@@ -22,6 +22,7 @@ import Mathlib
 import SKEFTHawking.AlgebraicRokhlin
 import SKEFTHawking.HasseMinkowskiLocal
 import SKEFTHawking.PadicSquare
+import SKEFTHawking.HilbertProductFormula
 
 namespace SKEFTHawking
 
@@ -177,5 +178,104 @@ theorem isotropic_padicInt_of_unit_det {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {
   · -- isotropic
     have h := mulVec_update_coord_quadratic A hsymm y j z
     rw [h, ← hFe z]; exact hz
+
+/-! ## p = 2 from reciprocity (the lone sub-frontier, square-discriminant case)
+
+For a square-discriminant rank-4 form the local isotropy at a place `v` is governed by a *single* binary
+Hilbert symbol `(α, β)_v` (`α = -ab`, `β = ac`) via the norm-form reduction
+`quaternary_sqdisc_iso_iff_ternary` + the per-place symbol bridges. The product formula
+`hilbertGlobalProd_eq_one` then forces the `p = 2` factor once all other places are `1` — so a
+square-disc form isotropic at `ℝ` and every *odd* prime is automatically isotropic at `2`. -/
+
+open HilbertSymbol in
+/-- **Reciprocity completeness for the binary symbol.** If `(α,β)_∞ = 1` and `(α,β)_p = 1` for every odd
+prime `p`, then `(α,β)_2 = 1` — the `p = 2` factor is pinned by the Hilbert product formula
+`hilbertGlobalProd_eq_one` (every other factor being `1`). -/
+theorem hilbertPrime_two_eq_one_of_real_odd {α β : ℤ} (hα : α ≠ 0) (hβ : β ≠ 0)
+    (hreal : HilbertSymbol.hilbertReal (α : ℝ) (β : ℝ) = 1)
+    (hodd : ∀ p : ℕ, p.Prime → p ≠ 2 → HilbertSymbol.hilbertPrime p α β = 1) :
+    HilbertSymbol.hilbertPrime 2 α β = 1 := by
+  have hglob := hilbertGlobalProd_eq_one hα hβ
+  rw [hilbertGlobalProd] at hglob
+  have hfin : ∏ᶠ p : ℕ, HilbertSymbol.hilbertPrime p α β = HilbertSymbol.hilbertPrime 2 α β := by
+    refine finprod_eq_single _ 2 (fun p hp2 => ?_)
+    by_cases hpp : p.Prime
+    · exact hodd p hpp hp2
+    · exact hilbertPrime_of_not_prime hpp α β
+  rw [hfin, hreal, one_mul] at hglob
+  exact hglob
+
+/-- **Square-discriminant quaternary Hasse–Minkowski, without the place `2`.** For nonzero integers with
+`a·b·c·d = s²`, if `a x² + b y² − c z² − d w² = 0` is solvable over `ℝ` and over every *odd* `ℚ_p`, it is
+solvable over `ℚ`. The `p = 2` local solvability — the lone gap in the shipped
+`quaternary_sqdisc_solvable_of_local` — is supplied by reciprocity: each place's isotropy is the symbol
+`(−ab, ac)_v = 1`, and `hilbertPrime_two_eq_one_of_real_odd` pins the `2`-factor from the others. -/
+theorem quaternary_sqdisc_solvable_of_local_no_two {a b c d s : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0) (hsq : a * b * c * d = s ^ 2)
+    (hR : ∃ x y z w : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℝ) * x ^ 2 + (b : ℝ) * y ^ 2 - (c : ℝ) * z ^ 2 - (d : ℝ) * w ^ 2 = 0)
+    (hodd : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∃ x y z w : ℚ_[p],
+      ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 - (c : ℚ_[p]) * z ^ 2 - (d : ℚ_[p]) * w ^ 2 = 0) :
+    ∃ x y z w : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ) * x ^ 2 + (b : ℚ) * y ^ 2 - (c : ℚ) * z ^ 2 - (d : ℚ) * w ^ 2 = 0 := by
+  set α : ℤ := -(a * b) with hαdef
+  set β : ℤ := a * c with hβdef
+  have hα : α ≠ 0 := neg_ne_zero.mpr (mul_ne_zero ha hb)
+  have hβ : β ≠ 0 := mul_ne_zero ha hc
+  -- real place: the symbol (α,β)_∞ = 1
+  have hreal : HilbertSymbol.hilbertReal (α : ℝ) (β : ℝ) = 1 := by
+    obtain ⟨X, Y, Z, hnzt, het⟩ :=
+      (quaternary_sqdisc_iso_iff_ternary (a := (a : ℝ)) (b := (b : ℝ)) (c := (c : ℝ)) (d := (d : ℝ))
+        (s := (s : ℝ)) (by exact_mod_cast ha) (by exact_mod_cast hb) (by exact_mod_cast hc)
+        (by exact_mod_cast hd) (by exact_mod_cast hsq)).mp hR
+    have het' : Z ^ 2 = (α : ℝ) * X ^ 2 + (β : ℝ) * Y ^ 2 := by
+      rw [het, hαdef, hβdef]; push_cast; ring
+    rw [HilbertSymbol.hilbertReal_eq_one_iff (by exact_mod_cast hα) (by exact_mod_cast hβ)]
+    refine ⟨X, Y, Z, ?_, het'⟩
+    intro h
+    rw [Prod.mk_eq_zero] at h
+    obtain ⟨hX, hYZ⟩ := h
+    rw [Prod.mk_eq_zero] at hYZ
+    exact hnzt ⟨hX, hYZ.1, hYZ.2⟩
+  -- odd primes: the symbol (α,β)_p = 1
+  have hoddsym : ∀ p : ℕ, p.Prime → p ≠ 2 → HilbertSymbol.hilbertPrime p α β = 1 := by
+    intro p hp hp2
+    haveI := Fact.mk hp
+    rw [HilbertSymbol.hilbertPrime_odd hp hp2, ← solvable_padic_iff_hilbertPadicInt_one hp2 hα hβ]
+    obtain ⟨X, Y, Z, hnzt, het⟩ :=
+      (quaternary_sqdisc_iso_iff_ternary (a := (a : ℚ_[p])) (b := (b : ℚ_[p])) (c := (c : ℚ_[p]))
+        (d := (d : ℚ_[p])) (s := (s : ℚ_[p])) (by exact_mod_cast ha) (by exact_mod_cast hb)
+        (by exact_mod_cast hc) (by exact_mod_cast hd) (by exact_mod_cast hsq)).mp (hodd p hp2)
+    exact ⟨X, Y, Z, hnzt, by rw [het, hαdef, hβdef]; push_cast; ring⟩
+  -- p = 2 from reciprocity
+  have h2sym : HilbertSymbol.hilbert2Int α β = 1 := by
+    rw [← HilbertSymbol.hilbertPrime_two]
+    exact hilbertPrime_two_eq_one_of_real_odd hα hβ hreal hoddsym
+  have h2loc : ∃ x y z w : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[2]) * x ^ 2 + (b : ℚ_[2]) * y ^ 2 - (c : ℚ_[2]) * z ^ 2 - (d : ℚ_[2]) * w ^ 2 = 0 := by
+    haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+    obtain ⟨X, Y, Z, hnzt, het⟩ := (solvable_2adic_iff_hilbert2Int hα hβ).mpr h2sym
+    refine (quaternary_sqdisc_iso_iff_ternary (a := (a : ℚ_[2])) (b := (b : ℚ_[2])) (c := (c : ℚ_[2]))
+      (d := (d : ℚ_[2])) (s := (s : ℚ_[2])) (by exact_mod_cast ha) (by exact_mod_cast hb)
+      (by exact_mod_cast hc) (by exact_mod_cast hd) (by exact_mod_cast hsq)).mpr ⟨X, Y, Z, hnzt, ?_⟩
+    rw [het, hαdef, hβdef]; push_cast; ring
+  -- combine all places and invoke the full square-disc Hasse–Minkowski
+  have hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x y z w : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 - (c : ℚ_[p]) * z ^ 2 - (d : ℚ_[p]) * w ^ 2 = 0 := by
+    intro p _
+    by_cases hp2 : p = 2
+    · subst hp2; exact h2loc
+    · exact hodd p hp2
+  have hQ := quaternary_sqdisc_solvable_of_local (a := (a : ℚ)) (b := (b : ℚ)) (c := (c : ℚ))
+    (d := (d : ℚ)) (s := (s : ℚ)) (by exact_mod_cast ha) (by exact_mod_cast hb) (by exact_mod_cast hc)
+    (by exact_mod_cast hd) (by exact_mod_cast hsq) ?_ ?_
+  · obtain ⟨x, y, z, w, hnz, he⟩ := hQ
+    exact ⟨x, y, z, w, hnz, by push_cast at he ⊢; linear_combination he⟩
+  · obtain ⟨x, y, z, w, hnz, he⟩ := hR
+    exact ⟨x, y, z, w, hnz, by push_cast at he ⊢; linear_combination he⟩
+  · intro p _
+    obtain ⟨x, y, z, w, hnz, he⟩ := hloc p
+    exact ⟨x, y, z, w, hnz, by push_cast at he ⊢; linear_combination he⟩
 
 end SKEFTHawking
