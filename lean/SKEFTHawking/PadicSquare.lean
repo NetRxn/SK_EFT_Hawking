@@ -2527,6 +2527,30 @@ theorem exists_int_residues (ps : List ℕ) (hps : ∀ p ∈ ps, p.Prime) (hd : 
   push_cast
   exact_mod_cast h2
 
+/-- **CRT at prime powers: an integer hitting prescribed residues mod `p^{e p}` at distinct primes.** The
+prime-power refinement of `exists_int_residues`: distinct primes give pairwise-coprime prime powers
+(`Nat.Coprime.pow`), so `Nat.chineseRemainderOfList` yields an integer `k` with `(k : ZMod (p^{e p})) = r p`
+for every `p ∈ ps`. Prescribing the residue mod `p^{v_p(t_p)+1}` fixes both the valuation AND the unit residue
+of `k` at `p` — i.e. its full `ℚ_p`-square class. This is the weak-approximation core of the rank-4 keystone:
+it builds a single integer matching the local common values' square classes at every bad prime simultaneously,
+without per-prime cross-term bookkeeping. -/
+theorem exists_int_prime_pow_residues (ps : List ℕ) (hps : ∀ p ∈ ps, p.Prime) (hd : ps.Nodup)
+    (e : ℕ → ℕ) (r : ℕ → ℕ) :
+    ∃ k : ℤ, ∀ p ∈ ps, (k : ZMod (p ^ e p)) = (r p : ZMod (p ^ e p)) := by
+  have hpw : List.Pairwise (Function.onFun Nat.Coprime (fun p => p ^ e p)) ps := by
+    rw [List.pairwise_iff_get]
+    intro i j hij
+    have hne : ps.get i ≠ ps.get j := fun h => by have := hd.get_inj_iff.mp h; omega
+    show ((ps.get i) ^ e (ps.get i)).Coprime ((ps.get j) ^ e (ps.get j))
+    exact Nat.Coprime.pow (e (ps.get i)) (e (ps.get j))
+      ((Nat.coprime_primes (hps _ (List.get_mem _ _)) (hps _ (List.get_mem _ _))).mpr hne)
+  obtain ⟨k, hk⟩ := Nat.chineseRemainderOfList r (fun p => p ^ e p) ps hpw
+  refine ⟨(k : ℤ), fun p hp => ?_⟩
+  have h2 : (k : ZMod (p ^ e p)) = (r p : ZMod (p ^ e p)) :=
+    (ZMod.natCast_eq_natCast_iff _ _ _).mpr (hk p hp)
+  push_cast
+  exact_mod_cast h2
+
 /-- **CRT with guaranteed coprimality: a unit-residue integer at finitely many distinct primes.** Refines
 `exists_int_residues`: if each prescribed residue `r p` is *nonzero* mod `p` (i.e. `¬ p ∣ r p`), the produced
 integer `k` not only hits `(k : ZMod p) = r p` but is also coprime to every `p ∈ ps` (`¬ (p:ℤ) ∣ k`). This is
