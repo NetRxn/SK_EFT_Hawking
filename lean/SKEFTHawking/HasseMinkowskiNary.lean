@@ -753,4 +753,97 @@ theorem bad_prime_R_certificate {p : ℕ} [Fact p.Prime] {m : ℕ} (hm : 0 < m)
   · subst hp2; exact bad_prime_R_certificate_2 hm hc0 hc1 Rq hRq hiso
   · exact bad_prime_R_certificate_odd hp2 hm hc0 hc1 Rq hRq hiso
 
+/-! ### The rank-reduction step -/
+
+/-- Casting commutes with `Fin.cons` (integer coefficients into any `AddGroupWithOne`). -/
+theorem cast_cons_int {K : Type*} [AddGroupWithOne K] {m : ℕ} (a : ℤ) (R : Fin m → ℤ)
+    (i : Fin (m + 1)) :
+    (((Fin.cons a R : Fin (m + 1) → ℤ) i : ℤ) : K)
+      = (Fin.cons (a : K) (fun j => (R j : K)) : Fin (m + 1) → K) i := by
+  refine Fin.cases ?_ ?_ i <;> simp
+
+/-- **Meyer rank-reduction step (`n = m+2 ≥ 5`, cons form).** For a diagonal form `⟨c₀, c₁, R⟩` with integer
+coefficients (`R : Fin m → ℤ`, `m ≥ 3`) whose residual `R` is indefinite over ℝ and which is isotropic over
+every `ℚ_[p]`, the rank-`(m+1)` inductive hypothesis (applied to the descended form `⟨a, R⟩`) yields a
+nontrivial rational zero. The descent value `a = c₀X₀² + c₁X₁²` is built by integer CRT
+(`exists_two_ints_matching`) over the finite bad-prime list (`exists_bad_prime_list`); at each bad prime the
+unified certificate (`bad_prime_R_certificate`) gives `R reps −a`, at good primes the residual unit form is
+universal (`represents_of_units_odd_padic`), and over ℝ the residual is indefinite
+(`diag_real_isotropic_of_signs`). `B reps a` is free (`a = B(X)`); `cons_isotropic_of_repr_neg` and
+`reduction_assembly` close the descent. This is the inductive step of the general-rank Hasse–Minkowski theorem;
+the spine peels two coordinates of the majority real sign into the leading binary before applying it. -/
+theorem diag_reduction_step_cons {m : ℕ} (hm3 : 3 ≤ m) {c0 c1 : ℤ} (hc0 : c0 ≠ 0) (hc1 : c1 ≠ 0)
+    (R : Fin m → ℤ) (hR : ∀ i, R i ≠ 0)
+    (hRpos : ∃ k, 0 < (R k : ℝ)) (hRneg : ∃ l, (R l : ℝ) < 0)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x : Fin (m + 2) → ℚ_[p], x ≠ 0 ∧
+      ∑ i, (Fin.cons (c0 : ℚ_[p]) (Fin.cons (c1 : ℚ_[p]) (fun i => (R i : ℚ_[p])) :
+        Fin (m + 1) → ℚ_[p]) : Fin (m + 2) → ℚ_[p]) i * x i ^ 2 = 0)
+    (IH : ∀ d : Fin (m + 1) → ℤ, (∀ i, d i ≠ 0) →
+      (∃ x : Fin (m + 1) → ℝ, x ≠ 0 ∧ ∑ i, (d i : ℝ) * x i ^ 2 = 0) →
+      (∀ (p : ℕ) [Fact p.Prime], ∃ x : Fin (m + 1) → ℚ_[p], x ≠ 0 ∧ ∑ i, (d i : ℚ_[p]) * x i ^ 2 = 0) →
+      ∃ x : Fin (m + 1) → ℚ, x ≠ 0 ∧ ∑ i, (d i : ℚ) * x i ^ 2 = 0) :
+    ∃ x : Fin (m + 2) → ℚ, x ≠ 0 ∧
+      ∑ i, (Fin.cons (c0 : ℚ) (Fin.cons (c1 : ℚ) (fun i => (R i : ℚ)) :
+        Fin (m + 1) → ℚ) : Fin (m + 2) → ℚ) i * x i ^ 2 = 0 := by
+  classical
+  have hm0 : 0 < m := by omega
+  set c : Fin (m + 2) → ℤ := Fin.cons c0 (Fin.cons c1 R) with hc
+  have hcss : ∀ i : Fin m, c i.succ.succ = R i := by intro i; rw [hc]; simp
+  have hcne : ∀ i, c i ≠ 0 := by
+    intro i; rw [hc]; refine Fin.cases ?_ (fun j => ?_) i
+    · simpa using hc0
+    · simp only [Fin.cons_succ]; refine Fin.cases ?_ (fun k => ?_) j
+      · simpa using hc1
+      · simpa using hR k
+  obtain ⟨S, hSprime, hSnodup, hS2, hSgood⟩ := exists_bad_prime_list c hcne
+  have hcert : ∀ (p : ℕ) (hp : p ∈ S),
+      haveI : Fact p.Prime := ⟨hSprime p hp⟩
+      ∃ (n0 n1 : ℤ) (N : ℕ), ∀ X0 X1 : ℤ, (p : ℤ) ^ N ∣ X0 - n0 → (p : ℤ) ^ N ∣ X1 - n1 →
+        c0 * X0 ^ 2 + c1 * X1 ^ 2 ≠ 0 ∧
+        ∃ y : Fin m → ℚ_[p], ∑ i, (R i : ℚ_[p]) * y i ^ 2 = -((c0 * X0 ^ 2 + c1 * X1 ^ 2 : ℤ) : ℚ_[p]) := by
+    intro p hp
+    haveI : Fact p.Prime := ⟨hSprime p hp⟩
+    exact bad_prime_R_certificate hm0 hc0 hc1 (fun i => (R i : ℚ_[p]))
+      (fun i => show (R i : ℚ_[p]) ≠ 0 by exact_mod_cast hR i) (hloc p)
+  choose! n0 n1 N hguar using hcert
+  obtain ⟨X0, X1, hmatch⟩ := exists_two_ints_matching S hSprime hSnodup N n0 n1
+  set a : ℤ := c0 * X0 ^ 2 + c1 * X1 ^ 2 with hadef
+  have ha0 : a ≠ 0 := (hguar 2 hS2 X0 X1 (hmatch 2 hS2).1 (hmatch 2 hS2).2).1
+  set g : Fin (m + 1) → ℤ := Fin.cons a R with hg
+  have hgne : ∀ i, g i ≠ 0 := by
+    intro i; rw [hg]; refine Fin.cases ?_ (fun j => ?_) i
+    · simpa using ha0
+    · simpa using hR j
+  have hgR : ∃ x : Fin (m + 1) → ℝ, x ≠ 0 ∧ ∑ i, (g i : ℝ) * x i ^ 2 = 0 := by
+    obtain ⟨k, hk⟩ := hRpos; obtain ⟨l, hl⟩ := hRneg
+    have hkl : k.succ ≠ l.succ := by
+      simp only [ne_eq, Fin.succ_inj]; rintro rfl; linarith
+    refine diag_real_isotropic_of_signs (fun i => ((g i : ℤ) : ℝ)) k.succ l.succ hkl ?_ ?_
+    · rw [hg]; simpa using hk
+    · rw [hg]; simpa using hl
+  have hgloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x : Fin (m + 1) → ℚ_[p], x ≠ 0 ∧
+      ∑ i, (g i : ℚ_[p]) * x i ^ 2 = 0 := by
+    intro p _
+    by_cases hpS : p ∈ S
+    · obtain ⟨_, y, hy⟩ := hguar p hpS X0 X1 (hmatch p hpS).1 (hmatch p hpS).2
+      obtain ⟨z, hz0, hze⟩ := cons_isotropic_of_repr_neg (fun i => (R i : ℚ_[p])) ⟨y, hy⟩
+      refine ⟨z, hz0, ?_⟩
+      rw [← hze]; refine Finset.sum_congr rfl (fun i _ => ?_); rw [hg, cast_cons_int]
+    · have hpprime := Fact.out (p := p.Prime)
+      have hp2 : p ≠ 2 := by rintro rfl; exact hpS hS2
+      have hRunit : ∀ i, ‖(R i : ℚ_[p])‖ = 1 := fun i =>
+        padic_norm_intCast_eq_one (by rw [← hcss i]; exact hSgood p hpprime hpS i.succ.succ)
+      obtain ⟨y, hy⟩ := represents_of_units_odd_padic hp2 hm3 (fun i => (R i : ℚ_[p])) hRunit
+        (-((a : ℤ) : ℚ_[p]))
+      obtain ⟨z, hz0, hze⟩ := cons_isotropic_of_repr_neg (fun i => (R i : ℚ_[p])) ⟨y, hy⟩
+      refine ⟨z, hz0, ?_⟩
+      rw [← hze]; refine Finset.sum_congr rfl (fun i _ => ?_); rw [hg, cast_cons_int]
+  obtain ⟨z, hz0, hze⟩ := IH g hgne hgR hgloc
+  have hB : ∃ u0 u1 : ℚ, (c0 : ℚ) * u0 ^ 2 + (c1 : ℚ) * u1 ^ 2 = (a : ℚ) := by
+    refine ⟨(X0 : ℚ), (X1 : ℚ), ?_⟩; rw [hadef]; push_cast; ring
+  have hgcast : ∃ y : Fin (m + 1) → ℚ, y ≠ 0 ∧
+      ∑ i, (Fin.cons (a : ℚ) (fun i => (R i : ℚ)) : Fin (m + 1) → ℚ) i * y i ^ 2 = 0 := by
+    refine ⟨z, hz0, ?_⟩; rw [← hze]; refine Finset.sum_congr rfl (fun i _ => ?_); rw [hg, cast_cons_int]
+  exact reduction_assembly (a := (a : ℚ)) (by exact_mod_cast ha0) hB hgcast
+
 end SKEFTHawking
