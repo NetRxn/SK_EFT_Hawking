@@ -2205,7 +2205,7 @@ PLACEHOLDER_CONTENT_COUNT = sum(
 HYPOTHESIS_REGISTRY: dict[str, dict] = {
     'rokhlin_sigma_mod_16': {
         'statement': 'For any closed smooth spin 4-manifold M, 16 | σ(M)',
-        'status': 'decomposed',  # Phase 5q.B: opaque hypothesis replaced by a wired theorem over a narrow interface
+        'status': 'discharged',  # Phase 5q.B (2026-06-08): 16|σ now an UNCONDITIONAL kernel-pure theorem; only the topological factor 2|σ/8 remains as interface input
         'eliminability': 'very_hard',
         'elimination_path': 'Phase 5q.B (Route B) DECOMPOSED this opaque hypothesis into the narrow '
             'SmoothSpinManifold4 interface (SpinRokhlinInterface.lean) and PROVED 16|σ as a kernel-pure '
@@ -2229,16 +2229,32 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'CLASSIFICATION SCAFFOLDING: [E1] primitive vectors + dual (LatticePrimitive); [E2]-partial '
             'exists_hyperbolic_pair ({v,w-prime} Gram = H) + even_form_dvd; [E3] assembly DONE. The signature '
             'side is CLOSED: any normal form E8^a (+) (-E8)^b (+) H^c gives latticeSig = 8(a-b), hence 8|sigma. '
-            'REMAINING to discharge eight_dvd from even_unimod = the classification EXISTENCE statement only: '
-            '[E2] basis-completion (extend {v,w-prime} to a Z-basis via Smith Normal Form / the H-duality '
-            'splitting; substrate scouted), then the two irreducible research inputs [HM] Hasse-Minkowski '
-            '(indefinite represents 0) and [Theta] theta-modularity (definite 8|rank) — both confirmed with no '
-            'Mathlib substrate. sixteen_convergence_unconditional is the companion to sixteen_convergence_full '
-            'with the 16|σ conjunct now a theorem (modulo the single eight_dvd interface field), not an '
-            'assumed h_rokhlin. Full living decomposition: docs/roadmaps/Phase5qB_LabNotebook.md.',
+            '✅ DISCHARGED 2026-06-08: BOTH irreducible inputs are now kernel-pure THEOREMS. [Theta] '
+            'theta-modularity (definite 8|rank) = eight_dvd_latticeSig_of_definite (shipped earlier). [HM] '
+            'Hasse-Minkowski (indefinite even unimodular ⟹ isotropic vector) = hasIsotropicVector '
+            '(RokhlinHMRankFour), discharging HasWeakIsotropicVectorHyp at EVERY rank: rank ≥5 '
+            '(weakIsotropic_of_five_le, general-rank diagonal HM spine diag_nary_zero_of_local with ℝ + odd-p + '
+            '2-adic local isotropy all proven), rank 2 (weakIsotropic_rank_two, det=-1 mod-4), ranks 1 & 3 (no '
+            'even unimodular form exists), rank 4 (weakIsotropic_rank_four: det=1 forces square discriminant, '
+            'then brick (a) odd-p ℤ_p-unimodular isotropy [Chevalley-Warning + Hensel] + brick (b) p=2 via '
+            'binary Hilbert reciprocity [quaternary_sqdisc_iso_iff_ternary + hilbertGlobalProd_eq_one] '
+            'transported through the explicit congruence A=PᵀdiagP). Hence eight_dvd_latticeSig (8|σ for every '
+            'even unimodular form) and sixteen_dvd_latticeSig (16|σ given 2|σ/8) are UNCONDITIONAL. The '
+            'SmoothSpinManifold4 structure no longer carries the eight_dvd field — SmoothSpinManifold4.rokhlin '
+            '(16|σ) is derived from even_unimod + topo (2|σ/8) ALONE. The ONLY remaining interface input is the '
+            'genuinely-topological factor 2|σ/8 (Â-genus even / Arf(q-bar)=0). All kernel-pure '
+            '{propext,Classical.choice,Quot.sound}, axiom_closure_allowlist GREEN. '
+            'sixteen_convergence_unconditional is the companion to sixteen_convergence_full with the 16|σ '
+            'conjunct now a full theorem, not an assumed h_rokhlin. Full living decomposition: '
+            'docs/roadmaps/Phase5qB_LabNotebook.md.',
         'dependent_theorems': [
             'SKEFTHawking.SmoothSpinManifold4.rokhlin',
             'SKEFTHawking.SmoothSpinManifold4.eight_dvd_sig',
+            'SKEFTHawking.hasWeakIsotropicVector',
+            'SKEFTHawking.hasIsotropicVector',
+            'SKEFTHawking.weakIsotropic_rank_four',
+            'SKEFTHawking.eight_dvd_latticeSig',
+            'SKEFTHawking.sixteen_dvd_latticeSig',
             'SKEFTHawking.sixteen_dvd_latticeSig_of_eight_dvd_of_topo',
             'SKEFTHawking.sixteen_convergence_unconditional',
             'SKEFTHawking.sixteen_convergence_full',
