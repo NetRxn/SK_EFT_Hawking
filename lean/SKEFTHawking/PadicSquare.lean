@@ -2669,6 +2669,46 @@ theorem isSquare_padic_div_int {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {x m Cx C
   · rw [hmeq]; push_cast [zpow_natCast]; ring
   · rw [map_intCast, map_intCast]; exact_mod_cast hres
 
+/-- **Square ratio from a high-power congruence over `ℚ_[p]` (odd `p`).** If `k ≡ m (mod p^{v_p(m)+1})` for
+nonzero integers `k, m`, then `k/m` is a square in `ℚ_[p]`. (The congruence forces `v_p(k) = v_p(m)`
+exactly — ultrametric — and the cofactors congruent mod `p`, so `isSquare_padic_div_int` applies.) This is the
+weak-approximation bridge: the prime-power-CRT integer (`exists_int_prime_pow_residues`, prescribed `≡ t_p`
+mod a high power of `p`) automatically shares the local common value `t_p`'s `ℚ_p`-square class at each bad
+odd prime — connecting the construction's CRT step to the bad-prime verification with no manual decomposition. -/
+theorem isSquare_padic_div_of_modEq {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {k m : ℤ}
+    (hk : k ≠ 0) (hm : m ≠ 0) (hcong : (p : ℤ) ^ (padicValInt p m + 1) ∣ (k - m)) :
+    IsSquare ((k : ℚ_[p]) / (m : ℚ_[p])) := by
+  obtain ⟨Ck, hkeq, hCk⟩ := exists_int_factor_padicValInt (p := p) hk
+  obtain ⟨Cm, hmeq, hCm⟩ := exists_int_factor_padicValInt (p := p) hm
+  have hpne : (p : ℤ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  set vk := padicValInt p k with hvkdef
+  set vm := padicValInt p m with hvmdef
+  have hvk_ge : vm ≤ vk := by
+    have h1 : (p : ℤ) ^ vm ∣ (k - m) := dvd_trans (pow_dvd_pow _ (by omega)) hcong
+    have h2 : (p : ℤ) ^ vm ∣ m := ⟨Cm, hmeq⟩
+    have hkdv : (p : ℤ) ^ vm ∣ k := by have := h1.add h2; simpa using this
+    rcases (padicValInt_dvd_iff vm k).mp hkdv with h | h
+    · exact absurd h hk
+    · exact h
+  have hvk_le : vk ≤ vm := by
+    by_contra hc
+    rw [not_le] at hc
+    have hkdvd : (p : ℤ) ^ (vm + 1) ∣ k := (padicValInt_dvd_iff (vm + 1) k).mpr (Or.inr (by omega))
+    have hmdvd : (p : ℤ) ^ (vm + 1) ∣ m := by have := hkdvd.sub hcong; simpa using this
+    rcases (padicValInt_dvd_iff (vm + 1) m).mp hmdvd with h | h
+    · exact hm h
+    · omega
+  have hvkm : vk = vm := le_antisymm hvk_le hvk_ge
+  have hCcong : (Ck : ZMod p) = (Cm : ZMod p) := by
+    have hkm : k - m = (p : ℤ) ^ vm * (Ck - Cm) := by rw [hkeq, hmeq, ← hvkm]; ring
+    rw [hkm, pow_succ] at hcong
+    have hdvd : (p : ℤ) ∣ (Ck - Cm) :=
+      (mul_dvd_mul_iff_left (pow_ne_zero vm hpne)).mp hcong
+    have hz : ((Ck - Cm : ℤ) : ZMod p) = 0 := by rwa [ZMod.intCast_zmod_eq_zero_iff_dvd]
+    rw [Int.cast_sub, sub_eq_zero] at hz
+    exact hz
+  exact isSquare_padic_div_int hp hCk hCm hkeq hmeq (by rw [hvkm]; simp) hCcong
+
 /-- **Two `ℤ_2` units with the same residue mod 8 have square ratio over `ℚ_2`.** The `p = 2` analogue of
 `isSquare_padic_div_units`: if `toZModPow 3 u = toZModPow 3 v` (same class in `ZMod 8`) then `u/v ≡ 1 (mod 8)`
 is a square (`isSquare_of_toZModPow_three_eq_one`). -/
