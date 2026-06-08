@@ -205,4 +205,58 @@ theorem weakIsotropic_of_five_le {m : ℕ} (hm : 5 ≤ m) (A : Matrix (Fin m) (F
     rw [hiff]
     exact ⟨x, hx0, hxe⟩
 
+/-! ## Small-rank cases (2, and the odd/degenerate vacuities)
+
+The rank-≥5 case (`weakIsotropic_of_five_le`) covers every form with nonzero signature (an indefinite even
+unimodular form with `σ ≠ 0` has rank ≥ 10). The recursion in `eight_dvd_latticeSig_of_HM_of_Theta` (split
+off a hyperbolic plane, recurse on rank `n-2`) nonetheless reaches the small even ranks `2` and `4`, so the
+weak [HM] hypothesis must hold there too. Rank 2 is elementary. -/
+
+/-- **Even unimodular `2×2` ⟹ `det = -1`.** Pure arithmetic: with both diagonal entries even,
+`det = A₀₀A₁₁ - A₀₁² ≡ -A₀₁² (mod 4) ∈ {0, 3}`, so `det = 1` is impossible; with `det = ±1` this forces
+`det = -1`. (No real-signature input is needed — every even unimodular binary form is indefinite.) -/
+theorem det_eq_neg_one_of_evenUnimodular_two (A : Matrix (Fin 2) (Fin 2) ℤ) (hA : IsEvenUnimodular A) :
+    A.det = -1 := by
+  obtain ⟨hsym, hdet, heven⟩ := hA
+  have h10 : A 1 0 = A 0 1 := by
+    have h := congrFun (congrFun hsym 0) 1
+    simpa [Matrix.transpose_apply] using h
+  obtain ⟨a, ha⟩ := heven 0
+  obtain ⟨c, hc⟩ := heven 1
+  have hdetval : A.det = A 0 0 * A 1 1 - A 0 1 * A 1 0 := Matrix.det_fin_two A
+  rcases hdet with h1 | h1
+  · exfalso
+    rw [hdetval, ha, hc, h10] at h1
+    rcases Int.even_or_odd (A 0 1) with ⟨k, hk⟩ | ⟨k, hk⟩
+    · rw [hk] at h1
+      have h2 : (2 : ℤ) ∣ 1 := ⟨2 * a * c - 2 * (k * k), by linear_combination -h1⟩
+      norm_num at h2
+    · rw [hk] at h1
+      have h4 : (4 : ℤ) ∣ 2 := ⟨a * c - k * k - k, by linear_combination -h1⟩
+      norm_num at h4
+  · exact h1
+
+/-- **Weak [HM] at rank 2.** Every even unimodular `2×2` form has a nonzero integer isotropic vector. With
+`det = -1` (`det_eq_neg_one_of_evenUnimodular_two`), the explicit vector `![1 - A₀₁, A₀₀]` (or `![1,0]` when
+`A₀₀ = 0`) is isotropic: `vᵀAv = A₀₀·(1 + det) = 0`. -/
+theorem weakIsotropic_rank_two (A : Matrix (Fin 2) (Fin 2) ℤ) (hA : IsEvenUnimodular A) :
+    ∃ v : Fin 2 → ℤ, v ≠ 0 ∧ v ⬝ᵥ A *ᵥ v = 0 := by
+  have hdneg := det_eq_neg_one_of_evenUnimodular_two A hA
+  obtain ⟨hsym, _, _⟩ := hA
+  have h10 : A 1 0 = A 0 1 := by
+    have h := congrFun (congrFun hsym 0) 1
+    simpa [Matrix.transpose_apply] using h
+  have hdv : A 0 0 * A 1 1 - A 0 1 * A 0 1 = -1 := by
+    have hd : A.det = A 0 0 * A 1 1 - A 0 1 * A 1 0 := Matrix.det_fin_two A
+    rw [h10] at hd; rw [← hd]; exact hdneg
+  by_cases h00 : A 0 0 = 0
+  · refine ⟨![1, 0], ?_, ?_⟩
+    · intro h; have := congrFun h 0; simp at this
+    · simp [dotProduct, Matrix.mulVec, Fin.sum_univ_two, h00]
+  · refine ⟨![1 - A 0 1, A 0 0], ?_, ?_⟩
+    · intro h; have := congrFun h 1; simp at this; exact h00 this
+    · simp only [dotProduct, Matrix.mulVec, Fin.sum_univ_two, Matrix.cons_val_zero,
+        Matrix.cons_val_one]
+      rw [h10]; linear_combination (A 0 0) * hdv
+
 end SKEFTHawking
