@@ -2059,6 +2059,29 @@ theorem isSquare_odd_prime_zmod {p q : ℕ} [Fact p.Prime] [Fact q.Prime]
   rw [heven.neg_one_pow] at hqr
   exact by simpa using (legendreSym.eq_one_iff q hpz).mp hqr
 
+/-- **Flexible QR: an odd prime `p` is a QR mod `q` when `q ≡ 1 mod 4` and `q` is a *square* mod `p`.**
+This relaxes `isSquare_odd_prime_zmod`, which demanded the rigid `q ≡ 1 (mod p)`; here only the genuine
+reciprocity input `IsSquare ((q : ℤ) : ZMod p)` (i.e. `(q | p) = 1`) is required. The reciprocity sign is
+`+1` since `q ≡ 1 (mod 4)`, so `(p | q) = (q | p) = 1`. This is the brick that frees the Dirichlet
+residue selection in the Serre Thm 4 construction: `q`'s class mod each bad prime `p` can be *chosen*
+among the `(p−1)/2` quadratic residues, rather than pinned to `1`. -/
+theorem isSquare_odd_prime_zmod_flex {p q : ℕ} [Fact p.Prime] [Fact q.Prime]
+    (hp : p ≠ 2) (hq : q ≠ 2) (hpq : p ≠ q) (hq4 : q % 4 = 1)
+    (hqp : IsSquare ((q : ℤ) : ZMod p)) : IsSquare ((p : ZMod q)) := by
+  have hqp0 : (((q : ℤ)) : ZMod p) ≠ 0 := by
+    rw [Int.cast_natCast, Ne, CharP.cast_eq_zero_iff (ZMod p) p]
+    exact fun h => hpq ((Nat.prime_dvd_prime_iff_eq Fact.out Fact.out).mp h)
+  have hpz : ((p : ℤ) : ZMod q) ≠ 0 := by
+    rw [Int.cast_natCast, Ne, CharP.cast_eq_zero_iff (ZMod q) q]
+    exact fun h => hpq ((Nat.prime_dvd_prime_iff_eq Fact.out Fact.out).mp h).symm
+  have hpq1 : legendreSym p q = 1 := by
+    rw [legendreSym.eq_one_iff p hqp0]; exact hqp
+  have hqr := legendreSym.quadratic_reciprocity hp hq hpq
+  rw [hpq1, mul_one] at hqr
+  have heven : Even (p / 2 * (q / 2)) := (Nat.even_iff.mpr (by omega)).mul_left _
+  rw [heven.neg_one_pow] at hqr
+  exact by simpa using (legendreSym.eq_one_iff q hpz).mp hqr
+
 /-- **Multiplicative QR criterion (ℕ).** If `q ≡ 1 (mod 8)` and every prime factor `p` of `m` satisfies
 `q ≡ 1 (mod p)`, then `m` is a square mod `q`. Reduces over the factorisation of `m` (`Nat.recOnMul`):
 the prime case is `isSquare_odd_prime_zmod` (odd `p`) or `ZMod.exists_sq_eq_two_iff` (`p = 2`, using
