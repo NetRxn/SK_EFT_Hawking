@@ -241,4 +241,152 @@ theorem quaternary_isotropic_of_symbol_except_q {a b c d t : ℤ}
     · subst hpq; exact hqcd
     · exact hcd p hpq
 
+/-- **🎯 Rank-4 Hasse–Minkowski (the keystone, fully discharged).** If the quaternary form
+`a x² + b y² = c z² + d w²` (nonzero integer coefficients) is isotropic over ℝ and over every `ℚ_p`, then it is
+isotropic over ℚ. This is the global existence of the Serre Ch III §2.2 Theorem 4 value `t`, constructed
+explicitly: `t = ε·(∏_{p∈S} p^{v_p(m_p)})·q` where `S` is the bad set `2abcd`, `m_p` are the local common
+values (bad-place certificates), the sign `ε` matches the real place, and `q` is a single plain-Dirichlet prime
+(`exists_prime_prime_pow_residues`) setting the unit residues so `t` lands in each `m_p`'s `ℚ_p`-square class
+(`exists_residue_smul_congr`). At every place except `q` the symbols match directly (bad places via the
+congruence certificates, good places via `hilbertPrime_pair_match_good`, `∞` via the sign); the `q`-place is
+recovered *for free* from the product formula (`quaternary_isotropic_of_symbol_except_q`) — so the construction
+needs NO 𝔽₂ consistency / quadratic-reciprocity-matrix argument. Kernel-pure, no new axioms; the sole arithmetic
+inputs are the product formula and Dirichlet's theorem (both in Mathlib / proven here). This is the previously
+"never-formalized-via-this-route" summit of the indefinite even-unimodular `8 ∣ σ` (van der Blij) leg. -/
+theorem quaternary_solvable_of_local {a b c d : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hR : ∃ x y z w : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℝ) * x ^ 2 + (b : ℝ) * y ^ 2 = (c : ℝ) * z ^ 2 + (d : ℝ) * w ^ 2)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x y z w : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 = (c : ℚ_[p]) * z ^ 2 + (d : ℚ_[p]) * w ^ 2) :
+    ∃ x y z w : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ) * x ^ 2 + (b : ℚ) * y ^ 2 = (c : ℚ) * z ^ 2 + (d : ℚ) * w ^ 2 := by
+  classical
+  set B : ℕ := 2 * a.natAbs * b.natAbs * c.natAbs * d.natAbs with hB
+  have hBpos : 0 < B := by rw [hB]; positivity
+  set S : List ℕ := B.primeFactors.toList with hSdef
+  have hSprime : ∀ p ∈ S, p.Prime := fun p hp =>
+    Nat.prime_of_mem_primeFactors (by rwa [hSdef, Finset.mem_toList] at hp)
+  have hSnodup : S.Nodup := by rw [hSdef]; exact Finset.nodup_toList _
+  have hSdvd : ∀ p ∈ S, p ∣ B := fun p hp =>
+    Nat.dvd_of_mem_primeFactors (by rwa [hSdef, Finset.mem_toList] at hp)
+  have cert : ∀ p ∈ S, ∃ mp : ℤ, mp ≠ 0 ∧ ∀ {t : ℤ}, t ≠ 0 →
+      (p : ℤ) ^ (padicValInt p mp + (if p = 2 then 3 else 1)) ∣ (t - mp) →
+        hilbertPrime p t (-(a * b)) = hilbertPrime p a b ∧
+        hilbertPrime p t (-(c * d)) = hilbertPrime p c d := by
+    intro p hp; haveI := Fact.mk (hSprime p hp)
+    exact hilbertPrime_pair_match_of_congr ha hb hc hd (hloc p)
+  choose! m hm0 hmcert using cert
+  haveI : Invertible (2 : ℝ) := invertibleOfNonzero two_ne_zero
+  obtain ⟨tv, htv, habv, hcdv⟩ := common_value_of_quaternary_isotropic
+    (by exact_mod_cast ha) (by exact_mod_cast hb) (by exact_mod_cast hc) (by exact_mod_cast hd) hR
+  obtain ⟨ε, hε1, hSab, hScd⟩ := exists_sign_for_real_common
+    ⟨tv, htv, (real_binary_represents_iff (by exact_mod_cast ha) (by exact_mod_cast hb)).mp habv,
+      (real_binary_represents_iff (by exact_mod_cast hc) (by exact_mod_cast hd)).mp hcdv⟩
+  obtain ⟨s, hs1, hsε⟩ : ∃ s : ℤ, (s = 1 ∨ s = -1) ∧ (s : ℝ) = ε := by
+    rcases hε1 with h | h
+    · exact ⟨1, Or.inl rfl, by rw [h]; norm_num⟩
+    · exact ⟨-1, Or.inr rfl, by rw [h]; norm_num⟩
+  have hδpos : ∀ p ∈ S, 0 < (if p = 2 then 3 else 1) := by intro p _; split <;> norm_num
+  have hPPne : (((S.map (fun p => p ^ padicValInt p (m p))).prod : ℕ) : ℤ) ≠ 0 := by
+    rw [Int.natCast_ne_zero, Ne, List.prod_eq_zero_iff]
+    rintro hmem; obtain ⟨x, hx, hx0⟩ := List.mem_map.mp hmem
+    exact pow_ne_zero _ (hSprime x hx).ne_zero hx0
+  set SP : ℤ := s * (((S.map (fun p => p ^ padicValInt p (m p))).prod : ℕ) : ℤ) with hSPdef
+  have hsne : s ≠ 0 := by rcases hs1 with h | h <;> simp [h]
+  have hSPne : SP ≠ 0 := by rw [hSPdef]; exact mul_ne_zero hsne hPPne
+  have hSPval : ∀ p ∈ S, padicValInt p SP = padicValInt p (m p) := by
+    intro p hp; haveI := Fact.mk (hSprime p hp)
+    rw [hSPdef, padicValInt.mul hsne hPPne,
+      show padicValInt p s = 0 by rcases hs1 with h | h <;> simp [h, padicValInt],
+      zero_add, padicValInt_prod_pow _ hSprime hSnodup, if_pos hp]
+  have rcert : ∀ p ∈ S, ∃ rval : ℕ, ¬ (p : ℤ) ∣ (rval : ℤ) ∧
+      (p : ℤ) ^ (padicValInt p (m p) + (if p = 2 then 3 else 1)) ∣ (SP * (rval : ℤ) - m p) := by
+    intro p hp; haveI := Fact.mk (hSprime p hp)
+    exact exists_residue_smul_congr hSPne (hm0 p hp) (hSPval p hp) (hδpos p hp)
+  choose! rval hrval0 hrvalcert using rcert
+  obtain ⟨q, hqp, hqgt, hqres⟩ := exists_prime_prime_pow_residues B hSprime hSnodup
+    (fun p => if p = 2 then 3 else 1) hδpos rval
+    (fun p hp hdvd => hrval0 p hp (Int.natCast_dvd_natCast.mpr hdvd))
+  have hqnotS : q ∉ S := fun hq =>
+    Nat.lt_irrefl q (lt_of_le_of_lt (Nat.le_of_dvd hBpos (hSdvd q hq)) hqgt)
+  set t : ℤ := SP * (q : ℤ) with htdef
+  have ht0 : t ≠ 0 := by rw [htdef]; exact mul_ne_zero hSPne (by exact_mod_cast hqp.ne_zero)
+  have hcong : ∀ p ∈ S, (p : ℤ) ^ (padicValInt p (m p) + (if p = 2 then 3 else 1)) ∣ (t - m p) := by
+    intro p hp; haveI := Fact.mk (hSprime p hp)
+    have hres' : (p : ℤ) ^ (if p = 2 then 3 else 1) ∣ ((q : ℤ) - (rval p : ℤ)) := by
+      have hres := hqres p hp
+      rw [ZMod.natCast_eq_natCast_iff] at hres
+      have h := Nat.modEq_iff_dvd.mp hres
+      rw [show ((p ^ (if p = 2 then 3 else 1) : ℕ) : ℤ) = (p : ℤ) ^ (if p = 2 then 3 else 1) by
+        push_cast; ring] at h
+      have h2 := dvd_neg.mpr h; rwa [neg_sub] at h2
+    have hSPdvd : (p : ℤ) ^ (padicValInt p (m p)) ∣ SP :=
+      (padicValInt_dvd_iff _ SP).mpr (Or.inr (le_of_eq (hSPval p hp).symm))
+    have h1 : (p : ℤ) ^ (padicValInt p (m p) + (if p = 2 then 3 else 1)) ∣
+        (SP * ((q : ℤ) - rval p)) := by rw [pow_add]; exact mul_dvd_mul hSPdvd hres'
+    rw [show t - m p = SP * ((q : ℤ) - rval p) + (SP * (rval p : ℤ) - m p) by rw [htdef]; ring]
+    exact dvd_add h1 (hrvalcert p hp)
+  have htR : (t : ℝ) = ε * (((S.map (fun p => p ^ padicValInt p (m p))).prod : ℕ) : ℝ) * (q : ℝ) := by
+    rw [htdef, hSPdef, ← hsε]; push_cast
+    simp only [List.map_map, Function.comp_def, Int.cast_natCast, mul_comm, mul_left_comm]
+  have hsign : ∀ {x : ℤ}, 0 ≤ (x : ℝ) * ε → 0 ≤ (x : ℝ) * (t : ℝ) := by
+    intro x hx
+    rw [htR, show (x : ℝ) * (ε * (((S.map (fun p => p ^ padicValInt p (m p))).prod : ℕ) : ℝ) * (q : ℝ))
+        = ((x : ℝ) * ε) * ((((S.map (fun p => p ^ padicValInt p (m p))).prod : ℕ) : ℝ) * (q : ℝ)) by ring]
+    exact mul_nonneg hx (by positivity)
+  have h2B : (2 : ℕ) ∣ B := ⟨a.natAbs * b.natAbs * c.natAbs * d.natAbs, by rw [hB]; ring⟩
+  refine quaternary_isotropic_of_symbol_except_q ha hb hc hd ht0 q ?_ ?_ ?_ ?_
+  · exact (represents_real_iff_symbol_linear ha hb ht0).mp
+      ((real_binary_represents_iff (by exact_mod_cast ha) (by exact_mod_cast hb)).mpr
+        (hSab.imp hsign hsign))
+  · exact (represents_real_iff_symbol_linear hc hd ht0).mp
+      ((real_binary_represents_iff (by exact_mod_cast hc) (by exact_mod_cast hd)).mpr
+        (hScd.imp hsign hsign))
+  · intro p hpq
+    by_cases hpS : p ∈ S
+    · haveI := Fact.mk (hSprime p hpS); exact (hmcert p hpS ht0 (hcong p hpS)).1
+    · by_cases hpprime : p.Prime
+      · haveI := Fact.mk hpprime
+        have hpB : ¬ p ∣ B := fun hdvd => hpS (by
+          rw [hSdef, Finset.mem_toList, Nat.mem_primeFactors]; exact ⟨hpprime, hdvd, hBpos.ne'⟩)
+        have hp2 : p ≠ 2 := fun h => hpB (h ▸ h2B)
+        have mkND : ∀ {x : ℤ}, x.natAbs ∣ B → ¬ (p : ℤ) ∣ x := fun {x} hx hh =>
+          hpB ((Int.natAbs_natCast p ▸ Int.natAbs_dvd_natAbs.mpr hh).trans hx)
+        have hpa := mkND (⟨2 * b.natAbs * c.natAbs * d.natAbs, by rw [hB]; ring⟩ : a.natAbs ∣ B)
+        have hpb := mkND (⟨2 * a.natAbs * c.natAbs * d.natAbs, by rw [hB]; ring⟩ : b.natAbs ∣ B)
+        have hpc := mkND (⟨2 * a.natAbs * b.natAbs * d.natAbs, by rw [hB]; ring⟩ : c.natAbs ∣ B)
+        have hpd := mkND (⟨2 * a.natAbs * b.natAbs * c.natAbs, by rw [hB]; ring⟩ : d.natAbs ∣ B)
+        have hpq' : ¬ (p : ℤ) ∣ (q : ℤ) := fun hh =>
+          hpq ((Nat.prime_dvd_prime_iff_eq hpprime hqp).mp (by exact_mod_cast hh))
+        have hpt : ¬ (p : ℤ) ∣ t := by
+          rw [htdef]; intro hh
+          rcases (Nat.prime_iff_prime_int.mp hpprime).dvd_mul.mp hh with h | h
+          · exact not_dvd_sign_mul_prod_pow hs1 S hSprime _ hpprime hpS h
+          · exact hpq' h
+        exact (hilbertPrime_pair_match_good hp2 hpa hpb hpc hpd hpt).1
+      · simp [hilbertPrime, hpprime]
+  · intro p hpq
+    by_cases hpS : p ∈ S
+    · haveI := Fact.mk (hSprime p hpS); exact (hmcert p hpS ht0 (hcong p hpS)).2
+    · by_cases hpprime : p.Prime
+      · haveI := Fact.mk hpprime
+        have hpB : ¬ p ∣ B := fun hdvd => hpS (by
+          rw [hSdef, Finset.mem_toList, Nat.mem_primeFactors]; exact ⟨hpprime, hdvd, hBpos.ne'⟩)
+        have hp2 : p ≠ 2 := fun h => hpB (h ▸ h2B)
+        have mkND : ∀ {x : ℤ}, x.natAbs ∣ B → ¬ (p : ℤ) ∣ x := fun {x} hx hh =>
+          hpB ((Int.natAbs_natCast p ▸ Int.natAbs_dvd_natAbs.mpr hh).trans hx)
+        have hpa := mkND (⟨2 * b.natAbs * c.natAbs * d.natAbs, by rw [hB]; ring⟩ : a.natAbs ∣ B)
+        have hpb := mkND (⟨2 * a.natAbs * c.natAbs * d.natAbs, by rw [hB]; ring⟩ : b.natAbs ∣ B)
+        have hpc := mkND (⟨2 * a.natAbs * b.natAbs * d.natAbs, by rw [hB]; ring⟩ : c.natAbs ∣ B)
+        have hpd := mkND (⟨2 * a.natAbs * b.natAbs * c.natAbs, by rw [hB]; ring⟩ : d.natAbs ∣ B)
+        have hpq' : ¬ (p : ℤ) ∣ (q : ℤ) := fun hh =>
+          hpq ((Nat.prime_dvd_prime_iff_eq hpprime hqp).mp (by exact_mod_cast hh))
+        have hpt : ¬ (p : ℤ) ∣ t := by
+          rw [htdef]; intro hh
+          rcases (Nat.prime_iff_prime_int.mp hpprime).dvd_mul.mp hh with h | h
+          · exact not_dvd_sign_mul_prod_pow hs1 S hSprime _ hpprime hpS h
+          · exact hpq' h
+        exact (hilbertPrime_pair_match_good hp2 hpa hpb hpc hpd hpt).2
+      · simp [hilbertPrime, hpprime]
+
 end SKEFTHawking
