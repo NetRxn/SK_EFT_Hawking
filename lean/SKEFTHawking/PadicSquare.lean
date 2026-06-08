@@ -2507,6 +2507,35 @@ theorem exists_int_coprime_residues (ps : List ℕ) (hps : ∀ p ∈ ps, p.Prime
   rw [← ZMod.intCast_zmod_eq_zero_iff_dvd, hk p hp, CharP.cast_eq_zero_iff (ZMod p) p]
   exact hr p hp
 
+/-- **Valuation of a product of distinct primes.** For a `Nodup` list `T` of primes, the `p`-adic valuation
+of `∏ T` (as an integer) is `1` if `p ∈ T` and `0` otherwise. This is the valuation-fixing factor of the
+rank-4 keystone's global value `t = ε·q·(∏ T)·u`: choosing `T` to be exactly the bad primes at which the local
+common value has *odd* valuation gives `t` the matching valuation parity (so `t / c_p` has even valuation,
+the first half of being a `ℚ_p`-square). -/
+theorem padicValInt_prod_primes {p : ℕ} [Fact p.Prime] :
+    ∀ {T : List ℕ}, (∀ q ∈ T, q.Prime) → T.Nodup →
+      padicValInt p ((T.prod : ℕ) : ℤ) = if p ∈ T then 1 else 0 := by
+  intro T
+  induction T with
+  | nil => intro _ _; simp
+  | cons q T' ih =>
+      intro hT hd
+      have hqp : q.Prime := hT q List.mem_cons_self
+      have hT' : ∀ r ∈ T', r.Prime := fun r hr => hT r (List.mem_cons_of_mem _ hr)
+      have hd' : T'.Nodup := (List.nodup_cons.mp hd).2
+      have hqnt : q ∉ T' := (List.nodup_cons.mp hd).1
+      have hT'0 : T'.prod ≠ 0 := by
+        rw [Ne, List.prod_eq_zero_iff]; exact fun h0 => Nat.not_prime_zero (hT' 0 h0)
+      have hih := ih hT' hd'
+      rw [padicValInt.of_nat] at hih ⊢
+      rw [List.prod_cons, padicValNat.mul hqp.ne_zero hT'0, hih]
+      by_cases hpq : p = q
+      · subst hpq
+        rw [padicValNat.self hqp.one_lt, if_pos List.mem_cons_self, if_neg hqnt]
+      · have hnd : ¬ p ∣ q := fun h => hpq ((Nat.prime_dvd_prime_iff_eq Fact.out hqp).mp h)
+        rw [padicValNat.eq_zero_of_not_dvd hnd]
+        simp only [List.mem_cons, hpq, false_or, Nat.zero_add]
+
 /-- **Equal residues ⟹ square ratio (odd `p`, unit case).** Two `ℤ_[p]` units `u, v` with the same residue
 mod `p` have `u/v` a square in `ℚ_[p]`. (`u·v⁻¹` is a unit with residue `1`, hence a square by
 `isSquare_iff_isSquare_toZMod`.) The valuation-`0` half of the square-class matching in the rank-4 keystone:
