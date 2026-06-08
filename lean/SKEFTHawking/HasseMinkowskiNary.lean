@@ -520,6 +520,42 @@ theorem diag_quaternary_zero_of_local_rat (c : Fin 4 → ℚ) (hc : ∀ i, c i �
       (fun p _ => (diag_iso_rat_int (K := ℚ_[p]) c).mp (hloc p))
   exact (diag_iso_rat_int (K := ℚ) c).mpr key
 
+/-- **`⟨a, R⟩` is isotropic when `R` represents `−a`.** Witness `(1, z)` where `R(z) = −a`. The descent
+direction of the Meyer reduction: once the residual `R` represents `−a` (the descended value), the rank-`(m+1)`
+form `⟨a, R⟩` has a nontrivial zero, feeding the inductive hypothesis. -/
+theorem cons_isotropic_of_repr_neg {K : Type*} [Field K] {m : ℕ} {a : K} (R : Fin m → K)
+    (h : ∃ z : Fin m → K, ∑ i, R i * z i ^ 2 = -a) :
+    ∃ y : Fin (m + 1) → K, y ≠ 0 ∧ ∑ i, (Fin.cons a R : Fin (m + 1) → K) i * y i ^ 2 = 0 := by
+  obtain ⟨z, hz⟩ := h
+  refine ⟨Fin.cons 1 z, ?_, ?_⟩
+  · intro hzero; have := congrFun hzero 0; simp at this
+  · rw [Fin.sum_univ_succ]; simp only [Fin.cons_zero, Fin.cons_succ]; rw [hz]; ring
+
+/-- **A real-isotropic diagonal form is indefinite.** A nontrivial real zero of `∑ cᵢ xᵢ²` (all `cᵢ ≠ 0`)
+forces both a positive and a negative coefficient. (If all had one sign the form would be definite.) Supplies
+the hypotheses of `exists_peel_pair`. -/
+theorem exists_pos_neg_of_real_isotropic {n : ℕ} (c : Fin n → ℝ) (hc : ∀ i, c i ≠ 0)
+    (h : ∃ x : Fin n → ℝ, x ≠ 0 ∧ ∑ i, c i * x i ^ 2 = 0) :
+    (∃ i, 0 < c i) ∧ (∃ j, c j < 0) := by
+  obtain ⟨x, hx0, he⟩ := h
+  obtain ⟨k, hk⟩ := Function.ne_iff.mp hx0
+  simp only [Pi.zero_apply] at hk
+  constructor
+  · by_contra hpos
+    simp only [not_exists, not_lt] at hpos
+    have hlt : ∀ i, c i < 0 := fun i => lt_of_le_of_ne (hpos i) (hc i)
+    have : ∑ i, c i * x i ^ 2 < 0 :=
+      Finset.sum_neg' (fun i _ => mul_nonpos_of_nonpos_of_nonneg (hlt i).le (sq_nonneg _))
+        ⟨k, Finset.mem_univ k, mul_neg_of_neg_of_pos (hlt k) (by positivity)⟩
+    linarith
+  · by_contra hneg
+    simp only [not_exists, not_lt] at hneg
+    have hgt : ∀ i, 0 < c i := fun i => lt_of_le_of_ne (hneg i) (Ne.symm (hc i))
+    have : 0 < ∑ i, c i * x i ^ 2 :=
+      Finset.sum_pos' (fun i _ => mul_nonneg (hgt i).le (sq_nonneg _))
+        ⟨k, Finset.mem_univ k, mul_pos (hgt k) (by positivity)⟩
+    linarith
+
 /-- **Finite bad-prime list.** For nonzero integer coefficients `c`, there is a finite list `S` of primes
 (containing `2`, nodup) outside which every coefficient is coprime to `p` — i.e. a `p`-adic unit. (Take the
 prime factors of `∏ |cᵢ|`, plus `2`.) The good-prime set of the Meyer descent: outside `S` the residual unit
