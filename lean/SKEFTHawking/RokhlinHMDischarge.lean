@@ -21,11 +21,12 @@ diagonalization + signature plumbing and the small-rank (2, 4) cases build on to
 import Mathlib
 import SKEFTHawking.HasseMinkowskiNary
 import SKEFTHawking.PadicSquareTwo
+import SKEFTHawking.LatticeContent
 
 namespace SKEFTHawking
 
 open scoped BigOperators
-open QuadraticMap Matrix
+open QuadraticForm Matrix
 
 /-! ## Signature ⟹ value bricks (for transferring indefiniteness to the diagonalization)
 
@@ -152,5 +153,56 @@ theorem diag_indefinite_rat_zero {n : ℕ} (hn : 5 ≤ n) (c : Fin n → ℤ) (h
         (fun i => Int.cast_ne_zero.mpr (hc i))
     · exact exists_diag_nary_zero_odd_padic hp2 hn (fun i => (c i : ℚ_[p]))
         (fun i => Int.cast_ne_zero.mpr (hc i))
+
+/-! ## Rank-≥5 weak isotropy (the main case of [HM])
+
+For rank `≥ 5`, indefiniteness alone (no even-unimodularity needed) gives an integer isotropic vector:
+diagonalize over ℚ, transfer indefiniteness to the rational weights (`sigPos/sigNeg_cast_pos` +
+`sig*_of_equiv_weightedSumSquares`), then either a zero weight gives a trivial isotropic vector or the
+rank-≥5 local–global wrapper `diag_indefinite_rat_zero` applies to the cleared-denominator integer form. -/
+
+/-- **Weak [HM] for rank ≥ 5.** An indefinite integer Gram form of rank `≥ 5` (positive `sigPos` and
+`sigNeg` over ℝ) has a nonzero integer isotropic vector. Even-unimodularity is *not* required at this rank —
+local isotropy over every `ℚ_p` is automatic for rank-≥5 diagonal forms. -/
+theorem weakIsotropic_of_five_le {m : ℕ} (hm : 5 ≤ m) (A : Matrix (Fin m) (Fin m) ℤ)
+    (hsp : 0 < sigPos (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
+    (hsn : 0 < sigNeg (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap') :
+    ∃ v : Fin m → ℤ, v ≠ 0 ∧ v ⬝ᵥ A *ᵥ v = 0 := by
+  apply exists_int_isotropic_of_rat A
+  set Aq : Matrix (Fin m) (Fin m) ℚ := A.map (Int.cast : ℤ → ℚ) with hAq
+  obtain ⟨w, hwe⟩ := QuadraticForm.equivalent_weightedSumSquares Aq.toQuadraticMap'
+  have hspq : 0 < sigPos Aq.toQuadraticMap' := sigPos_cast_pos A hsp
+  have hsnq : 0 < sigNeg Aq.toQuadraticMap' := sigNeg_cast_pos A hsn
+  rw [sigPos_of_equiv_weightedSumSquares hwe] at hspq
+  rw [sigNeg_of_equiv_weightedSumSquares hwe] at hsnq
+  obtain ⟨ip, hip⟩ : ∃ i, 0 < w i := Set.nonempty_of_ncard_ne_zero hspq.ne'
+  obtain ⟨iN, hiN⟩ : ∃ i, w i < 0 := Set.nonempty_of_ncard_ne_zero hsnq.ne'
+  rw [matrix_isotropic_iff_weighted Aq w hwe]
+  by_cases hz : ∃ i, w i = 0
+  · obtain ⟨i0, hi0⟩ := hz
+    refine ⟨fun j => if j = i0 then 1 else 0, ?_, ?_⟩
+    · intro h; have := congrFun h i0; simp at this
+    · rw [Finset.sum_eq_single i0]
+      · simp [hi0]
+      · intro b _ hb; simp [hb]
+      · intro h; simp at h
+  · simp only [not_exists] at hz
+    have hn : Module.finrank ℚ (Fin m → ℚ) = m := Module.finrank_fin_fun ℚ
+    set d : Fin (Module.finrank ℚ (Fin m → ℚ)) → ℤ := fun i => (w i).num * ((w i).den : ℤ) with hd
+    have hdne : ∀ i, d i ≠ 0 := by
+      intro i; rw [hd]; simp only
+      exact mul_ne_zero (Rat.num_ne_zero.mpr (hz i)) (by exact_mod_cast (w i).den_nz)
+    have hdpos : ∃ i, 0 < d i := ⟨ip, by rw [hd]; positivity⟩
+    have hdneg : ∃ i, d i < 0 := by
+      refine ⟨iN, ?_⟩; rw [hd]; simp only
+      have hnum : (w iN).num < 0 := Rat.num_neg.mpr hiN
+      have hden : (0 : ℤ) < (w iN).den := by exact_mod_cast (w iN).pos
+      exact mul_neg_of_neg_of_pos hnum hden
+    have h5n : 5 ≤ Module.finrank ℚ (Fin m → ℚ) := by rw [hn]; exact hm
+    obtain ⟨x, hx0, hxe⟩ := diag_indefinite_rat_zero h5n d hdne hdpos hdneg
+    have hiff := diag_iso_rat_int (K := ℚ) w
+    simp only [Rat.cast_id] at hiff
+    rw [hiff]
+    exact ⟨x, hx0, hxe⟩
 
 end SKEFTHawking
