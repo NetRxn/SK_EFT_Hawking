@@ -806,3 +806,22 @@ p-adic crux): (i) assemble `bad_prime_R_certificate` (N:=padicValInt p T + 1 odd
 (ii) `diag_reduction_step` (CRT over S=`{2}∪{p∣∏cₖ}`, build a, R-iso ∀ places, IH, `reduction_assembly`);
 (iii) strong-induction spine `diag_nary_zero_of_local`; (iv) p=2 rank-≥5 ℚ₂ isotropy; (v) matrix→ℚ-diagonalize
 → `HasWeakIsotropicVectorHyp`; (vi) wire RokhlinBridge + D2/L2 + registry + closure reviewer.
+
+### 2026-06-08 (cont.⁷) — 🎯 BOTH BAD-PRIME CERTIFICATES COMPLETE (per-place layer fully assembled)
+**+2 commits (kernel-pure, `main`, NOT pushed):**
+- `f3c5e6e6` **`bad_prime_R_certificate_odd`** — odd p: `⟨c₀,c₁,R⟩` iso /ℚ_p ⟹ ∃ integer residue targets
+  `n₀,n₁,N` s.t. ∀ `X₀≡n₀, X₁≡n₁ (mod p^N)`: `a=c₀X₀²+c₁X₁² ≠0` ∧ `R reps −a /ℚ_p`. Full chain assembled
+  (common_value_split ∘ exists_int_sq_ratio_odd ∘ binary_represents_congr_sq ∘ exists_padicInt_binary_rep
+  [T=mᵢ·p^{2M}] ∘ diag_represents_* ∘ appr_bridge ∘ isSquare_padic_div_of_modEq ∘ transfer). N=padicValInt p T+1
+  ⟹ p^N∤T ⟹ a≠0.
+- `6d0f6dca` **`bad_prime_R_certificate_2`** — p=2 analogue (exists_int_sq_ratio_2 + isSquare_2adic_div_of_modEq,
+  N=padicValInt 2 T+3). 🔑 p=2 `padicValInt_dvd_iff` needs `((2:ℕ):ℤ)` form (`exact_mod_cast` the literal `(2:ℤ)`).
+
+**THE ENTIRE PER-PLACE LAYER IS DONE.** Both certificates deliver "R reps −a at bad p"; good odd p =
+`represents_of_units_odd_padic`; ∞ = `diag_real_isotropic_of_signs` (R indefinite via `exists_peel_pair`);
+B reps a = FREE (a=B(X)). **REMAINING = the global assembly `diag_reduction_step`** (the one big composition):
+WLOG integer coeffs (`diag_iso_rat_int`); peel pair (`exists_peel_pair`+`exists_equiv_zero_one`+`diag_reindex_iso`)
+→ cons-shape; bad set `S = primes ∣ 2·∏|cₖ|` (Finset/List); per-p certificate (odd/2 dispatch); CRT
+(`exists_int_prime_pow_residues`) → `X₀,X₁`; `a=c₀X₀²+c₁X₁²`; `g=⟨a,R⟩` loc-iso ∀ places (bad: cert; good odd:
+units since p∤cₖ outside S; ∞: R indef); IH (rank n−1) → `g` iso/ℚ → `reduction_assembly` → reindex back.
+Then: spine `diag_nary_zero_of_local`; p=2 rank-≥5 ℚ₂ isotropy; matrix→diag `HasWeakIsotropicVectorHyp`; wire.
