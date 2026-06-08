@@ -179,6 +179,16 @@ theorem isotropic_padicInt_of_unit_det {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {
     have h := mulVec_update_coord_quadratic A hsymm y j z
     rw [h, ← hFe z]; exact hz
 
+/-- **Weighted sum of squares is the diagonal Gram form.** `∑ wᵢ xᵢ² = x ⬝ᵥ diag(w) *ᵥ x`. The bridge from
+the abstract diagonalization `QuadraticForm.equivalent_weightedSumSquares` to a concrete diagonal matrix,
+so the discriminant `∏ wᵢ = det (diag w)` is exposed for the square-discriminant computation. -/
+theorem weightedSumSquares_eq_diagonal {K : Type*} [CommRing K] {n : ℕ} (w : Fin n → K) :
+    QuadraticMap.weightedSumSquares K w = (Matrix.diagonal w).toQuadraticMap' := by
+  ext x
+  rw [QuadraticMap.weightedSumSquares_apply, toQuadraticMap'_apply, dotProduct]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  simp only [Matrix.mulVec_diagonal, smul_eq_mul, sq]; ring
+
 /-! ## Rank-4 even unimodular forms have determinant `+1`
 
 The signature of a rank-4 even unimodular form is `0` (the `det = -1`, `σ = ±2` shapes do not occur): mod 4,
