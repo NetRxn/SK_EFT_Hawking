@@ -312,6 +312,45 @@ theorem exists_padicInt_binary_rep {p : ℕ} [Fact p.Prime] {c0 c1 w : ℚ_[p]}
   show c0 * ((p:ℚ_[p])^M * u0) ^ 2 + c1 * ((p:ℚ_[p])^M * u1) ^ 2 = w * ((p:ℚ_[p])^M)^2
   rw [← hu]; ring
 
+/-- **Integer divisibility from `ℤ_[p]` divisibility.** If `p^N ∣ k` in `ℤ_[p]` (for an integer `k`), then
+`p^N ∣ k` in `ℤ`. (The `ℤ_[p]` divisibility bounds `‖k‖ ≤ p^{-N}`, which `PadicInt.norm_int_le_pow_iff_dvd`
+reads back as integer divisibility.) -/
+theorem int_dvd_of_padicInt_dvd {p : ℕ} [Fact p.Prime] {k : ℤ} {N : ℕ}
+    (h : (p : ℤ_[p]) ^ N ∣ (k : ℤ_[p])) : (p : ℤ) ^ N ∣ k := by
+  rw [← PadicInt.norm_int_le_pow_iff_dvd]
+  have hb : ‖(k : ℤ_[p])‖ ≤ ‖(p : ℤ_[p]) ^ N‖ := by
+    obtain ⟨c, hc⟩ := h
+    rw [hc, norm_mul]
+    calc ‖(p : ℤ_[p]) ^ N‖ * ‖c‖ ≤ ‖(p : ℤ_[p]) ^ N‖ * 1 :=
+          mul_le_mul_of_nonneg_left c.2 (norm_nonneg _)
+      _ = ‖(p : ℤ_[p]) ^ N‖ := mul_one _
+  rw [norm_pow, PadicInt.norm_p, inv_pow] at hb
+  rw [zpow_neg, zpow_natCast]; convert hb using 2
+
+/-- **Integer residues of a `ℤ_[p]` binary representation.** If `(T : ℚ_[p]) = c₀ v₀² + c₁ v₁²` with
+`v₀, v₁ ∈ ℤ_[p]`, then the integer obtained from the mod-`p^N` residues of `v₀, v₁` is `≡ T (mod p^N)`. This
+is the integer-congruence bridge of the bad-prime descent: with `Xᵢ ≡ vᵢ.appr N`, the global integer value
+`c₀ X₀² + c₁ X₁²` lands `≡ T (mod p^N)`, in `T`'s `ℚ_[p]`-square class. -/
+theorem appr_bridge {p : ℕ} [Fact p.Prime] (c0 c1 : ℤ) (v0 v1 : ℤ_[p]) (T : ℤ) (N : ℕ)
+    (hT : (T : ℚ_[p]) = c0 * (v0 : ℚ_[p]) ^ 2 + c1 * (v1 : ℚ_[p]) ^ 2) :
+    (p : ℤ) ^ N ∣ (c0 * (v0.appr N : ℤ) ^ 2 + c1 * (v1.appr N : ℤ) ^ 2) - T := by
+  apply int_dvd_of_padicInt_dvd
+  have hTz : (T : ℤ_[p]) = c0 * v0 ^ 2 + c1 * v1 ^ 2 := by
+    apply PadicInt.ext; push_cast; linear_combination hT
+  have e0 : (v0.appr N : ℤ_[p]) - v0 ∈ Ideal.span {(p : ℤ_[p]) ^ N} := by
+    rw [show (v0.appr N : ℤ_[p]) - v0 = -(v0 - (v0.appr N : ℤ_[p])) by ring]
+    exact neg_mem (PadicInt.appr_spec N v0)
+  have e1 : (v1.appr N : ℤ_[p]) - v1 ∈ Ideal.span {(p : ℤ_[p]) ^ N} := by
+    rw [show (v1.appr N : ℤ_[p]) - v1 = -(v1 - (v1.appr N : ℤ_[p])) by ring]
+    exact neg_mem (PadicInt.appr_spec N v1)
+  have key : ((c0 * (v0.appr N : ℤ) ^ 2 + c1 * (v1.appr N : ℤ) ^ 2 : ℤ) : ℤ_[p]) - (T : ℤ_[p])
+      = c0 * (((v0.appr N : ℤ_[p]) - v0) * ((v0.appr N : ℤ_[p]) + v0))
+        + c1 * (((v1.appr N : ℤ_[p]) - v1) * ((v1.appr N : ℤ_[p]) + v1)) := by
+    rw [hTz]; push_cast; ring
+  rw [← Ideal.mem_span_singleton, Int.cast_sub, key]
+  exact Ideal.add_mem _ (Ideal.mul_mem_left _ _ (Ideal.mul_mem_right _ _ e0))
+    (Ideal.mul_mem_left _ _ (Ideal.mul_mem_right _ _ e1))
+
 /-- **Common value of the leading binary and the residual (per place).** Over a field with `Invertible 2`,
 if the diagonal form `⟨c₀, c₁, R⟩` (`R : Fin m → K`, `m ≥ 1`, all coefficients nonzero) is isotropic, then
 there is a nonzero `w` represented by the binary `⟨c₀, c₁⟩` with `−w` represented by `R`. (From a zero
