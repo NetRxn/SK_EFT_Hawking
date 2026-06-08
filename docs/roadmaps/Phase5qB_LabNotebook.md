@@ -807,6 +807,38 @@ p-adic crux): (i) assemble `bad_prime_R_certificate` (N:=padicValInt p T + 1 odd
 (iii) strong-induction spine `diag_nary_zero_of_local`; (iv) p=2 rank-≥5 ℚ₂ isotropy; (v) matrix→ℚ-diagonalize
 → `HasWeakIsotropicVectorHyp`; (vi) wire RokhlinBridge + D2/L2 + registry + closure reviewer.
 
+### 2026-06-08 (cont.¹²) — HM-discharge ASSEMBLY started: rank-≥5 local-global wrapper shipped
+
+- `d01512eb` **`diag_indefinite_rat_zero`** (new file `RokhlinHMDischarge.lean`) — rank-≥5 indefinite
+  integer diagonal forms are ℚ-isotropic. Combines `diag_nary_zero_of_local` (the spine) with the now-TOTAL
+  local inputs: ℝ (`diag_real_isotropic_of_signs`), odd p (`exists_diag_nary_zero_odd_padic`), p=2 (the new
+  `exists_diag_nary_zero_2adic`). Kernel-pure. **This is the direct payoff of the closed frontier.**
+
+**REMAINING to discharge `HasWeakIsotropicVectorHyp` + wire (no walls; mechanical but voluminous):**
+- **Signature base-change** (the key next sub-brick): for the ℚ-diagonalization `A_ℚ ≃ wSS ℚ w` (from
+  `QuadraticForm.equivalent_weightedSumSquares`), transfer to ℝ so that `sigPos_of_equiv_weightedSumSquares`
+  gives `#{i | (w i:ℝ)>0} = sigPos(A_ℝ)` and `#{(w i:ℝ)<0} = sigNeg(A_ℝ)`. Then `sigPos>0 ⟹ ∃ c_i>0`,
+  `sigNeg>0 ⟹ ∃ c_j<0` (signs of the cleared-denominator integer `c` = signs of `w`). USE
+  `QuadraticForm.sigPos_of_equiv_weightedSumSquares` (Mathlib, confirmed: `Equivalent Q (wSS 𝕜 w) → sigPos Q
+  = {i|0<w i}.ncard`) + a ℚ→ℝ base change of the `Equivalent`. (Mathlib API to locate/build: base-change of
+  `QuadraticMap.Equivalent` / `Matrix.toQuadraticMap'` along `algebraMap ℚ ℝ`.)
+- **Matrix↔diagonal bridge:** `matrix_isotropic_iff_weighted` (already shipped, HasseMinkowskiLocal) gives
+  `A_K iso ⟺ ⟨w⟩ iso` from the equivalence — no matrix `P` extraction needed. + `diag_iso_rat_int` /
+  `exists_diag_isotropic_congr_sq` to pass between ℚ-weights `w` and integer `c`, + `exists_int_isotropic_of_rat`.
+- **Rank case-split** (the spine `diag_nary_zero_of_local` handles all ranks given hloc, but hloc for the
+  ℚ-diagonal needs rank ≥5 for the generic p lemmas):
+  - rank ≥ 6 (≥5): the wrapper `diag_indefinite_rat_zero` (DONE).
+  - rank 2: ELEMENTARY — even unimod indefinite ⟹ det A = −1 ⟹ binary disc `b²−4ac = 1` (perfect square) ⟹
+    explicit integer isotropic vector `(−b+1, 2a)` (case `a=0`: `(1,0)`). [worked out, not yet formalized]
+  - rank 4 (σ=0): the LONE residual needing even-unimodular ℤ₂ structure (contains U) at p=2; odd p is fine via
+    matrix-direct Chevalley–Warning (`finite_field_form_isotropic`, shipped) + Hensel (gradient `2Av`, p odd,
+    unimodular ⟹ ≢0). NOTE indefinite even unimod has σ=0 for rank < 10, so the recursion (peel H, σ=0 stays
+    (p,p)) DOES reach rank 4 → must be handled.
+- **Wire:** prove `HasWeakIsotropicVectorHyp` (case-split), feed `hasIsotropic_of_weak` → drop `eight_dvd`/
+  Rokhlin hyp from `RokhlinBridge.sixteen_convergence_full`; update D2/L2 + HYPOTHESIS_REGISTRY; root-import
+  `PadicSquareTwo` + `RokhlinHMDischarge` (+ `HasseMinkowskiNary`/`HasseMinkowskiGlobal` if not yet) →
+  project-gate `ExtractDeps` → closure reviewer.
+
 ### 2026-06-08 (cont.¹¹) — 🎯🎯🎯 p=2 RANK-≥5 ℚ₂ LOCAL ISOTROPY COMPLETE (the frontier is CLOSED)
 
 **THE LAST MATHEMATICAL FRONTIER IS BEHIND US.** New file `PadicSquareTwo.lean` (kernel-pure
