@@ -2287,6 +2287,18 @@ theorem binary_represents_padic_even_val_int {p : ℕ} [Fact p.Prime] (hp : p �
   binary_represents_padic_even_val hp (padic_norm_intCast_eq_one ha) (padic_norm_intCast_eq_one hb)
     (by exact_mod_cast ht) hv
 
+/-- **Good-prime representability keyed on `padicValInt = 0`.** Over `ℚ_[p]` (odd `p`) with `p ∤ a`, `p ∤ b`
+and `padicValInt p t = 0` (i.e. `p ∤ t`), `⟨a,b⟩` represents `t`. This is the form the rank-4 keystone
+assembly actually produces: the constructed value `t = ε·q·∏T` has `padicValInt p t = (if p ∈ q::T then 1
+else 0)` (`padicValInt_prod_primes`), so at every good odd prime `p ∉ {q}∪T` this is `0` and `⟨a,b⟩`
+represents `t`. Bridges `padicValInt` (the assembly's valuation API) to the `ℚ_[p]`-valuation hypothesis of
+`binary_represents_padic_even_val_int` via `Padic.valuation_intCast`. -/
+theorem binary_represents_padic_val_zero_int {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b t : ℤ}
+    (ha : ¬ (p : ℤ) ∣ a) (hb : ¬ (p : ℤ) ∣ b) (ht : t ≠ 0) (hv : padicValInt p t = 0) :
+    ∃ u v : ℚ_[p], (a : ℚ_[p]) * u ^ 2 + (b : ℚ_[p]) * v ^ 2 = (t : ℚ_[p]) := by
+  refine binary_represents_padic_even_val_int hp ha hb ht ?_
+  rw [Padic.valuation_intCast, hv]; simp
+
 /-- **Good-prime symbol conditions are automatic.** At an odd prime `p` dividing none of `a, b, c, d, t`,
 the linear-symbol conditions `(t, −ab)_p = (a,b)_p` and `(t, −cd)_p = (c,d)_p` hold trivially — both sides are
 `1` (`hilbertPadicInt_units`, since all coordinates are `p`-adic units). This is why the global common-value
