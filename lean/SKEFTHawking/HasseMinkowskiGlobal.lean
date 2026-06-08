@@ -179,6 +179,23 @@ theorem hilbertPrime_pair_match_of_congr_2 {a b c d : ℤ}
   exact ⟨(represents_padic_iff_hilbertPrime_linear ha hb ht).mp hrab,
          (represents_padic_iff_hilbertPrime_linear hc hd ht).mp hrcd⟩
 
+/-- **Unified symbol-form bad-place certificate (all primes).** From local quaternary isotropy over `ℚ_[p]`
+(any prime `p`), an integer common value `m ≠ 0` such that every `t ≡ m (mod p^{v_p(m)+δ})`
+(`δ = 3` at `p = 2`, `δ = 1` at odd `p`) matches *both* families' Hilbert symbols at `p`. Dispatches
+`hilbertPrime_pair_match_of_congr_2` / `_odd`. This is the per-bad-prime input the global-`t` construction
+consumes uniformly over the bad set `S` (no per-prime `2`-vs-odd case split needed at the assembly level). -/
+theorem hilbertPrime_pair_match_of_congr {p : ℕ} [Fact p.Prime] {a b c d : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hiso : ∃ x y z w : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 = (c : ℚ_[p]) * z ^ 2 + (d : ℚ_[p]) * w ^ 2) :
+    ∃ m : ℤ, m ≠ 0 ∧ ∀ {t : ℤ}, t ≠ 0 →
+        (p : ℤ) ^ (padicValInt p m + (if p = 2 then 3 else 1)) ∣ (t - m) →
+      hilbertPrime p t (-(a * b)) = hilbertPrime p a b ∧
+      hilbertPrime p t (-(c * d)) = hilbertPrime p c d := by
+  by_cases hp2 : p = 2
+  · subst hp2; simpa using hilbertPrime_pair_match_of_congr_2 ha hb hc hd hiso
+  · simpa [hp2] using hilbertPrime_pair_match_of_congr_odd hp2 ha hb hc hd hiso
+
 /-- **Good-place symbol coverage (unified `hilbertPrime` form).** At an odd prime `p` dividing none of
 `a, b, c, d, t`, both families' Hilbert symbols match automatically: `(t,−ab)_p = (a,b)_p` and
 `(t,−cd)_p = (c,d)_p` (both `= 1`). The `hilbertPrime`-level wrapper of `good_prime_symbol_auto` (via
