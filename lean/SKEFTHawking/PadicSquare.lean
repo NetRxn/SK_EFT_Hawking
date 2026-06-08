@@ -2196,6 +2196,18 @@ theorem exists_prime_gt_isSquare_pair (N : ℕ) {m n : ℤ} (hm : m ≠ 0) (hn :
   · exact isSquare_intCast_zmod_of_modEq hq8 (mkdvd hn (fun p' _ hpn => by
       rw [hM]; exact (Dvd.dvd.mul_left hpn (8 * m.natAbs))))
 
+/-- **Plain Dirichlet selection: a prime in a prescribed unit residue class.** For any modulus `D`, unit
+target `r : ZMod D`, and bound `N`, there is a prime `q > N` with `q ≡ r (mod D)` (the ZMod-unit form of
+Dirichlet, `Nat.forall_exists_prime_gt_and_eq_mod`). Unlike `exists_prime_gt_eq_mod_isSquare` this imposes NO
+square condition — it is the consistency-free Dirichlet step of the *clean* keystone construction, where the
+auxiliary prime's only job is to set the unit residue of `t = (S-part)·q` at the bad places (a coprime residue
+class, always realizable); the `q`-place Hilbert symbols are then recovered *for free* from the product formula
+(`hilbertPrime_eq_of_others`), dissolving the per-prime QR conflict entirely. -/
+theorem exists_prime_gt_eq_mod (N : ℕ) {D : ℕ} [NeZero D] {r : ZMod D} (hr : IsUnit r) :
+    ∃ q : ℕ, q.Prime ∧ N < q ∧ (q : ZMod D) = r := by
+  obtain ⟨q, hqN, hqp, hqr⟩ := Nat.forall_exists_prime_gt_and_eq_mod hr N
+  exact ⟨q, hqp, hqN, hqr⟩
+
 /-- **Flexible Dirichlet selection (the Serre Thm 4 construction engine).** Given a modulus `D` with
 `8 ∣ D`, a *unit* target `r : ZMod D` whose canonical representative is `≡ 1 (mod 8)` and is a quadratic
 residue mod every prime factor `p` of `|m|` (all of which are required to divide `D`), there is a prime
