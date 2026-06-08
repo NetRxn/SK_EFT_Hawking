@@ -25,6 +25,38 @@ import SKEFTHawking.PadicSquareTwo
 namespace SKEFTHawking
 
 open scoped BigOperators
+open QuadraticMap
+
+/-! ## Signature ⟹ value bricks (for transferring indefiniteness to the diagonalization)
+
+`sigPos > 0`/`sigNeg > 0` of a form means it takes a positive/negative value. The reusable direction we need
+(a positive value forces `sigPos ≥ 1`) is `le_sigPos_of_posDef` applied to the line spanned by that value. -/
+
+/-- A positive value of a quadratic form forces `1 ≤ sigPos` (the line it spans is positive-definite). -/
+theorem one_le_sigPos_of_pos_value {K M : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
+    [AddCommGroup M] [Module K M] [Module.Finite K M] (Q : QuadraticForm K M) (x : M)
+    (hx : 0 < Q x) : 1 ≤ sigPos Q := by
+  have hx0 : x ≠ 0 := by rintro rfl; simp at hx
+  have hposdef : (Q.restrict (Submodule.span K {x})).PosDef := by
+    intro v hv
+    obtain ⟨t, ht⟩ := Submodule.mem_span_singleton.mp v.2
+    have hvval : (v : M) = t • x := ht.symm
+    have htne : t ≠ 0 := by
+      rintro rfl; simp only [zero_smul] at hvval
+      exact hv (Subtype.ext (by simpa using hvval))
+    show 0 < Q.restrict _ v
+    rw [QuadraticMap.restrict_apply, hvval, QuadraticMap.map_smul, smul_eq_mul]
+    exact mul_pos (mul_self_pos.mpr htne) hx
+  have hfr : Module.finrank K (Submodule.span K {x}) = 1 := finrank_span_singleton hx0
+  calc 1 = Module.finrank K (Submodule.span K {x}) := hfr.symm
+    _ ≤ sigPos Q := le_sigPos_of_posDef Q hposdef
+
+/-- A negative value of a quadratic form forces `1 ≤ sigNeg` (via `sigNeg Q = sigPos (-Q)`). -/
+theorem one_le_sigNeg_of_neg_value {K M : Type*} [Field K] [LinearOrder K] [IsStrictOrderedRing K]
+    [AddCommGroup M] [Module K M] [Module.Finite K M] (Q : QuadraticForm K M) (x : M)
+    (hx : Q x < 0) : 1 ≤ sigNeg Q := by
+  rw [← sigPos_neg]
+  exact one_le_sigPos_of_pos_value (-Q) x (by rw [QuadraticMap.neg_apply]; exact neg_pos.mpr hx)
 
 /-- **Local–global for an indefinite integer diagonal form (rank ≥ 5).** A diagonal form `∑ cᵢ xᵢ²` of
 rank `n ≥ 5` with nonzero integer coefficients that is indefinite over ℝ (a positive and a negative
