@@ -259,4 +259,30 @@ theorem weakIsotropic_rank_two (A : Matrix (Fin 2) (Fin 2) ℤ) (hA : IsEvenUnim
         Matrix.cons_val_one]
       rw [h10]; linear_combination (A 0 0) * hdv
 
+/-- **No `1×1` even unimodular form.** Its determinant `A₀₀` is both `±1` (unimodular) and even, impossible. -/
+theorem not_evenUnimodular_one (A : Matrix (Fin 1) (Fin 1) ℤ) (hA : IsEvenUnimodular A) : False := by
+  obtain ⟨_, hdet, heven⟩ := hA
+  obtain ⟨a, ha⟩ := heven 0
+  rcases hdet with h | h <;> rw [Matrix.det_fin_one, ha] at h <;> omega
+
+/-- **No `3×3` even unimodular form.** Reducing mod 2: a zero-diagonal symmetric `3×3` matrix has
+`det = 8abc - 2a·A₁₂² - 2c·A₀₁² + 2·A₀₁A₁₂A₀₂ - 2b·A₀₂²`, every term even, so `2 ∣ det`, contradicting
+`det = ±1`. (This is the rank-3 instance of "even unimodular ⟹ even rank", avoiding general char-2
+Pfaffian machinery.) -/
+theorem not_evenUnimodular_three (A : Matrix (Fin 3) (Fin 3) ℤ) (hA : IsEvenUnimodular A) : False := by
+  obtain ⟨hsym, hdet, heven⟩ := hA
+  have s01 : A 1 0 = A 0 1 := by
+    have h := congrFun (congrFun hsym 0) 1; simpa [Matrix.transpose_apply] using h
+  have s02 : A 2 0 = A 0 2 := by
+    have h := congrFun (congrFun hsym 0) 2; simpa [Matrix.transpose_apply] using h
+  have s12 : A 2 1 = A 1 2 := by
+    have h := congrFun (congrFun hsym 1) 2; simpa [Matrix.transpose_apply] using h
+  obtain ⟨a, ha⟩ := heven 0
+  obtain ⟨b, hb⟩ := heven 1
+  obtain ⟨c, hc⟩ := heven 2
+  have hdvd : (2 : ℤ) ∣ A.det :=
+    ⟨4 * a * b * c - a * (A 1 2) ^ 2 - c * (A 0 1) ^ 2 + (A 0 1) * (A 1 2) * (A 0 2) - b * (A 0 2) ^ 2, by
+      rw [Matrix.det_fin_three, ha, hb, hc, s01, s02, s12]; ring⟩
+  rcases hdet with h | h <;> rw [h] at hdvd <;> norm_num at hdvd
+
 end SKEFTHawking
