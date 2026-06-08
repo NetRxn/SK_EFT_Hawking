@@ -592,4 +592,69 @@ theorem bad_prime_R_certificate_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {m :
   exact diag_represents_of_isSquare_ratio Rq (neg_ne_zero.mpr hTQ0)
     (by rw [neg_div_neg_eq]; exact hsqaT) hRT
 
+/-- **Bad-prime descent certificate at `p = 2`.** The `p = 2` analogue of `bad_prime_R_certificate_odd`,
+using `exists_int_sq_ratio_2` and `isSquare_2adic_div_of_modEq` (modulus exponent `N = padicValInt 2 T + 3`).
+`2 ∈ S` always, so this is mandatory. -/
+theorem bad_prime_R_certificate_2 {m : ℕ} (hm : 0 < m)
+    {c0 c1 : ℤ} (hc0 : c0 ≠ 0) (hc1 : c1 ≠ 0) (Rq : Fin m → ℚ_[2]) (hRq : ∀ i, Rq i ≠ 0)
+    (hiso : ∃ x : Fin (m + 2) → ℚ_[2], x ≠ 0 ∧
+      ∑ i, (Fin.cons (c0 : ℚ_[2]) (Fin.cons (c1 : ℚ_[2]) Rq : Fin (m + 1) → ℚ_[2]) :
+        Fin (m + 2) → ℚ_[2]) i * x i ^ 2 = 0) :
+    ∃ (n0 n1 : ℤ) (N : ℕ), ∀ X0 X1 : ℤ, (2 : ℤ) ^ N ∣ X0 - n0 → (2 : ℤ) ^ N ∣ X1 - n1 →
+      c0 * X0 ^ 2 + c1 * X1 ^ 2 ≠ 0 ∧
+      ∃ y : Fin m → ℚ_[2], ∑ i, Rq i * y i ^ 2 = -((c0 * X0 ^ 2 + c1 * X1 ^ 2 : ℤ) : ℚ_[2]) := by
+  haveI : Invertible (2 : ℚ_[2]) := invertibleOfNonzero (by norm_num)
+  have hc0Q : (c0 : ℚ_[2]) ≠ 0 := by exact_mod_cast hc0
+  have hc1Q : (c1 : ℚ_[2]) ≠ 0 := by exact_mod_cast hc1
+  obtain ⟨w, hw0, hBw, hRw⟩ := exists_common_value_split hm Rq hc0Q hc1Q hRq hiso
+  obtain ⟨mi, hmi0, hsq⟩ := exists_int_sq_ratio_2 hw0
+  obtain ⟨s, hs⟩ := hsq
+  have hmiQ : (mi : ℚ_[2]) ≠ 0 := by exact_mod_cast hmi0
+  have hs0 : s ≠ 0 := by
+    rintro rfl; rw [mul_zero, div_eq_zero_iff] at hs; exact hw0 (hs.resolve_right hmiQ)
+  have hweq : w = (mi : ℚ_[2]) * s ^ 2 := by field_simp at hs; linear_combination hs
+  have hBm : ∃ u0 u1 : ℚ_[2], (c0 : ℚ_[2]) * u0 ^ 2 + (c1 : ℚ_[2]) * u1 ^ 2 = (mi : ℚ_[2]) := by
+    rw [binary_represents_congr_sq hs0]
+    obtain ⟨u0, u1, h⟩ := hBw; exact ⟨u0, u1, by rw [h, hweq]⟩
+  obtain ⟨M, v0, v1, hv⟩ := exists_padicInt_binary_rep hBm
+  set T : ℤ := mi * (2 : ℤ) ^ (2 * M) with hTdef
+  have hT0 : T ≠ 0 := mul_ne_zero hmi0 (pow_ne_zero _ (by norm_num))
+  have hTQ0 : ((T : ℤ) : ℚ_[2]) ≠ 0 := by exact_mod_cast hT0
+  have hTQ : ((T : ℤ) : ℚ_[2]) = (c0 : ℚ_[2]) * (v0 : ℚ_[2]) ^ 2 + (c1 : ℚ_[2]) * (v1 : ℚ_[2]) ^ 2 := by
+    rw [hv, hTdef]; push_cast; ring
+  have hsqr : IsSquare ((-(mi : ℚ_[2])) / (-w)) := by
+    rw [neg_div_neg_eq, hweq]; refine ⟨s⁻¹, ?_⟩; field_simp
+  have hRm : ∃ y : Fin m → ℚ_[2], ∑ i, Rq i * y i ^ 2 = -(mi : ℚ_[2]) :=
+    diag_represents_of_isSquare_ratio Rq (neg_ne_zero.mpr hw0) hsqr hRw
+  have hRT : ∃ y : Fin m → ℚ_[2], ∑ i, Rq i * y i ^ 2 = -((T : ℤ) : ℚ_[2]) := by
+    obtain ⟨y, hy⟩ := diag_represents_congr_sq Rq (s := (2 : ℚ_[2]) ^ M) hRm
+    exact ⟨y, by rw [hy, hTdef]; push_cast; ring⟩
+  set N := padicValInt 2 T + 3 with hNdef
+  refine ⟨(v0.appr N : ℤ), (v1.appr N : ℤ), N, fun X0 X1 hX0 hX1 => ?_⟩
+  set a : ℤ := c0 * X0 ^ 2 + c1 * X1 ^ 2 with hadef
+  have hcong : (2 : ℤ) ^ N ∣ a - T := by
+    have hbr := appr_bridge (p := 2) c0 c1 v0 v1 T N hTQ
+    have hd0 : (2 : ℤ) ^ N ∣ X0 ^ 2 - (v0.appr N : ℤ) ^ 2 := by
+      rw [show X0 ^ 2 - (v0.appr N : ℤ) ^ 2 = (X0 - (v0.appr N : ℤ)) * (X0 + (v0.appr N : ℤ)) by ring]
+      exact Dvd.dvd.mul_right hX0 _
+    have hd1 : (2 : ℤ) ^ N ∣ X1 ^ 2 - (v1.appr N : ℤ) ^ 2 := by
+      rw [show X1 ^ 2 - (v1.appr N : ℤ) ^ 2 = (X1 - (v1.appr N : ℤ)) * (X1 + (v1.appr N : ℤ)) by ring]
+      exact Dvd.dvd.mul_right hX1 _
+    have heq : a - T = (c0 * (X0 ^ 2 - (v0.appr N : ℤ) ^ 2) + c1 * (X1 ^ 2 - (v1.appr N : ℤ) ^ 2))
+        + ((c0 * (v0.appr N : ℤ) ^ 2 + c1 * (v1.appr N : ℤ) ^ 2) - T) := by rw [hadef]; ring
+    rw [heq]
+    exact dvd_add (dvd_add (Dvd.dvd.mul_left hd0 _) (Dvd.dvd.mul_left hd1 _)) hbr
+  have ha0 : a ≠ 0 := by
+    intro h
+    rw [h, zero_sub, dvd_neg] at hcong
+    have hcong2 : ((2 : ℕ) : ℤ) ^ (padicValInt 2 T + 3) ∣ T := by rw [hNdef] at hcong; exact_mod_cast hcong
+    rw [padicValInt_dvd_iff] at hcong2
+    rcases hcong2 with h' | h'
+    · exact hT0 h'
+    · omega
+  refine ⟨ha0, ?_⟩
+  have hsqaT : IsSquare ((a : ℚ_[2]) / (T : ℚ_[2])) := isSquare_2adic_div_of_modEq ha0 hT0 hcong
+  exact diag_represents_of_isSquare_ratio Rq (neg_ne_zero.mpr hTQ0)
+    (by rw [neg_div_neg_eq]; exact hsqaT) hRT
+
 end SKEFTHawking
