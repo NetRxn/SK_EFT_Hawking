@@ -146,4 +146,37 @@ theorem quaternary_isotropic_of_symbol_keystone {a b c d : ℤ}
   · obtain ⟨u, v, h⟩ := hRcd'; exact ⟨u, v, by push_cast at h ⊢; linear_combination h⟩
   · intro p _; obtain ⟨u, v, h⟩ := hloccd p; exact ⟨u, v, by push_cast at h ⊢; linear_combination h⟩
 
+/-- **Symbol-form bad-place certificate (odd `p`).** From local quaternary isotropy over `ℚ_[p]` (odd `p`),
+an integer common value `m ≠ 0` such that every integer `t ≡ m (mod p^{v_p(m)+1})` matches *both* families'
+Hilbert symbols at `p`: `(t,−ab)_p = (a,b)_p` and `(t,−cd)_p = (c,d)_p` (in the unified `hilbertPrime` form).
+The representation certificate `binary_pair_represents_of_congr_odd` converted to the symbol currency the
+keystone construction works in (`represents_padic_iff_hilbertPrime_linear`). At each bad odd prime the
+prime-power-CRT value of the construction matches both symbols. -/
+theorem hilbertPrime_pair_match_of_congr_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b c d : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hiso : ∃ x y z w : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 = (c : ℚ_[p]) * z ^ 2 + (d : ℚ_[p]) * w ^ 2) :
+    ∃ m : ℤ, m ≠ 0 ∧ ∀ {t : ℤ}, t ≠ 0 → (p : ℤ) ^ (padicValInt p m + 1) ∣ (t - m) →
+      hilbertPrime p t (-(a * b)) = hilbertPrime p a b ∧
+      hilbertPrime p t (-(c * d)) = hilbertPrime p c d := by
+  obtain ⟨m, hm, hcert⟩ := binary_pair_represents_of_congr_odd hp ha hb hc hd hiso
+  refine ⟨m, hm, fun {t} ht hcong => ?_⟩
+  obtain ⟨hrab, hrcd⟩ := hcert ht hcong
+  exact ⟨(represents_padic_iff_hilbertPrime_linear ha hb ht).mp hrab,
+         (represents_padic_iff_hilbertPrime_linear hc hd ht).mp hrcd⟩
+
+/-- **Symbol-form bad-place certificate at `p = 2`** (the `p = 2` analogue, mod `2^{v_2(m)+3}`). -/
+theorem hilbertPrime_pair_match_of_congr_2 {a b c d : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hiso : ∃ x y z w : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[2]) * x ^ 2 + (b : ℚ_[2]) * y ^ 2 = (c : ℚ_[2]) * z ^ 2 + (d : ℚ_[2]) * w ^ 2) :
+    ∃ m : ℤ, m ≠ 0 ∧ ∀ {t : ℤ}, t ≠ 0 → (2 : ℤ) ^ (padicValInt 2 m + 3) ∣ (t - m) →
+      hilbertPrime 2 t (-(a * b)) = hilbertPrime 2 a b ∧
+      hilbertPrime 2 t (-(c * d)) = hilbertPrime 2 c d := by
+  obtain ⟨m, hm, hcert⟩ := binary_pair_represents_of_congr_2 ha hb hc hd hiso
+  refine ⟨m, hm, fun {t} ht hcong => ?_⟩
+  obtain ⟨hrab, hrcd⟩ := hcert ht hcong
+  exact ⟨(represents_padic_iff_hilbertPrime_linear ha hb ht).mp hrab,
+         (represents_padic_iff_hilbertPrime_linear hc hd ht).mp hrcd⟩
+
 end SKEFTHawking
