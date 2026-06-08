@@ -864,4 +864,88 @@ theorem diag_reduction_step_cons {m : ℕ} (hm3 : 3 ≤ m) {c0 c1 : ℤ} (hc0 : 
     refine ⟨z, hz0, ?_⟩; rw [← hze]; refine Finset.sum_congr rfl (fun i _ => ?_); rw [hg, cast_cons_int]
   exact reduction_assembly (a := (a : ℚ)) (by exact_mod_cast ha0) hB hgcast
 
+/-! ### General-rank diagonal Hasse–Minkowski (the spine) -/
+
+/-- **General-rank diagonal Hasse–Minkowski (integer coefficients).** For any nonzero integer coefficients
+`c : Fin n → ℤ`, the diagonal form `∑ cᵢ xᵢ²` has a nontrivial rational zero iff it has one over ℝ and over
+every `ℚ_[p]`. Proved by strong recursion on `n`: ranks `n ≤ 1` are vacuous (no real zero of a definite form),
+`n = 2, 3, 4` are the shipped base cases (`diag_binary/ternary/quaternary_zero_*`), and `n ≥ 5` is the Meyer
+descent (`diag_reduction_step_cons`) after peeling two coordinates of the majority real sign to the front
+(`exists_peel_pair` + `exists_equiv_zero_one` + `diag_reindex_iso`), recursing at rank `n − 1`.
+
+This is the local–global principle in full generality (Hasse–Minkowski + Meyer); for indefinite even
+unimodular forms the local hypotheses are automatic (indefinite over ℝ; rank-`≥5` isotropy over every
+`ℚ_[p]`), which is the route to unconditional `16 ∣ σ`. -/
+theorem diag_nary_zero_of_local : ∀ (n : ℕ) (c : Fin n → ℤ), (∀ i, c i ≠ 0) →
+    (∃ x : Fin n → ℝ, x ≠ 0 ∧ ∑ i, (c i : ℝ) * x i ^ 2 = 0) →
+    (∀ (p : ℕ) [Fact p.Prime], ∃ x : Fin n → ℚ_[p], x ≠ 0 ∧ ∑ i, (c i : ℚ_[p]) * x i ^ 2 = 0) →
+    ∃ x : Fin n → ℚ, x ≠ 0 ∧ ∑ i, (c i : ℚ) * x i ^ 2 = 0
+  | 0, c, _, hR, _ => by obtain ⟨x, hx0, _⟩ := hR; exact absurd (Subsingleton.elim x 0) hx0
+  | 1, c, hc, hR, _ => by
+      obtain ⟨x, hx0, he⟩ := hR
+      rw [Fin.sum_univ_one] at he
+      have hc0 : (c 0 : ℝ) ≠ 0 := Int.cast_ne_zero.mpr (hc 0)
+      have hx00 : x 0 = 0 :=
+        pow_eq_zero_iff (by norm_num) |>.mp ((mul_eq_zero.mp he).resolve_left hc0)
+      exact absurd (funext fun i => by rw [Subsingleton.elim i 0]; exact hx00) hx0
+  | 2, c, hc, hR, hloc => by
+      exact diag_binary_zero_sum (fun i => (c i : ℚ)) (Int.cast_ne_zero.mpr (hc 0))
+        ⟨hR.choose, hR.choose_spec.1, by have := hR.choose_spec.2; push_cast at this ⊢; convert this using 2⟩
+        (fun p _ => ⟨(hloc p).choose, (hloc p).choose_spec.1, by
+          have := (hloc p).choose_spec.2; push_cast at this ⊢; convert this using 2⟩)
+  | 3, c, hc, hR, hloc => by
+      exact diag_ternary_zero_sum (fun i => (c i : ℚ)) (Int.cast_ne_zero.mpr (hc 0))
+        (Int.cast_ne_zero.mpr (hc 1)) (Int.cast_ne_zero.mpr (hc 2))
+        ⟨hR.choose, hR.choose_spec.1, by have := hR.choose_spec.2; push_cast at this ⊢; convert this using 2⟩
+        (fun p _ => ⟨(hloc p).choose, (hloc p).choose_spec.1, by
+          have := (hloc p).choose_spec.2; push_cast at this ⊢; convert this using 2⟩)
+  | 4, c, hc, hR, hloc => by
+      exact diag_quaternary_zero_of_local_rat (fun i => (c i : ℚ)) (fun i => Int.cast_ne_zero.mpr (hc i))
+        ⟨hR.choose, hR.choose_spec.1, by have := hR.choose_spec.2; push_cast at this ⊢; convert this using 2⟩
+        (fun p _ => ⟨(hloc p).choose, (hloc p).choose_spec.1, by
+          have := (hloc p).choose_spec.2; push_cast at this ⊢; convert this using 2⟩)
+  | (m + 5), c, hc, hR, hloc => by
+      have hposneg := exists_pos_neg_of_real_isotropic (fun i => (c i : ℝ))
+        (fun i => Int.cast_ne_zero.mpr (hc i)) hR
+      obtain ⟨i, j, hij, ⟨k, hki, hkj, hk⟩, ⟨l, hli, hlj, hl⟩⟩ :=
+        exists_peel_pair (by omega) (fun i => (c i : ℝ)) (fun i => Int.cast_ne_zero.mpr (hc i))
+          hposneg.1 hposneg.2
+      obtain ⟨e, he0, he1⟩ := exists_equiv_zero_one i j hij
+      have hkss : ∃ t : Fin (m + 3), e.symm k = t.succ.succ :=
+        exists_eq_succ_succ _ (fun h => hki (by rw [← he0, ← h, Equiv.apply_symm_apply]))
+          (fun h => hkj (by rw [← he1, ← h, Equiv.apply_symm_apply]))
+      have hlss : ∃ t : Fin (m + 3), e.symm l = t.succ.succ :=
+        exists_eq_succ_succ _ (fun h => hli (by rw [← he0, ← h, Equiv.apply_symm_apply]))
+          (fun h => hlj (by rw [← he1, ← h, Equiv.apply_symm_apply]))
+      obtain ⟨tk, htk⟩ := hkss; obtain ⟨tl, htl⟩ := hlss
+      have hek : e tk.succ.succ = k := by rw [← htk, Equiv.apply_symm_apply]
+      have hel : e tl.succ.succ = l := by rw [← htl, Equiv.apply_symm_apply]
+      refine (diag_reindex_iso e (fun i => (c i : ℚ))).mpr ?_
+      have hstep := diag_reduction_step_cons (m := m + 3) (by omega)
+        (c0 := c (e 0)) (c1 := c (e 1)) (hc (e 0)) (hc (e 1))
+        (R := fun t => c (e t.succ.succ)) (fun t => hc _)
+        ⟨tk, by show (0:ℝ) < ((c (e tk.succ.succ) : ℤ) : ℝ); rw [hek]; exact hk⟩
+        ⟨tl, by show ((c (e tl.succ.succ) : ℤ) : ℝ) < 0; rw [hel]; exact hl⟩
+        (fun p _ => by
+          obtain ⟨y, hy0, hye⟩ := (diag_reindex_iso e (fun i => (c i : ℚ_[p]))).mp (hloc p)
+          refine ⟨y, hy0, ?_⟩
+          rw [← hye]
+          refine Finset.sum_congr rfl (fun z _ => ?_)
+          induction z using Fin.cases with
+          | zero => simp
+          | succ j => induction j using Fin.cases with
+            | zero => simp
+            | succ t => simp)
+        (fun d hd hdR hdloc => diag_nary_zero_of_local (m + 4) d hd hdR hdloc)
+      obtain ⟨x, hx0, hxe⟩ := hstep
+      refine ⟨x, hx0, ?_⟩
+      rw [← hxe]
+      refine Finset.sum_congr rfl (fun z _ => ?_)
+      induction z using Fin.cases with
+      | zero => simp
+      | succ j => induction j using Fin.cases with
+        | zero => simp
+        | succ t => simp
+  termination_by n => n
+
 end SKEFTHawking
