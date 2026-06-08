@@ -753,6 +753,24 @@ theorem bad_prime_R_certificate {p : ℕ} [Fact p.Prime] {m : ℕ} (hm : 0 < m)
   · subst hp2; exact bad_prime_R_certificate_2 hm hc0 hc1 Rq hRq hiso
   · exact bad_prime_R_certificate_odd hp2 hm hc0 hc1 Rq hRq hiso
 
+/-- A function on `Fin (m+2)` is its own leading-two-cons decomposition. -/
+theorem cons_decomp {K : Type*} {m : ℕ} (f : Fin (m + 2) → K) :
+    f = (Fin.cons (f 0) (Fin.cons (f 1) (fun k => f k.succ.succ)) : Fin (m + 2) → K) := by
+  funext i
+  refine Fin.cases ?_ (fun j => ?_) i
+  · simp
+  · simp only [Fin.cons_succ]; refine Fin.cases ?_ (fun k => ?_) j <;> simp
+
+/-- An index of `Fin (m+2)` other than `0, 1` is a double successor. -/
+theorem exists_eq_succ_succ {m : ℕ} (x : Fin (m + 2)) (h0 : x ≠ 0) (h1 : x ≠ 1) :
+    ∃ t : Fin m, x = t.succ.succ := by
+  induction x using Fin.cases with
+  | zero => exact absurd rfl h0
+  | succ y =>
+    induction y using Fin.cases with
+    | zero => rw [Fin.succ_zero_eq_one] at h1; exact absurd rfl h1
+    | succ t => exact ⟨t, rfl⟩
+
 /-! ### The rank-reduction step -/
 
 /-- Casting commutes with `Fin.cons` (integer coefficients into any `AddGroupWithOne`). -/
