@@ -284,6 +284,34 @@ theorem exists_nat_pow_mul_norm_le_one {p : ℕ} [Fact p.Prime] (u : ℚ_[p]) :
     rw [norm_mul, norm_pow, Padic.norm_p, inv_pow, inv_mul_le_iff₀ hpM, mul_one]
     exact hM.le
 
+/-- **Integral `ℤ_[p]` coordinates for a `p`-adic binary representation.** If `c₀ u₀² + c₁ u₁² = w` over
+`ℚ_[p]`, scaling both coordinates by a common `p^M` puts them in `ℤ_[p]` while multiplying the value by the
+square `(p^M)²`. This is the bridge from a local representation to integer CRT: the integral coordinates
+reduce mod `p^N` to give the residue targets, and the value stays in `w`'s square class. -/
+theorem exists_padicInt_binary_rep {p : ℕ} [Fact p.Prime] {c0 c1 w : ℚ_[p]}
+    (h : ∃ u0 u1 : ℚ_[p], c0 * u0 ^ 2 + c1 * u1 ^ 2 = w) :
+    ∃ (M : ℕ) (v0 v1 : ℤ_[p]),
+      c0 * (v0 : ℚ_[p]) ^ 2 + c1 * (v1 : ℚ_[p]) ^ 2 = w * ((p : ℚ_[p]) ^ M) ^ 2 := by
+  obtain ⟨u0, u1, hu⟩ := h
+  obtain ⟨M0, hM0⟩ := exists_nat_pow_mul_norm_le_one (p := p) u0
+  obtain ⟨M1, hM1⟩ := exists_nat_pow_mul_norm_le_one (p := p) u1
+  set M := max M0 M1 with hM
+  have hp1 : ‖(p : ℚ_[p])‖ ≤ 1 := by
+    rw [Padic.norm_p]; exact inv_le_one_of_one_le₀ (by exact_mod_cast (Fact.out : p.Prime).one_le)
+  have hpow : ∀ k : ℕ, ‖(p : ℚ_[p]) ^ k‖ ≤ 1 := fun k => by
+    rw [norm_pow]; exact pow_le_one₀ (norm_nonneg _) hp1
+  have hv0 : ‖(p : ℚ_[p]) ^ M * u0‖ ≤ 1 := by
+    rw [show (p : ℚ_[p]) ^ M * u0 = (p:ℚ_[p])^(M - M0) * ((p:ℚ_[p])^M0 * u0) by
+      rw [← mul_assoc, ← pow_add, Nat.sub_add_cancel (le_max_left _ _)], norm_mul]
+    exact mul_le_one₀ (hpow _) (norm_nonneg _) hM0
+  have hv1 : ‖(p : ℚ_[p]) ^ M * u1‖ ≤ 1 := by
+    rw [show (p : ℚ_[p]) ^ M * u1 = (p:ℚ_[p])^(M - M1) * ((p:ℚ_[p])^M1 * u1) by
+      rw [← mul_assoc, ← pow_add, Nat.sub_add_cancel (le_max_right _ _)], norm_mul]
+    exact mul_le_one₀ (hpow _) (norm_nonneg _) hM1
+  refine ⟨M, ⟨_, hv0⟩, ⟨_, hv1⟩, ?_⟩
+  show c0 * ((p:ℚ_[p])^M * u0) ^ 2 + c1 * ((p:ℚ_[p])^M * u1) ^ 2 = w * ((p:ℚ_[p])^M)^2
+  rw [← hu]; ring
+
 /-- **Common value of the leading binary and the residual (per place).** Over a field with `Invertible 2`,
 if the diagonal form `⟨c₀, c₁, R⟩` (`R : Fin m → K`, `m ≥ 1`, all coefficients nonzero) is isotropic, then
 there is a nonzero `w` represented by the binary `⟨c₀, c₁⟩` with `−w` represented by `R`. (From a zero
