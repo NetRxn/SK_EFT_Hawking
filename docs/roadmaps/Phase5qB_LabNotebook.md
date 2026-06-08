@@ -416,3 +416,45 @@ unconditional bridge + update D2/L2 + HYPOTHESIS_REGISTRY + dispatch closure rev
 **Standing rules unchanged:** kernel-pure (standard axioms only), no `native_decide`/`maxHeartbeats`/axiom;
 file-gate per brick, project-gate (`ExtractDeps`) at wave close; commit brick-by-brick to `main`, NEVER push;
 PadicSquare/HasseMinkowskiLocal are root-imported but appending theorems needs no root edit (no bordism dance).
+
+---
+
+## 2026-06-08 — FLEXIBLE-SELECTION LAYER SHIPPED (the Serre Thm 4 construction engine)
+
+**Resume session after multi-day pause. 3 substantive bricks, all kernel-pure `{propext, Classical.choice,
+Quot.sound}`, file-gate green, committed to `main` (NOT pushed); all in `PadicSquare.lean`.** These break the
+rigidity (`exists_prime_gt_isSquare_pair` forced `q ≡ 1 mod p`, over-constraining the residue-matching freedom)
+that was the identified obstacle to the keystone construction.
+
+- `3e0e5980` **`isSquare_odd_prime_zmod_flex`** — flexible QR: odd primes `p,q`, `q ≡ 1 mod 4`,
+  `IsSquare ((q:ℤ):ZMod p)` ⟹ `IsSquare ((p:ZMod q))`. Relaxes `isSquare_odd_prime_zmod`'s rigid `q ≡ 1 mod p`
+  to the genuine reciprocity input `(q|p)=1`. Proof = `legendreSym.quadratic_reciprocity` + `eq_one_iff`,
+  sign `+1` from `q ≡ 1 mod 4`.
+- `c47ffa26` **`isSquare_{natCast,intCast}_zmod_of_isSquare_residues`** — flexible multiplicative criterion:
+  `q ≡ 1 mod 8` + every prime factor `p` of `m` has `IsSquare ((q:ℤ):ZMod p)` ⟹ `IsSquare ((m:ZMod q))`.
+  Generalises `isSquare_*_zmod_of_modEq`. `Nat.recOnMul` over the factorisation; `p=q` trivial (`m≡0`),
+  odd `p` via the flex QR lemma, `p=2` via `q≡1 mod 8`, sign via `−1` square.
+- `d279f953` **`exists_prime_gt_eq_mod_isSquare`** — THE construction engine: `8∣D`, unit `r:ZMod D` with
+  `r.val ≡ 1 mod 8` and `r` a QR mod every prime factor of `|m|` (all dividing `D`) ⟹ ∃ prime `q>N` with
+  `q ≡ r (mod D)` AND `IsSquare ((m:ZMod q))`. Realizes the prescribed square class `r` *exactly* (ZMod-unit
+  Dirichlet `Nat.forall_exists_prime_gt_and_eq_mod`) while keeping `m` square (flex criterion). Generalises
+  `exists_prime_gt_isSquare_pair` (rigid `r=1`, `D=8|m||n|`). **This is Serre Ch III §2.2 Thm 4's auxiliary-prime
+  step: ONE prime simultaneously matches a prescribed class and keeps a target square. The consistency that
+  such a unit `r` EXISTS is the product-formula content — a separate, still-to-build input.**
+
+🔑 reusable API confirmed: `Nat.forall_exists_prime_gt_and_eq_mod {q}[NeZero q]{a:ZMod q}(IsUnit a)(n) :
+∃ p>n, p.Prime ∧ ↑p=a` (ZMod-unit Dirichlet, cleaner than the ℕ-ModEq form); `ZMod.natCast_rightInverse r :
+↑r.val = r`; `Nat.ModEq` is defeq to `% = %` (omega-usable directly); `Nat.ModEq.of_dvd`.
+
+### REMAINING toward the keystone (`quaternary_isotropic_of_keystone` consumes a global `t`):
+With the engine in hand, the keystone existence (Serre Thm 4 for the two families `a₁=−ab, a₂=−cd`) now needs:
+(a) **the consistency brick** — construct the unit target `r:ZMod D` whose images encode the matching square
+classes at the bad primes AND the QR conditions, with joint realizability = `hilbertGlobalProd_eq_one` (the
+genuine crux); (b) **valuation builder** — assemble `t = ε·q·∏_{p∈S} p^{δ_p}` (sign `ε` via
+`exists_sign_for_real_common`, prime `q` via the new engine, valuations via squarefree products + `exists_int_residues`
+CRT); (c) **place-by-place verification** — ℝ (`real_binary_represents_iff`), good odd `p`
+(`binary_represents_good_odd` / `_padic_even_val`), bad `p` (`binary_represents_of_isSquare_ratio` matching `c_p`),
+`q` (`binary_universal_padic_of_residue`); (d) feed `represents_everywhere_iff_symbols`/`quaternary_isotropic_of_keystone`
+⟹ `quaternary_solvable_of_local` (n=4); then n≥5 Meyer, p=2 even-unimod local isotropy, `HasWeakIsotropicVectorHyp`,
+wire RokhlinBridge + D2/L2 + registry + closure reviewer. **EVEN-UNIMOD SIMPLIFICATION still to exploit:
+bad set reduces toward {∞,2}, dissolving odd-prime residue conflicts in (a).**
