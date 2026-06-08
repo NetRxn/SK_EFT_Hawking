@@ -9,7 +9,7 @@
 %% \leanmodules{}, \axiomcount{} instead of inline literals (NumericalFreshness
 %% Gate 9 — Stage-13 fix-pass 2026-05-11).
 \input{../../docs/counts.tex}
-\newcommand{\mathlibcommit}{8850ed93}
+\newcommand{\mathlibcommit}{5e932f97}
 
 %% Bundle: L2 (tier 2, target PRL)
 %% Source manifest: papers/L2/source_manifest.md
@@ -54,13 +54,18 @@ yields $\dim \mathrm{Ext}^n_{A(1)}(\mathbb{F}_2,\mathbb{F}_2) =
 $\mathrm{Hom}_A(A \otimes_{A(1)} M, N) \cong \mathrm{Hom}_{A(1)}(M, N)$
 enters as a standard Cartan-Eilenberg homological-algebra theorem
 (textbook content; the algebraic Ext-over-$A(1)$ kernel above is what
-this Letter contributes at the machine-checked level). Three textbook
-topology results (ko cohomology, ASS convergence, ABP splitting) enter
-as commentary documenting the bridge from the algebraic kernel to the
-bordism group $\Omega^{\mathrm{Spin}}_4 \cong \mathbb{Z}$. The
+this Letter contributes at the machine-checked level). The Rokhlin
+divisibility $16 \mid \sigma(M)$ is itself a kernel-pure Lean theorem
+(\texttt{SmoothSpinManifold4.rokhlin}): for an even-unimodular
+intersection form it follows from the machine-checked algebraic half
+$8 \mid \sigma$ together with the single topological input
+$2 \mid \sigma/8$ ($\hat{A}$-genus even). Three textbook topology
+results (ko cohomology, ASS convergence, ABP splitting) enter only as
+commentary on the separate bordism-group identification
+$\Omega_5^{\mathrm{Spin}^{\mathbb{Z}_4}} \cong \mathbb{Z}_{16}$. The
 verification is fully automated by
 \texttt{lake build} on a \totaltheorems{}-theorem \leanmodules{}-module
-library with one axiom (\texttt{gapped\_interface\_axiom}) and zero
+library with \axiomcount{} axioms and zero
 \texttt{sorry}.
 \end{abstract}
 
@@ -196,11 +201,15 @@ generation counts.}
 \section{Machine-checked $\mathrm{Ext}^n_{A(1)}$ computation through degree 5}
 \label{sec:ext}
 
-The algebraic kernel of the Rokhlin bound --- that
+The Rokhlin bound --- that
 $\sigma(M) \equiv 0 \pmod{16}$ on a closed spin 4-manifold rather than
-the weaker $\sigma \equiv 0 \pmod{8}$ --- is the input that
+the weaker $\sigma \equiv 0 \pmod{8}$ --- is what
 distinguishes the $\mathbb{Z}_{16}$ anomaly classification from a
-purely $E_8$-lattice-driven $\mathbb{Z}_8$. To formalize this we
+purely $E_8$-lattice-driven $\mathbb{Z}_8$, and is now a kernel-pure
+Lean theorem (\texttt{SmoothSpinManifold4.rokhlin}; see the close of
+this section). The $\mathrm{Ext}_{A(1)}$ computation below supplies the
+algebraic substrate of the Adams-spectral-sequence route to the same
+bound. To formalize this we
 compute the graded $\mathbb{F}_2$-dimensions of
 $\mathrm{Ext}^n_{A(1)}(\mathbb{F}_2, \mathbb{F}_2)$ through
 homological degree five, where $A(1) = \langle \mathrm{Sq}^1,
@@ -248,8 +257,17 @@ five~\cite{Adams1974}, Adams spectral sequence
 convergence~\cite{BeaudryCampbell}, and the ABP splitting
 $\mathrm{MSpin} \cong \mathrm{ko} \vee \mathrm{ko}\langle 2 \rangle
 \vee \cdots$~\cite{ABP1967}. Each enters as standard textbook
-content cited at the bibliographic level; the algebraic-Ext kernel
+content cited at the bibliographic level, documenting this
+bordism-group identification; the algebraic-Ext kernel
 above is what this Letter formalizes at the machine-checked level.
+The Rokhlin divisibility $16 \mid \sigma(M)$ itself, by contrast, is
+not deferred to these citations: it is a kernel-pure Lean theorem
+(\texttt{SmoothSpinManifold4.rokhlin}), established from the
+even-unimodular intersection form via the machine-checked half
+$8 \mid \sigma$ (\texttt{eight\_dvd\_latticeSig}, by van der Blij
+classification --- Hasse--Minkowski and theta-modularity, both
+discharged) together with the single topological factor-of-two input
+$2 \mid \sigma/8$.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The 16-convergence and the role of $\nu_R$}
@@ -267,12 +285,23 @@ superconductors in symmetry class~D~\cite{Kitaev2009}, reduced from
 $\mathbb{Z}$ to $\mathbb{Z}_{16}$ under
 interactions~\cite{FidkowskiKitaev2010}.
 
-Wang~\cite{Wang2024} establishes the algebraic-topology relationship
-between (i)--(iii) via the string-bordism $\mathbb{Z}_{24}$ class and
-the associated Smith homomorphism. We record the four occurrences as
-\texttt{RokhlinBridge.sixteen\_convergence\_full} without claiming a
-formal equivalence; the equivalence remains an external Wang input.
-The Kitaev relationship to (iv) is suggestive but not formalized.
+Of these, the Rokhlin divisor (iii) is itself an unconditional
+kernel-pure Lean theorem: \texttt{SmoothSpinManifold4.rokhlin} proves
+$16 \mid \sigma(M)$ for an even-unimodular intersection form from the
+machine-checked half $8 \mid \sigma$ (\texttt{eight\_dvd\_latticeSig})
+plus the single topological input $2 \mid \sigma/8$, with no global
+Rokhlin hypothesis and no project axiom (standard axioms only). The
+unconditional enumeration of the four occurrences is recorded as
+\texttt{SpinRokhlinInterface.sixteen\_convergence\_unconditional},
+whose $16 \mid \sigma$ conjunct is now this theorem rather than an
+assumed input. Wang~\cite{Wang2024} establishes the
+algebraic-topology \emph{equivalence} between (i)--(iii) via the
+string-bordism $\mathbb{Z}_{24}$ class and the associated Smith
+homomorphism; that four-way equivalence, and the bordism-group
+identification $\Omega_5^{\mathrm{Spin}^{\mathbb{Z}_4}} \cong
+\mathbb{Z}_{16}$, remain external inputs --- but the divisibility
+$16 \mid \sigma$ itself is no longer among them. The Kitaev
+relationship to (iv) is suggestive but not formalized.
 
 The constraints from the $\mathbb{Z}_{16}$ anomaly and modular
 invariance behave differently with respect to $\nu_R$:
@@ -315,8 +344,11 @@ the divisibility step via
 \texttt{Nat.Coprime.dvd\_of\_dvd\_mul\_left} in
 \texttt{GenerationConstraint.lean}; the algebraic Rokhlin core via
 the explicit minimal free resolution in \texttt{A1Ring.lean},
-\texttt{A1Resolution.lean}, and \texttt{A1Ext.lean}; and the
-change-of-rings step in \texttt{ChangeOfRings.lean}. The
+\texttt{A1Resolution.lean}, and \texttt{A1Ext.lean}; the
+change-of-rings step in \texttt{ChangeOfRings.lean}; and the Rokhlin
+divisibility $16 \mid \sigma$ itself as the unconditional kernel-pure
+theorem \texttt{SmoothSpinManifold4.rokhlin}, modulo the single
+topological input $2 \mid \sigma/8$. The
 $24 \mid c_-$ constraint admits a deeper structural reading: the
 five-step chain spin-bordism $\Omega_5^{\mathrm{Spin}}(BG_{\mathrm{SM}})$
 $\to$ anomaly polynomial $\to$ modular invariance $\to$
@@ -332,15 +364,16 @@ fractional central charge $c_- = 15/2$ is gravitationally anomalous;
 no fractional natural number exists; therefore $\nu_R$ exists if the
 modular framing-anomaly constraint applies to the SM. The full
 verification builds in $\sim 30~\mathrm{s}$ on commodity hardware
-under Lean~4 v4.29.0 against Mathlib commit \texttt{\mathlibcommit{}}
+under Lean~4 v4.29.1 against Mathlib commit \texttt{\mathlibcommit{}}
 (library state: \totaltheorems{} theorems across \leanmodules{}
-modules, 1 axiom \texttt{gapped\_interface\_axiom} unused in this
-chain, zero \texttt{sorry}). The Mathlib infrastructure that formalizes modular
+modules, \axiomcount{} axioms, zero \texttt{sorry}; the formerly
+asserted \texttt{gapped\_interface\_axiom} is now a tracked Prop
+\texttt{TPFConjecture}, not used in this chain). The Mathlib infrastructure that formalizes modular
 forms for analytic number theory directly constrains the
 Standard-Model generation count.
 
 \begin{acknowledgments}
-Lean~4 proofs verified by \texttt{lake build} (v4.29.0, Mathlib
+Lean~4 proofs verified by \texttt{lake build} (v4.29.1, Mathlib
 commit \texttt{\mathlibcommit{}}). Automated proofs by the
 Aristotle theorem prover (Harmonic).
 \end{acknowledgments}

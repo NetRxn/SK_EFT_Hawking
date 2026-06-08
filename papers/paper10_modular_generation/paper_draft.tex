@@ -4,6 +4,8 @@
 \usepackage{hyperref}
 \usepackage{braket}
 
+\input{../../docs/counts.tex}
+
 \begin{document}
 
 \title{From Modular Forms to Generation Counting:\\
@@ -28,12 +30,16 @@ pure mathematics (zeta regularization $\zeta(-1) = -1/12$), the denominator
 is pure physics (SM fermion content). Without right-handed neutrinos,
 $c_- = 15/2$ is fractional --- a formally verified independent argument
 for $\nu_R$. The complete chain from modular forms to particle physics
-comprises 2237+~theorems across 170~Lean~4 modules (zero axioms in the
-generation constraint chain); the complete
+comprises \totaltheorems{}~theorems across \leanmodules{}~Lean~4 modules
+(\axiomcount{} project-local axioms); the complete
 derivation chain from modular forms through fermion counting to the
-generation bound is fully machine-checked. The algebraic core of the
-Rokhlin bound is verified via a machine-checked Ext computation over the
-Steenrod subalgebra $A(1)$. This is a formal derivation connecting
+generation bound is fully machine-checked. The Rokhlin signature bound
+$16 \mid \sigma$ for closed smooth spin 4-manifolds---which underwrites
+the ``16'' convergence---is itself an unconditional kernel-pure theorem
+($8 \mid \sigma$ via van der Blij plus the single topological factor
+$2 \mid \sigma/8$), not an assumed input; an independent machine-checked
+Ext computation over the Steenrod subalgebra $A(1)$ corroborates the
+algebraic ``why 16.'' This is a formal derivation connecting
 number-theoretic modular invariance to a Standard Model constraint.
 \end{abstract}
 
@@ -71,8 +77,8 @@ Together: $8 N_f \equiv 0 \pmod{24}$, i.e., $N_f \equiv 0 \pmod{3}$.
 
 In this Letter, we present a formally verified version of this
 derivation, machine-checked in Lean~4 with Mathlib's modular forms
-infrastructure. Every numerical coefficient is either derived from the
-formalization or enters as a well-motivated physics axiom.
+infrastructure. Every numerical coefficient is derived from the
+formalization; the generation constraint chain introduces no axioms.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The Chiral Central Charge}
@@ -217,15 +223,32 @@ bordism $\mathbb{Z}_{24}$ class and the associated Smith homomorphism.
 The relationship to the Kitaev $\mathbb{Z}_{16}$ classification is
 suggestive but has not been formalized here.
 
-The formal verification records the four occurrences of the number 16
-as \texttt{sixteen\_convergence\_full} in \texttt{RokhlinBridge.lean}.
-The theorem statement is an enumeration: it asserts that (i)~the SM
-fermion component count equals 16, (ii)~$16 \equiv 0 \pmod{16}$, and
-(iii)~divisibility by 16 of spin-4-manifold signatures holds
-\emph{as a hypothesis} (Rokhlin's theorem). It does \emph{not} prove the
-mathematical equivalence of the four phenomena; that equivalence is
-the content of Wang's cobordism argument, which we use as an external
-input rather than formalize.
+The signature half of this convergence is now an unconditional
+formally-verified theorem. The structure
+\texttt{SpinRokhlinInterface.SmoothSpinManifold4} records a closed smooth
+spin 4-manifold's even-unimodular intersection form (even and unimodular
+by Wu's formula and Poincar\'e duality) and the single topological factor
+$2 \mid \sigma/8$ (\^A-genus even / Arf invariant); from these,
+\texttt{SmoothSpinManifold4.rokhlin}~$:~16 \mid \sigma$ is proved as a
+kernel-pure theorem (standard axioms only; no global Rokhlin hypothesis,
+no new \texttt{axiom}). Its signature is the genuine signature of the
+intersection form, $\sigma := \mathrm{latticeSig}\,(\text{form})$, and the
+algebraic bound $8 \mid \sigma$ is itself \emph{proved} (van der Blij)
+through the classification of even unimodular lattices---indefinite case by
+Hasse--Minkowski, definite case by theta-modularity---in
+\texttt{RokhlinHMRankFour.lean} and \texttt{SpinRokhlinInterface.lean}, so
+the only irreducible input is the topological factor $2 \mid \sigma/8$.
+The headline statement
+\texttt{sixteen\_convergence\_unconditional}
+(\texttt{SpinRokhlinInterface.lean}) reruns the four-16 enumeration with
+the $16 \mid \sigma$ conjunct now a theorem rather than an assumed input.
+The older \texttt{sixteen\_convergence\_full} in
+\texttt{RokhlinBridge.lean} is an enumeration over an abstract free-integer
+manifold type that still carries $16 \mid \sigma$ as an explicit hypothesis
+by design; we cite the unconditional form for the substantive claim.
+The formalization does \emph{not} prove the mathematical equivalence of
+all four phenomena; that equivalence is the content of Wang's cobordism
+argument, which we use as an external input rather than formalize.
 
 \subsection{With vs.\ without $\nu_R$}
 
@@ -254,8 +277,11 @@ The minimal solution is $N_f = \mathrm{lcm}(16, 3) = 48$
 (\texttt{constraints\_without\_nu\_R}). Since $N_f = 3$ is observed,
 this provides formal evidence for the existence of $\nu_R$.
 
-Rokhlin's theorem enters as a hypothesis (not an axiom) in the key theorems. It is a well-established result (1952,
-hundreds of citations). The bound is sharp: the K3 surface has
+Rokhlin's theorem $16 \mid \sigma$ is, in this formalization, a proved
+kernel-pure theorem (\texttt{SmoothSpinManifold4.rokhlin}), not an assumed
+hypothesis and not an axiom; the historical result (Rokhlin 1952) is
+recovered from even-unimodularity plus the topological factor $2 \mid
+\sigma/8$. The bound is sharp: the K3 surface has
 $\sigma = -16$, while the E8 manifold has $\sigma = 8$ but is
 \emph{not} spin --- formally verified as
 \texttt{rokhlin\_strictly\_stronger}: $16 \nmid 8$.
@@ -281,42 +307,56 @@ constraint requires $N_f = \mathrm{lcm}(16,3) = 48$ --- providing formal
 evidence for right-handed neutrinos from the observed $N_f = 3$.
 \end{enumerate}
 
-The formal verification comprises 2237+~theorems across 170~Lean~4
-modules (1~axiom, zero in the generation constraint chain). Key modules:
+The formal verification comprises \totaltheorems{}~theorems across
+\leanmodules{}~Lean~4 modules (\axiomcount{} project-local axioms). Key modules:
 \texttt{SMFermionData.lean} (fermion enumeration),
 \texttt{WangBridge.lean} ($c_- = 8$ derivation),
 \texttt{GenerationConstraint.lean} ($24 \mid 8N_f \Rightarrow 3 \mid N_f$,
 Aristotle \texttt{a1dfcbde}),
 \texttt{ModularInvarianceConstraint.lean} (framing anomaly from $\eta$,
 proved manually, zero \texttt{sorry}),
-\texttt{RokhlinBridge.lean} (``16'' convergence,
+\texttt{RokhlinBridge.lean} (``16'' enumeration,
 Aristotle \texttt{b54f9611} for \texttt{z16\_anomaly\_without\_nu\_R}),
-\texttt{AlgebraicRokhlin.lean} (Serre's $8 \mid \sigma$, zero \texttt{sorry}),
+\texttt{AlgebraicRokhlin.lean} and \texttt{RokhlinHMRankFour.lean}
+($8 \mid \sigma$ \emph{proved} via van der Blij / Hasse--Minkowski
+classification, zero \texttt{sorry}),
+\texttt{SpinRokhlinInterface.lean} (unconditional $16 \mid \sigma$ and
+\texttt{sixteen\_convergence\_unconditional}, zero \texttt{sorry}),
 \texttt{E8Lattice.lean} ($\sigma(E_8) = 8$, \texttt{native\_decide}),
 and \texttt{SpinBordism.lean} (Wang chain, zero \texttt{sorry}).
 
-\paragraph{Machine-checked Ext computation.}
-The algebraic content of the Rokhlin bound --- the reason ``16''
-rather than~8 or~32 --- is now machine-checked.
+\paragraph{Independent corroboration: a machine-checked $A(1)$ Ext computation.}
+The unconditional $16 \mid \sigma$ derivation above does \emph{not} route
+through the Adams spectral sequence; it proceeds via the lattice-signature
+classification (van der Blij plus the topological factor $2 \mid \sigma/8$).
+As an \emph{independent} corroboration of the bordism-theoretic origin of
+the ``16'' --- the reason ``16'' rather than~8 or~32 in the
+$\Omega^{\mathrm{Spin}}_4$ picture --- we additionally machine-check the
+relevant $A(1)$ Ext groups.
 The minimal free resolution of $\mathbb{F}_2$ over $A(1) = \langle \mathrm{Sq}^1, \mathrm{Sq}^2 \rangle$
 (the 8-dimensional sub-Hopf algebra of the Steenrod algebra) is verified
-through homological degree~5 in four new Lean~4 modules:
+through homological degree~5 in three Lean~4 modules:
 \texttt{A1Ring.lean} (left regular representation, Adem relations via \texttt{native\_decide}),
 \texttt{A1Resolution.lean} (differentials $d^2=0$ at all levels,
 exactness via kernel enumeration and RREF witnesses),
 \texttt{A1Ext.lean} (minimality, $\dim \mathrm{Ext}^n = 1,2,2,2,3,4$ for $n=0,\ldots,5$).
-The Hom-tensor adjunction
-$\mathrm{Hom}_A(A \otimes_{A(1)} M, N) \cong \mathrm{Hom}_{A(1)}(M, N)$
-(\texttt{ChangeOfRings.lean}) establishes the change-of-rings isomorphism
-as pure algebra, reducing the full Adams spectral sequence computation to the
-finite $A(1)$ computation.
-This Ext computation over the Steenrod subalgebra $A(1)$ is
-machine-checked end-to-end.
+The change-of-rings step uses the Hom-tensor adjunction
+$\mathrm{Hom}_A(A \otimes_{A(1)} M, N) \cong \mathrm{Hom}_{A(1)}(M, N)$,
+a standard algebra fact (Weibel, Thm.~2.6.1~\cite{Weibel1994}) that
+reduces the full Adams spectral sequence computation to the finite $A(1)$
+computation; \texttt{ChangeOfRings.lean} documents this isomorphism but does
+not itself supply a machine-checked proof of it. We emphasize that the
+$\Omega^{\mathrm{Spin}}_4 \cong \mathbb{Z}$ bordism route (ko cohomology,
+Adams spectral sequence convergence, Anderson--Brown--Peterson splitting)
+is \emph{deliberately not used} for the unconditional theorem: it relies on
+facts equivalent to Rokhlin's theorem and would be circular. This $A(1)$
+Ext computation is therefore an independent algebraic artifact, not the
+mechanism behind the live $16 \mid \sigma$ result.
 
-The complete generation constraint chain rests on
-machine-checked algebra plus three standard textbook topology results
-(ko cohomology~\cite{Adams1974}, ASS convergence~\cite{BeaudryCampbell},
-ABP splitting~\cite{ABP1967}).
+The complete generation constraint chain rests on machine-checked algebra:
+the load-bearing $16 \mid \sigma$ now follows from the lattice-signature
+classification (van der Blij) together with the single topological input
+$2 \mid \sigma/8$.
 
 The same Mathlib infrastructure that formalizes modular forms for number
 theory directly constrains the Standard Model's generation count ---
@@ -324,7 +364,7 @@ a bridge between pure mathematics and particle physics, machine-checked
 end to end.
 
 \begin{acknowledgments}
-Lean~4 proofs verified by \texttt{lake build} (v4.29.0, Mathlib \texttt{8850ed93}).
+Lean~4 proofs verified by \texttt{lake build} (v4.29.1, Mathlib \texttt{5e932f97}).
 Automated proofs by the Aristotle theorem prover (Harmonic).
 \end{acknowledgments}
 
@@ -382,6 +422,10 @@ Ann.\ Math.\ \textbf{86}, 271--298 (1967).
 A.~Beaudry and J.~A.~Campbell,
 \emph{A guide for computing stable homotopy groups},
 Contemp.\ Math.\ \textbf{718}, 89--136 (2018) [arXiv:1801.07530].
+
+\bibitem{Weibel1994}
+C.~A.~Weibel, \emph{An Introduction to Homological Algebra}
+(Cambridge University Press, 1994), Thm.~2.6.1.
 \end{thebibliography}
 
 \end{document}

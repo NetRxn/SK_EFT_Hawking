@@ -5086,6 +5086,23 @@ CITATION_REGISTRY = {
         'notes': 'Auto-generated stub from \bibitem block in `papers/paper10_modular_generation/paper_draft.tex`.',
     },
 
+    'Weibel1994': {
+        'authors': 'C.~A.~Weibel',
+        'title': 'An Introduction to Homological Algebra',
+        'journal': 'Cambridge University Press (Cambridge Studies in Advanced Mathematics 38)',
+        'volume': None,
+        'page': None,
+        'year': 1994,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/paper10_modular_generation/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Canonical-textbook reference (textbook exemption: doi/arxiv/primary_source_path all None). Cited in paper10 (2026-06-08 Stage-13 fix-pass) for the Hom-tensor adjunction (Thm 2.6.1), the standard algebra fact underlying the change-of-rings reduction documented in ChangeOfRings.lean.',
+    },
+
     'Adams1974': {
         'authors': 'Adams, J. F.',
         'title': 'Stable Homotopy and Generalised Homology',

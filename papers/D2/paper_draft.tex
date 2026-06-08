@@ -71,9 +71,12 @@ generation count $N_f = 3$ appears in two independent settings
 components through three formal mechanisms to one observed
 $N_f = 3$ — is verified by \texttt{lake build} on a Lean 4
 library with \totaltheorems{} theorems across \leanmodules{}
-modules with one axiom (\texttt{gapped\_interface\_axiom}, a 4+1D
-hypothesis corroborated in 1+1D and 2+1D by independent
-formalizations), one Mathlib-deferral placeholder
+modules with \axiomcount{} project-local axioms: the 4+1D
+gapped-interface statement is carried as a tracked-hypothesis
+\texttt{Prop} (\texttt{TPFConjecture}, formerly
+\texttt{axiom gapped\_interface\_axiom}, converted to a tracked
+\texttt{Prop} on 2026-05-19; corroborated in 1+1D and 2+1D by
+independent formalizations), one Mathlib-deferral placeholder
 (\texttt{Z16AnomalyComputation.dai\_freed\_spin\_z4}, asserting
 $\Omega_5^{{\rm Spin}^{\mathbb{Z}_4}} \cong \mathbb{Z}_{16}$
 pending Mathlib cobordism infrastructure), four tracked
@@ -128,10 +131,12 @@ unification of the four threads. The headline contribution is not any one mechan
 isolation: paper-length expositions of (i), (ii) and (iii) exist
 elsewhere~\cite{Roehm2026L2,Roehm2026Wave9,Roehm2026Wave7,Roehm2026Wave8}.
 What is new here is the integrated treatment that exposes the
-load-bearing axiom budget when all four threads are placed inside a
-single Lean 4 library: one true axiom
-(\texttt{gapped\_interface\_axiom}, the 4+1D conjecture sitting at
-the intersection of mechanisms (ii) and (iii), supported by
+load-bearing hypothesis budget when all four threads are placed inside a
+single Lean 4 library (\axiomcount{} project-local axioms): one
+tracked-hypothesis \texttt{Prop}
+(\texttt{TPFConjecture}, formerly \texttt{axiom gapped\_interface\_axiom},
+converted to a tracked \texttt{Prop} on 2026-05-19; the 4+1D conjecture
+sitting at the intersection of mechanisms (ii) and (iii), supported by
 machine-checked 1+1D and 2+1D evidence), three tracked
 algebraic-topology hypotheses (deferred to upstream Mathlib), and a
 single Mathlib-deferral placeholder
@@ -326,13 +331,14 @@ Rather than carry $16 \mid \sigma$ as an opaque hypothesis, we expose its
 content through a narrow interface. The structure
 \texttt{SpinRokhlinInterface.SmoothSpinManifold4} records a closed smooth
 spin 4-manifold's even-unimodular intersection form (even and unimodular by
-Wu's formula and Poincar\'e duality), the algebraic signature bound
-$8\mid\sigma$, and the topological factor of two $2 \mid \sigma/8$. Its
-signature is the \emph{genuine} signature of the intersection form,
+Wu's formula and Poincar\'e duality) in the field \texttt{even\_unimod}, and
+the topological factor of two $2 \mid \sigma/8$ in the field \texttt{topo}.
+Its signature is the \emph{genuine} signature of the intersection form,
 $\sigma := \mathrm{latticeSig}\,(\text{form})$ (\texttt{LatticeSignature.lean}),
-not a free parameter; the algebraic residual is carried as the precise field
-\texttt{eight\_dvd}~$:~8\mid\mathrm{latticeSig}\,(\text{form})$, the isolated
-van der Blij bound. From these,
+not a free parameter. The algebraic residual $8\mid\mathrm{latticeSig}\,(\text{form})$
+is \emph{not} a carried interface field --- it is itself the derived kernel-pure
+theorem \texttt{SmoothSpinManifold4.eight\_dvd\_sig} (the isolated van der Blij
+bound, via the discharged Hasse--Minkowski input). From these,
 \texttt{SmoothSpinManifold4.rokhlin}~$:~16 \mid \sigma$ is a kernel-pure
 theorem (standard axioms only; no global Rokhlin hypothesis, no new
 \texttt{axiom}), obtained via
@@ -350,7 +356,7 @@ itself (which is the conclusion), avoiding the circularity of the
 $\Omega^{\mathrm{Spin}}_4 \cong \mathbb{Z}$ bordism alternative.
 This isolates the irreducible content exactly as Finashin--Kharlamov--Viro
 describe. The algebraic half $8\mid\sigma$ is van der Blij's lemma on even
-unimodular forms; its zero-axiom discharge is pursued through the
+unimodular forms; its zero-axiom discharge is completed through the
 \emph{classification of even unimodular lattices} ($L\cong E_8^{\,a}\oplus
 (-E_8)^{\,b}\oplus H^{\,c}$, whence $\sigma=8(a-b)$). The \emph{signature
 calculus} for that route is machine-checked and complete (all kernel-pure;
@@ -365,17 +371,25 @@ additivity $\sigma(A\oplus B)=\sigma(A)+\sigma(B)$ for nondegenerate blocks
 (\texttt{BlockSignature.lean}, \texttt{GeneratorNondeg.lean}), and the
 index-general signature with reindexing invariance (\texttt{LatticeSigBlock.lean})
 are all established, so any normal form yields $\mathrm{latticeSig}=8(a-b)$ and
-hence $8\mid\sigma$ (\texttt{RokhlinClassification.lean}). The remaining input
-is solely the classification's \emph{existence} statement: the elementary
-hyperbolic-plane splitting from a primitive isotropic vector is in hand
+hence $8\mid\sigma$ (\texttt{RokhlinClassification.lean}). The classification's
+two classical inputs are now \emph{both} discharged as kernel-pure theorems,
+with no remaining Mathlib gap. The Hasse--Minkowski input (an indefinite form
+represents zero) is the theorem \texttt{hasIsotropicVector}, established at
+every rank (rank $\geq 5$; rank $2$; ranks $1,3$ vacuous; rank $4$ via
+Chevalley--Warning $+$ Hensel $+$ binary Hilbert reciprocity, through
+\texttt{hasWeakIsotropicVector} / \texttt{weakIsotropic\_rank\_four} in
+\texttt{RokhlinHMRankFour.lean}); the elementary hyperbolic-plane splitting from
+a primitive isotropic vector is in hand
 (\texttt{LatticePrimitive.lean}: \texttt{exists\_hyperbolic\_pair}, on the
-parity lemma \texttt{even\_form\_dvd}), reducing it to a Smith-normal-form
-basis completion, together with the two classical inputs with no current
-Mathlib substrate --- Hasse--Minkowski (an indefinite form represents zero)
-and the level-one theta-modularity giving $8\mid\mathrm{rank}=\sigma$ in the
-definite case, for which the \texttt{LatticeTheta.lean} substrate (convergence,
-$T$/$T^2$-invariance, isometry-class invariance, cusp normalisation, and the
-diagonal $S$-transform) is assembled pending multivariate Poisson summation. The char-2 Arf / Gauss-sum machinery of \texttt{ArfInvariant.lean}
+parity lemma \texttt{even\_form\_dvd}). The level-one theta-modularity giving
+$8\mid\mathrm{rank}=\sigma$ in the definite case is the theorem
+\texttt{eight\_dvd\_latticeSig\_of\_definite}. Composing the two branches,
+\texttt{eight\_dvd\_latticeSig} proves $8\mid\mathrm{latticeSig}\,M$ for
+\emph{every} even unimodular form unconditionally, and \texttt{sixteen\_dvd\_latticeSig}
+upgrades this to $16\mid\sigma$ given the topological factor; both are kernel-pure
+(standard axioms only). The only genuinely outstanding interface input is the
+topological factor of two $2\mid\sigma/8$, treated next. The char-2 Arf /
+Gauss-sum machinery of \texttt{ArfInvariant.lean}
 and \texttt{EvenLatticeForm.lean} --- the genus-$g$ Milgram--Arf identity
 $\sum_x (-1)^{q(x)} = 2^{g}(-1)^{\mathrm{Arf}}$ and the lattice quadratic
 refinement $\bar q(x)=b(x,x)/2$ --- belongs not here but to the \emph{second}
@@ -883,9 +897,12 @@ evidence}
 The chirality-wall program rests on a single non-trivial
 hypothesis: that any 4+1D SPT slab admits a gapped interface
 trivialisation iff its bulk anomaly cancels. In our Lean library
-this is the lone axiom \texttt{gapped\_interface\_axiom} (in
-\texttt{SPTClassification}; 20 theorems plus the 1 axiom). We
-support the axiom by machine-checked evidence in 1+1D and
+this is the tracked-hypothesis \texttt{Prop} \texttt{TPFConjecture}
+(in \texttt{SPTClassification}; formerly
+\texttt{axiom gapped\_interface\_axiom}, converted to a tracked
+\texttt{Prop} on 2026-05-19, so that the module declares
+\axiomcount{} project-local axioms). We
+support the hypothesis by machine-checked evidence in 1+1D and
 2+1D.
 
 The 1+1D case is the (3450)-K-matrix invertible TQFT
@@ -971,12 +988,17 @@ $\mathrm{Hom}_A(A \otimes_{A(1)} M, N) \cong \mathrm{Hom}_{A(1)}(M, N)$
 change-of-rings adjunction (Eq.~\ref{eq:change-of-rings})
 discharge the homological-algebra side. The machine-verified
 Fidkowski-Kitaev 2+1D gapped-interface classification supports the
-lone 4+1D axiom.
+4+1D tracked-hypothesis \texttt{Prop} \texttt{TPFConjecture}.
 
 \subsection{What is axiomatised}
 
-A single true axiom: \texttt{gapped\_interface\_axiom} (the 4+1D
-conjecture in \texttt{SPTClassification}). This is supported by
+The project declares \axiomcount{} project-local axioms. The 4+1D
+gapped-interface conjecture is carried as a tracked-hypothesis
+\texttt{Prop}, \texttt{TPFConjecture} (in \texttt{SPTClassification};
+formerly \texttt{axiom gapped\_interface\_axiom}, converted to a tracked
+\texttt{Prop} on 2026-05-19), consumed by downstream theorems as an
+explicit \texttt{(H : TPFConjecture)} hypothesis parameter rather than
+asserted as an axiom. It is supported by
 machine-checked 1+1D evidence (\texttt{VillainHamiltonian}) and
 2+1D evidence (\texttt{FKGappedInterface}, including the
 explicit $\Delta = 2$ spectral gap).
@@ -996,7 +1018,8 @@ GS condition C5 (no spontaneous symmetry breaking, encoded as
 \texttt{C5\_no\_ssb.fields\_complete : Prop}). Neither carries
 mathematical content beyond what its statement asserts; both are
 standard physics inputs. The project's \texttt{lake build} axiom
-tally remains 1 because these are predicate fields, not
+tally is \axiomcount{} --- both these conditions and the 4+1D
+\texttt{TPFConjecture} are predicate \texttt{Prop} fields, not
 \texttt{axiom} declarations.
 
 \subsection{Tracked hypotheses}
@@ -1023,15 +1046,22 @@ isomorphism statement~\eqref{eq:change-of-rings} remains a tracked
 sub-hypothesis pending a Mathlib upstream of the explicit
 isomorphism witness.
 
-The five active tracked Props underlying the chirality-wall + modular
+Two active tracked Props underlying the chirality-wall + modular
 chain are registered in
 \texttt{src/core/constants.py::HYPOTHESIS\_REGISTRY} under the
-keys \texttt{rokhlin\_sigma\_mod\_16},
-\texttt{modular\_invariance\_framing}, \texttt{c\_minus\_equals\_8Nf},
-\texttt{characteristic\_square\_mod\_8}, and
-\texttt{spin\_bordism\_iso\_Z} (each carries its own falsifier set
+keys \texttt{modular\_invariance\_framing} and
+\texttt{c\_minus\_equals\_8Nf} (each carries its own falsifier set
 in the registry). Stage~14 audit invocations consume these keys
-through the project's standard hypothesis-disclosure pipeline.
+through the project's standard hypothesis-disclosure pipeline. The
+registry key \texttt{rokhlin\_sigma\_mod\_16} is now marked
+\texttt{discharged}: $16\mid\sigma(M)$ for closed smooth spin
+4-manifolds is the unconditional kernel-pure theorem
+\texttt{SmoothSpinManifold4.rokhlin} (\S\ref{sec:modular}), derived
+from the even-unimodular intersection form together with the
+topological factor $2\mid\sigma/8$ alone --- with the algebraic
+floor $8\mid\sigma$ (\texttt{eight\_dvd\_latticeSig}) itself
+discharged via the completed classification route (Hasse--Minkowski
+$+$ theta-modularity).
 
 \subsection{What is conjectural and motivational}
 
@@ -1055,7 +1085,7 @@ internally consistent SM extension violating $N_f \equiv 0
 \pmod 3$ falsifies Wang's modular hypothesis as currently
 stated; (ii) any 4+1D construction admitting a gapped boundary
 violating SPT-stacking trivialisation falsifies the project's
-sole axiom; (iii) any lattice chiral fermion construction with
+central tracked hypothesis \texttt{TPFConjecture}; (iii) any lattice chiral fermion construction with
 chirality-charge spectrum bounded inside $\{-1, +1\}$ on
 finite-dimensional Hilbert space falsifies the
 chirality-wall pillar-1$\leftrightarrow$pillar-2 bridge.
@@ -1071,11 +1101,14 @@ Adams spectral sequence, and ko-cohomology. The
 can be lifted into a Mathlib pull request once the algebraic-Ext
 infrastructure (already drafted in
 Phase~5o~\cite{Roehm2026I2}) merges. Closing all three of H1,
-H3, H4 reduces the axiom count of D2 from four (one true plus
-one placeholder plus two physics conjectures) to three (one true
-plus two physics conjectures), with the placeholder
+H3, H4 reduces the tracked-hypothesis budget of D2 from four
+(the 4+1D \texttt{TPFConjecture} \texttt{Prop} plus one
+Mathlib-deferral placeholder plus two physics-conjecture
+\texttt{Prop} fields) to three (the \texttt{TPFConjecture}
+\texttt{Prop} plus the two physics conjectures), with the placeholder
 \texttt{dai\_freed\_spin\_z4} elevated to a substantive
-machine-checked theorem.
+machine-checked theorem. The project-local axiom count stays at
+\axiomcount{} throughout.
 
 \subsection{Cross-bundle scope}
 
