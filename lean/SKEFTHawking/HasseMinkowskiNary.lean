@@ -738,4 +738,19 @@ theorem bad_prime_R_certificate_2 {m : ℕ} (hm : 0 < m)
   exact diag_represents_of_isSquare_ratio Rq (neg_ne_zero.mpr hTQ0)
     (by rw [neg_div_neg_eq]; exact hsqaT) hRT
 
+/-- **Unified bad-prime descent certificate.** Dispatches `bad_prime_R_certificate_odd` (odd `p`) and
+`bad_prime_R_certificate_2` (`p = 2`) so the global descent can apply one statement uniformly across the bad
+set. -/
+theorem bad_prime_R_certificate {p : ℕ} [Fact p.Prime] {m : ℕ} (hm : 0 < m)
+    {c0 c1 : ℤ} (hc0 : c0 ≠ 0) (hc1 : c1 ≠ 0) (Rq : Fin m → ℚ_[p]) (hRq : ∀ i, Rq i ≠ 0)
+    (hiso : ∃ x : Fin (m + 2) → ℚ_[p], x ≠ 0 ∧
+      ∑ i, (Fin.cons (c0 : ℚ_[p]) (Fin.cons (c1 : ℚ_[p]) Rq : Fin (m + 1) → ℚ_[p]) :
+        Fin (m + 2) → ℚ_[p]) i * x i ^ 2 = 0) :
+    ∃ (n0 n1 : ℤ) (N : ℕ), ∀ X0 X1 : ℤ, (p : ℤ) ^ N ∣ X0 - n0 → (p : ℤ) ^ N ∣ X1 - n1 →
+      c0 * X0 ^ 2 + c1 * X1 ^ 2 ≠ 0 ∧
+      ∃ y : Fin m → ℚ_[p], ∑ i, Rq i * y i ^ 2 = -((c0 * X0 ^ 2 + c1 * X1 ^ 2 : ℤ) : ℚ_[p]) := by
+  by_cases hp2 : p = 2
+  · subst hp2; exact bad_prime_R_certificate_2 hm hc0 hc1 Rq hRq hiso
+  · exact bad_prime_R_certificate_odd hp2 hm hc0 hc1 Rq hRq hiso
+
 end SKEFTHawking
