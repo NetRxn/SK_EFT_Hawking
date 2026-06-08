@@ -2275,6 +2275,22 @@ theorem padicInt_intCast_isUnit {p : ℕ} [Fact p.Prime] {C : ℤ} (h : ¬ (p : 
   rw [PadicInt.isUnit_iff, PadicInt.norm_intCast_eq_one_iff, isCoprime_comm]
   exact ((Nat.prime_iff_prime_int.mp Fact.out).coprime_iff_not_dvd).mpr h
 
+/-- **`p`-factorization of a nonzero integer.** Every nonzero `m : ℤ` factors as `m = p^{padicValInt p m}·m'`
+with `p ∤ m'` (`padicValInt_dvd_iff`: `p^v ∣ m` at `v = padicValInt p m`, and `p^{v+1} ∤ m`). This is the
+extraction that lets the integer square-ratio matchers `isSquare_padic_div_int` / `isSquare_2adic_div_int` apply
+to an arbitrary integer: split it into its `p`-power and a `p`-coprime cofactor, the data those lemmas consume. -/
+theorem exists_int_factor_padicValInt {p : ℕ} [Fact p.Prime] {m : ℤ} (hm : m ≠ 0) :
+    ∃ m' : ℤ, m = (p : ℤ) ^ (padicValInt p m) * m' ∧ ¬ (p : ℤ) ∣ m' := by
+  set v := padicValInt p m with hv
+  have hdvd : (p : ℤ) ^ v ∣ m := (padicValInt_dvd_iff _ m).mpr (Or.inr le_rfl)
+  obtain ⟨m', hm'⟩ := hdvd
+  refine ⟨m', hm', fun hpm' => ?_⟩
+  obtain ⟨c, hc⟩ := hpm'
+  have hd2 : (p : ℤ) ^ (v + 1) ∣ m := ⟨c, by rw [hm', hc]; ring⟩
+  rcases (padicValInt_dvd_iff _ m).mp hd2 with h | h
+  · exact hm h
+  · omega
+
 /-- **Representability at a good odd prime, integer-coprimality form.** Over `ℚ_[p]` with `p` odd, if `p`
 divides none of `a, b, t` (integers), then `⟨a,b⟩` represents `t`. (`padic_norm_intCast_eq_one` turns
 non-divisibility into unit norm, then `binary_represents_padic_of_units`.) The good-place fact powering the
