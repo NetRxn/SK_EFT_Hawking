@@ -807,6 +807,44 @@ p-adic crux): (i) assemble `bad_prime_R_certificate` (N:=padicValInt p T + 1 odd
 (iii) strong-induction spine `diag_nary_zero_of_local`; (iv) p=2 rank-≥5 ℚ₂ isotropy; (v) matrix→ℚ-diagonalize
 → `HasWeakIsotropicVectorHyp`; (vi) wire RokhlinBridge + D2/L2 + registry + closure reviewer.
 
+### 2026-06-08 (cont.¹¹) — 🎯🎯🎯 p=2 RANK-≥5 ℚ₂ LOCAL ISOTROPY COMPLETE (the frontier is CLOSED)
+
+**THE LAST MATHEMATICAL FRONTIER IS BEHIND US.** New file `PadicSquareTwo.lean` (kernel-pure
+`{propext, Classical.choice, Quot.sound}`, NO `native_decide`, NO axioms, NO `maxHeartbeats`; file-gate
+green; on `main`, NOT pushed; NOT yet root-imported). The p=2 rank-≥5 isotropy — which cont.¹⁰ correctly
+flagged as genuine 2-adic Witt theory with no Mathlib toehold — was built via a route that AVOIDS both
+square-class counting and multivariate Hensel:
+
+- `50e3abf7` **`mod8_quinary_solvable`** — the finite combinatorial crux: `∑ uᵢxᵢ² ≡ 0 (mod 8)` solvable with
+  coord 0 odd, for 3 unit + 2 unit-or-two-unit coefficients. **Kernel `decide` (Fin-indexed encoding:
+  coeffs `![1,3,5,7]`/`![1,2,3,5,6,7]`, square-reps `![0,1,2]` → ~10⁵ cases, kernel-tractable, NO
+  native_decide).** Bridged from the positional `mod8_core` via `exists_fin4_of_unit8`/`exists_fin6_of_nz`.
+- `5ab9450e` **`quinary_lift_2adic`** — mod-8 solution → exact ℤ₂ zero. **No multivariate Hensel**: freeze
+  coords 1–4 at integer residue lifts; coord 0 (odd unit) solves an EXACT unit square root via the shipped
+  `isSquare_iff_toZModPow_three_eq_one` (the mod-8 eq forces `−R/a₀ ≡ 1 mod 8`). + `isUnit_of_isUnit_toZModPow`.
+- `8602f2e1` **`exists_equiv_zero_one_two`** (reorder 3 indices to front, extends `exists_equiv_zero_one`) +
+  **`toZModPow3_ne_zero_four_of_norm`** (valuation 0/1 ⟹ residue ≠0,≠4).
+- `7ac6d6e3` **`exists_quinary_zero_2adic`** 🎯 — rank-5 ℚ₂ isotropy. Normalize ALL coeffs to valuation 0/1
+  with 3 units via a SINGLE global parity choice `m∈{0,1}` + per-coord square sub (no two-round halving),
+  reorder units to front, bridge to ℤ₂, apply `quinary_lift_2adic`, back-substitute. Helpers
+  `exists_padicInt_of_norm_le`, `norm_normalized` (‖2^m·w·2^(2k)‖ = 2^(-(v+m)%2)), `diag_scale_back_padic`.
+- `87ff652f` **`exists_diag_nary_zero_2adic`** 🎯🎯 — rank-≥5 ℚ₂ isotropy (pad rank-5 to n via `Fin.castLE`).
+  **The exact 2-adic companion of `exists_diag_nary_zero_odd_padic`.** Discharges the p=2 leg of
+  `diag_nary_zero_of_local`'s `hloc` for any rank-≥5 form.
+
+🔑 KEY INSIGHT that dissolved the "needs 2-adic Witt theory" wall: solve mod 8 (finite `decide`) then lift
+the ONE odd unit coordinate by an exact square root — the mod-8 solvability (Davenport-style zero-sum,
+machine-verified) + `isSquare_iff_toZModPow_three_eq_one` replace the entire anisotropic-quaternary
+classification. The global-parity-`m` trick unified halving into one step.
+
+**REMAINING (no walls — matrix plumbing + rank case-split + wiring):** (1) matrix → ℚ-diagonalize
+(`equivalent_weightedSumSquares` + `matrix_isotropic_congr` + `diag_iso_rat_int`) feeding
+`diag_nary_zero_of_local`, with local isotropy ℝ (sig>0) / odd p (`exists_diag_nary_zero_odd_padic`) / p=2
+(NEW `exists_diag_nary_zero_2adic`) — for rank ≥6; rank 2 = U (trivial integer vector), rank 4 = square-disc
+(`quaternary_sqdisc_solvable_of_local`); (2) assemble `HasWeakIsotropicVectorHyp`; (3) drop `eight_dvd` from
+`RokhlinBridge.sixteen_convergence_full`; (4) D2/L2 + HYPOTHESIS_REGISTRY; (5) root-import PadicSquareTwo +
+project-gate (ExtractDeps) + closure reviewer.
+
 ### 2026-06-08 (cont.¹⁰) — hasseWitt_reciprocity SHIPPED; SCOPE CORRECTION on the p=2 frontier
 - `d1ae253a` **`hasseWitt_reciprocity`** — `∏_v εᵥ = 1` for `εᵥ = ∏_{i<j}(aᵢ,aⱼ)ᵥ` (Hasse–Witt invariant over
   all places), from `hilbertGlobalProd_eq_one` + `prod_finprod_comm` Fubini. Kernel-pure, reuses the entire
