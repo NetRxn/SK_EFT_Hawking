@@ -2611,6 +2611,24 @@ theorem isSquare_padic_div_of_decomp {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {x 
   rw [hx, hy, mul_div_mul_comm, ← zpow_sub₀ hp0]
   exact hpow.mul (isSquare_padic_div_units hp hux huy hres)
 
+/-- **Integer square-ratio matcher over `ℚ_[p]` (odd `p`).** For integers `x = p^{vx}·Cx`, `m = p^{vm}·Cm`
+with `Cx, Cm` coprime to `p`, if the valuations have equal parity and the cofactors are congruent mod `p`,
+then `x / m` is a square in `ℚ_[p]`. The integer face of `isSquare_padic_div_of_decomp` (cofactors lifted to
+`ℤ_[p]` units via `padicInt_intCast_isUnit`, residues via `map_intCast PadicInt.toZMod`). Composed with the
+integer square-class representative `exists_int_sq_ratio_odd` of the local common value `c_p`, this is the
+bad-odd-prime verification of the rank-4 keystone: the constructed integer `t = ε·q·∏T` shares `c_p`'s
+`ℚ_p`-square class, so `binary_represents_of_isSquare_ratio` transfers representability of `c_p` to `t`. -/
+theorem isSquare_padic_div_int {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {x m Cx Cm : ℤ} {vx vm : ℕ}
+    (hCx : ¬ (p : ℤ) ∣ Cx) (hCm : ¬ (p : ℤ) ∣ Cm)
+    (hxeq : x = (p : ℤ) ^ vx * Cx) (hmeq : m = (p : ℤ) ^ vm * Cm)
+    (hpar : Even ((vx : ℤ) - (vm : ℤ))) (hres : (Cx : ZMod p) = (Cm : ZMod p)) :
+    IsSquare ((x : ℚ_[p]) / (m : ℚ_[p])) := by
+  refine isSquare_padic_div_of_decomp hp (padicInt_intCast_isUnit hCx) (padicInt_intCast_isUnit hCm)
+    (vx := (vx : ℤ)) (vy := (vm : ℤ)) ?_ ?_ hpar ?_
+  · rw [hxeq]; push_cast [zpow_natCast]; ring
+  · rw [hmeq]; push_cast [zpow_natCast]; ring
+  · rw [map_intCast, map_intCast]; exact_mod_cast hres
+
 /-- **Two `ℤ_2` units with the same residue mod 8 have square ratio over `ℚ_2`.** The `p = 2` analogue of
 `isSquare_padic_div_units`: if `toZModPow 3 u = toZModPow 3 v` (same class in `ZMod 8`) then `u/v ≡ 1 (mod 8)`
 is a square (`isSquare_of_toZModPow_three_eq_one`). -/
