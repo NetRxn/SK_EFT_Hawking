@@ -544,6 +544,26 @@ the genuine large core; everything it feeds is a theorem. Build order next: (1) 
 (2) the 𝔽₂ solvability from the product formula (the crux); (3) assemble `t = ε·q·∏T`, verify place-by-place,
 feed `quaternary_isotropic_of_keystone`; (4) downstream chain + wire.
 
+**➕ WEAK-APPROXIMATION BRIDGE LAYER (2026-06-08, kernel-pure, file-gate green, NOT pushed) — CRT ⇒ square-class:**
+- `0b73a2fa` **`exists_int_prime_pow_residues`** — prime-power CRT: distinct primes, prescribed residues mod
+  `p^{e p}` ⟹ ∃ integer `k` hitting them all (`Nat.chineseRemainderOfList` + `Nat.Coprime.pow`). Prescribing mod
+  `p^{v_p(t_p)+1}` fixes the full ℚ_p-square class. The weak-approx core — matches all bad primes at once.
+- `44f3cf47` **`exists_int_factor_padicValInt`** — `m≠0 ⟹ m = p^{padicValInt p m}·m'` with `p∤m'`
+  (`padicValInt_dvd_iff`). Lets the integer matchers apply to ANY integer.
+- `a86c77e1` **`isSquare_padic_div_of_modEq`** — odd p, `k ≡ m (mod p^{v_p(m)+1})` ⟹ `IsSquare(k/m)` /ℚ_p
+  (congruence ⟹ equal valuation [ultrametric] + cofactors ≡ mod p ⟹ `isSquare_padic_div_int`). **The bridge:
+  the prime-power-CRT integer automatically shares `t_p`'s square class at each bad odd prime — connecting the
+  CRT step to bad-prime verification with NO manual decomposition.**
+🔑 reusable: `padicValInt_dvd_iff n a : p^n∣a ↔ a=0 ∨ n≤padicValInt p a`; `Nat.Coprime.pow` takes exponents
+positionally; `exists_int_factor_padicValInt (p := p)` — pin `p` (else `Fact` metavar stuck).
+
+**STATUS: the CRT→square-class→representability pipeline is now end-to-end for the bad odd primes** (need the p=2
+analogue of `isSquare_padic_div_of_modEq` — straightforward via `isSquare_2adic_div_int` + mod-8 congruence —
+plus the ∞ sign). **The ONLY remaining mathematical content is the 𝔽₂ solvability** (existence of `(ε,T)` / the
+Dirichlet prime residue making every bad-prime square-class condition hold, via `hilbertGlobalProd_eq_one`). Next
+increment: design+build the 𝔽₂ consistency (linear system over ZMod 2 with the reciprocity matrix; solvable from
+the product formula), then assemble `quaternary_solvable_of_local`.
+
 ### REMAINING toward the keystone (`quaternary_isotropic_of_keystone` consumes a global `t`):
 With the engine in hand, the keystone existence (Serre Thm 4 for the two families `a₁=−ab, a₂=−cd`) now needs:
 (a) **the consistency brick** — construct the unit target `r:ZMod D` whose images encode the matching square
