@@ -766,3 +766,25 @@ loc-iso everywhere: bad p (just shown), good odd p (`represents_of_units_odd_pad
 `reduction_assembly`; (5) strong-induction spine `diag_nary_zero_of_local` (bases n≤4 ✓); (6) p=2 rank-≥5 ℚ₂
 isotropy for application `hloc`; (7) matrix→ℚ-diagonalize → `HasWeakIsotropicVectorHyp`; (8) wire RokhlinBridge
 + D2/L2 + registry + closure reviewer. Bad set `S = {2} ∪ {odd p ∣ ∏ cₖ}` (integer coeffs).
+
+### 2026-06-08 (cont.⁵) — bad-prime certificate: INTEGER-ONLY design locked + first 2 sub-bricks
+**+2 commits (kernel-pure, `main`, NOT pushed):**
+- `7345267c` `exists_nat_pow_mul_norm_le_one` — `∃ M, ‖p^M·u‖≤1` (scale ℚ_p into ℤ_p; `pow_unbounded_of_one_lt`).
+- `b7701cd1` `exists_padicInt_binary_rep` — `B(u)=w` over ℚ_p ⟹ `∃ M, ṽ₀ ṽ₁∈ℤ_p, B(ṽ)=w·(p^M)²` (integral coords;
+  `Nat.sub_add_cancel`+`mul_le_one₀` for the `max`-exponent norm bound).
+
+🎯🎯 **KEY DESIGN INSIGHT (eliminates the feared ℚ_p "close⟹square" lemma): the bad-prime certificate uses
+ONLY integer congruences + the EXISTING integer `isSquare_padic_div_of_modEq`.** Per bad p, the global value
+`a = c₀X₀²+c₁X₁²` (X from CRT) is compared to `m_target := c₀n₀²+c₁n₁² ∈ ℤ` (n₀,n₁ = `ṽ` residues, INTEGERS) —
+so `a ≡ m_target (mod p^N)` is a clean INTEGER congruence (`p^N ∣ a−m_target` from `p^N∣Xᵢ−nᵢ`, since
+`Xᵢ²−nᵢ²=(Xᵢ−nᵢ)(Xᵢ+nᵢ)`). And `R reps −m_target`: `m_target ≡ B(ṽ)=m·p^{2M} (mod p^N over ℤ_p)` ⟹ (both
+integers) `m_target ≡ m·p^{2M} (mod p^N over ℤ)` ⟹ `isSquare_padic_div_of_modEq` ⟹ `m_target/m` square ⟹
+`R reps −m_target` (from `R reps −m`, `diag_represents_of_isSquare_ratio`). Chain to `R reps −a` likewise.
+**NO Dirichlet, NO ℚ_p closeness, NO sign — all integer machinery reused.**
+
+**REMAINING certificate sub-bricks:** (a) residue extraction: `PadicInt.appr`/`toZModPow` → integer `nᵢ` with
+`(nᵢ:ℤ_p) ≡ ṽᵢ (mod p^N)`; (b) integer-over-ℤ_p-congruence ⟹ integer-over-ℤ (`PadicInt.norm_int_le_pow_iff_dvd`
+or similar `(p^N:ℤ)∣k ↔ ‖(k:ℤ_p)‖≤p^{-N}`); (c) assemble `bad_prime_R_certificate` (∃ n₀ n₁ N m_target≠0,
+`p^N∤m_target`, ∀ X≡n: `R reps −(c₀X₀²+c₁X₁²)` ∧ value≢0); (d) global reduction step: CRT
+(`exists_int_prime_pow_residues`) over `S`, build `a`, R-iso everywhere, IH, `reduction_assembly`; (e) spine;
+(f) p=2 rank-≥5 ℚ₂ isotropy; (g) matrix→diag `HasWeakIsotropicVectorHyp`; (h) wire.
