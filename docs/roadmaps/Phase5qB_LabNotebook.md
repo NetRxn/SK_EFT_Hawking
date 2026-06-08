@@ -719,3 +719,23 @@ class at bad p ⟹ R reps −a at bad p (R reps −a_v + square scale); good p (
 induction spine `diag_nary_zero_of_local` (bases n≤4 ✓, step n≥5); (6) p=2 rank-≥5 ℚ₂ isotropy (or even-unimod
 ⊃U) for the application's `hloc`; (7) matrix→ℚ-diagonalize (`equivalent_weightedSumSquares`) →
 `HasWeakIsotropicVectorHyp`; (8) wire RokhlinBridge + D2/L2 + registry + closure reviewer.
+
+### 2026-06-08 (cont.³) — n≥5 reduction STRUCTURAL INFRASTRUCTURE COMPLETE (9 bricks); only CRT core remains
+Items (1) front-permutation, ∞-place, peel-pigeonhole, and all n≤4 bases now SHIPPED (kernel-pure, `main`,
+NOT pushed). Commits this run beyond the 6 above:
+- `cca2d408` `exists_equiv_zero_one` (front-permutation `e 0=i ∧ e 1=j` via two `Equiv.swap`s)
+- `b026aa8f` `diag_real_isotropic_of_signs` (indefinite real form isotropic: `√(−cⱼ),√(cᵢ)` witness)
+- `e7960778` `exists_peel_pair` (majority-sign pigeonhole: residual stays indefinite; `Finset.two_lt_card_iff`)
+
+**THE ONLY REMAINING MATH** is the CRT bad-prime value construction (item 2+3), which is the n=4-summit-magnitude
+core but now with NO Dirichlet / NO product-formula / NO sign-archimedean (all dissolved by majority-peel +
+weak-approx-value route). Precise plan for the CRT core (next session): for the peeled binary `B=⟨c i,c j⟩` and
+bad set `S = {2} ∪ {odd p : ∃k, ¬IsUnit (c k) at p}` (primes dividing num/den of the `c k`): (i) at each `p∈S`,
+`hloc p` gives an integer-scaled local zero `(x^p)` of `f` ⟹ `a_p := B(x₀^p,x₁^p)=−R(x≥2^p) ∈ ℤ_p`; if `a_p=0`
+then either `B` or `R` is isotropic at `p` (⟹ universal at `p`, place imposes no constraint — handle by a free
+class); (ii) CRT integers `x₀,x₁` with `x₀≡x₀^p, x₁≡x₁^p (mod p^{N_p})` at all `p∈S`
+(`exists_int_prime_pow_residues`) ⟹ `a:=B(x₀,x₁) ≡ a_p` in `ℚ_p`-square class (`isSquare_padic_div_of_modEq`
+/`_2adic_`); (iii) `g=⟨a,R⟩` locally isotropic: bad `p` (`R` reps `−a_p`⟹`−a`); good odd `p`
+(`represents_of_units_odd_padic`); `∞` (`diag_real_isotropic_of_signs` on `R`, indefinite by `exists_peel_pair`);
+(iv) IH (rank n−1) ⟹ `g` iso/ℚ; `B` reps `a` free (a=B-value); `reduction_assembly`. Then spine + p=2 + matrix
++ wire.
