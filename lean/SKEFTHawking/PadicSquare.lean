@@ -2558,6 +2558,25 @@ theorem isSquare_padic_div_units {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u v : 
     rw [map_mul, hres, ← map_mul, hvinv, map_one]
   rw [htz]; exact ⟨1, by ring⟩
 
+/-- **Square ratio over `ℚ_[p]` (odd `p`) from matching valuation parity + unit residue.** Given the explicit
+`p`-adic decompositions `x = p^{vx}·ux`, `y = p^{vy}·uy` (with `ux, uy` `ℤ_[p]` *units*), if the valuations
+have equal parity (`Even (vx − vy)`) and the unit parts have the same residue (`toZMod ux = toZMod uy`), then
+`x / y` is a square. (`p^{vx−vy} = (p^k)²` is a square since `vx−vy` is even; `ux/uy` is a square by
+`isSquare_padic_div_units`; the product is a square.) This is the square-class matcher the rank-4 keystone
+feeds to `binary_represents_of_isSquare_ratio`: the constructed global value `t` and the local common value
+`c_p` share a `ℚ_p`-square class exactly when their valuation parities and unit residues agree. -/
+theorem isSquare_padic_div_of_decomp {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {x y : ℚ_[p]}
+    {ux uy : ℤ_[p]} (hux : IsUnit ux) (huy : IsUnit uy) {vx vy : ℤ}
+    (hx : x = (p : ℚ_[p]) ^ vx * (ux : ℚ_[p])) (hy : y = (p : ℚ_[p]) ^ vy * (uy : ℚ_[p]))
+    (hpar : Even (vx - vy)) (hres : PadicInt.toZMod ux = PadicInt.toZMod uy) :
+    IsSquare (x / y) := by
+  have hp0 : (p : ℚ_[p]) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  obtain ⟨r, hr⟩ := hpar
+  have hpow : IsSquare ((p : ℚ_[p]) ^ (vx - vy)) :=
+    ⟨(p : ℚ_[p]) ^ r, by rw [hr, zpow_add₀ hp0]⟩
+  rw [hx, hy, mul_div_mul_comm, ← zpow_sub₀ hp0]
+  exact hpow.mul (isSquare_padic_div_units hp hux huy hres)
+
 /-- **Two `ℤ_2` units with the same residue mod 8 have square ratio over `ℚ_2`.** The `p = 2` analogue of
 `isSquare_padic_div_units`: if `toZModPow 3 u = toZModPow 3 v` (same class in `ZMod 8`) then `u/v ≡ 1 (mod 8)`
 is a square (`isSquare_of_toZModPow_three_eq_one`). -/
