@@ -40,13 +40,18 @@ import SKEFTHawking.AlgebraicRokhlin
 import SKEFTHawking.LatticeSignature
 import SKEFTHawking.RokhlinClassification
 import SKEFTHawking.RokhlinBridge
+import SKEFTHawking.RokhlinHMRankFour
 
 namespace SKEFTHawking
 
 /-- A closed smooth spin 4-manifold, carrying exactly the data the Rokhlin derivation consumes:
-    its even-unimodular intersection form, the algebraic signature bound, and the topological
-    factor-of-two. Its signature is `latticeSig form` (see `SmoothSpinManifold4.sig`), not a free
-    parameter. -/
+    its even-unimodular intersection form and the topological factor-of-two. Its signature is
+    `latticeSig form` (see `SmoothSpinManifold4.sig`), not a free parameter.
+
+    The algebraic bound `8 ∣ σ` is **no longer an interface field** — it is now a kernel-pure theorem
+    (`eight_dvd_latticeSig`, via the discharged Hasse–Minkowski `hasIsotropicVector` + theta-modularity),
+    so a smooth spin 4-manifold is determined by its (even-unimodular) form and the genuinely topological
+    factor `2 ∣ σ/8` alone. -/
 structure SmoothSpinManifold4 where
   /-- dimension of `H²(M; ℤ)` (rank of the intersection lattice). -/
   rank : ℕ
@@ -54,21 +59,22 @@ structure SmoothSpinManifold4 where
   form : Matrix (Fin rank) (Fin rank) ℤ
   /-- spin ⟹ the intersection form is even unimodular (Wu's formula + Poincaré duality). -/
   even_unimod : IsEvenUnimodular form
-  /-- the algebraic bound `8 ∣ σ` (van der Blij; Wave-B1 input, precisely `8 ∣ latticeSig form`). -/
-  eight_dvd : (8 : ℤ) ∣ latticeSig form
   /-- the topological factor of two: `2 ∣ σ/8` (Â-genus even / `Arf(q̄)=0`). -/
   topo : (2 : ℤ) ∣ latticeSig form / 8
 
 /-- The signature `σ(M)` of a smooth spin 4-manifold is the genuine signature of its intersection form. -/
 noncomputable def SmoothSpinManifold4.sig (M : SmoothSpinManifold4) : ℤ := latticeSig M.form
 
-/-- The algebraic half: `8 ∣ σ` for a smooth spin 4-manifold (carried by the `eight_dvd` interface field). -/
-theorem SmoothSpinManifold4.eight_dvd_sig (M : SmoothSpinManifold4) : 8 ∣ M.sig := M.eight_dvd
+/-- The algebraic half: `8 ∣ σ` for a smooth spin 4-manifold — now an unconditional theorem (van der Blij,
+    derived from even-unimodularity via the discharged [HM] input), not a carried hypothesis. -/
+theorem SmoothSpinManifold4.eight_dvd_sig (M : SmoothSpinManifold4) : 8 ∣ M.sig :=
+  eight_dvd_latticeSig M.rank M.form M.even_unimod
 
 /-- **Rokhlin's theorem, wired:** `16 ∣ σ(M)` for every closed smooth spin 4-manifold — a kernel-pure
-    theorem, derived from the interface data with no global Rokhlin hypothesis and no new axiom. -/
+    theorem derived from the even-unimodular form and the topological factor alone, with no global Rokhlin
+    hypothesis, no assumed `8 ∣ σ`, and no new axiom. -/
 theorem SmoothSpinManifold4.rokhlin (M : SmoothSpinManifold4) : 16 ∣ M.sig :=
-  sixteen_dvd_latticeSig_of_eight_dvd_of_topo M.form M.eight_dvd M.topo
+  sixteen_dvd_latticeSig M.form M.even_unimod M.topo
 
 /-- **`sixteen_convergence` without the Rokhlin hypothesis.** The unconditional companion to
     `RokhlinBridge.sixteen_convergence_full`: the `16 ∣ σ` conjunct is now a *theorem*
