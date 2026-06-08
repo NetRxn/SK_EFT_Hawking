@@ -269,6 +269,21 @@ theorem exists_peel_pair {n : ℕ} (hn : 5 ≤ n) (c : Fin n → ℝ) (hc : ∀ 
       ⟨q, fun h => by rw [h] at hq; linarith [h1.2], fun h => by rw [h] at hq; linarith [h2.2], hq⟩,
       ⟨p3, d13.symm, d23.symm, h3.2⟩⟩
 
+/-- **Scaling a `p`-adic number into `ℤ_[p]` by a power of `p`.** For any `u : ℚ_[p]` there is `M` with
+`‖p^M · u‖ ≤ 1` (so `p^M · u` lies in the unit ball `ℤ_[p]`). Multiplying the local representation coordinates
+`(u₀, u₁)` of a common value by a common `p^M` clears their denominators (`p^{2M}` is a square, so the
+square class of the value is preserved) so they can be reduced mod `p^N` and fed to integer CRT. -/
+theorem exists_nat_pow_mul_norm_le_one {p : ℕ} [Fact p.Prime] (u : ℚ_[p]) :
+    ∃ M : ℕ, ‖(p : ℚ_[p]) ^ M * u‖ ≤ 1 := by
+  have hp1 : (1 : ℝ) < (p : ℝ) := by exact_mod_cast (Fact.out : p.Prime).one_lt
+  rcases eq_or_ne u 0 with rfl | hu
+  · exact ⟨0, by simp⟩
+  · obtain ⟨M, hM⟩ := pow_unbounded_of_one_lt ‖u‖ hp1
+    refine ⟨M, ?_⟩
+    have hpM : (0 : ℝ) < (p : ℝ) ^ M := by positivity
+    rw [norm_mul, norm_pow, Padic.norm_p, inv_pow, inv_mul_le_iff₀ hpM, mul_one]
+    exact hM.le
+
 /-- **Common value of the leading binary and the residual (per place).** Over a field with `Invertible 2`,
 if the diagonal form `⟨c₀, c₁, R⟩` (`R : Fin m → K`, `m ≥ 1`, all coefficients nonzero) is isotropic, then
 there is a nonzero `w` represented by the binary `⟨c₀, c₁⟩` with `−w` represented by `R`. (From a zero
