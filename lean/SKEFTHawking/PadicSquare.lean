@@ -2122,6 +2122,49 @@ theorem isSquare_intCast_zmod_of_modEq {q : ℕ} [Fact q.Prime] (hq8 : q % 8 = 1
   · rw [he, Int.cast_neg, Int.cast_natCast, neg_eq_neg_one_mul]
     exact (ZMod.exists_sq_eq_neg_one_iff.mpr (by omega)).mul hnat
 
+/-- **Flexible multiplicative QR criterion (ℕ).** If `q ≡ 1 (mod 8)` and every prime factor `p` of `m`
+satisfies `IsSquare ((q : ℤ) : ZMod p)`, then `m` is a square mod `q`. This relaxes
+`isSquare_natCast_zmod_of_modEq` (which demanded the rigid `q ≡ 1 mod p`) to the genuine reciprocity
+input. The `p = q` case is handled trivially (`(p : ZMod q) = 0` is a square); the odd-prime case uses
+`isSquare_odd_prime_zmod_flex`; `p = 2` uses `q ≡ 1 mod 8`; `IsSquare.mul` assembles over the
+factorisation. -/
+theorem isSquare_natCast_zmod_of_isSquare_residues {q : ℕ} [Fact q.Prime] (hq8 : q % 8 = 1) :
+    ∀ {m : ℕ}, (∀ p, p.Prime → p ∣ m → IsSquare (((q : ℤ)) : ZMod p)) → IsSquare ((m : ZMod q)) := by
+  have hq2 : q ≠ 2 := by omega
+  intro m
+  induction m using Nat.recOnMul with
+  | zero => intro _; exact ⟨0, by simp⟩
+  | one => intro _; exact ⟨1, by simp⟩
+  | prime p hp_prime =>
+      intro hyp
+      haveI := Fact.mk hp_prime
+      by_cases hpq : p = q
+      · subst hpq; rw [ZMod.natCast_self]; exact ⟨0, by simp⟩
+      · have h := hyp p hp_prime (dvd_refl p)
+        by_cases hp2 : p = 2
+        · subst hp2; simpa using (ZMod.exists_sq_eq_two_iff hq2).mpr (Or.inl hq8)
+        · exact isSquare_odd_prime_zmod_flex hp2 hq2 hpq (by omega) h
+  | mul a b iha ihb =>
+      intro hyp
+      have hypA : ∀ p, p.Prime → p ∣ a → IsSquare (((q : ℤ)) : ZMod p) :=
+        fun p pp hpa => hyp p pp (hpa.mul_right b)
+      have hypB : ∀ p, p.Prime → p ∣ b → IsSquare (((q : ℤ)) : ZMod p) :=
+        fun p pp hpb => hyp p pp (hpb.mul_left a)
+      rw [Nat.cast_mul]
+      exact (iha hypA).mul (ihb hypB)
+
+/-- **Flexible multiplicative QR criterion (ℤ).** If `q ≡ 1 (mod 8)` and every prime factor of `|m|`
+satisfies `IsSquare ((q : ℤ) : ZMod p)`, then `m` is a square mod `q` (the sign is absorbed: `−1` is a
+square since `q ≡ 1 mod 4`). -/
+theorem isSquare_intCast_zmod_of_isSquare_residues {q : ℕ} [Fact q.Prime] (hq8 : q % 8 = 1)
+    {m : ℤ} (hdvd : ∀ p, p.Prime → p ∣ m.natAbs → IsSquare (((q : ℤ)) : ZMod p)) :
+    IsSquare ((m : ZMod q)) := by
+  have hnat : IsSquare ((m.natAbs : ZMod q)) := isSquare_natCast_zmod_of_isSquare_residues hq8 hdvd
+  rcases Int.natAbs_eq m with he | he
+  · rw [he, Int.cast_natCast]; exact hnat
+  · rw [he, Int.cast_neg, Int.cast_natCast, neg_eq_neg_one_mul]
+    exact (ZMod.exists_sq_eq_neg_one_iff.mpr (by omega)).mul hnat
+
 /-- **Dirichlet-prime selection: a prime making two integers squares.** For nonzero `m, n : ℤ` and any
 bound `N`, there is a prime `q > N` with both `m` and `n` squares mod `q`. (Dirichlet supplies a prime
 `q ≡ 1 mod (8·|m|·|n|)`; then `isSquare_intCast_zmod_of_modEq` makes each of `m, n` a square mod `q`.) The
