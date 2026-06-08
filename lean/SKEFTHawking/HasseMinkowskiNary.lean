@@ -166,6 +166,24 @@ theorem diag_iso_rat_int {K : Type*} [Field K] [CharZero K] {n : ℕ} (c : Fin n
     fun i => (cast_num_mul_den (c i)).symm
   simp_rw [hcoef]
 
+/-- **Isotropy is invariant under reindexing the coordinates.** For an equivalence `e : Fin n ≃ Fin n`,
+`∑ cᵢ xᵢ²` is isotropic iff `∑ c_{e i} xᵢ²` is (witness `x ↦ x ∘ e`). Lets the rank reduction move any chosen
+pair of coordinates (e.g. two of the majority real sign, so the residual stays indefinite over ℝ) to the
+front. -/
+theorem diag_reindex_iso {K : Type*} [Field K] {n : ℕ} (e : Fin n ≃ Fin n) (c : Fin n → K) :
+    (∃ x : Fin n → K, x ≠ 0 ∧ ∑ i, c i * x i ^ 2 = 0) ↔
+    (∃ y : Fin n → K, y ≠ 0 ∧ ∑ i, c (e i) * y i ^ 2 = 0) := by
+  constructor
+  · rintro ⟨x, hx0, hxe⟩
+    refine ⟨fun i => x (e i), ?_, ?_⟩
+    · intro h; apply hx0; funext k; have := congrFun h (e.symm k); simpa using this
+    · rw [← Equiv.sum_comp e (fun i => c i * x i ^ 2)] at hxe; simpa using hxe
+  · rintro ⟨y, hy0, hye⟩
+    refine ⟨fun k => y (e.symm k), ?_, ?_⟩
+    · intro h; apply hy0; funext i; have := congrFun h (e i); simpa using this
+    · rw [← Equiv.sum_comp e (fun k => c k * y (e.symm k) ^ 2)]
+      simp only [Equiv.symm_apply_apply]; exact hye
+
 /-! ### `n ≤ 4` base cases in uniform `∑`-shape -/
 
 /-- A `Fin 2 → K` vector is nonzero iff not both entries vanish. -/
