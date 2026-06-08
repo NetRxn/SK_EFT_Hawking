@@ -179,6 +179,73 @@ theorem isotropic_padicInt_of_unit_det {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {
     have h := mulVec_update_coord_quadratic A hsymm y j z
     rw [h, ← hFe z]; exact hz
 
+/-! ## Rank-4 even unimodular forms have determinant `+1`
+
+The signature of a rank-4 even unimodular form is `0` (the `det = -1`, `σ = ±2` shapes do not occur): mod 4,
+`det ≡ (A₀₁A₂₃ - A₀₂A₁₃ + A₀₃A₁₂)²` (the diagonal entries are even, so every determinant term containing a
+diagonal factor is `≡ 0 mod 4`), a square `∈ {0,1}`; with `det = ±1` this forces `det = 1`. This pins the
+discriminant of the diagonalization to a **square**, so the square-discriminant machinery below applies. -/
+
+set_option maxRecDepth 4000 in
+/-- **Mod-4 determinant of an even-diagonal symmetric `4×4`.** The determinant equals the squared
+"Pfaffian-like" combination `(af - be + cd)²` modulo `4` (every term with a diagonal factor `2gᵢ` is `≡0`). -/
+theorem det4_evenDiag_sq (g0 g1 g2 g3 a b c d e f : ZMod 4) :
+    (!![2 * g0, a, b, c; a, 2 * g1, d, e; b, d, 2 * g2, f; c, e, f, 2 * g3] :
+        Matrix (Fin 4) (Fin 4) (ZMod 4)).det = (a * f - b * e + c * d) ^ 2 := by
+  have h4 : (4 : ZMod 4) = 0 := by decide
+  rw [Matrix.det_succ_row_zero]
+  simp [Fin.sum_univ_four, Matrix.det_fin_three, Matrix.submatrix_apply, Fin.succAbove,
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
+  linear_combination (g0 * g1 * g2 * g3 * 4 - g0 * g1 * f ^ 2 - g0 * g2 * e ^ 2 - g0 * g3 * d ^ 2
+    + g0 * f * d * e - g1 * g2 * c ^ 2 - g1 * g3 * b ^ 2 + g1 * f * b * c - g2 * g3 * a ^ 2
+    + g2 * e * a * c + g3 * d * a * b - f * d * a * c) * h4
+
+/-- **A rank-4 even unimodular form has `det = 1`.** (Mod-4: `det ≡ (A₀₁A₂₃ - A₀₂A₁₃ + A₀₃A₁₂)² ∈ {0,1}`;
+with `det = ±1` this forces `det = 1`, excluding the `σ = ±2` shapes — so the diagonalization has square
+discriminant.) -/
+theorem det_eq_one_of_evenUnimodular_four (A : Matrix (Fin 4) (Fin 4) ℤ) (hA : IsEvenUnimodular A) :
+    A.det = 1 := by
+  obtain ⟨hsym, hdet, heven⟩ := hA
+  obtain ⟨g0, hg0⟩ := heven 0
+  obtain ⟨g1, hg1⟩ := heven 1
+  obtain ⟨g2, hg2⟩ := heven 2
+  obtain ⟨g3, hg3⟩ := heven 3
+  have s10 : A 1 0 = A 0 1 := by
+    have h := congrFun (congrFun hsym 0) 1; simpa [Matrix.transpose_apply] using h
+  have s20 : A 2 0 = A 0 2 := by
+    have h := congrFun (congrFun hsym 0) 2; simpa [Matrix.transpose_apply] using h
+  have s30 : A 3 0 = A 0 3 := by
+    have h := congrFun (congrFun hsym 0) 3; simpa [Matrix.transpose_apply] using h
+  have s21 : A 2 1 = A 1 2 := by
+    have h := congrFun (congrFun hsym 1) 2; simpa [Matrix.transpose_apply] using h
+  have s31 : A 3 1 = A 1 3 := by
+    have h := congrFun (congrFun hsym 1) 3; simpa [Matrix.transpose_apply] using h
+  have s32 : A 3 2 = A 2 3 := by
+    have h := congrFun (congrFun hsym 2) 3; simpa [Matrix.transpose_apply] using h
+  have hM : A.map (Int.castRingHom (ZMod 4)) =
+      !![2 * (g0 : ZMod 4), (A 0 1 : ZMod 4), (A 0 2 : ZMod 4), (A 0 3 : ZMod 4);
+         (A 0 1 : ZMod 4), 2 * (g1 : ZMod 4), (A 1 2 : ZMod 4), (A 1 3 : ZMod 4);
+         (A 0 2 : ZMod 4), (A 1 2 : ZMod 4), 2 * (g2 : ZMod 4), (A 2 3 : ZMod 4);
+         (A 0 3 : ZMod 4), (A 1 3 : ZMod 4), (A 2 3 : ZMod 4), 2 * (g3 : ZMod 4)] := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp only [Matrix.map_apply, Int.coe_castRingHom, Matrix.cons_val', Matrix.cons_val_zero,
+        Matrix.cons_val_one, Matrix.head_cons, Matrix.head_fin_const, Matrix.cons_val_fin_one,
+        Matrix.empty_val', Fin.isValue, Matrix.of_apply] <;>
+      push_cast [hg0, hg1, hg2, hg3, s10, s20, s30, s21, s31, s32] <;> ring
+  have hmod : (A.det : ZMod 4)
+      = ((A 0 1 * A 2 3 - A 0 2 * A 1 3 + A 0 3 * A 1 2 : ℤ) : ZMod 4) ^ 2 := by
+    have hd : (A.map (Int.castRingHom (ZMod 4))).det = (A.det : ZMod 4) :=
+      (RingHom.map_det (Int.castRingHom (ZMod 4)) A).symm
+    rw [← hd, hM, det4_evenDiag_sq]
+    push_cast; ring
+  rcases hdet with h | h
+  · exact h
+  · exfalso
+    rw [h] at hmod
+    have hsq : ∀ x : ZMod 4, ((-1 : ℤ) : ZMod 4) ≠ x ^ 2 := by decide
+    exact hsq _ hmod
+
 /-! ## p = 2 from reciprocity (the lone sub-frontier, square-discriminant case)
 
 For a square-discriminant rank-4 form the local isotropy at a place `v` is governed by a *single* binary
