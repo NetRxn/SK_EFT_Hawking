@@ -815,13 +815,20 @@ p-adic crux): (i) assemble `bad_prime_R_certificate` (N:=padicValInt p T + 1 odd
   `exists_diag_nary_zero_2adic`). Kernel-pure. **This is the direct payoff of the closed frontier.**
 
 **REMAINING to discharge `HasWeakIsotropicVectorHyp` + wire (no walls; mechanical but voluminous):**
-- **Signature base-change** (the key next sub-brick): for the ℚ-diagonalization `A_ℚ ≃ wSS ℚ w` (from
-  `QuadraticForm.equivalent_weightedSumSquares`), transfer to ℝ so that `sigPos_of_equiv_weightedSumSquares`
-  gives `#{i | (w i:ℝ)>0} = sigPos(A_ℝ)` and `#{(w i:ℝ)<0} = sigNeg(A_ℝ)`. Then `sigPos>0 ⟹ ∃ c_i>0`,
-  `sigNeg>0 ⟹ ∃ c_j<0` (signs of the cleared-denominator integer `c` = signs of `w`). USE
-  `QuadraticForm.sigPos_of_equiv_weightedSumSquares` (Mathlib, confirmed: `Equivalent Q (wSS 𝕜 w) → sigPos Q
-  = {i|0<w i}.ncard`) + a ℚ→ℝ base change of the `Equivalent`. (Mathlib API to locate/build: base-change of
-  `QuadraticMap.Equivalent` / `Matrix.toQuadraticMap'` along `algebraMap ℚ ℝ`.)
+- ✅ **Signature value-bricks SHIPPED (`c844358a`):** `one_le_sigPos_of_pos_value` / `one_le_sigNeg_of_neg_value`
+  (a positive/negative value of `Q` forces `sigPos≥1`/`sigNeg≥1`, via `le_sigPos_of_posDef` on the spanned
+  line). These CONSUME the positivity transfer below.
+- **ℝ→ℚ positivity transfer** (THE key next brick): `0 < sigPos(A_ℝ) ⟹ 0 < sigPos(A_ℚ)` (likewise sigNeg).
+  Mathlib has NO signature scalar-extension invariance (searched). Route = DENSITY (not base-change of the
+  equivalence — that needs the BilinForm-matrix API which timed out on `IsSymm`): (1) `0<sigPos(A_ℝ)` →
+  `exists_finrank_eq_sigPos_and_posDef` (bare name, confirmed: gives posDef subspace `V`, `finrank V =
+  sigPos`) → `V≠⊥` → `∃ y:ℝ^m, 0 < Q_ℝ y`; (2) `{y | 0 < Q_ℝ y}` is OPEN (`Q_ℝ = fun y => y ⬝ᵥ (A.map ℝ) *ᵥ y`
+  continuous — dotProduct/mulVec continuous in finite dim) and nonempty; ℚ^m DENSE in ℝ^m (componentwise
+  `Rat.cast` dense range) → `∃ x:ℚ^m, 0 < Q_ℝ(↑x)`; (3) `Q_ℝ(↑x) = ↑(Q_ℚ x)` (cast commutes with the
+  bilinear sum) → `0 < Q_ℚ x`; (4) `one_le_sigPos_of_pos_value (A_ℚ).toQuadraticMap' x` → `0 < sigPos(A_ℚ)`.
+  ~60–100 lines real-analysis; the LONE remaining analytic step in the assembly. (Then signs of the integer
+  `c` from clearing denoms of the ℚ-diag weights `w` = signs of `w`, with `#pos(w)=sigPos(A_ℚ)>0` via
+  `sigPos_of_equiv_weightedSumSquares` applied to the ℚ-equivalence — NO base change.)
 - **Matrix↔diagonal bridge:** `matrix_isotropic_iff_weighted` (already shipped, HasseMinkowskiLocal) gives
   `A_K iso ⟺ ⟨w⟩ iso` from the equivalence — no matrix `P` extraction needed. + `diag_iso_rat_int` /
   `exists_diag_isotropic_congr_sq` to pass between ℚ-weights `w` and integer `c`, + `exists_int_isotropic_of_rat`.
