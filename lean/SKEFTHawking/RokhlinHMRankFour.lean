@@ -23,11 +23,12 @@ import SKEFTHawking.AlgebraicRokhlin
 import SKEFTHawking.HasseMinkowskiLocal
 import SKEFTHawking.PadicSquare
 import SKEFTHawking.HilbertProductFormula
+import SKEFTHawking.RokhlinHMDischarge
 
 namespace SKEFTHawking
 
 open scoped BigOperators
-open Matrix
+open Matrix QuadraticForm
 
 /-- **One-coordinate variation of a quadratic form is a univariate quadratic.** For a symmetric matrix
 `A`, replacing coordinate `j` of `y` by `t` (where `y j = 0`) gives
@@ -445,5 +446,127 @@ theorem diag_four_solvable_of_local_no_two {d : Fin 4 → ℤ} (hne : ∀ i, d i
   · rw [Fin.sum_univ_four]; simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
       Matrix.cons_val_two, Matrix.cons_val_three, Matrix.tail_cons]
     push_cast at he ⊢; linear_combination he
+
+/-- A ring hom commutes with the Gram quadratic value `v ⬝ᵥ M *ᵥ v`. -/
+theorem ringHom_map_gram {R S : Type*} [CommRing R] [CommRing S] (ι : R →+* S) {k : ℕ}
+    (M : Matrix (Fin k) (Fin k) R) (v : Fin k → R) :
+    ι (v ⬝ᵥ M *ᵥ v) = (fun i => ι (v i)) ⬝ᵥ (M.map ι) *ᵥ (fun i => ι (v i)) := by
+  simp only [dotProduct, Matrix.mulVec, map_sum, map_mul, Matrix.map_apply]
+
+/-- **Weak [HM] at rank 4.** Every indefinite even unimodular `4×4` form has a nonzero integer isotropic
+vector. `det = 1` (excluding `σ = ±2`) makes the ℚ-diagonalization square-discriminant; ℝ-isotropy is
+indefiniteness; odd-`p` isotropy is the `ℤ_p`-unimodular fact (brick a) transported through the explicit
+congruence; the `p = 2` place is then free by reciprocity (brick b). -/
+theorem weakIsotropic_rank_four (A : Matrix (Fin 4) (Fin 4) ℤ) (hA : IsEvenUnimodular A)
+    (hsp : 0 < sigPos (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
+    (hsn : 0 < sigNeg (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap') :
+    ∃ v : Fin 4 → ℤ, v ≠ 0 ∧ v ⬝ᵥ A *ᵥ v = 0 := by
+  apply exists_int_isotropic_of_rat A
+  set Aq : Matrix (Fin 4) (Fin 4) ℚ := A.map (Int.cast : ℤ → ℚ) with hAq
+  have hAqsymm : Aq.IsSymm := by
+    ext i j
+    rw [Matrix.transpose_apply, hAq, Matrix.map_apply, Matrix.map_apply]
+    congr 1
+    have := congrFun (congrFun hA.1 i) j; rwa [Matrix.transpose_apply] at this
+  have hdetq : Aq.det = 1 := by
+    have h : Aq.det = ((A.det : ℤ) : ℚ) := (RingHom.map_det (Int.castRingHom ℚ) A).symm
+    rw [h, det_eq_one_of_evenUnimodular_four A hA, Int.cast_one]
+  obtain ⟨w, hwe⟩ := equivalent_weightedSumSquares_fin Aq
+  obtain ⟨P, hPunit, hAeq⟩ := congr_of_equiv_weighted Aq hAqsymm hwe
+  have hsqw : IsSquare (∏ i, w i) := isSquare_prod_weights Aq hAqsymm hdetq hwe
+  -- real signs of w (from indefiniteness)
+  have hspq : 0 < sigPos Aq.toQuadraticMap' := sigPos_cast_pos A hsp
+  have hsnq : 0 < sigNeg Aq.toQuadraticMap' := sigNeg_cast_pos A hsn
+  rw [sigPos_of_equiv_weightedSumSquares hwe] at hspq
+  rw [sigNeg_of_equiv_weightedSumSquares hwe] at hsnq
+  obtain ⟨ip, hip⟩ : ∃ i, 0 < w i := Set.nonempty_of_ncard_ne_zero hspq.ne'
+  obtain ⟨iN, hiN⟩ : ∃ i, w i < 0 := Set.nonempty_of_ncard_ne_zero hsnq.ne'
+  rw [matrix_isotropic_iff_weighted Aq w hwe]
+  by_cases hz : ∃ i, w i = 0
+  · obtain ⟨i0, hi0⟩ := hz
+    exact ⟨fun j => if j = i0 then 1 else 0, fun h => by simpa using congrFun h i0, by
+      rw [Finset.sum_eq_single i0]
+      · simp [hi0]
+      · intro b _ hb; simp [hb]
+      · intro h; simp at h⟩
+  · simp only [not_exists] at hz
+    set d : Fin 4 → ℤ := fun i => (w i).num * ((w i).den : ℤ) with hd
+    have hdne : ∀ i, d i ≠ 0 := fun i =>
+      mul_ne_zero (Rat.num_ne_zero.mpr (hz i)) (by exact_mod_cast (w i).den_nz)
+    have hiff := diag_iso_rat_int (K := ℚ) w
+    simp only [Rat.cast_id] at hiff
+    rw [hiff]
+    -- IsSquare (∏ d)
+    have hsqd : IsSquare (d 0 * d 1 * d 2 * d 3) := by
+      rw [← Rat.isSquare_intCast_iff]
+      have hnum : ∀ i, ((w i).num : ℚ) = (w i) * ((w i).den : ℚ) :=
+        fun i => (div_eq_iff (by exact_mod_cast (w i).den_nz)).mp (Rat.num_div_den (w i))
+      have hcast : ((d 0 * d 1 * d 2 * d 3 : ℤ) : ℚ)
+          = (∏ i, w i) * (((w 0).den * (w 1).den * (w 2).den * (w 3).den : ℕ) : ℚ) ^ 2 := by
+        simp only [hd, Fin.prod_univ_four]
+        push_cast
+        rw [hnum 0, hnum 1, hnum 2, hnum 3]; ring
+      rw [hcast]
+      exact hsqw.mul ⟨_, pow_two _⟩
+    refine diag_four_solvable_of_local_no_two hdne hsqd ?_ ?_
+    · -- ℝ: indefinite ⟹ a + and − coefficient among (d i : ℝ)
+      have hdR_pos : 0 < ((d ip : ℤ) : ℝ) := by
+        rw [hd]; have : (0:ℤ) < (w ip).num * (w ip).den :=
+          mul_pos (Rat.num_pos.mpr hip) (by exact_mod_cast (w ip).pos)
+        exact_mod_cast this
+      have hdR_neg : ((d iN : ℤ) : ℝ) < 0 := by
+        rw [hd]; have : (w iN).num * ((w iN).den : ℤ) < 0 :=
+          mul_neg_of_neg_of_pos (Rat.num_neg.mpr hiN) (by exact_mod_cast (w iN).pos)
+        exact_mod_cast this
+      have hipN : ip ≠ iN := fun h => by rw [h] at hip; exact absurd (hip.trans hiN) (lt_irrefl _)
+      exact diag_real_isotropic_of_signs (fun i => (d i : ℝ)) ip iN hipN hdR_pos hdR_neg
+    · -- odd p: brick (a) + congruence transfer
+      intro p _ hp2
+      set φ : ℚ →+* ℚ_[p] := Rat.castHom ℚ_[p] with hφ
+      -- A over ℤ_p isotropic (brick a)
+      have hsymZp : (A.map (Int.castRingHom ℤ_[p])).transpose = A.map (Int.castRingHom ℤ_[p]) := by
+        ext i j
+        simp only [Matrix.transpose_apply, Matrix.map_apply]
+        congr 1
+        have := congrFun (congrFun hA.1 i) j; rwa [Matrix.transpose_apply] at this
+      have hunitZp : IsUnit ((A.map (Int.castRingHom ℤ_[p])).det) := by
+        have hdt : (A.map (Int.castRingHom ℤ_[p])).det = (Int.castRingHom ℤ_[p]) A.det :=
+          (RingHom.map_det (Int.castRingHom ℤ_[p]) A).symm
+        rw [hdt]
+        rcases hA.2.1 with h | h <;> rw [h] <;> simp
+      obtain ⟨vp, hvp0, hvpe⟩ :=
+        isotropic_padicInt_of_unit_det hp2 (by norm_num) _ hsymZp hunitZp
+      -- cast ℤ_p → ℚ_p : A.map(ℤ→ℚ_p) isotropic
+      set ι : ℤ_[p] →+* ℚ_[p] := algebraMap ℤ_[p] ℚ_[p] with hι
+      have hAQp_iso : ∃ x : Fin 4 → ℚ_[p], x ≠ 0 ∧
+          x ⬝ᵥ (A.map (Int.cast : ℤ → ℚ_[p])) *ᵥ x = 0 := by
+        have hinj : Function.Injective ι := FaithfulSMul.algebraMap_injective ℤ_[p] ℚ_[p]
+        refine ⟨fun i => ι (vp i), fun h => hvp0 (funext fun i => ?_), ?_⟩
+        · have hc := congrFun h i
+          exact hinj ((show ι (vp i) = 0 by simpa using hc).trans (map_zero ι).symm)
+        · have hmateq : A.map (Int.cast : ℤ → ℚ_[p])
+              = (A.map (Int.castRingHom ℤ_[p])).map ι := by
+            ext i j; simp [Matrix.map_apply, hι, map_intCast]
+          have hg := ringHom_map_gram ι (A.map (Int.castRingHom ℤ_[p])) vp
+          rw [hvpe, map_zero] at hg
+          rw [hmateq]; exact hg.symm
+      -- transfer: A_{ℚ_p} = Aq.map φ = (P.map φ)ᵀ * diagonal (φ∘w) * (P.map φ)
+      have hAcast : A.map (Int.cast : ℤ → ℚ_[p]) = Aq.map φ := by
+        ext i j; simp only [hAq, Matrix.map_apply, hφ, map_intCast]
+      have hAeqp : Aq.map φ = (P.map φ)ᵀ * Matrix.diagonal (fun i => φ (w i)) * (P.map φ) := by
+        rw [hAeq]
+        rw [Matrix.map_mul, Matrix.map_mul, Matrix.transpose_map, Matrix.diagonal_map (map_zero φ)]
+      have hPunitp : IsUnit (P.map φ).det := by
+        have hdt : (P.map φ).det = φ P.det := (RingHom.map_det φ P).symm
+        rw [hdt]; exact hPunit.map φ
+      have hdiagiso : ∃ x : Fin 4 → ℚ_[p], x ≠ 0 ∧
+          x ⬝ᵥ Matrix.diagonal (fun i => φ (w i)) *ᵥ x = 0 := by
+        rw [matrix_isotropic_congr (Matrix.diagonal (fun i => φ (w i))) (P.map φ) hPunitp]
+        rw [← hAeqp, ← hAcast]; exact hAQp_iso
+      obtain ⟨x, hx0, hxe⟩ := hdiagiso
+      have hsum : ∑ i, (w i : ℚ_[p]) * x i ^ 2 = 0 := by
+        rw [← hxe, dotProduct]; refine Finset.sum_congr rfl fun i _ => ?_
+        rw [Matrix.mulVec_diagonal]; simp only [hφ, Rat.coe_castHom]; ring
+      exact (diag_iso_rat_int (K := ℚ_[p]) w).mp ⟨x, hx0, hsum⟩
 
 end SKEFTHawking
