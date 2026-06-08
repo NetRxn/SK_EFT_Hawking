@@ -113,4 +113,106 @@ theorem reduction_assembly {m : ℕ} {c0 c1 a : ℚ} (ha : a ≠ 0) {R : Fin m �
     have hsub : c0 * (u0 * y 0) ^ 2 + c1 * (u1 * y 0) ^ 2 = a * y 0 ^ 2 := by rw [← hBeq]; ring
     linarith [hsub]
 
+/-! ### Rational ⇄ integer coefficient scaling -/
+
+/-- The integer `c.num · c.den` cast into a characteristic-zero field equals `c · (c.den)²`. This is the
+identity behind clearing the denominator of a single diagonal coefficient by the variable substitution
+`x ↦ c.den · x` (coefficient `c` becomes the integer `c.num · c.den`). -/
+theorem cast_num_mul_den {K : Type*} [Field K] [CharZero K] (c : ℚ) :
+    ((c.num * (c.den : ℤ) : ℤ) : K) = (c : K) * ((c.den : ℕ) : K) ^ 2 := by
+  have hd : ((c.den : ℕ) : K) ≠ 0 := by exact_mod_cast c.den_nz
+  push_cast; rw [Rat.cast_def]; field_simp
+
+/-- **Variable scaling preserves isotropy.** Over a field, scaling each variable by a nonzero `dᵢ` carries a
+nontrivial zero of `∑ (cᵢ dᵢ²) xᵢ²` to one of `∑ cᵢ xᵢ²` (witness `xᵢ ↦ dᵢ xᵢ`). Used both ways (with `d` or
+`1/d`) to convert between rational and integer diagonal coefficients and to clear denominators. -/
+theorem diag_scale_var {K : Type*} [Field K] {n : ℕ} (c d : Fin n → K) (hd : ∀ i, d i ≠ 0)
+    (hiso : ∃ x : Fin n → K, x ≠ 0 ∧ ∑ i, (c i * d i ^ 2) * x i ^ 2 = 0) :
+    ∃ x : Fin n → K, x ≠ 0 ∧ ∑ i, c i * x i ^ 2 = 0 := by
+  obtain ⟨x, hx0, hxe⟩ := hiso
+  refine ⟨fun i => d i * x i, ?_, ?_⟩
+  · intro h
+    apply hx0
+    funext i
+    have := congrFun h i
+    simp only [Pi.zero_apply] at this ⊢
+    exact (mul_eq_zero.mp this).resolve_left (hd i)
+  · rw [← hxe]; apply Finset.sum_congr rfl; intro i _; ring
+
+/-- Isotropy is invariant under multiplying every coefficient by a nonzero square `dᵢ²` (both directions of
+`diag_scale_var`). -/
+theorem diag_iso_mul_sq {K : Type*} [Field K] {n : ℕ} (c d : Fin n → K) (hd : ∀ i, d i ≠ 0) :
+    (∃ x : Fin n → K, x ≠ 0 ∧ ∑ i, c i * x i ^ 2 = 0) ↔
+    (∃ x : Fin n → K, x ≠ 0 ∧ ∑ i, (c i * d i ^ 2) * x i ^ 2 = 0) := by
+  constructor
+  · intro h
+    refine diag_scale_var (fun i => c i * d i ^ 2) (fun i => (d i)⁻¹) (fun i => inv_ne_zero (hd i)) ?_
+    obtain ⟨x, hx0, hxe⟩ := h
+    refine ⟨x, hx0, ?_⟩
+    rw [← hxe]; refine Finset.sum_congr rfl (fun i _ => ?_)
+    have hdi := hd i; field_simp
+  · exact diag_scale_var c d hd
+
+/-- **Rational ⇄ integer coefficients (per place).** Over a characteristic-zero field, the diagonal form with
+rational coefficients `c` is isotropic iff the form with integer coefficients `aᵢ = (cᵢ).num · (cᵢ).den` is
+(clear each denominator by `xᵢ ↦ (cᵢ).den · xᵢ`). This transports the rational local/global hypotheses to the
+integer `n = 4` summit `HasseMinkowskiGlobal.diag_quaternary_zero_of_local`. -/
+theorem diag_iso_rat_int {K : Type*} [Field K] [CharZero K] {n : ℕ} (c : Fin n → ℚ) :
+    (∃ x : Fin n → K, x ≠ 0 ∧ ∑ i, (c i : K) * x i ^ 2 = 0) ↔
+    (∃ x : Fin n → K, x ≠ 0 ∧ ∑ i, (((c i).num * ((c i).den : ℤ) : ℤ) : K) * x i ^ 2 = 0) := by
+  rw [diag_iso_mul_sq (fun i => ((c i : ℚ) : K)) (fun i => ((c i).den : K))
+      (fun i => by show ((c i).den : K) ≠ 0; exact_mod_cast (c i).den_nz)]
+  have hcoef : ∀ i, ((c i : ℚ) : K) * ((c i).den : K) ^ 2 = (((c i).num * ((c i).den : ℤ) : ℤ) : K) :=
+    fun i => (cast_num_mul_den (c i)).symm
+  simp_rw [hcoef]
+
+/-! ### `n ≤ 4` base cases in uniform `∑`-shape -/
+
+/-- A `Fin 4 → K` vector is nonzero iff not all four entries vanish. -/
+theorem ne_zero_iff_four {K : Type*} [Zero K] (x : Fin 4 → K) :
+    x ≠ 0 ↔ ¬(x 0 = 0 ∧ x 1 = 0 ∧ x 2 = 0 ∧ x 3 = 0) := by
+  rw [not_iff_not]; constructor
+  · intro h; subst h; simp
+  · intro ⟨h0, h1, h2, h3⟩; funext i; fin_cases i <;> simpa
+
+/-- **`n = 4` summit in `Fin 4 / ∑`-shape (integer coefficients).** Repackages
+`HasseMinkowskiGlobal.diag_quaternary_zero_of_local` with the uniform `∑ i, (a i) xᵢ²` shape used by the
+rank-induction spine (bridging via `Fin.sum_univ_four` and `ne_zero_iff_four`). -/
+theorem diag_quaternary_zero_sum_int (a : Fin 4 → ℤ) (h0 : a 0 ≠ 0) (h1 : a 1 ≠ 0)
+    (h2 : a 2 ≠ 0) (h3 : a 3 ≠ 0)
+    (hR : ∃ x : Fin 4 → ℝ, x ≠ 0 ∧ ∑ i, (a i : ℝ) * x i ^ 2 = 0)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x : Fin 4 → ℚ_[p], x ≠ 0 ∧ ∑ i, (a i : ℚ_[p]) * x i ^ 2 = 0) :
+    ∃ x : Fin 4 → ℚ, x ≠ 0 ∧ ∑ i, (a i : ℚ) * x i ^ 2 = 0 := by
+  have hRe : ∃ x y z w : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a 0:ℝ)*x^2 + (a 1:ℝ)*y^2 + (a 2:ℝ)*z^2 + (a 3:ℝ)*w^2 = 0 := by
+    obtain ⟨x, hx0, hxe⟩ := hR
+    exact ⟨x 0, x 1, x 2, x 3, (ne_zero_iff_four x).mp hx0,
+      by rw [Fin.sum_univ_four] at hxe; linarith⟩
+  have hloce : ∀ (p : ℕ) [Fact p.Prime], ∃ x y z w : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a 0:ℚ_[p])*x^2 + (a 1:ℚ_[p])*y^2 + (a 2:ℚ_[p])*z^2 + (a 3:ℚ_[p])*w^2 = 0 := by
+    intro p _
+    obtain ⟨x, hx0, hxe⟩ := hloc p
+    exact ⟨x 0, x 1, x 2, x 3, (ne_zero_iff_four x).mp hx0,
+      by rw [Fin.sum_univ_four] at hxe; linear_combination hxe⟩
+  obtain ⟨x, y, z, w, hnz, he⟩ := diag_quaternary_zero_of_local h0 h1 h2 h3 hRe hloce
+  refine ⟨![x, y, z, w], (ne_zero_iff_four _).mpr (by simpa using hnz), ?_⟩
+  rw [Fin.sum_univ_four]; simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+    Matrix.cons_val_two, Matrix.cons_val_three, Matrix.tail_cons]
+  linear_combination he
+
+/-- **Rational `n = 4` diagonal Hasse–Minkowski.** ℚ-coefficient form of the rank-4 summit, obtained from
+`diag_quaternary_zero_sum_int` by clearing denominators with `diag_iso_rat_int` over each of ℝ, ℚ_p, ℚ. The
+`n = 4` base of the rank-induction spine. -/
+theorem diag_quaternary_zero_of_local_rat (c : Fin 4 → ℚ) (hc : ∀ i, c i ≠ 0)
+    (hR : ∃ x : Fin 4 → ℝ, x ≠ 0 ∧ ∑ i, (c i : ℝ) * x i ^ 2 = 0)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x : Fin 4 → ℚ_[p], x ≠ 0 ∧ ∑ i, (c i : ℚ_[p]) * x i ^ 2 = 0) :
+    ∃ x : Fin 4 → ℚ, x ≠ 0 ∧ ∑ i, c i * x i ^ 2 = 0 := by
+  have ha : ∀ i, (c i).num * ((c i).den : ℤ) ≠ 0 := fun i =>
+    mul_ne_zero (Rat.num_ne_zero.mpr (hc i)) (by exact_mod_cast (c i).den_nz)
+  have key : ∃ x : Fin 4 → ℚ, x ≠ 0 ∧ ∑ i, (((c i).num * ((c i).den : ℤ) : ℤ) : ℚ) * x i ^ 2 = 0 :=
+    diag_quaternary_zero_sum_int _ (ha 0) (ha 1) (ha 2) (ha 3)
+      ((diag_iso_rat_int (K := ℝ) c).mp hR)
+      (fun p _ => (diag_iso_rat_int (K := ℚ_[p]) c).mp (hloc p))
+  exact (diag_iso_rat_int (K := ℚ) c).mpr key
+
 end SKEFTHawking
