@@ -2493,6 +2493,20 @@ theorem exists_int_residues (ps : List ℕ) (hps : ∀ p ∈ ps, p.Prime) (hd : 
   push_cast
   exact_mod_cast h2
 
+/-- **CRT with guaranteed coprimality: a unit-residue integer at finitely many distinct primes.** Refines
+`exists_int_residues`: if each prescribed residue `r p` is *nonzero* mod `p` (i.e. `¬ p ∣ r p`), the produced
+integer `k` not only hits `(k : ZMod p) = r p` but is also coprime to every `p ∈ ps` (`¬ (p:ℤ) ∣ k`). This is
+exactly the *unit factor* of the rank-4 keystone's global value `t = ε·q·∏p^{δ_p}·u`: `u` must be a `p`-adic
+unit at each bad prime so it perturbs no valuation while setting the unit part of `t`'s `ℚ_p`-square class. -/
+theorem exists_int_coprime_residues (ps : List ℕ) (hps : ∀ p ∈ ps, p.Prime) (hd : ps.Nodup)
+    (r : ℕ → ℕ) (hr : ∀ p ∈ ps, ¬ p ∣ r p) :
+    ∃ k : ℤ, (∀ p ∈ ps, (k : ZMod p) = (r p : ZMod p)) ∧ (∀ p ∈ ps, ¬ (p : ℤ) ∣ k) := by
+  obtain ⟨k, hk⟩ := exists_int_residues ps hps hd r
+  refine ⟨k, hk, fun p hp => ?_⟩
+  haveI := Fact.mk (hps p hp)
+  rw [← ZMod.intCast_zmod_eq_zero_iff_dvd, hk p hp, CharP.cast_eq_zero_iff (ZMod p) p]
+  exact hr p hp
+
 /-- **Equal residues ⟹ square ratio (odd `p`, unit case).** Two `ℤ_[p]` units `u, v` with the same residue
 mod `p` have `u/v` a square in `ℚ_[p]`. (`u·v⁻¹` is a unit with residue `1`, hence a square by
 `isSquare_iff_isSquare_toZMod`.) The valuation-`0` half of the square-class matching in the rank-4 keystone:
