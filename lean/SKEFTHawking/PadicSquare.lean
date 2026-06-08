@@ -2675,6 +2675,64 @@ theorem padicValInt_prod_pow {p : ℕ} [Fact p.Prime] (e : ℕ → ℕ) :
         rw [padicValNat.eq_zero_of_not_dvd hnd]
         simp only [List.mem_cons, hpq, false_or, Nat.zero_add]
 
+/-- **Coprimality with a product of prime powers.** If `k` is coprime to (not divisible by) each prime in a
+list `L`, then `k` is coprime to `∏_{q∈L} q^{e q}`. (`IsCoprime.mul_right` + `IsCoprime.pow_right` over the
+list.) Used to show the prime-power-CRT integer is a unit in `ZMod (∏ p^{e p})`, so plain Dirichlet can find a
+prime in its class. -/
+theorem isCoprime_int_prod_pow {k : ℤ} (e : ℕ → ℕ) :
+    ∀ {L : List ℕ}, (∀ q ∈ L, q.Prime) → (∀ q ∈ L, ¬ (q : ℤ) ∣ k) →
+      IsCoprime k (((L.map (fun q => q ^ e q)).prod : ℕ) : ℤ) := by
+  intro L
+  induction L with
+  | nil => intro _ _; exact isCoprime_one_right
+  | cons q T' ih =>
+      intro hT hk
+      have hqp := hT q List.mem_cons_self
+      have hcop_q : IsCoprime k (q : ℤ) :=
+        (((Nat.prime_iff_prime_int.mp hqp).coprime_iff_not_dvd).mpr (hk q List.mem_cons_self)).symm
+      have hrest := ih (fun r hr => hT r (List.mem_cons_of_mem _ hr))
+        (fun r hr => hk r (List.mem_cons_of_mem _ hr))
+      rw [List.map_cons, List.prod_cons, Nat.cast_mul, Nat.cast_pow]
+      exact (hcop_q.pow_right).mul_right hrest
+
+/-- **A prime in prescribed prime-power residue classes (Dirichlet, multi-modulus).** For a `Nodup` list `S`
+of primes, positive exponents `e`, and target residues `r p` *coprime to `p`* (so units), there is a prime
+`q > N` with `q ≡ r p (mod p^{e p})` at every `p ∈ S`. (Prime-power CRT `exists_int_prime_pow_residues` gives an
+integer `k` hitting the residues; `k` is coprime to `D = ∏ p^{e p}` since each `r p` is a `p`-unit, so
+`(k : ZMod D)` is a unit; plain Dirichlet `exists_prime_gt_eq_mod` finds a prime `q ≡ k (mod D)`, which then
+reduces to `r p` mod each `p^{e p}`.) This is the keystone construction's auxiliary-prime finder: it produces
+the single prime `q` whose residues set the unit part of `t = (S-part)·q` at every bad place — with the
+`q`-place itself recovered free by the product formula, so NO consistency constraint is imposed on `q`. -/
+theorem exists_prime_prime_pow_residues (N : ℕ) {S : List ℕ} (hS : ∀ p ∈ S, p.Prime) (hd : S.Nodup)
+    (e : ℕ → ℕ) (he : ∀ p ∈ S, 0 < e p) (r : ℕ → ℕ) (hr : ∀ p ∈ S, ¬ p ∣ r p) :
+    ∃ q : ℕ, q.Prime ∧ N < q ∧ ∀ p ∈ S, (q : ZMod (p ^ e p)) = (r p : ZMod (p ^ e p)) := by
+  obtain ⟨k, hk⟩ := exists_int_prime_pow_residues S hS hd e r
+  set D : ℕ := (S.map (fun p => p ^ e p)).prod with hD
+  have hDne : D ≠ 0 := by
+    rw [hD, Ne, List.prod_eq_zero_iff]
+    rintro hmem
+    obtain ⟨x, hx, hx0⟩ := List.mem_map.mp hmem
+    exact pow_ne_zero (e x) (hS x hx).ne_zero hx0
+  haveI : NeZero D := ⟨hDne⟩
+  have hkcop : ∀ p ∈ S, ¬ (p : ℤ) ∣ k := by
+    intro p hp hdvd
+    haveI := Fact.mk (hS p hp)
+    have hpd : p ∣ p ^ e p := dvd_pow_self p (he p hp).ne'
+    have hcast : ((k : ℤ) : ZMod p) = ((r p : ℕ) : ZMod p) := by
+      have := congrArg (ZMod.castHom hpd (ZMod p)) (hk p hp)
+      simpa using this
+    have hk0 : ((k : ℤ) : ZMod p) = 0 := (ZMod.intCast_zmod_eq_zero_iff_dvd k p).mpr hdvd
+    rw [hcast] at hk0
+    exact hr p hp ((CharP.cast_eq_zero_iff (ZMod p) p (r p)).mp hk0)
+  have hcop : IsCoprime k (D : ℤ) := isCoprime_int_prod_pow e hS hkcop
+  have hunit : IsUnit ((k : ZMod D)) := (ZMod.coe_int_isUnit_iff_isCoprime k D).mpr hcop.symm
+  obtain ⟨q, hqp, hqN, hqr⟩ := exists_prime_gt_eq_mod N hunit
+  refine ⟨q, hqp, hqN, fun p hp => ?_⟩
+  have hpdD : (p ^ e p) ∣ D := List.dvd_prod (List.mem_map_of_mem (f := fun p => p ^ e p) hp)
+  have e1 : ((q : ℕ) : ZMod (p ^ e p)) = ZMod.castHom hpdD (ZMod (p ^ e p)) ((q : ℕ) : ZMod D) := by simp
+  have e2 : ((k : ℤ) : ZMod (p ^ e p)) = ZMod.castHom hpdD (ZMod (p ^ e p)) ((k : ℤ) : ZMod D) := by simp
+  rw [e1, hqr, ← e2, hk p hp]
+
 /-- **Equal residues ⟹ square ratio (odd `p`, unit case).** Two `ℤ_[p]` units `u, v` with the same residue
 mod `p` have `u/v` a square in `ℚ_[p]`. (`u·v⁻¹` is a unit with residue `1`, hence a square by
 `isSquare_iff_isSquare_toZMod`.) The valuation-`0` half of the square-class matching in the rank-4 keystone:
