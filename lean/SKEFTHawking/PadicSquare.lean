@@ -2733,6 +2733,48 @@ theorem exists_prime_prime_pow_residues (N : ℕ) {S : List ℕ} (hS : ∀ p ∈
   have e2 : ((k : ℤ) : ZMod (p ^ e p)) = ZMod.castHom hpdD (ZMod (p ^ e p)) ((k : ℤ) : ZMod D) := by simp
   rw [e1, hqr, ← e2, hk p hp]
 
+/-- **Solvable residue for the `S`-part scaling.** For nonzero integers `SP, m` with the *same* `p`-adic
+valuation and any `δ > 0`, there is a residue `rval` coprime to `p` with `p^{v_p(m)+δ} ∣ (SP·rval − m)`.
+(Factor `SP = p^v·u_S`, `m = p^v·u_m` with `u_S, u_m` `p`-units; `u_S` is a unit mod `p^δ`, so `rval :=
+(u_S⁻¹·u_m).val` solves `u_S·rval ≡ u_m (mod p^δ)`, whence `p^{v+δ} ∣ p^v(u_S·rval − u_m) = SP·rval − m`.)
+This hides the modular inverse: it is the per-prime residue target for the keystone's auxiliary prime `q`, so
+the global value `t = (S-part)·q` lands in each local common value's square class with no explicit inverse in the
+assembly. -/
+theorem exists_residue_smul_congr {p : ℕ} [Fact p.Prime] {SP m : ℤ} (hSP : SP ≠ 0) (hm : m ≠ 0)
+    (hval : padicValInt p SP = padicValInt p m) {δ : ℕ} (hδ : 0 < δ) :
+    ∃ rval : ℕ, ¬ (p : ℤ) ∣ (rval : ℤ) ∧
+      (p : ℤ) ^ (padicValInt p m + δ) ∣ (SP * (rval : ℤ) - m) := by
+  obtain ⟨uS, hSPeq, huS⟩ := exists_int_factor_padicValInt (p := p) hSP
+  obtain ⟨uM, hmeq, huM⟩ := exists_int_factor_padicValInt (p := p) hm
+  rw [hval] at hSPeq
+  set e : ℕ := padicValInt p m with he
+  haveI : NeZero (p ^ δ) := ⟨pow_ne_zero δ (Fact.out : p.Prime).ne_zero⟩
+  have hpδ : ((p ^ δ : ℕ) : ℤ) = (p : ℤ) ^ δ := by push_cast; ring
+  have huSunit : IsUnit ((uS : ZMod (p ^ δ))) := by
+    rw [ZMod.coe_int_isUnit_iff_isCoprime, hpδ]
+    exact (((Nat.prime_iff_prime_int.mp Fact.out).coprime_iff_not_dvd).mpr huS).pow_left
+  have huMunit : IsUnit ((uM : ZMod (p ^ δ))) := by
+    rw [ZMod.coe_int_isUnit_iff_isCoprime, hpδ]
+    exact (((Nat.prime_iff_prime_int.mp Fact.out).coprime_iff_not_dvd).mpr huM).pow_left
+  set z : ZMod (p ^ δ) := Ring.inverse ((uS : ℤ) : ZMod (p ^ δ)) * ((uM : ℤ) : ZMod (p ^ δ)) with hz
+  have hkey : ((uS : ℤ) : ZMod (p ^ δ)) * z = ((uM : ℤ) : ZMod (p ^ δ)) := by
+    rw [hz, ← mul_assoc, Ring.mul_inverse_cancel _ huSunit, one_mul]
+  have hzunit : IsUnit z := isUnit_of_mul_isUnit_right (hkey ▸ huMunit)
+  refine ⟨z.val, ?_, ?_⟩
+  · intro hpd
+    have hpn : p ∣ z.val := by exact_mod_cast hpd
+    have hcop : Nat.Coprime z.val (p ^ δ) := by
+      rw [← ZMod.isUnit_iff_coprime, ZMod.natCast_rightInverse z]; exact hzunit
+    have : p ∣ 1 := hcop ▸ Nat.dvd_gcd hpn (dvd_pow_self p hδ.ne')
+    exact Nat.Prime.one_lt Fact.out |>.ne' (Nat.dvd_one.mp this)
+  · rw [hSPeq, hmeq,
+        show (p : ℤ) ^ e * uS * (z.val : ℤ) - (p : ℤ) ^ e * uM
+           = (p : ℤ) ^ e * (uS * (z.val : ℤ) - uM) by ring, pow_add]
+    apply mul_dvd_mul_left
+    rw [← hpδ, ← ZMod.intCast_zmod_eq_zero_iff_dvd]
+    push_cast
+    rw [ZMod.natCast_rightInverse z, hkey, sub_self]
+
 /-- **Equal residues ⟹ square ratio (odd `p`, unit case).** Two `ℤ_[p]` units `u, v` with the same residue
 mod `p` have `u/v` a square in `ℚ_[p]`. (`u·v⁻¹` is a unit with residue `1`, hence a square by
 `isSquare_iff_isSquare_toZMod`.) The valuation-`0` half of the square-class matching in the rank-4 keystone:
