@@ -463,10 +463,32 @@ square-class matching layer the construction feeds to `binary_represents_of_isSq
   class iff valuation parities + unit residues agree — the exact consumer of `binary_represents_of_isSquare_ratio`.**
 
 **STATE: all multiplicative ingredients (ε via `exists_sign_for_real_common`, q via `exists_prime_gt_eq_mod_isSquare`,
-∏T via `padicValInt_prod_primes`, u via `exists_int_coprime_residues`) + the square-class matcher are in hand.
-NEXT = assemble the global integer `t` and compute its valuation/unit-residue at each bad prime (compose the
-factor lemmas), then place-by-place representability verification → `quaternary_solvable_of_local` (n=4). The
-remaining work is the big assembly proof (no new walls — all leaves shipped).**
+∏T via `padicValInt_prod_primes`, u via `exists_int_coprime_residues`) + the square-class matcher are in hand.**
+
+**➕ VERIFICATION + PRODUCT-FORMULA-CLOSURE LAYER (same 2026-06-08 session, kernel-pure, file-gate green, NOT pushed):**
+- `f542e912` **`binary_represents_padic_even_val_int`** (PadicSquare) — odd `p`, `p∤a`, `p∤b`, `t≠0`,
+  `Even((t:ℚ_p).valuation)` ⟹ `⟨a,b⟩` represents `t` over `ℚ_p`. The good-place verification: at every odd
+  prime outside `2abcd` and `≠ q`, the constructed `t = ε·q·∏T` is a unit (valuation 0 even) ⟹ both binaries
+  represent it. (`padic_norm_intCast_eq_one` + `binary_represents_padic_even_val`.)
+- `129175e3` **`hilbertReal_eq_of_hilbertPrime_eq`** (HasseMinkowskiGlobal, **axiom-free []**) — if
+  `(t,−ab)_p=(a,b)_p` at EVERY finite place `p`, then it holds at `∞` too. Both global products `=1`
+  (`hilbertGlobalProd_eq_one`); equal finite factors (±1, nonzero) cancel ⟹ equal real factors. **The
+  distinguished-place mechanism of Serre Thm 4: using `∞` as the free place removes one degree of constraint
+  exactly as the product formula dictates — the construction need only match symbols at the bad FINITE places.**
+
+🔑 **KEY STRUCTURAL SIMPLIFICATION discovered this session (de-risks the assembly):** with `−ab,−cd` square mod
+the Dirichlet prime `q` (handled by the engine via `q`'s residue being a QR mod each bad prime), `q` is a square
+in `ℚ_p` at each bad prime `p` ⟹ the `(q,·)_p` factor of the symbol is `1` ⟹ **the symbol at `p` does NOT depend
+on `q`'s residue**, only on `ε` and `T` (the valuation/sign data). And at `q` itself, `−ab,−cd` square ⟹ both
+symbols are `1=1` automatically (`binary_universal_padic_of_residue`/`good_prime_symbol_auto`). So the only
+genuinely-constrained data is `ε` (real sign) + `T` (which bad primes carry the odd-valuation factor), matched
+at the bad finite places, with `∞` free by `hilbertReal_eq_of_hilbertPrime_eq`.
+
+**NEXT = the big assembly proof `quaternary_solvable_of_local` (n=4): build the global integer `t = ε·q·∏T`,
+prove its symbol at each bad finite place matches `(a,b)_p`/`(c,d)_p` by the `ε`/`T` choice (q-factor trivial),
+feed `hilbertReal_eq_of_hilbertPrime_eq` for `∞`, then `represents_everywhere_iff_symbols` +
+`quaternary_isotropic_of_keystone`. Then n≥5 Meyer, p=2 even-unimod local isotropy, `HasWeakIsotropicVectorHyp`,
+wire RokhlinBridge + D2/L2 + registry + closure reviewer. No new walls — all leaves shipped.**
 
 ### REMAINING toward the keystone (`quaternary_isotropic_of_keystone` consumes a global `t`):
 With the engine in hand, the keystone existence (Serre Thm 4 for the two families `a₁=−ab, a₂=−cd`) now needs:
