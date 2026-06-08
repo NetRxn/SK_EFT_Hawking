@@ -2640,6 +2640,41 @@ theorem not_dvd_sign_mul_prod_primes {s : ℤ} (hs : s = 1 ∨ s = -1) (L : List
     obtain ⟨q, hqL, hpq⟩ := hp.prime.dvd_prod_iff.mp h
     exact hpL (((Nat.prime_dvd_prime_iff_eq hp (hL q hqL)).mp hpq) ▸ hqL)
 
+/-- **Weighted product valuation: `v_p(∏ q^{e q}) = e p` (or 0).** For a `Nodup` list `L` of primes and any
+exponent function `e`, the `p`-adic valuation of `∏_{q∈L} q^{e q}` is `e p` if `p ∈ L` and `0` otherwise. The
+prime-power generalisation of `padicValInt_prod_primes` (= the `e ≡ 1` case). This computes the valuation of the
+rank-4 keystone's `S`-part `∏_{p∈S} p^{v_p(m_p)}` at each bad prime, giving `v_p(t) = v_p(m_p)` exactly — the
+valuation match the bad-place congruence certificates require. -/
+theorem padicValInt_prod_pow {p : ℕ} [Fact p.Prime] (e : ℕ → ℕ) :
+    ∀ {L : List ℕ}, (∀ q ∈ L, q.Prime) → L.Nodup →
+      padicValInt p (((L.map (fun q => q ^ e q)).prod : ℕ) : ℤ) = if p ∈ L then e p else 0 := by
+  intro L
+  induction L with
+  | nil => intro _ _; simp
+  | cons q T' ih =>
+      intro hT hd
+      have hqp : q.Prime := hT q List.mem_cons_self
+      have hT' : ∀ r ∈ T', r.Prime := fun r hr => hT r (List.mem_cons_of_mem _ hr)
+      have hd' : T'.Nodup := (List.nodup_cons.mp hd).2
+      have hqnt : q ∉ T' := (List.nodup_cons.mp hd).1
+      have hT'0 : (T'.map (fun q => q ^ e q)).prod ≠ 0 := by
+        rw [Ne, List.prod_eq_zero_iff]
+        rintro hmem
+        obtain ⟨r, hr, hr0⟩ := List.mem_map.mp hmem
+        exact pow_ne_zero (e r) (hT' r hr).ne_zero hr0
+      have hih := ih hT' hd'
+      rw [padicValInt.of_nat] at hih ⊢
+      rw [List.map_cons, List.prod_cons,
+          padicValNat.mul (pow_ne_zero (e q) hqp.ne_zero) hT'0, hih]
+      by_cases hpq : p = q
+      · subst hpq
+        rw [padicValNat.prime_pow, if_pos List.mem_cons_self, if_neg hqnt, Nat.add_zero]
+      · have hnd : ¬ p ∣ q ^ e q := fun h =>
+          hpq ((Nat.prime_dvd_prime_iff_eq Fact.out hqp).mp
+            ((Fact.out : Nat.Prime p).prime.dvd_of_dvd_pow h))
+        rw [padicValNat.eq_zero_of_not_dvd hnd]
+        simp only [List.mem_cons, hpq, false_or, Nat.zero_add]
+
 /-- **Equal residues ⟹ square ratio (odd `p`, unit case).** Two `ℤ_[p]` units `u, v` with the same residue
 mod `p` have `u/v` a square in `ℚ_[p]`. (`u·v⁻¹` is a unit with residue `1`, hence a square by
 `isSquare_iff_isSquare_toZMod`.) The valuation-`0` half of the square-class matching in the rank-4 keystone:
