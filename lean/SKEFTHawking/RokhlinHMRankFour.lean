@@ -238,6 +238,19 @@ theorem isSquare_prod_weights {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (hA : A
   have hne : P.det ≠ 0 := hPunit.ne_zero
   exact ⟨P.det⁻¹, by field_simp; linear_combination -key⟩
 
+/-- **`Fin n`-indexed diagonalization.** `QuadraticForm.equivalent_weightedSumSquares` produces weights
+indexed by `Fin (finrank …)`; reindexing along `finrank (Fin n → ℚ) = n` gives a diagonalization indexed by
+`Fin n` directly, removing the `Fin (finrank)` vs `Fin n` friction in the assembly. -/
+theorem equivalent_weightedSumSquares_fin {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) :
+    ∃ w : Fin n → ℚ, A.toQuadraticMap'.Equivalent (QuadraticMap.weightedSumSquares ℚ w) := by
+  obtain ⟨w, hwe⟩ := QuadraticForm.equivalent_weightedSumSquares A.toQuadraticMap'
+  set e : Fin (Module.finrank ℚ (Fin n → ℚ)) ≃ Fin n := finCongr (Module.finrank_fin_fun ℚ)
+  refine ⟨w ∘ e.symm, hwe.trans ⟨⟨LinearEquiv.funCongrLeft ℚ ℚ e.symm, fun m => ?_⟩⟩⟩
+  rw [QuadraticMap.weightedSumSquares_apply, QuadraticMap.weightedSumSquares_apply,
+      ← Equiv.sum_comp e.symm (fun i => w i • (m i * m i))]
+  refine Finset.sum_congr rfl fun x _ => ?_
+  simp [LinearEquiv.funCongrLeft_apply, LinearMap.funLeft_apply, Function.comp]
+
 /-! ## Rank-4 even unimodular forms have determinant `+1`
 
 The signature of a rank-4 even unimodular form is `0` (the `det = -1`, `σ = ±2` shapes do not occur): mod 4,
