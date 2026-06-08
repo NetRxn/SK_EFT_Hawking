@@ -184,6 +184,29 @@ theorem diag_reindex_iso {K : Type*} [Field K] {n : ℕ} (e : Fin n ≃ Fin n) (
     · rw [← Equiv.sum_comp e (fun k => c k * y (e.symm k) ^ 2)]
       simp only [Equiv.symm_apply_apply]; exact hye
 
+/-- **Move two distinct indices to the front.** For distinct `i j : Fin (m+2)` there is a coordinate
+permutation sending `0 ↦ i` and `1 ↦ j` (composition of two transpositions). Combined with
+`diag_reindex_iso`, this peels any chosen coordinate pair `{i, j}` into the leading binary of the rank
+reduction. -/
+theorem exists_equiv_zero_one {m : ℕ} (i j : Fin (m + 2)) (hij : i ≠ j) :
+    ∃ e : Fin (m + 2) ≃ Fin (m + 2), e 0 = i ∧ e 1 = j := by
+  set s := Equiv.swap (0 : Fin (m + 2)) i with hs
+  set k := s.symm j with hk
+  have hk0 : k ≠ 0 := by
+    rw [hk]; intro h
+    apply hij
+    have h1 : s (s.symm j) = j := s.apply_symm_apply j
+    rw [h, hs, Equiv.swap_apply_left] at h1
+    exact h1
+  set t := Equiv.swap (1 : Fin (m + 2)) k with ht
+  refine ⟨t.trans s, ?_, ?_⟩
+  · show s (t 0) = i
+    have ht0 : t 0 = 0 := by rw [ht, Equiv.swap_apply_of_ne_of_ne (by norm_num) (Ne.symm hk0)]
+    rw [ht0, hs, Equiv.swap_apply_left]
+  · show s (t 1) = j
+    have ht1 : t 1 = k := by rw [ht]; exact Equiv.swap_apply_left 1 k
+    rw [ht1, hk]; exact s.apply_symm_apply j
+
 /-! ### `n ≤ 4` base cases in uniform `∑`-shape -/
 
 /-- A `Fin 2 → K` vector is nonzero iff not both entries vanish. -/
