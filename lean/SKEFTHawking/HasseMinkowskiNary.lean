@@ -313,6 +313,31 @@ theorem exists_common_value_split {K : Type*} [Field K] [Invertible (2 : K)]
       · intro h; exact absurd (Finset.mem_univ _) h
   · exact ⟨c0 * x 0 ^ 2 + c1 * x 1 ^ 2, hB, ⟨x 0, x 1, rfl⟩, ⟨xR, by linear_combination hsum⟩⟩
 
+/-- A diagonal form's represented values are closed under multiplication by a square (`y ↦ s • y`). -/
+theorem diag_represents_congr_sq {K : Type*} [Field K] {m : ℕ} (R : Fin m → K) {t s : K}
+    (h : ∃ y : Fin m → K, ∑ i, R i * y i ^ 2 = t) :
+    ∃ y : Fin m → K, ∑ i, R i * y i ^ 2 = t * s ^ 2 := by
+  obtain ⟨y, hy⟩ := h
+  refine ⟨fun i => s * y i, ?_⟩
+  show ∑ i, R i * (s * y i) ^ 2 = t * s ^ 2
+  have : ∑ i, R i * (s * y i) ^ 2 = s ^ 2 * ∑ i, R i * y i ^ 2 := by
+    rw [Finset.mul_sum]; exact Finset.sum_congr rfl (fun i _ => by ring)
+  rw [this, hy]; ring
+
+/-- If a diagonal form represents `c ≠ 0` and `r / c` is a square, it represents `r` (square-class
+invariance of representability — the rank-`m` analog of `binary_represents_of_isSquare_ratio`). The
+bad-prime descent transfers `R reps −w_p` to `R reps −a` once `a / w_p` is a `ℚ_p`-square. -/
+theorem diag_represents_of_isSquare_ratio {K : Type*} [Field K] {m : ℕ} (R : Fin m → K) {c r : K}
+    (hc : c ≠ 0) (hsq : IsSquare (r / c)) (h : ∃ y : Fin m → K, ∑ i, R i * y i ^ 2 = c) :
+    ∃ y : Fin m → K, ∑ i, R i * y i ^ 2 = r := by
+  obtain ⟨s, hs⟩ := hsq
+  obtain ⟨y, hy⟩ := h
+  refine ⟨fun i => s * y i, ?_⟩
+  show ∑ i, R i * (s * y i) ^ 2 = r
+  have hstep : ∑ i, R i * (s * y i) ^ 2 = s ^ 2 * ∑ i, R i * y i ^ 2 := by
+    rw [Finset.mul_sum]; exact Finset.sum_congr rfl (fun i _ => by ring)
+  rw [hstep, hy, show r = c * (s * s) by rw [← hs]; field_simp]; ring
+
 /-! ### `n ≤ 4` base cases in uniform `∑`-shape -/
 
 /-- A `Fin 2 → K` vector is nonzero iff not both entries vanish. -/
