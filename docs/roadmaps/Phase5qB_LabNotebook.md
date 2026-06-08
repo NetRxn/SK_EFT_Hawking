@@ -807,6 +807,25 @@ p-adic crux): (i) assemble `bad_prime_R_certificate` (N:=padicValInt p T + 1 odd
 (iii) strong-induction spine `diag_nary_zero_of_local`; (iv) p=2 rank-≥5 ℚ₂ isotropy; (v) matrix→ℚ-diagonalize
 → `HasWeakIsotropicVectorHyp`; (vi) wire RokhlinBridge + D2/L2 + registry + closure reviewer.
 
+### 2026-06-08 (cont.¹⁰) — hasseWitt_reciprocity SHIPPED; SCOPE CORRECTION on the p=2 frontier
+- `d1ae253a` **`hasseWitt_reciprocity`** — `∏_v εᵥ = 1` for `εᵥ = ∏_{i<j}(aᵢ,aⱼ)ᵥ` (Hasse–Witt invariant over
+  all places), from `hilbertGlobalProd_eq_one` + `prod_finprod_comm` Fubini. Kernel-pure, reuses the entire
+  Hilbert-symbol apparatus. Valid + useful (rank 3,4 local-criterion + general theory).
+- ⚠️ **CORRECTION to the cont.⁹ "reciprocity dodges p=2" claim: it does NOT dodge the MAIN case.** Rank `≥5`
+  forms are *always* locally isotropic at every place (incl. 2) with NO reciprocity constraint — so for
+  rank-`≥6` even unimodular (the bulk), the p=2 blocker is the DIRECT local fact **"every rank-5 form over ℚ₂
+  is isotropic"** ≡ "every rank-4 ℚ₂ form is universal (represents all of ℚ₂*)" ≡ "anisotropic ℚ₂ forms have
+  rank ≤ 4". This is genuine 2-adic Witt theory (the anisotropic quaternary = quaternion-division norm form;
+  its norm is surjective ⟹ universal ⟹ rank-5 isotropic). NO elementary Hensel/pigeonhole shortcut (5 coords
+  vs 8 square-classes; parity-pigeonhole gives only 3 same-parity, insufficient at p=2). `hasseWitt_reciprocity`
+  helps rank 3,4 (force isotropy-at-2 from other places) but NOT rank ≥5.
+- **HONEST REMAINING SCOPE for p=2:** build 2-adic local theory from scratch — square classes of ℚ₂ (8 classes,
+  have `isSquare_iff_toZModPow_three_eq_one`), the unit anisotropic quaternary, norm-surjectivity/universality
+  of rank-4, hence `exists_diag_nary_zero_2adic` (rank ≥5). Substantial (~ several hundred lines), NO Mathlib/
+  repo toehold (confirmed `lean_leansearch`). THEN: matrix-diagonalize extraction + `HasWeakIsotropicVectorHyp`
+  (via `matrix_isotropic_congr` + `diag_nary_zero_of_local` + `exists_int_isotropic_of_rat`) + wire RokhlinBridge
+  + D2/L2 + registry + closure reviewer. Small-rank even-unimod (2=U trivial, 4=square-disc) handled separately.
+
 ### 2026-06-08 (cont.⁹) — base-change bridge SHIPPED; p=2 local isotropy = the one remaining frontier
 - `2720c1eb` **`matrix_isotropic_congr`** (+ field-general `toQuadraticMap'_congr_field`): isotropy of `A`
   ⟺ isotropy of `Pᵀ A P` (P invertible) over ANY field, via `isometryEquivOfCompLinearEquiv` +
