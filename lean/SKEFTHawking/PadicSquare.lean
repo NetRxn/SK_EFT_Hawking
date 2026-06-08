@@ -2196,6 +2196,40 @@ theorem exists_prime_gt_isSquare_pair (N : ℕ) {m n : ℤ} (hm : m ≠ 0) (hn :
   · exact isSquare_intCast_zmod_of_modEq hq8 (mkdvd hn (fun p' _ hpn => by
       rw [hM]; exact (Dvd.dvd.mul_left hpn (8 * m.natAbs))))
 
+/-- **Flexible Dirichlet selection (the Serre Thm 4 construction engine).** Given a modulus `D` with
+`8 ∣ D`, a *unit* target `r : ZMod D` whose canonical representative is `≡ 1 (mod 8)` and is a quadratic
+residue mod every prime factor `p` of `|m|` (all of which are required to divide `D`), there is a prime
+`q > N` with `q ≡ r (mod D)` *and* `m` a square mod `q`.
+
+The prescribed residue `r` is realized *exactly* (`(q : ZMod D) = r`, via the ZMod-unit form of Dirichlet
+`Nat.forall_exists_prime_gt_and_eq_mod`), while `m` is forced to be a square mod `q` through the flexible
+multiplicative criterion `isSquare_intCast_zmod_of_isSquare_residues`: `q`'s class mod each `p ∣ |m|` equals
+`r`'s class (since `p ∣ D`), which is assumed a square. This is the construction engine of Serre
+Ch III §2.2 Theorem 4 — it lets a single auxiliary prime *simultaneously* match a prescribed square class
+(via `r`) and keep a target integer square; the consistency that such a unit `r` exists is the
+product-formula content (a separate input). It generalises `exists_prime_gt_isSquare_pair`, which is the
+rigid special case `r = 1`, `D = 8·|m|·|n|`. -/
+theorem exists_prime_gt_eq_mod_isSquare (N : ℕ) {D : ℕ} [NeZero D] {r : ZMod D} (hr : IsUnit r)
+    (h8 : (8 : ℕ) ∣ D) (hr8 : r.val % 8 = 1) {m : ℤ}
+    (hmD : ∀ p, p.Prime → p ∣ m.natAbs → p ∣ D)
+    (hmsq : ∀ p, p.Prime → p ∣ m.natAbs → IsSquare ((r.val : ZMod p))) :
+    ∃ q : ℕ, q.Prime ∧ N < q ∧ (q : ZMod D) = r ∧ IsSquare ((m : ZMod q)) := by
+  obtain ⟨q, hqN, hqp, hqr⟩ := Nat.forall_exists_prime_gt_and_eq_mod hr N
+  haveI := Fact.mk hqp
+  have hqv : q ≡ r.val [MOD D] :=
+    (ZMod.natCast_eq_natCast_iff q r.val D).mp (hqr.trans (ZMod.natCast_rightInverse r).symm)
+  have hq8 : q % 8 = 1 := by
+    have h : q % 8 = r.val % 8 := Nat.ModEq.of_dvd h8 hqv
+    omega
+  have hsq : IsSquare ((m : ZMod q)) := by
+    refine isSquare_intCast_zmod_of_isSquare_residues hq8 (fun p pp hpm => ?_)
+    haveI := Fact.mk pp
+    have hqpv : q ≡ r.val [MOD p] := Nat.ModEq.of_dvd (hmD p pp hpm) hqv
+    have hcast : ((q : ℤ) : ZMod p) = ((r.val : ℕ) : ZMod p) := by
+      rw [Int.cast_natCast]; exact (ZMod.natCast_eq_natCast_iff q r.val p).mpr hqpv
+    rw [hcast]; exact hmsq p pp hpm
+  exact ⟨q, hqp, hqN, hqr, hsq⟩
+
 /-- **`hilbertPadicInt` is invariant under a square factor (left).** `(a·s², b)_p = (a, b)_p`
 (bimultiplicativity + `(±1)² = 1`). The symbol-side analogue of `solvable_canonical_congr_sq_left`, reducing
 the symbol↔solvability bridge to the four `unit`/`p·unit` canonical cases. -/
