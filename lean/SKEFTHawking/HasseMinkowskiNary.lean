@@ -32,6 +32,7 @@ namespace SKEFTHawking
 
 open Finset
 open Matrix
+open HilbertSymbol
 
 /-- **Isotropic diagonal form is universal.** Over a field of characteristic `≠ 2`, a diagonal form
 `∑ wᵢ xᵢ²` with every coefficient nonzero that has a *nontrivial* zero represents *every* value `t`.
@@ -866,6 +867,25 @@ theorem diag_reduction_step_cons {m : ℕ} (hm3 : 3 ≤ m) {c0 c1 : ℤ} (hc0 : 
   exact reduction_assembly (a := (a : ℚ)) (by exact_mod_cast ha0) hB hgcast
 
 /-! ### General-rank diagonal Hasse–Minkowski (the spine) -/
+
+/-- **Hasse–Witt invariant reciprocity.** For nonzero integer coefficients `a`, the product over all places
+(the real place `∞` and `∏ᶠ p` over finite primes) of the local Hasse–Witt invariants
+`εᵥ = ∏_{i<j} (aᵢ, aⱼ)ᵥ` equals `1`. (Each pair contributes `∏ᵥ (aᵢ,aⱼ)ᵥ = 1` by the Hilbert product formula
+`hilbertGlobalProd_eq_one`; a Fubini swap `prod_finprod_comm` reorders the place/pair products.) This is the
+global constraint behind the `p = 2` local-isotropy input: a diagonal form isotropic at `ℝ` and every odd
+prime is forced isotropic at `2`, because the per-place isotropy obstructions multiply to `1`. -/
+theorem hasseWitt_reciprocity {n : ℕ} (a : Fin n → ℤ) (ha : ∀ i, a i ≠ 0) :
+    (∏ ij ∈ univ.filter (fun ij : Fin n × Fin n => ij.1 < ij.2),
+        hilbertReal (a ij.1 : ℝ) (a ij.2 : ℝ)) *
+      ∏ᶠ p : ℕ, (∏ ij ∈ univ.filter (fun ij : Fin n × Fin n => ij.1 < ij.2),
+        hilbertPrime p (a ij.1) (a ij.2)) = 1 := by
+  rw [← prod_finprod_comm _ _ (fun ij _ => hilbertPrime_mulSupport_finite (ha ij.1) (ha ij.2)),
+    ← Finset.prod_mul_distrib]
+  rw [← Finset.prod_const_one (s := univ.filter (fun ij : Fin n × Fin n => ij.1 < ij.2))]
+  refine Finset.prod_congr rfl (fun ij _ => ?_)
+  have := hilbertGlobalProd_eq_one (ha ij.1) (ha ij.2)
+  rw [hilbertGlobalProd] at this
+  exact this
 
 /-! ### Matrix congruence base-change (matrix → diagonal bridge) -/
 
