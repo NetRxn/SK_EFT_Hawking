@@ -2640,6 +2640,25 @@ theorem not_dvd_sign_mul_prod_primes {s : ℤ} (hs : s = 1 ∨ s = -1) (L : List
     obtain ⟨q, hqL, hpq⟩ := hp.prime.dvd_prod_iff.mp h
     exact hpL (((Nat.prime_dvd_prime_iff_eq hp (hL q hqL)).mp hpq) ▸ hqL)
 
+/-- **Support of `±1·∏(prime powers)`: a prime outside the list does not divide it.** The prime-power version
+of `not_dvd_sign_mul_prod_primes`: for `s = ±1`, primes `L`, exponents `e`, any prime `p ∉ L` is coprime to
+`s · ∏_{q∈L} q^{e q}`. The good-place support of the keystone value `t = ε·(∏_{p∈S} p^{v_p(m_p)})·q`: at every
+prime outside `S ∪ {q}`, `p ∤ t`, so `hilbertPrime_pair_match_good` applies. -/
+theorem not_dvd_sign_mul_prod_pow {s : ℤ} (hs : s = 1 ∨ s = -1) (L : List ℕ)
+    (hL : ∀ q ∈ L, q.Prime) (e : ℕ → ℕ) {p : ℕ} (hp : p.Prime) (hpL : p ∉ L) :
+    ¬ (p : ℤ) ∣ (s * (((L.map (fun q => q ^ e q)).prod : ℕ) : ℤ)) := by
+  have hpZ : Prime (p : ℤ) := Nat.prime_iff_prime_int.mp hp
+  intro hdvd
+  rcases hpZ.dvd_mul.mp hdvd with h | h
+  · rcases hs with hs1 | hs1 <;> rw [hs1] at h
+    · exact hpZ.not_dvd_one h
+    · exact hpZ.not_dvd_one (dvd_neg.mp h)
+  · rw [Int.natCast_dvd_natCast] at h
+    obtain ⟨x, hx, hpx⟩ := hp.prime.dvd_prod_iff.mp h
+    obtain ⟨r, hr, hrx⟩ := List.mem_map.mp hx
+    rw [← hrx] at hpx
+    exact hpL ((Nat.prime_dvd_prime_iff_eq hp (hL r hr)).mp (hp.prime.dvd_of_dvd_pow hpx) ▸ hr)
+
 /-- **Weighted product valuation: `v_p(∏ q^{e q}) = e p` (or 0).** For a `Nodup` list `L` of primes and any
 exponent function `e`, the `p`-adic valuation of `∏_{q∈L} q^{e q}` is `e p` if `p ∈ L` and `0` otherwise. The
 prime-power generalisation of `padicValInt_prod_primes` (= the `e ≡ 1` case). This computes the valuation of the
