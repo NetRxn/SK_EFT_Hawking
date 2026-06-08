@@ -25,7 +25,7 @@ import SKEFTHawking.PadicSquareTwo
 namespace SKEFTHawking
 
 open scoped BigOperators
-open QuadraticMap
+open QuadraticMap Matrix
 
 /-! ## Signature ⟹ value bricks (for transferring indefiniteness to the diagonalization)
 
@@ -57,6 +57,80 @@ theorem one_le_sigNeg_of_neg_value {K M : Type*} [Field K] [LinearOrder K] [IsSt
     (hx : Q x < 0) : 1 ≤ sigNeg Q := by
   rw [← sigPos_neg]
   exact one_le_sigPos_of_pos_value (-Q) x (by rw [QuadraticMap.neg_apply]; exact neg_pos.mpr hx)
+
+/-! ## ℝ → ℚ signature positivity transfer (by density)
+
+`sigPos`/`sigNeg` of a rational form is not known to Mathlib to be scalar-extension invariant, but POSITIVITY
+transfers ℝ → ℚ by density: a positive (resp. negative) value of the real form gives, via density of `ℚ^m` in
+`ℝ^m` and continuity, a positive (resp. negative) value of the rational form, which forces `sigPos`/`sigNeg`
+of the rational form to be `≥ 1`. This converts the ℝ-stated indefiniteness hypotheses of
+`HasWeakIsotropicVectorHyp` into the ℚ-side input needed to feed the ℚ-diagonalization to the spine. -/
+
+/-- **`sigPos` positivity transfers ℝ → ℚ.** If the real Gram form has `sigPos > 0`, so does the rational
+Gram form (a real positive value yields a rational one by density of `ℚ^m`, then `one_le_sigPos_of_pos_value`). -/
+theorem sigPos_cast_pos {m : ℕ} (A : Matrix (Fin m) (Fin m) ℤ)
+    (hsp : 0 < sigPos (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap') :
+    0 < sigPos (A.map (Int.cast : ℤ → ℚ)).toQuadraticMap' := by
+  obtain ⟨V, hVdim, hVpd⟩ :=
+    exists_finrank_eq_sigPos_and_posDef (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap'
+  have hVne : V ≠ ⊥ := by rintro rfl; rw [finrank_bot] at hVdim; omega
+  obtain ⟨y, hyV, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hVne
+  have hQy : 0 < y ⬝ᵥ (A.map (Int.cast : ℤ → ℝ)) *ᵥ y := by
+    have := hVpd ⟨y, hyV⟩ (by simp [hy0])
+    rwa [QuadraticMap.restrict_apply, toQuadraticMap'_apply] at this
+  set B : Matrix (Fin m) (Fin m) ℝ := A.map (Int.cast : ℤ → ℝ) with hB
+  have hcont : Continuous (fun z : Fin m → ℝ => z ⬝ᵥ B *ᵥ z) := by
+    unfold dotProduct Matrix.mulVec dotProduct; fun_prop
+  have hUopen : IsOpen {z : Fin m → ℝ | 0 < z ⬝ᵥ B *ᵥ z} := isOpen_lt continuous_const hcont
+  have hdense : DenseRange (fun (q : Fin m → ℚ) (i : Fin m) => ((q i : ℝ))) := by
+    have h : (Set.range (fun (q : Fin m → ℚ) (i : Fin m) => ((q i : ℝ))))
+        = Set.univ.pi (fun _ : Fin m => Set.range ((↑) : ℚ → ℝ)) := by
+      ext z; simp only [Set.mem_range, Set.mem_univ_pi]
+      refine ⟨?_, ?_⟩
+      · rintro ⟨q, rfl⟩ i; exact ⟨q i, rfl⟩
+      · intro h; choose q hq using h; exact ⟨q, funext fun i => hq i⟩
+    rw [DenseRange, h]; exact dense_pi Set.univ (fun i _ => Rat.denseRange_cast)
+  obtain ⟨x, hx⟩ := hdense.exists_mem_open hUopen ⟨y, hQy⟩
+  have hcast : (fun i => ((x i : ℝ))) ⬝ᵥ B *ᵥ (fun i => ((x i : ℝ)))
+      = ((x ⬝ᵥ (A.map (Int.cast : ℤ → ℚ)) *ᵥ x : ℚ) : ℝ) := by
+    simp only [dotProduct, Matrix.mulVec, hB, Matrix.map_apply]; push_cast; rfl
+  rw [Set.mem_setOf_eq, hcast] at hx
+  have hQqx : 0 < x ⬝ᵥ (A.map (Int.cast : ℤ → ℚ)) *ᵥ x := by exact_mod_cast hx
+  exact one_le_sigPos_of_pos_value _ x (by rwa [toQuadraticMap'_apply])
+
+/-- **`sigNeg` positivity transfers ℝ → ℚ.** Dual of `sigPos_cast_pos` (negative value, via the negated
+form's `posDef` subspace and `one_le_sigNeg_of_neg_value`). -/
+theorem sigNeg_cast_pos {m : ℕ} (A : Matrix (Fin m) (Fin m) ℤ)
+    (hsn : 0 < sigNeg (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap') :
+    0 < sigNeg (A.map (Int.cast : ℤ → ℚ)).toQuadraticMap' := by
+  obtain ⟨V, hVdim, hVpd⟩ :=
+    exists_finrank_eq_sigPos_and_posDef (-(A.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
+  rw [sigPos_neg] at hVdim
+  have hVne : V ≠ ⊥ := by rintro rfl; rw [finrank_bot] at hVdim; omega
+  obtain ⟨y, hyV, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hVne
+  have hQy : y ⬝ᵥ (A.map (Int.cast : ℤ → ℝ)) *ᵥ y < 0 := by
+    have := hVpd ⟨y, hyV⟩ (by simp [hy0])
+    rw [QuadraticMap.restrict_apply, QuadraticMap.neg_apply, toQuadraticMap'_apply] at this
+    linarith
+  set B : Matrix (Fin m) (Fin m) ℝ := A.map (Int.cast : ℤ → ℝ) with hB
+  have hcont : Continuous (fun z : Fin m → ℝ => z ⬝ᵥ B *ᵥ z) := by
+    unfold dotProduct Matrix.mulVec dotProduct; fun_prop
+  have hUopen : IsOpen {z : Fin m → ℝ | z ⬝ᵥ B *ᵥ z < 0} := isOpen_lt hcont continuous_const
+  have hdense : DenseRange (fun (q : Fin m → ℚ) (i : Fin m) => ((q i : ℝ))) := by
+    have h : (Set.range (fun (q : Fin m → ℚ) (i : Fin m) => ((q i : ℝ))))
+        = Set.univ.pi (fun _ : Fin m => Set.range ((↑) : ℚ → ℝ)) := by
+      ext z; simp only [Set.mem_range, Set.mem_univ_pi]
+      refine ⟨?_, ?_⟩
+      · rintro ⟨q, rfl⟩ i; exact ⟨q i, rfl⟩
+      · intro h; choose q hq using h; exact ⟨q, funext fun i => hq i⟩
+    rw [DenseRange, h]; exact dense_pi Set.univ (fun i _ => Rat.denseRange_cast)
+  obtain ⟨x, hx⟩ := hdense.exists_mem_open hUopen ⟨y, hQy⟩
+  have hcast : (fun i => ((x i : ℝ))) ⬝ᵥ B *ᵥ (fun i => ((x i : ℝ)))
+      = ((x ⬝ᵥ (A.map (Int.cast : ℤ → ℚ)) *ᵥ x : ℚ) : ℝ) := by
+    simp only [dotProduct, Matrix.mulVec, hB, Matrix.map_apply]; push_cast; rfl
+  rw [Set.mem_setOf_eq, hcast] at hx
+  have hQqx : x ⬝ᵥ (A.map (Int.cast : ℤ → ℚ)) *ᵥ x < 0 := by exact_mod_cast hx
+  exact one_le_sigNeg_of_neg_value _ x (by rwa [toQuadraticMap'_apply])
 
 /-- **Local–global for an indefinite integer diagonal form (rank ≥ 5).** A diagonal form `∑ cᵢ xᵢ²` of
 rank `n ≥ 5` with nonzero integer coefficients that is indefinite over ℝ (a positive and a negative
