@@ -158,4 +158,70 @@ theorem quinary_lift_2adic (a : Fin 5 → ℤ_[2])
     rw [hR] at hfin
     linear_combination hfin
 
+/-! ## Normalization glue: reorder + residue facts
+
+To feed `quinary_lift_2adic`, the rank-5 form is normalized so that every coefficient has valuation `0` or
+`1` (unit or two-unit) and the three units sit at coordinates `0,1,2`. The permutation glue reorders three
+chosen unit-coordinates to the front; the residue helper certifies the `≠ 0, ≠ 4` hypotheses. -/
+
+/-- **Move three distinct indices to the front.** For distinct `i,j,k : Fin (m+3)` there is a coordinate
+permutation sending `0 ↦ i, 1 ↦ j, 2 ↦ k` (three transpositions). Extends `exists_equiv_zero_one`. -/
+theorem exists_equiv_zero_one_two {m : ℕ} (i j k : Fin (m + 3))
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
+    ∃ e : Fin (m + 3) ≃ Fin (m + 3), e 0 = i ∧ e 1 = j ∧ e 2 = k := by
+  obtain ⟨e1, he10, he11⟩ : ∃ e : Fin (m + 3) ≃ Fin (m + 3), e 0 = i ∧ e 1 = j := by
+    set s := Equiv.swap (0 : Fin (m + 3)) i with hs
+    set a := s.symm j with ha
+    have ha0 : a ≠ 0 := by
+      rw [ha]; intro h; apply hij
+      have h1 : s (s.symm j) = j := s.apply_symm_apply j
+      rw [h, hs, Equiv.swap_apply_left] at h1; exact h1
+    set t := Equiv.swap (1 : Fin (m + 3)) a with ht
+    refine ⟨t.trans s, ?_, ?_⟩
+    · show s (t 0) = i
+      have ht0 : t 0 = 0 := by rw [ht, Equiv.swap_apply_of_ne_of_ne (by norm_num) (Ne.symm ha0)]
+      rw [ht0, hs, Equiv.swap_apply_left]
+    · show s (t 1) = j
+      have ht1 : t 1 = a := by rw [ht]; exact Equiv.swap_apply_left 1 a
+      rw [ht1, ha]; exact s.apply_symm_apply j
+  set p := e1.symm k with hp
+  have hp0 : p ≠ 0 := by rw [hp]; intro h; apply hik; rw [← he10, ← h, e1.apply_symm_apply]
+  have hp1 : p ≠ 1 := by rw [hp]; intro h; apply hjk; rw [← he11, ← h, e1.apply_symm_apply]
+  have h02 : (0 : Fin (m + 3)) ≠ 2 := by apply Fin.ne_of_val_ne; rw [Fin.val_zero, Fin.val_two]; omega
+  have h12 : (1 : Fin (m + 3)) ≠ 2 := by apply Fin.ne_of_val_ne; rw [Fin.val_one, Fin.val_two]; omega
+  set sw := Equiv.swap (2 : Fin (m + 3)) p with hsw
+  refine ⟨sw.trans e1, ?_, ?_, ?_⟩
+  · show e1 (sw 0) = i
+    rw [hsw, Equiv.swap_apply_of_ne_of_ne h02 (Ne.symm hp0)]; exact he10
+  · show e1 (sw 1) = j
+    rw [hsw, Equiv.swap_apply_of_ne_of_ne h12 (Ne.symm hp1)]; exact he11
+  · show e1 (sw 2) = k
+    rw [hsw, Equiv.swap_apply_left, hp, e1.apply_symm_apply]
+
+/-- A `2`-adic integer of valuation `0` or `1` (norm `1` or `1/2`) has residue mod `8` neither `0` nor `4`
+(it is a unit or a two-unit). This certifies the last-two-coordinate hypotheses of `quinary_lift_2adic`. -/
+theorem toZModPow3_ne_zero_four_of_norm {x : ℤ_[2]} (hx : ‖x‖ = 1 ∨ ‖x‖ = 2⁻¹) :
+    toZModPow 3 x ≠ 0 ∧ toZModPow 3 x ≠ 4 := by
+  haveI : Fact (1 < 2 ^ 3) := ⟨by norm_num⟩
+  rcases hx with h | h
+  · have hu : IsUnit x := PadicInt.isUnit_iff.mpr h
+    have hru : IsUnit (toZModPow 3 x) := hu.map _
+    refine ⟨hru.ne_zero, ?_⟩
+    intro h4; rw [h4] at hru; revert hru; decide
+  · have hlt : ‖x‖ < 1 := by rw [h]; norm_num
+    obtain ⟨u, rfl⟩ := (PadicInt.norm_lt_one_iff_dvd x).mp hlt
+    have h2norm : ‖((2 : ℕ) : ℤ_[2])‖ = 2⁻¹ := by
+      rw [show ((2 : ℕ) : ℤ_[2]) = (2 : ℤ_[2]) by norm_num]
+      simpa using (PadicInt.norm_p (p := 2))
+    have huu : IsUnit u := by
+      rw [PadicInt.isUnit_iff]
+      rw [norm_mul, h2norm] at h
+      have hh : (2 : ℝ)⁻¹ * ‖u‖ = 2⁻¹ := h
+      field_simp at hh
+      linarith [hh]
+    rw [map_mul, map_natCast]
+    have hdec : ∀ r : ZMod 8, IsUnit r → 2 * r ≠ 0 ∧ 2 * r ≠ 4 := by decide +revert
+    have := hdec (toZModPow 3 u) (huu.map _)
+    convert this using 2
+
 end SKEFTHawking
