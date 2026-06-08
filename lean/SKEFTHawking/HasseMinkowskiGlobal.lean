@@ -389,4 +389,22 @@ theorem quaternary_solvable_of_local {a b c d : ℤ} (ha : a ≠ 0) (hb : b ≠ 
         exact (hilbertPrime_pair_match_good hp2 hpa hpb hpc hpd hpt).2
       · simp [hilbertPrime, hpprime]
 
+/-- **Rank-4 Hasse–Minkowski, diagonal-zero form (integer).** A diagonal quaternary
+`a x² + b y² + c z² + d w² = 0` (nonzero integer coefficients) isotropic over ℝ and every `ℚ_p` is isotropic
+over ℚ. The sign-flipped restatement of `quaternary_solvable_of_local` (`c,d ↦ −c,−d`), in the diagonal shape
+the nary Hasse–Minkowski rank induction consumes. -/
+theorem diag_quaternary_zero_of_local {a b c d : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hR : ∃ x y z w : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℝ) * x ^ 2 + (b : ℝ) * y ^ 2 + (c : ℝ) * z ^ 2 + (d : ℝ) * w ^ 2 = 0)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x y z w : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 + (c : ℚ_[p]) * z ^ 2 + (d : ℚ_[p]) * w ^ 2 = 0) :
+    ∃ x y z w : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ) * x ^ 2 + (b : ℚ) * y ^ 2 + (c : ℚ) * z ^ 2 + (d : ℚ) * w ^ 2 = 0 := by
+  obtain ⟨x, y, z, w, hnz, he⟩ := quaternary_solvable_of_local ha hb
+    (neg_ne_zero.mpr hc) (neg_ne_zero.mpr hd)
+    (by obtain ⟨x, y, z, w, hnz, he⟩ := hR; exact ⟨x, y, z, w, hnz, by push_cast; linarith⟩)
+    (by intro p _; obtain ⟨x, y, z, w, hnz, he⟩ := hloc p
+        exact ⟨x, y, z, w, hnz, by push_cast; linear_combination he⟩)
+  exact ⟨x, y, z, w, hnz, by push_cast at he ⊢; linarith⟩
+
 end SKEFTHawking
