@@ -340,4 +340,42 @@ theorem exists_quinary_zero_2adic (w : Fin 5 → ℚ_[2]) (hw : ∀ i, w i ≠ 0
     rw [Finset.sum_congr rfl (fun i _ => hterm i)]; exact hcast
   exact diag_scale_back_padic w k m y hy0 hsum
 
+/-- **Rank-≥5 `ℚ₂` local isotropy.** Any diagonal form `∑ wᵢ xᵢ²` of rank `n ≥ 5` over `ℚ₂` with all
+coefficients nonzero is isotropic — the `2`-adic companion of `PadicSquare.exists_diag_nary_zero_odd_padic`.
+Reduces to the rank-5 case (`exists_quinary_zero_2adic`) on the leading five coordinates, padding the rest
+with `0`. Together with the odd-`p` lemma and the real (indefinite) case, this discharges the `p = 2` local
+hypothesis of the general-rank Hasse–Minkowski spine `diag_nary_zero_of_local` for any rank-≥5 form. -/
+theorem exists_diag_nary_zero_2adic {n : ℕ} (hn : 5 ≤ n)
+    (w : Fin n → ℚ_[2]) (hw : ∀ i, w i ≠ 0) :
+    ∃ x : Fin n → ℚ_[2], x ≠ 0 ∧ ∑ i, w i * x i ^ 2 = 0 := by
+  set w5 : Fin 5 → ℚ_[2] := fun j => w (Fin.castLE hn j) with hw5def
+  have hw5 : ∀ j, w5 j ≠ 0 := fun j => hw _
+  obtain ⟨x5, hx50, hx5eq⟩ := exists_quinary_zero_2adic w5 hw5
+  set x : Fin n → ℚ_[2] := fun i => if h : i.val < 5 then x5 ⟨i.val, h⟩ else 0 with hxdef
+  refine ⟨x, ?_, ?_⟩
+  · obtain ⟨j, hj⟩ := Function.ne_iff.mp hx50
+    intro hxz
+    apply hj
+    have hxi : x (Fin.castLE hn j) = 0 := by rw [hxz]; rfl
+    rw [hxdef] at hxi; simp only at hxi
+    rw [dif_pos (show (Fin.castLE hn j).val < 5 from j.isLt)] at hxi
+    exact hxi
+  · have hzero : ∀ i ∈ Finset.univ, i ∉ Finset.univ.map (Fin.castLEEmb hn) →
+        w i * x i ^ 2 = 0 := by
+      intro i _ hi
+      have hnlt : ¬ (i.val < 5) := by
+        intro hlt
+        exact hi (Finset.mem_map.mpr ⟨⟨i.val, hlt⟩, Finset.mem_univ _, rfl⟩)
+      rw [hxdef]; simp only [dif_neg hnlt]; ring
+    rw [← Finset.sum_subset (Finset.subset_univ (Finset.univ.map (Fin.castLEEmb hn))) hzero,
+      Finset.sum_map]
+    have hterm : ∀ j : Fin 5, w (Fin.castLEEmb hn j) * x (Fin.castLEEmb hn j) ^ 2
+        = w5 j * x5 j ^ 2 := by
+      intro j
+      have hxj : x (Fin.castLEEmb hn j) = x5 j := by
+        rw [hxdef]; simp only [dif_pos (show (Fin.castLEEmb hn j).val < 5 from j.isLt)]; congr 1
+      rw [hxj]; rfl
+    rw [Finset.sum_congr rfl (fun j _ => hterm j)]
+    exact hx5eq
+
 end SKEFTHawking
