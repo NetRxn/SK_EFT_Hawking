@@ -119,4 +119,31 @@ theorem hilbertPrime_eq_of_others {a b t : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (h
     exact one_ne_zero h2.symm
   exact mul_left_cancel₀ hKPg (by linear_combination h1.trans h2.symm)
 
+/-- **Keystone in pure Hilbert-symbol form (the Serre Thm 4 output shape).** If there is a single nonzero
+integer `t` whose linear Hilbert-symbol prescriptions match *both* binary parts at *every* place — ℝ and all
+ℚ_p, for `(t,−ab)` against `(a,b)` and `(t,−cd)` against `(c,d)` — then the quaternary
+`a x² + b y² = c z² + d w²` has a nontrivial rational solution. (`represents_everywhere_iff_symbols` turns the
+symbol prescriptions into everywhere-representability of `t` by both binaries; `quaternary_isotropic_of_keystone`
+assembles.) This is exactly the interface between Serre Ch III §2.2 Theorem 4 (which produces such a global `t`
+with prescribed symbols) and the rank-4 Hasse–Minkowski conclusion: the *sole* remaining input to `n = 4` HM is
+the construction of this `t`. -/
+theorem quaternary_isotropic_of_symbol_keystone {a b c d : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hkey : ∃ t : ℤ, t ≠ 0 ∧
+      (hilbertReal ((t : ℤ) : ℝ) ((-(a * b) : ℤ) : ℝ) = hilbertReal ((a : ℤ) : ℝ) ((b : ℤ) : ℝ)) ∧
+      (∀ (p : ℕ) [Fact p.Prime], hilbertPrime p t (-(a * b)) = hilbertPrime p a b) ∧
+      (hilbertReal ((t : ℤ) : ℝ) ((-(c * d) : ℤ) : ℝ) = hilbertReal ((c : ℤ) : ℝ) ((d : ℤ) : ℝ)) ∧
+      (∀ (p : ℕ) [Fact p.Prime], hilbertPrime p t (-(c * d)) = hilbertPrime p c d)) :
+    ∃ x y z w : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ) * x ^ 2 + (b : ℚ) * y ^ 2 = (c : ℚ) * z ^ 2 + (d : ℚ) * w ^ 2 := by
+  obtain ⟨t, ht, hRab, hPab, hRcd, hPcd⟩ := hkey
+  obtain ⟨hRab', hlocab⟩ := (represents_everywhere_iff_symbols ha hb ht).mpr ⟨hRab, hPab⟩
+  obtain ⟨hRcd', hloccd⟩ := (represents_everywhere_iff_symbols hc hd ht).mpr ⟨hRcd, hPcd⟩
+  refine quaternary_isotropic_of_keystone (by exact_mod_cast ha) (by exact_mod_cast hb)
+    (by exact_mod_cast hc) (by exact_mod_cast hd) ⟨(t : ℚ), by exact_mod_cast ht, ?_, ?_, ?_, ?_⟩
+  · obtain ⟨u, v, h⟩ := hRab'; exact ⟨u, v, by push_cast at h ⊢; linear_combination h⟩
+  · intro p _; obtain ⟨u, v, h⟩ := hlocab p; exact ⟨u, v, by push_cast at h ⊢; linear_combination h⟩
+  · obtain ⟨u, v, h⟩ := hRcd'; exact ⟨u, v, by push_cast at h ⊢; linear_combination h⟩
+  · intro p _; obtain ⟨u, v, h⟩ := hloccd p; exact ⟨u, v, by push_cast at h ⊢; linear_combination h⟩
+
 end SKEFTHawking
