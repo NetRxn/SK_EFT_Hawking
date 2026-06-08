@@ -1003,3 +1003,29 @@ WLOG integer coeffs (`diag_iso_rat_int`); peel pair (`exists_peel_pair`+`exists_
 (`exists_int_prime_pow_residues`) → `X₀,X₁`; `a=c₀X₀²+c₁X₁²`; `g=⟨a,R⟩` loc-iso ∀ places (bad: cert; good odd:
 units since p∤cₖ outside S; ∞: R indef); IH (rank n−1) → `g` iso/ℚ → `reduction_assembly` → reindex back.
 Then: spine `diag_nary_zero_of_local`; p=2 rank-≥5 ℚ₂ isotropy; matrix→diag `HasWeakIsotropicVectorHyp`; wire.
+
+---
+## 🎯🎯🎯 2026-06-08 cont.¹⁴ — GOAL MET: `16 ∣ σ` UNCONDITIONAL AND WIRED
+
+`HasWeakIsotropicVectorHyp` is fully DISCHARGED and `SmoothSpinManifold4.rokhlin : 16 ∣ σ(M)` is a
+kernel-pure theorem with NO Rokhlin hypothesis, NO `eight_dvd` interface field, NO new axiom. All commits
+this session kernel-pure `{propext, Classical.choice, Quot.sound}`; ExtractDeps project-gate GREEN (9128
+jobs); `validate.py --check axiom_closure_allowlist` GREEN. `main` NOT pushed.
+
+**Per-rank discharge of weak [HM]** (`hasWeakIsotropicVector`, `RokhlinHMRankFour.lean`):
+- rank ≥5: `weakIsotropic_of_five_le` (general-rank diagonal HM spine `diag_nary_zero_of_local` + ℝ/odd-p/2-adic local isotropy).
+- rank 2: `weakIsotropic_rank_two` (even unimod ⟹ det=−1 by mod-4; explicit witness).
+- ranks 1, 3: `not_evenUnimodular_one`/`_three` (no even unimodular form of that rank).
+- rank 0: `sigPos = 0` contradiction.
+- **rank 4** (the "lone sub-frontier"), `weakIsotropic_rank_four`, assembling:
+  - `det_eq_one_of_evenUnimodular_four` (mod-4 det identity ⟹ det=1, excludes σ=±2 ⟹ square discriminant);
+  - brick (a) `isotropic_padicInt_of_unit_det` (odd-p ℤ_p-unimodular ⟹ ℚ_p-isotropic: Chevalley–Warning mod p + single-var Hensel at the auto-simple zero; engine `mulVec_update_coord_quadratic`);
+  - brick (b) `quaternary_sqdisc_solvable_of_local_no_two` (p=2 free by reciprocity — the feared 4-dim Hasse theory collapsed to BINARY Hilbert reciprocity via shipped `quaternary_sqdisc_iso_iff_ternary` + `hilbertGlobalProd_eq_one`);
+  - plumbing: `congr_of_equiv_weighted` (explicit A=PᵀdiagP), `isSquare_prod_weights` (det=1 ⟹ IsSquare ∏w), `equivalent_weightedSumSquares_fin`, `diag_four_solvable_of_local_no_two`; odd-p transferred through the congruence cast to each ℚ_p via `matrix_isotropic_congr`.
+
+**Assembly + wiring:** `hasIsotropicVector = hasIsotropic_of_weak hasWeakIsotropicVector`; `eight_dvd_latticeSig`
+(8|σ ∀ even unimodular, via `eight_dvd_latticeSig_of_HM` + theta-modularity) and `sixteen_dvd_latticeSig`
+(16|σ given 2|σ/8) are UNCONDITIONAL. `SpinRokhlinInterface.lean` drops the `eight_dvd` field;
+`SmoothSpinManifold4.rokhlin` derives 16|σ from `even_unimod` + `topo` alone. `HYPOTHESIS_REGISTRY`
+`rokhlin_sigma_mod_16` → `status='discharged'`. Only remaining interface input = the genuinely-topological
+`2 ∣ σ/8` (Â-genus even / Arf=0). Anti-circularity preserved (no ABP / Rokhlin-equivalent input).
