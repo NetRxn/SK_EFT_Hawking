@@ -490,6 +490,37 @@ feed `hilbertReal_eq_of_hilbertPrime_eq` for `∞`, then `represents_everywhere_
 `quaternary_isotropic_of_keystone`. Then n≥5 Meyer, p=2 even-unimod local isotropy, `HasWeakIsotropicVectorHyp`,
 wire RokhlinBridge + D2/L2 + registry + closure reviewer. No new walls — all leaves shipped.**
 
+**➕ INTEGER↔ℤ_p-UNIT BRIDGES (same 2026-06-08 session, kernel-pure, file-gate green, NOT pushed):**
+- `c19a881d` **`binary_represents_padic_val_zero_int`** (PadicSquare) — odd `p`, `p∤a`, `p∤b`, `t≠0`,
+  `padicValInt p t = 0` ⟹ `⟨a,b⟩` represents `t` over `ℚ_p`. The exact good-place form for the constructed `t`
+  (its valuation is read via `padicValInt_prod_primes`); bridges to the ℚ_p-valuation hyp via `Padic.valuation_intCast`.
+- `2e772372` **`padicInt_intCast_isUnit`** (PadicSquare) — `¬p∣C ⟹ IsUnit (C:ℤ_[p])`. With `map_intCast
+  PadicInt.toZMod C`, packages an integer cofactor as the `ℤ_[p]`-unit-with-known-residue that
+  `isSquare_padic_div_of_decomp` consumes (the unit part of `t=ε·q·∏T` at a bad prime is the integer `t/p`).
+
+### THE REMAINING CORE: the 𝔽₂ consistency (Serre Thm 4 heart) — precise plan
+All leaves are shipped; the bottleneck is the single hard proof that the construction data `(ε, T)` exists.
+Concretely (square-class matching via `binary_represents_of_isSquare_ratio` + `isSquare_padic_div_of_decomp`):
+at each bad odd prime `p∈S`, with `q` a QR mod `p` (so `q` is a `ℚ_p`-square, its symbol factor drops out),
+`t/c_p` is a square ⟺ `ε·∏_{p'∈T,p'≠p} p' ≡ c_p`'s unit class (mod squares mod `p`) AND `[p∈T] ≡ v_p(c_p) (mod 2)`.
+The first conditions, across all `p∈S` (plus `p=2` via mod 8) and for BOTH forms `⟨a,b⟩,⟨c,d⟩`, form a **linear
+system over 𝔽₂** in the unknowns `ε` (1 bit) + `{[p∈T] : p∈S_odd}`. **Solvability ⟸ the product formula**
+(`hilbertGlobalProd_eq_one`): the equations are consistent because the global product of each form's symbols is 1.
+`hilbertReal_eq_of_hilbertPrime_eq` already discharges the `∞` equation for free (one fewer constraint). NEXT
+increments: (i) formalize the per-bad-prime symbol/square-class of `t` as an 𝔽₂-linear functional of `(ε,T)`
+(cross-terms = Legendre symbols `legendre(p'/p)`); (ii) prove the system is solvable from the product formula
+(the genuine crux — a rank/consistency argument over 𝔽₂); (iii) assemble. This is the "hardest single piece,
+never formalized via this route." No axiom, no absent Mathlib machinery (Dirichlet present) — pure construction.
+
+### 🔎 SCOPE OBSERVATION (worth exploiting / flag for review): rank-4 indefinite even unimodular ⟹ SQUARE disc.
+An indefinite even unimodular form of rank 4 has `8∣σ ∧ |σ|≤4 ⟹ σ=0` ⟹ real form has 2 pos + 2 neg eigenvalues
+⟹ `det = (+)(+)(−)(−) = +1` (and `|det|=1` by unimodularity) ⟹ **discriminant is a square** ⟹ handled by the
+already-proven **Dirichlet-free** `quaternary_sqdisc_solvable_of_local`. So the non-square-disc n=4 construction is
+NOT needed at rank 4. Generally `det = (−1)^{(n−σ)/2}`, a square iff `4∣n`; ranks `≡2 mod 4` (6,10,…) still give
+non-square disc, so the general n=4 construction is still required for those via the n≥5 reduction. (Rank 2 even
+unimodular indefinite = `H`: `b²−4ac=1` square disc ⟹ elementary binary isotropy.) Net: the 𝔽₂ construction is
+unavoidable for rank ≥ 6, but rank-2 and rank-4 cases are already discharged by elementary/square-disc routes.
+
 ### REMAINING toward the keystone (`quaternary_isotropic_of_keystone` consumes a global `t`):
 With the engine in hand, the keystone existence (Serre Thm 4 for the two families `a₁=−ab, a₂=−cd`) now needs:
 (a) **the consistency brick** — construct the unit target `r:ZMod D` whose images encode the matching square
