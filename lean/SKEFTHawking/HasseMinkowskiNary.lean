@@ -62,4 +62,17 @@ theorem represents_of_isotropic_diag {K : Type*} [Field K] (hchar : (2 : K) ≠ 
   field_simp
   ring
 
+/-- **Good odd place: a rank `≥ 3` unit diagonal form over `ℚ_[p]` is universal.** For an odd prime `p`,
+`n ≥ 3`, and norm-1 coefficients, `∑ wᵢ xᵢ²` represents every `t ∈ ℚ_[p]`. (The form is isotropic by
+`PadicSquare.exists_diag_nary_zero_odd_padic_unit`; `represents_of_isotropic_diag` upgrades isotropy to
+universality — `ℚ_[p]` has characteristic `0`, so `(2 : ℚ_[p]) ≠ 0`.) This is the residual-form input at the
+good primes of the Meyer rank reduction: outside the finitely many bad primes the rank-`(n−2)` residual unit
+form represents the value `−a` chosen for the descent. -/
+theorem represents_of_units_odd_padic {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {n : ℕ} (hn : 3 ≤ n)
+    (w : Fin n → ℚ_[p]) (hw : ∀ i, ‖w i‖ = 1) (t : ℚ_[p]) :
+    ∃ x : Fin n → ℚ_[p], ∑ i, w i * x i ^ 2 = t := by
+  refine represents_of_isotropic_diag two_ne_zero w (fun i => ?_) ?_ t
+  · exact norm_ne_zero_iff.mp (by rw [hw i]; norm_num)
+  · exact exists_diag_nary_zero_odd_padic_unit hp hn w hw
+
 end SKEFTHawking
