@@ -446,6 +446,28 @@ that was the identified obstacle to the keystone construction.
 ∃ p>n, p.Prime ∧ ↑p=a` (ZMod-unit Dirichlet, cleaner than the ℕ-ModEq form); `ZMod.natCast_rightInverse r :
 ↑r.val = r`; `Nat.ModEq` is defeq to `% = %` (omega-usable directly); `Nat.ModEq.of_dvd`.
 
+**➕ MATCHING PRIMITIVES (same 2026-06-08 session, kernel-pure, file-gate green, `main` NOT pushed) — the
+square-class matching layer the construction feeds to `binary_represents_of_isSquare_ratio`:**
+- `318745e4` **`exists_int_coprime_residues`** — refines `exists_int_residues`: nonzero target residues
+  (`¬p∣r p`) ⟹ the CRT integer `k` hits `(k:ZMod p)=r p` AND is coprime to every `p∈ps`. The *unit factor* `u`
+  of `t = ε·q·(∏T)·u` (a `p`-adic unit at each bad prime, perturbs no valuation while setting the unit part).
+- `3b24138c` **`padicValInt_prod_primes`** — for a Nodup prime list `T`, `padicValInt p (∏T) = if p∈T then 1
+  else 0`. The *valuation-fixing factor*: `T` = bad primes where `v_p(c_p)` is odd ⟹ `t` gets matching
+  valuation parity (so `v_p(t/c_p)` is even). Proof = list induction + `padicValNat.mul/self/eq_zero_of_not_dvd`
+  + `padicValInt.of_nat`; `List.prod_eq_zero_iff` for nonzero-product; ⚠️ `List.mem_cons_self` takes NO explicit
+  args in this Mathlib.
+- `d2de4449` **`isSquare_padic_div_of_decomp`** — odd `p`, `x=p^{vx}·ux`, `y=p^{vy}·uy` (`ux,uy` ℤ_p units),
+  `Even(vx−vy)` + `toZMod ux=toZMod uy` ⟹ `IsSquare(x/y)`. `p^{vx−vy}=(p^k)²` square × `ux/uy` square
+  (`isSquare_padic_div_units`). 🔑 `mul_div_mul_comm`+`←zpow_sub₀`; `IsSquare(p^{2r})` via `⟨p^r, by rw[hr,
+  zpow_add₀]⟩` (NOT `congr 1;omega` — that over-closes). **⟹ constructed `t` and local `c_p` share a ℚ_p-square
+  class iff valuation parities + unit residues agree — the exact consumer of `binary_represents_of_isSquare_ratio`.**
+
+**STATE: all multiplicative ingredients (ε via `exists_sign_for_real_common`, q via `exists_prime_gt_eq_mod_isSquare`,
+∏T via `padicValInt_prod_primes`, u via `exists_int_coprime_residues`) + the square-class matcher are in hand.
+NEXT = assemble the global integer `t` and compute its valuation/unit-residue at each bad prime (compose the
+factor lemmas), then place-by-place representability verification → `quaternary_solvable_of_local` (n=4). The
+remaining work is the big assembly proof (no new walls — all leaves shipped).**
+
 ### REMAINING toward the keystone (`quaternary_isotropic_of_keystone` consumes a global `t`):
 With the engine in hand, the keystone existence (Serre Thm 4 for the two families `a₁=−ab, a₂=−cd`) now needs:
 (a) **the consistency brick** — construct the unit target `r:ZMod D` whose images encode the matching square
