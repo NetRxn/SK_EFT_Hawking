@@ -75,4 +75,42 @@ theorem represents_of_units_odd_padic {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {n
   · exact norm_ne_zero_iff.mp (by rw [hw i]; norm_num)
   · exact exists_diag_nary_zero_odd_padic_unit hp hn w hw
 
+/-- **Rank-reduction assembly (pure algebra).** If the leading binary `⟨c₀, c₁⟩` represents a nonzero value
+`a`, and the descended rank-`(m+1)` form `⟨a, R⟩` (over ℚ) is isotropic, then the rank-`(m+2)` form
+`⟨c₀, c₁, R⟩` is isotropic. (Substitute `a = c₀ u₀² + c₁ u₁²` into the descended zero `a y₀² + R(y') = 0`
+and split the `a`-term: the witness is `x = (u₀ y₀, u₁ y₀, y')`. Nonzero: if `y₀ = 0` the residual tail
+`y'` survives; if `y₀ ≠ 0` then `a ≠ 0 ⟹ u₀ ≠ 0 ∨ u₁ ≠ 0` makes a leading coordinate nonzero.) This is the
+descent half of the Meyer reduction, isolating the algebra from the global-value construction. -/
+theorem reduction_assembly {m : ℕ} {c0 c1 a : ℚ} (ha : a ≠ 0) {R : Fin m → ℚ}
+    (hB : ∃ u0 u1 : ℚ, c0 * u0 ^ 2 + c1 * u1 ^ 2 = a)
+    (hg : ∃ y : Fin (m + 1) → ℚ, y ≠ 0 ∧ ∑ i, (Fin.cons a R : Fin (m + 1) → ℚ) i * y i ^ 2 = 0) :
+    ∃ x : Fin (m + 2) → ℚ, x ≠ 0 ∧
+      ∑ i, (Fin.cons c0 (Fin.cons c1 R) : Fin (m + 2) → ℚ) i * x i ^ 2 = 0 := by
+  obtain ⟨u0, u1, hBeq⟩ := hB
+  obtain ⟨y, hy0, hgeq⟩ := hg
+  rw [Fin.sum_univ_succ] at hgeq
+  simp only [Fin.cons_zero, Fin.cons_succ] at hgeq
+  refine ⟨Fin.cons (u0 * y 0) (Fin.cons (u1 * y 0) (fun i => y i.succ)), ?_, ?_⟩
+  · intro hx
+    by_cases hy00 : y 0 = 0
+    · apply hy0
+      funext i
+      refine Fin.cases ?_ (fun j => ?_) i
+      · exact hy00
+      · have := congrFun hx j.succ.succ
+        simpa [hy00] using this
+    · have hu : u0 ≠ 0 ∨ u1 ≠ 0 := by
+        by_contra h
+        simp only [not_or, not_not] at h
+        exact ha (by rw [← hBeq, h.1, h.2]; ring)
+      rcases hu with hu | hu
+      · exact mul_ne_zero hu hy00 (by simpa using congrFun hx 0)
+      · exact mul_ne_zero hu hy00 (by simpa using congrFun hx 1)
+  · rw [Fin.sum_univ_succ, Fin.sum_univ_succ]
+    simp only [Fin.cons_zero, Fin.cons_succ]
+    have hR : ∑ i, R i * y i.succ ^ 2 = -(a * y 0 ^ 2) := by linarith [hgeq]
+    rw [hR]
+    have hsub : c0 * (u0 * y 0) ^ 2 + c1 * (u1 * y 0) ^ 2 = a * y 0 ^ 2 := by rw [← hBeq]; ring
+    linarith [hsub]
+
 end SKEFTHawking
