@@ -788,3 +788,21 @@ or similar `(p^N:ℤ)∣k ↔ ‖(k:ℤ_p)‖≤p^{-N}`); (c) assemble `bad_prim
 `p^N∤m_target`, ∀ X≡n: `R reps −(c₀X₀²+c₁X₁²)` ∧ value≢0); (d) global reduction step: CRT
 (`exists_int_prime_pow_residues`) over `S`, build `a`, R-iso everywhere, IH, `reduction_assembly`; (e) spine;
 (f) p=2 rank-≥5 ℚ₂ isotropy; (g) matrix→diag `HasWeakIsotropicVectorHyp`; (h) wire.
+
+### 2026-06-08 (cont.⁶) — ALL bad-prime certificate COMPONENTS shipped; bridges done (hardest p-adic part)
+**+2 commits (kernel-pure, `main`, NOT pushed):**
+- `b7701cd1` `exists_padicInt_binary_rep` (already noted) — ℤ_p integral coords for a ℚ_p binary rep.
+- `dc4d568c` `int_dvd_of_padicInt_dvd` (`p^N∣k` in ℤ_p ⟹ in ℤ via `norm_int_le_pow_iff_dvd`) + **`appr_bridge`**
+  (integer residues `vᵢ.appr N` of a ℤ_p binary rep `(T:ℚ_p)=c₀v₀²+c₁v₁²` give `p^N ∣ (c₀(appr v₀)²+c₁(appr v₁)²)−T`
+  over ℤ). 🔑 `PadicInt.ext` for ℤ_p→ℚ_p injectivity (NOT `coe_inj`/`coe_injective`); `PadicInt.appr_spec N v :
+  v − ↑(v.appr N) ∈ Ideal.span {p^N}`; `neg_mem`; `Ideal.mul_mem_left/right`+`add_mem` for span arithmetic.
+
+**THE HARD P-ADIC WORK IS DONE.** Every component of the bad-prime certificate is now a shipped kernel-pure
+lemma: `exists_common_value_split` (w, B reps w, R reps −w) ∘ `exists_int_sq_ratio_{odd,2}` (w=m·s², m∈ℤ) ∘
+`binary_represents_congr_sq` (B reps m) ∘ `exists_padicInt_binary_rep` (ṽ∈ℤ_p, B(ṽ)=m·(p^M)², T:=m·p^{2M}∈ℤ) ∘
+`diag_represents_of_isSquare_ratio`+`diag_represents_congr_sq` (R reps −T) ∘ `appr_bridge` (a≡T mod p^N integer)
+∘ `isSquare_padic_div_of_modEq` (a/T square) ∘ transfer (R reps −a). **Remaining = PURE COMPOSITION** (no new
+p-adic crux): (i) assemble `bad_prime_R_certificate` (N:=padicValInt p T + 1 odd / +3 at p=2, so p^N∤T ⟹ a≠0);
+(ii) `diag_reduction_step` (CRT over S=`{2}∪{p∣∏cₖ}`, build a, R-iso ∀ places, IH, `reduction_assembly`);
+(iii) strong-induction spine `diag_nary_zero_of_local`; (iv) p=2 rank-≥5 ℚ₂ isotropy; (v) matrix→ℚ-diagonalize
+→ `HasWeakIsotropicVectorHyp`; (vi) wire RokhlinBridge + D2/L2 + registry + closure reviewer.
