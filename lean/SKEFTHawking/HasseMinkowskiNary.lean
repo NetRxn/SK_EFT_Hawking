@@ -31,6 +31,7 @@ theorem — `16 ∣ σ` is the eventual conclusion downstream.
 namespace SKEFTHawking
 
 open Finset
+open Matrix
 
 /-- **Isotropic diagonal form is universal.** Over a field of characteristic `≠ 2`, a diagonal form
 `∑ wᵢ xᵢ²` with every coefficient nonzero that has a *nontrivial* zero represents *every* value `t`.
@@ -325,7 +326,7 @@ theorem int_dvd_of_padicInt_dvd {p : ℕ} [Fact p.Prime] {k : ℤ} {N : ℕ}
           mul_le_mul_of_nonneg_left c.2 (norm_nonneg _)
       _ = ‖(p : ℤ_[p]) ^ N‖ := mul_one _
   rw [norm_pow, PadicInt.norm_p, inv_pow] at hb
-  rw [zpow_neg, zpow_natCast]; convert hb using 2
+  rw [_root_.zpow_neg, zpow_natCast]; convert hb using 2
 
 /-- **Integer residues of a `ℤ_[p]` binary representation.** If `(T : ℚ_[p]) = c₀ v₀² + c₁ v₁²` with
 `v₀, v₁ ∈ ℤ_[p]`, then the integer obtained from the mod-`p^N` residues of `v₀, v₁` is `≡ T (mod p^N)`. This
@@ -865,6 +866,36 @@ theorem diag_reduction_step_cons {m : ℕ} (hm3 : 3 ≤ m) {c0 c1 : ℤ} (hc0 : 
   exact reduction_assembly (a := (a : ℚ)) (by exact_mod_cast ha0) hB hgcast
 
 /-! ### General-rank diagonal Hasse–Minkowski (the spine) -/
+
+/-! ### Matrix congruence base-change (matrix → diagonal bridge) -/
+
+/-- Matrix congruence at the quadratic-map level, over any commutative ring:
+`(Bᵀ A B).toQuadraticMap' = A.toQuadraticMap' ∘ mulVecLin B`. (Field-general form of
+`LatticeSignatureCongr.toQuadraticMap'_congr`, which is ℝ-only.) -/
+theorem toQuadraticMap'_congr_field {K : Type*} [CommRing K] {n : ℕ} (A B : Matrix (Fin n) (Fin n) K) :
+    (Bᵀ * A * B).toQuadraticMap' = A.toQuadraticMap'.comp (Matrix.mulVecLin B) := by
+  ext x
+  simp only [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply,
+    Matrix.toLinearMap₂'_apply', QuadraticMap.comp_apply, Matrix.mulVecLin_apply]
+  rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec,
+    Matrix.vecMul_transpose]
+
+/-- **Isotropy is invariant under matrix congruence by an invertible matrix (any field).** For
+`P` with `IsUnit P.det`, the Gram form of `A` has a nontrivial zero iff the Gram form of `Pᵀ A P` does.
+Because the congruence holds at the matrix level, the SAME rational `P` (cast to ℝ / ℚ_p / ℚ) transfers
+isotropy of `A` to the diagonalization at every completion — the base-change bridge feeding the diagonal
+spine `diag_nary_zero_of_local`. -/
+theorem matrix_isotropic_congr {K : Type*} [Field K] {n : ℕ} (A P : Matrix (Fin n) (Fin n) K)
+    (hP : IsUnit P.det) :
+    (∃ x : Fin n → K, x ≠ 0 ∧ x ⬝ᵥ A *ᵥ x = 0) ↔
+    (∃ x : Fin n → K, x ≠ 0 ∧ x ⬝ᵥ (Pᵀ * A * P) *ᵥ x = 0) := by
+  haveI : Invertible P := P.invertibleOfIsUnitDet hP
+  have hequiv : (Pᵀ * A * P).toQuadraticMap'.Equivalent A.toQuadraticMap' := by
+    rw [toQuadraticMap'_congr_field]
+    exact ⟨(QuadraticMap.isometryEquivOfCompLinearEquiv A.toQuadraticMap'
+      (Matrix.toLinearEquiv' P inferInstance)).symm⟩
+  simp only [← toQuadraticMap'_apply]
+  exact (exists_ne_zero_isotropic_congr hequiv).symm
 
 /-- **General-rank diagonal Hasse–Minkowski (integer coefficients).** For any nonzero integer coefficients
 `c : Fin n → ℤ`, the diagonal form `∑ cᵢ xᵢ²` has a nontrivial rational zero iff it has one over ℝ and over
