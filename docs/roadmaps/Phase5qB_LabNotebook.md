@@ -807,6 +807,33 @@ p-adic crux): (i) assemble `bad_prime_R_certificate` (N:=padicValInt p T + 1 odd
 (iii) strong-induction spine `diag_nary_zero_of_local`; (iv) p=2 rank-≥5 ℚ₂ isotropy; (v) matrix→ℚ-diagonalize
 → `HasWeakIsotropicVectorHyp`; (vi) wire RokhlinBridge + D2/L2 + registry + closure reviewer.
 
+### 2026-06-08 (cont.⁸) — 🎯🎯🎯 GENERAL-RANK HASSE–MINKOWSKI COMPLETE (`diag_nary_zero_of_local`)
+**THE WALL IS BEHIND US END-TO-END.** The full local–global principle for diagonal forms of ANY rank is now a
+kernel-pure theorem. Commits (all `{propext, Classical.choice, Quot.sound}`, `main`, NOT pushed):
+- `5436077c` `exists_two_ints_matching` (simultaneous CRT for two coord families)
+- `5a3c46b4` `bad_prime_R_certificate` (unified odd/p=2 dispatch)
+- `072c255e` `exists_bad_prime_list` (finite good-prime complement)
+- `359049cd` `cons_isotropic_of_repr_neg` + `exists_pos_neg_of_real_isotropic`
+- `1b9acfae` **`diag_reduction_step_cons`** — the Meyer descent step (CRT-builds `a=c₀X₀²+c₁X₁²`; bad/good/∞
+  local isotropy of `g=⟨a,R⟩`; IH + `reduction_assembly`) + `cast_cons_int`
+- `479dd158` `cons_decomp` + `exists_eq_succ_succ` (spine index helpers)
+- `b7efdf8c` **`diag_nary_zero_of_local`** — 🎯 THE SPINE: `∀ n, c:Fin n→ℤ` nonzero, `∑cᵢxᵢ²` has a nontrivial
+  ℚ-zero iff over ℝ and every ℚ_p. Strong recursion: n≤1 vacuous, n=2,3,4 base cases, n≥5 Meyer descent after
+  majority-sign peel (`exists_peel_pair`+`exists_equiv_zero_one`+`diag_reindex_iso`), recursing at n−1.
+  `termination_by n`. 🔑 LEAN: equation-compiler `match n with |0|1|2|3|4|(m+5)`; `Int.cast_ne_zero.mpr` for
+  cast-nonzeros (beta-redex blocks `exact_mod_cast` through a lambda coeff); coeff conversion after reindex via
+  `rw [← h…]; Finset.sum_congr rfl (fun z _ => by induction z using Fin.cases <;> simp)` (NOT inline cons
+  literals — they mis-bind the `→` ascription and beta-differ from the step's R-form).
+
+**REMAINING to unconditional 16∣σ (NO global-arithmetic walls left — only the local-isotropy INPUTS + matrix
+plumbing + wiring):** (1) p=2 rank-≥5 ℚ₂ isotropy (odd p already `exists_diag_nary_zero_odd_padic`); for even
+unimodular indefinite (even rank ≥2): rank ≥6 ⟹ rank-≥5 local isotropy everywhere is automatic, rank 2 = U
+trivial, rank 4 = square-disc; (2) matrix → ℚ-diagonalize (`equivalent_weightedSumSquares` + the shipped
+`exists_ne_zero_isotropic_congr` bridge) feeding `diag_nary_zero_of_local`, then `exists_int_isotropic_of_rat`
+→ `HasWeakIsotropicVectorHyp`; (3) `hasIsotropic_of_weak` → `HasIsotropicVectorHyp` → drop `eight_dvd` from
+`RokhlinBridge.sixteen_convergence_full`; (4) update D2/L2 + HYPOTHESIS_REGISTRY; (5) project-gate (ExtractDeps,
+root-import HasseMinkowskiNary) + closure reviewer.
+
 ### 2026-06-08 (cont.⁷) — 🎯 BOTH BAD-PRIME CERTIFICATES COMPLETE (per-place layer fully assembled)
 **+2 commits (kernel-pure, `main`, NOT pushed):**
 - `f3c5e6e6` **`bad_prime_R_certificate_odd`** — odd p: `⟨c₀,c₁,R⟩` iso /ℚ_p ⟹ ∃ integer residue targets
