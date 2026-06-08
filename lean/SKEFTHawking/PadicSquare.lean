@@ -2647,6 +2647,34 @@ theorem isSquare_2adic_div_units {u v : ℤ_[2]} (_hu : IsUnit u) (hv : IsUnit v
   refine ⟨(s : ℚ_[2]), ?_⟩
   rw [← PadicInt.coe_mul, ← hs]
 
+/-- **Square ratio over `ℚ_2` from matching valuation parity + residue mod 8** (the `p = 2` analogue of
+`isSquare_padic_div_of_decomp`). Decompositions `x = 2^{vx}·ux`, `y = 2^{vy}·uy` with `ux, uy` `ℤ_2` units,
+`Even (vx − vy)`, and `toZModPow 3 ux = toZModPow 3 uy` (same class mod 8) give `x/y` a square. -/
+theorem isSquare_2adic_div_of_decomp {x y : ℚ_[2]} {ux uy : ℤ_[2]} (hux : IsUnit ux) (huy : IsUnit uy)
+    {vx vy : ℤ} (hx : x = (2 : ℚ_[2]) ^ vx * (ux : ℚ_[2])) (hy : y = (2 : ℚ_[2]) ^ vy * (uy : ℚ_[2]))
+    (hpar : Even (vx - vy)) (hres : PadicInt.toZModPow 3 ux = PadicInt.toZModPow 3 uy) :
+    IsSquare (x / y) := by
+  have hp0 : (2 : ℚ_[2]) ≠ 0 := two_ne_zero
+  obtain ⟨r, hr⟩ := hpar
+  have hpow : IsSquare ((2 : ℚ_[2]) ^ (vx - vy)) := ⟨(2 : ℚ_[2]) ^ r, by rw [hr, zpow_add₀ hp0]⟩
+  rw [hx, hy, mul_div_mul_comm, ← zpow_sub₀ hp0]
+  exact hpow.mul (isSquare_2adic_div_units hux huy hres)
+
+/-- **Integer square-ratio matcher over `ℚ_2`.** For integers `x = 2^{vx}·Cx`, `m = 2^{vm}·Cm` with `Cx, Cm`
+odd, equal valuation parity and `Cx ≡ Cm (mod 8)` give `x/m` a square in `ℚ_2`. The `p = 2` face of the
+bad-place verification of the rank-4 keystone (`2 ∈ S` always): composed with the integer square-class
+representative of the local common value, it transfers representability of `c_2` to the constructed `t`. -/
+theorem isSquare_2adic_div_int {x m Cx Cm : ℤ} {vx vm : ℕ}
+    (hCx : ¬ (2 : ℤ) ∣ Cx) (hCm : ¬ (2 : ℤ) ∣ Cm)
+    (hxeq : x = (2 : ℤ) ^ vx * Cx) (hmeq : m = (2 : ℤ) ^ vm * Cm)
+    (hpar : Even ((vx : ℤ) - (vm : ℤ))) (hres : (Cx : ZMod 8) = (Cm : ZMod 8)) :
+    IsSquare ((x : ℚ_[2]) / (m : ℚ_[2])) := by
+  refine isSquare_2adic_div_of_decomp (padicInt_intCast_isUnit hCx) (padicInt_intCast_isUnit hCm)
+    (vx := (vx : ℤ)) (vy := (vm : ℤ)) ?_ ?_ hpar ?_
+  · rw [hxeq]; push_cast [zpow_natCast]; ring
+  · rw [hmeq]; push_cast [zpow_natCast]; ring
+  · rw [map_intCast, map_intCast]; exact_mod_cast hres
+
 /-- **A `ℤ_2` unit's square class has an integer representative.** For any unit `u : ℤ_2`, there is an integer
 `n` (the residue lift `(toZModPow 3 u).val ∈ {1,3,5,7}`) with `(n : ℤ_2)` a unit and `(u : ℚ_2)/n` a square
 (`isSquare_2adic_div_units`). The `p = 2` analogue of `exists_int_unit_sq_ratio_odd`. -/
