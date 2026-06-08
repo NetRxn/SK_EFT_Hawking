@@ -201,31 +201,41 @@ theorem toMatrix'_toQuadraticMap' {n : ℕ} (M : Matrix (Fin n) (Fin n) ℚ) (hM
   rw [QuadraticMap.toMatrix', Matrix.toQuadraticMap',
       QuadraticMap.associated_left_inverse (S := ℚ) hsymm, LinearMap.toMatrix'_toLinearMap₂']
 
+/-- **Explicit rational congruence to the diagonalization.** A symmetric Gram form over ℚ isometric to
+`∑ wᵢ xᵢ²` is matrix-congruent to `diagonal w` via the (invertible) change-of-basis `P = toMatrix' e`.
+Exposing `P` lets the congruence cast to every completion `ℝ`/`ℚ_p` (feeding `matrix_isotropic_congr`). -/
+theorem congr_of_equiv_weighted {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (hA : A.IsSymm)
+    {w : Fin n → ℚ} (hwe : A.toQuadraticMap'.Equivalent (QuadraticMap.weightedSumSquares ℚ w)) :
+    ∃ P : Matrix (Fin n) (Fin n) ℚ, IsUnit P.det ∧ A = Pᵀ * Matrix.diagonal w * P := by
+  obtain ⟨e⟩ := hwe
+  refine ⟨LinearMap.toMatrix' e.toLinearEquiv.toLinearMap, ?_, ?_⟩
+  · have hmul : (LinearMap.toMatrix' e.toLinearEquiv.toLinearMap).det
+        * (LinearMap.toMatrix' e.toLinearEquiv.symm.toLinearMap).det = 1 := by
+      rw [← Matrix.det_mul, ← LinearMap.toMatrix'_comp,
+          show e.toLinearEquiv.toLinearMap ∘ₗ e.toLinearEquiv.symm.toLinearMap = LinearMap.id from by
+            ext x; simp, LinearMap.toMatrix'_id, Matrix.det_one]
+    exact isUnit_iff_ne_zero.mpr (left_ne_zero_of_mul_eq_one hmul)
+  · have hWM : (QuadraticMap.weightedSumSquares ℚ w).toMatrix' = Matrix.diagonal w := by
+      rw [weightedSumSquares_eq_diagonal, toMatrix'_toQuadraticMap' _ (Matrix.isSymm_diagonal w)]
+    have hcomp : A.toQuadraticMap'
+        = (QuadraticMap.weightedSumSquares ℚ w).comp e.toLinearEquiv.toLinearMap := by
+      ext v; rw [QuadraticMap.comp_apply]; exact (e.map_app v).symm
+    have h1 := congrArg QuadraticMap.toMatrix' hcomp
+    rw [QuadraticMap.toMatrix'_comp, hWM, toMatrix'_toQuadraticMap' A hA] at h1
+    exact h1
+
 /-- **`IsSquare (∏ wᵢ)` from `det A = 1`.** If a symmetric `det = 1` Gram form is isometric to the diagonal
-form `∑ wᵢ xᵢ²`, then `∏ wᵢ` is a square: `det A = (det P)² · ∏ wᵢ` for the change-of-basis `P`
-(`discr_comp`), so `∏ wᵢ = (det P)⁻²`. This pins the diagonalization's discriminant to a square — the
-square-discriminant hypothesis brick (b) consumes. -/
+form `∑ wᵢ xᵢ²`, then `∏ wᵢ` is a square: `det A = (det P)² · ∏ wᵢ`, so `∏ wᵢ = (det P)⁻²`. This pins the
+diagonalization's discriminant to a square — the square-discriminant hypothesis brick (b) consumes. -/
 theorem isSquare_prod_weights {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (hA : A.IsSymm)
     (hdet : A.det = 1) {w : Fin n → ℚ}
     (hwe : A.toQuadraticMap'.Equivalent (QuadraticMap.weightedSumSquares ℚ w)) :
     IsSquare (∏ i, w i) := by
-  obtain ⟨e⟩ := hwe
-  set P : Matrix (Fin n) (Fin n) ℚ := LinearMap.toMatrix' e.toLinearEquiv.toLinearMap with hP
-  have hWM : (QuadraticMap.weightedSumSquares ℚ w).toMatrix' = Matrix.diagonal w := by
-    rw [weightedSumSquares_eq_diagonal,
-        toMatrix'_toQuadraticMap' _ (Matrix.isSymm_diagonal w)]
-  have hcomp : A.toQuadraticMap'
-      = (QuadraticMap.weightedSumSquares ℚ w).comp e.toLinearEquiv.toLinearMap := by
-    ext v; rw [QuadraticMap.comp_apply]; exact (e.map_app v).symm
-  have hAeq : A = Pᵀ * Matrix.diagonal w * P := by
-    have h1 := congrArg QuadraticMap.toMatrix' hcomp
-    rw [QuadraticMap.toMatrix'_comp, hWM, toMatrix'_toQuadraticMap' A hA, ← hP] at h1
-    exact h1
+  obtain ⟨P, hPunit, hAeq⟩ := congr_of_equiv_weighted A hA hwe
   have key : A.det = P.det ^ 2 * ∏ i, w i := by
     rw [hAeq, Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose, Matrix.det_diagonal]; ring
   rw [hdet] at key
-  -- key : 1 = P.det ^ 2 * ∏ w
-  have hne : P.det ≠ 0 := by rintro h; rw [h] at key; simp at key
+  have hne : P.det ≠ 0 := hPunit.ne_zero
   exact ⟨P.det⁻¹, by field_simp; linear_combination -key⟩
 
 /-! ## Rank-4 even unimodular forms have determinant `+1`
