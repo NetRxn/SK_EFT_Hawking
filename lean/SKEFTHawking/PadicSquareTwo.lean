@@ -224,4 +224,120 @@ theorem toZModPow3_ne_zero_four_of_norm {x : ℤ_[2]} (hx : ‖x‖ = 1 ∨ ‖x
     have := hdec (toZModPow 3 u) (huu.map _)
     convert this using 2
 
+/-! ## Rank-5 isotropy over `ℚ₂` (arbitrary nonzero coefficients)
+
+The normalization: per-coordinate square substitution `xᵢ ↦ 2^(kᵢ) yᵢ` together with a single global parity
+choice `m ∈ {0,1}` reduces every coefficient to valuation `0` or `1`, with three coordinates (the
+same-parity triple from the pigeonhole) becoming units. After reordering those three to the front and
+bridging to `ℤ₂`, `quinary_lift_2adic` supplies the zero; the back-substitution recovers a zero of the
+original form. -/
+
+/-- A `ℚ₂` element of norm `≤ 1` lifts to `ℤ₂` (recovering its coercion and norm). -/
+theorem exists_padicInt_of_norm_le {z : ℚ_[2]} (h : ‖z‖ ≤ 1) :
+    ∃ z' : ℤ_[2], (z' : ℚ_[2]) = z ∧ ‖z'‖ = ‖z‖ := ⟨⟨z, h⟩, rfl, rfl⟩
+
+/-- **Normalized coefficient norm.** After the global parity shift `m` and the square substitution
+`xᵢ ↦ 2^(-⌊(vᵢ+m)/2⌋) yᵢ`, the coefficient `2^m · w · 2^(2·(-⌊(v+m)/2⌋))` has norm `2^(-((v+m) % 2))`,
+i.e. valuation `(v+m) % 2 ∈ {0,1}` (unit or two-unit). -/
+theorem norm_normalized (w : ℚ_[2]) (hw : w ≠ 0) (m : ℤ) :
+    ‖(2 : ℚ_[2]) ^ m * w * (2 : ℚ_[2]) ^ (2 * (-((w.valuation + m) / 2)))‖
+      = (2 : ℝ) ^ (-((w.valuation + m) % 2)) := by
+  set v := w.valuation with hv
+  set k : ℤ := -((v + m) / 2) with hk
+  have hn2 : ‖(2 : ℚ_[2])‖ = (2 : ℝ)⁻¹ := by
+    rw [show (2 : ℚ_[2]) = ((2 : ℕ) : ℚ_[2]) by norm_num]; simpa using (Padic.norm_p (p := 2))
+  have hnw : ‖w‖ = (2 : ℝ) ^ (-v) := by rw [hv]; simpa using Padic.norm_eq_zpow_neg_valuation hw
+  rw [norm_mul, norm_mul, norm_zpow, norm_zpow, hn2, hnw,
+    show ((2 : ℝ)⁻¹) = (2 : ℝ) ^ (-1 : ℤ) by simp,
+    ← zpow_mul, ← zpow_mul, ← zpow_add₀ (by norm_num : (2 : ℝ) ≠ 0),
+    ← zpow_add₀ (by norm_num : (2 : ℝ) ≠ 0)]
+  congr 1; omega
+
+/-- **Back-substitution.** If the per-coordinate-scaled, globally-`2^m`-shifted form `∑ (2^m wᵢ 2^(2kᵢ)) yᵢ²`
+has a nontrivial zero `y`, then so does `∑ wᵢ xᵢ²` (with `xᵢ = 2^(kᵢ) yᵢ`). -/
+theorem diag_scale_back_padic {n : ℕ} (w : Fin n → ℚ_[2]) (k : Fin n → ℤ) (m : ℤ)
+    (y : Fin n → ℚ_[2]) (hy : y ≠ 0)
+    (heq : ∑ i, ((2 : ℚ_[2]) ^ m * w i * (2 : ℚ_[2]) ^ (2 * k i)) * y i ^ 2 = 0) :
+    ∃ x : Fin n → ℚ_[2], x ≠ 0 ∧ ∑ i, w i * x i ^ 2 = 0 := by
+  have h2 : (2 : ℚ_[2]) ≠ 0 := two_ne_zero
+  refine ⟨fun i => (2 : ℚ_[2]) ^ (k i) * y i, ?_, ?_⟩
+  · intro hx; apply hy; funext i
+    have hxi := congrFun hx i
+    simp only [Pi.zero_apply, mul_eq_zero] at hxi ⊢
+    rcases hxi with h | h
+    · exact absurd h (zpow_ne_zero _ h2)
+    · exact h
+  · have key : ∀ i, w i * ((2 : ℚ_[2]) ^ (k i) * y i) ^ 2
+        = (2 : ℚ_[2]) ^ (-m) * (((2 : ℚ_[2]) ^ m * w i * (2 : ℚ_[2]) ^ (2 * k i)) * y i ^ 2) := by
+      intro i
+      have e1 : ((2 : ℚ_[2]) ^ (k i)) ^ 2 = (2 : ℚ_[2]) ^ (2 * k i) := by
+        rw [sq, ← zpow_add₀ h2, show k i + k i = 2 * k i from by ring]
+      have e2 : (2 : ℚ_[2]) ^ (-m) * (2 : ℚ_[2]) ^ m = 1 := by
+        rw [← zpow_add₀ h2, neg_add_cancel, zpow_zero]
+      rw [mul_pow, e1,
+        show (2 : ℚ_[2]) ^ (-m) * ((2 : ℚ_[2]) ^ m * w i * (2 : ℚ_[2]) ^ (2 * k i) * y i ^ 2)
+          = ((2 : ℚ_[2]) ^ (-m) * (2 : ℚ_[2]) ^ m) * (w i * (2 : ℚ_[2]) ^ (2 * k i) * y i ^ 2)
+          from by ring, e2, one_mul]
+      ring
+    have hrw : ∑ i, w i * ((2 : ℚ_[2]) ^ (k i) * y i) ^ 2
+        = (2 : ℚ_[2]) ^ (-m) * ∑ i, ((2 : ℚ_[2]) ^ m * w i * (2 : ℚ_[2]) ^ (2 * k i)) * y i ^ 2 := by
+      rw [Finset.mul_sum]; exact Finset.sum_congr rfl (fun i _ => key i)
+    show ∑ i, w i * ((2 : ℚ_[2]) ^ (k i) * y i) ^ 2 = 0
+    rw [hrw, heq, mul_zero]
+
+/-- **Rank-5 `ℚ₂` local isotropy.** Every diagonal form `∑ wᵢ xᵢ²` of rank `5` over `ℚ₂` with all
+coefficients nonzero is isotropic. This is the `2`-adic analogue of the odd-`p`
+`exists_diag_nary_zero_odd_padic` — the genuine frontier, since the odd-`p` ternary route fails at `p = 2`
+(`⟨1,1,1⟩` is anisotropic over `ℚ₂`). Built from the mod-8 combinatorial core + exact `ℤ₂` lift after
+normalizing all coefficients to valuation `0/1` with three units, via a single global parity choice. -/
+theorem exists_quinary_zero_2adic (w : Fin 5 → ℚ_[2]) (hw : ∀ i, w i ≠ 0) :
+    ∃ x : Fin 5 → ℚ_[2], x ≠ 0 ∧ ∑ i, w i * x i ^ 2 = 0 := by
+  set v : Fin 5 → ℤ := fun i => (w i).valuation with hvdef
+  obtain ⟨i0, i1, i2, d01, d02, d12, hg01, hg12⟩ :=
+    exists_three_same_parity (n := 5) (by norm_num) (fun i => ((v i : ZMod 2)))
+  have hpar01 : v i0 % 2 = v i1 % 2 := (ZMod.intCast_eq_intCast_iff _ _ _).mp hg01
+  have hpar12 : v i1 % 2 = v i2 % 2 := (ZMod.intCast_eq_intCast_iff _ _ _).mp hg12
+  set m : ℤ := v i0 % 2 with hm
+  set k : Fin 5 → ℤ := fun i => -((v i + m) / 2) with hkdef
+  set b : Fin 5 → ℚ_[2] := fun i => (2 : ℚ_[2]) ^ m * w i * (2 : ℚ_[2]) ^ (2 * k i) with hbdef
+  have hbnorm : ∀ i, ‖b i‖ = (2 : ℝ) ^ (-((v i + m) % 2)) := by
+    intro i; exact norm_normalized (w i) (hw i) m
+  have hall : ∀ i, (v i + m) % 2 = 0 ∨ (v i + m) % 2 = 1 := by intro i; omega
+  have h0chosen : (v i0 + m) % 2 = 0 := by omega
+  have h1chosen : (v i1 + m) % 2 = 0 := by omega
+  have h2chosen : (v i2 + m) % 2 = 0 := by omega
+  have hle : ∀ i, ‖b i‖ ≤ 1 := by
+    intro i; rw [hbnorm i]; rcases hall i with h | h <;> rw [h] <;> norm_num
+  choose b' hb'coe hb'norm using fun i => exists_padicInt_of_norm_le (hle i)
+  have hbu : ∀ i, (v i + m) % 2 = 0 → IsUnit (b' i) := by
+    intro i hi; rw [PadicInt.isUnit_iff, hb'norm i, hbnorm i, hi]; norm_num
+  have hres : ∀ i, toZModPow 3 (b' i) ≠ 0 ∧ toZModPow 3 (b' i) ≠ 4 := by
+    intro i; apply toZModPow3_ne_zero_four_of_norm
+    rw [hb'norm i, hbnorm i]; rcases hall i with h | h <;> rw [h] <;> [left; right] <;> norm_num
+  obtain ⟨e, he0, he1, he2⟩ := exists_equiv_zero_one_two (m := 2) i0 i1 i2 d01 d02 d12
+  set a : Fin 5 → ℤ_[2] := fun i => b' (e i) with hadef
+  have hua0 : IsUnit (a 0) := by rw [hadef]; simp only; rw [he0]; exact hbu i0 h0chosen
+  have hua1 : IsUnit (a 1) := by rw [hadef]; simp only; rw [he1]; exact hbu i1 h1chosen
+  have hua2 : IsUnit (a 2) := by rw [hadef]; simp only; rw [he2]; exact hbu i2 h2chosen
+  obtain ⟨x', hx'0, hx'eq⟩ := quinary_lift_2adic a hua0 hua1 hua2
+    (hres (e 3)).1 (hres (e 3)).2 (hres (e 4)).1 (hres (e 4)).2
+  set y : Fin 5 → ℚ_[2] := fun j => ((x' (e.symm j) : ℚ_[2])) with hydef
+  have hy0 : y ≠ 0 := by
+    intro hyz; apply hx'0
+    have hh : y (e 0) = 0 := by rw [hyz]; rfl
+    rw [hydef] at hh; simp only [Equiv.symm_apply_apply] at hh
+    exact PadicInt.coe_eq_zero.mp hh
+  have hcast : ∑ i, (a i : ℚ_[2]) * ((x' i : ℚ_[2])) ^ 2 = 0 := by
+    have := congrArg (fun t : ℤ_[2] => (t : ℚ_[2])) hx'eq
+    push_cast at this; simpa using this
+  have hsum : ∑ j, b j * (y j) ^ 2 = 0 := by
+    rw [← Equiv.sum_comp e (fun j => b j * (y j) ^ 2)]
+    have hterm : ∀ i, b (e i) * (y (e i)) ^ 2 = (a i : ℚ_[2]) * ((x' i : ℚ_[2])) ^ 2 := by
+      intro i
+      have hye : y (e i) = ((x' i : ℚ_[2])) := by rw [hydef]; simp [Equiv.symm_apply_apply]
+      have hbe : b (e i) = ((a i : ℚ_[2])) := by rw [hadef]; simp only; rw [← hb'coe (e i)]
+      rw [hye, hbe]
+    rw [Finset.sum_congr rfl (fun i _ => hterm i)]; exact hcast
+  exact diag_scale_back_padic w k m y hy0 hsum
+
 end SKEFTHawking
