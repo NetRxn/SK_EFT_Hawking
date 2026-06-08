@@ -2960,6 +2960,43 @@ theorem local_common_int_value_2 {a b c d : ℤ}
   rw [htvm] at hab hcd
   exact ⟨m, hm, (binary_represents_congr_sq hsne).mpr hab, (binary_represents_congr_sq hsne).mpr hcd⟩
 
+/-- **Per-bad-odd-prime verification keyed on a congruence (the assembly's bad-place certificate).** If the
+quaternary is isotropic over `ℚ_[p]` (odd `p`), there is an integer common value `m ≠ 0` such that *every*
+integer `t` with `t ≡ m (mod p^{v_p(m)+1})` is represented over `ℚ_[p]` by *both* binary forms `⟨a,b⟩` and
+`⟨c,d⟩`. (Local common value `local_common_int_value_odd` → `t/m` square at `p` via
+`isSquare_padic_div_of_modEq` → `binary_represents_of_isSquare_ratio` transfers both representations.) This is
+exactly what the global construction consumes at each bad odd prime: the prime-power-CRT value `t ≡ m
+(mod p^{v+1})` is automatically represented by both binaries over `ℚ_[p]`. -/
+theorem binary_pair_represents_of_congr_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b c d : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hiso : ∃ x y z w : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 = (c : ℚ_[p]) * z ^ 2 + (d : ℚ_[p]) * w ^ 2) :
+    ∃ m : ℤ, m ≠ 0 ∧ ∀ {t : ℤ}, t ≠ 0 → (p : ℤ) ^ (padicValInt p m + 1) ∣ (t - m) →
+      (∃ u v : ℚ_[p], (a : ℚ_[p]) * u ^ 2 + (b : ℚ_[p]) * v ^ 2 = (t : ℚ_[p])) ∧
+      (∃ u v : ℚ_[p], (c : ℚ_[p]) * u ^ 2 + (d : ℚ_[p]) * v ^ 2 = (t : ℚ_[p])) := by
+  obtain ⟨m, hm, hab, hcd⟩ := local_common_int_value_odd hp ha hb hc hd hiso
+  refine ⟨m, hm, fun {t} ht hcong => ?_⟩
+  have hsq : IsSquare ((t : ℚ_[p]) / (m : ℚ_[p])) := isSquare_padic_div_of_modEq hp ht hm hcong
+  have hmne : (m : ℚ_[p]) ≠ 0 := by exact_mod_cast hm
+  exact ⟨binary_represents_of_isSquare_ratio hmne hab hsq,
+    binary_represents_of_isSquare_ratio hmne hcd hsq⟩
+
+/-- **Per-`p=2` verification keyed on a congruence** (the `p = 2` analogue of `binary_pair_represents_of_congr_odd`,
+using the mod-`2^{v+3}` bridge `isSquare_2adic_div_of_modEq`). `2 ∈ S` always, so this is mandatory. -/
+theorem binary_pair_represents_of_congr_2 {a b c d : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hiso : ∃ x y z w : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[2]) * x ^ 2 + (b : ℚ_[2]) * y ^ 2 = (c : ℚ_[2]) * z ^ 2 + (d : ℚ_[2]) * w ^ 2) :
+    ∃ m : ℤ, m ≠ 0 ∧ ∀ {t : ℤ}, t ≠ 0 → (2 : ℤ) ^ (padicValInt 2 m + 3) ∣ (t - m) →
+      (∃ u v : ℚ_[2], (a : ℚ_[2]) * u ^ 2 + (b : ℚ_[2]) * v ^ 2 = (t : ℚ_[2])) ∧
+      (∃ u v : ℚ_[2], (c : ℚ_[2]) * u ^ 2 + (d : ℚ_[2]) * v ^ 2 = (t : ℚ_[2])) := by
+  obtain ⟨m, hm, hab, hcd⟩ := local_common_int_value_2 ha hb hc hd hiso
+  refine ⟨m, hm, fun {t} ht hcong => ?_⟩
+  have hsq : IsSquare ((t : ℚ_[2]) / (m : ℚ_[2])) := isSquare_2adic_div_of_modEq ht hm hcong
+  have hmne : (m : ℚ_[2]) ≠ 0 := by exact_mod_cast hm
+  exact ⟨binary_represents_of_isSquare_ratio hmne hab hsq,
+    binary_represents_of_isSquare_ratio hmne hcd hsq⟩
+
 /-- `hilbertPadicInt` invariant under a square factor (right), via `_left` + `comm`. -/
 theorem hilbertPadicInt_mul_sq_right {p : ℕ} [Fact p.Prime] {a b s : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
     (hs : s ≠ 0) :
