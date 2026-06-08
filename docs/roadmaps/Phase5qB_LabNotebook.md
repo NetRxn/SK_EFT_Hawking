@@ -584,6 +584,36 @@ Before committing ~1000 lines to Serre Thm 4, scanned Mathlib + repo + Lit-Searc
 `hilbertGlobalProd_eq_one`), then assemble `quaternary_solvable_of_local` from the shipped leaves → downstream
 chain (n≥5 Meyer-via-HM → p=2 even-unimod local isotropy → `HasWeakIsotropicVectorHyp`) → wire.
 
+### ⭐⭐ CLEAN CONSTRUCTION (2026-06-08) — the free-place mechanism DISSOLVES the 𝔽₂ matrix
+**Key realization: the feared 𝔽₂ linear system / per-prime QR conflict is NOT needed.** The conflict only arose
+when requiring `−ab,−cd` square mod the auxiliary prime `q` (to handle the q-place directly), which pinned `q`'s
+residue mod each bad prime to the QR subgroup AND to the matching class simultaneously. **Instead, FREE the
+q-place via the product formula** (`hilbertPrime_eq_of_others`, shipped): then `q`'s residue is only constrained
+to set the unit residue of `t = (S-part)·q` at the bad places — a *coprime* class, always realizable by plain
+Dirichlet (`exists_prime_gt_eq_mod`, shipped `b31ad43f`), with NO QR requirement and NO consistency obstruction.
+
+**The clean construction of the global `t`:**
+1. At each `p∈S = {2}∪{odd p∣abcd}`, the certificates `binary_pair_represents_of_congr_{odd,2}` give an integer
+   common value `m_p` such that any `t ≡ m_p (mod p^{N_p})` is represented by BOTH binaries over ℚ_p.
+2. Choose sign `ε` (via `local_realizable_symbol_real`/`exists_sign_for_real_common`) so both binaries represent
+   `t` over ℝ (matches both families at ∞).
+3. Let `t = (S-part)·q` where the S-part `= ε·∏_{p∈S-odd}p^{v_p(m_p)}` carries the valuations, and `q` is a
+   single Dirichlet prime (`exists_prime_gt_eq_mod`) with `q ≡ (m_p·(S-part)⁻¹) (mod p^{N_p})` at each `p∈S`
+   and `q ≡ 1 mod 8` — a coprime residue class, CRT-combined, ALWAYS realizable (no product-formula needed here).
+4. Verify both families match at every place EXCEPT q:
+   - `p∈S`: `t ≡ m_p mod p^{N_p}` ⟹ certificates ⟹ both represent `t` ⟹ symbols match (`represents_padic_iff_hilbertPrime_linear`).
+   - good odd `p∉S∪{q}`: `t` is a unit (supported on `S∪{q}`) ⟹ `good_prime_symbol_auto` (p∤a,b,c,d,t).
+   - `∞`: sign `ε` ⟹ both represent ⟹ symbols match.
+5. **q-place: FREE** — `hilbertPrime_eq_of_others` (per family) gives `(t,−ab)_q=(a,b)_q` and `(t,−cd)_q=(c,d)_q`
+   from matching at ∞ + all finite ≠ q (the product formula does the work).
+6. ⟹ both families match at ALL places ⟹ `quaternary_isotropic_of_symbol_keystone` (shipped `2b685c64`) ⟹
+   `quaternary_solvable_of_local`.
+
+**NO 𝔽₂ matrix, NO consistency obstruction — just CRT + plain Dirichlet + the shipped free-place lemmas.** The DR
+(`Lit-Search/tasks/submitted/Phase5qB_SerreThm4_n4...`) will confirm/refine, but this path is now concrete. NEXT:
+build the global-`t` construction (CRT residue target + Dirichlet `q` + `t=(S-part)·q` with its
+supported-on-`S∪{q}` + `≡m_p` + sign properties), then `quaternary_solvable_of_local`, then the downstream chain.
+
 ### REMAINING toward the keystone (`quaternary_isotropic_of_keystone` consumes a global `t`):
 With the engine in hand, the keystone existence (Serre Thm 4 for the two families `a₁=−ab, a₂=−cd`) now needs:
 (a) **the consistency brick** — construct the unit target `r:ZMod D` whose images encode the matching square
