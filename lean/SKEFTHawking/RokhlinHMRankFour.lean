@@ -189,6 +189,45 @@ theorem weightedSumSquares_eq_diagonal {K : Type*} [CommRing K] {n : ℕ} (w : F
   refine Finset.sum_congr rfl fun i _ => ?_
   simp only [Matrix.mulVec_diagonal, smul_eq_mul, sq]; ring
 
+/-- **`toMatrix'` inverts `toQuadraticMap'` on symmetric matrices.** Over ℚ, a symmetric Gram matrix is
+recovered from its quadratic form. -/
+theorem toMatrix'_toQuadraticMap' {n : ℕ} (M : Matrix (Fin n) (Fin n) ℚ) (hM : M.IsSymm) :
+    (M.toQuadraticMap').toMatrix' = M := by
+  have hsymm : ∀ x y : Fin n → ℚ,
+      (Matrix.toLinearMap₂' ℚ M) x y = (Matrix.toLinearMap₂' ℚ M) y x := by
+    intro x y
+    rw [Matrix.toLinearMap₂'_apply', Matrix.toLinearMap₂'_apply',
+        Matrix.dotProduct_mulVec, dotProduct_comm, ← Matrix.mulVec_transpose, hM.eq]
+  rw [QuadraticMap.toMatrix', Matrix.toQuadraticMap',
+      QuadraticMap.associated_left_inverse (S := ℚ) hsymm, LinearMap.toMatrix'_toLinearMap₂']
+
+/-- **`IsSquare (∏ wᵢ)` from `det A = 1`.** If a symmetric `det = 1` Gram form is isometric to the diagonal
+form `∑ wᵢ xᵢ²`, then `∏ wᵢ` is a square: `det A = (det P)² · ∏ wᵢ` for the change-of-basis `P`
+(`discr_comp`), so `∏ wᵢ = (det P)⁻²`. This pins the diagonalization's discriminant to a square — the
+square-discriminant hypothesis brick (b) consumes. -/
+theorem isSquare_prod_weights {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (hA : A.IsSymm)
+    (hdet : A.det = 1) {w : Fin n → ℚ}
+    (hwe : A.toQuadraticMap'.Equivalent (QuadraticMap.weightedSumSquares ℚ w)) :
+    IsSquare (∏ i, w i) := by
+  obtain ⟨e⟩ := hwe
+  set P : Matrix (Fin n) (Fin n) ℚ := LinearMap.toMatrix' e.toLinearEquiv.toLinearMap with hP
+  have hWM : (QuadraticMap.weightedSumSquares ℚ w).toMatrix' = Matrix.diagonal w := by
+    rw [weightedSumSquares_eq_diagonal,
+        toMatrix'_toQuadraticMap' _ (Matrix.isSymm_diagonal w)]
+  have hcomp : A.toQuadraticMap'
+      = (QuadraticMap.weightedSumSquares ℚ w).comp e.toLinearEquiv.toLinearMap := by
+    ext v; rw [QuadraticMap.comp_apply]; exact (e.map_app v).symm
+  have hAeq : A = Pᵀ * Matrix.diagonal w * P := by
+    have h1 := congrArg QuadraticMap.toMatrix' hcomp
+    rw [QuadraticMap.toMatrix'_comp, hWM, toMatrix'_toQuadraticMap' A hA, ← hP] at h1
+    exact h1
+  have key : A.det = P.det ^ 2 * ∏ i, w i := by
+    rw [hAeq, Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose, Matrix.det_diagonal]; ring
+  rw [hdet] at key
+  -- key : 1 = P.det ^ 2 * ∏ w
+  have hne : P.det ≠ 0 := by rintro h; rw [h] at key; simp at key
+  exact ⟨P.det⁻¹, by field_simp; linear_combination -key⟩
+
 /-! ## Rank-4 even unimodular forms have determinant `+1`
 
 The signature of a rank-4 even unimodular form is `0` (the `det = -1`, `σ = ±2` shapes do not occur): mod 4,
