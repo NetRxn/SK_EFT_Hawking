@@ -2265,6 +2265,16 @@ theorem padic_norm_intCast_eq_one {p : ℕ} [Fact p.Prime] {k : ℤ} (h : ¬ (p 
   rw [hc, padic_norm_e_of_padicInt, PadicInt.norm_intCast_eq_one_iff, isCoprime_comm]
   exact ((Nat.prime_iff_prime_int.mp Fact.out).coprime_iff_not_dvd).mpr h
 
+/-- **An integer coprime to `p` is a `ℤ_[p]` unit.** If `p ∤ C` then `(C : ℤ_[p])` is a unit
+(`‖·‖ = 1` via `PadicInt.norm_intCast_eq_one_iff`). Combined with `map_intCast PadicInt.toZMod C`
+(`toZMod (C:ℤ_[p]) = (C : ZMod p)`), this packages an integer cofactor as the `ℤ_[p]`-unit-with-known-residue
+that the square-class matcher `isSquare_padic_div_of_decomp` consumes: when the constructed `t = ε·q·∏T` has
+`v_p(t) = 1` at a bad prime `p`, its unit part is `(t/p : ℤ)`, a `ℤ_[p]` unit with residue `(t/p) mod p`. -/
+theorem padicInt_intCast_isUnit {p : ℕ} [Fact p.Prime] {C : ℤ} (h : ¬ (p : ℤ) ∣ C) :
+    IsUnit ((C : ℤ_[p])) := by
+  rw [PadicInt.isUnit_iff, PadicInt.norm_intCast_eq_one_iff, isCoprime_comm]
+  exact ((Nat.prime_iff_prime_int.mp Fact.out).coprime_iff_not_dvd).mpr h
+
 /-- **Representability at a good odd prime, integer-coprimality form.** Over `ℚ_[p]` with `p` odd, if `p`
 divides none of `a, b, t` (integers), then `⟨a,b⟩` represents `t`. (`padic_norm_intCast_eq_one` turns
 non-divisibility into unit norm, then `binary_represents_padic_of_units`.) The good-place fact powering the
