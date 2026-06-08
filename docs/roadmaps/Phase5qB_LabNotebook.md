@@ -739,3 +739,30 @@ class); (ii) CRT integers `x₀,x₁` with `x₀≡x₀^p, x₁≡x₁^p (mod p^
 (`represents_of_units_odd_padic`); `∞` (`diag_real_isotropic_of_signs` on `R`, indefinite by `exists_peel_pair`);
 (iv) IH (rank n−1) ⟹ `g` iso/ℚ; `B` reps `a` free (a=B-value); `reduction_assembly`. Then spine + p=2 + matrix
 + wire.
+
+### 2026-06-08 (cont.⁴) — CRT construction per-place LAYER COMPLETE; coordinate-CRT route LOCKED
+**+2 commits (kernel-pure, `main`, NOT pushed):**
+- `119d2b1a` `exists_common_value_split` — per-place entry: `⟨c₀,c₁,R⟩` iso over a field (Inv 2) ⟹ ∃ `w≠0`,
+  `B=⟨c₀,c₁⟩` reps `w` ∧ `R` reps `−w`. Generalizes `common_value_of_quaternary_isotropic` to binary-vs-rank-R
+  (reuses `binary_isotropic_universal` + `represents_of_isotropic_diag`; `Fin.cons` decomp, `Fin.succ_zero_eq_one`
+  AFTER `cons_succ`). 🔑 m≥1 needed for the `R 0` fallback value.
+- `c8b184c9` `diag_represents_congr_sq` + `diag_represents_of_isSquare_ratio` — rank-m square-class transfer
+  (the R-analogs of `binary_represents_congr_sq`/`_of_isSquare_ratio`): push `R reps −w_p` → `R reps −a` once
+  `a/w_p` is a ℚ_p-square. `y ↦ s•y`, `Finset.mul_sum`.
+
+🎯 **ROUTE LOCKED: coordinate-CRT (a = B(X₀,X₁)), NOT value-CRT+Dirichlet.** Reason: making `a` an actual binary
+value of `B` over ℚ ⟹ "B reps a" is FREE at EVERY place (incl. good primes & ∞), dissolving the q-place /
+Dirichlet / product-formula machinery the n=4 summit needed for matching two binaries. **WLOG integer coeffs**
+(clear denominators once via `diag_iso_rat_int`/`diag_scale_var`) ⟹ `a = c₀X₀²+c₁X₁² ∈ ℤ` ⟹ integer
+square-class lemmas (`isSquare_padic_div_of_modEq`) apply directly.
+
+**REMAINING CRT sub-bricks (next):** (1) ℚ_p→ℤ_p normalization of the local B-rep coords `(u₀^p,u₁^p)` of `w_p`
+(scale by `p^{−min val}` so both ∈ ℤ_p; square class of `w_p` preserved); take residues mod `p^{N_p}`;
+(2) CRT integers `X₀,X₁ ≡` those residues at all `p∈S` (`exists_int_prime_pow_residues`); valuation estimate
+`a=B(X)≡w_p·λ² (mod p^{N_p})` ⟹ `a/w_p` square ⟹ `R reps −a` (`diag_represents_of_isSquare_ratio`); (3) `g=⟨a,R⟩`
+loc-iso everywhere: bad p (just shown), good odd p (`represents_of_units_odd_padic` — coeffs unit), ∞
+(`diag_real_isotropic_of_signs`, R indefinite by `exists_peel_pair`); (4) reduction step `diag_reduction_step`
+= peel via `exists_peel_pair`+`exists_equiv_zero_one`+`diag_reindex_iso` → cons-shape → build `a` → IH → 
+`reduction_assembly`; (5) strong-induction spine `diag_nary_zero_of_local` (bases n≤4 ✓); (6) p=2 rank-≥5 ℚ₂
+isotropy for application `hloc`; (7) matrix→ℚ-diagonalize → `HasWeakIsotropicVectorHyp`; (8) wire RokhlinBridge
++ D2/L2 + registry + closure reviewer. Bad set `S = {2} ∪ {odd p ∣ ∏ cₖ}` (integer coeffs).
