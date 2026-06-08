@@ -520,6 +520,31 @@ theorem diag_quaternary_zero_of_local_rat (c : Fin 4 → ℚ) (hc : ∀ i, c i �
       (fun p _ => (diag_iso_rat_int (K := ℚ_[p]) c).mp (hloc p))
   exact (diag_iso_rat_int (K := ℚ) c).mpr key
 
+/-- **Finite bad-prime list.** For nonzero integer coefficients `c`, there is a finite list `S` of primes
+(containing `2`, nodup) outside which every coefficient is coprime to `p` — i.e. a `p`-adic unit. (Take the
+prime factors of `∏ |cᵢ|`, plus `2`.) The good-prime set of the Meyer descent: outside `S` the residual unit
+form is universal over `ℚ_[p]`. -/
+theorem exists_bad_prime_list {n : ℕ} (c : Fin n → ℤ) (hc : ∀ i, c i ≠ 0) :
+    ∃ S : List ℕ, (∀ p ∈ S, p.Prime) ∧ S.Nodup ∧ 2 ∈ S ∧
+      ∀ p : ℕ, p.Prime → p ∉ S → ∀ i, ¬ (p : ℤ) ∣ c i := by
+  classical
+  set N : ℕ := ∏ i, (c i).natAbs with hN
+  have hN0 : N ≠ 0 := Finset.prod_ne_zero_iff.mpr (fun i _ => Int.natAbs_ne_zero.mpr (hc i))
+  set Sf : Finset ℕ := insert 2 N.primeFactors with hSf
+  refine ⟨Sf.toList, ?_, Sf.nodup_toList, ?_, ?_⟩
+  · intro p hp
+    rw [Finset.mem_toList, hSf, Finset.mem_insert] at hp
+    rcases hp with rfl | hp
+    · exact Nat.prime_two
+    · exact (Nat.mem_primeFactors.mp hp).1
+  · rw [Finset.mem_toList, hSf, Finset.mem_insert]; exact Or.inl rfl
+  · intro p hp hpS i hdvd
+    rw [Finset.mem_toList, hSf, Finset.mem_insert, not_or] at hpS
+    have hpN : ¬ p ∣ N := fun h => hpS.2 (Nat.mem_primeFactors.mpr ⟨hp, h, hN0⟩)
+    have hdvdAbs : p ∣ (c i).natAbs := by
+      have := Int.natAbs_dvd_natAbs.mpr hdvd; simpa using this
+    exact hpN (dvd_trans hdvdAbs (Finset.dvd_prod_of_mem _ (Finset.mem_univ i)))
+
 /-! ### Bad-prime descent certificate -/
 
 /-- **Bad-prime descent certificate (odd `p`).** If `⟨c₀, c₁, R⟩` (integer `c₀, c₁`; `R : Fin m → ℚ_[p]`,
