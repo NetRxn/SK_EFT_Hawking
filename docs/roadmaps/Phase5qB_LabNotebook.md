@@ -557,12 +557,32 @@ feed `quaternary_isotropic_of_keystone`; (4) downstream chain + wire.
 🔑 reusable: `padicValInt_dvd_iff n a : p^n∣a ↔ a=0 ∨ n≤padicValInt p a`; `Nat.Coprime.pow` takes exponents
 positionally; `exists_int_factor_padicValInt (p := p)` — pin `p` (else `Fact` metavar stuck).
 
-**STATUS: the CRT→square-class→representability pipeline is now end-to-end for the bad odd primes** (need the p=2
-analogue of `isSquare_padic_div_of_modEq` — straightforward via `isSquare_2adic_div_int` + mod-8 congruence —
-plus the ∞ sign). **The ONLY remaining mathematical content is the 𝔽₂ solvability** (existence of `(ε,T)` / the
-Dirichlet prime residue making every bad-prime square-class condition hold, via `hilbertGlobalProd_eq_one`). Next
-increment: design+build the 𝔽₂ consistency (linear system over ZMod 2 with the reciprocity matrix; solvable from
-the product formula), then assemble `quaternary_solvable_of_local`.
+**STATUS: the CRT→square-class→representability pipeline is now end-to-end** for BOTH bad odd primes
+(`isSquare_padic_div_of_modEq` `a86c77e1`) AND p=2 (`isSquare_2adic_div_of_modEq` `e423d7ac`, mod 2^{v+3}).
+**The ONLY remaining mathematical content is the 𝔽₂ solvability** (existence of `(ε,T)` / the Dirichlet prime
+residue making every bad-prime square-class condition hold, via `hilbertGlobalProd_eq_one`), then assemble.
+
+### 🔎 ROUTE-CONFIRMATION investigation (2026-06-08, Explore breadth scan — NO shortcut, summit required)
+Before committing ~1000 lines to Serre Thm 4, scanned Mathlib + repo + Lit-Search for a Dirichlet-free shortcut
+(motivated by the rank-4 = square-disc observation). FINDINGS:
+- **Mathlib has NO Minkowski convex-body theorem / geometry-of-numbers isotropy** (only `ZLattice`/`covolume`
+  infra + number-field `minkowski_bound`). So a geometry-of-numbers Meyer would require building the convex-body
+  theorem from scratch (Blichfeldt + ...) — itself substantial. Mathlib has NO Meyer, NO genus classification.
+- **Repo rank-≥5 LOCAL isotropy IS Dirichlet-free and shipped:** `exists_diag_nary_zero_odd_padic`
+  (`PadicSquare.lean:317`) — any rank-≥5 diagonal form over ℚ_p (odd p) is isotropic, via parity-pigeonhole
+  (`exists_three_same_parity` → same-parity ternary block). Plus `indefinite_repr_zero` (ℝ). So rank-≥5 forms are
+  locally isotropic everywhere with NO Dirichlet — BUT the **global** local→global step for rank ≥5 still reduces
+  (Serre's rank reduction) to the **n=4 common-value construction**, which needs Dirichlet. ⟹ Meyer does NOT
+  dodge the summit.
+- **Lit-Search Phase-5c** (`Rokhlin/Rokhlin's theorem, even unimodular lattices, and Lean 4 formalization.md`):
+  confirms σ≡0 mod 8 for indefinite uses Hasse–Minkowski (odd indefinite classification); no algebraic dodge.
+- **CONCLUSION (consistent with prior deep research): the n=4 / Serre Thm 4 construction is genuinely required.**
+  The rank-4 = square-disc observation handles rank 4 (and rank 2 elementary), but rank ≥ 6 even unimodular needs
+  the general construction. PROCEED to build the summit (the 𝔽₂ consistency).
+
+**NEXT: design+build the 𝔽₂ consistency** (linear system over ZMod 2 with the reciprocity matrix; solvable from
+`hilbertGlobalProd_eq_one`), then assemble `quaternary_solvable_of_local` from the shipped leaves → downstream
+chain (n≥5 Meyer-via-HM → p=2 even-unimod local isotropy → `HasWeakIsotropicVectorHyp`) → wire.
 
 ### REMAINING toward the keystone (`quaternary_isotropic_of_keystone` consumes a global `t`):
 With the engine in hand, the keystone existence (Serre Thm 4 for the two families `a₁=−ab, a₂=−cd`) now needs:
