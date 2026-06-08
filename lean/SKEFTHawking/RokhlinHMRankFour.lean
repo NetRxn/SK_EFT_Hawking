@@ -24,6 +24,7 @@ import SKEFTHawking.HasseMinkowskiLocal
 import SKEFTHawking.PadicSquare
 import SKEFTHawking.HilbertProductFormula
 import SKEFTHawking.RokhlinHMDischarge
+import SKEFTHawking.RokhlinFromHM
 
 namespace SKEFTHawking
 
@@ -568,5 +569,40 @@ theorem weakIsotropic_rank_four (A : Matrix (Fin 4) (Fin 4) ℤ) (hA : IsEvenUni
         rw [← hxe, dotProduct]; refine Finset.sum_congr rfl fun i _ => ?_
         rw [Matrix.mulVec_diagonal]; simp only [hφ, Rat.coe_castHom]; ring
       exact (diag_iso_rat_int (K := ℚ_[p]) w).mp ⟨x, hx0, hsum⟩
+
+/-! ## Discharge of `HasWeakIsotropicVectorHyp` (all ranks) -/
+
+/-- **The weak [HM] hypothesis is a theorem.** Every indefinite even unimodular integer form has a nonzero
+integer isotropic vector. Rank case-split: rank 0 (`sigPos = 0`, contradiction), ranks 1 & 3 (no even
+unimodular form exists), rank 2 (`weakIsotropic_rank_two`), rank 4 (`weakIsotropic_rank_four`), rank ≥ 5
+(`weakIsotropic_of_five_le`). -/
+theorem hasWeakIsotropicVector : HasWeakIsotropicVectorHyp := by
+  intro m A hA hsp hsn
+  rcases Nat.lt_or_ge m 5 with hm | hm
+  · interval_cases m
+    · exfalso
+      have h := QuadraticForm.sigPos_add_sigNeg_add_radical
+        (Q := (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
+      rw [show Module.finrank ℝ (Fin 0 → ℝ) = 0 by simp] at h
+      omega
+    · exact (not_evenUnimodular_one A hA).elim
+    · exact weakIsotropic_rank_two A hA
+    · exact (not_evenUnimodular_three A hA).elim
+    · exact weakIsotropic_rank_four A hA hsp hsn
+  · exact weakIsotropic_of_five_le hm A hsp hsn
+
+/-- **The strong [HM] hypothesis is a theorem** (primitive isotropic vector), via content extraction. -/
+theorem hasIsotropicVector : HasIsotropicVectorHyp := hasIsotropic_of_weak hasWeakIsotropicVector
+
+/-- **`8 ∣ σ` for every even unimodular form — unconditional.** Combines the discharged [HM] input with the
+theta-modularity [Θ] input (`eight_dvd_latticeSig_of_HM`). -/
+theorem eight_dvd_latticeSig (n : ℕ) (M : Matrix (Fin n) (Fin n) ℤ) (heu : IsEvenUnimodular M) :
+    8 ∣ latticeSig M :=
+  eight_dvd_latticeSig_of_HM hasIsotropicVector n M heu
+
+/-- **`16 ∣ σ` for every even unimodular form with the topological factor — unconditional.** -/
+theorem sixteen_dvd_latticeSig {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (heu : IsEvenUnimodular M)
+    (htopo : (2 : ℤ) ∣ latticeSig M / 8) : (16 : ℤ) ∣ latticeSig M :=
+  sixteen_dvd_latticeSig_of_HM_of_topo hasIsotropicVector M heu htopo
 
 end SKEFTHawking
