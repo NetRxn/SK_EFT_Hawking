@@ -195,4 +195,33 @@ theorem hilbertPrime_pair_match_good {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a 
       hilbertPrime_odd Fact.out hp, hilbertPrime_odd Fact.out hp]
   exact ⟨h1, h2⟩
 
+/-- **Closing lemma of the keystone construction: one free finite place `q`.** If a single nonzero integer `t`
+matches *both* families' Hilbert symbols at `∞` and at every finite place *except* one prime `q`, then the
+quaternary `a x² + b y² = c z² + d w²` is isotropic over ℚ. The two free-place closures
+(`hilbertPrime_eq_of_others`, applied per family) recover the symbols at `q` from the product formula, so all
+places match and `quaternary_isotropic_of_symbol_keystone` fires. **This reduces the entire `n = 4` Hasse–
+Minkowski to a single constructive task: produce an integer `t` matching both families at `∞` and all finite
+places ≠ q** — which the clean construction does via the bad-place certificates
+(`hilbertPrime_pair_match_of_congr_*`), good-place coverage (`hilbertPrime_pair_match_good`), a sign choice at
+`∞`, and a plain-Dirichlet prime `q` (no consistency obstruction — the `q`-place is the free one here). -/
+theorem quaternary_isotropic_of_symbol_except_q {a b c d t : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0) (ht : t ≠ 0) (q : ℕ)
+    (hRab : hilbertReal ((t : ℤ) : ℝ) ((-(a * b) : ℤ) : ℝ) = hilbertReal ((a : ℤ) : ℝ) ((b : ℤ) : ℝ))
+    (hRcd : hilbertReal ((t : ℤ) : ℝ) ((-(c * d) : ℤ) : ℝ) = hilbertReal ((c : ℤ) : ℝ) ((d : ℤ) : ℝ))
+    (hab : ∀ p : ℕ, p ≠ q → hilbertPrime p t (-(a * b)) = hilbertPrime p a b)
+    (hcd : ∀ p : ℕ, p ≠ q → hilbertPrime p t (-(c * d)) = hilbertPrime p c d) :
+    ∃ x y z w : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ) * x ^ 2 + (b : ℚ) * y ^ 2 = (c : ℚ) * z ^ 2 + (d : ℚ) * w ^ 2 := by
+  have hqab : hilbertPrime q t (-(a * b)) = hilbertPrime q a b :=
+    hilbertPrime_eq_of_others ha hb ht q hRab hab
+  have hqcd : hilbertPrime q t (-(c * d)) = hilbertPrime q c d :=
+    hilbertPrime_eq_of_others hc hd ht q hRcd hcd
+  refine quaternary_isotropic_of_symbol_keystone ha hb hc hd ⟨t, ht, hRab, ?_, hRcd, ?_⟩
+  · intro p _; rcases eq_or_ne p q with hpq | hpq
+    · subst hpq; exact hqab
+    · exact hab p hpq
+  · intro p _; rcases eq_or_ne p q with hpq | hpq
+    · subst hpq; exact hqcd
+    · exact hcd p hpq
+
 end SKEFTHawking
