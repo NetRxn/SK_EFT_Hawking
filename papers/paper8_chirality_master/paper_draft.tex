@@ -39,8 +39,10 @@ in Lean~4}
 We present a formal verification survey of the lattice chirality
 problem---the obstruction to placing chiral fermions on a lattice with
 the correct continuum limit. The formalization in Lean~4 with Mathlib comprises
-$\totaltheorems{}$~theorems with $\axiomcount{}$~axiom
-(\texttt{gapped\_interface\_axiom}) across $\leanmodules{}$~modules
+$\totaltheorems{}$~theorems with $\axiomcount{}$~project-local axioms
+(the 4+1D gapped-interface statement is carried as the tracked-hypothesis Prop
+\texttt{TPFConjecture}, formerly the axiom \texttt{gapped\_interface\_axiom})
+across $\leanmodules{}$~modules
 (zero \texttt{sorry}), of which $\aristotleproved{}$~are proved by the
 Aristotle automated theorem prover. The work is organized around three
 complementary pillars.
@@ -107,13 +109,13 @@ standard lattice gauging.
 This paper presents a comprehensive formal verification of the
 chirality wall in the Lean~4 proof assistant with Mathlib. The
 formalization totals $\totaltheorems{}$~theorems
-($\axiomcount{}$~axiom: \texttt{gapped\_interface\_axiom})
+($\axiomcount{}$~project-local axioms; the gapped-interface statement is the tracked Prop \texttt{TPFConjecture})
 across $\leanmodules{}$~Lean modules, of which $\aristotleproved{}$ are proved by the Aristotle
 automated theorem prover~\cite{Aristotle2025}. Phase~2 (3+1D extension) adds
 \texttt{GaugingStep.lean} (14~theorems: gauging obstruction, SMG phases,
 not-on-site symmetry formalization) and \texttt{SPTClassification.lean}
-(20~theorems + 1~axiom: SPT phase types, gapped interface conjecture,
-conditional chiral gauge theorem). The work is organized
+(20~theorems: SPT phase types, the gapped-interface conjecture as the
+tracked Prop \texttt{TPFConjecture}, conditional chiral gauge theorem). The work is organized
 around three pillars: the no-go (Sec.~\ref{sec:pillar1}), the positive
 construction (Sec.~\ref{sec:pillar2}), and the algebraic framework
 (Sec.~\ref{sec:pillar3}). Bridge theorems connecting the pillars are
@@ -403,7 +405,7 @@ $16n$ fermions for anomaly cancellation.
 \caption{The three-pillar structure of the chirality wall formal
 verification. Pillar~1 (no-go), Pillar~2 (positive construction), and
 Pillar~3 (anomaly classification) are connected by bridge theorems.
-Total: $\totaltheorems{}$~theorems, $\axiomcount{}$~axiom, $\leanmodules{}$~modules.}
+Total: $\totaltheorems{}$~theorems, $\axiomcount{}$~axioms, $\leanmodules{}$~modules.}
 \label{fig:three_pillars}
 \end{figure}
 
@@ -443,9 +445,11 @@ Fidkowski-Kitaev 2+1D gapped interface, and all bridge connections.
 
 \noindent\textbf{What was formerly axiomatized:} GS no-go theorem
 and gauge erasure universality are proved as theorems. The $\mathbb{Z}_{16}$
-cobordism algebraic core is machine-checked (Ext computation). One axiom
-remains: \texttt{gapped\_interface\_axiom} (4+1D gapped interface
-conjecture), supported by machine-checked 1+1D and 2+1D evidence.
+cobordism algebraic core is machine-checked (Ext computation). The 4+1D
+gapped-interface conjecture is carried as the tracked-hypothesis Prop
+\texttt{TPFConjecture} (formerly the axiom \texttt{gapped\_interface\_axiom};
+the project now declares $\axiomcount{}$~axioms), supported by machine-checked
+1+1D and 2+1D evidence.
 
 \noindent\textbf{Machine-checked evidence for the gapped interface:}
 The analogous statement is machine-verified in two lower dimensions:
@@ -456,7 +460,7 @@ proof that 8~Majorana fermions can be gapped to a unique ground state
 (spectral gap $\Delta=2$) while preserving symmetry.
 
 \noindent\textbf{What remains open:} The 4+1D gapped interface
-conjecture (TPF, the project's single axiom), the gauging step from
+conjecture (TPF, the project's central tracked-hypothesis Prop \texttt{TPFConjecture}), the gauging step from
 vector-like SMG to chiral gauge coupling, and the full $\mathbb{Z}_{16}$
 cobordism proof (algebraic core machine-checked via the Ext computation;
 3~topological hypotheses remain).
@@ -496,7 +500,7 @@ on which any resolution must stand is now machine-checked.
 
 We have presented a comprehensive formal verification of the lattice
 chirality problem in Lean~4, comprising $\totaltheorems{}$~theorems
-($\axiomcount{}$~axiom: gapped interface) across $\leanmodules{}$~modules. The three-pillar
+($\axiomcount{}$~project-local axioms; the gapped interface is carried as the tracked Prop \texttt{TPFConjecture}) across $\leanmodules{}$~modules. The three-pillar
 structure---no-go, positive construction, anomaly classification---provides
 a complete machine-checked map of the chirality wall as of 2026. The
 Gioia-Thorngren chiral symmetry $[H,Q_A]=0$ is formally verified, the
