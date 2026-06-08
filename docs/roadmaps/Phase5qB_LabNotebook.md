@@ -807,6 +807,25 @@ p-adic crux): (i) assemble `bad_prime_R_certificate` (N:=padicValInt p T + 1 odd
 (iii) strong-induction spine `diag_nary_zero_of_local`; (iv) p=2 rank-≥5 ℚ₂ isotropy; (v) matrix→ℚ-diagonalize
 → `HasWeakIsotropicVectorHyp`; (vi) wire RokhlinBridge + D2/L2 + registry + closure reviewer.
 
+### 2026-06-08 (cont.⁹) — base-change bridge SHIPPED; p=2 local isotropy = the one remaining frontier
+- `2720c1eb` **`matrix_isotropic_congr`** (+ field-general `toQuadraticMap'_congr_field`): isotropy of `A`
+  ⟺ isotropy of `Pᵀ A P` (P invertible) over ANY field, via `isometryEquivOfCompLinearEquiv` +
+  `exists_ne_zero_isotropic_congr`. ⟹ a single RATIONAL congruence `P` (cast to ℝ/ℚ_p/ℚ) transfers `A`'s
+  isotropy to a diagonal form at EVERY completion → feeds `diag_nary_zero_of_local`. (Still need: produce the
+  ℚ diagonalizing `P` — extract from `equivalent_weightedSumSquares`'s IsometryEquiv via `LinearMap.toMatrix'`,
+  or a matrix-level symmetric diagonalization; then clear denominators with `diag_iso_rat_int`.) Kernel-pure.
+
+**🔑 NEW ROUTE for the p=2 local isotropy (the ONLY remaining hard input) — via Hilbert RECIPROCITY, reusing
+`hilbertGlobalProd_eq_one`, possibly MUCH cleaner than 2-adic classification:** the Hasse–Witt invariant of a
+diagonal form `⟨a₁,…,aₙ⟩` is `εᵥ = ∏_{i<j}(aᵢ,aⱼ)ᵥ`; ∏ᵥ εᵥ = ∏_{i<j} ∏ᵥ(aᵢ,aⱼ)ᵥ = ∏_{i<j} 1 = 1 (Hilbert
+product formula, SHIPPED). Local isotropy at `v` (rank ≥3, controlled disc) ⟺ an `εᵥ`-condition; so isotropy
+at ℝ + all odd p (both SHIPPED: `indefinite_*` + `exists_diag_nary_zero_odd_padic`) + `∏εᵥ=1` ⟹ isotropy at
+p=2 for FREE — dodging the direct 2-adic anisotropic-classification. Needs the "isotropic ⟺ Hasse-criterion"
+local lemma assembled from the shipped symbol↔solvability bridges (`solvable_padic_iff_hilbertPadicInt_one`,
+`solvable_2adic_iff_hilbert2Int`). NEXT SESSION: pursue this reciprocity route for p=2 (it reuses the entire
+Hilbert-symbol apparatus already built), then matrix-diagonalize assembly → `HasWeakIsotropicVectorHyp` → wire.
+Alternative if reciprocity-assembly is heavy: direct rank-≥5 ℚ₂ (2-adic, from scratch, no toehold).
+
 ### 2026-06-08 (cont.⁸) — 🎯🎯🎯 GENERAL-RANK HASSE–MINKOWSKI COMPLETE (`diag_nary_zero_of_local`)
 **THE WALL IS BEHIND US END-TO-END.** The full local–global principle for diagonal forms of ANY rank is now a
 kernel-pure theorem. Commits (all `{propext, Classical.choice, Quot.sound}`, `main`, NOT pushed):
