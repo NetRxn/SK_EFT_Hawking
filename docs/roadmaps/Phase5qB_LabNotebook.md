@@ -659,3 +659,34 @@ CRT); (c) **place-by-place verification** — ℝ (`real_binary_represents_iff`)
 ⟹ `quaternary_solvable_of_local` (n=4); then n≥5 Meyer, p=2 even-unimod local isotropy, `HasWeakIsotropicVectorHyp`,
 wire RokhlinBridge + D2/L2 + registry + closure reviewer. **EVEN-UNIMOD SIMPLIFICATION still to exploit:
 bad set reduces toward {∞,2}, dissolving odd-prime residue conflicts in (a).**
+
+## 2026-06-08 (cont.) — n≥5 MEYER REDUCTION underway (new file `HasseMinkowskiNary.lean`)
+
+Post-compact re-orientation done (Physlib scout: ZERO arithmetic/HM substrate — only diff-geo quadratic forms;
+Mathlib still none). The n=4 summit `quaternary_solvable_of_local` is the wall; everything downstream is
+brick-assembly. Started the general-rank diagonal HM spine. **3 bricks shipped, kernel-pure
+`{propext, Classical.choice, Quot.sound}`, file-gate green, committed to `main` (NOT pushed):**
+- `2d9ecced` **`represents_of_isotropic_diag`** — field-general (char≠2): an isotropic diagonal form
+  `∑ wᵢxᵢ²` (all `wᵢ≠0`) represents EVERY value `t`. Witness `x = s•v + e_j`, `s=(t−wⱼ)/(2wⱼvⱼ)`,
+  `q(x)=wⱼ(2vⱼs+1)`. The "good place" universality engine. 🔑 `Function.ne_iff` gives `v j ≠ 0 j` (the `0`
+  applied) — normalize with `Pi.zero_apply` before `field_simp`.
+- `1bdac0ed` **`represents_of_units_odd_padic`** — odd p, rank ≥3 unit (`‖wᵢ‖=1`) diagonal form over ℚ_p is
+  UNIVERSAL: compose `exists_diag_nary_zero_odd_padic_unit` (isotropy) ∘ `represents_of_isotropic_diag`
+  (ℚ_p char 0 ⟹ `two_ne_zero`). The residual-form input at good primes of the reduction.
+- `f104f72f` **`reduction_assembly`** — descent half (pure algebra): `⟨c₀,c₁⟩` reps `a≠0` + `⟨a,R⟩` isotropic
+  over ℚ ⟹ `⟨c₀,c₁,R⟩` isotropic over ℚ. `Fin.cons` witness `(u₀y₀, u₁y₀, y')`, `Fin.sum_univ_succ`. 🔑
+  index-1 coord: `simpa using congrFun hx 1` (NOT `Fin.cons_one`); a≠0 ⟹ u₀≠0∨u₁≠0 via `rw[←hBeq,h.1,h.2];ring`.
+
+**ROUTE DECISION (weak-approximation, NOT n=4-style Dirichlet):** the descended value `a := B(x₀,x₁)` is taken
+to be an ACTUAL value of the binary `B=⟨c₀,c₁⟩` over ℚ (rational x₀,x₁ from CRT) ⟹ "B reps a globally" is FREE
+(definitional), and at good primes the residual `R` (rank n−2≥3 unit) is universal ⟹ `g=⟨a,R⟩` isotropic FREE.
+So NO Dirichlet/product-formula needed (unlike n=4): the ONLY construction is choosing rational `x₀,x₁` with
+`B(x₀,x₁)` in `a_v`'s ℚ_v-square class at each bad finite `v∈S` (CRT: `exists_int_prime_pow_residues` +
+`isSquare_padic_div_of_modEq`/`_2adic_`) and sign-matched at ∞ (archimedean `x₀↦x₀+M·k` adjustment). Then
+`g` isotropic everywhere → induction (rank n−1) → `g` isotropic /ℚ → `R` reps `−a` /ℚ → `reduction_assembly`.
+
+**NEXT bricks:** (i) normalize a local zero of `f` at `v∈S` to integer entries with nonzero B-value `a_v`
+(handle B-isotropic-at-v ⟹ B universal, and R-isotropic ⟹ R universal sub-cases); (ii) the weak-approx value
+lemma `exists_binary_value_matching_local` (CRT + sign); (iii) the n≥5 reduction step; (iv) n≤4 base wiring
+(`binary/diag_ternary/diag_quaternary_zero_of_local`, with a ℚ-coeff quaternary wrapper) + strong-induction
+spine `diag_nary_zero_of_local`; (v) matrix→diagonal `HasWeakIsotropicVectorHyp`; (vi) wire.
