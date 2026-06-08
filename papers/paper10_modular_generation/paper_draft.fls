@@ -2,7 +2,7 @@ PWD /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-
 INPUT /usr/local/texlive/2026/texmf.cnf
 INPUT /usr/local/texlive/2026/texmf-dist/web2c/texmf.cnf
 INPUT /usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper10_modular_generation/paper_draft.tex
+INPUT paper_draft.tex
 OUTPUT paper_draft.log
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/revtex/revtex4-2.cls
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/revtex/revtex4-2.cls
@@ -99,6 +99,9 @@ INPUT /usr/local/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter
 INPUT /usr/local/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/braket/braket.sty
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/braket/braket.sty
+INPUT ../../docs/counts.tex
+INPUT ../../docs/counts.tex
+INPUT ../../docs/counts.tex
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT ./paper_draft.aux

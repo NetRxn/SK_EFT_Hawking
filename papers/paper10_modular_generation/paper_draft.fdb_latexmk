@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex paper_draft"] 1777661835.70606 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1777661836.54351 0
-  "./paper_draftNotes.bib" 1777661836.31423 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1780960152.50163 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1780960153.42262 0
+  "./paper_draftNotes.bib" 1780960153.14593 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1777661836.31336 4495 913c7370666176db49e8853ee833737d "pdflatex"
+  "paper_draft.aux" 1780960153.14526 4523 164519c8a64caf0ceba8f5f11ef01dc0 "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1777661835.81158 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper10_modular_generation/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1777661836.54366 0
-  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper10_modular_generation/paper_draft.tex" 1777661790.12221 18056 4de013466b0dbdeff64a31ddd8448593 ""
+["pdflatex"] 1780960152.60982 "paper_draft.tex" "paper_draft.pdf" "paper_draft" 1780960153.42276 0
+  "../../docs/counts.tex" 1780582644.65068 2191 13812e3c00cd81f3c8edabaf78518e4d ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -127,10 +127,10 @@
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
   "figures/fig73_sm_generation_constraint.png" 1775328529.7687 81502 f23e3687d2e7956b44d1e4afacd518df ""
   "figures/fig75_modular_invariance_phase.png" 1775329368.14127 114396 50136f9c1d74fec902d2f00fc5959655 ""
-  "paper_draft.aux" 1777661836.31336 4495 913c7370666176db49e8853ee833737d "pdflatex"
-  "paper_draft.bbl" 1777661835.80919 1980 28c19e8c34138b62d4af8c2d0ed844b0 "bibtex paper_draft"
-  "paper_draft.out" 1777661836.3141 2874 c8a75f24627dfef7be8ecc853ac455ab "pdflatex"
-  "paper_draft.tex" 1777661790.12221 18056 4de013466b0dbdeff64a31ddd8448593 ""
+  "paper_draft.aux" 1780960153.14526 4523 164519c8a64caf0ceba8f5f11ef01dc0 "pdflatex"
+  "paper_draft.bbl" 1780960152.60772 1982 35453d3875d823f0ec9445e740a573d9 "bibtex paper_draft"
+  "paper_draft.out" 1780960153.14577 2874 c8a75f24627dfef7be8ecc853ac455ab "pdflatex"
+  "paper_draft.tex" 1780960134.72773 20828 77ae9d3ef27b5b53485edb5a35bf1583 ""
   (generated)
   "paper_draft.aux"
   "paper_draft.log"
