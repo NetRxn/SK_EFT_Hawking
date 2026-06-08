@@ -70,4 +70,23 @@ theorem represents_everywhere_iff_symbols {a b t : ℤ} (ha : a ≠ 0) (hb : b �
     exact ⟨(represents_real_iff_symbol_linear ha hb ht).mpr hR,
       fun p _ => (represents_padic_iff_hilbertPrime_linear ha hb ht).mpr (hsym p)⟩
 
+/-- **Product-formula closure: the real place comes for free.** If the linear Hilbert-symbol prescription
+`(t, −ab)_p = (a,b)_p` holds at *every finite place* `p`, then it holds at the real place too. This is the
+distinguished-place mechanism of Serre Ch III §2.2 Theorem 4: both global products `∏_v (t,−ab)_v` and
+`∏_v (a,b)_v` equal `1` (`hilbertGlobalProd_eq_one`), so once the finite-place factors agree their (common,
+nonzero, ±1-valued) product cancels and the two real factors must be equal. Using `∞` as the free place means
+the construction only has to *match the symbols at the finitely many bad finite places* — the archimedean
+condition is then automatic, removing one degree of constraint exactly as the product formula dictates. -/
+theorem hilbertReal_eq_of_hilbertPrime_eq {a b t : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (ht : t ≠ 0)
+    (hfin : ∀ p : ℕ, hilbertPrime p t (-(a * b)) = hilbertPrime p a b) :
+    hilbertReal ((t : ℤ) : ℝ) ((-(a * b) : ℤ) : ℝ) = hilbertReal ((a : ℤ) : ℝ) ((b : ℤ) : ℝ) := by
+  have hab : -(a * b) ≠ 0 := neg_ne_zero.mpr (mul_ne_zero ha hb)
+  have h1 := hilbertGlobalProd_eq_one ht hab
+  have h2 := hilbertGlobalProd_eq_one ha hb
+  unfold hilbertGlobalProd at h1 h2
+  rw [finprod_congr hfin] at h1
+  have hP : (∏ᶠ p : ℕ, hilbertPrime p a b) ≠ 0 := by
+    intro h; rw [h, mul_zero] at h2; exact one_ne_zero h2.symm
+  exact mul_right_cancel₀ hP (h1.trans h2.symm)
+
 end SKEFTHawking
