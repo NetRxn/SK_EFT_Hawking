@@ -2622,6 +2622,24 @@ theorem padicValInt_prod_primes {p : ℕ} [Fact p.Prime] :
         rw [padicValNat.eq_zero_of_not_dvd hnd]
         simp only [List.mem_cons, hpq, false_or, Nat.zero_add]
 
+/-- **Support of `±1·∏(primes)`: a prime outside the list does not divide it.** For `s = ±1` and a list `L`
+of primes, any prime `p ∉ L` is coprime to `s · ∏ L`. This is the *good-place support* property of the rank-4
+keystone's global value `t = ε·(L.prod)` (with `L` the bad primes carrying odd valuation, together with the
+single Dirichlet prime `q`): at every prime `p ∉ L`, `p ∤ t`, so `good_prime_symbol_auto` /
+`hilbertPrime_pair_match_good` certify both binary symbols there with no further work. -/
+theorem not_dvd_sign_mul_prod_primes {s : ℤ} (hs : s = 1 ∨ s = -1) (L : List ℕ)
+    (hL : ∀ q ∈ L, q.Prime) {p : ℕ} (hp : p.Prime) (hpL : p ∉ L) :
+    ¬ (p : ℤ) ∣ (s * ((L.prod : ℕ) : ℤ)) := by
+  have hpZ : Prime (p : ℤ) := Nat.prime_iff_prime_int.mp hp
+  intro hdvd
+  rcases hpZ.dvd_mul.mp hdvd with h | h
+  · rcases hs with hs1 | hs1 <;> rw [hs1] at h
+    · exact hpZ.not_dvd_one h
+    · exact hpZ.not_dvd_one (dvd_neg.mp h)
+  · rw [Int.natCast_dvd_natCast] at h
+    obtain ⟨q, hqL, hpq⟩ := hp.prime.dvd_prod_iff.mp h
+    exact hpL (((Nat.prime_dvd_prime_iff_eq hp (hL q hqL)).mp hpq) ▸ hqL)
+
 /-- **Equal residues ⟹ square ratio (odd `p`, unit case).** Two `ℤ_[p]` units `u, v` with the same residue
 mod `p` have `u/v` a square in `ℚ_[p]`. (`u·v⁻¹` is a unit with residue `1`, hence a square by
 `isSquare_iff_isSquare_toZMod`.) The valuation-`0` half of the square-class matching in the rank-4 keystone:
