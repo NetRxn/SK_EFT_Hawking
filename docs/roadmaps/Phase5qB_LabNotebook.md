@@ -521,6 +521,29 @@ non-square disc, so the general n=4 construction is still required for those via
 unimodular indefinite = `H`: `b²−4ac=1` square disc ⟹ elementary binary isotropy.) Net: the 𝔽₂ construction is
 unavoidable for rank ≥ 6, but rank-2 and rank-4 cases are already discharged by elementary/square-disc routes.
 
+**➕ BAD-PRIME VERIFICATION TOOLKIT NOW COMPLETE (2026-06-08, kernel-pure, file-gate green, NOT pushed):**
+- `a52579c9` **`hilbertPrime_eq_of_others`** (HasseMinkowskiGlobal) — companion of the ∞-free lemma: match at ∞
+  and every finite place except a chosen prime `q` ⟹ match at `q`. Single-point finprod factoring
+  (`mul_finprod_cond_ne`). **Both free-place directions now available — the construction may free ANY place.**
+- `deb3d35d` **`isSquare_padic_div_int`** (PadicSquare) — integer face of `isSquare_padic_div_of_decomp`: integers
+  `x=p^vx·Cx`, `m=p^vm·Cm` (Cx,Cm coprime to p), equal valuation parity + `Cx≡Cm mod p` ⟹ `IsSquare(x/m)` /ℚ_p.
+- `ecdd77c7` **`isSquare_2adic_div_of_decomp` + `isSquare_2adic_div_int`** (PadicSquare) — the `p=2` analogues
+  (valuation parity + residue mod 8 via `toZModPow 3`/`ZMod 8`). `2∈S` always, so the p=2 matcher is mandatory.
+🔑 reusable: `padicInt_intCast_isUnit hC` lifts an integer cofactor `¬p∣C` to a `ℤ_[p]` unit; `map_intCast
+PadicInt.toZMod`/`toZModPow 3` gives its residue; `push_cast [zpow_natCast]; ring` bridges `ℕ`-pow `p^v` to the
+`zpow` the decomp matcher wants.
+
+### ASSEMBLY ENTRY POINT (next increment): `quaternary_solvable_of_local`
+EVERY verification leaf is now shipped (good odd p: `binary_represents_padic_val_zero_int`; q-place:
+`binary_universal_padic_of_residue`; bad odd p: `binary_represents_of_isSquare_ratio` ∘ `isSquare_padic_div_int`
+∘ `exists_int_sq_ratio_odd`; p=2: `…_2adic_div_int`; ∞: `real_binary_represents_iff` + product-formula closure).
+The ONLY remaining mathematical content is the **𝔽₂-consistency / construction of the data `(ε, T, q-residues)`**:
+prove that `hilbertGlobalProd_eq_one` makes the per-bad-prime square-class conditions jointly solvable. This is
+the genuine large core; everything it feeds is a theorem. Build order next: (1) extract local common values `c_v`
++ their integer square-class reps at each `v∈S` (`common_value_of_quaternary_isotropic` + `exists_int_sq_ratio_*`);
+(2) the 𝔽₂ solvability from the product formula (the crux); (3) assemble `t = ε·q·∏T`, verify place-by-place,
+feed `quaternary_isotropic_of_keystone`; (4) downstream chain + wire.
+
 ### REMAINING toward the keystone (`quaternary_isotropic_of_keystone` consumes a global `t`):
 With the engine in hand, the keystone existence (Serre Thm 4 for the two families `a₁=−ab, a₂=−cd`) now needs:
 (a) **the consistency brick** — construct the unit target `r:ZMod D` whose images encode the matching square
