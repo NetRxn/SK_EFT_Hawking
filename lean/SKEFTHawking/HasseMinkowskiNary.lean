@@ -231,6 +231,43 @@ theorem diag_real_isotropic_of_signs {n : ℕ} (c : Fin n → ℝ) (i j : Fin n)
       simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hk
       rw [exo k hk.1 hk.2]; ring
 
+/-- **Majority-sign peel pigeonhole.** If a rank-`≥ 5` real diagonal form (all coefficients nonzero) is
+indefinite (`∃` positive, `∃` negative coefficient), there is a coordinate pair `{i, j}` whose removal
+leaves the residual still indefinite (a positive coordinate `k` and a negative coordinate `l`, both
+distinct from `i, j`). (Pigeonhole: the majority sign has `≥ 3` coordinates; peel two of them.) Peeling such
+a pair keeps the descended form isotropic over ℝ for free (`diag_real_isotropic_of_signs`). -/
+theorem exists_peel_pair {n : ℕ} (hn : 5 ≤ n) (c : Fin n → ℝ) (hc : ∀ k, c k ≠ 0)
+    (hpos : ∃ p, 0 < c p) (hneg : ∃ q, c q < 0) :
+    ∃ i j : Fin n, i ≠ j ∧ (∃ k, k ≠ i ∧ k ≠ j ∧ 0 < c k) ∧ (∃ l, l ≠ i ∧ l ≠ j ∧ c l < 0) := by
+  classical
+  set P := univ.filter (fun k => 0 < c k) with hP
+  set N := univ.filter (fun k => c k < 0) with hN
+  have hdisj : Disjoint P N := by
+    rw [Finset.disjoint_left]; intro k hkP hkN
+    rw [hP, Finset.mem_filter] at hkP; rw [hN, Finset.mem_filter] at hkN
+    linarith [hkP.2, hkN.2]
+  have hcover : P ∪ N = univ := by
+    rw [hP, hN, ← Finset.filter_or, Finset.filter_true_of_mem]
+    intro k _; rcases lt_or_gt_of_ne (hc k) with h | h
+    · exact Or.inr h
+    · exact Or.inl h
+  have hcard : P.card + N.card = n := by
+    rw [← Finset.card_union_of_disjoint hdisj, hcover, Finset.card_univ, Fintype.card_fin]
+  rcases (by omega : 3 ≤ P.card ∨ 3 ≤ N.card) with hPc | hNc
+  · obtain ⟨p1, p2, p3, h1, h2, h3, d12, d13, d23⟩ :=
+      Finset.two_lt_card_iff.mp (show 2 < P.card by omega)
+    rw [hP, Finset.mem_filter] at h1 h2 h3
+    obtain ⟨q, hq⟩ := hneg
+    exact ⟨p1, p2, d12, ⟨p3, d13.symm, d23.symm, h3.2⟩,
+      ⟨q, fun h => by rw [h] at hq; linarith [h1.2], fun h => by rw [h] at hq; linarith [h2.2], hq⟩⟩
+  · obtain ⟨p1, p2, p3, h1, h2, h3, d12, d13, d23⟩ :=
+      Finset.two_lt_card_iff.mp (show 2 < N.card by omega)
+    rw [hN, Finset.mem_filter] at h1 h2 h3
+    obtain ⟨q, hq⟩ := hpos
+    exact ⟨p1, p2, d12,
+      ⟨q, fun h => by rw [h] at hq; linarith [h1.2], fun h => by rw [h] at hq; linarith [h2.2], hq⟩,
+      ⟨p3, d13.symm, d23.symm, h3.2⟩⟩
+
 /-! ### `n ≤ 4` base cases in uniform `∑`-shape -/
 
 /-- A `Fin 2 → K` vector is nonzero iff not both entries vanish. -/
