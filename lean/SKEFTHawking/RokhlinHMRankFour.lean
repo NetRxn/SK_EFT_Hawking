@@ -404,4 +404,33 @@ theorem quaternary_sqdisc_solvable_of_local_no_two {a b c d s : ℤ}
     obtain ⟨x, y, z, w, hnz, he⟩ := hloc p
     exact ⟨x, y, z, w, hnz, by push_cast at he ⊢; linear_combination he⟩
 
+/-- **Square-discriminant rank-4 diagonal Hasse–Minkowski without place 2**, in `∑ dᵢ xᵢ²` form. A diagonal
+form with nonzero integer coefficients and square product, isotropic over `ℝ` and every *odd* `ℚ_p`, is
+isotropic over `ℚ`. A thin `Fin 4`-vector wrapper over `quaternary_sqdisc_solvable_of_local_no_two`. -/
+theorem diag_four_solvable_of_local_no_two {d : Fin 4 → ℤ} (hne : ∀ i, d i ≠ 0)
+    (hsq : IsSquare (d 0 * d 1 * d 2 * d 3))
+    (hR : ∃ x : Fin 4 → ℝ, x ≠ 0 ∧ ∑ i, (d i : ℝ) * x i ^ 2 = 0)
+    (hodd : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 →
+      ∃ x : Fin 4 → ℚ_[p], x ≠ 0 ∧ ∑ i, (d i : ℚ_[p]) * x i ^ 2 = 0) :
+    ∃ x : Fin 4 → ℚ, x ≠ 0 ∧ ∑ i, (d i : ℚ) * x i ^ 2 = 0 := by
+  obtain ⟨s, hs⟩ := hsq
+  obtain ⟨x, y, z, w, hnz, he⟩ := quaternary_sqdisc_solvable_of_local_no_two
+    (hne 0) (hne 1) (neg_ne_zero.mpr (hne 2)) (neg_ne_zero.mpr (hne 3))
+    (show d 0 * d 1 * (-d 2) * (-d 3) = s ^ 2 by rw [pow_two]; linear_combination hs)
+    (by obtain ⟨v, hv, hve⟩ := hR
+        refine ⟨v 0, v 1, v 2, v 3, fun h => hv (funext fun i => by fin_cases i <;> simp_all), ?_⟩
+        rw [Fin.sum_univ_four] at hve; push_cast; linear_combination hve)
+    (by intro p _ hp2
+        obtain ⟨v, hv, hve⟩ := hodd p hp2
+        refine ⟨v 0, v 1, v 2, v 3, fun h => hv (funext fun i => by fin_cases i <;> simp_all), ?_⟩
+        rw [Fin.sum_univ_four] at hve; push_cast; linear_combination hve)
+  refine ⟨![x, y, z, w], fun h => hnz ⟨?_, ?_, ?_, ?_⟩, ?_⟩
+  · have := congrFun h 0; simpa using this
+  · have := congrFun h 1; simpa using this
+  · have := congrFun h 2; simpa using this
+  · have := congrFun h 3; simpa using this
+  · rw [Fin.sum_univ_four]; simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+      Matrix.cons_val_two, Matrix.cons_val_three, Matrix.tail_cons]
+    push_cast at he ⊢; linear_combination he
+
 end SKEFTHawking
