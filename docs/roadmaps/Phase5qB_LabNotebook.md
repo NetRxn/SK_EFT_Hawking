@@ -690,3 +690,32 @@ So NO Dirichlet/product-formula needed (unlike n=4): the ONLY construction is ch
 lemma `exists_binary_value_matching_local` (CRT + sign); (iii) the n≥5 reduction step; (iv) n≤4 base wiring
 (`binary/diag_ternary/diag_quaternary_zero_of_local`, with a ℚ-coeff quaternary wrapper) + strong-induction
 spine `diag_nary_zero_of_local`; (v) matrix→diagonal `HasWeakIsotropicVectorHyp`; (vi) wire.
+
+### 2026-06-08 (cont.²) — n≤4 BASES + INFRASTRUCTURE COMPLETE; sign-free reduction plan locked
+**6 kernel-pure commits to `main` (NOT pushed), all `{propext, Classical.choice, Quot.sound}`, file-gate green,
+in `HasseMinkowskiNary.lean`:**
+- `2d9ecced` `represents_of_isotropic_diag` (isotropic⟹universal, field char≠2)
+- `1bdac0ed` `represents_of_units_odd_padic` (good-place: rank≥3 unit form over ℚ_p universal)
+- `f104f72f` `reduction_assembly` (descent algebra: B reps a≠0 + ⟨a,R⟩ iso ⟹ ⟨c₀,c₁,R⟩ iso, Fin.cons witness)
+- `3200f3af` rational n=4 base: `cast_num_mul_den`, `diag_scale_var`, `diag_iso_mul_sq`, `diag_iso_rat_int`
+  (rational⇄integer denominator-clearing over any CharZero field), `ne_zero_iff_four`,
+  `diag_quaternary_zero_sum_int` (Fin4/∑ ℤ summit), `diag_quaternary_zero_of_local_rat` (ℚ n=4 HM)
+- `008deacd` n=2,3 ∑-bases: `ne_zero_iff_two/three`, `diag_binary_zero_sum`, `diag_ternary_zero_sum`
+- `d8faf6d6` `diag_reindex_iso` (isotropy invariant under coordinate reindex `e:Fin n≃Fin n`, `Equiv.sum_comp`)
+
+🎯 **KEY SIMPLIFICATION (sign-free reduction):** peel TWO coordinates of the MAJORITY real sign (pigeonhole:
+n≥5 ⟹ some sign has ≥3 coords; via `diag_reindex_iso` move them to 0,1). Then the residual `R` (rank n−2≥3)
+retains BOTH signs ⟹ R is INDEFINITE over ℝ ⟹ universal over ℝ ⟹ `g=⟨a,R⟩` isotropic over ℝ for FREE, for ANY
+`a`. **This ELIMINATES the archimedean/sign construction entirely.** Combined with the weak-approx route
+(`a := B(x₀,x₁)` an actual binary value ⟹ "B reps a" free; R universal at good odd p ⟹ free), **the reduction
+now needs NO Dirichlet, NO product formula, NO sign control, NO archimedean estimate** — ONLY CRT square-class
+matching at the finitely many bad primes (`exists_int_prime_pow_residues` + `isSquare_padic_div_of_modEq`/`_2adic`).
+
+**REMAINING for the spine (all wall-free, CRT-only):** (1) pigeonhole `∃ sign with ≥3 coords` + front-permutation
+`∃ e:Fin(m+2)≃, e 0=i ∧ e 1=j`; (2) extract integer-normalized local zero of `f` at `v∈S` giving `a_v=B-value`
+(handle a_v=0 via B-iso⟹universal or R-iso⟹universal); (3) CRT value `a=B(CRT x₀,x₁)` matching `a_v` square
+class at bad p ⟹ R reps −a at bad p (R reps −a_v + square scale); good p (R universal); ∞ (R indefinite univ);
+(4) `g=⟨a,R⟩` locally isotropic everywhere → IH (rank n−1) → `g` iso /ℚ → `reduction_assembly`; (5) strong-
+induction spine `diag_nary_zero_of_local` (bases n≤4 ✓, step n≥5); (6) p=2 rank-≥5 ℚ₂ isotropy (or even-unimod
+⊃U) for the application's `hloc`; (7) matrix→ℚ-diagonalize (`equivalent_weightedSumSquares`) →
+`HasWeakIsotropicVectorHyp`; (8) wire RokhlinBridge + D2/L2 + registry + closure reviewer.
