@@ -179,4 +179,20 @@ theorem hilbertPrime_pair_match_of_congr_2 {a b c d : ℤ}
   exact ⟨(represents_padic_iff_hilbertPrime_linear ha hb ht).mp hrab,
          (represents_padic_iff_hilbertPrime_linear hc hd ht).mp hrcd⟩
 
+/-- **Good-place symbol coverage (unified `hilbertPrime` form).** At an odd prime `p` dividing none of
+`a, b, c, d, t`, both families' Hilbert symbols match automatically: `(t,−ab)_p = (a,b)_p` and
+`(t,−cd)_p = (c,d)_p` (both `= 1`). The `hilbertPrime`-level wrapper of `good_prime_symbol_auto` (via
+`hilbertPrime_odd`). In the keystone construction, the constructed value `t = (S-part)·q` is a unit at every
+odd prime outside `S ∪ {q}`, so both symbols match there with no further work — leaving only the finitely many
+bad places (`hilbertPrime_pair_match_of_congr_*`), `∞`, and the single free place `q` to handle. -/
+theorem hilbertPrime_pair_match_good {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b c d t : ℤ}
+    (ha : ¬ (p : ℤ) ∣ a) (hb : ¬ (p : ℤ) ∣ b) (hc : ¬ (p : ℤ) ∣ c) (hd : ¬ (p : ℤ) ∣ d)
+    (ht : ¬ (p : ℤ) ∣ t) :
+    hilbertPrime p t (-(a * b)) = hilbertPrime p a b ∧
+    hilbertPrime p t (-(c * d)) = hilbertPrime p c d := by
+  obtain ⟨h1, h2⟩ := good_prime_symbol_auto ha hb hc hd ht
+  rw [hilbertPrime_odd Fact.out hp, hilbertPrime_odd Fact.out hp,
+      hilbertPrime_odd Fact.out hp, hilbertPrime_odd Fact.out hp]
+  exact ⟨h1, h2⟩
+
 end SKEFTHawking
