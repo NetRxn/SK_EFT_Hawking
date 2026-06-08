@@ -168,6 +168,20 @@ theorem diag_iso_rat_int {K : Type*} [Field K] [CharZero K] {n : ℕ} (c : Fin n
 
 /-! ### `n ≤ 4` base cases in uniform `∑`-shape -/
 
+/-- A `Fin 2 → K` vector is nonzero iff not both entries vanish. -/
+theorem ne_zero_iff_two {K : Type*} [Zero K] (x : Fin 2 → K) :
+    x ≠ 0 ↔ ¬(x 0 = 0 ∧ x 1 = 0) := by
+  rw [not_iff_not]; constructor
+  · intro h; subst h; simp
+  · intro ⟨h0, h1⟩; funext i; fin_cases i <;> simpa
+
+/-- A `Fin 3 → K` vector is nonzero iff not all three entries vanish. -/
+theorem ne_zero_iff_three {K : Type*} [Zero K] (x : Fin 3 → K) :
+    x ≠ 0 ↔ ¬(x 0 = 0 ∧ x 1 = 0 ∧ x 2 = 0) := by
+  rw [not_iff_not]; constructor
+  · intro h; subst h; simp
+  · intro ⟨h0, h1, h2⟩; funext i; fin_cases i <;> simpa
+
 /-- A `Fin 4 → K` vector is nonzero iff not all four entries vanish. -/
 theorem ne_zero_iff_four {K : Type*} [Zero K] (x : Fin 4 → K) :
     x ≠ 0 ↔ ¬(x 0 = 0 ∧ x 1 = 0 ∧ x 2 = 0 ∧ x 3 = 0) := by
@@ -198,6 +212,43 @@ theorem diag_quaternary_zero_sum_int (a : Fin 4 → ℤ) (h0 : a 0 ≠ 0) (h1 : 
   refine ⟨![x, y, z, w], (ne_zero_iff_four _).mpr (by simpa using hnz), ?_⟩
   rw [Fin.sum_univ_four]; simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
     Matrix.cons_val_two, Matrix.cons_val_three, Matrix.tail_cons]
+  linear_combination he
+
+/-- **`n = 2` base in `∑`-shape (rational).** From `PadicSquare.binary_solvable_of_local`. -/
+theorem diag_binary_zero_sum (c : Fin 2 → ℚ) (h0 : c 0 ≠ 0)
+    (hR : ∃ x : Fin 2 → ℝ, x ≠ 0 ∧ ∑ i, (c i : ℝ) * x i ^ 2 = 0)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x : Fin 2 → ℚ_[p], x ≠ 0 ∧ ∑ i, (c i : ℚ_[p]) * x i ^ 2 = 0) :
+    ∃ x : Fin 2 → ℚ, x ≠ 0 ∧ ∑ i, c i * x i ^ 2 = 0 := by
+  have hRe : ∃ x y : ℝ, ¬(x = 0 ∧ y = 0) ∧ (c 0:ℝ)*x^2 + (c 1:ℝ)*y^2 = 0 := by
+    obtain ⟨x, hx0, hxe⟩ := hR
+    exact ⟨x 0, x 1, (ne_zero_iff_two x).mp hx0, by rw [Fin.sum_univ_two] at hxe; linarith⟩
+  have hloce : ∀ (p : ℕ) [Fact p.Prime], ∃ x y : ℚ_[p], ¬(x = 0 ∧ y = 0) ∧
+      (c 0:ℚ_[p])*x^2 + (c 1:ℚ_[p])*y^2 = 0 := by
+    intro p _; obtain ⟨x, hx0, hxe⟩ := hloc p
+    exact ⟨x 0, x 1, (ne_zero_iff_two x).mp hx0, by rw [Fin.sum_univ_two] at hxe; linear_combination hxe⟩
+  obtain ⟨x, y, hnz, he⟩ := binary_solvable_of_local h0 hRe hloce
+  refine ⟨![x, y], (ne_zero_iff_two _).mpr (by simpa using hnz), ?_⟩
+  rw [Fin.sum_univ_two]; simp only [Matrix.cons_val_zero, Matrix.cons_val_one]
+  linear_combination he
+
+/-- **`n = 3` base in `∑`-shape (rational).** From `PadicSquare.diag_ternary_solvable_of_local`. -/
+theorem diag_ternary_zero_sum (c : Fin 3 → ℚ) (h0 : c 0 ≠ 0) (h1 : c 1 ≠ 0) (h2 : c 2 ≠ 0)
+    (hR : ∃ x : Fin 3 → ℝ, x ≠ 0 ∧ ∑ i, (c i : ℝ) * x i ^ 2 = 0)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x : Fin 3 → ℚ_[p], x ≠ 0 ∧ ∑ i, (c i : ℚ_[p]) * x i ^ 2 = 0) :
+    ∃ x : Fin 3 → ℚ, x ≠ 0 ∧ ∑ i, c i * x i ^ 2 = 0 := by
+  have hRe : ∃ x y z : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      (c 0:ℝ)*x^2 + (c 1:ℝ)*y^2 + (c 2:ℝ)*z^2 = 0 := by
+    obtain ⟨x, hx0, hxe⟩ := hR
+    exact ⟨x 0, x 1, x 2, (ne_zero_iff_three x).mp hx0, by rw [Fin.sum_univ_three] at hxe; linarith⟩
+  have hloce : ∀ (p : ℕ) [Fact p.Prime], ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      (c 0:ℚ_[p])*x^2 + (c 1:ℚ_[p])*y^2 + (c 2:ℚ_[p])*z^2 = 0 := by
+    intro p _; obtain ⟨x, hx0, hxe⟩ := hloc p
+    exact ⟨x 0, x 1, x 2, (ne_zero_iff_three x).mp hx0,
+      by rw [Fin.sum_univ_three] at hxe; linear_combination hxe⟩
+  obtain ⟨x, y, z, hnz, he⟩ := diag_ternary_solvable_of_local h0 h1 h2 hRe hloce
+  refine ⟨![x, y, z], (ne_zero_iff_three _).mpr (by simpa using hnz), ?_⟩
+  rw [Fin.sum_univ_three]; simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+    Matrix.cons_val_two, Matrix.tail_cons]
   linear_combination he
 
 /-- **Rational `n = 4` diagonal Hasse–Minkowski.** ℚ-coefficient form of the rank-4 summit, obtained from
