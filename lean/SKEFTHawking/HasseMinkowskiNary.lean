@@ -207,6 +207,30 @@ theorem exists_equiv_zero_one {m : ℕ} (i j : Fin (m + 2)) (hij : i ≠ j) :
     have ht1 : t 1 = k := by rw [ht]; exact Equiv.swap_apply_left 1 k
     rw [ht1, hk]; exact s.apply_symm_apply j
 
+/-- **Indefinite real diagonal form is isotropic.** A coefficient `c i > 0` and another `c j < 0`
+(`i ≠ j`) give a nontrivial real zero: `xᵢ = √(−cⱼ)`, `xⱼ = √(cᵢ)`, rest `0`, since
+`cᵢ(−cⱼ) + cⱼ cᵢ = 0`. The `∞`-place input of the rank reduction: after peeling two coordinates of the
+majority real sign, the residual retains both signs, so the descended form is isotropic over ℝ for free. -/
+theorem diag_real_isotropic_of_signs {n : ℕ} (c : Fin n → ℝ) (i j : Fin n) (hij : i ≠ j)
+    (hi : 0 < c i) (hj : c j < 0) : ∃ x : Fin n → ℝ, x ≠ 0 ∧ ∑ k, c k * x k ^ 2 = 0 := by
+  set x : Fin n → ℝ := fun k => if k = i then Real.sqrt (-c j) else if k = j then Real.sqrt (c i) else 0
+    with hx
+  have exi : x i = Real.sqrt (-c j) := by rw [hx]; simp
+  have exj : x j = Real.sqrt (c i) := by rw [hx]; simp [Ne.symm hij]
+  have exo : ∀ k, k ≠ i → k ≠ j → x k = 0 := by intro k h1 h2; rw [hx]; simp [h1, h2]
+  refine ⟨x, ?_, ?_⟩
+  · intro h
+    have h2 : x i = 0 := by rw [h]; rfl
+    rw [exi, Real.sqrt_eq_zero (by linarith)] at h2
+    linarith
+  · rw [← Finset.sum_subset (Finset.subset_univ {i, j})]
+    · rw [Finset.sum_pair hij, exi, exj,
+        Real.sq_sqrt (by linarith : (0:ℝ) ≤ -c j), Real.sq_sqrt (le_of_lt hi)]
+      ring
+    · intro k _ hk
+      simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hk
+      rw [exo k hk.1 hk.2]; ring
+
 /-! ### `n ≤ 4` base cases in uniform `∑`-shape -/
 
 /-- A `Fin 2 → K` vector is nonzero iff not both entries vanish. -/
