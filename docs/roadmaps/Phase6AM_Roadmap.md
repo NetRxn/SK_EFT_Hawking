@@ -428,7 +428,10 @@ Treat the DR as suggestion, not fact (the requesting side has the Mathlib/Lean a
   (the naive-column "post-selection" worry is settled). **2 ancillas.** **Brick B (now unblocked)** =
   circuit C preparing `|v⟩` via O(k) Clifford+T (= 2-qubit exact synthesis of a ℤ[ω][1/√2] unit column,
   the Giles–Selinger/KMM-1206.5236 Column-Lemma at dim 4) + controlled-C (Column Lemma, no extra ancilla)
-  + the leakage error bound. Rounding-into-disk (`|u|²≤4^k`) stays the §5-style tracked hypothesis.
+  + the leakage error bound. ~~Rounding-into-disk (`|u|²≤4^k`) stays the §5-style tracked hypothesis.~~
+  **[UPDATED inc 8] The rounding is NO LONGER a hypothesis — inc 8 `exists_round_toward_zero` +
+  `kmm_amplitude_approx` PROVE it unconditionally (∀φ,k ∃ disk-bounded `m₁,m₂` with `‖u/2^k − e^{iφ}‖ ≤
+  √2/2^k`). So the z-rotation headline carries NO rounding hypothesis — stronger than this inc-6-era plan.**
 - **Increment 7 ✅ — the KMM z-rotation ancilla state exists unconditionally (`21804cab`).**
   `AncillaState.lean`: `kmm_ancilla_state_exists (m₁ m₂ : ℤ) (k) (h : m₁²+m₂² ≤ 4^k) : ∃ t₁ t₂,
   Σ normSq((m₁+m₂ω², t₁, t₂)/√2^{2k}) = 1` — the exact KMM target column `|v⟩` is a UNIT vector for the
@@ -549,6 +552,13 @@ ship incrementally. Construction reference: `Lit-Search/Phase-6AO/KMM-1212.0822-
   helps". Track 1(a) ℤ[√2]-ED already shipped.
 
 ### Track 2 — remaining circuit layer (faithful factorization; sequenced, NOT de-scoped)
+
+> **⚠ SUPERSEDED (inc-1–6 era snapshot; kept for history).** Two statements below are now STALE and would
+> UNDER-claim if read as current: (i) "(5) rounding … hypothesized project-wide … carry it as a tracked
+> input" — **inc 8 DISCHARGED the rounding unconditionally** (`kmm_amplitude_approx`); the z-rotation
+> headline carries NO rounding hypothesis. (ii) "the precise KMM-1212.0822 construction → DR dispatched" —
+> **RESOLVED by the inc-6 web search** (construction = the dim-4 Column Lemma; no DR pending). Current truth
+> = the inc 7–16 log + the corrected inc-15/16 block above.
 
 The full `∀U∈SU(2)` O(log 1/ε)-with-≤2-ancillas headline factors as: **(1) keystone ✅ → (2) 2-qubit
 semantics ✅ → (3) state-column → ring-unitary (orthonormal completion over ℤ[ω][1/√2]) → (4) 2-qubit
