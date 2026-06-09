@@ -1518,6 +1518,11 @@ import SKEFTHawking.FKLW.RossSelinger.AncillaState
 -- (‖u/2^k − e^{iφ}‖ ≤ √2/2^k, disk-bounded, UNCONDITIONAL) + kmm_ancilla_state_approx (the milestone:
 -- the normalized KMM ancilla state approximating e^{iφ} exists for every (φ,k), no prime-density hypothesis).
 import SKEFTHawking.FKLW.RossSelinger.AmplitudeApprox
+-- Phase 6AO Track 2 (increment 9; 2026-06-09): the KMM leakage bound (dominant O(2^{−0.5k}) error) —
+-- toComplex_normSq (ring norm → complex squared modulus) + kmm_ancilla_state_full (normalized +
+-- amplitude within √2/2^k of e^{iφ} + total ancilla-|1⟩ leakage ≤ 2·√2/2^k, all UNCONDITIONAL via
+-- inc-8 amplitude bound + reverse triangle). Completes the error-budget half of ‖W − Λ(e^{iφ})⊗I‖ ≤ ε.
+import SKEFTHawking.FKLW.RossSelinger.AncillaLeakage
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
