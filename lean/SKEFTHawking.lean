@@ -1538,6 +1538,12 @@ import SKEFTHawking.FKLW.RossSelinger.ColumnBaseCase
 -- denExp-0 entries are ℤ[ω]-valued (denExp_le_iff k=0), Σ|v i|²=1 transports to ℤ[ω] (normSq_of, of inj),
 -- the structure gives ωᵏ·e_{i₀} (inc 11/12), realizable by inc 13. The column-lemma induction anchor.
 import SKEFTHawking.FKLW.RossSelinger.ColumnBaseRealizable
+-- Phase 6AO Track 2 (increment 16; 2026-06-09): the elementary matching-residue reduction engine —
+-- dividesSqrt2_add_of_dividesSqrt2_sub (x≡y mod √2 ⟹ √2 ∣ x±y, since x+y=(x−y)+2y) +
+-- denExp_mk_succ_le_of_dividesSqrt2 (√2-divisible numerator at level k+1 clears to denExp ≤ k). The
+-- kernel-pure core of the dim-4 ReductionStep — NO kmm_lemma3/native_decide (that proves optimal T-count;
+-- the column lemma needs only *some* reduction). ⟹ kernel-pure synthesis likely independent of Track 3.
+import SKEFTHawking.FKLW.RossSelinger.MatchingResidue
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
