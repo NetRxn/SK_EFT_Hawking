@@ -432,6 +432,35 @@ Treat the DR as suggestion, not fact (the requesting side has the Mathlib/Lean a
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
+### Track 3 + 2-qubit-synthesis JOINED PROGRAM (2026-06-09; user-approved, <10k LOC bar; method = my judgment, elegance-first)
+
+**Reprioritization (user, upstream-driven):** `native_decide` blocks any Mathlib/physlib upstream;
+Mathlib *also* rejects slow `decide` (CI), so the 4 sites + the 2-qubit synthesis must be kernel-pure.
+Track 3 is therefore **critical path**, done jointly with the (fresh, kernel-pure-by-design) synthesis.
+
+**Probe (sizes + method + LOC estimate ≈ 7.4k central, auto-approved <10k):**
+- The 4 `native_decide` cores are consumed by structural wrappers (`KMMCompleteness.bridge_u`/
+  `cliffordBase_u`/`ma_step_exists_u`, `KMMLemma3Column`) via `reconstruct_box_data_unitary` + the box
+  check ⟹ eliminating a core upgrades its wrapper to fully kernel-pure.
+- `bridge_box_core` (`KMMBridge.lean:132`): 1664 of `zomBox²×8` (zomBox=5⁴=625), checks `kSO3≤3`.
+  **Method: structural `μ≤3 ⟹ kSO3≤3`** (sde↔kSO3 balancing; `muMeasure_le_kSO3_add_two_u` is the
+  reverse, present). ~400–700 LOC. *Most tractable — START HERE.*
+- `maStep_exists_core` (`MAStepExists.lean:256`): ~809k `validCol³`. **Method: orthogonality-class
+  ORBIT reduction** (signed-perm/Clifford orbits of orthogonal triples → small reps + invariance lemma
+  + small kernel `decide`). ~800–1500 LOC.
+- `cliffordBase_box_core` (`CliffordBase.lean:291`): `zomBox²×8` filtered `kSO3=0`, ≤6-word coverage.
+  **Method: Clifford-orbit coverage** (reduce to coset reps). ~800–1500 LOC.
+- `kmm_lemma3_alg2` (`KMMLemma3.lean:113`): ~16.7M over `(ZMod 8)⁴²`. **Method: structural mod-8
+  sde-reduction** (ω-action mod 8 symmetry; the gde valuation algebra). ~1000–2000 LOC. *Hardest
+  (research-flavoured) — LAST.*
+- **2-qubit synthesis (circuit C + controlled-C + leakage bound):** no existing multi-qubit substrate;
+  Giles–Selinger column lemma at dim 4 (cleaner than the single-qubit SO(3) route), designed kernel-pure.
+  ~3,000–5,000 LOC.
+
+**Build order:** bridge (tractable win + valuation machinery) → maStep → cliffordBase → kmm_lemma3 →
+the 2-qubit synthesis (reusing the kernel-pure base-case machinery). Each a complete kernel-pure unit;
+ship incrementally. Construction reference: `Lit-Search/Phase-6AO/KMM-1212.0822-...-websearch.md`.
+
 - **Track 1(b) brick ✅ — `GaussInt2 = ℤ[√2][i]` is an integral domain (`b5123126`).**
   `lean/SKEFTHawking/FKLW/RossSelinger/Zsqrt2GaussInt2Domain.lean`: `zsqrt2_sq_add_sq_eq_zero`
   (`a²+b²=0 ⟺ a=b=0` over ℤ[√2] — formal reality at the integer-coordinate level via `nlinarith`, **no
