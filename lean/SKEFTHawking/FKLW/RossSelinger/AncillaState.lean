@@ -78,4 +78,28 @@ theorem exists_ancilla_normalized_column {u : ZOmega} {k m : ℕ}
   refine ⟨t₁, t₂, ancillaColNormSq u t₁ t₂ k ?_⟩
   rw [ht, natCast_two_pow_eq]
 
+/-- **The KMM (arXiv:1212.0822 §2.1) ancilla state exists, unconditionally, for the z-rotation target.**
+Faithful to the primary construction: the Gaussian-integer approximant `u = m₁ + m₂·i`
+(`m₁ = ⌊2^k cos φ⌋`, `m₂ = ⌊2^k sin φ⌋`, so `u/2^k ≈ e^{iφ}`) has integer squared modulus
+`|u|² = m₁² + m₂²`; whenever it lies in the disk (`m₁² + m₂² ≤ 4^k`, the §5 rounding constraint), the
+KMM two-ancilla state column `|v⟩ = (1/2^k)(u, 0, t₁, t₂)` is a **unit vector** — the completion
+entries `t₁ = a + b·i`, `t₂ = c + d·i` exist by Lagrange four-squares (the keystone), with NO
+prime-density hypothesis. (Denominator exponent `2k`: `2^{2k} = 4^k`. This is the exact state circuit
+C of KMM prepares; the remaining brick is C's Clifford+T synthesis.) -/
+theorem kmm_ancilla_state_exists (m₁ m₂ : ℤ) (k : ℕ) (h : m₁ ^ 2 + m₂ ^ 2 ≤ 4 ^ k) :
+    ∃ t₁ t₂ : ZOmega,
+      normSq (mk ((m₁ : ZOmega) + (m₂ : ZOmega) * ZOmega.ω ^ 2) (2 * k))
+        + normSq (mk t₁ (2 * k)) + normSq (mk t₂ (2 * k)) = 1 := by
+  have hpos : (0 : ℤ) ≤ m₁ ^ 2 + m₂ ^ 2 := add_nonneg (sq_nonneg m₁) (sq_nonneg m₂)
+  have hu : ZOmega.normSq ((m₁ : ZOmega) + (m₂ : ZOmega) * ZOmega.ω ^ 2)
+      = (((m₁ ^ 2 + m₂ ^ 2).toNat : ℕ) : ZOmega) := by
+    rw [normSq_real_sumSq (conj_intCast m₁) (conj_intCast m₂),
+        ← Int.cast_natCast (R := ZOmega) (m₁ ^ 2 + m₂ ^ 2).toNat,
+        Int.toNat_of_nonneg hpos]
+    push_cast; ring
+  have hmk : (m₁ ^ 2 + m₂ ^ 2).toNat ≤ 2 ^ (2 * k) := by
+    rw [pow_mul, show (2 : ℕ) ^ 2 = 4 from rfl, Int.toNat_le]
+    push_cast; exact h
+  exact exists_ancilla_normalized_column hu hmk
+
 end SKEFTHawking.RossSelinger
