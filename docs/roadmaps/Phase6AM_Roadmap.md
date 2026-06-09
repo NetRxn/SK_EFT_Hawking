@@ -396,6 +396,19 @@ Treat the DR as suggestion, not fact (the requesting side has the Mathlib/Lean a
   so the shipped single-qubit `kmmReduce` transports onto the system/ancilla line at no length cost),
   `interp2_append`, `cnot{01,10}_mul_cnot{01,10}` involutions (kernel `decide`). Kernel-pure; cnot
   `decide` is KERNEL `decide` (native_decide count unchanged at 592).
+- **Increment 3 ✅ — unconditional normalized ancilla state column (`3757096f`).**
+  `lean/SKEFTHawking/FKLW/RossSelinger/AncillaState.lean`: lifts the inc-1 integer identity to the
+  ℤ[ω][1/√2] amplitude level. `ZOmegaSqrt2.mk_add_same`; `ancillaColNormSq` (3-entry extension of the
+  shipped `KMM.colNormSq`); **`exists_ancilla_normalized_column`** — for an integer-residual approximant
+  `u` (`normSq u = m ≤ 2^k`), the cleared column `(u,t₁,t₂)/√2^k` is a UNIT vector UNCONDITIONALLY (the
+  KMM-ancilla existence, DR rec. #3, at the amplitude level — no relative-norm hypothesis). Kernel-pure.
+- **Increment 4 ✅ — system-line synthesis on the two-qubit register (`bd6fd333`).**
+  `lean/SKEFTHawking/FKLW/RossSelinger/AncillaSynthesisBridge.lean`: `embedFst_kmmReduce_interp`
+  (`interp2 ((kmmReduce M).map onFst) = embedFst M` — the shipped single-qubit KMM synthesis realizes
+  `M⊗I` on the system line) + `embedFst_kmmReduce_length` (same `N₃+4·denExp` bound, no length cost).
+  Connects inc-2 semantics to the verified `kmmReduce`; consumes the 4 TOLERATED native_decide
+  (Track-3 targets), no new project-local axiom (native_decide decl-count 592→594, as any kmmReduce
+  consumer). The building block for the ancilla circuit's system-line ops.
 
 ### Track 2 — remaining circuit layer (faithful factorization; sequenced, NOT de-scoped)
 
@@ -407,5 +420,11 @@ ring linear algebra + general 2-qubit synthesis — they do NOT need the paper-s
 gate sequence, so they are buildable faithfully. (5) is the §5 grid analysis — already **hypothesized
 project-wide** (even the single-qubit `rossSelinger_compile_log_length` takes the rounding quality
 `h00` as a hypothesis), so it is consistent to carry it as a tracked input and prove the unconditional
-completion+synthesis around it. Next increment: brick (3) — the ZOmegaSqrt2 normalized ancilla state
-column (`Σ normSq = 1`) from the keystone, then brick (4).
+completion+synthesis around it. **Status:** (1)✅ (2)✅ (3)✅ done (inc 1–4 above). The system-line of
+the circuit is realized (inc 4). **Remaining:** brick (B) the ancilla 4×4 unitary itself (orthonormal
+completion of the inc-3 unit column over ℤ[ω][1/√2]) → brick (4) two-qubit exact synthesis of that
+unitary into a `Gate2`-word of length O(sde) (the general KMM multi-qubit row-reduction — the major
+remaining build; mirrors the single-qubit `Sde`/`KMMReduce`/`MAStep`/`CliffordBase`/`KMMCompleteness`
+arc at dimension 4). These are large dedicated sub-builds (fresh-context-worthy), faithful (general ring
+LA + general 2-qubit synthesis, NOT the paper-specific KMM-1212.0822 gate sequence). Tracks 1 (b/c/d) +
+3 (native_decide ×4) remain in scope and untouched.
