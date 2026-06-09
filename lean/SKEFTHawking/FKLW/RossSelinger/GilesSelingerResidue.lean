@@ -114,6 +114,63 @@ theorem dividesSqrt2_iff_normSq_cd_even (z : ZOmega) :
   push_cast
   exact key (a : ZMod 2) (b : ZMod 2) (c : ZMod 2) (d : ZMod 2)
 
+/-- **Giles–Selinger Lemma 5 (matching-residue-norm pair exists).** For a dim-4 column `w` whose
+squared-modulus sum has even `√2`- and rational coordinates (`(Σ|wᵢ|²).c`, `(Σ|wᵢ|²).d` both even —
+which the unit condition `Σ|wᵢ|² = 2^s`, `s ≥ 1`, supplies), if some entry `w i₀` is **active** (not
+`√2`-divisible, i.e. residue norm `0001` or `1010`), then there exist **two distinct entries with the
+same residue norm mod 2**, both active. (The active entry lies in the `.c`-odd (`1010`) or `.d`-odd
+(`0001`) class; that class's count is EVEN by `even_card_filter_of_sum_even`, hence `≥ 2`; the two share
+both residue coordinates by `normSq_cd_not_both_odd`.) This is exactly the pair Lemma 4's row operation
+reduces. -/
+theorem exists_matching_residue_pair {w : Fin 2 × Fin 2 → ZOmega}
+    (hc : (∑ i, normSq (w i)).c % 2 = 0) (hd : (∑ i, normSq (w i)).d % 2 = 0)
+    {i₀ : Fin 2 × Fin 2} (hact : ¬ dividesSqrt2 (w i₀)) :
+    ∃ i j, i ≠ j ∧ (normSq (w i)).c % 2 = (normSq (w j)).c % 2 ∧
+      (normSq (w i)).d % 2 = (normSq (w j)).d % 2 ∧ ¬ dividesSqrt2 (w i) := by
+  rw [sum_c] at hc
+  rw [sum_d] at hd
+  have hEc : Even (Finset.univ.filter (fun i => (normSq (w i)).c % 2 = 1)).card :=
+    even_card_filter_of_sum_even (fun i => (normSq (w i)).c) hc
+  have hEd : Even (Finset.univ.filter (fun i => (normSq (w i)).d % 2 = 1)).card :=
+    even_card_filter_of_sum_even (fun i => (normSq (w i)).d) hd
+  have hi0 : (normSq (w i₀)).c % 2 = 1 ∨ (normSq (w i₀)).d % 2 = 1 := by
+    by_contra h
+    rw [not_or] at h
+    rcases Int.emod_two_eq_zero_or_one (normSq (w i₀)).c with hc0 | hc1
+    · rcases Int.emod_two_eq_zero_or_one (normSq (w i₀)).d with hd0 | hd1
+      · exact hact ((dividesSqrt2_iff_normSq_cd_even (w i₀)).mpr ⟨hc0, hd0⟩)
+      · exact h.2 hd1
+    · exact h.1 hc1
+  rcases hi0 with hi0 | hi0
+  · have hmem : i₀ ∈ Finset.univ.filter (fun i => (normSq (w i)).c % 2 = 1) :=
+      Finset.mem_filter.mpr ⟨Finset.mem_univ _, hi0⟩
+    have hpos : 0 < (Finset.univ.filter (fun i => (normSq (w i)).c % 2 = 1)).card :=
+      Finset.card_pos.mpr ⟨i₀, hmem⟩
+    have hcard : 1 < (Finset.univ.filter (fun i => (normSq (w i)).c % 2 = 1)).card := by
+      rcases hEc with ⟨k, hk⟩; omega
+    obtain ⟨i, hi, j, hj, hij⟩ := Finset.one_lt_card.mp hcard
+    have hpi := (Finset.mem_filter.mp hi).2
+    have hpj := (Finset.mem_filter.mp hj).2
+    refine ⟨i, j, hij, by rw [hpi, hpj], ?_, ?_⟩
+    · have hdi : (normSq (w i)).d % 2 = 0 := (normSq_cd_not_both_odd (w i)).resolve_left (by omega)
+      have hdj : (normSq (w j)).d % 2 = 0 := (normSq_cd_not_both_odd (w j)).resolve_left (by omega)
+      rw [hdi, hdj]
+    · exact fun hdvd => by have := ((dividesSqrt2_iff_normSq_cd_even (w i)).mp hdvd).1; omega
+  · have hmem : i₀ ∈ Finset.univ.filter (fun i => (normSq (w i)).d % 2 = 1) :=
+      Finset.mem_filter.mpr ⟨Finset.mem_univ _, hi0⟩
+    have hpos : 0 < (Finset.univ.filter (fun i => (normSq (w i)).d % 2 = 1)).card :=
+      Finset.card_pos.mpr ⟨i₀, hmem⟩
+    have hcard : 1 < (Finset.univ.filter (fun i => (normSq (w i)).d % 2 = 1)).card := by
+      rcases hEd with ⟨k, hk⟩; omega
+    obtain ⟨i, hi, j, hj, hij⟩ := Finset.one_lt_card.mp hcard
+    have hpi := (Finset.mem_filter.mp hi).2
+    have hpj := (Finset.mem_filter.mp hj).2
+    refine ⟨i, j, hij, ?_, by rw [hpi, hpj], ?_⟩
+    · have hci : (normSq (w i)).c % 2 = 0 := (normSq_cd_not_both_odd (w i)).resolve_right (by omega)
+      have hcj : (normSq (w j)).c % 2 = 0 := (normSq_cd_not_both_odd (w j)).resolve_right (by omega)
+      rw [hci, hcj]
+    · exact fun hdvd => by have := ((dividesSqrt2_iff_normSq_cd_even (w i)).mp hdvd).2; omega
+
 end ZOmega
 
 end SKEFTHawking.RossSelinger
