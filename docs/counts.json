@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-09T15:07:27.341795",
+  "generated": "2026-06-09T15:22:11.278242",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 19648,
-    "theorems_total": 11731,
-    "theorems_substantive": 11705,
+    "total_declarations": 19653,
+    "theorems_total": 11734,
+    "theorems_substantive": 11708,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 897,
+    "modules": 898,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -370,6 +370,7 @@
       "SKEFTHawking.FKLW.RossSelinger.CliffordTBaseFinderKMM",
       "SKEFTHawking.FKLW.RossSelinger.CliffordTGate",
       "SKEFTHawking.FKLW.RossSelinger.CliffordTGate2",
+      "SKEFTHawking.FKLW.RossSelinger.ColumnSynthesis",
       "SKEFTHawking.FKLW.RossSelinger.Compile",
       "SKEFTHawking.FKLW.RossSelinger.CompileApprox",
       "SKEFTHawking.FKLW.RossSelinger.ComplexEmbedding",
@@ -910,7 +911,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 7027,
+    "definitions": 7029,
     "structures": 294,
     "instances": 501,
     "inductives": 95

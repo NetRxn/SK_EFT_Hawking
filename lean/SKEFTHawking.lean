@@ -1523,6 +1523,11 @@ import SKEFTHawking.FKLW.RossSelinger.AmplitudeApprox
 -- amplitude within √2/2^k of e^{iφ} + total ancilla-|1⟩ leakage ≤ 2·√2/2^k, all UNCONDITIONAL via
 -- inc-8 amplitude bound + reverse triangle). Completes the error-budget half of ‖W − Λ(e^{iφ})⊗I‖ ≤ ε.
 import SKEFTHawking.FKLW.RossSelinger.AncillaLeakage
+-- Phase 6AO Track 2 (increment 10; 2026-06-09): the dim-4 column-synthesis backbone — IsColRealizableWithin
+-- (a column is M·e₀ of a Gate2 word of length ≤ L), IsColRealizableWithin.smul_left (the induction
+-- backbone: G realizable + v col-realizable ⟹ G·v col-realizable, budgets add), isColRealizableWithin_e0
+-- (base anchor |00⟩). The skeleton the dim-4 Column Lemma induction (on denominator exponent) is built on.
+import SKEFTHawking.FKLW.RossSelinger.ColumnSynthesis
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
