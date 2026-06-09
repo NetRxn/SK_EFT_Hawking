@@ -424,6 +424,17 @@ Treat the DR as suggestion, not fact (the requesting side has the Mathlib/Lean a
   leaks into the ancilla-|1⟩ subspace (a post-selected, NOT deterministic-unitary, construction) — the
   project's correctness standard forbids guessing the published circuit. Async; treat as suggestion.
 
+### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
+
+- **Track 1(b) brick ✅ — `GaussInt2 = ℤ[√2][i]` is an integral domain (`b5123126`).**
+  `lean/SKEFTHawking/FKLW/RossSelinger/Zsqrt2GaussInt2Domain.lean`: `zsqrt2_sq_add_sq_eq_zero`
+  (`a²+b²=0 ⟺ a=b=0` over ℤ[√2] — formal reality at the integer-coordinate level via `nlinarith`, **no
+  real embedding** needed, which Mathlib lacks for `Zsqrtd 2`) + `GaussInt2.norm_eq_zero` +
+  `Nontrivial`/`NoZeroDivisors`/`instIsDomain`. **Fully kernel-pure** (native_decide unchanged at 596).
+  Next Track-1 bricks: GaussInt2 `EuclideanDomain` (mirrors the shipped `Zsqrt2EuclideanDomain`) → PID/UFD
+  → the splitting law (`x²+1` mod π) → the even-power relative-norm criterion 1(c) → "ancilla strictly
+  helps". Track 1(a) ℤ[√2]-ED already shipped.
+
 ### Track 2 — remaining circuit layer (faithful factorization; sequenced, NOT de-scoped)
 
 The full `∀U∈SU(2)` O(log 1/ε)-with-≤2-ancillas headline factors as: **(1) keystone ✅ → (2) 2-qubit
