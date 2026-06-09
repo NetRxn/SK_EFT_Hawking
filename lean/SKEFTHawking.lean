@@ -1074,6 +1074,8 @@ import SKEFTHawking.FKLW.PerAlphabetConcreteLengthHeadlines
 -- Ross-Selinger ℤ[ω][1/√2] optimal-length refinement deferred per
 -- Lit-Search task drop ross_selinger_arxiv_1403_2975_zomega_invsqrt2_synthesis.md.
 import SKEFTHawking.FKLW.RossSelingerLightweight
+-- Phase 6AN Wave 5 (2026-06-08): correct-by-construction Clifford+T gate compiler (CompCert-style).
+import SKEFTHawking.FKLW.CliffordTCompiler
 -- Phase 6x Tier-1 residual B-RR5 (2026-05-27): UNCONDITIONAL constructive
 -- base finder + 3-conjunct strict headline for Read-Rezayi `SU(2)_5`.
 -- Mirrors RossSelingerLightweight's T-S′ pattern (ConstructiveEpsilonNet
@@ -2735,6 +2737,15 @@ import SKEFTHawking.QuantumNetwork.DiamondSDPAttainment
 import SKEFTHawking.QuantumNetwork.DiamondSDPDuality
 -- Phase 6AK Wave 6AK.1 (2026-06-03): coherence-limited average-gate-fidelity ceiling.
 import SKEFTHawking.QuantumNetwork.CoherenceFidelity
+-- Phase 6AN Wave 3 (2026-06-08): composed coherence ⊕ control gate error budget (diamond + fidelity).
+import SKEFTHawking.QuantumNetwork.ComposedGateFidelity
+-- Phase 6AN Wave 2 (2026-06-08): multipath network capacity (flow/cut weak duality + path bottleneck).
+import SKEFTHawking.QuantumNetwork.NetworkCapacity
+-- Phase 6AN Wave 2 strengthening (2026-06-08): MFMC strong-duality progress — max-flow attained
+-- (compactness) + conditional strong duality (reduces full MFMC to the augmenting-path lemma).
+import SKEFTHawking.QuantumNetwork.NetworkCapacityStrongDuality
+-- Phase 6AN Wave 4 (2026-06-08): FDT (Johnson–Nyquist) noise floor + LDP rare-event tail (devices).
+import SKEFTHawking.QuantumNetwork.FDTNoiseFloor
 -- Phase 6AK Wave 6AK.3 (2026-06-03): unitary-error-basis exact diamond distance (two-qubit Pauli).
 import SKEFTHawking.QuantumNetwork.ErrorBasisDiamond
 -- Phase 6AK Wave 6AK.6 (2026-06-03): SPAM bit-flip diamond distance + process fidelity.

@@ -110,6 +110,21 @@ theorem diamondDist_composeKraus_le {L₁ L₂ : Fin b → Matrix (Fin n) (Fin n
         add_le_add (diamondDist_composeKraus_right hL₁ hL₂ hK₁)
           (diamondDist_composeKraus_left hL₂ hK₁ hK₂)
 
+/-- **Worked 2-stage diamond error budget (named channels).** A concrete instance of
+`diamondDist_composeKraus_le`: a depolarizing channel (strength `p`) followed by a dephasing
+channel (strength `γ`), compared against the ideal `id ∘ id` pipeline. Since the per-stage diamond
+distances from the identity are *exactly* `γ` (`diamondDist_dephasing_eq`) and `p`
+(`diamondDist_depolarizing_eq`), the composed worst-case (diamond) error is bounded by their sum
+`γ + p` — the composition error budget made fully explicit on physical noise channels. -/
+theorem diamondDist_dephasing_after_depolarizing_le {γ p : ℝ}
+    (hγ0 : 0 ≤ γ) (hγ1 : γ ≤ 1) (hp0 : 0 ≤ p) (hp1 : p ≤ 1) :
+    diamondDist (composeKraus (dephasingKraus γ) (depolarizingKraus p))
+        (composeKraus (idKrausPad 1 2) (idKrausPad 3 2)) ≤ γ + p := by
+  have h := diamondDist_composeKraus_le (isKrausChannel_dephasingKraus hγ0 hγ1)
+    (isKrausChannel_idKrausPad 1 2) (isKrausChannel_depolarizingKraus hp0 hp1)
+    (isKrausChannel_idKrausPad 3 2)
+  rwa [diamondDist_dephasing_eq hγ0 hγ1, diamondDist_depolarizing_eq hp0 hp1] at h
+
 end Diamond
 
 end SKEFTHawking.QuantumNetwork
