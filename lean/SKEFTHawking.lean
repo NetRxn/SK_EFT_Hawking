@@ -1498,6 +1498,11 @@ import SKEFTHawking.FKLW.RossSelinger.AncillaCompletion
 -- realizability transport embedFst_interp (single-qubit kmmReduce word → 2-qubit word, SAME length) +
 -- cnot involutions (kernel decide). Foundation for the ancilla-extended O(log 1/ε) Clifford+T circuit.
 import SKEFTHawking.FKLW.RossSelinger.CliffordTGate2
+-- Phase 6AO Track 2 (2026-06-09): unconditional normalized ancilla state column — ancillaColNormSq
+-- (3-entry extension of KMM.colNormSq) + exists_ancilla_normalized_column (for an integer-residual
+-- approximant u, the cleared column (u,t₁,t₂)/√2^k is a UNIT vector unconditionally — the KMM-ancilla
+-- "existence" at the ℤ[ω][1/√2] amplitude level, no relative-norm hypothesis). Lifts the inc-1 keystone.
+import SKEFTHawking.FKLW.RossSelinger.AncillaState
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
