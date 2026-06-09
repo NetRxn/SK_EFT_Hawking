@@ -32,9 +32,33 @@ namespace SKEFTHawking.RossSelinger
 
 namespace ZOmega
 
-/-- **Integer `% 2 = 0` from a `ZMod 2` vanishing** (the `ℤ ↔ 𝔽₂` bridge). -/
+/-- **`n % 2 = 0 ⟺ (n : ZMod 2) = 0`** (the `ℤ ↔ 𝔽₂` bridge). -/
+theorem emod_two_eq_zero_iff_zmod {n : ℤ} : n % 2 = 0 ↔ (n : ZMod 2) = 0 := by
+  rw [ZMod.intCast_zmod_eq_zero_iff_dvd]
+  exact ⟨fun h => by exact_mod_cast Int.dvd_of_emod_eq_zero h,
+    fun h => Int.emod_eq_zero_of_dvd (by exact_mod_cast h)⟩
+
 private theorem emod_two_eq_zero_of_zmod {n : ℤ} (h : (n : ZMod 2) = 0) : n % 2 = 0 :=
-  Int.emod_eq_zero_of_dvd (by exact_mod_cast (ZMod.intCast_zmod_eq_zero_iff_dvd n 2).mp h)
+  emod_two_eq_zero_iff_zmod.mpr h
+
+/-- **`(n : ZMod 2)` is the parity indicator**: `1` if `n` is odd, `0` if even. -/
+theorem intCast_zmod2_eq_ite (n : ℤ) : (n : ZMod 2) = if n % 2 = 1 then 1 else 0 := by
+  rcases Int.emod_two_eq_zero_or_one n with h | h
+  · rw [if_neg (by omega), ← emod_two_eq_zero_iff_zmod]; exact h
+  · rw [if_pos h]
+    have h0 : ((n - 1 : ℤ) : ZMod 2) = 0 := emod_two_eq_zero_iff_zmod.mp (by omega)
+    push_cast at h0
+    exact eq_of_sub_eq_zero h0
+
+/-- **An even integer sum has an even number of odd summands.** If `∑ g ≡ 0 (mod 2)` over a `Fintype`,
+the count of indices with `g i` odd is even — the parity engine of the Giles–Selinger Lemma-5
+matching-pair argument. -/
+theorem even_card_filter_of_sum_even {ι : Type*} [Fintype ι] (g : ι → ℤ)
+    (hg : (∑ i, g i) % 2 = 0) :
+    Even (Finset.univ.filter (fun i => g i % 2 = 1)).card := by
+  rw [even_iff_two_dvd, ← CharP.cast_eq_zero_iff (ZMod 2) 2, ← Finset.sum_boole,
+    Finset.sum_congr rfl (fun i _ => (intCast_zmod2_eq_ite (g i)).symm), ← Int.cast_sum]
+  exact emod_two_eq_zero_iff_zmod.mp hg
 
 /-- **Giles–Selinger residue-norm classification (the `{0000, 0001, 1010}` exclusion of `1011`).**
 For `z ∈ ℤ[ω]`, the `√2`-coordinate `(|z|²).c` and the rational coordinate `(|z|²).d` are **never both
