@@ -1488,6 +1488,11 @@ import SKEFTHawking.FKLW.RossSelinger.Compile
 import SKEFTHawking.FKLW.RossSelinger.CliffordTBaseFinderKMM
 -- Phase 6AM W5 (2026-06-09): Ross–Selinger O(log 1/ε) word-length headline (exponent 1, vs SK log^3.97).
 import SKEFTHawking.FKLW.RossSelinger.LogLengthHeadline
+-- Phase 6AO Track 2 (2026-06-09): KMM ancilla mechanism — exists_two_relativeNorms_of_nat (every r:ℕ
+-- is a sum of two ℤ[ω] relative norms, via Lagrange Nat.sum_four_squares) + ancilla_completion_of_nat_residual
+-- (the (1+ancilla)-qubit unit column closes UNCONDITIONALLY — no relative-norm/prime-density hypothesis,
+-- unlike the ancilla-free rossSelinger_synth_of_residual). The number-theoretic core that removes the W5 wall.
+import SKEFTHawking.FKLW.RossSelinger.AncillaCompletion
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
