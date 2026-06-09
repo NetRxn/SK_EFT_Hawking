@@ -483,6 +483,21 @@ dim-2 reduction** (exactly as inc-4 `AncillaSynthesisBridge` already consumes th
 eliminates `kmm_lemma3_alg2`** (structural mod-8 / symmetry-reduced kernel-decide) ⟹ retroactively
 kernel-pure. NOT a wall (provable, not axiom-needing) — sequencing, not de-scope.
 
+**↑ REFINED inc 15–16 (the dependency is WEAKER than first thought — likely NO `kmm_lemma3` needed):**
+- inc 15 (`ad3d7c77`): `colDenExp` measure + `ReductionStep C` predicate + **`colLemma_of_reductionStep`**
+  (the column lemma by strong induction on `colDenExp`, reduced to `ReductionStep` alone — base case at 0,
+  else `v=g·v'` climbs via `smul_left`). The ENTIRE remaining circuit-`C` synthesis is now the single
+  `ReductionStep` brick (then controlled-C + operator-norm assembly).
+- inc 16 (`6b7e337d`, `MatchingResidue.lean`): **the per-pair reduction is ELEMENTARY** —
+  `dividesSqrt2_add_of_dividesSqrt2_sub` (`x≡y mod √2 ⟹ √2∣x±y`, since `x+y=(x−y)+2y`) +
+  `denExp_mk_succ_le_of_dividesSqrt2`. Two entries sharing a residue mod √2 ⟹ both `(x±y)/√2 ∈ ℤ[ω]`,
+  so an `H`-combination lowers denExp — **kernel-pure, NO `kmm_lemma3`** (`kmm_lemma3` proves the stronger
+  *optimal* T-count; the column lemma needs only *some* reduction). **⟹ a kernel-pure `ReductionStep`
+  (hence kernel-pure Track-2 synthesis) is LIKELY INDEPENDENT of Track 3's `kmm_lemma3_alg2`.** Remaining
+  `ReductionStep` input = the **pairing** (matching max-denExp entries exist — forced by the unit/parity
+  condition; the Giles–Selinger combinatorial step) + the 2-level `H` as a `Gate2` circuit (CNOT + `onSnd H`
+  + `T^k` residue-alignment via the `ω:(p,q)↦(q,p)` action on `ℤ[ω]/(√2)≅𝔽₂²`). That is the next build.
+
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
 ### Track 3 + 2-qubit-synthesis JOINED PROGRAM (2026-06-09; user-approved, <10k LOC bar; method = my judgment, elegance-first)
