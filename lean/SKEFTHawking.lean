@@ -1486,6 +1486,8 @@ import SKEFTHawking.FKLW.RossSelinger.Compile
 -- N₃+4·sde length, UNCONDITIONAL), and cliffordTBaseFinder_kmm + _approx/_headline (the ρ_CliffT-
 -- picture SOUNDNESS lift of compile_correct). Composes nonempty_kmmReduction + the phase bridge.
 import SKEFTHawking.FKLW.RossSelinger.CliffordTBaseFinderKMM
+-- Phase 6AM W5 (2026-06-09): Ross–Selinger O(log 1/ε) word-length headline (exponent 1, vs SK log^3.97).
+import SKEFTHawking.FKLW.RossSelinger.LogLengthHeadline
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
