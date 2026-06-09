@@ -2686,6 +2686,8 @@ import SKEFTHawking.QuantumNetwork.MixedState
 import SKEFTHawking.QuantumNetwork.DiamondNorm
 -- Phase 6AF-4 (2026-06-01): CPTP Kraus channel + trace-distance contractivity (data processing).
 import SKEFTHawking.QuantumNetwork.CPTPChannel
+-- Phase 6AM W2 (2026-06-09): Kraus↔MState/CPTPMap bridge to PhysLib + sandwiched-Rényi DPI transfer witness.
+import SKEFTHawking.QuantumNetwork.PhyslibBridge
 -- Phase 6AF-6 (2026-06-01): the diamond distance ½‖Φ₁−Φ₂‖_◇ (tensor channel + bounded sSup).
 import SKEFTHawking.QuantumNetwork.DiamondNormSup
 -- Phase 6AF-7 (2026-06-01): fidelity bounds (F≤1 / Fuchs–van de Graaf) — entry point + blueprint.
