@@ -161,5 +161,34 @@ theorem cnot01_mul_cnot01 : cnot01 * cnot01 = 1 := by decide
 /-- **CNOT (control-second) is an involution.** -/
 theorem cnot10_mul_cnot10 : cnot10 * cnot10 = 1 := by decide
 
+/-! ## Two-qubit Clifford+T realizable class
+
+The two-qubit analog of the single-qubit `KMM.IsCliffordTRealizable`: the class of operators
+expressible as a `Gate2` word. This is the codomain that two-qubit exact synthesis (the remaining
+circuit brick) targets; the algebraic closure here is its monoid structure. -/
+
+/-- A two-qubit operator is **Clifford+T-realizable** if it is `interp2` of some `Gate2` word. -/
+def IsRealizable (M : Mat4) : Prop := ∃ w : List Gate2, interp2 w = M
+
+/-- The identity is realizable (the empty word). -/
+theorem IsRealizable.one : IsRealizable (1 : Mat4) := ⟨[], interp2_nil⟩
+
+/-- Every generator is realizable (the singleton word). -/
+theorem gateMatrix2_isRealizable (g : Gate2) : IsRealizable (gateMatrix2 g) :=
+  ⟨[g], by rw [interp2_cons, interp2_nil]; exact Matrix.mul_one _⟩
+
+/-- Realizable operators are **closed under product** (word concatenation, `interp2_append`). -/
+theorem IsRealizable.mul {A B : Mat4} (hA : IsRealizable A) (hB : IsRealizable B) :
+    IsRealizable (A * B) := by
+  obtain ⟨wa, ha⟩ := hA
+  obtain ⟨wb, hb⟩ := hB
+  exact ⟨wa ++ wb, by rw [interp2_append, ha, hb]⟩
+
+/-- The two cnots and every embedded single-qubit generator are realizable (specializations of
+`gateMatrix2_isRealizable`). -/
+theorem cnot01_isRealizable : IsRealizable cnot01 := gateMatrix2_isRealizable .cx01
+
+theorem cnot10_isRealizable : IsRealizable cnot10 := gateMatrix2_isRealizable .cx10
+
 end Gate2
 end SKEFTHawking.RossSelinger

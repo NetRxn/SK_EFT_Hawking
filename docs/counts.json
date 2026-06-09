@@ -1,10 +1,10 @@
 {
-  "generated": "2026-06-09T12:50:50.783777",
+  "generated": "2026-06-09T13:00:18.419702",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 19610,
-    "theorems_total": 11701,
-    "theorems_substantive": 11675,
+    "total_declarations": 19617,
+    "theorems_total": 11707,
+    "theorems_substantive": 11681,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
@@ -906,7 +906,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 7022,
+    "definitions": 7023,
     "structures": 294,
     "instances": 498,
     "inductives": 95

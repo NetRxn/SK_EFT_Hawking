@@ -55,4 +55,11 @@ theorem embedFst_kmmReduce_length (M : Matrix (Fin 2) (Fin 2) ZOmegaSqrt2)
   rw [length_map_onFst]
   exact KMM.kmmReduce_length_bound M hM
 
+/-- **Single-qubit → two-qubit realizability transport.** An ℤ[ω][1/√2]-realizable single-qubit `M`
+makes `M ⊗ I` two-qubit Clifford+T-realizable, witnessed by `(kmmReduce M).map onFst`. -/
+theorem embedFst_isRealizable (M : Matrix (Fin 2) (Fin 2) ZOmegaSqrt2)
+    (hM : KMM.IsCliffordTRealizable M) :
+    Gate2.IsRealizable (Gate2.embedFst M) :=
+  ⟨(KMM.kmmReduce M).map Gate2.onFst, embedFst_kmmReduce_interp M hM⟩
+
 end SKEFTHawking.RossSelinger
