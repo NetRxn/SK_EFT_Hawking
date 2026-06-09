@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-09T13:29:48.040502",
+  "generated": "2026-06-09T13:46:13.357033",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 19630,
-    "theorems_total": 11714,
-    "theorems_substantive": 11688,
+    "total_declarations": 19640,
+    "theorems_total": 11723,
+    "theorems_substantive": 11697,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 894,
+    "modules": 895,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -424,6 +424,7 @@
       "SKEFTHawking.FKLW.RossSelinger.ZOmegaSqrt2",
       "SKEFTHawking.FKLW.RossSelinger.Zsqrt2",
       "SKEFTHawking.FKLW.RossSelinger.Zsqrt2EuclideanDomain",
+      "SKEFTHawking.FKLW.RossSelinger.Zsqrt2GaussInt2Conj",
       "SKEFTHawking.FKLW.RossSelinger.Zsqrt2GaussInt2Domain",
       "SKEFTHawking.FKLW.RossSelinger.Zsqrt2GaussianInt",
       "SKEFTHawking.FKLW.RossSelingerLightweight",
@@ -907,7 +908,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 7026,
+    "definitions": 7027,
     "structures": 294,
     "instances": 501,
     "inductives": 95

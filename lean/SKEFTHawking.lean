@@ -1454,6 +1454,10 @@ import SKEFTHawking.FKLW.RossSelinger.Zsqrt2EuclideanDomain
 -- (structure GaussInt2 + CommRing + multiplicative relative norm re²+im²). The degree-2
 -- extension whose splitting gives two-squares-over-ℤ[√2] (Prop 3.2.7) → Item I residual-t.
 import SKEFTHawking.FKLW.RossSelinger.Zsqrt2GaussianInt
+-- Phase 6AO Track 1(b) (2026-06-09) — conjugation on ℤ[√2][i]=GaussInt2: conj(re+im·i)=re−im·i, a
+-- ring hom (conj_add/conj_mul) with x·conj x = ⟨N x, 0⟩ (mul_conj) + norm_conj. Foundation for the
+-- GaussInt2 EuclideanDomain division step (x/y = round(x·conj y / N y)).
+import SKEFTHawking.FKLW.RossSelinger.Zsqrt2GaussInt2Conj
 -- Phase 6AO Track 1(b) (2026-06-09) — ℤ[√2][i]=GaussInt2 is an INTEGRAL DOMAIN (instIsDomain), via
 -- its positive-definite relative norm re²+im²: zsqrt2_sq_add_sq_eq_zero (a²+b²=0⟺a=b=0 over ℤ[√2], by
 -- integer-coordinate non-negativity — no real embedding) + GaussInt2.norm_eq_zero + NoZeroDivisors.
