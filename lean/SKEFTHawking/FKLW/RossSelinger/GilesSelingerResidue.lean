@@ -57,6 +57,39 @@ theorem normSq_cd_not_both_odd (z : ZOmega) :
     push_cast
     exact h
 
+/-- The `√2`-coordinate as an additive hom `ℤ[ω] →+ ℤ`. -/
+def cHom : ZOmega →+ ℤ := { toFun := ZOmega.c, map_zero' := rfl, map_add' := ZOmega.add_c }
+
+/-- The rational coordinate as an additive hom `ℤ[ω] →+ ℤ`. -/
+def dHom : ZOmega →+ ℤ := { toFun := ZOmega.d, map_zero' := rfl, map_add' := ZOmega.add_d }
+
+/-- The `√2`-coordinate commutes with finite sums. -/
+theorem sum_c {ι : Type*} (s : Finset ι) (f : ι → ZOmega) :
+    (∑ i ∈ s, f i).c = ∑ i ∈ s, (f i).c := map_sum cHom f s
+
+/-- The rational coordinate commutes with finite sums. -/
+theorem sum_d {ι : Type*} (s : Finset ι) (f : ι → ZOmega) :
+    (∑ i ∈ s, f i).d = ∑ i ∈ s, (f i).d := map_sum dHom f s
+
+/-- **`√2 ∣ z` ⟺ the residue norm is `0000`** (`(|z|²).c` and `(|z|²).d` both even). With `u = a+c`,
+`v = b+d`: `√2 ∣ z ⟺ a≡c ∧ b≡d ⟺ u≡v≡0`, and the residue norm is `0000 ⟺ (uv, u+v) ≡ (0,0) ⟺ u≡v≡0`.
+So the "active" (irreducible) entries — those NOT divisible by `√2` (residue norm `0001` or `1010`) —
+are exactly those with `(|z|²).c` or `(|z|²).d` odd. -/
+theorem dividesSqrt2_iff_normSq_cd_even (z : ZOmega) :
+    dividesSqrt2 z ↔ (normSq z).c % 2 = 0 ∧ (normSq z).d % 2 = 0 := by
+  obtain ⟨a, b, c, d⟩ := z
+  have hbridge : ∀ m n : ℤ, m % 2 = n % 2 ↔ (m : ZMod 2) = (n : ZMod 2) := fun m n =>
+    (ZMod.intCast_eq_intCast_iff m n 2).symm
+  have hz : ∀ n : ℤ, n % 2 = 0 ↔ (n : ZMod 2) = 0 := fun n =>
+    ⟨fun h => by rw [← Int.cast_zero (R := ZMod 2)]; exact (hbridge n 0).mp (by simpa using h),
+     emod_two_eq_zero_of_zmod⟩
+  simp only [normSq_coords, dividesSqrt2, hbridge, hz]
+  have key : ∀ x y w t : ZMod 2,
+      (x = w ∧ y = t) ↔
+        (x * y - x * t + w * y + w * t = 0 ∧ x ^ 2 + y ^ 2 + w ^ 2 + t ^ 2 = 0) := by decide
+  push_cast
+  exact key (a : ZMod 2) (b : ZMod 2) (c : ZMod 2) (d : ZMod 2)
+
 end ZOmega
 
 end SKEFTHawking.RossSelinger
