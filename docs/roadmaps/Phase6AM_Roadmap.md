@@ -417,12 +417,18 @@ Treat the DR as suggestion, not fact (the requesting side has the Mathlib/Lean a
   `.isRealizable`/`gateMatrix2_realizableWithin_one`; `embedFst_kmmReduce_realizableWithin` (system-line
   `M⊗I` within `N₃+4·denExp` = O(log 1/ε)). **This is the precise abstraction the headline needs**: a
   circuit assembled from O(log)-length pieces is O(log) overall.
-- **DR dispatched (2026-06-09) — `Lit-Search/Tasks/submitted/20260609_phase6ao_kmm_1212_0822_ancilla_construction.md`.**
-  For the **precise** KMM-1212.0822 ≤2-ancilla construction (the explicit unitary; THE crux question:
-  deterministic ancilla restoration to |0⟩ vs. measure-and-restore; which block is U; the gate count's
-  decomposition into single-qubit-synth pieces + cnots). Reason: a naive "first column = (u,v,t₁,t₂)/√2^k"
-  leaks into the ancilla-|1⟩ subspace (a post-selected, NOT deterministic-unitary, construction) — the
-  project's correctness standard forbids guessing the published circuit. Async; treat as suggestion.
+- **✅ Construction RESOLVED via web search (2026-06-09; DR delayed, user-directed) —
+  `Lit-Search/Phase-6AO/KMM-1212.0822-ancilla-construction-websearch.md`.** The KMM §2.1 Diophantine
+  `a²+b²+c²+d² = 4^k − ⌊2^k cos φ⌋² − ⌊2^k sin φ⌋²` with `|v⟩ = (1/2^k)(⌊2^k cosφ⌋+i⌊2^k sinφ⌋, 0, a+ib,
+  c+id)` **IS EXACTLY** the Phase-6AO keystone (inc 1) + normalized state (inc 3) at `K=2k`: `a+ib`,
+  `c+id` = our `t₁=a+bω²`, `t₂=c+dω²`; `u=⌊2^k cosφ⌋+⌊2^k sinφ⌋i ∈ ℤ[i]`; residual `4^k−|u|² = 2^K−normSq u`.
+  **Inc 1–6 confirmed faithful to the primary source — no correction.** **CRUX resolved:** *deterministic*
+  unitary (no measurement/post-selection); the ancilla-|1⟩ leakage `|g⟩` is *bounded and folded into the
+  ε error* `O(2^{−0.5k})` — so the headline is `‖W − Λ(e^{iφ})⊗I‖ ≤ ε` for a deterministic Clifford+T `W`
+  (the naive-column "post-selection" worry is settled). **2 ancillas.** **Brick B (now unblocked)** =
+  circuit C preparing `|v⟩` via O(k) Clifford+T (= 2-qubit exact synthesis of a ℤ[ω][1/√2] unit column,
+  the Giles–Selinger/KMM-1206.5236 Column-Lemma at dim 4) + controlled-C (Column Lemma, no extra ancilla)
+  + the leakage error bound. Rounding-into-disk (`|u|²≤4^k`) stays the §5-style tracked hypothesis.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
