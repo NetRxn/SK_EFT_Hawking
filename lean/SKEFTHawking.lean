@@ -1544,6 +1544,11 @@ import SKEFTHawking.FKLW.RossSelinger.ColumnBaseRealizable
 -- kernel-pure core of the dim-4 ReductionStep — NO kmm_lemma3/native_decide (that proves optimal T-count;
 -- the column lemma needs only *some* reduction). ⟹ kernel-pure synthesis likely independent of Track 3.
 import SKEFTHawking.FKLW.RossSelinger.MatchingResidue
+-- Phase 6AO Track 2 (increment 18; 2026-06-09): Giles–Selinger residue-norm classification —
+-- normSq_cd_not_both_odd (|z|² has residue norm mod 2 in {0000,0001,1010}, never 1011: (|z|².c,|z|².d)
+-- never both odd, since Q≡(a+c)(b+d), P≡(a+c)+(b+d), so Q odd ⟹ P even). The number-theoretic entry
+-- point to the Giles–Selinger column-lemma reduction (Lemma 5 parity); kernel decide over (ZMod 2)⁴.
+import SKEFTHawking.FKLW.RossSelinger.GilesSelingerResidue
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
