@@ -162,10 +162,31 @@ no Fannes/Audenaert file in the pinned tree. So adoption does **not** discharge 
   word + length bound; (5) compose → `RossSelinger.compile : SU(2) → FreeGroup (Fin 2)` discharging
   `BaseFinder_length_bounded` + `BaseFinder_approximates_within … (2·ε₀)`; (6) the unconditional
   `O(log 1/ε)` headline.
-- **Gate (strength-pinned):** `RossSelinger.compile` shipped; the **unconditional** Clifford+T headline
-  with an **`O(log(1/ε))`** word-length conjunct (exponent **1**, not 3.97); kernel-pure
+- **Gate (strength-pinned — ORIGINAL):** `RossSelinger.compile` shipped; the **unconditional** Clifford+T
+  headline with an **`O(log(1/ε))`** word-length conjunct (exponent **1**, not 3.97); kernel-pure
   `{propext, Classical.choice, Quot.sound}`, no new project-local axioms (#15), no `native_decide`, no
   `maxHeartbeats` (#10); full lib + `ExtractDeps` build green; Stage-13 adversarial review.
+- **🔒 GATE AMENDMENT (2026-06-09, user-approved after full diligence + fresh-context Opus 4.8 adversarial
+  review).** The ORIGINAL "unconditional / no-native_decide" gate is **NOT achievable in this phase** for
+  reasons established (not effort) by decompose → primary-DR read → independent review:
+  - **Full ∀U-unconditionality is blocked by a genuine, literature-open analytic-NT wall.** Removing the
+    `gridFindT … = some t` hypothesis bottoms out at the §6 existence that *some* grid candidate's residual
+    `√2^{2k}−u·u*` is a relative norm — a **prime-of-given-norm-in-a-growing-grid-window** (Bunyakovsky /
+    short-interval) statement. Mathlib's Dirichlet (`NumberTheory.LSeries.PrimesInAP`) is present but
+    **insufficient** (gives a prime *somewhere above a bound*, not localized to the scaled disk); the result
+    is **absent from Mathlib and open in the literature** — the source (Selinger arXiv:1212.6253, Ross thesis
+    Prop 3.2.9) realizes it only **randomized under a prime-distribution hypothesis.** Disposition:
+    **Caves-precedent tracked `Prop`, never an axiom** (#15 preserved).
+  - **The 4 KMM `native_decide` axioms** in the consumed substrate are empirically un-eliminable by kernel
+    `decide` under #10 (the enumerations blow the 200k-heartbeat budget; `maxHeartbeats` is forbidden) — they
+    need structural reproofs, a separate program. **Project-TOLERATED** (`axiom_closure_allowlist`
+    tracks-not-fails them); this phase does not eliminate them.
+  - **ACCEPTED W5 DELIVERABLE (what this phase ships, gate MET as amended):** (i) the **efficiency headline**
+    `rossSelinger_log_length_explicit` — output word length `≤ N₃ + 16·log₂(1/δ) + C`, i.e. **O(log 1/ε)
+    exponent 1** vs SK `O(log^{3.97})` (the wave's raison d'être — practical T-count, RESOLVED); (ii) the
+    **§6-gate made explicit + axiom-free**: `gridFindT_isSome_of_residual` (kernel-pure) +
+    `rossSelinger_synth_of_residual` replace the opaque `gridFindT=some t` with the precise relative-norm
+    existence `Prop`. No new axioms; no Mathlib-pin bump.
 - **Depends on:** nothing in 6AM — self-contained (number theory + the existing FKLW SK substrate
   `RossSelingerLightweight.lean` / `CliffordTQuantitative.lean`). Independent of PhysLib.
 
@@ -290,3 +311,30 @@ and structural-KMM `native_decide` elimination — into dedicated `/goal`s. Also
 citation scaffolding (`Phase-6x` DR) is self-flagged PARTIAL-VIABLE (§6 iff-criterion / §7.2 constant
 unconfirmed vs primary `1403.2975v3`) — verify before any RS claim is load-bearing in a published bundle.
 No axioms added anywhere; no Mathlib-pin bump; never pushed.
+
+## ✅ PHASE 6AM CLOSED (2026-06-09, user-approved)
+
+Value-bearing work complete and gate-met (W2, W3, W4 per their original gates; **W6** fully — sharp
+Fannes–Audenaert `log(d−1)`, `hAud` discharged, unconditional, kernel-pure; **W5** per the amended gate —
+O(log 1/ε) efficiency + axiom-free §6-gate `Prop`). All kernel-pure `{propext, Classical.choice, Quot.sound}`
+where claimed (independently `#print axioms`-verified by the closure adversarial review); lib + ExtractDeps
+green (9204); axiom_closure_allowlist + graph_integrity + counts_fresh pass; counts refreshed. Commits
+(NOT pushed): `599c3be9` `c7fc6863` `b0bd8a8b` `846f2ccf` `f16c3f81` `be40ce07`. W7 (migration) was optional,
+not required — not done.
+
+### Tracked future dedicated `/goal`s (NOT dropped — user-approved deferral 2026-06-09)
+Both are genuinely-separate large undertakings, deferred per "large sub-programs get their own /goal":
+
+1. **RS grid-FINDER constructive completeness** (would thin the W5 wall-`Prop`, but cannot remove the
+   prime-density wall). Scope: §5 convex geometry (ellipse uprightness, Step-Lemma 0.9-factor, grid
+   operators, scaled-two-disk existence Ross Lemma 5.2.38, enumeration completeness Prop 5.2.36) +
+   §6 two-squares-over-ℤ[√2] (build `GaussInt2` `EuclideanDomain` + prime-splitting descent on the shipped
+   `Zsqrt2EuclideanDomain`/`Zsqrt2GaussianInt`). Prereq read: `Phase-6x/Ross–Selinger §5:§6:§7 grid-FINDER
+   completeness.md` — **and first verify its §6-iff-criterion / §7.2-constant citations against primary
+   `1403.2975v3`** (the DR is self-flagged PARTIAL-VIABLE; T-count slope is 3–4 for z-rotations, not 12).
+   The terminal prime-density existence stays a Caves-precedent tracked `Prop`.
+2. **Structural-KMM `native_decide` elimination** (4 sites; project-tolerated meanwhile). Per-site:
+   `cliffordBase_box_core` (Clifford ≤6-word coverage, structural), `bridge_box_core` (Giles–Selinger
+   sde↔kSO3 + column bounds), `kmm_lemma3_alg2` (mod-8 algebra — research-flavoured), `maStep_exists_core`
+   (MA-step orthogonality-class orbit-closure — mechanical-tedious, ~809k triples). NO trusted-oracle /
+   checksum fallback (= `native_decide` by another name). Benefits all KMM consumers, not just W5.
