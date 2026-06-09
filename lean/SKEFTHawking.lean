@@ -1533,6 +1533,11 @@ import SKEFTHawking.FKLW.RossSelinger.ColumnSynthesis
 -- 8th roots of unity, via elementary sum-of-four-squares — no Galois/Kronecker) + normSq_eq_zero_iff
 -- (|z|²=0 ⟺ z=0). The denExp-0 unit-column structure (one unit entry ⟹ ωᵏ·eᵢ realizable) builds on these.
 import SKEFTHawking.FKLW.RossSelinger.ColumnBaseCase
+-- Phase 6AO Track 2 (increment 14; 2026-06-09): the dim-4 column-lemma base case ASSEMBLED —
+-- Gate2.base_case (a denExp-0 unit column v : Fin 2 × Fin 2 → ℤ[ω][1/√2] is column-realizable): the
+-- denExp-0 entries are ℤ[ω]-valued (denExp_le_iff k=0), Σ|v i|²=1 transports to ℤ[ω] (normSq_of, of inj),
+-- the structure gives ωᵏ·e_{i₀} (inc 11/12), realizable by inc 13. The column-lemma induction anchor.
+import SKEFTHawking.FKLW.RossSelinger.ColumnBaseRealizable
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
