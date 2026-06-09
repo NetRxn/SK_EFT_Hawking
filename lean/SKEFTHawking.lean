@@ -1454,6 +1454,11 @@ import SKEFTHawking.FKLW.RossSelinger.Zsqrt2EuclideanDomain
 -- (structure GaussInt2 + CommRing + multiplicative relative norm re²+im²). The degree-2
 -- extension whose splitting gives two-squares-over-ℤ[√2] (Prop 3.2.7) → Item I residual-t.
 import SKEFTHawking.FKLW.RossSelinger.Zsqrt2GaussianInt
+-- Phase 6AO Track 1(b) (2026-06-09) — ℤ[√2][i]=GaussInt2 is an INTEGRAL DOMAIN (instIsDomain), via
+-- its positive-definite relative norm re²+im²: zsqrt2_sq_add_sq_eq_zero (a²+b²=0⟺a=b=0 over ℤ[√2], by
+-- integer-coordinate non-negativity — no real embedding) + GaussInt2.norm_eq_zero + NoZeroDivisors.
+-- The next brick toward the even-power two-squares-over-ℤ[√2] criterion (Prop 3.2.7).
+import SKEFTHawking.FKLW.RossSelinger.Zsqrt2GaussInt2Domain
 -- Phase 6x Tier-2 Item I (2026-05-30) — compile_correct approximation helpers:
 -- linftyOpNorm_fin_two_le (entrywise ≤δ ⟹ ℓ∞-operator-norm ≤ 2δ for 2×2) + su2_entry_structure
 -- (U∈SU(2) ⟹ U=[[a,−b̄],[b,ā]]). Propagate the grid first-column approximation to ‖·‖≤ε.
