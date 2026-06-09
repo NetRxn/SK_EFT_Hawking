@@ -78,6 +78,60 @@ theorem normSq_eq_one_iff_omega_pow {z : ZOmega} : normSq z = 1 ↔ ∃ k, k < 8
       first | exact ⟨0, by decide, by decide⟩ | exact ⟨1, by decide, by decide⟩ | exact ⟨2, by decide, by decide⟩ | exact ⟨3, by decide, by decide⟩ | exact ⟨4, by decide, by decide⟩ | exact ⟨5, by decide, by decide⟩ | exact ⟨6, by decide, by decide⟩ | exact ⟨7, by decide, by decide⟩ | exact absurd hP (by decide)
   · rintro ⟨k, _, rfl⟩; exact normSq_omega_pow k
 
+/-- **A vanishing rational coordinate forces the element to vanish**: `(|z|²).d = 0 → z = 0`, since
+`(|z|²).d = a²+b²+c²+d²`. -/
+theorem normSq_d_eq_zero_imp {z : ZOmega} (h : (normSq z).d = 0) : z = 0 := by
+  obtain ⟨a, b, c, d⟩ := z
+  rw [normSq_coords] at h
+  have hP : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 0 := h
+  have ha : a = 0 := by nlinarith [sq_nonneg a, sq_nonneg b, sq_nonneg c, sq_nonneg d]
+  have hb : b = 0 := by nlinarith [sq_nonneg a, sq_nonneg b, sq_nonneg c, sq_nonneg d]
+  have hc : c = 0 := by nlinarith [sq_nonneg a, sq_nonneg b, sq_nonneg c, sq_nonneg d]
+  have hd : d = 0 := by nlinarith [sq_nonneg a, sq_nonneg b, sq_nonneg c, sq_nonneg d]
+  rw [ha, hb, hc, hd]; rfl
+
+/-- **denExp-0 unit-column structure.** For a column `v : Fin 2 × Fin 2 → ℤ[ω]` whose squared moduli
+sum to `1` (a unit vector with no `√2` denominators — the column-lemma base case), **exactly one entry
+has `|·|² = 1` and all others vanish**. Proof: the rational coordinate `(|v i|²).d = aᵢ²+bᵢ²+cᵢ²+dᵢ² ≥ 0`
+sums to `1` (the `√2`-coordinate machinery is not needed), so exactly one is `1` and the rest `0`; a
+zero rational coordinate forces the entry to vanish (`normSq_d_eq_zero_imp`). Combined with
+`normSq_eq_one_iff_omega_pow`, the column is `ωᵏ·eᵢ`. -/
+theorem unit_col_zero_denExp_structure (v : Fin 2 × Fin 2 → ZOmega)
+    (h : ∑ i, normSq (v i) = 1) :
+    ∃ i, normSq (v i) = 1 ∧ ∀ j, j ≠ i → v j = 0 := by
+  have hnn : ∀ i, 0 ≤ (normSq (v i)).d := by
+    intro i; obtain ⟨a, b, c, d⟩ := v i; rw [normSq_coords]; positivity
+  have hd : ∑ i, (normSq (v i)).d = 1 := by
+    let dH : ZOmega →+ ℤ := { toFun := ZOmega.d, map_zero' := rfl, map_add' := ZOmega.add_d }
+    have hms := map_sum dH (fun i => normSq (v i)) Finset.univ
+    simp only [dH, AddMonoidHom.coe_mk, ZeroHom.coe_mk] at hms
+    rw [← hms, h]; rfl
+  have hle : ∀ i, (normSq (v i)).d ≤ 1 := fun i => by
+    have hsl := Finset.single_le_sum (f := fun i => (normSq (v i)).d)
+      (fun j _ => hnn j) (Finset.mem_univ i)
+    rwa [hd] at hsl
+  have hex : ∃ i, (normSq (v i)).d = 1 := by
+    by_contra hc
+    have hz : ∀ i, (normSq (v i)).d = 0 := fun i => by
+      have h1 := hle i; have h2 := hnn i
+      have h3 : (normSq (v i)).d ≠ 1 := fun he => hc ⟨i, he⟩
+      omega
+    rw [Finset.sum_congr rfl (fun i _ => hz i), Finset.sum_const_zero] at hd
+    exact absurd hd (by norm_num)
+  obtain ⟨i₀, hi₀⟩ := hex
+  have hrest : ∀ j, j ≠ i₀ → (normSq (v j)).d = 0 := by
+    have hsplit : (normSq (v i₀)).d + ∑ j ∈ Finset.univ.erase i₀, (normSq (v j)).d = 1 :=
+      (Finset.add_sum_erase Finset.univ (fun j => (normSq (v j)).d) (Finset.mem_univ i₀)).trans hd
+    rw [hi₀] at hsplit
+    have hrest0 : ∑ j ∈ Finset.univ.erase i₀, (normSq (v j)).d = 0 := by omega
+    intro j hj
+    exact (Finset.sum_eq_zero_iff_of_nonneg (fun k _ => hnn k)).mp hrest0 j
+      (Finset.mem_erase.mpr ⟨hj, Finset.mem_univ j⟩)
+  have hvj : ∀ j, j ≠ i₀ → v j = 0 := fun j hj => normSq_d_eq_zero_imp (hrest j hj)
+  refine ⟨i₀, ?_, hvj⟩
+  rw [← h, Finset.sum_eq_single i₀ (fun j _ hj => by rw [hvj j hj, normSq_zero])
+    (fun hni => absurd (Finset.mem_univ i₀) hni)]
+
 end ZOmega
 
 end SKEFTHawking.RossSelinger
