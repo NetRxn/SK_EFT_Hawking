@@ -2,7 +2,7 @@
 
 **Purpose.** LLM-friendly comprehensive index for the SK-EFT Hawking project. **This file is pointers only — no embedded content.** Every entry is `file path + one-line summary`. For full content read the pointed-to file. For comprehensive prose see `SK_EFT_Hawking_Inventory.md`. For live counts read `docs/counts.json`.
 
-**Last synced:** 2026-06-02 (Phase 6AG FULLY COMPLETE — operational QN certification layer, all 4 asks DONE incl. the **LAST public fence now DOWN**: the general-qudit average-gate ↔ entanglement-fidelity identity `avgGateFidelity_eq : F_avg(Φ)=(d·F_e+1)/(d+1)` proven kernel-pure & UNCONDITIONAL via the constructive Gaussian→sphere route — bricks `QuantumNetwork/Gaussian{Moments,Wick,Polar,ComplexMoment,ComplexTensor}.lean` + `GateFidelity.lean` (`complexSphereTensor` = the degree-(2,2) unitary-2-design 2nd moment as a THEOREM, no Weingarten import; `sphere_braKet_normSq` contraction; `kraus_normSq_sum` CPTP collapse). counts regenerated `docs/counts.json` **790 mod/10393 thm/0 axiom/0 sorry**, kernel-pure; D6 §6(iv′)+preprint §3e updated. Prior sync below:) 2026-06-02 (Phase 6AF FULLY COMPLETE — public QI analytic frontier: trace-distance metric, Uhlmann fidelity, BOTH Fuchs–van de Graaf bounds, diamond-distance attainment, and the **Watrous Choi sandwich** `‖J‖₁/d ≤ ‖·‖_◇ ≤ d‖J‖∞` both one-sided bounds proven — `diamondDist_ge_maxEntangled` + `diamondDist_le_choi_opNorm` in `QuantumNetwork/DiamondNormChoi{,Upper}.lean`; counts regenerated `docs/counts.json` 778 mod/10237 thm/0 axiom/0 sorry, kernel-pure. Prior sync below:) 2026-05-31 (verified-quantum-compilation arc COMPLETE — Phases 6u→6x→6x′→6y→6z; counts from `docs/counts.json` regenerated 2026-05-30). Highlights: Phase 6z literal Clifford+CCZ no-`T` **dense in SU(8)** (`cliffordCCZLiteral_dense`, `bb9aae0`); Phase 6y **first kernel-verified Solovay-Kitaev at arbitrary SU(d)** (`solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight` + concrete-radius `matrixMercatorLog`); Phase 6x′ **unconditional Toffoli lower bound** `channelSde2_le_toffoliCost` + `cliffordOnly_not_dense` (Mukhopadhyay 2401.08950). Full build clean, **0 axioms, 0 sorries**, all headlines kernel-pure. Publication: corpus consolidated into new Tier-1 bundle **D8** (authorized 2026-05-31; `PAPER_STRATEGY.md` §2.2 — 17 bundle targets). **Sync source:** `docs/counts.json` (2026-05-30). NOTE: this index's per-family module map below predates several phases (last full reconcile 2026-05-26); `docs/counts.json` field `lean.module_names` is the canonical current module list (751 modules).
+**Last synced:** 2026-06-08 (Phase 6AN COMPLETE — all 5 waves, kernel-pure, 0 axiom / 0 sorry, full `lake build SKEFTHawking.ExtractDeps` green (9132 jobs), counts 11608 thm / 883 mod. New: `QuantumNetwork/{NetworkCapacity, ComposedGateFidelity, FDTNoiseFloor}.lean` (channel-composition diamond budget, multipath flow/cut weak-duality+path-bottleneck capacity, composed coherence⊕control gate-fidelity bound, FDT Johnson–Nyquist noise floor + LDP rare-event tail) + `FKLW/CliffordTCompiler.lean` (correct-by-construction Clifford+T gate compiler — named `cliffordTCompile` + loop invariant + termination + unconditional algorithm-level error+length correctness). Built on shared `main` alongside concurrent Phase 5q work. Prior sync:) 2026-06-02 (Phase 6AG FULLY COMPLETE — operational QN certification layer, all 4 asks DONE incl. the **LAST public fence now DOWN**: the general-qudit average-gate ↔ entanglement-fidelity identity `avgGateFidelity_eq : F_avg(Φ)=(d·F_e+1)/(d+1)` proven kernel-pure & UNCONDITIONAL via the constructive Gaussian→sphere route — bricks `QuantumNetwork/Gaussian{Moments,Wick,Polar,ComplexMoment,ComplexTensor}.lean` + `GateFidelity.lean` (`complexSphereTensor` = the degree-(2,2) unitary-2-design 2nd moment as a THEOREM, no Weingarten import; `sphere_braKet_normSq` contraction; `kraus_normSq_sum` CPTP collapse). counts regenerated `docs/counts.json` **790 mod/10393 thm/0 axiom/0 sorry**, kernel-pure; D6 §6(iv′)+preprint §3e updated. Prior sync below:) 2026-06-02 (Phase 6AF FULLY COMPLETE — public QI analytic frontier: trace-distance metric, Uhlmann fidelity, BOTH Fuchs–van de Graaf bounds, diamond-distance attainment, and the **Watrous Choi sandwich** `‖J‖₁/d ≤ ‖·‖_◇ ≤ d‖J‖∞` both one-sided bounds proven — `diamondDist_ge_maxEntangled` + `diamondDist_le_choi_opNorm` in `QuantumNetwork/DiamondNormChoi{,Upper}.lean`; counts regenerated `docs/counts.json` 778 mod/10237 thm/0 axiom/0 sorry, kernel-pure. Prior sync below:) 2026-05-31 (verified-quantum-compilation arc COMPLETE — Phases 6u→6x→6x′→6y→6z; counts from `docs/counts.json` regenerated 2026-05-30). Highlights: Phase 6z literal Clifford+CCZ no-`T` **dense in SU(8)** (`cliffordCCZLiteral_dense`, `bb9aae0`); Phase 6y **first kernel-verified Solovay-Kitaev at arbitrary SU(d)** (`solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight` + concrete-radius `matrixMercatorLog`); Phase 6x′ **unconditional Toffoli lower bound** `channelSde2_le_toffoliCost` + `cliffordOnly_not_dense` (Mukhopadhyay 2401.08950). Full build clean, **0 axioms, 0 sorries**, all headlines kernel-pure. Publication: corpus consolidated into new Tier-1 bundle **D8** (authorized 2026-05-31; `PAPER_STRATEGY.md` §2.2 — 17 bundle targets). **Sync source:** `docs/counts.json` (2026-05-30). NOTE: this index's per-family module map below predates several phases (last full reconcile 2026-05-26); `docs/counts.json` field `lean.module_names` is the canonical current module list (751 modules).
 
 **Size discipline.** Target ~50–80 KB. Keep under 100 KB so future LLM bootstraps can read it in a single `Read` call (the harness truncates files >256 KB and may skip files much smaller than that). When this file approaches 100 KB, prune narrative — move it to `SK_EFT_Hawking_Inventory.md` or `temporary/working-docs/`. Do NOT inline session logs, wave-history, or per-commit detail; those belong in `temporary/working-docs/` or the prose inventory.
 
@@ -19,27 +19,22 @@
 
 ## 1. One-page state snapshot
 
-**Counts (from `docs/counts.json` regenerated 2026-05-30, post-Phase-6x′):**
+**Counts (from `docs/counts.json` regenerated 2026-06-08, post-Phase-6AN; also reflects concurrent Phase 5q work on shared `main`):**
 
 | Metric | Value |
 |---|---:|
-| Lean theorems (total) | 11039 |
-| Lean theorems (substantive) | 11013 |
+| Lean theorems (total) | 11608 |
+| Lean theorems (substantive) | 11582 |
 | Lean theorems (placeholder `True := trivial`) | 26 |
-| Lean modules | 853 |
-| Lean total declarations | 18871 |
-| Lean definitions | 6949 |
-| Lean structures | 287 |
-| Lean instances | 489 |
-| Lean inductives | 94 |
+| Lean modules | 883 |
+| Lean definitions | 6988 |
 | Lean axioms | **0** (project-local) |
 | Lean sorries | **0** |
 | Aristotle-proved theorems | 322 |
 | Aristotle runs | 44 |
 | Python source modules | 132 |
-| Test files | 109 |
-| Pytest cases | 4475 |
-| Figures (PNG) | 156 |
+| Test files | 110 |
+| Figures (PNG) | 162 |
 | Notebooks | 89 |
 | Papers (drafts) | 42 |
 | Publication bundles (per PAPER_STRATEGY) | 17 |

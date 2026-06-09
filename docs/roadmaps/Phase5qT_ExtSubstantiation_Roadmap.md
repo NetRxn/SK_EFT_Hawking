@@ -135,6 +135,23 @@ leave the natural-iso as tracked follow-up — but **not** as a `True` placehold
   `papers/paper10_*` per-wave draft is internal source material, not a deliverable.)
 - Update `HYPOTHESIS_REGISTRY` H2 entry: `placeholder → discharged` only when Wave T4 ships real content.
 
+### Wave T6 — (OPTIONAL) full Steenrod algebra A + the `A//A(1)` module structure [governed by ADR-003]
+
+**Goal.** Extend the genuine A(1) ring (Wave T2) to the **full Steenrod algebra A**, and state/prove the
+**`A//A(1)` module structure** — the *algebraic* content of hypothesis **H1** (`H*(ko;𝔽₂) ≅ A//A(1)` as an
+A-module). This is the **tractable, top-row, spectra-free adjacent** of Leg D (the Adams/ABP frontier): it
+strengthens the Ext-as-E₂-page *corroboration* narrative **without** building any stable homotopy.
+
+**Scope boundary (critical).** T6 delivers only the *algebraic* `A//A(1)` structure. It does **NOT** discharge
+H1/H3/H4 as *topological* facts — that requires the ko spectrum / Adams SS / ABP (Leg D), which is a
+deferred bottom-row frontier per [ADR-003](../adrs/ADR-003-rokhlin-leg-discharge-and-deferred-topological-frontiers.md)
+and `Phase5qD`. T6 must not imply the topological realization is proven.
+
+**Trigger.** Pursue **only if** the Ext-as-E₂ corroboration narrative is judged worth the cost (it is *not* on
+any critical path; `16 ∣ σ` is already unconditional via Phase 5q.B). Otherwise leave planned.
+
+**Risk.** Low–medium (Adem-relation bookkeeping by `decide`; same newtype/diamond pattern as T2, larger basis).
+
 ---
 
 ## Status and sequence
@@ -146,11 +163,17 @@ leave the natural-iso as tracked follow-up — but **not** as a `True` placehold
 | T3 | Real `Ext` via `isoExt` | Planned | Medium |
 | T4 | Genuine change-of-rings (H2) | Planned | Medium-high |
 | T5 | Proxy detector + integration | Planned | Low |
+| T6 | (OPTIONAL) full Steenrod A + `A//A(1)` structure | Planned — narrative-gated (ADR-003) | Low-medium |
 
 **Recommended sequence:** the T5 proxy detector can land immediately (independent, low-risk, and it guards the
 whole class of issue T1 addressed). T2 is the prerequisite for T3 (real `Ext` needs the genuine ring). T4
-(change-of-rings) depends on T3's `Ext` being real. None of this is gated on the Mathlib community — it is all
-finite F₂ algebra + standard homological algebra that Mathlib already supports abstractly.
+(change-of-rings) depends on T3's `Ext` being real. T6 (optional) extends T2's ring and is narrative-gated —
+pursue only if the Ext-as-E₂ corroboration story is wanted. T1–T6 are all **top-row** (finite F₂ algebra +
+standard homological algebra Mathlib supports abstractly) and **not** gated on the Mathlib community — unlike
+the *topological* discharge of H1/H3/H4 (Leg D), which is deferred and trigger-gated in `Phase5qD` per ADR-003.
+
+**Execution prompts:** ready-to-run `/goal` prompts for T2–T5 (split into two parts) live in
+[Phase5qT_goal_prompt.md](Phase5qT_goal_prompt.md).
 
 ## What success looks like
 

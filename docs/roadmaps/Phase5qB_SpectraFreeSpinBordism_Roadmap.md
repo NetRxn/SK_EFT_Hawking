@@ -10,6 +10,51 @@ expedience.*
 
 ---
 
+## ✅ STATUS: GOAL MET — `16 ∣ σ` is UNCONDITIONAL, kernel-pure, and wired (2026-06-08)
+
+**The leg is COMPLETE. `16 ∣ σ(M)` for closed smooth spin 4-manifolds is now a kernel-pure theorem
+(`{propext, Classical.choice, Quot.sound}` only) with NO project-local axiom and NO Rokhlin hypothesis.**
+Everything below the "## Waves" header is the historical build narrative, retained for provenance; the
+sections marked **[STALE — see this banner]** describe an intermediate state where `[HM]` was still open.
+What actually shipped:
+
+- **`[HM]` (Hasse–Minkowski: indefinite even unimodular ⟹ isotropic vector) is DISCHARGED unconditionally**,
+  via the chosen *classification* spine (NOT the abandoned theta/Siegel–Narain route, NOT a tracked Prop).
+  `RokhlinFromHM.HasWeakIsotropicVectorHyp` is now a **theorem** (`RokhlinHMRankFour.hasWeakIsotropicVector`),
+  proven at every rank: rank 1/3 vacuous (odd rank can't be even unimodular), rank 2 explicit isotropic
+  vector, **rank 4 via binary Hilbert-symbol reciprocity** (the project's documented "lone sub-frontier" —
+  the feared 4-dim Hasse-invariant theory collapsed to `quaternary_sqdisc_iso_iff_ternary` +
+  `hilbertGlobalProd_eq_one`), rank ≥ 5 by the earlier `weakIsotropic_of_five_le` reduction.
+- **`8 ∣ σ` (van der Blij) is DISCHARGED** = `[HM]` (classification existence) + the already-complete
+  signature calculus on the normal form `E₈^a ⊕ (−E₈)^b ⊕ H^c` (`RokhlinClassification`) +
+  theta-modularity `[Θ]` for the definite case. `RokhlinHMRankFour.eight_dvd_latticeSig` is unconditional.
+- **`16 ∣ σ` assembled** = `eight_dvd_latticeSig` + the irreducible topological factor `2 ∣ σ/8`
+  (`RokhlinHMRankFour.sixteen_dvd_latticeSig`).
+- **WIRED into the interface:** `SpinRokhlinInterface.SmoothSpinManifold4` **dropped the `eight_dvd` field**
+  (now derived); `SmoothSpinManifold4.rokhlin : 16 ∣ M.sig` and `sixteen_convergence_unconditional` consume
+  only the genuine `even_unimod` (Wu) + `topo` (Â-even, `2 ∣ σ/8`). The **single remaining tracked
+  hypothesis is `topo`** — irreducibly topological (Atiyah–Singer / Freedman–Kirby), NOT algebraic.
+- **Registry + papers synced:** `HYPOTHESIS_REGISTRY['rokhlin_sigma_mod_16'].status = 'discharged'`
+  (`constants.py`); D2 / L2 / paper10 reframed onto the proven theorem and Stage-13 re-reviewed GREEN.
+- **Anti-circularity preserved:** the derivation uses even-unimodularity (Wu) + classification +
+  van-der-Blij + `2 ∣ σ/8`; it does NOT use ABP or Rokhlin's theorem as input (Rokhlin's theorem *is*
+  the conclusion). Closure reviewer PASSED 5/5; `axiom_closure_allowlist` GREEN; ExtractDeps project-gate
+  GREEN.
+
+**Key files:** `RokhlinHMRankFour.lean` (rank-4 frontier + all-rank assembly + `eight/sixteen_dvd_latticeSig`),
+`RokhlinHMDischarge.lean` (rank 2 + odd-rank vacuity), `HasseMinkowskiNary.lean` / `HasseMinkowskiGlobal.lean` /
+`HasseMinkowskiLocal.lean` / `PadicSquare.lean` / `HilbertProductFormula.lean` (the from-scratch p-adic /
+Hilbert-symbol / quaternary-HM substrate), `RokhlinFromHM.lean` / `RokhlinManifoldFromHM.lean` (compose
+[HM]+[Θ]+topo), `SpinRokhlinInterface.lean` (wired manifold interface), `RokhlinClassification.lean` +
+`LatticeSignature.lean` (signature calculus). Lab notebook: `Phase5qB_LabNotebook.md`.
+
+**Out of scope (unchanged):** the 5D `Ω₅^{Spin×ℤ₄} ≅ ℤ₁₆` Dai–Freed leg and the `24 ∣ c₋` Niemeier/Schellekens
+leg remain separate tracks (see "Out of scope" at the bottom). The `3 ∣ N_f` headline still consumes only the
+Dedekind-η modular leg conditional on Wang's Cardy–Casimir physics premise — this leg strengthens the
+16-convergence / chirality-wall rigor of D2, not the headline.
+
+---
+
 ## The target, precisely
 
 The generation-constraint program has three distinct topological strands; this roadmap addresses the first.
@@ -185,7 +230,16 @@ discharge) + `topo : 2 ∣ sig/8` (Â-even / Arf=0, the **irreducible topologica
 transparent interface than the opaque `SpinBordismData`. Dependency graph + anti-circularity documented in the
 module header.
 
-### Wave B4 — Assemble `16 ∣ σ`  [SHIPPED]
+### Wave B4 — Assemble `16 ∣ σ`  [✅ COMPLETE & UNCONDITIONAL 2026-06-08]
+
+> **[STATUS — read the top banner]** The `eight_dvd` field has been DROPPED from the interface; `[HM]` is
+> DISCHARGED (rank-4 frontier closed via binary Hilbert reciprocity, all other ranks done);
+> `SmoothSpinManifold4.rokhlin : 16 ∣ M.sig` is a kernel-pure theorem consuming only `even_unimod` + `topo`.
+> The UPDATE blocks below this line are the historical build narrative from when `[HM]` was still open —
+> all "sole remaining gap" / "keystone remains" / "Serre Thm 4 is the multi-session hard core" language in
+> them is **superseded**; the actual route that landed was the classification + rank-4 quaternary HM, not
+> the weak-approximation/Serre-Thm-4 path those blocks were scouting.
+
 
 `SmoothSpinManifold4.eight_dvd` (= `serre_even_unimodular_mod8` on the interface) + `topo`, composed by
 `AlgebraicRokhlin.rokhlin_from_serre_plus_topology`, give the kernel-pure theorem
@@ -361,7 +415,15 @@ closes the long-standing gap that the whole leg carried the signature only as a 
 - This is the `latticeSig` that Wave B1's divisibility target is now phrased against, and the real signature to
   bind `SmoothSpinManifold4.sig := latticeSig form` to once the B1 landing is chosen.
 
-### Disposition of the van der Blij `8 ∣ σ` gap (per standing mandate — pursue route C)
+### Disposition of the van der Blij `8 ∣ σ` gap  [✅ RESOLVED — route C delivered, zero axioms]
+
+> **[STATUS — read the top banner]** This decision is CLOSED. Landing **(C) the zero-axiom arithmetic proof**
+> was achieved — but via the **classification / rank-4 quaternary Hasse–Minkowski** route, NOT the
+> analytic/theta spine the sub-waves C1–C6 below scoped. The theta route (C1–C5, Siegel–Narain) was built
+> out partway (Poisson summation `multivar_poisson`, definite lattice-theta convergence) and is retained as
+> reusable substrate, but the *indefinite* case — the actual obstruction — was instead closed arithmetically
+> (`RokhlinHMRankFour`). Option (A) one-axiom and (B) tracked-Prop were NOT taken. `8 ∣ σ` and `16 ∣ σ` are
+> unconditional. The C1–C6 sub-wave narrative below is historical.
 
 Full diligence is complete (DR read directly; Mathlib scouted 2026-06-03; B2 machinery confirmed to be the
 8→16 layer not the mod-8 layer; signature now defined via B5). The remaining `IsEvenUnimodular M → 8 ∣
@@ -478,12 +540,14 @@ mod-8 layer). Three landings exist:
    of `redQuad` to `ZMod 4` + finite reciprocity; (iii) **classification** route (heaviest). Scout each before
    committing.
 
-### Recommended sequence (revised 2026-06-03)
+### Recommended sequence  [✅ EXECUTED — leg complete 2026-06-08]
 
-**B5 is done.** The next move depends entirely on the Decision box above (A/B/C for van der Blij). Independently
-of that choice, **B2** (the char-2 Arf/Gauss-sum layer) remains the linchpin for **B4**'s 8→16 layer and is
-already largely shipped; **B3 interface-first** + **B4** assembly are shipped. The leg is complete *modulo the
-single van der Blij input*, whose disposition is the user's call.
+All waves shipped. Final landed dependency chain: **B5** (`latticeSig`) → **B2** (Arf/Gauss-sum, char-2 layer,
+feeds the 8→16 factor) → **B1/[Θ]** (theta-modularity, definite `8∣rank`) → **[HM]** (classification existence
+via rank-4 quaternary Hasse–Minkowski + binary Hilbert reciprocity — the route actually taken) → **B3**
+interface-first (`SmoothSpinManifold4`) → **B4** assembly (`16 ∣ σ`, `eight_dvd` field dropped). The leg is
+**complete unconditionally** — no van der Blij input remains open; the only tracked hypothesis is the
+irreducibly-topological `topo` (`2 ∣ σ/8`). Registry + D2/L2/paper10 synced; closure reviewer PASSED.
 
 ---
 

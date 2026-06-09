@@ -1,5 +1,31 @@
 # Phase 5q: Ext Computation over A(1) — The Algebraic Core of Spin Bordism
 
+> ## 📍 5q FAMILY STATUS & NAVIGATION (master index — added 2026-06-09)
+>
+> This April-2026 roadmap is the **parent** 5q (the Ext-over-A(1) computation). 5q later grew into a family
+> of sub-phases. This banner is the single navigation point so the family is **100% planned** and the
+> remaining items can be re-prioritized. **Governance:**
+> [ADR-003](../adrs/ADR-003-rokhlin-leg-discharge-and-deferred-topological-frontiers.md) (Rokhlin-leg posture
+> + re-trigger tables) · [Leg-C scouting spike](../assessments/LegC_GeometricResidue_ScoutingSpike.md)
+> (2026-06-09) · [Route A/B assessment](../assessments/GenerationConstraint_RouteA_vs_B_ImpactAssessment.md).
+>
+> | Sub-phase | Scope | Status | Doc |
+> |---|---|---|---|
+> | **5q (this doc)** | Ext-over-A(1) computation (resolution + Ext dims) | **COMPLETE** (Track A W1–6). Appended **Wave H** (H1/H3/H4) → re-homed to 5q.D | this file |
+> | **5q.B** | spectra-free Rokhlin → unconditional `16 ∣ σ` | ✅ **COMPLETE** (2026-06-08) | `Phase5qB_SpectraFreeSpinBordism_Roadmap.md` |
+> | **5q.C** | Arf-bridge hardening (`topo → arfOfForm=0`) | **Phase 1 ACTIONABLE NOW** (top-row; `/goal` ready) · **Phase 2 DEFERRED** (geometric residue; spike-confirmed) | `Phase5qC_ArfBridge_Roadmap.md` |
+> | **5q.D** | Adams/ABP bordism frontier (= this doc's Wave H) | ⏸️ **DEFERRED, trigger-gated, shelf-ready** (early-warming: `Bordism.lean` first brick landed at master) | `Phase5qD_AdamsABP_Frontier_Roadmap.md` |
+> | **5q.T** | upgrade Ext proxies → real Mathlib `Ext` | **T1 COMPLETE** · **T2–T5 ACTIONABLE** (`/goal`s ready) · **T6 OPTIONAL** | `Phase5qT_ExtSubstantiation_Roadmap.md`, `Phase5qT_goal_prompt.md` |
+>
+> **Remaining ACTIONABLE-NOW 5q items (for re-prioritization):** 5q.C Phase 1 · 5q.T T2–T5 · (optional) 5q.T T6.
+> **DEFERRED / trigger-gated (no work until a trigger fires):** 5q.C Phase 2 (Leg-C-geometric — gating brick:
+> Mathlib cup-product cohomology + Poincaré duality) · 5q.D (Leg-D / Adams-ABP). **Both are *early-warming*, not
+> cold** — vs. our v4.29.1 pin, Mathlib **master (`v4.31.0-rc2`)** has shipped `SingularHomology/HomotopyInvariance`
+> (Leg-C precursor) and `Geometry/Manifold/Bordism.lean` (`SingularManifold`, Leg-D first brick); neither is
+> load-bearing yet. Per ADR-003 Decision #7, triggers are checked against **both our pin and `gh` master**, and
+> a load-bearing brick at HEAD is a cue to **vendor-and-rewire** ahead of the official bump. Both have full wave
+> plans in their roadmaps so reactivation is execution, not re-planning.
+
 ## Technical Roadmap — April 2026
 
 *Prepared 2026-04-08 | Updated 2026-04-08 (deep research complete — resolution data extracted, brute-force approach confirmed) | Follows Phase 5p (Muger center, FP dimension). Addresses the deepest open hypothesis in the generation constraint chain.*
@@ -356,6 +382,13 @@ Wave 1 (deep research) ──COMPLETE──→ Wave 2 (A(1) Ring + SageMath)
 ---
 
 ## Append-only Wave: H1/H3/H4 Topological-Hypothesis Finalization
+
+> **⟶ RE-HOMED (2026-06-08): the live version of this frontier is
+> [Phase 5q.D](Phase5qD_AdamsABP_Frontier_Roadmap.md)** (Adams/ABP), governed by
+> [ADR-003](../adrs/ADR-003-rokhlin-leg-discharge-and-deferred-topological-frontiers.md). The sub-wave plan
+> and Mathlib triggers below remain valid and are mirrored there; treat 5q.D as the authoritative tracker.
+> Note also that **5q.B already delivers `16 ∣ σ` unconditionally without this frontier**, so Wave H / 5q.D is
+> now *optional* (narrative/prestige: wiring Ext to bordism), not on the `16 ∣ σ` critical path.
 
 *Appended 2026-04-28 | Trigger: post-Phase 6 gap analysis (`temporary/Research-Overview/research_overview_analysis.md`, 2026-04-28). Status: **LATENT — Mathlib-blocked**.*
 

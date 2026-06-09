@@ -3,6 +3,14 @@
 > **DECISION (2026-06-03): proceeding with Route B.** The canonical plan is
 > [Phase5qB_SpectraFreeSpinBordism_Roadmap.md](../roadmaps/Phase5qB_SpectraFreeSpinBordism_Roadmap.md).
 > This document is retained as the comparative analysis (and for possible future reconsideration of A).
+>
+> **UPDATE (2026-06-08): Route B COMPLETE; this doc's *cost* prediction for B is SUPERSEDED.** §4/§5 below
+> predicted Route B was "a serious multi-PY effort, not an order-of-magnitude shortcut." Route B's `16 ∣ σ`
+> in fact landed in **~2 working days** (Phase 5q.B). The corrected, velocity-grounded LOE convention and the
+> disposition of the remaining frontiers (Route A = now `Phase5qD`, trigger-gated) are in
+> [ADR-003](../adrs/ADR-003-rokhlin-leg-discharge-and-deferred-topological-frontiers.md). The *strategic*
+> comparison below (A = literal ko/Adams narrative + reusable stable-homotopy infra; B = spectra-free, one
+> irreducible topological residue) remains accurate.
 
 *Prepared 2026-06-03. Purpose: the larger-program context behind the Route-A-vs-B choice for making the
 **bordism leg** of the three-generations constraint unconditional. North star: **correctness over expedience.***

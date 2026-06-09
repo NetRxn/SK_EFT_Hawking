@@ -8,7 +8,7 @@
   "stage10_status": "green",
   "stage13_status": "green",
   "stage13_redo_required": false,
-  "freshness_stale": false,
+  "freshness_stale": true,
   "source_manifest_last_regen": "2026-05-31T17:24:48Z",
   "last_lift": "2026-05-31T17:24:48Z",
   "last_stage9_review": "2026-05-04T17:30:00Z",
