@@ -131,5 +131,42 @@ theorem isColRealizableWithin_omega_pow_basis (k : ℕ) (a b : Fin 2) :
       funext i; rw [Pi.smul_apply, smul_eq_mul, mul_ite, mul_one, mul_zero]] at h
   exact h.mono (by omega)
 
+/-! ### Block-wise action of embedded single-qubit operations on a 4-column
+
+The dim-4 reduction's 2-level operations are embedded single-qubit gates (`embedFst`/`embedSnd`); these
+lemmas compute their `mulVec` action on a column block-wise — `embedSnd A` applies `A` within each
+first-qubit block (combining the second-qubit pair), `embedFst A` applies `A` across blocks at fixed
+second qubit. The raw matrix-algebra the reduction (and `smul_left`) consume. -/
+
+/-- **`embedSnd A` acts within each first-qubit block**: `(embedSnd A · v)(i,j) = ∑_{j'} A j j' · v(i,j')`
+(combines the second-qubit pair `{(i,0),(i,1)}` by `A`, for each `i`). -/
+theorem embedSnd_mulVec_apply (A : Mat2') (v : Fin 2 × Fin 2 → ZOmegaSqrt2) (i j : Fin 2) :
+    (embedSnd A).mulVec v (i, j) = ∑ j' : Fin 2, A j j' * v (i, j') := by
+  rw [embedSnd, Matrix.mulVec, dotProduct, Fintype.sum_prod_type,
+    Finset.sum_eq_single_of_mem i (Finset.mem_univ i)
+      (fun i' _ hi' => Finset.sum_eq_zero fun j' _ => by
+        rw [Matrix.kroneckerMap_apply]
+        show (1 : Mat2') i i' * A j j' * v (i', j') = 0
+        rw [Matrix.one_apply_ne (Ne.symm hi'), zero_mul, zero_mul])]
+  refine Finset.sum_congr rfl fun j' _ => ?_
+  rw [Matrix.kroneckerMap_apply]
+  show (1 : Mat2') i i * A j j' * v (i, j') = A j j' * v (i, j')
+  rw [Matrix.one_apply_eq, one_mul]
+
+/-- **`embedFst A` acts across blocks at fixed second qubit**: `(embedFst A · v)(i,j) =
+∑_{i'} A i i' · v(i',j)` (combines the first-qubit pair `{(0,j),(1,j)}` by `A`, for each `j`). -/
+theorem embedFst_mulVec_apply (A : Mat2') (v : Fin 2 × Fin 2 → ZOmegaSqrt2) (i j : Fin 2) :
+    (embedFst A).mulVec v (i, j) = ∑ i' : Fin 2, A i i' * v (i', j) := by
+  rw [embedFst, Matrix.mulVec, dotProduct, Fintype.sum_prod_type]
+  refine Finset.sum_congr rfl fun i' _ => ?_
+  rw [Finset.sum_eq_single_of_mem j (Finset.mem_univ j)
+    (fun j' _ hj' => by
+      rw [Matrix.kroneckerMap_apply]
+      show A i i' * (1 : Mat2') j j' * v (i', j') = 0
+      rw [Matrix.one_apply_ne (Ne.symm hj'), mul_zero, zero_mul])]
+  rw [Matrix.kroneckerMap_apply]
+  show A i i' * (1 : Mat2') j j * v (i', j) = A i i' * v (i', j)
+  rw [Matrix.one_apply_eq, mul_one]
+
 end Gate2
 end SKEFTHawking.RossSelinger
