@@ -491,25 +491,34 @@ kernel-pure. NOT a wall (provable, not axiom-needing) — sequencing, not de-sco
   (the column lemma by strong induction on `colDenExp`, reduced to `ReductionStep` alone — base case at 0,
   else `v=g·v'` climbs via `smul_left`). The ENTIRE remaining circuit-`C` synthesis is now the single
   `ReductionStep` brick (then controlled-C + operator-norm assembly).
-- inc 16 (`6b7e337d`, `MatchingResidue.lean`): `dividesSqrt2_add_of_dividesSqrt2_sub` (`x≡y mod √2 ⟹
-  √2∣x±y`) + `denExp_mk_succ_le_of_dividesSqrt2`. **These lemmas are CORRECT facts** (and useful
-  scaffolding), but the commit's *framing* ("elementary reduction, independent of `kmm_lemma3`") was
-  **WRONG — corrected**:
-  - ⚠ **(a) matching-residue + H does NOT reduce `colDenExp`.** Cleared at `colDenExp=s` (`wᵢ/√2^s`), an
-    `H` on a matching pair gives `(wᵢ±wⱼ)/√2^{s+1}`; `wᵢ±wⱼ` are `√2`-divisible so these land at denExp
-    `≤ s`, but `(wᵢ+wⱼ)/√2` is generically NOT further `√2`-divisible (would need `wᵢ+wⱼ` divisible by
-    `√2²=2`, not just `√2`). So the combined entries sit at denExp **`= s`, not `s−1`** — no reduction.
-    The real reduction needs the `|·|²` 2-adic-valuation (`gde`) argument = exactly `kmm_lemma3`.
-  - ⚠ **(b) the headline REQUIRES the optimal T-count.** Even if some elementary reduction existed, the
-    headline is **exponent-1 `O(log 1/ε)`** length — that IS the *optimal* T-count `kmm_lemma3` proves; a
-    suboptimal reduction would blow the exponent. **Do NOT substitute a weaker reduction.**
-  - ⟹ **`ReductionStep` MUST use the optimal `kmm_lemma3` reduction.** Architecture (unchanged from the
-    pre-inc-16 plan): build `ReductionStep` reusing the dim-2 `reduceStep` + `kmm_lemma3_column`
-    (tolerated `native_decide`, as inc-4 already consumes the 4 sites) → ship the exponent-1 headline →
-    **Track 3 structurally eliminates `kmm_lemma3_alg2`** ⟹ retroactively kernel-pure. Remaining
-    `ReductionStep` input = the dim-4 **pairing/orchestration** of the dim-2 `reduceStep` (which entries
-    to combine, via CNOT + `onSnd`/`onFst` embedding of `reduceStep`) + the `colDenExp`-decrease proof
-    (per-pair via `kmm_lemma3_column`). That is the next build.
+- inc 16 (`6b7e337d`, `MatchingResidue.lean`): `dividesSqrt2_add_of_dividesSqrt2_sub` + `denExp_mk_succ_
+  le_of_dividesSqrt2` — CORRECT facts, part of the elementary residue toolkit.
+
+**✅ DEFINITIVE (web-verified 2026-06-09, `Lit-Search/Phase-6AO/GilesSelinger-1212.0506-column-lemma-
+mechanism-websearch.md`): the `ReductionStep` is the GILES–SELINGER column lemma — ELEMENTARY, kernel-
+pure, optimal O(lde), and INDEPENDENT of `kmm_lemma3`/Track 3.** This supersedes the inc-16 back-and-
+forth below (both the v1 "elementary mod-√2" mechanism AND the v2 "kmm_lemma3 needed" walk-back were
+off; the v2 conflated `kmm_lemma3` with the column lemma).
+  - **Two ar5iv fetches settle it.** KMM 1212.0822: circuit C = "Lemma 20 (Column lemma) from [8]",
+    [8] = **Giles–Selinger 1212.0506** "Exact synthesis of multiqubit Clifford+T circuits". Giles–Selinger
+    reduction = **purely elementary**: Lemma 5 parity (`Σ xⱼ†xⱼ = 0000` over residues in `𝔽₂[x]/(x⁴+1)`;
+    each summand ∈ {`0000`,`0001`,`1010`}; EVEN count of `0001` ⟹ a matching-residue-norm pair exists)
+    + Lemma 4 row operation (3 explicit cases by residue norm, H/T 2-level word, denExp drops by 1).
+    **"No algebraic number theory, class field theory, or number-theoretic decision procedures." NO
+    `native_decide`.**
+  - **`kmm_lemma3` is a DIFFERENT result** (KMM Algorithm 2: the SO(3)/`|·|²`-valuation optimal-T-count
+    for ANCILLA-FREE single-qubit synthesis) — NOT what circuit C uses. The project's dim-2 column
+    reduction happens to use it (a choice for the finer SO(3) optimality); the dim-4 KMM-ancilla circuit C
+    does NOT. So the dim-4 `ReductionStep` neither needs nor reuses `kmm_lemma3`.
+  - **Optimal T-count preserved**: Giles–Selinger gives O(lde) = O(log 1/ε) gates (exponent 1) — the
+    headline's asymptotic optimality (saturates the constant-ancilla lower bound, per KMM). The finer
+    kmm_lemma3/SO(3) optimality is ancilla-free-only and not required.
+  - **⟹ kernel-pure `ReductionStep` is achievable via Giles–Selinger, independent of Track 3.** Build
+    plan (elementary): (i) residue map `ZOmega → ℤ[ω]/√2 ≅ 𝔽₂[x]/(x⁴+1)` + residue-norm `x†x ∈
+    {0000,0001,1010}`; (ii) Lemma-4 3-case row operation (matching pair → H/T word via `onFst`/`onSnd`/
+    CNOT + the inc-17 block-action + inc-16 `√2`-clearing; denExp drops by 1); (iii) Lemma-5 parity
+    (even count of `0001` ⟹ matching pair) ⟹ `ReductionStep`; (iv) inc-15 `colLemma_of_reductionStep`
+    ⟹ unconditional column lemma. All kernel-pure. THIS is the next build (elementary, NOT research-grade).
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
