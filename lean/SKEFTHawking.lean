@@ -1503,6 +1503,11 @@ import SKEFTHawking.FKLW.RossSelinger.CliffordTGate2
 -- approximant u, the cleared column (u,t₁,t₂)/√2^k is a UNIT vector unconditionally — the KMM-ancilla
 -- "existence" at the ℤ[ω][1/√2] amplitude level, no relative-norm hypothesis). Lifts the inc-1 keystone.
 import SKEFTHawking.FKLW.RossSelinger.AncillaState
+-- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
+-- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
+-- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
+-- the 2-qubit semantics to the verified kmmReduce; building block for the ancilla circuit's system-line ops.
+import SKEFTHawking.FKLW.RossSelinger.AncillaSynthesisBridge
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
