@@ -429,6 +429,34 @@ Treat the DR as suggestion, not fact (the requesting side has the Mathlib/Lean a
   circuit C preparing `|v⟩` via O(k) Clifford+T (= 2-qubit exact synthesis of a ℤ[ω][1/√2] unit column,
   the Giles–Selinger/KMM-1206.5236 Column-Lemma at dim 4) + controlled-C (Column Lemma, no extra ancilla)
   + the leakage error bound. Rounding-into-disk (`|u|²≤4^k`) stays the §5-style tracked hypothesis.
+- **Increment 7 ✅ — the KMM z-rotation ancilla state exists unconditionally (`21804cab`).**
+  `AncillaState.lean`: `kmm_ancilla_state_exists (m₁ m₂ : ℤ) (k) (h : m₁²+m₂² ≤ 4^k) : ∃ t₁ t₂,
+  Σ normSq((m₁+m₂ω², t₁, t₂)/√2^{2k}) = 1` — the exact KMM target column `|v⟩` is a UNIT vector for the
+  Gaussian approximant `u = m₁+m₂i` in the disk, completion `t₁,t₂` by Lagrange four-squares (keystone).
+- **Increment 8 ✅ — the unconditional amplitude approximation (rounding → ε) (`33f4700b`).**
+  `AmplitudeApprox.lean`: `exists_round_toward_zero` (∃ m, m²≤x² ∧ |x−m|≤1 — disk-preserving rounding);
+  `toComplex_gaussian_approx` (the shipped `ZOmegaSqrt2 →+* ℂ` embedding sends `mk (m₁+m₂ω²) (2k)` to its
+  analytic amplitude `(m₁+m₂i)/2^k` via `s2C²=2`, `ω²↦i`); **`kmm_amplitude_approx`** (∀φ,k a disk-bounded
+  approximant with `‖u/2^k − e^{iφ}‖ ≤ √2/2^k`, UNCONDITIONAL); **`kmm_ancilla_state_approx`** (milestone:
+  inc-7 state + this amplitude bound). Kernel-pure; native_decide unchanged 596.
+- **Increment 9 ✅ — the KMM leakage bound, the dominant `O(2^{−0.5k})` error (`38126592`).**
+  `AncillaLeakage.lean`: `toComplex_normSq` (ring norm → complex squared modulus, `toComplex` is a *-hom);
+  **`kmm_ancilla_state_full`** (∀φ,k: normalized + `|00⟩`-amplitude within √2/2^k of `e^{iφ}` + total
+  ancilla-|1⟩ leakage `≤ 2·√2/2^k`, UNCONDITIONAL — leakage² = 1−|amp|², bounded via inc-8 + reverse
+  triangle, `‖e^{iφ}‖=1`). **This completes the ERROR-BUDGET half of `‖W − Λ(e^{iφ})⊗I‖ ≤ ε`** (both the
+  amplitude error and the leakage are now quantitative + unconditional). Kernel-pure; native_decide 596.
+
+**REMAINING Track-2 brick = the CIRCUIT SYNTHESIS only** (multi-increment sub-program, NOT de-scoped):
+the `O(k)` Clifford+T word that realizes a unitary preparing `|v⟩`, + its assembly into the operator-norm
+headline + the length-`O(log 1/ε)` corollary (inc 6's composition law makes length automatic once the
+synthesis is O(k)-piece-assembled). Per the websearch resolution, KMM §2.2 does NOT give a new explicit
+circuit — it *invokes* the Giles–Selinger/KMM-1206.5236 **Column Lemma at dim 4** (no shortcut via a
+guessable §2.2 gate sequence; the faithful route is the correct-by-construction exact synthesis). Structure
+(reuse the dim-2 `KMMReduce`/`MAStep`/`*Column` machinery at dim 4 on the shipped `Gate2`/`Mat4` semantics):
+(1) `colDenExp` of a 4-column; (2) base case `colDenExp v = 0` ∧ unit ⟹ `v = ωʲ·eᵢ` realizable by Clifford
+`Gate2`; (3) reduction step `colDenExp = k+1 ⟹ ∃ O(1) Gate2 word g, colDenExp (g·v) ≤ k` (the residue/
+syndrome lemma at dim 4 — the hard core); (4) induct ⟹ any unit column realizable in `O(colDenExp)` =
+`O(k)` = `O(log 1/ε)` `Gate2` gates. Then controlled-C + operator-norm assembly on inc-8/9's error budget.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
