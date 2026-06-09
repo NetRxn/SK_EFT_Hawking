@@ -1493,6 +1493,11 @@ import SKEFTHawking.FKLW.RossSelinger.LogLengthHeadline
 -- (the (1+ancilla)-qubit unit column closes UNCONDITIONALLY — no relative-norm/prime-density hypothesis,
 -- unlike the ancilla-free rossSelinger_synth_of_residual). The number-theoretic core that removes the W5 wall.
 import SKEFTHawking.FKLW.RossSelinger.AncillaCompletion
+-- Phase 6AO Track 2 (2026-06-09): two-qubit Clifford+T gate semantics (system + ancilla) — Gate2 ADT,
+-- gateMatrix2/interp2 over Matrix (Fin 2 × Fin 2), kronecker embeddings embedFst/embedSnd (monoid homs),
+-- realizability transport embedFst_interp (single-qubit kmmReduce word → 2-qubit word, SAME length) +
+-- cnot involutions (kernel decide). Foundation for the ancilla-extended O(log 1/ε) Clifford+T circuit.
+import SKEFTHawking.FKLW.RossSelinger.CliffordTGate2
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
