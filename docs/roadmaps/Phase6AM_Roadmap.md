@@ -166,6 +166,20 @@ no Fannes/Audenaert file in the pinned tree. So adoption does **not** discharge 
   headline with an **`O(log(1/ε))`** word-length conjunct (exponent **1**, not 3.97); kernel-pure
   `{propext, Classical.choice, Quot.sound}`, no new project-local axioms (#15), no `native_decide`, no
   `maxHeartbeats` (#10); full lib + `ExtractDeps` build green; Stage-13 adversarial review.
+- **✅ WALL VERDICT RE-INVESTIGATED + RESOLVED (2026-06-09 PM; DR `Lit-Search/Phase-6AM/Is the Ross–Selinger
+  O(log 1:ε) existence guarantee conditional…md` + Mathlib dig).** The earlier "prime-density wall" was
+  **mis-framed** (it anchored on the sparse prime-`β•β` sufficient condition + a Dirichlet framing). Corrected
+  status of the **ancilla-free** O(log 1/ε) *existence* (route B): it needs only that the residual be a
+  *relative norm* (positive density) — **strictly weaker than RS's actual Hypothesis 29** (which demands
+  *primality* of `β•β`). So (B) is **plausibly unconditional**, but its load-bearing step is a
+  Friedlander–Iwaniec / half-dimensional-sieve lower bound over a *structured* candidate set — **not a citable
+  theorem and not in Mathlib** (Landau–Ramanujan absent; Selberg sieve is upper-bound-only). Verdict:
+  **"unconditional-but-needs-large-analytic-NT" → in Lean a tracked `Prop`, NEVER an axiom** (NOT a clean
+  hard wall, NOT Lean-buildable short-term). **The genuinely-unconditional O(log 1/ε) path that IS
+  Lean-buildable is KMM-with-≤2-ancillas** (arXiv:1212.0822) — mechanism: ancillas add variables so the
+  norm equation is always solvable (Lagrange four-squares, `Nat.sum_four_squares`, IS in Mathlib). Both
+  routes are scoped into the next `/goal` (see "Tracked future dedicated /goals" below). The amendment
+  immediately below remains the correct statement for THIS (now-closed) phase.
 - **🔒 GATE AMENDMENT (2026-06-09, user-approved after full diligence + fresh-context Opus 4.8 adversarial
   review).** The ORIGINAL "unconditional / no-native_decide" gate is **NOT achievable in this phase** for
   reasons established (not effort) by decompose → primary-DR read → independent review:
@@ -312,6 +326,15 @@ citation scaffolding (`Phase-6x` DR) is self-flagged PARTIAL-VIABLE (§6 iff-cri
 unconfirmed vs primary `1403.2975v3`) — verify before any RS claim is load-bearing in a published bundle.
 No axioms added anywhere; no Mathlib-pin bump; never pushed.
 
+> **[2026-06-09 PM — post-review DR update]** The user chose disposition (a). A follow-up DR then **refined
+> the "prime-density wall"** above: the ancilla-free existence needs only *relative-norm* density (NOT
+> primality), so it is **strictly weaker than RS Hypothesis 29** and *plausibly unconditional* — but
+> Lean-impractical (Friedlander–Iwaniec lower bound; Landau–Ramanujan + lower-bound sieve absent from
+> Mathlib) → tracked `Prop`, never an axiom. The genuinely-unconditional Lean-buildable path is
+> **KMM-with-ancillas** (Lagrange four-squares core, in Mathlib). Read the "✅ WALL VERDICT RESOLVED" flag in
+> the W5 section + the "Next /goal" tracks below as the current truth; this review paragraph is the
+> as-of-review snapshot it supersedes.
+
 ## ✅ PHASE 6AM CLOSED (2026-06-09, user-approved)
 
 Value-bearing work complete and gate-met (W2, W3, W4 per their original gates; **W6** fully — sharp
@@ -322,19 +345,29 @@ green (9204); axiom_closure_allowlist + graph_integrity + counts_fresh pass; cou
 (NOT pushed): `599c3be9` `c7fc6863` `b0bd8a8b` `846f2ccf` `f16c3f81` `be40ce07`. W7 (migration) was optional,
 not required — not done.
 
-### Tracked future dedicated `/goal`s (NOT dropped — user-approved deferral 2026-06-09)
-Both are genuinely-separate large undertakings, deferred per "large sub-programs get their own /goal":
+### → Next `/goal`: the W5-residual program (DR-sharpened 2026-06-09; see goal statement below)
+The DR (`Lit-Search/Phase-6AM/Is the Ross–Selinger O(log 1:ε) existence…md`) sharpened the three strands.
+Treat the DR as suggestion, not fact (the requesting side has the Mathlib/Lean access it lacked).
 
-1. **RS grid-FINDER constructive completeness** (would thin the W5 wall-`Prop`, but cannot remove the
-   prime-density wall). Scope: §5 convex geometry (ellipse uprightness, Step-Lemma 0.9-factor, grid
-   operators, scaled-two-disk existence Ross Lemma 5.2.38, enumeration completeness Prop 5.2.36) +
-   §6 two-squares-over-ℤ[√2] (build `GaussInt2` `EuclideanDomain` + prime-splitting descent on the shipped
-   `Zsqrt2EuclideanDomain`/`Zsqrt2GaussianInt`). Prereq read: `Phase-6x/Ross–Selinger §5:§6:§7 grid-FINDER
-   completeness.md` — **and first verify its §6-iff-criterion / §7.2-constant citations against primary
-   `1403.2975v3`** (the DR is self-flagged PARTIAL-VIABLE; T-count slope is 3–4 for z-rotations, not 12).
-   The terminal prime-density existence stays a Caves-precedent tracked `Prop`.
-2. **Structural-KMM `native_decide` elimination** (4 sites; project-tolerated meanwhile). Per-site:
-   `cliffordBase_box_core` (Clifford ≤6-word coverage, structural), `bridge_box_core` (Giles–Selinger
-   sde↔kSO3 + column bounds), `kmm_lemma3_alg2` (mod-8 algebra — research-flavoured), `maStep_exists_core`
-   (MA-step orthogonality-class orbit-closure — mechanical-tedious, ~809k triples). NO trusted-oracle /
-   checksum fallback (= `native_decide` by another name). Benefits all KMM consumers, not just W5.
+- **Track 2 — KMM-ancilla UNCONDITIONAL O(log 1/ε) Clifford+T (THE PRIZE; genuinely removes the wall).**
+  KMM (arXiv:1212.0822, PRL 110:190502) gives unconditional O(log 1/ε) Clifford+T with ≤2 ancillas;
+  mechanism = ancillas add variables ⟹ the norm/Diophantine equation is *always* solvable (Lagrange
+  four-squares, `Nat.sum_four_squares`, IS in Mathlib). Map the exact KMM rounding+ancilla construction
+  onto the shipped KMM exact-synthesis substrate (`KMMCompleteness`); ship the unconditional headline.
+  This is NOT the BRS/RUS protocols (those keep a runtime hypothesis) — KMM specifically.
+- **Track 1 — unconditional scaffolding + thin the bare-CT `Prop`.** (a) ℤ[√2] norm-Euclidean — ALREADY
+  shipped (`Zsqrt2EuclideanDomain`; the DR listed it as a missing build — we're ahead). (b) finish
+  ℤ[ω]=ℤ[√2][i] relative norm (`GaussInt2` + `RelativeNorm`). (c) the **even-power relative-norm criterion**
+  (β a relative norm ⟺ every inert ℤ[√2]-prime to even power) — lift Mathlib `Nat.eq_sq_add_sq_iff`
+  (ℤ template, PRESENT) over `Zsqrt2EuclideanDomain`; splitting law = `x²+1` mod π (split/inert ⟺ −1 is a
+  square/non-square; ramified ⟺ residue char 2, π~√2 — DR-corrected). (d) §5 grid existence (Ross
+  Lemma 4.4 / Thm 5.18 — paper numbering DR-confirmed). The terminal ancilla-free existence stays a tracked
+  `Prop`: *"∃ k=log₂(1/ε)+O(loglog) with a relative-norm-solvable residual in R_ε"* — **strictly weaker
+  than RS Hypothesis 29** (relative-norm, not primality), plausibly unconditional but its lower bound is a
+  Friedlander–Iwaniec/half-dimensional-sieve statement (Landau–Ramanujan absent from Mathlib; Selberg sieve
+  is upper-bound-only) → tracked `Prop`, NEVER an axiom.
+- **Track 3 — structural-KMM `native_decide` elimination** (4 sites; project-tolerated meanwhile). Per-site:
+  `cliffordBase_box_core` (Clifford ≤6-word coverage), `bridge_box_core` (Giles–Selinger sde↔kSO3 + column
+  bounds), `kmm_lemma3_alg2` (mod-8 algebra — research-flavoured), `maStep_exists_core` (MA-step
+  orthogonality-class orbit-closure — mechanical-tedious, ~809k triples). NO trusted-oracle/checksum fallback
+  (= `native_decide` by another name). Benefits all KMM consumers.
