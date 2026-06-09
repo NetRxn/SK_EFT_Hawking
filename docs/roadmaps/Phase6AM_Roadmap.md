@@ -458,6 +458,31 @@ guessable §2.2 gate sequence; the faithful route is the correct-by-construction
 syndrome lemma at dim 4 — the hard core); (4) induct ⟹ any unit column realizable in `O(colDenExp)` =
 `O(k)` = `O(log 1/ε)` `Gate2` gates. Then controlled-C + operator-norm assembly on inc-8/9's error budget.
 
+**Circuit-synthesis progress (inc 10–13, all kernel-pure, native_decide stays 596):**
+- inc 10 (`77a3b91a`, `ColumnSynthesis.lean`): `IsColRealizableWithin` (column = `M·e₀` of a `Gate2`
+  word ≤ L) + **`smul_left`** (the induction backbone: `G` realizable + `v` col-realizable ⟹ `G·v`
+  col-realizable, budgets add) + base anchor `e₀`. inc 10b (`ad051faa`): all basis states `|a,b⟩`
+  realizable within 2 (X-permutation, kernel `decide`).
+- inc 11 (`55679480`, `ColumnBaseCase.lean`): `normSq_eq_one_iff_omega_pow` (`|z|²=1 ⟺ z=ωᵏ`) +
+  `normSq_eq_zero_iff`. **Key simplification: the base case needs NO total-positivity / Galois /
+  Kronecker** — `normSq` lands in ℤ[ω] with `(|z|²).d = a²+b²+c²+d²`, so `|z|²=1` ⟹ elementary
+  sum-of-four-squares =1.
+- inc 12 (`b0e7a345`): `unit_col_zero_denExp_structure` (`Σ|vᵢ|²=1 ⟹` one unit entry, rest 0) +
+  `normSq_d_eq_zero_imp`. inc 13 (`3ebe0904`): `isColRealizableWithin_omega_pow_basis` (`ωᵏ·eᵢ`
+  realizable within `k+2`, via `smul_omega`/`smul_omega_pow`). **⟹ base case (step 2) essentially
+  DONE** — remaining = the `of`/`normSq` bridge (denExp-0 ⟹ ℤ[ω] entries via `denExp_le_iff` k=0;
+  `normSq(of z)=of(normSq z)`) assembling `base_case : denExp-0 unit column ⟹ IsColRealizableWithin`.
+
+**🔑 KEY DEPENDENCY (decomposition-backed, surfaced inc-reduction-step depth-read):** the reduction
+step (3) reuses the dim-2 `reduceStep` (`H·Tᵏ`, col → `(z+ωᵏw)/√2`) + **`kmm_lemma3_column`**, whose
+existence-of-reducing-`k` is the `native_decide` `kmm_lemma3_alg2` (KMM Algorithm 2; **no published
+closed-form proof** — `(ZMod 8)⁴×(ZMod 8)⁴` computer check). So a **fully kernel-pure** Track-2 synthesis
+shares its hardest dependency with **Track 3's hardest site** (`kmm_lemma3_alg2`). Efficient architecture
+(matches "build on KMMCompleteness substrate"): **ship the synthesis reusing the tolerated-native_decide
+dim-2 reduction** (exactly as inc-4 `AncillaSynthesisBridge` already consumes the 4 sites), then **Track 3
+eliminates `kmm_lemma3_alg2`** (structural mod-8 / symmetry-reduced kernel-decide) ⟹ retroactively
+kernel-pure. NOT a wall (provable, not axiom-needing) — sequencing, not de-scope.
+
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
 ### Track 3 + 2-qubit-synthesis JOINED PROGRAM (2026-06-09; user-approved, <10k LOC bar; method = my judgment, elegance-first)
