@@ -409,6 +409,20 @@ Treat the DR as suggestion, not fact (the requesting side has the Mathlib/Lean a
   Connects inc-2 semantics to the verified `kmmReduce`; consumes the 4 TOLERATED native_decide
   (Track-3 targets), no new project-local axiom (native_decide decl-count 592→594, as any kmmReduce
   consumer). The building block for the ancilla circuit's system-line ops.
+- **Increment 5 ✅ — two-qubit Clifford+T realizable class + closure (`0086d83f`).** `Gate2.IsRealizable`
+  (`∃ w, interp2 w = M`) + `.one`/`.mul` (monoid closure)/`gateMatrix2_isRealizable`/cnot realizability;
+  `embedFst_isRealizable` (single→2-qubit transport). The codomain 2-qubit synthesis targets.
+- **Increment 6 ✅ — length-tracked realizability, the O(log 1/ε) composition law (`b3babeec`).**
+  `Gate2.IsRealizableWithin M L` + **`IsRealizableWithin.mul` (budgets ADD under product)** + `.mono`/
+  `.isRealizable`/`gateMatrix2_realizableWithin_one`; `embedFst_kmmReduce_realizableWithin` (system-line
+  `M⊗I` within `N₃+4·denExp` = O(log 1/ε)). **This is the precise abstraction the headline needs**: a
+  circuit assembled from O(log)-length pieces is O(log) overall.
+- **DR dispatched (2026-06-09) — `Lit-Search/Tasks/submitted/20260609_phase6ao_kmm_1212_0822_ancilla_construction.md`.**
+  For the **precise** KMM-1212.0822 ≤2-ancilla construction (the explicit unitary; THE crux question:
+  deterministic ancilla restoration to |0⟩ vs. measure-and-restore; which block is U; the gate count's
+  decomposition into single-qubit-synth pieces + cnots). Reason: a naive "first column = (u,v,t₁,t₂)/√2^k"
+  leaks into the ancilla-|1⟩ subspace (a post-selected, NOT deterministic-unitary, construction) — the
+  project's correctness standard forbids guessing the published circuit. Async; treat as suggestion.
 
 ### Track 2 — remaining circuit layer (faithful factorization; sequenced, NOT de-scoped)
 
@@ -420,11 +434,14 @@ ring linear algebra + general 2-qubit synthesis — they do NOT need the paper-s
 gate sequence, so they are buildable faithfully. (5) is the §5 grid analysis — already **hypothesized
 project-wide** (even the single-qubit `rossSelinger_compile_log_length` takes the rounding quality
 `h00` as a hypothesis), so it is consistent to carry it as a tracked input and prove the unconditional
-completion+synthesis around it. **Status:** (1)✅ (2)✅ (3)✅ done (inc 1–4 above). The system-line of
-the circuit is realized (inc 4). **Remaining:** brick (B) the ancilla 4×4 unitary itself (orthonormal
-completion of the inc-3 unit column over ℤ[ω][1/√2]) → brick (4) two-qubit exact synthesis of that
-unitary into a `Gate2`-word of length O(sde) (the general KMM multi-qubit row-reduction — the major
-remaining build; mirrors the single-qubit `Sde`/`KMMReduce`/`MAStep`/`CliffordBase`/`KMMCompleteness`
-arc at dimension 4). These are large dedicated sub-builds (fresh-context-worthy), faithful (general ring
-LA + general 2-qubit synthesis, NOT the paper-specific KMM-1212.0822 gate sequence). Tracks 1 (b/c/d) +
-3 (native_decide ×4) remain in scope and untouched.
+completion+synthesis around it. **Status (inc 1–6 above):** the entire FOUNDATION is built and verified —
+the unconditional NT core (1), 2-qubit semantics (2), the unconditional normalized ancilla *state*
+existence (3), system-line synthesis at the KMM length (4), the realizable class (5), and the
+**O(log 1/ε) length-composition law** (6). **The single remaining Track-2 piece** is brick (B): the
+explicit ancilla *unitary* that block-encodes `U` with the ancilla restored to |0⟩ **deterministically**
+(NOT the naive (u,v,t₁,t₂) column, which leaks into ancilla-|1⟩ = a post-selected scheme), then its
+two-qubit exact synthesis into a `Gate2`-word — which, by inc 6, is then O(log 1/ε) automatically. This
+needs the **precise KMM-1212.0822 construction** to formalize faithfully (the project does not guess a
+published circuit) → **DR dispatched** (see execution log). Once back, brick B + the synthesis assemble
+the full `∀U` headline on the inc-1–6 foundation. Tracks 1 (b/c/d) + 3 (native_decide ×4) remain in scope
+and untouched (paper-independent; available for continuations while the DR is async).
