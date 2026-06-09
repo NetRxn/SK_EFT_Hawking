@@ -530,11 +530,24 @@ native_decide held at 596, confirming Track-3 independence):**
   **`even_card_filter_of_sum_even`** (even ℤ-sum ⟹ even count of odd summands).
 - inc 21 (`0552a469`): **`exists_matching_residue_pair` = GILES–SELINGER LEMMA 5 DONE** — unit column +
   active entry ⟹ two distinct entries with matching residue norm mod 2, both active.
-- **NEXT = Lemma 4** (the H/T 2-level row operation: matching pair ⟹ `colDenExp` drops by 1; 3 residue-
-  norm cases; reuse inc-16 `√2`-clearing + inc-17 block-action — mechanical-concrete, NOT research-grade)
-  → assemble Lemma 4 + Lemma 5 + common-denominator clearing into `ReductionStep` → inc-15
-  `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et al.) +
-  operator-norm assembly on inc-8/9 ⟹ the `∀U∈SU(2)` headline.
+- **inc 22 (`GilesSelingerRowOp.lean`): LEMMA-4 CORE STEP + kernel-confirmed 3-case structure.** Settled
+  via `#eval` over `ℤ[ω]/2` (`ω`-action `(a,b,c,d)↦(b,c,d,a)`, period 4): the active residues split by
+  residue norm — `(P,Q)=(0,1)` ["1010"] = the SINGLE `ω`-orbit `{3,6,9,12}`; `(P,Q)=(1,0)` ["0001"] =
+  TWO orbits `O₁={1,2,4,8}`, `O₂={7,11,13,14}=O₁⊕1111` (exactly Giles–Selinger's Case-3 sets). So Lemma 4
+  is: **same-orbit (`x≡ωᵐy mod 2`) ⟹ single `H·Tᵐ`** (`core_step`: drops BOTH entries one denExp level,
+  `(x±ωᵐy)/√2` at `denExp≤t` from level `t+1`, via `2 ∣ x±ωᵐy` ⟹ `√2²`-clear); **cross-orbit `0001` ⟹
+  2-step `1111`-bridge** (follow-on). `core_step`+`denExp_mk_le_of_two_dvd`+`two_dvd_add_of_two_dvd_sub`+
+  `mk_sub_same` all kernel-pure `{propext,Quot.sound}`; native_decide held at 596; lib+ExtractDeps green
+  (9218). **CONFIRMS the settled plan** — "mechanical-concrete, NOT research-grade" = elementary multi-case
+  (incl. the 2-step), exactly as designed; the single-`H·Tᵐ` insufficiency was always known (inc-16). Also
+  corrected the stale inc-16 `MatchingResidue` docstring (the v2 "`kmm_lemma3` IS needed" conflation).
+- **NEXT (Lemma-4 completion → `ReductionStep`):** (i) cross-orbit `0001` 2-step `1111`-bridge (reduces to
+  `core_step`); (ii) the mod-2-alignment existence (same-orbit ⟹ `∃m, 2∣x−ωᵐy`; from the residue tables);
+  (iii) wrap into the realizable `Gate2` two-level op (embed `H·Tᵐ` via `embedFst`/`embedSnd` + index
+  permutation X/CNOT, inc-17 block-action) reducing active-count without raising `colDenExp`; (iv) inner
+  induction on active-count + factor `√2` ⟹ `ReductionStep` → inc-15 `colLemma_of_reductionStep`
+  (unconditional dim-4 column lemma) → controlled-C (Amy et al.) + operator-norm on inc-8/9 ⟹ the
+  `∀U∈SU(2)` headline.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
