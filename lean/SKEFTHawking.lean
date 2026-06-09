@@ -1512,6 +1512,12 @@ import SKEFTHawking.FKLW.RossSelinger.CliffordTGate2
 -- approximant u, the cleared column (u,t₁,t₂)/√2^k is a UNIT vector unconditionally — the KMM-ancilla
 -- "existence" at the ℤ[ω][1/√2] amplitude level, no relative-norm hypothesis). Lifts the inc-1 keystone.
 import SKEFTHawking.FKLW.RossSelinger.AncillaState
+-- Phase 6AO Track 2 (increment 8; 2026-06-09): unconditional amplitude approximation (rounding → ε) —
+-- exists_round_toward_zero + toComplex_gaussian_approx (the embedding sends the KMM Gaussian approximant
+-- m₁+m₂·ω² at denominator 2k to its analytic amplitude (m₁+m₂·i)/2^k) + kmm_amplitude_approx
+-- (‖u/2^k − e^{iφ}‖ ≤ √2/2^k, disk-bounded, UNCONDITIONAL) + kmm_ancilla_state_approx (the milestone:
+-- the normalized KMM ancilla state approximating e^{iφ} exists for every (φ,k), no prime-density hypothesis).
+import SKEFTHawking.FKLW.RossSelinger.AmplitudeApprox
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
