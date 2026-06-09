@@ -5083,7 +5083,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper10_modular_generation/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper10_modular_generation/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper10_modular_generation/paper_draft.tex`.',
     },
 
     'Weibel1994': {
@@ -5136,7 +5136,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper3_gauge_erasure/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title and full author list verified via arXiv:2404.14896 (Session-4 cleanup).',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title and full author list verified via arXiv:2404.14896 (Session-4 cleanup).',
     },
 
     'AlvarezGaumeWitten1984': {
@@ -5156,7 +5156,7 @@ CITATION_REGISTRY = {
                     'papers/L2/paper_draft.tex',
                     'papers/D2/paper_draft.tex'],
         'provides': ['Gravitational-anomaly classification of chiral fermions; foundational anchor for the L2/D2 mod-3 generation derivation chain.'],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'AnantramDatta1996': {
@@ -5173,7 +5173,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'AndersonBFP2013': {
@@ -5190,7 +5190,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Antusch2003': {
@@ -5207,7 +5207,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-6c/primary-sources/Antusch2003.pdf',
         'used_in': ['papers/paper33_ewbg_chirality_wall/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper33_ewbg_chirality_wall/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper33_ewbg_chirality_wall/paper_draft.tex`.',
     },
 
     'Aristotle': {
@@ -5225,7 +5225,7 @@ CITATION_REGISTRY = {
         'used_in': ['papers/paper6_vestigial/paper_draft.tex',
                     'papers/paper7_chirality_formal/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper6_vestigial/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper6_vestigial/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Aristotle2025': {
@@ -5242,7 +5242,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper8_chirality_master/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper8_chirality_master/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper8_chirality_master/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'BRSSS2008': {
@@ -5259,11 +5259,11 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title and full author list verified via arXiv:0712.2451 (Session-4 cleanup).',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title and full author list verified via arXiv:0712.2451 (Session-4 cleanup).',
     },
 
     'Baseilhac2005': {
-        'authors': 'P.~Baseilhac and K.~Belliard, Nucl.\ Phys.\ B , 550 (2013) [arXiv:0906.1215]',
+        'authors': 'P.~Baseilhac and K.~Belliard, Nucl.\\ Phys.\\ B , 550 (2013) [arXiv:0906.1215]',
         'title': '',
         'journal': None,
         'volume': 873,
@@ -5276,7 +5276,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-5c/primary-sources/Baseilhac2005.pdf',
         'used_in': ['papers/paper11_quantum_group/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'BeaudryCampbell': {
@@ -5293,11 +5293,11 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-5e/primary-sources/BeaudryCampbell.pdf',
         'used_in': ['papers/paper10_modular_generation/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper10_modular_generation/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper10_modular_generation/paper_draft.tex`.',
     },
 
     'Berry1989': {
-        'authors': 'M.~V.~Berry, Proc.\ R.\ Soc.\ A , 7 (1989)',
+        'authors': 'M.~V.~Berry, Proc.\\ R.\\ Soc.\\ A , 7 (1989)',
         'title': '',
         'journal': None,
         'volume': 422,
@@ -5310,7 +5310,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper4_wkb_connection/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper4_wkb_connection/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper4_wkb_connection/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Bilic1999': {
@@ -5327,7 +5327,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Blanter2000': {
@@ -5344,7 +5344,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'BruillardGRW2017': {
@@ -5361,7 +5361,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper8_chirality_master/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
     },
 
     'CallenWelton1951': {
@@ -5378,7 +5378,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'CohenKaplanNelson1993': {
@@ -5412,12 +5412,12 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-6b/primary-sources/Cooke2018.pdf',
         'used_in': ['papers/paper29_bbn_unified/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Coutant2014': {
         'authors': 'O.~Coutant and R.~Parentani',
-        'title': 'Phys.\ Rev.\ D',
+        'title': 'Phys.\\ Rev.\\ D',
         'journal': None,
         'volume': 90,
         'page': None,
@@ -5429,7 +5429,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper1_first_order/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
     },
 
     'CoutantParentani2010': {
@@ -5446,7 +5446,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'CriticalReview2026': {
@@ -5463,7 +5463,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper8_chirality_master/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper8_chirality_master/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper8_chirality_master/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Crossley:2017': {
@@ -5480,7 +5480,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper2_second_order/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper2_second_order/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper2_second_order/paper_draft.tex`.',
     },
 
     'Csaki2024': {
@@ -5497,11 +5497,11 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-5d/primary-sources/Csaki2024.pdf',
         'used_in': ['papers/paper5_adw_gap/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'DPR1991': {
-        'authors': 'R.~Dijkgraaf, V.~Pasquier, and P.~Roche, Nucl.\ Phys.\ B (Proc.\ Suppl.) , 60 (1991)',
+        'authors': 'R.~Dijkgraaf, V.~Pasquier, and P.~Roche, Nucl.\\ Phys.\\ B (Proc.\\ Suppl.) , 60 (1991)',
         'title': '',
         'journal': None,
         'volume': 18,
@@ -5514,7 +5514,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper9_sm_anomaly_drinfeld/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper9_sm_anomaly_drinfeld/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper9_sm_anomaly_drinfeld/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'DarkSectorSynthesisLean': {
@@ -5531,7 +5531,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper29_bbn_unified/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`.',
     },
 
     'Davies1990': {
@@ -5548,7 +5548,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper8_chirality_master/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
     },
 
     'DolanGrady1982': {
@@ -5570,7 +5570,7 @@ CITATION_REGISTRY = {
     },
 
     'Drinfeld1986': {
-        'authors': 'V.~G.~Drinfeld, Proc.\ ICM Berkeley, 798 (1986)',
+        'authors': 'V.~G.~Drinfeld, Proc.\\ ICM Berkeley, 798 (1986)',
         'title': '',
         'journal': None,
         'volume': None,
@@ -5583,7 +5583,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper11_quantum_group/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'FK2010': {
@@ -5600,7 +5600,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper8_chirality_master/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
     },
 
     'FK2011': {
@@ -5617,7 +5617,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper8_chirality_master/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
     },
 
     'FangGu2024': {
@@ -5634,7 +5634,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper29_bbn_unified/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'FangGuLean': {
@@ -5651,11 +5651,11 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper29_bbn_unified/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`.',
     },
 
     'Fernandes2019': {
-        'authors': "R.~M.~Fernandes, P.~P.~Orth, and J.~Schmalian, ``Intertwined vestigial order in quantum materials: nematicity and beyond,'' Annu.\ Rev.\ Condens.\ Matter Phys.\ , 133 (2019)",
+        'authors': "R.~M.~Fernandes, P.~P.~Orth, and J.~Schmalian, ``Intertwined vestigial order in quantum materials: nematicity and beyond,'' Annu.\\ Rev.\\ Condens.\\ Matter Phys.\\ , 133 (2019)",
         'title': '',
         'journal': None,
         'volume': 10,
@@ -5668,7 +5668,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper6_vestigial/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper6_vestigial/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper6_vestigial/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'FidkowskiKitaev2010': {
@@ -5687,7 +5687,7 @@ CITATION_REGISTRY = {
                     'papers/L2/paper_draft.tex',
                     'papers/D2/paper_draft.tex'],
         'provides': ['Interacting reduction of the 2D class-D free-fermion Z to Z_16 (the sixteenfold way under interactions); load-bearing for the Z_16 anomaly chain in L2/D2.'],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'FractonDarkMatterLean': {
@@ -5704,7 +5704,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper29_bbn_unified/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`.',
     },
 
     'FreedHopkins2021': {
@@ -5721,7 +5721,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper8_chirality_master/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
     },
 
     'GKSW2015': {
@@ -5738,7 +5738,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper3_gauge_erasure/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'GarciaEtxebarria2019': {
@@ -5758,7 +5758,7 @@ CITATION_REGISTRY = {
                     'papers/L2/paper_draft.tex',
                     'papers/D2/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Gavela1994': {
@@ -5775,7 +5775,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-6c/primary-sources/Gavela1994.pdf',
         'used_in': ['papers/paper33_ewbg_chirality_wall/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper33_ewbg_chirality_wall/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper33_ewbg_chirality_wall/paper_draft.tex`.',
     },
 
     'Geurs2025': {
@@ -5793,7 +5793,7 @@ CITATION_REGISTRY = {
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex',
                     'papers/E2/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. E2 used_in added 2026-05-11 (Stage-13 reinvocation).',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. E2 used_in added 2026-05-11 (Stage-13 reinvocation).',
     },
 
     # DEPRECATED ALIAS — `GioiaTh2026` historically used by paper7 + paper8 with
@@ -5855,11 +5855,11 @@ CITATION_REGISTRY = {
                     'papers/L2/paper_draft.tex',
                     'papers/D2/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'GrozdanovHofmanIqbal': {
-        'authors': 'S.~Grozdanov, D.~M.~Hofman, and N.~Iqbal, Phys.\ Rev.\ D , 096003 (2017)',
+        'authors': 'S.~Grozdanov, D.~M.~Hofman, and N.~Iqbal, Phys.\\ Rev.\\ D , 096003 (2017)',
         'title': '',
         'journal': None,
         'volume': 95,
@@ -5872,7 +5872,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper3_gauge_erasure/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Heading1962': {
@@ -5889,7 +5889,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper4_wkb_connection/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper4_wkb_connection/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper4_wkb_connection/paper_draft.tex`.',
     },
 
     'HiddenSectorClassificationLean': {
@@ -5906,11 +5906,11 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper29_bbn_unified/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`.',
     },
 
     'HofmanIqbal': {
-        'authors': 'D.~M.~Hofman and N.~Iqbal, SciPost Phys.\ , 006 (2019)',
+        'authors': 'D.~M.~Hofman and N.~Iqbal, SciPost Phys.\\ , 006 (2019)',
         'title': '',
         'journal': None,
         'volume': 6,
@@ -5923,7 +5923,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper3_gauge_erasure/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Huet1994': {
@@ -5940,7 +5940,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-6c/primary-sources/Huet1994.pdf',
         'used_in': ['papers/paper33_ewbg_chirality_wall/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper33_ewbg_chirality_wall/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper33_ewbg_chirality_wall/paper_draft.tex`.',
     },
 
     'InonuWigner1953': {
@@ -5957,7 +5957,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper8_chirality_master/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
     },
 
     'Iorio2012': {
@@ -5974,12 +5974,12 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Jacobson1996': {
         'authors': 'T.~Jacobson',
-        'title': 'Phys.\ Rev.\ D',
+        'title': 'Phys.\\ Rev.\\ D',
         'journal': None,
         'volume': 53,
         'page': None,
@@ -5991,11 +5991,11 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper1_first_order/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
     },
 
     'Jimbo1986': {
-        'authors': 'M.~Jimbo, Lett.\ Math.\ Phys.\ , 247 (1986)',
+        'authors': 'M.~Jimbo, Lett.\\ Math.\\ Phys.\\ , 247 (1986)',
         'title': '',
         'journal': None,
         'volume': 11,
@@ -6008,7 +6008,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper11_quantum_group/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'KSS2005': {
@@ -6282,7 +6282,7 @@ CITATION_REGISTRY = {
     },
 
     'Kolb2014': {
-        'authors': 'S.~Kolb, Adv.\ Math.\ , 395 (2014) [arXiv:1206.2117]',
+        'authors': 'S.~Kolb, Adv.\\ Math.\\ , 395 (2014) [arXiv:1206.2117]',
         'title': '',
         'journal': None,
         'volume': 267,
@@ -6295,11 +6295,11 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-5c/primary-sources/Kolb2014.pdf',
         'used_in': ['papers/paper11_quantum_group/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Kondo1989': {
-        'authors': 'K.-I.~Kondo, H.~Mino, and K.~Yamawaki, Phys.\ Rev.\ D , 2430 (1989)',
+        'authors': 'K.-I.~Kondo, H.~Mino, and K.~Yamawaki, Phys.\\ Rev.\\ D , 2430 (1989)',
         'title': '',
         'journal': None,
         'volume': 39,
@@ -6312,7 +6312,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper5_adw_gap/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Majumdar2025': {
@@ -6329,7 +6329,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex', 'papers/D1/paper_draft.tex', 'papers/E2/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`.',
     },
 
     'NastaseSonnenschein2025': {
@@ -6346,7 +6346,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-3/primary-sources/NastaseSonnenschein2025.pdf',
         'used_in': ['papers/paper3_gauge_erasure/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Nielsen1981a': {
@@ -6388,7 +6388,7 @@ CITATION_REGISTRY = {
     },
 
     'Oertel2000': {
-        'authors': 'M.~Oertel, M.~Buballa, and J.~Wambach, Phys.\ Lett.\ B , 77 (2000)',
+        'authors': 'M.~Oertel, M.~Buballa, and J.~Wambach, Phys.\\ Lett.\\ B , 77 (2000)',
         'title': '',
         'journal': None,
         'volume': 477,
@@ -6401,7 +6401,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper5_adw_gap/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Onsager1944': {
@@ -6418,7 +6418,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper8_chirality_master/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
     },
 
     'Paper10': {
@@ -6435,7 +6435,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper11_quantum_group/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Paper5': {
@@ -6452,7 +6452,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper6_vestigial/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper6_vestigial/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper6_vestigial/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Paper8': {
@@ -6469,7 +6469,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper7_chirality_formal/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper7_chirality_formal/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper7_chirality_formal/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Paper9': {
@@ -6486,7 +6486,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper11_quantum_group/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'PaperI': {
@@ -6503,12 +6503,12 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper2_second_order/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper2_second_order/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper2_second_order/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Phase6bRoadmap': {
         'authors': 'Unknown',
-        'title': 'docs/roadmaps/Phase6b\_Roadmap.md',
+        'title': 'docs/roadmaps/Phase6b\\_Roadmap.md',
         'journal': None,
         'volume': None,
         'page': None,
@@ -6520,11 +6520,11 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper29_bbn_unified/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`.',
     },
 
     'Planck2020VI': {
-        'authors': "Planck Collaboration, ``Planck 2020 results VI: cosmological parameters,'' A\&A , A6 (2020), arXiv:1807.06209",
+        'authors': "Planck Collaboration, ``Planck 2020 results VI: cosmological parameters,'' A\\&A , A6 (2020), arXiv:1807.06209",
         'title': '',
         'journal': None,
         'volume': 641,
@@ -6537,7 +6537,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-6b/primary-sources/Planck2020VI.pdf',
         'used_in': ['papers/paper29_bbn_unified/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'ProfumoRamsey2007': {
@@ -6554,7 +6554,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-6c/primary-sources/ProfumoRamsey2007.pdf',
         'used_in': ['papers/paper33_ewbg_chirality_wall/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper33_ewbg_chirality_wall/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper33_ewbg_chirality_wall/paper_draft.tex`.',
     },
 
     'Rademacher1973': {
@@ -6571,7 +6571,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper10_modular_generation/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper10_modular_generation/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper10_modular_generation/paper_draft.tex`.',
     },
 
     'Roehm2026LinearizedEFE': {
@@ -6608,7 +6608,7 @@ CITATION_REGISTRY = {
         'used_in': ['papers/paper10_modular_generation/paper_draft.tex',
                     'papers/L2/paper_draft.tex'],
         'provides': ['Rokhlin signature theorem (16 | sigma for spin 4-manifolds); foundational anchor for the L2 modular-discriminant chain (16 in 24 | c_- = 8 N_f).'],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper10_modular_generation/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Romatschke2010': {
@@ -6625,7 +6625,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Roy2016': {
@@ -6642,7 +6642,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper5_adw_gap/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Sbordone2010': {
@@ -6659,7 +6659,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-6b/primary-sources/Sbordone2010.pdf',
         'used_in': ['papers/paper29_bbn_unified/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper29_bbn_unified/paper_draft.tex`.',
     },
 
     'Seiberg2023': {
@@ -6676,7 +6676,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-5h/primary-sources/Seiberg2023.pdf',
         'used_in': ['papers/paper8_chirality_master/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
     },
 
     'SeibergShao2024': {
@@ -6693,7 +6693,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-5h/primary-sources/SeibergShao2024.pdf',
         'used_in': ['papers/paper8_chirality_master/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
     },
 
     'Selch2025': {
@@ -6710,11 +6710,11 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper5_adw_gap/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Sexty2013': {
-        'authors': "D.~Sexty and C.~Wetterich, ``Emergent gravity in two dimensions,'' Nucl.\ Phys.\ B , 290 (2013)",
+        'authors': "D.~Sexty and C.~Wetterich, ``Emergent gravity in two dimensions,'' Nucl.\\ Phys.\\ B , 290 (2013)",
         'title': '',
         'journal': None,
         'volume': 867,
@@ -6727,7 +6727,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper6_vestigial/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper6_vestigial/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper6_vestigial/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Son2002': {
@@ -6750,7 +6750,7 @@ CITATION_REGISTRY = {
 
     'Steinhauer2019': {
         'authors': 'J.~Steinhauer',
-        'title': 'Nat.\ Phys.',
+        'title': 'Nat.\\ Phys.',
         'journal': None,
         'volume': 12,
         'page': None,
@@ -6762,11 +6762,11 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper1_first_order/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
     },
 
     'Stolz1993': {
-        'authors': 'S.~Stolz, Math.\ Ann.\ , 685 (1993)',
+        'authors': 'S.~Stolz, Math.\\ Ann.\\ , 685 (1993)',
         'title': '',
         'journal': None,
         'volume': 296,
@@ -6779,7 +6779,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper9_sm_anomaly_drinfeld/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper9_sm_anomaly_drinfeld/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper9_sm_anomaly_drinfeld/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'TPF2024': {
@@ -6796,7 +6796,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-5e/primary-sources/TPF2024.pdf',
         'used_in': ['papers/paper7_chirality_formal/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper7_chirality_formal/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper7_chirality_formal/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'TPF2026': {
@@ -6832,7 +6832,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Talanov2024.pdf',
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`.',
     },
 
     'Terwilliger2001': {
@@ -6849,7 +6849,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-5c/primary-sources/Terwilliger2001.pdf',
         'used_in': ['papers/paper11_quantum_group/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper11_quantum_group/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Tong2022': {
@@ -6866,11 +6866,11 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-5e/primary-sources/Tong2022.pdf',
         'used_in': ['papers/paper7_chirality_formal/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper7_chirality_formal/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper7_chirality_formal/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Torrieri2020': {
-        'authors': 'G.~Torrieri, Phys.\ Rev.\ D , 076009 (2020)',
+        'authors': 'G.~Torrieri, Phys.\\ Rev.\\ D , 076009 (2020)',
         'title': '',
         'journal': None,
         'volume': 102,
@@ -6883,11 +6883,11 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper3_gauge_erasure/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Vladimirov2012': {
-        'authors': 'A.~A.~Vladimirov and D.~Diakonov, Phys.\ Rev.\ D , 104019 (2012)',
+        'authors': 'A.~A.~Vladimirov and D.~Diakonov, Phys.\\ Rev.\\ D , 104019 (2012)',
         'title': '',
         'journal': None,
         'volume': 86,
@@ -6900,7 +6900,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper5_adw_gap/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Vollhardt2013': {
@@ -6917,7 +6917,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper6_vestigial/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper6_vestigial/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper6_vestigial/paper_draft.tex`.',
     },
 
     'Volovik2003': {
@@ -6935,7 +6935,7 @@ CITATION_REGISTRY = {
         'used_in': ['papers/paper3_gauge_erasure/paper_draft.tex',
                     'papers/paper5_adw_gap/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`.',
     },
 
     'Wang2024': {
@@ -6972,7 +6972,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-6c/primary-sources/WangWanYou2022.pdf',
         'used_in': ['papers/paper33_ewbg_chirality_wall/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper33_ewbg_chirality_wall/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper33_ewbg_chirality_wall/paper_draft.tex`.',
     },
 
     'Wen2003': {
@@ -6993,7 +6993,7 @@ CITATION_REGISTRY = {
     },
 
     'Wen2006': {
-        'authors': 'M.~Levin and X.-G.~Wen, Phys.\ Rev.\ B , 035122 (2006)',
+        'authors': 'M.~Levin and X.-G.~Wen, Phys.\\ Rev.\\ B , 035122 (2006)',
         'title': '',
         'journal': None,
         'volume': 73,
@@ -7006,11 +7006,11 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper5_adw_gap/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Wetterich2005': {
-        'authors': 'C.~Wetterich, Phys.\ Rev.\ D , 105004 (2004)',
+        'authors': 'C.~Wetterich, Phys.\\ Rev.\\ D , 105004 (2004)',
         'title': '',
         'journal': None,
         'volume': 70,
@@ -7023,7 +7023,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper5_adw_gap/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper5_adw_gap/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'Witten1982': {
@@ -7040,12 +7040,12 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper8_chirality_master/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper8_chirality_master/paper_draft.tex`.',
     },
 
     'Zaremba1999': {
         'authors': 'E.~Zaremba, T.~Nikuni, and A.~Griffin',
-        'title': 'J.\ Low Temp.\ Phys.',
+        'title': 'J.\\ Low Temp.\\ Phys.',
         'journal': None,
         'volume': 116,
         'page': None,
@@ -7057,7 +7057,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper1_first_order/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper1_first_order/paper_draft.tex`.',
     },
 
     'Zhao2023': {
@@ -7094,7 +7094,7 @@ CITATION_REGISTRY = {
         'used_in': ['papers/paper15_methodology/paper_draft.tex',
                     'papers/I1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper15_methodology/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper15_methodology/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'aristotle': {
@@ -7111,7 +7111,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper14_braided_mtc/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'bhmv1995': {
@@ -7129,12 +7129,12 @@ CITATION_REGISTRY = {
         'used_in': ['papers/paper14_braided_mtc/paper_draft.tex',
                     'papers/paper16_wrt_tqft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'compcert': {
         'authors': "X.~Leroy, ``Formal verification of a realistic compiler,''",
-        'title': 'Comm.\ ACM',
+        'title': 'Comm.\\ ACM',
         'journal': None,
         'volume': 52,
         'page': None,
@@ -7147,7 +7147,7 @@ CITATION_REGISTRY = {
         'used_in': ['papers/paper15_methodology/paper_draft.tex',
                     'papers/I1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper15_methodology/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper15_methodology/paper_draft.tex`.',
     },
 
     'diFrancesco1997': {
@@ -7164,11 +7164,11 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper10_modular_generation/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper10_modular_generation/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper10_modular_generation/paper_draft.tex`.',
     },
 
     'fidkowski2010': {
-        'authors': 'L.~Fidkowski and A.~Kitaev, Phys.\ Rev.\ B , 134509 (2010)',
+        'authors': 'L.~Fidkowski and A.~Kitaev, Phys.\\ Rev.\\ B , 134509 (2010)',
         'title': '',
         'journal': None,
         'volume': 81,
@@ -7181,12 +7181,12 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper9_sm_anomaly_drinfeld/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper9_sm_anomaly_drinfeld/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper9_sm_anomaly_drinfeld/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'flw2002': {
         'authors': "M.~H.~Freedman, M.~Larsen, Z.~Wang, ``A modular functor which is universal for quantum computation,''",
-        'title': 'Comm.\ Math.\ Phys.',
+        'title': 'Comm.\\ Math.\\ Phys.',
         'journal': None,
         'volume': 227,
         'page': None,
@@ -7198,12 +7198,12 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper14_braided_mtc/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`.',
     },
 
     'hietala2021': {
         'authors': "K.~Hietala et al., ``A verified optimizer for quantum circuits,''",
-        'title': 'Proc.\ ACM POPL',
+        'title': 'Proc.\\ ACM POPL',
         'journal': None,
         'volume': None,
         'page': None,
@@ -7215,12 +7215,12 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper14_braided_mtc/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`.',
     },
 
     'kitaev2006': {
         'authors': "A.~Kitaev, ``Anyons in an exactly solved model and beyond,''",
-        'title': 'Ann.\ Phys.',
+        'title': 'Ann.\\ Phys.',
         'journal': None,
         'volume': 321,
         'page': None,
@@ -7232,7 +7232,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-5o/primary-sources/kitaev2006.pdf',
         'used_in': ['papers/paper14_braided_mtc/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`.',
     },
 
     'leancipilot': {
@@ -7255,7 +7255,7 @@ CITATION_REGISTRY = {
 
     'mss2024': {
         'authors': "D.~J.~Myers, H.~Sati, U.~Schreiber, ``Topological quantum gates in homotopy type theory,''",
-        'title': 'Comm.\ Math.\ Phys.',
+        'title': 'Comm.\\ Math.\\ Phys.',
         'journal': None,
         'volume': 405,
         'page': None,
@@ -7267,7 +7267,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper14_braided_mtc/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`.',
     },
 
     'paper14': {
@@ -7284,7 +7284,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_wrt_tqft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_wrt_tqft/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_wrt_tqft/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'physlean': {
@@ -7303,12 +7303,12 @@ CITATION_REGISTRY = {
                     'papers/paper15_methodology/paper_draft.tex',
                     'papers/I1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'rowell2009': {
         'authors': "E.~Rowell, R.~Stong, Z.~Wang, ``On classification of modular tensor categories,''",
-        'title': 'Comm.\ Math.\ Phys.',
+        'title': 'Comm.\\ Math.\\ Phys.',
         'journal': None,
         'volume': 292,
         'page': None,
@@ -7320,11 +7320,11 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper14_braided_mtc/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`.',
     },
 
     'rt1991': {
-        'authors': 'N.~Reshetikhin, V.~Turaev, Invent.\ Math.\ , 547 (1991)',
+        'authors': 'N.~Reshetikhin, V.~Turaev, Invent.\\ Math.\\ , 547 (1991)',
         'title': '',
         'journal': None,
         'volume': 103,
@@ -7337,12 +7337,12 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_wrt_tqft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_wrt_tqft/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_wrt_tqft/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'sel4': {
         'authors': "G.~Klein et al., ``seL4: Formal verification of an OS kernel,''",
-        'title': 'Proc.\ ACM SOSP',
+        'title': 'Proc.\\ ACM SOSP',
         'journal': None,
         'volume': None,
         'page': None,
@@ -7355,7 +7355,7 @@ CITATION_REGISTRY = {
         'used_in': ['papers/paper15_methodology/paper_draft.tex',
                     'papers/I1/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper15_methodology/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper15_methodology/paper_draft.tex`.',
     },
 
     'tpf2026': {
@@ -7372,7 +7372,7 @@ CITATION_REGISTRY = {
         'primary_source_path': 'Lit-Search/Phase-5b/primary-sources/tpf2026.pdf',
         'used_in': ['papers/paper9_sm_anomaly_drinfeld/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper9_sm_anomaly_drinfeld/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper9_sm_anomaly_drinfeld/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'turaev2010': {
@@ -7390,7 +7390,7 @@ CITATION_REGISTRY = {
         'used_in': ['papers/paper16_wrt_tqft/paper_draft.tex',
                     'papers/I2/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_wrt_tqft/paper_draft.tex`. Canonical textbook (de Gruyter Studies in Mathematics 18, 2nd ed. 2010); Wave 6 textbook exemption applies to Pipeline Invariant #11 (primary_source_path None, doi None, arxiv None).',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_wrt_tqft/paper_draft.tex`. Canonical textbook (de Gruyter Studies in Mathematics 18, 2nd ed. 2010); Wave 6 textbook exemption applies to Pipeline Invariant #11 (primary_source_path None, doi None, arxiv None).',
     },
 
     'efron1982': {
@@ -7496,7 +7496,7 @@ CITATION_REGISTRY = {
     },
 
     'wenzl1988': {
-        'authors': 'H.~Wenzl, Invent.\ Math.\ , 349 (1988)',
+        'authors': 'H.~Wenzl, Invent.\\ Math.\\ , 349 (1988)',
         'title': '',
         'journal': None,
         'volume': 92,
@@ -7509,11 +7509,11 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_wrt_tqft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper14_braided_mtc/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     'witten1989': {
-        'authors': 'E.~Witten, Comm.\ Math.\ Phys.\ , 351 (1989)',
+        'authors': 'E.~Witten, Comm.\\ Math.\\ Phys.\\ , 351 (1989)',
         'title': '',
         'journal': None,
         'volume': 121,
@@ -7526,7 +7526,7 @@ CITATION_REGISTRY = {
         'primary_source_path': None,
         'used_in': ['papers/paper16_wrt_tqft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_wrt_tqft/paper_draft.tex`. Title not present in source bibitem.',
+        'notes': 'Auto-generated stub from \\bibitem block in `papers/paper16_wrt_tqft/paper_draft.tex`. Title not present in source bibitem.',
     },
 
     # ════════════════════════════════════════════════════════════════════
@@ -10533,6 +10533,26 @@ CITATION_REGISTRY = {
                     'papers/E2/paper_draft.tex'],
         'provides': ['Independent classical-simulation validation of universal Kibble-Zurek physics on 300+ qubit disordered TFIMs (2D square, 3D cubic, 3D diamond lattices), matching D-Wave Advantage2 5000-qubit quantum annealer via belief-propagation contraction of lattice-specific PEPS/PEPO tensor networks'],
         'notes': 'Phase 6w Wave 6w.1 foundation reference. The Kibble-Zurek scaling exponent extracted here (universal data of the continuous quantum phase transition) is the experimentally-cross-checked analog of the SK-EFT surface-gravity prediction via the Kibble-Zurek-Unruh correspondence (1/τ_Q ≡ κ). Also anchors Phase 6w Wave 6w.2/6w.3 (BP-on-TN Mathlib substrate + LDP-controlled simulability) as the foundational primary source.',
+    },
+
+    # ════════════════════════════════════════════════════════════════
+    # Citation-pipeline backfill (cited in papers/D6, absent from registry)
+    # ════════════════════════════════════════════════════════════════
+    'ChungHajdusekVanMeter2025QNetSimXval': {
+        'authors': 'Chung, J., Hajdušek, M., Benchasattabuse, N., Kolar, A., Singal, A., Soon, K. S., Teramoto, K., Zang, A., Kettimuthu, R., Van Meter, R.',
+        'title': 'Cross-Validating Quantum Network Simulators',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2025,
+        'doi': None,
+        'arxiv': '2504.01290',
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/ChungHajdusekVanMeter2025QNetSimXval.pdf',
+        'used_in': ['papers/D6/paper_draft.tex'],
+        'provides': ['Independent cross-validation of two open-source quantum network simulators (QuISP and SeQUeNCe) on basic networking tasks, establishing simulator-agreement on link/end-to-end fidelity — the model-independence anchor for the D6 Werner-chain fidelity envelope'],
+        'notes': 'Citation-pipeline backfill: cited in papers/D6/paper_draft.tex but absent from CITATION_REGISTRY. Primary source verified against arXiv:2504.01290 (abstract + first-page author list cross-checked): title "Cross-Validating Quantum Network Simulators", authors Joaquin Chung, Michal Hajdušek, ... Rodney Van Meter (2025). arXiv PDF cached as primary source. Note: the D6 \\bibitem renders the first author initial as "K. Chung" but the verified first author is Joaquin Chung (J.).',
     },
 }
 

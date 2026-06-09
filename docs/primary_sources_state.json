@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-05-25T14:13:36+00:00",
+  "generated_at": "2026-06-09T11:02:19+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -1101,6 +1101,17 @@
       "size_bytes": 24508,
       "url_used": "https://api.crossref.org/works/10.1016/0550-3213(79)90516-9",
       "note": "no arxiv id"
+    },
+    "ChungHajdusekVanMeter2025QNetSimXval": {
+      "bibkey": "ChungHajdusekVanMeter2025QNetSimXval",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/ChungHajdusekVanMeter2025QNetSimXval.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-06-09T11:02:19+00:00",
+      "size_bytes": 705965,
+      "url_used": "https://arxiv.org/pdf/2504.01290",
+      "note": null
     },
     "CiriglianoMasterFormula2018": {
       "bibkey": "CiriglianoMasterFormula2018",

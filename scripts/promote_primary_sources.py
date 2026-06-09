@@ -143,10 +143,12 @@ def py_repr(v):
     if isinstance(v, bool):
         return "True" if v else "False"
     if isinstance(v, str):
-        # Escape single quotes by switching delimiter
-        if "'" in v and '"' not in v:
-            return '"' + v + '"'
-        return "'" + v.replace("'", "\\'") + "'"
+        # repr() guarantees a valid, round-trippable literal: it escapes
+        # backslashes and control chars (NOT doing so was the bug that wrote
+        # LaTeX text like 'Nucl.\ Phys.' and '\bibitem' with bare backslashes,
+        # yielding SyntaxWarnings and silent \b->0x08 corruption) while keeping
+        # the same single-vs-double quote preference and printable Unicode.
+        return repr(v)
     if isinstance(v, list):
         if not v:
             return "[]"

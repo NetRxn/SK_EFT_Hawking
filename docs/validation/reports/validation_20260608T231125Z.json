@@ -1,0 +1,29 @@
+{
+  "timestamp": "20260608T231125Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "citation_primary_sources_present": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": false,
+          "message": "438 bibkeys cited across 60 papers \u2014 308 cached / 30 inprep-exempt / 99 textbook-exempt / 0 need cache / 1 missing-from-registry",
+          "warning": false
+        },
+        {
+          "name": "missing_from_registry",
+          "passed": false,
+          "message": "1 cited bibkeys absent from CITATION_REGISTRY: ChungHajdusekVanMeter2025QNetSimXval",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}
