@@ -2839,6 +2839,11 @@ import SKEFTHawking.QuantumNetwork.FannesAudenaert
 -- ∑ₖ|λ↓ₖ(A)−λ↓ₖ(B)| ≤ ‖A−B‖₁ via Weyl monotonicity + positive/negative-part split; discharges hMirsky,
 -- making quantum_fannes_audenaert (trace-distance form) rest only on the separate classical-Audenaert residual.
 import SKEFTHawking.QuantumNetwork.MirskyUnconditional
+-- Phase 6AM Wave 6 (2026-06-09): sharp Fannes–Audenaert log(d−1) — discharges hAud. sharp_fannes_classical
+-- (|H(p)−H(q)| ≤ qaryEntropy d T via the maximal coupling + per-column spreading + binEntropy-concavity)
+-- and quantum_fannes_audenaert_sharp (FULLY UNCONDITIONAL trace-distance bound for density operators:
+-- |S(ρ)−S(σ)| ≤ qaryEntropy d (½‖ρ−σ‖₁), no hB3, no hAud residual). Closes Phase 6AL Gap 1.
+import SKEFTHawking.QuantumNetwork.SharpFannesAudenaert
 -- Phase 6AL Wave 4 (2026-06-04): toward Lidskii–Wielandt. diag_conj_eq_sum_normSq — the diagonal of a
 -- Hermitian conjugated into another eigenbasis is a doubly-stochastic combination of its eigenvalues
 -- (∑ⱼ|Mᵢⱼ|²λⱼ); the operator core of the sorted-difference majorization (the sole remaining Mirsky brick).
