@@ -228,3 +228,48 @@ weak-form, definitional-only, or docstring-cited deliverable (see the gate-stren
 Several adjacent phases (entropy/entanglement strengthening; channel-composition substrate, Phase 6AN W1)
 overlap PhysLib's `Distance.lean` / `Entropy/*` — **check PhysLib before proving any QI lemma from scratch.**
 The previous from-scratch DPI/modular-operator plan is retained only in version history; do not resurrect it.
+
+## Execution status (2026-06-09 — pre-adversarial-review snapshot; gates above are UNCHANGED)
+
+- **W1 ✅ / W2 ✅ (`599c3be9`) / W3 ✅ (`c7fc6863`) / W4 ✅ (`b0bd8a8b`)** — meet their strength gates
+  (per prior-session verification + #print axioms FQN checks).
+- **W6 ✅ COMPLETE (`846f2ccf`)** — `SharpFannesAudenaert.lean`: `sharp_fannes_classical`
+  (`|H(p)−H(q)| ≤ qaryEntropy d T`, maximal-coupling + per-column `spreading_bound` + `sum_g_le_binEntropy`
+  conditional-entropy Jensen, the finite-Fano layer built from scratch) and the **fully unconditional**
+  density-operator headline `quantum_fannes_audenaert_sharp` (`hAud` discharged, sharp `log(d−1)`, no
+  residual). Kernel-pure `{propext,Classical.choice,Quot.sound}`, 0 axiom / 0 native_decide / 0
+  maxHeartbeats; wired; lib+ExtractDeps green (9204); axiom_closure_allowlist + graph_integrity + counts
+  pass. **Gate MET.**
+- **W5 — efficiency ✅ delivered; full unconditionality blocked by a GENUINE analytic-NT wall (NOT effort).**
+  Re-evaluated with the full protocol (decompose → read primary DR `Phase-6x/Ross–Selinger §5:§6:§7 grid-FINDER
+  completeness.md` directly → ℤ[√2]-EuclideanDomain + ℤ[√2][i] substrate read). Findings:
+  - **Efficiency (the W5 raison d'être) is shipped** (prior `ebbec284`): `rossSelinger_log_length_explicit`
+    gives output word length `≤ N₃ + 16·log₂(1/δ) + C`, i.e. **O(log 1/ε) exponent 1**, vs SK `O(log^{3.97})`.
+  - **§6-gate made explicit + axiom-free (this session):** `gridFindT_isSome_of_residual` /
+    `rossSelinger_synth_of_residual` (LogLengthHeadline.lean) replace the opaque `gridFindT = some t`
+    with the precise relative-norm existence (Ross Problem 3.2.4), reducible via
+    `RelativeNorm.exists_relativeNorm_of_real_sumSq` to two-squares-over-ℤ[√2].
+  - **The wall:** full ∀U unconditionality bottoms out at the §6 *existence* that, among the grid candidates
+    (supplied unconditionally by the §5 scaled-two-disk convex geometry, Ross Lemma 5.2.38), *some* residual
+    is a relative norm — a **prime-density** input the source literature itself (Selinger arXiv:1212.6253,
+    Ross Prop 3.2.9) realizes only **randomized under a prime-distribution hypothesis**. This is a genuine,
+    primary-source-confirmed analytic-NT gate, NOT a Mathlib gap and NOT effort → **Caves-precedent tracked
+    `Prop` (never an axiom).** The constructive scaffolding that would thin it — §5 grid-FINDER convex
+    geometry (ellipse uprightness / Step-Lemma 0.9 / Prop 5.2.36 enumeration completeness) + §6
+    two-squares-over-ℤ[√2] (GaussInt2 EuclideanDomain + prime-splitting descent on the shipped
+    `Zsqrt2EuclideanDomain`) — is a **dedicated multi-thousand-LoC sub-program (its own `/goal`)**, per the
+    "large sub-programs get their own /goal, never dropped" discipline.
+- **native_decide elimination (4 KMM sites) — kernel-`decide` confirmed INFEASIBLE under no-maxHeartbeats;
+  needs structural reproofs (a dedicated sub-program).** Empirically sized: `cliffordBase_box_core` /
+  `bridge_box_core` (`zomBox²×8`, matrix-interp / kSO3), `kmm_lemma3_alg2` (`(ZMod 8)⁴²` = 16.7M Coord4
+  pairs), `maStep_exists_core` (`validCol³` ~244M). All exceed the elaborator heartbeat budget for kernel
+  `decide` (and #10 forbids `maxHeartbeats`), so each requires a research-grade STRUCTURAL reproof
+  (KMM Lemma-3 mod-8 algebra; Giles–Selinger sde↔kSO3; Clifford-group ≤6-word coverage; MA-step
+  orbit-closure) — the structural-KMM-correctness theory the KMM authors used `native_decide` to bypass.
+  **Project-TOLERATED meanwhile** (`validate.py --check axiom_closure_allowlist` tracks-not-fails them).
+  A dedicated `/goal` (structural KMM purity); not a wall, not dropped.
+
+**Net:** W1–W4 + W6 meet their gates. W5's efficiency goal is met and its residual is now a precise,
+literature-grounded `Prop` (the genuine prime-density wall) rather than an opaque hypothesis; the full-
+unconditional discharge (§5/§6 grid-FINDER) and the native_decide structural cleanup are each a tracked,
+dedicated sub-program. No axioms added anywhere; no Mathlib-pin bump; never pushed.

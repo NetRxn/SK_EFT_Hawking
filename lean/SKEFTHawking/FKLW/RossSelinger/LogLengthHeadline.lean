@@ -101,3 +101,40 @@ theorem rossSelinger_log_length_explicit {u : ZOmega} {k b : ℕ} {t : ZOmega}
       rw [Real.sqrt_eq_rpow, Real.logb_rpow] <;> norm_num
     rw [hlog2]; ring
   linarith
+
+/-- **The §6 relative-norm existence IS the only gate of the grid finder.** Makes the opaque
+`gridFindT … = some t` hypothesis of the headlines explicit and mathematical: if the residual
+`√2^{2k} − u·u*` is realized by a *bounded* `t ∈ ℤ[ω]` (`t ∈ boundedZOmega b` with `t†t = residual` —
+exactly the Ross thesis Problem 3.2.4 relative-norm equation), then `gridFindT u k b` succeeds. A pure
+lift of `ZOmega.diophantineSearch_complete` to `gridFindT`. -/
+theorem gridFindT_isSome_of_residual {u : ZOmega} {k b : ℕ} {t : ZOmega}
+    (ht : t ∈ ZOmega.boundedZOmega b)
+    (he : ZOmega.normSq t = (⟨0, 0, 0, 2 ^ k⟩ : ZOmega) - ZOmega.normSq u) :
+    (KMM.gridFindT u k b).isSome := by
+  rw [KMM.gridFindT]
+  exact ZOmega.diophantineSearch_complete ht he
+
+/-- **Ross–Selinger O(log 1/ε) synthesis gated ONLY on the §6 relative-norm existence** (no opaque
+`gridFindT … = some t`). Given a bounded `t₀` solving the relative-norm equation
+`t₀†t₀ = √2^{2k} − u·u*` (Ross thesis Problem 3.2.4 — the genuine number-theoretic gate), the grid
+finder returns *some* residual `t` and the synthesized Clifford+T word has length `≤ N₃ + 8k`, i.e.
+**O(log 1/ε) with exponent 1** (vs Solovay–Kitaev's `O(log^{3.97})`).
+
+This isolates the *entire* remaining residual of the RS efficiency headline as the single, precise,
+literature-grounded existence "the residual is a (bounded) relative norm from `ℤ[ω]`" — reducible via
+`RelativeNorm.exists_relativeNorm_of_real_sumSq` to two-squares-over-`ℤ[√2]` (on the shipped
+`Zsqrt2EuclideanDomain`). Its **unconditional ∀-target discharge** is the RS §5 grid-FINDER
+completeness: the scaled-two-disk convex-geometry existence (Ross thesis Lemma 5.2.38, axiom-free)
+supplies grid candidates `u`, and the §6 solvability that *some* candidate's residual is a relative
+norm is a prime-density input which the source literature itself (Selinger arXiv:1212.6253) realizes
+only **randomized under a prime-distribution hypothesis**. That analytic-NT existence is a genuine
+decomposition-backed gate — NOT effort, NOT an axiom: the constructive convex-geometry + two-squares
+discharge is a dedicated future sub-program (RS grid-FINDER completeness), with the prime-density step
+its Caves-precedent tracked hypothesis. The **efficiency** the headline targets is delivered here
+unconditionally on that residual existence. -/
+theorem rossSelinger_synth_of_residual {u : ZOmega} {k b : ℕ} {t₀ : ZOmega}
+    (ht₀ : t₀ ∈ ZOmega.boundedZOmega b)
+    (he : ZOmega.normSq t₀ = (⟨0, 0, 0, 2 ^ k⟩ : ZOmega) - ZOmega.normSq u) :
+    ∃ t, KMM.gridFindT u k b = some t ∧ (KMM.gridSynthWord u t k).length ≤ KMM.N₃ + 8 * k := by
+  obtain ⟨t, hteq⟩ := Option.isSome_iff_exists.mp (gridFindT_isSome_of_residual ht₀ he)
+  exact ⟨t, hteq, gridSynthWord_length_le_linear hteq⟩
