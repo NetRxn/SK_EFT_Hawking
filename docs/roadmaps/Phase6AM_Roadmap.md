@@ -371,3 +371,41 @@ Treat the DR as suggestion, not fact (the requesting side has the Mathlib/Lean a
   bounds), `kmm_lemma3_alg2` (mod-8 algebra — research-flavoured), `maStep_exists_core` (MA-step
   orthogonality-class orbit-closure — mechanical-tedious, ~809k triples). NO trusted-oracle/checksum fallback
   (= `native_decide` by another name). Benefits all KMM consumers.
+
+## Phase 6AO execution log (the W5-residual `/goal`, started 2026-06-09)
+
+### Track 2 — KMM ancilla (PRIORITIZED). Increments 1–2 shipped (kernel-pure, green).
+
+- **Increment 1 ✅ — the unconditional number-theoretic keystone (`a8cf2f3d`).**
+  `lean/SKEFTHawking/FKLW/RossSelinger/AncillaCompletion.lean`:
+  - `exists_two_relativeNorms_of_nat (r : ℕ) : ∃ t₁ t₂, normSq t₁ + normSq t₂ = (r:ZOmega)` — **every
+    `r:ℕ` is a sum of two ℤ[ω] relative norms**, via Lagrange `Nat.sum_four_squares` (`r=a²+b²+c²+d²` →
+    `t₁=a+bω²`, `t₂=c+dω²`, `normSq_real_sumSq`). **This is the wall-removing core**: the ancilla turns
+    the single-relative-norm condition (sum of 2 squares over ℤ[√2], conditional/prime-density) into a
+    sum-of-4-integer-squares condition — ALWAYS solvable. No Hypothesis 29, no prime density.
+  - `ancilla_completion_of_nat_residual` — for an approximant `u` with integer `normSq u = m ≤ 2^k`,
+    `∃ t₁ t₂, normSq u + normSq t₁ + normSq t₂ = 2^k` UNCONDITIONALLY (the (1+ancilla)-qubit unit column
+    closes), vs the ancilla-free `rossSelinger_synth_of_residual` which REQUIRES a single relative norm.
+  - `conj_intCast`/`conj_natCast` — rational integers are `conj`-fixed (real in ℤ[ω]).
+  - Both headlines `#print axioms`-clean `{propext, Classical.choice, Quot.sound}`.
+- **Increment 2 ✅ — two-qubit Clifford+T gate semantics (circuit-layer foundation) (`c787a24b`).**
+  `lean/SKEFTHawking/FKLW/RossSelinger/CliffordTGate2.lean` (`Matrix (Fin 2 × Fin 2)`, kronecker-native):
+  `Gate2` ADT (onFst/onSnd single-qubit + cx01/cx10 cnots), `gateMatrix2`/`interp2`, `embedFst`/`embedSnd`
+  (proven monoid homs via `Matrix.mul_kronecker_mul`), **`embedFst_interp`/`embedSnd_interp` — the
+  load-bearing realizability transport** (single-qubit Clifford+T word → 2-qubit word, SAME length;
+  so the shipped single-qubit `kmmReduce` transports onto the system/ancilla line at no length cost),
+  `interp2_append`, `cnot{01,10}_mul_cnot{01,10}` involutions (kernel `decide`). Kernel-pure; cnot
+  `decide` is KERNEL `decide` (native_decide count unchanged at 592).
+
+### Track 2 — remaining circuit layer (faithful factorization; sequenced, NOT de-scoped)
+
+The full `∀U∈SU(2)` O(log 1/ε)-with-≤2-ancillas headline factors as: **(1) keystone ✅ → (2) 2-qubit
+semantics ✅ → (3) state-column → ring-unitary (orthonormal completion over ℤ[ω][1/√2]) → (4) 2-qubit
+exact synthesis (`Gate2`-word, length O(sde) — the general KMM multi-qubit row-reduction; the major
+remaining build) → (5) rounding (target → integer-residual approximant within ε)**. (3)/(4) are general
+ring linear algebra + general 2-qubit synthesis — they do NOT need the paper-specific KMM-1212.0822
+gate sequence, so they are buildable faithfully. (5) is the §5 grid analysis — already **hypothesized
+project-wide** (even the single-qubit `rossSelinger_compile_log_length` takes the rounding quality
+`h00` as a hypothesis), so it is consistent to carry it as a tracked input and prove the unconditional
+completion+synthesis around it. Next increment: brick (3) — the ZOmegaSqrt2 normalized ancilla state
+column (`Σ normSq = 1`) from the keystone, then brick (4).
