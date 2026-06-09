@@ -32,7 +32,7 @@ import SKEFTHawking.FKLW.RossSelinger.CliffordTGate2
 
 set_option autoImplicit false
 
-open scoped Matrix
+open scoped Matrix Kronecker
 
 namespace SKEFTHawking.RossSelinger
 namespace Gate2
@@ -81,6 +81,55 @@ theorem isColRealizableWithin_basis (a b : Fin 2) :
     ⟨_, rfl, ?_⟩, ?_⟩
   · fin_cases a <;> fin_cases b <;> decide
   · fin_cases a <;> fin_cases b <;> decide
+
+/-! ### Global `ω`-phase (the base case's `ωᵏ` factor)
+
+The denExp-0 unit column is `ωᵏ·eᵢ` (base-case number theory, `ColumnBaseCase`). The basis state `eᵢ`
+is realizable (`isColRealizableWithin_basis`); these lemmas supply the global `ωᵏ` phase, realized by
+`k` copies of the `onFst ω` gate (each scales the whole register by `ωS`). -/
+
+/-- `gateMatrix2 (onFst ω) = ωS • 1` (the global-phase generator: `ω·I ⊗ I = ωS·I`). -/
+theorem gateMatrix2_onFst_omega :
+    gateMatrix2 (Gate2.onFst CliffordTGate.omega) = CliffordTGate.ωS • (1 : Mat4) := by
+  show (CliffordTGate.gateMatrix CliffordTGate.omega) ⊗ₖ (1 : Mat2') = CliffordTGate.ωS • (1 : Mat4)
+  rw [show CliffordTGate.gateMatrix CliffordTGate.omega = CliffordTGate.ωS • (1 : Mat2') from rfl,
+    Matrix.smul_kronecker, Matrix.one_kronecker_one]
+
+/-- Prepending one `onFst ω` scales a realizable matrix by `ωS` (length `+1`). -/
+theorem IsRealizableWithin.smul_omega {M : Mat4} {L : ℕ} (h : IsRealizableWithin M L) :
+    IsRealizableWithin (CliffordTGate.ωS • M) (L + 1) := by
+  obtain ⟨w, hw, hl⟩ := h
+  refine ⟨Gate2.onFst CliffordTGate.omega :: w, ?_, by simpa using hl⟩
+  rw [interp2_cons, gateMatrix2_onFst_omega, hw, Matrix.smul_mul]
+  congr 1
+  exact one_mul M
+
+/-- Scaling a column-realizable vector by `ωS` (length `+1`). -/
+theorem IsColRealizableWithin.smul_omega {v : Fin 2 × Fin 2 → ZOmegaSqrt2} {L : ℕ}
+    (h : IsColRealizableWithin v L) : IsColRealizableWithin (CliffordTGate.ωS • v) (L + 1) := by
+  obtain ⟨M, hM, hcol⟩ := h
+  refine ⟨CliffordTGate.ωS • M, hM.smul_omega, ?_⟩
+  funext i
+  rw [Matrix.smul_apply, Pi.smul_apply, ← congrFun hcol i]
+
+/-- Scaling by `ωᵏ` (length `+k`): iterate `smul_omega`. -/
+theorem IsColRealizableWithin.smul_omega_pow {v : Fin 2 × Fin 2 → ZOmegaSqrt2} {L : ℕ}
+    (h : IsColRealizableWithin v L) (k : ℕ) :
+    IsColRealizableWithin (CliffordTGate.ωS ^ k • v) (L + k) := by
+  induction k with
+  | zero => rw [pow_zero, one_smul]; exact h
+  | succ n ih => rw [pow_succ', mul_smul]; exact ih.smul_omega
+
+/-- **`ωᵏ·eᵢ` is column-realizable within `k + 2`** (the dim-4 column-lemma base case's realizable
+form): the basis state `e_{(a,b)}` (`isColRealizableWithin_basis`, `≤ 2` gates) phased by `ωᵏ`
+(`k` copies of `onFst ω`). -/
+theorem isColRealizableWithin_omega_pow_basis (k : ℕ) (a b : Fin 2) :
+    IsColRealizableWithin (fun i => if i = (a, b) then CliffordTGate.ωS ^ k else 0) (k + 2) := by
+  have h := (isColRealizableWithin_basis a b).smul_omega_pow k
+  rw [show CliffordTGate.ωS ^ k • (fun i => if i = (a, b) then (1 : ZOmegaSqrt2) else 0)
+        = (fun i => if i = (a, b) then CliffordTGate.ωS ^ k else 0) from by
+      funext i; rw [Pi.smul_apply, smul_eq_mul, mul_ite, mul_one, mul_zero]] at h
+  exact h.mono (by omega)
 
 end Gate2
 end SKEFTHawking.RossSelinger
