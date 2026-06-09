@@ -4,33 +4,33 @@ Phase 5q.B Waves B3/B4: smooth-spin 4-manifold interface and the wired `16 ∣ �
 INTERFACE-FIRST (roadmap Wave B3). A closed smooth spin 4-manifold contributes exactly the
 data the spectra-free Rokhlin derivation needs:
   • its intersection form is **even unimodular** (Wu's formula + Poincaré duality — topological),
-  • the algebraic signature bound `8 ∣ σ` holds (van der Blij; the target of Wave B1, where it is to
-    be *proved* from even-unimodularity via the classification `E₈^a ⊕ (−E₈)^b ⊕ H^c`), and
   • the extra factor of two `2 ∣ σ/8` (Â-genus even / Arf(q̄)=0 — the irreducible topological input,
     Atiyah–Singer index / Freedman–Kirby; this is what genuinely distinguishes smooth from
     topological, per Freedman's E₈ manifold).
 
+The algebraic bound `8 ∣ σ` (van der Blij) is **no longer carried as interface data** — it is now a
+kernel-pure THEOREM (`RokhlinHMRankFour.eight_dvd_latticeSig`), derived from even-unimodularity via the
+classification `E₈^a ⊕ (−E₈)^b ⊕ H^c` (existence DISCHARGED: Hasse–Minkowski `[HM]` via the rank-4
+quaternary route + theta-modularity `[Θ]` for the definite case).
+
 The signature here is the genuine `latticeSig form` (`LatticeSignature.lean`), NOT a free integer
 parameter: a manifold's signature *is* the signature of its intersection form. From these data,
-`16 ∣ latticeSig form` is a kernel-pure THEOREM via `sixteen_dvd_latticeSig_of_eight_dvd_of_topo`
-(= `rokhlin_from_serre_plus_topology` on `latticeSig`) — NO global Rokhlin hypothesis, NO new axiom.
+`16 ∣ latticeSig form` is a kernel-pure THEOREM via `RokhlinHMRankFour.sixteen_dvd_latticeSig`
+(= `rokhlin_from_serre_plus_topology` on `latticeSig`, with `8 ∣ σ` now proved) — NO global Rokhlin
+hypothesis, NO new axiom.
 
 DEPENDENCY GRAPH (anti-circularity): the derivation routes
-  even-unimodular (Wu) ─┐
-  8 ∣ σ (van der Blij) ──┼─→ (carried as `eight_dvd`)  ─┐
-                         │                              ├─→ 16 ∣ σ
-  2 ∣ σ/8 (Â even)  ──────────────────────────────────┘
+  even-unimodular (Wu) ─→ [HM]+[Θ] ─→ 8 ∣ σ (van der Blij, PROVED)  ─┐
+                                                                     ├─→ 16 ∣ σ
+  2 ∣ σ/8 (Â even, topological)  ─────────────────────────────────┘
 It does NOT use Anderson–Brown–Peterson or Rokhlin's theorem itself as input (Rokhlin's theorem
 *is* the conclusion `16 ∣ σ`); the `2 ∣ σ/8` field is the more primitive index-theoretic fact.
 
-STATUS: the `eight_dvd` field is the Wave-B1 algebraic input, precisely isolated as `8 ∣ latticeSig form`.
-The signature *calculus* discharging it from the classification normal form is COMPLETE
-(`RokhlinClassification.lean`: generators `8∣σ`, block-sum/congruence/reindex closure); the only remaining
-input is the classification's EXISTENCE statement (every even unimodular form is congruent to
-`E₈^a ⊕ (−E₈)^b ⊕ H^c`), whose two irreducible pieces — Hasse–Minkowski (indefinite represents 0) and
-theta-modularity (definite `8 ∣ rank`) — have no Mathlib substrate yet. The `topo` field is the genuinely
-topological input. Until the existence statement lands, `eight_dvd` is the single tracked interface
-hypothesis (not an axiom).
+STATUS (2026-06-08): `8 ∣ σ` is DISCHARGED and the `eight_dvd` field has been DROPPED. The classification
+EXISTENCE statement (every even unimodular form ≅ `E₈^a ⊕ (−E₈)^b ⊕ H^c`) is proved — both irreducible
+pieces landed: Hasse–Minkowski (`RokhlinHMRankFour.hasWeakIsotropicVector`, all ranks; rank-4 frontier via
+binary Hilbert reciprocity) and theta-modularity (definite `8 ∣ rank`). The **only remaining tracked
+hypothesis is `topo`** (`2 ∣ σ/8`), which is irreducibly topological (not an axiom, not algebraic).
 
 See docs/roadmaps/Phase5qB_SpectraFreeSpinBordism_Roadmap.md (Waves B3, B4) and
 docs/roadmaps/Phase5qB_LabNotebook.md.
