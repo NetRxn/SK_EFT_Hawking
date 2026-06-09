@@ -73,5 +73,59 @@ theorem base_case (v : Fin 2 × Fin 2 → ZOmegaSqrt2) (hden : ∀ i, denExp (v 
   rw [hv_eq]
   exact isColRealizableWithin_omega_pow_basis k i₀.1 i₀.2
 
+/-! ### The column denominator exponent and the induction skeleton
+
+The column lemma inducts on the **column denominator exponent** `colDenExp v` (the max `√2`-denominator
+exponent over the entries) down to the base case `colDenExp v = 0`. Each reduction step left-multiplies
+by an `O(1)` realizable `g` lowering `colDenExp`, so by `smul_left` (inc 10) the realizability climbs
+back up. This isolates the **one** remaining synthesis piece — the reduction step — as `ReductionStep`. -/
+
+/-- **Column denominator exponent**: the largest `√2`-denominator exponent among the entries. The
+measure the dim-4 column lemma inducts on. -/
+def colDenExp (v : Fin 2 × Fin 2 → ZOmegaSqrt2) : ℕ := Finset.univ.sup fun i => denExp (v i)
+
+/-- Each entry's denominator exponent is `≤ colDenExp`. -/
+theorem denExp_le_colDenExp (v : Fin 2 × Fin 2 → ZOmegaSqrt2) (i : Fin 2 × Fin 2) :
+    denExp (v i) ≤ colDenExp v :=
+  Finset.le_sup (f := fun i => denExp (v i)) (Finset.mem_univ i)
+
+/-- **Base case via the measure**: a `colDenExp`-`0` unit column is column-realizable (every entry has
+denominator exponent `0`, so `base_case` applies). -/
+theorem isColRealizableWithin_of_colDenExp_zero (v : Fin 2 × Fin 2 → ZOmegaSqrt2)
+    (h0 : colDenExp v = 0) (hunit : ∑ i, normSq (v i) = 1) : ∃ L, IsColRealizableWithin v L :=
+  base_case v (fun i => Nat.le_zero.mp (h0 ▸ denExp_le_colDenExp v i)) hunit
+
+/-- **The reduction-step property** (budget `C`): every unit column with positive denominator exponent
+factors as `g · v'` for a realizable `g` (within `C`) and a **strictly-lower-`colDenExp`** unit column
+`v'`. This is the dim-4 Giles–Selinger residue reduction — the one remaining synthesis brick (it reuses
+the dim-2 `reduceStep` + `kmm_lemma3`, the tolerated-`native_decide` site Track 3 will eliminate). -/
+def ReductionStep (C : ℕ) : Prop :=
+  ∀ v : Fin 2 × Fin 2 → ZOmegaSqrt2, (∑ i, normSq (v i) = 1) → 0 < colDenExp v →
+    ∃ (g : Mat4) (v' : Fin 2 × Fin 2 → ZOmegaSqrt2),
+      IsRealizableWithin g C ∧ v = g.mulVec v' ∧ (∑ i, normSq (v' i) = 1) ∧
+        colDenExp v' < colDenExp v
+
+/-- **The dim-4 column lemma, reduced to the reduction step.** Given the reduction step (budget `C`),
+**every unit column is column-realizable** — by strong induction on `colDenExp`: at `0` use the base
+case; otherwise factor `v = g · v'` (lower `colDenExp`), realize `v'` by induction, and climb back via
+`smul_left` (`g` realizable, budgets add). This is the unconditional column lemma modulo the single
+residue-reduction brick; assembling that brick (reusing the dim-2 substrate) completes circuit `C`. -/
+theorem colLemma_of_reductionStep {C : ℕ} (hred : ReductionStep C)
+    (v : Fin 2 × Fin 2 → ZOmegaSqrt2) (hunit : ∑ i, normSq (v i) = 1) :
+    ∃ L, IsColRealizableWithin v L := by
+  suffices H : ∀ n v, colDenExp v = n → (∑ i, normSq (v i) = 1) → ∃ L, IsColRealizableWithin v L from
+    H (colDenExp v) v rfl hunit
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n IH =>
+    intro v hn hv
+    rcases Nat.eq_zero_or_pos n with h0 | hpos
+    · exact isColRealizableWithin_of_colDenExp_zero v (hn.trans h0) hv
+    · obtain ⟨g, v', hg, hveq, hv'unit, hv'lt⟩ := hred v hv (hn ▸ hpos)
+      obtain ⟨L', hL'⟩ := IH (colDenExp v') (hn ▸ hv'lt) v' rfl hv'unit
+      refine ⟨C + L', ?_⟩
+      rw [hveq]
+      exact IsColRealizableWithin.smul_left hg hL'
+
 end Gate2
 end SKEFTHawking.RossSelinger
