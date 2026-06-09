@@ -262,14 +262,31 @@ The previous from-scratch DPI/modular-operator plan is retained only in version 
 - **native_decide elimination (4 KMM sites) — kernel-`decide` confirmed INFEASIBLE under no-maxHeartbeats;
   needs structural reproofs (a dedicated sub-program).** Empirically sized: `cliffordBase_box_core` /
   `bridge_box_core` (`zomBox²×8`, matrix-interp / kSO3), `kmm_lemma3_alg2` (`(ZMod 8)⁴²` = 16.7M Coord4
-  pairs), `maStep_exists_core` (`validCol³` ~244M). All exceed the elaborator heartbeat budget for kernel
-  `decide` (and #10 forbids `maxHeartbeats`), so each requires a research-grade STRUCTURAL reproof
-  (KMM Lemma-3 mod-8 algebra; Giles–Selinger sde↔kSO3; Clifford-group ≤6-word coverage; MA-step
-  orbit-closure) — the structural-KMM-correctness theory the KMM authors used `native_decide` to bypass.
+  pairs), `maStep_exists_core` (`validCol³`; validCol filtered to 18/42/90 for t=2/4/8 ⟹ **~809k triples**,
+  NOT the earlier "244M" — corrected by the adversarial review). All exceed the elaborator heartbeat budget
+  for kernel `decide` (empirically demonstrated: even a t=2-only slice blows the 200k budget; `maxHeartbeats 0`
+  finishes t=2 in ~45s — a *budget* wall, and #10 forbids `maxHeartbeats`), so each requires a STRUCTURAL
+  reproof (KMM Lemma-3 mod-8 algebra [genuinely research-flavoured]; Giles–Selinger sde↔kSO3; Clifford-group
+  ≤6-word coverage; MA-step orbit-closure [mechanical-tedious, not deep]) — the structural-KMM-correctness
+  theory the KMM authors used `native_decide` to bypass.
   **Project-TOLERATED meanwhile** (`validate.py --check axiom_closure_allowlist` tracks-not-fails them).
   A dedicated `/goal` (structural KMM purity); not a wall, not dropped.
 
-**Net:** W1–W4 + W6 meet their gates. W5's efficiency goal is met and its residual is now a precise,
-literature-grounded `Prop` (the genuine prime-density wall) rather than an opaque hypothesis; the full-
-unconditional discharge (§5/§6 grid-FINDER) and the native_decide structural cleanup are each a tracked,
-dedicated sub-program. No axioms added anywhere; no Mathlib-pin bump; never pushed.
+**Net (adversarial review 2026-06-09, fresh-context Opus 4.8 subagent — independently confirmed):**
+W2, W3, W4, W6 **genuinely meet their strength-pinned gates and are kernel-pure** `{propext,
+Classical.choice, Quot.sound}` (verified by independent `#print axioms` on 13 headlines; W3 routes around
+the PhysLib `Relative.lean` sorry; W6 maximal-coupling math checked correct). **W5 does NOT meet its gate
+as written** — the efficiency headlines remain (a) conditional on the residual existence and (b) carry the
+4 KMM `native_decide` axioms in their closure, both explicitly forbidden by the W5 gate. This is an HONEST
+tracked residual, NOT papered over: the descope rests on a **genuine, correctly-located prime-density wall**
+(the review independently confirmed Mathlib's Dirichlet [`NumberTheory.LSeries.PrimesInAP`] is present but
+**insufficient** — the need is primes-of-a-given-norm in a *growing grid window*, a Bunyakovsky/short-interval
+statement absent from Mathlib and open in the literature), with the right axiom-free disposition (Caves-precedent
+`Prop`, never an axiom). **DISPOSITION OPTIONS (user call):** (a) formally amend the W5 gate to accept the
+tracked-`native_decide` + conditional-on-residual posture as the deliverable (efficiency met; full
+unconditionality blocked by a literature-open conjecture); or (b) keep W5 open and spin the two constructive
+sub-programs — §5/§6 grid-FINDER (convex geometry + two-squares-over-ℤ[√2]; thins but cannot remove the wall)
+and structural-KMM `native_decide` elimination — into dedicated `/goal`s. Also flagged: the §5/§6/§7 RS
+citation scaffolding (`Phase-6x` DR) is self-flagged PARTIAL-VIABLE (§6 iff-criterion / §7.2 constant
+unconfirmed vs primary `1403.2975v3`) — verify before any RS claim is load-bearing in a published bundle.
+No axioms added anywhere; no Mathlib-pin bump; never pushed.

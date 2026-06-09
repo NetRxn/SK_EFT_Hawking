@@ -18,7 +18,7 @@ statements about the repo's representation.
 * `toCPTPMap_apply_eq`                        — the round-trip lifted to `MState` equality
 * `krausMap_sandwichedRenyi_DPI`              — **transfer witness**: the repo's Kraus channels
     inherit PhysLib's data-processing inequality for the sandwiched Rényi relative entropy. The
-    PhysLib FQN `PhysLib's `sandwichedRenyiEntropy_DPI` (`QuantumInfo/Finite/Entropy/DPI.lean`)` is *invoked in the proof body*
+    PhysLib FQN `sandwichedRenyiEntropy_DPI` (`QuantumInfo/Finite/Entropy/DPI.lean`) is *invoked in the proof body*
     (CLAUDE.md P6), so `#print axioms` shows the PhysLib closure.
 
 The channel bridge is a faithful *identification* rather than a Choi reconstruction: PhysLib's
@@ -84,8 +84,9 @@ theorem toCPTPMap_apply_eq (K : Fin m → Matrix ι ι ℂ) (hK : IsKrausChannel
 /-- **Transfer witness (P6-faithful).** The repo's Kraus channels inherit PhysLib's
 **data-processing inequality** for the sandwiched Rényi relative entropy: for `α ≥ 1` and density
 operators `ρ, σ`, the entropy between the channel *outputs* `krausMap K ρ`, `krausMap K σ` is at
-most the entropy between the *inputs*. The bound is `PhysLib's `sandwichedRenyiEntropy_DPI` (`QuantumInfo/Finite/Entropy/DPI.lean`)`
-invoked in the proof body, transported across the Wave-2 round-trip so the statement is phrased on
+most the entropy between the *inputs*. PhysLib's `sandwichedRenyiEntropy_DPI`
+(`QuantumInfo/Finite/Entropy/DPI.lean`) is invoked in the proof body, transported across the Wave-2
+round-trip so the statement is phrased on
 the repo's `krausMap`. -/
 theorem krausMap_sandwichedRenyi_DPI {α : ℝ} (hα : 1 ≤ α)
     (K : Fin m → Matrix ι ι ℂ) (hK : IsKrausChannel K)
