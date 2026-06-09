@@ -190,5 +190,41 @@ theorem cnot01_isRealizable : IsRealizable cnot01 := gateMatrix2_isRealizable .c
 
 theorem cnot10_isRealizable : IsRealizable cnot10 := gateMatrix2_isRealizable .cx10
 
+/-! ## Length-tracked realizability
+
+The O(log 1/ε) headline is a statement about word **length**, so the realizable class is refined to
+carry a length budget. The budget is **additive under composition** (`interp2_append` +
+`List.length_append`), so a circuit assembled from pieces of length `L₁, …, Lₙ` has length `≤ ΣLᵢ` —
+the structure that turns "each piece is O(log 1/ε)" into "the whole circuit is O(log 1/ε)". -/
+
+/-- `M` is **realizable within length `L`** if some `Gate2` word of length `≤ L` interprets to `M`. -/
+def IsRealizableWithin (M : Mat4) (L : ℕ) : Prop :=
+  ∃ w : List Gate2, interp2 w = M ∧ w.length ≤ L
+
+/-- Weaken the length budget. -/
+theorem IsRealizableWithin.mono {M : Mat4} {L L' : ℕ} (h : IsRealizableWithin M L) (hL : L ≤ L') :
+    IsRealizableWithin M L' :=
+  let ⟨w, hw, hlw⟩ := h; ⟨w, hw, hlw.trans hL⟩
+
+/-- Forget the budget. -/
+theorem IsRealizableWithin.isRealizable {M : Mat4} {L : ℕ} (h : IsRealizableWithin M L) :
+    IsRealizable M :=
+  let ⟨w, hw, _⟩ := h; ⟨w, hw⟩
+
+/-- Each generator is realizable within length `1`. -/
+theorem gateMatrix2_realizableWithin_one (g : Gate2) : IsRealizableWithin (gateMatrix2 g) 1 :=
+  ⟨[g], by rw [interp2_cons, interp2_nil]; exact Matrix.mul_one _, by simp⟩
+
+/-- **Budgets add under product** (the load-bearing length-composition law): word concatenation gives
+`interp2 (wa ++ wb) = A * B` with `length (wa ++ wb) = La' + Lb' ≤ La + Lb`. -/
+theorem IsRealizableWithin.mul {A B : Mat4} {La Lb : ℕ}
+    (hA : IsRealizableWithin A La) (hB : IsRealizableWithin B Lb) :
+    IsRealizableWithin (A * B) (La + Lb) := by
+  obtain ⟨wa, ha, hla⟩ := hA
+  obtain ⟨wb, hb, hlb⟩ := hB
+  refine ⟨wa ++ wb, by rw [interp2_append, ha, hb], ?_⟩
+  rw [List.length_append]
+  omega
+
 end Gate2
 end SKEFTHawking.RossSelinger

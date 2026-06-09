@@ -62,4 +62,14 @@ theorem embedFst_isRealizable (M : Matrix (Fin 2) (Fin 2) ZOmegaSqrt2)
     Gate2.IsRealizable (Gate2.embedFst M) :=
   ⟨(KMM.kmmReduce M).map Gate2.onFst, embedFst_kmmReduce_interp M hM⟩
 
+/-- **System-line synthesis with the O(log 1/ε) length budget.** An ℤ[ω][1/√2]-realizable single-qubit
+`M` makes `M ⊗ I` realizable on the two-qubit register *within length* `N₃ + 4·denExp(|M₀₀|²)` — the
+single-qubit KMM bound (= O(sde), exponent-1 `O(log 1/ε)`). This is the length-tracked base case the
+ancilla circuit composes (via `IsRealizableWithin.mul`) for its system-line operations. -/
+theorem embedFst_kmmReduce_realizableWithin (M : Matrix (Fin 2) (Fin 2) ZOmegaSqrt2)
+    (hM : KMM.IsCliffordTRealizable M) :
+    Gate2.IsRealizableWithin (Gate2.embedFst M)
+      (KMM.N₃ + 4 * ZOmegaSqrt2.denExp (ZOmegaSqrt2.normSq (M 0 0))) :=
+  ⟨(KMM.kmmReduce M).map Gate2.onFst, embedFst_kmmReduce_interp M hM, embedFst_kmmReduce_length M hM⟩
+
 end SKEFTHawking.RossSelinger
