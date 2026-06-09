@@ -71,5 +71,16 @@ theorem isColRealizableWithin_e0 :
   funext i
   rw [Matrix.one_apply]
 
+/-- **Every computational basis state is column-realizable within `2`.** The basis state `|a,b⟩`
+(`fun i => if i = (a,b) then 1 else 0`) is prepared from `|00⟩` by `X^a ⊗ X^b` — a Clifford word of
+`≤ 2` `Gate2` gates (an `onFst X` iff `a = 1`, an `onSnd X` iff `b = 1`). The base-case permutation
+piece of the dim-4 column lemma. -/
+theorem isColRealizableWithin_basis (a b : Fin 2) :
+    IsColRealizableWithin (fun i => if i = (a, b) then 1 else 0) 2 := by
+  refine ⟨interp2 ((if a = 1 then [Gate2.onFst .X] else []) ++ (if b = 1 then [Gate2.onSnd .X] else [])),
+    ⟨_, rfl, ?_⟩, ?_⟩
+  · fin_cases a <;> fin_cases b <;> decide
+  · fin_cases a <;> fin_cases b <;> decide
+
 end Gate2
 end SKEFTHawking.RossSelinger
