@@ -483,20 +483,30 @@ dim-2 reduction** (exactly as inc-4 `AncillaSynthesisBridge` already consumes th
 eliminates `kmm_lemma3_alg2`** (structural mod-8 / symmetry-reduced kernel-decide) ⟹ retroactively
 kernel-pure. NOT a wall (provable, not axiom-needing) — sequencing, not de-scope.
 
-**↑ REFINED inc 15–16 (the dependency is WEAKER than first thought — likely NO `kmm_lemma3` needed):**
+**↑ inc 15 + inc 16 (the latter's framing CORRECTED — `kmm_lemma3` IS needed; see ⚠ below):**
 - inc 15 (`ad3d7c77`): `colDenExp` measure + `ReductionStep C` predicate + **`colLemma_of_reductionStep`**
   (the column lemma by strong induction on `colDenExp`, reduced to `ReductionStep` alone — base case at 0,
   else `v=g·v'` climbs via `smul_left`). The ENTIRE remaining circuit-`C` synthesis is now the single
   `ReductionStep` brick (then controlled-C + operator-norm assembly).
-- inc 16 (`6b7e337d`, `MatchingResidue.lean`): **the per-pair reduction is ELEMENTARY** —
-  `dividesSqrt2_add_of_dividesSqrt2_sub` (`x≡y mod √2 ⟹ √2∣x±y`, since `x+y=(x−y)+2y`) +
-  `denExp_mk_succ_le_of_dividesSqrt2`. Two entries sharing a residue mod √2 ⟹ both `(x±y)/√2 ∈ ℤ[ω]`,
-  so an `H`-combination lowers denExp — **kernel-pure, NO `kmm_lemma3`** (`kmm_lemma3` proves the stronger
-  *optimal* T-count; the column lemma needs only *some* reduction). **⟹ a kernel-pure `ReductionStep`
-  (hence kernel-pure Track-2 synthesis) is LIKELY INDEPENDENT of Track 3's `kmm_lemma3_alg2`.** Remaining
-  `ReductionStep` input = the **pairing** (matching max-denExp entries exist — forced by the unit/parity
-  condition; the Giles–Selinger combinatorial step) + the 2-level `H` as a `Gate2` circuit (CNOT + `onSnd H`
-  + `T^k` residue-alignment via the `ω:(p,q)↦(q,p)` action on `ℤ[ω]/(√2)≅𝔽₂²`). That is the next build.
+- inc 16 (`6b7e337d`, `MatchingResidue.lean`): `dividesSqrt2_add_of_dividesSqrt2_sub` (`x≡y mod √2 ⟹
+  √2∣x±y`) + `denExp_mk_succ_le_of_dividesSqrt2`. **These lemmas are CORRECT facts** (and useful
+  scaffolding), but the commit's *framing* ("elementary reduction, independent of `kmm_lemma3`") was
+  **WRONG — corrected**:
+  - ⚠ **(a) matching-residue + H does NOT reduce `colDenExp`.** Cleared at `colDenExp=s` (`wᵢ/√2^s`), an
+    `H` on a matching pair gives `(wᵢ±wⱼ)/√2^{s+1}`; `wᵢ±wⱼ` are `√2`-divisible so these land at denExp
+    `≤ s`, but `(wᵢ+wⱼ)/√2` is generically NOT further `√2`-divisible (would need `wᵢ+wⱼ` divisible by
+    `√2²=2`, not just `√2`). So the combined entries sit at denExp **`= s`, not `s−1`** — no reduction.
+    The real reduction needs the `|·|²` 2-adic-valuation (`gde`) argument = exactly `kmm_lemma3`.
+  - ⚠ **(b) the headline REQUIRES the optimal T-count.** Even if some elementary reduction existed, the
+    headline is **exponent-1 `O(log 1/ε)`** length — that IS the *optimal* T-count `kmm_lemma3` proves; a
+    suboptimal reduction would blow the exponent. **Do NOT substitute a weaker reduction.**
+  - ⟹ **`ReductionStep` MUST use the optimal `kmm_lemma3` reduction.** Architecture (unchanged from the
+    pre-inc-16 plan): build `ReductionStep` reusing the dim-2 `reduceStep` + `kmm_lemma3_column`
+    (tolerated `native_decide`, as inc-4 already consumes the 4 sites) → ship the exponent-1 headline →
+    **Track 3 structurally eliminates `kmm_lemma3_alg2`** ⟹ retroactively kernel-pure. Remaining
+    `ReductionStep` input = the dim-4 **pairing/orchestration** of the dim-2 `reduceStep` (which entries
+    to combine, via CNOT + `onSnd`/`onFst` embedding of `reduceStep`) + the `colDenExp`-decrease proof
+    (per-pair via `kmm_lemma3_column`). That is the next build.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
