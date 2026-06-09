@@ -1528,6 +1528,11 @@ import SKEFTHawking.FKLW.RossSelinger.AncillaLeakage
 -- backbone: G realizable + v col-realizable ⟹ G·v col-realizable, budgets add), isColRealizableWithin_e0
 -- (base anchor |00⟩). The skeleton the dim-4 Column Lemma induction (on denominator exponent) is built on.
 import SKEFTHawking.FKLW.RossSelinger.ColumnSynthesis
+-- Phase 6AO Track 2 (increment 11; 2026-06-09): the dim-4 column-lemma base-case number theory —
+-- normSq_eq_one_iff_omega_pow (|z|²=1 ⟺ z=ωᵏ, k<8: the modulus-1 elements of ℤ[ω] are exactly the
+-- 8th roots of unity, via elementary sum-of-four-squares — no Galois/Kronecker) + normSq_eq_zero_iff
+-- (|z|²=0 ⟺ z=0). The denExp-0 unit-column structure (one unit entry ⟹ ωᵏ·eᵢ realizable) builds on these.
+import SKEFTHawking.FKLW.RossSelinger.ColumnBaseCase
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
