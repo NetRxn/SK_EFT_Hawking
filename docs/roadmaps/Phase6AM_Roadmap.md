@@ -520,6 +520,22 @@ off; the v2 conflated `kmm_lemma3` with the column lemma).
     (even count of `0001` ⟹ matching pair) ⟹ `ReductionStep`; (iv) inc-15 `colLemma_of_reductionStep`
     ⟹ unconditional column lemma. All kernel-pure. THIS is the next build (elementary, NOT research-grade).
 
+**Giles–Selinger build PROGRESS (inc 18–21, `GilesSelingerResidue.lean`, ALL kernel `decide` only —
+native_decide held at 596, confirming Track-3 independence):**
+- inc 18 (`47c2a5fd`): `normSq_cd_not_both_odd` — residue-norm classification (`{0000,0001,1010}`, never
+  `1011`: `(|z|²).c`,`(|z|²).d` never both odd; `Q≡(a+c)(b+d)`, `P≡(a+c)+(b+d)`).
+- inc 19 (`ba635d43`): `cHom`/`dHom`+`sum_c`/`sum_d` (coord sums distribute) + `dividesSqrt2_iff_normSq_
+  cd_even` (active = not-√2-divisible ⟺ residue norm ≠ 0000).
+- inc 20 (`0e200ed6`): parity engine — `emod_two_eq_zero_iff_zmod`, `intCast_zmod2_eq_ite`,
+  **`even_card_filter_of_sum_even`** (even ℤ-sum ⟹ even count of odd summands).
+- inc 21 (`0552a469`): **`exists_matching_residue_pair` = GILES–SELINGER LEMMA 5 DONE** — unit column +
+  active entry ⟹ two distinct entries with matching residue norm mod 2, both active.
+- **NEXT = Lemma 4** (the H/T 2-level row operation: matching pair ⟹ `colDenExp` drops by 1; 3 residue-
+  norm cases; reuse inc-16 `√2`-clearing + inc-17 block-action — mechanical-concrete, NOT research-grade)
+  → assemble Lemma 4 + Lemma 5 + common-denominator clearing into `ReductionStep` → inc-15
+  `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et al.) +
+  operator-norm assembly on inc-8/9 ⟹ the `∀U∈SU(2)` headline.
+
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
 ### Track 3 + 2-qubit-synthesis JOINED PROGRAM (2026-06-09; user-approved, <10k LOC bar; method = my judgment, elegance-first)
