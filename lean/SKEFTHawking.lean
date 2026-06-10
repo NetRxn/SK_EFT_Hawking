@@ -1516,6 +1516,14 @@ import SKEFTHawking.FKLW.RossSelinger.RelNormEvenPowerObstruction
 -- via conj-fixedness). Both the u²+1 (p≡1 mod 4) and u²+2 (p≡3 mod 8) paper cases are
 -- instances (w = u+i, w = u+√2i are conj-pairs: u²+k = normSq w). Specializations next inc.
 import SKEFTHawking.FKLW.RossSelinger.RelNormPrimeCase
+-- Phase 6AO Track 1(c) inc 6 (2026-06-10) — **C.20 instances + C.21 criterion**:
+-- daggerDecomposable_sqrt2 (p=2: √2 = λ⁻¹·δ†δ, δ=1+ω);
+-- daggerDecomposable_of_dvd_prime_one_mod_four (w = u+i via ZMod.exists_sq_eq_neg_one_iff) and
+-- _three_mod_eight (w = u+√2i via ZMod.exists_sq_eq_neg_two_iff; difference-kills 2ω²·ω² = −2,
+-- 2√2i·√2(−i) = 4); not_dvd_two_of_dvd_odd_prime (Bezout 1 = p − 2m);
+-- **daggerDecomposable_pow_iff_seven** — Lemma C.21 at the obstructed primes: N(ξ)=±p, p≡7(8):
+-- ξ^m †-decomposable ⟺ m EVEN (the even-power criterion, iff form). zsqrtd_norm_pow.
+import SKEFTHawking.FKLW.RossSelinger.RelNormPrimeCaseInstances
 -- Phase 6x Tier-2 Item I (2026-05-30) — compile_correct approximation helpers:
 -- linftyOpNorm_fin_two_le (entrywise ≤δ ⟹ ℓ∞-operator-norm ≤ 2δ for 2×2) + su2_entry_structure
 -- (U∈SU(2) ⟹ U=[[a,−b̄],[b,ā]]). Propagate the grid first-column approximation to ‖·‖≤ε.
