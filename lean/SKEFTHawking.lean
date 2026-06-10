@@ -1493,6 +1493,14 @@ import SKEFTHawking.FKLW.RossSelinger.RelNormSolvability
 -- λ•=−λ⁻¹ absorbed by ∀-position), explicit 3-candidate base (1+√2, √2), λ-power bracketing
 -- with the swapped family at j+1 rescuing the √2-gap (λ ≥ 2).
 import SKEFTHawking.FKLW.RossSelinger.GridExistenceSharp
+-- Phase 6AO Track 1(c) inc 3 (2026-06-10) — RS 1403.2975v3 **Lemma C.19**:
+-- daggerDecomposable_mul_iff — for coprime α, β ∈ ℤ[√2], αβ †-decomposable ⟺ both are.
+-- BEZOUT-ONLY (no GCDMonoid/normalize): s := gcd(t, embed α) in the new EuclideanDomain ZOmega;
+-- s·s† ∣ α² (conjHom dvd-transport) ∧ s·s† ∣ t·t† ~ αβ; IsCoprime.map transports Bezout through
+-- the embedding ⟹ s·s† ∣ α = xα²+yαβ; conversely gcd_eq_gcd_ab expands s·s† = pp†(tt†)+α(…) ⟹
+-- α ∣ s·s†; mutual dvd of CONJ-FIXED elements descends to an ℤ[√2]-unit (conj-fixed ⟺ embedded,
+-- by coordinates). Also conjHom (bundled), relNormZsqrt2_mul.
+import SKEFTHawking.FKLW.RossSelinger.RelNormMultiplicativity
 -- Phase 6x Tier-2 Item I (2026-05-30) — compile_correct approximation helpers:
 -- linftyOpNorm_fin_two_le (entrywise ≤δ ⟹ ℓ∞-operator-norm ≤ 2δ for 2×2) + su2_entry_structure
 -- (U∈SU(2) ⟹ U=[[a,−b̄],[b,ā]]). Propagate the grid first-column approximation to ‖·‖≤ε.
