@@ -39,6 +39,7 @@ import SKEFTHawking.FKLW.RossSelinger.UnitaryClosure
 import SKEFTHawking.FKLW.RossSelinger.MuDecrease
 import SKEFTHawking.FKLW.RossSelinger.GridSynth
 import SKEFTHawking.FKLW.RossSelinger.BridgeStructural
+import SKEFTHawking.FKLW.RossSelinger.MAStepStructural
 
 set_option autoImplicit false
 
@@ -134,10 +135,9 @@ theorem blochNum_c_eq_u (M : Mat2) (i j : Fin 3) : (blochNum M i j).c = -(blochN
 
 /-! ## The MA reduction step, realizability-free (`ma_step_exists_u`)
 
-Unitary mirrors of the `MAStepExists` chain: with reality now free (`blochNum_*_u`) and
-orthogonality already `IsUnitaryT` (`blochNum_orthogonal`), every realizability hypothesis in
-the MA-step existence collapses to bare `IsUnitaryT`. The bodies are the originals verbatim
-with `isUnitaryT_of_isCliffordTRealizable h ↦ hu` and `blochNum_real/b_zero/c_eq h ↦ *_u M`. -/
+Unitary mirrors of the `MAStepExists`/`MAStepStructural` chain: with reality now free
+(`blochNum_*_u`) and orthogonality already `IsUnitaryT` (`blochNum_orthogonal`), every
+realizability hypothesis in the MA-step existence collapses to bare `IsUnitaryT`. -/
 
 /-- Per-column squared-modulus sum (realizability-free). -/
 theorem blochNum_normSq_sum_u {M : Mat2} (hu : IsUnitaryT M) (j : Fin 3) :
@@ -146,22 +146,6 @@ theorem blochNum_normSq_sum_u {M : Mat2} (hu : IsUnitaryT M) (j : Fin 3) :
   rw [if_pos rfl] at hortho
   rw [← hortho]; apply Finset.sum_congr rfl; intro i _; rw [ZOmega.normSq, blochNum_real_u M i j]
 
-/-- Coordinate bound from `kSO3 ≤ 3` (realizability-free). -/
-theorem blochNum_normSq_d_le_u {M : Mat2} (hu : IsUnitaryT M) (hk : kSO3 M ≤ 3) (i j : Fin 3) :
-    (ZOmega.normSq (blochNum M i j)).d ≤ 8 := by
-  have hsum := congrArg ZOmega.d (blochNum_normSq_sum_u hu j)
-  rw [two_pow_d] at hsum
-  have hsumd : ∑ i', (ZOmega.normSq (blochNum M i' j)).d = 2 ^ kSO3 M := by
-    rw [← hsum]; simp [Fin.sum_univ_three, ZOmega.add_d]
-  have hle : (ZOmega.normSq (blochNum M i j)).d ≤ 2 ^ kSO3 M := by
-    rw [← hsumd]
-    have hnn : ∀ i', 0 ≤ (ZOmega.normSq (blochNum M i' j)).d := by
-      intro i'; rw [ZOmega.normSq_d]; positivity
-    fin_cases i <;> simp_all [Fin.sum_univ_three] <;> nlinarith [hnn 0, hnn 1, hnn 2]
-  have : (2 : ℤ) ^ kSO3 M ≤ 8 := by
-    calc (2:ℤ)^kSO3 M ≤ 2^3 := pow_le_pow_right₀ (by norm_num) hk
-      _ = 8 := by norm_num
-  omega
 
 /-- `√2 ∤ B` from `kSO3`-exactness (realizability-free — reality is automatic). -/
 theorem blochNum_exists_odd_d_u (M : Mat2) (hk1 : 1 ≤ kSO3 M) :
@@ -190,35 +174,7 @@ theorem blochNum_exists_odd_d_u (M : Mat2) (hk1 : 1 ≤ kSO3 M) :
   have hle : denExp (blochEntry M p.1 p.2) ≤ kSO3 M - 1 := denExp_le_iff.mpr ⟨w, hcancel⟩
   omega
 
-/-- Each cleared Bloch numerator lies in `realBoxList` (realizability-free). -/
-theorem blochNum_mem_realBoxList_u {M : Mat2} (hu : IsUnitaryT M) (hk3 : kSO3 M ≤ 3)
-    (i j : Fin 3) : blochNum M i j ∈ realBoxList := by
-  have hb := blochNum_b_zero_u M i j
-  have hc := blochNum_c_eq_u M i j
-  have hnd := blochNum_normSq_d_le_u hu hk3 i j
-  rw [ZOmega.normSq_d, hb, hc] at hnd
-  apply mem_realBoxList hb hc <;>
-    nlinarith [sq_nonneg (blochNum M i j).a, sq_nonneg (blochNum M i j).d,
-      sq_nonneg ((blochNum M i j).a - 2), sq_nonneg ((blochNum M i j).a + 2),
-      sq_nonneg ((blochNum M i j).d - 2), sq_nonneg ((blochNum M i j).d + 2)]
 
-/-- The `j`-th cleared Bloch column lies in `validCol (2^kSO3 M)` (realizability-free). -/
-theorem col_mem_validCol_u {M : Mat2} (hu : IsUnitaryT M) (hk3 : kSO3 M ≤ 3) (j : Fin 3) :
-    ((blochNum M 0 j, blochNum M 1 j, blochNum M 2 j) : Col) ∈ validCol (2 ^ kSO3 M) := by
-  rw [validCol, List.mem_filter]
-  refine ⟨?_, ?_⟩
-  · rw [List.mem_flatMap]
-    exact ⟨blochNum M 0 j, blochNum_mem_realBoxList_u hu hk3 0 j, by
-      rw [List.mem_flatMap]
-      exact ⟨blochNum M 1 j, blochNum_mem_realBoxList_u hu hk3 1 j, by
-        rw [List.mem_map]
-        exact ⟨blochNum M 2 j, blochNum_mem_realBoxList_u hu hk3 2 j, rfl⟩⟩⟩
-  · rw [decide_eq_true_eq]
-    have hortho := blochNum_orthogonal hu j j
-    rw [if_pos rfl, Fin.sum_univ_three] at hortho
-    show blochNum M 0 j * blochNum M 0 j + blochNum M 1 j * blochNum M 1 j
-        + blochNum M 2 j * blochNum M 2 j = _
-    rw [hortho, two_pow_eq]
 
 /-- `√2 ∤` the column triple (realizability-free). -/
 theorem col_notSqrt2Div_u (M : Mat2) (hk1 : 1 ≤ kSO3 M) :
@@ -230,34 +186,26 @@ theorem col_notSqrt2Div_u (M : Mat2) (hk1 : 1 ≤ kSO3 M) :
   exact ⟨blochNum M i j, by fin_cases i <;> fin_cases j <;> simp,
     by rw [beq_iff_eq]; exact hij⟩
 
-/-- **`ma_step` existence, realizability-free**: a unitary `M` with `1 ≤ kSO3 M ≤ 3` admits a
-syllable strip lowering `kSO3` by ≥ 1 — the MA recursion's reducing step from bare unitarity
-(the realizability hypothesis is gone). -/
-theorem ma_step_exists_u {M : Mat2} (hu : IsUnitaryT M)
-    (hk1 : 1 ≤ kSO3 M) (hk3 : kSO3 M ≤ 3) :
+/-- **`ma_step` existence, realizability-free AND bound-free**: a unitary `M` with
+`kSO3 M ≥ 1` admits a syllable strip lowering `kSO3` by ≥ 1 — the MA recursion's reducing
+step from bare unitarity, via the structural parity theorem `someKills_of_orthogonal`
+(`MAStepStructural.lean` — no box, and the former `kSO3 ≤ 3` hypothesis is gone). -/
+theorem ma_step_exists_u {M : Mat2} (hu : IsUnitaryT M) (hk1 : 1 ≤ kSO3 M) :
     ∃ s : Syllable, kSO3 (stripMat s M) < kSO3 M := by
-  have htmem : (2 : ℤ) ^ kSO3 M ∈ ([2, 4, 8] : List ℤ) := by
-    rcases (by omega : kSO3 M = 1 ∨ kSO3 M = 2 ∨ kSO3 M = 3) with hh | hh | hh <;> rw [hh] <;> decide
-  have e4 := List.all_eq_true.mp (List.all_eq_true.mp (List.all_eq_true.mp
-    (List.all_eq_true.mp maStep_exists_core _ htmem) _ (col_mem_validCol_u hu hk3 0))
-    _ (col_mem_validCol_u hu hk3 1)) _ (col_mem_validCol_u hu hk3 2)
-  have hbracket :
-      (decide (Col.dot (blochNum M 0 0, blochNum M 1 0, blochNum M 2 0)
-            (blochNum M 0 1, blochNum M 1 1, blochNum M 2 1) = 0)
-        && decide (Col.dot (blochNum M 0 0, blochNum M 1 0, blochNum M 2 0)
-            (blochNum M 0 2, blochNum M 1 2, blochNum M 2 2) = 0)
-        && decide (Col.dot (blochNum M 0 1, blochNum M 1 1, blochNum M 2 1)
-            (blochNum M 0 2, blochNum M 1 2, blochNum M 2 2) = 0)
-        && notSqrt2Div (blochNum M 0 0, blochNum M 1 0, blochNum M 2 0)
-            (blochNum M 0 1, blochNum M 1 1, blochNum M 2 1)
-            (blochNum M 0 2, blochNum M 1 2, blochNum M 2 2)) = true := by
-    rw [Bool.and_eq_true, Bool.and_eq_true, Bool.and_eq_true, decide_eq_true_eq,
-        decide_eq_true_eq, decide_eq_true_eq]
-    exact ⟨⟨⟨col_dot_eq_zero hu (by decide), col_dot_eq_zero hu (by decide)⟩,
-      col_dot_eq_zero hu (by decide)⟩, col_notSqrt2Div_u M hk1⟩
-  rw [hbracket, Bool.not_true, Bool.false_or] at e4
-  rw [someKills, List.any_eq_true] at e4
-  obtain ⟨s, -, hs⟩ := e4
+  have hreal : ∀ j : Fin 3,
+      ColReal (blochNum M 0 j, blochNum M 1 j, blochNum M 2 j) := fun j =>
+    ⟨blochNum_b_zero_u M 0 j, blochNum_c_eq_u M 0 j, blochNum_b_zero_u M 1 j,
+      blochNum_c_eq_u M 1 j, blochNum_b_zero_u M 2 j, blochNum_c_eq_u M 2 j⟩
+  have ht : (2 : ℤ) ^ kSO3 M % 2 = 0 := by
+    have : (2 : ℤ) ^ kSO3 M = 2 * 2 ^ (kSO3 M - 1) := by
+      rw [← pow_succ', show kSO3 M - 1 + 1 = kSO3 M from by omega]
+    omega
+  have hkills := someKills_of_orthogonal ht (hreal 0) (hreal 1) (hreal 2)
+    (col_selfDot hu 0) (col_selfDot hu 1) (col_selfDot hu 2)
+    (col_dot_eq_zero hu (by decide)) (col_dot_eq_zero hu (by decide))
+    (col_dot_eq_zero hu (by decide)) (col_notSqrt2Div_u M hk1)
+  rw [someKills, List.any_eq_true] at hkills
+  obtain ⟨s, -, hs⟩ := hkills
   rw [Bool.and_eq_true, Bool.and_eq_true] at hs
   obtain ⟨⟨hk0, hk1c⟩, hk2c⟩ := hs
   refine ⟨s, kSO3_stripMat_lt hu s hk1 (fun i j => ?_)⟩
@@ -404,7 +352,7 @@ theorem maCoverage_aux_u :
     intro M hu hdet hkn hn3
     rcases Nat.eq_zero_or_pos n with hn0 | hnpos
     · subst hn0; exact cliffordBase_u hu hdet hkn
-    · obtain ⟨s, hlt⟩ := ma_step_exists_u hu (by omega) (by omega)
+    · obtain ⟨s, hlt⟩ := ma_step_exists_u hu (by omega)
       have hmn : kSO3 (stripMat s M) < n := by rw [← hkn]; exact hlt
       obtain ⟨gs', hgs'⟩ := ih (kSO3 (stripMat s M)) hmn (stripMat s M)
         (isUnitaryT_stripMat hu s) (det_stripMat' hdet s) rfl (by omega)

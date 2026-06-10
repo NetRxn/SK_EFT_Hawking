@@ -28,7 +28,7 @@ separately; the recursion is unconditional.
 
 -/
 
-import SKEFTHawking.FKLW.RossSelinger.MAStepExists
+import SKEFTHawking.FKLW.RossSelinger.MAStepStructural
 import SKEFTHawking.FKLW.RossSelinger.MuDecrease
 import SKEFTHawking.FKLW.RossSelinger.KMMReduceMu
 
@@ -58,8 +58,7 @@ theorem maCoverage_aux
       obtain ⟨gs, hgs, hlen⟩ := cliffordBase M hM hkn
       exact ⟨gs, hgs, by omega⟩
     · have hk1 : 1 ≤ kSO3 M := by omega
-      have hk3 : kSO3 M ≤ 3 := by omega
-      obtain ⟨s, hlt⟩ := ma_step_exists hM hk1 hk3
+      obtain ⟨s, hlt⟩ := ma_step_exists hM hk1
       have hmn : kSO3 (stripMat s M) < n := by rw [← hkn]; exact hlt
       obtain ⟨gs', hgs', hlen'⟩ :=
         ih (kSO3 (stripMat s M)) hmn (stripMat s M) (stripMat_realizable s hM) rfl (by omega)
