@@ -775,9 +775,15 @@ the smaller measure. Real-embedding order `zsqrt2ToReal`.
 †-decomposable. Infrastructure: `zsqrt2ToZOmega` (ℤ[√2]→+*ℤ[ω]; conj-fixed; σ5↔star;
 toComplex↔zsqrt2ToReal via `s2C_eq`), `relNormZsqrt2` + **norm tower**
 `N_ℤ[√2](relNorm t) = N_ℤ[ω](t)` ⟹ t≠0 strict positivity via `norm_eq_zero_iff` (no
-toComplex-injectivity). REMAINING (c): C.19 (coprime multiplicativity; Mathlib
-`gcd_mul_dvd_mul_gcd` + new ZOmega gcd) → C.20 (prime case; `ZMod.exists_sq_eq_neg_one_iff`,
-t = gcd(ξ, u+i), three-possibilities argument; p≡7(8) impossibility via a²+b² mod 8) → C.21.
+toComplex-injectivity). **✅ (c) inc 3 SHIPPED (`88818fa4`): Lemma C.19** (`RelNormMultiplicativity.lean`,
+`daggerDecomposable_mul_iff`) — Bezout-only (conjHom dvd-transport; IsCoprime.map; gcd_eq_gcd_ab
+expansion; conj-fixed ⟺ embedded descent). **✅ (c) inc 4 SHIPPED (`e0ca23a7`): the EVEN-POWER
+OBSTRUCTION** (`RelNormEvenPowerObstruction.lean`, `not_daggerDecomposable_of_norm_pow_seven`) —
+N(ξ) = ±(a²+b²) for †-decomposables (norm tower + ℤ[i]-Gauss form) and a²+b² ≢ 7 (mod 8); plus
+`daggerDecomposable_pow_even`/`DaggerDecomposable.pow`. REMAINING (c): C.20 positive cases
+(p=2 explicit δ†δ; p≡1(4) via `ZMod.exists_sq_eq_neg_one_iff` + t = gcd(embed ξ, u+i) +
+dvd_prime_pow three-possibilities; p≡3(8) via `ZMod.exists_sq_eq_neg_two_iff`, u²+2 factors with
+sqrt2·ω²) → C.21 per-prime-power assembly (Even m ∨ p%8 ∈ {1,2,3,5}).
 **✅ (d) SHIPPED (`35cb7b09`, 9233 green, kernel-pure): `GridExistenceSharp.lean` —
 Lemma 4.4 SHARP product form** (`oneDim_grid_exists_product`): `δ·Δ ≥ (1+√2)²` ALONE gives 1-D
 grid existence at every position — the asymmetric tiny-ε-region × huge-disk form Lemma 5.23 /
