@@ -1612,6 +1612,13 @@ import SKEFTHawking.FKLW.RossSelinger.Gate3Control
 -- column = |1⟩⊗|v⟩ with v a unit column, v(0,1)=0, |00⟩-amplitude within √2/2^k of e^{iφ}, ancilla
 -- leakage ≤ 2√2/2^k. By linearity = the full KMM ≤2-ancilla guarantee on ancilla-initialized inputs.
 import SKEFTHawking.FKLW.RossSelinger.KMMZRotationHeadline
+-- Phase 6AO Track 2 (inc 37, 2026-06-10): unitarity of three-qubit words + the ℂ-norm transport —
+-- adjoint8/IsUnitary8 (ring-level conj-transpose at dim 8); EVERY Gate3 generator unitary (ONE kernel
+-- reduction over the 30-element Fintype, decide +kernel top-level); interp3_unitary (word induction);
+-- toComplexMat8 intertwines adjoint8 with ᴴ (toComplex_conj *-hom) ⟹ embedded words ℂ-UNITARY;
+-- sumNormSq (squared ℓ² on ℂ⁸) preserved by embedded words — the norm-preservation the ∀U error
+-- composition consumes (intermediate states leave the initialized subspace).
+import SKEFTHawking.FKLW.RossSelinger.Gate3Unitary
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
