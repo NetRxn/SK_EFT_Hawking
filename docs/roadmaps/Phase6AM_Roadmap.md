@@ -748,15 +748,28 @@ z-rotation slope, hence the DR's "3–4 not 12"). Historical log entries above r
 shorthand; THIS block is the citation source of truth. Thesis refs (Prop 3.2.7/3.2.4,
 Lemma 5.2.38) are Ross-thesis numbering, kept as separate-source citations.
 
-**Track 1 (b–d) implementation plan (verified anchors):** (b) `GaussInt2 = ℤ[√2][i]`
-EuclideanDomain (mirror `Zsqrt2EuclideanDomain`; brick `b5123126` has IsDomain + norm_eq_zero) →
-PID/UFD. (c) even-power criterion = Lean-ify **C.16 + C.19/C.20/C.21** over the shipped
-`Zsqrt2EuclideanDomain` (splitting law C.8/C.9/C.11; constructive u²≡−1/−2 cases per C.22;
-lift Mathlib `Nat.eq_sq_add_sq_iff` template). (d) §5 grid existence = **Lemma 4.4 (1D)** +
-**Lemma 5.23 (two-disk)** as Lean theorems (center-rounding versions shipped in `GridProblem.lean`;
-the quantitative `(1+√2)²` thresholds are the remaining sharp forms). Terminal ancilla-free
-existence stays a tracked `Prop` (strictly weaker than Hyp 8.3 — relative-norm density, not
-primality), NEVER an axiom.
+**Track 1 (b–d) implementation plan (verified anchors):** (b) ~~`GaussInt2 = ℤ[√2][i]`
+EuclideanDomain~~ **MATHEMATICALLY IMPOSSIBLE as roadmapped** — ℤ[√2][i] is an index-2
+non-integrally-closed subring of ℤ[ω] (paper Lemma 5.5: `ℤ[ω] = ℤ[√2][i] ∪ (ℤ[√2][i]+ω)`), so it
+is never a UFD, let alone Euclidean; caught by the primary-source verification. The correct object
+is the FULL `ZOmega = ℤ[ζ₈]`. **✅ (b) SHIPPED 2026-06-10 (`e78d8c43`, 9230 green, kernel-pure):
+`ZOmegaEuclideanDomain.lean` — `EuclideanDomain ZOmega`** (Mathlib has none for ℤ[ζ₈]): ℤ[i]-pair
+Gaussian rounding on the `{1,ω}`-grading (γ=d+bi, δ=c+ai; relative conj = the existing `σ5`;
+`norm t = N_ℤ[i](t·σ5 t)` = sum of two squares ⟹ `norm_nonneg` free), descent crux
+`|eγ²−i·eδ²|² < 1` via the **perpendicular-corner rescue** (all-corners: eγ² purely imaginary,
+i·eδ² purely real ⟹ value 1/2; algebraic skeleton `A²+B² = S² − 2(e₁(f₁−f₂)+e₂(f₁+f₂))²`).
+Plus `IsDomain ZOmega`, `norm_eq_zero_iff` (ℤ[√2]-descent via `Zsqrtd.norm_eq_zero`/`two_ne_sq`),
+`norm_σ5`, grading lemmas, natAbs descent. ⟹ PID/UFD/gcd for ℤ[ω] — the C.18–C.21 gcd engine.
+🔑 Lean lesson: `field_simp` rewrites inside `round`-atoms and breaks cancellation — prove the
+round-free exact-quotient identities first, then close coordinate identities with
+`linear_combination` (coefficient −1), keeping `round` atomic.
+(c) even-power criterion = Lean-ify **C.16 + C.19/C.20/C.21** over the shipped
+`Zsqrt2EuclideanDomain` + new `ZOmega` gcd (splitting law C.8/C.9/C.11; constructive u²≡−1/−2
+cases per C.22; lift Mathlib `Nat.eq_sq_add_sq_iff` template). (d) §5 grid existence =
+**Lemma 4.4 (1D)** + **Lemma 5.23 (two-disk)** as Lean theorems (center-rounding versions shipped
+in `GridProblem.lean`; the quantitative `(1+√2)²` thresholds are the remaining sharp forms).
+Terminal ancilla-free existence stays a tracked `Prop` (strictly weaker than Hyp 8.3 —
+relative-norm density, not primality), NEVER an axiom.
 
 ### Track 3 + 2-qubit-synthesis JOINED PROGRAM (2026-06-09; user-approved, <10k LOC bar; method = my judgment, elegance-first)
 
