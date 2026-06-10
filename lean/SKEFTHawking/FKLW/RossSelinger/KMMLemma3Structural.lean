@@ -95,6 +95,50 @@ theorem reach_Q (x y : Coord4) :
   obtain ⟨a, b, c, d⟩ := x; obtain ⟨e, f, g, h⟩ := y
   simp only [Pform, Qform, Bform, mulOmegaPow, mulOmega]; ring
 
+/-! ### The k-sweep update tables -/
+
+/-- The `P`-update of the `k`-th rotation: `P(x + ωᵏy) = P(x) + P(y) + pUpd k`. -/
+def pUpd (t0 t1 t2 t3 : ZMod 8) : Fin 4 → ZMod 8
+  | 0 => 2 * t0
+  | 1 => 2 * t1
+  | 2 => 2 * t2
+  | 3 => 2 * t3
+
+/-- The `Q`-update of the `k`-th rotation: `Q(x + ωᵏy) = Q(x) + Q(y) + qUpd k`
+(`Tₖ₊₁ − Tₖ₊₃` with the `Tₖ₊₄ = −Tₖ` signed fold). -/
+def qUpd (t0 t1 t2 t3 : ZMod 8) : Fin 4 → ZMod 8
+  | 0 => t1 - t3
+  | 1 => t2 + t0
+  | 2 => t3 + t1
+  | 3 => t2 - t0
+
 end Coord4
+
+/-! ### The master sweeps (kernel `decide` over the reachable `(P,Q,T)`-data)
+
+`qY = −qX` is forced exactly (`Q(x)+Q(y) = 0`), so the translated `Q`-base is `0`;
+`2(P(x)+P(y)) = 0` leaves `pY ∈ {−pX, 4−pX}` (translated `P`-base `0` or `4`) — one
+master per branch. The two reachability hypotheses are the norm-multiplicativity
+constraints (`reach_P`/`reach_Q`); WITHOUT them the sweep is false. -/
+
+set_option maxRecDepth 8000 in
+/-- **Master sweep, branch `pY = −pX`** (`P`-base `0`). -/
+theorem kmm_master_a : ∀ pX qX t0 t1 t2 t3 : ZMod 8, ∀ j : Fin 2,
+    gdePQ pX qX = j.val → gdePQ (-pX) (-qX) = j.val →
+    pX * (-pX) + 2 * (qX * (-qX)) = t0 ^ 2 + t1 ^ 2 + t2 ^ 2 + t3 ^ 2 →
+    pX * (-qX) + qX * (-pX) = t3 * t2 + t2 * t1 + t1 * t0 - t3 * t0 →
+    ∀ s : Fin 3, ∃ k : Fin 4,
+      gdePQ (0 + pUpd t0 t1 t2 t3 k) (0 + qUpd t0 t1 t2 t3 k) = (s.val + 1) + j.val := by
+  decide +kernel
+
+set_option maxRecDepth 8000 in
+/-- **Master sweep, branch `pY = 4 − pX`** (`P`-base `4`). -/
+theorem kmm_master_b : ∀ pX qX t0 t1 t2 t3 : ZMod 8, ∀ j : Fin 2,
+    gdePQ pX qX = j.val → gdePQ (4 - pX) (-qX) = j.val →
+    pX * (4 - pX) + 2 * (qX * (-qX)) = t0 ^ 2 + t1 ^ 2 + t2 ^ 2 + t3 ^ 2 →
+    pX * (-qX) + qX * (4 - pX) = t3 * t2 + t2 * t1 + t1 * t0 - t3 * t0 →
+    ∀ s : Fin 3, ∃ k : Fin 4,
+      gdePQ (4 + pUpd t0 t1 t2 t3 k) (0 + qUpd t0 t1 t2 t3 k) = (s.val + 1) + j.val := by
+  decide +kernel
 
 end SKEFTHawking.RossSelinger.KMM
