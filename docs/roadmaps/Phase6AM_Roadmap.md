@@ -780,10 +780,13 @@ toComplex-injectivity). **✅ (c) inc 3 SHIPPED (`88818fa4`): Lemma C.19** (`Rel
 expansion; conj-fixed ⟺ embedded descent). **✅ (c) inc 4 SHIPPED (`e0ca23a7`): the EVEN-POWER
 OBSTRUCTION** (`RelNormEvenPowerObstruction.lean`, `not_daggerDecomposable_of_norm_pow_seven`) —
 N(ξ) = ±(a²+b²) for †-decomposables (norm tower + ℤ[i]-Gauss form) and a²+b² ≢ 7 (mod 8); plus
-`daggerDecomposable_pow_even`/`DaggerDecomposable.pow`. REMAINING (c): C.20 positive cases
-(p=2 explicit δ†δ; p≡1(4) via `ZMod.exists_sq_eq_neg_one_iff` + t = gcd(embed ξ, u+i) +
-dvd_prime_pow three-possibilities; p≡3(8) via `ZMod.exists_sq_eq_neg_two_iff`, u²+2 factors with
-sqrt2·ω²) → C.21 per-prime-power assembly (Even m ∨ p%8 ∈ {1,2,3,5}).
+`daggerDecomposable_pow_even`/`DaggerDecomposable.pow`. **✅ (c) incs 5–6 SHIPPED
+(`22d7fe95` + `bf19314a`): the C.20 ENGINE** (`daggerDecomposable_of_prime_dvd_normSq` —
+three-possibilities via t = gcd(embed ξ, w), dvd_prime_pow, gcd_isUnit_iff, conj-fixed descent)
+**+ INSTANCES** (p=2 √2 = λ⁻¹δ†δ; p≡1(4) via u+i / `ZMod.exists_sq_eq_neg_one_iff`; p≡3(8) via
+u+√2i / `exists_sq_eq_neg_two_iff`; `ZMod.intCast_surjective` lifts — no val-plumbing)
+**+ `daggerDecomposable_pow_iff_seven`** = **LEMMA C.21, THE EVEN-POWER CRITERION (iff)**:
+N(ξ)=±p, p≡7(8) ⟹ (ξ^m †-dec ⟺ Even m). **TRACK 1 (a–d) COMPLETE.**
 **✅ (d) SHIPPED (`35cb7b09`, 9233 green, kernel-pure): `GridExistenceSharp.lean` —
 Lemma 4.4 SHARP product form** (`oneDim_grid_exists_product`): `δ·Δ ≥ (1+√2)²` ALONE gives 1-D
 grid existence at every position — the asymmetric tiny-ε-region × huge-disk form Lemma 5.23 /
