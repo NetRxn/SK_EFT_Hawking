@@ -78,9 +78,13 @@ $10^3$--$10^6$ improvement over spontaneous-correlation detection);
 graphene delivers a closed-form noise spectrum
 $\Delta S_I(\omega) = 2\hbar\omega \sigma_Q \Gamma(\omega) n_H(\omega)$
 derived independently from Keldysh fluctuation-dissipation and
-Landauer-Büttiker scattering, validated cross-platform by the
-giant Wiedemann-Franz violation $L/L_0 > 200$ measured at the same
-device. End-to-end, \substantivetheorems{}~Lean theorems are
+Landauer-Büttiker scattering, cross-checked against the giant
+Wiedemann-Franz violation $L/L_0 > 200$ measured by Majumdar et al.
+The quantum-critical transport coefficients
+($\sigma_Q \approx 4e^2/h$, $L/L_0 > 200$) are adopted from
+Majumdar et al.'s monolayer-graphene Dirac-fluid characterization
+as a cross-device modeling assumption for the bilayer nozzle
+regime. End-to-end, \substantivetheorems{}~Lean theorems are
 machine-verified
 (\texttt{lake build} clean, zero \texttt{sorry},
 \aristotleproved{}~closed by the Aristotle automated prover). The substrate's first-order KMS structure
@@ -112,7 +116,18 @@ projected at the Heidelberg group for an as-yet-unrealised
 transonic-flow target), exciton-polariton
 microcavities~\cite{Falque2025,Giacobino2025}, and bilayer-graphene
 Dirac fluids in supersonic nozzle
-geometries~\cite{Geurs2025,Majumdar2025}. The three platforms span a
+geometries~\cite{Geurs2025,Majumdar2025}. On the graphene platform
+the experimental record is geometric and transport-based rather
+than spectral: Geurs et al.~\cite{Geurs2025} demonstrate supersonic
+electron flow past the electronic sound barrier in a bilayer
+de~Laval nozzle (terminated by a viscous shock front), establishing
+the transonic transition that is the geometric prerequisite for an
+analog sonic horizon, while Majumdar et al.~\cite{Majumdar2025}
+characterize the quantum-critical Dirac-fluid transport (in
+ultra-clean monolayer graphene) that fixes the dissipative sector;
+the analog-Hawking interpretation and the spectrum prediction are
+the present work's theoretical application, not a finding of either
+experiment. The three platforms span a
 ten-order-of-magnitude window in Hawking temperature
 ($\SI{0.35}{\nano\kelvin}$ to $\SI{2.4}{\kelvin}$) and use
 microscopic constituents that differ as profoundly as cold atoms
@@ -707,8 +722,16 @@ nozzle parameters~\cite{AndersonBFP2013}.
 
 The Lorenz number $L_0 = \pi^2 k_B^2 / 3 e^2$ is the standard
 ratio of thermal to electrical conductivities in a Fermi liquid.
-The bilayer-graphene Dirac fluid violates this by factor
-$> 200$~\cite{Majumdar2025}. The two-channel SK-EFT structure
+Majumdar et al.~\cite{Majumdar2025} measure a violation of this
+ratio by a factor $> 200$ in ultra-clean monolayer graphene at the
+Dirac point. As in the companion letter E2, we adopt these
+quantum-critical transport coefficients
+($\sigma_Q \approx 4e^2/h$, $L/L_0 > 200$) for the Dean-equivalent
+bilayer-Dirac-fluid regime --- a modeling assumption, since the
+Dean nozzle device (Ref.~\cite{Geurs2025}, bilayer) is plausibly
+within the same quantum-critical universality class but is not
+itself the device measured in
+Ref.~\cite{Majumdar2025}. The two-channel SK-EFT structure
 (charge and heat are independent) predicts giant Wiedemann-Franz
 violation as a structural consequence of the same noise structure
 that gives~\eqref{eq:graphene-noise}. This is captured in

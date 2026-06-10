@@ -27,7 +27,11 @@ We give the SK-EFT-predicted analog Hawking spectrum, surface gravity
 $\kappa$, dispersive parameter $D$, and current-noise observables at
 the Dean group's bilayer-graphene de~Laval-nozzle parameters
 \cite{Geurs2025} with the Majumdar et al.\ Wiedemann-Franz-violation
-transport coefficients~\cite{Majumdar2025}. The predicted Hawking
+transport coefficients~\cite{Majumdar2025}. The quantum-critical
+transport coefficients ($\sigma_Q \approx 4e^2/h$, $L/L_0 > 200$)
+are adopted from the Majumdar et al.\ monolayer Dirac-fluid
+characterization as a cross-device modeling assumption for the
+bilayer nozzle regime. The predicted Hawking
 temperature is $T_H \approx \SI{2.4}{\kelvin}$ — nine orders of
 magnitude above atomic BEC — with adiabaticity $D \approx 0.23$
 (deep in the perturbative regime) and dissipative correction
@@ -64,11 +68,17 @@ acoustic-metric framework of Visser~\cite{Visser1998,Bilic1999} predict
 that fluid systems with sonic horizons emit thermal radiation with
 temperature set by the velocity-gradient surface gravity. The
 Geurs et al.~\cite{Geurs2025} demonstration of supersonic electron
-flow through a de~Laval nozzle in bilayer graphene establishes a
-hydrodynamic-electron sonic horizon: drift velocity $v > c_s \approx
+flow past the electronic sound barrier in a bilayer-graphene
+de~Laval nozzle — drift velocity $v > c_s \approx
 \SI{440}{\kilo\meter/\second}$ inside a $\SI{200}{\nano\meter}$
-throat. The Majumdar et al.~\cite{Majumdar2025} measurement of
-quantum-critical transport at the Dirac point — universal conductance
+throat, terminated by a viscous shock front — establishes the
+transonic transition that is the geometric prerequisite for a
+hydrodynamic-electron sonic horizon; the analog-Hawking
+interpretation of that flow, and the spectrum predicted below, are
+this Letter's theoretical application, not a finding of
+Ref.~\cite{Geurs2025}. The Majumdar et al.~\cite{Majumdar2025}
+measurement of quantum-critical transport at the Dirac point in
+ultra-clean monolayer graphene — universal conductance
 $\sigma_Q \approx 4\,e^2/h$ and Wiedemann-Franz violation
 exceeding $200\times$, with $\eta/s$ within a factor of four of the
 Kovtun-Son-Starinets bound~\cite{KSS2005} (consistent with the
@@ -78,8 +88,11 @@ transport coefficients needed to predict the Hawking signal. Together
 with the Zhao et al.~\cite{Zhao2023} hydrodynamic-plasmon
 measurement constraining the conformal sound speed
 $c_s = v_F/\sqrt{2}$,
-every prerequisite for analog Hawking detection in graphene is
-in place.
+the prerequisites for analog Hawking detection in graphene are in
+place — the transonic nozzle geometry demonstrated directly on the
+bilayer device~\cite{Geurs2025}, the quantum-critical transport
+coefficients adopted cross-device from the monolayer
+measurement~\cite{Majumdar2025}.
 
 This Letter provides the SK-EFT-predicted Hawking spectrum and
 current-noise observables at the Dean device's published parameters,
@@ -148,7 +161,7 @@ structural simplification: every 1+1D Hawking calculation — WKB
 connection formula, Bogoliubov coefficients, dispersive corrections —
 applies directly to the $(t,x)$ sector via the binding lemma
 \texttt{DiracFluidWKB.toExactWKB}, which is checked in
-$\sim 92\%$ of the transferred Lean theorems.
+$\sim 93\%$ of the transferred Lean theorems.
 
 The transverse-channel cutoff is the only genuine 2+1D effect. For
 the Dean nozzle ($W = \SI{1}{\micro\meter}$, $c_s = \SI{4.4e5}{\meter/\second}$),
@@ -199,9 +212,11 @@ is positive for $D^2 < 6/\pi$, formalized in
 The dissipative correction is negligible. The Majumdar
 et al.~\cite{Majumdar2025} $\eta/s$ bound is reported for the
 thermal-regime effective dynamic viscosity in the cleanest
-hBN-encapsulated samples; we adopt it here for the Dean-equivalent
+hBN-encapsulated monolayer samples; we adopt it here for the
+Dean-equivalent
 ultra-clean bilayer-Dirac-fluid regime — a modeling assumption since
-the Dean nozzle device (Geurs2025) is plausibly within the same
+the Dean nozzle device (Ref.~\cite{Geurs2025}, bilayer) is plausibly
+within the same
 universality class but is not itself the device measured in
 \cite{Majumdar2025}. With $\eta/s \approx 4 \times \hbar/(4\pi k_B)$
 and $T \approx \SI{150}{\kelvin}$, the viscous damping rate at the
@@ -436,8 +451,11 @@ quasi-1D treatment is parametrically safe (lowest transverse
 channel above $4\omega_H$, formally verified). The falsifiable spectral window is
 $\omega/\omega_H \in [0.5, 4]$ (Eq.~\eqref{eq:falsifiable_window}).
 The Dean-Kim-Lucas
-device~\cite{Geurs2025,Majumdar2025} now has every prerequisite for
-the measurement; the SK-EFT framework supplies the prediction; the
+device~\cite{Geurs2025} has demonstrated the transonic nozzle
+geometry for the measurement, with quantum-critical transport
+coefficients adopted cross-device from the monolayer
+characterization~\cite{Majumdar2025}; the SK-EFT framework supplies
+the prediction; the
 Lean~4 verification chain (\substantivetheorems{}~substantive
 theorems / \leanmodules{}~modules / \axiomcount{}~axiom /
 \sorrycount{}~sorry; \texttt{lake build} clean, v4.29.0,
