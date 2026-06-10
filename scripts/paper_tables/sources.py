@@ -422,22 +422,37 @@ def validation_checks() -> list[dict]:
 
     Returns rows with: number, name, description.
     """
-    import re as _re
+    import ast as _ast
     validate_py = PROJECT_ROOT / "scripts" / "validate.py"
     if not validate_py.exists():
         return []
 
-    text = validate_py.read_text()
-    # Match only DECORATOR usages (line starts with @register_check),
-    # never examples inside docstrings or comments.
-    pattern = _re.compile(
-        r'^@register_check\(\s*"([^"]+)"\s*,\s*("(?:[^"\\]|\\.)*")\s*\)',
-        _re.MULTILINE | _re.DOTALL,
-    )
+    # AST-based extraction: robust to multi-line decorators, implicit
+    # string concatenation in descriptions, and trailing commas — the
+    # earlier single-string-literal regex silently dropped 4 of the
+    # registered checks (found 2026-06-10 during the I1 methodology sync).
+    tree = _ast.parse(validate_py.read_text())
+    found: list[tuple[int, str, str]] = []
+    for node in _ast.walk(tree):
+        if not isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+            continue
+        for dec in node.decorator_list:
+            if (isinstance(dec, _ast.Call)
+                    and isinstance(dec.func, _ast.Name)
+                    and dec.func.id == 'register_check'
+                    and len(dec.args) >= 2
+                    and isinstance(dec.args[0], _ast.Constant)
+                    and isinstance(dec.args[1], _ast.Constant)):
+                found.append((dec.lineno, str(dec.args[0].value), str(dec.args[1].value)))
+    found.sort()
     rows = []
-    for idx, m in enumerate(pattern.finditer(text), start=1):
-        name = m.group(1)
-        desc = m.group(2)[1:-1].replace('\\"', '"')
+    for idx, (_, name, desc) in enumerate(found, start=1):
+        # LaTeX-sanitize check descriptions: special characters (#, &, %) and
+        # non-ASCII operators. Backslash/braces/underscore are NOT escaped —
+        # descriptions may intentionally embed LaTeX (e.g. \texttt{}), and the
+        # document tolerates raw underscores (established by the pre-existing rows).
+        desc = (desc.replace('#', r'\#').replace('&', r'\&').replace('%', r'\%')
+                .replace('≤', r'$\leq$').replace('—', '---'))
         rows.append({
             'number': str(idx),
             'name': f'\\texttt{{{name}}}',
