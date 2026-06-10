@@ -47,3 +47,39 @@ Post-Wave-1-7 absorption: F bundle synced with sibling Tier-1 fix-pass correctio
   - **ADW-coupling-count hedging (per F-Y1 caution).** Physics-coupling claims dropped hard counts rather than inflating 13 → 16: synthesis claim (~219) now "the same ADW substrate with $N_f = 16$ drives the program's sibling threads"; "its thirteen faces are thirteen bundles' worth" metaphor (abstract ~67, §1.3 ~261, §12 ~2052 + abstract comment block) now "its faces are the sibling bundles' worth of predictive register". Rationale: D6/D7/D8 are verification-native bundles connected through the FKLW/horizon-MTC line; PAPER_STRATEGY does not establish them as direct ADW-substrate-prediction readers, so a hard "sixteen faces" coupling count is not verifiable. Architecture counts (how many targets exist) remain hard 17/16.
   - Untouched by design: `sixteen left-handed Weyl fermions` (~738/~754, physics $N_f=16$, not a bundle count); "all 13 sub-phases" (~438, counts Phase-6 sub-phases); 93%/106/114 reuse numbers (separate agent's fix).
   - **PDF:** 23 pages, 489666 bytes (was 22 pages). LaTeX compile gate clean ×2 passes (zero errors, zero Undefined references/citations).
+
+## 2026-06-10 — Source-reconciliation pass post external-review remediation (REVISION)
+
+- Source: `bundle_source_freshness` flag (17 of 59 sources modified after F's 2026-05-31 last_lift); committed real-delta set = paper10 [RESTRICTED to Phase 5q.B], paper11, paper12, paper15, paper17, paper18, paper20, paper21, paper26, paper4, paper6, paper7, paper8, paper9 (commits `f6048c48`/`6ac6ef89` paper10; `3036ffd7` paper8; `5207b72b` 11 drafts' zero-axiom/TPFConjecture phrasing + CHECK 24/25/26 calibration; `8b68fe13` paper11 table1_chain regen; `6ca06607`+`43919c53` paper15 table2_checks regen). Remaining flagged sources are mtime noise (auto-regen artifacts).
+- Lift action: Inline-absorption-record (in-place reconciliation edits; no new sections)
+- Insertion point: (in-place edits: abstract, §5 Pillar 1, §6 Closure 3, §9 NO-GO register ×2, §10 pipeline stage list)
+- Stage-13 redo required: yes (substantive prose changed in abstract + body)
+- Verified-consistent (no edit needed):
+  - Zero-axiom / `TPFConjecture` posture (paper4/6/7/8/9/11/12/17/18/20/21/26 delta theme): F already carries `\axiomcount{}` + "formerly `gapped_interface_axiom`" historical framing at all sites (073d0e1e sweep); zero stale "one axiom" hits.
+  - Halenka–Miller PRD **102**, 084007 (2020) relaxed-cluster framing: already present at §1 contribution list, §4 Track-B ledger, §4 candidate list, bibliography (f1a0829f sweep).
+  - Verlinde 2-of-4 ledger at §1 (~195), §4 (~386), §4 Track-B subsection (~1457–1500): already corrected (both_decisive 2-conjunct aggregator language).
+  - D5 module theorem counts (CausalSet 12 / EntropicGravity 17 / JacobsonThermoGR 22 / DarkSectorClassificationExtension 11): already current.
+  - Vergeles propositions naming (Gates E.1, open-register item): matches current D3 §2/§5 "Vergeles unitarity propositions" framing — no fabricated eq-level provenance present in F.
+  - L2/D2 external-hypothesis description (Ω₅^{Spin^Z4} ≅ Z₁₆ as Mathlib-deferral external input): still accurate vs current D2 §1/§5 + L2 — the bordism-group identification remains an external input post-`f6048c48`.
+  - No SU2kSMatrix per-module counts in F (paper11 table 18→253 regen has no F counterpart).
+- Fixed (residual divergence, mirrored at flagship register):
+  - **Abstract (~74–79):** stale "three of four quantitative mechanisms exceed Jeffreys-decisive" → corrected 2-of-4 ledger with Verlinde 2017 ≥5σ galaxy-cluster mass-density exclusion under nominal profile assumptions (mirrors f696c0a0/f1a0829f honest downgrade; 2026-06-10 unit-coherence correction).
+  - **§9 cleared NO-GO register (~1829–1836):** same 3-of-4 → 2-of-4 fix + Halenka–Miller `\cite{HalenkaMiller2020}` attribution.
+  - **§5 Pillar 1 (~800–808):** "Golterman–Shamir no-go / cannot exist / evades this obstruction" → GS conditional-constraints framing (nine kinematical conditions delimiting Nielsen–Ninomiya applicability; TPF *exits the applicability scope* rather than contradicting a theorem), mirroring 1bb62842 D2 §4 reframe; cross-ref "(D2 §4)" added.
+  - **§6 Closure 3 (~975–983):** χ_vest∈[0.1,10] window given honest provenance ("project-adopted order-unity naturalness window about the RPA bubble-integral scale — a modeling choice of this project, not a published derivation") + GW170817 bound stated asymmetrically (−3×10⁻¹⁵ ≤ Δc/c ≤ +7×10⁻¹⁶, conservatively two-sided), mirroring ca0d0f36 D3/L1 corrections.
+  - **§9 falsified register (~1792–1800):** "over the Volovik vestigial natural range" misattribution → mode attributed to Volovik, window flagged project-adopted.
+  - **§10 stage list (~1631):** "validate.py; 22+ checks" → "29+ checks" (paper15 table2_checks regen now enumerates 29 checks; validate.py at 33).
+- **Paper10 / Rokhlin / 16∣σ divergences DOCUMENTED, NOT FIXED (owned by active Phase 5q.B session):**
+  1. F §5 (~756–761) states the Rokhlin 16-convergence as "the signature divides by 16 on a Spin^Z4 4-manifold" with no proven/hypothesis status marker. Post-`f6048c48`, D2/L2/paper10 present 16∣σ as the *unconditional kernel-pure theorem* `SmoothSpinManifold4.rokhlin` (van der Blij 8∣σ + topological 2∣σ/8), headline `sixteen_convergence_unconditional`; F could be upgraded to cite the unconditional theorem (and "closed smooth spin 4-manifold" is the precise hypothesis class, vs F's "Spin^Z4" wording).
+  2. F §5 L2-splash paragraph (~861–870) describes the L2/D2 shared external hypothesis as the Ω₅ ≅ Z₁₆ cobordism input only — consistent today, but if 5q.B's unconditional-16∣σ reframe propagates further (e.g., L2 abstract-level claims), F's "carries the Rokhlin 16-convergence" sentence may want the "now a proved theorem, not an assumed input" qualifier. Handoff to 5q.B / next F lift.
+- **Compile gate:** pdflatex ×2 clean — 23 pages, 491788 bytes; zero errors, zero Missing $/Misplaced &/Undefined control sequence, zero undefined citations/references.
+- **Registry additions needed:** none (HalenkaMiller2020 bibitem + CITATION_REGISTRY entry pre-existing; no new bibkeys introduced).
+- **Freshness flag intentionally NOT cleared** (paper10-driven divergence remains open under the 5q.B restriction; a future lift/absorption event closes it).
+
+## 2026-06-10 — Inline-absorption-record (bookkeeping)
+
+- Source: (none — bookkeeping event)
+- Lift action: Inline-absorption-record
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-06-10 source-reconciliation pass post external-review remediation: real-delta set (paper4/6/7/8/9/11/12/15/17/18/20/21/26 + paper10 RESTRICTED) reconciled against F. Verified-consistent: zero-axiom/TPFConjecture posture, Halenka-Miller PRD 102 084007 (2020) framing, 2-of-4 Bayes-decisive Track-B ledger at the three already-swept sites, D5 module counts, Vergeles-propositions naming, L2/D2 external-hypothesis description. Fixed residuals: abstract + Section-9 register stale 3-of-4 Bayes-decisive -> 2-of-4 with Verlinde >=5-sigma Halenka-Miller exclusion; Pillar-1 GS no-go -> conditional-constraints/applicability framing (mirrors D2); chi_vest window given project-adopted-window provenance + asymmetric GW170817 bound (mirrors D3/L1); Volovik natural-range misattribution; 22+ -> 29+ validate checks. Paper10/Rokhlin 16|sigma unconditional-theorem upgrade DOCUMENTED NOT FIXED (Phase 5q.B ownership) - see change_log.md. Compile gate clean x2 (23pp). stage13_redo_required=true (substantive prose changed); freshness_stale intentionally retained.

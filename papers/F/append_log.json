@@ -33,6 +33,17 @@
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-05-31T17:24:48Z",
       "notes": "Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL \u00a73d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \\input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN)."
+    },
+    {
+      "date": "2026-06-10T20:28:10Z",
+      "source_paper": "(none \u2014 bookkeeping)",
+      "lift_action": "Inline-absorption-record",
+      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-bookkeeping-2026-06-10T20:28:10Z",
+      "notes": "2026-06-10 source-reconciliation pass post external-review remediation: real-delta set (paper4/6/7/8/9/11/12/15/17/18/20/21/26 + paper10 RESTRICTED) reconciled against F. Verified-consistent: zero-axiom/TPFConjecture posture, Halenka-Miller PRD 102 084007 (2020) framing, 2-of-4 Bayes-decisive Track-B ledger at the three already-swept sites, D5 module counts, Vergeles-propositions naming, L2/D2 external-hypothesis description. Fixed residuals: abstract + Section-9 register stale 3-of-4 Bayes-decisive -> 2-of-4 with Verlinde >=5-sigma Halenka-Miller exclusion; Pillar-1 GS no-go -> conditional-constraints/applicability framing (mirrors D2); chi_vest window given project-adopted-window provenance + asymmetric GW170817 bound (mirrors D3/L1); Volovik natural-range misattribution; 22+ -> 29+ validate checks. Paper10/Rokhlin 16|sigma unconditional-theorem upgrade DOCUMENTED NOT FIXED (Phase 5q.B ownership) - see change_log.md. Compile gate clean x2 (23pp). stage13_redo_required=true (substantive prose changed); freshness_stale intentionally retained."
     }
   ]
 }
