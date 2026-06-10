@@ -562,10 +562,18 @@ native_decide held at 596, confirming Track-3 independence):**
   √2-matchable `∃m∈{0,1}, √2∣(w_p−ωᵐw_q)`, via the clean swap-orbit proof (norm class ⟹ mod-√2 residue; `ω`
   swaps its components; matched ⟹ same swap-orbit). `ZMod 2` kernel `decide` (256 cases) + parity bridge;
   kernel-pure `{propext,Classical.choice,Quot.sound}`; native_decide 596; lib+ExtractDeps green (9218).
-- **NEXT (Lemma-4 completion → `ReductionStep`):** (ii) prove brick (B) post-step1 mod-2 alignment (`∃m',
-  2∣u₁−ωᵐ'u₂` where `uᵢ=divSqrt2(w_p±ωᵐw_q)`) — structural mod-`√2³` (the hard core; `u`'s depend on `w`'s
-  mod 4 via `divSqrt2`'s `/2`) → assemble (A)+(B)+`core_step` into the uniform Lemma 4 "matched-active pair ⟹
-  both drop to `denExp ≤ k-1`"; (iii) wrap into the realizable `Gate2` two-level op (embed `H·Tᵐ` via
+- **Brick (B) DECOMPOSED + VALIDATED (kernel `#eval`, 0/512 cross-orbit failures — the recipe for the next
+  increment).** The post-step1 mod-2 alignment splits into two clean halves:
+  - **(B′) step1 lands the `u`'s in the `1010` class:** for cross-orbit `0001` matched-active pairs there is a
+    √2-matching `m` (brick A) with BOTH `u₁=divSqrt2(w_p+ωᵐw_q)`, `u₂=divSqrt2(w_p−ωᵐw_q)` in the `1010`
+    norm-class (`(normSq uᵢ).c` odd). This is the **mod-4 core** (`uᵢ` depend on `w`'s mod 4 via `divSqrt2`'s
+    `/2`; `|uᵢ|² = |w_p±ωᵐw_q|²/2`, so the class is a `|·|²`-mod-4 fact). Strengthen brick A to deliver this `m`.
+  - **(B″) `1010` ⟹ mod-2 aligned:** the `1010` class is the single ω-orbit `{3,6,9,12}`, so any two `1010`
+    elements satisfy `∃m', 2∣(u₁−ωᵐ'u₂)` — a clean `ZMod 2` decide + bridge, exactly like brick A. (B″ also
+    closes the `1010` case of Lemma 4 directly via `core_step`, single step.)
+- **NEXT (Lemma-4 completion → `ReductionStep`):** prove (B″) [clean mod-2, ship first] then (B′) [the mod-4
+  core] → assemble brick A + (B′) + (B″) + `core_step` into the uniform Lemma 4 "matched-active pair ⟹ both
+  drop to `denExp ≤ k-1`"; (iii) wrap into the realizable `Gate2` two-level op (embed `H·Tᵐ` via
   `embedFst`/`embedSnd` + index permutation X/CNOT, inc-17 block-action); (iv) inner induction on
   count-at-max-level + factor `√2` ⟹ `ReductionStep` → inc-15 `colLemma_of_reductionStep` (unconditional dim-4
   column lemma) → controlled-C (Amy et al.) + operator-norm on inc-8/9 ⟹ the `∀U∈SU(2)` headline.
