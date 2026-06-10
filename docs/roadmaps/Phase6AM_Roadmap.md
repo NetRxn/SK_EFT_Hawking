@@ -765,7 +765,20 @@ round-free exact-quotient identities first, then close coordinate identities wit
 `linear_combination` (coefficient −1), keeping `round` atomic.
 (c) even-power criterion = Lean-ify **C.16 + C.19/C.20/C.21** over the shipped
 `Zsqrt2EuclideanDomain` + new `ZOmega` gcd (splitting law C.8/C.9/C.11; constructive u²≡−1/−2
-cases per C.22; lift Mathlib `Nat.eq_sq_add_sq_iff` template). (d) §5 grid existence =
+cases per C.22; lift Mathlib `Nat.eq_sq_add_sq_iff` template).
+**✅ (c) inc 1 SHIPPED (`9c7781ec`): `Zsqrt2Units.lean` — Lemma C.2** (doubly-positive units of
+ℤ[√2] are squares) by fundamental-unit descent WITHOUT unit-group classification: λ⁻²=3−2√2
+shrinks `im.natAbs` (im=1 impossible: re²=3); the φ<1 branch star-flips INSIDE the recursion at
+the smaller measure. Real-embedding order `zsqrt2ToReal`.
+**✅ (c) inc 2 SHIPPED (`13a7e602`): `RelNormSolvability.lean` — Lemma C.16**
+(`relNorm_iff_doublyPositive_decomposable`): t†t = ξ solvable in ℤ[ω] ⟺ ξ doubly-positive ∧
+†-decomposable. Infrastructure: `zsqrt2ToZOmega` (ℤ[√2]→+*ℤ[ω]; conj-fixed; σ5↔star;
+toComplex↔zsqrt2ToReal via `s2C_eq`), `relNormZsqrt2` + **norm tower**
+`N_ℤ[√2](relNorm t) = N_ℤ[ω](t)` ⟹ t≠0 strict positivity via `norm_eq_zero_iff` (no
+toComplex-injectivity). REMAINING (c): C.19 (coprime multiplicativity; Mathlib
+`gcd_mul_dvd_mul_gcd` + new ZOmega gcd) → C.20 (prime case; `ZMod.exists_sq_eq_neg_one_iff`,
+t = gcd(ξ, u+i), three-possibilities argument; p≡7(8) impossibility via a²+b² mod 8) → C.21.
+(d) §5 grid existence =
 **Lemma 4.4 (1D)** + **Lemma 5.23 (two-disk)** as Lean theorems (center-rounding versions shipped
 in `GridProblem.lean`; the quantitative `(1+√2)²` thresholds are the remaining sharp forms).
 Terminal ancilla-free existence stays a tracked `Prop` (strictly weaker than Hyp 8.3 —
