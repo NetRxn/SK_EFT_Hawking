@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 John Roehm. All rights reserved.
 
-# Phase 6AO Track 2 (increments 22–25) — Giles–Selinger Lemma 4, the row operation
+# Phase 6AO Track 2 (increments 22–26) — Giles–Selinger Lemma 4, the row operation
 
 The dim-4 column lemma's reduction (`ReductionStep`, `ColumnBaseRealizable`) is the **Giles–Selinger
 column lemma** (arXiv:1212.0506): Lemma 5 (parity) supplies a **matching residue-norm pair**
@@ -46,8 +46,13 @@ mod 2 — verified by `#eval` enumeration:
   * **inc 25 — `normSq_c_mod4_all_odd` + `divSqrt2_normSq_c_odd`** (Lemma-4 brick B′, the mod-4 core): the
     cross-orbit `0001` step1 (`m` with `w_p+ωᵐw_q ≡ 1111 (mod 2)`) makes both `w_p±ωᵐw_q` all-odd; for
     all-odd `z`, `(normSq z).c ≡ 2 (mod 4)` (clean `ZMod 4` decide), hence `divSqrt2(w_p±ωᵐw_q)` are both
-    `1010` → `lemma4_1010` finishes. (Remaining for the cross-orbit case: the `0001` dichotomy `∃m` step1
-    [mod-2 decide, verified] + the step1 level computation + composition into the uniform Lemma 4.)
+    `1010` → `lemma4_1010` finishes.
+  * **inc 26 — `matched_active_dichotomy`** (the uniform Lemma-4 case-split): every matched-active pair is
+    EITHER mod-2 `ω`-aligned (`∃m, 2∣w_p−ωᵐw_q` → `core_step`) OR step1-able to all-odd
+    (`∃m, w_p+ωᵐw_q` all-coords-odd → `divSqrt2_normSq_c_odd` + `lemma4_1010`). A single `ZMod 2` `decide`
+    + the `ℤ→𝔽₂` parity bridge. This is the one decision the uniform Lemma 4 / `ReductionStep` consumes.
+    (Remaining: the cross-orbit step1 level computation + the column-level `Gate2` wrapper + the inner
+    induction into `ReductionStep`.)
 
 ## Pipeline invariants
 
@@ -234,6 +239,133 @@ theorem divSqrt2_normSq_c_odd {z : ZOmega}
   have hcc : (normSq z).c = 2 * (normSq (divSqrt2 z)).c := by rw [hns, two_mul, add_c]; ring
   have h2 := normSq_c_mod4_all_odd ha hb hc hd
   omega
+
+/-! ### The uniform Lemma-4 case-split (inc 26)
+
+`matched_active_dichotomy` is the single decision that drives the whole row operation: every
+matched residue-norm active pair is EITHER mod-2 `ω`-aligned (`∃m, 2 ∣ w_p − ωᵐw_q` — one `H·Tᵐ`
+via `core_step`, covering the `1010` class and the same-`ω`-orbit `0001` sub-case) OR step1-able to
+all-odd (`∃m, w_p + ωᵐw_q` has all four coords odd — the cross-orbit `0001` sub-case, whose `H·Tᵐ`
+outputs land in the `1010` class by `divSqrt2_normSq_c_odd`, then `lemma4_1010` finishes). The
+mathematical content is a single `ZMod 2` `decide` (`dichB_true`, the residue-norm classification is
+kernel-confirmed over `(ZMod 2)⁸`); the rest is the `ℤ → 𝔽₂` parity bridge. Kernel-pure, no
+`native_decide`, no `maxRecDepth`/`synthInstance` knob. -/
+
+/-- The 12-way residue dichotomy as a single `Bool` (the `decide`-friendly form; the `Prop` `∀`
+of the same disjunction exceeds the default `Decidable`-instance depth — the `Bool` `= true` body
+sidesteps that without a `synthInstance`/`maxRecDepth` knob). The four "all-odd" clauses use `≠`
+(over `ZMod 2`, `x + y = 1 ⟺ x ≠ y`) so the downstream `rcases` never eliminates a compound
+equality. -/
+private def dichB (pa pb pc pd qa qb qc qd : ZMod 2) : Bool :=
+  (decide (pa = pc) && decide (pb = pd)) || (decide (qa = qc) && decide (qb = qd)) ||
+  (! decide (pa*pb - pa*pd + pc*pb + pc*pd = qa*qb - qa*qd + qc*qb + qc*qd)) ||
+  (! decide (pa^2+pb^2+pc^2+pd^2 = qa^2+qb^2+qc^2+qd^2)) ||
+  (decide (pa=qa) && decide (pb=qb) && decide (pc=qc) && decide (pd=qd)) ||
+  (decide (pa=qb) && decide (pb=qc) && decide (pc=qd) && decide (pd=qa)) ||
+  (decide (pa=qc) && decide (pb=qd) && decide (pc=qa) && decide (pd=qb)) ||
+  (decide (pa=qd) && decide (pb=qa) && decide (pc=qb) && decide (pd=qc)) ||
+  (! decide (pa=qa) && ! decide (pb=qb) && ! decide (pc=qc) && ! decide (pd=qd)) ||
+  (! decide (pa=qb) && ! decide (pb=qc) && ! decide (pc=qd) && ! decide (pd=qa)) ||
+  (! decide (pa=qc) && ! decide (pb=qd) && ! decide (pc=qa) && ! decide (pd=qb)) ||
+  (! decide (pa=qd) && ! decide (pb=qa) && ! decide (pc=qb) && ! decide (pd=qc))
+
+/-- The residue-norm dichotomy over `(ZMod 2)⁸` (256 cases, kernel `decide`): a matched
+(`Q,P`-equal) active pair is `ω`-aligned or all-odd-able. -/
+private theorem dichB_true :
+    ∀ pa pb pc pd qa qb qc qd : ZMod 2, dichB pa pb pc pd qa qb qc qd = true := by decide
+
+/-- **Giles–Selinger Lemma 4, the uniform case-split.** A matched residue-norm *active* pair
+`(w_p, w_q)` (`¬√2∣w_p`, `¬√2∣w_q`, equal residue norms `(normSq ·).c,(normSq ·).d` mod 2) satisfies
+EITHER `∃m, 2 ∣ (w_p − ωᵐw_q)` (mod-2 `ω`-aligned — `core_step` drops both column entries one level in
+one `H·Tᵐ`; this is the `1010` class and the same-orbit `0001` sub-case) OR `∃m, w_p + ωᵐw_q` is
+all-coords-odd (the cross-orbit `0001` sub-case — the `H·Tᵐ` outputs `divSqrt2(w_p±ωᵐw_q)` are then
+`1010` by `divSqrt2_normSq_c_odd`, finished by `lemma4_1010`, a 2-step reduction). This is the single
+decision the uniform Lemma 4 / `ReductionStep` consumes. Proof: the `ZMod 2` `decide` `dichB_true`
+(residue-norm classification) + the `ℤ → 𝔽₂` parity bridge. -/
+theorem matched_active_dichotomy {wp wq : ZOmega}
+    (hp : ¬ dividesSqrt2 wp) (hq : ¬ dividesSqrt2 wq)
+    (hcm : (normSq wp).c % 2 = (normSq wq).c % 2) (hdm : (normSq wp).d % 2 = (normSq wq).d % 2) :
+    (∃ m, (2 : ZOmega) ∣ (wp - ω ^ m * wq)) ∨
+    (∃ m, (wp + ω ^ m * wq).a % 2 = 1 ∧ (wp + ω ^ m * wq).b % 2 = 1 ∧
+          (wp + ω ^ m * wq).c % 2 = 1 ∧ (wp + ω ^ m * wq).d % 2 = 1) := by
+  have hbr : ∀ m n : ℤ, m % 2 = n % 2 ↔ (m : ZMod 2) = (n : ZMod 2) := fun m n =>
+    (ZMod.intCast_eq_intCast_iff m n 2).symm
+  have heven : ∀ m n : ℤ, (m : ZMod 2) = (n : ZMod 2) → (m + -n) % 2 = 0 := fun m n h => by
+    have := (hbr m n).mpr h; omega
+  have hodd : ∀ m n : ℤ, (m : ZMod 2) ≠ (n : ZMod 2) → (m + n) % 2 = 1 := fun m n h => by
+    have := (hbr m n).not.mpr h; omega
+  have hodds : ∀ m n : ℤ, (m : ZMod 2) ≠ (n : ZMod 2) → (m + -n) % 2 = 1 := fun m n h => by
+    have := (hbr m n).not.mpr h; omega
+  have h2dvd : ∀ z : ZOmega, z.a % 2 = 0 → z.b % 2 = 0 → z.c % 2 = 0 → z.d % 2 = 0 →
+      (2 : ZOmega) ∣ z := fun z ha hb hc hd => ⟨⟨z.a/2, z.b/2, z.c/2, z.d/2⟩, by
+    ext <;> simp only [mul_a, mul_b, mul_c, mul_d, show (2:ZOmega).a = 0 from rfl,
+      show (2:ZOmega).b = 0 from rfl, show (2:ZOmega).c = 0 from rfl, show (2:ZOmega).d = 2 from rfl] <;>
+      omega⟩
+  have eω : ∀ a b c d : ℤ, ω * (⟨a,b,c,d⟩ : ZOmega) = ⟨b,c,d,-a⟩ := fun a b c d => by
+    ext <;> simp [mul_a, mul_b, mul_c, mul_d]
+  obtain ⟨pa, pb, pc, pd⟩ := wp
+  obtain ⟨qa, qb, qc, qd⟩ := wq
+  have p0 : ω ^ 0 * (⟨qa,qb,qc,qd⟩ : ZOmega) = ⟨qa,qb,qc,qd⟩ := by rw [pow_zero, one_mul]
+  have p1 : ω ^ 1 * (⟨qa,qb,qc,qd⟩ : ZOmega) = ⟨qb,qc,qd,-qa⟩ := by rw [pow_one, eω]
+  have p2 : ω ^ 2 * (⟨qa,qb,qc,qd⟩ : ZOmega) = ⟨qc,qd,-qa,-qb⟩ := by
+    rw [show (2:ℕ) = 1 + 1 from rfl, pow_add, pow_one, mul_assoc, eω, eω]
+  have p3 : ω ^ 3 * (⟨qa,qb,qc,qd⟩ : ZOmega) = ⟨qd,-qa,-qb,-qc⟩ := by
+    rw [show (3:ℕ) = 1 + 1 + 1 from rfl, pow_add, pow_add, pow_one, mul_assoc, mul_assoc, eω, eω, eω]
+  simp only [dividesSqrt2, hbr] at hp hq
+  rw [hbr, normSq_coords, normSq_coords] at hcm hdm
+  push_cast at hcm hdm
+  have h := dichB_true (pa : ZMod 2) pb pc pd qa qb qc qd
+  simp only [dichB, Bool.or_eq_true, Bool.and_eq_true, decide_eq_true_eq, Bool.not_eq_true',
+    decide_eq_false_iff_not] at h
+  rcases h with (((((((((((h|h)|h)|h)|⟨⟨⟨h1,h2⟩,h3⟩,h4⟩)|⟨⟨⟨h1,h2⟩,h3⟩,h4⟩)|⟨⟨⟨h1,h2⟩,h3⟩,h4⟩)|⟨⟨⟨h1,h2⟩,h3⟩,h4⟩)|⟨⟨⟨h1,h2⟩,h3⟩,h4⟩)|⟨⟨⟨h1,h2⟩,h3⟩,h4⟩)|⟨⟨⟨h1,h2⟩,h3⟩,h4⟩)|⟨⟨⟨h1,h2⟩,h3⟩,h4⟩)
+  · exact absurd h hp
+  · exact absurd h hq
+  · exact absurd hcm h
+  · exact absurd hdm h
+  · left; refine ⟨0, h2dvd _ ?_ ?_ ?_ ?_⟩ <;>
+      rw [p0] <;> simp only [sub_eq_add_neg, add_a, add_b, add_c, add_d, neg_a, neg_b, neg_c, neg_d]
+    · exact heven _ _ h1
+    · exact heven _ _ h2
+    · exact heven _ _ h3
+    · exact heven _ _ h4
+  · left; refine ⟨1, h2dvd _ ?_ ?_ ?_ ?_⟩ <;>
+      rw [p1] <;> simp only [sub_eq_add_neg, add_a, add_b, add_c, add_d, neg_a, neg_b, neg_c, neg_d, neg_neg]
+    · exact heven _ _ h1
+    · exact heven _ _ h2
+    · exact heven _ _ h3
+    · have := (hbr pd qa).mpr h4; omega
+  · left; refine ⟨2, h2dvd _ ?_ ?_ ?_ ?_⟩ <;>
+      rw [p2] <;> simp only [sub_eq_add_neg, add_a, add_b, add_c, add_d, neg_a, neg_b, neg_c, neg_d, neg_neg]
+    · exact heven _ _ h1
+    · exact heven _ _ h2
+    · have := (hbr pc qa).mpr h3; omega
+    · have := (hbr pd qb).mpr h4; omega
+  · left; refine ⟨3, h2dvd _ ?_ ?_ ?_ ?_⟩ <;>
+      rw [p3] <;> simp only [sub_eq_add_neg, add_a, add_b, add_c, add_d, neg_a, neg_b, neg_c, neg_d, neg_neg]
+    · exact heven _ _ h1
+    · have := (hbr pb qa).mpr h2; omega
+    · have := (hbr pc qb).mpr h3; omega
+    · have := (hbr pd qc).mpr h4; omega
+  · right; refine ⟨0, ?_, ?_, ?_, ?_⟩ <;> rw [p0] <;> simp only [add_a, add_b, add_c, add_d]
+    · exact hodd _ _ h1
+    · exact hodd _ _ h2
+    · exact hodd _ _ h3
+    · exact hodd _ _ h4
+  · right; refine ⟨1, ?_, ?_, ?_, ?_⟩ <;> rw [p1] <;> simp only [add_a, add_b, add_c, add_d]
+    · exact hodd _ _ h1
+    · exact hodd _ _ h2
+    · exact hodd _ _ h3
+    · exact hodds _ _ h4
+  · right; refine ⟨2, ?_, ?_, ?_, ?_⟩ <;> rw [p2] <;> simp only [add_a, add_b, add_c, add_d]
+    · exact hodd _ _ h1
+    · exact hodd _ _ h2
+    · exact hodds _ _ h3
+    · exact hodds _ _ h4
+  · right; refine ⟨3, ?_, ?_, ?_, ?_⟩ <;> rw [p3] <;> simp only [add_a, add_b, add_c, add_d]
+    · exact hodd _ _ h1
+    · exact hodds _ _ h2
+    · exact hodds _ _ h3
+    · exact hodds _ _ h4
 
 end ZOmega
 

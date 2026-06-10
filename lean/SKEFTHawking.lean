@@ -1549,12 +1549,14 @@ import SKEFTHawking.FKLW.RossSelinger.MatchingResidue
 -- never both odd, since Q≡(a+c)(b+d), P≡(a+c)+(b+d), so Q odd ⟹ P even). The number-theoretic entry
 -- point to the Giles–Selinger column-lemma reduction (Lemma 5 parity); kernel decide over (ZMod 2)⁴.
 import SKEFTHawking.FKLW.RossSelinger.GilesSelingerResidue
--- Phase 6AO Track 2 (increments 22–25; 2026-06-09): Giles–Selinger Lemma-4 row operation. inc 22
+-- Phase 6AO Track 2 (increments 22–26; 2026-06-09): Giles–Selinger Lemma-4 row operation. inc 22
 -- core_step; inc 23 exists_sqrt2_match (√2-match ∃m∈{0,1}); inc 24 exists_mod2_align_of_normSq_c_odd +
 -- lemma4_1010 (the 1010 case in one H·Tᵐ); inc 25 normSq_c_mod4_all_odd + divSqrt2_normSq_c_odd (brick B′
 -- mod-4 core: all-odd z ⟹ (normSq z).c ≡ 2 mod 4 ⟹ divSqrt2 z is 1010 — the cross-orbit step1's
--- 1111-sum lands both outputs in 1010 for lemma4_1010). Kernel decide only (√2·√2=2 ; ZMod 2/ZMod 4),
--- native_decide held at 596.
+-- 1111-sum lands both outputs in 1010 for lemma4_1010); inc 26 matched_active_dichotomy (the UNIFORM
+-- case-split: matched-active pair ⟹ mod-2 ω-aligned [core_step] ∨ step1-able-to-all-odd [→ lemma4_1010];
+-- one ZMod 2 decide + parity bridge — the decision ReductionStep consumes). Kernel decide only
+-- (√2·√2=2 ; ZMod 2/ZMod 4), native_decide held at 596.
 import SKEFTHawking.FKLW.RossSelinger.GilesSelingerRowOp
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on

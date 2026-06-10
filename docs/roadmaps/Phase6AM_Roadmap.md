@@ -585,17 +585,25 @@ native_decide held at 596, confirming Track-3 independence):**
   and `(b−d)+(b+d)=2b≡2`) ⟹ `divSqrt2_normSq_c_odd` (both `divSqrt2(w_p±ωᵐw_q)` are `1010`) ⟹ `lemma4_1010`.
   `ZMod 4` decide + parity bridges; kernel-pure; native_decide 596; lib+ExtractDeps green (9218). (The
   cross-term `C.c mod 4` analysis was unnecessary — the all-odd ⟹ Q≡2 collapse is the real mechanism.)
-- **NEXT (Lemma-4 completion → `ReductionStep`):** the remaining cross-orbit pieces are now MECHANICAL: (i) the
-  `0001` dichotomy bridged to ℤ[ω] — `both 0001 ⟹ (∃m, 2∣w_p−ωᵐw_q) ∨ (∃m, w_p+ωᵐw_q all-odd)` (mod-2 `ZMod 2`
-  decide, VERIFIED [needs `set_option synthInstance.maxSize/maxRecDepth` for the 12-disjunct — allowed, not
-  maxHeartbeats]); (ii) the step1 level computation `invSqrt2·(mk w_p (t+1) ± ωS^m·mk w_q (t+1)) =
-  mk(divSqrt2(w_p±ωᵐw_q))(t+1)` when `w_p±ωᵐw_q` all-odd; (iii) compose (i)+(ii)+`divSqrt2_normSq_c_odd`+
-  `lemma4_1010` into the cross-orbit denExp-drop, then with `lemma4_1010` (the `1010` case) + `core_step`
-  (same-orbit `0001`) ⟹ the uniform Lemma 4 "matched-active pair ⟹ both drop to `denExp ≤ k-1`"; (iv) wrap into
-  the realizable `Gate2` two-level op (embed `H·Tᵐ` via `embedFst`/`embedSnd` + index permutation X/CNOT,
-  inc-17 block-action); (v) inner induction on count-at-max-level + factor `√2` ⟹ `ReductionStep` → inc-15
-  `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et al.) + operator-norm
-  on inc-8/9 ⟹ `∀U` headline.
+- **inc 26 ✅ (`GilesSelingerRowOp.lean`): `matched_active_dichotomy` — the UNIFORM Lemma-4 case-split DONE.**
+  Every matched-active pair is EITHER mod-2 `ω`-aligned (`∃m, 2∣w_p−ωᵐw_q` → `core_step`, the `1010` class +
+  same-orbit `0001`) OR step1-able to all-odd (`∃m, w_p+ωᵐw_q` all-coords-odd → `divSqrt2_normSq_c_odd` +
+  `lemma4_1010`, the cross-orbit `0001`). **Done KNOB-FREE** — the 12-disjunct `Prop` ∀ does exceed the
+  default `Decidable`-instance depth, but a `Bool`-valued `dichB` + `dichB_true : ∀… dichB = true` (single
+  `= true` body) sidesteps it with NO `synthInstance`/`maxRecDepth` (the worried-about knobs were AVOIDED;
+  cf. the new `elaboration_knob_watchlist` validation check, which separates these elaboration knobs —
+  kernel-pure, perf-only — from the `native_decide` soundness gate). All-odd clauses use `≠` (over `ZMod 2`,
+  `x+y=1⟺x≠y`) so `rcases` never eliminates a compound equality; explicit left-nested `rcases` pattern +
+  `ℤ→𝔽₂` parity bridge. Kernel-pure `{propext,Classical.choice,Quot.sound}`; native_decide 596; lib+ExtractDeps
+  green (9218).
+- **NEXT (Lemma-4 completion → `ReductionStep`):** (ii) the step1 level computation `invSqrt2·(mk w_p (t+1) ±
+  ωS^m·mk w_q (t+1)) = mk(divSqrt2(w_p±ωᵐw_q))(t+1)` when `w_p±ωᵐw_q` all-odd (so the cross-orbit `H·Tᵐ` keeps
+  the pair at the common level, outputs `1010`); (iii) compose `matched_active_dichotomy` + (ii) +
+  `divSqrt2_normSq_c_odd` + `lemma4_1010` + `core_step` ⟹ the uniform Lemma 4 "matched-active pair ⟹ both drop
+  to `denExp ≤ k-1`"; (iv) wrap into the realizable `Gate2` two-level op (embed `H·Tᵐ` via `embedFst`/`embedSnd`
+  + index permutation X/CNOT, inc-17 block-action); (v) inner induction on count-at-max-level + factor `√2` ⟹
+  `ReductionStep` → inc-15 `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et
+  al.) + operator-norm on inc-8/9 ⟹ `∀U` headline.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
