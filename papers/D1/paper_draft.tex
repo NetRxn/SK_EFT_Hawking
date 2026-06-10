@@ -892,6 +892,18 @@ transport-coefficient counting formula \eqref{eq:count-formula}
 were substantive contributions, not merely closures of existing
 skeletons.
 
+\section*{Methods and tools disclosure}
+The formal verification layer of this work was developed with
+substantial machine assistance: Lean~4 proof drafting and iteration
+used LLM-based agents (Anthropic Claude-family models) operating under
+the project's staged validation pipeline. A subset of the underlying
+library's theorems was closed by the Aristotle automated theorem
+prover (Harmonic); every proof is ultimately certified by the Lean~4
+kernel via \texttt{lake build} on the public repository, independently
+of any AI tool. Manuscript prose was AI-assisted and human-reviewed;
+all numerical claims trace to the repository's computation pipeline
+through its automated validation checks.
+
 \begin{thebibliography}{99}
 
 \bibitem{TindallMelloFishmanStoudenmireSels2026Science392}

@@ -1,6 +1,6 @@
 # Bundle E1 — Source Manifest
 
-**Auto-generated:** 2026-05-31
+**Auto-generated:** 2026-06-10
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`E1`
@@ -14,7 +14,7 @@
 | `_phase6o_W1b_lean_only` | (see mapping) | (unspecified) | (see mapping) | (missing) |
 | `_phase6w_W1_lean_only` | §6 paragraph addition | (unspecified) | (see mapping) | (missing) |
 | `_phase6w_W6_lean_only` | §"classical-simulability boundary" | (unspecified) | (see mapping) | (missing) |
-| `paper12_polariton` | (see mapping) | Lift-companion | (see mapping) | 2026-05-29T08:08:20Z |
+| `paper12_polariton` | (see mapping) | Lift-companion | (see mapping) | 2026-06-10T20:01:33Z |
 
 ## Coverage notes
 

@@ -1,6 +1,6 @@
 # Bundle D1 — Source Manifest
 
-**Auto-generated:** 2026-05-31
+**Auto-generated:** 2026-06-10
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D1`
@@ -17,11 +17,11 @@
 | `_phase6w_W1_lean_only` | §9.1 | (unspecified) | (see mapping) | (missing) |
 | `_phase6w_W3_lean_only` | §"LDP-controlled classical-simulability" cross-bridge | (unspecified) | (see mapping) | (missing) |
 | `_phase6w_W6_lean_only` | §"quantum-advantage demarcation" | (unspecified) | (see mapping) | (missing) |
-| `paper12_polariton` | §6 | Lift-companion | (see mapping) | 2026-05-29T08:08:20Z |
+| `paper12_polariton` | §6 | Lift-companion | (see mapping) | 2026-06-10T20:01:33Z |
 | `paper16_graphene_sk_eft` | §7 | Lift-companion | (see mapping) | 2026-05-12T12:42:35Z |
-| `paper1_first_order` | §2 | Lift-section | (see mapping) | 2026-05-29T08:08:20Z |
-| `paper2_second_order` | §3 | Lift-section | (see mapping) | 2026-05-29T08:08:20Z |
-| `paper4_wkb_connection` | §4 | Lift-section | (see mapping) | 2026-05-29T08:08:20Z |
+| `paper1_first_order` | §2 | Lift-section | (see mapping) | 2026-06-10T20:01:33Z |
+| `paper2_second_order` | §3 | Lift-section | (see mapping) | 2026-06-10T20:01:33Z |
+| `paper4_wkb_connection` | §4 | Lift-section | (see mapping) | 2026-06-10T20:01:33Z |
 
 ## Coverage notes
 
