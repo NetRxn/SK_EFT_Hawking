@@ -1367,6 +1367,14 @@ import SKEFTHawking.FKLW.RossSelinger.MAStepExists
 -- bound, NO box, NO enumeration) + the moved ma_step_exists (kSO3 ≤ 3 hypothesis DROPPED —
 -- strictly stronger: the reducing syllable exists for EVERY kSO3 ≥ 1).
 import SKEFTHawking.FKLW.RossSelinger.MAStepStructural
+-- Phase 6AO Track 3 inc 4a (2026-06-10) — ZOmegaTorsion: the ℤ[ω] torsion classification
+-- toward eliminating cliffordBase_box_core. |z|²=1 ⟹ z=ωʲ (Σcoord²=1, range bash);
+-- |z|²=⟨0,0,0,2⟩ ⟹ z=√2·ωʲ (cross-coords kill non-adjacent ±1-pairs); |z|²=⟨0,0,0,4⟩ ⟹
+-- z=2·ωʲ (mod-4 square parity: all-even halves to norm-1, all-odd ±1⁴ dies on cross-coords).
+-- Aux-decomposed range bashes (Inv #10 budgets) closing by decide on the CLOSED substituted
+-- normSq equation. Plus Galois positivity 2(|z|²).c² ≤ (|z|²).d² (= |z·σ₅z|².d ≥ 0) — the
+-- engine pinning the √2-part in the inc-4b |x|² ∈ {0,2,4} quantization.
+import SKEFTHawking.FKLW.RossSelinger.ZOmegaTorsion
 -- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — the Matsumoto-Amano coverage recursion.
 -- maCoverage (realizable M, kSO3 M≤3 ⟹ ∃ word ≤ 3·kSO3 M+6 ≤ 15) by strong induction on kSO3:
 -- base = Clifford (cliffordBase hypothesis ≤6); step = strip ma_step syllable (kSO3 drops) +
