@@ -1549,11 +1549,12 @@ import SKEFTHawking.FKLW.RossSelinger.MatchingResidue
 -- never both odd, since Q≡(a+c)(b+d), P≡(a+c)+(b+d), so Q odd ⟹ P even). The number-theoretic entry
 -- point to the Giles–Selinger column-lemma reduction (Lemma 5 parity); kernel decide over (ZMod 2)⁴.
 import SKEFTHawking.FKLW.RossSelinger.GilesSelingerResidue
--- Phase 6AO Track 2 (increments 22–23; 2026-06-09): Giles–Selinger Lemma-4 row operation. inc 22
--- core_step (matched pair mod-2 ω-aligned, 2∣x−ωᵐy, under H·Tᵐ drops BOTH entries one denominator
--- level; covers 1010 + same-orbit 0001). inc 23 exists_sqrt2_match (every matched-active pair is
--- √2-matchable ∃m∈{0,1}, √2∣w_p−ωᵐw_q — clean swap-orbit proof, opens the uniform 2-step for the
--- cross-orbit 0001 case too). Kernel decide only (√2·√2=2 ; ZMod 2 parity), native_decide held at 596.
+-- Phase 6AO Track 2 (increments 22–24; 2026-06-09): Giles–Selinger Lemma-4 row operation. inc 22
+-- core_step (matched pair mod-2 ω-aligned, 2∣x−ωᵐy, under H·Tᵐ drops BOTH entries one denominator level).
+-- inc 23 exists_sqrt2_match (every matched-active pair √2-matchable ∃m∈{0,1}; swap-orbit proof). inc 24
+-- exists_mod2_align_of_normSq_c_odd + lemma4_1010: a 1010-norm pair (single ω-orbit {3,6,9,12}) is mod-2
+-- ω-aligned ⟹ the WHOLE 1010 case of Lemma 4 reduces in one H·Tᵐ. Kernel decide only (√2·√2=2 ; ZMod 2
+-- parity), native_decide held at 596.
 import SKEFTHawking.FKLW.RossSelinger.GilesSelingerRowOp
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on

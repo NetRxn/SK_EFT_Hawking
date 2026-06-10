@@ -571,12 +571,22 @@ native_decide held at 596, confirming Track-3 independence):**
   - **(B″) `1010` ⟹ mod-2 aligned:** the `1010` class is the single ω-orbit `{3,6,9,12}`, so any two `1010`
     elements satisfy `∃m', 2∣(u₁−ωᵐ'u₂)` — a clean `ZMod 2` decide + bridge, exactly like brick A. (B″ also
     closes the `1010` case of Lemma 4 directly via `core_step`, single step.)
-- **NEXT (Lemma-4 completion → `ReductionStep`):** prove (B″) [clean mod-2, ship first] then (B′) [the mod-4
-  core] → assemble brick A + (B′) + (B″) + `core_step` into the uniform Lemma 4 "matched-active pair ⟹ both
-  drop to `denExp ≤ k-1`"; (iii) wrap into the realizable `Gate2` two-level op (embed `H·Tᵐ` via
-  `embedFst`/`embedSnd` + index permutation X/CNOT, inc-17 block-action); (iv) inner induction on
-  count-at-max-level + factor `√2` ⟹ `ReductionStep` → inc-15 `colLemma_of_reductionStep` (unconditional dim-4
-  column lemma) → controlled-C (Amy et al.) + operator-norm on inc-8/9 ⟹ the `∀U∈SU(2)` headline.
+- **inc 24 ✅ (`GilesSelingerRowOp.lean`): brick (B″) DONE + the `1010` case of Lemma 4 CLOSED.**
+  `exists_mod2_align_of_normSq_c_odd` (a `1010`-norm pair — `(normSq ·).c` odd, mod-2 residue in the single
+  ω-orbit `{3,6,9,12}` — is mod-2 ω-aligned `∃m, 2∣w_p−ωᵐw_q`; `ZMod 2` `decide` in `∨¬` form + parity bridge)
+  and **`lemma4_1010`** (= brick B″ ∘ `core_step`: a matched `1010` pair drops BOTH entries one denExp level in
+  a single `H·Tᵐ`). Kernel-pure `{propext,Classical.choice,Quot.sound}`; native_decide 596; lib+ExtractDeps
+  green (9218). [Decidability note: the implication-chain `∀ ZMod2, h₁→h₂→C` failed `Decidable` synthesis at
+  this nesting; the `¬h₁ ∨ ¬h₂ ∨ C` form decides — reusable trick.]
+- **NEXT (Lemma-4 completion → `ReductionStep`):** (B′) the mod-4 core — for a cross-orbit `0001` matched-active
+  pair, the √2-matching `m` (brick A) lands BOTH `uᵢ=divSqrt2(w_p±ωᵐw_q)` in the `1010` class (`(normSq uᵢ).c`
+  odd); `|uᵢ|²=|w_p±ωᵐw_q|²/2`, so it's a `|·|²`-mod-4 fact. Then `0001`-cross-orbit Lemma 4 = step1 +
+  `lemma4_1010`. Assemble (the `1010` case `lemma4_1010` + same-orbit `0001` via `core_step` + cross-orbit
+  `0001` via B′) into the uniform Lemma 4 "matched-active pair ⟹ both drop to `denExp ≤ k-1`"; (iii) wrap into
+  the realizable `Gate2` two-level op (embed `H·Tᵐ` via `embedFst`/`embedSnd` + index permutation X/CNOT,
+  inc-17 block-action); (iv) inner induction on count-at-max-level + factor `√2` ⟹ `ReductionStep` → inc-15
+  `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et al.) + operator-norm
+  on inc-8/9 ⟹ the `∀U∈SU(2)` headline.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
