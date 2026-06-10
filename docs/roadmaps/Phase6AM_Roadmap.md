@@ -607,18 +607,42 @@ native_decide held at 596, confirming Track-3 independence):**
 - **inc 28 ✅ (`ColumnSynthesis.lean`, `04e6d90f`): circuit-realizability foundations** — `embedSnd/embedFst_
   realizableWithin` (an embedded single-qubit word is realizable within its length) + `interp_replicate` +
   `wHTm`/`wHTm_interp` (the `H·Tᵐ` row-op word). Kernel-pure; nd 596; 9218 green.
-- **NEXT = the rest of `ReductionStep` (the SAME ~3–5k-LOC circuit synthesis — line 641 — that has been the
-  Track-2 plan since inc 6; inc 10–28 ≈ ~1.5k of it is built. Lemma 4 was a COMPONENT of this, NOT a separate
-  phase — do not re-narrate the remainder as new scope):** (iv) the `Gate2` WRAPPER — realize the Lemma-4 row op
-  on a column index-pair as a realizable `Mat4` (qubit-align an arbitrary pair via `X`/`CNOT`; the single-pair
-  **controlled** 2-level op — note an *embedded* `H·Tᵐ` hits BOTH qubit-blocks, so a single matched pair needs a
-  controlled op or a cleaner dim-4-block realization; **⚠🔑 OPEN DESIGN Q — design against DR/Giles–Selinger
-  BEFORE coding, don't guess the circuit; ~800–1500 LOC, LOW confidence**); connect the pair `denExp` drops
-  (`core_step`/`cross_orbit_drop`) to `colDenExp`; (v) Lemma 5 pairs the active entries, inner induction on
-  active-count ⟹ all `√2`-divisible, factor `√2` ⟹ `colDenExp` drops ⟹ `ReductionStep C` (~400–800) → inc-15
-  `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et al., ~300–700) +
-  operator-norm on inc-8/9 (~400–900) ⟹ the `∀U` headline (~100–200). **T2-remaining ≈ 2000–4100 LOC**; then
-  T1 (~2000–3900) + T3 (~3000–5700). Full LOC map: memory `[[project_phase6AO_progress_2026_06_09]]` handoff.
+- **✅ DESIGN RESOLVED (2026-06-10, the inc-28 ⚠🔑 OPEN DESIGN Q): the `Gate2` wrapper = the `ctrl` block
+  algebra + det-balanced row-op gadget `ctrl Tᵐ (H·Tᵐ) = CH·(I⊗Tᵐ)`.** Settled from first principles +
+  substrate fan-out (the 1212.0506 §two-level-realization fetch failed — ar5iv truncates mid-Lemma-6 — but
+  the determinant invariant pins the answer):
+  - **Det obstruction (why the naive 2-level op fails, and why GS need an ancilla):** every `Gate2` generator
+    has `det ∈ ⟨ω²⟩ = {1,i,−1,−i}` (`embedFst/Snd g`: `det₂(g)²` ∈ {1,ω²,…}; cnots: `−1`) ⟹ ANY `Gate2` word
+    has `det ∈ ⟨ω²⟩`. The bare two-level `H·Tᵐ` at a pair has `det = −ωᵐ` — for **odd m NOT realizable on 2
+    qubits, period** (so: never attempt controlled-`T`; this is the elementary content behind GS's one-ancilla
+    clause). **Fix: balance with an UNCONDITIONAL phase** — `blockdiag(Tᵐ, H·Tᵐ) = Λ₁(H)·(I⊗Tᵐ)`: the spectator
+    pair takes a harmless `ωᵐ` unit phase (denExp/normSq invariant), `det = −ω²ᵐ ∈ ⟨ω²⟩` for ALL m, and the
+    only controlled piece is the FIXED gate `CH`.
+  - **`ctrl P Q : Mat4`** (fst-blocked: `P` on the `fst=0` block, `Q` on `fst=1`) with `ctrl_mul : ctrl P Q *
+    ctrl R S = ctrl (P*R) (Q*S)`; `cnot01 = ctrl 1 X`; `embedSnd A = ctrl A A`. Then `CZ = ctrl 1 Z =
+    (I⊗H)·cnot01·(I⊗H)` (needs only `HXH=Z`, 2×2 decide) and **`CH = ctrl 1 H = (I⊗B)·CZ·(I⊗B†)`, `B =
+    S·H·T·H·S†`** (`BZB† = H` hand-verified: `HZH=X`, `TXT† = [[0,ω⁷],[ω,0]]`, `H·that·H = (1/√2)[[1,i],[−i,−1]]`,
+    `S·that·S† = H`; S,X,Z are native ADT gates, `S† = S·Z`). CH word ≈ 21 gates; all dim-2 facts by chunked
+    single-mul kernel decides (the `T_mul_T_eq_S` precedent; 19-mul one-shot decides are untested scale).
+  - **Gadget action = verbatim the shipped pair-level lemmas**: `(ctrl Tᵐ (H·Tᵐ)).mulVec v` at the `fst=1` pair
+    = `invSqrt2*(v₁₀ ± ωSᵐ·v₁₁)` (= `core_step`/`lemma4_1010`/`cross_orbit_drop` shapes), spectators `(v₀₀, ωᵐv₀₁)`.
+    Inverse gadget = `(I⊗T^{8−m})·CH` (`CH² = ctrl 1 H² = 1`, `T⁸=1` shipped). Cross-orbit = two gadgets at the
+    same pair. Alignment: 6 pairs → canonical `fst=1` pair via ≤3-gate perm words (snd-pairs: id / `X⊗I`;
+    fst-pairs: SWAP-conj, `swap = cx01·cx10·cx01`, `swap·ctrl P Q·swap = ctrl′ P Q`; diagonals: one cnot to a
+    fst-pair) — perm `mulVec` = index relabel (colDenExp/unit invariant).
+  - **Needed small lemmas (absent per fan-out):** `denExp (ωSᵐ·x) = denExp x`, `normSq (ωSᵐ·x) = normSq x`,
+    parallelogram `normSq((x+u)/√2)+normSq((x−u)/√2) = normSq x + normSq u`, `mk`-extraction `denExp ≤ t+1 ⟹
+    v = mk w (t+1)` (+ `denExp = t+1 ⟺ ¬dividesSqrt2 w`), `normSq_mk` numerator bridge `ΣnormSq(vᵢ)=1 ⟹
+    Σ ZOmega.normSq wᵢ = 2^{t+1}` (feeds `exists_matching_residue_pair`'s `.c/.d ≡ 0` hypotheses; both class
+    counts even via shipped `sum_c`/`sum_d` + `even_card_filter_of_sum_even` ⟹ actives ∈ {2,4}, ≤2 gadget rounds).
+  - **Increment plan:** inc 29 `Gate2Control.lean` (ctrl algebra + CH + gadget realizability ≤28 + action);
+    inc 30 alignment perms; inc 31 single-pair column drop (dichotomy→gadgets, spectators invariant, unit kept);
+    inc 32 actives-induction ⟹ `ReductionStep C`; inc 33 **quantitative** column lemma (`colLemma_of_reductionStep`
+    currently returns UNBOUNDED `∃L` — strengthen to `L ≤ C·colDenExp v + 9` for the O(log 1/ε) headline). Then
+    controlled-C + operator-norm (NEXT design checkpoint: the n=3 det parity `⟨ω⁴⟩` bites the Λ-lift the same way
+    — design against KMM §2.2–2.3/[9] before coding; the headline norm form likely ancilla-restricted
+    `‖(W−Λ(e^{iφ})⊗I)·(I⊗|00⟩)‖`, which is what inc-8/9's leakage budget supports). **T2-remaining ≈ 2000–4100
+    LOC**; then T1 (~2000–3900) + T3 (~3000–5700). Full LOC map: memory `[[project_phase6AO_progress_2026_06_09]]`.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
