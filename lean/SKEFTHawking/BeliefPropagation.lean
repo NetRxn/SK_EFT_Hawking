@@ -9,7 +9,7 @@ This module formalizes **belief propagation (BP)** on factor graphs, the
 canonical message-passing algorithm for computing approximate marginals
 on graphical models. It provides the Mathlib-PR-quality substrate
 consumed by Wave 6w.3 (LDP-controlled classical-simulability headline
-`bp_convergence_iff_ldp_below_threshold`) and by Wave 6w.5
+`bp_convergence_iff_ldp_rate_zero`) and by Wave 6w.5
 (categorical-Chern ↔ real-space-Chern bridge on PEPS tensor networks).
 
 The substantive cross-bridge anchor is the Tindall, Mello, Fishman,

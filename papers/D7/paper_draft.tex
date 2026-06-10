@@ -34,24 +34,29 @@ network factor graphs exists. We make no broader first-claim and
 welcome notification of prior work.}: a quantum many-body system on a
 factor graph $G$ with factor weights $f_a$ and categorical-Chern data
 $(c_0, c_1)$ is classically simulable in the combined BP / Chebyshev-
-TN regime if and only if (i) a structural tree indicator on the
-factor graph is below a fixed threshold (the underlying topology is
-tree-like and factor weights are non-negative) AND (ii) the
-topological coefficient $c_1$ vanishes. Outside this regime --- loopy
-factor-graph topology OR non-trivial Chern coefficient --- quantum
-processors retain a structural simulation advantage at the level of
-the formalized substrate. The Lean substrate is fully generic over
-the factor-graph type parameters; analog-Hawking applications via the
+TN regime if and only if (i) the loop-correction rate function of the
+factor graph --- the Cram\'er/Legendre transform at zero deviation of
+the log-MGF of the Bernoulli loop-presence observable whose success
+parameter is the graph's 4-cycle density --- vanishes and the factor
+weights are non-negative, AND (ii) the topological coefficient $c_1$
+vanishes. The zero-rate $\Leftrightarrow$ tree equivalence is proven
+from the variational definition (not definitional). Outside this
+regime --- strictly positive loop-correction rate OR non-trivial
+Chern coefficient --- quantum processors retain a structural
+simulation advantage at the level of the formalized substrate. The
+Lean substrate is fully generic over the (finite) factor-graph type
+parameters; analog-Hawking applications via the
 Kibble-Zurek-Unruh correspondence are sketched at the cross-module
 substrate level in Section~\ref{sec:kzu-application}, with explicit
 per-platform (BEC, polariton, graphene Dirac fluid) instantiation
-bridges deferred to the D-bundle absorption pass. The 65 substantive
+bridges deferred to the D-bundle absorption pass. The 81 substantive
 theorems shipped across seven contributing modules have kernel-only
 axiom closure $[\mathtt{propext}, \mathtt{Classical.choice},
-\mathtt{Quot.sound}]$ with zero project-local axioms; the structural
-tree-indicator predicate uses \texttt{Classical.byCases} on an
-undecidable graph property and so the "threshold check" is
-information-theoretic, not algorithmic, at this substrate layer.
+\mathtt{Quot.sound}]$ with zero project-local axioms; the
+loop-correction rate is built from decidable 4-cycle combinatorics
+(a kernel-checked \texttt{Finset} filter), with noncomputability
+entering only through the real-valued logarithm and supremum, as is
+standard for rate functions.
 \end{abstract}
 
 \maketitle
@@ -79,20 +84,42 @@ biconditional that decomposes the simulability question into two
 load-bearing axes:
 
 \begin{enumerate}
-\item \textit{Tree-indicator condition}: a structural indicator
-on the factor graph (encoding "this graph is a tree" at the
-predicate level) must be at or below the fixed threshold $1/2$
-(equivalently, the factor graph is tree-like and the factor weights
-are non-negative). The Lean implementation
-$\mathtt{loopCorrectionRate}\,G := \mathtt{if}\
-\mathrm{IsTreeFactorGraph}\,G\ \mathtt{then}\ 0\ \mathtt{else}\ 1$
-is a $\{0,1\}$-valued indicator, not a continuous Cramér-type large-
-deviation rate function. The "LDP" framing in the Tindall-Sels
-literature motivates the predicate but is not encoded inside the
-present substrate; an upgrade to a substantive Cramér rate
-function on loop-correction terms is a separate deliverable
-(estimated ~200--400 LoC against the existing project LDP module
-suite) flagged for a future revision.
+\item \textit{Zero-rate condition}: the loop-correction rate
+function of the factor graph must vanish (equivalently --- proven,
+not definitionally --- the factor graph is tree-like), and the
+factor weights must be non-negative. The Lean implementation is a
+genuine Cram\'er/Legendre construction
+(\texttt{loopCorrectionRate}\,$G := \sup_{\theta}\,
+[-\log \mathrm{mgf}_G(\theta)]$, the Legendre transform at zero
+deviation of the log-MGF $\mathrm{mgf}_G(\theta) = 1 - p +
+p\,e^{\theta}$ of the Bernoulli \emph{loop-presence observable},
+whose success parameter $p = \mathtt{loopDensity}\,G \in [0,1)$ is
+the graph's 4-cycle density). The closed form $-\log(1-p)$ is a
+theorem (\texttt{loopCorrectionRate\_eq\_neg\_log}, an explicit
+least-upper-bound argument; the supremum is approached as $\theta
+\to -\infty$ and not attained on loopy graphs), as are the
+zero-rate $\Leftrightarrow$ tree equivalence
+(\texttt{loopCorrectionRate\_eq\_zero\_iff\_tree}), strict
+positivity on loopy graphs
+(\texttt{loopCorrectionRate\_pos\_of\_not\_tree}), strict
+monotonicity in loop density
+(\texttt{loopCorrectionRate\_lt\_of\_loopDensity\_lt} --- the rate
+separates loopy graphs by loop content, e.g.\ the complete
+bipartite $2{\times}2$ graph has rate $\log(4/3)$,
+kernel-checked), the exact finite-$n$ Cram\'er identity $(1-p)^n =
+e^{-n \cdot I(0)}$ for the no-loop-correction event
+(\texttt{no\_loop\_event\_prob\_eq\_exp\_neg\_rate}), and the
+bridge to the project LDP-suite Cram\'er predicate via the
+Bernoulli Kullback-Leibler rate function
+(\texttt{loopCorrection\_isCramerIIDUpperBound}). This upgrades the
+earlier $\{0,1\}$-valued tree indicator flagged in the
+review-2026-06-05 finding D7-EV3. Honest residual scope: the rate
+is attached to the \emph{combinatorial} loop-presence observable
+(4-cycle density, matching the granularity of the tree predicate);
+the attachment to the \emph{dynamical} loop-correction terms of the
+Chertkov-Chernyak loop-series
+expansion~\cite{ChertkovChernyak2006LoopSeries} over the BP message
+space remains future work.
 \item \textit{Topological condition}: the
 categorical Chern coefficient $c_1$ of the system must vanish.
 \end{enumerate}
@@ -119,15 +146,19 @@ fixed-point stability, and Bethe free-energy substrate
 (Section~\ref{sec:bp-substrate}).
 
 \item A kernel-verified biconditional characterization of BP-
-favorable factor graphs in terms of a tree-indicator threshold:
+favorable factor graphs in terms of the vanishing of a continuous
+loop-correction rate function:
 $\mathrm{IsBPConvergenceFavorable}\ G\ f_a \iff
-\mathrm{loopCorrectionRate}\ G \leq 1/2 \land
+\mathrm{loopCorrectionRate}\ G = 0 \land
 (\forall a\, y,\, 0 \leq f_a(y))$ where $\mathrm{loopCorrectionRate}$
-is a $\{0,1\}$-valued structural tree indicator (not a continuous
-LDP rate function in the present substrate; see
-Section~\ref{sec:ldp-bp}). The threshold $1/2$ is fixed; the
-biconditional collapses to the tree-predicate-plus-non-negativity
-pair (Section~\ref{sec:ldp-bp}).
+is the Cram\'er/Legendre transform at zero deviation of the Bernoulli
+loop-presence log-MGF (4-cycle density of the factor graph; see
+Section~\ref{sec:ldp-bp}). The zero-rate $\Leftrightarrow$ tree
+equivalence is itself a theorem proven through the Legendre
+evaluation, and a general threshold form
+($\mathrm{rate} \leq t \Leftrightarrow$ explicit loop-density bound
+$1 - e^{-t}$) replaces the former fixed indicator threshold
+(Section~\ref{sec:ldp-bp}).
 
 \item A categorical-Chern $\leftrightarrow$ real-space-Chern bridge
 formalized via the Chebyshev tensor-network expansion, with
@@ -161,12 +192,25 @@ boundary + functoriality, and the tree-factor-graph predicate.]
 \section{LDP-controlled belief-propagation convergence}
 \label{sec:ldp-bp}
 
-[Wave 6w.3 headline substrate. The biconditional
-\texttt{bp\_convergence\_iff\_ldp\_below\_threshold} ties the
+[Wave 6w.3 headline substrate, upgraded per review-2026-06-05
+finding D7-EV3. The biconditional
+\texttt{bp\_convergence\_iff\_ldp\_rate\_zero} ties the
 structural simulability property \texttt{IsBPConvergenceFavorable} to
-the LDP rate-function threshold via the substantive characterization
-\texttt{loopCorrectionRate\_below\_threshold\_iff\_tree}. Seven
-substantive theorems + two companions verified kernel-only.]
+the vanishing of the loop-correction rate function via the
+substantive characterization
+\texttt{loopCorrectionRate\_eq\_zero\_iff\_tree} (proven through the
+Legendre evaluation \texttt{loopCorrectionRate\_eq\_neg\_log}, the
+log/density analysis, and the 4-cycle Finset $\leftrightarrow$
+tree-predicate bridge \texttt{fourCycles\_eq\_empty\_iff\_tree}).
+Twenty-two substantive theorems + two companions verified
+kernel-only, including strict positivity on loopy graphs, strict
+monotonicity in loop density, the threshold $\Leftrightarrow$
+loop-density characterization
+(\texttt{loopCorrectionRate\_le\_iff\_loopDensity\_le}), the exact
+finite-$n$ Cram\'er identity for the no-loop-correction event, the
+Bernoulli Kullback-Leibler bridge to the project LDP suite
+(\texttt{loopCorrection\_isCramerIIDUpperBound}), and the worked
+complete-bipartite $2{\times}2$ value $\log(4/3)$.]
 
 \section{Chebyshev tensor-network Chern bridge}
 \label{sec:chern-bridge}
@@ -217,24 +261,34 @@ biconditional demarcation between regimes where the formalized
 classical tensor-network substrate suffices and where the
 formalization identifies a structural simulation advantage for
 quantum processors. The demarcation is falsifiable on two distinct
-axes (tree-indicator threshold + Chern coefficient) and the substrate
+axes (loop-correction rate function + Chern coefficient) and the substrate
 is generic enough at the type level to apply beyond analog Hawking
 to any factor-graph + Chebyshev-TN classification setting.
 
 We are explicit about the substrate's current scope: (i) the
-``loopCorrectionRate'' is a structural tree indicator, not a
-continuous LDP rate function --- the LDP-framing terminology
-motivates the predicate but is not encoded substantively in the
-present Lean substrate; an upgrade to a Cramér-type rate function
-on loop-correction terms is a separate ~200--400 LoC deliverable;
-(ii) the per-platform analog-Hawking bridges (BEC, polariton, graphene
+loop-correction rate function is now a genuine Cram\'er/Legendre
+construction (the review-2026-06-05 D7-EV3 upgrade): the Legendre
+transform at zero deviation of the Bernoulli loop-presence log-MGF,
+with the closed form $-\log(1 - p)$, the zero-rate
+$\Leftrightarrow$ tree equivalence, strict positivity on loopy
+graphs, strict monotonicity in loop density, the exact finite-$n$
+Cram\'er identity, and the Kullback-Leibler bridge to the project
+LDP suite all proven kernel-only --- the honest residual is that
+the rate attaches to the \emph{combinatorial} loop-presence
+observable (4-cycle density, the granularity of the tree
+predicate), while the attachment to the \emph{dynamical}
+loop-correction terms of the Chertkov-Chernyak loop-series
+expansion over the BP message space remains future work; (ii) the
+per-platform analog-Hawking bridges (BEC, polariton, graphene
 Dirac fluid) are at the cross-module substrate level via the
 \texttt{KibbleZurekUnruh.lean} foundation theorem but are NOT yet
 shipped as platform-specific instantiation lemmas attached to the
-demarcation predicate; (iii) the threshold check is information-
-theoretic rather than algorithmic (the tree-indicator predicate uses
-\texttt{Classical.byCases} on an undecidable graph property).
-Each scope-limitation point is a clean future-revision target.
+demarcation predicate; (iii) the rate function is built from
+decidable 4-cycle combinatorics (kernel-checked \texttt{Finset}
+filter; the former \texttt{Classical.byCases} on the undecidable
+tree predicate is gone from the definition), with noncomputability
+entering only through the real-valued logarithm and supremum.
+Each residual scope point is a clean future-revision target.
 
 \begin{thebibliography}{99}
 
@@ -257,6 +311,12 @@ J.~Yedidia, W.~T.~Freeman, Y.~Weiss,
 \emph{Understanding Belief Propagation and Its Generalizations},
 in \textit{Exploring Artificial Intelligence in the New Millennium}
 (Morgan Kaufmann, 2003), pp.~239--269.
+
+\bibitem{ChertkovChernyak2006LoopSeries}
+M.~Chertkov, V.~Y.~Chernyak,
+\emph{Loop series for discrete statistical models on graphs},
+J.\ Stat.\ Mech.\ (2006) P06009,
+DOI 10.1088/1742-5468/2006/06/P06009, arXiv:cond-mat/0601487.
 
 \bibitem{Zurek1985}
 W.~H.~Zurek,

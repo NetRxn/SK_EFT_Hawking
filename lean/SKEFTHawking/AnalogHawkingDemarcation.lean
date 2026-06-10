@@ -10,19 +10,21 @@ import SKEFTHawking.ChernBridge
 
 Substantive headline theorem `analog_hawking_quantum_advantage_demarcation`
 combining the Wave 6w.3 LDP-controlled BP classical-simulability
-biconditional (`bp_convergence_iff_ldp_below_threshold`) with the Wave
+biconditional (`bp_convergence_iff_ldp_rate_zero`) with the Wave
 6w.5 categorical-Chern ↔ real-space-Chern bridge
 (`crystalline_eq_quasicrystalline_iff_c1_zero`) into a unified
 classical-simulability ↔ quantum-advantage demarcation criterion.
 
-The biconditional states: an analog Hawking system on a factor graph
-`G` with factor weights `factorWeight` and categorical-Chern data
-`(c_0, c_1)` admits classical simulation iff (i) the LDP rate function
-of the loop-correction terms is below the simulability threshold AND
+The biconditional states: an analog Hawking system on a finite factor
+graph `G` with factor weights `factorWeight` and categorical-Chern
+data `(c_0, c_1)` admits classical simulation iff (i) the
+loop-correction rate function — the Cramér/Legendre transform of the
+Bernoulli loop-presence log-MGF at zero deviation (review-2026-06-05
+D7-EV3 upgrade of the former `{0,1}` indicator) — vanishes AND
 (ii) the categorical Chern coefficient `c_1` vanishes (topologically
 trivial regime). Outside this regime — either the loop-correction rate
-exceeds threshold OR the Chern coefficient is non-zero — quantum
-processors retain a genuine advantage.
+is strictly positive (loopy factor graph) OR the Chern coefficient is
+non-zero — quantum processors retain a genuine advantage.
 
 ## Substantive content
 
@@ -92,34 +94,40 @@ def IsAnalogHawkingClassicallySimulable
 /-- **HEADLINE.** Analog Hawking quantum-advantage demarcation
     biconditional.
 
-      `IsAnalogHawkingClassicallySimulable G factorWeight c_0 c_1
-        ↔ (loopCorrectionRate G ≤ ldpSimulabilityThreshold
+      `IsAnalogHawkingClassicallySimulable G factorWeight c_1
+        ↔ (loopCorrectionRate G = 0
             ∧ ∀ a y, 0 ≤ factorWeight a y)
           ∧ realSpaceChernAt (categoricalChernExpansion c_0 c_1) 1
               = realSpaceChernAt (categoricalChernExpansion c_0 c_1) (-1)`.
 
     Substantive content combines:
-    - Wave 6w.3 `bp_convergence_iff_ldp_below_threshold`
-      (`IsBPConvergenceFavorable ↔ rate ≤ threshold ∧ non-negative weights`)
+    - Wave 6w.3 `bp_convergence_iff_ldp_rate_zero`
+      (`IsBPConvergenceFavorable ↔ rate = 0 ∧ non-negative weights`,
+      where the rate is the Cramér/Legendre transform of the Bernoulli
+      loop-presence log-MGF at zero deviation; the zero-rate ⟺ tree
+      equivalence is proven through the Legendre evaluation, NOT
+      definitional — review-2026-06-05 D7-EV3 upgrade)
     - Wave 6w.5 `crystalline_eq_quasicrystalline_iff_c1_zero`
       (`Chern crystalline = Chern quasicrystalline ↔ c_1 = 0`).
 
     The biconditional makes the simulability ↔ quantum-advantage
     demarcation falsifiable at three load-bearing axes simultaneously:
-    LDP rate function, factor-weight positivity, and topological
-    triviality. The contrapositive
+    vanishing of the loop-correction rate function, factor-weight
+    positivity, and topological triviality. The contrapositive
     `loopy_or_nonzero_c1_implies_not_simulable` gives the
     quantum-advantage regime explicitly. -/
 theorem analog_hawking_quantum_advantage_demarcation
-    {ν α X : Type*} (G : FactorGraph ν α)
+    {ν α X : Type*}
+    [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α)
     (factorWeight : α → (ν → X) → ℝ) (c0 c1 : ℝ) :
     IsAnalogHawkingClassicallySimulable G factorWeight c1 ↔
-      (loopCorrectionRate G ≤ ldpSimulabilityThreshold ∧
+      (loopCorrectionRate G = 0 ∧
         ∀ a y, 0 ≤ factorWeight a y) ∧
       realSpaceChernAt (categoricalChernExpansion c0 c1) 1
         = realSpaceChernAt (categoricalChernExpansion c0 c1) (-1) := by
   unfold IsAnalogHawkingClassicallySimulable
-  rw [bp_convergence_iff_ldp_below_threshold,
+  rw [bp_convergence_iff_ldp_rate_zero,
       crystalline_eq_quasicrystalline_iff_c1_zero]
 
 /-! ## Substantive companion lemmas -/

@@ -244,10 +244,19 @@ PRL 136, 156601 (2026).
 **Anchors:**
 - **HEADLINE demarcation theorem** `analog_hawking_quantum_advantage_demarcation`
   (Lean module `AnalogHawkingDemarcation.lean`): biconditional
-  characterization of classical simulability via BP-LDP rate
-  threshold + Chern coefficient.
-- **BP-LDP biconditional** `bp_convergence_iff_ldp_below_threshold`
-  (Lean module `BPLDPSimulability.lean`, Wave 6w.3).
+  characterization of classical simulability via vanishing of the
+  loop-correction rate function + Chern coefficient.
+- **BP-LDP biconditional** `bp_convergence_iff_ldp_rate_zero`
+  (Lean module `BPLDPSimulability.lean`, Wave 6w.3; review-2026-06-05
+  D7-EV3 upgrade): `loopCorrectionRate` is the Cramér/Legendre
+  transform at zero deviation of the Bernoulli loop-presence log-MGF
+  over the graph's 4-cycle density; closed form `-log(1-p)` proven via
+  IsLUB (`loopCorrectionRate_eq_neg_log`); zero-rate ⟺ tree proven,
+  not definitional (`loopCorrectionRate_eq_zero_iff_tree`); strict
+  positivity on loopy graphs, strict monotonicity in loop density,
+  exact finite-n Cramér identity, KL bridge to the LDP suite
+  (`loopCorrection_isCramerIIDUpperBound`), worked K_{2,2} value
+  `log(4/3)`.
 - **Categorical-Chern bridge** `categorical_chern_eq_real_space_chern_crystalline`
   and `_quasicrystalline` (Lean module `ChernBridge.lean`, Wave
   6w.5).

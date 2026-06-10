@@ -3222,11 +3222,15 @@ import SKEFTHawking.KibbleZurekUnruh
 import SKEFTHawking.BeliefPropagation
 
 -- Phase 6w Wave 6w.3 LDP-controlled classical-simulability headline
--- (A1a follow-up). loopCorrectionRate + ldpSimulabilityThreshold +
--- IsBPConvergenceFavorable + HEADLINE bp_convergence_iff_ldp_below_threshold.
+-- (A1a follow-up; review-2026-06-05 D7-EV3 continuous-rate upgrade).
+-- fourCycles + loopDensity + bernoulliLoopMgf + loopCorrectionRate
+-- (Cramér/Legendre transform of the Bernoulli loop-presence log-MGF at
+-- zero deviation; closed form -log(1-p) proven via IsLUB) +
+-- bernoulliCramerRate KL bridge to SKEFTHawking.LDP.IsCramerIIDUpperBound +
+-- IsBPConvergenceFavorable + HEADLINE bp_convergence_iff_ldp_rate_zero.
 -- Substantive biconditional combining BP-on-TN substrate (Wave 6w.2) with
--- LDP rate function characterization (Tindall-Sels Science 392, 868
--- (2026) classical-simulation regime).
+-- the loop-correction rate-function characterization (Tindall-Sels
+-- Science 392, 868 (2026) classical-simulation regime).
 import SKEFTHawking.BPLDPSimulability
 
 -- Phase 6w Wave 6w.4 substrate (Antão-Sun-Fumega-Lado, PRL 136, 156601
