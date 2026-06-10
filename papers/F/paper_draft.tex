@@ -41,15 +41,15 @@ A Formally Verified Survey}
 %%   Bundle D5 (causal-set + entropic + Jacobson-thermo-GR with full
 %%   Phase 6m closure), and the topological quantum-computation
 %%   foundations of Bundle D4 (one MTC, four faces). The substrate is
-%%   one object; its thirteen faces are thirteen bundles' worth of
+%%   one object; its faces are the sibling bundles' worth of
 %%   predictive register.
 
-We consolidate thirteen sibling-bundle threads of the SK--EFT Hawking
-research program into a single, formally verified survey of the
+We consolidate the sixteen sibling-bundle threads of the SK--EFT
+Hawking research program into a single, formally verified survey of the
 substrate-condensation approach to fundamental physics. The
 substrate's predictive register lives at the boundary partition
 (\emph{cleared / falsified / structurally-blocked / reproduced}); this
-review reports the substrate as a single object across all twelve
+review reports the substrate as a single object across the program's
 sibling threads. The synthesis claim, NEW to this flagship and absent
 from any individual sibling, is that the same antisymmetric-tetrad-bilinear
 (ADW) substrate that drives the emergent-gravity content of
@@ -64,7 +64,7 @@ D3's Sakharov-coefficient $N_f$), the dark-sector NO-GO closures of
 Bundle~D5 (causal-set, entropic, and Jacobson thermodynamic-GR with
 the full Phase~6m three-track closure), and the topological
 quantum-computation foundations of Bundle~D4 (one MTC, four faces).
-The substrate is one object; its thirteen faces are thirteen bundles'
+The substrate is one object; its faces are the sibling bundles'
 worth of predictive register. NO-GO results are reported as
 first-class predictive content rather than absences: GW170817 falsifies
 the vestigial-second-sound graviton at $\sim 7\times 10^{14}$; an
@@ -80,8 +80,9 @@ The cosmological-constant problem is \emph{reproduced} (not solved) at
 $\Lambda_{\mathrm{emerg}}/\Lambda_{\mathrm{obs}} \gtrsim 10^{100}$
 (the rigorous Lean lower bound; heuristically $\sim 10^{122}$). All
 load-bearing claims ship with Lean~4 modules at zero \texttt{sorry}
-and one true axiom (\texttt{gapped\_interface\_axiom}; the 4+1D
-gapped-interface conjecture).
+and zero project-local axioms; the single non-trivial hypothesis ---
+the 4+1D gapped-interface conjecture --- is carried as the
+tracked-hypothesis \texttt{Prop} \texttt{TPFConjecture}.
 \end{abstract}
 
 \maketitle
@@ -108,41 +109,52 @@ emergent gravitational coupling
 $G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
 through the heat-kernel $a_2$ coefficient of an
 $N_f$-flavour Dirac fermion bundle~\cite{Sakharov1968,Adler1980,
-Vassilevich2003}. Twelve sibling bundles in this series take that
-substrate and read off its predictions across SK--EFT analog Hawking
+Vassilevich2003}. Sixteen sibling bundles in this series build on that
+substrate and its verification stack: SK--EFT analog Hawking
 radiation in three laboratory platforms (Bundle~D1, with companion
 experimental letters E1 and E2), Standard-Model anomaly cancellation
 and modular invariance (Bundle~D2 with PRL splash L2), emergent gravity
 through black-hole thermodynamics (Bundle~D3 with PRL splashes L1 on
 GW170817 and L3 on the BCH four laws), topological quantum-computation
 foundations (Bundle~D4), the dark sector under substrate constraints
-(Bundle~D5), and the methodology and verification stack itself
-(Bundles~I1 and I2). This flagship review is the thirteenth bundle. It
-synthesises the thirteen sibling threads into a unified description of
-the substrate's predictive register and reports the cross-thread
-identities that none of the sibling bundles report individually.
+(Bundle~D5), the verified quantum-computation frontier connected
+through the program's FKLW/horizon-MTC line (Bundles~D6, D7, and D8,
+on the fault-tolerant-computation substrate, the
+classical-simulability demarcation, and universal gate compilation
+respectively), and the methodology and verification stack itself
+(Bundles~I1, I2, and I3). This flagship review is the seventeenth
+bundle. It synthesises the sixteen sibling threads into a unified
+description of the substrate's predictive register and reports the
+cross-thread identities that none of the sibling bundles report
+individually.
 
-\subsection{The 14-bundle publication architecture}
+\subsection{The 17-bundle publication architecture}
 
 Per the project's strategy frame~\cite{Roehm2026Strategy}, the SK--EFT
-Hawking program ships across $13$ publication targets organised by
+Hawking program ships across $17$ publication targets organised by
 target tier:
 
 \begin{itemize}
 \item \textbf{Tier 0 (1 paper):} this flagship review (Bundle~F).
-\item \textbf{Tier 1 (5 deep papers):} Bundle~D1 (analog Hawking
+\item \textbf{Tier 1 (8 deep papers):} Bundle~D1 (analog Hawking
   across three platforms; PRD long format), Bundle~D2 (anomaly
   constraints on Standard-Model particle content), Bundle~D3 (emergent
   gravity through BH thermodynamics; the heaviest single bundle at
   $\sim 50$pp), Bundle~D4 (topological quantum-computation foundations),
-  Bundle~D5 (dark sector under substrate constraints).
+  Bundle~D5 (dark sector under substrate constraints), Bundle~D6
+  (formally verified fault-tolerant quantum-computation substrate),
+  Bundle~D7 (classical simulability and quantum advantage via tensor
+  networks; a formally verified demarcation), Bundle~D8
+  (kernel-verified universal quantum gate compilation;
+  alphabet-agnostic Solovay--Kitaev across $\mathrm{SU}(d)$).
 \item \textbf{Tier 2 (3 PRL splashes):} Bundle~L1 (GW170817 falsifies
   the vestigial-second-sound graviton), Bundle~L2 (three SM fermion
   generations from modular invariance), Bundle~L3 (BCH four laws by
   regime).
-\item \textbf{Tier 3 (2 infrastructure papers):} Bundle~I1 (verification
+\item \textbf{Tier 3 (3 infrastructure papers):} Bundle~I1 (verification
   methodology with worked cases), Bundle~I2 (verified statistics +
-  Lean tensor-categories software paper).
+  Lean tensor-categories software paper), Bundle~I3 (verified
+  stochastic calculus and large-deviation foundations for Mathlib4).
 \item \textbf{Tier 4 (2 experimental letters):} Bundle~E1 (Paris--LKB
   polariton companion to D1), Bundle~E2 (Dean--Kim--Lucas graphene
   companion to D1).
@@ -216,8 +228,8 @@ partitions. \S\ref{sec:substrate-register} is the consolidated table.
 Each sibling bundle reports its own thread; this flagship reports the
 substrate as one object. The synthesis claim NEW to F---absent from any
 individual sibling bundle and load-bearing for the architectural
-argument---is that all thirteen sibling threads share the same ADW
-substrate. Concretely:
+argument---is that the same ADW substrate with $N_f = 16$ drives the
+program's sibling threads. Concretely:
 
 \begin{itemize}
 \item The single Sakharov coefficient
@@ -258,7 +270,7 @@ substrate. Concretely:
   substrate.
 \end{itemize}
 
-The substrate is one object. Its thirteen faces are thirteen bundles'
+The substrate is one object. Its faces are the sibling bundles'
 worth of predictive register. The cross-thread identities listed above
 are the F-unique synthesis content, structurally absent from any
 individual sibling bundle.
@@ -307,7 +319,8 @@ lattice, fracton hydrodynamics producing subdiffusive emergent
 currents, and vestigial gravity as a distinct intermediate ordering.
 Layer-3 predictions in this sector are falsifiable, formalised
 (currently $\sim \substantivetheorems$ Lean theorems with zero
-\texttt{sorry} and one true axiom; see \S\ref{sec:methodology}), and
+\texttt{sorry} and \axiomcount{} project-local axioms; see
+\S\ref{sec:methodology}), and
 actively tested against laboratory platforms (BEC, polariton, graphene
 Dirac fluid; D1, E1, E2).
 
@@ -351,7 +364,8 @@ After three independent six-round deep-research probes of the mechanism
 families flagged out-of-scope by Phase 5y (Tracks A, B, C in Phase~6m),
 Phase~6m closes at the Lean-formalisation scope. Project totals:
 $\sim \substantivetheorems$ substantive theorems across
-\leanmodules{} modules, $\axiomcount$ axiom, $\sorrycount$ \texttt{sorry}.
+\leanmodules{} modules, \axiomcount{} project-local axioms,
+$\sorrycount$ \texttt{sorry}.
 
 \textbf{Track-level verdicts.}
 \begin{itemize}
@@ -437,7 +451,7 @@ formulation:
 \item \textbf{Program value preserved.} The Lean backbone of the
   program continues to build cleanly across all 13 sub-phases.
   $\sim \substantivetheorems$ theorems, $\sorrycount$ \texttt{sorry},
-  $\axiomcount$ axiom.
+  \axiomcount{} project-local axioms.
 \item \textbf{Scope explicit.} The predictive-scope boundary is
   formally stated in Lean
   (\texttt{ClassificationTableDark.lean},
@@ -801,27 +815,36 @@ the $\theta$-angle data of Bundle~D3 \S 13 (Phase~6l Z16 strong-CP
 substrate-silence verdict).
 
 The three pillars synthesise into the chirality-wall theorem: the
-4+1D gapped-interface axiom (\texttt{gapped\_interface\_axiom}) is
+4+1D gapped-interface conjecture (the tracked-hypothesis
+\texttt{Prop} \texttt{TPFConjecture}) is
 the unique structural ingredient required, and the substrate's
 fermion content is the unique 4-manifold-boundary spectrum consistent
-with the axiom.
+with that hypothesis.
 
-\subsection{The single axiom \texttt{gapped\_interface\_axiom}}
+\subsection{The tracked-hypothesis \texttt{Prop} \texttt{TPFConjecture}}
 
-The substrate's Bundle~D2 ships with one true axiom:
-\texttt{gapped\_interface\_axiom}, the 4+1D conjecture that asserts
-the existence of the gapped interface required by Pillar 2. This is
-the only axiom in the entire 14-bundle program that has not been
-discharged at the Lean-formalisation scope. All other load-bearing
-substrate claims are theorems with zero \texttt{sorry}.
+The chirality-wall program rests on a single non-trivial hypothesis:
+that any 4+1D SPT slab admits a gapped interface trivialisation iff
+its bulk anomaly cancels --- the gapped interface required by
+Pillar~2. In the Lean library this is the tracked-hypothesis
+\texttt{Prop} \texttt{TPFConjecture} (in \texttt{SPTClassification};
+formerly \texttt{axiom gapped\_interface\_axiom}, converted to a
+tracked \texttt{Prop} on 2026-05-19, so that the library declares
+\axiomcount{} project-local axioms). It is the only undischarged
+ingredient of the chirality-wall chain at the Lean-formalisation
+scope; with the conversion, the entire 17-bundle program ships
+\axiomcount{} project-local axioms. All load-bearing substrate claims
+are theorems with zero \texttt{sorry}; content downstream of the
+conjecture carries \texttt{TPFConjecture} as an explicit hypothesis
+rather than consuming an axiom.
 
-The axiom's status is partial in a specific sense: it is a
+The hypothesis's status is partial in a specific sense: it is a
 mathematical conjecture (existence of a particular gapped-interface
 construction) that mathematicians have not yet proved, rather than a
 physical postulate. Its discharge is a Mathlib-upstream cycle target
 (see Bundle~I2~\cite{Roehm2026Strategy}) and is on the Phase 8 outlook
-roadmap. Bundle~D4 inherits the axiom but introduces no new ones
-(\S\ref{sec:topological-qc}).
+roadmap. Bundle~D4 consumes the same tracked hypothesis and
+introduces no axioms of its own (\S\ref{sec:topological-qc}).
 
 \subsection{The L2 PRL splash}
 
@@ -1256,9 +1279,13 @@ topological-quantum-computation register:
 
 \subsection{Inheritance and axiom budget}
 
-D4 inherits Bundle~D2's single true axiom \texttt{gapped\_interface\_axiom}
-(the 4+1D conjecture sitting at the intersection of mechanisms (ii)
-and (iii) of D2). \emph{No new axioms are introduced in D4.} The
+D4 inherits Bundle~D2's single non-trivial hypothesis, the
+tracked-hypothesis \texttt{Prop} \texttt{TPFConjecture} (formerly
+\texttt{axiom gapped\_interface\_axiom}, converted to a tracked
+\texttt{Prop} on 2026-05-19; the 4+1D conjecture sitting at the
+intersection of mechanisms (ii) and (iii) of D2). \emph{No axioms are
+introduced in D4; the project carries \axiomcount{} project-local
+axioms.} The
 \texttt{H\_HorizonBoundaryCondition} structure is a tracked-hypothesis
 Prop record (three substantive fields: \texttt{positivity},
 \texttt{areaLeading}, \texttt{secondLaw}; two \texttt{True}-placeholder
@@ -1519,7 +1546,7 @@ Bundle~I1 (verification methodology, with worked cases) and Bundle~I2
 the substrate program's verification machinery. Both bundles are
 infrastructure-grade content rather than direct substrate physics:
 they explain how the substrate program reaches the predictive-register
-conclusions that the deep papers (D1--D5) report.
+conclusions that the substrate-physics deep papers (D1--D5) report.
 
 \subsection{The three-layer verification architecture}
 
@@ -1540,8 +1567,8 @@ evidence that something is wrong with the substrate analysis:
   \texttt{formulas.py} carries a Lean theorem reference; every Lean
   theorem has zero \texttt{sorry}. The Lean library currently ships
   $\sim \substantivetheorems$ substantive theorems across
-  \leanmodules{} modules with $\axiomcount$ axiom and $\sorrycount$
-  \texttt{sorry}.
+  \leanmodules{} modules with \axiomcount{} project-local axioms and
+  $\sorrycount$ \texttt{sorry}.
 \item \textbf{Layer 3: Aristotle automated theorem prover.}
   Hard-to-discharge sub-lemmas surfaced during a Lean development
   cycle can be submitted to the Aristotle automated theorem prover
@@ -1627,10 +1654,10 @@ implicit assumptions). The reviewer's tool budget is hard-capped
 walk; partial-coverage caveats are documented in the verdict file
 when the cap is hit.
 
-The 14-bundle architecture is gated by reviewer-triple closure (Stage
+The 17-bundle architecture is gated by reviewer-triple closure (Stage
 9 figure-reviewer + Stage 10 claims-reviewer + Stage 13
 adversarial-reviewer; all three GREEN for a bundle to be marked
-closed). At F flagship close-out, all 12 sibling bundles plus this
+closed). At F flagship close-out, all 16 sibling bundles plus this
 flagship will have passed reviewer-triple closure independently.
 
 \subsection{Algebraic-Lorentzian-geometry backbone}
@@ -1893,32 +1920,37 @@ target is identified.
 \subsection{Phase 7 close-out summary}
 
 At the time of this flagship's submission, the substrate program has
-shipped 13 bundles to reviewer-triple-closed Stage-13 GREEN status.
-The 12 sibling bundles ship across five tiers: Tier~0 (this flagship),
-Tier~1 (D1--D5; five deep papers), Tier~2 (L1--L3; three PRL splashes
-extracted from D2 and D3), Tier~3 (I1--I2; two infrastructure papers),
-and Tier~4 (E1--E2; two experimental letters). The architecture is
-the project's strategy frame~\cite{Roehm2026Strategy}.
+shipped 17 bundles to reviewer-triple-closed Stage-13 GREEN status.
+The 17 bundles ship across five tiers: Tier~0 (this flagship),
+Tier~1 (D1--D8; eight deep papers), Tier~2 (L1--L3; three PRL splashes
+extracted from D2 and D3), Tier~3 (I1--I3; three infrastructure
+papers), and Tier~4 (E1--E2; two experimental letters). The
+architecture is the project's strategy
+frame~\cite{Roehm2026Strategy}.
 
 Total program output at flagship close-out:
 $\sim \substantivetheorems$ substantive Lean theorems across
-\leanmodules{} modules with $\axiomcount$ axiom and $\sorrycount$ \texttt{sorry}.
-The single axiom is \texttt{gapped\_interface\_axiom}, the 4+1D
-gapped-interface conjecture from Bundle~D2's chirality-wall pillar 2.
-All other load-bearing claims are theorems.
+\leanmodules{} modules with \axiomcount{} project-local axioms and
+$\sorrycount$ \texttt{sorry}.
+The single non-trivial hypothesis is the tracked-hypothesis
+\texttt{Prop} \texttt{TPFConjecture} (formerly
+\texttt{axiom gapped\_interface\_axiom}, converted to a tracked
+\texttt{Prop} on 2026-05-19), the 4+1D gapped-interface conjecture
+from Bundle~D2's chirality-wall pillar 2.
+All load-bearing claims are theorems.
 
 \subsection{Submission roll-out}
 
 The submission sequence per~\cite{Roehm2026Strategy} \S 3 begins with
 the Tier-2 PRL splashes (L1, L2, L3) as arXiv vouchers ahead of the
-Tier-1 deep-paper submissions. The Tier-1 deep papers (D1, D2, D3,
-D4, D5) follow the splashes, with D3 (the heaviest at $\sim 50$pp)
+Tier-1 deep-paper submissions. The Tier-1 deep papers (D1--D8)
+follow the splashes, with D3 (the heaviest at $\sim 50$pp)
 shipped after L1 and L3 since L1 and L3 extract content from D3.
-The Tier-3 infrastructure papers (I1, I2) ship in parallel with the
-Tier-1 deep papers; I2 may delay if the Mathlib upstream cycle
+The Tier-3 infrastructure papers (I1, I2, I3) ship in parallel with
+the Tier-1 deep papers; I2 may delay if the Mathlib upstream cycle
 extends. The Tier-4 experimental letters (E1, E2) ship with the D1
 deep paper as companion content. This flagship review (F) ships last,
-citing all 12 siblings in their Phase-7-final form.
+citing all 16 siblings in their Phase-7-final form.
 
 The submission cadence is intentionally tied to the architecture's
 internal cross-bridges: each downstream submission cites upstream
@@ -1977,8 +2009,9 @@ horizons:
 
 \begin{enumerate}
 \item \textbf{Is the substrate's predictive register complete at the
-  Lean-formalisation scope?} The current state ($\axiomcount$ axiom,
-  $\sorrycount$ \texttt{sorry}) is consistent with completeness, but the
+  Lean-formalisation scope?} The current state (\axiomcount{}
+  project-local axioms, $\sorrycount$ \texttt{sorry}) is consistent
+  with completeness, but the
   open-under-tracked-hypothesis register
   (\S\ref{sec:substrate-register}) lists $\sim 10$ residual closure
   targets. Each is bounded; the question is whether closure of all of
@@ -1990,8 +2023,10 @@ horizons:
   the Tier-4 experimental letters give the device-parameter audit.
   Phase 8 collaboration with the Paris--LKB and Dean--Kim--Lucas
   groups is on the roadmap.
-\item \textbf{Is the chirality-wall axiom dischargeable?} The single
-  remaining axiom \texttt{gapped\_interface\_axiom} is a mathematical
+\item \textbf{Is the chirality-wall hypothesis dischargeable?} The
+  single non-trivial hypothesis --- the tracked-hypothesis
+  \texttt{Prop} \texttt{TPFConjecture} (formerly
+  \texttt{axiom gapped\_interface\_axiom}) --- is a mathematical
   conjecture (existence of a particular gapped-interface
   construction). Its discharge is a Mathlib-upstream-cycle target
   but may also depend on independent mathematical-topology research.
@@ -2019,7 +2054,8 @@ categories without rescoping in the face of negative results.
 
 The synthesis claim of this flagship is structurally absent from any
 individual sibling bundle. Each sibling reports its own thread; this
-flagship reports the substrate as a single object across all twelve.
+flagship reports the substrate as a single object across the
+program's sibling threads.
 The cross-thread identities listed in \S\ref{sec:strategic-frame} are
 the F-unique synthesis content:
 
@@ -2049,7 +2085,7 @@ the F-unique synthesis content:
   $\Lambda_J$-vs-$\Lambda_{HK}$ comparison on a common substrate.
 \end{itemize}
 
-The substrate is one object; its thirteen faces are thirteen bundles'
+The substrate is one object; its faces are the sibling bundles'
 worth of predictive register.
 
 \subsection{Predictive register at the boundary partition}
@@ -2078,26 +2114,28 @@ problem at $\Lambda_{\mathrm{emerg}}/\Lambda_{\mathrm{obs}} \gtrsim
 
 \S\ref{sec:substrate-register} ships the consolidated table.
 
-\subsection{The 14-bundle architecture as a coherent submission package}
+\subsection{The 17-bundle architecture as a coherent submission package}
 
-Per the project's strategy frame~\cite{Roehm2026Strategy}, the 14
-bundles ship as a coherent submission package: the five Tier-1 deep
-papers (D1--D5) carry the full substantive content; the three Tier-2
+Per the project's strategy frame~\cite{Roehm2026Strategy}, the 17
+bundles ship as a coherent submission package: the eight Tier-1 deep
+papers (D1--D8) carry the full substantive content; the three Tier-2
 PRL splashes extract headline results from D3 (L1, L3) and D2 (L2);
 the three Tier-3 infrastructure papers describe the methodology (I1),
 the verified-statistics software (I2), and the LDP/It\^o substrate
 (I3); the two Tier-4 experimental letters carry per-platform
 companion content (E1 polariton, E2 graphene); and this Tier-0
-flagship review (Bundle~F) integrates the thirteen sibling threads
+flagship review (Bundle~F) integrates the sixteen sibling threads
 into a single survey with substrate-identity synthesis claim. NO-GO results are reported as first-class predictive
 content rather than absences. All load-bearing claims ship with Lean
-4 modules at zero \texttt{sorry} and one true axiom
-(\texttt{gapped\_interface\_axiom}; the 4+1D gapped-interface
-conjecture). The architecture is intentionally append-friendly: new
+4 modules at zero \texttt{sorry} and \axiomcount{} project-local
+axioms; the single non-trivial hypothesis --- the 4+1D
+gapped-interface conjecture --- is carried as the tracked-hypothesis
+\texttt{Prop} \texttt{TPFConjecture}. The architecture is
+intentionally append-friendly: new
 Tier-2 PRL splashes can be added if a future Phase 6X wave produces
 a 4-page-PRL-shaped headline.
 
-The substrate is one object; the 14-bundle architecture is its
+The substrate is one object; the 17-bundle architecture is its
 coherent description across SM-plus-GR phenomenology.
 
 %% BUNDLE_APPEND_INSERT_HERE — bundle_append.py inserts new sections at
@@ -2114,7 +2152,7 @@ coherent description across SM-plus-GR phenomenology.
 
 \bibitem{Roehm2026Strategy}
 J.~G.~Roehm,
-``SK--EFT Hawking 14-bundle publication architecture,''
+``SK--EFT Hawking 17-bundle publication architecture,''
 project paper-strategy frame, in preparation (2026).
 
 \bibitem{Roehm2026D1}
