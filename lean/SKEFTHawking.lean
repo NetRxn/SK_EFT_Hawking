@@ -1583,6 +1583,14 @@ import SKEFTHawking.FKLW.RossSelinger.Gate2Perm
 -- ω⁸ = 1 + exponent capping (budget-bounded phases), denExp/normSq unit-phase invariance, the
 -- √2-parallelogram law, mk-numerator extraction, denExp (mk z (k+1)) = k+1 ⟺ ¬dividesSqrt2 z.
 import SKEFTHawking.FKLW.RossSelinger.GilesSelingerPairDrop
+-- Phase 6AO Track 2 (inc 32–33, 2026-06-10): ReductionStep DISCHARGED + the UNCONDITIONAL dim-4
+-- Giles–Selinger column lemma — reductionStep_holds : ReductionStep 280 (numerator-sum bridge
+-- Σ|wᵢ|² = 2^{t+1} ⟹ Lemma-5 matched pair exists ⟹ exists_pair_drop removes it; active-set descent,
+-- ≤4 rounds/level); column_lemma_bounded: EVERY unit ℤ[ω][1/√2] column is the first column of an exact
+-- 2-qubit Clifford+T word of length ≤ 280·colDenExp + 9 (LINEAR in the denominator exponent = the
+-- O(log 1/ε) count the KMM ≤2-ancilla headline consumes) + the existential form. Circuit C exact
+-- synthesis complete. Kernel-pure {propext, Classical.choice, Quot.sound}.
+import SKEFTHawking.FKLW.RossSelinger.GilesSelingerColumnLemma
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
