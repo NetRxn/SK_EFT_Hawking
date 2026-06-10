@@ -38,6 +38,81 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-31T14:07:52Z",
       "notes": "Sourceless synthesis (D.4): Phase 6p/6t/6u/6x/6x-prime/6y/6z verified-quantum-compilation corpus. Authorized 2026-05-31 per Pipeline Invariant #14."
+    },
+    {
+      "date": "2026-06-10T20:22:08Z",
+      "source_paper": "_phase6AN_W5_lean_only",
+      "lift_action": "Synthesize",
+      "bundle_section_inserted": "\u00a7NEW (verified compiler algorithm layer)",
+      "lean_modules_referenced": [
+        "CliffordTCompiler"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-06-10T20:22:08Z",
+      "notes": "Late absorption (sourceless): Phase 6AN W5 correct-by-construction Clifford+T compiler \u2014 Lean-only substrate"
+    },
+    {
+      "date": "2026-06-10T20:22:22Z",
+      "source_paper": "_phase6AM_W5_lean_only",
+      "lift_action": "Synthesize",
+      "bundle_section_inserted": "\u00a74 (RS efficiency layer + honest prime-density wall)",
+      "lean_modules_referenced": [
+        "RossSelinger/LogLengthHeadline",
+        "RossSelinger/AncillaCompletion"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-06-10T20:22:22Z",
+      "notes": "Late absorption (sourceless): Phase 6AM W5 Ross-Selinger O(log 1/eps) efficiency layer + axiom-free Section-6-gate Prop + documented prime-density wall \u2014 Lean-only substrate"
+    },
+    {
+      "date": "2026-06-10T20:22:22Z",
+      "source_paper": "_phase6AO_lean_only",
+      "lift_action": "Synthesize",
+      "bundle_section_inserted": "\u00a74\u2013\u00a76 (RS Appendix-C chain + KMM third mechanism + kernel-purity uniformity)",
+      "lean_modules_referenced": [
+        "RossSelinger/Zsqrt2Units",
+        "RossSelinger/RelNormSolvability",
+        "RossSelinger/RelNormMultiplicativity",
+        "RossSelinger/RelNormEvenPowerObstruction",
+        "RossSelinger/RelNormPrimeCase",
+        "RossSelinger/RelNormPrimeCaseInstances",
+        "RossSelinger/ZOmegaEuclideanDomain",
+        "RossSelinger/GridExistenceSharp",
+        "RossSelinger/KMMZRotationHeadline",
+        "RossSelinger/KMMOperational",
+        "RossSelinger/SU2Euler",
+        "RossSelinger/Gate3Unitary",
+        "RossSelinger/KMMUniversal",
+        "RossSelinger/BridgeParity",
+        "RossSelinger/BridgeStructural",
+        "RossSelinger/MAStepStructural",
+        "RossSelinger/ZOmegaTorsion",
+        "RossSelinger/CliffordBaseStructural",
+        "RossSelinger/KMMLemma3Structural",
+        "RossSelinger/KMMLemma3Alg2"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-06-10T20:22:22Z",
+      "notes": "Late absorption (sourceless): Phase 6AO T1 RS Appendix-C chain + Z[zeta8]-Euclidean + Hyp-8.3 errata + sharp Lemma 4.4; T2 kmm_universal_headline; T3 native_decide elimination \u2014 Lean-only substrate"
+    },
+    {
+      "date": "2026-06-10T20:22:22Z",
+      "source_paper": "_phase6AP_W3b_lean_only",
+      "lift_action": "Synthesize",
+      "bundle_section_inserted": "\u00a7NEW (compiled-gate diamond certificate)",
+      "lean_modules_referenced": [
+        "QuantumNetwork/KroneckerOpNorm",
+        "QuantumNetwork/UnitaryDiamond",
+        "QuantumNetwork/MatrixNormBridge",
+        "CompiledGateDiamond"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-06-10T20:22:22Z",
+      "notes": "Late absorption (sourceless): Phase 6AP W3+W3b AKN diamond chain + end-to-end compiled-gate channel certificate \u2014 Lean-only substrate"
     }
   ]
 }

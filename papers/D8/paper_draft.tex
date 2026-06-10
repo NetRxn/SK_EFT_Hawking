@@ -10,6 +10,10 @@
 %% Source manifest: papers/D8/source_manifest.md
 %% Append log: papers/D8/append_log.json
 %% Sourceless (D.4) synthesis: Phase 6p/6t/6u/6x/6x'/6y/6z verified-compilation corpus.
+%% Late absorption 2026-06-10 (D.4 sourceless, LATE_PHASE6_ABSORPTION_PROTOCOL):
+%%   Phase 6AM W5 (RS efficiency layer), 6AN W5 (cliffordTCompile), 6AO T1-T3
+%%   (RS App-C chain + Z[zeta8]-ED + kmm_universal_headline + native_decide
+%%   elimination), 6AP W3+W3b (AKN diamond chain + compiled-gate certificate).
 %% All headline theorems kernel-pure {propext, Classical.choice, Quot.sound}; 0 project-local axioms.
 
 \newcommand{\lean}[1]{\texttt{#1}}
@@ -47,14 +51,27 @@ fundamentally distinct, formally verified density mechanisms: one using the
 $T$ gate, and one using \emph{no} $T$ gate at all, in which the doubly
 controlled-$Z$ (CCZ) gate is essential---accompanied by a converse proving
 that the Clifford group alone generates only a finite subgroup of $\su{8}$ and
-hence is not dense. Finally we machine-check, unconditionally, a lower bound on
+hence is not dense. We machine-check, unconditionally, a lower bound on
 the number of Toffoli gates required to implement a unitary, expressed through
-a signed-parity-invariant measure on the gate's channel representation. Every
-headline theorem is verified to the Lean kernel with no project-local axioms.
+a signed-parity-invariant measure on the gate's channel representation.
+Beyond existence, we verify the compilation \emph{algorithm} itself: a named
+correct-by-construction Clifford$+T$ compiler whose error and length contract
+is a theorem about the algorithm; an $O(\log 1/\varepsilon)$-length
+(exponent-$1$) synthesis theory along two further mechanisms---the
+Ross--Selinger grid route, formalized down to its Appendix-C Diophantine
+solvability theory with its one remaining number-theoretic existence carried
+as an explicit hypothesis, and the Kliuchnikov--Maslov--Mosca ancilla route,
+fully unconditional via Lagrange's four-square theorem with an explicit
+verified word bound---and an end-to-end diamond-distance certificate
+converting compiler accuracy $\varepsilon$ into worst-case channel error
+$\le \sqrt 2\,\varepsilon$. Every
+headline theorem is verified to the Lean kernel with no project-local axioms,
+and the corpus contains no compiled-evaluation
+(\texttt{native\_decide}) trust escapes.
 We delimit the scope explicitly: this is the verified \emph{existence},
-universality, and lower-bound theory; runtime-compiler implementation,
-hardware-specific tuning, and length-optimality engineering are a separate
-deliverable.
+universality, algorithm-correctness, synthesis, and lower-bound theory;
+runtime-compiler implementation, hardware-specific tuning, and
+constant-factor length optimization are a separate deliverable.
 \end{abstract}
 
 \maketitle
@@ -120,6 +137,27 @@ $\su 8$.
 unconditional machine-checked lower bound on Toffoli count via a
 signed-parity-invariant measure on the channel representation, following
 Mukhopadhyay~\cite{Mukhopadhyay2024}.
+
+\item A \emph{correct-by-construction compiler} (Sec.~\ref{sec:compiler}):
+a named Clifford$+T$ compilation function whose termination, loop invariant,
+error, and length bounds are theorems about the algorithm itself.
+
+\item A \emph{verified optimal-length synthesis theory}
+(Secs.~\ref{sec:rs}--\ref{sec:rsnt}): the Ross--Selinger grid
+route~\cite{RossSelinger2016} formalized down to its Appendix-C Diophantine
+solvability chain (over a newly verified Euclidean $\mathbb Z[\zeta_8]$),
+with its single remaining number-theoretic existence isolated as an explicit
+hypothesis and honestly documented as open; and the
+Kliuchnikov--Maslov--Mosca ancilla route~\cite{KMM2013ancilla}, verified
+\emph{unconditionally} at $O(\log 1/\varepsilon)$ with exponent $1$ and an
+explicit word bound --- a third compilation mechanism alongside the
+Solovay--Kitaev recursion and the grid route.
+
+\item An \emph{end-to-end channel certificate} (Sec.~\ref{sec:diamond}):
+an Aharonov--Kitaev--Nisan-style operator-norm-to-diamond
+conversion~\cite{AKN1998} composed with the verified compiler, certifying
+that compiling to accuracy $\varepsilon$ bounds the worst-case channel error
+by $\sqrt 2\,\varepsilon$, every link kernel-checked.
 
 \item A \emph{Mathlib-upstream contribution portfolio}
 (Sec.~\ref{sec:mathlib}).
@@ -370,6 +408,287 @@ note the scope: the matching Toffoli-count \emph{upper} bound (minimality;
 Mukhopadhyay's Conjecture~4.8) is not addressed here; the lower bound stands
 unconditionally on its own.
 
+%% ─── Lifted from _phase6AN_W5_lean_only (§NEW, verified compiler algorithm layer) — late absorption 2026-06-10 (D.4 sourceless; Phase 6AN W5) ───
+\section{From existence to a verified algorithm: a correct-by-construction
+Clifford$+T$ compiler}
+\label{sec:compiler}
+
+The theory developed so far certifies that good compilations \emph{exist}. A
+strictly stronger guarantee is a verified \emph{algorithm}: a single named
+compile function whose error and length contract is a theorem about the
+algorithm itself, universally quantified over targets and precisions, rather
+than a certificate checked per output --- the gate-compilation analogue of a
+verified compiler in the CompCert tradition. The substrate of
+Sec.~\ref{sec:substrate} already contains the two load-bearing ingredients: the
+Dawson--Nielsen composition is realized as a \emph{structural} recursion on the
+depth (so termination is by construction), and the per-level super-quadratic
+error contraction is proved unconditionally. Packaging these yields the
+compiler function
+\[
+  \lean{cliffordTCompile} : \su{2} \times \mathbb{R} \longrightarrow
+  \mathrm{FreeGroup}(\mathrm{Fin}\;2),
+\]
+which maps a target $U$ and a precision $\varepsilon$ to a word in the free
+group on the two generators $H, T$ (\lean{FKLW/CliffordTCompiler.lean}). Its
+verification contract has
+the shape of a classical loop-correctness proof, with each piece a named
+kernel-checked theorem:
+
+\begin{itemize}
+\item \emph{termination / finite depth}
+(\lean{cliffordTCompile\_eq\_recursion}): the compiler equals the structural
+Dawson--Nielsen recursion run to the explicit finite depth
+$\lean{skLevel\_polylog}\,\varepsilon$;
+\item \emph{loop initialization}
+(\lean{cliffordTCompile\_recursion\_base}): at depth $0$ the compiler returns
+the constructive base-finder word;
+\item \emph{loop invariant} (\lean{cliffordTCompile\_loop\_invariant}): at
+every recursion depth $n$ and for every target $U$, the depth-$n$ output
+approximates $U$ within the super-quadratically shrinking budget --- each
+refinement step preserves and tightens the contract, unconditionally;
+\item \emph{correctness} (\lean{cliffordTCompile\_correct}): for every
+$U \in \su 2$ and every $\varepsilon \in (0, \varepsilon_0]$, the output
+simultaneously (i) approximates $U$ within $\varepsilon$ in operator norm,
+(ii) has recursion-level length within the poly-logarithmic
+Sec.~\ref{sec:substrate} bound, and (iii) has actual output-word length bounded
+by an explicit closed-form expression in the recursion depth and the
+constructive $\varepsilon_0$-cover's maximum word length.
+\end{itemize}
+
+A worked instantiation (\lean{cliffordTCompile\_correct\_example}) witnesses
+that the contract is non-vacuous at a concrete operating point. We flag the
+honest residual in (iii): the output-word length constant is the constructive
+$\varepsilon_0$-cover's, not the information-theoretically optimal
+Ross--Selinger constant --- precisely the gap the next two sections address.
+We also reiterate the scope boundary: \lean{cliffordTCompile} is a
+mathematical function inside the proof assistant, verified once for all
+inputs; engineering it into a runnable, performance-tuned software compiler
+remains outside this paper's scope (Sec.~\ref{sec:scope}).
+%% ─── End lift from _phase6AN_W5_lean_only ───
+
+%% ─── Lifted from _phase6AM_W5_lean_only (§4 hint, RS efficiency layer + honest prime-density wall) — late absorption 2026-06-10 (D.4 sourceless; Phase 6AM W5) ───
+\section{Optimal-length synthesis: the Ross--Selinger grid route and an honest
+number-theoretic wall}
+\label{sec:rs}
+
+The Solovay--Kitaev recursion delivers word length
+$O\!\big((\log 1/\varepsilon)^{3.97}\big)$; the information-theoretic optimum
+is $O(\log 1/\varepsilon)$ with exponent $1$, achieved for Clifford$+T$
+$z$-rotations by the Ross--Selinger grid-synthesis
+algorithm~\cite{RossSelinger2016} building on exact synthesis over
+$\mathbb Z[\omega][1/\sqrt 2]$~\cite{KMM2013}. We formalize the
+\emph{efficiency layer} of this route
+(\lean{FKLW/RossSelinger/LogLengthHeadline.lean}): conditional on the grid
+finder succeeding, the synthesized Clifford$+T$ word has length
+$\le N_3 + 8k$ at precision parameter $k$ --- equivalently
+(\lean{rossSelinger\_log\_length\_explicit}) length
+$\le N_3 + 16\log_2(1/\delta) + 16\log_2(1+\sqrt2)$ at grid precision
+$\delta = (1+\sqrt 2)/\sqrt 2^{\,k}$ --- i.e.\ $O(\log 1/\varepsilon)$ with
+exponent $1$.
+
+The conditionality is not left opaque. The theorem
+\lean{gridFindT\_isSome\_of\_residual} proves that the grid finder's success
+is implied by a single, precise number-theoretic existence: that the
+residual $2^k - u^\dagger u$ of a grid candidate $u$ is realized as a bounded
+relative norm $t^\dagger t$ from $\mathbb Z[\omega]$,
+$\omega = e^{i\pi/4}$ (Ross's Problem~3.2.4), and
+\lean{rossSelinger\_synth\_of\_residual} then delivers the full
+$O(\log 1/\varepsilon)$ synthesis from that hypothesis alone. The remaining
+gap is therefore isolated, and we state its status plainly: the source
+literature itself discharges this existence only as a \emph{randomized}
+algorithm under a prime-distribution hypothesis (Hypothesis~8.3 of
+Ref.~\cite{RossSelinger2016}, which we verified against the primary sources
+to be the same statement as Hypothesis~29 of Ref.~\cite{Selinger2015}); an
+unconditional discharge would need primes (or relative norms) of prescribed
+form in growing grid windows, a short-interval analytic-number-theory
+statement that is open in the formalized-mathematics ecosystem and, in its
+primality form, in the literature. The needed existence is strictly weaker
+than the prime-distribution hypothesis --- relative-norm density rather than
+primality --- and is plausibly unconditional, but the known analytic routes
+(Landau--Ramanujan-type lower bounds via half-dimensional sieves) are far
+beyond current formal libraries. Per this project's standing posture, the gap
+is carried as an \emph{explicit hypothesis in the theorem statement} --- never
+as an axiom --- so the zero-project-local-axiom claim of this paper is
+preserved; the conditional theorems are kernel-checked exactly as stated. The
+next section shows that a different, ancilla-assisted mechanism removes the
+wall entirely.
+%% ─── End lift from _phase6AM_W5_lean_only ───
+
+%% ─── Lifted from _phase6AO_lean_only (§4–§6 hints) — late absorption 2026-06-10 (D.4 sourceless; Phase 6AO Tracks 1–3) ───
+\section{Completing the Ross--Selinger substrate, and a fully constructive
+third mechanism}
+\label{sec:rsnt}
+
+\subsection{The Diophantine correctness theory and a Euclidean
+\texorpdfstring{$\mathbb Z[\zeta_8]$}{Z[zeta8]}}
+\label{sec:rsnt-appc}
+
+The grid route of Sec.~\ref{sec:rs} rests on the Diophantine equation
+$t^\dagger t = \xi$ over $\mathbb Z[\omega]$, whose solvability theory is
+Appendix~C of Ref.~\cite{RossSelinger2016}. We machine-check the load-bearing
+chain end-to-end (\lean{FKLW/RossSelinger/} module family): Lemma~C.2, that
+doubly-positive units of $\mathbb Z[\sqrt 2]$ are squares
+(\lean{zsqrt2\_isSquare\_of\_unit\_pos\_pos}); Lemma~C.16, the solvability
+criterion --- $t^\dagger t = \xi$ is solvable iff $\xi$ is doubly positive and
+$\dagger$-decomposable (\lean{relNorm\_iff\_doublyPositive\_decomposable});
+Lemma~C.19, multiplicativity of $\dagger$-decomposability across coprime
+factors (\lean{daggerDecomposable\_mul\_iff}); the mod-$8$ obstruction at
+primes over $p \equiv 7 \pmod 8$
+(\lean{not\_daggerDecomposable\_of\_norm\_pow\_seven}); the Lemma~C.20 engine
+(\lean{daggerDecomposable\_of\_prime\_dvd\_normSq}) with its constructive
+prime-case instances; and Lemma~C.21, the even-power criterion as a
+biconditional (\lean{daggerDecomposable\_pow\_iff\_seven}): for $\xi$ of norm
+$\pm p$ with $p \equiv 7 \pmod 8$, the power $\xi^m$ is
+$\dagger$-decomposable iff $m$ is even.
+
+The gcd machinery underneath the chain required proving that
+$\mathbb Z[\omega] = \mathbb Z[\zeta_8]$ is a Euclidean domain
+(\lean{ZOmegaEuclideanDomain.lean}), an instance absent from Mathlib and a
+standalone upstream candidate (Sec.~\ref{sec:mathlib}). The formalization
+also caught a planning error worth recording: an earlier internal roadmap
+targeted a Euclidean-domain structure on the subring
+$\mathbb Z[\sqrt 2][i]$, which is mathematically impossible --- it is an
+index-$2$, non-integrally-closed subring of $\mathbb Z[\omega]$ and hence
+never a UFD. The primary source was re-read end-to-end during this
+formalization pass and our internal cross-reference scaffolding corrected
+against it; all section and lemma numbers cited here follow
+arXiv:1403.2975v3.
+
+On the geometric side, we sharpen the one-dimensional grid-existence input:
+\lean{oneDim\_grid\_exists\_product}
+(\lean{FKLW/RossSelinger/GridExistenceSharp.lean}) establishes Lemma~4.4 of
+Ref.~\cite{RossSelinger2016} in its sharp product form --- the product
+condition $\delta\Delta \ge (1+\sqrt 2)^2$ alone guarantees a grid point at
+every position, where the naive center-rounding argument needs \emph{both}
+interval lengths to be at least $1+\sqrt 2$. The product form is exactly what
+the asymmetric two-disk scaled-grid analysis (a tiny $\varepsilon$-region
+against a large disk) consumes.
+
+\subsection{A fully constructive third mechanism: the
+Kliuchnikov--Maslov--Mosca ancilla route}
+\label{sec:kmm}
+
+The corpus now contains \emph{three} formally verified compilation
+mechanisms, resting on genuinely different mathematics: the Dawson--Nielsen
+recursion (unconditional, alphabet-agnostic, length exponent $\approx 3.97$;
+Secs.~\ref{sec:substrate}--\ref{sec:sud}), the Ross--Selinger grid route
+(optimal exponent $1$, conditional on the relative-norm existence;
+Sec.~\ref{sec:rs}), and --- the headline of this section --- the
+Kliuchnikov--Maslov--Mosca ancilla-assisted route~\cite{KMM2013ancilla},
+which achieves the optimal exponent \emph{unconditionally}, with no
+number-theoretic hypothesis of any kind. The mechanism is the one identified
+in Ref.~\cite{KMM2013ancilla}: adjoining ancilla qubits turns the synthesis
+Diophantine equation into a four-square problem, which Lagrange's
+four-square theorem solves \emph{always}. The formalization combines that
+keystone with a constructive dimension-$4$ column lemma in the style of
+Giles--Selinger exact synthesis~\cite{GilesSelinger2013} and a verified Euler
+$Z$--$X$--$Z$ decomposition of $\su 2$.
+
+The result is the unconditional headline
+(\lean{kmm\_universal\_headline},
+\lean{FKLW/RossSelinger/KMMUniversal.lean}): \emph{for every}
+$U \in \su 2$ and every $k \in \mathbb N$ there exist a three-qubit
+Clifford$+T$ word $W$ of length
+\[
+  |W| \;\le\; 50400\,k + 812
+\]
+and a global phase $c$ with $\lvert c\rvert = 1$, such that for every unit
+input pair $(\alpha, \beta)$, applying $W$ to the ancilla-initialized state
+$(\alpha\lvert 0\rangle + \beta\lvert 1\rangle)\otimes\lvert 00\rangle$
+produces a state within squared $\ell^2$-distance
+\[
+  9\left(\frac{2}{4^k} + \frac{2\sqrt 2}{2^k}\right)
+\]
+of the ancilla-restored ideal output for $c^{-1}U$. The error scale is
+$\varepsilon \sim 2^{-k}$ up to constants, so the word length is
+$O(\log 1/\varepsilon)$ with exponent exactly $1$ --- and the proof consumes
+\emph{no} prime-density input: only Lagrange four squares, the constructive
+column lemma, and the Euler decomposition. We state the contract's shape
+honestly: it is a state-level guarantee on ancilla-initialized inputs
+(matching the published construction's own contract), with the ancillas
+restored in the comparison state up to the stated error and a global phase;
+and the explicit constants $50400\,k + 812$ are verified bounds, not
+optimized ones --- tightening them is engineering, outside this paper's
+scope.
+
+\subsection{Kernel purity made uniform: eliminating
+\texorpdfstring{\lean{native\_decide}}{native-decide}}
+\label{sec:purity}
+
+Lean offers two ways to discharge a large finite check: kernel-checked
+evaluation (\lean{decide}), and compiled evaluation (\lean{native\_decide}),
+which extends the trusted base from the kernel to the Lean compiler and host
+toolchain. The exact-synthesis layer beneath the
+Kliuchnikov--Maslov--Mosca development originally relied on four
+\lean{native\_decide} finite sweeps (the largest over
+$\sim$$16.7$~million tuples). All four have been eliminated by structural
+reproofs: a parity/ramification calculus replaces the bridge-step box sweep
+(\lean{kSO3\_reconstruct\_le\_three}); a Giles--Selinger-style parity
+argument replaces the orthogonal-triple sweep
+(\lean{someKills\_of\_orthogonal}), and in doing so \emph{strengthens} the
+statement by dropping a hypothesis; a torsion classification of
+$\mathbb Z[\omega]$ elements of small norm reduces the Clifford base-case
+coverage to chunked kernel-checked \lean{decide}s; and a pairing-form
+calculus reduces the mod-$8$ valuation algebra to two kernel-checked sweeps.
+As a result, the entire compilation corpus this paper reports --- substrate,
+instantiations, resource bounds, compiler, grid route, ancilla route, and
+channel certificates --- is verified to the kernel with the standard axiom
+set and \emph{zero} compiler-trust escape hatches; every remaining finite
+check is kernel-checked.
+%% ─── End lift from _phase6AO_lean_only ───
+
+%% ─── Lifted from _phase6AP_W3b_lean_only (§NEW, compiled-gate diamond certificate) — late absorption 2026-06-10 (D.4 sourceless; Phase 6AP W3+W3b) ───
+\section{From compiled gates to physical channels: an end-to-end diamond
+certificate}
+\label{sec:diamond}
+
+A synthesis bound controls the \emph{operator-norm} distance between
+unitaries; what a hardware error budget consumes is the \emph{worst-case
+channel} error --- the diamond distance between the induced channels. We
+close this gap with a kernel-checked chain
+(\lean{QuantumNetwork/UnitaryDiamond.lean}). The central inequality is the
+Aharonov--Kitaev--Nisan-style conversion~\cite{AKN1998}
+(\lean{diamondDist\_unitaryKraus\_le}): for unitary channels
+$\Phi_U(\rho) = U\rho U^\dagger$ and $\Phi_V(\rho) = V\rho V^\dagger$,
+\[
+  \mathrm{diamondDist}(\Phi_U, \Phi_V) \;\le\; \lVert U - V\rVert_{\mathrm{op}}
+\]
+in this development's $\tfrac12\lVert\cdot\rVert_\diamond$ convention
+(equivalently $\lVert \Phi_U - \Phi_V\rVert_\diamond \le
+2\lVert U - V\rVert_{\mathrm{op}}$), with the ancilla register handled by a
+Kronecker-factor operator-norm bound
+(\lean{l2\_opNorm\_kronecker\_one\_le}) and the trace-norm H\"older toolbox
+transferred from the community quantum-information library of
+Ref.~\cite{Meiburg2025PhysLib} through a single norm identification
+(\lean{traceNorm\_eq\_physlib}). The add-subtract telescope underlying the
+proof is established for arbitrary contractions, strictly more general than
+the unitary case. A known caveat is itself shipped \emph{as a theorem} rather
+than as prose: the bound is not sharp under global phase ---
+\lean{diamondDist\_unitary\_smul\_phase} proves that $U$ and $e^{i\theta}U$
+generate the same channel (diamond distance zero) while their operator-norm
+distance is positive. The phase-optimized tightening is documented and
+deliberately not claimed.
+
+The capstone composes this with the verified compiler of
+Sec.~\ref{sec:compiler}
+(\lean{diamondDist\_cliffordTCompile\_le},
+\lean{FKLW/CompiledGateDiamond.lean}): for every $U \in \su 2$ and
+$\varepsilon \in (0, \varepsilon_0]$, compiling $U$ to accuracy
+$\varepsilon$ implies the compiled word's \emph{physical channel} is within
+diamond distance $\sqrt 2\,\varepsilon$ of the target's. Every link is
+kernel-checked: the compiler contract (an $L^\infty$ operator-norm bound)
+yields per-row $\ell^1$ sums $\le \varepsilon$; a row-sum-to-$L^2$
+operator-norm bridge (\lean{l2\_opNorm\_le\_sqrt\_card\_mul\_of\_rowSum\_le})
+gives $\lVert W - U\rVert_{\mathrm{op}} \le \sqrt 2\,\varepsilon$; the
+conversion above finishes. The $\sqrt 2$ is the dimension constant of the
+norm bridge ($\sqrt{\mathrm{card}}$ at one qubit), not the conversion
+constant --- a sharper bridge would tighten it. The result is the
+certificate-grade statement an error budget can cite by name: gate-synthesis
+accuracy $\varepsilon$ implies worst-case channel error at most
+$\sqrt 2\,\varepsilon$, with no unverified step between the algorithm and
+the channel.
+%% ─── End lift from _phase6AP_W3b_lean_only ───
+
 \section{Mathlib-upstream contribution portfolio}
 \label{sec:mathlib}
 
@@ -379,29 +698,50 @@ concrete-radius matrix logarithm of Sec.~\ref{sec:sud} (the strongest
 standalone candidate, as the library lacks a Banach-algebra logarithm with a
 named convergence radius); a dimension-generic BCH order-two cubic estimate;
 the $\su d$ Cartan density-from-witness lemma; and the matrix-exponential
-local-homeomorphism at the identity. Filing these reduces the maintenance
+local-homeomorphism at the identity. The late-absorbed synthesis layer
+(Secs.~\ref{sec:rs}--\ref{sec:diamond}) adds three further candidates, each
+verified to be absent from Mathlib at the time of writing: the Euclidean
+domain instance for $\mathbb Z[\zeta_8]$
+(\lean{ZOmegaEuclideanDomain.lean}, Sec.~\ref{sec:rsnt-appc}); the Euler
+$Z$--$X$--$Z$ decomposition of $\su 2$ (\lean{SU2Euler.lean}); and the
+Kronecker-with-identity $L^2$ operator-norm bound
+$\lVert A \otimes \mathbf 1\rVert \le \lVert A\rVert$
+(\lean{KroneckerOpNorm.lean}). Filing these reduces the maintenance
 surface of the present development and subjects the substrate to independent
-review.
+review; the elimination of every \lean{native\_decide} from the corpus
+(Sec.~\ref{sec:purity}) was a prerequisite, since compiled evaluation is not
+accepted upstream.
 
 \section{Scope and discussion}
 \label{sec:scope}
 
 We state the boundary of this work explicitly, both to forestall over-reading
 and because the boundary is itself a deliberate design choice. This paper
-establishes the verified \emph{existence}, \emph{universality}, and
+establishes the verified \emph{existence}, \emph{universality},
+\emph{algorithm-correctness}, \emph{optimal-length synthesis}, and
 \emph{lower-bound} theory of universal quantum gate compilation: that a
 compilation exists, with provable error and word-length bounds, at arbitrary
-dimension, for the alphabets treated here, and that the associated resource
-costs obey machine-checked bounds. What is \emph{not} in scope is the
-engineering of a runnable compiler: the runtime gate-word-emitting
-implementation, hardware-specific tuning for particular devices, certificate
-formats, and length-optimality (the gap between our poly-logarithmic guarantee
-and the optimal Ross--Selinger-style synthesis~\cite{RossSelinger2016}) are a
-separate engineering deliverable. The existential $\varepsilon_0$-net used here
-can in principle be replaced by a genuinely runnable algorithmic synthesis
-following Kliuchnikov--Maslov--Mosca~\cite{KMM2013} and
+dimension, for the alphabets treated here; that a named compilation algorithm
+meets its contract as a theorem (Sec.~\ref{sec:compiler}); that
+$O(\log 1/\varepsilon)$-length synthesis is verified along three distinct
+mechanisms (Secs.~\ref{sec:rs}--\ref{sec:rsnt}); that compiled gates carry a
+kernel-checked channel-level certificate (Sec.~\ref{sec:diamond}); and that
+the associated resource costs obey machine-checked bounds. An earlier version
+of this paper recorded the algorithmic-synthesis refinement following
+Kliuchnikov--Maslov--Mosca~\cite{KMM2013,KMM2013ancilla} and
 Ross--Selinger~\cite{RossSelinger2016} over the ring
-$\mathbb Z[\omega][1/\sqrt 2]$; that refinement is recorded as future work.
+$\mathbb Z[\omega][1/\sqrt 2]$ as future work; that refinement has since been
+carried out at the theory level and is reported in
+Secs.~\ref{sec:compiler}--\ref{sec:diamond}. What remains \emph{not} in scope
+is the engineering of a runnable compiler: the runtime gate-word-emitting
+implementation, hardware-specific tuning for particular devices, certificate
+formats, and constant-factor length optimization (e.g., tightening the
+verified $50400\,k + 812$ word bound of Sec.~\ref{sec:kmm} toward practical
+$T$-counts) are a separate engineering deliverable. One mathematical gap is
+also stated plainly: the \emph{ancilla-free} unconditional form of
+Ross--Selinger synthesis rests on a number-theoretic existence that is open
+(Sec.~\ref{sec:rs}); we carry it as an explicit hypothesis, and the
+ancilla-assisted route of Sec.~\ref{sec:kmm} is unconditional.
 
 The development demonstrates a methodology as much as a result: by factoring
 the alphabet-specific from the alphabet-agnostic and lifting the latter to
@@ -412,7 +752,12 @@ two-mechanism $\su 8$ result and the unconditional Toffoli bound suggest that
 formal verification is reaching the point where it can serve not only as a
 correctness check on known compilation results but as a tool for settling
 structural questions---such as the essentiality of a gate---that are easy to
-state and surprisingly delicate to prove.
+state and surprisingly delicate to prove. The synthesis layer reinforces the
+point from two directions: the formalization isolated the \emph{exact}
+number-theoretic boundary of unconditional ancilla-free synthesis
+(Sec.~\ref{sec:rs}), and it caught a mathematically impossible plan
+($\mathbb Z[\sqrt 2][i]$ as a Euclidean domain, Sec.~\ref{sec:rsnt-appc})
+before any effort was wasted on it.
 
 \paragraph{Relationship to companion work.} The Fibonacci-universality and
 topological/categorical foundations are developed in a companion bundle, which
@@ -428,10 +773,22 @@ here as its universal-compilation primitive.
 Every headline theorem named in this paper is verified to the Lean~4 kernel
 with axiom set $\{\texttt{propext},\,\texttt{Classical.choice},\,
 \texttt{Quot.sound}\}$ and no project-local axioms (Pipeline Invariant~\#15).
+Conditional statements (the Ross--Selinger ancilla-free synthesis of
+Sec.~\ref{sec:rs}) carry their hypotheses explicitly in the theorem
+statement and are kernel-checked exactly as stated; no statement in this
+paper is discharged by an axiom or by compiled evaluation
+(\texttt{native\_decide}) --- every finite check in the corpus is
+kernel-checked (Sec.~\ref{sec:purity}).
 The contributing Lean module families are \lean{FKLW/GenericSUd*},
 \lean{FKLW/CliffordCCZSU8*}, \lean{FKLW/TrappedIonSU4*}, \lean{FKLW/ReadRezayi*},
 \lean{FKLW/Mukhopadhyay*}, \lean{FKLW/CliffordT*}, and the
-\lean{SolovayKitaev*} top-level modules.
+\lean{SolovayKitaev*} top-level modules; the late-absorbed synthesis layer
+(Secs.~\ref{sec:compiler}--\ref{sec:diamond}) additionally contributes
+\lean{FKLW/CliffordTCompiler}, the \lean{FKLW/RossSelinger/*} family
+(including \lean{LogLengthHeadline}, \lean{ZOmegaEuclideanDomain},
+\lean{GridExistenceSharp}, \lean{SU2Euler}, and \lean{KMMUniversal}),
+\lean{FKLW/CompiledGateDiamond}, and the \lean{QuantumNetwork} modules
+\lean{KroneckerOpNorm}, \lean{UnitaryDiamond}, and \lean{MatrixNormBridge}.
 
 \bibliography{bibliography}
 \bibliographystyle{apsrev4-2}

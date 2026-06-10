@@ -1,16 +1,20 @@
 # Bundle D8 — Source Manifest
 
-**Auto-generated:** 2026-05-31
+**Auto-generated:** 2026-06-10
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D8`
 **Schema:** `docs/BUNDLE_DIRECTORY_SCHEMA.md`
 
-## Contributing source papers (9)
+## Contributing source papers (13)
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
 | `D8_initial_draft` | §1–§6 | (unspecified) | (see mapping) | (missing) |
+| `_phase6AM_W5_lean_only` | §4 (RS efficiency layer + honest prime-density wall scope note) | (unspecified) | (see mapping) | (missing) |
+| `_phase6AN_W5_lean_only` | §NEW (verified compiler algorithm layer — from existence theory to a named verified algorithm) | (unspecified) | (see mapping) | (missing) |
+| `_phase6AO_lean_only` | §4 (KMM constructive-bound route as third compilation mechanism beside SK recursion + RS grid) | (unspecified) | (see mapping) | (missing) |
+| `_phase6AP_W3b_lean_only` | §NEW (compiled-gate diamond certificate — joins the 6AN W5 compiler layer) | (unspecified) | (see mapping) | (missing) |
 | `_phase6p_W2cd_lean_only` | §1 | (unspecified) | (see mapping) | (missing) |
 | `_phase6t_lean_only` | §2 | (unspecified) | (see mapping) | (missing) |
 | `_phase6u_lean_only` | §3 | (unspecified) | (see mapping) | (missing) |
