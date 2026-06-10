@@ -10628,6 +10628,29 @@ CITATION_REGISTRY = {
         'provides': ['Independent cross-validation of two open-source quantum network simulators (QuISP and SeQUeNCe) on basic networking tasks, establishing simulator-agreement on link/end-to-end fidelity — the model-independence anchor for the D6 Werner-chain fidelity envelope'],
         'notes': 'Citation-pipeline backfill: cited in papers/D6/paper_draft.tex but absent from CITATION_REGISTRY. Primary source verified against arXiv:2504.01290 (abstract + first-page author list cross-checked): title "Cross-Validating Quantum Network Simulators", authors Joaquin Chung, Michal Hajdušek, ... Rodney Van Meter (2025). arXiv PDF cached as primary source. Note: the D6 \\bibitem renders the first author initial as "K. Chung" but the verified first author is Joaquin Chung (J.).',
     },
+
+    # ════════════════════════════════════════════════════════════════
+    # Citation-pipeline backfill (cited in papers/D7 by commit 4702f6ba,
+    # review-2026-06-05 D7-EV3 continuous loop-correction rate; registry
+    # entry deferred to this batch because citations.py was concurrently
+    # owned at ship time)
+    # ════════════════════════════════════════════════════════════════
+    'ChertkovChernyak2006LoopSeries': {
+        'authors': 'Chertkov, M. and Chernyak, V. Y.',
+        'title': 'Loop series for discrete statistical models on graphs',
+        'journal': 'J. Stat. Mech.',
+        'volume': 2006,
+        'page': 'P06009',
+        'year': 2006,
+        'doi': '10.1088/1742-5468/2006/06/P06009',
+        'arxiv': 'cond-mat/0603189',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/ChertkovChernyak2006LoopSeries.pdf',
+        'used_in': ['papers/D7/paper_draft.tex'],
+        'provides': ['Exact finite loop-series representation of the partition function of discrete statistical models on graphs: the leading term is the Bethe-Peierls/belief-propagation (BP) contribution and every correction term is a loop contribution evaluated at the BP fixed point. The "dynamical loop-correction terms over the BP message space" named in the D7 honest-residual scope note — the future-work target the combinatorial loopCorrectionRate (4-cycle density Cramér rate, BPLDPSimulability.lean) does not yet attach to.'],
+        'notes': 'Added 2026-06-10 (review-2026-06-05 D7-EV3 follow-up). Metadata verified 2026-06-10 against Crossref (DOI 10.1088/1742-5468/2006/06/P06009 → Michael Chertkov & Vladimir Y. Chernyak, "Loop series for discrete statistical models on graphs", J. Stat. Mech.: Theory and Experiment 2006(06) P06009, published 2006-06-14) AND the arXiv Atom API (cond-mat/0603189v3 carries journal_ref "J. Stat. Mech. (2006) P06009" + the same DOI). The D7 bibitem as first shipped in 4702f6ba listed arXiv:cond-mat/0601487, which is the COMPANION Chertkov-Chernyak letter "Loop Calculus in Statistical Physics and Information Science" (Phys. Rev. E 73, 065102(R) (2006), DOI 10.1103/PhysRevE.73.065102), not this paper — bibitem corrected to cond-mat/0603189 in this batch. arXiv PDF cached as primary source (bundle-first bibkey → Phase-1-and-Background cache routing per the Phase 6v Wave 6v.3 convention).',
+    },
 }
 
 
