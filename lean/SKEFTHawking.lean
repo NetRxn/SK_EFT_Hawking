@@ -1619,6 +1619,12 @@ import SKEFTHawking.FKLW.RossSelinger.KMMZRotationHeadline
 -- sumNormSq (squared ℓ² on ℂ⁸) preserved by embedded words — the norm-preservation the ∀U error
 -- composition consumes (intermediate states leave the initialized subspace).
 import SKEFTHawking.FKLW.RossSelinger.Gate3Unitary
+-- Phase 6AO Track 2 (inc 38, 2026-06-10): the OPERATIONAL KMM z-rotation bound on ℂ⁸ —
+-- kmm_z_rotation_operational: ∀ φ k ∃ W (length ≤ 16800k+270), ∀ α β: the embedded word maps the
+-- initialized state (α|0⟩+β|1⟩)⊗|00⟩ within SQUARED ℓ²-distance |β|²·(2/4^k + 2√2/2^k) of the ideal
+-- α|000⟩ + β·e^{iφ}|100⟩ — KMM's |β(e^{iφ}−γ)|² + |β|²‖g‖² error, O(2^{-k}) in squared distance.
+-- initState/targetState; mulVec_two_support collapse; 8-index difference computation.
+import SKEFTHawking.FKLW.RossSelinger.KMMOperational
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
