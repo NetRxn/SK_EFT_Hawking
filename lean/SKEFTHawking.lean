@@ -1472,6 +1472,12 @@ import SKEFTHawking.FKLW.RossSelinger.Zsqrt2GaussInt2Domain
 -- index-2 NON-integrally-closed subring (paper Lemma 5.5) — never a UFD; the Euclidean layer lives
 -- on the full ZOmega.
 import SKEFTHawking.FKLW.RossSelinger.ZOmegaEuclideanDomain
+-- Phase 6AO Track 1(c) inc 1 (2026-06-10) — ℤ[√2] unit theory (RS 1403.2975v3 Lemma C.2 =
+-- Selinger 1212.6253 Lemma 10): zsqrt2_isSquare_of_unit_pos_pos — DOUBLY-POSITIVE UNITS ARE
+-- SQUARES, by fundamental-unit descent (λ⁻²=3−2√2 multiplier shrinks im.natAbs; φ<1 branch flips
+-- through star INSIDE the recursion at the smaller measure — no unit-group classification needed).
+-- Real-embedding order zsqrt2ToReal (= paper's ξ ≥ 0). The unit input Lemma C.16 consumes.
+import SKEFTHawking.FKLW.RossSelinger.Zsqrt2Units
 -- Phase 6x Tier-2 Item I (2026-05-30) — compile_correct approximation helpers:
 -- linftyOpNorm_fin_two_le (entrywise ≤δ ⟹ ℓ∞-operator-norm ≤ 2δ for 2×2) + su2_entry_structure
 -- (U∈SU(2) ⟹ U=[[a,−b̄],[b,ā]]). Propagate the grid first-column approximation to ‖·‖≤ε.
