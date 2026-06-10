@@ -13,11 +13,12 @@
   "last_lift": "2026-05-31T15:37:22Z",
   "last_stage9_review": null,
   "last_stage10_review": null,
-  "last_stage13_review": null,
+  "last_stage13_review": "2026-06-01",
   "blockers_open": 0,
   "advisories_open": 0,
   "stage13_review_doc": "docs/audits/stage13_phase6AA_2026-06-01.md",
   "audit_log_path": "papers/D6/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "D6 bundle CREATED 2026-05-26 by Phase 6v Wave 6v.1. Per Phase 6v strategy synthesis \u00a73.5. D6 is the 15th publication target in the project's bundle architecture (sibling to D4 'TQC foundations'; D6 covers the fault-tolerant-computation substrate side). | Wave 6v.1 ships \u00a73 Williamson-Yoder gauging-QEC overhead bound (FIRST kernel-verified declaration under D6). Subsequent waves contribute: \u00a72 Phase 6t quantitative Solovay-Kitaev retroactive absorption (currently bundle-orphan); \u00a74 APM-LDPC + hashing-bound (Wave 6v.5); \u00a75 Google/Caltech Shor T-gate counts (Wave 6v.2); \u00a76 W-state QFT in Q(\u03b6_N) (Wave 6v.6). | Stage-13 adversarial review DEFERRED to Phase 6v close per user directive (single Phase-6v-close adversarial pass after all 7 waves have shipped)."
+  "notes": "D6 bundle CREATED 2026-05-26 by Phase 6v Wave 6v.1. Per Phase 6v strategy synthesis \u00a73.5. D6 is the 15th publication target in the project's bundle architecture (sibling to D4 'TQC foundations'; D6 covers the fault-tolerant-computation substrate side). | Wave 6v.1 ships \u00a73 Williamson-Yoder gauging-QEC overhead bound (FIRST kernel-verified declaration under D6). Subsequent waves contribute: \u00a72 Phase 6t quantitative Solovay-Kitaev retroactive absorption (currently bundle-orphan); \u00a74 APM-LDPC + hashing-bound (Wave 6v.5); \u00a75 Google/Caltech Shor T-gate counts (Wave 6v.2); \u00a76 W-state QFT in Q(\u03b6_N) (Wave 6v.6). | Stage-13 adversarial review DEFERRED to Phase 6v close per user directive (single Phase-6v-close adversarial pass after all 7 waves have shipped).",
+  "last_stage13_review_source": "backfilled-from-audit-doc docs/audits/stage13_D6_fullbundle_2026-06-01.md 2026-06-10"
 }
