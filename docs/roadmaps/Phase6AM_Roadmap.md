@@ -688,15 +688,35 @@ native_decide held at 596, confirming Track-3 independence):**
     v unit, v(0,1) = 0, |00⟩-amplitude within √2/2^k of e^{iφ}, leakage ≤ 2√2/2^k. By linearity = the full
     KMM ≤2-ancilla guarantee on ancilla-initialized inputs. NO prime-density hypothesis (only Lagrange
     four-squares + the constructive column lemma). Kernel-pure (lean_verify).
-  - **NEXT = the ∀U∈SU(2) extension (~1000–1500 LOC, the LAST Track-2 piece):** (37) ring-level adjoint +
-    unitarity of `interp3` words (per-gate ring decides + product induction) + the ℂ-transport (toComplex
-    *-hom ⟹ embedded words unitary); (38) ℂ⁸ action machinery (toComplexMat8 mapMatrix, mulVec, handrolled
-    `dist²` = Σ normSq to avoid PiLp friction) + the α,β-operational corollary of inc 36 (state-level error
-    `|β|²(amp² + leak) ≤ ε²`); (39) Euler ZXZ existence over SU(2) (`U = Rz(α)·H·Rz(θ)·H·Rz(β)` via
-    `H·Rz·H = Rx` + angle extraction by Complex.arg/abs — real analysis, ABSENT from Mathlib per fan-out;
-    state as ∃-form); (40) the ∀U composition headline (3 z-rotation words + exact H's on the system line;
-    error propagation through UNITARITY — intermediate states leave the initialized subspace, so the
-    triangle-inequality steps need norm preservation, hence (37)). Then T1 (a–d), then T3.
+  - ~~NEXT: the ∀U∈SU(2) extension (37–40)~~ **✅ TRACK 2 COMPLETE (inc 37–40 SHIPPED 2026-06-10,
+    commits `5f64ac09` `0272c691` `e5e60f43`+`a5525cab` `f669f047`+`a9f0c029`+`2ab38be2`; 9229 green;
+    nd 596; all kernel-pure via lean_verify).**
+    - **inc 37 `Gate3Unitary.lean`:** `gateMatrix3_unitary` (ONE `decide +kernel` over the 30-element
+      `Fintype Gate3`) → `interp3_unitary` (induction, congrArg-calc) → `toComplexMat8` intertwines
+      `adjoint8` with `ᴴ` (`toComplex_conj`) → **embedded words ℂ-unitary** →
+      `sumNormSq_mulVec_interp3` (squared-ℓ² preservation via `star_mulVec`/`dotProduct_mulVec`).
+    - **inc 38 `KMMOperational.lean`:** `kmm_z_rotation_operational` — ∀φ k ∃W (≤16800k+270): ∀α β,
+      `sumNormSq(W·(α,β-init) − target) ≤ |β|²(2/4ᵏ + 2√2/2ᵏ)` (8-index decide-dichotomy + two-support
+      mulVec collapse; the verbatim KMM §2.2 state-level error).
+    - **inc 39 `SU2Euler.lean`:** `su2_euler_decomposition` — ∀U∈SU(2) ∃φ₁φ₂φ₃ c (‖c‖=1):
+      `U = c·Λ(φ₁)HΛ(φ₂)HΛ(φ₃)` (closed-form `eulerProd_eq` via `1±e^{iθ}` half-angle factorizations;
+      polar `conj_polar` + arccos angle extraction; 3-case a=0/b=0/main). Euler-ZXZ ABSENT from Mathlib.
+    - **inc 40 `KMMUniversal.lean`:** **`kmm_universal_headline` — THE ∀U KMM HEADLINE, UNCONDITIONAL.**
+      ∀ U∈SU(2), k: ∃ 3-qubit Clifford+T word W, **length ≤ 50400·k + 812** (linear in k = O(log 1/ε)
+      exponent 1), global phase c (‖c‖=1): ∀ unit (α,β), embedded W maps the ancilla-initialized state
+      within **squared ℓ²-distance 9·(2/4ᵏ + 2√2/2ᵏ)** of the ideal (c⁻¹U)-rotated output. NO
+      prime-density hypothesis (Lagrange four-squares + constructive dim-4 column lemma + Euler). Errors
+      add through unitarity: `step_triangle` (EuclideanSpace/PiLp Minkowski bridge) + exact `sysH_step`
+      Hadamard steps + `pair_norm_lam`/`pair_norm_h` unit-pair preservation along the chain.
+      🔑 **Heartbeat-budget decomposition (invariant #10):** the monolithic proof exhausted the 200k
+      per-declaration budget (isDefEq/whnf timeouts ATTRIBUTED to innocent sites — the budget is
+      cumulative per declaration, the reported position is just where it ran out); hoisting the 3-step
+      chain (`chain_bound`, explicit `step_triangle` instantiations + `rw`-aligned action equalities +
+      `linarith` assembly — calc-free) and the squaring (`sq_le_of_sqrt_le_three_sqrt`) into top-level
+      lemmas with their own budgets + deleting dead `have`s fixed it with zero `maxHeartbeats`.
+      🔑 Bare `rw [mulVec_append]` is ambiguous when several `interp3 (· ++ ·)` occurrences exist —
+      instantiate explicitly (`mulVec_append Wb [.onSys .H] t₃`) or rewrite the list first.
+  - **NEXT: Track 1 (b–d) — FIRST verify §5/§6/§7 numbering vs primary 1403.2975v3; then T3.**
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
