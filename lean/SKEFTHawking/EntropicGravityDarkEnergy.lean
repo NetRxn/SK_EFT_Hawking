@@ -23,9 +23,19 @@ literature. Paper-45 publication-novelty claim.
 
 ## Per-candidate references
 
-1. **Verlinde 2017 emergent gravity** — Hossenfelder critique 1612.08029;
-   Dai-Stojkovic 1710.00946; Halenka-Miller analyses (CMB+Bullet, ≳5σ
-   exclusion; r_d-independent).
+1. **Verlinde 2017 emergent gravity** — three independent legs (R3 §6 +
+   R5 §B.2.1): structural CMB critique (no coherent Boltzmann hierarchy;
+   Hossenfelder 1612.08029; non-conservative entropic force,
+   Dai-Stojkovic 1710.00946); structural Bullet-Cluster critique
+   (apparent-DM-tracks-baryons vs the lensing/X-ray offset; Pardo 2017);
+   and the *quantitative* Halenka-Miller galaxy-cluster mass-density
+   test (PRD 102, 084007 (2020); arXiv:1807.01689): 23 relaxed clusters
+   (weak-lensing total-mass + X-ray gas-mass profiles), Verlinde EG
+   excluded at > 5σ in cores/outskirts **under nominal profile
+   assumptions only** — the same paper finds good agreement once
+   weak-lensing/X-ray profile systematics are included. Halenka-Miller
+   involves **neither the CMB nor the Bullet cluster** (mis-attribution
+   corrected 2026-06-10, review-2026-06-05 D5-EV1). r_d-independent.
 2. **Padmanabhan / CosMIn** — no scalar perturbation theory derivable
    from the CosMIn axiom set (1302.3226). r_d-independent.
 3. **Hossenfelder-Verlinde dS instability** — Yoon-Guha 2304.07301
@@ -59,6 +69,8 @@ literature. Paper-45 publication-novelty claim.
 - `Lit-Search/Phase-6m/Phase 6m Round 5 — DESI DR2 (w₀, w_a) Comparison ...md` §2
 - `temporary/working-docs/phase6m_R5_synthesis.md` §2, §6.2
 - `temporary/working-docs/phase6m_unified_gd_taxonomy.md` §1 (Classes (b), (c), (d))
+- `Lit-Search/Phase-1-and-Background/primary-sources/HalenkaMiller2020.pdf`
+  (EGDE1 primary source; registry bibkey `HalenkaMiller2020`)
 -/
 
 namespace SKEFTHawking.EntropicGravityDarkEnergy
@@ -96,20 +108,29 @@ inductive EntropicGravityCandidate where
 
 Each candidate either fails on a quantitative ledger (Bayes factor
 |log 𝓑| ≥ Jeffreys-decisive threshold of 5, OR information-criteria
-ΔAIC at moderate-or-greater Burnham-Anderson disfavour) or on
+ΔAIC at moderate-or-greater Burnham-Anderson disfavour, OR a published
+σ-significance exclusion at the conventional 5σ level) or on
 r_d-independent structural grounds (CMB perturbations, Bullet-Cluster
 tension, Gibbs-Duhem-locked w = −1).
 
-**Mixed-threshold note (Phase 7 absorption Session 5, 2026-05-08).**
-Three of the four explicitly-quantitative candidates (Verlinde, Tsallis,
-Odintsov) fail at the Bayes-factor Jeffreys-decisive level. The fourth
-(Barrow) fails at the AIC moderate-disfavour level (Burnham-Anderson
-"considerably less support", ΔAIC ≥ 4) but **NOT** at Jeffreys-decisive
-— the primary-source-verified ΔAIC is 4.7, below the conventional 5
-cutoff. The aggregator `all_quantitative_bounds_disfavoured` reports
-the mixed-threshold honest closure; the historical decisive-only
-aggregator `all_three_decisive_bayes_bounds_exceed_jeffreys_decisive`
-covers exactly the three Bayes-factor candidates.
+**Mixed-threshold note (Phase 7 absorption Session 5, 2026-05-08;
+unit-coherence correction 2026-06-10, review-2026-06-05 D5-EV1).**
+The four explicitly-quantitative candidates split by methodology:
+two (Tsallis, Odintsov) fail at the Bayes-factor Jeffreys-decisive
+level; one (Verlinde) fails a σ-significance galaxy-cluster
+mass-density test at > 5σ — *under nominal profile assumptions only*
+(Halenka-Miller PRD 102, 084007 (2020); the exclusion weakens once
+weak-lensing/X-ray systematics are included) — which is a Gaussian-σ
+statement, NOT a Bayes factor; one (Barrow) fails at the AIC
+moderate-disfavour level (Burnham-Anderson "considerably less
+support", ΔAIC = 4.7, below the conventional Jeffreys 5 cutoff). The
+aggregator `all_quantitative_bounds_disfavoured` reports the
+mixed-threshold honest closure with per-candidate unit coherence
+(σ / log𝓑 / ΔAIC / log𝓑); the Bayes-methodology cohort is aggregated
+in `both_decisive_bayes_bounds_exceed_jeffreys_decisive`. (The
+pre-2026-06-10 code compared the Verlinde σ value against
+`jeffreys_decisive_threshold` — a σ-vs-log𝓑 units conflation, now
+corrected via the σ-scale `five_sigma_threshold`.)
 -/
 
 /-- Jeffreys' "decisive" Bayesian evidence threshold: |log 𝓑| ≥ 5. -/
@@ -124,6 +145,21 @@ noncomputable def jeffreys_decisive_threshold : ℝ := 5.0
     natural project-internal "moderate disfavour" line for IC-only
     evidence ledgers that do not produce a Bayes factor. -/
 noncomputable def aic_moderate_threshold : ℝ := 4.0
+
+/-- Conventional 5σ significance level, on the Gaussian standard-deviation
+    scale. Project-internal "decisive significance" line for ledgers
+    quoted in σ (cluster-exclusion significances, sign-mismatch
+    significances).
+
+    **Unit discipline:** this is a σ-scale constant and is deliberately
+    distinct from `jeffreys_decisive_threshold`, which is a |log 𝓑|
+    (Bayes-factor) cutoff — the two scales are not interconvertible
+    without a modeling assumption, and no such conversion is asserted
+    anywhere in this module. Introduced 2026-06-10 (review-2026-06-05
+    D5-EV1) to fix a σ-vs-log𝓑 conflation in the original EGDE1
+    statement, which compared a σ-significance against the Jeffreys
+    |log 𝓑| threshold. -/
+noncomputable def five_sigma_threshold : ℝ := 5.0
 
 /-- Tsallis HDE |log 𝓑| extracted from Tyagi-Haridasu-Basak 2504.11308
     (R5 §2.2). The primary source reports a Gravity-Thermodynamic
@@ -157,9 +193,28 @@ noncomputable def odintsov_log_bayes : ℝ := 16.0
     ≳3σ. -/
 noncomputable def hde_event_horizon_wa_sigma : ℝ := 3.0
 
-/-- Verlinde 2017 CMB + Bullet-Cluster combined exclusion significance
-    (R5 §2.2): ≳5σ. -/
-noncomputable def verlinde_cmb_bullet_sigma : ℝ := 5.0
+/-- Halenka-Miller galaxy-cluster exclusion significance for Verlinde 2017
+    emergent gravity, **under nominal profile assumptions**
+    (primary-source-verified 2026-06-10, review-2026-06-05 D5-EV1).
+
+    V. Halenka & C. J. Miller, *Testing emergent gravity with mass
+    densities of galaxy clusters*, PRD 102, 084007 (2020),
+    arXiv:1807.01689 (registry bibkey `HalenkaMiller2020`): 23 relaxed
+    galaxy clusters with weak-lensing total-mass and X-ray gas-mass
+    profiles. Under nominal assumptions about both profile families,
+    Verlinde-2017 emergent gravity (no dark matter) is an acceptable fit
+    only near the virial radius and is ruled out at > 5σ in the cores
+    and outskirts; 5.0 is the conservative lower envelope of that
+    "> 5σ" claim. **Caveat encoded in the name (`_nominal_`):** the same
+    paper finds that once weak-lensing/X-ray profile systematics are
+    accounted for, the EG predictions agree with the data — the
+    exclusion is nominal-assumptions-only. The test involves **neither
+    the CMB nor the Bullet cluster**; those are separate *structural*
+    critique legs (Hossenfelder 1612.08029; Dai-Stojkovic 1710.00946;
+    Pardo 2017) carrying no verified σ value. Supersedes the
+    pre-2026-06-10 `verlinde_cmb_bullet_sigma`, which mis-attributed
+    "CMB+Bullet ≳5σ" to Halenka-Miller. -/
+noncomputable def halenka_miller_cluster_nominal_sigma : ℝ := 5.0
 
 /-!
 ## §3 Per-candidate R3 + R5 NO-GO theorems
@@ -169,14 +224,30 @@ candidate. Numerical bounds are load-bearing — they are the actual
 norm_num-checkable thresholds at which each candidate is excluded.
 -/
 
-/-- **EGDE1 — Verlinde 2017 NO-GO via CMB + Bullet-Cluster (R3 + R5 §2.2).**
+/-- **EGDE1 — Verlinde 2017 NO-GO: quantitative leg via galaxy-cluster
+    mass densities (Halenka-Miller; R3 §6 + R5 §B.2.1).**
 
-    Hossenfelder 1612.08029 + Dai-Stojkovic 1710.00946 + Halenka-Miller
-    analyses establish ≳5σ tension with CMB perturbation theory and the
-    Bullet-Cluster mass distribution. **r_d-independent.** -/
-theorem verlinde_2017_no_go_via_cmb_bullet_cluster_halenka_miller :
-    verlinde_cmb_bullet_sigma ≥ jeffreys_decisive_threshold := by
-  unfold verlinde_cmb_bullet_sigma jeffreys_decisive_threshold; norm_num
+    The σ-level exclusion: Halenka-Miller's 23-relaxed-cluster
+    weak-lensing + X-ray test (PRD 102, 084007 (2020); arXiv:1807.01689)
+    excludes Verlinde 2017 emergent gravity at ≥ 5σ (conservative
+    envelope of the published "> 5σ") **under nominal profile
+    assumptions** — the exclusion weakens to compatibility once profile
+    systematics are included; see
+    `halenka_miller_cluster_nominal_sigma`. Unit-coherent: both sides of
+    the comparison are on the Gaussian-σ scale (the pre-2026-06-10
+    statement compared this σ value against the |log 𝓑|-scale
+    `jeffreys_decisive_threshold`).
+
+    The candidate's full NO-GO additionally rests on two
+    r_d-independent *structural* legs deliberately NOT encoded in this
+    inequality, because they carry no verified σ value: (i) no coherent
+    CMB Boltzmann hierarchy (Hossenfelder 1612.08029; non-conservative
+    entropic force, Dai-Stojkovic 1710.00946); (ii) Bullet-Cluster
+    apparent-DM-tracks-baryons vs the lensing/X-ray offset (Pardo 2017).
+    **r_d-independent.** -/
+theorem verlinde_2017_no_go_via_cluster_mass_densities_halenka_miller :
+    halenka_miller_cluster_nominal_sigma ≥ five_sigma_threshold := by
+  unfold halenka_miller_cluster_nominal_sigma five_sigma_threshold; norm_num
 
 /-- **EGDE2 — Padmanabhan / CosMIn NO-GO: no scalar perturbation theory
     derivable from the CosMIn axiom set (R3 §2.2; R5 §2.2).**
@@ -311,8 +382,8 @@ theorem barrow_hde_disfavoured_information_criteria_luciano_paliathanasis_sarida
     Jeffreys-decisive threshold (5). The Barrow HDE remains NO-GO
     on Phase 6m's Track B 8/8 closure via *moderate* AIC disfavour
     plus structural conjuncts; it is honestly excluded from the
-    decisive-bounds aggregator
-    `all_three_decisive_bayes_bounds_exceed_jeffreys_decisive`. -/
+    Bayes-factor-decisive aggregator
+    `both_decisive_bayes_bounds_exceed_jeffreys_decisive`. -/
 theorem barrow_aic_delta_below_jeffreys_decisive :
     barrow_aic_delta < jeffreys_decisive_threshold := by
   unfold barrow_aic_delta jeffreys_decisive_threshold; norm_num
@@ -340,7 +411,9 @@ remain r_d-independent).
 /-- Whether a Track B candidate's NO-GO mechanism survives a fixed-r_d
     rescue attempt. -/
 def rDIndependentNoGo : EntropicGravityCandidate → Bool
-  | .verlinde2017 => true        -- CMB + Bullet, r_d-independent
+  | .verlinde2017 => true        -- cluster mass densities (Halenka-Miller)
+                                  --   + structural CMB/Bullet legs, all
+                                  --   r_d-independent
   | .padmanabhanCosMIn => true   -- no perturbation theory at all
   | .hossenfelderVerlinde => true -- CMB-perturbation route
   | .cadoniTuveriDEC => true     -- GCG-CMB + Bullet (r_d-independent
@@ -406,69 +479,100 @@ theorem entropic_gravity_no_go_count_eight :
 ## §6 Quantitative summary (mixed-threshold, primary-source-honest)
 
 The four explicitly-quantitative NO-GO ledgers in Track B split by
-methodology: three of them (Verlinde, Tsallis, Odintsov) are
-Bayes-factor-based and individually exceed Jeffreys-decisive (≥ 5).
-The fourth (Barrow, Luciano-Paliathanasis-Saridakis 2506.03019) is
+methodology: two (Tsallis, Odintsov) are Bayes-factor-based and
+individually exceed Jeffreys-decisive (≥ 5); one (Verlinde,
+Halenka-Miller PRD 102, 084007 (2020)) is a σ-significance
+galaxy-cluster mass-density exclusion at ≥ 5σ **under nominal profile
+assumptions only** (weakening once systematics are included); one
+(Barrow, Luciano-Paliathanasis-Saridakis 2506.03019) is
 information-criteria-based with primary-source-verified ΔAIC = 4.7,
 which is *moderate* disfavour (Burnham-Anderson ≥ 4) but **NOT**
 Jeffreys-decisive.
 
 Two aggregators below capture the honest closure:
 
-* `all_three_decisive_bayes_bounds_exceed_jeffreys_decisive` covers the
-  three genuinely-decisive Bayes-factor cases.
-* `all_quantitative_bounds_disfavoured` covers all four with the
-  mixed-threshold (decisive/decisive/moderate/decisive) phrasing,
-  where Barrow is at the AIC moderate level and the other three at
-  the Bayes-factor decisive level.
+* `both_decisive_bayes_bounds_exceed_jeffreys_decisive` covers the two
+  genuinely Bayes-factor-decisive cases (Tsallis, Odintsov).
+* `all_quantitative_bounds_disfavoured` covers all four with
+  per-candidate unit coherence (σ / log𝓑 / ΔAIC / log𝓑), where
+  Verlinde is at the nominal-assumptions 5σ level (Gaussian-σ scale),
+  Barrow at the AIC moderate level, and Tsallis/Odintsov at the
+  Bayes-factor decisive level.
 
 The historical-named aggregator
 `all_quantitative_bounds_exceed_jeffreys_decisive` (which Phase-6m-era
-prose cited) is **retained as a deprecation alias** with a 3-of-4
-restricted body that excludes Barrow; downstream prose now cites the
+prose cited) is **retained as a deprecation alias** restricted to the
+honest Bayes-factor cohort, after two successive honesty restrictions:
+Barrow removed 2026-05-08 (AIC-only methodology, ΔAIC = 4.7 < 5), and
+Verlinde removed 2026-06-10 (its quantitative ledger is a Gaussian-σ
+cluster exclusion, not a Bayes factor — the historical first conjunct
+conflated the σ and |log 𝓑| scales). Downstream prose now cites the
 two new aggregators with explicit per-candidate methodology tagging.
 -/
 
-/-- **EGDE11 — Three Bayes-factor bounds exceed Jeffreys-decisive
-    (R3 + R5 numerical content; Bayes-factor methodology cohort).** -/
-theorem all_three_decisive_bayes_bounds_exceed_jeffreys_decisive :
-    verlinde_cmb_bullet_sigma ≥ jeffreys_decisive_threshold ∧
+/-- **EGDE11 — Both Bayes-factor bounds exceed Jeffreys-decisive
+    (R3 + R5 numerical content; Bayes-factor methodology cohort).**
+
+    Exactly two of the four quantitative Track-B ledgers are Bayes
+    factors (Tsallis, Odintsov); both are Jeffreys-decisive. Verlinde's
+    quantitative ledger is a Gaussian-σ cluster-mass-density exclusion
+    (see `verlinde_2017_no_go_via_cluster_mass_densities_halenka_miller`)
+    and Barrow's is AIC-moderate
+    (see `barrow_aic_delta_below_jeffreys_decisive`); neither belongs in
+    a Bayes-factor cohort. Supersedes the pre-2026-06-10
+    `all_three_decisive_bayes_bounds_exceed_jeffreys_decisive`, whose
+    first conjunct compared Verlinde's σ value against the |log 𝓑|
+    threshold (units conflation). -/
+theorem both_decisive_bayes_bounds_exceed_jeffreys_decisive :
     tsallis_log_bayes ≥ jeffreys_decisive_threshold ∧
     odintsov_log_bayes ≥ jeffreys_decisive_threshold :=
-  ⟨verlinde_2017_no_go_via_cmb_bullet_cluster_halenka_miller,
-   tsallis_hde_no_go_bayes_factor_tyagi_haridasu_basak,
+  ⟨tsallis_hde_no_go_bayes_factor_tyagi_haridasu_basak,
    by unfold odintsov_log_bayes jeffreys_decisive_threshold; norm_num⟩
 
 /-- **EGDE11′ — All four quantitative bounds quantitatively disfavour
-    the candidate at moderate-or-greater level
+    the candidate at moderate-or-greater level on their native scales
     (mixed-threshold honest closure).**
 
-    Verlinde + Tsallis + Odintsov are Bayes-factor-decisive (≥ 5);
-    Barrow is AIC-moderate (≥ 4). The mixed-threshold conjunction is
-    the load-bearing numerical content of Phase 6m Track B's
+    Per-candidate unit-coherent conjunction: Verlinde at the
+    nominal-assumptions galaxy-cluster 5σ level (Gaussian-σ scale;
+    Halenka-Miller PRD 102, 084007 (2020)); Tsallis + Odintsov
+    Bayes-factor-decisive (|log 𝓑| ≥ 5); Barrow AIC-moderate
+    (ΔAIC ≥ 4). The mixed-threshold conjunction is the load-bearing
+    numerical content of Phase 6m Track B's
     first-complete-mechanism-family closure under primary-source
-    fidelity. -/
+    fidelity. Each conjunct compares a quantity against a threshold on
+    the SAME scale; no σ↔log𝓑 conversion is asserted. -/
 theorem all_quantitative_bounds_disfavoured :
-    verlinde_cmb_bullet_sigma ≥ jeffreys_decisive_threshold ∧
+    halenka_miller_cluster_nominal_sigma ≥ five_sigma_threshold ∧
     tsallis_log_bayes ≥ jeffreys_decisive_threshold ∧
     barrow_aic_delta ≥ aic_moderate_threshold ∧
     odintsov_log_bayes ≥ jeffreys_decisive_threshold :=
-  ⟨verlinde_2017_no_go_via_cmb_bullet_cluster_halenka_miller,
+  ⟨verlinde_2017_no_go_via_cluster_mass_densities_halenka_miller,
    tsallis_hde_no_go_bayes_factor_tyagi_haridasu_basak,
    barrow_hde_disfavoured_information_criteria_luciano_paliathanasis_saridakis,
    by unfold odintsov_log_bayes jeffreys_decisive_threshold; norm_num⟩
 
 /-- **Deprecation alias.** The Phase-6m-era name
     `all_quantitative_bounds_exceed_jeffreys_decisive` is retained for
-    cross-bundle prose-side citation continuity, but its restricted
-    body now matches the honest 3-of-4 Bayes-factor cohort. Downstream
-    callers should migrate to the explicit aggregators above. -/
-@[deprecated all_three_decisive_bayes_bounds_exceed_jeffreys_decisive
+    cross-bundle prose-side citation continuity, restricted to the
+    honest Bayes-factor cohort after two successive honesty
+    restrictions: (i) 2026-05-08 — Barrow removed (primary source is
+    AIC-only, ΔAIC = 4.7 < 5; see
+    `barrow_aic_delta_below_jeffreys_decisive`); (ii) 2026-06-10 —
+    Verlinde removed (its quantitative ledger is the Halenka-Miller
+    Gaussian-σ galaxy-cluster exclusion, not a Bayes factor; the
+    historical conjunct `verlinde_cmb_bullet_sigma ≥
+    jeffreys_decisive_threshold` conflated the σ and |log 𝓑| scales).
+    What this name now proves is the 2-of-4 Bayes cohort
+    (Tsallis + Odintsov). Downstream callers should migrate to
+    `both_decisive_bayes_bounds_exceed_jeffreys_decisive` (Bayes
+    cohort) or `all_quantitative_bounds_disfavoured` (all four,
+    mixed-threshold, unit-coherent). -/
+@[deprecated both_decisive_bayes_bounds_exceed_jeffreys_decisive
   (since := "2026-05-08")]
 theorem all_quantitative_bounds_exceed_jeffreys_decisive :
-    verlinde_cmb_bullet_sigma ≥ jeffreys_decisive_threshold ∧
     tsallis_log_bayes ≥ jeffreys_decisive_threshold ∧
     odintsov_log_bayes ≥ jeffreys_decisive_threshold :=
-  all_three_decisive_bayes_bounds_exceed_jeffreys_decisive
+  both_decisive_bayes_bounds_exceed_jeffreys_decisive
 
 end SKEFTHawking.EntropicGravityDarkEnergy
