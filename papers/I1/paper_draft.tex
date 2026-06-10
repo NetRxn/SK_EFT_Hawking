@@ -68,7 +68,7 @@ published numerical claims match the underlying computation. We
 describe a three-layer continuous-verification pipeline integrating
 Python numerics, Lean~4 formal proofs, and the Aristotle automated
 theorem prover, organized into a fourteen-stage workflow with
-fourteen invariants. Applied across a research program spanning
+fifteen invariants. Applied across a research program spanning
 dissipative effective field theory, analog Hawking radiation,
 emergent gravity through black-hole thermodynamics, anomaly
 constraints on Standard Model particle content, dark-sector substrate
@@ -82,7 +82,7 @@ development via the language-server protocol, fresh-context
 adversarial review, and meta-process quality improvement), three new
 invariants (placeholder non-load-bearing, no heartbeat overrides in
 proof bodies, primary-source citation cache), the publication-bundle
-architecture that consolidates per-wave drafts into fourteen
+architecture that consolidates per-wave drafts into seventeen
 publication targets, and the preemptive-strengthening discipline
 that reduces theorem-statement audit cost from twelve retroactive
 cuts to five and then to zero across three successive waves (with
@@ -99,6 +99,14 @@ document the algebraic-general-relativity substrate formalization
 work that the pipeline accreted as a byproduct, and a
 Mathlib-dependency-fallback discipline pattern for theorems whose
 substantive content has no upstream PDE infrastructure available.
+A final process result documents the limits of metadata-level
+citation validation: a June~2026 external-review remediation found
+that a citation can be metadata-valid --- resolvable identifier,
+cached primary source, correct bibliographic data --- while the
+specific claim the prose attributes to it is unsupported by the
+source (three instances in roughly ten spot checks), motivating
+three new deterministic prose-consistency checks and a systematic
+content-level attribution sweep.
 The methodology is domain-agnostic.
 \end{abstract}
 
@@ -144,7 +152,7 @@ Lean-based physics infrastructure
 proof-assistance side include large-language-model copilots for
 Lean theorem proving~\cite{leancipilot} and recent
 silver-medal IMO results from automated proving~\cite{alphaproof}.
-Our pipeline has fourteen stages and fourteen invariants, integrates
+Our pipeline has fourteen stages and fifteen invariants, integrates
 three orthogonal verification layers, and produces
 machine-checkable artifacts at each stage. We have applied it to
 a research program spanning \papercount{}
@@ -172,9 +180,13 @@ language-server protocol (Stage~3a), fresh-context adversarial
 review (Stage~13), and meta-process quality improvement
 (Stage~14) --- and three invariants (placeholder non-load-bearing,
 no heartbeat overrides in proof bodies, primary-source citation
-cache). It also documents the
+cache). The invariant set has since grown to fifteen; the
+fifteenth --- explicit user sign-off, with a documented discharge
+plan, for any new project-local axiom --- encodes the project's
+posture that axioms are temporary scaffolding, not permanent
+commitments (Section~\ref{sec:pipeline}). It also documents the
 publication-bundle architecture that consolidates per-wave drafts
-into fourteen publication targets and the preemptive-strengthening
+into seventeen publication targets and the preemptive-strengthening
 discipline that reduces theorem-statement audit cost from twelve
 retroactive cuts (Phase~6c.3) to five (Phase~6b.1) and then to zero
 (Phase~6m R6) by applying strengthening rules prospectively, with
@@ -196,7 +208,9 @@ the cross-paper consistency cluster mechanism that enables bundle
 publication. Section~\ref{sec:three_layer_extended} returns to the
 three-layer architecture in the context of automated theorem proving
 integration. Section~\ref{sec:adversarial} describes the
-fresh-context adversarial-reviewer pattern.
+fresh-context adversarial-reviewer pattern, the recorded-review
+readiness semantics, and the limits of metadata-level citation
+validation surfaced by a June~2026 external-review remediation.
 Section~\ref{sec:phase6f_substrate} presents the
 algebraic-general-relativity substrate roster shipped over
 Phase~6f Waves~1--6. Section~\ref{sec:riemannian_sidebar}
@@ -584,25 +598,31 @@ values; each entry carries a \texttt{reason} or
 
 The chirality-wall theorem's load-bearing structural assumptions
 decompose along three pillars, each anchored on one entry of one
-of these tables: (i) the $\mathbb{Z}_{16}$ anomaly chain, backed
+of these tables (registry line numbers as of June~2026):
+(i) the $\mathbb{Z}_{16}$ anomaly chain, backed
 by the chiral-central-charge entry
 \texttt{c\_minus\_equals\_8Nf} in
-\texttt{HYPOTHESIS\_REGISTRY} (line 1590, tier
+\texttt{HYPOTHESIS\_REGISTRY} (line 2282, tier
 \texttt{algebraic}, derived from particle content);
 (ii) the four-plus-one-dimensional gapped-interface hypothesis,
-encoded verbatim as the
+encoded at decomposition time as the
 \texttt{gapped\_interface\_axiom} entry in
-\texttt{AXIOM\_METADATA} (line 1351, tier \texttt{hard}, with
-a tracked dimensional ladder of evidence: proven at $1{+}1$D
+\texttt{AXIOM\_METADATA} (line 1391; tier \texttt{hard} at the
+time of the decomposition, since retired: on 2026-05-19 the
+project-local axiom was converted into the tracked-hypothesis
+\texttt{Prop} \texttt{TPFConjecture}, with every consumer theorem
+now taking the conjecture as an explicit hypothesis parameter and
+the entry's eliminability moved to \texttt{closed} --- the tracked
+dimensional ladder of evidence is unchanged: proven at $1{+}1$D
 and $2{+}1$D, conjectural at $3{+}1$D and $4{+}1$D);
 (iii) the topological-pivoting-frame no-go evasion, anchored on
 the \texttt{chirality\_limitation\_zero} placeholder entry in
-\texttt{PLACEHOLDER\_THEOREMS} (line 1483; per Invariant~9, this
+\texttt{PLACEHOLDER\_THEOREMS} (line 2127; per Invariant~9, this
 is a non-load-bearing documentation marker pointing at the
 underlying GS / TPF / GT three-pillar synthesis whose substantive
 content lives in the EWBaryogenesisChiralityWall theorem suite,
 some of whose hypotheses --- e.g.\ \texttt{H\_KLRS\_SM\_Crossover}
-on line 1627 --- are themselves
+on line 2329 --- are themselves
 \texttt{HYPOTHESIS\_REGISTRY} entries). The decomposition tracks the same
 three-pillar boundary: three sub-lemmas per pillar, plus three
 sub-lemmas for the crossover side, totaling nine. Each
@@ -742,8 +762,13 @@ constants in \texttt{constants.py}, formulas in
 Stage~2 implements formulas with provenance metadata. Stages~3--4
 formalize and prove (interactive plus automated). Stage~5 verifies
 the formal layer compiles cleanly. Stage~6 runs Python tests.
-Stage~7 runs over twenty automated cross-layer validation checks
-(Section~\ref{sec:provenance}). Stage~8 generates publication-
+Stage~7 runs the automated cross-layer validation suite ---
+thirty-three registered checks at the time of writing
+(June~2026), enumerated live by \texttt{validate.py --list} ---
+spanning formula--theorem correspondence, parameter provenance,
+count freshness, citation integrity, and bundle consistency
+(Sections~\ref{sec:provenance} and~\ref{sec:adversarial}).
+Stage~8 generates publication-
 quality figures. Stage~9 runs a figure-reviewer agent. Stage~10
 drafts the paper with full provenance for every claim. Stage~11
 produces reproducible computational notebooks. Stage~12 syncs
@@ -809,7 +834,19 @@ bundle.} New drafts, section additions, and notebook companions
 identify their target bundle at Stage~1 and record it in the
 draft-mapping document at Stage~12. No new stand-alone paper
 drafts are created without explicit user authorization to add a
-fifteenth-or-higher bundle target.
+new bundle target beyond the current seventeen.
+
+\item \textbf{Every new project-local axiom requires explicit
+user sign-off.} Locked in May~2026. No axiom ships on
+recommendation-only authority; every new axiom carries either a
+discharge plan (a scheduled wave producing a substantive
+constructive proof) or a documented argument that no constructive
+proof is feasible against the current upstream mathematics
+library. The posture is that axioms are temporary scaffolding,
+not permanent commitments: the project's last pre-existing
+project-local axiom was retired into a tracked-hypothesis
+\texttt{Prop} on 2026-05-19 (Section~\ref{sec:case3}), taking the
+live project-local axiom count to zero.
 
 \end{enumerate}
 
@@ -931,7 +968,7 @@ single-bundle. Cross-bundle clusters survive bundle
 consolidation, providing the per-bundle Stage-13
 adversarial-reviewer with a stable provenance index even when
 sentences are lifted into different paper bundles. Walked by
-\texttt{validate.py} CHECK~21 (\texttt{bundle\_consistency}).}
+\texttt{validate.py --check bundle\_consistency}.}
 \label{fig:sentence_clusters}
 \end{figure}
 
@@ -986,20 +1023,22 @@ parameter value) groups its sentence IDs into a cluster registered
 in \texttt{papers/claim\_clusters.json}, with a
 \texttt{cross\_bundle: true} flag for clusters spanning two or more
 publication bundles. The validation check
-\texttt{validate.py --check bundle\_consistency} (CHECK~21) walks
+\texttt{validate.py --check bundle\_consistency} walks
 the registry and flags any cluster whose member sentences disagree
 on the cluster's load-bearing fact. The load-bearing example is
 GW170817 vs vestigial-graviton: the L1 PRL splash and the D3 deep
 paper both report the LIGO $\Delta c/c$ bound and the
-$7\times 10^{14}$ falsification factor; CHECK~21 enforces that the
+$7\times 10^{14}$ falsification factor; the
+\texttt{bundle\_consistency} check enforces that the
 two reports agree character-for-character on the numerical content.
 
 The publication-bundle architecture (codified in the process
 document \texttt{docs/PAPER\_STRATEGY.md} in the public repository)
-consolidates the project's forty-plus per-wave drafts into fourteen
+consolidates the project's seventy-plus mapped sources (per-wave
+drafts plus Lean-only synthesis handles) into seventeen
 publication targets organized into five tiers: a flagship review
-(\texttt{F}), five themed deep papers
-(\texttt{D1}--\texttt{D5}), three PRL-style headline letters
+(\texttt{F}), eight themed deep papers
+(\texttt{D1}--\texttt{D8}), three PRL-style headline letters
 (\texttt{L1}--\texttt{L3}), three infrastructure papers (\texttt{I1},
 \texttt{I2}, \texttt{I3}), and two experimental letters (\texttt{E1},
 \texttt{E2}). Each per-wave draft maps to one bundle target via an
@@ -1012,18 +1051,44 @@ fourteen canonical steps);
 late-arriving Phase~6X waves absorb into already-drafted bundles via
 a hot-swap protocol
 (repository document \texttt{docs/LATE\_PHASE6\_ABSORPTION\_PROTOCOL.md},
-stages~A--G with explicit branches D.1 / D.2 / D.3 by bundle state). Per-bundle
-state is captured in \texttt{papers/<bundle>/bundle\_metadata.json}
-with thirteen metadata fields including the three review-stage
-statuses (Stage~9 / 10 / 13), a freshness flag, source manifest
-last-regen timestamp, and stage-13 review document path. Pipeline
+stages~A--G with explicit branches D.1 / D.2 / D.3 / D.4 by bundle
+state). Per-bundle
+state is captured in \texttt{papers/<bundle>/bundle\_metadata.json},
+whose fields include the three review-stage
+statuses (Stage~9 / 10 / 13), a freshness flag, the source-manifest
+last-regeneration timestamp, the stage-13 review document path, and
+the recorded-review timestamps consumed by the readiness semantics
+of Section~\ref{sec:adversarial}. Pipeline
 Invariant~14 codifies the contract: every paper-shaped output lifts
 into a bundle target identified at Stage~1 and recorded at
-Stage~12. The architecture is what makes forty-plus-draft to
-fourteen-publication consolidation tractable without sacrificing
+Stage~12. The architecture is what makes seventy-plus-source to
+seventeen-publication consolidation tractable without sacrificing
 per-claim provenance: the sentence-level audit trail moves with the
 prose; the cluster registry preserves cross-bundle consistency; the
 bundle metadata captures every reviewer agent's verdict.
+
+Two deposit-time process standards extend the bundle architecture
+to publication mechanics. First, the manuscript-level disclosure
+of machine assistance is \emph{register-derived rather than
+prose-discretionary}: a single canonical disclosure text
+(repository document \texttt{docs/DISCLOSURE\_TEXT.md}) exists in
+exactly two variants, differing only in one conditional sentence
+crediting the Aristotle automated theorem prover, and the variant
+each bundle carries is computed deterministically
+(\texttt{scripts/aristotle\_usage\_by\_bundle.py}) from the
+canonical registers --- the Aristotle run registry, the per-paper
+declared Lean modules, the draft-to-bundle mapping, and the Lean
+dependency export --- rather than chosen by the author. Second,
+deposit sequencing (repository document
+\texttt{docs/ARXIV\_DEPOSIT\_PLAN.md}) is gated on completion of
+the content-level attribution sweep described in
+Section~\ref{sec:adversarial}, and the deposit-time conversion of
+in-preparation self-citations into deposited identifiers is a
+single documented scripted pass
+(\texttt{scripts/convert\_inprep\_citations.py}) that updates the
+citation registry, rewrites the affected bibliography items, and
+writes the cache stubs the primary-source invariant requires ---
+keeping Invariant~11 unbroken across the deposit transition.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §9 Three-layer architecture extended (Aristotle integration)
@@ -1240,6 +1305,97 @@ load-bearing claims and citations the bundle's review must verify.
 Cross-bundle cluster mismatches (\texttt{cross\_bundle: true}
 clusters in \texttt{cluster\_bundle\_index.json}) emit
 \texttt{BundleConsistencyMismatch} findings.
+
+The review-state semantics were hardened in June~2026 with a
+\emph{recorded-review} requirement. A bundle's readiness verdict
+can reach green only when three conditions hold simultaneously:
+zero open blocker-class findings, at most five open advisories,
+\emph{and} a recorded fresh-context Stage-13 review --- the review
+event itself, with its date and report path, captured in the
+bundle's \texttt{bundle\_metadata.json}. The third condition is
+the substantive one. Before the change, a bundle with no recorded
+findings was indistinguishable from a bundle that had been
+reviewed and passed; ``no findings recorded'' is not evidence of
+review, it is evidence of nothing. The hardened semantics
+introduce an explicit \emph{yellow (unreviewed)} verdict class for
+bundles with zero open blockers but no recorded fresh-context
+review, so the readiness heatmap cannot silently launder the
+absence of review into a pass.
+
+The June~2026 external-review remediation also surfaced the most
+instructive citation-integrity lesson of the program to date. The
+pipeline's citation machinery to this point --- the primary-source
+cache (Invariant~11), registry identifier resolution, and the
+bibliographic-title drift detector --- validates citation
+\emph{metadata}. The remediation identified a failure class that
+metadata validation cannot catch by construction: a citation can
+be metadata-valid --- the identifier resolves, the primary source
+is cached, the bibliographic data are correct --- while the
+\emph{claim the prose attributes to it} is fabricated. Three
+instances were found in roughly ten spot checks of load-bearing
+attributions. In one, a draft attributed a quantitative
+susceptibility-range estimate to a cached source that is a
+unitarity proof in a lattice-gravity framework and contains no
+such analysis. In another, the prose attributed an observational
+exclusion to the wrong observables, at the wrong significance,
+with the wrong year, relative to the cached paper. In the third,
+the citation registry's own change history carried a fabricated
+title and wrong journal coordinates for a real paper whose actual
+framing is conditional rather than a no-go. All three passed every
+metadata-level check, by construction: the sources are real,
+cached, and correctly identified --- the attributed \emph{content}
+was wrong.
+
+The deterministic response shipped in the same remediation as
+three new validation checks. The first
+(\texttt{validate.py --check axiom\_count\_prose\_consistency})
+scans every paper draft for axiom-count claims and fails any
+present-tense claim that disagrees with the live machine-generated
+count --- motivated by drafts still asserting the single-axiom
+posture after the last project-local axiom was retired into a
+tracked-hypothesis \texttt{Prop} on 2026-05-19; the calibration
+run alone surfaced sixteen stale prose sites across eleven drafts.
+The second
+(\texttt{validate.py --check prose\_theorem\_reference\_coverage})
+requires every Lean-identifier-shaped reference in monospaced
+bundle prose to resolve to a live declaration in the Lean
+dependency export, with a documented per-instance waiver mechanism
+(this paper's deliberately historical reference to the disproved
+folklore bound of Section~\ref{sec:case2} is the canonical
+waiver). The third
+(\texttt{validate.py --check theorem\_name\_embedded\_citations})
+covers declaration names that embed author--year tokens: when a
+paper's prose cites such a declaration, the citing paper's
+bibliography must contain a matching entry, so a reader can
+actually follow the citation the name encodes. The same
+remediation also replaced a manually maintained deep-paper
+headline count of cross-platform Lean-theorem reuse with a
+deterministic scripted count
+(\texttt{scripts/count\_theorem\_reuse.py}); the manual figure of
+$109/119$ corrected to $106/114 \approx 93\%$, with both the
+numerator and the denominator of the manual count having drifted.
+
+Deterministic checks, however, guard \emph{presence and
+consistency}; only reading the source against the claim verifies
+\emph{support}. The systematic response is a content-level
+attribution sweep (repository document
+\texttt{docs/roadmaps/AttributionContentSweep\_Roadmap.md}). For
+every load-bearing citation--claim pair on a bundle's anchor list,
+a fresh-context agent reads the cached primary source and issues a
+dated verdict: supported; supported-with-caveat (the paper must
+then carry the caveat); not-supported (prose and registry
+corrected, with a ledger-style record); or source-missing (fetch,
+then verify). Each bundle visit pairs the content pass with a
+fresh-context Stage-13 re-invocation, works falsification-critical
+bundles first and the flagship last (so the flagship inherits its
+siblings' corrections), and installs the register-derived
+disclosure block of Section~\ref{sec:provenance}. The sweep's exit
+criterion is every bundle green under the recorded-review
+semantics above. The base rate that motivated the sweep ---
+roughly three fabricated attributions per ten spot-checked --- is
+exactly the kind of number a verification program must be willing
+to publish about itself: the metadata layer the program had been
+treating as citation integrity is necessary but not sufficient.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §11 Phase 6f W1-W6 algebraic-GR substrate roster
@@ -1542,7 +1698,7 @@ two months of recoverable cost.
 \section{Lessons and Future Work}
 \label{sec:lessons}
 
-We close with three lessons drawn from a year of running the
+We close with four lessons drawn from a year of running the
 pipeline at the scale described.
 
 \textbf{Continuous verification is cheaper than retrofitted
@@ -1579,14 +1735,28 @@ agent runs in a context window that has not seen the author's
 work --- is the structural fix. The author fixes; the author
 re-invokes; iteration converges to clean.
 
-Three pipeline extensions are in active development at the time of
-writing. First, a meta-process quality-improvement register
+\textbf{Metadata-valid is not content-true.} The citation
+machinery of Invariant~11 --- cached primary sources, resolving
+identifiers, title-drift detection --- structurally prevents
+hallucinated \emph{references}. It does not prevent fabricated
+\emph{attributions}: prose ascribing to a real, cached, correctly
+cited source a claim the source does not make. At a measured base
+rate of roughly three per ten spot-checked load-bearing
+attributions (Section~\ref{sec:adversarial}), this is the failure
+mode that survived every deterministic layer of the pipeline. The
+response --- deterministic prose-consistency checks where the
+property is mechanizable, fresh-context content reading where it
+is not --- is the pipeline's newest layer, and there is no reason
+to believe it is the last.
+
+Three pipeline extensions matured during the year under review
+and are now load-bearing. First, a meta-process quality-improvement register
 (Stage~14) that surfaces systemic patterns across waves; the seed
 event is the April~2026 external-adversarial-review round that
 exposed a thirteen-dimensional problem space that internal
 validation could not detect by construction. Second, the
 publication-bundle architecture that consolidates per-wave drafts
-into fourteen publication targets while preserving sentence-level
+into seventeen publication targets while preserving sentence-level
 provenance; this paper is drafted under that architecture. Third, an automated cross-bundle consistency check
 that walks a cross-bundle cluster registry and flags member-
 sentence drift across bundle boundaries, preventing the same fact

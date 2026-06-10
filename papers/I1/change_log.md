@@ -274,3 +274,110 @@ re-review.
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL §3d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN).
+
+## 2026-06-10 — Inline-absorption-record (bookkeeping)
+
+- Source: (none — bookkeeping event)
+- Lift action: Inline-absorption-record
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-06-10 methodology sync: CHECKs 27-29 (axiom_count_prose_consistency / prose_theorem_reference_coverage / theorem_name_embedded_citations; registered-name forms — note table2_checks.tex row numbers 27-29 vs validate.py internal comments CHECK 24-26), attribution-content failure class + sweep design, recorded-review semantics, disclosure standard. Substantive prose changed in paper_draft.tex (abstract, §1, §5, §6, §8, §10, §14) — stage13_redo_required manually set true and freshness_stale manually restored after this bookkeeping event (the bundle remains stale pending the AttributionContentSweep I1 visit).
+
+## 2026-06-10 — Methodology sync: 2026-06-08→10 process-infrastructure growth (SUBSTANTIVE prose revision)
+
+**Correction to the bookkeeping entry above:** Stage-13 redo IS required
+(the `--bookkeeping-only` template line "Stage-13 redo required: no" is
+overridden; `bundle_metadata.json.stage13_redo_required` set `true`
+manually, and `freshness_stale` restored to `true` — this revision does
+NOT discharge the bundle's staleness; the AttributionContentSweep I1
+visit (Pass 1 Stage-13 re-invocation + Pass 2 content verification +
+disclosure-block install) remains owed per
+`docs/roadmaps/AttributionContentSweep_Roadmap.md`.
+
+**Sections touched (all additive or count-sync):**
+
+- **Abstract** — invariant count 14→15; bundle-target count 14→17; new
+  closing sentence on the metadata-valid-vs-content-fabricated citation
+  failure class (three instances in ~10 spot checks) + the sweep.
+- **§1** — "fourteen stages and fourteen invariants" → fifteen
+  invariants; new sentence on the fifteenth invariant (axiom sign-off,
+  May 2026, axioms-as-temporary-scaffolding posture); bundle targets
+  14→17; §10 roadmap sentence extended (recorded-review semantics +
+  citation-validation limits).
+- **§5 (Worked Case 3)** — registry line numbers synced to June-2026
+  `src/core/constants.py`: c_minus_equals_8Nf 1590→2282,
+  gapped_interface_axiom 1351→1391, chirality_limitation_zero
+  1483→2127, H_KLRS_SM_Crossover 1627→2329; gapped_interface_axiom
+  attribution updated from present-tense "tier hard" to
+  tier-hard-at-decomposition-time + retired 2026-05-19 into
+  tracked-hypothesis Prop TPFConjecture (eliminability now `closed`;
+  dimensional evidence ladder unchanged). This removes an internal
+  contradiction with the new §10 CHECK-24 content.
+- **§6** — Stage-7 check count "over twenty" → thirty-three registered
+  checks at time of writing, enumerated live by `validate.py --list`
+  (verified 2026-06-10: 33 `@register_check` registrations; the
+  regenerated paper15 `table2_checks.tex` lists only 29 because its
+  decorator-parsing regex misses 4 checks registered with
+  concatenated-string descriptions / trailing commas —
+  axiom_closure_allowlist, elaboration_knob_watchlist,
+  bundle_consistency, bundle_source_freshness); invariant enumerate
+  extended with item 15 (axiom sign-off + zero live project-local
+  axioms since 2026-05-19); Invariant-14 item text updated
+  (fifteenth-or-higher → beyond the current seventeen).
+- **§8** — bundle-architecture counts synced (forty-plus drafts/14
+  targets → seventy-plus mapped sources/17 targets; D1–D5 → D1–D8;
+  branches D.1/D.2/D.3 → +D.4); brittle "thirteen metadata fields"
+  count dropped (field-list phrasing); CHECK~21 ordinals replaced by
+  check-name forms (2 sites + fig3 caption — ordinal numbering now
+  ambiguous vs table2_checks row numbers); NEW closing paragraph:
+  register-derived disclosure standard (docs/DISCLOSURE_TEXT.md, two
+  variants, deterministic per-bundle derivation via
+  scripts/aristotle_usage_by_bundle.py) + deposit sequencing
+  (docs/ARXIV_DEPOSIT_PLAN.md, sweep-gated) + scripted in-prep
+  citation conversion (scripts/convert_inprep_citations.py).
+- **§10** — FOUR new paragraphs: (1) recorded-review semantics
+  (GREEN requires recorded fresh-context Stage-13 review; explicit
+  yellow-unreviewed verdict class; "no findings recorded ≠ reviewed
+  and passed"); (2) the attribution-content failure class
+  (metadata-valid citation, fabricated attributed claim; three
+  instances described structurally without naming third-party
+  authors, per I1's established §1 register; honest ~3-in-10 base
+  rate); (3) the three new deterministic checks
+  (axiom_count_prose_consistency — 16 stale sites at calibration;
+  prose_theorem_reference_coverage — closes qi-leantheoremdrift,
+  documents this paper's own gap_solution_bounded waiver;
+  theorem_name_embedded_citations) + the deterministic theorem-reuse
+  count (scripts/count_theorem_reuse.py; manual 109/119 corrected to
+  106/114 ≈ 93%, verified by running the script 2026-06-10);
+  (4) the content-level attribution sweep protocol (verdict
+  vocabulary, falsification-critical-first/flagship-last ordering,
+  exit = all bundles GREEN under recorded-review semantics).
+- **§14** — lessons three → four; NEW fourth lesson
+  "Metadata-valid is not content-true"; "in active development" →
+  "matured during the year under review" (all three listed
+  extensions have shipped and are described in this paper); bundle
+  targets 14→17.
+
+**Preserved exactly:** the documented-waiver reference
+`gap_solution_bounded` (3 pre-existing occurrences, no new \texttt
+occurrence added; the §10 mention refers to it descriptively).
+CHECK 25 re-run post-edit: 1 waived (documented), 0 unresolved.
+
+**Compile gate:** pdflatex ×2 clean — 0 errors, 23 pages (was 21),
+only the pre-existing project-wide OMS/cmtt font-shape warnings.
+Post-edit validator runs: axiom_count_prose_consistency PASS,
+prose_theorem_reference_coverage PASS (1 documented waiver),
+theorem_name_embedded_citations PASS, count_literals PASS,
+numerical_literals PASS (no new I1 findings in any).
+
+**Registry additions needed (NOT done here — CITATION_REGISTRY is
+out of scope for this revision):** none strictly required; the new
+prose deliberately describes the three fabricated-attribution
+instances structurally without \cite-ing the affected sources
+(Vergeles2025 / Halenka-Miller / GoltermanShamir2026 remain
+registry-only, per the sweep roadmap). If a future revision decides
+to name them in I1, their bibkeys + primary-source cache entries
+already exist.
+
+Stage-13 redo required: **yes** (reviewer triple to re-clear at the
+AttributionContentSweep I1 visit).
