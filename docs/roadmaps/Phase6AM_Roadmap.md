@@ -829,6 +829,23 @@ Track 3 is therefore **critical path**, done jointly with the (fresh, kernel-pur
 the 2-qubit synthesis (reusing the kernel-pure base-case machinery). Each a complete kernel-pure unit;
 ship incrementally. Construction reference: `Lit-Search/Phase-6AO/KMM-1212.0822-...-websearch.md`.
 
+- **Track 3 site 1/4 ✅ — `bridge_box_core` native_decide ELIMINATED (`f6a4f0ad` inc 1 + `2a5e33ca` inc 2).**
+  Inc 1 `BridgeParity.lean`: the structural core `sqrt2_sq_dvd_sq_add_sub` (|x|²+|y|² = √2⁴ ∧ √2∣|x|²
+  ⟹ √2²∣(x²±y²)) via the parity/δ-ramification calculus (δ=1+ω, δ²=√2·⟨0,1,1,1⟩; equal-parity squares
+  agree mod √2; mixed case refuted by the halving lemma). Inc 2 `BridgeStructural.lean`: nine per-entry
+  `denExp_bloch_{xx..zz} ≤ 3` bounds for `reconstruct x y k` (one declaration each, Inv #10 budgets;
+  uniform script: simp-expansion to `mk`-form → `denExp_mk_le_three` workhorse → `linear_combination`
+  with per-entry ω-phase coefficients; xy needs the `+2ω²(w̄−w)` M-correction, yy the `ω⁴=−1` relation).
+  The four factor-2 conjugate-pair entries (xz/zx/yz/zy) are UNCONDITIONAL (no hypotheses). Assembled:
+  `kSO3_reconstruct_le_three` (∀ x y k — NO box, NO enumeration, NO coordinate bounds) + the moved
+  structural `bridge`. `bridgeBoxOk`/`bridge_box_core` (1664-tuple native_decide) DELETED from
+  `KMMBridge.lean` (reconstruction substrate + `zomBox` retained for CliffordBase);
+  `KMMCompleteness.bridge_u` rewired (coordinate-bound conjuncts of `reconstruct_box_data_unitary`
+  now unused there). **`bridge`, `bridge_u`, `kSO3_reconstruct_le_three` all verify kernel-pure
+  `{propext, Classical.choice, Quot.sound}`.** Negative result (3× measured): `decide +kernel` on the
+  box sweep hits the elaborator pre-eval wall (~108–112 s, ≈100–150k whnf steps) — kernel decide CANNOT
+  host these checks; the structural route was the only path. Full lib+ExtractDeps green (9239 jobs).
+  Remaining sites: `maStep_exists_core` → `cliffordBase_box_core` → `kmm_lemma3_alg2`.
 - **Track 1(b) brick ✅ — `GaussInt2 = ℤ[√2][i]` is an integral domain (`b5123126`).**
   `lean/SKEFTHawking/FKLW/RossSelinger/Zsqrt2GaussInt2Domain.lean`: `zsqrt2_sq_add_sq_eq_zero`
   (`a²+b²=0 ⟺ a=b=0` over ℤ[√2] — formal reality at the integer-coordinate level via `nlinarith`, **no
