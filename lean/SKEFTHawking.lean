@@ -1575,6 +1575,14 @@ import SKEFTHawking.FKLW.RossSelinger.Gate2Control
 -- slots {(1,0),(1,1)} by mutually-inverse ≤5-gate perm words realizing permMat e / permMat e.symm
 -- (12-case table, kernel decide). Conjugating the inc-29 gadget by these words = the row op at (p,q).
 import SKEFTHawking.FKLW.RossSelinger.Gate2Perm
+-- Phase 6AO Track 2 (inc 31, 2026-06-10): the single-pair column drop — exists_pair_drop: for a column at
+-- level t+1 with a matched-active numerator pair p ≠ q, a realizable G (+ realizable inverse, Ginv·G = 1,
+-- both ≤ 70 gates: alignment-conjugated row-op gadgets) drops BOTH pair entries to denExp ≤ t, leaves every
+-- spectator's denExp unchanged (unit phases only), and preserves the unit-column normSq-sum. Dichotomy
+-- branches: aligned = one gadget + core_step; cross-orbit = two gadgets + cross_orbit_drop. Helper layer:
+-- ω⁸ = 1 + exponent capping (budget-bounded phases), denExp/normSq unit-phase invariance, the
+-- √2-parallelogram law, mk-numerator extraction, denExp (mk z (k+1)) = k+1 ⟺ ¬dividesSqrt2 z.
+import SKEFTHawking.FKLW.RossSelinger.GilesSelingerPairDrop
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
