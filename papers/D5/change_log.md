@@ -195,3 +195,11 @@ Phase 7b sub-wave 7b.2 ledger entry: 1 person-day effort for fresh first-pass + 
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-05-12 first-claim-removal: paper17_dark_sector 'first deliverable to export' line softened to descriptive; D5 bundle own §11 Sakharov $\Lambda_J$ vs $\Lambda_{HK}$ paragraphs (3 places) had 'to the best of our knowledge ... the first systematic ...' framing dropped and replaced with descriptive prose; D5 discussion section 'first-complete-mechanism-family' -> 'complete-mechanism-family'.
+
+## 2026-06-10 - Prose-revision-bookkeeping (review-2026-06-05 D5-EV1 arithmetic/narrative sync)
+
+- Source: (none - Lean ground-truth sync after commits d83ff8b6 + 196a5a70: Halenka-Miller primary-source verification + unit-coherent `EntropicGravityDarkEnergy` §2/§6 restatement)
+- Lift action: Prose-revision-bookkeeping
+- Insertion point: abstract; §1 bundle-goals; §9.1 intro + aggregator paragraph; §9.2 r_d-independence; READINESS_GATES.md substantive-content item 1
+- Stage-13 redo required: no
+- Notes: Bayes-decisive cohort corrected 3-of-4 → 2-of-4 (Tsallis HDE, Odintsov-D'Onofrio-Paul; aggregated in `both_decisive_bayes_bounds_exceed_jeffreys_decisive`). Verlinde 2017's quantitative ledger restated as σ-significance — excluded at >5σ by Halenka-Miller PRD 102, 084007 (2020) galaxy-cluster mass densities under nominal profile assumptions only (weakens once profile systematics are included); it is a Gaussian-σ statement, not a Bayes factor, and not a CMB/Bullet test. Barrow HDE stays AIC-moderate (ΔAIC = +4.7). The 4-of-4 closure is now cited only at the mixed-threshold unit-coherent level (`all_quantitative_bounds_disfavoured`, σ / log𝓑 / ΔAIC / log𝓑); the stale §9.1 citation of the deprecated alias `all_quantitative_bounds_exceed_jeffreys_decisive` (now restricted to the 2-of-4 Bayes cohort) removed. Also fixed §1 "all eight quantitative bounds exceeding the Jeffreys-decisive threshold" (only 4 of 8 ledgers are explicitly quantitative; only 2 are Bayes-decisive) and §9.2 "three Bayes-factor decisive bounds" cohort arithmetic. pdflatex ×2 clean.
