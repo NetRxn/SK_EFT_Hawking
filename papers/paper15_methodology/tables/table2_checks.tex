@@ -9,35 +9,36 @@
 1 & \texttt{formulas} & Python formulas reference valid Lean theorems \\
 2 & \texttt{numerical} & Experimental parameters match reference values \\
 3 & \texttt{identities} & Mathematical identities and boundary conditions hold \\
-4 & \texttt{paper_table} & Paper 1 Table 1 values match solver output \\
+4 & \texttt{paper\_table} & Paper 1 Table 1 values match solver output \\
 5 & \texttt{theorems} & Theorem registry has 322 entries and is self-consistent \\
 6 & \texttt{notebooks} & Notebooks import physics from src.core, no re-implementation \\
-7 & \texttt{lean_source} & Key theorem names found in Lean source files \\
-8 & \texttt{cgl_fdr} & CGL FDR derivation produces correct results \\
-9 & \texttt{lean_build} & Lean project builds cleanly (requires lake) \\
-10 & \texttt{axiom_closure_allowlist} & Every SKEFTHawking declaration's transitive axiom closure is on the standard kernel axioms + the AXIOM_METADATA allow-list (Invariant \#15 backstop) \\
-11 & \texttt{elaboration_knob_watchlist} & Watchlist (advisory): proof-body maxRecDepth / synthInstance knobs --- a performance / Mathlib-CI-portability signal, NOT a soundness or axiom-closure issue \\
-12 & \texttt{viz_consistency} & Notebook visualizations use imported physics and consistent style \\
-13 & \texttt{notebook_exec} & All notebooks execute without errors \\
-14 & \texttt{physical_bounds} & All computed quantities within physical bounds \\
-15 & \texttt{cross_path_consistency} & Different code paths agree within 0.5\%/1\% tolerance \\
-16 & \texttt{paper_provenance} & Paper numerical claims trace to computations within 0.5\% \\
-17 & \texttt{parameter_provenance} & Every experimental parameter has verified provenance \\
-18 & \texttt{counts_fresh} & counts.json / counts.tex are up-to-date vs. sources \\
-19 & \texttt{tables_fresh} & Paper tables (tables/*.tex) are up-to-date vs. pipeline sources \\
-20 & \texttt{claim_clusters_fresh} & papers/claim_clusters.json is up-to-date vs. v2 claims_review.json files \\
-21 & \texttt{numerical_literals} & Paper .tex files free of inline numerical literals outside \input{} blocks \\
-22 & \texttt{graph_integrity} & Knowledge graph integrity --- orphans, conflicts, broken chains \\
-23 & \texttt{count_literals} & Paper .tex files reference counts via \input{counts.tex} macros, not literals \\
-24 & \texttt{readiness_submission_gate} & Every paper has all P1 readiness gates passed (Phase 5v Wave 4) \\
-25 & \texttt{citation_primary_sources_present} & Every external bibitem cited in papers has a primary-source cache file \\
-26 & \texttt{provenance_doi_in_registry} & PARAMETER_PROVENANCE source DOIs resolve to CITATION_REGISTRY bibkeys \\
-27 & \texttt{bundle_consistency} & Cross-bundle clusters' member sentences agree on numerical content across bundle boundaries \\
-28 & \texttt{bundle_source_freshness} & Bundle source-paper mtime $\leq$ bundle last_lift; flag stale bundles \\
-29 & \texttt{bibitem_title_primary_source} & Registry titles match primary-source cache PDF page-1 titles (drift detector) \\
-30 & \texttt{quantum_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
-31 & \texttt{axiom_count_prose_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
-32 & \texttt{prose_theorem_reference_coverage} & Bundle-draft \texttt{} Lean references resolve in lean_deps.json \\
-33 & \texttt{theorem_name_embedded_citations} & Declaration names embedding author+year have matching bibliography entries \\
+7 & \texttt{lean\_source} & Key theorem names found in Lean source files \\
+8 & \texttt{cgl\_fdr} & CGL FDR derivation produces correct results \\
+9 & \texttt{lean\_build} & Lean project builds cleanly (requires lake) \\
+10 & \texttt{axiom\_closure\_allowlist} & Every SKEFTHawking declaration's transitive axiom closure is on the standard kernel axioms + the AXIOM\_METADATA allow-list (Invariant \#15 backstop) \\
+11 & \texttt{elaboration\_knob\_watchlist} & Watchlist (advisory): proof-body maxRecDepth / synthInstance knobs --- a performance / Mathlib-CI-portability signal, NOT a soundness or axiom-closure issue \\
+12 & \texttt{viz\_consistency} & Notebook visualizations use imported physics and consistent style \\
+13 & \texttt{notebook\_exec} & All notebooks execute without errors \\
+14 & \texttt{physical\_bounds} & All computed quantities within physical bounds \\
+15 & \texttt{cross\_path\_consistency} & Different code paths agree within 0.5\%/1\% tolerance \\
+16 & \texttt{paper\_provenance} & Paper numerical claims trace to computations within 0.5\% \\
+17 & \texttt{parameter\_provenance} & Every experimental parameter has verified provenance \\
+18 & \texttt{counts\_fresh} & counts.json / counts.tex are up-to-date vs. sources \\
+19 & \texttt{tables\_fresh} & Paper tables (tables/*.tex) are up-to-date vs. pipeline sources \\
+20 & \texttt{claim\_clusters\_fresh} & papers/claim\_clusters.json is up-to-date vs. v2 claims\_review.json files \\
+21 & \texttt{numerical\_literals} & Paper .tex files free of inline numerical literals outside \texttt{\textbackslash input\{\}} blocks \\
+22 & \texttt{graph\_integrity} & Knowledge graph integrity --- orphans, conflicts, broken chains \\
+23 & \texttt{count\_literals} & Paper .tex files reference counts via \texttt{\textbackslash input\{counts.tex\}} macros, not literals \\
+24 & \texttt{readiness\_submission\_gate} & Every paper has all P1 readiness gates passed (Phase 5v Wave 4) \\
+25 & \texttt{citation\_primary\_sources\_present} & Every external bibitem cited in papers has a primary-source cache file \\
+26 & \texttt{provenance\_doi\_in\_registry} & PARAMETER\_PROVENANCE source DOIs resolve to CITATION\_REGISTRY bibkeys \\
+27 & \texttt{bundle\_consistency} & Cross-bundle clusters' member sentences agree on numerical content across bundle boundaries \\
+28 & \texttt{bundle\_source\_freshness} & Bundle source-paper mtime $\leq$ bundle last\_lift; flag stale bundles \\
+29 & \texttt{bibitem\_title\_primary\_source} & Registry titles match primary-source cache PDF page-1 titles (drift detector) \\
+30 & \texttt{quantum\_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
+31 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
+32 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft \texttt{} Lean references resolve in lean\_deps.json \\
+33 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
+34 & \texttt{inventory\_index\_autogen\_fresh} & Advisory: SK\_EFT\_Hawking\_Inventory\_Index.md autogen blocks match docs/counts.json \\
 \hline
 \end{tabular}

@@ -8832,6 +8832,104 @@ CITATION_REGISTRY = {
                  'verified 2026-06-10 via arXiv abs page + Crossref API (DOI '
                  'resolves to matching title/authors/volume/article).',
     },
+    'KMM2013ancilla': {
+        'authors': 'Kliuchnikov, V. and Maslov, D. and Mosca, M.',
+        'title': 'Asymptotically optimal approximation of single qubit unitaries by '
+                 'Clifford and T circuits using a constant number of ancillary qubits',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 110,
+        'page': '190502',
+        'year': 2013,
+        'doi': '10.1103/PhysRevLett.110.190502',
+        'arxiv': '1212.0822',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/KMM2013ancilla.pdf',
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Added 2026-06-10 (D8 absorption of Phase 6AO Track 2). The KMM '
+                 'ancilla-assisted construction behind kmm_universal_headline (3-qubit '
+                 'Clifford+T word <= 50400k+812, no prime-density input). Title/authors '
+                 'verified against arXiv API 2026-06-10; primary source cached.',
+    },
+    'Selinger2015': {
+        'authors': 'Selinger, P.',
+        'title': 'Efficient Clifford+T approximation of single-qubit operators',
+        'journal': 'Quantum Inf. Comput.',
+        'volume': 15,
+        'page': '159-180',
+        'year': 2015,
+        'doi': '10.26421/QIC15.1-2-10',
+        'arxiv': '1212.6253',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Selinger2015.pdf',
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Added 2026-06-10 (D8 absorption, Phase 6AM W5 / 6AO Track 1). The '
+                 'randomized-under-prime-distribution efficiency result; its Hyp 29 = '
+                 'RS Hyp 8.3 is the honestly-documented prime-density wall carried as '
+                 'an explicit hypothesis in the Lean substrate. Title/authors verified '
+                 'against arXiv API 2026-06-10; primary source cached.',
+    },
+    'GilesSelinger2013': {
+        'authors': 'Giles, B. and Selinger, P.',
+        'title': 'Exact synthesis of multiqubit Clifford+T circuits',
+        'journal': 'Phys. Rev. A',
+        'volume': 87,
+        'page': '032332',
+        'year': 2013,
+        'doi': '10.1103/PhysRevA.87.032332',
+        'arxiv': '1212.0506',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/GilesSelinger2013.pdf',
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Added 2026-06-10 (D8 absorption, Phase 6AO Track 1 exact-synthesis '
+                 'context for the Ross-Selinger Appendix-C chain). Title/authors '
+                 'verified against arXiv API 2026-06-10; primary source cached.',
+    },
+    'AKN1998': {
+        'authors': 'Aharonov, D. and Kitaev, A. and Nisan, N.',
+        'title': 'Quantum circuits with mixed states',
+        'journal': 'Proc. 30th Annual ACM Symposium on Theory of Computing (STOC)',
+        'volume': None,
+        'page': '20-30',
+        'year': 1998,
+        'doi': '10.1145/276698.276708',
+        'arxiv': 'quant-ph/9806029',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/AKN1998.pdf',
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Added 2026-06-10 (D8 absorption, Phase 6AP W3). Origin of the '
+                 'diamond-norm channel distance; the AKN unitary->diamond bound '
+                 'diamondDist_unitaryKraus_le is the Lean-verified form. Title/authors '
+                 'verified against arXiv API 2026-06-10; primary source cached.',
+    },
+    'Meiburg2025PhysLib': {
+        'authors': 'Meiburg, A. and Lessa, L. A. and Soldati, R. R.',
+        'title': "A Formalization of the Generalized Quantum Stein's Lemma in Lean",
+        'journal': 'arXiv preprint',
+        'volume': None,
+        'page': None,
+        'year': 2025,
+        'doi': None,
+        'arxiv': '2510.08672',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Meiburg2025PhysLib.pdf',
+        'used_in': ['papers/D8/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Added 2026-06-10 (D8 absorption, Phase 6AP W3 PhysLib trace-norm '
+                 'transfer). The paper accompanying the leanprover-community/physlib '
+                 'library this project consumes via the traceNorm_eq_physlib bridge. '
+                 'NOTE: actual title is the Stein-lemma formalization paper (verified '
+                 'against arXiv API + cached PDF page 1, 2026-06-10) — cited here as '
+                 'the canonical PhysLib reference.',
+    },
     'CadoniCasadioGiustiMuckTuveri2018': {
         'authors': 'Cadoni, M., Casadio, R., Giusti, A., Mück, W., Tuveri, M.',
         'title': 'Effective fluid description of the dark universe',
