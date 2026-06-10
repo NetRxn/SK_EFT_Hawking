@@ -1631,6 +1631,10 @@ import SKEFTHawking.FKLW.RossSelinger.KMMOperational
 -- Λ(φ₁)·H·Λ(φ₂)·H·Λ(φ₃) = ½[[1+e₂, (1−e₂)e₃],[e₁(1−e₂), e₁e₃(1+e₂)]]. Toward the ∀U∈SU(2)
 -- up-to-global-phase decomposition (the LAST Track-2 piece).
 import SKEFTHawking.FKLW.RossSelinger.SU2Euler
+-- Phase 6AO Track 2 (inc 40 part 1, 2026-06-10): ∀U composition machinery — the ℓ²-bridge
+-- (sumNormSq = ‖·‖² in EuclideanSpace) and step_triangle: one composition step's errors add through
+-- a unitary word prefix (triangle + sumNormSq_mulVec_interp3 norm preservation).
+import SKEFTHawking.FKLW.RossSelinger.KMMUniversal
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
