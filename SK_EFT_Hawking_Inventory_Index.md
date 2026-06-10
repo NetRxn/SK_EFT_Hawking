@@ -21,6 +21,9 @@
 
 **Counts (from `docs/counts.json` regenerated 2026-06-10 PM, post Phase 6AQ device-characterization completion):**
 
+> The blocks bracketed by `<!-- AUTOGEN:... -->` comments below (this counts table, the §3 per-family-counts sentence, and the §3.1 generated family→count table) are **auto-generated** by `scripts/update_inventory_index.py` from `docs/counts.json`; do not hand-edit between the markers — run the script (`uv run python scripts/update_inventory_index.py`) instead. The surrounding prose and the hand-maintained §3.1 subdirectory table are NOT auto-generated.
+
+<!-- AUTOGEN:counts-table BEGIN -->
 | Metric | Value |
 |---|---:|
 | Lean declarations (total) | 20502 |
@@ -42,7 +45,13 @@
 | Figures (PNG) | 162 |
 | Notebooks | 89 |
 | Papers (drafts) | 42 |
-| Publication bundles (per PAPER_STRATEGY) | 17 |
+| Publication bundles (per PAPER_STRATEGY) | 18 |
+<!-- AUTOGEN:counts-table END -->
+
+**SymTFT phase footprint (hand-maintained narrative — not auto-generated):**
+
+| Metric | Value |
+|---|---|
 | **Phase 6r SymTFT modules** | 18 (~2,650 LoC, originally shipped 2026-05-25 Session 1) |
 | **Phase 6r-prime ADDITIONAL modules** | 20+ (Sessions 1–5 substantive substrate; M1–M5 + A1–A5 + B1–B12) |
 | **Phase 6r/6r' total SymTFT+CrossBridges+APSEta-asymmetry LoC** | ~9,910 lines |
@@ -96,7 +105,11 @@ For the public narrative of what the project does, see `README.MD`. Key story ar
 
 ## 3. Lean module map
 
-**936 Lean modules** (per `docs/counts.json` regen 2026-06-10 PM; the jump from 751 at 2026-05-30 reflects (i) the FKLW Ross-Selinger / KMM / grid-synth corpus growth across Phases 6AM→6AO, and (ii) the `QuantumNetwork/` build-out — 103 modules now — across Phases 6AF→6AQ) under `lean/SKEFTHawking/`. Grouped by subdirectory or topical family. **Per-family verified counts** (from grouping `lean.module_names`): FKLW 373, QuantumNetwork 103, SymTFT 38, DKMBootstrap 12, QuantumCrooks 11, GloriosoLiu 9, CrooksAnalogHawking 8, SymTFTAudit 8, APSEta 7, FaultTolerance 7, Itô 6, LDP 6, Schellekens 6, DoubleCopy 5, Resurgence 5, SoftTheorems 5, ETH 3, CrossBridges 2, MathlibAux 1; remaining **321 top-level** modules under `lean/SKEFTHawking/` directly. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
+**936 Lean modules** (per `docs/counts.json` regen 2026-06-10 PM; the jump from 751 at 2026-05-30 reflects (i) the FKLW Ross-Selinger / KMM / grid-synth corpus growth across Phases 6AM→6AO, and (ii) the `QuantumNetwork/` build-out — 103 modules now — across Phases 6AF→6AQ) under `lean/SKEFTHawking/`. Grouped by subdirectory or topical family.
+
+<!-- AUTOGEN:per-family-counts BEGIN -->
+**Per-family verified counts** (from grouping `lean.module_names`): FKLW 373, QuantumNetwork 103, SymTFT 38, DKMBootstrap 12, QuantumCrooks 11, GloriosoLiu 9, CrooksAnalogHawking 8, SymTFTAudit 8, APSEta 7, FaultTolerance 7, Itô 6, LDP 6, Schellekens 6, DoubleCopy 5, Resurgence 5, SoftTheorems 5, ETH 3, CrossBridges 2, MathlibAux 1; remaining **321 top-level** modules under `lean/SKEFTHawking/` directly. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
+<!-- AUTOGEN:per-family-counts END -->
 
 ### 3.1 Subdirectory families (sub-packages)
 
@@ -121,6 +134,34 @@ For the public narrative of what the project does, see `README.MD`. Key story ar
 | `lean/SKEFTHawking/DKMBootstrap/` | 12 | Phase 6q DKM transport bootstrap on SK-EFT-Hawking horizon transport (Chowdhury-Hartnoll-Hebbar-Khondaker arXiv:2509.18255 specialization). **11 modules, 2,716 LoC** (Session 1: 10 modules, ~2,375 LoC, 2026-05-23; Session 2: BECBogoliubovBosonicGrowth.lean, 341 LoC, 2026-05-25 strengthening close); zero sorries, zero new axioms. Track 1 (Predicates/AxiomSet/KMSConsistency/NoCrossing/SDPStructure/LinearFunctionals/LDPBridge) builds DKM substrate + resolves three Phase 6o Wave 1c NO-GO obstructions; Track 2 (SKEFTSpecialization/E1E2CrossBridge/HorizonTransportBootstrap) specializes to 3 platforms (graphene/BEC/polariton) with bimodal outcome (positive uniqueness on graphene + sharpened NO-GO on super-factorial-unbounded). Wave 2b.4 module `BECBogoliubovBosonicGrowth.lean` lifts the sharpened-NO-GO half to a witnessed concrete substrate-level stand-in sequence `(2κ)!` (substantive Lieb-Robinson-for-bosons derivation deferred). Python numerical companion at `src/dkm_bootstrap/` ships substantive graphene MIR constant `(2·β_2/(4π))^(1/3) = 0.07562892800257...` (30 dps mpmath). | `ls lean/SKEFTHawking/DKMBootstrap/` |
 | `lean/SKEFTHawking/SymTFT/` | 38 | **Phase 6r SymTFT formalization** (substrate-to-bulk unification under KOZ + FMT + Bhardwaj-Copetti-Pajer-Schäfer-Nameki *Boundary SymTFT* arXiv:2409.02166 framework) + **Phase 6r-prime substantive substrate discharge** (Sessions 1–5, 2026-05-25/26). **38 modules, ~9,910 LoC total across `SymTFT/` + `CrossBridges/SMMatterAsSymTFTBoundary.lean` + `APSEta/SubstrateBulkAsymmetry.lean`**; zero sorries; zero new axioms; **2 legitimate tracked Props** (KT 1990 Pin⁺ bordism cyclic-generation + DMNO 2010 Witt-trivial ⟺ Lagrangian-algebra biconditional, both meeting 3-criterion bar). **Module families:** (a) **Bulk SymTFT data** — `Basic.lean`, `BulkTQFT.lean`, `BulkInstances.lean`, `BulkBoundaryCorrespondence.lean`, `DrinfeldCenterAsBulk.lean`. (b) **Frobenius / Lagrangian-algebra substrate** — `FrobeniusAlgebra.lean`, `FrobeniusPerronDim.lean`, `LagrangianAlgebra.lean`, `GappedBoundary.lean`, `ToricCodeLagrangian.lean`, `ToricCodeLagrangianAnyons.lean`. (c) **Pin⁺ / Z₁₆ / Anderson-dual** — `PinBordism.lean`, `PinPlusManifold4.lean`, `PinPlusBordism4.lean`, `PontryaginDualPinPlus.lean`, `AndersonDualSubstrate.lean`, `AndersonDualFunctor.lean`, `StiefelWhitney.lean`, `SpinSymTFT.lean`, `SpinSymTFTSchellekensAlignment.lean`, `Z16ViaSpinSymTFT.lean`. (d) **RP⁴ + smooth structure (M3 layer)** — `RP4.lean`, `RP4Smooth.lean`, `RP4LocalHomeomorph.lean`, `RP4ChartedSpace.lean`, `RP4IsManifold.lean`. (e) **SM matter + dark sector boundary** — `IsSMMatterTopologicalBoundary.lean`, `AlternativeBoundaries.lean`, `SubstrateToBulkIdentification.lean`, `SubstrateEtaInvariant.lean`. (f) **A5 toric-code object-level (Drinfeld biproducts + Center C)** — `VecGPreadditive.lean`, `CenterPreadditive.lean`, `CenterBiproducts.lean`, `CenterBiproductsHalfBraiding.lean`, `A5VacuumMonObj.lean`, `A5VacuumPlusElectric.lean`, `A5LagrangianCenterUnit.lean`. (g) **Closure** — `Phase6rPrimeClose.lean` (68-conjunct consolidated substantive closure theorem; M-R adversarial-review reviewer anchor). Primary anchor: Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 (substantive boundary-SymTFT framework) + Kirby-Taylor 1990 (Pin⁺ Z₁₆) + Freed-Hopkins arXiv:1604.06527 (Anderson dual) + DMNO arXiv:1009.2117 (Witt-trivial ⟺ Lagrangian-algebra biconditional) + Karoubi 1968 §5 (RP⁴ mod-2 binomial Stiefel-Whitney values) + Davighi-Gripaios-Lohitsiri arXiv:2207.10700 (cited; non-Abelian-finite-group cobordism). | `ls lean/SKEFTHawking/SymTFT/` |
 | `lean/SKEFTHawking/CrossBridges/` | 2 | Cross-bridge modules for Phase 6r SymTFT consumers: `SMMatterAsSymTFTBoundary.lean` (Wave 3a.3 substantive SM-matter-as-SymTFT-boundary biconditional with `IsBoundarySymTFTCorrespondence` + `witt_triviality_iff_has_lagrangian_algebra`; consumed by D2 + L2 bundle pre-drafts) + `NbReDIIIToPinPlusZ16.lean` (NbRe DIII-class → Pin⁺/ℤ₁₆ cross-bridge, Phase 6v 8.D-8.H family). | `ls lean/SKEFTHawking/CrossBridges/` |
+
+<!-- AUTOGEN:family-count-table BEGIN -->
+**Generated family module-count table** (authoritative; derived from `lean.module_names`. The §3.1 table above is hand-maintained — reconcile its Count column against this block):
+
+| Family | Modules |
+|---|---:|
+| `FKLW` | 373 |
+| `QuantumNetwork` | 103 |
+| `SymTFT` | 38 |
+| `DKMBootstrap` | 12 |
+| `QuantumCrooks` | 11 |
+| `GloriosoLiu` | 9 |
+| `CrooksAnalogHawking` | 8 |
+| `SymTFTAudit` | 8 |
+| `APSEta` | 7 |
+| `FaultTolerance` | 7 |
+| `Itô` | 6 |
+| `LDP` | 6 |
+| `Schellekens` | 6 |
+| `DoubleCopy` | 5 |
+| `Resurgence` | 5 |
+| `SoftTheorems` | 5 |
+| `ETH` | 3 |
+| `CrossBridges` | 2 |
+| `MathlibAux` | 1 |
+| _(top-level)_ | 321 |
+| **Total** | **936** |
+<!-- AUTOGEN:family-count-table END -->
 
 ### 3.2 Topical groupings (top-level `.lean` files)
 

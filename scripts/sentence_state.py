@@ -203,7 +203,7 @@ _SENTENCE_KNOWN = _SENTENCE_REQUIRED | _SENTENCE_OPTIONAL
 _VALID_BUNDLE_TARGETS = {
     'F',                                # Tier 0 flagship review
     'D1', 'D2', 'D3', 'D4', 'D5',       # Tier 1 deep papers
-    'D6', 'D7', 'D8',                   # Tier 1 deep papers — D6 (FT-QC substrate, Phase 6v.1), D7 (tensor-network demarcation, Phase 6w.6), D8 (universal quantum gate compilation, 2026-05-31)
+    'D6', 'D7', 'D8', 'D9',                   # Tier 1 deep papers — D6 (FT-QC substrate, Phase 6v.1), D7 (tensor-network demarcation, Phase 6w.6), D8 (universal quantum gate compilation, 2026-05-31)
     'L1', 'L2', 'L3',                   # Tier 2 PRL splashes
     'I1', 'I2', 'I3',                   # Tier 3 infrastructure (I3 added Phase 6n.4 / Phase 6o.ζ — Verified Stochastic Calculus for Mathlib4)
     'E1', 'E2',                         # Tier 4 experimental letters

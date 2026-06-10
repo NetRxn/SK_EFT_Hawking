@@ -4011,6 +4011,55 @@ def check_theorem_name_embedded_citations() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK: Inventory-Index autogen freshness (advisory)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("inventory_index_autogen_fresh",
+                "Advisory: SK_EFT_Hawking_Inventory_Index.md autogen blocks match docs/counts.json")
+def check_inventory_index_autogen_fresh() -> CheckResult:
+    """Advisory watchlist: the auto-generated blocks in the Inventory Index
+    (the §1 counts table, the §3 per-family-counts sentence, and the §3.1
+    generated family->count table) must reflect ``docs/counts.json``.
+
+    These blocks are owned by ``scripts/update_inventory_index.py`` and
+    bracketed by ``<!-- AUTOGEN:... -->`` markers. They drift between manual
+    syncs whenever ``update_counts.py`` regenerates ``counts.json`` without a
+    follow-up index refresh. This check is ADVISORY (always passes, warns on
+    staleness) — mirroring ``elaboration_knob_watchlist`` semantics — because a
+    stale doc-index is a documentation-hygiene signal, not a soundness or
+    pipeline-invariant failure. Fix: run
+    ``uv run python scripts/update_inventory_index.py``.
+
+    Runs the generator's ``compute_stale`` logic in-process (no shelling out).
+    """
+    if str(SCRIPT_DIR) not in sys.path:
+        sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        from update_inventory_index import compute_stale
+    except ImportError as exc:
+        return CheckResult(passed=True, details=[
+            Detail("import", True,
+                   f"SKIPPED — update_inventory_index not importable: {exc}",
+                   warning=True)])
+
+    try:
+        stale, summary = compute_stale()
+    except Exception as exc:  # defensive: never fail the suite on an advisory
+        return CheckResult(passed=True, details=[
+            Detail("compute", True,
+                   f"SKIPPED — compute_stale raised: {exc}", warning=True)])
+
+    if stale:
+        return CheckResult(passed=True, details=[
+            Detail("freshness", True,
+                   f"{summary} — run `uv run python "
+                   "scripts/update_inventory_index.py` to refresh",
+                   warning=True)])
+    return CheckResult(passed=True, details=[
+        Detail("freshness", True, summary)])
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CLI
 # ═══════════════════════════════════════════════════════════════════════
 
