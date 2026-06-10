@@ -8806,7 +8806,8 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/HalenkaMiller2020.pdf',
-        'used_in': ['papers/D5/paper_draft.tex'],
+        'used_in': ['papers/D5/paper_draft.tex', 'papers/F/paper_draft.tex',
+                    'papers/D3/paper_draft.tex'],
         'provides': [],
         'notes': 'Added 2026-06-10 (review-2026-06-05 D5 phantom-citation fix: '
                  'prose previously named "Halenka-Miller 2018" with no bibitem or '

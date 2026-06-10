@@ -192,9 +192,12 @@ four categories.
   the abelian-MTC falsifier on Bekenstein--Hawking entropy with the
   Kaul--Majumdar $-3/2\log A$ correction (D3 \S\ref{sec:emergent-gravity}
   with D4 \S\ref{sec:topological-qc}), and the unanimous $8/8$
-  Phase~6m Track-B entropic-gravity dark-energy closure with three of
-  the four quantitative mechanisms (Verlinde, Tsallis-aggregate,
-  Odintsov) exceeding the Jeffreys-decisive Bayes threshold and the
+  Phase~6m Track-B entropic-gravity dark-energy closure with two of
+  the four quantitative mechanisms (Tsallis-aggregate,
+  Odintsov) exceeding the Jeffreys-decisive Bayes threshold, one
+  (Verlinde) excluded at $\geq 5\sigma$ by galaxy-cluster mass
+  densities under nominal profile
+  assumptions~\cite{HalenkaMiller2020}, and the
   fourth (Barrow) disfavoured by information-criteria
   $\Delta\!\mathrm{AIC} = 4.7$ above the Burnham--Anderson moderate
   threshold (D5 \S\ref{sec:dark-sector}).
@@ -370,7 +373,7 @@ $\sorrycount$ \texttt{sorry}.
 \textbf{Track-level verdicts.}
 \begin{itemize}
 \item \textbf{Track A --- Causal-set DE} (\texttt{CausalSetDarkEnergy.lean},
-  15 theorems): three NO-GO-R5 phenomenological + causal-set
+  12 theorems): three NO-GO-R5 phenomenological + causal-set
   d'Alembertian NO-GO-R2 reaffirmed via 4D gradient instability.
   Three publishable structural caveats survive independent of DESI:
   GD-inapplicability robust under all four sprinkling prescriptions;
@@ -378,20 +381,23 @@ $\sorrycount$ \texttt{sorry}.
   $\sigma_\Lambda = \alpha_{\mathrm{BDG}}/\sqrt{V}$ first-principles
   decomposition.
 \item \textbf{Track B --- Entropic-gravity DE}
-  (\texttt{EntropicGravityDarkEnergy.lean}, 14 theorems): \emph{eight
+  (\texttt{EntropicGravityDarkEnergy.lean}, 17 theorems): \emph{eight
   NO-GO-R5 unanimous} --- a complete-mechanism-family NO-GO closure
   in Phase~6m. Verlinde~2017, Padmanabhan-CosMIn,
   Hossenfelder--Verlinde post-Yoon--Guha, Cadoni--Tuveri DEC, Li~2004
   HDE, Tsallis HDE, Barrow HDE, and Odintsov-D'Onofrio-Paul
-  $\Omega_k$ all closed at mixed quantitative thresholds: Verlinde,
-  Tsallis-aggregate, and Odintsov exceed Jeffreys-decisive
-  ($|\!\log\mathcal{B}| \geq 5$); Barrow is disfavoured by
+  $\Omega_k$ all closed at mixed quantitative thresholds:
+  Tsallis-aggregate and Odintsov exceed Jeffreys-decisive
+  ($|\!\log\mathcal{B}| \geq 5$); Verlinde is excluded at
+  $\geq 5\sigma$ by the Halenka--Miller galaxy-cluster mass-density
+  test (Gaussian-$\sigma$ scale, nominal profile
+  assumptions)~\cite{HalenkaMiller2020}; Barrow is disfavoured by
   information-criteria ($\Delta\!\mathrm{AIC} = 4.7$, above the
   Burnham--Anderson moderate threshold); the remaining four are
   structurally closed. Seven of eight candidates have
   $r_d$-independent NO-GO mechanisms.
 \item \textbf{Track C --- Jacobson thermodynamic-GR DE}
-  (\texttt{JacobsonThermoGRDarkEnergy.lean}, 12 theorems):
+  (\texttt{JacobsonThermoGRDarkEnergy.lean}, 22 theorems):
   highest-survival track with five-plus R5 survivors. M3 EGJ $f(R)$
   Exp and ArcTanh are the strongest CLEARED-R5 of any track in
   Phase~6m (Plaza--Kraiselburd:
@@ -414,7 +420,7 @@ This is a systematic $\Lambda_J$-vs-$\Lambda_{HK}$ comparison on a
 common substrate.
 
 \textbf{Wave 4 unified Phase~6m 7-class GD taxonomy}
-(\texttt{DarkSectorClassificationExtension.lean}, 10 theorems):
+(\texttt{DarkSectorClassificationExtension.lean}, 11 theorems):
 consolidates the three-track verdicts into a single classification
 namespace with a 3-tier GD-applicability gradient. M8 KSS uniquely
 populates Class~(a). The unimodular reformulation as
@@ -1420,7 +1426,7 @@ architectural bets.
 \subsection{Phase 6m Track A: Causal-set DE}
 
 The Phase~6m Track-A closure ships in
-\texttt{CausalSetDarkEnergy.lean} ($15$ theorems) with three NO-GO-R5
+\texttt{CausalSetDarkEnergy.lean} ($12$ theorems) with three NO-GO-R5
 phenomenological closures (Sorkin everpresent-$\Lambda$ M1 + M2;
 phenomenological BDG MYZ~2025) plus the causal-set d'Alembertian
 NO-GO-R2 reaffirmed via 4D gradient instability. \emph{Three publishable
@@ -1442,14 +1448,19 @@ stand-alone CQG/JCAP letter if Phase 8 authors target.
 \subsection{Phase 6m Track B: Entropic-gravity DE (8/8 unanimous NO-GO)}
 
 The Phase~6m Track-B closure ships in
-\texttt{EntropicGravityDarkEnergy.lean} ($14$ theorems) as a
+\texttt{EntropicGravityDarkEnergy.lean} ($17$ theorems) as a
 complete-mechanism-family unanimous NO-GO closure across eight
 independent entropic-gravity dark-energy candidates at mixed
 quantitative thresholds:
 
 \begin{itemize}
-\item Verlinde 2017 (CMB + Bullet-cluster sweet-spot fit;
-  Halenka--Miller 2018 at $\geq 5\sigma$).
+\item Verlinde 2017 (galaxy-cluster mass-density exclusion at
+  $\geq 5\sigma$ under nominal profile assumptions, weakening once
+  weak-lensing/X-ray profile systematics are included ---
+  Halenka--Miller, PRD \textbf{102}, 084007
+  (2020)~\cite{HalenkaMiller2020}; plus structural
+  CMB and Bullet-cluster critiques carrying no verified $\sigma$
+  value).
 \item Padmanabhan--CosMIn (no scalar perturbation theory).
 \item Hossenfelder--Verlinde post-Yoon--Guha (matter+radiation
   FLRW stabilises dS attractor).
@@ -1471,12 +1482,14 @@ quantitative thresholds:
 \noindent
 The closure is robust under the $r_d$-anchoring rescue ($7/8$
 candidates have $r_d$-independent NO-GO mechanism). The
-3-conjunct aggregator
-\texttt{all\_three\_decisive\_bayes\_bounds\_exceed\_jeffreys\_decisive}
-(EGDE11) ships the genuinely Bayes-decisive triple
-(Verlinde + Tsallis-aggregate + Odintsov) as a single Lean theorem;
+2-conjunct aggregator
+\texttt{both\_decisive\_bayes\_bounds\_exceed\_jeffreys\_decisive}
+(EGDE11) ships the genuinely Bayes-decisive pair
+(Tsallis-aggregate + Odintsov) as a single Lean theorem;
 the 4-conjunct mixed-threshold aggregator
-\texttt{all\_quantitative\_bounds\_disfavoured} adds Barrow at the
+\texttt{all\_quantitative\_bounds\_disfavoured} adds Verlinde at the
+$\geq 5\sigma$ galaxy-cluster mass-density level (Gaussian-$\sigma$
+scale, nominal profile assumptions) and Barrow at the
 information-criteria moderate level; the $r_d$-independent count is
 \texttt{r\_d\_independent\_count\_eight}. \emph{This is Bundle~D5's
 publishable-novelty claim} (Paper-45 candidate).
@@ -1484,7 +1497,7 @@ publishable-novelty claim} (Paper-45 candidate).
 \subsection{Phase 6m Track C: Jacobson thermodynamic-GR (highest survival)}
 
 The Phase~6m Track-C closure ships in
-\texttt{JacobsonThermoGRDarkEnergy.lean} ($12$ theorems) and is the
+\texttt{JacobsonThermoGRDarkEnergy.lean} ($22$ theorems) and is the
 \emph{highest-survival track} with five-plus R5 survivors. The strongest
 CLEARED-R5 of any Phase~6m track is M3 EGJ $f(R)$ Exp + ArcTanh
 (Plaza--Kraiselburd 2504.05432: $\Delta\!\mathrm{AIC} \simeq
@@ -1528,7 +1541,7 @@ This is the F-unique substrate-identity content listed in
 
 Bundle~D5 \S\ref{sec:dark-sector} ships a unified Phase~6m 7-class
 Gibbs--Duhem taxonomy (\texttt{DarkSectorClassificationExtension.lean},
-$10$ theorems) that consolidates the three-track verdicts into a
+$11$ theorems) that consolidates the three-track verdicts into a
 single classification namespace with a 3-tier GD-applicability
 gradient. M8 KSS uniquely populates Class~(a). The unimodular
 reformulation as $\Lambda_{HK}$-escape route admits 5-of-6 Track-C
@@ -2269,6 +2282,12 @@ arXiv:quant-ph/0001108.
 P.~Glorioso and H.~Liu,
 ``The second law of thermodynamics from symmetry and unitarity,''
 arXiv:1612.07705 (2018).
+
+\bibitem{HalenkaMiller2020}
+V.~Halenka and C.~J.~Miller,
+``Testing emergent gravity with mass densities of galaxy clusters,''
+Phys.\ Rev.\ D \textbf{102}, 084007 (2020),
+arXiv:1807.01689.
 
 \bibitem{Hawking1971}
 S.~W.~Hawking,

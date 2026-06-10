@@ -34,9 +34,23 @@ from src.core.citations import (
 # ────────────────────────────────────────────────────────────────────────
 
 def test_paper_to_phase_keys_exist_on_disk():
-    """Every key in PAPER_TO_PHASE matches a real papers/<key>/ directory."""
+    """Every key in PAPER_TO_PHASE matches a real papers/<key>/ directory.
+
+    Exemption: underscore-prefixed keys (e.g. `_phase6w_W1_lean_only`) are
+    the deliberate lean-only-wave convention introduced by Phase 6w Wave 1
+    (cbc5fe52) — synthetic `used_in` handles that phase-route primary-source
+    caching for waves that shipped Lean modules without a per-wave paper
+    draft (see the "D.4 sourceless-lift handle" note in CITATION_REGISTRY).
+    They intentionally have no papers/<key>/ directory; registry entries
+    whose first `used_in` points at them route their cache files to the
+    mapped Lit-Search/Phase-X/ dir instead of the Phase-1-and-Background
+    fallback. Real (non-underscore) keys must still exist on disk.
+    """
     papers_dir = SK_ROOT / "papers"
-    missing = [k for k in PAPER_TO_PHASE if not (papers_dir / k).is_dir()]
+    missing = [
+        k for k in PAPER_TO_PHASE
+        if not k.startswith("_") and not (papers_dir / k).is_dir()
+    ]
     assert not missing, f"PAPER_TO_PHASE has keys without paper directories: {missing}"
 
 

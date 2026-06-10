@@ -2694,60 +2694,101 @@ PARAMETER_PROVENANCE = {
         'value': 0.1,
         'unit': 'dimensionless (× Λ²)',
         'tier': 'PROJECTED',
-        'source': 'Vergeles 2025 RPA bubble-integral natural range, half-decade convention',
+        'source': 'Project-adopted naturalness window (±1 decade about the unit-normalized '
+                  'O(Λ²/16π²) one-loop bubble scale); same convention as GRAV.ALPHA_ADW_LOWER',
         'detail': 'Vestigial-phase metric-channel susceptibility natural lower bound. '
-                  'χ_vest · Λ² ∈ [0.1, 10] is the natural range from VestigialSusceptibility.lean '
-                  'chi_RPA closed form with O(Λ²/16π²) bubble integral.',
+                  'χ_vest · Λ² ∈ [0.1, 10] is a PROJECT-ADOPTED naturalness window, not a '
+                  'published derivation: the one-loop bubble normalization is O(Λ²/16π²) by '
+                  'dimensional analysis (χ_RPA = χ_0/(1 − γ_★ χ_0) closed form, standard '
+                  'Hertz–Millis convention, formalized project-side in '
+                  'VestigialSusceptibility.lean), and the range is the ±1-decade window about '
+                  'the resulting unit-normalized central value. The DOI below (Vergeles 2025) '
+                  'is cited for what it actually establishes — unitarity of the underlying '
+                  'Einstein–Cartan–Palatini lattice theory — NOT as the source of this range.',
         'doi': '10.1103/PhysRevD.112.054509',
         'llm_verified_date': '2026-04-25',
-        'llm_verified_notes': 'PROJECTED. Same convention as GRAV.ALPHA_ADW_LOWER.',
+        'llm_verified_notes': 'PROJECTED. Same convention as GRAV.ALPHA_ADW_LOWER. '
+                              '2026-06-10 primary-source keyword-sweep (review-2026-06-05 '
+                              'EV4/L1-EV2, commit ca0d0f36): the cached Vergeles2025.pdf '
+                              '(PRD 112, 054509 = arXiv:2506.00036v2, "Unitarity of 4D Lattice '
+                              'Theory of Gravity") contains NO RPA bubble integral, NO '
+                              'susceptibility computation, and NO [0.1, 10] range — the range '
+                              'is re-attributed as project-adopted; Vergeles cited for ECP '
+                              'lattice unitarity only.',
         'human_verified_date': None,
         'human_verified_notes': (
-            'PROPOSED HUMAN-VERIFY NOTE (Phase 7b sub-wave 7b.0 pre-fill, 2026-05-01) — '
-            'review and approve via provenance dashboard if accurate, else edit and approve. '
-            'The natural range χ_vest · Λ² ∈ [0.1, 10] is the half-decade convention '
-            '"within 1 order of magnitude of unity," rooted in three convergent lines: '
-            '(a) RPA bubble integral — Vergeles 2025 (Phys. Rev. D 112, 054509; '
-            'arXiv:2506.00036; cached at Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf) '
-            'derives χ_RPA = χ_0 / (1 − γ_★ χ_0) for the metric-channel susceptibility in the '
-            'vestigial fermionic-condensate phase, with χ_0 ~ Λ²/16π² from the loop integral by '
-            'dimensional analysis. (b) Half-decade convention — O(Λ²/16π²) places the natural '
-            'value within ~1 order of magnitude of unity in the dimensionless form χ_vest · Λ², '
-            'so the natural range is [0.1, 10] (half-decade about unity). (c) Cross-program '
-            'consistency — the same convention frames α_ADW ∈ [0.1, 10] in '
-            'GRAV.ALPHA_ADW_LOWER/UPPER (Wave 1 emergent-gravity ADW microscopic-coefficient) '
-            'and arises identically from the Sakharov–Adler kernel. Lower endpoint 0.1 is the '
-            'conservative half-decade edge; values < 0.1 would require fine-tuned suppression '
-            'below the natural RPA scale, which no mechanism in Volovik 2024 / Vergeles 2025 '
-            'provides. Cross-link: VestigialSusceptibility.chi_RPA (Lean).'
+            'PROPOSED HUMAN-VERIFY NOTE (rewritten 2026-06-10, review-2026-06-05 sweep; '
+            'supersedes the Phase 7b sub-wave 7b.0 pre-fill of 2026-05-01, which misattributed '
+            'the range to a Vergeles 2025 RPA bubble-integral derivation) — review and approve '
+            'via provenance dashboard if accurate, else edit and approve. '
+            'The natural range χ_vest · Λ² ∈ [0.1, 10] is a PROJECT-ADOPTED naturalness '
+            'window — a modeling choice of this project, not a published derivation: '
+            '(a) Scale — the one-loop bubble normalization is O(Λ²/16π²) by dimensional '
+            'analysis; the χ_RPA = χ_0/(1 − γ_★ χ_0) closed form (standard Hertz–Millis '
+            'convention) is formalized project-side in VestigialSusceptibility.lean. '
+            '(b) Window — the range is the ±1-decade window about the resulting '
+            'unit-normalized central value, i.e. [0.1, 10]. (c) Cross-program anchor — the '
+            'window matches the linearized-EFE wave\'s ADW microscopic-coefficient '
+            'α_ADW ∈ [0.1, 10] natural range (GRAV.ALPHA_ADW_LOWER/UPPER), the '
+            'project-internal anchor for the order-of-magnitude prior. Vergeles 2025 '
+            '(Phys. Rev. D 112, 054509; arXiv:2506.00036; cached at '
+            'Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf) establishes unitarity of '
+            'the underlying Einstein–Cartan–Palatini lattice theory but does not itself '
+            'compute χ_vest or assign it a range (keyword-sweep verified 2026-06-10: no RPA '
+            'bubble integral, no susceptibility computation, no [0.1, 10] range in the paper). '
+            'Lower endpoint 0.1 is the conservative −1-decade edge of the adopted prior; '
+            'values < 0.1 would require fine-tuned suppression below the adopted naturalness '
+            'scale. Cross-link: VestigialSusceptibility.chi_RPA (Lean).'
         ),
-        'notes': 'Cross-link: VestigialSusceptibility.chi_RPA (Lean).',
+        'notes': 'Project-adopted ±1-decade naturalness window (modeling choice, not a '
+                 'published derivation); Vergeles 2025 cited for ECP lattice unitarity only. '
+                 'Cross-link: VestigialSusceptibility.chi_RPA (Lean).',
     },
     'GW.CHI_VEST_NATURAL_UPPER': {
         'value': 10.0,
         'unit': 'dimensionless (× Λ²)',
         'tier': 'PROJECTED',
-        'source': 'Vergeles 2025 RPA bubble-integral natural range, half-decade convention',
-        'detail': 'Upper bound matching CHI_VEST_NATURAL_LOWER; ±1 order of magnitude window.',
+        'source': 'Project-adopted naturalness window (±1 decade about the unit-normalized '
+                  'O(Λ²/16π²) one-loop bubble scale); same convention as GRAV.ALPHA_ADW_UPPER',
+        'detail': 'Upper bound matching CHI_VEST_NATURAL_LOWER; ±1-decade window about the '
+                  'unit-normalized central value. PROJECT-ADOPTED naturalness window, not a '
+                  'published derivation — see CHI_VEST_NATURAL_LOWER for the full provenance '
+                  'note. The DOI below (Vergeles 2025) is cited for ECP lattice unitarity '
+                  'only, NOT as the source of this range.',
         'doi': '10.1103/PhysRevD.112.054509',
         'llm_verified_date': '2026-04-25',
-        'llm_verified_notes': 'PROJECTED. Same convention as GRAV.ALPHA_ADW_UPPER.',
+        'llm_verified_notes': 'PROJECTED. Same convention as GRAV.ALPHA_ADW_UPPER. '
+                              '2026-06-10 primary-source keyword-sweep (review-2026-06-05 '
+                              'EV4/L1-EV2, commit ca0d0f36): the cached Vergeles2025.pdf '
+                              '(PRD 112, 054509 = arXiv:2506.00036v2, "Unitarity of 4D Lattice '
+                              'Theory of Gravity") contains NO RPA bubble integral, NO '
+                              'susceptibility computation, and NO [0.1, 10] range — the range '
+                              'is re-attributed as project-adopted; Vergeles cited for ECP '
+                              'lattice unitarity only.',
         'human_verified_date': None,
         'human_verified_notes': (
-            'PROPOSED HUMAN-VERIFY NOTE (Phase 7b sub-wave 7b.0 pre-fill, 2026-05-01) — '
-            'review and approve via provenance dashboard if accurate, else edit and approve. '
-            'Upper endpoint of the half-decade window centered on χ_vest · Λ² = 1; derivation '
-            'chain identical to CHI_VEST_NATURAL_LOWER. Upper value 10 is the conservative '
-            'half-decade edge of the natural-range prior; values χ_vest > 10 would imply a '
-            'metric-channel susceptibility 10× the RPA loop scale O(Λ²/16π²), requiring an '
-            'enhancement mechanism not present in the Vergeles 2025 closed form '
-            'χ_RPA = χ_0/(1 − γ_★ χ_0) under the natural γ_★ χ_0 < 1 RPA self-consistency '
-            'assumption. Cross-program: matches GRAV.ALPHA_ADW_UPPER half-decade upper bound '
-            'via the same Sakharov–Adler kernel. Primary source cached at '
+            'PROPOSED HUMAN-VERIFY NOTE (rewritten 2026-06-10, review-2026-06-05 sweep; '
+            'supersedes the Phase 7b sub-wave 7b.0 pre-fill of 2026-05-01, which misattributed '
+            'the range to a Vergeles 2025 RPA bubble-integral derivation) — review and approve '
+            'via provenance dashboard if accurate, else edit and approve. '
+            'Upper endpoint of the PROJECT-ADOPTED ±1-decade naturalness window centered on '
+            'χ_vest · Λ² = 1; rationale identical to CHI_VEST_NATURAL_LOWER. Upper value 10 '
+            'is the conservative +1-decade edge of the adopted prior; values χ_vest > 10 '
+            'would imply a metric-channel susceptibility 10× the adopted naturalness scale '
+            'O(Λ²/16π²), an enhancement the project\'s natural-range prior excludes by '
+            'construction. This window is a modeling choice of this project, not a published '
+            'derivation: Vergeles 2025 establishes unitarity of the underlying '
+            'Einstein–Cartan–Palatini lattice theory but does not itself compute χ_vest or '
+            'assign it a range (keyword-sweep verified 2026-06-10: no RPA bubble integral, no '
+            'susceptibility computation, no [0.1, 10] range in the paper). Cross-program: '
+            'matches the GRAV.ALPHA_ADW_UPPER +1-decade upper bound, the project-internal '
+            'anchor for the order-of-magnitude prior. Primary source cached at '
             'Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf. Cross-link: '
             'VestigialSusceptibility.chi_RPA (Lean).'
         ),
-        'notes': 'Cross-link: VestigialSusceptibility.chi_RPA (Lean).',
+        'notes': 'Project-adopted ±1-decade naturalness window (modeling choice, not a '
+                 'published derivation); Vergeles 2025 cited for ECP lattice unitarity only. '
+                 'Cross-link: VestigialSusceptibility.chi_RPA (Lean).',
     },
     'GW.CHI_VEST_DEFAULT': {
         'value': 1.0,

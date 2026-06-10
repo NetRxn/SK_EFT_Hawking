@@ -226,8 +226,14 @@ def count_per_section_theorems(lean_path: Path) -> dict:
     return per_section
 
 
-def generate_tex(counts: dict, path: Path):
-    """Generate LaTeX macros for paper inclusion."""
+def generate_tex(counts: dict, path: Path, deps: list | None = None):
+    """Generate LaTeX macros for paper inclusion.
+
+    If `deps` is provided (the parsed lean_deps.json declaration list from
+    `refresh_lean_deps()`), it is used for the per-module
+    kind == "theorem" macro groups below; otherwise the cached
+    lean/lean_deps.json is read directly.
+    """
     lean = counts.get("lean", {})
     python = counts.get("python", {})
     aristotle = counts.get("aristotle", {})
@@ -401,6 +407,94 @@ def generate_tex(counts: dict, path: Path):
         )
         lines.extend(phase6_lines)
 
+    # --- Phase 6f/6g classical-GR per-module + wave-total counts (I1) ---
+    # Consumer: papers/I1/paper_draft.tex §11–§13 references these 19
+    # macros (per-module theorem counts + wave totals for the Phase 6f
+    # classical-GR infrastructure W1–W8 and the Phase 6g W9
+    # curve-theoretic modules). I1 carries a \providecommand fallback
+    # block (added 2026-06-10, commit 804bd2be) that auto-yields to the
+    # definitions emitted here — keep the macro names in sync with that
+    # block; this emission is the durable fix.
+    # Convention: kind == "theorem" grouped by full module name in
+    # lean/lean_deps.json (identical to count_lean()'s theorem counting),
+    # derived at generation time — never hardcoded values.
+    if deps is None and LEAN_DEPS.exists():
+        try:
+            with open(LEAN_DEPS) as f:
+                deps = json.load(f)
+        except (OSError, json.JSONDecodeError):
+            deps = None
+    if deps:
+        mod_thms: dict = {}
+        for d in deps:
+            if d.get("kind") == "theorem":
+                mod_thms[d["module"]] = mod_thms.get(d["module"], 0) + 1
+
+        _i1_w16 = [  # Phase 6f Waves 1–6 (one module per wave)
+            ("curvatureThms", "SKEFTHawking.Curvature"),
+            ("einsteinTensorThms", "SKEFTHawking.EinsteinTensor"),
+            ("energyConditionsThms", "SKEFTHawking.EnergyConditions"),
+            ("exactSolutionsThms", "SKEFTHawking.ExactSolutions"),
+            ("admFormalismThms", "SKEFTHawking.ADMFormalism"),
+            ("tetradFormalismThms", "SKEFTHawking.TetradFormalism"),
+        ]
+        _i1_w7_mods = [  # Phase 6f Wave 7 (total only; no per-module macro)
+            "SKEFTHawking.LorentzianMetric",
+            "SKEFTHawking.RiemannianConnection",
+        ]
+        _i1_w8 = [  # Phase 6f Wave 8 Sessions 1–5
+            ("riemannCoordinateThms", "SKEFTHawking.RiemannCoordinate"),
+            ("riemannDifferentialBianchiThms",
+             "SKEFTHawking.RiemannDifferentialBianchi"),
+            ("bundleRiemannAuxThms", "SKEFTHawking.BundleRiemannAux"),
+            ("bundleRiemannThms", "SKEFTHawking.BundleRiemann"),
+            ("leviCivitaThms", "SKEFTHawking.LeviCivita"),
+        ]
+        _i1_w9 = [  # Phase 6g Wave 9 curve-theoretic modules
+            ("riccatiComparisonThms", "SKEFTHawking.RiccatiComparison"),
+            ("mazurSigmaModelRigidityThms",
+             "SKEFTHawking.MazurSigmaModelRigidity"),
+            ("hawkingPenroseCurveThms",
+             "SKEFTHawking.HawkingPenroseSingularityCurveTheoretic"),
+            ("areaTheoremCurveThms",
+             "SKEFTHawking.AreaTheoremCurveTheoretic"),
+        ]
+
+        i1_lines: list = []
+
+        def _emit_i1_module(macro: str, module: str):
+            """Emit a per-module macro; skip (leaving I1's fallback in
+            force) if the module is absent from lean_deps.json — never
+            emit a silently-wrong 0 for a renamed/moved module."""
+            n = mod_thms.get(module)
+            if n is not None:
+                i1_lines.append(f"\\newcommand{{\\{macro}}}{{{n}}}")
+
+        def _emit_i1_total(macro: str, modules: list):
+            """Emit a wave-total macro only if every constituent module
+            is present (a partial sum would be silently wrong)."""
+            ns = [mod_thms.get(m) for m in modules]
+            if all(n is not None for n in ns):
+                i1_lines.append(f"\\newcommand{{\\{macro}}}{{{sum(ns)}}}")
+
+        for macro, module in _i1_w16:
+            _emit_i1_module(macro, module)
+        _emit_i1_total("phaseSixfWonesixTotal", [m for _, m in _i1_w16])
+        _emit_i1_total("phaseSixfWsevenTotal", _i1_w7_mods)
+        for macro, module in _i1_w8:
+            _emit_i1_module(macro, module)
+        _emit_i1_total("phaseSixfWeightTotal", [m for _, m in _i1_w8])
+        for macro, module in _i1_w9:
+            _emit_i1_module(macro, module)
+        _emit_i1_total("phaseSixgWnineTotal", [m for _, m in _i1_w9])
+
+        if i1_lines:
+            lines.append(
+                "% --- Phase 6f/6g classical-GR per-module + wave totals "
+                "(I1 §11–§13) ---"
+            )
+            lines.extend(i1_lines)
+
     path.write_text("\n".join(lines) + "\n")
 
 
@@ -432,7 +526,7 @@ def main():
     print(f"Counts written to {OUTPUT_JSON}")
 
     # Write LaTeX
-    generate_tex(counts, OUTPUT_TEX)
+    generate_tex(counts, OUTPUT_TEX, deps=deps_data)
     print(f"LaTeX macros written to {OUTPUT_TEX}")
 
     # Summary
