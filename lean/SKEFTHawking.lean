@@ -1508,6 +1508,14 @@ import SKEFTHawking.FKLW.RossSelinger.RelNormMultiplicativity
 -- squares ≢ 7 (mod 8). Structural positives: daggerDecomposable_pow_even (ξ^{2k} = (ξ^k)²),
 -- DaggerDecomposable.pow, relNormZsqrt2_embed.
 import SKEFTHawking.FKLW.RossSelinger.RelNormEvenPowerObstruction
+-- Phase 6AO Track 1(c) inc 5 (2026-06-10) — RS **Lemma C.20 ENGINE** (positive prime cases):
+-- daggerDecomposable_of_prime_dvd_normSq — prime ξ ∣ w·w† with ξ ∤ (w − w†) ⟹ †-decomposable,
+-- via t := gcd(embed ξ, w) + dvd_prime_pow three-possibilities (unit case ⟹ IsCoprime to w AND
+-- w† (conjHom) ⟹ ξ ∣ normSq w forces ξ unit ✗; ξ²-case ⟹ embed ξ ∣ w ∧ ∣ w† ✗ the difference;
+-- middle case = the decomposition). Plus zsqrt2_dvd_descent / zsqrt2_isUnit_descent (ℤ[ω]→ℤ[√2]
+-- via conj-fixedness). Both the u²+1 (p≡1 mod 4) and u²+2 (p≡3 mod 8) paper cases are
+-- instances (w = u+i, w = u+√2i are conj-pairs: u²+k = normSq w). Specializations next inc.
+import SKEFTHawking.FKLW.RossSelinger.RelNormPrimeCase
 -- Phase 6x Tier-2 Item I (2026-05-30) — compile_correct approximation helpers:
 -- linftyOpNorm_fin_two_le (entrywise ≤δ ⟹ ℓ∞-operator-norm ≤ 2δ for 2×2) + su2_entry_structure
 -- (U∈SU(2) ⟹ U=[[a,−b̄],[b,ā]]). Propagate the grid first-column approximation to ‖·‖≤ε.
