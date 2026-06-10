@@ -558,13 +558,17 @@ native_decide held at 596, confirming Track-3 independence):**
     (256/512 cross-orbit pairs fail it). (B) genuinely needs mod-`2√2` (`√2³`) residue analysis — the `u`'s
     depend on `w_p,w_q` mod 4 through `divSqrt2`'s `/2`. The structural proof tracks that; a single big decide
     over `ℤ[ω]/√2³` (64²·64 ≈ 262k) exceeds the kernel heartbeat budget (#10), so NOT a decide — structural.
-- **NEXT (Lemma-4 completion → `ReductionStep`):** (i) prove (A) √2-match existence (mod-2 decide + ω^m-coord
-  bridge); (ii) prove (B) post-step1 mod-2 alignment (structural mod-`√2³`, the hard core) → assemble (A)+(B)+
-  `core_step` into the uniform Lemma 4 "matched-active pair ⟹ both drop to `denExp ≤ k-1`"; (iii) wrap into the
-  realizable `Gate2` two-level op (embed `H·Tᵐ` via `embedFst`/`embedSnd` + index permutation X/CNOT,
-  inc-17 block-action); (iv) inner induction on count-at-max-level + factor `√2` ⟹ `ReductionStep` → inc-15
-  `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et al.) + operator-norm
-  on inc-8/9 ⟹ the `∀U∈SU(2)` headline.
+- **inc 23 ✅ (`GilesSelingerRowOp.lean` `exists_sqrt2_match`): brick (A) DONE** — every matched-active pair is
+  √2-matchable `∃m∈{0,1}, √2∣(w_p−ωᵐw_q)`, via the clean swap-orbit proof (norm class ⟹ mod-√2 residue; `ω`
+  swaps its components; matched ⟹ same swap-orbit). `ZMod 2` kernel `decide` (256 cases) + parity bridge;
+  kernel-pure `{propext,Classical.choice,Quot.sound}`; native_decide 596; lib+ExtractDeps green (9218).
+- **NEXT (Lemma-4 completion → `ReductionStep`):** (ii) prove brick (B) post-step1 mod-2 alignment (`∃m',
+  2∣u₁−ωᵐ'u₂` where `uᵢ=divSqrt2(w_p±ωᵐw_q)`) — structural mod-`√2³` (the hard core; `u`'s depend on `w`'s
+  mod 4 via `divSqrt2`'s `/2`) → assemble (A)+(B)+`core_step` into the uniform Lemma 4 "matched-active pair ⟹
+  both drop to `denExp ≤ k-1`"; (iii) wrap into the realizable `Gate2` two-level op (embed `H·Tᵐ` via
+  `embedFst`/`embedSnd` + index permutation X/CNOT, inc-17 block-action); (iv) inner induction on
+  count-at-max-level + factor `√2` ⟹ `ReductionStep` → inc-15 `colLemma_of_reductionStep` (unconditional dim-4
+  column lemma) → controlled-C (Amy et al.) + operator-norm on inc-8/9 ⟹ the `∀U∈SU(2)` headline.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 

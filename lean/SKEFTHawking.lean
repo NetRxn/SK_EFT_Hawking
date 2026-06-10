@@ -1549,10 +1549,11 @@ import SKEFTHawking.FKLW.RossSelinger.MatchingResidue
 -- never both odd, since Q≡(a+c)(b+d), P≡(a+c)+(b+d), so Q odd ⟹ P even). The number-theoretic entry
 -- point to the Giles–Selinger column-lemma reduction (Lemma 5 parity); kernel decide over (ZMod 2)⁴.
 import SKEFTHawking.FKLW.RossSelinger.GilesSelingerResidue
--- Phase 6AO Track 2 (increment 22; 2026-06-09): Giles–Selinger Lemma-4 row-operation CORE STEP —
--- core_step (a matched pair that is mod-2 ω-aligned, 2∣x−ωᵐy, under the two-level H·Tᵐ drops BOTH
--- entries one denominator level: (x±ωᵐy)/√2 land at denExp ≤ t). Covers the single-H·Tᵐ cases (the
--- whole 1010 residue-norm class + the same-ω-orbit 0001 sub-case); kernel decide only (√2·√2=2).
+-- Phase 6AO Track 2 (increments 22–23; 2026-06-09): Giles–Selinger Lemma-4 row operation. inc 22
+-- core_step (matched pair mod-2 ω-aligned, 2∣x−ωᵐy, under H·Tᵐ drops BOTH entries one denominator
+-- level; covers 1010 + same-orbit 0001). inc 23 exists_sqrt2_match (every matched-active pair is
+-- √2-matchable ∃m∈{0,1}, √2∣w_p−ωᵐw_q — clean swap-orbit proof, opens the uniform 2-step for the
+-- cross-orbit 0001 case too). Kernel decide only (√2·√2=2 ; ZMod 2 parity), native_decide held at 596.
 import SKEFTHawking.FKLW.RossSelinger.GilesSelingerRowOp
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
