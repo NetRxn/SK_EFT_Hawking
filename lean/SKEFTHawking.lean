@@ -1597,6 +1597,14 @@ import SKEFTHawking.FKLW.RossSelinger.GilesSelingerColumnLemma
 -- transport embedAnc_interp2 (the column-lemma circuit C rides onto the register at no length cost);
 -- embedSys; IsRealizable3Within + additive composition. The register the controlled-C lift lives on.
 import SKEFTHawking.FKLW.RossSelinger.CliffordTGate3
+-- Phase 6AO Track 2 (inc 35, 2026-06-10): the system-controlled lift — ctrl8 block algebra; Toffoli via the
+-- CCZ phase-polynomial word 4sab = s+a+b−(s⊕a)−(a⊕b)−(s⊕b)+(s⊕a⊕b) (kernel-verified, decide +kernel at
+-- top level where the kernel check is budget-free); ctrlLift per-gate rule (target-diagonal T/S/Z/id lift
+-- UNCONTROLLED — their s=0 block fixes |00⟩, sidestepping the det-impossible controlled-T; X→CNOT, Y→S-conj,
+-- H→V-conjugated CNOT, cnots→Toffoli, ω→T_sys); ctrlLift_word_spec: EVERY Gate2 word w lifts to a Gate3 word
+-- ≤ 30·|w| with interp3 = ctrl8 D (interp2 w), D |00⟩-fixing — applied to the column-lemma word = KMM's
+-- controlled-C. Kernel-pure.
+import SKEFTHawking.FKLW.RossSelinger.Gate3Control
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
