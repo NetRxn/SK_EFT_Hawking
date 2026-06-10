@@ -194,18 +194,112 @@ theorem spin_connection_gap : (6 : ℕ) > 1 := by norm_num
     The metric has 10 independent components (symmetric 4×4). -/
 theorem metric_independent_components : (4 * (4 + 1)) / 2 = (10 : ℕ) := by norm_num
 
-/-! ## 8. Module Summary -/
+/-! ## 8. Wen-ADW factor-6000 deficit (closed form + numerical bracket)
+
+Bundle D3 §4 cites the Wen/ADW coupling ratio as ≈ 1/6202 ≈ 1/6000 at the
+compact-QED calibration point (α = 1/5 per Jersák et al. 1983, N_f = 4).
+This section discharges that claim at full numerical strength, upgrading the
+structural 1/1000 bounds (`coupling_deficit`, `coupling_ratio_small`) to the
+factor-6000 level:
+
+1. `wen_adw_ratio_eq` — the closed-form identity on the coupling map:
+   G_Wen/G_c^ADW = α²·N_f/(32π³) for any nonzero cutoff.
+2. `wen_adw_ratio_bracket` — the sharp numerical bracket
+   1/6202 < α²N_f/(32π³) < 1/6201 at α = 1/5, N_f = 4
+   (deficit factor 200π³ ≈ 6201.26).
+3. `wen_adw_factor_6000` — the headline: 1/6202 < G_Wen/G_c^ADW < 1/6000,
+   the single-line corollary of (1) + (2) promised by the D3 draft.
+-/
+
+/-- π³ > 31.00625, from Mathlib's `Real.pi_gt_d6` (π > 3.141592):
+    3.141592³ = 31.006257… > 31.00625. -/
+private theorem pi_cubed_gt : (31.00625 : ℝ) < Real.pi ^ 3 := by
+  have h : (3.141592 : ℝ) ^ 3 < Real.pi ^ 3 := by
+    gcongr
+    exact Real.pi_gt_d6
+  have h2 : (31.00625 : ℝ) < (3.141592 : ℝ) ^ 3 := by norm_num
+  linarith
+
+/-- π³ < 31.0063, from Mathlib's `Real.pi_lt_d6` (π < 3.141593):
+    3.141593³ = 31.006287… < 31.0063. -/
+private theorem pi_cubed_lt : Real.pi ^ 3 < (31.0063 : ℝ) := by
+  have h : Real.pi ^ 3 < (3.141593 : ℝ) ^ 3 := by
+    gcongr
+    exact Real.pi_lt_d6
+  have h2 : (3.141593 : ℝ) ^ 3 < (31.0063 : ℝ) := by norm_num
+  linarith
+
+/-- **Closed-form Wen/ADW coupling ratio.** On the machine-verified coupling
+    map, for any nonzero UV cutoff Λ and any N_f ≠ 0:
+
+      G_Wen/G_c^ADW = perturbative_4f_coupling α Λ / G_c_adw N_f Λ
+                    = α²·N_f/(32π³) = coupling_ratio α N_f.
+
+    This is the algebraic formula D3 §4 quotes; it shows the ratio is
+    cutoff-independent, so the numerical bracket below holds for every Λ. -/
+theorem wen_adw_ratio_eq (alpha Λ : ℝ) (N_f : ℕ) (hΛ : Λ ≠ 0) (hN : N_f ≠ 0) :
+    perturbative_4f_coupling alpha Λ / G_c_adw N_f Λ = coupling_ratio alpha N_f := by
+  have hNR : (N_f : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr hN
+  have hπ : Real.pi ≠ 0 := Real.pi_ne_zero
+  unfold perturbative_4f_coupling G_c_adw coupling_ratio
+  field_simp
+  ring
+
+/-- **Sharp numerical bracket at the compact-QED calibration point.**
+    At α = 1/5 (= α_max from Jersák et al. 1983 compact QED₄) and N_f = 4:
+
+      1/6202 < α²N_f/(32π³) < 1/6201,
+
+    i.e. the deficit factor 32π³/(α²N_f) = 200π³ ≈ 6201.26 lies strictly
+    between 6201 and 6202. This pins D3 §4's "≈ 1/6202" numerical estimate
+    to ±1 in the denominator; proven from π ∈ (3.141592, 3.141593)
+    (`Real.pi_gt_d6`/`Real.pi_lt_d6`), not from a floating-point evaluation.
+    Strictly sharper than `coupling_ratio_small` (ratio < 1/1000). -/
+theorem wen_adw_ratio_bracket :
+    1/6202 < coupling_ratio (1/5) 4 ∧ coupling_ratio (1/5) 4 < 1/6201 := by
+  have hpos : (0:ℝ) < 32 * Real.pi ^ 3 := by positivity
+  unfold coupling_ratio
+  constructor
+  · rw [div_lt_div_iff₀ (by norm_num : (0:ℝ) < 6202) hpos]
+    push_cast
+    nlinarith [pi_cubed_lt]
+  · rw [div_lt_div_iff₀ hpos (by norm_num : (0:ℝ) < 6201)]
+    push_cast
+    nlinarith [pi_cubed_gt]
+
+/-- **The factor-6000 Wen-ADW deficit (D3 §4 headline).** For every nonzero
+    UV cutoff Λ, at the compact-QED-bounded point α = 1/5, N_f = 4:
+
+      1/6202 < G_Wen/G_c^ADW < 1/6000.
+
+    The lower bound certifies the deficit is a factor of at most 6202 (the
+    paper's numerical estimate ≈ 1/6202); the upper bound is the load-bearing
+    factor-6000 underprediction — strictly stronger than the structural
+    `coupling_deficit` bound (G_Wen < G_c/1000). Single-line corollary of
+    `wen_adw_ratio_eq` + `wen_adw_ratio_bracket`, as promised in D3 §4. -/
+theorem wen_adw_factor_6000 (Λ : ℝ) (hΛ : Λ ≠ 0) :
+    1/6202 < perturbative_4f_coupling (1/5) Λ / G_c_adw 4 Λ ∧
+      perturbative_4f_coupling (1/5) Λ / G_c_adw 4 Λ < 1/6000 := by
+  rw [wen_adw_ratio_eq (1/5) Λ 4 hΛ (by norm_num)]
+  exact ⟨wen_adw_ratio_bracket.1,
+    wen_adw_ratio_bracket.2.trans (by norm_num : (1/6201 : ℝ) < 1/6000)⟩
+
+/-! ## 9. Module Summary -/
 
 /-! ## Module summary
 
 EmergentGravityBounds: physics bounds on emergent gravity program.
-  - Coupling deficit: G₄f < G_c/1000 (sorry, Aristotle target)
+  - Coupling deficit: G₄f < G_c/1000 (PROVED, Aristotle run 986b9f66)
+  - Wen-ADW factor-6000: closed-form ratio identity G_Wen/G_c = α²N_f/(32π³)
+    (`wen_adw_ratio_eq`), sharp bracket 1/6202 < ratio < 1/6201 at α = 1/5,
+    N_f = 4 (`wen_adw_ratio_bracket`), headline 1/6202 < G_Wen/G_c^ADW < 1/6000
+    (`wen_adw_factor_6000`) (PROVED)
   - Instanton vertex: 2|qn|N_f = 8 for ADW (PROVED)
   - G_c NLO invariance: α₁ = 0 (PROVED, structural)
   - Tetrad mode counting: 16 → 10 physical (PROVED)
   - Spin-connection gap: dim SO(3,1) = 6 > dim U(1) = 1 (PROVED)
   - Vestigial gravity: metric = 10 components (PROVED)
   - Three obstacles enumerated
-  - 2 sorry (coupling deficit bounds — need Real.pi bounds from Aristotle)
+  - 0 sorry
 -/
 end SKEFTHawking.EmergentGravityBounds

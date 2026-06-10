@@ -259,3 +259,11 @@ All recorded in `docs/review_finding_supersessions.json`. Post-remediation: D3 o
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL §3d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN).
+
+## 2026-06-10 — Review-fix (review-2026-06-05 D3-Y1)
+
+- Source: lean/SKEFTHawking/EmergentGravityBounds.lean (new §8, shipped this fix)
+- Lift action: Prose-revision (Lean-backing upgrade)
+- Insertion point: §4.1 (Perturbative Wen-ADW deficit)
+- Stage-13 redo required: no (claim strengthened to match shipped Lean; no new physics claim)
+- Notes: External review D3-Y1 (prose-outruns-Lean): the ≈1/6202 ≈ 1/6000 Wen/ADW ratio was cited with Lean backing only at the structural 1/1000 level. Shipped the promised lemma family in EmergentGravityBounds.lean — `wen_adw_ratio_eq` (closed-form identity G_Wen/G_c^ADW = α²N_f/(32π³), any Λ ≠ 0, N_f ≠ 0), `wen_adw_ratio_bracket` (sharp 1/6202 < ratio < 1/6201 at α = 1/5, N_f = 4, from Real.pi_gt_d6/pi_lt_d6), `wen_adw_factor_6000` (headline 1/6202 < G_Wen/G_c^ADW < 1/6000, single-line corollary as the draft promised). All kernel-pure ([propext, Classical.choice, Quot.sound] only). §4.1 sentence replaced: "the structural Lean bound at 1/1000 is the formally discharged inequality" → factor-6000 statement now formally discharged by the named shipped lemmas.

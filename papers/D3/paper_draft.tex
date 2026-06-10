@@ -439,9 +439,16 @@ Lean-formalization scope by
 (\(G_{4f}/G_c < 1/1000\) at \(\alpha = 0.20,\ N_f = 4\)). The same
 algebraic formula \(\alpha^2 N_f / (32\pi^3)\) gives the tighter
 numerical estimate \(\approx 1/6202 \approx 1/6000\) at the
-compact-QED-bounded \(\alpha = 1/5,\ N_f = 4\) point; the structural
-Lean bound at \(1/1000\) is the formally discharged inequality (Wen
-2003~\cite{Wen2003}).
+compact-QED-bounded \(\alpha = 1/5,\ N_f = 4\) point; this factor-6000
+statement is itself formally discharged by the shipped lemma
+\texttt{EmergentGravityBounds.wen\_adw\_factor\_6000}, which proves
+\(1/6202 < G_{\mathrm{Wen}}/G_c^{\mathrm{ADW}} < 1/6000\) for every
+nonzero cutoff, as a single-line corollary of the closed-form ratio
+identity \texttt{EmergentGravityBounds.wen\_adw\_ratio\_eq}
+(\(G_{\mathrm{Wen}}/G_c^{\mathrm{ADW}} = \alpha^2 N_f/(32\pi^3)\)) and
+the sharp bracket \texttt{EmergentGravityBounds.wen\_adw\_ratio\_bracket}
+(\(1/6202 < \alpha^2 N_f/(32\pi^3) < 1/6201\) at this point, i.e.\ a
+deficit factor \(200\pi^3 \approx 6201.3\)) (Wen 2003~\cite{Wen2003}).
 Wen's mechanism is consistent for a $U(1)$ photon---its original
 target---but cannot scale to gravity at quantitative magnitude.
 
