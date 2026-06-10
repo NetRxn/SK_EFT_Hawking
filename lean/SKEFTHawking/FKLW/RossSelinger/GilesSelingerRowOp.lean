@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 John Roehm. All rights reserved.
 
-# Phase 6AO Track 2 (increments 22–26) — Giles–Selinger Lemma 4, the row operation
+# Phase 6AO Track 2 (increments 22–27) — Giles–Selinger Lemma 4, the row operation
 
 The dim-4 column lemma's reduction (`ReductionStep`, `ColumnBaseRealizable`) is the **Giles–Selinger
 column lemma** (arXiv:1212.0506): Lemma 5 (parity) supplies a **matching residue-norm pair**
@@ -51,7 +51,13 @@ mod 2 — verified by `#eval` enumeration:
     EITHER mod-2 `ω`-aligned (`∃m, 2∣w_p−ωᵐw_q` → `core_step`) OR step1-able to all-odd
     (`∃m, w_p+ωᵐw_q` all-coords-odd → `divSqrt2_normSq_c_odd` + `lemma4_1010`). A single `ZMod 2` `decide`
     + the `ℤ→𝔽₂` parity bridge. This is the one decision the uniform Lemma 4 / `ReductionStep` consumes.
-    (Remaining: the cross-orbit step1 level computation + the column-level `Gate2` wrapper + the inner
+  * **inc 27 — `mk_sqrt2_mul_succ` + `step1_combo_eq`/`_sub` + `cross_orbit_drop`** (the cross-orbit 2-step):
+    `step1_combo_eq` (`H·Tᵐ` on a `√2`-divisible all-odd combination keeps the pair at level `s` with the
+    `divSqrt2` numerator, via the `√2`-peel `mk_sqrt2_mul_succ`); `cross_orbit_drop` composes step1 +
+    `divSqrt2_normSq_c_odd` (both outputs `1010`) + `lemma4_1010` ⟹ the cross-orbit pair drops one level in
+    two `H·Tᵐ` ops. With `core_step` (aligned, one step) this discharges BOTH branches of
+    `matched_active_dichotomy` — the full Lemma 4 at the pair level is now complete. (Remaining: the
+    column-level `Gate2` wrapper [embed `H·Tᵐ` on a column index-pair as a realizable `Mat4`] + the inner
     induction into `ReductionStep`.)
 
 ## Pipeline invariants
@@ -419,6 +425,75 @@ theorem lemma4_1010 {wp wq : ZOmega} {t : ℕ}
          denExp (invSqrt2 * (mk wp (t + 1) - CliffordTGate.ωS ^ m * mk wq (t + 1))) ≤ t := by
   obtain ⟨m, hm⟩ := ZOmega.exists_mod2_align_of_normSq_c_odd hp hq
   exact ⟨m, core_step hm⟩
+
+/-! ### The cross-orbit step1 level computation (inc 27)
+
+For the cross-orbit `0001` sub-case, `matched_active_dichotomy` supplies an `m` with `w_p + ωᵐw_q`
+all-coords-odd, hence `√2`-divisible. The step1 `H·Tᵐ` operation on such a combination therefore
+**keeps the pair at its level** (`invSqrt2·(mk w_p s ± ωS^m·mk w_q s) = mk(divSqrt2(w_p ± ωᵐw_q)) s`):
+the `H` raises the denominator by one and the `√2`-divisibility peels it straight back. The resulting
+numerators `divSqrt2(w_p ± ωᵐw_q)` are `1010` (`divSqrt2_normSq_c_odd`), so the second op `lemma4_1010`
+finishes the 2-step. -/
+
+/-- **`√2`-peel**: `mk (√2·z) (s+1) = mk z s` — multiplying numerator and denominator by `√2` is the
+identity on `ZOmegaSqrt2`. -/
+theorem mk_sqrt2_mul_succ (z : ZOmega) (s : ℕ) : mk (ZOmega.sqrt2 * z) (s + 1) = mk z s := by
+  rw [mk_eq_mk_iff, pow_succ]; ring
+
+/-- **Step1 keeps the level (`+` output).** When `w_p + ωᵐw_q` is `√2`-divisible (the all-odd case),
+the `H·Tᵐ` "`+`" output equals `mk(divSqrt2(w_p + ωᵐw_q)) s` — same level `s`, with the (`1010`)
+`divSqrt2` numerator. -/
+theorem step1_combo_eq {x y : ZOmega} {m s : ℕ} (h : ZOmega.dividesSqrt2 (x + ZOmega.ω ^ m * y)) :
+    invSqrt2 * (mk x s + CliffordTGate.ωS ^ m * mk y s) = mk (ZOmega.divSqrt2 (x + ZOmega.ω ^ m * y)) s := by
+  have hpow : of (ZOmega.ω ^ m) = (of ZOmega.ω) ^ m := map_pow ofRingHom ZOmega.ω m
+  have hmul : CliffordTGate.ωS ^ m * mk y s = mk (ZOmega.ω ^ m * y) s := by
+    rw [show (CliffordTGate.ωS : ZOmegaSqrt2) = of ZOmega.ω from rfl, ← hpow, of_def, mk_mul,
+        Nat.zero_add]
+  rw [hmul, mk_add_same, invSqrt2_def, mk_mul, one_mul,
+      show 1 + s = s + 1 from Nat.add_comm 1 s, ← ZOmega.divSqrt2_spec h, mk_sqrt2_mul_succ,
+      ZOmega.divSqrt2_spec h]
+
+/-- **Step1 keeps the level (`−` output).** As `step1_combo_eq`, for the `H·Tᵐ` "`−`" output. -/
+theorem step1_combo_eq_sub {x y : ZOmega} {m s : ℕ}
+    (h : ZOmega.dividesSqrt2 (x - ZOmega.ω ^ m * y)) :
+    invSqrt2 * (mk x s - CliffordTGate.ωS ^ m * mk y s) = mk (ZOmega.divSqrt2 (x - ZOmega.ω ^ m * y)) s := by
+  have hpow : of (ZOmega.ω ^ m) = (of ZOmega.ω) ^ m := map_pow ofRingHom ZOmega.ω m
+  have hmul : CliffordTGate.ωS ^ m * mk y s = mk (ZOmega.ω ^ m * y) s := by
+    rw [show (CliffordTGate.ωS : ZOmegaSqrt2) = of ZOmega.ω from rfl, ← hpow, of_def, mk_mul,
+        Nat.zero_add]
+  rw [hmul, mk_sub_same, invSqrt2_def, mk_mul, one_mul,
+      show 1 + s = s + 1 from Nat.add_comm 1 s, ← ZOmega.divSqrt2_spec h, mk_sqrt2_mul_succ,
+      ZOmega.divSqrt2_spec h]
+
+/-- **The cross-orbit 2-step reduction.** When the dichotomy supplies an `m` with `w_p + ωᵐw_q`
+all-coords-odd (the cross-orbit `0001` case), the two-step `H·Tᵐ` then `H·Tᵐ'` drops BOTH column
+entries one denominator level. Mechanism: `w_p ± ωᵐw_q` are both all-odd (coord-relation
+`(w_p+ωᵐw_q).x + (w_p−ωᵐw_q).x = 2·w_p.x`), so step1 (`step1_combo_eq`/`_sub`) keeps the pair at level
+`t+1` with `1010` numerators `divSqrt2(w_p ± ωᵐw_q)` (`divSqrt2_normSq_c_odd`), which `lemma4_1010`
+then reduces to `denExp ≤ t`. Together with `core_step` (the mod-2-aligned, one-step case), this
+discharges every branch of `matched_active_dichotomy` — the full Giles–Selinger Lemma 4. -/
+theorem cross_orbit_drop {wp wq : ZOmega} {m t : ℕ}
+    (ha : (wp + ZOmega.ω ^ m * wq).a % 2 = 1) (hb : (wp + ZOmega.ω ^ m * wq).b % 2 = 1)
+    (hc : (wp + ZOmega.ω ^ m * wq).c % 2 = 1) (hd : (wp + ZOmega.ω ^ m * wq).d % 2 = 1) :
+    ∃ m', denExp (invSqrt2 * (invSqrt2 * (mk wp (t+1) + CliffordTGate.ωS ^ m * mk wq (t+1))
+            + CliffordTGate.ωS ^ m' * (invSqrt2 * (mk wp (t+1) - CliffordTGate.ωS ^ m * mk wq (t+1))))) ≤ t ∧
+          denExp (invSqrt2 * (invSqrt2 * (mk wp (t+1) + CliffordTGate.ωS ^ m * mk wq (t+1))
+            - CliffordTGate.ωS ^ m' * (invSqrt2 * (mk wp (t+1) - CliffordTGate.ωS ^ m * mk wq (t+1))))) ≤ t := by
+  have erel : ∀ f : ZOmega → ℤ, (∀ x y : ZOmega, f (x + y) = f x + f y) → (∀ x : ZOmega, f (-x) = - f x) →
+      f (wp - ZOmega.ω ^ m * wq) = 2 * f wp - f (wp + ZOmega.ω ^ m * wq) := fun f hadd hneg => by
+    rw [sub_eq_add_neg, hadd, hneg, hadd]; ring
+  have hsa := erel ZOmega.a ZOmega.add_a ZOmega.neg_a
+  have hsb := erel ZOmega.b ZOmega.add_b ZOmega.neg_b
+  have hsc := erel ZOmega.c ZOmega.add_c ZOmega.neg_c
+  have hsd := erel ZOmega.d ZOmega.add_d ZOmega.neg_d
+  have hdvd1 : ZOmega.dividesSqrt2 (wp + ZOmega.ω ^ m * wq) := ⟨by omega, by omega⟩
+  have hdvd2 : ZOmega.dividesSqrt2 (wp - ZOmega.ω ^ m * wq) := ⟨by omega, by omega⟩
+  have h1p : (ZOmega.normSq (ZOmega.divSqrt2 (wp + ZOmega.ω ^ m * wq))).c % 2 = 1 :=
+    ZOmega.divSqrt2_normSq_c_odd ha hb hc hd
+  have h1q : (ZOmega.normSq (ZOmega.divSqrt2 (wp - ZOmega.ω ^ m * wq))).c % 2 = 1 :=
+    ZOmega.divSqrt2_normSq_c_odd (by omega) (by omega) (by omega) (by omega)
+  rw [step1_combo_eq hdvd1, step1_combo_eq_sub hdvd2]
+  exact lemma4_1010 h1p h1q
 
 end ZOmegaSqrt2
 

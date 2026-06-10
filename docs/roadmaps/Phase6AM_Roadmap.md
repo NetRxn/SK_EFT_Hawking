@@ -596,14 +596,22 @@ native_decide held at 596, confirming Track-3 independence):**
   `x+y=1⟺x≠y`) so `rcases` never eliminates a compound equality; explicit left-nested `rcases` pattern +
   `ℤ→𝔽₂` parity bridge. Kernel-pure `{propext,Classical.choice,Quot.sound}`; native_decide 596; lib+ExtractDeps
   green (9218).
-- **NEXT (Lemma-4 completion → `ReductionStep`):** (ii) the step1 level computation `invSqrt2·(mk w_p (t+1) ±
-  ωS^m·mk w_q (t+1)) = mk(divSqrt2(w_p±ωᵐw_q))(t+1)` when `w_p±ωᵐw_q` all-odd (so the cross-orbit `H·Tᵐ` keeps
-  the pair at the common level, outputs `1010`); (iii) compose `matched_active_dichotomy` + (ii) +
-  `divSqrt2_normSq_c_odd` + `lemma4_1010` + `core_step` ⟹ the uniform Lemma 4 "matched-active pair ⟹ both drop
-  to `denExp ≤ k-1`"; (iv) wrap into the realizable `Gate2` two-level op (embed `H·Tᵐ` via `embedFst`/`embedSnd`
-  + index permutation X/CNOT, inc-17 block-action); (v) inner induction on count-at-max-level + factor `√2` ⟹
-  `ReductionStep` → inc-15 `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et
-  al.) + operator-norm on inc-8/9 ⟹ `∀U` headline.
+- **inc 27 ✅ (`GilesSelingerRowOp.lean`): step1 level computation + cross-orbit 2-step — the full Lemma 4 at the
+  PAIR level is now COMPLETE.** `mk_sqrt2_mul_succ` (`√2`-peel `mk(√2·z)(s+1)=mk z s`); `step1_combo_eq`/`_sub`
+  (`H·Tᵐ` on a `√2`-divisible all-odd combo keeps the pair at level `s` with the `divSqrt2` numerator);
+  `cross_orbit_drop` (composes step1 + `divSqrt2_normSq_c_odd` [both outputs `1010`] + `lemma4_1010` ⟹ the
+  cross-orbit pair drops one level in two `H·Tᵐ`; the `−`-combo all-odd from the coord relation
+  `(w_p+ωᵐw_q).x+(w_p−ωᵐw_q).x=2w_p.x`). With `core_step` (aligned, one step), BOTH branches of
+  `matched_active_dichotomy` are discharged. Kernel-pure `{propext,Classical.choice,Quot.sound}`; nd 596;
+  lib+ExtractDeps green (9218).
+- **NEXT (column assembly → `ReductionStep` → headline) — the NUMBER THEORY is DONE; what remains is the
+  CIRCUIT layer:** (iv) the column-level `Gate2` wrapper — express `H·Tᵐ` on a column index-pair as a realizable
+  `Mat4` (`embedFst`/`embedSnd` of single-qubit `H·Tᵐ` + `X`/`CNOT` to bring an arbitrary pair into qubit
+  alignment, inc-17 block-action), and connect the pair-level `denExp` drops (`core_step`/`cross_orbit_drop`) to
+  `colDenExp`; (v) Lemma 5 (`exists_matching_residue_pair`) pairs the active entries, inner induction on
+  active-count drives them all `√2`-divisible, factor `√2` ⟹ `colDenExp` drops ⟹ `ReductionStep C` →
+  inc-15 `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et al.) +
+  operator-norm on inc-8/9 ⟹ the `∀U` headline. This is a distinct phase (circuit synthesis, not number theory).
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
