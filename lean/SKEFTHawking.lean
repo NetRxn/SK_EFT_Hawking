@@ -1485,6 +1485,14 @@ import SKEFTHawking.FKLW.RossSelinger.Zsqrt2Units
 -- ℤ[√2]-valued t†t) with the NORM TOWER N_ℤ[√2](relNorm t) = N_ℤ[ω](t) ⟹ strict positivity for
 -- t ≠ 0 via norm_eq_zero_iff (NO toComplex-injectivity). Unit absorbed by Lemma C.2.
 import SKEFTHawking.FKLW.RossSelinger.RelNormSolvability
+-- Phase 6AO Track 1(d) (2026-06-10) — RS 1403.2975v3 **Lemma 4.4 SHARP (product form)**:
+-- oneDim_grid_exists_product — δ·Δ ≥ (1+√2)² alone gives 1-D grid existence at EVERY position
+-- (the asymmetric tiny-ε-region × huge-disk form that Lemma 5.23 / eq.(21)'s
+-- k₂ ≤ 2+2log₂(1+√2)+2log₂(1/ε) consumes; center-rounding needed BOTH ≥ 1+√2). Selinger
+-- 1212.6253 Lemmas 16–17 formalized: OneDimCoverage moves (mono/swap/λ-rescale via α↦λα,
+-- λ•=−λ⁻¹ absorbed by ∀-position), explicit 3-candidate base (1+√2, √2), λ-power bracketing
+-- with the swapped family at j+1 rescuing the √2-gap (λ ≥ 2).
+import SKEFTHawking.FKLW.RossSelinger.GridExistenceSharp
 -- Phase 6x Tier-2 Item I (2026-05-30) — compile_correct approximation helpers:
 -- linftyOpNorm_fin_two_le (entrywise ≤δ ⟹ ℓ∞-operator-norm ≤ 2δ for 2×2) + su2_entry_structure
 -- (U∈SU(2) ⟹ U=[[a,−b̄],[b,ā]]). Propagate the grid first-column approximation to ‖·‖≤ε.
