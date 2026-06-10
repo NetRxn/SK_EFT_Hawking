@@ -1568,6 +1568,13 @@ import SKEFTHawking.FKLW.RossSelinger.GilesSelingerRowOp
 -- the unconditional I⊗Tᵐ phase balances it for all m) + realizability ≤ 18+m + inverse + the exact column
 -- action (verbatim the core_step / cross_orbit_drop pair shapes; spectators get a harmless ωᵐ unit phase).
 import SKEFTHawking.FKLW.RossSelinger.Gate2Control
+-- Phase 6AO Track 2 (inc 30, 2026-06-10): basis-permutation words + the pair-alignment table — permMat f
+-- (pullback convention: (permMat f).mulVec v = v ∘ f) + anti-composition permMat_mul; the 4 Gate2
+-- permutation generators (cnot01/cnot10/X⊗I/I⊗X) identified as permMats of explicit involutions; and
+-- exists_pair_alignment: EVERY ordered pair p ≠ q of column indices is pulled into the gadget's canonical
+-- slots {(1,0),(1,1)} by mutually-inverse ≤5-gate perm words realizing permMat e / permMat e.symm
+-- (12-case table, kernel decide). Conjugating the inc-29 gadget by these words = the row op at (p,q).
+import SKEFTHawking.FKLW.RossSelinger.Gate2Perm
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
