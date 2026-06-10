@@ -1,6 +1,6 @@
 # Bundle D3 — Source Manifest
 
-**Auto-generated:** 2026-05-31
+**Auto-generated:** 2026-06-10
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D3`
@@ -19,12 +19,12 @@
 | `_phase6o_W1c_writeup` | §10 | (unspecified) | (see mapping) | (missing) |
 | `_phase6o_W2a_lean_only` | §17 | (unspecified) | (see mapping) | (missing) |
 | `_phase6o_W3b_lean_only` | §6 | (unspecified) | (see mapping) | (missing) |
-| `paper20_scalar_rung` | §11 | Lift-section | (see mapping) | 2026-05-12T12:38:38Z |
-| `paper21_majorana_rung` | §12 | Lift-section | (see mapping) | 2026-04-25T16:19:07Z |
+| `paper20_scalar_rung` | §11 | Lift-section | (see mapping) | 2026-06-10T17:55:01Z |
+| `paper21_majorana_rung` | §12 | Lift-section | (see mapping) | 2026-06-10T18:11:22Z |
 | `paper22_ew_phase_transition` | §13 | Lift-section | (see mapping) | 2026-05-01T12:57:31Z |
 | `paper23_linearized_efe` | §5 | Lift-section | (see mapping) | 2026-04-28T01:18:32Z |
 | `paper25_gravitational_waves` | §6 | Lift-letter | (see mapping) | 2026-05-01T18:23:19Z |
-| `paper26_bh_entropy` | §7 | Lift-section | (see mapping) | 2026-04-27T13:21:03Z |
+| `paper26_bh_entropy` | §7 | Lift-section | (see mapping) | 2026-06-10T17:55:06Z |
 | `paper27_bh_thermodynamics_four_laws` | §8 | Lift-letter | (see mapping) | 2026-04-26T18:34:54Z |
 | `paper33_ewbg_chirality_wall` | §13.5 | Lift-section | (see mapping) | 2026-04-29T01:04:06Z |
 | `paper35_qec_holography` | §9 | Lift-section | (see mapping) | 2026-04-27T18:45:49Z |
@@ -33,14 +33,14 @@
 | `paper38_cfl` | §16 | Lift-section | (see mapping) | 2026-04-27T18:45:52Z |
 | `paper39_heat_kernel_expansion` | §17 | Lift-section | (see mapping) | 2026-04-28T01:58:15Z |
 | `paper3_gauge_erasure` | §3 | Lift-section | (see mapping) | 2026-04-25T07:44:43Z |
-| `paper40_higher_curvature` | §18 | Lift-section | (see mapping) | 2026-05-29T08:08:20Z |
+| `paper40_higher_curvature` | §18 | Lift-section | (see mapping) | 2026-06-10T20:01:33Z |
 | `paper41_diff_invariance` | §19 | Lift-section | (see mapping) | 2026-04-28T12:49:18Z |
 | `paper42_nonlinear_efe` | §20 | Lift-section | (see mapping) | 2026-04-28T14:32:28Z |
 | `paper42b_cc_emergent` | §21 | Lift-section | (see mapping) | 2026-04-28T23:51:08Z |
 | `paper43_einstein_cartan` | §22 | Lift-section | (see mapping) | 2026-04-28T20:51:38Z |
 | `paper44_riemannian_connection` | §22.5 | Lift-section | (see mapping) | 2026-05-12T12:38:48Z |
 | `paper5_adw_gap` | §2 | Lift-section | (see mapping) | 2026-05-12T12:38:04Z |
-| `paper6_vestigial` | §10 | Lift-section | (see mapping) | 2026-04-28T02:03:40Z |
+| `paper6_vestigial` | §10 | Lift-section | (see mapping) | 2026-06-10T17:54:35Z |
 
 ## Coverage notes
 

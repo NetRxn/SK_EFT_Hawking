@@ -2423,6 +2423,24 @@ the Phase~7 close-out window per the project strategy
 %% this marker. To insert at a specific section, edit body manually after
 %% the script runs.
 
+%% Standard AI-disclosure block (docs/DISCLOSURE_TEXT.md §1, Variant A —
+%% register-derived verdict via scripts/aristotle_usage_by_bundle.py:
+%% D3 aristotle_used=yes, S1+S2 both fire; 7 witness modules / 57
+%% witness theorems at the 2026-06-10 register run). Inserted
+%% 2026-06-10 during the post-external-review source-reconciliation
+%% pass; no prior manuscript-level disclosure existed in this bundle.
+\section*{Methods and tools disclosure}
+The formal verification layer of this work was developed with
+substantial machine assistance: Lean~4 proof drafting and iteration
+used LLM-based agents (Anthropic Claude-family models) operating under
+the project's staged validation pipeline. A subset of the underlying
+library's theorems was closed by the Aristotle automated theorem
+prover (Harmonic); every proof is ultimately certified by the Lean~4
+kernel via \texttt{lake build} on the public repository, independently
+of any AI tool. Manuscript prose was AI-assisted and human-reviewed;
+all numerical claims trace to the repository's computation pipeline
+through its automated validation checks.
+
 \begin{thebibliography}{99}
 
 \bibitem{Abbott2017GW170817}
