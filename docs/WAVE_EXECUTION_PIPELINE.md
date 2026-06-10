@@ -76,11 +76,12 @@ passes (all parameters human-verified). Checked before arXiv/journal submission,
 paper-shaped output (a new draft, a section addition to an existing
 draft, or a notebook companion to a paper), Stage 1 also identifies
 which bundle target the wave's content lifts into per
-`docs/PAPER_STRATEGY.md` (one of `F`, `D1`–`D5`, `L1`–`L3`, `I1`, `I2`,
-`E1`, `E2`). The assignment is recorded in `docs/PAPER_DRAFT_MAPPING.md`
+`docs/PAPER_STRATEGY.md` (one of `F`, `D1`–`D9`, `L1`–`L3`, `I1`–`I3`,
+`E1`, `E2` — the 18-target architecture as of the 2026-06-10 D9
+authorization). The assignment is recorded in `docs/PAPER_DRAFT_MAPPING.md`
 (append-only) at Stage 12. Pipeline Invariant #14 codifies this rule:
 no new stand-alone paper drafts are created without explicit user
-authorization to add a 14th-or-higher bundle target.
+authorization to add a further bundle target beyond the current roster.
 
 ---
 
@@ -388,7 +389,7 @@ uv run python scripts/review_figures.py
 **Two paradigms apply, depending on phase:**
 
 - **Phase ≤ 6X (per-paper drafts in `papers/paperN_*/`):** the actions in this section are canonical.
-- **Phase 7+ (bundle drafts in `papers/<bundle>/` for I1, I2, D1–D5, L1–L3, F, E1, E2):** Stage 10 is implemented by the **canonical bundle-lift procedure** documented in `docs/BUNDLE_LIFT_PROCEDURE.md` (frozen at Phase 7a sub-wave 7a.4, 2026-05-01). The bundle-lift procedure is *the* Stage 10 activity for Phase 7+; the per-paper actions below remain as the substrate framework that bundle-lift §3a/§3b draws from. Late-Phase-6 absorption events follow `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` (Stages A–G with branches D.1/D.2/D.3/D.4).
+- **Phase 7+ (bundle drafts in `papers/<bundle>/` for I1–I3, D1–D9, L1–L3, F, E1, E2):** Stage 10 is implemented by the **canonical bundle-lift procedure** documented in `docs/BUNDLE_LIFT_PROCEDURE.md` (frozen at Phase 7a sub-wave 7a.4, 2026-05-01). The bundle-lift procedure is *the* Stage 10 activity for Phase 7+; the per-paper actions below remain as the substrate framework that bundle-lift §3a/§3b draws from. Late-Phase-6 absorption events follow `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` (Stages A–G with branches D.1/D.2/D.3/D.4).
 
 **Actions (per-paper paradigm; substrate for bundle paradigm):**
 - Copy validated PNGs to `papers/paper<N>_<name>/figures/`
@@ -672,7 +673,7 @@ These must hold at ALL times, not just at wave completion:
 
 13. **Stage 14 QI register is auto-regen + manually-curated, never wiped.** `scripts/qi_register.py` regenerates `docs/QI_REGISTER.md` on each invocation, but (a) only emits a QI item to the **Open Items** section when the QI item's `qi-<gate>` ID is NOT already present in the existing **Closed Items** section, AND (b) the underlying `ReviewFinding` nodes have `meta.status == 'open'` (Wave-6 status filter; per-finding `fixed`/`accepted` overrides are honored via `docs/review_finding_supersessions.json`). The regenerator preserves the manually-curated `## Closed Items` block verbatim across regenerations (block-by-`### qi-*` heading). New QI items surfaced by adversarial review (Stage 13) are added under `## Open Items` automatically by the next regen; closure is achieved by manually editing `docs/QI_REGISTER.md` to move the block under `## Closed Items` with an `evidence_on_close` field, or by ledger-superseding all the underlying findings.
 
-14. **Every paper-shaped output lifts into a `PAPER_STRATEGY.md` bundle.** Every new draft, section addition, or notebook companion identifies its target bundle (one of `F`, `D1`–`D5`, `L1`–`L3`, `I1`, `I2`, `E1`, `E2`) at Stage 1 and records it in `docs/PAPER_DRAFT_MAPPING.md` (append-only) at Stage 12. No new stand-alone paper drafts are created without explicit user authorization to add a 14th-or-higher bundle target. The schema additions in `scripts/sentence_state.py` (`bundle_destination`, `bundle_section_hint`, `lift_action`) propagate the bundle assignment to every prose-state sentence; `scripts/bundle_migration.py` provides the migration; `scripts/bundle_clusters.py` projects per-paper bundle assignments onto claim clusters at `papers/cluster_bundle_index.json`. Per-bundle Stage-13 readiness is summarized in `docs/BUNDLE_READINESS_HEATMAP.md`; cross-bundle consistency is enforced by `validate.py --check bundle_consistency`. Phase 6i Wave 7 deliverable.
+14. **Every paper-shaped output lifts into a `PAPER_STRATEGY.md` bundle.** Every new draft, section addition, or notebook companion identifies its target bundle (one of `F`, `D1`–`D9`, `L1`–`L3`, `I1`–`I3`, `E1`, `E2` — 18 targets as of the 2026-06-10 D9 authorization; roster history: 13 → I3 → D6 → D7 → D8 → D9) at Stage 1 and records it in `docs/PAPER_DRAFT_MAPPING.md` (append-only) at Stage 12. No new stand-alone paper drafts are created without explicit user authorization to add a further bundle target beyond the current roster. The schema additions in `scripts/sentence_state.py` (`bundle_destination`, `bundle_section_hint`, `lift_action`) propagate the bundle assignment to every prose-state sentence; `scripts/bundle_migration.py` provides the migration; `scripts/bundle_clusters.py` projects per-paper bundle assignments onto claim clusters at `papers/cluster_bundle_index.json`. Per-bundle Stage-13 readiness is summarized in `docs/BUNDLE_READINESS_HEATMAP.md`; cross-bundle consistency is enforced by `validate.py --check bundle_consistency`. Phase 6i Wave 7 deliverable.
 
 15. **Every new project-local `axiom` requires explicit user sign-off.** Policy locked-in 2026-05-12 post-Phase-6p strengthening Pass 2. A deep-research return recommending "ship as predicate-substrate AXIOM" is advisory only; no axiom ships without explicit user approval. **Every new axiom must come with**: (a) a discharge plan in the wave roadmap (a future wave that produces a substantive constructive proof), OR (b) a documented argument that no constructive proof is feasible in current Mathlib4 (substrate scout, ~500 LoC infrastructure absent, etc.). The project's posture is **axioms are temporary scaffolding, not permanent commitments**. The pre-Phase-6p axiom count was 1 (`gapped_interface_axiom`, `SPTClassification.lean`); Phase 6p added 2 (`bridge_axiom_FKLW`, `sk_axiom_Dawson_Nielsen`) on DR-only authority; both are post-hoc scheduled for discharge via Phase 6p Waves 2c (Aharonov-Arad ~430 LoC) + 2d (Dawson-Nielsen ~550 LoC). **Quality bar:** standard kernel only on headline theorems; all axioms eventually discharged.
 
