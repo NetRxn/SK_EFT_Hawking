@@ -1,0 +1,29 @@
+{
+  "timestamp": "20260610T155942Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "provenance_doi_in_registry": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "119 provenance DOIs resolved / 0 missing / 86 entries without DOI (internal derivation); 16 cited_bibkeys resolved / 0 missing",
+          "warning": false
+        },
+        {
+          "name": "all_resolved",
+          "passed": true,
+          "message": "Every provenance DOI and cited_bibkey resolves to a CITATION_REGISTRY entry",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

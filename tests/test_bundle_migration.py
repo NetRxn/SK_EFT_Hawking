@@ -109,11 +109,13 @@ class TestSchemaAdditions:
             assert not errs, f"{b}: {errs}"
 
     def test_bundle_target_set_size(self):
-        # Lock the count: 1 flagship + 5 deep + 3 PRL + 3 infra + 2 expt = 14.
-        # I3 added Phase 6n session 4 (commit a72ba68) under Pipeline Invariant #14
-        # user-auth — bundle architecture grew from 13 to 14 with I3 (verified-stochastic-
-        # calculus-for-Mathlib4 community contribution).
-        assert len(_VALID_BUNDLE_TARGETS) == 14
+        # Lock the count: 1 flagship + 8 deep + 3 PRL + 3 infra + 2 expt = 17.
+        # History: 13 → 14 with I3 (Phase 6n session 4, commit a72ba68); 14 → 17
+        # with D6 (Phase 6v FT-QC substrate, 2026-05-26), D7 (Phase 6w tensor-network
+        # demarcation, 2026-05-26), and D8 (verified-quantum-compilation arc,
+        # authorized 2026-05-31, commit 856a5dac) — each under Pipeline Invariant
+        # #14 user-auth per PAPER_STRATEGY.md §2.2.
+        assert len(_VALID_BUNDLE_TARGETS) == 17
 
     def test_lift_action_set_size(self):
         # Lock the count: 6 actions per PAPER_DRAFT_MAPPING.md conventions.
@@ -153,9 +155,16 @@ class TestMappingParser:
         # per-entry substantive question, not a universal requirement.
         # See PAPER_DRAFT_MAPPING.md row notes like "(no standalone draft
         # per Phase 6n research-only scope)" for the architectural rationale.
+        # Sourceless synthesis keys (e.g. `D8_initial_draft`, registered per
+        # PAPER_DRAFT_MAPPING.md §3b with "no per-paper directory") are exempt
+        # for the same reason as `_lean_only` handles: they record a bundle's
+        # own fresh-authored lift, not an existing per-paper draft, so the
+        # universal also-lifts-to-F invariant does not apply.
         for paper, a in assignments.items():
             if paper.endswith('_lean_only'):
                 continue
+            if not (MAPPING_DOC.parent.parent / "papers" / paper).is_dir():
+                continue  # sourceless synthesis key — no per-paper draft dir
             assert "F" in a["bundle_destinations"], (
                 f"{paper} missing F (flagship) assignment"
             )
