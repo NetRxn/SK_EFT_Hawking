@@ -3098,7 +3098,7 @@ def check_quantum_network() -> CheckResult:
 
 #: Bundle codes per docs/PAPER_STRATEGY.md (publication-bundle drafts).
 BUNDLE_CODES = (
-    "F", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8",
+    "F", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9",
     "E1", "E2", "I1", "I2", "I3", "L1", "L2", "L3",
 )
 
@@ -3363,7 +3363,7 @@ _PROSE_MATHLIB_PREFIXES = (
     "Submodule.", "Subgroup.", "MonoidHom.", "ContinuousMap.",
     "CartanMatrix.", "IsCyclotomicExtension.",
 )
-# Empirically-built allowlist (calibrated 2026-06-10 on the 17 bundle
+# Empirically-built allowlist (calibrated 2026-06-10 on the 18 bundle
 # drafts; iterate when calibration surfaces a new non-Lean idiom class):
 #   - bare Mathlib lemmas / tactic names quoted in methodology prose
 #   - validate.py / infrastructure identifiers described in I1
@@ -3634,8 +3634,8 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
     prevention proposed by QI item **qi-leantheoremdrift**
     (`bundle_lean_refs_resolve`, docs/QI_REGISTER.md).
 
-    Scope: the 17 publication-bundle drafts
-    (``papers/{F,D1–D8,E1,E2,I1–I3,L1–L3}/paper_draft.tex``) only.
+    Scope: the 18 publication-bundle drafts
+    (``papers/{F,D1–D9,E1,E2,I1–I3,L1–L3}/paper_draft.tex``) only.
     Legacy per-paper drafts are *excluded for now* — they are
     historical-snapshot documents superseded by the bundles, and their
     reference hygiene is audited separately by
@@ -3661,7 +3661,7 @@ def check_prose_theorem_reference_coverage() -> CheckResult:
     - Mathlib-namespace tokens → skipped (resolve upstream, not in
       lean_deps.json).
 
-    Calibrated live 2026-06-10 across all 17 bundles (72 raw
+    Calibrated live 2026-06-10 across all 18 bundles (72 raw
     unresolved → filter/disclaimer/registry classes → 1 documented
     waiver). Run ``--json`` for machine-readable per-bundle findings.
     """

@@ -171,15 +171,18 @@ def render_stub_entry(stub: dict, primary_source_path: str | None) -> str:
     cited_in = stub.get("cited_in", [])
     used_in = [f"papers/{p}/paper_draft.tex" for p in cited_in]
 
-    # Notes: factual provenance only
+    # Notes: prefer an explicit curated stub note; else factual provenance.
     bibitem_source = stub.get("bibitem_source") or "(unknown)"
-    notes_parts = [
-        "Auto-generated stub from \\bibitem block in "
-        f"`papers/{bibitem_source}/paper_draft.tex`."
-    ]
-    if not stub.get("title"):
-        notes_parts.append("Title not present in source bibitem.")
-    notes = " ".join(notes_parts)
+    if stub.get("notes"):
+        notes = stub["notes"]
+    else:
+        notes_parts = [
+            "Auto-generated stub from \\bibitem block in "
+            f"`papers/{bibitem_source}/paper_draft.tex`."
+        ]
+        if not stub.get("title"):
+            notes_parts.append("Title not present in source bibitem.")
+        notes = " ".join(notes_parts)
 
     lines = [f"    '{bibkey}': {{"]
     lines.append(f"        'authors': {py_repr(authors)},")
@@ -208,6 +211,7 @@ def apply_promotions(
     text: str,
     sidecar_entries: dict[str, dict],
     stubs: list[dict],
+    stubs_only: bool = False,
 ) -> tuple[str, dict[str, int]]:
     """Return (new_text, counts).
 
@@ -231,8 +235,15 @@ def apply_promotions(
     # sidecar verdict. Path is set when the fetch succeeded; None otherwise.
     # Entries that already have `inprep` (PoC + inprep self-cites) are left
     # alone, even if their sidecar path differs from the registry value.
+    #
+    # NOTE: the line-anchored scanner only sees `inprep`/`doi_verified` when
+    # each lives on its own line. Compact entries that pack several fields onto
+    # one line (`'doi_verified': True, 'inprep': True, ...`) read as
+    # inprep-less, so op (a) would insert a DUPLICATE `inprep` key and (last
+    # wins) silently flip the entry. Pass `stubs_only=True` to skip op (a)
+    # entirely when only appending new stub entries is intended.
     insertions: list[tuple[int, list[str]]] = []
-    for bibkey, loc in by_key.items():
+    for bibkey, loc in ([] if stubs_only else by_key.items()):
         if loc.has_inprep:
             counts["existing-skipped-already"] += 1
             continue
@@ -317,6 +328,10 @@ def main(argv: list[str] | None = None) -> int:
                    help="Preview counts; don't write citations.py.")
     p.add_argument("--no-validate", action="store_true",
                    help="Skip the post-write validate.py re-run.")
+    p.add_argument("--stubs-only", action="store_true",
+                   help="Append new stub entries only; skip op (a) updates to "
+                        "existing entries (required when existing entries use "
+                        "the compact multi-field-per-line style).")
     args = p.parse_args(argv)
 
     if not SIDECAR_PATH.is_file():
@@ -331,7 +346,8 @@ def main(argv: list[str] | None = None) -> int:
         stubs = stubs_payload.get("stubs", [])
 
     text = CITATIONS_PATH.read_text(encoding="utf-8")
-    new_text, counts = apply_promotions(text, sidecar_entries, stubs)
+    new_text, counts = apply_promotions(text, sidecar_entries, stubs,
+                                        stubs_only=args.stubs_only)
 
     print("Promotion summary:")
     for k in (

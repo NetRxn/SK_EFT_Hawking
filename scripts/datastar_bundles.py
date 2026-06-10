@@ -32,7 +32,7 @@ REVIEWS_DIR = PAPERS_DIR / "AutomatedReviews"
 # Tier metadata. Phase 6i Wave 7.5.
 _TIER_OF = {
     "F": 0,
-    "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1,
+    "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1, "D9": 1,
     "L1": 2, "L2": 2, "L3": 2,
     "I1": 3, "I2": 3, "I3": 3,
     "E1": 4, "E2": 4,
@@ -48,6 +48,7 @@ _BUNDLE_TITLES = {
     "D6": "Formally Verified Fault-Tolerant Quantum Computation Substrate",
     "D7": "Classical Simulability and Quantum Advantage via Tensor Networks: A Formally Verified Demarcation",
     "D8": "Kernel-Verified Universal Quantum Gate Compilation — Alphabet-Agnostic Solovay-Kitaev across Dimensions",
+    "D9": "Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate",
     "L1": "GW170817 / vestigial-graviton",
     "L2": "Three generations from modular invariance",
     "L3": "BCH four laws by regime",

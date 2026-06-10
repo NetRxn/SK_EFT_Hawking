@@ -109,13 +109,15 @@ class TestSchemaAdditions:
             assert not errs, f"{b}: {errs}"
 
     def test_bundle_target_set_size(self):
-        # Lock the count: 1 flagship + 8 deep + 3 PRL + 3 infra + 2 expt = 17.
+        # Lock the count: 1 flagship + 9 deep + 3 PRL + 3 infra + 2 expt = 18.
         # History: 13 → 14 with I3 (Phase 6n session 4, commit a72ba68); 14 → 17
         # with D6 (Phase 6v FT-QC substrate, 2026-05-26), D7 (Phase 6w tensor-network
         # demarcation, 2026-05-26), and D8 (verified-quantum-compilation arc,
-        # authorized 2026-05-31, commit 856a5dac) — each under Pipeline Invariant
-        # #14 user-auth per PAPER_STRATEGY.md §2.2.
-        assert len(_VALID_BUNDLE_TARGETS) == 17
+        # authorized 2026-05-31, commit 856a5dac); 17 → 18 with D9 (QN +
+        # device-characterization certification substrate, authorized 2026-06-10,
+        # consolidating Phases 6AA–6AL + 6AM/6AN/6AP/6AQ) — each under Pipeline
+        # Invariant #14 user-auth per PAPER_STRATEGY.md §2.2.
+        assert len(_VALID_BUNDLE_TARGETS) == 18
 
     def test_lift_action_set_size(self):
         # Lock the count: 6 actions per PAPER_DRAFT_MAPPING.md conventions.

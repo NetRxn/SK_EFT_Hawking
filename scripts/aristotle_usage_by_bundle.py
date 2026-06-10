@@ -3,8 +3,8 @@
 aristotle_usage_by_bundle.py — register-driven Aristotle-clause applicability
 =============================================================================
 
-Deterministically derives, for each of the 17 publication bundles
-(`F`, `D1`–`D8`, `L1`–`L3`, `I1`–`I3`, `E1`, `E2`), whether the bundle's
+Deterministically derives, for each of the 18 publication bundles
+(`F`, `D1`–`D9`, `L1`–`L3`, `I1`–`I3`, `E1`, `E2`), whether the bundle's
 content used Aristotle-proved theorems. The result selects which AI-disclosure
 variant each bundle carries (see `docs/DISCLOSURE_TEXT.md`): bundles with
 `aristotle_used = yes` include the conditional Aristotle sentence; bundles
@@ -104,7 +104,7 @@ LEAN_SRC_DIR = PROJECT_ROOT / "lean" / "SKEFTHawking"
 PAPERS_DIR = PROJECT_ROOT / "papers"
 
 ALL_BUNDLES = [
-    "F", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8",
+    "F", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9",
     "L1", "L2", "L3", "I1", "I2", "I3", "E1", "E2",
 ]
 

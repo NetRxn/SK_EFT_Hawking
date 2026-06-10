@@ -46,7 +46,7 @@ from sentence_state import _VALID_BUNDLE_TARGETS  # noqa: E402
 # in a follow-up wave).
 _TIER_OF = {
     "F": 0,
-    "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1,
+    "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1, "D9": 1,
     "L1": 2, "L2": 2, "L3": 2,
     "I1": 3, "I2": 3, "I3": 3,
     "E1": 4, "E2": 4,
@@ -62,6 +62,7 @@ _BUNDLE_TITLES = {
     "D6": "Formally Verified Fault-Tolerant Quantum Computation Substrate",
     "D7": "Classical Simulability and Quantum Advantage via Tensor Networks: A Formally Verified Demarcation",
     "D8": "Kernel-Verified Universal Quantum Gate Compilation — Alphabet-Agnostic Solovay-Kitaev across Dimensions",
+    "D9": "Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate",
     "L1": "GW170817 / vestigial-graviton",
     "L2": "Three generations from modular invariance",
     "L3": "BCH four laws by regime",
@@ -82,6 +83,7 @@ _BUNDLE_TARGET_JOURNAL = {
     "D6": "PRD | PRX Quantum | JHEP",
     "D7": "PRX Quantum | PRX",
     "D8": "PRX Quantum | Quantum",
+    "D9": "PRX Quantum | Quantum",
     "L1": "PRL",
     "L2": "PRL",
     "L3": "PRL",
@@ -96,10 +98,11 @@ _BUNDLE_TARGET_JOURNAL = {
 # D5+L1+L3 in 7b; D3 in 7c; D2+L2 in 7d; D1+E1+E2 in 7e; D4 in 7f; F in 7g.
 # I3 in Phase 6o.ζ (community Mathlib4 contribution; out-of-band of the Phase 7 sub-phase ladder).
 # D6/D7/D8 are post-freeze deep-paper additions (Phase 6v / 6w / 2026-05-31 verified-compilation-arc consolidation).
+# D9 is the 2026-06-10 QI/network/device-characterization consolidation (Phases 6AA–6AL + 6AM/6AN/6AP/6AQ envelope waves).
 _BUNDLE_SUBPHASE = {
     "F": "7g",
     "D1": "7e", "D2": "7d", "D3": "7c", "D4": "7f", "D5": "7b",
-    "D6": "6v", "D7": "6w", "D8": "6xz",
+    "D6": "6v", "D7": "6w", "D8": "6xz", "D9": "6AA-AQ",
     "L1": "7b", "L2": "7d", "L3": "7b",
     "I1": "7a", "I2": "7a", "I3": "6o.zeta",
     "E1": "7e", "E2": "7e",

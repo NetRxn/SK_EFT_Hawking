@@ -60,7 +60,7 @@ def list_bundles() -> dict[str, dict]:
 
     tiers = {
         "F": 0,
-        "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1,
+        "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1, "D9": 1,
         "L1": 2, "L2": 2, "L3": 2,
         "I1": 3, "I2": 3, "I3": 3,
         "E1": 4, "E2": 4,
@@ -177,10 +177,10 @@ def main() -> int:
     )
     parser.add_argument(
         "--list-bundles", action="store_true",
-        help="list all 17 bundles + source paper counts",
+        help="list all 18 bundles + source paper counts",
     )
     parser.add_argument(
-        "--bundle", help="bundle code (one of F, D1-D8, L1-L3, I1-I3, E1-E2)",
+        "--bundle", help="bundle code (one of F, D1-D9, L1-L3, I1-I3, E1-E2)",
     )
     parser.add_argument(
         "--prep-brief", action="store_true",
