@@ -1375,6 +1375,14 @@ import SKEFTHawking.FKLW.RossSelinger.MAStepStructural
 -- normSq equation. Plus Galois positivity 2(|z|²).c² ≤ (|z|²).d² (= |z·σ₅z|².d ≥ 0) — the
 -- engine pinning the √2-part in the inc-4b |x|² ∈ {0,2,4} quantization.
 import SKEFTHawking.FKLW.RossSelinger.ZOmegaTorsion
+-- Phase 6AO Track 3 inc 4b (2026-06-10) — CliffordBaseStructural: the kSO3 = 0 QUANTIZATION.
+-- blochEntry_reconstruct_zz (R₂₂ = mk (2(|x|²−|y|²)) 6, k-free); kSO3=0 ⟹ 4 ∣ |x|²−|y|²
+-- (√2⁶-clearing + 2-cancellation over the ZOmega domain); normSq_quantized trichotomy:
+-- unit-column + 4∣Δ ⟹ (x=0 ∧ |y|²=4) ∨ (|x|²=|y|²=2) ∨ (|x|²=4 ∧ y=0) — Galois positivity
+-- (ZOmegaTorsion) kills the √2-parts on BOTH coordinates. Composes with the torsion classes:
+-- every kSO3=0 key is (0, 2ωᵇ), (√2ωᵃ, √2ωᵇ), or (2ωᵃ, 0) — substrate for the per-class
+-- finite coverage checks replacing cliffordBase_box_core (inc 4c).
+import SKEFTHawking.FKLW.RossSelinger.CliffordBaseStructural
 -- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — the Matsumoto-Amano coverage recursion.
 -- maCoverage (realizable M, kSO3 M≤3 ⟹ ∃ word ≤ 3·kSO3 M+6 ≤ 15) by strong induction on kSO3:
 -- base = Clifford (cliffordBase hypothesis ≤6); step = strip ma_step syllable (kSO3 drops) +
