@@ -1560,6 +1560,14 @@ import SKEFTHawking.FKLW.RossSelinger.GilesSelingerResidue
 -- lemma4_1010 — discharges BOTH dichotomy branches ⟹ full Lemma 4 at the pair level). Kernel decide only
 -- (√2·√2=2 ; ZMod 2/ZMod 4), native_decide held at 596.
 import SKEFTHawking.FKLW.RossSelinger.GilesSelingerRowOp
+-- Phase 6AO Track 2 (inc 29, 2026-06-10): the controlled-gate block algebra + det-balanced row-op gadget —
+-- ctrl P Q (fst-controlled blockdiag) with the ctrl_mul block algebra; CH = ctrl 1 H realized EXACTLY as an
+-- 18-gate Gate2 word (conjugator V = S·H·T·H·S†·H with V·X·V⁻¹ = H; decide +kernel = pure kernel reduction,
+-- same trust base as decide, no native_decide); rowOpGadget m = ctrl Tᵐ (H·Tᵐ) = CH·(I⊗Tᵐ) — the
+-- det-balanced Lemma-4 row op (the bare two-level H·Tᵐ has det −ωᵐ ∉ ⟨ω²⟩ for odd m, NOT Gate2-realizable;
+-- the unconditional I⊗Tᵐ phase balances it for all m) + realizability ≤ 18+m + inverse + the exact column
+-- action (verbatim the core_step / cross_orbit_drop pair shapes; spectators get a harmless ωᵐ unit phase).
+import SKEFTHawking.FKLW.RossSelinger.Gate2Control
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
