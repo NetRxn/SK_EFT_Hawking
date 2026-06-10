@@ -681,13 +681,22 @@ native_decide held at 596, confirming Track-3 independence):**
     `Gate3Control.lean` (ctrl8 algebra; `ctrlLift_word_spec`: EVERY Gate2 word w lifts to ≤30·|w| Gate3 gates
     with `interp3 = ctrl8 D (interp2 w)`, `FixesE00 D`). 🔑 `decide +kernel` MUST be at top level (nested in a
     tactic `have` it re-enters the elaborator heartbeat budget).
-  - **NEXT = the headline assembly (~600–1200 LOC):** (a) ctrl8/Gate3 `mulVec` action lemmas on initialized
-    states; (b) the W-action theorem `W(ψ ⊗ |00⟩) = α|0⟩⊗D|00⟩ + β|1⟩⊗(C|00⟩)` = `α|000⟩ + β|1⟩|v⟩`
-    (FixesE00 + the column-lemma first-column); (c) the ℂ-level error bound assembling inc-8/9
-    (`kmm_ancilla_state_full`: amplitude ≤ √2/2^k + leakage ≤ 2√2/2^k ⟹ state distance ≤ 3·√2/2^k-ish);
-    (d) length: `column_lemma_bounded` (≤ 280·colDenExp+9) × 30 + the |v⟩-column's colDenExp = 2k bookkeeping
-    ⟹ word ≤ O(k); (e) the z-rotation headline ∀φ,k bundling error ∧ length; (f) ∀U∈SU(2) via the Euler/
-    z-rotation reduction on the shipped single-qubit substrate. Then T1 (a–d), then T3.
+  - ~~NEXT: headline assembly (a–e)~~ **✅ inc 36 SHIPPED (`45909061`, 9225 green): `kmm_z_rotation_word` —
+    THE KMM Z-ROTATION HEADLINE WORD, UNCONDITIONAL, O(k) GATES.** ∀ φ k: an explicit 3-qubit Clifford+T
+    word `W`, length ≤ 16800·k + 270 (linear in k = O(log 1/ε) exponent 1, ε = √2/2^k), with the |0,00⟩
+    column RING-EXACTLY the indicator (FixesE00) and the |1,00⟩ column = |1⟩⊗|v⟩ (zero on the s=0 block):
+    v unit, v(0,1) = 0, |00⟩-amplitude within √2/2^k of e^{iφ}, leakage ≤ 2√2/2^k. By linearity = the full
+    KMM ≤2-ancilla guarantee on ancilla-initialized inputs. NO prime-density hypothesis (only Lagrange
+    four-squares + the constructive column lemma). Kernel-pure (lean_verify).
+  - **NEXT = the ∀U∈SU(2) extension (~1000–1500 LOC, the LAST Track-2 piece):** (37) ring-level adjoint +
+    unitarity of `interp3` words (per-gate ring decides + product induction) + the ℂ-transport (toComplex
+    *-hom ⟹ embedded words unitary); (38) ℂ⁸ action machinery (toComplexMat8 mapMatrix, mulVec, handrolled
+    `dist²` = Σ normSq to avoid PiLp friction) + the α,β-operational corollary of inc 36 (state-level error
+    `|β|²(amp² + leak) ≤ ε²`); (39) Euler ZXZ existence over SU(2) (`U = Rz(α)·H·Rz(θ)·H·Rz(β)` via
+    `H·Rz·H = Rx` + angle extraction by Complex.arg/abs — real analysis, ABSENT from Mathlib per fan-out;
+    state as ∃-form); (40) the ∀U composition headline (3 z-rotation words + exact H's on the system line;
+    error propagation through UNITARITY — intermediate states leave the initialized subspace, so the
+    triangle-inequality steps need norm preservation, hence (37)). Then T1 (a–d), then T3.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
