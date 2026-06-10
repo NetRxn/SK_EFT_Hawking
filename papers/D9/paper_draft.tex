@@ -1,0 +1,1249 @@
+\documentclass[aps,pra,reprint,nofootinbib,superscriptaddress]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+
+\input{../../docs/counts.tex}
+
+%% Bundle target: D9 (tier 1, journal PRX Quantum | Quantum)
+%% Schema: docs/BUNDLE_DIRECTORY_SCHEMA.md
+%% Source manifest: papers/D9/source_manifest.md
+%% Append log: papers/D9/append_log.json
+%% Sourceless (§3b) synthesis: Phases 6AA–6AL (QI-analytics + network corpus)
+%%   + 6AM W1–W4/W6 (PhysLib adoption, quantum-FDT floor, sharp Fannes–Audenaert)
+%%   + 6AN W2–W4 (NetworkCapacity, ComposedGateFidelity, FDTNoiseFloor)
+%%   + 6AP W1/W2/W4 (expNeg_enclosure, KroneckerOpNorm, ErasureRateBound)
+%%   + 6AQ (ReadoutRelaxationBound, ThermalAssignmentFloor).
+%%   Initial lift 2026-06-10 per D9 authorization (Pipeline Invariant #14).
+%%   Seed material: papers/phase6AA_qnetwork_preprint/preprint_draft.md
+%%   (verified against current Lean state at lift time).
+%% All theorems kernel-pure {propext, Classical.choice, Quot.sound};
+%% 0 project-local axioms; 0 sorry; no native_decide; no maxHeartbeats.
+
+\newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\dnorm}[1]{\lVert #1 \rVert_{\diamond}}
+\newcommand{\trnorm}[1]{\lVert #1 \rVert_{1}}
+
+\begin{document}
+
+\title{Kernel-Verified Quantum-Network and Device-Characterization
+Certification Substrate}
+
+\author{John Roehm}
+
+\begin{abstract}
+We report a machine-checked Lean~4 / Mathlib4 substrate for certifying
+quantum networks and quantum devices from universally stated parameters:
+five interlocking layers, comprising (at the time of writing) 103 Lean
+modules and over 900 kernel-checked theorems, with no project-local axioms
+and no compiled-evaluation trust escapes. The layers are (i) a
+\emph{diamond-norm program} --- trace distance, Uhlmann fidelity, both
+Fuchs--van de Graaf inequalities, the two-sided Choi-matrix sandwich on the
+diamond distance, the full Watrous semidefinite-programming duality with
+attainment of both the primal supremum and the dual infimum, and exact
+diamond distances for the named channel families (Pauli and general
+unitary-error-basis channels, dephasing, depolarizing, qutrit
+Weyl--Heisenberg, readout bit-flip), with two-sided brackets where the
+channel is not covariant (amplitude damping and its thermal
+generalization); (ii) an \emph{entropy and majorization corpus} --- the
+Klein inequality, subadditivity, concavity, the Gibbs variational bound,
+the Fannes--Audenaert continuity bound including the sharp unconditional
+Audenaert form with constant $\log(d-1)$, Lidskii--Wielandt-type
+majorization, and a negativity/PPT/partial-transpose ladder up to a
+regularized distillation-rate bound; (iii) \emph{network envelopes} ---
+a model-independent fidelity envelope for Werner entanglement-swap chains
+and its memory-decay-inclusive generalization, DEJMPS/BBPSSW distillation,
+the unconditional Horodecki teleportation fidelity, BB84 secret-key
+positivity with a proven (not hardcoded) crossover, repeater and W-state
+rates, repeaterless rate ceilings in the PLOB and erasure forms, and
+network capacity with max-flow/min-cut weak duality, witnessed optimality,
+and full strong duality, built in-project; (iv) a
+\emph{device-characterization envelope family} --- the coherence-limited
+average-gate-fidelity ceiling from $T_1/T_2$ data, composed-gate and SPAM
+process fidelities, a randomized-benchmarking-style two-sided certificate,
+classical Johnson--Nyquist and derived quantum Callen--Welton
+($\tfrac{\hbar\omega}{2}\coth$) fluctuation--dissipation noise floors, and
+readout-window envelopes (relaxation decay probability and a thermal
+two-level-population assignment floor derived from a community-library
+canonical ensemble); and (v) a \emph{kernel-only rational-enclosure
+technique} that brackets every decaying-exponential operating point
+between rational bounds with no floating-point transcendentals. The
+methodological through-line, which we propose as a contribution in its own
+right, is a strict \emph{two-layer posture}: the formula layer is
+machine-verified; the identification of a formula with a physical device
+or channel quantity is literature-cited and carried as an explicit,
+named model hypothesis in every floor and ceiling theorem --- never
+conflated with the verified mathematics. Known limits of the verified
+layer (notably the Caves amplifier added-noise bound, whose bosonic
+commutation-relation substrate is absent from current formal libraries)
+are documented as cited hypotheses rather than silently absorbed.
+\end{abstract}
+
+\maketitle
+
+%% ─────────────────────────────────────────────────────────────────────
+
+\section{Introduction}
+\label{sec:intro}
+
+Quantum networks and quantum processors are characterized through a small
+set of recurring mathematical quantities: fidelities and trace distances
+between states, diamond distances between channels, entropies and
+entanglement measures, protocol rates, and noise floors. The literature
+that defines these quantities is mature, but the chains of inequalities
+that connect a measured device parameter (a $T_1$ time, a link
+transmissivity, a readout window) to a certified statement (``the
+end-to-end fidelity lies in this interval''; ``the average assignment
+error cannot be below this floor'') are assembled per-paper, per-simulator,
+and per-vendor, with conventions and side conditions that drift.
+Quantum-network simulators are a concrete instance: cross-validation
+studies have found quantitative disagreement between mature simulators on
+timing predictions, while fidelity predictions agree under matched error
+models~\cite{Chung2025} --- precisely the situation in which a
+machine-checked, model-independent envelope provides a deductive
+reference. Any computed end-to-end fidelity falling outside the proven
+interval is provably inconsistent with the stated model, independently of
+implementation details.
+
+This paper reports such a reference, developed in the Lean~4 proof
+assistant on Mathlib: a certification substrate for entanglement-based
+quantum networks and for the characterization of quantum devices, in five
+interlocking layers. Every theorem in the corpus is verified to the Lean
+kernel with axiom set
+$\{\texttt{propext},\,\texttt{Classical.choice},\,\texttt{Quot.sound}\}$
+(the standard Lean kernel), with no project-local axioms, no \texttt{sorry}
+placeholders, and no compiled-evaluation (\texttt{native\_decide}) trust
+escapes. At the time of writing the corpus comprises 103 Lean modules and
+over 900 kernel-checked theorems in the \lean{QuantumNetwork} module
+family.
+
+\paragraph*{The two-layer posture.} The contribution we wish to emphasize
+ahead of any individual theorem is a scoping discipline that the corpus
+enforces uniformly and that we believe certification-grade formalization
+requires. Every result lives on one of two layers, and the layers are
+never conflated:
+
+\begin{enumerate}
+\item \textbf{The formula layer (machine-verified).} The mathematical
+content --- a closed form, an inequality, a monotonicity, an enclosure ---
+is a kernel-checked theorem about explicitly defined mathematical objects.
+
+\item \textbf{The identification layer (literature-cited).} The reading of
+that mathematical object as a \emph{physical} quantity --- ``this Kraus
+family is the device's readout channel,'' ``realized noise is at least the
+coherence-limited model,'' ``the excited-branch misassignment is at least
+the window decay probability'' --- is a modeling step. It enters every
+floor and ceiling theorem as an explicit, named hypothesis, with the
+literature source cited in the module header, and is never silently
+absorbed into the verified statement.
+\end{enumerate}
+
+A representative example: the repeaterless secret-key bound of
+Pirandola--Laurenza--Ottaviani--Banchi~\cite{PLOB2017} rests on
+continuous-variable channel-capacity theory (the relative entropy of
+entanglement of bosonic Gaussian channels) that no current formal library
+provides. The corpus therefore formalizes the \emph{rate-bound function}
+$\mathrm{plob}(\eta) = -\log_2(1-\eta)$ with its rigorous loss-penalty
+properties, and states plainly that the channel-converse semantics is the
+cited theorem of Ref.~\cite{PLOB2017}, not a formalized one. The same
+posture governs the Caves amplifier bound (Sec.~\ref{sec:walls}), the
+coherence-limited fidelity ceiling, and the readout floors. We regard this
+honest two-layer bookkeeping --- which keeps the verified artifact
+maximally strong without overclaiming physics --- as the paper's
+methodological headline.
+
+\paragraph*{Contributions.} Concretely, the five layers are:
+
+\begin{enumerate}
+\item \emph{The diamond-norm program} (Sec.~\ref{sec:diamond}): the
+finite-dimensional distinguishability calculus --- trace norm and trace
+distance as a genuine metric, Uhlmann fidelity, both Fuchs--van de Graaf
+bounds~\cite{FuchsvandeGraaf1999}, CPTP data processing in both the
+trace-distance and fidelity domains, the diamond
+distance~\cite{Kitaev1997} with attainment, the two-sided Choi sandwich
+and the full Watrous SDP duality~\cite{Watrous2018} with both attainments,
+and a library of exact diamond distances for named channels.
+
+\item \emph{The entropy and majorization corpus} (Sec.~\ref{sec:entropy}):
+Klein, subadditivity, concavity, the Gibbs variational bound, the
+Fannes~\cite{Fannes1973}--Audenaert~\cite{Audenaert2007} continuity chain
+through an unconditional Mirsky eigenvalue step~\cite{Mirsky1960}, the
+sharp Audenaert constant $\log(d-1)$ in unconditional form, spectral
+majorization in the Lidskii--Wielandt style~\cite{Bhatia1997}, and the
+negativity/PPT ladder~\cite{Peres1996,HorodeckiPPT1996,VidalWerner2002}
+up to a regularized distillation-rate bound.
+
+\item \emph{Network envelopes} (Sec.~\ref{sec:network}): the
+model-independent end-to-end fidelity envelope for Werner swap
+chains~\cite{BDCZ1998,WernerState1989} and its decay-inclusive
+generalization; BBPSSW~\cite{BBPSSW1996} and DEJMPS~\cite{DEJMPS1996}
+distillation including a verified non-monotonicity witness; the
+unconditional Horodecki teleportation fidelity~\cite{Horodecki1999} with
+its Haar integral proven rather than assumed; BB84 secret-key
+positivity~\cite{BB84,ShorPreskill2000} with the crossover produced by the
+intermediate-value theorem; W-state random-pair
+rates~\cite{FortescueLo2007}; linear-optics Bell-measurement and
+elementary-link rate anchors~\cite{CalsamigliaLutkenhaus2001,Sangouard2011};
+the PLOB~\cite{PLOB2017} and erasure~\cite{BennettDiVincenzoSmolin1997}
+rate ceilings in two-layer form; and network capacity with weak duality,
+witnessed max-flow/min-cut equality, and full strong
+duality~\cite{FordFulkerson1956} --- the latter built in-project, as
+Mathlib at our pin has no max-flow/min-cut theory.
+
+\item \emph{The device-characterization envelope family}
+(Sec.~\ref{sec:device}): the average-gate/entanglement-fidelity identity
+$F_{\mathrm{avg}} = (dF_e+1)/(d+1)$~\cite{Horodecki1999,Nielsen2002}
+proven constructively; the coherence-limited fidelity ceiling from
+$T_1/T_2$ data; composed-gate and SPAM process fidelities; a
+randomized-benchmarking-style certificate
+bracket~\cite{Magesan2011}; the classical
+Johnson--Nyquist~\cite{Nyquist1928} and the \emph{derived} quantum
+Callen--Welton~\cite{CallenWelton1951} fluctuation--dissipation floors,
+the latter obtained by instantiating a community-library canonical
+ensemble~\cite{Meiburg2025PhysLib} on the oscillator spectrum; and the
+readout-window envelopes (relaxation decay
+probability~\cite{Gambetta2007,Walter2017,Geerlings2013} and the thermal
+assignment floor~\cite{Jin2015}), each with rational-enclosure
+corollaries.
+
+\item \emph{The kernel-only rational-enclosure technique}
+(Sec.~\ref{sec:enclosure}): a uniform method --- Bernoulli brackets plus
+degree-$n$ Taylor squeezes --- that converts any decaying-exponential
+operating point into a machine-checked rational interval with no
+floating-point transcendentals, making every envelope in the corpus
+\emph{evaluable} at device parameters inside the proof assistant.
+\end{enumerate}
+
+\paragraph*{Relationship to companion work.} Three sibling bundles divide
+the surrounding territory. The verified-compilation bundle (D8) owns the
+gate-synthesis theory and, in particular, the compiled-gate diamond
+certificate \lean{diamondDist\_cliffordTCompile\_le}, which converts
+compiler accuracy $\varepsilon$ into worst-case channel error
+$\le \sqrt2\,\varepsilon$; the operator-norm-to-diamond conversion it
+consumes lives in the present corpus, and this paper cites D8 for the
+compiler layer while owning the channel- and measurement-certification
+layer. The fault-tolerant-computation bundle (D6) owns the logical layer
+--- codes, measurement, gauging; the device envelopes of
+Sec.~\ref{sec:device} characterize the physical layer beneath it, and the
+abstract code-distance suppression theorems included here
+(Sec.~\ref{sec:device-qec}) are the interface between the two. The
+stochastic-calculus bundle (I3) owns the large-deviation foundations that
+the rare-event tails of Sec.~\ref{sec:device-fdt} consume.
+
+\section{The diamond-norm program}
+\label{sec:diamond}
+
+The first layer is the finite-dimensional distinguishability calculus,
+built concretely on $\mathrm{Matrix}\;(\mathrm{Fin}\,n)\;(\mathrm{Fin}\,n)\;
+\mathbb{C}$ with no Stinespring dilation and no abstract
+$C^*$-algebra detour. Throughout, $\mathrm{diamondDist}$ denotes the
+\emph{halved} diamond norm, $\mathrm{diamondDist}(\Phi_1,\Phi_2) =
+\tfrac12\dnorm{\Phi_1-\Phi_2}$, so that it is $[0,1]$-valued on channel
+pairs.
+
+\subsection{Trace distance, fidelity, and the Fuchs--van de Graaf
+inequalities}
+
+The base objects are density operators (\lean{IsDensityOperator}:
+positive-semidefinite, unit trace), the Schatten-1 norm
+(\lean{traceNorm}), and the trace distance
+$D(\rho,\sigma)=\tfrac12\trnorm{\rho-\sigma}$. The linchpin
+\lean{traceNorm\_posSemidef} ($\trnorm{A} = \operatorname{tr} A$ for
+positive semidefinite $A$) is proven without a continuous-functional-calculus
+instance, via a characteristic-polynomial root-multiset argument; the
+general (non-Hermitian) triangle inequality is obtained through the
+Hermitian dilation, making the trace distance a genuine metric
+(\lean{traceDist\_triangle}) with range $[0,1]$ on density operators
+(\lean{traceDist\_mem\_Icc}). The Uhlmann fidelity~\cite{Uhlmann1976}
+enters as the root fidelity $\sqrt F(\rho,\sigma) =
+\trnorm{\sqrt\sigma\sqrt\rho}$ (\lean{sqrtFidelity}), proven equal to the
+literal Uhlmann trace expression, with $F \le 1$
+(\lean{sqrtFidelity\_le\_one}) by a double Cauchy--Schwarz assembly. Both
+Fuchs--van de Graaf bounds~\cite{FuchsvandeGraaf1999} are kernel-checked:
+\[
+1 - \sqrt F(\rho,\sigma) \;\le\; D(\rho,\sigma) \;\le\;
+\sqrt{1 - F(\rho,\sigma)},
+\]
+the lower bound (\lean{one\_sub\_sqrtFidelity\_le\_traceDist}) by a
+Powers--St\o rmer-type argument with the non-commuting Loewner step
+\emph{removed} rather than assumed, and the upper bound
+(\lean{traceDist\_le\_sqrt\_one\_sub\_sqrtFidelity\_sq})
+purification-free, via Holevo--Helstrom~\cite{Helstrom1976} plus the
+classical inequality, powered by a sharp Schatten-2 Cauchy--Schwarz
+$\trnorm{AB} \le \lVert A\rVert_F\,\lVert B\rVert_F$
+(\lean{traceNorm\_mul\_le}) built with no singular-value decomposition.
+
+Channels enter as Kraus families: for trace-preserving
+$\Phi(\rho)=\sum_k K_k\rho K_k^{\dagger}$, the corpus proves trace-norm
+contractivity, trace-distance data processing
+(\lean{traceDist\_krausMap\_le}), density-operator preservation, and
+positivity of the Choi matrix~\cite{Choi1975}
+(\lean{choiMatrix\_krausMap\_posSemidef}). Data processing is then lifted
+to the \emph{fidelity} domain in full generality via the Alberti
+form~\cite{Alberti1983} of the fidelity, with both the forward bound and
+its attainment proven for all positive-semidefinite inputs:
+\lean{sqrtFidelity\_krausMap\_ge\_psd\_inputs} gives Uhlmann monotonicity
+$F(\Phi\rho,\Phi\sigma) \ge F(\rho,\sigma)$ for \emph{all} density
+operators and any trace-preserving Kraus channel --- no full-rank
+assumption on inputs or outputs --- together with joint concavity
+(\lean{sqrtFidelity\_jointly\_concave}) and Loewner monotonicity
+(\lean{sqrtFidelity\_mono\_left}).
+
+\subsection{The diamond distance: metric, attainment, Choi sandwich, and
+SDP duality}
+
+The diamond distance~\cite{Kitaev1997,Watrous2018} is defined as the
+supremum of output trace distances of the stabilized channels
+$\Phi\otimes\mathrm{id}$ over input density operators on the doubled
+space; the stabilized channel is proven CPTP
+(\lean{isKrausChannel\_tensorKraus}), the supremum is well-defined from
+boundedness, and the result is a genuine $[0,1]$-valued metric on
+channels (\lean{diamondDist\_triangle}). Three structural results turn
+the definition into a certification tool:
+
+\begin{itemize}
+\item \emph{Attainment.} The supremum is attained by an optimal input
+density operator (\lean{exists\_diamondDist\_eq}), via trace-norm
+continuity (\lean{continuous\_traceNorm}, a Lipschitz bound that
+sidesteps the discontinuity of individual eigenvalues) and compactness of
+the density-operator set.
+
+\item \emph{The two-sided Choi sandwich.} With $J(\Phi)$ the Choi matrix
+on an $n$-dimensional system,
+\[
+\tfrac{1}{2n}\,\trnorm{J(\Phi_1)-J(\Phi_2)} \;\le\;
+\mathrm{diamondDist}(\Phi_1,\Phi_2) \;\le\;
+n\,\lVert J(\Phi_1)-J(\Phi_2)\rVert_{\infty},
+\]
+the lower bound from the maximally entangled input
+(\lean{diamondDist\_ge\_maxEntangled},
+\lean{diamondDist\_ge\_choi\_traceNorm}) and the upper bound
+(\lean{diamondDist\_le\_choi\_opNorm}) via a vectorization identity that
+moves the Helstrom pairing onto the Choi matrix --- the formalizable
+content of the Watrous Choi characterization with no conic duality
+required.
+
+\item \emph{Full SDP duality with attainment.} The weak-duality direction
+(\lean{diamondDist\_le\_dual\_witness}: any Hermitian $W \succeq 0$ with
+$W \succeq J(\Phi_1)-J(\Phi_2)$ certifies
+$\mathrm{diamondDist} \le \lVert\mathrm{Tr}_2 W\rVert_\infty$) is
+elementary; the \emph{equality}
+\[
+\mathrm{diamondDist}(\Phi_1,\Phi_2) \;=\;
+\inf\{\lVert\mathrm{Tr}_2 W\rVert_\infty :
+W \succeq 0,\; W \succeq J(\Phi_1)-J(\Phi_2)\}
+\]
+(\lean{diamondDist\_eq\_choiSDP}) --- the Watrous semidefinite
+program~\cite{Watrous2018} --- is proven unconditionally, via the
+geometric Hahn--Banach separation over a self-adjoint-matrix
+inner-product carrier whose Riesz vector is the optimal dual witness. The
+dual infimum is itself attained (\lean{exists\_choiDualValue\_eq}), so
+both sides of the program are genuine optima.
+\end{itemize}
+
+Composition turns per-stage distances into end-to-end budgets:
+$\mathrm{diamondDist}$ is subadditive under channel composition
+(\lean{diamondDist\_composeKraus\_le}), with a worked two-stage instance
+(\lean{diamondDist\_dephasing\_after\_depolarizing\_le}: a
+depolarizing-then-dephasing pipeline is within $\gamma+p$ of the
+identity, discharged from the exact per-stage distances below).
+
+\subsection{Exact diamond distances for named channels}
+\label{sec:diamond-named}
+
+For the channel families that device benchmarks actually target, the dual
+witness closes the sandwich to exact values:
+
+\begin{itemize}
+\item \emph{Dephasing and depolarizing} (covariant):
+$\mathrm{diamondDist}(\Phi_\gamma,\mathrm{id}) = \gamma$
+(\lean{diamondDist\_dephasing\_eq}) and
+$\mathrm{diamondDist}(\Delta_p,\mathrm{id}) = p$
+(\lean{diamondDist\_depolarizing\_eq}), each from an explicit optimal
+witness, with no twirling machinery.
+
+\item \emph{The Pauli channel}, exactly its total error weight:
+$\mathrm{diamondDist}(\Phi_{\mathbf p},\mathrm{id}) = 1-p_0$
+(\lean{diamondDist\_pauliKraus\_eq}). This generalizes to any
+\emph{unitary error basis} --- a family $\{U_i\}$ with $U_0 = 1$ and
+Hilbert--Schmidt orthogonality on $\mathbb{C}^n$ ---
+(\lean{diamondDist\_errorBasisKraus\_eq}), with the two-qubit Pauli
+channel ($1-p_{00}$, \lean{diamondDist\_twoQubitPauliKraus\_eq}) and the
+qutrit Weyl--Heisenberg channel (\lean{diamondDist\_weylKraus\_eq}) as
+instances; the pure cyclic-shift leakage channel has diamond distance
+exactly its leakage probability (\lean{diamondDist\_shiftLeakage\_eq}).
+
+\item \emph{SPAM readout bit-flip}: the classical readout-error channel
+$\Phi_q(\rho)=(1-q)\rho + qX\rho X$ has
+$\mathrm{diamondDist}(\Phi_q,\mathrm{id}) = q$
+(\lean{diamondDist\_spamBitFlip\_eq}) --- the readout error probability
+itself.
+
+\item \emph{Amplitude damping and its thermal generalization}
+(non-covariant): honest two-sided brackets in place of unsupported exact
+claims, $\gamma/2 \le \mathrm{diamondDist}(\mathcal A_\gamma,\mathrm{id})
+\le \gamma + 1 - \sqrt{1-\gamma}$ (\lean{diamondDist\_ampDamp\_ge},
+\lean{diamondDist\_ampDamp\_le}) and, for generalized amplitude damping
+toward a bath of excited population $N$, the bracket
+$(1-N)\gamma \le \mathrm{diamondDist}(\Phi_{\gamma,N},\mathrm{id}) \le 1$
+(\lean{diamondDist\_genAmpDamp\_bracket}), the lower endpoint achievable
+and recovering $\gamma$ at $N=0$.
+\end{itemize}
+
+The unitary-channel conversion
+$\mathrm{diamondDist}(\Phi_U,\Phi_V) \le \lVert U - V\rVert_{\mathrm{op}}$
+and its composition with a verified compiler into the end-to-end
+compiled-gate certificate are reported in the companion compilation
+bundle (D8), which consumes the present layer; we do not restate that
+content here.
+
+\section{The entropy and majorization corpus}
+\label{sec:entropy}
+
+The second layer is the entropy calculus on the same concrete matrix
+carrier, together with the eigenvalue-majorization toolbox that continuity
+bounds require.
+
+\subsection{Entropy inequalities}
+
+The von Neumann entropy (\lean{vonNeumannEntropy}) carries its range
+theorems ($0 \le S(\rho) \le \log d$), and the quantum relative entropy
+its foundational chain~\cite{NielsenChuang2010}:
+
+\begin{itemize}
+\item \emph{Klein inequality}: $S(\rho\,\Vert\,\sigma) \ge 0$
+(\lean{relativeEntropy\_nonneg}), by a unitary-overlap Jensen argument on
+the eigenbases.
+
+\item \emph{Subadditivity and mutual information}:
+$S(\rho_{AB}) \le S(\rho_A) + S(\rho_B)$
+(\lean{vonNeumannEntropy\_subadditive}) and $I(A{:}B)\ge 0$
+(\lean{mutualInformation\_nonneg}).
+
+\item \emph{Concavity}: $S(\sum_k w_k\rho_k) \ge \sum_k w_k S(\rho_k)$
+(\lean{vonNeumannEntropy\_concave}).
+
+\item \emph{Gibbs variational bound}: the free-energy gap identity
+$-\mathrm{Re}\operatorname{tr}(\rho\log\sigma) - S(\rho) =
+S(\rho\,\Vert\,\sigma)$
+(\lean{cross\_sub\_entropy\_eq\_relativeEntropy}) and the bound
+$S(\rho) \le -\mathrm{Re}\operatorname{tr}(\rho\log\sigma)$
+(\lean{vonNeumannEntropy\_le\_cross}), saturated at $\rho=\sigma$
+(\lean{cross\_self\_eq\_entropy}) --- the thermal-state variational
+principle in matrix form.
+\end{itemize}
+
+For the deeper convexity results the corpus \emph{adopts} rather than
+re-proves: a faithful bridge (\lean{toMState}, \lean{toCPTPMap},
+\lean{toCPTPMap\_apply\_m}) identifies the corpus's Kraus-family channels
+with the bundled channel representation of the community
+quantum-information library PhysLib~\cite{Meiburg2025PhysLib}, pinned to
+the same Mathlib commit, so that PhysLib's data-processing inequality for
+the sandwiched R\'enyi relative entropy transfers to the corpus's channels
+(\lean{krausMap\_sandwichedRenyi\_DPI}) and strong subadditivity and
+ordinary subadditivity read back as statements about the corpus's density
+operators (\lean{repo\_strong\_subadditivity},
+\lean{repo\_subadditivity}). A relative-entropy-of-entanglement layer
+(\lean{relEntEntanglement}) with separable-witness upper bounds completes
+the interoperation. The bridge is an identification, not a Choi
+reconstruction, and its kernel-purity is verified by axiom audit.
+
+\subsection{Eigenvalue majorization and the Fannes--Audenaert chain}
+
+Entropy continuity rests on eigenvalue perturbation. The corpus proves
+the Schur--Horn-type step that diagonal entries of a Hermitian matrix in
+any orthonormal frame are a doubly stochastic mixture of eigenvalues
+(\lean{eigenvalue\_eq\_doublyStochastic\_combination}), the Ky Fan-type
+partial-sum subadditivity (\lean{sum\_top\_subadditive}), the
+Weyl/minimax perturbation bounds with their Lipschitz consequence
+(\lean{weyl\_lipschitz})~\cite{Bhatia1997}, and the Mirsky
+inequality~\cite{Mirsky1960} in unconditional form
+(\lean{mirsky\_unconditional}): the $\ell^1$ distance between sorted
+eigenvalue sequences of Hermitian $A, B$ is at most $\trnorm{A-B}$.
+
+On this base the Fannes--Audenaert continuity chain is closed in two
+stages. The quantum continuity bound
+\lean{quantum\_fannes\_audenaert}~\cite{Fannes1973,Audenaert2007}
+delivers $|S(\rho)-S(\sigma)|$ control from the trace distance through
+the Mirsky step; and the \emph{sharp} Audenaert
+form~\cite{Audenaert2007} is proven \emph{unconditionally} for density
+operators (\lean{quantum\_fannes\_audenaert\_sharp}): for
+$d = \dim \ge 2$ and trace distance
+$T = \tfrac12\trnorm{\rho-\sigma}$ in the monotone regime
+$T \le 1 - 1/d$,
+\[
+|S(\rho)-S(\sigma)| \;\le\; T\log(d-1) + H_2(T),
+\]
+with the sharp constant $\log(d-1)$ and \emph{no residual hypothesis}:
+the classical sharp bound is established on the eigenvalue distributions
+by a maximal-coupling/spreading argument and transferred through the
+unconditional Mirsky step. To our knowledge this is the first
+machine-checked discharge of the sharp Audenaert constant; the statement
+matches Ref.~\cite{Audenaert2007} exactly on its stated domain.
+
+\subsection{The negativity/PPT/partial-transpose ladder}
+
+The corpus builds the entanglement-measure ladder concretely, from
+two-qubit Bell-diagonal states to arbitrary finite bipartitions:
+
+\begin{itemize}
+\item \emph{Exact negativity and the PPT criterion} on Bell-diagonal
+states (\lean{negativityBellDiag\_eq}, \lean{ppt\_bellDiagState\_iff})
+~\cite{Peres1996,HorodeckiPPT1996,VidalWerner2002}; for the Werner state
+of singlet fraction $F$, $N = (2F-1)/2$ for $F\ge\tfrac12$
+(\lean{negativityBellDiag\_werner}) and PPT exactly at $F \le \tfrac12$
+(\lean{ppt\_werner\_iff}) --- the same threshold as the BBPSSW/DEJMPS
+distillability cutoff of Sec.~\ref{sec:network}.
+
+\item \emph{Monotonicity under local operations} and a one-shot
+distillation no-go: a state with $\trnorm{\rho^{\Gamma}} < 2$ cannot be
+mapped to a Bell pair by any local operation on one party
+(\lean{no\_local\_distillation\_to\_bellPair}) --- the axiom-free
+operational content of ``local operations cannot create entanglement,''
+with no LOCC abstraction.
+
+\item \emph{Log-negativity additivity}
+$E_N(\rho\otimes\sigma)=E_N(\rho)+E_N(\sigma)$
+(\lean{logNegativity\_add})~\cite{VidalWerner2002,Plenio2005}, whose
+substantive content is the dimension-general trace-norm
+multiplicativity $\trnorm{A\otimes B} = \trnorm{A}\trnorm{B}$
+(\lean{traceNorm\_kronecker}); and Lipschitz continuity of the
+partial-transpose trace norm in the trace distance
+(\lean{abs\_traceNorm\_pt2\_sub\_le\_traceDist}).
+
+\item \emph{The general-bipartition capstone}: the partial transpose,
+monotone, and additive log-negativity at arbitrary finite party types;
+the maximal value $E_N(\Phi_d) = \log_2 d$ on the maximally entangled
+state (\lean{logNegB\_maxEntState}); the single-copy distillation bound
+$\log_2 k \le E_N(\rho)$ (\lean{distillation\_single\_copy\_bound}); and,
+on the genuine grouped $n$-copy state, $E_N(\rho^{\otimes n}) = n E_N(\rho)$
+(\lean{logNegB\_ncopy}) with the regularized rate reading
+$E_N(\Lambda(\rho^{\otimes n})) \le n E_N(\rho)$
+(\lean{logNegB\_ncopy\_localKraus\_le}) --- the per-$n$ form of
+$E_D \le E_N$~\cite{VidalWerner2002}.
+\end{itemize}
+
+\section{Network envelopes}
+\label{sec:network}
+
+The third layer certifies protocol-level quantities for
+entanglement-based networks. Its design principle is that the
+Bell-diagonal/Werner protocol class admits explicit real-parameter
+representations --- no density matrices are needed for the envelope
+theorems, which makes them maximally robust as deductive references for
+simulators~\cite{Chung2025}; the general-state layer of
+Secs.~\ref{sec:diamond}--\ref{sec:entropy} then removes the
+protocol-class restriction where needed.
+
+\subsection{The swap-chain fidelity envelope}
+
+For a chain of $k$ entanglement swaps of Werner links~\cite{WernerState1989}
+with per-link fidelity $F$, the Werner-parameter representation
+$w = (4F-1)/3$ makes the swap multiplicative
+(\lean{wernerSwapFidelity}, the
+Briegel--D\"ur--Cirac--Zoller composition law~\cite{BDCZ1998}, with the
+end-to-end closed form $F_{\mathrm{e2e}} = (1+3w^k)/4$,
+\lean{endToEndFidelity}). The envelope theorem,
+\[
+\lean{swapChain\_fidelity\_envelope} :\;
+\tfrac14 \le F \le 1 \;\Longrightarrow\;
+\tfrac14 \le F_{\mathrm{e2e}}(F,k) \le 1,
+\]
+together with monotonicity in $F$ and antitonicity in $k$, is --- to our
+knowledge --- the first formally verified protocol-level fidelity bound
+for quantum networks. Three generalizations keep the envelope realistic:
+
+\begin{itemize}
+\item \emph{Memory decay}: the depolarizing memory model
+$F(t) = F e^{-2t/\tau} + (1-e^{-2t/\tau})/4$
+(\lean{memoryDegradedFidelity}) multiplies the Werner parameter by
+$e^{-2t/\tau}$, and the decay-inclusive envelope
+(\lean{decayInclusive\_fidelity\_envelope}) bounds the $k$-swap chain of
+memory-degraded links in $[\tfrac14, 1]$ for all $t \ge 0$, $\tau > 0$.
+
+\item \emph{General Bell-diagonal swaps}: the Klein-four convolution map
+with normalization and the bridge to the Werner case
+(\lean{bellDiagSwapA\_werner}).
+
+\item \emph{Repeater recursion}: the BDCZ nesting-doubling identity
+(\lean{endToEndFidelity\_nest\_double}) and the
+teleportation-usefulness threshold over the chain
+($F_{\mathrm{e2e}} > \tfrac12 \iff w^k > \tfrac13$,
+\lean{endToEnd\_teleportation\_useful}).
+\end{itemize}
+
+For \emph{arbitrary} states, the data-processing chain
+\lean{traceDist\_applyChain\_le} bounds the trace distance to a target
+reference as non-increasing under any chain of CPTP steps (swaps,
+distillation, memory channels), and its fidelity-domain mirror
+\lean{sqrtFidelity\_applyChain\_ge\_psd} gives the same chain in the
+opposite monotone direction --- the network-level data-processing
+inequalities with the uniform-Werner restriction removed.
+
+\subsection{Distillation, teleportation, and key rates}
+
+\begin{itemize}
+\item \emph{BBPSSW and DEJMPS}~\cite{BBPSSW1996,DEJMPS1996}: the
+distillability flagship \lean{bbpsswRecurrence\_gt} (purification
+strictly increases fidelity on $F\in(\tfrac12,1)$, the whole statement
+reducing to one cubic inequality), the corrected-pairing DEJMPS map with
+a monotone single-step increase on the phase-flip-only sub-basin
+(\lean{dejmps\_increase\_phaseFlipOnly}), and --- the honesty witness ---
+a verified \emph{non-monotonicity} counterexample
+(\lean{dejmps\_single\_step\_can\_decrease}): $\lambda_{00} > \tfrac12$
+does \emph{not} guarantee a single-step increase. The full asymptotic
+convergence basin rests on Macchiavello's non-monotone
+argument~\cite{Macchiavello1998} and is cited, not formalized.
+
+\item \emph{Teleportation}~\cite{Horodecki1999,MassarPopescu1995}: the
+average teleportation fidelity $(2F+1)/3$ is \emph{unconditional}
+(\lean{teleportAvgFidelity\_horodecki\_unconditional}): its single
+analytic input, the Haar--Pauli quadratic integral
+$\int_{S^2}\langle\psi|\sigma_z|\psi\rangle^2\,d\mu = \tfrac13$, is
+itself proven in the Bloch picture (\lean{haarPauliZSqAverage\_eq})
+rather than assumed; the classical threshold
+$f_{\mathrm{avg}} > \tfrac23 \iff F > \tfrac12$ holds with no hypothesis
+(\lean{teleport\_beats\_classical\_iff\_unconditional}) and composes over
+chains (\lean{teleport\_useful\_over\_chain}).
+
+\item \emph{BB84}~\cite{BB84,ShorPreskill2000}: the asymptotic key rate
+$r(e) = 1 - 2h_2(e)$ (\lean{bb84KeyRate}, with the bits-normalized
+binary entropy), strict decrease (\lean{bb84KeyRate\_strictAntiOn}),
+positivity as $h_2(e) < \tfrac12$
+(\lean{bb84KeyRate\_pos\_iff\_binEntropy\_lt}), and a genuine crossover
+$e^* \in (0,\tfrac12)$ with $r(e^*) = 0$ produced by the
+intermediate-value theorem (\lean{bb84\_crossover\_exists}) --- the
+conventional $\approx 11\%$ threshold is recovered as the implicit root
+of $h_2(e) = \tfrac12$; no decimal is asserted in the formal layer. The
+composition with the end-to-end QBER gives the fidelity threshold for
+positive key over a chain
+(\lean{bb84\_positiveKey\_fidelity\_threshold}).
+
+\item \emph{Multipartite rates}~\cite{FortescueLo2007}: the
+Fortescue--Lo random-pair yield $D/(D+1)$ surpasses the single-copy
+specified-pair bound $\tfrac23$ for $D \ge 3$
+(\lean{fortescueLoYield\_gt\_two\_thirds}), the $W_3$-vs-GHZ$_3$
+randomization advantage is strictly positive
+(\lean{w3\_beats\_ghz\_randomization\_advantage}), and the yield tends to
+$1$ (\lean{fortescueLoYield\_tendsto\_one}); the asymptotic optimality
+conjecture of Ref.~\cite{FortescueLo2007} is \emph{not} claimed.
+
+\item \emph{Physical-layer anchors}: the dB$\leftrightarrow$Np fiber
+attenuation identity (\lean{fiberTransmission\_eq\_exp\_neg\_attenuationNp});
+the linear-optics Bell-measurement bound, success $\le \tfrac12$
+(\lean{bsmSuccessProb\_le\_half\_of\_linearOptics})
+~\cite{CalsamigliaLutkenhaus2001}; and the elementary-link rate
+$\tau = L/(c\,p_{\mathrm{link}})$ (\lean{linkRate}) with the
+expected-attempts factor \emph{derived} as a geometric-distribution mean
+(\lean{geometric\_expected\_attempts})~\cite{Sangouard2011}.
+Handshake-inclusive link timing is model-dependent and deliberately not
+bounded --- this is exactly the layer on which simulators
+disagree~\cite{Chung2025}.
+\end{itemize}
+
+\subsection{Rate ceilings and network capacity}
+\label{sec:network-capacity}
+
+Two repeaterless ceilings ship in the two-layer posture of
+Sec.~\ref{sec:intro}. The PLOB bound~\cite{PLOB2017} enters as the
+rate-bound function $\mathrm{plob}(\eta) = -\log_2(1-\eta)$
+(\lean{plobBound}) with its rigorous loss-penalty properties --- zero at
+total loss, strictly increasing on transmissivity
+(\lean{plobBound\_strictMonoOn}), bounded below by the linear penalty
+$\eta/\ln 2$ (\lean{linear\_le\_plobBound}), and decaying to zero along
+an exponentially lossy fiber
+(\lean{plobBound\_tendsto\_zero\_of\_exp\_decay}); the channel-converse
+semantics (that no two-way-assisted protocol exceeds it) is the cited
+theorem of Ref.~\cite{PLOB2017}, resting on continuous-variable
+machinery absent from current formal libraries. The erasure-channel
+two-way capacity formula $1-p$~\cite{BennettDiVincenzoSmolin1997} enters
+the same way (\lean{erasureBound}), with the cross-link
+$1 - p \le \mathrm{plob}(1-p)$ (\lean{erasureBound\_le\_plobBound})
+proven --- the two ceilings are mutually consistent, with the erasure
+form tighter on its domain.
+
+Multipath distribution requires flow theory. Mathlib at our pin has no
+max-flow/min-cut development, so the corpus builds one
+(\lean{NetworkCapacity}, \lean{NetworkCapacityStrongDuality}): weak
+duality (\lean{flowValue\_le\_cutCap}), witnessed optimality (a flow
+saturating a cut is maximal, \lean{maxFlow\_minCut\_of\_saturating}),
+existence of a maximal flow by compactness (\lean{maxFlow\_exists}), the
+augmenting-path theorem, and full strong duality
+\[
+\lean{maxFlow\_eq\_minCut} :\;
+\max_{f}\,\mathrm{val}(f) \;=\; \min_{S}\,\mathrm{cap}(S)
+\]
+in the Ford--Fulkerson sense~\cite{FordFulkerson1956}, on real-capacity
+finite networks. Worked instances connect the flow picture to repeater
+chains: the two-edge path network has capacity exactly the bottleneck
+(\lean{path3\_capacity\_eq\_bottleneck}), and instantiating the
+capacities with PLOB ceilings of two fiber segments certifies the
+repeaterless series bottleneck (\lean{path3\_repeaterless\_bottleneck}).
+
+\section{The device-characterization envelope family}
+\label{sec:device}
+
+The fourth layer turns the channel calculus into device-facing envelopes:
+closed-form ceilings and floors, parametrized by universally stated
+device data ($T_1$, $T_2$, temperature, frequency, window length), that
+an achievable quantity provably cannot cross \emph{within the stated
+model}. Every theorem in this section carries the two-layer posture
+explicitly: the formula and its monotonicity are kernel-checked; the
+identification of the model channel with the physical device is a cited
+hypothesis.
+
+\subsection{Gate fidelity: identity, ceiling, and composition}
+
+The bench-data bridge is the average-gate/entanglement-fidelity identity
+$F_{\mathrm{avg}}(\Phi) = (d\,F_e(\Phi)+1)/(d+1)$
+(\lean{avgGateFidelity\_eq})~\cite{Horodecki1999,Nielsen2002}, proven
+\emph{constructively} --- the degree-$(2,2)$ complex-sphere moment is
+computed along a Gaussian-to-sphere route (one-dimensional Gaussian
+moments, a Wick/Isserlis tensor, polar reduction), so the
+unitary-2-design second moment is obtained as a theorem rather than
+imported. On it sits the \emph{coherence-limited fidelity ceiling}: for
+the standard $T_1/T_2$ model channel of a duration-$t$ gate (amplitude
+damping with $\gamma = 1-e^{-t/T_1}$ composed after dephasing with
+$p = (1-e^{-t/T_2})/2$),
+\[
+F_{\mathrm{avg}}(\Phi_t) \;=\;
+\tfrac12 + \tfrac16 e^{-t/T_1} + \tfrac13 e^{-t/(2T_1)-t/T_2}
+\]
+(\lean{avgGateFidelity\_coherenceChannel}, with
+\lean{entanglementFidelity\_coherenceChannel}), monotone decreasing in
+the gate duration (\lean{avgGateFidelity\_coherenceChannel\_antitone})
+with exact endpoints $1$ at $t=0$ and floor $\tfrac12$
+(\lean{avgGateFidelity\_coherenceChannel\_ge\_half},
+\lean{avgGateFidelity\_coherenceChannel\_le\_one}). These are exact
+statements about the model channel; reading the ceiling as a bound on a
+physical gate is the separate modeling assumption that realized noise is
+at least coherence-limited, stated as such. Composition with a control
+error budget gives the composed-gate bound
+(\lean{diamondDist\_coherence\_after\_control\_le}) with its fidelity
+reading (\lean{sqrtFidelity\_coherence\_after\_control\_ge}) and
+both binding regimes identified
+(\lean{diamondDist\_coherence\_after\_control\_le\_coherence\_binds},
+\lean{diamondDist\_coherence\_after\_control\_le\_control\_binds}).
+
+SPAM characterization exposes the process fidelity
+(\lean{processFidelity}) with the identity restated for it
+(\lean{avgGateFidelity\_eq\_processFidelity}) and the readout bit-flip
+diamond distance of Sec.~\ref{sec:diamond-named}. The
+randomized-benchmarking-style certificate~\cite{Magesan2011} is the
+two-sided bracket connecting an averaged benchmark number to worst-case
+channel error: $F_{\mathrm{avg}}$ controls and is controlled by the
+diamond distance to the identity
+(\lean{avgGateFidelity\_diamondDist\_bound},
+\lean{avgGateFidelity\_diamondDist\_two\_sided}, via the Fuchs--van de
+Graaf bracket on the Choi states,
+\lean{entanglementDistinguishability\_fvdg\_bracket}). The two-layer
+note applies with force here: these theorems certify the
+\emph{fidelity-to-diamond conversion}; the identification of an
+experimental RB decay constant with $F_{\mathrm{avg}}$ of a fixed channel
+(gate-independence of noise, Markovianity) is the cited RB model
+hypothesis~\cite{Magesan2011}, not a theorem of this corpus.
+
+\subsection{Fluctuation--dissipation noise floors}
+\label{sec:device-fdt}
+
+The classical Johnson--Nyquist floor~\cite{Nyquist1928} ships with
+operating-point monotonicity in temperature and conductance and worked
+detector/amplifier operating points
+(\lean{johnsonNyquistPSD\_mono\_temp},
+\lean{fdt\_noise\_floor\_bound}, \lean{fdt\_noise\_floor\_detector}),
+plus the linear-response large-deviation rare-event tail and its
+Gallavotti--Cohen-type symmetry (\lean{fdt\_rare\_event\_tail},
+\lean{fdt\_gallavotti\_cohen}), consuming the large-deviation
+foundations of the I3 bundle.
+
+The quantum (Callen--Welton~\cite{CallenWelton1951}) floor is
+\emph{derived, not posited}: instantiating the PhysLib canonical-ensemble
+framework~\cite{Meiburg2025PhysLib} on the harmonic-oscillator spectrum
+$E_n = \hbar\omega(n+\tfrac12)$ (\lean{qhoEnsemble}) and computing its
+mean energy yields
+\[
+\langle E\rangle \;=\; \frac{\hbar\omega}{2}\,
+\coth\!\Big(\frac{\beta\hbar\omega}{2}\Big)
+\]
+(\lean{qho\_meanEnergy}), bounded below by the zero-point energy
+(\lean{qho\_meanEnergy\_ge\_zeroPoint}), with the resulting
+zero-point-corrected noise floor (\lean{fdt\_quantum\_noise\_floor})
+replacing the classical floor in the cryogenic regime
+$\hbar\omega \gtrsim k_BT$ where the classical formula vanishes and
+misses the dominant half-quantum. By contrast, the Caves
+phase-insensitive-amplifier added-noise bound
+$A \ge \hbar\omega/2$~\cite{Caves1982} remains a \emph{cited hypothesis}
+(\lean{fdt\_noise\_floor\_amplifier} takes it as the explicit assumption
+\lean{hcaves}): its proof requires the bosonic ladder algebra
+$[a,a^{\dagger}]=1$, which no current formal library provides
+(Sec.~\ref{sec:walls}).
+
+\subsection{Readout-window envelopes}
+\label{sec:device-readout}
+
+The family is completed by measurement-side envelopes from the same
+universally stated parameters. The \emph{relaxation envelope}: for a
+readout window $t$ against relaxation time $T_1$, the excited-state decay
+probability $p_{\mathrm{decay}}(t,T_1) = 1 - e^{-t/T_1}$
+(\lean{readoutDecayProb}) carries range
+($0 \le p < 1$, \lean{readoutDecayProb\_nonneg},
+\lean{readoutDecayProb\_lt\_one}), strict monotonicity in the window
+(\lean{readoutDecayProb\_strictMono\_time}), strict antitonicity in
+$T_1$ (\lean{readoutDecayProb\_strictAnti\_relax}), endpoints
+(\lean{readoutDecayProb\_zero\_time},
+\lean{readoutDecayProb\_tendsto\_one}), and the rational enclosure
+\[
+\frac{t/T_1}{1+t/T_1} \;\le\; p_{\mathrm{decay}} \;\le\; \frac{t}{T_1}
+\]
+(\lean{readoutDecayProb\_enclosure}) --- the short-window rule
+$p \lesssim t/T_1$ proven as an exact inequality on the full domain.
+Under the literature-cited readout model (QND-ideal, no re-excitation,
+decay flips the outcome~\cite{Gambetta2007,Walter2017,Geerlings2013}),
+the uniform-prior averaged assignment error is floored at
+$p_{\mathrm{decay}}/2$ (\lean{avgAssignmentError\_relaxation\_floor};
+the model prefactor is exactly $\tfrac12$), with the rational
+operating-point form
+$\tfrac{t/T_1}{2(1+t/T_1)} \le \varepsilon_{\mathrm{avg}}$
+(\lean{avgAssignmentError\_rational\_floor}).
+
+The \emph{thermal envelope}: the excited-state thermal occupancy
+$p_{\mathrm{th}} = 1/(1+e^{x})$, $x = \beta\hbar\omega$
+(\lean{thermalExcitedPop}), is \emph{derived} from the PhysLib two-state
+canonical ensemble --- the library's $\tanh$-form closed-form
+probability is converted by the bridge identity
+$\tfrac12(1-\tanh u) = 1/(1+e^{2u})$ (\lean{half\_one\_sub\_tanh}) into
+the Boltzmann-occupancy theorem \lean{twoState\_excited\_probability},
+so the occupancy is a theorem of statistical mechanics here, not a
+definition. It carries strict antitonicity in $x$
+(\lean{thermalExcitedPop\_strictAnti}), strict monotonicity in
+temperature and strict antitonicity in frequency through a
+temperature-$\beta$ bridge
+(\lean{thermalExcitedPop\_strictMono\_temperature},
+\lean{thermalExcitedPop\_strictAnti\_frequency}), endpoints ($\tfrac12$
+at $x=0$, $\to 0$ as $x\to\infty$), and two-sided rational enclosures
+(\lean{thermalExcitedPop\_rational\_upper},
+\lean{thermalExcitedPop\_rational\_lower}). Under the cited
+thermal-population readout model~\cite{Jin2015,Geerlings2013}, the
+assignment error is floored at $p_{\mathrm{th}}/2$
+(\lean{avgAssignmentError\_thermal\_floor}) with its rational
+operating-point companion
+(\lean{avgAssignmentError\_thermal\_rational\_floor}). The family
+capstone combines both mechanisms:
+\[
+\frac{\max\big(p_{\mathrm{decay}}(t,T_1),\, p_{\mathrm{th}}(x)\big)}{2}
+\;\le\; \varepsilon_{\mathrm{avg}}
+\]
+(\lean{avgAssignmentError\_combined\_floor}) --- a readout subject to
+both relaxation during the window and thermal population is floored by
+the worse of the two, from $(t, T_1, T, \omega)$ alone.
+
+\subsection{Interface to the logical layer}
+\label{sec:device-qec}
+
+The abstract code-distance suppression relation
+$A\,(p/p_{\mathrm{th}})^{\lfloor(d+1)/2\rfloor}$ carries its two
+threshold properties --- antitone in distance below threshold
+(\lean{logicalErrorBound\_antitone\_distance}) and vanishing in the
+distance limit strictly below threshold
+(\lean{logicalErrorBound\_tendsto\_zero}) --- as neutral QEC
+mathematics: the interface across which the physical-layer envelopes of
+this section feed the logical layer owned by the companion
+fault-tolerance bundle (D6).
+
+\section{The rational-enclosure technique, library contributions, and
+documented walls}
+\label{sec:enclosure}
+
+\subsection{Kernel-only rational enclosures}
+
+Every envelope above is \emph{evaluable}: the cross-cutting method is the
+Bernoulli bracket
+\[
+\lean{expNeg\_enclosure} :\; 0 \le r \;\Longrightarrow\;
+1 - r \,\le\, e^{-r} \,\le\, \frac{1}{1+r},
+\]
+whose endpoints are rational at rational $r$, so every decay factor
+$e^{-t/\tau}$ (fiber loss, memory decoherence, readout decay, thermal
+occupancy via \lean{thermalExcitedPop\_expNeg\_form}) admits a
+machine-checked rational bracket with no floating-point transcendentals
+and no external interval-arithmetic oracle. When more precision is
+needed, the degree-$n$ Taylor squeeze on Mathlib's exponential remainder
+bound tightens the bracket at kernel-checked cost: the representative
+fiber-loss operating point $e^{-0.46}$ (0.2\,dB/km at 10\,km, through
+the dB$\leftrightarrow$Np identity) is bracketed loosely by the
+Bernoulli form (\lean{expNeg046\_enclosure}) and to three decimals,
+$0.631 \le e^{-0.46} \le 0.632$, by the degree-5 squeeze
+(\lean{expNeg046\_tight}). The consumers inside the corpus ---
+\lean{readoutDecayProb\_enclosure},
+\lean{avgAssignmentError\_rational\_floor},
+\lean{avgAssignmentError\_thermal\_rational\_floor} --- demonstrate the
+intended pattern: a certification claim at a device operating point
+reduces to rational arithmetic inside the kernel. We propose this
+pattern as the right interface between formal envelopes and
+device-parameter tables: no step of the evaluation leaves the proof
+assistant, and no step trusts a float.
+
+\subsection{Library-contribution portfolio}
+
+Several components are general-purpose and absent from the underlying
+libraries at our pin, and are candidates for upstream contribution: the
+max-flow/min-cut development of Sec.~\ref{sec:network-capacity}
+(Mathlib has no network-flow theory); the Kronecker-with-identity
+operator-norm bound
+$\lVert A\otimes\mathbf 1\rVert \le \lVert A\rVert$
+(\lean{l2\_opNorm\_kronecker\_one\_le}) and the trace-norm
+multiplicativity \lean{traceNorm\_kronecker}; the complex-sphere moment
+toolchain beneath \lean{avgGateFidelity\_eq} (Gaussian Wick tensors,
+polar reduction, realification); the unconditional Mirsky inequality and
+the Weyl/minimax eigenvalue toolbox; and the Haar--Pauli spherical
+integral. Conversely, the corpus deliberately \emph{adopts} the
+community PhysLib library~\cite{Meiburg2025PhysLib} where it is
+authoritative (sandwiched-R\'enyi data processing, strong
+subadditivity, canonical ensembles), through the faithful bridge of
+Sec.~\ref{sec:entropy} --- the derived Callen--Welton floor and the
+derived thermal occupancy are worked demonstrations that bridging beats
+re-deriving.
+
+\subsection{Documented walls}
+\label{sec:walls}
+
+We record plainly what the verified layer does \emph{not} contain, since
+the two-layer posture is only honest if its boundary is explicit:
+
+\begin{itemize}
+\item \emph{The Caves added-noise bound}~\cite{Caves1982}. The
+phase-insensitive-amplifier half-quantum bound $A \ge \hbar\omega/2$
+requires the bosonic commutation relation $[a,a^{\dagger}]=1$ and its
+ladder-operator calculus, absent from PhysLib and Mathlib at our pin.
+It is carried as the explicit hypothesis \lean{hcaves} of
+\lean{fdt\_noise\_floor\_amplifier} --- never as an axiom --- and is the
+canonical example of an identification-layer input.
+
+\item \emph{Continuous-variable channel capacity}. The PLOB and erasure
+ceilings (Sec.~\ref{sec:network-capacity}) are formula-layer objects;
+their converse semantics (relative entropy of entanglement of Gaussian
+channels, teleportation stretching) is cited to
+Refs.~\cite{PLOB2017,BennettDiVincenzoSmolin1997}.
+
+\item \emph{DEJMPS asymptotics}. The full convergence basin is
+Macchiavello's non-monotone argument~\cite{Macchiavello1998}; the corpus
+proves the single-step results and a counterexample delimiting them, and
+cites the rest.
+
+\item \emph{Non-covariant exact diamond distances}. Amplitude damping
+and its thermal generalization carry two-sided brackets, not exact
+values; the exact optimum requires an eigenvector witness the corpus
+documents but does not claim.
+
+\item \emph{Asymptotic multipartite optimality}. The Fortescue--Lo
+$D/(D+1)\to 1$ limit is proven; the optimality of $1$ is the cited open
+conjecture~\cite{FortescueLo2007} and is not claimed.
+\end{itemize}
+
+\section{Scope and discussion}
+\label{sec:scope}
+
+Almost every theorem in this corpus formalizes known mathematics, and we
+state that plainly: the contribution is not new quantum information
+theory but a \emph{certification substrate} --- the known results,
+machine-checked at full strength, organized so that a device or network
+claim traces through named theorems from stated parameters to a
+certified interval, with every modeling step surfaced as an explicit
+hypothesis. The named exceptions where the formal development itself
+contributes are circumscribed: the in-project max-flow/min-cut
+development (a library gap, not new mathematics), the unconditional
+machine-checked form of the sharp Audenaert bound, the swap-chain
+envelope as (to our knowledge) the first formally verified
+protocol-level network fidelity bound, and the constructive
+sphere-moment derivation of the average-gate-fidelity identity. The
+methodological claims --- the two-layer posture and the kernel-only
+rational-enclosure pattern --- are, we believe, the transferable
+content: they make the difference between a formalization that
+\emph{mentions} devices and one that can be cited line-by-line in an
+error budget without overclaiming.
+
+What this paper does not contain: gate-synthesis and compilation theory
+(the D8 bundle, which consumes Sec.~\ref{sec:diamond} for its
+channel-level certificate); the logical layer of fault tolerance (D6);
+runtime tooling, vendor-specific parameter fits, or experimental data
+analysis. The corpus is a mathematical substrate; its numerical
+companion pipeline (figure generation and a cross-validation gate
+against the Python layer) is part of the public repository's automated
+validation suite.
+
+\section*{Methods and tools disclosure}
+The formal verification layer of this work was developed with
+substantial machine assistance: Lean~4 proof drafting and iteration
+used LLM-based agents (Anthropic Claude-family models) operating under
+the project's staged validation pipeline. Every proof is ultimately
+certified by the Lean~4 kernel via \texttt{lake build} on the public
+repository, independently of any AI tool. Manuscript prose was
+AI-assisted and human-reviewed; all numerical claims trace to the
+repository's computation pipeline through its automated validation
+checks.
+
+\appendix
+
+\section{Verification status}
+\label{app:verification}
+
+Every theorem named in this paper is verified to the Lean~4 kernel with
+axiom set $\{\texttt{propext},\,\texttt{Classical.choice},\,
+\texttt{Quot.sound}\}$ and no project-local axioms (the parent
+repository's validation suite enforces \axiomcount{} project-local
+axioms and \sorrycount{} \texttt{sorry} placeholders project-wide,
+across \totaltheorems{} theorems in \leanmodules{} Lean modules). The
+\lean{QuantumNetwork} corpus reported here comprises 103 Lean modules
+with over 900 theorem declarations at the time of writing; it contains
+no \texttt{native\_decide} compiled-evaluation escapes and no heartbeat
+overrides. Conditional statements --- the Caves hypothesis of
+Sec.~\ref{sec:device-fdt} and the model-identification hypotheses of
+every floor and ceiling --- are carried explicitly in the theorem
+statements and are kernel-checked exactly as stated. The toolchain is
+pinned (Lean \texttt{v4.29.1}, Mathlib \texttt{5e932f97}); the PhysLib
+dependency~\cite{Meiburg2025PhysLib} is pinned to a commit verified to
+share the identical Mathlib pin, and the corpus's PhysLib-touching
+theorems are verified by axiom audit not to depend on the one sorried
+declaration present in that library at our pin.
+
+\begin{thebibliography}{99}
+
+\bibitem{Chung2025}
+K.~Chung, M.~Hajdu\v{s}ek, R.~Van~Meter \emph{et al.},
+``Cross-verification of quantum network simulators,''
+arXiv:2504.01290 (2025).
+
+\bibitem{Watrous2018}
+J.~Watrous,
+\emph{The Theory of Quantum Information}
+(Cambridge University Press, Cambridge, 2018).
+
+\bibitem{FuchsvandeGraaf1999}
+C.~A. Fuchs and J.~van~de~Graaf,
+``Cryptographic distinguishability measures for quantum-mechanical
+states,''
+IEEE Trans. Inf. Theory \textbf{45}, 1216 (1999).
+
+\bibitem{Uhlmann1976}
+A.~Uhlmann,
+``The `transition probability' in the state space of a *-algebra,''
+Rep. Math. Phys. \textbf{9}, 273 (1976).
+
+\bibitem{Alberti1983}
+P.~M. Alberti,
+``A note on the transition probability over $C^*$-algebras,''
+Lett. Math. Phys. \textbf{7}, 25 (1983).
+
+\bibitem{Helstrom1976}
+C.~W. Helstrom,
+\emph{Quantum Detection and Estimation Theory}
+(Academic Press, New York, 1976).
+
+\bibitem{Choi1975}
+M.-D. Choi,
+``Completely positive linear maps on complex matrices,''
+Linear Algebra Appl. \textbf{10}, 285 (1975).
+
+\bibitem{Kitaev1997}
+A.~Yu. Kitaev,
+``Quantum computations: algorithms and error correction,''
+Russ. Math. Surv. \textbf{52}, 1191 (1997).
+
+\bibitem{Fannes1973}
+M.~Fannes,
+``A continuity property of the entropy density for spin lattice
+systems,''
+Commun. Math. Phys. \textbf{31}, 291 (1973).
+
+\bibitem{Audenaert2007}
+K.~M.~R. Audenaert,
+``A sharp continuity estimate for the von Neumann entropy,''
+J. Phys. A: Math. Theor. \textbf{40}, 8127 (2007).
+
+\bibitem{Mirsky1960}
+L.~Mirsky,
+``Symmetric gauge functions and unitarily invariant norms,''
+Q. J. Math. \textbf{11}, 50 (1960).
+
+\bibitem{Bhatia1997}
+R.~Bhatia,
+\emph{Matrix Analysis},
+Graduate Texts in Mathematics Vol. 169
+(Springer, New York, 1997).
+
+\bibitem{NielsenChuang2010}
+M.~A. Nielsen and I.~L. Chuang,
+\emph{Quantum Computation and Quantum Information},
+10th anniversary ed. (Cambridge University Press, Cambridge, 2010).
+
+\bibitem{Peres1996}
+A.~Peres,
+``Separability criterion for density matrices,''
+Phys. Rev. Lett. \textbf{77}, 1413 (1996).
+
+\bibitem{HorodeckiPPT1996}
+M.~Horodecki, P.~Horodecki, and R.~Horodecki,
+``Separability of mixed states: necessary and sufficient conditions,''
+Phys. Lett. A \textbf{223}, 1 (1996).
+
+\bibitem{VidalWerner2002}
+G.~Vidal and R.~F. Werner,
+``Computable measure of entanglement,''
+Phys. Rev. A \textbf{65}, 032314 (2002).
+
+\bibitem{Plenio2005}
+M.~B. Plenio,
+``Logarithmic negativity: a full entanglement monotone that is not
+convex,''
+Phys. Rev. Lett. \textbf{95}, 090503 (2005).
+
+\bibitem{WernerState1989}
+R.~F. Werner,
+``Quantum states with Einstein-Podolsky-Rosen correlations admitting a
+hidden-variable model,''
+Phys. Rev. A \textbf{40}, 4277 (1989).
+
+\bibitem{BDCZ1998}
+H.-J. Briegel, W.~D\"ur, J.~I. Cirac, and P.~Zoller,
+``Quantum repeaters: the role of imperfect local operations in quantum
+communication,''
+Phys. Rev. Lett. \textbf{81}, 5932 (1998).
+
+\bibitem{BBPSSW1996}
+C.~H. Bennett, G.~Brassard, S.~Popescu, B.~Schumacher, J.~A. Smolin,
+and W.~K. Wootters,
+``Purification of noisy entanglement and faithful teleportation via
+noisy channels,''
+Phys. Rev. Lett. \textbf{76}, 722 (1996).
+
+\bibitem{DEJMPS1996}
+D.~Deutsch, A.~Ekert, R.~Jozsa, C.~Macchiavello, S.~Popescu, and
+A.~Sanpera,
+``Quantum privacy amplification and the security of quantum
+cryptography over noisy channels,''
+Phys. Rev. Lett. \textbf{77}, 2818 (1996).
+
+\bibitem{Macchiavello1998}
+C.~Macchiavello,
+``On the analytical convergence of the QPA procedure,''
+Phys. Lett. A \textbf{246}, 385 (1998).
+
+\bibitem{Horodecki1999}
+M.~Horodecki, P.~Horodecki, and R.~Horodecki,
+``General teleportation channel, singlet fraction, and
+quasidistillation,''
+Phys. Rev. A \textbf{60}, 1888 (1999).
+
+\bibitem{MassarPopescu1995}
+S.~Massar and S.~Popescu,
+``Optimal extraction of information from finite quantum ensembles,''
+Phys. Rev. Lett. \textbf{74}, 1259 (1995).
+
+\bibitem{BB84}
+C.~H. Bennett and G.~Brassard,
+``Quantum cryptography: public key distribution and coin tossing,''
+in \emph{Proceedings of the IEEE International Conference on Computers,
+Systems and Signal Processing, Bangalore, India} (IEEE, New York,
+1984), p. 175.
+
+\bibitem{ShorPreskill2000}
+P.~W. Shor and J.~Preskill,
+``Simple proof of security of the BB84 quantum key distribution
+protocol,''
+Phys. Rev. Lett. \textbf{85}, 441 (2000).
+
+\bibitem{FortescueLo2007}
+B.~Fortescue and H.-K. Lo,
+``Random bipartite entanglement from W and W-like states,''
+Phys. Rev. Lett. \textbf{98}, 260501 (2007).
+
+\bibitem{CalsamigliaLutkenhaus2001}
+J.~Calsamiglia and N.~L\"utkenhaus,
+``Maximum efficiency of a linear-optical Bell-state analyzer,''
+Appl. Phys. B \textbf{72}, 67 (2001).
+
+\bibitem{Sangouard2011}
+N.~Sangouard, C.~Simon, H.~de~Riedmatten, and N.~Gisin,
+``Quantum repeaters based on atomic ensembles and linear optics,''
+Rev. Mod. Phys. \textbf{83}, 33 (2011).
+
+\bibitem{PLOB2017}
+S.~Pirandola, R.~Laurenza, C.~Ottaviani, and L.~Banchi,
+``Fundamental limits of repeaterless quantum communications,''
+Nat. Commun. \textbf{8}, 15043 (2017).
+
+\bibitem{BennettDiVincenzoSmolin1997}
+C.~H. Bennett, D.~P. DiVincenzo, and J.~A. Smolin,
+``Capacities of quantum erasure channels,''
+Phys. Rev. Lett. \textbf{78}, 3217 (1997).
+
+\bibitem{FordFulkerson1956}
+L.~R. Ford and D.~R. Fulkerson,
+``Maximal flow through a network,''
+Canad. J. Math. \textbf{8}, 399 (1956).
+
+\bibitem{Nielsen2002}
+M.~A. Nielsen,
+``A simple formula for the average gate fidelity of a quantum
+dynamical operation,''
+Phys. Lett. A \textbf{303}, 249 (2002).
+
+\bibitem{Magesan2011}
+E.~Magesan, J.~M. Gambetta, and J.~Emerson,
+``Scalable and robust randomized benchmarking of quantum processes,''
+Phys. Rev. Lett. \textbf{106}, 180504 (2011).
+
+\bibitem{Nyquist1928}
+H.~Nyquist,
+``Thermal agitation of electric charge in conductors,''
+Phys. Rev. \textbf{32}, 110 (1928).
+
+\bibitem{CallenWelton1951}
+H.~B. Callen and T.~A. Welton,
+``Irreversibility and generalized noise,''
+Phys. Rev. \textbf{83}, 34 (1951).
+
+\bibitem{Caves1982}
+C.~M. Caves,
+``Quantum limits on noise in linear amplifiers,''
+Phys. Rev. D \textbf{26}, 1817 (1982).
+
+\bibitem{Gambetta2007}
+J.~Gambetta, W.~A. Braff, A.~Wallraff, S.~M. Girvin, and
+R.~J. Schoelkopf,
+``Protocols for optimal readout of qubits using a continuous quantum
+nondemolition measurement,''
+Phys. Rev. A \textbf{76}, 012325 (2007).
+
+\bibitem{Walter2017}
+T.~Walter, P.~Kurpiers, S.~Gasparinetti, P.~Magnard, A.~Poto\v{c}nik,
+Y.~Salath\'e, M.~Pechal, M.~Mondal, M.~Oppliger, C.~Eichler, and
+A.~Wallraff,
+``Rapid high-fidelity single-shot dispersive readout of superconducting
+qubits,''
+Phys. Rev. Applied \textbf{7}, 054020 (2017).
+
+\bibitem{Geerlings2013}
+K.~Geerlings, Z.~Leghtas, I.~M. Pop, S.~Shankar, L.~Frunzio,
+R.~J. Schoelkopf, M.~Mirrahimi, and M.~H. Devoret,
+``Demonstrating a driven reset protocol for a superconducting qubit,''
+Phys. Rev. Lett. \textbf{110}, 120501 (2013).
+
+\bibitem{Jin2015}
+X.~Y. Jin, A.~Kamal, A.~P. Sears, T.~Gudmundsen, D.~Hover, J.~Miloshi,
+R.~Slattery, F.~Yan, J.~Yoder, T.~P. Orlando, S.~Gustavsson, and
+W.~D. Oliver,
+``Thermal and residual excited-state population in a 3D transmon
+qubit,''
+Phys. Rev. Lett. \textbf{114}, 240501 (2015).
+
+\bibitem{Meiburg2025PhysLib}
+A.~Meiburg, L.~A. Lessa, and R.~R. Soldati,
+``A formalization of the generalized quantum Stein's lemma in Lean,''
+arXiv:2510.08672 (2025).
+
+\end{thebibliography}
+
+\end{document}

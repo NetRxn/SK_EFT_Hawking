@@ -395,6 +395,178 @@ density). All Lean-only / D.4-sourceless.
   Invariant #15); axiom-audit cross-check via `validate.py`. All
   headlines kernel-pure `{propext, Classical.choice, Quot.sound}`.
 
+### D9. Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate
+
+(NEW BUNDLE — authorized 2026-06-10 per Pipeline Invariant #14, commit
+`edc18ce3`; consolidates the Phase 6AA–6AL QI-analytics/network corpus
+plus the 6AM/6AN/6AP/6AQ envelope waves that had no bundle home.
+Defensive-publication posture: textbook/published math at full
+strength, honestly attributed.)
+
+**Sources:** Phases 6AA–6AL (QI-analytics + network corpus), 6AM
+W1–W4 + W6 (PhysLib adoption + quantum-FDT floor + sharp
+Fannes–Audenaert), 6AN W2–W4 (NetworkCapacity, ComposedGateFidelity,
+FDTNoiseFloor), 6AP W1/W2/W4 (expNeg_enclosure, KroneckerOpNorm,
+ErasureRateBound), 6AQ (ReadoutRelaxationBound,
+ThermalAssignmentFloor). All Lean-only / §3b-sourceless; seed material
+`papers/phase6AA_qnetwork_preprint/preprint_draft.md` (verified
+against current Lean state at lift time, 2026-06-10).
+
+**Anchors (load-bearing):**
+- **Diamond-norm program** — both Fuchs–van de Graaf bounds
+  (`one_sub_sqrtFidelity_le_traceDist`, `FidelityBounds.lean`;
+  `traceDist_le_sqrt_one_sub_sqrtFidelity_sq`,
+  `FidelityUpperBound.lean`); the two-sided Choi sandwich
+  `(1/2n)‖J₁−J₂‖₁ ≤ diamondDist ≤ n‖J₁−J₂‖_∞`
+  (`diamondDist_ge_maxEntangled` / `diamondDist_ge_choi_traceNorm` /
+  `diamondDist_le_choi_opNorm`); the full Watrous SDP duality
+  `diamondDist_eq_choiSDP` (`DiamondSDPDuality.lean`) with primal
+  attainment `exists_diamondDist_eq` and dual attainment
+  `exists_choiDualValue_eq`; exact named-channel distances
+  (`diamondDist_dephasing_eq` = γ, `diamondDist_depolarizing_eq` = p,
+  `diamondDist_pauliKraus_eq` = 1−p₀,
+  `diamondDist_errorBasisKraus_eq`, `diamondDist_spamBitFlip_eq` = q)
+  vs honest two-sided BRACKETS for the non-covariant channels
+  (`diamondDist_ampDamp_ge`/`diamondDist_ampDamp_le`,
+  `diamondDist_genAmpDamp_bracket`) — verify the draft never claims
+  exactness for amplitude damping or its thermal generalization.
+- **Sharp Audenaert** `quantum_fannes_audenaert_sharp`
+  (`SharpFannesAudenaert.lean`): sharp constant `log(d−1)`,
+  UNCONDITIONAL for density operators on the monotone regime
+  `T ≤ 1 − 1/d` — verify the regime hypothesis `hTV` is stated, and
+  that the "first machine-checked discharge" claim is hedged with "to
+  our knowledge" (per Phase 6AM W6 roadmap status).
+- **Entropy corpus** — Klein (`relativeEntropy_nonneg`,
+  `QuantumKlein.lean`), subadditivity
+  (`vonNeumannEntropy_subadditive`), concavity
+  (`vonNeumannEntropy_concave`), Gibbs variational
+  (`vonNeumannEntropy_le_cross`), unconditional Mirsky
+  (`mirsky_unconditional`); PhysLib ADOPTION (not re-derivation) for
+  sandwiched-Rényi DPI / SSA via the faithful bridge
+  (`toMState`/`toCPTPMap`/`krausMap_sandwichedRenyi_DPI`,
+  `PhyslibBridge.lean`) — verify the bridge is described as an
+  identification and the PhysLib citation (arXiv:2510.08672) is
+  present.
+- **Negativity/PPT ladder** — Werner thresholds
+  (`negativityBellDiag_werner`: N = (2F−1)/2 for F ≥ ½;
+  `ppt_werner_iff`: PPT ⟺ F ≤ ½, matching the BBPSSW/DEJMPS cutoff);
+  trace-norm multiplicativity `traceNorm_kronecker`; log-negativity
+  additivity `logNegativity_add`; n-copy regularized rate
+  `logNegB_ncopy` + `logNegB_ncopy_localKraus_le`.
+- **Network envelopes** — `swapChain_fidelity_envelope`
+  (`Envelope.lean`, [¼,1] for k-swap Werner chains; "to our knowledge
+  the first formally verified protocol-level fidelity bound for
+  quantum networks" — hedged claim, verify hedge survives);
+  decay-inclusive `decayInclusive_fidelity_envelope`; unconditional
+  Horodecki teleportation
+  `teleportAvgFidelity_horodecki_unconditional` ((2F+1)/3, the Haar
+  integral `haarPauliZSqAverage_eq` PROVEN not assumed); BB84
+  crossover `bb84_crossover_exists` (IVT root, the ≈11% decimal is
+  NEVER asserted in the formal layer — verify the draft keeps this);
+  DEJMPS non-monotonicity witness `dejmps_single_step_can_decrease`
+  (Macchiavello asymptotics cited, NOT formalized); PLOB/erasure
+  two-layer posture (`plobBound`, `erasureBound`,
+  `erasureBound_le_plobBound` — formula layer Lean-verified, channel
+  converse literature-cited); MFMC strong duality `maxFlow_eq_minCut`
+  (`NetworkCapacityStrongDuality.lean`) — built in-project, Mathlib
+  has no max-flow/min-cut at the pin (verify this absence claim is
+  scoped to the pin).
+- **Device envelopes** — `avgGateFidelity_eq`
+  (F_avg = (dF_e+1)/(d+1), constructive sphere-moment proof);
+  coherence ceiling `avgGateFidelity_coherenceChannel`
+  (½ + ⅙e^{−t/T₁} + ⅓e^{−t/(2T₁)−t/T₂}, exact about the MODEL
+  channel); RB-style two-sided certificate
+  `avgGateFidelity_diamondDist_two_sided`; quantum FDT floor
+  `qho_meanEnergy` ((ℏω/2)·coth(βℏω/2), DERIVED from the PhysLib
+  canonical ensemble — verify "derived, not posited" framing); 6AQ
+  readout envelopes `readoutDecayProb` (range/strict-mono/antitone/
+  endpoints/`readoutDecayProb_enclosure`) and `thermalExcitedPop`
+  (DERIVED via `twoState_excited_probability` from PhysLib twoState;
+  StrictAnti; temperature/frequency monotonicity; rational
+  enclosures); uniform-prior prefactor ½ floors
+  (`avgAssignmentError_relaxation_floor`,
+  `avgAssignmentError_thermal_floor`) and the max-capstone
+  `avgAssignmentError_combined_floor`.
+- **Rational-enclosure technique** — `expNeg_enclosure`
+  (1−r ≤ e^{−r} ≤ 1/(1+r), `NumericalBounds.lean`) + degree-5 Taylor
+  squeeze `expNeg046_tight` (0.631 ≤ e^{−0.46} ≤ 0.632) — verify the
+  numerical bracket endpoints against the Lean statements.
+- Primary sources: Watrous (Theory of Quantum Information, CUP 2018);
+  Fuchs–van de Graaf (IEEE TIT 45, 1216 (1999)); Audenaert
+  (J. Phys. A 40, 8127 (2007)); Fannes (CMP 31, 291 (1973)); Mirsky
+  (Q. J. Math. 11, 50 (1960)); PLOB (Nat. Commun. 8, 15043 (2017));
+  Bennett–Brassard 1984; Shor–Preskill (PRL 85, 441 (2000)); Deutsch
+  et al. DEJMPS (PRL 77, 2818 (1996)); BBPSSW (PRL 76, 722 (1996));
+  BDCZ (PRL 81, 5932 (1998)); Horodecki³ (PRA 60, 1888 (1999));
+  Vidal–Werner (PRA 65, 032314 (2002)); Bennett–DiVincenzo–Smolin
+  (PRL 78, 3217 (1997)); Ford–Fulkerson (Canad. J. Math. 8, 399
+  (1956)); Nielsen (Phys. Lett. A 303, 249 (2002)); Magesan et al.
+  (PRL 106, 180504 (2011)); Gambetta et al. (PRA 76, 012325 (2007));
+  Walter et al. (PRApplied 7, 054020 (2017)); Geerlings et al.
+  (PRL 110, 120501 (2013)); Jin et al. (PRL 114, 240501 (2015));
+  Callen–Welton (Phys. Rev. 83, 34 (1951)); Caves (PRD 26, 1817
+  (1982)); Meiburg–Lessa–Soldati PhysLib (arXiv:2510.08672). Each
+  must resolve to a primary-source cache file.
+
+**Stage-13 anchors specific to D9:**
+- **The two-layer posture is load-bearing throughout.** Every floor /
+  ceiling theorem must keep the formula layer (Lean-verified) and the
+  device/channel-identification layer (literature-cited, explicit
+  hypothesis) separate. Spot-verify the four canonical instances: the
+  coherence ceiling (model-channel exactness vs physical-gate bound),
+  `plobBound`/`erasureBound` (formula vs CV channel converse), the
+  readout floors (decay-flips-outcome model hypothesis `he1`), and
+  the RB certificate (fidelity-to-diamond conversion verified; RB
+  model identification cited). Any sentence that reads a model
+  theorem as an unconditional device fact is a BLOCKER.
+- **The Caves wall ships as a HYPOTHESIS, never an axiom.** The
+  amplifier added-noise bound A ≥ ℏω/2 is the explicit hypothesis
+  `hcaves` of `fdt_noise_floor_amplifier` (`FDTNoiseFloor.lean`); the
+  bosonic CCR ladder algebra is absent from PhysLib/Mathlib at the
+  pin (documented wall, Phase 6AM/6AN roadmaps). Verify the draft
+  says hypothesis-not-axiom, and that the zero-project-local-axiom
+  claim is consistent with it.
+- **Diamond convention.** The corpus uses the HALVED diamond norm
+  (diamondDist = ½‖·‖_◇, [0,1]-valued). Verify every numerical
+  diamond claim (γ, p, 1−p₀, q, brackets) is stated in this
+  convention and no factor-of-2 drift exists against the cited
+  literature values.
+- **Formalization-first claims are hedged and enumerated.** Only
+  four such claims are authorized, all "to our knowledge": the
+  swap-chain protocol-level envelope, the sharp-Audenaert discharge,
+  the in-project MFMC (a library-gap claim, not new mathematics),
+  and the constructive sphere-moment derivation of the gate-fidelity
+  identity being import-free. Any additional "first" is a BLOCKER.
+- **Open items honestly excluded.** DEJMPS asymptotic basin
+  (Macchiavello, cited); Fortescue–Lo asymptotic optimality (open
+  conjecture, NOT claimed — verify `fortescueLoYield_tendsto_one` is
+  not over-read); exact non-covariant diamond distances (brackets
+  only); CV capacities (cited).
+- **Cross-bridge to D8 (compiled-gate certificate).** D8 owns
+  `diamondDist_cliffordTCompile_le` and the AKN conversion narrative;
+  D9 owns the channel/measurement-certification layer and cites D8
+  as sibling without restating its content. Verify no duplication of
+  the compiled-gate chain (`UnitaryDiamond`/`MatrixNormBridge`
+  content appears in D9 only as the consumed substrate note).
+- **Cross-bridge to D6 (logical layer).** The QEC suppression
+  theorems (`logicalErrorBound_antitone_distance`,
+  `logicalErrorBound_tendsto_zero`) are D9's interface to D6's
+  logical layer; verify D9 does not develop code/measurement/gauging
+  content.
+- **Cross-bridge to I3 (LDP foundations).** The FDT rare-event tail
+  (`fdt_rare_event_tail`, `fdt_gallavotti_cohen`) consumes I3's
+  large-deviation substrate; verify the citation direction.
+- **Disclosure Variant B** (register-derived 2026-06-10): no
+  ARISTOTLE_THEOREMS entry resolves to a QuantumNetwork module (S1)
+  and the draft names no Aristotle-proved theorem (S2, whole-word
+  sweep). Verify the standard Variant B block is the only
+  manuscript-level disclosure (docs/DISCLOSURE_TEXT.md).
+- **No project-local axioms** across D9 contributions (Pipeline
+  Invariant #15); the QuantumNetwork corpus additionally carries no
+  `native_decide`, no `sorry`, and no `maxHeartbeats` overrides
+  (verified by source sweep 2026-06-10). All theorems kernel-pure
+  `{propext, Classical.choice, Quot.sound}`.
+
 ---
 
 ## Tier 2 — PRL splashes
