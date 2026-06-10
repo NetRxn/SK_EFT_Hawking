@@ -168,5 +168,42 @@ theorem embedFst_mulVec_apply (A : Mat2') (v : Fin 2 × Fin 2 → ZOmegaSqrt2) (
   show A i i' * (1 : Mat2') j j * v (i', j) = A i i' * v (i', j)
   rw [Matrix.one_apply_eq, mul_one]
 
+/-! ### Circuit-layer foundations (inc 28): embedded single-qubit words are realizable
+
+The dim-4 column reduction realizes each row operation as a two-qubit `Gate2` word. The simplest such
+words embed a single-qubit Clifford+T word onto one line (`embedFst`/`embedSnd`); these are realizable
+within the word's length (`embedFst_interp`/`embedSnd_interp` are length-preserving). `wHTm` is the
+single-qubit `H·Tᵐ` word (the row-operation generator). NB an *embedded* `H·Tᵐ` acts on BOTH qubit
+blocks at once — the single-pair (controlled) operation the reduction ultimately needs is a follow-on;
+these lemmas are the shared realizability substrate. -/
+
+/-- `embedSnd` of a realizable single-qubit word is realizable within the word's length. -/
+theorem embedSnd_realizableWithin (gs : List CliffordTGate) :
+    IsRealizableWithin (embedSnd (CliffordTGate.interp gs)) gs.length :=
+  ⟨gs.map Gate2.onSnd, (embedSnd_interp gs).symm, by simp⟩
+
+/-- `embedFst` of a realizable single-qubit word is realizable within the word's length. -/
+theorem embedFst_realizableWithin (gs : List CliffordTGate) :
+    IsRealizableWithin (embedFst (CliffordTGate.interp gs)) gs.length :=
+  ⟨gs.map Gate2.onFst, (embedFst_interp gs).symm, by simp⟩
+
+/-- A replicated single-qubit word interprets to a power: `interp (replicate m g) = gateMatrix g ^ m`. -/
+theorem interp_replicate (g : CliffordTGate) (m : ℕ) :
+    CliffordTGate.interp (List.replicate m g) = (CliffordTGate.gateMatrix g) ^ m := by
+  induction m with
+  | zero => simp [CliffordTGate.interp_nil]
+  | succ n ih => rw [List.replicate_succ, CliffordTGate.interp_cons, ih]; exact (pow_succ' _ _).symm
+
+/-- The single-qubit `H·Tᵐ` word (the Giles–Selinger row-operation generator): one `H` then `m` `T`s. -/
+def wHTm (m : ℕ) : List CliffordTGate := CliffordTGate.H :: List.replicate m CliffordTGate.T
+
+@[simp] theorem wHTm_length (m : ℕ) : (wHTm m).length = m + 1 := by simp [wHTm]
+
+/-- `wHTm m` interprets to `H · Tᵐ`. -/
+theorem wHTm_interp (m : ℕ) :
+    CliffordTGate.interp (wHTm m) = CliffordTGate.gateMatrix CliffordTGate.H *
+      CliffordTGate.gateMatrix CliffordTGate.T ^ m := by
+  rw [wHTm, CliffordTGate.interp_cons, interp_replicate]
+
 end Gate2
 end SKEFTHawking.RossSelinger
