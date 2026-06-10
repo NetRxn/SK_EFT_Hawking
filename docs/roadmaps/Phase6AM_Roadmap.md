@@ -541,13 +541,30 @@ native_decide held at 596, confirming Track-3 independence):**
   (9218). **CONFIRMS the settled plan** — "mechanical-concrete, NOT research-grade" = elementary multi-case
   (incl. the 2-step), exactly as designed; the single-`H·Tᵐ` insufficiency was always known (inc-16). Also
   corrected the stale inc-16 `MatchingResidue` docstring (the v2 "`kmm_lemma3` IS needed" conflation).
-- **NEXT (Lemma-4 completion → `ReductionStep`):** (i) cross-orbit `0001` 2-step `1111`-bridge (reduces to
-  `core_step`); (ii) the mod-2-alignment existence (same-orbit ⟹ `∃m, 2∣x−ωᵐy`; from the residue tables);
-  (iii) wrap into the realizable `Gate2` two-level op (embed `H·Tᵐ` via `embedFst`/`embedSnd` + index
-  permutation X/CNOT, inc-17 block-action) reducing active-count without raising `colDenExp`; (iv) inner
-  induction on active-count + factor `√2` ⟹ `ReductionStep` → inc-15 `colLemma_of_reductionStep`
-  (unconditional dim-4 column lemma) → controlled-C (Amy et al.) + operator-norm on inc-8/9 ⟹ the
-  `∀U∈SU(2)` headline.
+- **VALIDATED Lemma-4 construction (kernel `#eval` over `{-1,0,1}⁴`, 0 failures — the recipe for the next
+  increment).** The UNIFORM 2-step handles BOTH same- and cross-orbit matched-active pairs:
+  - **(A) √2-match always exists:** every matched-active pair has `∃m∈{0,1}, √2 ∣ (w_p − ωᵐw_q)`. **Clean
+    proof (no big decide):** the mod-`√2` residue `r(z) := (a+c, b+d) mod 2 ∈ (ZMod 2)²` (so `√2∣z ⟺ r(z)=0`)
+    is *determined by the norm class* — `1010` `(P,Q)=(0,1)` ⟹ `r=(1,1)`; `0001` `(1,0)` ⟹ `r∈{(0,1),(1,0)}`
+    (since `P≡u+v`, `Q≡uv` with `u=a+c=r.1`, `v=b+d=r.2`). And `ω` acts on `r` by SWAPPING its two components
+    (`r(ωz)=(b+d,a+c)=swap r(z)`, so `ω²` fixes `r`). Swap-orbits: `{(1,1)}`, `{(0,1),(1,0)}` — so matched-norm
+    ⟹ same swap-orbit ⟹ `r(w_p)=r(ω^m w_q)` for `m=0` (if `r` equal) or `m=1` (if swapped). Step1 = `H·Tᵐ`
+    keeps both entries at level `k` (`√2 ∣ w_p ± ωᵐw_q`), giving `(u₁,u₂)=(divSqrt2(w_p+ωᵐw_q),divSqrt2(w_p−ωᵐw_q))`.
+    (Corollary: `1010` pairs have `r=(1,1)` always ⟹ √2-matched at `m=0`; consistent with `1010` = single ω-orbit.)
+  - **(B) post-step1 is mod-2 aligned:** `∃m', 2 ∣ (u₁ − ωᵐ'u₂)` — so `core_step` (inc 22) is step2, dropping
+    both to `denExp ≤ k-1`. (Same-orbit pairs also satisfy this directly via `core_step` alone — the 2-step is
+    a uniform superset.)
+  - **CAUTION (kernel-disproven shortcut):** the tempting "after step1, `u₁ = ωᵏu₂` EXACTLY" is FALSE
+    (256/512 cross-orbit pairs fail it). (B) genuinely needs mod-`2√2` (`√2³`) residue analysis — the `u`'s
+    depend on `w_p,w_q` mod 4 through `divSqrt2`'s `/2`. The structural proof tracks that; a single big decide
+    over `ℤ[ω]/√2³` (64²·64 ≈ 262k) exceeds the kernel heartbeat budget (#10), so NOT a decide — structural.
+- **NEXT (Lemma-4 completion → `ReductionStep`):** (i) prove (A) √2-match existence (mod-2 decide + ω^m-coord
+  bridge); (ii) prove (B) post-step1 mod-2 alignment (structural mod-`√2³`, the hard core) → assemble (A)+(B)+
+  `core_step` into the uniform Lemma 4 "matched-active pair ⟹ both drop to `denExp ≤ k-1`"; (iii) wrap into the
+  realizable `Gate2` two-level op (embed `H·Tᵐ` via `embedFst`/`embedSnd` + index permutation X/CNOT,
+  inc-17 block-action); (iv) inner induction on count-at-max-level + factor `√2` ⟹ `ReductionStep` → inc-15
+  `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et al.) + operator-norm
+  on inc-8/9 ⟹ the `∀U∈SU(2)` headline.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
