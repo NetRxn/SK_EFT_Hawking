@@ -643,6 +643,39 @@ native_decide held at 596, confirming Track-3 independence):**
     — design against KMM §2.2–2.3/[9] before coding; the headline norm form likely ancilla-restricted
     `‖(W−Λ(e^{iφ})⊗I)·(I⊗|00⟩)‖`, which is what inc-8/9's leakage budget supports). **T2-remaining ≈ 2000–4100
     LOC**; then T1 (~2000–3900) + T3 (~3000–5700). Full LOC map: memory `[[project_phase6AO_progress_2026_06_09]]`.
+- **✅✅ inc 29–33 SHIPPED (2026-06-10): the ENTIRE ReductionStep program is DONE — the dim-4 Giles–Selinger
+  column lemma is UNCONDITIONAL, QUANTITATIVE, and kernel-pure.** Commits `4c46e307` (inc 29 `Gate2Control.lean`),
+  `9de0a93b` (inc 30 `Gate2Perm.lean`), `f39ac035` (inc 31 `GilesSelingerPairDrop.lean`), `31d49ea3` (inc 32–33
+  `GilesSelingerColumnLemma.lean`); lib+ExtractDeps 9222 green; native_decide 596; all headlines
+  `lean_verify`-kernel-pure `{propext, Classical.choice, Quot.sound}`.
+  - inc 29: `ctrl P Q` block algebra (`ctrl_mul`; `cnot01 = ctrl 1 X`; `embedSnd A = ctrl A A`); **CH = ctrl 1 H
+    realized EXACTLY as an 18-gate Gate2 word** via conjugator `V = S·H·T·H·S†·H` (`V·X·V⁻¹ = H`); the
+    **det-balanced row-op gadget `rowOpGadget m = ctrl Tᵐ (H·Tᵐ) = CH·(I⊗Tᵐ)`** (≤ 18+m gates, inverse
+    `(I⊗T^{8−m})·CH`), exact column action = verbatim `core_step`/`cross_orbit_drop` shapes. 🔑 NEW TOOL:
+    **`decide +kernel`** (pure kernel reduction, same trust base as `decide`, NO native_decide, NO heartbeat
+    budget) — settles the 17-mul conjugator products that blow both `maxRecDepth` AND the 200k-heartbeat
+    elaborator budget under plain `decide`. The det obstruction is documented in-file: every Gate2 word has
+    `det ∈ ⟨ω²⟩`, so the bare two-level `H·Tᵐ` (det `−ωᵐ`) is UNREALIZABLE for odd m — the unconditional
+    `I⊗Tᵐ` phase balances it (this is the elementary content behind Giles–Selinger's one-ancilla clause).
+  - inc 30: `permMat` (pullback convention) + anti-composition + the **12-case ordered-pair alignment table**
+    (`exists_pair_alignment`: mutually-inverse ≤5-gate perm words, kernel decide — the decide caught a
+    transcription error in one case, the intended self-checking).
+  - inc 31: **`exists_pair_drop`** — matched-active pair ⟹ realizable `G` (+ realizable inverse, `Ginv·G = 1`,
+    ≤70 gates) dropping BOTH pair entries to `denExp ≤ t`, spectators' denExp unchanged (unit phases), unit
+    sum preserved. Helpers: `ω⁸=1` + exponent capping (budget-bounded phases), denExp/normSq unit-phase
+    invariance, the √2-parallelogram law, `mk`-extraction, `denExp (mk z (k+1)) = k+1 ⟺ ¬dividesSqrt2 z`.
+  - inc 32–33: **`reductionStep_holds : ReductionStep 280`** (numerator-sum bridge `Σ|wᵢ|² = 2^{t+1}` ⟹
+    Lemma-5 pair exists ⟹ pair-drop; active-set descent, ≤4 rounds — NO evenness counting needed at budget
+    280) + **`column_lemma_bounded`: every unit ℤ[ω][1/√2] column is the first column of an exact 2-qubit
+    Clifford+T word of length ≤ 280·colDenExp + 9** (linear in denominator exponent = O(log 1/ε)) +
+    `column_lemma_unconditional`. **Circuit-C exact synthesis COMPLETE.**
+  - **NEXT (the remaining T2 pieces): controlled-C + operator-norm + ∀U headline (~800–1800 LOC).** ⚠ DESIGN
+    CHECKPOINT FIRST (do NOT guess): the KMM W acts on system⊗2-ancillas (dim 8); the n=3 det parity (`⟨ω⁴⟩`
+    achievable) obstructs naive Λ-lifts of Gate2 words exactly as at n=2 (e.g. `Λ(I⊗Tᵐ)` has det `ω²ᵐ ∉ ⟨ω⁴⟩`
+    for odd m) — the same unconditional-phase det-balancing pattern should lift, but design the dim-8 gate layer
+    + the controlled-C realization against KMM §2.2–2.3 (+ ref [9] Amy et al.) BEFORE coding. Also settle the
+    headline norm form: full `‖W−Λ(e^{iφ})⊗I‖` vs ancilla-restricted `‖(W−Λ(e^{iφ})⊗I)·(I_sys⊗|00⟩)‖` (inc-8/9's
+    amplitude+leakage budget directly supports the restricted form — verify which form KMM actually prove).
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
