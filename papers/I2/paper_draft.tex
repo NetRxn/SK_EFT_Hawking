@@ -47,7 +47,7 @@ purely as deterministic functions on finite samples, using neither
 probability theory nor measure theory, with proofs that exercise
 only finite-arithmetic Lean tactics. \textbf{(2)
 \texttt{lean-tensor-categories}}: a 27-module library
-($\sim$695 declarations across theorems, definitions,
+($\sim$949 declarations across theorems, definitions,
 structures, classes, and inductives) covering the categorical
 hierarchy
 (Pivotal $\to$ Spherical $\to$ Balanced $\to$ Ribbon $\to$
@@ -534,7 +534,7 @@ this library.
 \label{sec:instances}
 
 The instances are organized by anyon family. Total yield across
-ten files: 295 declarations.
+ten files: 549 declarations.
 
 \begin{figure}[h]
 \centering
@@ -572,20 +572,36 @@ combinatorial datum.
 
 \texttt{SU2kMTC.lean} (17 declarations) instantiates
 \texttt{ModularTensorData} for each $k$. \texttt{SU2kSMatrix.lean}
-(20 declarations) computes the explicit $S$-matrix
+(259 declarations including 245 theorems) computes the explicit
+$S$-matrix
 $S_{j_1 j_2} = \sqrt{\frac{2}{k+2}}
 \sin\!\frac{(2j_1+1)(2j_2+1)\pi}{k+2}$ and proves the Verlinde
 formula
 $N_{j_1 j_2}^{j_3} = \sum_{j} \frac{S_{j_1 j} S_{j_2 j}
-\overline{S_{j_3 j}}}{S_{0 j}}$ for the cases $k = 1$ and $k = 2$
+\overline{S_{j_3 j}}}{S_{0 j}}$ at every $k = 1, \ldots, 5$:
+representative cases at $k = 1, 2$
 (theorems \texttt{verlinde\_k1\_11\_0}, \texttt{verlinde\_k1\_11\_1},
 \texttt{verlinde\_k2\_sigma\_sq\_vacuum},
 \texttt{verlinde\_k2\_sigma\_sq\_no\_sigma},
 \texttt{verlinde\_k2\_sigma\_sq\_psi},
-\texttt{verlinde\_k2\_psi\_sq\_vacuum}); Verlinde-formula
-verification at $k = 3, 4, 5$ is not yet shipped (the fusion
-associativity at those levels is proven separately in
-\texttt{SU2kFusion.lean}).
+\texttt{verlinde\_k2\_psi\_sq\_vacuum}), and the \emph{complete}
+fusion tables at $k = 3, 4, 5$
+(\texttt{verlinde\_k3\_full} / \texttt{verlinde\_k4\_full} /
+\texttt{verlinde\_k5\_full}: all $4^3 = 64$, $5^3 = 125$, and
+$6^3 = 216$ index triples respectively, each fiber checked against
+the truncated Clebsch--Gordan coefficients of
+\texttt{SU2kFusion.lean}), together with
+$S S^{\mathsf{T}} = I$ unitarity and $\det S \neq 0$ modularity at
+each level. The $k = 3, 4$ tables reduce in
+$\mathbb{Q}(\varphi) = \mathbb{Q}(\sqrt{5})$ and
+$\mathbb{Q}(\sqrt{3})$ respectively, while the $k = 5$ entries live
+in the totally real cubic field $\mathbb{Q}(2\cos(\pi/7))$, whose
+generator admits no quadratic radical form (casus irreducibilis) and
+whose cubic minimal polynomial $c^3 = c^2 + 2c - 1$ is itself proven
+from the double- and triple-angle identities and drives all power
+reduction. All of these proofs are kernel-pure
+(\texttt{decide} / \texttt{norm\_num} / \texttt{ring} /
+\texttt{linear\_combination}; no \texttt{native\_decide}).
 
 \subsection{$\mathrm{SU}(3)_k$ at $k = 1, 2$}
 
@@ -615,8 +631,9 @@ $\sigma$-anyon braiding.
 
 \subsection{Fibonacci MTC}
 
-\texttt{FibonacciBraiding.lean} (55 declarations including 32
-theorems) is the largest single instance file in the library. The
+\texttt{FibonacciBraiding.lean} (70 declarations including 45
+theorems) is the second-largest instance file in the library
+(after \texttt{SU2kSMatrix.lean}). The
 two simple objects are $\mathbf{1}$ and $\tau$ (the Fibonacci
 anyon, with quantum dimension $d_\tau = \varphi$). The fusion rule
 $\tau \otimes \tau = \mathbf{1} \oplus \tau$ is the source of the
@@ -628,8 +645,21 @@ Section~\ref{sec:numberfields}. \texttt{FibonacciMTC.lean}
 (18 declarations) wraps the result as a \texttt{ModularTensorData}
 instance and proves the pentagon identity (theorem
 \texttt{fib\_pentagon}, line~106) by \texttt{native\_decide} on the
-512-case F-symbol catalog. The hexagon identity is not yet shipped
-as a named theorem in either Fibonacci file.
+512-case F-symbol catalog. The hexagon identity is shipped in both
+braiding orientations as named, kernel-pure theorems in
+\texttt{FibonacciBraiding.lean}: the $d = \tau$ sector
+entry-by-entry (\texttt{fib\_hexagon\_R\_00} through
+\texttt{fib\_hexagon\_R\_11}) plus the vacuum sector
+\texttt{fib\_hexagon\_R\_vacuum} (the eigenvalue relation
+$R_\tau^2 = R_{\mathbf{1}}$), and the inverse-braiding counterparts
+\texttt{fib\_hexagon\_Rinv\_00} through
+\texttt{fib\_hexagon\_Rinv\_11} with
+\texttt{fib\_hexagon\_Rinv\_vacuum}, against proven inverses
+$R_{\mathbf{1}}^{-1} = \theta_\tau$ and $R_\tau^{-1} = -\zeta_5$;
+the pentagon remains hosted in \texttt{FibonacciMTC.lean}, the
+hexagon in \texttt{FibonacciBraiding.lean} because the $R$-symbols
+are complex phases that live in $\mathbb{Q}(\zeta_5)$ rather than
+the real field $\mathbb{Q}(\sqrt{5})$ of the F-matrix.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §7 Mathlib upstream coordination

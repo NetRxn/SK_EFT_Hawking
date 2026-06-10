@@ -15,7 +15,9 @@ Braiding generators:
   σ₁ = diag(R₁, R_τ)              (braids anyons 1,2)
   σ₂ = F · diag(R₁, R_τ) · F     (braids anyons 2,3; F²=I so F⁻¹=F)
 
-All arithmetic in Q(ζ₅) verified by native_decide. Zero sorry.
+Arithmetic in Q(ζ₅). The hexagon block (§5) is kernel-pure (`ext <;> simp`
+over QCyc5 components — no native_decide); the legacy braid-relation,
+center, and order sections (§4, §6–§8) retain native_decide. Zero sorry.
 
 References:
   Freedman, Larsen, Wang, Comm. Math. Phys. 227, 605 (2002)
@@ -176,7 +178,108 @@ theorem braid_11 :
     Rtau * sigma2_11 * Rtau =
     sigma2_10 * R1 * sigma2_01 + sigma2_11 * Rtau * sigma2_11 := by native_decide
 
-/-! ## 5. Center of B₃ and Density Structure
+/-! ## 5. Hexagon Equations (R and R⁻¹ orientations)
+
+The hexagon axiom of a braided fusion category ties the braiding (R-symbols)
+to the associator (F-symbols). For a multiplicity-free anyon model the two
+hexagon equations read (Kitaev 2006, App. E; with all labels = τ):
+
+  R^{ττ}_e · [F^{τττ}_d]_{ef} · R^{ττ}_f = Σ_g [F^{τττ}_d]_{eg} · R^{τg}_d · [F^{τττ}_d]_{gf}
+
+and the same with every R replaced by R⁻¹. The KEY structural point: the
+middle factor on the right braids τ past the INTERMEDIATE charge g, so it is
+`R^{τ1}_d = 1` for g = vacuum (braiding with the vacuum is trivial) and
+`R^{ττ}_τ = Rτ` for g = τ.
+
+**Sector d = τ** (e, f ∈ {1, τ} both admissible): with R̂ = diag(R₁, Rτ) this
+is the 2×2 matrix identity  R̂ · F · R̂ = F · diag(1, Rτ) · F,  verified
+entry-by-entry below (`fib_hexagon_R_00` … `fib_hexagon_R_11`).
+
+**Sector d = 1** (e = f = τ forced by fusion): Rτ · 1 · Rτ = 1 · R₁ · 1, i.e.
+`Rτ² = R₁` (`fib_hexagon_R_vacuum`) — the eigenvalue relation that powers the
+FLW two-eigenvalue classification.
+
+Hosting note: the F-symbols also live in `FibonacciMTC.fibF` over the REAL
+field ℚ(√5) (same Kitaev-convention isotopy gauge; F-matrix
+[[φ⁻¹, φ⁻¹], [1, -φ⁻¹]] = `F00 F01 F10 F11` here), but the R-symbols are
+complex phases, so the hexagon can only be stated in ℚ(ζ₅) — hence it is
+hosted HERE (this file owns the R-symbols `R1`, `Rtau` from `QCyc5.lean`;
+`FibonacciMTC.lean` owns the pentagon over ℚ(√5)).
+
+Dividing the (0,0)/(0,1)/(1,1) entries by the common φ⁻¹ factor recovers
+exactly the scalar consequence relations `QCyc5.hexagon_E1/E2/E3`. All ten
+theorems below are **kernel-pure** via the `ext <;> simp [powerTable…]`
+template — no `native_decide`. -/
+
+/-- R₁⁻¹ = ζ² = θτ: the inverse of the vacuum-channel R-symbol is the
+topological twist (cf. `QCyc5.twist_from_R`). -/
+def R1_inv : QCyc5 := theta_tau
+
+/-- R₁ · R₁⁻¹ = 1 (kernel-pure companion of `QCyc5.twist_from_R`). -/
+theorem R1_mul_R1_inv : R1 * R1_inv = 1 := by
+  ext <;> simp [R1, R1_inv, theta_tau]
+
+/-- Rτ⁻¹ = -ζ (inverse of the τ-channel R-symbol Rτ = -ζ⁴). -/
+def Rtau_inv : QCyc5 := ⟨0, -1, 0, 0⟩
+
+/-- Rτ · Rτ⁻¹ = 1 (kernel-pure). -/
+theorem Rtau_mul_Rtau_inv : Rtau * Rtau_inv = 1 := by
+  ext <;> simp [Rtau, Rtau_inv]
+
+/-- **Hexagon (R), d = τ, entry (0,0)**: R₁·F₀₀·R₁ = F₀₀·F₀₀ + F₀₁·Rτ·F₁₀.
+Dividing by φ⁻¹ gives `QCyc5.hexagon_E1`. -/
+theorem fib_hexagon_R_00 :
+    R1 * F00 * R1 = F00 * F00 + F01 * Rtau * F10 := by
+  ext <;> simp [F00, F01, F10, R1, Rtau, phi_inv]
+
+/-- **Hexagon (R), d = τ, entry (0,1)**: R₁·F₀₁·Rτ = F₀₀·F₀₁ + F₀₁·Rτ·F₁₁.
+Dividing by φ⁻¹ gives `QCyc5.hexagon_E2`. -/
+theorem fib_hexagon_R_01 :
+    R1 * F01 * Rtau = F00 * F01 + F01 * Rtau * F11 := by
+  ext <;> simp [F00, F01, F11, R1, Rtau, phi_inv]
+
+/-- **Hexagon (R), d = τ, entry (1,0)**: Rτ·F₁₀·R₁ = F₁₀·F₀₀ + F₁₁·Rτ·F₁₀. -/
+theorem fib_hexagon_R_10 :
+    Rtau * F10 * R1 = F10 * F00 + F11 * Rtau * F10 := by
+  ext <;> simp [F00, F10, F11, R1, Rtau, phi_inv]
+
+/-- **Hexagon (R), d = τ, entry (1,1)**: Rτ·F₁₁·Rτ = F₁₀·F₀₁ + F₁₁·Rτ·F₁₁.
+Multiplying out by -φ recovers `QCyc5.hexagon_E3`. -/
+theorem fib_hexagon_R_11 :
+    Rtau * F11 * Rtau = F10 * F01 + F11 * Rtau * F11 := by
+  ext <;> simp [F01, F10, F11, Rtau, phi_inv]
+
+/-- **Hexagon (R), d = 1 (vacuum sector)**: Rτ² = R₁. The 1×1 hexagon
+component (e = f = τ forced); kernel-pure strengthening of
+`QCyc5.R1_eq_Rtau_sq` (which is `native_decide`). -/
+theorem fib_hexagon_R_vacuum : Rtau * Rtau = R1 := by
+  ext <;> simp [R1, Rtau]
+
+/-- **Hexagon (R⁻¹), d = τ, entry (0,0)**: R₁⁻¹·F₀₀·R₁⁻¹ = F₀₀·F₀₀ + F₀₁·Rτ⁻¹·F₁₀. -/
+theorem fib_hexagon_Rinv_00 :
+    R1_inv * F00 * R1_inv = F00 * F00 + F01 * Rtau_inv * F10 := by
+  ext <;> simp [F00, F01, F10, R1_inv, theta_tau, Rtau_inv, phi_inv]
+
+/-- **Hexagon (R⁻¹), d = τ, entry (0,1)**: R₁⁻¹·F₀₁·Rτ⁻¹ = F₀₀·F₀₁ + F₀₁·Rτ⁻¹·F₁₁. -/
+theorem fib_hexagon_Rinv_01 :
+    R1_inv * F01 * Rtau_inv = F00 * F01 + F01 * Rtau_inv * F11 := by
+  ext <;> simp [F00, F01, F11, R1_inv, theta_tau, Rtau_inv, phi_inv]
+
+/-- **Hexagon (R⁻¹), d = τ, entry (1,0)**: Rτ⁻¹·F₁₀·R₁⁻¹ = F₁₀·F₀₀ + F₁₁·Rτ⁻¹·F₁₀. -/
+theorem fib_hexagon_Rinv_10 :
+    Rtau_inv * F10 * R1_inv = F10 * F00 + F11 * Rtau_inv * F10 := by
+  ext <;> simp [F00, F10, F11, R1_inv, theta_tau, Rtau_inv, phi_inv]
+
+/-- **Hexagon (R⁻¹), d = τ, entry (1,1)**: Rτ⁻¹·F₁₁·Rτ⁻¹ = F₁₀·F₀₁ + F₁₁·Rτ⁻¹·F₁₁. -/
+theorem fib_hexagon_Rinv_11 :
+    Rtau_inv * F11 * Rtau_inv = F10 * F01 + F11 * Rtau_inv * F11 := by
+  ext <;> simp [F01, F10, F11, Rtau_inv, phi_inv]
+
+/-- **Hexagon (R⁻¹), d = 1 (vacuum sector)**: (Rτ⁻¹)² = R₁⁻¹ (= θτ). -/
+theorem fib_hexagon_Rinv_vacuum : Rtau_inv * Rtau_inv = R1_inv := by
+  ext <;> simp [R1_inv, theta_tau, Rtau_inv]
+
+/-! ## 6. Center of B₃ and Density Structure
 
 The B₃ representation from 3 Fibonacci anyons is DENSE in SU(2)
 (Freedman-Larsen-Wang, Comm. Math. Phys. 227/228, 2002).
@@ -250,7 +353,7 @@ theorem s1s2_cu_not_identity : s1s2_cu_00 ≠ 1 := by native_decide
 /-- (σ₁σ₂)⁶ = (scalar)² — checking if the scalar squares to 1 or det. -/
 theorem s1s2_6_diagonal : s1s2_cu_00 * s1s2_cu_00 ≠ 1 := by native_decide
 
-/-! ## 6. Contrast with Ising Clifford Group
+/-! ## 7. Contrast with Ising Clifford Group
 
 Ising braiding generates the FINITE Clifford group (order 24).
 Fibonacci braiding generates a DENSE subgroup of SU(2) (FLW 2002).
@@ -287,7 +390,7 @@ theorem Rtau_order_divides_10 :
     let r5 := Rtau * Rtau * Rtau * Rtau * Rtau
     r5 * r5 = 1 := by native_decide
 
-/-! ## 7. Trace Data and Universality Structure
+/-! ## 8. Trace Data and Universality Structure
 
 The FLW density proof uses the "two-eigenvalue classification":
 each σᵢ satisfies (σᵢ+1)(σᵢ-q) = 0 with q = e^{2πi/5}.
@@ -329,7 +432,7 @@ theorem tr_s1s2_cu_is_double_scalar :
 -- Universality requires the qutrit encoding (total charge τ, dim 3),
 -- which needs the degree-8 field Q(ζ₅, √φ) ⊃ Q(ζ₅).
 
-/-! ## 8. Module Summary -/
+/-! ## 9. Module Summary -/
 
 /-! ## Module summary
 
@@ -339,11 +442,18 @@ FibonacciBraiding: First verified Fibonacci anyon braiding gates.
   - σ₂ = FRF: diagonal entries in Q(ζ₅), det = det(σ₁) PROVED
   - tr(σ₂) = tr(σ₁) PROVED (cyclic property of trace)
   - **Yang-Baxter / braid relation: ALL 4 entries PROVED** (native_decide)
+  - **Hexagon identity, BOTH orientations, PROVED kernel-pure** (§5):
+    d=τ sector entry-by-entry `fib_hexagon_R_00/01/10/11` + vacuum sector
+    `fib_hexagon_R_vacuum` (Rτ² = R₁), and the R⁻¹ counterparts
+    `fib_hexagon_Rinv_00/01/10/11` + `fib_hexagon_Rinv_vacuum`, with proven
+    inverses `R1_mul_R1_inv` / `Rtau_mul_Rtau_inv` — `ext <;> simp` over
+    QCyc5, NO native_decide (pentagon lives in FibonacciMTC.lean)
   - **(σ₁σ₂)³ = scalar: PROVED** (B₃ center element Δ², consistent with dense image)
   - (σ₁σ₂)¹ and (σ₁σ₂)² NOT scalar: PROVED
   - R₁ exact order 5, R_τ exact order 10: PROVED
   - B₃ image is DENSE in SU(2) by FLW theorem (not finite icosahedral)
   - Off-diagonal σ₂ entries need Q(ζ₅,√φ); traces stay in Q(ζ₅)
-  - Zero sorry, zero axioms. All by native_decide over Q(ζ₅).
+  - Zero sorry, zero axioms. Legacy sections by native_decide over Q(ζ₅);
+    the §5 hexagon block is kernel-pure.
 -/
 end SKEFTHawking.FibonacciBraiding

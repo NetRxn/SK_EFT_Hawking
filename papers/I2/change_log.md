@@ -115,3 +115,57 @@ QI candidates surfaced (Stage 14 candidates):
 - `scripts/update_counts.py` per-bundle macros — extend to emit `\iiNumberFieldDecls`, `\iiHopfDecls`, `\iiCategoricalDecls`, `\iiInstancesDecls`, etc., for I2-class count-heavy bundles. Closes the count-drift class for good.
 
 LaTeX compile clean (14 pages, 1200339 bytes). validate.py citation_primary_sources_present PASS (no new bibitems added; all references registry-resident). Stage-13 redo: re-runnable; expect GREEN.
+
+## 2026-06-10 — Review-2026-06-05 weakness fix: Verlinde k=3,4,5 full tables + Fibonacci hexagon (Lean-first, prose synced)
+
+Lean ships (same commit):
+
+- `lean/SKEFTHawking/SU2kSMatrix.lean` 20 → 259 declarations (245
+  theorems): k=3 4×4 S-matrix over ℚ(φ) with FULL 64-fiber Verlinde
+  table (`verlinde_k3_full`); k=4 5×5 over ℚ(√3), 125 fibers
+  (`verlinde_k4_full`); k=5 6×6 over ℚ(2cos(π/7)) with PROVEN cubic
+  minimal polynomial `c7_cubed : c₇³ = c₇² + 2c₇ − 1` (casus
+  irreducibilis — no quadratic radical form), 216 fibers
+  (`verlinde_k5_full`); every fiber checked against `su2kFusion` of
+  `SU2kFusion.lean`; S·Sᵀ = I unitarity + det S ≠ 0 at each of
+  k=3,4,5; row-0 trig ties (`S_k3_row0_sin` / `S_k4_row0_sin` /
+  `S_k5_row0_sin`). Kernel-pure: decide / norm_num / ring /
+  linear_combination only; no native_decide, no maxHeartbeats; axiom
+  closure of `verlinde_k5_full` + `S_k5_unitary` =
+  propext + Classical.choice + Quot.sound (lean_verify).
+- `lean/SKEFTHawking/FibonacciBraiding.lean` 55 → 70 declarations
+  (32 → 45 theorems): hexagon identity in BOTH orientations as named
+  kernel-pure theorems — `fib_hexagon_R_{00,01,10,11}` +
+  `fib_hexagon_R_vacuum` (Rτ² = R₁) and `fib_hexagon_Rinv_{00,01,10,11}`
+  + `fib_hexagon_Rinv_vacuum` — with proven inverses `R1_mul_R1_inv` /
+  `Rtau_mul_Rtau_inv` (`ext <;> simp` over QCyc5; zero new
+  native_decide). Header + module summary updated to distinguish the
+  kernel-pure §5 hexagon block from legacy native_decide sections;
+  duplicate `## 8` section header resolved (Module Summary → `## 9`).
+
+Paper edits (count convention `grep -cE '^\s*(noncomputable\s+)?(def|abbrev|theorem|lemma|structure|class|inductive|instance)'`; stated HEAD counts 20 / 55 / "32 theorems" reproduced exactly before recounting):
+
+- §6.1 Verlinde passage: k=1,2-only limitation REPLACED by k=1..5
+  coverage — representative k=1,2 theorems retained by name + full
+  tables `verlinde_k3_full` / `verlinde_k4_full` / `verlinde_k5_full`
+  (4³=64, 5³=125, 6³=216 triples) + unitarity/modularity at each
+  level + the ℚ(2cos(π/7)) cubic-minimal-polynomial substrate clause;
+  SU2kSMatrix count 20 → 259 (245 theorems).
+- §6.4 Fibonacci passage: "hexagon not yet shipped" limitation (the
+  2026-05-11 Stage-13 BLOCKER 3.2 retraction) REPLACED by the shipped
+  named theorems, both orientations, with the ℚ(ζ₅)-vs-ℚ(√5) hosting
+  rationale; pentagon remains attributed to `FibonacciMTC.lean`;
+  FibonacciBraiding count 55 → 70 (45 theorems); stale "largest
+  single instance file" → "second-largest (after SU2kSMatrix.lean)".
+- Aggregates: §6 ten-file instance total 295 → 549; abstract library
+  total ~695 → ~949. SU3k2FSymbols deferral sentence (~§6.2, a
+  different file/claim) intentionally untouched.
+
+QI candidate surfaced (Stage 14): `figures/i2_fig3_mtc_instances.png`
+component-status cells may now understate SU(2)_{3,4,5} Verlinde
+coverage (figure regeneration runs through the canonical
+visualizations pipeline, out of scope for this text-sync commit).
+
+Gates: `lake build` clean (9248 jobs); `validate.py --check
+lean_source` PASS; pdflatex ×2 clean (zero errors, zero undefined
+references).
