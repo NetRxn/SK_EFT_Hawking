@@ -1478,6 +1478,13 @@ import SKEFTHawking.FKLW.RossSelinger.ZOmegaEuclideanDomain
 -- through star INSIDE the recursion at the smaller measure — no unit-group classification needed).
 -- Real-embedding order zsqrt2ToReal (= paper's ξ ≥ 0). The unit input Lemma C.16 consumes.
 import SKEFTHawking.FKLW.RossSelinger.Zsqrt2Units
+-- Phase 6AO Track 1(c) inc 2 (2026-06-10) — RS 1403.2975v3 **Lemma C.16**:
+-- relNorm_iff_doublyPositive_decomposable — t†t = ξ solvable in ℤ[ω] ⟺ ξ doubly positive ∧
+-- †-decomposable (Defs C.1/C.15). Infrastructure: zsqrt2ToZOmega (ℤ[√2] →+* ℤ[ω], conj-fixed,
+-- σ5∘embed = embed∘star, toComplex∘embed = ℝ-cast∘zsqrt2ToReal via s2C_eq), relNormZsqrt2 (the
+-- ℤ[√2]-valued t†t) with the NORM TOWER N_ℤ[√2](relNorm t) = N_ℤ[ω](t) ⟹ strict positivity for
+-- t ≠ 0 via norm_eq_zero_iff (NO toComplex-injectivity). Unit absorbed by Lemma C.2.
+import SKEFTHawking.FKLW.RossSelinger.RelNormSolvability
 -- Phase 6x Tier-2 Item I (2026-05-30) — compile_correct approximation helpers:
 -- linftyOpNorm_fin_two_le (entrywise ≤δ ⟹ ℓ∞-operator-norm ≤ 2δ for 2×2) + su2_entry_structure
 -- (U∈SU(2) ⟹ U=[[a,−b̄],[b,ā]]). Propagate the grid first-column approximation to ‖·‖≤ε.
