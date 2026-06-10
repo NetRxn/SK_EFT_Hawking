@@ -1383,6 +1383,21 @@ import SKEFTHawking.FKLW.RossSelinger.ZOmegaTorsion
 -- every kSO3=0 key is (0, 2ωᵇ), (√2ωᵃ, √2ωᵇ), or (2ωᵃ, 0) — substrate for the per-class
 -- finite coverage checks replacing cliffordBase_box_core (inc 4c).
 import SKEFTHawking.FKLW.RossSelinger.CliffordBaseStructural
+-- Phase 6AO Track 3 site 4/4 (2026-06-10) — **KMMLemma3Structural: the T-pairing calculus**
+-- toward eliminating kmm_lemma3_alg2. Bform pairing + gdePQ-factoring + update formulas
+-- (P(x+z) = P+P+2B; Q(x+z) = Q+Q+(B(x,ωz)−B(x,ω³z))) + P/Q ω-invariance + B(x,ω⁴z) = −B +
+-- the TWO norm-multiplicativity reachability identities (x·ȳ = ⟨T₃,T₂,T₁,T₀⟩ exactly:
+-- P·P'+2Q·Q' = ΣTᵢ²; P·Q'+Q·P' = T₃T₂+T₂T₁+T₁T₀−T₃T₀) — all ring-proved. Plus the two
+-- 262k-tuple kernel master sweeps kmm_master_a/b (decide +kernel, ~80 s each; the free-T
+-- version is FALSE — the reachability constraints are load-bearing, validated 0/36864).
+import SKEFTHawking.FKLW.RossSelinger.KMMLemma3Structural
+-- Phase 6AO Track 3 site 4/4 (2026-06-10) — **KMMLemma3Alg2: kmm_lemma3_alg2 ELIMINATED**
+-- (the LAST of the 4 KMM native_decide sites — formerly a ~16.7M-pair sweep). The statement
+-- is re-proved VERBATIM (zero consumer changes): branch on P(x)+P(y) ∈ {0,4} (2u=0 dichotomy),
+-- massage to the master's (P,Q,T)-data via the reachability identities, transport the
+-- conclusion through gde_add_eq_of + the Bform index folds. Kernel-pure — the ENTIRE KMM
+-- exact-synthesis arc (bridge, ma_step, cliffordBase, Lemma 3) is now native_decide-free.
+import SKEFTHawking.FKLW.RossSelinger.KMMLemma3Alg2
 -- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — the Matsumoto-Amano coverage recursion.
 -- maCoverage (realizable M, kSO3 M≤3 ⟹ ∃ word ≤ 3·kSO3 M+6 ≤ 15) by strong induction on kSO3:
 -- base = Clifford (cliffordBase hypothesis ≤6); step = strip ma_step syllable (kSO3 drops) +

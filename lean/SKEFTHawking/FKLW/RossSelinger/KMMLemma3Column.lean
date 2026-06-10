@@ -32,6 +32,7 @@ matrix-level translation of `gde(|·|²)` to `sdeC`.
 -/
 
 import SKEFTHawking.FKLW.RossSelinger.PropOneBridge
+import SKEFTHawking.FKLW.RossSelinger.KMMLemma3Alg2
 
 set_option autoImplicit false
 

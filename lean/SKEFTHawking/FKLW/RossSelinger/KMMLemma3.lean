@@ -101,20 +101,5 @@ end Coord4
 
 open Coord4
 
-/-- **KMM Lemma 3 (Algorithm 2, computer-checked).** For each base level
-`j ∈ {0,1}`, each residue pair `(x,y)` with `gde x = gde y = j` satisfying the
-necessary congruences `2·(P(x)+P(y)) = 0` (i.e. `P(x)+P(y) ∈ {0, 4}`) and
-`Q(x)+Q(y) = 0` in `ℤ[ω]/(2³)`, and each target `d = s+1 ∈ {1,2,3}`, there is
-`k ∈ {0,1,2,3}` with `gde(x + ωᵏ·y) = d + j`. This is KMM Algorithm 2 verbatim;
-the maximiser at `d = 3` (resp. `d+j = 4` when `j=1`) is the sde-reducing `k`.
-The `P+P ∈ {0,4}` condition (phrased as `2·(P+P) = 0` for clean `Decidable`
-synthesis) covers the entire `sde(|z|²) ≥ 4` regime: `P+P ≡ 0` is `m ≥ 3`
-(sde ≥ 5) and `P+P ≡ 4` is `m = 2` (sde = 4, `j = 0`), where `|x|²+|y|² = 2^m`. -/
-theorem kmm_lemma3_alg2 :
-    ∀ (x y : Coord4) (j : Fin 2),
-      gde x = j.val → gde y = j.val →
-      2 * (Pform x + Pform y) = 0 → Qform x + Qform y = 0 →
-      ∀ s : Fin 3, ∃ k : Fin 4, gde (add x (mulOmegaPow k.val y)) = (s.val + 1) + j.val := by
-  native_decide
 
 end SKEFTHawking.RossSelinger.KMM

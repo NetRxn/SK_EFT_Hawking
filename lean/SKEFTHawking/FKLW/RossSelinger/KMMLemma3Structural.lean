@@ -28,6 +28,9 @@ pairing (`B(x,z) = Σ xᵢzᵢ`):
 
 import SKEFTHawking.FKLW.RossSelinger.KMMLemma3
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.FinCases
 
 set_option autoImplicit false
 
@@ -140,5 +143,30 @@ theorem kmm_master_b : ∀ pX qX t0 t1 t2 t3 : ZMod 8, ∀ j : Fin 2,
     ∀ s : Fin 3, ∃ k : Fin 4,
       gdePQ (4 + pUpd t0 t1 t2 t3 k) (0 + qUpd t0 t1 t2 t3 k) = (s.val + 1) + j.val := by
   decide +kernel
+
+/-! ### Iterated rotation helpers -/
+
+namespace Coord4
+
+/-- `mulOmegaPow` composes additively. -/
+theorem mulOmegaPow_add (a b : ℕ) (z : Coord4) :
+    mulOmegaPow a (mulOmegaPow b z) = mulOmegaPow (a + b) z := by
+  induction a with
+  | zero => rw [Nat.zero_add]; rfl
+  | succ n ih => rw [Nat.succ_add]; show mulOmega _ = _; rw [ih]; rfl
+
+/-- `P` is invariant under iterated rotation. -/
+theorem Pform_mulOmegaPow (n : ℕ) (z : Coord4) : Pform (mulOmegaPow n z) = Pform z := by
+  induction n with
+  | zero => rfl
+  | succ m ih => show Pform (mulOmega _) = _; rw [Pform_mulOmega, ih]
+
+/-- `Q` is invariant under iterated rotation. -/
+theorem Qform_mulOmegaPow (n : ℕ) (z : Coord4) : Qform (mulOmegaPow n z) = Qform z := by
+  induction n with
+  | zero => rfl
+  | succ m ih => show Qform (mulOmega _) = _; rw [Qform_mulOmega, ih]
+
+end Coord4
 
 end SKEFTHawking.RossSelinger.KMM
