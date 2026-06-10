@@ -1605,6 +1605,13 @@ import SKEFTHawking.FKLW.RossSelinger.CliffordTGate3
 -- ≤ 30·|w| with interp3 = ctrl8 D (interp2 w), D |00⟩-fixing — applied to the column-lemma word = KMM's
 -- controlled-C. Kernel-pure.
 import SKEFTHawking.FKLW.RossSelinger.Gate3Control
+-- Phase 6AO Track 2 (inc 36, 2026-06-10): THE KMM Z-ROTATION HEADLINE WORD — kmm_z_rotation_word: ∀ φ k,
+-- an explicit 3-qubit Clifford+T word W of length ≤ 16800·k + 270 (LINEAR in k = O(log 1/ε) exponent 1,
+-- ε = √2/2^k) realizing controlled-C UNCONDITIONALLY (no prime-density hypothesis; only Lagrange
+-- four-squares + the constructive column lemma): the |0,00⟩ column RING-EXACT (FixesE00), the |1,00⟩
+-- column = |1⟩⊗|v⟩ with v a unit column, v(0,1)=0, |00⟩-amplitude within √2/2^k of e^{iφ}, ancilla
+-- leakage ≤ 2√2/2^k. By linearity = the full KMM ≤2-ancilla guarantee on ancilla-initialized inputs.
+import SKEFTHawking.FKLW.RossSelinger.KMMZRotationHeadline
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
