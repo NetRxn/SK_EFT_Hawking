@@ -21,6 +21,34 @@
 %% structural-Prop scoping pattern as substrate; the prose is authored
 %% fresh.
 \input{../../docs/counts.tex}
+%% ── Per-module Phase-6f/6g count-macro fallbacks ────────────────────
+%% These 19 macros are referenced in §11–§13 but are not (yet) emitted
+%% by scripts/update_counts.py into docs/counts.tex. Values computed
+%% from lean/lean_deps.json (kind == "theorem" grouped by module — the
+%% exact update_counts.py convention), snapshot 2026-06-10.
+%% \providecommand yields to docs/counts.tex definitions the moment the
+%% counts pipeline emits these macros; the durable fix is to add them
+%% to update_counts.py and delete this block.
+\providecommand{\curvatureThms}{14}
+\providecommand{\einsteinTensorThms}{9}
+\providecommand{\energyConditionsThms}{8}
+\providecommand{\exactSolutionsThms}{16}
+\providecommand{\admFormalismThms}{10}
+\providecommand{\tetradFormalismThms}{5}
+\providecommand{\phaseSixfWonesixTotal}{62}
+\providecommand{\phaseSixfWsevenTotal}{13}
+\providecommand{\riemannCoordinateThms}{8}
+\providecommand{\riemannDifferentialBianchiThms}{8}
+\providecommand{\bundleRiemannAuxThms}{6}
+\providecommand{\bundleRiemannThms}{7}
+\providecommand{\leviCivitaThms}{7}
+\providecommand{\phaseSixfWeightTotal}{36}
+\providecommand{\riccatiComparisonThms}{11}
+\providecommand{\mazurSigmaModelRigidityThms}{12}
+\providecommand{\hawkingPenroseCurveThms}{6}
+\providecommand{\areaTheoremCurveThms}{10}
+\providecommand{\phaseSixgWnineTotal}{39}
+%% ── end count-macro fallbacks ───────────────────────────────────────
 
 \title{Continuous Verification for Computational Physics Research:\\
 A Three-Layer Pipeline with Worked Cases from Schwinger--Keldysh
@@ -130,7 +158,11 @@ computation foundations. The pipeline has produced
 \totaltheorems{} machine-checked theorems across \leanmodules{}
 Lean modules, with \sorrycount{} remaining unproved gaps
 (\sorrypercent\%) and \aristotleproved{} theorems closed by the
-Aristotle automated theorem prover.
+Aristotle automated theorem prover. The pipeline, its process
+documents, and the validation machinery described below are
+publicly available; monospaced file paths throughout this paper
+are paths from the root of the public repository (see the Code
+Availability statement).
 
 This paper extends and supersedes an earlier internal draft
 description of a twelve-stage version of the pipeline (April
@@ -759,9 +791,10 @@ raising the budget.
 
 \item \textbf{Every external bibitem has a primary-source cache
 file.} Each non-in-prep entry in the citation registry carries a
-path to a primary-source artifact under
-\texttt{Lit-Search/Phase-X/primary-sources/}, structurally
-preventing the hallucinated-citation failure mode.
+resolvable path to a cached copy of the cited primary source,
+held in a per-phase literature cache maintained alongside the
+repository, structurally preventing the hallucinated-citation
+failure mode.
 
 \item \textbf{Provenance DOIs resolve to the registry.} Every DOI
 mentioned in any parameter-provenance source must resolve to a
@@ -961,7 +994,8 @@ paper both report the LIGO $\Delta c/c$ bound and the
 $7\times 10^{14}$ falsification factor; CHECK~21 enforces that the
 two reports agree character-for-character on the numerical content.
 
-The publication-bundle architecture (\texttt{docs/PAPER\_STRATEGY.md})
+The publication-bundle architecture (codified in the process
+document \texttt{docs/PAPER\_STRATEGY.md} in the public repository)
 consolidates the project's forty-plus per-wave drafts into fourteen
 publication targets organized into five tiers: a flagship review
 (\texttt{F}), five themed deep papers
@@ -970,13 +1004,15 @@ publication targets organized into five tiers: a flagship review
 \texttt{I2}, \texttt{I3}), and two experimental letters (\texttt{E1},
 \texttt{E2}). Each per-wave draft maps to one bundle target via an
 append-only assignment table
-(\texttt{docs/PAPER\_DRAFT\_MAPPING.md}); each bundle accumulates
+(repository document \texttt{docs/PAPER\_DRAFT\_MAPPING.md}); each
+bundle accumulates
 contributions from its sources via a documented lift workflow
-(\texttt{docs/BUNDLE\_LIFT\_PROCEDURE.md}, fourteen canonical steps);
+(repository document \texttt{docs/BUNDLE\_LIFT\_PROCEDURE.md},
+fourteen canonical steps);
 late-arriving Phase~6X waves absorb into already-drafted bundles via
 a hot-swap protocol
-(\texttt{docs/LATE\_PHASE6\_ABSORPTION\_PROTOCOL.md}, stages~A--G
-with explicit branches D.1 / D.2 / D.3 by bundle state). Per-bundle
+(repository document \texttt{docs/LATE\_PHASE6\_ABSORPTION\_PROTOCOL.md},
+stages~A--G with explicit branches D.1 / D.2 / D.3 by bundle state). Per-bundle
 state is captured in \texttt{papers/<bundle>/bundle\_metadata.json}
 with thirteen metadata fields including the three review-stage
 statuses (Stage~9 / 10 / 13), a freshness flag, source manifest
@@ -1095,7 +1131,7 @@ Sections~\ref{sec:case1}--\ref{sec:case3} have been verified to
 compile cleanly on the project's local 4.29.0 toolchain
 post-integration. The integration protocol is unchanged across the
 shift: never \texttt{--integrate} on submission, always retrieve
-first, review the diff under
+first, review the diff archived in the repository under
 \texttt{docs/aristotle\_results/run\_<timestamp>/diff.patch}, and
 integrate only after axiom-hygiene verification (Invariant~10:
 no heartbeat overrides introduced; new axioms registered in
@@ -1155,9 +1191,8 @@ backchannel into the author's intent, and emits findings against
 the artifact rather than against the author. The architectural
 choice is that the agent runs in a separate Claude Code session
 (separate context window, separate skill loading); the prompt is
-the agent definition file at
-\texttt{.claude/plugins/physics-qa/agents/adversarial-reviewer.md}
-and the paper or bundle target.
+the \texttt{physics-qa} plugin's adversarial-reviewer agent
+definition plus the paper or bundle target.
 
 The agent works through eight finding classes in strict order, one
 class at a time, against eleven readiness gates:
@@ -1241,7 +1276,7 @@ treatment is the subject of a companion algebraic-general-relativity
 backbone paper.
 
 Phase~6f Waves~1 through~6 produced \phaseSixfWonesixTotal{}~theorems
-(63~substantive after placeholder markers are excluded; the
+(all substantive in the current build; the
 substantive--vs--total distinction is the
 \texttt{PLACEHOLDER\_THEOREMS} registry per Invariant~9 of
 Section~\ref{sec:pipeline}) across six modules at the
@@ -1293,13 +1328,11 @@ witness, determinant identity, and cross-bridges to the
 Einstein-Cartan extension module (Phase~6e).
 \end{itemize}
 
-Total Phase~6f W1-W6 yield: \phaseSixfWonesixTotal{}~theorems
-(63~substantive after the six per-module placeholder markers are
-excluded), zero sorry, zero new axioms. The Phase~6f audit summary is
-on file at
-\texttt{Lit-Search/Phase-6f/Phase\,6f\,audit\,---\,Classical\,GR\,Lean\,infrastructure.md}
-(at the project root, not under
-\texttt{SK\_EFT\_Hawking/}; the filename contains a literal em-dash); downstream papers
+Total Phase~6f W1-W6 yield: \phaseSixfWonesixTotal{}~theorems,
+all substantive (zero placeholder markers in the current build),
+zero sorry, zero new axioms. The Phase~6f audit summary
+is preserved in the program's per-phase literature cache,
+maintained alongside the repository; downstream papers
 (Bardeen-Carter-Hawking four laws, area theorem,
 Hawking--Penrose singularity theorem) reference these modules as
 load-bearing imports rather than as documentation. The
@@ -1569,6 +1602,23 @@ pharmaceutical software (FDA SaMD algorithmic vigilance),
 verified-risk financial modeling, climate modeling, and any other
 research domain where the audit trail from code to claim is itself
 the deliverable.
+
+%% ─────────────────────────────────────────────────────────────────
+%% Code availability
+%% ─────────────────────────────────────────────────────────────────
+
+\section*{Code Availability}
+
+The complete pipeline described in this paper --- the Python
+numerics, the Lean~4 formalization, the validation and
+graph-construction scripts (\texttt{scripts/}), the canonical
+process documents (\texttt{docs/}), the automated-review reports
+(\texttt{papers/AutomatedReviews/}), and the source of this paper
+itself --- is maintained in a single public repository at
+\url{https://github.com/NetRxn/SK_EFT_Hawking}. Monospaced file
+paths throughout this paper are paths from the repository root;
+templated path segments in angle brackets (e.g.,
+\texttt{run\_<timestamp>}) denote per-instance artifacts.
 
 %% ─────────────────────────────────────────────────────────────────
 
