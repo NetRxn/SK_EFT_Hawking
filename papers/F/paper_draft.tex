@@ -34,7 +34,7 @@ A Formally Verified Survey}
 %%   the emergent-gravity content of Bundle D3 (single Sakharov coefficient
 %%   $G_N^{\rm Sak} = 12\pi/(N_f \Lambda_{\rm UV}^2)$ propagating across
 %%   six observables) also drives the SK-EFT analog-Hawking content of
-%%   Bundle D1 (across BEC, polariton, graphene; 92\% Lean-theorem reuse),
+%%   Bundle D1 (across BEC, polariton, graphene; 93\% Lean-theorem reuse),
 %%   the chirality-wall + modular-invariance content of Bundle D2
 %%   (Spin$^{\mathbb{Z}_4}$ 5-bordism with $N_f = 16$ matching D3's
 %%   Sakharov-coefficient $N_f$), the dark-sector NO-GO closures of
@@ -57,7 +57,7 @@ Bundle~D3---a single Sakharov coefficient
 $G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
 propagating across six observables---also drives the SK--EFT analog-Hawking
 content of Bundle~D1 (across BEC, polariton, and graphene Dirac-fluid
-platforms; $92\%$ Lean-theorem reuse), the chirality-wall and
+platforms; $93\%$ Lean-theorem reuse), the chirality-wall and
 modular-invariance content of Bundle~D2
 ($\mathrm{Spin}^{\mathbb{Z}_4}$ 5-bordism with $N_f = 16$ matching
 D3's Sakharov-coefficient $N_f$), the dark-sector NO-GO closures of
@@ -234,7 +234,7 @@ substrate. Concretely:
   fluctuation-dissipation relation that close the analog-Hawking
   spectrum on the BEC platform (D1 \S\ref{sec:analog-hawking})
   re-close on the polariton (E1) and graphene Dirac-fluid (E2)
-  platforms with $\sim 92\%$ Lean-theorem reuse. The substrate is
+  platforms with $\sim 93\%$ Lean-theorem reuse. The substrate is
   platform-agnostic at the formal level; the platforms supply only
   the dispersion data.
 \item The MTC that carries the SU(2)$_k$ Chern--Simons logarithmic
@@ -563,7 +563,7 @@ and the graphene Dirac fluid (Bundle~E2 companion letter for the
 Dean--Kim--Lucas platform~\cite{Roehm2026E2}). The substrate-identity
 synthesis content of \S\ref{sec:strategic-frame} leans on the
 observation that the same SK--EFT axioms close on all three platforms
-with $\sim 92\%$ Lean theorem reuse: the substrate is platform-agnostic
+with $\sim 93\%$ Lean theorem reuse: the substrate is platform-agnostic
 at the formal level, and the platforms supply only the dispersion
 data.
 
@@ -661,15 +661,17 @@ the three platforms: the gain $G$ is a directly measurable spectral
 quantity that the SK--EFT substrate predicts at $5\sigma$ with the
 expected probe-photon count.
 
-\subsection{Graphene Dirac-fluid platform: 2+1D, 92\% Lean reuse}
+\subsection{Graphene Dirac-fluid platform: 2+1D, 93\% Lean reuse}
 
 On the graphene platform, the substrate's analog Hawking spectrum is
 $T_H \approx 2.4\,\mathrm{K}$ on the Dean--Kim--Lucas device parameters
 (\texttt{T\_H\_graphene} provenance entry). The substrate is in
 $2{+}1$D rather than the BEC $3{+}1$D / polariton $2{+}1$D
 configurations, but the \texttt{SKDoubling.lean} +
-\texttt{SecondOrderSK.lean} machinery transfers across $\sim 92\%$
-of the load-bearing theorem content---the substrate-platform-agnostic
+\texttt{SecondOrderSK.lean} machinery transfers across $\sim 93\%$
+of the load-bearing theorem content (deterministic count
+$106/114$: \texttt{scripts/count\_theorem\_reuse.py})---the
+substrate-platform-agnostic
 property at the Lean-formalisation scope.
 
 A characteristic substrate prediction in the graphene platform is the
@@ -683,7 +685,7 @@ Dean--Kim--Lucas platform and the experimental falsification window.
 
 \subsection{Cross-platform substrate-identity}
 
-The 92\% Lean-theorem-reuse statistic above is a substrate-identity
+The 93\% Lean-theorem-reuse statistic above is a substrate-identity
 claim: the substrate's SK--EFT axioms close on three independent
 laboratory platforms (BEC, polariton, graphene) with the \emph{same}
 Lean theorems, modulo platform-specific dispersion data and platform
@@ -2031,7 +2033,7 @@ the F-unique synthesis content:
 \item The SK--EFT axioms, KMS condition, and fluctuation-dissipation
   relation that close the BEC analog Hawking spectrum (D1
   \S\ref{sec:analog-hawking}) re-close on polariton (E1) and
-  graphene Dirac-fluid (E2) platforms with $\sim 92\%$ Lean-theorem
+  graphene Dirac-fluid (E2) platforms with $\sim 93\%$ Lean-theorem
   reuse: the substrate is platform-agnostic at the formal level.
 \item The MTC carrying the Kaul--Majumdar $-3/2 \log A$ correction to
   Bekenstein--Hawking entropy (D3 \S\ref{sec:emergent-gravity}) is

@@ -55,11 +55,11 @@ orders of magnitude in Hawking temperature
 $T_H \sim \SI{85}{\milli\kelvin}$ for the LKB polariton smooth-horizon
 baseline, $T_H \approx \SI{2.4}{\kelvin}$ for the Dean bilayer
 graphene nozzle), yet share a large fraction of the Lean theorem
-infrastructure (109 of 119 1+1D theorems --- approximately
-$92\%$ --- apply unchanged to graphene's 2+1D Dirac-fluid setup
-with $c_s \to v_F/\sqrt{2}$; the $109/119$ partition is a manual
-count over \texttt{lean/SKEFTHawking/}, not yet a deterministic
-script output). The
+infrastructure (106 of 114 1+1D theorems --- approximately
+$93\%$ --- apply unchanged to graphene's 2+1D Dirac-fluid setup
+with $c_s \to v_F/\sqrt{2}$; the $106/114$ partition is a
+deterministic script output over \texttt{lean/SKEFTHawking/},
+\texttt{scripts/count\_theorem\_reuse.py}). The
 hierarchy of corrections is platform-dependent: at Heidelberg-class
 BEC the dissipative correction $\delta_\text{diss}$ exceeds the
 dispersive $\delta_\text{disp}$ by a factor $\sim 22$; at the LKB
@@ -125,11 +125,17 @@ We make the universality claim quantitative through formal
 verification. We present an SK-EFT
 framework~\cite{CGL2017a,GloriosoLiu2018,Crossley2017II,Jana2020} for the
 three platforms and machine-check its predictions in Lean~4. The
-universality claim becomes the statement that 109 of 119 BEC 1+1D
+universality claim becomes the statement that 106 of 114 BEC 1+1D
 Lean theorems apply unchanged to the graphene 2+1D Dirac-fluid
-setup with $c_s \to v_F/\sqrt{2}$ --- a $92\%$ reuse fraction. The
-$8\%$ that does not reuse ($\sim 10$ theorems) handles the metric
-block-diagonalisation specific to the 2+1D quasi-1D flow geometry.
+setup with $c_s \to v_F/\sqrt{2}$ --- a $93\%$ reuse fraction,
+determined deterministically by
+\texttt{scripts/count\_theorem\_reuse.py}. The
+$7\%$ that does not reuse (8 theorems) comprises the explicit
+$2\times 2$ acoustic-metric matrix algebra (superseded in 2+1D by
+the $3\times 3$ block-diagonalisation) and the
+BEC-microphysics-specific statements (Bogoliubov superluminal
+dispersion, spin-sonic enhancement) that do not transfer to the
+Dirac fluid.
 This provides a quantitative test of analog-Hawking universality
 across distinct microscopic substrates.
 
@@ -170,7 +176,7 @@ including the reservoir-corrected sound speed, the
 stimulated-Hawking detection, and the universal threshold
 $\omega/\kappa = \ln(3)/(2\pi) \approx 0.175$ at $G(\omega) = 0.5$.
 Section~\ref{sec:graphene} treats the graphene Dirac-fluid platform:
-the 3$\times$3 metric block-diagonalisation, the $92\%$ Lean theorem
+the 3$\times$3 metric block-diagonalisation, the $93\%$ Lean theorem
 reuse claim, the closed-form noise spectrum from independent FDT
 and Landauer-Büttiker derivations, and the Wiedemann-Franz
 cross-check linking the SK-EFT noise prediction to a published
@@ -592,7 +598,7 @@ measurements anywhere on the band falsify the framework at the
 polariton platform.
 
 %% ══════════════════════════════════════════════════════════════════
-\section{Graphene Dirac-fluid platform: 2+1D, $92\%$ Lean reuse,
+\section{Graphene Dirac-fluid platform: 2+1D, $93\%$ Lean reuse,
 Wiedemann-Franz cross-check}
 \label{sec:graphene}
 
@@ -618,19 +624,33 @@ block-diagonalisation theorems
 \texttt{QuasiOneDReduction.quasi1D\_validity\_bound} provides the
 algebraic-envelope bound on the off-diagonal corrections.
 
-\subsection{$92\%$ Lean theorem reuse}
+\subsection{$93\%$ Lean theorem reuse}
 
-The 1+1D BEC infrastructure of \S\ref{sec:bec-first}--\S\ref{sec:exact-wkb}
-contains $119$ theorems. Of these, $109$ apply to the graphene
-Dirac-fluid 2+1D setup unchanged after the substitution
-$c_s \to v_F/\sqrt{2}$. The $109/119$ partition is determined by
-manual inspection of \texttt{lean/SKEFTHawking/} (109 of 119
-$\approx 91.6\%$, which we round to $92\%$ throughout). The
-$\sim 10$ theorems that do not reuse handle the metric
-block-diagonalisation and the 2+1D-specific aspects of the
-noise spectrum.
+The 1+1D BEC infrastructure consists of nine Lean modules
+(\texttt{AcousticMetric}, \texttt{HawkingUniversality},
+\texttt{WKBConnection}, \texttt{WKBAnalysis},
+\texttt{SecondOrderSK}, \texttt{CGLTransform},
+\texttt{ThirdOrderSK}, \texttt{SKDoubling},
+\texttt{KappaScaling}) containing $114$ theorems. Of these, $106$
+apply to the graphene Dirac-fluid 2+1D setup unchanged after the
+substitution $c_s \to v_F/\sqrt{2}$. The $106/114$ partition is
+computed deterministically by
+\texttt{scripts/count\_theorem\_reuse.py}: a theorem is classified
+platform-specific if and only if its statement references a
+1+1D-explicit or BEC-microphysics-specific definition (the
+explicit $2\times 2$ acoustic-metric matrices and phonon-EOM
+structure, the Bogoliubov superluminal dispersion law, or the
+two-component spin-sonic enhancement); all other statements
+quantify only over platform-parametric structures and hold
+verbatim for the graphene instantiation ($106$ of $114$
+$\approx 92.98\%$, which we round to $93\%$ throughout). The
+$8$ theorems that do not reuse are superseded on the graphene
+side by the metric block-diagonalisation of the preceding
+subsection (the $2\times 2$ matrix algebra) or have no Dirac-fluid analogue
+(the subluminal Dirac fluid negates the superluminal-dispersion
+statement, and no spin/density two-speed structure exists).
 
-The approximately $92\%$ reuse fraction is a quantitative
+The approximately $93\%$ reuse fraction is a quantitative
 measurement of analog-Hawking universality across BEC and
 graphene, which differ in dimension, dispersion sign
 (super- vs.~sub-luminal), and microscopic constituents (cold-atom
@@ -722,7 +742,7 @@ the all-orders transport-coefficient counting
 formula~\eqref{eq:count-formula}; the three non-perturbative
 effects of the exact-WKB connection (\S\ref{sec:exact-wkb},
 equations~\eqref{eq:modified-unitarity}--\eqref{eq:noise-floor});
-the $92\%$ Lean theorem reuse fraction across BEC and graphene
+the $93\%$ Lean theorem reuse fraction across BEC and graphene
 (\S\ref{sec:graphene}); and the platform-dependent hierarchy of
 dispersive and dissipative corrections (Table~\ref{tab:hierarchy}),
 each platform delivering a distinct leading detection mode (BEC:
