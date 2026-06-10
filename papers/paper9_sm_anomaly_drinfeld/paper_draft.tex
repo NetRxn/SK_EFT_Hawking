@@ -32,7 +32,7 @@ modules in Lean~4 with Mathlib, compute the Drinfeld centers of $\mathrm{Vec}_{\
 establish $Z(\mathrm{Vec}_G)$ as a braided monoidal category via Mathlib's
 infrastructure. All modules referenced in this paper are verified by
 \texttt{lake build} with zero \texttt{sorry}. The broader project comprises
-4049~theorems across 170~Lean~4 modules (1 axiom), with 322
+4049~theorems across 170~Lean~4 modules (1 axiom, since retired into a tracked Prop), with 322
 filled by the Aristotle automated prover.
 \end{abstract}
 
@@ -311,7 +311,8 @@ algebraic foundation for $Z(\mathrm{Vec}_G) \cong \mathrm{Rep}(D(G))$.
 \end{enumerate}
 
 The formal verification comprises 4049 theorems across 170 Lean~4
-modules, with 1 axiom. All modules referenced
+modules, with 1 axiom (since retired into the tracked Prop
+\texttt{TPFConjecture}). All modules referenced
 in this paper have zero \texttt{sorry}; 322 theorems are filled by the
 Aristotle automated prover across 44 runs.
 The broader project includes Hopf algebra, quantum group fusion rule,

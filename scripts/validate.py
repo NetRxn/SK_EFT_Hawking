@@ -3090,6 +3090,927 @@ def check_quantum_network() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# Shared helpers for the prose-consistency checks (CHECK 24–26)
+# (Stage 14 follow-through from the 2026-06-05 external-review remediation;
+#  record: temporary/working-docs/reviews/papers/2026-06-05-Perplexity/
+#  REMEDIATION_TRIAGE_2026-06-10.md, Wave-5 process items a/b/c.)
+# ═══════════════════════════════════════════════════════════════════════
+
+#: Bundle codes per docs/PAPER_STRATEGY.md (publication-bundle drafts).
+BUNDLE_CODES = (
+    "F", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8",
+    "E1", "E2", "I1", "I2", "I3", "L1", "L2", "L3",
+)
+
+
+def _strip_tex_comments(text: str) -> str:
+    """Blank out LaTeX comments (unescaped ``%`` to end-of-line) with
+    spaces, preserving every character offset and line break so that
+    match offsets in the stripped text map 1:1 onto the original file.
+    """
+    out = []
+    for line in text.split("\n"):
+        idx = None
+        i = 0
+        while i < len(line):
+            if line[i] == "%":
+                # escaped \% is content, not a comment
+                n_bs = 0
+                j = i - 1
+                while j >= 0 and line[j] == "\\":
+                    n_bs += 1
+                    j -= 1
+                if n_bs % 2 == 0:
+                    idx = i
+                    break
+            i += 1
+        if idx is None:
+            out.append(line)
+        else:
+            out.append(line[:idx] + " " * (len(line) - idx))
+    return "\n".join(out)
+
+
+def _line_of(text: str, offset: int) -> int:
+    """1-based line number of a character offset."""
+    return text.count("\n", 0, offset) + 1
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 24: Axiom-count ↔ paper-prose consistency
+# ═══════════════════════════════════════════════════════════════════════
+
+# Present-tense single-axiom claims ("one axiom", "a single axiom",
+# "1~axiom", "one tracked axiom", ...). `~` is the LaTeX non-breaking
+# space; word separators may also be newlines.
+_AXIOM_SEP = r"(?:\s|~)+"
+_AXIOM_SINGULAR_RE = re.compile(
+    r"\b(?:one|single|sole|lone|1)" + _AXIOM_SEP
+    + r"(?:(?:true|tracked|remaining|residual|project-local|project|"
+    + r"genuine|physical|global)" + _AXIOM_SEP + r")?"
+    + r"axiom\b(?!-)",
+    re.IGNORECASE,
+)
+# Present-tense naming of the retired axiom ("the axiom \texttt{gapped...").
+_AXIOM_GAPPED_PRESENT_RE = re.compile(
+    r"the" + _AXIOM_SEP + r"axiom" + _AXIOM_SEP + r"\\texttt\{gapped",
+    re.IGNORECASE,
+)
+# Numeric plural claims ("0 axioms", "3 axioms", "zero axioms"). The
+# qualifier group is captured so per-wave delta claims ("zero NEW
+# axioms") can be excluded from the total-count comparison.
+_AXIOM_PLURAL_RE = re.compile(
+    r"\b(zero|\d+)" + _AXIOM_SEP
+    + r"(?:(new|additional|extra|tracked|project-local|true|active|"
+    + r"declared)" + _AXIOM_SEP + r")?"
+    + r"axioms\b",
+    re.IGNORECASE,
+)
+# Historical-attribution context tokens: a single-axiom claim sitting
+# within ±120 chars of one of these is a legitimate retrospective
+# (D2/F-style "formerly axiom gapped_interface_axiom" usage).
+_AXIOM_HISTORICAL_RE = re.compile(
+    r"formerly|converted|retired|was\s+an\s+axiom|2026-05-19",
+    re.IGNORECASE,
+)
+_AXIOM_HIST_WINDOW = 120
+# Narrow immediately-preceding negation guard ("no single axiom ...").
+_AXIOM_NEG_BEFORE_RE = re.compile(r"\b(?:no|without)\b[^.\n]{0,15}$",
+                                  re.IGNORECASE)
+
+
+def _axiom_prose_findings(text: str, axiom_count: int) -> list:
+    """Pure scanning core for CHECK 24 (unit-testable).
+
+    Returns a list of dicts: ``{kind, line, excerpt, fail}`` where
+    ``kind`` is one of ``singular`` / ``gapped_present`` /
+    ``plural_mismatch``. ``fail=True`` only for the hard-failure class:
+    a non-historical single-axiom claim while the live axiom count is 0.
+    LaTeX comments are blanked before scanning (offsets preserved).
+    """
+    stripped = _strip_tex_comments(text)
+    findings = []
+
+    def _is_historical(start: int, end: int) -> bool:
+        lo = max(0, start - _AXIOM_HIST_WINDOW)
+        hi = min(len(stripped), end + _AXIOM_HIST_WINDOW)
+        return bool(_AXIOM_HISTORICAL_RE.search(stripped[lo:hi]))
+
+    for m in _AXIOM_SINGULAR_RE.finditer(stripped):
+        if _is_historical(m.start(), m.end()):
+            continue
+        if _AXIOM_NEG_BEFORE_RE.search(stripped[max(0, m.start() - 18):m.start()]):
+            continue
+        findings.append({
+            "kind": "singular",
+            "line": _line_of(stripped, m.start()),
+            "excerpt": " ".join(m.group(0).split()),
+            # claim value is 1; hard-fail iff the live count is 0,
+            # advisory mismatch iff the live count is some other N ≠ 1.
+            "fail": axiom_count == 0,
+            "mismatch": axiom_count != 1,
+        })
+
+    for m in _AXIOM_GAPPED_PRESENT_RE.finditer(stripped):
+        if _is_historical(m.start(), m.end()):
+            continue
+        findings.append({
+            "kind": "gapped_present",
+            "line": _line_of(stripped, m.start()),
+            "excerpt": " ".join(m.group(0).split()),
+            "fail": axiom_count == 0,
+            "mismatch": True,
+        })
+
+    for m in _AXIOM_PLURAL_RE.finditer(stripped):
+        qualifier = (m.group(2) or "").lower()
+        if qualifier in ("new", "additional", "extra"):
+            continue  # per-wave delta claim, not a total-count claim
+        value = 0 if m.group(1).lower() == "zero" else int(m.group(1))
+        if value == axiom_count:
+            continue
+        if _is_historical(m.start(), m.end()):
+            continue
+        findings.append({
+            "kind": "plural_mismatch",
+            "line": _line_of(stripped, m.start()),
+            "excerpt": " ".join(m.group(0).split()),
+            "fail": False,  # numeric plural drift is advisory-only
+            "mismatch": True,
+        })
+
+    return findings
+
+
+@register_check("axiom_count_prose_consistency",
+                "Paper prose axiom-count claims agree with docs/counts.json")
+def check_axiom_count_prose_consistency() -> CheckResult:
+    """Prevent the F-flagship failure class from the 2026-06-05 external
+    review: paper prose claiming "one (true) axiom" while
+    ``docs/counts.json`` reports 0 project-local axioms (the
+    ``gapped_interface_axiom`` was retired into the tracked Prop
+    ``TPFConjecture`` on 2026-05-19; see Pipeline Invariant #15).
+
+    Scans every ``papers/*/paper_draft.tex`` (bundle drafts AND legacy
+    per-paper drafts). Failure classes:
+
+    - **FAIL** — live axiom count is 0 and a present-tense single-axiom
+      claim ("one axiom", "a single axiom", "1~axiom", "one tracked
+      axiom", "the axiom \\texttt{gapped...") appears outside a
+      historical-attribution context (±120 chars of
+      formerly/converted/retired/"was an axiom"/2026-05-19 — the
+      D2/F-style "formerly axiom gapped_interface_axiom" usage is
+      legitimate and never flags).
+    - **WARN (advisory)** — a numeric plural claim ("N axioms", digit or
+      "zero" literal) disagrees with the live count. Word-numeral
+      plurals ("three axioms" — the Son-action physics-axioms idiom in
+      D1/F) and per-wave delta claims ("zero NEW axioms") are excluded
+      by design. The ``\\axiomcount{}`` macro is the preferred
+      mechanism and never flags (it carries no prose literal).
+
+    LaTeX comments are stripped before scanning. Calibrated live
+    2026-06-10: the sweep surfaced 16 genuinely-missed stale sites
+    across D5 + 10 legacy drafts (paper4/6/7/9/11/12/17/18/20/21/26),
+    all fixed in the same commit that ships this check.
+    """
+    counts_path = PROJECT_ROOT / "docs" / "counts.json"
+    if not counts_path.exists():
+        return CheckResult(passed=False,
+                           error=f"missing {counts_path}; run scripts/update_counts.py")
+    try:
+        axiom_count = int(json.loads(counts_path.read_text())["lean"]["axioms"])
+    except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+        return CheckResult(passed=False,
+                           error=f"counts.json unreadable / missing lean.axioms: {exc}")
+
+    details: List[Detail] = []
+    n_fail = 0
+    n_warn = 0
+    n_scanned = 0
+
+    for tex in sorted(PAPERS_DIR.glob("*/paper_draft.tex")):
+        n_scanned += 1
+        try:
+            text = tex.read_text()
+        except OSError as exc:
+            details.append(Detail(f"unreadable:{tex.parent.name}", False, str(exc)))
+            n_fail += 1
+            continue
+        for f in _axiom_prose_findings(text, axiom_count):
+            rel = f"papers/{tex.parent.name}/paper_draft.tex:{f['line']}"
+            if f["fail"]:
+                n_fail += 1
+                details.append(Detail(
+                    f"stale_axiom_claim:{tex.parent.name}:{f['line']}",
+                    False,
+                    f"{rel} — present-tense '{f['excerpt']}' claim but "
+                    f"counts.json reports {axiom_count} project-local axioms "
+                    f"(non-historical context)",
+                ))
+            elif f["mismatch"]:
+                n_warn += 1
+                details.append(Detail(
+                    f"axiom_count_mismatch:{tex.parent.name}:{f['line']}",
+                    True,
+                    f"{rel} — '{f['excerpt']}' disagrees with counts.json "
+                    f"axiom count {axiom_count} (advisory)",
+                    warning=True,
+                ))
+
+    details.insert(0, Detail(
+        "summary",
+        n_fail == 0,
+        f"axiom count {axiom_count} (docs/counts.json) vs {n_scanned} "
+        f"paper drafts — {n_fail} stale single-axiom FAIL(s) / "
+        f"{n_warn} advisory mismatch(es)",
+    ))
+    if n_fail == 0 and n_warn == 0:
+        details.append(Detail(
+            "all_consistent", True,
+            "No non-historical axiom-count drift in any paper draft",
+        ))
+    return CheckResult(passed=(n_fail == 0), details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 25: Prose Lean-theorem reference coverage (bundle drafts)
+# (Implements the structural prevention proposed by QI item
+#  qi-leantheoremdrift as `bundle_lean_refs_resolve`.)
+# ═══════════════════════════════════════════════════════════════════════
+
+_PROSE_TEXTTT_RE = re.compile(r"\\texttt\{([^{}]+)\}")
+_PROSE_UNESCAPE_RE = re.compile(r"\\([_\\&%$#{}~^])")
+_PROSE_IDENT_RE = re.compile(
+    r"^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*$")
+_PROSE_FILE_SUFFIXES = (
+    ".py", ".md", ".json", ".tex", ".lean", ".ipynb", ".bib", ".log",
+    ".jsonl", ".pdf", ".png", ".toml", ".yaml", ".yml", ".txt", ".csv",
+    ".sh", ".olean", ".aux", ".bbl",
+)
+# Memory-note / working-doc tags carry trailing _YYYY_MM_DD dates
+# (e.g. project_phase6q_complete_2026_05_23 quoted in D5 prose).
+_PROSE_DOC_TAG_RE = re.compile(r"_(?:19|20)\d{2}_\d{2}_\d{2}$")
+# Mathlib namespaces commonly cited in bundle prose. These resolve in
+# Mathlib, not in lean_deps.json (which indexes only declarations
+# elaborated inside SKEFTHawking modules), so they are skipped.
+_PROSE_MATHLIB_PREFIXES = (
+    "Mathlib.", "Real.", "Nat.", "Int.", "Rat.", "Classical.", "Quot.",
+    "Complex.", "Finset.", "Fin.", "Set.", "List.", "Matrix.",
+    "Polynomial.", "MeasureTheory.", "CyclotomicField.", "FiberBundle.",
+    "Probability.", "LinearAlgebra.", "Function.", "Equiv.",
+    "LinearMap.", "TensorProduct.", "Algebra.", "CategoryTheory.",
+    "Filter.", "Topology.", "AddCircle.", "RingQuot.", "Module.",
+    "Submodule.", "Subgroup.", "MonoidHom.", "ContinuousMap.",
+    "CartanMatrix.", "IsCyclotomicExtension.",
+)
+# Empirically-built allowlist (calibrated 2026-06-10 on the 17 bundle
+# drafts; iterate when calibration surfaces a new non-Lean idiom class):
+#   - bare Mathlib lemmas / tactic names quoted in methodology prose
+#   - validate.py / infrastructure identifiers described in I1
+#   - Aristotle difficulty-tier enum labels (I1)
+#   - the retired-axiom name: every remaining mention is historical /
+#     a Python AXIOM_METADATA key; prose staleness around it is owned
+#     by CHECK 24 (axiom_count_prose_consistency).
+_PROSE_REF_ALLOWLIST = {
+    # tactics / Mathlib bare lemmas
+    "norm_num", "native_decide", "linear_combination", "fun_prop",
+    "mul_nonneg", "mul_self_nonneg", "sq_nonneg", "le_refl",
+    "continuous_const", "zeta_spec", "ring_nf", "simp_rw",
+    "exact_mod_cast", "decide_eq_true", "by_contra", "push_neg",
+    "field_simp",
+    # project infrastructure identifiers (validate.py checks, cluster /
+    # sentence-state schema fields) described in the I1 infrastructure
+    # paper and the F flagship process section
+    "bundle_consistency", "claim_cluster", "bundle_destination",
+    # Aristotle difficulty-tier enum labels (I1 registry description)
+    "very_hard",
+    # retired axiom name — historical mentions owned by CHECK 24
+    "gapped_interface_axiom",
+}
+# Disclaimer tokens: an unresolved reference within ±200 chars of one of
+# these is prose *about* a not-yet-shipped / renamed / removed
+# declaration, which is legitimate.
+_PROSE_DISCLAIMER_RE = re.compile(
+    r"in\s+flight|deferred|not\s+yet|planned|forthcoming|formerly|"
+    r"deprecated|renamed|retired|replaced|removed|commented-out",
+    re.IGNORECASE,
+)
+_PROSE_DISCLAIMER_WINDOW = 200
+# Narrow immediately-preceding negation ("there are no \texttt{X} ...").
+_PROSE_NEG_BEFORE_RE = re.compile(
+    r"\b(?:no|not|absent|without|lacks?)\b[^.]{0,30}$", re.IGNORECASE)
+
+
+def _prose_occurrence_disclaimed(source: str, offset: int) -> bool:
+    """True if the ``\\texttt{}`` occurrence at ``offset`` sits within
+    ±200 chars of a disclaimer token (in flight / deferred / planned /
+    formerly / renamed / retired / ...) or is immediately preceded by a
+    negation ("there are no \\texttt{X} or analogous ..."). Unit-testable
+    core of CHECK 25's exemption logic.
+    """
+    lo = max(0, offset - _PROSE_DISCLAIMER_WINDOW)
+    hi = min(len(source), offset + _PROSE_DISCLAIMER_WINDOW)
+    if _PROSE_DISCLAIMER_RE.search(source[lo:hi]):
+        return True
+    return bool(_PROSE_NEG_BEFORE_RE.search(source[max(0, offset - 40):offset]))
+
+# Per-instance waivers: (bundle, token) → reason. Each use is surfaced
+# prominently as a WARN detail. Keep this list short (≤5) — if it
+# grows, the candidate filter is too loose.
+_PROSE_REF_WAIVERS = {
+    ("I1", "gap_solution_bounded"):
+        "Deliberate historical reference: I1's gap-equation narrative "
+        "cites the FALSE folklore theorem disproved by an Aristotle "
+        "counterexample; it survives only as a commented-out stub at "
+        "TetradGapEquation.lean:307-321 (intentionally not a live "
+        "declaration). TODO: drop this waiver if the I1 narrative is "
+        "restructured to use the live gap_solution_monotone name only.",
+}
+
+
+def _extract_prose_lean_candidates(tex_source: str) -> list:
+    """Extract candidate Lean-identifier tokens from ``\\texttt{...}``
+    blocks (unit-testable core for CHECK 25).
+
+    Returns ``[(token, match_start_offset), ...]`` for tokens that pass
+    the candidate filter: identifier-shaped, contains ``_`` or ``.``,
+    no path separators or file suffixes, not ALL-CAPS (Python registry
+    constants), not an MCP tool name (``lean_*``), not a dated doc-tag,
+    length ≥ 4, no leading/trailing underscore.
+    """
+    out = []
+    for m in _PROSE_TEXTTT_RE.finditer(tex_source):
+        tok = _PROSE_UNESCAPE_RE.sub(r"\1", m.group(1)).strip()
+        if len(tok) < 4:
+            continue
+        if "_" not in tok and "." not in tok:
+            continue
+        if "/" in tok or "\\" in tok or any(c.isspace() for c in tok):
+            continue
+        if tok.endswith(_PROSE_FILE_SUFFIXES):
+            continue
+        if tok.startswith(("src.", "tests.", "scripts.", "docs.")):
+            continue
+        if tok.startswith("lean_"):  # lean-lsp MCP tool names (I3 §tooling)
+            continue
+        if tok.endswith("_") or tok.startswith("_"):
+            continue
+        if not _PROSE_IDENT_RE.match(tok):
+            continue
+        if tok.replace("_", "").replace(".", "").isupper():
+            continue  # CITATION_REGISTRY-style Python constants
+        if _PROSE_DOC_TAG_RE.search(tok):
+            continue  # memory-note / working-doc dated tags
+        out.append((tok, m.start()))
+    return out
+
+
+_LEAN_NAME_INDEX_CACHE: Optional[dict] = None
+
+
+def _load_lean_name_index() -> dict:
+    """Load (and cache) the Lean declaration-name index from
+    ``lean/lean_deps.json`` (declaration names + their `module` fields)
+    + module names from ``docs/counts.json`` + project Python registry
+    keys (PLACEHOLDER_THEOREMS, AXIOM_METADATA, HYPOTHESIS_REGISTRY,
+    ARISTOTLE_THEOREMS, PARAMETER_PROVENANCE, and the canonical
+    ``formulas.py`` public function names — prose legitimately
+    references entries of those canonical registries by key per
+    Pipeline Invariants #1/#2/#8).
+    """
+    global _LEAN_NAME_INDEX_CACHE
+    if _LEAN_NAME_INDEX_CACHE is not None:
+        return _LEAN_NAME_INDEX_CACHE
+
+    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
+    entries = json.loads(deps_path.read_text())
+    names = set()
+    shorts = set()
+    dotted_suffixes = set()
+    short_to_modules: Dict[str, set] = {}
+    for e in entries:
+        n = e.get("name", "")
+        if not n:
+            continue
+        names.add(n)
+        segs = n.split(".")
+        shorts.add(segs[-1])
+        short_to_modules.setdefault(segs[-1], set()).add(e.get("module", ""))
+        for i in range(1, len(segs)):
+            dotted_suffixes.add(".".join(segs[i:]))
+
+    modules = set()
+    counts_path = PROJECT_ROOT / "docs" / "counts.json"
+    if counts_path.exists():
+        try:
+            modules = set(
+                json.loads(counts_path.read_text())["lean"]["module_names"])
+        except (json.JSONDecodeError, KeyError, TypeError):
+            modules = set()
+
+    registry_keys = set()
+    try:
+        from src.core import constants as _c
+        for reg_name in ("PLACEHOLDER_THEOREMS", "AXIOM_METADATA",
+                         "HYPOTHESIS_REGISTRY", "ARISTOTLE_THEOREMS"):
+            reg = getattr(_c, reg_name, None)
+            if isinstance(reg, dict):
+                registry_keys.update(reg.keys())
+            elif isinstance(reg, (list, set, tuple)):
+                registry_keys.update(reg)
+    except Exception:
+        pass  # registry resolution is a bonus source, never a blocker
+    try:
+        from src.core.provenance import PARAMETER_PROVENANCE
+        registry_keys.update(PARAMETER_PROVENANCE.keys())
+    except Exception:
+        pass
+    try:
+        from src.core import formulas as _f
+        registry_keys.update(
+            nm for nm in dir(_f)
+            if not nm.startswith("_") and callable(getattr(_f, nm)))
+    except Exception:
+        pass
+
+    _LEAN_NAME_INDEX_CACHE = {
+        "names": names,
+        "shorts": shorts,
+        "dotted_suffixes": dotted_suffixes,
+        "short_to_modules": short_to_modules,
+        "modules": modules,
+        "registry_keys": registry_keys,
+        "count": len(entries),
+    }
+    return _LEAN_NAME_INDEX_CACHE
+
+
+_LEAN_SOURCE_CACHE: Optional[str] = None
+
+
+def _lean_source_declares(short: str) -> bool:
+    """Secondary resolution source: does any ``lean/SKEFTHawking``
+    source file *declare* ``short`` (including ``private`` lemmas,
+    which ExtractDeps deliberately omits from lean_deps.json)?
+
+    Comments are stripped first so commented-out stubs (e.g. the
+    ``gap_solution_bounded`` folklore counterexample anchor in
+    TetradGapEquation.lean) do NOT resolve. Lazy + cached: the
+    concatenated comment-stripped source is built on first use only.
+    """
+    global _LEAN_SOURCE_CACHE
+    if _LEAN_SOURCE_CACHE is None:
+        chunks = []
+        for lf in sorted(LEAN_DIR.rglob("*.lean")):
+            try:
+                src = lf.read_text()
+            except OSError:
+                continue
+            src = re.sub(r"--[^\n]*", "", src)
+            prev = None
+            while prev != src:  # nested /- ... -/ block comments
+                prev = src
+                src = re.sub(r"/-(?:(?!/-|-/).)*?-/", "", src, flags=re.DOTALL)
+            chunks.append(src)
+        _LEAN_SOURCE_CACHE = "\n".join(chunks)
+    pat = (r"(?:theorem|lemma|def|abbrev|structure|class|instance|opaque)\s+"
+           + re.escape(short) + r"\b")
+    return re.search(pat, _LEAN_SOURCE_CACHE) is not None
+
+
+def _resolve_prose_ref(token: str, index: dict) -> str:
+    """Resolve a candidate token against the Lean name index.
+
+    Returns one of:
+      'OK'       — exact / project-qualified suffix / verified
+                   ``<Module>.<thm>`` documentation idiom / module /
+                   Python-registry-key / canonical-formula match
+      'PRIVATE'  — declared in the Lean source but absent from
+                   lean_deps.json (``private`` declaration; OK)
+      'DRIFTED'  — dotted token whose last segment exists but in a
+                   module that does not match the written prefix
+                   (module-attribution drift; advisory)
+      'MATHLIB'  — known Mathlib namespace (skipped)
+      'ABSENT'   — no match anywhere
+    """
+    names = index["names"]
+    if token in names or token in index["dotted_suffixes"]:
+        return "OK"
+    if token in index["registry_keys"]:
+        return "OK"
+    modules = index["modules"]
+    if token in modules or f"SKEFTHawking.{token}" in modules:
+        return "OK"
+    if "." in token and any(m.startswith(token + ".") for m in modules):
+        return "OK"  # namespace prefix of a module family (e.g. SKEFTHawking.LDP)
+    if token.startswith(_PROSE_MATHLIB_PREFIXES):
+        return "MATHLIB"
+    short = token.rsplit(".", 1)[-1]
+    if short in index["shorts"]:
+        if "." not in token:
+            return "OK"
+        # Project documentation idiom `<Module>.<thm>`: the theorem is
+        # declared at (or near) top-level namespace inside the module
+        # FILE named `<Module>.lean`, so its qualified Lean name does
+        # not carry the module segment. Verify via the declaration's
+        # `module` field instead of its name.
+        head = token[: -(len(short) + 1)]
+        for mod in index["short_to_modules"].get(short, ()):
+            if (mod == head or mod == f"SKEFTHawking.{head}"
+                    or mod.endswith(f".{head}")):
+                return "OK"
+        return "DRIFTED"
+    if _lean_source_declares(short):
+        return "PRIVATE"
+    return "ABSENT"
+
+
+@register_check("prose_theorem_reference_coverage",
+                "Bundle-draft \\texttt{} Lean references resolve in lean_deps.json")
+def check_prose_theorem_reference_coverage() -> CheckResult:
+    """Prevent the ``wen_adw_factor_6000`` failure class from the
+    2026-06-05 external review: bundle prose naming a Lean declaration
+    that does not exist in the built library. Implements the structural
+    prevention proposed by QI item **qi-leantheoremdrift**
+    (`bundle_lean_refs_resolve`, docs/QI_REGISTER.md).
+
+    Scope: the 17 publication-bundle drafts
+    (``papers/{F,D1–D8,E1,E2,I1–I3,L1–L3}/paper_draft.tex``) only.
+    Legacy per-paper drafts are *excluded for now* — they are
+    historical-snapshot documents superseded by the bundles, and their
+    reference hygiene is audited separately by
+    ``scripts/audit_paper_lean_refs.py`` (Phase 6i Wave 4).
+
+    Pipeline: extract ``\\texttt{...}`` tokens → un-escape LaTeX →
+    candidate filter (identifier-shaped, contains ``_``/``.``, no file
+    suffix, not ALL-CAPS / ``lean_*`` MCP tool names / dated doc-tags /
+    allowlist) → resolve against lean_deps.json declaration names
+    (exact, project-qualified suffix, unqualified short name), module
+    names (docs/counts.json), and project Python registry keys.
+
+    Verdicts:
+    - unresolved (ABSENT) → **FAIL**, unless every occurrence sits
+      within ±200 chars of a disclaimer token (in flight / deferred /
+      not yet / planned / forthcoming / formerly / deprecated / renamed
+      / retired / replaced / removed / commented-out) or is immediately
+      preceded by a negation ("there are no \\texttt{X} ..."), or the
+      (bundle, token) pair carries a documented waiver
+      (``_PROSE_REF_WAIVERS`` — each use surfaces as a WARN).
+    - dotted token whose short name exists under a different namespace
+      (DRIFTED) → advisory WARN (rename candidates).
+    - Mathlib-namespace tokens → skipped (resolve upstream, not in
+      lean_deps.json).
+
+    Calibrated live 2026-06-10 across all 17 bundles (72 raw
+    unresolved → filter/disclaimer/registry classes → 1 documented
+    waiver). Run ``--json`` for machine-readable per-bundle findings.
+    """
+    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
+    if not deps_path.exists():
+        return CheckResult(
+            passed=False,
+            error=(f"missing {deps_path}; refresh via `cd lean && lake build "
+                   f"SKEFTHawking.ExtractDeps` or validate.py --check graph_integrity"),
+        )
+    index = _load_lean_name_index()
+
+    details: List[Detail] = []
+    n_fail = 0
+    n_drift = 0
+    n_waived = 0
+    n_candidates = 0
+    n_bundles = 0
+
+    for bundle in BUNDLE_CODES:
+        tex = PAPERS_DIR / bundle / "paper_draft.tex"
+        if not tex.exists():
+            details.append(Detail(
+                f"missing_draft:{bundle}", True,
+                f"papers/{bundle}/paper_draft.tex absent — skipped",
+                warning=True,
+            ))
+            continue
+        n_bundles += 1
+        source = tex.read_text()
+        cands = _extract_prose_lean_candidates(source)
+        # Collapse to per-token occurrence lists
+        by_token: dict = {}
+        for tok, off in cands:
+            by_token.setdefault(tok, []).append(off)
+        n_candidates += len(by_token)
+
+        for tok, offsets in sorted(by_token.items()):
+            if tok in _PROSE_REF_ALLOWLIST:
+                continue
+            verdict = _resolve_prose_ref(tok, index)
+            if verdict in ("OK", "MATHLIB", "PRIVATE"):
+                continue
+            if verdict == "DRIFTED":
+                n_drift += 1
+                details.append(Detail(
+                    f"drifted:{bundle}:{tok}", True,
+                    f"papers/{bundle}/paper_draft.tex:"
+                    f"{_line_of(source, offsets[0])} — qualified name "
+                    f"'{tok}' unresolved but short name exists under a "
+                    f"different namespace (rename candidate; advisory)",
+                    warning=True,
+                ))
+                continue
+            # ABSENT — disclaimer / negation exemption (every occurrence)
+            if all(_prose_occurrence_disclaimed(source, off)
+                   for off in offsets):
+                continue
+            waiver = _PROSE_REF_WAIVERS.get((bundle, tok))
+            if waiver is not None:
+                n_waived += 1
+                details.append(Detail(
+                    f"waived:{bundle}:{tok}", True,
+                    f"papers/{bundle}/paper_draft.tex:"
+                    f"{_line_of(source, offsets[0])} — '{tok}' unresolved "
+                    f"but WAIVED: {waiver}",
+                    warning=True,
+                ))
+                continue
+            n_fail += 1
+            lines = ",".join(str(_line_of(source, o)) for o in offsets[:4])
+            details.append(Detail(
+                f"unresolved:{bundle}:{tok}", False,
+                f"papers/{bundle}/paper_draft.tex:{lines} — "
+                f"\\texttt{{{tok}}} does not resolve to any declaration in "
+                f"lean/lean_deps.json (no disclaimer context; Class-TN drift)",
+            ))
+
+    details.insert(0, Detail(
+        "summary",
+        n_fail == 0,
+        f"{n_bundles} bundle drafts scanned / {n_candidates} candidate "
+        f"Lean references — {n_fail} unresolved FAIL(s) / {n_drift} "
+        f"drifted advisory / {n_waived} waived (documented)",
+    ))
+    if n_fail == 0 and n_drift == 0 and n_waived == 0:
+        details.append(Detail(
+            "all_resolved", True,
+            "Every bundle-draft Lean reference resolves against lean_deps.json",
+        ))
+    return CheckResult(passed=(n_fail == 0), details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 26: Theorem-name-embedded citations (advisory)
+# ═══════════════════════════════════════════════════════════════════════
+
+_YEAR_SEG_RE = re.compile(r"_((?:19|20)\d{2})(?=_|$)")
+# Segments immediately before a year token that are NOT author surnames
+# (numerical-bound naming idioms like d_n_bound_2020).
+_EMBED_AUTHOR_STOPWORDS = {
+    "bound", "bounds", "rate", "mass", "limit", "law", "gap", "model",
+    "theorem", "lemma", "data", "run", "wave", "phase", "et", "al",
+    "upper", "lower", "min", "max", "eq", "neq", "dr", "fit",
+}
+
+
+def _registry_surnames() -> set:
+    """Lowercased author surnames from CITATION_REGISTRY ('Halenka, V.
+    and Miller, C. J.' → {'halenka', 'miller'})."""
+    try:
+        from src.core.citations import CITATION_REGISTRY
+    except Exception:
+        return set()
+    surnames = set()
+    for entry in CITATION_REGISTRY.values():
+        authors = entry.get("authors") or ""
+        for m in re.finditer(r"([A-Za-z'\-]+)\s*,", authors):
+            surnames.add(m.group(1).lower())
+    return surnames
+
+
+def _embedded_citation_pairs(short_name: str, surname_lexicon: set) -> dict:
+    """Extract embedded (author, year) citation candidates from a
+    snake_case declaration name (unit-testable core for CHECK 26).
+
+    Returns ``{"year": str|None, "primary_author": str|None,
+    "trailing_authors": [str, ...]}``:
+
+    - ``primary_author`` — the segment immediately before the first
+      year token, unless it is a naming-idiom stopword / too short
+      (then None: no inferable authorship, declaration is skipped).
+    - ``trailing_authors`` — segments after the year token that match
+      a CITATION_REGISTRY author surname (length ≥ 4). The registry
+      acts as the surname lexicon so English naming segments
+      ("cluster", "densities") are never misread as authors.
+    """
+    m = _YEAR_SEG_RE.search(short_name)
+    if not m:
+        return {"year": None, "primary_author": None, "trailing_authors": []}
+    year = m.group(1)
+    before = short_name[:m.start()].split("_")
+    after = [s for s in short_name[m.end():].split("_") if s]
+
+    primary = before[-1].lower() if before and before[-1] else None
+    if (primary is None or len(primary) < 4 or not primary.isalpha()
+            or primary in _EMBED_AUTHOR_STOPWORDS):
+        primary = None
+
+    trailing = [s.lower() for s in after
+                if len(s) >= 4 and s.isalpha()
+                and s.lower() in surname_lexicon]
+    return {"year": year, "primary_author": primary,
+            "trailing_authors": trailing}
+
+
+_BIBITEM_RE = re.compile(
+    r"\\bibitem(?:\[[^\]]*\])?\{([^}]+)\}(.*?)"
+    r"(?=\\bibitem|\\end\{thebibliography\})",
+    re.DOTALL,
+)
+
+
+def _paper_bibitems(tex_source: str, bundle_dir: Path) -> list:
+    """Return [(bibkey, text), ...] from the draft's inline
+    ``thebibliography`` block; fall back to a ``\\bibliography{X}``
+    .bib file in the bundle directory if no inline block exists."""
+    items = _BIBITEM_RE.findall(tex_source)
+    if items:
+        return items
+    m = re.search(r"\\bibliography\{([^}]+)\}", tex_source)
+    if m:
+        bib = bundle_dir / f"{m.group(1)}.bib"
+        if bib.exists():
+            chunks = re.split(r"(?=@\w+\{)", bib.read_text())
+            out = []
+            for c in chunks:
+                km = re.match(r"@\w+\{([^,]+),", c)
+                if km:
+                    out.append((km.group(1).strip(), c))
+            return out
+    return []
+
+
+@register_check("theorem_name_embedded_citations",
+                "Declaration names embedding author+year have matching bibliography entries")
+def check_theorem_name_embedded_citations() -> CheckResult:
+    """Prevent the D5 phantom-citation class from the 2026-06-05
+    external review: a theorem name like
+    ``verlinde_2017_no_go_via_cluster_mass_densities_halenka_miller``
+    encodes author+year citations; if a bundle's prose mentions the
+    declaration but its bibliography has no matching entry, the reader
+    cannot follow the embedded citation (the original incident shipped
+    with BOTH Verlinde 2017 AND Halenka–Miller absent from the D5
+    bibliography and CITATION_REGISTRY).
+
+    Kinship note: this check is kin to the open QI item
+    **qi-citation_authoryear_metadata_match** (bibkey form vs registry
+    metadata) but distinct — that item validates
+    ``<LastName><Year>``-shaped *bibkeys* against registry metadata;
+    this check validates *Lean declaration names* that embed
+    author/year tokens against each citing paper's bibliography. It
+    does NOT close that QI item.
+
+    Mechanics: scan ``lean/lean_deps.json`` short declaration names for
+    year segments (``_((19|20)\\d{2})(_|$)``). Extract the candidate
+    primary (author, year) pair = segment immediately before the year
+    (skipped when it is a naming-idiom stopword like ``bound`` in
+    ``d_n_bound_2020`` — no inferable authorship), plus trailing author
+    segments validated against the CITATION_REGISTRY surname lexicon
+    (so naming segments like "cluster"/"densities" are never misread
+    as authors). For each bundle draft whose prose mentions the
+    declaration (``\\texttt``-escaped or raw), require:
+
+    - primary pair: some single bibitem contains the author surname
+      (case-insensitive) AND the year, OR a CITATION_REGISTRY entry
+      matches author+year and lists the paper in ``used_in``;
+    - each trailing author: appears in some bibitem, OR a registry
+      entry with that author lists the paper in ``used_in``.
+
+    Mismatch → **WARN (advisory default)**; promoted to **FAIL** under
+    ``--strict`` (mirrors provenance_doi_in_registry). Calibrated live
+    2026-06-10: 3 year-token declarations project-wide; the Verlinde
+    no-go (cited in D5) passes via the post-remediation
+    Verlinde2017dSEmergent + HalenkaMiller2020 bibitems.
+    """
+    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
+    if not deps_path.exists():
+        return CheckResult(
+            passed=False,
+            error=(f"missing {deps_path}; refresh via `cd lean && lake build "
+                   f"SKEFTHawking.ExtractDeps`"),
+        )
+
+    try:
+        from src.core.citations import CITATION_REGISTRY
+    except Exception as exc:
+        return CheckResult(passed=False,
+                           error=f"CITATION_REGISTRY unavailable: {exc}")
+
+    surname_lexicon = _registry_surnames()
+    entries = json.loads(deps_path.read_text())
+    year_decls: dict = {}  # short_name → pairs dict
+    for e in entries:
+        n = e.get("name", "")
+        if not n:
+            continue
+        short = n.rsplit(".", 1)[-1]
+        if short in year_decls:
+            continue
+        if _YEAR_SEG_RE.search(short):
+            year_decls[short] = _embedded_citation_pairs(short, surname_lexicon)
+
+    details: List[Detail] = []
+    n_warn = 0
+    n_checked = 0
+    n_skipped_no_author = 0
+
+    def _registry_match(author: str, year: Optional[str], bundle: str) -> bool:
+        for entry in CITATION_REGISTRY.values():
+            authors = (entry.get("authors") or "").lower()
+            if author not in authors:
+                continue
+            if year is not None and str(entry.get("year") or "") != year:
+                continue
+            used_in = entry.get("used_in") or []
+            if any(f"papers/{bundle}/" in u for u in used_in):
+                return True
+        return False
+
+    for bundle in BUNDLE_CODES:
+        tex = PAPERS_DIR / bundle / "paper_draft.tex"
+        if not tex.exists():
+            continue
+        source = tex.read_text()
+        bibitems = None  # lazy
+        for short, pairs in sorted(year_decls.items()):
+            escaped = short.replace("_", r"\_")
+            if escaped not in source and short not in source:
+                continue
+            if pairs["primary_author"] is None and not pairs["trailing_authors"]:
+                n_skipped_no_author += 1
+                details.append(Detail(
+                    f"no_inferable_author:{bundle}:{short}", True,
+                    f"papers/{bundle}/paper_draft.tex mentions '{short}' "
+                    f"(year {pairs['year']}) but the pre-year segment is a "
+                    f"naming idiom, not an author — skipped",
+                ))
+                continue
+            if bibitems is None:
+                bibitems = _paper_bibitems(source, tex.parent)
+            n_checked += 1
+
+            requirements = []
+            if pairs["primary_author"]:
+                requirements.append((pairs["primary_author"], pairs["year"]))
+            for t in pairs["trailing_authors"]:
+                requirements.append((t, None))
+
+            for author, year in requirements:
+                bib_ok = any(
+                    author in (key + text).lower()
+                    and (year is None or year in text or year in key)
+                    for key, text in bibitems
+                )
+                if bib_ok or _registry_match(author, year, bundle):
+                    continue
+                n_warn += 1
+                msg = (
+                    f"papers/{bundle}/paper_draft.tex mentions "
+                    f"\\texttt{{{short}}} which embeds "
+                    f"'{author}'" + (f" ({year})" if year else "")
+                    + " — no matching bibliography entry or "
+                      "CITATION_REGISTRY used_in entry (phantom-citation "
+                      "candidate)"
+                )
+                if STRICT_MODE:
+                    details.append(Detail(
+                        f"embedded_citation_missing:{bundle}:{short}:{author}",
+                        False, f"[strict] {msg}"))
+                else:
+                    details.append(Detail(
+                        f"embedded_citation_missing:{bundle}:{short}:{author}",
+                        True, msg, warning=True))
+
+    passed = True
+    if STRICT_MODE and n_warn > 0:
+        passed = False
+    details.insert(0, Detail(
+        "summary",
+        passed,
+        f"{len(year_decls)} year-token declaration name(s) project-wide / "
+        f"{n_checked} prose-mention checks across bundles — {n_warn} "
+        f"embedded-citation mismatch(es)"
+        + (" (strict mode: mismatches FAIL)" if STRICT_MODE else " (advisory)")
+        + (f" / {n_skipped_no_author} skipped (no inferable author)"
+           if n_skipped_no_author else ""),
+        warning=(n_warn > 0 and not STRICT_MODE),
+    ))
+    if n_warn == 0:
+        details.append(Detail(
+            "all_embedded_citations_resolved", True,
+            "Every prose-mentioned year-token declaration has matching "
+            "bibliography / registry coverage",
+        ))
+    return CheckResult(passed=passed, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CLI
 # ═══════════════════════════════════════════════════════════════════════
 

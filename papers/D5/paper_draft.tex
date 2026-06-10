@@ -102,7 +102,9 @@ Honesty discipline: load-bearing claims separate \emph{derived}
 classification (MCC)} (consistency-of-author-classification verification)
 from \emph{heuristic / empirical}; the explicit MCC label is used
 throughout. The bundle ships at $\totaltheorems$ Lean theorems across
-$\leanmodules$ modules with zero active sorry and a single tracked axiom.
+$\leanmodules$ modules with zero active sorry and zero project-local
+axioms (the formerly-tracked gapped-interface statement is now the
+tracked Prop \texttt{TPFConjecture}).
 
 \end{abstract}
 
@@ -155,8 +157,10 @@ Invariant~\#14 (no 14th+ bundle target spawned).
 
 The bundle imports the canonical project counts via
 \texttt{counts.tex} ($\totaltheorems$ theorems / $\leanmodules$ modules
-/ zero active sorry / one tracked axiom: \texttt{gapped\_interface\_axiom}
-from Phase~5s, unrelated to the dark sector) and the canonical formula
+/ zero active sorry / zero project-local axioms; the formerly-tracked
+\texttt{gapped\_interface\_axiom} from Phase~5s, unrelated to the dark
+sector, was retired into the tracked Prop \texttt{TPFConjecture} on
+2026-05-19) and the canonical formula
 registry via \texttt{src/core/formulas.py}. Each cited Lean theorem
 resolves to a built declaration; each cited bibitem resolves to a
 \texttt{CITATION\_REGISTRY} entry with primary-source cache. The
@@ -1303,9 +1307,10 @@ Wave~2b.4). This closes the explicit Phase~6q open question for
 the D5 substrate-constraints reading.
 
 The bundle ships at $\totaltheorems$ Lean theorems / $\leanmodules$
-modules / zero active sorry / 1 tracked axiom
-(\texttt{gapped\_interface\_axiom} from Phase~5s, unrelated to the
-dark sector). The Phase~6m closure adds $50$ substantive theorems
+modules / zero active sorry / zero project-local axioms
+(the formerly-tracked \texttt{gapped\_interface\_axiom} from Phase~5s,
+unrelated to the dark sector, was retired into the tracked Prop
+\texttt{TPFConjecture} on 2026-05-19). The Phase~6m closure adds $50$ substantive theorems
 across 4 modules. The substantive count $\substantivetheorems$
 separates load-bearing from $\placeholdertheorems$ documentation-marker
 content.

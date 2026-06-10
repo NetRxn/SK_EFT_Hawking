@@ -662,9 +662,9 @@ quantitative predictions.
 
 On the polariton platform, the substrate predicts a stimulated-Hawking
 gain $G$ that scales with frequency relative to the surface gravity
-$\kappa$. The substrate-canonical prediction (computed in
-\texttt{src/core/provenance.py} and verified against the
-\texttt{T\_H\_polariton} provenance source) is
+$\kappa$. The substrate-canonical prediction (computed via
+\texttt{stimulated\_hawking\_gain} in \texttt{src/core/formulas.py},
+the canonical formula registry) is
 \begin{equation}
   G(\omega/\kappa = \ln 3 / (2\pi)) > 0.5,
   \qquad N_{\mathrm{probe}} = 100\ \text{photons per mode}
@@ -685,7 +685,7 @@ expected probe-photon count.
 
 On the graphene platform, the substrate's analog Hawking spectrum is
 $T_H \approx 2.4\,\mathrm{K}$ on the Dean--Kim--Lucas device parameters
-(\texttt{T\_H\_graphene} provenance entry). The substrate is in
+(\texttt{Dean\_bilayer\_nozzle.T\_H\_K} provenance entry). The substrate is in
 $2{+}1$D rather than the BEC $3{+}1$D / polariton $2{+}1$D
 configurations, but the \texttt{SKDoubling.lean} +
 \texttt{SecondOrderSK.lean} machinery transfers across $\sim 93\%$
@@ -1006,7 +1006,7 @@ the alternative.
 \item \textbf{Gate E.2 (heat-kernel calibration).} Sakharov
   coefficient verified character-for-character against Vassilevich
   Eq.~4.37;
-  \texttt{HeatKernelExpansion.G\_N\_sakharov\_eq\_ratio\_critical\_coupling}
+  \texttt{LinearizedEFE.G\_N\_sakharov\_eq\_ratio\_critical\_coupling}
   closes the comparison.
 \item \textbf{Gate E.3 (diffeomorphism invariance through $a_4$).}
   The path-(b) framework ships
@@ -1905,7 +1905,7 @@ documented in each sibling bundle's Outlook section:
   3-manifolds (D4 \S 5; partial coverage on $S^3$ via Lickorish
   surgery; trefoil and figure-eight knot invariants ship closed at
   zero \texttt{sorry} via
-  \texttt{Ising\_MTC.trefoil\_eq\_neg\_sqrt2} and
+  \texttt{IsingBraiding.trefoil\_eq\_neg\_sqrt2} and
   \texttt{FigureEightKnot.figure\_eight\_trace\_neg\_one}).
 \item Doublon-SWAP gate Berry-phase / SWAP-equivalence layer
   (D4 \S 6; \texttt{FermiHubbardDimer.lean} ships the sign-flip

@@ -1398,7 +1398,7 @@ requirements (the explicit Sakharov-$\Leftrightarrow$-horizon-Crooks
 bridge is the Stage-2--3 deferral of the cited Lean module). The Lean substrate of this unification is
 \texttt{lean/SKEFTHawking/CrooksAnalogHawking/SakharovHorizonCrooks.lean},
 where the predicate
-\texttt{HorizonCrooksSubstrate.jacobsonConsistent} bundles a
+\texttt{CrooksAnalogHawking.jacobsonConsistent} bundles a
 \texttt{SakharovConditions} record with a \texttt{HorizonDetailedBalance}
 witness, and the partition theorem
 \texttt{horizonCrooks\_substrate\_partition} establishes that ${}^3$He-A
@@ -2196,7 +2196,7 @@ identifier with a one-line closure path:
   scale as natural microscopic anchor for the QCD chiral-SSB chain
   (\S\ref{sec:chiral-ssb}); closes when the Higgs-mass back-reaction
   calculation is delivered.
-\item \texttt{NonlinearEFE.H\_RegimePartition} — regime-partition
+\item \texttt{BHThermodynamicsFourLaws.H\_RegimePartition} — regime-partition
   criterion at $M_c = N_f \Lambda_{\mathrm{UV}}/(12\pi\,\alpha_{\mathrm{ADW}})$
   separating the Schottky-natural and ADW-extremality branches
   (\S\ref{sec:bch-four-laws}); shipped at the Lean-formalization scope
@@ -2207,7 +2207,7 @@ identifier with a one-line closure path:
   \texttt{falsifier\_third\_law\_form},
   \texttt{falsifier\_alpha\_ADW\_dependence}, and
   \texttt{four\_laws\_consistent\_with\_acoustic\_regime}.
-\item \texttt{NonlinearEFE.IsADWPenroseApplicable} — substrate-specific
+\item \texttt{PenroseSingularity.IsADWPenroseApplicable} — substrate-specific
   applicability predicate for the Penrose singularity hypothesis
   (\S\ref{sec:singularity-thms}); the predicate requires
   (i)~ADW-substrate-scale tetrad presence, (ii)~trapped-surface
@@ -2235,7 +2235,7 @@ identifier with a one-line closure path:
   vestigial-second-sound mode is identified with the graviton
   (\S\ref{sec:gw170817}); falsifier shipped via
   \texttt{second\_sound\_graviton\_natural\_range\_universally\_falsified}.
-\item \texttt{Verlinde2017.H\_VerlindeKMLiteralSumDerivation} — Verlinde
+\item \texttt{BHEntropyMicroscopic.H\_VerlindeKMLiteralSumDerivation} — Verlinde
   2017 KM literal-sum derivation as cited in \S\ref{sec:cfl-cross-bridge};
   inherited from the published Verlinde 2017 derivation, no further
   closure.

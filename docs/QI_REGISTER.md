@@ -9,10 +9,10 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 ## Summary
 
 - **411** ReviewFinding nodes currently in the graph
-- **21** QI items tracked (9 manually-curated open + 12 closed via `## Closed Items` section)
-- **9** open, **12** closed
+- **22** QI items tracked (9 manually-curated open + 13 closed via `## Closed Items` section)
+- **9** open, **13** closed
 
-> 9 currently-open items: 3 from Phase 7b sub-wave 7b.4 (E1+E2 reviewer triples, 2026-05-04), 4 from Phase 7c sub-waves 7c.1-7c.4 (D1+D2+D3+D4 reviewer triples, 2026-05-04), and 2 from Phase 7c sub-wave 7c.6 (D3 Stage-10 r3 prep + D4 Stage-13 r1, 2026-05-04). All are manually-curated additions; none auto-detected from `ReviewFinding` graph nodes. The latest pair (`qi-bundle_skeleton_inline_bibliography` + `qi-citation_authoryear_metadata_match`) supersedes the prior `qi-bibfilename` (which is now retained as a narrower precursor of the broader bundle-skeleton-template fix). See "Open Items" section.
+> 9 currently-open items: 3 from Phase 7b sub-wave 7b.4 (E1+E2 reviewer triples, 2026-05-04), 3 from Phase 7c sub-waves 7c.1-7c.4 (D1+D2+D3+D4 reviewer triples, 2026-05-04; `qi-leantheoremdrift` closed 2026-06-10 via structural prevention), 2 from Phase 7c sub-wave 7c.6 (D3 Stage-10 r3 prep + D4 Stage-13 r1, 2026-05-04), and 1 from Phase 6w D7 Stage-13 (`qi-gate-5-self-audit-blind-spot-on-sibling-tautologies`, 2026-05-26). All are manually-curated additions; none auto-detected from `ReviewFinding` graph nodes. The pair (`qi-bundle_skeleton_inline_bibliography` + `qi-citation_authoryear_metadata_match`) supersedes the prior `qi-bibfilename` (which is now retained as a narrower precursor of the broader bundle-skeleton-template fix). See "Open Items" section.
 
 ## Open Items
 
@@ -27,16 +27,6 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 - **Owner:** unassigned. **Target:** apply on next wave close (Phase 6x onward).
 - **Status:** open.
 - **Evidence:** `papers/AutomatedReviews/2026-05-26-2112-internal-adversarial/D7.md` (findings 3.1, 3.2, 3.3 + QI Candidate section); commit `89cae29` remediation chain.
-
-### qi-leantheoremdrift — opened 2026-05-04 by Phase 7c sub-waves 7c.1-7c.4 (D1+D2+D3+D4 lifts)
-
-- **First observed:** 2026-05-04 across D1 (5 BLOCKERs), D2 (9 BLOCKERs), D3 (13 BLOCKERs), D4 (1 BLOCKER cluster) Stage-10 round-1 reviews — **~32 instances of Class TN theorem-name drift** in 4 first-pass drafts.
-- **Pattern summary:** First-pass drafts repeatedly cite Lean theorems by *intended* module name (drafted from synthesis brief or memory) rather than *actual* qualified name in `lean_deps.json`. Examples: `NonlinearDiffInvariance.h_path_b_holds_iff_dirac_bundle` (intended) vs `diff_invariance_a4_iff_dirac_basis_consistent` (actual); `HoloQEC.admissible_iff` vs `QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class`; `HigherCurvatureStelle.basis_change_identity` vs nonexistent module. Generalises QI-LEAN-1 from 7b.4.
-- **Pipeline stage affected:** Stage 10 (claims review). Each occurrence triggers a Class-TN BLOCKER.
-- **Proposed structural prevention:** add a pre-Stage-10 grep step to `BUNDLE_LIFT_PROCEDURE.md` §7 LaTeX-compile gate. For every `\texttt{ModuleX.theorem_name}` reference in `papers/<bundle>/paper_draft.tex`, verify that `ModuleX.theorem_name` appears as a fully-qualified declaration in `lean/lean_deps.json`. Could be implemented as `validate.py --check bundle_lean_refs_resolve` that scans paper TeX for `\\texttt\\{[A-Za-z]+\\.[a-zA-Z_]+\\}` patterns and verifies each resolves.
-- **Owner:** unassigned. **Target:** before F flagship draft (which will inherit the same risk surface across 41 source papers).
-- **Evidence:** `papers/D1/claims_review.json` (Stage 10 r1, 5 TN BLOCKERs); `papers/D2/claims_review.json` (9 TN BLOCKERs); `papers/D3/claims_review.json` (13 TN BLOCKERs); `papers/D4/claims_review.json` (1 TN BLOCKER cluster of 7 names with HPCode prefix).
-- **Severity:** advisory but high-impact. Each first-pass draft suffers ~5-15 Class-TN BLOCKERs surfaced at Stage 10. Without the structural prevention, F flagship will surface ~40+ Class TN BLOCKERs.
 
 ### qi-bibfilename — opened 2026-05-04 by Phase 7c sub-wave 7c.1 (D3 Stage-10 r1)
 
@@ -213,6 +203,18 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
   honours per-finding status overrides.
 - **Numerics:** 13 paper40 nodes flipped open → fixed; FixPropagation
   gate flips needs-recheck → passed.
+
+### qi-leantheoremdrift — closed 2026-06-10 by the external-review remediation process wave (structural prevention)
+
+- **First observed:** 2026-05-04 across D1 (5 BLOCKERs), D2 (9 BLOCKERs), D3 (13 BLOCKERs), D4 (1 BLOCKER cluster) Stage-10 round-1 reviews — **~32 instances of Class TN theorem-name drift** in 4 first-pass drafts.
+- **Pattern summary:** First-pass drafts repeatedly cite Lean theorems by *intended* module name (drafted from synthesis brief or memory) rather than *actual* qualified name in `lean_deps.json`. Examples: `NonlinearDiffInvariance.h_path_b_holds_iff_dirac_bundle` (intended) vs `diff_invariance_a4_iff_dirac_basis_consistent` (actual); `HoloQEC.admissible_iff` vs `QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class`; `HigherCurvatureStelle.basis_change_identity` vs nonexistent module. Generalises QI-LEAN-1 from 7b.4.
+- **Pipeline stage affected:** Stage 10 (claims review). Each occurrence triggers a Class-TN BLOCKER.
+- **Proposed structural prevention:** add a pre-Stage-10 grep step to `BUNDLE_LIFT_PROCEDURE.md` §7 LaTeX-compile gate. For every `\texttt{ModuleX.theorem_name}` reference in `papers/<bundle>/paper_draft.tex`, verify that `ModuleX.theorem_name` appears as a fully-qualified declaration in `lean/lean_deps.json`. Could be implemented as `validate.py --check bundle_lean_refs_resolve` that scans paper TeX for `\\texttt\\{[A-Za-z]+\\.[a-zA-Z_]+\\}` patterns and verifies each resolves.
+- **Owner:** unassigned. **Target:** before F flagship draft (which will inherit the same risk surface across 41 source papers).
+- **Evidence:** `papers/D1/claims_review.json` (Stage 10 r1, 5 TN BLOCKERs); `papers/D2/claims_review.json` (9 TN BLOCKERs); `papers/D3/claims_review.json` (13 TN BLOCKERs); `papers/D4/claims_review.json` (1 TN BLOCKER cluster of 7 names with HPCode prefix).
+- **Severity:** advisory but high-impact. Each first-pass draft suffers ~5-15 Class-TN BLOCKERs surfaced at Stage 10. Without the structural prevention, F flagship will surface ~40+ Class TN BLOCKERs.
+- **Status:** closed (structural prevention, Stage-14 pathway 2).
+- **Evidence on close:** `validate.py --check prose_theorem_reference_coverage` (CHECK 25, shipped 2026-06-10 in commit "feat(process): 3 new validators — axiom-prose consistency, prose-theorem coverage (closes qi-leantheoremdrift), theorem-name-embedded citations"). The check implements the proposed `bundle_lean_refs_resolve` mechanism: it extracts `\texttt{}` Lean-identifier candidates from all 17 bundle drafts, resolves each against `lean/lean_deps.json` declaration names (exact / project-qualified suffix / module-field-verified `<Module>.<thm>` documentation idiom / unqualified short name), plus module names and project Python registry keys, with disclaimer-context exemptions and a documented waiver list. Unresolved references hard-fail. Calibration on ship-day surfaced and fixed 13 live Class-TN drift sites (D1 `hawking_universality_main`→`hawking_universality`, `bp_convergence_iff_ldp_below_threshold`→`bp_convergence_iff_ldp_rate_zero`; D4 `valid_branch_K_chain_le_K_compose_numeric`→`_generic`; D3 ×3 + F ×2 + E1/E2 module-attribution corrections; F `T_H_polariton`/`T_H_graphene`→ canonical formula/provenance keys). Tests: `tests/test_validate_prose_checks.py`.
 
 ### qi-leanproofsubstance — closed 2026-04-29 by Phase 6i Wave 4
 
