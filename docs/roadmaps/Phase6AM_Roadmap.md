@@ -324,6 +324,14 @@ sub-programs — §5/§6 grid-FINDER (convex geometry + two-squares-over-ℤ[√
 and structural-KMM `native_decide` elimination — into dedicated `/goal`s. Also flagged: the §5/§6/§7 RS
 citation scaffolding (`Phase-6x` DR) is self-flagged PARTIAL-VIABLE (§6 iff-criterion / §7.2 constant
 unconfirmed vs primary `1403.2975v3`) — verify before any RS claim is load-bearing in a published bundle.
+**[RESOLVED 2026-06-10, Phase 6AP W5]:** both items are covered by the 6AO Track-1 end-to-end
+primary-source verification (Phase6AO_Roadmap.md §"PRIMARY-SOURCE VERIFICATION COMPLETE" — the
+citation source of truth): the §6 iff-criterion is **Appendix C, Lemma C.16** (solvable ⟺
+doubly-positive ∧ †-decomposable; §6 proper carries Lemma 6.1 necessity + Thm 6.2 factoring
+reduction), and the §7.2/constant question resolves via **§7.2 = ε-region eq. (14)** + the
+Hypothesis-8.3 ↔ Selinger-1212.6253-Hypothesis-29 cross-identification (the K+12 slope is the
+∀SU(2) form, K+4 the z-rotation slope). Numbering errata were fixed in-repo by 6AO; RS claims may
+now be load-bearing in published bundles subject to the per-theorem layer labels.
 No axioms added anywhere; no Mathlib-pin bump; never pushed.
 
 > **[2026-06-09 PM — post-review DR update]** The user chose disposition (a). A follow-up DR then **refined

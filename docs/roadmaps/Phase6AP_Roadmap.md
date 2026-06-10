@@ -28,6 +28,7 @@ header: no vacuous/definitional-only deliverables; no effort-based deferral.
 - **Why now:** it is the ancilla-register step every diamond-norm comparison with auxiliary
   system needs — the direct substrate for W3.
 - **Gate:** the bound at full generality (`RCLike 𝕜`, arbitrary finite index types), kernel-pure.
+- ✅ **SHIPPED 2026-06-10 (`d525c793`):** `KroneckerOpNorm.lean`, linter-clean, kernel-pure.
 
 ## W3 — unitary operator-norm → diamond bound (the AKN inequality)
 
@@ -44,6 +45,15 @@ header: no vacuous/definitional-only deliverables; no effort-based deferral.
 - **Gate:** the bound on a non-trivial unitary pair class with the ancilla register included
   (not the ancilla-free weakening); kernel-pure; a worked instance connecting to an exact
   named-channel distance as cross-check.
+- ✅ **SHIPPED 2026-06-10 (`f50e9406`):** `UnitaryDiamond.lean` — `traceNorm_eq_physlib`
+  identification importing PhysLib's general trace-norm toolbox (subadditivity + both Hölder
+  bounds, now on the project trace norm); `l2_opNorm_le_one_of_unitary`;
+  `traceNorm_conj_diff_le` (the telescope for arbitrary CONTRACTIONS — strictly stronger than
+  unitary); **`diamondDist_unitaryKraus_le`**: `diamondDist Φ_U Φ_V ≤ ‖U − V‖_op` (½-diamond
+  convention; = AKN `‖·‖_◇ ≤ 2‖U−V‖_op`), ancilla via the W2 Kronecker bound. The sharpness
+  caveat ships AS A THEOREM: `diamondDist_unitary_smul_phase` (global phase ⇒ same channel at
+  zero diamond distance, positive opnorm distance — the gate's cross-check instance; the
+  phase-optimized tightening documented, not claimed). Kernel-pure (lean_verify).
 
 ## W4 — erasure two-way capacity formula (`ErasureRateBound.lean` or PLOBRateBound extension)
 
@@ -53,6 +63,9 @@ header: no vacuous/definitional-only deliverables; no effort-based deferral.
   semantics stays literature-cited until the teleportation-stretching machinery exists.
 - **Gate:** formula + monotonicity/range, kernel-pure, with the converse-vs-formula layer split
   documented in the module header (mirroring `PLOBRateBound.lean`).
+- ✅ **SHIPPED 2026-06-10 (`a3933e49`):** `ErasureRateBound.lean` — formula + endpoints + STRICT
+  antitonicity + the cross-formula comparison `erasureBound_le_plobBound` (loss dominates
+  erasure at matched parameter; the two formulas provably not interchangeable). Kernel-pure.
 
 ## W5 — Ross–Selinger citation-scaffolding verification (documentation)
 
@@ -61,6 +74,15 @@ header: no vacuous/definitional-only deliverables; no effort-based deferral.
   PARTIAL-VIABLE. Update the scaffolding docs/docstrings; record the verification artifact.
   Lean theorem validity is unaffected (kernel-checked); this gates published-bundle RS *claims*.
 - **Gate:** per-claim verbatim confirmation or correction, recorded with source extracts.
+- ✅ **RESOLVED 2026-06-10 (no duplicate read needed):** the 6AO Track-1 closure had already
+  performed the end-to-end primary-source verification (all 40 pp; recorded in
+  `Phase6AO_Roadmap.md` §"PRIMARY-SOURCE VERIFICATION COMPLETE", the citation source of truth,
+  with numbering errata fixed in-repo — it even caught a mathematically-impossible roadmap item,
+  ℤ[√2][i]-ED). Both 6AM-flagged items are covered: §6 iff-criterion = **Appendix C Lemma C.16**
+  (solvable ⟺ doubly-positive ∧ †-decomposable); §7.2 = ε-region eq. (14), with the constant
+  question resolved by the Hypothesis-8.3 ↔ Selinger-1212.6253-Hyp-29 cross-identification
+  (K+12 = ∀SU(2) slope vs K+4 z-rotation slope). W5 closure = the stale PARTIAL-VIABLE flags
+  annotated RESOLVED with pointers (6AM roadmap; private-consumer notes follow the same pointer).
 
 ## Closure
 
