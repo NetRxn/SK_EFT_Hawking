@@ -744,6 +744,63 @@ def check_axiom_closure_allowlist() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK: Elaboration-knob watchlist (perf / upstream-portability, NOT soundness)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check(
+    "elaboration_knob_watchlist",
+    "Watchlist (advisory): proof-body maxRecDepth / synthInstance knobs — a "
+    "performance / Mathlib-CI-portability signal, NOT a soundness or axiom-closure issue",
+)
+def check_elaboration_knob_watchlist() -> CheckResult:
+    """
+    Surfaces every ``set_option maxRecDepth`` / ``synthInstance.maxSize`` /
+    ``synthInstance.maxHeartbeats`` in SKEFTHawking Lean source.
+
+    WHY THIS IS SEPARATE FROM ``axiom_closure_allowlist`` (the soundness gate):
+    these are *elaboration-time* knobs. They only let the front-end search deeper /
+    wider before giving up; the **kernel independently re-checks the final term** and
+    never reads them, so they add NOTHING to the axiom closure (no ``Lean.ofReduceBool``)
+    and stay kernel-pure ``{propext, Classical.choice, Quot.sound}``. Mathlib uses
+    ``maxRecDepth`` routinely. The genuine trust surface (``native_decide`` →
+    ``Lean.ofReduceBool``) is gated by ``axiom_closure_allowlist``; THIS check is a
+    NON-FAILING watchlist for the only real downside — a ``decide`` heavy enough to
+    need a knob is also a slow KERNEL reduction, which Mathlib CI's speed budget may
+    reject. So each hit is an upstream-portability candidate (consider a structural
+    reproof IF upstreaming that lemma), never a correctness concern. Always passes.
+
+    NB ``maxHeartbeats`` in proof bodies is forbidden outright by Invariant #10
+    (architecture discipline) and is enforced elsewhere; it is intentionally not in
+    this advisory list.
+    """
+    import re
+
+    lean_dir = PROJECT_ROOT / "lean" / "SKEFTHawking"
+    if not lean_dir.exists():
+        return CheckResult(passed=True, details=[
+            Detail("lean_src", True, f"SKIPPED — {lean_dir} not found")])
+
+    pat = re.compile(
+        r"set_option\s+(maxRecDepth|synthInstance\.maxSize|synthInstance\.maxHeartbeats)\s+(\d+)")
+    hits: List[Detail] = []
+    for f in sorted(lean_dir.rglob("*.lean")):
+        if "/.lake/" in str(f):
+            continue
+        for i, line in enumerate(f.read_text(errors="replace").splitlines(), 1):
+            m = pat.search(line)
+            if m:
+                rel = f.relative_to(PROJECT_ROOT)
+                hits.append(Detail(f"{rel}:{i}", True, f"{m.group(1)} {m.group(2)}", warning=True))
+
+    summary = Detail(
+        "watchlist", True,
+        f"{len(hits)} proof-body elaboration-knob site(s) — perf/upstream-CI watchlist, "
+        "kernel-pure (NOT a soundness/axiom-closure issue; that is axiom_closure_allowlist)",
+        warning=bool(hits))
+    return CheckResult(passed=True, details=[summary] + hits)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CHECK 10: Notebook visualization consistency (warnings only)
 # ═══════════════════════════════════════════════════════════════════════
 
