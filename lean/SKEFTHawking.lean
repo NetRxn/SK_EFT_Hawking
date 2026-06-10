@@ -1463,6 +1463,15 @@ import SKEFTHawking.FKLW.RossSelinger.Zsqrt2GaussInt2Conj
 -- integer-coordinate non-negativity — no real embedding) + GaussInt2.norm_eq_zero + NoZeroDivisors.
 -- The next brick toward the even-power two-squares-over-ℤ[√2] criterion (Prop 3.2.7).
 import SKEFTHawking.FKLW.RossSelinger.Zsqrt2GaussInt2Domain
+-- Phase 6AO Track 1(b) (2026-06-10) — ℤ[ω]=ℤ[ζ₈] is a EUCLIDEAN DOMAIN (Mathlib has none): ℤ[i]-pair
+-- Gaussian rounding on the {1,ω}-grading (γ=d+bi, δ=c+ai; relative conj = σ5; norm = N_ℤ[i](t·σ5 t)
+-- = sum of two squares ⟹ norm_nonneg) with the perpendicular-corner rescue
+-- A²+B² = S²−2(e₁(f₁−f₂)+e₂(f₁+f₂))², all-corners value 1/2. Also IsDomain ZOmega, norm_eq_zero_iff
+-- (ℤ[√2]-descent via Zsqrtd.norm_eq_zero). ⟹ PID/UFD/gcd for ℤ[ω] — the engine for the paper's
+-- Appendix-C gcd arguments (Lemma C.20, t = gcd(ξ, u+i)): Track 1(c). NOTE ℤ[√2][i] (above) is an
+-- index-2 NON-integrally-closed subring (paper Lemma 5.5) — never a UFD; the Euclidean layer lives
+-- on the full ZOmega.
+import SKEFTHawking.FKLW.RossSelinger.ZOmegaEuclideanDomain
 -- Phase 6x Tier-2 Item I (2026-05-30) — compile_correct approximation helpers:
 -- linftyOpNorm_fin_two_le (entrywise ≤δ ⟹ ℓ∞-operator-norm ≤ 2δ for 2×2) + su2_entry_structure
 -- (U∈SU(2) ⟹ U=[[a,−b̄],[b,ā]]). Propagate the grid first-column approximation to ‖·‖≤ε.
