@@ -3253,6 +3253,19 @@ import SKEFTHawking.ChernBridge
 -- spin-out decision deferred to user authorization (default: NO,
 -- absorb into D1 + E1 + E2 via Wave 6w.7).
 import SKEFTHawking.AnalogHawkingDemarcation
+-- Phase 6AP (2026-06-10): QuantumNetwork substrate completions — textbook-math
+-- origination + the diamond AKN chain. W1 general exp-enclosure landed in-place in
+-- NumericalBounds (already imported). W2 Kronecker-with-identity opnorm bound; W3 the
+-- unitary opnorm→diamond AKN bound + trace-norm Hölder transfer from PhysLib (with the
+-- global-phase non-sharpness caveat AS a theorem); W3b row-sum→L2-opnorm bridge + the
+-- END-TO-END compiled-gate diamond certificate diamondDist_cliffordTCompile_le
+-- (compiler contract → row sums → norm bridge → AKN, every link kernel-checked);
+-- W4 erasure two-way rate-bound formula (two-layer posture mirroring PLOBRateBound).
+import SKEFTHawking.QuantumNetwork.KroneckerOpNorm
+import SKEFTHawking.QuantumNetwork.UnitaryDiamond
+import SKEFTHawking.QuantumNetwork.MatrixNormBridge
+import SKEFTHawking.QuantumNetwork.ErasureRateBound
+import SKEFTHawking.FKLW.CompiledGateDiamond
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

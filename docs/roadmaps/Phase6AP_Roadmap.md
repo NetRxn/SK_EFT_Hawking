@@ -54,6 +54,13 @@ header: no vacuous/definitional-only deliverables; no effort-based deferral.
   caveat ships AS A THEOREM: `diamondDist_unitary_smul_phase` (global phase ⇒ same channel at
   zero diamond distance, positive opnorm distance — the gate's cross-check instance; the
   phase-optimized tightening documented, not claimed). Kernel-pure (lean_verify).
+- ✅ **W3b SHIPPED 2026-06-10 (`a6eb7c15`):** `MatrixNormBridge.lean`
+  (`l2_opNorm_le_sqrt_card_mul_of_rowSum_le`, hypothesis-form so it composes across files
+  elaborated under either matrix-norm instance) + `FKLW/CompiledGateDiamond.lean` — the
+  END-TO-END capstone `diamondDist_cliffordTCompile_le`: compile any `U ∈ SU(2)` to `ε`, the
+  compiled CHANNEL is within diamond distance `√2·ε` of the target's (compiler contract → row
+  sums via `linfty_opNorm_def` → norm bridge → AKN), every link kernel-checked. The `√2` is the
+  `card (Fin 2)` bridge constant, not the AKN constant (stated; a sharper bridge would tighten).
 
 ## W4 — erasure two-way capacity formula (`ErasureRateBound.lean` or PLOBRateBound extension)
 
@@ -88,3 +95,14 @@ header: no vacuous/definitional-only deliverables; no effort-based deferral.
 
 - `lake build` + `lake build SKEFTHawking.ExtractDeps` clean; `validate.py` green; counts +
   Inventory refreshed; Stage-13-style review of new statements (strengthening checklist).
+- ✅ **PHASE 6AP CLOSED 2026-06-10.** All 5 waves + W3b capstone shipped same-day. Full library
+  + ExtractDeps green (9249 jobs); `validate.py` ALL CHECKS PASSED (re-run after lean_deps
+  regen); counts refreshed `docs/counts.json` **12159 thm / 934 mod / 0 axiom / 0 sorry**
+  (Δ vs 6AO close: +29 thm, +5 mod); root `SKEFTHawking.lean` imports the five new modules;
+  Inventory Index synced. Strengthening notes: the W3 caveat ships as a THEOREM
+  (`diamondDist_unitary_smul_phase`), the W3 telescope is the strictly-stronger contraction
+  form, W4 carries the non-trivial cross-formula comparison (no definitional-only deliverable);
+  the only `Prop`-shaped hypothesis-form statement (`MatrixNormBridge`) is deliberate interface
+  design, consumed non-vacuously by the W3b capstone. Private-side consumption shipped in the
+  same session (vcc diamond layer; re-points; P-R1 consolidation disposition — see the private
+  roadmap for those records).
