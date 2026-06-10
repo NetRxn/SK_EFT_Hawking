@@ -1625,6 +1625,12 @@ import SKEFTHawking.FKLW.RossSelinger.Gate3Unitary
 -- α|000⟩ + β·e^{iφ}|100⟩ — KMM's |β(e^{iφ}−γ)|² + |β|²‖g‖² error, O(2^{-k}) in squared distance.
 -- initState/targetState; mulVec_two_support collapse; 8-index difference computation.
 import SKEFTHawking.FKLW.RossSelinger.KMMOperational
+-- Phase 6AO Track 2 (inc 39 substrate, 2026-06-10): SU(2) Euler decomposition substrate — lamC (the
+-- Λ(φ) = diag(1, e^{iφ}) target), hC (the ℂ-Hadamard matching toComplexMat_gateMatrix_H), the half-angle
+-- identities 1 ± e^{iθ} = (2cos / −2i·sin)(θ/2)·e^{iθ/2}, and eulerProd_eq: the closed form of
+-- Λ(φ₁)·H·Λ(φ₂)·H·Λ(φ₃) = ½[[1+e₂, (1−e₂)e₃],[e₁(1−e₂), e₁e₃(1+e₂)]]. Toward the ∀U∈SU(2)
+-- up-to-global-phase decomposition (the LAST Track-2 piece).
+import SKEFTHawking.FKLW.RossSelinger.SU2Euler
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
