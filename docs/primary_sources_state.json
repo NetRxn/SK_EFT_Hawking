@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-06-09T11:02:19+00:00",
+  "generated_at": "2026-06-10T15:06:09+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -2190,6 +2190,17 @@
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "HalenkaMiller2020": {
+      "bibkey": "HalenkaMiller2020",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/HalenkaMiller2020.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-06-10T15:06:09+00:00",
+      "size_bytes": 1567896,
+      "url_used": "https://arxiv.org/pdf/1807.01689",
+      "note": null
     },
     "HartmanKunduTajdini2017": {
       "bibkey": "HartmanKunduTajdini2017",

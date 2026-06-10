@@ -142,6 +142,19 @@ class KlinkhamerVolovikPrediction:
     wa: float = 0.0
     oscillation_period_seconds: float = 1e-44  # Planck scale
     w_effective_time_averaged: float = 0.0
+    # Provenance (verified against the cached DESI DR2 primary source,
+    # arXiv:2503.14738v3 = PRD 112, 083515 (2025); CITATION_REGISTRY key
+    # 'DESI2025'): the sigmas below are SINGLE-PARAMETER w0 distances of
+    # the KV prediction w0 = -1 from the DESI DR2 w0waCDM posteriors —
+    #   DESI+CMB+Pantheon+ : w0 = -0.838 ± 0.055  (Eq. 26)
+    #       → (1 - 0.838)/0.055 ≈ 2.9σ
+    #   DESI+CMB+DESY5     : w0 = -0.752 ± 0.057  (Eq. 28)
+    #       → (1 - 0.752)/0.057 ≈ 4.4σ
+    # They are NOT the DESI paper's own two-parameter Δχ²_MAP preference
+    # values for w0waCDM over ΛCDM (2.8σ / 4.2σ for the same data
+    # combinations). Derivation: Phase 5x Wave 1b Task 7 DR
+    # (Lit-Search/Phase-5x/5x-Klinkhamer-Volovik Oscillating Vacuum vs.
+    # DESI DR2 ...md, Block 4). Documented 2026-06-10.
     desi_dr2_exclusion_sigma_pantheon_plus: float = 2.9
     desi_dr2_exclusion_sigma_desy5: float = 4.4
 

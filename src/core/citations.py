@@ -6053,7 +6053,7 @@ CITATION_REGISTRY = {
     # Introduced by Stage 10.E D4 §9 prose commit 62f1185 (2026-05-23).
     # ────────────────────────────────────────────────────────────────────
 
-    'AharonovArad2017': {
+    'AharonovArad2011': {
         'authors': 'Aharonov, D. and Arad, I.',
         'title': 'The BQP-hardness of approximating the Jones polynomial',
         'journal': 'New Journal of Physics',
@@ -6062,12 +6062,20 @@ CITATION_REGISTRY = {
         'year': 2011,
         'doi': '10.1088/1367-2630/13/3/035019',
         'arxiv': 'quant-ph/0605181',
-        'doi_verified': None,
+        'doi_verified': True,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/AharonovArad2017.abstract.txt',
-        'used_in': ['papers/D4/paper_draft.tex'],
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/AharonovArad2011.abstract.txt',
+        'used_in': ['papers/D4/paper_draft.tex', 'papers/D8/paper_draft.tex'],
         'provides': [],
-        'notes': 'Bibkey carried over from earlier phase (year suffix 2017 inherited); actual publication year is 2011 (New J. Phys. 13, 035019) with arXiv preprint 2006. Lemma 6.1 provides group-commutator quadratic-shrinkage substrate consumed by the F.21 density argument. arXiv ID verified via arxiv.org 2026-05-23.',
+        'notes': 'Bibkey renamed AharonovArad2017 -> AharonovArad2011 on 2026-06-10 '
+                 '(review-2026-06-05 D8 finding: misleading year suffix inherited from an '
+                 'earlier phase); actual publication year is 2011 (New J. Phys. 13, 035019) '
+                 'with arXiv preprint 2006. Lemma 6.1 provides group-commutator '
+                 'quadratic-shrinkage substrate consumed by the F.21 density argument. '
+                 'arXiv ID verified via arxiv.org 2026-05-23. DOI verified 2026-06-10: '
+                 'doi.org resolves to iopscience.iop.org article page with matching title, '
+                 'authors (Dorit Aharonov, Itai Arad), NJP 13, 035019 (2011). Cache file '
+                 'renamed in lockstep.',
     },
 
     'DawsonNielsen2006': {
@@ -6082,9 +6090,9 @@ CITATION_REGISTRY = {
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.abstract.txt',
-        'used_in': ['papers/D4/paper_draft.tex'],
+        'used_in': ['papers/D4/paper_draft.tex', 'papers/D8/paper_draft.tex'],
         'provides': [],
-        'notes': 'Canonical reference for the polylogarithmic length bound of the Solovay-Kitaev algorithm. Cited in D4 §9 Stage 10.E prose alongside KitaevShenVyalyi2002 (existence form) and AharonovArad2017 (group-commutator substrate).',
+        'notes': 'Canonical reference for the polylogarithmic length bound of the Solovay-Kitaev algorithm. Cited in D4 §9 Stage 10.E prose alongside KitaevShenVyalyi2002 (existence form) and AharonovArad2011 (group-commutator substrate). No DOI: QIC vol. 6 (Rinton Press) does not register article DOIs; arXiv quant-ph/0505030 is the canonical locator.',
     },
 
     'KitaevShenVyalyi2002': {
@@ -6099,9 +6107,9 @@ CITATION_REGISTRY = {
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': None,  # textbook — no arXiv PDF
-        'used_in': ['papers/D4/paper_draft.tex'],
+        'used_in': ['papers/D4/paper_draft.tex', 'papers/D8/paper_draft.tex'],
         'provides': [],
-        'notes': 'American Mathematical Society, Graduate Studies in Mathematics vol. 47 (ISBN 978-0-8218-2161-8). Textbook existence-form statement of the Solovay-Kitaev theorem (Theorem 8.3), prior to Dawson-Nielsen quantitative refinement. Textbook-exempt per validate.py textbook rule (no arXiv, primary-source-path None).',
+        'notes': 'American Mathematical Society, Graduate Studies in Mathematics vol. 47 (ISBN 978-0-8218-2161-8). Textbook existence-form statement of the Solovay-Kitaev theorem (Theorem 8.3), prior to Dawson-Nielsen quantitative refinement. Textbook-exempt per validate.py textbook rule (no arXiv, primary-source-path None). No DOI on record for the book; doi_verified not applicable (2026-06-10 review pass).',
     },
 
     # ════════════════════════════════════════════════════════════════
@@ -8748,20 +8756,57 @@ CITATION_REGISTRY = {
 
     'Verlinde2017dSEmergent': {
         'authors': 'Verlinde, E. P.',
-        'title': 'Emergent gravity and the dark universe',
+        'title': 'Emergent Gravity and the Dark Universe',
         'journal': 'SciPost Phys.',
         'volume': 2,
         'page': '016',
         'year': 2017,
         'doi': '10.21468/SciPostPhys.2.3.016',
         'arxiv': '1611.02269',
-        'doi_verified': None,
+        'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6m/primary-sources/Verlinde2017dSEmergent.pdf',
-        'used_in': ['papers/paper45_phase6m_review/paper_draft.tex'],
+        'used_in': ['papers/paper45_phase6m_review/paper_draft.tex',
+                    'papers/D5/paper_draft.tex'],
         'provides': [],
         'notes': 'Emergent gravity in dS; predicts Lambda-CDM-equivalent w '
-                 '(Phase 6m TB-R1/R2/R3 §1).',
+                 '(Phase 6m TB-R1/R2/R3 §1). Metadata re-verified 2026-06-10 '
+                 '(review-2026-06-05 D5 phantom-citation fix): arXiv abs page '
+                 'confirms SciPost Phys. 2, 016 (2017); DOI verified via '
+                 'Crossref API (Erik P. Verlinde, SciPost Physics 2, 016, '
+                 'issued 2017-05-16). D5 bibitem + body cite wiring added '
+                 'same day; title capitalization normalized to published form.',
+    },
+    'HalenkaMiller2020': {
+        'authors': 'Halenka, V. and Miller, C. J.',
+        'title': 'Testing emergent gravity with mass densities of galaxy clusters',
+        'journal': 'Phys. Rev. D',
+        'volume': 102,
+        'page': '084007',
+        'year': 2020,
+        'doi': '10.1103/PhysRevD.102.084007',
+        'arxiv': '1807.01689',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/HalenkaMiller2020.pdf',
+        'used_in': ['papers/D5/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Added 2026-06-10 (review-2026-06-05 D5 phantom-citation fix: '
+                 'prose previously named "Halenka-Miller 2018" with no bibitem or '
+                 'registry entry). 23 relaxed galaxy clusters with weak-lensing '
+                 'total-mass + X-ray gas-mass profiles; under nominal profile '
+                 'assumptions Verlinde-2017 EG (no dark matter) fits only near the '
+                 'virial radius and is ruled out at >5 sigma in cores/outskirts; '
+                 'the abstract notes the exclusion weakens when weak-lensing/X-ray '
+                 'systematics are included. Supports ONLY the cluster-mass-profile '
+                 'leg of EGDE1 (verlinde_2017_no_go_via_cmb_bullet_cluster_'
+                 'halenka_miller); the CMB and Bullet-cluster legs of that Lean '
+                 'label trace to Phase-6m dossier structural critiques (no scalar '
+                 'perturbation theory; apparent-DM-tracks-baryons vs lensing/X-ray '
+                 'offset, R5 B.2.1 citing Pardo 2017), not to this paper. arXiv v1 '
+                 '2018-07-04; published PRD 102, 084007 (2020-10-05). Metadata '
+                 'verified 2026-06-10 via arXiv abs page + Crossref API (DOI '
+                 'resolves to matching title/authors/volume/article).',
     },
     'CadoniCasadioGiustiMuckTuveri2018': {
         'authors': 'Cadoni, M., Casadio, R., Giusti, A., Mück, W., Tuveri, M.',
@@ -8985,7 +9030,12 @@ CITATION_REGISTRY = {
                  'cannot alleviate H0 tension (Phase 6m TB-R3; Phase 7 Session 5). '
                  'Registry corrected 2026-05-11 from earlier "Same entropies..." '
                  'title (was unrelated to actual arXiv content) per Stage-13 '
-                 'D5 review finding 1.1; arXiv title + JHEAp venue verified via WebFetch.',
+                 'D5 review finding 1.1; arXiv title + JHEAp venue verified via WebFetch. '
+                 'Version pin: ΔAIC = +4.7 (Barrow Entropy, SN+BAO row, AIC−AIC_Λ '
+                 'column of Table II; the SN+OHD+BAO row gives +4.2) verified '
+                 'against the cached primary source arXiv:2506.03019v1 PDF on '
+                 '2026-06-10; D5 prose year corrected 2025→2026 same day '
+                 '(publication year is 2026, JHEAp 49, 100427).',
     },
     'TyagiHaridasuBasak2025': {
         'authors': 'Tyagi, U. K., Haridasu, S., Basak, S.',
