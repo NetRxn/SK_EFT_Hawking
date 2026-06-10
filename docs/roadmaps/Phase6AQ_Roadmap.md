@@ -2,8 +2,8 @@
 
 **Status: ✅ COMPLETE 2026-06-10 (both waves shipped, closure gates green).** W1
 `QuantumNetwork/ReadoutRelaxationBound.lean` (12 thms / 2 defs) and W2 (stretch — shipped at
-full strength, no descope needed) `QuantumNetwork/ThermalAssignmentFloor.lean` (16 thms /
-1 def), both kernel-pure `{propext, Classical.choice, Quot.sound}` (spot-verified via
+full strength, no descope needed) `QuantumNetwork/ThermalAssignmentFloor.lean` (20 thms /
+1 def, incl. the closure-review amendments below), both kernel-pure `{propext, Classical.choice, Quot.sound}` (spot-verified via
 `lean_verify` on the PhysLib-touching derivation + the enclosure), 0 sorry, 0 new axioms,
 no `maxHeartbeats`. Closure: full `lake build` + `lake build SKEFTHawking.ExtractDeps` green
 (9254 jobs); `validate.py` 33/33 ALL CHECKS PASSED; counts refreshed (12,459 thm / 936 mod);
@@ -30,6 +30,20 @@ conclusion) both defs are pinned to pre-existing objects — `readoutDecayProb` 
 gate-side `cohGamma`, `thermalExcitedPop` to the PhysLib ensemble probability. Strict
 variants shipped wherever cleanly provable (strict `< 1`, `StrictMono` in window,
 strict antitone in `T₁`, `StrictAnti` on ℝ for the thermal floor).
+
+**Fresh-context adversarial closure review: PASS-with-notes (0 blockers), all 5 findings
+addressed same-session** (commit follows `cf518a43`): (N1) `hT : 0 < T.val` dropped from
+`thermalExcitedPop_anti_frequency` — `β ≥ 0` holds unconditionally (ℝ≥0 coercion), statement
+now hypothesis-minimal; (N2) strict Temperature/frequency companions added
+(`temperature_beta_strictAnti`, `thermalExcitedPop_strictMono_temperature`,
+`thermalExcitedPop_strictAnti_frequency`) closing the gap against the strict-variant claim
+above; (N3) `twoState_excited_probability` docstring now states the identity holds for all
+`E₀` (state 1 is the *excited* state only for `E₀ > 0`); (N4) W1 bridge docstring plural
+fixed (imports exactly `cohGamma_nonneg`); (N5) `avgAssignmentError_thermal_rational_floor`
+added — the W2 companion of W1's rational operating-point floor, restoring family symmetry.
+The reviewer independently re-verified kernel purity of all theorems via `#print axioms`
+and hand-checked the enclosure math, the tanh↔logistic identity, the PhysLib derivation
+chain, and all four citations.
 
 ---
 

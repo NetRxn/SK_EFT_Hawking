@@ -54,9 +54,10 @@ theorem half_one_sub_tanh (u : ℝ) : 1 / 2 * (1 - Real.tanh u) = 1 / (1 + Real.
   linear_combination 2 * Real.exp u * hee + 2 * Real.exp (-u) * h2u
 
 /-- **Canonical-ensemble derivation of the occupancy** (reuses PhysLib, does not re-derive): the
-probability of the excited state of the PhysLib two-state ensemble with level splitting `E₀`
-(ground energy `0`, excited energy `E₀`) at temperature `T` **is** `thermalExcitedPop (β·E₀)`.
-The Boltzmann/detailed-balance form of the floor is therefore a theorem of statistical
+probability of state `1` of the PhysLib two-state ensemble with level splitting `E₀`
+(state-`0` energy `0`, state-`1` energy `E₀` — the excited state for `E₀ > 0`; the identity
+holds for all `E₀`) at temperature `T` **is** `thermalExcitedPop (β·E₀)`. The
+Boltzmann/detailed-balance form of the floor is therefore a theorem of statistical
 mechanics here, not a definition. -/
 theorem twoState_excited_probability (E0 : ℝ) (T : Temperature) :
     (CanonicalEnsemble.twoState 0 E0).probability T 1
@@ -125,14 +126,43 @@ theorem thermalExcitedPop_mono_temperature {E0 : ℝ} (hE0 : 0 ≤ E0) {T T' : T
   thermalExcitedPop_strictAnti.antitone
     (mul_le_mul_of_nonneg_right (temperature_beta_anti hT hTT) hE0)
 
-/-- **The thermal floor improves with qubit frequency:** at fixed `T > 0`, a larger level
-splitting gives a smaller occupancy (`ω ≤ ω'` ⟹ `p_th(ω') ≤ p_th(ω)`). -/
-theorem thermalExcitedPop_anti_frequency {E0 E0' : ℝ} {T : Temperature} (hT : 0 < T.val)
-    (hE : E0 ≤ E0') :
+/-- **The thermal floor improves with qubit frequency:** a larger level splitting gives a
+smaller occupancy (`ω ≤ ω'` ⟹ `p_th(ω') ≤ p_th(ω)`). No temperature hypothesis is needed —
+`β ≥ 0` holds unconditionally (`Temperature.β` is `ℝ≥0`-valued), so the inequality survives
+even the `β = 0` junk point. -/
+theorem thermalExcitedPop_anti_frequency {E0 E0' : ℝ} {T : Temperature} (hE : E0 ≤ E0') :
     thermalExcitedPop ((Temperature.β T : ℝ) * E0')
       ≤ thermalExcitedPop ((Temperature.β T : ℝ) * E0) :=
   thermalExcitedPop_strictAnti.antitone
-    (mul_le_mul_of_nonneg_left hE (Temperature.beta_pos T hT).le)
+    (mul_le_mul_of_nonneg_left hE (Temperature.β T).coe_nonneg)
+
+/-- Strict companion of `temperature_beta_anti`: strictly hotter means strictly smaller `β`. -/
+theorem temperature_beta_strictAnti {T T' : Temperature} (hT : 0 < T.val)
+    (hTT : T.val < T'.val) : (Temperature.β T' : ℝ) < (Temperature.β T : ℝ) := by
+  have hβ : (Temperature.β T : ℝ) = 1 / (Constants.kB * (T : ℝ)) := rfl
+  have hβ' : (Temperature.β T' : ℝ) = 1 / (Constants.kB * (T' : ℝ)) := rfl
+  have hTr : (0 : ℝ) < (T : ℝ) := hT
+  have hTTr : ((T : ℝ) : ℝ) < (T' : ℝ) := by exact_mod_cast hTT
+  rw [hβ, hβ']
+  apply one_div_lt_one_div_of_lt (mul_pos Constants.kB_pos hTr)
+  exact mul_lt_mul_of_pos_left hTTr Constants.kB_pos
+
+/-- Strict companion of `thermalExcitedPop_mono_temperature`: at a strictly positive splitting,
+strictly hotter means a strictly worse thermal floor. -/
+theorem thermalExcitedPop_strictMono_temperature {E0 : ℝ} (hE0 : 0 < E0) {T T' : Temperature}
+    (hT : 0 < T.val) (hTT : T.val < T'.val) :
+    thermalExcitedPop ((Temperature.β T : ℝ) * E0)
+      < thermalExcitedPop ((Temperature.β T' : ℝ) * E0) :=
+  thermalExcitedPop_strictAnti
+    (mul_lt_mul_of_pos_right (temperature_beta_strictAnti hT hTT) hE0)
+
+/-- Strict companion of `thermalExcitedPop_anti_frequency`: at fixed `T > 0`, a strictly larger
+splitting strictly lowers the occupancy. -/
+theorem thermalExcitedPop_strictAnti_frequency {E0 E0' : ℝ} {T : Temperature}
+    (hT : 0 < T.val) (hE : E0 < E0') :
+    thermalExcitedPop ((Temperature.β T : ℝ) * E0')
+      < thermalExcitedPop ((Temperature.β T : ℝ) * E0) :=
+  thermalExcitedPop_strictAnti (mul_lt_mul_of_pos_left hE (Temperature.beta_pos T hT))
 
 /-! ## Rational enclosures (Phase-6AP `expNeg_enclosure` Bernoulli bracket) -/
 
@@ -177,6 +207,20 @@ theorem avgAssignmentError_thermal_floor {x e0 e1 : ℝ} (he0 : 0 ≤ e0)
     (he1 : thermalExcitedPop x ≤ e1) :
     thermalExcitedPop x / 2 ≤ avgAssignmentError e0 e1 := by
   unfold avgAssignmentError
+  linarith
+
+/-- **Rational thermal floor** — the W2 companion of `avgAssignmentError_rational_floor`: the
+composition of the thermal floor with the lower enclosure endpoint gives the rational
+operating-point bound `(1−x)/(2(2−x)) ≤ ε_avg` for `0 ≤ x < 2`. -/
+theorem avgAssignmentError_thermal_rational_floor {x e0 e1 : ℝ} (hx0 : 0 ≤ x) (hx2 : x < 2)
+    (he0 : 0 ≤ e0) (he1 : thermalExcitedPop x ≤ e1) :
+    (1 - x) / (2 * (2 - x)) ≤ avgAssignmentError e0 e1 := by
+  have hfloor := avgAssignmentError_thermal_floor he0 he1
+  have hencl := thermalExcitedPop_rational_lower hx0 hx2
+  have hne : (2 : ℝ) - x ≠ 0 := by linarith
+  have hrw : (1 - x) / (2 * (2 - x)) = (1 - x) / (2 - x) / 2 := by
+    field_simp
+  rw [hrw]
   linarith
 
 /-- **Combined relaxation + thermal floor** — the envelope-family capstone: a readout subject to

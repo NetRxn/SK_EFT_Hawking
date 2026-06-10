@@ -42,7 +42,7 @@ noncomputable def readoutDecayProb (t T1 : ℝ) : ℝ := 1 - Real.exp (-t / T1)
 /-- **Family link:** the readout decay probability is definitionally the amplitude-damping
 weight `γ(t,T₁)` of the coherence channel (`CoherenceFidelity.cohGamma`) at the readout window —
 the same coherence data that bounds gates bounds readout. Used below to import the gate-side
-range lemmas. -/
+range lemma `cohGamma_nonneg` (the upper range ships sharper here: strict `< 1`). -/
 theorem readoutDecayProb_eq_cohGamma (t T1 : ℝ) : readoutDecayProb t T1 = cohGamma t T1 := rfl
 
 /-- The decay probability is nonnegative on physical windows (`t ≥ 0`, `T₁ > 0`). -/
