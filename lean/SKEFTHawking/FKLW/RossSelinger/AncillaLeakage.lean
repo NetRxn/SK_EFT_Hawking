@@ -11,7 +11,9 @@ approximation error folded into `ε`. This file ships that bound. The leakage's 
 Hence the leakage `Σ_{ancilla≠00}|·|² ≤ 2·√2/2^k`, i.e. `O(2^{−k})` in the squared norm and the
 **`O(2^{−0.5k})` leakage amplitude** the KMM error estimate quotes.
 
-This completes the *error budget* half of the headline `‖W − Λ(e^{iφ})⊗I‖ ≤ ε`: both the amplitude
+This completes the *error budget* half of the headline (the KMM state-level guarantee on
+ancilla-initialized inputs — `‖(W − Λ(e^{iφ})⊗I)·(ψ⊗|00⟩)‖ ≤ ε`, NOT a full operator-norm
+claim): both the amplitude
 error (inc 8) and the leakage (here) are now quantitative and unconditional. The remaining headline
 brick is purely the **circuit synthesis** of `|v⟩` (the `O(k)` Clifford+T word) and its assembly.
 

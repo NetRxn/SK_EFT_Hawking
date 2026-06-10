@@ -99,9 +99,9 @@ theorem sysH_step (α' β' : ℂ) :
   have hone : ∀ p : Fin 2 × Fin 2, p ≠ ((0 : Fin 2), (0 : Fin 2)) →
       ∀ z : ZOmegaSqrt2, ZOmegaSqrt2.toComplex (z * (1 : Mat4) p ((0 : Fin 2), (0 : Fin 2))) = 0 :=
     fun p hp z => by rw [Matrix.one_apply_ne hp, mul_zero, map_zero]
-  have hHcol : ∀ s : Fin 2, ∀ z : ZOmegaSqrt2,
+  have hHcol : ∀ _ : Fin 2, ∀ z : ZOmegaSqrt2,
       ZOmegaSqrt2.toComplex (z * (1 : Mat4) ((0 : Fin 2), (0 : Fin 2))
-        ((0 : Fin 2), (0 : Fin 2))) = ZOmegaSqrt2.toComplex z := fun s z => by
+        ((0 : Fin 2), (0 : Fin 2))) = ZOmegaSqrt2.toComplex z := fun _ z => by
     rw [Matrix.one_apply_eq, mul_one]
   funext i
   rw [show initState α' β' = (fun j => if j = ((0 : Fin 2), (0 : Fin 2), (0 : Fin 2)) then α'
