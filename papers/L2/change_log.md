@@ -55,3 +55,11 @@ Phase 7b sub-wave 7b.3 ledger entry: <0.5 person-day effort for fresh first-pass
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-05-12 first-claim-removal: paper10_modular_generation (L2's sole source paper) had abstract + conclusion + body first-claims rewritten to descriptive prose. L2 bundle content remains aligned.
+
+## 2026-06-10 — External-review prose fix (L2-Y2)
+
+- Source: (none — direct prose revision per review-2026-06-05 findings)
+- Lift action: Prose-revision (direct edit, no content lift)
+- Insertion point: abstract + §Ext (textbook-bridge paragraph)
+- Stage-13 redo required: no (epistemic-labeling clarification; no claims added/removed)
+- Notes: L2-Y2 — epistemic-status label added to the three textbook topology results (ko cohomology, ASS convergence, ABP splitting): all established results in the algebraic-topology literature, tracked pending Mathlib formalization — "a library gap, not an open problem". "Commentary" framing KEPT after load-bearing verification against Lean ground truth: H1/H3/H4 Props live only in `ExtBordismBridge.lean`, are consumed only by the bridge-documentation theorem `generation_constraint_chain` (where they are cleared before the arithmetic), and the kernel-pure headline `SmoothSpinManifold4.rokhlin` (16|σ via Hasse-Minkowski + theta-modularity classification route) does not depend on them — anti-circularity note in `src/core/constants.py` HYPOTHESIS_REGISTRY confirms ABP is deliberately NOT used. pdflatex ×2 clean, 0 undefined refs.

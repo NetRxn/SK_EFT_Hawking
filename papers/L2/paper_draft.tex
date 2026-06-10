@@ -60,7 +60,10 @@ divisibility $16 \mid \sigma(M)$ is itself a kernel-pure Lean theorem
 intersection form it follows from the machine-checked algebraic half
 $8 \mid \sigma$ together with the single topological input
 $2 \mid \sigma/8$ ($\hat{A}$-genus even). Three textbook topology
-results (ko cohomology, ASS convergence, ABP splitting) enter only as
+results (ko cohomology, ASS convergence, ABP splitting) --- all
+established results in the algebraic-topology literature, tracked
+pending Mathlib formalization rather than open problems --- enter
+only as
 commentary on the separate bordism-group identification
 $\Omega_5^{\mathrm{Spin}^{\mathbb{Z}_4}} \cong \mathbb{Z}_{16}$. The
 verification is fully automated by
@@ -256,7 +259,11 @@ to the bordism group $\Omega_5^{\mathrm{Spin}^{\mathbb{Z}_4}} \cong
 five~\cite{Adams1974}, Adams spectral sequence
 convergence~\cite{BeaudryCampbell}, and the ABP splitting
 $\mathrm{MSpin} \cong \mathrm{ko} \vee \mathrm{ko}\langle 2 \rangle
-\vee \cdots$~\cite{ABP1967}. Each enters as standard textbook
+\vee \cdots$~\cite{ABP1967}. Each is an established result in the
+algebraic-topology literature, tracked pending Mathlib
+formalization of the requisite infrastructure (spectra, the Adams
+spectral sequence, Thom spectra) --- a library gap, not an open
+problem. Each enters as standard textbook
 content cited at the bibliographic level, documenting this
 bordism-group identification; the algebraic-Ext kernel
 above is what this Letter formalizes at the machine-checked level.

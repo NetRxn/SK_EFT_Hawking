@@ -53,7 +53,8 @@ $X = 5(B-L) - 4Y$ assigns odd Z$_4$ charge to all six SM fermion
 species; $3 \times 15 \equiv -3 \pmod{16}$ in the no-$\nu_R$ case
 forces a hidden Z$_{16}$-charged sector. (iii) An integrated formal
 synthesis of the chirality wall integrates a no-go pillar
-(Golterman-Shamir nine conditions, two-particle-fermion (TPF) evasion
+(the nine Golterman-Shamir conditions under which the
+Nielsen-Ninomiya obstruction applies, two-particle-fermion (TPF) evasion
 via discontinuity of \texttt{round} at 1/2 and infinite-dimensionality
 of $\ell^2(\mathbb{Z})$), a positive-construction pillar
 (Gioia-Thorngren BdG Hamiltonian on $(\mathbb{Z}/L)^3$ with the
@@ -83,7 +84,10 @@ pending Mathlib cobordism infrastructure), four tracked
 Mathlib-side hypotheses
 (H1 ko-cohomology, H2 Hom-tensor adjunction at the full
 isomorphism level, H3 Adams spectral sequence convergence,
-H4 Anderson-Brown-Peterson splitting), two physics-conjecture
+H4 Anderson-Brown-Peterson splitting; all four are established
+results in the algebraic-topology literature, tracked pending
+Mathlib formalization --- epistemically distinct from the
+genuinely open \texttt{TPFConjecture}), two physics-conjecture
 \texttt{Prop} fields (Golterman-Shamir conditions C4 and C5;
 encoded as predicate fields on structures, not as
 \texttt{axiom} declarations), and zero \texttt{sorry};
@@ -160,7 +164,8 @@ Drinfeld-centre layer needed to interpret SPT stacking
 $Z(\mathrm{Vec}_{S_3})$ structure deferred to a companion
 paper~\cite{Roehm2026D4}). Section~\ref{sec:chirality-wall} is the
 three-pillar chirality-wall synthesis: the no-go pillar formalises
-the Golterman-Shamir conditions and exhibits the explicit
+the Golterman-Shamir conditions for Nielsen-Ninomiya applicability
+and exhibits the explicit
 non-conditions any TPF construction must violate; the
 positive-construction pillar gives a machine-verified lattice
 chiral-fermion construction
@@ -737,22 +742,36 @@ physically relevant), pinned by the witness theorems
 The constraints of \S\ref{sec:modular} and \S\ref{sec:z16-drinfeld}
 are algebraic. Whether they can be satisfied by a lattice
 construction is a separate question. The chirality-wall program
-addresses this question through three pillars: a no-go statement
+addresses this question through three pillars: a conditional no-go
+statement (the Nielsen-Ninomiya obstruction together with the
+Golterman-Shamir conditions for its applicability)
 identifying the standard scope outside which a lattice chiral
 fermion can live; a positive construction realising a chiral
 fermion outside that scope; and an algebraic framework relating the
 construction to the targeted anomaly. We have machine-verified
 all three pillars and the bridges between them.
 
-\subsection{Pillar 1 — Golterman-Shamir no-go and TPF evasion}
+\subsection{Pillar 1 — Golterman-Shamir conditional constraints and TPF evasion}
 
-The Golterman-Shamir (GS) no-go theorem~\cite{GoltermanShamir2026}
-classifies lattice chiral fermion constructions through nine
-conditions: six explicit ones (C1-C6) involving locality,
+The Golterman-Shamir (GS) conditional
+constraints~\cite{GoltermanShamir2026} classify lattice chiral
+fermion constructions through nine kinematical conditions under
+which the Nielsen-Ninomiya obstruction applies: six explicit ones
+(C1-C6) involving locality,
 anti-Hermiticity, $\gamma_5$-Hermiticity, and finite Brillouin
 zones, and three implicit ones (I1-I3) involving lattice
 periodicity, finite Hilbert spaces, and the Nielsen-Ninomiya
-doubler-counting argument~\cite{Nielsen1981a,Nielsen1981b}. Our
+doubler-counting argument~\cite{Nielsen1981a,Nielsen1981b}.
+We emphasise that GS themselves frame the result conditionally
+rather than as a stand-alone no-go theorem: constructing a
+one-particle lattice Hamiltonian for the fermion spectrum, they
+discuss the conditions for the \emph{applicability} of the
+Nielsen-Ninomiya theorem to that Hamiltonian, such that if the
+conditions are satisfied, the massless fermion spectrum must be
+vector-like. ``Evading GS'' throughout this paper therefore means
+exiting the joint scope of the nine applicability conditions ---
+and with it the Nielsen-Ninomiya obstruction --- not
+contradicting a theorem. Our
 formalisation of these nine conditions in
 \texttt{GoltermanShamir} (14 theorems) and
 \texttt{LatticeHamiltonian} (28 theorems) encodes seven of them as
@@ -767,8 +786,9 @@ physics conjectures, encoded as inductive-constructor Prop fields on
 the GS condition record (not as Lean \texttt{axiom} declarations).
 We discuss the implications of this in \S\ref{sec:outlook}.
 
-The Two-Particle Family (TPF) construction~\cite{TPF2026} evades
-the GS no-go by violating five of the nine conditions
+The Two-Particle Family (TPF) construction~\cite{TPF2026} exits
+the GS applicability scope by violating five of the nine
+conditions
 explicitly: C1 via the discontinuity of \texttt{round} at $1/2$
 (the round-to-integer map is not continuous, formalised as
 \texttt{LatticeHamiltonian.round\_not\_continuous\_at\_half} and
@@ -784,8 +804,8 @@ collected in \texttt{TPFEvasion.tpf\_outside\_gs\_scope\_main}
 The pillar is not merely "a TPF construction works"; it is
 "a TPF construction works \emph{exactly because} it sits at the
 five condition-violations identified above". This is what makes
-the no-go result and the positive construction (Pillar 2) two
-sides of one statement.
+the conditional no-go analysis and the positive construction
+(Pillar 2) two sides of one statement.
 
 \subsection{Pillar 2 — Gioia-Thorngren positive construction}
 
@@ -943,8 +963,8 @@ Pillar 3 establishes the Dolan-Grady-coefficient
 GT loop algebra, and the Witten-Z$_2$ embedding.
 Pillar 1 $\leftrightarrow$ Pillar 3 establishes the joint
 Golterman-Shamir + Z$_{16}$ constraint: any lattice chiral
-fermion construction either violates GS or uses $16n$ Weyl
-components. The conjunction of the three bridges, together with
+fermion construction either violates the GS conditions or uses
+$16n$ Weyl components. The conjunction of the three bridges, together with
 the three pillars, gives the master statement of the
 chirality-wall program: a lattice chiral fermion exists, lives
 outside the GS scope at the precise condition-violations
@@ -1025,7 +1045,12 @@ tally is \axiomcount{} --- both these conditions and the 4+1D
 \subsection{Tracked hypotheses}
 
 Three textbook results in algebraic topology enter as tracked
-hypotheses:
+hypotheses. All are established mathematics with standard
+published proofs, tracked here only because Mathlib lacks the
+corresponding infrastructure (spectra, the Adams spectral
+sequence, Thom spectra) --- their epistemic status is therefore
+wholly different from that of the genuinely open
+\texttt{TPFConjecture} above, which is a research conjecture:
 \begin{itemize}
 \item \textbf{H1} — ko-cohomology computation
 (Adams~\cite{Adams1974} et seq.). The structure of
@@ -1269,6 +1294,17 @@ J.~Roehm, ``Verified Statistical Estimators and the
 %  (verified via CITATION_REGISTRY['GoltermanShamir2026']; cross-verified in
 %  papers/paper7_chirality_formal/paper_draft.tex and
 %  papers/paper8_chirality_master/paper_draft.tex)]
+% [2026-06-10 review-2026-06-05 D2-EV1/SYS-EV4 follow-up: the 2026-05-04
+%  entry above recorded a then-cached title "Generalized no-go theorem for
+%  chiral fermions on a lattice" + PRD 113, 014503 coords that were LATER
+%  found fabricated (CITATION_REGISTRY notes, re-verified against arXiv
+%  2026-05-11): the actual title is "Symmetric mass generation and the
+%  Nielsen-Ninomiya theorem", preprint-only (PoS Lattice 2025 proceedings) —
+%  the bibitem above reflects this. Body prose reframed 2026-06-10 from
+%  "GS no-go theorem" to GS's own conditional-constraints presentation
+%  (primary-source abstract: "we discuss the conditions for the
+%  applicability of the Nielsen-Ninomiya theorem... If these conditions are
+%  satisfied, the massless fermion spectrum must be vector-like").]
 % [2026-05-04 cleanup: GioiaThorngrenPRL2026 placeholder arXiv:2604.XXXXX +
 %  PRL 136, 011XXX → PRL 136, 061601 (2026); arXiv ID dropped — registry
 %  entry has arxiv=None; PLACEHOLDER PENDING for arXiv ID until added to

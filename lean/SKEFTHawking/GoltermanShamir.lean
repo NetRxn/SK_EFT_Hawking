@@ -3,13 +3,22 @@ import Mathlib
 import SKEFTHawking.LatticeHamiltonian
 
 /-!
-# Golterman-Shamir No-Go Conditions: Substantive Formalization
+# Golterman-Shamir Conditions for Nielsen-Ninomiya Applicability: Substantive Formalization
 
 ## Overview
 
 Formalizes the 9 GS conditions as substantive Lean propositions on concrete
 lattice Hamiltonians, informed by deep research into Mathlib API availability.
 Upgrades previous axiomatized (`True`) conditions to meaningful mathematical content.
+
+Framing note (per the primary source, arXiv:2603.15985): Golterman-Shamir present
+their result conditionally, not as a stand-alone no-go theorem of their own —
+constructing a one-particle lattice Hamiltonian for the fermion spectrum, they
+"discuss the conditions for the applicability of the Nielsen-Ninomiya theorem"
+to that Hamiltonian; if the conditions are satisfied, the massless fermion
+spectrum must be vector-like. The no-go being conditioned throughout this module
+is Nielsen-Ninomiya's; "escaping GS" means exiting the joint scope of the nine
+applicability conditions.
 
 **Research references (in Lit-Search/Phase-5/):**
 - C2: `ExteriorAlgebra as fermionic Fock space in Lean 4 : Mathlib.md`
@@ -22,7 +31,10 @@ Upgrades previous axiomatized (`True`) conditions to meaningful mathematical con
 
 - **Substantive (7/9):** C1, C2, C3, C4, C5, I2, I3
 - **Structural (2/9):** C6 (physics conjecture), I1 (Hermitian generator exists)
-- **Axiom:** gs_nogo_axiom (full proof requires unbounded spectral theory)
+- **Axiom:** none — the former `gs_nogo_axiom` was REMOVED 2026-04-04; the
+  conditioned Nielsen-Ninomiya conclusion now enters as an explicit hypothesis
+  (see `gs_nogo_contrapositive_bundle`; full proof requires unbounded spectral
+  theory not yet in Mathlib)
 
 ## Key Theorems
 
@@ -423,7 +435,9 @@ structure GSConditionsBundle (M : LatticeModel) [NeZero M.n] where
   local_dim_pos : 0 < local_dim
 
 /-
-GS no-go theorem (conditional formulation).
+Nielsen-Ninomiya no-go under the GS applicability conditions (conditional
+formulation; GS frame the result as conditions for NN applicability, not
+as a no-go theorem of their own — see module header).
 REMOVED as axiom (2026-04-04): the no-go conclusion enters as a hypothesis.
 Full proof requires unbounded spectral theory not yet in Mathlib.
 Previously: axiom gs_nogo_axiom (M : LatticeModel) [NeZero M.n] ... -/
@@ -432,7 +446,8 @@ Previously: axiom gs_nogo_axiom (M : LatticeModel) [NeZero M.n] ... -/
 ## Core Theorems
 -/
 
-/-- **Contrapositive: if GS no-go holds, then chiral spectrum + all conditions → False.** -/
+/-- **Contrapositive: if the GS-conditioned Nielsen-Ninomiya conclusion
+(every spectrum vector-like) holds, then chiral spectrum + all conditions → False.** -/
 theorem gs_nogo_contrapositive_bundle (M : LatticeModel) [NeZero M.n]
     (s : WeylSpectrum) (hs : s.isChiral) (h : GSConditionsBundle M)
     (gs_nogo : ∀ s : WeylSpectrum, s.n_left = s.n_right) : False := by
