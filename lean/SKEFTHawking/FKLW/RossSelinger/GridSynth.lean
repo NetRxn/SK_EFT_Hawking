@@ -3,17 +3,21 @@ Copyright (c) 2026 John Roehm. All rights reserved.
 
 # Phase 6x Tier-2 Items G/H — the Ross-Selinger grid-problem solver (foundation)
 
-The Ross-Selinger constructive synthesis (arXiv:1403.2975 §5) decomposes as:
-  (a) `epsilonRegion θ ε` — the convex target region in `ℂ`;
-  (b) `gridSolutions A B k` — enumerate `u ∈ ℤ[ω][1/√2]` with `u ∈ A`, Galois `u• ∈ B`;
-  (c) `diophantine u k` — solve `t·t* = √2^{2k} − u·u*` in `ℤ[ω]`;
+The Ross-Selinger constructive synthesis (arXiv:1403.2975v3 §§5–7; numbering verified against
+the primary 2026-06-10) decomposes as:
+  (a) `epsilonRegion θ ε` — the convex target region in `ℂ` (paper §7.2, the ε-region, eq. (14));
+  (b) `gridSolutions A B k` — enumerate `u ∈ ℤ[ω][1/√2]` with `u ∈ A`, Galois `u• ∈ B`
+      (paper §5: Theorem 5.18 general 2D grid enumeration; §5.7 scaled variant, Prop 5.22);
+  (c) `diophantine u k` — solve `t·t* = √2^{2k} − u·u*` in `ℤ[ω]` (paper §6, Theorem 6.2 +
+      Appendix C);
   (d) `assembleUnitary u t k` — `M = [[u, −t*],[t, u*]]/√2^k` (this file);
   (e) `kmmReduce` — the exact Clifford+T word (SHIPPED, `KMM.lean` / `CliffordBase.lean`).
 
 This file ships step (d) (the assembly) *with its unitarity proof*, plus the cleared-ring
 helpers it rests on. Steps (a)–(c) — the convex-geometry ε-region and the `ℤ[ω]`
-prime-factorization Diophantine, the analytic core of the solver — are the next increment
-(deterministic branch only; NO §4 factoring fast-path). Validated end-to-end in
+factoring-based Diophantine, the analytic core of the solver — are the next increment
+(deterministic branch only; NO Theorem-6.2 factoring path, i.e. no Algorithm 7.6 step 2(b)
+oracle). Validated end-to-end in
 `scripts/grid_stub_validation.py`: the (c)+(d) core yields an exactly realizable `det`-1
 `SU(2)` matrix for every sample target.
 

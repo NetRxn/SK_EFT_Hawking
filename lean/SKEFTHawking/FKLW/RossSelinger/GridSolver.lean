@@ -22,13 +22,14 @@ This file composes them into a **runnable, verified deterministic grid-synthesis
 `#eval`-runnable: e.g. `gridFindT ⟨0,0,0,1⟩ 1 2` finds `t` with `|t|² = ⟨0,0,0,1⟩` (validated
 against `scripts/grid_stub_validation.py`, which uses the same `ℤ[ω]` brute-force Diophantine).
 
-## What is verified vs. what remains (deterministic branch ONLY — NO §4 factoring fast-path)
+## What is verified vs. what remains (deterministic branch ONLY — NO Theorem-6.2 factoring path)
 
 VERIFIED here: the (c)→(d)→(e) chain is SOUND — *when* `gridFindT` returns a `t`, the produced
 word is exactly correct and length-bounded. This is the synthesis backbone the private `gridcert`
 port relies on.
 
-REMAINING (the analytic completeness of the FINDER, Ross-Selinger §5 Theorem 2): the guarantee
+REMAINING (the analytic completeness of the FINDER, Ross-Selinger arXiv:1403.2975v3
+Theorem 5.18 + Prop 5.22 grid enumeration + the §7.2 ε-region reduction): the guarantee
 that for any target `U ∈ SU(2,ℂ)` and `ε`, a `(u, t)` with `‖assembleUnitary u t k − U‖ < ε`
 EXISTS in the search region (the `epsilonRegion` ε-region geometry + `gridSolutions` enumeration
 completeness + the ℤ[ω] prime-factorization Diophantine completeness). That convex-geometry /
@@ -60,9 +61,10 @@ def boundedZOmega (b : ℕ) : List ZOmega :=
 
 /-- **Bounded `ℤ[ω]` Diophantine search** (deterministic, sound): find a `t` with `|t|² = N`
 among coordinates in `[-b, b]`, or `none`. Computable (`List.find?` over a finite candidate
-set). This is the bounded deterministic stand-in for the Ross-Selinger §5 prime-factorization
-Diophantine; its *soundness* is unconditional, its *completeness* (a solution is found whenever
-one exists with small coords) is the analytic input deferred with the ε-region geometry. -/
+set). This is the bounded deterministic stand-in for the Ross-Selinger §6/Theorem-6.2
+factoring-based Diophantine; its *soundness* is unconditional, its *completeness* (a solution is
+found whenever one exists with small coords) is the analytic input deferred with the ε-region
+geometry. -/
 def diophantineSearch (N : ZOmega) (b : ℕ) : Option ZOmega :=
   (boundedZOmega b).find? (fun t => decide (ZOmega.normSq t = N))
 
@@ -74,9 +76,9 @@ theorem diophantineSearch_sound {N : ZOmega} {b : ℕ} {t : ZOmega}
 
 /-- **Completeness of the bounded Diophantine search**: if a solution `t` to `|t|² = N` exists
 within the coordinate bound, the search returns one. (`List.isSome_find?` + `List.any_eq_true`.)
-This connects the §6 *existence* of a relative-norm solution (Ross thesis Prop 3.2.7 sufficient
-case `n = β•β` prime ≡1 mod 8, made unconditional over the grid by Dirichlet's theorem on primes
-in arithmetic progressions) to the computable solver: once existence is supplied, the search
+This connects the §6 *existence* of a relative-norm solution (paper Prop C.26: `ξ` doubly
+positive with `ξ•ξ = n/2^ℓ`, `n` prime `≡ 1 mod 8` ⟹ `t†t = ξ` solvable; = Ross thesis
+Prop 3.2.7 sufficient case) to the computable solver: once existence is supplied, the search
 finds the witness. -/
 theorem diophantineSearch_complete {N : ZOmega} {b : ℕ} {t : ZOmega}
     (ht : t ∈ boundedZOmega b) (he : ZOmega.normSq t = N) : (diophantineSearch N b).isSome := by
@@ -125,8 +127,9 @@ theorem gridSynthWord_length {u : ZOmega} {k b : ℕ} {t : ZOmega} (h : gridFind
 /-- **Deterministic grid-synthesis compiler** (numerator form): given the solved column numerator
 `u`, denominator exponent `k`, and search bound `b`, produce a Clifford+T word for the assembled
 unitary, or `none` if no residual `t` is found within the bound. The complex-target → `(u, k)`
-rounding (the FINDER front-end) is the RS §5 ε-region step still gated on the grid-completeness
-DR; this is the verified synthesis back-end it feeds. -/
+rounding (the FINDER front-end) is the RS §7.2 ε-region step (eq. (14); candidates enumerated
+by the §5.7 scaled grid, Prop 5.22) still gated on the grid-completeness DR; this is the
+verified synthesis back-end it feeds. -/
 noncomputable def gridCompile (u : ZOmega) (k b : ℕ) : Option (List CliffordTGate) :=
   (gridFindT u k b).map (fun t => gridSynthWord u t k)
 

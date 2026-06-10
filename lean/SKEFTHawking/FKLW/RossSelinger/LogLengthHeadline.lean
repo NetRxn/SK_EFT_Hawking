@@ -124,10 +124,11 @@ This isolates the *entire* remaining residual of the RS efficiency headline as t
 literature-grounded existence "the residual is a (bounded) relative norm from `ℤ[ω]`" — reducible via
 `RelativeNorm.exists_relativeNorm_of_real_sumSq` to two-squares-over-`ℤ[√2]` (on the shipped
 `Zsqrt2EuclideanDomain`). Its **unconditional ∀-target discharge** is the RS §5 grid-FINDER
-completeness: the scaled-two-disk convex-geometry existence (Ross thesis Lemma 5.2.38, axiom-free)
-supplies grid candidates `u`, and the §6 solvability that *some* candidate's residual is a relative
-norm is a prime-density input which the source literature itself (Selinger arXiv:1212.6253) realizes
-only **randomized under a prime-distribution hypothesis**. That analytic-NT existence is a genuine
+completeness: the scaled-two-disk convex-geometry existence (arXiv:1403.2975v3 Lemma 5.23 = Ross
+thesis Lemma 5.2.38, axiom-free) supplies grid candidates `u`, and the §6 solvability that *some*
+candidate's residual is a relative norm is a prime-density input which the source literature itself
+realizes only **randomized under a prime-distribution hypothesis** (Selinger arXiv:1212.6253
+Hypothesis 29 = arXiv:1403.2975v3 Hypothesis 8.3). That analytic-NT existence is a genuine
 decomposition-backed gate — NOT effort, NOT an axiom: the constructive convex-geometry + two-squares
 discharge is a dedicated future sub-program (RS grid-FINDER completeness), with the prime-density step
 its Caves-precedent tracked hypothesis. The **efficiency** the headline targets is delivered here

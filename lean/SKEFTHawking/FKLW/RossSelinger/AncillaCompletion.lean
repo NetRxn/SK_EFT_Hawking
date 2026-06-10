@@ -7,14 +7,16 @@ The Phase-6AM Wave 5 efficiency headline (`LogLengthHeadline.lean`) ships the **
 exponent-1** Clifford+T word length, but its `∀U`-unconditionality is gated on the **ancilla-free**
 relative-norm existence `t†t = √2^{2k} − u·u*` (`rossSelinger_synth_of_residual`'s hypothesis `he`).
 That gate is a genuine analytic-NT statement (prime-density of solvable residuals; strictly weaker
-than Ross–Selinger Hypothesis 29 but still Lean-impractical — Friedlander–Iwaniec / half-dimensional
-sieve, absent from Mathlib).
+than the source literature's prime-density hypothesis — Selinger arXiv:1212.6253 Hypothesis 29
+= Ross–Selinger arXiv:1403.2975v3 Hypothesis 8.3 — but still Lean-impractical:
+Friedlander–Iwaniec / half-dimensional sieve, absent from Mathlib).
 
 This file builds the **Kliuchnikov–Maslov–Mosca ancilla mechanism** (arXiv:1212.0822, PRL 110:190502 —
 "approximates single qubit unitaries with precision ε using O(log 1/ε) Clifford and T gates and
 employing up to two ancillary qubits"), which makes the norm equation **unconditionally solvable**:
 adding ancilla qubits adds completion columns, turning the *single* relative-norm condition (a SUM OF
-TWO squares over ℤ[√2], conditional — Fermat-style, needs inert primes to even powers) into a SUM OF
+TWO squares over ℤ[√2], conditional — Fermat-style; the precise criterion is 1403.2975v3
+Lemmas C.20/C.21: ℤ[√2]-primes over `p ≡ 7 (mod 8)` must occur to even powers) into a SUM OF
 *FOUR* squares condition (**always solvable by Lagrange**, `Nat.sum_four_squares`, present in Mathlib).
 
 ## Headlines
@@ -23,8 +25,8 @@ TWO squares over ℤ[√2], conditional — Fermat-style, needs inert primes to 
   * `exists_two_relativeNorms_of_nat` — **the keystone.** Every `r : ℕ` is a sum of two `ℤ[ω]`
     relative norms: `∃ t₁ t₂, normSq t₁ + normSq t₂ = r`. Proof: `Nat.sum_four_squares` gives
     `r = a²+b²+c²+d²`; set `t₁ = a + b·ω²`, `t₂ = c + d·ω²` (`ω² = i`, and `a,b,c,d ∈ ℤ` are real),
-    whence `normSq tᵢ = (·)² + (·)²` by `normSq_real_sumSq`. **Unconditional** — no prime-density,
-    no Hypothesis 29.
+    whence `normSq tᵢ = (·)² + (·)²` by `normSq_real_sumSq`. **Unconditional** — no prime-density
+    hypothesis (no 1212.6253 Hyp. 29 / 1403.2975v3 Hyp. 8.3).
   * `ancilla_completion_of_nat_residual` — the **unconditional unit-column completion**: for an
     approximant `u` whose squared modulus is the rational integer `m ≤ 2^k` (the √2-balanced
     approximant the KMM rounding targets), the two ancilla completion entries `t₁, t₂ ∈ ℤ[ω]` exist

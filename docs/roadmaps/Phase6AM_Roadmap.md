@@ -720,6 +720,44 @@ native_decide held at 596, confirming Track-3 independence):**
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
+**✅ PRIMARY-SOURCE VERIFICATION COMPLETE (2026-06-10, arXiv:1403.2975v3 PDF read end-to-end, all
+40 pp).** The goal-mandated §5/§6/§7 check before any further Track-1 work. Verified structure:
+§3 algebra (Def 3.1 rings; Def 3.4 LDE; λ=1+√2, δ=1+ω) · §4 ONE-dim grid problems (**Lemma 4.4**:
+`δΔ ≥ (1+√2)²` ⟹ ≥1 solution — CONFIRMED) · §5 TWO-dim grid problems (§5.1 upright Lemmas 5.5/5.6;
+§5.3 grid operators; §5.4 **Thm 5.16** 1/6-upright; §5.6 **Thm 5.18** general enumeration —
+CONFIRMED; §5.7 scaled grids Def 5.20 / **Prop 5.22** increasing-k / **Lemma 5.23** two-disk
+`rR ≥ (1+√2)²/2^k` ⟹ ≥2 solutions = thesis Lemma 5.2.38) · §6 Diophantine `t†t = ξ` (Lemma 6.1
+doubly-positive necessary; **Thm 6.2** factoring reduction; full theory in **Appendix C**:
+Def C.15 †-decomposable, **Lemma C.16 iff** (solvable ⟺ doubly-positive ∧ †-decomposable),
+C.8/C.9/C.11 ℤ[√2]-splitting (p=2 ramified; p≡3,5(8) inert; p≡±1(8) split via x²≡2),
+**Lemma C.20** (prime ξ over p †-dec ⟺ p=2 ∨ p≡1,3,5 (8)), **Lemma C.21 EVEN-POWER CRITERION**
+(ξᵐ †-dec ⟺ m even ∨ p≡1,2,3,5 (8) — obstruction ONLY at primes over p≡7(8), which are the
+ℤ[√2]-split / relatively-INERT ones), Remark C.22 constructive via u²≡−1 (p≡1(4)) / u²≡−2 (p≡3(8)),
+**Prop C.26** (n=ξ•ξ·2^ℓ prime ≡1(8) ⟹ solvable — the Algorithm-7.6 easy case; n≡1(8) by
+Lemma 8.4/App D) · §7.1–7.3 synthesis (Lemma 7.2 WLOG; **Lemma 7.3 T-count = 2k−2 or 2k**;
+Problem 7.4; **§7.2 = ε-region 𝓡_ε eq. (14)**; §7.3 **Algorithm 7.6**, factoring at step 2(b)) ·
+§8 analysis (**Hypothesis 8.3 = THE prime-density hypothesis**; Prop 8.8 near-optimality
+`m'' + O(log log 1/ε)`; §8.3 worst-case `K+4log₂(1/ε)`, **Conjecture 8.10** typical
+`K+3log₂(1/ε)`) · §9 up-to-phase (Cor 9.5 λ∈{1,e^{iπ/8}}; Lemma 9.7 T-count 2k−1/2k+1).
+**Numbering errata FIXED in repo (commit this session):** "§4 factoring fast-path" → Thm-6.2/Alg-7.6
+factoring path (GridSynth, GridSolver); "§5 Theorem 2" → Thm 5.18 + Prop 5.22 (GridSolver);
+"§5 ε-region" → §7.2 eq. (14) (GridSolver); "RS Hypothesis 29" → **Selinger arXiv:1212.6253
+Hypothesis 29 = 1403.2975v3 Hypothesis 8.3** (AncillaCompletion, LogLengthHeadline — 1212.6253
+uses sequential numbering, CONFIRMED by fetch; its K+12log₂(1/ε) is the ∀SU(2) slope, K+4 the
+z-rotation slope, hence the DR's "3–4 not 12"). Historical log entries above retain the old
+shorthand; THIS block is the citation source of truth. Thesis refs (Prop 3.2.7/3.2.4,
+Lemma 5.2.38) are Ross-thesis numbering, kept as separate-source citations.
+
+**Track 1 (b–d) implementation plan (verified anchors):** (b) `GaussInt2 = ℤ[√2][i]`
+EuclideanDomain (mirror `Zsqrt2EuclideanDomain`; brick `b5123126` has IsDomain + norm_eq_zero) →
+PID/UFD. (c) even-power criterion = Lean-ify **C.16 + C.19/C.20/C.21** over the shipped
+`Zsqrt2EuclideanDomain` (splitting law C.8/C.9/C.11; constructive u²≡−1/−2 cases per C.22;
+lift Mathlib `Nat.eq_sq_add_sq_iff` template). (d) §5 grid existence = **Lemma 4.4 (1D)** +
+**Lemma 5.23 (two-disk)** as Lean theorems (center-rounding versions shipped in `GridProblem.lean`;
+the quantitative `(1+√2)²` thresholds are the remaining sharp forms). Terminal ancilla-free
+existence stays a tracked `Prop` (strictly weaker than Hyp 8.3 — relative-norm density, not
+primality), NEVER an axiom.
+
 ### Track 3 + 2-qubit-synthesis JOINED PROGRAM (2026-06-09; user-approved, <10k LOC bar; method = my judgment, elegance-first)
 
 **Reprioritization (user, upstream-driven):** `native_decide` blocks any Mathlib/physlib upstream;
