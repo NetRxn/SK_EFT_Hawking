@@ -1,6 +1,39 @@
 # Phase 6AQ — device-characterization envelope completion (readout-window bounds)
 
-**Status: OPEN 2026-06-10.** Successor to 6AP (closed 2026-06-10). Scope: two small waves
+**Status: ✅ COMPLETE 2026-06-10 (both waves shipped, closure gates green).** W1
+`QuantumNetwork/ReadoutRelaxationBound.lean` (12 thms / 2 defs) and W2 (stretch — shipped at
+full strength, no descope needed) `QuantumNetwork/ThermalAssignmentFloor.lean` (16 thms /
+1 def), both kernel-pure `{propext, Classical.choice, Quot.sound}` (spot-verified via
+`lean_verify` on the PhysLib-touching derivation + the enclosure), 0 sorry, 0 new axioms,
+no `maxHeartbeats`. Closure: full `lake build` + `lake build SKEFTHawking.ExtractDeps` green
+(9254 jobs); `validate.py` 33/33 ALL CHECKS PASSED; counts refreshed (12,459 thm / 936 mod);
+Inventory + Index synced; root `SKEFTHawking.lean` imports added.
+
+**W2 substrate note:** PhysLib already ships `CanonicalEnsemble.twoState` with the
+`tanh`-form closed-form probabilities — W2 *derives* the Boltzmann occupancy
+`thermalExcitedPop x = 1/(1+eˣ)` from it (`twoState_excited_probability`, via the new
+tanh↔logistic bridge `half_one_sub_tanh`), so the occupancy is a theorem of statistical
+mechanics here, not a definition. Temperature-indexed monotonicity goes through a new
+`Temperature.β` antitonicity bridge (`temperature_beta_anti`, from `Constants.kB_pos`).
+
+**Stage-13-style strengthening review (applied preemptively + post-pass; 0 retroactive
+cuts needed):** (P2) the only conjunction shipped is the two-sided enclosure (lower+upper
+bracket, the established `expNeg_enclosure` shape — not redundant conjuncts); (P3/P5) the
+two `avgAssignmentError_*_floor` glue lemmas are intentionally thin — they carry the
+roadmap-mandated uniform-prior model prefactor ½ and are composed non-trivially in
+`avgAssignmentError_rational_floor` (rational operating-point bound) and the
+`avgAssignmentError_combined_floor` max-capstone; (P6) every header cross-reference is
+backed by a call (`cohGamma_nonneg`, `expNeg_enclosure` ×3, `twoState_probability_snd`,
+`Constants.kB_pos`); the `readoutDecayProb_eq_cohGamma` rfl-bridge is the documented
+formal family link and is load-bearing (used by `readoutDecayProb_nonneg`); (defining-the-
+conclusion) both defs are pinned to pre-existing objects — `readoutDecayProb` to the
+gate-side `cohGamma`, `thermalExcitedPop` to the PhysLib ensemble probability. Strict
+variants shipped wherever cleanly provable (strict `< 1`, `StrictMono` in window,
+strict antitone in `T₁`, `StrictAnti` on ℝ for the thermal floor).
+
+---
+
+**Original scope (for reference):** Successor to 6AP (closed 2026-06-10). Two small waves
 completing the device-characterization envelope family where textbook/published math is still
 missing from the substrate. The family today bounds *gate* performance from coherence data
 (coherence-limited fidelity ceiling; composed-gate fidelity; n-qubit Pauli/thermal diamond

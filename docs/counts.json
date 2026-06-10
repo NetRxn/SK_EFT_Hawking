@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-10T12:21:07.975531",
+  "generated": "2026-06-10T14:41:43.009982",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 20465,
-    "theorems_total": 12429,
-    "theorems_substantive": 12403,
+    "total_declarations": 20498,
+    "theorems_total": 12459,
+    "theorems_substantive": 12433,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 934,
+    "modules": 936,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -774,6 +774,7 @@
       "SKEFTHawking.QuantumNetwork.QutritWeyl",
       "SKEFTHawking.QuantumNetwork.RBCertificate",
       "SKEFTHawking.QuantumNetwork.Rate",
+      "SKEFTHawking.QuantumNetwork.ReadoutRelaxationBound",
       "SKEFTHawking.QuantumNetwork.RepeaterChain",
       "SKEFTHawking.QuantumNetwork.SecretKeyRate",
       "SKEFTHawking.QuantumNetwork.SelfAdjointInnerProduct",
@@ -782,6 +783,7 @@
       "SKEFTHawking.QuantumNetwork.SpectralMajorization",
       "SKEFTHawking.QuantumNetwork.Swapping",
       "SKEFTHawking.QuantumNetwork.Teleportation",
+      "SKEFTHawking.QuantumNetwork.ThermalAssignmentFloor",
       "SKEFTHawking.QuantumNetwork.TraceNormCauchySchwarz",
       "SKEFTHawking.QuantumNetwork.UnitaryDiamond",
       "SKEFTHawking.QuantumNetwork.VectorMajorization",
@@ -947,15 +949,15 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 7133,
+    "definitions": 7136,
     "structures": 294,
     "instances": 513,
     "inductives": 96
   },
   "python": {
     "python_modules": 132,
-    "test_files": 110,
-    "pytest_cases": 4527,
+    "test_files": 112,
+    "pytest_cases": 4594,
     "notebooks": 89,
     "papers": 42,
     "figures": 162

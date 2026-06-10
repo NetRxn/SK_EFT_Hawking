@@ -3270,6 +3270,17 @@ import SKEFTHawking.QuantumNetwork.UnitaryDiamond
 import SKEFTHawking.QuantumNetwork.MatrixNormBridge
 import SKEFTHawking.QuantumNetwork.ErasureRateBound
 import SKEFTHawking.FKLW.CompiledGateDiamond
+-- Phase 6AQ (2026-06-10): device-characterization envelope completion — readout-window
+-- bounds from the same universally-stated coherence/thermal parameters that bound gates.
+-- W1 readout-window relaxation envelope: p_decay = 1 − e^{−t/T₁} (range/strict-mono/antitone/
+-- endpoints incl. Tendsto-to-1, rational enclosure via expNeg_enclosure, averaged-assignment
+-- floor with uniform-prior prefactor ½; identification with device assignment error stays
+-- literature-cited, two-layer posture). W2 thermal-population assignment floor: p_th =
+-- 1/(1+e^{βℏω}) DERIVED from PhysLib CanonicalEnsemble.twoState (tanh↔logistic bridge),
+-- StrictAnti + Temperature/frequency-indexed monotonicity via the Temperature.β bridge,
+-- endpoints (T→0⁺ ⇒ 0; high-T ⇒ ½), rational enclosures, combined max-floor capstone.
+import SKEFTHawking.QuantumNetwork.ReadoutRelaxationBound
+import SKEFTHawking.QuantumNetwork.ThermalAssignmentFloor
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
