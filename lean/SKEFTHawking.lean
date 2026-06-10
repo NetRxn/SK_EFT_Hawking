@@ -1501,6 +1501,13 @@ import SKEFTHawking.FKLW.RossSelinger.GridExistenceSharp
 -- α ∣ s·s†; mutual dvd of CONJ-FIXED elements descends to an ℤ[√2]-unit (conj-fixed ⟺ embedded,
 -- by coordinates). Also conjHom (bundled), relNormZsqrt2_mul.
 import SKEFTHawking.FKLW.RossSelinger.RelNormMultiplicativity
+-- Phase 6AO Track 1(c) inc 4 (2026-06-10) — the EVEN-POWER OBSTRUCTION (RS Lemmas C.20 p≡7(8)
+-- case + C.21 odd half): not_daggerDecomposable_of_norm_pow_seven — N(ξ) = ±p^m, p≡7(8), m odd ⟹
+-- NOT †-decomposable. Engine: exists_sq_add_sq_of_daggerDecomposable (N(ξ) = ±(a²+b²) via the
+-- norm tower + the ℤ[i]-graded Gauss form norm_eq_gauss = the paper's t•t = a+bi) + sums of two
+-- squares ≢ 7 (mod 8). Structural positives: daggerDecomposable_pow_even (ξ^{2k} = (ξ^k)²),
+-- DaggerDecomposable.pow, relNormZsqrt2_embed.
+import SKEFTHawking.FKLW.RossSelinger.RelNormEvenPowerObstruction
 -- Phase 6x Tier-2 Item I (2026-05-30) — compile_correct approximation helpers:
 -- linftyOpNorm_fin_two_le (entrywise ≤δ ⟹ ℓ∞-operator-norm ≤ 2δ for 2×2) + su2_entry_structure
 -- (U∈SU(2) ⟹ U=[[a,−b̄],[b,ā]]). Propagate the grid first-column approximation to ‖·‖≤ε.
