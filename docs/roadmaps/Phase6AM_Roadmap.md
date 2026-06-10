@@ -778,9 +778,16 @@ toComplex↔zsqrt2ToReal via `s2C_eq`), `relNormZsqrt2` + **norm tower**
 toComplex-injectivity). REMAINING (c): C.19 (coprime multiplicativity; Mathlib
 `gcd_mul_dvd_mul_gcd` + new ZOmega gcd) → C.20 (prime case; `ZMod.exists_sq_eq_neg_one_iff`,
 t = gcd(ξ, u+i), three-possibilities argument; p≡7(8) impossibility via a²+b² mod 8) → C.21.
-(d) §5 grid existence =
-**Lemma 4.4 (1D)** + **Lemma 5.23 (two-disk)** as Lean theorems (center-rounding versions shipped
-in `GridProblem.lean`; the quantitative `(1+√2)²` thresholds are the remaining sharp forms).
+**✅ (d) SHIPPED (`35cb7b09`, 9233 green, kernel-pure): `GridExistenceSharp.lean` —
+Lemma 4.4 SHARP product form** (`oneDim_grid_exists_product`): `δ·Δ ≥ (1+√2)²` ALONE gives 1-D
+grid existence at every position — the asymmetric tiny-ε-region × huge-disk form Lemma 5.23 /
+eq.(21)'s `k₂ ≤ 2+2log₂(1+√2)+2log₂(1/ε)` consumes (center-rounding needed BOTH ≥ 1+√2).
+Selinger 1212.6253 Lemmas 16–17 formalized: `OneDimCoverage` + mono/swap/λ-rescale moves
+(α ↦ λα; λ• = −λ⁻¹ flip absorbed by the ∀-position), 3-candidate base `(1+√2, √2)` via floor
+bracketing, λ-power families (`Int.induction_on`), assembly by λ-power bracketing with the
+swapped family at j+1 rescuing the √2-gap (λ ≥ 2). 🔑 Lean: division atoms defeat
+nlinarith — use multiplication-only positions (λ⁻¹ = √2−1) + explicit `linear_combination`
+product-equalities, then plain `linarith` on the monomial atoms.
 Terminal ancilla-free existence stays a tracked `Prop` (strictly weaker than Hyp 8.3 —
 relative-norm density, not primality), NEVER an axiom.
 
