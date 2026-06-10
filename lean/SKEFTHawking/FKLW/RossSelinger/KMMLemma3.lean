@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 John Roehm. All rights reserved.
 
-# Phase 6x Tier-2 Item F (M4) — KMM Lemma 3 via Algorithm 2 (the finite decide)
+# Phase 6x Tier-2 Item F (M4) — KMM Lemma 3 residue vocabulary (Algorithm 2 substrate)
 
 KMM Lemma 3 (arXiv:1206.5236 v4, p. 6; proof = **Algorithm 2**, p. 14) is the
 sde-reduction existence lemma:

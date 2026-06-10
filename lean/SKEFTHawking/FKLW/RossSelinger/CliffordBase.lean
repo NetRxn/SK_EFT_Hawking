@@ -47,8 +47,8 @@ namespace KMM
 open CliffordTGate ZOmegaSqrt2
 open scoped Matrix
 
-/-- **Box data of a realizable `μ ≤ 3` matrix**: `M = reconstruct x y k` with `(x, y)`
-in the coordinate box and meeting the filter conditions. Packages the
+/-- **Reconstruction data of a realizable `μ ≤ 3` matrix**: `M = reconstruct x y k` with
+the unit-column equation and the `μ ≤ 3` divisibility. Packages the
 `column0_cleared_bounded` + `realizable_col1` extraction shared with the bridge. -/
 theorem reconstruct_box_data {M : Mat2} (hM : IsCliffordTRealizable M) (hμ : muMeasure M ≤ 3) :
     ∃ (x y : ZOmega) (k : ℕ), M = reconstruct x y k ∧

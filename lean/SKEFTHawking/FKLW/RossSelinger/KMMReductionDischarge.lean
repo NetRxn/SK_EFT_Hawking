@@ -34,8 +34,9 @@ gating in `KMM.lean` (kmmReduce / Item G headline) is discharged.
 
 - **#10** (no `maxHeartbeats`): respected.
 - **#15** (no new project-local axioms): respected — `coverage` is a hypothesis,
-  not an `axiom`. `kmmReduction_of_coverage` inherits the tracked `native_decide`
-  (via `mu_decrease`) only.
+  not an `axiom`. `kmmReduction_of_coverage` is kernel-pure (the former
+  `native_decide` chain through the KMM substrate was eliminated in Phase 6AO
+  Track 3).
 
 -/
 

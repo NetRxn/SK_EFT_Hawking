@@ -25,13 +25,14 @@ The **O(log 1/ε), exponent-1** length bound (the gate's headline improvement ov
 `O(log^{3.97})`) is delivered here, on the shipped RS compiler. Two residuals against the strictest
 reading of the gate are genuine — not effort:
 
-1. **Axiom closure.** This file adds NO `native_decide`/`maxHeartbeats`/project-local axiom. But it
-   *consumes* the Phase-6x KMM substrate, whose `cliffordBase_box_core`, `maStep_exists_core`,
-   `bridge_box_core`, `kmm_lemma3_alg2` are discharged by `native_decide` over large finite
-   Clifford-orbit / MA-step enumerations (kernel `decide` is infeasible there). These
-   `native_decide` compiler-trust axioms are **tracked + tolerated** by the project gate
-   `validate.py --check axiom_closure_allowlist` (distinct from project-local `axiom`s; the project
-   carries them since Phase 6x). So `#print axioms` shows those 4 alongside the standard three.
+1. **Axiom closure — RESOLVED (Phase 6AO Track 3, 2026-06-10).** This file adds NO
+   `native_decide`/`maxHeartbeats`/project-local axiom, and the Phase-6x KMM substrate it
+   consumes is now fully structural: the four former `native_decide` cores
+   (`bridge_box_core`, `maStep_exists_core`, `cliffordBase_box_core`, `kmm_lemma3_alg2`)
+   were ALL eliminated (BridgeParity/BridgeStructural, MAStepStructural,
+   ZOmegaTorsion/CliffordBaseStructural + kernel coverage checks, KMMLemma3Structural/Alg2).
+   `#print axioms` on the headlines shows exactly the standard three
+   `{propext, Classical.choice, Quot.sound}`.
 2. **Unconditionality.** The headlines are conditional on the grid finder succeeding
    (`gridFindT … = some t`). Deterministic `∀U`-completeness of `gridFindT` is the Ross–Selinger
    **factoring / number-theoretic branch** (residual `√2^{2k} − u·u*` being a relative norm from

@@ -23,8 +23,11 @@ squared-modulus sde `μ(M) = denExp (normSq (M 0 0))`:
     here are the first links).
 
 This file ships the **descent ingredients** (preservation of unitarity and `det = ωᵏ` under
-`reduceStep`) and `reconstruct_box_data_unitary` (the box-data extraction, realizability-free,
-via `unitary_col1`). The base-case re-point + the induction assembly are the next increments.
+`reduceStep`), `reconstruct_box_data_unitary` (the reconstruction-data extraction,
+realizability-free, via `unitary_col1`), the realizability-free MA chain
+(`ma_step_exists_u`, `cliffordBase_u`, `bridge_u` — all structural since Phase 6AO Track 3),
+and the full induction assembly (`maCoverage_aux_u`, `kmm_completeness_aux`,
+`kmm_completeness`).
 
 ## Pipeline invariants
 
@@ -216,9 +219,10 @@ theorem ma_step_exists_u {M : Mat2} (hu : IsUnitaryT M) (hk1 : 1 ≤ kSO3 M) :
 
 /-! ## Box-data extraction, realizability-free (base-case re-point, first link) -/
 
-/-- **Box data of a `μ ≤ 3` unitary** (realizability-free form of `reconstruct_box_data`):
-`M = reconstruct x y k` with `(x, y)` in the coordinate box and meeting the `𝕊₃` filter,
-assuming only `IsUnitaryT M` + `det M = ωS^kd` (not `IsCliffordTRealizable M`). The col-1
+/-- **Reconstruction data of a `μ ≤ 3` unitary** (realizability-free form of
+`reconstruct_box_data`): `M = reconstruct x y k` with the unit-column equation and the
+`μ ≤ 3` divisibility, assuming only `IsUnitaryT M` + `det M = ωS^kd` (not
+`IsCliffordTRealizable M`). The col-1
 structure comes from `unitary_col1` instead of `realizable_col1`; everything else
 (`column0_cleared_bounded`, `unitary_col0_normSq`, the cleared-form algebra) already runs on
 unitarity. This is the first link in re-pointing the MA-coverage base off realizability. -/

@@ -21,8 +21,8 @@ circuit uses for every system-line operation; the entangling/ancilla structure i
 ## Pipeline invariants
 
 - **#10** (no `maxHeartbeats`): respected. **#15** (no new project-local axioms): respected.
-  No `native_decide` in this file's own proofs (it *consumes* the `KMM.kmmReduce` substrate, whose
-  tolerated `native_decide` set is unchanged — Track 3 of this `/goal` eliminates those separately).
+  No `native_decide` in this file's own proofs, and the `KMM.kmmReduce` substrate it consumes
+  is kernel-pure since Phase 6AO Track 3 eliminated all four former `native_decide` sites.
 -/
 
 import SKEFTHawking.FKLW.RossSelinger.CliffordTGate2

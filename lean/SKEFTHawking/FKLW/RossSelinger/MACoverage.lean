@@ -3,8 +3,8 @@ Copyright (c) 2026 John Roehm. All rights reserved.
 
 # Phase 6x Tier-2 Item F — the Matsumoto-Amano coverage recursion
 
-With `ma_step_exists` (`MAStepExists.lean`) supplying the reducing syllable for
-`1 ≤ kSO3 M ≤ 3`, the MA coverage is a structural recursion on `kSO3`:
+With `ma_step_exists` (`MAStepStructural.lean`) supplying the reducing syllable for
+every `kSO3 M ≥ 1`, the MA coverage is a structural recursion on `kSO3`:
 
   * **base** `kSO3 M = 0` (⟺ `M` is a Clifford): `cliffordBase` supplies a `≤ 6`-gate word;
   * **step** `kSO3 M ≥ 1`: strip the `ma_step` syllable `s` (`kSO3` drops by ≥ 1),

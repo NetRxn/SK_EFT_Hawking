@@ -98,7 +98,8 @@ theorem isColRealizableWithin_of_colDenExp_zero (v : Fin 2 × Fin 2 → ZOmegaSq
 /-- **The reduction-step property** (budget `C`): every unit column with positive denominator exponent
 factors as `g · v'` for a realizable `g` (within `C`) and a **strictly-lower-`colDenExp`** unit column
 `v'`. This is the dim-4 Giles–Selinger residue reduction — the one remaining synthesis brick (it reuses
-the dim-2 `reduceStep` + `kmm_lemma3`, the tolerated-`native_decide` site Track 3 will eliminate). -/
+the dim-2 `reduceStep` + `kmm_lemma3` — structural since Phase 6AO Track 3 eliminated the
+former `native_decide`). -/
 def ReductionStep (C : ℕ) : Prop :=
   ∀ v : Fin 2 × Fin 2 → ZOmegaSqrt2, (∑ i, normSq (v i) = 1) → 0 < colDenExp v →
     ∃ (g : Mat4) (v' : Fin 2 × Fin 2 → ZOmegaSqrt2),

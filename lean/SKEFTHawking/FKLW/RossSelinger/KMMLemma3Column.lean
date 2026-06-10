@@ -25,9 +25,10 @@ matrix-level translation of `gde(|·|²)` to `sdeC`.
 ## Pipeline invariants
 
 - **#10** (no `maxHeartbeats`): respected.
-- **#15** (no new project-local axioms): respected. `kmm_lemma3_column` inherits
-  the `Lean.ofReduceBool` axiom from `kmm_lemma3_alg2` (KMM Algorithm 2's
-  computer check); the `coordOf_*` homomorphism lemmas are kernel-pure.
+- **#15** (no new project-local axioms): respected. `kmm_lemma3_column` is
+  kernel-pure `{propext, Classical.choice, Quot.sound}` — `kmm_lemma3_alg2` is
+  structural since Phase 6AO Track 3 (the former `native_decide` was eliminated);
+  the `coordOf_*` homomorphism lemmas are kernel-pure.
 
 -/
 
