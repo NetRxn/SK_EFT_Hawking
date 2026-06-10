@@ -20,6 +20,21 @@ namespace SKEFTHawking.QuantumNetwork
 
 open Real
 
+/-- **General rational enclosure of `exp(−r)` for `r ≥ 0`** (Bernoulli envelopes on both
+sides): `1 − r ≤ exp(−r) ≤ 1/(1+r)`. Both endpoints are rational at rational `r`, so every
+decay factor `e^{−t/τ}` appearing in fiber-loss / memory-decoherence channels admits a
+machine-checkable rational bracket with no floating-point `exp` — the load-bearing primitive
+for rigorous rational enclosures of decay-inclusive fidelities. The lower bound is
+`Real.add_one_le_exp` at `−r`; the upper bound is the same envelope at `r` inverted
+(`exp(−r) = (exp r)⁻¹ ≤ (1+r)⁻¹`). The worked operating point `expNeg046_enclosure` below
+is this bracket at `r = 0.46`. -/
+theorem expNeg_enclosure {r : ℝ} (hr : 0 ≤ r) :
+    1 - r ≤ Real.exp (-r) ∧ Real.exp (-r) ≤ 1 / (1 + r) := by
+  refine ⟨by linarith [Real.add_one_le_exp (-r)], ?_⟩
+  have hpos : (0 : ℝ) < 1 + r := by linarith
+  rw [Real.exp_neg, one_div]
+  exact inv_anti₀ hpos (by linarith [Real.add_one_le_exp r])
+
 /-- Representative fiber-loss factor enclosure: at `α = 0.046 Np/km`, `L = 10 km`
 the transmission factor is `exp(−0.46)`, kernel-only bracketed via the Bernoulli
 envelopes `x+1 ≤ exp x`. (This is the `exp`-form value of `fiberTransmission` at
