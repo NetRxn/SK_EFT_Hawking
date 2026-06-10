@@ -1591,6 +1591,12 @@ import SKEFTHawking.FKLW.RossSelinger.GilesSelingerPairDrop
 -- O(log 1/ε) count the KMM ≤2-ancilla headline consumes) + the existential form. Circuit C exact
 -- synthesis complete. Kernel-pure {propext, Classical.choice, Quot.sound}.
 import SKEFTHawking.FKLW.RossSelinger.GilesSelingerColumnLemma
+-- Phase 6AO Track 2 (inc 34, 2026-06-10): three-qubit Clifford+T gate semantics (system + 2 ancillas) —
+-- Gate3 ADT (single-qubit on each line + all 6 directed cnots), Mat8 = system × (anc₁ × anc₂) so the
+-- ancilla pair carries the Mat4 index natively; embedAnc (M ↦ I₂⊗M) with the faithful length-preserving
+-- transport embedAnc_interp2 (the column-lemma circuit C rides onto the register at no length cost);
+-- embedSys; IsRealizable3Within + additive composition. The register the controlled-C lift lives on.
+import SKEFTHawking.FKLW.RossSelinger.CliffordTGate3
 -- Phase 6AO Track 2 (2026-06-09): system-line synthesis on the two-qubit register — embedFst_kmmReduce_interp
 -- (interp2 ((kmmReduce M).map onFst) = embedFst M: the shipped single-qubit KMM synthesis realizes M⊗I on
 -- the system line) + embedFst_kmmReduce_length (same KMM length bound N₃+4·denExp, no length cost). Connects
