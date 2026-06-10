@@ -226,9 +226,8 @@ theorem reconstruct_box_data_unitary {M : Mat2} (hu : IsUnitaryT M) {kd : ℕ}
     (hkdet : Matrix.det M = ωS ^ kd) (hμ : muMeasure M ≤ 3) :
     ∃ (x y : ZOmega) (k : ℕ), M = reconstruct x y k ∧
       ZOmega.normSq x + ZOmega.normSq y = (⟨0, 0, 0, 4⟩ : ZOmega) ∧
-      ZOmega.dividesSqrt2 (ZOmega.normSq x) ∧
-      (ZOmega.normSq x).d ≤ 4 ∧ (ZOmega.normSq y).d ≤ 4 := by
-  obtain ⟨x, y, hx, hy, hxd, hyd⟩ := column0_cleared_bounded hu hμ
+      ZOmega.dividesSqrt2 (ZOmega.normSq x) := by
+  obtain ⟨x, y, hx, hy, -, -⟩ := column0_cleared_bounded hu hμ
   obtain ⟨hcol01, hcol11⟩ := unitary_col1 hu hkdet
   have h00 : M 0 0 = mk x 2 := eq_mk_of_sqrt2_pow_mul hx
   have h10 : M 1 0 = mk y 2 := eq_mk_of_sqrt2_pow_mul hy
@@ -245,7 +244,7 @@ theorem reconstruct_box_data_unitary {M : Mat2} (hu : IsUnitaryT M) {kd : ℕ}
         pow_add, mul_assoc, hw, pow_one]
       simp only [sqrt2_def, of_def]
     exact (ZOmega.dividesSqrt2_iff_dvd _).mpr ⟨w, hns⟩
-  exact ⟨x, y, kd, hMrec, hsum, hdvd, hxd, hyd⟩
+  exact ⟨x, y, kd, hMrec, hsum, hdvd⟩
 
 /-! ## `stripMat` / `reduceStep` preservation + the base case + the KMM Theorem-1 converse -/
 
@@ -319,26 +318,34 @@ theorem muMeasure_le_kSO3_add_two_u {M : Mat2} (hu : IsUnitaryT M) {kd : ℕ}
 `kSO3_reconstruct_le_three'` (`BridgeStructural.lean` — no finite check). -/
 theorem bridge_u {M : Mat2} (hu : IsUnitaryT M) {kd : ℕ} (hdet : Matrix.det M = ωS ^ kd)
     (hμ : muMeasure M ≤ 3) : kSO3 M ≤ 3 := by
-  obtain ⟨x, y, k, hMrec, hsum, hdvd, -, -⟩ := reconstruct_box_data_unitary hu hdet hμ
+  obtain ⟨x, y, k, hMrec, hsum, hdvd⟩ := reconstruct_box_data_unitary hu hdet hμ
   rw [hMrec]; exact kSO3_reconstruct_le_three' hsum hdvd k
 
 /-- **The Clifford base, realizability-free** (was `cliffordBase`): a unitary `M` with
-`det = ωᵏ` and `kSO3 M = 0` is realizable, via `reconstruct_box_data_unitary` +
-`cliffordBase_box_core`. -/
+`det = ωᵏ` and `kSO3 M = 0` is realizable — STRUCTURAL via `reconstruct_box_data_unitary` +
+the `kSO3 = 0` quantization + the per-class kernel coverage checks (no box, no
+`native_decide`). -/
 theorem cliffordBase_u {M : Mat2} (hu : IsUnitaryT M) (hdet : ∃ k, Matrix.det M = ωS ^ k)
     (hk0 : kSO3 M = 0) : ∃ gs : List CliffordTGate, interp gs = M := by
   obtain ⟨kd, hkd⟩ := hdet
   have hμ : muMeasure M ≤ 3 := by have := muMeasure_le_kSO3_add_two_u hu hkd; omega
-  obtain ⟨x, y, k, hMrec, hsum, hdvd, hxd, hyd⟩ := reconstruct_box_data_unitary hu hkd hμ
+  obtain ⟨x, y, k, hMrec, hsum, hdvd⟩ := reconstruct_box_data_unitary hu hkd hμ
   have hk0' : kSO3 (reconstruct x y (k % 8)) = 0 := by rw [← reconstruct_mod, ← hMrec]; exact hk0
   have hk8 : k % 8 < 8 := Nat.mod_lt _ (by norm_num)
-  have h2 := List.all_eq_true.mp (List.all_eq_true.mp cliffordBase_box_core x (mem_zomBox hxd))
-    y (mem_zomBox hyd)
-  rw [if_pos ⟨hsum, hdvd⟩] at h2
-  have h3 := List.all_eq_true.mp h2 (k % 8) (List.mem_range.mpr hk8)
-  rw [decide_eq_true_eq.mpr hk0', Bool.not_true, Bool.false_or, Bool.and_eq_true] at h3
-  exact ⟨cliffordWordOf x y (k % 8), by
-    rw [of_decide_eq_true h3.1, hMrec]; exact (reconstruct_mod x y k).symm⟩
+  have hZZ := four_dvd_normSq_sub_of_kSO3_eq_zero hk0'
+  rcases normSq_quantized hsum hZZ with ⟨hx0, hy4⟩ | ⟨hx2, hy2⟩ | ⟨hx4, hy0⟩
+  · obtain ⟨b, hb, rfl⟩ := ZOmega.two_torsion_of_normSq_eq_four hy4
+    subst hx0
+    obtain ⟨hint, -⟩ := cliffordCover_y2 b hb (k % 8) hk8 hk0'
+    exact ⟨_, by rw [hint, hMrec, reconstruct_mod _ _ k]⟩
+  · obtain ⟨a, ha, rfl⟩ := ZOmega.sqrt2_torsion_of_normSq_eq_two hx2
+    obtain ⟨b, hb, rfl⟩ := ZOmega.sqrt2_torsion_of_normSq_eq_two hy2
+    obtain ⟨hint, -⟩ := cliffordCover_mid a ha b hb (k % 8) hk8 hk0'
+    exact ⟨_, by rw [hint, hMrec, reconstruct_mod _ _ k]⟩
+  · obtain ⟨a, ha, rfl⟩ := ZOmega.two_torsion_of_normSq_eq_four hx4
+    subst hy0
+    obtain ⟨hint, -⟩ := cliffordCover_x2 a ha (k % 8) hk8 hk0'
+    exact ⟨_, by rw [hint, hMrec, reconstruct_mod _ _ k]⟩
 
 /-- **MA base coverage, realizability-free**: every unitary `M` with `det = ωᵏ` and
 `kSO3 M = n ≤ 3` is realizable. Strong induction on `n`; base `cliffordBase_u`, step strips an

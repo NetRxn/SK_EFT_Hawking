@@ -10,29 +10,32 @@ The MA coverage recursion (`MACoverage.lean`) bottoms out at `kSO3 M = 0`, where
 ## Structure (mirrors the bridge)
 
 `muMeasure_le_kSO3_add_two` gives `kSO3 M = 0 ⟹ μ(M) ≤ 2 ≤ 3`, so
-`column0_cleared_bounded` + `realizable_col1` rewrite `M = reconstruct x y k` with
-bounded `(x, y)` (`KMMBridge`). The word is then a finite `(x, y, k)`-keyed lookup
-`cliffordWordOf` into the explicit 192-entry `cliffordTable` (BFS-minimal Clifford
-words, gens `{H,S,X,Y,Z,ω}`, all length `≤ 6`). The `native_decide`
-`cliffordBase_box_core` re-verifies, for every `kSO3 = 0` tuple in the bridge box,
-that `interp (cliffordWordOf x y k) = reconstruct x y k` and the word length is `≤ 6`
-— so the table is untrusted scaffolding (`scripts/emit_clifford_table.py`).
+`column0_cleared_bounded` + `realizable_col1` rewrite `M = reconstruct x y k`
+(`KMMBridge`). The word is a finite `(x, y, k)`-keyed lookup `cliffordWordOf` into the
+explicit 192-entry `cliffordTable` (BFS-minimal Clifford words, gens `{H,S,X,Y,Z,ω}`,
+all length `≤ 6`; emitted by `scripts/emit_clifford_table.py`, untrusted scaffolding).
+**STRUCTURAL coverage (Phase 6AO Track 3, 2026-06-10)**: the former `native_decide` box
+sweep (`cliffordBase_box_core`) was ELIMINATED — the `kSO3 = 0` quantization
+(`CliffordBaseStructural` + `ZOmegaTorsion`) pins every key to a torsion class
+(`(0, 2ωᵇ)`, `(√2ωᵃ, √2ωᵇ)`, `(2ωᵃ, 0)`), and three per-class kernel `decide +kernel`
+checks (`cliffordCover_{y2,mid,x2}`, 640 torsion tuples total) verify the table words.
 
 ## Validated
 
-`scripts/clifford_base_validation.py`: the `kSO3 = 0` subset of the box is exactly
+`scripts/clifford_base_validation.py`: the `kSO3 = 0` subset is exactly
 192 Cliffords (`μ ∈ {0,1,2}`), each reachable by a `≤ 6`-gate Clifford word.
 
 ## Pipeline invariants
 
 - **#10** (no `maxHeartbeats`): respected (`maxRecDepth` only).
-- **#15** (no new project-local axioms): respected (`native_decide` carries the
-  tracked `Lean.ofReduceBool` axiom).
+- **#15** (no new project-local axioms): respected. No `native_decide` —
+  kernel-pure `{propext, Classical.choice, Quot.sound}`.
 
 -/
 
 import SKEFTHawking.FKLW.RossSelinger.KMMBridge
 import SKEFTHawking.FKLW.RossSelinger.BridgeStructural
+import SKEFTHawking.FKLW.RossSelinger.CliffordBaseStructural
 import SKEFTHawking.FKLW.RossSelinger.MACoverage
 
 set_option autoImplicit false
@@ -50,10 +53,9 @@ in the coordinate box and meeting the filter conditions. Packages the
 theorem reconstruct_box_data {M : Mat2} (hM : IsCliffordTRealizable M) (hμ : muMeasure M ≤ 3) :
     ∃ (x y : ZOmega) (k : ℕ), M = reconstruct x y k ∧
       ZOmega.normSq x + ZOmega.normSq y = (⟨0, 0, 0, 4⟩ : ZOmega) ∧
-      ZOmega.dividesSqrt2 (ZOmega.normSq x) ∧
-      (ZOmega.normSq x).d ≤ 4 ∧ (ZOmega.normSq y).d ≤ 4 := by
+      ZOmega.dividesSqrt2 (ZOmega.normSq x) := by
   have hu : IsUnitaryT M := by obtain ⟨gs, rfl⟩ := hM; exact interp_isUnitaryT gs
-  obtain ⟨x, y, hx, hy, hxd, hyd⟩ := column0_cleared_bounded hu hμ
+  obtain ⟨x, y, hx, hy, -, -⟩ := column0_cleared_bounded hu hμ
   obtain ⟨k, hcol01, hcol11⟩ := realizable_col1 hM
   have h00 : M 0 0 = mk x 2 := eq_mk_of_sqrt2_pow_mul hx
   have h10 : M 1 0 = mk y 2 := eq_mk_of_sqrt2_pow_mul hy
@@ -70,7 +72,7 @@ theorem reconstruct_box_data {M : Mat2} (hM : IsCliffordTRealizable M) (hμ : mu
         pow_add, mul_assoc, hw, pow_one]
       simp only [sqrt2_def, of_def]
     exact (ZOmega.dividesSqrt2_iff_dvd _).mpr ⟨w, hns⟩
-  exact ⟨x, y, k, hMrec, hsum, hdvd, hxd, hyd⟩
+  exact ⟨x, y, k, hMrec, hsum, hdvd⟩
 
 -- 192 entries; max word length 6
 def cliffordTable : List (ZOmega × ZOmega × ℕ × List CliffordTGate) := [
@@ -274,41 +276,160 @@ def cliffordWordOf (x y : ZOmega) (k : ℕ) : List CliffordTGate :=
   ((cliffordTable.find? (fun e => decide (e.1 = x ∧ e.2.1 = y ∧ e.2.2.1 = k))).map
     (·.2.2.2)).getD []
 
-/-- **The finite Clifford-base check**: for every `(x, y, k)` in the bridge box with
-`kSO3 (reconstruct x y k) = 0`, the looked-up word reconstructs `M` and has length `≤ 6`. -/
-def cliffordBaseBoxOk : Bool :=
-  zomBox.all (fun x => zomBox.all (fun y =>
-    if ZOmega.normSq x + ZOmega.normSq y = (⟨0, 0, 0, 4⟩ : ZOmega)
-        ∧ ZOmega.dividesSqrt2 (ZOmega.normSq x)
-    then (List.range 8).all (fun k =>
-      !decide (kSO3 (reconstruct x y k) = 0) ||
-        (decide (interp (cliffordWordOf x y k) = reconstruct x y k)
-          && decide ((cliffordWordOf x y k).length ≤ 6)))
-    else true))
+/-! ## The per-class coverage checks (kernel `decide` — no box sweep)
+
+By `normSq_quantized` + the `ZOmegaTorsion` classes, every `kSO3 = 0` reconstruction key is
+`(0, 2ωᵇ)`, `(√2ωᵃ, √2ωᵇ)`, or `(2ωᵃ, 0)` with torsion exponents `< 8` and phase `k < 8`.
+The three finite checks below verify, per class, that the looked-up `cliffordTable` word
+reconstructs the matrix and has length `≤ 6` whenever `kSO3 = 0`. Kernel-pure
+(`decide +kernel`); the former `native_decide` box sweep (`bridgeBox`-style `5⁴`-coordinate
+enumeration) is gone — the quantization replaces it with `8·8 + 8·8·8 + 8·8 = 640` torsion
+tuples. -/
 
 set_option maxRecDepth 8000 in
-/-- **The Clifford-base native_decide core**: every `kSO3 = 0` tuple's looked-up word
-is correct and `≤ 6` gates. Re-verifies the (untrusted) `cliffordTable`. -/
-theorem cliffordBase_box_core : cliffordBaseBoxOk = true := by native_decide
+/-- Coverage, class `x = 0` (`y = 2ωᵇ`): the table word is correct on every `kSO3 = 0` key. -/
+theorem cliffordCover_y2 : ∀ b < 8, ∀ k < 8,
+    kSO3 (reconstruct 0 (2 * ZOmega.ω ^ b) k) = 0 →
+    interp (cliffordWordOf 0 (2 * ZOmega.ω ^ b) k) = reconstruct 0 (2 * ZOmega.ω ^ b) k ∧
+      (cliffordWordOf 0 (2 * ZOmega.ω ^ b) k).length ≤ 6 := by
+  decide +kernel
+
+set_option maxRecDepth 8000 in
+/-- Coverage, class `y = 0` (`x = 2ωᵃ`). -/
+theorem cliffordCover_x2 : ∀ a < 8, ∀ k < 8,
+    kSO3 (reconstruct (2 * ZOmega.ω ^ a) 0 k) = 0 →
+    interp (cliffordWordOf (2 * ZOmega.ω ^ a) 0 k) = reconstruct (2 * ZOmega.ω ^ a) 0 k ∧
+      (cliffordWordOf (2 * ZOmega.ω ^ a) 0 k).length ≤ 6 := by
+  decide +kernel
+
+set_option maxRecDepth 8000 in
+/-- Coverage, middle class, chunk `a = 0` (64 tuples — sized to the kernel budget). -/
+theorem cliffordCover_mid_0 : ∀ b < 8, ∀ k < 8,
+    kSO3 (reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 0) (ZOmega.sqrt2 * ZOmega.ω ^ b) k) = 0 →
+    interp (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 0) (ZOmega.sqrt2 * ZOmega.ω ^ b) k)
+        = reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 0) (ZOmega.sqrt2 * ZOmega.ω ^ b) k ∧
+      (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 0) (ZOmega.sqrt2 * ZOmega.ω ^ b) k).length
+        ≤ 6 := by
+  decide +kernel
+
+set_option maxRecDepth 8000 in
+/-- Coverage, middle class, chunk `a = 1` (64 tuples — sized to the kernel budget). -/
+theorem cliffordCover_mid_1 : ∀ b < 8, ∀ k < 8,
+    kSO3 (reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 1) (ZOmega.sqrt2 * ZOmega.ω ^ b) k) = 0 →
+    interp (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 1) (ZOmega.sqrt2 * ZOmega.ω ^ b) k)
+        = reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 1) (ZOmega.sqrt2 * ZOmega.ω ^ b) k ∧
+      (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 1) (ZOmega.sqrt2 * ZOmega.ω ^ b) k).length
+        ≤ 6 := by
+  decide +kernel
+
+set_option maxRecDepth 8000 in
+/-- Coverage, middle class, chunk `a = 2` (64 tuples — sized to the kernel budget). -/
+theorem cliffordCover_mid_2 : ∀ b < 8, ∀ k < 8,
+    kSO3 (reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 2) (ZOmega.sqrt2 * ZOmega.ω ^ b) k) = 0 →
+    interp (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 2) (ZOmega.sqrt2 * ZOmega.ω ^ b) k)
+        = reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 2) (ZOmega.sqrt2 * ZOmega.ω ^ b) k ∧
+      (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 2) (ZOmega.sqrt2 * ZOmega.ω ^ b) k).length
+        ≤ 6 := by
+  decide +kernel
+
+set_option maxRecDepth 8000 in
+/-- Coverage, middle class, chunk `a = 3` (64 tuples — sized to the kernel budget). -/
+theorem cliffordCover_mid_3 : ∀ b < 8, ∀ k < 8,
+    kSO3 (reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 3) (ZOmega.sqrt2 * ZOmega.ω ^ b) k) = 0 →
+    interp (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 3) (ZOmega.sqrt2 * ZOmega.ω ^ b) k)
+        = reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 3) (ZOmega.sqrt2 * ZOmega.ω ^ b) k ∧
+      (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 3) (ZOmega.sqrt2 * ZOmega.ω ^ b) k).length
+        ≤ 6 := by
+  decide +kernel
+
+set_option maxRecDepth 8000 in
+/-- Coverage, middle class, chunk `a = 4` (64 tuples — sized to the kernel budget). -/
+theorem cliffordCover_mid_4 : ∀ b < 8, ∀ k < 8,
+    kSO3 (reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 4) (ZOmega.sqrt2 * ZOmega.ω ^ b) k) = 0 →
+    interp (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 4) (ZOmega.sqrt2 * ZOmega.ω ^ b) k)
+        = reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 4) (ZOmega.sqrt2 * ZOmega.ω ^ b) k ∧
+      (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 4) (ZOmega.sqrt2 * ZOmega.ω ^ b) k).length
+        ≤ 6 := by
+  decide +kernel
+
+set_option maxRecDepth 8000 in
+/-- Coverage, middle class, chunk `a = 5` (64 tuples — sized to the kernel budget). -/
+theorem cliffordCover_mid_5 : ∀ b < 8, ∀ k < 8,
+    kSO3 (reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 5) (ZOmega.sqrt2 * ZOmega.ω ^ b) k) = 0 →
+    interp (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 5) (ZOmega.sqrt2 * ZOmega.ω ^ b) k)
+        = reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 5) (ZOmega.sqrt2 * ZOmega.ω ^ b) k ∧
+      (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 5) (ZOmega.sqrt2 * ZOmega.ω ^ b) k).length
+        ≤ 6 := by
+  decide +kernel
+
+set_option maxRecDepth 8000 in
+/-- Coverage, middle class, chunk `a = 6` (64 tuples — sized to the kernel budget). -/
+theorem cliffordCover_mid_6 : ∀ b < 8, ∀ k < 8,
+    kSO3 (reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 6) (ZOmega.sqrt2 * ZOmega.ω ^ b) k) = 0 →
+    interp (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 6) (ZOmega.sqrt2 * ZOmega.ω ^ b) k)
+        = reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 6) (ZOmega.sqrt2 * ZOmega.ω ^ b) k ∧
+      (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 6) (ZOmega.sqrt2 * ZOmega.ω ^ b) k).length
+        ≤ 6 := by
+  decide +kernel
+
+set_option maxRecDepth 8000 in
+/-- Coverage, middle class, chunk `a = 7` (64 tuples — sized to the kernel budget). -/
+theorem cliffordCover_mid_7 : ∀ b < 8, ∀ k < 8,
+    kSO3 (reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 7) (ZOmega.sqrt2 * ZOmega.ω ^ b) k) = 0 →
+    interp (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 7) (ZOmega.sqrt2 * ZOmega.ω ^ b) k)
+        = reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ 7) (ZOmega.sqrt2 * ZOmega.ω ^ b) k ∧
+      (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ 7) (ZOmega.sqrt2 * ZOmega.ω ^ b) k).length
+        ≤ 6 := by
+  decide +kernel
+
+/-- Coverage, middle class (`x = √2ωᵃ`, `y = √2ωᵇ`) — dispatcher over the 8 per-`a`
+kernel chunks (a single 512-tuple `decide +kernel` exceeds the heartbeat budget;
+64-tuple chunks match the passing class sizes). -/
+theorem cliffordCover_mid : ∀ a < 8, ∀ b < 8, ∀ k < 8,
+    kSO3 (reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ a) (ZOmega.sqrt2 * ZOmega.ω ^ b) k) = 0 →
+    interp (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ a) (ZOmega.sqrt2 * ZOmega.ω ^ b) k)
+        = reconstruct (ZOmega.sqrt2 * ZOmega.ω ^ a) (ZOmega.sqrt2 * ZOmega.ω ^ b) k ∧
+      (cliffordWordOf (ZOmega.sqrt2 * ZOmega.ω ^ a) (ZOmega.sqrt2 * ZOmega.ω ^ b) k).length
+        ≤ 6 := by
+  intro a ha b hb k hk h0
+  rcases (by omega : a = 0 ∨ a = 1 ∨ a = 2 ∨ a = 3 ∨ a = 4 ∨ a = 5 ∨ a = 6 ∨ a = 7)
+    with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+  · exact cliffordCover_mid_0 b hb k hk h0
+  · exact cliffordCover_mid_1 b hb k hk h0
+  · exact cliffordCover_mid_2 b hb k hk h0
+  · exact cliffordCover_mid_3 b hb k hk h0
+  · exact cliffordCover_mid_4 b hb k hk h0
+  · exact cliffordCover_mid_5 b hb k hk h0
+  · exact cliffordCover_mid_6 b hb k hk h0
+  · exact cliffordCover_mid_7 b hb k hk h0
 
 /-- **The Clifford base** (`MACoverage`'s second remaining hypothesis): a realizable
 `M` with `kSO3 M = 0` (i.e. a single-qubit Clifford up to phase) has a `≤ 6`-gate word.
-Via `muMeasure_le_kSO3_add_two` (`kSO3 = 0 ⟹ μ ≤ 2 ≤ 3`), `reconstruct_box_data`
-rewrites `M = reconstruct x y k`; `cliffordBase_box_core` then supplies and verifies
-the word `cliffordWordOf x y (k % 8)`. -/
+STRUCTURAL (Phase 6AO Track 3): `muMeasure_le_kSO3_add_two` gives `μ ≤ 2 ≤ 3`;
+`reconstruct_box_data` rewrites `M = reconstruct x y k`; the `kSO3 = 0` quantization
+(`four_dvd_normSq_sub_of_kSO3_eq_zero` + `normSq_quantized` + the `ZOmegaTorsion` classes)
+pins `(x, y)` to a torsion class, and the per-class kernel coverage check supplies and
+verifies the word. No box enumeration, no `native_decide`. -/
 theorem cliffordBase (M : Mat2) (hM : IsCliffordTRealizable M) (hk0 : kSO3 M = 0) :
     ∃ gs : List CliffordTGate, interp gs = M ∧ gs.length ≤ 6 := by
   have hμ : muMeasure M ≤ 3 := by have := muMeasure_le_kSO3_add_two hM; omega
-  obtain ⟨x, y, k, hMrec, hsum, hdvd, hxd, hyd⟩ := reconstruct_box_data hM hμ
+  obtain ⟨x, y, k, hMrec, hsum, hdvd⟩ := reconstruct_box_data hM hμ
   have hk0' : kSO3 (reconstruct x y (k % 8)) = 0 := by rw [← reconstruct_mod, ← hMrec]; exact hk0
   have hk8 : k % 8 < 8 := Nat.mod_lt _ (by norm_num)
-  have h2 := List.all_eq_true.mp (List.all_eq_true.mp cliffordBase_box_core x (mem_zomBox hxd))
-    y (mem_zomBox hyd)
-  rw [if_pos ⟨hsum, hdvd⟩] at h2
-  have h3 := List.all_eq_true.mp h2 (k % 8) (List.mem_range.mpr hk8)
-  rw [decide_eq_true_eq.mpr hk0', Bool.not_true, Bool.false_or, Bool.and_eq_true] at h3
-  refine ⟨cliffordWordOf x y (k % 8), ?_, of_decide_eq_true h3.2⟩
-  rw [of_decide_eq_true h3.1, hMrec]; exact (reconstruct_mod x y k).symm
+  have hZZ := four_dvd_normSq_sub_of_kSO3_eq_zero hk0'
+  rcases normSq_quantized hsum hZZ with ⟨hx0, hy4⟩ | ⟨hx2, hy2⟩ | ⟨hx4, hy0⟩
+  · obtain ⟨b, hb, rfl⟩ := ZOmega.two_torsion_of_normSq_eq_four hy4
+    subst hx0
+    obtain ⟨hint, hlen⟩ := cliffordCover_y2 b hb (k % 8) hk8 hk0'
+    exact ⟨_, by rw [hint, hMrec, reconstruct_mod _ _ k], hlen⟩
+  · obtain ⟨a, ha, rfl⟩ := ZOmega.sqrt2_torsion_of_normSq_eq_two hx2
+    obtain ⟨b, hb, rfl⟩ := ZOmega.sqrt2_torsion_of_normSq_eq_two hy2
+    obtain ⟨hint, hlen⟩ := cliffordCover_mid a ha b hb (k % 8) hk8 hk0'
+    exact ⟨_, by rw [hint, hMrec, reconstruct_mod _ _ k], hlen⟩
+  · obtain ⟨a, ha, rfl⟩ := ZOmega.two_torsion_of_normSq_eq_four hx4
+    subst hy0
+    obtain ⟨hint, hlen⟩ := cliffordCover_x2 a ha (k % 8) hk8 hk0'
+    exact ⟨_, by rw [hint, hMrec, reconstruct_mod _ _ k], hlen⟩
 
 /-! ## The unconditional KMM reduction (orphan #2 substrate, fully discharged) -/
 

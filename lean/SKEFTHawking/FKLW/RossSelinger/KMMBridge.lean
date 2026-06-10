@@ -8,9 +8,8 @@ The MA coverage recursion (`MACoverage.lean`) consumes the bridge
   `bridge : ∀ M, IsCliffordTRealizable M → muMeasure M ≤ 3 → kSO3 M ≤ 3`
 
 — the quantitative `sde ↔ k_SO3` relationship of Giles-Selinger Cor 7.11. This
-file ships the *substrate*: the KMM Theorem 1 reconstruction, the coordinate
-box (still consumed by `CliffordBase.lean`), the connecting lemmas, and the
-reverse bound `μ ≤ kSO3 + 2`. The bridge theorem itself lives in
+file ships the *substrate*: the KMM Theorem 1 reconstruction, the connecting
+lemmas, and the reverse bound `μ ≤ kSO3 + 2`. The bridge theorem itself lives in
 `BridgeStructural.lean`, proved **structurally** (Phase 6AO Track 3): the
 former `native_decide` core (`bridgeBoxOk`/`bridge_box_core`, a `1664`-tuple
 boxed sweep) was eliminated 2026-06-09 in favor of the parity/δ-divisibility
@@ -31,7 +30,9 @@ So `kSO3 M = kSO3 (reconstruct x y k)`, a function of the integer data
 scaled by `√2⁴`), and `μ ≤ 3` is exactly `√2 ∣ |x|²` (`= gde(|x|²) ≥ 1`, since
 `μ = denExp(|M₀₀|²) = 4 − gde(|x|²)`). `BridgeStructural.lean` shows these two
 conditions alone force `denExp (blochEntry (reconstruct x y k) i j) ≤ 3` for all
-nine Bloch entries — no coordinate bound or enumeration needed.
+nine Bloch entries — no coordinate bound or enumeration needed. [Phase 6AO
+2026-06-10: the coordinate box (`coordBox`/`zomBox`/`mem_zomBox`) was removed
+entirely once the structural Clifford base eliminated its last consumer.]
 
 ## References
 
@@ -94,14 +95,6 @@ column-0 `ℤ[ω]` numerators `x, y` (cleared at exponent `2`) and the global ph
 def reconstruct (x y : ZOmega) (k : ℕ) : Mat2 :=
   !![mk x 2, -(ωS ^ k * conj (mk y 2)); mk y 2, ωS ^ k * conj (mk x 2)]
 
-/-- The explicit coordinate range `[-2, 2]` for each `ℤ[ω]` component (the
-`(|x|²).d ≤ 4` sum-of-squares bound forces `|coord| ≤ 2`). -/
-def coordBox : List ℤ := [-2, -1, 0, 1, 2]
-
-/-- The explicit `5⁴ = 625`-element `ℤ[ω]` box `[-2, 2]⁴`. -/
-def zomBox : List ZOmega :=
-  coordBox.flatMap (fun a => coordBox.flatMap (fun b =>
-    coordBox.flatMap (fun c => coordBox.map (fun d => ⟨a, b, c, d⟩))))
 
 /-! ## Connecting lemmas: from the abstract `M` to the box -/
 
@@ -133,22 +126,6 @@ theorem reconstruct_mod (x y : ZOmega) (k : ℕ) :
     reconstruct x y k = reconstruct x y (k % 8) := by
   unfold reconstruct; rw [omegaS_pow_mod k]
 
-/-- **Coordinate bound ⟹ box membership**: `(|x|²).d = a²+b²+c²+d² ≤ 4` forces every
-`ℤ[ω]` coordinate into `[-2,2]`, hence `x ∈ zomBox`. -/
-theorem mem_zomBox {x : ZOmega} (h : (ZOmega.normSq x).d ≤ 4) : x ∈ zomBox := by
-  rw [ZOmega.normSq_d] at h
-  have hmem : ∀ t : ℤ, t ^ 2 ≤ 4 → t ∈ coordBox := by
-    intro t ht
-    simp only [coordBox, List.mem_cons, List.not_mem_nil, or_false]
-    have h1 : -2 ≤ t := by nlinarith [sq_nonneg (t + 2)]
-    have h2 : t ≤ 2 := by nlinarith [sq_nonneg (t - 2)]
-    omega
-  have ha : x.a ∈ coordBox := hmem x.a (by nlinarith [sq_nonneg x.b, sq_nonneg x.c, sq_nonneg x.d])
-  have hb : x.b ∈ coordBox := hmem x.b (by nlinarith [sq_nonneg x.a, sq_nonneg x.c, sq_nonneg x.d])
-  have hc : x.c ∈ coordBox := hmem x.c (by nlinarith [sq_nonneg x.a, sq_nonneg x.b, sq_nonneg x.d])
-  have hd : x.d ∈ coordBox := hmem x.d (by nlinarith [sq_nonneg x.a, sq_nonneg x.b, sq_nonneg x.c])
-  simp only [zomBox, List.mem_flatMap, List.mem_map]
-  exact ⟨x.a, ha, x.b, hb, x.c, hc, x.d, hd, rfl⟩
 
 /-! ## The reverse bound `μ ≤ kSO3 + 2` (for the Clifford base) -/
 

@@ -1412,10 +1412,14 @@ import SKEFTHawking.FKLW.RossSelinger.KMMForm
 import SKEFTHawking.FKLW.RossSelinger.KMMBridge
 -- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — the Clifford base + CAPSTONE. cliffordBase:
 -- realizable M, kSO3 M = 0 (Clifford up to phase) ⟹ ∃ ≤6-gate Clifford word, via the μ≤kSO3+2
--- reverse bound (kSO3=0⟹μ≤2≤3, KMMBridge) + 192-entry (x,y,k)→word lookup (cliffordTable) +
--- cliffordBase_box_core native_decide re-verification. The SECOND of MACoverage's two hypotheses
--- discharged ⟹ nonempty_kmmReduction : Nonempty KMMReduction UNCONDITIONAL (no axiom; Inv #15) —
--- the exact-synthesis substrate closing Phase 6x orphan #2 at the deterministic-branch level.
+-- reverse bound (kSO3=0⟹μ≤2≤3, KMMBridge) + 192-entry (x,y,k)→word lookup (cliffordTable).
+-- [Phase 6AO Track 3 inc 4c (2026-06-10): cliffordBase_box_core native_decide ELIMINATED —
+-- the kSO3=0 quantization (CliffordBaseStructural+ZOmegaTorsion) pins every key to a torsion
+-- class ((0,2ωᵇ), (√2ωᵃ,√2ωᵇ), (2ωᵃ,0)); per-class kernel decide +kernel coverage checks
+-- cliffordCover_{y2,mid_0..7,x2} (640 tuples, 64/chunk) verify the table words. cliffordBase
+-- now KERNEL-PURE.] The SECOND of MACoverage's two hypotheses discharged ⟹
+-- nonempty_kmmReduction : Nonempty KMMReduction — the exact-synthesis substrate closing
+-- Phase 6x orphan #2 at the deterministic-branch level.
 import SKEFTHawking.FKLW.RossSelinger.CliffordBase
 -- Phase 6x Tier-2 Item G (2026-05-29) — the ℤ[ω] → ℂ ring embedding. ZOmega.toComplex : ZOmega →+* ℂ
 -- (evaluation at ω = e^{iπ/4} = Complex.exp(π/4·I)), ⟨a,b,c,d⟩ ↦ a·ω³+b·ω²+c·ω+d; map_mul via the
