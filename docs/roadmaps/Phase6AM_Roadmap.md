@@ -846,6 +846,64 @@ ship incrementally. Construction reference: `Lit-Search/Phase-6AO/KMM-1212.0822-
   box sweep hits the elaborator pre-eval wall (~108–112 s, ≈100–150k whnf steps) — kernel decide CANNOT
   host these checks; the structural route was the only path. Full lib+ExtractDeps green (9239 jobs).
   Remaining sites: `maStep_exists_core` → `cliffordBase_box_core` → `kmm_lemma3_alg2`.
+- **Track 3 site 2/4 ✅ — `maStep_exists_core` native_decide ELIMINATED (`83e7fd13` inc 3).**
+  `MAStepStructural.lean`: the Giles–Selinger §6 PARITY ARGUMENT replaces the ~809k-tuple
+  `validCol t`³ sweep. The hypotheses contribute exactly 4 mod-2 congruence families (F1 column
+  q-sum even; F2 selfDot-√2-part; F3 dot-rational; F4 dot-√2-part); distinct nonzero even-weight
+  parity vectors have 𝔽₂-inner-product 1, so all odd columns share ONE pattern, and the matching
+  syllable (T={1,2}, HT={2,3}, SHT={1,3}) kills every column. `killCond_engine` = ONE 12-variable
+  mod-2 lemma (witness pattern + F2(W) + target F1/F3/F4 ⟹ all 3 kill conditions; the self case
+  reuses it since F3(W,W) derives from F1(W) + t²≡t and F4(W,W) from commutativity).
+  `someKills_of_orthogonal` holds for ANY even selfDot t — `ma_step_exists`/`ma_step_exists_u`
+  DROP the former `kSO3 ≤ 3` hypothesis (strictly stronger: reducing syllable for EVERY
+  kSO3 ≥ 1). Box machinery (validCol/realBoxList/intBox + membership chain) deleted from
+  MAStepExists + KMMCompleteness. All kernel-pure `{propext, Classical.choice, Quot.sound}`.
+  9240 green. 🔑 lessons: .a-coordinate extractions carry BOTH product orientations as separate
+  omega-atoms — bridge with `mul_comm` haves; matrix-literal entries reduce definitionally under
+  `show` (no simp set needed for `stripRow` row identities); permuted-order engine application
+  bridges by bare `omega` (same atoms, reordered sums).
+- **Track 3 site 3/4 ✅ — `cliffordBase_box_core` native_decide ELIMINATED
+  (`996be365` inc 4a + `36a87704` inc 4b + `f6769a41` inc 4c).**
+  4a `ZOmegaTorsion.lean`: |z|²=1 ⟹ z=ωʲ, |z|²=2-lit ⟹ z=√2ωʲ, |z|²=4-lit ⟹ z=2ωʲ
+  (aux-decomposed range bashes closing by decide on the CLOSED substituted normSq equation;
+  mod-4 square parity splits all-even/all-odd) + Galois positivity 2(|z|²).c² ≤ (|z|²).d².
+  4b `CliffordBaseStructural.lean`: blochEntry_reconstruct_zz (R₂₂ = mk (2(|x|²−|y|²)) 6,
+  k-free; raw simp-NF level is 18 ⟹ mk_eq_mk_iff + √2¹⁸-lc), kSO3=0 ⟹ 4∣|x|²−|y|²,
+  normSq_quantized trichotomy (x=0∧|y|²=4)∨(2,2)∨(|x|²=4∧y=0) via Galois on both coords.
+  4c: per-class kernel `decide +kernel` coverage checks cliffordCover_{y2,x2,mid_0..7+
+  dispatcher} (640 torsion tuples; 64/chunk — a single 512-tuple decide busts the ~200k
+  heartbeat wall; 3-level bounded-∀ Decidable does NOT synthesize — chunk over literal
+  exponents + omega-rcases dispatcher) verify the 192-entry cliffordTable; cliffordBase +
+  cliffordBase_u rewired (quantization → torsion class → coverage); cliffordBaseBoxOk/
+  cliffordBase_box_core DELETED; KMMBridge coordBox/zomBox/mem_zomBox deleted (last box
+  remnants); reconstruct_box_data(_unitary) coordinate-bound conjuncts dropped
+  (strengthening discipline). **cliffordBase / cliffordBase_u kernel-pure**;
+  `nonempty_kmmReduction` now carries ONLY kmm_lemma3_alg2's native axiom — site 4/4 is
+  the last. 9242 green. CliffordBase one-time compile ≈ 280 s (the 10 kernel decides).
+- **🏆 Track 3 site 4/4 ✅ — `kmm_lemma3_alg2` native_decide ELIMINATED (`8375e175` inc a +
+  `e774007c` inc b + `85a64ad7` inc c) ⟹ TRACK 3 COMPLETE: the entire KMM exact-synthesis
+  arc is native_decide-FREE.** The T-PAIRING CALCULUS (`KMMLemma3Structural.lean`): with
+  `B(x,z) = Σxᵢzᵢ` and `Tₖ = B(x,ωᵏy)`, the statement depends on residues only through
+  `(P(x),Q(x),P(y),Q(y),T₀..T₃)` — update formulas `P(x+z) = P+P+2B`,
+  `Q(x+z) = Q+Q+(B(x,ωz)−B(x,ω³z))`, P/Q ω-invariance, `Tₖ₊₄ = −Tₖ` (all `ring` over
+  destructured `Coord4`). REACHABILITY: `x·ȳ = ⟨T₃,T₂,T₁,T₀⟩` exactly ⟹ norm
+  multiplicativity descends to `P·P'+2Q·Q' = ΣTᵢ²` and `P·Q'+Q·P' = T₃T₂+T₂T₁+T₁T₀−T₃T₀`
+  (numerically decisive: free-T master FAILS 491k/1.18M; WITH the constraints 0/36864).
+  TWO kernel master sweeps `kmm_master_a/b` (qY = −qX substituted; pY-branches −pX / 4−pX;
+  262k tuples each, ONE `decide +kernel` decl each, ~80 s — no chunking needed).
+  `KMMLemma3Alg2.lean` re-proves the EXACT original statement (consumers untouched modulo
+  one import line in `KMMLemma3Column`): `P+P' ∈ {0,4}` dichotomy → massage to
+  (P,Q,T)-data → master instance → transport via `gde_add_eq_of` + `Bform` index folds,
+  per-k `congrArg₂ gdePQ` + `linear_combination` closers. The ~16.7M-pair `native_decide`
+  DELETED from `KMMLemma3.lean`. Kernel-pure; 9244 green; axiom_closure PASS;
+  **native_decide-tainted declarations 593 → 546** (the whole KMM completeness/synthesis
+  chain un-tainted). Counts refreshed: theorems=12130, modules=929, sorry=0.
+  🔑 lessons: per-decl 262k ZMod-8-arith kernel sweeps PASS comfortably (~100× lighter per
+  tuple than kSO3-evals); `fin_cases` emits mk-form Fin literals (rw-patterns with
+  `(1 : Fin 4).val` DON'T match — normalize via `Nat.reduceAdd` simproc + defeq-`show`s or
+  avoid by `congrArg₂`+lc); slim files need explicit Mathlib.Tactic.{Ring,LinearCombination,
+  NormNum,FinCases} imports; iterate heavy-decide files by splitting proof-iteration into a
+  separate file (masters cache in olean).
 - **Track 1(b) brick ✅ — `GaussInt2 = ℤ[√2][i]` is an integral domain (`b5123126`).**
   `lean/SKEFTHawking/FKLW/RossSelinger/Zsqrt2GaussInt2Domain.lean`: `zsqrt2_sq_add_sq_eq_zero`
   (`a²+b²=0 ⟺ a=b=0` over ℤ[√2] — formal reality at the integer-coordinate level via `nlinarith`, **no

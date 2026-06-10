@@ -22,9 +22,12 @@ coordinates `mod 8` (verified — only the zero residue is ambiguous, and it has
 `|x|² = P(x) + √2·Q(x)` with `P, Q` the two quadratic forms below; `gde(|·|²)` is
 then read off `(v₂(P), v₂(Q))` via KMM Prop 1. Running Algorithm 2 over all
 residue pairs satisfying the necessary congruences `P(x)+P(y) ≡ 0 ∨ 4` and
-`Q(x)+Q(y) ≡ 0 (mod 8)` and `gde = gde = j` returns **true** — this file
-reproduces that as a `native_decide` (`kmm_lemma3_alg2`), the faithful Lean form
-of KMM's proof.
+`Q(x)+Q(y) ≡ 0 (mod 8)` and `gde = gde = j` returns **true** — this file ships
+the residue vocabulary (`Coord4`, `Pform`, `Qform`, `mulOmega`, `vtwo`, `gde`);
+the theorem itself (`kmm_lemma3_alg2`) lives in `KMMLemma3Alg2.lean`, proved
+**structurally** (Phase 6AO Track 3, 2026-06-10): the former ~16.7M-pair
+`native_decide` was eliminated via the T-pairing calculus + the two 262k-tuple
+kernel master sweeps of `KMMLemma3Structural.lean`.
 
 **The `P+P ∈ {0,4}` disjunction covers the whole reduction regime `sde(|z|²) ≥ 4`.**
 The cleared column satisfies `|x|²+|y|² = 2^m` with `m = s_c` the column clearing
@@ -44,12 +47,9 @@ from the DR's loose `mulOmega` formula — the oracle pins the correct one).
 
 ## Pipeline invariants
 
-- **#10** (no `maxHeartbeats`): respected. `native_decide` is the project-standard
-  compiler-trust path for finite kernel checks and is the faithful image of KMM's
-  Algorithm 2 ("we implemented Algorithm 2 and the result is true"); it carries
-  the `Lean.ofReduceBool` axiom (tracked by `validate.py --check
-  axiom_closure_allowlist`), exactly the trust of running KMM's published C++.
-- **#15** (no new project-local axioms): respected.
+- **#10** (no `maxHeartbeats`): respected.
+- **#15** (no new project-local axioms): respected. No `native_decide` —
+  kernel-pure `{propext, Classical.choice, Quot.sound}`.
 
 -/
 
