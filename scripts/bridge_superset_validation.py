@@ -1,4 +1,11 @@
-"""Validate the `bridge` native_decide BEFORE formalizing it.
+"""Validate the `bridge` finite box check (HISTORICAL — native_decide since eliminated).
+
+[2026-06-10, Phase 6AO Track 3] The Lean side no longer uses this box at all:
+`bridgeBoxOk`/`bridge_box_core` (native_decide) were replaced by the fully
+structural proof in `lean/SKEFTHawking/FKLW/RossSelinger/BridgeStructural.lean`
+(per-entry √2³-divisibility of the Bloch numerators via the BridgeParity
+calculus — no enumeration, kernel-pure). This script remains as the original
+numerical validation of the bridge CLAIM itself and of the 1664-orbit census.
 
 bridge: realizable M, μ(M)=sde(|M00|²) ≤ 3  ⟹  kSO3 M ≤ 3.
 

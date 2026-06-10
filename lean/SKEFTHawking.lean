@@ -1376,14 +1376,13 @@ import SKEFTHawking.FKLW.RossSelinger.KMMDet
 -- ∀-over-realizable-M discharges (μ≤3⟹kSO3≤3 bridge, kSO3=0⟹Clifford base) into bounded
 -- native_decide enumerations over a (x,y,k,m) integer tuple.
 import SKEFTHawking.FKLW.RossSelinger.KMMForm
--- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — the μ≤3⟹kSO3≤3 bridge (Giles-Selinger
--- Cor 7.11), the FIRST of MACoverage's two remaining hypotheses, fully DISCHARGED. reconstruct
--- (KMM Thm 1 form from column-0 numerators x,y + phase k) + bridgeBoxOk (the finite check over
--- the [-2,2]⁴ ℤ[ω] box, filtered to |x|²+|y|²=⟨0,0,0,4⟩ ∧ √2∣|x|² = exactly the 1664 μ≤3
--- matrices) + bridge_box_core (native_decide; max kSO3=3, 0 failures) + connecting lemmas
--- (eq_mk_of_sqrt2_pow_mul: √2-unit clearing; M=reconstruct via realizable_col1; mem_zomBox;
--- ωS^8=1 periodicity) ⟹ bridge : realizable M → μ(M)≤3 → kSO3 M ≤ 3. Python-validated
--- (scripts/bridge_superset_validation.py): the √2∣|x|² filter is the exact μ≤3 condition.
+-- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — KMM reconstruction substrate for the
+-- μ≤3⟹kSO3≤3 bridge. reconstruct (KMM Thm 1 form from column-0 numerators x,y + phase k) +
+-- coordBox/zomBox (the [-2,2]⁴ ℤ[ω] box, still consumed by CliffordBase) + connecting lemmas
+-- (eq_mk_of_sqrt2_pow_mul: √2-unit clearing; mem_zomBox; ωS^8=1 periodicity) + the μ≤kSO3+2
+-- reverse bound. [Phase 6AO 2026-06-10: the former bridgeBoxOk/bridge_box_core native_decide
+-- finite check was ELIMINATED — the bridge theorem itself now lives in BridgeStructural,
+-- proved structurally with no box enumeration.]
 import SKEFTHawking.FKLW.RossSelinger.KMMBridge
 -- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — the Clifford base + CAPSTONE. cliffordBase:
 -- realizable M, kSO3 M = 0 (Clifford up to phase) ⟹ ∃ ≤6-gate Clifford word, via the μ≤kSO3+2
@@ -1531,6 +1530,13 @@ import SKEFTHawking.FKLW.RossSelinger.RelNormPrimeCaseInstances
 -- divDelta split; equal-parity squares agree mod √2; the mixed case refuted via the halving
 -- lemma. Plus dvdSqrt2Pow_sub_conj (the −-twin of the KMM-L5 +1 lemma) and ω-unit transport.
 import SKEFTHawking.FKLW.RossSelinger.BridgeParity
+-- Phase 6AO Track 3 inc 2 (2026-06-10) — **BridgeStructural: bridge_box_core ELIMINATED**
+-- (native_decide 596 → 595). The nine per-entry denExp_bloch_{xx..zz} ≤ 3 bounds for
+-- reconstruct x y k under |x|²+|y|² = √2⁴ ∧ √2 ∣ |x|² (each entry's cleared ℤ[ω] numerator
+-- carries √2³ via the BridgeParity calculus; denExp_mk_le_three workhorse; per-declaration
+-- budgets per Inv #10). Assembled: kSO3_reconstruct_le_three (∀ x y k — NO box, NO finite
+-- check) + the moved structural `bridge` (μ ≤ 3 ⟹ kSO3 ≤ 3, Giles–Selinger Cor 7.11).
+import SKEFTHawking.FKLW.RossSelinger.BridgeStructural
 -- Phase 6x Tier-2 Item I (2026-05-30) — compile_correct approximation helpers:
 -- linftyOpNorm_fin_two_le (entrywise ≤δ ⟹ ℓ∞-operator-norm ≤ 2δ for 2×2) + su2_entry_structure
 -- (U∈SU(2) ⟹ U=[[a,−b̄],[b,ā]]). Propagate the grid first-column approximation to ‖·‖≤ε.

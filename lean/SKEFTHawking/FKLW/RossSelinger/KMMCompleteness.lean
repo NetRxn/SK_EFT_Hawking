@@ -38,6 +38,7 @@ import SKEFTHawking.FKLW.RossSelinger.KMMDet
 import SKEFTHawking.FKLW.RossSelinger.UnitaryClosure
 import SKEFTHawking.FKLW.RossSelinger.MuDecrease
 import SKEFTHawking.FKLW.RossSelinger.GridSynth
+import SKEFTHawking.FKLW.RossSelinger.BridgeStructural
 
 set_option autoImplicit false
 
@@ -366,17 +367,12 @@ theorem muMeasure_le_kSO3_add_two_u {M : Mat2} (hu : IsUnitaryT M) {kd : ℕ}
     _ ≤ kSO3 M + 2 := by have := denExp_blochEntry_le_kSO3 M 2 2; omega
 
 /-- **The `μ → kSO3` bridge, realizability-free** (was `bridge`): `μ ≤ 3 ⟹ kSO3 ≤ 3` from
-`IsUnitaryT` + `det = ωᵏ`, via `reconstruct_box_data_unitary` + `bridge_box_core`. -/
+`IsUnitaryT` + `det = ωᵏ`, via `reconstruct_box_data_unitary` + the structural
+`kSO3_reconstruct_le_three'` (`BridgeStructural.lean` — no finite check). -/
 theorem bridge_u {M : Mat2} (hu : IsUnitaryT M) {kd : ℕ} (hdet : Matrix.det M = ωS ^ kd)
     (hμ : muMeasure M ≤ 3) : kSO3 M ≤ 3 := by
-  obtain ⟨x, y, k, hMrec, hsum, hdvd, hxd, hyd⟩ := reconstruct_box_data_unitary hu hdet hμ
-  have hk8 : k % 8 < 8 := Nat.mod_lt _ (by norm_num)
-  have hbox : kSO3 (reconstruct x y (k % 8)) ≤ 3 := by
-    have h1 := List.all_eq_true.mp bridge_box_core x (mem_zomBox hxd)
-    have h2 := List.all_eq_true.mp h1 y (mem_zomBox hyd)
-    rw [if_pos ⟨hsum, hdvd⟩] at h2
-    exact of_decide_eq_true (List.all_eq_true.mp h2 (k % 8) (List.mem_range.mpr hk8))
-  rw [hMrec, reconstruct_mod]; exact hbox
+  obtain ⟨x, y, k, hMrec, hsum, hdvd, -, -⟩ := reconstruct_box_data_unitary hu hdet hμ
+  rw [hMrec]; exact kSO3_reconstruct_le_three' hsum hdvd k
 
 /-- **The Clifford base, realizability-free** (was `cliffordBase`): a unitary `M` with
 `det = ωᵏ` and `kSO3 M = 0` is realizable, via `reconstruct_box_data_unitary` +

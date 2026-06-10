@@ -32,6 +32,7 @@ that `interp (cliffordWordOf x y k) = reconstruct x y k` and the word length is 
 -/
 
 import SKEFTHawking.FKLW.RossSelinger.KMMBridge
+import SKEFTHawking.FKLW.RossSelinger.BridgeStructural
 import SKEFTHawking.FKLW.RossSelinger.MACoverage
 
 set_option autoImplicit false
@@ -313,7 +314,7 @@ theorem cliffordBase (M : Mat2) (hM : IsCliffordTRealizable M) (hk0 : kSO3 M = 0
 
 /-- **`Nonempty KMMReduction`, UNCONDITIONAL** — the capstone of the MA-coverage arc.
 Both hypotheses of `nonempty_kmmReduction_of_clifford_bridge` are now theorems:
-`cliffordBase` (this file) and `bridge` (`KMMBridge`). No axiom, no open hypothesis
+`cliffordBase` (this file) and `bridge` (`BridgeStructural`, fully structural). No axiom, no open hypothesis
 (Inv #15). This is the exact-synthesis substrate that closes Phase 6x orphan #2 at
 the deterministic-branch level (feeds Item G). -/
 theorem nonempty_kmmReduction : Nonempty KMMReduction :=
