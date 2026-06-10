@@ -46,9 +46,14 @@ compilation primitive for the universal gate set; (iii)~the
 APM-LDPC asymptotically-optimal code substrate together with a hashing-
 bound Shannon-capacity sub-result; (iv)~the Kyoto--Hiroshima W-state
 single-shot projective measurement decomposed in $\mathbb{Q}(\zeta_N)$
-cyclotomic coordinates. Together, these results form the first
-end-to-end kernel-verified ``substrate'' (code $\to$ measurement
-$\to$ compiler $\to$ universal logic) for the FT-QC frontier.
+cyclotomic coordinates. Together, these results form, to our
+knowledge, the first end-to-end kernel-verified ``substrate'' (code
+$\to$ measurement $\to$ compiler $\to$ universal logic) for the FT-QC
+frontier. Formally verified circuit-level \emph{optimizers} exist
+(VOQC/SQIR in Coq); what is new here is not circuit-equivalence
+verification but the end-to-end kernel-verified chain from QEC
+resource overhead through logical measurement and approximation
+compilation to universal logic.
 
 The substrate is closed under standard Lean kernel axioms only
 ($[\mathrm{propext}, \mathrm{Classical.choice}, \mathrm{Quot.sound}]$);
@@ -77,9 +82,40 @@ Hiroshima 2025-09 + Wave~6v.6 lift). Each question has a published
 answer; this bundle formalises all four answers as a unified,
 kernel-verified substrate.
 
+\paragraph{Prior art: formally verified quantum computation.}
+Formal verification of quantum software is an active field, and the
+positioning of this bundle against it must be precise. VOQC/SQIR in
+Coq~\cite{Hietala2020VOQC} verifies \emph{equivalence-preserving}
+optimizations of quantum circuits --- a certified compiler pass
+guaranteeing that the optimized circuit denotes the same unitary as
+its input. Qbricks~\cite{Chareton2021Qbricks} provides a deductive
+(Why3-based) verification framework for parametrized
+circuit-building quantum programs, with certified case studies
+including quantum phase estimation and Grover search. The broader
+verified-quantum-programs landscape --- quantum Hoare logics and
+tool support across Coq, Isabelle, Why3, and dedicated systems ---
+is surveyed by Lewis, Soudjani, and Zuliani~\cite{Lewis2021VerifQC}.
+These efforts certify that a \emph{given circuit or program computes
+what it should}. None of them targets the fault-tolerance substrate
+itself: quantitative QEC resource-overhead bounds, fault-tolerant
+logical-measurement protocols, \emph{approximation} compilation
+(bounded-error synthesis toward a target unitary, as opposed to
+equivalence-preserving rewriting), and density/universality of the
+compiled gate set. D6's contribution --- to our knowledge the first
+of its kind --- is that chain, kernel-checked end to end in Lean~4:
+the gauging-of-logical-operators overhead bound
+(\textsection\ref{sec:gaugingQEC}), the asymptotically-optimal-code
+substrate (\textsection\ref{sec:apmldpc}), the single-shot W-state
+measurement decomposition (\textsection\ref{sec:wstate}), and the
+consumed D8 Solovay--Kitaev approximation-compilation primitive
+(\textsection\ref{sec:sk}), composed into a single substrate.
+The two genres are complementary: a verified circuit optimizer
+certifies the implementation of a circuit the substrate-level
+theory has already costed and approved.
+
 \paragraph{Bundle architecture.} D6 sits in the project's 15-bundle
 publication architecture (per the program's internal paper-strategy
-document at \verb|docs/PAPER_STRATEGY.md|) as a Tier~1 deep-paper
+document) as a Tier~1 deep-paper
 sibling to D4
 (``Topological Quantum Computation --- First Machine-Verified
 Foundations''). D4 retains its Fibonacci-anyon / topological-foundations
@@ -108,8 +144,6 @@ the verified existence-and-bounds guarantee (a compilation exists with bounded
 error and word length), and D6 supplies the fault-tolerant-substrate
 application. The Phase~6t Fibonacci headline that this section previously held
 as a bundle-orphan stub is now the $\mathrm{SU}(2)$ origin instance within D8.
-See \texttt{docs/PAPER\_STRATEGY.md}~\textsection2.2 (D8) and
-\texttt{docs/PAPER\_DRAFT\_MAPPING.md}.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{Williamson--Yoder gauging-QEC overhead bound
@@ -191,7 +225,7 @@ machinery formalises in \verb|GaugeEmergence.lean| and
 substrate-level overhead bound into the full categorical-gauging
 framework. The current ship at substrate level is the bare scaling
 result; the full algebraic lift is reserved for a future wave
-following the bundle-lift protocol of \verb|docs/BUNDLE_LIFT_PROCEDURE.md|.
+following the project's canonical bundle-lift protocol.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{APM-LDPC code substrate + hashing-bound LDP sub-wave
@@ -835,8 +869,8 @@ computational level to the next) with probability $q$ --- has diamond distance t
 equal to the leakage probability $q$ (\verb|diamondDist_shiftLeakage_eq|), the population leaving any
 fixed level. Kernel-only; \emph{zero} new project-local axioms.
 
-A companion result (\verb|BellNegativity.lean|) constructs the first \emph{entanglement measure} on an
-actual two-qubit density matrix. The partial transpose on the second qubit
+A companion result (\verb|BellNegativity.lean|) constructs what is, to our knowledge, the first
+kernel-verified \emph{entanglement measure} evaluated on an actual two-qubit density matrix. The partial transpose on the second qubit
 $(T_B\rho)_{(a,b),(c,d)}=\rho_{(a,d),(c,b)}$ acts on the Bell projectors (the same $B_i$ blocks) as
 $T_B(B_i)=B_i-\tfrac12 y_i\sum_j y_j B_j$, where $y=(-1,1,-1,1)$ is the $\sigma_Y\otimes\sigma_Y$ parity
 of the four Bell states (\verb|pt2_bellBlock|). Hence a Bell-diagonal state $\rho(p)=\sum_i p_i P_i$
@@ -1003,6 +1037,27 @@ four headline results remains the final pre-submission gate.
 
 %% ════════════════════════════════════════════════════════════════════
 \begin{thebibliography}{99}
+
+\bibitem{Hietala2020VOQC}
+K.~Hietala, R.~Rand, S.-H.~Hung, X.~Wu, and M.~Hicks,
+``A verified optimizer for quantum circuits,''
+Proc.\ ACM Program.\ Lang.\ \textbf{5} (POPL), Article 37 (2021)
+[arXiv:1912.02250], doi:10.1145/3434318.
+
+\bibitem{Chareton2021Qbricks}
+C.~Chareton, S.~Bardin, F.~Bobot, V.~Perrelle, and B.~Valiron,
+``An automated deductive verification framework for circuit-building
+quantum programs,''
+in \emph{Programming Languages and Systems (ESOP 2021)},
+Lecture Notes in Computer Science \textbf{12648}, 148--177
+(Springer, 2021) [arXiv:2003.05841], doi:10.1007/978-3-030-72019-3\_6.
+
+\bibitem{Lewis2021VerifQC}
+M.~Lewis, S.~Soudjani, and P.~Zuliani,
+``Formal verification of quantum programs: theory, tools, and
+challenges,''
+ACM Trans.\ Quantum Comput.\ \textbf{5}, 1 (2024)
+[arXiv:2110.01320], doi:10.1145/3624483.
 
 \bibitem{WilliamsonYoder2026GaugingLogicalOperators}
 D.~J.~Williamson and T.~J.~Yoder,

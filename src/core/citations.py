@@ -6233,26 +6233,43 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Hietala2020VOQC.abstract.txt',
-        'used_in': ['papers/D8/paper_draft.tex'],
+        'used_in': ['papers/D8/paper_draft.tex', 'papers/D6/paper_draft.tex'],
         'provides': [],
-        'notes': 'VOQC/SQIR (Coq) — prior verified-QC compiler work; cited in D8 §1 for prior-art positioning (exact circuit optimization vs D8 quantitative-approximation theory). arXiv ID verified 2026-05-31.',
+        'notes': 'VOQC/SQIR (Coq) — prior verified-QC compiler work; cited in D8 §1 for prior-art positioning (exact circuit optimization vs D8 quantitative-approximation theory) and in D6 §1 (equivalence-preserving optimization vs D6 FT-substrate chain). arXiv ID verified 2026-05-31.',
+    },
+
+    'Chareton2021Qbricks': {
+        'authors': 'Chareton, C. and Bardin, S. and Bobot, F. and Perrelle, V. and Valiron, B.',
+        'title': 'An Automated Deductive Verification Framework for Circuit-building Quantum Programs',
+        'journal': 'Programming Languages and Systems (ESOP 2021), Lecture Notes in Computer Science',
+        'volume': 12648,
+        'page': '148-177',
+        'year': 2021,
+        'doi': '10.1007/978-3-030-72019-3_6',
+        'arxiv': '2003.05841',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Chareton2021Qbricks.pdf',
+        'used_in': ['papers/D6/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Qbricks — Why3-based deductive verification of parametrized circuit-building quantum programs (QPE, Grover case studies); cited in D6 §1 prior-art positioning. Title/authors/venue Crossref-verified against DOI 2026-06-10 (published ESOP 2021 chapter title carries "An Automated ..."; the latest arXiv version title drops "Automated").',
     },
 
     'Lewis2021VerifQC': {
         'authors': 'Lewis, M. and Soudjani, S. and Zuliani, P.',
-        'title': 'Formal verification of quantum programs: theory, tools and challenges',
-        'journal': 'arXiv preprint (later ACM Trans. Quantum Comput.)',
-        'volume': None,
-        'page': None,
-        'year': 2021,
-        'doi': None,
+        'title': 'Formal Verification of Quantum Programs: Theory, Tools, and Challenges',
+        'journal': 'ACM Trans. Quantum Comput.',
+        'volume': 5,
+        'page': 'Article 1, 1-35',
+        'year': 2024,
+        'doi': '10.1145/3624483',
         'arxiv': '2110.01320',
-        'doi_verified': None,
+        'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Lewis2021VerifQC.abstract.txt',
-        'used_in': ['papers/D8/paper_draft.tex'],
+        'used_in': ['papers/D8/paper_draft.tex', 'papers/D6/paper_draft.tex'],
         'provides': [],
-        'notes': 'Survey of the verified-quantum-programs landscape (NOT Qbricks — a Stage-13 reviewer mis-identified this ID). Cited in D8 §1 as the umbrella prior-art reference. arXiv ID verified 2026-05-31.',
+        'notes': 'Survey of the verified-quantum-programs landscape (NOT Qbricks — a Stage-13 reviewer mis-identified this ID). Cited in D8 §1 as the umbrella prior-art reference and in D6 §1. arXiv ID verified 2026-05-31; bibkey year retains the 2021 arXiv submission, published-version metadata (ACM TQC 5(1), Article 1, March 2024, DOI 10.1145/3624483) Crossref-verified 2026-06-10.',
     },
 
     'RossSelinger2016': {
@@ -8799,11 +8816,17 @@ CITATION_REGISTRY = {
                  'virial radius and is ruled out at >5 sigma in cores/outskirts; '
                  'the abstract notes the exclusion weakens when weak-lensing/X-ray '
                  'systematics are included. Supports ONLY the cluster-mass-profile '
-                 'leg of EGDE1 (verlinde_2017_no_go_via_cmb_bullet_cluster_'
-                 'halenka_miller); the CMB and Bullet-cluster legs of that Lean '
-                 'label trace to Phase-6m dossier structural critiques (no scalar '
-                 'perturbation theory; apparent-DM-tracks-baryons vs lensing/X-ray '
-                 'offset, R5 B.2.1 citing Pardo 2017), not to this paper. arXiv v1 '
+                 'leg of EGDE1 (Lean theorem verlinde_2017_no_go_via_cluster_'
+                 'mass_densities_halenka_miller, renamed 2026-06-10 from '
+                 'verlinde_2017_no_go_via_cmb_bullet_cluster_halenka_miller; '
+                 'constant halenka_miller_cluster_nominal_sigma encodes the '
+                 'nominal-assumptions-only caveat, compared against the sigma-'
+                 'scale five_sigma_threshold rather than the log-Bayes '
+                 'jeffreys_decisive_threshold); the CMB and Bullet-cluster '
+                 'critiques are separate structural legs from the Phase-6m '
+                 'dossiers (no scalar perturbation theory; apparent-DM-tracks-'
+                 'baryons vs lensing/X-ray offset, R5 B.2.1 citing Pardo 2017), '
+                 'not from this paper. arXiv v1 '
                  '2018-07-04; published PRD 102, 084007 (2020-10-05). Metadata '
                  'verified 2026-06-10 via arXiv abs page + Crossref API (DOI '
                  'resolves to matching title/authors/volume/article).',
