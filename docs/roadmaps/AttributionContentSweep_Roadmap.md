@@ -33,6 +33,7 @@ Per bundle, two passes in one visit (fresh-context agent each):
 ## Exit criteria
 
 - Every touched bundle has a post-2026-06-10 fresh-context Stage-13 review recorded in `bundle_metadata.json` (heatmap GREEN under the new recorded-review semantics, commit `3e0e8252`).
+- Every bundle visit also applies the standard disclosure block (correct variant per the register-derived rule) per `docs/DISCLOSURE_TEXT.md`.
 - Every anchor-listed (bibkey, claim) pair has a dated verification verdict.
 - `validate.py` 30/30 + CHECK 24/25/26 green; suite green.
 - QI item filed if any new systematic failure class emerges.
