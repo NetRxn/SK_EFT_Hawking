@@ -669,13 +669,25 @@ native_decide held at 596, confirming Track-3 independence):**
     280) + **`column_lemma_bounded`: every unit ℤ[ω][1/√2] column is the first column of an exact 2-qubit
     Clifford+T word of length ≤ 280·colDenExp + 9** (linear in denominator exponent = O(log 1/ε)) +
     `column_lemma_unconditional`. **Circuit-C exact synthesis COMPLETE.**
-  - **NEXT (the remaining T2 pieces): controlled-C + operator-norm + ∀U headline (~800–1800 LOC).** ⚠ DESIGN
-    CHECKPOINT FIRST (do NOT guess): the KMM W acts on system⊗2-ancillas (dim 8); the n=3 det parity (`⟨ω⁴⟩`
-    achievable) obstructs naive Λ-lifts of Gate2 words exactly as at n=2 (e.g. `Λ(I⊗Tᵐ)` has det `ω²ᵐ ∉ ⟨ω⁴⟩`
-    for odd m) — the same unconditional-phase det-balancing pattern should lift, but design the dim-8 gate layer
-    + the controlled-C realization against KMM §2.2–2.3 (+ ref [9] Amy et al.) BEFORE coding. Also settle the
-    headline norm form: full `‖W−Λ(e^{iφ})⊗I‖` vs ancilla-restricted `‖(W−Λ(e^{iφ})⊗I)·(I_sys⊗|00⟩)‖` (inc-8/9's
-    amplitude+leakage budget directly supports the restricted form — verify which form KMM actually prove).
+  - ~~NEXT: controlled-C design checkpoint~~ **✅ RESOLVED + SHIPPED (inc 34–35, 2026-06-10, commits `a3220dfa`
+    `4c03033b`; 9224 green; nd 596).** ar5iv §2.2 fetch settled both questions: (i) **W = controlled-C**, with
+    the action stated on ancilla-INITIALIZED inputs `α|000⟩+β|100⟩ ↦ ≈ α|000⟩+βe^{iφ}|100⟩` and error
+    `|β(e^{iφ}−γ)|² + |β|²‖g‖²` — verbatim the inc-8/9 amplitude+leakage budget; NO full-operator-norm claim
+    (the restricted form is the faithful one). (ii) The det-parity analysis gives the per-gate lift rule —
+    **target-diagonal gates (T/S/Z/id) lift UNCONTROLLED** (their `s=0` block fixes `|00⟩`; sidesteps the
+    det-impossible controlled-T entirely); X→CNOT_s·, Y→S-conj, H→V-conj CNOT (inc-29 conjugator reused),
+    cnots→**Toffoli** (CCZ phase-polynomial word `4sab = s+a+b−Σpairs+triple` mod 8, kernel-verified),
+    ω→T_sys. Shipped: `CliffordTGate3.lean` (Gate3/Mat8, embedAnc transport at no length cost) +
+    `Gate3Control.lean` (ctrl8 algebra; `ctrlLift_word_spec`: EVERY Gate2 word w lifts to ≤30·|w| Gate3 gates
+    with `interp3 = ctrl8 D (interp2 w)`, `FixesE00 D`). 🔑 `decide +kernel` MUST be at top level (nested in a
+    tactic `have` it re-enters the elaborator heartbeat budget).
+  - **NEXT = the headline assembly (~600–1200 LOC):** (a) ctrl8/Gate3 `mulVec` action lemmas on initialized
+    states; (b) the W-action theorem `W(ψ ⊗ |00⟩) = α|0⟩⊗D|00⟩ + β|1⟩⊗(C|00⟩)` = `α|000⟩ + β|1⟩|v⟩`
+    (FixesE00 + the column-lemma first-column); (c) the ℂ-level error bound assembling inc-8/9
+    (`kmm_ancilla_state_full`: amplitude ≤ √2/2^k + leakage ≤ 2√2/2^k ⟹ state distance ≤ 3·√2/2^k-ish);
+    (d) length: `column_lemma_bounded` (≤ 280·colDenExp+9) × 30 + the |v⟩-column's colDenExp = 2k bookkeeping
+    ⟹ word ≤ O(k); (e) the z-rotation headline ∀φ,k bundling error ∧ length; (f) ∀U∈SU(2) via the Euler/
+    z-rotation reduction on the shipped single-qubit substrate. Then T1 (a–d), then T3.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
