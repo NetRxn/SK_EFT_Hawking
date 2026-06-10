@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 John Roehm. All rights reserved.
 
-# Phase 6AO Track 2 (increments 22–24) — Giles–Selinger Lemma 4, the row operation
+# Phase 6AO Track 2 (increments 22–25) — Giles–Selinger Lemma 4, the row operation
 
 The dim-4 column lemma's reduction (`ReductionStep`, `ColumnBaseRealizable`) is the **Giles–Selinger
 column lemma** (arXiv:1212.0506): Lemma 5 (parity) supplies a **matching residue-norm pair**
@@ -42,8 +42,12 @@ mod 2 — verified by `#eval` enumeration:
   * **inc 24 — `exists_mod2_align_of_normSq_c_odd`** (Lemma-4 brick B″) + **`lemma4_1010`**: a `1010`-norm
     pair (`(normSq ·).c` odd; mod-2 residue in the single ω-orbit `{3,6,9,12}`) is mod-2 `ω`-aligned
     (`∃m, 2 ∣ w_p − ωᵐw_q`, the `core_step` hypothesis), so `lemma4_1010` reduces the whole `1010` case of
-    Lemma 4 in a single `H·Tᵐ`. Brick B′ (cross-orbit `0001` step1 → outputs land in `1010`, the mod-4
-    core) then reduces the cross-orbit case to `lemma4_1010`.
+    Lemma 4 in a single `H·Tᵐ`.
+  * **inc 25 — `normSq_c_mod4_all_odd` + `divSqrt2_normSq_c_odd`** (Lemma-4 brick B′, the mod-4 core): the
+    cross-orbit `0001` step1 (`m` with `w_p+ωᵐw_q ≡ 1111 (mod 2)`) makes both `w_p±ωᵐw_q` all-odd; for
+    all-odd `z`, `(normSq z).c ≡ 2 (mod 4)` (clean `ZMod 4` decide), hence `divSqrt2(w_p±ωᵐw_q)` are both
+    `1010` → `lemma4_1010` finishes. (Remaining for the cross-orbit case: the `0001` dichotomy `∃m` step1
+    [mod-2 decide, verified] + the step1 level computation + composition into the uniform Lemma 4.)
 
 ## Pipeline invariants
 
@@ -169,6 +173,67 @@ theorem exists_mod2_align_of_normSq_c_odd {wp wq : ZOmega}
       rw [hw3, show wp - (⟨wq.d, -wq.a, -wq.b, -wq.c⟩ : ZOmega)
             = ⟨wp.a - wq.d, wp.b + wq.a, wp.c + wq.b, wp.d + wq.c⟩ from by ext <;> simp [sub_eq_add_neg]]
       exact hdvd _ (heq _ _ e1) (hadd _ _ e2) (hadd _ _ e3) (hadd _ _ e4)
+
+/-! ### Lemma-4 brick (B′): the cross-orbit `0001` case lands in `1010` (the mod-4 core)
+
+The hard mod-4 core of Lemma 4. For the cross-orbit `0001` case, Giles–Selinger's step1 is the
+`H·Tᵐ` whose `m` makes `w_p + ωᵐw_q ≡ 1111 (mod 2)` (all coordinates odd) — then both
+`w_p ± ωᵐw_q` are all-odd, and the **clean universal lemma** `normSq_c_mod4_all_odd` (below) forces
+both `divSqrt2(w_p±ωᵐw_q)` into the `1010` class, where `lemma4_1010` finishes. The mod-4 mystery
+collapses to: **for all-odd `z`, `(normSq z).c ≡ 2 (mod 4)`** — because `Q = a(b−d) + c(b+d)` with
+`a,b,c,d` odd, and `(b−d)+(b+d) = 2b ≡ 2 (mod 4)` forces exactly one of `b±d` to be `≡2`, giving
+`Q ≡ 2·odd ≡ 2`. (`#eval`-validated 0-failures; the exact-proportionality shortcut was disproven.) -/
+
+/-- An odd integer reduces to `1` or `3` in `ZMod 4`. -/
+theorem zmod4_of_odd {n : ℤ} (hn : n % 2 = 1) : (n : ZMod 4) = 1 ∨ (n : ZMod 4) = 3 := by
+  have h4 : n % 4 = 1 ∨ n % 4 = 3 := by omega
+  rcases h4 with h | h
+  · left;  obtain ⟨k, hk⟩ : ∃ k, n = 4*k + 1 := ⟨n/4, by omega⟩
+    rw [hk]; push_cast; rw [show (4 : ZMod 4) = 0 from by decide]; ring
+  · right; obtain ⟨k, hk⟩ : ∃ k, n = 4*k + 3 := ⟨n/4, by omega⟩
+    rw [hk]; push_cast; rw [show (4 : ZMod 4) = 0 from by decide]; ring
+
+/-- `(n : ZMod 4) = 2` reflects back to `n % 4 = 2`. -/
+theorem eq_two_of_zmod4 {n : ℤ} (h : (n : ZMod 4) = 2) : n % 4 = 2 := by
+  have h2 : (n : ZMod 4) = ((2 : ℤ) : ZMod 4) := by rw [h]; rfl
+  rw [ZMod.intCast_eq_intCast_iff] at h2
+  have h3 : n % 4 = 2 % 4 := h2; omega
+
+/-- **The clean key lemma.** For `z ∈ ℤ[ω]` with ALL four coordinates odd, `(normSq z).c ≡ 2 (mod 4)`.
+(`(normSq z).c = a·b − a·d + c·b + c·d = a(b−d) + c(b+d)`; `(b−d)+(b+d) = 2b ≡ 2 mod 4`, so exactly one
+of `b±d` is `≡ 2`, giving `Q ≡ 2·odd ≡ 2`.) Discharged as a `ZMod 4` kernel `decide` over the odd
+residues `{1,3}⁴` + the `ℤ → ZMod 4` parity bridges. -/
+theorem normSq_c_mod4_all_odd {z : ZOmega}
+    (ha : z.a % 2 = 1) (hb : z.b % 2 = 1) (hc : z.c % 2 = 1) (hd : z.d % 2 = 1) :
+    (normSq z).c % 4 = 2 := by
+  have key : ∀ a b c d : ZMod 4, ¬(a = 1 ∨ a = 3) ∨ ¬(b = 1 ∨ b = 3) ∨ ¬(c = 1 ∨ c = 3) ∨
+      ¬(d = 1 ∨ d = 3) ∨ (a*b - a*d + c*b + c*d = 2) := by decide
+  apply eq_two_of_zmod4
+  have hk := key (z.a : ZMod 4) z.b z.c z.d
+  rw [normSq_coords]; push_cast
+  rcases hk with h|h|h|h|h
+  · exact absurd (zmod4_of_odd ha) h
+  · exact absurd (zmod4_of_odd hb) h
+  · exact absurd (zmod4_of_odd hc) h
+  · exact absurd (zmod4_of_odd hd) h
+  · linear_combination h
+
+/-- **The 1010-landing.** If `z` has all coordinates odd (so `√2 ∣ z`), then `divSqrt2 z` lies in the
+`1010` residue-norm class (`(normSq (divSqrt2 z)).c` odd). Because `normSq z = 2·normSq(divSqrt2 z)` (as
+`z = √2·divSqrt2 z` and `normSq √2 = 2`), so `(normSq z).c = 2·(normSq(divSqrt2 z)).c`; combined with
+`(normSq z).c ≡ 2 (mod 4)` this forces `(normSq(divSqrt2 z)).c` odd. This is exactly the `1010` hypothesis
+`lemma4_1010` consumes — so after the cross-orbit step1 (`w_p+ωᵐw_q ≡ 1111`), both outputs feed `lemma4_1010`. -/
+theorem divSqrt2_normSq_c_odd {z : ZOmega}
+    (ha : z.a % 2 = 1) (hb : z.b % 2 = 1) (hc : z.c % 2 = 1) (hd : z.d % 2 = 1) :
+    (normSq (divSqrt2 z)).c % 2 = 1 := by
+  have hdvd : dividesSqrt2 z := ⟨by omega, by omega⟩
+  have hz : z = sqrt2 * divSqrt2 z := (divSqrt2_spec hdvd).symm
+  have hns : normSq z = 2 * normSq (divSqrt2 z) := by
+    conv_lhs => rw [hz]
+    rw [normSq_mul, show normSq sqrt2 = 2 from by decide]
+  have hcc : (normSq z).c = 2 * (normSq (divSqrt2 z)).c := by rw [hns, two_mul, add_c]; ring
+  have h2 := normSq_c_mod4_all_odd ha hb hc hd
+  omega
 
 end ZOmega
 

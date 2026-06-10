@@ -578,21 +578,24 @@ native_decide held at 596, confirming Track-3 independence):**
   a single `H·Tᵐ`). Kernel-pure `{propext,Classical.choice,Quot.sound}`; native_decide 596; lib+ExtractDeps
   green (9218). [Decidability note: the implication-chain `∀ ZMod2, h₁→h₂→C` failed `Decidable` synthesis at
   this nesting; the `¬h₁ ∨ ¬h₂ ∨ C` form decides — reusable trick.]
-- **NEXT (Lemma-4 completion → `ReductionStep`):** (B′) the mod-4 core — for a cross-orbit `0001` matched-active
-  pair, the √2-matching `m` (brick A) lands BOTH `uᵢ=divSqrt2(w_p±ωᵐw_q)` in the `1010` class (`(normSq uᵢ).c`
-  odd). **Localized (cross-term structure kernel-VERIFIED):** since `2·normSq uᵢ = normSq(w_p±ωᵐw_q)`,
-  `(normSq uᵢ).c` odd ⟺ `(normSq(w_p±ωᵐw_q)).c ≡ 2 (mod 4)`. By `normSq_add` (EXISTS, `NormSqGde`):
-  `(normSq(w_p±ωᵐw_q)).c = (normSq w_p).c + (normSq w_q).c ± C.c`, where `C = w_p·conj(ωᵐw_q) + ωᵐw_q·conj(w_p)`
-  is conj-fixed of the form `⟨e,0,−e,2f⟩` (verified) with `C.c = (w_p·conj(ωᵐw_q)).c − (w_p·conj(ωᵐw_q)).a`.
-  For cross-orbit `0001` both `(normSq w_·).c` are EVEN, so the target is: `∃` √2-match `m` with both
-  `even ± C.c ≡ 2 (mod 4)` (⟺ `C.c` even ∧ a mod-2 parity on `(normSq w_p).c/2 + (normSq w_q).c/2 + C.c/2`).
-  A mod-4 bilinear-form argument on the 8 coords — the genuine hard core; tractable structurally now that it's
-  localized to `C.c mod 4`. Then `0001`-cross-orbit Lemma 4 = step1 + `lemma4_1010`. Assemble (the `1010` case
-  `lemma4_1010` + same-orbit `0001` via `core_step` + cross-orbit `0001` via B′) into the uniform Lemma 4
-  "matched-active pair ⟹ both drop to `denExp ≤ k-1`"; (iii) wrap into the realizable `Gate2` two-level op
-  (embed `H·Tᵐ` via `embedFst`/`embedSnd` + index permutation X/CNOT, inc-17 block-action); (iv) inner
-  induction on count-at-max-level + factor `√2` ⟹ `ReductionStep` → inc-15 `colLemma_of_reductionStep`
-  (unconditional dim-4 column lemma) → controlled-C (Amy et al.) + operator-norm on inc-8/9 ⟹ `∀U` headline.
+- **inc 25 ✅ (`GilesSelingerRowOp.lean`): brick (B′) mod-4 core RESOLVED — far cleaner than the cross-term path.**
+  The cross-orbit `0001` step1 is the `m` making `w_p+ωᵐw_q ≡ 1111 (mod 2)` (all coords odd; `#eval`-validated:
+  this `m` always exists AND forces the 1010-landing). Then both `w_p±ωᵐw_q` are all-odd, and the **clean
+  universal lemma** `normSq_c_mod4_all_odd` (all-odd `z` ⟹ `(normSq z).c ≡ 2 mod 4`, because `Q = a(b−d)+c(b+d)`
+  and `(b−d)+(b+d)=2b≡2`) ⟹ `divSqrt2_normSq_c_odd` (both `divSqrt2(w_p±ωᵐw_q)` are `1010`) ⟹ `lemma4_1010`.
+  `ZMod 4` decide + parity bridges; kernel-pure; native_decide 596; lib+ExtractDeps green (9218). (The
+  cross-term `C.c mod 4` analysis was unnecessary — the all-odd ⟹ Q≡2 collapse is the real mechanism.)
+- **NEXT (Lemma-4 completion → `ReductionStep`):** the remaining cross-orbit pieces are now MECHANICAL: (i) the
+  `0001` dichotomy bridged to ℤ[ω] — `both 0001 ⟹ (∃m, 2∣w_p−ωᵐw_q) ∨ (∃m, w_p+ωᵐw_q all-odd)` (mod-2 `ZMod 2`
+  decide, VERIFIED [needs `set_option synthInstance.maxSize/maxRecDepth` for the 12-disjunct — allowed, not
+  maxHeartbeats]); (ii) the step1 level computation `invSqrt2·(mk w_p (t+1) ± ωS^m·mk w_q (t+1)) =
+  mk(divSqrt2(w_p±ωᵐw_q))(t+1)` when `w_p±ωᵐw_q` all-odd; (iii) compose (i)+(ii)+`divSqrt2_normSq_c_odd`+
+  `lemma4_1010` into the cross-orbit denExp-drop, then with `lemma4_1010` (the `1010` case) + `core_step`
+  (same-orbit `0001`) ⟹ the uniform Lemma 4 "matched-active pair ⟹ both drop to `denExp ≤ k-1`"; (iv) wrap into
+  the realizable `Gate2` two-level op (embed `H·Tᵐ` via `embedFst`/`embedSnd` + index permutation X/CNOT,
+  inc-17 block-action); (v) inner induction on count-at-max-level + factor `√2` ⟹ `ReductionStep` → inc-15
+  `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et al.) + operator-norm
+  on inc-8/9 ⟹ `∀U` headline.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
