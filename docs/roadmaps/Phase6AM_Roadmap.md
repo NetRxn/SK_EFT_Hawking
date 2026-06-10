@@ -604,14 +604,21 @@ native_decide held at 596, confirming Track-3 independence):**
   `(w_p+ωᵐw_q).x+(w_p−ωᵐw_q).x=2w_p.x`). With `core_step` (aligned, one step), BOTH branches of
   `matched_active_dichotomy` are discharged. Kernel-pure `{propext,Classical.choice,Quot.sound}`; nd 596;
   lib+ExtractDeps green (9218).
-- **NEXT (column assembly → `ReductionStep` → headline) — the NUMBER THEORY is DONE; what remains is the
-  CIRCUIT layer:** (iv) the column-level `Gate2` wrapper — express `H·Tᵐ` on a column index-pair as a realizable
-  `Mat4` (`embedFst`/`embedSnd` of single-qubit `H·Tᵐ` + `X`/`CNOT` to bring an arbitrary pair into qubit
-  alignment, inc-17 block-action), and connect the pair-level `denExp` drops (`core_step`/`cross_orbit_drop`) to
-  `colDenExp`; (v) Lemma 5 (`exists_matching_residue_pair`) pairs the active entries, inner induction on
-  active-count drives them all `√2`-divisible, factor `√2` ⟹ `colDenExp` drops ⟹ `ReductionStep C` →
-  inc-15 `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et al.) +
-  operator-norm on inc-8/9 ⟹ the `∀U` headline. This is a distinct phase (circuit synthesis, not number theory).
+- **inc 28 ✅ (`ColumnSynthesis.lean`, `04e6d90f`): circuit-realizability foundations** — `embedSnd/embedFst_
+  realizableWithin` (an embedded single-qubit word is realizable within its length) + `interp_replicate` +
+  `wHTm`/`wHTm_interp` (the `H·Tᵐ` row-op word). Kernel-pure; nd 596; 9218 green.
+- **NEXT = the rest of `ReductionStep` (the SAME ~3–5k-LOC circuit synthesis — line 641 — that has been the
+  Track-2 plan since inc 6; inc 10–28 ≈ ~1.5k of it is built. Lemma 4 was a COMPONENT of this, NOT a separate
+  phase — do not re-narrate the remainder as new scope):** (iv) the `Gate2` WRAPPER — realize the Lemma-4 row op
+  on a column index-pair as a realizable `Mat4` (qubit-align an arbitrary pair via `X`/`CNOT`; the single-pair
+  **controlled** 2-level op — note an *embedded* `H·Tᵐ` hits BOTH qubit-blocks, so a single matched pair needs a
+  controlled op or a cleaner dim-4-block realization; **⚠🔑 OPEN DESIGN Q — design against DR/Giles–Selinger
+  BEFORE coding, don't guess the circuit; ~800–1500 LOC, LOW confidence**); connect the pair `denExp` drops
+  (`core_step`/`cross_orbit_drop`) to `colDenExp`; (v) Lemma 5 pairs the active entries, inner induction on
+  active-count ⟹ all `√2`-divisible, factor `√2` ⟹ `colDenExp` drops ⟹ `ReductionStep C` (~400–800) → inc-15
+  `colLemma_of_reductionStep` (unconditional dim-4 column lemma) → controlled-C (Amy et al., ~300–700) +
+  operator-norm on inc-8/9 (~400–900) ⟹ the `∀U` headline (~100–200). **T2-remaining ≈ 2000–4100 LOC**; then
+  T1 (~2000–3900) + T3 (~3000–5700). Full LOC map: memory `[[project_phase6AO_progress_2026_06_09]]` handoff.
 
 ### Track 1 — unconditional scaffolding (paper-independent; advanced while the Track-2 DR is async)
 
