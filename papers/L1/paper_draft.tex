@@ -37,9 +37,12 @@ $\cGW = c\sqrt{\chivest}$ where $\chivest$ is the metric-channel
 susceptibility of the broken-symmetry phase. We formalize this
 identification and confront it with the multi-messenger
 GW170817~\cite{Abbott2017GW170817} bound
-$|\dccap| \leq 3\times 10^{-15}$. The result is sharp:
-over the natural susceptibility range $\chivest \in [0.1, 10]$
-induced by the random-phase-approximation bubble integral, the
+$-3\times 10^{-15} \leq \dccap \leq +7\times 10^{-16}$
+(conservatively two-sided: $|\dccap| \leq 3\times 10^{-15}$). The
+result is sharp: over the natural susceptibility range
+$\chivest \in [0.1, 10]$ --- a project-adopted order-unity
+naturalness window about the random-phase-approximation
+bubble-integral scale --- the
 deviation $\dccap = \sqrt{\chivest} - 1$ falls in $[-0.68, +2.16]$,
 exceeding the GW170817 cap by $\sim 7\times 10^{14}$. The
 GW170817-compatible window
@@ -86,9 +89,12 @@ wave equation with effective sound speed
   \cGW(\chivest) = c\sqrt{\chivest},
   \label{eq:cGW}
 \end{equation}
-where $\chivest$ is the metric-channel susceptibility computed by the
-Vergeles random-phase-approximation (RPA) bubble
-integral~\cite{Vergeles2025}. The identification is appealing in its
+where $\chivest$ is the metric-channel susceptibility of the
+vestigial phase, computed in the random-phase approximation (RPA)
+in this project's formalization
+(\texttt{VestigialSusceptibility.lean}); the underlying
+lattice-fermion framework is the one whose unitarity Vergeles
+establishes~\cite{Vergeles2025}. The identification is appealing in its
 brevity. As established by the present project's Phase~5y H1
 deep-research finding, however, it has \emph{never} been derived as
 a propagating degree of freedom from first principles. The
@@ -124,11 +130,19 @@ paths in Sec.~\ref{sec:discussion}.
 The vestigial-phase metric-channel susceptibility $\chivest$ is the
 RPA bubble integral with closed form
 $\chi_{\rm RPA} = \chi_0/(1 - \gamma_\star \chi_0)$ in the standard
-Hertz--Millis convention. The natural range $\chivest \in [0.1, 10]$
-(in units of inverse $\Lambda_{\rm UV}^2$) is the half-decade window
-induced by the Vergeles bubble integral
-$\sim \mathcal{O}(\Lambda_{\rm UV}^2/16\pi^2)$~\cite{Vergeles2025};
-this matches the linearized-EFE wave's ADW microscopic-coefficient
+Hertz--Millis convention, as formalized in
+\texttt{VestigialSusceptibility.lean}. The natural range
+$\chivest \in [0.1, 10]$ (in units of inverse $\Lambda_{\rm UV}^2$)
+is a \emph{project-adopted} naturalness window: the one-loop bubble
+normalization is $\mathcal{O}(\Lambda_{\rm UV}^2/16\pi^2)$ by
+dimensional analysis, and we take the $\pm 1$-decade window about
+the resulting unit-normalized central value. We emphasize the
+provenance: the window is a modeling choice of this project, not a
+published derivation --- the Vergeles lattice
+analysis~\cite{Vergeles2025} establishes unitarity of the underlying
+Einstein--Cartan--Palatini lattice theory but does not itself
+compute $\chivest$ or assign it a range. The window matches the
+linearized-EFE wave's ADW microscopic-coefficient
 $\alpha_{\rm ADW} \in [0.1, 10]$ natural
 range~\cite{Roehm2026LinearizedEFE}, which we treat as the
 project-internal anchor for the order-of-magnitude prior.

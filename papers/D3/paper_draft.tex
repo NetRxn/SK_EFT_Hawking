@@ -141,9 +141,14 @@ the Stelle-basis higher-curvature coefficients live (\S\ref{sec:closure-triad},
 vestigial second-sound mode as the spin-2
 graviton~\cite{Volovik2024Vestigial} predicts a leading
 gravitational-wave-speed offset $c_{\mathrm{GW}} = c\sqrt{\chi_{\mathrm{vest}}}$;
-on the natural susceptibility range $\chi_{\mathrm{vest}}\in[0.1,10]$, this
-forces $|\Delta c/c|\in[0.68,2.16]$, while the LIGO--Virgo
-GW170817 cap $|\Delta c/c|\le 3\times 10^{-15}$~\cite{Abbott2017GW170817}
+on the natural susceptibility range $\chi_{\mathrm{vest}}\in[0.1,10]$
+(a project-adopted order-unity naturalness window about the
+random-phase-approximation bubble-integral scale), this
+forces $|\Delta c/c|\in[0.68,2.16]$, while the LIGO--Virgo GW170817
+multi-messenger constraint
+$-3\times 10^{-15} \le \Delta c/c \le +7\times 10^{-16}$
+(conservatively two-sided: $|\Delta c/c|\le 3\times
+10^{-15}$)~\cite{Abbott2017GW170817}
 falsifies the entire natural range by approximately
 $7\times 10^{14}$ (\S\ref{sec:gw170817}). Each closure is a Lean theorem,
 not a literature pointer; together they isolate the ADW route as the
@@ -606,17 +611,27 @@ $\chi_{\mathrm{vest}}=1$
 (\texttt{GravitationalWaves.c\_GW\_deviation\_zero\_iff\_chi\_one}),
 and is strictly monotone in $\chi_{\mathrm{vest}}$
 (\texttt{c\_GW\_deviation\_strict\_mono}). The natural range of
-$\chi_{\mathrm{vest}}$ is bounded below by the critical-fluid lower edge
-($\chi_{\mathrm{vest}}\sim 0.1$, where vestigial-condensate susceptibility
-is well-defined) and above by the strong-coupling regime
-($\chi_{\mathrm{vest}}\sim 10$, beyond which the ADW one-loop expansion
-fails).
+$\chi_{\mathrm{vest}}$ is a \emph{project-adopted} order-unity
+naturalness window ($\pm 1$ decade about the unit-normalised
+random-phase-approximation bubble-integral scale
+$\mathcal{O}(\Lambda_{\mathrm{UV}}^{2}/16\pi^{2})$, the same
+convention as the $\alpha_{\mathrm{ADW}}\in[0.1,10]$ prior of
+\S\ref{sec:linearized-efe}); it is a modeling choice of this
+project, not a published derivation. Physically, the lower edge marks
+the critical-fluid regime ($\chi_{\mathrm{vest}}\sim 0.1$, where
+vestigial-condensate susceptibility is well-defined) and the upper
+edge the strong-coupling regime ($\chi_{\mathrm{vest}}\sim 10$,
+beyond which the ADW one-loop expansion fails).
 
 \subsection{LIGO--Virgo cap and falsification}
 
 The LIGO--Virgo joint observation of GW170817 with the
-GRB~170817A counterpart caps
-$|\Delta c/c| \le 3\times 10^{-15}$~\cite{Abbott2017GW170817}. Combined
+GRB~170817A counterpart constrains the gravitational-wave speed
+asymmetrically,
+$-3\times 10^{-15} \le \Delta c/c \le
++7\times 10^{-16}$~\cite{Abbott2017GW170817}; throughout we adopt the
+conservative two-sided envelope $|\Delta c/c| \le 3\times 10^{-15}$
+(the looser, negative side) as the falsification cap. Combined
 with~\eqref{eq:c-gw-leading}, the natural range produces
 $\Delta c/c \in [-0.68, +2.16]$, which violates the LIGO--Virgo cap by
 roughly fourteen orders of magnitude. Lean
@@ -1245,7 +1260,9 @@ $\sum_{k=0}^{2}\zeta^k = 0$ closes via
 
 \texttt{CFL\_emergent\_Z3\_matches\_QCD\_center\_Z3}: the cube root that
 emerges from the CFL diquark condensate is exactly the cube root that
-generates the $\mathbb{Z}_3$ centre of QCD. The Hirono--Tanizaki
+generates the $\mathbb{Z}_3$ centre of QCD. To our knowledge this
+centre-matching identity has not previously been stated or checked
+in any proof assistant. The Hirono--Tanizaki
 topological-order framing~\cite{HironoTanizaki2018} makes this a
 sufficient condition for the substrate's higher-form-symmetry data to
 match QCD's; \texttt{H\_TopologicalOrderBeyondLG} carries this as a
@@ -1407,10 +1424,13 @@ holographic-screen entropy gradients. Per the program's Phase 6m
 Track B closure (\texttt{lean/SKEFTHawking/EntropicGravityDarkEnergy.lean}),
 Verlinde-class entropic gravity is $r_d$-independent disfavoured under
 \emph{mixed-threshold} criteria across the quantitative
-checks canvassed: Bayes-decisive at Jeffreys $\geq 5$ for three of four
-$r_d$-independent quantitative bounds (Verlinde + Tsallis HDE +
+checks canvassed: Bayes-decisive at Jeffreys $\geq 5$ for two of four
+$r_d$-independent quantitative bounds (Tsallis HDE +
 Odintsov dark energy --- aggregated as
-\texttt{all\_three\_decisive\_bayes\_bounds\_exceed\_jeffreys\_decisive}),
+\texttt{both\_decisive\_bayes\_bounds\_exceed\_jeffreys\_decisive}),
+at the $\geq 5\sigma$ galaxy-cluster mass-density level for Verlinde
+2017 (nominal profile assumptions only; the exclusion weakens once
+weak-lensing/X-ray systematics are included),
 and at Burnham--Anderson moderate-AIC ($\Delta\mathrm{AIC} = 4.7 < 5$,
 below the Jeffreys-decisive threshold) for the fourth (Barrow HDE,
 verified Phase 7 absorption Session 5 against Luciano-Paliathanasis-
@@ -1422,9 +1442,10 @@ no-scalar-perturbation-theory, Hossenfelder--Verlinde dS-instability,
 Cadoni--Tuveri DEC bound, DEC--CPL DESI~DR2 $1\sigma$ exclusion)
 provide independent structural reasons for the same disfavoured
 verdict. The NO-GO closure is the program's Phase 6m Track B
-headline; the honest characterisation is `3-of-4 Bayes-decisive +
-4-of-4 mixed-threshold` rather than `4-of-4 Bayes-decisive', per
-the Session-5 honest downgrade. The horizon-Crooks identity~\eqref{eq:horizon-crooks}
+headline; the honest characterisation is `2-of-4 Bayes-decisive +
+1 $\sigma$-level + 1 AIC-moderate, 4-of-4 mixed-threshold` rather
+than `4-of-4 Bayes-decisive', per the Session-5 honest downgrade
+and the 2026-06-10 unit-coherence correction. The horizon-Crooks identity~\eqref{eq:horizon-crooks}
 is consistent only with the equilibrium-Clausius derivation of the
 Einstein equation; it does \emph{not} entail the ontological claim
 that gravity itself is an entropic force, and the substrate's gravity
@@ -1790,11 +1811,13 @@ no-hair content of subsequent sections.
 \subsection{Levi-Civita Christoffel uniqueness on Lorentzian metrics}
 
 The Christoffel-symbol Levi-Civita uniqueness theorem, which on
-Riemannian manifolds is well known and Mathlib-shipped, was not
-previously formalised on Lorentzian (indefinite-signature) metrics in any
-proof assistant. \texttt{RiemannianConnection.lean} discharges
+Riemannian manifolds is well known and Mathlib-shipped, was --- to our
+knowledge --- not previously formalised on Lorentzian
+(indefinite-signature) metrics in any proof assistant.
+\texttt{RiemannianConnection.lean} discharges
 uniqueness on the indefinite-signature case; this is the
-load-bearing first-formalization claim of \S\ref{sec:algebraic-gr-backbone}.
+load-bearing first-formalization claim of
+\S\ref{sec:algebraic-gr-backbone}.
 
 \subsection{Algebraic first Bianchi identity}
 
@@ -1942,8 +1965,13 @@ collapses on the Lean side via the Riccati-focusing route
 (\S\ref{sec:singularity-thms} above); when any one fails, the
 applicability predicate is false and the biconditional is vacuously
 satisfied (the Penrose hypothesis does not engage the substrate at
-that point). This is the substrate's first-formalization Penrose
-hypothesis bundle.
+that point). To our knowledge this is the first machine-checked
+formalization of the Penrose singularity-theorem hypothesis bundle
+in any proof assistant; we state the claim's scope precisely: it is
+a predicate-level formalization (hypothesis bundle, Riccati-focusing
+core, and biconditional under an explicit applicability predicate),
+not a full differential-geometric proof of the 1965
+theorem~\cite{Penrose1965}.
 
 
 %% =====================================================================
@@ -2232,7 +2260,8 @@ QEC-MTC framing that Bundle~D4 \S 7 will adopt downstream.
 share the $N_f = 16$ anchor. \S\ref{sec:cc-emergent} and Bundle~D5
 \S 7 share the heat-kernel $a_0$ coefficient character-for-character.
 \S\ref{sec:algebraic-gr-backbone} and Bundle~I1 share the
-first-formalization claims; I1 is the primary, D3 the supplement.
+first-formalization claims (each hedged ``to our knowledge''); I1 is
+the primary, D3 the supplement.
 
 \subsection{Algebraic-Lorentzian-geometry supplement scope}
 
