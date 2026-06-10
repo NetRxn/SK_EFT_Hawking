@@ -252,7 +252,12 @@ theorem relNorm_of_doublyPositive_decomposable {ξ : Zsqrtd 2}
       ← zsqrt2ToZOmega_relNormZsqrt2 t, ← map_mul, ← hv, heq]
 
 /-- **Lemma C.16** (Ross–Selinger arXiv:1403.2975v3): `t†t = ξ` is solvable in `ℤ[ω]` iff `ξ` is
-doubly positive and †-decomposable. -/
+doubly positive and †-decomposable.
+
+NOTE (Stage-13): this is the **`ℤ`-level** statement (`ξ ∈ ℤ[√2]`, `t ∈ ℤ[ω]`) — the level at
+which the paper's §C.5 (C.19–C.21) and this project's consumers operate. The paper's C.16 is
+stated for `𝔻[√2]`/`𝔻[ω]`; the denominator-clearing reduction (paper Lemma C.17) is not
+formalized here. -/
 theorem relNorm_iff_doublyPositive_decomposable (ξ : Zsqrtd 2) :
     (∃ t : ZOmega, ZOmega.normSq t = zsqrt2ToZOmega ξ) ↔
       DoublyPositive ξ ∧ DaggerDecomposable ξ :=

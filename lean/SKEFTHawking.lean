@@ -1524,6 +1524,13 @@ import SKEFTHawking.FKLW.RossSelinger.RelNormPrimeCase
 -- **daggerDecomposable_pow_iff_seven** — Lemma C.21 at the obstructed primes: N(ξ)=±p, p≡7(8):
 -- ξ^m †-decomposable ⟺ m EVEN (the even-power criterion, iff form). zsqrtd_norm_pow.
 import SKEFTHawking.FKLW.RossSelinger.RelNormPrimeCaseInstances
+-- Phase 6AO Track 3 inc 1 (2026-06-10) — **BridgeParity: the structural-bridge core**
+-- (toward eliminating bridge_box_core's native_decide): sqrt2_sq_dvd_sq_add_sub —
+-- |x|²+|y|² = √2⁴ ∧ √2 ∣ |x|² ⟹ √2² ∣ (x²±y²). Parity toolkit: √2∣|z|² ⟺ √2∣z² ⟺
+-- Σcoord even (residue arithmetic, t²≡t); δ = 1+ω with δ² = √2·⟨0,1,1,1⟩ and the explicit
+-- divDelta split; equal-parity squares agree mod √2; the mixed case refuted via the halving
+-- lemma. Plus dvdSqrt2Pow_sub_conj (the −-twin of the KMM-L5 +1 lemma) and ω-unit transport.
+import SKEFTHawking.FKLW.RossSelinger.BridgeParity
 -- Phase 6x Tier-2 Item I (2026-05-30) — compile_correct approximation helpers:
 -- linftyOpNorm_fin_two_le (entrywise ≤δ ⟹ ℓ∞-operator-norm ≤ 2δ for 2×2) + su2_entry_structure
 -- (U∈SU(2) ⟹ U=[[a,−b̄],[b,ā]]). Propagate the grid first-column approximation to ‖·‖≤ε.

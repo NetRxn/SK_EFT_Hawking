@@ -181,8 +181,12 @@ theorem zsqrtd_norm_pow (z : Zsqrtd 2) (k : ℕ) :
   | succ n ih =>
     rw [pow_succ, pow_succ, Zsqrtd.norm_mul, ih]
 
-/-- **Lemma C.21 at the obstructed primes** (the even-power criterion in iff form): for a prime
-of norm `±p` with `p ≡ 7 (mod 8)`, the power `ξ^m` is †-decomposable **iff `m` is even**. -/
+/-- **Lemma C.21 at the obstructed primes** (the even-power criterion in iff form): for an
+element of norm `±p` with `p ≡ 7 (mod 8)`, the power `ξ^m` is †-decomposable **iff `m` is
+even**. (Slightly more general than the paper's statement: `ξ`-primality is not needed, only
+the norm value. Connecting an abstract prime `ξ ∣ p` to the `norm ξ = ±p` hypothesis uses the
+paper's Lemma C.6 split/inert dichotomy, which is not formalized here — supply the norm
+directly, as the compiled witnesses do.) -/
 theorem daggerDecomposable_pow_iff_seven {ξ : Zsqrtd 2} {p : ℤ} (hppos : 0 < p)
     (hp7 : p % 8 = 7) (hn : Zsqrtd.norm ξ = p ∨ Zsqrtd.norm ξ = -p) (m : ℕ) :
     DaggerDecomposable (ξ ^ m) ↔ Even m := by
