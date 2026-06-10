@@ -1,6 +1,6 @@
 # Bundle D5 — Source Manifest
 
-**Auto-generated:** 2026-05-12
+**Auto-generated:** 2026-06-10
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D5`
@@ -14,7 +14,7 @@
 | `_phase6n_W1c_writeup` | §13 | (unspecified) | (see mapping) | (missing) |
 | `_phase6n_W2b_lean_only` | §13 | (unspecified) | (see mapping) | (missing) |
 | `_phase6o_W4a_lean_only` | §11 | (unspecified) | (see mapping) | (missing) |
-| `paper17_dark_sector` | §2 | Lift-section | (see mapping) | 2026-05-12T12:41:14Z |
+| `paper17_dark_sector` | §2 | Lift-section | (see mapping) | 2026-06-10T17:54:56Z |
 | `paper29_bbn_unified` | §4 | Lift-section | (see mapping) | 2026-04-26T22:03:12Z |
 | `paper32_strong_cp_de` | §5 | Lift-section | (see mapping) | 2026-04-28T22:16:03Z |
 | `paper34_equivalence_principle` | §6 | Lift-section | (see mapping) | 2026-04-27T18:45:48Z |

@@ -99,3 +99,19 @@ All four recorded in `docs/review_finding_supersessions.json`. Post-remediation:
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: D8 cross-bridge absorption 2026-05-31: D4 paper_draft.tex edited to re-point/cross-reference the new D8 bundle (verified-quantum-compilation corpus). D4 retains Fibonacci/topological anchor; D6 consumes D8's SK primitive. Scoped adversarial re-check of the new cross-bridge paragraph only (additive cross-ref to already-GREEN D8).
+
+## 2026-06-10 — Prose-revision-bookkeeping (bookkeeping)
+
+- Source: (none — bookkeeping event)
+- Lift action: Prose-revision-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: Source-paper reconciliation vs last_lift 2026-05-31: 3 flagged sources (paper11_quantum_group, paper18_doublon_gate, paper9_sm_anomaly_drinfeld) all carry REAL commits, not mtime noise — commit 5207b72b (2026-06-10) axiom-prose fixes ('1 axiom' -> retired into tracked Prop TPFConjecture) in all three drafts, plus commit 8b68fe13 paper11 tables/table1_chain.tex SU2kSMatrix.lean theorem-count regen 18->253. D4 prose verified already aligned: axiom posture fixed across D4 on 2026-05-23 (fu:D4:r4:4; abstract + section 8.5 + 9.3 + 9.5 all read 'zero project-local axioms' + TPFConjecture); D4 contains zero SU2kSMatrix per-module-count references and zero \input of source-paper tables (compile path decoupled). No content lift required. Disclosure block (DISCLOSURE_TEXT.md Variant B, register-verified aristotle_used=no) installed in same session as a separate draft edit; pdflatex x2 clean (31pp). freshness_stale deliberately NOT cleared per reconciliation-task constraint.
+
+## 2026-06-10 — Standard AI-disclosure block installed (draft edit, non-substantive)
+
+- Source: (none — DISCLOSURE_TEXT.md application)
+- Edit: `\section*{Methods and tools disclosure}` (Variant B — register-derived `aristotle_used=no` per `scripts/aristotle_usage_by_bundle.py` 2026-06-10 run) inserted immediately before `\begin{thebibliography}{99}` (paper_draft.tex ~l.1391). No pre-existing ad-hoc disclosure text existed; nothing normalized away.
+- Substantive prose: UNCHANGED — no claims, counts, citations, or Lean references touched; stage13_redo_required remains false.
+- Compile gate: pdflatex ×2 clean, zero errors (31pp / 394440B).
+- Metadata note: the Prose-revision-bookkeeping event above auto-bumped `last_lift` and cleared `freshness_stale`; both fields were deliberately restored (`last_lift=2026-05-31T15:37:22Z`, `freshness_stale=true`) per the reconciliation-task constraint that the staleness signal must persist.

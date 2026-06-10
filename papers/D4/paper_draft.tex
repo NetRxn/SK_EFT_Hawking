@@ -1388,6 +1388,17 @@ subject of D8, which this showcase now cross-references rather than subsumes.
 See \texttt{docs/PAPER\_STRATEGY.md}~\textsection2.2 (D8) and
 \texttt{docs/PAPER\_DRAFT\_MAPPING.md}.
 
+\section*{Methods and tools disclosure}
+The formal verification layer of this work was developed with
+substantial machine assistance: Lean~4 proof drafting and iteration
+used LLM-based agents (Anthropic Claude-family models) operating under
+the project's staged validation pipeline. Every proof is ultimately
+certified by the Lean~4 kernel via \texttt{lake build} on the public
+repository, independently of any AI tool. Manuscript prose was
+AI-assisted and human-reviewed; all numerical claims trace to the
+repository's computation pipeline through its automated validation
+checks.
+
 \begin{thebibliography}{99}
 
 \bibitem{AharonovArad2011}
