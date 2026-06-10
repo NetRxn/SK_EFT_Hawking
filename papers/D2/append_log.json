@@ -165,6 +165,17 @@
       "stage13_redo_required": false,
       "agent_run_id": "bundle_append-bookkeeping-2026-05-31T17:24:48Z",
       "notes": "Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL \u00a73d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \\input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN)."
+    },
+    {
+      "date": "2026-06-10T20:24:03Z",
+      "source_paper": "(none \u2014 bookkeeping)",
+      "lift_action": "Prose-revision-bookkeeping",
+      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-bookkeeping-2026-06-10T20:24:03Z",
+      "notes": "2026-06-10 freshness reconciliation vs post-2026-05-31 source commits (non-paper10 scope only; paper10 deltas OWNED by active Phase 5q.B session \u2014 NOT reconciled here). Real committed deltas inspected: paper7+paper9 (5207b72b, 2026-06-10 13:12 \u2014 historical '1 axiom' snapshot prose annotated 'since retired into a tracked Prop / TPFConjecture' at 3+2 sites) and paper8 (3036ffd7, 2026-06-08 \u2014 axiomcount{} macro + TPFConjecture reframing; SPTClassification '20 theorems + 1 axiom' -> '20 theorems'). D2 verified ALREADY CONSISTENT with all of these: D2 carries the axiomcount{}/TPFConjecture framing from f6048c48 + 1bb62842 (which edited D2 in tandem), uses counts.tex macros throughout (no stale 4049/2237/170 literals \u2014 grep-verified), GoltermanShamir2026 bibitem title matches the corrected CITATION_REGISTRY title ('Symmetric mass generation and the Nielsen-Ninomiya theorem', arXiv:2603.15985), GS conditional-constraints framing present (Pillar 1), Mathlib pin 5e932f97. CHECKs 24/25/26 PASS. Source tables/*.tex + paper_draftNotes.bib mtime drift = recompile noise (git status clean; D2 inputs only ../../docs/counts.tex). ONE bundle edit this event: standard Variant-A 'Methods and tools disclosure' block installed before bibliography per docs/DISCLOSURE_TEXT.md (was clearly absent; register verdict D2=Variant A via scripts/aristotle_usage_by_bundle.py). Boilerplate only \u2014 no scientific claims added/removed; stage13 redo NOT required. pdflatex x2 clean (11 pp, 0 errors, 0 undefined refs). freshness_stale deliberately RE-SET to true after this event: paper10 (modified 2026-06-08, RESTRICTED) remains unreconciled pending Phase 5q.B supersession records."
     }
   ]
 }
