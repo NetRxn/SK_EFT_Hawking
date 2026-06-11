@@ -1,6 +1,6 @@
 # Attribution-Content Sweep + Stage-13 Re-Review — Roadmap
 
-**Authorized:** 2026-06-10 (user-scoped, "load-bearing first"). **Status:** READY — designed to run as its own dedicated `/goal`.
+**Authorized:** 2026-06-10 (user-scoped, "load-bearing first"). **Status:** ✅ COMPLETE 2026-06-10 (commit `3c4a441d`). All 18 bundles GREEN. 6 fabrication-class NOT-SUPPORTED fixed (D1 Falque-method, E2 Falque-temp/Geurs, D3 Sen −45/2→212/45 + KLRS→D'Onofrio[added], D6 Bravyi-Kitaev→Nielsen-Chuang) + 1 cache-integrity fix (D7 Bianco-Resta arxiv id). D2/L2/F cleared via paper10 supersession (paper10 already clean on disk — no 5q.B edit needed). Genuine fresh-context reviews recorded per bundle; doc: `docs/audits/stage13_attribution_sweep_2026-06-10.md`. Residual human-gate items: AharonovArad Lemma 6.1 + forward-dated published venues (full PDF/DOI), Amelio2020 registry-title disambiguation. See memory `project_attribution_sweep_2026_06_10`.
 
 ## Why this exists
 
