@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-01T19:09:13.622490+00:00",
+  "generated": "2026-06-10T23:44:20.454547+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -3243,6 +3243,34 @@
       "expected_axes": {
         "xaxis": "rounds",
         "yaxis": "EPR pairs"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_qnet_readout_envelopes",
+      "function": "fig_qnet_readout_envelopes",
+      "caption": "D9 \u00a75 (Phase 6AQ) \u2014 readout-window device-characterization envelopes. Left: relaxation decay probability p_decay = 1 \u2212 e^(\u2212t/T\u2081) vs t/T\u2081 inside the Lean-proven rational enclosure (t/T\u2081)/(1+t/T\u2081) \u2264 p \u2264 t/T\u2081 (readoutDecayProb_enclosure). Right: thermal excited-state occupancy p_th = 1/(1+e^x), x = \u03b2\u210f\u03c9, inside its rational enclosure \u2014 upper 1/(2+x) for all x \u2265 0, lower (1\u2212x)/(2\u2212x) proven on 0 \u2264 x < 2 (sharp at x = 0), clamped at 0 elsewhere via p_th > 0. Lean: ReadoutRelaxationBound.lean, ThermalAssignmentFloor.lean.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_readout_envelopes.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_readout_envelopes.html",
+      "expected_traces": 6,
+      "expected_axes": {
+        "xaxis": "t/T\u2081",
+        "xaxis2": "\u03b2\u210f\u03c9",
+        "yaxis": "decay probability",
+        "yaxis2": "thermal occupancy"
       },
       "physics_checks": [],
       "color_keys": [

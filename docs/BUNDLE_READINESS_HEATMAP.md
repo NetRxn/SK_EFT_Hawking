@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-06-10
+**Auto-generated:** 2026-06-11
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable; GREEN semantics tightened 2026-06-10 (S5 closure — see legend).
@@ -20,53 +20,49 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Stage-13 review | Verdict |
 |---|---:|---:|---:|---:|---|:---:|:---:|
-| **F** | 0 | 63 | 6 | 5 | 3 critical, 2 major, 1 minor | 2026-05-11 | 🔴 RED |
-| **D1** | 1 | 12 | 0 | 0 | _(none)_ | 2026-05-07 | 🟢 GREEN |
-| **D2** | 1 | 6 | 6 | 5 | 3 critical, 2 major, 1 minor | 2026-05-06 | 🔴 RED |
-| **D3** | 1 | 31 | 0 | 0 | _(none)_ | 2026-05-06 | 🟢 GREEN |
-| **D4** | 1 | 12 | 0 | 0 | _(none)_ | 2026-05-23 | 🟢 GREEN |
-| **D5** | 1 | 9 | 0 | 0 | _(none)_ | 2026-05-07 | 🟢 GREEN |
-| **D6** | 1 | 3 | 0 | 0 | _(none)_ | 2026-06-01 † | 🟢 GREEN |
-| **D7** | 1 | 1 | 0 | 0 | _(none)_ | 2026-05-26 | 🟢 GREEN |
-| **D8** | 1 | 13 | 0 | 0 | _(none)_ | 2026-05-31 | 🟢 GREEN |
-| **D9** | 1 | 1 | 0 | 0 | _(none)_ | — none recorded | 🟡 YELLOW (unreviewed) |
-| **L1** | 2 | 2 | 0 | 0 | _(none)_ | 2026-05-07 | 🟢 GREEN |
-| **L2** | 2 | 1 | 6 | 5 | 3 critical, 2 major, 1 minor | 2026-05-06 | 🔴 RED |
-| **L3** | 2 | 4 | 0 | 0 | _(none)_ | 2026-05-06 | 🟢 GREEN |
-| **I1** | 3 | 8 | 0 | 0 | _(none)_ | 2026-05-06 | 🟢 GREEN |
-| **I2** | 3 | 1 | 0 | 0 | _(none)_ | 2026-05-11 | 🟢 GREEN |
-| **I3** | 3 | 1 | 0 | 0 | _(none)_ | 2026-05-11 | 🟢 GREEN |
-| **E1** | 4 | 5 | 0 | 0 | _(none)_ | 2026-05-07 | 🟢 GREEN |
-| **E2** | 4 | 4 | 0 | 0 | _(none)_ | 2026-05-07 | 🟢 GREEN |
+| **F** | 0 | 63 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **D1** | 1 | 12 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **D2** | 1 | 6 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **D3** | 1 | 31 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **D4** | 1 | 12 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **D5** | 1 | 9 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **D6** | 1 | 3 | 0 | 0 | _(none)_ | 2026-06-10 † | 🟢 GREEN |
+| **D7** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **D8** | 1 | 13 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **L1** | 2 | 2 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **L2** | 2 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **L3** | 2 | 4 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **I1** | 3 | 8 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **I2** | 3 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **I3** | 3 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **E1** | 4 | 5 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **E2** | 4 | 4 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
 
 † review date backfilled from on-disk review evidence; the evidence path is recorded in the bundle's `bundle_metadata.json` `last_stage13_review_source` field.
 
-### Per-bundle caveats
-
-- **D6** — non-enum `stage13_status` in `papers/D6/bundle_metadata.json` (surfaced verbatim): "green_phase6AA_section (full-bundle Stage-13 still pending Phase-6v close)"
-
 ## Gate × Bundle distribution (open findings)
 
-| Bundle | AssumptionDisclosu | ComputationCorrect | CountFreshness | CrossPaperConsiste |
-|---|---:|---:|---:|---:|
-| **F** | 1 | 2 | 1 | 2 |
-| **D1** | 0 | 0 | 0 | 0 |
-| **D2** | 1 | 2 | 1 | 2 |
-| **D3** | 0 | 0 | 0 | 0 |
-| **D4** | 0 | 0 | 0 | 0 |
-| **D5** | 0 | 0 | 0 | 0 |
-| **D6** | 0 | 0 | 0 | 0 |
-| **D7** | 0 | 0 | 0 | 0 |
-| **D8** | 0 | 0 | 0 | 0 |
-| **D9** | 0 | 0 | 0 | 0 |
-| **L1** | 0 | 0 | 0 | 0 |
-| **L2** | 1 | 2 | 1 | 2 |
-| **L3** | 0 | 0 | 0 | 0 |
-| **I1** | 0 | 0 | 0 | 0 |
-| **I2** | 0 | 0 | 0 | 0 |
-| **I3** | 0 | 0 | 0 | 0 |
-| **E1** | 0 | 0 | 0 | 0 |
-| **E2** | 0 | 0 | 0 | 0 |
+| Bundle |  |
+|---||
+| **F** |  |
+| **D1** |  |
+| **D2** |  |
+| **D3** |  |
+| **D4** |  |
+| **D5** |  |
+| **D6** |  |
+| **D7** |  |
+| **D8** |  |
+| **D9** |  |
+| **L1** |  |
+| **L2** |  |
+| **L3** |  |
+| **I1** |  |
+| **I2** |  |
+| **I3** |  |
+| **E1** |  |
+| **E2** |  |
 
 ## Notes
 

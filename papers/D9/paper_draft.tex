@@ -551,7 +551,8 @@ end-to-end closed form $F_{\mathrm{e2e}} = (1+3w^k)/4$,
 \tfrac14 \le F \le 1 \;\Longrightarrow\;
 \tfrac14 \le F_{\mathrm{e2e}}(F,k) \le 1,
 \]
-together with monotonicity in $F$ and antitonicity in $k$, is --- to our
+together with monotonicity in $F$ and antitonicity in $k$
+(Fig.~\ref{fig:swapchain}), is --- to our
 knowledge --- the first formally verified protocol-level fidelity bound
 for quantum networks. Three generalizations keep the envelope realistic:
 
@@ -573,6 +574,19 @@ teleportation-usefulness threshold over the chain
 ($F_{\mathrm{e2e}} > \tfrac12 \iff w^k > \tfrac13$,
 \lean{endToEnd\_teleportation\_useful}).
 \end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_qnet_swap_chain_envelope.png}
+\caption{End-to-end fidelity $F_{\mathrm{e2e}} = (1+3w^k)/4$ of a
+$k$-swap Werner chain versus the number of swaps $k$, for per-link
+fidelities $F = 0.95$, $0.85$, $0.75$ (\lean{endToEndFidelity}). All
+curves remain inside the kernel-proven envelope $[\tfrac14, 1]$ (shaded
+band, \lean{swapChain\_fidelity\_envelope}) and decay monotonically
+toward the fully mixed value $\tfrac14$ as the Werner parameter
+$w = (4F-1)/3$ is exponentiated by the chain.}
+\label{fig:swapchain}
+\end{figure}
 
 For \emph{arbitrary} states, the data-processing chain
 \lean{traceDist\_applyChain\_le} bounds the trace distance to a target
@@ -614,7 +628,8 @@ binary entropy), strict decrease (\lean{bb84KeyRate\_strictAntiOn}),
 positivity as $h_2(e) < \tfrac12$
 (\lean{bb84KeyRate\_pos\_iff\_binEntropy\_lt}), and a genuine crossover
 $e^* \in (0,\tfrac12)$ with $r(e^*) = 0$ produced by the
-intermediate-value theorem (\lean{bb84\_crossover\_exists}) --- the
+intermediate-value theorem (\lean{bb84\_crossover\_exists};
+Fig.~\ref{fig:bb84}) --- the
 conventional $\approx 11\%$ threshold is recovered as the implicit root
 of $h_2(e) = \tfrac12$; no decimal is asserted in the formal layer. The
 composition with the end-to-end QBER gives the fidelity threshold for
@@ -627,7 +642,8 @@ specified-pair bound $\tfrac23$ for $D \ge 3$
 (\lean{fortescueLoYield\_gt\_two\_thirds}), the $W_3$-vs-GHZ$_3$
 randomization advantage is strictly positive
 (\lean{w3\_beats\_ghz\_randomization\_advantage}), and the yield tends to
-$1$ (\lean{fortescueLoYield\_tendsto\_one}); the asymptotic optimality
+$1$ (\lean{fortescueLoYield\_tendsto\_one}; Fig.~\ref{fig:wghz}); the
+asymptotic optimality
 conjecture of Ref.~\cite{FortescueLo2007} is \emph{not} claimed.
 
 \item \emph{Physical-layer anchors}: the dB$\leftrightarrow$Np fiber
@@ -642,6 +658,32 @@ Handshake-inclusive link timing is model-dependent and deliberately not
 bounded --- this is exactly the layer on which simulators
 disagree~\cite{Chung2025}.
 \end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_qnet_bb84_key_rate.png}
+\caption{BB84 asymptotic secret-key rate $r(e) = 1 - 2h_2(e)$ versus
+end-to-end QBER $e$ (\lean{bb84KeyRate}). The positive-key crossover
+$e^* \approx 0.110$ is located numerically by bisection on the proven
+strictly decreasing branch as the implicit root of $h_2(e) = \tfrac12$
+--- mirroring \lean{bb84\_crossover\_exists}, which produces the
+crossover by the intermediate-value theorem; no decimal threshold is
+asserted in the formal layer.}
+\label{fig:bb84}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_qnet_w_vs_ghz.png}
+\caption{Fortescue--Lo random-pair $W_3$ distillation yield $D/(D+1)$
+versus the number of rounds $D$ (\lean{fortescueLoYield}). The yield
+surpasses the single-copy specified-pair bound $\tfrac23$ for $D \ge 3$
+(\lean{fortescueLoYield\_gt\_two\_thirds}) and approaches, but never
+attains, the GHZ$_3$ rate $1$ (\lean{fortescueLoYield\_lt\_one},
+\lean{fortescueLoYield\_tendsto\_one}); the asymptotic optimality
+conjecture of Ref.~\cite{FortescueLo2007} is not claimed.}
+\label{fig:wghz}
+\end{figure}
 
 \subsection{Rate ceilings and network capacity}
 \label{sec:network-capacity}
@@ -797,7 +839,8 @@ $T_1$ (\lean{readoutDecayProb\_strictAnti\_relax}), endpoints
 \[
 \frac{t/T_1}{1+t/T_1} \;\le\; p_{\mathrm{decay}} \;\le\; \frac{t}{T_1}
 \]
-(\lean{readoutDecayProb\_enclosure}) --- the short-window rule
+(\lean{readoutDecayProb\_enclosure}; Fig.~\ref{fig:readout}, left) ---
+the short-window rule
 $p \lesssim t/T_1$ proven as an exact inequality on the full domain.
 Under the literature-cited readout model (QND-ideal, no re-excitation,
 decay flips the outcome~\cite{Gambetta2007,Walter2017,Geerlings2013}),
@@ -824,7 +867,8 @@ temperature-$\beta$ bridge
 \lean{thermalExcitedPop\_strictAnti\_frequency}), endpoints ($\tfrac12$
 at $x=0$, $\to 0$ as $x\to\infty$), and two-sided rational enclosures
 (\lean{thermalExcitedPop\_rational\_upper},
-\lean{thermalExcitedPop\_rational\_lower}). Under the cited
+\lean{thermalExcitedPop\_rational\_lower};
+Fig.~\ref{fig:readout}, right). Under the cited
 thermal-population readout model~\cite{Jin2015,Geerlings2013}, the
 assignment error is floored at $p_{\mathrm{th}}/2$
 (\lean{avgAssignmentError\_thermal\_floor}) with its rational
@@ -838,6 +882,31 @@ capstone combines both mechanisms:
 (\lean{avgAssignmentError\_combined\_floor}) --- a readout subject to
 both relaxation during the window and thermal population is floored by
 the worse of the two, from $(t, T_1, T, \omega)$ alone.
+
+\begin{figure*}
+\centering
+\includegraphics[width=\textwidth]{figures/fig_qnet_readout_envelopes.png}
+\caption{Readout-window envelopes inside their Lean-proven rational
+enclosures (shaded bands). Left: relaxation decay probability
+$p_{\mathrm{decay}} = 1 - e^{-t/T_1}$ versus the normalized window
+$t/T_1$ (\lean{readoutDecayProb}), bracketed by
+$(t/T_1)/(1+t/T_1) \le p_{\mathrm{decay}} \le t/T_1$
+(\lean{readoutDecayProb\_enclosure}); the upper endpoint is the
+short-window rule, proven as an exact inequality on the full physical
+domain. Right: thermal excited-state occupancy
+$p_{\mathrm{th}} = 1/(1+e^{x})$, $x = \beta\hbar\omega$
+(\lean{thermalExcitedPop}), bracketed above by $1/(2+x)$ for all
+$x \ge 0$ (\lean{thermalExcitedPop\_rational\_upper}) and below by
+$(1-x)/(2-x)$, proven on $0 \le x < 2$ and sharp at $x = 0$, where both
+endpoints equal the fully mixed value $\tfrac12$
+(\lean{thermalExcitedPop\_rational\_lower}); where that endpoint is
+nonpositive the band floor is the positivity bound
+$p_{\mathrm{th}} > 0$ (\lean{thermalExcitedPop\_pos}). All enclosure
+endpoints are rational at rational arguments --- no floating-point
+transcendentals are needed to bracket an operating point
+(Sec.~\ref{sec:enclosure}).}
+\label{fig:readout}
+\end{figure*}
 
 \subsection{Interface to the logical layer}
 \label{sec:device-qec}

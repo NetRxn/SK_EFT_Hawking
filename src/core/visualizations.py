@@ -14575,7 +14575,7 @@ def fig_qnet_bb84_key_rate() -> go.Figure:
     fig.update_yaxes(title="secret-key rate  r(e)  [bits/sifted bit]",
                      showgrid=True, gridcolor="#eee")
     fig.update_layout(
-        title="D6 §6 — BB84 secret-key rate vs QBER (crossover proven, not hardcoded)",
+        title="BB84 secret-key rate vs QBER (crossover proven, not hardcoded)",
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
         height=500, width=900, margin=dict(l=80, r=40, t=110, b=60), plot_bgcolor="white")
     return fig
@@ -14603,7 +14603,7 @@ def fig_qnet_swap_chain_envelope() -> go.Figure:
     fig.update_xaxes(title="number of entanglement swaps  k", dtick=1, showgrid=True, gridcolor="#eee")
     fig.update_yaxes(title="end-to-end fidelity  F_e2e", range=[0.2, 1.05], showgrid=True, gridcolor="#eee")
     fig.update_layout(
-        title="D6 §6 — Swap-chain end-to-end fidelity within the proven [1/4,1] envelope",
+        title="Swap-chain end-to-end fidelity within the proven [1/4,1] envelope",
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
         height=500, width=900, margin=dict(l=80, r=40, t=110, b=60), plot_bgcolor="white")
     return fig
@@ -14626,7 +14626,84 @@ def fig_qnet_w_vs_ghz() -> go.Figure:
     fig.update_xaxes(title="distillation rounds  D", dtick=1, showgrid=True, gridcolor="#eee")
     fig.update_yaxes(title="EPR pairs per |W₃⟩", range=[0.4, 1.05], showgrid=True, gridcolor="#eee")
     fig.update_layout(
-        title="D6 §6 — W₃ random-party distillation: surpasses 2/3 (D≥3), → GHZ₃ rate 1",
+        title="W₃ random-party distillation: surpasses 2/3 (D≥3), → GHZ₃ rate 1",
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
         height=500, width=900, margin=dict(l=80, r=40, t=110, b=60), plot_bgcolor="white")
+    return fig
+
+
+def fig_qnet_readout_envelopes() -> go.Figure:
+    """Phase 6AQ readout-window envelopes (two panels). Left: relaxation decay
+    probability p_decay = 1 − e^{−t/T₁} vs t/T₁ inside the Lean-proven rational
+    enclosure (t/T₁)/(1+t/T₁) ≤ p ≤ t/T₁ (readoutDecayProb_enclosure). Right:
+    thermal excited-state occupancy p_th = 1/(1+e^x), x = βℏω, inside its
+    rational enclosure — upper 1/(2+x) for all x ≥ 0, lower (1−x)/(2−x) proven
+    on 0 ≤ x < 2 (sharp at x = 0) and clamped at 0 elsewhere via p_th > 0."""
+    from src.core import formulas as F
+    blue, amber = COLORS["steel_blue"], COLORS["amber"]
+    band_fill = "rgba(241, 143, 1, 0.22)"  # translucent amber
+    fig = make_subplots(rows=1, cols=2, horizontal_spacing=0.10, subplot_titles=(
+        "relaxation envelope (ReadoutRelaxationBound)",
+        "thermal envelope (ThermalAssignmentFloor)"))
+
+    # ── Left panel: p_decay(t/T₁) with rational-enclosure band ──
+    r = np.linspace(0.0, 3.0, 400)
+    p_decay = np.array([F.readout_decay_prob(x, 1.0) for x in r])
+    encl = [F.readout_decay_prob_enclosure(x, 1.0) for x in r]
+    lo_l = np.array([e[0] for e in encl])
+    hi_l = np.array([e[1] for e in encl])
+    fig.add_trace(go.Scatter(
+        x=np.concatenate([r, r[::-1]]), y=np.concatenate([hi_l, lo_l[::-1]]),
+        fill="toself", fillcolor=band_fill, line=dict(width=0),
+        name="enclosure  (t/T₁)/(1+t/T₁) ≤ p ≤ t/T₁", hoverinfo="skip"),
+        row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=r, y=hi_l, mode="lines", name="short-window rule  t/T₁ (upper)",
+        line=dict(color=amber, width=2, dash="dot")), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=r, y=p_decay, mode="lines", name="p_decay = 1 − e^{−t/T₁}",
+        line=dict(color=blue, width=3)), row=1, col=1)
+    fig.add_hline(y=1.0, line=dict(color=COLORS["horizon"], width=1, dash="dot"),
+                  row=1, col=1)
+
+    # ── Right panel: p_th(x) with rational-enclosure band ──
+    xs = np.linspace(0.0, 4.0, 400)
+    p_th = np.array([F.thermal_excited_pop(x) for x in xs])
+    encl_t = [F.thermal_excited_pop_enclosure(x) for x in xs]
+    lo_r = np.array([e[0] for e in encl_t])
+    hi_r = np.array([e[1] for e in encl_t])
+    fig.add_trace(go.Scatter(
+        x=np.concatenate([xs, xs[::-1]]), y=np.concatenate([hi_r, lo_r[::-1]]),
+        fill="toself", fillcolor=band_fill, line=dict(width=0),
+        name="enclosure  (1−x)/(2−x) ≤ p_th ≤ 1/(2+x)", hoverinfo="skip"),
+        row=1, col=2)
+    fig.add_trace(go.Scatter(
+        x=xs, y=hi_r, mode="lines", name="rational upper  1/(2+x)",
+        line=dict(color=amber, width=2, dash="dot"), showlegend=False),
+        row=1, col=2)
+    fig.add_trace(go.Scatter(
+        x=xs, y=p_th, mode="lines", name="p_th = 1/(1+e^x)",
+        line=dict(color=blue, width=3)), row=1, col=2)
+    fig.add_hline(y=0.5, line=dict(color=COLORS["horizon"], width=1, dash="dot"),
+                  row=1, col=2)
+    fig.add_annotation(x=0.05, y=0.52, xref="x2", yref="y2", showarrow=False,
+                       xanchor="left", yanchor="bottom", font=dict(size=10, color="#444"),
+                       text="½ at x=0 (sharp: both endpoints = ½)")
+    fig.add_annotation(x=2.0, y=0.30, xref="x2", yref="y2", showarrow=False,
+                       font=dict(size=10, color="#444"),
+                       text="lower endpoint proven on 0≤x<2,<br>clamped at 0 via p_th > 0")
+
+    fig.update_xaxes(title_text="readout window  t/T₁", row=1, col=1,
+                     showgrid=True, gridcolor="#eee")
+    fig.update_yaxes(title_text="decay probability  p_decay", range=[0, 1.55],
+                     row=1, col=1, showgrid=True, gridcolor="#eee")
+    fig.update_xaxes(title_text="x = βℏω", row=1, col=2,
+                     showgrid=True, gridcolor="#eee")
+    fig.update_yaxes(title_text="thermal occupancy  p_th", range=[0, 0.62],
+                     row=1, col=2, showgrid=True, gridcolor="#eee")
+    fig.update_layout(
+        title="D9 §5 (Phase 6AQ) — readout-window envelopes inside Lean-proven rational enclosures",
+        legend=dict(orientation="h", yanchor="top", y=-0.18, xanchor="left", x=0),
+        height=520, width=1000, margin=dict(l=80, r=40, t=90, b=110),
+        plot_bgcolor="white")
     return fig

@@ -14,17 +14,24 @@
   "last_stage9_review": null,
   "last_stage10_review": "2026-05-26T21:35:00Z",
   "last_stage10_review_round1": "2026-05-26T21:12:00Z",
-  "last_stage13_review": "2026-05-26T21:29:00Z",
+  "last_stage13_review": "2026-06-10T19:30:00Z",
   "blockers_open": 0,
   "advisories_open": 0,
-  "stage13_review_doc": "papers/AutomatedReviews/2026-05-26-2129-internal-adversarial/D7.md",
+  "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d7",
   "stage13_review_doc_round1": "papers/AutomatedReviews/2026-05-26-2112-internal-adversarial/D7.md",
   "stage10_review_doc": "papers/D7/claims_review.json",
   "audit_log_path": "papers/D7/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "created": "2026-05-26T20:00:00Z",
-  "creation_authorization": "Phase 6w strategy synthesis decision-rule conditional authorization; condition met by Wave 6w.6 substantive generality (predicate operates on arbitrary FactorGraph + factor weights + Chern data — nothing analog-Hawking-specific); user authorization confirmed 2026-05-26 PM.",
-  "phase6w_contributing_waves": ["6w.1", "6w.2", "6w.3", "6w.4", "6w.5", "6w.6"],
+  "creation_authorization": "Phase 6w strategy synthesis decision-rule conditional authorization; condition met by Wave 6w.6 substantive generality (predicate operates on arbitrary FactorGraph + factor weights + Chern data \u2014 nothing analog-Hawking-specific); user authorization confirmed 2026-05-26 PM.",
+  "phase6w_contributing_waves": [
+    "6w.1",
+    "6w.2",
+    "6w.3",
+    "6w.4",
+    "6w.5",
+    "6w.6"
+  ],
   "lean_modules": [
     "lean/SKEFTHawking/KibbleZurekUnruh.lean",
     "lean/SKEFTHawking/BeliefPropagation.lean",
@@ -53,9 +60,9 @@
         "Deleted 3 P5 tautology theorems caught by adversarial reviewer that self-audit missed: analog_hawking_simulable_implies_both_conditions (identity-function on And), analog_hawking_simulable_of_both_conditions (trivial And-constructor), categoricalChernExpansion_uses_aperiodicLattice (LEM-vacuous first conjunct + already-proved second + decorative L parameter).",
         "Dropped decorative _c0 parameter from IsAnalogHawkingClassicallySimulable predicate.",
         "Added 3 missing bibkeys (YedidiaFreemanWeiss2003, Zurek1985, BiancoResta2011) to CITATION_REGISTRY with primary-source cache files at Lit-Search/Phase-6w/primary-sources/.",
-        "Down-toned D7 abstract LDP-framing overclaim: 'large-deviation rate function of the loop-correction terms' → 'structural tree indicator on the factor graph'; 'computable threshold' → 'fixed threshold' (also noted that the predicate uses Classical.byCases on an undecidable graph property, so the threshold check is information-theoretic, not algorithmic).",
-        "Down-toned D7 abstract platform-instantiation overclaim: 'We instantiate the demarcation on three analog-Hawking platforms' → 'analog-Hawking applications via the Kibble-Zurek-Unruh correspondence are sketched at the cross-module substrate level... with explicit per-platform (BEC, polariton, graphene Dirac fluid) instantiation bridges deferred to the D-bundle absorption pass'.",
-        "Updated theorem count: 67 → 65 substantive after the 3 deletions; first-claim disclaimer footnote added per finding 5.4.",
+        "Down-toned D7 abstract LDP-framing overclaim: 'large-deviation rate function of the loop-correction terms' \u2192 'structural tree indicator on the factor graph'; 'computable threshold' \u2192 'fixed threshold' (also noted that the predicate uses Classical.byCases on an undecidable graph property, so the threshold check is information-theoretic, not algorithmic).",
+        "Down-toned D7 abstract platform-instantiation overclaim: 'We instantiate the demarcation on three analog-Hawking platforms' \u2192 'analog-Hawking applications via the Kibble-Zurek-Unruh correspondence are sketched at the cross-module substrate level... with explicit per-platform (BEC, polariton, graphene Dirac fluid) instantiation bridges deferred to the D-bundle absorption pass'.",
+        "Updated theorem count: 67 \u2192 65 substantive after the 3 deletions; first-claim disclaimer footnote added per finding 5.4.",
         "Updated headline_theorems list (this metadata) to remove deleted theorems; collapsed crystalline + quasicrystalline pair into single difference-identity headline per finding 7.2."
       ],
       "remaining_action_items": [
@@ -69,13 +76,13 @@
       "date": "2026-05-26T21:29:00Z",
       "trigger": "Stage-13 adversarial-reviewer ROUND 2 fresh-context re-review 2026-05-26T21:29:00Z (post-remediation verification pass)",
       "review_doc": "papers/AutomatedReviews/2026-05-26-2129-internal-adversarial/D7.md",
-      "findings_summary": "Adversarial Round 2: 0 BLOCKER + 0 REQUIRED + 1 RECOMMENDED (N1.1 = author-side bundle_metadata.json ledger flip — this very change closes it). 15 of 16 prior Round-1 findings verdict-ed SUPERSEDED via deterministic recheck; the 16th (7.3 metadata flip) is the carried-forward author-side action closed by this metadata update.",
+      "findings_summary": "Adversarial Round 2: 0 BLOCKER + 0 REQUIRED + 1 RECOMMENDED (N1.1 = author-side bundle_metadata.json ledger flip \u2014 this very change closes it). 15 of 16 prior Round-1 findings verdict-ed SUPERSEDED via deterministic recheck; the 16th (7.3 metadata flip) is the carried-forward author-side action closed by this metadata update.",
       "substantive_fixes": [
-        "Closed N1.1 (mechanical metadata ledger flip): stage13_status 'blocked' → 'green'; stage13_redo_required true → false; last_stage13_review updated to round-2 timestamp 2026-05-26T21:29:00Z; stage13_review_doc updated to round-2 report path; round-1 report path preserved as stage13_review_doc_round1 for audit trail.",
+        "Closed N1.1 (mechanical metadata ledger flip): stage13_status 'blocked' \u2192 'green'; stage13_redo_required true \u2192 false; last_stage13_review updated to round-2 timestamp 2026-05-26T21:29:00Z; stage13_review_doc updated to round-2 report path; round-1 report path preserved as stage13_review_doc_round1 for audit trail.",
         "Filed qi-gate-5-self-audit-blind-spot-on-sibling-tautologies to docs/QI_REGISTER.md (commit 04f1c38)."
       ],
       "remaining_action_items": [
-        "Stage 9 (figure review) — not started; D7 has no figures yet (skeleton paper), so Stage-9 is vacuous-pass eligible per BUNDLE_LIFT_PROCEDURE.md.",
+        "Stage 9 (figure review) \u2014 not started; D7 has no figures yet (skeleton paper), so Stage-9 is vacuous-pass eligible per BUNDLE_LIFT_PROCEDURE.md.",
         "Claims-reviewer round 2 in-flight at metadata-flip time; results pending."
       ]
     },
@@ -83,15 +90,15 @@
       "date": "2026-05-26T21:35:00Z",
       "trigger": "Stage-10 claims-reviewer ROUND 2 fresh-context re-review 2026-05-26T21:35:00Z (post-remediation verification pass)",
       "review_doc": "papers/D7/claims_review.json",
-      "findings_summary": "Claims Round 2: 0 BLOCKER (was 2; both Round-1 BLOCKERs deterministically auto-closed); 1 new IA finding block:D7:3 (text-sync: §5 placeholder said 'four companion lemmas' but post-adversarial-deletions only 2 remain) — fixed substantively immediately; 5 non-blocking followups carried as candidate_for_supersession per LLM-judgment protocol.",
+      "findings_summary": "Claims Round 2: 0 BLOCKER (was 2; both Round-1 BLOCKERs deterministically auto-closed); 1 new IA finding block:D7:3 (text-sync: \u00a75 placeholder said 'four companion lemmas' but post-adversarial-deletions only 2 remain) \u2014 fixed substantively immediately; 5 non-blocking followups carried as candidate_for_supersession per LLM-judgment protocol.",
       "substantive_fixes": [
-        "Fixed §5 placeholder text-sync: 'four companion lemmas' → 'two companion lemmas (the post-adversarial-remediation count, after the three P5 tautologies caught by the Round-1 review were deleted)'. D7 LaTeX re-compiles clean (3 pages)."
+        "Fixed \u00a75 placeholder text-sync: 'four companion lemmas' \u2192 'two companion lemmas (the post-adversarial-remediation count, after the three P5 tautologies caught by the Round-1 review were deleted)'. D7 LaTeX re-compiles clean (3 pages)."
       ],
       "remaining_action_items": [
-        "Stage 9 (figure review) — D7 has no figures (skeleton paper), so Stage-9 vacuous-PASS eligible per BUNDLE_LIFT_PROCEDURE.md §9.",
+        "Stage 9 (figure review) \u2014 D7 has no figures (skeleton paper), so Stage-9 vacuous-PASS eligible per BUNDLE_LIFT_PROCEDURE.md \u00a79.",
         "Final commit + push of round-2 remediation + memory entry."
       ]
     }
   ],
-  "notes": "D7 bundle created 2026-05-26 PM at Phase 6w Wave 6w.7 absorption pass. Synthesizes the Phase 6w substrate into a unified classical-simulability ↔ quantum-advantage demarcation paper. Primary anchors: Tindall-Sels Science 392, 868 (2026) (BP-on-PEPS classical simulation) + Antão-Sun-Fumega-Lado PRL 136, 156601 (2026) (Chebyshev-TN quasicrystal Chern markers). Stage 13 adversarial review Round 1 surfaced 4 BLOCKERs + 5 REQUIREDs + 4 RECOMMENDEDs; Stage 10 claims-reviewer Round 1 surfaced 2 BLOCKERs (1 IA count drift + 1 TN registry absence). Substantive remediation applied (3 P5 tautology theorems deleted, _c0 decorative parameter dropped, 3 missing bibkeys added with primary-source caching, paper prose down-toned to honestly describe substrate state). Round 2 fresh-context re-reviews on both sides verified prior findings SUPERSEDED via deterministic recheck. Final state: Stage-10 GREEN (0 BLOCKER, 5 LLM-judgment carry-forwards); Stage-13 GREEN (0 BLOCKER + 0 REQUIRED + 0 open RECOMMENDED). Bundle Stage-13 SUBMISSION-READY pending Stage 9 (vacuous-PASS eligible — no figures)."
+  "notes": "D7 bundle created 2026-05-26 PM at Phase 6w Wave 6w.7 absorption pass. Synthesizes the Phase 6w substrate into a unified classical-simulability \u2194 quantum-advantage demarcation paper. Primary anchors: Tindall-Sels Science 392, 868 (2026) (BP-on-PEPS classical simulation) + Ant\u00e3o-Sun-Fumega-Lado PRL 136, 156601 (2026) (Chebyshev-TN quasicrystal Chern markers). Stage 13 adversarial review Round 1 surfaced 4 BLOCKERs + 5 REQUIREDs + 4 RECOMMENDEDs; Stage 10 claims-reviewer Round 1 surfaced 2 BLOCKERs (1 IA count drift + 1 TN registry absence). Substantive remediation applied (3 P5 tautology theorems deleted, _c0 decorative parameter dropped, 3 missing bibkeys added with primary-source caching, paper prose down-toned to honestly describe substrate state). Round 2 fresh-context re-reviews on both sides verified prior findings SUPERSEDED via deterministic recheck. Final state: Stage-10 GREEN (0 BLOCKER, 5 LLM-judgment carry-forwards); Stage-13 GREEN (0 BLOCKER + 0 REQUIRED + 0 open RECOMMENDED). Bundle Stage-13 SUBMISSION-READY pending Stage 9 (vacuous-PASS eligible \u2014 no figures). | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN after cache fix. BiancoResta2011 registry arxiv id was wrong (1106.4014=Sau-Halperin) -> corrected to 1111.5697 + re-fetched. Tindall 300+ qubits/BP/Advantage2, Antao 268M sites verbatim; lattice-naming paraphrase caveat noted."
 }

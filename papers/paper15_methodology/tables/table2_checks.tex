@@ -36,9 +36,10 @@
 28 & \texttt{bundle\_source\_freshness} & Bundle source-paper mtime $\leq$ bundle last\_lift; flag stale bundles \\
 29 & \texttt{bibitem\_title\_primary\_source} & Registry titles match primary-source cache PDF page-1 titles (drift detector) \\
 30 & \texttt{quantum\_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
-31 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
-32 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft \texttt{} Lean references resolve in lean\_deps.json \\
-33 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
-34 & \texttt{inventory\_index\_autogen\_fresh} & Advisory: SK\_EFT\_Hawking\_Inventory\_Index.md autogen blocks match docs/counts.json \\
+31 & \texttt{paper\_latex\_compiles} & Bundle drafts compile under pdflatex (advisory; slow --- pass --force-latex or --check paper\_latex\_compiles) \\
+32 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
+33 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft \texttt{} Lean references resolve in lean\_deps.json \\
+34 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
+35 & \texttt{inventory\_index\_autogen\_fresh} & Advisory: SK\_EFT\_Hawking\_Inventory\_Index.md autogen blocks match docs/counts.json \\
 \hline
 \end{tabular}

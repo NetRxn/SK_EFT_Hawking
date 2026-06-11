@@ -10,17 +10,17 @@
   "stage10_round": 2,
   "stage13_status": "green",
   "stage13_round": 1,
-  "stage13_redo_required": true,
+  "stage13_redo_required": false,
   "freshness_stale": true,
   "source_manifest_last_regen": "2026-06-10T20:23:52Z",
   "last_lift": "2026-05-31T17:24:48Z",
   "last_stage9_review": "2026-05-07T01:00:00Z",
   "last_stage10_review": "2026-05-06T23:50:00Z",
-  "last_stage13_review": "2026-05-07T00:35:00Z",
+  "last_stage13_review": "2026-06-10T19:30:00Z",
   "blockers_open": 0,
   "advisories_open": 4,
-  "stage13_review_doc": "papers/AutomatedReviews/2026-05-06-bundle-stage13/E1.md",
+  "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#e1",
   "audit_log_path": "papers/E1/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "Stage 13 r1 2026-05-04: GREEN. 0 BLOCKER / 0 REQUIRED / 4 ADVISORY (5.1 \u0393=1-limit qualifier on universal 0.175\u03ba; 5.2 5229-thms project-vs-chain framing; 2.1 G(\u03ba)\u22480.002 sig-fig rounding; 8.1 boxed-eq label cosmetic). 14 bibitems all in CITATION_REGISTRY; 11 device-parameter audit points reproduce <0.5% from Falque \u00a7IV.1 + provenance.py human_verified 2026-04-28; 4 cited Lean theorems substantive; cross-paper diff vs paper12 + paper16 clean. **Bundle reviewer-triple closed: Stage 9 r3 GREEN + Stage 10 r2 GREEN + Stage 13 r1 GREEN.** QI-E1-1 candidate raised: validate.py --check tier4_device_audit. Stage 10 r2: Round-1 propagating drift block:E1:1 + block:E1:2 fully resolved. | 2026-05-06 Session-2 stage10 round-3 re-walk GREEN (28 sentences, 0 blocking_issues, 0 FAIL, 1 WARN cosmetic). Both 2 D.2 absorption stubs (W1a noise floor \u00a73, W1b Kerr-Schild double-copy \u00a74) properly commented post-Session-2 systematic cleanup. Cross-bundle E1\u2194D1 \u00a76 polariton VERIFIED IDENTICAL LKB device specs. | 2026-05-06 Session-2 stage13 round-1 RED\u2192fix-verified GREEN: BLOCKER 7.1 (Gate 9 CountFreshness, 5229/243 stale literal at lines 45 + 82) FIXED via mechanical replacement to 5812/322. Verified by grep (0 remaining 5229/243 references) + LaTeX recompile clean (3pp/373291 bytes). Cross-bundle E1\u2194D1 \u00a76 polariton character-for-character agreement verified. | 2026-05-06 Session-2 stage9 Stage9 GREEN: D.2 absorption events were post-bib stubs only (now commented); no figure changes. E1 figures pre-existing GREEN per round-3 close 2026-05-04."
+  "notes": "Stage 13 r1 2026-05-04: GREEN. 0 BLOCKER / 0 REQUIRED / 4 ADVISORY (5.1 \u0393=1-limit qualifier on universal 0.175\u03ba; 5.2 5229-thms project-vs-chain framing; 2.1 G(\u03ba)\u22480.002 sig-fig rounding; 8.1 boxed-eq label cosmetic). 14 bibitems all in CITATION_REGISTRY; 11 device-parameter audit points reproduce <0.5% from Falque \u00a7IV.1 + provenance.py human_verified 2026-04-28; 4 cited Lean theorems substantive; cross-paper diff vs paper12 + paper16 clean. **Bundle reviewer-triple closed: Stage 9 r3 GREEN + Stage 10 r2 GREEN + Stage 13 r1 GREEN.** QI-E1-1 candidate raised: validate.py --check tier4_device_audit. Stage 10 r2: Round-1 propagating drift block:E1:1 + block:E1:2 fully resolved. | 2026-05-06 Session-2 stage10 round-3 re-walk GREEN (28 sentences, 0 blocking_issues, 0 FAIL, 1 WARN cosmetic). Both 2 D.2 absorption stubs (W1a noise floor \u00a73, W1b Kerr-Schild double-copy \u00a74) properly commented post-Session-2 systematic cleanup. Cross-bundle E1\u2194D1 \u00a76 polariton VERIFIED IDENTICAL LKB device specs. | 2026-05-06 Session-2 stage13 round-1 RED\u2192fix-verified GREEN: BLOCKER 7.1 (Gate 9 CountFreshness, 5229/243 stale literal at lines 45 + 82) FIXED via mechanical replacement to 5812/322. Verified by grep (0 remaining 5229/243 references) + LaTeX recompile clean (3pp/373291 bytes). Cross-bundle E1\u2194D1 \u00a76 polariton character-for-character agreement verified. | 2026-05-06 Session-2 stage9 Stage9 GREEN: D.2 absorption events were post-bib stubs only (now commented); no figure changes. E1 figures pre-existing GREEN per round-3 close 2026-05-04. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 12 claims: 6 SUPPORTED / 6 CAVEAT / 0 NOT-SUPPORTED. Device specs verbatim. Amelio2020 registry-title flagged."
 }

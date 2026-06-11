@@ -6,10 +6,10 @@
   "phase7_subphase": "6xz",
   "stage9_status": "pending",
   "stage10_status": "pending",
-  "stage13_status": "pending",
-  "stage13_redo_required": true,
-  "last_stage13_review": "2026-05-31T15:00:00Z",
-  "stage13_review_doc": "papers/AutomatedReviews/2026-05-31-1500-bundle-stage13-rerun/D8.md",
+  "stage13_status": "green",
+  "stage13_redo_required": false,
+  "last_stage13_review": "2026-06-10T19:30:00Z",
+  "stage13_review_doc": "docs/audits/stage13_attribution_sweep_2026-06-10.md#d8",
   "stage13_round1_doc": "papers/AutomatedReviews/2026-05-31-bundle-stage13/D8.md",
   "stage13_round1_findings": "0 BLOCKER, 2 REQUIRED (prior-art positioning vs VOQC/survey; first-claim ledger), 4 RECOMMENDED; all REQUIRED remediated, re-run GREEN",
   "freshness_stale": false,
@@ -52,5 +52,5 @@
     "SKEFTHawking.QuantumNetwork.diamondDist_unitaryKraus_le",
     "SKEFTHawking.FKLW.GenericSU2.diamondDist_cliffordTCompile_le"
   ],
-  "notes": "fresh-authored as a synthesis-driven new composition (no per-paper-draft sources to lift; sourceless per PAPER_DRAFT_MAPPING.md, D.4 path). Substrate is the FKLW/* + Mukhopadhyay/* + SolovayKitaev* Lean module families. Late absorption 2026-06-10 (D.4 x4): Phase 6AM-W5 / 6AN-W5 / 6AO T1-T3 / 6AP-W3+W3b verified-synthesis layer (FKLW/RossSelinger/*, FKLW/CliffordTCompiler, FKLW/CompiledGateDiamond, QuantumNetwork/{KroneckerOpNorm,UnitaryDiamond,MatrixNormBridge}); stage13_redo_required=true pending the queued Stage-F reviewer triple."
+  "notes": "fresh-authored as a synthesis-driven new composition (no per-paper-draft sources to lift; sourceless per PAPER_DRAFT_MAPPING.md, D.4 path). Substrate is the FKLW/* + Mukhopadhyay/* + SolovayKitaev* Lean module families. Late absorption 2026-06-10 (D.4 x4): Phase 6AM-W5 / 6AN-W5 / 6AO T1-T3 / 6AP-W3+W3b verified-synthesis layer (FKLW/RossSelinger/*, FKLW/CliffordTCompiler, FKLW/CompiledGateDiamond, QuantumNetwork/{KroneckerOpNorm,UnitaryDiamond,MatrixNormBridge}); stage13_redo_required=true pending the queued Stage-F reviewer triple. | 2026-06-10 attribution-content sweep (docs/audits/stage13_attribution_sweep_2026-06-10.md): GREEN. 10 anchors: 3 SUPPORTED / 7 CAVEAT(abstract-only cache) / 0 NOT-SUPPORTED. AKN Lemma 12.6 diamond bound, KMM Lagrange-4-square, GilesSelinger column lemma all full-text verified; RS deep lemmas via verbatim DR."
 }

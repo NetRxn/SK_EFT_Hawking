@@ -355,7 +355,7 @@ density). All Lean-only / D.4-sourceless.
   Kuperberg 2009; Boykin-Mor-Pulver-Roychowdhury-Vatan
   (arXiv:quant-ph/9906054); Read-Rezayi (arXiv:cond-mat/9809384);
   Brylinski-Brylinski (arXiv:quant-ph/0108062); Aaronson-Gottesman
-  (arXiv:quant-ph/0403025); Mukhopadhyay (arXiv:2401.08950);
+  (arXiv:quant-ph/0406196); Mukhopadhyay (arXiv:2401.08950);
   Kliuchnikov-Maslov-Mosca (arXiv:1206.5236); Ross-Selinger
   (arXiv:1403.2975). Each must resolve to a primary-source cache file.
 

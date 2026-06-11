@@ -10970,3 +10970,107 @@ def link_rate(L: float, c: float, p: float) -> float:
 
 # Haar–Pauli quadratic integral ∫_{S²}(⟨ψ|σ_k|ψ⟩)² dμ = 1/3 (Lean: haarPauliZSqAverage_eq).
 HAAR_PAULI_CONSTANT: float = 1.0 / 3.0
+
+
+# ════════════════════════════════════════════════════════════════════
+# Readout-window envelopes (Phase 6AQ — QuantumNetwork/
+# ReadoutRelaxationBound.lean + ThermalAssignmentFloor.lean)
+#
+# Python numeric mirror of the kernel-verified device-characterization
+# readout envelopes: the relaxation decay probability over a finite
+# readout window and the two-level thermal excited-state occupancy,
+# each with its Lean-proven rational enclosure (both enclosure
+# endpoints rational at rational arguments — no floating-point exp is
+# needed to bracket an operating point). All quantities are
+# dimensionless probabilities; t and T1 share any common time unit;
+# x = βℏω is dimensionless.
+# ════════════════════════════════════════════════════════════════════
+
+def readout_decay_prob(t: float, T1: float) -> float:
+    """
+    Excited-state decay probability over a readout window of duration t
+    on a qubit with relaxation time T₁: p_decay(t, T₁) = 1 − e^{−t/T₁}.
+
+    Range [0, 1) on the physical domain t ≥ 0, T₁ > 0; strictly increasing
+    in t, strictly decreasing in T₁; p(0) = 0 and p → 1 as t → ∞. Equals the
+    amplitude-damping weight γ(t, T₁) of the coherence channel
+    (readoutDecayProb_eq_cohGamma) — the same coherence data that bounds
+    gates bounds readout. The identification with the excited-branch
+    misassignment ε₁ is the literature-cited model layer, never a theorem.
+
+    Lean: readoutDecayProb, readoutDecayProb_eq_cohGamma,
+          readoutDecayProb_nonneg, readoutDecayProb_lt_one,
+          readoutDecayProb_zero_time, readoutDecayProb_pos,
+          readoutDecayProb_strictMono_time, readoutDecayProb_strictAnti_relax,
+          readoutDecayProb_tendsto_one (ReadoutRelaxationBound.lean)
+    Source: Gambetta et al. PRA 76, 012325 (2007); Walter et al.
+            PRApplied 7, 054020 (2017) (cited readout-model layer)
+    """
+    return 1.0 - np.exp(-t / T1)
+
+
+def readout_decay_prob_enclosure(t: float, T1: float) -> tuple[float, float]:
+    """
+    Lean-proven rational enclosure of the readout decay probability on
+    t ≥ 0, T₁ > 0:  (t/T₁)/(1 + t/T₁) ≤ p_decay(t, T₁) ≤ t/T₁.
+
+    Both endpoints are rational at rational t/T₁, so every operating point
+    admits a machine-checkable rational bracket with no floating-point exp
+    (Phase-6AP expNeg_enclosure Bernoulli bracket). The upper endpoint is the
+    short-window rule p ≲ t/T₁, proven as an exact inequality on the full
+    physical domain. Returns (lower, upper).
+
+    Lean: readoutDecayProb_enclosure (ReadoutRelaxationBound.lean);
+          expNeg_enclosure (NumericalBounds.lean)
+    """
+    r = t / T1
+    return (r / (1.0 + r), r)
+
+
+def thermal_excited_pop(x: float) -> float:
+    """
+    Two-level thermal excited-state occupancy at dimensionless inverse
+    temperature x = βℏω: p_th(x) = 1/(1 + e^x) (Boltzmann/detailed-balance
+    form; the Fermi/logistic function). Derived in Lean from the PhysLib
+    two-state canonical ensemble (twoState_excited_probability via the
+    tanh↔logistic bridge half_one_sub_tanh) — a theorem of statistical
+    mechanics, not a definition.
+
+    Strictly decreasing in x; p_th(0) = 1/2 (high-T endpoint), p_th → 0 as
+    x → ∞ (zero-temperature endpoint); 0 < p_th ≤ 1/2 on x ≥ 0. The reading
+    as an assignment-error floor is the literature-cited model layer.
+
+    Lean: thermalExcitedPop, twoState_excited_probability, half_one_sub_tanh,
+          thermalExcitedPop_strictAnti, thermalExcitedPop_zero,
+          thermalExcitedPop_le_half, thermalExcitedPop_pos,
+          thermalExcitedPop_tendsto_zero,
+          thermalExcitedPop_strictMono_temperature,
+          thermalExcitedPop_strictAnti_frequency (ThermalAssignmentFloor.lean)
+    Source: Geerlings et al. PRL 110, 120501 (2013); Jin et al.
+            PRL 114, 240501 (2015) (cited thermal-population model layer)
+    """
+    return 1.0 / (1.0 + np.exp(x))
+
+
+def thermal_excited_pop_enclosure(x: float) -> tuple[float, float]:
+    """
+    Lean-proven rational enclosure of the thermal occupancy on x ≥ 0:
+
+      upper:  p_th(x) ≤ 1/(2 + x)        for all x ≥ 0
+              (thermalExcitedPop_rational_upper);
+      lower:  (1 − x)/(2 − x) ≤ p_th(x)  proven for 0 ≤ x < 2, sharp at
+              x = 0 (thermalExcitedPop_rational_lower); for x ≥ 1 the
+              rational endpoint is ≤ 0, so the returned lower bound is
+              clamped at 0, valid for ALL x ≥ 0 via strict positivity
+              0 < p_th (thermalExcitedPop_pos).
+
+    Both endpoints rational at rational x (Phase-6AP expNeg_enclosure
+    Bernoulli bracket). Returns (lower, upper).
+
+    Lean: thermalExcitedPop_rational_upper, thermalExcitedPop_rational_lower,
+          thermalExcitedPop_pos (ThermalAssignmentFloor.lean);
+          expNeg_enclosure (NumericalBounds.lean)
+    """
+    upper = 1.0 / (2.0 + x)
+    lower = max(0.0, (1.0 - x) / (2.0 - x)) if x < 2.0 else 0.0
+    return (lower, upper)

@@ -73,10 +73,12 @@ de~Laval nozzle — drift velocity $v > c_s \approx
 \SI{440}{\kilo\meter/\second}$ inside a $\SI{200}{\nano\meter}$
 throat, terminated by a viscous shock front — establishes the
 transonic transition that is the geometric prerequisite for a
-hydrodynamic-electron sonic horizon; the analog-Hawking
-interpretation of that flow, and the spectrum predicted below, are
-this Letter's theoretical application, not a finding of
-Ref.~\cite{Geurs2025}. The Majumdar et al.~\cite{Majumdar2025}
+hydrodynamic-electron sonic horizon. Ref.~\cite{Geurs2025} already
+notes the de~Laval--acoustic-black-hole analogy and an
+order-of-magnitude estimate $T_H \sim \SI{500}{\milli\kelvin}$; the
+detailed analog-Hawking spectrum and noise power spectral density
+predicted below are this Letter's theoretical development. The
+Majumdar et al.~\cite{Majumdar2025}
 measurement of quantum-critical transport at the Dirac point in
 ultra-clean monolayer graphene — universal conductance
 $\sigma_Q \approx 4\,e^2/h$ and Wiedemann-Franz violation
@@ -117,9 +119,12 @@ surface gravity at the throat is $\kappa \approx \SI{2.0e12}{\per\second}$
 than the order-of-magnitude identification $c_s/L \approx \SI{2.2e12}{\per\second}$);
 this gives $T_H \approx \SI{2.4}{\kelvin}$ — nine orders of magnitude above
 the atomic-BEC value of $\SI{0.35}{\nano\kelvin}$
-\cite{Steinhauer2016,deNova2019} and four orders of magnitude above
-the exciton-polariton analog-horizon platform's
-$T_H \sim \SI{0.1}{\kelvin}$ range~\cite{Falque2025}. The temperature
+\cite{Steinhauer2016,deNova2019} and more than an order of magnitude
+above the exciton-polariton analog-horizon scale
+($T_H \sim \SI{0.1}{\kelvin}$ for the LKB smooth-horizon device, using
+the standard $T_H=\hbar\kappa/2\pi k_B$ normalisation; Falque
+\emph{et al.}~\cite{Falque2025} quote the un-normalised
+$\hbar\kappa/k_B \approx \SI{3}{\kelvin}$). The temperature
 advantage is decisive: $T_H \approx \SI{2.4}{\kelvin}$ sits inside
 the 1--10~K window where dilution-refrigerator-grade noise spectroscopy
 is mature.
@@ -187,8 +192,8 @@ markers are the Dean bilayer nozzle ($L = \SI{200}{\nano\meter}$,
 $T_H \approx \SI{2.4}{\kelvin}$) and two monolayer constriction
 projections at $L = \SI{50}{\nano\meter}$ ($T_H \approx \SI{17}{\kelvin}$,
 EFT breakdown beyond) and $L = \SI{100}{\nano\meter}$
-($T_H \approx \SI{8.7}{\kelvin}$). Horizontal lines: $T_{\rm amb} =
-\SI{150}{\kelvin}$ Dean operating temperature; $T_{\rm imp} \approx
+($T_H \approx \SI{8.7}{\kelvin}$). Horizontal lines: $T_{\rm e} =
+\SI{150}{\kelvin}$ Dean high-bias electron temperature; $T_{\rm imp} \approx
 \SI{80}{\kelvin}$ disorder scale below which hydrodynamic transport
 is robust.}
 \label{fig:T_sweep}
@@ -201,7 +206,10 @@ scattering length:
 \begin{equation}
 \delta_{\rm disp} = -\frac{\pi}{6} D^2.
 \end{equation}
-At Dean operating temperature $T = \SI{150}{\kelvin}$,
+At the Dean device's high-bias electron temperature $T = \SI{150}{\kelvin}$
+(the lattice bath sits near \SI{10}{\kelvin}; under bias the electron gas
+heats to $\sim\SI{150}{\kelvin}$~\cite{Geurs2025}, and this electron
+temperature sets the carrier thermal noise),
 $l_{\rm ee} \approx \SI{51}{\nano\meter}$ gives $D \approx 0.23$ —
 deep in the perturbative regime — and
 $\delta_{\rm disp} \approx -2.8\%$. The effective Hawking temperature
@@ -318,8 +326,8 @@ $\Gamma \approx 0.99994$). The signal peaks at $\omega \approx
 \SI{51}{\giga\hertz}$ at $\Delta S_I \approx
 \SI{e-26}{\ampere\squared/\hertz}$, two orders of magnitude below
 the white Johnson-Nyquist thermal background
-$S_{\rm thermal} = 4 k_B T_{\rm amb} \sigma_Q \approx
-\SI{1.3e-24}{\ampere\squared/\hertz}$ at $T_{\rm amb} = \SI{150}{\kelvin}$,
+$S_{\rm thermal} = 4 k_B T_{\rm e} \sigma_Q \approx
+\SI{1.3e-24}{\ampere\squared/\hertz}$ at $T_{\rm e} = \SI{150}{\kelvin}$,
 but distinguished by its Planckian shape vs.\ the white background.}
 \label{fig:noise}
 \end{figure}
@@ -330,7 +338,7 @@ but distinguished by its Planckian shape vs.\ the white background.}
 \caption{Per-bin Hawking-to-thermal noise ratio
 $S_{\rm Hawking}(\omega) / S_{\rm thermal}$ versus frequency at the
 Dean bilayer-nozzle parameters ($\sigma_Q \approx 4 e^2/h$,
-$T_{\rm amb} = \SI{150}{\kelvin}$). The peak ratio is
+$T_{\rm e} = \SI{150}{\kelvin}$). The peak ratio is
 $\sim 8 \times 10^{-3}$ at $\omega \approx \omega_H$, reflecting
 the two-orders-of-magnitude separation between the Planckian
 Hawking signal and the white Johnson-Nyquist background. Shape-

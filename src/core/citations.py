@@ -2133,6 +2133,29 @@ CITATION_REGISTRY = {
                  'SM-as-crossover verdict. doi_verified pending — APS PRL '
                  'CrossRef + arXiv hep-ph/9605288 fetch round.',
     },
+    'DOnofrioRummukainen2016': {
+        'authors': "D'Onofrio, M., Rummukainen, K.",
+        'title': 'Standard Model cross-over on the lattice',
+        'journal': 'Phys. Rev. D',
+        'volume': 93,
+        'page': '025003',
+        'year': 2016,
+        'doi': '10.1103/PhysRevD.93.025003',
+        'arxiv': '1508.07161',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/DOnofrioRummukainen2016.pdf',
+        'used_in': ['papers/D3/paper_draft.tex'],
+        'provides': [],
+        'notes': 'D\'Onofrio-Rummukainen 2016 (arXiv:1508.07161, title '
+                 'title-matched against arXiv API 2026-06-10) — the lattice '
+                 'crossover temperature T_c = 159.5 ± 1.5 GeV at the physical '
+                 'Higgs mass m_H = 125 GeV. Added 2026-06-10 in the '
+                 'AttributionContentSweep: D3 §13 had mis-attributed this '
+                 '159 GeV/125 GeV result to KLRS1996 (which studied '
+                 'm_H = 60-180 GeV and reports no 159 GeV); KLRS1996 is '
+                 'retained for the crossover-existence verdict only.',
+    },
     'ButtazzoEtAl2013': {
         'authors': 'Buttazzo, D., Degrassi, G., Giardino, P. P., Giudice, G. F., Sala, F., Salvio, A., Strumia, A.',
         'title': 'Investigating the near-criticality of the Higgs boson',
@@ -10653,7 +10676,7 @@ CITATION_REGISTRY = {
         'page': '241106(R)',
         'year': 2011,
         'doi': '10.1103/PhysRevB.84.241106',
-        'arxiv': '1106.4014',
+        'arxiv': '1111.5697',  # corrected 2026-06-10: was 1106.4014 (=Sau-Halperin, the paper the stale cache actually held); 1111.5697 is the real Bianco-Resta "Mapping topological order in coordinate space" (title-matched vs arXiv API)
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6w/primary-sources/BiancoResta2011.pdf',

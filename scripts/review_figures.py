@@ -1836,6 +1836,25 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[],
         color_keys=["steel_blue", "amber"],
     ),
+    FigureSpec(
+        name="fig_qnet_readout_envelopes",
+        function="fig_qnet_readout_envelopes",
+        caption=(
+            "D9 §5 (Phase 6AQ) — readout-window device-characterization envelopes. "
+            "Left: relaxation decay probability p_decay = 1 − e^(−t/T₁) vs t/T₁ inside "
+            "the Lean-proven rational enclosure (t/T₁)/(1+t/T₁) ≤ p ≤ t/T₁ "
+            "(readoutDecayProb_enclosure). Right: thermal excited-state occupancy "
+            "p_th = 1/(1+e^x), x = βℏω, inside its rational enclosure — upper 1/(2+x) "
+            "for all x ≥ 0, lower (1−x)/(2−x) proven on 0 ≤ x < 2 (sharp at x = 0), "
+            "clamped at 0 elsewhere via p_th > 0. Lean: ReadoutRelaxationBound.lean, "
+            "ThermalAssignmentFloor.lean."
+        ),
+        needs_experiments=False, expected_traces=6,
+        expected_axes={"xaxis": "t/T₁", "xaxis2": "βℏω",
+                       "yaxis": "decay probability", "yaxis2": "thermal occupancy"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber"],
+    ),
 ]
 
 
@@ -2000,6 +2019,7 @@ def generate_figures() -> dict[str, Path]:
         fig_sk_length_bound_curve,
         fig_fibonacci_braid_word_t_gate_example,
         fig_qnet_bb84_key_rate, fig_qnet_swap_chain_envelope, fig_qnet_w_vs_ghz,
+        fig_qnet_readout_envelopes,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -2167,6 +2187,8 @@ def generate_figures() -> dict[str, Path]:
         "fig_qnet_bb84_key_rate": fig_qnet_bb84_key_rate,
         "fig_qnet_swap_chain_envelope": fig_qnet_swap_chain_envelope,
         "fig_qnet_w_vs_ghz": fig_qnet_w_vs_ghz,
+        # Phase 6AQ — readout-window envelopes (D9 §5)
+        "fig_qnet_readout_envelopes": fig_qnet_readout_envelopes,
     }
 
     paths = {}
@@ -2365,6 +2387,7 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_sk_length_bound_curve,
         fig_fibonacci_braid_word_t_gate_example,
         fig_qnet_bb84_key_rate, fig_qnet_swap_chain_envelope, fig_qnet_w_vs_ghz,
+        fig_qnet_readout_envelopes,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -2530,6 +2553,8 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_qnet_bb84_key_rate": fig_qnet_bb84_key_rate,
         "fig_qnet_swap_chain_envelope": fig_qnet_swap_chain_envelope,
         "fig_qnet_w_vs_ghz": fig_qnet_w_vs_ghz,
+        # Phase 6AQ — readout-window envelopes (D9 §5)
+        "fig_qnet_readout_envelopes": fig_qnet_readout_envelopes,
     }
 
     issues: list[CheckIssue] = []
