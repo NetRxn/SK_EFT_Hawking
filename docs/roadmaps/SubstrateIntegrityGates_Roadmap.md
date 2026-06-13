@@ -99,6 +99,20 @@ Each wave: build the check → triage the flagged set → register-or-fix → wi
 | W4 formula content-grounding (R1) | ✅ COMPLETE 2026-06-13 |
 | W5 native_decide accounting (R4) | ✅ COMPLETE 2026-06-13 |
 | W6 pipeline + QI + ADR integration | ✅ COMPLETE 2026-06-13 |
+| W7 adversarial-review hardening | ✅ COMPLETE 2026-06-13 |
+
+### W7 close (2026-06-13) — closure-review findings remediated
+Two fresh-context closure reviewers ran (claims-review of paper7 #3; adversarial audit of the 6 gates). **Claims-review: PASS on all 4 (the #3 fix is honest — Z/2 genuinely proven via `full_correspondence`, S₃ count-only, general-G stub, no other placeholder cited).** **Registries/disclosures verified HONEST.** **Q5 RESOLVED: defensible** — paper7 cites the unconditional `full_correspondence`, not the H_CFZ2-gated deferred categorical functor (zero downstream); W1 "Z/2 fully verified" framing sound (registry risk notes updated to record this). Gate-mechanism findings fixed:
+- **C1 (critical):** `_scan_lean_theorem_bodies` now scans `theorem` AND `lemma` (was theorem-only — a defining-the-conclusion `lemma := rfl` bypassed R2). `def`/`instance` deliberately excluded (definitions, not claims).
+- **C2 (critical):** added trivial-body patterns `Iff.rfl`, all-`rfl`/`trivial` `⟨…⟩`, `And.intro rfl rfl`, `fun _ => _.field` projection — but NOT bare `⟨…⟩` (a genuine `full_correspondence`-style bundle of real lemmas must not be flagged; verified).
+- **M3:** broadened `_STRUCTURAL_NAME_RE` (+`_correspondence`/`_matches`/`_preserved`/`_bijection`/`_holds`); surfaced 2 new flags, both legitimate-definitional, disclosed (`signature_preserved`, `phase6y_cascade_closure_status_holds`).
+- **H2 (high):** hedge logic now uses CLAIM-SPECIFIC multi-word phrases (a stray `stub`/`modulo`/`deferred` no longer suppresses a real overclaim) — fixed without the window-tightening that false-flagged paper9.
+- **H1 (high):** Invariant #16 scoped HONESTLY — struct-field assumptions are covered case-by-case (topo via rokhlin), NOT auto-enumerated; general struct-field detection is tracked debt (the invariant no longer claims coverage the code lacks).
+- **M1:** `tracked_hypotheses_fresh` now HARD-FAILS on drift (was silently rewriting a tracked file).
+- **M2:** counts-staleness backstop uses `rglob` (subdir native_decide additions were invisible).
+- **L1:** `TRACKED_HYPOTHESIS_NON_LOAD_BEARING` dict now exists (was referenced via getattr-default).
+- **L2 (deferred):** formula dangling-ref ratchet — folded into FormulaRefSweep tracked debt.
+4 new W7 unit tests (25 total green).
 
 ### W6 close (2026-06-13)
 - `WAVE_EXECUTION_PIPELINE.md`: 6 SIG gates added to the Stage-7 (+Stage-5 nd) check list; Invariant #9 strengthened with automated-enforcement clause; **Stage-14 closure-pathway policy** added (substance/disclosure QI close ONLY via pathway #2). (Inv #4 restated in W4, Inv #16 added in W3.)

@@ -282,18 +282,18 @@
 **Statement.** Mirror of H_CFZ2_sq_e at the (aAdd, aAdd, aAdd) index triple (hexagon double-swap identity for the Z/2 Drinfeld-center functor).
 
 - status `active` · eliminability `hard` · module `CenterFunctorZ2Equiv`
-- **Posture.** Local hexagon double-swap identity (aAdd summand) for the Z/2 Drinfeld center.
+- **Posture.** Local hexagon double-swap identity (aAdd summand) for the deferred Z/2 Drinfeld-center categorical functor (no downstream paper consumer).
 - **Source.** Phase 5s Wave 9 Option A (2026-04-20).
-- **Risk.** Local algebraic hexagon identity; same review note as H_CFZ2_sq_e.
+- **Risk.** Local algebraic hexagon identity. RESOLVED — same as H_CFZ2_sq_e: gates only the deferred categorical functor (zero downstream); paper7 cites the unconditional `full_correspondence`, not this. W1 "Z/2 fully verified" framing sound.
 
 ### `H_CFZ2_sq_e`
 
 **Statement.** The halfBraiding double-swap (hexagon-derived β≫β_can≫β≫desc = ρ) identity at the (eAdd, aAdd, aAdd) index triple of the Z/2 Drinfeld-center functor.
 
 - status `active` · eliminability `hard` · module `CenterFunctorZ2Equiv`
-- **Posture.** Local hexagon double-swap identity (eAdd summand) for the Z/2 Drinfeld center.
+- **Posture.** Local hexagon double-swap identity (eAdd summand) for the deferred Z/2 Drinfeld-center categorical functor (no downstream paper consumer).
 - **Source.** Phase 5s Wave 9 Option A (2026-04-20); hexagon identity for Z(Vec_{ℤ/2}).
-- **Risk.** Local algebraic hexagon identity. NOTE: conditions the Z/2 center-functor equivalence — review whether the W1 "Z/2 fully verified" framing should disclose it.
+- **Risk.** Local algebraic hexagon identity. RESOLVED (ADR-004 W7 review, 2026-06-13): gates ONLY the deferred categorical functor `CenterFunctorZ2Equiv.canonicalCenterToRep` (proven Faithful; full Equivalence explicitly DEFERRED, zero downstream consumers). paper7 cites `CenterEquivalenceZ2.full_correspondence` — the unconditional finite object/fusion/braiding correspondence of the 4 simples — NOT this functor; so the W1 "Z/2 fully verified" framing is sound and no paper claim rides on H_CFZ2.
 
 ### `H_DecouplingBoundDim6`
 

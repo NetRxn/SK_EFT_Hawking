@@ -2426,6 +2426,19 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
         'reason': 'Counts the filtered candidate List length = 8 (rDIndependentCount); a definitional count of a concrete List, not a derivation.',
         'discloses': '`def rDIndependentCount` (the .filter over the 8-candidate list); docstring.',
     },
+    # surfaced by the W7 M3 name-pattern broadening (correspondence/preserved/holds):
+    'signature_preserved': {
+        'lean_name': 'signature_preserved', 'module': 'CenterEquivalenceZ2',
+        'category': 'definitional',
+        'reason': 'Genuine finite data-preservation fact: the toric-code braiding signature R(e,m) = −1 is preserved under the Z/2 center equivalence (`braidingPhase = dz2BraidingPhase ∘ toricToDZ2`), true by rfl over the concrete 4-anyon data. A real sibling of fusion_preserved/braiding_preserved (which use `simp`); part of the substantive `full_correspondence`.',
+        'discloses': '`CenterEquivalenceZ2.full_correspondence` bundles it with fusion/braiding/grading preservation; docstring.',
+    },
+    'phase6y_cascade_closure_status_holds': {
+        'lean_name': 'phase6y_cascade_closure_status_holds', 'module': 'FKLW.Phase6yClosureStatusIndex',
+        'category': 'definitional',
+        'reason': 'Status-index marker: `phase6y_cascade_closure_status` is a `def` that unfolds to `True` (a human-readable closure-status checklist in its body comments), so the theorem is a documentation marker, not a mathematical claim.',
+        'discloses': '`def phase6y_cascade_closure_status := True` with the per-item closure checklist in comments; the genuine FKLW results are the cited per-session theorems.',
+    },
 
     # ---- vacuous_proxy (DISCLOSED tracked debt: statement is content-free vs name) ----
     'change_of_rings_ext_dim': {
@@ -2493,6 +2506,15 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
 #   risk: Assessment of the hypothesis's reliability
 #   circularity_note: Any known circularity concerns
 # ════════════════════════════════════════════════════════════════════
+
+# Downgrade escape hatch for `tracked_hypothesis_ledger` (R3): a consumed
+# tracked Prop that is genuinely NOT load-bearing (e.g. discharged within its
+# own module, or a purely-local intermediate) is listed here with a reason
+# instead of getting a full HYPOTHESIS_REGISTRY entry. Currently empty — every
+# consumed tracked Prop is a real registry entry. (ADR-004 W7 finding L1: the
+# check referenced this dict via getattr-default; now it exists explicitly.)
+TRACKED_HYPOTHESIS_NON_LOAD_BEARING: dict[str, str] = {
+}
 
 HYPOTHESIS_REGISTRY: dict[str, dict] = {
     'rokhlin_sigma_mod_16': {
@@ -2849,16 +2871,16 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
         'status': 'active', 'tier': 'local', 'eliminability': 'hard',
         'module': 'CenterFunctorZ2Equiv',
         'source': 'Phase 5s Wave 9 Option A (2026-04-20); hexagon identity for Z(Vec_{ℤ/2}).',
-        'risk': 'Local algebraic hexagon identity. NOTE: conditions the Z/2 center-functor equivalence — review whether the W1 "Z/2 fully verified" framing should disclose it.',
-        'circularity_note': 'None.', 'prose': 'Local hexagon double-swap identity (eAdd summand) for the Z/2 Drinfeld center.',
+        'risk': 'Local algebraic hexagon identity. RESOLVED (ADR-004 W7 review, 2026-06-13): gates ONLY the deferred categorical functor `CenterFunctorZ2Equiv.canonicalCenterToRep` (proven Faithful; full Equivalence explicitly DEFERRED, zero downstream consumers). paper7 cites `CenterEquivalenceZ2.full_correspondence` — the unconditional finite object/fusion/braiding correspondence of the 4 simples — NOT this functor; so the W1 "Z/2 fully verified" framing is sound and no paper claim rides on H_CFZ2.',
+        'circularity_note': 'None.', 'prose': 'Local hexagon double-swap identity (eAdd summand) for the deferred Z/2 Drinfeld-center categorical functor (no downstream paper consumer).',
     },
     'H_CFZ2_sq_a': {
         'statement': 'Mirror of H_CFZ2_sq_e at the (aAdd, aAdd, aAdd) index triple (hexagon double-swap identity for the Z/2 Drinfeld-center functor).',
         'status': 'active', 'tier': 'local', 'eliminability': 'hard',
         'module': 'CenterFunctorZ2Equiv',
         'source': 'Phase 5s Wave 9 Option A (2026-04-20).',
-        'risk': 'Local algebraic hexagon identity; same review note as H_CFZ2_sq_e.',
-        'circularity_note': 'None.', 'prose': 'Local hexagon double-swap identity (aAdd summand) for the Z/2 Drinfeld center.',
+        'risk': 'Local algebraic hexagon identity. RESOLVED — same as H_CFZ2_sq_e: gates only the deferred categorical functor (zero downstream); paper7 cites the unconditional `full_correspondence`, not this. W1 "Z/2 fully verified" framing sound.',
+        'circularity_note': 'None.', 'prose': 'Local hexagon double-swap identity (aAdd summand) for the deferred Z/2 Drinfeld-center categorical functor (no downstream paper consumer).',
     },
 }
 

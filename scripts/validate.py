@@ -216,12 +216,18 @@ _VERIFY_CLAIM_RE = re.compile(
     r"zero\s+\\?texttt\{?sorry",
     re.IGNORECASE,
 )
-# Hedge phrasing that, in the same window, means the claim is honestly disclosed
-# (statement-level / concrete-instance-only / deferred) — not an overclaim.
+# Hedge phrasing that, near a placeholder reference, means the claim is honestly
+# disclosed (statement-level / concrete-instance-only / deferred) — not an
+# overclaim. ADR-004 W7 finding H2: these are CLAIM-SPECIFIC MULTI-WORD phrases,
+# NOT bare ambiguous single words (a stray "stub"/"modulo"/"deferred" in
+# unrelated prose must not suppress a real overclaim). Each alternative is a
+# phrase a careful author writes ABOUT this specific claim.
 _HEDGE_CLAIM_RE = re.compile(
-    r"statement[-\s]level|at\s+the\s+statement\s+level|placeholder|_TODO|"
-    r"\\_TODO|not\s+yet|conjectur|deferred|stub|modulo|abstract\s+functor|"
-    r"concrete(ly)?\s+(verif|for|instance)|general[-\s]?\$?G\$?\s+(statement|case|level)|"
+    r"statement[-\s]level|at\s+the\s+statement\s+level|formalized\s+at\s+the\s+statement|"
+    r"_TODO|\\_TODO|not\s+yet\s+(proven|formal|verif)|conjectur|"
+    r"deferred\s+to|abstract\s+(braided[-\s]monoidal\s+)?functor|"
+    r"concrete(ly)?\s+(verif|for|instance)|verified\s+concretely|"
+    r"general[-\s]?\$?G\$?\s+(statement|case|level)|matched\s+at\s+the\s+(level|anyon)|"
     r"only\s+(the\s+)?\$?\\?mathbb\{?Z\}?|for\s+\$?\\?mathbb",
     re.IGNORECASE,
 )
@@ -250,7 +256,11 @@ def check_placeholder_not_cited() -> CheckResult:
     if not PAPERS_DIR.exists():
         return CheckResult(passed=True, details=[Detail("papers_dir", True, "no papers/ directory")])
 
-    WINDOW = 320  # chars on each side of a placeholder match
+    WINDOW = 320  # verification-claim + hedge search window each side of a match.
+    #               ADR-004 W7 finding H2 is addressed by tightening the HEDGE
+    #               REGEX to claim-specific multi-word phrases (above), NOT by a
+    #               narrower window (which false-flags legitimately-hedged-but-
+    #               spread-out prose, e.g. paper9).
 
     tokens: List[tuple] = []  # (compiled_regex, registry_key, kind)
     for key, meta in PLACEHOLDER_THEOREMS.items():
@@ -280,10 +290,8 @@ def check_placeholder_not_cited() -> CheckResult:
         offenders: Dict[str, str] = {}
         for tok_re, key, kind in tokens:
             for m in tok_re.finditer(text):
-                lo = max(0, m.start() - WINDOW)
-                hi = min(len(text), m.end() + WINDOW)
-                window = text[lo:hi]
-                if _VERIFY_CLAIM_RE.search(window) and not _HEDGE_CLAIM_RE.search(window):
+                win = text[max(0, m.start() - WINDOW): min(len(text), m.end() + WINDOW)]
+                if _VERIFY_CLAIM_RE.search(win) and not _HEDGE_CLAIM_RE.search(win):
                     offenders.setdefault(key, kind)
 
         if offenders:
@@ -309,9 +317,9 @@ def check_placeholder_not_cited() -> CheckResult:
 # Theorem NAME claims a structural / quantitative result.
 _STRUCTURAL_NAME_RE = re.compile(
     r"(_dim$|_dim_|_dims_|rank|finrank|Ext|classification|_no_go$|_nogo$|"
-    r"sixteen_|_unanimous$|_equivalence$|_corresponds$|_combined$|_iso$|"
-    r"_well_defined$|_count$)",
-    re.IGNORECASE,
+    r"sixteen_|_unanimous$|_equivalence$|_corresponds$|_correspondence$|_combined$|"
+    r"_iso$|_well_defined$|_count$|_matches|_preserved$|_bijection$|_holds$)",
+    re.IGNORECASE,  # ADR-004 W7 finding M3: added correspondence/matches/preserved/bijection/holds
 )
 # A body that is ESSENTIALLY a trivial closer (after whitespace normalization).
 # Deliberately EXCLUDES decide / native_decide / norm_num / ring / simp etc. —
@@ -323,6 +331,14 @@ _TRIVIAL_BODY_RES = [
     (re.compile(r"^by\s+(intro\s+[\w\s]+?)?cases\s+\w+\s*<;>\s*rfl$"), "cases <;> rfl"),
     (re.compile(r"^(by\s+exact\s+)?h[\w']*$"), "identity-return (hypothesis)"),
     (re.compile(r"^(by\s+exact\s+)?Equiv\.refl[\w\s.]*$"), "Equiv.refl"),
+    # ADR-004 W7 adversarial finding C2 — UNAMBIGUOUSLY-trivial forms only.
+    # (Deliberately NOT a bare `⟨…⟩` matcher: an anonymous constructor of REAL
+    # proven lemmas — e.g. `full_correspondence := ⟨left_inverse, right_inverse,
+    # …⟩` — is substantive, so only all-rfl/all-trivial constructors are flagged.)
+    (re.compile(r"^(by\s+exact\s+)?Iff\.rfl$"), "Iff.rfl"),
+    (re.compile(r"^(by\s+exact\s+)?⟨\s*(rfl|trivial)(\s*,\s*(rfl|trivial))*\s*⟩$"), "⟨rfl,…⟩"),
+    (re.compile(r"^(by\s+exact\s+)?And\.intro\s+(rfl|trivial)\s+(rfl|trivial)$"), "And.intro rfl rfl"),
+    (re.compile(r"^fun\s+\w+\s*=>\s*\w+\.\w+$"), "struct-field projection (fun _ => _.field)"),
 ]
 # Substantive-tactic markers: if the body contains any of these it is NOT a
 # trivial closer (belt-and-suspenders with the anchored patterns above).
@@ -504,10 +520,13 @@ def check_tracked_hypotheses_fresh() -> CheckResult:
     if old == new:
         return CheckResult(passed=True, details=[Detail(
             "tracked_hypotheses", True, f"{new.count('### ')} entries; doc matches HYPOTHESIS_REGISTRY")])
-    doc.write_text(new)
-    return CheckResult(passed=True, details=[Detail(
-        "tracked_hypotheses", True,
-        "doc was stale vs HYPOTHESIS_REGISTRY — auto-regenerated", warning=True)])
+    # HARD-FAIL on drift (do NOT silently rewrite a git-tracked file — ADR-004 W7
+    # adversarial finding M1; cf. memory feedback_dont_discard_autogen_artifacts).
+    # The maintainer regenerates + commits the result in the same wave.
+    return CheckResult(passed=False, details=[Detail(
+        "tracked_hypotheses", False,
+        "docs/PERMANENT_TRACKED_HYPOTHESES.md is STALE vs HYPOTHESIS_REGISTRY — "
+        "run `python scripts/render_tracked_hypotheses.py` and commit the regenerated doc")])
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -1898,11 +1917,15 @@ def _counts_is_stale() -> tuple[bool, str]:
         if src.exists() and src.stat().st_mtime > counts_mtime:
             return True, f"{src.name} newer than counts.json"
     # Also regenerate if any .lean file in SKEFTHawking is newer (catches
-    # cases where lean_deps.json isn't regenerated but sources changed)
-    lean_src = LEAN_DIR.glob("*.lean")
+    # cases where lean_deps.json isn't regenerated but sources changed).
+    # rglob (recursive) — a *.lean in a subdirectory (FKLW/, SymTFT/,
+    # QuantumNetwork/, …) must also mark counts stale, else a native_decide
+    # added in a subdir kept the decl-closure metric stale (ADR-004 W7
+    # adversarial finding M2, 2026-06-13).
+    lean_src = LEAN_DIR.rglob("*.lean")
     newest_lean = max((f.stat().st_mtime for f in lean_src), default=0)
     if newest_lean > counts_mtime:
-        return True, "SKEFTHawking/*.lean newer than counts.json"
+        return True, "SKEFTHawking/**/*.lean newer than counts.json"
     return False, "fresh"
 
 

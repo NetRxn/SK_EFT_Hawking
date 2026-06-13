@@ -1608,7 +1608,12 @@ def _scan_lean_theorem_bodies(source: str):
                            r'section|variable|variables|attribute|@\[)\b')
     while i < len(lines):
         line = lines[i]
-        m = re.match(r'^theorem\s+([A-Za-z_][A-Za-z0-9_\']*)', line)
+        # theorem AND lemma — both are claims (a defining-the-conclusion claim
+        # shipped as a `lemma` previously bypassed proxy_body_audit; ADR-004 W7
+        # adversarial finding C1, 2026-06-13). `def`/`instance` are NOT scanned:
+        # they are definitions, not claims, and a value def (`def foo_dim := 3`)
+        # is legitimately trivial-bodied.
+        m = re.match(r'^(?:theorem|lemma)\s+([A-Za-z_][A-Za-z0-9_\']*)', line)
         if not m:
             i += 1
             continue

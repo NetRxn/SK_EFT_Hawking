@@ -221,3 +221,47 @@ def test_native_decide_metric_in_counts_and_under_ceiling():
     clusters = lean.get("native_decide_clusters", {})
     assert "fklw_rossselinger" not in clusters
     assert "quantum_network" not in clusters
+
+
+# ── W7 adversarial-review hardening (C1/C2/H2/L1) ───────────────────────
+
+def test_scanner_yields_lemmas_not_just_theorems():  # C1
+    from scripts.build_graph import _scan_lean_theorem_bodies
+    names = [n for n, _, _ in _scan_lean_theorem_bodies(
+        "lemma foo_rank_iso : a = a := rfl\ntheorem bar : b := rfl\ndef baz : Nat := 3\n")]
+    assert "foo_rank_iso" in names and "bar" in names
+    assert "baz" not in names  # defs are NOT claims — not scanned
+
+
+def test_new_trivial_body_patterns_fire_but_spare_genuine_bundles():  # C2
+    from scripts.validate import _TRIVIAL_BODY_RES, _NONTRIVIAL_MARKER_RE
+
+    def istriv(b):
+        n = " ".join(b.split())
+        if _NONTRIVIAL_MARKER_RE.search(n):
+            return None
+        return next((l for rx, l in _TRIVIAL_BODY_RES if rx.match(n)), None)
+    assert istriv("Iff.rfl")
+    assert istriv("⟨rfl, rfl⟩")
+    assert istriv("by exact ⟨rfl, rfl⟩")
+    assert istriv("And.intro rfl rfl")
+    assert istriv("fun M => M.topo")
+    # a genuine bundle of REAL proven lemmas must NOT be flagged
+    assert istriv("⟨left_inverse, right_inverse, grading_preserved⟩") is None
+    assert istriv("⟨h1, by ring⟩") is None
+
+
+def test_hedge_is_claim_specific_not_stray_word():  # H2
+    from scripts.validate import _VERIFY_CLAIM_RE, _HEDGE_CLAIM_RE
+    attack = ("We formally verify Z(Vec_G)=Rep(D(G)) for all G in Lean. "
+              "The CLI stub script is separate; arithmetic modulo p.")
+    assert _VERIFY_CLAIM_RE.search(attack)
+    assert not _HEDGE_CLAIM_RE.search(attack), "a stray 'stub'/'modulo' must NOT suppress"
+    legit = ("verified concretely for G=Z/2; the general-G statement is "
+             "formalized at the statement level, deferred to future work")
+    assert _HEDGE_CLAIM_RE.search(legit)
+
+
+def test_non_load_bearing_registry_exists():  # L1
+    from src.core.constants import TRACKED_HYPOTHESIS_NON_LOAD_BEARING
+    assert isinstance(TRACKED_HYPOTHESIS_NON_LOAD_BEARING, dict)
