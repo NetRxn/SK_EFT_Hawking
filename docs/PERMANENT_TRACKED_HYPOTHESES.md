@@ -1,459 +1,325 @@
 # Permanent Tracked Hypotheses
 
-**Purpose.** Catalogue the project's load-bearing **tracked-hypothesis Props** — Lean predicates that are consumed by substantive theorems but are NOT independently derived in the project. Each entry documents what the Prop says, where it is consumed, the physics status of the underlying claim, and the project's posture toward it (permanent honest-framing vs deferred-to-future-phase discharge).
+> **AUTO-GENERATED — DO NOT EDIT BY HAND.** This document is rendered from `HYPOTHESIS_REGISTRY` in `src/core/constants.py` by `scripts/render_tracked_hypotheses.py` (Substrate Integrity Gates W3, ADR-004). The registry is the single source of truth; edit it, then regenerate. Freshness enforced by `validate.py --check tracked_hypotheses_fresh`.
 
-**Why this doc.** The project's posture per CLAUDE.md is that **axioms are temporary scaffolding, not permanent commitments** (Pipeline Invariant #15). Tracked-hypothesis Props are the *constructive* alternative to axioms: instead of asserting a load-bearing physical claim as a global `axiom`, we package it as a `def`-Prop and have consumers take an explicit hypothesis. This makes the project's claim surface visible at the type-signature level and locates *all* load-bearing physical assumptions in one document (here).
+**Purpose.** Catalogue the project's load-bearing tracked-hypothesis Props — Lean predicates consumed by substantive theorems but NOT independently derived. Each is a *constructive* alternative to a global `axiom`: the claim is packaged as a `def … : Prop` and taken as an explicit hypothesis, making the project's assumption surface visible at the type-signature level (Pipeline Invariant #15/#16).
 
-**Scope.** This catalogue covers tracked-hypothesis Props at the project-scope boundary — claims that the SK_EFT_Hawking program does NOT derive from first principles within Phases 1–6 but consumes as external physical input. Items recorded here fall into two categories:
-
-- **KEEP_AS_TRACKED** — the underlying claim is a research-grade conjecture, an empirically-supported but not-derivable assumption, or a project-scope boundary. The tracked-Prop form *is* the principled framing; "discharging" would mean shipping a different microscopic substrate that the project does not commit to.
-- **DISCHARGE_FUTURE_PHASE** — the underlying claim is in-principle derivable within the project's substrate and is scheduled for substantive discharge in a specific future phase. The tracked-Prop form is honest interim framing.
-
-**Sensitivity.** internal-and-publishable — this doc IS appropriate for external publication alongside any paper that consumes one of these tracked Props.
-
-**Last synced:** 2026-05-31. This ledger is substantively complete through the verified-quantum-compilation arc: **Phases 6u–6z (bundles D6/D7/D8) introduced zero new tracked Props and zero new axioms** — every headline in that arc is kernel-pure. The most recent substantive change to this catalogue was the post-Phase-6r-prime audit (2026-05-26), which reduced the Phase-6r SymTFT tracked-Prop set to its legitimate core. Project axiom count remains **0** (`docs/counts.json`).
+**Count.** 31 tracked hypotheses 4 headline, 14 external_boundary, 7 discharge_future, 6 local.
 
 ---
 
-## 1. `H_VestigialModeIsGraviton` — KEEP_AS_TRACKED
+## Headline-gating (a published-paper headline rides on it)
 
-**File:** `lean/SKEFTHawking/GravitationalWaves.lean:326-329`
+### `H_Fib_NonCentralConjugateWitness`
 
-**Statement.**
+**Statement.** There exist (g₁,g₂) ∈ H_Fib × H_Fib with g₁ not commuting with its g₂-conjugate (non-central-conjugate antecedent for the Fibonacci density argument).
 
-```lean
-def H_VestigialModeIsGraviton (χ_vest : ℝ) : Prop :=
-  0 < χ_vest ∧ LigoSatisfied (c_GW_deviation χ_vest) ∧ |c_GW_deviation χ_vest| < 1/2
-```
+- status `active` · eliminability `hard` · module `FKLW.CartanSubstrate`
+- **Posture.** Non-central-conjugate witness feeding the Fibonacci density argument.
+- **Discharge path.** Discharge plan: g₁=σ_Fib_1, g₂=σ_Fib_2 (deferred ~50-150 LoC).
+- **Source.** FKLW Fibonacci density.
+- **Risk.** Headline-gating density sub-witness.
 
-**What the Prop says.** A vestigial-mode coupling `χ_vest` represents a graviton-like degree of freedom if (a) the coupling is positive, (b) the implied gravitational-wave-speed deviation passes the LIGO constraint, and (c) the deviation magnitude is bounded by 1/2.
+### `H_Fib_TwoLITangents`
 
-**Anchor + falsifiers.** The Prop is non-vacuous: there is an explicit anchor at `χ_vest = 1` discharging the Prop, and 4 falsifier theorems rule out trivial inhabitants — P2-violation patterns at `χ_vest ∈ {0.1, 10}`, P1 at `χ_vest = 0`, and a P3 falsifier at `χ_vest = 1/4`. These witness that the Prop genuinely picks out a non-trivial subclass of `ℝ`.
+**Statement.** Two ℝ-linearly-independent tangent directions exist in the Lie algebra of H_Fib (companion antecedent for the Fibonacci density v4 witness).
 
-**Underlying physics status.** **Conjectural.** Volovik 2024 (the "second-sound graviton" proposal) derives the phase velocity `s_2 = c` at equilibrium from Landau hydrodynamics, but does not supply an off-shell propagator, a dispersion relation `ω(k)`, or a coupling to matter. Volovik himself writes that *"the type of graviton this mode represents requires further consideration"*. The bridge from this hydrodynamic mode to a graviton with the required Riemann-tensor coupling structure is, to our knowledge, not derived in any published source.
+- status `active` · eliminability `hard` · module `FKLW.CartanSubstrate`
+- **Posture.** Two-LI-tangents witness feeding the Fibonacci density argument.
+- **Discharge path.** Discharge ~50-150 LoC (deferred).
+- **Source.** FKLW Fibonacci density.
+- **Risk.** Headline-gating density sub-witness.
 
-**Why KEEP_AS_TRACKED.** Discharging this Prop would require shipping a different microscopic theory than the one this project commits to — specifically, a microscopic substrate from which the vestigial-mode-to-graviton bridge follows derivatively. Such a substrate is out of scope for the current SK_EFT_Hawking program (analog-Hawking physics on a BEC condensate, not full quantum gravity). The tracked-Prop form is the **principled treatment**: it makes the physical assumption visible to consumers, lets them propagate the dependency explicitly through their own derivations, and avoids the overreach of treating a research-grade conjecture as an established result.
+### `H_Fib_v4_witness`
 
-**Consumers.** Any theorem citing `H_VestigialModeIsGraviton` in its hypotheses propagates the conjecture-status to its conclusion. Downstream gravitational-wave-related theorems should explicitly carry this Prop as a hypothesis parameter rather than discharging it silently.
+**Statement.** exp(ℝ•X₁) ⊆ H_Fib for two ℝ-linearly-independent tangents X₁, X₂ — the v4 density witness for the Fibonacci closure subgroup.
 
-**Reassessment trigger.** If a future microscopic-substrate ship in the project derives the vestigial-mode-to-graviton bridge (Phase 7+ speculative), this entry would be revisited and the Prop could be upgraded from "tracked" to "shipped". No such ship is currently scheduled.
+- status `active` · eliminability `hard` · module `FKLW.CartanSubstrate`
+- **Posture.** Fibonacci-density v4 witness; the Fibonacci universality headline rides on the H_Fib density witnesses.
+- **Discharge path.** Discharge ~50-150 LoC (deferred); gates the FKLW Fibonacci SU(2) density / universality headline (audit #8 "sound predicate v3/v4").
+- **Source.** FKLW Fibonacci density (Cartan substrate).
+- **Risk.** Headline-gating density witness.
 
----
+### `H_PMNSAnglesFromExactSubstrate`
 
-## 2. `H_DESICompatibility` — DISCHARGE_FUTURE_PHASE (Phase 6b.2)
+**Statement.** A PMNS matrix exhibits exact substrate μ-τ row symmetry (holds at θ₂₃ = π/4; NuFit-6.0 best fit 49.1° does NOT satisfy it — row magnitudes differ by ≈0.1).
 
-**File:** `lean/SKEFTHawking/FLRWDynamics.lean:272-276`
-
-**Statement.**
-
-```lean
-def H_DESICompatibility (pred : DEPredictor) (Λ_UV N_f α_ADW : ℝ) : Prop :=
-  0 < Λ_UV ∧ 0 < N_f ∧ 0 < α_ADW
-  ∧ |(pred Λ_UV N_f α_ADW).1 - w_0_DESI| < 0.1
-  ∧ |(pred Λ_UV N_f α_ADW).2 - w_a_DESI| < 0.2
-```
-
-where `(w_0_DESI, w_a_DESI) = (-0.838, -0.62)` are the DESI DR2 best-fit values for the Chevallier-Polarski-Linder parametrization of the dark-energy equation of state.
-
-**What the Prop says.** A dark-energy predictor `pred` produces `(w_0, w_a)` values within 0.1 / 0.2 absolute tolerance of the DESI DR2 measurements, for some positive `(Λ_UV, N_f, α_ADW)` parameter triple.
-
-**Non-vacuity.** No anchor discharge is currently shipped (the Prop is parameterized over an unknown predictor); 3 falsifiers establish non-vacuity by ruling out (a) the `α_ADW ≤ 0` regime, (b) the constant-zero predictor, and (c) the ΛCDM predictor (which has CPL gap `|w_0 - (-1)| = 0.162 > 0.1`).
-
-**Underlying physics status.** **Derivable in principle within the project's substrate**, not yet executed. The Anti-De-Witt (ADW) FLRW dynamics formalized in `FLRWDynamics.lean` provide the foundation; what remains is the cosmological-perturbation-theory chain (linear perturbations of the ADW background → growth-of-structure observable → CPL extraction → likelihood comparison against DESI DR2). Phase 5y Round 3 established that single-scalar mechanisms in the project's substrate lock `w = -1` via Gibbs-Duhem no-go; ADW offers a different mechanism (multi-scalar) but has not yet been forked through to `(w_0, w_a)` territory.
-
-**LoE for substantive discharge.** Estimated ~50 person-hours: coupled FLRW perturbations, numerical ODE solver for the perturbed-ADW background, Boltzmann code integration, CPL likelihood scan, Lean formalization of the bridge. Outside the budget for Phase 6, slotted for Phase 6b.2 ("cosmological perturbation theory") which is not currently active.
-
-**Why DISCHARGE_FUTURE_PHASE (not KEEP).** Unlike the vestigial-mode-to-graviton bridge in §1, the DESI compatibility claim *is* expected to follow derivatively from the project's existing substrate (ADW dynamics) once the perturbation-theory machinery is shipped. The tracked-Prop form is **honest interim framing**, not permanent project-scope boundary.
-
-**Consumers.** Any cosmology-adjacent theorem citing `H_DESICompatibility` carries the deferred-status to its conclusion. External writeups that consume this Prop should hedge: *"predicated on the H_DESICompatibility tracked hypothesis, which remains open pending Phase 6b.2"*.
-
-**Reassessment trigger.** When Phase 6b.2 is opened.
+- status `active` · eliminability `hard` · module `NeutrinoMixing`
+- **Posture.** Headline-gating: the PMNS prediction is conditional on exact substrate μ-τ symmetry, which the empirical best fit does not exactly satisfy.
+- **Discharge path.** WAVE2-OPEN-2: derive exact μ-τ symmetry from the substrate (vs assume); gates the PMNS prediction (paper40).
+- **Source.** NuFit-6.0; substrate μ-τ symmetry.
+- **Risk.** Strict predicate, falsifiable against NuFit; headline-gating for the neutrino-mixing prediction.
 
 ---
 
-## 3. `H_RT_Formula_Valid` — KEEP_AS_TRACKED
+## External boundary / KEEP_AS_TRACKED (research-grade or project-scope)
 
-**File:** `lean/SKEFTHawking/RTCasiniHuertaBounds.lean:87-88`
+### `H_CasiniHuerta_Bound_Valid`
 
-**Statement.**
+**Statement.** For a 2D-CFT entanglement entropy S_ent(L) with central charge c and UV cutoff ε, the Casini–Huerta log bound S_ent(L) ≤ (c/3) log(L/ε) holds for all L > ε > 0.
 
-```lean
-structure H_RT_Formula_Valid (S_BH : ℝ → ℝ → ℝ) : Prop where
-  rt_proportional : ∀ A G_N, 0 < A → 0 < G_N → S_BH A G_N = A / (4 * G_N)
-```
+- status `active` · eliminability `hard` · module `RTCasiniHuertaBounds`
+- **Posture.** External CFT boundary input consumed by the RT/Casini-Huerta bridge theorems.
+- **Source.** Casini–Huerta (CFT entanglement-entropy bound).
+- **Risk.** Established CFT result; tracked as external CFT input.
 
-**What the Prop says.** A given black-hole-entropy function `S_BH` satisfies the Ryu-Takayanagi proportionality `S = A/(4G_N)` for all positive `(A, G_N)`.
+### `H_HorizonBoundaryCondition`
 
-**Non-vacuity.** The Prop is consumed in 4 substantive cross-bridge theorems shipped in `RTCasiniHuertaBounds.lean`:
-- `rt_entropy_pos` — RT-form entropy is positive.
-- `rt_falsified_by_kaul_majumdar` — the Kaul-Majumdar correction (with non-trivial reduced-area term) violates `H_RT_Formula_Valid`.
-- `isolatedHorizon_violates_H_RT` — loop-quantum-gravity isolated-horizon hypotheses imply `¬H_RT_Formula_Valid`.
-- `kaulMajumdarS_violates_H_RT_via_IH` — compositional sanity-check tying the previous two together.
+**Statement.** Bundles the five conditions a horizon-bounding MTC must satisfy for S(A) = A/(4 G_N^emerg) + log corrections (positivity, area-leading, …).
 
-These consumers establish that `H_RT_Formula_Valid` is a **load-bearing boundary condition**, not a placeholder. The Prop's falsification has substantive consequences (RT-vs-alternatives can be distinguished within the project's substrate).
+- status `active` · eliminability `hard` · module `BHEntropyMicroscopic`
+- **Posture.** A 5-condition bundle Prop; consumed by the microscopic-entropy and QEC-holography bridges.
+- **Source.** Microscopic BH-entropy program (BHEntropyMicroscopic / QECHolographyBridge).
+- **Risk.** Bundle of well-motivated horizon conditions; tracked as external boundary.
 
-**Underlying physics status.** **Empirically supported in AdS/CFT; research-grade conjecture in quantum gravity.** The Ryu-Takayanagi formula is derived from the holographic principle via the Lewkowycz-Maldacena replica trick in AdS/CFT and has been corroborated in multiple holographic test-cases. However, in the broader context of quantum gravity (without holographic dual), the RT formula remains a conjecture. The SK_EFT_Hawking program does NOT independently derive the RT formula — the bulk holographic dual is out of Phase 6 scope.
+### `H_KLRS_SM_Crossover`
 
-**Why KEEP_AS_TRACKED.** Same as §1: the underlying claim is a **project-scope boundary**, not deferred substrate work. The 4 substantive consumers establish that the Prop is consumed as a *boundary condition* — external comms that cite the Prop should treat it as a standard holographic working assumption with explicit hedging when used outside AdS/CFT contexts.
+**Statement.** The full thermal-resummed SM electroweak phase transition is a crossover (not first-order) at the physical Higgs mass m_H = 125.20 GeV. Equivalently: the strict-LO smBenchmarkParams cubic coefficient E = 0.01 is driven below the crossover threshold by full thermal corrections at m_H ≫ KLRS endpoint 72.4 GeV.
 
-**Consumers.** The 4 theorems listed above. External writeups should hedge appropriately when relying on RT outside AdS/CFT.
+- status `active` · eliminability `hard` · module `EWBaryogenesisChiralityWall`
+- **Discharge path.** Requires formalizing finite-temperature lattice thermodynamics infrastructure (Wilson-flow gradient + dimensional reduction at T ≳ T_c + lattice artifact extrapolation) to derive the KLRS 1996 / CFH 1999 endpoint at m_H = 72.4 ± 1.7 GeV from continuum perturbation theory. Out of scope for the Lean library; replication is the standard validation path. The quantitative anchor sm_klrs_overshoot_ratio_gt_threshold (1.5 < 125.20/72.4 ≈ 1.73) provides a falsifiable physical-input lever: if a future lattice study revises the endpoint upward to m_H > 83.5 GeV, the overshoot would drop below 1.5 and the hypothesis would weaken.
+- **Source.** Kajantie, Laine, Rummukainen, Shaposhnikov, PRL 77, 2887 (1996), arXiv:hep-ph/9605288 (initial endpoint); refined by Csikor, Fodor, Heitger, PRL 82, 21 (1999), arXiv:hep-ph/9809291 (m_H endpoint = 72.4 ± 1.7 GeV).
+- **Risk.** Extremely low — KLRS / CFH are well-established lattice results, replicated by independent groups (Aoki et al., Bödeker et al.) and consistent with continuum dimensional-reduction analyses. The crossover verdict at m_H = 125.20 GeV is universally accepted in the EWBG community.
+- **Circularity.** None. The hypothesis is a downstream lattice result that takes the SM gauge + Higgs sector as input and produces a thermodynamic verdict; no logical dependency on theorems within the project.
+- **Consumers.** `SKEFTHawking.EWBaryogenesisChiralityWall.sm_with_3nu_R_ewbg_forbidden_under_klrs`, `SKEFTHawking.EWBaryogenesisChiralityWall.sm_no_nu_R_ewbg_doubly_forbidden`
 
-**Reassessment trigger.** If the project ships an independent derivation of the RT formula (Phase 7+ speculative; not currently scheduled), this entry would be revisited.
+### `H_MixedChannelZ16Cancels`
+
+**Statement.** Wan–Wang ℤ₁₆ ⊕ ℤ₄ joint-charge cancellation of a mixed-charge hidden sector (parameterized by a ℤ₁₆ indexing φ; SM +13 ≡ −3 mod 16).
+
+- status `active` · eliminability `hard` · module `HiddenSectorMixedCharge`
+- **Posture.** Mixed-charge hidden-sector anomaly cancellation under the Wan-Wang ℤ₁₆⊕ℤ₄ scheme.
+- **Source.** Wan–Wang ℤ₁₆ classification.
+- **Risk.** Tracked anomaly-cancellation hypothesis; parallel to the CenterFunctor center-functor Props.
+
+### `H_RT_Formula_Valid`
+
+**Statement.** A black-hole-entropy function S_BH satisfies the Ryu–Takayanagi proportionality S = A/(4 G_N) for all positive (A, G_N).
+
+- status `active` · eliminability `open` · module `RTCasiniHuertaBounds`
+- **Posture.** KEEP_AS_TRACKED. Load-bearing boundary condition; consumers establish RT-vs-Kaul-Majumdar/loop-quantum-gravity distinguishability. External comms hedge when used outside AdS/CFT.
+- **Discharge path.** Out of Phase-6 scope (no holographic dual derived). RT is a QG conjecture outside AdS/CFT.
+- **Source.** Ryu–Takayanagi; Lewkowycz–Maldacena replica trick (AdS/CFT).
+- **Risk.** Empirically supported in AdS/CFT; research-grade conjecture in general QG. 4 substantive consumers (RT-vs-alternatives distinguishable).
+- **Consumers.** `SKEFTHawking.rt_entropy_pos`, `SKEFTHawking.rt_falsified_by_kaul_majumdar`, `SKEFTHawking.isolatedHorizon_violates_H_RT`, `SKEFTHawking.kaulMajumdarS_violates_H_RT_via_IH`
+
+### `H_RegimePartition`
+
+**Statement.** Glorioso–Liu second-law bundle: dynamical-KMS ℤ₂ symmetry + unitarity (Im S_eff ≥ 0) ⟹ local entropy-current monotonicity ∂_μ s^μ ≥ 0, without invoking pointwise NEC.
+
+- status `active` · eliminability `hard` · module `BHThermodynamicsFourLaws`
+- **Posture.** Post-Stage-13 strengthened bundle encoding the Glorioso-Liu entropy-current theorem.
+- **Source.** Glorioso–Liu, arXiv:1612.07705 §III Eq. 3.20.
+- **Risk.** Established SK-EFT result; tracked as external theorem-bundle input.
+
+### `H_VergelesPositivity`
+
+**Statement.** Osterwalder–Schrader reflection-positivity on the lattice ADW theory ⟹ α_ADW > 0 strictly inside the broken phase (G/G_c > 1).
+
+- status `active` · eliminability `hard` · module `LinearizedEFE`
+- **Posture.** External lattice-positivity input giving α_ADW > 0 in the broken phase.
+- **Source.** Vergeles, PRD 112, 054509 (2025).
+- **Risk.** Published lattice reflection-positivity result; tracked as external input.
+
+### `H_VestigialModeIsGraviton`
+
+**Statement.** A vestigial-mode coupling χ_vest represents a graviton-like d.o.f.: 0<χ_vest ∧ LigoSatisfied(c_GW_deviation χ_vest) ∧ |c_GW_deviation χ_vest| < 1/2.
+
+- status `active` · eliminability `open` · module `GravitationalWaves`
+- **Posture.** KEEP_AS_TRACKED. The hydrodynamic-mode→graviton bridge is, to our knowledge, not derived in any published source; the tracked-Prop form is the principled treatment. Discharging would mean shipping a different microscopic theory than this project commits to.
+- **Discharge path.** Out of scope for SK_EFT_Hawking (analog-Hawking BEC, not full QG). Would require a microscopic substrate from which the vestigial-mode→graviton bridge follows.
+- **Source.** Volovik 2024 ("second-sound graviton"): derives s₂=c at equilibrium but NO off-shell propagator / matter coupling; "the type of graviton this mode represents requires further consideration".
+- **Risk.** Conjectural. Anchor at χ_vest=1 + 4 falsifiers establish non-vacuity.
+
+### `TPFConjecture`
+
+**Statement.** For every anomaly-free SPT phase there exists a local, symmetric, gapped interface Hamiltonian with unique ground state and short-range entanglement (Thorngren–Preskill–Fidkowski 2026).
+
+- status `active` · eliminability `open` · module `SPTClassification`
+- **Posture.** KEEP_AS_TRACKED (ex-axiom). The conversion from a global axiom to a consumed tracked Prop made the assumption visible at the type level; this is the principled framing pending a constructive interface proof.
+- **Discharge path.** No proof in any proof assistant; would need the full TPF gapped-interface construction.
+- **Source.** Thorngren–Preskill–Fidkowski 2026 (TPF conjecture). Converted from `axiom gapped_interface_axiom` → tracked Prop on 2026-05-19.
+- **Risk.** Research-grade conjecture. Strengthened by FKGappedInterface.lean.
+
+### `c_minus_equals_8Nf`
+
+**Statement.** The chiral central charge of N_f generations of SM fermions is c₋ = 8N_f
+
+- status `active` · eliminability `algebraic` · module `WangBridge`
+- **Discharge path.** This was DERIVED (not hypothesized) in WangBridge.lean from the 16 Weyl fermions per generation. But the derivation assumes the standard SM fermion content — the hypothesis is that the SM has exactly 16 Weyl fermions per generation.
+- **Source.** SM fermion content (standard textbook result)
+- **Risk.** Zero — this is the definition of the SM.
+- **Consumers.** `SKEFTHawking.central_charge_from_sm`
+
+### `characteristic_square_mod_8`
+
+**Statement.** For any unimodular symmetric bilinear form and any characteristic vector c, c^T M c ≡ σ(M) mod 8
+
+- status `superseded_on_wiring_path` · eliminability `hard` · module `AlgebraicRokhlin (alternate route; no longer on the SpinRokhlinInterface wiring path)`
+- **Discharge path.** SUPERSEDED ON THE WIRING PATH (2026-06-04): the rewired SmoothSpinManifold4 interface no longer consumes this characteristic-vector formulation (serre_even_unimodular_mod8 used it only at c=0, i.e. only to extract 8|σ). The interface now carries the precise residual eight_dvd : 8 | latticeSig form directly, whose discharge target is the even-unimodular CLASSIFICATION (E8^a (+) (-E8)^b (+) H^c), with the signature calculus already complete (RokhlinClassification et al.) and only the classification existence ([E2] Smith-Normal-Form basis-completion + [HM] Hasse-Minkowski + [Theta] theta-modularity) remaining. This entry is retained as a valid ALTERNATE algebraic formulation (Serre/van der Blij characteristic-vector route); it still requires the classification of indefinite unimodular forms (Hasse-Minkowski) or the van der Blij Gauss-sum lemma, neither in Mathlib. serre_even_unimodular_mod8 and CharacteristicSquareModEight remain defined and valid in AlgebraicRokhlin.lean.
+- **Source.** Serre, "A Course in Arithmetic" (1973), Ch. V; van der Blij, Math. Z. 74, 18 (1960)
+- **Risk.** Extremely low — proved independently by Serre (1973) and van der Blij (1960). Textbook result.
+- **Circularity.** None. Purely algebraic result about bilinear forms, independent of topology.
+- **Consumers.** `SKEFTHawking.serre_even_unimodular_mod8`
+
+### `modular_invariance_framing`
+
+**Statement.** The framing anomaly requires e^{2πic/24} = 1 for a consistent TQFT, i.e., 24 | c₋
+
+- status `active` · eliminability `hard` · module `WangBridge`
+- **Discharge path.** Requires formalizing: (a) Atiyah 2-framing on 3-manifolds, (b) the relation between central charge and framing anomaly, (c) Witten-Reshetikhin-Turaev invariant modularity. The algebraic consequence (24 | c₋) is proved; the physical INPUT (framing anomaly = modularity constraint) is the hypothesis.
+- **Source.** Witten, Comm. Math. Phys. 121, 351 (1989); Atiyah, Topology 29, 1 (1990)
+- **Risk.** Extremely low — foundational result in TQFT, universally accepted.
+- **Consumers.** `SKEFTHawking.wang_bridge_full_chain`, `SKEFTHawking.generation_constraint_iff`
+
+### `rokhlin_sigma_mod_16`
+
+**Statement.** For any closed smooth spin 4-manifold M, 16 | σ(M)
+
+- status `discharged` · eliminability `very_hard` · module `SpinRokhlinInterface (Phase 5q.B, rewired to latticeSig); E8Signature + LatticeSignatureCongr + BlockSignature + GeneratorNondeg + LatticeSigBlock + RokhlinClassification (signature calculus, classification route); LatticePrimitive + EvenLatticeForm (classification scaffolding [E1]/[E2]); LatticeSignature (latticeSig); RokhlinBridge (legacy hypothesis form)`
+- **Discharge path.** Phase 5q.B (Route B) DECOMPOSED this opaque hypothesis into the narrow SmoothSpinManifold4 interface (SpinRokhlinInterface.lean) and PROVED 16|σ as a kernel-pure theorem over it: SmoothSpinManifold4.rokhlin, via even-unimodular + 8|σ composed with 2|σ/8 (sixteen_dvd_latticeSig_of_eight_dvd_of_topo = rokhlin_from_serre_plus_topology on latticeSig). INTERFACE REWIRED (2026-06-04): the signature is now the GENUINE latticeSig of the intersection form (sig := latticeSig form, closing the prior free-unconnected-integer gap), and the algebraic residual is carried as the PRECISE field eight_dvd : 8 | latticeSig form (the isolated van der Blij wall), replacing the opaque charSq/CharacteristicSquareModEight. Remaining interface inputs: (i) even_unimod [Wu formula, topological], (ii) eight_dvd : 8|latticeSig form [van der Blij, the Wave-B1 ALGEBRAIC target], (iii) topo : 2|σ/8 [Â-genus even / Arf(q-bar)=0 — the single IRREDUCIBLE topological input, Atiyah-Singer / Freedman-Kirby]. USER DECISION 2026-06-04: GO FULL via the CLASSIFICATION route (E8^a (+) (-E8)^b (+) H^c), zero-axiom. SIGNATURE CALCULUS COMPLETE this session (all kernel-pure, ExtractDeps baseline green 9073 jobs): E8Signature (sigma(E8)=8, sigma(-E8)=-8 via the integer-Cholesky C8^T C8 = 4.E8lit decide-over-Z route), LatticeSignatureCongr (latticeSig_congr = Sylvester congruence invariance; sigma(H)=0), BlockSignature (sigma(A (+) B)=sigma A+sigma B; nondeg bridge), GeneratorNondeg (generator nondegeneracy), LatticeSigBlock (latticeSigOf on any index + block additivity + reindex invariance), RokhlinClassification (the [E3] assembly: generators 8|sigma, block-sum/congruence/reindex closure, and the bridge sixteen_dvd_latticeSig_of_eight_dvd_of_topo). CLASSIFICATION SCAFFOLDING: [E1] primitive vectors + dual (LatticePrimitive); [E2]-partial exists_hyperbolic_pair ({v,w-prime} Gram = H) + even_form_dvd; [E3] assembly DONE. The signature side is CLOSED: any normal form E8^a (+) (-E8)^b (+) H^c gives latticeSig = 8(a-b), hence 8|sigma. ✅ DISCHARGED 2026-06-08: BOTH irreducible inputs are now kernel-pure THEOREMS. [Theta] theta-modularity (definite 8|rank) = eight_dvd_latticeSig_of_definite (shipped earlier). [HM] Hasse-Minkowski (indefinite even unimodular ⟹ isotropic vector) = hasIsotropicVector (RokhlinHMRankFour), discharging HasWeakIsotropicVectorHyp at EVERY rank: rank ≥5 (weakIsotropic_of_five_le, general-rank diagonal HM spine diag_nary_zero_of_local with ℝ + odd-p + 2-adic local isotropy all proven), rank 2 (weakIsotropic_rank_two, det=-1 mod-4), ranks 1 & 3 (no even unimodular form exists), rank 4 (weakIsotropic_rank_four: det=1 forces square discriminant, then brick (a) odd-p ℤ_p-unimodular isotropy [Chevalley-Warning + Hensel] + brick (b) p=2 via binary Hilbert reciprocity [quaternary_sqdisc_iso_iff_ternary + hilbertGlobalProd_eq_one] transported through the explicit congruence A=PᵀdiagP). Hence eight_dvd_latticeSig (8|σ for every even unimodular form) and sixteen_dvd_latticeSig (16|σ given 2|σ/8) are UNCONDITIONAL. The SmoothSpinManifold4 structure no longer carries the eight_dvd field — SmoothSpinManifold4.rokhlin (16|σ) is derived from even_unimod + topo (2|σ/8) ALONE. The ONLY remaining interface input is the genuinely-topological factor 2|σ/8 (Â-genus even / Arf(q-bar)=0). All kernel-pure {propext,Classical.choice,Quot.sound}, axiom_closure_allowlist GREEN. sixteen_convergence_unconditional is the companion to sixteen_convergence_full with the 16|σ conjunct now a full theorem, not an assumed h_rokhlin. Full living decomposition: docs/roadmaps/Phase5qB_LabNotebook.md.
+- **Source.** Rokhlin, Dokl. Akad. Nauk SSSR 84, 221 (1952); van der Blij, Math. Z. 74, 18 (1960); Freedman-Kirby (1978)
+- **Risk.** Extremely low — proved 1952, independently confirmed by Atiyah-Singer (1963), Freedman-Kirby (1978). As solid as any result in topology.
+- **Circularity.** Anti-circularity verified: the wired derivation routes even-unimodular + van der Blij ⟹ 8|σ, plus 2|σ/8 ⟹ 16|σ; it does NOT use Anderson-Brown-Peterson or Rokhlins theorem as input (Rokhlins theorem IS the conclusion). The 2-axiom bordism alternative (Ω^Spin_4 ≅ Z) WOULD be circular (ABP used Rokhlin-equivalent facts) — deliberately NOT used.
+- **Consumers.** `SKEFTHawking.SmoothSpinManifold4.rokhlin`, `SKEFTHawking.SmoothSpinManifold4.eight_dvd_sig`, `SKEFTHawking.hasWeakIsotropicVector`, `SKEFTHawking.hasIsotropicVector`, `SKEFTHawking.weakIsotropic_rank_four`, `SKEFTHawking.eight_dvd_latticeSig`, `SKEFTHawking.sixteen_dvd_latticeSig`, `SKEFTHawking.sixteen_dvd_latticeSig_of_eight_dvd_of_topo`, `SKEFTHawking.sixteen_convergence_unconditional`, `SKEFTHawking.sixteen_convergence_full`, `SKEFTHawking.z16_anomaly_without_nu_R`
+
+### `spin_bordism_iso_Z`
+
+**Statement.** Ω^Spin_4 ≅ Z, generated by the K3 surface with σ(K3) = -16
+
+- status `proposed` · eliminability `very_hard` · module `proposed: SpinBordism.lean`
+- **Discharge path.** Requires Adams spectral sequence computation (Anderson-Brown-Peterson 1966-67). Probably 10+ years from formalization in any proof assistant.
+- **Source.** Anderson-Brown-Peterson, Bull. AMS 72, 256 (1966)
+- **Risk.** Extremely low — standard result in algebraic topology.
+- **Circularity.** CAUTION: The ABP computation historically used facts equivalent to Rokhlin theorem. Using this to DERIVE Rokhlin creates a logical dependency chain where A proves B but A was originally proved using B. The mathematical content is not circular (ABP can be proved independently of Rokhlin via Adams spectral sequence), but the historical provenance is tangled. If used, should be clearly documented as an independent route, not as "proving" Rokhlin from more basic facts.
 
 ---
 
-## 4. `TPFConjecture` — KEEP_AS_TRACKED (converted from `axiom gapped_interface_axiom` on 2026-05-19)
+## Discharge-future (in-principle derivable; scheduled)
 
-**File:** `lean/SKEFTHawking/SPTClassification.lean:254`
+### `H_DESICompatibility`
 
-**Statement.**
+**Statement.** A dark-energy predictor produces (w₀,w_a) within (0.1, 0.2) of the DESI DR2 CPL best-fit (−0.838, −0.62) for some positive (Λ_UV, N_f, α_ADW).
 
-```lean
-def TPFConjecture : Prop :=
-  ∀ (spt : SPTPhaseData), spt.anomaly_free →
-    ∃ (interface : InterfaceData spt) (props : GappedInterfaceProperties),
-      interface.is_local ∧ interface.preserves_symmetry ∧
-      props.unique_ground_state ∧ props.short_range_entangled
-```
+- status `active` · eliminability `hard` · module `FLRWDynamics`
+- **Posture.** DISCHARGE_FUTURE_PHASE (6b.2). Honest interim framing: expected to follow derivatively from ADW dynamics once cosmological-perturbation machinery ships. External writeups must hedge "predicated on H_DESICompatibility, open pending 6b.2".
+- **Discharge path.** Phase 6b.2 (NOT currently active): coupled FLRW perturbations → growth observable → CPL extraction → DESI likelihood. ~50 person-hours.
+- **Source.** DESI DR2 CPL best-fit; ADW multi-scalar mechanism (FLRWDynamics).
+- **Risk.** Derivable in principle within the substrate; not yet executed. 3 falsifiers establish non-vacuity (ΛCDM CPL gap 0.162 > 0.1).
 
-**What the Prop says.** The Thorngren-Preskill-Fidkowski (TPF) 2026 conjecture: for every anomaly-free SPT phase, there exists a local, symmetric interface Hamiltonian that is gapped with a unique ground state and short-range entanglement (between the free-fermion and commuting-projector realizations).
+### `H_MR_FromADWSubstrate_BCS_LNV`
 
-**Anchor + falsifier.** `TPFConjecture_iff_explicit` (well-typed-ness — confirms `TPFConjecture` reduces to the expected `∀ spt h_free, ∃ interface props, …` statement) and `TPFConjecture_falsifier_has_nonempty_hypothesis` (non-vacuity — exhibits `spt_4plus1d 16` with `spt_one_generation_anomaly_free` to guarantee the hypothesis pool is non-empty).
+**Statement.** The BCS-exponential M_R form derived from the projected Majorana-channel NJL gap equation, conditional on H_LeptonNumberViolated G_LV (G_LV=0 ⟹ G_M≡0).
 
-**Underlying physics status.** **Research-grade conjecture; "plausible but unproven" per TPF's own assessment.** The conjecture is precisely statable but numerically intractable in 3+1D / 4+1D (Hilbert space too large). Machine-checked dimensional ladder of evidence (`gapped_interface_dimensional_ladder` in `SPTClassification.lean`):
+- status `active` · eliminability `hard` · module `MajoranaRung`
+- **Posture.** BCS M_R form for the Majorana rung, gated on lepton-number violation.
+- **Source.** WAVE2-OPEN-1b; projected Majorana-channel NJL gap equation.
+- **Risk.** Conditional on explicit substrate-L violation; tracked.
 
-- **1+1D analog (proven):** `VillainHamiltonian.k3450_gappable` — K-matrix gappability for the 3450 chiral gauge theory (det K = 1, two mutually-local null vectors).
-- **2+1D analog (proven, Wave 3 2026-04-15):** `FK.fk_summary` — explicit 16×16 FK Hamiltonian with spectral gap Δ = 14, ground-state energy E₀ = −14, fermion-parity preserved. Distinct framework (Cayley-calibration / Majorana) — the two-framework agreement is a non-trivial strengthening.
-- **3+1D / 4+1D (this Prop):** no counterexample known; "plausible but unproven."
+### `H_MR_FromSMGGap`
 
-**Why KEEP_AS_TRACKED.** Discharging this Prop would require either (a) a constructive proof of TPF in 3+1D / 4+1D (open at the literature frontier; no known approach), or (b) a counterexample (which would also revolutionize the field). Both are out of project scope. The Tracked-Prop form is the **principled treatment**: the substantive 3+1D / 4+1D claim is preserved (still asserted as a Prop), but the dependency surface is now visible at the type-signature level of every downstream consumer, rather than silently propagating via a global axiom.
+**Statement.** The per-generation Majorana mass M_R i arises from the substrate SMG gap scale via M_R i = c_i · Λ_SMG for c_i ∈ (0,1] (no lepton-number-violation precondition).
 
-**Conversion provenance.** This Prop replaced `axiom gapped_interface_axiom` (the Phase-5h Wave-1 original ship) on 2026-05-19 (Phase 5h Wave 2). Per CLAUDE.md Pipeline Invariant #15 ("axioms are temporary scaffolding, not permanent commitments"), the constructive alternative of a tracked Prop is preferred when the substantive content is genuinely conjectural. The pre-conversion project-local axiom count drops by 1 with this ship. See `AXIOM_METADATA['gapped_interface_axiom']` in `src/core/constants.py` — `eliminability: 'closed'` with full conversion details under `evidence_on_close`.
+- status `active` · eliminability `hard` · module `MajoranaRungSMG`
+- **Posture.** M_R from the SMG gap scale; the unconditional companion to H_MR_FromADWSubstrate_BCS_LNV.
+- **Source.** WAVE4-OPEN-2; substrate SMG gap.
+- **Risk.** Tracked seesaw-scale hypothesis.
 
-**Consumers.** The 4 conditional theorems in `SPTClassification.lean`:
+### `H_ScalarChannelIsTetradBifurcationOutput`
 
-- `anomaly_free_implies_chiral_gauge` (takes `(H : TPFConjecture)`)
-- `sm_generation_gapped_interface` (takes `(H : TPFConjecture)`)
-- `sm_three_gen_gapped_interface` (takes `(H : TPFConjecture)`)
-- `no_gap_implies_anomalous` (takes `(H : TPFConjecture)`)
+**Statement.** For a ScalarChannel s arising from the TetradGapEquation supercritical branch and a UV cutoff Λ_UV, the condensate VEV satisfies √(μ²/λ) ≤ Λ_UV (no super-UV condensates).
 
-External writeups that consume these theorems propagate the dependency on `TPFConjecture` and should hedge appropriately: *"predicated on the TPFConjecture tracked hypothesis, the 3+1D / 4+1D analog of TPF (proven in 1+1D and 2+1D in independent frameworks; conjectural in 3+1D / 4+1D)"*.
+- status `active` · eliminability `hard` · module `ScalarRungInterpretation`
+- **Discharge path.** Requires resolution of Open Question O.2: a quantitative bridge mapping the Wetterich scalar-channel parameters (μ², λ) to the GL-expansion coefficients of the tetrad gap-equation bifurcation. Once O.2 is closed (via deep-research derivation of the supercritical-branch coefficient identities), the kinematic bound √(μ²/λ) ≤ Λ_UV becomes a theorem of TetradGapEquation rather than an external hypothesis.
+- **Source.** Tracked external hypothesis pending Open Question O.2 (deep-research-gated). Disclosed in paper20 (papers/paper20_scalar_rung/paper_draft.tex L181, L368). Project precedent: same tracked-hypothesis pattern in HiddenSectorMixedCharge.H_MixedChannelZ16Cancels and DarkSectorSynthesis.H_VestigialRelicCarriesZ16Charge.
+- **Risk.** Low — the kinematic constraint √(μ²/λ) ≤ Λ_UV is a generic effective-field-theory consistency requirement (no super-UV condensates) and is expected to hold for any ScalarChannel that genuinely emerges from the tetrad gap-equation supercritical branch. The hypothesis is genuinely non-trivial (can fail for super-UV scalar channels) but is structurally aligned with EFT validity. The contrapositive `bridge_excludes_super_uv_vev` provides explicit falsifiability.
+- **Circularity.** None. The hypothesis cleanly separates the qualitative bifurcation-output identification (currently external) from the algebraic Mexican-hat consequences (proved in Lean). No circular dependency on any downstream theorem.
+- **Consumers.** `SKEFTHawking.mexican_hat_vev_under_supercritical_bridge`, `SKEFTHawking.bridge_excludes_super_uv_vev`
 
-**Reassessment trigger.** If a future paper proves (or disproves) the 3+1D / 4+1D TPF conjecture, this entry would be revisited.
+### `H_SubstrateNearSMGFixedPoint`
+
+**Statement.** The substrate parameters sit in the seesaw-restricted SMG window AND Λ_SMG = c_SMG·Λ_UV with c_SMG ∈ [10⁻¹⁰, 10⁻⁴] (NJL-derived band).
+
+- status `active` · eliminability `hard` · module `MajoranaRungSMG`
+- **Posture.** Substrate-near-SMG-fixed-point window for the Majorana-rung seesaw.
+- **Source.** WAVE4-OPEN-1; NJL seesaw-restricted band.
+- **Risk.** Tracked window hypothesis.
+
+### `H_VestigialRelicCarriesZ16Charge`
+
+**Statement.** The vestigial relic carries the ℤ₁₆ anomaly-cancellation charge +3 required by the SM deformation class (existence anomaly-forced).
+
+- status `active` · eliminability `hard` · module `DarkSectorSynthesis`
+- **Posture.** Tracked dark-sector Prop: the relic-carries-ℤ₁₆-charge claim that anomaly-forces the vestigial relic.
+- **Source.** Wave 8 dark-sector synthesis; SM ℤ₁₆ deformation class.
+- **Risk.** Not a Lean theorem; tracked dark-sector hypothesis.
+
+### `Phase6hHyperchargeSplittingHypothesis`
+
+**Statement.** Bundle of the three substrate parameters (δ_f flavour charge, α_∗ AS fixed-point coupling, Λ_UV) that would parametrize the closed-form light-quark prediction m_f/Λ_UV ~ exp(...).
+
+- status `active` · eliminability `hard` · module `LightQuarkHierarchyFallthrough`
+- **Posture.** Discharge-future bundle for the (inactive) Phase-6h light-quark-hierarchy extension.
+- **Discharge path.** Phase 6h W4 (Gate Z.4 NEGATIVE / inactive): rigorous only in 2D; 4D needs Catterall mirror decoupling.
+- **Source.** Phase 6h hypercharge-splitting path (asymptotic-safety).
+- **Risk.** Phase 6h inactive; tracked bundle.
 
 ---
 
-## 5. Phase 6r SymTFT tracked Props — POST-AUDIT (2026-05-25 Session 2 self-audit)
+## Local / intermediate (module-scoped algebraic hypothesis)
 
-The Phase 6r SymTFT formalization (substrate-to-bulk unification under the Kaidi–Ohmori–Zheng + Freed–Moore–Teleman + Bhardwaj-Copetti-Pajer-Schäfer-Nameki framework) shipped 18 Lean modules under `lean/SKEFTHawking/SymTFT/` + `lean/SKEFTHawking/CrossBridges/` + `lean/SKEFTHawking/APSEta/SubstrateBulkAsymmetry.lean` (~2,650 LoC). It originally introduced 12 tracked Props at predicate-substrate level.
+### `H_BilocalPointlikeLimit`
 
-**Phase 6r-prime Session 2 self-audit (2026-05-25, post-A1/A2/A3 audit remediation)** applied the user's 3-criterion bar — (a) well-established in literature, (b) ≥1 year to discharge from scratch, (c) we haven't already done the lift somewhere else — and found that the original 12-Prop count was inflated by P5 identity-wrapper + P2 bundle-redundancy anti-patterns. **Post-audit honest count: 2 legitimate tracked Props (#1 KT 1990, #6 DMNO 2010) + 1 substantive definition reclassified from tracked Prop (#10).** The remaining 9 were either P5/P2 anti-patterns (deleted in A2) or restructured to genuine substantive content (#2 via Pontryagin substrate per A1; #9 anyon-set-level via C1.1-1.3; #11 with hidden-sector witness conjunct per A3).
+**Statement.** In the pointlike limit ϕ(0)→ϕ(∞) (dilution→1) the bilocal field reduces to the pointlike SM Higgs doublet; the non-trivial content is bilocalDilution b = 1.
 
-### Final post-audit summary
+- status `active` · eliminability `hard` · module `BHLGaugeEmbedding`
+- **Posture.** Pointlike-limit reduction of the bilocal BHL field to the SM Higgs doublet.
+- **Source.** BHL minimal embedding (bilocal → pointlike).
+- **Risk.** Non-trivial quantitative claim (any spread bilocal field has dilution<1).
 
-| Original # | Tracked Prop | Post-audit verdict | File:Line (post-audit) |
-|---|---|---|---|
-| 1 | `IsKirbyTaylorPinPlusBordism` | **KEEP** (literature: Kirby-Taylor 1990; full geometric discharge needs Stiefel-Whitney + Pin group reductions absent in Mathlib) | `lean/SKEFTHawking/SymTFT/PinBordism.lean` |
-| 2 | `IsAndersonDualPinPlus` | **A1 RESTRUCTURED to substantive Pontryagin discharge** (post-A1: `TP5PinPlus := AddChar (ZMod 16) Circle`; iso to ZMod 16 via `circleEquivComplex.trans zmodAddEquiv.symm`, substantive Mathlib character theory) | `lean/SKEFTHawking/SymTFT/PinBordism.lean` |
-| 3 | `IsAndersonDualPinPlusRelation` | **SUBSTANTIVELY DISCHARGED post-A1** (composes Pontryagin chain + W1.2 quotient iso, both substantive) | `lean/SKEFTHawking/SymTFT/PinBordism.lean` |
-| 4 | `IsWittenYonekuraInflow` | **A2 DELETED** (P5+P2: bundle of #1+#2 with unused `_s : SubstrateConfig` parameter) | (removed) |
-| 5 | `IsAndersonDualSpinBulk` | **A2 DELETED** (P5+P2: bundle with unused `_z : TP5PinPlus` parameter; inlined in `IsSpinSymTFTConsistent` body) | (removed) |
-| 6 | `IsDMNOBiconditional` | **KEEP** (literature: DMNO 2010 main theorem; forward direction Witt-trivial → has Lagrangian algebra requires MTC typeclass + Lagrangian-algebra construction infrastructure absent in Mathlib) | `lean/SKEFTHawking/SymTFT/LagrangianAlgebra.lean` |
-| 7 | `IsKapustinSaulinaGappedBoundary` | **A2 DELETED** (P5 alias for `HasLagrangianAlgebra`) | (removed) |
-| 8 | `IsBoundarySymTFTCorrespondence` | **A2 DELETED** (P5 alias for `Is3DTQFT`; substantive BCPS-N content via `IsDMNOBiconditional` + `witt_triviality_iff_has_lagrangian_algebra`) | (removed) |
-| 9 | `IsToricCodeTwoLagrangianAlgebraStructure` | **SUBSTANTIVELY DISCHARGED at anyon-set level via C1.1-1.3** (post-A2: replaced `IsBoundarySymTFTCorrespondence` first conjunct with `Is3DTQFT`). Object-level construction via M2 Drinfeld biproducts is the post-close upstream ship. | `lean/SKEFTHawking/SymTFT/ToricCodeLagrangian.lean` |
-| 10 | `IsSKEFTHawkingSymTFTBoundary` | **A4 RECLASSIFIED**: substantive definition (`wittenYonekuraToZ16 s = 0`) with substantive discharge. Not a tracked Prop in the load-bearing sense; remains as a D-class program-identity definition. | `lean/SKEFTHawking/SymTFT/SubstrateToBulkIdentification.lean` |
-| 11 | `IsDarkSectorTopologicalBoundary` | **A3 RESTRUCTURED with hidden-sector witness conjunct** (`∃ hidden_charge ≠ 0, s.z16_class = (-3) + hidden_charge`); substantively distinguishes dark-sector from SM substrates at predicate level. | `lean/SKEFTHawking/SymTFT/AlternativeBoundaries.lean` |
-| 12 | `IsSubstantivePinPlusSPTAsymmetry` | **A2 DELETED** (P5+P2: bundle of #1+#2 with docstring acknowledgment that body did not capture claimed substantive content; deferred to future Pin⁺ SPT classification infrastructure ship) | (removed) |
+### `H_CFZ2_sq_a`
 
-**Honest tracked-Prop count after A1+A2+A3+A4 audit remediation: 2 (KT 1990 + DMNO 2010), down from 12 nominal.**
+**Statement.** Mirror of H_CFZ2_sq_e at the (aAdd, aAdd, aAdd) index triple (hexagon double-swap identity for the Z/2 Drinfeld-center functor).
 
-### Detailed entries (legacy 5.1–5.12, frozen pre-audit state for audit trail)
+- status `active` · eliminability `hard` · module `CenterFunctorZ2Equiv`
+- **Posture.** Local hexagon double-swap identity (aAdd summand) for the Z/2 Drinfeld center.
+- **Source.** Phase 5s Wave 9 Option A (2026-04-20).
+- **Risk.** Local algebraic hexagon identity; same review note as H_CFZ2_sq_e.
 
-This section locks the **pre-audit state** as the audit trail; the post-audit verdicts are summarized in the table above. The detailed entries below describe the original Phase 6r predicate-substrate states + the prior Phase 6r-prime Session 1 discharges. **Read the table above for current post-audit state.**
+### `H_CFZ2_sq_e`
 
-### 5.1 `IsKirbyTaylorPinPlusBordism` — DISCHARGE_PHASE_6R_PRIME (W1 substrate + W3 KT proof)
+**Statement.** The halfBraiding double-swap (hexagon-derived β≫β_can≫β≫desc = ρ) identity at the (eAdd, aAdd, aAdd) index triple of the Z/2 Drinfeld-center functor.
 
-**File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:128`
+- status `active` · eliminability `hard` · module `CenterFunctorZ2Equiv`
+- **Posture.** Local hexagon double-swap identity (eAdd summand) for the Z/2 Drinfeld center.
+- **Source.** Phase 5s Wave 9 Option A (2026-04-20); hexagon identity for Z(Vec_{ℤ/2}).
+- **Risk.** Local algebraic hexagon identity. NOTE: conditions the Z/2 center-functor equivalence — review whether the W1 "Z/2 fully verified" framing should disclose it.
 
-**Statement.** `def IsKirbyTaylorPinPlusBordism : Prop := Nonempty (Omega4PinPlus ≃+ ZMod 16)` where `Omega4PinPlus := ZMod 16` is a Phase 6r placeholder type (W1 substantively refactors to `Quotient PinPlusBordism4Setoid`).
+### `H_DecouplingBoundDim6`
 
-**What the Prop says.** Pin⁺ bordism group at dimension 4 is isomorphic to ℤ/16; equivalently, [RP⁴, Pin⁺] generates the group of order 16 (Kirby-Taylor 1990).
+**Statement.** The amplitude-difference amp_diff(E) between Embedding III (substrate-bound ν_R) and Embedding I (fundamental ν_R) is bounded above by the natural Wilson coefficient × (E/Λ_ADW)² at every energy.
 
-**Anchor.** Kirby-Taylor, *A calculation of Pin⁺ bordism groups,* Comment. Math. Helv. 65 (1990) 434, Theorem. A-class published mathematics.
+- status `active` · eliminability `hard` · module `MajoranaRungDecoupling`
+- **Posture.** Dim-6 decoupling bound between the two ν_R embeddings.
+- **Source.** WAVE2-OPEN-5b (k=2, generic dim-6) EFT decoupling.
+- **Risk.** Tracked EFT-decoupling bound.
 
-**Underlying physics status.** A-class published mathematics; the Lean placeholder body (`Omega4PinPlus := ZMod 16`) carries the substantive content at the type level, but the substantive interpretation (the bordism quotient) is not constructed at the Phase 6r layer.
+### `H_HSCovariantBosonisation`
 
-**Why DISCHARGE_PHASE_6R_PRIME.** Mathlib4 (v4.29.1) lacks a cobordism category and Pin⁺ structure typeclass; ship in-project per the `LaplaceMethod.lean` precedent. W1 (Tier A) ships the substantive substrate (`Omega4PinPlus := Quotient PinPlusBordism4Setoid`); W3 (Tier B + C) ships the substantive KT proof (Path α: η-invariant on RP⁴ + AHSS; Path β: Pin⁺/Spin bordism long exact sequence). First formalization of any Pin⁺ bordism group in any proof assistant per Wave 1a.1 §6 cross-prover survey.
+**Statement.** Hubbard–Stratonovich bosonisation of the BHL 4-fermion operator yields an auxiliary field gauge-covariant under SU(2)_L×U(1)_Y with hypercharge +1/2.
 
-**Consumers.** `IsAndersonDualPinPlus` (transitive), `IsAndersonDualSpinBulk` (KT ∧ AD body), `IsWittenYonekuraInflow` (KT ∧ AD body), `IsSubstantivePinPlusSPTAsymmetry` (KT ∧ AD body), `wave_2a_3_substantive_instance` (Wave 2a.3 biconditional via spin-SymTFT consumers).
+- status `active` · eliminability `hard` · module `BHLGaugeEmbedding`
+- **Posture.** Gauge-covariance + hypercharge of the HS auxiliary field in the BHL embedding.
+- **Source.** BHL gauge embedding; HS bosonisation.
+- **Risk.** Non-trivial (hypercharge could be 0 or +1).
 
-**Reassessment trigger.** Phase 6r-prime W3 close (substrate-level ✅) + Phase 7+ Mathlib upstream (geometric η-invariant for full Kirby-Taylor proof).
+### `IsCurveTheoreticPenroseHypothesis`
 
-**Discharge status.** SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (commits ed79cdb W1.1 PinPlusManifold4 + 28bb595 W1.2 PinPlusBordism4 ≃+ ZMod 16 + dfd7817 W1.3 substantive Omega4PinPlus refactor + a93f91e W3-minimal RP⁴ generator order=16 theorem). Substrate ships ~620 LoC across PinPlusManifold4 + PinPlusBordism4 + PinBordism refactor. Per W3 scout: Path γ "kernel of Kirby-Taylor" structural-generator content captured at substrate level; full geometric η-invariant proof (Path α) → Phase 7+.
+**Statement.** The 4-conjunct hypothesis bundle (initial_expansion, focal_config, …) for the curve-theoretic Penrose wave-completion composition theorem.
 
-### 5.2 `IsAndersonDualPinPlus` — SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (W1.4)
-
-**File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:142`
-
-**Statement.** `def IsAndersonDualPinPlus : Prop := Nonempty (TP5PinPlus ≃+ ZMod 16)`.
-
-**What the Prop says.** The 5D Pin⁺ SPT classification group `TP_5(Pin⁺)` is isomorphic to ℤ/16, via the Anderson-dual computation `TP_5(Pin⁺) ≅ Hom(Ω_4^{Pin⁺}, ℝ/ℤ) ⊕ Ext(Ω_5^{Pin⁺}, ℤ) ≅ ℤ/16` (with Ω_5^{Pin⁺} = 0).
-
-**Anchor.** Freed-Hopkins, *Reflection positivity and invertible topological phases,* Geom. Topol. 25 (2021) 1165; arXiv:1604.06527. A-class published mathematics.
-
-**Underlying physics status.** A-class published mathematics; derivable as the Anderson dual of #1.
-
-**Why SUBSTRATE_DISCHARGED_PHASE_6R_PRIME.** W1.4 ship 2026-05-25 (commit 28e09ff): defines `Omega5PinPlus := Unit` with substantive AddCommGroup (encodes Kirby-Taylor Ω_5^{Pin⁺}(pt) = 0); ships `IsOmega5PinPlusVanishes` tracked Prop discharged via AddEquiv.refl; defines `IsAndersonDualFormulaPinPlus := IsKirbyTaylorPinPlusBordism ∧ IsOmega5PinPlusVanishes` bundling the formula inputs; ships substantive `anderson_dual_formula_pin_plus_inputs_hold` discharge composing W1.3 KT iso with Omega5 vanishing. Post-strengthening (d9bc5e7): added substantive `tp5PinPlusToAddCharCircle : TP5PinPlus ≃+ AddChar (ZMod 16) Circle` capturing the Pontryagin-dual factorization (non-trivial codomain).
-
-**Consumers.** Same as #1 (cascades through the KT ∧ AD body).
-
-**Reassessment trigger.** Phase 6r-prime W1.4 close (substrate-level ✅) + Phase 7+ Mathlib upstream (geometric η-invariant).
-
-**Discharge status.** SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (commits 28e09ff W1.4 + d9bc5e7 strengthening).
-
-### 5.3 `IsAndersonDualPinPlusRelation` — SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (W1.3 substrate)
-
-**File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:153`
-
-**Statement.** `def IsAndersonDualPinPlusRelation : Prop := Nonempty (TP5PinPlus ≃+ Omega4PinPlus)`.
-
-**What the Prop says.** TP_5(Pin⁺) and Ω_4^{Pin⁺} are isomorphic as abelian groups (both ≅ ℤ/16 by #1 + #2). Records the Anderson-dual identification at the equivalence level.
-
-**Anchor.** Composition of Kirby-Taylor 1990 + Freed-Hopkins arXiv:1604.06527.
-
-**Why SUBSTRATE_DISCHARGED_PHASE_6R_PRIME.** W1.3 ship 2026-05-25 (commit dfd7817): refactored `isAndersonDualPinPlusRelation_holds` discharge from `AddEquiv.refl` to `omega4PinPlusBordismEquivZMod16.symm` (substantive W1.2 Quotient-substrate iso). Plus post-strengthening (commit d9bc5e7) `andersonDualPinPlusRelationEquivViaSubstrate` companion using the same substrate.
-
-**Consumers.** Cross-bridge users in `APSEta/SymTFTBridge.lean` and downstream.
-
-**Reassessment trigger.** Phase 6r-prime W1 close (substrate-level ✅).
-
-**Discharge status.** SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (commits dfd7817 W1.3 + d9bc5e7 strengthening).
-
-### 5.4 `IsWittenYonekuraInflow` — PARTIAL_DISCHARGE_PHASE_6R_PRIME (W4 substrate-level shipped; full APS framework deferred)
-
-**File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:198`
-
-**Statement.** `def IsWittenYonekuraInflow (_s : SubstrateConfig) : Prop := IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus` (Phase 6r strengthening; pre-strengthening was `True`).
-
-**What the Prop says.** The 4d boundary anomaly equals the bulk Pin⁺ partition function (= η/16 mod 1 evaluated on the 5D Pin⁺ manifold) — Witten-Yonekura's nonperturbative anomaly-inflow description.
-
-**Anchor.** Witten-Yonekura, *Anomaly Inflow and the η-Invariant,* arXiv:1909.08775 (in *Shoucheng Zhang Memorial Workshop* proceedings, 2021). A-class published physics.
-
-**Why PARTIAL_DISCHARGE_PHASE_6R_PRIME.** Substrate-level W4 + W4.2 substantive discharges shipped 2026-05-25 (W4-η-1: `substrateEtaInvariant` via `ZMod.toAddCircle`; W4-η-2: biconditional `η = 0 ↔ z16 = 0`; W4-η-3: anomalous-substrate witness; W4-η-4 / C2-honest-3: broken-paper-17 falsifier; W4-η-5: analogSubstrateConfig bridge to Phase 6o; Pontryagin-Pin⁺-1/2/3/4/5: AddChar + character-sum bridge). The Prop body itself (`KT ∧ AD`) is now substantively backed by the W4-η substrate-level Mathlib bridge via composition with `substrateEtaInvariant_zero_of_anomaly_cancels`. (Strengthening 2026-05-25: an earlier shipping included an `IsWittenYonekuraInflowSubstantive` alternative predicate; reviewer identified it as P5 defining-the-conclusion — body equaled the lemma's conclusion — so it was deleted. Consumers compose with the lemma directly.) Full APS index theorem in Mathlib (W4.1 elliptic-operator substrate at the level required to discharge the original "boundary anomaly = bulk Pin⁺ partition fn at η/16 mod 1" identity) remains deferred to Phase 7+ Mathlib upstream.
-
-**Consumers.** Downstream substrate-bulk asymmetry consumers; SM-as-boundary witnesses (now backed by `sm_substrate_data_eta_invariant_vanishes` and `sm_boundary_data_eta_invariant_vanishes`).
-
-**Reassessment trigger.** Phase 6r-prime W4 close (substrate-level ✅) + Mathlib upstream APS-index PR (full).
-
-**Discharge status.** SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (commits 25dd97a / f03e8ad / f1107dd / bceb350 / 83f368b / 1705a6e / a2e1dab / 5a80671); APS-framework full discharge → Phase 7+.
-
-### 5.5 `IsAndersonDualSpinBulk` — SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (transitive on substantively-discharged #1 + #2)
-
-**File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:219`
-
-**Statement.** `def IsAndersonDualSpinBulk (_z : TP5PinPlus) : Prop := IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus`.
-
-**What the Prop says.** A Pin⁺ class `z : TP5PinPlus` parameterizes an Anderson-dual spin bulk (in the Freed-Hopkins 1604.06527 sense — invertible TFT obtained as the Anderson dual of the Pin⁺ bordism group).
-
-**Anchor.** Freed-Hopkins arXiv:1604.06527 + Yonekura arXiv:1803.10796.
-
-**Why DISCHARGE_PHASE_6R_PRIME.** Transitive on #1 + #2 after W1 ships. The substantive content is in the substrate-level Kirby-Taylor + Anderson-dual relations.
-
-**Consumers.** `IsSpinSymTFTConsistent s` (Wave 2a.3 body); cascade through SM-as-boundary witnesses.
-
-**Reassessment trigger.** Phase 6r-prime W1 close.
-
-**Discharge status.** SCHEDULED_W1 (transitive).
-
-### 5.6 `IsDMNOBiconditional` — SHIPPED_PHASE_6R_PRIME (W2.3 substantive, v2 post adversarial-review remediation)
-
-**File:** `lean/SKEFTHawking/SymTFT/LagrangianAlgebra.lean` (renamed from `IsDMNOWittTrivialIffLagrangianAlgebra` in adversarial-review round-1 remediation, 2026-05-25)
-
-**Statement.** `def IsDMNOBiconditional (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop := Is3DTQFTBraided B ↔ HasLagrangianAlgebra B`
-
-**What the Prop says.** A 3D-TQFT bulk B is Witt-trivial (substrate-level marker `Is3DTQFTBraided B`) **iff** it admits a Lagrangian algebra (substantive existence per `HasLagrangianAlgebra B`). The biconditional is the load-bearing DMNO 2010 statement carried at the type level.
-
-**Anchor.** Davydov-Müger-Nikshych-Ostrik, *The Witt group of non-degenerate braided fusion categories,* J. Reine Angew. Math. 677 (2013) 135; arXiv:1009.2117. A-class published mathematics.
-
-**Phase 6r → Phase 6r-prime evolution.**
-- **Phase 6r (BLOCKER-2 root)**: body was `:= Is3DTQFTBraided B`, predicate-substrate redundancy. `witt_triviality_iff_has_lagrangian_algebra` proof was `intro h; exact h` (pure tautology since LHS, RHS, hypothesis all reduced to `Is3DTQFT B`).
-- **Phase 6r-prime W2.3 v1 (2026-05-25)**: body strengthened to existence-of-LA. Adversarial review correctly flagged this as P5 aliasing (the body became definitionally identical to `HasLagrangianAlgebra B`).
-- **Phase 6r-prime W2.3 v2 (2026-05-25, this version)**: renamed predicate and made body the **actual biconditional** `Is3DTQFTBraided B ↔ HasLagrangianAlgebra B`. The body now substantively encodes the DMNO 2010 biconditional content; the substantive content is in the *type* of the hypothesis. `witt_triviality_iff_has_lagrangian_algebra` proof becomes `exact hDMNO` (one-line extraction).
-
-**Why DISCHARGE_PHASE_6R_PRIME.** Substantively shipped at the predicate-body level (the body IS the substantive biconditional). The substantive DMNO 2010 categorical-algebra proof itself (proving the biconditional from first principles) remains A-class published mathematics carried via primary-source citation; that proof requires multi-month categorical-algebra Mathlib substrate.
-
-**Consumers.** `SymTFT/BulkBoundaryCorrespondence.lean::witt_triviality_iff_has_lagrangian_algebra` (W2.5 substantive closure); `CrossBridges/SMMatterAsSymTFTBoundary.lean::witt_triviality_iff_has_lagrangian_algebra` (cross-bridge).
-
-**Reassessment trigger.** Phase 6r-prime' / Phase 7+ Mathlib upstream PR for substantive DMNO categorical-algebra proof.
-
-**Discharge status.** **SHIPPED_W2.3_v2** (body substantively the biconditional; substantive DMNO proof deferred to Phase 7+).
-
-### 5.7 `IsKapustinSaulinaGappedBoundary` — SHIPPED_PHASE_6R_PRIME (W2.4 substantive)
-
-**File:** `lean/SKEFTHawking/SymTFT/LagrangianAlgebra.lean` (post-W2.4 location)
-
-**Statement (post-W2.4).** `def IsKapustinSaulinaGappedBoundary (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop := HasLagrangianAlgebra B`
-
-**What the Prop says.** Gapped boundary conditions of a 3D TQFT are in bijection with Lagrangian algebras in its boundary fusion category (Kapustin-Saulina 2011). The W2.4 strengthening makes this predicate substantively equivalent to LA-existence (`HasLagrangianAlgebra B` body asserts `∃ braided, ∃ L, IsLagrangianAlgebra L`).
-
-**Anchor.** Kapustin-Saulina, *Topological boundary conditions in abelian Chern-Simons theory,* Nucl. Phys. B 845 (2011) 393; arXiv:1008.0654. Refinement: Fuchs-Schweigert-Valentino arXiv:1203.4568.
-
-**Phase 6r → Phase 6r-prime evolution.**
-- **Phase 6r**: body was `:= Is3DTQFT B` (predicate-substrate marker).
-- **Phase 6r-prime W2.4 (2026-05-25)**: refactored to `:= HasLagrangianAlgebra B`. The KS bulk-boundary bijection (gapped boundary ⟺ LA-exists) is captured at the predicate-substrate level by defining the gapped-boundary predicate AS the LA-existence predicate. Substantive content: the W2.4-strengthened `HasLagrangianAlgebra` body requires real LA existence with W2.1 substantive `IsConnectedAlgebra` + `IsSeparableAlgebra` (Frobenius section) ingredients.
-
-**Consumers.** `GappedBoundary.lean` (`IsGappedTopologicalBoundary` uses `HasLagrangianAlgebra` directly post-W2.4); downstream boundary-correspondence theorems.
-
-**Reassessment trigger.** Phase 6r-prime' / Phase 7+ Mathlib upstream for full Frobenius-Perron-dimension infrastructure.
-
-**Discharge status.** **SHIPPED_W2.4** (substantive body via `HasLagrangianAlgebra`).
-
-### 5.8 `IsBoundarySymTFTCorrespondence` — DISCHARGE_PHASE_6R_PRIME (W2.4 predicate-level)
-
-**File:** `lean/SKEFTHawking/SymTFT/Basic.lean:231`
-
-**Statement.** `def IsBoundarySymTFTCorrespondence (B : Type u₁) [Category.{v₁} B] [MonoidalCategory B] : Prop := Is3DTQFT B` (Phase 6r predicate-substrate).
-
-**What the Prop says.** For every SymTFT bulk B, gapped boundary conditions of B are in bijection with Lagrangian algebras in the Drinfeld center realizing B (Bhardwaj-Copetti-Pajer-Schäfer-Nameki "Boundary SymTFT" framework).
-
-**Anchor.** Bhardwaj-Copetti-Pajer-Schäfer-Nameki, *Boundary SymTFT,* arXiv:2409.02166, SciPost Phys. 19 (2025) 061. **PRIMARY anchor** for the Phase 6r SM-as-boundary identification.
-
-**Why DISCHARGE_PHASE_6R_PRIME.** W2.4 strengthens body to require full bulk-boundary biconditional content using W2.3 substrate (Frobenius-Perron dimensions + non-degenerate braided fusion + Lagrangian-algebra existence).
-
-**Consumers.** `IsToricCodeTwoLagrangianAlgebraStructure` (current body wraps this Prop); `CrossBridges/SMMatterAsSymTFTBoundary.lean`.
-
-**Reassessment trigger.** Phase 6r-prime W2.4 close.
-
-**Discharge status.** SCHEDULED_W2.4 (predicate-level discharge; statement-level substantive after W2.5).
-
-### 5.9 `IsToricCodeTwoLagrangianAlgebraStructure` — SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (C1.1+C1.2+C1.3)
-
-**File:** `lean/SKEFTHawking/SymTFT/ToricCodeLagrangian.lean:88`
-
-**Statement.** `def IsToricCodeTwoLagrangianAlgebraStructure : Prop := IsBoundarySymTFTCorrespondence toricCodeBulk` (Phase 6r predicate-substrate).
-
-**What the Prop says.** The toric-code SymTFT bulk `Center (Discrete (ZMod 2))` admits exactly two Lagrangian algebras up to equivalence: electric `𝟙 ⊕ e` and magnetic `𝟙 ⊕ m`.
-
-**Anchor.** Kitaev-Kong, *Models for gapped boundaries and domain walls,* Commun. Math. Phys. 313 (2012) 351; arXiv:1104.5047. Concrete-instance content: Bombin-Martín-Delgado arXiv:0803.5046.
-
-**Why SUBSTRATE_DISCHARGED_PHASE_6R_PRIME.** C1 ship 2026-05-25 (3 sub-waves): C1.1 (commit fa7dd5e) ships substantive Kitaev-Kong Lagrangian-algebra criterion at anyon-set level + electric/magnetic witnesses + fermion falsifier in new ToricCodeLagrangianAnyons.lean (~230 LoC); C1.2 (commit e3fe2e6) ships substantive classification theorem (exactly two satisfy criterion via cardinality+vacuum+braiding enumeration ~170 LoC delta); C1.3 (commit 7c919ba) refactors `IsToricCodeTwoLagrangianAlgebraStructure` body from tautology marker to substantive ∃-quantified statement requiring two distinct anyon sets + classification. **First substantively-formalized two-Lagrangian-algebra classification for toric code MTC** per Wave 1a.1 §5.3 cross-prover survey (at anyon-set level — concrete Mon_/Comon_/IsCommFrobeniusAlgebra instance construction in `Center (Discrete (ZMod 2))` deferred to Phase 7+ Mathlib upstream per direct-sum-structure substrate gap).
-
-**Consumers.** `AlternativeBoundaries.lean` (toric-code labels for SM-vs-dark-sector); dark-sector boundary witnesses (paper-17).
-
-**Reassessment trigger.** Phase 6r-prime C1 close.
-
-**Discharge status.** SCHEDULED_C1 (after W2.3 ideal; standalone fallback).
-
-### 5.10 `IsSKEFTHawkingSymTFTBoundary` — KEEP_AS_TRACKED (permanent; D-class program identity)
-
-**File:** `lean/SKEFTHawking/SymTFT/SubstrateToBulkIdentification.lean:68`
-
-**Statement.** `def IsSKEFTHawkingSymTFTBoundary (s : APSEta.Substrate) : Prop := wittenYonekuraToZ16 s = 0`.
-
-**What the Prop says.** A substrate `s : APSEta.Substrate` (one of BEC, ADW, ³He-A) admits a SymTFT-boundary-data reading in the Bhardwaj-Copetti-Pajer-Schäfer-Nameki sense (predicate body: the Witten-Yonekura η/16 lift is well-defined and trivial at the substrate-data layer).
-
-**Anchor.** Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 (substrate-side framework) + program-original D-class synthesis (substrate identification).
-
-**Underlying status.** **Program-original identification**, NOT an A-class published result. The Phase 6r Wave 3b.1 substantive identification (`wave_3b_1_substrate_to_bulk_identification`) ships the predicate-level statement; the substantive identification IS the program's D-class contribution.
-
-**Why KEEP_AS_TRACKED.** The Prop body IS the program's D-class identity statement — discharging it would mean dissolving the identity claim into A-class substrate content, which is structurally inappropriate (program-original D-class content does not get "discharged" the way A-class scaffolding does). Per Phase 6r close-out: this is the ONLY KEEP among the 12 Phase 6r tracked Props.
-
-**Consumers.** `wave_3b_1_substrate_to_bulk_identification`, `wave_3b_1_closure`, and downstream substrate-as-boundary witnesses.
-
-**Reassessment trigger.** N/A (permanent).
-
-**Discharge status.** **KEEP** (permanent; D-class program identity by design).
-
-### 5.11 `IsDarkSectorTopologicalBoundary` — SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (C2 + W5-η-bridge-3)
-
-**File:** `lean/SKEFTHawking/SymTFT/AlternativeBoundaries.lean:99`
-
-**Statement.** `def IsDarkSectorTopologicalBoundary (s : Z16AnomalyForcesThetaBar.SubstrateConfig) : Prop := IsSpinSymTFTConsistent s` (Phase 6r predicate-substrate marker, paper-17-conditional).
-
-**What the Prop says.** A substrate `s : SubstrateConfig` carries a dark-sector topological boundary structure (an *alternative* Lagrangian-algebra boundary to the SM-matter one — magnetic vs electric label on the same SymTFT bulk).
-
-**Anchor.** Paper 17 dark-sector substrate (HiddenSectorClassification.lean + FractonDarkMatter.lean + SFDMMergerForecast.lean + FangGuTorsionDM.lean) + Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 + DMNO 2010 (alternative Lagrangian-algebra labels).
-
-**Why SUBSTRATE_DISCHARGED_PHASE_6R_PRIME.** C2 substantively shipped 2026-05-25 via three sub-waves: (a) C2-honest-1 (commit c8a67b6): paper-17 read + `sm_plus_paper17_hidden_substrate` SubstrateConfig with substantive `-3 + 3 = 0` cancellation arithmetic + `paper17_hidden_sector_charge_eq_three_singlets` cross-bridge to Phase 5x `HiddenSectorClassification.three_singlets_satisfy_hidden_sector`; (b) C2-honest-2 / W5-η-bridge-3 (commit 83f368b): η-level discharge via `sm_plus_paper17_hidden_substrate_eta_invariant_vanishes` + bundled corollary `*_dark_topological_AND_eta_trivial`; (c) C2-honest-3 / W4-η-4 (commit a2e1dab): broken-paper-17 falsifier (`broken_paper17_hidden_sector_charge := 2` vs substantive `+3`) demonstrating framework distinguishes valid from invalid configurations. Working doc at `temporary/working-docs/phase6r-prime/c2_paper17_substantive.md`. Full electric/magnetic Lagrangian-algebra label correspondence at the categorical level remains for Phase 6r-prime' / Phase 7+ MTC follow-up.
-
-**Consumers.** `wave_3b_1b_alternative_boundary_structural_closure` + new `sm_plus_paper17_hidden_substrate_*` witness chain.
-
-**Reassessment trigger.** Phase 6r-prime' / Phase 7+ MTC follow-up (categorical-level LA-label correspondence).
-
-**Discharge status.** SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (commits c8a67b6 / 83f368b / a2e1dab); categorical-level full discharge → Phase 7+.
-
-### 5.12 `IsSubstantivePinPlusSPTAsymmetry` — SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (transitive on substantively-discharged #1 + #2)
-
-**File:** `lean/SKEFTHawking/APSEta/SubstrateBulkAsymmetry.lean:156`
-
-**Statement.** `def IsSubstantivePinPlusSPTAsymmetry : Prop := IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus`.
-
-**What the Prop says.** The substantive Pin⁺ SPT realization asymmetry between analog-Hawking substrates (BEC, ADW, ³He-A — all ℤ/16-trivial at substrate-data layer) and the SM-with-νR substrate (ℤ/16-non-trivial per García-Etxebarria-Montero arXiv:1808.00009 at the realization layer, despite bare counting `16·N_f ≡ 0 mod 16`).
-
-**Anchor.** García-Etxebarria-Montero, *Dai-Freed anomalies in particle physics,* JHEP 08 (2019) 003; arXiv:1808.00009. Composed with Kapustin-Thorngren-Turzillo-Wang arXiv:1406.7329.
-
-**Why DISCHARGE_PHASE_6R_PRIME.** Transitive on #1 + #2 after W1 ships substantive substrate; the GEM-bridge content lives at the Pin⁺ SPT classification realization layer (separate from the bare ℤ/16 counting layer per the Wave 3a.1 §Caveats discipline).
-
-**Consumers.** `analogHawking_vs_SM_bulk_asymmetry_substrate_data`, `wave_3a_3_substrate_bulk_asymmetry_closure`, `wave_3b_1_closure`.
-
-**Reassessment trigger.** Phase 6r-prime W1 close (transitive) + Phase 6r-prime W4 close (composed with GEM-bridge if formalized).
-
-**Discharge status.** SCHEDULED_W1 (transitive substrate) + Phase 6r-prime' or 7+ (full GEM-bridge formalization).
+- status `active` · eliminability `hard` · module `PenroseSingularityCurveTheoretic`
+- **Posture.** Curve-theoretic Penrose focal-configuration bundle for the singularity-completion theorem.
+- **Source.** Curve-theoretic Penrose singularity (wave-completion).
+- **Risk.** Bundle of focal-configuration conditions; tracked.
 
 ---
-
-## 6. Posture summary (post Phase 6r-prime Sessions 1-5 audit + remediation; **synced 2026-05-26**)
-
-**Honest legitimate tracked-Prop count after Phase 6r-prime: 7** (4 pre-Phase-6r + 3 from Phase 6r/6r' substantive ships). The original Phase 6r 12-Prop count was reduced via A1-A4 audit remediation (5 DELETED P5/P2 anti-patterns; 1 RECLASSIFIED to substantive definition; 3 RESTRUCTURED to substantive content via substantive substrate ships).
-
-### Pre-Phase-6r tracked Props (unchanged)
-
-| Prop | Status | Discharge LoE | Scheduled phase |
-|---|---|---|---|
-| `H_VestigialModeIsGraviton` | KEEP_AS_TRACKED (permanent) | N/A — requires different substrate | None |
-| `H_DESICompatibility` | DISCHARGE_FUTURE_PHASE | ~50 person-hours | Phase 6b.2 (not active) |
-| `H_RT_Formula_Valid` | KEEP_AS_TRACKED (permanent) | N/A — project-scope boundary | None |
-| `TPFConjecture` | KEEP_AS_TRACKED (permanent; converted from axiom on 2026-05-19) | N/A — open at literature frontier | None |
-| `SolovayKitaevQuantitativeContract` (active discharge) | DISCHARGE_IN_PROGRESS | Phase 6t Path A Option C tight-ε SHIPPED 2026-05-23 | Phase 6t (shipped); K-margin tightening upstream Mathlib-PR-quality |
-
-### Phase 6r SymTFT tracked Props (post-audit final state)
-
-| Original # | Prop | Post-audit verdict | Discharge state |
-|---|---|---|---|
-| 1 | `IsKirbyTaylorPinPlusBordism` | **KEEP** (legitimate; Kirby-Taylor 1990) | Substrate-discharged via W1.2 `Omega4PinPlusBordism ≃+ ZMod 16` substantively; full geometric ISO → Phase 7+ Mathlib upstream (Stiefel-Whitney + Pin reductions absent). |
-| 2 | `IsAndersonDualPinPlus` | **RESTRUCTURED** to substantive Pontryagin discharge | Body now substantively iso via `TP5PinPlus := AddChar (ZMod 16) Circle` + `circleEquivComplex.trans zmodAddEquiv.symm`; no longer P5 identity wrapper. |
-| 3 | `IsAndersonDualPinPlusRelation` | **SUBSTANTIVELY DISCHARGED** post-A1 | Composition of Pontryagin chain + W1.2 quotient iso (both substantive). |
-| 4 | `IsWittenYonekuraInflow` | **A2 DELETED** (P5+P2 bundle of #1+#2 with unused `_s` param) | Removed; consumers point at substantive substrate directly. |
-| 5 | `IsAndersonDualSpinBulk` | **A2 DELETED** (P5+P2 bundle with unused `_z` param) | Removed; consumers point at substantive substrate. |
-| 6 | `IsDMNOBiconditional` (renamed from `IsDMNOWittTrivialIffLagrangianAlgebra` in W2.3 v2) | **KEEP** (legitimate; DMNO 2010) | Body IS the biconditional `Is3DTQFTBraided B ↔ HasLagrangianAlgebra B`; substantive DMNO categorical-algebra proof → Phase 7+ Mathlib upstream. |
-| 7 | `IsKapustinSaulinaGappedBoundary` | **A2 DELETED** (P5 alias) | Removed; consumers point at `HasLagrangianAlgebra` directly. |
-| 8 | `IsBoundarySymTFTCorrespondence` | **A2 DELETED** (P5 alias for `Is3DTQFT`) | Removed; substantive BCPS-N content via `IsDMNOBiconditional` + `witt_triviality_iff_has_lagrangian_algebra`. |
-| 9 | `IsToricCodeTwoLagrangianAlgebraStructure` | **SUBSTANTIVELY DISCHARGED at anyon-set level via C1.1-C1.3** | `ToricCodeLagrangianAnyons.lean` (`Lagrangian anyon-set` Kitaev-Kong criterion + 2-anyon-set existence + 3-step classification). Object-level via M2 → A5(c-e) substrate complete Session 5; full instance-axiom-discharge (MonObj/ComonObj associativity, Frobenius bridge) is ADV-3 (non-blocking strengthening for next session). |
-| 10 | `IsSKEFTHawkingSymTFTBoundary` | **A4 RECLASSIFIED** as substantive definition (D-class program identity) | `wittenYonekuraToZ16 s = 0` — not a load-bearing tracked Prop, just a definition. |
-| 11 | `IsDarkSectorTopologicalBoundary` | **A3 RESTRUCTURED** with hidden-sector witness conjunct | Body adds `∃ hidden_charge ≠ 0, s.z16_class = (-3) + hidden_charge`; substantively distinguishes dark-sector from SM. Cross-bridge to Phase 5x `HiddenSectorClassification.three_singlets_satisfy_hidden_sector`. |
-| 12 | `IsSubstantivePinPlusSPTAsymmetry` | **A2 DELETED** (P5+P2 bundle with docstring acknowledgment of non-substantive body) | Removed; substantive Pin⁺ SPT classification asymmetry tracked at primary-source level (García-Etxebarria-Montero arXiv:1808.00009 + Kapustin-Thorngren-Turzillo-Wang arXiv:1406.7329) for Phase 7+ MTC follow-up. |
-
-**Net axiom-and-tracked-Prop count rationale.** The project minimizes both `axiom` declarations (per Pipeline Invariant #15) AND tracked-Prop count by:
-
-1. Categorizing each tracked Prop as either KEEP or DISCHARGE (not leaving it ambiguous).
-2. For KEEP entries: documenting the project-scope-boundary rationale and the substrate that would be required to discharge.
-3. For DISCHARGE entries: scheduling a specific future phase + estimating LoE.
-4. **(Phase 6r-prime audit addition)** Applying the user's 3-criterion bar BEFORE counting as a legitimate tracked Prop: (a) well-established literature; (b) ≥1 year discharge cost OR >20k LoC bespoke substrate; (c) project does not already have the substrate elsewhere. Anti-patterns failing the bar (P5 identity wrappers, P2 bundle redundancy, P4 trivial discharges, P3 multiplication-only tautologies) are DELETED or RESTRUCTURED rather than counted.
-
-This catalogue is the source of truth for the project's load-bearing tracked-Prop surface area. New tracked Props (added in any future wave) should be recorded here with a status assignment + rationale + 3-criterion-bar check BEFORE being consumed by load-bearing theorems.
-
----
-
-## 7. Cross-reference
-
-- Pipeline Invariant #15: see `CLAUDE.md` workspace-level (no new project-local axiom without explicit user sign-off + discharge plan).
-- Strengthening-pass discipline: see `CLAUDE.md` workspace-level §"Preemptive-strengthening discipline".
-- For `axiom`-declarations (as opposed to tracked Props), see the `AXIOM_METADATA` registry in `src/core/constants.py` and the per-axiom eliminability metadata.
-- For per-Prop consumer enumeration of the original 4 entries: `lean/SKEFTHawking/{GravitationalWaves,FLRWDynamics,RTCasiniHuertaBounds,SPTClassification}.lean` and any `grep -rn "H_VestigialModeIsGraviton\|H_DESICompatibility\|H_RT_Formula_Valid\|TPFConjecture" lean/`.
-- For Phase 6r SymTFT tracked Props (entries §5.1–§5.12): `lean/SKEFTHawking/SymTFT/` + `lean/SKEFTHawking/CrossBridges/SMMatterAsSymTFTBoundary.lean` + `lean/SKEFTHawking/APSEta/SubstrateBulkAsymmetry.lean`. Discharge plan: `docs/roadmaps/Phase6r_prime_Roadmap.md`. Source-of-truth catalogue: this doc §5 (this entry); supersedes any ad-hoc enumeration in working docs.
-- Phase 6r close-out + Phase 6r-prime planning: see `docs/roadmaps/Phase6r_Roadmap.md` Sessions log + `docs/roadmaps/Phase6r_prime_Roadmap.md` substrate-state snapshot §A.
-
----
-
-**Maintenance.** This doc is updated whenever (a) a new tracked Prop is added to the project's substrate, (b) an existing tracked Prop is substantively discharged, or (c) the status assignment changes (e.g., DISCHARGE_FUTURE_PHASE → KEEP, or KEEP → discharged).

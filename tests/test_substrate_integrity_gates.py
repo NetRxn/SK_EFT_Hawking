@@ -19,6 +19,8 @@ from scripts.validate import (
     _tex_name_pattern,
     _VERIFY_CLAIM_RE,
     _HEDGE_CLAIM_RE,
+    _is_prop_codomain,
+    _TRACKED_PROP_NAME_RE,
 )
 
 
@@ -122,3 +124,53 @@ def test_verify_vs_hedge_windows():
     fixed = (r"verified concretely for $G = \mathbb{Z}/2$ ... the general-$G$ "
              r"statement is formalized at the statement level")
     assert _HEDGE_CLAIM_RE.search(fixed)
+
+
+# ── W3 tracked-hypothesis single source of truth ───────────────────────
+
+from src.core.constants import HYPOTHESIS_REGISTRY  # noqa: E402
+
+
+def test_prop_codomain_filter_excludes_subgroup_defs():
+    assert _is_prop_codomain("Prop")
+    assert _is_prop_codomain("SKEFTHawking.NeutrinoMixing.PMNSMatrix → Prop")
+    # the H_Fib / H_of_G false positives are Subgroup-valued, not Prop
+    assert not _is_prop_codomain(
+        "Subgroup (Subtype fun x => SetLike.instMembership.mem (Matrix.specialUnitaryGroup (Fin 2) Complex) x)")
+
+
+def test_tracked_prop_name_filter():
+    for n in ["H_RegimePartition", "TPFConjecture", "Phase6hHyperchargeSplittingHypothesis"]:
+        assert _TRACKED_PROP_NAME_RE.match(n), n
+    for n in ["wrtS2xS1", "sm_fermion_count"]:
+        assert not _TRACKED_PROP_NAME_RE.match(n), n
+
+
+def test_every_registry_entry_is_tiered():
+    valid = {"headline", "external_boundary", "discharge_future", "local"}
+    for k, v in HYPOTHESIS_REGISTRY.items():
+        assert v.get("tier") in valid, f"{k} tier={v.get('tier')!r}"
+        assert v.get("statement") or v.get("status"), k
+
+
+def test_doc_props_merged_into_registry():
+    """The cosmology Props formerly only in the markdown doc now live in the registry."""
+    for k in ["H_VestigialModeIsGraviton", "H_DESICompatibility",
+              "H_RT_Formula_Valid", "TPFConjecture"]:
+        assert k in HYPOTHESIS_REGISTRY, k
+        assert HYPOTHESIS_REGISTRY[k].get("prose"), f"{k} needs publication prose"
+
+
+def test_topo_covered_by_rokhlin_not_double_registered():
+    """topo (2|sigma/8) is covered via rokhlin_sigma_mod_16's dependent_theorems, not its own entry."""
+    assert "topo" not in HYPOTHESIS_REGISTRY
+    dts = HYPOTHESIS_REGISTRY["rokhlin_sigma_mod_16"].get("dependent_theorems", [])
+    assert any("SmoothSpinManifold4.rokhlin" in d for d in dts)
+
+
+def test_render_is_deterministic_and_matches_disk():
+    from scripts import render_tracked_hypotheses as r
+    out = r.render()
+    assert out == r.render()  # deterministic
+    assert out.count("### ") == len(HYPOTHESIS_REGISTRY)
+    assert r.DOC_PATH.read_text() == out, "doc out of sync — run render_tracked_hypotheses.py"

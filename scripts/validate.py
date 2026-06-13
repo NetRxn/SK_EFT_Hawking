@@ -472,19 +472,42 @@ def check_tracked_hypothesis_ledger() -> CheckResult:
 
     details: List[Detail] = []
     details.append(Detail(
-        "surface", True,
+        "surface", not gap,
         f"{len(tracked)} tracked Prop-defs; {len(consumed)} consumed; "
-        f"{len(consumed) - len(gap)} covered (registry {len(HYPOTHESIS_REGISTRY)} + non-LB {len(NON_LB)})",
-        warning=bool(gap)))
+        f"{len(consumed) - len(gap)} covered (registry {len(HYPOTHESIS_REGISTRY)} + non-LB {len(NON_LB)})"))
     for n in gap:
         details.append(Detail(
-            n, True,
+            n, False,
             f"consumed tracked Prop (def in {tracked[n]}) absent from HYPOTHESIS_REGISTRY "
-            f"and TRACKED_HYPOTHESIS_NON_LOAD_BEARING — register or downgrade",
-            warning=True))
-    # Advisory phase: never blocks. Escalates to `passed = not gap` once the
-    # backlog is cleared (Invariant #16) — see SubstrateIntegrityGates roadmap W3.
-    return CheckResult(passed=True, details=details)
+            f"and TRACKED_HYPOTHESIS_NON_LOAD_BEARING — register or downgrade (Invariant #16)"))
+    return CheckResult(passed=not gap, details=details)
+
+
+@register_check(
+    "tracked_hypotheses_fresh",
+    "docs/PERMANENT_TRACKED_HYPOTHESES.md is up-to-date vs HYPOTHESIS_REGISTRY (auto-regen)")
+def check_tracked_hypotheses_fresh() -> CheckResult:
+    """The tracked-hypotheses doc is an auto-generated VIEW of HYPOTHESIS_REGISTRY
+    (Substrate Integrity Gates W3). Same auto-regenerate-stale pattern as
+    ``counts_fresh``/``tables_fresh``: if the on-disk markdown drifts from the
+    registry render, regenerate it (so it can never silently diverge — the prior
+    two-disjoint-ledgers failure)."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).parent))
+    try:
+        import render_tracked_hypotheses as _r
+    except Exception as e:  # pragma: no cover
+        return CheckResult(passed=True, details=[Detail("import", True, f"renderer unavailable: {e}", warning=True)])
+    new = _r.render()
+    doc = _r.DOC_PATH
+    old = doc.read_text() if doc.exists() else ""
+    if old == new:
+        return CheckResult(passed=True, details=[Detail(
+            "tracked_hypotheses", True, f"{new.count('### ')} entries; doc matches HYPOTHESIS_REGISTRY")])
+    doc.write_text(new)
+    return CheckResult(passed=True, details=[Detail(
+        "tracked_hypotheses", True,
+        "doc was stale vs HYPOTHESIS_REGISTRY — auto-regenerated", warning=True)])
 
 
 # ═══════════════════════════════════════════════════════════════════════
