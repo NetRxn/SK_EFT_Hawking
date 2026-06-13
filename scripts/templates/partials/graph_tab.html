@@ -540,11 +540,27 @@
         })
         .catch(err => {
             const el = document.getElementById('kg-loading');
+            el.style.display = '';   // line above hid it; restore so the error is visible
             el.textContent = 'Error loading graph: ' + err.message;
             el.style.color = '#ef4444';
         });
 
     function initGraph() {
+        // Guard: d3.forceLink throws "node not found" on the FIRST edge whose
+        // source/target id is absent from `nodes`, which blanks the ENTIRE graph.
+        // build_graph can emit edges to formula/aristotle ids that were never
+        // materialised as nodes (dangling edges); drop them and warn instead of
+        // letting one bad edge take down the whole visualization.
+        {
+            const _ids = new Set(nodes.map(n => n.id));
+            const _end = x => (x && typeof x === 'object') ? x.id : x;
+            const _before = links.length;
+            links = links.filter(l => _ids.has(_end(l.source)) && _ids.has(_end(l.target)));
+            if (links.length < _before) {
+                console.warn('KG: dropped ' + (_before - links.length) +
+                             ' dangling edge(s) referencing absent nodes.');
+            }
+        }
         const wrap = document.getElementById('kg-wrap');
         const W = wrap.clientWidth;
         const topbarH = parseFloat(

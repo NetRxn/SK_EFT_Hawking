@@ -95,7 +95,7 @@ Provenance chain inspector. Lists named provenance chains (paper claim → formu
 
 ### Bundles _(Phase 6i Wave 7.5)_
 
-Per-publication-bundle readiness panel for the 17-bundle architecture (1 flagship F + 8 Tier 1 deep + 3 Tier 2 PRL + 3 Tier 3 infrastructure + 2 Tier 4 experimental). Sourced from `scripts/datastar_bundles.py`, which assembles per-bundle data from `docs/PAPER_DRAFT_MAPPING.md`, `papers/cluster_bundle_index.json` (cross-bundle ClaimCluster index), per-paper readiness output, and `docs/submission_state.json`. Each bundle card shows: cluster membership, source-freshness flag (`bundle_source_freshness`), Stage-13 reviewer-triple status, and a submission-event log. Submission events post via `/api/bundles/<bundle>/submission_event`.
+Per-publication-bundle readiness panel for the 18-bundle architecture (1 flagship F + 9 Tier 1 deep + 3 Tier 2 PRL + 3 Tier 3 infrastructure + 2 Tier 4 experimental). Sourced from `scripts/datastar_bundles.py`, which assembles per-bundle data from `docs/PAPER_DRAFT_MAPPING.md`, `papers/cluster_bundle_index.json` (cross-bundle ClaimCluster index), per-paper readiness output, and `docs/submission_state.json`. Each bundle card shows: cluster membership, source-freshness flag (`bundle_source_freshness`), Stage-13 reviewer-triple status, and a submission-event log. Submission events are recorded via the tab's inline form (or by POSTing to `/api/bundles/<bundle>/submission_event`).
 
 ### Paper Provenance v2 _(Phase 5v Wave 10)_
 
@@ -152,14 +152,14 @@ Schema spans Phase 1 / 1.5 base types + Phase 5v Wave 2a readiness-system types 
 ## Keyboard Shortcuts
 
 - `j` / `k` — navigate parameter cards (Parameters tab)
-- `c` — confirm current parameter
-- `r` — reject current parameter
+- `y` — confirm current parameter
+- `n` — reject current parameter
 - `f` — flag current parameter
 
 ## Bundle readiness command _(2026-05-07)_
 
 ```bash
-# Regenerates docs/BUNDLE_READINESS_HEATMAP.md (N-gate × 17-bundle matrix).
+# Regenerates docs/BUNDLE_READINESS_HEATMAP.md (N-gate × 18-bundle matrix).
 uv run python scripts/bundle_readiness.py --heatmap
 
 # Full per-bundle pass (per-paper rollup + heatmap).

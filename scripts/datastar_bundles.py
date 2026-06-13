@@ -104,6 +104,9 @@ def load_bundles_summary() -> dict[str, Any]:
             "open_findings": info["open_findings"],
             "blocker_count": info["blocker_count"],
             "readiness": info["readiness"],
+            # readiness_display carries the nuance bundle_readiness.py computes
+            # (e.g. "YELLOW (unreviewed)") that bare readiness flattens away.
+            "readiness_display": info.get("readiness_display", info["readiness"]),
             "verdict_icon": _VERDICT_ICON.get(info["readiness"], "?"),
             "review_doc": review_doc,
         })

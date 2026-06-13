@@ -87,12 +87,16 @@ pythonpath = ["."]
 # Default behaviour: skip tests marked `slow` (Lean ExtractDeps re-runs,
 # graph rebuilds, anything that shells out to lake / pdflatex / aristotle).
 # Run them explicitly with `-m slow` or `-m ""` to include everything.
-addopts = "-m 'not slow'"
+addopts = "-m 'not slow and not e2e'"
 markers = [
     "slow: marks tests that trigger Lean re-extraction, graph rebuilds, or external subprocess calls (run with `-m slow` or `-m ''` to include)",
+    "e2e: real-browser (Playwright) end-to-end dashboard tests; excluded from the default and `slow` runs (run with `-m e2e`).",
 ]
 
 [dependency-groups]
 dev = [
     "maturin>=1.12.6",
+    # Browser-driven e2e tests for the provenance dashboard (tests/e2e/).
+    # Dev-only; never shipped. Chromium provisioned via `uv run playwright install chromium`.
+    "playwright>=1.50",
 ]

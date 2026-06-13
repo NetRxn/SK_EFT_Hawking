@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SK-EFT Provenance Command Center</title>
+    <!-- Inline SVG favicon — declaring an icon stops the browser falling back
+         to a 404 /favicon.ico request on every page load. -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%234682b4'/%3E%3Ctext x='8' y='12' font-size='9' font-family='monospace' font-weight='700' text-anchor='middle' fill='white'%3ESK%3C/text%3E%3C/svg%3E">
     <!-- Datastar v1.0.1 — gh-tagged build (npm-scoped URL 404s).
          SDK datastar-py 0.8.0 emits datastar-patch-elements/signals events;
          v1.0.0+ consumes these (beta.11 used the old merge-fragments names).
@@ -995,14 +998,14 @@
 </div>
 
 <!-- Save bar -->
-<div class="save-bar" {% if tab == 'graph' %}style="display: none;"{% endif %}>
+{% if tab == 'parameters' %}
+<div class="save-bar">
     <div class="save-status" id="save-status">
-        Changes accumulate in browser session. Click "Save All" to persist.
+        &#10003; Confirm / Reject / Flag actions save immediately to the audit log
+        (<code>docs/verification_log.jsonl</code>) — there is no separate save step.
     </div>
-    <button class="btn btn-save" onclick="saveAll()">
-        Save All
-    </button>
 </div>
+{% endif %}
 
 <!-- Verify/Save fetch helpers (replacing HTMX) + Keyboard shortcuts -->
 <script>
@@ -1026,16 +1029,6 @@
                 if (target) safeSetHTML(target, html);
             })
             .catch(err => console.error('Verify failed:', err));
-    }
-
-    function saveAll() {
-        fetch('/save', {method: 'POST'})
-            .then(r => r.text())
-            .then(html => {
-                const target = document.getElementById('save-status');
-                if (target) safeSetHTML(target, html);
-            })
-            .catch(err => console.error('Save failed:', err));
     }
 
     let currentCard = 0;

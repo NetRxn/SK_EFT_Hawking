@@ -1,7 +1,7 @@
 {# ═════════════════════════════════════════════════════════════════
    Bundles Tab — Phase 6i Wave 7.5
 
-   Surfaces the 13 publication targets defined in
+   Surfaces the 18 publication targets defined in
    docs/PAPER_STRATEGY.md, each with: tier, target journal, lifted-
    source paper count, cross-bundle cluster count, Stage-13 readiness
    verdict, submission status, and a cross-link to the bundle review
@@ -58,6 +58,15 @@
         user-triggered.
     </p>
 
+    {% if bundles_summary.error %}
+    <div class="bundles-error" style="margin: 12px 0; padding: 12px 16px; border-radius: 6px;
+         background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;">
+        <strong>Bundle data failed to load.</strong>
+        The summary below may be empty or incomplete —
+        <code>{{ bundles_summary.error }}</code>
+    </div>
+    {% endif %}
+
     <table class="bundles-table">
         <thead>
             <tr>
@@ -86,7 +95,7 @@
                 <td style="text-align: right;">{{ b.blocker_count }}</td>
                 <td>
                     <span class="verdict-{{ b.readiness }}">
-                        {{ b.verdict_icon }} {{ b.readiness }}
+                        {{ b.verdict_icon }} {{ b.readiness_display }}
                     </span>
                 </td>
                 <td>
@@ -138,11 +147,59 @@
     <h3>Submission state log</h3>
     <p style="color: #555;">
         Append-only log at
-        <code>docs/submission_state.json</code>. Updated by user via
-        <code>scripts/datastar_bundles.py</code> POST endpoint when bundle
-        events occur (drafted / stage13_pass / submitted / accepted /
-        published).
+        <code>docs/submission_state.json</code>. Record an event with the form
+        below (or POST <code>/api/bundles/&lt;bundle&gt;/submission_event</code>)
+        when a bundle is drafted / stage13_pass / submitted / accepted /
+        published.
     </p>
+
+    {% if request.args.get('submitted') %}
+    <div class="submission-ok" style="margin: 8px 0; padding: 8px 12px; border-radius: 6px;
+         background: #f0fdf4; border: 1px solid #86efac; color: #166534;">
+        Recorded a submission event for <strong>{{ request.args.get('submitted') }}</strong>.
+    </div>
+    {% endif %}
+    {% if request.args.get('submit_error') %}
+    <div class="submission-err" style="margin: 8px 0; padding: 8px 12px; border-radius: 6px;
+         background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;">
+        Could not record the event — invalid bundle or action.
+    </div>
+    {% endif %}
+
+    <form class="submission-form" method="post" action="/bundles/submission_event"
+          style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;
+                 margin: 12px 0; padding: 12px; background: #f9fafb;
+                 border: 1px solid #e5e7eb; border-radius: 6px;">
+        <label style="display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: #555;">
+            Bundle
+            <select name="bundle" required style="padding: 4px 6px;">
+                {% for b in bundles_summary.bundles %}
+                <option value="{{ b.code }}">{{ b.code }} — {{ b.title[:46] }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: #555;">
+            Action
+            <select name="action" required style="padding: 4px 6px;">
+                <option value="drafted">drafted</option>
+                <option value="stage13_pass">stage13_pass</option>
+                <option value="submitted">submitted</option>
+                <option value="accepted">accepted</option>
+                <option value="published">published</option>
+            </select>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 3px; font-size: 12px;
+                      color: #555; flex: 1; min-width: 220px;">
+            Evidence
+            <input type="text" name="evidence" placeholder="arXiv id, commit hash, or note"
+                   style="padding: 4px 6px;">
+        </label>
+        <button type="submit" style="padding: 6px 14px; background: #4682b4; color: white;
+                border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
+            Record event
+        </button>
+    </form>
+
     {% if bundles_summary.submission_events %}
     <table class="bundles-table">
         <thead>
@@ -171,7 +228,7 @@
     <hr style="margin-top: 32px;">
     <p style="color: #888; font-size: 12px;">
         Companion documents:
-        <a href="https://github.com/anthropics/claude-code"><code>docs/PAPER_STRATEGY.md</code></a>,
+        <code>docs/PAPER_STRATEGY.md</code>,
         <code>docs/PAPER_DRAFT_MAPPING.md</code>,
         <code>docs/agents/claims-reviewer-bundle-prompts.md</code>,
         <code>docs/BUNDLE_READINESS_HEATMAP.md</code>.

@@ -1175,6 +1175,25 @@ def bundle_submission_event(bundle):
     return jsonify({"ok": True, "event": event})
 
 
+@app.route("/bundles/submission_event", methods=["POST"])
+def bundle_submission_event_form():
+    """Form-encoded sibling of /api/bundles/<b>/submission_event for the Bundles
+    tab's inline UI. Records the event, then redirects back to the tab (so the log
+    re-renders) with a success/error flash in the query string. Plain form POST —
+    no client-side JS — so it can never break the way a two-way Datastar binding
+    can (see memory `feedback-test-client-never-runs-js`)."""
+    from flask import redirect
+    from datastar_bundles import append_submission_event, _TIER_OF
+    bundle = (request.form.get("bundle") or "").strip()
+    action = (request.form.get("action") or "").strip()
+    evidence = (request.form.get("evidence") or "").strip()
+    valid_actions = {"drafted", "stage13_pass", "submitted", "accepted", "published"}
+    if bundle not in _TIER_OF or action not in valid_actions:
+        return redirect("/?tab=bundles&submit_error=1")
+    append_submission_event(bundle, action, evidence)
+    return redirect(f"/?tab=bundles&submitted={bundle}")
+
+
 @app.route("/verify", methods=["POST"])
 def verify_param():
     """Legacy Parameters-tab endpoint: mark a parameter human-verified.
@@ -1359,32 +1378,12 @@ def api_verification_state():
     return jsonify({"events": items, "count": len(items)})
 
 
-@app.route("/save", methods=["POST"])
-def save_all():
-    """Write current PARAMETER_PROVENANCE state back to provenance.py."""
-    from src.core.provenance import PARAMETER_PROVENANCE
-
-    provenance_path = PROJECT_ROOT / "src" / "core" / "provenance.py"
-    text = provenance_path.read_text()
-
-    # Update human_verified_date and human_verified_notes for each modified entry
-    changes = 0
-    for key, entry in PARAMETER_PROVENANCE.items():
-        if entry.get('human_verified_date'):
-            # Find and update in file
-            old_pattern = f"'{key}'"
-            if old_pattern in text:
-                # Update human_verified_date
-                old_hvd = "'human_verified_date': None,"
-                new_hvd = f"'human_verified_date': '{entry['human_verified_date']}',"
-                # This is a simplified approach — for production, use AST rewriting
-                # For now, we track changes and report them
-                changes += 1
-
-    return f'''<div class="save-status">
-        <strong>{changes} parameters updated in memory.</strong>
-        <p>Run <code>uv run python scripts/provenance_dashboard.py --write</code> to persist to disk.</p>
-    </div>'''
+# NOTE: the former POST /save ("Save All") route was removed. It was a no-op that
+# claimed "{N} parameters updated" and told the user to run `--write` to persist,
+# but it wrote nothing to disk (and `--write` is itself an unimplemented stub).
+# Verification actions already persist immediately, per-action, via
+# /verify -> verification_state.record_event (docs/verification_log.jsonl), so
+# there is nothing to batch-save. The Parameters-tab save-bar now states this.
 
 
 # ════════════════════════════════════════════════════════════════════
