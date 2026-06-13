@@ -17,8 +17,8 @@ Our contribution:
   - Half-braiding ↔ D(G)-module correspondence (key lemma)
   - Structural consequences for Z(Vec_G) from Mathlib's Center API
 
-This is a first step toward discharging the gauge_emergence_statement axiom
-in GaugeEmergence.lean.
+This is a first step toward discharging the `gauge_emergence_statement_TODO`
+placeholder (a `True := trivial` stub, not an axiom) in GaugeEmergence.lean.
 
 References:
   Müger, J. Pure Appl. Algebra 180, 159 (2003) — Z(C) modularity

@@ -2090,43 +2090,75 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
 # ════════════════════════════════════════════════════════════════════
 
 PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
-    # === Content placeholders (mathematical claims, no proof) ===
-    # Total `True := trivial` in Lean: ~26 (post 2026-04-26 audit cleanup;
-    # was 95 before the project-wide Lean substance audit converted ~69
-    # `*_summary : True := trivial` markers to `/-! ## Module summary -/`
-    # markdown blocks via scripts/convert_summaries.py).
-    # Only content placeholders with resolution plans are tracked here.
-    # Module summaries are now documentation markdown — non-load-bearing.
-    # Full count is in docs/counts.json via update_counts.py.
+    # === Registry of every `True := trivial` placeholder theorem in the Lean
+    #     substrate. Reconciled 2026-06-13 (Substrate Integrity Gates W1) to
+    #     cover ALL 26 on-disk type-`True` declarations (docs/counts.json
+    #     `theorems_placeholder` == 26), up from the 11 content entries tracked
+    #     before. Each entry carries:
+    #       category : 'content'      — a named mathematical claim standing in
+    #                                   for unproven content (load-bearing if
+    #                                   any proof/formula/paper references it —
+    #                                   Pipeline Invariant #9 forbids that);
+    #                  'docs_marker'  — a navigation/summary/caveat anchor,
+    #                                   non-load-bearing (cosmetic).
+    #       module    : Lean module (short, under SKEFTHawking[.Sub]).
+    #       lean_name : the ACTUAL Lean declaration name. The dict KEY is a
+    #                   stable tracking id (5 historical keys are descriptive
+    #                   and differ from the decl — they are referenced by
+    #                   bundle I1 metadata + the append-only supersession
+    #                   ledger + the prose-reference index, so they are NOT
+    #                   rekeyed); `placeholder_not_cited` (validate.py) and
+    #                   build_graph.py match papers/graph against `lean_name`,
+    #                   never the key. For the 15 W1-added entries key == lean_name.
+    #       claim     : what the placeholder asserts.
+    #       resolution: what a substantive proof would require.
+    # ---------------------------------------------------------------------
+    # CONTENT placeholders (20) — unproven mathematical claims
     # DrinfeldEquivalence: categorical wrapping stubs
     'monoidal_structure_corresponds': {
         'category': 'content',
         'module': 'DrinfeldEquivalence',
+        'lean_name': 'equivalence_preserves_tensor',
         'claim': 'Monoidal structures of Z(Vec_G) and Rep(D(G)) correspond',
         'resolution': 'Requires full functor construction (Phase 6)',
     },
     'braided_structure_corresponds': {
         'category': 'content',
         'module': 'DrinfeldEquivalence',
+        'lean_name': 'equivalence_preserves_braiding',
         'claim': 'Braided structures correspond',
         'resolution': 'Requires braided monoidal functor (Phase 6)',
     },
-    # GaugeEmergence: 6 placeholder statements
+    'center_universal_property': {
+        'category': 'content',
+        'module': 'DrinfeldEquivalence',
+        'lean_name': 'center_universal_property',
+        'claim': 'Z(Vec_G) is the universal braided monoidal subcategory mapping faithfully to Vec_G (Müger)',
+        'resolution': "Categorical statement; needs Müger's universal-property infrastructure (Phase 6)",
+    },
+    # GaugeEmergence: placeholder statements
     'gauge_emergence_half_braiding': {
         'category': 'content',
         'module': 'GaugeEmergence',
+        'lean_name': 'half_braiding_gives_action_TODO',
         'claim': 'Half-braiding ↔ D(G)-module bijection (full categorical)',
         'resolution': 'Algebraic version proved in DrinfeldCenterBridge; categorical wrapping Phase 6',
     },
     'gauge_emergence_equivalence': {
         'category': 'content',
         'module': 'GaugeEmergence',
-        'claim': 'Z(Vec_G) ≅ Rep(D(G)) as braided monoidal categories',
-        'resolution': 'Concrete verification for Z/2 and S₃ done; abstract functor Phase 6',
+        'lean_name': 'gauge_emergence_statement_TODO',
+        'claim': 'Z(Vec_G) ≅ Rep(D(G)) as braided monoidal categories (general G)',
+        'resolution': 'Concrete verification for Z/2 and S₃ done; abstract general-G functor Phase 6',
+        # Published-claim signature for `placeholder_not_cited`: papers cite this
+        # result by its math notation `Z(Vec_G) ≅ Rep(D(G))`, not the Lean decl
+        # name. Matches `\mathrm{Rep}(D(` / `Rep}(D(` / `Rep(D(`.
+        'tex_signature': r'Rep\}?\(D\(',
     },
     'chirality_limitation_zero': {
         'category': 'content',
         'module': 'GaugeEmergence',
+        'lean_name': 'chirality_independent_of_G_TODO',
         'claim': 'c = 0 for all Z(Vec_G)',
         'resolution': 'Follows from string-net construction; needs formal Turaev-Viro connection',
     },
@@ -2135,6 +2167,7 @@ PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
     'a1_is_sub_hopf_algebra': {
         'category': 'content',
         'module': 'SteenrodA1',
+        'lean_name': 'a1_is_sub_hopf_algebra',
         'claim': 'A(1) is a sub-Hopf-algebra of the Steenrod algebra',
         'resolution': 'Requires Hopf structure on A(1)',
     },
@@ -2142,20 +2175,30 @@ PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
     'small_uq_dim_statement': {
         'category': 'content',
         'module': 'RestrictedUq',
+        'lean_name': 'small_uq_dim_statement',
         'claim': 'dim u_q(sl₂) = ℓ³',
         'resolution': 'Requires explicit basis construction',
+    },
+    'small_uq_to_su2k_connection': {
+        'category': 'content',
+        'module': 'RestrictedUq',
+        'lean_name': 'small_uq_to_su2k_connection',
+        'claim': 'At ℓ = k+2 the semisimple quotient of Rep(u_q(sl₂)) carries the SU(2)_k fusion rules',
+        'resolution': 'Statement-level bridge; needs the semisimple-quotient construction (Phase 6)',
     },
     # FusionCategory: Ocneanu rigidity + TQFT placeholder
     # (renamed _placeholder → _TODO 2026-04-26 per Stage-13 audit)
     'ocneanu_rigidity_TODO': {
         'category': 'content',
         'module': 'FusionCategory',
+        'lean_name': 'ocneanu_rigidity_TODO',
         'claim': 'Fusion categories are rigid (Ocneanu)',
         'resolution': 'Deep result; axiomatize or defer to Phase 6+',
     },
     'fusion_to_tqft_TODO': {
         'category': 'content',
         'module': 'FusionCategory',
+        'lean_name': 'fusion_to_tqft_TODO',
         'claim': 'Fusion category → TQFT via Turaev-Viro',
         'resolution': 'Statement-level; full construction requires cobordism infrastructure',
     },
@@ -2164,14 +2207,115 @@ PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
     'equivalence_is_monoidal_TODO': {
         'category': 'content',
         'module': 'CenterFunctor',
+        'lean_name': 'equivalence_is_monoidal_TODO',
         'claim': 'Z(Vec_G) ≌ Mod(D(G)) is monoidal',
         'resolution': 'Phase 6 categorical wrapping (full functor construction)',
     },
     'equivalence_is_braided_TODO': {
         'category': 'content',
         'module': 'CenterFunctor',
+        'lean_name': 'equivalence_is_braided_TODO',
         'claim': 'Z(Vec_G) ≌ Mod(D(G)) is braided monoidal',
         'resolution': 'Phase 6 categorical wrapping (full functor construction)',
+    },
+    # q-Onsager / coideal embedding
+    'dolan_grady_from_chevalley': {
+        'category': 'content',
+        'module': 'CoidealEmbedding',
+        'lean_name': 'dolan_grady_from_chevalley',
+        'claim': 'The Dolan-Grady relation holds for the coideal generators B₀,B₁ (confirms the O_q embedding)',
+        'resolution': 'Purely algebraic computation in the quotient ring via q-Serre + KE/KF relations (Phase 6 wrapping)',
+    },
+    'oq_coideal_property_B0_statement': {
+        'category': 'content',
+        'module': 'Uqsl2Affine',
+        'lean_name': 'oq_coideal_property_B0_statement',
+        'claim': 'Coideal property Δ(Bᵢ) = Bᵢ ⊗ Kᵢ⁻¹ + 1 ⊗ Bᵢ for the right coideal subalgebra',
+        'resolution': 'Needs the Hopf structure on U_q(ŝl₂) (Δ preserving all 22 relations) — Phase 6',
+    },
+    # Onsager algebra representation theory
+    'davies_roan_classification': {
+        'category': 'content',
+        'module': 'OnsagerAlgebra',
+        'lean_name': 'davies_roan_classification',
+        'claim': 'Davies-Roan: every non-trivial fin-dim irreducible O-module is a tensor product of sl₂ evaluation modules',
+        'resolution': 'Requires representation-category infrastructure (Phase 6+)',
+    },
+    # SMG synthesis bridges (statement-level)
+    'smg_three_conditions': {
+        'category': 'content',
+        'module': 'SMGClassification',
+        'lean_name': 'smg_three_conditions',
+        'claim': 'SMG arises iff TPF evasion (necessary) + Z₁₆ anomaly cancellation (necessary) + spectral gap (sufficient, conjectured)',
+        'resolution': 'Synthesis bridge across GoltermanShamir / TPFEvasion / Z16Classification; gap leg is conjectural',
+    },
+    'tpf_z16_combined': {
+        'category': 'content',
+        'module': 'Z16Classification',
+        'lean_name': 'tpf_z16_combined',
+        'claim': 'TPF evasion is necessary but not sufficient for SMG (must also satisfy Z₁₆ anomaly cancellation)',
+        'resolution': 'Synthesis connecting TPFEvasion.lean to the Z₁₆ classification',
+    },
+    # GaugingStep: 3+1D disentangler conditional on the gapped interface
+    'disentangler_3d_requires_gap1': {
+        'category': 'content',
+        'module': 'GaugingStep',
+        'lean_name': 'disentangler_3d_requires_gap1',
+        'claim': '3+1D disentangler existence is conditional on the gapped interface (TPFConjecture, ex gapped_interface_axiom)',
+        'resolution': 'Conditional on the TPFConjecture tracked Prop (SPTClassification.lean); see HYPOTHESIS_REGISTRY',
+    },
+    # ChangeOfRings: H2 "discharged" stub — trivial body discharges nothing
+    # (audit 2026-06-13 finding #25; Substrate Integrity Gates W2 renames →_TODO)
+    'h2_discharged_TODO': {
+        'category': 'content',
+        'module': 'ChangeOfRings',
+        'lean_name': 'h2_discharged_TODO',
+        'claim': 'H2 — the change-of-rings Hom-tensor adjunction Ext_A(A⊗_{A(1)}F₂,F₂) ≅ Ext_{A(1)}(F₂,F₂)',
+        'resolution': 'Trivial `True` body discharges nothing; real content is the adjunction (Phase 5q.T A1ExtReal). Renamed →`_TODO` in W2 (2026-06-13).',
+    },
+    # ---------------------------------------------------------------------
+    # DOCS-MARKER placeholders (6) — navigation/summary/caveat anchors, cosmetic
+    'module_summary_marker': {
+        'category': 'docs_marker',
+        'module': 'BBN',
+        'lean_name': 'module_summary_marker',
+        'claim': 'BBN module summary navigation anchor',
+        'resolution': 'Documentation marker — non-load-bearing',
+    },
+    'cosmological_perturbations_summary': {
+        'category': 'docs_marker',
+        'module': 'CosmologicalPerturbations',
+        'lean_name': 'cosmological_perturbations_summary',
+        'claim': 'Cosmological-perturbations module summary anchor',
+        'resolution': 'Documentation marker — non-load-bearing',
+    },
+    'flrw_dynamics_summary': {
+        'category': 'docs_marker',
+        'module': 'FLRWDynamics',
+        'lean_name': 'flrw_dynamics_summary',
+        'claim': 'FLRW-dynamics module summary anchor',
+        'resolution': 'Documentation marker — non-load-bearing',
+    },
+    'quantumNetwork_substrate_ready': {
+        'category': 'docs_marker',
+        'module': 'QuantumNetwork.Basic',
+        'lean_name': 'quantumNetwork_substrate_ready',
+        'claim': 'QuantumNetwork substrate-ready marker',
+        'resolution': 'Documentation marker — non-load-bearing',
+    },
+    'phase6b_w3_structural_no_go_marker': {
+        'category': 'docs_marker',
+        'module': 'VestigialInflationNoGo',
+        'lean_name': 'phase6b_w3_structural_no_go_marker',
+        'claim': 'Phase 6b W3 structural no-go navigation marker',
+        'resolution': 'Documentation marker — non-load-bearing',
+    },
+    'misumi_instability_caveat': {
+        'category': 'docs_marker',
+        'module': 'GaugingStep',
+        'lean_name': 'misumi_instability_caveat',
+        'claim': 'Caveat: Misumi (2025) symmetry-preserving deformations can destabilize the single-Weyl phase (not a no-go)',
+        'resolution': 'Documentation caveat — non-load-bearing',
     },
 }
 
@@ -2179,6 +2323,143 @@ PLACEHOLDER_THEOREMS: dict[str, dict[str, str]] = {
 PLACEHOLDER_CONTENT_COUNT = sum(
     1 for v in PLACEHOLDER_THEOREMS.values() if v['category'] == 'content'
 )
+# Total placeholders registered; must equal docs/counts.json `theorems_placeholder`
+# (every on-disk `True := trivial` decl is registered — Pipeline Invariant #9).
+PLACEHOLDER_TOTAL_COUNT = len(PLACEHOLDER_THEOREMS)
+# Lookup by actual Lean decl name → registry entry (placeholder_not_cited,
+# build_graph.py, and the proxy-body audit match on the real decl, not the key).
+PLACEHOLDER_LEAN_NAMES = {
+    v.get('lean_name', k): k for k, v in PLACEHOLDER_THEOREMS.items()
+}
+
+# ════════════════════════════════════════════════════════════════════
+# MODELING-ASSUMPTION THEOREMS (proxy-body-audit whitelist; R2 / W2)
+#
+# `validate.py --check proxy_body_audit` flags theorems whose NAME claims a
+# structural / quantitative result (`*_dim`, `rank`, `*Ext*`, `*classification`,
+# `sixteen_*`, `*_no_go`, `*_unanimous`, `*_equivalence`, `*_corresponds`) but
+# whose PROOF is a trivial closer (`rfl` / `trivial` / `cases <;> rfl` /
+# identity-return / `⟨_,_⟩`) — the "defining-the-conclusion" anti-pattern
+# (Stage-3a checklist item 5), where the substantive load lives in a definition
+# / struct field / registry rather than the proof term.
+#
+# A flagged decl is COMPLIANT (not a defect) iff it is registered here with a
+# `lean_name`, a `reason` (why the trivial body is a legitimate modeling choice
+# / extraction lemma), and a `discloses` pointer (the docstring / tracked Prop /
+# registry entry where the real assumption is disclosed). Honest, documented
+# modeling choices PASS; silent ones FAIL. (Native_decide / kernel-`decide`
+# bodies are NOT in scope here — ADR-002's P4 gate owns the compiler-trust
+# surface; the decide/norm_num arithmetic-proxy class is Phase-5q.T's T5 detector.)
+# Populated by the W2 triage of the proxy_body_audit flagged set.
+# ════════════════════════════════════════════════════════════════════
+
+MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
+    # category: 'definitional' = a correct, disclosed definitional record (the
+    #   value is a falsifiable property of a concretely-defined object / named
+    #   constant; the trivial proof is legitimate). 'vacuous_proxy' = the
+    #   statement is content-free relative to the theorem NAME (an `N = N` /
+    #   `x = x` decorative restatement of a docstring claim); retained as
+    #   DISCLOSED tracked debt with a `discharge` pointer, NOT a derivation.
+    # Every entry needs `lean_name`, `module`, `category`, `reason`, `discloses`.
+    # Populated by the 2026-06-13 W2 triage of the proxy_body_audit flagged set.
+
+    # ---- definitional records (legitimate trivial-by-design) ----
+    'sVec_fermion_dim_DEFINITIONAL': {
+        'lean_name': 'sVec_fermion_dim_DEFINITIONAL', 'module': 'Z16Classification',
+        'category': 'definitional',
+        'reason': 'Records d(f)=1 (unit-dimension of any fusion-category object); self-disclosed via the `_DEFINITIONAL` name suffix.',
+        'discloses': 'name suffix `_DEFINITIONAL` + docstring ("carries no genuine super-modular content"); substantive content in `sVec_global_dim`.',
+    },
+    'g2k1_dims_eq_fib': {
+        'lean_name': 'g2k1_dims_eq_fib', 'module': 'FPDimension',
+        'category': 'definitional',
+        'reason': 'g2k1Dims is *defined* as fibDims (FPDimension.lean:266), so the G₂-level-1 = Fibonacci FP-dim coincidence is encoded in the definition; rfl records it.',
+        'discloses': 'docstring "(definitional)"; `def g2k1Dims := fibDims`.',
+    },
+    'sl2_dim_eq': {
+        'lean_name': 'sl2_dim_eq', 'module': 'OnsagerAlgebra',
+        'category': 'definitional',
+        'reason': 'Records dim sl₂ = 3 via the named constant `sl2_dim : ℕ := 3`; a definitional record of a textbook value.',
+        'discloses': '`def sl2_dim : ℕ := 3` (OnsagerAlgebra.lean:172).',
+    },
+    'emanant_su2_dim': {
+        'lean_name': 'emanant_su2_dim', 'module': 'GTWeylDoublet',
+        'category': 'definitional',
+        'reason': 'Same content as `sl2_dim_eq` (sl2_dim = 3) re-stated in the emanant-symmetry context; the IR contraction → SU(2) is described in the docstring, the dim is a definitional record.',
+        'discloses': '`def sl2_dim : ℕ := 3`; docstring (Seiberg emanant SU(2)). NOTE: duplicates OnsagerAlgebra.sl2_dim_eq.',
+    },
+    'hw_matches_sm_count': {
+        'lean_name': 'hw_matches_sm_count', 'module': 'GaugingStep',
+        'category': 'definitional',
+        'reason': 'Records that the concrete `hw_smg : SMGPhaseData` carries n_weyl = 16 (a struct-field value matching the SM per-generation Weyl count); falsifiable against the construction.',
+        'discloses': '`def hw_smg : SMGPhaseData where n_weyl := 16`; independent SM count = ∑ components = 16 (SMFermomData.total_components_with_nu_R).',
+    },
+    'free_energy_well_defined': {
+        'lean_name': 'free_energy_well_defined', 'module': 'SU2PseudoReality',
+        'category': 'definitional',
+        'reason': 'Unfolds freeEnergyDensity ln_Z V = -ln_Z/V (the closed form); the `_well_defined` name refers to the closed form, not finiteness. NOTE: the `0 < V` hypothesis is unused (`_hV`).',
+        'discloses': '`def freeEnergyDensity`; docstring. Candidate for a future tightening (drop unused hyp or rename).',
+    },
+    # Proactive disclosure of audit-2026-06-13 #9 (NOT auto-flagged — the names
+    # don't match the structural-quantity patterns; recorded here as the W2
+    # triage decision for the known entropic-gravity "8/8 NO-GO" case).
+    'r_d_anchoring_partial_rescue_does_not_save_class_b_or_class_d': {
+        'lean_name': 'r_d_anchoring_partial_rescue_does_not_save_class_b_or_class_d',
+        'module': 'EntropicGravityDarkEnergy', 'category': 'definitional',
+        'reason': 'Aggregate `∀ c, rDIndependentNoGo c = true := by cases c <;> rfl` over a Bool registry — bookkeeping. The SUBSTANCE is the 8 per-candidate NO-GO theorems: EGDE1/EGDE4 are genuine norm_num falsifiers vs data thresholds (σ ≥ 5σ; DESI w₀ gap ≥ 0.5), EGDE2/EGDE3 are disclosed Bool-flag modeling judgments.',
+        'discloses': 'per-candidate theorems verlinde_2017_no_go_* / cadoni_tuveri_* (substantive) + the "encoded as a Boolean flag" docstrings; audit report meta-obs.',
+    },
+    'r_d_independent_count_eight': {
+        'lean_name': 'r_d_independent_count_eight',
+        'module': 'EntropicGravityDarkEnergy', 'category': 'definitional',
+        'reason': 'Counts the filtered candidate List length = 8 (rDIndependentCount); a definitional count of a concrete List, not a derivation.',
+        'discloses': '`def rDIndependentCount` (the .filter over the 8-candidate list); docstring.',
+    },
+
+    # ---- vacuous_proxy (DISCLOSED tracked debt: statement is content-free vs name) ----
+    'change_of_rings_ext_dim': {
+        'lean_name': 'change_of_rings_ext_dim', 'module': 'ChangeOfRings',
+        'category': 'vacuous_proxy',
+        'reason': 'Statement is `ext_dim = ext_dim` with hypothesis `ext_dim = ext_dim` — VACUOUS; the docstring claims Ext-dimension preservation but the proof term proves x=x (audit 2026-06-13 #25).',
+        'discharge': 'Phase 5q.T (A1ExtReal — the real Mathlib `Ext` functor via ProjectiveResolution.isoExt) replaces the `cols/8` proxy.',
+        'discloses': 'this registry entry + the audit report; paired with the `h2_discharged`→`*_TODO` placeholder.',
+    },
+    'rank2_classification_count': {
+        'lean_name': 'rank2_classification_count', 'module': 'FusionExamples',
+        'category': 'vacuous_proxy',
+        'reason': 'Statement is `(3:ℕ) = 3` — the rank-2 fusion-category count (Ostrik 2003: Vec_ℤ/2, Fibonacci, Yang-Lee) is in the docstring, not derived from an enumeration.',
+        'discharge': 'Strengthen to `Fintype.card`/`List.length` of a concrete rank-2 enumeration (needs the enumeration built).',
+        'discloses': 'this registry entry; docstring cites Ostrik 2003.',
+    },
+    'dg_generator_count': {
+        'lean_name': 'dg_generator_count', 'module': 'OnsagerAlgebra',
+        'category': 'vacuous_proxy',
+        'reason': 'Statement is `(2:ℕ) = 2` — the "2 Dolan-Grady generators" claim is in the docstring, not derived from a generator structure.',
+        'discharge': 'Strengthen to count a concrete generator List/Fintype (needs it built).',
+        'discloses': 'this registry entry; docstring.',
+    },
+    'dg_relation_count': {
+        'lean_name': 'dg_relation_count', 'module': 'OnsagerAlgebra',
+        'category': 'vacuous_proxy',
+        'reason': 'Statement is `(2:ℕ) = 2` — the "2 Dolan-Grady relations" claim is in the docstring, not derived from a relation structure.',
+        'discharge': 'Strengthen to count a concrete relation List/Fintype (needs it built).',
+        'discloses': 'this registry entry; docstring.',
+    },
+    'ising_wrt_rank': {
+        'lean_name': 'ising_wrt_rank', 'module': 'WRTComputation',
+        'category': 'vacuous_proxy',
+        'reason': 'Statement is `(3:ℕ) = 3` — Ising rank (3 simples) is decorative; the real WRT content is `ising_globalDimSq` / `ising_gauss_sum_is_2zeta`.',
+        'discharge': 'Strengthen via `wrtS2xS1 isingMTC = 3` once a concrete `isingMTC : MTCWithTwist` instance is built (WRTInvariant.wrtS2xS1 D := D.n exists).',
+        'discloses': 'this registry entry; docstring.',
+    },
+    'fib_wrt_rank': {
+        'lean_name': 'fib_wrt_rank', 'module': 'WRTComputation',
+        'category': 'vacuous_proxy',
+        'reason': 'Statement is `(2:ℕ) = 2` — Fibonacci rank (2 simples) is decorative; the real WRT content is `fib_globalDimSq`.',
+        'discharge': 'Strengthen via `wrtS2xS1 fibMTC = 2` once a concrete `fibMTC : MTCWithTwist` instance is built.',
+        'discloses': 'this registry entry; docstring.',
+    },
+}
 
 # ════════════════════════════════════════════════════════════════════
 # HYPOTHESIS REGISTRY

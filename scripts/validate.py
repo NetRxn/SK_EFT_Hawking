@@ -204,6 +204,217 @@ def check_formulas_to_theorems() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 1b: Placeholder theorems are not cited as verified (Invariant #9, R5)
+# ═══════════════════════════════════════════════════════════════════════
+
+# Verification-claim phrasing that, in a window around a placeholder reference,
+# indicates the paper presents a `True := trivial` placeholder as a real result.
+_VERIFY_CLAIM_RE = re.compile(
+    r"formally\s+verif|formal\s+verification|machine[-\s]check|"
+    r"end[-\s]to[-\s]end\s+(formal\s+)?verif|kernel[-\s]verif|kernel[-\s]check|"
+    r"proven\s+in\s+Lean|verified\s+(in|by)\s+Lean|rigorously\s+verif|"
+    r"zero\s+\\?texttt\{?sorry",
+    re.IGNORECASE,
+)
+# Hedge phrasing that, in the same window, means the claim is honestly disclosed
+# (statement-level / concrete-instance-only / deferred) — not an overclaim.
+_HEDGE_CLAIM_RE = re.compile(
+    r"statement[-\s]level|at\s+the\s+statement\s+level|placeholder|_TODO|"
+    r"\\_TODO|not\s+yet|conjectur|deferred|stub|modulo|abstract\s+functor|"
+    r"concrete(ly)?\s+(verif|for|instance)|general[-\s]?\$?G\$?\s+(statement|case|level)|"
+    r"only\s+(the\s+)?\$?\\?mathbb\{?Z\}?|for\s+\$?\\?mathbb",
+    re.IGNORECASE,
+)
+
+
+def _tex_name_pattern(token: str) -> "re.Pattern":
+    """Regex for a Lean decl name as it can appear in LaTeX — underscores may be
+    backslash-escaped (`\\_`) inside `\\texttt{}` / prose."""
+    return re.compile(re.escape(token).replace("_", r"(?:\\_|_)"))
+
+
+@register_check(
+    "placeholder_not_cited",
+    "Placeholder (True := trivial) theorems are not cited as verified in any paper (Invariant #9)")
+def check_placeholder_not_cited() -> CheckResult:
+    """Enforces the paper-claim clause of Pipeline Invariant #9: a placeholder
+    theorem (registered in ``PLACEHOLDER_THEOREMS``) must NOT be presented as a
+    formally-verified result in any paper. Matches both (a) the actual Lean decl
+    name / tracking key and (b) an optional ``tex_signature`` (the published math
+    notation a paper cites the claim by, e.g. ``Z(Vec_G) ≅ Rep(D(G))``) within a
+    window of a verification-claim phrase, unless a hedge phrase is also present.
+    Substrate Integrity Gates W1 (2026-06-13); enforces audit finding #3.
+    """
+    from src.core.constants import PLACEHOLDER_THEOREMS
+
+    if not PAPERS_DIR.exists():
+        return CheckResult(passed=True, details=[Detail("papers_dir", True, "no papers/ directory")])
+
+    WINDOW = 320  # chars on each side of a placeholder match
+
+    tokens: List[tuple] = []  # (compiled_regex, registry_key, kind)
+    for key, meta in PLACEHOLDER_THEOREMS.items():
+        lean_name = meta.get("lean_name", key)
+        for tok in {lean_name, key}:
+            tokens.append((_tex_name_pattern(tok), key, "name"))
+        sig = meta.get("tex_signature")
+        if sig:
+            tokens.append((re.compile(sig, re.IGNORECASE), key, "signature"))
+
+    details: List[Detail] = []
+    any_fail = False
+    n_drafts = 0
+
+    for paper_dir in sorted(PAPERS_DIR.iterdir()):
+        if not paper_dir.is_dir():
+            continue
+        tex = paper_dir / "paper_draft.tex"
+        if not tex.exists():
+            continue
+        n_drafts += 1
+        try:
+            text = tex.read_text()
+        except (OSError, UnicodeDecodeError):
+            continue
+
+        offenders: Dict[str, str] = {}
+        for tok_re, key, kind in tokens:
+            for m in tok_re.finditer(text):
+                lo = max(0, m.start() - WINDOW)
+                hi = min(len(text), m.end() + WINDOW)
+                window = text[lo:hi]
+                if _VERIFY_CLAIM_RE.search(window) and not _HEDGE_CLAIM_RE.search(window):
+                    offenders.setdefault(key, kind)
+
+        if offenders:
+            any_fail = True
+            msg = "; ".join(f"{k} ({kind})" for k, kind in sorted(offenders.items()))
+            details.append(Detail(
+                paper_dir.name, False,
+                f"presents placeholder(s) as formally verified without a hedge: {msg} "
+                f"(Invariant #9 — placeholders MUST NOT be cited as a paper claim)"))
+
+    if not any_fail:
+        details.append(Detail(
+            "all_papers", True,
+            f"no placeholder cited as a verified result across {n_drafts} paper draft(s)"))
+    return CheckResult(passed=not any_fail, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 1c: Proxy-body audit — structurally-named theorems not trivially closed
+#           (R2; mechanizes Stage-3a checklist item 5 "defining-the-conclusion")
+# ═══════════════════════════════════════════════════════════════════════
+
+# Theorem NAME claims a structural / quantitative result.
+_STRUCTURAL_NAME_RE = re.compile(
+    r"(_dim$|_dim_|_dims_|rank|finrank|Ext|classification|_no_go$|_nogo$|"
+    r"sixteen_|_unanimous$|_equivalence$|_corresponds$|_combined$|_iso$|"
+    r"_well_defined$|_count$)",
+    re.IGNORECASE,
+)
+# A body that is ESSENTIALLY a trivial closer (after whitespace normalization).
+# Deliberately EXCLUDES decide / native_decide / norm_num / ring / simp etc. —
+# the compiler-trust surface is ADR-002's P4 gate, and the decide/norm_num
+# arithmetic-proxy class is Phase-5q.T's T5 detector.
+_TRIVIAL_BODY_RES = [
+    (re.compile(r"^(by\s+)?(exact\s+)?rfl$"), "rfl"),
+    (re.compile(r"^(by\s+)?(exact\s+)?trivial$"), "trivial"),
+    (re.compile(r"^by\s+(intro\s+[\w\s]+?)?cases\s+\w+\s*<;>\s*rfl$"), "cases <;> rfl"),
+    (re.compile(r"^(by\s+exact\s+)?h[\w']*$"), "identity-return (hypothesis)"),
+    (re.compile(r"^(by\s+exact\s+)?Equiv\.refl[\w\s.]*$"), "Equiv.refl"),
+]
+# Substantive-tactic markers: if the body contains any of these it is NOT a
+# trivial closer (belt-and-suspenders with the anchored patterns above).
+_NONTRIVIAL_MARKER_RE = re.compile(
+    r"\b(decide|native_decide|norm_num|simp|ring|omega|linarith|nlinarith|"
+    r"aesop|positivity|induction|refine|constructor|calc|apply)\b")
+
+
+@register_check(
+    "proxy_body_audit",
+    "Structurally-named theorems are not proved by a trivial 'defining-the-conclusion' body (R2)")
+def check_proxy_body_audit() -> CheckResult:
+    """Flags any theorem whose NAME claims a structural / quantitative result
+    but whose PROOF is a trivial closer (rfl / trivial / cases<;>rfl /
+    identity-return / Equiv.refl) — the defining-the-conclusion anti-pattern
+    where the real content lives in a definition / struct field / registry, not
+    the proof. A flagged decl is COMPLIANT iff registered in
+    ``MODELING_ASSUMPTION_THEOREMS`` (with a reason + disclosure pointer) or
+    already a ``PLACEHOLDER_THEOREMS`` stub. Substrate Integrity Gates W2."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).parent))
+    from build_graph import _scan_lean_theorem_bodies
+    from src.core.constants import PLACEHOLDER_LEAN_NAMES
+    try:
+        from src.core.constants import MODELING_ASSUMPTION_THEOREMS
+    except ImportError:
+        MODELING_ASSUMPTION_THEOREMS = {}
+
+    lean_dir = PROJECT_ROOT / "lean" / "SKEFTHawking"
+    if not lean_dir.exists():
+        return CheckResult(passed=True, details=[Detail("lean_dir", True, "no lean dir")])
+
+    exempt = set(PLACEHOLDER_LEAN_NAMES.keys())
+    # A whitelist entry is a valid disclosure ONLY if it carries `reason` AND
+    # `discloses` — a bare entry is not a free pass.
+    whitelisted: set = set()
+    wl_incomplete: List[str] = []
+    for k, v in MODELING_ASSUMPTION_THEOREMS.items():
+        if v.get("reason") and v.get("discloses"):
+            whitelisted.add(v.get("lean_name", k))
+        else:
+            wl_incomplete.append(k)
+
+    flagged: List[tuple] = []
+    for lean_file in sorted(lean_dir.rglob("*.lean")):
+        try:
+            source = lean_file.read_text()
+        except (OSError, UnicodeDecodeError):
+            continue
+        for thm_name, line_no, body in _scan_lean_theorem_bodies(source):
+            if thm_name in exempt or thm_name in whitelisted:
+                continue
+            if not _STRUCTURAL_NAME_RE.search(thm_name):
+                continue
+            norm = " ".join(body.split())
+            if _NONTRIVIAL_MARKER_RE.search(norm):
+                continue
+            label = next((lbl for rx, lbl in _TRIVIAL_BODY_RES if rx.match(norm)), None)
+            if label is None:
+                continue
+            flagged.append((f"{lean_file.stem}.{thm_name}", line_no, label))
+
+    details: List[Detail] = []
+    # Advisory: disclosed vacuous_proxy theorems are tracked debt (PASS, but visible).
+    n_vac = sum(1 for v in MODELING_ASSUMPTION_THEOREMS.values()
+                if v.get("category") == "vacuous_proxy")
+    if n_vac:
+        details.append(Detail(
+            "tracked_vacuous_proxies", True,
+            f"{n_vac} structurally-named theorem(s) disclosed as `vacuous_proxy` tracked debt "
+            f"(see MODELING_ASSUMPTION_THEOREMS `discharge` pointers)", warning=True))
+
+    for k in wl_incomplete:
+        details.append(Detail(
+            k, False,
+            "MODELING_ASSUMPTION_THEOREMS entry missing `reason`/`discloses` — not a valid disclosure"))
+    for full, line_no, label in flagged:
+        details.append(Detail(
+            full, False,
+            f"structurally-named theorem closed by `{label}` at line {line_no} — "
+            f"register in MODELING_ASSUMPTION_THEOREMS (with reason+discloses) or strengthen"))
+
+    if flagged or wl_incomplete:
+        return CheckResult(passed=False, details=details)
+    details.append(Detail(
+        "all_theorems", True,
+        "every structurally-named trivially-closed theorem is registered + disclosed "
+        "in MODELING_ASSUMPTION_THEOREMS"))
+    return CheckResult(passed=True, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CHECK 2: Numerical consistency
 # ═══════════════════════════════════════════════════════════════════════
 

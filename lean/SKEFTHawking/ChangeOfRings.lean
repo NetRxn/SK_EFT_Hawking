@@ -95,19 +95,18 @@ theorem change_of_rings_ext_dim (n : ℕ) (ext_dim : ℕ)
     : ext_dim = ext_dim :=       -- Ext_A dimension (by adjunction)
   h_ext
 
-/-- Hypothesis H2 is discharged.
+/-- **Placeholder (`True := trivial`) — H2 is NOT discharged by this theorem.**
 
-    The statement: Ext_A(A ⊗_{A(1)} F₂, F₂) ≅ Ext_{A(1)}(F₂, F₂)
-    follows from the Hom-tensor adjunction, which is pure algebra.
-
-    The adjunction requires:
-    1. A is a B-algebra (A contains A(1) as a subring) — ALGEBRAIC FACT
-    2. P is a free B-module — VERIFIED in A1Resolution.lean
-    3. ε: A → k is an augmentation — ALGEBRAIC FACT
-
-    None of these require topology. H2 is an algebraic identity, not
-    a topological hypothesis. -/
-theorem h2_discharged : True := trivial
+    The intended statement is the change-of-rings identity
+    `Ext_A(A ⊗_{A(1)} F₂, F₂) ≅ Ext_{A(1)}(F₂, F₂)`, which follows from the
+    Hom-tensor adjunction (pure algebra: A ⊇ A(1) a subring, P free, ε an
+    augmentation — no topology). But this declaration's body is `trivial`, so it
+    proves only `True`; the adjunction itself is not formalized here. The
+    substantive change-of-rings content via Mathlib's real `Ext` functor is the
+    Phase 5q.T `A1ExtReal` target. Renamed `h2_discharged → h2_discharged_TODO`
+    (Substrate Integrity Gates W2, 2026-06-13) so the name cannot be read as a
+    proof; tracked in `PLACEHOLDER_THEOREMS` + `MODELING_ASSUMPTION_THEOREMS`. -/
+theorem h2_discharged_TODO : True := trivial
 
 /-! ## 3. Consequences for the Generation Constraint
 

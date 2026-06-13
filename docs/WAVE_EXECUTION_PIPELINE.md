@@ -418,6 +418,14 @@ The agent reads each paper's `.tex` and cross-references against:
 The agent reports:
 - **FAIL**: numerical value in paper disagrees with computation by >0.5%
 - **FAIL**: "formally verified" claim but theorem not in Lean or has sorry
+- **FAIL**: "formally verified" claim cites a **placeholder** theorem — a
+  `True := trivial` stub registered in `PLACEHOLDER_THEOREMS` (matched by its
+  `lean_name` OR its published-claim `tex_signature`), OR a result presented
+  as kernel-verified that is actually only a concrete-instance / statement-level
+  stub (Invariant #9; Substrate Integrity Gates R5). The deterministic backstop
+  is `validate.py --check placeholder_not_cited`; the agent additionally catches
+  the conceptual form where the paper names the claim in prose/math notation
+  rather than by the Lean decl name (the paper7 `Z(Vec_G)≅Rep(D(G))` case).
 - **FAIL**: cited reference DOI doesn't resolve or is wrong paper
 - **WARN**: parameter referenced but not human-verified (blocks submission)
 - **WARN**: qualitative claim without computed support

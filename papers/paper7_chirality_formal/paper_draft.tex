@@ -304,10 +304,15 @@ these walls might be breached.
 
 The broader formalization program has also produced Lean~4 definitions
 of pivotal, spherical, and fusion categories, along with a formalization
-of the Drinfeld double $D(G)$ and the gauge emergence theorem
-$Z(\mathrm{Vec}_G) \cong \mathrm{Rep}(D(G))$. Together, these 4049 theorems across 170 modules
-provide end-to-end formal verification from categorical Layer~1 through
-gauge Layer~2 to hydrodynamic Layer~3.
+of the Drinfeld double $D(G)$ and the gauge emergence equivalence
+$Z(\mathrm{Vec}_G) \cong \mathrm{Rep}(D(G))$. This equivalence is verified
+concretely for $G = \mathbb{Z}/2$ (the toric code, as a full
+object/fusion/braiding correspondence) and is matched at the level of the
+anyon count for $G = S_3$ ($|Z(\mathrm{Vec}_{S_3})| = 8 = |\mathrm{Irr}(D(S_3))|$);
+the general-$G$ statement is formalized at the statement level, with the
+abstract braided-monoidal functor deferred to future work. The broader
+project comprises 4049 theorems across 170 modules spanning categorical
+Layer~1 through gauge Layer~2 to hydrodynamic Layer~3.
 
 %═══════════════════════════════════════════════════════════════════
 \section{Conclusion}

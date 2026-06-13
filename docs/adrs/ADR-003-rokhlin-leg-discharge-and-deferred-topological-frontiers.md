@@ -25,6 +25,12 @@
   [Phase5qD roadmap](../roadmaps/Phase5qD_AdamsABP_Frontier_Roadmap.md) (NEW; trigger-gated);
   [Route A/B assessment](../assessments/GenerationConstraint_RouteA_vs_B_ImpactAssessment.md)
   (**partially superseded on cost** — see Context); Pipeline Invariant #15 (no undocumented axioms).
+- **See also:** [ADR-004](ADR-004-substrate-integrity-gates.md) (Substrate Integrity Gates) — the `topo`
+  (`2 ∣ σ/8`) posture decided here is the **canonical precedent** for ADR-004's "compliant disclosed
+  assumption": `SmoothSpinManifold4.topo` is already recorded in `HYPOTHESIS_REGISTRY['rokhlin_sigma_mod_16']`
+  and is the template `MODELING_ASSUMPTION_THEOREMS` whitelist entry for ADR-004's **R2** (proxy-body audit)
+  and already-covered for **R3** (tracked-hypothesis ledger sweep). ADR-004 generalizes this discipline to
+  the rest of the substrate; it does **not** re-open `topo`.
 
 ---
 

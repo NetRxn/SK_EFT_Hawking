@@ -61,7 +61,7 @@ Specifically: if β is a half-braiding, then for each h ∈ G,
 
 This is the conceptual core of Z(Vec_G) ≅ Rep(D(G)).
 -/
-theorem half_braiding_gives_action :
+theorem half_braiding_gives_action_TODO :
     True := trivial  -- placeholder: full statement requires VecG category
 
 /-! ## 2. The equivalence Z(Vec_G) ≅ Rep(D(G)) -/
@@ -87,7 +87,7 @@ The inverse functor: a D(G)-module M
 This is the FIRST formal statement of the gauge emergence theorem
 in any proof assistant.
 -/
-theorem gauge_emergence_statement :
+theorem gauge_emergence_statement_TODO :
     True := trivial  -- full proof requires VecG monoidal + D(G) module cat
 
 /--
@@ -124,7 +124,7 @@ The non-chirality is independent of whether G is abelian or non-abelian.
 Even with non-abelian gauge structure (matrix-valued braiding,
 fusion multiplicities > 1), the theory remains doubled.
 -/
-theorem chirality_independent_of_G :
+theorem chirality_independent_of_G_TODO :
     True := trivial  -- c = 0 for ALL Z(Vec_G), regardless of G
 
 /-! ## 4. Connection to gauge erasure -/

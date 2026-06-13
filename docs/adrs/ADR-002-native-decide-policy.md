@@ -14,6 +14,13 @@
   triage report (`temporary/working-docs/native_decide_triage.md`, commit `e021fe0`) + this investigation.
 - **Related:** [ADR-001](ADR-001-commring-qcyc5ext-roadmap.md) (QCyc5 CommRing / ext roadmap — supplies the
   kernel-pure machinery used below); Pipeline Invariant #15 (no undocumented project axioms).
+- **See also:** [ADR-004](ADR-004-substrate-integrity-gates.md) (Substrate Integrity Gates) — this ADR's
+  **P4 gate** (`validate.py --check axiom_closure_allowlist`) remains the sole owner of the `native_decide`
+  compiler-trust surface and its elimination policy. ADR-004 builds *on top of* it without changing it:
+  **R4** surfaces the P4-gate decl-closure count (546 as of 2026-06-10) into `counts.json` with a
+  regression threshold; **R2's** proxy-body detector explicitly *excludes* the `native_decide`/finite-
+  combinatorial-`decide` class (deferred here); **R5** enforces Decision #2's "kernel-checked modulo
+  `native_decide`" prose-precision at the paper-claim level.
 
 ## Context
 

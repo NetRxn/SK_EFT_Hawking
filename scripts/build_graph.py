@@ -1670,9 +1670,13 @@ def extract_placeholder_marker_nodes() -> list[dict]:
     conveys no content) require LLM inspection and are caught by Stage 13
     adversarial review (Wave 6), not this extractor.
     """
-    from src.core.constants import PLACEHOLDER_THEOREMS
+    from src.core.constants import PLACEHOLDER_LEAN_NAMES
 
-    placeholder_short_names = set(PLACEHOLDER_THEOREMS.keys()) if PLACEHOLDER_THEOREMS else set()
+    # Match on the ACTUAL Lean decl name (`lean_name`), not the registry key:
+    # 5 historical keys are descriptive and differ from the decl, so keying on
+    # `.keys()` silently failed to exclude those already-registered placeholders
+    # (Substrate Integrity Gates W1, 2026-06-13).
+    placeholder_short_names = set(PLACEHOLDER_LEAN_NAMES.keys()) if PLACEHOLDER_LEAN_NAMES else set()
 
     nodes = []
     seen_ids: set[str] = set()
