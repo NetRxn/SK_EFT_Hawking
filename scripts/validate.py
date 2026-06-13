@@ -415,6 +415,79 @@ def check_proxy_body_audit() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 1d: Tracked-hypothesis ledger coverage (R3, Invariant #16)
+# ═══════════════════════════════════════════════════════════════════════
+
+def _is_prop_codomain(type_str: str) -> bool:
+    """True if a declaration's type has codomain `Prop` (a Prop-valued def /
+    structure = a candidate tracked-hypothesis), excluding `Subgroup`/type
+    defs that happen to be H_*-named."""
+    if not type_str:
+        return False
+    return type_str.replace("\n", " ").rstrip().split("→")[-1].strip() == "Prop"
+
+
+_TRACKED_PROP_NAME_RE = re.compile(r"^(H_[A-Za-z0-9_]+|[A-Za-z0-9_]+Conjecture|[A-Za-z0-9_]+Hypothesis)$")
+
+
+@register_check(
+    "tracked_hypothesis_ledger",
+    "Every consumed tracked-hypothesis Prop is registered in HYPOTHESIS_REGISTRY (Invariant #16, R3)")
+def check_tracked_hypothesis_ledger() -> CheckResult:
+    """Single-source-of-truth enforcement for tracked hypotheses: every
+    Prop-valued tracked hypothesis (`H_*` / `*Conjecture` / `*Hypothesis`) that
+    is CONSUMED as a binder `(h : P …)` by some theorem must be registered in
+    ``HYPOTHESIS_REGISTRY`` (the machine-readable source of truth) — or listed
+    in ``TRACKED_HYPOTHESIS_NON_LOAD_BEARING`` with a reason. Substrate
+    Integrity Gates W3. **Advisory until the registry backlog is cleared, then
+    escalates to hard-fail (Invariant #16).**"""
+    from src.core import constants as _c
+    HYPOTHESIS_REGISTRY = getattr(_c, "HYPOTHESIS_REGISTRY", {})
+    NON_LB = getattr(_c, "TRACKED_HYPOTHESIS_NON_LOAD_BEARING", {})
+
+    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
+    if not deps_path.exists():
+        return CheckResult(passed=True, details=[Detail("lean_deps", True, "no lean_deps.json")])
+    deps = json.loads(deps_path.read_text())
+
+    # 1) Prop-valued tracked-hypothesis defs/structures (codomain Prop, tracked name)
+    tracked: dict = {}  # short name -> module
+    for d in deps:
+        short = d.get("name", "").split(".")[-1]
+        if _TRACKED_PROP_NAME_RE.match(short) and _is_prop_codomain(d.get("type", "")):
+            tracked[short] = d.get("module", "")
+
+    # 2) which are CONSUMED as a binder `( ident : Name` anywhere in the source
+    lean_dir = PROJECT_ROOT / "lean" / "SKEFTHawking"
+    src = "\n".join(
+        f.read_text(errors="ignore") for f in lean_dir.rglob("*.lean"))
+    consumed = set()
+    for name in tracked:
+        if re.search(r"\(\s*_?[A-Za-z0-9_']*\s*:\s*" + re.escape(name) + r"\b", src):
+            consumed.add(name)
+
+    # 3) coverage: registry key OR a dependent_theorems back-reference OR non-LB list
+    covered = set(HYPOTHESIS_REGISTRY.keys())
+    gap = sorted(n for n in consumed if n not in covered and n not in NON_LB)
+
+    details: List[Detail] = []
+    details.append(Detail(
+        "surface", True,
+        f"{len(tracked)} tracked Prop-defs; {len(consumed)} consumed; "
+        f"{len(consumed) - len(gap)} covered (registry {len(HYPOTHESIS_REGISTRY)} + non-LB {len(NON_LB)})",
+        warning=bool(gap)))
+    for n in gap:
+        details.append(Detail(
+            n, True,
+            f"consumed tracked Prop (def in {tracked[n]}) absent from HYPOTHESIS_REGISTRY "
+            f"and TRACKED_HYPOTHESIS_NON_LOAD_BEARING — register or downgrade",
+            warning=True))
+    # Advisory phase: never blocks. Escalates to `passed = not gap` once the
+    # backlog is cleared (Invariant #16) — see SubstrateIntegrityGates roadmap W3.
+    return CheckResult(passed=True, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CHECK 2: Numerical consistency
 # ═══════════════════════════════════════════════════════════════════════
 
