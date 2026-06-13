@@ -98,7 +98,13 @@ Each wave: build the check → triage the flagged set → register-or-fix → wi
 | W3 tracked-hyp ledger sweep (R3) + Inv #16 | ✅ COMPLETE 2026-06-13 |
 | W4 formula content-grounding (R1) | ✅ COMPLETE 2026-06-13 |
 | W5 native_decide accounting (R4) | ✅ COMPLETE 2026-06-13 |
-| W6 pipeline + QI + ADR integration | IN PROGRESS |
+| W6 pipeline + QI + ADR integration | ✅ COMPLETE 2026-06-13 |
+
+### W6 close (2026-06-13)
+- `WAVE_EXECUTION_PIPELINE.md`: 6 SIG gates added to the Stage-7 (+Stage-5 nd) check list; Invariant #9 strengthened with automated-enforcement clause; **Stage-14 closure-pathway policy** added (substance/disclosure QI close ONLY via pathway #2). (Inv #4 restated in W4, Inv #16 added in W3.)
+- `QI_REGISTER.md`: `qi-leanproofsubstance` + `qi-assumptiondisclosure` annotated RECURRED + RE-CLOSED via structural prevention (the new gates). HONEST disposition of the 2 related open items: `qi-gate-5-self-audit-blind-spot` = PARTIALLY mitigated by `proxy_body_audit` (structural-named subset; identity-wrappers w/ non-structural names still need the reviewer) — kept open; `qi-prose_lean_numerical_bound_gap` = NOT closed by SIG (a claims-reviewer Class-IA-LEAN concern) — kept open, recorded for honesty.
+- ADR-004 → **ACCEPTED + IMPLEMENTED**. Inventory Index + counts synced. **Full `validate.py` 41/41 PASS** (174 advisory warnings = SIG tracked-debt surfacing).
+- **Follow-up backlogs (gated + visible, not effort-deferred):** FormulaRefSweep (81 dangling formula refs); 6 `vacuous_proxy` strengthenings; the Class-IA-LEAN prose-bound check.
 
 ### W5 close (2026-06-13)
 - `update_counts.py` now emits `lean.native_decide_decl_closure` (**546** — ADR-002's decl-closure metric, NOT call-sites) + `native_decide_clusters` (anyon_mtc 327, number_field_qgroup 154, other 53, lattice_signature 12; **fklw_rossselinger + quantum_network = 0**, confirming the audit) into `counts.json`.

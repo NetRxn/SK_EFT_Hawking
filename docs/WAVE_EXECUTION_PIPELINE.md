@@ -340,6 +340,16 @@ uv run python scripts/validate.py
 15. `parameter_provenance` — All parameters have verified provenance
 16. `graph_integrity` — Knowledge graph integrity: orphans, conflicts, broken chains, axiom classification, PG+AGE sync
 
+(The suite has grown well beyond these 16 — run `validate.py --list` for the full set, including the bundle/citation/freshness checks and the **Substrate Integrity Gates (ADR-004, R1–R5)** below.)
+
+**Substrate Integrity Gates (ADR-004 — semantic, not just syntactic, presence):**
+- `placeholder_not_cited` (R5, Invariant #9) — no paper presents a `True := trivial` placeholder as formally verified (matches `lean_name` + `tex_signature`).
+- `proxy_body_audit` (R2) — no structurally-named theorem is closed by a trivial defining-the-conclusion body (`rfl`/`cases<;>rfl`/identity-return) unless disclosed in `MODELING_ASSUMPTION_THEOREMS`.
+- `tracked_hypothesis_ledger` (R3, Invariant #16) — every consumed tracked-hypothesis Prop is in `HYPOTHESIS_REGISTRY`.
+- `tracked_hypotheses_fresh` (R3) — `PERMANENT_TRACKED_HYPOTHESES.md` matches the registry (auto-regenerates).
+- `formula_grounding` (R1, Invariant #4) — every formulas.py `Lean:` ref resolves to a real, non-placeholder theorem.
+- `native_decide_regression` (R4; **Stage 5** + here) — the native_decide decl-closure does not silently grow past `NATIVE_DECIDE_DECL_CLOSURE_CEILING` (ADR-002).
+
 **Gate:** ALL checks pass (not just advisory warnings). Report archived to `docs/validation/reports/`.
 
 ---
@@ -641,6 +651,8 @@ A QI item closes via one of three pathways, individually or in combination:
 
 **The supersession ledger is append-only.** Once a finding is added to `docs/review_finding_supersessions.json`, never remove the entry — the schema's `_introduced_by` and per-entry `superseded_by` fields preserve the audit trail for Stage 14 historical analysis.
 
+**Closure-pathway policy for substance/disclosure classes (Substrate Integrity Gates, ADR-004, 2026-06-13).** QI items in the **proof-substance** and **assumption-disclosure** families — `qi-leanproofsubstance`, `qi-assumptiondisclosure`, `qi-gate-5-self-audit-blind-spot-on-sibling-tautologies`, and any successor whose failure class has a *live generator* (the pattern recurs in new modules as they ship) — may close **ONLY via pathway #2 (structural prevention)**, never pathway #1 (per-finding supersession). Rationale: per-finding supersession fixes the catalogued instances but leaves the generator alive, so the class recurs. This is empirical: `qi-leanproofsubstance` (closed 2026-04-29 Wave 4) and `qi-assumptiondisclosure` (closed 2026-04-29 Wave 5) were both closed via pathway #1, and the 2026-06-13 whole-substrate weakness audit found both classes recurring in post-2026-04-29 modules (the 6n/6e/5q.B/5x/5z arc). They are re-closed via the standing `validate.py` gates `proxy_body_audit` / `tracked_hypothesis_ledger` / `placeholder_not_cited` / `formula_grounding` (ADR-004 R1–R5).
+
 **Gate (advisory, no blocking):** QI register exists, is regenerated on Stage 14 runs, and is linked from the dashboard Process Health tab.
 
 ---
@@ -665,7 +677,7 @@ These must hold at ALL times, not just at wave completion:
 
 8. **Every experimental parameter has verified provenance.** Each value in EXPERIMENTS, ATOMS, and platform dicts traces to a specific published source (paper, table/figure, page) via `PARAMETER_PROVENANCE` in `src/core/provenance.py`. Parameters from LLM research outputs are not considered verified until LLM reads the primary source. Paper submission requires human verification via the provenance dashboard. Enforced by CHECK 15.
 
-9. **Placeholder theorems are non-load-bearing.** Theorems proved as `True := trivial` encode no mathematical content and MUST NOT be referenced by any other proof, formula, or paper claim. They are documentation markers only. Tracked in `PLACEHOLDER_THEOREMS` in `constants.py`. Substantive theorem count = total - placeholders. Paper claims MUST cite substantive count, not total.
+9. **Placeholder theorems are non-load-bearing.** Theorems proved as `True := trivial` encode no mathematical content and MUST NOT be referenced by any other proof, formula, or paper claim. They are documentation markers only. Tracked in `PLACEHOLDER_THEOREMS` in `constants.py`. Substantive theorem count = total - placeholders. Paper claims MUST cite substantive count, not total. **Automated enforcement (Substrate Integrity Gates R5, 2026-06-13):** the registry MUST be complete — every on-disk `True := trivial` decl is registered (`PLACEHOLDER_TOTAL_COUNT == docs/counts.json theorems_placeholder`), each with a `lean_name` + `category` (`content`/`docs_marker`). The "MUST NOT be cited as a paper claim" clause is enforced by `validate.py --check placeholder_not_cited` (deterministic, matching `lean_name` + an optional published-claim `tex_signature`) AND by the claims-reviewer **Class PC**. The "MUST NOT be referenced by another proof/formula" clause is enforced for formulas by `formula_grounding` (Invariant #4) and for the graph by `build_graph.py`'s `lean_name`-keyed placeholder exclusion. This clause was previously unenforced — the audit (#3) found paper7 presenting a `True`-stub general-G gauge-emergence equivalence as "end-to-end formal verification".
 
 10. **No heartbeat overrides in proof bodies.** No `set_option maxHeartbeats` or `set_option synthInstance.maxHeartbeats` in any `theorem`, `lemma`, `example`, or `def`/`noncomputable def` whose body is produced by tactics. Proof bodies that hit the heartbeat limit are evidence that the proof architecture is wrong — the fix is `have` sub-lemma decomposition, not raising the budget. Expensive typeclass synthesis is resolved via `@[local instance]` caching, not heartbeat increases.
 

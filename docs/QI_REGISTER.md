@@ -25,8 +25,8 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
   - **(a) Tighten self-audit checklist:** When one P5 is caught in a module, the auditor MUST inspect EVERY OTHER theorem in that module returning a hypothesis directly OR using `⟨_, _⟩` / `And.intro` / trivial-constructor bodies on the same definitional target, before clearing the module GREEN.
   - **(b) Stronger:** ALWAYS invoke `physics-qa:adversarial-reviewer` + `physics-qa:claims-reviewer` plugin agents at wave close. Self-conducted audits are insufficient substitutes for fresh-context independent review. Add this to `WAVE_EXECUTION_PIPELINE.md` Stage 13 as a hard rule.
 - **Owner:** unassigned. **Target:** apply on next wave close (Phase 6x onward).
-- **Status:** open.
-- **Evidence:** `papers/AutomatedReviews/2026-05-26-2112-internal-adversarial/D7.md` (findings 3.1, 3.2, 3.3 + QI Candidate section); commit `89cae29` remediation chain.
+- **Status:** open (PARTIALLY MITIGATED 2026-06-13, ADR-004 R2). `validate.py --check proxy_body_audit` automatically flags the **structural-named** subset of this class (a theorem whose name claims a quantity but whose body is `rfl`/`cases<;>rfl`/identity-return), removing reliance on a self-audit catching siblings — a genuine pathway-#2 advance. **NOT fully closed:** identity-wrappers with non-structural names (e.g. the 6w `analog_hawking_simulable_implies_both_conditions` `:= h`) still depend on the Stage-13 fresh-context reviewer; the gate-5(b) rule ("ALWAYS invoke `physics-qa:adversarial-reviewer` at wave close") remains the residual process fix.
+- **Evidence:** `papers/AutomatedReviews/2026-05-26-2112-internal-adversarial/D7.md` (findings 3.1, 3.2, 3.3 + QI Candidate section); commit `89cae29` remediation chain; ADR-004 R2 (`proxy_body_audit`).
 
 ### qi-bibfilename — opened 2026-05-04 by Phase 7c sub-wave 7c.1 (D3 Stage-10 r1)
 
@@ -47,6 +47,7 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 - **Owner:** unassigned. **Target:** before F flagship draft (which will lift D3's Lean-theorem references).
 - **Evidence:** `papers/D3/claims_review.json` `block:3`; `lean/SKEFTHawking/MicroscopicCoefficientMatch.lean` line 182 docstring.
 - **Severity:** advisory. Resolvable by softening prose to formal bound + heuristic-estimate caveat.
+- **Status:** open (NOT closed by ADR-004 — recorded for honesty 2026-06-13). The Substrate Integrity Gates (R1–R5) do not cover the prose-numerical-bound-vs-Lean-literal comparison; this is a **claims-reviewer Class-IA-LEAN** concern (extract the cited theorem's literal and verify the prose claim is bounded by it). The audit's related finding #54 (`vestigial_phase_eta_violates_microscope_bound` compares bare literals `1.0 > 1e-15`, not the named constants) is the same family and likewise remains for the claims-reviewer. Residual fix: implement the Class-IA-LEAN sub-check.
 
 ### qi-bibitem_registry_drift — opened 2026-05-04 by Phase 7c sub-wave 7c.4 (D1 Stage-13 r1)
 
@@ -133,6 +134,17 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
   disclosure paralleling Stakeholder §6 honest-scope.
 - **Numerics:** open count 30 → 0 (100%); supersession ledger 107 →
   137 entries (+30 Wave-5 entries).
+- **⚠ RECURRED + RE-CLOSED VIA STRUCTURAL PREVENTION (2026-06-13, ADR-004).**
+  The 2026-04-29 closure was **pathway #1 (per-finding supersession)**. The
+  2026-06-13 audit found the assumption-disclosure class recurring: the two
+  hand-maintained tracked-hypothesis ledgers (`HYPOTHESIS_REGISTRY` vs the
+  markdown doc) held **disjoint** contents, and ~21 consumed tracked Props were
+  in neither ledger (audit #2). Re-closed via **pathway #2** — `HYPOTHESIS_REGISTRY`
+  is now the single source of truth, the doc is auto-generated, and
+  `validate.py --check tracked_hypothesis_ledger` (R3, **new Invariant #16**)
+  hard-fails on any consumed-but-unregistered tracked Prop. Per the Stage-14
+  closure-pathway policy this class closes ONLY via pathway #2.
+  **Evidence:** ADR-004; commit `616cc35d`; `docs/audits/SUBSTRATE_WEAKNESS_AUDIT_2026-06-13.md`.
 
 ---
 
@@ -230,6 +242,17 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
   refs across 40 papers, 617 OK / 159 ABSENT (mostly Mathlib /
   module-name idioms) / 10 DRIFTED (paper-convention `<Module>.<thm>`
   notation, accepted as documentation idiom).
+- **⚠ RECURRED + RE-CLOSED VIA STRUCTURAL PREVENTION (2026-06-13, ADR-004).**
+  The 2026-04-29 closure was **pathway #1 (per-finding supersession)**, which
+  left the generator alive: the 2026-06-13 whole-substrate weakness audit found
+  the proof-substance class recurring in post-2026-04-29 modules (paper7 `True`-stub
+  overclaim #3; `change_of_rings_ext_dim` `x=x`; entropic `cases<;>rfl` over a
+  constant-true registry; 5× `N=N` decorative theorems). Re-closed via **pathway #2
+  (structural prevention)** — the standing gates `validate.py --check
+  placeholder_not_cited` (R5) + `proxy_body_audit` (R2), the `MODELING_ASSUMPTION_THEOREMS`
+  disclosure whitelist, and the strengthened Invariant #9. Per the new Stage-14
+  closure-pathway policy, this class may now close ONLY via pathway #2.
+  **Evidence:** ADR-004; commits `6dc125ea`/`047d73cf`; `docs/audits/SUBSTRATE_WEAKNESS_AUDIT_2026-06-13.md`.
 
 ### qi-narrativegrounding — closed 2026-04-29 by Phase 6i Wave 3
 
