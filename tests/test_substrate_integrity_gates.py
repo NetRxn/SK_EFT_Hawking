@@ -21,6 +21,7 @@ from scripts.validate import (
     _HEDGE_CLAIM_RE,
     _is_prop_codomain,
     _TRACKED_PROP_NAME_RE,
+    _parse_formula_lean_refs,
 )
 
 
@@ -174,3 +175,32 @@ def test_render_is_deterministic_and_matches_disk():
     assert out == r.render()  # deterministic
     assert out.count("### ") == len(HYPOTHESIS_REGISTRY)
     assert r.DOC_PATH.read_text() == out, "doc out of sync — run render_tracked_hypotheses.py"
+
+
+# ── W4 formula content-grounding ───────────────────────────────────────
+
+def test_formula_ref_parser_drops_artifacts():
+    src = (
+        '    """\n    Lean: real_theorem_name, AnotherModule.also_real (Foo.lean)\n'
+        '    Lean: WRTComputation.lean\n'           # filename — drop
+        '    Lean: pending\n'                        # aristotle convention — drop
+        '    Lean: K0E0\n'                           # matrix label — drop
+        '    Lean: firstOrder_correction_zero_iff — proves stuff\n    """\n'
+    )
+    refs = _parse_formula_lean_refs(src)
+    assert "real_theorem_name" in refs
+    assert "AnotherModule.also_real" in refs
+    assert "firstOrder_correction_zero_iff" in refs
+    for artifact in ("WRTComputation.lean", "pending", "K0E0"):
+        assert artifact not in refs
+
+
+def test_no_formula_grounded_on_placeholder():
+    """Invariant #4 content-grounding: no formula cites a True/placeholder stub.
+    Invokes the real check (which resolution-gates before classifying)."""
+    from scripts.validate import check_formula_grounding
+    res = check_formula_grounding()
+    assert res.passed, "a formula is grounded on a placeholder/True stub"
+    # the hard-fail dimension is placeholder-grounding; dangling refs are advisory
+    fails = [d for d in res.details if not d.passed]
+    assert not fails, f"placeholder-grounded formula refs: {[d.name for d in fails]}"

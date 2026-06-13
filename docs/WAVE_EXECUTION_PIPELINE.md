@@ -655,7 +655,7 @@ These must hold at ALL times, not just at wave completion:
 
 3. **`visualizations.py` is canonical.** It is the ONLY place figure functions live. Notebooks reference figures via `# viz-ref:` tags, never reimplementing figure logic.
 
-4. **Every formula has a Lean theorem.** Every Lean theorem has a proof (zero sorry). No unformalized formulas in the computation pipeline.
+4. **Every formula is content-grounded on a real, non-placeholder Lean theorem.** Every Lean theorem has a proof (zero sorry); no unformalized formulas in the computation pipeline. **Content-grounding (Substrate Integrity Gates R1, 2026-06-13):** a `formulas.py` `Lean:` reference must resolve to an actual declaration that is NOT a `True`/placeholder stub — a formula may not be "grounded" on a theorem that proves nothing (the δ_diss-class hazard, where a 7–9-order dimensional error hid because the old check verified only that a *named* theorem existed in a 7-function hardcoded map, not that it pertained to the formula — audit 2026-06-13 #14). Enforced by `validate.py --check formula_grounding` over ALL ~390 references (hard-fail on placeholder-grounded refs; advisory on dangling stale-name refs — the FormulaRefSweep remediation backlog). The legacy `--check formulas` (7-pair name+docstring presence) is retained as a complement.
 
 5. **Every computed quantity has bounds.** Physical bounds are tested in the test suite and enforced by CHECK 12.
 

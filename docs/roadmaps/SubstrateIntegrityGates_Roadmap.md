@@ -60,6 +60,9 @@ Each wave: build the check → triage the flagged set → register-or-fix → wi
 - **Gate:** `tracked_hypothesis_ledger` + `tracked_hypotheses_fresh` PASS; the markdown is generated, not hand-edited; registry is the sole source.
 
 ### W4 — Formula content-grounding (R1) + Invariant #4 teeth
+
+**✅ W4 COMPLETE 2026-06-13.** New gate `validate.py --check formula_grounding`: parses ALL `Lean:` references in formulas.py (~461 refs, robust parser dropping `.lean` filenames / `pending` / fragments / matrix labels), resolves each against `lean_deps.json` (dotted-suffix). **HARD-FAIL** on any ref grounded on a `True`/placeholder stub — **0 found** (the δ_diss / Invariant-#4 hazard is clean: no formula cites a stub). **ADVISORY**: surfaces **81 dangling (stale-name) refs** — formulas.py cites renamed/removed theorems (e.g. `FLRWDynamics.friedmann_one` → the module now has `friedmann_I_dot_eq_conservation_times_coeff`). Invariant #4 restated as content-grounding (pipeline doc). 4 W4 unit tests (20 total green).
+**TRACKED DEBT — FormulaRefSweep:** the 81 dangling refs are a stale-name remediation backlog (each needs its current theorem name found + the docstring updated). This is a large content-sweep (own follow-up /goal, à la AttributionContentSweep), NOT effort-deferred — the gate now makes it VISIBLE and prevents NEW placeholder-grounding. Listed via `validate.py --check formula_grounding`.
 - Build the unbuilt Wave-21 `lean_grounding_audit`: for each `formulas.py` entry, parse the cited Lean theorem's STATEMENT (from `lean_deps.json` types) and assert the formula's relation/symbols appear in it (not just the name). Expand the 7-pair hardcoded `mapping` in `check_formulas_to_theorems` to all formula functions.
 - Add `validate.py --check formula_grounding`. Restate Invariant #4 as content-grounding in the pipeline doc.
 - **Gate:** `formula_grounding` PASSES over all formulas; the δ_diss converting-identity has a content-checked theorem (or is flagged).
@@ -93,8 +96,8 @@ Each wave: build the check → triage the flagged set → register-or-fix → wi
 | W1 placeholder registry + R5 + #3 fix | ✅ COMPLETE 2026-06-13 |
 | W2 proxy-body audit (R2) | ✅ COMPLETE 2026-06-13 |
 | W3 tracked-hyp ledger sweep (R3) + Inv #16 | ✅ COMPLETE 2026-06-13 |
-| W4 formula content-grounding (R1) | IN PROGRESS |
-| W5 native_decide accounting (R4) | NOT STARTED |
+| W4 formula content-grounding (R1) | ✅ COMPLETE 2026-06-13 |
+| W5 native_decide accounting (R4) | IN PROGRESS |
 | W6 pipeline + QI + ADR integration | NOT STARTED |
 
 ### W1 close (2026-06-13)

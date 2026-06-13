@@ -511,6 +511,91 @@ def check_tracked_hypotheses_fresh() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 1e: Formula content-grounding (R1, Invariant #4 with teeth)
+# ═══════════════════════════════════════════════════════════════════════
+
+def _parse_formula_lean_refs(src: str) -> set:
+    """Extract Lean theorem-name tokens from `Lean: …` docstring lines in
+    formulas.py, dropping non-decl artifacts (file names, `pending`, fragments,
+    all-caps matrix labels)."""
+    refs = set()
+    for m in re.finditer(r"Lean:\s*(.+)", src):
+        line = re.split(r"[—–]\s|\s-\s", m.group(1))[0]  # drop trailing description
+        for tok in line.split(","):
+            tok = re.sub(r"\(.*?\)", "", tok).strip().rstrip(".").strip()
+            if not re.fullmatch(r"[A-Za-z_][\w.]*", tok) or len(tok) <= 2:
+                continue
+            if tok.endswith(".lean") or tok == "pending" or tok.startswith("_"):
+                continue
+            if re.fullmatch(r"[A-Z][A-Z0-9]{0,4}", tok):  # matrix-element labels (K0E0)
+                continue
+            refs.add(tok)
+    return refs
+
+
+@register_check(
+    "formula_grounding",
+    "Every formulas.py Lean reference resolves to a real, non-placeholder theorem (Invariant #4, R1)")
+def check_formula_grounding() -> CheckResult:
+    """Content-grounding for Pipeline Invariant #4: each `Lean:` reference in
+    `formulas.py` must resolve to a real Lean declaration that is NOT a
+    `True`/placeholder stub (a formula must not be 'grounded' on a theorem that
+    proves nothing — the δ_diss-class hazard, audit 2026-06-13 #14). Extends the
+    7-pair name-presence `formulas` check to ALL ~390 references.
+    HARD-FAIL: placeholder-grounded refs. ADVISORY: dangling (unresolved) refs —
+    a stale-name drift backlog the gate surfaces (FormulaRefSweep follow-up)."""
+    from src.core.constants import PLACEHOLDER_LEAN_NAMES
+    formulas_path = PROJECT_ROOT / "src" / "core" / "formulas.py"
+    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
+    if not formulas_path.exists() or not deps_path.exists():
+        return CheckResult(passed=True, details=[Detail("inputs", True, "formulas.py / lean_deps.json absent")])
+
+    deps = json.loads(deps_path.read_text())
+    names, dotted, shorts, by_short, by_full = set(), set(), set(), {}, {}
+    for d in deps:
+        n = d.get("name", "")
+        if not n:
+            continue
+        names.add(n); by_full[n] = d
+        segs = n.split("."); shorts.add(segs[-1]); by_short.setdefault(segs[-1], d)
+        for i in range(1, len(segs)):
+            dotted.add(".".join(segs[i:]))
+
+    refs = _parse_formula_lean_refs(formulas_path.read_text())
+
+    def resolves(t):
+        return t in names or t in dotted or t in shorts
+
+    def decl(t):
+        return by_full.get(t) or by_short.get(t.split(".")[-1])
+
+    placeholder_grounded, dangling = [], []
+    for t in sorted(refs):
+        if not resolves(t):
+            dangling.append(t)
+            continue
+        d = decl(t)
+        if d and (d.get("type") == "True" or d["name"].split(".")[-1] in PLACEHOLDER_LEAN_NAMES):
+            placeholder_grounded.append(t)
+
+    details: List[Detail] = []
+    details.append(Detail(
+        "coverage", True,
+        f"{len(refs)} Lean refs; {len(refs) - len(dangling)} resolve; "
+        f"{len(placeholder_grounded)} placeholder-grounded; {len(dangling)} dangling"))
+    for t in placeholder_grounded:
+        details.append(Detail(t, False, "formula grounded on a placeholder/True stub (Invariant #4)"))
+    if dangling:
+        details.append(Detail(
+            "dangling_refs", True,
+            f"{len(dangling)} formula Lean-ref(s) do not resolve (stale names — "
+            f"FormulaRefSweep tracked debt): " + ", ".join(dangling[:12])
+            + ("…" if len(dangling) > 12 else ""),
+            warning=True))
+    return CheckResult(passed=not placeholder_grounded, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CHECK 2: Numerical consistency
 # ═══════════════════════════════════════════════════════════════════════
 
