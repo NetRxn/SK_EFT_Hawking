@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-13T13:14:35.856834",
+  "generated": "2026-06-13T14:24:38.506766",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
     "total_declarations": 20502,
@@ -952,12 +952,19 @@
     "definitions": 7136,
     "structures": 294,
     "instances": 513,
-    "inductives": 96
+    "inductives": 96,
+    "native_decide_decl_closure": 546,
+    "native_decide_clusters": {
+      "anyon_mtc": 327,
+      "number_field_qgroup": 154,
+      "other": 53,
+      "lattice_signature": 12
+    }
   },
   "python": {
     "python_modules": 132,
     "test_files": 117,
-    "pytest_cases": 4681,
+    "pytest_cases": 4689,
     "notebooks": 89,
     "papers": 42,
     "figures": 163

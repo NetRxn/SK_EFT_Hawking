@@ -596,6 +596,43 @@ def check_formula_grounding() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 1f: native_decide trust-surface regression (R4)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check(
+    "native_decide_regression",
+    "native_decide decl-closure does not silently grow past its ceiling (R4; ADR-002)")
+def check_native_decide_regression() -> CheckResult:
+    """The native_decide kernel-trust surface (decl-closure — ADR-002's metric,
+    in docs/counts.json `lean.native_decide_decl_closure`) may only DECREASE
+    without review. A wave that ADDS trust surface must bump
+    `NATIVE_DECIDE_DECL_CLOSURE_CEILING` (constants.py) in the same commit with a
+    rationale, so the increase is visible (no silent growth). Elimination policy
+    is owned by ADR-002. Substrate Integrity Gates W5."""
+    from src.core.constants import NATIVE_DECIDE_DECL_CLOSURE_CEILING as CEIL
+    counts_path = PROJECT_ROOT / "docs" / "counts.json"
+    if not counts_path.exists():
+        return CheckResult(passed=True, details=[Detail("counts", True, "counts.json absent")])
+    lean = json.loads(counts_path.read_text()).get("lean", {})
+    cur = lean.get("native_decide_decl_closure")
+    if cur is None:
+        return CheckResult(passed=True, details=[Detail(
+            "metric", True, "native_decide_decl_closure not yet in counts.json — run update_counts.py",
+            warning=True)])
+    clusters = lean.get("native_decide_clusters", {})
+    if cur > CEIL:
+        return CheckResult(passed=False, details=[Detail(
+            "ceiling", False,
+            f"native_decide decl-closure {cur} EXCEEDS ceiling {CEIL} — a wave grew the "
+            f"kernel-trust surface. Eliminate (ADR-002) or bump NATIVE_DECIDE_DECL_CLOSURE_CEILING "
+            f"with a rationale. Clusters: {clusters}")])
+    msg = f"native_decide decl-closure {cur} ≤ ceiling {CEIL}"
+    if cur < CEIL:
+        msg += f" (down {CEIL - cur}; consider lowering the ceiling). Clusters: {clusters}"
+    return CheckResult(passed=True, details=[Detail("ceiling", True, msg, warning=(cur < CEIL))])
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CHECK 2: Numerical consistency
 # ═══════════════════════════════════════════════════════════════════════
 

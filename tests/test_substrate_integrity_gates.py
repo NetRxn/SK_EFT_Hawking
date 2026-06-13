@@ -5,6 +5,7 @@ Covers the deterministic pattern logic of W1 (`placeholder_not_cited`) and W2
 registry invariants the gates rely on. Fast (no Lean, no I/O beyond imports).
 """
 import re
+from pathlib import Path
 
 from src.core.constants import (
     PLACEHOLDER_THEOREMS,
@@ -204,3 +205,19 @@ def test_no_formula_grounded_on_placeholder():
     # the hard-fail dimension is placeholder-grounding; dangling refs are advisory
     fails = [d for d in res.details if not d.passed]
     assert not fails, f"placeholder-grounded formula refs: {[d.name for d in fails]}"
+
+
+# ── W5 native_decide accounting ────────────────────────────────────────
+
+def test_native_decide_metric_in_counts_and_under_ceiling():
+    import json
+    from src.core.constants import NATIVE_DECIDE_DECL_CLOSURE_CEILING as CEIL
+    root = Path(__file__).resolve().parent.parent
+    lean = json.loads((root / "docs" / "counts.json").read_text())["lean"]
+    cur = lean.get("native_decide_decl_closure")
+    assert isinstance(cur, int), "counts.json must carry native_decide_decl_closure (R4)"
+    assert cur <= CEIL, f"native_decide decl-closure {cur} exceeds ceiling {CEIL}"
+    # the audit's key finding: FKLW/RossSelinger + QuantumNetwork carry ZERO real nd
+    clusters = lean.get("native_decide_clusters", {})
+    assert "fklw_rossselinger" not in clusters
+    assert "quantum_network" not in clusters

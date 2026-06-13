@@ -116,6 +116,38 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
     # Also count theorems that directly use sorry (kind == "theorem" with sorry dep)
     sorry_theorems = [d for d in sorry_deps if d["kind"] == "theorem"]
 
+    # native_decide trust-surface metric (ADR-002 / Substrate Integrity Gates R4):
+    # the authoritative count is the DECL-CLOSURE — declarations whose transitive
+    # axiom closure includes a native_decide compiler-trust axiom — NOT the source
+    # call-site count. This mirrors `validate.py --check axiom_closure_allowlist`.
+    def _is_nd_axiom(a) -> bool:
+        s = str(a)
+        return "native_decide" in s or s in ("Lean.ofReduceBool", "Lean.trustCompiler")
+
+    nd_decls = [
+        d for d in data
+        if any(_is_nd_axiom(a) for a in
+               (d.get("axiom_deps_project") or []) + (d.get("axiom_deps_core") or []))
+    ]
+    nd_clusters: dict = {}
+    for d in nd_decls:
+        m = d.get("module", "")
+        if "RossSelinger" in m or "FKLW" in m:
+            key = "fklw_rossselinger"
+        elif "QuantumNetwork" in m:
+            key = "quantum_network"
+        elif any(t in m for t in ("Fib", "Ising", "SU2k", "SU3k", "MTC", "KacWalton",
+                                  "Anyon", "TQFT", "Braid", "FPDim", "WRT", "Muger")):
+            key = "anyon_mtc"
+        elif any(t in m for t in ("QCyc", "QSqrt", "QLevel", "PolyQuot", "Uqsl", "QuantumGroup")):
+            key = "number_field_qgroup"
+        elif any(t in m for t in ("Lattice", "E8", "Theta", "Signature", "Arf",
+                                  "VanDerBlij", "HasseMink", "Rokhlin", "SpinBordism")):
+            key = "lattice_signature"
+        else:
+            key = "other"
+        nd_clusters[key] = nd_clusters.get(key, 0) + 1
+
     return {
         "total_declarations": len(data),
         "theorems_total": len(theorems),
@@ -131,6 +163,9 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
         "structures": len([d for d in data if d["kind"] == "structure"]),
         "instances": len([d for d in data if d["kind"] == "instance"]),
         "inductives": len([d for d in data if d["kind"] == "inductive"]),
+        # native_decide kernel-trust surface (ADR-002 metric; R4)
+        "native_decide_decl_closure": len(nd_decls),
+        "native_decide_clusters": dict(sorted(nd_clusters.items(), key=lambda kv: -kv[1])),
     }
 
 

@@ -97,8 +97,12 @@ Each wave: build the check → triage the flagged set → register-or-fix → wi
 | W2 proxy-body audit (R2) | ✅ COMPLETE 2026-06-13 |
 | W3 tracked-hyp ledger sweep (R3) + Inv #16 | ✅ COMPLETE 2026-06-13 |
 | W4 formula content-grounding (R1) | ✅ COMPLETE 2026-06-13 |
-| W5 native_decide accounting (R4) | IN PROGRESS |
-| W6 pipeline + QI + ADR integration | NOT STARTED |
+| W5 native_decide accounting (R4) | ✅ COMPLETE 2026-06-13 |
+| W6 pipeline + QI + ADR integration | IN PROGRESS |
+
+### W5 close (2026-06-13)
+- `update_counts.py` now emits `lean.native_decide_decl_closure` (**546** — ADR-002's decl-closure metric, NOT call-sites) + `native_decide_clusters` (anyon_mtc 327, number_field_qgroup 154, other 53, lattice_signature 12; **fklw_rossselinger + quantum_network = 0**, confirming the audit) into `counts.json`.
+- `NATIVE_DECIDE_DECL_CLOSURE_CEILING = 546` (constants.py) + `validate.py --check native_decide_regression` (no-silent-growth: decl-closure may only decrease; a wave that adds trust surface must bump the ceiling with a rationale). Elimination policy stays ADR-002. 21 unit tests green.
 
 ### W1 close (2026-06-13)
 - `PLACEHOLDER_THEOREMS` reconciled **11→26** (every on-disk `True := trivial` decl; +`lean_name` + `category` content|docs_marker; 20 content + 6 docs_marker). New `PLACEHOLDER_TOTAL_COUNT`/`PLACEHOLDER_LEAN_NAMES`. Registry lean_names ≡ on-disk 26 (verified).

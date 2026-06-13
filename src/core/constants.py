@@ -2332,6 +2332,17 @@ PLACEHOLDER_LEAN_NAMES = {
     v.get('lean_name', k): k for k, v in PLACEHOLDER_THEOREMS.items()
 }
 
+# native_decide kernel-trust surface ceiling (Substrate Integrity Gates R4 / W5).
+# The decl-closure count (declarations whose transitive axiom closure includes a
+# native_decide compiler-trust axiom — ADR-002's authoritative metric, NOT the
+# source call-site count) may only DECREASE without explicit review. A wave that
+# ADDS native_decide trust surface must bump this ceiling in the same commit, with
+# a rationale — making the increase visible (no silent growth). Elimination policy
+# is owned by ADR-002; this is only the regression backstop. Tracked in
+# docs/counts.json `lean.native_decide_decl_closure`; enforced by
+# `validate.py --check native_decide_regression`.
+NATIVE_DECIDE_DECL_CLOSURE_CEILING = 546  # 2026-06-13 (post-6AO; was 852→587 at ADR-002 cleanup)
+
 # ════════════════════════════════════════════════════════════════════
 # MODELING-ASSUMPTION THEOREMS (proxy-body-audit whitelist; R2 / W2)
 #
