@@ -599,19 +599,21 @@ def check_formula_grounding() -> CheckResult:
 
     details: List[Detail] = []
     details.append(Detail(
-        "coverage", True,
+        "coverage", not (placeholder_grounded or dangling),
         f"{len(refs)} Lean refs; {len(refs) - len(dangling)} resolve; "
         f"{len(placeholder_grounded)} placeholder-grounded; {len(dangling)} dangling"))
     for t in placeholder_grounded:
         details.append(Detail(t, False, "formula grounded on a placeholder/True stub (Invariant #4)"))
-    if dangling:
+    # Dangling refs are HARD-FAIL since the 2026-06-13 FormulaRefSweep drove the
+    # count to 0 (ratchet — a NEW stale/renamed formula ref must be fixed, not
+    # left to rot). Replace the dangling name with the current theorem, drop the
+    # ref if no theorem grounds the formula, or (if it is a legitimate Mathlib /
+    # external name) it should still resolve in lean_deps — if not, it is drift.
+    for t in dangling:
         details.append(Detail(
-            "dangling_refs", True,
-            f"{len(dangling)} formula Lean-ref(s) do not resolve (stale names — "
-            f"FormulaRefSweep tracked debt): " + ", ".join(dangling[:12])
-            + ("…" if len(dangling) > 12 else ""),
-            warning=True))
-    return CheckResult(passed=not placeholder_grounded, details=details)
+            t, False,
+            "formula Lean-ref does not resolve (stale/renamed) — fix the name or drop the ref"))
+    return CheckResult(passed=not (placeholder_grounded or dangling), details=details)
 
 
 # ═══════════════════════════════════════════════════════════════════════

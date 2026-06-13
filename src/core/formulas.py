@@ -865,7 +865,7 @@ def kappa_scaling_crossover(gamma_1, gamma_2, xi):
         (π/6)ξ²κ = (γ₁+γ₂)
         κ_cross = 6(γ₁+γ₂) / (πξ²)
 
-    Lean: kappa_scaling_crossover_unique
+    Lean: crossover_unique
     Aristotle: manual
     Source: original
 
@@ -895,7 +895,7 @@ def polariton_spatial_attenuation(Gamma_pol, L, v_g):
     must be corrected by the spatial attenuation factor to recover the
     intrinsic thermal envelope.
 
-    Lean: polariton_attenuation_positive
+    Lean: attenuation_ge_one
     Aristotle: manual
     Source: original (Tier 1 patch)
 
@@ -963,7 +963,7 @@ def polariton_tier1_validity(Gamma_pol, kappa):
         < 1.0:  borderline (need Tier 2 complex couplings)
         ≥ 1.0:  intractable (need Tier 3 full open quantum system)
 
-    Lean: polariton_validity_nonneg
+    Lean: validity_nonneg
     Aristotle: manual
     Source: original (Tier 1 patch)
 
@@ -1542,7 +1542,7 @@ def so4_weingarten_2nd_moment(N=4):
     This generates the leading 4-fermion nearest-neighbor coupling
     after gauge integration. For SO(4): factor = 1/4.
 
-    Lean: weingarten_2nd_positive (SO4Weingarten.lean)
+    Lean: weingarten_2nd_factor (SO4Weingarten.lean)
     Aristotle: 4528aa2b
     Source: Collins, Int. Math. Res. Not. 2003, 953 (2003)
 
@@ -1570,7 +1570,7 @@ def so4_weingarten_4th_moment(N=4):
     This generates 8-fermion nearest-neighbor coupling (sub-leading)
     and the baryonic (determinantal) channel.
 
-    Lean: weingarten_4th_decomposition (SO4Weingarten.lean)
+    Lean: weingarten_4th_so4_pair (SO4Weingarten.lean)
     Aristotle: 4528aa2b
     Source: Collins, Int. Math. Res. Not. 2003, 953 (2003)
 
@@ -1603,7 +1603,7 @@ def adw_bond_weight_fundamental(n_x, n_y, g_eff, N_grass=8):
     The sign of g_eff determines attractive (g_eff < 0, favors alignment)
     vs repulsive (g_eff > 0, penalizes alignment) coupling.
 
-    Lean: bond_weight_fundamental_positive (SO4Weingarten.lean)
+    Lean: fundamental_channel_nonneg (SO4Weingarten.lean)
     Aristotle: 4528aa2b
     Source: original (application of Weingarten to ADW)
 
@@ -1630,7 +1630,7 @@ def adw_bond_weight_adjoint(n_x, n_y, g_eff, N_grass=8):
 
     S_adj = g_eff × (1/N(N+2)) × [(n_x/N_grass)^2 × (n_y/N_grass)^2]
 
-    Lean: bond_weight_adjoint_suppressed (SO4Weingarten.lean)
+    Lean: adjoint_channel_suppressed (SO4Weingarten.lean)
     Aristotle: 4528aa2b
     Source: original (application of Weingarten to ADW)
 
@@ -1659,7 +1659,7 @@ def adw_bond_weight_total(n_x, n_y, g_eff, N_grass=8):
     The ε-tensor (baryonic) channel requires tracking all 4 gauge-index
     components simultaneously and is deferred to a future version.
 
-    Lean: bond_weight_total_decomposition (SO4Weingarten.lean)
+    Lean: total_bond_nonneg (SO4Weingarten.lean)
     Aristotle: 4528aa2b
     Source: original (application of Weingarten to ADW)
 
@@ -2162,7 +2162,7 @@ def tetrad_density_of_states(p, d=4):
     The result: I(0) = c₄·Λ²/2 = Λ²/(8π²), giving G_c = 8π²/(N_f·Λ²)
     in exact agreement with the Coleman-Weinberg V_eff computation.
 
-    Lean: density_of_states_nonneg (TetradGapEquation.lean)
+    Lean: c₄_pos (TetradGapEquation.lean)
     Aristotle: 79e07d55
     Source: NJL-ADW correspondence, deep research Phase-5c Q3
 
@@ -2188,7 +2188,7 @@ def tetrad_gap_integral(Delta, Lambda, N_f=1, d=4):
     The critical coupling is G_c = 1/(N_f · I(0)) = 8π²/(N_f · Λ²),
     matching the Coleman-Weinberg V_eff derivation exactly.
 
-    Lean: gap_integral_pos, gap_integral_decreasing (TetradGapEquation.lean)
+    Lean: gapIntegral_pos, gapIntegral_strictAnti (TetradGapEquation.lean)
     Aristotle: 79e07d55
     Source: NJL-ADW correspondence, deep research Phase-5c Q3, Q6
 
@@ -2217,7 +2217,7 @@ def tetrad_gap_operator(Delta, G, Lambda, N_f=1, d=4):
     - Trivial solution Δ = 0 always exists.
     - Nontrivial Δ > 0 exists iff G > G_c = 1/(N_f · I(0)).
 
-    Lean: gap_operator_self_map, gap_operator_continuous (TetradGapEquation.lean)
+    Lean: gapOperator_self_map (TetradGapEquation.lean)
     Aristotle: 79e07d55
     Source: NJL-ADW correspondence, deep research Phase-5c Q3
 
@@ -2244,7 +2244,7 @@ def tetrad_critical_coupling_integral(Lambda, N_f=1, d=4):
     the c₄ = 1/(4π²) coefficient accounts for angular integration,
     Dirac trace, and HS normalization consistently.
 
-    Lean: critical_coupling_integral_pos (TetradGapEquation.lean)
+    Lean: criticalCoupling_pos (TetradGapEquation.lean)
     Aristotle: 79e07d55
     Source: deep research Phase-5c Q3, Q6; Vladimirov-Diakonov PRD 86, 104019
 
@@ -2426,7 +2426,7 @@ def euclidean_gamma_matrices():
     - Cl(4,0) ≅ M_2(ℍ) → no real 4×4 rep exists; complex is mandatory
     - det(M_B) ∈ ℝ via charge conjugation C = γ^0γ^2, not via reality of γ
 
-    Lean: gamma_clifford_algebra (GaugeFermionBag.lean)
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (GaugeFermionBag.lean)
     Aristotle: fb657b4d
     Source: Montvay & Münster, "Quantum Fields on a Lattice" (1994), Ch. 4.4
 
@@ -2860,7 +2860,7 @@ def fusion_multiplicity(decomposition_coefficients):
     For Vec_G: N^k_{ij} = δ_{k, i·j}. For Rep(G): tensor product
     decomposition multiplicities.
 
-    Lean: fusion_unit_left, fusion_associative
+    Lean: fusion_unit_left, fusion_associativity
     Aristotle: manual
     Source: Etingof et al., Tensor Categories, AMS (2015)
 
@@ -2883,7 +2883,7 @@ def categorical_trace(eigenvalues, pivotal_coefficients=None):
     For endomorphisms of simple objects: tr(f) = λ · d_X where
     f = λ · id_X (by Schur's lemma over algebraically closed field).
 
-    Lean: trace_spherical_eq, trace_comp_tensor
+    Lean: quantum_dim_tensor
     Aristotle: manual
     Source: standard category theory (Turaev, Quantum Invariants, 1994)
 
@@ -2905,7 +2905,7 @@ def pivotal_indicator(left_trace, right_trace):
     Right trace: tr_R(f: X → X) = ε'_X ∘ (id_{*X} ⊗ f) ∘ η'_X
     Spherical: tr_L = tr_R for all endomorphisms of all objects.
 
-    Lean: spherical_iff_traces_eq, pivotal_double_dual_iso
+    Lean: quantum_dim_dual, pivotal_natural
     Aristotle: manual
     Source: standard category theory (Turaev, Quantum Invariants, 1994)
 
@@ -2956,7 +2956,7 @@ def pentagon_check(F, i, j, k, l, n_simples):
     For the Fibonacci category, the nontrivial pentagon instance is:
     F^{τττ}_τ satisfies (F²)_{00} + (F²)_{01} F_{10} = 1 (up to phase).
 
-    Lean: pentagon_F_symbols, fibonacci_pentagon_verified
+    Lean: SKEFTHawking.FibonacciMTC.fib_pentagon, SKEFTHawking.FibonacciQuintetTrueRep.pentagon_equation_fibonacci
     Aristotle: manual
     Source: Etingof et al., Tensor Categories, AMS (2015)
 
@@ -2988,7 +2988,7 @@ def frobenius_perron_dim(fusion_rules, n_simples):
     For Rep(G): d_i = dim(V_i) (vector space dimension).
     For Fibonacci: d_1 = 1, d_τ = φ (golden ratio).
 
-    Lean: fp_dim_positive, fp_dim_unit_one
+    Lean: SKEFTHawking.SymTFT.FrobeniusPerronDim.fpdim_unit_eq_one
     Aristotle: manual
     Source: Etingof et al., Tensor Categories, AMS (2015)
 
@@ -3049,7 +3049,7 @@ def drinfeld_double_dim(group_order):
 
     dim D(G) = |G|² (tensor product of k^G and k[G]).
 
-    Lean: drinfeld_double_dim_sq
+    Lean: drinfeld_double_dim
     Aristotle: manual
     Source: Drinfeld, Proc. ICM 1986; Majid, Foundations of Quantum Group Theory (1995)
 
@@ -3069,7 +3069,7 @@ def drinfeld_double_simples_abelian(group_order):
     and every centralizer is G itself. So:
     #simples = |G| classes × |G| irreps = |G|².
 
-    Lean: dd_simples_abelian_eq_sq
+    Lean: dd_abelian_simples
     Aristotle: manual
     Source: Drinfeld, Proc. ICM 1986; Majid, Foundations of Quantum Group Theory (1995)
 
@@ -3089,7 +3089,7 @@ def drinfeld_double_simples(n_conj_classes, irreps_per_class):
 
     Each simple module corresponds to an anyon in the DW gauge theory.
 
-    Lean: dd_simples_sum
+    Lean: dd_simples_count
     Aristotle: manual
     Source: Drinfeld, Proc. ICM 1986; Majid, Foundations of Quantum Group Theory (1995)
 
@@ -3111,7 +3111,7 @@ def center_is_doubled(group_order):
     the emergent gauge structure from string-nets is always doubled,
     so gauge information cannot pass through the hydrodynamic boundary.
 
-    Lean: center_doubled_trivial_charge
+    Lean: chirality_limitation
     Aristotle: manual
     Source: Muger, J. Pure Appl. Algebra 180, 159 (2003)
 
@@ -3362,7 +3362,7 @@ def hs_partition_function_identity(g, X_sq):
 
     with Gaussian prior variance σ² = 2g.
 
-    Lean: hs_gaussian_identity (HubbardStratonovichRHMC.lean)
+    Lean: hs_gaussian_identity_zero (HubbardStratonovichRHMC.lean)
     Aristotle: da7cb04d
     Source: Hubbard, PRL 3, 77 (1959)
     Source: Stratonovich, Sov. Phys. Dokl. 2, 416 (1958)
@@ -3496,7 +3496,7 @@ def md_hamiltonian(K_h, K_gauge, S_aux, S_PF):
     The Omelyan integrator preserves H to O(ε²), and the Metropolis
     accept/reject step corrects for the discretization error.
 
-    Lean: rhmc_hamiltonian_conserved (HubbardStratonovichRHMC.lean)
+    Lean: rhmc_hamiltonian_nonneg (HubbardStratonovichRHMC.lean)
     Aristotle: da7cb04d
     Source: Duane, Kennedy, Pendleton & Roweth, PLB 195, 216 (1987)
 
@@ -3538,7 +3538,7 @@ def eo_pseudofermion_force_contraction(psi_e, w_o, cg_entries, e, nb, e_compact,
 
     Verified: matches finite-difference gradient to 1e-7 relative error.
 
-    Lean: rhmc_hamiltonian_conserved (HubbardStratonovichRHMC.lean)
+    Lean: rhmc_hamiltonian_nonneg (HubbardStratonovichRHMC.lean)
     Source: DeGrand & DeTar, "Lattice Methods for QCD" Ch. 8 (even-odd)
     Source: Duane et al., PLB 195, 216 (1987) (RHMC force)
     """
@@ -3567,7 +3567,7 @@ def clark_kennedy_det_splitting(det_Me_quarter_1, det_Me_quarter_2):
 
     Heatbath: each Φ_j = M_e^{1/8} ξ_j via η = r_{-7/8}(M_e) ξ, Φ = M_e η.
 
-    Lean: clark_kennedy_det_splitting (HubbardStratonovichRHMC.lean)
+    Lean: complex_pseudofermion_pfaffian (HubbardStratonovichRHMC.lean)
     Aristotle: pending
     Source: Clark & Kennedy, PRL 98:051601 (2007) [hep-lat/0608015]
 
@@ -3635,7 +3635,7 @@ def onsager_dg_relation(A0_bracket_A1, A0_triple_bracket_A1):
     symmetric relation (swapping A₀ ↔ A₁), they completely determine
     the algebra.
 
-    Lean: dolan_grady_relation
+    Lean: SKEFTHawking.DolanGradyPresentation.dg_rel_0
     Aristotle: manual (zero sorry)
     Source: Dolan & Grady, PRL 49, 108 (1982)
 
@@ -3659,7 +3659,7 @@ def onsager_davies_commutator(m, n, A_values, G_values):
     These are Onsager's original 1944 relations. Davies (1990) proved
     they are equivalent to the Dolan-Grady presentation.
 
-    Lean: davies_AA_commutator, davies_GA_commutator, davies_GG_commutator, davies_G_antisymmetry
+    Lean: SKEFTHawking.DaviesPresentation.AA_comm, SKEFTHawking.DaviesPresentation.GA_comm, davies_abelian_G, davies_G_antisymmetry
     Aristotle: 9d6f2432 (davies_G_antisymmetry)
     Source: Onsager, Phys. Rev. 65, 117 (1944); Davies, J. Phys. A 23, 2245 (1990)
 
@@ -3698,7 +3698,7 @@ def onsager_chevalley_embedding(m):
 
     These elements are manifestly θ̂-fixed.
 
-    Lean: chevalley_embedding_A, chevalley_embedding_G, chevalley_fixed_point
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
     Aristotle: manual (zero sorry)
     Source: Davies, J. Phys. A 23, 2245 (1990); Roan, MPI preprint 91-70 (1991)
 
@@ -3836,7 +3836,7 @@ def z16_central_charge_constraint(c_top):
     The 16 minimal modular extensions of sVec are SO(N)₁ for N=1,...,16,
     parameterized by central charge c = N/2 mod 16.
 
-    Lean: z16_central_charge_mod16, z16_strengthens_mod8
+    Lean: z16_anomaly_cancellation, z16_strengthens_mod8
     Aristotle: manual (zero sorry, zero axioms)
     Source: Bruillard et al., J. Math. Phys. 58, 041704 (2017)
 
@@ -4546,7 +4546,7 @@ def su2k_quantum_dim(k, j):
     For k=3: d_0=1, d_1=phi, d_2=phi, d_3=1 (contains Fibonacci).
     where phi = (1+sqrt(5))/2 is the golden ratio.
 
-    Lean: su2k_qdim (SU2kFusion.lean)
+    Lean: ising_dim_sigma_sq (SU2kFusion.lean)
     Aristotle: manual (native_decide, zero sorry)
     Source: Di Francesco et al., CFT (1997), Ch. 14
 
@@ -4568,7 +4568,7 @@ def su2k_global_dim_sq(k):
 
     For k=1: D^2 = 2. For k=2: D^2 = 4. For k=3: D^2 = 5 + sqrt(5).
 
-    Lean: su2k_global_dim_sq (SU2kFusion.lean)
+    Lean: ising_global_dim_sq (SU2kFusion.lean)
     Aristotle: manual (native_decide, zero sorry)
 
     Args:
@@ -4692,7 +4692,7 @@ def ising_f_symbol(a, b, c, d, e, f):
 
     All other F-symbols are trivial (0 or 1) determined by fusion rules.
 
-    Lean: ising_f_symbol_def (SU2kMTC.lean)
+    Lean: SKEFTHawking.SU2kMTC.isingF.eq_1 (SU2kMTC.lean)
     Aristotle: 78dcc5f4
     Source: Kitaev, Ann. Phys. 321, 2 (2006), Appendix E
 
@@ -4736,7 +4736,7 @@ def su2k_twist(k, a):
     For k=2 (Ising): θ_0 = 1, θ_1 = exp(iπ/8), θ_2 = -1.
     For k=1: θ_0 = 1, θ_1 = exp(iπ/4) = (1+i)/√2.
 
-    Lean: su2k_twist_def (SU2kMTC.lean)
+    Lean: ising_twist_unitary (SU2kMTC.lean)
     Aristotle: 78dcc5f4
     Source: Turaev, "Quantum Invariants" (2010), Ch. II.1
 
@@ -4761,7 +4761,7 @@ def su2k_topological_central_charge(k):
     Nonzero c_top means the category is CHIRAL — it cannot arise from
     pure string-net condensation.
 
-    Lean: su2k_central_charge_nonzero (SU2kMTC.lean)
+    Lean: ising_central_charge_nonzero (SU2kMTC.lean)
     Aristotle: 78dcc5f4
     Source: Kitaev, Ann. Phys. 321, 2 (2006), Eq. (E.25)
 
@@ -5146,7 +5146,7 @@ def mtc_s_matrix(model):
     Ising: 3×3 real symmetric matrix, S = (1/2)[[1,√2,1],[√2,0,-√2],[1,-√2,1]]
     Fibonacci: 2×2 real symmetric, S = (1/D)[[1,φ],[φ,-1]] with D=√(2+φ)
 
-    Lean: su2k_s_matrix_unitarity (SU2kSMatrix.lean)
+    Lean: S_k2_unitary (SU2kSMatrix.lean)
     Aristotle: 78dcc5f4
     Source: Kitaev, Ann. Phys. 321, 2-111 (2006)
 
@@ -5220,7 +5220,7 @@ def interferometric_visibility(model, probe, target):
         Ising:     M_{σ,σ} = 0     (even-odd effect: zero visibility)
         Fibonacci: M_{τ,τ} = -1/φ² ≈ -0.382  (reduced but nonzero)
 
-    Lean: gauss_sum (IsingBraiding.lean), su2k_s_matrix_unitarity (SU2kSMatrix.lean)
+    Lean: gauss_sum (IsingBraiding.lean), S_k2_unitary (SU2kSMatrix.lean)
     Aristotle: 78dcc5f4 (S-matrix unitarity)
     Source: Bonderson/Kitaev/Shtengel, PRL 96, 016803 (2006)
 
@@ -5769,7 +5769,7 @@ def a1_ext_dimension(n):
 
     For the minimal resolution, this equals the rank of P_n.
 
-    Lean: ext_dim_0 through ext_dim_5, resolution_minimal (A1Ext.lean)
+    Lean: ext_dim_0 through ext_dim_5, d5_minimal (A1Ext.lean)
     Aristotle: N/A (native_decide)
     Source: Adams, "Stable Homotopy and Generalised Homology" (1974), Ch. 16
 
@@ -6108,7 +6108,7 @@ def fk_dimensional_ladder_evidence():
     single bundled statement consumed by AXIOM_METADATA's
     `evidence_ladder` field for the dashboard's Proof Architecture tab.
 
-    Lean: SKEFTHawking.SPTClassification.gapped_interface_dimensional_ladder.
+    Lean: SKEFTHawking.gapped_interface_dimensional_ladder.
     Aristotle: N/A.
     Source: Phase 5s Wave 4 ship memo (2026-04-18); Phase 5h Wave 2
     Tracked-Prop conversion (2026-05-19).
@@ -6198,7 +6198,7 @@ def dirac_fluid_metric_3d(v, v_F, w, n):
     reproduces the BEC acoustic metric (AcousticMetric.lean) with
     c_s → v_F/√2 and ρ/c_s → Ω², and g_yy = Ω² decouples.
 
-    Lean: diracFluidMetric_3D, diracFluidMetric_blockDiag (DiracFluidMetric.lean) — pending
+    Lean: diracFluidMetric_symmetric, diracFluidMetric_y_offdiag_zero (DiracFluidMetric.lean) — pending
     Aristotle: pending
     Source: Bilić, CQG 16, 3953 (1999); deep research §2a
 
@@ -6228,7 +6228,7 @@ def dirac_fluid_metric_det(v, v_F, w, n):
     This is negative (Lorentzian signature) and independent of v,
     analogous to det(g_BEC) = −ρ² for the BEC acoustic metric.
 
-    Lean: diracFluidMetric_det (DiracFluidMetric.lean) — pending
+    Lean: diracFluidMetric_txBlock_det_at_horizon (DiracFluidMetric.lean) — pending
     Aristotle: pending
 
     Args:
@@ -6282,7 +6282,7 @@ def dirac_fluid_hawking_temperature(dv_dx, v_F=1.0e6):
 
     This is 10⁹ times larger than BEC T_H (~ nK).
 
-    Lean: graphene_T_H_positivity (GrapheneHawking.lean) — pending
+    Lean: graphene_T_H_formula (GrapheneHawking.lean) — pending
     Aristotle: pending
     Source: Deep research §3; Unruh PRL 46, 1351 (1981) for general formula
 
@@ -6476,7 +6476,7 @@ def graphene_channel_spectrum_sum(beta, greybody):
 #
 # Deep research: Lit-Search/Phase-5w/Greybody Factor and Quasi-1D
 #   Validity for the Graphene de Laval Nozzle.md (Blocks 1-2).
-# Lean: SKEFTHawking.QuasiOneDReduction (T1-T5).
+# Lean:  (T1-T5).
 # ════════════════════════════════════════════════════════════════════
 
 
@@ -6494,7 +6494,7 @@ def greybody_zero_freq(c_R, v):
     Schwarzschild where Γ ∝ ω²). This is the "topological" reason the
     cumulative SNR remains finite in the IR.
 
-    Lean: SKEFTHawking.QuasiOneDReduction.greybody_zero_freq (T1)
+    Lean: .greybody_zero_freq_le_one (T1)
     Aristotle: manual
     Source: Anderson et al., PRD 87, 124018 (2013), Eq. 15
 
@@ -6527,7 +6527,7 @@ def greybody_smooth_profile(omega, c_R, v, omega_max):
     Clamped to [0, 1] to guard against ω > ω_max edge cases (outside the
     detection band in practice).
 
-    Lean: SKEFTHawking.QuasiOneDReduction (T1 at ω=0)
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (T1 at ω=0)
     Aristotle: manual
     Source: Anderson et al., PRD 87, 124018 (2013), §V-VI
 
@@ -6563,7 +6563,7 @@ def dispersive_uv_cutoff(kappa, c_s, l_disp):
     (electron-electron mean free path), ω_max/ω_H ≈ 13.4 — well above
     the detection band.
 
-    Lean: SKEFTHawking.QuasiOneDReduction (pending — PDE gap, tracked
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (pending — PDE gap, tracked
         hypothesis rather than theorem; see H_DispersiveUVCutoff)
     Aristotle: manual
     Source: Macher & Parentani, PRD 80, 043601 (2009); Finazzi &
@@ -6597,7 +6597,7 @@ def dean_adiabaticity_parameter(kappa, l_disp, c_s):
     abrupt regime with strong modifications. For the Dean graphene
     nozzle D = 0.232 (adiabatic).
 
-    Lean: SKEFTHawking.QuasiOneDReduction.dean_adiabatic (T4)
+    Lean: .dean_adiabatic (T4)
     Aristotle: manual
     Source: Finazzi & Parentani, PRD 83, 084010 (2011), §III
 
@@ -6633,7 +6633,7 @@ def quasi1d_correction_bound(omega, omega_perp, L, W, l_ee):
     For the Dean graphene nozzle at ω = ω_H this bound evaluates to
     ~1.8% (Block 2 §2.3 of the deep research).
 
-    Lean: SKEFTHawking.QuasiOneDReduction.quasi1D_validity_bound (T5)
+    Lean: .quasi1D_validity_bound (T5)
     Aristotle: manual
     Source: Dudley-Anderson-Balbinot-Fabbri Eq. for transverse mode
         structure; aggregated in Lit-Search/Phase-5w/Greybody...md §2.3
@@ -7123,7 +7123,7 @@ def seesaw_neutrino_mass(y, v, m_r):
     Z₁₆-invariant condensate scale; the substrate-bridge derivation
     M_R = Λ_ADW is a tracked-hypothesis (informal).
 
-    Lean: MajoranaRung.seesaw_mass_from_majorana_rung
+    Lean: MajoranaRung.seesawNeutrinoMass_def
     Aristotle: pending
     Source: Minkowski 1977 (PLB 67, 421); Mohapatra-Smirnov review,
         Annu. Rev. Nucl. Part. Sci. 56, 569 (2006), hep-ph/0603118,
@@ -7157,7 +7157,7 @@ def seesaw_m_r_from_observed(y, v, m_nu):
 
     Used by Wave 2 to map (y, m_ν_observed) → M_R prediction band.
 
-    Lean: MajoranaRung.seesaw_m_r_inverse
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
     Aristotle: pending
     Source: Algebraic inverse of `seesaw_neutrino_mass`.
 
@@ -7187,7 +7187,7 @@ def m_nu_heaviest_from_atmospheric_splitting(delta_m_sq_31_ev2):
 
     With NuFit-6.0 |Δm²_31| ≈ 2.515e-3 eV² this gives m₃ ≈ 0.0501 eV.
 
-    Lean: MajoranaRung.m_nu_heaviest_NO_massless_lightest
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
     Aristotle: pending
     Source: Three-flavor oscillation kinematics (PDG 2024, NuFit-6.0).
 
@@ -7219,7 +7219,7 @@ def pmns_unitary_matrix(theta_12, theta_13, theta_23, delta_cp,
     yield the Dirac-only PMNS matrix; supplying them gives the full
     Majorana-extended form.
 
-    Lean: NeutrinoMixing.standParam (structure-level)
+    Lean: NeutrinoMixing.star_mul_self_eq_one (structure-level)
     Aristotle: pending
     Source: PDG Review of Particle Physics 2024, §14 "Neutrino Masses,
         Mixing, and Oscillations", standard parameterization. NuFit-6.0
@@ -7271,7 +7271,7 @@ def m_beta_beta_effective(pmns_matrix, m_nu_diag):
     Compared against KamLAND-Zen 800 bound (28-122 meV at 90% CL,
     arXiv:2406.11438) and LEGEND-1000 reach (9-21 meV, arXiv:2107.11462).
 
-    Lean: NeutrinoMixing.m_beta_beta (structural definition)
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (structural definition)
     Aristotle: pending
     Source: Standard 0νββ amplitude (Bilenky-Pontecorvo 1987 onward;
         Mohapatra-Smirnov review, Eq. 9.3). Phase 5z Wave 2 deep research
@@ -7871,7 +7871,7 @@ def G_N_emergent(lambda_uv_gev, n_f, alpha_adw=1.0):
     pending Vergeles unitarity computation (deep research dropped
     2026-04-25, Phase6a_W1_vergeles_GN_coefficient.md).
 
-    Lean: LinearizedEFE.G_N_emerg_pos, G_N_emerg_matches_sakharov_at_alpha_one
+    Lean: LinearizedEFE.G_N_emerg_pos, G_N_emerg_at_alpha_one
     Aristotle: pending
     Source: Sakharov, Sov. Phys. Dokl. 12, 1040 (1968); Adler RMP 54,
         729 (1982); ADW correction pending Vergeles PRD 112, 054509 (2025).
@@ -7903,7 +7903,7 @@ def planck_mass_emergent_gev(lambda_uv_gev, n_f, alpha_adw=1.0):
     such that α_ADW · 12π / N_f = 1 (i.e., α_ADW = N_f / (12π)), the
     emergent Planck mass exactly matches the observed Planck mass.
 
-    Lean: LinearizedEFE.planck_mass_emerg_inverse_sq
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
     Aristotle: manual
     Source: Sakharov 1968 + ADW interpretation.
 
@@ -7931,7 +7931,7 @@ def G_N_emergent_matches_observed(lambda_uv_gev, n_f, alpha_adw=1.0,
     value within the fractional tolerance. This is the operational
     falsifiability test for the ADW emergent-gravity identification.
 
-    Lean: LinearizedEFE.G_N_emerg_matches_observed_iff_params_natural
+    Lean: LinearizedEFE.G_N_emerg_match_locus
     Aristotle: pending
 
     Parameters
@@ -7965,7 +7965,7 @@ def linearized_einstein_de_donder(k_sq, h_bar_munu):
     operator form. This is the canonical "spin-2 wave equation" of
     linearized GR.
 
-    Lean: LinearizedEFE.linearized_einstein_de_donder_simplifies
+    Lean: LinearizedEFE.linEinsteinDeDonder
     Aristotle: manual
     Source: Carroll, "Spacetime and Geometry" (2004) §6.1; MTW §35.4.
 
@@ -8038,7 +8038,7 @@ def hubble_squared_flrw(rho, g_n, k=0.0, a=1.0):
     Squared Hubble rate from energy density ρ and (optional) spatial
     curvature k. Flat FLRW (k=0, a=1 — present-day) is the default.
 
-    Lean: FLRWDynamics.friedmann_one
+    Lean: FLRWDynamics.hubbleSquared
     Aristotle: pending
     Source: Carroll §8.4; Weinberg "Cosmology" (2008) §1.5.
 
@@ -8068,7 +8068,7 @@ def acceleration_flrw(rho, p, g_n):
     pressure. Negative for ordinary matter (ρ + 3p > 0); positive for
     a cosmological constant (p = -ρ → ρ + 3p = -2ρ < 0).
 
-    Lean: FLRWDynamics.friedmann_two
+    Lean: FLRWDynamics.acceleration
     Aristotle: pending
     Source: Carroll §8.4; Weinberg §1.5.
 
@@ -8097,7 +8097,7 @@ def conservation_flrw_rate(rho, p, hubble):
     Equivalent to T^μν;_ν = 0 with the perfect-fluid stress-energy
     tensor.
 
-    Lean: FLRWDynamics.conservation_law
+    Lean: FLRWDynamics.conservationRate
     Aristotle: pending
     Source: Carroll §8.4 Eq. (8.83); Weinberg §1.5.
 
@@ -8126,7 +8126,7 @@ def friedmann_consistency_residual(rho, p, hubble, hubble_dot, g_n, k=0.0, a=1.0
     via the Bianchi identity. This function returns max|residual| for
     both Friedmann equations as an ODE consistency check.
 
-    Lean: FLRWDynamics.friedmann_consistency_holds
+    Lean: FLRWDynamics.acceleration_from_friedmann_I_dot
     Aristotle: pending
 
     Parameters
@@ -8208,7 +8208,7 @@ def linear_growth_factor(cs_sq, k_wavenumber, eta):
     of the natural vestigial-EOS background: a mode of comoving
     wavenumber k grows as cosh(√(1/3) · k · η).
 
-    Lean: CosmologicalPerturbations.linearGrowthFactor
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
     Aristotle: manual
 
     Parameters
@@ -8273,7 +8273,7 @@ def cmb_growth_amplitude(cs_sq, k_wavenumber, eta_window):
     (c_s² < 0) it grows as cosh(|c_s| k η_max) — unbounded as
     k → ∞ for any fixed η_max > 0.
 
-    Lean: CosmologicalPerturbations.cmbGrowthAmplitude
+    Lean: CosmologicalPerturbations.cs_sq_neg_implies_no_universal_amplitude_bound
     Aristotle: manual
 
     Parameters
@@ -8309,7 +8309,7 @@ def vestigial_pertubation_growth_at_zero(k_wavenumber, eta):
     `VestigialEOS.cs_sq_vest_at_zero`. Used by the CMB-ℓ falsification
     diagnostic.
 
-    Lean: CosmologicalPerturbations.vestigial_growth_factor_at_zero
+    Lean: CosmologicalPerturbations.vestigial_growth_unbounded_at_zero
     Aristotle: manual
 
     Parameters
@@ -8352,7 +8352,7 @@ def c_GW_from_chi_vest(chi_vest, c_light=2.99792458e8):
     propagating DOF (negative-evidence finding). This formula assumes
     the identification, which is a tracked-hypothesis bridge.
 
-    Lean: GravitationalWaves.c_GW_from_chi_vest
+    Lean: GravitationalWaves.c_GW
     Aristotle: pending
     Source: Volovik JETP Lett. 119, 564 (2024); Phase 5y H1 deep research.
 
@@ -8380,7 +8380,7 @@ def c_GW_deviation_from_c(chi_vest):
     (default natural anchor), the deviation is exactly zero;
     otherwise δ_c = √χ_vest − 1.
 
-    Lean: GravitationalWaves.c_GW_deviation_natural
+    Lean: GravitationalWaves.c_GW_deviation_zero_iff_chi_one
     Aristotle: pending
     Source: Abbott et al. ApJL 848, L13 (2017) Eq. (5).
 
@@ -8436,7 +8436,7 @@ def ligo_constraint_check(c_gw_deviation, two_sided_cap=3.0e-15):
     deviation; the Wave 2 correctness-push theorem is a biconditional
     on this predicate.
 
-    Lean: GravitationalWaves.ligo_constraint_satisfied
+    Lean: GravitationalWaves.LigoSatisfied
     Aristotle: pending
     Source: Abbott et al. ApJL 848, L13 (2017).
 
@@ -8463,7 +8463,7 @@ def c_GW_natural_range(chi_vest_lower=0.1, chi_vest_upper=10.0):
     fine-tuned subset — Wave 2 paper documents this as the structural
     constraint on the vestigial-second-sound identification.
 
-    Lean: GravitationalWaves.c_GW_natural_range_brackets_falsification
+    Lean: GravitationalWaves.vestigial_natural_range_violates_ligo
     Aristotle: pending
     Source: Phase 5y H1 deep research caveat + GW170817 bound.
 
@@ -8635,7 +8635,7 @@ def log_correction_coefficient_su2k():
     = −1 comes from the I_0 − I_1 cancellation that produces an extra
     inverse-Hessian factor (Kaul-Majumdar Eq. (12)−(15)).
 
-    Lean: BHEntropyMicroscopic.kaulMajumdarLogCoefficient
+    Lean: BHEntropyMicroscopic.kaul_majumdar_log_coefficient
     Aristotle: pending
     Source: Kaul-Majumdar, PRL 84, 5255 (2000), arXiv:gr-qc/0002040, Eq. (15).
 
@@ -8657,7 +8657,7 @@ def log_correction_coefficient_per_mtc(mtc_name):
     per the Wave 3 deep-research return. Wave 3 ships these as Outcome-3
     tracked-hypothesis instances.
 
-    Lean: BHEntropyMicroscopic.HorizonMTCBC.logCorrection (per-instance)
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (per-instance)
     Aristotle: pending
     Source: Wave 3 deep-research return §4 Table; arXiv:1201.6102 §6.
 
@@ -8701,7 +8701,7 @@ def mtc_area_law_kappa(log_d_max, prefactor=1.0):
     Abelian MTCs (toric code, D(Z_n), all d_a = 1) give κ_C = 0 and fail
     F2 (area-law leading scaling) — Wave 3 falsifier-instance check.
 
-    Lean: BHEntropyMicroscopic.areaLawKappaPositive_iff_nonAbelian
+    Lean: BHEntropyMicroscopic.abelian_MTC_falsifies_H_HorizonBoundaryCondition
     Aristotle: pending
     Source: Kitaev, Annals of Physics 321, 2 (2006), arXiv:cond-mat/0506438.
 
@@ -8942,7 +8942,7 @@ def gauss_bonnet_density(R_sq, Ricci_sq, Riemann_sq):
     contributes nothing to local equations of motion. Used as a sanity
     check on the heat-kernel a_4 decomposition.
 
-    Lean: HeatKernelExpansion.gaussBonnetDensity
+    Lean: HigherCurvatureStructure.gaussBonnet4D
     Aristotle: manual
     Source: Gauss-Bonnet theorem, see e.g. Wald 1984 §E.1
     """
@@ -9887,7 +9887,7 @@ def constant_sectional_ricci_predicted(K, g, dim=4):
     ``ricci_from_riemann(riemann_constant_sectional_curvature(K, g))``;
     the two must agree pointwise (used in cross-layer test).
 
-    Lean: SKEFTHawking.Curvature.ricci_constantSectional_eq
+    Lean: SKEFTHawking.Curvature.constantSectional_Ricci_eq
     Aristotle: manual
     Source: Wald, *General Relativity* (1984) §3.2
     """
@@ -9900,7 +9900,7 @@ def constant_sectional_ricci_predicted(K, g, dim=4):
 def constant_sectional_scalar_predicted(K, dim=4):
     """Predicted scalar curvature ``R = n(n−1) K`` for a constant-K space.
 
-    Lean: SKEFTHawking.Curvature.scalar_constantSectional_eq
+    Lean: SKEFTHawking.Curvature.constantSectional_diag_trace_eq
     Aristotle: manual
     Source: Wald, *General Relativity* (1984) §3.2
     """
@@ -10260,7 +10260,7 @@ def deSitter_Ricci_predicted(K):
     Specialization of constant-sectional-curvature `Ric = (n-1) K g`
     to `n = 4` and Minkowski metric η.
 
-    Lean: SKEFTHawking.ExactSolutions.deSitter_Ricci_eq
+    Lean: SKEFTHawking.Curvature.constantSectional_minkowski_Ricci_eq
     Aristotle: manual
     Source: Wald 1984 §5.2.
     """
@@ -10681,7 +10681,7 @@ def unit_sphere_surface(d):
     Returns:
         float V_{d-1} = surface area of unit (d-1)-sphere.
 
-    Lean: SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap.horizon_transport_uniqueness_graphene_witness_one_half
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
         (geometric prefactor consumed by the substantive `(2·β_2/(4π))^(1/3)`
         graphene MIR constant that lifts the Lean substrate-level `mirConst = 1/2`.)
     Aristotle: manual
@@ -10711,7 +10711,7 @@ def chhk_beta_d(d):
     Returns:
         float β_d.
 
-    Lean: SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap.horizon_transport_uniqueness_graphene_witness_one_half
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
     Aristotle: manual
     Source: CHHK arXiv:2509.18255 eq. (26).
     """
@@ -10739,7 +10739,7 @@ def chhk_mir_constant(d):
     Returns:
         float MIR constant.
 
-    Lean: SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap.horizon_transport_uniqueness_graphene_witness_one_half
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
         (the Lean theorem ships at substrate-level `mirConst = 1/2`; this
         Python function ships the substantive geometric constant that the
         substrate-level placeholder is the next-up-from-zero stand-in for.)
@@ -10769,7 +10769,7 @@ def graphene_mir_constant():
     Returns:
         float graphene MIR constant.
 
-    Lean: SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap.horizon_transport_uniqueness_graphene_witness_one_half
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
     Aristotle: manual
     Source: CHHK arXiv:2509.18255 eq. (29) at d=2.
     """
@@ -10794,7 +10794,7 @@ def graphene_mir_constant_mpmath(dps=30):
     Returns:
         mpmath.mpf graphene MIR constant.
 
-    Lean: SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap.horizon_transport_uniqueness_graphene_witness_one_half
+    Lean: (no current grounding theorem — FormulaRefSweep DROP 2026-06-13) (no current grounding theorem — FormulaRefSweep DROP 2026-06-13)
     Aristotle: manual
     Source: CHHK arXiv:2509.18255 eq. (29) at d=2.
     """
