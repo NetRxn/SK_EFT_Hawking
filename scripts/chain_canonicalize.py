@@ -39,7 +39,28 @@ VALID_KINDS = {"formula", "theorem", "axiom", "parameter", "citation",
 
 RESOLVED = "resolved"
 SUGGESTED = "suggested"
-UNRESOLVABLE = "unresolvable"
+INVALID = "invalid"            # target is not an identifier at all (auto-rejectable)
+UNRESOLVABLE = "unresolvable"  # plausible identifier that doesn't resolve (needs a lookup)
+
+# Operators / brackets / path separators that never appear in a valid node id.
+_INVALID_CHARS = set("=/[]()+^<>%*")
+
+
+def _looks_invalid(target: str) -> bool:
+    """A target that is an expression, file path, ratio, or multi-word prose —
+    not an identifier/bibkey — is a mis-tagged link, auto-rejectable without a
+    human. (Strips one trailing ``(...)`` value annotation first, e.g.
+    ``Dean_bilayer_nozzle.T_H_K (2.4 K)`` -> the param path.)"""
+    base = re.sub(r"\s*\([^)]*\)\s*$", "", (target or "")).strip()
+    if not base:
+        return True
+    if any(c in _INVALID_CHARS for c in base):
+        return True
+    if " " in base:                       # multi-word prose
+        return True
+    if re.fullmatch(r"[\d/.\s]+", base):  # pure number / ratio
+        return True
+    return False
 
 
 @dataclass
@@ -92,6 +113,9 @@ def canonicalize_link(kind: str, target: str, idx: Index) -> Resolution:
         return R(UNRESOLVABLE, reason=f"invalid link kind {kind!r}", category="invalid-kind")
     if not t:
         return R(UNRESOLVABLE, reason="empty target", category="empty")
+    if _looks_invalid(t):
+        return R(INVALID, category="invalid-target",
+                 reason="not an identifier (expression / path / ratio / prose) — re-tag the kind or drop the link")
 
     if kind == "formula":
         if f"formula:{t}" in idx.node_ids:
@@ -252,7 +276,7 @@ def cmd_report(args: argparse.Namespace) -> int:
     print(f"\nchain-link canonicalization report — {total} links"
           + (f" (paper={args.paper})" if args.paper else " (all 46 files)"))
     print("=" * 64)
-    for st in (RESOLVED, SUGGESTED, UNRESOLVABLE):
+    for st in (RESOLVED, SUGGESTED, INVALID, UNRESOLVABLE):
         print(f"  {st:13} {by_status[st]:5}  ({100*by_status[st]//max(total,1)}%)")
     print("\nby category:")
     for (st, cat), n in by_category.most_common():

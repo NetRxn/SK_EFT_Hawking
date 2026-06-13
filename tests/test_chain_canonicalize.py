@@ -10,7 +10,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from chain_canonicalize import (  # noqa: E402
-    canonicalize_link, RESOLVED, SUGGESTED, UNRESOLVABLE,
+    canonicalize_link, RESOLVED, SUGGESTED, INVALID, UNRESOLVABLE,
 )
 
 
@@ -110,3 +110,19 @@ def test_invalid_kind():
 
 def test_empty_target():
     assert canonicalize_link("formula", "", IDX).status == UNRESOLVABLE
+
+
+def test_invalid_expression_or_ratio():
+    assert canonicalize_link("formula", "109/119", IDX).status == INVALID
+    assert canonicalize_link("formula", "delta_diss = (1 + xi^2)^-1", IDX).status == INVALID
+    assert canonicalize_link("parameter", "n_theorems = 5229", IDX).status == INVALID
+
+
+def test_invalid_path_or_dict_access():
+    assert canonicalize_link("formula", "docs/counts.json:lean.theorems_total", IDX).status == INVALID
+    assert canonicalize_link("parameter", "EXPERIMENTS['Steinhauer']", IDX).status == INVALID
+
+
+def test_value_annotation_stripped_is_not_invalid():
+    # "X (2.4 K)" base is a valid param path -> not auto-rejected as invalid.
+    assert canonicalize_link("parameter", "Dean_bilayer_nozzle.T_H_K (2.4 K)", IDX).status != INVALID
