@@ -51,7 +51,7 @@ Lean declarations are extracted via a meta-programming script (`lean/SKEFTHawkin
 
 > **Authoritative source.** The lists below are descriptive. For the authoritative node and edge taxonomy always defer to `scripts/build_graph.py` (`SHAPE_MAP` for node types; the per-edge-extractor functions for edge types). If you spot drift between this doc and the script, trust the script.
 
-### Node Types (25 — Phase 1 + 1.5 + 5v Wave 2a + 5v Wave 10b)
+### Node Types (26 — Phase 1 + 1.5 + 5v Wave 2a + 5v Wave 10b + Phase 6 module substrate)
 
 **Phase 1 / 1.5 base types (14):**
 
@@ -94,6 +94,14 @@ Note: Lean IDs switched from `{short_name}` to `{full_name}` in Phase 5v Wave 0 
 | **Sentence** | Circle | Wave 10b | Per-sentence prose unit with chain-of-backing. Content-hash ID `sentence:<paper>:<section_slug>:<sha8>` survives section reorder + benign edits. Emitted from `papers/<paper>/claims_review.json[sentences]` (claims-reviewer-v2) overlaid with `prose_state.json` (human ratification state, CLI-owned). Tombstone state preserves audit history for deleted prose. |
 | **AuditEvent** | Triangle | Wave 10b | Append-only verification event log entry. Emitted from `papers/<paper>/audit_log.jsonl`. Actor field follows `user:<id>` or `agent:<name>:<ISO-timestamp>` discipline — enables chain-of-findings across multiple agent runs (claims-reviewer-v2 → adversarial-reviewer → subsequent rounds). Never updated in place; corrections are new events with `action: re_audit`. |
 | **ClaimCluster** | Square | Wave 10b (data from Wave 10f) | Cross-paper claim equivalence grouping. All equivalence clusters (2+ members) go through this n-ary node — **no pairwise SAME_CLAIM_AS edges**. Source: `papers/claim_clusters.json` (produced by Wave 10f claims-reviewer-cross-paper pass). Safe no-op if the file doesn't exist yet. |
+
+**Phase 6 — Lean module substrate (1):**
+
+| Node Type | Shape | Color | Source | ID Format |
+|-----------|-------|-------|--------|-----------|
+| **LeanModule** | Square | Slate (#64748b) | lean_deps.json (auto, one per module) | `module:{full_module_path}` |
+
+Auto-derived: **one LeanModule node per Lean module (file)**, so a claim backed by a *whole module* (`SKEFTHawking.WKBConnection`, `X (module)`, …) resolves to its module node instead of becoming a `missing_target` dangling edge — **no manual registration; new modules are picked up automatically on the next graph build** (`extract_module_nodes`). Container nodes, hidden under the KG "Scaffolding" toggle; declaration membership is the lazy DECLARES edge layer. Unreferenced module nodes are valid standalone substrate and are exempt from the orphan-integrity check.
 
 Every node has a uniform schema: `{id, type, label, name, verification, detail, meta}`. **Wave 10b also adds `meta.last_modified`** to every node — computed via `scripts/last_modified.py` dependency walk over PROPAGATION edge types (USED_BY, VERIFIED_BY, DEPENDS_ON_AXIOM, ASSUMES, IMPORTS, CITES, CITES_SOURCE, GROUNDED_IN, BACKED_BY, VERIFIES). Powers the Wave 10c cross-tab change-bus + sentence freshness check.
 
@@ -156,7 +164,7 @@ Shapes encode semantic roles — a visual dimension independent of color:
 
 | Edge | From | To | Purpose | Wired in |
 |------|------|----|---------|----------|
-| `BACKED_BY` | Sentence | any artifact (Formula / LeanTheorem / LeanAxiom / Parameter / PrimarySource / Hypothesis / AristotleRun / ProductionRun) | One edge per chain link proposed by claims-reviewer-v2. Carries `meta.link_kind` + `meta.link_state` (derived at build-time: `resolved` / `llm_verified_only` / `human_verified` / `stale` / `missing_target` — NOT human-ratified separately; sentence-level is the ratification axis, per-link is UX affordance). | Wave 10b |
+| `BACKED_BY` | Sentence | any artifact (Formula / LeanTheorem / LeanAxiom / Parameter / PrimarySource / Hypothesis / AristotleRun / ProductionRun / LeanModule) | One edge per chain link proposed by claims-reviewer-v2. Carries `meta.link_kind` + `meta.link_state` (derived at build-time: `resolved` / `llm_verified_only` / `human_verified` / `stale` / `missing_target` — NOT human-ratified separately; sentence-level is the ratification axis, per-link is UX affordance). | Wave 10b |
 | `LOGGED_BY` | AuditEvent | any node (target of the audit event) | Sentence node + all `LOGGED_BY` edges incoming = full audit trail for that sentence. Emitted from `audit_log.jsonl`. | Wave 10b |
 | `MEMBER_OF` | Sentence | ClaimCluster | Cross-paper claim-cluster membership; replaces pairwise `SAME_CLAIM_AS` for n-ary equivalence. Any cluster size 2+ uses this edge. Carries `meta.member_confidence`. | Wave 10b (data from Wave 10f) |
 

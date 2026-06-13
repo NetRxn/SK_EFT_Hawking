@@ -371,7 +371,7 @@
             <div class="kg-filter-divider" id="kg-scaffolding-divider" style="display:none"></div>
             <div class="kg-scaffolding-pills" id="kg-scaffolding-pills"></div>
             <div class="kg-filter-divider"></div>
-            <button class="kg-toggle-btn" id="kg-scaffolding-toggle" title="Show/hide Lean scaffolding types (Def, Structure, Inductive, Instance)">Scaffolding</button>
+            <button class="kg-toggle-btn" id="kg-scaffolding-toggle" title="Show/hide Lean scaffolding types (Def, Structure, Inductive, Instance, Module)">Scaffolding</button>
             <button class="kg-toggle-btn" id="kg-core-axioms-toggle" title="Show/hide core axioms (propext, Classical.choice, Quot.sound)">Core Axioms</button>
             <button class="kg-toggle-btn" id="kg-proof-deps-toggle" title="Show direct proof-reference edges (USES) — fetched on demand; may take a second to first render">Proof Deps</button>
         </div>
@@ -484,20 +484,20 @@
         Paper:'#2E86AB', PaperClaim:'#E8C547', Formula:'#F18F01', LeanTheorem:'#5C946E',
         AristotleRun:'#22c55e', Parameter:'#A23B72', PrimarySource:'#c8ccd0', Figure:'#9b6dff',
         LeanAxiom:'#d97706', LeanDef:'#60a5fa', LeanStructure:'#c084fc',
-        LeanInductive:'#fbbf24', LeanInstance:'#818cf8'
+        LeanInductive:'#fbbf24', LeanInstance:'#818cf8', LeanModule:'#64748b'
     };
     const TR = {
         Paper:18, PaperClaim:12, Formula:14, LeanTheorem:12,
         AristotleRun:10, Parameter:13, PrimarySource:11, Figure:11,
-        LeanAxiom:13, LeanDef:10, LeanStructure:12, LeanInductive:12, LeanInstance:10
+        LeanAxiom:13, LeanDef:10, LeanStructure:12, LeanInductive:12, LeanInstance:10, LeanModule:15
     };
     const COL = {
         PrimarySource:0, Parameter:1, Formula:2, LeanTheorem:3, LeanAxiom:3,
-        LeanDef:3, LeanStructure:3, LeanInductive:3, LeanInstance:3,
+        LeanDef:3, LeanStructure:3, LeanInductive:3, LeanInstance:3, LeanModule:3,
         AristotleRun:3.5, Figure:4.5, PaperClaim:4.5, Paper:5.5
     };
     // Scaffolding types (hidden by default)
-    const SCAFFOLDING_TYPES = new Set(['LeanDef', 'LeanStructure', 'LeanInductive', 'LeanInstance']);
+    const SCAFFOLDING_TYPES = new Set(['LeanDef', 'LeanStructure', 'LeanInductive', 'LeanInstance', 'LeanModule']);
     // Core axiom names
     const CORE_AXIOM_NAMES = new Set(['propext', 'Classical.choice', 'Quot.sound']);
 

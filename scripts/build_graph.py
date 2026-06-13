@@ -74,6 +74,10 @@ SHAPE_MAP: dict[str, str] = {
     'Sentence': 'circle',           # Per-sentence prose unit with chain-of-backing
     'AuditEvent': 'triangle',       # Append-only verification event log entry
     'ClaimCluster': 'square',       # Cross-paper claim equivalence grouping (n-ary; replaces SAME_CLAIM_AS)
+    # Phase 6 — Lean module substrate (auto-derived from lean_deps). A claim
+    # backed by a whole module resolves to one of these instead of becoming a
+    # missing_target dangling edge. Membership is the lazy DECLARES layer.
+    'LeanModule': 'square',         # Lean module (file) — container for declarations
 }
 
 LEAN_KIND_TO_TYPE: dict[str, str] = {
@@ -2048,7 +2052,14 @@ def extract_backed_by_edges(node_ids: set) -> list[dict]:
                     # also accepts already-qualified names like
                     # ``SKEFTHawking.Module.thm`` and yields ``lean:<full>``.
                     resolved = _resolve_lean_short(target, node_ids)
-                    candidates = [resolved] if resolved else [f'lean:{target}']
+                    if resolved:
+                        candidates = [resolved]
+                    else:
+                        # Fall back to a whole-module backing reference: a claim
+                        # citing module ``X`` resolves to its LeanModule node
+                        # instead of becoming a missing_target dangling edge.
+                        mod_id = _module_id_for_ref(target, node_ids)
+                        candidates = [mod_id] if mod_id else [f'lean:{target}']
                 elif kind == 'parameter':
                     candidates = [f'param:{target}']
                 elif kind == 'citation':
@@ -2246,12 +2257,74 @@ def extract_all_edges_without_gates(node_ids: set) -> list[dict]:
 # Aggregate node extraction
 # ═══════════════════════════════════════════════════════════════════════
 
+def _module_id_for_ref(target: str, node_ids: set) -> str | None:
+    """Map a 'whole module' backing reference to its LeanModule node id, if one
+    exists. Handles the claims-reviewer's surface forms: ``X (module)``,
+    ``X_module``, ``SKEFTHawking.X``, bare ``X``, and full nested paths ``A.B``.
+    Returns None if the normalized form is not a known module node."""
+    base = re.sub(r'\s*\([^)]*\)\s*$', '', target).strip()
+    base = re.sub(r'_module$', '', base)
+    if not base:
+        return None
+    cand = base if base.startswith('SKEFTHawking.') else f'SKEFTHawking.{base}'
+    mid = f'module:{cand}'
+    return mid if mid in node_ids else None
+
+
+def extract_module_nodes() -> list[dict]:
+    """One LeanModule node per Lean module (file), auto-derived from lean_deps.
+
+    This lets the graph 'pick up substrate across all modules' automatically:
+    a claim backed by a whole module resolves to its module node with no manual
+    registration, instead of becoming a missing_target dangling edge. These are
+    container nodes — declaration membership is the lazy DECLARES edge layer
+    (loaded on demand like USES), so the default graph stays light.
+    """
+    from scripts.extract_lean_deps import load_lean_deps
+
+    counts: dict[str, int] = {}
+    kinds: dict[str, dict[str, int]] = {}
+    for decl in load_lean_deps():
+        mod = decl.get('module', '')
+        if not mod:
+            continue
+        kind = decl.get('kind', '')
+        if LEAN_KIND_TO_TYPE.get(kind) is None:
+            continue
+        short = (decl.get('name', '') or '').rsplit('.', 1)[-1]
+        if _AUTOGEN_SHORT_RE.match(short):
+            continue
+        counts[mod] = counts.get(mod, 0) + 1
+        kinds.setdefault(mod, {})
+        kinds[mod][kind] = kinds[mod].get(kind, 0) + 1
+
+    nodes = []
+    for mod, count in sorted(counts.items()):
+        label = mod[len('SKEFTHawking.'):] if mod.startswith('SKEFTHawking.') else mod
+        nodes.append({
+            'id': f'module:{mod}',
+            'type': 'LeanModule',
+            'label': label,
+            'name': label,
+            'verification': 'verified',
+            'detail': f'{count} declarations',
+            'meta': {
+                'module_path': mod,
+                'declaration_count': count,
+                'kinds': kinds.get(mod, {}),
+                'shape': SHAPE_MAP['LeanModule'],
+            },
+        })
+    return nodes
+
+
 def extract_all_nodes() -> list[dict]:
     """Extract all nodes from all extractors."""
     nodes = []
     nodes.extend(extract_parameter_nodes())
     nodes.extend(extract_formula_nodes())
     nodes.extend(extract_lean_declaration_nodes())
+    nodes.extend(extract_module_nodes())
     nodes.extend(extract_aristotle_run_nodes())
     nodes.extend(extract_primary_source_nodes())
     nodes.extend(extract_paper_nodes())

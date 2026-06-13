@@ -76,8 +76,14 @@ def run_integrity_checks() -> dict:
         connected.add(edge['target'])
 
     # --- 1. Orphan nodes: zero edges (not source or target of anything) ---
+    # LeanModule nodes are auto-derived substrate (one per Lean module). An
+    # unreferenced module is a valid standalone node — it exists so any future
+    # whole-module backing reference resolves automatically — not a provenance
+    # orphan. (Its declaration membership lives in the lazy DECLARES edge layer.)
     orphan_nodes = []
     for n in nodes:
+        if n['type'] == 'LeanModule':
+            continue
         if n['id'] not in connected:
             orphan_nodes.append({
                 'id': n['id'],
