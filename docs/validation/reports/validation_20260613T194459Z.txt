@@ -1,0 +1,10 @@
+SK-EFT Hawking Validation Report
+Generated: 20260613T194459Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] proxy_body_audit
+  + tracked_vacuous_proxies — 6 structurally-named theorem(s) disclosed as `vacuous_proxy` tracked debt (see MODELING_ASSUMPTION_THEOREMS `discharge` pointers)
+  - CenterEquivalenceZ2.signature_preserved — structurally-named theorem closed by `rfl` at line 179 — register in MODELING_ASSUMPTION_THEOREMS (with reason+discloses) or strengthen
+  - Phase6yClosureStatusIndex.phase6y_cascade_closure_status_holds — structurally-named theorem closed by `trivial` at line 129 — register in MODELING_ASSUMPTION_THEOREMS (with reason+discloses) or strengthen
+
+Overall: 0/1 passed

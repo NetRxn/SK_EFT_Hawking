@@ -1,0 +1,9 @@
+SK-EFT Hawking Validation Report
+Generated: 20260613T191505Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] prose_theorem_reference_coverage
+  + summary — 18 bundle drafts scanned / 634 candidate Lean references — 0 unresolved FAIL(s) / 0 drifted advisory / 1 waived (documented)
+  + waived:I1:gap_solution_bounded — papers/I1/paper_draft.tex:488 — 'gap_solution_bounded' unresolved but WAIVED: Deliberate historical reference: I1's gap-equation narrative cites the FALSE folklore theorem disproved by an Aristotle counterexample; it survives only as a commented-out stub at TetradGapEquation.lean:307-321 (intentionally not a live declaration). TODO: drop this waiver if the I1 narrative is restructured to use the live gap_solution_monotone name only.
+
+Overall: 1/1 passed

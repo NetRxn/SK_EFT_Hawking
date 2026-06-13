@@ -1,0 +1,19 @@
+SK-EFT Hawking Validation Report
+Generated: 20260613T180047Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] proxy_body_audit
+  - ChangeOfRings.change_of_rings_ext_dim — structurally-named theorem closed by `identity-return (hypothesis)` at line 93 — register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen
+  - FPDimension.g2k1_dims_eq_fib — structurally-named theorem closed by `rfl` at line 272 — register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen
+  - FusionExamples.rank2_classification_count — structurally-named theorem closed by `rfl` at line 326 — register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen
+  - GTWeylDoublet.emanant_su2_dim — structurally-named theorem closed by `rfl` at line 132 — register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen
+  - GaugingStep.hw_matches_sm_count — structurally-named theorem closed by `rfl` at line 180 — register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen
+  - OnsagerAlgebra.sl2_dim_eq — structurally-named theorem closed by `rfl` at line 174 — register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen
+  - OnsagerAlgebra.dg_generator_count — structurally-named theorem closed by `rfl` at line 309 — register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen
+  - OnsagerAlgebra.dg_relation_count — structurally-named theorem closed by `rfl` at line 315 — register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen
+  - SU2PseudoReality.free_energy_well_defined — structurally-named theorem closed by `rfl` at line 157 — register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen
+  - WRTComputation.ising_wrt_rank — structurally-named theorem closed by `rfl` at line 30 — register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen
+  - WRTComputation.fib_wrt_rank — structurally-named theorem closed by `rfl` at line 52 — register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen
+  - Z16Classification.sVec_fermion_dim_DEFINITIONAL — structurally-named theorem closed by `rfl` at line 100 — register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen
+
+Overall: 0/1 passed

@@ -1,0 +1,23 @@
+{
+  "timestamp": "20260613T193626Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "native_decide_regression": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "ceiling",
+          "passed": true,
+          "message": "native_decide decl-closure 546 \u2264 ceiling 546",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

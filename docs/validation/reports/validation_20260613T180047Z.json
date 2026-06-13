@@ -1,0 +1,89 @@
+{
+  "timestamp": "20260613T180047Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "proxy_body_audit": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "ChangeOfRings.change_of_rings_ext_dim",
+          "passed": false,
+          "message": "structurally-named theorem closed by `identity-return (hypothesis)` at line 93 \u2014 register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen",
+          "warning": false
+        },
+        {
+          "name": "FPDimension.g2k1_dims_eq_fib",
+          "passed": false,
+          "message": "structurally-named theorem closed by `rfl` at line 272 \u2014 register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen",
+          "warning": false
+        },
+        {
+          "name": "FusionExamples.rank2_classification_count",
+          "passed": false,
+          "message": "structurally-named theorem closed by `rfl` at line 326 \u2014 register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen",
+          "warning": false
+        },
+        {
+          "name": "GTWeylDoublet.emanant_su2_dim",
+          "passed": false,
+          "message": "structurally-named theorem closed by `rfl` at line 132 \u2014 register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen",
+          "warning": false
+        },
+        {
+          "name": "GaugingStep.hw_matches_sm_count",
+          "passed": false,
+          "message": "structurally-named theorem closed by `rfl` at line 180 \u2014 register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen",
+          "warning": false
+        },
+        {
+          "name": "OnsagerAlgebra.sl2_dim_eq",
+          "passed": false,
+          "message": "structurally-named theorem closed by `rfl` at line 174 \u2014 register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen",
+          "warning": false
+        },
+        {
+          "name": "OnsagerAlgebra.dg_generator_count",
+          "passed": false,
+          "message": "structurally-named theorem closed by `rfl` at line 309 \u2014 register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen",
+          "warning": false
+        },
+        {
+          "name": "OnsagerAlgebra.dg_relation_count",
+          "passed": false,
+          "message": "structurally-named theorem closed by `rfl` at line 315 \u2014 register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen",
+          "warning": false
+        },
+        {
+          "name": "SU2PseudoReality.free_energy_well_defined",
+          "passed": false,
+          "message": "structurally-named theorem closed by `rfl` at line 157 \u2014 register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen",
+          "warning": false
+        },
+        {
+          "name": "WRTComputation.ising_wrt_rank",
+          "passed": false,
+          "message": "structurally-named theorem closed by `rfl` at line 30 \u2014 register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen",
+          "warning": false
+        },
+        {
+          "name": "WRTComputation.fib_wrt_rank",
+          "passed": false,
+          "message": "structurally-named theorem closed by `rfl` at line 52 \u2014 register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen",
+          "warning": false
+        },
+        {
+          "name": "Z16Classification.sVec_fermion_dim_DEFINITIONAL",
+          "passed": false,
+          "message": "structurally-named theorem closed by `rfl` at line 100 \u2014 register in MODELING_ASSUMPTION_THEOREMS (with disclosure) or strengthen",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

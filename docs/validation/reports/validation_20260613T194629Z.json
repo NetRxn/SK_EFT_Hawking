@@ -1,0 +1,23 @@
+{
+  "timestamp": "20260613T194629Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "placeholder_not_cited": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "paper9_sm_anomaly_drinfeld",
+          "passed": false,
+          "message": "presents placeholder(s) as formally verified without a hedge: gauge_emergence_equivalence (signature) (Invariant #9 \u2014 placeholders MUST NOT be cited as a paper claim)",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

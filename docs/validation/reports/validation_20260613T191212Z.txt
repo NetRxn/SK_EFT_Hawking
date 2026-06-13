@@ -1,0 +1,8 @@
+SK-EFT Hawking Validation Report
+Generated: 20260613T191212Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] tracked_hypothesis_ledger
+  + surface — 55 tracked Prop-defs; 23 consumed; 23 covered (registry 31 + non-LB 0)
+
+Overall: 1/1 passed

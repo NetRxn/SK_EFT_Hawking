@@ -1,0 +1,53 @@
+{
+  "timestamp": "20260613T175234Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "graph_integrity": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "graph_size",
+          "passed": true,
+          "message": "25949 nodes, 8094 edges",
+          "warning": false
+        },
+        {
+          "name": "conflicts",
+          "passed": true,
+          "message": "No verification conflicts",
+          "warning": false
+        },
+        {
+          "name": "orphan_nodes",
+          "passed": true,
+          "message": "19510 orphan nodes: param:Penn_TMD_MoSe2.Gamma_pol, param:SFDM.c_s_subcluster_BK, param:SFDM.merger_Mach_canonical, param:SFDM.condensate_fraction_BK, param:SFDM.shock_extent_Bullet_kpc (+19505 more)",
+          "warning": true
+        },
+        {
+          "name": "ungrounded_claims",
+          "passed": true,
+          "message": "130 ungrounded claims: claim:paper10_modular_generation:0, claim:paper10_modular_generation:1, claim:paper10_modular_generation:2, claim:paper10_modular_generation:3, claim:paper10_modular_generation:4 (+125 more)",
+          "warning": true
+        },
+        {
+          "name": "broken_chains",
+          "passed": true,
+          "message": "108 broken provenance chains: formula:polariton_spatial_attenuation, formula:polariton_tier1_validity, formula:stimulated_hawking_spectrum, formula:polariton_spatial_attenuation, formula:polariton_tier1_validity (+103 more)",
+          "warning": true
+        },
+        {
+          "name": "missing_provenance",
+          "passed": true,
+          "message": "47 params without SOURCED_FROM: HBAR, K_B, A_BOHR, Rb87.mass, K39.mass (+42 more)",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}
