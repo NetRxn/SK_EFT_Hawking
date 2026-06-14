@@ -711,6 +711,12 @@ import SKEFTHawking.PinPlusDischarge
 -- Phase 5q.F W7 (2026-06-14): Omega_5^{Spin-Z4} ≅ Z/16 via the Smith iso + the FINITE Pin+ side
 -- (criterion 2) -- the SM Dai-Freed group is the SAME finite Z/16 as Omega_4^Pin+, tied by smithHom.
 import SKEFTHawking.Omega5FiniteIso
+-- Phase 5q.F W4 (2026-06-14, goal_prompt.md geometric discharge): a genuine bordism group over Mathlib's
+-- SingularManifold + manifolds-with-boundary. The `Bordism` structure (collar/embedding form: compact
+-- mfld-with-boundary W + smooth injection e:M⊕N→W onto ∂W), the `IsBordant` relation, symmetry, and the
+-- W-projection instances. The group will be `Quot (IsBordant J)` (no manifold-gluing needed — Quot
+-- identifies via the relation's closure). Replaces the posited Omega4PinPlusBordism (a ℤ/16ℤ relabel).
+import SKEFTHawking.BordismGroup
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
