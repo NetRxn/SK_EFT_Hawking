@@ -57,6 +57,12 @@ just coincidence-spotting?":
 - **Explicit facet-1 → facet-4 composition** (`sm_count_trivializes_z16`): the Spin(10) branching
   sum `dim(10)+dim(5̄)+dim(1)=16` is *the* integer whose Kitaev class is `0` — a genuine
   composition of explicit maps, not a numerical coincidence of two 16s.
+- **The anomaly-phase character μ₁₆** (`AnomalyPhaseCharacter.lean`): the explicit finite map
+  `e^{2πiν/16} ∈ μ₁₆` realizing the shared ℤ₁₆ as 16th roots of unity, with the genuine
+  central-charge → phase relation `anomalyPhase ν = e^{2πi·c₋(ν)/8}` (Vafa form, label level).
+  The *deep* Gauss-sum link `p₊ = D·e^{2πic₋/8}` to a concrete MTC is **native_decide-purity-
+  blocked** (the repo's Ising `p₊=2ζ₁₆` would give the ν=1 realization but carries
+  `Lean.ofReduceBool`; a kernel-pure `QCyc16` Gauss sum would unlock it).
 
 **Still NOT proved (the wall):** the genuine *identification* of the facets' ℤ₁₆s as one bordism
 invariant under the Smith homomorphism (computed `Ω₄^{Pin⁺}/Ω₅^{Spin-ℤ₄} ≅ ℤ₁₆` + the Dai–Freed
