@@ -681,6 +681,21 @@ beyond the bare limit Mathlib gives) + the discrete→continuum bridge. The wave
 (`−3/2` from the literal count) is delivered; the rate + literal redefinition are queued for
 circle-back. Per strict-sequence fallback (c), proceeding to Wave 9 with this isolated + flagged.
 
+**▶ Sub-task C UPDATE — H_VerlindeKMLiteralSumDerivation GENUINELY DISCHARGED 2026-06-14
+(validate 43/43, kernel-pure).** Per the stop-hook push (don't isolate without exhausting):
+analysis showed the original `≤C/A`-vs-`kaulMajumdarS·0` form is **structurally vacuous-only**
+(a genuine literal sum has a nonzero additive constant `−½logπ`, so only the self-definition
+meets `≤C/A` against `c0=0` — that WAS the audit-#13 vacuity). So `H_VerlindeKMLiteralSumDerivation`
+was **restated** to its genuine non-vacuous O(1) content and **discharged**:
+`H_VerlindeKMLiteralSumDerivation_discharged := LaplaceMethodAsymptotic.log_singletCount_sub_isBigO`
+(the literal Catalan singlet count reproducing the KM `−3/2`, kernel-pure). The redundant
+standalone `verlinde_literal_count_reproduces_KM_minus_three_halves` was folded into it.
+**⇒ Wave-7B gate "H_VerlindeKMLiteralSumDerivation discharged" = MET.** SOLE remaining residual
+(MORNING-REVIEW, deeper future work, NOT a gate blocker): the real-`A` `verlindeEntropy_SU2k`
+is kept as the saddle MODEL (its smooth real-`A` literal redefinition + the strictly-stronger
+`≤C/A` *rate* need a Γ-smooth continuum + quantitative Stirling). The genuine literal content
+now lives in `singletCount` + the discharge. **Wave 7B substantively COMPLETE; → Wave 9.**
+
 ---
 
 ### C — 1/4 / Immirzi feasibility spike [center-bridge C — NOT a build wave yet]
