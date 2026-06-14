@@ -924,6 +924,22 @@ Center-Bridge reconcile); GammaStirling/ContinuumCatalan are transitively import
 BHEntropyMicroscopic (root is 5q-contended). Stage-13 adversarial review + closure reviewer dispatched
 at close.
 
+**▶ FOLLOW-ON Wave 8B (2026-06-14) — Witt-invariant strengthening of the horizon `anomalyMatch`
+(`b008a881`, kernel-pure).** User-requested re-examination of the two center-bridge residuals
+previously called "low-utility/high-effort":
+- **(A) conical heat-kernel `a₂` (48π/12π → unconditional 1/4): assessed genuinely unwise, skipped.**
+  `a2_R_coefficient` is a *defined literature value*; deriving it is the PDE-level Seeley–DeWitt
+  asymptotic on conical geometry — an open-ended geometric-analysis subfield (Mathlib-absent, no
+  bounded path, explicitly project-scoped-out as `DiracHeatKernelAsymptotic`) with **zero new
+  physics** (standard input + falsifier). Correctly carried as a tracked hypothesis.
+- **(B) Walker–Wang `anomalyMatch` sufficiency: was over-pessimistic — DONE.** The repo already has
+  the SymTFT bulk-boundary stack, so `lean/SKEFTHawking/HorizonWittBoundary.lean` sharpens Wave 8's
+  `anomalyMatch` (`8∣c₋`, which is **vacuous** for the ADW horizon: `8∣8N_f` always) to
+  `WittTrivial(8N_f) ⟺ 3∣N_f` (`24∣c₋`, unconditional) with a de-vacuization falsifier
+  (`N_f=1` passes `8∣c₋`, fails `24∣c₋`) — unifying the horizon BC with the 3-generation Witt
+  result; gapped-boundary sufficiency is the cited DMNO correspondence (DMNO-conditional). Leaf
+  module → root import added at the session-close reconcile.
+
 ---
 
 ## Decision Gates
