@@ -148,6 +148,31 @@ theorem hypercharge_traceless_total :
       + hyperchargeY .nu_R_bar * (components .nu_R_bar : ℚ) = 0 := by
   norm_num [hyperchargeY, components]
 
+/-! ### B−L: the SO(10)\SU(5) generator (the facet-1 ↔ facet-2 bridge)
+
+`B−L` is the extra `U(1)` of `Spin(10) ⊃ SU(5)`: it is a traceless generator of **Spin(10)**
+(traceless over the full 16) but **not** of SU(5) (nonzero trace over the SU(5) `10`). This is
+the generator whose discrete `ℤ₄` remnant `X = 5(B−L) − 4Y` (`SMFermionData.z4ChargeRaw`)
+carries the `ℤ₁₆` Dai–Freed anomaly — so these two theorems are the explicit link from the
+Spin(10)-embedding facet (1) to the anomaly facet (2). -/
+
+/-- `B−L` is a traceless generator of **Spin(10)**: `Σ_f (B−L)(f)·components(f) = 0` over the
+full 16. -/
+theorem bMinusL_traceless_total :
+    bMinusL .Q_L * (components .Q_L : ℚ) + bMinusL .u_R_bar * (components .u_R_bar : ℚ)
+      + bMinusL .d_R_bar * (components .d_R_bar : ℚ) + bMinusL .L * (components .L : ℚ)
+      + bMinusL .e_R_bar * (components .e_R_bar : ℚ)
+      + bMinusL .nu_R_bar * (components .nu_R_bar : ℚ) = 0 := by
+  norm_num [bMinusL, components]
+
+/-- `B−L` is **not** an SU(5) generator: its trace over the SU(5) `10` `{Q_L, ū_R, ē_R}` is
+`(1/3)·6 + (−1/3)·3 + 1·1 = 2 ≠ 0`. Contrast `hypercharge_traceless_ten` (`Y` *is* SU(5),
+trace 0): `B−L` lives in `SO(10) \ SU(5)`, the extra `U(1)` of the GUT chain. -/
+theorem bMinusL_su5_ten_trace :
+    bMinusL .Q_L * (components .Q_L : ℚ) + bMinusL .u_R_bar * (components .u_R_bar : ℚ)
+      + bMinusL .e_R_bar * (components .e_R_bar : ℚ) = 2 := by
+  norm_num [bMinusL, components]
+
 /-! ## §5. Module summary
 
 Genuine Spin(10)-spinor branching content (the facet-1 ↔ facet-2 algebraic half):
@@ -160,6 +185,9 @@ Genuine Spin(10)-spinor branching content (the facet-1 ↔ facet-2 algebraic hal
   - `hypercharge_traceless_{ten,fivebar,total}` — `Σ Y·components = 0` per multiplet and over
     the full 16: the traceless-generator consistency of the embedding (charge quantization),
     grounded in the real `hyperchargeY` data.
+  - `bMinusL_traceless_total` + `bMinusL_su5_ten_trace` — `B−L` is a Spin(10) generator
+    (traceless over 16) but NOT an SU(5) one (trace 2 over the `10`): the SO(10)\SU(5) `U(1)`,
+    and the facet-1 ↔ facet-2 link (its `ℤ₄` remnant carries the `ℤ₁₆` anomaly).
 
 Wall (documented): constructing the Spin(10) spinor module / SU(5) ⊂ Spin(10) / the branching
 as a rep-theory theorem is Mathlib-absent. All proofs kernel-pure (`decide` / `norm_num`); no
