@@ -87,4 +87,22 @@ theorem TangentialBordismGrp.mk_eq_of_bordant.{u} (ξ : TangentialStr.{u} X k I)
     TangentialBordismGrp.mk ξ s = TangentialBordismGrp.mk ξ t :=
   Quot.sound h
 
+/-- **Disjoint union `⊕` on `ξ`-bordism classes.** Well-defined: `onSum` keeps the sum a `ξ`-manifold,
+and the congruence `s ~ s' ⟹ s ⊔ t ~ s' ⊔ t` is `Bordism.add` of the `ξ`-bordism with the cylinder
+(`add_onBor` + `cyl_onBor`), reusing the genuine machinery with no gluing. -/
+noncomputable def TangentialBordismGrp.add.{u} (ξ : TangentialStr.{u} X k I)
+    (x y : TangentialBordismGrp ξ) : TangentialBordismGrp ξ :=
+  Quot.lift₂ (fun s t => TangentialBordismGrp.mk ξ ⟨s.1.sum t.1, ξ.onSum s.2 t.2⟩)
+    (fun s _t _t' h => h.elim fun b hb =>
+      mk_eq_of_bordant ξ ⟨Bordism.add (reflCylinder s.1) b, ξ.add_onBor (ξ.cyl_onBor s.2) hb⟩)
+    (fun _s _s' t h => h.elim fun b hb =>
+      mk_eq_of_bordant ξ ⟨Bordism.add b (reflCylinder t.1), ξ.add_onBor hb (ξ.cyl_onBor t.2)⟩)
+    x y
+
+@[simp] theorem TangentialBordismGrp.add_mk.{u} (ξ : TangentialStr.{u} X k I)
+    (s t : {s : SingularManifold.{u} X k I // ξ.onMfd s}) :
+    TangentialBordismGrp.add ξ (TangentialBordismGrp.mk ξ s) (TangentialBordismGrp.mk ξ t) =
+      TangentialBordismGrp.mk ξ ⟨s.1.sum t.1, ξ.onSum s.2 t.2⟩ :=
+  rfl
+
 end SKEFTHawking.TangentialBordism
