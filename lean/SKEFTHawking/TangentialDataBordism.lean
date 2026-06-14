@@ -48,6 +48,24 @@ structure TangentialData.{u} (X : Type*) [TopologicalSpace X] (k : WithTop ℕ�
   commBor : {s t : SingularManifold.{u} X k I} → (σ : Mfd s) → (τ : Mfd t) →
     Bor (mapCylinder (Diffeomorph.sumComm I s.M k t.M)
       (by funext z; rcases z with z | z <;> rfl)) (sumStr σ τ) (sumStr τ σ)
+  /-- Structures correspond under `sumAssoc` (for `⊕`-associativity). -/
+  assocBor : {s t u : SingularManifold.{u} X k I} → (σ : Mfd s) → (τ : Mfd t) → (ρ : Mfd u) →
+    Bor (mapCylinder (Diffeomorph.sumAssoc I s.M k t.M u.M)
+      (by funext w; rcases w with (w | w) | w <;> rfl))
+      (sumStr (sumStr σ τ) ρ) (sumStr σ (sumStr τ ρ))
+  /-- `sumStr σ emptyStr` corresponds to `σ` under `sumEmpty` (for the unit law). -/
+  unitBor : {s : SingularManifold.{u} X k I} → (σ : Mfd s) →
+    Bor (mapCylinder (Diffeomorph.sumEmpty I s.M k (M' := emptySM.M))
+      (by funext z; cases z with | inl m => rfl | inr e => exact (IsEmpty.false e).elim))
+      (sumStr σ emptyStr) σ
+  /-- **Structure reversal** — the Pin⁺ additive inverse (orientation/structure conjugation). -/
+  revStr : {s : SingularManifold.{u} X k I} → Mfd s → Mfd s
+  /-- Reversal is functorial on bordism structures. -/
+  revBor : {s t : SingularManifold.{u} X k I} → {b : Bordism.{u} (I.prod (𝓡∂ 1)) s t} →
+    {σ : Mfd s} → {τ : Mfd t} → Bor b σ τ → Bor b (revStr σ) (revStr τ)
+  /-- `(M,σ) ⊔ (M, σ̄)` bounds the cylinder — the inverse law `-[M,σ] + [M,σ] = 0`. -/
+  negBor : {s : SingularManifold.{u} X k I} → (σ : Mfd s) →
+    Bor (doublingBordism s) (sumStr (revStr σ) σ) emptyStr
 
 variable {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
   {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
@@ -101,5 +119,72 @@ theorem DataBordismGrp.add_comm.{u} (ξ : TangentialData.{u} X k I) (x y : DataB
   exact mk_eq_of_bordant ξ
     ⟨mapCylinder (Diffeomorph.sumComm I p.1.M k q.1.M) (by funext z; rcases z with z | z <;> rfl),
      ⟨ξ.commBor p.2 q.2⟩⟩
+
+/-- `⊕` on faithful bordism classes is **associative**. -/
+theorem DataBordismGrp.add_assoc.{u} (ξ : TangentialData.{u} X k I) (x y z : DataBordismGrp ξ) :
+    add ξ (add ξ x y) z = add ξ x (add ξ y z) := by
+  induction x using Quot.ind with | _ p =>
+  induction y using Quot.ind with | _ q =>
+  induction z using Quot.ind with | _ r =>
+  exact mk_eq_of_bordant ξ
+    ⟨mapCylinder (Diffeomorph.sumAssoc I p.1.M k q.1.M r.1.M)
+      (by funext w; rcases w with (w | w) | w <;> rfl), ⟨ξ.assocBor p.2 q.2 r.2⟩⟩
+
+/-- The **zero** faithful bordism class: the empty manifold with its structure. -/
+noncomputable def DataBordismGrp.zero.{u} (ξ : TangentialData.{u} X k I) : DataBordismGrp ξ :=
+  DataBordismGrp.mk ξ ⟨emptySM, ξ.emptyStr⟩
+
+/-- `x ⊕ 0 = x`. -/
+theorem DataBordismGrp.add_zero.{u} (ξ : TangentialData.{u} X k I) (x : DataBordismGrp ξ) :
+    add ξ x (zero ξ) = x := by
+  induction x using Quot.ind with | _ p =>
+  exact mk_eq_of_bordant ξ
+    ⟨mapCylinder (Diffeomorph.sumEmpty I p.1.M k (M' := emptySM.M))
+      (by funext z; cases z with | inl m => rfl | inr e => exact (IsEmpty.false e).elim),
+     ⟨ξ.unitBor p.2⟩⟩
+
+/-- `0 ⊕ x = x`. -/
+theorem DataBordismGrp.zero_add.{u} (ξ : TangentialData.{u} X k I) (x : DataBordismGrp ξ) :
+    add ξ (zero ξ) x = x := by
+  rw [add_comm ξ]; exact add_zero ξ x
+
+/-- **Negation** = structure reversal (the genuine Pin⁺ inverse, NOT the unoriented identity). -/
+noncomputable def DataBordismGrp.neg.{u} (ξ : TangentialData.{u} X k I) (x : DataBordismGrp ξ) :
+    DataBordismGrp ξ :=
+  Quot.lift (fun p => DataBordismGrp.mk ξ ⟨p.1, ξ.revStr p.2⟩)
+    (fun _p _q h => h.elim fun b hb => hb.elim fun str =>
+      mk_eq_of_bordant ξ ⟨b, ⟨ξ.revBor str⟩⟩) x
+
+@[simp] theorem DataBordismGrp.neg_mk.{u} (ξ : TangentialData.{u} X k I) (p : StrMfd ξ) :
+    DataBordismGrp.neg ξ (DataBordismGrp.mk ξ p) = DataBordismGrp.mk ξ ⟨p.1, ξ.revStr p.2⟩ :=
+  rfl
+
+noncomputable instance (ξ : TangentialData X k I) : Zero (DataBordismGrp ξ) :=
+  ⟨DataBordismGrp.zero ξ⟩
+noncomputable instance (ξ : TangentialData X k I) : Add (DataBordismGrp ξ) :=
+  ⟨DataBordismGrp.add ξ⟩
+noncomputable instance (ξ : TangentialData X k I) : Neg (DataBordismGrp ξ) :=
+  ⟨DataBordismGrp.neg ξ⟩
+
+/-- The **faithful tangential bordism group `Ω^ξ` is an additive commutative group**, with negation =
+structure reversal (the genuine Pin⁺ inverse). For ξ = Pin⁺ this is `Ω_•^{Pin⁺}` (ℤ/16 in degree 4). -/
+noncomputable instance (ξ : TangentialData X k I) : AddCommGroup (DataBordismGrp ξ) where
+  add := (· + ·)
+  zero := 0
+  neg := (- ·)
+  add_assoc := DataBordismGrp.add_assoc ξ
+  zero_add := DataBordismGrp.zero_add ξ
+  add_zero := DataBordismGrp.add_zero ξ
+  add_comm := DataBordismGrp.add_comm ξ
+  neg_add_cancel := fun x => by
+    induction x using Quot.ind with | _ p =>
+      exact DataBordismGrp.mk_eq_of_bordant ξ ⟨doublingBordism p.1, ⟨ξ.negBor p.2⟩⟩
+  nsmul := nsmulRec
+  nsmul_zero := fun _ => rfl
+  nsmul_succ := fun _ _ => rfl
+  zsmul := zsmulRec
+  zsmul_zero' := fun _ => rfl
+  zsmul_succ' := fun _ _ => rfl
+  zsmul_neg' := fun _ _ => rfl
 
 end SKEFTHawking.TangentialDataBordism
