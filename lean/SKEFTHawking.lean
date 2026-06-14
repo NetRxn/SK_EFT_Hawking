@@ -666,6 +666,7 @@ import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
 import SKEFTHawking.SixteenConvergenceExplicit
+import SKEFTHawking.CommonOrigin
 import SKEFTHawking.RokhlinManifoldFromHM
 import SKEFTHawking.ExtBordismBridge
 import SKEFTHawking.ChangeOfRings

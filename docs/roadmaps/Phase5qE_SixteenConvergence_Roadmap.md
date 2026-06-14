@@ -6,13 +6,17 @@
 (same deferred-frontier framework as Leg C-geometric / Leg D). Status framing:
 [`docs/SIXTEEN_CONVERGENCE_STATUS.md`](../SIXTEEN_CONVERGENCE_STATUS.md).*
 
-**STATUS (2026-06-14): the buildable TOP-ROW shards are DONE.** Phase 5q.E waves W1–W4 (6 commits
-`01247a54`→`deb6e464`, NOT pushed) shipped every genuine, kernel-pure, non-vacuous *algebraic shadow*
-of the four facets — see [§Landed algebraic shards](#landed-algebraic-shards-phase-5qe-waves--the-top-row-buildable-now-content)
-below. **Only the BOTTOM-ROW capstones** (computed Pin⁺/Spin-ℤ₄ bordism groups, the Dai–Freed functor,
-the Smith homomorphism — the genuine *common-origin identification*) remain DEFERRED, gated on
-Mathlib-absent cobordism infrastructure (verified absent 2026-06-14, [§Mathlib status](#mathlib-status--verified-2026-06-14-semantic-search-not-grep)).
-The rest of this doc records that bottom-row plan **recorded, not re-derived**.*
+**STATUS (2026-06-14): the buildable TOP-ROW shards are DONE, and the common-origin capstone is built
+CONDITIONALLY (W5).** Phase 5q.E waves W1–W4 shipped every genuine, kernel-pure *algebraic shadow* of the four
+facets; **W5 `CommonOrigin.lean` then assembled the actual common-origin theorem** (`sixteen_convergence_common_origin`)
+— the four 16s as images of ONE genuine Pin⁺ bordism ℤ₁₆ under explicit maps, with Rokhlin and Kitaev reading it
+identically pointwise — **conditional on the disclosed `SmithInflow` tracked input** (the Smith hom's ℤ₁₆-level
+content; inhabited, NOT an axiom). See [§Landed algebraic shards](#landed-algebraic-shards-phase-5qe-waves--the-top-row-buildable-now-content).
+**What remains DEFERRED** is now narrower: the *geometric* `Ω₅^{Spin-ℤ₄}` bordism group + geometric Smith map +
+Dai–Freed functor (to discharge `SmithInflow` into an *unconditional* unification) — Mathlib-absent landmarks
+(verified 2026-06-14, [§Mathlib status](#mathlib-status--verified-2026-06-14-semantic-search-not-grep)). The
+convergence is now a **conditional genuine unification**, no longer a bare enumeration. The rest of this doc records
+the remaining geometric plan **recorded, not re-derived**.*
 
 ---
 
@@ -66,6 +70,7 @@ each is honest that a shared ℤ₁₆ **constrains, does not derive**, and flag
 | **W2** (2026-06-13/14) | `Spin10Sixteen.lean` | The facet-1↔facet-2 algebraic half: the Spin(10) Weyl-spinor branching `16 → 10 ⊕ 5̄ ⊕ 1` realized at dimension/assignment level. `su5dim` grounds `10,5,1` as even-exterior-power dims `C(5,2),C(5,4),C(5,0)`; `weyl_spinor_as_even_exterior` (`C(5,0)+C(5,2)+C(5,4)=2⁴`); Georgi–Glashow `su5Multiplet` is a verified partition (`su5_partition_exhaustive`); `su5_branching_{ten,fivebar,one}` (components/multiplet = irrep dim, falsified by any wrong assignment); `spinor16_decomposition` via `total_components_with_nu_R`. **(2026-06-14) embedding-consistency added**: `hypercharge_traceless_{ten,fivebar,total}` — `Σ Y·components = 0` per multiplet and over the full 16 (the traceless-generator condition = GUT charge quantization), grounded in the real `hyperchargeY` data; **+ B−L Cartan** (`c980f4bf`): `bMinusL_traceless_total` (=0 over the 16 ⇒ Spin(10) generator) and `bMinusL_su5_ten_trace` (=2 over the SU(5) `10` ⇒ NOT an SU(5) generator), identifying B−L as the SO(10)\SU(5) `U(1)` whose ℤ₄ remnant `X=5(B−L)−4Y` carries the ℤ₁₆ anomaly — the explicit facet-1↔facet-2 link. | constructing the Spin(10) spinor *module* / `SU(5) ⊂ Spin(10)` / the branching as a rep-theory theorem (CliffordAlgebra/spinGroup) is Mathlib-absent (generational). |
 | **W3** (2026-06-13) | `SixteenConvergenceExplicit.lean` | The honest capstone (explicit maps, NOT unification): `sm_trivial_among_sixteen_distinct` (**constrains-not-derives** — SM is the trivial one of 16 *genuinely distinct* phases, via Kitaev faithfulness); `sm_count_trivializes_z16` (explicit facet-1→facet-4 composition: Spin(10) branching sum =16 is the integer whose Kitaev class is 0). | the bordism identification (Smith homomorphism + computed `Ω₄^{Pin⁺}/Ω₅^{Spin-ℤ₄}≅ℤ₁₆`) that would make "all the same 16" literal is Mathlib-absent. |
 | **W4** (2026-06-14) | `AnomalyPhaseCharacter.lean` | The explicit **finite map**: the anomaly phase `e^{2πiν/16} ∈ μ₁₆` as a faithful character `ℤ₁₆ → μ₁₆`. NEW headline `anomalyPhase_eq_central_charge_phase` (anomaly phase `= e^{2πi·c₋/8}`, Vafa form at label level, backed by a `kitaevCentralCharge` call); `anomalyPhase_add` (homomorphism), `anomalyPhase_faithful` (16 distinct phases, μ₁₆-codomain form of W1 faithfulness), `sm_anomalyPhase_trivial` (SM at identity). | the **deep** Gauss-sum `p₊ = D·e^{2πic₋/8}` link to a concrete MTC is **native_decide-purity-blocked** — the repo's Ising `p₊=2ζ₁₆` (`WRTComputation.ising_gauss_sum_is_2zeta`) would give the ν=1 realization, but it carries `Lean.ofReduceBool`. A kernel-pure `QCyc16` Gauss-sum computation would unlock it. |
+| **W5** (2026-06-14) | `CommonOrigin.lean` | **The actual common-origin capstone (E.5), CONDITIONAL.** The four 16s as images of ONE genuine ℤ₁₆ — the Pin⁺ bordism group `Omega4PinPlusBordism` (real `Quotient`, `≃+ ZMod 16`, `[RP⁴]` order *exactly* 16) — under explicit maps. `rokhlin_reads_kitaev` (**pointwise** `signatureMod16 ∘ smith ∘ kitaevClass = id` ⇒ Kitaev labels = Rokhlin signature classes, the SAME ℤ₁₆); `kitaev_generator_is_bordism_generator` (ν=1 ↦ `[RP⁴]`, non-vacuous heart); `sm_anomaly_trivial_in_bordism` + `rokhlin_k3_trivial` (SM/smooth-spin at the trivial class); `sixteen_convergence_common_origin` bundles all four facets. Conditional on the disclosed **`SmithInflow`** tracked hypothesis (the Smith hom's ℤ₁₆-level content; **inhabited** by `substrateSmithInflow`; NOT an axiom). Supersedes the bare `sixteen_convergence_full` enumeration. Still **constrains-not-derives**. | the **geometric** Smith homomorphism + the `Ω₅^{Spin-ℤ₄}` bordism group + the Dai–Freed functor are Mathlib-absent — carried as the disclosed `SmithInflow` input (its ℤ₁₆ **iso-ness** cited-true, GEM 2018 / Wang 2024; the generator pin `1↦[RP⁴]` a canonical normalization convention). ⚠️ `SmithInflow` registry entry in `HYPOTHESIS_REGISTRY` is DEFERRED (concurrency: `constants.py` held by the parallel 6A agent); disclosed here + in the module meanwhile. |
 
 Brick (iv) (SM-anomaly → SymTFT inflow) was assessed **already-covered**: `SymTFT/IsSMMatterTopologicalBoundary.lean`
 ships `z16_class=16·N_f`, `sm_3gen_via_symtft`, the η-invariant vanishing, and the topological-boundary
@@ -120,6 +125,16 @@ Smith homomorphism tying (E.2) to (E.1); (E.4) the Rokhlin/Kitaev readings of th
 `sixteen_convergence_full` with the common-origin theorem + retire the "enumeration-only" caveat. Each capstone is
 trigger-individually gated; partial completion still strengthens the *enumeration → cited-connection → one-map*
 gradient honestly.
+
+**Status update (2026-06-14): E.4 + E.5 DONE conditionally; E.1 (Pin⁺ half) already present.** `W5
+CommonOrigin.lean` ships the **conditional** common-origin theorem (`sixteen_convergence_common_origin`): the
+four facets are images of ONE genuine Pin⁺ bordism ℤ₁₆ (`Omega4PinPlusBordism`, E.1 Pin⁺ half from Phase 6r)
+under explicit maps, with Rokhlin and Kitaev reading it identically pointwise (E.4). E.5 is realized **modulo the
+disclosed `SmithInflow` tracked input** (the E.2 Dai–Freed inflow + E.3 Smith hom at the ℤ₁₆ level; geometric
+construction = the still-deferred bottom-row landmarks). The remaining *unconditional* work is exactly building
+the geometric `Ω₅^{Spin-ℤ₄}` bordism group + the geometric Smith map + Dai–Freed functor to discharge `SmithInflow`
+— the same Mathlib-landmark frontier. So the convergence is now a **conditional genuine unification**, not a bare
+enumeration; only its geometric *inputs* remain trigger-gated.
 
 ---
 

@@ -63,11 +63,22 @@ just coincidence-spotting?":
   The *deep* Gauss-sum link `p₊ = D·e^{2πic₋/8}` to a concrete MTC is **native_decide-purity-
   blocked** (the repo's Ising `p₊=2ζ₁₆` would give the ν=1 realization but carries
   `Lean.ofReduceBool`; a kernel-pure `QCyc16` Gauss sum would unlock it).
+- **The CONDITIONAL common origin** (`CommonOrigin.lean`, W5): the four 16s are now images of ONE
+  *genuine* ℤ₁₆ — the Pin⁺ bordism group `Omega4PinPlusBordism` (a real `Quotient`, `≃+ ZMod 16`,
+  `[RP⁴]` of *exact* order 16, Kirby–Taylor 1990) — under explicit maps, with **Rokhlin and Kitaev
+  reading it identically, pointwise** (`rokhlin_reads_kitaev`: `signatureMod16 ∘ smith ∘ kitaevClass
+  = id`). This is the genuine map-composition that replaces the bare enumeration `sixteen_convergence_full`
+  — **conditional** on the disclosed `SmithInflow` tracked input (the Smith homomorphism's ℤ₁₆-level
+  content; inhabited by `substrateSmithInflow`; a hypothesis, NOT an axiom).
 
-**Still NOT proved (the wall):** the genuine *identification* of the facets' ℤ₁₆s as one bordism
-invariant under the Smith homomorphism (computed `Ω₄^{Pin⁺}/Ω₅^{Spin-ℤ₄} ≅ ℤ₁₆` + the Dai–Freed
-functor) is Mathlib-absent (Phase 5q.E roadmap §"Walls"). The explicit maps are algebraic shadows,
-not the bordism identification. None of this touches the independent 3-generation headline.
+**Still NOT proved (the wall — now narrower):** the common-origin identification is proved *conditionally*
+on `SmithInflow`; what remains for an **unconditional** unification is the *geometric* construction —
+the `Ω₅^{Spin-ℤ₄}` bordism group, the geometric Smith map, and the Dai–Freed functor — all Mathlib-absent
+(Phase 5q.E roadmap §"Walls"). So the honest status moved from "bare enumeration" to "conditional genuine
+unification with a disclosed geometric input (its iso-ness cited-true, GEM/Wang; the generator pin a
+canonical normalization convention)." It still **constrains, does not derive** (the SM
+is the *trivial* class among 16; `[RP⁴]` is the shared generator; many theories share this ℤ₁₆). None of
+this touches the independent 3-generation headline.
 
 ## 4. Proved NOT true (the no-gos — what the discipline caught)
 
