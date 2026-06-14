@@ -304,6 +304,16 @@ noncomputable def BordismGrp.add (x y : BordismGrp X k I) : BordismGrp X k I :=
     BordismGrp.add (BordismGrp.mk s) (BordismGrp.mk t) = BordismGrp.mk (s.sum t) :=
   rfl
 
+/-- The **empty singular manifold** — the additive identity of the bordism group. The `ChartedSpace`
+on the empty type is `ChartedSpace.empty` (a `def`, provided locally). -/
+noncomputable def emptySM : SingularManifold X k I :=
+  haveI : ChartedSpace H PEmpty := ChartedSpace.empty H PEmpty
+  SingularManifold.empty X PEmpty I
+
+/-- The empty singular manifold is empty. -/
+instance : IsEmpty (emptySM (X := X) (k := k) (I := I)).M :=
+  inferInstanceAs (IsEmpty PEmpty)
+
 /-- `⊕` on bordism classes is **commutative** (disjoint union commutes up to diffeomorphism). -/
 theorem BordismGrp.add_comm (x y : BordismGrp X k I) : x.add y = y.add x := by
   induction x using Quot.ind with | _ s =>
@@ -319,6 +329,34 @@ theorem BordismGrp.add_assoc (x y z : BordismGrp X k I) :
   induction z using Quot.ind with | _ u =>
   exact mk_eq_of_bordant (IsBordant.of_diffeo (Diffeomorph.sumAssoc I s.M k t.M u.M)
     (by funext w; rcases w with (w | w) | w <;> rfl))
+
+/-- The **zero** bordism class: the empty manifold (null-bordant). -/
+noncomputable def BordismGrp.zero : BordismGrp X k I := BordismGrp.mk emptySM
+
+/-- `x ⊕ 0 = x` (the empty manifold is a right unit, `M ⊔ ∅ ≅ M`). -/
+theorem BordismGrp.add_zero (x : BordismGrp X k I) : x.add zero = x := by
+  induction x using Quot.ind with | _ s =>
+  exact mk_eq_of_bordant (IsBordant.of_diffeo
+    (Diffeomorph.sumEmpty I s.M k (M' := emptySM.M))
+    (by funext z; cases z with | inl m => rfl | inr e => exact (IsEmpty.false e).elim))
+
+/-- `0 ⊕ x = x` (commute, then use the right unit). -/
+theorem BordismGrp.zero_add (x : BordismGrp X k I) : zero.add x = x := by
+  rw [add_comm]; exact add_zero x
+
+noncomputable instance : Zero (BordismGrp X k I) := ⟨BordismGrp.zero⟩
+noncomputable instance : Add (BordismGrp X k I) := ⟨BordismGrp.add⟩
+
+/-- The bordism group is an **additive commutative monoid** under disjoint union, with the empty
+manifold as identity. -/
+noncomputable instance : AddCommMonoid (BordismGrp X k I) where
+  add_assoc := BordismGrp.add_assoc
+  zero_add := BordismGrp.zero_add
+  add_zero := BordismGrp.add_zero
+  add_comm := BordismGrp.add_comm
+  nsmul := nsmulRec
+  nsmul_zero := fun _ => rfl
+  nsmul_succ := fun _ _ => rfl
 
 end Group
 
