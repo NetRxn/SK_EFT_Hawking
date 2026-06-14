@@ -80,6 +80,19 @@ those remain Mathlib-absent walls.
 + a *cited* literature connection (GEM 2018; Wang 2024 Smith-homomorphism / string-bordism ℤ₂₄). Do **not** open
 this absent the trigger.
 
+## Mathlib status — verified 2026-06-14 (semantic search, not grep)
+
+Confirming the walls are genuine and ordering them by approachability:
+- **`Ω₄^{Pin⁺}`/`Ω₅^{Spin-ℤ₄}` computed bordism groups — ABSENT.** `leansearch "cobordism group … Z/16"` and
+  `local_search "Bordism"` return only homotopy groups, `IsManifold`, and the project's own
+  `SymTFT.BordismVanishes` predicate. No bordism *ring/group*. (Deepest wall; shared with ADR-003 Leg D.)
+- **Smith homomorphism — ABSENT.** `loogle "Smith homomorphism"` → no results. Never formalized in any prover.
+- **Dai–Freed anomaly functor — ABSENT** (η/APS substrate only; no invertible-TQFT functor).
+- **`spinGroup` / `pinGroup` — PRESENT** (`Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup`, as Clifford-algebra
+  groups, NOT bordism). ⟹ the **Spin(10) spinor-module** route (W2's wall) is the *most approachable* capstone:
+  the Clifford/spin substrate exists, so constructing the irreducible 16 as a `spinGroup`-module and proving the
+  `SU(5) ⊂ Spin(10)` branching as rep theory is "hard but has a foothold," unlike the bordism groups which have none.
+
 ## Re-trigger conditions
 
 Activate this phase when **any** of:
