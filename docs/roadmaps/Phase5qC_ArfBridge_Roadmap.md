@@ -10,6 +10,35 @@ as mathematically possible.*
 
 ---
 
+## STATUS 2026-06-13 — re-confirmed LIVE-board #1; UNSTARTED; ecosystem re-checked
+
+**This is THE authoritative roadmap for the Rokhlin `topo` discharge.** The 2026-06-13 substrate-weakness
+reconciliation ranks it **#1** (score 92, the flagship — `docs/audits/SUBSTRATE_WEAKNESS_LIVE_BOARD_2026-06-13.md`
+§B1). Entry-state **re-verified on disk 2026-06-13**: `EvenLattice.redQuad` + `redQuad_refines_redBilin` /
+`redQuad_add` / `redQuad_zero` and `Arf.gaussSum_genus_g` all **PRESENT**; **`arfOfForm` does NOT yet exist →
+C.1–C.4 are UNSTARTED.** The Phase-1 `/goal` below is ready to run as-is.
+
+**Honesty (corrects the 5q.B header).** The 5q.B roadmap header reads "16∣σ UNCONDITIONAL" — that is
+**OVERSTATED**. `8∣σ` is proven outright; `16∣σ` consumes `SmoothSpinManifold4.topo : 2∣σ/8`. This wave
+RELOCATES that to `topo' : Arf(q̄)=0` (the genuine smooth-spin input) **and PROVES the bridge** — it does NOT
+make `16∣σ` unconditional (mathematically impossible — E₈). Endpoint = *"16∣σ proven GIVEN Arf(q̄)=0."*
+
+**Ecosystem re-check 2026-06-13** (fresh re-run of the ADR-003 Decision-#7 two-layer watch over the
+leanprover-community org — 83 active repos): **nothing to pull in for this wave.** We already have `batteries` +
+the full standard dep set (transitively via Mathlib) + `Physlib` direct. **No Arf invariant anywhere** — Mathlib
+pin **v4.29.1** AND master **v4.31.0-rc2**, all org repos (validated `gh search code`), `sphere-eversion` (139
+files, 0 relevant), `physlib` — the apparent "Arf" path-hits are `line**arF**orm`/`Ch**arF**un` substring
+artifacts (`/Arf.lean` = 0). So our hand-built `ArfInvariant.lean` is necessary and Phase 1 is top-row in-repo
+assembly. **Phase-2 load-bearing bricks STILL ABSENT at master** (CupProduct / PoincareDuality / StiefelWhitney /
+Wu / Guillou–Marin / manifold-SpinStructure / IntersectionForm / ChernWeil all = 0) → **deferral verdict
+UNCHANGED, do NOT vendor**. Trajectory/warming (watch-don't-vendor): master added `QuadraticForm/{Signature,
+Radical,Basis,AlgClosed}.lean` + `QuadraticModuleCat/*`, `AlgebraicTopology/EilenbergSteenrod.lean` (cohomology
+AXIOMS), `Sites/SheafCohomology/{Cech,MayerVietoris}.lean`, `Manifold/PoincareConjecture.lean` (a STATEMENT, not
+duality). The sister doc `Phase5qB_RokhlinTopoDischarge_Plan.md` is now a pointer here (this is the single source
+of truth).
+
+---
+
 ## Why this wave exists
 
 After Phase 5q.B, `SmoothSpinManifold4.rokhlin : 16 ∣ σ` is kernel-pure, consuming only `even_unimod` (Wu,

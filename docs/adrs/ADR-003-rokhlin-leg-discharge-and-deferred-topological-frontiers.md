@@ -304,6 +304,21 @@ are checked against **both** our pin *and* `gh` master (Decision #7) — a load-
 trigger to **vendor-and-rewire** ahead of the official bump, not merely to wait. The Re-trigger "Mathlib
 community ships" column is satisfied by a master landing, not only a pin bump.
 
+**Watch re-run 2026-06-13 (no trigger fired; verdict unchanged).** Re-ran the two-layer watch over the whole
+leanprover-community org (83 active repos; `gh search code` validated against a known `QuadraticForm` hit) +
+`gh` master-tree of Mathlib (now **v4.31.0-rc2**) and `sphere-eversion`. **All Leg-C/Leg-D load-bearing bricks
+remain absent at master:** `CupProduct` / `PoincareDuality` / `StiefelWhitney` / `Wu` / `Guillou-Marin` /
+manifold-`SpinStructure` / `IntersectionForm` / `ChernWeil` = **0 hits each**; **no Arf invariant anywhere** in
+the ecosystem (the `grep "Arf"` path-hits are `line`**`arF`**`orm`/`Ch`**`arF`**`un` substring artifacts;
+`/Arf.lean` = 0 — same grep-vs-semantic-search lesson as `feedback_lean_semantic_search_over_grep`).
+`sphere-eversion` (139 files) and `physlib` add nothing for these legs (h-principle / physics, no manifold
+alg-top). **We confirmed `batteries` + the full standard dep set are already pulled** (transitively via Mathlib)
++ `Physlib` direct — nothing in the org is un-pulled and useful here. Continued **warming** since our pin
+(watch-don't-vendor, sub-load-bearing): master added `QuadraticForm/{Signature,Radical,Basis,AlgClosed}.lean` +
+`QuadraticModuleCat/*`, `AlgebraicTopology/EilenbergSteenrod.lean` (cohomology **axioms**),
+`Sites/SheafCohomology/{Cech,MayerVietoris}.lean`, `Manifold/PoincareConjecture.lean` (a **statement**, not
+duality). So Phase 5q.C Phase 1 needs no external infra (top-row in-repo), and Phase 2 stays deferred.
+
 ---
 
 ## Consequences
