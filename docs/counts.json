@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-14T13:37:58.963375",
+  "generated": "2026-06-14T14:29:10.932180",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 20911,
-    "theorems_total": 12730,
-    "theorems_substantive": 12704,
+    "total_declarations": 20919,
+    "theorems_total": 12733,
+    "theorems_substantive": 12707,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 964,
+    "modules": 965,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -668,6 +668,7 @@
       "SKEFTHawking.PenroseSingularityCurveTheoretic",
       "SKEFTHawking.Phase6vSubwaves8DHClose",
       "SKEFTHawking.Phase6vWave9Close",
+      "SKEFTHawking.PinPlusAdamsAbutment",
       "SKEFTHawking.PinPlusDischarge",
       "SKEFTHawking.PinPlusExtBound",
       "SKEFTHawking.PinPlusHeight4",
@@ -977,9 +978,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 7263,
+    "definitions": 7265,
     "structures": 298,
-    "instances": 523,
+    "instances": 526,
     "inductives": 97,
     "native_decide_decl_closure": 546,
     "native_decide_clusters": {

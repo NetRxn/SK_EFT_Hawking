@@ -27,20 +27,22 @@ bound, the SM-anomaly triviality — is finite/machine-checked.
 -/
 import Mathlib
 import SKEFTHawking.PinPlusHeight4
+import SKEFTHawking.PinPlusAdamsAbutment
 import SKEFTHawking.PinPlusExtBound
 import SKEFTHawking.SymTFT.SmithMechanism
 
 namespace SKEFTHawking.PinPlusDischarge
 
-open SKEFTHawking.SymTFT SKEFTHawking.PinHeight4
+open SKEFTHawking.SymTFT SKEFTHawking.PinHeight4 SKEFTHawking.PinPlusAdamsAbutment
 
-/-! ## §1. The finite height and the single disclosed Pontryagin–Thom Prop -/
+/-! ## §1. The finite height and the single disclosed Pontryagin–Thom Prop
 
-/-- The **finite** column-4 cokernel height (`= 4` by `col4_height_eq_four`, a `decide`). The Pin⁺
-abutment order is `2^this`. -/
-def height4 : ℕ := ((List.range 8).filter (survives 4)).length
-
-theorem height4_eq : height4 = 4 := col4_height_eq_four
+`height4`/`height4_eq` now live in `SKEFTHawking.PinPlusAdamsAbutment` (the W1 module), in scope here via
+`open`. That module also ships the **hypothesis-free** `adamsAbutment ≃+ ZMod 16` — the iso is PROVED
+from the decidable `col4_height_eq_four` with no `Nonempty`-of-the-conclusion hypothesis. The
+`pin4_abutment` Prop below is **retained only** as the documented modeling bridge for the *geometric*
+`Omega4PinPlusBordism` object (consumed by `Omega5FiniteIso`); it is the geometric-faithfulness
+identification, to be DERIVED by the W4–W6 Smith-LES route — not the load-bearing input for the ℤ/16. -/
 
 /-- **`pin4_abutment` — the SINGLE disclosed topological Prop** (`finite_height4_cap.md` §5): the Pin⁺
 bordism group is the Adams abutment of the column-4 height-`height4` `h₀`-tower, i.e. `Ω₄^{Pin⁺} ≃+
@@ -53,7 +55,14 @@ ext). NOT an axiom; **inhabited** (`pin4_abutment_substrate`). The cardinality `
 *proposition* as the iso-half of the old `SmithInflow`. The axiom-stratification win is **where the 16
 comes from** — the decidable Ext cokernel height (`col4_height_eq_four`, `axioms:[]`) rather than a bare
 posited literal — **NOT** that a *weaker* topological assumption is made. The iso itself (the
-Pontryagin–Thom bridge) is still disclosed; only its cardinality is now finite-derived. -/
+Pontryagin–Thom bridge) is still disclosed; only its cardinality is now finite-derived.
+
+**W1 supersession (2026-06-14, `discharge_pin4_abutment_route.md` Route C.1).** For the *unconditional*
+finite statement, `pin4_abutment` is superseded by `PinPlusAdamsAbutment.adamsAbutmentEquivZMod16`: that
+iso `adamsAbutment ≃+ ZMod 16` carries **no hypothesis** — the `Nonempty`-of-the-conclusion binder is
+gone; the `16` is proved outright from `col4_height_eq_four`. `pin4_abutment` is retained here ONLY as
+the geometric-faithfulness modeling bridge — the identification of the finite Adams abutment with the
+*smooth* `Omega4PinPlusBordism` — to be DERIVED (not assumed) by the W4–W6 Smith-LES route. -/
 def pin4_abutment : Prop := Nonempty (Omega4PinPlusBordism ≃+ ZMod (2 ^ height4))
 
 /-- The disclosed Prop is **inhabited** at the substrate: the Kirby–Taylor iso `Ω₄^{Pin⁺} ≃+ ZMod 16`
@@ -125,5 +134,31 @@ theorem sixteen_convergence_finite_discharge_substrate :
       addOrderOf (Omega4PinPlusBordism.mk pinPlusRP4) = 16 ∧
         IsPinPlusObstruction RP4 :=
   sixteen_convergence_finite_discharge pin4_abutment_substrate
+
+/-! ## §5. W1 headline — the 16-convergence at the finite Adams abutment, UNCONDITIONAL -/
+
+/-- **W1 headline — the 16-convergence, with NO hypothesis binder.** Unlike
+`sixteen_convergence_finite_discharge` (which consumes the disclosed `pin4_abutment`), this carries
+**no hypothesis at all** (no `SmithInflow`, no `pin4_abutment`):
+
+1. **iso, finite & UNCONDITIONAL:** `adamsAbutment ≃+ ZMod 16` is `PinPlusAdamsAbutment.adamsAbutmentEquivZMod16`,
+   PROVED from the decidable Ext-cokernel height `col4_height_eq_four` (`axioms:[]`). The `Nonempty`-of-the-
+   conclusion hypothesis the old `pin4_abutment` carried is gone — this is the W1 discharge of the
+   *logical* dependency.
+2. **lower, finite:** `addOrderOf [RP⁴] = 16` (surface-ABK `β=1` a unit ⟹ order 16), an unconditional
+   closed theorem.
+3. **Smith landing:** `[RP⁴]` is Pin⁺ (`w₂=0`, the SW-mechanism).
+
+The only residual is the *geometric-faithfulness* modeling definition — that the finite `adamsAbutment`
+IS the smooth `Ω₄^{Pin⁺}` — documented in `PinPlusAdamsAbutment.adamsAbutment` and to be **DERIVED, not
+assumed**, by the W4–W6 Smith-LES route (`discharge_pin4_abutment_route.md`). It is carried in a `def`'s
+documentation, **not** as a hypothesis here and **not** as an axiom. -/
+theorem sixteen_convergence_adams_abutment :
+    Nonempty (adamsAbutment ≃+ ZMod 16) ∧
+      addOrderOf (Omega4PinPlusBordism.mk pinPlusRP4) = 16 ∧
+        IsPinPlusObstruction RP4 :=
+  ⟨⟨adamsAbutmentEquivZMod16⟩,
+   pinPlusRP4_addOrder_of_pin4 pin4_abutment_substrate,
+   smith_RP4_isPinPlus_via_mechanism⟩
 
 end SKEFTHawking.PinPlusDischarge

@@ -123,6 +123,39 @@ equivalent* to the iso `Ω₄≃ZMod 16`, so the win is **where the 16 comes fro
 not a weaker iso-assumption. The one-breath rule (§6) stays correct; the convergence still **constrains,
 does not derive** the SM (the trivial class); the 3-generation headline is independent.
 
+### 3.6.1 W1 — the finite Adams abutment, UNCONDITIONAL (no disclosed Prop) (2026-06-14)
+
+A scoping pass (`Lit-Search/Phase-5qF/discharge_pin4_abutment_route.md`, route-ranked against a
+**direct Mathlib survey**) established the load-bearing calibration: **`Omega4PinPlusBordism` is a
+posited `ℤ/16ℤ`** (a one-field `signature:ℤ` quotient with a vacuous Pin⁺ `Prop`-class), **not** the
+smooth bordism group; and `pin4_abutment` is *logically equivalent to its own conclusion*. So the
+genuine task is to construct an honest object and **derive** `≅ ℤ/16`. Mathlib state (verified directly):
+spectra / Thom spectra / Steenrod algebra / Adams SS / Stiefel–Whitney / η / APS — **all ABSENT**;
+bordism has only `SingularManifold` objects (no relation/group/Pin–Spin); `spinGroup`/`pinGroup`
+algebraic only. Every route to a genuine geometric `Ω₄^{Pin⁺} ≅ ℤ/16` is gated behind deep absent
+infrastructure (Route A homotopy stack = 15–25 PY; Route C.2 Smith-LES geometric spine = weeks-to-months,
+the critical path).
+
+**W1 brick built (`PinPlusAdamsAbutment.lean`, route C.1, kernel-pure, `axioms:[]`).** The column-`t−s=4`
+Adams abutment is now **defined** as the finite height-capped tower `adamsAbutment := ZMod (2^height4)`,
+and `adamsAbutmentEquivZMod16 : adamsAbutment ≃+ ZMod 16` is **PROVED outright** from the decidable
+`col4_height_eq_four` — **with no hypothesis at all**. This **removes the `Nonempty`-of-the-conclusion
+binder** the old `pin4_abutment` carried: the new `PinPlusDischarge.sixteen_convergence_adams_abutment`
+headline takes **no binder** (no `SmithInflow`, no `pin4_abutment`). The substance is the **height**
+(`col4_height_eq_four`, the explicit δ=·h₀ survivor set `{0,1,2,3}` via `adamsAbutment_card_from_cokernel`);
+the `≅ ZMod 16` is the trivial `2⁴=16` consequence.
+
+**Honest residual (precisely scoped, NOT a hypothesis, NOT an axiom).** The *geometric faithfulness* —
+that this finite `adamsAbutment` IS the smooth `Ω₄^{Pin⁺}` — is carried as a **documented modeling
+definition** in `adamsAbutment`'s docstring (the honest 5q.E `KitaevSixteenFold`/facet-shadow pattern),
+to be **DERIVED — not assumed —** by the W4–W6 Smith-LES route (build a genuine bordism-group scaffold
+over Mathlib's manifolds-with-boundary, then present `Ω₄^{Pin⁺}` as the Smith image of the classical
+groups the project already models: `Ω₂^{Pin⁻}=ℤ/8` via ABK, `Ω₄^{Spin}=ℤ` via Rokhlin). `pin4_abutment`
+is retained only as that geometric-faithfulness bridge (consumed by `Omega5FiniteIso`). **This module must
+never be read as "the geometric Pin⁺ bordism group."** Wave plan: W1 ✅ · W2 (built ABK lower bound,
+posited-signature-free) · W3 (Kreck-α upper arithmetic) · W4–W6 (Smith-LES geometric spine — its own
+sub-program, weeks).
+
 ## 4. Proved NOT true (the no-gos — what the discipline caught)
 
 - **Lattice Arf bridge** `σ/8 ≡ Arf(redQuad) mod 2` — **FALSE** (`RokhlinArfNoGo.lean`; E₈: Arf=0, σ/8=1; Arf(redQuad)≡0 on every even-unimodular lattice). The genuine σ/8↔Arf is the *geometric* Guillou–Marin Arf on a characteristic surface, not a lattice invariant.

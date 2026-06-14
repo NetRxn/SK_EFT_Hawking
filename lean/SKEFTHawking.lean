@@ -695,10 +695,18 @@ import SKEFTHawking.PinPlusExtBound
 -- cokernel), decidable F2 linear algebra -> |Omega_4^Pin+| <= 2^4 = 16. The genuine finite
 -- upper-bound core (no topological input; that is the one disclosed pin4_abutment Prop).
 import SKEFTHawking.PinPlusHeight4
+-- Phase 5q.F W1 (2026-06-14, discharge_pin4_abutment_route.md Route C.1): the Pin+ Adams abutment
+-- as a FINITE, derived Z/16 with NO disclosed Prop. adamsAbutment := ZMod(2^height4);
+-- adamsAbutmentEquivZMod16 is PROVED from the decidable col4_height_eq_four with no hypothesis --
+-- removing the Nonempty-of-the-conclusion binder the old pin4_abutment carried. The geometric
+-- identification (adamsAbutment = smooth Omega_4^Pin+) is a documented modeling DEFINITION, to be
+-- DERIVED by the W4-W6 Smith-LES route, not assumed.
+import SKEFTHawking.PinPlusAdamsAbutment
 -- Phase 5q.F W5+W8 (2026-06-14): Omega_4^Pin+ ≅ Z/16 from the FINITE height-4 cap + the
 -- SmithInflow DISCHARGE. sixteen_convergence_finite_discharge carries NO SmithInflow binder --
 -- only the single disclosed pin4_abutment (Pontryagin-Thom + convergence); the Z/16 is from the
--- finite Ext cokernel height (col4_height_eq_four), the old delta-cap is DERIVED.
+-- finite Ext cokernel height (col4_height_eq_four), the old delta-cap is DERIVED. W1 adds the
+-- hypothesis-free sixteen_convergence_adams_abutment headline.
 import SKEFTHawking.PinPlusDischarge
 -- Phase 5q.F W7 (2026-06-14): Omega_5^{Spin-Z4} ≅ Z/16 via the Smith iso + the FINITE Pin+ side
 -- (criterion 2) -- the SM Dai-Freed group is the SAME finite Z/16 as Omega_4^Pin+, tied by smithHom.
