@@ -823,6 +823,83 @@ report (`72π`→`48π`). ⚠ Root registration (`SKEFTHawking.lean` import) is 
 
 ---
 
+### Wave 7C — the `−3/2` *rate* + faithful `verlindeEntropy_SU2k` (finishes 6a.7 / center-bridge B to full strength) [Pipeline: Stages 1–13]
+
+**Status: AUTHORIZED 2026-06-14 (user sign-off) — take it ALL the way, build the Mathlib infra.**
+Wave 7B derived the Kaul–Majumdar `−3/2` to `O(1)` from the literal Catalan singlet count, but stopped
+short of two things it set out to do: (i) the strictly-stronger `≤C/A` *rate*, and (ii) the
+named-function redefinition `verlindeEntropy_SU2k = the literal sum, not its own saddle` (Sub-task C of
+the original Wave 7). Both were left because the real-`A` continuum needs a `Real.Gamma`
+Stirling-with-remainder that is not yet in Mathlib. **Wave 7C builds that infrastructure and finishes
+the job.** Building upstream Mathlib analysis infra is routine for this project; it is the analytic
+core of this wave, not a precondition to wait on. This wave fully closes substrate-audit #13.
+
+**Goal (full strength — no residual, no tracked-Prop, no spin-off):**
+1. **Discrete rate.** Identify the literal constant `c₀ = −½·log π` and strengthen
+   `LaplaceMethodAsymptotic.log_singletCount_sub_isBigO` from `O(1)` to a quantitative
+   `log(catalan m) − (2m·log2 − (3/2)·log m − ½·log π) =O[atTop] (fun m ↦ (1:ℝ)/m)` — kernel-pure,
+   from Mathlib's quantitative factorial Stirling (`Stirling.log_stirlingSeq_sub_log_stirlingSeq_succ`,
+   tail bound `≤ 1/(4(n+1)²)`, summed to an `O(1/m)` remainder).
+2. **Build the upstream `Real.Gamma` Stirling-with-remainder** (new `lean/SKEFTHawking/GammaStirling.lean`,
+   Mathlib-PR-shaped): `Real.log (Real.Gamma x) − ((x − 1/2)·log x − x + (1/2)·log (2π)) =O[atTop] (fun x ↦ 1/x)`,
+   a **genuine constructive proof, NOT an axiom**. Feasible route = the **Bohr–Mollerup convexity
+   squeeze**: Mathlib has `Real.convexOn_log_Gamma` + `Real.Gamma_nat_eq_factorial`; convexity pins
+   `log Γ(x)` between secant/tangent lines through consecutive integer points whose values are the
+   factorial Stirling, squeeze width `O(1/x)`.
+3. **Faithful continuum count.** Define `continuousSingletCount / verlindeDim : ℝ → ℝ` as the
+   `Real.Gamma`-continuation of the central-binomial difference (the Catalan continuum) and prove its
+   `2x·log2 − (3/2)·log x − ½·log π + O(1/x)` asymptotic from (2), bridged to the area via the
+   (documented, falsifiable) area–spin relation.
+4. **Redefine `verlindeEntropy_SU2k` to the faithful literal/continuum form** so the headline function
+   IS the literal log-dimension and `kaulMajumdarS` (the Gaussian saddle) becomes a *derived corollary*
+   (`kaulMajumdar_saddle_of_verlinde`), not the definition. Re-anchor `gaussianSaddleAsymptotic` and
+   every consumer onto the faithful definition — the saddle is now a genuine **theorem about** the
+   literal entropy, no longer the `|x−x| = 0` self-reference (audit #13 fully closed).
+5. **Restate + discharge `H_VerlindeKMLiteralSumDerivation` at the strong rate** (`faithful entropy −
+   saddle = O(1/A)`, the `≤C/A` form), discharged from (2)/(3) — superseding the `O(1)` discharge.
+
+**Key insight — the whole wave hinges on the Gamma asymptotic.** Once `log Γ` has a bounded-remainder
+Stirling, the continuum count, the faithful redefinition, and the rate all follow. The convexity
+squeeze is elementary in spirit (no new transcendental machinery); it is the brick to lay first after
+the discrete rate.
+
+**Reuse (already built — strengthen, do not discard):**
+- `LaplaceMethodAsymptotic.lean` — `singletCount = catalan`, `succ_mul_singletCount`,
+  `log_singletCount_sub_eq`, `log_singletCount_sub_isBigO`.
+- Mathlib — `Stirling.stirlingSeq`, `Stirling.log_stirlingSeq_sub_log_stirlingSeq_succ`,
+  `Stirling.tendsto_stirlingSeq_sqrt_pi`; `Real.Gamma`, `Real.Gamma_add_one`,
+  `Real.Gamma_nat_eq_factorial`, `Real.convexOn_log_Gamma`, `Real.Gamma_pos_of_pos`;
+  `Asymptotics.IsBigO`, `Filter.Tendsto`, `Real.log` lemmas.
+- `BHEntropyMicroscopic.lean` — `verlindeEntropy_SU2k`, `kaulMajumdarS`, `gaussianSaddleAsymptotic`,
+  `H_VerlindeKMLiteralSumDerivation(_discharged)` (rewire all).
+
+**Discipline:** preemptive-strengthening checklist before every statement; **kernel-pure**
+(`lean_verify` each new theorem); **NO new axiom** (the Gamma Stirling is proven — that is the point
+of the wave); NO `native_decide`; NO `maxHeartbeats` in proof bodies (decompose to `have`
+sub-lemmas); MCP loop (`lean_goal` → `lean_multi_attempt`) before any Aristotle fallback; lean4
+semantic search (not grep) for Mathlib decl existence; read the relevant `Lit-Search/Phase-*`
+analysis blueprints directly. Every new Prop ships a witness AND a falsifier.
+
+**▶ NO-DEFERRAL MANDATE (this wave — per [[feedback-no-hypothesis-based-descope]], the 6a-W7B/5q.E
+root cause):** "absent from Mathlib," "no foothold," "needs new infrastructure," "the Γ-continuum is a
+large build," "could take weeks/months," "deserves its own /goal," and "tracked-Prop /
+documented-residual / awaiting-sign-off fallback" are **NOT valid outcomes and must not be written.**
+Building the `Real.Gamma` Stirling-with-remainder *is the wave.* The ONLY honest stop is (1) a **proved**
+mathematical no-go or (2) a genuine product decision only the user can make — and Wave 7C has neither
+(the Catalan and Gamma asymptotics are standard true results). At every stop-hook firing while the goal
+is unmet, ship the next brick: discrete rate → Gamma-module lemmas → continuum count → faithful
+redefinition → rate discharge → consumers → paper → Stage-13.
+
+**Success / exit (ALL required):** `H_VerlindeKMLiteralSumDerivation` discharged at the `≤C/A` rate;
+`verlindeEntropy_SU2k` faithfully defined with the Gaussian saddle a derived corollary; `GammaStirling.lean`
+built kernel-pure and upstream-shaped; all consumers + paper26/D3/D4 prose + HYPOTHESIS_REGISTRY +
+AXIOM_METADATA (`gaussianSaddleAsymptotic` reason updated — now a genuine theorem about the literal
+entropy) + counts + Inventory + Inventory_Index synced; Stage-13 fresh-context adversarial review at
+0 blockers; full `validate.py` green; committed (own explicit paths only). **Goal prompt:**
+`Phase6a_Wave7C_goal_prompt.md`.
+
+---
+
 ## Decision Gates
 
 **Gate A.1 — after Wave 1 (`LinearizedEFE`) ships:** Is `G_N^emerg` sign correct and within 2 orders of magnitude of observed `G_N`? YES → all subsequent 6a waves proceed at full scope. NO (wrong sign) → ADW identification falsified at linearized order; 6a.4 scope is narrowed, 6a.5 and 6a.6 continue as formal exercises; Phase 6e reassessed. NO (right sign, wrong magnitude) → proceed but document parameter-fit freedom in every downstream wave.
