@@ -25,17 +25,22 @@ make `16∣σ` unconditional (mathematically impossible — E₈). Endpoint = *"
 
 **Ecosystem re-check 2026-06-13** (fresh re-run of the ADR-003 Decision-#7 two-layer watch over the
 leanprover-community org — 83 active repos): **nothing to pull in for this wave.** We already have `batteries` +
-the full standard dep set (transitively via Mathlib) + `Physlib` direct. **No Arf invariant anywhere** — Mathlib
-pin **v4.29.1** AND master **v4.31.0-rc2**, all org repos (validated `gh search code`), `sphere-eversion` (139
-files, 0 relevant), `physlib` — the apparent "Arf" path-hits are `line**arF**orm`/`Ch**arF**un` substring
-artifacts (`/Arf.lean` = 0). So our hand-built `ArfInvariant.lean` is necessary and Phase 1 is top-row in-repo
-assembly. **Phase-2 load-bearing bricks STILL ABSENT at master** (CupProduct / PoincareDuality / StiefelWhitney /
-Wu / Guillou–Marin / manifold-SpinStructure / IntersectionForm / ChernWeil all = 0) → **deferral verdict
-UNCHANGED, do NOT vendor**. Trajectory/warming (watch-don't-vendor): master added `QuadraticForm/{Signature,
-Radical,Basis,AlgClosed}.lean` + `QuadraticModuleCat/*`, `AlgebraicTopology/EilenbergSteenrod.lean` (cohomology
-AXIOMS), `Sites/SheafCohomology/{Cech,MayerVietoris}.lean`, `Manifold/PoincareConjecture.lean` (a STATEMENT, not
-duality). The sister doc `Phase5qB_RokhlinTopoDischarge_Plan.md` is now a pointer here (this is the single source
-of truth).
+the full standard dep set (transitively via Mathlib) + `Physlib` direct. **Existence checks done by SEMANTIC
+search** (lean4-skill `leansearch`/`loogle`/`leanfinder`, NOT grep — per `feedback_lean_semantic_search_over_grep`;
+a tree-`grep "Arf"` returns only `line`**`arF`**`orm`/`Ch`**`arF`**`un` substring noise): **no Arf invariant**
+anywhere (Mathlib pin v4.29.1 AND current master via leansearch/loogle, `sphere-eversion`, `physlib`); **no
+Brown/Milgram Gauss-Milgram** (Mathlib's `NumberTheory.GaussSum` is the multiplicative-character sum, a different
+object); **manifold spin structure absent** (only algebraic `CliffordAlgebra.spinGroup`); **cup-product / Poincaré
+duality / intersection form / Stiefel-Whitney / Pontryagin / Chern / Witt-group all absent** (only the
+`VectorBundle` foundation + the `PoincareConjecture` *statement*). So our hand-built `ArfInvariant.lean` is
+necessary and Phase 1 is top-row in-repo assembly. **Reusable Mathlib substrate that DOES exist** (already used
+by 5q.B/5q.C): `QuadraticForm.{sigPos,sigNeg}`, `equivalent_weightedSumSquares*` (diagonalization),
+`QuadraticMap.discr`, `QuadraticForm.toDualProd` (hyperbolic `Q⊕(−Q)`), `CliffordAlgebra.{EquivEven,spinGroup}`.
+**Phase-2 load-bearing bricks STILL ABSENT** → **deferral UNCHANGED, do NOT vendor**. Trajectory/warming
+(gh master-tree, watch-don't-vendor): master added `QuadraticForm/{Signature,Radical,Basis}.lean` +
+`QuadraticModuleCat/*`, `AlgebraicTopology/EilenbergSteenrod.lean` (cohomology AXIOMS), `Sites/SheafCohomology/*`,
+`Manifold/PoincareConjecture.lean` (a STATEMENT, not duality). The sister doc
+`Phase5qB_RokhlinTopoDischarge_Plan.md` is now a pointer here (this is the single source of truth).
 
 ---
 

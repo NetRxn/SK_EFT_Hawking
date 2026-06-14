@@ -304,20 +304,29 @@ are checked against **both** our pin *and* `gh` master (Decision #7) — a load-
 trigger to **vendor-and-rewire** ahead of the official bump, not merely to wait. The Re-trigger "Mathlib
 community ships" column is satisfied by a master landing, not only a pin bump.
 
-**Watch re-run 2026-06-13 (no trigger fired; verdict unchanged).** Re-ran the two-layer watch over the whole
-leanprover-community org (83 active repos; `gh search code` validated against a known `QuadraticForm` hit) +
-`gh` master-tree of Mathlib (now **v4.31.0-rc2**) and `sphere-eversion`. **All Leg-C/Leg-D load-bearing bricks
-remain absent at master:** `CupProduct` / `PoincareDuality` / `StiefelWhitney` / `Wu` / `Guillou-Marin` /
-manifold-`SpinStructure` / `IntersectionForm` / `ChernWeil` = **0 hits each**; **no Arf invariant anywhere** in
-the ecosystem (the `grep "Arf"` path-hits are `line`**`arF`**`orm`/`Ch`**`arF`**`un` substring artifacts;
-`/Arf.lean` = 0 — same grep-vs-semantic-search lesson as `feedback_lean_semantic_search_over_grep`).
-`sphere-eversion` (139 files) and `physlib` add nothing for these legs (h-principle / physics, no manifold
-alg-top). **We confirmed `batteries` + the full standard dep set are already pulled** (transitively via Mathlib)
-+ `Physlib` direct — nothing in the org is un-pulled and useful here. Continued **warming** since our pin
-(watch-don't-vendor, sub-load-bearing): master added `QuadraticForm/{Signature,Radical,Basis,AlgClosed}.lean` +
-`QuadraticModuleCat/*`, `AlgebraicTopology/EilenbergSteenrod.lean` (cohomology **axioms**),
-`Sites/SheafCohomology/{Cech,MayerVietoris}.lean`, `Manifold/PoincareConjecture.lean` (a **statement**, not
-duality). So Phase 5q.C Phase 1 needs no external infra (top-row in-repo), and Phase 2 stays deferred.
+**Watch re-run 2026-06-13 (no trigger fired; verdict unchanged) — SEMANTIC search + gh master-tree.** Re-ran the
+Decision-#7 two-layer watch. **Layer (i) — the authoritative "does X exist" check — via the lean4-skill SEMANTIC
+tools** (`leansearch`/`loogle`/`leanfinder` over current Mathlib, NOT grep, per
+`feedback_lean_semantic_search_over_grep`): **no Arf invariant** (`loogle "Arf"` → no results;
+`leansearch`/`leanfinder` nearest = `QuadraticForm.toDualProd` / `CliffordAlgebra.EquivEven` / `QuadraticMap.discr`
+— none is an Arf invariant); **no Brown/Milgram Gauss-Milgram** for quadratic forms/lattices (Mathlib's
+`NumberTheory.GaussSum` is the *multiplicative-character* sum for quadratic reciprocity — a different object than
+the Z/2 sign-sum `Arf.gaussSumZ`); **manifold spin structure absent** (only the *algebraic*
+`CliffordAlgebra.spinGroup`); **cup-product cohomology / Poincaré duality / intersection form absent** (nearest =
+`exteriorPower.pairingDual` + the `PoincareConjecture` *statement* — neither is manifold cup-product/duality);
+**Stiefel-Whitney/Pontryagin/Chern characteristic classes absent** (only the `VectorBundle` foundation); no Witt
+group. `physlib` (netrxn-scope semantic search, indexing Mathlib+physlib) surfaced only Mathlib decls — nothing
+for these legs. **Layer (ii) — the `gh` master-tree check** (Mathlib now **v4.31.0-rc2**) for new-file landings —
+confirms only trajectory/warming (`QuadraticForm/{Signature,Radical,Basis}.lean`, `QuadraticModuleCat/*`,
+`AlgebraicTopology/EilenbergSteenrod.lean` = cohomology *axioms*, `Sites/SheafCohomology/{Cech,MayerVietoris}.lean`,
+`Manifold/PoincareConjecture.lean` = a *statement*), NO load-bearing Leg-C brick; `sphere-eversion` (h-principle)
+adds nothing. (A naive tree-`grep "Arf"` returns `line`**`arF`**`orm`/`Ch`**`arF`**`un` substring noise — the
+precise reason layer (i) semantic search, not grep, is the authoritative existence check.) Confirmed `batteries` +
+the full standard dep set are already pulled (transitively via Mathlib) + `Physlib` direct. **Reusable Mathlib
+substrate that DOES exist** (already used by 5q.B/5q.C): `QuadraticForm.{sigPos,sigNeg}`,
+`equivalent_weightedSumSquares*` (diagonalization), `QuadraticMap.discr`, `QuadraticForm.toDualProd` (hyperbolic
+`Q ⊕ (−Q)`), `CliffordAlgebra.{EquivEven,spinGroup}`. Net: **5q.C Phase 1 needs no external infra (top-row,
+in-repo); Phase 2 stays deferred.**
 
 ---
 
