@@ -46,7 +46,14 @@ theorem height4_eq : height4 = 4 := col4_height_eq_four
 bordism group is the Adams abutment of the column-4 height-`height4` `h₀`-tower, i.e. `Ω₄^{Pin⁺} ≃+
 ZMod (2^height4)`. Bundles Pontryagin–Thom (`Ω₄ ≅ π₄MTPin⁺`) + Adams convergence (`E₂=E∞`, no hidden
 ext). NOT an axiom; **inhabited** (`pin4_abutment_substrate`). The cardinality `2^height4` is the
-**finite** Ext height (`col4_height_eq_four`), so the `ℤ/16` below is from finite content. -/
+**finite** Ext height (`col4_height_eq_four`), so the `ℤ/16` below is from finite content.
+
+**Honest scope (adversarial-review flag 1).** `pin4_abutment` is *logically equivalent* to
+`Nonempty (Ω₄^{Pin⁺} ≃+ ZMod 16)` (since `2^height4 = 2^4 = 16`), i.e. it asserts the same iso
+*proposition* as the iso-half of the old `SmithInflow`. The axiom-stratification win is **where the 16
+comes from** — the decidable Ext cokernel height (`col4_height_eq_four`, `axioms:[]`) rather than a bare
+posited literal — **NOT** that a *weaker* topological assumption is made. The iso itself (the
+Pontryagin–Thom bridge) is still disclosed; only its cardinality is now finite-derived. -/
 def pin4_abutment : Prop := Nonempty (Omega4PinPlusBordism ≃+ ZMod (2 ^ height4))
 
 /-- The disclosed Prop is **inhabited** at the substrate: the Kirby–Taylor iso `Ω₄^{Pin⁺} ≃+ ZMod 16`
@@ -95,28 +102,28 @@ theorem pinPlusRP4_addOrder_of_pin4 (h : pin4_abutment) :
 1. **upper, finite:** `Ω₄^{Pin⁺} ≃+ ℤ/16`, the 16 from the height-4 cokernel (`col4_height_eq_four`).
 2. **lower, finite:** `addOrderOf [RP⁴] = 16` (surface ABK `β=1` a unit ⟹ odd ⟹ order 16).
 3. **Smith landing:** `[RP⁴] = PD(α)` is Pin⁺ (`w₂=0`, the SW-mechanism).
-4. **SM trivial:** the Dai–Freed anomaly `16·N_f = 0` in the bordism `ℤ/16` (anomaly-free).
+
+(The SM-anomaly facet — the Dai–Freed class `16·N_f` is the trivial bordism class — is the *substantive*
+`SymTFT.smithHom_sm_trivial` / `Omega5Finite.omega5_finite_convergence` on the Ω₅ side, NOT the vacuous
+`16·N_f = 0 (mod 16)` tautology the adversarial review flagged here, which is dropped.)
 
 `SmithInflow` (the opaque ℤ₁₆-iso hypothesis) is gone: its iso content is `pinPlus_iso_zmod16_of_pin4`
 (from finite content) and the upper cap is `deltaCap_of_pin4` (derived). The single tracked input is
 Pontryagin–Thom + convergence — NOT the opaque iso, NOT the posited quotient. -/
-theorem sixteen_convergence_finite_discharge (h : pin4_abutment) (N_f : ℕ) :
+theorem sixteen_convergence_finite_discharge (h : pin4_abutment) :
     Nonempty (Omega4PinPlusBordism ≃+ ZMod 16) ∧
       addOrderOf (Omega4PinPlusBordism.mk pinPlusRP4) = 16 ∧
-        IsPinPlusObstruction RP4 ∧
-          (16 : ZMod 16) * (N_f : ZMod 16) = 0 :=
+        IsPinPlusObstruction RP4 :=
   ⟨pinPlus_iso_zmod16_of_pin4 h, pinPlusRP4_addOrder_of_pin4 h,
-   smith_RP4_isPinPlus_via_mechanism, by
-     rw [show (16 : ZMod 16) = 0 from by decide, zero_mul]⟩
+   smith_RP4_isPinPlus_via_mechanism⟩
 
 /-- **Substrate instance** — the fully discharged convergence at the substrate (the disclosed
 `pin4_abutment` inhabited): `Ω₄^{Pin⁺} ≅ ℤ/16` (16 from the finite height), `[RP⁴]` order 16 (finite
 ABK), Pin⁺ SW-mechanism. The geometric Pontryagin–Thom remains the single tracked input. -/
-theorem sixteen_convergence_finite_discharge_substrate (N_f : ℕ) :
+theorem sixteen_convergence_finite_discharge_substrate :
     Nonempty (Omega4PinPlusBordism ≃+ ZMod 16) ∧
       addOrderOf (Omega4PinPlusBordism.mk pinPlusRP4) = 16 ∧
-        IsPinPlusObstruction RP4 ∧
-          (16 : ZMod 16) * (N_f : ZMod 16) = 0 :=
-  sixteen_convergence_finite_discharge pin4_abutment_substrate N_f
+        IsPinPlusObstruction RP4 :=
+  sixteen_convergence_finite_discharge pin4_abutment_substrate
 
 end SKEFTHawking.PinPlusDischarge

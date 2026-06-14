@@ -700,6 +700,9 @@ import SKEFTHawking.PinPlusHeight4
 -- only the single disclosed pin4_abutment (Pontryagin-Thom + convergence); the Z/16 is from the
 -- finite Ext cokernel height (col4_height_eq_four), the old delta-cap is DERIVED.
 import SKEFTHawking.PinPlusDischarge
+-- Phase 5q.F W7 (2026-06-14): Omega_5^{Spin-Z4} ≅ Z/16 via the Smith iso + the FINITE Pin+ side
+-- (criterion 2) -- the SM Dai-Freed group is the SAME finite Z/16 as Omega_4^Pin+, tied by smithHom.
+import SKEFTHawking.Omega5FiniteIso
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
