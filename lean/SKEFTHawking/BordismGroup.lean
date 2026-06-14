@@ -158,4 +158,29 @@ theorem IsBordant.refl {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
     (s : SingularManifold X k I) : IsBordant (I.prod (𝓡∂ 1)) s s :=
   ⟨reflCylinder s⟩
 
+/-! ## §4. The bordism group `Quot (IsBordant)` (no transitivity/gluing needed) -/
+
+/-- The **bordism group** of `X` (with `X = PUnit` for the absolute `Ω_•^I(pt)`): bordism classes of
+closed singular `I`-manifolds, with the canonical `(n+1)`-bordism model `I.prod (𝓡∂ 1)`. `Quot`
+quotients by the cobordism relation directly — it identifies via the relation's equivalence-closure, so
+**no transitivity (manifold-gluing) proof is needed**, and the quotient is the genuine bordism group. -/
+def BordismGrp (X : Type*) [TopologicalSpace X] (k : WithTop ℕ∞)
+    {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [TopologicalSpace H] (I : ModelWithCorners ℝ E H) : Type _ :=
+  Quot (IsBordant (I.prod (𝓡∂ 1)) : SingularManifold X k I → SingularManifold X k I → Prop)
+
+/-- The bordism class of a closed singular manifold. -/
+def BordismGrp.mk {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
+    {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [TopologicalSpace H] {I : ModelWithCorners ℝ E H} (s : SingularManifold X k I) :
+    BordismGrp X k I :=
+  Quot.mk _ s
+
+/-- Bordant manifolds have the same bordism class. -/
+theorem BordismGrp.mk_eq_of_bordant {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
+    {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [TopologicalSpace H] {I : ModelWithCorners ℝ E H} {s t : SingularManifold X k I}
+    (h : IsBordant (I.prod (𝓡∂ 1)) s t) : BordismGrp.mk s = BordismGrp.mk t :=
+  Quot.sound h
+
 end SKEFTHawking.BordismTheory
