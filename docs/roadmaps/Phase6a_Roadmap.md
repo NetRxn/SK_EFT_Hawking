@@ -478,6 +478,42 @@ This wave pays that cost.
 
 ---
 
+## ✅ MORNING SUMMARY — Center-Bridge Discharge COMPLETE (2026-06-14, overnight /goal)
+
+**All three waves shipped, kernel-pure ({propext, Classical.choice, Quot.sound}), each passed an
+independent fresh-context Stage-13 review with 0 BLOCKERS; full validate.py 43/43 throughout.**
+The D4 "Area Law" `log Ω ≟ A/4G` is discharged: counting (left) and area (right) both genuinely derived.
+
+| Wave | Landing | Commits |
+|---|---|---|
+| **8** (consistency) | `modularInvariant`:=`md.modular`, `anomalyMatch`:=`8∣c₋`; F4 de-tautologized; witnesses+falsifiers | `9c12cd34` |
+| **7B** (literal Verlinde) | Kaul–Majumdar **−3/2 derived from the literal Catalan singlet count via Stirling** (no Hardy–Ramanujan/Bessel); `H_VerlindeKMLiteralSumDerivation` discharged | `c1c2a156 64ecf70d f739f230 210c6ce3` |
+| **9** (induced-gravity 1/4) | **`frolov_fursaev_quarter_coefficient`** — 1/4 from the shared-`a₂` 48:12 ratio, γ-independent; **Gate A.2 CLOSED**; witness+falsifier+consistency | `474c3fcc` |
+| closure | induced-gravity 1/4 lifted into paper26+D3; stale axiom/HR claims fixed | `f80d94fc` |
+
+**Flags / fallbacks / defaults (all honest, documented):**
+- **Wave 7B residual (deeper future work, tracked):** `verlindeEntropy_SU2k` kept as the smooth real-`A`
+  saddle MODEL (the genuine literal sum is `singletCount`); a faithful real-`A` literal redefinition +
+  the strictly-stronger `≤C/A` *rate* need a Γ-smooth continuum + quantitative Stirling (1/(12n)). The
+  genuine `O(1)` leading+log discharge is shipped. Per fallback (b/c): isolated, flagged, circle-back.
+- **Wave 9 default:** the `48π` conical-replica heat-kernel coefficient is a NAMED, FALSIFIABLE physical
+  input (FFZ hep-th/9607104) — a hypothesis, NOT an axiom (Mathlib lacks conical heat kernels);
+  `frolov_fursaev_falsifier_wrong_coeff` makes it load-bearing. `H_Sakharov` registered as a tracked
+  physical premise (the conditional's honest antecedent). Caught+fixed a `72π`→`48π` bug in the DR report.
+
+**⚠ ONE DEFERRED ACTION for the morning (NOT done — concurrent 5QE agent entanglement):** the shared
+autogen (`docs/counts.json`, `docs/counts.tex`, `lean/lean_deps.json(.hash)`, `SK_EFT_Hawking_Inventory_Index.md`)
++ the root `lean/SKEFTHawking.lean` `import SKEFTHawking.InducedGravityEntropy` line are **on-disk +
+validated this session but UNCOMMITTED** (committing them would entangle 5QE's uncommitted `CommonOrigin.lean`).
+The committed tree is buildable (InducedGravityEntropy.lean is committed; nothing committed imports it →
+orphan-but-valid). **Reconcile once 5QE settles:** `lake build SKEFTHawking.ExtractDeps` →
+`update_counts.py` → `update_inventory_index.py` → commit those autogen + the root import line.
+
+All 8 commits on `main`, **NOT pushed**. Full chain: `9c12cd34` (W8) → `c1c2a156 64ecf70d f739f230
+210c6ce3` (W7B) → `474c3fcc` (W9) → `f80d94fc` (closure).
+
+---
+
 ## RE-OPENED 2026-06-13 — Center-Bridge Discharge (Waves 7B + 8 + C-spike)
 
 *Origin: a planning spike on the D4 "Area Law" figure. The figure's center bridge `log Ω ≟ A/4G`
