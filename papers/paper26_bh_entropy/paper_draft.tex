@@ -224,7 +224,7 @@ Lifting the prose-level sourcing to per-summand Lean definitions
 (\texttt{gaussianContribution}, \texttt{singletProjectionContribution})
 is a follow-on goal.
 
-\subsection{The Laplace-method bound (axiom retired in Wave~6a.7)}
+\subsection{The Laplace-method bound (axiom retired Wave~6a.7; faithful definition + genuine $O(1/A)$ rate Wave~7C)}
 \label{sec:saddle}
 
 Wave~3 originally axiomatized the key bound:
@@ -234,26 +234,30 @@ Wave~3 originally axiomatized the key bound:
 \leq C/A
 \end{equation}
 for all $A \geq 1$, $G_N > 0$.
-\textbf{Wave~6a.7 (2026-04-27) retired the axiom}: the symbolic
-$\texttt{verlindeEntropy\_SU2k}$ is now the concrete Laplace-saddle-
-limit definition $\texttt{verlindeEntropy\_SU2k}(A, G_N) :=
-\texttt{kaulMajumdarS}(A, G_N, 0)$, and \texttt{gaussianSaddleAsymptotic}
-is a theorem with $C = 1$. Substantive content of the project-local
-\texttt{lean/SKEFTHawking/LaplaceMethod.lean} module
-(\texttt{gaussian\_full\_integral} via \texttt{integral\_gaussian},
-\texttt{exp\_neg\_sq\_le\_exp\_neg\_lin}, the
-\texttt{IsBoundedRemainderOoneOverA} predicate with reflexivity +
-transitivity) provides the Watson's-lemma assembly bridge for future
-work. The literal SU(2)$_k$ Verlinde-sum derivation of the $-3/2$ is
-\emph{shipped} (Wave~7B): the horizon singlet count is the SU(2) singlet
-multiplicity $=$ Catalan number $\binom{2m}{m}/(m{+}1)$ (the discrete
-$I_0-I_1$), whose $-3/2$ follows from Mathlib's Stirling formula --- NOT a
-Hardy--Ramanujan partition asymptotic (that is for \emph{unrestricted}
-partitions; the horizon count is the \emph{constrained} singlet count). This
-discharges \texttt{H\_VerlindeKMLiteralSumDerivation}
-(\texttt{H\_VerlindeKMLiteralSumDerivation\_discharged}, via
-\texttt{LaplaceMethodAsymptotic.log\_singletCount\_sub\_isBigO}); only the
-strictly-stronger $O(1/A)$ \emph{rate} (quantitative Stirling) remains future work.
+\textbf{Wave~6a.7 (2026-04-27) retired the axiom}; \textbf{Wave~7C
+(2026-06-14) made the definition \emph{faithful}}:
+$\texttt{verlindeEntropy\_SU2k}(A, G_N) := \texttt{continuumLogCatalan}(A/(8 G_N \log 2))$
+is now the \emph{literal} log of the $\Gamma$-interpolated SU(2) singlet dimension
+$\Gamma(2x{+}1)/(\Gamma(x{+}1)\,\Gamma(x{+}2))$ --- a genuine independent analytic object,
+\emph{not} the earlier saddle self-definition $:= \texttt{kaulMajumdarS}(A, G_N, 0)$
+(substrate-audit finding \#13, ``defining-the-conclusion''). The Kaul--Majumdar closed form is
+now a \emph{derived corollary}: \texttt{gaussianSaddleAsymptotic} is the genuine $O(1/A)$ rate
+$|\texttt{verlindeEntropy\_SU2k}(A,G_N) - \texttt{kaulMajumdarS}(A,G_N,\kappa_{\mathrm{KM}})| =
+O(1/A)$ with the literal nonzero constant $\kappa_{\mathrm{KM}} = \tfrac{3}{2}\log(2\log 2) -
+\tfrac{1}{2}\log\pi$ --- no longer the vacuous $|x-x| = 0$. The literal SU(2)$_k$ Verlinde-sum
+derivation of the $-3/2$ is the foundation: the horizon singlet count is the SU(2) singlet
+multiplicity $=$ Catalan number $\binom{2m}{m}/(m{+}1)$ (the discrete $I_0-I_1$), whose $-3/2$
+follows from Mathlib's Stirling formula --- NOT a Hardy--Ramanujan partition asymptotic (that is
+for \emph{unrestricted} partitions; the horizon count is the \emph{constrained} singlet count).
+The discrete asymptotic is sharpened to the $O(1/m)$ \emph{rate}
+(\texttt{LaplaceMethodAsymptotic.log\_singletCount\_sub\_rate}), and \textbf{the strictly-stronger
+$O(1/A)$ continuum rate is now \emph{shipped}, not future work}: Wave~7C builds the
+\texttt{Real.Gamma} Stirling-with-remainder
+(\texttt{GammaStirling.logGamma\_sub\_stirlingPart\_isBigO}, kernel-pure, via the Bohr--Mollerup
+convexity squeeze --- previously absent from Mathlib) and the continuum Catalan asymptotic
+(\texttt{ContinuumCatalan.continuumLogCatalan\_isBigO}), discharging
+\texttt{H\_VerlindeKMLiteralSumDerivation} at the $O(1/A)$ rate
+(\texttt{H\_VerlindeKMLiteralSumDerivation\_discharged}).
 After Wave~6a.7, \texttt{AXIOM\_METADATA[\textquotesingle gaussianSaddleAsymptotic\textquotesingle]}
 shows \texttt{eliminability: closed} with full \texttt{evidence\_on\_close} block;
 \texttt{\textbackslash axiomcount} drops from 2 to 1 (only
@@ -472,9 +476,10 @@ and an adversarial-review followup; one of the original 19 was
 replaced by a substantive corollary, see below), \sorrycount{} sorry,
 \textbf{0 new axioms} after Wave~6a.7 axiom retirement
 (originally Wave~3 axiomatized \texttt{gaussianSaddleAsymptotic};
-Wave~6a.7 made \texttt{verlindeEntropy\_SU2k} concrete via the
-Laplace-saddle-limit definition and proved
-\texttt{gaussianSaddleAsymptotic} as a theorem). \texttt{lake build}
+Wave~6a.7 made \texttt{verlindeEntropy\_SU2k} concrete, and Wave~7C made it
+\emph{faithful} --- the literal $\Gamma$-Catalan log-dimension, with
+\texttt{gaussianSaddleAsymptotic} the genuine $O(1/A)$ rate and the
+Kaul--Majumdar saddle a derived corollary). \texttt{lake build}
 clean. Companion module:
 \texttt{lean/SKEFTHawking/LaplaceMethod.lean} (Wave~6a.7,
 5 theorems, 0 sorry, 0 axioms beyond \{\texttt{propext},

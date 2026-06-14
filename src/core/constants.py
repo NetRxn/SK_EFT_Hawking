@@ -1470,10 +1470,19 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
                   'derived the literal -3/2 from the SU(2) singlet = Catalan '
                   'count via Mathlib Stirling (no Hardy-Ramanujan, no Bessel; '
                   '`LaplaceMethodAsymptotic.log_singletCount_sub_isBigO`), '
-                  'discharging `H_VerlindeKMLiteralSumDerivation`. Only the '
-                  'strictly-stronger O(1/A) RATE (+ a Gamma-smooth real-A '
-                  'verlindeEntropy_SU2k redefinition) remains future work — '
-                  'it needs quantitative Stirling, NOT Hardy-Ramanujan.',
+                  'discharging `H_VerlindeKMLiteralSumDerivation` at O(1). '
+                  'Wave 7C (2026-06-14) COMPLETED the program: '
+                  '`verlindeEntropy_SU2k` is now the FAITHFUL literal Gamma-Catalan '
+                  'log-dimension `continuumLogCatalan (A/(8 G_N log 2))` (substrate-audit '
+                  '#13 closed at the named-function level), the Real.Gamma '
+                  'Stirling-with-remainder was built kernel-pure '
+                  '(`GammaStirling.logGamma_sub_stirlingPart_isBigO`, Bohr-Mollerup '
+                  'convexity squeeze; previously absent from Mathlib), and the '
+                  'strictly-stronger O(1/A) rate is DISCHARGED: `gaussianSaddleAsymptotic` '
+                  'is now the genuine per-G_N O(1/A) rate vs `kaulMajumdarS A G_N '
+                  'kmConstant` (kmConstant = 3/2 log(2 log 2) - 1/2 log pi), no longer '
+                  'the |x-x|=0 vacuity. NO remaining future work; it needed quantitative '
+                  'Stirling, NOT Hardy-Ramanujan.',
         'module': 'BHEntropyMicroscopic',
         'used_in': 'kaulMajumdar_asymptotic_within_OoneOverA, '
                    'verlinde_matches_kaul_majumdar_at_large_area '
@@ -1495,15 +1504,18 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
                             '.kaulMajumdar_S_pos_at_e_squared returns '
                             'axioms = [propext, Classical.choice, Quot.sound] '
                             'only (no gaussianSaddleAsymptotic in any closure).',
-            'future_work': 'Wave 7B (2026-06-14) discharged '
-                           '`H_VerlindeKMLiteralSumDerivation` genuinely via the '
-                           'Catalan/Stirling route (`LaplaceMethodAsymptotic`) — '
-                           'Hardy-Ramanujan is NOT needed (that p(N) asymptotic is '
-                           'for unrestricted partitions; the horizon count is the '
-                           'constrained SU(2) singlet = Catalan number). Remaining '
-                           'narrow future work: the strictly-stronger O(1/A) rate '
-                           '(needs quantitative Stirling, 1/(12n)) + a Gamma-smooth '
-                           'real-A `verlindeEntropy_SU2k` literal redefinition.',
+            'future_work': 'NONE — fully completed 2026-06-14. Wave 7B discharged '
+                           '`H_VerlindeKMLiteralSumDerivation` at O(1) via the '
+                           'Catalan/Stirling route; Wave 7C then (a) built the '
+                           'Real.Gamma Stirling-with-remainder kernel-pure '
+                           '(`GammaStirling.logGamma_sub_stirlingPart_isBigO`, '
+                           'Bohr-Mollerup squeeze, Mathlib-absent), (b) the continuum '
+                           'Catalan asymptotic (`ContinuumCatalan.continuumLogCatalan_isBigO`), '
+                           '(c) redefined `verlindeEntropy_SU2k` to the faithful literal '
+                           'Gamma-Catalan log-dimension (audit-#13 closed), and (d) '
+                           'discharged the strictly-stronger per-G_N O(1/A) rate '
+                           '(`gaussianSaddleAsymptotic`, vs `kaulMajumdarS A G_N kmConstant`). '
+                           'Hardy-Ramanujan was never needed (constrained singlet = Catalan).',
         },
     },
     'sk_axiom_Dawson_Nielsen': {

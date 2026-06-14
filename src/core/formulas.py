@@ -8498,17 +8498,20 @@ def verlinde_dim_horizon(p, S_matrix, label_indices, vacuum_index=0):
     physical content the Wave 3 module needs at the horizon.
 
     Lean: pending — Verlinde sum is not yet formalized at theorem level.
-          Wave 6a.7 (2026-04-27) restructured the abstract counterpart from
-          `opaque verlindeEntropy_SU2k` + `axiom gaussianSaddleAsymptotic`
-          into a concrete Laplace-saddle-limit definition + theorem
-          (`BHEntropyMicroscopic.verlindeEntropy_SU2k := kaulMajumdarS` at
-          the saddle limit; `gaussianSaddleAsymptotic` now a theorem).
+          Wave 6a.7 (2026-04-27) retired `axiom gaussianSaddleAsymptotic`.
           Wave 7B (2026-06-14) GENUINELY derived the literal -3/2 from the
           SU(2) singlet = Catalan count via Mathlib Stirling — NOT Hardy-Ramanujan
           (that p(N) asymptotic is for unrestricted partitions; the horizon count
-          is the constrained Catalan number) — in `LaplaceMethodAsymptotic`,
-          discharging `H_VerlindeKMLiteralSumDerivation`. Only the stronger O(1/A)
-          rate + a Gamma-smooth real-A redefinition remain future work.
+          is the constrained Catalan number) — in `LaplaceMethodAsymptotic`.
+          Wave 7C (2026-06-14) COMPLETED it: `verlindeEntropy_SU2k` is now the
+          faithful literal Gamma-Catalan log-dimension
+          `continuumLogCatalan (A/(8 G_N log 2))` (substrate-audit #13 closed), built on
+          the kernel-pure Real.Gamma Stirling-with-remainder
+          (`GammaStirling.logGamma_sub_stirlingPart_isBigO`, Mathlib-absent before) +
+          continuum Catalan asymptotic (`ContinuumCatalan.continuumLogCatalan_isBigO`);
+          `gaussianSaddleAsymptotic` is the genuine per-G_N O(1/A) rate vs
+          `kaulMajumdarS A G_N kmConstant`, discharging `H_VerlindeKMLiteralSumDerivation`.
+          No remaining future work.
     Aristotle: pending
     Source: Verlinde, Nucl. Phys. B 300, 360 (1988); Kaul SIGMA 8, 005 (2012),
             Eq. (24), arXiv:1201.6102.
