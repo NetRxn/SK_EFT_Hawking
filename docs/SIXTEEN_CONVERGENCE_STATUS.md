@@ -107,6 +107,15 @@ it is a classification statement, not a dynamical mechanism.
 ## 6. How to say it (one breath)
 
 > *"Three generations follows from the Standard Model's 16 Weyl fermions per generation plus modular invariance —
-> that part is machine-verified. Separately, the number 16 recurs in Rokhlin's theorem, the ℤ₁₆ global anomaly,
-> and Kitaev's classification; the literature ties those together through spin-bordism, and we've formally
-> recorded each occurrence — but we have not formally proved they share a single origin, and we don't claim to."*
+> that part is machine-verified and uses none of the convergence. Separately, the number 16 recurs in Rokhlin's
+> theorem, the ℤ₁₆ global anomaly, and Kitaev's classification; we've now formally shown (`CommonOrigin.lean`) that
+> these are images of **one** genuine ℤ₁₆ — the Pin⁺ bordism group — under explicit maps, with Rokhlin and Kitaev
+> reading it identically. That common-origin theorem is **conditional**: it rests on a disclosed input, the Smith
+> homomorphism, whose isomorphism content is established in the literature but whose geometric construction (and the
+> Ω₅^{Spin-ℤ₄} bordism group) is not yet in Mathlib. So we've moved from 'the number 16 recurs' to 'these are one
+> ℤ₁₆ under explicit maps, given the cited Smith identification' — and even fully proved it would **constrain, not
+> derive** the Standard Model."*
+
+(Earlier framing, pre-2026-06-14: "we have not formally proved they share a single origin." That is now superseded
+by the *conditional* common origin; the *unconditional* version still awaits the geometric Smith map / Ω₅ bordism
+group. Do not overstate it as unconditional.)
