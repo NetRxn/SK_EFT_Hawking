@@ -232,4 +232,25 @@ theorem BordismGrp.mk_eq_of_bordant {X : Type*} [TopologicalSpace X] {k : WithTo
     (h : IsBordant (I.prod (𝓡∂ 1)) s t) : BordismGrp.mk s = BordismGrp.mk t :=
   Quot.sound h
 
+/-! ## §5. The disjoint-union operation on the bordism group -/
+
+section Group
+variable {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
+  {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+  [TopologicalSpace H] {I : ModelWithCorners ℝ E H} [I.Boundaryless]
+
+/-- **Disjoint union `⊕` on bordism classes.** Well-defined via `Bordism.add` + the cylinder: the
+congruence `s ~ s' ⟹ s ⊔ t ~ s' ⊔ t` is `Bordism.add (bordism) (reflCylinder t)`, with no gluing. -/
+noncomputable def BordismGrp.add (x y : BordismGrp X k I) : BordismGrp X k I :=
+  Quot.lift₂ (fun s t => BordismGrp.mk (s.sum t))
+    (fun s _t _t' h => h.elim fun b => mk_eq_of_bordant ⟨Bordism.add (reflCylinder s) b⟩)
+    (fun _s _s' t h => h.elim fun b => mk_eq_of_bordant ⟨Bordism.add b (reflCylinder t)⟩)
+    x y
+
+@[simp] theorem BordismGrp.add_mk (s t : SingularManifold X k I) :
+    BordismGrp.add (BordismGrp.mk s) (BordismGrp.mk t) = BordismGrp.mk (s.sum t) :=
+  rfl
+
+end Group
+
 end SKEFTHawking.BordismTheory
