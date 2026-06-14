@@ -72,4 +72,21 @@ theorem DataBordismGrp.mk_eq_of_bordant.{u} (ξ : TangentialData.{u} X k I) {p q
     (h : IsDataBordant ξ p q) : DataBordismGrp.mk ξ p = DataBordismGrp.mk ξ q :=
   Quot.sound h
 
+/-- **Disjoint union `⊕` on faithful (structured) bordism classes.** Well-defined: `sumStr` combines the
+structures; the congruence is `Bordism.add` of the structured bordism with the cylinder (`addBor` +
+`cylBor`), reusing the genuine machinery with no gluing. -/
+noncomputable def DataBordismGrp.add.{u} (ξ : TangentialData.{u} X k I)
+    (x y : DataBordismGrp ξ) : DataBordismGrp ξ :=
+  Quot.lift₂ (fun p q => DataBordismGrp.mk ξ ⟨p.1.sum q.1, ξ.sumStr p.2 q.2⟩)
+    (fun p _q _q' h => h.elim fun b hb => hb.elim fun str =>
+      mk_eq_of_bordant ξ ⟨Bordism.add (reflCylinder p.1) b, ⟨ξ.addBor (ξ.cylBor p.2) str⟩⟩)
+    (fun _p _p' q h => h.elim fun b hb => hb.elim fun str =>
+      mk_eq_of_bordant ξ ⟨Bordism.add b (reflCylinder q.1), ⟨ξ.addBor str (ξ.cylBor q.2)⟩⟩)
+    x y
+
+@[simp] theorem DataBordismGrp.add_mk.{u} (ξ : TangentialData.{u} X k I) (p q : StrMfd ξ) :
+    DataBordismGrp.add ξ (DataBordismGrp.mk ξ p) (DataBordismGrp.mk ξ q) =
+      DataBordismGrp.mk ξ ⟨p.1.sum q.1, ξ.sumStr p.2 q.2⟩ :=
+  rfl
+
 end SKEFTHawking.TangentialDataBordism
