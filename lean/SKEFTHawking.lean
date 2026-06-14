@@ -667,6 +667,7 @@ import SKEFTHawking.BrownInvariant
 import SKEFTHawking.GuillouMarinBridge
 import SKEFTHawking.JokerModule
 import SKEFTHawking.KspModule
+import SKEFTHawking.KspResolution
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
