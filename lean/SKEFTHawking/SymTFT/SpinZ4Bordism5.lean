@@ -16,20 +16,26 @@ This is the **exact analog** of `SymTFT/PinPlusBordism4.lean` (Phase 6r, reviewe
 ℤ-lift of the Dai–Freed/η class, `16·η ∈ ℤ`), quotiented by `16 ∣ Δ(daiFreed)` to give a genuine
 `Omega5SpinZ4Bordism ≃+ ZMod 16`. Just as the Pin⁺ substrate **assigns** `signature` (e.g.
 `pinPlusRP4 := ⟨1⟩`) rather than computing it from geometry, this substrate **assigns** `daiFreed`;
-the geometric Spin-ℤ₄ structure and the genuine η-invariant are the **tracked** content (the same
-status as `IsKirbyTaylorPinPlusBordism` for the Pin⁺ group, and per the `smith_inflow_z16`
-HYPOTHESIS_REGISTRY entry). The `APSEta.wittenYonekuraToZ16` η-map is currently a placeholder, so
-the *computed* η is not yet available — but, as on the Pin⁺ side, the ℤ₁₆ **bordism-group
-structure** is genuine even when its invariant is assigned.
+the geometric Spin-ℤ₄ structure and the genuine η-invariant are the **tracked** content.
 
-**What W6 changes vs. the W5 `SmithInflow` hypothesis:** the Smith map is now a **constructed**
-`AddEquiv` between two genuine bordism `Quotient`s (`smithHom`), not an abstract `ZMod 16 ≃+ Ω₄`
-hypothesis. The conditional common origin's one tracked input (the *existence* of the Smith iso) is
-thereby **discharged at the substrate level** (`smithInflowOfSmithHom` realizes the W5
-`SmithInflow` from `smithHom`). The residual tracked content shrinks to the *geometric faithfulness*
-of the two thin substrates — the same class the Pin⁺ substrate already carries. The geometric
-**construction** of `Ω₅^{Spin-ℤ₄}` from manifolds-with-Spin-ℤ₄-structure + the η-invariant remains
-the Mathlib-absent landmark; this is its honest substrate stand-in.
+**Honest caveat — the faithfulness gap here is LARGER than on the Pin⁺ side (do not flatten this).**
+Two same-day records (the `smith_inflow_z16` HYPOTHESIS_REGISTRY entry and the Phase 5q.E roadmap)
+reasoned that the real Dai–Freed invariant is **intrinsically ℤ₁₆** (η/16 mod 1 ∈ ℝ/ℤ), with no
+*natural* ℤ-lift. So while this Lean `Quotient` is a genuine, kernel-pure `≃+ ZMod 16` (it is NOT
+"vacuous" — that earlier wording overstated the other way), the act of carrying `daiFreed : ℤ` and
+reducing mod 16 is a **less-faithful** stand-in than the Pin⁺ signature is for `Ω₄^{Pin⁺}`: the
+Pin⁺ side's tracked content is "this ℤ-valued signature is the bordism invariant," whereas this
+side *additionally* tracks "the invariant takes ℤ values at all," which the geometric η does not.
+The `APSEta.wittenYonekuraToZ16` η-map is a placeholder, so the *computed* η is unavailable.
+
+**What W6 changes vs. the W5 `SmithInflow` hypothesis (scoped honestly):** the Smith map is now a
+**constructed** `AddEquiv` between two genuine bordism `Quotient`s (`smithHom`), not an abstract
+`ZMod 16 ≃+ Ω₄` hypothesis. So `CommonOrigin`'s ℤ₁₆-level chain SM → Ω₅ → Smith → Ω₄ is built with
+**no abstract Lean hypothesis** (`smithInflowOfSmithHom` realizes the W5 `SmithInflow` from
+`smithHom`). This is a **hypothesis-level** change only — NOT a faithfulness-level one: the geometric
+**construction** of `Ω₅^{Spin-ℤ₄}` from manifolds + the η-invariant, and the faithfulness of these
+thin substrates, remain the Mathlib-absent landmark (a *larger* tracked gap than the Pin⁺ side, per
+the caveat above). This is its honest substrate stand-in, not a discharge of the geometry.
 
 ## References
   - García-Etxebarria–Montero, JHEP 08 (2019) 003 [arXiv:1808.00009] — `Ω₅^{Spin-ℤ₄} ≅ ℤ₁₆`, the SM
@@ -45,9 +51,10 @@ namespace SKEFTHawking.SymTFT
 
 /-! ## §1. SpinZ4Manifold5 — thin Spin-ℤ₄ 5-manifold (à la PinPlusManifold4) -/
 
-/-- A closed Spin-ℤ₄ 5-manifold, reduced to the data needed for bordism: the ℤ-lift of its
+/-- A closed Spin-ℤ₄ 5-manifold, reduced to the data needed for bordism: a ℤ-lift of its
 Dai–Freed/η anomaly class. Thin substrate (the geometric Spin-ℤ₄ structure + η-invariant are
-tracked, exactly as `PinPlusManifold4` carries only `signature`). -/
+tracked, mirroring `PinPlusManifold4`'s `signature` field — but see the header caveat: the η
+invariant is ℤ₁₆-native, so this ℤ-lift is a *less*-faithful stand-in than the Pin⁺ signature). -/
 structure SpinZ4Manifold5 where
   /-- ℤ-lift of the Dai–Freed anomaly class (`16·η ∈ ℤ`); the `Ω₅^{Spin-ℤ₄} ≅ ℤ₁₆` invariant. -/
   daiFreed : ℤ
@@ -83,6 +90,13 @@ def spinZ4Gen : SpinZ4Manifold5 := ⟨1⟩
 /-- The SM Dai–Freed anomaly representative for `N_f` complete generations: `daiFreed = 16·N_f`
 (`16` Weyl per generation), anomaly-free since `16·N_f ≡ 0 mod 16`. -/
 def smSpinZ4Class (N_f : ℕ) : SpinZ4Manifold5 := ⟨16 * N_f⟩
+
+/-- A non-generator, non-trivial witness exercising the quotient beyond `{0, gen}` (the analog of
+the Pin⁺ side's `pinPlusK3Lift := ⟨-16⟩`, which the Pin⁺ substrate uses to witness its quotient is
+not collapsed): `daiFreed = 3` is neither `0`, `1`, nor `16·k`, so its class is the non-trivial
+`3 ∈ ZMod 16`. Witnesses that `Omega5SpinZ4Bordism` is a genuine 16-element quotient, not just
+`{0, [gen]}`. -/
+def spinZ4NonTrivial : SpinZ4Manifold5 := ⟨3⟩
 
 /-! ## §2. The Ω₅^{Spin-ℤ₄} bordism quotient (à la Omega4PinPlusBordism) -/
 
@@ -206,6 +220,15 @@ noncomputable def omega5SpinZ4BordismEquivZMod16 : Omega5SpinZ4Bordism ≃+ ZMod
   show (((16 * N_f : ℤ)) : ZMod 16) = 16 * (N_f : ZMod 16)
   push_cast; ring
 
+/-- The non-generator witness has the non-trivial class `3 ∈ ZMod 16` — the quotient is a genuine
+16-element group (not collapsed to `{0, [gen]}`), mirroring the Pin⁺ side's non-trivial witnesses. -/
+theorem omega5_nontrivial_class :
+    omega5SpinZ4BordismEquivZMod16 (mk spinZ4NonTrivial) = 3 := by
+  show daiFreedMod16 (mk spinZ4NonTrivial) = 3
+  show ((spinZ4NonTrivial.daiFreed : ZMod 16)) = 3
+  show ((3 : ℤ) : ZMod 16) = 3
+  decide
+
 /-! ## §3. The constructed Smith homomorphism Ω₅^{Spin-ℤ₄} → Ω₄^{Pin⁺} -/
 
 /-- **`smithHom`** — the Smith homomorphism `Ω₅^{Spin-ℤ₄} → Ω₄^{Pin⁺}`, **constructed** (not
@@ -229,9 +252,11 @@ theorem smithHom_sm_trivial (N_f : ℕ) : smithHom (mk (smSpinZ4Class N_f)) = 0 
   rw [omega5_sm_class, show (16 : ZMod 16) * (N_f : ZMod 16) = 0 from by
     rw [show (16 : ZMod 16) = 0 from by decide]; ring, map_zero]
 
-/-- **Smith reads the Pin⁺ signature.** For every Ω₅ class, the Rokhlin signature reading of its
-Pin⁺ image under `smithHom` equals its own Dai–Freed class — `signatureMod16 ∘ smithHom =
-daiFreedMod16` (the dimension-shifting identification at the ℤ₁₆ level). -/
+/-- **ℤ₁₆-level consistency of the constructed Smith map.** For every Ω₅ class, the Rokhlin
+signature reading of its Pin⁺ image under `smithHom` equals its own Dai–Freed class
+(`signatureMod16 ∘ smithHom = daiFreedMod16`). This holds **by construction** of `smithHom` (it was
+defined as the composite of the two `≃+ ZMod 16` isos), so it carries no geometric Rokhlin/Dai–Freed
+content — that dimension-shifting identification is the tracked, Mathlib-absent part. -/
 theorem signatureMod16_smithHom (x : Omega5SpinZ4Bordism) :
     Omega4PinPlusBordism.signatureMod16 (smithHom x) = omega5SpinZ4BordismEquivZMod16 x := by
   show omega4PinPlusBordismToZMod16 (omega4PinPlusBordismEquivZMod16.symm

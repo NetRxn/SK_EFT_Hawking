@@ -2636,34 +2636,48 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'level as an isomorphism `ZMod 16 ≃+ SKEFTHawking.SymTFT.Omega4PinPlusBordism` pinned to the '
             'canonical generator `smith 1 = Omega4PinPlusBordism.mk pinPlusRP4` (the structure '
             'SKEFTHawking.CommonOrigin.SmithInflow, consumed via the (S : SmithInflow) binder).',
-        'status': 'active (conditional input to the Phase 5q.E W5 common-origin theorem; a hypothesis, '
-            'NOT an axiom; the dependent theorems are kernel-pure {propext, Classical.choice, Quot.sound}). '
-            'INHABITED at the substrate level by substrateSmithInflow (via omega4PinPlusBordismEquivZMod16.symm) '
-            'and CANONICAL/unique by smithInflow_smith_unique (a ℤ₁₆-hom is determined by its value at 1) — so '
-            'the conditional is neither vacuously false nor choice-dependent.',
+        'status': 'active — but at the HYPOTHESIS level the W5 SmithInflow binder is now DISCHARGED by W6: '
+            'the abstract iso is replaced by a CONSTRUCTED substrate Smith map (SymTFT.smithHom : Ω₅ → Ω₄^{Pin⁺}, '
+            'SpinZ4Bordism5.lean), and sixteen_convergence_common_origin_via_constructed_smith takes no '
+            'SmithInflow binder. This entry remains active because the GEOMETRIC FAITHFULNESS of the thin Ω₅/Ω₄ '
+            'substrates + the genuine η-invariant are still tracked (a LARGER gap than the Pin⁺ side — the '
+            'Dai–Freed invariant is ℤ₁₆-native; see elimination_path). The W5 binder form (SmithInflow) also '
+            'survives, INHABITED by substrateSmithInflow and CANONICAL/unique by smithInflow_smith_unique. A '
+            'hypothesis, NOT an axiom; all dependent theorems kernel-pure {propext, Classical.choice, Quot.sound}.',
         'eliminability': 'very_hard',
         'elimination_path': 'Build the GEOMETRIC inputs the structure stands in for: (i) the Ω₅^{Spin-ℤ₄} '
             'bordism group, (ii) the geometric Smith homomorphism Ω₅^{Spin-ℤ₄} → Ω₄^{Pin⁺}, and (iii) the '
             'Dai–Freed anomaly functor — all Mathlib-absent landmarks (Phase 5q.E roadmap §Walls + §Mathlib '
             'status, verified 2026-06-14 via semantic search). The Pin⁺ HALF (Ω₄^{Pin⁺} ≃+ ZMod 16) already '
-            'exists as the Phase 6r SymTFT/PinPlusBordism4 substrate. CHECKED 2026-06-14 from first principles: '
-            'an Ω₅^{Spin-ℤ₄} SUBSTRATE (à la Omega4PinPlusBordism) is NOT a thin-wrapper away — the Pin⁺ '
-            'substrate is genuine because its signature is ℤ-valued with a 16∣Δσ quotient, whereas the Ω₅ '
-            'Dai–Freed invariant is intrinsically ℤ₁₆ (η/16 mod 1) with no ℤ-lift, so the analogous Quotient '
-            'collapses to ZMod 16 (vacuous); the APSEta wittenYonekuraToZ16 η-map is also a placeholder (:= 0). '
-            'So the Ω₅ side is genuinely η-invariant / Dai–Freed-gated, trigger-gated per ADR-003 (shared '
-            'frontier with Leg C/D). On the ADR-003 Leg D trigger (Mathlib ships spin-flavored bordism groups), '
-            'build (i)+(ii) to upgrade the W5 theorem from conditional to unconditional.',
+            'exists as the Phase 6r SymTFT/PinPlusBordism4 substrate. '
+            'W6 UPDATE 2026-06-14 (corrects an earlier overstatement): a thin Ω₅^{Spin-ℤ₄} SUBSTRATE IS now '
+            'built (SpinZ4Bordism5.lean) — a genuine, kernel-pure `Quotient ≃+ ZMod 16` carrying `daiFreed : ℤ` '
+            'with a 16∣Δ relation, plus a CONSTRUCTED Smith map `smithHom : Ω₅ → Ω₄^{Pin⁺}`. The earlier '
+            '"NOT a thin-wrapper away / collapses to ZMod 16 (vacuous)" wording was wrong in one direction: the '
+            'Quotient is NOT vacuous (it is a real ≃+ ZMod 16, like the Pin⁺ one). BUT it is a LESS-FAITHFUL '
+            'stand-in for the geometric Ω₅ than the Pin⁺ signature is for Ω₄: the Dai–Freed invariant is '
+            'ℤ₁₆-native (η/16 mod 1, no natural ℤ-lift), so carrying `daiFreed : ℤ` additionally tracks "the '
+            'invariant takes ℤ values at all" — a tracked gap LARGER than the Pin⁺ side. So W6 discharges this '
+            'input at the HYPOTHESIS level only (no abstract Lean binder in '
+            'sixteen_convergence_common_origin_via_constructed_smith), NOT at the geometry/faithfulness level. '
+            'The GEOMETRIC construction of Ω₅ from manifolds + the η-invariant (placeholder in APSEta) + the '
+            'geometric Smith/Dai–Freed maps remain the Mathlib-absent landmark, trigger-gated per ADR-003 '
+            '(shared frontier with Leg C/D). On the ADR-003 Leg D trigger (Mathlib ships spin-flavored bordism '
+            'groups + the Dirac-operator/η machinery), build the geometric (i)+(ii)+(iii) to upgrade the chain '
+            'from substrate-constructed to geometrically-faithful.',
         'dependent_theorems': [
             'SKEFTHawking.CommonOrigin.sixteen_convergence_common_origin',
             'SKEFTHawking.CommonOrigin.sixteen_convergence_common_origin_substrate',
+            'SKEFTHawking.CommonOrigin.sixteen_convergence_common_origin_via_constructed_smith',
+            'SKEFTHawking.CommonOrigin.smithInflowOfSmithHom',
             'SKEFTHawking.CommonOrigin.rokhlin_reads_kitaev',
             'SKEFTHawking.CommonOrigin.kitaev_generator_is_bordism_generator',
             'SKEFTHawking.CommonOrigin.sm_anomaly_trivial_in_bordism',
             'SKEFTHawking.CommonOrigin.sm_spin10_count_trivial_in_bordism',
         ],
-        'module': 'CommonOrigin (Phase 5q.E W5); Pin⁺ half from SymTFT/PinPlusBordism4 (Phase 6r); '
-            'Kitaev reading from KitaevSixteenFold (W1)',
+        'module': 'CommonOrigin (Phase 5q.E W5 + W6); Pin⁺ half from SymTFT/PinPlusBordism4 (Phase 6r); '
+            'Ω₅ substrate + constructed Smith from SymTFT/SpinZ4Bordism5 (W6); Kitaev reading from '
+            'KitaevSixteenFold (W1)',
         'source': 'García-Etxebarria–Montero, JHEP 08 (2019) 003 [arXiv:1808.00009]; Wang (2024) '
             'Smith-homomorphism / string-bordism. NOTE: what the literature establishes is the ISO-NESS (the '
             'Smith hom is a generator-preserving isomorphism ℤ₁₆ ≅ ℤ₁₆) — that is cited-true; the SPECIFIC '
@@ -2681,9 +2695,14 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'Weyl-fermion count, the ℤ₁₆ global anomaly, Rokhlin signature divisibility, and the Kitaev 16-fold '
             'way — are images of one genuine ℤ₁₆ (the Pin⁺ bordism group) under explicit maps, with Rokhlin and '
             'Kitaev reading it identically. The result still CONSTRAINS rather than DERIVES the Standard Model '
-            '(the SM is the trivial class among 16). The geometric construction of the Smith map and the '
-            'Ω₅^{Spin-ℤ₄} bordism group remain Mathlib-absent; until they land, the theorem is stated '
-            'conditionally on this disclosed input.',
+            '(the SM is the trivial class among 16). W6 (2026-06-14) builds a thin Ω₅^{Spin-ℤ₄} bordism '
+            'substrate and a CONSTRUCTED Smith map, so the theorem can be stated with no abstract Lean '
+            'hypothesis (sixteen_convergence_common_origin_via_constructed_smith) — but this is a '
+            'HYPOTHESIS-LEVEL change only: the GEOMETRIC construction of the Smith map and the Ω₅ bordism group '
+            'from manifolds + the η-invariant remain Mathlib-absent, and the thin substrates carry a tracked '
+            'faithfulness gap (larger for Ω₅ than for the Pin⁺ side, as the Dai–Freed invariant is ℤ₁₆-native). '
+            'So the convergence is a genuine ℤ₁₆-level map-composition; it must NOT be quoted as a geometric '
+            'derivation or an unconditional unification.',
         'circularity_note': 'None. The common-origin theorem is honestly CONDITIONAL on this input — it does '
             'not assume its own conclusion. Verified by adversarial review (2026-06-14): the headline '
             'rokhlin_reads_kitaev is provably NOT rfl/simp/decide-able for an arbitrary SmithInflow, so the '

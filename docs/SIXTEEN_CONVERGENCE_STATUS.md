@@ -70,15 +70,22 @@ just coincidence-spotting?":
   = id`). This is the genuine map-composition that replaces the bare enumeration `sixteen_convergence_full`
   — **conditional** on the disclosed `SmithInflow` tracked input (the Smith homomorphism's ℤ₁₆-level
   content; inhabited by `substrateSmithInflow`; a hypothesis, NOT an axiom).
+- **W6 (`SpinZ4Bordism5.lean`) — the Smith map CONSTRUCTED (hypothesis-level only).** W6 builds the
+  `Ω₅^{Spin-ℤ₄}` bordism group as a thin `Quotient ≃+ ZMod 16` and `smithHom : Ω₅ → Ω₄^{Pin⁺}` as a
+  *constructed* `AddEquiv`, so `sixteen_convergence_common_origin_via_constructed_smith` states the
+  chain SM → Ω₅ → Smith → Ω₄ with **no abstract Lean hypothesis**. **This is a hypothesis-level change,
+  NOT a geometric one** (a 2026-06-14 adversarial review caught and corrected the original "discharged /
+  unconditional" overclaim): the thin Ω₅ substrate has a faithfulness gap **larger** than the Pin⁺ side
+  (the Dai–Freed invariant is ℤ₁₆-native), so the geometric Ω₅/Smith remain absent.
 
-**Still NOT proved (the wall — now narrower):** the common-origin identification is proved *conditionally*
-on `SmithInflow`; what remains for an **unconditional** unification is the *geometric* construction —
-the `Ω₅^{Spin-ℤ₄}` bordism group, the geometric Smith map, and the Dai–Freed functor — all Mathlib-absent
-(Phase 5q.E roadmap §"Walls"). So the honest status moved from "bare enumeration" to "conditional genuine
-unification with a disclosed geometric input (its iso-ness cited-true, GEM/Wang; the generator pin a
-canonical normalization convention)." It still **constrains, does not derive** (the SM
-is the *trivial* class among 16; `[RP⁴]` is the shared generator; many theories share this ℤ₁₆). None of
-this touches the independent 3-generation headline.
+**Still NOT proved (the wall):** the *geometric* construction — the `Ω₅^{Spin-ℤ₄}` bordism group from
+manifolds + the η-invariant, the geometric Smith map, and the Dai–Freed functor — is Mathlib-absent
+(Phase 5q.E roadmap §"Walls"; the η-side needs the Dirac-operator spectral machinery, also absent).
+W6's `smithHom` is a *substrate* construction, not the geometric map; "no Lean hypothesis" ≠
+"geometrically unconditional." So the honest status: from "bare enumeration" → "ℤ₁₆-level genuine
+map-composition, constructed at the substrate level, with the geometric faithfulness tracked." It still
+**constrains, does not derive** (the SM is the *trivial* class among 16; `[RP⁴]` is the shared generator;
+many theories share this ℤ₁₆). None of this touches the independent 3-generation headline.
 
 ## 4. Proved NOT true (the no-gos — what the discipline caught)
 
@@ -116,6 +123,11 @@ it is a classification statement, not a dynamical mechanism.
 > ℤ₁₆ under explicit maps, given the cited Smith identification' — and even fully proved it would **constrain, not
 > derive** the Standard Model."*
 
-(Earlier framing, pre-2026-06-14: "we have not formally proved they share a single origin." That is now superseded
-by the *conditional* common origin; the *unconditional* version still awaits the geometric Smith map / Ω₅ bordism
-group. Do not overstate it as unconditional.)
+(Framing history. Pre-2026-06-14: "we have not formally proved they share a single origin" — superseded by the
+*conditional* common origin. W6 (2026-06-14) then built a thin Ω₅ substrate + a *constructed* Smith map, so the
+Lean theorem `sixteen_convergence_common_origin_via_constructed_smith` carries **no abstract hypothesis** — but
+that is a **hypothesis-level** change only: the *geometric* Smith map / Ω₅ bordism group from manifolds + the
+η-invariant are still Mathlib-absent, and the thin Ω₅ substrate's faithfulness gap is *larger* than the Pin⁺
+side's. So the one-breath above stays correct as written. **Do not quote "no Lean hypothesis" as "geometrically
+unconditional"** — a 2026-06-14 adversarial review caught exactly that overstatement in W6's first draft and it
+was corrected (rename + scoping; this doc, the roadmap, and the `smith_inflow_z16` registry entry are reconciled).)
