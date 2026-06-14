@@ -158,6 +158,59 @@ theorem IsBordant.refl {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
     (s : SingularManifold X k I) : IsBordant (I.prod (𝓡∂ 1)) s s :=
   ⟨reflCylinder s⟩
 
+/-- **Mapping cylinder.** A compatible diffeomorphism `φ : s.M ≃ t.M` (with `t.f ∘ φ = s.f`) of the
+underlying manifolds gives a bordism `s → t`: the cylinder `s.M × [0,1]` with the top end reparametrized
+by `φ⁻¹`. This is the workhorse for the bordism-group laws — **diffeomorphic singular manifolds are
+bordant** — and generalizes `reflCylinder` (the `φ = id` case). -/
+noncomputable def mapCylinder {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
+    {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [TopologicalSpace H] {I : ModelWithCorners ℝ E H} [I.Boundaryless]
+    {s t : SingularManifold X k I} (φ : Diffeomorph I I s.M t.M k) (hf : t.f ∘ φ = s.f) :
+    Bordism (I.prod (𝓡∂ 1)) s t where
+  W := s.M × Set.Icc (0 : ℝ) 1
+  e := Sum.elim (fun m => (m, ⊥)) (fun m' => (φ.symm m', ⊤))
+  he_smooth :=
+    ContMDiff.sumElim (contMDiff_id.prodMk contMDiff_const)
+      (φ.symm.contMDiff.prodMk contMDiff_const)
+  he_inj := by
+    have hbt : (⊥ : Set.Icc (0 : ℝ) 1) ≠ ⊤ := by
+      intro h; have := congrArg Subtype.val h; norm_num at this
+    rintro (a | a) (b | b) hab <;>
+      simp only [Sum.elim_inl, Sum.elim_inr, Prod.mk.injEq] at hab
+    · rw [hab.1]
+    · exact absurd hab.2 hbt
+    · exact absurd hab.2.symm hbt
+    · rw [φ.symm.injective hab.1]
+  he_boundary := by
+    rw [boundary_product, Set.Sum.elim_range]
+    ext ⟨m, t⟩
+    simp only [Set.mem_union, Set.mem_range, Prod.mk.injEq]
+    constructor
+    · rintro (⟨x, _, rfl⟩ | ⟨x, _, rfl⟩)
+      · exact Set.mk_mem_prod (Set.mem_univ _) (Set.mem_insert _ _)
+      · exact Set.mk_mem_prod (Set.mem_univ _) (Set.mem_insert_of_mem _ rfl)
+    · intro hmem
+      rcases hmem.2 with rfl | rfl
+      · exact Or.inl ⟨m, rfl, rfl⟩
+      · exact Or.inr ⟨φ m, φ.symm_apply_apply m, rfl⟩
+  g := fun p => s.f p.1
+  hg := s.hf.comp continuous_fst
+  hg_restrict := by
+    funext x
+    cases x with
+    | inl m => rfl
+    | inr m' =>
+      show s.f (φ.symm m') = t.f m'
+      rw [← hf]; simp [Function.comp, φ.apply_symm_apply]
+
+/-- **Diffeomorphic singular manifolds are bordant.** The driver of the group laws. -/
+theorem IsBordant.of_diffeo {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
+    {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [TopologicalSpace H] {I : ModelWithCorners ℝ E H} [I.Boundaryless]
+    {s t : SingularManifold X k I} (φ : Diffeomorph I I s.M t.M k) (hf : t.f ∘ φ = s.f) :
+    IsBordant (I.prod (𝓡∂ 1)) s t :=
+  ⟨mapCylinder φ hf⟩
+
 /-! ## §3.5. Disjoint union of bordisms — the `⊕` operation's congruence -/
 
 namespace Bordism
@@ -250,6 +303,22 @@ noncomputable def BordismGrp.add (x y : BordismGrp X k I) : BordismGrp X k I :=
 @[simp] theorem BordismGrp.add_mk (s t : SingularManifold X k I) :
     BordismGrp.add (BordismGrp.mk s) (BordismGrp.mk t) = BordismGrp.mk (s.sum t) :=
   rfl
+
+/-- `⊕` on bordism classes is **commutative** (disjoint union commutes up to diffeomorphism). -/
+theorem BordismGrp.add_comm (x y : BordismGrp X k I) : x.add y = y.add x := by
+  induction x using Quot.ind with | _ s =>
+  induction y using Quot.ind with | _ t =>
+  exact mk_eq_of_bordant (IsBordant.of_diffeo (Diffeomorph.sumComm I s.M k t.M)
+    (by funext z; rcases z with z | z <;> rfl))
+
+/-- `⊕` on bordism classes is **associative** (disjoint union associates up to diffeomorphism). -/
+theorem BordismGrp.add_assoc (x y z : BordismGrp X k I) :
+    (x.add y).add z = x.add (y.add z) := by
+  induction x using Quot.ind with | _ s =>
+  induction y using Quot.ind with | _ t =>
+  induction z using Quot.ind with | _ u =>
+  exact mk_eq_of_bordant (IsBordant.of_diffeo (Diffeomorph.sumAssoc I s.M k t.M u.M)
+    (by funext w; rcases w with (w | w) | w <;> rfl))
 
 end Group
 
