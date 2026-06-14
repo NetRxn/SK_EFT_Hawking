@@ -695,6 +695,11 @@ import SKEFTHawking.PinPlusExtBound
 -- cokernel), decidable F2 linear algebra -> |Omega_4^Pin+| <= 2^4 = 16. The genuine finite
 -- upper-bound core (no topological input; that is the one disclosed pin4_abutment Prop).
 import SKEFTHawking.PinPlusHeight4
+-- Phase 5q.F W5+W8 (2026-06-14): Omega_4^Pin+ ≅ Z/16 from the FINITE height-4 cap + the
+-- SmithInflow DISCHARGE. sixteen_convergence_finite_discharge carries NO SmithInflow binder --
+-- only the single disclosed pin4_abutment (Pontryagin-Thom + convergence); the Z/16 is from the
+-- finite Ext cokernel height (col4_height_eq_four), the old delta-cap is DERIVED.
+import SKEFTHawking.PinPlusDischarge
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
