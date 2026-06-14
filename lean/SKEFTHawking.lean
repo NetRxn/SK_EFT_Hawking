@@ -672,6 +672,9 @@ import SKEFTHawking.GuillouMarinBridge
 import SKEFTHawking.JokerModule
 import SKEFTHawking.KspModule
 import SKEFTHawking.KspResolution
+-- Phase 5q.F W4e (2026-06-14): machine-checked Ext^s_{A(1)}(K,F2) dims = 1,2,3 (= rank P_s)
+-- via the dualized minimal resolution (delta^s = 0 by minimality) -- the E2-page substrate.
+import SKEFTHawking.KspExt
 -- Phase 5q.F W4d (2026-06-14): the joker J = A(1)/A(1)Sq3 minimal free resolution
 -- (d1=R(Sq3), d2=[R(Sq1)|R(Sq5+Sq4Sq1)]) -- the direct Pin+ Adams-E2 module H*(MTPin+).
 import SKEFTHawking.JokerResolution
