@@ -8799,7 +8799,7 @@ def fig_log_correction_signature():
         "rgba(180,180,180,0.5)",  # Fib conj
         "rgba(180,180,180,0.5)",  # Ising conj
         "rgba(180,180,180,0.5)",  # DS3 conj
-        "rgba(220,80,80,0.6)",    # Toric F2
+        "rgba(90,90,90,0.6)",     # Toric F2 (abelian falsifier; palette-compliant dark grey, not red)
     ]
 
     fig = go.Figure()
