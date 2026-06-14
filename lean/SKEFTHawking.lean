@@ -380,6 +380,10 @@ import SKEFTHawking.SymTFT.RP4ChartedSpace
 -- (all degrees, Steenrod squares, Whitney sum) is honest >20k LoC
 -- deferred per Phase-5a feasibility assessment.
 import SKEFTHawking.SymTFT.StiefelWhitney
+-- Phase 5q.F W6b (2026-06-14): the Smith map's Stiefel-Whitney mechanism
+-- `w2(N)=0 => Pin+` (Tachikawa-Yonekura / HKT geometric Smith), the
+-- SW-obstruction heart under the otherwise content-free `smithHom`.
+import SKEFTHawking.SymTFT.SmithMechanism
 -- Phase 6r-prime M5 upstream-PR-quality ship (2026-05-25):
 -- Generic Anderson-dual functor `IZOmega` per Freed-Hopkins
 -- arXiv:1604.06527 §6 at the predicate-substrate level. Takes
