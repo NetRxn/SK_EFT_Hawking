@@ -158,6 +158,55 @@ theorem IsBordant.refl {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
     (s : SingularManifold X k I) : IsBordant (I.prod (𝓡∂ 1)) s s :=
   ⟨reflCylinder s⟩
 
+/-! ## §3.5. Disjoint union of bordisms — the `⊕` operation's congruence -/
+
+namespace Bordism
+
+/-- **Disjoint union of bordisms.** `b₁ ⊔ b₂` is a bordism from `s₁ ⊔ s₂` to `t₁ ⊔ t₂` on `W = W₁ ⊔ W₂`.
+The boundary identification routes the four pieces through the inclusions `b₁.e`/`b₂.e` into the two
+halves. This is the disjoint-union congruence that makes `⊕` well-defined on bordism classes (no gluing). -/
+noncomputable def add {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
+    {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [TopologicalSpace H] {I : ModelWithCorners ℝ E H}
+    {E' H' : Type*} [NormedAddCommGroup E'] [NormedSpace ℝ E'] [FiniteDimensional ℝ E']
+    [TopologicalSpace H'] {J : ModelWithCorners ℝ E' H'}
+    {s₁ t₁ s₂ t₂ : SingularManifold X k I}
+    (b₁ : Bordism J s₁ t₁) (b₂ : Bordism J s₂ t₂) :
+    Bordism J (s₁.sum s₂) (t₁.sum t₂) where
+  W := b₁.W ⊕ b₂.W
+  e := Sum.elim
+        (Sum.elim (fun a => Sum.inl (b₁.e (Sum.inl a))) (fun a => Sum.inr (b₂.e (Sum.inl a))))
+        (Sum.elim (fun a => Sum.inl (b₁.e (Sum.inr a))) (fun a => Sum.inr (b₂.e (Sum.inr a))))
+  he_smooth :=
+    ContMDiff.sumElim
+      (ContMDiff.sumElim (ContMDiff.inl.comp (b₁.he_smooth.comp ContMDiff.inl))
+        (ContMDiff.inr.comp (b₂.he_smooth.comp ContMDiff.inl)))
+      (ContMDiff.sumElim (ContMDiff.inl.comp (b₁.he_smooth.comp ContMDiff.inr))
+        (ContMDiff.inr.comp (b₂.he_smooth.comp ContMDiff.inr)))
+  he_inj := by
+    rintro (a | a) (c | c) hac <;>
+      rcases a with a | a <;> rcases c with c | c <;>
+      simp only [Sum.elim_inl, Sum.elim_inr, Sum.inl.injEq, Sum.inr.injEq, reduceCtorEq] at hac <;>
+      first
+        | (have := b₁.he_inj hac; aesop)
+        | (have := b₂.he_inj hac; aesop)
+  he_boundary := by
+    rw [ModelWithCorners.boundary_disjointUnion, ← b₁.he_boundary, ← b₂.he_boundary]
+    ext w
+    simp only [Set.mem_range, Set.mem_union, Set.mem_image, Sum.exists, Sum.elim_inl, Sum.elim_inr]
+    aesop
+  g := Sum.elim b₁.g b₂.g
+  hg := b₁.hg.sumElim b₂.hg
+  hg_restrict := by
+    funext x
+    rcases x with (a | a) | (a | a)
+    · exact congrFun b₁.hg_restrict (Sum.inl a)
+    · exact congrFun b₂.hg_restrict (Sum.inl a)
+    · exact congrFun b₁.hg_restrict (Sum.inr a)
+    · exact congrFun b₂.hg_restrict (Sum.inr a)
+
+end Bordism
+
 /-! ## §4. The bordism group `Quot (IsBordant)` (no transitivity/gluing needed) -/
 
 /-- The **bordism group** of `X` (with `X = PUnit` for the absolute `Ω_•^I(pt)`): bordism classes of
