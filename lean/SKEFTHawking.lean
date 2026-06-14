@@ -672,6 +672,10 @@ import SKEFTHawking.GuillouMarinBridge
 import SKEFTHawking.JokerModule
 import SKEFTHawking.KspModule
 import SKEFTHawking.KspResolution
+-- Phase 5q.F W4c (2026-06-14): Pin+ Ext upper bound + two-bounds pinch to Z/16
+-- (Campbell delta-truncation height-4 cap as disclosed Prop; [RP4] order 16 DERIVED
+-- from the surface-ABK lower bound + the Ext delta-cap, not posited).
+import SKEFTHawking.PinPlusExtBound
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
