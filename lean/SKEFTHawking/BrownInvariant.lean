@@ -480,10 +480,40 @@ lemma brownUnit_stdQuadratic (g : ℕ) : (stdQuadratic g).brownUnit = 0 := by
   rw [← h, zeta4_zero, one_mul]
 
 /-- **`brown(stdForm g) = g`** — the general Brown invariant reproduces the genus, hence `brownStd`.
-For `g = 1` this is `brown(RP²-form) = 1`, the order-16 generator value used by the W3 lower bound. -/
+For `g = 1` this is `brown(RP²-form) = 1`, the order-8 generator value of `Ω₂^{Pin⁻}`. -/
 lemma brown_stdQuadratic (g : ℕ) : (stdQuadratic g).brown = (g : ZMod 8) := by
   simp only [brown, brownUnit_stdQuadratic, ZMod.val_zero, Nat.cast_zero, mul_zero, zero_add,
     Fintype.card_fin]
+
+/-! ## `Ω₂^{Pin⁻} ≅ ℤ₈` realized by the DERIVED Brown invariant (de-risk capstone)
+
+The Brown invariant `brown` — derived kernel-pure from the genuine ℤ₄-quadratic enhancement of a Pin⁻
+surface (W1–W2), **not posited** — realizes the full `ZMod 8` structure of Pin⁻ surface bordism: it is
+additive (`brown_orthSum`), **surjective** (every class hit by a standard surface `stdQuadratic g`), and
+the generator `stdQuadratic 1` (`= RP²` with its Pin⁻ structure) has additive order exactly **8**. Modulo
+the cited completeness of the Arf–Brown–Kervaire invariant for Pin⁻ surface bordism (Kirby–Taylor 1990 /
+ABP: `Ω₂^{Pin⁻} ≅ ℤ₈`, generator `RP²`), this is the surface bordism group with the invariant **derived** —
+the Level-4 improvement over a posited carrier (contrast `PinPlusManifold4.signature`), at the `ZMod 8`
+surface level that feeds the `ZMod 16` Pin⁺ 4-manifold bound. -/
+
+/-- The derived Brown invariant is **surjective** onto `ZMod 8` — every Pin⁻ surface bordism class is
+realized by a genuine standard surface. -/
+theorem brown_stdQuadratic_surjective : Function.Surjective (fun g : ℕ => (stdQuadratic g).brown) :=
+  fun k => ⟨k.val, by show (stdQuadratic k.val).brown = k
+                      rw [brown_stdQuadratic, ZMod.natCast_val, ZMod.cast_id]⟩
+
+/-- The standard surfaces realize an **additive** map onto `ZMod 8` (the bordism group structure). -/
+theorem brown_stdQuadratic_add (g₁ g₂ : ℕ) :
+    (stdQuadratic (g₁ + g₂)).brown = (stdQuadratic g₁).brown + (stdQuadratic g₂).brown := by
+  simp only [brown_stdQuadratic, Nat.cast_add]
+
+/-- **The generator `[RP²] = stdQuadratic 1` has additive order exactly 8** — the derived Brown invariant
+exhibits the full order-8 cyclic structure of `Ω₂^{Pin⁻} ≅ ℤ₈`. -/
+theorem brown_generator_order_eight :
+    (8 : ℕ) • (stdQuadratic 1).brown = 0 ∧
+      ∀ k : ℕ, 0 < k → k < 8 → k • (stdQuadratic 1).brown ≠ 0 := by
+  rw [brown_stdQuadratic]
+  exact ⟨by decide, fun k hk0 hk8 => by interval_cases k <;> decide⟩
 
 end Z4Quadratic
 
