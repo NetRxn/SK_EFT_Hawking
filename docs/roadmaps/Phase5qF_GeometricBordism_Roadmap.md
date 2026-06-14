@@ -173,6 +173,18 @@ ABSENT (= build surface): `DiracOperator`, bordism groups, `QuadraticForm.signat
 Deferred (NOT a DONE-criterion — cross-check only): the `brown mod 2 = Arf` bridge to `SKEFTHawking.Arf`
 needs the symplectic (spin) pairing, not the diagonal Pin⁻ form; off the two-bound critical path. Revisit only if W3/closure needs it.
 
+**Session 2 (2026-06-14) — bounds + Smith mechanism + capstone, all kernel-pure (8 commits, NOT pushed):**
+
+| W3b/c | `GuillouMarinBridge.lean` | `doubleBrown`/`GMrelation`/`GM_rp4`/`doubleBrown_eight_distinct` (even part ≥8); **odd-bit ≥16 via the finite η-surrogate**: `reduce16to8`, `order_exact_sixteen_of_surfaceABK` (kernel-pure: mod-8 reduction = surface ABK `β`; `β` a unit ⟹ odd ⟹ order 16 — NO APS), `pinPlus_RP4_order16_from_ABK` (∀g, **posit-free**), `pinPlusRP4_order16_backed_by_ABK` (concrete, uses posited `signature=1`) | `7b508fd3`+`8158eeef` | ✅ |
+| W4a | `JokerModule.lean`, `KspModule.lean` | the joker `J=A(1)/A(1)Sq³` + ksp `K=A(1)/(A(1)Sq¹+A(1)Sq²Sq¹Sq²)` A(1)-modules (Adem-verified actions; CORRECTED joker action vs the erroneous DR §2.4d) | `7e469b39`+`5e0e7bda` | ✅ |
+| W4b | `KspResolution.lean` | K's minimal free A(1)-resolution `d₁,d₂,d₃` (`eps`, `Rsq1/Rsq2/Re6/Rsq3`, block chain `ε∘d₁=0`, `d₁∘d₂=0`, `d₂∘d₃=0`, minimality), verified vs Campbell/Mills §3.2 generator-for-generator | `b9b55e99`+`8a62f2a3`+`e5a24c21` | ✅ |
+| W4c | `PinPlusExtBound.lean` | upper `≤16` via disclosed Campbell **δ-truncation cap** (`DeltaTruncationCap`, inhabited; does NOT assert the FALSE `Ext(K)_4=0`) + **two-bounds pinch** `addOrderOf [RP⁴]=16` (lower ABK + upper δ-cap); H1–H4 disclosed-Prop pattern | `d33444a1` | ✅ |
+| W6b | `SymTFT/SmithMechanism.lean` | the Smith map's SW-obstruction heart `w₂(N)=0⟹Pin⁺` (Whitney `w₂(N)=c+b²` + Spin-ℤ₄ `c=b²`; RP⁵→RP⁴ via Karoubi `C(6,2)=1`,`C(5,2)=0`) — geometric content under the content-free `smithHom` | `0aec7431` | ✅ |
+| W7 | `SixteenConvergenceDerived.lean` | capstone: SmithInflow's opaque content **REFINED** into constructed `smithHom` + two-bounds-derived order + SW-mechanism (`sixteen_convergence_derived_substrate`, no SmithInflow binder). Explicitly **NOT** a geometric discharge | `966e4760` | ✅ |
+| QA | (4 files) | fresh-context adversarial review = **DEFENSIBLE** (no vacuous/axiom/false-math; capstone framing "exemplary"); remediated CRITICAL-2 (concrete "derived" wording: uses posited `signature=1`) + CRITICAL-1 (cupSquare rank-transport note); dropped `shared_generator_order_derived` alias | `14e74d1e` | ✅ |
+
+**Scout verdict (2026-06-14, `Explore`):** the algebraic Ext layer (resolution + `A1ExtSubstantive`-style `dim Ext = rank P_n` via `Module.finrank`) is **TRACTABLE** to deepen; the topological grounding (Pontryagin–Thom + ABP + Adams convergence + δ-truncation-as-spectrum) is **genuinely Mathlib-absent** (ADR-003; existing `ChangeOfRings.h2`/`ExtBordismBridge` H1/H3/H4 are themselves `True` placeholders — our disclosed Props are *more* substantive). The honest endpoint: bounds + order + Smith built; topological landmarks carried as disclosed cited Props with the discharge plan = future stable-homotopy Mathlib infra.
+
 (rows appended as waves land)
 
 ---

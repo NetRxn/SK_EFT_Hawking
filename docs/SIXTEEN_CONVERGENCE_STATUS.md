@@ -87,6 +87,40 @@ map-composition, constructed at the substrate level, with the geometric faithful
 **constrains, does not derive** (the SM is the *trivial* class among 16; `[RP⁴]` is the shared generator;
 many theories share this ℤ₁₆). None of this touches the independent 3-generation headline.
 
+## 3.6 The two-bounds upgrade (Phase 5q.F, 2026-06-14) — `SmithInflow`'s content REFINED, NOT discharged
+
+Phase 5q.F takes the one opaque `SmithInflow` hypothesis of 5q.E and **refines it into transparent,
+mostly-built content** — the `Ω₄^{Pin⁺} ≅ ℤ/16`'s order is now pinned by two *independent* bounds and the
+Smith map carries its Stiefel–Whitney mechanism. All kernel-pure (`{propext, Classical.choice, Quot.sound}`,
+0 axiom); fresh-context adversarial review = **DEFENSIBLE**.
+
+- **Lower bound `≥ 16` — the finite η-surrogate, NO APS** (`GuillouMarinBridge.lean`). Deep research
+  (`Lit-Search/Phase-5qF/eta_rp4_finite_surrogate.md`, verdict FINITE-SURROGATE-EXISTS) shows
+  `η(RP⁴)=1/16` needs no spectral analysis: the Pin⁺ ℤ/16 class **reduces mod 8 to the characteristic
+  surface's ABK `β(F)`** (`Z[M]²=ζ₈^{β}`). Since `β(RP²)=(stdQuadratic 1).brown=1` is a **unit** of ℤ/8
+  (the genuinely-built Gauss-sum invariant, `BrownInvariant.lean`), the class is odd ⟹ order 16. The
+  `∀ g` form (`pinPlus_RP4_order16_from_ABK`) is **posit-free**; the concrete `[RP⁴]` instance uses the
+  substrate's posited `signature = 1` to fix the class, the ABK supplying the order-forcing unit value.
+- **Upper bound `≤ 16` — the disclosed δ-cap + machine-checked resolution** (`PinPlusExtBound.lean`,
+  `KspResolution.lean`). The K=ksp=Σ⁻⁴ko⟨4⟩ minimal A(1)-resolution is machine-checked (`d₁,d₂,d₃`,
+  verified vs Campbell/Mills). The "16" is **NOT** an `Ext_{A(1)}(K)` property (that column is
+  4-periodic-INFINITE — we explicitly do NOT assert the false `Ext_4=0`); it is the **Campbell
+  δ-truncation** height-4 cap (Thm 6.7), carried as a disclosed cited Prop (the H1–H4 pattern). The
+  two bounds pinch `addOrderOf [RP⁴] = 16`.
+- **The Smith map's SW-mechanism** (`SymTFT/SmithMechanism.lean`): `w₂(N)=0 ⟹ Pin⁺` (Whitney + Spin-ℤ₄;
+  RP⁵→RP⁴ via Karoubi binomials `C(6,2)=1`, `C(5,2)=0`) — the geometric content under the otherwise
+  content-free `smithHom`.
+- **The capstone** (`SixteenConvergenceDerived.lean`): the convergence with `SmithInflow`'s opaque
+  content replaced by the constructed `smithHom` + the two-bounds order + the SW-mechanism, **no
+  `SmithInflow` binder** (`sixteen_convergence_derived_substrate`).
+
+**Honest scope (do NOT quote as "discharged"/"geometrically unconditional").** This is a **refinement**
+of the opaque hypothesis into named transparent pieces (most built/derived, a few disclosed). The thin
+substrates still *assign* their invariants; **Pontryagin–Thom, ABP splitting, the Campbell δ-truncation,
+the genuine η-invariant, and the manifold-level bordism construction remain disclosed cited Props**
+(Mathlib-absent — an `Explore` scope confirmed these are "permanently blocked without stable-homotopy
+machinery", ADR-003). The one-breath rule (§6) stays correct. Still **constrains, does not derive** the SM.
+
 ## 4. Proved NOT true (the no-gos — what the discipline caught)
 
 - **Lattice Arf bridge** `σ/8 ≡ Arf(redQuad) mod 2` — **FALSE** (`RokhlinArfNoGo.lean`; E₈: Arf=0, σ/8=1; Arf(redQuad)≡0 on every even-unimodular lattice). The genuine σ/8↔Arf is the *geometric* Guillou–Marin Arf on a characteristic surface, not a lattice invariant.
