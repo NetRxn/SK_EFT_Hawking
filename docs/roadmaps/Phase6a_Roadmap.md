@@ -898,6 +898,32 @@ entropy) + counts + Inventory + Inventory_Index synced; Stage-13 fresh-context a
 0 blockers; full `validate.py` green; committed (own explicit paths only). **Goal prompt:**
 `Phase6a_Wave7C_goal_prompt.md`.
 
+**▶ WAVE 7C COMPLETE 2026-06-14 (MORNING SUMMARY).** All 5 deliverables shipped kernel-pure
+({propext, Classical.choice, Quot.sound}); counts **12641 thm / 0 axiom / 0 sorry / 948 modules**;
+full library + ExtractDeps builds (9266 jobs); `validate.py` **43/43**. 6 commits on `main`,
+**NOT pushed**: `ca87ffd5` (brick 1) → `5b7047e4` (brick 2) → `88dd5918` (brick 3) → `98209249`
+(bricks 4–5) → `bb201364` (closure prose).
+
+| # | Deliverable | Landing |
+|---|---|---|
+| 1 | discrete `O(1/m)` rate | `LaplaceMethodAsymptotic.log_singletCount_sub_rate` + the **missing Mathlib `stirlingSeq→√π` rate** (`log_stirlingSeq_sub_log_sqrt_pi_le/_isBigO`, telescoping `Stirling.log_stirlingSeq_diff_le`) |
+| 2 | **`Real.Gamma` Stirling-with-remainder** | NEW `GammaStirling.lean` — `logGamma_sub_stirlingPart_isBigO`, Bohr–Mollerup convexity squeeze (`Real.convexOn_log_Gamma`); **loogle-confirmed Mathlib-absent** |
+| 3 | continuum Catalan asymptotic | NEW `ContinuumCatalan.lean` — `continuumLogCatalan_isBigO` |
+| 4–5 | faithful `verlindeEntropy_SU2k` + `O(1/A)` discharge | `BHEntropyMicroscopic`: `:= continuumLogCatalan(A/(8 G_N log2))` (literal Γ-Catalan log-dim, **audit-#13 CLOSED**); `kaulMajumdarS` a derived corollary; `gaussianSaddleAsymptotic` = genuine per-`G_N` `O(1/A)` rate vs `kaulMajumdarS A G_N kmConstant` (`kmConstant = 3/2·log(2log2) − ½·logπ` ≠ 0); `H_VerlindeKMLiteralSumDerivation` restated to the rate + discharged |
+
+**🔑 The deferral that triggered this wave is resolved:** the `Real.Gamma` Stirling-with-remainder
+the prior session flagged as a *"genuine Mathlib wall — weeks-scale, own /goal"* was **built kernel-pure
+in-session** (Bohr–Mollerup squeeze). Absent-from-Mathlib was the wave, not a wall — built straight
+through, no tracked-Prop fallback, no spin-off.
+
+**Closure:** paper26 + AXIOM_METADATA + formulas.py prose updated (the "O(1/A) rate remains future
+work" claims now read DONE); D3/D4 had no stale verlinde claims (grep-clean); Wave-9 induced-gravity
+`1/4` untouched. **⚠ Shared-autogen commit (counts/deps/Inventory_Index) DEFERRED to session-close
+reconcile** — the concurrent Phase 5q.F agent is actively committing on `main` (same pattern as the
+Center-Bridge reconcile); GammaStirling/ContinuumCatalan are transitively imported via
+BHEntropyMicroscopic (root is 5q-contended). Stage-13 adversarial review + closure reviewer dispatched
+at close.
+
 ---
 
 ## Decision Gates
