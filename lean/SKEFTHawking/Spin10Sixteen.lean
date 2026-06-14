@@ -114,7 +114,41 @@ theorem spinor16_decomposition :
       = su5dim .ten + su5dim .fivebar + su5dim .one := by
   rw [total_components_with_nu_R]; decide
 
-/-! ## §4. Module summary
+/-! ## §4. Hypercharge tracelessness — the embedding is consistent (charge quantization)
+
+The branching above is dimension-counting; *this* section is the rep-theory **consistency**
+condition that makes the SU(5)/Spin(10) embedding genuine. Hypercharge `Y` is realized as a
+(traceless) generator of SU(5), so `Σ Y = 0` over each complete SU(5) multiplet — equivalently
+`Σ_f Y(f)·(components f) = 0` summing component-weighted hypercharges. This is the GUT origin of
+**electric-charge quantization** (it forces e.g. `Q_d = -1/3`), and it is genuinely falsifiable:
+the actual `hyperchargeY` values from `SMFermionData` are load-bearing — a single wrong value
+breaks the sum. (A traceless generator is the SU(5) consistency that dimension-counting cannot
+see.) -/
+
+/-- Hypercharge is traceless over the SU(5) **10** `{Q_L, ū_R, ē_R}`:
+`(1/6)·6 + (−2/3)·3 + 1·1 = 0`. -/
+theorem hypercharge_traceless_ten :
+    hyperchargeY .Q_L * (components .Q_L : ℚ) + hyperchargeY .u_R_bar * (components .u_R_bar : ℚ)
+      + hyperchargeY .e_R_bar * (components .e_R_bar : ℚ) = 0 := by
+  norm_num [hyperchargeY, components]
+
+/-- Hypercharge is traceless over the SU(5) **5̄** `{d̄_R, L}`: `(1/3)·3 + (−1/2)·2 = 0`. -/
+theorem hypercharge_traceless_fivebar :
+    hyperchargeY .d_R_bar * (components .d_R_bar : ℚ) + hyperchargeY .L * (components .L : ℚ) = 0 := by
+  norm_num [hyperchargeY, components]
+
+/-- **Charge quantization headline**: hypercharge is traceless over the full **16** of Spin(10)
+(`Σ_f Y(f)·components(f) = 0` over all six one-generation multiplets). `Y` is a traceless
+generator of Spin(10) ⊃ SU(5); this is the GUT consistency behind electric-charge quantization.
+Equals `hypercharge_traceless_ten + hypercharge_traceless_fivebar` plus the singlet `Y(ν̄_R)=0`. -/
+theorem hypercharge_traceless_total :
+    hyperchargeY .Q_L * (components .Q_L : ℚ) + hyperchargeY .u_R_bar * (components .u_R_bar : ℚ)
+      + hyperchargeY .d_R_bar * (components .d_R_bar : ℚ) + hyperchargeY .L * (components .L : ℚ)
+      + hyperchargeY .e_R_bar * (components .e_R_bar : ℚ)
+      + hyperchargeY .nu_R_bar * (components .nu_R_bar : ℚ) = 0 := by
+  norm_num [hyperchargeY, components]
+
+/-! ## §5. Module summary
 
 Genuine Spin(10)-spinor branching content (the facet-1 ↔ facet-2 algebraic half):
   - `su5dim` grounds `10, 5, 1` as `C(5,2), C(5,4), C(5,0)` (even exterior powers Λ⁰,Λ²,Λ⁴).
@@ -123,9 +157,12 @@ Genuine Spin(10)-spinor branching content (the facet-1 ↔ facet-2 algebraic hal
   - `su5_branching_{ten,fivebar,one}` — components per multiplet = irrep dimension (falsified
     by any wrong assignment).
   - `spinor16_decomposition` — SM 16 = 10 + 5̄ + 1, via `total_components_with_nu_R`.
+  - `hypercharge_traceless_{ten,fivebar,total}` — `Σ Y·components = 0` per multiplet and over
+    the full 16: the traceless-generator consistency of the embedding (charge quantization),
+    grounded in the real `hyperchargeY` data.
 
 Wall (documented): constructing the Spin(10) spinor module / SU(5) ⊂ Spin(10) / the branching
-as a rep-theory theorem is Mathlib-absent. All proofs kernel-pure (`decide` / `simp`); no
+as a rep-theory theorem is Mathlib-absent. All proofs kernel-pure (`decide` / `norm_num`); no
 axiom / sorry / native_decide.
 -/
 
