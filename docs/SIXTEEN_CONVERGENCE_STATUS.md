@@ -16,9 +16,9 @@ formalization plan for a *genuine* common-origin proof is `docs/roadmaps/Phase5q
 
 Three generations follows from a short, self-standing chain — exactly one "16" enters, via the fermion count:
 
-1. **SM fermion content** ⟹ `c₋ = 8·N_f` (16 Weyl/generation × ½ = 8). — `c_minus_eight_N_f` (WangBridge), kernel-pure.
+1. **SM fermion content** ⟹ `c₋ = 8` per generation (16 Weyl/generation × ½ = 8), hence `8·N_f` additively. — `fermion_count_gives_central_charge` (WangBridge: `weyl_central_charge (∑ components) = 8`), kernel-pure.
 2. **Modular invariance** of the Dedekind-η framing anomaly ⟹ `24 ∣ c₋`. — physics premise (consistency requirement).
-3. Arithmetic: `24 ∣ 8·N_f ⟺ 3 ∣ N_f`. — `generation_constraint_iff`, proved by `omega`.
+3. Arithmetic: `24 ∣ 8·N_f ⟺ 3 ∣ N_f`. — `generation_constraint_iff` (proved via two divisibility helper lemmas).
 
 Rokhlin's 16, the ℤ₁₆ anomaly, and Kitaev's 16 appear **nowhere** in this proof (verified: `generation_constraint_iff`'s
 import closure never touches the Rokhlin / lattice / Arf machinery; blast radius of the whole Rokhlin leg = narrative-only).
