@@ -681,6 +681,10 @@ import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
 import SKEFTHawking.SixteenConvergenceExplicit
 import SKEFTHawking.CommonOrigin
+-- Phase 5q.F W7 (2026-06-14): the 16-convergence capstone with SmithInflow's content
+-- REFINED -- constructed smithHom + two-bounds-derived order-16 + Smith SW-mechanism
+-- (refinement of the opaque hypothesis, NOT a geometric discharge; see module header).
+import SKEFTHawking.SixteenConvergenceDerived
 import SKEFTHawking.RokhlinManifoldFromHM
 import SKEFTHawking.ExtBordismBridge
 import SKEFTHawking.ChangeOfRings
