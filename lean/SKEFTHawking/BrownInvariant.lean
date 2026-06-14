@@ -266,4 +266,103 @@ theorem gaussSum4_normSq :
 
 end Z4Quadratic
 
+/-! ## Gaussian-integer norm-`2^N` classification → the Brown phase
+
+Every Gaussian integer of norm `2^N` is `i^k · (1+i)^N` — proved elementarily (NO prime theory) via the
+explicit `(1+i)`-division `⟨a,b⟩ = (1+i)·⟨(a+b)/2,(b-a)/2⟩` when `a ≡ b mod 2`, by induction on `N`. Since
+`gaussSum4 Q.q` has norm `|V| = 2^N` (the magnitude theorem), this pins its ℤ₈ phase and defines
+`brown Q ∈ ZMod 8`. -/
+
+@[simp] lemma norm_I : I.norm = 1 := by decide
+
+@[simp] lemma norm_one_add_I : (1 + I : GaussianInt).norm = 2 := by decide
+
+@[simp] lemma norm_zeta4 (k : ZMod 4) : (zeta4 k).norm = 1 := by revert k; decide
+
+@[simp] lemma I_re : I.re = 0 := rfl
+@[simp] lemma I_im : I.im = 1 := rfl
+
+/-- The units of `ℤ[i]` are exactly the powers of `i`: norm `1` ⟺ `g = i^k`. -/
+lemma eq_zeta4_of_norm_eq_one {g : GaussianInt} (h : g.norm = 1) : ∃ k : ZMod 4, g = zeta4 k := by
+  obtain ⟨a, b⟩ := g
+  have hab : a * a + b * b = 1 := by
+    have := h; simp only [Zsqrtd.norm] at this; linarith
+  have ha : -1 ≤ a ∧ a ≤ 1 := ⟨by nlinarith [mul_self_nonneg b], by nlinarith [mul_self_nonneg b]⟩
+  have hb : -1 ≤ b ∧ b ≤ 1 := ⟨by nlinarith [mul_self_nonneg a], by nlinarith [mul_self_nonneg a]⟩
+  obtain ⟨ha1, ha2⟩ := ha; obtain ⟨hb1, hb2⟩ := hb
+  interval_cases a <;> interval_cases b <;> simp_all <;>
+    first
+      | exact ⟨0, by decide⟩
+      | exact ⟨1, by decide⟩
+      | exact ⟨2, by decide⟩
+      | exact ⟨3, by decide⟩
+
+@[simp] lemma one_add_I_re : (1 + I : GaussianInt).re = 1 := rfl
+@[simp] lemma one_add_I_im : (1 + I : GaussianInt).im = 1 := rfl
+
+/-- `(1+i) ∣ g` whenever `2 ∣ norm g`, via the explicit quotient (no prime theory). -/
+lemma one_add_I_dvd_of_two_dvd_norm {g : GaussianInt} (h : (2 : ℤ) ∣ g.norm) : (1 + I) ∣ g := by
+  obtain ⟨a, b⟩ := g
+  have hn : (2 : ℤ) ∣ (a * a + b * b) := by simpa [Zsqrtd.norm] using h
+  have haa : a * a % 2 = a % 2 := by
+    rw [Int.mul_emod]; rcases Int.emod_two_eq_zero_or_one a with h' | h' <;> rw [h'] <;> decide
+  have hbb : b * b % 2 = b % 2 := by
+    rw [Int.mul_emod]; rcases Int.emod_two_eq_zero_or_one b with h' | h' <;> rw [h'] <;> decide
+  obtain ⟨p, hp⟩ : (2 : ℤ) ∣ (a + b) := by omega
+  obtain ⟨q, hq⟩ : (2 : ℤ) ∣ (b - a) := by omega
+  refine ⟨⟨p, q⟩, ?_⟩
+  apply Zsqrtd.ext
+  · simp only [Zsqrtd.re_mul, one_add_I_re, one_add_I_im]; omega
+  · simp only [Zsqrtd.im_mul, one_add_I_re, one_add_I_im]; omega
+
+/-- **Norm-`2^N` classification.** Every `g` with `norm g = 2^N` is `i^k · (1+i)^N`. By induction:
+strip one `(1+i)` factor each step via `one_add_I_dvd_of_two_dvd_norm`; base case = units. -/
+lemma exists_zeta4_mul_of_norm_eq_pow :
+    ∀ (N : ℕ) (g : GaussianInt), g.norm = 2 ^ N → ∃ k : ZMod 4, g = zeta4 k * (1 + I) ^ N := by
+  intro N
+  induction N with
+  | zero =>
+    intro g h
+    simp only [pow_zero] at h
+    obtain ⟨k, rfl⟩ := eq_zeta4_of_norm_eq_one h
+    exact ⟨k, by simp⟩
+  | succ N ih =>
+    intro g h
+    have hdvd : (1 + I) ∣ g := one_add_I_dvd_of_two_dvd_norm (by rw [h]; exact ⟨2 ^ N, by ring⟩)
+    obtain ⟨g', rfl⟩ := hdvd
+    have hg' : g'.norm = 2 ^ N := by
+      have hmul : (1 + I : GaussianInt).norm * g'.norm = 2 ^ (N + 1) := by
+        rw [← Zsqrtd.norm_mul]; exact h
+      rw [norm_one_add_I] at hmul
+      have h2 : 2 * g'.norm = 2 * 2 ^ N := by rw [hmul]; ring
+      exact mul_left_cancel₀ (by norm_num) h2
+    obtain ⟨k, hk⟩ := ih g' hg'
+    exact ⟨k, by rw [hk]; ring⟩
+
+/-- `zeta4` is injective (the four units `1,i,-1,-i` are distinct). -/
+lemma zeta4_injective : Function.Injective zeta4 := by decide
+
+/-- The unit `k` in the norm-`2^N` decomposition is unique. -/
+lemma zeta4_mul_pow_right_inj {k k' : ZMod 4} {N : ℕ}
+    (h : zeta4 k * (1 + I) ^ N = zeta4 k' * (1 + I) ^ N) : k = k' :=
+  zeta4_injective (mul_right_cancel₀ (pow_ne_zero N (by decide)) h)
+
+/-- `|ι → ZMod 2| = 2^|ι|`. -/
+lemma card_fun_zmod2 (ι : Type*) [Fintype ι] [DecidableEq ι] :
+    Fintype.card (ι → ZMod 2) = 2 ^ Fintype.card ι := by
+  rw [Fintype.card_fun, ZMod.card]
+
+namespace Z4Quadratic
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι] (Q : Z4Quadratic ι)
+
+/-- The Gauss sum has norm `2^dim` — the magnitude theorem in `Zsqrtd.norm` form. -/
+lemma norm_gaussSum4 : (gaussSum4 Q.q).norm = 2 ^ Fintype.card ι := by
+  have hmag : ((gaussSum4 Q.q).norm : GaussianInt) = (Fintype.card (ι → ZMod 2) : GaussianInt) := by
+    rw [Zsqrtd.norm_eq_mul_conj]; exact Q.gaussSum4_normSq
+  have hcast : (gaussSum4 Q.q).norm = (Fintype.card (ι → ZMod 2) : ℤ) := by exact_mod_cast hmag
+  rw [hcast, card_fun_zmod2]; norm_cast
+
+end Z4Quadratic
+
 end SKEFTHawking.Brown
