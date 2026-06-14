@@ -52,7 +52,4 @@ cyclic presentation `K = A(1)/(A(1)Sq¹ + A(1)Sq²Sq¹Sq²)`, the start of the m
 theorem ksp_cyclic :
     (1 : Matrix (Fin 3) (Fin 3) F2) 0 0 = 1 ∧ rhoSq2 1 0 = 1 ∧ (rhoSq1 * rhoSq2) 2 0 = 1 := by decide
 
-/-- `K` is 3-dimensional over `𝔽₂`. -/
-theorem ksp_dim : Module.finrank F2 (Fin 3 → F2) = 3 := by simp
-
 end SKEFTHawking.Ksp

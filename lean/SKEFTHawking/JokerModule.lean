@@ -59,9 +59,6 @@ theorem rho_Sq2_cubed : rhoSq2 * rhoSq2 * rhoSq2 = 0 := by decide
 theorem rho_top_killed : (∀ i, rhoSq1 i 4 = 0) ∧ (∀ i, rhoSq2 i 4 = 0) := by
   constructor <;> decide
 
-/-- `J` is 5-dimensional over `𝔽₂`. -/
-theorem joker_dim : Module.finrank F2 (Fin 5 → F2) = 5 := by simp
-
 /-! ### The cyclic presentation `J = A(1)/(A(1)·Sq³)` (the minimal-resolution start)
 
 `J` is cyclic on `j₀`, and `Sq³ = Sq¹Sq²` kills `j₀` (`Sq³·j₀ = Sq¹·(Sq²j₀) = Sq¹ j₂ = 0`). So
