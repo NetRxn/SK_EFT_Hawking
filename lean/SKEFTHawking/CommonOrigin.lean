@@ -53,6 +53,7 @@ recurs" and "these are images of one ℤ₁₆ invariant under explicit maps."
 import Mathlib
 import SKEFTHawking.SymTFT.PinPlusBordism4
 import SKEFTHawking.KitaevSixteenFold
+import SKEFTHawking.Spin10Sixteen
 
 namespace SKEFTHawking.CommonOrigin
 
@@ -114,6 +115,18 @@ theorem sm_anomaly_trivial_in_bordism (S : SmithInflow) (N_f : ℕ) :
     rw [show (16 : ZMod 16) = 0 from by decide]; ring
   rw [h16, map_zero]
 
+/-- **Facet-1 → facet-2 → bordism — the chain from its actual start.** The goal's anomaly-inflow
+chain begins with the SM 16-fermion content (the Spin(10) Weyl spinor). Here that "16" is the
+`Spin10Sixteen` branching sum `dim(10)+dim(5̄)+dim(1)` (the even-binomial count `C(5,0)+C(5,2)+C(5,4)`,
+NOT a literal), and `N_f` generations feed it through the Smith inflow to the trivial bordism class
+— routing facet 1 (the Spin(10) count) explicitly into the common origin. -/
+theorem sm_spin10_count_trivial_in_bordism (S : SmithInflow) (N_f : ℕ) :
+    S.smith (((Spin10.su5dim .ten + Spin10.su5dim .fivebar + Spin10.su5dim .one : ℕ) : ZMod 16)
+      * (N_f : ZMod 16)) = 0 := by
+  have hcount : ((Spin10.su5dim .ten + Spin10.su5dim .fivebar + Spin10.su5dim .one : ℕ) : ZMod 16)
+      = 0 := by decide
+  rw [hcount, zero_mul, map_zero]
+
 /-- **Rokhlin: a smooth-spin bulk is the trivial class.** The K3 spin 4-manifold's Pin⁺ lift has
 `16 ∣ σ` (`σ = -16`), so its class in `Ω₄^{Pin⁺}` is `0` — Rokhlin's theorem at the bordism level. -/
 theorem rokhlin_k3_trivial : Omega4PinPlusBordism.mk pinPlusK3Lift = 0 := by
@@ -166,6 +179,8 @@ The conditional common origin (roadmap E.1–E.5), superseding the enumeration:
   - `rokhlin_reads_kitaev` — **pointwise** Rokhlin = Kitaev in the ONE ℤ₁₆ (the strong unification).
   - `kitaev_generator_is_bordism_generator` — Kitaev ν=1 = `[RP⁴]` (non-vacuous heart).
   - `sm_anomaly_trivial_in_bordism`, `rokhlin_k3_trivial` — SM / smooth-spin at the trivial class.
+  - `sm_spin10_count_trivial_in_bordism` — facet 1 (the Spin(10) count = `su5dim` sum) routed
+    into the chain from its actual start (SM 16-fermion content → anomaly → bordism).
   - `sixteen_convergence_common_origin` (+ `_substrate`) — the bundled four-facet capstone.
 
 Walls still standing (documented): the geometric Smith homomorphism + `Ω₅^{Spin-ℤ₄}` bordism
