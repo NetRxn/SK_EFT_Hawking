@@ -136,4 +136,31 @@ theorem chain_d2_d3 :
   show Rsq2 * Rsq2 + Rsq1 * (Rsq2 * Rsq1) = 0
   decide
 
+/-! ## Step 4: `d₄` and the chain property `d₃ ∘ d₄ = 0` (the 4-periodicity onset)
+
+`P₄ = Σ⁴A(1) ⊕ Σ⁸A(1) ⊕ Σ¹²A(1)` (`A1_resolution_higher_syzygies.md` §3.2, verified): the `Σ¹²`
+generator is the `w ∈ Ext^{4,12}` periodicity class (`Cam17` Thm 5.5), from which the resolution is
+`(s,t) ↦ (s+4, t+12)`-periodic. Generator images into `P₃`'s `g₀(Σ³), g₁(Σ⁷), g₂(Σ⁹)`:
+
+  `d₄(g₀) = Sq¹·g₀`,  `d₄(g₁) = (Sq⁵+Sq⁴Sq¹)·g₀ + Sq¹·g₁`,  `d₄(g₂) = (Sq⁵+Sq⁴Sq¹)·g₁ + Sq³·g₂`.
+
+`d₃ ∘ d₄ = 0` reduces (block-decomposed, `R(y)·R(x) = R(x·y)`) to the A(1)-monomial identities:
+* gen 0: `Sq¹·Sq¹ = 0`;
+* gen 1: `Sq¹·e₆ + e₆·Sq¹ = 0` (= `chain_d1_d2`.2);
+* gen 2: `e₆·e₆ = 0` (degree `10 > 6`); `e₆·Sq¹ + Sq³·Sq³ = e₇ + e₇ = 0` (Adem `Sq³Sq³ = Sq⁵Sq¹`,
+  char 2); `Sq³·Sq² = 0` (Adem). -/
+
+/-- **Chain-complex property `d₃ ∘ d₄ = 0`** (resolution step 4), block-decomposed. The three new
+A(1)-monomial identities beyond `chain_d2_d3` are `e₆·e₆ = 0` (degree), `e₆Sq¹ + Sq³Sq³ = 0`
+(Adem `Sq³Sq³ = Sq⁵Sq¹`, both `= e₇`, char 2), and `Sq³·Sq² = 0` (Adem). Every `d₄`-syzygy generator
+lies in `ker d₃`; this is the onset of the `w`-periodic 4-periodic tail. -/
+theorem chain_d3_d4 :
+    Rsq1 * Rsq1 = 0 ∧ Rsq1 * Re6 + Re6 * Rsq1 = 0 ∧ Re6 * Re6 = 0 ∧
+      Rsq1 * Re6 + Rsq3 * Rsq3 = 0 ∧ Rsq2 * Rsq3 = 0 := by
+  refine ⟨by decide, by decide, by decide, ?_, ?_⟩
+  · show Rsq1 * Re6 + (Rsq2 * Rsq1) * (Rsq2 * Rsq1) = 0
+    decide
+  · show Rsq2 * (Rsq2 * Rsq1) = 0
+    decide
+
 end SKEFTHawking.KspRes
