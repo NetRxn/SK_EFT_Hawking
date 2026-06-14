@@ -691,6 +691,10 @@ import SKEFTHawking.JokerExt
 -- (Campbell delta-truncation height-4 cap as disclosed Prop; [RP4] order 16 DERIVED
 -- from the surface-ABK lower bound + the Ext delta-cap, not posited).
 import SKEFTHawking.PinPlusExtBound
+-- Phase 5q.F W4i (2026-06-14): the FINITE Pin+ column-4 height-4 cap (Campbell delta=.h0
+-- cokernel), decidable F2 linear algebra -> |Omega_4^Pin+| <= 2^4 = 16. The genuine finite
+-- upper-bound core (no topological input; that is the one disclosed pin4_abutment Prop).
+import SKEFTHawking.PinPlusHeight4
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
