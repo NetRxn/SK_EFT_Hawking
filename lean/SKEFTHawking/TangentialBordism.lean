@@ -46,6 +46,12 @@ structure TangentialStr.{u} (X : Type*) [TopologicalSpace X] (k : WithTop ℕ∞
   /-- The reverse of a `ξ`-bordism is a `ξ`-bordism (for symmetry). -/
   symm_onBor : {s t : SingularManifold.{u} X k I} → {b : Bordism.{u} (I.prod (𝓡∂ 1)) s t} →
     onBor b → onBor b.symm
+  /-- The mapping cylinder of a `ξ`-manifold is a `ξ`-bordism (covers refl + the group laws via the
+  sum diffeomorphisms). -/
+  mapCyl_onBor : {s t : SingularManifold.{u} X k I} → {φ : Diffeomorph I I s.M t.M k} →
+    {hf : t.f ∘ φ = s.f} → onMfd s → onBor (mapCylinder φ hf)
+  /-- The doubling bordism `M ⊔ M ~ ∅` of a `ξ`-manifold is a `ξ`-bordism (for the additive inverse). -/
+  doubling_onBor : {s : SingularManifold.{u} X k I} → onMfd s → onBor (doublingBordism s)
 
 variable {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
   {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
@@ -61,6 +67,8 @@ def trivialTangentialStr : TangentialStr X k I where
   cyl_onBor _ := trivial
   add_onBor _ _ := trivial
   symm_onBor _ := trivial
+  mapCyl_onBor _ := trivial
+  doubling_onBor _ := trivial
 
 /-! ## The `ξ`-tangential bordism group `Ω^ξ` -/
 
@@ -104,5 +112,73 @@ noncomputable def TangentialBordismGrp.add.{u} (ξ : TangentialStr.{u} X k I)
     TangentialBordismGrp.add ξ (TangentialBordismGrp.mk ξ s) (TangentialBordismGrp.mk ξ t) =
       TangentialBordismGrp.mk ξ ⟨s.1.sum t.1, ξ.onSum s.2 t.2⟩ :=
   rfl
+
+/-- `⊕` on `ξ`-bordism classes is **commutative**. -/
+theorem TangentialBordismGrp.add_comm.{u} (ξ : TangentialStr.{u} X k I)
+    (x y : TangentialBordismGrp ξ) : add ξ x y = add ξ y x := by
+  induction x using Quot.ind with | _ s =>
+  induction y using Quot.ind with | _ t =>
+  exact mk_eq_of_bordant ξ
+    ⟨mapCylinder (Diffeomorph.sumComm I s.1.M k t.1.M) (by funext z; rcases z with z | z <;> rfl),
+     ξ.mapCyl_onBor (ξ.onSum s.2 t.2)⟩
+
+/-- `⊕` on `ξ`-bordism classes is **associative**. -/
+theorem TangentialBordismGrp.add_assoc.{u} (ξ : TangentialStr.{u} X k I)
+    (x y z : TangentialBordismGrp ξ) : add ξ (add ξ x y) z = add ξ x (add ξ y z) := by
+  induction x using Quot.ind with | _ s =>
+  induction y using Quot.ind with | _ t =>
+  induction z using Quot.ind with | _ u =>
+  exact mk_eq_of_bordant ξ
+    ⟨mapCylinder (Diffeomorph.sumAssoc I s.1.M k t.1.M u.1.M)
+      (by funext w; rcases w with (w | w) | w <;> rfl),
+     ξ.mapCyl_onBor (ξ.onSum (ξ.onSum s.2 t.2) u.2)⟩
+
+/-- The **zero** `ξ`-bordism class: the empty `ξ`-manifold. -/
+noncomputable def TangentialBordismGrp.zero.{u} (ξ : TangentialStr.{u} X k I) :
+    TangentialBordismGrp ξ :=
+  TangentialBordismGrp.mk ξ ⟨emptySM, ξ.onEmpty⟩
+
+/-- `x ⊕ 0 = x`. -/
+theorem TangentialBordismGrp.add_zero.{u} (ξ : TangentialStr.{u} X k I)
+    (x : TangentialBordismGrp ξ) : add ξ x (zero ξ) = x := by
+  induction x using Quot.ind with | _ s =>
+  exact mk_eq_of_bordant ξ
+    ⟨mapCylinder (Diffeomorph.sumEmpty I s.1.M k (M' := emptySM.M))
+      (by funext z; cases z with | inl m => rfl | inr e => exact (IsEmpty.false e).elim),
+     ξ.mapCyl_onBor (ξ.onSum s.2 ξ.onEmpty)⟩
+
+/-- `0 ⊕ x = x`. -/
+theorem TangentialBordismGrp.zero_add.{u} (ξ : TangentialStr.{u} X k I)
+    (x : TangentialBordismGrp ξ) : add ξ (zero ξ) x = x := by
+  rw [add_comm ξ]; exact add_zero ξ x
+
+noncomputable instance (ξ : TangentialStr X k I) : Zero (TangentialBordismGrp ξ) :=
+  ⟨TangentialBordismGrp.zero ξ⟩
+noncomputable instance (ξ : TangentialStr X k I) : Add (TangentialBordismGrp ξ) :=
+  ⟨TangentialBordismGrp.add ξ⟩
+/-- `Ω^ξ` for the trivial (and more generally 2-torsion) structure has `neg = id`. -/
+instance (ξ : TangentialStr X k I) : Neg (TangentialBordismGrp ξ) := ⟨id⟩
+
+/-- The **`ξ`-tangential bordism group `Ω^ξ` is an additive commutative group** — the genuine bordism
+machinery + the tangential closure axioms. (As built the group is 2-torsion, `neg = id`; the Pin⁺
+refinement replaces the doubling-neg by structure reversal.) -/
+noncomputable instance (ξ : TangentialStr X k I) : AddCommGroup (TangentialBordismGrp ξ) where
+  add := (· + ·)
+  zero := 0
+  neg := (- ·)
+  add_assoc := TangentialBordismGrp.add_assoc ξ
+  zero_add := TangentialBordismGrp.zero_add ξ
+  add_zero := TangentialBordismGrp.add_zero ξ
+  add_comm := TangentialBordismGrp.add_comm ξ
+  neg_add_cancel := fun x => by
+    induction x using Quot.ind with | _ s =>
+      exact TangentialBordismGrp.mk_eq_of_bordant ξ ⟨doublingBordism s.1, ξ.doubling_onBor s.2⟩
+  nsmul := nsmulRec
+  nsmul_zero := fun _ => rfl
+  nsmul_succ := fun _ _ => rfl
+  zsmul := zsmulRec
+  zsmul_zero' := fun _ => rfl
+  zsmul_succ' := fun _ _ => rfl
+  zsmul_neg' := fun _ _ => rfl
 
 end SKEFTHawking.TangentialBordism
