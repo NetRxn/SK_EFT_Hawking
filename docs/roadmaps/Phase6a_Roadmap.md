@@ -509,16 +509,17 @@ The D4 "Area Law" `log Ω ≟ A/4G` is discharged: counting (left) and area (rig
   `frolov_fursaev_falsifier_wrong_coeff` makes it load-bearing. `H_Sakharov` registered as a tracked
   physical premise (the conditional's honest antecedent). Caught+fixed a `72π`→`48π` bug in the DR report.
 
-**⚠ ONE DEFERRED ACTION for the morning (NOT done — concurrent 5QE agent entanglement):** the shared
-autogen (`docs/counts.json`, `docs/counts.tex`, `lean/lean_deps.json(.hash)`, `SK_EFT_Hawking_Inventory_Index.md`)
-+ the root `lean/SKEFTHawking.lean` `import SKEFTHawking.InducedGravityEntropy` line are **on-disk +
-validated this session but UNCOMMITTED** (committing them would entangle 5QE's uncommitted `CommonOrigin.lean`).
-The committed tree is buildable (InducedGravityEntropy.lean is committed; nothing committed imports it →
-orphan-but-valid). **Reconcile once 5QE settles:** `lake build SKEFTHawking.ExtractDeps` →
-`update_counts.py` → `update_inventory_index.py` → commit those autogen + the root import line.
+**✅ DEFERRED ACTION — DONE 2026-06-14 (commit `45046ed5`).** 5QE settled (all its source committed
+through `e897fbdd`); the shared autogen (`docs/counts.json`, `docs/counts.tex`,
+`lean/lean_deps.json(.hash)`, `SK_EFT_Hawking_Inventory_Index.md`) was regenerated from the full
+settled tree (`lake build SKEFTHawking.ExtractDeps` → `update_counts.py` → `update_inventory_index.py`)
+and committed together with the root `lean/SKEFTHawking.lean` `import SKEFTHawking.InducedGravityEntropy`
+line. Counts: **12566 thm / 0 axiom / 0 sorry / 945 modules**; validate.py **43/43**. InducedGravityEntropy
+is now a live import (no longer orphan); the on-disk chain is fully self-consistent.
 
-All 8 commits on `main`, **NOT pushed**. Full chain: `9c12cd34` (W8) → `c1c2a156 64ecf70d f739f230
-210c6ce3` (W7B) → `474c3fcc` (W9) → `f80d94fc` (closure).
+All 10 commits on `main`, **NOT pushed**. Full chain: `9c12cd34` (W8) → `c1c2a156 64ecf70d f739f230
+210c6ce3` (W7B) → `474c3fcc` (W9) → `f80d94fc` (closure) → `b148ef4f` (this summary) → `794987a9`
+(wall-confirmation) → `45046ed5` (autogen + root-import reconcile).
 
 ---
 
