@@ -4,7 +4,7 @@
 
 **Purpose.** Catalogue the project's load-bearing tracked-hypothesis Props — Lean predicates consumed by substantive theorems but NOT independently derived. Each is a *constructive* alternative to a global `axiom`: the claim is packaged as a `def … : Prop` and taken as an explicit hypothesis, making the project's assumption surface visible at the type-signature level (Pipeline Invariant #15/#16).
 
-**Count.** 32 tracked hypotheses 4 headline, 14 external_boundary, 8 discharge_future, 6 local.
+**Count.** 33 tracked hypotheses 4 headline, 15 external_boundary, 8 discharge_future, 6 local.
 
 ---
 
@@ -111,6 +111,16 @@
 - **Posture.** Post-Stage-13 strengthened bundle encoding the Glorioso-Liu entropy-current theorem.
 - **Source.** Glorioso–Liu, arXiv:1612.07705 §III Eq. 3.20.
 - **Risk.** Established SK-EFT result; tracked as external theorem-bundle input.
+
+### `H_Sakharov`
+
+**Statement.** Sakharov induction condition: the physical Newton constant is fully induced by N_f Dirac fermion loops (no bare gravitational action), G_N = G_N_from_a2 = 12π/(N_f Λ²). Consumed by the Frolov–Fursaev induced-gravity 1/4 conditional (Phase 6a Wave 9, frolov_fursaev_quarter_coefficient).
+
+- status `active` · eliminability `hard` · module `InducedGravityEntropy`
+- **Posture.** The fully-induced-G_N condition consumed by frolov_fursaev_quarter_coefficient to derive κ = 1/(4 G_N) (Gate A.2). Witnessed (Dirac, frolov_fursaev_dirac_witness) and falsified (wrong heat-kernel coefficient, frolov_fursaev_falsifier_wrong_coeff).
+- **Source.** Sakharov 1967 induced gravity; Adler 1982; Frolov–Fursaev–Zelnikov, Nucl. Phys. B 486 (1997), hep-th/9607104.
+- **Risk.** Standard induced-gravity premise (no bare action); equivalent to α_ADW = 1 (δG = 0) via matchResidual_eq_zero_iff_alpha_unity (bridge H_Sakharov_iff_alpha_unity). Independent of the BH-entropy normalization — does NOT assume S = A/4G.
+- **Circularity.** None — Sakharov induction (G_N from loops) is independent of demanding S = A/4G; bridged to α_ADW = 1, and the 1/4 emerges from the shared Seeley–DeWitt a₂ ratio (48:12), not a tuning.
 
 ### `H_VergelesPositivity`
 

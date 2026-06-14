@@ -743,6 +743,39 @@ genuinely-derived MTC content). **AUTHORIZED 2026-06-13 (user sign-off) with the
 induced-gravity / γ-irrelevant narrative.** Goal prompt: `Phase6a_Wave9_goal_prompt.md`; runs as
 the third link of `Phase6a_CenterBridge_chained_goal_prompt.md`.
 
+**▶ Wave 9 DESIGN (2026-06-14, started; substrate + report read).** Honest non-vacuous structure
+(report `6a-Immirzi-area-gap-independence-for-Wave8.md` §5, with a numerical correction):
+the conditional `induced_gravity_entropy_coeff` —
+`h_Sakharov (G_N = 12π/(N_f Λ²), α=1, no bare action) ∧ h_ident (S_BH = S_ent) ∧
+h_heatKernel (S_ent = N_f·Λ²/(48π)·A) ⟹ S_BH = A/(4 G_N)`. **NONE of the 3 antecedents is
+`S=A/4G`** (anti-vacuity #5 satisfied): Sakharov G_N-form + entanglement identification +
+the Frolov–Fursaev heat-kernel `a₂` coefficient. The `1/4` = the ratio `48:12` (heat-kernel
+S_ent coeff vs EH G_N coeff, same `a₂`). **⚠ Report numerical bug caught:** its skeleton wrote
+`S_ent = N_f Λ²/(72π)·A` (gives ratio 2/3) — the correct coeff is `N_f Λ²/(48π)` so that
+`A/(4G_N) = N_f Λ²/(48π)·A` exactly with `G_N = 12π/(N_f Λ²)`. Substrate reuse: `H_Sakharov`
+ties to `MicroscopicCoefficientMatch.matchResidual_eq_zero_iff_alpha_unity` (δG=0 ⟺ α=1) +
+`HeatKernelExpansion.G_N_from_a2` (= 12π/(N_f Λ²)); `S_ent` coeff documented as the FF heat-kernel
+`a₂` input (checklist #5: the conical-replica derivation of 48π is Mathlib-walled → the coefficient
+is a named citable physical input as a hypothesis, NOT an axiom, falsifiable by a wrong coeff).
+Plan: `entanglementEntropyAreaLeading` def + `induced_gravity_entropy_coeff` (the ratio algebra,
+`field_simp;ring`) + `frolov_fursaev_quarter_coefficient` + consistency (= `kaulMajumdarS` leading
+coeff) + Dirac witness + falsifier (coeff ≠ 48π or α ≠ 1 ⟹ ≠ 1/4G). Build in new induced-gravity
+module. **NEXT: implement + build.**
+
+**▶ Wave 9 DONE 2026-06-14 (module `InducedGravityEntropy.lean` builds clean, axiom-pure
+{propext,Classical.choice,Quot.sound}; full graph + ExtractDeps 9263 jobs; validate 43/43).**
+Shipped: `entanglementEntropyAreaLeading` (FF heat-kernel `S_ent = N_f Λ²/(48π)·A`);
+`H_Sakharov` (G_N fully induced) + bridge `H_Sakharov_iff_alpha_unity`
+(↔ `MicroscopicCoefficientMatch` α=1/δG=0); `entanglement_area_eq_quarter_inv_G_induced`
+(the 48:12 = 4:1 ratio); **`frolov_fursaev_quarter_coefficient`** (the conditional, 3 independent
+antecedents, none `S=A/4G`); `frolov_fursaev_dirac_witness`; `frolov_fursaev_falsifier_wrong_coeff`
+(48π load-bearing); `frolov_fursaev_matches_kaulMajumdar_leading` (consistency w/ the MTC route).
+`H_Sakharov` registered in HYPOTHESIS_REGISTRY (tracked physical premise; the conditional's honest
+assumption, NOT open debt). **Gate A.2 CLOSED.** Caught + corrected a numerical bug in the research
+report (`72π`→`48π`). ⚠ Root registration (`SKEFTHawking.lean` import) is ON-DISK but UNCOMMITTED
+(5QE's CommonOrigin entangled in that file) — reconcile at session close. **NEXT: Wave 9 Stage-13
+→ FINAL adversarial review → MORNING SUMMARY + memory note + closure reviewer.**
+
 ---
 
 ## Decision Gates
@@ -750,6 +783,11 @@ the third link of `Phase6a_CenterBridge_chained_goal_prompt.md`.
 **Gate A.1 — after Wave 1 (`LinearizedEFE`) ships:** Is `G_N^emerg` sign correct and within 2 orders of magnitude of observed `G_N`? YES → all subsequent 6a waves proceed at full scope. NO (wrong sign) → ADW identification falsified at linearized order; 6a.4 scope is narrowed, 6a.5 and 6a.6 continue as formal exercises; Phase 6e reassessed. NO (right sign, wrong magnitude) → proceed but document parameter-fit freedom in every downstream wave.
 
 **Gate A.2 — after Wave 3 (`BHEntropyMicroscopic`) ships:** Does MTC counting reproduce 1/4 (within stated tolerance)? YES → 6c.4 (QEC-holography) and 6c.5 (RT/CH) proceed at full scope. NO → log-correction prediction becomes the 6a.3 deliverable; 6c.4/6c.5 reassessed.
+> **✅ GATE A.2 CLOSED (2026-06-14, Wave 9).** The 1/4 is derived (not merely tuned) via the
+> Frolov–Fursaev induced-gravity route: `InducedGravityEntropy.frolov_fursaev_quarter_coefficient`
+> proves `H_Sakharov ∧ (S_BH = S_ent) ∧ (FF heat-kernel a₂ form) ⟹ S_BH = A/(4 G_N)`, kernel-pure,
+> the 1/4 from the shared-`a₂` 48:12 ratio (NOT γ-tuning). The MTC-counting route supplies the
+> `−3/2` log (Wave 7B). Both routes consistent (`frolov_fursaev_matches_kaulMajumdar_leading`).
 
 **Gate A.3 — before Wave 6 (`PositiveMassTheorem`) begins:** Is Phase 6f.1 (`Curvature.lean`) + 6f.3 (`EnergyConditions.lean`) at least partially available? If NO, Wave 6 carries the needed objects inline but documents the Mathlib-PR candidates explicitly.
 

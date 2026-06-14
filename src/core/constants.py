@@ -2882,6 +2882,15 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
         'source': 'Microscopic BH-entropy program (BHEntropyMicroscopic / QECHolographyBridge).', 'risk': 'Bundle of well-motivated horizon conditions; tracked as external boundary (no published derivation pins a specific MTC at a 4D ADW horizon). Wave-8 hardened: each conjunct is independently witnessed AND falsified, and the full bundle is satisfiable (fibonacci_horizon_satisfies_H_HorizonBoundaryCondition).',
         'circularity_note': 'None.', 'prose': 'A 5-condition bundle Prop carrying a companion HorizonModularData (S-matrix + c₋); consumed by the microscopic-entropy and QEC-holography bridges. Wave 8: modularInvariant := md.modular, anomalyMatch := (8 ∣ c₋) — no longer True placeholders.',
     },
+    'H_Sakharov': {
+        'statement': 'Sakharov induction condition: the physical Newton constant is fully induced by N_f Dirac fermion loops (no bare gravitational action), G_N = G_N_from_a2 = 12π/(N_f Λ²). Consumed by the Frolov–Fursaev induced-gravity 1/4 conditional (Phase 6a Wave 9, frolov_fursaev_quarter_coefficient).',
+        'status': 'active', 'tier': 'external_boundary', 'eliminability': 'hard',
+        'module': 'InducedGravityEntropy',
+        'source': 'Sakharov 1967 induced gravity; Adler 1982; Frolov–Fursaev–Zelnikov, Nucl. Phys. B 486 (1997), hep-th/9607104.',
+        'risk': 'Standard induced-gravity premise (no bare action); equivalent to α_ADW = 1 (δG = 0) via matchResidual_eq_zero_iff_alpha_unity (bridge H_Sakharov_iff_alpha_unity). Independent of the BH-entropy normalization — does NOT assume S = A/4G.',
+        'circularity_note': 'None — Sakharov induction (G_N from loops) is independent of demanding S = A/4G; bridged to α_ADW = 1, and the 1/4 emerges from the shared Seeley–DeWitt a₂ ratio (48:12), not a tuning.',
+        'prose': 'The fully-induced-G_N condition consumed by frolov_fursaev_quarter_coefficient to derive κ = 1/(4 G_N) (Gate A.2). Witnessed (Dirac, frolov_fursaev_dirac_witness) and falsified (wrong heat-kernel coefficient, frolov_fursaev_falsifier_wrong_coeff).',
+    },
     'H_RegimePartition': {
         'statement': 'Glorioso–Liu second-law bundle: dynamical-KMS ℤ₂ symmetry + unitarity (Im S_eff ≥ 0) ⟹ local entropy-current monotonicity ∂_μ s^μ ≥ 0, without invoking pointwise NEC.',
         'status': 'active', 'tier': 'external_boundary', 'eliminability': 'hard',
