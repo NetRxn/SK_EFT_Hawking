@@ -44,6 +44,10 @@ structure TangentialData.{u} (X : Type*) [TopologicalSpace X] (k : WithTop ℕ�
   /-- The reverse of a bordism structure (for symmetry). -/
   symmBor : {s t : SingularManifold.{u} X k I} → {b : Bordism.{u} (I.prod (𝓡∂ 1)) s t} →
     {σ : Mfd s} → {τ : Mfd t} → Bor b σ τ → Bor b.symm τ σ
+  /-- The structures `sumStr σ τ` and `sumStr τ σ` correspond under `sumComm` (for `⊕`-commutativity). -/
+  commBor : {s t : SingularManifold.{u} X k I} → (σ : Mfd s) → (τ : Mfd t) →
+    Bor (mapCylinder (Diffeomorph.sumComm I s.M k t.M)
+      (by funext z; rcases z with z | z <;> rfl)) (sumStr σ τ) (sumStr τ σ)
 
 variable {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
   {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
@@ -88,5 +92,14 @@ noncomputable def DataBordismGrp.add.{u} (ξ : TangentialData.{u} X k I)
     DataBordismGrp.add ξ (DataBordismGrp.mk ξ p) (DataBordismGrp.mk ξ q) =
       DataBordismGrp.mk ξ ⟨p.1.sum q.1, ξ.sumStr p.2 q.2⟩ :=
   rfl
+
+/-- `⊕` on faithful (structured) bordism classes is **commutative**. -/
+theorem DataBordismGrp.add_comm.{u} (ξ : TangentialData.{u} X k I) (x y : DataBordismGrp ξ) :
+    add ξ x y = add ξ y x := by
+  induction x using Quot.ind with | _ p =>
+  induction y using Quot.ind with | _ q =>
+  exact mk_eq_of_bordant ξ
+    ⟨mapCylinder (Diffeomorph.sumComm I p.1.M k q.1.M) (by funext z; rcases z with z | z <;> rfl),
+     ⟨ξ.commBor p.2 q.2⟩⟩
 
 end SKEFTHawking.TangentialDataBordism
