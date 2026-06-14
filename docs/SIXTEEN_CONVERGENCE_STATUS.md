@@ -87,39 +87,41 @@ map-composition, constructed at the substrate level, with the geometric faithful
 **constrains, does not derive** (the SM is the *trivial* class among 16; `[RP⁴]` is the shared generator;
 many theories share this ℤ₁₆). None of this touches the independent 3-generation headline.
 
-## 3.6 The two-bounds upgrade (Phase 5q.F, 2026-06-14) — `SmithInflow`'s content REFINED, NOT discharged
+## 3.6 The FINITE A(1)-Ext upper bound + the `SmithInflow` DISCHARGE (Phase 5q.F, 2026-06-14)
 
-Phase 5q.F takes the one opaque `SmithInflow` hypothesis of 5q.E and **refines it into transparent,
-mostly-built content** — the `Ω₄^{Pin⁺} ≅ ℤ/16`'s order is now pinned by two *independent* bounds and the
-Smith map carries its Stiefel–Whitney mechanism. All kernel-pure (`{propext, Classical.choice, Quot.sound}`,
-0 axiom); fresh-context adversarial review = **DEFENSIBLE**.
+Phase 5q.F **discharges** the opaque `SmithInflow` hypothesis of 5q.E into the **axiom-stratified
+framework** (Phase-5a chirality-wall feasibility l.57/100: "the finite A(1)-Ext *partially discharges*
+the cobordism axiom"): `Ω₄^{Pin⁺} ≅ ℤ/16` is pinned by two **finite** bounds + **ONE** disclosed
+topological Prop, with the `ℤ/16` cardinality read off a **decidable F₂-linear-algebra** computation.
+All kernel-pure; fresh-context adversarial review = **GENUINE discharge, NOT a rename** (no CRITICAL
+issues — the binder is gone, the `16` is from finite content, the disclosed surface is one Prop).
 
-- **Lower bound `≥ 16` — the finite η-surrogate, NO APS** (`GuillouMarinBridge.lean`). Deep research
-  (`Lit-Search/Phase-5qF/eta_rp4_finite_surrogate.md`, verdict FINITE-SURROGATE-EXISTS) shows
-  `η(RP⁴)=1/16` needs no spectral analysis: the Pin⁺ ℤ/16 class **reduces mod 8 to the characteristic
-  surface's ABK `β(F)`** (`Z[M]²=ζ₈^{β}`). Since `β(RP²)=(stdQuadratic 1).brown=1` is a **unit** of ℤ/8
-  (the genuinely-built Gauss-sum invariant, `BrownInvariant.lean`), the class is odd ⟹ order 16. The
-  `∀ g` form (`pinPlus_RP4_order16_from_ABK`) is **posit-free**; the concrete `[RP⁴]` instance uses the
-  substrate's posited `signature = 1` to fix the class, the ABK supplying the order-forcing unit value.
-- **Upper bound `≤ 16` — the disclosed δ-cap + machine-checked resolution** (`PinPlusExtBound.lean`,
-  `KspResolution.lean`). The K=ksp=Σ⁻⁴ko⟨4⟩ minimal A(1)-resolution is machine-checked (`d₁,d₂,d₃`,
-  verified vs Campbell/Mills). The "16" is **NOT** an `Ext_{A(1)}(K)` property (that column is
-  4-periodic-INFINITE — we explicitly do NOT assert the false `Ext_4=0`); it is the **Campbell
-  δ-truncation** height-4 cap (Thm 6.7), carried as a disclosed cited Prop (the H1–H4 pattern). The
-  two bounds pinch `addOrderOf [RP⁴] = 16`.
+- **Lower bound `≥ 16` — the finite η-surrogate, NO APS** (`GuillouMarinBridge.lean`): the Pin⁺ ℤ/16
+  class reduces mod 8 to the surface ABK `β(RP²)=(stdQuadratic 1).brown=1`, a **unit** of ℤ/8 (the
+  built Gauss-sum invariant, `BrownInvariant.lean`), so the class is odd ⟹ order 16
+  (`eta_rp4_finite_surrogate.md`; `∀g` posit-free form `pinPlus_RP4_order16_from_ABK`).
+- **Upper bound `≤ 16` — the FINITE height-4 cap** (`PinPlusHeight4.lean`, **`axioms:[]`**, pure
+  `decide`): the Pin⁺ Adams column `t−s=4` is the Campbell `δ=·h₀` cokernel (`finite_height4_cap.md`,
+  Route A, machine-verified). The capped tower is the **RP^∞₋₁-inserted N-tower, NOT `Ext(K)`** (so the
+  false `Ext_4=0` trap is avoided); the δ-source v-tower (`v∈Ext^{3,7}`) kills filtration `s≥4`, leaving
+  **survivors `{0,1,2,3}` → height 4 → `ℤ/2⁴ = 16`** (`col4_height_eq_four = 4`). The whole
+  `π₀..₄ = ℤ/2,0,ℤ/2,ℤ/2,ℤ/16` is reproduced by the same δ-rule (cross-validation).
+- **The discharge** (`PinPlusDischarge.lean`): `sixteen_convergence_finite_discharge` carries **NO
+  `SmithInflow` binder** — only the single disclosed `pin4_abutment`. The `ℤ/16` comes from the finite
+  height (`col4_height_eq_four`), not the posited quotient; the old δ-cap (`16·[RP⁴]=0`) is **derived**
+  (`deltaCap_of_pin4`). Registry `smith_inflow_z16` reconciled (hypothesis→reduced to `pin4_abutment`).
+  The `Ω₅^{Spin-ℤ₄}` side is tied by the Smith iso to the **same** finite `ℤ/16` (`Omega5FiniteIso`).
 - **The Smith map's SW-mechanism** (`SymTFT/SmithMechanism.lean`): `w₂(N)=0 ⟹ Pin⁺` (Whitney + Spin-ℤ₄;
-  RP⁵→RP⁴ via Karoubi binomials `C(6,2)=1`, `C(5,2)=0`) — the geometric content under the otherwise
-  content-free `smithHom`.
-- **The capstone** (`SixteenConvergenceDerived.lean`): the convergence with `SmithInflow`'s opaque
-  content replaced by the constructed `smithHom` + the two-bounds order + the SW-mechanism, **no
-  `SmithInflow` binder** (`sixteen_convergence_derived_substrate`).
+  Karoubi binomials) — the geometric content under `smithHom`.
 
-**Honest scope (do NOT quote as "discharged"/"geometrically unconditional").** This is a **refinement**
-of the opaque hypothesis into named transparent pieces (most built/derived, a few disclosed). The thin
-substrates still *assign* their invariants; **Pontryagin–Thom, ABP splitting, the Campbell δ-truncation,
-the genuine η-invariant, and the manifold-level bordism construction remain disclosed cited Props**
-(Mathlib-absent — an `Explore` scope confirmed these are "permanently blocked without stable-homotopy
-machinery", ADR-003). The one-breath rule (§6) stays correct. Still **constrains, does not derive** the SM.
+**Honest scope (the axiom-stratified discharge).** The binder is genuinely gone (the discharge's import
+closure never touches `SmithInflow`; the old `SmithInflow`-bound theorem is orphaned). The `ℤ/16` is from
+finite content (the decidable Ext height). The **single** remaining tracked input is `pin4_abutment` =
+**Pontryagin–Thom (`Ω₄^{Pin⁺}=π₄MTPin⁺`) + Adams convergence** — Mathlib-absent (Thom-spectrum /
+stable-homotopy), ONE disclosed Prop (NOT an axiom; inhabited at the substrate). It is *logically
+equivalent* to the iso `Ω₄≃ZMod 16`, so the win is **where the 16 comes from** (finite Ext, not a posit),
+not a weaker iso-assumption. The one-breath rule (§6) stays correct; the convergence still **constrains,
+does not derive** the SM (the trivial class); the 3-generation headline is independent.
 
 ## 4. Proved NOT true (the no-gos — what the discipline caught)
 
