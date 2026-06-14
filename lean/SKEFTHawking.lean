@@ -717,6 +717,10 @@ import SKEFTHawking.Omega5FiniteIso
 -- W-projection instances. The group will be `Quot (IsBordant J)` (no manifold-gluing needed — Quot
 -- identifies via the relation's closure). Replaces the posited Omega4PinPlusBordism (a ℤ/16ℤ relabel).
 import SKEFTHawking.BordismGroup
+-- Phase 5q.F W4 (tangential layer): the tangential-structure interface (Prop-interface: onMfd/onBor
+-- conditions, e.g. Pin⁺ ⟺ w₂=0) refining the genuine unoriented bordism group to Ω^ξ. Pin⁺/Spin/
+-- Spin-ℤ₄ are instances; Ω₄^{Pin⁺} is the Pin⁺-tangential bordism group (the Smith-LES route's target).
+import SKEFTHawking.TangentialBordism
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
