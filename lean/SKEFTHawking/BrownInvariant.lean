@@ -157,6 +157,9 @@ vanishes for `z ≠ 0` by nondegeneracy. -/
 associated to a `ZMod 4`-quadratic form is `2·B`. -/
 def embed2 (b : ZMod 2) : ZMod 4 := 2 * (b.val : ZMod 4)
 
+/-- `embed2` is additive (`b ↦ 2b` is a `ZMod 2 → ZMod 4` homomorphism). -/
+lemma embed2_add (a b : ZMod 2) : embed2 (a + b) = embed2 a + embed2 b := by revert a b; decide
+
 /-- The `±1` character of `ZMod 2` valued in `ℤ[i]`. -/
 def chi2 (b : ZMod 2) : GaussianInt := if b = 0 then 1 else -1
 
@@ -362,6 +365,82 @@ lemma norm_gaussSum4 : (gaussSum4 Q.q).norm = 2 ^ Fintype.card ι := by
     rw [Zsqrtd.norm_eq_mul_conj]; exact Q.gaussSum4_normSq
   have hcast : (gaussSum4 Q.q).norm = (Fintype.card (ι → ZMod 2) : ℤ) := by exact_mod_cast hmag
   rw [hcast, card_fun_zmod2]; norm_cast
+
+/-- The unit `k` such that `gaussSum4 Q.q = i^k · (1+i)^dim`. -/
+noncomputable def brownUnit : ZMod 4 :=
+  (exists_zeta4_mul_of_norm_eq_pow (Fintype.card ι) (gaussSum4 Q.q) Q.norm_gaussSum4).choose
+
+lemma gaussSum4_eq_brownUnit :
+    gaussSum4 Q.q = zeta4 Q.brownUnit * (1 + I) ^ Fintype.card ι :=
+  (exists_zeta4_mul_of_norm_eq_pow (Fintype.card ι) (gaussSum4 Q.q) Q.norm_gaussSum4).choose_spec
+
+/-- **The Brown invariant `∈ ZMod 8`** of a nondegenerate `ZMod 4`-quadratic form: `brown Q = 2·k + dim`
+where `gaussSum4 Q.q = i^k·(1+i)^dim` (the `ζ₈`-phase of the Gauss sum, `gaussSum4 = √|V|·ζ₈^{brown}`). -/
+noncomputable def brown : ZMod 8 :=
+  2 * (Q.brownUnit.val : ZMod 8) + (Fintype.card ι : ZMod 8)
+
+/-- Orthogonal direct sum of two nondegenerate `ZMod 4`-quadratic forms (= disjoint union of the
+characteristic surfaces). The Gauss sum multiplies, so the Brown invariant adds. -/
+def orthSum {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂]
+    (Q₁ : Z4Quadratic ι₁) (Q₂ : Z4Quadratic ι₂) : Z4Quadratic (ι₁ ⊕ ι₂) where
+  q x := Q₁.q (fun i => x (Sum.inl i)) + Q₂.q (fun i => x (Sum.inr i))
+  B x y := Q₁.B (fun i => x (Sum.inl i)) (fun i => y (Sum.inl i))
+         + Q₂.B (fun i => x (Sum.inr i)) (fun i => y (Sum.inr i))
+  refine' x y := by
+    have e1 : (fun i => (x + y) (Sum.inl i)) = (fun i => x (Sum.inl i)) + fun i => y (Sum.inl i) := rfl
+    have e2 : (fun i => (x + y) (Sum.inr i)) = (fun i => x (Sum.inr i)) + fun i => y (Sum.inr i) := rfl
+    simp only [e1, e2, Q₁.refine', Q₂.refine', embed2_add]; ring
+  B_add_left x y z := by
+    have e1 : (fun i => (x + y) (Sum.inl i)) = (fun i => x (Sum.inl i)) + fun i => y (Sum.inl i) := rfl
+    have e2 : (fun i => (x + y) (Sum.inr i)) = (fun i => x (Sum.inr i)) + fun i => y (Sum.inr i) := rfl
+    simp only [e1, e2, Q₁.B_add_left, Q₂.B_add_left]; ring
+  B_symm x y := by simp only [Q₁.B_symm (fun i => x (Sum.inl i)), Q₂.B_symm (fun i => x (Sum.inr i))]
+  nondeg x hx := by
+    have key : ∀ (w₁ : ι₁ → ZMod 2) (w₂ : ι₂ → ZMod 2),
+        Q₁.B (fun i => x (Sum.inl i)) w₁ + Q₂.B (fun i => x (Sum.inr i)) w₂ = 0 := by
+      intro w₁ w₂; have h := hx (Sum.elim w₁ w₂); simpa using h
+    have hl : ∀ w₁, Q₁.B (fun i => x (Sum.inl i)) w₁ = 0 := fun w₁ => by
+      have h := key w₁ 0
+      rwa [show Q₂.B (fun i => x (Sum.inr i)) 0 = 0 from by rw [Q₂.B_symm]; exact Q₂.B_zero_left _,
+        add_zero] at h
+    have hr : ∀ w₂, Q₂.B (fun i => x (Sum.inr i)) w₂ = 0 := fun w₂ => by
+      have h := key 0 w₂
+      rwa [show Q₁.B (fun i => x (Sum.inl i)) 0 = 0 from by rw [Q₁.B_symm]; exact Q₁.B_zero_left _,
+        zero_add] at h
+    have hxl := Q₁.nondeg _ hl
+    have hxr := Q₂.nondeg _ hr
+    funext i; cases i with
+    | inl i => exact congrFun hxl i
+    | inr i => exact congrFun hxr i
+
+/-- The Gauss sum is multiplicative over the orthogonal sum. -/
+lemma gaussSum4_orthSum {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂]
+    (Q₁ : Z4Quadratic ι₁) (Q₂ : Z4Quadratic ι₂) :
+    gaussSum4 (orthSum Q₁ Q₂).q = gaussSum4 Q₁.q * gaussSum4 Q₂.q := by
+  rw [← gaussSum4_orthogonal Q₁.q Q₂.q]
+  exact Fintype.sum_equiv (Equiv.sumArrowEquivProdArrow ι₁ ι₂ (ZMod 2)) _ _ (fun _ => rfl)
+
+/-- The unit summand of the Brown phase adds over the orthogonal sum. -/
+lemma brownUnit_orthSum {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂]
+    (Q₁ : Z4Quadratic ι₁) (Q₂ : Z4Quadratic ι₂) :
+    (orthSum Q₁ Q₂).brownUnit = Q₁.brownUnit + Q₂.brownUnit := by
+  have h := (orthSum Q₁ Q₂).gaussSum4_eq_brownUnit
+  rw [gaussSum4_orthSum, Q₁.gaussSum4_eq_brownUnit, Q₂.gaussSum4_eq_brownUnit, Fintype.card_sum] at h
+  refine zeta4_mul_pow_right_inj (N := Fintype.card ι₁ + Fintype.card ι₂) ?_
+  rw [← h, zeta4_add, pow_add]; ring
+
+/-- `2·val` is additive `ZMod 4 → ZMod 8` (the wraparound is a multiple of `8`). -/
+lemma two_mul_val_add (a b : ZMod 4) :
+    (2 * ((a + b).val : ZMod 8)) = 2 * (a.val : ZMod 8) + 2 * (b.val : ZMod 8) := by
+  revert a b; decide
+
+/-- **Additivity of the Brown invariant** under orthogonal sum (the property the lower bound's
+bordism-invariant `β` needs). -/
+lemma brown_orthSum {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂]
+    (Q₁ : Z4Quadratic ι₁) (Q₂ : Z4Quadratic ι₂) :
+    (orthSum Q₁ Q₂).brown = Q₁.brown + Q₂.brown := by
+  simp only [brown, brownUnit_orthSum, Fintype.card_sum, Nat.cast_add, two_mul_val_add]
+  ring
 
 end Z4Quadratic
 
