@@ -721,6 +721,11 @@ import SKEFTHawking.BordismGroup
 -- conditions, e.g. Pin⁺ ⟺ w₂=0) refining the genuine unoriented bordism group to Ω^ξ. Pin⁺/Spin/
 -- Spin-ℤ₄ are instances; Ω₄^{Pin⁺} is the Pin⁺-tangential bordism group (the Smith-LES route's target).
 import SKEFTHawking.TangentialBordism
+-- Phase 5q.F W4 (faithful tangential layer): tangential structures carried AS DATA (the structure-count
+-- = H¹-torsor is what makes Ω₄^{Pin⁺}=ℤ/16, so the Prop-interface admits-Pin⁺ existence-version is
+-- insufficient — found by building). TangentialData/StrMfd/DataBordismGrp = the faithful chosen-structure
+-- bordism group; Pin⁺ instance's Mfd = the genuine Pin⁺ structure.
+import SKEFTHawking.TangentialDataBordism
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
