@@ -1,11 +1,18 @@
 # Phase 5q.E: the "16 convergence" — what a genuine common-origin proof would require
 
-## Technical Roadmap — June 2026 (DEFERRED FRONTIER, trigger-gated)
+## Technical Roadmap — June 2026 (top-row EXECUTED 2026-06-14; bottom-row DEFERRED, trigger-gated)
 
 *Created 2026-06-13. Governed by [ADR-003](../adrs/ADR-003-rokhlin-leg-discharge-and-deferred-topological-frontiers.md)
 (same deferred-frontier framework as Leg C-geometric / Leg D). Status framing:
-[`docs/SIXTEEN_CONVERGENCE_STATUS.md`](../SIXTEEN_CONVERGENCE_STATUS.md). This roadmap exists so the plan is
-**recorded, not re-derived** — it is NOT actionable now; it is gated on Mathlib-absent cobordism infrastructure.*
+[`docs/SIXTEEN_CONVERGENCE_STATUS.md`](../SIXTEEN_CONVERGENCE_STATUS.md).*
+
+**STATUS (2026-06-14): the buildable TOP-ROW shards are DONE.** Phase 5q.E waves W1–W4 (6 commits
+`01247a54`→`deb6e464`, NOT pushed) shipped every genuine, kernel-pure, non-vacuous *algebraic shadow*
+of the four facets — see [§Landed algebraic shards](#landed-algebraic-shards-phase-5qe-waves--the-top-row-buildable-now-content)
+below. **Only the BOTTOM-ROW capstones** (computed Pin⁺/Spin-ℤ₄ bordism groups, the Dai–Freed functor,
+the Smith homomorphism — the genuine *common-origin identification*) remain DEFERRED, gated on
+Mathlib-absent cobordism infrastructure (verified absent 2026-06-14, [§Mathlib status](#mathlib-status--verified-2026-06-14-semantic-search-not-grep)).
+The rest of this doc records that bottom-row plan **recorded, not re-derived**.*
 
 ---
 
@@ -34,7 +41,7 @@ and Ext⁴=16 no-gos, `SIXTEEN_CONVERGENCE_STATUS.md` §4).
 
 | Brick | Needed for | In-repo today? |
 |---|---|---|
-| SM 16 = Spin(10) spinor; 16-fermion anomaly arithmetic | facet 1 ↔ 2 (algebraic half) | ✅ partial — `total_components_with_nu_R`, `z16_anomaly_*` (arithmetic); GEM bordism cited not proved |
+| SM 16 = Spin(10) spinor; 16-fermion anomaly arithmetic | facet 1 ↔ 2 (algebraic half) | ✅ **W2 realized** (2026-06-14) — `Spin10Sixteen.lean`: branching `16→10⊕5̄⊕1` at dimension/assignment level + hypercharge & B−L Cartan consistency; plus `total_components_with_nu_R`, `z16_anomaly_*`. The spinor *module* + GEM bordism class remain cited-not-proved (bottom-row). |
 | **Spin / Pin⁺ / Spin-ℤ₄ bordism groups** `Ω₄^{Pin⁺}≅ℤ₁₆`, `Ω₅^{Spin-ℤ₄}≅ℤ₁₆` as *computed* groups | facets 2,3,4 share one ℤ₁₆ | ⚠️ **skeleton only** — Phase 6r `PinBordism`/`PinPlusBordism4` ship `Omega4PinPlusBordism ≃+ ZMod 16` as a *substrate Quotient*; the genuine geometric bordism group is a tracked Prop (`IsKirbyTaylorPinPlusBordism`), Mathlib-absent |
 | **Dai–Freed anomaly = bordism invariant** (anomaly-in-d = invertible-term-in-d+1) | facet 2 as a bordism class | ❌ absent — needs the η-invariant/APS + invertible-TQFT formalism (Phase 6o `APSEta` is a *substrate* η, not the Dai–Freed functor) |
 | **The Smith homomorphism** `Ω_*^{Spin-ℤ₄} → Ω_{*−1}^{Pin⁺}` (the map tying SM-anomaly ℤ₁₆ to the Pin⁺ ℤ₁₆) | the actual identification facet 2 ↔ 3/4 | ❌ absent — never formalized in any prover |
@@ -56,7 +63,7 @@ each is honest that a shared ℤ₁₆ **constrains, does not derive**, and flag
 | Wave | Module | What landed (genuine, non-vacuous) | Wall it stops at |
 |---|---|---|---|
 | **W1** (2026-06-13) | `KitaevSixteenFold.lean` | The Kitaev facet's ℤ₁₆ as an **explicit faithful central-charge character**: `c₋(ν)=ν/2`; `kitaevCentralCharge_faithful` (16 charges pairwise-distinct mod 8 ⇔ ν=μ — *the* 16-fold statement); `kitaev_eight_bosonic_phases` (index-8 bosonic sub-sector, the "8 doubled to 16" shadow); `sm_realizes_trivial_kitaev_class` (SM 16 Weyl→c=8→class 0 via `total_components_with_nu_R`); `rokhlin_forces_bosonic_boundary` (honest **conditional** Rokhlin→bosonic inflow). Supersedes the vacuous `Z16Classification` placeholders. | the index relation `c₋=σ/2` and the bulk-boundary map are *hypotheses*, not proved — the genuine identification needs the Smith homomorphism + computed bordism groups (bottom-row). |
-| **W2** (2026-06-13/14) | `Spin10Sixteen.lean` | The facet-1↔facet-2 algebraic half: the Spin(10) Weyl-spinor branching `16 → 10 ⊕ 5̄ ⊕ 1` realized at dimension/assignment level. `su5dim` grounds `10,5,1` as even-exterior-power dims `C(5,2),C(5,4),C(5,0)`; `weyl_spinor_as_even_exterior` (`C(5,0)+C(5,2)+C(5,4)=2⁴`); Georgi–Glashow `su5Multiplet` is a verified partition (`su5_partition_exhaustive`); `su5_branching_{ten,fivebar,one}` (components/multiplet = irrep dim, falsified by any wrong assignment); `spinor16_decomposition` via `total_components_with_nu_R`. **(2026-06-14) embedding-consistency added**: `hypercharge_traceless_{ten,fivebar,total}` — `Σ Y·components = 0` per multiplet and over the full 16 (the traceless-generator condition = GUT charge quantization), grounded in the real `hyperchargeY` data. | constructing the Spin(10) spinor *module* / `SU(5) ⊂ Spin(10)` / the branching as a rep-theory theorem (CliffordAlgebra/spinGroup) is Mathlib-absent (generational). |
+| **W2** (2026-06-13/14) | `Spin10Sixteen.lean` | The facet-1↔facet-2 algebraic half: the Spin(10) Weyl-spinor branching `16 → 10 ⊕ 5̄ ⊕ 1` realized at dimension/assignment level. `su5dim` grounds `10,5,1` as even-exterior-power dims `C(5,2),C(5,4),C(5,0)`; `weyl_spinor_as_even_exterior` (`C(5,0)+C(5,2)+C(5,4)=2⁴`); Georgi–Glashow `su5Multiplet` is a verified partition (`su5_partition_exhaustive`); `su5_branching_{ten,fivebar,one}` (components/multiplet = irrep dim, falsified by any wrong assignment); `spinor16_decomposition` via `total_components_with_nu_R`. **(2026-06-14) embedding-consistency added**: `hypercharge_traceless_{ten,fivebar,total}` — `Σ Y·components = 0` per multiplet and over the full 16 (the traceless-generator condition = GUT charge quantization), grounded in the real `hyperchargeY` data; **+ B−L Cartan** (`c980f4bf`): `bMinusL_traceless_total` (=0 over the 16 ⇒ Spin(10) generator) and `bMinusL_su5_ten_trace` (=2 over the SU(5) `10` ⇒ NOT an SU(5) generator), identifying B−L as the SO(10)\SU(5) `U(1)` whose ℤ₄ remnant `X=5(B−L)−4Y` carries the ℤ₁₆ anomaly — the explicit facet-1↔facet-2 link. | constructing the Spin(10) spinor *module* / `SU(5) ⊂ Spin(10)` / the branching as a rep-theory theorem (CliffordAlgebra/spinGroup) is Mathlib-absent (generational). |
 | **W3** (2026-06-13) | `SixteenConvergenceExplicit.lean` | The honest capstone (explicit maps, NOT unification): `sm_trivial_among_sixteen_distinct` (**constrains-not-derives** — SM is the trivial one of 16 *genuinely distinct* phases, via Kitaev faithfulness); `sm_count_trivializes_z16` (explicit facet-1→facet-4 composition: Spin(10) branching sum =16 is the integer whose Kitaev class is 0). | the bordism identification (Smith homomorphism + computed `Ω₄^{Pin⁺}/Ω₅^{Spin-ℤ₄}≅ℤ₁₆`) that would make "all the same 16" literal is Mathlib-absent. |
 | **W4** (2026-06-14) | `AnomalyPhaseCharacter.lean` | The explicit **finite map**: the anomaly phase `e^{2πiν/16} ∈ μ₁₆` as a faithful character `ℤ₁₆ → μ₁₆`. NEW headline `anomalyPhase_eq_central_charge_phase` (anomaly phase `= e^{2πi·c₋/8}`, Vafa form at label level, backed by a `kitaevCentralCharge` call); `anomalyPhase_add` (homomorphism), `anomalyPhase_faithful` (16 distinct phases, μ₁₆-codomain form of W1 faithfulness), `sm_anomalyPhase_trivial` (SM at identity). | the **deep** Gauss-sum `p₊ = D·e^{2πic₋/8}` link to a concrete MTC is **native_decide-purity-blocked** — the repo's Ising `p₊=2ζ₁₆` (`WRTComputation.ising_gauss_sum_is_2zeta`) would give the ν=1 realization, but it carries `Lean.ofReduceBool`. A kernel-pure `QCyc16` Gauss-sum computation would unlock it. |
 
@@ -71,14 +78,16 @@ those remain Mathlib-absent walls.
 
 ## LOE + posture (per ADR-003 velocity rows)
 
-- **Algebraic shards** (the anomaly arithmetic, the Spin(10)-spinor count, the ℤ₁₆ ZMod facts): top-row, mostly
-  in hand — these are the *facets*, already enumerated.
+- **Algebraic shards** (the Kitaev faithful character, the Spin(10) branching + Cartan consistency, the μ₁₆
+  anomaly-phase character, the constrains-not-derives capstone): top-row — **DONE 2026-06-14** (W1–W4, §Landed
+  shards). These are the *facets* with explicit maps, no longer a bare enumeration.
 - **The connective tissue** (bordism groups as computed, Dai–Freed, Smith homomorphism, ABS doubling): bottom-row,
-  Mathlib-absent, generational. This is where "all the same 16" actually lives, and it is exactly the gap.
+  Mathlib-absent, generational. This is where "all the same 16" actually lives, and it is exactly the remaining gap.
 
-**Posture: DEFER, trigger-gated** (identical to ADR-003 Leg C/D). Carry the convergence as a *formal enumeration*
-+ a *cited* literature connection (GEM 2018; Wang 2024 Smith-homomorphism / string-bordism ℤ₂₄). Do **not** open
-this absent the trigger.
+**Posture: top-row EXECUTED; bottom-row DEFER, trigger-gated** (identical to ADR-003 Leg C/D). The convergence is
+now carried as a *formal enumeration with explicit per-facet maps* (W1–W4) + a *cited* literature connection for
+the unification (GEM 2018; Wang 2024 Smith-homomorphism / string-bordism ℤ₂₄). Do **not** open the **bottom-row
+capstones** absent the trigger.
 
 ## Mathlib status — verified 2026-06-14 (semantic search, not grep)
 
