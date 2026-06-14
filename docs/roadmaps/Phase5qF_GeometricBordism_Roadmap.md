@@ -146,7 +146,16 @@ ABSENT (= build surface): `DiracOperator`, bordism groups, `QuadraticForm.signat
 | W1a | `SKEFTHawking/BrownInvariant.lean` | `gaussSum4` (ℤ[i] Gauss sum) + `gaussSum4_orthogonal`/`gaussSum4_pi` multiplicativity; `qGen`/`stdForm` generators; `gaussSum4_stdForm = (1+I)^g`; `gaussSum4_stdForm_normSq = 2^g` (magnitude); `one_add_I_pow_{two,four,eight}` (phase order **exactly 8** → genuinely `ZMod 8`); `brownStd` + additivity + `brownStd_order_eight`. Kernel-pure. | (source-only) | ✅ landed |
 | W1b | `BrownInvariant.lean` (cont.) | `Z4Quadratic` structure (nondeg `ZMod 4`-quadratic form: refines a symmetric biadditive nondeg `B`); `B_zero_left`/`q_zero`/`B_add_right`; `chi2_B_sum_eq_zero` (character orthogonality on `B`); **`gaussSum4_normSq` magnitude theorem** `gaussSum4 q · conj = \|V\|` — the well-definedness of the Brown phase. Kernel-pure. | (source-only) | ✅ landed |
 
-**W1 status:** ✅ core complete (Gauss sum + multiplicativity + ℤ₈ structure + magnitude/well-definedness). The standalone `brown : Z4Quadratic → ZMod 8` *extraction function* + Arf-mod-2 bridge are **moved to W2**: they require the normal-form classification of finite ℤ₄-quadratic forms (to prove additivity / `brown(stdForm g)=g`), which W2 builds alongside the characteristic-surface forms. (Mathematical dependency, not effort-deferral — the general well-definedness, the hard part, is done.)
+**W1 status:** ✅ core complete (Gauss sum + multiplicativity + ℤ₈ structure + magnitude/well-definedness).
+
+**W2 status:** ✅ COMPLETE (`509ba644` + `f95b2661` + `3c163033`) — the general Brown invariant + additivity + generator bridge, all kernel-pure:
+
+| W2a | `BrownInvariant.lean` | Gaussian-integer norm-`2^N` classification `g = i^k·(1+i)^N` (elementary, NO prime theory — via `(1+i)`-division `⟨a,b⟩=(1+i)·⟨(a+b)/2,(b-a)/2⟩` induction); `zeta4` injectivity/uniqueness; `norm_gaussSum4 = 2^dim` bridge | `509ba644` | ✅ |
+| W2b | `BrownInvariant.lean` | `brown : Z4Quadratic → ZMod 8` (ζ₈-phase via `Exists.choose`); `orthSum` (disjoint-union form, all 4 fields incl nondeg); **`brown_orthSum` additivity** | `f95b2661` | ✅ |
+| W2c | `BrownInvariant.lean` | `stdQuadratic g` instance; **`brown(stdForm g) = g`** ⇒ `brown(RP²-form)=1`, the order-16 generator value W3 consumes | `3c163033` | ✅ |
+
+Deferred (NOT a DONE-criterion — cross-check only): the `brown mod 2 = Arf` bridge to `SKEFTHawking.Arf`
+needs the symplectic (spin) pairing, not the diagonal Pin⁻ form; off the two-bound critical path. Revisit only if W3/closure needs it.
 
 (rows appended as waves land)
 
