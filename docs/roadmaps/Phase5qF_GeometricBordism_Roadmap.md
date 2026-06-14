@@ -61,18 +61,23 @@ Why this is the clearly-best route (decision taken 2026-06-14, no user gate need
 So: build the invariant `β : (Pin⁺ 4-manifold data) → ℤ₁₆` combinatorially, prove its bordism-invariance
 (handle calculus / Guillou–Marin congruence), prove it's an iso, then the Smith map, then Ω₅.
 
-> ⚠️ **CORRECTION 2026-06-14 — the "two finite bounds" claim below is REFUTED and stands pending a user
-> decision.** The *dedicated* feasibility assessment `Lit-Search/Phase-5a/Formalizing Ω₄^{Pin⁺} = ℤ₁₆ in
-> Lean 4- a feasibility assessment.md` (authoritative for this task) gives **15–25 person-years** for the
-> full geometric `Ω₄^{Pin⁺}=ℤ₁₆` ("infeasible on any realistic timeline"): it needs Thom spectra + Steenrod
-> algebra + Adams SS + APS index theorem, none in any proof assistant. The "finite A(1)-Ext" is a tiny
-> kernel **embedded** in that absent multi-year infrastructure — it only *partially* discharges the axiom;
-> it is NOT a finite route to the bordism group. The η lower bound needs APS (absent). **W1+W2 (Brown
-> invariant) is genuine bottom-up *evidence*, not the `Ω₄` bound.** DR-recommended path: keep `ℤ₁₆` as a
-> disclosed tracked input + build the categorical 16-fold-way + finite evidence. The wave plan W3–W5 below
-> is on hold pending the user's decision (redirect / commit person-years / stop at W1+W2).
+> ⚠️ **SCOPE CORRECTION 2026-06-14 (the "two finite bounds" framing was an over-claim) — but the FULL
+> objective is HELD; we do NOT de-scope.** Honest scope: the full geometric `Ω₄^{Pin⁺}=ℤ₁₆` is a **large
+> multi-layer infrastructure build** (Thom spectra + Steenrod algebra + Adams SS + APS / spinor-Dirac-η),
+> none of it in any proof assistant. The dedicated DR estimates 15–25 *human* person-years — but per the
+> user (2026-06-14), **authoritative person-year estimates do NOT gate this** (AI-dev pace has crushed such
+> estimates; thousands of PY in months). The "finite A(1)-Ext" is a real but PARTIAL kernel embedded in
+> that infra (not a shortcut to the bordism group). **Plan: hold the full discharge as the goal; START with
+> the achievable de-risking pieces (the A(1)-Ext upper-bound algebraic kernel; the categorical 16-fold-way
+> on existing fusion-category infra; Brown evidence ✅ W1+W2), THEN attack the foundational layers (Thom
+> spectra → Steenrod → Adams SS; spinor bundles → Dirac → η/APS; Smith exact sequence) over an extended
+> period.** No de-scope; see memory `[[feedback-no-hypothesis-based-descope]]` (person-year estimates
+> eliminated from continue-vs-stop). W3–W5 below are re-cast as "build the layers," not "finite bounds."
 
-### ~~The concrete two-bound architecture for `Ω₄^{Pin⁺} ≅ ℤ₁₆`~~ (REFUTED — see correction banner above)
+### The `Ω₄^{Pin⁺} ≅ ℤ₁₆` discharge — a large infrastructure build (de-risk-first, full objective held)
+
+The discharge needs both bounds of `Ω₄^{Pin⁺} ≅ ℤ₁₆`. Each requires genuinely-absent infrastructure that
+we BUILD (not axiomatize); the "finite" pieces below are the **de-risking entry points**, not the whole:
 
 `Lit-Search/Phase-5a/Formalizing the chirality wall- a Lean 4 feasibility assessment.md` (read directly)
 is explicit that the iso splits into two **finite, machine-checkable** bounds — neither needs the absent
