@@ -1,0 +1,269 @@
+import Mathlib
+
+/-!
+# The Arf–Brown–Kervaire (Brown) invariant in `ZMod 8`
+
+Phase 5q.F Wave 1. This module lifts the `ZMod 2`-valued, real (`±1`) Gauss sum of
+`SKEFTHawking.Arf` (`ArfInvariant.lean`, which carries the **Arf** invariant `∈ ZMod 2`) to the
+`ZMod 4`-valued Gauss sum over the Gaussian integers `ℤ[i]`, which carries the **Arf–Brown–Kervaire
+(Brown) invariant** `∈ ZMod 8`.
+
+This is the genuine algebraic heart of the Pin⁺ `ℤ₁₆` bordism invariant: by the
+Guillou–Marin / Kirby–Taylor formula the Pin⁺ `ℤ₁₆` of a `4`-manifold is read off a characteristic
+**surface** carrying a `ZMod 4`-valued quadratic enhancement, whose Brown invariant is exactly the
+phase of the Gauss sum built here. The project's no-go `RokhlinArfNoGo.lean`
+(`lattice_arf_bridge_refuted`) proved the mod-`16` is *not* a lattice Arf invariant — it is this
+characteristic-surface Brown invariant. See `docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md`.
+
+The Gauss sum is `g(q) = ∑ₓ i^{q(x)} ∈ ℤ[i]` for a `ZMod 4`-quadratic form `q`. For a nondegenerate
+refinement `g(q) = √|V| · ζ₈^{β}` with `β = Brown(q) ∈ ZMod 8`; equivalently `g(q)·conj g(q) = |V|`.
+
+All proofs are kernel-pure (`decide` over the finite primitives; no `native_decide`, no axioms).
+-/
+
+namespace SKEFTHawking.Brown
+
+open scoped BigOperators
+
+/-- The imaginary unit `i ∈ ℤ[i]`. -/
+def I : GaussianInt := ⟨0, 1⟩
+
+@[simp] lemma I_sq : I * I = -1 := by decide
+
+lemma I_pow_two : I ^ 2 = -1 := by
+  rw [pow_two]; exact I_sq
+
+@[simp] lemma I_pow_four : I ^ 4 = 1 := by decide
+
+/-- `i^n` for `n : ZMod 4`, well-defined because `i⁴ = 1`. The `ZMod 4`-graded version of the
+sign character `signZ : ZMod 2 → ℤ` from `SKEFTHawking.Arf`. -/
+def zeta4 (n : ZMod 4) : GaussianInt := I ^ n.val
+
+@[simp] lemma zeta4_zero : zeta4 0 = 1 := by decide
+
+/-- The defining homomorphism property: `i^{a+b} = i^a · i^b` (the `ZMod 4` exponent is
+well-defined modulo `i⁴ = 1`). -/
+lemma zeta4_add (a b : ZMod 4) : zeta4 (a + b) = zeta4 a * zeta4 b := by
+  revert a b; decide
+
+/-- The `ZMod 4` Gauss sum of a quadratic form `q : ι → ZMod 4` over a finite type. -/
+def gaussSum4 {ι : Type*} [Fintype ι] (q : ι → ZMod 4) : GaussianInt := ∑ x, zeta4 (q x)
+
+/-- Multiplicativity under orthogonal direct sum (the `ℤ[i]` analogue of
+`SKEFTHawking.Arf.gaussSum_orthogonal`). -/
+theorem gaussSum4_orthogonal {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (f : ι → ZMod 4) (g : κ → ZMod 4) :
+    gaussSum4 (fun p : ι × κ => f p.1 + g p.2) = gaussSum4 f * gaussSum4 g := by
+  unfold gaussSum4
+  rw [Fintype.sum_prod_type, Finset.sum_mul_sum]
+  apply Finset.sum_congr rfl
+  intro x _
+  apply Finset.sum_congr rfl
+  intro y _
+  rw [zeta4_add]
+
+/-- `zeta4` extends to finite sums: `i^{∑ᵢ fᵢ} = ∏ᵢ i^{fᵢ}` (the ℤ[i] analogue of
+`SKEFTHawking.Arf.signZ_sum`). -/
+theorem zeta4_sum {ι : Type*} (s : Finset ι) (f : ι → ZMod 4) :
+    zeta4 (∑ i ∈ s, f i) = ∏ i ∈ s, zeta4 (f i) := by
+  classical
+  induction s using Finset.induction with
+  | empty => simp [zeta4_zero]
+  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.prod_insert ha, zeta4_add, ih]
+
+/-- **Genus-`g` multiplicativity.** For a block-diagonal form `x ↦ ∑ᵢ qᵢ(xᵢ)` on `∀ i, V i`,
+the Gauss sum factorises as `∏ᵢ gaussSum4 qᵢ` (the ℤ[i] analogue of `Arf.gaussSum_pi`). -/
+theorem gaussSum4_pi {ι : Type*} [Fintype ι] [DecidableEq ι] {V : ι → Type*}
+    [∀ i, Fintype (V i)] (q : ∀ i, V i → ZMod 4) :
+    gaussSum4 (fun x : (∀ i, V i) => ∑ i, q i (x i)) = ∏ i, gaussSum4 (q i) := by
+  unfold gaussSum4
+  simp only [zeta4_sum]
+  rw [Finset.prod_univ_sum, Fintype.piFinset_univ]
+
+/-- The `1`-dimensional generator: the `ZMod 4`-quadratic form on `ZMod 2` with `q(1) = 1`.
+This is the Pin⁻ Möbius/`RP²` generator whose Brown invariant is `+1`. -/
+def qGen : ZMod 2 → ZMod 4 := fun x => (x.val : ZMod 4)
+
+/-- The Gauss sum of the generator is `1 + i` (i.e. `√2 · ζ₈`, phase `ζ₈^1`). -/
+theorem gaussSum4_qGen : gaussSum4 qGen = 1 + I := by decide
+
+/-- Magnitude of the generator Gauss sum: `(1+i)·conj(1+i) = 2 = |ZMod 2|`. The Gauss-sum
+magnitude theorem at the generator — the seed of the general `g·conj g = |V|`. -/
+theorem gaussSum4_qGen_normSq : gaussSum4 qGen * star (gaussSum4 qGen) = 2 := by
+  rw [gaussSum4_qGen]; decide
+
+/-! ## The genus-`g` standard form and the `ZMod 8` structure of the Brown phase
+
+The orthogonal sum of `g` copies of the generator has Gauss sum `(1+i)^g = (√2 · ζ₈)^g`, phase
+`ζ₈^g`. The three power facts below pin the order of the phase to exactly `8`:
+`ζ₈² = i` (not real), `ζ₈⁴ = -1` (real but negative), `ζ₈⁸ = 1` (positive real). Hence the Brown
+invariant carried by this phase is genuinely `ZMod 8`-valued — not `ZMod 4` or `ZMod 2`. -/
+
+/-- The genus-`g` standard form: the orthogonal sum of `g` copies of the generator `qGen`. -/
+def stdForm (g : ℕ) : (Fin g → ZMod 2) → ZMod 4 := fun x => ∑ i, qGen (x i)
+
+/-- The genus-`g` standard Gauss sum is `(1+i)^g`. -/
+theorem gaussSum4_stdForm (g : ℕ) : gaussSum4 (stdForm g) = (1 + I) ^ g := by
+  unfold stdForm
+  rw [gaussSum4_pi (fun _ : Fin g => qGen)]
+  simp only [gaussSum4_qGen, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
+
+/-- `(1+i)² = 2i`: the Brown phase at genus `2` is imaginary (order does not divide `2`). -/
+theorem one_add_I_pow_two : (1 + I) ^ 2 = 2 * I := by decide
+
+/-- `(1+i)⁴ = -4`: the Brown phase at genus `4` is negative real (order does not divide `4`). -/
+theorem one_add_I_pow_four : (1 + I) ^ 4 = -4 := by decide
+
+/-- `(1+i)⁸ = 16`: the Brown phase returns to positive real at genus `8` (order divides `8`). -/
+theorem one_add_I_pow_eight : (1 + I) ^ 8 = 16 := by decide
+
+/-- **Magnitude of the standard genus-`g` Gauss sum:** `|（1+i)^g|² = 2^g = |(ZMod 2)^g|`.
+The Gauss-sum magnitude theorem on the forms that generate the whole `ZMod 8` structure. -/
+theorem gaussSum4_stdForm_normSq (g : ℕ) :
+    gaussSum4 (stdForm g) * star (gaussSum4 (stdForm g)) = (2 : GaussianInt) ^ g := by
+  rw [gaussSum4_stdForm, star_pow, ← mul_pow]
+  rw [show (1 + I) * star (1 + I) = (2 : GaussianInt) from by decide]
+
+/-- The genus-`8` standard Gauss sum is the positive real `16` — phase `ζ₈⁸ = 1`. -/
+theorem gaussSum4_stdForm_eight : gaussSum4 (stdForm 8) = 16 := by
+  rw [gaussSum4_stdForm]; exact one_add_I_pow_eight
+
+/-- **The Brown invariant of the genus-`g` standard form is `g mod 8`.** Its defining property is
+the Gauss-sum phase `ζ₈^{brownStd g}`; `brownStd` is additive under orthogonal sum, and genuinely
+`ZMod 8`-valued (the generator has order `8`, witnessed by `one_add_I_pow_{two,four,eight}`). -/
+def brownStd (g : ℕ) : ZMod 8 := (g : ZMod 8)
+
+/-- Additivity of the standard Brown invariant under orthogonal sum (`stdForm` block-stacking). -/
+theorem brownStd_add (g h : ℕ) : brownStd (g + h) = brownStd g + brownStd h := by
+  simp [brownStd]
+
+/-- The generator's Brown invariant is `1`. -/
+@[simp] theorem brownStd_one : brownStd 1 = 1 := rfl
+
+/-- Genuinely `ZMod 8`-valued: the generator has additive order exactly `8`. -/
+theorem brownStd_order_eight : brownStd 8 = 0 ∧ brownStd 4 ≠ 0 ∧ brownStd 2 ≠ 0 := by
+  refine ⟨by decide, by decide, by decide⟩
+
+/-! ## General nondegenerate `ZMod 4`-quadratic forms and the magnitude theorem
+
+The well-definedness of the Brown invariant: for a `ZMod 4`-quadratic refinement `q` of a
+**nondegenerate** symmetric `ZMod 2`-bilinear form `B` on a finite `ZMod 2`-space, the Gauss sum
+satisfies `gaussSum4 q · conj (gaussSum4 q) = |V|`. Hence `gaussSum4 q = √|V| · ζ₈^{β}` with the
+Brown invariant `β` the phase. The proof is character orthogonality on `B`: after a translation
+reindex the double sum factors as `∑_z i^{q z} · ∑_y (-1)^{B z y}`, and the inner character sum
+vanishes for `z ≠ 0` by nondegeneracy. -/
+
+/-- Embed `ZMod 2 ↪ ZMod 4` as `{0,1} ↦ {0,2}` — the polar-form coefficient: the bilinear form
+associated to a `ZMod 4`-quadratic form is `2·B`. -/
+def embed2 (b : ZMod 2) : ZMod 4 := 2 * (b.val : ZMod 4)
+
+/-- The `±1` character of `ZMod 2` valued in `ℤ[i]`. -/
+def chi2 (b : ZMod 2) : GaussianInt := if b = 0 then 1 else -1
+
+/-- `chi2` is a character: adding `1` toggles the sign. -/
+lemma chi2_add_one (b : ZMod 2) : chi2 (b + 1) = -chi2 b := by
+  revert b; decide
+
+@[simp] lemma star_I : star I = -I := by decide
+
+@[simp] lemma zeta4_embed2 (b : ZMod 2) : zeta4 (embed2 b) = chi2 b := by
+  revert b; decide
+
+lemma star_zeta4 (n : ZMod 4) : star (zeta4 n) = zeta4 (-n) := by
+  revert n; decide
+
+lemma star_gaussSum4 {ι : Type*} [Fintype ι] (q : ι → ZMod 4) :
+    star (gaussSum4 q) = ∑ x, zeta4 (-q x) := by
+  unfold gaussSum4
+  rw [star_sum]
+  exact Finset.sum_congr rfl (fun x _ => star_zeta4 (q x))
+
+/-- A nondegenerate `ZMod 4`-quadratic form on the finite `ZMod 2`-space `ι → ZMod 2`. The bilinear
+form `B` is its polar form (`q(x+y) = q x + q y + 2·B x y`), symmetric, biadditive, nondegenerate. -/
+structure Z4Quadratic (ι : Type*) [Fintype ι] [DecidableEq ι] where
+  /-- The `ZMod 4`-quadratic form. -/
+  q : (ι → ZMod 2) → ZMod 4
+  /-- Its polar (associated symmetric bilinear) form, valued in `ZMod 2`. -/
+  B : (ι → ZMod 2) → (ι → ZMod 2) → ZMod 2
+  /-- `q` refines `B`: `q(x+y) = q x + q y + 2·B x y`. -/
+  refine' : ∀ x y, q (x + y) = q x + q y + embed2 (B x y)
+  /-- `B` is additive in its left argument. -/
+  B_add_left : ∀ x y z, B (x + y) z = B x z + B y z
+  /-- `B` is symmetric. -/
+  B_symm : ∀ x y, B x y = B y x
+  /-- `B` is nondegenerate. -/
+  nondeg : ∀ x, (∀ y, B x y = 0) → x = 0
+
+namespace Z4Quadratic
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι] (Q : Z4Quadratic ι)
+
+/-- `B 0 y = 0` (left additivity at `0`). -/
+lemma B_zero_left (y : ι → ZMod 2) : Q.B 0 y = 0 := by
+  have h := Q.B_add_left 0 0 y
+  rw [add_zero] at h
+  simpa using h.symm
+
+/-- `q 0 = 0`. -/
+lemma q_zero : Q.q 0 = 0 := by
+  have h := Q.refine' 0 0
+  rw [add_zero, Q.B_zero_left, show embed2 (0 : ZMod 2) = 0 from by decide, add_zero] at h
+  simpa using h.symm
+
+/-- `B` is additive in its right argument (from symmetry + left additivity). -/
+lemma B_add_right (x y z : ι → ZMod 2) : Q.B x (y + z) = Q.B x y + Q.B x z := by
+  rw [Q.B_symm x (y + z), Q.B_add_left, Q.B_symm y x, Q.B_symm z x]
+
+/-- **Character orthogonality.** For `z ≠ 0` the `±1` character sum `∑_y (-1)^{B z y}` vanishes
+(`y ↦ B z y` is a nonzero `ZMod 2`-functional, balanced by the `y ↦ y + y₀` involution). -/
+lemma chi2_B_sum_eq_zero {z : ι → ZMod 2} (hz : z ≠ 0) :
+    ∑ y, chi2 (Q.B z y) = 0 := by
+  obtain ⟨y₀, hy₀⟩ : ∃ y₀, Q.B z y₀ ≠ 0 := by
+    by_contra h
+    exact hz (Q.nondeg z (fun y => by simpa using not_exists.mp h y))
+  have hy1 : Q.B z y₀ = 1 := by revert hy₀; generalize Q.B z y₀ = b; revert b; decide
+  set S := ∑ y, chi2 (Q.B z y) with hS
+  have key : S = -S := by
+    calc S = ∑ y, chi2 (Q.B z (y + y₀)) := (Equiv.sum_comp (Equiv.addRight y₀) _).symm
+      _ = ∑ y, -chi2 (Q.B z y) := by
+            refine Finset.sum_congr rfl (fun y _ => ?_)
+            rw [Q.B_add_right z y y₀, hy1, chi2_add_one]
+      _ = -S := by rw [hS, Finset.sum_neg_distrib]
+  have h2 : (2 : GaussianInt) * S = 0 := by rw [two_mul]; nth_rewrite 2 [key]; exact add_neg_cancel S
+  rcases mul_eq_zero.mp h2 with h | h
+  · exact absurd h (by decide)
+  · exact h
+
+/-- **Magnitude theorem.** `gaussSum4 q · conj (gaussSum4 q) = |V|` for a nondegenerate refinement.
+This is the well-definedness of the Brown phase (`gaussSum4 q = √|V| ζ₈^β`). The proof is character
+orthogonality: after a translation reindex the double sum factors as `∑_z i^{q z} · ∑_y (-1)^{B z y}`,
+whose inner sum vanishes for `z ≠ 0` and is `|V|` at `z = 0`. -/
+theorem gaussSum4_normSq :
+    gaussSum4 Q.q * star (gaussSum4 Q.q) = (Fintype.card (ι → ZMod 2) : GaussianInt) := by
+  have inner : ∀ y, (∑ x, zeta4 (Q.q x + -Q.q y)) = ∑ z, zeta4 (Q.q z) * chi2 (Q.B z y) := by
+    intro y
+    rw [← Equiv.sum_comp (Equiv.addRight y) (fun x => zeta4 (Q.q x + -Q.q y))]
+    refine Finset.sum_congr rfl (fun z _ => ?_)
+    simp only [Equiv.coe_addRight]
+    rw [Q.refine' z y,
+      show Q.q z + Q.q y + embed2 (Q.B z y) + -Q.q y = Q.q z + embed2 (Q.B z y) from by ring,
+      zeta4_add, zeta4_embed2]
+  rw [star_gaussSum4]
+  show (∑ x, zeta4 (Q.q x)) * (∑ y, zeta4 (-Q.q y)) = _
+  rw [Finset.sum_mul]
+  simp only [Finset.mul_sum, ← zeta4_add]
+  rw [Finset.sum_comm]
+  simp only [inner]
+  rw [Finset.sum_comm]
+  simp only [← Finset.mul_sum]
+  rw [Finset.sum_eq_single (0 : ι → ZMod 2)
+      (fun b _ hb => by rw [chi2_B_sum_eq_zero Q hb, mul_zero])
+      (fun h => absurd (Finset.mem_univ _) h)]
+  rw [q_zero, zeta4_zero, one_mul]
+  have hone : ∀ y, chi2 (Q.B 0 y) = (1 : GaussianInt) := fun y => by rw [Q.B_zero_left]; rfl
+  rw [Finset.sum_congr rfl (fun y _ => hone y)]
+  simp [Finset.card_univ]
+
+end Z4Quadratic
+
+end SKEFTHawking.Brown
