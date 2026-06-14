@@ -61,6 +61,30 @@ Why this is the clearly-best route (decision taken 2026-06-14, no user gate need
 So: build the invariant `β : (Pin⁺ 4-manifold data) → ℤ₁₆` combinatorially, prove its bordism-invariance
 (handle calculus / Guillou–Marin congruence), prove it's an iso, then the Smith map, then Ω₅.
 
+### The concrete two-bound architecture for `Ω₄^{Pin⁺} ≅ ℤ₁₆` (the buildable route — verified 2026-06-14)
+
+`Lit-Search/Phase-5a/Formalizing the chirality wall- a Lean 4 feasibility assessment.md` (read directly)
+is explicit that the iso splits into two **finite, machine-checkable** bounds — neither needs the absent
+infrastructure (Adams SS / APS / Dirac):
+
+1. **Lower bound `|Ω₄^{Pin⁺}| ≥ 16`** — the **Brown/ABK invariant** `β : Ω₄^{Pin⁺} → ℤ₁₆` (the geometric
+   Guillou–Marin route) with `β([RP⁴])` a generator of order 16. **This is W1's Brown invariant** — its
+   ℤ₈ phase + the signature defect give the ℤ₁₆; the order-16 element forces `|group| ≥ 16`.
+2. **Upper bound `|Ω₄^{Pin⁺}| ≤ 16`** — the assessment (line 57): *"The Ext computation over A(1) in total
+   degree 4 is actually finite and algorithmic — this specific computation could in principle be
+   machine-checked even without general spectral sequence infrastructure, by encoding A(1) as an
+   8-dimensional 𝔽₂-algebra and computing Ext directly via a free resolution. This would partially
+   discharge the cobordism axiom."* I.e. `Ω₄^{Pin⁺} = π₄(MPin⁻)` (Pontryagin–Thom) and the A(1)-`Ext`
+   in degree 4 is a **finite 𝔽₂-linear-algebra computation** (free resolution of the relevant A(1)-module),
+   giving `|group| ≤ 16`.
+
+Together ⇒ `≅ ℤ₁₆`. **Both bounds are finite/algebraic and avoid every Mathlib-absent landmark.** The
+assessment *recommends axiomatizing* (`axiom cobordism_Z16`, `axiom RP4_generates`, …) — but per project
+policy that is **advisory only**, and per the standing directive we **BUILD both finite bounds instead of
+axiomatizing.** (This corrects the earlier "η/Adams-SS, no foothold, multi-week" mis-call, which conflated
+the *general* spectral-sequence infrastructure — genuinely absent — with *this specific finite computation*
+— buildable. The DR draws exactly that distinction.)
+
 ---
 
 ## Existing substrate to build ON (do not duplicate)
@@ -81,30 +105,32 @@ ABSENT (= build surface): `DiracOperator`, bordism groups, `QuadraticForm.signat
 
 ## Wave plan
 
-> Dependency spine: **W1 → W2 → W3 → W4 → W5 → W6 → W7 → W8 → W9.** Start = W1.
+> Dependency spine: **W1 → W2 → {W3 lower ‖ W4 upper} → W5 → W6 → W7 → W8 → W9.** Start = W1.
+> W3 (lower bound) and W4 (upper bound) are independent and can be built in either order.
 
-- **W1 — Arf–Brown–Kervaire (Brown) invariant ∈ ℤ₈.** Genuine ABK of a ℤ₄-quadratic refinement of a
-  nondegenerate ℤ₂ inner-product space, via the normalized Gauss sum (`gaussSum = √dim · ζ₈^{ABK}`).
-  Build on `Arf.gaussSum`. Deliver: Gauss-sum modulus `|gaussSum|² = dim`; the unit-phase ∈ μ₈;
-  `brown : Form → ZMod 8` well-defined; additivity under ⊥; `brown(generator)=1`; `Arf = brown mod 2`
-  (bridge to `arfOfForm`). *Self-contained algebra; the heart of the Pin⁺ ℤ₁₆.*
-- **W2 — ℤ₄-quadratic classification + general Brown extraction + characteristic-surface data.**
-  (a) Normal-form classification of finite nondeg `Z4Quadratic` forms (orthogonal sum of generators);
-  (b) the general `brown : Z4Quadratic → ZMod 8` phase-extraction function with additivity and
-  `brown(stdForm g) = g` + the Arf-mod-2 bridge to `SKEFTHawking.Arf` (carried over from W1, where it
-  was correctly identified as classification-dependent); (c) the ℤ₄-valued quadratic enhancement on
-  `H₁(F;ℤ₂)` of a characteristic surface — the Guillou–Marin form β consumes.
-- **W3 — β : Pin⁺-4-manifold data → ℤ₁₆ (Kirby–Taylor / Guillou–Marin formula).** Assemble
-  β = (signature-defect term) + 2·(Brown of characteristic surface) ∈ ℤ₁₆ from W1+W2; `β(RP⁴)=1`.
-- **W4 — Bordism-invariance of β (descent).** β descends to the bordism quotient (handle calculus /
-  Guillou–Marin congruence). Deepest geometric brick: build the elementary route; if an irreducible
-  named congruence (Rokhlin / Guillou–Marin) remains, carry as ONE disclosed tracked `Prop` + discharge
-  plan — only after building everything above it.
-- **W5 — Ω₄^{Pin⁺} ≅ ℤ₁₆ derived.** Re-base `PinPlusManifold4` on derived β; re-derive
-  `Omega4PinPlusBordism ≃+ ZMod 16` from β-injectivity + RP⁴ generation. Posited `signature` carrier retired.
-- **W6 — Smith homomorphism (geometric).** Ω₅^{Spin-ℤ₄} → Ω₄^{Pin⁺} as the cut along the Poincaré
-  dual of the ℤ₄ class; replace the thin constructed `smithHom`.
-- **W7 — Ω₅^{Spin-ℤ₄} ≅ ℤ₁₆ via Smith iso.** Discharge the `daiFreed:ℤ` carrier.
+- **W1 — Arf–Brown–Kervaire (Brown) invariant ∈ ℤ₈.** ✅ **DONE.** ABK of a ℤ₄-quadratic refinement of a
+  nondeg ℤ₂ space via the ℤ[i] Gauss sum (`gaussSum4 = √dim · ζ₈^{ABK}`): multiplicativity, the magnitude
+  theorem `|gaussSum4|² = dim` (well-definedness), the ℤ₈ phase structure (order exactly 8). The algebraic
+  heart of the Pin⁺ ℤ₁₆ **lower bound**.
+- **W2 — general Brown extraction + characteristic-surface data.** (a) general `brown : Z4Quadratic → ZMod 8`
+  phase-extraction (via the Gaussian-integer norm-`2^{2d}` structure ⇒ `gaussSum4·(1-i)^d = 2^d·i^k`, which
+  gives additivity *without* the full form-classification) + `brown(stdForm g)=g` + Arf-mod-2 bridge;
+  (b) the ℤ₄-valued quadratic enhancement on `H₁(F;ℤ₂)` of a characteristic surface (the Guillou–Marin form).
+- **W3 — LOWER bound `|Ω₄^{Pin⁺}| ≥ 16`: the β invariant + order-16 generator.** Assemble
+  `β = (signature defect) + 2·brown(char surface) ∈ ℤ₁₆` (Kirby–Taylor/Guillou–Marin); `β([RP⁴])` = generator
+  of exact order 16 ⇒ the group has an order-16 element. (β's bordism-invariance: build the elementary
+  handle-calculus/Guillou–Marin route; any irreducible named congruence carried as ONE disclosed tracked
+  `Prop` + discharge plan, only after building everything above it.)
+- **W4 — UPPER bound `|Ω₄^{Pin⁺}| ≤ 16`: the finite A(1)-`Ext` computation.** Pontryagin–Thom
+  `Ω₄^{Pin⁺} = π₄(MPin⁻)`; encode `A(1) = ⟨Sq¹,Sq²⟩` as an **8-dimensional 𝔽₂-algebra**, build the relevant
+  free resolution, compute `Ext_{A(1)}` in total degree 4 (a **finite 𝔽₂-linear-algebra** computation) ⇒
+  `|group| ≤ 16`. No spectral-sequence infrastructure (per Phase-5a assessment line 57). Independent of W3.
+- **W5 — `Ω₄^{Pin⁺} ≅ ℤ₁₆` derived + re-base substrate.** Combine W3 (≥16) + W4 (≤16) ⇒ `≅ ZMod 16`;
+  re-base `PinPlusManifold4`'s carrier on derived β (retire the posited `signature = 1` for `[RP⁴]`);
+  re-derive `Omega4PinPlusBordism ≃+ ZMod 16`.
+- **W6 — Smith homomorphism (geometric).** `Ω₅^{Spin-ℤ₄} → Ω₄^{Pin⁺}` as the cut along the Poincaré dual
+  of the ℤ₄ class; replace the thin constructed `smithHom`.
+- **W7 — `Ω₅^{Spin-ℤ₄} ≅ ℤ₁₆` via Smith iso.** Discharge the `daiFreed:ℤ` carrier.
 - **W8 — Discharge `SmithInflow`; convergence unconditional.** Wire derived maps into `CommonOrigin`;
   `sixteen_convergence_common_origin` loses its hypothesis. Retire registry `smith_inflow_z16`
   (hypothesis → theorem). Reconcile all disclosure surfaces.
