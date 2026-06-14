@@ -1,0 +1,23 @@
+{
+  "timestamp": "20260614T002234Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "disclosure_consistency": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "D5",
+          "passed": false,
+          "message": "presents disclosed definitional/vacuous_proxy theorem(s) as establishing a result: r_d_independent_count_eight \u2014 reframe (the substantive proof load is in the per-item theorems; these are bookkeeping/markers per MODELING_ASSUMPTION_THEOREMS)",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

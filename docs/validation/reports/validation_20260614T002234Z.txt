@@ -1,0 +1,8 @@
+SK-EFT Hawking Validation Report
+Generated: 20260614T002234Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] disclosure_consistency
+  - D5 — presents disclosed definitional/vacuous_proxy theorem(s) as establishing a result: r_d_independent_count_eight — reframe (the substantive proof load is in the per-item theorems; these are bookkeeping/markers per MODELING_ASSUMPTION_THEOREMS)
+
+Overall: 0/1 passed

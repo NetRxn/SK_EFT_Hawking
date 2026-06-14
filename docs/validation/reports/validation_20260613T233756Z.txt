@@ -1,0 +1,9 @@
+SK-EFT Hawking Validation Report
+Generated: 20260613T233756Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] proxy_body_audit
+  + tracked_vacuous_proxies — 6 structurally-named theorem(s) disclosed as `vacuous_proxy` tracked debt (see MODELING_ASSUMPTION_THEOREMS `discharge` pointers)
+  + all_theorems — every structurally-named trivially-closed theorem is registered + disclosed in MODELING_ASSUMPTION_THEOREMS
+
+Overall: 1/1 passed

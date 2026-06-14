@@ -1,0 +1,35 @@
+{
+  "timestamp": "20260614T002034Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "proxy_body_audit": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "tracked_vacuous_proxies",
+          "passed": true,
+          "message": "6 structurally-named theorem(s) disclosed as `vacuous_proxy` tracked debt (see MODELING_ASSUMPTION_THEOREMS `discharge` pointers)",
+          "warning": true
+        },
+        {
+          "name": "baseline",
+          "passed": true,
+          "message": "23 grandfathered trivially-bodied theorem(s) in VACUOUS_STATEMENT_BASELINE (visible tracked debt \u2192 Vacuous Statement Sweep)",
+          "warning": true
+        },
+        {
+          "name": "all_theorems",
+          "passed": true,
+          "message": "no NEW trivially-closed structural theorems (23 baselined, 6 disclosed vacuous_proxy)",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

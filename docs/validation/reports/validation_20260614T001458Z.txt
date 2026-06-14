@@ -1,0 +1,13 @@
+SK-EFT Hawking Validation Report
+Generated: 20260614T001458Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] formula_grounding
+  - coverage — 437 Lean refs; 437 resolve; 0 placeholder-grounded; 5 thin-grounded; 0 dangling
+  - fib_wrt_S2xS1 — formula grounded on a reflexive/tautological theorem (proves nothing; Invariant #4 content-grounding) — reground on a substantive theorem
+  - fib_wrt_rank — formula grounded on a reflexive/tautological theorem (proves nothing; Invariant #4 content-grounding) — reground on a substantive theorem
+  - fierz_channel_count — formula grounded on a reflexive/tautological theorem (proves nothing; Invariant #4 content-grounding) — reground on a substantive theorem
+  - ising_wrt_S2xS1 — formula grounded on a reflexive/tautological theorem (proves nothing; Invariant #4 content-grounding) — reground on a substantive theorem
+  - ising_wrt_rank — formula grounded on a reflexive/tautological theorem (proves nothing; Invariant #4 content-grounding) — reground on a substantive theorem
+
+Overall: 0/1 passed

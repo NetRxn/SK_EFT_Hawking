@@ -1,0 +1,53 @@
+{
+  "timestamp": "20260614T001458Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "formula_grounding": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "coverage",
+          "passed": false,
+          "message": "437 Lean refs; 437 resolve; 0 placeholder-grounded; 5 thin-grounded; 0 dangling",
+          "warning": false
+        },
+        {
+          "name": "fib_wrt_S2xS1",
+          "passed": false,
+          "message": "formula grounded on a reflexive/tautological theorem (proves nothing; Invariant #4 content-grounding) \u2014 reground on a substantive theorem",
+          "warning": false
+        },
+        {
+          "name": "fib_wrt_rank",
+          "passed": false,
+          "message": "formula grounded on a reflexive/tautological theorem (proves nothing; Invariant #4 content-grounding) \u2014 reground on a substantive theorem",
+          "warning": false
+        },
+        {
+          "name": "fierz_channel_count",
+          "passed": false,
+          "message": "formula grounded on a reflexive/tautological theorem (proves nothing; Invariant #4 content-grounding) \u2014 reground on a substantive theorem",
+          "warning": false
+        },
+        {
+          "name": "ising_wrt_S2xS1",
+          "passed": false,
+          "message": "formula grounded on a reflexive/tautological theorem (proves nothing; Invariant #4 content-grounding) \u2014 reground on a substantive theorem",
+          "warning": false
+        },
+        {
+          "name": "ising_wrt_rank",
+          "passed": false,
+          "message": "formula grounded on a reflexive/tautological theorem (proves nothing; Invariant #4 content-grounding) \u2014 reground on a substantive theorem",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}
