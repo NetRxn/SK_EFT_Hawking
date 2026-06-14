@@ -109,4 +109,53 @@ theorem IsBordant.symm {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
     {s t : SingularManifold X k I} (h : IsBordant J s t) : IsBordant J t s :=
   h.elim fun b => ⟨b.symm⟩
 
+/-! ## §3. The cylinder bordism — reflexivity and the operations' workhorse -/
+
+open scoped Manifold
+
+/-- The **cylinder bordism** `s.M × [0,1]`: a bordism from `s` to itself. The workhorse for reflexivity,
+the disjoint-union congruence, and the additive inverse. Built on Mathlib's `Icc` manifold-with-boundary
+and its pre-computed product boundary `∂(M × [0,1]) = M × {⊥,⊤}` (`boundary_product`). -/
+noncomputable def reflCylinder {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
+    {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [TopologicalSpace H] {I : ModelWithCorners ℝ E H} [I.Boundaryless]
+    (s : SingularManifold X k I) :
+    Bordism (I.prod (𝓡∂ 1)) s s where
+  W := s.M × Set.Icc (0 : ℝ) 1
+  e := Sum.elim (fun m => (m, ⊥)) (fun m => (m, ⊤))
+  he_smooth :=
+    ContMDiff.sumElim (contMDiff_id.prodMk contMDiff_const)
+      (contMDiff_id.prodMk contMDiff_const)
+  he_inj := by
+    have hbt : (⊥ : Set.Icc (0 : ℝ) 1) ≠ ⊤ := by
+      intro h; have := congrArg Subtype.val h; norm_num at this
+    rintro (a | a) (b | b) hab <;>
+      simp only [Sum.elim_inl, Sum.elim_inr, Prod.mk.injEq] at hab
+    · rw [hab.1]
+    · exact absurd hab.2 hbt
+    · exact absurd hab.2.symm hbt
+    · rw [hab.1]
+  he_boundary := by
+    rw [boundary_product, Set.Sum.elim_range]
+    ext ⟨m, t⟩
+    simp only [Set.mem_union, Set.mem_range, Prod.mk.injEq]
+    constructor
+    · rintro (⟨x, _, rfl⟩ | ⟨x, _, rfl⟩)
+      · exact Set.mk_mem_prod (Set.mem_univ _) (Set.mem_insert _ _)
+      · exact Set.mk_mem_prod (Set.mem_univ _) (Set.mem_insert_of_mem _ rfl)
+    · intro hmem
+      rcases hmem.2 with rfl | rfl
+      · exact Or.inl ⟨m, rfl, rfl⟩
+      · exact Or.inr ⟨m, rfl, rfl⟩
+  g := fun p => s.f p.1
+  hg := s.hf.comp continuous_fst
+  hg_restrict := by funext x; cases x <;> rfl
+
+/-- **Reflexivity** of the cobordism relation, via the cylinder. -/
+theorem IsBordant.refl {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
+    {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [TopologicalSpace H] {I : ModelWithCorners ℝ E H} [I.Boundaryless]
+    (s : SingularManifold X k I) : IsBordant (I.prod (𝓡∂ 1)) s s :=
+  ⟨reflCylinder s⟩
+
 end SKEFTHawking.BordismTheory
