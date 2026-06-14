@@ -108,4 +108,32 @@ theorem chain_d1_d2 :
 theorem d2_minimal : (∀ j, d2 0 j = 0) ∧ (∀ j, d2 8 j = 0) := by
   constructor <;> decide
 
+/-! ## Step 3: `d₃` and the chain property `d₂ ∘ d₃ = 0`
+
+`P₃ = Σ³A(1) ⊕ Σ⁷A(1) ⊕ Σ⁹A(1)` (`Lit-Search/Phase-5qF/A1_resolution_higher_syzygies.md` §3.2,
+re-derived + verified against Campbell eq. (5.10)-style generator-for-generator), with generator images
+into `P₂`'s `g₀(Σ²), g₁(Σ⁶), g₂(Σ⁷)`:
+
+  `d₃(g₀) = Sq¹·g₀`,  `d₃(g₁) = (Sq⁵+Sq⁴Sq¹)·g₀ + Sq¹·g₁`,  `d₃(g₂) = Sq³·g₁ + Sq²·g₂`.
+
+As with `chain_d1_d2`, the full `8×24×24` `decide` of `d₂∘d₃` is too slow, so `d₂ ∘ d₃ = 0` is verified
+via the A(1)-monomial **block identities** it reduces to (`R(y)·R(x) = R(x·y)`, right multiplication):
+* gen 0: `R(Sq¹)·R(Sq¹) = R(Sq¹·Sq¹) = 0`;
+* gen 1: `R(Sq¹)·R(e₆) + R(e₆)·R(Sq¹) = R(e₆Sq¹) + R(Sq¹e₆) = R(e₇)+R(e₇) = 0` (= `chain_d1_d2`.2);
+* gen 2: `R(Sq²)·R(Sq²) + R(Sq¹)·R(Sq³) = R(Sq²Sq²) + R(Sq³Sq¹) = 0` (Adem `Sq²Sq² = Sq³Sq¹`, char 2)
+  and `R(e₆)·R(Sq³) = R(Sq³·e₆) = 0` (degree `3+5 = 8 > 6`, above `A(1)`'s top class). -/
+
+/-- Right multiplication by `Sq³` on `A(1)`, as `R(Sq³) = R(Sq¹Sq²) = R(Sq²)∘R(Sq¹) = Rsq2·Rsq1`
+(`Sq³ = Sq¹Sq²` by Adem) — correct-by-construction from the verified `Rsq1, Rsq2`. -/
+def Rsq3 : Matrix (Fin 8) (Fin 8) F2 := Rsq2 * Rsq1
+
+/-- **Chain-complex property `d₂ ∘ d₃ = 0`** (resolution step 3), block-decomposed. The two new
+A(1)-monomial identities beyond `chain_d1_d2` are `Sq²Sq² + Sq³Sq¹ = 0` (Adem, char 2) and
+`Sq³·e₆ = 0` (degree); together with `Sq¹Sq¹ = 0` they put every `d₃`-syzygy generator in `ker d₂`. -/
+theorem chain_d2_d3 :
+    Rsq1 * Rsq1 = 0 ∧ Rsq2 * Rsq2 + Rsq1 * Rsq3 = 0 ∧ Re6 * Rsq3 = 0 := by
+  refine ⟨by decide, ?_, by decide⟩
+  show Rsq2 * Rsq2 + Rsq1 * (Rsq2 * Rsq1) = 0
+  decide
+
 end SKEFTHawking.KspRes
