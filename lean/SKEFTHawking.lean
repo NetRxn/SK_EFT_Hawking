@@ -672,6 +672,9 @@ import SKEFTHawking.GuillouMarinBridge
 import SKEFTHawking.JokerModule
 import SKEFTHawking.KspModule
 import SKEFTHawking.KspResolution
+-- Phase 5q.F W4d (2026-06-14): the joker J = A(1)/A(1)Sq3 minimal free resolution
+-- (d1=R(Sq3), d2=[R(Sq1)|R(Sq5+Sq4Sq1)]) -- the direct Pin+ Adams-E2 module H*(MTPin+).
+import SKEFTHawking.JokerResolution
 -- Phase 5q.F W4c (2026-06-14): Pin+ Ext upper bound + two-bounds pinch to Z/16
 -- (Campbell delta-truncation height-4 cap as disclosed Prop; [RP4] order 16 DERIVED
 -- from the surface-ABK lower bound + the Ext delta-cap, not posited).
