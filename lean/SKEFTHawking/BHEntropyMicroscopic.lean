@@ -2,6 +2,7 @@ import SKEFTHawking.Basic
 import SKEFTHawking.LinearizedEFE
 import SKEFTHawking.LaplaceMethod
 import SKEFTHawking.LaplaceMethodAsymptotic
+import SKEFTHawking.ContinuumCatalan
 import SKEFTHawking.RibbonCategory
 import SKEFTHawking.FibonacciMTC
 import SKEFTHawking.ModularInvarianceConstraint
@@ -164,144 +165,136 @@ theorem sen_4d_quantitative_disagreement_bound :
 /-! ## §2 — Laplace-saddle limit of the Verlinde-counted entropy
                   (Wave 6a.7 — axiom retired) -/
 
+/-- **Puncture-number variable** `x(A) = A / (8 G_N log 2) = reducedArea / (2 log 2)`: the
+SU(2) singlet-count argument whose leading log-dimension `2·x·log 2` equals the reduced area
+`A/(4 G_N)`. -/
+noncomputable def verlindeArea (A G_N : ℝ) : ℝ := A / (8 * G_N * Real.log 2)
+
+/-- **Kaul–Majumdar additive constant** the faithful continuum entropy converges to:
+`(3/2)·log(2 log 2) − ½·log π` — the change-of-variables constant `(3/2)·log(2 log 2)`
+(from `x = reducedArea/(2 log 2)`) plus the Catalan principal-part constant `−½·log π`. -/
+noncomputable def kmConstant : ℝ :=
+  (3 / 2) * Real.log (2 * Real.log 2) - (1 / 2) * Real.log Real.pi
+
 /--
-**Verlinde-counted SU(2)_k horizon entropy at the Laplace-saddle limit.**
+**Faithful Verlinde-counted SU(2)_k horizon entropy (Wave 7C — substrate-audit #13 CLOSED).**
 
-`verlindeEntropy_SU2k A G_N := kaulMajumdarS A G_N 0`
+`verlindeEntropy_SU2k A G_N := continuumLogCatalan (x(A))` — the LITERAL log of the
+Γ-interpolated SU(2) singlet dimension `Γ(2x+1)/(Γ(x+1)·Γ(x+2))` evaluated at the puncture
+variable `x(A) = A/(8 G_N log 2)`.
 
-Wave 6a.7 (cf. `LaplaceMethod.lean`) ships this as the Laplace-
-saddle-limit *concrete model* of the Verlinde-counted entropy.
-
-**Wave 7B correction (2026-06-14).** The earlier claim that the literal
-SU(2)_k horizon Verlinde sum "requires the Hardy–Ramanujan integer-partition
-asymptotic" was an overstatement: `p(N)` is the *unrestricted* partition
-asymptotic, whereas the horizon count is the *constrained* SU(2) singlet
-multiplicity = the Catalan number `binom(2m,m)/(m+1)` (the discrete `I₀ − I₁`).
-That count's `−3/2` is now genuinely derived from Mathlib's Stirling — no
-Hardy–Ramanujan, no Bessel — in `LaplaceMethodAsymptotic` and discharged here as
-`H_VerlindeKMLiteralSumDerivation_discharged` (a genuine `O(1)` leading+log match).
-This saddle-limit `verlindeEntropy_SU2k` definition is
-retained as the smooth real-`A` model (keeping `gaussianSaddleAsymptotic` and
-its consumers sound); the genuine literal `−3/2` is the bridge theorem above.
-The `O(1/A)` *rate* (`H_VerlindeKMLiteralSumDerivation`) remains tracked future
-work (quantitative Stirling + the discrete→continuum area bridge).
-
-Wave 3 originally shipped this declaration as
-`opaque verlindeEntropy_SU2k : ℝ → ℝ → ℝ` together with the load-
-bearing axiom `gaussianSaddleAsymptotic`. Wave 6a.7 retires the
-axiom by making the definition concrete via the saddle limit.
-After Wave 6a.7, this module is axiom-free.
-
-(Project-wide as of Phase 6p Wave 2c.4a-iteration: 2 axioms total —
-`gapped_interface_axiom` in `SPTClassification.lean` +
-`aa_residual_interior_at_one_for_hom` in `FKLW/AharonovAradBridgeIteration.lean`,
-the latter amended 2026-05-13 to include the `image_infinite` hypothesis
-per the user-authorized soundness audit.)
+This is a genuine, independent analytic object (the analytic continuation of the Catalan singlet
+count), **not** the saddle self-definition `:= kaulMajumdarS A G_N 0` that Wave 6a.7 shipped
+(substrate-audit finding #13, "defining-the-conclusion"). The Kaul–Majumdar closed form
+`kaulMajumdarS` is now a *derived corollary* — `gaussianSaddleAsymptotic` is the genuine `O(1/A)`
+rate, no longer the vacuous `|x − x| = 0`. The `−3/2` log coefficient is carried by
+`ContinuumCatalan.continuumLogCatalan_isBigO` (kernel-pure), ultimately from the `Real.Gamma`
+Stirling-with-remainder `GammaStirling.logGamma_sub_stirlingPart_isBigO`. The discrete `O(1/m)`
+analogue is `LaplaceMethodAsymptotic.log_singletCount_sub_rate`.
 -/
 noncomputable def verlindeEntropy_SU2k (A G_N : ℝ) : ℝ :=
-  kaulMajumdarS A G_N 0
+  ContinuumCatalan.continuumLogCatalan (verlindeArea A G_N)
+
+/-- **Change of variables: the Kaul–Majumdar saddle IS the continuum principal part.** For
+`A, G_N > 0`, `kaulMajumdarS A G_N kmConstant = 2·x(A)·log 2 − (3/2)·log x(A) − ½·log π`
+*exactly* (`2·x·log 2 = A/(4 G_N)` cancels the `log 2`; the `−(3/2)·log(2 log 2)` from
+`x = reducedArea/(2 log 2)` folds into `kmConstant`). -/
+theorem kaulMajumdarS_eq_continuum_principal (A G_N : ℝ) (hA : 0 < A) (hG : 0 < G_N) :
+    kaulMajumdarS A G_N kmConstant
+      = 2 * verlindeArea A G_N * Real.log 2 - (3 / 2) * Real.log (verlindeArea A G_N)
+        - (1 / 2) * Real.log Real.pi := by
+  have h2log2 : (0 : ℝ) < 2 * Real.log 2 := by positivity
+  have hra : (0 : ℝ) < A / (4 * G_N) := by positivity
+  have hva : verlindeArea A G_N = A / (4 * G_N) / (2 * Real.log 2) := by
+    unfold verlindeArea; field_simp; ring
+  have hlogva : Real.log (verlindeArea A G_N)
+      = Real.log (A / (4 * G_N)) - Real.log (2 * Real.log 2) := by
+    rw [hva, Real.log_div (ne_of_gt hra) (ne_of_gt h2log2)]
+  have hlead : 2 * verlindeArea A G_N * Real.log 2 = A / (4 * G_N) := by
+    unfold verlindeArea; field_simp; ring
+  unfold kaulMajumdarS kmConstant
+  rw [hlead, hlogva]; ring
 
 /--
-**Literal Verlinde-sum derivation of the Kaul–Majumdar −3/2 (Wave 7B — DISCHARGED).**
+**Gaussian-saddle asymptotic (Wave 7C — genuine `O(1/A)` rate).**
 
-Wave 6a.7 stated this as a `verlindeSum`-parameterized `≤ C/A` predicate vs
-`kaulMajumdarS · 0`. That `≤ C/A`-against-`c₀=0` form is **structurally vacuous-only**:
-a genuine literal Verlinde sum carries a *nonzero* additive constant (the literal SU(2)
-singlet count is `2m·log2 − (3/2)·log m − ½·log π + o(1)`), so the *only* `verlindeSum`
-meeting `≤ C/A` against `kaulMajumdarS · 0` is the self-definition `:= kaulMajumdarS · 0`
-— exactly the audit-#13 vacuity (`|x−x| = 0 ≤ C/A`).
+For each `G_N > 0`, the *faithful* continuum Verlinde entropy `verlindeEntropy_SU2k` converges to
+the Kaul–Majumdar closed form `kaulMajumdarS A G_N kmConstant` at rate `O(1/A)` as `A → ∞`.
 
-Wave 7B restates it to its genuine, non-vacuous content and **discharges it**
-(`H_VerlindeKMLiteralSumDerivation_discharged`): the literal SU(2) singlet log-count
-(`singletCount m = catalan m`, the discrete `I₀ − I₁`) reproduces the Kaul–Majumdar
-leading + `(−3/2)·log` form to `O(1)`, via Mathlib Stirling — NO Hardy–Ramanujan, NO
-Bessel (`LaplaceMethodAsymptotic.log_singletCount_sub_isBigO`, kernel-pure). The
-`O(1/A)`-*rate* refinement (matching `kaulMajumdarS · c₀` for the literal constant `c₀`,
-to `≤ C/A`) needs quantitative Stirling (the `1/(12n)` error) + a Γ-smooth continuum
-bridge `A = a₀·2m`; that strictly-stronger rate is documented deeper future work.
+This replaces the Wave-6a.7 vacuity: there `verlindeEntropy_SU2k := kaulMajumdarS A G_N 0`, so the
+bound was the trivial `|x − x| = 0 ≤ C/A` (substrate-audit #13). Now `verlindeEntropy_SU2k` is the
+literal Γ-Catalan log-dimension and this is the genuine saddle-point statement, derived from
+`ContinuumCatalan.continuumLogCatalan_isBigO` (kernel-pure, via the `Real.Gamma`
+Stirling-with-remainder). The additive constant is `kmConstant ≠ 0` — the literal Verlinde sum's
+genuine constant — not the prior `c₀ = 0`; and the rate constant depends on `G_N` (the puncture
+variable scales as `A/(8 G_N log 2)`), so the statement is per-`G_N` rather than uniform.
+-/
+theorem gaussianSaddleAsymptotic (G_N : ℝ) (hG : 0 < G_N) :
+    (fun A : ℝ => verlindeEntropy_SU2k A G_N - kaulMajumdarS A G_N kmConstant)
+      =O[Filter.atTop] (fun A : ℝ => 1 / A) := by
+  have hlog2 : (0 : ℝ) < Real.log 2 := Real.log_pos (by norm_num)
+  have hc : (0 : ℝ) < 8 * G_N * Real.log 2 := by positivity
+  -- x(A) → ∞
+  have hva_tendsto : Filter.Tendsto (fun A : ℝ => verlindeArea A G_N) Filter.atTop Filter.atTop := by
+    have hfun : (fun A : ℝ => verlindeArea A G_N) = (fun A : ℝ => (8 * G_N * Real.log 2)⁻¹ * A) := by
+      funext A; unfold verlindeArea; rw [div_eq_inv_mul]
+    rw [hfun]
+    exact Filter.tendsto_id.const_mul_atTop (inv_pos.mpr hc)
+  -- 1/x(A) = O(1/A) (it is a positive constant multiple of 1/A)
+  have hva_bigO : (fun A : ℝ => 1 / verlindeArea A G_N) =O[Filter.atTop] (fun A : ℝ => 1 / A) := by
+    have hfun : (fun A : ℝ => 1 / verlindeArea A G_N)
+        = (fun A : ℝ => (8 * G_N * Real.log 2) * (1 / A)) := by
+      funext A; unfold verlindeArea; rw [one_div_div]; ring
+    rw [hfun]
+    exact (Asymptotics.isBigO_refl (fun A : ℝ => 1 / A) Filter.atTop).const_mul_left _
+  -- compose the continuum asymptotic with x(A), then match the target pointwise
+  have hcomp := (ContinuumCatalan.continuumLogCatalan_isBigO.comp_tendsto hva_tendsto).trans hva_bigO
+  refine hcomp.congr' ?_ (Filter.EventuallyEq.refl _ _)
+  filter_upwards [Filter.eventually_gt_atTop 0] with A hA
+  simp only [Function.comp_apply]
+  unfold verlindeEntropy_SU2k
+  rw [kaulMajumdarS_eq_continuum_principal A G_N hA hG]
+
+/-- **Public face of the saddle-point bound** (re-export of `gaussianSaddleAsymptotic`). -/
+theorem kaulMajumdar_asymptotic_within_OoneOverA (G_N : ℝ) (hG : 0 < G_N) :
+    (fun A : ℝ => verlindeEntropy_SU2k A G_N - kaulMajumdarS A G_N kmConstant)
+      =O[Filter.atTop] (fun A : ℝ => 1 / A) :=
+  gaussianSaddleAsymptotic G_N hG
+
+/--
+**Verlinde → Kaul–Majumdar large-area convergence.** The faithful continuum entropy converges to
+the Kaul–Majumdar closed form (with the genuine constant `kmConstant`) as `A → ∞`. Derived from
+the `O(1/A)` rate `gaussianSaddleAsymptotic` and `1/A → 0`.
+-/
+theorem verlinde_matches_kaul_majumdar_at_large_area (G_N : ℝ) (hG : 0 < G_N) :
+    Filter.Tendsto (fun A : ℝ => verlindeEntropy_SU2k A G_N - kaulMajumdarS A G_N kmConstant)
+      Filter.atTop (nhds 0) := by
+  have h0 : Filter.Tendsto (fun A : ℝ => 1 / A) Filter.atTop (nhds 0) := by
+    simpa only [one_div] using tendsto_inv_atTop_zero
+  exact (gaussianSaddleAsymptotic G_N hG).trans_tendsto h0
+
+/--
+**Literal Verlinde-sum derivation at the `O(1/A)` rate (Wave 7C — DISCHARGED, audit-#13 closed).**
+
+The faithful continuum Verlinde entropy minus its Kaul–Majumdar saddle is `O(1/A)` for every
+`G_N > 0`. This is the strictly-stronger `≤ C/A` *rate* that Wave 7B left as future work (Wave 7B
+had only the discrete `O(1)`; Wave 7C now has the discrete `O(1/m)` rate
+`LaplaceMethodAsymptotic.log_singletCount_sub_rate` AND this continuum `O(1/A)` form). Discharged
+by `gaussianSaddleAsymptotic`, ultimately from the `Real.Gamma` Stirling-with-remainder
+(`GammaStirling.logGamma_sub_stirlingPart_isBigO`) + the continuum Catalan asymptotic
+(`ContinuumCatalan.continuumLogCatalan_isBigO`), all kernel-pure. The earlier `≤ C/A`-against-`c₀=0`
+self-definition vacuity (`|x − x| = 0`) is now fully eliminated: the entropy is the literal
+Γ-Catalan log-dimension and the saddle is its genuine asymptotic limit.
 -/
 def H_VerlindeKMLiteralSumDerivation : Prop :=
-  (fun m : ℕ => Real.log (LaplaceMethodAsymptotic.singletCount m)
-      - (2 * (m : ℝ) * Real.log 2 - (3 / 2) * Real.log (m : ℝ)))
-    =O[Filter.atTop] (fun _ : ℕ => (1 : ℝ))
+  ∀ G_N : ℝ, 0 < G_N →
+    (fun A : ℝ => verlindeEntropy_SU2k A G_N - kaulMajumdarS A G_N kmConstant)
+      =O[Filter.atTop] (fun A : ℝ => 1 / A)
 
-/-- **Discharge of `H_VerlindeKMLiteralSumDerivation`** (Wave 7B, kernel-pure): the literal
-Catalan singlet count genuinely reproduces the Kaul–Majumdar `−3/2` (leading+log, `O(1)`),
-replacing the audit-#13 saddle self-definition with a genuine derivation. -/
+/-- **Discharge of `H_VerlindeKMLiteralSumDerivation`** (Wave 7C, kernel-pure): the faithful
+continuum entropy meets the strong `O(1/A)` rate against its genuine Kaul–Majumdar saddle. -/
 theorem H_VerlindeKMLiteralSumDerivation_discharged : H_VerlindeKMLiteralSumDerivation :=
-  LaplaceMethodAsymptotic.log_singletCount_sub_isBigO
-
-/--
-**Gaussian-saddle asymptotic theorem — Wave 6a.7 axiom retirement.**
-
-The Verlinde-counted SU(2)_k horizon entropy `verlindeEntropy_SU2k`
-agrees with the Kaul–Majumdar closed form `kaulMajumdarS A G_N 0`
-to within an `O(1/A)` remainder, uniformly in `G_N > 0` and `A ≥ 1`.
-
-Wave 3 axiomatized this as `axiom gaussianSaddleAsymptotic` (the
-sole `eliminability: hard` axiom in the project). Wave 6a.7 derives
-the bound from the Laplace-saddle-limit concrete definition: at the
-saddle limit `verlindeEntropy_SU2k A G_N = kaulMajumdarS A G_N 0`
-exactly, so the `O(1/A)` bound holds with any `C > 0` (the
-implementation picks `C = 1`). The substantive subleading content
-of the literal Verlinde sum is reserved for future work via
-`H_VerlindeKMLiteralSumDerivation`.
-
-The signature is identical to the retired axiom; downstream consumers
-(`kaulMajumdar_asymptotic_within_OoneOverA`,
-`verlinde_matches_kaul_majumdar_at_large_area`) compile unchanged.
--/
-theorem gaussianSaddleAsymptotic :
-    ∃ C : ℝ, 0 < C ∧
-      ∀ A G_N : ℝ, 0 < G_N → 1 ≤ A →
-        |verlindeEntropy_SU2k A G_N - kaulMajumdarS A G_N 0| ≤ C / A := by
-  refine ⟨1, one_pos, ?_⟩
-  intro A G_N _hG hA
-  have hApos : 0 < A := lt_of_lt_of_le zero_lt_one hA
-  unfold verlindeEntropy_SU2k
-  rw [sub_self, abs_zero]
-  positivity
-
-/--
-**Public face of the saddle-point bound.** The Verlinde-counted SU(2)_k
-horizon entropy converges to the Kaul–Majumdar closed form with
-`O(A⁻¹)` corrections. Wave 3 derived this from the now-retired axiom;
-Wave 6a.7 derives it from `gaussianSaddleAsymptotic` (now a theorem).
--/
-theorem kaulMajumdar_asymptotic_within_OoneOverA :
-    ∃ C : ℝ, 0 < C ∧
-      ∀ A G_N : ℝ, 0 < G_N → 1 ≤ A →
-        |verlindeEntropy_SU2k A G_N - kaulMajumdarS A G_N 0| ≤ C / A :=
-  gaussianSaddleAsymptotic
-
-/--
-**Verlinde → Kaul–Majumdar leading-order match.** As `A → ∞`, the
-subleading correction vanishes, so the Verlinde-counted entropy and
-the Kaul–Majumdar closed form agree to leading + log order.
--/
-theorem verlinde_matches_kaul_majumdar_at_large_area
-    (G_N : ℝ) (hG : 0 < G_N) :
-    ∀ ε > 0, ∃ A₀ : ℝ, ∀ A : ℝ, A₀ ≤ A →
-      |verlindeEntropy_SU2k A G_N - kaulMajumdarS A G_N 0| ≤ ε := by
-  intro ε hε
-  obtain ⟨C, hCpos, hC⟩ := gaussianSaddleAsymptotic
-  -- Choose A₀ ≥ max(1, C/ε). Then C/A ≤ C/A₀ ≤ ε.
-  refine ⟨max 1 (C / ε), ?_⟩
-  intro A hA
-  have h1 : (1 : ℝ) ≤ A := le_trans (le_max_left _ _) hA
-  have h2 : C / ε ≤ A := le_trans (le_max_right _ _) hA
-  have hApos : 0 < A := lt_of_lt_of_le zero_lt_one h1
-  have h_bound := hC A G_N hG h1
-  -- C/A ≤ ε since A ≥ C/ε > 0 and ε > 0.
-  have h_CA_le_ε : C / A ≤ ε := by
-    rw [div_le_iff₀ hApos]
-    rw [div_le_iff₀ hε] at h2
-    linarith
-  exact le_trans h_bound h_CA_le_ε
-
--- The genuine literal-count −3/2 derivation is `H_VerlindeKMLiteralSumDerivation` (§2)
--- discharged by `H_VerlindeKMLiteralSumDerivation_discharged` (kernel-pure, via
--- `LaplaceMethodAsymptotic.log_singletCount_sub_isBigO`) — NOT the saddle self-definition.
+  fun G_N hG => gaussianSaddleAsymptotic G_N hG
 
 /-! ## §3 — Per-MTC abstract data carrier -/
 
