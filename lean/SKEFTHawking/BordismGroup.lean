@@ -344,19 +344,80 @@ theorem BordismGrp.add_zero (x : BordismGrp X k I) : x.add zero = x := by
 theorem BordismGrp.zero_add (x : BordismGrp X k I) : zero.add x = x := by
   rw [add_comm]; exact add_zero x
 
+/-- The **doubling bordism**: `M ⊔ M` bounds the cylinder `M × [0,1]` (boundary `M ⊔ M`, target empty),
+witnessing `[M] + [M] = 0`. The unoriented bordism group is 2-torsion. -/
+noncomputable def doublingBordism (s : SingularManifold X k I) :
+    Bordism (I.prod (𝓡∂ 1)) (s.sum s) emptySM where
+  W := s.M × Set.Icc (0 : ℝ) 1
+  e := Sum.elim (Sum.elim (fun m => (m, ⊥)) (fun m => (m, ⊤))) (fun z => isEmptyElim z)
+  he_smooth :=
+    ContMDiff.sumElim
+      (ContMDiff.sumElim (contMDiff_id.prodMk contMDiff_const)
+        (contMDiff_id.prodMk contMDiff_const))
+      (fun z => isEmptyElim z)
+  he_inj := by
+    have hbt : (⊥ : Set.Icc (0 : ℝ) 1) ≠ ⊤ := by
+      intro h; have := congrArg Subtype.val h; norm_num at this
+    rintro (a | a) (b | b) hab
+    · rcases a with a | a <;> rcases b with b | b <;>
+        simp only [Sum.elim_inl, Sum.elim_inr, Prod.mk.injEq] at hab
+      · rw [hab.1]
+      · exact absurd hab.2 hbt
+      · exact absurd hab.2.symm hbt
+      · rw [hab.1]
+    · exact isEmptyElim b
+    · exact isEmptyElim a
+    · exact isEmptyElim a
+  he_boundary := by
+    rw [boundary_product]
+    ext ⟨m, t⟩
+    constructor
+    · rintro ⟨x, hx⟩
+      rcases x with (a | a) | z
+      · simp only [Sum.elim_inl] at hx; rw [← hx]
+        exact Set.mk_mem_prod (Set.mem_univ _) (Set.mem_insert _ _)
+      · simp only [Sum.elim_inl, Sum.elim_inr] at hx; rw [← hx]
+        exact Set.mk_mem_prod (Set.mem_univ _) (Set.mem_insert_of_mem _ rfl)
+      · exact isEmptyElim z
+    · intro hmem
+      rcases hmem.2 with rfl | rfl
+      · exact ⟨Sum.inl (Sum.inl m), rfl⟩
+      · exact ⟨Sum.inl (Sum.inr m), rfl⟩
+  g := fun p => s.f p.1
+  hg := s.hf.comp continuous_fst
+  hg_restrict := by
+    funext x
+    rcases x with (a | a) | z
+    · rfl
+    · rfl
+    · exact isEmptyElim z
+
 noncomputable instance : Zero (BordismGrp X k I) := ⟨BordismGrp.zero⟩
 noncomputable instance : Add (BordismGrp X k I) := ⟨BordismGrp.add⟩
+/-- The unoriented bordism group is 2-torsion, so negation is the identity. -/
+instance : Neg (BordismGrp X k I) := ⟨id⟩
 
-/-- The bordism group is an **additive commutative monoid** under disjoint union, with the empty
-manifold as identity. -/
-noncomputable instance : AddCommMonoid (BordismGrp X k I) where
+/-- The bordism group is an **additive commutative group** under disjoint union (the empty manifold is
+the identity; the unoriented group is 2-torsion, so negation is the identity and `neg_add_cancel` is the
+doubling bordism `[M] + [M] = 0`). -/
+noncomputable instance : AddCommGroup (BordismGrp X k I) where
+  add := (· + ·)
+  zero := 0
+  neg := (- ·)
   add_assoc := BordismGrp.add_assoc
   zero_add := BordismGrp.zero_add
   add_zero := BordismGrp.add_zero
   add_comm := BordismGrp.add_comm
+  neg_add_cancel := fun x => by
+    induction x using Quot.ind with | _ s =>
+      exact BordismGrp.mk_eq_of_bordant ⟨doublingBordism s⟩
   nsmul := nsmulRec
   nsmul_zero := fun _ => rfl
   nsmul_succ := fun _ _ => rfl
+  zsmul := zsmulRec
+  zsmul_zero' := fun _ => rfl
+  zsmul_succ' := fun _ _ => rfl
+  zsmul_neg' := fun _ _ => rfl
 
 end Group
 
