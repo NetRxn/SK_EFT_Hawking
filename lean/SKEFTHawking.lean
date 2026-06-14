@@ -674,6 +674,9 @@ import SKEFTHawking.KspModule
 -- Phase 5q.F W4g (2026-06-14): the M = A(1)//A(0) prototype h0-tower module
 -- (corrected action Sq1: m2->m3) -- the substrate of the Campbell delta-truncation.
 import SKEFTHawking.MModule
+-- Phase 5q.F W4h (2026-06-14): M's minimal resolution (all d = R(Sq1)) + Ext(M)=F2[h0],
+-- the prototype h0-tower the Pin+ delta-cokernel caps at height 4 (finite upper-bound substrate).
+import SKEFTHawking.MResolution
 import SKEFTHawking.KspResolution
 -- Phase 5q.F W4e (2026-06-14): machine-checked Ext^s_{A(1)}(K,F2) dims = 1,2,3 (= rank P_s)
 -- via the dualized minimal resolution (delta^s = 0 by minimality) -- the E2-page substrate.
