@@ -1,6 +1,7 @@
 import SKEFTHawking.Basic
 import SKEFTHawking.LinearizedEFE
 import SKEFTHawking.LaplaceMethod
+import SKEFTHawking.LaplaceMethodAsymptotic
 import SKEFTHawking.RibbonCategory
 import SKEFTHawking.FibonacciMTC
 import SKEFTHawking.ModularInvarianceConstraint
@@ -169,15 +170,21 @@ theorem sen_4d_quantitative_disagreement_bound :
 `verlindeEntropy_SU2k A G_N := kaulMajumdarS A G_N 0`
 
 Wave 6a.7 (cf. `LaplaceMethod.lean`) ships this as the Laplace-
-saddle-limit *concrete model* of the Verlinde-counted entropy. The
-literal SU(2)_k Verlinde sum at the BH horizon (Kaul–Majumdar 2000
-Eq. (5)) requires the Hardy–Ramanujan integer-partition asymptotic
-(`p(N) ~ exp(π √(2N/3)) / (4 N √3)`) to be derived from first
-principles. Mathlib 4.29 lacks Hardy–Ramanujan, so Wave 6a.7 ships
-the Laplace-saddle limit — at this level of approximation the literal
-sum and the Kaul–Majumdar closed form agree exactly to leading + log
-order; the `O(1/A)` subleading correction is reserved for the future
-literal-sum derivation tracked by `H_VerlindeKMLiteralSumDerivation`.
+saddle-limit *concrete model* of the Verlinde-counted entropy.
+
+**Wave 7B correction (2026-06-14).** The earlier claim that the literal
+SU(2)_k horizon Verlinde sum "requires the Hardy–Ramanujan integer-partition
+asymptotic" was an overstatement: `p(N)` is the *unrestricted* partition
+asymptotic, whereas the horizon count is the *constrained* SU(2) singlet
+multiplicity = the Catalan number `binom(2m,m)/(m+1)` (the discrete `I₀ − I₁`).
+That count's `−3/2` is now genuinely derived from Mathlib's Stirling — no
+Hardy–Ramanujan, no Bessel — in `LaplaceMethodAsymptotic` and lifted here as
+`verlinde_literal_count_reproduces_KM_minus_three_halves` (a genuine `O(1)`
+leading+log match). This saddle-limit `verlindeEntropy_SU2k` definition is
+retained as the smooth real-`A` model (keeping `gaussianSaddleAsymptotic` and
+its consumers sound); the genuine literal `−3/2` is the bridge theorem above.
+The `O(1/A)` *rate* (`H_VerlindeKMLiteralSumDerivation`) remains tracked future
+work (quantitative Stirling + the discrete→continuum area bridge).
 
 Wave 3 originally shipped this declaration as
 `opaque verlindeEntropy_SU2k : ℝ → ℝ → ℝ` together with the load-
@@ -198,18 +205,16 @@ noncomputable def verlindeEntropy_SU2k (A G_N : ℝ) : ℝ :=
 **Future-work tracked hypothesis: literal Verlinde-sum derivation
 of the Kaul–Majumdar form.**
 
-When Mathlib gains the Hardy–Ramanujan integer-partition asymptotic
-(or its analogue applicable to the SU(2)_k modular-S Verlinde sum),
-a literal Verlinde-sum function `verlindeSum : ℝ → ℝ → ℝ` admits a
-Watson's-lemma / Laplace-method derivation of the Kaul–Majumdar form
-expressed via `LaplaceMethod.IsBoundedRemainderOoneOverA`.
-
-The current Wave 6a.7 ship interprets `verlindeEntropy_SU2k` at the
-Laplace-saddle limit (where it equals `kaulMajumdarS A G_N 0`). This
-predicate is the forward-declaration of the literal-sum derivation
-scope; it is *not* an axiom and *not* a load-bearing consumer in
-Wave 6a.7. It is instantiated by future work at the point where
-`verlindeSum` is constructed.
+**Wave 7B (2026-06-14).** The discrete literal count is now genuinely
+derived — `verlinde_literal_count_reproduces_KM_minus_three_halves` (via
+`LaplaceMethodAsymptotic`, Mathlib Stirling, NO Hardy–Ramanujan, NO Bessel)
+proves the literal SU(2) singlet log-count reproduces the Kaul–Majumdar
+`−3/2` to `O(1)` (leading+log). This predicate is the *remaining* `O(1/A)`-rate
+refinement: a real-`A` `verlindeSum` matching `kaulMajumdarS` to `≤ C/A` (not
+merely the `O(1)` leading+log). Discharging it needs quantitative Stirling
+(the `1/(12n)` error) plus the discrete→continuum area bridge `A = a₀·2m`;
+tracked future work. It remains *not* an axiom and *not* a load-bearing
+consumer.
 -/
 def H_VerlindeKMLiteralSumDerivation
     (verlindeSum : ℝ → ℝ → ℝ) : Prop :=
@@ -285,6 +290,23 @@ theorem verlinde_matches_kaul_majumdar_at_large_area
     rw [div_le_iff₀ hε] at h2
     linarith
   exact le_trans h_bound h_CA_le_ε
+
+/--
+**Genuine literal-count derivation of the −3/2 (Wave 7B).** The literal SU(2) singlet
+log-count `log (singletCount m)` (`singletCount m = catalan m = binom(2m,m)/(m+1)`, the
+discrete `I₀ − I₁`) reproduces the Kaul–Majumdar leading + `(−3/2)·log` form to `O(1)` via
+Mathlib's Stirling — **NO Hardy–Ramanujan, NO Bessel**, and crucially **NOT** the saddle-limit
+self-definition `verlindeEntropy_SU2k := kaulMajumdarS`. This is the genuine derivation that the
+Wave-6a.7 saddle *model* only modelled: the `−3/2` provably comes from the literal Catalan count
+(`LaplaceMethodAsymptotic.log_singletCount_sub_isBigO`, kernel-pure). The `O(1/A)` *rate*
+refinement of `H_VerlindeKMLiteralSumDerivation` (vs this genuine `O(1)` leading+log match)
+remains tracked future work — it needs quantitative Stirling (the `1/(12n)` error) plus the
+discrete→continuum area bridge `A = a₀·2m`. -/
+theorem verlinde_literal_count_reproduces_KM_minus_three_halves :
+    (fun m : ℕ => Real.log (SKEFTHawking.LaplaceMethodAsymptotic.singletCount m)
+        - (2 * m * Real.log 2 - (3 / 2) * Real.log m))
+      =O[Filter.atTop] (fun _ : ℕ => (1 : ℝ)) :=
+  SKEFTHawking.LaplaceMethodAsymptotic.log_singletCount_sub_isBigO
 
 /-! ## §3 — Per-MTC abstract data carrier -/
 

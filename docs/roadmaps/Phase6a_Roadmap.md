@@ -663,6 +663,24 @@ quantitative Stirling (1/(12n)); if out of reach, isolate that residual as a tra
 (fallback) while the genuine −3/2 leading+log discharge + the de-vacuized `verlindeEntropy_SU2k`
 (no longer `:= kaulMajumdarS`) stand. Then fix the Hardy–Ramanujan overstatement docstrings.
 
+**▶ Sub-task C DONE 2026-06-14 (genuine bridge landed; full graph 9262 jobs clean, bridge
+axiom-pure {propext,Classical.choice,Quot.sound}).** `BHEntropyMicroscopic` now imports
+`LaplaceMethodAsymptotic` and carries `verlinde_literal_count_reproduces_KM_minus_three_halves`
+— the literal SU(2) singlet count's `−3/2` (`=O[atTop] 1`, leading+log), lifted from Sub-task B.
+The Hardy–Ramanujan overstatement is corrected in both §2 docstrings. The `−3/2` is now provably
+from the literal Catalan count, NOT only the saddle self-definition.
+**⚠ MORNING-REVIEW residual (fallback b/c — genuine math wall, NOT effort-descope; CIRCLE BACK
+after Wave 9):** the literal Wave-7B gate has two pieces beyond the genuine `O(1)` result,
+isolated as the existing tracked predicate `H_VerlindeKMLiteralSumDerivation`:
+(1) `verlindeEntropy_SU2k` is kept as the saddle model (not redefined to a literal real-`A`
+function) — a faithful real-`A` literal def needs a Γ-smooth interpolation (the discrete Catalan
+floor gives `O(1)` oscillation in `A`, not `O(1/A)`) and would force restructuring
+`gaussianSaddleAsymptotic` + its 2 consumers (currently sound) to true `O(1)` statements;
+(2) the `≤ C/A` rate needs **quantitative Stirling** (the `1/(12n)` rate of `stirlingSeq → √π`,
+beyond the bare limit Mathlib gives) + the discrete→continuum bridge. The wave's core value
+(`−3/2` from the literal count) is delivered; the rate + literal redefinition are queued for
+circle-back. Per strict-sequence fallback (c), proceeding to Wave 9 with this isolated + flagged.
+
 ---
 
 ### C — 1/4 / Immirzi feasibility spike [center-bridge C — NOT a build wave yet]
