@@ -1494,7 +1494,14 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
             'derivation_strategy': 'Concrete `noncomputable def verlindeEntropy_SU2k '
                                    ':= kaulMajumdarS A G_N 0` (Laplace-saddle-limit '
                                    'interpretation) makes the original axiom\'s '
-                                   'O(1/A) bound trivially provable with C = 1.',
+                                   'O(1/A) bound trivially provable with C = 1. '
+                                   '[SUPERSEDED 2026-06-14 by the Wave-7C FAITHFUL '
+                                   'definition `:= continuumLogCatalan (A/(8 G_N log 2))`: '
+                                   'verlindeEntropy_SU2k is no longer the saddle '
+                                   'self-definition; gaussianSaddleAsymptotic is now the '
+                                   'genuine per-G_N O(1/A) rate vs kaulMajumdarS A G_N '
+                                   'kmConstant. This field records the 2026-04-27 closure '
+                                   'strategy only.]',
             'verification': 'lean_verify on '
                             'BHEntropyMicroscopic.gaussianSaddleAsymptotic + '
                             '.kaulMajumdar_asymptotic_within_OoneOverA + '
