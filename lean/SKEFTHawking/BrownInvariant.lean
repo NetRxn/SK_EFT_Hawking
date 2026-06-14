@@ -442,6 +442,49 @@ lemma brown_orthSum {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂] [Decid
   simp only [brown, brownUnit_orthSum, Fintype.card_sum, Nat.cast_add, two_mul_val_add]
   ring
 
+/-- The generator's per-component refinement: `qGen(a+b) = qGen a + qGen b + 2·(a·b)`. -/
+lemma qGen_refine (a b : ZMod 2) : qGen (a + b) = qGen a + qGen b + embed2 (a * b) := by
+  revert a b; decide
+
+/-- `embed2` extends to finite sums. -/
+lemma embed2_sum {κ : Type*} (s : Finset κ) (f : κ → ZMod 2) :
+    embed2 (∑ i ∈ s, f i) = ∑ i ∈ s, embed2 (f i) := by
+  classical
+  induction s using Finset.induction with
+  | empty => simp [embed2]
+  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, embed2_add, ih]
+
+/-- The genus-`g` standard form as a nondegenerate `Z4Quadratic` (diagonal dot-product polar form). -/
+def stdQuadratic (g : ℕ) : Z4Quadratic (Fin g) where
+  q := stdForm g
+  B x y := ∑ i, x i * y i
+  refine' x y := by
+    show stdForm g (x + y) = stdForm g x + stdForm g y + embed2 (∑ i, x i * y i)
+    simp only [stdForm, Pi.add_apply]
+    rw [embed2_sum, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl (fun i _ => qGen_refine (x i) (y i))
+  B_add_left x y z := by simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
+  B_symm x y := by simp only [mul_comm]
+  nondeg x hx := by
+    funext i
+    have h := hx (Pi.single i 1)
+    rw [Finset.sum_eq_single i (fun j _ hj => by rw [Pi.single_eq_of_ne hj, mul_zero])
+      (fun hi => absurd (Finset.mem_univ i) hi)] at h
+    simpa using h
+
+/-- `brownUnit` of the standard form is `0`: its Gauss sum `(1+i)^g` has unit `1 = i^0`. -/
+lemma brownUnit_stdQuadratic (g : ℕ) : (stdQuadratic g).brownUnit = 0 := by
+  have h := (stdQuadratic g).gaussSum4_eq_brownUnit
+  rw [show (stdQuadratic g).q = stdForm g from rfl, gaussSum4_stdForm, Fintype.card_fin] at h
+  refine zeta4_mul_pow_right_inj (N := g) ?_
+  rw [← h, zeta4_zero, one_mul]
+
+/-- **`brown(stdForm g) = g`** — the general Brown invariant reproduces the genus, hence `brownStd`.
+For `g = 1` this is `brown(RP²-form) = 1`, the order-16 generator value used by the W3 lower bound. -/
+lemma brown_stdQuadratic (g : ℕ) : (stdQuadratic g).brown = (g : ZMod 8) := by
+  simp only [brown, brownUnit_stdQuadratic, ZMod.val_zero, Nat.cast_zero, mul_zero, zero_add,
+    Fintype.card_fin]
+
 end Z4Quadratic
 
 end SKEFTHawking.Brown
