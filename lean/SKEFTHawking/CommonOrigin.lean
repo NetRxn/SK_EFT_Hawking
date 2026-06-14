@@ -82,6 +82,22 @@ noncomputable def substrateSmithInflow : SmithInflow where
     rw [← pinPlusRP4_class_to_zmod16]
     exact omega4PinPlusBordismEquivZMod16.symm_apply_apply _
 
+/-- **The Smith inflow is canonical (unique), not an arbitrary choice.** Any two
+generator-preserving inflows are equal — a `ℤ₁₆`-hom is determined by its value at `1`, and both
+send `1 ↦ [RP⁴]`. So the common origin below does not depend on a choice of Smith map: the
+generator pin *forces* the entire ℤ₁₆-level identification. (Only the geometric *reality* of this
+unique map is tracked, not any selection among candidates.) -/
+theorem smithInflow_smith_unique (S T : SmithInflow) : S.smith = T.smith := by
+  have hkey : S.smith.toAddMonoidHom.comp (Int.castAddHom (ZMod 16))
+      = T.smith.toAddMonoidHom.comp (Int.castAddHom (ZMod 16)) := by
+    apply AddMonoidHom.ext_int
+    show S.smith (((1 : ℤ)) : ZMod 16) = T.smith (((1 : ℤ)) : ZMod 16)
+    have h1 : (((1 : ℤ)) : ZMod 16) = 1 := by norm_num
+    rw [h1, S.smith_gen, T.smith_gen]
+  ext n
+  have := DFunLike.congr_fun hkey (n.val : ℤ)
+  simpa [ZMod.natCast_val, ZMod.cast_id] using this
+
 /-! ## §2. The four facet-readings into the ONE ℤ₁₆ -/
 
 /-- **Rokhlin reads Kitaev — pointwise.** For *every* Kitaev phase `ν`, the Rokhlin signature
@@ -175,7 +191,9 @@ theorem sixteen_convergence_common_origin_substrate (N_f : ℕ) :
 /-! ## §4. Module summary
 
 The conditional common origin (roadmap E.1–E.5), superseding the enumeration:
-  - `SmithInflow` — the disclosed tracked Smith hom (hypothesis, NOT axiom; inhabited).
+  - `SmithInflow` — the disclosed tracked Smith hom (hypothesis, NOT axiom; inhabited by
+    `substrateSmithInflow`; **canonical/unique** by `smithInflow_smith_unique` — the generator pin
+    forces it, so the result is choice-free).
   - `rokhlin_reads_kitaev` — **pointwise** Rokhlin = Kitaev in the ONE ℤ₁₆ (the strong unification).
   - `kitaev_generator_is_bordism_generator` — Kitaev ν=1 = `[RP⁴]` (non-vacuous heart).
   - `sm_anomaly_trivial_in_bordism`, `rokhlin_k3_trivial` — SM / smooth-spin at the trivial class.
