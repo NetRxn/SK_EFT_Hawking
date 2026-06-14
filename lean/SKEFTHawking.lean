@@ -726,6 +726,12 @@ import SKEFTHawking.TangentialBordism
 -- insufficient — found by building). TangentialData/StrMfd/DataBordismGrp = the faithful chosen-structure
 -- bordism group; Pin⁺ instance's Mfd = the genuine Pin⁺ structure.
 import SKEFTHawking.TangentialDataBordism
+-- Phase 5q.F W4-cohomology (2026-06-14): genuine graded ℤ/2 cohomology as actual ℤ/2-vector spaces
+-- (cellular cochain complex → δ²=0 → Hⁿ = ker δⁿ / im δⁿ⁻¹ quotient vector space). The H¹(M;ℤ/2)
+-- layer the faithful Pin⁺ TangentialData instance needs (chosen-structure torsor; the rank-carrier
+-- CohomologyMod2 in SymTFT/StiefelWhitney is too coarse). Lightest honest object: cellular ≅ singular
+-- for CW complexes; the cellular side is the finite, decidable, reviewer-checkable one.
+import SKEFTHawking.CellularCohomologyMod2
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
