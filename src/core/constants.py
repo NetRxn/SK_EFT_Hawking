@@ -2665,7 +2665,18 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'substrates + the genuine η-invariant are still tracked (a LARGER gap than the Pin⁺ side — the '
             'Dai–Freed invariant is ℤ₁₆-native; see elimination_path). The W5 binder form (SmithInflow) also '
             'survives, INHABITED by substrateSmithInflow and CANONICAL/unique by smithInflow_smith_unique. A '
-            'hypothesis, NOT an axiom; all dependent theorems kernel-pure {propext, Classical.choice, Quot.sound}.',
+            'hypothesis, NOT an axiom; all dependent theorems kernel-pure {propext, Classical.choice, Quot.sound}. '
+            'W5+W8 UPDATE 2026-06-14 (Phase 5q.F finite discharge, PinPlusDischarge.lean): the SmithInflow ISO '
+            'content (ZMod 16 ≃+ Ω₄^{Pin⁺}) is now DERIVED from the FINITE A(1)-Ext, not posited. The Pin⁺ Adams '
+            'column t−s=4 height-4 cap is decidable F₂ linear algebra (PinPlusHeight4.col4_height_eq_four = 4, '
+            'axioms:[], the Campbell δ=·h₀ cokernel), so |Ω₄^{Pin⁺}| = 2^4 = 16 from the finite Ext height; the '
+            'old DeltaTruncationCap (16·[RP⁴]=0) is DERIVED (deltaCap_of_pin4). The single tracked input is REDUCED '
+            'from the opaque SmithInflow to ONE precise disclosed Prop pin4_abutment = Pontryagin–Thom '
+            '(Ω₄^{Pin⁺}=π₄MTPin⁺) + Adams convergence (E₂=E∞, no hidden ext); inhabited (pin4_abutment_substrate). '
+            'sixteen_convergence_finite_discharge carries NO SmithInflow binder (takes pin4_abutment); the ℤ/16 is '
+            'from finite content (criterion 8). The RESIDUAL tracked landmark is now just pin4_abutment (PT + '
+            'convergence), Mathlib-absent (Thom-spectrum / stable-homotopy), per the axiom-stratified framework '
+            '(Phase-5a chirality-wall l.57/100: the finite A(1)-Ext "partially discharges the cobordism axiom").',
         'eliminability': 'very_hard',
         'elimination_path': 'Build the GEOMETRIC inputs the structure stands in for: (i) the Ω₅^{Spin-ℤ₄} '
             'bordism group, (ii) the geometric Smith homomorphism Ω₅^{Spin-ℤ₄} → Ω₄^{Pin⁺}, and (iii) the '
@@ -2696,6 +2707,10 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'SKEFTHawking.CommonOrigin.kitaev_generator_is_bordism_generator',
             'SKEFTHawking.CommonOrigin.sm_anomaly_trivial_in_bordism',
             'SKEFTHawking.CommonOrigin.sm_spin10_count_trivial_in_bordism',
+            'SKEFTHawking.PinPlusDischarge.pin4_abutment',
+            'SKEFTHawking.PinPlusDischarge.pinPlus_iso_zmod16_of_pin4',
+            'SKEFTHawking.PinPlusDischarge.deltaCap_of_pin4',
+            'SKEFTHawking.PinPlusDischarge.sixteen_convergence_finite_discharge',
         ],
         'module': 'CommonOrigin (Phase 5q.E W5 + W6); Pin⁺ half from SymTFT/PinPlusBordism4 (Phase 6r); '
             'Ω₅ substrate + constructed Smith from SymTFT/SpinZ4Bordism5 (W6); Kitaev reading from '
