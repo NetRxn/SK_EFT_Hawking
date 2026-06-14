@@ -62,4 +62,23 @@ theorem rho_top_killed : (∀ i, rhoSq1 i 4 = 0) ∧ (∀ i, rhoSq2 i 4 = 0) := 
 /-- `J` is 5-dimensional over `𝔽₂`. -/
 theorem joker_dim : Module.finrank F2 (Fin 5 → F2) = 5 := by simp
 
+/-! ### The cyclic presentation `J = A(1)/(A(1)·Sq³)` (the minimal-resolution start)
+
+`J` is cyclic on `j₀`, and `Sq³ = Sq¹Sq²` kills `j₀` (`Sq³·j₀ = Sq¹·(Sq²j₀) = Sq¹ j₂ = 0`). So
+`A(1) ↠ J`, `1 ↦ j₀`, has kernel the left ideal `A(1)·Sq³` — the first step of the minimal free
+resolution whose degree-4 Ext is the height-4 `h₀`-tower `= 16` (W4b: build the higher syzygies). -/
+
+/-- `Sq³ = Sq¹Sq²` acts on `J` as `j₁ ↦ j₄` (and `0` elsewhere). -/
+theorem rho_Sq3_eq :
+    rhoSq1 * rhoSq2 = !![0,0,0,0,0; 0,0,0,0,0; 0,0,0,0,0; 0,0,0,0,0; 0,1,0,0,0] := by decide
+
+/-- **`Sq³` kills the generator `j₀`** — the defining relation of `J = A(1)/(A(1)·Sq³)`. -/
+theorem Sq3_kills_generator : ∀ i, (rhoSq1 * rhoSq2) i 0 = 0 := by decide
+
+/-- **`j₀` generates `J`**: the operators `1, Sq¹, Sq², Sq²Sq¹, Sq³Sq¹` send `j₀` to the five basis
+vectors `j₀,…,j₄` (their column-0 entries are the standard basis), so `A(1)·j₀ = J`. -/
+theorem joker_cyclic :
+    (1 : Matrix (Fin 5) (Fin 5) F2) 0 0 = 1 ∧ rhoSq1 1 0 = 1 ∧ rhoSq2 2 0 = 1 ∧
+      (rhoSq2 * rhoSq1) 3 0 = 1 ∧ (rhoSq2 * rhoSq2) 4 0 = 1 := by decide
+
 end SKEFTHawking.Joker
