@@ -715,6 +715,9 @@ import SKEFTHawking.FLRWDynamics
 import SKEFTHawking.GravitationalWaves
 import SKEFTHawking.BHEntropyMicroscopic
 import SKEFTHawking.InducedGravityEntropy
+import SKEFTHawking.GammaStirling
+import SKEFTHawking.ContinuumCatalan
+import SKEFTHawking.HorizonWittBoundary
 import SKEFTHawking.BHThermodynamicsFourLaws
 import SKEFTHawking.EnergyConditions
 import SKEFTHawking.Curvature
