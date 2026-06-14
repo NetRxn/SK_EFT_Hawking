@@ -709,6 +709,7 @@ import SKEFTHawking.EinsteinCartanExtension
 import SKEFTHawking.FLRWDynamics
 import SKEFTHawking.GravitationalWaves
 import SKEFTHawking.BHEntropyMicroscopic
+import SKEFTHawking.InducedGravityEntropy
 import SKEFTHawking.BHThermodynamicsFourLaws
 import SKEFTHawking.EnergyConditions
 import SKEFTHawking.Curvature
