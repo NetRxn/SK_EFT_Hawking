@@ -309,6 +309,76 @@ def check_placeholder_not_cited() -> CheckResult:
     return CheckResult(passed=not any_fail, details=details)
 
 
+# Strong "this proves the scientific result" verbs (the theorem as SUBJECT).
+# Deliberately EXCLUDES `proven`/`proved` — "the theorem is proven (zero sorry)"
+# is a legitimate statement about the theorem EXISTING, not an overclaim that it
+# establishes the physics.
+_OVERCLAIM_VERB_RE = re.compile(
+    r"\b(establish(es|ed)?|demonstrat(es|ed)?|guarante(es|ed)|confirm(s|ed))\b",
+    re.IGNORECASE)
+# Honest framings for a bookkeeping / definitional theorem near its name.
+_LEDGER_HEDGE_RE = re.compile(
+    r"\b(record(s|ed)?|tabulat|aggregat|enumerat|bookkeep|tallies|"
+    r"classification\s+ledger|summari[sz])\b", re.IGNORECASE)
+
+
+@register_check(
+    "disclosure_consistency",
+    "No paper presents a disclosed definitional/vacuous_proxy theorem as 'establishing' a result (#9)")
+def check_disclosure_consistency() -> CheckResult:
+    """ADR-004 reconcile #9: a theorem disclosed in ``MODELING_ASSUMPTION_THEOREMS``
+    as ``definitional`` / ``vacuous_proxy`` (NOT carrying the substantive proof
+    load — bookkeeping / a self-disclosed marker) must NOT be presented in any
+    paper as ESTABLISHING / DEMONSTRATING / GUARANTEEING a scientific result.
+    Nothing previously checked that paper prose matched a theorem's disclosure
+    tier: D5 prose-claimed the disclosed-bookkeeping aggregator
+    ``r_d_independent_count_eight`` 'establishes the 8/8 closure', contradicting
+    its own constants.py disclosure. Mirrors ``placeholder_not_cited`` (R5) for the
+    modeling-assumption disclosure tier (paper-prose ↔ disclosure-category)."""
+    from src.core.constants import MODELING_ASSUMPTION_THEOREMS as M
+    if not PAPERS_DIR.exists():
+        return CheckResult(passed=True, details=[Detail("papers_dir", True, "no papers/ directory")])
+
+    disclosed = []  # (regex, lean_name)
+    for k, v in M.items():
+        if v.get("category") in ("definitional", "vacuous_proxy"):
+            ln = v.get("lean_name", k)
+            disclosed.append((_tex_name_pattern(ln), ln))
+
+    AFTER = 60  # the disclosed theorem is the SUBJECT; the claim verb follows it.
+    details: List[Detail] = []
+    any_fail = False
+    n_drafts = 0
+    for paper_dir in sorted(PAPERS_DIR.iterdir()):
+        tex = paper_dir / "paper_draft.tex"
+        if not (paper_dir.is_dir() and tex.exists()):
+            continue
+        n_drafts += 1
+        try:
+            text = tex.read_text()
+        except (OSError, UnicodeDecodeError):
+            continue
+        offenders: set = set()
+        for rx, ln in disclosed:
+            for m in rx.finditer(text):
+                win = text[m.end(): min(len(text), m.end() + AFTER)]
+                if _OVERCLAIM_VERB_RE.search(win) and not _LEDGER_HEDGE_RE.search(win):
+                    offenders.add(ln)
+        if offenders:
+            any_fail = True
+            details.append(Detail(
+                paper_dir.name, False,
+                f"presents disclosed definitional/vacuous_proxy theorem(s) as establishing a result: "
+                f"{', '.join(sorted(offenders))} — reframe (the substantive proof load is in the "
+                f"per-item theorems; these are bookkeeping/markers per MODELING_ASSUMPTION_THEOREMS)"))
+    if not any_fail:
+        details.append(Detail(
+            "all_papers", True,
+            f"no disclosed-definitional theorem prose-claimed to 'establish' a result "
+            f"across {n_drafts} paper draft(s)"))
+    return CheckResult(passed=not any_fail, details=details)
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # CHECK 1c: Proxy-body audit — structurally-named theorems not trivially closed
 #           (R2; mechanizes Stage-3a checklist item 5 "defining-the-conclusion")
@@ -339,6 +409,18 @@ _TRIVIAL_BODY_RES = [
     (re.compile(r"^(by\s+exact\s+)?⟨\s*(rfl|trivial)(\s*,\s*(rfl|trivial))*\s*⟩$"), "⟨rfl,…⟩"),
     (re.compile(r"^(by\s+exact\s+)?And\.intro\s+(rfl|trivial)\s+(rfl|trivial)$"), "And.intro rfl rfl"),
     (re.compile(r"^fun\s+\w+\s*=>\s*\w+\.\w+$"), "struct-field projection (fun _ => _.field)"),
+    # ADR-004 reconcile #23 — a self-discharging existential witnessed ENTIRELY by
+    # `Equiv.refl` / `rfl` / `trivial` (+ a `.bijective`/`.symm` projection of one):
+    # `∃ φ, Bijective φ := ⟨Equiv.refl _, (Equiv.refl _).bijective⟩`. This is a
+    # TARGETED anon-ctor matcher (every component is itself trivial), NOT a bare
+    # `⟨…⟩` matcher — a constructor of REAL lemmas (`⟨left_inv, right_inv⟩`) has a
+    # component that is not Equiv.refl/rfl/trivial, so it does not match (preserves
+    # the deliberate non-flagging of substantive constructors at finding C2).
+    (re.compile(
+        r"^(by\s+exact\s+)?⟨\s*"
+        r"(\(?\s*Equiv\.refl[\s\w]*\)?(\.\w+)?|rfl|trivial)"
+        r"(\s*,\s*(\(?\s*Equiv\.refl[\s\w]*\)?(\.\w+)?|rfl|trivial))*\s*⟩$"),
+     "⟨Equiv.refl,…⟩ (self-discharging existential)"),
 ]
 # Substantive-tactic markers: if the body contains any of these it is NOT a
 # trivial closer (belt-and-suspenders with the anchored patterns above).
@@ -366,6 +448,10 @@ def check_proxy_body_audit() -> CheckResult:
         from src.core.constants import MODELING_ASSUMPTION_THEOREMS
     except ImportError:
         MODELING_ASSUMPTION_THEOREMS = {}
+    try:
+        from src.core.constants import VACUOUS_STATEMENT_BASELINE as BASELINE
+    except ImportError:
+        BASELINE = frozenset()
 
     lean_dir = PROJECT_ROOT / "lean" / "SKEFTHawking"
     if not lean_dir.exists():
@@ -382,7 +468,8 @@ def check_proxy_body_audit() -> CheckResult:
         else:
             wl_incomplete.append(k)
 
-    flagged: List[tuple] = []
+    new_flagged: List[tuple] = []
+    grandfathered: List[str] = []
     for lean_file in sorted(lean_dir.rglob("*.lean")):
         try:
             source = lean_file.read_text()
@@ -399,7 +486,13 @@ def check_proxy_body_audit() -> CheckResult:
             label = next((lbl for rx, lbl in _TRIVIAL_BODY_RES if rx.match(norm)), None)
             if label is None:
                 continue
-            flagged.append((f"{lean_file.stem}.{thm_name}", line_no, label))
+            # Grandfather the pre-existing class un-hid by the scanner / anon-ctor
+            # fixes (visible tracked debt). A NEW trivially-bodied structural
+            # theorem (not in the baseline) is a HARD-FAIL — closes the generator.
+            if thm_name in BASELINE:
+                grandfathered.append(thm_name)
+            else:
+                new_flagged.append((f"{lean_file.stem}.{thm_name}", line_no, label))
 
     details: List[Detail] = []
     # Advisory: disclosed vacuous_proxy theorems are tracked debt (PASS, but visible).
@@ -410,23 +503,29 @@ def check_proxy_body_audit() -> CheckResult:
             "tracked_vacuous_proxies", True,
             f"{n_vac} structurally-named theorem(s) disclosed as `vacuous_proxy` tracked debt "
             f"(see MODELING_ASSUMPTION_THEOREMS `discharge` pointers)", warning=True))
+    if grandfathered:
+        details.append(Detail(
+            "baseline", True,
+            f"{len(grandfathered)} grandfathered trivially-bodied theorem(s) in "
+            f"VACUOUS_STATEMENT_BASELINE (visible tracked debt → Vacuous Statement Sweep)",
+            warning=True))
 
     for k in wl_incomplete:
         details.append(Detail(
             k, False,
             "MODELING_ASSUMPTION_THEOREMS entry missing `reason`/`discloses` — not a valid disclosure"))
-    for full, line_no, label in flagged:
+    for full, line_no, label in new_flagged:
         details.append(Detail(
             full, False,
-            f"structurally-named theorem closed by `{label}` at line {line_no} — "
+            f"NEW structurally-named theorem closed by `{label}` at line {line_no} (not in baseline) — "
             f"register in MODELING_ASSUMPTION_THEOREMS (with reason+discloses) or strengthen"))
 
-    if flagged or wl_incomplete:
+    if new_flagged or wl_incomplete:
         return CheckResult(passed=False, details=details)
     details.append(Detail(
         "all_theorems", True,
-        "every structurally-named trivially-closed theorem is registered + disclosed "
-        "in MODELING_ASSUMPTION_THEOREMS"))
+        f"no NEW trivially-closed structural theorems ({len(grandfathered)} baselined, "
+        f"{n_vac} disclosed vacuous_proxy)"))
     return CheckResult(passed=True, details=details)
 
 
@@ -533,6 +632,151 @@ def check_tracked_hypotheses_fresh() -> CheckResult:
 # CHECK 1e: Formula content-grounding (R1, Invariant #4 with teeth)
 # ═══════════════════════════════════════════════════════════════════════
 
+# ═══════════════════════════════════════════════════════════════════════
+# Type-thinness classifier (ADR-004 reconcile #45/#54/#25/#14) — shared by
+# `vacuous_statement_audit` and the `formula_grounding` hardening. Operates on
+# the ELABORATED type from lean_deps.json (name-agnostic, tactic-agnostic), so
+# it catches statements that prove nothing regardless of the proof tactic or the
+# theorem's name — the gap that let bare-arithmetic / reflexive theorems slip the
+# name-gated, norm_num-excluding `proxy_body_audit`.
+# ═══════════════════════════════════════════════════════════════════════
+
+# Tokens that carry NO physics content (operators, relations, numeric base types,
+# logical connectives). A statement whose ONLY identifiers are these (+ numeric
+# literals) is a closed decidable fact — "ground arithmetic dressed as physics".
+_ARITH_TOKENS = frozenset({
+    "Eq", "Ne", "GT.gt", "LT.lt", "LE.le", "GE.ge",
+    "HMul.hMul", "instHMul.hMul", "HAdd.hAdd", "instHAdd.hAdd",
+    "HSub.hSub", "instHSub.hSub", "HDiv.hDiv", "instHDiv.hDiv",
+    "HPow.hPow", "instHPow", "Neg.neg", "OfNat.ofNat", "OfScientific.ofScientific",
+    "Nat", "Int", "Real", "Rat", "ℝ", "ℕ", "ℤ", "ℚ",
+    "And", "Or", "Iff", "Not", "True", "False", "Prop",
+})
+_NUMLIT_RE = re.compile(r"^-?\d+(\.\d+)?(e-?\d+)?$", re.IGNORECASE)
+_TYPE_IDENT_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_'.]*")
+# A "simple" Eq-argument = a single token with no internal structure (numeric
+# literal or a bare identifier / bound variable). Reflexive `Eq X X` is reliable
+# ONLY for simple args: a COMPOUND arg (`Eq (f a) (f a)`) may be a FALSE reflexive
+# because lean_deps' pretty-printed type ELIDES implicit args — e.g.
+# `sigPos_cast_pos : … sigPos (A.map (Int.cast:ℤ→ℝ)) → … sigPos (A.map (Int.cast:ℤ→ℚ))`
+# prints both sides as `sigPos (A.map Int.cast)` (the ℝ/ℚ codomain is elided), so a
+# genuine ℝ→ℚ transfer LOOKS reflexive. Restricting to simple args removes this
+# whole elision false-positive class (reconcile 2026-06-13).
+_SIMPLE_ARG_RE = re.compile(r"^-?[\w.]+'?$")
+_THIN_HARD = {"True", "reflexive (X=X)"}
+
+
+def _top_tokens(s: str) -> List[str]:
+    """Split into top-level tokens (bracket-balanced groups or maximal
+    non-space runs), respecting ()[]{}⟨⟩."""
+    toks, depth, cur = [], 0, ""
+    for ch in s:
+        if ch in "([{⟨":
+            depth += 1; cur += ch
+        elif ch in ")]}⟩":
+            depth -= 1; cur += ch
+        elif ch == " " and depth == 0:
+            if cur:
+                toks.append(cur); cur = ""
+        else:
+            cur += ch
+    if cur:
+        toks.append(cur)
+    return toks
+
+
+def _top_arrow_split(s: str) -> List[str]:
+    """Split on top-level `→` (function arrows), respecting brackets."""
+    parts, depth, last, i = [], 0, 0, 0
+    while i < len(s):
+        ch = s[i]
+        if ch in "([{⟨":
+            depth += 1
+        elif ch in ")]}⟩":
+            depth -= 1
+        elif depth == 0 and ch == "→":
+            parts.append(s[last:i].strip()); last = i + 1
+        i += 1
+    parts.append(s[last:].strip())
+    return parts
+
+
+def _strip_leading_binders(t: str) -> str:
+    """Drop leading `∀ … ,` / `∃ … ,` binder groups to reach the proposition."""
+    t = t.strip()
+    while t.startswith("∀") or t.startswith("∃"):
+        depth, ci = 0, None
+        for i, ch in enumerate(t):
+            if ch in "([{⟨":
+                depth += 1
+            elif ch in ")]}⟩":
+                depth -= 1
+            elif ch == "," and depth == 0:
+                ci = i; break
+        if ci is None:
+            break
+        t = t[ci + 1:].strip()
+    return t
+
+
+# Lean/Mathlib compiler-EMITTED lemmas (congruence, constructor, recursor,
+# equation lemmas) carry trivial/structural types by construction and are NOT
+# authored claims — exclude them (e.g. `Padic.congr_simp`, `Foo.mk.congr_simp`).
+_AUTOGEN_SHORT = frozenset({
+    "congr_simp", "congr", "injEq", "mk", "rec", "recOn", "casesOn", "below",
+    "brecOn", "ind", "binductionOn", "noConfusion", "noConfusionType",
+    "sizeOf_spec", "eq_def", "eq_mp", "eq_mpr", "fst", "snd",
+})
+_AUTOGEN_RE = re.compile(r"^(eq|proof|match|fun)_\d+$")
+
+
+def _is_autogen_decl(name: str) -> bool:
+    short = name.split(".")[-1]
+    return (short in _AUTOGEN_SHORT or bool(_AUTOGEN_RE.match(short))
+            or ".mk." in name or name.endswith(".congr_simp"))
+
+
+def _thin_type_label(type_str: str):
+    """Classify a declaration's elaborated type as content-thin, or None.
+
+    Returns a label string; `label in _THIN_HARD` ⇒ unambiguously vacuous
+    (hard-fail). `'ground-arith'` ⇒ closed numeric fact (advisory — the class
+    legitimately mixes vacuous physics-dressing with real counting identities
+    like `4*5/2 = 10`, with no syntactic separator). Operates on the elaborated
+    lean_deps type. Order: True ▸ reflexive ▸ ground-arith.
+
+    NOTE type-based `P→P` (hypothesis-return) detection is DELIBERATELY omitted:
+    lean_deps elides implicit args, so a genuine transfer `P_ℝ → P_ℚ` prints as
+    `P → P` (e.g. `sigPos_cast_pos`). The genuine `P→P` tautologies are caught
+    body-wise by `proxy_body_audit` (identity-return), which is elision-immune."""
+    if not type_str:
+        return None
+    t = type_str.replace("\n", " ").strip()
+    while "  " in t:
+        t = t.replace("  ", " ")
+    if t == "True":
+        return "True"
+    core = _strip_leading_binders(t)
+    concl = _top_arrow_split(core)[-1].strip()
+    # reflexive `Eq X X` (prefix) / `X = X` (infix) — SIMPLE args only (a compound
+    # arg may be a pretty-print elision false-reflexive; see `_SIMPLE_ARG_RE`).
+    toks = _top_tokens(concl)
+    if len(toks) == 3 and toks[0] == "Eq" and toks[1] == toks[2] \
+            and _SIMPLE_ARG_RE.match(toks[1]):
+        return "reflexive (X=X)"
+    if len(toks) == 3 and toks[1] == "=" and toks[0] == toks[2] \
+            and _SIMPLE_ARG_RE.match(toks[0]):
+        return "reflexive (X=X)"
+    # ground arithmetic: conclusion's only identifiers are operators/literals
+    leftover = [x for x in _TYPE_IDENT_RE.findall(concl)
+                if x not in _ARITH_TOKENS and not _NUMLIT_RE.match(x)]
+    has_rel = (any(r in concl for r in ("Eq", "GT.gt", "LT.lt", "LE.le", "GE.ge", "Ne"))
+               or any(op in concl for op in ("=", "<", ">", "≤", "≥")))
+    if has_rel and not leftover:
+        return "ground-arith"
+    return None
+
+
 def _parse_formula_lean_refs(src: str) -> set:
     """Extract Lean theorem-name tokens from `Lean: …` docstring lines in
     formulas.py, dropping non-decl artifacts (file names, `pending`, fragments,
@@ -588,22 +832,43 @@ def check_formula_grounding() -> CheckResult:
     def decl(t):
         return by_full.get(t) or by_short.get(t.split(".")[-1])
 
-    placeholder_grounded, dangling = [], []
+    placeholder_grounded, dangling, thin_grounded = [], [], []
     for t in sorted(refs):
         if not resolves(t):
             dangling.append(t)
             continue
         d = decl(t)
-        if d and (d.get("type") == "True" or d["name"].split(".")[-1] in PLACEHOLDER_LEAN_NAMES):
+        if not d:
+            continue
+        if d.get("type") == "True" or d["name"].split(".")[-1] in PLACEHOLDER_LEAN_NAMES:
             placeholder_grounded.append(t)
+            continue
+        # ADR-004 reconcile #14 (the real Wave-21 semantic audit): a formula must
+        # not be "grounded" on a theorem whose CONCLUSION proves nothing — a
+        # reflexive `Eq N N` / `P→P` tautology (the δ_diss-class hazard, where the
+        # cited theorem merely mentions the quantity instead of relating it). The
+        # 7-9-order δ_diss units bug hid precisely because grounding meant "a named
+        # theorem exists", not "the theorem's conclusion pertains to the formula".
+        # NOTE this is STRUCTURAL substance (the statement is non-tautological),
+        # not full semantic "conclusion ⟹ float-computation" (undecidable); it
+        # catches the prove-nothing class. Ground-arith groundings are allowed —
+        # a formula computing a count may legitimately ground on `… = N`.
+        if _thin_type_label(d.get("type", "")) in _THIN_HARD:
+            thin_grounded.append(t)
 
     details: List[Detail] = []
     details.append(Detail(
-        "coverage", not (placeholder_grounded or dangling),
+        "coverage", not (placeholder_grounded or dangling or thin_grounded),
         f"{len(refs)} Lean refs; {len(refs) - len(dangling)} resolve; "
-        f"{len(placeholder_grounded)} placeholder-grounded; {len(dangling)} dangling"))
+        f"{len(placeholder_grounded)} placeholder-grounded; {len(thin_grounded)} thin-grounded; "
+        f"{len(dangling)} dangling"))
     for t in placeholder_grounded:
         details.append(Detail(t, False, "formula grounded on a placeholder/True stub (Invariant #4)"))
+    for t in thin_grounded:
+        details.append(Detail(
+            t, False,
+            "formula grounded on a reflexive/tautological theorem (proves nothing; "
+            "Invariant #4 content-grounding) — reground on a substantive theorem"))
     # Dangling refs are HARD-FAIL since the 2026-06-13 FormulaRefSweep drove the
     # count to 0 (ratchet — a NEW stale/renamed formula ref must be fixed, not
     # left to rot). Replace the dangling name with the current theorem, drop the
@@ -613,7 +878,96 @@ def check_formula_grounding() -> CheckResult:
         details.append(Detail(
             t, False,
             "formula Lean-ref does not resolve (stale/renamed) — fix the name or drop the ref"))
-    return CheckResult(passed=not (placeholder_grounded or dangling), details=details)
+    return CheckResult(passed=not (placeholder_grounded or dangling or thin_grounded), details=details)
+
+
+@register_check(
+    "vacuous_statement_audit",
+    "No project theorem/lemma has a content-thin (reflexive / tautological) statement (R2 type-companion)")
+def check_vacuous_statement_audit() -> CheckResult:
+    """Type-based companion to `proxy_body_audit` (ADR-004 reconcile #45/#54/#25).
+    `proxy_body_audit` is name-gated (`_STRUCTURAL_NAME_RE`) and excludes
+    `norm_num`/`decide` bodies, so a theorem whose STATEMENT proves nothing slips
+    if its name isn't structural or its proof is `by norm_num` (e.g.
+    `tetrad_components : 4*4=16`, `hom_tensor_adjunction_dim : ∀ rank, rank=rank`).
+    This check classifies the ELABORATED type (lean_deps.json), name- and
+    tactic-agnostic.
+
+    HARD-FAIL: reflexive `Eq X X` and `True` (the unambiguously-vacuous classes)
+    NOT in `VACUOUS_STATEMENT_BASELINE`. ADVISORY: ground-arithmetic (closed
+    numeric facts — the class legitimately mixes vacuous physics-dressing with
+    real counting identities like `4*5/2=10`) AND the grandfathered baseline (the
+    ~48 pre-existing content-thin theorems un-hid by the SIG-gate blind-spot fixes,
+    visible tracked debt — a name leaves the set only by being dispositioned). A
+    flagged decl is COMPLIANT iff registered in `PLACEHOLDER_THEOREMS` /
+    `MODELING_ASSUMPTION_THEOREMS` (reason+discloses), self-disclosed via a
+    `_DEFINITIONAL` name suffix, or in the baseline. NEW (non-baseline) thin
+    statements HARD-FAIL — closing the generator (ADR-004 pathway #2)."""
+    from src.core.constants import PLACEHOLDER_LEAN_NAMES
+    try:
+        from src.core.constants import MODELING_ASSUMPTION_THEOREMS
+    except ImportError:
+        MODELING_ASSUMPTION_THEOREMS = {}
+    try:
+        from src.core.constants import VACUOUS_STATEMENT_BASELINE as BASELINE
+    except ImportError:
+        BASELINE = frozenset()
+    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
+    if not deps_path.exists():
+        return CheckResult(passed=True, details=[Detail("inputs", True, "lean_deps.json absent")])
+
+    exempt = set(PLACEHOLDER_LEAN_NAMES.keys())
+    for k, v in MODELING_ASSUMPTION_THEOREMS.items():
+        if v.get("reason") and v.get("discloses"):
+            exempt.add(v.get("lean_name", k))
+
+    deps = json.loads(deps_path.read_text())
+    new_hard: List[tuple] = []
+    grandfathered: List[str] = []
+    advisory: List[tuple] = []
+    for d in deps:
+        if d.get("kind") not in ("theorem", "lemma"):
+            continue
+        name = d.get("name", "")
+        if _is_autogen_decl(name):
+            continue
+        short = name.split(".")[-1]
+        if short in exempt or short.endswith("_DEFINITIONAL"):
+            continue
+        label = _thin_type_label(d.get("type", ""))
+        if label is None:
+            continue
+        if label not in _THIN_HARD:
+            advisory.append((name, label))
+        elif short in BASELINE:
+            grandfathered.append(short)
+        else:
+            new_hard.append((name, label))
+
+    details: List[Detail] = []
+    if advisory:
+        details.append(Detail(
+            "ground_arithmetic", True,
+            f"{len(advisory)} closed-arithmetic theorem(s) (verify load-bearing or delete/disclose) — "
+            f"e.g. {', '.join(n.split('.')[-1] for n, _ in advisory[:5])}", warning=True))
+    if grandfathered:
+        details.append(Detail(
+            "baseline", True,
+            f"{len(grandfathered)} grandfathered content-thin theorem(s) in VACUOUS_STATEMENT_BASELINE "
+            f"(visible tracked debt → Vacuous Statement Sweep)", warning=True))
+    for name, label in new_hard:
+        short = name.split(".")[-1]
+        details.append(Detail(
+            short, False,
+            f"NEW content-thin statement `{short}` [{label}] not in baseline — strengthen, delete, "
+            f"or register in MODELING_ASSUMPTION_THEOREMS (reason+discloses)"))
+    if new_hard:
+        return CheckResult(passed=False, details=details)
+    details.append(Detail(
+        "all_theorems", True,
+        f"no NEW content-thin statements ({len(grandfathered)} baselined, "
+        f"{len(advisory)} ground-arith advisory)"))
+    return CheckResult(passed=True, details=details)
 
 
 # ═══════════════════════════════════════════════════════════════════════

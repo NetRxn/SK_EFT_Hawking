@@ -265,3 +265,79 @@ def test_hedge_is_claim_specific_not_stray_word():  # H2
 def test_non_load_bearing_registry_exists():  # L1
     from src.core.constants import TRACKED_HYPOTHESIS_NON_LOAD_BEARING
     assert isinstance(TRACKED_HYPOTHESIS_NON_LOAD_BEARING, dict)
+
+
+# ── SIG gate hardening: blind-spot reconciliation (2026-06-13) ──────────
+
+from scripts.validate import (  # noqa: E402
+    _thin_type_label, _THIN_HARD, _is_autogen_decl,
+    _OVERCLAIM_VERB_RE, _LEDGER_HEDGE_RE,
+    check_vacuous_statement_audit, check_proxy_body_audit,
+    check_formula_grounding, check_disclosure_consistency,
+)
+from src.core.constants import VACUOUS_STATEMENT_BASELINE  # noqa: E402
+
+
+def test_thin_type_reflexive_simple_args():
+    assert _thin_type_label("∀ (rank : Nat), Eq rank rank") == "reflexive (X=X)"
+    assert _thin_type_label("Eq 2 2") == "reflexive (X=X)"
+    assert _thin_type_label("∀ (N_f : Nat), Eq 10 10") == "reflexive (X=X)"
+
+
+def test_thin_type_compound_eq_is_elision_safe():  # sigPos_cast_pos class
+    # lean_deps elides implicit args, so a genuine transfer P_ℝ→P_ℚ prints with
+    # identical sides; restricting reflexive to SIMPLE args avoids the FP, and
+    # type-based hyp-return is omitted entirely.
+    assert _thin_type_label(
+        "∀ A, instLTNat.lt 0 (sigPos (A.map Int.cast)) "
+        "→ instLTNat.lt 0 (sigPos (A.map Int.cast))") is None
+    assert _thin_type_label("Eq (sigPos (A.map Int.cast)) (sigPos (A.map Int.cast))") is None
+
+
+def test_thin_type_ground_arith_is_advisory_not_hard():
+    assert _thin_type_label("Eq (instHMul.hMul 4 4) 16") == "ground-arith"
+    assert _thin_type_label("GT.gt 6 1") == "ground-arith"
+    assert "ground-arith" not in _THIN_HARD
+
+
+def test_thin_type_true_and_genuine_nonthin():
+    assert _thin_type_label("True") == "True"
+    assert _thin_type_label("Eq (wrtS2xS1 D) D.n") is None  # relates distinct named things
+
+
+def test_is_autogen_decl():
+    assert _is_autogen_decl("Padic.congr_simp")
+    assert _is_autogen_decl("SKEFTHawking.Foo.mk.congr_simp")
+    assert _is_autogen_decl("Bar.injEq")
+    assert not _is_autogen_decl("even_odd_force_equivalence")
+    assert not _is_autogen_decl("SKEFTHawking.RokhlinHMDischarge.sigPos_cast_pos")
+
+
+def test_scanner_captures_body_on_continuation_line():  # #25 (the empty-body bug)
+    from scripts.build_graph import _scan_lean_theorem_bodies
+    src = "theorem foo (x : Nat) :\n    x = x := rfl\n"
+    bodies = {n: b for n, _, b in _scan_lean_theorem_bodies(src)}
+    assert bodies.get("foo") == "rfl", bodies  # was '' before the fix
+
+
+def test_anon_ctor_equiv_refl_pattern_fires():  # #23
+    def label(b):
+        return next((lbl for rx, lbl in _TRIVIAL_BODY_RES if rx.match(b)), None)
+    assert "Equiv.refl" in (label("⟨Equiv.refl _, (Equiv.refl _).bijective⟩") or "")
+    assert label("⟨left_inverse, right_inverse⟩") is None  # real constructor spared
+
+
+def test_overclaim_and_ledger_regexes():  # #9
+    assert _OVERCLAIM_VERB_RE.search("establishes the 8/8 closure")
+    assert _OVERCLAIM_VERB_RE.search("demonstrates that")
+    assert not _OVERCLAIM_VERB_RE.search("is proven (zero sorry)")  # 'proven' excluded
+    assert _LEDGER_HEDGE_RE.search("records the 8/8 tally")
+    assert _LEDGER_HEDGE_RE.search("a verified-consistent classification ledger")
+
+
+def test_vacuous_baseline_nonempty_and_all_gates_green():
+    assert len(VACUOUS_STATEMENT_BASELINE) >= 40
+    assert check_vacuous_statement_audit().passed
+    assert check_proxy_body_audit().passed
+    assert check_formula_grounding().passed
+    assert check_disclosure_consistency().passed

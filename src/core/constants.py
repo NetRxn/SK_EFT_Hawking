@@ -2344,6 +2344,46 @@ PLACEHOLDER_LEAN_NAMES = {
 NATIVE_DECIDE_DECL_CLOSURE_CEILING = 546  # 2026-06-13 (post-6AO; was 852→587 at ADR-002 cleanup)
 
 # ════════════════════════════════════════════════════════════════════
+# VACUOUS-STATEMENT BASELINE (identity-pinned ratchet; SIG gate hardening 2026-06-13)
+#
+# `validate.py --check vacuous_statement_audit` (type-thin: reflexive `Eq X X`) and
+# `--check proxy_body_audit` (body-thin: rfl / identity-return / self-discharging
+# existential) flag theorems whose STATEMENT or PROOF proves nothing. The SIG-gate
+# blind-spot reconciliation (2026-06-13) — fixing the `_scan_lean_theorem_bodies`
+# empty-body bug (#25), adding the anon-ctor `⟨Equiv.refl,…⟩` pattern (#23), and the
+# name-agnostic type-thinness classifier (#45/#54) — UN-HID a pre-existing widespread
+# class of ~48 content-thin theorems that the prior name-gated, norm_num-excluding,
+# body-mis-parsing detectors silently skipped.
+#
+# These are GRANDFATHERED here as VISIBLE tracked debt (not hidden): a name in this
+# set is reported as ADVISORY by both checks; a NEW content-thin theorem (not in the
+# set) is a HARD-FAIL — closing the generator (ADR-004 pathway #2 structural
+# prevention) for all future work. The set may only SHRINK: dispositioning an entry
+# (strengthen / restate / delete / disclose in MODELING_ASSUMPTION_THEOREMS) removes
+# it. This mirrors NATIVE_DECIDE_DECL_CLOSURE_CEILING. Sweep tracker:
+# docs/roadmaps/SIGGateHardening_Roadmap.md (W5) → a dedicated "Vacuous Statement
+# Sweep" /goal. Keyed by the short Lean decl name.
+VACUOUS_STATEMENT_BASELINE = frozenset({
+    # reflexive `Eq X X` markers (counts / dims / coefficients reduced to a literal)
+    "G_c_nlo_invariance", "bag_weight_real", "chevalley_GG_verification",
+    "chirality_is_independent_obstruction", "chirality_obstruction", "circuit_depth_two",
+    "davies_AA_coeff", "davies_GA_coeff", "doublet_algebra_generators", "ext_degree_zero",
+    "fib_wrt_S2xS1", "fierz_channel_count", "first_order_conformal_charged_count",
+    "golterman_shamir_obstruction", "gsd_sphere_eq_one", "gt_lattice_dim_match",
+    "hom_tensor_adjunction_dim", "ising_wrt_S2xS1", "model3450_equal_species",
+    "onsager_two_u1_charges", "pillar1_nogo_requires_all", "q_V_on_site",
+    "sixteen_fold_way_DEFINITIONAL", "su2_coefficient_match", "tetrad_modes_nf_independent",
+    "three_gaps", "three_obstacles_exist", "vecZ2_F_trivial", "vec_G_simples_count",
+    "wilson_offset", "wilson_spatial_dim", "wilson_weyl_node_count",
+    # body-thin (rfl / identity-return / cases<;>rfl / self-discharging existential)
+    "character_preserved", "dd_simples_count", "dispersion_matches_charge_scaling",
+    "even_odd_cg_equivalence", "even_odd_force_equivalence", "first_order_non_conformal_count",
+    "fusion_matches_k1", "fusion_matches_k2", "grading_preserved", "hopf_link_matches_S_matrix",
+    "phase5x_viable_candidate_count", "sixteen_majoranas_gappable", "spt_classification_from_bordism",
+    "stress_tensor_isotropic_holds", "wrt_S2xS1_eq_rank", "z16_classification",
+})
+
+# ════════════════════════════════════════════════════════════════════
 # MODELING-ASSUMPTION THEOREMS (proxy-body-audit whitelist; R2 / W2)
 #
 # `validate.py --check proxy_body_audit` flags theorems whose NAME claims a
@@ -2425,6 +2465,12 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
         'module': 'EntropicGravityDarkEnergy', 'category': 'definitional',
         'reason': 'Counts the filtered candidate List length = 8 (rDIndependentCount); a definitional count of a concrete List, not a derivation.',
         'discloses': '`def rDIndependentCount` (the .filter over the 8-candidate list); docstring.',
+    },
+    'entropic_gravity_no_go_count_eight': {
+        'lean_name': 'entropic_gravity_no_go_count_eight',
+        'module': 'EntropicGravityDarkEnergy', 'category': 'definitional',
+        'reason': 'List-length rfl over the 8-candidate NO-GO list = 8. A bookkeeping tally; the proof load is the per-candidate quantitative NO-GO theorems (the substantive content). Disclosed 2026-06-13 (SIG reconcile #9) so disclosure_consistency covers the D5 prose, which previously prose-claimed it "establishes the 8/8 closure".',
+        'discloses': 'docstring + D5 prose reframed to "records the 8/8 tally ... classification ledger rather than the proof load"; the per-candidate legs carry the closure.',
     },
     # surfaced by the W7 M3 name-pattern broadening (correspondence/preserved/holds):
     'signature_preserved': {

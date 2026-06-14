@@ -1695,7 +1695,7 @@ def njl_fierz_channel_count():
     Total: 1 + 1 + 4 + 4 + 6 = 16 = 4² (Fierz completeness).
     These provide 5 independent channel structures for the 4-fermion vertex.
 
-    Lean: fierz_channel_count (WetterichNJL.lean)
+    Lean: (no current grounding theorem — Fierz channel count is a definitional Clifford-decomposition input; `fierz_channel_count` is a reflexive `5=5` marker, in the vacuous-statement baseline / sweep)
     Aristotle: 4528aa2b
     Source: Fierz, Z. Phys. 104, 553 (1937); standard Clifford algebra decomposition
 
@@ -5328,7 +5328,7 @@ def ground_state_degeneracy(model):
     Ising:     GSD = 3 (anyons: 1, σ, ψ)
     Fibonacci: GSD = 2 (anyons: 1, τ)
 
-    Lean: ising_wrt_rank, fib_wrt_rank (WRTComputation.lean)
+    Lean: wrt_S2xS1_eq_rank (WRTInvariant.lean)
     Aristotle: N/A (rfl)
     Source: Wen, "Quantum Field Theory of Many-Body Systems" (2004)
 
@@ -5449,7 +5449,7 @@ def wrt_s2xs1(model):
     This follows from the 0-framed unknot surgery formula and the
     Verlinde formula. Proved in Lean as wrt_S2xS1_eq_rank.
 
-    Lean: wrt_S2xS1_eq_rank (WRTInvariant.lean), ising_wrt_S2xS1, fib_wrt_S2xS1 (WRTComputation.lean)
+    Lean: wrt_S2xS1_eq_rank (WRTInvariant.lean)
     Aristotle: manual (native_decide)
     Source: Turaev, "Quantum Invariants" (de Gruyter, 2010)
 

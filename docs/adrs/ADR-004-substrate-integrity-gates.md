@@ -81,6 +81,18 @@ This ADR was cross-checked against ADR-001/002/003 to ensure it *extends* their 
 
 **Explicitly out of scope.** Re-proving `topo` (Atiyah–Singer/Â-genus, Mathlib-absent), the Ross–Selinger prime-density wall, the Caves/CCR floor, or any of the named literature walls. Those are tracked-hypothesis posture (ADR-003 style), and the gates' job is to ensure they are *disclosed*, not discharged.
 
+### Reconciliation hardening (2026-06-13) — closing the gates' own blind-spots
+
+The ledger-reconciliation (`docs/audits/SUBSTRATE_WEAKNESS_LIVE_BOARD_2026-06-13.md` §D) found that the R1/R2 detectors themselves had evadable holes — the "presence-not-load" root cause recurring *inside* the gates. Closed (tracker: `docs/roadmaps/SIGGateHardening_Roadmap.md`):
+
+- **R2 body scanner** (`build_graph._scan_lean_theorem_bodies`) returned an EMPTY body when `:=`+body sat on a continuation line → `proxy_body_audit` silently skipped the decl (`hom_tensor_adjunction_dim`). Fixed (`body_start_col`).
+- **R2 anon-constructor evasion** — `⟨Equiv.refl _, …⟩` self-discharging existentials (`z16_classification`) now matched by a targeted (component-wise-trivial) pattern that still spares real constructors.
+- **Name-gate / `norm_num`-exclusion gap** (`tetrad_components : 4*4=16`) → new **type-based** `vacuous_statement_audit` over the elaborated lean_deps type (name- and tactic-agnostic): hard-fail on reflexive `Eq X X` (SIMPLE args — elision-safe) and `True`; advisory on ground-arithmetic.
+- **`formula_grounding` (R1/#14)** now rejects groundings on reflexive/`True` theorems (the δ_diss "proves-nothing" class), not just literal `type=='True'`.
+- **New `disclosure_consistency` (#9)** — no paper presents a `definitional`/`vacuous_proxy`-disclosed theorem as "establishing/demonstrating" a result (paper-prose ↔ disclosure-category), mirroring R5 for the modeling-assumption tier.
+
+The fixes **un-hid a widespread pre-existing class** (~48 content-thin theorems). Disposition = an **identity-pinned baseline ratchet** (`VACUOUS_STATEMENT_BASELINE`, constants.py) — grandfathered as VISIBLE tracked debt (advisory), NEW occurrences hard-fail (pathway #2 for the generator), the set may only shrink. Clearing it is a dedicated **"Vacuous Statement Sweep"** follow-on `/goal`. Calibration: `_is_autogen_decl` excludes Lean/Mathlib `*.congr_simp`/`*.mk.*`; type-based hyp-return is omitted because lean_deps elides implicit args (a genuine `P_ℝ→P_ℚ` transfer prints as `P→P`).
+
 ---
 
 ## Alternatives considered

@@ -1638,7 +1638,16 @@ def _scan_lean_theorem_bodies(source: str):
             continue
         # Collect body: from after `:=` until blank line / next top-level kw
         body_start_line = j
-        body_start_col = assign_offset_in_acc + 2  # skip the `:=`
+        # `:=` COLUMN WITHIN line j — NOT the joined-`acc` offset. The acc search
+        # begins at line j's start, so the assignment is the first `:=` in line j;
+        # `lines[j].find(':=')` recovers its column. Using `assign_offset_in_acc`
+        # (an offset into the multi-line joined string) silently produced an EMPTY
+        # body whenever `:=` AND the body sat on the same *continuation* line
+        # (e.g. `theorem foo (x:ℕ) :\n    x = x := rfl`), so proxy_body_audit /
+        # the placeholder extractor skipped the decl (ADR-004 reconcile #25,
+        # `hom_tensor_adjunction_dim`, 2026-06-13).
+        _assign_col = lines[j].find(":=")
+        body_start_col = (_assign_col + 2) if _assign_col >= 0 else len(lines[j])
         # Body on the same line as `:=`
         body_parts = []
         first_line = lines[body_start_line][body_start_col:].strip()
