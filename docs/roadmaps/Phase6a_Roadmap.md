@@ -12,6 +12,19 @@
 
 ---
 
+> **🔓 RE-OPENED 2026-06-13 — Center-Bridge Discharge (Waves 7B + 8 + C-spike).**
+> A planning spike on the D4 "Area Law" visualization (the center bridge `log Ω ≟ A/4G`)
+> traced the orange `≟` to `BHEntropyMicroscopic.lean` and decomposed it into three loci of
+> very different difficulty/honesty. Phase 6a is re-opened to host all three. **See the
+> "RE-OPENED 2026-06-13 — Center-Bridge Discharge" section below (just above Decision Gates)**
+> for: **Wave 8 (A)** — discharge the two `True` consistency placeholders + the F4 tautology
+> (the active `/goal`); **Wave 7B (B)** — the genuine literal-Verlinde Laplace derivation that
+> 6a.7's 2026-04-27 "axiom retirement" deferred (substrate-audit #13); **C** — the 1/4/Immirzi
+> feasibility spike (research agent dispatched 2026-06-13). Goal prompts:
+> `Phase6a_Wave8_goal_prompt.md` (A), `Phase6a_Wave7B_goal_prompt.md` (B),
+> `Phase6a_Wave9_goal_prompt.md` (C). **Unattended overnight execution chains all three via
+> `Phase6a_CenterBridge_chained_goal_prompt.md` (Wave 8 → 7B → 9, strict sequence).**
+
 > **AGENT INSTRUCTIONS — READ BEFORE ANY WORK:**
 >
 > 1. Read CLAUDE.md, WAVE_EXECUTION_PIPELINE.md, SK_EFT_Hawking_Inventory_Index
@@ -462,6 +475,181 @@ This wave pays that cost.
 
 **Estimated LOE:** 10–15 person-months
 **Risk:** High. Heaviest classical-GR wave in 6a. Witten's proof requires spinor bundle / covariant-derivative infrastructure that may not be in Mathlib. Budget dependencies on Phase 6f carefully.
+
+---
+
+## RE-OPENED 2026-06-13 — Center-Bridge Discharge (Waves 7B + 8 + C-spike)
+
+*Origin: a planning spike on the D4 "Area Law" figure. The figure's center bridge `log Ω ≟ A/4G`
+is the orange `≟` between state-counting (left) and area (right). In the substrate it is **three
+distinct loci**, not one hypothesis. The −3/2 log coefficient (`kaul_majumdar_log_coefficient`,
+`kaul_majumdar_log_decomposition`) and the Sen non-universality witness are already proven. What
+remains:*
+
+| | What | Home | Honesty profile |
+|---|---|---|---|
+| **A** | Make the bundle's two `True` consistency conditions + the F4 tautology real | **Wave 8 (6a.8)** below | Tractable; mostly wiring proven machinery |
+| **B** | Literal Verlinde sum → discharge `H_VerlindeKMLiteralSumDerivation` | **Wave 7B** (completes 6a.7) below | Hard analysis; honest |
+| **C** | Derive the 1/4 / Immirzi (not a tuning) | **C-spike** below — NOT a build wave yet | Research-open; conditional-only |
+
+**The 1/4 survives both A and B as a γ-tuning.** A makes the consistency conditions real; B
+derives the *form* from a genuine count — but the *coefficient* of A is still the Immirzi γ
+(Meissner value) chosen to land on 1/4. Only C touches the number itself, and only honestly as
+a conditional.
+
+---
+
+### Wave 8 — `BHEntropyMicroscopic.lean` consistency-condition discharge (6a.8) [center-bridge A] [Pipeline: Stages 1–13]
+
+**Goal:** Replace `H_HorizonBoundaryCondition.modularInvariant : True` and `.anomalyMatch : True`
+(line ~383–384) with genuine, falsifiable Props, and strengthen the F4 falsifier
+`H_HorizonBoundaryCondition_falsifier_quarterCoefficient` (currently `rw [← h_match]; exact h_fail`
+— a P5 identity-wrapper tautology) into a real quantitative comparison. This is the
+well-posedness layer of the center bridge; the −3/2 log is already proven, this makes the bundle
+non-vacuous. Resolves the deferred half of **O.2** (the placeholders flagged "future Wave").
+
+**Key insight — the two fields are ONE anomaly.** `(ST)³ = e^{2πi c₋/8}·S²` (Gauss–Milgram:
+`Σ_a d_a² θ_a = D·e^{2πi c₋/8}`). The phase obstructing `(ST)³ = S²` *is* `c₋ mod 8` — exactly the
+Walker–Wang Z₂ inflow that `anomalyMatch` checks. Build **one** chiral-central-charge-mod-8 /
+Gauss–Milgram object; derive both fields + the F4 strengthening from it.
+
+**Reuse (already built & proven — this is mostly wiring):**
+- `RibbonCategory.PreModularData` + `.modular` (S non-degenerate); witnesses
+  `FibonacciMTC.fib_modular`, `RibbonCategory.su2k1_modular` / `su2k2_modular`.
+- `ModularInvarianceConstraint.lean` (`24 ∣ c₋`, framing-anomaly chain), `WangBridge` (`c₋ = 8 N_f`),
+  `KMatrixAnomaly.lean` (gapped-boundary / Lagrangian-sublattice condition).
+- `HolographicCFunctionMTC.lean` — the **template**: real Props on `HorizonMTCBC`, proven per
+  concrete instance (Fib / Ising / toric).
+
+**Module structure:**
+- **A1 — modularInvariant.** Parameterize `H_HorizonBoundaryCondition` with the instance's
+  `PreModularData ℝ` (`md`); set `modularInvariant := md.modular`. **DO NOT add S/T fields to
+  `HorizonMTCBC`** — it has external consumers (`HolographicCFunctionMTC`). `(ST)³ = S²` is a
+  *derived* MTC property; formalizing the literal SL(2,ℤ) relation with the T-matrix is an
+  **optional strengthening** only if the core lands clean. Falsifier: a premodular non-modular
+  instance (degenerate S).
+- **A2 — anomalyMatch.** An honest Gauss–Milgram / chiral-`c₋`-mod-8 inflow-matching Prop
+  referencing the `c₋` machinery. **Get the physics honest** (a T-invariant bulk forces a specific
+  `c₋ mod 8`; Fibonacci alone is chiral, `c₋ = 14/5` — use a non-chiral/doubled instance, or state
+  the bulk inflow value as the matching target). Ship a satisfying instance AND a falsifier
+  (chiral `c₋ ≢` matching value). No `True`-dressed-vacuous field.
+- **A3 — F4 strengthening.** Real quantitative falsifier tying the leading coefficient to
+  `1/(4 G)` (`norm_num`-backed). Do **not** derive `κ = 1/4G` here (that is the C-spike) — make the
+  *falsifier* substantive.
+- **A4 — consumers + instances + paper.** The parameterization changes the bundle signature →
+  update ALL consumers (the 5 in-file falsifiers F1–F5 + `QECHolographyBridge` + any grep hits;
+  Stage-2 dependency grep first). Prove the upgraded bundle for Fibonacci + su2k₂(Ising). Update
+  paper26 prose (conditions real, not placeholders) — bundle-aware.
+
+**Discipline:** preemptive-strengthening checklist (esp. #4 trivial-discharge, #5
+defining-the-conclusion) before EVERY statement; no new axioms (sign-off rule); no `native_decide`;
+no `maxHeartbeats` in proof bodies; kernel-pure; `lean_verify` on every new theorem.
+
+**Risk:** Medium. (1) getting `anomalyMatch` physics honest (which instance genuinely matches a
+T-invariant bulk); (2) consumer blast radius from the signature change.
+
+**Cross-link:** high-value slice of the **Vacuous Statement Sweep** (de-vacuizes 2 `True`s + 1
+tautology in a paper-headline module). **Goal prompt:** `Phase6a_Wave8_goal_prompt.md`.
+
+**▶ PROGRESS 2026-06-14 (Lean core COMPLETE + verified, kernel-pure).** Shipped in
+`BHEntropyMicroscopic.lean` (builds clean, 8269 jobs; `lean_verify` → axioms exactly
+`{propext, Classical.choice, Quot.sound}`):
+- §3.7 NEW: `HorizonModularData` companion carrier (S-matrix + `c₋`, kept off
+  `HorizonMTCBC` to spare its consumers); `chiralAnomalyVanishesMod8 (c₋) := ∃k:ℤ, c₋=8k`;
+  `HorizonModularData.modularInvariant := M.md.modular`, `.anomalyMatch := 8∣c₋`.
+- Witnesses: `fibonacci_satisfies_modularInvariant` (via `fib_modular`),
+  `adw_chiral_charge_vanishes_mod8` (c₋=8N_f). Falsifiers: `fibonacci_chiral_violates_mod8`
+  (14/5∉8ℤ), `ising_chiral_violates_mod8` (1/2∉8ℤ). Bridge:
+  `horizon_anomalyMatch_modular_forces_three_generations` (calls
+  `ModularInvarianceConstraint.modular_generation_constraint`).
+- §4 bundle `H_HorizonBoundaryCondition` parameterized with `(M : HorizonModularData)`;
+  the two `True` fields → `M.modularInvariant` / `M.anomalyMatch` (REAL). All §5 falsifiers
+  (F1/F2/F3/F5 + abelian) updated to the new signature.
+- §6.7: F4 `_quarterCoefficient` de-tautologized → substantive `κ·(4G) ≠ kaulMajumdarS (4G) G 0`
+  (invokes `kaulMajumdar_S_at_4GN`); `fibonacci_horizon_satisfies_H_HorizonBoundaryCondition`
+  full-bundle non-vacuity witness (coherence modeling-note re doubled-Fib documented).
+- Consumer `QECHolographyBridge.horizon_BC_implies_HP_admissible` updated (+`M` param); builds clean.
+- §4/§8 docstrings de-placeholdered.
+**▶ Wave-8 closure status (2026-06-14):**
+- ✅ Full `lake build SKEFTHawking.ExtractDeps` clean (9259 jobs, 0 sorry); all downstream
+  modules (HolographicCFunctionMTC, QEC, …) compile with the parameterized bundle.
+- ✅ `validate.py` **43/43 PASS** (179 advisory citation warnings, pre-existing/unrelated);
+  `prose_theorem_reference_coverage` 0-unresolved (F4 name preserved), `tracked_hypotheses`
+  matches registry, `counts_fresh` green.
+- ✅ counts.json refreshed (12518 thm, 0 sorry); Inventory_Index autogen refreshed.
+- ✅ `HYPOTHESIS_REGISTRY['H_HorizonBoundaryCondition']` updated (Wave-8 hardening) +
+  `PERMANENT_TRACKED_HYPOTHESES.md` re-rendered (31 entries).
+- ✅ paper26 prose (8 edits: verbatim block, primary disclosure, F4 item, envelope, table
+  caption, F4 para, F5 para, conclusion) — fields now real, F4 substantive, physical
+  MTC-at-horizon identification honestly still flagged conjectural.
+- ✅ D4 bundle prose (2 edits: §qec-mtc + §tracked-Props) de-placeholdered.
+- ⏳ REMAINING: Stage-13 adversarial review (fresh-context sweep) + remediation; then commit
+  own paths. Then → Wave 7B, then Wave 9.
+
+---
+
+### Wave 7B — genuine literal-Verlinde Laplace derivation (completes 6a.7) [center-bridge B]
+
+**Goal:** Discharge `H_VerlindeKMLiteralSumDerivation` by building the literal SU(2)_k Verlinde-sum
+entropy and deriving `kaulMajumdarS A G_N 0` from it via a **genuine** Laplace/Watson
+bounded-remainder — i.e. execute the Wave 7 Sub-tasks A/B/C (full breakdown at the **Wave 7** entry
+above, lines ~341–421). The 2026-04-27 "axiom retirement" only redefined
+`verlindeEntropy_SU2k := kaulMajumdarS A G_N 0` (its own saddle limit), so `gaussianSaddleAsymptotic`
+proves `|x−x| = 0` — **substrate-weakness audit finding #13** ("defining-the-conclusion"); the
+genuine `LaplaceMethodAsymptotic.lean` was never built.
+
+**Decision gate (do FIRST):** (1) recheck Mathlib master for a landed Laplace-method lemma; (2)
+settle whether the literal SU(2)_k Verlinde sum genuinely needs the Hardy–Ramanujan `p(n)`
+asymptotic, or admits a **direct** Watson/Laplace saddle (the latter shrinks the wave a lot).
+
+**Sequencing:** its own `/goal`, run **after** Wave 8 (disjoint surface — §2 + `LaplaceMethod` vs
+§3–§6 — but sequence per the plan). **The leading 1/4 stays γ-tuned after this wave** (that is the
+C-spike). **Goal prompt:** `Phase6a_Wave7B_goal_prompt.md`.
+
+---
+
+### C — 1/4 / Immirzi feasibility spike [center-bridge C — NOT a build wave yet]
+
+The leading 1/4 is the only genuinely research-open locus and it survives Waves 8 + 7B. C is the
+**unshipped Wave-6a.3 theorem** `coefficient_matches_one_quarter_iff_anyon_spectrum_matches_spherical`
+(planned, never built) and the still-open **Gate A.2**. It is honest **only as a CONDITIONAL**
+("given independent substrate input X, `κ = 1/(4G)`"); an unconditional proof would be
+defining-the-conclusion.
+
+**Feasibility spike dispatched 2026-06-13** (web-research agent) →
+`Lit-Search/Phase-6a/6a-Immirzi-area-gap-independence-for-Wave8.md`: *does the ADW substrate fix the
+horizon area gap / γ independently of the BH match?* — focus on the γ-free routes (Bianchi
+1204.5122, Frodden–Ghosh–Perez, self-dual Engle–Noui–Perez, Jacobson) and the induced-gravity
+species route (Susskind–Uglum, Frolov–Fursaev). **Promote to a build `/goal` ONLY on a "feasible"
+verdict.** Tracked under `H_HorizonBoundaryCondition` in `PERMANENT_TRACKED_HYPOTHESES.md`.
+
+**Verdict (2026-06-13 research agent): FEASIBLE-BUT-REFRAMED** →
+`Lit-Search/Phase-6a/6a-Immirzi-area-gap-independence-for-Wave8.md`. In the ADW Sakharov–Adler
+induced-gravity substrate the 1/4 is **automatic, not a γ-tuning**: the same Seeley–DeWitt `a₂`
+coefficient (conical-deficit replica trick) fixes BOTH the horizon entanglement entropy `S_ent`
+AND the induced `G_N` from the N_f Dirac loops; their ratio is exactly 4 (Frolov–Fursaev–Zelnikov
+hep-th/9607104; Jacobson gr-qc/9404039; Susskind–Uglum hep-th/9401070). The γ-free LQG route
+(Bianchi 1204.5122: S = A/4G for *all* γ via boost-Hamiltonian/Unruh) corroborates that γ is
+irrelevant to the coefficient; the Hossenfelder-2012 counting-vs-thermodynamics tension is
+*resolved* in this framing (γ sets neither route's coefficient).
+
+**Infra already largely present** (size revised DOWN from "research-scale" to a normal wave):
+`HeatKernelExpansion.lean` (Phase 6e W1) has `a0_dirac`, `a2_R_coefficient`, `G_N_from_a2`,
+`G_N_from_a2_eq_G_N_sakharov`, `DiracHeatKernelAsymptotic`; `MicroscopicCoefficientMatch.lean`
+(6e W5) is the Dirac-witness + perturbed-α-falsifier template for G_N-from-`a₂`;
+`RTReplicaTrickOnMTC.lean` has `topologicalEntanglementEntropy`. The only genuinely NEW analytic
+content is the **conical / area-law entanglement entropy `S_ent ∝ a₂·A`** and the **ratio-4
+conditional**.
+
+**⇒ Proposed Wave 9 (6a.9) — Induced-gravity 1/4 (Frolov–Fursaev conditional).** Honest
+non-vacuous target: `H_Sakharov(no bare action) ∧ (S_BH = S_ent) ⟹ κ = 1/(4 G_N)` — neither
+antecedent is `S = A/4G`; the substantive content is the shared-`a₂` ratio, and `G_N` is already
+`G_N_from_a2` in-pipeline. Include a consistency theorem (induced-gravity 1/4 = MTC leading
+coefficient), a Dirac witness, and a falsifier. Closes **Gate A.2**. Queue AFTER Waves 8 + 7B.
+Until it lands, document the MTC-framing 1/4 as phenomenological (the −3/2 log is the
+genuinely-derived MTC content). **AUTHORIZED 2026-06-13 (user sign-off) with the
+induced-gravity / γ-irrelevant narrative.** Goal prompt: `Phase6a_Wave9_goal_prompt.md`; runs as
+the third link of `Phase6a_CenterBridge_chained_goal_prompt.md`.
 
 ---
 

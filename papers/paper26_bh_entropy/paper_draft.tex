@@ -293,19 +293,32 @@ horizon BC, we ship a Lean tracked-hypothesis bundle:
 \begin{verbatim}
 structure H_HorizonBoundaryCondition
     (H : HorizonMTCBC)
+    (M : HorizonModularData)
     (S_horizon : HorizonMTCBC → ℝ → ℝ) : Prop where
   positivity      : ∀ A, 0 ≤ A → 0 ≤ S_horizon H A
   areaLeading     : 0 < H.areaLawKappa
   secondLaw       : Monotone (S_horizon H)
-  modularInvariant : True
-  anomalyMatch    : True
+  modularInvariant : M.modularInvariant   -- S-matrix non-degenerate
+  anomalyMatch    : M.anomalyMatch         -- 8 | c_-  (Walker-Wang Z2)
 \end{verbatim}
 \end{quote}
-The two \texttt{True} placeholders correspond to (F4)~modular invariance
-$(ST)^3 = S^2$ (testable per-MTC via formalized $S$-matrices but not
-universally across abstract MTCs at the level of this Wave) and
-(F5)~Walker-Wang anomaly match between bulk $\mathbb{Z}_2$ time-reversal
-inflow and boundary chiral $c_-$ mod 8 \cite{WalkerWang2012}.
+As of Wave~8, the two former \texttt{True} placeholders are genuine,
+falsifiable predicates carried by a companion datum
+$M : \texttt{HorizonModularData}$ (the modular $S$-matrix together with the
+chiral central charge $c_-$): \texttt{modularInvariant} $:= M.\texttt{md.modular}$
+is $S$-matrix non-degeneracy ($\det S \neq 0$, the data-level modularity from
+which $(ST)^3 = S^2$ follows for a genuine MTC), and \texttt{anomalyMatch}
+$:= (8 \mid c_-)$ is the vanishing of the perturbative gravitational anomaly
+mod 8 (the mod-8 factor of the $24 = 8\times3$ framing decomposition). This is
+\emph{not} a biconditional for bounding a $\mathbb{Z}_2$ Walker--Wang bulk: the
+3-fermion model bounds such a bulk yet realizes the nontrivial $c_-\equiv4$ class
+\cite{WalkerWang2012}. The small chiral MTCs
+satisfy modularity but \emph{falsify} the anomaly match ($c_-(\mathrm{Fib}) = 14/5$,
+$c_-(\mathrm{Ising}) = 1/2$ are not multiples of $8$), whereas the ADW substrate
+value $c_- = 8 N_f$ satisfies it by construction --- exactly the mod-$8$ factor of
+the $24 = 8 \times 3$ framing-anomaly decomposition. The leading coefficient $1/4$
+itself remains the Immirzi $\gamma$-tuning at this level; its induced-gravity
+derivation is separate future work.
 
 \subsection{Five falsifier theorems}
 
@@ -319,8 +332,13 @@ Each conjunct of the bundle is paired with a falsifier theorem in
         falsifier; toric code triggers).
   \item \texttt{falsifier\_secondLaw}: $\exists A_1 \leq A_2,\,
         S(A_1) > S(A_2) \;\Rightarrow\; \neg \texttt{H\_HorizonBoundaryCondition}$.
-  \item \texttt{falsifier\_quarterCoefficient}: $\kappa_C \neq 1/(4 G_N)
-        \;\Rightarrow\;$ the candidate fails the quantitative BH match.
+  \item \texttt{falsifier\_quarterCoefficient} (Wave~8, substantive): for any
+        leading coefficient $\kappa \neq 1/(4 G_N)$, the linear model
+        $\kappa\!\cdot\!A$ disagrees with the Kaul--Majumdar value at $A = 4 G_N$
+        (where the log term vanishes): $\kappa\,(4 G_N) \neq
+        \texttt{kaulMajumdarS}(4 G_N, G_N, 0) = 1$. Invokes
+        \texttt{kaulMajumdar\_S\_at\_4GN}; replaces the prior identity-wrapper
+        tautology.
   \item \texttt{H\_HorizonBoundaryCondition\_implies\_nonabelian\_envelope}
         (substantive structural corollary, post-strengthening 2026-04-26):
         the bundle's five conjuncts \emph{jointly} imply (i)~$\exists a,\,
@@ -330,11 +348,11 @@ Each conjunct of the bundle is paired with a falsifier theorem in
         the toric-code F2 falsifier and is what blocks any purely abelian
         MTC from carrying the Wave~3 horizon BC. Replaces the prior
         \texttt{falsifier\_anomalyMatch} placeholder, which an
-        adversarial review correctly flagged as logically trivial. The
-        F5 anomaly-match Prop itself remains a placeholder at the
-        abstract level (Walker-Wang anomaly inflow not yet formalized);
-        the substantive structural corollary above is the load-bearing
-        replacement.
+        adversarial review correctly flagged as logically trivial. As of
+        Wave~8 the anomaly-match Prop is itself a genuine predicate
+        ($8 \mid c_-$; \S\ref{sec:tracked}), independently witnessed (ADW
+        $c_- = 8 N_f$) and falsified (chiral Fibonacci/Ising); this
+        structural corollary remains a complementary load-bearing result.
 \end{itemize}
 
 \subsection{Per-MTC instance status}
@@ -358,9 +376,10 @@ SU(2)$_k$, $k\geq 2$ & \checkmark & \checkmark & \checkmark & \checkmark & ? \\
 \end{tabular}
 \caption{F1-F5 falsifier-instance status across the Wave~3 MTC zoo.
 \checkmark = structurally compatible (no published $d_a$ data triggers
-the corresponding F-falsifier); ? = conjectural at the abstract bundle
-level (F5 placeholder; F4 partial via S-matrix unitarity but no
-theorem-discharge of $(ST)^3 = S^2$ at the bundle level); \textbf{FAIL}
+the corresponding F-falsifier); ? = the full per-MTC bundle discharge is
+conjectural at the abstract level (as of Wave~8 \texttt{modularInvariant} and
+\texttt{anomalyMatch} are real Props, but a single fully-coherent non-abelian
+\emph{and} non-anomalous instance is a data-construction follow-up); \textbf{FAIL}
 = falsifier theorem triggered. With the exception of the toric-code
 F2 \textbf{FAIL} (theorem-discharged via
 \texttt{abelian\_MTC\_falsifies\_H\_HorizonBoundaryCondition}) and the
@@ -374,23 +393,26 @@ are a follow-on Wave goal.}
 \label{tab:instances}
 \end{table}
 
-The F4 (modular invariance) Prop is a placeholder \texttt{True} at
-the abstract \texttt{H\_HorizonBoundaryCondition} level. The four
-auxiliary modules \texttt{SU2kFusion.lean} (S-matrix unitarity verified
-for $k \in \{2, 3, 4, 5, 10\}$ in our pytest suite),
+As of Wave~8 the F4 (modular invariance) Prop is the genuine $S$-matrix
+non-degeneracy condition $M.\texttt{md.modular}$ ($\det S \neq 0$), carried by the
+companion \texttt{HorizonModularData} and witnessed by
+\texttt{fibonacci\_satisfies\_modularInvariant} (via \texttt{FibonacciMTC.fib\_modular},
+proved over $\mathbb{Q}(\sqrt 5)$). The auxiliary modules \texttt{SU2kFusion.lean},
 \texttt{FibonacciMTC.lean}, \texttt{IsingBraiding.lean}, and
-\texttt{S3CenterAnyons.lean} (all zero sorry) establish
-\emph{S-matrix unitarity} and the modular data, which are
-\emph{necessary} ingredients toward the full $(ST)^3 = S^2$ relation
-but are not, on their own, theorem-discharging proofs of $(ST)^3 = S^2$
-at the abstract bundle level. Lifting the F4 Prop from \texttt{True}
-to the explicit Verlinde-form modular relation is a follow-on step
+\texttt{S3CenterAnyons.lean} (all zero sorry) supply the formalized $S$-matrix and
+modular data. Non-degeneracy is the data-level modularity condition from which the
+full $(ST)^3 = S^2$ modular-group action follows for a genuine MTC; formalizing
+that relation explicitly with the $T$-matrix is an optional strengthening
 (see \S\ref{sec:novelty}).
 
-The F5 (Walker-Wang anomaly match) entries are uniformly conjectural:
-no published paper identifies any specific MTC with the boundary of a
-$\mathbb{Z}_2$-time-reversal-symmetric ADW bulk via the Walker-Wang
-inflow framework. We flag this as a Wave~3 novelty conjecture (\S\ref{sec:novelty}).
+As of Wave~8 the F5 anomaly-match Prop is the genuine condition $8 \mid c_-$
+(\texttt{chiralAnomalyVanishesMod8}), witnessed by the ADW substrate value
+$c_- = 8 N_f$ (\texttt{adw\_chiral\_charge\_vanishes\_mod8}) and \emph{falsified} by
+the chiral small MTCs ($c_-(\mathrm{Fib}) = 14/5$, $c_-(\mathrm{Ising}) = 1/2$ are
+not multiples of $8$). What remains a Wave~3 novelty conjecture is the
+\emph{physical identification} of a specific MTC as the boundary of a
+$\mathbb{Z}_2$-time-reversal-symmetric ADW Walker-Wang bulk: no published paper
+pins this (\S\ref{sec:novelty}).
 
 \section{Non-Universality Witness}
 \label{sec:nonuniversality}
@@ -549,10 +571,12 @@ is encoded as a machine-checked non-universality witness theorem.
 The general-MTC tracked hypothesis is bundled as
 \texttt{H\_HorizonBoundaryCondition} with five falsifier theorems.
 The toric-code abelian falsifier (F2: $\log\dmax = 0$) is proven;
-the F4 (modular invariance) entry passes via the formalized
-$S$-matrices for SU(2)$_k$, Fibonacci, Ising, $D(S_3)$; the F5
-(Walker-Wang anomaly match) entry is uniformly conjectural across
-the MTC zoo, in agreement with the deep-research return verdict
+the F4 (modular invariance) entry is the genuine $S$-matrix non-degeneracy
+Prop (Wave~8), witnessed via the formalized $S$-matrices for SU(2)$_k$,
+Fibonacci, Ising, $D(S_3)$; the F5 (anomaly match) entry is the genuine
+$8 \mid c_-$ Prop (Wave~8), with the \emph{physical} MTC-at-horizon
+identification remaining conjectural across the MTC zoo, in agreement with
+the deep-research return verdict
 that no published paper places any specific MTC at the horizon of a
 4D ADW black hole.
 

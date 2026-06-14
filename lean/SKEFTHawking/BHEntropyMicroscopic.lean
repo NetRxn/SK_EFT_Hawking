@@ -1,6 +1,9 @@
 import SKEFTHawking.Basic
 import SKEFTHawking.LinearizedEFE
 import SKEFTHawking.LaplaceMethod
+import SKEFTHawking.RibbonCategory
+import SKEFTHawking.FibonacciMTC
+import SKEFTHawking.ModularInvarianceConstraint
 import Mathlib
 
 /-!
@@ -352,6 +355,115 @@ theorem areaLawKappa_nonneg (H : HorizonMTCBC) : 0 ≤ H.areaLawKappa :=
 
 end HorizonMTCBC
 
+/-! ## §3.7 — Real modular & anomaly conditions for the horizon BC
+    (Wave 8 — discharge of the `modularInvariant` / `anomalyMatch` placeholders)
+
+The Wave-3 bundle `H_HorizonBoundaryCondition` (§4) carried two fields as literal
+`True` placeholders: `modularInvariant` (intended: the MTC modular-data condition)
+and `anomalyMatch` (intended: Walker–Wang Z₂ anomaly inflow). This section ships
+the genuine, falsifiable predicates they are wired to. -/
+
+/--
+**Horizon modular + anomaly data.** Companion carrier to `HorizonMTCBC`, holding
+the S-matrix-bearing modular data (`PreModularData`) and the chiral central charge
+`c₋`. Kept *separate* from `HorizonMTCBC` (which has external consumers —
+`QECHolographyBridge`, `HolographicCFunctionMTC`) so enriching the boundary
+condition with modular structure does not ripple into those modules' carrier.
+-/
+structure HorizonModularData where
+  md : SKEFTHawking.PreModularData ℝ
+  c_minus : ℝ
+
+/--
+**Mod-8 perturbative-gravitational-anomaly predicate (Walker–Wang Z₂ inflow).**
+The chiral central charge has a vanishing perturbative gravitational anomaly mod 8,
+`8 ∣ c₋` — exactly the mod-8 factor of the `24 = 8 × 3` framing-anomaly
+decomposition in `ModularInvarianceConstraint` (`twenty_four_decomposition`).
+
+**Honesty note (what this is and is NOT).** This is the *trivial-anomaly-mod-8*
+condition; it is NOT a biconditional for "bounds a Z₂-symmetric Walker–Wang bulk".
+The canonical Z₂ Walker–Wang example — the 3-fermion (3F) model — bounds such a
+bulk yet realizes the *nontrivial* `c₋ ≡ 4 (mod 8)` class, so `8 ∣ c₋` is strictly
+the vanishing-anomaly condition, not WW-bulk-bounding. The ADW substrate's
+`c₋ = 8 N_f` (`WangBridge`) satisfies `8 ∣ c₋` by construction; a chiral MTC
+(`c₋ ∉ 8ℤ`, e.g. Fibonacci `14/5`, Ising `1/2`) does not.
+-/
+def chiralAnomalyVanishesMod8 (c_minus : ℝ) : Prop := ∃ k : ℤ, c_minus = 8 * (k : ℝ)
+
+namespace HorizonModularData
+
+/-- **Real modular-invariance condition** (replaces the Wave-3 `True`): the MTC's
+modular `S`-matrix is non-degenerate (`det S ≠ 0`), the data-level modularity from
+which the `(ST)³ = S²` modular-group action follows for a genuine MTC. -/
+def modularInvariant (M : HorizonModularData) : Prop := M.md.modular
+
+/-- **Real anomaly-inflow condition** (replaces the Wave-3 `True`): the boundary
+chiral `c₋` matches the bulk Z₂ Walker–Wang inflow, i.e. `8 ∣ c₋`. -/
+def anomalyMatch (M : HorizonModularData) : Prop := chiralAnomalyVanishesMod8 M.c_minus
+
+end HorizonModularData
+
+/-- **`modularInvariant` witness.** The Fibonacci modular data is non-degenerate
+(`FibonacciMTC.fib_modular`), so a Fibonacci-carrying horizon datum satisfies the
+real modular-invariance condition — non-vacuously (a premodular *non*-modular
+category with degenerate `S` fails it). -/
+theorem fibonacci_satisfies_modularInvariant :
+    (HorizonModularData.mk FibonacciMTC.fibData (14 / 5)).modularInvariant :=
+  FibonacciMTC.fib_modular
+
+/-- A degenerate-`S` premodular datum (`S = !![1,1;1,1]`, so `det S = 0`). -/
+noncomputable def degenerateSData : SKEFTHawking.PreModularData ℝ where
+  n := 2
+  hn := by norm_num
+  S := !![1, 1; 1, 1]
+  d := ![1, 1]
+  N := fun _ _ _ => 0
+
+/-- **`modularInvariant` falsifier.** A premodular datum with a degenerate `S`-matrix
+(`det S = 0`) fails `modularInvariant` — the symmetric counterpart to the two
+`anomalyMatch` falsifiers, so the Wave-8 modular condition is non-vacuous in both
+directions (a real witness `fibonacci_satisfies_modularInvariant` AND a real
+falsifier). -/
+theorem degenerate_S_violates_modularInvariant :
+    ¬ (HorizonModularData.mk degenerateSData 0).modularInvariant := by
+  have hdet : degenerateSData.S.det = 0 := by
+    unfold degenerateSData; simp [Matrix.det_fin_two]
+  simpa [HorizonModularData.modularInvariant, SKEFTHawking.PreModularData.modular,
+    not_ne_iff] using hdet
+
+/-- **`anomalyMatch` witness (ADW substrate).** The ADW chiral central charge
+`c₋ = 8 N_f` (`WangBridge`) satisfies the Walker–Wang Z₂ mod-8 inflow condition for
+every generation count `N_f`. -/
+theorem adw_chiral_charge_vanishes_mod8 (N_f : ℤ) :
+    chiralAnomalyVanishesMod8 (8 * (N_f : ℝ)) :=
+  ⟨N_f, rfl⟩
+
+/-- **`anomalyMatch` falsifier (Fibonacci is chiral).** `c₋(Fib) = 14/5 ∉ 8ℤ`: a
+single chiral MTC cannot bound a Z₂-symmetric Walker–Wang bulk. -/
+theorem fibonacci_chiral_violates_mod8 : ¬ chiralAnomalyVanishesMod8 (14 / 5) := by
+  rintro ⟨k, hk⟩
+  have hk' : (40 * k : ℤ) = 14 := by
+    have : ((40 * k : ℤ) : ℝ) = 14 := by push_cast; linarith
+    exact_mod_cast this
+  omega
+
+/-- **`anomalyMatch` falsifier (Ising is chiral).** `c₋(Ising) = 1/2 ∉ 8ℤ`. -/
+theorem ising_chiral_violates_mod8 : ¬ chiralAnomalyVanishesMod8 (1 / 2) := by
+  rintro ⟨k, hk⟩
+  have hk' : (16 * k : ℤ) = 1 := by
+    have : ((16 * k : ℤ) : ℝ) = 1 := by push_cast; linarith
+    exact_mod_cast this
+  omega
+
+/-- **Cross-module bridge (anomaly-match ⟹ generation constraint).** If the horizon
+chiral charge is the ADW value `c₋ = 8 N_f` (so `anomalyMatch` holds mod 8) and the
+partition function is additionally fully modular-invariant (`24 ∣ c₋`), then
+`3 ∣ N_f` — recovering `ModularInvarianceConstraint.modular_generation_constraint`
+from the horizon boundary condition. -/
+theorem horizon_anomalyMatch_modular_forces_three_generations
+    (N_f : ℕ) (hN : 0 < N_f) (h24 : (24 : ℤ) ∣ 8 * (N_f : ℤ)) : 3 ∣ N_f :=
+  SKEFTHawking.modular_generation_constraint N_f hN h24
+
 /-! ## §4 — Tracked-hypothesis bundle `H_HorizonBoundaryCondition` -/
 
 /--
@@ -363,25 +475,34 @@ for `S(A) = A/(4 G_N^emerg) + log corrections` to make sense:
   - `positivity`     — entropy ≥ 0 for all non-negative A
   - `areaLeading`    — leading scaling is κ·A with κ > 0
   - `secondLaw`      — entropy is monotone non-decreasing in A
-  - `modularInvariant` — the MTC's modular S, T satisfy (ST)³ = S²
-                          (placeholder Prop at this abstract level)
-  - `anomalyMatch`   — boundary chiral c_- matches bulk Z₂ inflow mod 8
-                          (Walker-Wang; placeholder Prop)
+  - `modularInvariant` — the MTC modular `S`-matrix is non-degenerate
+                          (`M.modularInvariant := M.md.modular`; the data-level
+                          modularity from which `(ST)³ = S²` follows). **Wave 8:
+                          real Prop, no longer a `True` placeholder (§3.7).**
+  - `anomalyMatch`   — boundary chiral `c₋` matches the bulk Z₂ Walker–Wang
+                          inflow, `8 ∣ c₋` (`M.anomalyMatch`). **Wave 8: real
+                          Prop, no longer a `True` placeholder (§3.7).**
 
-The bundle is genuinely non-trivial: each conjunct admits a falsifier
-witness theorem (see §5). Discharged for the SU(2)_k specialization
-in §6 conditional on `gaussianSaddleAsymptotic` and `immirziTuned`.
+The bundle now carries the companion modular datum `M : HorizonModularData`
+(S-matrix + `c₋`), kept separate from `HorizonMTCBC` to avoid rippling into the
+carrier's external consumers. It is genuinely non-trivial: every conjunct admits a
+falsifier (§5, §6.7) AND the whole bundle is satisfiable
+(`fibonacci_horizon_satisfies_H_HorizonBoundaryCondition`, §6.7). The two Wave-8
+fields are independently witnessed (`fibonacci_satisfies_modularInvariant`,
+`adw_chiral_charge_vanishes_mod8`) and falsified (`fibonacci_chiral_violates_mod8`,
+`ising_chiral_violates_mod8`).
 
 **Novelty flag.** No published paper pins the MTC for an ADW substrate.
-This Prop is the formal record of the Wave 3 tracked hypothesis.
+This Prop is the formal record of the Wave 3 tracked hypothesis (Wave-8 hardened).
 -/
 structure H_HorizonBoundaryCondition (H : HorizonMTCBC)
+    (M : HorizonModularData)
     (S_horizon : HorizonMTCBC → ℝ → ℝ) : Prop where
   positivity      : ∀ A, 0 ≤ A → 0 ≤ S_horizon H A
   areaLeading     : 0 < H.areaLawKappa
   secondLaw       : Monotone (S_horizon H)
-  modularInvariant : True  -- placeholder for (ST)³ = S² at abstract level
-  anomalyMatch    : True  -- placeholder for Walker-Wang inflow at abstract level
+  modularInvariant : M.modularInvariant  -- real: S-matrix non-degenerate (§3.7)
+  anomalyMatch    : M.anomalyMatch        -- real: 8 ∣ c₋ Walker–Wang inflow (§3.7)
 
 /-! ## §5 — Five falsifier theorems for `H_HorizonBoundaryCondition` -/
 
@@ -390,9 +511,9 @@ structure H_HorizonBoundaryCondition (H : HorizonMTCBC)
 `S ≥ 0` at any non-negative A is rejected.
 -/
 theorem H_HorizonBoundaryCondition_falsifier_positivity
-    (H : HorizonMTCBC) (S_horizon : HorizonMTCBC → ℝ → ℝ)
+    (H : HorizonMTCBC) (M : HorizonModularData) (S_horizon : HorizonMTCBC → ℝ → ℝ)
     (A₀ : ℝ) (hA₀ : 0 ≤ A₀) (hneg : S_horizon H A₀ < 0) :
-    ¬ H_HorizonBoundaryCondition H S_horizon := by
+    ¬ H_HorizonBoundaryCondition H M S_horizon := by
   intro h
   exact absurd (h.positivity A₀ hA₀) (not_le.mpr hneg)
 
@@ -403,9 +524,9 @@ rejected. This is the abelian-MTC falsifier: pure-`d_a = 1` MTCs
 hence `κ_C = 0`, triggering F2.
 -/
 theorem H_HorizonBoundaryCondition_falsifier_logBound
-    (H : HorizonMTCBC) (S_horizon : HorizonMTCBC → ℝ → ℝ)
+    (H : HorizonMTCBC) (M : HorizonModularData) (S_horizon : HorizonMTCBC → ℝ → ℝ)
     (hkap : H.areaLawKappa = 0) :
-    ¬ H_HorizonBoundaryCondition H S_horizon := by
+    ¬ H_HorizonBoundaryCondition H M S_horizon := by
   intro h
   exact absurd h.areaLeading (by rw [hkap]; exact lt_irrefl 0)
 
@@ -414,31 +535,15 @@ theorem H_HorizonBoundaryCondition_falsifier_logBound
 in A is rejected.
 -/
 theorem H_HorizonBoundaryCondition_falsifier_secondLaw
-    (H : HorizonMTCBC) (S_horizon : HorizonMTCBC → ℝ → ℝ)
+    (H : HorizonMTCBC) (M : HorizonModularData) (S_horizon : HorizonMTCBC → ℝ → ℝ)
     (A₁ A₂ : ℝ) (hA : A₁ ≤ A₂) (hviol : S_horizon H A₂ < S_horizon H A₁) :
-    ¬ H_HorizonBoundaryCondition H S_horizon := by
+    ¬ H_HorizonBoundaryCondition H M S_horizon := by
   intro h
   exact absurd (h.secondLaw hA) (not_le.mpr hviol)
 
-/--
-**F4 (1/4-coefficient / immirzi-tuning falsifier).** A candidate whose
-leading coefficient is bounded away from `1/(4 G_N)` cannot satisfy the
-Bekenstein-Hawking match condition. We encode this as: if a pre-claimed
-"leading coefficient" κ_pre fails to match `1/(4 G_N)`, then the candidate
-falsifies the bundle. In Wave 3 this is checked numerically per Immirzi γ
-choice; in the abstract bundle, `areaLeading > 0` is necessary but not
-sufficient — a separate quantitative tuning condition lives at the
-specialization sub-corollary level.
--/
-theorem H_HorizonBoundaryCondition_falsifier_quarterCoefficient
-    (H : HorizonMTCBC) (_S_horizon : HorizonMTCBC → ℝ → ℝ)
-    (κ_pre G_N : ℝ) (_hG : 0 < G_N)
-    (h_match : κ_pre = H.areaLawKappa)
-    (h_fail  : κ_pre ≠ 1 / (4 * G_N)) :
-    -- The candidate is consistent with the bundle (positivity, area law, etc.)
-    -- but fails the quantitative Bekenstein-Hawking match.
-    H.areaLawKappa ≠ 1 / (4 * G_N) := by
-  rw [← h_match]; exact h_fail
+-- F4 (the quantitative 1/4-coefficient falsifier
+-- `H_HorizonBoundaryCondition_falsifier_quarterCoefficient`) is relocated to §6.7
+-- below — its substantive form depends on `kaulMajumdar_S_at_4GN` (defined in §6).
 
 /--
 **F5 (substantive structural corollary of the bundle).**
@@ -470,8 +575,8 @@ can use `h.areaLeading` directly (which IS the field projection,
 honestly named).
 -/
 theorem H_HorizonBoundaryCondition_implies_nonabelian_envelope
-    (H : HorizonMTCBC) (S_horizon : HorizonMTCBC → ℝ → ℝ)
-    (h : H_HorizonBoundaryCondition H S_horizon)
+    (H : HorizonMTCBC) (M : HorizonModularData) (S_horizon : HorizonMTCBC → ℝ → ℝ)
+    (h : H_HorizonBoundaryCondition H M S_horizon)
     {A₁ A₂ : ℝ} (hA₁ : 0 ≤ A₁) (hA : A₁ ≤ A₂) :
     (∃ a : Fin H.num_objects, 1 < H.quantum_dim a) ∧
     0 ≤ S_horizon H A₁ ∧ S_horizon H A₁ ≤ S_horizon H A₂ := by
@@ -494,9 +599,9 @@ out as horizon BCs by the area-law leading-scaling condition F2}. This
 is the deep-research-§4 verdict made machine-checked.
 -/
 theorem abelian_MTC_falsifies_H_HorizonBoundaryCondition
-    (H : HorizonMTCBC) (S_horizon : HorizonMTCBC → ℝ → ℝ)
+    (H : HorizonMTCBC) (M : HorizonModularData) (S_horizon : HorizonMTCBC → ℝ → ℝ)
     (h_abelian : ∀ a, H.quantum_dim a = 1) :
-    ¬ H_HorizonBoundaryCondition H S_horizon := by
+    ¬ H_HorizonBoundaryCondition H M S_horizon := by
   -- d_max ≤ 1 from h_abelian + d_max_upper; combined with one_le_d_max gives d_max = 1.
   have h_dmax_eq_one : H.d_max = 1 := by
     obtain ⟨a, ha⟩ := H.d_max_attained
@@ -504,7 +609,7 @@ theorem abelian_MTC_falsifies_H_HorizonBoundaryCondition
   have h_kappa_zero : H.areaLawKappa = 0 := by
     unfold HorizonMTCBC.areaLawKappa
     rw [h_dmax_eq_one, Real.log_one]
-  exact H_HorizonBoundaryCondition_falsifier_logBound H S_horizon h_kappa_zero
+  exact H_HorizonBoundaryCondition_falsifier_logBound H M S_horizon h_kappa_zero
 
 /-! ## §6 — SU(2)_k Kaul-Majumdar specialization (Outcome-2 sub-corollary) -/
 
@@ -620,6 +725,59 @@ theorem fibonacci_horizon_areaLawKappa_pos :
     linarith [Real.sqrt_lt_sqrt (by norm_num : (0 : ℝ) ≤ 4) h4lt5]
   linarith
 
+/-! ## §6.7 — Quantitative 1/4-coefficient falsifier + non-vacuous bundle witness
+    (Wave 8; placed after §6/§6.5 so `kaulMajumdar_S_at_4GN` and `fibonacciHorizonBC`
+    are in scope) -/
+
+/--
+**F4 (quantitative 1/4-coefficient falsifier).** A leading-order entropy model
+`S(A) = κ·A` whose coefficient differs from `1/(4 G_N)` is genuinely falsified: at
+`A = 4 G_N` (where the log correction vanishes) it disagrees with the Kaul–Majumdar
+value `kaulMajumdarS (4 G_N) G_N 0 = 1`. Substantive — invokes `kaulMajumdar_S_at_4GN`
+and the field structure of ℝ — replacing the prior P5 identity-wrapper tautology
+(`rw [← h_match]; exact h_fail`) flagged by the strengthening discipline. -/
+theorem H_HorizonBoundaryCondition_falsifier_quarterCoefficient
+    (G_N : ℝ) (hG : 0 < G_N) (κ : ℝ) (hκ : κ ≠ 1 / (4 * G_N)) :
+    κ * (4 * G_N) ≠ kaulMajumdarS (4 * G_N) G_N 0 := by
+  have h4 : (4 : ℝ) * G_N ≠ 0 := ne_of_gt (by positivity)
+  rw [kaulMajumdar_S_at_4GN G_N hG]
+  intro hcontra
+  exact hκ ((eq_div_iff h4).mpr hcontra)
+
+/--
+**Non-vacuous full-bundle witness (Wave 8).** *(Caveat up-front: the `S`-matrix and
+`c₋` in the witness datum `M` are paired from DIFFERENT MTCs — Fibonacci's `S` with
+the non-anomalous charge `c₋ = 8` — since `HorizonModularData`'s two fields are
+independent and no single coherent non-abelian non-anomalous `PreModularData` is yet
+constructed; see the modeling note below.)* The upgraded five-field
+`H_HorizonBoundaryCondition` is satisfiable: the Fibonacci-shape horizon
+(`fibonacciHorizonBC`, `areaLawKappa = log φ > 0`), paired with modular data
+carrying the non-degenerate Fibonacci `S`-matrix and a non-anomalous chiral charge
+`c₋ = 8`, under the leading-order entropy model `S(A) = κ·A`, satisfies all five
+conditions — including the now-real `modularInvariant` (`fib_modular`) and
+`anomalyMatch` (`8 ∣ 8`).
+
+Modeling note (preemptive-strengthening checklist #5): `HorizonModularData` carries
+the `S`-matrix and `c₋` as *independent* fields, so this witness is mathematically
+honest as stated. A single fully-coherent non-abelian *and* non-anomalous MTC is the
+doubled Fibonacci (`d_max = φ²`, `c₋ = 0`); constructing its `PreModularData` is the
+natural coherent witness and is tracked as a data-construction follow-up. Neither
+new field is vacuous: each is independently witnessed
+(`fibonacci_satisfies_modularInvariant`, `adw_chiral_charge_vanishes_mod8`) and
+independently falsified (`fibonacci_chiral_violates_mod8`,
+`ising_chiral_violates_mod8`). -/
+theorem fibonacci_horizon_satisfies_H_HorizonBoundaryCondition :
+    H_HorizonBoundaryCondition fibonacciHorizonBC
+      (HorizonModularData.mk FibonacciMTC.fibData 8)
+      (fun H A => H.areaLawKappa * A) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · intro A hA; exact mul_nonneg fibonacciHorizonBC.areaLawKappa_nonneg hA
+  · exact fibonacci_horizon_areaLawKappa_pos
+  · intro A₁ A₂ hA
+    exact mul_le_mul_of_nonneg_left hA fibonacciHorizonBC.areaLawKappa_nonneg
+  · exact FibonacciMTC.fib_modular
+  · exact ⟨1, by norm_num⟩
+
 /-! ## §7 — Bridge to LinearizedEFE (Wave 1 anchor) -/
 
 /--
@@ -652,11 +810,19 @@ tracked-hypothesis bundle for the general MTC case at the horizon:
   — non-universality witness against −3/2.
 - `HorizonMTCBC` — abstract MTC data carrier (positive quantum dims,
   unit object, attainable d_max, Immirzi γ).
+- `HorizonModularData` + `chiralAnomalyVanishesMod8` (§3.7, Wave 8) — companion
+  modular datum (`S`-matrix + `c₋`) and the `8 ∣ c₋` Walker–Wang predicate, with
+  witnesses (`fibonacci_satisfies_modularInvariant`, `adw_chiral_charge_vanishes_mod8`),
+  falsifiers (`fibonacci_chiral_violates_mod8`, `ising_chiral_violates_mod8`), and the
+  generation bridge `horizon_anomalyMatch_modular_forces_three_generations`.
 - `H_HorizonBoundaryCondition` — five-condition tracked-hypothesis Prop
-  (positivity, areaLeading, secondLaw, modularInvariant, anomalyMatch;
-  the latter two are placeholders at this abstract level).
-- Four falsifier theorems (`H_HorizonBoundaryCondition_falsifier_*`):
-  `_positivity`, `_logBound`, `_secondLaw`, `_quarterCoefficient`.
+  (positivity, areaLeading, secondLaw, modularInvariant, anomalyMatch). **Wave 8:
+  `modularInvariant`/`anomalyMatch` are now real Props (`M.md.modular` / `8 ∣ c₋`),
+  no longer `True` placeholders; satisfiability proved by
+  `fibonacci_horizon_satisfies_H_HorizonBoundaryCondition` (§6.7).**
+- Falsifier theorems (`H_HorizonBoundaryCondition_falsifier_*`):
+  `_positivity`, `_logBound`, `_secondLaw`, and `_quarterCoefficient` (§6.7, Wave 8 —
+  now the substantive `κ·(4G) ≠ kaulMajumdarS` separation, not the prior tautology).
 - `H_HorizonBoundaryCondition_implies_nonabelian_envelope`
   (post-strengthening + adversarial-review followup substantive
   corollary): the bundle implies `∃ a, 1 < d_a` (non-abelian MTC) ∧
@@ -669,11 +835,14 @@ tracked-hypothesis bundle for the general MTC case at the horizon:
   `G_N_emerg`.
 
 **Open conjectures (paper-level novelty flags).** The MTC choice for
-the ADW substrate is unfixed by published derivations; F4 (modular
-invariance) and F5 (Walker-Wang anomaly inflow) are placeholders at
-this level; the per-MTC area-law leading coefficient `κ_C` for
-Fibonacci, Ising, D(S₃) lacks a published derivation per the Wave 3
-deep-research return §4.
+the ADW substrate is unfixed by published derivations. **Wave 8 update:**
+`modularInvariant` (S-matrix non-degeneracy) and `anomalyMatch`
+(`8 ∣ c₋` Walker–Wang Z₂ inflow) are now formalized as real, falsifiable
+predicates (§3.7) — the small chiral MTCs (Fibonacci `c₋ = 14/5`, Ising
+`c₋ = 1/2`) satisfy modularity but *falsify* the Z₂ inflow, while the ADW
+substrate `c₋ = 8 N_f` satisfies it. The leading-coefficient `1/4` itself
+remains the Immirzi γ-tuning at this level; its induced-gravity derivation
+(Frolov–Fursaev) is the separate Wave-9 program (Phase 6a roadmap, Gate A.2).
 -/
 
 end SKEFTHawking.BHEntropyMicroscopic

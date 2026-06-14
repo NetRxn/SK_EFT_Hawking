@@ -247,8 +247,9 @@ This is a substantive cross-bridge — the proof body invokes
 `0 < log d_max`, and rewrites it via `Real.log_pos_iff`.
 -/
 theorem horizon_BC_implies_HP_admissible
+    (M : HorizonModularData)
     (S_horizon : HorizonMTCBC → ℝ → ℝ)
-    (h : H_HorizonBoundaryCondition H.horizon S_horizon) :
+    (h : H_HorizonBoundaryCondition H.horizon M S_horizon) :
     1 < H.horizon.d_max := by
   -- h.areaLeading : 0 < H.horizon.areaLawKappa = 0 < log d_max
   have h_log_pos : 0 < Real.log H.horizon.d_max := h.areaLeading

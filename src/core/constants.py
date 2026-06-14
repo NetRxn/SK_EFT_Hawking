@@ -2793,11 +2793,11 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
         'circularity_note': 'None.', 'prose': 'External CFT boundary input consumed by the RT/Casini-Huerta bridge theorems.',
     },
     'H_HorizonBoundaryCondition': {
-        'statement': 'Bundles the five conditions a horizon-bounding MTC must satisfy for S(A) = A/(4 G_N^emerg) + log corrections (positivity, area-leading, …).',
+        'statement': 'Bundles the five conditions a horizon-bounding MTC must satisfy for S(A) = A/(4 G_N^emerg) + log corrections: positivity, area-leading (κ>0), second law (monotone), modularInvariant (S-matrix non-degenerate), anomalyMatch (8 ∣ c₋, the Walker–Wang Z₂ inflow). Wave 8 (2026-06-14) replaced the modularInvariant/anomalyMatch True placeholders with these real, falsifiable predicates.',
         'status': 'active', 'tier': 'external_boundary', 'eliminability': 'hard',
         'module': 'BHEntropyMicroscopic',
-        'source': 'Microscopic BH-entropy program (BHEntropyMicroscopic / QECHolographyBridge).', 'risk': 'Bundle of well-motivated horizon conditions; tracked as external boundary.',
-        'circularity_note': 'None.', 'prose': 'A 5-condition bundle Prop; consumed by the microscopic-entropy and QEC-holography bridges.',
+        'source': 'Microscopic BH-entropy program (BHEntropyMicroscopic / QECHolographyBridge).', 'risk': 'Bundle of well-motivated horizon conditions; tracked as external boundary (no published derivation pins a specific MTC at a 4D ADW horizon). Wave-8 hardened: each conjunct is independently witnessed AND falsified, and the full bundle is satisfiable (fibonacci_horizon_satisfies_H_HorizonBoundaryCondition).',
+        'circularity_note': 'None.', 'prose': 'A 5-condition bundle Prop carrying a companion HorizonModularData (S-matrix + c₋); consumed by the microscopic-entropy and QEC-holography bridges. Wave 8: modularInvariant := md.modular, anomalyMatch := (8 ∣ c₋) — no longer True placeholders.',
     },
     'H_RegimePartition': {
         'statement': 'Glorioso–Liu second-law bundle: dynamical-KMS ℤ₂ symmetry + unitarity (Im S_eff ≥ 0) ⟹ local entropy-current monotonicity ∂_μ s^μ ≥ 0, without invoking pointwise NEC.',

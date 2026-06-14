@@ -525,19 +525,24 @@ in Bundle~D3's \texttt{BHEntropyMicroscopic.lean}, consumed here
 through the QEC-MTC cross-bridge to D3 \S 7). The Prop record has
 five fields: three substantive (\texttt{positivity}: $S \ge 0$ for
 $A \ge 0$; \texttt{areaLeading}: $0 < \kappa_{\mathrm{area}}$;
-\texttt{secondLaw}: $S_{\mathrm{horizon}}$ monotone) and two
-explicit-\texttt{True}-placeholder fields (\texttt{modularInvariant},
-intended for $(ST)^3 = S^2$ modular-group action at the abstract
-level; \texttt{anomalyMatch}, intended for Walker--Wang anomaly
-inflow at the abstract level). The two placeholder fields are not
-yet bundled into the substrate; the Prop's load-bearing content is
-the three substantive conjuncts. The five horizon-boundary falsifier
-theorems of Bundle~D3 \S 7
+\texttt{secondLaw}: $S_{\mathrm{horizon}}$ monotone) and --- as of the
+Wave~8 hardening (2026-06-14) --- two further \emph{real} fields carried by
+a companion \texttt{HorizonModularData} datum: \texttt{modularInvariant}
+$:= \texttt{PreModularData.modular}$ on $M.\mathrm{md}$ ($S$-matrix non-degeneracy, the data-level
+modularity from which $(ST)^3 = S^2$ follows for a genuine MTC) and
+\texttt{anomalyMatch} $:= (8 \mid c_-)$ (vanishing perturbative gravitational
+anomaly mod 8 --- the mod-8 factor of $24 = 8\times3$; not a biconditional for
+bounding a $\mathbb{Z}_2$ Walker--Wang bulk, cf.\ the 3-fermion $c_-\equiv4$ case).
+These replace the former \texttt{True} placeholders;
+each is independently witnessed and falsified (chiral Fibonacci/Ising
+$c_- \notin 8\mathbb{Z}$ falsify \texttt{anomalyMatch}; the ADW $c_- = 8 N_f$
+satisfies it), and the full bundle is satisfiable
+(\texttt{fibonacci\_horizon\_satisfies\_H\_HorizonBoundaryCondition}). The four
+horizon-boundary falsifier theorems of Bundle~D3 \S 7
 (\texttt{H\_HorizonBoundaryCondition\_falsifier\_positivity},
 \texttt{*\_logBound}, \texttt{*\_secondLaw},
-\texttt{*\_quarterCoefficient}, and the non-abelian envelope) close
-on these three substantive fields, giving a constructive obstruction
-set on the horizon MTC. The boundary condition fixes
+\texttt{*\_quarterCoefficient}), together with the non-abelian envelope, close
+as a constructive obstruction set on the horizon MTC. The boundary condition fixes
 the global dimension squared via
 \texttt{QECHolographyBridge.HPCode.one\_le\_globalDimSq}; the scrambling time
 is bounded below by a positivity guard
@@ -651,12 +656,11 @@ Bekenstein--Hawking.
 
 \texttt{H\_HorizonBoundaryCondition} is the principal tracked
 Prop: the boundary condition that picks out the BH-entropy-yielding
-MTC. As itemised in \S\ref{sec:qec-mtc}, the Prop has five fields,
-three substantive (\texttt{positivity}, \texttt{areaLeading},
-\texttt{secondLaw}) and two
-\texttt{True}-placeholder
-(\texttt{modularInvariant}, \texttt{anomalyMatch}); the Prop's
-load-bearing content is the three substantive conjuncts. The four
+MTC. As itemised in \S\ref{sec:qec-mtc}, the Prop has five fields, all
+substantive as of the Wave~8 hardening: \texttt{positivity},
+\texttt{areaLeading}, \texttt{secondLaw}, plus \texttt{modularInvariant}
+($S$-matrix non-degeneracy) and \texttt{anomalyMatch} ($8 \mid c_-$
+Walker--Wang inflow) carried by the companion \texttt{HorizonModularData}. The four
 horizon-boundary falsifier theorems of Bundle~D3 \S 7
 (\texttt{H\_HorizonBoundaryCondition\_falsifier\_positivity},
 \texttt{*\_logBound}, \texttt{*\_secondLaw}, and

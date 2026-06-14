@@ -65,12 +65,12 @@
 
 ### `H_HorizonBoundaryCondition`
 
-**Statement.** Bundles the five conditions a horizon-bounding MTC must satisfy for S(A) = A/(4 G_N^emerg) + log corrections (positivity, area-leading, …).
+**Statement.** Bundles the five conditions a horizon-bounding MTC must satisfy for S(A) = A/(4 G_N^emerg) + log corrections: positivity, area-leading (κ>0), second law (monotone), modularInvariant (S-matrix non-degenerate), anomalyMatch (8 ∣ c₋, the Walker–Wang Z₂ inflow). Wave 8 (2026-06-14) replaced the modularInvariant/anomalyMatch True placeholders with these real, falsifiable predicates.
 
 - status `active` · eliminability `hard` · module `BHEntropyMicroscopic`
-- **Posture.** A 5-condition bundle Prop; consumed by the microscopic-entropy and QEC-holography bridges.
+- **Posture.** A 5-condition bundle Prop carrying a companion HorizonModularData (S-matrix + c₋); consumed by the microscopic-entropy and QEC-holography bridges. Wave 8: modularInvariant := md.modular, anomalyMatch := (8 ∣ c₋) — no longer True placeholders.
 - **Source.** Microscopic BH-entropy program (BHEntropyMicroscopic / QECHolographyBridge).
-- **Risk.** Bundle of well-motivated horizon conditions; tracked as external boundary.
+- **Risk.** Bundle of well-motivated horizon conditions; tracked as external boundary (no published derivation pins a specific MTC at a 4D ADW horizon). Wave-8 hardened: each conjunct is independently witnessed AND falsified, and the full bundle is satisfiable (fibonacci_horizon_satisfies_H_HorizonBoundaryCondition).
 
 ### `H_KLRS_SM_Crossover`
 
