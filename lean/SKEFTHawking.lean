@@ -663,6 +663,7 @@ import SKEFTHawking.RokhlinFromHM
 import SKEFTHawking.RokhlinClassification
 import SKEFTHawking.SpinRokhlinInterface
 import SKEFTHawking.RokhlinArfNoGo
+import SKEFTHawking.BrownInvariant
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
