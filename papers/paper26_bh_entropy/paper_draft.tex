@@ -99,16 +99,20 @@ from the SU(2)-singlet projection in the $I_0 - I_1$ cancellation
 (Kaul-Majumdar Eq.~(15)). The decomposition is a Lean theorem,
 \texttt{kaul\_majumdar\_log\_decomposition}.
 
-(ii)~The leading $1/4$ prefactor is a TUNING. The Immirzi parameter
-$\Imm$ is fixed by demanding the Verlinde-counted leading area
-coefficient equal $1/(4 G_N)$. Distinct counting prescriptions yield
-distinct $\Imm$ values
-(Domagala-Lewandowski~$\Imm_{\rm DL} \approx 0.2375$
-[arXiv:gr-qc/0407051];
-Meissner~$\Imm_M \approx 0.2739$
-[arXiv:gr-qc/0407052]) with the \emph{same} $-3/2$ log coefficient.
-$\Imm$ enters as an explicit field of the Lean structure
-\texttt{HorizonMTCBC} (\S\ref{sec:lean}).
+(ii)~The leading $1/4$ prefactor. \emph{In the LQG/Verlinde-counting route}
+the Immirzi parameter $\Imm$ is fixed by demanding the counted leading area
+coefficient equal $1/(4 G_N)$; distinct counting prescriptions yield distinct
+$\Imm$ values (Domagala-Lewandowski~$\Imm_{\rm DL} \approx 0.2375$
+[arXiv:gr-qc/0407051]; Meissner~$\Imm_M \approx 0.2739$
+[arXiv:gr-qc/0407052]) with the \emph{same} $-3/2$ log coefficient, and $\Imm$
+enters as an explicit field of the Lean structure \texttt{HorizonMTCBC}
+(\S\ref{sec:lean}). The $1/4$ is, however, \emph{not} irreducibly a tuning: in
+the ADW Sakharov induced-gravity substrate it is derived $\Imm$-independently
+(\S\ref{sec:induced-quarter}) from the shared Seeley--DeWitt $a_2$ coefficient ---
+the same $a_2$ that induces $G_N$ also fixes the horizon entanglement-entropy
+area density, with the heat-kernel-to-Einstein--Hilbert ratio structurally equal
+to $4$. The Immirzi value is then a \emph{consistency check}, not the source of
+the $1/4$.
 
 (iii)~The $-3/2$ is NOT universal. Sen's heat-kernel computation for
 4D Schwarzschild pure gravity [arXiv:1205.0971] gives
@@ -240,10 +244,16 @@ is a theorem with $C = 1$. Substantive content of the project-local
 \texttt{exp\_neg\_sq\_le\_exp\_neg\_lin}, the
 \texttt{IsBoundedRemainderOoneOverA} predicate with reflexivity +
 transitivity) provides the Watson's-lemma assembly bridge for future
-work. The literal SU(2)$_k$ Verlinde-sum derivation of the
-$O(1/A)$ subleading correction (which requires a Hardy--Ramanujan
-partition asymptotic in Mathlib, currently absent at 4.29) is tracked
-by the predicate \texttt{H\_VerlindeKMLiteralSumDerivation}.
+work. The literal SU(2)$_k$ Verlinde-sum derivation of the $-3/2$ is
+\emph{shipped} (Wave~7B): the horizon singlet count is the SU(2) singlet
+multiplicity $=$ Catalan number $\binom{2m}{m}/(m{+}1)$ (the discrete
+$I_0-I_1$), whose $-3/2$ follows from Mathlib's Stirling formula --- NOT a
+Hardy--Ramanujan partition asymptotic (that is for \emph{unrestricted}
+partitions; the horizon count is the \emph{constrained} singlet count). This
+discharges \texttt{H\_VerlindeKMLiteralSumDerivation}
+(\texttt{H\_VerlindeKMLiteralSumDerivation\_discharged}, via
+\texttt{LaplaceMethodAsymptotic.log\_singletCount\_sub\_isBigO}); only the
+strictly-stronger $O(1/A)$ \emph{rate} (quantitative Stirling) remains future work.
 After Wave~6a.7, \texttt{AXIOM\_METADATA[\textquotesingle gaussianSaddleAsymptotic\textquotesingle]}
 shows \texttt{eliminability: closed} with full \texttt{evidence\_on\_close} block;
 \texttt{\textbackslash axiomcount} drops from 2 to 1 (only
@@ -553,20 +563,54 @@ research-level conjectures:
         identities, and the Cardy density-of-states formula.
 \end{enumerate}
 
+\section{Induced-Gravity Derivation of the $1/4$ (Sakharov Route)}
+\label{sec:induced-quarter}
+
+The leading $1/4$ coefficient need not be an Immirzi tuning. In the ADW Sakharov
+induced-gravity substrate --- where Newton's constant is fully induced by the $N_f$
+Dirac fermion loops, $G_N = 12\pi/(N_f \Lambda^2)$ (no bare gravitational action) ---
+the $1/4$ is derived $\Imm$-independently. The mechanism (Frolov--Fursaev--Zelnikov,
+Nucl.\ Phys.\ B 486 (1997), hep-th/9607104; Susskind--Uglum, hep-th/9401070) is that the
+\emph{same} Seeley--DeWitt $a_2$ heat-kernel coefficient fixes both the induced $G_N$
+(Einstein--Hilbert action matching) and the horizon entanglement-entropy area density
+$S_{\rm ent} = (N_f \Lambda^2/48\pi)\,A$; their ratio is structurally $48:12 = 4:1$.
+
+We formalize this as the conditional theorem
+\texttt{InducedGravityEntropy.frolov\_fursaev\_quarter\_coefficient}:
+\[
+  \underbrace{G_N = \tfrac{12\pi}{N_f\Lambda^2}}_{\text{Sakharov induction}} \;\wedge\;
+  \underbrace{S_{\rm BH} = S_{\rm ent}}_{\text{entanglement id.}} \;\wedge\;
+  \underbrace{S_{\rm ent} = \tfrac{N_f\Lambda^2}{48\pi}A}_{\text{Frolov--Fursaev } a_2}
+  \;\Longrightarrow\; S_{\rm BH} = \frac{A}{4 G_N}.
+\]
+None of the three antecedents is $S = A/(4G)$: the $1/4$ emerges algebraically from the
+shared-$a_2$ ratio (\texttt{entanglement\_area\_eq\_quarter\_inv\_G\_induced}), and the
+Sakharov condition is bridged to the substrate calibration $\alpha_{\rm ADW}=1$
+(\texttt{H\_Sakharov\_iff\_alpha\_unity}). The $48\pi$ conical-replica prefactor enters as a
+named, falsifiable physical input (a hypothesis, not an axiom; Mathlib lacks conical heat
+kernels): \texttt{frolov\_fursaev\_falsifier\_wrong\_coeff} shows any other coefficient
+breaks the match. The induced-gravity $1/4$ is consistent with the Kaul--Majumdar leading
+term (\texttt{frolov\_fursaev\_matches\_kaulMajumdar\_leading}) --- the induced-gravity route
+supplies the $1/4$, the MTC-counting route the $-3/2$ log (\S\ref{sec:lean}) --- and is
+corroborated by the $\Imm$-free Bianchi route (arXiv:1204.5122), where $\Imm$ cancels from
+$E/T = A/4G$ entirely.
+
 \section{Conclusions}
 
 We have formalized the Bekenstein-Hawking entropy at a horizon
 labeled by an MTC, shipping in tracked-hypothesis mode for the
 general case with a Kaul-Majumdar SU(2)$_k$ closed-form
 sub-corollary as the structural anchor. The Lean module ships
-\bhEntropyTotal{} theorems, 0~sorry, and one new axiom (the
-Laplace-method
-asymptotic, classified \texttt{eliminability: hard}). The $-3/2$
+\bhEntropyTotal{} theorems, 0~sorry, and \textbf{0 new axioms} (the
+Wave-3 Laplace-method axiom was retired in Wave~6a.7). The $-3/2$
 log coefficient decomposes structurally as
-$(-1/2)$~Gaussian-saddle + $(-1)$ SU(2)-singlet-projection; the
-$1/4$ leading prefactor is established as a TUNING (Immirzi $\Imm$),
-not a derivation. Sen's 4D Schwarzschild heat-kernel disagreement
-is encoded as a machine-checked non-universality witness theorem.
+$(-1/2)$~Gaussian-saddle + $(-1)$ SU(2)-singlet-projection, and is
+genuinely derived from the literal Catalan singlet count via Stirling
+(Wave~7B). The $1/4$ leading prefactor is, in the LQG-counting route, the
+Immirzi $\Imm$ tuning; in the ADW Sakharov induced-gravity route it is
+derived $\Imm$-independently from the shared Seeley--DeWitt $a_2$ ratio
+(\S\ref{sec:induced-quarter}, Wave~9). Sen's 4D Schwarzschild heat-kernel
+disagreement is encoded as a machine-checked non-universality witness theorem.
 
 The general-MTC tracked hypothesis is bundled as
 \texttt{H\_HorizonBoundaryCondition} with five falsifier theorems.
