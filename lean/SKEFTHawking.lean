@@ -662,6 +662,9 @@ import SKEFTHawking.RokhlinFromHM
 import SKEFTHawking.RokhlinClassification
 import SKEFTHawking.SpinRokhlinInterface
 import SKEFTHawking.RokhlinArfNoGo
+import SKEFTHawking.KitaevSixteenFold
+import SKEFTHawking.Spin10Sixteen
+import SKEFTHawking.SixteenConvergenceExplicit
 import SKEFTHawking.RokhlinManifoldFromHM
 import SKEFTHawking.ExtBordismBridge
 import SKEFTHawking.ChangeOfRings

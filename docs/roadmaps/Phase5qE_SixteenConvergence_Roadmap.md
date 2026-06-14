@@ -47,6 +47,27 @@ frontier** ADR-003 already defers for Leg C/D. This is a "build a Mathlib landma
 
 ---
 
+## Landed algebraic shards (Phase 5q.E waves — the top-row, buildable-now content)
+
+These are the genuine, kernel-pure, falsifiable shards that advance the *enumeration →
+explicit-finite-maps* gradient WITHOUT the absent capstones. They are the algebraic shadows;
+each is honest that a shared ℤ₁₆ **constrains, does not derive**, and flags its wall.
+
+| Wave | Module | What landed (genuine, non-vacuous) | Wall it stops at |
+|---|---|---|---|
+| **W1** (2026-06-13) | `KitaevSixteenFold.lean` | The Kitaev facet's ℤ₁₆ as an **explicit faithful central-charge character**: `c₋(ν)=ν/2`; `kitaevCentralCharge_faithful` (16 charges pairwise-distinct mod 8 ⇔ ν=μ — *the* 16-fold statement); `kitaev_eight_bosonic_phases` (index-8 bosonic sub-sector, the "8 doubled to 16" shadow); `sm_realizes_trivial_kitaev_class` (SM 16 Weyl→c=8→class 0 via `total_components_with_nu_R`); `rokhlin_forces_bosonic_boundary` (honest **conditional** Rokhlin→bosonic inflow). Supersedes the vacuous `Z16Classification` placeholders. | the index relation `c₋=σ/2` and the bulk-boundary map are *hypotheses*, not proved — the genuine identification needs the Smith homomorphism + computed bordism groups (bottom-row). |
+| **W2** (2026-06-13) | `Spin10Sixteen.lean` | The facet-1↔facet-2 algebraic half: the Spin(10) Weyl-spinor branching `16 → 10 ⊕ 5̄ ⊕ 1` realized at dimension/assignment level. `su5dim` grounds `10,5,1` as even-exterior-power dims `C(5,2),C(5,4),C(5,0)`; `weyl_spinor_as_even_exterior` (`C(5,0)+C(5,2)+C(5,4)=2⁴`); Georgi–Glashow `su5Multiplet` is a verified partition (`su5_partition_exhaustive`); `su5_branching_{ten,fivebar,one}` (components/multiplet = irrep dim, falsified by any wrong assignment); `spinor16_decomposition` via `total_components_with_nu_R`. | constructing the Spin(10) spinor *module* / `SU(5) ⊂ Spin(10)` / the branching as a rep-theory theorem (CliffordAlgebra/spinGroup) is Mathlib-absent (generational). |
+| **W3** (2026-06-13) | `SixteenConvergenceExplicit.lean` | The honest capstone (explicit maps, NOT unification): `sm_trivial_among_sixteen_distinct` (**constrains-not-derives** — SM is the trivial one of 16 *genuinely distinct* phases, via Kitaev faithfulness); `sm_count_trivializes_z16` (explicit facet-1→facet-4 composition: Spin(10) branching sum =16 is the integer whose Kitaev class is 0). | the bordism identification (Smith homomorphism + computed `Ω₄^{Pin⁺}/Ω₅^{Spin-ℤ₄}≅ℤ₁₆`) that would make "all the same 16" literal is Mathlib-absent. |
+
+Brick (iv) (SM-anomaly → SymTFT inflow) was assessed **already-covered**: `SymTFT/IsSMMatterTopologicalBoundary.lean`
+ships `z16_class=16·N_f`, `sm_3gen_via_symtft`, the η-invariant vanishing, and the topological-boundary
+witness. Adding more would be renaming; the modular ℤ/24 sector is correctly kept DISTINCT from the
+Kitaev/anomaly ℤ/16 (no false bridge). The bottom-row brick table above (Spin/Pin⁺/Spin-ℤ₄ bordism
+groups, Dai–Freed functor, Smith homomorphism, ABS/KO doubling, geometric Rokhlin Arf) is unchanged:
+those remain Mathlib-absent walls.
+
+---
+
 ## LOE + posture (per ADR-003 velocity rows)
 
 - **Algebraic shards** (the anomaly arithmetic, the Spin(10)-spinor count, the ℤ₁₆ ZMod facts): top-row, mostly

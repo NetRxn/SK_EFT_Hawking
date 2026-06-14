@@ -135,6 +135,17 @@ structure MinimalModularExtension (B : SuperModularCategoryData) where
       consistency witness. -/
   fermion_absorbed : ext_global_dim_sq = 2 * base_global_dim_sq
 
+/-! ### Documented-vacuous placeholders — superseded in content by Phase 5q.E
+
+**The three theorems in this subsection (`sixteen_fold_way_DEFINITIONAL`,
+`svec_sixteen_extensions`, `svec_extension_central_charge`) are documented-vacuous
+markers** (`16 = 16`, `card (Fin 16) = 16`, `∀ N : Fin 16, ↑N + 1 ≤ 16`). The genuine,
+falsifiable content they gesture at is now in `KitaevSixteenFold.lean` (Phase 5q.E W1):
+`Kitaev16.kitaevCentralCharge_faithful` (the 16 central charges pairwise-distinct mod 8 —
+*the* 16-fold statement), `Kitaev16.kitaev_eight_bosonic_phases`, etc. **Do NOT count these
+placeholders as independent progress alongside the 5q.E theorems** — they remain here only as
+cardinality witnesses, not as content. -/
+
 /--
 The 16-fold way theorem (conditional on existence):
 If a super-modular category admits any minimal modular extension,

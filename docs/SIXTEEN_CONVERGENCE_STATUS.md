@@ -36,10 +36,32 @@ hypothesis you fed in) ∧ (SM count = 16 again, retyped)`. Its own docstring (`
 
 | Facet | What the 16 actually is | Status |
 |---|---|---|
-| **SM Weyl count = 16** | the **16 of Spin(10)** (irreducible real spinor; 10⊕5̄⊕1, the 1 = ν_R) | ✅ **proved** (`total_components_with_nu_R`); the only 16 that feeds the physics |
+| **SM Weyl count = 16** | the **16 of Spin(10)** (irreducible real spinor; 10⊕5̄⊕1, the 1 = ν_R) | ✅ **proved** (`total_components_with_nu_R`); the only 16 that feeds the physics. **Branching realized** (Phase 5q.E W2, `Spin10Sixteen.lean`): the SU(5) decomposition `16 → 10 ⊕ 5̄ ⊕ 1` is machine-checked at the dimension/assignment level — multiplets are even exterior powers Λ⁰,Λ²,Λ⁴ (`C(5,0)+C(5,2)+C(5,4)=2⁴`), Georgi–Glashow assignment is a verified partition. (Constructing the spinor *module* is still Mathlib-absent.) |
 | **ℤ₁₆ global anomaly** | SM Dai–Freed anomaly for the spin/ℤ₄ structure is ℤ₁₆-valued; 16 fermions cancel it (GEM 2018) | ⚠️ **cited input** — bordism `= ℤ₁₆` not formalized; the arithmetic consequence (16-fermion cancellation with ν_R) IS proved (`z16_anomaly_always_cancels_with_nu_R`, `z16_anomaly_without_nu_R`) |
 | **Rokhlin `16∣σ`** | Ω₄^Spin ≅ ℤ (K3, σ=−16); Dirac index even | ⚠️ **8∣σ proved** (van der Blij) **+ tracked hypothesis** `topo : 2∣σ/8` (geometric Â-genus/Guillou–Marin factor) |
-| **Kitaev 16-fold way** | 16 (2+1)D topological-SC phases by chiral central charge mod 16 | ⚠️ **cited, not formalized** |
+| **Kitaev 16-fold way** | 16 (2+1)D topological-SC phases by chiral central charge mod 16 | ✅ **central-charge ℤ₁₆ formalized as a faithful character** (Phase 5q.E W1, `KitaevSixteenFold.lean`): `c₋(ν)=ν/2`, the 16 charges pairwise-distinct mod 8 (`kitaevCentralCharge_faithful` — *the* 16-fold statement), bosonic index-8 sub-sector, SM lands on the trivial class. (The *categorical* 16-fold-way / super-modular ℤ₁₆-torsor structure is still cited, not formalized.) |
+
+## 3.5 The explicit-maps upgrade (Phase 5q.E, 2026-06-13) — enumeration with explicit maps
+
+Phase 5q.E replaces the bare enumeration (`sixteen_convergence_full`, whose one conjunct is the
+tautology `(16:ZMod 16)=0`) with **explicit faithful maps** for the buildable facets, and proves
+the convergence **constrains, it does not derive** — the rigorous answer to "is 'all the same 16'
+just coincidence-spotting?":
+
+- **Faithful Kitaev character** (`KitaevSixteenFold.lean`): the 16 phases carry 16 *genuinely
+  distinct* central charges mod 8 (`kitaevCentralCharge_faithful`). So the shared ℤ₁₆ has 16
+  physically-distinct realizations.
+- **SM is one of sixteen** (`SixteenConvergenceExplicit.sm_trivial_among_sixteen_distinct`): the SM
+  realizes the *trivial* element (class 0), but `ν=1` is provably a different phase — so the ℤ₁₆
+  **does not single out the SM**. It constrains; it does not derive.
+- **Explicit facet-1 → facet-4 composition** (`sm_count_trivializes_z16`): the Spin(10) branching
+  sum `dim(10)+dim(5̄)+dim(1)=16` is *the* integer whose Kitaev class is `0` — a genuine
+  composition of explicit maps, not a numerical coincidence of two 16s.
+
+**Still NOT proved (the wall):** the genuine *identification* of the facets' ℤ₁₆s as one bordism
+invariant under the Smith homomorphism (computed `Ω₄^{Pin⁺}/Ω₅^{Spin-ℤ₄} ≅ ℤ₁₆` + the Dai–Freed
+functor) is Mathlib-absent (Phase 5q.E roadmap §"Walls"). The explicit maps are algebraic shadows,
+not the bordism identification. None of this touches the independent 3-generation headline.
 
 ## 4. Proved NOT true (the no-gos — what the discipline caught)
 
