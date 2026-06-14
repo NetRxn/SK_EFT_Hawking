@@ -287,6 +287,7 @@ import SKEFTHawking.SymTFT.PinPlusManifold4
 -- (substantive Kirby-Taylor 1990 iso). Foundation for W1.3 refactor of
 -- SymTFT/PinBordism.lean to use this substrate.
 import SKEFTHawking.SymTFT.PinPlusBordism4
+import SKEFTHawking.SymTFT.SpinZ4Bordism5
 -- Phase 6r-prime C1.1 (2026-05-25): Lagrangian-algebra anyon-set
 -- substantive content for toric code via Kitaev-Kong 2012 criteria.
 -- IsLagrangianAnyonSet predicate + electric/magnetic witnesses +

@@ -35,6 +35,16 @@ homomorphisms into *one* genuine ℤ₁₆, and **Rokhlin and Kitaev read it ide
 not derive** the SM: the SM is the *trivial* class among 16, `[RP⁴]` is the shared generator,
 and many theories share this ℤ₁₆. The 3-generation headline is independent and imports none of this.
 
+## W6 (2026-06-14): the Smith map is now CONSTRUCTED, not hypothesized
+The §4 additions discharge the `SmithInflow` hypothesis at the substrate level: `SpinZ4Bordism5.lean`
+builds the `Ω₅^{Spin-ℤ₄}` bordism group as a genuine `Quotient` (thin, à la the accepted Pin⁺
+substrate) and the Smith homomorphism `smithHom : Ω₅ → Ω₄^{Pin⁺}` as a **constructed** `AddEquiv`.
+`sixteen_convergence_common_origin_unconditional` then states the common origin with **no**
+`SmithInflow` hypothesis — the chain SM → Ω₅ → Smith → Ω₄ is fully built. What remains tracked
+shrinks to the *geometric faithfulness* of the two thin substrates (invariants assigned, not
+computed from geometry/η — the SAME status the Pin⁺ substrate already carries) plus the genuine
+η-invariant; the geometric *construction* of `Ω₅` from manifolds + η is the Mathlib-absent landmark.
+
 ## Why this is a real upgrade over `sixteen_convergence_full`
 That theorem is an *unconditional conjunction with no maps between the four 16s*. This one
 exhibits the **explicit maps** and proves they **cohere into one ℤ₁₆** (pointwise Rokhlin=Kitaev,
@@ -52,6 +62,7 @@ recurs" and "these are images of one ℤ₁₆ invariant under explicit maps."
 
 import Mathlib
 import SKEFTHawking.SymTFT.PinPlusBordism4
+import SKEFTHawking.SymTFT.SpinZ4Bordism5
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 
@@ -188,7 +199,48 @@ theorem sixteen_convergence_common_origin_substrate (N_f : ℕ) :
     (∀ k : ℕ, 0 < k → k < 16 → (k : ℕ) • (Omega4PinPlusBordism.mk pinPlusRP4) ≠ 0) :=
   sixteen_convergence_common_origin substrateSmithInflow N_f
 
-/-! ## §4. Module summary
+/-! ## §4. W6 — discharge the `SmithInflow` hypothesis via the constructed Smith homomorphism
+
+W6 (`SymTFT/SpinZ4Bordism5.lean`) builds the `Ω₅^{Spin-ℤ₄}` bordism group as a genuine `Quotient`
+(the SM Dai–Freed anomaly's home) and the Smith homomorphism `smithHom : Ω₅ → Ω₄^{Pin⁺}` as a
+**constructed** `AddEquiv` — exactly the analog of the accepted Pin⁺ substrate. So the `smith`
+map is no longer an abstract hypothesis; the chain `SM → Ω₅ → Smith → Ω₄` is fully built, and the
+residual tracked content shrinks to the *geometric faithfulness* of the two thin substrates (the
+same class the Pin⁺ substrate already carries; `smith_inflow_z16` HYPOTHESIS_REGISTRY). -/
+
+/-- **The `SmithInflow` hypothesis, constructed.** The W5 hypothesis is realized from the W6
+substrate Smith homomorphism (`smithHom` precomposed with `Ω₅ ≃+ ZMod 16`). So `SmithInflow` is not
+merely *inhabited* by an abstract `ZMod 16`-iso, but by a map arising from a genuine Spin-ℤ₄ bordism
+`Quotient` and the dimension-shifting Smith construction. -/
+noncomputable def smithInflowOfSmithHom : SmithInflow where
+  smith := SymTFT.omega5SpinZ4BordismEquivZMod16.symm.trans SymTFT.smithHom
+  smith_gen := by
+    show SymTFT.smithHom (SymTFT.omega5SpinZ4BordismEquivZMod16.symm 1) = _
+    have h : SymTFT.omega5SpinZ4BordismEquivZMod16.symm (1 : ZMod 16)
+        = SymTFT.Omega5SpinZ4Bordism.mk SymTFT.spinZ4Gen := by
+      rw [← SymTFT.omega5_gen_class]
+      exact SymTFT.omega5SpinZ4BordismEquivZMod16.symm_apply_apply _
+    rw [h, SymTFT.smithHom_gen]
+
+/-- **`sixteen_convergence_common_origin_unconditional`** — the common origin with the Smith map
+DISCHARGED (W6): using the constructed `smithHom` (no `SmithInflow` hypothesis), the SM Dai–Freed
+anomaly (in the genuine `Ω₅^{Spin-ℤ₄}` bordism group) is sent to the trivial Pin⁺ class; the Ω₅
+generator to `[RP⁴]`; Rokhlin reads that image as the generator `1`; and `[RP⁴]` has exact order 16.
+The chain SM → Ω₅ → Smith → Ω₄ is fully constructed at the substrate level; only the *geometric
+faithfulness* of the thin Ω₅/Ω₄ substrates (and the genuine η-invariant) remains tracked — the same
+status as the accepted Pin⁺ substrate. -/
+theorem sixteen_convergence_common_origin_unconditional (N_f : ℕ) :
+    SymTFT.smithHom (SymTFT.Omega5SpinZ4Bordism.mk (SymTFT.smSpinZ4Class N_f)) = 0 ∧
+    SymTFT.smithHom (SymTFT.Omega5SpinZ4Bordism.mk SymTFT.spinZ4Gen)
+      = Omega4PinPlusBordism.mk pinPlusRP4 ∧
+    Omega4PinPlusBordism.signatureMod16
+      (SymTFT.smithHom (SymTFT.Omega5SpinZ4Bordism.mk SymTFT.spinZ4Gen)) = 1 ∧
+    (∀ k : ℕ, 0 < k → k < 16 → (k : ℕ) • (Omega4PinPlusBordism.mk pinPlusRP4) ≠ 0) := by
+  refine ⟨SymTFT.smithHom_sm_trivial N_f, SymTFT.smithHom_gen, ?_,
+    pinPlusRP4_class_order_exact_sixteen⟩
+  rw [SymTFT.signatureMod16_smithHom, SymTFT.omega5_gen_class]
+
+/-! ## §5. Module summary
 
 The conditional common origin (roadmap E.1–E.5), superseding the enumeration:
   - `SmithInflow` — the disclosed tracked Smith hom (hypothesis, NOT axiom; inhabited by
@@ -200,10 +252,15 @@ The conditional common origin (roadmap E.1–E.5), superseding the enumeration:
   - `sm_spin10_count_trivial_in_bordism` — facet 1 (the Spin(10) count = `su5dim` sum) routed
     into the chain from its actual start (SM 16-fermion content → anomaly → bordism).
   - `sixteen_convergence_common_origin` (+ `_substrate`) — the bundled four-facet capstone.
+  - **W6**: `smithInflowOfSmithHom` (the hypothesis CONSTRUCTED from the Ω₅ substrate + `smithHom`)
+    and `sixteen_convergence_common_origin_unconditional` (the chain SM → Ω₅ → Smith → Ω₄ fully
+    built at the substrate level, NO `SmithInflow` hypothesis).
 
-Walls still standing (documented): the geometric Smith homomorphism + `Ω₅^{Spin-ℤ₄}` bordism
-group + Dai–Freed functor (Mathlib-absent). This theorem is honestly conditional on their
-ℤ₁₆-level content (cited-true), not a from-scratch geometric proof. Kernel-pure; 0 axiom/0 sorry.
+Walls still standing (documented, now narrower): the GEOMETRIC construction of `Ω₅^{Spin-ℤ₄}` from
+manifolds-with-Spin-ℤ₄-structure + the η-invariant, and the geometric Smith/Dai–Freed maps, remain
+Mathlib-absent. W6 builds the *substrate* analogs (thin, à la the accepted Pin⁺ substrate), so the
+ℤ₁₆-level chain is now fully constructed; only the *geometric faithfulness* of the thin substrates
+is tracked (`smith_inflow_z16` registry). Kernel-pure; 0 axiom/0 sorry.
 -/
 
 end SKEFTHawking.CommonOrigin
