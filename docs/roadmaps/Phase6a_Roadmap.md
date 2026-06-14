@@ -494,8 +494,16 @@ The D4 "Area Law" `log Ω ≟ A/4G` is discharged: counting (left) and area (rig
 **Flags / fallbacks / defaults (all honest, documented):**
 - **Wave 7B residual (deeper future work, tracked):** `verlindeEntropy_SU2k` kept as the smooth real-`A`
   saddle MODEL (the genuine literal sum is `singletCount`); a faithful real-`A` literal redefinition +
-  the strictly-stronger `≤C/A` *rate* need a Γ-smooth continuum + quantitative Stirling (1/(12n)). The
+  the strictly-stronger `≤C/A` *rate* need a Γ-smooth continuum + quantitative Stirling. The
   genuine `O(1)` leading+log discharge is shipped. Per fallback (b/c): isolated, flagged, circle-back.
+  **▶ Circle-back wall CONFIRMED (2026-06-14):** Mathlib HAS the *discrete*-rate ingredient
+  (`Stirling.log_stirlingSeq_sub_log_stirlingSeq_succ`, `≤ 1/(4(n+1)²)` — summable to a discrete
+  `O(1/m)` strengthening of `log_singletCount_sub_isBigO`), but the *real-`A`* `≤C/A` redefinition of
+  `verlindeEntropy_SU2k` needs a Γ-smooth continuous-Catalan (no floor oscillation) whose quantitative
+  asymptotic requires a `Real.Gamma` Stirling-with-remainder that is **absent from Mathlib** (loogle:
+  no `Real.Gamma` `IsBigO`). ⟹ genuine Mathlib-gap-blocked dedicated /goal (build the discrete `O(1/m)`
+  first; then the Γ-continuum), NOT effort-avoidance. The center-bridge's substantive content (`−3/2`
+  + `1/4` derivations) is complete + reviewed regardless.
 - **Wave 9 default:** the `48π` conical-replica heat-kernel coefficient is a NAMED, FALSIFIABLE physical
   input (FFZ hep-th/9607104) — a hypothesis, NOT an axiom (Mathlib lacks conical heat kernels);
   `frolov_fursaev_falsifier_wrong_coeff` makes it load-bearing. `H_Sakharov` registered as a tracked
