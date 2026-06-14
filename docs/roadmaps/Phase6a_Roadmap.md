@@ -583,8 +583,17 @@ tautology in a paper-headline module). **Goal prompt:** `Phase6a_Wave8_goal_prom
   caption, F4 para, F5 para, conclusion) — fields now real, F4 substantive, physical
   MTC-at-horizon identification honestly still flagged conjectural.
 - ✅ D4 bundle prose (2 edits: §qec-mtc + §tracked-Props) de-placeholdered.
-- ⏳ REMAINING: Stage-13 adversarial review (fresh-context sweep) + remediation; then commit
-  own paths. Then → Wave 7B, then Wave 9.
+- ✅ Stage-13 fresh-context adversarial sweep done → 1 IMPORTANT (the `8∣c₋` "iff bounds a
+  Z₂-WW bulk" overclaim — reframed to *vanishing perturbative grav. anomaly mod 8*, the mod-8
+  factor of 24=8×3, in all 3 sites; 3F model = c₋≡4 counterexample) + 3 MINOR (added
+  `degenerate_S_violates_modularInvariant` falsifier; D4 "three/five" fragment; witness
+  Frankenstein-pairing caveat) — ALL remediated; re-validated 43/43.
+- ✅ **COMMITTED `9c12cd34`** (main, NOT pushed; 12 source paths only — autogen
+  counts.json/lean_deps.json/Inventory_Index/counts.tex deliberately excluded: the concurrent
+  Phase 5qE agent's `CommonOrigin.lean` is entangled in them, reconcile at session close).
+
+**▶ WAVE 8 CLOSED 2026-06-14.** Per chain control-flow → now **Wave 7B** (decision gate first:
+Hardy–Ramanujan vs direct Watson/Laplace saddle; recheck Mathlib for a landed Laplace lemma).
 
 ---
 
@@ -605,6 +614,54 @@ asymptotic, or admits a **direct** Watson/Laplace saddle (the latter shrinks the
 **Sequencing:** its own `/goal`, run **after** Wave 8 (disjoint surface — §2 + `LaplaceMethod` vs
 §3–§6 — but sequence per the plan). **The leading 1/4 stays γ-tuned after this wave** (that is the
 C-spike). **Goal prompt:** `Phase6a_Wave7B_goal_prompt.md`.
+
+**▶ DECISION-GATE VERDICT (2026-06-14, Wave 7B start).** (1) Mathlib recheck (leansearch +
+loogle): NO Laplace-method/Watson's-lemma asymptotic; NO Bessel functions (`Real.besselI`
+absent). BUT Mathlib **HAS Stirling** (`Stirling.factorial_isEquivalent_stirling`,
+`le_factorial_stirling`, `stirlingSeq`). (2) **Hardy–Ramanujan NOT required** — the prior
+docstrings' "requires Hardy–Ramanujan p(N)" is an overstatement (p(N) is the *unrestricted*
+partition asymptotic; the SU(2)_k horizon count is the *constrained* singlet multiplicity).
+**Chosen route: central-binomial-difference (discrete I₀−I₁) + Stirling.** The SU(2) singlet
+multiplicity in (spin-½)^⊗n is `binom(n,n/2) − binom(n,n/2+1)` (Catalan-type); Stirling gives
+`~ 2^{n+1}√(2/π)·n^{−3/2}` ⟹ `log = n·log2 − (3/2)·log n + O(1)`, i.e. −3/2 = −½ (from √(2πn))
+− 1 (from the binomial difference). Genuine, Bessel-free, Hardy-Ramanujan-free. **Caveat:** the
+`O(1/A)` *bounded* remainder (beyond leading+log) may need quantitative Stirling (the 1/(12n)
+error); if Mathlib's `stirlingSeq` bounds don't yield the explicit `C/A`, that single step →
+tracked-Prop fallback (flagged), with the leading+log discharge genuine regardless. Building in
+`lean/SKEFTHawking/LaplaceMethodAsymptotic.lean`.
+
+**▶ PROGRESS 2026-06-14 (Wave 7B Sub-task B foundation, module GREEN).**
+`LaplaceMethodAsymptotic.lean` created + builds clean (8249 jobs): `singletCount m := catalan m`
+(literal SU(2) singlet multiplicity), `succ_mul_singletCount` ((m+1)·C_m = centralBinom m, via
+`catalan_eq_centralBinom_div` + `Nat.succ_dvd_centralBinom`), `singletCount_pos` — all proven.
+Confirmed Mathlib names: `catalan` (root ns, NOT `Nat.catalan`), `Nat.centralBinom`,
+`catalan_eq_centralBinom_div`, `Stirling.factorial_isEquivalent_stirling`; Mathlib has NO direct
+centralBinom asymptotic + NO Bessel. **NEXT: prove `log_singletCount_sub_isBigO`** (the −3/2 core
+— currently the module's one `sorry`, with a step-by-step Stirling-propagation PLAN inlined at the
+sorry). Then Sub-task C: real-A `verlindeSum` bridge, redefine `verlindeEntropy_SU2k` (kill the
+saddle-limit self-definition), discharge `H_VerlindeKMLiteralSumDerivation`, rewire
+`gaussianSaddleAsymptotic`, fix the Hardy–Ramanujan overstatement in LaplaceMethod.lean §4 +
+BHEntropyMicroscopic §2 docstrings. Module not yet wired into the library graph (will import from
+BHEntropyMicroscopic at Sub-task C — NOT the 5QE-touched root `SKEFTHawking.lean`).
+
+**▶ Sub-task B COMPLETE 2026-06-14 (module ZERO sorry, kernel-pure, axioms exactly
+{propext,Classical.choice,Quot.sound}).** `log_singletCount_sub_isBigO` PROVEN:
+`(fun m => log(singletCount m) − (2m·log2 − (3/2)·log m)) =O[atTop] (fun _ => 1)` — the
+Kaul–Majumdar −3/2 derived from the literal Catalan/singlet count via Stirling, no
+Hardy–Ramanujan, no Bessel. Supporting (all proven): `log_factorial_formula` (rearranged
+`Stirling.log_stirlingSeq_formula`), `log_singletCount_sub_eq` (the algebraic −3/2 collapse:
+`= [log stirlingSeq(2m) − 2 log stirlingSeq m] + (log m − log(m+1))`), the stirlingSeq→√π
+limit assembly + `Tendsto.isBigO_one`. 🔑 names: `catalan` (root ns), `Nat.centralBinom`,
+`Stirling.log_stirlingSeq_formula`, `Stirling.tendsto_stirlingSeq_sqrt_pi`,
+`tendsto_one_div_add_atTop_nhds_zero_nat`, `Real.continuousAt_log`. Committed standalone.
+**▶ Sub-task C (NEXT) + a real subtlety to resolve:** wire into BHEntropyMicroscopic. The
+proven result is `=O[1]` (BOUNDED, leading+log) in the *discrete* puncture count `m`;
+`H_VerlindeKMLiteralSumDerivation` wants `IsBoundedRemainderOoneOverA` (`≤ C/A`) in *continuous*
+area `A`. Bridge needed: area-per-puncture `A = a₀·(2m)` (so `2m·log2 = κA` with κ the Immirzi
+tuning) + the constant `−½logπ` absorbed into `c0`. The `≤ C/A` *rate* (vs my `O(1)`) needs
+quantitative Stirling (1/(12n)); if out of reach, isolate that residual as a tracked-Prop
+(fallback) while the genuine −3/2 leading+log discharge + the de-vacuized `verlindeEntropy_SU2k`
+(no longer `:= kaulMajumdarS`) stand. Then fix the Hardy–Ramanujan overstatement docstrings.
 
 ---
 
