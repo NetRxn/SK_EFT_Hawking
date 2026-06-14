@@ -1,5 +1,24 @@
 # Phase 5q.B: Spin-Bordism Formalization — an unconditional `16 ∣ σ` via quadratic-form methods
 
+> # ⛔ CORRECTION (2026-06-13): the "Gauss-sum / van der Blij UNCONDITIONAL route to `σ mod 16`" is FALSE
+> The "Central algebraic identity" below claims **`σ(L) ≡ 8·Arf(q̄) (mod 16)`** for even unimodular `L` (with
+> q̄ = mod-2 refinement on `L/2L`) and an **unconditional Brown/Gauss-sum route** to `σ mod 16`. **The mod-16
+> half is FALSE as a lattice identity.** `Arf(q̄)` (lattice Arf of `redQuad` on `L/2L`) is **identically 0** on
+> every even unimodular lattice — the discriminant form `L*/L` is trivial for unimodular `L`, so the finite
+> Arf / Gauss-sum apparatus sees only `σ mod 8`. Concretely: **E₈ has `gaussSum = +16`, `#zeros = 136 ⟹
+> Arf(q̄) = 0`, yet `σ(E₈) = 8` (`σ/8 = 1`)** — so `8·Arf(q̄) = 0 ≠ 8 = σ mod 16`. The generator values
+> "E₈/−E₈ have Arf = 1" stated below are WRONG (the truth is 0). **Refuted in
+> `lean/SKEFTHawking/RokhlinArfNoGo.lean`** (`arfOfForm_e8lit_eq_zero`, `lattice_arf_bridge_refuted`).
+>
+> **What IS true and unconditional:** `8 ∣ σ` for even unimodular forms (van der Blij; shipped as
+> `eight_dvd_latticeSig`). The mod-16 (8→16) factor `2 ∣ σ/8` is **irreducibly geometric** — the Guillou–Marin
+> Arf of a smoothly embedded *characteristic surface* (Freedman–Kirby `σ ≡ Σ·Σ + 8·Arf(M,Σ) mod 16`), which is
+> NOT the lattice `Arf(redQuad)`. It is carried as the tracked hypothesis `topo : 2∣σ/8` (ADR-003), and is NOT
+> algebraically reducible (Freedman's E₈, σ=8). The root error below was conflating the geometric Guillou–Marin
+> Arf with the lattice Arf — from an internally self-contradictory deep-research note. **NEVER delete the
+> `redQuad`/`gaussSum` machinery — it is correct (it computes `σ mod 8` via Arf = 0); only the σ-mod-16 bridge
+> claim is wrong.** See ADR-003 + the no-go memory.
+
 ## Technical Roadmap — June 2026
 
 *Goal: make the spin-bordism / Rokhlin leg of the generation-constraint program unconditional by
@@ -74,27 +93,47 @@ Note the `3 ∣ N_f` **headline** (`GenerationConstraint.generation_mod3_constra
 a topological one). This roadmap therefore strengthens the **16-convergence / chirality-wall** rigor of the
 D2 deep paper, not the headline itself.
 
-## Central algebraic identity (the spine of the whole route)
+## Central algebraic identity (the spine of the whole route)  [⛔ mod-16 half FALSE — see top banner]
+
+> **⛔ CORRECTION (2026-06-13).** Everything below about `σ mod 8` (Arf-free) is fine, but the **mod-16**
+> claims in this section are FALSE as lattice identities — `Arf(q̄)` of `redQuad` is identically 0 on even
+> unimodular lattices (E₈: Arf = 0, σ/8 = 1). The false sentences are struck inline. Refuted in
+> `RokhlinArfNoGo.lean`.
 
 For an even unimodular lattice `(L, b)`, define the mod-2 quadratic refinement
 `q̄ : L/2L → 𝔽₂`, `q̄(x) = b(x,x)/2 mod 2` (well-defined since `b` is even; the reduced bilinear form
 `b̄(x,y) = b(x,y) mod 2` is alternating and nondegenerate by unimodularity). Then
 
-> **σ(L) ≡ 8 · Arf(q̄) (mod 16)**     (van der Blij 1959 / Brown 1972 / Freedman–Kirby).
+> ~~**σ(L) ≡ 8 · Arf(q̄) (mod 16)**     (van der Blij 1959 / Brown 1972 / Freedman–Kirby).~~
+> **⛔ FALSE.** `Arf(q̄) ≡ 0` for all even unimodular `L`, so this would force `16 ∣ σ` for E₈ (σ=8) — false.
+> The correct lattice statement is only **`σ(L) ≡ 0 (mod 8)`** (van der Blij). The "`8·Arf`" mod-16 refinement
+> belongs to the *geometric* Guillou–Marin Arf of a characteristic surface, NOT to the lattice `Arf(redQuad)`.
 
 This single identity organizes the route:
-- **`8 ∣ σ` (Wave B1) is an immediate corollary**: `8·Arf(q̄) ∈ {0, 8}`, so `σ ≡ 0 or 8 (mod 16)`, hence
-  `8 ∣ σ`. (No separate van der Blij-mod-8 argument needed.)
-- **`σ/8 mod 2 = Arf(q̄)`**, so the topological factor `2 ∣ σ/8` (Wave B3) is exactly **`Arf(q̄) = 0`** — which
+- **`8 ∣ σ` (Wave B1) is an immediate corollary** ~~: `8·Arf(q̄) ∈ {0, 8}`, so `σ ≡ 0 or 8 (mod 16)`, hence
+  `8 ∣ σ`. (No separate van der Blij-mod-8 argument needed.)~~ — but it is NOT a corollary of the (false)
+  mod-16 identity; `8 ∣ σ` is proven directly (van der Blij / classification, `eight_dvd_latticeSig`). ✅ TRUE.
+- ~~**`σ/8 mod 2 = Arf(q̄)`**, so the topological factor `2 ∣ σ/8` (Wave B3) is exactly **`Arf(q̄) = 0`** — which
   for an intersection form of a *smooth closed spin 4-manifold* is the Freedman–Kirby vanishing (equivalently
-  Â even). That is the irreducible topological input, entered as a narrow tracked hypothesis.
-- **`16 ∣ σ` (Wave B4)** = the identity + `Arf(q̄) = 0`.
+  Â even). That is the irreducible topological input, entered as a narrow tracked hypothesis.~~
+  **⛔ FALSE.** `σ/8 mod 2 ≠ Arf(q̄)` (lattice Arf is 0; σ/8 is generically nonzero). The topological factor
+  `2 ∣ σ/8` is the *geometric* Freedman–Kirby / Guillou–Marin vanishing on a characteristic surface, which is
+  **not** the lattice `Arf(redQuad)`. It stays as the tracked hypothesis `topo : 2∣σ/8`, NOT relocatable to a
+  lattice Arf. See `RokhlinArfNoGo.lean` + ADR-003.
+- ~~**`16 ∣ σ` (Wave B4)** = the identity + `Arf(q̄) = 0`.~~ **⛔** `16 ∣ σ` = `8 ∣ σ` (proven) + the geometric
+  `2 ∣ σ/8` (tracked `topo`), NOT an algebraic lattice-Arf identity.
 
-Two proof routes for the identity itself: (a) additivity of `σ` and `Arf` over orthogonal sums + values on
+~~Two proof routes for the identity itself: (a) additivity of `σ` and `Arf` over orthogonal sums + values on
 the generators `E₈` (σ=8, Arf=1), `−E₈` (σ=−8, Arf=1), `H` (σ=0, Arf=0) + the classification of even
 unimodular lattices as `E₈ᵃ ⊕ (−E₈)ᵇ ⊕ Hᶜ` (needs Hasse–Minkowski — heavy); or (b) the **direct Brown/van
 der Blij Gauss sum** `∑_{x} i^{q(x)} = √|·| · e^{2πi σ/8}` (no classification — the unconditional route). The
-Wave B2 Arf + Gauss-sum machinery targets route (b).
+Wave B2 Arf + Gauss-sum machinery targets route (b).~~
+**⛔ FALSE (2026-06-13).** Neither route proves a mod-16 lattice identity, because none exists. The generator
+Arf values are WRONG: **`Arf(q̄)` for E₈ and −E₈ is 0, not 1** (`arfOfForm_e8lit_eq_zero`); the real-valued
+`∑(−1)^{q̄(x)}` Gauss sum on `L/2L` detects only `Arf(q̄) ≡ σ/8 mod 2`, which is identically 0 here. Route (b)
+("the unconditional Gauss-sum route to `σ mod 16`") therefore does **not** exist. The Gauss-sum machinery (Wave
+B2) is real and useful, but it computes only the (trivially-0) `L/2L` Arf — it never reaches the mod-16 factor.
+What is actually unconditional is `8 ∣ σ`, delivered by the classification route, NOT this Gauss-sum identity.
 
 ## Why the quadratic-form route
 
@@ -207,8 +246,10 @@ the capstone **`redQuad_refines_redBilin`** (`q̄(x+y)=q̄ x+q̄ y+b̄(x,y)`, `b
 quadratic refinement of the alternating symplectic form `b̄ = b mod 2` on `L/2L`.
 Next: nondegeneracy of `b̄` from unimodularity (`det M̄ = det M mod 2 = 1`); the symplectic-basis / Arf
 well-definedness (the hard classical Arf theory — connects `redQuad` to `gaussSum_genus_g`); then the Brown
-`ZMod 4` ℂ Gauss sum `∑ i^{q(x)}=√|·|·e^{2πiσ/8}` (`σ mod 8` codomain) → B1's unconditional `8 ∣ σ` +
-`σ/8 mod 2 = Arf(q̄)`.
+`ZMod 4` ℂ Gauss sum `∑ i^{q(x)}=√|·|·e^{2πiσ/8}` (`σ mod 8` codomain) → B1's unconditional `8 ∣ σ`. ~~+
+`σ/8 mod 2 = Arf(q̄)`~~ **⛔ FALSE (2026-06-13):** `σ/8 mod 2 ≠ Arf(q̄)` — the `L/2L` lattice Arf is
+identically 0 (E₈: Arf = 0, σ/8 = 1), so this Gauss-sum machinery reaches only `σ mod 8`, never the mod-16
+factor. Refuted in `RokhlinArfNoGo.lean`; see top banner.
 
 ### Wave B3 — Characteristic surfaces / intersection forms of smooth closed 4-manifolds
 
@@ -226,9 +267,11 @@ support matures.
 **Interface SHIPPED (`lean/SKEFTHawking/SpinRokhlinInterface.lean`, kernel-pure):** `SmoothSpinManifold4`
 carries `form` + `even_unimod : IsEvenUnimodular form` (Wu, topological) + `sig` + `charSq :
 CharacteristicSquareModEight form sig` (van der Blij, the **Wave-B1 algebraic input**, tracked here pending
-discharge) + `topo : 2 ∣ sig/8` (Â-even / Arf=0, the **irreducible topological input**). A far narrower,
+discharge) + `topo : 2 ∣ sig/8` (Â-even / geometric Guillou–Marin Arf vanishing on a characteristic surface —
+NOT the lattice `Arf(redQuad)`, which is identically 0; the **irreducible topological input**). A far narrower,
 transparent interface than the opaque `SpinBordismData`. Dependency graph + anti-circularity documented in the
-module header.
+module header. *(2026-06-13: corrected — `topo` is NOT a lattice-Arf condition; see top banner +
+`RokhlinArfNoGo.lean`.)*
 
 ### Wave B4 — Assemble `16 ∣ σ`  [✅ COMPLETE & UNCONDITIONAL 2026-06-08]
 
@@ -252,7 +295,8 @@ it does NOT use ABP or Rokhlin's theorem as input (Rokhlin's theorem *is* the co
 
 **Remaining to FULL unconditional:** discharge `eight_dvd` (van der Blij) algebraically from `even_unimod`,
 then it drops as a field, and update D2/L2 + HYPOTHESIS_REGISTRY. The `topo` field is irreducibly topological
-and remains the single narrow tracked hypothesis (= `Arf(q̄)=0`).
+and remains the single narrow tracked hypothesis ~~(= `Arf(q̄)=0`)~~ **(= geometric `2∣σ/8`, the Freedman–Kirby
+/ Guillou–Marin Arf on a characteristic surface — NOT the lattice `Arf(redQuad)`, corrected 2026-06-13).**
 
 **UPDATE 2026-06-04 — `eight_dvd` discharge: [Θ] DONE, wiring DONE, [HM] is the sole remaining gap.**
 - **[Θ] (definite `8∣σ`) DISCHARGED unconditionally** via theta-modularity: `ThetaModularWeight.eight_dvd_rank`

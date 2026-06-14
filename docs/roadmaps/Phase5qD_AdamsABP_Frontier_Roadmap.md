@@ -97,7 +97,11 @@ spectra-free framing (Phase 5q.B/5q.C) already satisfies honestly.
 ## Relationship to the other phases
 
 - **Phase 5q.B** already makes `16 ∣ σ` unconditional **without** this frontier (the reason D is optional).
-- **Phase 5q.C** sharpens the one irreducible topological residue (`Arf(q̄)=0`) on the spectra-free side.
+- **Phase 5q.C** ~~sharpens the one irreducible topological residue (`Arf(q̄)=0`) on the spectra-free side.~~
+  **⛔ CORRECTION (2026-06-13):** the 5q.C Phase-1 Arf-bridge is a NO-GO — `σ/8 ≡ Arf(q̄) mod 2` is FALSE
+  (lattice `Arf(q̄) ≡ 0` on even unimodular forms; E₈: Arf=0, σ/8=1; refuted in `RokhlinArfNoGo.lean`). The
+  irreducible topological residue **stays the geometric `2 ∣ σ/8`** (Guillou–Marin Arf on a characteristic
+  surface), NOT a lattice `Arf(q̄)=0`. This does not affect Leg-D (independent). See 5q.C top banner + ADR-003.
 - **Phase 5q.T Wave T6** is the *only* piece of Leg D worth doing pre-trigger (algebraic `A//A(1)`, top-row).
 - **Leg C-geometric** (the *other* deferred frontier — smooth-4-manifold index theory) is documented in the
   `Phase5qC` roadmap §"Phase 2"; it is a *different* frontier (geometric topology, not stable homotopy) with

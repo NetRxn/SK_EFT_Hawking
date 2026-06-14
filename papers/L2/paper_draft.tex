@@ -55,11 +55,14 @@ $\mathrm{Hom}_A(A \otimes_{A(1)} M, N) \cong \mathrm{Hom}_{A(1)}(M, N)$
 enters as a standard Cartan-Eilenberg homological-algebra theorem
 (textbook content; the algebraic Ext-over-$A(1)$ kernel above is what
 this Letter contributes at the machine-checked level). The Rokhlin
-divisibility $16 \mid \sigma(M)$ is itself a kernel-pure Lean theorem
-(\texttt{SmoothSpinManifold4.rokhlin}): for an even-unimodular
-intersection form it follows from the machine-checked algebraic half
-$8 \mid \sigma$ together with the single topological input
-$2 \mid \sigma/8$ ($\hat{A}$-genus even). Three textbook topology
+divisibility $16 \mid \sigma(M)$ is a kernel-pure Lean theorem over the
+\texttt{SmoothSpinManifold4} interface (\texttt{SmoothSpinManifold4.rokhlin}):
+for an even-unimodular intersection form it follows from the
+machine-checked algebraic half $8 \mid \sigma$ together with the single
+topological input $2 \mid \sigma/8$ ($\hat{A}$-genus even / Guillou--Marin),
+which is carried as a disclosed tracked hypothesis. It is therefore not
+claimed unconditional --- necessarily so, since $16 \mid \sigma$ is false
+for general even-unimodular forms (Freedman's $E_8$, $\sigma = 8$). Three textbook topology
 results (ko cohomology, ASS convergence, ABP splitting) --- all
 established results in the algebraic-topology literature, tracked
 pending Mathlib formalization rather than open problems --- enter
@@ -268,13 +271,17 @@ content cited at the bibliographic level, documenting this
 bordism-group identification; the algebraic-Ext kernel
 above is what this Letter formalizes at the machine-checked level.
 The Rokhlin divisibility $16 \mid \sigma(M)$ itself, by contrast, is
-not deferred to these citations: it is a kernel-pure Lean theorem
+not deferred to these citations: it is a kernel-pure Lean theorem over the
+\texttt{SmoothSpinManifold4} interface
 (\texttt{SmoothSpinManifold4.rokhlin}), established from the
 even-unimodular intersection form via the machine-checked half
 $8 \mid \sigma$ (\texttt{eight\_dvd\_latticeSig}, by van der Blij
 classification --- Hasse--Minkowski and theta-modularity, both
 discharged) together with the single topological factor-of-two input
-$2 \mid \sigma/8$.
+$2 \mid \sigma/8$, which is carried as a disclosed tracked hypothesis. The
+$16$ leg is thus conditional on that input rather than unconditional, as it
+must be: $16 \mid \sigma$ fails for general even-unimodular forms
+(Freedman's $E_8$, $\sigma = 8$).
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The 16-convergence and the role of $\nu_R$}
@@ -292,16 +299,21 @@ superconductors in symmetry class~D~\cite{Kitaev2009}, reduced from
 $\mathbb{Z}$ to $\mathbb{Z}_{16}$ under
 interactions~\cite{FidkowskiKitaev2010}.
 
-Of these, the Rokhlin divisor (iii) is itself an unconditional
-kernel-pure Lean theorem: \texttt{SmoothSpinManifold4.rokhlin} proves
+Of these, the Rokhlin divisor (iii) is a kernel-pure Lean theorem over a
+disclosed interface: \texttt{SmoothSpinManifold4.rokhlin} proves
 $16 \mid \sigma(M)$ for an even-unimodular intersection form from the
-machine-checked half $8 \mid \sigma$ (\texttt{eight\_dvd\_latticeSig})
-plus the single topological input $2 \mid \sigma/8$, with no global
-Rokhlin hypothesis and no project axiom (standard axioms only). The
-unconditional enumeration of the four occurrences is recorded as
+machine-checked unconditional half $8 \mid \sigma$
+(\texttt{eight\_dvd\_latticeSig})
+plus the single topological input $2 \mid \sigma/8$ (carried as a tracked
+hypothesis), with no global
+Rokhlin hypothesis and no project axiom (standard axioms only). The $16$
+leg is therefore conditional on $2 \mid \sigma/8$, not unconditional ---
+necessarily, since $16 \mid \sigma$ is false for general even-unimodular
+forms (Freedman's $E_8$, $\sigma = 8$). The enumeration of the four
+occurrences is recorded as
 \texttt{SpinRokhlinInterface.sixteen\_convergence\_unconditional},
-whose $16 \mid \sigma$ conjunct is now this theorem rather than an
-assumed input. Wang~\cite{Wang2024} establishes the
+whose $16 \mid \sigma$ conjunct is now this interface theorem rather than a
+bare assumed input. Wang~\cite{Wang2024} establishes the
 algebraic-topology \emph{equivalence} between (i)--(iii) via the
 string-bordism $\mathbb{Z}_{24}$ class and the associated Smith
 homomorphism; that four-way equivalence, and the bordism-group
@@ -353,9 +365,10 @@ the divisibility step via
 the explicit minimal free resolution in \texttt{A1Ring.lean},
 \texttt{A1Resolution.lean}, and \texttt{A1Ext.lean}; the
 change-of-rings step in \texttt{ChangeOfRings.lean}; and the Rokhlin
-divisibility $16 \mid \sigma$ itself as the unconditional kernel-pure
-theorem \texttt{SmoothSpinManifold4.rokhlin}, modulo the single
-topological input $2 \mid \sigma/8$. The
+divisibility $16 \mid \sigma$ itself as the kernel-pure interface
+theorem \texttt{SmoothSpinManifold4.rokhlin}, conditional on the single
+disclosed topological input $2 \mid \sigma/8$ (and so not unconditional,
+since $16 \mid \sigma$ is false for general even-unimodular forms). The
 $24 \mid c_-$ constraint admits a deeper structural reading: the
 five-step chain spin-bordism $\Omega_5^{\mathrm{Spin}}(BG_{\mathrm{SM}})$
 $\to$ anomaly polynomial $\to$ modular invariance $\to$

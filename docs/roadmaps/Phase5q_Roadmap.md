@@ -13,11 +13,12 @@
 > |---|---|---|---|
 > | **5q (this doc)** | Ext-over-A(1) computation (resolution + Ext dims) | **COMPLETE** (Track A W1–6). Appended **Wave H** (H1/H3/H4) → re-homed to 5q.D | this file |
 > | **5q.B** | spectra-free Rokhlin → unconditional `16 ∣ σ` | ✅ **COMPLETE** (2026-06-08) | `Phase5qB_SpectraFreeSpinBordism_Roadmap.md` |
-> | **5q.C** | Arf-bridge hardening (`topo → arfOfForm=0`) | **Phase 1 ACTIONABLE NOW** (top-row; `/goal` ready) · **Phase 2 DEFERRED** (geometric residue; spike-confirmed) | `Phase5qC_ArfBridge_Roadmap.md` |
+> | **5q.C** | ~~Arf-bridge hardening (`topo → arfOfForm=0`)~~ | **⛔ Phase 1 NO-GO (2026-06-13)** — bridge `σ/8≡Arf(q̄) mod 2` is FALSE (`arfOfForm≡0` on even unimodular; E₈: Arf=0, σ/8=1; refuted in `RokhlinArfNoGo.lean`); residual stays geometric `2∣σ/8` · **Phase 2 DEFERRED** (geometric residue; spike-confirmed) | `Phase5qC_ArfBridge_Roadmap.md` |
 > | **5q.D** | Adams/ABP bordism frontier (= this doc's Wave H) | ⏸️ **DEFERRED, trigger-gated, shelf-ready** (early-warming: `Bordism.lean` first brick landed at master) | `Phase5qD_AdamsABP_Frontier_Roadmap.md` |
 > | **5q.T** | upgrade Ext proxies → real Mathlib `Ext` | **T1 COMPLETE** · **T2–T5 ACTIONABLE** (`/goal`s ready) · **T6 OPTIONAL** | `Phase5qT_ExtSubstantiation_Roadmap.md`, `Phase5qT_goal_prompt.md` |
 >
-> **Remaining ACTIONABLE-NOW 5q items (for re-prioritization):** 5q.C Phase 1 · 5q.T T2–T5 · (optional) 5q.T T6.
+> **Remaining ACTIONABLE-NOW 5q items (for re-prioritization):** ~~5q.C Phase 1~~ (⛔ NO-GO 2026-06-13 — bridge
+> FALSE, see row above) · 5q.T T2–T5 · (optional) 5q.T T6.
 > **DEFERRED / trigger-gated (no work until a trigger fires):** 5q.C Phase 2 (Leg-C-geometric — gating brick:
 > Mathlib cup-product cohomology + Poincaré duality) · 5q.D (Leg-D / Adams-ABP). **Both are *early-warming*, not
 > cold** — vs. our v4.29.1 pin, Mathlib **master (`v4.31.0-rc2`)** has shipped `SingularHomology/HomotopyInvariance`

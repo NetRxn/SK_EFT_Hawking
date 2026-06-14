@@ -17,9 +17,12 @@ That divisibility is the one genuinely arithmetic input remaining on the leg; pe
 note (`Lit-Search/Phase-5c/Rokhlin/…`) and a direct Mathlib scout (2026-06-03), it requires either
 the Hasse–Minkowski classification of indefinite unimodular forms or Milgram–Gauss-sum reciprocity,
 neither of which is in Mathlib (no Witt group, no p-adic quadratic-form theory, no lattice Gauss-sum
-reciprocity). The finite Arf/Gauss-sum machinery in `ArfInvariant.lean`/`EvenLatticeForm.lean`
-captures the *mod-2* layer (the second factor of two, `σ/8 mod 2 = Arf(q̄)`), which is genuinely a
-different and more elementary layer than van der Blij's mod-8 statement. See the roadmap
+reciprocity). The finite Arf/Gauss-sum machinery in `ArfInvariant.lean`/`EvenLatticeForm.lean` is a
+correct construction of the mod-2 refinement and its Gauss sum, **but (CORRECTION 2026-06-13) it does NOT
+capture `σ/8 mod 2`**: the lattice Arf `Arf(redQuad)` is identically `0` on even unimodular forms (E₈:
+`Arf=0` but `σ/8=1`), so the once-claimed `σ/8 mod 2 = Arf(q̄)` is FALSE (`RokhlinArfNoGo.lean`). The mod-16
+factor `2∣σ/8` is irreducibly geometric (Guillou–Marin / Â-genus-even), carried as `SmoothSpinManifold4.topo`.
+See the roadmap
 `docs/roadmaps/Phase5qB_SpectraFreeSpinBordism_Roadmap.md` (Wave B1) for the discharge options.
 
 See also `AlgebraicRokhlin.lean` (the `8 ∣ σ` algebra, conditional on the characteristic-square

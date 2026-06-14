@@ -352,7 +352,12 @@ theorem (standard axioms only; no global Rokhlin hypothesis, no new
 \Rightarrow 16\mid\mathrm{latticeSig}$, in turn
 \texttt{rokhlin\_from\_serre\_plus\_topology} on \texttt{latticeSig}); the companion
 \texttt{sixteen\_convergence\_unconditional} reruns the four-16 enumeration
-with the $16\mid\sigma$ conjunct now a theorem rather than an assumed input.
+with the $16\mid\sigma$ conjunct now an interface theorem (conditional on
+the tracked \texttt{topo} field $2\mid\sigma/8$) rather than a bare assumed
+input. (The theorem name flags the \emph{unconditional} discharge of the
+algebraic $8\mid\sigma$ floor; the $16$ leg remains conditioned on
+$2\mid\sigma/8$, as it must be --- $16\mid\sigma$ is false for general
+even-unimodular forms.)
 The dependency graph routes
 \emph{even-unimodular} $+$ \emph{van der Blij} $\Rightarrow 8\mid\sigma$,
 together with $2\mid\sigma/8 \Rightarrow 16\mid\sigma$, and so does
@@ -393,15 +398,22 @@ $8\mid\mathrm{rank}=\sigma$ in the definite case is the theorem
 \emph{every} even unimodular form unconditionally, and \texttt{sixteen\_dvd\_latticeSig}
 upgrades this to $16\mid\sigma$ given the topological factor; both are kernel-pure
 (standard axioms only). The only genuinely outstanding interface input is the
-topological factor of two $2\mid\sigma/8$, treated next. The char-2 Arf /
-Gauss-sum machinery of \texttt{ArfInvariant.lean}
-and \texttt{EvenLatticeForm.lean} --- the genus-$g$ Milgram--Arf identity
-$\sum_x (-1)^{q(x)} = 2^{g}(-1)^{\mathrm{Arf}}$ and the lattice quadratic
-refinement $\bar q(x)=b(x,x)/2$ --- belongs not here but to the \emph{second}
-factor of two: $\sigma/8 \bmod 2 = \mathrm{Arf}(\bar q)$. That last factor
-$2\mid\sigma/8$, equivalently $\mathrm{Arf}(\bar q)=0$ (the $\hat A$-genus
-evenness), is the genuinely smooth-topological input that Freedman's $E_8$
-manifold shows cannot be reduced to algebra.
+topological factor of two $2\mid\sigma/8$. This factor is the $\hat A$-genus
+evenness (Atiyah--Singer index parity), equivalently --- by Freedman--Kirby ---
+the vanishing of the Arf invariant of a smoothly embedded \emph{characteristic
+surface} in the $4$-manifold. It is irreducible: Freedman's $E_8$ manifold
+($\sigma = 8$) shows it cannot be reduced to any algebraic invariant of the
+intersection \emph{form}. In particular it is \emph{not} the Arf invariant of
+the lattice refinement $\bar q(x) = b(x,x)/2 \bmod 2$ on $L/2L$: that lattice
+Arf is identically $0$ on every even unimodular form (for $E_8$,
+$\mathrm{Arf}(\bar q) = 0$ while $\sigma/8 = 1$, so $\sigma/8 \bmod 2 \neq
+\mathrm{Arf}(\bar q)$; the discriminant form of a unimodular lattice is trivial,
+so the finite Arf/Gauss-sum apparatus sees only $\sigma \bmod 8$). This no-go is
+itself machine-checked (\texttt{RokhlinArfNoGo.lean}: \texttt{arfOfForm\,E8lit =
+0}, \texttt{lattice\_arf\_bridge\_refuted}). The char-2 Arf/Gauss-sum machinery
+of \texttt{ArfInvariant.lean} (the genus-$g$ identity $\sum_x (-1)^{q(x)} =
+2^{g}(-1)^{\mathrm{Arf}}$) is sound and reusable but does not certify the
+mod-$16$ factor.
 
 \subsection{Machine-checked $\mathrm{Ext}^n_{A(1)}$ computation through degree 5}
 
@@ -1077,16 +1089,19 @@ chain are registered in
 keys \texttt{modular\_invariance\_framing} and
 \texttt{c\_minus\_equals\_8Nf} (each carries its own falsifier set
 in the registry). Stage~14 audit invocations consume these keys
-through the project's standard hypothesis-disclosure pipeline. The
-registry key \texttt{rokhlin\_sigma\_mod\_16} is now marked
-\texttt{discharged}: $16\mid\sigma(M)$ for closed smooth spin
-4-manifolds is the unconditional kernel-pure theorem
-\texttt{SmoothSpinManifold4.rokhlin} (\S\ref{sec:modular}), derived
-from the even-unimodular intersection form together with the
-topological factor $2\mid\sigma/8$ alone --- with the algebraic
-floor $8\mid\sigma$ (\texttt{eight\_dvd\_latticeSig}) itself
-discharged via the completed classification route (Hasse--Minkowski
-$+$ theta-modularity).
+through the project's standard hypothesis-disclosure pipeline. For the
+registry key \texttt{rokhlin\_sigma\_mod\_16}, the algebraic floor
+$8\mid\sigma$ (\texttt{eight\_dvd\_latticeSig}) is discharged
+unconditionally via the completed classification route
+(Hasse--Minkowski $+$ theta-modularity); the full $16\mid\sigma(M)$ for
+closed smooth spin 4-manifolds is then carried over the
+\texttt{SmoothSpinManifold4} interface (\S\ref{sec:modular}), given the
+tracked topological factor $2\mid\sigma/8$. The $16$ leg is thus
+conditional on that disclosed input rather than unconditional, as it must
+be: $16\mid\sigma$ is false for general even-unimodular forms (Freedman's
+$E_8$, $\sigma = 8$). The interface theorem
+\texttt{SmoothSpinManifold4.rokhlin} is kernel-pure relative to that input
+(no project axiom).
 
 \subsection{What is conjectural and motivational}
 

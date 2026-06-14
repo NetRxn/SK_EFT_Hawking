@@ -129,16 +129,42 @@ gating bricks arrive on a months-not-years horizon**, and to make adoption cheap
 
 ## 4. The target, and why there is no interface-first dodge
 
-Discharge `arfOfForm form = 0` **for a form that comes from an actual smooth spin 4-manifold** (not an abstract
-even unimodular form — for those it is *false*: E₈ has `arfOfForm = 1`). The substantive content is therefore
-*constructing the intersection form from the manifold and proving the Arf vanishes*; it cannot be obtained by
-any algebraic narrowing, because the algebraic narrowing is exactly what already produced the E₈ counterexample.
+> **⚠️ CORRECTION (2026-06-13) — this section conflates the LATTICE Arf with the GEOMETRIC Guillou–Marin Arf;
+> the lattice statements below are FALSE.** The target `arfOfForm form = 0` (with `arfOfForm` = the Arf of
+> `redQuad` on `L/2L`) is **NOT** the smoothness obstruction for `16∣σ`, and there is no lattice route to it:
+> `arfOfForm` is **identically 0 on every even unimodular lattice** (E₈: `gaussSum = +16`,
+> `#zeros = 136 = 2⁷+2³ ⟹ Arf = 0`, yet `σ(E₈)/8 = 1` is odd), because the discriminant form `L*/L` is trivial
+> for unimodular `L`, so the lattice Arf/Gauss-sum apparatus sees only **σ mod 8**. The genuine geometric
+> residue is `2 ∣ σ/8`, equivalently the vanishing of the **geometric** Guillou–Marin Arf on a smoothly
+> embedded *characteristic surface* (the FK-7 congruence `σ − F·F ≡ 8·Arf(M,Σ) mod 16` below — which is TRUE
+> and a *different object* than the lattice `arfOfForm`). The two were conflated by an internally
+> self-contradictory deep-research note. Machine-checked refutation: `lean/SKEFTHawking/RokhlinArfNoGo.lean`
+> (`arfOfForm_e8lit_eq_zero`, `lattice_arf_bridge_refuted`, `redQuad_neg_eq`). The §4 reasoning that "the form
+> must be constructed from the manifold; there is no interface-first dodge; the defer is earned" is **still
+> correct** — only the specific *target object* (`arfOfForm form = 0` as a lattice quantity, and the claim that
+> E₈ has `arfOfForm = 1`) is wrong. Read "discharge `2 ∣ σ/8` geometrically" in place of "discharge
+> `arfOfForm form = 0`."
+
+Discharge `2 ∣ σ/8` (the geometric residue) **for a form that comes from an actual smooth spin 4-manifold**.
+The substantive content is *constructing the intersection form from the manifold and proving the geometric
+Guillou–Marin Arf (on a characteristic surface) vanishes*; it cannot be obtained by any **lattice-algebraic**
+narrowing, because the lattice apparatus only ever reaches `σ mod 8` (van der Blij) — the E₈ counterexample
+(`σ = 8`, `σ/8 = 1`) shows precisely that no lattice invariant of an even unimodular form distinguishes
+`σ mod 16`. *(CORRECTION 2026-06-13: the original text here read "Discharge `arfOfForm form = 0` … for those it
+is false: E₈ has `arfOfForm = 1`." That is wrong — E₈ has `arfOfForm = 0`; see banner above and
+`RokhlinArfNoGo.lean`.)*
 
 I explicitly looked for a leaner route (anti-wall discipline — decompose before asserting a wall):
 - **The F=∅ / spin trick** (the null-homologous characteristic surface) collapses FK-8 to triviality but does
   **not** remove the need to *prove* the Guillou–Marin congruence (FK-7) or to *construct* the form (FK-2…5).
-- **The algebraic shadow** (`σ ≡ 8·Arf mod 16`, van der Blij) is **already maximally captured** by Phase 5q.C
-  Phase 1 (`latticeSig_div_eight_modTwo_eq_arf`). There is no further algebraic content to extract.
+- **The algebraic shadow.** ~~(`σ ≡ 8·Arf mod 16`, van der Blij) is **already maximally captured** by Phase 5q.C
+  Phase 1 (`latticeSig_div_eight_modTwo_eq_arf`).~~ **⚠️ CORRECTION 2026-06-13: this is FALSE.** There is no
+  lattice identity `σ ≡ 8·Arf(q̄) mod 16` (with `q̄ = redQuad`): the *lattice* `Arf(redQuad)` is identically 0
+  on every even unimodular lattice, so it determines only `σ mod 8` (the genuine van der Blij shadow), never the
+  σ-mod-16 factor. The Phase 5q.C "Arf bridge" / `latticeSig_div_eight_modTwo_eq_arf` is **refuted** by
+  `lean/SKEFTHawking/RokhlinArfNoGo.lean`. The correct algebraic shadow is just `8 ∣ σ` (van der Blij) — which
+  *is* fully captured — and there is **no further algebraic content to extract** toward `σ mod 16`. The
+  remaining factor of two is irreducibly geometric.
 - **The bordism route** (σ is a spin-bordism invariant, `Ω^Spin_4 ≅ ℤ`) is Leg-D — a *different* bottom-row
   frontier (stable homotopy), and circular for Rokhlin.
 
@@ -208,8 +234,10 @@ only the entry. The honest one-line tier is: *bottom-row capstone, middle-row en
 gating brick on a watchable community trajectory.*
 
 **(3) No interface-first dodge exists** (§4) — the form must be built from the manifold, requiring the absent
-cohomology+PD layer; the algebraic shadow is already fully captured by 5q.C. Anti-wall discipline satisfied:
-the wall was decomposed, not asserted.
+cohomology+PD layer; the algebraic shadow (`8 ∣ σ`, van der Blij) is already fully captured by 5q.C. *(CORRECTION
+2026-06-13: "algebraic shadow" here means only `8 ∣ σ` — the lattice apparatus captures nothing beyond it. The
+once-claimed lattice bridge `σ ≡ 8·Arf(redQuad) mod 16` is FALSE; see the §4 banner and `RokhlinArfNoGo.lean`.)*
+Anti-wall discipline satisfied: the wall was decomposed, not asserted.
 
 **(4) Therefore: DEFER Leg-C-geometric — now on evidence, not on a reflex.** Opening it would mean building a
 multi-foundation stack (cohomology ring + Poincaré duality + intersection form + spin structures + Wu) and then

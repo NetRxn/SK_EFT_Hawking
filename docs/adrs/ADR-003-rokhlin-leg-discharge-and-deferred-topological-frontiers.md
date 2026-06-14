@@ -23,6 +23,9 @@
   [Phase5qC roadmap](../roadmaps/Phase5qC_ArfBridge_Roadmap.md) (NEW; created with this ADR);
   [Phase5qT roadmap](../roadmaps/Phase5qT_ExtSubstantiation_Roadmap.md) (optional Wave T6 appended);
   [Phase5qD roadmap](../roadmaps/Phase5qD_AdamsABP_Frontier_Roadmap.md) (NEW; trigger-gated);
+  [Phase5qE roadmap](../roadmaps/Phase5qE_SixteenConvergence_Roadmap.md) (NEW 2026-06-13; the "16 convergence"
+  common-origin formalization — trigger-gated, shares the bordism/KO frontier with Leg D) +
+  [`SIXTEEN_CONVERGENCE_STATUS.md`](../SIXTEEN_CONVERGENCE_STATUS.md) (proved/hypothesis/enumerated/refuted framing);
   [Route A/B assessment](../assessments/GenerationConstraint_RouteA_vs_B_ImpactAssessment.md)
   (**partially superseded on cost** — see Context); Pipeline Invariant #15 (no undocumented axioms).
 - **See also:** [ADR-004](ADR-004-substrate-integrity-gates.md) (Substrate Integrity Gates) — the `topo`
@@ -160,6 +163,25 @@ Decision #3 and [the spike](../assessments/LegC_GeometricResidue_ScoutingSpike.m
    `ArfInvariant.lean`. This is the **maximal honest hardening** of the residual short of the geometric
    frontier: it makes the irreducible input transparent and machinery-connected. Roadmap: `Phase5qC`.
 
+   > **⚠️ CORRECTION (2026-06-13) — Decision #2 is INVALIDATED. The lattice Arf bridge is FALSE.**
+   > Machine-checked refutation: `lean/SKEFTHawking/RokhlinArfNoGo.lean`
+   > (`arfOfForm_e8lit_eq_zero`, `lattice_arf_bridge_refuted`, `redQuad_neg_eq`). The proposed identity
+   > **`σ/8 ≡ Arf(q̄) (mod 2)`** (with `q̄ = redQuad` on `L/2L`) does **not hold**, and there is **no
+   > `topo → topo' : Arf(q̄)=0` refactor**. The reason: `Arf(redQuad)` is **identically 0 on every even
+   > unimodular lattice** — for E₈, `gaussSum = +16` and `#zeros = 136 = 2⁷ + 2³ ⟹ Arf = 0`, yet
+   > `σ(E₈)/8 = 1` (odd). The discriminant form `L*/L` is trivial for unimodular `L`, so the finite
+   > Arf/Gauss-sum apparatus sees only **σ mod 8** — it cannot supply the factor-of-two to σ mod 16. The
+   > *geometric* Guillou–Marin Arf lives on a smoothly embedded **characteristic surface** in the 4-manifold
+   > (Freedman–Kirby `σ ≡ Σ·Σ + 8·Arf(M,Σ) mod 16`), which is a *different object* from the lattice
+   > `Arf(redQuad)`; conflating the two was the root error (traced to an internally self-contradictory
+   > deep-research note). **The genuine residue therefore stays `topo : 2 ∣ σ/8`** (the irreducibly
+   > geometric Â-genus-even / Atiyah–Singer index parity, equivalently the geometric Guillou–Marin Arf on a
+   > characteristic surface). Do **not** pursue Phase 5q.C Phase 1 as a discharge of `topo` — there is
+   > nothing to discharge it to at the lattice level. The honest remediation is the **disclosure/wording
+   > pass** in Decision #1 + the Consequences (paper "unconditional 16∣σ" → "8∣σ proven; 16∣σ given the
+   > tracked topological `2∣σ/8`"), **not** an Arf bridge. The `redQuad`/`gaussSum` machinery in
+   > `ArfInvariant.lean` is correct and must be preserved — only the false σ-bridge *claim* is retracted.
+
 3. **Leg C-geometric: scouting spike RUN (2026-06-09) → DEFER, now evidence-based.** The spike
    ([LegC_GeometricResidue_ScoutingSpike](../assessments/LegC_GeometricResidue_ScoutingSpike.md)) did the
    first-principles, interface-first decomposition the prior draft demanded and reached three findings:
@@ -204,9 +226,13 @@ Decision #3 and [the spike](../assessments/LegC_GeometricResidue_ScoutingSpike.m
      low-degree computation (or the Adams/ABP stack). Sub-load-bearing bricks (e.g. master's current
      `SingularManifold`-only `Bordism.lean`, which also carries v4.31 module-system syntax) are **watch, don't
      vendor.**
-   - **Re-wire-ready interfaces.** Keep the swap surface to `SmoothSpinManifold4.topo'` + `HYPOTHESIS_REGISTRY`
-     (one field, one registry entry) so adoption is a discharge, not a refactor — 5q.C's `arfOfForm = 0`
-     refactor exists partly to minimize this surface. A `validate.py` watch check MAY be added but is not
+   - **Re-wire-ready interfaces.** Keep the swap surface to `SmoothSpinManifold4.topo` + `HYPOTHESIS_REGISTRY`
+     (one field, one registry entry) so adoption is a discharge, not a refactor. *(CORRECTION 2026-06-13: the
+     original text here referenced a "5q.C `arfOfForm = 0` refactor" of the field to `topo'`; per the
+     Decision-#2 correction above and `RokhlinArfNoGo.lean`, that lattice-Arf refactor is **abandoned** — the
+     field stays `topo : 2 ∣ σ/8`. The single-field/single-registry-entry swap surface is unchanged; only the
+     name and target of the eventual discharge are corrected — discharge comes from the geometric Guillou–Marin
+     / Â-genus frontier, not a lattice Arf identity.)* A `validate.py` watch check MAY be added but is not
      required by this ADR.
 
 ---
@@ -332,9 +358,18 @@ in-repo); Phase 2 stays deferred.**
 
 ## Consequences
 
+> **⚠️ CORRECTION (2026-06-13) applies to this section.** Wherever the Consequences below state that 5q.C
+> refactors the residual to the *lattice* invariant `Arf(q̄)=0`, that is **retracted** — the lattice Arf
+> bridge is false (see the Decision-#2 correction and `RokhlinArfNoGo.lean`). The residual stays
+> `topo : 2 ∣ σ/8`. The substantive Consequence — that `16 ∣ σ` carries exactly one irreducible
+> smooth-topological hypothesis and "fully unconditional Rokhlin from nothing" is not claimed — is **unchanged
+> and correct**; only the "expressed as `Arf(q̄)=0`" framing is wrong.
+
 **Positive.**
 - The honest ceiling is on record: `16 ∣ σ` carries exactly **one** irreducible smooth-topological hypothesis,
-  by mathematical necessity, and 5q.C makes it as small/transparent as possible (`Arf(q̄)=0`).
+  by mathematical necessity. *(CORRECTION 2026-06-13: the residual is carried as `topo : 2 ∣ σ/8`, the
+  geometric Â-genus-even / Guillou–Marin input — **not** the lattice `Arf(q̄)=0`, which is identically 0 on
+  even unimodular lattices and so cannot supply the σ-mod-16 factor; see `RokhlinArfNoGo.lean`.)*
 - The deferred frontiers are **planned, not re-litigated**: triggers + wave plans exist, so a future
   reactivation is execution, not re-analysis.
 - LOE is now velocity-grounded; future estimates won't be mis-read (the Route-B "multi-PY" mis-prediction is
@@ -348,8 +383,10 @@ in-repo); Phase 2 stays deferred.**
   stays motivational until Leg D, which we are not opening).
 - The Ext-as-E₂-page story remains a true *narrative*, not a wired theorem, unless Wave T6 (+ eventually Leg D)
   is pursued.
-- `2 ∣ σ/8` (post-5qC: `Arf(q̄)=0`) remains a hypothesis indefinitely. This is correct, but means "fully
-  unconditional Rokhlin from nothing" is **not** claimed and must not be implied in any paper.
+- `2 ∣ σ/8` remains a hypothesis indefinitely. This is correct, but means "fully
+  unconditional Rokhlin from nothing" is **not** claimed and must not be implied in any paper. *(CORRECTION
+  2026-06-13: the original parenthetical "post-5qC: `Arf(q̄)=0`" is removed — that lattice-Arf refactor is
+  false per `RokhlinArfNoGo.lean`; the hypothesis stays in its `2 ∣ σ/8` geometric form.)*
 
 **Neutral.**
 - None of this affects the `3 ∣ N_f` headline, which rests on the η/framing-anomaly physics premise

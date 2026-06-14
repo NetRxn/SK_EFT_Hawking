@@ -2566,7 +2566,7 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
     'rokhlin_sigma_mod_16': {
         'tier': 'external_boundary',
         'statement': 'For any closed smooth spin 4-manifold M, 16 | σ(M)',
-        'status': 'discharged',  # Phase 5q.B (2026-06-08): 16|σ now an UNCONDITIONAL kernel-pure theorem; only the topological factor 2|σ/8 remains as interface input
+        'status': 'active (8|σ proven & unconditional; the irreducible topological factor 2|σ/8 is carried as the tracked input topo)',  # CORRECTION 2026-06-13: 16|σ is a kernel-pure theorem over the SmoothSpinManifold4 interface GIVEN topo:2|σ/8 — it is NOT unconditional (16|σ is false for general even unimodular forms: E₈ has σ=8). The earlier 'discharged'/'UNCONDITIONAL' wording overstated this. 8|σ (van der Blij) IS unconditional & proven; the mod-16 factor is irreducibly geometric (Guillou-Marin / Â-genus-even), NOT a lattice Arf (see RokhlinArfNoGo.lean).
         'eliminability': 'very_hard',
         'elimination_path': 'Phase 5q.B (Route B) DECOMPOSED this opaque hypothesis into the narrow '
             'SmoothSpinManifold4 interface (SpinRokhlinInterface.lean) and PROVED 16|σ as a kernel-pure '
@@ -2577,8 +2577,11 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'residual is carried as the PRECISE field eight_dvd : 8 | latticeSig form (the isolated van der '
             'Blij wall), replacing the opaque charSq/CharacteristicSquareModEight. Remaining interface inputs: '
             '(i) even_unimod [Wu formula, topological], (ii) eight_dvd : 8|latticeSig form [van der Blij, the '
-            'Wave-B1 ALGEBRAIC target], (iii) topo : 2|σ/8 [Â-genus even / Arf(q-bar)=0 — the single '
-            'IRREDUCIBLE topological input, Atiyah-Singer / Freedman-Kirby]. '
+            'Wave-B1 ALGEBRAIC target], (iii) topo : 2|σ/8 [Â-genus even (Atiyah-Singer index parity) / '
+            'geometric Guillou-Marin Arf of a characteristic SURFACE (Freedman-Kirby) — the single '
+            'IRREDUCIBLE topological input. NOTE 2026-06-13: this is NOT the lattice Arf(redQuad), which is '
+            'identically 0 on every even unimodular form (E₈: Arf=0 but σ/8=1); the lattice Arf bridge is '
+            'FALSE, see RokhlinArfNoGo.lean]. '
             'USER DECISION 2026-06-04: GO FULL via the CLASSIFICATION route (E8^a (+) (-E8)^b (+) H^c), '
             'zero-axiom. SIGNATURE CALCULUS COMPLETE this session (all kernel-pure, ExtractDeps baseline '
             'green 9073 jobs): E8Signature (sigma(E8)=8, sigma(-E8)=-8 via the integer-Cholesky C8^T C8 = '
@@ -2603,7 +2606,8 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'even unimodular form) and sixteen_dvd_latticeSig (16|σ given 2|σ/8) are UNCONDITIONAL. The '
             'SmoothSpinManifold4 structure no longer carries the eight_dvd field — SmoothSpinManifold4.rokhlin '
             '(16|σ) is derived from even_unimod + topo (2|σ/8) ALONE. The ONLY remaining interface input is the '
-            'genuinely-topological factor 2|σ/8 (Â-genus even / Arf(q-bar)=0). All kernel-pure '
+            'genuinely-topological factor 2|σ/8 (Â-genus even / geometric Guillou-Marin characteristic-surface '
+            'Arf — NOT the lattice Arf(redQuad), which is content-free [≡0]; RokhlinArfNoGo.lean). All kernel-pure '
             '{propext,Classical.choice,Quot.sound}, axiom_closure_allowlist GREEN. '
             'sixteen_convergence_unconditional is the companion to sixteen_convergence_full with the 16|σ '
             'conjunct now a full theorem, not an assumed h_rokhlin. Full living decomposition: '

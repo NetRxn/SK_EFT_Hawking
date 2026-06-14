@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-13T19:28:09.271021",
+  "generated": "2026-06-13T21:52:23.074840",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 20502,
-    "theorems_total": 12463,
-    "theorems_substantive": 12437,
+    "total_declarations": 20511,
+    "theorems_total": 12471,
+    "theorems_substantive": 12445,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 936,
+    "modules": 937,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -809,6 +809,7 @@
       "SKEFTHawking.RiemannCoordinate",
       "SKEFTHawking.RiemannDifferentialBianchi",
       "SKEFTHawking.RiemannianConnection",
+      "SKEFTHawking.RokhlinArfNoGo",
       "SKEFTHawking.RokhlinBridge",
       "SKEFTHawking.RokhlinClassification",
       "SKEFTHawking.RokhlinFromHM",
@@ -949,7 +950,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 7136,
+    "definitions": 7137,
     "structures": 294,
     "instances": 513,
     "inductives": 96,

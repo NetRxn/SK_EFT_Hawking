@@ -4,9 +4,11 @@ Phase 5q.B Waves B3/B4: smooth-spin 4-manifold interface and the wired `16 ∣ �
 INTERFACE-FIRST (roadmap Wave B3). A closed smooth spin 4-manifold contributes exactly the
 data the spectra-free Rokhlin derivation needs:
   • its intersection form is **even unimodular** (Wu's formula + Poincaré duality — topological),
-  • the extra factor of two `2 ∣ σ/8` (Â-genus even / Arf(q̄)=0 — the irreducible topological input,
-    Atiyah–Singer index / Freedman–Kirby; this is what genuinely distinguishes smooth from
-    topological, per Freedman's E₈ manifold).
+  • the extra factor of two `2 ∣ σ/8` (Â-genus even / vanishing of the GEOMETRIC Guillou–Marin Arf of a
+    characteristic SURFACE — the irreducible topological input, Atiyah–Singer index / Freedman–Kirby; this
+    is what genuinely distinguishes smooth from topological, per Freedman's E₈ manifold). NOTE (2026-06-13):
+    this is NOT the lattice `Arf(redQuad)`, which is identically 0 on even unimodular forms (the `σ/8 ≡ Arf(q̄)`
+    lattice bridge is FALSE — E₈ has `Arf=0` but `σ/8=1`; see `RokhlinArfNoGo.lean`).
 
 The algebraic bound `8 ∣ σ` (van der Blij) is **no longer carried as interface data** — it is now a
 kernel-pure THEOREM (`RokhlinHMRankFour.eight_dvd_latticeSig`), derived from even-unimodularity via the
@@ -59,7 +61,9 @@ structure SmoothSpinManifold4 where
   form : Matrix (Fin rank) (Fin rank) ℤ
   /-- spin ⟹ the intersection form is even unimodular (Wu's formula + Poincaré duality). -/
   even_unimod : IsEvenUnimodular form
-  /-- the topological factor of two: `2 ∣ σ/8` (Â-genus even / `Arf(q̄)=0`). -/
+  /-- the topological factor of two: `2 ∣ σ/8` — the Â-genus-even / geometric Guillou–Marin
+      characteristic-surface Arf-vanishing (Freedman–Kirby), the single irreducible topological input.
+      NOT the lattice `Arf(redQuad)` (identically 0; the lattice bridge is false — `RokhlinArfNoGo.lean`). -/
   topo : (2 : ℤ) ∣ latticeSig form / 8
 
 /-- The signature `σ(M)` of a smooth spin 4-manifold is the genuine signature of its intersection form. -/

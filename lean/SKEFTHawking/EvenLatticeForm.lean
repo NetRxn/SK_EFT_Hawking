@@ -4,8 +4,18 @@ Phase 5q.B Wave B2/B1 bridge: even integer lattice → mod-2 quadratic refinemen
 For an even unimodular lattice with Gram matrix `M`, the spectra-free Rokhlin route works
 with the finite quadratic refinement on `L/2L ≅ (ZMod 2)ⁿ`:
   q̄(x) = b(x,x)/2 mod 2,    b̄(x,y) = b(x,y) mod 2,
-where `b̄` is alternating and nondegenerate (nondegeneracy ⟺ `M` unimodular) and `q̄` refines
-it. The central identity `σ(L) ≡ 8·Arf(q̄) mod 16` (van der Blij / Brown) then drives B1/B3/B4.
+where `b̄` is alternating and nondegenerate (nondegeneracy ⟺ `M` unimodular) and `q̄` refines it.
+
+**CORRECTION (2026-06-13).** A prior version of this header claimed `σ(L) ≡ 8·Arf(q̄) mod 16` as a *lattice*
+identity (and an `σ/8 ≡ Arf(q̄) mod 2` bridge). **That is FALSE** — refuted by E₈: `Arf(redQuad E₈) = 0`
+(`gaussSum = +16`, `#zeros = 136 = 2⁷+2³`) while `σ(E₈)/8 = 1`; in fact `Arf(redQuad)` is *identically 0* on
+every even unimodular lattice (the discriminant form `L*/L` is trivial for unimodular `L`, so the finite
+Arf/Gauss-sum apparatus sees only `σ mod 8`). See `RokhlinArfNoGo.lean` for the proved no-go. van der Blij
+gives only `8 ∣ σ` (`eight_dvd_latticeSig`); the mod-16 factor `2∣σ/8` is irreducibly GEOMETRIC — the
+Â-genus-even / index-theoretic input (Atiyah–Singer), equivalently the geometric Guillou–Marin Arf of a
+characteristic *surface* in the 4-manifold (Freedman–Kirby) — and is carried as the tracked hypothesis
+`SmoothSpinManifold4.topo : 2∣σ/8` (ADR-003). The `redBilin`/`redQuad` construction below is correct and
+reusable (it proves `gaussSum(redQuad M) = 2^g·(−1)^{Arf}` and `Arf ≡ 0`), but it does NOT drive a σ-bridge.
 
 This module builds the bridge from a symmetric even integer matrix. This increment establishes
 the mod-2 reduced bilinear form `redBilin` and its symmetry; the alternating property and the
