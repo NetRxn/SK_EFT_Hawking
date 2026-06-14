@@ -713,8 +713,20 @@ tuning; in the ADW Sakharov induced-gravity route it is derived $\Imm$-independe
 (\texttt{InducedGravityEntropy.frolov\_fursaev\_quarter\_coefficient}, Wave~9): the
 same Seeley--DeWitt $a_2$ that induces $G_N$ also fixes the horizon entanglement-entropy
 area density, with the heat-kernel-to-Einstein--Hilbert ratio structurally $4$ (FFZ,
-hep-th/9607104). The $-3/2$ log is genuinely derived from the literal Catalan singlet
-count via Stirling (Wave~7B); the two routes are consistent
+hep-th/9607104). The $-3/2$ log is genuinely derived from the literal SU(2) singlet count:
+\texttt{verlindeEntropy\_SU2k} is now (Wave~7C) the \emph{faithful} $\Gamma$-Catalan
+log-dimension $\log\!\bigl[\Gamma(2x{+}1)/(\Gamma(x{+}1)\Gamma(x{+}2))\bigr]$ at
+$x = A/(8 G_N \log 2)$ --- a genuine analytic object, not the earlier saddle self-definition
+(closing substrate-audit \#13) --- and the Kaul--Majumdar closed form is a \emph{derived
+corollary}: \texttt{gaussianSaddleAsymptotic} is the genuine $O(1/A)$ rate
+$\bigl|\texttt{verlindeEntropy\_SU2k}(A,G_N) - \texttt{kaulMajumdarS}(A,G_N,\kappa_{\mathrm{KM}})\bigr|
+= O(1/A)$ with the literal constant $\kappa_{\mathrm{KM}} = \tfrac{3}{2}\log(2\log 2) -
+\tfrac{1}{2}\log\pi$. The discrete singlet count carries the sharp $O(1/m)$ rate
+(\texttt{LaplaceMethodAsymptotic.log\_singletCount\_sub\_rate}); the continuum $O(1/A)$ rate
+rests on a \texttt{Real.Gamma} Stirling-with-remainder built kernel-pure from Mathlib primitives
+via a Bohr--Mollerup convexity squeeze
+(\texttt{GammaStirling.logGamma\_sub\_stirlingPart\_isBigO}, previously absent from Mathlib),
+with no Hardy--Ramanujan input. The two routes are consistent
 (\texttt{frolov\_fursaev\_matches\_kaulMajumdar\_leading}).
 
 \subsection{Five falsifier theorems for the boundary-condition bundle}
@@ -728,6 +740,23 @@ five falsifier theorems
 and an envelope
 \texttt{H\_HorizonBoundaryCondition\_implies\_nonabelian\_envelope}). Each
 falsifier is a constructive obstruction.
+
+\subsection{Witt-invariant sharpening of the anomaly-matching condition}
+
+The bundle's anomaly-matching consistency field is sharpened beyond its perturbative form
+(Wave~8B). The horizon chiral central charge $c_- = 8 N_f$ satisfies the elementary mod-8
+condition $8 \mid c_-$ for \emph{every} $N_f$
+(\texttt{HorizonWittBoundary.horizon\_wave8\_anomalyMatch\_always}), so on its own it does not
+constrain the ADW model. The genuine, non-vacuous consistency condition is Witt-triviality of the
+boundary, $24 \mid c_-$, which holds \emph{if and only if $3 \mid N_f$}
+(\texttt{horizon\_wittTrivial\_iff\_three\_generations}; unconditional, wiring the SymTFT
+Witt-class machinery). The perturbative $8 \mid c_-$ is exactly its necessary shadow
+(\texttt{wittTrivial\_implies\_mod8}), and the gap is strict: $N_f = 1$ passes $8 \mid c_-$ but
+fails $24 \mid c_-$ (\texttt{horizon\_anomalyMatch\_strictly\_weaker\_than\_witt}). This ties the
+horizon boundary condition to the program's three-generation result through the \emph{same} Witt
+invariant. The physical reading---Witt-triviality is equivalent to the boundary admitting a gapped
+(Lagrangian-algebra) topological boundary---is the Davydov--M\"uger--Nikshych--Ostrik (2010)
+correspondence, of which the perturbative $8 \mid c_-$ is only the necessary part.
 
 \subsection{Abelian-MTC falsifier}
 
