@@ -8503,8 +8503,12 @@ def verlinde_dim_horizon(p, S_matrix, label_indices, vacuum_index=0):
           into a concrete Laplace-saddle-limit definition + theorem
           (`BHEntropyMicroscopic.verlindeEntropy_SU2k := kaulMajumdarS` at
           the saddle limit; `gaussianSaddleAsymptotic` now a theorem).
-          The literal Verlinde-sum derivation via Hardy-Ramanujan is
-          tracked by `H_VerlindeKMLiteralSumDerivation` for future work.
+          Wave 7B (2026-06-14) GENUINELY derived the literal -3/2 from the
+          SU(2) singlet = Catalan count via Mathlib Stirling — NOT Hardy-Ramanujan
+          (that p(N) asymptotic is for unrestricted partitions; the horizon count
+          is the constrained Catalan number) — in `LaplaceMethodAsymptotic`,
+          discharging `H_VerlindeKMLiteralSumDerivation`. Only the stronger O(1/A)
+          rate + a Gamma-smooth real-A redefinition remain future work.
     Aristotle: pending
     Source: Verlinde, Nucl. Phys. B 300, 360 (1988); Kaul SIGMA 8, 005 (2012),
             Eq. (24), arXiv:1201.6102.

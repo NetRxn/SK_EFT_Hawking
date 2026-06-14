@@ -41,19 +41,19 @@ with a documented `// TODO: upstream when Mathlib lands LaplaceMethod`
 marker." When the Mathlib PR lands, this module's lemmas migrate
 upstream and the module deletes.
 
-## Future literal-Verlinde derivation
+## Literal-Verlinde derivation — SHIPPED (Wave 7B, 2026-06-14)
 
-Even with Sub-task A in hand, the substantive Wave 6a.7 content
-requires `verlindeEntropy_SU2k` to be defined as the literal SU(2)_k
-Verlinde sum for the partition function at the BH horizon, with the
-Kaul-Majumdar `I₀ − I₁` cancellation derived from first principles.
-That requires the Hardy-Ramanujan integer-partition asymptotic
-(`p(N) ~ exp(π√(2N/3))/(4N√3)`), not yet present in Mathlib 4.29.
-Wave 6a.7 ships the Laplace-saddle-limit interpretation
-(`verlindeEntropy_SU2k = kaulMajumdarS A G_N 0`) with the literal-
-sum derivation tracked as a future-work item via the
-`H_VerlindeKMLiteralSumDerivation` predicate in
-`BHEntropyMicroscopic`.
+**Correction to the earlier note.** The literal SU(2)_k horizon Verlinde sum
+does NOT require the Hardy-Ramanujan integer-partition asymptotic — that `p(N)`
+result is for *unrestricted* partitions, whereas the horizon count is the
+*constrained* SU(2) singlet multiplicity = the Catalan number `binom(2m,m)/(m+1)`
+(the discrete `I₀ − I₁`). Its Kaul-Majumdar `−3/2` is derived from Mathlib's
+Stirling — no Hardy-Ramanujan, no Bessel — in `LaplaceMethodAsymptotic`
+(`log_singletCount_sub_isBigO`), discharging `H_VerlindeKMLiteralSumDerivation`
+in `BHEntropyMicroscopic`. The saddle-limit `verlindeEntropy_SU2k = kaulMajumdarS`
+def is retained as the smooth real-`A` model. Remaining future work is narrow:
+the strictly-stronger `≤ C/A` *rate* + a Γ-smooth real-`A` literal redefinition
+(needs quantitative Stirling).
 
 -/
 
@@ -178,18 +178,17 @@ theorem isBoundedRemainderOoneOverA_trans {f g h : ℝ → ℝ}
     _ ≤ C₁ / A + C₂ / A := add_le_add (h₁ A hA) (h₂ A hA)
     _ = (C₁ + C₂) / A := by ring
 
-/-! ## §4 — Future-work scope (documentation only)
+/-! ## §4 — Status (Wave 7B update)
 
-When Mathlib gains the Hardy-Ramanujan integer-partition asymptotic
-(`p(N) ~ exp(π√(2N/3))/(4N√3)`) — currently absent in 4.29 — the
-literal SU(2)_k Verlinde sum at the BH horizon admits a Watson's-
-lemma derivation of the Kaul-Majumdar form. The future-work goal is
-to construct an explicit `verlindeSum` function (the literal Verlinde
-sum) and prove `IsBoundedRemainderOoneOverA verlindeSum kaulMajumdarS`
-using `gaussian_full_integral` + `exp_neg_sq_le_exp_neg_lin` + a tail-
-integral evaluation. The current Wave 7 ship handles the Laplace-
-saddle-limit case (`verlindeEntropy_SU2k = kaulMajumdarS A G_N 0`) via
-`isBoundedRemainderOoneOverA_refl`. -/
+The literal-Verlinde `−3/2` is SHIPPED via the Catalan/Stirling route in
+`LaplaceMethodAsymptotic` (`log_singletCount_sub_isBigO`) — NOT requiring the
+Hardy-Ramanujan partition asymptotic (that is for *unrestricted* partitions; the
+horizon count is the *constrained* SU(2) singlet = Catalan number). It discharges
+`H_VerlindeKMLiteralSumDerivation`. This `LaplaceMethod` module's Gaussian-integral
+infrastructure (`gaussian_full_integral`, `exp_neg_sq_le_exp_neg_lin`,
+`IsBoundedRemainderOoneOverA`) remains available for the remaining narrow future
+work: the strictly-stronger `≤ C/A` *rate* + a Γ-smooth real-`A` `verlindeSum`
+(needs quantitative Stirling). -/
 
 end LaplaceMethod
 end SKEFTHawking

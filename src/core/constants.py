@@ -1466,12 +1466,14 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
                   'and proving `gaussianSaddleAsymptotic` as a theorem with '
                   'C = 1. At the Laplace-saddle level, the literal Verlinde '
                   'sum and the Kaul-Majumdar closed form agree exactly to '
-                  'leading + log order. The substantive O(1/A) subleading '
-                  'correction in the literal SU(2)_k Verlinde sum is reserved '
-                  'for future work, tracked by the new structural predicate '
-                  '`H_VerlindeKMLiteralSumDerivation` (forward-declares the '
-                  'Hardy-Ramanujan partition asymptotic application when it '
-                  'lands in Mathlib).',
+                  'leading + log order. Wave 7B (2026-06-14) then GENUINELY '
+                  'derived the literal -3/2 from the SU(2) singlet = Catalan '
+                  'count via Mathlib Stirling (no Hardy-Ramanujan, no Bessel; '
+                  '`LaplaceMethodAsymptotic.log_singletCount_sub_isBigO`), '
+                  'discharging `H_VerlindeKMLiteralSumDerivation`. Only the '
+                  'strictly-stronger O(1/A) RATE (+ a Gamma-smooth real-A '
+                  'verlindeEntropy_SU2k redefinition) remains future work — '
+                  'it needs quantitative Stirling, NOT Hardy-Ramanujan.',
         'module': 'BHEntropyMicroscopic',
         'used_in': 'kaulMajumdar_asymptotic_within_OoneOverA, '
                    'verlinde_matches_kaul_majumdar_at_large_area '
@@ -1493,14 +1495,15 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
                             '.kaulMajumdar_S_pos_at_e_squared returns '
                             'axioms = [propext, Classical.choice, Quot.sound] '
                             'only (no gaussianSaddleAsymptotic in any closure).',
-            'future_work': 'Mathlib-PR for `MeasureTheory.Asymptotic.LaplaceMethod` '
-                           '(generic Watson\'s-lemma / Laplace bounded-remainder '
-                           'lemma) + Hardy-Ramanujan partition asymptotic '
-                           'in Mathlib → enable derivation of '
-                           '`H_VerlindeKMLiteralSumDerivation verlindeSum` for '
-                           'an explicit literal Verlinde-sum function `verlindeSum`. '
-                           'The current Wave 7 ship interprets `verlindeEntropy_SU2k` '
-                           'at the Laplace-saddle level only.',
+            'future_work': 'Wave 7B (2026-06-14) discharged '
+                           '`H_VerlindeKMLiteralSumDerivation` genuinely via the '
+                           'Catalan/Stirling route (`LaplaceMethodAsymptotic`) — '
+                           'Hardy-Ramanujan is NOT needed (that p(N) asymptotic is '
+                           'for unrestricted partitions; the horizon count is the '
+                           'constrained SU(2) singlet = Catalan number). Remaining '
+                           'narrow future work: the strictly-stronger O(1/A) rate '
+                           '(needs quantitative Stirling, 1/(12n)) + a Gamma-smooth '
+                           'real-A `verlindeEntropy_SU2k` literal redefinition.',
         },
     },
     'sk_axiom_Dawson_Nielsen': {

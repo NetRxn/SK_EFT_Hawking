@@ -665,8 +665,10 @@ quantitative Stirling (1/(12n)); if out of reach, isolate that residual as a tra
 
 **▶ Sub-task C DONE 2026-06-14 (genuine bridge landed; full graph 9262 jobs clean, bridge
 axiom-pure {propext,Classical.choice,Quot.sound}).** `BHEntropyMicroscopic` now imports
-`LaplaceMethodAsymptotic` and carries `verlinde_literal_count_reproduces_KM_minus_three_halves`
-— the literal SU(2) singlet count's `−3/2` (`=O[atTop] 1`, leading+log), lifted from Sub-task B.
+`LaplaceMethodAsymptotic` and carries the genuine literal-count `−3/2` bridge (initially the
+standalone `verlinde_literal_count_reproduces_KM_minus_three_halves`, since folded into
+`H_VerlindeKMLiteralSumDerivation_discharged` — see the UPDATE block below) — the literal SU(2)
+singlet count's `−3/2` (`=O[atTop] 1`, leading+log), lifted from Sub-task B.
 The Hardy–Ramanujan overstatement is corrected in both §2 docstrings. The `−3/2` is now provably
 from the literal Catalan count, NOT only the saddle self-definition.
 **⚠ MORNING-REVIEW residual (fallback b/c — genuine math wall, NOT effort-descope; CIRCLE BACK
