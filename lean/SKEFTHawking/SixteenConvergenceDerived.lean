@@ -49,12 +49,15 @@ open SKEFTHawking.SymTFT SKEFTHawking.CommonOrigin
 
 /-- **The 16-convergence with `SmithInflow`'s content refined (Phase 5q.F capstone).** No `SmithInflow`
 binder: the constructed `smithHom` carries the chain `SM → Ω₅^{Spin-ℤ₄} → Smith → Ω₄^{Pin⁺}`, and the
-shared ℤ₁₆ generator `[RP⁴]` now has its order **derived** and its Pin⁺-landing **SW-mechanized**:
+shared ℤ₁₆ generator `[RP⁴]` now has its order **pinned by two bounds** and its Pin⁺-landing
+**SW-mechanized**:
 
 1. **SM anomaly trivial** (`smithHom_sm_trivial`): the Dai–Freed class `16·N_f` lands at `0 ∈ Ω₄^{Pin⁺}`.
 2. **Smith gen = `[RP⁴]`** (`smithHom_gen`): the Ω₅ generator maps to the Pin⁺ generator.
-3. **order DERIVED** (`pinPlusRP4_addOrder_sixteen_substrate`): `addOrderOf [RP⁴] = 16`, pinched by the
-   surface-ABK lower bound and the Ext δ-cap upper bound — **not** the substrate's posited quotient.
+3. **order pinned by two bounds** (`pinPlusRP4_addOrder_sixteen_substrate`): `addOrderOf [RP⁴] = 16`
+   from the surface-ABK lower bound (the genuine `β = 1` unit value) and the Ext δ-cap upper bound. Honest
+   scope (PinPlusExtBound CRITICAL-2): for the *concrete* `[RP⁴]` the class `= 1` is fixed via the posited
+   `signature = 1` and the ABK supplies the order-forcing value; the posit-free order-16 is the `∀ g` lemma.
 4. **Smith SW-mechanism** (`smith_RP4_isPinPlus_via_mechanism`): `[RP⁴] = PD(α) ⊂ RP⁵` genuinely lands
    in Pin⁺ because `w₂(RP⁴) = 0` (Whitney `+` Spin-ℤ₄, Karoubi binomials).
 
@@ -79,14 +82,5 @@ theorem sixteen_convergence_derived (S : SmithInflow) (N_f : ℕ) :
           IsPinPlusObstruction RP4 :=
   ⟨sm_anomaly_trivial_in_bordism S N_f, kitaev_generator_is_bordism_generator S,
    PinPlusExt.pinPlusRP4_addOrder_sixteen_substrate, smith_RP4_isPinPlus_via_mechanism⟩
-
-/-- **The order-16 of the shared generator is route-independent** — the same `addOrderOf [RP⁴] = 16`
-underlies the constructed-Smith chain, the conditional `SmithInflow` reading, and the direct two-bounds
-derivation. This is the load-bearing genuineness fact of the whole convergence: the shared ℤ₁₆ is real
-(the generator has exact order 16), and that order is now **derived**, closing the "order posited" gap
-of the Phase 5q.E `SmithInflow`. -/
-theorem shared_generator_order_derived :
-    addOrderOf (Omega4PinPlusBordism.mk pinPlusRP4) = 16 :=
-  PinPlusExt.pinPlusRP4_addOrder_sixteen_substrate
 
 end SKEFTHawking.SixteenConvergenceDerived

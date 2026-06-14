@@ -109,7 +109,15 @@ Whitney identity `w₂(RP⁴) = c + α²` and the Spin-ℤ₄ constraint `c = α
 binomials `C(5,2) ≡ 0`, `C(6,2) ≡ 1`), so `w₂(RP⁴) = α² + α² = 0`. This exhibits the
 Pin⁺-ness of the Smith image `[RP⁴]` as a *consequence of the Smith construction* (PD in
 Spin-ℤ₄ `RP⁵`), distinct from the direct Karoubi `RP4_isPinPlusObstruction` — same
-conclusion, derived through the dimension-shifting mechanism. -/
+conclusion, derived through the dimension-shifting mechanism.
+
+**Thin-model caveat (adversarial-review CRITICAL-1).** In the `RP4` instance `cupSquare`
+is **rank-transport** (`⟨x.rank⟩`), NOT a modelled cup product, so on the generator both the
+Whitney identity (`⟨0⟩ = ⟨1⟩ + ⟨1⟩`) and the Spin-ℤ₄ constraint (`⟨1⟩ = ⟨1⟩`) reduce to
+`decide`-able `ZMod 2` facts. The *binomial* content (`C(6,2)=1`, `C(5,2)=0`) is genuine; the
+cup-product / restriction structure is the same tracked predicate-substrate gap as
+`StiefelWhitney.lean`. The **abstract** `smith_w2_vanishes` (over an opaque `HasStiefelWhitney`)
+is where the non-collapsed mechanism lives. -/
 theorem smith_RP4_isPinPlus_via_mechanism : IsPinPlusObstruction RP4 := by
   refine smith_w2_vanishes (HasStiefelWhitney.w (M := RP4) 1) smithAmbientW2RP4 ?_ ?_
   · -- Whitney identity: `w₂(RP⁴) = c + cupSquare (w₁ RP⁴)`, i.e. `⟨0⟩ = ⟨1⟩ + ⟨1⟩`.

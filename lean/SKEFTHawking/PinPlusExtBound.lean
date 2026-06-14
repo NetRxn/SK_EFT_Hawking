@@ -7,7 +7,16 @@ Mirrors `ExtBordismBridge.lean`'s H1–H4 disclosed-Prop pattern, for the Pin⁺
 `decide`); the topological assembly that turns its column-(`t−s=4`) `h₀`-tower into the order-16
 abutment is carried as **disclosed, cited Props** (NOT axioms). Combined with the kernel-pure **lower
 bound** from the surface ABK (`GuillouMarinBridge.order_exact_sixteen_of_surfaceABK`), the two
-independent bounds pinch `Ω₄^{Pin⁺}` to exactly `ℤ/16` — `[RP⁴]` of order 16 **DERIVED, not posited**.
+independent bounds pinch `Ω₄^{Pin⁺}` to exactly `ℤ/16`.
+
+**Honest precision on "derived" (adversarial-review CRITICAL-2).** The genuinely **posit-free** order-16
+derivation is `GuillouMarin.pinPlus_RP4_order16_from_ABK` — universally quantified over *any* `g` with
+the disclosed GM relation `reduce16to8 g = β(RP²)`. The *concrete* `[RP⁴]` theorems below instantiate
+it at the substrate generator, and to fix that class as `1 ∈ ℤ/16` they use the substrate's **posited**
+`signature = 1`; the genuine ABK then supplies the unit value `β(RP²) = 1` forcing order 16 (odd ⟹
+unit ⟹ order 16), the δ-cap supplies `16·[RP⁴] = 0`. So the concrete generator's order is "16 **given**
+the posited `[RP⁴] ↦ 1` **and** the genuine ABK `β = 1` **and** the δ-cap" — a genuine *pinch by two
+bounds*, but NOT a posit-free identification of `[RP⁴]`'s class (that is the `∀ g` lemma).
 
 ## The honest mechanism (read before quoting — `Lit-Search/Phase-5qF/A1_resolution_higher_syzygies.md`)
 
@@ -76,18 +85,22 @@ theorem pinPlusRP4_addOrder_sixteen_two_bounds (hCap : DeltaTruncationCap) :
   exact pinPlusRP4_order16_backed_by_ABK m hm0 hm16 (by rw [← map_nsmul, hmg, map_zero])
 
 /-- **Substrate instance of the pinch** (δ-cap discharged via the substrate's inhabitation). The
-order-16 of `[RP⁴]` with the **lower** half genuinely from the surface ABK and the **upper** half
-(δ-cap) inhabited at the substrate — the honest substrate-level statement of the two-bounds pinch (the
-geometric δ-truncation remains the tracked content). -/
+order-16 of `[RP⁴]`: the **upper** half (δ-cap) is inhabited at the substrate, and the **lower** half
+routes through `pinPlusRP4_order16_backed_by_ABK` — which (per the header's CRITICAL-2 note) uses the
+substrate's **posited** `signature = 1` to fix the class as `1 ∈ ℤ/16`, the genuine ABK supplying the
+unit value `β = 1` that forces order 16. So this is the honest substrate-level pinch, NOT a posit-free
+concrete derivation (that is the `∀ g` `pinPlus_RP4_order16_from_ABK`); the geometric δ-truncation and
+the manifold-level class identification remain the tracked content. -/
 theorem pinPlusRP4_addOrder_sixteen_substrate :
     addOrderOf (Omega4PinPlusBordism.mk pinPlusRP4) = 16 :=
   pinPlusRP4_addOrder_sixteen_two_bounds deltaTruncationCap_substrate
 
-/-- **`Ω₄^{Pin⁺} ≅ ℤ/16` with the generator's order DERIVED.** The substrate iso
-`Ω₄^{Pin⁺} ≃+ ℤ/16` exists (`omega4PinPlusBordismEquivZMod16`); the two-bounds pinch above shows its
-generator `[RP⁴]` genuinely has order 16 (lower from the ABK, upper from the δ-cap), so the `ℤ/16` is
-not merely the assigned quotient — it is the order pinned by the Ext upper bound and the surface-ABK
-lower bound. -/
+/-- **`Ω₄^{Pin⁺} ≅ ℤ/16`, with the generator's order pinned by the two bounds.** The substrate iso
+`Ω₄^{Pin⁺} ≃+ ℤ/16` exists (`omega4PinPlusBordismEquivZMod16`); the two-bounds pinch shows its
+generator `[RP⁴]` has order 16 — the **lower** half from the genuine surface ABK (`β = 1` a unit) and
+the **upper** half from the disclosed δ-cap. Honest scope (CRITICAL-2): for the *concrete* `[RP⁴]` the
+class `= 1` is fixed via the substrate's posited `signature = 1`; the ABK contributes the order-forcing
+unit value, the δ-cap the height-4 bound. The posit-free order-16 derivation is the `∀ g` lemma. -/
 theorem pinPlus_iso_zmod16_order_derived :
     Nonempty (Omega4PinPlusBordism ≃+ ZMod 16) ∧
       addOrderOf (Omega4PinPlusBordism.mk pinPlusRP4) = 16 :=

@@ -120,11 +120,15 @@ theorem pinPlus_RP4_order16_from_ABK (g : ZMod 16)
   rw [brown_stdQuadratic, Nat.cast_one] at hGM
   exact (order_exact_sixteen_of_surfaceABK g hGM).2
 
-/-- **The substrate's posited order-16 of `[RP⁴]` is backed by the ABK derivation.** Under the
-Kirby–Taylor iso `Ω₄^{Pin⁺} ≃+ ℤ/16`, `[RP⁴] ↦ 1`, whose mod-8 reduction is `1 = β(RP²)`; so the
-kernel-pure odd-bit lemma re-derives `pinPlusRP4_class_order_exact_sixteen` from the genuine surface
-ABK (rather than from the assigned `ℤ/16` quotient) — closing the "derived not posited" gap for the
-generator's order. -/
+/-- **The order-16 of `[RP⁴]` re-derived via the surface ABK odd-bit lemma.** Honest scope: the
+genuinely **posit-free** statement is the universally-quantified `pinPlus_RP4_order16_from_ABK` (over
+*any* `g` satisfying the disclosed GM relation `reduce16to8 g = β(RP²)`). This *concrete-generator*
+corollary instantiates it at `g = [RP⁴]`, and to do so it uses the substrate's **posited**
+`signature = 1` (`pinPlusRP4_class_to_zmod16 : [RP⁴] ↦ 1`) to *supply* the GM relation's left side
+`reduce16to8 1 = 1`; the genuine ABK then supplies the **matching value** `β(RP²) = 1`. So this is
+"order 16 **given** the posited `[RP⁴] ↦ 1` **and** the genuine ABK `β = 1` (mutually consistent)" —
+the ABK contributes the value `1`'s unit-ness (⟹ odd ⟹ order 16), NOT a posit-free identification of
+`[RP⁴]`'s class. The posit-free content lives in the `∀ g` lemma above. -/
 theorem pinPlusRP4_order16_backed_by_ABK :
     ∀ k : ℕ, 0 < k → k < 16 →
       (k : ℕ) • (SymTFT.omega4PinPlusBordismEquivZMod16
