@@ -2630,6 +2630,67 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
         'risk': 'Extremely low — proved 1952, independently confirmed by Atiyah-Singer (1963), Freedman-Kirby (1978). As solid as any result in topology.',
         'circularity_note': 'Anti-circularity verified: the wired derivation routes even-unimodular + van der Blij ⟹ 8|σ, plus 2|σ/8 ⟹ 16|σ; it does NOT use Anderson-Brown-Peterson or Rokhlin''s theorem as input (Rokhlin''s theorem IS the conclusion). The 2-axiom bordism alternative (Ω^Spin_4 ≅ Z) WOULD be circular (ABP used Rokhlin-equivalent facts) — deliberately NOT used.',
     },
+    'smith_inflow_z16': {
+        'tier': 'discharge_future',
+        'statement': 'The Smith homomorphism Ω₅^{Spin-ℤ₄} ≅ ℤ₁₆ → Ω₄^{Pin⁺}, carried at the ℤ₁₆ '
+            'level as an isomorphism `ZMod 16 ≃+ SKEFTHawking.SymTFT.Omega4PinPlusBordism` pinned to the '
+            'canonical generator `smith 1 = Omega4PinPlusBordism.mk pinPlusRP4` (the structure '
+            'SKEFTHawking.CommonOrigin.SmithInflow, consumed via the (S : SmithInflow) binder).',
+        'status': 'active (conditional input to the Phase 5q.E W5 common-origin theorem; a hypothesis, '
+            'NOT an axiom; the dependent theorems are kernel-pure {propext, Classical.choice, Quot.sound}). '
+            'INHABITED at the substrate level by substrateSmithInflow (via omega4PinPlusBordismEquivZMod16.symm) '
+            'and CANONICAL/unique by smithInflow_smith_unique (a ℤ₁₆-hom is determined by its value at 1) — so '
+            'the conditional is neither vacuously false nor choice-dependent.',
+        'eliminability': 'very_hard',
+        'elimination_path': 'Build the GEOMETRIC inputs the structure stands in for: (i) the Ω₅^{Spin-ℤ₄} '
+            'bordism group, (ii) the geometric Smith homomorphism Ω₅^{Spin-ℤ₄} → Ω₄^{Pin⁺}, and (iii) the '
+            'Dai–Freed anomaly functor — all Mathlib-absent landmarks (Phase 5q.E roadmap §Walls + §Mathlib '
+            'status, verified 2026-06-14 via semantic search). The Pin⁺ HALF (Ω₄^{Pin⁺} ≃+ ZMod 16) already '
+            'exists as the Phase 6r SymTFT/PinPlusBordism4 substrate. CHECKED 2026-06-14 from first principles: '
+            'an Ω₅^{Spin-ℤ₄} SUBSTRATE (à la Omega4PinPlusBordism) is NOT a thin-wrapper away — the Pin⁺ '
+            'substrate is genuine because its signature is ℤ-valued with a 16∣Δσ quotient, whereas the Ω₅ '
+            'Dai–Freed invariant is intrinsically ℤ₁₆ (η/16 mod 1) with no ℤ-lift, so the analogous Quotient '
+            'collapses to ZMod 16 (vacuous); the APSEta wittenYonekuraToZ16 η-map is also a placeholder (:= 0). '
+            'So the Ω₅ side is genuinely η-invariant / Dai–Freed-gated, trigger-gated per ADR-003 (shared '
+            'frontier with Leg C/D). On the ADR-003 Leg D trigger (Mathlib ships spin-flavored bordism groups), '
+            'build (i)+(ii) to upgrade the W5 theorem from conditional to unconditional.',
+        'dependent_theorems': [
+            'SKEFTHawking.CommonOrigin.sixteen_convergence_common_origin',
+            'SKEFTHawking.CommonOrigin.sixteen_convergence_common_origin_substrate',
+            'SKEFTHawking.CommonOrigin.rokhlin_reads_kitaev',
+            'SKEFTHawking.CommonOrigin.kitaev_generator_is_bordism_generator',
+            'SKEFTHawking.CommonOrigin.sm_anomaly_trivial_in_bordism',
+            'SKEFTHawking.CommonOrigin.sm_spin10_count_trivial_in_bordism',
+        ],
+        'module': 'CommonOrigin (Phase 5q.E W5); Pin⁺ half from SymTFT/PinPlusBordism4 (Phase 6r); '
+            'Kitaev reading from KitaevSixteenFold (W1)',
+        'source': 'García-Etxebarria–Montero, JHEP 08 (2019) 003 [arXiv:1808.00009]; Wang (2024) '
+            'Smith-homomorphism / string-bordism. NOTE: what the literature establishes is the ISO-NESS (the '
+            'Smith hom is a generator-preserving isomorphism ℤ₁₆ ≅ ℤ₁₆) — that is cited-true; the SPECIFIC '
+            'generator pin `smith 1 = [RP⁴]` is the canonical Kirby–Taylor normalization (a convention, not '
+            'itself a cited theorem; the true Smith hom agrees up to a generator relabeling).',
+        'risk': 'Low. The carried fact (Smith hom is an iso ℤ₁₆ ≅ ℤ₁₆) is established in the literature '
+            '(GEM 2018 / Wang 2024); only its geometric CONSTRUCTION is Mathlib-absent. Crucial contrast with '
+            'the FALSE lattice-Arf bridge (RokhlinArfNoGo.lean): there a claimed identity was false; here the '
+            'cited fact is TRUE and only the construction is absent. The conditional is inhabited '
+            '(substrateSmithInflow) and canonical (smithInflow_smith_unique), so it is neither vacuous nor a '
+            'choice-dependent artifact.',
+        'prose': 'The "16 convergence" common-origin theorem (CommonOrigin.lean) is honestly CONDITIONAL on '
+            'this Smith-inflow input: GIVEN the Smith homomorphism (whose ℤ₁₆ iso-ness is established by '
+            'García-Etxebarria–Montero 2018 and Wang 2024), the four occurrences of 16 — the Standard Model '
+            'Weyl-fermion count, the ℤ₁₆ global anomaly, Rokhlin signature divisibility, and the Kitaev 16-fold '
+            'way — are images of one genuine ℤ₁₆ (the Pin⁺ bordism group) under explicit maps, with Rokhlin and '
+            'Kitaev reading it identically. The result still CONSTRAINS rather than DERIVES the Standard Model '
+            '(the SM is the trivial class among 16). The geometric construction of the Smith map and the '
+            'Ω₅^{Spin-ℤ₄} bordism group remain Mathlib-absent; until they land, the theorem is stated '
+            'conditionally on this disclosed input.',
+        'circularity_note': 'None. The common-origin theorem is honestly CONDITIONAL on this input — it does '
+            'not assume its own conclusion. Verified by adversarial review (2026-06-14): the headline '
+            'rokhlin_reads_kitaev is provably NOT rfl/simp/decide-able for an arbitrary SmithInflow, so the '
+            'hypothesis does not smuggle the conclusion; it genuinely requires coherence of the '
+            'independently-constructed Kitaev (KitaevSixteenFold) and Rokhlin (PinPlusBordism4) maps. Review '
+            'verdict: "the legitimate opposite of the Arf-bridge failure mode."',
+    },
     'modular_invariance_framing': {
         'tier': 'external_boundary',
         'statement': 'The framing anomaly requires e^{2πic/24} = 1 for a consistent TQFT, i.e., 24 | c₋',
