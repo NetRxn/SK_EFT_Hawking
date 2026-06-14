@@ -61,7 +61,18 @@ Why this is the clearly-best route (decision taken 2026-06-14, no user gate need
 So: build the invariant `β : (Pin⁺ 4-manifold data) → ℤ₁₆` combinatorially, prove its bordism-invariance
 (handle calculus / Guillou–Marin congruence), prove it's an iso, then the Smith map, then Ω₅.
 
-### The concrete two-bound architecture for `Ω₄^{Pin⁺} ≅ ℤ₁₆` (the buildable route — verified 2026-06-14)
+> ⚠️ **CORRECTION 2026-06-14 — the "two finite bounds" claim below is REFUTED and stands pending a user
+> decision.** The *dedicated* feasibility assessment `Lit-Search/Phase-5a/Formalizing Ω₄^{Pin⁺} = ℤ₁₆ in
+> Lean 4- a feasibility assessment.md` (authoritative for this task) gives **15–25 person-years** for the
+> full geometric `Ω₄^{Pin⁺}=ℤ₁₆` ("infeasible on any realistic timeline"): it needs Thom spectra + Steenrod
+> algebra + Adams SS + APS index theorem, none in any proof assistant. The "finite A(1)-Ext" is a tiny
+> kernel **embedded** in that absent multi-year infrastructure — it only *partially* discharges the axiom;
+> it is NOT a finite route to the bordism group. The η lower bound needs APS (absent). **W1+W2 (Brown
+> invariant) is genuine bottom-up *evidence*, not the `Ω₄` bound.** DR-recommended path: keep `ℤ₁₆` as a
+> disclosed tracked input + build the categorical 16-fold-way + finite evidence. The wave plan W3–W5 below
+> is on hold pending the user's decision (redirect / commit person-years / stop at W1+W2).
+
+### ~~The concrete two-bound architecture for `Ω₄^{Pin⁺} ≅ ℤ₁₆`~~ (REFUTED — see correction banner above)
 
 `Lit-Search/Phase-5a/Formalizing the chirality wall- a Lean 4 feasibility assessment.md` (read directly)
 is explicit that the iso splits into two **finite, machine-checkable** bounds — neither needs the absent
