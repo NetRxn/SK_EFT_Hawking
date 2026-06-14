@@ -630,7 +630,7 @@ indexed by `j = 0, ..., k`. Wave 3 ships an *abstract* SU(2)_k constructor;
 the concrete formalization of d_j lives in the existing `SU2kFusion` module.
 
 Here we record the entropy candidate and prove the structural log
-coefficient under the `gaussianSaddleAsymptotic` axiom.
+coefficient (its saddle-point limit is `gaussianSaddleAsymptotic`, now a theorem).
 -/
 noncomputable def kaulMajumdar_S_KM (G_N : ℝ) : ℝ → ℝ :=
   fun A => kaulMajumdarS A G_N 0
@@ -815,7 +815,7 @@ tracked-hypothesis bundle for the general MTC case at the horizon:
 
 - `kaulMajumdarS` — closed-form `A/(4 G_N) − (3/2) log(A/(4 G_N)) + c_0`.
 - `kaul_majumdar_log_decomposition` — −3/2 = (−1/2) + (−1) (Gaussian + singlet).
-- `gaussianSaddleAsymptotic` — sole new axiom (Laplace-method bound).
+- `gaussianSaddleAsymptotic` — the genuine per-`G_N` `O(1/A)` saddle-point rate (Wave 7C; no longer an axiom).
 - `senFourDimSchwarzschildLogCoeff` + `sen_4d_disagrees_with_kaul_majumdar`
   — non-universality witness against −3/2.
 - `HorizonMTCBC` — abstract MTC data carrier (positive quantum dims,
