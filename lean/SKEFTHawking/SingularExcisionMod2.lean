@@ -334,6 +334,24 @@ theorem linBoundary_linSubdiv : ∀ (n : ℕ) (c : LinChain V (n + 1)),
         linBoundary_linBoundary_apply, map_zero, map_zero, add_zero, linBoundary_single,
         linBoundary_single_smul, map_smul]
 
+/-! ## §5. The subdivision chain homotopy `D` (`∂D + D∂ = 1 − Sd`) -/
+
+/-- The **subdivision chain homotopy** `D : LC_n(V) → LC_{n+1}(V)`, recursive
+`D[v] = b_v · ([v] − D(∂[v]))` (degree 0: `D = 0`). Witnesses `Sd ≃ id`. -/
+noncomputable def linHomotopy : (n : ℕ) → LinChain V n →ₗ[ZMod 2] LinChain V (n + 1)
+  | 0 => 0
+  | n + 1 => Finsupp.linearCombination (ZMod 2)
+      (fun v => cone (barycenter v) (n + 1)
+        (Finsupp.single v 1 + linHomotopy n (linBoundary n (Finsupp.single v 1))))
+
+theorem linHomotopy_zero_map (c : LinChain V 0) : linHomotopy 0 c = 0 := rfl
+
+theorem linHomotopy_single_smul (n : ℕ) (v : Fin (n + 1 + 1) → V) (a : ZMod 2) :
+    linHomotopy (n + 1) (Finsupp.single v a)
+      = a • cone (barycenter v) (n + 1)
+          (Finsupp.single v 1 + linHomotopy n (linBoundary n (Finsupp.single v 1))) := by
+  rw [linHomotopy, Finsupp.linearCombination_single]
+
 end Subdivision
 
 end SKEFTHawking.SingularExcisionMod2
