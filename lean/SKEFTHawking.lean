@@ -737,6 +737,11 @@ import SKEFTHawking.CellularCohomologyMod2
 -- generator's characteristic surface: H¹(RP²;ℤ/2) = the ABK quadratic form's domain, doubleBrown = the
 -- Guillou–Marin value. The genuine cohomology layer feeds the genuine ABK invariant on [RP⁴].
 import SKEFTHawking.PinPlusCohomologyABK
+-- Phase 5q.F W4-cohomology brick 6 (2026-06-14): the genuine ℤ/2 cellular CUP PRODUCT (Mathlib has none —
+-- no cohomology ring). Carries the Alexander–Whitney diagonal as data (CupData.coeff), defines the cochain
+-- cup product + bilinearity (cupₗ). Prereq for the intersection form on H² (resp. H¹ of a surface) that
+-- carries the ZMod 4-quadratic refinement of the Guillou–Marin / ABK invariant β.
+import SKEFTHawking.CellularCupProduct
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
