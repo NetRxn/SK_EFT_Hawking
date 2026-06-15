@@ -2676,7 +2676,18 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'sixteen_convergence_finite_discharge carries NO SmithInflow binder (takes pin4_abutment); the ℤ/16 is '
             'from finite content (criterion 8). The RESIDUAL tracked landmark is now just pin4_abutment (PT + '
             'convergence), Mathlib-absent (Thom-spectrum / stable-homotopy), per the axiom-stratified framework '
-            '(Phase-5a chirality-wall l.57/100: the finite A(1)-Ext "partially discharges the cobordism axiom").',
+            '(Phase-5a chirality-wall l.57/100: the finite A(1)-Ext "partially discharges the cobordism axiom"). '
+            'RETIREMENT 2026-06-15 (Phase 5q.F criterion 4): PinPlusDischarge §6 + Omega5FiniteIso re-pointed onto '
+            'the GENUINE W4 bordism group DataBordismGrp ξ (real SingularManifolds over manifolds-with-boundary) — '
+            'sixteen_convergence_genuine_carrier / omega5_quotient_iso_zmod16_genuine_carrier derive the ℤ/16 as '
+            'the image of the genuine ABK/η grade (UNCONDITIONAL via the quotient '
+            'dataBordism_quotient_abk_equiv_zmod16; full-carrier via the single disclosed PinPlusBordismLandmark = '
+            'the OBJECTIVE-permitted Brown/ABK order-16 + height-4 ≤16 finite inputs). pin4_abutment / '
+            'Omega4PinPlusBordism / the adamsAbutment modeling def are DEMOTED to finite-substrate corollaries; no '
+            'load-bearing modeling DEFINITION remains for the geometric ℤ/16. The W5 geometric Smith map is the '
+            'typed hom SmithIsomorphism.smithDataHom (DR Smith_sequence.md §5.2 scope) with the genuine manifold '
+            'layer (SmithIsomorphism.smithImageSingularManifold, bricks 1-2: PD(a) a real codim-1 SingularManifold '
+            'over arbitrary M). pin4_abutment remains CONSUMED by the demoted §1-§5 forms, hence still registered here.',
         'eliminability': 'very_hard',
         'elimination_path': 'Build the GEOMETRIC inputs the structure stands in for: (i) the Ω₅^{Spin-ℤ₄} '
             'bordism group, (ii) the geometric Smith homomorphism Ω₅^{Spin-ℤ₄} → Ω₄^{Pin⁺}, and (iii) the '
