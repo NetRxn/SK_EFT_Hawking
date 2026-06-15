@@ -65,4 +65,64 @@ theorem pushChain_single {X : TopCat} {N n : ℕ}
     pushChain σ (Finsupp.single w a) = Finsupp.single (pushSimplex σ w) a := by
   rw [pushChain, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single]
 
+/-- **The `toSSetObjEquiv` naturality at a coface `δ i`** (the singular-set simplicial structure):
+applying `face i` to a simplex `= toSSetObjEquiv.symm g` corresponds, under `toSSetObjEquiv`, to
+precomposing `g` with the topological face `stdSimplex.map (δ i) : Δⁿ → Δⁿ⁺¹`. The one `toSSet`-plumbing
+lemma (Mathlib gives no direct version; derived via the restricted-Yoneda structure + `toTopHomeo`). -/
+theorem toSSetObjEquiv_symm_face {X : TopCat} {n : ℕ} (i : Fin (n + 2))
+    (g : C(stdSimplex ℝ (Fin (n + 1 + 1)), X)) :
+    X.toSSetObjEquiv (op (SimplexCategory.mk n))
+        (face i ((X.toSSetObjEquiv (op (SimplexCategory.mk (n + 1)))).symm g))
+      = g.comp ⟨_root_.stdSimplex.map (SimplexCategory.δ i),
+          _root_.stdSimplex.continuous_map (SimplexCategory.δ i)⟩ :=
+  rfl
+
+/-- The pure finite-sum reindexing underlying the affine face-compatibility: distributing the
+fiber-weighted sum over the convex coefficients and collapsing the fibers of `g` (here `g = δ i`)
+gives the pulled-back affine combination. Stated over `ℝ` so the proof is coercion-free; the
+geometric lemma applies it by defeq. -/
+private theorem sum_fiberwise_reindex {n : ℕ} (g : Fin (n + 1) → Fin (n + 2))
+    (T : Fin (n + 1) → ℝ) (a : Fin (n + 2) → ℝ) :
+    ∑ x, (∑ x_1 ∈ Finset.univ.filter (fun m => g m = x), T x_1) • a x = ∑ m, T m • a (g m) := by
+  rw [← Finset.sum_fiberwise Finset.univ g (fun m => T m • a (g m))]
+  refine Finset.sum_congr rfl fun x _ => ?_
+  rw [Finset.sum_smul]
+  refine Finset.sum_congr rfl fun m hm => ?_
+  rw [Finset.mem_filter] at hm
+  rw [hm.2]
+
+/-- **(B) The affine face-compatibility**: precomposing the affine simplex with the topological coface
+`stdSimplex.map (δ i)` (which inserts a `0` coordinate at `i`) drops the `i`-th vertex —
+`affineSimplexStd w ∘ (δ i) = affineSimplexStd (w ∘ Fin.succAbove i)`. -/
+theorem affineSimplexStd_comp_face {N n : ℕ} (w : Fin (n + 1 + 1) → stdSimplex ℝ (Fin (N + 1)))
+    (i : Fin (n + 2)) :
+    (affineSimplexStd w).comp ⟨_root_.stdSimplex.map (SimplexCategory.δ i),
+        _root_.stdSimplex.continuous_map (SimplexCategory.δ i)⟩
+      = affineSimplexStd (w ∘ i.succAbove) := by
+  ext t k
+  -- Reduce both sides to coordinate sums by `change` (defeq: `affineSimplexStd`'s coe is the
+  -- `rfl`-unfolding `affineSimplex`). This sidesteps the `⇑`(DFunLike)/`↑`(Subtype.val from `ext`)
+  -- coercion-head mismatch that otherwise blocks `rw`/`simp` from expanding the RHS.
+  change (∑ j : Fin (n + 1 + 1),
+            ⇑(stdSimplex.map (ConcreteCategory.hom (SimplexCategory.δ i)) t) j • ⇑(w j)) k
+       = (∑ m : Fin (n + 1), ⇑t m • ⇑(w (i.succAbove m))) k
+  rw [Finset.sum_apply, Finset.sum_apply]
+  simp only [Pi.smul_apply, stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  -- The remaining identity is the pure finite-sum reindexing along the injective coface
+  -- `δ i = Fin.succAbove i`. `exact` closes it by defeq (`⇑ = ↑`, `δ i m = Fin.succAbove i m`).
+  exact sum_fiberwise_reindex (fun m => (ConcreteCategory.hom (SimplexCategory.δ i)) m)
+    (fun x => ⇑t x) (fun x => ⇑(w x) k)
+
+/-- **The pushforward boundary-naturality**: `face i (σ_# [w]) = σ_# [w ∘ ∂ᵢ]` — the singular `i`-th
+face of a pushforward is the pushforward of the affine `i`-th face. From the (definitional)
+`toSSetObjEquiv` naturality + the affine face-compatibility (B). -/
+theorem pushSimplex_face {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    (w : Fin (n + 1 + 1) → stdSimplex ℝ (Fin (N + 1))) (i : Fin (n + 2)) :
+    face i (pushSimplex σ w) = pushSimplex σ (w ∘ i.succAbove) := by
+  apply (X.toSSetObjEquiv (op (SimplexCategory.mk n))).injective
+  simp only [pushSimplex, toSSetObjEquiv_symm_face, Equiv.apply_symm_apply]
+  exact congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk N))) σ).comp ·)
+    (affineSimplexStd_comp_face w i)
+
 end SKEFTHawking.SingularExcisionPushforward
