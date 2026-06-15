@@ -102,4 +102,12 @@ theorem localRep_hasStrictFDerivAt {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, �
       (fderiv ℝ (localRep (I := I) f p) (extChartAt I p p)) (extChartAt I p p) :=
   (localRep_contDiffAt hf p).hasStrictFDerivAt (by norm_num)
 
+omit [FiniteDimensional ℝ E] [I.Boundaryless] [IsManifold I ⊤ M] in
+/-- At a zero-locus point `p`, the local representative vanishes at the chart point:
+`localRep f p (extChartAt I p p) = f p = 0` — the `h0` input the level-set chart needs. -/
+theorem localRep_chartPt_eq_zero {f : M → ℝ} {p : M} (hp : p ∈ mZeroLocus f) :
+    localRep (I := I) f p (extChartAt I p p) = 0 := by
+  rw [localRep_apply, extChartAt_to_inv]
+  exact hp
+
 end SKEFTHawking.ManifoldRegularValue
