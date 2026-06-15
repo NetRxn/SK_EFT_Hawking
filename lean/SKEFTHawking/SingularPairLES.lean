@@ -312,4 +312,56 @@ theorem exact_connecting_homIncl (n : ℕ) :
     rw [← hy]
     exact homIncl_connecting S n y
 
+/-- **The complex property `j_* ∘ i_* = 0`**: a class pulled in from `S` becomes a subspace chain,
+hence `0` in the relative complex. -/
+theorem homProj_homIncl (n : ℕ) (w : Homology (sub S) n) :
+    homProj S n (homIncl S n w) = 0 := by
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ w
+  show homProj S n (homIncl S n (Homology.mk (sub S) n z)) = 0
+  rw [homIncl_mk, homProj_mk]
+  refine (Submodule.Quotient.mk_eq_zero _).2 ?_
+  show RelativeChain.mk S n (chainIncl S n (z : SingularChain (sub S) n)) ∈ relBoundaries S n
+  rw [(RelativeChain.mk_eq_zero_iff S n _).2 ⟨z, rfl⟩]
+  exact Submodule.zero_mem _
+
+/-- **Exactness at `Hₙ(X)`**: `ker j_* = im i_*` (snake-lemma argument: `[mk c] = 0` ⟹ `c` differs
+from a boundary by a subspace cycle `chainIncl e`, whence `[c] = i_*[e]`). -/
+theorem exact_homIncl_homProj (n : ℕ) :
+    Function.Exact (homIncl S n) (homProj S n) := by
+  intro x
+  obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  constructor
+  · intro h
+    have h2 : homProj S n (Homology.mk X n c) = 0 := h
+    rw [homProj_mk, RelativeHomology.mk_eq_zero_iff] at h2
+    obtain ⟨w, hw⟩ := h2
+    obtain ⟨d, rfl⟩ := Submodule.Quotient.mk_surjective (subspaceChains S (n + 1)) w
+    have h1 : RelativeChain.mk S n (c : SingularChain X n)
+        = RelativeChain.mk S n (chainBoundary X n d) := by
+      rw [← relBoundary_mk]; exact hw.symm
+    rw [RelativeChain.mk, RelativeChain.mk] at h1
+    obtain ⟨e, he⟩ := (Submodule.Quotient.eq (subspaceChains S n)).1 h1
+    have hecyc : e ∈ cycles (sub S) n := by
+      cases n with
+      | zero => exact Submodule.mem_top
+      | succ m =>
+        show e ∈ LinearMap.ker (chainBoundary (sub S) m)
+        rw [LinearMap.mem_ker]
+        apply chainIncl_injective S m
+        rw [map_zero, chainIncl_chainBoundary, he, map_sub, chainBoundary_chainBoundary_apply,
+          LinearMap.mem_ker.mp c.2, sub_zero]
+    refine ⟨Homology.mk (sub S) n ⟨e, hecyc⟩, ?_⟩
+    rw [homIncl_mk]
+    refine (Submodule.Quotient.eq _).2 ?_
+    rw [Submodule.submoduleOf, Submodule.mem_comap]
+    show chainIncl S n e - (c : SingularChain X n) ∈ boundaries X n
+    rw [he]
+    have hsub : ((c : SingularChain X n) - chainBoundary X n d) - (c : SingularChain X n)
+        = -chainBoundary X n d := by abel
+    rw [hsub]
+    exact Submodule.neg_mem _ ⟨d, rfl⟩
+  · rintro ⟨w, hw⟩
+    rw [← hw]
+    exact homProj_homIncl S n w
+
 end SKEFTHawking.SingularPairLES
