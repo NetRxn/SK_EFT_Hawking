@@ -652,6 +652,18 @@ theorem mLevelSetIsManifold :
   letI := mLevelSetChartedSpace f hf hsub
   { compatible := fun he he' => (mLevelSetHasGroupoid f hf hsub).compatible he he' }
 
+/-- **The manifold level set as a `SingularManifold`** (over `PUnit`): the compact, boundaryless
+`C^∞` manifold `mZeroLocus f`, packaged for the bordism group `DataBordismGrp`. This is the form the
+geometric Smith map's Poincaré-dual `[M] ↦ [PD(a) = N]` consumes — `mZeroLocus f` is compact (closed
+in the compact `M`), boundaryless (modelled on a boundaryless self-model), and `C^∞`
+(`mLevelSetIsManifold`). -/
+noncomputable def mLevelSetSingularManifold [CompactSpace M] :
+    SingularManifold PUnit ⊤ (modelWithCornersSelf ℝ (euclideanModel E)) :=
+  letI := mLevelSetChartedSpace f hf hsub
+  letI := mLevelSetIsManifold f hf hsub
+  haveI : CompactSpace (mZeroLocus f) := instCompactSpace_mZeroLocus hf.continuous
+  SingularManifold.toPUnit (mZeroLocus f) (modelWithCornersSelf ℝ (euclideanModel E))
+
 end Chart
 
 end SKEFTHawking.ManifoldRegularValue
