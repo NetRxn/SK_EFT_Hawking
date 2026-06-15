@@ -773,6 +773,11 @@ import SKEFTHawking.SmithRegularValue
 -- with smooth embedding. C^∞-IFT-chart gap resolved pointwise via contDiffAt_symm on the open
 -- invertibility locus. The full PD-submanifold structure for the geometric Smith map.
 import SKEFTHawking.SmithRegularValueGeneral
+-- Phase 5q.F W5 (2026-06-16): the geometric Smith map's real line bundle L_a + section zero locus = PD(a).
+-- SignCocycle → VectorBundleCore (genuine VectorBundle ℝ ℝ, structure group ℤ/2⊂ℝˣ); section coordinate
+-- function → zero locus is a C^∞ codim-1 manifold via the regular-value theorem + smooth embedding;
+-- w₂(N)=0 SW-inheritance (PD_RP4_isPinPlus). The PD-submanifold construction for [M]↦[PD(a)].
+import SKEFTHawking.SmithLineBundle
 -- Phase 5q.F W6 (2026-06-16): the Smith-LES derivation engine — the exact segment 0→Ω₆^{Pin⁻}→Ω₄^{Pin⁺}→0
 -- (twisted-spin vanishings) forces sm_{2σ} an iso; with the cited Ω₆^{Pin⁻}=ℤ/16 (height-4 input) ⟹
 -- Ω₄^{Pin⁺}≅ℤ/16. The genuine W6 assembly; instantiated at the genuine carriers + geometric Smith map.
