@@ -225,4 +225,133 @@ noncomputable def cupₗ {X : TopCat} (p q : ℕ) :
 @[simp] theorem cupₗ_apply {X : TopCat} {p q : ℕ} (f : SingularCochain X p) (g : SingularCochain X q) :
     cupₗ p q f g = cup f g := rfl
 
+/-! ## §4. The cup Leibniz rule `δ(f ⌣ g) = δf ⌣ g + f ⌣ δg` (mod 2)
+
+The Alexander–Whitney coboundary identity, stated cast-free at a fixed `(p+q+1)`-simplex `τ`: the
+front/back faces of `τ` at the two splits `(p+1, q)` and `(p, q+1)` carry the expanded coboundaries
+`δf`, `δg`, so the right-hand side is written with `coboundary` applied to genuine `(p+1)`- and
+`(q+1)`-simplices — never `cup (coboundary …) …`, which would force a degree cast `(p+q)+1 = (p+1)+q`.
+Over `ℤ/2` the two "diagonal" terms (`δf`'s last face × `g`'s back; `f`'s front × `δg`'s first face)
+coincide and cancel. -/
+
+/-- Inclusion `[p+1] ⟶ [p+q+1]` onto the front vertices `{0,…,p+1}`. -/
+def frontBigIncl (p q : ℕ) : SimplexCategory.mk (p + 1) ⟶ SimplexCategory.mk (p + q + 1) :=
+  SimplexCategory.mkHom ⟨fun i => i.castLE (by omega), fun a b h => by
+    rw [Fin.le_def] at h ⊢; simp only [Fin.val_castLE]; omega⟩
+
+/-- Inclusion `[q] ⟶ [p+q+1]` onto the back vertices `{p+1,…,p+q+1}`. -/
+def backBigIncl (p q : ℕ) : SimplexCategory.mk q ⟶ SimplexCategory.mk (p + q + 1) :=
+  SimplexCategory.mkHom ⟨fun i => ⟨i.val + (p + 1), by have := i.isLt; omega⟩, fun a b h => by
+    simp only [Fin.le_def] at h ⊢; omega⟩
+
+/-- **Front `(p+1)`-face** of a `(p+q+1)`-simplex (vertices `{0,…,p+1}`); carries `δf`. -/
+noncomputable def frontBig {X : TopCat} {p q : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (p + q + 1)))) :
+    (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (p + 1))) :=
+  (TopCat.toSSet.obj X).map (frontBigIncl p q).op σ
+
+/-- **Back `q`-face** of a `(p+q+1)`-simplex (vertices `{p+1,…,p+q+1}`). -/
+noncomputable def backBig {X : TopCat} {p q : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (p + q + 1)))) :
+    (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk q)) :=
+  (TopCat.toSSet.obj X).map (backBigIncl p q).op σ
+
+/-- **Front `p`-face** of a `(p+q+1)`-simplex (vertices `{0,…,p}`); reuses `frontIncl p (q+1)` since
+`p + (q+1) = p+q+1` definitionally. -/
+noncomputable def frontSmall {X : TopCat} {p q : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (p + q + 1)))) :
+    (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk p)) :=
+  (TopCat.toSSet.obj X).map (frontIncl p (q + 1)).op σ
+
+/-- **Back `(q+1)`-face** of a `(p+q+1)`-simplex (vertices `{p,…,p+q+1}`); carries `δg`. Reuses
+`backIncl p (q+1)`. -/
+noncomputable def backSmall {X : TopCat} {p q : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (p + q + 1)))) :
+    (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (q + 1))) :=
+  (TopCat.toSSet.obj X).map (backIncl p (q + 1)).op σ
+
+/-- The value of `Fin.succAbove`: `p.succAbove i` is `i` if `i < p`, else `i+1`. The single arithmetic
+fact behind every face-commutation identity below. -/
+theorem succAbove_val {n : ℕ} (p : Fin (n + 1)) (i : Fin n) :
+    (p.succAbove i).val = if i.val < p.val then i.val else i.val + 1 := by
+  rcases lt_or_ge i.castSucc p with h | h
+  · rw [Fin.succAbove_of_castSucc_lt p i h, Fin.val_castSucc, if_pos]
+    rwa [Fin.lt_def, Fin.val_castSucc] at h
+  · rw [Fin.succAbove_of_le_castSucc p i h, Fin.val_succ, if_neg]
+    rw [Fin.le_def, Fin.val_castSucc] at h; omega
+
+/-- `δ i` as an order map evaluates to `Fin.succAbove` (definitional; stated so `simp` can match it
+syntactically through the `Hom.toOrderHom`/`mkHom` projections). -/
+theorem toOrderHom_δ {n : ℕ} (i : Fin (n + 2)) (x : Fin (n + 1)) :
+    (SimplexCategory.Hom.toOrderHom (SimplexCategory.δ i)) x = i.succAbove x := rfl
+
+/-- `Hom.toOrderHom (mkHom f)` evaluates to `f` (definitional; stated for `simp` matching). -/
+theorem toOrderHom_mkHom {n m : ℕ} (f : Fin (n + 1) →o Fin (m + 1)) (x : Fin (n + 1)) :
+    (SimplexCategory.Hom.toOrderHom (SimplexCategory.mkHom f)) x = f x := rfl
+
+/-- **(I1)** Front-face commutation for `i ≤ p`: removing vertex `i ≤ p` from the front-`p` face of
+`∂ᵢτ` is the `i`-th face of the front-`(p+1)` face of `τ`. -/
+theorem front_comp_δ_of_le (p q : ℕ) (i : Fin (p + q + 2)) (h : i.val ≤ p) :
+    frontIncl p q ≫ SimplexCategory.δ i
+      = SimplexCategory.δ (⟨i.val, by omega⟩ : Fin (p + 2)) ≫ frontBigIncl p q := by
+  ext x : 3
+  apply Fin.ext
+  simp only [SimplexCategory.comp_toOrderHom, OrderHom.comp_coe, Function.comp_apply, toOrderHom_δ,
+    frontIncl, frontBigIncl, toOrderHom_mkHom, OrderHom.coe_mk, succAbove_val, Fin.val_castLE]
+
+/-- **(I2)** Back-face invariance for `i ≤ p`: removing an early vertex `i ≤ p` leaves the back-`q`
+face of `∂ᵢτ` equal to the back-`q` face `{p+1,…,p+q+1}` of `τ`. -/
+theorem back_comp_δ_of_le (p q : ℕ) (i : Fin (p + q + 2)) (h : i.val ≤ p) :
+    backIncl p q ≫ SimplexCategory.δ i = backBigIncl p q := by
+  ext x : 3
+  apply Fin.ext
+  simp only [SimplexCategory.comp_toOrderHom, OrderHom.comp_coe, Function.comp_apply, toOrderHom_δ,
+    backIncl, backBigIncl, toOrderHom_mkHom, OrderHom.coe_mk, succAbove_val, Fin.val_natAdd]
+  split <;> omega
+
+/-- **(I3)** Front-face invariance for `i > p`: removing a late vertex `i > p` leaves the front-`p`
+face of `∂ᵢτ` equal to the front-`p` face `{0,…,p}` of `τ`. -/
+theorem front_comp_δ_of_gt (p q : ℕ) (i : Fin (p + q + 2)) (h : p < i.val) :
+    frontIncl p q ≫ SimplexCategory.δ i = frontIncl p (q + 1) := by
+  ext x : 3
+  apply Fin.ext
+  simp only [SimplexCategory.comp_toOrderHom, OrderHom.comp_coe, Function.comp_apply, toOrderHom_δ,
+    frontIncl, toOrderHom_mkHom, OrderHom.coe_mk, succAbove_val, Fin.val_castLE]
+  have hx : x.val < p + 1 := x.isLt
+  split_ifs <;> omega
+
+/-- **(I4)** Back-face commutation for `i > p`: removing vertex `i > p` from the back-`q` face of
+`∂ᵢτ` is the `(i-p)`-th face of the back-`(q+1)` face of `τ`. -/
+theorem back_comp_δ_of_gt (p q : ℕ) (i : Fin (p + q + 2)) (h : p < i.val) :
+    backIncl p q ≫ SimplexCategory.δ i
+      = SimplexCategory.δ (⟨i.val - p, by have := i.isLt; omega⟩ : Fin (q + 2)) ≫ backIncl p (q + 1) := by
+  ext x : 3
+  apply Fin.ext
+  simp only [SimplexCategory.comp_toOrderHom, OrderHom.comp_coe, Function.comp_apply, toOrderHom_δ,
+    backIncl, toOrderHom_mkHom, OrderHom.coe_mk, succAbove_val, Fin.val_natAdd]
+  split_ifs <;> omega
+
+/-- **(D1)** Diagonal front term: the last face of the front-`(p+1)` face of `τ` is its front-`p`
+face. -/
+theorem δ_last_comp_frontBig (p q : ℕ) :
+    SimplexCategory.δ (Fin.last (p + 1)) ≫ frontBigIncl p q = frontIncl p (q + 1) := by
+  ext x : 3
+  apply Fin.ext
+  simp only [SimplexCategory.comp_toOrderHom, OrderHom.comp_coe, Function.comp_apply, toOrderHom_δ,
+    frontIncl, frontBigIncl, toOrderHom_mkHom, OrderHom.coe_mk, succAbove_val, Fin.val_castLE,
+    Fin.val_last]
+  have hx : x.val < p + 1 := x.isLt
+  split_ifs <;> omega
+
+/-- **(D2)** Diagonal back term: the zeroth face of the back-`(q+1)` face of `τ` is its back-`q`
+face. -/
+theorem δ_zero_comp_backSmall (p q : ℕ) :
+    SimplexCategory.δ (0 : Fin (q + 2)) ≫ backIncl p (q + 1) = backBigIncl p q := by
+  ext x : 3
+  apply Fin.ext
+  simp only [SimplexCategory.comp_toOrderHom, OrderHom.comp_coe, Function.comp_apply, toOrderHom_δ,
+    backIncl, backBigIncl, toOrderHom_mkHom, OrderHom.coe_mk, succAbove_val, Fin.val_natAdd,
+    Fin.val_zero]
+  split_ifs <;> omega
+
 end SKEFTHawking.SingularCohomologyMod2
