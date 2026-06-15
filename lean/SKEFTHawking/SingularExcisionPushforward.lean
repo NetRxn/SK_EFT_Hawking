@@ -142,4 +142,50 @@ theorem pushChain_chainBoundary {X : TopCat} {N n : ℕ}
     refine congrArg (a • ·) (Finset.sum_congr rfl fun i _ => ?_)
     rw [pushChain_single, pushSimplex_face]
 
+open Classical in
+/-- **The module-valued pushforward of an affine simplex of `Δᴺ`** along `σ`: for a vertex-tuple
+`u : Fin (n+1) → (Fin (N+1) → ℝ)` in the *ambient* `ℝ`-module (where the barycentric subdivision lives),
+push it along `σ` when all its vertices lie in `Δᴺ` (corestricting to `affineSimplexStd`), with a junk
+constant simplex otherwise (never reached on chains in `chainsIn (stdSimplex …)`). This is the bridge
+that lets the module-valued `linSubdiv`/`linHomotopy` be pushed to singular chains. -/
+noncomputable def pushSimplexM {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    (u : Fin (n + 1) → (Fin (N + 1) → ℝ)) :
+    (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n)) :=
+  if h : ∀ j, u j ∈ stdSimplex ℝ (Fin (N + 1))
+  then pushSimplex σ (fun j => ⟨u j, h j⟩)
+  else pushSimplex σ (fun _ => stdSimplex.vertex 0)
+
+/-- On an in-simplex vertex-tuple, `pushSimplexM` is the corestricted `pushSimplex`. -/
+theorem pushSimplexM_of_mem {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    {u : Fin (n + 1) → (Fin (N + 1) → ℝ)} (hu : ∀ j, u j ∈ stdSimplex ℝ (Fin (N + 1))) :
+    pushSimplexM σ u = pushSimplex σ (fun j => ⟨u j, hu j⟩) := by
+  rw [pushSimplexM, dif_pos hu]
+
+/-- **The module-valued pushforward boundary-naturality** (in-simplex tuples): `face i (σ_# u) =
+σ_# (u ∘ ∂ᵢ)`. The faces of an in-simplex tuple are in-simplex, so both `pushSimplexM`s corestrict
+and the identity is `pushSimplex_face`. -/
+theorem pushSimplexM_face {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    {u : Fin (n + 1 + 1) → (Fin (N + 1) → ℝ)} (hu : ∀ j, u j ∈ stdSimplex ℝ (Fin (N + 1)))
+    (i : Fin (n + 2)) :
+    face i (pushSimplexM σ u) = pushSimplexM σ (u ∘ i.succAbove) := by
+  rw [pushSimplexM_of_mem σ hu,
+    pushSimplexM_of_mem σ (u := u ∘ i.succAbove) (fun j => hu (i.succAbove j)), pushSimplex_face]
+  rfl
+
+/-- The module-valued pushforward as a `ℤ/2`-linear map `LinChain (Fin (N+1) → ℝ) n → SingularChain X n`
+(the `Finsupp` extension of `pushSimplexM σ`). -/
+noncomputable def pushChainM {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N))) :
+    LinChain (Fin (N + 1) → ℝ) n →ₗ[ZMod 2] SingularChain X n :=
+  Finsupp.lmapDomain (ZMod 2) (ZMod 2) (pushSimplexM σ)
+
+theorem pushChainM_single {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    (u : Fin (n + 1) → (Fin (N + 1) → ℝ)) (a : ZMod 2) :
+    pushChainM σ (Finsupp.single u a) = Finsupp.single (pushSimplexM σ u) a := by
+  rw [pushChainM, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single]
+
 end SKEFTHawking.SingularExcisionPushforward
