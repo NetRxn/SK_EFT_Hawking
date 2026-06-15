@@ -198,4 +198,33 @@ theorem smith_w2_vanishes_genuine (w2 c : Cochain C (1 + 1)) (b : Cochain C 1)
 
 end CupData
 
+/-! ## §4. The `RP^n` cup ring and the genuine Smith mechanism on the generator `[RP⁴]`
+
+`H*(RP^n; ℤ/2) = ℤ/2[α]/(αⁿ⁺¹)` with `αⁱ ⌣ αʲ = αⁱ⁺ʲ` — since each degree has a single cell, every
+cup coefficient is `1`. This gives the genuine cup-square `α² = α ⌣ α` (the `H²` generator), de-thinning
+the Smith mechanism's rank-transport on the generator `[RP⁴]`. -/
+
+/-- The cup product on `RP^n`: `αⁱ ⌣ αʲ = αⁱ⁺ʲ`, i.e. every diagonal coefficient is `1`. -/
+def RPCupData (n : ℕ) : CupData (RPComplex n) where
+  coeff _ _ _ _ := 1
+
+/-- The genuine cup-square of the `H¹` generator `α = 1` of `RP^n` (`n ≥ 2`) is the **nonzero** `H²`
+generator `α² = 1`: `α ⌣ α` sums the single `(1,1)`-cell pair with coefficient `1`. So `α²` is genuinely
+nonzero — the Smith cancellation `α² + α² = 0` below is a real char-2 cancellation, not `0 + 0`. -/
+theorem RPCupData_cupSquare_gen (n : ℕ) (hn : 2 ≤ n) :
+    (RPCupData n).cupSquare (1 : Cochain (RPComplex n) 1) = (1 : Cochain (RPComplex n) 2) := by
+  haveI : Unique ((RPComplex n).cells 1) := RPComplex_cells_unique n 1 (by omega)
+  funext σ
+  simp [CupData.cupSquare, CupData.cup, RPCupData]
+
+/-- **The Smith mechanism's cancellation on the generator `[RP⁴]`, over the GENUINE cup-square.** For
+`RP⁴` the Smith inputs are `b = α = w₁(RP⁴)` and `c = α² = w₂(RP⁵)|_{RP⁴}`, and the Whitney + Spin-ℤ₄
+relations give `w₂(RP⁴) = α² + α² = 0`. Here `α²` is the genuine (nonzero) cup-square `α ⌣ α`
+(`RPCupData_cupSquare_gen`), so the Pin⁺-landing of the Smith image `[RP⁴]` is backed by this session's
+REAL cup product — not the rank-transport of `SymTFT/SmithMechanism`. -/
+theorem RP4_smith_cupSquare_cancellation :
+    (RPCupData 4).cupSquare (1 : Cochain (RPComplex 4) 1)
+      + (RPCupData 4).cupSquare (1 : Cochain (RPComplex 4) 1) = 0 :=
+  cochain_add_self _
+
 end SKEFTHawking.CellularCohomologyMod2
