@@ -757,6 +757,7 @@ import SKEFTHawking.PinPlusBordismGroupDerived
 -- the genuine β discharging dataBordism_iso_zmod16's hypotheses.
 import SKEFTHawking.SingularCohomologyMod2
 import SKEFTHawking.SingularCohomologyFunctorial
+import SKEFTHawking.SingularCohomologyDisjoint
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
