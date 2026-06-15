@@ -149,6 +149,18 @@ theorem cup_coboundary_left {p q : ℕ} (h : Cochain C p) (g : Cochain C q)
   rw [hg, CupData.cup_zero, add_zero] at hL
   exact hL.symm
 
+/-- The cup product of two **cocycle representatives**, packaged as a cocycle (an element of
+`ker δ^{p+q}`). The representative-level cup used to define the cup product on cohomology. -/
+def cupCocycle {p q : ℕ} (z₁ : LinearMap.ker (coboundary C p))
+    (z₂ : LinearMap.ker (coboundary C q)) : LinearMap.ker (coboundary C (p + q)) :=
+  ⟨R.toCupData.cup z₁.val z₂.val,
+   LinearMap.mem_ker.mpr
+     (R.cup_cocycle z₁.val z₂.val (LinearMap.mem_ker.mp z₁.2) (LinearMap.mem_ker.mp z₂.2))⟩
+
+@[simp] theorem cupCocycle_val {p q : ℕ} (z₁ : LinearMap.ker (coboundary C p))
+    (z₂ : LinearMap.ker (coboundary C q)) :
+    (R.cupCocycle z₁ z₂).val = R.toCupData.cup z₁.val z₂.val := rfl
+
 end CupRing
 
 end SKEFTHawking.CellularCohomologyMod2
