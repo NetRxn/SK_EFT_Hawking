@@ -52,4 +52,27 @@ theorem genuine_cohomology_feeds_ABK_on_generator :
       doubleBrown (stdQuadratic 1) = ((0 - (-2 : ℤ)) : ZMod 16) :=
   ⟨charSurface_RP2_H1_finrank, GM_rp4.symm⟩
 
+/-! ## §2. `β = doubleBrown` is a homomorphism (additive under orthogonal sum)
+
+The algebraic core of "the ABK invariant `β : Ω₄^{Pin⁺} → ℤ/16` is a group homomorphism": the doubled
+Brown invariant is additive under the orthogonal sum of `ZMod 4`-quadratic forms — which is the
+quadratic-form shadow of the connected sum / disjoint union of characteristic surfaces (and hence of the
+group operation on Pin⁺ bordism). Built on the already-proven `Brown.brown_orthSum`. -/
+
+/-- `2·val` is additive as a map `ZMod 8 → ZMod 16` (the doubling embedding of the even subgroup;
+the wraparound at `8` becomes a multiple of `16`). The `ZMod 8 → ZMod 16` analogue of
+`Brown.two_mul_val_add` (`ZMod 4 → ZMod 8`). -/
+lemma two_mul_val_add_8_16 (a b : ZMod 8) :
+    (2 * ((a + b).val : ZMod 16)) = 2 * (a.val : ZMod 16) + 2 * (b.val : ZMod 16) := by
+  revert a b; decide
+
+/-- **The ℤ/16 ABK invariant `doubleBrown` is additive under orthogonal sum.** This is the algebraic
+core of "`β : Ω₄^{Pin⁺} → ℤ/16` is a group homomorphism": `β(Q₁ ⊕ Q₂) = β(Q₁) + β(Q₂)`, lifting
+`Brown.brown_orthSum` through the doubling `ZMod 8 → ZMod 16`. -/
+theorem doubleBrown_orthSum {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂]
+    (Q₁ : Z4Quadratic ι₁) (Q₂ : Z4Quadratic ι₂) :
+    doubleBrown (orthSum Q₁ Q₂) = doubleBrown Q₁ + doubleBrown Q₂ := by
+  unfold doubleBrown
+  rw [brown_orthSum, two_mul_val_add_8_16]
+
 end SKEFTHawking.PinPlusCohomologyABK
