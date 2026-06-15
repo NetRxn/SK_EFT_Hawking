@@ -125,4 +125,21 @@ theorem pushSimplex_face {X : TopCat} {N n : ℕ}
   exact congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk N))) σ).comp ·)
     (affineSimplexStd_comp_face w i)
 
+/-- **The pushforward is a chain map**: `∂ ∘ σ_# = σ_# ∘ ∂` (`SingularChain`'s `chainBoundary`
+intertwines with the affine `linBoundary`). The chain-level upgrade of `pushSimplex_face`; this is the
+naturality that transports the affine subdivision identities (`∂Sd=Sd∂`, `∂D+D∂=1−Sd`, all verified on
+`LinChain`) to singular chains. Proven by `ℤ/2`-linearity + the per-basis face computation. -/
+theorem pushChain_chainBoundary {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    (c : LinChain (stdSimplex ℝ (Fin (N + 1))) (n + 1)) :
+    chainBoundary X n (pushChain σ c) = pushChain σ (linBoundary n c) := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp only [map_zero]
+  | add c d hc hd => simp only [map_add, hc, hd]
+  | single w a =>
+    rw [pushChain_single, chainBoundary_single_smul, linBoundary_single_smul, map_smul,
+      boundaryBasis, linBoundaryBasis, map_sum]
+    refine congrArg (a • ·) (Finset.sum_congr rfl fun i _ => ?_)
+    rw [pushChain_single, pushSimplex_face]
+
 end SKEFTHawking.SingularExcisionPushforward
