@@ -208,4 +208,108 @@ noncomputable def homProj (n : ℕ) : Homology X n →ₗ[ZMod 2] RelativeHomolo
       show RelativeChain.mk S n (z : SingularChain X n) ∈ relBoundaries S n
       exact relMk_mem_relBoundaries S n z hz)
 
+@[simp] theorem homIncl_mk (n : ℕ) (z : cycles (sub S) n) :
+    homIncl S n (Homology.mk (sub S) n z)
+      = Homology.mk X n ⟨chainIncl S n (z : SingularChain (sub S) n),
+          chainIncl_mem_cycles S n z z.2⟩ := rfl
+
+@[simp] theorem homProj_mk (n : ℕ) (z : cycles X n) :
+    homProj S n (Homology.mk X n z)
+      = RelativeHomology.mk S n ⟨RelativeChain.mk S n (z : SingularChain X n),
+          relMk_mem_relCycles S n z z.2⟩ := rfl
+
+/-! ## §4. Exactness of the LES of the pair -/
+
+/-- A cycle of `X` lies in the relative-cycle lift submodule (its boundary `0` is a subspace chain). -/
+theorem cycle_mem_relCycleLift (n : ℕ) (z : cycles X (n + 1)) :
+    (z : SingularChain X (n + 1)) ∈ relCycleLift S n := by
+  show chainBoundary X n (z : SingularChain X (n + 1)) ∈ subspaceChains S n
+  rw [LinearMap.mem_ker.mp z.2]
+  exact Submodule.zero_mem _
+
+/-- **The complex property `δ ∘ j_* = 0`**: the connecting map kills the image of `j_*` (a class from a
+genuine `X`-cycle has boundary `0`, so its extraction is a boundary). -/
+theorem connecting_homProj (n : ℕ) (x : Homology X (n + 1)) :
+    connecting S n (homProj S (n + 1) x) = 0 := by
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  have hzZ := cycle_mem_relCycleLift S n z
+  show connecting S n (relCycleToHom S n ⟨(z : SingularChain X (n + 1)), hzZ⟩) = 0
+  rw [connecting_relCycleToHom, connectingLift_apply]
+  refine (Submodule.Quotient.mk_eq_zero _).2 ?_
+  show boundaryExtract S n ⟨(z : SingularChain X (n + 1)), hzZ⟩ ∈ boundaries (sub S) n
+  have hb0 : boundaryExtract S n ⟨(z : SingularChain X (n + 1)), hzZ⟩ = 0 := by
+    apply chainIncl_injective S n
+    rw [chainIncl_boundaryExtract, map_zero]
+    exact LinearMap.mem_ker.mp z.2
+  rw [hb0]
+  exact Submodule.zero_mem _
+
+/-- **Exactness at `Hₙ₊₁(X,S)`**: `ker δ = im j_*`. -/
+theorem exact_homProj_connecting (n : ℕ) :
+    Function.Exact (homProj S (n + 1)) (connecting S n) := by
+  intro y
+  obtain ⟨c, rfl⟩ := relCycleToHom_surjective S n y
+  rw [connecting_relCycleToHom, connectingLift_apply]
+  constructor
+  · intro h
+    have hb : boundaryExtract S n c ∈ boundaries (sub S) n := by
+      have h2 := (Submodule.Quotient.mk_eq_zero _).1 h
+      rwa [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype] at h2
+    obtain ⟨e, he⟩ := hb
+    have hcyc : (c : SingularChain X (n + 1)) - chainIncl S (n + 1) e ∈ cycles X (n + 1) := by
+      show _ ∈ LinearMap.ker (chainBoundary X n)
+      rw [LinearMap.mem_ker, map_sub, ← chainIncl_boundaryExtract S n c, ← he,
+        chainIncl_chainBoundary, sub_self]
+    refine ⟨Homology.mk X (n + 1) ⟨_, hcyc⟩, ?_⟩
+    rw [homProj_mk, relCycleToHom_apply]
+    refine congrArg (RelativeHomology.mk (S := S) (n + 1)) (Subtype.ext ?_)
+    show RelativeChain.mk S (n + 1) ((c : SingularChain X (n + 1)) - chainIncl S (n + 1) e)
+      = RelativeChain.mk S (n + 1) (c : SingularChain X (n + 1))
+    rw [RelativeChain.mk, RelativeChain.mk]
+    refine (Submodule.Quotient.eq _).2 ?_
+    have hsub : ((c : SingularChain X (n + 1)) - chainIncl S (n + 1) e)
+        - (c : SingularChain X (n + 1)) = -chainIncl S (n + 1) e := by abel
+    rw [hsub]
+    exact Submodule.neg_mem _ ⟨e, rfl⟩
+  · rintro ⟨x, hx⟩
+    rw [← connectingLift_apply, ← connecting_relCycleToHom, ← hx]
+    exact connecting_homProj S n x
+
+/-- **The complex property `i_* ∘ δ = 0`**: `i_*` kills the image of `δ` (the extracted boundary
+re-includes to `∂c`, a boundary in `X`). -/
+theorem homIncl_connecting (n : ℕ) (y : RelativeHomology S (n + 1)) :
+    homIncl S n (connecting S n y) = 0 := by
+  obtain ⟨c, rfl⟩ := relCycleToHom_surjective S n y
+  rw [connecting_relCycleToHom, connectingLift_apply, homIncl_mk]
+  refine (Submodule.Quotient.mk_eq_zero _).2 ?_
+  show chainIncl S n (boundaryExtract S n c) ∈ boundaries X n
+  rw [chainIncl_boundaryExtract]
+  exact LinearMap.mem_range_self _ _
+
+/-- **Exactness at `Hₙ(S)`**: `ker i_* = im δ`. -/
+theorem exact_connecting_homIncl (n : ℕ) :
+    Function.Exact (connecting S n) (homIncl S n) := by
+  intro w₀
+  obtain ⟨w, rfl⟩ := Submodule.Quotient.mk_surjective _ w₀
+  constructor
+  · intro h
+    have hb : chainIncl S n (w : SingularChain (sub S) n) ∈ boundaries X n := by
+      have h2 : homIncl S n (Homology.mk (sub S) n w) = 0 := h
+      rw [homIncl_mk] at h2
+      have h3 := (Submodule.Quotient.mk_eq_zero _).1 h2
+      rwa [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype] at h3
+    obtain ⟨d, hd⟩ := hb
+    have hdZ : d ∈ relCycleLift S n := by
+      show chainBoundary X n d ∈ subspaceChains S n
+      rw [hd]; exact ⟨w, rfl⟩
+    refine ⟨relCycleToHom S n ⟨d, hdZ⟩, ?_⟩
+    rw [connecting_relCycleToHom, connectingLift_apply]
+    have hbe : boundaryExtract S n ⟨d, hdZ⟩ = (w : SingularChain (sub S) n) := by
+      apply chainIncl_injective S n
+      rw [chainIncl_boundaryExtract]; exact hd
+    exact congrArg (Homology.mk (sub S) n) (Subtype.ext hbe)
+  · rintro ⟨y, hy⟩
+    rw [← hy]
+    exact homIncl_connecting S n y
+
 end SKEFTHawking.SingularPairLES
