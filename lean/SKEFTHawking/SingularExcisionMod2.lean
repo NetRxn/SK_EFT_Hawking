@@ -167,6 +167,11 @@ theorem linBoundary_comp_linBoundary (n : ℕ) :
   rw [LinearMap.comp_apply, LinearMap.zero_apply, hsingle, map_smul, map_smul,
     linBoundary_linBoundary_single_eq_zero, smul_zero]
 
+/-- `∂² = 0` in applied form. -/
+theorem linBoundary_linBoundary_apply (n : ℕ) (c : LinChain Y (n + 1 + 1)) :
+    linBoundary n (linBoundary (n + 1) c) = 0 := by
+  rw [← LinearMap.comp_apply, linBoundary_comp_linBoundary, LinearMap.zero_apply]
+
 /-! ## §3. The cone operator `b · (-)` and its boundary formula
 
 The cone `b · [v₀,…,vₙ] = [b, v₀, …, vₙ]` (prepend the apex `b`) is the contracting homotopy of an affine
@@ -299,6 +304,35 @@ theorem linSubdiv_single (n : ℕ) (v : Fin (n + 1 + 1) → V) :
     linSubdiv (n + 1) (Finsupp.single v 1)
       = cone (barycenter v) n (linSubdiv n (linBoundary n (Finsupp.single v 1))) := by
   rw [linSubdiv, Finsupp.linearCombination_single, one_smul]
+
+theorem linSubdiv_single_smul (n : ℕ) (v : Fin (n + 1 + 1) → V) (a : ZMod 2) :
+    linSubdiv (n + 1) (Finsupp.single v a)
+      = a • cone (barycenter v) n (linSubdiv n (linBoundary n (Finsupp.single v 1))) := by
+  rw [linSubdiv, Finsupp.linearCombination_single]
+
+/-- **The subdivision is a chain map**: `∂ ∘ Sd = Sd ∘ ∂`. By induction on `n`: the base case uses the
+degree-0 cone formula + `ε∂ = 0` (the barycenter term cancels); the inductive step uses the general cone
+formula `∂(b·c) = c + b·(∂c)`, the IH, and `∂² = 0` (the cone term vanishes). -/
+theorem linBoundary_linSubdiv : ∀ (n : ℕ) (c : LinChain V (n + 1)),
+    linBoundary n (linSubdiv (n + 1) c) = linSubdiv n (linBoundary n c)
+  | 0, c => by
+    induction c using Finsupp.induction_linear with
+    | zero => simp only [map_zero]
+    | add c d hc hd => simp only [map_add, hc, hd]
+    | single v a =>
+      rw [linSubdiv_single_smul, linSubdiv_zero, map_smul, linSubdiv_zero,
+        show (Finsupp.single v a : LinChain V 1) = a • Finsupp.single v 1 from by
+          rw [Finsupp.smul_single, smul_eq_mul, mul_one], map_smul]
+      congr 1
+      rw [linBoundary_cone_zero, linAug_linBoundary, zero_smul, add_zero]
+  | n + 1, c => by
+    induction c using Finsupp.induction_linear with
+    | zero => simp only [map_zero]
+    | add c d hc hd => simp only [map_add, hc, hd]
+    | single v a =>
+      rw [linSubdiv_single_smul, map_smul, linBoundary_cone, linBoundary_linSubdiv n,
+        linBoundary_linBoundary_apply, map_zero, map_zero, add_zero, linBoundary_single,
+        linBoundary_single_smul, map_smul]
 
 end Subdivision
 
