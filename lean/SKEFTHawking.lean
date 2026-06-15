@@ -824,6 +824,11 @@ import SKEFTHawking.SingularRelativeHomologyMod2
 -- [c]↦[∂c] (the snake-lemma boundary, with hand-rolled well-definedness). Foundation for the local-homology
 -- computation Hₙ(ℝⁿ,ℝⁿ∖0)≅ℤ/2 → the ℤ/2 fundamental class → Poincaré duality.
 import SKEFTHawking.SingularPairLES
+-- Phase 5q.F (w₂ foundation brick 6c, 2026-06-15): barycentric subdivision + excision (the engine for
+-- local homology Hₙ(ℝⁿ,ℝⁿ∖0)≅ℤ/2). Sub-brick c1: the affine (linear) singular simplices [v₀,…,vₙ]:Δⁿ→V
+-- (t↦∑tᵢvᵢ) — the geometric atoms of the subdivision Sd. (Cone operator, recursive Sd, the chain homotopy
+-- ∂T+T∂=1−Sd, and the small-simplices theorem follow.)
+import SKEFTHawking.SingularExcisionMod2
 -- Phase 5q.F (fully-unconditional strengthening, w₂-foundation brick 5, 2026-06-15): the Wu class v₂ from
 -- Poincaré duality — for a PD datum (fundamental-class functional μ:H⁴→ℤ/2 + non-degenerate middle cup
 -- pairing, finite-dim H²), v₂∈H² represents x↦⟨Sq²x,[M]⟩ (wu_relation), the input to the Wu formula
