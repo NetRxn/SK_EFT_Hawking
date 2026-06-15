@@ -21,7 +21,7 @@ namespace SKEFTHawking.SingularSubdivision
 
 open CategoryTheory Opposite
 open SKEFTHawking.SingularExcisionMod2 SKEFTHawking.SingularHomologyMod2
-open SKEFTHawking.SingularCohomologyMod2
+open SKEFTHawking.SingularCohomologyMod2 SKEFTHawking.SingularSubdivisionNatural
 open SKEFTHawking.SingularExcisionPushforward SKEFTHawking.SingularSubdivisionConvex
 
 /-- **The module pushforward is a chain map on in-`Δᴺ` chains**: `∂ (σ_# c) = σ_# (∂ c)` for any affine
@@ -68,5 +68,22 @@ theorem pushSimplexM_facetIncl {X : TopCat} {N n : ℕ}
   rw [toSSetObjEquiv_face, ContinuousMap.comp_assoc]
   exact congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk (N + 1)))) σ).comp ·)
     (stdSimplexMap_comp_affineSimplexStd i (fun j => (⟨w j, hw j⟩ : stdSimplex ℝ (Fin (N + 1))))).symm
+
+/-- **Chain-level facet functoriality**: `σ_# ∘ (Lᵢ)_* = (∂ᵢσ)_#` on in-`Δᴺ` chains. The `ℤ/2`-linear
+lift of `pushSimplexM_facetIncl` over `chainsIn`: pushing an in-`Δᴺ` chain through the linear coface
+`Lᵢ` and then along `σ` equals pushing along the face `∂ᵢσ`. -/
+theorem pushChainM_mapVerts {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (N + 1)))) (i : Fin (N + 2))
+    {c : LinChain (Fin (N + 1) → ℝ) n}
+    (hc : c ∈ chainsIn (stdSimplex ℝ (Fin (N + 1))) n) :
+    pushChainM σ (mapVerts (FunOnFinite.linearMap ℝ ℝ i.succAbove) n c)
+      = pushChainM (face i σ) c := by
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ hc
+  · rintro _ ⟨w, hw, rfl⟩
+    rw [mapVerts_single, pushChainM_single, pushChainM_single]
+    exact congrArg (Finsupp.single · 1) (pushSimplexM_facetIncl σ i hw)
+  · simp only [map_zero]
+  · intro x y _ _ hx hy; simp only [map_add]; rw [hx, hy]
+  · intro a x _ hx; simp only [map_smul]; rw [hx]
 
 end SKEFTHawking.SingularSubdivision
