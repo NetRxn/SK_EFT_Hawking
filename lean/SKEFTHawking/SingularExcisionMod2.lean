@@ -222,4 +222,34 @@ theorem linBoundary_coneBasis (b : Y) (n : ℕ) (v : Fin (n + 1 + 1) → Y) :
   refine Finset.sum_congr rfl (fun j _ => ?_)
   rw [cons_comp_succ_succAbove, cone_single]
 
+/-! ## §4. The barycentric subdivision `Sd` (recursive)
+
+`Sd[v₀,…,vₙ] = b_v · Sd(∂[v₀,…,vₙ])`, coning the subdivided boundary at the barycenter `b_v`. Needs a
+real vector space `V` for the barycenter (the average of the vertices). -/
+
+section Subdivision
+
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+
+/-- The **barycenter** of an affine simplex `[v₀,…,vₙ]`: the average `(n+1)⁻¹ ∑ᵢ vᵢ`. -/
+noncomputable def barycenter {n : ℕ} (v : Fin (n + 1) → V) : V :=
+  ((n : ℝ) + 1)⁻¹ • ∑ i, v i
+
+/-- The **barycentric subdivision** `Sd : LC_n(V) → LC_n(V)`, recursive: `Sd[v] = b_v · Sd(∂[v])`
+(in degree 0, `Sd = id`). -/
+noncomputable def linSubdiv : (n : ℕ) → LinChain V n →ₗ[ZMod 2] LinChain V n
+  | 0 => LinearMap.id
+  | n + 1 => Finsupp.linearCombination (ZMod 2)
+      (fun v => cone (barycenter v) n (linSubdiv n (linBoundary n (Finsupp.single v 1))))
+
+theorem linSubdiv_zero (c : LinChain V 0) : linSubdiv 0 c = c := rfl
+
+/-- The subdivision on a single simplex: `Sd[v] = b_v · Sd(∂[v])`. -/
+theorem linSubdiv_single (n : ℕ) (v : Fin (n + 1 + 1) → V) :
+    linSubdiv (n + 1) (Finsupp.single v 1)
+      = cone (barycenter v) n (linSubdiv n (linBoundary n (Finsupp.single v 1))) := by
+  rw [linSubdiv, Finsupp.linearCombination_single, one_smul]
+
+end Subdivision
+
 end SKEFTHawking.SingularExcisionMod2
