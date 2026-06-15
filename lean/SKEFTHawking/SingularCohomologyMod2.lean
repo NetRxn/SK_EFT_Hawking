@@ -444,4 +444,17 @@ theorem coboundary_cup (f : SingularCochain X p) (g : SingularCochain X q) :
       rw [hidx]
   rw [hL, hAB]
 
+/-- **Cocycle ⌣ cocycle is a cocycle.** If `f` and `g` are cocycles (`δf = δg = 0`) then `f ⌣ g` is a
+cocycle. Immediate from the Leibniz rule `coboundary_cup`: both terms on the right carry a factor
+`δf` resp. `δg`, which vanish. The first descent fact — `cupₗ` carries `ker δ × ker δ → ker δ`. -/
+theorem cup_cocycle (f : SingularCochain X p) (g : SingularCochain X q)
+    (hf : coboundaryₗ X p f = 0) (hg : coboundaryₗ X q g = 0) :
+    coboundaryₗ X (p + q) (cup f g) = 0 := by
+  funext τ
+  show coboundary X (p + q) (cup f g) τ = 0
+  rw [coboundary_cup]
+  have hf' : coboundary X p f (frontBig τ) = 0 := congrFun hf (frontBig τ)
+  have hg' : coboundary X q g (backSmall τ) = 0 := congrFun hg (backSmall τ)
+  rw [hf', hg', zero_mul, mul_zero, add_zero]
+
 end SKEFTHawking.SingularCohomologyMod2
