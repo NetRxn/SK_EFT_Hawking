@@ -31,6 +31,16 @@ noncomputable def face {X : TopCat} {n : ℕ} (i : Fin (n + 2))
     (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n)) :=
   (TopCat.toSSet.obj X).map (SimplexCategory.δ i).op σ
 
+/-- **Faces compose to a composite coface.** `∂ⱼ(∂ᵢ σ)` is the face of `σ` along the composite
+`δ j ≫ δ i : [n] ⟶ [n+2]` (functoriality of the singular simplicial set + the op-reversal of
+composition). The key step for `δ² = 0`. -/
+theorem face_face {X : TopCat} {n : ℕ} (i : Fin (n + 3)) (j : Fin (n + 2))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 2)))) :
+    face j (face i σ)
+      = (TopCat.toSSet.obj X).map (SimplexCategory.δ j ≫ SimplexCategory.δ i).op σ := by
+  unfold face
+  rw [← FunctorToTypes.map_comp_apply, ← op_comp]
+
 /-- The **singular coboundary** `δ : Cⁿ → Cⁿ⁺¹`, `(δ f)(σ) = ∑ᵢ f(∂ᵢ σ)` over `ℤ/2` (the alternating
 sign is `+1` mod 2). Genuine `ℤ/2`-linear (a sum of precompositions). -/
 noncomputable def coboundary (X : TopCat) (n : ℕ) (f : SingularCochain X n) : SingularCochain X (n + 1) :=
