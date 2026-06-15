@@ -210,4 +210,18 @@ theorem singularD_chainHomotopy (X : TopCat) (n : ℕ) :
     simp only [LinearMap.add_apply, LinearMap.comp_apply, LinearMap.id_apply]
     exact chainBoundary_singularD X n σ
 
+/-- **`∂ ∘ Sdᵐ = Sdᵐ ∘ ∂`** — the iterated subdivision is a chain map. Induction on `m` from
+`singularSd_comp_chainBoundary`. -/
+theorem singularSd_iterate_chainBoundary (X : TopCat) (n m : ℕ) (c : SingularChain X (n + 1)) :
+    chainBoundary X n ((⇑(singularSd X (n + 1)))^[m] c)
+      = (⇑(singularSd X n))^[m] (chainBoundary X n c) := by
+  have hcomm : ∀ x, chainBoundary X n (singularSd X (n + 1) x)
+      = singularSd X n (chainBoundary X n x) :=
+    fun x => LinearMap.congr_fun (singularSd_comp_chainBoundary X n) x
+  induction m generalizing c with
+  | zero => rfl
+  | succ m ih =>
+    rw [Function.iterate_succ', Function.comp_apply, hcomm, ih, Function.iterate_succ',
+      Function.comp_apply]
+
 end SKEFTHawking.SingularSubdivision
