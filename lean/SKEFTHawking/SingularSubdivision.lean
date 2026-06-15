@@ -171,4 +171,43 @@ theorem chainBoundary_singularD (X : TopCat) (n : ℕ)
       (linHomotopy_mem_chainsIn (convex_stdSimplex ℝ _) (n + 1) (idChain_mem (n + 1))),
     ← map_add, linBoundary_linHomotopy, map_add, pushChainM_idChain, singularSd_single]
 
+/-! ## c8 — iterated subdivision `Sdᵐ` and the iterated homotopy (toward excision)
+
+The chain map `∂Sd=Sd∂` and homotopy `∂D+D∂=1−Sd` are first lifted from basis simplices to `LinearMap`
+identities (so they compose), then iterated: `Sdᵐ` is a chain map and `Dₘ := ∑_{i<m} Sdⁱ∘D` witnesses
+`∂Dₘ+Dₘ∂ = 1−Sdᵐ`. -/
+
+/-- **`∂ ∘ Sd = Sd ∘ ∂` as a `LinearMap` identity** (lifted from `chainBoundary_singularSd` on basis
+simplices by `ℤ/2`-linearity). -/
+theorem singularSd_comp_chainBoundary (X : TopCat) (n : ℕ) :
+    (chainBoundary X n).comp (singularSd X (n + 1)) = (singularSd X n).comp (chainBoundary X n) := by
+  refine LinearMap.ext fun c => ?_
+  induction c using Finsupp.induction_linear with
+  | zero => simp only [map_zero]
+  | add c d hc hd => simp only [LinearMap.comp_apply, map_add] at hc hd ⊢; rw [hc, hd]
+  | single σ a =>
+    rw [show Finsupp.single σ a = a • Finsupp.single σ 1 from by
+      rw [Finsupp.smul_single, smul_eq_mul, mul_one]]
+    simp only [LinearMap.comp_apply, map_smul]
+    rw [chainBoundary_singularSd]
+
+/-- **`∂D + D∂ = 1 + Sd` as a `LinearMap` identity** (`1 − Sd = 1 + Sd` over `ℤ/2`), lifted from
+`chainBoundary_singularD` on basis simplices by `ℤ/2`-linearity. The chain-homotopy `Sd ≃ id`. -/
+theorem singularD_chainHomotopy (X : TopCat) (n : ℕ) :
+    (chainBoundary X (n + 1)).comp (singularD X (n + 1))
+        + (singularD X n).comp (chainBoundary X n)
+      = LinearMap.id + singularSd X (n + 1) := by
+  refine LinearMap.ext fun c => ?_
+  induction c using Finsupp.induction_linear with
+  | zero => simp only [map_zero, LinearMap.add_apply, add_zero]
+  | add c d hc hd =>
+    simp only [LinearMap.add_apply, LinearMap.comp_apply, LinearMap.id_apply, map_add] at hc hd ⊢
+    rw [← hc, ← hd, add_add_add_comm]
+  | single σ a =>
+    rw [show Finsupp.single σ a = a • Finsupp.single σ 1 from by
+      rw [Finsupp.smul_single, smul_eq_mul, mul_one], map_smul, map_smul]
+    congr 1
+    simp only [LinearMap.add_apply, LinearMap.comp_apply, LinearMap.id_apply]
+    exact chainBoundary_singularD X n σ
+
 end SKEFTHawking.SingularSubdivision
