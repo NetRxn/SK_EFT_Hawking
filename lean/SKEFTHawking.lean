@@ -833,6 +833,10 @@ import SKEFTHawking.SingularExcisionMod2
 -- affine Sd/D to singular chains. c7a: affineSimplexStd — the affine simplex with vertices in Δᴺ landing
 -- in Δᴺ (convexity), ready to post-compose with a singular N-simplex σ:Δᴺ→X.
 import SKEFTHawking.SingularExcisionPushforward
+-- Phase 5q.F (w₂-foundation, brick 6c-c7c.2): barycentric subdivision stays in a convex set — the
+-- submodule chainsIn S n of in-S chains is preserved by cone/linBoundary/linSubdiv/linHomotopy (new
+-- vertices are barycenters = convex combinations), so the subdivision of Δᴺ has vertices in Δᴺ.
+import SKEFTHawking.SingularSubdivisionConvex
 -- Phase 5q.F (fully-unconditional strengthening, w₂-foundation brick 5, 2026-06-15): the Wu class v₂ from
 -- Poincaré duality — for a PD datum (fundamental-class functional μ:H⁴→ℤ/2 + non-degenerate middle cup
 -- pairing, finite-dim H²), v₂∈H² represents x↦⟨Sq²x,[M]⟩ (wu_relation), the input to the Wu formula
