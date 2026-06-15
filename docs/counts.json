@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-15T04:07:35.453713",
+  "generated": "2026-06-15T04:56:08.238065",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 21413,
-    "theorems_total": 13013,
-    "theorems_substantive": 12987,
+    "total_declarations": 21436,
+    "theorems_total": 13026,
+    "theorems_substantive": 13000,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 983,
+    "modules": 984,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -680,6 +680,7 @@
       "SKEFTHawking.PinPlusHeight4",
       "SKEFTHawking.PinPlusSmithDerived",
       "SKEFTHawking.PinPlusSmithLES",
+      "SKEFTHawking.PinPlusTangentialData",
       "SKEFTHawking.PolaritonTier1",
       "SKEFTHawking.PolyQuotOver",
       "SKEFTHawking.PolyQuotQ",
@@ -996,9 +997,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 7445,
+    "definitions": 7453,
     "structures": 307,
-    "instances": 551,
+    "instances": 553,
     "inductives": 97,
     "native_decide_decl_closure": 546,
     "native_decide_clusters": {
