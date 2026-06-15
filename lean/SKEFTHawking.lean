@@ -742,6 +742,11 @@ import SKEFTHawking.PinPlusCohomologyABK
 -- cup product + bilinearity (cupₗ). Prereq for the intersection form on H² (resp. H¹ of a surface) that
 -- carries the ZMod 4-quadratic refinement of the Guillou–Marin / ABK invariant β.
 import SKEFTHawking.CellularCupProduct
+-- Phase 5q.F W6 (2026-06-15): the Smith sandwich engine — a finite abelian group with an order-16 element
+-- and ≤16 elements is ≅ ℤ/16 (TY 1805.02772 fn 15). DERIVES the Pin⁺ ℤ/16 from the two finite bounds
+-- (≥16 ABK/Brown order of [RP⁴]; ≤16 decidable Adams height-4 cap), replacing the posited assigned-invariant
+-- iso. The genuine algebraic engine for retiring the Omega4PinPlusBordism signature posit.
+import SKEFTHawking.PinPlusSmithDerived
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
