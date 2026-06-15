@@ -204,4 +204,28 @@ theorem linSubdiv_diamLe {δ : ℝ} : ∀ (n : ℕ) {c : LinChain V n}, diamLe �
       rw [linBoundary_single, linBoundaryBasis]
       exact diamLe.sum _ _ (fun i _ => diamLe_single (fun a b => hvd _ _))
 
+/-- **Iterated subdivision contracts diameter geometrically**: the `m`-fold barycentric subdivision
+shrinks every simplex's diameter by `(n/(n+1))^m`. Induction on `m` from `linSubdiv_diamLe`. -/
+theorem linSubdiv_iterate_diamLe {δ : ℝ} {n : ℕ} :
+    ∀ (m : ℕ) {c : LinChain V n}, diamLe δ c →
+      diamLe (((n : ℝ) / ((n : ℝ) + 1)) ^ m * δ) ((linSubdiv n)^[m] c)
+  | 0, c, hc => by simpa using hc
+  | m + 1, c, hc => by
+    rw [Function.iterate_succ_apply']
+    refine (linSubdiv_diamLe n (linSubdiv_iterate_diamLe m hc)).mono (le_of_eq ?_)
+    rw [pow_succ]; ring
+
+/-- **Existence of an arbitrarily fine subdivision**: for any target `ε > 0`, enough barycentric
+subdivisions make every simplex's diameter `< ε`, since the contraction factor `(n/(n+1))^m → 0`. The
+smallness input that the Lebesgue-number excision step consumes. -/
+theorem exists_iterate_diamLe {δ : ℝ} {n : ℕ} {c : LinChain V n} (hc : diamLe δ c)
+    {ε : ℝ} (hε : 0 < ε) : ∃ m, diamLe ε ((linSubdiv n)^[m] c) := by
+  have hr0 : (0 : ℝ) ≤ (n : ℝ) / ((n : ℝ) + 1) := by positivity
+  have hr1 : (n : ℝ) / ((n : ℝ) + 1) < 1 := by
+    rw [div_lt_one (by positivity)]; linarith
+  have htend : Filter.Tendsto (fun m => ((n : ℝ) / ((n : ℝ) + 1)) ^ m * δ) Filter.atTop (nhds 0) := by
+    simpa using (tendsto_pow_atTop_nhds_zero_of_lt_one hr0 hr1).mul_const δ
+  obtain ⟨m, hm⟩ := (htend.eventually_lt_const hε).exists
+  exact ⟨m, (linSubdiv_iterate_diamLe m hc).mono (le_of_lt hm)⟩
+
 end SKEFTHawking.SingularSubdivisionDiameter
