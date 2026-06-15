@@ -764,6 +764,10 @@ import SKEFTHawking.SmithLESDefectMap
 -- local structure of a real submersion's zero locus (PD submanifold = zero locus of a transverse
 -- section) via Mathlib's implicit function theorem: local parametrization, immersion/smoothness, base.
 import SKEFTHawking.SmithTransversality
+-- Phase 5q.F W6 (2026-06-16): the Smith-LES derivation engine — the exact segment 0→Ω₆^{Pin⁻}→Ω₄^{Pin⁺}→0
+-- (twisted-spin vanishings) forces sm_{2σ} an iso; with the cited Ω₆^{Pin⁻}=ℤ/16 (height-4 input) ⟹
+-- Ω₄^{Pin⁺}≅ℤ/16. The genuine W6 assembly; instantiated at the genuine carriers + geometric Smith map.
+import SKEFTHawking.PinPlusSmithLES
 -- Phase 5q.F (2026-06-15): singular ℤ/2 cohomology on Mathlib's singular SSet (TopCat.toSSet) — the
 -- foundation for the ABK β BUILT FROM the SingularManifold bordism group (Mathlib has the singular chain
 -- complex but no cohomology). First brick: singular cochains + the coboundary δ. Toward δ²=0 → Hⁿ → cup →
