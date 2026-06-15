@@ -239,9 +239,11 @@ def frontBigIncl (p q : ℕ) : SimplexCategory.mk (p + 1) ⟶ SimplexCategory.mk
   SimplexCategory.mkHom ⟨fun i => i.castLE (by omega), fun a b h => by
     rw [Fin.le_def] at h ⊢; simp only [Fin.val_castLE]; omega⟩
 
-/-- Inclusion `[q] ⟶ [p+q+1]` onto the back vertices `{p+1,…,p+q+1}`. -/
+/-- Inclusion `[q] ⟶ [p+q+1]` onto the back vertices `{p+1,…,p+q+1}`. The `(p+1) + i` order (rather
+than `i + (p+1)`) matches `backIncl`'s `Fin.natAdd`, so `backBig` and `backFace` agree definitionally
+at the concrete degrees the descent lemmas use. -/
 def backBigIncl (p q : ℕ) : SimplexCategory.mk q ⟶ SimplexCategory.mk (p + q + 1) :=
-  SimplexCategory.mkHom ⟨fun i => ⟨i.val + (p + 1), by have := i.isLt; omega⟩, fun a b h => by
+  SimplexCategory.mkHom ⟨fun i => ⟨(p + 1) + i.val, by have := i.isLt; omega⟩, fun a b h => by
     simp only [Fin.le_def] at h ⊢; omega⟩
 
 /-- **Front `(p+1)`-face** of a `(p+q+1)`-simplex (vertices `{0,…,p+1}`); carries `δf`. -/
@@ -456,5 +458,35 @@ theorem cup_cocycle (f : SingularCochain X p) (g : SingularCochain X q)
   have hf' : coboundary X p f (frontBig τ) = 0 := congrFun hf (frontBig τ)
   have hg' : coboundary X q g (backSmall τ) = 0 := congrFun hg (backSmall τ)
   rw [hf', hg', zero_mul, mul_zero, add_zero]
+
+/-- **Cocycle ⌣ coboundary is a coboundary** (right argument): if `f` is a cocycle then
+`f ⌣ δb = δ(f ⌣ b)`. Cast-free: `cup f (δb) : Cochain (p+(q+1))` and `δ(cup f b) : Cochain ((p+q)+1)`
+are the same type (`add_succ`), and `frontSmall`/`backSmall` of `coboundary_cup` are by definition the
+`frontFace`/`backFace` of `cup f _` at the split `(p, q+1)`. This is the second descent fact: `cupₗ`
+sends `ker δ × im δ → im δ`. -/
+theorem cup_coboundary_right (f : SingularCochain X p) (b : SingularCochain X q)
+    (hf : coboundaryₗ X p f = 0) :
+    coboundaryₗ X (p + q) (cup f b) = cup f (coboundaryₗ X q b) := by
+  funext τ
+  show coboundary X (p + q) (cup f b) τ = cup f (coboundaryₗ X q b) τ
+  rw [coboundary_cup, cup_apply]
+  have hf' : coboundary X p f (frontBig τ) = 0 := congrFun hf (frontBig τ)
+  rw [hf', zero_mul, zero_add]
+  rfl
+
+/-- **Coboundary ⌣ cocycle is a coboundary** (left argument, degrees `0,1`): if `g : C¹` is a cocycle
+then `δa ⌣ g = δ(a ⌣ g)` for `a : C⁰`. Cast-free because the degrees are concrete
+(`(0+1)+1 = 2 = 1+1`) and `frontBig`/`backBig` at split `(0,1)` are definitionally the `frontFace`/
+`backFace` of `cup _ g` at split `(1,1)`. The left-argument analogue of `cup_coboundary_right`, valid
+in the degree the surface intersection form needs (`H¹ × H¹ → H²`). -/
+theorem cup_coboundary_left_deg0 (a : SingularCochain X 0) (g : SingularCochain X 1)
+    (hg : coboundaryₗ X 1 g = 0) :
+    coboundaryₗ X 1 (cup a g) = cup (coboundaryₗ X 0 a) g := by
+  funext τ
+  show coboundary X (0 + 1) (cup a g) τ = cup (coboundaryₗ X 0 a) g τ
+  rw [coboundary_cup, cup_apply]
+  have hg' : coboundary X 1 g (backSmall τ) = 0 := congrFun hg (backSmall τ)
+  rw [hg', mul_zero, add_zero]
+  rfl
 
 end SKEFTHawking.SingularCohomologyMod2
