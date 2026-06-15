@@ -128,4 +128,39 @@ theorem coboundary_comp_coboundary (X : TopCat) (n : ℕ) (f : SingularCochain X
         simp only [Fin.le_def, Fin.val_castSucc] at hle; omega
       simp only [dif_neg h, Fin.castSucc_castPred, Fin.pred_succ, dif_pos h2]
 
+/-! ## §2. Singular cohomology `Hⁿ(X; ℤ/2) = ker δⁿ / im δⁿ⁻¹` -/
+
+/-- The submodule of `n`-coboundaries (image of the incoming `δⁿ⁻¹`), `⊥` in degree `0`. -/
+noncomputable def coboundaryRange (X : TopCat) (n : ℕ) : Submodule (ZMod 2) (SingularCochain X n) :=
+  match n with
+  | 0 => ⊥
+  | m + 1 => LinearMap.range (coboundaryₗ X m)
+
+/-- Coboundaries are cocycles, `im δⁿ⁻¹ ≤ ker δⁿ` — the well-definedness of cohomology, from `δ² = 0`. -/
+theorem coboundaryRange_le_ker (X : TopCat) (n : ℕ) :
+    coboundaryRange X n ≤ LinearMap.ker (coboundaryₗ X n) := by
+  cases n with
+  | zero => exact bot_le
+  | succ m =>
+    show LinearMap.range (coboundaryₗ X m) ≤ LinearMap.ker (coboundaryₗ X (m + 1))
+    rw [LinearMap.range_le_ker_iff]
+    exact LinearMap.ext fun g => coboundary_comp_coboundary X m g
+
+/-- **Singular `ℤ/2` cohomology** `Hⁿ(X; ℤ/2) = ker δⁿ / im δⁿ⁻¹` — a genuine quotient `ℤ/2`-vector
+space (the cohomology of the topological space `X`, built from the singular cochain complex). -/
+def Cohomology (X : TopCat) (n : ℕ) : Type :=
+  (LinearMap.ker (coboundaryₗ X n)) ⧸
+    (coboundaryRange X n).submoduleOf (LinearMap.ker (coboundaryₗ X n))
+
+noncomputable instance (X : TopCat) (n : ℕ) : AddCommGroup (Cohomology X n) :=
+  inferInstanceAs (AddCommGroup (_ ⧸ _))
+
+noncomputable instance (X : TopCat) (n : ℕ) : Module (ZMod 2) (Cohomology X n) :=
+  inferInstanceAs (Module (ZMod 2) (_ ⧸ _))
+
+/-- The cohomology class of a cocycle. -/
+noncomputable def Cohomology.mk (X : TopCat) (n : ℕ) (z : LinearMap.ker (coboundaryₗ X n)) :
+    Cohomology X n :=
+  Submodule.Quotient.mk z
+
 end SKEFTHawking.SingularCohomologyMod2
