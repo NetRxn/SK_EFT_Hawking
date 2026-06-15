@@ -40,4 +40,29 @@ noncomputable def affineSimplexStd {N n : ℕ} (w : Fin (n + 1) → stdSimplex �
   show affineSimplex (fun i => (w i : Fin (N + 1) → ℝ)) t = _
   rw [affineSimplex_apply]
 
+open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
+
+/-- **The pushforward of an affine `n`-simplex of `Δᴺ` along a singular `N`-simplex `σ`**: the singular
+`n`-simplex `σ̃ ∘ affineSimplexStd(w)` of `X` (post-compose the geometric realization of `σ` with the
+affine simplex). The atom of `Sd(σ) := σ_#(Sd(ι_N))`. -/
+noncomputable def pushSimplex {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    (w : Fin (n + 1) → stdSimplex ℝ (Fin (N + 1))) :
+    (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n)) :=
+  (X.toSSetObjEquiv (op (SimplexCategory.mk n))).symm
+    ((X.toSSetObjEquiv (op (SimplexCategory.mk N)) σ).comp (affineSimplexStd w))
+
+/-- The pushforward as a `ℤ/2`-linear map `LinChain(Δᴺ)_n → SingularChain X n` (the `Finsupp` extension
+of `pushSimplex σ`). The transport of affine `n`-chains of `Δᴺ` to singular `n`-chains of `X`. -/
+noncomputable def pushChain {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N))) :
+    LinChain (stdSimplex ℝ (Fin (N + 1))) n →ₗ[ZMod 2] SingularChain X n :=
+  Finsupp.lmapDomain (ZMod 2) (ZMod 2) (pushSimplex σ)
+
+theorem pushChain_single {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    (w : Fin (n + 1) → stdSimplex ℝ (Fin (N + 1))) (a : ZMod 2) :
+    pushChain σ (Finsupp.single w a) = Finsupp.single (pushSimplex σ w) a := by
+  rw [pushChain, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single]
+
 end SKEFTHawking.SingularExcisionPushforward
