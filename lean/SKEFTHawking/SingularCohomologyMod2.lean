@@ -646,4 +646,25 @@ theorem cupH_symm (x y : Cohomology X 1) : cupH x y = cupH y x := by
   simp only [Pi.add_apply, Pi.sub_apply]
   rw [CharTwo.sub_eq_add]
 
+/-- The **cup square** `x ↦ x ⌣ x : H¹ → H²` — the mod-2 quadratic form whose `ℤ/4` lift is the
+Guillou–Marin quadratic refinement. By symmetry of `cupH` it is *additive* over `ℤ/2` (the cross terms
+`x⌣y + y⌣x = 2·(x⌣y)` cancel), i.e. a genuine group homomorphism — the Frobenius/`Sq¹` phenomenon. -/
+noncomputable def cupSquare (x : Cohomology X 1) : Cohomology X 2 := cupH x x
+
+theorem cupSquare_add (x y : Cohomology X 1) :
+    cupSquare (x + y) = cupSquare x + cupSquare y := by
+  have h2 : cupH x y + cupH x y = (0 : Cohomology X 2) := by
+    rw [← two_smul (ZMod 2), show (2 : ZMod 2) = 0 from rfl, zero_smul]
+  simp only [cupSquare, map_add, LinearMap.add_apply, cupH_symm y x]
+  abel_nf
+  rw [two_zsmul, h2, zero_add]
+
+/-- The cup square packaged as a genuine group homomorphism `H¹(X;ℤ/2) →+ H²(X;ℤ/2)` (additive over
+`ℤ/2` by `cupSquare_add`). This is the mod-2 Wu/`Sq¹`-type square — the `ℤ/2` reduction of the
+Guillou–Marin `ℤ/4`-quadratic refinement of the intersection form. -/
+noncomputable def cupSquareHom : Cohomology X 1 →+ Cohomology X 2 :=
+  AddMonoidHom.mk' cupSquare cupSquare_add
+
+@[simp] theorem cupSquareHom_apply (x : Cohomology X 1) : cupSquareHom x = cupH x x := rfl
+
 end SKEFTHawking.SingularCohomologyMod2
