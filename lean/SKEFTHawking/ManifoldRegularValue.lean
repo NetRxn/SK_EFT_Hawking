@@ -110,4 +110,21 @@ theorem localRep_chartPt_eq_zero {f : M → ℝ} {p : M} (hp : p ∈ mZeroLocus 
   rw [localRep_apply, extChartAt_to_inv]
   exact hp
 
+omit [FiniteDimensional ℝ E] [I.Boundaryless] [IsManifold I ⊤ M] in
+/-- On the chart source, `localRep f p ∘ extChartAt I p = f`: so `extChartAt I p` maps
+`mZeroLocus f ∩ source` into the model-space zero locus `zeroLocus (localRep f p)` — the
+subtype correspondence the §5 chart is built on. -/
+theorem localRep_extChartAt_eq {f : M → ℝ} {p q : M} (hq : q ∈ (extChartAt I p).source) :
+    localRep (I := I) f p (extChartAt I p q) = f q := by
+  rw [localRep_apply, (extChartAt I p).left_inv hq]
+
+omit [FiniteDimensional ℝ E] [I.Boundaryless] [IsManifold I ⊤ M] in
+/-- `extChartAt I p` carries a zero-locus point in its source into the model-space zero locus
+`SmithRegularValue.zeroLocus (localRep f p)`. -/
+theorem extChartAt_mem_zeroLocus {f : M → ℝ} {p q : M} (hq : q ∈ (extChartAt I p).source)
+    (hqz : q ∈ mZeroLocus f) :
+    extChartAt I p q ∈ SmithRegularValue.zeroLocus (localRep (I := I) f p) := by
+  rw [SmithRegularValue.mem_zeroLocus, localRep_extChartAt_eq hq]
+  exact hqz
+
 end SKEFTHawking.ManifoldRegularValue
