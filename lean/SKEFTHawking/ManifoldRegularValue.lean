@@ -452,6 +452,124 @@ space over the fixed Euclidean model** `EuclideanSpace ℝ (Fin (finrank E - 1))
   mem_chart_source p := mem_mLevelChartE_source f hf hsub p
   chart_mem_atlas p := Set.mem_range_self p
 
+/-! ### The chart transitions are `C^∞` (the structure-groupoid compatibility)
+
+The transition between the charts at `p` and `q`, in kernel coordinates, is the composite
+`(forward q-chart) ∘ (M-coordinate change `extChartAt q ∘ extChartAt p⁻¹`) ∘ (inverse p-chart)`, each
+`C^∞`: the inverse p-chart on `mRegularKerTarget` (`mContDiffOn_iftChart_symm`), the M-coordinate
+change by `contDiffOn_ext_coord_change`, the forward q-chart `(mIftChart q ·).2` affine. -/
+
+/-- The forward q-chart second coordinate `w ↦ (mIftChart q w).2 = P_q (w - a_q)` is globally `C^∞`. -/
+theorem mContDiff_forwardChart (q : mZeroLocus f) :
+    ContDiff ℝ ⊤ (fun w => (mIftChart f hf hsub q w).2) := by
+  have : (fun w => (mIftChart f hf hsub q w).2) =
+      fun w => chartProj (fderiv ℝ (localRep (I := I) f q.1) (extChartAt I q.1 q.1)) (hsub q.1 q.2)
+        (w - extChartAt I q.1 q.1) := by
+    funext w; rw [show mIftChart f hf hsub q w = iftChart (localRep (I := I) f q.1) _ _
+      (localRep_hasStrictFDerivAt hf q.1) (hsub q.1 q.2) w from rfl, iftChart_eq]
+  rw [this]
+  exact (chartProj _ (hsub q.1 q.2)).contDiff.comp (contDiff_id.sub contDiff_const)
+
+/-- **The chart transition in kernel coordinates is `C^∞`** on the regular set (intersected with the
+preimage of the M-coordinate-change domain): the composite of the `C^∞` inverse p-chart, the `C^∞`
+M-coordinate change, and the `C^∞` forward q-chart. -/
+theorem mContDiffOn_transition (p q : mZeroLocus f) :
+    ContDiffOn ℝ ⊤
+      (fun k => (mIftChart f hf hsub q
+        (extChartAt I q.1 ((extChartAt I p.1).symm ((mIftChart f hf hsub p).symm (0, k))))).2)
+      (mRegularKerTarget f hf hsub p ∩ (fun k => (mIftChart f hf hsub p).symm (0, k)) ⁻¹'
+        ((extChartAt I p.1).symm.trans (extChartAt I q.1)).source) := by
+  have hg2 : ContDiffOn ℝ ⊤ (fun k => (mIftChart f hf hsub p).symm (0, k))
+      (mRegularKerTarget f hf hsub p ∩ (fun k => (mIftChart f hf hsub p).symm (0, k)) ⁻¹'
+        ((extChartAt I p.1).symm.trans (extChartAt I q.1)).source) :=
+    (mContDiffOn_iftChart_symm f hf hsub p).mono Set.inter_subset_left
+  have hmaps : Set.MapsTo (fun k => (mIftChart f hf hsub p).symm (0, k))
+      (mRegularKerTarget f hf hsub p ∩ (fun k => (mIftChart f hf hsub p).symm (0, k)) ⁻¹'
+        ((extChartAt I p.1).symm.trans (extChartAt I q.1)).source)
+      ((extChartAt I p.1).symm.trans (extChartAt I q.1)).source := fun k hk => hk.2
+  have hg3 := (contDiffOn_ext_coord_change (I := I) q.1 p.1).comp hg2 hmaps
+  exact (mContDiff_forwardChart f hf hsub q).comp_contDiffOn hg3
+
+/-- **The chart transition in Euclidean coordinates is `C^∞`** — the kernel transition conjugated by
+the two Euclidean identifications `kerEquivEuclidean`. -/
+theorem mContDiffOn_transitionE (p q : mZeroLocus f) :
+    ContDiffOn ℝ ⊤
+      (fun v : euclideanModel E =>
+        (kerEquivEuclidean (fderiv ℝ (localRep (I := I) f q.1) (extChartAt I q.1 q.1)) (hsub q.1 q.2))
+          ((mIftChart f hf hsub q (extChartAt I q.1 ((extChartAt I p.1).symm
+            ((mIftChart f hf hsub p).symm (0,
+              (kerEquivEuclidean (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))
+                (hsub p.1 p.2)).symm v))))).2))
+      ((kerEquivEuclidean (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))
+          (hsub p.1 p.2)).symm ⁻¹'
+        (mRegularKerTarget f hf hsub p ∩ (fun k => (mIftChart f hf hsub p).symm (0, k)) ⁻¹'
+          ((extChartAt I p.1).symm.trans (extChartAt I q.1)).source)) := by
+  have hp : ContDiff ℝ ⊤ ⇑(kerEquivEuclidean (fderiv ℝ (localRep (I := I) f p.1)
+      (extChartAt I p.1 p.1)) (hsub p.1 p.2)).symm :=
+    (kerEquivEuclidean (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))
+      (hsub p.1 p.2)).symm.contDiff
+  have hq : ContDiff ℝ ⊤ ⇑(kerEquivEuclidean (fderiv ℝ (localRep (I := I) f q.1)
+      (extChartAt I q.1 q.1)) (hsub q.1 q.2)) :=
+    (kerEquivEuclidean (fderiv ℝ (localRep (I := I) f q.1) (extChartAt I q.1 q.1))
+      (hsub q.1 q.2)).contDiff
+  exact (hq.comp_contDiffOn (mContDiffOn_transition f hf hsub p q)).comp hp.contDiffOn
+    (Set.mapsTo_preimage _ _)
+
+/-- The Euclidean chart at `q`, on a point in the extended-chart source, reads
+`x ↦ e_q ((mIftChart q (extChartAt q x)).2)`. -/
+theorem mLevelChartE_apply (q x : mZeroLocus f) (hx : x.1 ∈ (extChartAt I q.1).source) :
+    (mLevelChartE f hf hsub q) x =
+      (kerEquivEuclidean (fderiv ℝ (localRep (I := I) f q.1) (extChartAt I q.1 q.1)) (hsub q.1 q.2))
+        ((mIftChart f hf hsub q (extChartAt I q.1 x.1)).2) := by
+  rw [mLevelChartE, OpenPartialHomeomorph.transHomeomorph_apply, Function.comp_apply,
+    ContinuousLinearEquiv.coe_toHomeomorph]
+  congr 1
+  rw [show (mLevelChartKerR f hf hsub q) x = (mLevelChartKer f hf hsub q) x from rfl,
+    mLevelChartKer, OpenPartialHomeomorph.trans_apply, extChartSubtype_apply_of_mem f q hx]
+  rfl
+
+/-- The inverse model-space level-set chart, on a kernel point in its target, is the IFT-chart
+inverse: `(mLevelSetChart p).symm k = (mIftChart p).symm (0, k)` in ambient coordinates. -/
+theorem mLevelSetChart_symm_apply (p : mZeroLocus f)
+    {k : kerModel (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))}
+    (hk : (0, k) ∈ (mIftChart f hf hsub p).target) :
+    ((mLevelSetChart f hf hsub p).symm k : E) = (mIftChart f hf hsub p).symm (0, k) := by
+  have hk' : (0, k) ∈ (iftChart (localRep (I := I) f p.1)
+      (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1)) (extChartAt I p.1 p.1)
+      (localRep_hasStrictFDerivAt hf p.1) (hsub p.1 p.2)).target := hk
+  rw [mLevelSetChart, levelSetChart]
+  simp only [OpenPartialHomeomorph.mk_coe_symm, PartialEquiv.coe_symm_mk, dif_pos hk']
+  rfl
+
+omit [FiniteDimensional ℝ E] [IsManifold I ⊤ M] in
+/-- The inverse subtype-restricted extended chart, on a target point, is `(extChartAt I p).symm`. -/
+theorem extChartSubtype_symm_apply_of_mem (p : mZeroLocus f)
+    {y : zeroLocus (localRep (I := I) f p.1)} (hy : y.1 ∈ (extChartAt I p.1).target) :
+    ((extChartSubtype f p).symm y : M) = (extChartAt I p.1).symm y.1 := by
+  rw [extChartSubtype]
+  simp only [OpenPartialHomeomorph.mk_coe_symm, PartialEquiv.coe_symm_mk, dif_pos hy]
+
+/-- The Euclidean chart inverse at `p`, in ambient `M`-coordinates: `v ↦ (extChartAt I p).symm` of the
+IFT-chart inverse of `e_p.symm v`. Holds where the IFT-preimage stays in `extChartAt`'s target. -/
+theorem mLevelChartE_symm_apply (p : mZeroLocus f) (v : euclideanModel E)
+    (hv : (0, (kerEquivEuclidean (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))
+      (hsub p.1 p.2)).symm v) ∈ (mIftChart f hf hsub p).target)
+    (hw : (mIftChart f hf hsub p).symm (0, (kerEquivEuclidean (fderiv ℝ (localRep (I := I) f p.1)
+      (extChartAt I p.1 p.1)) (hsub p.1 p.2)).symm v) ∈ (extChartAt I p.1).target) :
+    ((mLevelChartE f hf hsub p).symm v : M) =
+      (extChartAt I p.1).symm ((mIftChart f hf hsub p).symm
+        (0, (kerEquivEuclidean (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))
+          (hsub p.1 p.2)).symm v)) := by
+  have hy : ((mLevelSetChart f hf hsub p).symm
+      ((kerEquivEuclidean (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))
+        (hsub p.1 p.2)).symm v) : E) ∈ (extChartAt I p.1).target := by
+    rw [mLevelSetChart_symm_apply f hf hsub p hv]; exact hw
+  rw [mLevelChartE, OpenPartialHomeomorph.transHomeomorph_symm_apply, Function.comp_apply,
+    ContinuousLinearEquiv.coe_symm_toHomeomorph, mLevelChartKerR,
+    OpenPartialHomeomorph.coe_restrOpen_symm, mLevelChartKer,
+    OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+    extChartSubtype_symm_apply_of_mem f p hy, mLevelSetChart_symm_apply f hf hsub p hv]
+
 end Chart
 
 end SKEFTHawking.ManifoldRegularValue
