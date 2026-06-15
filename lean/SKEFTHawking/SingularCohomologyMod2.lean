@@ -489,4 +489,86 @@ theorem cup_coboundary_left_deg0 (a : SingularCochain X 0) (g : SingularCochain 
   rw [hg', mul_zero, add_zero]
   rfl
 
+/-! ### The cup product on cohomology `H¹ × H¹ → H²` (the surface intersection form) -/
+
+/-- For a fixed degree-1 cocycle `fc`, cup-with-`fc` descends to a linear map `H¹ → H²`. The cup lands
+in cocycles (`cup_cocycle`); it kills `H¹`-coboundaries because `f ⌣ δb = δ(f ⌣ b)`
+(`cup_coboundary_right`). -/
+noncomputable def cupRightH (fc : LinearMap.ker (coboundaryₗ X 1)) :
+    Cohomology X 1 →ₗ[ZMod 2] Cohomology X 2 :=
+  Submodule.liftQ _
+    ((Submodule.mkQ _).comp
+      (((cupₗ 1 1 fc.1).domRestrict (LinearMap.ker (coboundaryₗ X 1))).codRestrict
+        (LinearMap.ker (coboundaryₗ X 2)) fun gc => by
+          rw [LinearMap.mem_ker]
+          exact cup_cocycle fc.1 gc.1 (LinearMap.mem_ker.mp fc.2) (LinearMap.mem_ker.mp gc.2)))
+    (by
+      intro gc hgc
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] at hgc
+      rw [LinearMap.mem_ker]
+      change Submodule.Quotient.mk _ = 0
+      rw [Submodule.Quotient.mk_eq_zero]
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply,
+        LinearMap.codRestrict_apply, LinearMap.domRestrict_apply, cupₗ_apply]
+      show cup fc.1 gc.1 ∈ LinearMap.range (coboundaryₗ X 1)
+      obtain ⟨b, hb⟩ := hgc
+      refine ⟨cup fc.1 b, ?_⟩
+      rw [← hb]
+      exact cup_coboundary_right fc.1 b (LinearMap.mem_ker.mp fc.2))
+
+/-- The computation rule for `cupRightH` on a representative cocycle `gc`. -/
+theorem cupRightH_apply_mk (fc gc : LinearMap.ker (coboundaryₗ X 1)) :
+    cupRightH fc (Submodule.Quotient.mk gc)
+      = Submodule.Quotient.mk (⟨cup fc.1 gc.1, cup_cocycle fc.1 gc.1
+          (LinearMap.mem_ker.mp fc.2) (LinearMap.mem_ker.mp gc.2)⟩ :
+          LinearMap.ker (coboundaryₗ X 2)) := by
+  rfl
+
+/-- **The cup product on `H¹ × H¹ → H²`** — a genuine `ℤ/2`-bilinear map (the surface intersection
+form). Well-defined: `cup_cocycle` lands it in cocycles; `cup_coboundary_right`/`cup_coboundary_left_deg0`
+kill coboundaries in each argument. The first cohomology *operation* built on the singular cup product
+— the algebraic core of the Guillou–Marin intersection form on the characteristic surface. -/
+noncomputable def cupH : Cohomology X 1 →ₗ[ZMod 2] Cohomology X 1 →ₗ[ZMod 2] Cohomology X 2 :=
+  Submodule.liftQ _
+    { toFun := cupRightH
+      map_add' := fun fc fc' => by
+        ext x
+        obtain ⟨gc, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+        simp only [LinearMap.add_apply, cupRightH_apply_mk]
+        congr 1
+        apply Subtype.ext
+        simp only [Submodule.coe_add, cup_add_left]
+      map_smul' := fun c fc => by
+        ext x
+        obtain ⟨gc, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+        simp only [LinearMap.smul_apply, RingHom.id_apply, cupRightH_apply_mk]
+        congr 1
+        apply Subtype.ext
+        simp only [SetLike.val_smul, cup_smul_left] }
+    (by
+      intro fc hfc
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] at hfc
+      rw [LinearMap.mem_ker]
+      ext x
+      obtain ⟨gc, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+      rw [LinearMap.zero_apply]
+      change cupRightH fc (Submodule.Quotient.mk gc) = 0
+      rw [cupRightH_apply_mk]
+      change Submodule.Quotient.mk _ = 0
+      rw [Submodule.Quotient.mk_eq_zero]
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply]
+      show cup fc.1 gc.1 ∈ LinearMap.range (coboundaryₗ X 1)
+      obtain ⟨a, ha⟩ := hfc
+      refine ⟨cup a gc.1, ?_⟩
+      rw [← ha]
+      exact cup_coboundary_left_deg0 a gc.1 (LinearMap.mem_ker.mp gc.2))
+
+@[simp] theorem cupH_mk_mk (fc gc : LinearMap.ker (coboundaryₗ X 1)) :
+    cupH (Submodule.Quotient.mk fc) (Submodule.Quotient.mk gc)
+      = Submodule.Quotient.mk (⟨cup fc.1 gc.1, cup_cocycle fc.1 gc.1
+          (LinearMap.mem_ker.mp fc.2) (LinearMap.mem_ker.mp gc.2)⟩ :
+          LinearMap.ker (coboundaryₗ X 2)) := by
+  show cupRightH fc (Submodule.Quotient.mk gc) = _
+  exact cupRightH_apply_mk fc gc
+
 end SKEFTHawking.SingularCohomologyMod2
