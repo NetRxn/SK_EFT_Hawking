@@ -163,4 +163,48 @@ noncomputable def Cohomology.mk (X : TopCat) (n : ℕ) (z : LinearMap.ker (cobou
     Cohomology X n :=
   Submodule.Quotient.mk z
 
+/-! ## §3. The cup product (Alexander–Whitney) -/
+
+/-- The **front `p`-face inclusion** `[p] ⟶ [p+q]`, `i ↦ i` (`Fin.castLE`). -/
+def frontIncl (p q : ℕ) : SimplexCategory.mk p ⟶ SimplexCategory.mk (p + q) :=
+  SimplexCategory.mkHom ⟨fun i => i.castLE (by omega), fun a b h => by
+    rw [Fin.le_def] at h ⊢; simp only [Fin.val_castLE]; omega⟩
+
+/-- The **back `q`-face inclusion** `[q] ⟶ [p+q]`, `i ↦ i + p` (`Fin.natAdd`). -/
+def backIncl (p q : ℕ) : SimplexCategory.mk q ⟶ SimplexCategory.mk (p + q) :=
+  SimplexCategory.mkHom ⟨fun i => Fin.natAdd p i, fun a b h => by
+    rw [Fin.le_def] at h ⊢; simp only [Fin.val_natAdd]; omega⟩
+
+/-- The **front `p`-face** of a singular `(p+q)`-simplex (`σ` restricted to `{0,…,p}`). -/
+noncomputable def frontFace {X : TopCat} {p q : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (p + q)))) :
+    (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk p)) :=
+  (TopCat.toSSet.obj X).map (frontIncl p q).op σ
+
+/-- The **back `q`-face** of a singular `(p+q)`-simplex (`σ` restricted to `{p,…,p+q}`). -/
+noncomputable def backFace {X : TopCat} {p q : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (p + q)))) :
+    (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk q)) :=
+  (TopCat.toSSet.obj X).map (backIncl p q).op σ
+
+/-- The **singular cup product** `⌣ : Cᵖ × Cᵍ → Cᵖ⁺ᵍ`, `(f ⌣ g)(σ) = f(frontₚ σ) · g(backᵧ σ)`
+(Alexander–Whitney). -/
+noncomputable def cup {X : TopCat} {p q : ℕ} (f : SingularCochain X p) (g : SingularCochain X q) :
+    SingularCochain X (p + q) :=
+  fun σ => f (frontFace σ) * g (backFace σ)
+
+@[simp] theorem cup_apply {X : TopCat} {p q : ℕ} (f : SingularCochain X p) (g : SingularCochain X q)
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (p + q)))) :
+    cup f g σ = f (frontFace σ) * g (backFace σ) := rfl
+
+/-- The cup product is **left-additive**. -/
+theorem cup_add_left {X : TopCat} {p q : ℕ} (f₁ f₂ : SingularCochain X p) (g : SingularCochain X q) :
+    cup (f₁ + f₂) g = cup f₁ g + cup f₂ g := by
+  funext σ; simp only [cup_apply, Pi.add_apply]; ring
+
+/-- The cup product is **right-additive**. -/
+theorem cup_add_right {X : TopCat} {p q : ℕ} (f : SingularCochain X p) (g₁ g₂ : SingularCochain X q) :
+    cup f (g₁ + g₂) = cup f g₁ + cup f g₂ := by
+  funext σ; simp only [cup_apply, Pi.add_apply]; ring
+
 end SKEFTHawking.SingularCohomologyMod2
