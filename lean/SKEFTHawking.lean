@@ -841,6 +841,10 @@ import SKEFTHawking.SingularSubdivisionConvex
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
 import SKEFTHawking.SingularSubdivisionNatural
+-- Phase 5q.F (w₂-foundation, brick 6c-c7c.5): the singular barycentric subdivision Sd(σ):=σ_#(Sd ι_n),
+-- assembled from the affine engine. Chain-level boundary naturality of the module pushforward
+-- ∂∘σ_#=σ_#∘∂ on in-Δᴺ chains — the transport lemma for the singular chain map ∂Sd=Sd∂.
+import SKEFTHawking.SingularSubdivision
 -- Phase 5q.F (fully-unconditional strengthening, w₂-foundation brick 5, 2026-06-15): the Wu class v₂ from
 -- Poincaré duality — for a PD datum (fundamental-class functional μ:H⁴→ℤ/2 + non-degenerate middle cup
 -- pairing, finite-dim H²), v₂∈H² represents x↦⟨Sq²x,[M]⟩ (wu_relation), the input to the Wu formula
