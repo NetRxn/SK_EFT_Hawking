@@ -21,6 +21,7 @@ Per Invariant #15: no new axioms — `smith_sandwich` is finite-group algebra ov
 -/
 import Mathlib
 import SKEFTHawking.SymTFT.PinPlusBordism4
+import SKEFTHawking.SymTFT.SpinZ4Bordism5
 import SKEFTHawking.PinPlusExtBound
 
 namespace SKEFTHawking.PinPlusSmithDerived
@@ -108,5 +109,16 @@ theorem pinPlus_iso_zmod16_via_sandwich :
     Nonempty (Omega4PinPlusBordism ≃+ ZMod 16) :=
   smith_sandwich (Omega4PinPlusBordism.mk pinPlusRP4)
     pinPlusRP4_addOrder_sixteen_substrate omega4_card_le_16
+
+/-- **`Ω₅^{Spin-ℤ₄} ≅ ℤ/16` DERIVED via the sandwich — NO `pin4_abutment`.** The Smith iso
+`smithHom : Ω₅^{Spin-ℤ₄} ≃+ Ω₄^{Pin⁺}` (`SymTFT/SpinZ4Bordism5.lean`) composed with the sandwich-derived
+`Ω₄^{Pin⁺} ≃+ ℤ/16` (`pinPlus_iso_zmod16_via_sandwich`). Unlike `Omega5Finite.omega5_iso_zmod16_of_pin4`,
+which *consumes* `pin4_abutment`, this is hypothesis-free — the SM Dai–Freed `ℤ/16` is the same finite
+`ℤ/16` as the Pin⁺ side, tied by the Smith iso, with the `16` from the genuine ABK order + the cap and
+**no Pontryagin–Thom disclosure**. -/
+theorem omega5_iso_zmod16_via_sandwich :
+    Nonempty (Omega5SpinZ4Bordism ≃+ ZMod 16) := by
+  obtain ⟨e⟩ := pinPlus_iso_zmod16_via_sandwich
+  exact ⟨smithHom.trans e⟩
 
 end SKEFTHawking.PinPlusSmithDerived
