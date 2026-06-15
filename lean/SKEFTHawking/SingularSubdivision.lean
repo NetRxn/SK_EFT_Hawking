@@ -132,4 +132,43 @@ theorem chainBoundary_singularSd (X : TopCat) (n : ℕ)
   rw [singularSd_single, facet_idChain, ← mapVerts_linSubdiv,
     pushChainM_mapVerts σ i (linSubdiv_mem_chainsIn (convex_stdSimplex ℝ _) n (idChain_mem n))]
 
+/-- The top affine simplex of the subdivision (the identity `ι_{N+1}`) pushes to `σ`:
+`σ_# ι_{N+1} = σ`. The leading `1` of the homotopy identity `∂D+D∂=1−Sd`. -/
+theorem pushChainM_idChain {X : TopCat} {N : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (N + 1)))) :
+    pushChainM σ (idChain (N + 1)) = Finsupp.single σ 1 := by
+  rw [idChain, pushChainM_single, pushSimplexM_vertices]
+
+/-- **The singular subdivision chain homotopy** `D : Cₙ(X) → Cₙ₊₁(X)`: `D σ := σ_# (D ι_n)`, the
+`ℤ/2`-linear extension of pushing the affine subdivision homotopy of the identity simplex along `σ`. -/
+noncomputable def singularD (X : TopCat) (n : ℕ) :
+    SingularChain X n →ₗ[ZMod 2] SingularChain X (n + 1) :=
+  Finsupp.linearCombination (ZMod 2) (fun σ => pushChainM σ (linHomotopy n (idChain n)))
+
+theorem singularD_single (X : TopCat) (n : ℕ)
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) :
+    singularD X n (Finsupp.single σ 1) = pushChainM σ (linHomotopy n (idChain n)) := by
+  rw [singularD, Finsupp.linearCombination_single, one_smul]
+
+/-- **The singular subdivision is chain-homotopic to the identity** via `D`: `∂D + D∂ = 1 + Sd` (over
+`ℤ/2`, `1 − Sd = 1 + Sd`) on a basis simplex. Transports the affine `∂D+D∂=1−Sd`
+(`linBoundary_linHomotopy`) through the pushforward chain map + the facet functoriality (as for
+`∂Sd=Sd∂`); the leading `ι_{n+1}` term realizes as `σ` itself (`pushChainM_idChain`). -/
+theorem chainBoundary_singularD (X : TopCat) (n : ℕ)
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) :
+    chainBoundary X (n + 1) (singularD X (n + 1) (Finsupp.single σ 1))
+        + singularD X n (chainBoundary X n (Finsupp.single σ 1))
+      = Finsupp.single σ 1 + singularSd X (n + 1) (Finsupp.single σ 1) := by
+  have hB : singularD X n (chainBoundary X n (Finsupp.single σ 1))
+      = pushChainM σ (linHomotopy n (linBoundary n (idChain (n + 1)))) := by
+    rw [chainBoundary_single, boundaryBasis, map_sum, idChain, linBoundary_single, linBoundaryBasis,
+      map_sum, map_sum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [singularD_single, facet_idChain, ← mapVerts_linHomotopy,
+      pushChainM_mapVerts σ i (linHomotopy_mem_chainsIn (convex_stdSimplex ℝ _) n (idChain_mem n))]
+  rw [hB, singularD_single,
+    pushChainM_chainBoundary σ
+      (linHomotopy_mem_chainsIn (convex_stdSimplex ℝ _) (n + 1) (idChain_mem (n + 1))),
+    ← map_add, linBoundary_linHomotopy, map_add, pushChainM_idChain, singularSd_single]
+
 end SKEFTHawking.SingularSubdivision

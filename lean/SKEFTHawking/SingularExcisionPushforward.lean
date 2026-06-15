@@ -221,6 +221,24 @@ theorem affineSimplexStd_vertex_id {N : ℕ} :
     mul_one, mul_zero, Finset.sum_ite_eq Finset.univ k (fun j => (t : Fin (N + 1) → ℝ) j),
     Finset.mem_univ, if_true]
 
+/-- The pushforward of the **identity simplex** of `Δᴺ` (all standard vertices) along `σ` recovers `σ`:
+`σ_# ι_N = σ` (the affine simplex on all vertices is the identity, so `σ̃ ∘ id = σ̃`). -/
+theorem pushSimplexM_vertices {X : TopCat} {N : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N))) :
+    pushSimplexM σ (fun j => (Pi.single j 1 : Fin (N + 1) → ℝ)) = σ := by
+  have hP : affineSimplexStd
+        (fun j => (⟨Pi.single j 1, single_mem_stdSimplex ℝ j⟩ : stdSimplex ℝ (Fin (N + 1))))
+      = ContinuousMap.id _ := by
+    ext t k
+    change (∑ j, (t : Fin (N + 1) → ℝ) j • (Pi.single j 1 : Fin (N + 1) → ℝ)) k
+        = (t : Fin (N + 1) → ℝ) k
+    rw [Finset.sum_apply]
+    simp only [Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
+      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  rw [pushSimplexM_of_mem σ (fun j => single_mem_stdSimplex ℝ j), pushSimplex, Equiv.symm_apply_eq]
+  exact (congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk N))) σ).comp ·) hP).trans
+    (ContinuousMap.comp_id _)
+
 /-- The module-valued pushforward as a `ℤ/2`-linear map `LinChain (Fin (N+1) → ℝ) n → SingularChain X n`
 (the `Finsupp` extension of `pushSimplexM σ`). -/
 noncomputable def pushChainM {X : TopCat} {N n : ℕ}
