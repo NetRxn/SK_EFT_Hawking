@@ -756,6 +756,7 @@ import SKEFTHawking.PinPlusBordismGroupDerived
 -- complex but no cohomology). First brick: singular cochains + the coboundary δ. Toward δ²=0 → Hⁿ → cup →
 -- the genuine β discharging dataBordism_iso_zmod16's hypotheses.
 import SKEFTHawking.SingularCohomologyMod2
+import SKEFTHawking.SingularCohomologyFunctorial
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
