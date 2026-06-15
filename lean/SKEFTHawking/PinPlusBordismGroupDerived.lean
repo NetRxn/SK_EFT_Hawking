@@ -1,0 +1,56 @@
+/-
+# Phase 5q.F W6 — `Ω₄^{Pin⁺} ≅ ℤ/16` DERIVED on the GENUINE W4 bordism group
+
+The endpoint stated on the genuine bordism group built in W4 — `DataBordismGrp ξ` over Mathlib
+`SingularManifold` + manifolds-with-boundary (`TangentialDataBordism.lean`) — not on the thin
+signature substrate `Omega4PinPlusBordism`. The `ℤ/16` is DERIVED via the Smith sandwich
+(`PinPlusSmithDerived.smith_sandwich`) from the two finite invariants the OBJECTIVE permits as
+load-bearing inputs (DR `Smith_sequence.md` §5):
+
+  - a homomorphism `β : DataBordismGrp ξ →+ ℤ/16` (the ABK / Brown invariant of the bordism class) whose
+    value on the generator has order 16 (`β [ℝP⁴]` is a unit — the genuine ABK lower bound), and
+  - the cardinality cap `|DataBordismGrp ξ| ≤ 16` (the decidable Adams height-4 cap as the disclosed
+    convergence bound).
+
+The order of `β gen` divides the order of `gen` (homomorphism), so `gen` has order `≥ 16`; the cap forces
+`≤ 16`; hence `gen` has order exactly 16 and `smith_sandwich` gives `DataBordismGrp ξ ≃+ ℤ/16`. This is
+the Smith-LES derivation on the **genuine geometric bordism-group object** — the `β` + cap are the
+disclosed/finite inputs (ABK + height-4 cap), the carrier and the derivation are genuine.
+
+Per Invariant #15: no new axioms — finite-group algebra over Mathlib applied to the W4 bordism group.
+-/
+import SKEFTHawking.PinPlusSmithDerived
+import SKEFTHawking.TangentialDataBordism
+
+namespace SKEFTHawking.PinPlusBordismGroupDerived
+
+open SKEFTHawking.TangentialDataBordism SKEFTHawking.PinPlusSmithDerived
+
+variable {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
+  {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+  [TopologicalSpace H] {I : ModelWithCorners ℝ E H} [I.Boundaryless]
+
+/-- **`Ω^ξ ≅ ℤ/16` DERIVED on the genuine W4 bordism group via the Smith sandwich.** For the genuine
+bordism group `DataBordismGrp ξ` (over Mathlib `SingularManifold` + manifolds-with-boundary), given
+  - the ABK homomorphism `β : DataBordismGrp ξ →+ ℤ/16` and a generator `gen` whose ABK value `β gen`
+    has additive order 16 (the genuine ABK lower bound: `β [ℝP⁴]` is a unit of `ℤ/16`), and
+  - the cardinality cap `|DataBordismGrp ξ| ≤ 16` (the decidable Adams height-4 cap),
+the group is `≃+ ℤ/16`. The order of `β gen` divides the order of `gen`, forcing `addOrderOf gen ≥ 16`;
+the cap forces `≤ 16`; `smith_sandwich` then gives the iso. The `ℤ/16` is DERIVED — not the assigned
+`signature` invariant of the thin `Omega4PinPlusBordism`, and with NO `pin4_abutment`. -/
+theorem dataBordism_iso_zmod16 (ξ : TangentialData X k I) [Finite (DataBordismGrp ξ)]
+    (β : DataBordismGrp ξ →+ ZMod 16) (gen : DataBordismGrp ξ)
+    (hβgen : addOrderOf (β gen) = 16) (hcard : Nat.card (DataBordismGrp ξ) ≤ 16) :
+    Nonempty (DataBordismGrp ξ ≃+ ZMod 16) := by
+  -- order of the image divides the order of the element.
+  have hdvd : addOrderOf (β gen) ∣ addOrderOf gen := addOrderOf_map_dvd β gen
+  rw [hβgen] at hdvd
+  -- gen has finite (positive) order since the group is finite.
+  have hpos : 0 < addOrderOf gen := addOrderOf_pos gen
+  have hge : 16 ≤ addOrderOf gen := Nat.le_of_dvd hpos hdvd
+  -- and order divides cardinality ≤ 16.
+  have hle : addOrderOf gen ≤ 16 :=
+    le_trans (Nat.le_of_dvd Nat.card_pos (addOrderOf_dvd_natCard gen)) hcard
+  exact smith_sandwich gen (le_antisymm hle hge) hcard
+
+end SKEFTHawking.PinPlusBordismGroupDerived

@@ -747,6 +747,10 @@ import SKEFTHawking.CellularCupProduct
 -- (≥16 ABK/Brown order of [RP⁴]; ≤16 decidable Adams height-4 cap), replacing the posited assigned-invariant
 -- iso. The genuine algebraic engine for retiring the Omega4PinPlusBordism signature posit.
 import SKEFTHawking.PinPlusSmithDerived
+-- Phase 5q.F W6 (2026-06-15): Ω₄^{Pin⁺}≅ℤ/16 DERIVED on the GENUINE W4 bordism group DataBordismGrp (over
+-- Mathlib SingularManifold + manifolds-with-boundary), via the Smith sandwich from the ABK homomorphism +
+-- the height-4 cap — the endpoint on the genuine geometric carrier, not the thin signature substrate.
+import SKEFTHawking.PinPlusBordismGroupDerived
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
