@@ -751,6 +751,11 @@ import SKEFTHawking.PinPlusSmithDerived
 -- Mathlib SingularManifold + manifolds-with-boundary), via the Smith sandwich from the ABK homomorphism +
 -- the height-4 cap — the endpoint on the genuine geometric carrier, not the thin signature substrate.
 import SKEFTHawking.PinPlusBordismGroupDerived
+-- Phase 5q.F (2026-06-16): Ω₄^{Pin⁺}≅ℤ/16 on the GENUINE DataBordismGrp carrier + the structure-conjugation
+-- no-go (trivial revStr ⟹ 2-torsion ⟹ not ℤ/16, ruling out the H¹-as-group instantiation) + a concrete
+-- non-2-torsion carrier with a surjective ABK grade (the genuine ≥16 half). Iso from the disclosed
+-- ABK-completeness (≤16 cap) — the genuine-carrier endpoint, scoped precisely against DR §5.1.
+import SKEFTHawking.PinPlusGenuineCarrierIso
 -- Phase 5q.F (2026-06-15): singular ℤ/2 cohomology on Mathlib's singular SSet (TopCat.toSSet) — the
 -- foundation for the ABK β BUILT FROM the SingularManifold bordism group (Mathlib has the singular chain
 -- complex but no cohomology). First brick: singular cochains + the coboundary δ. Toward δ²=0 → Hⁿ → cup →
