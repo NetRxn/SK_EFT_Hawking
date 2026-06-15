@@ -82,4 +82,22 @@ theorem mapVerts_linSubdiv (L : V →ₗ[ℝ] W) :
       rw [linSubdiv_single_smul, map_smul, mapVerts_cone, map_barycenter, mapVerts_linSubdiv L n,
         mapVerts_linBoundary, mapVerts_single, ← linSubdiv_single_smul, mapVerts_single]
 
+omit [TopologicalSpace V] [ContinuousAdd V] [ContinuousSMul ℝ V] [TopologicalSpace W]
+  [ContinuousAdd W] [ContinuousSMul ℝ W] in
+/-- **The subdivision chain homotopy `D` is natural under linear maps**: `D ∘ L_* = L_* ∘ D`. Same
+mechanism as `mapVerts_linSubdiv` (the extra `[v]` term in the cone is `mapVerts`-natural by
+`mapVerts_single`). Needed to transport the singular homotopy identity `∂D+D∂=1−Sd`. -/
+theorem mapVerts_linHomotopy (L : V →ₗ[ℝ] W) :
+    ∀ (n : ℕ) (c : LinChain V n),
+      mapVerts L (n + 1) (linHomotopy n c) = linHomotopy n (mapVerts L n c)
+  | 0, c => by rw [linHomotopy_zero_map, linHomotopy_zero_map, map_zero]
+  | n + 1, c => by
+    induction c using Finsupp.induction_linear with
+    | zero => simp only [map_zero]
+    | add c d hc hd => simp only [map_add, hc, hd]
+    | single v a =>
+      rw [linHomotopy_single_smul, map_smul, mapVerts_cone, map_barycenter, map_add,
+        mapVerts_single, mapVerts_linHomotopy L n, mapVerts_linBoundary, mapVerts_single,
+        ← linHomotopy_single_smul, mapVerts_single]
+
 end SKEFTHawking.SingularSubdivisionNatural
