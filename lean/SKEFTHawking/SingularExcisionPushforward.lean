@@ -77,6 +77,17 @@ theorem toSSetObjEquiv_symm_face {X : TopCat} {n : ℕ} (i : Fin (n + 2))
           _root_.stdSimplex.continuous_map (SimplexCategory.δ i)⟩ :=
   rfl
 
+/-- **The `toSSetObjEquiv` naturality, forward form**: the geometric realization of the singular face
+`face i σ` is `σ̃` precomposed with the topological face `stdSimplex.map (δ i)`. (The `apply`-direction
+companion of `toSSetObjEquiv_symm_face`.) -/
+theorem toSSetObjEquiv_face {X : TopCat} {n : ℕ} (i : Fin (n + 2))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) :
+    X.toSSetObjEquiv (op (SimplexCategory.mk n)) (face i σ)
+      = (X.toSSetObjEquiv (op (SimplexCategory.mk (n + 1))) σ).comp
+          ⟨_root_.stdSimplex.map (SimplexCategory.δ i),
+            _root_.stdSimplex.continuous_map (SimplexCategory.δ i)⟩ :=
+  rfl
+
 /-- The pure finite-sum reindexing underlying the affine face-compatibility: distributing the
 fiber-weighted sum over the convex coefficients and collapsing the fibers of `g` (here `g = δ i`)
 gives the pulled-back affine combination. Stated over `ℝ` so the proof is coercion-free; the
@@ -90,6 +101,29 @@ private theorem sum_fiberwise_reindex {n : ℕ} (g : Fin (n + 1) → Fin (n + 2)
   refine Finset.sum_congr rfl fun m hm => ?_
   rw [Finset.mem_filter] at hm
   rw [hm.2]
+
+/-- **Post-composing an affine simplex by the (linear) face map `stdSimplex.map (δ i)`** gives the affine
+simplex on the image vertices: `stdSimplex.map (δ i) ∘ affineSimplexStd v = affineSimplexStd (stdSimplex.map
+(δ i) ∘ v)`. (The face map is affine — the corestriction of the linear `FunOnFinite.linearMap` — so it
+commutes with convex combinations.) The companion of `affineSimplexStd_comp_face` for the singular chain
+map's functoriality (2b). -/
+theorem stdSimplexMap_comp_affineSimplexStd {N n : ℕ} (i : Fin (N + 2))
+    (v : Fin (n + 1) → stdSimplex ℝ (Fin (N + 1))) :
+    (⟨_root_.stdSimplex.map (SimplexCategory.δ i),
+        _root_.stdSimplex.continuous_map (SimplexCategory.δ i)⟩
+        : C(stdSimplex ℝ (Fin (N + 1)), stdSimplex ℝ (Fin (N + 1 + 1)))).comp (affineSimplexStd v)
+      = affineSimplexStd (fun j => _root_.stdSimplex.map (SimplexCategory.δ i) (v j)) := by
+  ext t k
+  -- Reduce both sides to coordinate sums (defeq); LHS = (FunOnFinite.linearMap (δ i) (∑ⱼ tⱼ•vⱼ)) k,
+  -- RHS = (∑ⱼ tⱼ • FunOnFinite.linearMap (δ i) vⱼ) k; equal by linearity of `FunOnFinite.linearMap`.
+  change (FunOnFinite.linearMap ℝ ℝ (ConcreteCategory.hom (SimplexCategory.δ i))
+            (∑ j, (t : Fin (n + 1) → ℝ) j • ⇑(v j))) k
+       = (∑ j, (t : Fin (n + 1) → ℝ) j • ⇑(_root_.stdSimplex.map (SimplexCategory.δ i) (v j))) k
+  rw [map_sum, Finset.sum_apply, Finset.sum_apply]
+  refine Finset.sum_congr rfl fun j _ => ?_
+  rw [stdSimplex.map_coe]
+  exact congrFun (map_smul (FunOnFinite.linearMap ℝ ℝ (ConcreteCategory.hom (SimplexCategory.δ i)))
+    ((t : Fin (n + 1) → ℝ) j) (v j : Fin (N + 1) → ℝ)) k
 
 /-- **(B) The affine face-compatibility**: precomposing the affine simplex with the topological coface
 `stdSimplex.map (δ i)` (which inserts a `0` coordinate at `i`) drops the `i`-th vertex —
