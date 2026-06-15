@@ -793,6 +793,11 @@ import SKEFTHawking.PinPlusSmithLES
 -- complex but no cohomology). First brick: singular cochains + the coboundary δ. Toward δ²=0 → Hⁿ → cup →
 -- the genuine β discharging dataBordism_iso_zmod16's hypotheses.
 import SKEFTHawking.SingularCohomologyMod2
+-- Phase 5q.F (2026-06-15, w₂ foundation brick 3): singular ℤ/2 HOMOLOGY + the Kronecker pairing — the
+-- dual of SingularCohomologyMod2. Chains C_n = simplices →₀ ℤ/2, the boundary ∂ with ∂²=0, Homology
+-- Hₙ = ker∂/im∂, and the descended Kronecker pairing kroneckerH : Hⁿ × Hₙ → ℤ/2 (the evaluation
+-- ⟨·,[M]⟩ the Wu functional ⟨x∪x,[M]⟩ needs — the route to the fundamental class and w₂(TM)).
+import SKEFTHawking.SingularHomologyMod2
 import SKEFTHawking.SingularCohomologyFunctorial
 import SKEFTHawking.SingularCohomologyDisjoint
 import SKEFTHawking.KitaevSixteenFold
