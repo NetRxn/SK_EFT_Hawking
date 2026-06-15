@@ -571,4 +571,79 @@ noncomputable def cupH : Cohomology X 1 →ₗ[ZMod 2] Cohomology X 1 →ₗ[ZMo
   show cupRightH fc (Submodule.Quotient.mk gc) = _
   exact cupRightH_apply_mk fc gc
 
+/-! ### Symmetry of the intersection form `cupH` (graded commutativity in degree 1)
+
+The cohomology cup `cupH` is symmetric — the intersection form's `B_symm`. For degree `(1,1)` this needs
+no Steenrod `⌣₁`: the pointwise (Hadamard) product `a · b` of two `1`-cochains is a `1`-cochain whose
+coboundary is `a ⌣ b + b ⌣ a` (over `ℤ/2`, using the cocycle relation `a(σ|₀₂) = a(σ|₀₁) + a(σ|₁₂)`),
+so `a ⌣ b` and `b ⌣ a` are cohomologous. -/
+
+/-- The front-`1` face inclusion equals the coface `δ₂` (both hit `{0,1} ⊂ [2]`). -/
+theorem frontIncl_one_one : frontIncl 1 1 = SimplexCategory.δ (2 : Fin 3) := by
+  ext x : 3
+  apply Fin.ext
+  have hx : x.val < 2 := x.isLt
+  simp only [frontIncl, toOrderHom_mkHom, toOrderHom_δ, OrderHom.coe_mk, Fin.val_castLE, succAbove_val]
+  rw [show (2 : Fin 3).val = 2 from rfl]
+  split_ifs <;> omega
+
+/-- The back-`1` face inclusion equals the coface `δ₀` (both hit `{1,2} ⊂ [2]`). -/
+theorem backIncl_one_one : backIncl 1 1 = SimplexCategory.δ (0 : Fin 3) := by
+  ext x : 3
+  apply Fin.ext
+  simp only [backIncl, toOrderHom_mkHom, toOrderHom_δ, OrderHom.coe_mk, Fin.val_natAdd, succAbove_val]
+  rw [show (0 : Fin 3).val = 0 from rfl]
+  split_ifs <;> omega
+
+/-- For a `2`-simplex `σ`, the front-`1` face (at split `(1,1)`) is its `δ₂`-face. -/
+theorem frontFace_eq_face_two {X : TopCat}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (1 + 1)))) :
+    @frontFace X 1 1 σ = face (2 : Fin 3) σ := by
+  unfold frontFace face; rw [frontIncl_one_one]
+
+/-- For a `2`-simplex `σ`, the back-`1` face (at split `(1,1)`) is its `δ₀`-face. -/
+theorem backFace_eq_face_zero {X : TopCat}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (1 + 1)))) :
+    @backFace X 1 1 σ = face (0 : Fin 3) σ := by
+  unfold backFace face; rw [backIncl_one_one]
+
+/-- **The Hadamard coboundary identity** (degree 1): `δ(a · b) = a ⌣ b + b ⌣ a` for cocycles `a, b`.
+The pointwise product `fun σ => a σ * b σ` of two `1`-cochains witnesses `a ⌣ b + b ⌣ a` as a coboundary. -/
+theorem coboundary_hadamard_one (a b : SingularCochain X 1)
+    (ha : coboundaryₗ X 1 a = 0) (hb : coboundaryₗ X 1 b = 0) :
+    coboundary X 1 (fun σ => a σ * b σ) = cup a b + cup b a := by
+  funext σ
+  have hfa : a (face 1 σ) = a (face 2 σ) + a (face 0 σ) := by
+    have h : coboundary X 1 a σ = 0 := congrFun ha σ
+    rw [coboundary_apply, Fin.sum_univ_three] at h
+    rw [← sub_eq_zero, CharTwo.sub_eq_add, ← h]; ring
+  have hfb : b (face 1 σ) = b (face 2 σ) + b (face 0 σ) := by
+    have h : coboundary X 1 b σ = 0 := congrFun hb σ
+    rw [coboundary_apply, Fin.sum_univ_three] at h
+    rw [← sub_eq_zero, CharTwo.sub_eq_add, ← h]; ring
+  rw [coboundary_apply, Fin.sum_univ_three, Pi.add_apply, cup_apply, cup_apply,
+    frontFace_eq_face_two, backFace_eq_face_zero, hfa, hfb]
+  generalize a (face 0 σ) = x
+  generalize a (face 2 σ) = y
+  generalize b (face 0 σ) = z
+  generalize b (face 2 σ) = w
+  revert x y z w; decide
+
+/-- **`cupH` is symmetric** — the intersection-form property `B(x,y) = B(y,x)`. -/
+theorem cupH_symm (x y : Cohomology X 1) : cupH x y = cupH y x := by
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  obtain ⟨b, rfl⟩ := Submodule.Quotient.mk_surjective _ y
+  rw [cupH_mk_mk, cupH_mk_mk]
+  change (Submodule.Quotient.mk _ : _ ⧸ _) = Submodule.Quotient.mk _
+  rw [Submodule.Quotient.eq]
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply,
+    AddSubgroupClass.coe_sub]
+  show cup a.1 b.1 - cup b.1 a.1 ∈ LinearMap.range (coboundaryₗ X 1)
+  refine ⟨fun σ => a.1 σ * b.1 σ, ?_⟩
+  show coboundary X 1 (fun σ => a.1 σ * b.1 σ) = cup a.1 b.1 - cup b.1 a.1
+  rw [coboundary_hadamard_one a.1 b.1 (LinearMap.mem_ker.mp a.2) (LinearMap.mem_ker.mp b.2)]
+  funext σ
+  simp only [Pi.add_apply, Pi.sub_apply]
+  rw [CharTwo.sub_eq_add]
+
 end SKEFTHawking.SingularCohomologyMod2
