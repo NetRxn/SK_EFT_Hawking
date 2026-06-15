@@ -67,4 +67,34 @@ theorem dataBordism_iso_zmod16_of_bounds (ξ : TangentialData X k I) [Finite (Da
     Nonempty (DataBordismGrp ξ ≃+ ZMod 16) :=
   smith_sandwich gen hord hcard
 
+/-- **W6 — `Ω₄^{Pin⁺} ≅ ℤ/16` DERIVED via the Smith iso + the sandwich (the Smith-LES-route endpoint).**
+The assembly the OBJECTIVE's W6 prescribes (`Smith_sequence.md` §2.3, §5): given the geometric **Smith
+isomorphism** `s : Ω₅^{Spin-ℤ₄} ≃+ Ω₄^{Pin⁺}` (W5, `[ℝP⁵] ↦ [ℝP⁴]`; TY §3.4 eq 3.15) **on the genuine
+`DataBordismGrp` carriers**, together with the two §5.1 disclosed cited-true inputs on the **domain**
+(Spin-ℤ₄) side —
+  - a generator `genA` of additive order `16` (the ABK/η lower bound: `[ℝP⁵]` has order 16, the same 16
+    as `[ℝP⁴]` it maps to), and
+  - the AHSS cardinality cap `|Ω₅^{Spin-ℤ₄}| ≤ 16` (TY footnote 15, formalized as the decidable height-4
+    cap `PinHeight4.col4_height_eq_four`) —
+the **sandwich** (`dataBordism_iso_zmod16_of_bounds`) yields `Ω₅^{Spin-ℤ₄} ≅ ℤ/16`, and the Smith iso
+transfers it to `Ω₄^{Pin⁺} ≅ ℤ/16`.
+
+This is the W6 derivation on the **genuine** `DataBordismGrp` carriers via the Smith LES — NOT the posited
+`Omega4PinPlusBordism` signature quotient, NOT `pin4_abutment`, NOT the `adamsAbutment` modeling
+definition. The two bounds are the OBJECTIVE-permitted load-bearing finite invariants (Brown/ABK + AHSS
+height-4 cap, DR §5.1); the Smith iso (W5) and the sandwich are the genuine constructed content (DR §5.2).
+The `s : ξA ≃+ ξB` argument is the W5 geometric Smith iso `[M] ↦ [PD(a)]` (built once `SmithIsomorphism`
+supplies it on the genuine carriers); this theorem is the standing W6 assembly it feeds. -/
+theorem dataBordism_pinPlus_iso_via_smith
+    {XB : Type*} [TopologicalSpace XB] {kB : WithTop ℕ∞}
+    {EB HB : Type*} [NormedAddCommGroup EB] [NormedSpace ℝ EB] [FiniteDimensional ℝ EB]
+    [TopologicalSpace HB] {IB : ModelWithCorners ℝ EB HB} [IB.Boundaryless]
+    (ξA : TangentialData X k I) (ξB : TangentialData XB kB IB) [Finite (DataBordismGrp ξA)]
+    (s : DataBordismGrp ξA ≃+ DataBordismGrp ξB)
+    (genA : DataBordismGrp ξA) (hord : addOrderOf genA = 16)
+    (hcard : Nat.card (DataBordismGrp ξA) ≤ 16) :
+    Nonempty (DataBordismGrp ξB ≃+ ZMod 16) := by
+  obtain ⟨e⟩ := dataBordism_iso_zmod16_of_bounds ξA genA hord hcard
+  exact ⟨s.symm.trans e⟩
+
 end SKEFTHawking.PinPlusBordismGroupDerived
