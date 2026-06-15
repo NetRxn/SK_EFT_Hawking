@@ -732,6 +732,11 @@ import SKEFTHawking.TangentialDataBordism
 -- CohomologyMod2 in SymTFT/StiefelWhitney is too coarse). Lightest honest object: cellular ≅ singular
 -- for CW complexes; the cellular side is the finite, decidable, reviewer-checkable one.
 import SKEFTHawking.CellularCohomologyMod2
+-- Phase 5q.F W4-cohomology brick 4 (2026-06-14): integration — ties the genuine cellular ℤ/2 cohomology
+-- to the project's kernel-pure ABK/Brown invariant (BrownInvariant + GuillouMarinBridge) via the
+-- generator's characteristic surface: H¹(RP²;ℤ/2) = the ABK quadratic form's domain, doubleBrown = the
+-- Guillou–Marin value. The genuine cohomology layer feeds the genuine ABK invariant on [RP⁴].
+import SKEFTHawking.PinPlusCohomologyABK
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
