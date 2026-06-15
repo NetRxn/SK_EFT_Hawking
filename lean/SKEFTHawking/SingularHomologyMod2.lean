@@ -365,4 +365,71 @@ noncomputable def kroneckerH {X : TopCat} (n : ℕ) :
     (c : cycles X n) :
     kroneckerH n (Submodule.Quotient.mk fc) (Submodule.Quotient.mk c) = kronecker fc.1 c.1 := rfl
 
+/-! ## §8. The cap product `⌢ : Cᵏ × Cₙ → Cₙ₋ₖ` — the cohomology–homology pairing
+
+The cap product caps a `k`-cochain against an `n`-chain to land in `Cₙ₋ₖ`: on a basis `(k+m)`-simplex
+`σ`, `a ⌢ σ = a(frontₖ σ) • [backₘ σ]` (evaluate `a` on the front `k`-face, scale the back `m`-face).
+It is the homology-valued analogue of the cup product (same Alexander–Whitney front/back split), and the
+substrate for Poincaré duality, whose duality map is the cap with the fundamental class, `[M] ⌢ ·`. -/
+
+/-- The cap product of a `k`-cochain with a *single basis* `(k+m)`-simplex `σ`:
+`a ⌢ σ = a(frontₖ σ) • [backₘ σ]`. A `ℤ/2`-chain in `Cₘ`. -/
+noncomputable def capBasis {X : TopCat} {k m : ℕ} (a : SingularCochain X k)
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (k + m)))) : SingularChain X m :=
+  a (frontFace σ) • Finsupp.single (backFace σ) 1
+
+/-- The **cap product** `⌢ : Cᵏ × Cₙ → Cₙ₋ₖ` (with `n = k + m`), the `ℤ/2`-linear extension of
+`σ ↦ a(frontₖ σ) • [backₘ σ]` off the basis simplices (`Finsupp.linearCombination`). Connects
+cohomology and homology — the substrate for Poincaré duality `[M] ⌢ ·`. -/
+noncomputable def cap {X : TopCat} {k m : ℕ} (a : SingularCochain X k) :
+    SingularChain X (k + m) →ₗ[ZMod 2] SingularChain X m :=
+  Finsupp.linearCombination (ZMod 2) (capBasis a)
+
+/-- The cap product on a basis simplex: `a ⌢ [σ] = a(frontₖ σ) • [backₘ σ]`. -/
+theorem cap_single {X : TopCat} {k m : ℕ} (a : SingularCochain X k)
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (k + m)))) :
+    cap a (Finsupp.single σ 1) = capBasis a σ := by
+  rw [cap, Finsupp.linearCombination_single, one_smul]
+
+/-- The cap product on a scaled basis simplex. -/
+theorem cap_single_smul {X : TopCat} {k m : ℕ} (a : SingularCochain X k)
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (k + m)))) (s : ZMod 2) :
+    cap a (Finsupp.single σ s) = s • capBasis a σ := by
+  rw [cap, Finsupp.linearCombination_single]
+
+/-- The cap product is `ℤ/2`-linear in the cochain argument (additivity). -/
+theorem cap_add_cochain {X : TopCat} {k m : ℕ} (a b : SingularCochain X k)
+    (c : SingularChain X (k + m)) : cap (a + b) c = cap a c + cap b c := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp [map_zero]
+  | add c d hc hd => rw [map_add, map_add, map_add, hc, hd]; abel
+  | single σ s =>
+      rw [cap_single_smul, cap_single_smul, cap_single_smul, ← smul_add]
+      congr 1
+      simp only [capBasis, Pi.add_apply, add_smul]
+
+/-- The cap product is `ℤ/2`-linear in the cochain argument (homogeneity). -/
+theorem cap_smul_cochain {X : TopCat} {k m : ℕ} (s : ZMod 2) (a : SingularCochain X k)
+    (c : SingularChain X (k + m)) : cap (s • a) c = s • cap a c := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp [map_zero]
+  | add c d hc hd => rw [map_add, map_add, hc, hd, smul_add]
+  | single σ t =>
+      rw [cap_single_smul, cap_single_smul, smul_comm]
+      congr 1
+      simp only [capBasis, Pi.smul_apply, smul_eq_mul, mul_smul]
+
+/-- The **cap product packaged as a `ℤ/2`-bilinear map** `Cᵏ →ₗ (Cₖ₊ₘ →ₗ Cₘ)` (linear in the cochain
+by `cap_add_cochain`/`cap_smul_cochain`, in the chain since each `cap a` is already a `LinearMap`). The
+degree-`(k,m)` cap operation; the substrate for Poincaré duality `[M] ⌢ ·`. -/
+noncomputable def capₗ {X : TopCat} (k m : ℕ) :
+    SingularCochain X k →ₗ[ZMod 2] SingularChain X (k + m) →ₗ[ZMod 2] SingularChain X m where
+  toFun := cap
+  map_add' a b := LinearMap.ext fun c => by rw [LinearMap.add_apply]; exact cap_add_cochain a b c
+  map_smul' s a := LinearMap.ext fun c => by
+    rw [LinearMap.smul_apply, RingHom.id_apply]; exact cap_smul_cochain s a c
+
+@[simp] theorem capₗ_apply {X : TopCat} {k m : ℕ} (a : SingularCochain X k)
+    (c : SingularChain X (k + m)) : capₗ k m a c = cap a c := rfl
+
 end SKEFTHawking.SingularHomologyMod2
