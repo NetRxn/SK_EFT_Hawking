@@ -813,6 +813,12 @@ import SKEFTHawking.SingularCohomologyMod2
 -- Hₙ = ker∂/im∂, and the descended Kronecker pairing kroneckerH : Hⁿ × Hₙ → ℤ/2 (the evaluation
 -- ⟨·,[M]⟩ the Wu functional ⟨x∪x,[M]⟩ needs — the route to the fundamental class and w₂(TM)).
 import SKEFTHawking.SingularHomologyMod2
+-- Phase 5q.F (fully-unconditional strengthening, w₂-foundation brick 5, 2026-06-15): the Wu class v₂ from
+-- Poincaré duality — for a PD datum (fundamental-class functional μ:H⁴→ℤ/2 + non-degenerate middle cup
+-- pairing, finite-dim H²), v₂∈H² represents x↦⟨Sq²x,[M]⟩ (wu_relation), the input to the Wu formula
+-- w₂=v₂+v₁². The PD datum's geometric construction (the ℤ/2 fundamental class + PD) is the next foundation
+-- brick; toward collapsing the unoriented-bordism floor for the full-carrier UNCONDITIONAL Ω₄^{Pin⁺}≅ℤ/16.
+import SKEFTHawking.PoincareDualityWu
 import SKEFTHawking.SingularCohomologyFunctorial
 import SKEFTHawking.SingularCohomologyDisjoint
 import SKEFTHawking.KitaevSixteenFold
