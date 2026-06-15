@@ -237,6 +237,41 @@ theorem linBoundary_cone (b : Y) (n : ℕ) (c : LinChain Y (n + 1)) :
     · rw [Finsupp.smul_single, smul_eq_mul, mul_one]
     · rw [← map_smul, ← map_smul, Finsupp.smul_single, smul_eq_mul, mul_one]
 
+/-- The **augmentation** `ε : LC_0(Y) → ℤ/2`, the sum of coefficients (the boundary of the
+degree-0 cone lands here). -/
+noncomputable def linAug : LinChain Y 0 →ₗ[ZMod 2] ZMod 2 :=
+  Finsupp.linearCombination (ZMod 2) (fun _ => (1 : ZMod 2))
+
+theorem linAug_single (w : Fin 1 → Y) (a : ZMod 2) : linAug (Finsupp.single w a) = a := by
+  rw [linAug, Finsupp.linearCombination_single, smul_eq_mul, mul_one]
+
+/-- **The degree-0 cone boundary formula**: `∂(b·c) = c + (ε c)·[b]` over `ℤ/2`, where `[b]` is the
+constant 0-simplex at the apex `b`. (The `∂₀` face drops the apex; the `∂₁` face is the constant `b`.) -/
+theorem linBoundary_cone_zero (b : Y) (c : LinChain Y 0) :
+    linBoundary 0 (cone b 0 c) = c + (linAug c) • Finsupp.single (fun _ => b) 1 := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp only [map_zero, map_zero, zero_smul, add_zero]
+  | add c d hc hd => simp only [map_add, add_smul, hc, hd]; abel
+  | single w a =>
+    have h1 : (Fin.cons b w : Fin 2 → Y) ∘ (1 : Fin 2).succAbove = (fun _ => b) := by
+      funext k
+      rw [Function.comp_apply, show (1 : Fin 2).succAbove k = 0 from by fin_cases k; decide,
+        Fin.cons_zero]
+    rw [cone_single_smul, map_smul, linBoundary_single, linBoundaryBasis, Fin.sum_univ_two,
+      cons_comp_zero_succAbove, h1, smul_add, linAug_single]
+    congr 1
+    rw [Finsupp.smul_single, smul_eq_mul, mul_one]
+
+/-- The augmentation kills boundaries of `1`-chains (`ε ∂ = 0`): a `1`-simplex's boundary has two
+faces, total coefficient `2 = 0` over `ℤ/2`. -/
+theorem linAug_linBoundary (c : LinChain Y 1) : linAug (linBoundary 0 c) = 0 := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp only [map_zero, map_zero]
+  | add c d hc hd => rw [map_add, map_add, hc, hd, add_zero]
+  | single v a =>
+    rw [linBoundary_single_smul, map_smul, linBoundaryBasis, Fin.sum_univ_two, map_add,
+      linAug_single, linAug_single, show (1 : ZMod 2) + 1 = 0 from by decide, smul_zero]
+
 /-! ## §4. The barycentric subdivision `Sd` (recursive)
 
 `Sd[v₀,…,vₙ] = b_v · Sd(∂[v₀,…,vₙ])`, coning the subdivided boundary at the barycenter `b_v`. Needs a
