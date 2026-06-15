@@ -667,4 +667,116 @@ noncomputable def cupSquareHom : Cohomology X 1 →+ Cohomology X 2 :=
 
 @[simp] theorem cupSquareHom_apply (x : Cohomology X 1) : cupSquareHom x = cupH x x := rfl
 
+/-! ### The cup product on cohomology `H² × H² → H⁴` (the 4-manifold intersection form)
+
+The exact degree-`(2,2)` analogue of the surface form `cupH`. `cupH24` is the 4-manifold intersection
+form `H²(M⁴) × H²(M⁴) → H⁴(M⁴)`, and its cup square `cupSquare2 : H² → H⁴` is the top Steenrod square
+`Sq²` on `H²(M⁴)`. The construction mirrors the `(1,1)→2` case verbatim with degrees bumped `1→2`,
+`2→4`; the only new ingredient is the left-coboundary descent at degree `(1,2)` (`cup_coboundary_left_1_2`)
+that replaces `cup_coboundary_left_deg0`. -/
+
+/-- **Coboundary ⌣ cocycle is a coboundary** (left argument, degrees `1,2`): if `g : C²` is a cocycle
+then `δa ⌣ g = δ(a ⌣ g)` for `a : C¹`. The exact degree-bumped mirror of `cup_coboundary_left_deg0`:
+cast-free because the degrees are concrete (`(1+2)+1 = 4 = 2+2`) and `frontBig`/`backBig` at split
+`(1,2)` are definitionally the `frontFace`/`backFace` of `cup _ g` at split `(2,2)`. The left-argument
+analogue of `cup_coboundary_right`, valid in the degree the 4-manifold intersection form needs
+(`H² × H² → H⁴`). -/
+theorem cup_coboundary_left_1_2 (a : SingularCochain X 1) (g : SingularCochain X 2)
+    (hg : coboundaryₗ X 2 g = 0) :
+    coboundaryₗ X (1 + 2) (cup a g) = cup (coboundaryₗ X 1 a) g := by
+  funext τ
+  show coboundary X (1 + 2) (cup a g) τ = cup (coboundaryₗ X 1 a) g τ
+  rw [coboundary_cup, cup_apply]
+  have hg' : coboundary X 2 g (backSmall τ) = 0 := congrFun hg (backSmall τ)
+  rw [hg', mul_zero, add_zero]
+  rfl
+
+/-- For a fixed degree-2 cocycle `fc`, cup-with-`fc` descends to a linear map `H² → H⁴`. The cup lands
+in cocycles (`cup_cocycle`); it kills `H²`-coboundaries because `f ⌣ δb = δ(f ⌣ b)`
+(`cup_coboundary_right`). -/
+noncomputable def cupRightH24 (fc : LinearMap.ker (coboundaryₗ X 2)) :
+    Cohomology X 2 →ₗ[ZMod 2] Cohomology X 4 :=
+  Submodule.liftQ _
+    ((Submodule.mkQ _).comp
+      (((cupₗ 2 2 fc.1).domRestrict (LinearMap.ker (coboundaryₗ X 2))).codRestrict
+        (LinearMap.ker (coboundaryₗ X 4)) fun gc => by
+          rw [LinearMap.mem_ker]
+          exact cup_cocycle fc.1 gc.1 (LinearMap.mem_ker.mp fc.2) (LinearMap.mem_ker.mp gc.2)))
+    (by
+      intro gc hgc
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] at hgc
+      rw [LinearMap.mem_ker]
+      change Submodule.Quotient.mk _ = 0
+      rw [Submodule.Quotient.mk_eq_zero]
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply,
+        LinearMap.codRestrict_apply, LinearMap.domRestrict_apply, cupₗ_apply]
+      show cup fc.1 gc.1 ∈ LinearMap.range (coboundaryₗ X 3)
+      obtain ⟨b, hb⟩ := hgc
+      refine ⟨cup fc.1 b, ?_⟩
+      rw [← hb]
+      exact cup_coboundary_right fc.1 b (LinearMap.mem_ker.mp fc.2))
+
+/-- The computation rule for `cupRightH24` on a representative cocycle `gc`. -/
+theorem cupRightH24_apply_mk (fc gc : LinearMap.ker (coboundaryₗ X 2)) :
+    cupRightH24 fc (Submodule.Quotient.mk gc)
+      = Submodule.Quotient.mk (⟨cup fc.1 gc.1, cup_cocycle fc.1 gc.1
+          (LinearMap.mem_ker.mp fc.2) (LinearMap.mem_ker.mp gc.2)⟩ :
+          LinearMap.ker (coboundaryₗ X 4)) := by
+  rfl
+
+/-- **The cup product on `H² × H² → H⁴`** — a genuine `ℤ/2`-bilinear map: the 4-manifold intersection
+form `H²(M⁴) × H²(M⁴) → H⁴(M⁴)`. Well-defined: `cup_cocycle` lands it in cocycles;
+`cup_coboundary_right`/`cup_coboundary_left_1_2` kill coboundaries in each argument. The degree-`(2,2)`
+analogue of the surface intersection form `cupH`. -/
+noncomputable def cupH24 : Cohomology X 2 →ₗ[ZMod 2] Cohomology X 2 →ₗ[ZMod 2] Cohomology X 4 :=
+  Submodule.liftQ _
+    { toFun := cupRightH24
+      map_add' := fun fc fc' => by
+        ext x
+        obtain ⟨gc, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+        simp only [LinearMap.add_apply, cupRightH24_apply_mk]
+        congr 1
+        apply Subtype.ext
+        simp only [Submodule.coe_add, cup_add_left]
+      map_smul' := fun c fc => by
+        ext x
+        obtain ⟨gc, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+        simp only [LinearMap.smul_apply, RingHom.id_apply, cupRightH24_apply_mk]
+        congr 1
+        apply Subtype.ext
+        simp only [SetLike.val_smul, cup_smul_left] }
+    (by
+      intro fc hfc
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] at hfc
+      rw [LinearMap.mem_ker]
+      ext x
+      obtain ⟨gc, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+      rw [LinearMap.zero_apply]
+      change cupRightH24 fc (Submodule.Quotient.mk gc) = 0
+      rw [cupRightH24_apply_mk]
+      change Submodule.Quotient.mk _ = 0
+      rw [Submodule.Quotient.mk_eq_zero]
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply]
+      show cup fc.1 gc.1 ∈ LinearMap.range (coboundaryₗ X 3)
+      obtain ⟨a, ha⟩ := hfc
+      refine ⟨cup a gc.1, ?_⟩
+      rw [← ha]
+      exact cup_coboundary_left_1_2 a gc.1 (LinearMap.mem_ker.mp gc.2))
+
+@[simp] theorem cupH24_mk_mk (fc gc : LinearMap.ker (coboundaryₗ X 2)) :
+    cupH24 (Submodule.Quotient.mk fc) (Submodule.Quotient.mk gc)
+      = Submodule.Quotient.mk (⟨cup fc.1 gc.1, cup_cocycle fc.1 gc.1
+          (LinearMap.mem_ker.mp fc.2) (LinearMap.mem_ker.mp gc.2)⟩ :
+          LinearMap.ker (coboundaryₗ X 4)) := by
+  show cupRightH24 fc (Submodule.Quotient.mk gc) = _
+  exact cupRightH24_apply_mk fc gc
+
+/-- The **cup square** `x ↦ x ⌣ x : H² → H⁴` — the top Steenrod square `Sq²` on `H²(M⁴)`. Shipped as a
+plain map; additivity of `cupSquare2` is *not* claimed here (it would require the cup-`1` product
+symmetry at degree `2`, a separate later brick — unlike degree `1`, where the Hadamard product gives it
+for free). -/
+noncomputable def cupSquare2 (x : Cohomology X 2) : Cohomology X 4 := cupH24 x x
+
+theorem cupSquare2_apply (x : Cohomology X 2) : cupSquare2 x = cupH24 x x := rfl
+
 end SKEFTHawking.SingularCohomologyMod2
