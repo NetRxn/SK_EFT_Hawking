@@ -244,6 +244,114 @@ noncomputable def mLevelChartKer (p : mZeroLocus f) :
       (kerModel (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))) :=
   (extChartSubtype f p).trans (mLevelSetChart f hf hsub p)
 
+/-! ### Smoothness of the per-point chart transitions
+
+The model-space level-set chart `mLevelSetChart` (of the *local* representative `localRep f p`, which is
+only `ContDiffOn` the extended chart target — not a global submersion) has a `C^∞` inverse only on the
+**regular set**: chart points whose IFT-preimage lies in `extChartAt`'s target (where `localRep` is `C^∞`)
+and has an invertible forward derivative. We adapt `SmithRegularValueGeneral`'s machinery to this
+`ContDiffAt`-on-target setting. -/
+
+/-- The forward IFT chart of the local representative is `ContDiffAt` at each point of the extended
+chart target (where `localRep f p` is `C^∞`): its first coordinate is `localRep f p` (`ContDiffAt`
+there), its second is the affine `chartProj (· - a)`. -/
+theorem mIftChart_contDiffAt (p : mZeroLocus f) {x : E} (hx : x ∈ (extChartAt I p.1).target) :
+    ContDiffAt ℝ ⊤ (mIftChart f hf hsub p) x := by
+  have hloc : ContDiffAt ℝ ⊤ (localRep (I := I) f p.1) x :=
+    (localRep_contDiffOn hf p.1).contDiffAt ((isOpen_extChartAt_target p.1).mem_nhds hx)
+  have hcoe : (⇑(mIftChart f hf hsub p)) = fun y => (localRep (I := I) f p.1 y,
+      chartProj (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1)) (hsub p.1 p.2)
+        (y - extChartAt I p.1 p.1)) :=
+    iftChart_coe (localRep (I := I) f p.1) _ _ (localRep_hasStrictFDerivAt hf p.1) (hsub p.1 p.2)
+  rw [hcoe]
+  exact hloc.prodMk
+    (((chartProj _ (hsub p.1 p.2)).contDiff.comp (contDiff_id.sub contDiff_const)).contDiffAt)
+
+/-- **The IFT chart inverse of the local representative is `ContDiffAt`** at a chart point `y` whose
+preimage `(mIftChart p).symm y` lies in `extChartAt`'s target (so `localRep f p` is `C^∞` there) and
+where the forward derivative `(fderiv (localRep f p) ·).prod P` is invertible. Adapts
+`SmithRegularValueGeneral.iftChart_symm_contDiffAt` to the `ContDiffAt`-on-target setting. -/
+theorem mIftChart_symm_contDiffAt (p : mZeroLocus f)
+    {y : ℝ × kerModel (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))}
+    (hy : y ∈ (mIftChart f hf hsub p).target)
+    (hpre : (mIftChart f hf hsub p).symm y ∈ (extChartAt I p.1).target)
+    (hinv : ((fderiv ℝ (localRep (I := I) f p.1) ((mIftChart f hf hsub p).symm y)).prod
+      (chartProj (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1)) (hsub p.1 p.2))).IsInvertible) :
+    ContDiffAt ℝ ⊤ (mIftChart f hf hsub p).symm y := by
+  obtain ⟨g, hg⟩ := hinv
+  refine (mIftChart f hf hsub p).contDiffAt_symm (f₀' := g) hy ?_ ?_
+  · have hd : HasFDerivAt (⇑(mIftChart f hf hsub p))
+        ((fderiv ℝ (localRep (I := I) f p.1) ((mIftChart f hf hsub p).symm y)).prod
+          (chartProj (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1)) (hsub p.1 p.2)))
+        ((mIftChart f hf hsub p).symm y) :=
+      iftChart_hasFDerivAt (localRep (I := I) f p.1) _ _ (localRep_hasStrictFDerivAt hf p.1)
+        (hsub p.1 p.2) (((localRep_contDiffOn hf p.1).contDiffAt
+          ((isOpen_extChartAt_target p.1).mem_nhds hpre)).differentiableAt (by norm_num))
+    rw [← hg] at hd
+    exact hd
+  · exact mIftChart_contDiffAt f hf hsub p hpre
+
+include hf in
+/-- The derivative-with-projection map `x ↦ (fderiv (localRep f p) x).prod P` is `ContinuousOn` the
+extended chart target (where `localRep f p` is `C^∞`, so its `fderiv` is continuous). -/
+theorem mContinuousOn_fderiv_prod (p : mZeroLocus f) :
+    ContinuousOn (fun x => (fderiv ℝ (localRep (I := I) f p.1) x).prod
+      (chartProj (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1)) (hsub p.1 p.2)))
+      (extChartAt I p.1).target := by
+  have hd : ContinuousOn (fderiv ℝ (localRep (I := I) f p.1)) (extChartAt I p.1).target :=
+    (localRep_contDiffOn hf p.1).continuousOn_fderiv_of_isOpen (isOpen_extChartAt_target p.1)
+      (by norm_num)
+  have hcomp : ContinuousOn (fun x => (ContinuousLinearMap.prodL ℝ)
+      (fderiv ℝ (localRep (I := I) f p.1) x,
+        chartProj (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1)) (hsub p.1 p.2)))
+      (extChartAt I p.1).target :=
+    (ContinuousLinearMap.prodL ℝ).continuous.comp_continuousOn (hd.prodMk continuousOn_const)
+  simpa only [ContinuousLinearMap.prodL_apply] using hcomp
+
+/-- The **regular target set** of the local-rep chart at `p` (in kernel coordinates): chart points `(0,k)`
+whose IFT-preimage lies in `extChartAt`'s target (so `localRep f p` is `C^∞` there) and has invertible
+forward derivative — the open set on which the inverse chart is `C^∞`. Adds the `target`-membership
+condition to `SmithRegularValueGeneral.regularKerTarget`. -/
+def mRegularKerTarget (p : mZeroLocus f) :
+    Set (kerModel (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))) :=
+  {k | (0, k) ∈ (mIftChart f hf hsub p).target ∧
+    (mIftChart f hf hsub p).symm (0, k) ∈ (extChartAt I p.1).target ∧
+    ((fderiv ℝ (localRep (I := I) f p.1) ((mIftChart f hf hsub p).symm (0, k))).prod
+      (chartProj (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1)) (hsub p.1 p.2))).IsInvertible}
+
+theorem isOpen_mRegularKerTarget (p : mZeroLocus f) : IsOpen (mRegularKerTarget f hf hsub p) := by
+  have hcont0 : Continuous (fun k : kerModel (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1)) =>
+      ((0 : ℝ), k)) := continuous_const.prodMk continuous_id
+  set A := (fun k : kerModel (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1)) => ((0 : ℝ), k)) ⁻¹'
+    (mIftChart f hf hsub p).target with hA
+  have hAopen : IsOpen A := (mIftChart f hf hsub p).open_target.preimage hcont0
+  have hscont : ContinuousOn (fun k => (mIftChart f hf hsub p).symm (0, k)) A :=
+    (mIftChart f hf hsub p).continuousOn_symm.comp hcont0.continuousOn (fun _ hk => hk)
+  have hTopen : IsOpen ((extChartAt I p.1).target ∩
+      {x : E | ((fderiv ℝ (localRep (I := I) f p.1) x).prod
+        (chartProj (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1)) (hsub p.1 p.2))).IsInvertible}) :=
+    (mContinuousOn_fderiv_prod f hf hsub p).isOpen_inter_preimage (isOpen_extChartAt_target p.1)
+      (isOpen_isInvertible _)
+  have heq : mRegularKerTarget f hf hsub p = A ∩ (fun k => (mIftChart f hf hsub p).symm (0, k)) ⁻¹'
+      ((extChartAt I p.1).target ∩
+        {x : E | ((fderiv ℝ (localRep (I := I) f p.1) x).prod
+          (chartProj (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1)) (hsub p.1 p.2))).IsInvertible}) := by
+    ext k
+    simp only [mRegularKerTarget, hA, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage]
+  rw [heq]
+  exact hscont.isOpen_inter_preimage hAopen hTopen
+
+/-- **The inverse local-rep chart is `C^∞` on the regular set.** In kernel coordinates,
+`k ↦ (mIftChart p).symm (0, k)` is `ContDiffOn ℝ ⊤` on `mRegularKerTarget`. The load-bearing
+inverse-smoothness for the chart transitions. -/
+theorem mContDiffOn_iftChart_symm (p : mZeroLocus f) :
+    ContDiffOn ℝ ⊤ (fun k => (mIftChart f hf hsub p).symm (0, k)) (mRegularKerTarget f hf hsub p) := by
+  rw [(isOpen_mRegularKerTarget f hf hsub p).contDiffOn_iff]
+  intro k hk
+  obtain ⟨hkt, hpre, hinv⟩ := hk
+  exact (mIftChart_symm_contDiffAt f hf hsub p hkt hpre hinv).comp k
+    (contDiffAt_const.prodMk contDiffAt_id)
+
 end Chart
 
 end SKEFTHawking.ManifoldRegularValue
