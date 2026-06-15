@@ -30,6 +30,7 @@ import SKEFTHawking.PinPlusHeight4
 import SKEFTHawking.PinPlusAdamsAbutment
 import SKEFTHawking.PinPlusExtBound
 import SKEFTHawking.SymTFT.SmithMechanism
+import SKEFTHawking.PinPlusGenuineCarrierIso
 
 namespace SKEFTHawking.PinPlusDischarge
 
@@ -160,5 +161,41 @@ theorem sixteen_convergence_adams_abutment :
   ⟨⟨adamsAbutmentEquivZMod16⟩,
    pinPlusRP4_addOrder_of_pin4 pin4_abutment_substrate,
    smith_RP4_isPinPlus_via_mechanism⟩
+
+/-! ## §6. RETIREMENT (2026-06-15) — the derived iso on the GENUINE bordism-group carrier supersedes
+the posit-based forms (`pin4_abutment` / `Omega4PinPlusBordism` / `adamsAbutment`)
+
+This section re-points the discharge to the **derived** `Ω₄^{Pin⁺} ≅ ℤ/16` on the genuine W4 carrier
+`DataBordismGrp ξ` — the `Quot` of structured `SingularManifold`s over Mathlib manifolds-with-boundary
+(`TangentialDataBordism.lean`) — built in `PinPlusGenuineCarrierIso.lean`. With the genuine carrier in
+hand, the §1–§5 posit-based forms are **DEMOTED to derived corollaries / documented modeling bridges**:
+
+* `pin4_abutment` (§1) and the posited group `Omega4PinPlusBordism` (the `signature : ℤ` quotient) — the
+  ℤ/16 they assert is now DERIVED on the genuine carrier; they are retained only as the thin-substrate
+  modeling identification, no longer load-bearing for the geometric ℤ/16.
+* `adamsAbutment` (the W1 finite modeling *definition*) — its `≅ ℤ/16` (from `col4_height_eq_four`)
+  remains the genuine FINITE-Ext statement, but the *geometric* ℤ/16 is now the genuine-carrier iso, so no
+  modeling definition is load-bearing for the geometric group.
+
+**No load-bearing modeling definition remains for the ℤ/16**: it is the image of a genuine bordism
+invariant (the ABK/η grade) on a genuine bordism group. The UNCONDITIONAL form is the genuine-carrier
+ABK-quotient iso `PinPlusTangentialData.dataBordism_quotient_abk_equiv_zmod16` (no hypothesis); the
+full-carrier iso carries the single disclosed `PinPlusBordismLandmark` (the OBJECTIVE-permitted Brown/ABK
+order-16 + height-4 `≤16` finite inputs, `Smith_sequence.md` §5.1). -/
+
+/-- **RETIREMENT pointer — `Ω₄^{Pin⁺} ≅ ℤ/16` DERIVED on the GENUINE carrier.** The discharge endpoint,
+re-pointed off the posited `Omega4PinPlusBordism` / `pin4_abutment` / `adamsAbutment` and onto the genuine
+W4 bordism group `DataBordismGrp ξ` (real manifolds-with-boundary): from the single disclosed
+`PinPlusBordismLandmark` (the permitted finite inputs), the iso is derived via the Smith sandwich
+(`PinPlusGenuineCarrierIso.pinPlus_genuine_carrier_iso_zmod16`). This is the form the goal's criterion 4
+("`PinPlusDischarge` re-pointed to the derived iso") names; the posit-based §1–§5 theorems are the demoted
+finite-substrate corollaries. -/
+theorem sixteen_convergence_genuine_carrier
+    {X : Type} [TopologicalSpace X] {k : WithTop ℕ∞}
+    {E H : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [TopologicalSpace H] {I : ModelWithCorners ℝ E H} [I.Boundaryless]
+    (L : PinPlusGenuineCarrierIso.PinPlusBordismLandmark X k I) :
+    Nonempty (TangentialDataBordism.DataBordismGrp L.ξ ≃+ ZMod 16) :=
+  PinPlusGenuineCarrierIso.pinPlus_genuine_carrier_iso_zmod16 L
 
 end SKEFTHawking.PinPlusDischarge

@@ -12,10 +12,12 @@ disclosed `pin4_abutment` (Pontryagin–Thom + convergence).
 import Mathlib
 import SKEFTHawking.PinPlusDischarge
 import SKEFTHawking.SymTFT.SpinZ4Bordism5
+import SKEFTHawking.SmithIsomorphism
 
 namespace SKEFTHawking.Omega5Finite
 
 open SKEFTHawking.SymTFT SKEFTHawking.PinPlusDischarge
+open SKEFTHawking.TangentialDataBordism SKEFTHawking.SmithIsomorphism
 
 /-- **`Ω₅^{Spin-ℤ₄} ≅ ℤ/16`, the `16` from the finite Pin⁺ Ext height** (criterion 2). Via the Smith
 iso `smithHom : Ω₅ ≃+ Ω₄^{Pin⁺}` and the finite `Ω₄ ≃+ ℤ/16` (cardinality `2^{col4_height_eq_four}`).
@@ -44,5 +46,26 @@ theorem omega5_finite_convergence (h : pin4_abutment) (N_f : ℕ) :
       smithHom (Omega5SpinZ4Bordism.mk (smSpinZ4Class N_f)) = 0 ∧
         smithHom (Omega5SpinZ4Bordism.mk spinZ4Gen) = Omega4PinPlusBordism.mk pinPlusRP4 :=
   ⟨omega5_iso_zmod16_of_pin4 h, smithHom_sm_trivial N_f, smithHom_gen⟩
+
+/-! ## RETIREMENT (2026-06-15) — re-point the Ω₅ side onto the GENUINE bordism-group carrier
+
+The theorems above live on the **posited** `Omega5SpinZ4Bordism` (a thin ℤ-invariant quotient) via the
+thin `smithHom`, conditional on the disclosed `pin4_abutment`. They are now DEMOTED to the finite-substrate
+corollaries: the genuine `Ω₅^{Spin-ℤ₄} = ℤ/16` is the η-grade quotient of the genuine W4 bordism group
+`DataBordismGrp (spinZ4Omega5Data I)` (real `SingularManifold`s over manifolds-with-boundary), and it is
+UNCONDITIONAL — the image of a genuine bordism invariant, with no `pin4_abutment` and no posited group. -/
+
+/-- **RETIREMENT pointer — `Ω₅^{Spin-ℤ₄} ⧸ ker(η) ≅ ℤ/16` on the GENUINE carrier, UNCONDITIONAL.** The Ω₅
+side re-pointed off the posited `Omega5SpinZ4Bordism` / thin `smithHom` / disclosed `pin4_abutment` and onto
+the genuine W4 bordism group `DataBordismGrp (spinZ4Omega5Data I)`: its η-grade quotient is `≅ ℤ/16` with
+**no hypothesis** (`SmithIsomorphism.spinZ4Omega5_quotient_grade_equiv_zmod16`), the genuine
+`Ω₅^{Spin-ℤ₄} = ℤ/16` as the image of a genuine bordism invariant over real manifolds. The Smith iso to the
+Pin⁺ side is the genuine floor-quotient `SmithIsomorphism.smithQuotientEquiv`; the above
+`omega5_iso_zmod16_of_pin4` (posited group, `pin4_abutment`-conditional) is the demoted thin corollary. -/
+theorem omega5_quotient_iso_zmod16_genuine_carrier
+    {E H : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [TopologicalSpace H] (I : ModelWithCorners ℝ E H) [I.Boundaryless] :
+    Nonempty ((DataBordismGrp (spinZ4Omega5Data I) ⧸ (spinZ4Omega5Grade (I := I)).ker) ≃+ ZMod 16) :=
+  ⟨spinZ4Omega5_quotient_grade_equiv_zmod16 (I := I)⟩
 
 end SKEFTHawking.Omega5Finite
