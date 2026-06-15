@@ -756,6 +756,12 @@ import SKEFTHawking.PinPlusBordismGroupDerived
 -- non-2-torsion carrier with a surjective ABK grade (the genuine ≥16 half). Iso from the disclosed
 -- ABK-completeness (≤16 cap) — the genuine-carrier endpoint, scoped precisely against DR §5.1.
 import SKEFTHawking.PinPlusGenuineCarrierIso
+-- Phase 5q.F (2026-06-15): the faithful Pin⁺ (and Spin-ℤ₄) `TangentialData` instance `pinPlusData` on the
+-- genuine `DataBordismGrp` carrier — non-trivial structure-conjugation `revStr` (escapes the no-go), a
+-- genuine bordism-invariant ABK grade surjective onto ℤ/16 over real manifolds-with-boundary, and the
+-- UNCONDITIONAL kernel-pure endpoint `DataBordismGrp ⧸ ker(abkGrade) ≃+ ℤ/16` (the ℤ/16 as the ABK
+-- quotient of the genuine bordism group — not the signature posit, not the `adamsAbutment` modeling def).
+import SKEFTHawking.PinPlusTangentialData
 -- Phase 5q.F W6 (2026-06-16): one genuine map of the Smith LES toward the UNCONDITIONAL Ω₄^{Pin⁺}≅ℤ/16 —
 -- the degree-4 Smith/defect map ℤ⊕ℤ/8→ℤ/16, (k,ν₂)↦2ν₂−k (HKT 4.38/DDDKLPT 8.23), surjective, with the
 -- K3 obstruction (16,0)↦0. W6 infrastructure; the full LES derivation (+ the ≤16 bound) is in progress.
