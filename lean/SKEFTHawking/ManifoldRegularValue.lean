@@ -53,4 +53,31 @@ instance instCompactSpace_mZeroLocus [CompactSpace M] {f : M → ℝ} (hf : Cont
     CompactSpace (mZeroLocus f) :=
   isCompact_iff_compactSpace.mp (isCompact_mZeroLocus hf)
 
+/-! ## §2. The local representative of `f` in an extended chart
+
+In the extended chart `extChartAt I p` (a `PartialEquiv M E`), `f` is represented by
+`localRep f p := f ∘ (extChartAt I p).symm : E → ℝ`. Smoothness of `f` on the manifold transfers to
+`ContDiffOn` of `localRep` on the chart target, the link to the model-space construction
+(`SmithRegularValueGeneral.levelSetIsManifold`, which works with `g : E → ℝ`). -/
+
+variable [IsManifold I ⊤ M]
+
+/-- The **local representative** of `f : M → ℝ` in the extended chart at `p`:
+`localRep f p = f ∘ (extChartAt I p).symm : E → ℝ`. (The target chart on `ℝ` is the identity, so this
+is exactly `writtenInExtChartAt 𝓘(ℝ,ℝ) I p f`.) -/
+noncomputable def localRep (f : M → ℝ) (p : M) : E → ℝ := f ∘ (extChartAt I p).symm
+
+omit [FiniteDimensional ℝ E] [IsManifold I ⊤ M] in
+@[simp] theorem localRep_apply (f : M → ℝ) (p : M) (x : E) :
+    localRep (I := I) f p x = f ((extChartAt I p).symm x) := rfl
+
+omit [FiniteDimensional ℝ E] in
+/-- The local representative is **`ContDiffOn`** on the chart target: `f` smooth on `M` composed with the
+smooth chart-inverse `(extChartAt I p).symm` is `ContMDiffOn` as a model-space map `E → ℝ`, which is
+`ContDiffOn` (`contMDiffOn_iff_contDiffOn`). The link from manifold smoothness of `f` to the model-space
+regular-value machinery (`SmithRegularValueGeneral`). -/
+theorem localRep_contDiffOn {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) ⊤ f) (p : M) :
+    ContDiffOn ℝ ⊤ (localRep (I := I) f p) (extChartAt I p).target :=
+  contMDiffOn_iff_contDiffOn.mp (hf.comp_contMDiffOn (contMDiffOn_extChartAt_symm p))
+
 end SKEFTHawking.ManifoldRegularValue
