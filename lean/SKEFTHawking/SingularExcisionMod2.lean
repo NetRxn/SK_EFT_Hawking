@@ -352,6 +352,7 @@ theorem linHomotopy_single_smul (n : ℕ) (v : Fin (n + 1 + 1) → V) (a : ZMod 
           (Finsupp.single v 1 + linHomotopy n (linBoundary n (Finsupp.single v 1))) := by
   rw [linHomotopy, Finsupp.linearCombination_single]
 
+omit [AddCommGroup V] [Module ℝ V] in
 /-- A `ℤ/2`-module algebra fact (terms kept opaque to avoid normalizer blowup on cone/barycenter):
 `a·(P+Q+R) + a·Q = a·P + a·R` (the doubled `a·Q` cancels). -/
 private theorem smul_add_three_cancel (a : ZMod 2) {n : ℕ} (P Q R : LinChain V n) :

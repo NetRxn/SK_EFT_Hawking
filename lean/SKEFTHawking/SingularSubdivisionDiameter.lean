@@ -9,10 +9,11 @@ is within `(n/(n+1))·d` of each of its vertices (`d` = the diameter), because t
 -/
 import Mathlib
 import SKEFTHawking.SingularExcisionMod2
+import SKEFTHawking.SingularSubdivisionConvex
 
 namespace SKEFTHawking.SingularSubdivisionDiameter
 
-open SKEFTHawking.SingularExcisionMod2
+open SKEFTHawking.SingularExcisionMod2 SKEFTHawking.SingularSubdivisionConvex
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
@@ -69,18 +70,22 @@ theorem norm_sub_affineSimplex_le {n : ℕ} (b : V) (w : Fin (n + 1) → V)
 def diamLe (δ : ℝ) {n : ℕ} (c : LinChain V n) : Prop :=
   ∀ w ∈ c.support, ∀ i k, ‖w i - w k‖ ≤ δ
 
+omit [NormedSpace ℝ V] in
 theorem diamLe_zero_chain (δ : ℝ) {n : ℕ} : diamLe δ (0 : LinChain V n) := by
   intro w hw; simp at hw
 
+omit [NormedSpace ℝ V] in
 theorem diamLe.mono {δ δ' : ℝ} (hle : δ ≤ δ') {n : ℕ} {c : LinChain V n} (h : diamLe δ c) :
     diamLe δ' c := fun w hw i k => (h w hw i k).trans hle
 
+omit [NormedSpace ℝ V] in
 theorem diamLe_single {δ : ℝ} {n : ℕ} {v : Fin (n + 1) → V} {a : ZMod 2}
     (h : ∀ i k, ‖v i - v k‖ ≤ δ) : diamLe δ (Finsupp.single v a) := by
   intro w hw i k
   obtain rfl := Finset.mem_singleton.1 (Finset.mem_of_subset Finsupp.support_single_subset hw)
   exact h i k
 
+omit [NormedSpace ℝ V] in
 theorem diamLe.add {δ : ℝ} {n : ℕ} {c d : LinChain V n} (hc : diamLe δ c) (hd : diamLe δ d) :
     diamLe δ (c + d) := by
   classical
@@ -89,10 +94,33 @@ theorem diamLe.add {δ : ℝ} {n : ℕ} {c d : LinChain V n} (hc : diamLe δ c) 
   · exact hc w h i k
   · exact hd w h i k
 
+omit [NormedSpace ℝ V] in
 theorem diamLe.smul {δ : ℝ} {n : ℕ} (a : ZMod 2) {c : LinChain V n} (hc : diamLe δ c) :
     diamLe δ (a • c) :=
   fun w hw => hc w (Finsupp.support_smul hw)
 
+omit [NormedSpace ℝ V] in
+theorem diamLe.sum {δ : ℝ} {n : ℕ} {ι : Type*} (s : Finset ι) (f : ι → LinChain V n)
+    (hf : ∀ i ∈ s, diamLe δ (f i)) : diamLe δ (∑ i ∈ s, f i) :=
+  Finset.sum_induction f (diamLe δ) (fun _ _ => diamLe.add) (diamLe_zero_chain δ) hf
+
+omit [NormedAddCommGroup V] [NormedSpace ℝ V] in
+/-- Membership in `chainsIn S` forces every vertex of every support simplex into `S`. -/
+theorem chainsIn_support {S : Set V} {n : ℕ} {c : LinChain V n} (hc : c ∈ chainsIn S n) :
+    ∀ w ∈ c.support, ∀ i, w i ∈ S := by
+  classical
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ hc
+  · rintro _ ⟨u, hu, rfl⟩ w hw i
+    obtain rfl := Finset.mem_singleton.1 (Finset.mem_of_subset Finsupp.support_single_subset hw)
+    exact hu i
+  · intro w hw; simp at hw
+  · intro x y _ _ hx hy w hw i
+    rcases Finset.mem_union.1 (Finsupp.support_add hw) with h | h
+    · exact hx w h i
+    · exact hy w h i
+  · intro a x _ hx w hw i; exact hx w (Finsupp.support_smul hw) i
+
+omit [NormedAddCommGroup V] [NormedSpace ℝ V] in
 /-- The cone is the relabelling `v ↦ Fin.cons b v` of the chain — its support simplices are exactly the
 `b`-coned simplices of `c`. -/
 theorem cone_eq_mapDomain (b : V) (n : ℕ) (c : LinChain V n) :
@@ -103,6 +131,7 @@ theorem cone_eq_mapDomain (b : V) (n : ℕ) (c : LinChain V n) :
   | single v a => rw [cone_single_smul, Finsupp.mapDomain_single, Finsupp.smul_single,
       smul_eq_mul, mul_one]
 
+omit [NormedSpace ℝ V] in
 /-- **Cone diameter preservation**: if the apex `b` is within `δ` of every vertex of `c` and every
 basis simplex of `c` has diameter `≤ δ`, then so does `cone b c` (its simplices are `b` prepended). -/
 theorem cone_diamLe {δ : ℝ} {m : ℕ} {b : V} {c : LinChain V m}
@@ -135,9 +164,44 @@ theorem norm_barycenter_sub_convexHull_le {k : ℕ} (v : Fin (k + 1) → V) {p :
     _ = ‖barycenter v - v i‖ := by rw [dist_eq_norm, norm_sub_rev]
     _ ≤ ((k : ℝ) / ((k : ℝ) + 1)) * d := norm_barycenter_sub_vertex_le v i (fun j => hd j i)
 
-/-- The subdivision contraction factors increase with dimension: `m/(m+1) ≤ (m+1)/(m+2)`. -/
+/-- The subdivision contraction factors increase with dimension: `m/(m+1) ≤ (m+1)/((m+1)+1)`. Stated
+with the `Nat.cast (m+1)` numerator so it matches the `↑(n+1)` factor of the goal in the recursion. -/
 theorem div_succ_le_div_succ_succ (m : ℕ) :
-    (m : ℝ) / ((m : ℝ) + 1) ≤ ((m : ℝ) + 1) / ((m : ℝ) + 2) := by
+    (m : ℝ) / ((m : ℝ) + 1) ≤ ((m + 1 : ℕ) : ℝ) / (((m + 1 : ℕ) : ℝ) + 1) := by
+  push_cast
   rw [div_le_div_iff₀ (by positivity) (by positivity)]; nlinarith
+
+/-- **Barycentric subdivision contracts diameter by `n/(n+1)`**: if every basis simplex of `c` has
+diameter `≤ δ`, then every simplex of `Sd c` has diameter `≤ (n/(n+1))·δ`. Induction on dimension `n`:
+a piece of `Sd[v]` is `barycenter v` coned onto a piece of `Sd(∂[v])`; the barycenter is within
+`(n/(n+1))δ` of the whole hull (Lemma A + convexity) and the inner pieces shrink by the smaller
+dimension factor (IH + monotonicity). -/
+theorem linSubdiv_diamLe {δ : ℝ} : ∀ (n : ℕ) {c : LinChain V n}, diamLe δ c →
+    diamLe ((n : ℝ) / ((n : ℝ) + 1) * δ) (linSubdiv n c)
+  | 0, c, _ => by
+    rw [linSubdiv_zero]
+    intro w _ i k
+    rw [Fin.fin_one_eq_zero i, Fin.fin_one_eq_zero k, sub_self, norm_zero]
+    simp
+  | n + 1, c, hc => by
+    have hrw : linSubdiv (n + 1) c
+        = c.sum (fun v a => linSubdiv (n + 1) (Finsupp.single v a)) := by
+      conv_lhs => rw [← Finsupp.sum_single c]
+      simp only [Finsupp.sum, map_sum]
+    rw [hrw, Finsupp.sum]
+    refine diamLe.sum _ _ (fun v hv => ?_)
+    have hvd : ∀ i k, ‖v i - v k‖ ≤ δ := hc v hv
+    rw [linSubdiv_single_smul]
+    refine diamLe.smul _ (cone_diamLe (fun w hw i => ?_) ?_)
+    · have hmem : w i ∈ convexHull ℝ (Set.range v) :=
+        chainsIn_support (linSubdiv_mem_chainsIn (convex_convexHull ℝ _) n
+          (linBoundary_mem_chainsIn (single_mem_chainsIn
+            (fun j => subset_convexHull ℝ (Set.range v) (Set.mem_range_self j))))) w hw i
+      exact norm_barycenter_sub_convexHull_le v hmem hvd
+    · refine (linSubdiv_diamLe n ?_).mono
+        (mul_le_mul_of_nonneg_right (div_succ_le_div_succ_succ n)
+          ((norm_nonneg _).trans (hvd 0 0)))
+      rw [linBoundary_single, linBoundaryBasis]
+      exact diamLe.sum _ _ (fun i _ => diamLe_single (fun a b => hvd _ _))
 
 end SKEFTHawking.SingularSubdivisionDiameter
