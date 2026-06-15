@@ -837,6 +837,10 @@ import SKEFTHawking.SingularExcisionPushforward
 -- submodule chainsIn S n of in-S chains is preserved by cone/linBoundary/linSubdiv/linHomotopy (new
 -- vertices are barycenters = convex combinations), so the subdivision of Δᴺ has vertices in Δᴺ.
 import SKEFTHawking.SingularSubdivisionConvex
+-- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
+-- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
+-- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
+import SKEFTHawking.SingularSubdivisionNatural
 -- Phase 5q.F (fully-unconditional strengthening, w₂-foundation brick 5, 2026-06-15): the Wu class v₂ from
 -- Poincaré duality — for a PD datum (fundamental-class functional μ:H⁴→ℤ/2 + non-degenerate middle cup
 -- pairing, finite-dim H²), v₂∈H² represents x↦⟨Sq²x,[M]⟩ (wu_relation), the input to the Wu formula
