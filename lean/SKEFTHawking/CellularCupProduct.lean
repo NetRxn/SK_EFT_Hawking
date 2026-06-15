@@ -163,4 +163,39 @@ def cupCocycle {p q : ℕ} (z₁ : LinearMap.ker (coboundary C p))
 
 end CupRing
 
+/-! ## §3. The genuine Smith SW-mechanism `w₂(N) = 0` over the real cup product
+
+This upgrades the Smith homomorphism's operative content (`SymTFT/SmithMechanism.lean`,
+`smith_w2_vanishes`) from the rank-carrier `CohomologyMod2` — whose `cupSquare` is rank-transport
+(`⟨x.rank⟩`, the module's own "thin-model CRITICAL-1 caveat") — to **this session's genuine cup
+product**: `b²` is now the real cup-square `b ⌣ b`. -/
+
+/-- Over `ℤ/2` every cochain is 2-torsion: `x + x = 0`. -/
+theorem cochain_add_self {C : CellComplex} {n : ℕ} (x : Cochain C n) : x + x = 0 := by
+  funext σ
+  show x σ + x σ = 0
+  have h : ∀ r : ZMod 2, r + r = 0 := by decide
+  exact h (x σ)
+
+namespace CupData
+
+variable {C : CellComplex} (D : CupData C)
+
+/-- The **cup-square** `b ↦ b ⌣ b : C¹ → C²`. For a cocycle `b` representing a class in `H¹`, this is
+the genuine `b² ∈ H²` — not the rank-transport surrogate of `SymTFT/StiefelWhitney.cupSquare`. -/
+def cupSquare (b : Cochain C 1) : Cochain C (1 + 1) := D.cup b b
+
+/-- **Genuine Smith SW-mechanism: `w₂(N) = 0`.** Given the Whitney identity `w₂(N) = c + b²` (from the
+normal-bundle split `TM|_N ≅ TN ⊕ ν`, `b = w₁(ν)`, `c = w₂(M)|_N`) and the Spin-ℤ₄ constraint `c = b²`
+(`w₂(M) = a²` restricting), the second Stiefel–Whitney class of the Smith dual `N = PD(a)` vanishes:
+`w₂(N) = b² + b² = 0` over `ℤ/2`, so `N` admits a Pin⁺ structure (Lawson–Michelsohn II.1.7;
+Tachikawa–Yonekura 3.14). Here `b²` is the **genuine cup-square** `b ⌣ b`, de-thinning the
+rank-transport `cupSquare` of `SymTFT/SmithMechanism.smith_w2_vanishes`. -/
+theorem smith_w2_vanishes_genuine (w2 c : Cochain C (1 + 1)) (b : Cochain C 1)
+    (hWhitney : w2 = c + D.cupSquare b) (hSpinZ4 : c = D.cupSquare b) : w2 = 0 := by
+  rw [hWhitney, hSpinZ4]
+  exact cochain_add_self _
+
+end CupData
+
 end SKEFTHawking.CellularCohomologyMod2
