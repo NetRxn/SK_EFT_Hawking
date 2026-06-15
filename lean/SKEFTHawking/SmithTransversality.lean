@@ -67,4 +67,16 @@ theorem submersion_zero_locus_base (f : E → ℝ) (f' : E →L[ℝ] ℝ) (a : E
     hf.implicitFunction f f' hf' (f a) 0 = a :=
   hf.implicitFunction_apply_image hf'
 
+/-- **The Poincaré-dual submanifold has codimension exactly 1.** The model `ker f'` of the zero locus
+has codimension 1 in `E` (rank–nullity, with `range f' = ℝ`). This is the dimension drop `d ↦ d − 1`
+the Smith map `s : Ω_d → Ω_{d−1}` produces — `PD(a) = N^{d−1} ⊂ M^d`, `w₁(N) = a`. -/
+theorem submersion_ker_codim_one [FiniteDimensional ℝ E] (f' : E →L[ℝ] ℝ)
+    (hf' : (f' : E →L[ℝ] ℝ).range = ⊤) :
+    Module.finrank ℝ (LinearMap.ker (f' : E →ₗ[ℝ] ℝ)) + 1 = Module.finrank ℝ E := by
+  have hrn := (f' : E →ₗ[ℝ] ℝ).finrank_range_add_finrank_ker
+  have hr : Module.finrank ℝ (LinearMap.range (f' : E →ₗ[ℝ] ℝ)) = 1 := by
+    have htop : LinearMap.range (f' : E →ₗ[ℝ] ℝ) = ⊤ := hf'
+    rw [htop, finrank_top, Module.finrank_self]
+  omega
+
 end SKEFTHawking.SmithTransversality
