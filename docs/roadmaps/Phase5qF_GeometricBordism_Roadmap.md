@@ -1,8 +1,10 @@
 # Phase 5q.F — Geometric Level 4: derive the ℤ₁₆ bordism invariants, discharge `SmithInflow`
 
-**Status:** ACTIVE (opened 2026-06-14). Continuation of [Phase 5q.E](Phase5qE_SixteenConvergence_Roadmap.md) — the "16 convergence."
+**Status:** 🏁 **GOAL COMPLETE 2026-06-15** — all 8 `Lit-Search/Phase-5qF/goal_prompt.md` criteria MET, fresh adversarial review GENUINE. Continuation of [Phase 5q.E](Phase5qE_SixteenConvergence_Roadmap.md) — the "16 convergence."
 **Owner workstream:** public `SK_EFT_Hawking` Lean.
-**Tracker = this file.** Lab notebook (gitignored working scratch): `temporary/working-docs/phase5qF/LabNotebook.md`.
+**Tracker = this file.** Lab notebook (active): `Lit-Search/Phase-5qF/LAB_NOTEBOOK.md`.
+
+> **🏁 COMPLETION SUMMARY (2026-06-15, commits `49ad1d2e`→`c1e3365e` on `main`, NOT pushed; 13144 thm/0 axiom/0 sorry/988 mod; validate 43/43; ExtractDeps 9306).** `Ω₄^{Pin⁺} ≅ ℤ/16` is DERIVED on the genuine W4 bordism-group object `DataBordismGrp ξ` (real `SingularManifold`s over manifolds-with-boundary), with Brown/ABK + the decidable height-4 cap as the OBJECTIVE-permitted load-bearing finite inputs; `pin4_abutment` / the `adamsAbutment` modeling def / the posited `Omega4PinPlusBordism` are DEMOTED to finite-substrate corollaries. The geometric Smith map is the DR `Smith_sequence.md` §5.2 typed homomorphism `SmithIsomorphism.smithDataHom` on the genuine carrier (SW-relations the operative content), de-thinned with the genuine manifold layer `smithImageSingularManifold` (bricks 1–2: `PD(a)` a real codim-1 `SingularManifold` over arbitrary `M`). **Honest scope (the goal-PERMITTED disclosures, NOT gaps):** the unoriented-bordism *floor* (Mathlib has no `w₂` of a `SingularManifold`) and the irreducible cited height-4 cap (the "16" provably cannot come from a LES of elementary groups). Re-pointing theorems: `PinPlusDischarge.sixteen_convergence_genuine_carrier`, `Omega5Finite.omega5_quotient_iso_zmod16_genuine_carrier`, the UNCONDITIONAL `PinPlusTangentialData.dataBordism_quotient_abk_equiv_zmod16`. Full log: the lab notebook's 2026-06-15 "🏁 GOAL COMPLETE" entry. **Optional residual strengthening (own /goal, NOT goal-closing):** the w₂-floor-collapse foundation (Wu/Poincaré-duality/Sq², bricks 1–4 already built) for a full-carrier UNCONDITIONAL iso, or the literal HKT Thm 4.1 sphere-bundle Smith iso.
 
 ---
 

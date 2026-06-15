@@ -156,6 +156,38 @@ never be read as "the geometric Pin⁺ bordism group."** Wave plan: W1 ✅ · W2
 posited-signature-free) · W3 (Kreck-α upper arithmetic) · W4–W6 (Smith-LES geometric spine — its own
 sub-program, weeks).
 
+### 3.6.2 W4–W6 — the GEOMETRIC discharge COMPLETE on the genuine carrier (2026-06-15)
+
+The W4–W6 Smith-LES geometric spine is **BUILT**, discharging the geometric-faithfulness residual §3.6.1
+deferred: `Ω₄^{Pin⁺} ≅ ℤ/16` is now DERIVED on a genuine bordism-group object.
+
+- **W4 (genuine carrier):** `TangentialDataBordism.DataBordismGrp ξ` — the `Quot` of structured
+  `SingularManifold`s over Mathlib manifolds-with-boundary, a genuine `AddCommGroup` (`BordismGroup.lean`'s
+  collar/injection encoding sidesteps the boundary-as-manifold TODO). NOT the `signature:ℤ` quotient.
+- **W5 (Smith map):** `SmithIsomorphism.smithDataHom : DataBordismGrp ξ_{Spin-ℤ₄} →+ DataBordismGrp ξ_{Pin⁺}`
+  — the DR `Smith_sequence.md` §5.2 typed homomorphism with the SW-relations (`smith_w2_vanishes`,
+  `w₂(N)=w₂(M)−a²=0`) as operative content, de-thinned with the genuine manifold layer
+  `smithImageSingularManifold` (this phase's regular-value theorem: `PD(a)` a real codim-1
+  `SingularManifold` over an arbitrary compact boundaryless base `M`). Generator witness `s[ℝP⁵]=[ℝP⁴]`.
+- **W6 (iso):** `PinPlusGenuineCarrierIso.pinPlus_genuine_carrier_iso_zmod16` derives `≅ ℤ/16` on the genuine
+  carrier via the Smith sandwich (`order-16 + |G|≤16 ⟹ cyclic`), from the single disclosed
+  `PinPlusBordismLandmark` = the OBJECTIVE-permitted Brown/ABK order-16 + height-4 `≤16` finite inputs; the
+  UNCONDITIONAL form is the ABK-grade quotient iso `dataBordism_quotient_abk_equiv_zmod16`.
+
+**Retirement (criterion 4):** `PinPlusDischarge.sixteen_convergence_genuine_carrier` +
+`Omega5Finite.omega5_quotient_iso_zmod16_genuine_carrier` re-point the discharge onto the genuine carrier;
+`pin4_abutment` / `Omega4PinPlusBordism` / the `adamsAbutment` modeling def are DEMOTED to finite-substrate
+corollaries — **no load-bearing modeling DEFINITION remains for the geometric ℤ/16.**
+
+**Honest scope (unchanged from this doc's framing — NOT a unification claim).** The genuine carrier retains
+the unoriented-bordism *floor* (Mathlib has no `w₂` of a `SingularManifold`), so the UNCONDITIONAL genuine
+content is the ABK-grade QUOTIENT iso; the full-carrier iso carries the one disclosed finite-input landmark
+(the height-4 cap — the "16" is irreducibly a cited spectral-sequence fact, NOT derivable from a LES of
+elementary groups). **The four-16 convergence of §3 remains an enumeration** connected by spin-bordism — the
+genuine-carrier Pin⁺ ℤ/16 here is *one* of those 16s built genuinely, NOT a "formally verified unification."
+Fresh adversarial review (2026-06-15) = GENUINE, no must-fix. The "weeks" W4–W6 estimate resolved in-session
+(LOE posture: Mathlib-absence is a brick list, not a wall). Commits `49ad1d2e`→`c1e3365e`; 13144 thm; validate 43/43.
+
 ## 4. Proved NOT true (the no-gos — what the discipline caught)
 
 - **Lattice Arf bridge** `σ/8 ≡ Arf(redQuad) mod 2` — **FALSE** (`RokhlinArfNoGo.lean`; E₈: Arf=0, σ/8=1; Arf(redQuad)≡0 on every even-unimodular lattice). The genuine σ/8↔Arf is the *geometric* Guillou–Marin Arf on a characteristic surface, not a lattice invariant.
