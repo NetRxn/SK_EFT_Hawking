@@ -760,6 +760,10 @@ import SKEFTHawking.PinPlusGenuineCarrierIso
 -- the degree-4 Smith/defect map ℤ⊕ℤ/8→ℤ/16, (k,ν₂)↦2ν₂−k (HKT 4.38/DDDKLPT 8.23), surjective, with the
 -- K3 obstruction (16,0)↦0. W6 infrastructure; the full LES derivation (+ the ≤16 bound) is in progress.
 import SKEFTHawking.SmithLESDefectMap
+-- Phase 5q.F W5 (2026-06-16): transversality foundation for the geometric Smith map [M]↦[PD(a)] — the
+-- local structure of a real submersion's zero locus (PD submanifold = zero locus of a transverse
+-- section) via Mathlib's implicit function theorem: local parametrization, immersion/smoothness, base.
+import SKEFTHawking.SmithTransversality
 -- Phase 5q.F (2026-06-15): singular ℤ/2 cohomology on Mathlib's singular SSet (TopCat.toSSet) — the
 -- foundation for the ABK β BUILT FROM the SingularManifold bordism group (Mathlib has the singular chain
 -- complex but no cohomology). First brick: singular cochains + the coboundary δ. Toward δ²=0 → Hⁿ → cup →
