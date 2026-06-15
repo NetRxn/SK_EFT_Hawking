@@ -207,4 +207,22 @@ theorem cup_add_right {X : TopCat} {p q : ℕ} (f : SingularCochain X p) (g₁ g
     cup f (g₁ + g₂) = cup f g₁ + cup f g₂ := by
   funext σ; simp only [cup_apply, Pi.add_apply]; ring
 
+/-- The cup product is **left ℤ/2-linear in the scalar**. -/
+theorem cup_smul_left {X : TopCat} {p q : ℕ} (c : ZMod 2) (f : SingularCochain X p)
+    (g : SingularCochain X q) : cup (c • f) g = c • cup f g := by
+  funext σ; simp only [cup_apply, Pi.smul_apply, smul_eq_mul]; ring
+
+/-- The cup product is **right ℤ/2-linear in the scalar**. -/
+theorem cup_smul_right {X : TopCat} {p q : ℕ} (c : ZMod 2) (f : SingularCochain X p)
+    (g : SingularCochain X q) : cup f (c • g) = c • cup f g := by
+  funext σ; simp only [cup_apply, Pi.smul_apply, smul_eq_mul]; ring
+
+/-- The cup product as a **`ℤ/2`-bilinear map** `Cᵖ →ₗ Cᵍ →ₗ Cᵖ⁺ᵍ`. -/
+noncomputable def cupₗ {X : TopCat} (p q : ℕ) :
+    SingularCochain X p →ₗ[ZMod 2] SingularCochain X q →ₗ[ZMod 2] SingularCochain X (p + q) :=
+  LinearMap.mk₂ (ZMod 2) cup cup_add_left cup_smul_left cup_add_right cup_smul_right
+
+@[simp] theorem cupₗ_apply {X : TopCat} {p q : ℕ} (f : SingularCochain X p) (g : SingularCochain X q) :
+    cupₗ p q f g = cup f g := rfl
+
 end SKEFTHawking.SingularCohomologyMod2
