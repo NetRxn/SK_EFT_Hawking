@@ -86,4 +86,50 @@ theorem pushChainM_mapVerts {X : TopCat} {N n : ℕ}
   · intro x y _ _ hx hy; simp only [map_add]; rw [hx, hy]
   · intro a x _ hx; simp only [map_smul]; rw [hx]
 
+/-- The **identity affine `n`-simplex** of `Δⁿ`: the single simplex on the `n+1` standard basis vertices
+`eⱼ = Pi.single j 1` of `Δⁿ ⊆ (Fin (n+1) → ℝ)`. Its barycentric subdivision, pushed along `σ`, is `Sd σ`. -/
+noncomputable def idChain (n : ℕ) : LinChain (Fin (n + 1) → ℝ) n :=
+  Finsupp.single (fun j => Pi.single j 1) 1
+
+theorem idChain_mem (n : ℕ) : idChain n ∈ chainsIn (stdSimplex ℝ (Fin (n + 1))) n :=
+  single_mem_chainsIn (fun j => single_mem_stdSimplex ℝ j)
+
+/-- **The singular barycentric subdivision** `Sd : Cₙ(X) → Cₙ(X)`: `Sd σ := σ_# (Sd ι_n)`, the
+`ℤ/2`-linear extension of pushing the affine subdivision of the identity simplex along `σ`. -/
+noncomputable def singularSd (X : TopCat) (n : ℕ) :
+    SingularChain X n →ₗ[ZMod 2] SingularChain X n :=
+  Finsupp.linearCombination (ZMod 2) (fun σ => pushChainM σ (linSubdiv n (idChain n)))
+
+theorem singularSd_single (X : TopCat) (n : ℕ)
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) :
+    singularSd X n (Finsupp.single σ 1) = pushChainM σ (linSubdiv n (idChain n)) := by
+  rw [singularSd, Finsupp.linearCombination_single, one_smul]
+
+/-- The `i`-th facet of the identity `(n+1)`-simplex is the linear image of the identity `n`-simplex:
+`∂ᵢ ι_{n+1} = (Lᵢ)_* ι_n`, with `Lᵢ = FunOnFinite.linearMap (Fin.succAbove i)` (it sends the basis
+vertex `eⱼ` to `e_{δᵢj}`). -/
+theorem facet_idChain (n : ℕ) (i : Fin (n + 2)) :
+    Finsupp.single ((fun j => (Pi.single j 1 : Fin (n + 1 + 1) → ℝ)) ∘ i.succAbove) (1 : ZMod 2)
+      = mapVerts (FunOnFinite.linearMap ℝ ℝ i.succAbove) n (idChain n) := by
+  rw [idChain, mapVerts_single]
+  congr 1
+  funext j
+  rw [Function.comp_apply, Function.comp_apply, FunOnFinite.linearMap_piSingle]
+
+/-- **The singular subdivision is a chain map**: `∂ ∘ Sd = Sd ∘ ∂` on a basis simplex. Transports the
+affine `∂Sd=Sd∂` (`linBoundary_linSubdiv`) through the pushforward chain map (`pushChainM_chainBoundary`)
+and the facet functoriality (`pushChainM_mapVerts` + `mapVerts_linSubdiv` + `facet_idChain`). -/
+theorem chainBoundary_singularSd (X : TopCat) (n : ℕ)
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) :
+    chainBoundary X n (singularSd X (n + 1) (Finsupp.single σ 1))
+      = singularSd X n (chainBoundary X n (Finsupp.single σ 1)) := by
+  rw [singularSd_single,
+    pushChainM_chainBoundary σ
+      (linSubdiv_mem_chainsIn (convex_stdSimplex ℝ _) (n + 1) (idChain_mem (n + 1))),
+    linBoundary_linSubdiv, idChain, linBoundary_single, linBoundaryBasis, map_sum, map_sum,
+    chainBoundary_single, boundaryBasis, map_sum]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [singularSd_single, facet_idChain, ← mapVerts_linSubdiv,
+    pushChainM_mapVerts σ i (linSubdiv_mem_chainsIn (convex_stdSimplex ℝ _) n (idChain_mem n))]
+
 end SKEFTHawking.SingularSubdivision
