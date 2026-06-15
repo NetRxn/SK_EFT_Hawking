@@ -779,4 +779,349 @@ noncomputable def cupSquare2 (x : Cohomology X 2) : Cohomology X 4 := cupH24 x x
 
 theorem cupSquare2_apply (x : Cohomology X 2) : cupSquare2 x = cupH24 x x := rfl
 
+/-! ### §5. The Steenrod cup-`1` product at degree `(2,2)` and graded commutativity of `cupH24`
+
+Over `ℤ/2` the cup product is commutative on cohomology because, for cochains `a, b ∈ Cⁿ`, the
+cochain `a ⌣ b` and its transpose `b ⌣ a` are chain-homotopic via the Steenrod cup-`1` product
+`a ⌣₁ b ∈ C^{2n-1}`:
+  `δ(a ⌣₁ b) = a ⌣ b + b ⌣ a + (δa) ⌣₁ b + a ⌣₁ (δb)`   (mod 2).
+For cocycles this gives `a ⌣ b + b ⌣ a = δ(a ⌣₁ b)`, a coboundary, hence `[a⌣b] = [b⌣a]` in `H⁴`.
+
+At `n = 2` the cup-`1` product lands in `C³` (degree `2·2−1 = 3`), and its explicit Steenrod formula
+on a `3`-simplex `σ = [v₀,v₁,v₂,v₃]` is the two-term sum (`u = 0, 1`)
+  `(a ⌣₁ b)(σ) = a(σ|{0,2,3}) · b(σ|{0,1,2}) + a(σ|{0,1,3}) · b(σ|{1,2,3})`.
+This is the degree-`2` analogue of the degree-`1` Hadamard product `coboundary_hadamard_one`; here
+the homotopy is the genuine Steenrod `⌣₁`, not a pointwise product. -/
+
+/-- Inclusion `[2] ⟶ [3]` onto vertices `{0,2,3}` (`0↦0, 1↦2, 2↦3`): the `a`-restriction of the
+`u=0` cup-`1` term. -/
+def cupOneIncl023 : SimplexCategory.mk 2 ⟶ SimplexCategory.mk 3 :=
+  SimplexCategory.mkHom ⟨fun i => ⟨if i.val = 0 then 0 else i.val + 1, by
+      have := i.isLt; split <;> omega⟩,
+    fun a b h => by simp only [Fin.le_def] at h ⊢; split <;> split <;> omega⟩
+
+/-- Inclusion `[2] ⟶ [3]` onto vertices `{0,1,3}` (`0↦0, 1↦1, 2↦3`): the `a`-restriction of the
+`u=1` cup-`1` term. -/
+def cupOneIncl013 : SimplexCategory.mk 2 ⟶ SimplexCategory.mk 3 :=
+  SimplexCategory.mkHom ⟨fun i => ⟨if i.val = 2 then 3 else i.val, by
+      have := i.isLt; split <;> omega⟩,
+    fun a b h => by simp only [Fin.le_def] at h ⊢; split <;> split <;> omega⟩
+
+/-- The **Steenrod cup-`1` product at degree `(2,2)`** `⌣₁ : C² × C² → C³`,
+`(a ⌣₁ b)(σ) = a(σ|{0,2,3})·b(σ|{0,1,2}) + a(σ|{0,1,3})·b(σ|{1,2,3})` (the two-term `u=0,1` sum).
+The chain homotopy realising graded commutativity of the cup product in degree `2`. -/
+noncomputable def cupOne22 (a b : SingularCochain X 2) : SingularCochain X 3 :=
+  fun σ =>
+    a ((TopCat.toSSet.obj X).map cupOneIncl023.op σ)
+        * b ((TopCat.toSSet.obj X).map (frontIncl 2 1).op σ)
+    + a ((TopCat.toSSet.obj X).map cupOneIncl013.op σ)
+        * b ((TopCat.toSSet.obj X).map (backIncl 1 2).op σ)
+
+/-! ### The ten `2`-face inclusions `[2] ⟶ [4]` and the value abbreviation
+
+Every `2`-face of a singular `4`-simplex `τ` is `τ` restricted along one of the `C(5,3)=10` strictly
+monotone inclusions `[2] ⟶ [4]`. We name them `triIJK` (selecting vertices `{I,J,K} ⊂ {0,1,2,3,4}`)
+so that the five face-expansions of `cupOne22 a b (∂ᵢτ)` and the ten cocycle relations (`δa = δb = 0`
+on the five tetrahedral `3`-faces of `τ`) live in the same ten atoms — the bridge to the `ZMod 2`
+algebra. -/
+
+/-- `[2] ⟶ [4]` selecting vertices `{0,1,2}`. -/
+def tri012 : SimplexCategory.mk 2 ⟶ SimplexCategory.mk 4 :=
+  SimplexCategory.mkHom ⟨![0, 1, 2], by decide⟩
+/-- `[2] ⟶ [4]` selecting vertices `{0,1,3}`. -/
+def tri013 : SimplexCategory.mk 2 ⟶ SimplexCategory.mk 4 :=
+  SimplexCategory.mkHom ⟨![0, 1, 3], by decide⟩
+/-- `[2] ⟶ [4]` selecting vertices `{0,1,4}`. -/
+def tri014 : SimplexCategory.mk 2 ⟶ SimplexCategory.mk 4 :=
+  SimplexCategory.mkHom ⟨![0, 1, 4], by decide⟩
+/-- `[2] ⟶ [4]` selecting vertices `{0,2,3}`. -/
+def tri023 : SimplexCategory.mk 2 ⟶ SimplexCategory.mk 4 :=
+  SimplexCategory.mkHom ⟨![0, 2, 3], by decide⟩
+/-- `[2] ⟶ [4]` selecting vertices `{0,2,4}`. -/
+def tri024 : SimplexCategory.mk 2 ⟶ SimplexCategory.mk 4 :=
+  SimplexCategory.mkHom ⟨![0, 2, 4], by decide⟩
+/-- `[2] ⟶ [4]` selecting vertices `{0,3,4}`. -/
+def tri034 : SimplexCategory.mk 2 ⟶ SimplexCategory.mk 4 :=
+  SimplexCategory.mkHom ⟨![0, 3, 4], by decide⟩
+/-- `[2] ⟶ [4]` selecting vertices `{1,2,3}`. -/
+def tri123 : SimplexCategory.mk 2 ⟶ SimplexCategory.mk 4 :=
+  SimplexCategory.mkHom ⟨![1, 2, 3], by decide⟩
+/-- `[2] ⟶ [4]` selecting vertices `{1,2,4}`. -/
+def tri124 : SimplexCategory.mk 2 ⟶ SimplexCategory.mk 4 :=
+  SimplexCategory.mkHom ⟨![1, 2, 4], by decide⟩
+/-- `[2] ⟶ [4]` selecting vertices `{1,3,4}`. -/
+def tri134 : SimplexCategory.mk 2 ⟶ SimplexCategory.mk 4 :=
+  SimplexCategory.mkHom ⟨![1, 3, 4], by decide⟩
+/-- `[2] ⟶ [4]` selecting vertices `{2,3,4}`. -/
+def tri234 : SimplexCategory.mk 2 ⟶ SimplexCategory.mk 4 :=
+  SimplexCategory.mkHom ⟨![2, 3, 4], by decide⟩
+
+/-! ### The five face-expansions of `cupOne22 a b (∂ᵢτ)`
+
+For a `4`-simplex `τ` and each vertex `i ∈ {0,…,4}`, the `3`-cochain `cupOne22 a b` evaluated at the
+face `∂ᵢτ` expands, via the Steenrod two-term formula and the face-composition identities
+`(cupOneIncl⋯ ≫ δᵢ) = triIJK` (decidable in `SimplexCategory`), into a sum of two products of `a`/`b`
+values on `2`-faces of `τ`. The five identities are the `δ(a⌣₁b)(τ) = Σᵢ (a⌣₁b)(∂ᵢτ)` summands. -/
+
+variable (a b : SingularCochain X 2)
+  (τ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (3 + 1))))
+
+/-- Face expansion at `i = 0` (drop vertex `0`, remaining `{1,2,3,4}`). -/
+theorem cupOne22_face0 :
+    cupOne22 a b (face (0 : Fin 5) τ)
+      = a ((TopCat.toSSet.obj X).map tri134.op τ) * b ((TopCat.toSSet.obj X).map tri123.op τ)
+        + a ((TopCat.toSSet.obj X).map tri124.op τ) * b ((TopCat.toSSet.obj X).map tri234.op τ) := by
+  unfold cupOne22 face
+  rw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply,
+    ← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply,
+    ← op_comp, ← op_comp, ← op_comp, ← op_comp,
+    show cupOneIncl023 ≫ SimplexCategory.δ (0 : Fin 5) = tri134 from by decide,
+    show frontIncl 2 1 ≫ SimplexCategory.δ (0 : Fin 5) = tri123 from by decide,
+    show cupOneIncl013 ≫ SimplexCategory.δ (0 : Fin 5) = tri124 from by decide,
+    show backIncl 1 2 ≫ SimplexCategory.δ (0 : Fin 5) = tri234 from by decide]
+
+/-- Face expansion at `i = 1` (drop vertex `1`, remaining `{0,2,3,4}`). -/
+theorem cupOne22_face1 :
+    cupOne22 a b (face (1 : Fin 5) τ)
+      = a ((TopCat.toSSet.obj X).map tri034.op τ) * b ((TopCat.toSSet.obj X).map tri023.op τ)
+        + a ((TopCat.toSSet.obj X).map tri024.op τ) * b ((TopCat.toSSet.obj X).map tri234.op τ) := by
+  unfold cupOne22 face
+  rw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply,
+    ← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply,
+    ← op_comp, ← op_comp, ← op_comp, ← op_comp,
+    show cupOneIncl023 ≫ SimplexCategory.δ (1 : Fin 5) = tri034 from by decide,
+    show frontIncl 2 1 ≫ SimplexCategory.δ (1 : Fin 5) = tri023 from by decide,
+    show cupOneIncl013 ≫ SimplexCategory.δ (1 : Fin 5) = tri024 from by decide,
+    show backIncl 1 2 ≫ SimplexCategory.δ (1 : Fin 5) = tri234 from by decide]
+
+/-- Face expansion at `i = 2` (drop vertex `2`, remaining `{0,1,3,4}`). -/
+theorem cupOne22_face2 :
+    cupOne22 a b (face (2 : Fin 5) τ)
+      = a ((TopCat.toSSet.obj X).map tri034.op τ) * b ((TopCat.toSSet.obj X).map tri013.op τ)
+        + a ((TopCat.toSSet.obj X).map tri014.op τ) * b ((TopCat.toSSet.obj X).map tri134.op τ) := by
+  unfold cupOne22 face
+  rw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply,
+    ← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply,
+    ← op_comp, ← op_comp, ← op_comp, ← op_comp,
+    show cupOneIncl023 ≫ SimplexCategory.δ (2 : Fin 5) = tri034 from by decide,
+    show frontIncl 2 1 ≫ SimplexCategory.δ (2 : Fin 5) = tri013 from by decide,
+    show cupOneIncl013 ≫ SimplexCategory.δ (2 : Fin 5) = tri014 from by decide,
+    show backIncl 1 2 ≫ SimplexCategory.δ (2 : Fin 5) = tri134 from by decide]
+
+/-- Face expansion at `i = 3` (drop vertex `3`, remaining `{0,1,2,4}`). -/
+theorem cupOne22_face3 :
+    cupOne22 a b (face (3 : Fin 5) τ)
+      = a ((TopCat.toSSet.obj X).map tri024.op τ) * b ((TopCat.toSSet.obj X).map tri012.op τ)
+        + a ((TopCat.toSSet.obj X).map tri014.op τ) * b ((TopCat.toSSet.obj X).map tri124.op τ) := by
+  unfold cupOne22 face
+  rw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply,
+    ← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply,
+    ← op_comp, ← op_comp, ← op_comp, ← op_comp,
+    show cupOneIncl023 ≫ SimplexCategory.δ (3 : Fin 5) = tri024 from by decide,
+    show frontIncl 2 1 ≫ SimplexCategory.δ (3 : Fin 5) = tri012 from by decide,
+    show cupOneIncl013 ≫ SimplexCategory.δ (3 : Fin 5) = tri014 from by decide,
+    show backIncl 1 2 ≫ SimplexCategory.δ (3 : Fin 5) = tri124 from by decide]
+
+/-- Face expansion at `i = 4` (drop vertex `4`, remaining `{0,1,2,3}`). -/
+theorem cupOne22_face4 :
+    cupOne22 a b (face (4 : Fin 5) τ)
+      = a ((TopCat.toSSet.obj X).map tri023.op τ) * b ((TopCat.toSSet.obj X).map tri012.op τ)
+        + a ((TopCat.toSSet.obj X).map tri013.op τ) * b ((TopCat.toSSet.obj X).map tri123.op τ) := by
+  unfold cupOne22 face
+  rw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply,
+    ← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply,
+    ← op_comp, ← op_comp, ← op_comp, ← op_comp,
+    show cupOneIncl023 ≫ SimplexCategory.δ (4 : Fin 5) = tri023 from by decide,
+    show frontIncl 2 1 ≫ SimplexCategory.δ (4 : Fin 5) = tri012 from by decide,
+    show cupOneIncl013 ≫ SimplexCategory.δ (4 : Fin 5) = tri013 from by decide,
+    show backIncl 1 2 ≫ SimplexCategory.δ (4 : Fin 5) = tri123 from by decide]
+
+/-! ### The ten cocycle relations on the tetrahedral `3`-faces of `τ`
+
+The cocycle condition `δf = 0` for `f ∈ C²` says that on each tetrahedral `3`-face `∂ⱼτ`
+(`j ∈ {0,…,4}`) the alternating (mod 2: plain) sum of `f` over the four `2`-faces vanishes. Via
+`face_face` and the decidable composite identities `(δₖ ≫ δⱼ) = triIJK`, each becomes a four-term
+`ZMod 2` relation among the ten `triIJK`-atoms. Stated once per tetrahedron, reused for `a` and `b`. -/
+
+/-- Cocycle relation on tetra `∂₀τ` (faces of `{1,2,3,4}`). -/
+theorem cocycle_tetra0 (f : SingularCochain X 2) (hf : coboundaryₗ X 2 f = 0) :
+    f ((TopCat.toSSet.obj X).map tri234.op τ) + f ((TopCat.toSSet.obj X).map tri134.op τ)
+      + f ((TopCat.toSSet.obj X).map tri124.op τ) + f ((TopCat.toSSet.obj X).map tri123.op τ) = 0 := by
+  have h : coboundary X 2 f (face (0 : Fin 5) τ) = 0 := congrFun hf (face (0 : Fin 5) τ)
+  rw [coboundary_apply, Fin.sum_univ_four, face_face (0 : Fin 5) (0 : Fin 4) τ,
+    face_face (0 : Fin 5) (1 : Fin 4) τ, face_face (0 : Fin 5) (2 : Fin 4) τ,
+    face_face (0 : Fin 5) (3 : Fin 4) τ,
+    show SimplexCategory.δ (0 : Fin 4) ≫ SimplexCategory.δ (0 : Fin 5) = tri234 from by decide,
+    show SimplexCategory.δ (1 : Fin 4) ≫ SimplexCategory.δ (0 : Fin 5) = tri134 from by decide,
+    show SimplexCategory.δ (2 : Fin 4) ≫ SimplexCategory.δ (0 : Fin 5) = tri124 from by decide,
+    show SimplexCategory.δ (3 : Fin 4) ≫ SimplexCategory.δ (0 : Fin 5) = tri123 from by decide] at h
+  exact h
+
+/-- Cocycle relation on tetra `∂₁τ` (faces of `{0,2,3,4}`). -/
+theorem cocycle_tetra1 (f : SingularCochain X 2) (hf : coboundaryₗ X 2 f = 0) :
+    f ((TopCat.toSSet.obj X).map tri234.op τ) + f ((TopCat.toSSet.obj X).map tri034.op τ)
+      + f ((TopCat.toSSet.obj X).map tri024.op τ) + f ((TopCat.toSSet.obj X).map tri023.op τ) = 0 := by
+  have h : coboundary X 2 f (face (1 : Fin 5) τ) = 0 := congrFun hf (face (1 : Fin 5) τ)
+  rw [coboundary_apply, Fin.sum_univ_four, face_face (1 : Fin 5) (0 : Fin 4) τ,
+    face_face (1 : Fin 5) (1 : Fin 4) τ, face_face (1 : Fin 5) (2 : Fin 4) τ,
+    face_face (1 : Fin 5) (3 : Fin 4) τ,
+    show SimplexCategory.δ (0 : Fin 4) ≫ SimplexCategory.δ (1 : Fin 5) = tri234 from by decide,
+    show SimplexCategory.δ (1 : Fin 4) ≫ SimplexCategory.δ (1 : Fin 5) = tri034 from by decide,
+    show SimplexCategory.δ (2 : Fin 4) ≫ SimplexCategory.δ (1 : Fin 5) = tri024 from by decide,
+    show SimplexCategory.δ (3 : Fin 4) ≫ SimplexCategory.δ (1 : Fin 5) = tri023 from by decide] at h
+  exact h
+
+/-- Cocycle relation on tetra `∂₂τ` (faces of `{0,1,3,4}`). -/
+theorem cocycle_tetra2 (f : SingularCochain X 2) (hf : coboundaryₗ X 2 f = 0) :
+    f ((TopCat.toSSet.obj X).map tri134.op τ) + f ((TopCat.toSSet.obj X).map tri034.op τ)
+      + f ((TopCat.toSSet.obj X).map tri014.op τ) + f ((TopCat.toSSet.obj X).map tri013.op τ) = 0 := by
+  have h : coboundary X 2 f (face (2 : Fin 5) τ) = 0 := congrFun hf (face (2 : Fin 5) τ)
+  rw [coboundary_apply, Fin.sum_univ_four, face_face (2 : Fin 5) (0 : Fin 4) τ,
+    face_face (2 : Fin 5) (1 : Fin 4) τ, face_face (2 : Fin 5) (2 : Fin 4) τ,
+    face_face (2 : Fin 5) (3 : Fin 4) τ,
+    show SimplexCategory.δ (0 : Fin 4) ≫ SimplexCategory.δ (2 : Fin 5) = tri134 from by decide,
+    show SimplexCategory.δ (1 : Fin 4) ≫ SimplexCategory.δ (2 : Fin 5) = tri034 from by decide,
+    show SimplexCategory.δ (2 : Fin 4) ≫ SimplexCategory.δ (2 : Fin 5) = tri014 from by decide,
+    show SimplexCategory.δ (3 : Fin 4) ≫ SimplexCategory.δ (2 : Fin 5) = tri013 from by decide] at h
+  exact h
+
+/-- Cocycle relation on tetra `∂₃τ` (faces of `{0,1,2,4}`). -/
+theorem cocycle_tetra3 (f : SingularCochain X 2) (hf : coboundaryₗ X 2 f = 0) :
+    f ((TopCat.toSSet.obj X).map tri124.op τ) + f ((TopCat.toSSet.obj X).map tri024.op τ)
+      + f ((TopCat.toSSet.obj X).map tri014.op τ) + f ((TopCat.toSSet.obj X).map tri012.op τ) = 0 := by
+  have h : coboundary X 2 f (face (3 : Fin 5) τ) = 0 := congrFun hf (face (3 : Fin 5) τ)
+  rw [coboundary_apply, Fin.sum_univ_four, face_face (3 : Fin 5) (0 : Fin 4) τ,
+    face_face (3 : Fin 5) (1 : Fin 4) τ, face_face (3 : Fin 5) (2 : Fin 4) τ,
+    face_face (3 : Fin 5) (3 : Fin 4) τ,
+    show SimplexCategory.δ (0 : Fin 4) ≫ SimplexCategory.δ (3 : Fin 5) = tri124 from by decide,
+    show SimplexCategory.δ (1 : Fin 4) ≫ SimplexCategory.δ (3 : Fin 5) = tri024 from by decide,
+    show SimplexCategory.δ (2 : Fin 4) ≫ SimplexCategory.δ (3 : Fin 5) = tri014 from by decide,
+    show SimplexCategory.δ (3 : Fin 4) ≫ SimplexCategory.δ (3 : Fin 5) = tri012 from by decide] at h
+  exact h
+
+/-- Cocycle relation on tetra `∂₄τ` (faces of `{0,1,2,3}`). -/
+theorem cocycle_tetra4 (f : SingularCochain X 2) (hf : coboundaryₗ X 2 f = 0) :
+    f ((TopCat.toSSet.obj X).map tri123.op τ) + f ((TopCat.toSSet.obj X).map tri023.op τ)
+      + f ((TopCat.toSSet.obj X).map tri013.op τ) + f ((TopCat.toSSet.obj X).map tri012.op τ) = 0 := by
+  have h : coboundary X 2 f (face (4 : Fin 5) τ) = 0 := congrFun hf (face (4 : Fin 5) τ)
+  rw [coboundary_apply, Fin.sum_univ_four, face_face (4 : Fin 5) (0 : Fin 4) τ,
+    face_face (4 : Fin 5) (1 : Fin 4) τ, face_face (4 : Fin 5) (2 : Fin 4) τ,
+    face_face (4 : Fin 5) (3 : Fin 4) τ,
+    show SimplexCategory.δ (0 : Fin 4) ≫ SimplexCategory.δ (4 : Fin 5) = tri123 from by decide,
+    show SimplexCategory.δ (1 : Fin 4) ≫ SimplexCategory.δ (4 : Fin 5) = tri023 from by decide,
+    show SimplexCategory.δ (2 : Fin 4) ≫ SimplexCategory.δ (4 : Fin 5) = tri013 from by decide,
+    show SimplexCategory.δ (3 : Fin 4) ≫ SimplexCategory.δ (4 : Fin 5) = tri012 from by decide] at h
+  exact h
+
+/-! ### The cup-`1` coboundary identity at degree `(2,2)`
+
+The Steenrod homotopy identity for cocycles: `δ(a ⌣₁ b) = a ⌣ b + b ⌣ a` (mod 2). The left side sums
+the five face-expansions `cupOne22 a b (∂ᵢτ)` (ten `a·b` products on `2`-faces of `τ`); the right side
+is the two cup terms `a(τ|{0,1,2})·b(τ|{2,3,4}) + b(τ|{0,1,2})·a(τ|{2,3,4})`. The ten products collapse
+to the two cup terms using the ten cocycle relations `cocycle_tetra0..4` (for `a` and for `b`) — a pure
+`ZMod 2` computation. The degree-`2` analogue of `coboundary_hadamard_one`. -/
+theorem cupOne22_coboundary (a b : SingularCochain X 2)
+    (ha : coboundaryₗ X 2 a = 0) (hb : coboundaryₗ X 2 b = 0) :
+    coboundary X 3 (cupOne22 a b) = cup a b + cup b a := by
+  funext τ
+  -- a-cocycle relations on the five tetrahedral 3-faces
+  have ha0 := cocycle_tetra0 τ a ha
+  have ha1 := cocycle_tetra1 τ a ha
+  have ha2 := cocycle_tetra2 τ a ha
+  have ha3 := cocycle_tetra3 τ a ha
+  have ha4 := cocycle_tetra4 τ a ha
+  -- b-cocycle relations on the same five 3-faces
+  have hb0 := cocycle_tetra0 τ b hb
+  have hb1 := cocycle_tetra1 τ b hb
+  have hb2 := cocycle_tetra2 τ b hb
+  have hb3 := cocycle_tetra3 τ b hb
+  have hb4 := cocycle_tetra4 τ b hb
+  -- expand the left side into the five face-terms, then the ten atoms
+  rw [coboundary_apply, Fin.sum_univ_five, cupOne22_face0, cupOne22_face1, cupOne22_face2,
+    cupOne22_face3, cupOne22_face4]
+  -- expand the right side cup terms; front/back faces at split (2,2) are tri012 / tri234
+  show _ = (cup a b + cup b a) τ
+  rw [Pi.add_apply, cup_apply, cup_apply]
+  unfold frontFace backFace
+  rw [show frontIncl 2 2 = tri012 from by decide, show backIncl 2 2 = tri234 from by decide]
+  -- abstract the ten a-atoms and ten b-atoms to plain ZMod 2 variables, reducing to pure algebra
+  set a012 := a ((TopCat.toSSet.obj X).map tri012.op τ)
+  set a013 := a ((TopCat.toSSet.obj X).map tri013.op τ)
+  set a014 := a ((TopCat.toSSet.obj X).map tri014.op τ)
+  set a023 := a ((TopCat.toSSet.obj X).map tri023.op τ)
+  set a024 := a ((TopCat.toSSet.obj X).map tri024.op τ)
+  set a034 := a ((TopCat.toSSet.obj X).map tri034.op τ)
+  set a123 := a ((TopCat.toSSet.obj X).map tri123.op τ)
+  set a124 := a ((TopCat.toSSet.obj X).map tri124.op τ)
+  set a134 := a ((TopCat.toSSet.obj X).map tri134.op τ)
+  set a234 := a ((TopCat.toSSet.obj X).map tri234.op τ)
+  set b012 := b ((TopCat.toSSet.obj X).map tri012.op τ)
+  set b013 := b ((TopCat.toSSet.obj X).map tri013.op τ)
+  set b014 := b ((TopCat.toSSet.obj X).map tri014.op τ)
+  set b023 := b ((TopCat.toSSet.obj X).map tri023.op τ)
+  set b024 := b ((TopCat.toSSet.obj X).map tri024.op τ)
+  set b034 := b ((TopCat.toSSet.obj X).map tri034.op τ)
+  set b123 := b ((TopCat.toSSet.obj X).map tri123.op τ)
+  set b124 := b ((TopCat.toSSet.obj X).map tri124.op τ)
+  set b134 := b ((TopCat.toSSet.obj X).map tri134.op τ)
+  set b234 := b ((TopCat.toSSet.obj X).map tri234.op τ)
+  clear_value a012 a013 a014 a023 a024 a034 a123 a124 a134 a234
+    b012 b013 b014 b023 b024 b034 b123 b124 b134 b234
+  -- solve six cocycle relations for one atom each (char-2 aware), then substitute
+  have e1 : a123 = a234 + a134 + a124 := by
+    linear_combination (norm := (ring_nf; simp [CharTwo.two_eq_zero])) ha0
+  have e2 : a023 = a234 + a034 + a024 := by
+    linear_combination (norm := (ring_nf; simp [CharTwo.two_eq_zero])) ha1
+  have e3 : a013 = a134 + a034 + a014 := by
+    linear_combination (norm := (ring_nf; simp [CharTwo.two_eq_zero])) ha2
+  have e4 : b123 = b234 + b134 + b124 := by
+    linear_combination (norm := (ring_nf; simp [CharTwo.two_eq_zero])) hb0
+  have e5 : b023 = b234 + b034 + b024 := by
+    linear_combination (norm := (ring_nf; simp [CharTwo.two_eq_zero])) hb1
+  have e6 : b013 = b134 + b034 + b014 := by
+    linear_combination (norm := (ring_nf; simp [CharTwo.two_eq_zero])) hb2
+  subst e1 e2 e3 e4 e5 e6
+  -- the remaining two cocycle relations (tetra3) close the quadratic identity over ZMod 2
+  linear_combination (norm := (ring_nf; simp [CharTwo.two_eq_zero])) b234 * ha3 + a034 * hb3
+
+/-- **`cupH24` is symmetric** — graded commutativity of the `4`-manifold intersection form in degree
+`2`: `B(x,y) = B(y,x)`. The witness is the Steenrod cup-`1` product `cupOne22`, whose coboundary is
+`a ⌣ b + b ⌣ a` for cocycle representatives (`cupOne22_coboundary`), so `[a⌣b] = [b⌣a]` in `H⁴`. The
+degree-`2` analogue of `cupH_symm`, replacing the degree-`1` Hadamard product with the genuine `⌣₁`. -/
+theorem cupH24_symm (x y : Cohomology X 2) : cupH24 x y = cupH24 y x := by
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  obtain ⟨b, rfl⟩ := Submodule.Quotient.mk_surjective _ y
+  rw [cupH24_mk_mk, cupH24_mk_mk]
+  change (Submodule.Quotient.mk _ : _ ⧸ _) = Submodule.Quotient.mk _
+  rw [Submodule.Quotient.eq]
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply,
+    AddSubgroupClass.coe_sub]
+  show cup a.1 b.1 - cup b.1 a.1 ∈ LinearMap.range (coboundaryₗ X 3)
+  refine ⟨cupOne22 a.1 b.1, ?_⟩
+  show coboundary X 3 (cupOne22 a.1 b.1) = cup a.1 b.1 - cup b.1 a.1
+  rw [cupOne22_coboundary a.1 b.1 (LinearMap.mem_ker.mp a.2) (LinearMap.mem_ker.mp b.2)]
+  funext σ
+  simp only [Pi.add_apply, Pi.sub_apply]
+  rw [CharTwo.sub_eq_add]
+
+/-- The cup square `cupSquare2 : H² → H⁴` is **additive**: `(x+y)⌣² = x⌣² + y⌣²`. By symmetry of
+`cupH24` the cross terms satisfy `x⌣y + y⌣x = 2·(x⌣y) = 0` over `ℤ/2`, so the square is a group
+homomorphism — the degree-`2` Frobenius/`Sq²` phenomenon, the analogue of `cupSquare_add`. -/
+theorem cupSquare2_add (x y : Cohomology X 2) :
+    cupSquare2 (x + y) = cupSquare2 x + cupSquare2 y := by
+  have h2 : cupH24 x y + cupH24 x y = (0 : Cohomology X 4) := by
+    rw [← two_smul (ZMod 2), show (2 : ZMod 2) = 0 from rfl, zero_smul]
+  simp only [cupSquare2, map_add, LinearMap.add_apply, cupH24_symm y x]
+  abel_nf
+  rw [two_zsmul, h2, zero_add]
+
+/-- The cup square at degree `2` packaged as a genuine group homomorphism `H²(X;ℤ/2) →+ H⁴(X;ℤ/2)`
+(additive over `ℤ/2` by `cupSquare2_add`). This is the top Steenrod square `Sq²` on `H²(M⁴)` realised
+as an additive map — the degree-`2` analogue of `cupSquareHom`, now unblocked by the cup-`1` symmetry
+`cupH24_symm`. -/
+noncomputable def cupSquare2Hom : Cohomology X 2 →+ Cohomology X 4 :=
+  AddMonoidHom.mk' cupSquare2 cupSquare2_add
+
+@[simp] theorem cupSquare2Hom_apply (x : Cohomology X 2) : cupSquare2Hom x = cupH24 x x := rfl
+
 end SKEFTHawking.SingularCohomologyMod2
