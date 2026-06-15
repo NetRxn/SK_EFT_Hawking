@@ -103,4 +103,24 @@ theorem cone_eq_mapDomain (b : V) (n : ℕ) (c : LinChain V n) :
   | single v a => rw [cone_single_smul, Finsupp.mapDomain_single, Finsupp.smul_single,
       smul_eq_mul, mul_one]
 
+/-- **Cone diameter preservation**: if the apex `b` is within `δ` of every vertex of `c` and every
+basis simplex of `c` has diameter `≤ δ`, then so does `cone b c` (its simplices are `b` prepended). -/
+theorem cone_diamLe {δ : ℝ} {m : ℕ} {b : V} {c : LinChain V m}
+    (hb : ∀ w ∈ c.support, ∀ i, ‖b - w i‖ ≤ δ) (hc : diamLe δ c) :
+    diamLe δ (cone b m c) := by
+  classical
+  rw [cone_eq_mapDomain]
+  intro w' hw' i k
+  obtain ⟨w, hw, rfl⟩ := Finset.mem_image.1 (Finsupp.mapDomain_support hw')
+  refine Fin.cases ?_ (fun j => ?_) i
+  · refine Fin.cases ?_ (fun l => ?_) k
+    · simp only [Fin.cons_zero, sub_self, norm_zero]
+      exact (norm_nonneg _).trans (hb w hw 0)
+    · simpa only [Fin.cons_zero, Fin.cons_succ] using hb w hw l
+  · refine Fin.cases ?_ (fun l => ?_) k
+    · simp only [Fin.cons_succ, Fin.cons_zero]
+      rw [norm_sub_rev]
+      exact hb w hw j
+    · simpa only [Fin.cons_succ] using hc w hw j l
+
 end SKEFTHawking.SingularSubdivisionDiameter
