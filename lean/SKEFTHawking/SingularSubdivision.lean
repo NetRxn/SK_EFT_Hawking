@@ -21,6 +21,7 @@ namespace SKEFTHawking.SingularSubdivision
 
 open CategoryTheory Opposite
 open SKEFTHawking.SingularExcisionMod2 SKEFTHawking.SingularHomologyMod2
+open SKEFTHawking.SingularCohomologyMod2
 open SKEFTHawking.SingularExcisionPushforward SKEFTHawking.SingularSubdivisionConvex
 
 /-- **The module pushforward is a chain map on in-`Δᴺ` chains**: `∂ (σ_# c) = σ_# (∂ c)` for any affine
@@ -41,5 +42,31 @@ theorem pushChainM_chainBoundary {X : TopCat} {N n : ℕ}
   · simp only [map_zero]
   · intro x y _ _ hx hy; simp only [map_add]; rw [hx, hy]
   · intro a x _ hx; simp only [map_smul]; rw [hx]
+
+open SKEFTHawking.SingularSubdivisionNatural in
+/-- **Per-simplex facet functoriality**: pushing an in-`Δᴺ` affine simplex `w` of `Δᴺ`, first included
+into `Δᴺ⁺¹` via the linear coface `Lᵢ = FunOnFinite.linearMap (δ i)` and then along `σ`, equals pushing
+`w` directly along the `i`-th face `face i σ`. The geometric heart of `∂Sd = Sd∂`: it identifies the
+subdivision of the `i`-th facet of `Δᴺ⁺¹` (pushed by `σ`) with the subdivision of `Δᴺ` pushed by `∂ᵢσ`.
+Combines `toSSetObjEquiv_face` + `stdSimplexMap_comp_affineSimplexStd`. -/
+theorem pushSimplexM_facetIncl {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (N + 1)))) (i : Fin (N + 2))
+    {w : Fin (n + 1) → (Fin (N + 1) → ℝ)} (hw : ∀ j, w j ∈ stdSimplex ℝ (Fin (N + 1))) :
+    pushSimplexM σ
+        (fun j => FunOnFinite.linearMap ℝ ℝ (ConcreteCategory.hom (SimplexCategory.δ i)) (w j))
+      = pushSimplexM (face i σ) w := by
+  have hLw : ∀ j, FunOnFinite.linearMap ℝ ℝ (ConcreteCategory.hom (SimplexCategory.δ i)) (w j)
+      ∈ stdSimplex ℝ (Fin (N + 1 + 1)) :=
+    fun j => (_root_.stdSimplex.map (ConcreteCategory.hom (SimplexCategory.δ i)) ⟨w j, hw j⟩).2
+  have hvert : (fun j => (⟨FunOnFinite.linearMap ℝ ℝ (ConcreteCategory.hom (SimplexCategory.δ i)) (w j),
+        hLw j⟩ : stdSimplex ℝ (Fin (N + 1 + 1))))
+      = fun j => _root_.stdSimplex.map (SimplexCategory.δ i) (⟨w j, hw j⟩) := by
+    funext j; exact Subtype.ext (stdSimplex.map_coe _ ⟨w j, hw j⟩).symm
+  rw [pushSimplexM_of_mem σ hLw, pushSimplexM_of_mem (face i σ) hw, hvert]
+  simp only [pushSimplex]
+  refine congrArg (X.toSSetObjEquiv (op (SimplexCategory.mk n))).symm ?_
+  rw [toSSetObjEquiv_face, ContinuousMap.comp_assoc]
+  exact congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk (N + 1)))) σ).comp ·)
+    (stdSimplexMap_comp_affineSimplexStd i (fun j => (⟨w j, hw j⟩ : stdSimplex ℝ (Fin (N + 1))))).symm
 
 end SKEFTHawking.SingularSubdivision
