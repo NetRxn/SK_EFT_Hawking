@@ -239,6 +239,8 @@ The Phase 6r SymTFT predicate-substrate originally introduced 12 tracked `Prop`s
 
 Beginning Phase 6i Wave 7, external communication is organized as **17 publication targets**: one Tier-0 flagship review, eight Tier-1 themed deep papers, three Tier-2 PRL-style headline letters, three Tier-3 infrastructure papers, and two Tier-4 experimental letters. The architecture grew from its original 14 by three quantum-computation additions: **D6** (fault-tolerant QC substrate, Phase 6v), **D7** (classical-simulability demarcation, Phase 6w), and **D8** (universal quantum compilation, authorized 2026-05-31).
 
+**Important Note** - This repo is extremely active and paper bundles are touched more often than the readme is updated. The 'Stage-13 verdict' column is the most recent AI comprehensive review of bundle readiness, but does not include the human review gate. Consider all papers/bundles working drafts. The LEAN source code should be considered source of truth.
+
 | Tier | Target | Title (working) | Stage-13 verdict |
 |:---:|:---:|---|:---:|
 | 0 | **F** | Fluid-Based Approaches to Fundamental Physics — A Formally Verified Survey | 🟢 GREEN |
