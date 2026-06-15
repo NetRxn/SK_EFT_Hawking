@@ -36,4 +36,20 @@ sign is `+1` mod 2). Genuine `ℤ/2`-linear (a sum of precompositions). -/
 noncomputable def coboundary (X : TopCat) (n : ℕ) (f : SingularCochain X n) : SingularCochain X (n + 1) :=
   fun σ => ∑ i : Fin (n + 2), f (face i σ)
 
+@[simp] theorem coboundary_apply (X : TopCat) (n : ℕ) (f : SingularCochain X n)
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) :
+    coboundary X n f σ = ∑ i : Fin (n + 2), f (face i σ) := rfl
+
+/-- The singular coboundary is **`ℤ/2`-linear**, packaged as `δⁿ : Cⁿ →ₗ[ZMod 2] Cⁿ⁺¹`. -/
+noncomputable def coboundaryₗ (X : TopCat) (n : ℕ) :
+    SingularCochain X n →ₗ[ZMod 2] SingularCochain X (n + 1) where
+  toFun := coboundary X n
+  map_add' f g := by
+    funext σ
+    simp only [coboundary_apply, Pi.add_apply]
+    rw [← Finset.sum_add_distrib]
+  map_smul' c f := by
+    funext σ
+    simp only [coboundary_apply, Pi.smul_apply, smul_eq_mul, RingHom.id_apply, Finset.mul_sum]
+
 end SKEFTHawking.SingularCohomologyMod2
