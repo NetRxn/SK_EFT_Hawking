@@ -779,6 +779,12 @@ import SKEFTHawking.SmithRegularValue
 -- with smooth embedding. C^∞-IFT-chart gap resolved pointwise via contDiffAt_symm on the open
 -- invertibility locus. The full PD-submanifold structure for the geometric Smith map.
 import SKEFTHawking.SmithRegularValueGeneral
+-- Phase 5q.F (2026-06-15, foundation brick 1, IN PROGRESS): the regular-value theorem on a GENERAL
+-- MANIFOLD (not just the model space E) — the manifold-valued PD the genuine geometric Smith map needs
+-- (Mathlib has extChartAt/writtenInExtChartAt/MFDeriv but NO manifold RVT). Point-set foundation done
+-- (mZeroLocus closed/compact/CompactSpace); chart construction (extChartAt-local rep → levelSetIsManifold
+-- per chart → glue) next. Extends SmithRegularValueGeneral.levelSetIsManifold.
+import SKEFTHawking.ManifoldRegularValue
 -- Phase 5q.F W5 (2026-06-16): the geometric Smith map's real line bundle L_a + section zero locus = PD(a).
 -- SignCocycle → VectorBundleCore (genuine VectorBundle ℝ ℝ, structure group ℤ/2⊂ℝˣ); section coordinate
 -- function → zero locus is a C^∞ codim-1 manifold via the regular-value theorem + smooth embedding;
