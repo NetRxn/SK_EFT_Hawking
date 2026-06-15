@@ -222,6 +222,21 @@ theorem linBoundary_coneBasis (b : Y) (n : ℕ) (v : Fin (n + 1 + 1) → Y) :
   refine Finset.sum_congr rfl (fun j _ => ?_)
   rw [cons_comp_succ_succAbove, cone_single]
 
+/-- **The cone boundary formula on a general chain** (`n ≥ 1`): `∂(b·c) = c + b·(∂c)` over `ℤ/2`
+(the linear extension of `linBoundary_coneBasis`). -/
+theorem linBoundary_cone (b : Y) (n : ℕ) (c : LinChain Y (n + 1)) :
+    linBoundary (n + 1) (cone b (n + 1) c) = c + cone b n (linBoundary n c) := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp only [map_zero, zero_add]
+  | add c d hc hd => rw [map_add, map_add, map_add, map_add, hc, hd]; abel
+  | single v a =>
+    rw [cone_single_smul, map_smul,
+      show Finsupp.single (Fin.cons b v) (1 : ZMod 2) = coneBasis b (n + 1) v from rfl,
+      linBoundary_coneBasis, smul_add]
+    congr 1
+    · rw [Finsupp.smul_single, smul_eq_mul, mul_one]
+    · rw [← map_smul, ← map_smul, Finsupp.smul_single, smul_eq_mul, mul_one]
+
 /-! ## §4. The barycentric subdivision `Sd` (recursive)
 
 `Sd[v₀,…,vₙ] = b_v · Sd(∂[v₀,…,vₙ])`, coning the subdivided boundary at the barycenter `b_v`. Needs a
