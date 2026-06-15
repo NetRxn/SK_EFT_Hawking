@@ -167,7 +167,11 @@ structure PinPlusBordismLandmark.{u} (X : Type) [TopologicalSpace X] (k : WithTo
   gen : DataBordismGrp ξ
   /-- Its ABK/η order is `16` (Kirby–Taylor: the `≥ 16` lower bound). -/
   gen_order : addOrderOf gen = 16
-  /-- Cardinality `≤ 16` (AHSS / decidable height-4 cap: the `≤ 16` upper bound). -/
+  /-- Cardinality `≤ 16` (AHSS / decidable height-4 cap: the `≤ 16` upper bound). This is a STRICTLY
+  STRONGER disclosure than the layer-2 demonstration carrier `abkGradedData` achieves: there the grade
+  is surjective but NON-injective (the model retains an unoriented-bordism `Ω^O` factor it does not
+  quotient away, so its cardinality exceeds 16). The `≤ 16` cap is precisely the ABK-completeness that
+  makes the faithful Pin⁺ datum a *separate* disclosed input, not a corollary of the layer-2 surjection. -/
   card_le : Nat.card (DataBordismGrp ξ) ≤ 16
 
 /-- **`Ω₄^{Pin⁺} ≅ ℤ/16` DERIVED on the GENUINE bordism-group carrier.** From the single disclosed
