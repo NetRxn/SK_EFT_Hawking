@@ -209,6 +209,18 @@ theorem pushSimplexM_face {X : TopCat} {N n : ℕ}
     pushSimplexM_of_mem σ (u := u ∘ i.succAbove) (fun j => hu (i.succAbove j)), pushSimplex_face]
   rfl
 
+/-- **The affine simplex on all the vertices of `Δᴺ` is the identity**: `affineSimplexStd (vertex ·) =
+id` (`∑ⱼ tⱼ eⱼ = t` for `t ∈ Δᴺ`). The "leading term" `ι_N` of the subdivision pushes to `σ` itself. -/
+theorem affineSimplexStd_vertex_id {N : ℕ} :
+    affineSimplexStd (fun j => stdSimplex.vertex j : Fin (N + 1) → stdSimplex ℝ (Fin (N + 1)))
+      = ContinuousMap.id _ := by
+  ext t k
+  change (∑ j, (t : Fin (N + 1) → ℝ) j • ⇑(stdSimplex.vertex j)) k = (t : Fin (N + 1) → ℝ) k
+  rw [Finset.sum_apply]
+  simp only [stdSimplex.vertex_coe, Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite,
+    mul_one, mul_zero, Finset.sum_ite_eq Finset.univ k (fun j => (t : Fin (N + 1) → ℝ) j),
+    Finset.mem_univ, if_true]
+
 /-- The module-valued pushforward as a `ℤ/2`-linear map `LinChain (Fin (N+1) → ℝ) n → SingularChain X n`
 (the `Finsupp` extension of `pushSimplexM σ`). -/
 noncomputable def pushChainM {X : TopCat} {N n : ℕ}
