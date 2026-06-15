@@ -352,6 +352,47 @@ theorem linHomotopy_single_smul (n : ℕ) (v : Fin (n + 1 + 1) → V) (a : ZMod 
           (Finsupp.single v 1 + linHomotopy n (linBoundary n (Finsupp.single v 1))) := by
   rw [linHomotopy, Finsupp.linearCombination_single]
 
+/-- A `ℤ/2`-module algebra fact (terms kept opaque to avoid normalizer blowup on cone/barycenter):
+`a·(P+Q+R) + a·Q = a·P + a·R` (the doubled `a·Q` cancels). -/
+private theorem smul_add_three_cancel (a : ZMod 2) {n : ℕ} (P Q R : LinChain V n) :
+    a • (P + Q + R) + a • Q = a • P + a • R := by
+  have h : a • (P + Q + R) + a • Q = (a • P + a • R) + (a • Q + a • Q) := by
+    rw [smul_add, smul_add]; abel
+  rw [h, ZModModule.add_self, add_zero]
+
+/-- **The chain-homotopy identity `∂D + D∂ = 1 − Sd`** (over `ℤ/2`, `1 − Sd = 1 + Sd`): the subdivision
+`Sd` is chain-homotopic to the identity via `D`. By induction on `n`. -/
+theorem linBoundary_linHomotopy : ∀ (n : ℕ) (c : LinChain V (n + 1)),
+    linBoundary (n + 1) (linHomotopy (n + 1) c) + linHomotopy n (linBoundary n c)
+      = c + linSubdiv (n + 1) c
+  | 0, c => by
+    induction c using Finsupp.induction_linear with
+    | zero => simp only [map_zero, add_zero]
+    | add c d hc hd => simp only [map_add]; rw [add_add_add_comm, hc, hd, add_add_add_comm]
+    | single v a =>
+      rw [linHomotopy_single_smul, linHomotopy_zero_map, add_zero, linHomotopy_zero_map, add_zero,
+        map_smul, linBoundary_cone, linSubdiv_single_smul, linSubdiv_zero,
+        show (Finsupp.single v a : LinChain V 1) = a • Finsupp.single v 1 from by
+          rw [Finsupp.smul_single, smul_eq_mul, mul_one], smul_add]
+  | n + 1, c => by
+    induction c using Finsupp.induction_linear with
+    | zero => simp only [map_zero, add_zero]
+    | add c d hc hd => simp only [map_add]; rw [add_add_add_comm, hc, hd, add_add_add_comm]
+    | single v a =>
+      have hIH := linBoundary_linHomotopy n (linBoundary (n + 1) (Finsupp.single v 1))
+      rw [linBoundary_linBoundary_apply, map_zero, add_zero] at hIH
+      have key : linBoundary (n + 1) (Finsupp.single v 1
+          + linHomotopy (n + 1) (linBoundary (n + 1) (Finsupp.single v 1)))
+          = linSubdiv (n + 1) (linBoundary (n + 1) (Finsupp.single v 1)) := by
+        rw [map_add, hIH, ← add_assoc, ZModModule.add_self, zero_add]
+      rw [linHomotopy_single_smul, map_smul, linBoundary_cone, key, ← linSubdiv_single (n + 1) v,
+        linBoundary_single_smul (n + 1) v a, ← linBoundary_single (n + 1) v,
+        map_smul (linHomotopy (n + 1)) a]
+      simp only [show (Finsupp.single v a : LinChain V (n + 1 + 1)) = a • Finsupp.single v 1 from by
+        rw [Finsupp.smul_single, smul_eq_mul, mul_one]]
+      rw [map_smul (linSubdiv (n + 1 + 1)) a]
+      exact smul_add_three_cancel a _ _ _
+
 end Subdivision
 
 end SKEFTHawking.SingularExcisionMod2
