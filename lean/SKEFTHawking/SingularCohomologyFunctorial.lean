@@ -80,4 +80,34 @@ noncomputable def inducedCohomology (f : Y ⟶ X) (n : ℕ) :
           inducedCochainₗ_mem_ker f n gc.1 (LinearMap.mem_ker.mp gc.2)⟩ :
           LinearMap.ker (coboundaryₗ Y n)) := rfl
 
+/-! ### Functor laws (`id* = id`, `(g ≫ f)* = f* ∘ g*`) — the operative content of the ξ_Pin⁺ ops -/
+
+/-- `(𝟙 X)* = id` on cochains. -/
+theorem inducedCochainₗ_id (n : ℕ) : inducedCochainₗ (𝟙 X) n = LinearMap.id := by
+  ext g σ
+  simp only [inducedCochainₗ_apply, CategoryTheory.Functor.map_id, CategoryTheory.NatTrans.id_app,
+    CategoryTheory.types_id_apply, LinearMap.id_coe, id_eq]
+
+/-- `(g ≫ f)* = f* ∘ g*` on cochains (contravariant functoriality). -/
+theorem inducedCochainₗ_comp {Z : TopCat} (g : Z ⟶ Y) (f : Y ⟶ X) (n : ℕ) :
+    inducedCochainₗ (g ≫ f) n = (inducedCochainₗ g n).comp (inducedCochainₗ f n) := by
+  ext h σ
+  simp only [inducedCochainₗ_apply, CategoryTheory.Functor.map_comp, CategoryTheory.NatTrans.comp_app,
+    CategoryTheory.types_comp_apply, LinearMap.coe_comp, Function.comp_apply]
+
+/-- `(𝟙 X)* = id` on cohomology. -/
+@[simp] theorem inducedCohomology_id (n : ℕ) : inducedCohomology (𝟙 X) n = LinearMap.id := by
+  ext x
+  obtain ⟨gc, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  rw [inducedCohomology_mk, LinearMap.id_apply]
+  congr 1
+
+/-- `(g ≫ f)* = f* ∘ g*` on cohomology (contravariant functoriality). -/
+theorem inducedCohomology_comp {Z : TopCat} (g : Z ⟶ Y) (f : Y ⟶ X) (n : ℕ) :
+    inducedCohomology (g ≫ f) n = (inducedCohomology g n).comp (inducedCohomology f n) := by
+  ext x
+  obtain ⟨gc, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  rw [inducedCohomology_mk, LinearMap.comp_apply, inducedCohomology_mk, inducedCohomology_mk]
+  congr 1
+
 end SKEFTHawking.SingularCohomologyMod2
