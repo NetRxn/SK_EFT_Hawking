@@ -167,4 +167,59 @@ theorem linBoundary_comp_linBoundary (n : ℕ) :
   rw [LinearMap.comp_apply, LinearMap.zero_apply, hsingle, map_smul, map_smul,
     linBoundary_linBoundary_single_eq_zero, smul_zero]
 
+/-! ## §3. The cone operator `b · (-)` and its boundary formula
+
+The cone `b · [v₀,…,vₙ] = [b, v₀, …, vₙ]` (prepend the apex `b`) is the contracting homotopy of an affine
+simplex. Its boundary formula `∂(b·c) = c − b·(∂c)` (= `c + b·(∂c)` over ℤ/2, for `n ≥ 1`) is the engine
+that makes the subdivision a chain map. -/
+
+/-- The cone of a single affine simplex on apex `b`: `b·[v] = [b,v]` (prepend `b`). -/
+noncomputable def coneBasis (b : Y) (n : ℕ) (v : Fin (n + 1) → Y) : LinChain Y (n + 1) :=
+  Finsupp.single (Fin.cons b v) 1
+
+/-- The **cone operator** `b · (-) : LC_n(Y) → LC_{n+1}(Y)`, the `ℤ/2`-linear extension of `[v] ↦ [b,v]`. -/
+noncomputable def cone (b : Y) (n : ℕ) : LinChain Y n →ₗ[ZMod 2] LinChain Y (n + 1) :=
+  Finsupp.linearCombination (ZMod 2) (coneBasis b n)
+
+theorem cone_single (b : Y) (n : ℕ) (v : Fin (n + 1) → Y) :
+    cone b n (Finsupp.single v 1) = Finsupp.single (Fin.cons b v) 1 := by
+  rw [cone, Finsupp.linearCombination_single, one_smul, coneBasis]
+
+theorem cone_single_smul (b : Y) (n : ℕ) (v : Fin (n + 1) → Y) (a : ZMod 2) :
+    cone b n (Finsupp.single v a) = a • Finsupp.single (Fin.cons b v) 1 := by
+  rw [cone, Finsupp.linearCombination_single, coneBasis]
+
+/-- Dropping the apex of a cone recovers the original simplex: `(cons b v) ∘ ∂₀ = v`
+(`∂₀ = (0).succAbove = Fin.succ`). -/
+theorem cons_comp_zero_succAbove (b : Y) {n : ℕ} (v : Fin (n + 1) → Y) :
+    (Fin.cons b v : Fin (n + 2) → Y) ∘ (0 : Fin (n + 2)).succAbove = v := by
+  rw [Fin.succAbove_zero]
+  funext k
+  simp only [Function.comp_apply, Fin.cons_succ]
+
+/-- Dropping a later vertex of a cone is the cone of dropping that vertex of the base:
+`(cons b v) ∘ (j.succ).succAbove = cons b (v ∘ j.succAbove)`. -/
+theorem cons_comp_succ_succAbove (b : Y) {n : ℕ} (v : Fin (n + 1) → Y) (j : Fin (n + 1)) :
+    (Fin.cons b v : Fin (n + 2) → Y) ∘ (j.succ).succAbove = Fin.cons b (v ∘ j.succAbove) := by
+  funext k
+  refine Fin.cases ?_ ?_ k
+  · rw [Function.comp_apply, Fin.succAbove_of_castSucc_lt _ _ (by
+      rw [Fin.castSucc_zero]; exact Fin.succ_pos j), Fin.castSucc_zero, Fin.cons_zero, Fin.cons_zero]
+  · intro m
+    rw [Function.comp_apply, Fin.succ_succAbove_succ, Fin.cons_succ, Fin.cons_succ,
+      Function.comp_apply]
+
+/-- **The cone boundary formula** (`n ≥ 1`): `∂(b·[v]) = [v] + b·(∂[v])` over `ℤ/2`. The `∂₀` face
+drops the apex (giving `[v]`); the later faces are the cone of `∂[v]`. -/
+theorem linBoundary_coneBasis (b : Y) (n : ℕ) (v : Fin (n + 1 + 1) → Y) :
+    linBoundary (n + 1) (coneBasis b (n + 1) v)
+      = Finsupp.single v 1 + cone b n (linBoundary n (Finsupp.single v 1)) := by
+  rw [coneBasis, linBoundary_single, linBoundaryBasis,
+    Fin.sum_univ_succ (f := fun i => Finsupp.single ((Fin.cons b v) ∘ i.succAbove) (1 : ZMod 2)),
+    cons_comp_zero_succAbove]
+  congr 1
+  rw [linBoundary_single, linBoundaryBasis, map_sum]
+  refine Finset.sum_congr rfl (fun j _ => ?_)
+  rw [cons_comp_succ_succAbove, cone_single]
+
 end SKEFTHawking.SingularExcisionMod2
