@@ -231,6 +231,13 @@ theorem pinPlusGrade_card : Nat.card PinPlusGrade = 32 := by
   show Nat.card (ZMod 16 × Cohomology (RPComplex 1) 1) = 32
   rw [Nat.card_prod, Nat.card_zmod, pinPlusGrade_h1_card]
 
+-- Precision note (do not over-read): this factor-of-2 lives in the structure *count* of the
+-- `PinPlusGrade` type. In the bordism *carrier* `DataBordismGrp (pinPlusData I)` the `H¹` factor
+-- COLLAPSES over any fixed underlying manifold — it is identified by the cylinder bordism, since `Bor`
+-- records only `abk`-equality — so it does NOT enlarge the carrier (only the ABK `ZMod 16` and the
+-- underlying-bordism floor do). The `2` is the genuine `H¹`-torsor count of Pin⁺-structure *choices*,
+-- not a contribution to `|Ω^{Pin⁺}|`.
+
 /-! ## §5b. The ℤ/16 DERIVED as the ABK quotient of the GENUINE bordism group
 
 The honest endpoint of the geometric route. The genuine bordism group `DataBordismGrp (pinPlusData I)`
@@ -253,12 +260,19 @@ the `ℤ/16` is read off a genuine invariant's image.
 geometrically the underlying **unoriented** bordism floor `Ω^O_•` that survives because this framework
 cannot constrain *which* manifolds carry a Pin⁺ structure: that selection needs `w₂` of the tangent
 bundle as a manifold invariant, the same Mathlib-absent characteristic-class / frame-bundle foundation
-documented in §2. The genuine Pin⁺ structure trivialises this floor (`ker(abkGrade) = ⊥`), promoting the
-quotient iso to a full `DataBordismGrp ≃+ ℤ/16`; that collapse is the lone disclosed landmark, and per
-Anderson–Brown–Peterson 1969 the `16` is irreducibly a spectral-sequence fact (the goal-permitted
-load-bearing input). The quotient iso below is the **maximal unconditional genuine-carrier content**
-around that landmark — strictly stronger than the existing finite-abutment routes in that its carrier is
-a real bordism group of manifolds, not a posited signature quotient or a `ZMod (2^h)` modeling def. -/
+documented in §2. A *complete* Pin⁺ grade — the disclosed faithful datum of
+`PinPlusGenuineCarrierIso.PinPlusBordismLandmark`, whose AHSS `≤ 16` cap forces `ker = ⊥` — would
+promote the quotient iso to a full `DataBordismGrp ≃+ ℤ/16`. `abkGrade` on *this* `pinPlusData` is
+deliberately **not** that complete grade: its kernel, the `Ω^O` floor, is genuinely nontrivial (distinct
+non-bordant manifolds with `abk = 0` are distinct classes), so `ker(abkGrade) = ⊥` is **unreachable
+here** — that collapse is the lone disclosed landmark, and per Anderson–Brown–Peterson 1969 the `16` is
+irreducibly a spectral-sequence fact (the goal-permitted load-bearing input). The quotient iso below is
+the strongest **unconditional** statement available on the genuine carrier: it is **incomparable** to
+the conditional full-carrier route `PinPlusGenuineCarrierIso.pinPlus_genuine_carrier_iso_zmod16` (which
+delivers the *full* `DataBordismGrp ≃+ ℤ/16`, but only under that disclosed `≤ 16` cap) — trading a
+weaker conclusion (a quotient) for freedom from any posit. Both improve on `Omega4PinPlusBordism` /
+`adamsAbutment` in that the carrier is a real bordism group of manifolds, not a posited signature
+quotient or a `ZMod (2^h)` modeling def. -/
 
 /-- **`Ω^{Pin⁺} ⧸ ker(ABK) ≅ ℤ/16` — the `ℤ/16` derived as the ABK quotient of the GENUINE bordism
 group**, unconditional and kernel-pure (`QuotientAddGroup.quotientKerEquivOfSurjective` applied to the
