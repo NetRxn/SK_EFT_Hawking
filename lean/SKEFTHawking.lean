@@ -751,6 +751,11 @@ import SKEFTHawking.PinPlusSmithDerived
 -- Mathlib SingularManifold + manifolds-with-boundary), via the Smith sandwich from the ABK homomorphism +
 -- the height-4 cap — the endpoint on the genuine geometric carrier, not the thin signature substrate.
 import SKEFTHawking.PinPlusBordismGroupDerived
+-- Phase 5q.F (2026-06-15): singular ℤ/2 cohomology on Mathlib's singular SSet (TopCat.toSSet) — the
+-- foundation for the ABK β BUILT FROM the SingularManifold bordism group (Mathlib has the singular chain
+-- complex but no cohomology). First brick: singular cochains + the coboundary δ. Toward δ²=0 → Hⁿ → cup →
+-- the genuine β discharging dataBordism_iso_zmod16's hypotheses.
+import SKEFTHawking.SingularCohomologyMod2
 import SKEFTHawking.KitaevSixteenFold
 import SKEFTHawking.Spin10Sixteen
 import SKEFTHawking.AnomalyPhaseCharacter
