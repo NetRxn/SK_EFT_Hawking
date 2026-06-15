@@ -209,8 +209,11 @@ theorem smithStr_eq_of_grade {p q : StrMfd (spinZ4Omega5Data I)} (h : p.2 = q.2)
 `[M⁵, σ] ↦ [emptySM⁴, (σ, 0)]` (the grade-level realization of `[M⁵] ↦ [PD(a)⁴]`, TY eq 3.15). Genuinely
 well-defined (the Spin-ℤ₄ bordism constraint forces grade-equality, so the Pin⁺ images are literally the
 same structured manifold) and additive (`sumStr = +` and the ABK grade is the additive `ZMod 16`
-component; the underlying `emptySM ⊔ emptySM ~ emptySM` via the unit law). This is the **W5 typed hom `s`**
-the OBJECTIVE names as the primary target ("the HOM (not the full iso) is the target"). The W6 sandwich
+component; the underlying `emptySM ⊔ emptySM ~ emptySM` via the unit law). This is the **W5 typed-hom
+deliverable at the DR §5.2 grade scope** — the grade-transport realization; the *full* geometric
+`[M] ↦ [PD(a)]` underlying manifold is the disclosed manifold-bundle layer of §7 (the genuine `PD(a)`
+`SingularManifold`), NOT this map's image (`emptySM`). The OBJECTIVE names the HOM (not the full iso) as
+the target; here it is realized at the grade scope DR §5.2 authorizes. The W6 sandwich
 assembly `PinPlusBordismGroupDerived.dataBordism_pinPlus_iso_via_smith` instead consumes an `≃+` between
 the carriers; the genuine such iso (blocked on the *full* carriers by the floor) lives on the ABK/η-grade
 quotients — see `smithQuotientEquiv` (§4). -/
