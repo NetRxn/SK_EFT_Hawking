@@ -50,4 +50,43 @@ theorem affineSimplex_vertex {n : ℕ} (v : Fin (n + 1) → V) (j : Fin (n + 1))
   · intro i _ hi; simp [Pi.single_eq_of_ne hi]
   · intro h; exact absurd (Finset.mem_univ j) h
 
+/-! ## §2. The affine (linear) chain complex `LC(Y)` — the combinatorial subdivision layer
+
+The barycentric subdivision algebra (recursive `Sd`, the cone, the chain homotopy `∂T+T∂=1−Sd`) is
+cleanest on the **affine chain complex** `LC_n(Y)` of a set `Y`: the free `ℤ/2`-module on vertex-tuples
+`Fin (n+1) → Y` (an affine `n`-simplex is its tuple of vertices). The geometric realization
+`affineSimplex` (§1) and the pushforward to singular chains come later; here we set up the boundary. -/
+
+variable {Y : Type*}
+
+/-- **Affine `n`-chains** `LC_n(Y)`: free `ℤ/2`-module on vertex-tuples `Fin (n+1) → Y`. -/
+abbrev LinChain (Y : Type*) (n : ℕ) : Type _ := (Fin (n + 1) → Y) →₀ ZMod 2
+
+/-- The affine boundary of a *single* vertex-tuple `v` (an affine `(n+1)`-simplex): `∂[v] = ∑ᵢ [∂ᵢv]`
+over `ℤ/2`, where `∂ᵢv = v ∘ Fin.succAbove i` drops the `i`-th vertex. -/
+noncomputable def linBoundaryBasis (n : ℕ) (v : Fin (n + 1 + 1) → Y) : LinChain Y n :=
+  ∑ i : Fin (n + 2), Finsupp.single (v ∘ i.succAbove) 1
+
+/-- The **affine boundary** `∂ : LC_{n+1}(Y) → LC_n(Y)`, the `ℤ/2`-linear extension of `[v] ↦ ∑ᵢ [∂ᵢv]`. -/
+noncomputable def linBoundary (n : ℕ) : LinChain Y (n + 1) →ₗ[ZMod 2] LinChain Y n :=
+  Finsupp.linearCombination (ZMod 2) (linBoundaryBasis n)
+
+theorem linBoundary_single (n : ℕ) (v : Fin (n + 1 + 1) → Y) :
+    linBoundary n (Finsupp.single v 1) = linBoundaryBasis n v := by
+  rw [linBoundary, Finsupp.linearCombination_single, one_smul]
+
+theorem linBoundary_single_smul (n : ℕ) (v : Fin (n + 1 + 1) → Y) (a : ZMod 2) :
+    linBoundary n (Finsupp.single v a) = a • linBoundaryBasis n v := by
+  rw [linBoundary, Finsupp.linearCombination_single]
+
+/-- `∂²` on a single vertex-tuple `v` (an affine `(n+2)`-simplex) is the double sum
+`∑ᵢ∑ⱼ [∂ⱼ∂ᵢv]`. -/
+theorem linBoundary_linBoundary_single (n : ℕ) (v : Fin (n + 1 + 1 + 1) → Y) :
+    linBoundary n (linBoundary (n + 1) (Finsupp.single v 1))
+      = ∑ i : Fin (n + 3), ∑ j : Fin (n + 2),
+          Finsupp.single ((v ∘ i.succAbove) ∘ j.succAbove) (1 : ZMod 2) := by
+  rw [linBoundary_single, linBoundaryBasis, map_sum]
+  refine Finset.sum_congr rfl (fun i _ => ?_)
+  rw [linBoundary_single, linBoundaryBasis]
+
 end SKEFTHawking.SingularExcisionMod2
