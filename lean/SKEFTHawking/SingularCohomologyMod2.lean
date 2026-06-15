@@ -354,4 +354,94 @@ theorem δ_zero_comp_backSmall (p q : ℕ) :
     Fin.val_zero]
   split_ifs <;> omega
 
+/-! ### Per-term face evaluations (functoriality + the six morphism identities) -/
+
+variable {X : TopCat} {p q : ℕ}
+  (τ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (p + q + 1))))
+
+/-- For `i ≤ p`: the front-`p` face of `∂ᵢτ` is the `i`-th face of the front-`(p+1)` face of `τ`. -/
+theorem frontFace_face_of_le (i : Fin (p + q + 2)) (h : i.val ≤ p) :
+    frontFace (face i τ) = face (⟨i.val, by omega⟩ : Fin (p + 2)) (frontBig τ) := by
+  unfold frontFace face frontBig
+  rw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply, ← op_comp, ← op_comp,
+    front_comp_δ_of_le p q i h]
+
+/-- For `i ≤ p`: the back-`q` face of `∂ᵢτ` is the back-`q` face of `τ`. -/
+theorem backFace_face_of_le (i : Fin (p + q + 2)) (h : i.val ≤ p) :
+    backFace (face i τ) = backBig τ := by
+  unfold backFace face backBig
+  rw [← FunctorToTypes.map_comp_apply, ← op_comp, back_comp_δ_of_le p q i h]
+
+/-- For `i > p`: the front-`p` face of `∂ᵢτ` is the front-`p` face of `τ`. -/
+theorem frontFace_face_of_gt (i : Fin (p + q + 2)) (h : p < i.val) :
+    frontFace (face i τ) = frontSmall τ := by
+  unfold frontFace face frontSmall
+  rw [← FunctorToTypes.map_comp_apply, ← op_comp, front_comp_δ_of_gt p q i h]
+
+/-- For `i > p`: the back-`q` face of `∂ᵢτ` is the `(i-p)`-th face of the back-`(q+1)` face of `τ`. -/
+theorem backFace_face_of_gt (i : Fin (p + q + 2)) (h : p < i.val) :
+    backFace (face i τ) = face (⟨i.val - p, by have := i.isLt; omega⟩ : Fin (q + 2)) (backSmall τ) := by
+  unfold backFace face backSmall
+  rw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply, ← op_comp, ← op_comp,
+    back_comp_δ_of_gt p q i h]
+
+/-- The last face of the front-`(p+1)` face of `τ` is its front-`p` face (the diagonal front term). -/
+theorem face_last_frontBig : face (Fin.last (p + 1)) (frontBig τ) = frontSmall τ := by
+  unfold face frontBig frontSmall
+  rw [← FunctorToTypes.map_comp_apply, ← op_comp, δ_last_comp_frontBig p q]
+
+/-- The zeroth face of the back-`(q+1)` face of `τ` is its back-`q` face (the diagonal back term). -/
+theorem face_zero_backSmall : face (0 : Fin (q + 2)) (backSmall τ) = backBig τ := by
+  unfold face backSmall backBig
+  rw [← FunctorToTypes.map_comp_apply, ← op_comp, δ_zero_comp_backSmall p q]
+
+/-! ### The cup Leibniz identity -/
+
+/-- **Cup Leibniz** (mod 2): `δ(f ⌣ g) = δf ⌣ g + f ⌣ δg`, stated cast-free at the simplex `τ`. The
+left side sums `f(frontₚ ∂ᵢτ)·g(back_q ∂ᵢτ)` over all faces `∂ᵢτ`; the right side carries `δf` on the
+front-`(p+1)` face and `δg` on the back-`(q+1)` face. The faces split at `i = p`: faces `i ≤ p` feed
+`δf ⌣ g`, faces `i ≥ p+1` feed `f ⌣ δg`, and the two diagonal terms (`δf`'s last face × `g`'s back,
+`f`'s front × `δg`'s first face) coincide and cancel over `ℤ/2`. -/
+theorem coboundary_cup (f : SingularCochain X p) (g : SingularCochain X q) :
+    coboundary X (p + q) (cup f g) τ
+      = coboundary X p f (frontBig τ) * g (backBig τ)
+        + f (frontSmall τ) * coboundary X q g (backSmall τ) := by
+  rw [coboundary_apply, coboundary_apply, coboundary_apply, Finset.sum_mul, Finset.mul_sum]
+  simp only [cup_apply]
+  have h : p + 1 + (q + 1) = p + q + 2 := by omega
+  -- RHS reaches the canonical middle form by peeling the last front-face / first back-face term;
+  -- those two diagonal terms coincide and cancel over ℤ/2.
+  have hAB : (∑ i : Fin (p + 2), f (face i (frontBig τ)) * g (backBig τ))
+        + (∑ i : Fin (q + 2), f (frontSmall τ) * g (face i (backSmall τ)))
+      = (∑ j : Fin (p + 1), f (face j.castSucc (frontBig τ)) * g (backBig τ))
+        + (∑ k : Fin (q + 1), f (frontSmall τ) * g (face k.succ (backSmall τ))) := by
+    rw [Fin.sum_univ_castSucc (f := fun i => f (face i (frontBig τ)) * g (backBig τ)),
+      Fin.sum_univ_succ (f := fun i => f (frontSmall τ) * g (face i (backSmall τ))),
+      face_last_frontBig, face_zero_backSmall]
+    linear_combination (CharTwo.add_self_eq_zero (f (frontSmall τ) * g (backBig τ)))
+  -- LHS reaches the same middle form: split `Fin (p+q+2)` at `p`, evaluate each face.
+  have hL : (∑ i : Fin (p + q + 2), f (frontFace (face i τ)) * g (backFace (face i τ)))
+      = (∑ j : Fin (p + 1), f (face j.castSucc (frontBig τ)) * g (backBig τ))
+        + (∑ k : Fin (q + 1), f (frontSmall τ) * g (face k.succ (backSmall τ))) := by
+    rw [← Equiv.sum_comp (finCongr h)
+        (fun i => f (frontFace (face i τ)) * g (backFace (face i τ))), Fin.sum_univ_add]
+    congr 1
+    · refine Finset.sum_congr rfl (fun j _ => ?_)
+      have hle : (finCongr h (Fin.castAdd (q + 1) j)).val ≤ p := by
+        simp only [finCongr_apply, Fin.val_cast, Fin.val_castAdd]; omega
+      rw [frontFace_face_of_le τ _ hle, backFace_face_of_le τ _ hle]
+      have hidx : (⟨(finCongr h (Fin.castAdd (q + 1) j)).val, by omega⟩ : Fin (p + 2))
+          = j.castSucc := by
+        apply Fin.ext; simp [Fin.val_castSucc]
+      rw [hidx]
+    · refine Finset.sum_congr rfl (fun k _ => ?_)
+      have hgt : p < (finCongr h (Fin.natAdd (p + 1) k)).val := by
+        simp only [finCongr_apply, Fin.val_cast, Fin.val_natAdd]; omega
+      rw [frontFace_face_of_gt τ _ hgt, backFace_face_of_gt τ _ hgt]
+      have hidx : (⟨(finCongr h (Fin.natAdd (p + 1) k)).val - p, by have := k.isLt; omega⟩ : Fin (q + 2))
+          = k.succ := by
+        apply Fin.ext; simp only [Fin.val_succ, finCongr_apply, Fin.val_cast, Fin.val_natAdd]; omega
+      rw [hidx]
+  rw [hL, hAB]
+
 end SKEFTHawking.SingularCohomologyMod2
