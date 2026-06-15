@@ -123,4 +123,21 @@ theorem cone_diamLe {δ : ℝ} {m : ℕ} {b : V} {c : LinChain V m}
       exact hb w hw j
     · simpa only [Fin.cons_succ] using hc w hw j l
 
+/-- **Barycenter-to-hull bound**: the barycenter of `v` is within `(k/(k+1))·d` of *any* point of the
+convex hull of `v`'s vertices (the distance to a hull point is `≤` the distance to some vertex, by
+`convexHull_exists_dist_ge`, then Lemma A). Used for the subdivision vertices, which live in the hull. -/
+theorem norm_barycenter_sub_convexHull_le {k : ℕ} (v : Fin (k + 1) → V) {p : V}
+    (hp : p ∈ convexHull ℝ (Set.range v)) {d : ℝ} (hd : ∀ i j, ‖v i - v j‖ ≤ d) :
+    ‖barycenter v - p‖ ≤ ((k : ℝ) / ((k : ℝ) + 1)) * d := by
+  obtain ⟨_, ⟨i, rfl⟩, hle⟩ := convexHull_exists_dist_ge hp (barycenter v)
+  calc ‖barycenter v - p‖ = dist p (barycenter v) := by rw [dist_comm, dist_eq_norm]
+    _ ≤ dist (v i) (barycenter v) := hle
+    _ = ‖barycenter v - v i‖ := by rw [dist_eq_norm, norm_sub_rev]
+    _ ≤ ((k : ℝ) / ((k : ℝ) + 1)) * d := norm_barycenter_sub_vertex_le v i (fun j => hd j i)
+
+/-- The subdivision contraction factors increase with dimension: `m/(m+1) ≤ (m+1)/(m+2)`. -/
+theorem div_succ_le_div_succ_succ (m : ℕ) :
+    (m : ℝ) / ((m : ℝ) + 1) ≤ ((m : ℝ) + 1) / ((m : ℝ) + 2) := by
+  rw [div_le_div_iff₀ (by positivity) (by positivity)]; nlinarith
+
 end SKEFTHawking.SingularSubdivisionDiameter
