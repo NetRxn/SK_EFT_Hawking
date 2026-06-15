@@ -91,6 +91,53 @@ def cupₗ {p q : ℕ} : Cochain C p →ₗ[ZMod 2] Cochain C q →ₗ[ZMod 2] C
 @[simp] theorem cupₗ_apply {p q : ℕ} (f : Cochain C p) (g : Cochain C q) :
     D.cupₗ f g = D.cup f g := rfl
 
+/-- `0 ⌣ g = 0`. -/
+@[simp] theorem zero_cup {p q : ℕ} (g : Cochain C q) : D.cup (0 : Cochain C p) g = 0 := by
+  funext σ; simp [cup_apply]
+
+/-- `f ⌣ 0 = 0`. -/
+@[simp] theorem cup_zero {p q : ℕ} (f : Cochain C p) : D.cup f (0 : Cochain C q) = 0 := by
+  funext σ; simp [cup_apply]
+
 end CupData
+
+/-! ## §2. The Leibniz rule and descent to cohomology
+
+The cup product descends to cohomology iff the diagonal is a chain map — the **Leibniz rule**
+`δ(f ⌣ g) = δf ⌣ g + f ⌣ δg` (over `ℤ/2`, no sign). We carry it as a field on `CupRing` (the specific
+instances — `RP^n`, surfaces — discharge it from their explicit diagonals). The index bookkeeping is
+mild: `p + (q+1)` is *definitionally* `(p+q)+1` (Nat recursion is on the right argument), so only the
+left term `δf ⌣ g : C^{(p+1)+q}` needs transport to `C^{(p+q)+1}` (via `Nat.succ_add`). -/
+
+/-- A cell complex with a cup product satisfying the **Leibniz rule** (`δ` is a derivation), so the cup
+product descends to a graded-ring structure on cohomology. -/
+structure CupRing (C : CellComplex) extends CupData C where
+  /-- The Leibniz rule `δ(f ⌣ g) = δf ⌣ g + f ⌣ δg` (over `ℤ/2`). The left term is transported along
+  `(p+1) + q = (p+q) + 1` (`Nat.succ_add`); the right term lands in `p + (q+1) = (p+q)+1`
+  definitionally. -/
+  leibniz : ∀ {p q : ℕ} (f : Cochain C p) (g : Cochain C q),
+    coboundary C (p + q) (toCupData.cup f g)
+      = cast (congrArg (Cochain C) (Nat.succ_add p q)) (toCupData.cup (coboundary C p f) g)
+        + toCupData.cup f (coboundary C q g)
+
+/-- Transport of the zero cochain along an index equality is zero. -/
+theorem cast_cochain_zero {C : CellComplex} {a b : ℕ} (h : a = b) :
+    cast (congrArg (Cochain C) h) (0 : Cochain C a) = 0 := by
+  subst h; rfl
+
+namespace CupRing
+
+variable {C : CellComplex} (R : CupRing C)
+
+/-- **The cup product of two cocycles is a cocycle.** `δf = 0` and `δg = 0` give
+`δ(f ⌣ g) = δf ⌣ g + f ⌣ δg = 0` by the Leibniz rule. The foundation of the descent of the cup product
+to cohomology. -/
+theorem cup_cocycle {p q : ℕ} (f : Cochain C p) (g : Cochain C q)
+    (hf : coboundary C p f = 0) (hg : coboundary C q g = 0) :
+    coboundary C (p + q) (R.toCupData.cup f g) = 0 := by
+  rw [R.leibniz f g, hf, hg, CupData.zero_cup, CupData.cup_zero, add_zero]
+  exact cast_cochain_zero (Nat.succ_add p q)
+
+end CupRing
 
 end SKEFTHawking.CellularCohomologyMod2
