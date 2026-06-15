@@ -768,6 +768,11 @@ import SKEFTHawking.SmithTransversality
 -- codim-1 submanifold. levelSetChart (general local chart on the IFT) + full ChartedSpace/IsManifold +
 -- smooth embedding (affine case, fixed model K / Euclidean). The PD-submanifold structure for the Smith map.
 import SKEFTHawking.SmithRegularValue
+-- Phase 5q.F W5 (2026-06-16): regular-value theorem, GENERAL nonlinear case — the level set of a C^∞
+-- submersion f:E→ℝ (E finite-dim) is a smooth codim-1 manifold over EuclideanSpace ℝ(Fin(finrank E−1)),
+-- with smooth embedding. C^∞-IFT-chart gap resolved pointwise via contDiffAt_symm on the open
+-- invertibility locus. The full PD-submanifold structure for the geometric Smith map.
+import SKEFTHawking.SmithRegularValueGeneral
 -- Phase 5q.F W6 (2026-06-16): the Smith-LES derivation engine — the exact segment 0→Ω₆^{Pin⁻}→Ω₄^{Pin⁺}→0
 -- (twisted-spin vanishings) forces sm_{2σ} an iso; with the cited Ω₆^{Pin⁻}=ℤ/16 (height-4 input) ⟹
 -- Ω₄^{Pin⁺}≅ℤ/16. The genuine W6 assembly; instantiated at the genuine carriers + geometric Smith map.
