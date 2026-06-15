@@ -80,4 +80,26 @@ theorem localRep_contDiffOn {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) ⊤
     ContDiffOn ℝ ⊤ (localRep (I := I) f p) (extChartAt I p).target :=
   contMDiffOn_iff_contDiffOn.mp (hf.comp_contMDiffOn (contMDiffOn_extChartAt_symm p))
 
+/-! ## §3. The local representative is `ContDiffAt`/`HasStrictFDerivAt` at the chart point
+
+At the chart image `extChartAt I p p`, the chart target is a neighborhood (boundaryless manifold,
+`extChartAt_target_mem_nhds`), so the `ContDiffOn` of §2 upgrades to `ContDiffAt`, hence (for `C^⊤ ≥ C¹`)
+a `HasStrictFDerivAt` — the hypothesis the model-space IFT chart (`SmithRegularValue`) consumes. -/
+
+variable [I.Boundaryless]
+
+omit [FiniteDimensional ℝ E] in
+/-- The local representative is `ContDiffAt` at the chart point (target ∈ 𝓝, boundaryless). -/
+theorem localRep_contDiffAt {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) ⊤ f) (p : M) :
+    ContDiffAt ℝ ⊤ (localRep (I := I) f p) (extChartAt I p p) :=
+  (localRep_contDiffOn hf p).contDiffAt (extChartAt_target_mem_nhds (I := I) p)
+
+omit [FiniteDimensional ℝ E] in
+/-- The local representative has a **`HasStrictFDerivAt`** at the chart point, with derivative
+`fderiv ℝ (localRep f p) (extChartAt I p p)` — the regular-value IFT input. -/
+theorem localRep_hasStrictFDerivAt {f : M → ℝ} (hf : ContMDiff I 𝓘(ℝ, ℝ) ⊤ f) (p : M) :
+    HasStrictFDerivAt (localRep (I := I) f p)
+      (fderiv ℝ (localRep (I := I) f p) (extChartAt I p p)) (extChartAt I p p) :=
+  (localRep_contDiffAt hf p).hasStrictFDerivAt (by norm_num)
+
 end SKEFTHawking.ManifoldRegularValue
