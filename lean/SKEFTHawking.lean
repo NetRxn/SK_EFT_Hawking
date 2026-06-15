@@ -813,6 +813,12 @@ import SKEFTHawking.SingularCohomologyMod2
 -- Hₙ = ker∂/im∂, and the descended Kronecker pairing kroneckerH : Hⁿ × Hₙ → ℤ/2 (the evaluation
 -- ⟨·,[M]⟩ the Wu functional ⟨x∪x,[M]⟩ needs — the route to the fundamental class and w₂(TM)).
 import SKEFTHawking.SingularHomologyMod2
+-- Phase 5q.F (w₂ foundation brick 6a, 2026-06-15): relative singular ℤ/2 homology Hₙ(X,S) of a subspace
+-- S⊆X — relative chains C_n(X)/C_n(S) (genuine quotient ℤ/2-vsp), the relative boundary (∂²=0), and
+-- relative homology ker∂/im∂. The functorial chain map C_•(S)→C_•(X) (a genuine chain map by simplicial
+-- naturality) is the subspace inclusion's image. Foundation for local homology Hₙ(M,M∖x)≅ℤ/2 → the ℤ/2
+-- fundamental class → Poincaré duality (turning PoincareDual4Mid from a hypothesis into a theorem).
+import SKEFTHawking.SingularRelativeHomologyMod2
 -- Phase 5q.F (fully-unconditional strengthening, w₂-foundation brick 5, 2026-06-15): the Wu class v₂ from
 -- Poincaré duality — for a PD datum (fundamental-class functional μ:H⁴→ℤ/2 + non-degenerate middle cup
 -- pairing, finite-dim H²), v₂∈H² represents x↦⟨Sq²x,[M]⟩ (wu_relation), the input to the Wu formula
