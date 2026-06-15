@@ -138,6 +138,17 @@ theorem cup_cocycle {p q : ℕ} (f : Cochain C p) (g : Cochain C q)
   rw [R.leibniz f g, hf, hg, CupData.zero_cup, CupData.cup_zero, add_zero]
   exact cast_cochain_zero (Nat.succ_add p q)
 
+/-- **The cup of a coboundary with a cocycle is a coboundary.** For a cocycle `g` (`δg = 0`), the
+transported cup `δh ⌣ g` equals the coboundary `δ(h ⌣ g)`. The second half of the descent of the cup
+product to cohomology (well-definedness modulo coboundaries in the left argument). -/
+theorem cup_coboundary_left {p q : ℕ} (h : Cochain C p) (g : Cochain C q)
+    (hg : coboundary C q g = 0) :
+    cast (congrArg (Cochain C) (Nat.succ_add p q)) (R.toCupData.cup (coboundary C p h) g)
+      = coboundary C (p + q) (R.toCupData.cup h g) := by
+  have hL := R.leibniz h g
+  rw [hg, CupData.cup_zero, add_zero] at hL
+  exact hL.symm
+
 end CupRing
 
 end SKEFTHawking.CellularCohomologyMod2
