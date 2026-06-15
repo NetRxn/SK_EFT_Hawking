@@ -22,6 +22,7 @@ Per Invariant #15: no new axioms — `smith_sandwich` is finite-group algebra ov
 import Mathlib
 import SKEFTHawking.SymTFT.PinPlusBordism4
 import SKEFTHawking.SymTFT.SpinZ4Bordism5
+import SKEFTHawking.SymTFT.SmithMechanism
 import SKEFTHawking.PinPlusExtBound
 
 namespace SKEFTHawking.PinPlusSmithDerived
@@ -120,5 +121,21 @@ theorem omega5_iso_zmod16_via_sandwich :
     Nonempty (Omega5SpinZ4Bordism ≃+ ZMod 16) := by
   obtain ⟨e⟩ := pinPlus_iso_zmod16_via_sandwich
   exact ⟨smithHom.trans e⟩
+
+/-- **The 16-convergence, DERIVED via the Smith sandwich — fully `pin4_abutment`-free.** The
+hypothesis-free counterpart of `PinPlusDischarge.sixteen_convergence_finite_discharge` (which consumes
+`pin4_abutment`):
+1. `Ω₄^{Pin⁺} ≃+ ℤ/16`, the `16` from the genuine ABK order + the cap, via the sandwich (no posit);
+2. `addOrderOf [RP⁴] = 16` (the genuine ABK + Ext δ-cap lower bound);
+3. `[RP⁴]` is Pin⁺ (`w₂ = 0`, the Smith SW-mechanism).
+
+This carries **no `pin4_abutment` binder and no signature-assigned iso** — the Pin⁺ `ℤ/16` convergence
+obtained entirely from finite/genuine content via the Smith-LES sandwich. -/
+theorem sixteen_convergence_via_sandwich :
+    Nonempty (Omega4PinPlusBordism ≃+ ZMod 16) ∧
+      addOrderOf (Omega4PinPlusBordism.mk pinPlusRP4) = 16 ∧
+        IsPinPlusObstruction RP4 :=
+  ⟨pinPlus_iso_zmod16_via_sandwich, pinPlusRP4_addOrder_sixteen_substrate,
+   smith_RP4_isPinPlus_via_mechanism⟩
 
 end SKEFTHawking.PinPlusSmithDerived
