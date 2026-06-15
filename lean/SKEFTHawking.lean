@@ -785,6 +785,9 @@ import SKEFTHawking.SmithRegularValueGeneral
 -- (mZeroLocus closed/compact/CompactSpace); chart construction (extChartAt-local rep → levelSetIsManifold
 -- per chart → glue) next. Extends SmithRegularValueGeneral.levelSetIsManifold.
 import SKEFTHawking.ManifoldRegularValue
+-- Phase 5q.F (geometric foundation, brick 2): the Poincaré-dual N=PD(a) over a general manifold base
+-- M as a SingularManifold (lifts SmithLineBundle.sectionZeroLocus_isManifold E→M via the manifold RVT).
+import SKEFTHawking.ManifoldSmithPD
 -- Phase 5q.F W5 (2026-06-16): the geometric Smith map's real line bundle L_a + section zero locus = PD(a).
 -- SignCocycle → VectorBundleCore (genuine VectorBundle ℝ ℝ, structure group ℤ/2⊂ℝˣ); section coordinate
 -- function → zero locus is a C^∞ codim-1 manifold via the regular-value theorem + smooth embedding;
