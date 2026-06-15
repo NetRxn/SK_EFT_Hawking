@@ -54,9 +54,22 @@ theorem simplexIncl_face (n : ℕ)
   simpa only [simplexIncl, face] using
     (FunctorToTypes.naturality _ _ (TopCat.toSSet.map (inclMap S)) (SimplexCategory.δ i).op τ).symm
 
+/-- The induced simplex map is **injective**: `toSSet` (a right adjoint) preserves the mono
+`incl : S ↪ X`, and monos of simplicial sets are levelwise injective. -/
+theorem simplexIncl_injective (n : ℕ) : Function.Injective (simplexIncl S n) := by
+  have hmono : Mono (inclMap S) := (TopCat.mono_iff_injective _).2 Subtype.val_injective
+  have : Mono (TopCat.toSSet.map (inclMap S)) := inferInstance
+  have happ : Mono ((TopCat.toSSet.map (inclMap S)).app (op (SimplexCategory.mk n))) :=
+    inferInstance
+  exact (CategoryTheory.mono_iff_injective _).1 happ
+
 /-- The induced chain map `C_n(S) → C_n(X)`, `ℤ/2`-linear (`Finsupp.lmapDomain` of `simplexIncl`). -/
 noncomputable def chainIncl (n : ℕ) : SingularChain (sub S) n →ₗ[ZMod 2] SingularChain X n :=
   Finsupp.lmapDomain (ZMod 2) (ZMod 2) (simplexIncl S n)
+
+/-- The induced chain map is **injective** (`mapDomain` of the injective simplex map). -/
+theorem chainIncl_injective (n : ℕ) : Function.Injective (chainIncl S n) :=
+  Finsupp.mapDomain_injective (simplexIncl_injective S n)
 
 theorem chainIncl_single (n : ℕ)
     (τ : (TopCat.toSSet.obj (sub S)).obj (op (SimplexCategory.mk n))) (a : ZMod 2) :
@@ -157,5 +170,22 @@ noncomputable instance (n : ℕ) : Module (ZMod 2) (RelativeHomology S n) :=
 /-- The relative homology class of a relative cycle. -/
 noncomputable def RelativeHomology.mk (n : ℕ) (z : relCycles S n) : RelativeHomology S n :=
   Submodule.Quotient.mk z
+
+/-- `RelativeChain.mk c = 0` iff `c` is a subspace chain. -/
+theorem RelativeChain.mk_eq_zero_iff (n : ℕ) (c : SingularChain X n) :
+    RelativeChain.mk S n c = 0 ↔ c ∈ subspaceChains S n :=
+  Submodule.Quotient.mk_eq_zero _
+
+/-- A relative homology class `[z]` vanishes iff its representative chain is a relative boundary. -/
+theorem RelativeHomology.mk_eq_zero_iff (n : ℕ) (z : relCycles S n) :
+    RelativeHomology.mk S n z = 0 ↔ (z : RelativeChain S n) ∈ relBoundaries S n := by
+  constructor
+  · intro h
+    have h2 : z ∈ (relBoundaries S n).submoduleOf (relCycles S n) :=
+      (Submodule.Quotient.mk_eq_zero _).1 h
+    rwa [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype] at h2
+  · intro h
+    refine (Submodule.Quotient.mk_eq_zero _).2 ?_
+    rwa [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype]
 
 end SKEFTHawking.SingularRelativeHomologyMod2

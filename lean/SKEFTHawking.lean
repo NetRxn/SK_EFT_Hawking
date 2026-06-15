@@ -819,6 +819,11 @@ import SKEFTHawking.SingularHomologyMod2
 -- naturality) is the subspace inclusion's image. Foundation for local homology Hₙ(M,M∖x)≅ℤ/2 → the ℤ/2
 -- fundamental class → Poincaré duality (turning PoincareDual4Mid from a hypothesis into a theorem).
 import SKEFTHawking.SingularRelativeHomologyMod2
+-- Phase 5q.F (w₂ foundation brick 6b, 2026-06-15): the long exact sequence of a pair (X,S) — the induced
+-- maps i_* : Hₙ(S)→Hₙ(X), j_* : Hₙ(X)→Hₙ(X,S), and the connecting homomorphism δ : Hₙ₊₁(X,S)→Hₙ(S),
+-- [c]↦[∂c] (the snake-lemma boundary, with hand-rolled well-definedness). Foundation for the local-homology
+-- computation Hₙ(ℝⁿ,ℝⁿ∖0)≅ℤ/2 → the ℤ/2 fundamental class → Poincaré duality.
+import SKEFTHawking.SingularPairLES
 -- Phase 5q.F (fully-unconditional strengthening, w₂-foundation brick 5, 2026-06-15): the Wu class v₂ from
 -- Poincaré duality — for a PD datum (fundamental-class functional μ:H⁴→ℤ/2 + non-degenerate middle cup
 -- pairing, finite-dim H²), v₂∈H² represents x↦⟨Sq²x,[M]⟩ (wu_relation), the input to the Wu formula
