@@ -44,4 +44,24 @@ theorem norm_barycenter_sub_vertex_le {n : ℕ} (v : Fin (n + 1) → V) (j : Fin
       ≤ ((n : ℝ) + 1)⁻¹ * ((n : ℝ) * d) := mul_le_mul_of_nonneg_left hsum (by positivity)
     _ = ((n : ℝ) / ((n : ℝ) + 1)) * d := by field_simp
 
+/-- **Convexity distance bound**: a fixed point `b` is within `δ` of *any* point of the affine simplex
+on `w` whenever it is within `δ` of every vertex `wₖ` (`b − ∑ tₖwₖ = ∑ tₖ(b − wₖ)`, `∑ tₖ = 1`). Used
+in the sub-simplex diameter bound: the subdivision vertices lie in the parent faces. -/
+theorem norm_sub_affineSimplex_le {n : ℕ} (b : V) (w : Fin (n + 1) → V)
+    (t : stdSimplex ℝ (Fin (n + 1))) {δ : ℝ} (h : ∀ k, ‖b - w k‖ ≤ δ) :
+    ‖b - affineSimplex w t‖ ≤ δ := by
+  have hnn : ∀ k, (0 : ℝ) ≤ (t : Fin (n + 1) → ℝ) k := t.2.1
+  have hs1 : ∑ k, (t : Fin (n + 1) → ℝ) k = 1 := t.2.2
+  have hb : b = ∑ k, (t : Fin (n + 1) → ℝ) k • b := by
+    rw [← Finset.sum_smul, hs1, one_smul]
+  rw [affineSimplex_apply, hb, ← Finset.sum_sub_distrib]
+  calc ‖∑ k, ((t : Fin (n + 1) → ℝ) k • b - (t : Fin (n + 1) → ℝ) k • w k)‖
+      ≤ ∑ k, ‖(t : Fin (n + 1) → ℝ) k • b - (t : Fin (n + 1) → ℝ) k • w k‖ := norm_sum_le _ _
+    _ = ∑ k, (t : Fin (n + 1) → ℝ) k * ‖b - w k‖ := by
+        refine Finset.sum_congr rfl fun k _ => ?_
+        rw [← smul_sub, norm_smul, Real.norm_of_nonneg (hnn k)]
+    _ ≤ ∑ k, (t : Fin (n + 1) → ℝ) k * δ :=
+        Finset.sum_le_sum fun k _ => mul_le_mul_of_nonneg_left (h k) (hnn k)
+    _ = δ := by rw [← Finset.sum_mul, hs1, one_mul]
+
 end SKEFTHawking.SingularSubdivisionDiameter
