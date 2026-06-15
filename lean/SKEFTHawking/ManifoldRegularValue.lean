@@ -570,6 +570,88 @@ theorem mLevelChartE_symm_apply (p : mZeroLocus f) (v : euclideanModel E)
     OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
     extChartSubtype_symm_apply_of_mem f p hy, mLevelSetChart_symm_apply f hf hsub p hv]
 
+/-- The (regular-restricted) kernel chart's target lands in the regular kernel target. -/
+theorem mLevelChartKerR_target_subset (p : mZeroLocus f) :
+    (mLevelChartKerR f hf hsub p).target ⊆ mRegularKerTarget f hf hsub p := by
+  intro w hw
+  have hsource := (mLevelChartKerR f hf hsub p).map_target hw
+  rw [mLevelChartKerR, OpenPartialHomeomorph.restrOpen_source, OpenPartialHomeomorph.coe_restrOpen_symm,
+    Set.mem_inter_iff, Set.mem_inter_iff, Set.mem_preimage] at hsource
+  have hri := (mLevelChartKerR f hf hsub p).right_inv hw
+  rw [mLevelChartKerR, OpenPartialHomeomorph.coe_restrOpen,
+    OpenPartialHomeomorph.coe_restrOpen_symm] at hri
+  rw [hri] at hsource
+  exact hsource.2.2
+
+/-- From `v ∈ (mLevelChartE p).target`, the inverse Euclidean coordinate is regular. -/
+theorem mLevelChartE_target_regular (p : mZeroLocus f) {v : euclideanModel E}
+    (hv : v ∈ (mLevelChartE f hf hsub p).target) :
+    (kerEquivEuclidean (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))
+      (hsub p.1 p.2)).symm v ∈ mRegularKerTarget f hf hsub p := by
+  rw [mLevelChartE, OpenPartialHomeomorph.transHomeomorph_target,
+    ContinuousLinearEquiv.coe_symm_toHomeomorph, Set.mem_preimage] at hv
+  exact mLevelChartKerR_target_subset f hf hsub p hv
+
+/-- A point in a Euclidean chart's source has its `M`-coordinate in the corresponding extended chart's
+source. -/
+theorem mLevelChartE_source_mem_extChart (q : mZeroLocus f) {x : mZeroLocus f}
+    (hx : x ∈ (mLevelChartE f hf hsub q).source) : x.1 ∈ (extChartAt I q.1).source := by
+  rw [mLevelChartE, OpenPartialHomeomorph.transHomeomorph_source, mLevelChartKerR,
+    OpenPartialHomeomorph.restrOpen_source, mLevelChartKer, OpenPartialHomeomorph.trans_source] at hx
+  exact hx.1.1
+
+/-- **The chart transition `(mLevelChartE p).symm ≫ₕ (mLevelChartE q)` is `C^∞`** — it equals the
+explicit Euclidean transition composite (`mContDiffOn_transitionE`) on its source, which lands in the
+composite's regular domain. The structure-groupoid compatibility of the level-set atlas. -/
+theorem mContDiffOn_chart_trans (p q : mZeroLocus f) :
+    ContDiffOn ℝ ⊤ (↑((mLevelChartE f hf hsub p).symm ≫ₕ mLevelChartE f hf hsub q))
+      ((mLevelChartE f hf hsub p).symm ≫ₕ mLevelChartE f hf hsub q).source := by
+  refine (mContDiffOn_transitionE f hf hsub p q).congr_mono ?_ ?_
+  · intro v hv
+    rw [OpenPartialHomeomorph.trans_source, OpenPartialHomeomorph.symm_source, Set.mem_inter_iff,
+      Set.mem_preimage] at hv
+    obtain ⟨hvtgt, hvsrc⟩ := hv
+    have hreg := mLevelChartE_target_regular f hf hsub p hvtgt
+    have hq_src := mLevelChartE_source_mem_extChart f hf hsub q hvsrc
+    rw [OpenPartialHomeomorph.coe_trans, Function.comp_apply,
+      mLevelChartE_apply f hf hsub q _ hq_src,
+      mLevelChartE_symm_apply f hf hsub p v hreg.1 hreg.2.1]
+  · intro v hv
+    rw [OpenPartialHomeomorph.trans_source, OpenPartialHomeomorph.symm_source, Set.mem_inter_iff,
+      Set.mem_preimage] at hv
+    obtain ⟨hvtgt, hvsrc⟩ := hv
+    have hreg := mLevelChartE_target_regular f hf hsub p hvtgt
+    have hq_src := mLevelChartE_source_mem_extChart f hf hsub q hvsrc
+    rw [mLevelChartE_symm_apply f hf hsub p v hreg.1 hreg.2.1] at hq_src
+    rw [Set.mem_preimage]
+    refine ⟨hreg, ?_⟩
+    rw [Set.mem_preimage, PartialEquiv.trans_source, PartialEquiv.symm_source, Set.mem_inter_iff,
+      Set.mem_preimage]
+    exact ⟨hreg.2.1, hq_src⟩
+
+/-- **The manifold level set has a `C^∞` structure groupoid.** Every atlas chart transition is a `C^∞`
+diffeomorphism of the Euclidean model (`mContDiffOn_chart_trans`). -/
+theorem mLevelSetHasGroupoid :
+    @HasGroupoid (euclideanModel E) _ (mZeroLocus f) _ (mLevelSetChartedSpace f hf hsub)
+      (contDiffGroupoid ⊤ (modelWithCornersSelf ℝ (euclideanModel E))) := by
+  letI := mLevelSetChartedSpace f hf hsub
+  apply hasGroupoid_of_pregroupoid
+  intro e e' he he'
+  obtain ⟨p, rfl⟩ := he
+  obtain ⟨q, rfl⟩ := he'
+  rw [contDiffPregroupoid]
+  simp only [modelWithCornersSelf_coe, modelWithCornersSelf_coe_symm, Set.range_id,
+    Set.inter_univ, Set.preimage_id, Function.id_comp, Function.comp_id]
+  exact mContDiffOn_chart_trans f hf hsub p q
+
+/-- **The level set of a `C^∞` real submersion `f : M → ℝ` on a boundaryless manifold is a `C^∞`
+manifold** modelled on `EuclideanSpace ℝ (Fin (finrank E - 1))` — the manifold regular-value theorem. -/
+theorem mLevelSetIsManifold :
+    @IsManifold ℝ _ (euclideanModel E) _ _ (euclideanModel E) _
+      (modelWithCornersSelf ℝ (euclideanModel E)) ⊤ (mZeroLocus f) _ (mLevelSetChartedSpace f hf hsub) :=
+  letI := mLevelSetChartedSpace f hf hsub
+  { compatible := fun he he' => (mLevelSetHasGroupoid f hf hsub).compatible he he' }
+
 end Chart
 
 end SKEFTHawking.ManifoldRegularValue
