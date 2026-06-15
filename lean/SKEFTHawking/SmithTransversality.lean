@@ -79,4 +79,21 @@ theorem submersion_ker_codim_one [FiniteDimensional ℝ E] (f' : E →L[ℝ] ℝ
     rw [htop, finrank_top, Module.finrank_self]
   omega
 
+/-- **The zero locus is locally exactly the immersion's range.** Within the IFT chart's source, every
+point of `f⁻¹(0)` lies in the range of the codim-1 immersion `φ := f.implicitFunction f' 0` (since
+`φ = Φ.symm` on the `{0}`-slice and `(Φ x).1 = f x`). Together with `submersion_zero_locus_param`
+(`f (φ k) = 0` near `0`), this gives `f⁻¹(0) ∩ chart = range φ` locally — the level set near a regular
+point IS a smooth codim-1 embedded submanifold (the local model of `PD(a)`). -/
+theorem zero_locus_locally_range (f : E → ℝ) (f' : E →L[ℝ] ℝ) (a : E)
+    (hf : HasStrictFDerivAt f f' a) (hf' : (f' : E →L[ℝ] ℝ).range = ⊤) :
+    ∀ x ∈ (hf.implicitToOpenPartialHomeomorph f f' hf').source,
+      f x = 0 → x ∈ Set.range (hf.implicitFunction f f' hf' 0) := by
+  intro x hx hfx
+  set Φ := hf.implicitToOpenPartialHomeomorph f f' hf' with hΦ
+  refine ⟨(Φ x).2, ?_⟩
+  have hfst : (Φ x).1 = f x := hf.implicitToOpenPartialHomeomorph_fst hf' x
+  have hsymm : Φ.symm (Φ x) = x := Φ.left_inv hx
+  have hrw : hf.implicitFunction f f' hf' 0 (Φ x).2 = Φ.symm (0, (Φ x).2) := rfl
+  rw [hrw, ← hfx, ← hfst, hsymm]
+
 end SKEFTHawking.SmithTransversality
