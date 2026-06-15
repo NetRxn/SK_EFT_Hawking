@@ -62,4 +62,70 @@ noncomputable def coboundaryₗ (X : TopCat) (n : ℕ) :
     funext σ
     simp only [coboundary_apply, Pi.smul_apply, smul_eq_mul, RingHom.id_apply, Finset.mul_sum]
 
+/-- **`δ² = 0`** — the singular cochain complex condition. `(δ²f)(σ) = ∑ᵢ∑ⱼ f(∂ⱼ∂ᵢσ)`; by `face_face`
+each summand is `f` of the composite coface `δ j ≫ δ i`, and the cosimplicial identity `δ_comp_δ` pairs
+the index set `Fin(n+3) × Fin(n+2)` into a fixed-point-free involution with equal `f`-values, so the sum
+vanishes over `ℤ/2`. -/
+theorem coboundary_comp_coboundary (X : TopCat) (n : ℕ) (f : SingularCochain X n) :
+    coboundary X (n + 1) (coboundary X n f) = 0 := by
+  funext σ
+  simp only [coboundary_apply, face_face, Pi.zero_apply]
+  rw [← Fintype.sum_prod_type (f := fun p : Fin (n + 3) × Fin (n + 2) =>
+    f ((TopCat.toSSet.obj X).map (SimplexCategory.δ p.2 ≫ SimplexCategory.δ p.1).op σ))]
+  refine Finset.sum_involution
+    (fun p _ => if h : p.2.castSucc < p.1
+      then (p.2.castSucc, p.1.pred ((Fin.zero_le _).trans_lt h).ne')
+      else (p.2.succ, p.1.castPred (by
+        simp only [not_lt] at h
+        rw [Fin.ne_iff_vne, Fin.val_last]; have := p.2.isLt
+        rw [Fin.le_def, Fin.val_castSucc] at h; omega))) ?_ ?_ ?_ ?_
+  · rintro ⟨i, j⟩ -
+    simp only
+    by_cases h : j.castSucc < i
+    · rw [dif_pos h]
+      have hne : i ≠ 0 := ((Fin.zero_le _).trans_lt h).ne'
+      have hle : j ≤ i.pred hne := by
+        rw [Fin.le_def, Fin.val_pred]; rw [Fin.lt_def, Fin.val_castSucc] at h; omega
+      have heq : SimplexCategory.δ j ≫ SimplexCategory.δ i
+          = SimplexCategory.δ (i.pred hne) ≫ SimplexCategory.δ j.castSucc := by
+        rw [← SimplexCategory.δ_comp_δ hle, Fin.succ_pred]
+      rw [heq]; exact CharTwo.add_self_eq_zero _
+    · rw [dif_neg h]
+      simp only [not_lt] at h
+      have hne : i ≠ Fin.last (n + 1 + 1) := by
+        rw [Fin.ne_iff_vne, Fin.val_last]; have := j.isLt
+        rw [Fin.le_def, Fin.val_castSucc] at h; omega
+      have hle : i.castPred hne ≤ j := by
+        rw [Fin.le_def, Fin.coe_castPred]; rw [Fin.le_def, Fin.val_castSucc] at h; omega
+      have heq : SimplexCategory.δ j ≫ SimplexCategory.δ i
+          = SimplexCategory.δ (i.castPred hne) ≫ SimplexCategory.δ j.succ := by
+        rw [SimplexCategory.δ_comp_δ hle, Fin.castSucc_castPred]
+      rw [heq]; exact CharTwo.add_self_eq_zero _
+  · rintro ⟨i, j⟩ - _
+    by_cases h : j.castSucc < i
+    · simp only [dif_pos h, ne_eq, Prod.mk.injEq]
+      rintro ⟨hc, -⟩
+      simp only [Fin.ext_iff, Fin.val_castSucc] at hc
+      simp only [Fin.lt_def, Fin.val_castSucc] at h; omega
+    · simp only [dif_neg h, ne_eq, Prod.mk.injEq]
+      rintro ⟨hc, -⟩
+      simp only [Fin.ext_iff, Fin.val_succ] at hc
+      simp only [not_lt, Fin.le_def, Fin.val_castSucc] at h; omega
+  · intro a _; exact Finset.mem_univ _
+  · rintro ⟨i, j⟩ -
+    by_cases h : j.castSucc < i
+    · have hne : i ≠ 0 := ((Fin.zero_le _).trans_lt h).ne'
+      have h2 : ¬ (i.pred hne).castSucc < j.castSucc := by
+        simp only [Fin.lt_def, Fin.val_castSucc, Fin.val_pred]
+        simp only [Fin.lt_def, Fin.val_castSucc] at h; omega
+      simp only [dif_pos h, dif_neg h2, Fin.succ_pred, Fin.castPred_castSucc]
+    · have hle : i ≤ j.castSucc := not_lt.mp h
+      have hne : i ≠ Fin.last (n + 1 + 1) := by
+        simp only [Fin.ne_iff_vne, Fin.val_last]; have := j.isLt
+        simp only [Fin.le_def, Fin.val_castSucc] at hle; omega
+      have h2 : i < j.succ := by
+        simp only [Fin.lt_def, Fin.val_succ]
+        simp only [Fin.le_def, Fin.val_castSucc] at hle; omega
+      simp only [dif_neg h, Fin.castSucc_castPred, Fin.pred_succ, dif_pos h2]
+
 end SKEFTHawking.SingularCohomologyMod2
