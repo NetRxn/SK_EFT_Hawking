@@ -224,4 +224,46 @@ theorem singularSd_iterate_chainBoundary (X : TopCat) (n m : ℕ) (c : SingularC
     rw [Function.iterate_succ', Function.comp_apply, hcomm, ih, Function.iterate_succ',
       Function.comp_apply]
 
+/-- The **iterated subdivision homotopy** `Dₘ := ∑_{i<m} Sdⁱ ∘ D : Cₙ → Cₙ₊₁`. Witnesses `Sdᵐ ≃ id`. -/
+noncomputable def iterHomotopy (X : TopCat) (n m : ℕ) (c : SingularChain X n) :
+    SingularChain X (n + 1) :=
+  ∑ i ∈ Finset.range m, (⇑(singularSd X (n + 1)))^[i] (singularD X n c)
+
+theorem iterHomotopy_succ (X : TopCat) (n m : ℕ) (c : SingularChain X n) :
+    iterHomotopy X n (m + 1) c
+      = iterHomotopy X n m c + (⇑(singularSd X (n + 1)))^[m] (singularD X n c) := by
+  rw [iterHomotopy, iterHomotopy, Finset.sum_range_succ]
+
+/-- **The iterated subdivision is chain-homotopic to the identity**: `∂Dₘ + Dₘ∂ = 1 − Sdᵐ`
+(`= 1 + Sdᵐ` over `ℤ/2`). Telescoping induction on `m`: the base is `c + c = 0`; the step adds
+`Sdᵐ(∂D+D∂) = Sdᵐ − Sd^{m+1}` (using `∂` commutes with `Sdᵐ` and the one-step homotopy). -/
+theorem iterHomotopy_chainHomotopy (X : TopCat) (m : ℕ) :
+    ∀ (n : ℕ) (c : SingularChain X (n + 1)),
+      chainBoundary X (n + 1) (iterHomotopy X (n + 1) m c)
+          + iterHomotopy X n m (chainBoundary X n c)
+        = c + (⇑(singularSd X (n + 1)))^[m] c := by
+  induction m with
+  | zero =>
+    intro n c
+    simp only [iterHomotopy, Finset.range_zero, Finset.sum_empty, map_zero, add_zero,
+      Function.iterate_zero, id_eq]
+    exact (ZModModule.add_self c).symm
+  | succ m ih =>
+    intro n c
+    have hadd : ∀ a b : SingularChain X (n + 1),
+        (⇑(singularSd X (n + 1)))^[m] (a + b)
+          = (⇑(singularSd X (n + 1)))^[m] a + (⇑(singularSd X (n + 1)))^[m] b :=
+      fun a b => by simp only [← Module.End.coe_pow, map_add]
+    have hstep : ∀ x : SingularChain X (n + 1),
+        chainBoundary X (n + 1) (singularD X (n + 1) x) + singularD X n (chainBoundary X n x)
+          = x + singularSd X (n + 1) x :=
+      fun x => LinearMap.congr_fun (singularD_chainHomotopy X n) x
+    rw [iterHomotopy_succ, iterHomotopy_succ, map_add, singularSd_iterate_chainBoundary X (n + 1) m,
+      add_add_add_comm, ih n c, ← hadd, hstep, hadd, ← Function.iterate_succ_apply,
+      show c + (⇑(singularSd X (n + 1)))^[m] c
+            + ((⇑(singularSd X (n + 1)))^[m] c + (⇑(singularSd X (n + 1)))^[m + 1] c)
+          = c + (⇑(singularSd X (n + 1)))^[m + 1] c
+            + ((⇑(singularSd X (n + 1)))^[m] c + (⇑(singularSd X (n + 1)))^[m] c) from by abel,
+      ZModModule.add_self, add_zero]
+
 end SKEFTHawking.SingularSubdivision
