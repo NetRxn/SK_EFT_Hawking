@@ -89,4 +89,82 @@ theorem linBoundary_linBoundary_single (n : ℕ) (v : Fin (n + 1 + 1 + 1) → Y)
   refine Finset.sum_congr rfl (fun i _ => ?_)
   rw [linBoundary_single, linBoundaryBasis]
 
+/-- **`∂² = 0` on a single vertex-tuple** — the cosimplicial `Fin.succAbove` involution (the affine
+analog of the singular `∂²=0`): the pairing `(i,j) ↦ (j.castSucc, i.pred)` / `(j.succ, i.castPred)`
+identifies the double-sum terms in pairs (via `Fin.succAbove_succAbove_succAbove_predAbove`), so the sum
+vanishes over `ℤ/2`. -/
+theorem linBoundary_linBoundary_single_eq_zero (n : ℕ) (v : Fin (n + 1 + 1 + 1) → Y) :
+    linBoundary n (linBoundary (n + 1) (Finsupp.single v 1)) = 0 := by
+  rw [linBoundary_linBoundary_single]
+  rw [← Fintype.sum_prod_type (f := fun p : Fin (n + 3) × Fin (n + 2) =>
+    Finsupp.single ((v ∘ p.1.succAbove) ∘ p.2.succAbove) (1 : ZMod 2))]
+  refine Finset.sum_involution
+    (fun p _ => if h : p.2.castSucc < p.1
+      then (p.2.castSucc, p.1.pred ((Fin.zero_le _).trans_lt h).ne')
+      else (p.2.succ, p.1.castPred (by
+        simp only [not_lt] at h
+        rw [Fin.ne_iff_vne, Fin.val_last]; have := p.2.isLt
+        rw [Fin.le_def, Fin.val_castSucc] at h; omega))) ?_ ?_ ?_ ?_
+  · rintro ⟨i, j⟩ -
+    simp only
+    by_cases h : j.castSucc < i
+    · rw [dif_pos h]
+      have hne : i ≠ 0 := ((Fin.zero_le _).trans_lt h).ne'
+      have hfin : ((v ∘ i.succAbove) ∘ j.succAbove)
+          = ((v ∘ (j.castSucc).succAbove) ∘ (i.pred hne).succAbove) := by
+        funext k
+        simp only [Function.comp_apply]
+        congr 1
+        rw [← Fin.succAbove_succAbove_succAbove_predAbove i j k,
+          Fin.succAbove_of_castSucc_lt i j h, Fin.predAbove_of_castSucc_lt j i h]
+      rw [hfin]; exact ZModModule.add_self _
+    · rw [dif_neg h]
+      simp only [not_lt] at h
+      have hne : i ≠ Fin.last (n + 1 + 1) := by
+        rw [Fin.ne_iff_vne, Fin.val_last]; have := j.isLt
+        rw [Fin.le_def, Fin.val_castSucc] at h; omega
+      have hfin : ((v ∘ i.succAbove) ∘ j.succAbove)
+          = ((v ∘ (j.succ).succAbove) ∘ (i.castPred hne).succAbove) := by
+        funext k
+        simp only [Function.comp_apply]
+        congr 1
+        rw [← Fin.succAbove_succAbove_succAbove_predAbove i j k,
+          Fin.succAbove_of_le_castSucc i j h, Fin.predAbove_of_le_castSucc j i h]
+      rw [hfin]; exact ZModModule.add_self _
+  · rintro ⟨i, j⟩ - _
+    by_cases h : j.castSucc < i
+    · simp only [dif_pos h, ne_eq, Prod.mk.injEq]
+      rintro ⟨hc, -⟩
+      simp only [Fin.ext_iff, Fin.val_castSucc] at hc
+      simp only [Fin.lt_def, Fin.val_castSucc] at h; omega
+    · simp only [dif_neg h, ne_eq, Prod.mk.injEq]
+      rintro ⟨hc, -⟩
+      simp only [Fin.ext_iff, Fin.val_succ] at hc
+      simp only [not_lt, Fin.le_def, Fin.val_castSucc] at h; omega
+  · intro a _; exact Finset.mem_univ _
+  · rintro ⟨i, j⟩ -
+    by_cases h : j.castSucc < i
+    · have hne : i ≠ 0 := ((Fin.zero_le _).trans_lt h).ne'
+      have h2 : ¬ (i.pred hne).castSucc < j.castSucc := by
+        simp only [Fin.lt_def, Fin.val_castSucc, Fin.val_pred]
+        simp only [Fin.lt_def, Fin.val_castSucc] at h; omega
+      simp only [dif_pos h, dif_neg h2, Fin.succ_pred, Fin.castPred_castSucc]
+    · have hle : i ≤ j.castSucc := not_lt.mp h
+      have hne : i ≠ Fin.last (n + 1 + 1) := by
+        simp only [Fin.ne_iff_vne, Fin.val_last]; have := j.isLt
+        simp only [Fin.le_def, Fin.val_castSucc] at hle; omega
+      have h2 : i < j.succ := by
+        simp only [Fin.lt_def, Fin.val_succ]
+        simp only [Fin.le_def, Fin.val_castSucc] at hle; omega
+      simp only [dif_neg h, Fin.castSucc_castPred, Fin.pred_succ, dif_pos h2]
+
+/-- **`∂² = 0`** on the affine chain complex (reduced to the single-tuple case by linearity). -/
+theorem linBoundary_comp_linBoundary (n : ℕ) :
+    (linBoundary n (Y := Y)).comp (linBoundary (n + 1)) = 0 := by
+  refine Finsupp.lhom_ext (fun v b => ?_)
+  have hsingle : (Finsupp.single v b) = b • Finsupp.single v 1 := by
+    rw [Finsupp.smul_single, smul_eq_mul, mul_one]
+  rw [LinearMap.comp_apply, LinearMap.zero_apply, hsingle, map_smul, map_smul,
+    linBoundary_linBoundary_single_eq_zero, smul_zero]
+
 end SKEFTHawking.SingularExcisionMod2
