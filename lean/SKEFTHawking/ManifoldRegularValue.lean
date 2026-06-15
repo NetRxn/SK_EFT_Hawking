@@ -352,6 +352,106 @@ theorem mContDiffOn_iftChart_symm (p : mZeroLocus f) :
   exact (mIftChart_symm_contDiffAt f hf hsub p hkt hpre hinv).comp k
     (contDiffAt_const.prodMk contDiffAt_id)
 
+/-- The **regular-set restriction** of the per-point kernel chart: its source intersected with the
+(open) preimage of the regular kernel target, where the inverse chart is `C^∞` (so the chart
+transitions will be `C^∞`). -/
+noncomputable def mLevelChartKerR (p : mZeroLocus f) :
+    OpenPartialHomeomorph (mZeroLocus f)
+      (kerModel (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))) :=
+  (mLevelChartKer f hf hsub p).restrOpen
+    ((mLevelChartKer f hf hsub p).source ∩
+      ⇑(mLevelChartKer f hf hsub p) ⁻¹' (mRegularKerTarget f hf hsub p))
+    ((mLevelChartKer f hf hsub p).continuousOn_toFun.isOpen_inter_preimage
+      (mLevelChartKer f hf hsub p).open_source (isOpen_mRegularKerTarget f hf hsub p))
+
+/-- **The per-point chart of the manifold level set, valued in the fixed Euclidean model**
+`EuclideanSpace ℝ (Fin (finrank E - 1))`: the regular-restricted kernel chart composed with the
+continuous-linear identification `kerEquivEuclidean : ker (fderiv (localRep f p) …) ≃L euclideanModel E`. -/
+noncomputable def mLevelChartE (p : mZeroLocus f) :
+    OpenPartialHomeomorph (mZeroLocus f) (euclideanModel E) :=
+  (mLevelChartKerR f hf hsub p).transHomeomorph
+    (kerEquivEuclidean (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))
+      (hsub p.1 p.2)).toHomeomorph
+
+/-- The IFT chart of the local representative sends its base point `extChartAt I p p` to `(0, 0)`
+(the first coordinate is `localRep f p (extChartAt I p p) = 0`, the second is `0` by the
+implicit-function self-identity). -/
+theorem mIftChart_self (p : mZeroLocus f) :
+    mIftChart f hf hsub p (extChartAt I p.1 p.1) = (0, 0) := by
+  have h := (localRep_hasStrictFDerivAt hf p.1).implicitToOpenPartialHomeomorph_self (hsub p.1 p.2)
+  rw [show mIftChart f hf hsub p (extChartAt I p.1 p.1)
+      = (localRep_hasStrictFDerivAt hf p.1).implicitToOpenPartialHomeomorph (localRep (I := I) f p.1)
+        (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1)) (hsub p.1 p.2)
+        (extChartAt I p.1 p.1) from rfl, h, localRep_chartPt_eq_zero p.2]
+
+/-- The base point `extChartAt I p p` lies in the source of the IFT chart of `localRep f p`. -/
+theorem mem_mIftChart_source_self (p : mZeroLocus f) :
+    extChartAt I p.1 p.1 ∈ (mIftChart f hf hsub p).source :=
+  mem_iftChart_source (localRep (I := I) f p.1) _ _ (localRep_hasStrictFDerivAt hf p.1)
+    (hsub p.1 p.2)
+
+/-- The IFT-chart inverse sends `(0, 0)` back to the base point `extChartAt I p p`. -/
+theorem mIftChart_symm_zero (p : mZeroLocus f) :
+    (mIftChart f hf hsub p).symm (0, 0) = extChartAt I p.1 p.1 := by
+  rw [← mIftChart_self f hf hsub p,
+    (mIftChart f hf hsub p).left_inv (mem_mIftChart_source_self f hf hsub p)]
+
+/-- The kernel origin `0` lies in the regular target set: the base point is regular. -/
+theorem zero_mem_mRegularKerTarget (p : mZeroLocus f) :
+    (0 : kerModel (fderiv ℝ (localRep (I := I) f p.1) (extChartAt I p.1 p.1))) ∈
+      mRegularKerTarget f hf hsub p := by
+  refine ⟨?_, ?_, ?_⟩
+  · rw [← mIftChart_self f hf hsub p]
+    exact (mIftChart f hf hsub p).map_source (mem_mIftChart_source_self f hf hsub p)
+  · rw [mIftChart_symm_zero f hf hsub p]
+    exact (extChartAt I p.1).map_source (mem_extChartAt_source p.1)
+  · rw [mIftChart_symm_zero f hf hsub p]
+    exact prod_chartProj_isInvertible _ (hsub p.1 p.2)
+
+omit [FiniteDimensional ℝ E] [IsManifold I ⊤ M] in
+/-- On the extended-chart source, the subtype-restricted extended chart is `extChartAt I p`. -/
+theorem extChartSubtype_apply_of_mem (p : mZeroLocus f) {q : mZeroLocus f}
+    (hq : q.1 ∈ (extChartAt I p.1).source) :
+    (extChartSubtype f p) q = ⟨extChartAt I p.1 q.1, extChartAt_mem_zeroLocus hq q.2⟩ := by
+  apply Subtype.ext
+  show (dite (q.1 ∈ (extChartAt I p.1).source) _ _ : zeroLocus (localRep (I := I) f p.1)).1 =
+    extChartAt I p.1 q.1
+  rw [dif_pos hq]
+
+/-- The manifold level-set chart sends the base point `p` to the kernel origin `0`. -/
+theorem mLevelChartKer_self (p : mZeroLocus f) : (mLevelChartKer f hf hsub p) p = 0 := by
+  rw [mLevelChartKer, OpenPartialHomeomorph.trans_apply,
+    extChartSubtype_apply_of_mem f p (mem_extChartAt_source p.1)]
+  show (mIftChart f hf hsub p (extChartAt I p.1 p.1)).2 = 0
+  rw [mIftChart_self]
+
+/-- The base point `p` lies in the source of the (unrestricted) kernel chart. -/
+theorem mem_mLevelChartKer_source_self (p : mZeroLocus f) :
+    p ∈ (mLevelChartKer f hf hsub p).source := by
+  rw [mLevelChartKer, OpenPartialHomeomorph.trans_source]
+  refine ⟨mem_extChartAt_source p.1, ?_⟩
+  rw [Set.mem_preimage, extChartSubtype_apply_of_mem f p (mem_extChartAt_source p.1)]
+  exact mem_mIftChart_source_self f hf hsub p
+
+/-- **Every point of the manifold level set lies in the source of its own Euclidean chart** — the
+charted-space covering condition. -/
+theorem mem_mLevelChartE_source (p : mZeroLocus f) : p ∈ (mLevelChartE f hf hsub p).source := by
+  rw [mLevelChartE, OpenPartialHomeomorph.transHomeomorph_source, mLevelChartKerR,
+    OpenPartialHomeomorph.restrOpen_source]
+  refine ⟨mem_mLevelChartKer_source_self f hf hsub p,
+    mem_mLevelChartKer_source_self f hf hsub p, ?_⟩
+  rw [Set.mem_preimage, mLevelChartKer_self f hf hsub p]
+  exact zero_mem_mRegularKerTarget f hf hsub p
+
+/-- **The level set of a `C^∞` real submersion `f : M → ℝ` on a (boundaryless) manifold is a charted
+space over the fixed Euclidean model** `EuclideanSpace ℝ (Fin (finrank E - 1))`. -/
+@[reducible] noncomputable def mLevelSetChartedSpace :
+    ChartedSpace (euclideanModel E) (mZeroLocus f) where
+  atlas := Set.range (mLevelChartE f hf hsub)
+  chartAt p := mLevelChartE f hf hsub p
+  mem_chart_source p := mem_mLevelChartE_source f hf hsub p
+  chart_mem_atlas p := Set.mem_range_self p
+
 end Chart
 
 end SKEFTHawking.ManifoldRegularValue
