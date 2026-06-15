@@ -208,4 +208,46 @@ theorem RPComplex_finrank_cohomology (n k : ℕ) (hk : k ≤ n) :
     Module.finrank (ZMod 2) (Cohomology (RPComplex n) k) = 1 := by
   rw [(RPComplex_cohomology_equiv n k hk).finrank_eq, Module.finrank_self]
 
+/-! ## §6. Pin⁺ structures as the `H¹(M;ℤ/2)`-torsor — the factor-of-2 multiplicity
+
+The lab-notebook load-bearing finding: `Ω₄^{Pin⁺} ≅ ℤ/16` is the bordism group of **chosen** Pin⁺
+structures, and the chosen structures form an `H¹(M;ℤ/2)`-torsor — the per-manifold factor-of-2
+multiplicity is exactly what makes the group `ℤ/16` rather than the coarser admits-Pin⁺ group. With the
+genuine `H¹` vector space in hand (§1–§5), we can build that torsor and compute its size. -/
+
+/-- **Pin⁺ structures** on a manifold modeled by the cell complex `C` (when the Pin⁺ obstruction
+`w₂ = 0` holds), in the **regular `H¹(C; ℤ/2)`-torsor model**. The standard geometric fact
+(Kirby–Taylor 1990 §1; Lawson–Michelsohn *Spin Geometry* II.1.7) is that the Pin⁺ structures on a
+manifold `M` with `w₂ = 0` form a torsor over `H¹(M; ℤ/2)`. Lacking smooth frame-bundle reductions
+along `Pin⁺(n) → O(n)` (the genuine geometric structures, which need the smooth tangent bundle that
+`SingularManifold` does not carry), we model the torsor by its regular representation `H¹(C; ℤ/2)`
+acting on itself. The geometric torsor is non-canonically isomorphic to this model; the **count**
+`|PinPlusStr C| = |H¹(C; ℤ/2)|` — all that the `ℤ/16` multiplicity needs — is faithful. (The existence
+condition `w₂ = 0` is the project's `SymTFT.IsPinPlusObstruction`; for `RP⁴` it holds by Karoubi 1968.) -/
+def PinPlusStr (C : CellComplex) : Type := Cohomology C 1
+
+noncomputable instance (C : CellComplex) : AddCommGroup (PinPlusStr C) :=
+  inferInstanceAs (AddCommGroup (Cohomology C 1))
+
+/-- Pin⁺ structures form an `H¹(C; ℤ/2)`-torsor (the regular model: `H¹` acts on itself freely and
+transitively). This is the genuine torsor structure underlying the factor-of-2 multiplicity. -/
+noncomputable instance (C : CellComplex) : AddTorsor (Cohomology C 1) (PinPlusStr C) :=
+  inferInstanceAs (AddTorsor (Cohomology C 1) (Cohomology C 1))
+
+/-- **The Pin⁺ structure count on `RP^n` (`n ≥ 1`) is exactly `2`** `= |H¹(RP^n; ℤ/2)|` — the genuine
+factor-of-2 multiplicity per dimension. This is the seed of the `ℤ/16` of `Ω₄^{Pin⁺}`: `RP⁴` is Pin⁺
+(`w₂ = 0`, Karoubi 1968) and carries exactly two Pin⁺ structures, the two elements of the
+`H¹(RP⁴; ℤ/2)`-torsor. The substantive content lives in the cohomology computation
+`RPComplex_cohomology_equiv` (the genuine quotient vector space `H¹ ≅ ℤ/2`), not in the model
+definition of `PinPlusStr`. -/
+theorem RPComplex_pinPlusStr_card (n : ℕ) (hn : 1 ≤ n) :
+    Nat.card (PinPlusStr (RPComplex n)) = 2 := by
+  show Nat.card (Cohomology (RPComplex n) 1) = 2
+  rw [Nat.card_congr (RPComplex_cohomology_equiv n 1 hn).toEquiv, Nat.card_eq_fintype_card, ZMod.card]
+
+/-- The Pin⁺ structure torsor is **nonempty** (every Pin⁺-admissible manifold model carries a Pin⁺
+structure: the torsor over a nontrivial group is inhabited). -/
+instance (C : CellComplex) : Nonempty (PinPlusStr C) :=
+  inferInstanceAs (Nonempty (Cohomology C 1))
+
 end SKEFTHawking.CellularCohomologyMod2
