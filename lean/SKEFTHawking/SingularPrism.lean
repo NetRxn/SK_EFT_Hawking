@@ -612,3 +612,50 @@ theorem prism_chainHomotopy {X Y : TopCat} (H : C(↑X × unitInterval, ↑Y)) {
       rw [hsa]
       simp only [map_smul, ← smul_add]
       exact congrArg (a • ·) (prism_chainHomotopy_single H σ)
+
+/-! ## §12. The endpoint maps are chain maps -/
+
+/-- **`endSimplex` face-naturality**: `face i (endSimplex H r σ) = endSimplex H r (face i σ)` — the
+endpoint pushforward commutes with the simplicial face (post-composing by `H(·, r)` is natural). -/
+theorem face_endSimplex {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y)) (r : unitInterval)
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) (i : Fin (n + 2)) :
+    face i (endSimplex H r σ) = endSimplex H r (face i σ) := by
+  apply (Y.toSSetObjEquiv (op (SimplexCategory.mk n))).injective
+  simp only [endSimplex, toSSetObjEquiv_face, Equiv.apply_symm_apply]
+  rfl
+
+/-- **The endpoint map `endMap H r` is a chain map**: `∂ ∘ endMap = endMap ∘ ∂`. Hence `endMap H r`
+sends cycles to cycles — the well-definedness input for homology-level homotopy invariance. -/
+theorem chainBoundary_endMap {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y)) (r : unitInterval)
+    (c : SingularChain X (n + 1)) :
+    chainBoundary Y n (endMap H r (n + 1) c) = endMap H r n (chainBoundary X n c) := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp
+  | add c₁ c₂ h₁ h₂ => simp only [map_add, h₁, h₂]
+  | single σ a =>
+      have hsa : Finsupp.single σ a = a • Finsupp.single σ (1 : ZMod 2) := by
+        rw [Finsupp.smul_single, smul_eq_mul, mul_one]
+      rw [hsa]
+      simp only [map_smul]
+      congr 1
+      rw [endMap_single, chainBoundary_single, chainBoundary_single]
+      simp only [boundaryBasis, map_sum]
+      refine Finset.sum_congr rfl (fun i _ => ?_)
+      rw [endMap_single, face_endSimplex]
+
+/-! ## §13. Homotopy invariance of singular ℤ/2 homology -/
+
+/-- The endpoint map of a homotopy sends cycles to cycles (immediate from `chainBoundary_endMap`). -/
+theorem endMap_mem_cycles {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y)) (r : unitInterval)
+    (z : SingularChain X (n + 1)) (hz : chainBoundary X n z = 0) :
+    chainBoundary Y n (endMap H r (n + 1) z) = 0 := by
+  rw [chainBoundary_endMap, hz, map_zero]
+
+/-- **Homotopy invariance, chain level**: for a cycle `z` the two endpoints `g_#(z)` and `f_#(z)` of
+a homotopy `H` differ by a boundary, `g_#(z) + f_#(z) = ∂(P z) ∈ im ∂`. The two endpoints therefore
+represent the same homology class — homotopic maps induce equal maps on `Hₙ(·; ℤ/2)`. -/
+theorem endMap_add_mem_boundaries {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (z : SingularChain X (n + 1)) (hz : chainBoundary X n z = 0) :
+    endMap H 1 (n + 1) z + endMap H 0 (n + 1) z ∈ boundaries Y (n + 1) := by
+  rw [← prism_chainHomotopy H z, hz, map_zero, add_zero]
+  exact ⟨prismOp H (n + 1) z, rfl⟩
