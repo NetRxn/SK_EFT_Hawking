@@ -23,6 +23,7 @@ open CategoryTheory Opposite
 open SKEFTHawking.SingularExcisionMod2 SKEFTHawking.SingularHomologyMod2
 open SKEFTHawking.SingularExcisionPushforward SKEFTHawking.SingularSubdivisionConvex
 open SKEFTHawking.SingularSubdivision SKEFTHawking.SingularSubdivisionDiameter
+open SKEFTHawking.SingularCohomologyMod2
 
 /-- The standard `n`-simplex's vertices `eᵢ = Pi.single i 1` have all pairwise sup-norm distances `≤ 1`
 (`(eᵢ − eₖ) l ∈ {−1, 0, 1}`), so the identity affine chain `ιₙ` has diameter `≤ 1`. The seed the
@@ -202,6 +203,36 @@ theorem exists_iterate_smallChains {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
     ← Nat.sub_add_cancel (hm τ hτ), Function.iterate_add_apply]
   exact Submodule.smul_mem _ _
     (singularSd_iterate_mem_smallChains (mem_smallChains_of_support (hM τ)) _)
+
+/-- A face of a simplex has image inside the simplex's image (`∂ᵢτ`'s realization is `τ̃` precomposed with
+the topological coface). -/
+theorem range_face_subset_range {X : TopCat} {n : ℕ}
+    (τ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) (i : Fin (n + 2)) :
+    Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk n)) (face i τ))
+      ⊆ Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk (n + 1))) τ) := by
+  rw [toSSetObjEquiv_face]
+  rintro _ ⟨t, rfl⟩
+  exact ⟨_, rfl⟩
+
+/-- A face of a subordinate simplex is subordinate (to the same cover member). -/
+theorem IsSubordinate.face {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
+    {τ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))} (hτ : IsSubordinate 𝒰 τ)
+    (i : Fin (n + 2)) : IsSubordinate 𝒰 (face i τ) := by
+  obtain ⟨U, hU, hrange⟩ := hτ
+  exact ⟨U, hU, (range_face_subset_range τ i).trans hrange⟩
+
+/-- **`smallChains` is a subcomplex**: the boundary of a small chain is small (every face of a subordinate
+simplex is subordinate). So `(smallChains 𝒰)` is a `ℤ/2`-subcomplex of the singular chain complex. -/
+theorem chainBoundary_mem_smallChains {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
+    {c : SingularChain X (n + 1)} (hc : c ∈ smallChains 𝒰 (n + 1)) :
+    chainBoundary X n c ∈ smallChains 𝒰 n := by
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ hc
+  · rintro _ ⟨τ, hτ, rfl⟩
+    rw [chainBoundary_single, boundaryBasis]
+    exact Submodule.sum_mem _ (fun i _ => single_mem_smallChains (hτ.face i))
+  · rw [map_zero]; exact Submodule.zero_mem _
+  · intro a b _ _ ha hb; rw [map_add]; exact Submodule.add_mem _ ha hb
+  · intro r a _ ha; rw [map_smul]; exact Submodule.smul_mem _ r ha
 
 /-- The iterated-subdivision homotopy kills the zero chain. -/
 theorem iterHomotopy_zero (X : TopCat) (n m : ℕ) : iterHomotopy X n m 0 = 0 := by
