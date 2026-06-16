@@ -291,4 +291,39 @@ theorem prismBeta_faceMap_castSucc_eq {n : ℕ} (i : Fin (n + 1)) (t : stdSimple
   split_ifs with hc <;>
     simp only [Fin.lt_def, Fin.le_def, Fin.val_castSucc, Fin.val_succ] at hc ⊢ <;> omega
 
+/-! ## §8. Internal cancellation of the diagonal faces -/
+
+/-- **Internal cancellation**: the shared face `(i.castSucc).succ = (i.succ).castSucc` is the
+`w`-diagonal of prism `i.castSucc` AND the `v`-diagonal of prism `i.succ`; both have α-component the
+identity and β-component `Σ_{l>i}`, so the two prism simplices share this face. In the ℤ/2 boundary
+`∑ᵢ∑ⱼ face_j(prism σ i)` the two appearances cancel. -/
+theorem prism_internal_cancel {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) (i : Fin n) :
+    face i.castSucc.succ (prismSimplex H σ i.castSucc)
+      = face i.succ.castSucc (prismSimplex H σ i.succ) := by
+  apply (Y.toSSetObjEquiv (op (SimplexCategory.mk n))).injective
+  rw [prismSimplex_face, prismSimplex_face]
+  refine congrArg (fun g => H.comp g) ?_
+  refine congr_arg₂ ContinuousMap.prodMk ?_ ?_
+  · have hL : ((X.toSSetObjEquiv (op (SimplexCategory.mk n)) σ).comp
+        (prismAlpha i.castSucc)).comp (faceMap i.castSucc.succ)
+        = X.toSSetObjEquiv (op (SimplexCategory.mk n)) σ := by
+      rw [ContinuousMap.comp_assoc]
+      exact (congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk n))) σ).comp ·)
+        (prismAlpha_comp_faceMap_succ i.castSucc)).trans (ContinuousMap.comp_id _)
+    have hR : ((X.toSSetObjEquiv (op (SimplexCategory.mk n)) σ).comp
+        (prismAlpha i.succ)).comp (faceMap i.succ.castSucc)
+        = X.toSSetObjEquiv (op (SimplexCategory.mk n)) σ := by
+      rw [ContinuousMap.comp_assoc]
+      exact (congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk n))) σ).comp ·)
+        (prismAlpha_comp_faceMap_castSucc i.succ)).trans (ContinuousMap.comp_id _)
+    exact hL.trans hR.symm
+  · ext t
+    show (prismBeta i.castSucc (faceMap i.castSucc.succ t) : ℝ)
+      = (prismBeta i.succ (faceMap i.succ.castSucc t) : ℝ)
+    rw [prismBeta_faceMap_succ_eq, prismBeta_faceMap_castSucc_eq]
+    refine Finset.sum_congr (Finset.filter_congr (fun l _ => ?_)) (fun _ _ => rfl)
+    simp only [Fin.lt_def, Fin.le_def, Fin.val_castSucc, Fin.val_succ]
+    omega
+
 end SKEFTHawking.SingularPrism
