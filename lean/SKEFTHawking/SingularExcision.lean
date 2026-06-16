@@ -514,4 +514,22 @@ theorem iterHomotopy_mem_subspaceChains {X : TopCat} {A : Set X} {n : ℕ}
   exact Submodule.sum_mem _
     (fun i _ => singularSd_iterate_mem_subspaceChains (singularD_mem_subspaceChains hc) i)
 
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **The relative small-chains homotopy** (surjective half): a *relative* cycle `c` of `(X, A)`
+(`∂c ∈ C(A)`) is relatively homologous to its subdivision `Sdᵐc`. (Apply `RelativeChain.mk` to the
+absolute homotopy `∂Dₘc + Dₘ∂c = c + Sdᵐc`: `∂Dₘc` is a relative boundary, and `Dₘ∂c ∈ C(A)` vanishes in
+`C(X)/C(A)` since `Dₘ` preserves `C(A)`.) So every relative homology class has a small representative. -/
+theorem relative_add_singularSd_iterate_mem_relBoundaries {X : TopCat} {A : Set X} {n : ℕ}
+    {c : SingularChain X (n + 1)} (hc : chainBoundary X n c ∈ subspaceChains A n) (m : ℕ) :
+    RelativeChain.mk A (n + 1) c + RelativeChain.mk A (n + 1) ((⇑(singularSd X (n + 1)))^[m] c)
+      ∈ relBoundaries A (n + 1) := by
+  refine ⟨RelativeChain.mk A (n + 2) (iterHomotopy X (n + 1) m c), ?_⟩
+  rw [relBoundary_mk]
+  have hadd : ∀ x y : SingularChain X (n + 1),
+      RelativeChain.mk A (n + 1) x + RelativeChain.mk A (n + 1) y = RelativeChain.mk A (n + 1) (x + y) :=
+    fun _ _ => rfl
+  have hzero : RelativeChain.mk A (n + 1) (iterHomotopy X n m (chainBoundary X n c)) = 0 :=
+    (Submodule.Quotient.mk_eq_zero _).2 (iterHomotopy_mem_subspaceChains hc m)
+  rw [hadd, ← iterHomotopy_chainHomotopy X m n c, ← hadd, hzero, add_zero]
+
 end SKEFTHawking.SingularExcision
