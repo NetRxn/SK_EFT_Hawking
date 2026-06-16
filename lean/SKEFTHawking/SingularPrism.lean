@@ -613,6 +613,33 @@ theorem prism_chainHomotopy {X Y : TopCat} (H : C(↑X × unitInterval, ↑Y)) {
       simp only [map_smul, ← smul_add]
       exact congrArg (a • ·) (prism_chainHomotopy_single H σ)
 
+/-- **The degree-0 chain-homotopy identity** `∂(P z) = g_#(z) + f_#(z)` on `single σ 1` (there is no
+`P∂` term in degree `0`). The prism `1`-simplex of a `0`-simplex has exactly two faces — its
+endpoints `g_#` and `f_#`. -/
+theorem prism_chainHomotopy_zero_single {X Y : TopCat} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk 0))) :
+    chainBoundary Y 0 (prismOp H 0 (Finsupp.single σ 1))
+      = Finsupp.single (endSimplex H 1 σ) 1 + Finsupp.single (endSimplex H 0 σ) 1 := by
+  rw [prismOp_single, one_smul, prismBasis, Fin.sum_univ_one, chainBoundary_single, boundaryBasis,
+    Fin.sum_univ_two, face_zero_prismSimplex_zero,
+    show face (1 : Fin 2) (prismSimplex H σ (0 : Fin 1)) = endSimplex H 0 σ from
+      face_last_prismSimplex_last H σ]
+
+/-- **The degree-0 chain homotopy** `∂ ∘ P = g_# + f_#` on all of `C₀` (no `P∂` term). -/
+theorem prism_chainHomotopy_zero {X Y : TopCat} (H : C(↑X × unitInterval, ↑Y))
+    (c : SingularChain X 0) :
+    chainBoundary Y 0 (prismOp H 0 c) = endMap H 1 0 c + endMap H 0 0 c := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp
+  | add c₁ c₂ h₁ h₂ =>
+      simp only [map_add]
+      rw [add_add_add_comm (endMap H 1 0 c₁), h₁, h₂]
+  | single σ a =>
+      rw [show Finsupp.single σ a = a • Finsupp.single σ (1 : ZMod 2) by
+        rw [Finsupp.smul_single, smul_eq_mul, mul_one]]
+      simp only [map_smul, endMap_single, ← smul_add]
+      exact congrArg (a • ·) (prism_chainHomotopy_zero_single H σ)
+
 /-! ## §12. The endpoint maps are chain maps -/
 
 /-- **`endSimplex` face-naturality**: `face i (endSimplex H r σ) = endSimplex H r (face i σ)` — the
