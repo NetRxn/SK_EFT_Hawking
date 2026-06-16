@@ -223,6 +223,17 @@ theorem augH_ker_iso_zmod2 {X : TopCat} {U : Set ↑X} (hU : IsClopen U)
   exact ⟨(Module.finBasisOfFinrankEq (ZMod 2) _ hker).equivFun.trans
     (LinearEquiv.funUnique (Fin 1) (ZMod 2) (ZMod 2))⟩
 
+/-- **Reduced-acyclic-with-nonzero-`H₀` (`ε̄` bijective) transports across a homeomorphism.** -/
+theorem augH_bijective_of_homeo {X Y : TopCat} (f : C(↑X, ↑Y)) (g : C(↑Y, ↑X))
+    (hgf : g.comp f = ContinuousMap.id ↑X) (hfg : f.comp g = ContinuousMap.id ↑Y)
+    (hY : Function.Bijective (augH Y)) : Function.Bijective (augH X) := by
+  have hf : Function.Bijective (Homology.map f 0) :=
+    Homology.map_bijective_of_comp_id_all f g hgf hfg 0
+  refine ⟨augH_injective_of_map f hf.injective hY.injective, fun t => ?_⟩
+  obtain ⟨y, hy⟩ := hY.surjective t
+  obtain ⟨x, hx⟩ := hf.surjective y
+  exact ⟨x, by rw [← augH_naturality f, hx, hy]⟩
+
 /-- **A nonempty convex subset of a normed space is reduced-acyclic with nonzero `H₀`**: `ε̄` is
 bijective. Injective via the straight-line contraction `(x, t) ↦ (1-t)•x + t•p` to a basepoint `p`
 (stays in `C` by convexity); surjective since `C` is nonempty. The reduced-acyclic input the two
