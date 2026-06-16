@@ -203,4 +203,20 @@ theorem exists_iterate_smallChains {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
   exact Submodule.smul_mem _ _
     (singularSd_iterate_mem_smallChains (mem_smallChains_of_support (hM τ)) _)
 
+/-- The iterated-subdivision homotopy kills the zero chain. -/
+theorem iterHomotopy_zero (X : TopCat) (n m : ℕ) : iterHomotopy X n m 0 = 0 := by
+  rw [iterHomotopy, map_zero]
+  exact Finset.sum_eq_zero (fun i _ => by rw [← Module.End.coe_pow, map_zero])
+
+/-- **A cycle is homologous to its subdivision**: if `∂c = 0`, then `c + Sdᵐ c = ∂(Dₘ c)` — so `c` and
+`Sdᵐ c` represent the same homology class. With `exists_iterate_smallChains` (`Sdᵐ c` small for large
+`m`) this is the heart of the small-chains theorem: every homology class has a small representative. -/
+theorem add_singularSd_iterate_eq_boundary {X : TopCat} {n : ℕ} {c : SingularChain X (n + 1)}
+    (hc : chainBoundary X n c = 0) (m : ℕ) :
+    c + (⇑(singularSd X (n + 1)))^[m] c
+      = chainBoundary X (n + 1) (iterHomotopy X (n + 1) m c) := by
+  have h := iterHomotopy_chainHomotopy X m n c
+  rw [hc, iterHomotopy_zero, add_zero] at h
+  exact h.symm
+
 end SKEFTHawking.SingularExcision
