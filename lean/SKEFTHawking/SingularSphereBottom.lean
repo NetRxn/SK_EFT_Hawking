@@ -86,4 +86,19 @@ noncomputable def bottomSuspEquiv :
   (LinearEquiv.ofInjective (bottomSuspMap n v) bottomSuspMap_injective).trans
     (LinearEquiv.ofEq _ _ bottomSuspMap_range)
 
+/-! ## §2. The sphere-homology induction `Hₙ(Sⁿ) ≅ H₁(S¹)` -/
+
+/-- A canonical base point of `Sⁿ ⊂ ℝⁿ⁺¹` (the first standard basis vector). -/
+noncomputable def basePoint (m : ℕ) : Metric.sphere (0 : EuclideanSpace ℝ (Fin (m + 1))) 1 :=
+  ⟨EuclideanSpace.single 0 1, by
+    rw [mem_sphere_zero_iff_norm, EuclideanSpace.norm_single]; norm_num⟩
+
+/-- **`Hₘ₊₁(Sᵐ⁺¹) ≅ H₁(S¹)`** by iterating the dimension-reduction isomorphism
+`Hₖ₊₂(Sⁿ) ≅ Hₖ₊₁(Sⁿ⁻¹)` down to the circle. This reduces the top homology of every sphere to the
+single base case `H₁(S¹)`. -/
+noncomputable def topSphereReduce : (m : ℕ) →
+    Homology (Sph (m + 1)) (m + 1) ≃ₗ[ZMod 2] Homology (Sph 1) 1
+  | 0 => LinearEquiv.refl _ _
+  | (m + 1) => (dimReductionEquiv (basePoint (m + 2)) m).trans (topSphereReduce m)
+
 end SKEFTHawking.SingularSphereBottom
