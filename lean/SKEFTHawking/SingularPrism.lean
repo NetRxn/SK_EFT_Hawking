@@ -331,6 +331,34 @@ theorem prismAlpha_comp_faceMap_eq_w {n : ℕ} {i₀ : Fin (n + 2)} {j₀ : Fin 
   exact (congrArg stdSimplex.vertex (predAbove_succAbove_of_gt H m)).trans
     (stdSimplex.map_vertex _ _).symm
 
+/-- **The `v`-side prism-face β-preservation**: `prismBeta (j₀.succ) ∘ δ_{i₀.castSucc} = prismBeta
+j₀` (for `i₀ ≤ j₀.castSucc`) — the time coordinate is unchanged by the side coface. -/
+theorem prismBeta_comp_faceMap_eq_v {n : ℕ} {i₀ : Fin (n + 2)} {j₀ : Fin (n + 1)}
+    (H : i₀ ≤ j₀.castSucc) :
+    (prismBeta j₀.succ).comp (faceMap i₀.castSucc) = prismBeta j₀ := by
+  have hH : (i₀ : ℕ) ≤ (j₀ : ℕ) := by simpa [Fin.le_def, Fin.val_castSucc] using H
+  ext t
+  show (prismBeta j₀.succ (faceMap i₀.castSucc t) : ℝ)
+    = ∑ l ∈ Finset.univ.filter (fun l => j₀.castSucc < l), (t : Fin (n + 2) → ℝ) l
+  rw [prismBeta_faceMap_coe]
+  refine Finset.sum_congr (Finset.filter_congr (fun l _ => ?_)) (fun _ _ => rfl)
+  unfold Fin.succAbove
+  split_ifs with hc <;> simp only [Fin.lt_def, Fin.val_castSucc, Fin.val_succ] at hc ⊢ <;> omega
+
+/-- **The `w`-side prism-face β-preservation**: `prismBeta (j₀.castSucc) ∘ δ_{i₀.succ} = prismBeta
+j₀` (for `j₀.castSucc < i₀`). -/
+theorem prismBeta_comp_faceMap_eq_w {n : ℕ} {i₀ : Fin (n + 2)} {j₀ : Fin (n + 1)}
+    (H : j₀.castSucc < i₀) :
+    (prismBeta j₀.castSucc).comp (faceMap i₀.succ) = prismBeta j₀ := by
+  have hH : (j₀ : ℕ) < (i₀ : ℕ) := by simpa [Fin.lt_def, Fin.val_castSucc] using H
+  ext t
+  show (prismBeta j₀.castSucc (faceMap i₀.succ t) : ℝ)
+    = ∑ l ∈ Finset.univ.filter (fun l => j₀.castSucc < l), (t : Fin (n + 2) → ℝ) l
+  rw [prismBeta_faceMap_coe]
+  refine Finset.sum_congr (Finset.filter_congr (fun l _ => ?_)) (fun _ _ => rfl)
+  unfold Fin.succAbove
+  split_ifs with hc <;> simp only [Fin.lt_def, Fin.val_castSucc, Fin.val_succ] at hc ⊢ <;> omega
+
 /-! ## §9. Internal cancellation of the diagonal faces -/
 
 /-- **Internal cancellation**: the shared face `(i.castSucc).succ = (i.succ).castSucc` is the
