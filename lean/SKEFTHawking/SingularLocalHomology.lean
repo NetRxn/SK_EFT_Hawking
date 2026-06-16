@@ -62,6 +62,22 @@ theorem connecting_bijective_of_acyclic {X : TopCat} (S : Set ↑X) (n : ℕ)
   · rw [← LinearMap.range_eq_top, ← (exact_connecting_homIncl S n).linearMap_ker_eq, hincl0,
       LinearMap.ker_zero]
 
+/-- **The projection `j_* : Hₙ₊₁(X) → Hₙ₊₁(X, S)` is an isomorphism when the subspace is acyclic**:
+if `Hₙ₊₁(S) = 0` and `Hₙ(S) = 0`, the LES forces `j_*` to be bijective. (Companion of
+`connecting_bijective_of_acyclic`; the case `Hₖ(Sⁿ, A) ≅ Hₖ(Sⁿ)` for `A` a contractible hemisphere.) -/
+theorem homProj_bijective_of_acyclic {X : TopCat} (S : Set ↑X) (n : ℕ)
+    (hS1 : ∀ x : Homology (sub S) (n + 1), x = 0) (hS0 : ∀ x : Homology (sub S) n, x = 0) :
+    Function.Bijective (homProj S (n + 1)) := by
+  have hincl0 : homIncl S (n + 1) = 0 := by
+    ext y; rw [LinearMap.zero_apply, hS1 y, map_zero]
+  have hconn0 : connecting S n = 0 := by
+    ext y; rw [LinearMap.zero_apply]; exact hS0 _
+  refine ⟨?_, ?_⟩
+  · rw [← LinearMap.ker_eq_bot, (exact_homIncl_homProj S (n + 1)).linearMap_ker_eq, hincl0,
+      LinearMap.range_zero]
+  · rw [← LinearMap.range_eq_top, ← (exact_homProj_connecting S n).linearMap_ker_eq, hconn0,
+      LinearMap.ker_zero]
+
 /-- **The local-homology connecting isomorphism `Hⱼ₊₂(ℝⁿ, ℝⁿ∖0) ≅ Hⱼ₊₁(ℝⁿ∖0)`** (for `n ≥ 1`): from
 `ℝⁿ` acyclic, the LES connecting map is bijective. Composed with the deformation retract
 `ℝⁿ∖0 ≃ Sⁿ⁻¹` (`homology_map_normalize_bijective`) this gives `Hⱼ₊₂(ℝⁿ, ℝⁿ∖0) ≅ Hⱼ₊₁(Sⁿ⁻¹)` — the
