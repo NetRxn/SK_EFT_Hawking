@@ -291,7 +291,25 @@ theorem prismBeta_faceMap_castSucc_eq {n : ℕ} (i : Fin (n + 1)) (t : stdSimple
   split_ifs with hc <;>
     simp only [Fin.lt_def, Fin.le_def, Fin.val_castSucc, Fin.val_succ] at hc ⊢ <;> omega
 
-/-! ## §8. Internal cancellation of the diagonal faces -/
+/-! ## §8. The mixed simplicial identity (extracted from `SimplexCategory`) -/
+
+/-- The mixed simplicial identity `σ_j δ_i = δ_i σ_{j}` (for `i ≤ j.castSucc`), extracted at the Fin
+level from `SimplexCategory.δ_comp_σ_of_le`. The categorical equation's underlying-function
+component IS this identity definitionally, so `congrArg … |> exact` closes it with no coercion
+lemmas. This is the α-input for the `v`-side prism faces. -/
+theorem predAbove_succAbove_of_le {n : ℕ} {i : Fin (n + 2)} {j : Fin (n + 1)}
+    (H : i ≤ j.castSucc) (m : Fin (n + 2)) :
+    Fin.predAbove j.succ (Fin.succAbove i.castSucc m) = Fin.succAbove i (Fin.predAbove j m) :=
+  congrArg (fun f => (ConcreteCategory.hom f) m) (SimplexCategory.δ_comp_σ_of_le H)
+
+/-- The mixed simplicial identity `σ_j δ_i = δ_i σ_j` (for `j.castSucc < i`), extracted from
+`SimplexCategory.δ_comp_σ_of_gt`. The α-input for the `w`-side prism faces. -/
+theorem predAbove_succAbove_of_gt {n : ℕ} {i : Fin (n + 2)} {j : Fin (n + 1)}
+    (H : j.castSucc < i) (m : Fin (n + 2)) :
+    Fin.predAbove j.castSucc (Fin.succAbove i.succ m) = Fin.succAbove i (Fin.predAbove j m) :=
+  congrArg (fun f => (ConcreteCategory.hom f) m) (SimplexCategory.δ_comp_σ_of_gt H)
+
+/-! ## §9. Internal cancellation of the diagonal faces -/
 
 /-- **Internal cancellation**: the shared face `(i.castSucc).succ = (i.succ).castSucc` is the
 `w`-diagonal of prism `i.castSucc` AND the `v`-diagonal of prism `i.succ`; both have α-component the
