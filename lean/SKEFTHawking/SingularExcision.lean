@@ -432,4 +432,44 @@ theorem singularSd_mem_subspaceChains {X : TopCat} {A : Set X} {n : ℕ}
   obtain ⟨d, rfl⟩ := hc
   exact ⟨singularSd (sub A) n d, (singularSd_chainIncl A n d).symm⟩
 
+/-! ## Mayer–Vietoris ingredient: `C(A) ⊓ C(B) = C(A∩B)` -/
+
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- Every support simplex of a subspace chain `c ∈ C(S)` has image inside `S`. -/
+theorem range_of_mem_subspaceChains {X : TopCat} {S : Set X} {n : ℕ} {c : SingularChain X n}
+    (hc : c ∈ subspaceChains S n) {τ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))}
+    (hτ : τ ∈ c.support) :
+    Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk n)) τ) ⊆ S := by
+  classical
+  obtain ⟨d, rfl⟩ := hc
+  rw [chainIncl, Finsupp.lmapDomain_apply] at hτ
+  obtain ⟨τ', _, rfl⟩ := Finset.mem_image.1 (Finsupp.mapDomain_support hτ)
+  exact range_simplexIncl_subset S τ'
+
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- A chain whose support simplices all have image inside `S` is a subspace chain `∈ C(S)`. -/
+theorem mem_subspaceChains_of_support {X : TopCat} {S : Set X} {n : ℕ} {c : SingularChain X n}
+    (h : ∀ τ ∈ c.support, Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk n)) τ) ⊆ S) :
+    c ∈ subspaceChains S n := by
+  classical
+  rw [← Finsupp.sum_single c, Finsupp.sum]
+  refine Submodule.sum_mem _ (fun τ hτ => ?_)
+  rw [show Finsupp.single τ (c τ) = (c τ) • Finsupp.single τ (1 : ZMod 2) by
+    rw [Finsupp.smul_single, smul_eq_mul, mul_one]]
+  exact Submodule.smul_mem _ _ (single_mem_subspaceChains_of_subordinate (h τ hτ))
+
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **The Mayer–Vietoris intersection identity** `C(A) ⊓ C(B) = C(A∩B)` — a chain lying in both
+subspace complexes has all its simplices' images in `A ∩ B`. The kernel of the MV difference map. -/
+theorem subspaceChains_inf {X : TopCat} (A B : Set X) (n : ℕ) :
+    subspaceChains A n ⊓ subspaceChains B n = subspaceChains (A ∩ B) n := by
+  refine le_antisymm (fun c hc => ?_) (le_inf ?_ ?_)
+  · refine mem_subspaceChains_of_support (fun τ hτ => Set.subset_inter ?_ ?_)
+    · exact range_of_mem_subspaceChains hc.1 hτ
+    · exact range_of_mem_subspaceChains hc.2 hτ
+  · exact fun c hc => mem_subspaceChains_of_support
+      (fun τ hτ => (range_of_mem_subspaceChains hc hτ).trans Set.inter_subset_left)
+  · exact fun c hc => mem_subspaceChains_of_support
+      (fun τ hτ => (range_of_mem_subspaceChains hc hτ).trans Set.inter_subset_right)
+
 end SKEFTHawking.SingularExcision
