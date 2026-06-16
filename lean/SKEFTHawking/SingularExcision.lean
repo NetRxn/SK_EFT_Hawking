@@ -106,4 +106,60 @@ theorem exists_iterate_subordinate {X : TopCat} {n : ℕ}
     (range_pushSimplexM_subset σ hu (by linarith) (fun j => hm w hw 0 j) hUball).trans
       interior_subset⟩
 
+/-- A pushed-forward sub-simplex's image lies inside the original simplex's image: `range(σ_# w)~ ⊆
+range σ̃` (the affine piece maps `Δⁿ` into `Δᴺ`, then `σ̃` carries it inside `range σ̃`). The geometric
+core of "subdivision preserves smallness". -/
+theorem range_pushSimplexM_subset_range {X : TopCat} {N n : ℕ}
+    (τ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    {w : Fin (n + 1) → (Fin (N + 1) → ℝ)} (hw : ∀ j, w j ∈ stdSimplex ℝ (Fin (N + 1))) :
+    Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk n)) (pushSimplexM τ w))
+      ⊆ Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk N)) τ) := by
+  rw [pushSimplexM_realize τ hw]
+  rintro _ ⟨t, rfl⟩
+  exact ⟨affineSimplexStd (fun j => ⟨w j, hw j⟩) t, rfl⟩
+
+/-- A singular `n`-simplex is **subordinate** to a family `𝒰` when its image lies in some member of `𝒰`. -/
+def IsSubordinate {X : TopCat} {n : ℕ} (𝒰 : Set (Set X))
+    (τ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) : Prop :=
+  ∃ U ∈ 𝒰, Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk n)) τ) ⊆ U
+
+/-- The subcomplex of `𝒰`-**small** singular `n`-chains: the `ℤ/2`-span of the subordinate simplices. -/
+noncomputable def smallChains {X : TopCat} (𝒰 : Set (Set X)) (n : ℕ) :
+    Submodule (ZMod 2) (SingularChain X n) :=
+  Submodule.span (ZMod 2) {c | ∃ τ, IsSubordinate 𝒰 τ ∧ c = Finsupp.single τ 1}
+
+theorem single_mem_smallChains {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
+    {τ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))} (hτ : IsSubordinate 𝒰 τ) :
+    Finsupp.single τ 1 ∈ smallChains 𝒰 n :=
+  Submodule.subset_span ⟨τ, hτ, rfl⟩
+
+/-- Pushing an in-simplex affine chain along a **subordinate** simplex `τ` lands in the small chains:
+every piece's image is inside `τ`'s image, hence inside the same cover member. -/
+theorem pushChainM_mem_smallChains {X : TopCat} {N n : ℕ} {𝒰 : Set (Set X)}
+    {τ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N))} (hτ : IsSubordinate 𝒰 τ)
+    {c : LinChain (Fin (N + 1) → ℝ) n} (hc : c ∈ chainsIn (stdSimplex ℝ (Fin (N + 1))) n) :
+    pushChainM τ c ∈ smallChains 𝒰 n := by
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ hc
+  · rintro _ ⟨w, hw, rfl⟩
+    rw [pushChainM_single]
+    obtain ⟨U, hU𝒰, hUrange⟩ := hτ
+    exact single_mem_smallChains ⟨U, hU𝒰, (range_pushSimplexM_subset_range τ hw).trans hUrange⟩
+  · rw [map_zero]; exact Submodule.zero_mem _
+  · intro a b _ _ ha hb; rw [map_add]; exact Submodule.add_mem _ ha hb
+  · intro r a _ ha; rw [map_smul]; exact Submodule.smul_mem _ r ha
+
+/-- **The singular subdivision preserves smallness**: `Sd` maps `𝒰`-small chains to `𝒰`-small chains
+(each sub-simplex of a subordinate simplex is subordinate to the same cover member). -/
+theorem singularSd_mem_smallChains {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
+    {c : SingularChain X n} (hc : c ∈ smallChains 𝒰 n) :
+    singularSd X n c ∈ smallChains 𝒰 n := by
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ hc
+  · rintro _ ⟨τ, hτ, rfl⟩
+    rw [singularSd_single]
+    exact pushChainM_mem_smallChains hτ
+      (linSubdiv_mem_chainsIn (convex_stdSimplex ℝ _) n (idChain_mem n))
+  · rw [map_zero]; exact Submodule.zero_mem _
+  · intro a b _ _ ha hb; rw [map_add]; exact Submodule.add_mem _ ha hb
+  · intro r a _ ha; rw [map_smul]; exact Submodule.smul_mem _ r ha
+
 end SKEFTHawking.SingularExcision
