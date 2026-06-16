@@ -1,0 +1,17 @@
+{
+  "name": "skeft-local",
+  "owner": {
+    "name": "SK_EFT_Hawking project"
+  },
+  "metadata": {
+    "description": "Local marketplace for SK_EFT_Hawking in-repo developer plugins (tracked in-repo; loaded via .claude/settings.json enabledPlugins).",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "skeft-qa",
+      "source": "./.claude/plugins/skeft-qa",
+      "description": "QA review agents for the SK_EFT_Hawking physics project (Stage 13): adversarial-reviewer, claims-reviewer, figure-reviewer."
+    }
+  ]
+}

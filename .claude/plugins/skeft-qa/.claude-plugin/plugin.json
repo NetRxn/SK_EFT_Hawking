@@ -1,0 +1,5 @@
+{
+  "name": "skeft-qa",
+  "description": "QA review agents for the SK_EFT_Hawking physics project (Stage 13). adversarial-reviewer: fresh-context paper audit against the readiness-gate taxonomy (citations, parameter provenance, placeholder theorems, cross-paper consistency, narrative overclaims). claims-reviewer: sentence-level prose audit with chain-of-backing + reconciliation across five finding classes. figure-reviewer: visual review of generated figures for rendering quality, physics accuracy, and style.",
+  "agents": "agents"
+}
