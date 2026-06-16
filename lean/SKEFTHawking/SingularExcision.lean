@@ -42,4 +42,36 @@ theorem exists_iterate_idChain_diamLe (n : ℕ) {ε : ℝ} (hε : 0 < ε) :
     ∃ m, diamLe ε ((⇑(linSubdiv n))^[m] (idChain n)) :=
   exists_iterate_diamLe (idChain_diamLe n) hε
 
+/-- The geometric realization of `pushSimplexM σ u` (for an in-simplex tuple `u`) is `σ̃` post-composed
+with the affine simplex on `u` — `(σ_# u)~ = σ̃ ∘ affineSimplexStd ũ`. -/
+theorem pushSimplexM_realize {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    {u : Fin (n + 1) → (Fin (N + 1) → ℝ)} (hu : ∀ j, u j ∈ stdSimplex ℝ (Fin (N + 1))) :
+    X.toSSetObjEquiv (op (SimplexCategory.mk n)) (pushSimplexM σ u)
+      = (X.toSSetObjEquiv (op (SimplexCategory.mk N)) σ).comp
+          (affineSimplexStd (fun j => ⟨u j, hu j⟩)) := by
+  rw [pushSimplexM_of_mem σ hu]
+  exact Equiv.apply_symm_apply _ _
+
+/-- **A small affine simplex pushes to a simplex with small image**: if every vertex of the in-simplex
+tuple `u` is within `ε` of `u 0` and `σ̃` carries the metric ball `B(ũ₀, δ)` (with `ε < δ`) into `U`, then
+the realization of `pushSimplexM σ u` has range in `U`. (Each affine-combination point `∑ tⱼ uⱼ` is within
+`ε` of `u 0` by `norm_sub_affineSimplex_le`, hence in the ball.) -/
+theorem range_pushSimplexM_subset {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    {u : Fin (n + 1) → (Fin (N + 1) → ℝ)} (hu : ∀ j, u j ∈ stdSimplex ℝ (Fin (N + 1)))
+    {ε δ : ℝ} (hεδ : ε < δ) (hball : ∀ j, ‖(u 0 : Fin (N + 1) → ℝ) - u j‖ ≤ ε) {U : Set X}
+    (hU : Metric.ball (⟨u 0, hu 0⟩ : stdSimplex ℝ (Fin (N + 1)))
+            δ ⊆ (X.toSSetObjEquiv (op (SimplexCategory.mk N)) σ) ⁻¹' U) :
+    Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk n)) (pushSimplexM σ u)) ⊆ U := by
+  rw [pushSimplexM_realize σ hu]
+  rintro _ ⟨t, rfl⟩
+  apply hU
+  rw [Metric.mem_ball]
+  calc dist (affineSimplexStd (fun j => ⟨u j, hu j⟩) t) (⟨u 0, hu 0⟩ : stdSimplex ℝ (Fin (N + 1)))
+      = ‖u 0 - (affineSimplexStd (fun j => ⟨u j, hu j⟩) t).val‖ := by
+        rw [Subtype.dist_eq, dist_eq_norm, norm_sub_rev]
+    _ ≤ ε := norm_sub_affineSimplex_le (u 0) u t hball
+    _ < δ := hεδ
+
 end SKEFTHawking.SingularExcision
