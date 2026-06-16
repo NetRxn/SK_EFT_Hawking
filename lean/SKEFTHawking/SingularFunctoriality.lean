@@ -147,4 +147,21 @@ theorem Homology.map_comp {X Y Z : TopCat} (ψ : C(↑Y, ↑Z)) (φ : C(↑X, �
   simp only [Homology.map_mk]
   exact congrArg (Homology.mk Z n) (Subtype.ext (mapChain_comp ψ φ n z))
 
+/-- The induced map on cycles of the identity is the identity (cycle level). -/
+theorem cyclesMap_id {X : TopCat} (n : ℕ) :
+    cyclesMap (ContinuousMap.id ↑X) n = LinearMap.id := by
+  refine LinearMap.ext fun z => Subtype.ext ?_
+  rw [cyclesMap_coe, mapChain_id, LinearMap.id_apply]
+
+/-- **Homology functoriality**: `Hₙ(id) = id`. Proved propositionally (cycle-level identity +
+`Submodule.mapQ_apply`) to avoid the homology-quotient `whnf` blow-up. -/
+theorem Homology.map_id {X : TopCat} (n : ℕ) :
+    Homology.map (ContinuousMap.id ↑X) n = LinearMap.id := by
+  refine LinearMap.ext fun x => ?_
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  rw [LinearMap.id_apply, Homology.map]
+  exact (Submodule.mapQ_apply _ _ _ _).trans
+    (congrArg Submodule.Quotient.mk ((LinearMap.congr_fun (cyclesMap_id n) z).trans
+      (LinearMap.id_apply z)))
+
 end SKEFTHawking.SingularFunctoriality
