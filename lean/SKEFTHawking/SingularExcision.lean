@@ -406,4 +406,30 @@ theorem pushChainM_simplexIncl {X : TopCat} (A : Set X) {n k : ℕ}
   · intro a b _ _ ha hb; rw [map_add, map_add, map_add, ha, hb]
   · intro r a _ ha; rw [map_smul, map_smul, map_smul, ha]
 
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **`Sd` commutes with the subspace inclusion**: `Sd ∘ chainIncl A = chainIncl A ∘ Sd`. -/
+theorem singularSd_chainIncl {X : TopCat} (A : Set X) (n : ℕ) (d : SingularChain (sub A) n) :
+    singularSd X n (chainIncl A n d) = chainIncl A n (singularSd (sub A) n d) := by
+  induction d using Finsupp.induction_linear with
+  | zero => simp only [map_zero]
+  | add c d hc hd => simp only [map_add, hc, hd]
+  | single τ' a =>
+    rw [chainIncl_single,
+      show (Finsupp.single (simplexIncl A n τ') a) = a • Finsupp.single (simplexIncl A n τ') (1 : ZMod 2)
+        by rw [Finsupp.smul_single, smul_eq_mul, mul_one],
+      show (Finsupp.single τ' a) = a • Finsupp.single τ' (1 : ZMod 2)
+        by rw [Finsupp.smul_single, smul_eq_mul, mul_one],
+      map_smul, map_smul, map_smul, singularSd_single, singularSd_single,
+      pushChainM_simplexIncl A τ'
+        (linSubdiv_mem_chainsIn (convex_stdSimplex ℝ _) n (idChain_mem n))]
+
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **`Sd` preserves the subspace chains** `C(A)` — so it descends to the relative chains `C(X)/C(A)`,
+giving the relative small-chains homotopy that the excision iso `Hₙ(X∖Z,A∖Z)≅Hₙ(X,A)` consumes. -/
+theorem singularSd_mem_subspaceChains {X : TopCat} {A : Set X} {n : ℕ}
+    {c : SingularChain X n} (hc : c ∈ subspaceChains A n) :
+    singularSd X n c ∈ subspaceChains A n := by
+  obtain ⟨d, rfl⟩ := hc
+  exact ⟨singularSd (sub A) n d, (singularSd_chainIncl A n d).symm⟩
+
 end SKEFTHawking.SingularExcision
