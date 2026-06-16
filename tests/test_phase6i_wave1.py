@@ -27,6 +27,7 @@ from src.core.citations import (
     bibkey_phase,
     paper_phase,
 )
+from src.core.workspace import find_workspace
 
 
 # ────────────────────────────────────────────────────────────────────────
@@ -56,7 +57,7 @@ def test_paper_to_phase_keys_exist_on_disk():
 
 def test_paper_to_phase_values_exist_on_disk():
     """Every PAPER_TO_PHASE value matches a real Lit-Search/Phase-X/ dir."""
-    lit = PROJECT_ROOT / "Lit-Search"
+    lit = find_workspace() / "Lit-Search"
     missing = sorted({v for v in PAPER_TO_PHASE.values() if not (lit / v).is_dir()})
     assert not missing, f"PAPER_TO_PHASE values without Lit-Search dirs: {missing}"
 

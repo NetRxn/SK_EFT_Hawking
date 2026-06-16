@@ -86,10 +86,11 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+from src.core.workspace import find_workspace  # noqa: E402
 
 CITATIONS_PATH = PROJECT_ROOT / "src" / "core" / "citations.py"
 PAPERS_DIR = PROJECT_ROOT / "papers"
-LIT_SEARCH = PROJECT_ROOT.parent / "Lit-Search"
+LIT_SEARCH = find_workspace() / "Lit-Search"
 PHASE_FALLBACK = "Phase-1-and-Background"   # mirrors validate.py CHECK
 NOTES_INDENT = " " * 17                      # aligns under `'notes': '`
 

@@ -38,13 +38,15 @@ from typing import Iterable, Optional
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 SK_ROOT = Path(__file__).resolve().parent.parent
-LIT_SEARCH = PROJECT_ROOT / "Lit-Search"
 STUBS_PATH = SK_ROOT / "docs" / "missing_bibkey_stubs.json"
 SIDECAR_PATH = SK_ROOT / "docs" / "primary_sources_state.json"
 FALLBACK_PHASE = "Phase-1-and-Background"
 
 sys.path.insert(0, str(SK_ROOT))
 from src.core.citations import CITATION_REGISTRY, paper_phase, bibkey_phase  # noqa: E402
+from src.core.workspace import find_workspace  # noqa: E402
+
+LIT_SEARCH = find_workspace() / "Lit-Search"
 
 
 # ────────────────────────────────────────────────────────────────────────

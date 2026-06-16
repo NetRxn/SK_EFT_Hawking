@@ -3118,9 +3118,9 @@ def check_citation_primary_sources_present() -> CheckResult:
     """
     import re
     from src.core.citations import CITATION_REGISTRY, bibkey_phase
+    from src.core.workspace import find_workspace
 
-    PROJECT_ROOT_LOCAL = Path(__file__).resolve().parent.parent.parent
-    LIT_SEARCH = PROJECT_ROOT_LOCAL / "Lit-Search"
+    LIT_SEARCH = find_workspace() / "Lit-Search"
     FALLBACK = "Phase-1-and-Background"
     EXTENSIONS = ["pdf", "tex", "abstract.txt", "json"]
 
