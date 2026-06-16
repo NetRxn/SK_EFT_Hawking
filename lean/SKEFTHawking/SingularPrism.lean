@@ -143,4 +143,26 @@ theorem prismSimplex_face {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, 
   rw [prismSimplex, toSSetObjEquiv_symm_face]
   rfl
 
+/-! ## §4. The homotopy endpoints `f_#` and `g_#` -/
+
+/-- The simplex `σ` evaluated at homotopy-time `r`: realization `x ↦ H(σ(x), r)`. The boundary
+identity expresses `∂P + P∂` in terms of the two endpoints `endSimplex H 0` (`f_#`) and
+`endSimplex H 1` (`g_#`). -/
+noncomputable def endSimplex {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (r : unitInterval) (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) :
+    (TopCat.toSSet.obj Y).obj (op (SimplexCategory.mk n)) :=
+  (Y.toSSetObjEquiv (op (SimplexCategory.mk n))).symm
+    (H.comp ((X.toSSetObjEquiv (op (SimplexCategory.mk n)) σ).prodMk (ContinuousMap.const _ r)))
+
+/-- The chain map `Cₙ(X) → Cₙ(Y)` of the homotopy's time-`r` slice (`f_#` at `r = 0`, `g_#` at
+`r = 1`), the linear extension of `endSimplex`. -/
+noncomputable def endMap {X Y : TopCat} (H : C(↑X × unitInterval, ↑Y)) (r : unitInterval) (n : ℕ) :
+    SingularChain X n →ₗ[ZMod 2] SingularChain Y n :=
+  Finsupp.linearCombination (ZMod 2) (fun σ => Finsupp.single (endSimplex H r σ) 1)
+
+@[simp] theorem endMap_single {X Y : TopCat} (H : C(↑X × unitInterval, ↑Y)) (r : unitInterval)
+    (n : ℕ) (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) (a : ZMod 2) :
+    endMap H r n (Finsupp.single σ a) = Finsupp.single (endSimplex H r σ) a := by
+  rw [endMap, Finsupp.linearCombination_single, Finsupp.smul_single, smul_eq_mul, mul_one]
+
 end SKEFTHawking.SingularPrism
