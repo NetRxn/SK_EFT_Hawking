@@ -255,4 +255,20 @@ theorem prismAlpha_comp_faceMap_castSucc {n : ℕ} (i : Fin (n + 1)) :
   simp only [Fin.predAbove_succAbove]
   exact affineSimplexStd_vertex_id
 
+/-- The `α`-component of the `i`-th prism map restricted along the `i.succ` coface is the identity
+(the other adjacent codegeneracy ∘ coface law `σ_i δ_{i+1} = id`). -/
+theorem prismAlpha_comp_faceMap_succ {n : ℕ} (i : Fin (n + 1)) :
+    (prismAlpha i).comp (faceMap i.succ) = ContinuousMap.id _ := by
+  rw [prismAlpha_comp_face]
+  have h : ∀ k : Fin (n + 1), Fin.predAbove i (Fin.succAbove i.succ k) = k := by
+    intro k
+    unfold Fin.predAbove Fin.succAbove
+    split_ifs with h1 h2 h2
+    · exfalso; simp only [Fin.lt_def, Fin.val_castSucc, Fin.val_succ] at h1 h2; omega
+    · exact Fin.castPred_castSucc _
+    · exact Fin.pred_succ _
+    · exfalso; simp only [Fin.lt_def, Fin.val_castSucc, Fin.val_succ] at h1 h2; omega
+  simp only [h]
+  exact affineSimplexStd_vertex_id
+
 end SKEFTHawking.SingularPrism
