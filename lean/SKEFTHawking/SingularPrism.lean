@@ -448,4 +448,27 @@ theorem prismOp_chainBoundary {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterv
   refine Finset.sum_congr rfl (fun k _ => ?_)
   rw [prismOp_single, one_smul, prismBasis]
 
-end SKEFTHawking.SingularPrism
+/-- **The diagonal faces telescope to the endpoints**: `∑_p (face_{p.castSucc}(prism σ p) +
+face_{p.succ}(prism σ p)) = g_# + f_#`. The w-diagonal of prism `p` equals the v-diagonal of prism
+`p+1` (`prism_internal_cancel`), so the interior cancels mod 2, leaving the two endpoints. -/
+theorem prism_diagonal_telescope {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) :
+    ∑ p : Fin (n + 2), (Finsupp.single (face p.castSucc (prismSimplex H σ p)) (1 : ZMod 2)
+      + Finsupp.single (face p.succ (prismSimplex H σ p)) 1)
+    = Finsupp.single (endSimplex H 1 σ) 1 + Finsupp.single (endSimplex H 0 σ) 1 := by
+  rw [Finset.sum_add_distrib,
+    Fin.sum_univ_succ
+      (fun p : Fin (n + 2) => Finsupp.single (face p.castSucc (prismSimplex H σ p)) (1 : ZMod 2)),
+    Fin.sum_univ_castSucc
+      (fun p : Fin (n + 2) => Finsupp.single (face p.succ (prismSimplex H σ p)) (1 : ZMod 2))]
+  have hcancel : (∑ p : Fin (n + 1),
+        Finsupp.single (face p.castSucc.succ (prismSimplex H σ p.castSucc)) (1 : ZMod 2))
+      = ∑ p : Fin (n + 1),
+        Finsupp.single (face p.succ.castSucc (prismSimplex H σ p.succ)) (1 : ZMod 2) :=
+    Finset.sum_congr rfl
+      (fun p _ => congrArg (Finsupp.single · (1 : ZMod 2)) (prism_internal_cancel H σ p))
+  rw [hcancel, Fin.castSucc_zero, face_zero_prismSimplex_zero]
+  rw [show (Fin.last (n + 1)).succ = (Fin.last (n + 2) : Fin (n + 3)) from rfl]
+  rw [show (Fin.last (n + 1) : Fin (n + 2)) = Fin.last (n + 1) from rfl, face_last_prismSimplex_last]
+  rw [add_assoc, ← add_assoc _ _ (Finsupp.single (endSimplex H 0 σ) (1 : ZMod 2)),
+    ZModModule.add_self, zero_add]
