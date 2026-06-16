@@ -191,4 +191,20 @@ theorem prismBeta_last_comp_faceMap_last {n : ℕ} :
   rw [prismBeta_faceMap_coe, hfilter, Finset.sum_empty]
   rfl
 
+/-- **The bottom face of the last prism simplex is `f_#`**: `face_last (prismSimplex H σ last) =
+endSimplex H 0 σ`. The α-component collapses to the identity and the β-component to constant `0`.
+(Closed by defeq-aware `congrArg`/`congr_arg₂` rather than syntactic `rw`: the gateway-produced
+`(prismAlpha last).comp (faceMap last)` is defeq — but not syntactically equal — to the freshly
+elaborated form, so `rw` cannot match it.) -/
+theorem face_last_prismSimplex_last {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) :
+    face (Fin.last (n + 1)) (prismSimplex H σ (Fin.last n)) = endSimplex H 0 σ := by
+  apply (Y.toSSetObjEquiv (op (SimplexCategory.mk n))).injective
+  rw [prismSimplex_face, endSimplex, Equiv.apply_symm_apply]
+  refine congrArg (fun g => H.comp g) ?_
+  refine congr_arg₂ ContinuousMap.prodMk ?_ prismBeta_last_comp_faceMap_last
+  rw [ContinuousMap.comp_assoc]
+  exact (congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk n))) σ).comp ·)
+    prismAlpha_last_comp_faceMap_last).trans (ContinuousMap.comp_id _)
+
 end SKEFTHawking.SingularPrism
