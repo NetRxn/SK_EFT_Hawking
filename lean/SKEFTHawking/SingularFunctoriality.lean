@@ -99,4 +99,52 @@ theorem mapChain_id {X : TopCat} (n : ℕ) (c : SingularChain X n) :
   | add c₁ c₂ h₁ h₂ => simp only [map_add, h₁, h₂]
   | single σ a => simp only [mapChain_single, mapSimplex_id]
 
+/-! ## §3. The induced map on homology -/
+
+/-- `mapChain φ` preserves cycles (`ker ∂`). -/
+theorem mapChain_mem_cycles {X Y : TopCat} (φ : C(↑X, ↑Y)) {n : ℕ} {z : SingularChain X n}
+    (hz : z ∈ cycles X n) : mapChain φ n z ∈ cycles Y n := by
+  cases n with
+  | zero => exact Submodule.mem_top
+  | succ m =>
+      have hz' : chainBoundary X m z = 0 := hz
+      show chainBoundary Y m (mapChain φ (m + 1) z) = 0
+      rw [chainBoundary_mapChain, hz', map_zero]
+
+/-- `mapChain φ` preserves boundaries (`im ∂`). -/
+theorem mapChain_mem_boundaries {X Y : TopCat} (φ : C(↑X, ↑Y)) {n : ℕ} {w : SingularChain X n}
+    (hw : w ∈ boundaries X n) : mapChain φ n w ∈ boundaries Y n := by
+  obtain ⟨u, rfl⟩ := hw
+  exact ⟨mapChain φ (n + 1) u, chainBoundary_mapChain φ u⟩
+
+/-- The induced map on cycles `Zₙ(X) → Zₙ(Y)`. -/
+noncomputable def cyclesMap {X Y : TopCat} (φ : C(↑X, ↑Y)) (n : ℕ) :
+    cycles X n →ₗ[ZMod 2] cycles Y n :=
+  (mapChain φ n).restrict (fun _ hz => mapChain_mem_cycles φ hz)
+
+@[simp] theorem cyclesMap_coe {X Y : TopCat} (φ : C(↑X, ↑Y)) (n : ℕ) (z : cycles X n) :
+    (cyclesMap φ n z : SingularChain Y n) = mapChain φ n (z : SingularChain X n) := rfl
+
+/-- **The induced map on homology** `Hₙ(φ) : Hₙ(X; ℤ/2) → Hₙ(Y; ℤ/2)`. -/
+noncomputable def Homology.map {X Y : TopCat} (φ : C(↑X, ↑Y)) (n : ℕ) :
+    Homology X n →ₗ[ZMod 2] Homology Y n :=
+  Submodule.mapQ _ _ (cyclesMap φ n) (by
+    rintro ⟨z, hz⟩ hzb
+    rw [Submodule.mem_comap]
+    exact mapChain_mem_boundaries φ hzb)
+
+@[simp] theorem Homology.map_mk {X Y : TopCat} (φ : C(↑X, ↑Y)) (n : ℕ) (z : cycles X n) :
+    Homology.map φ n (Homology.mk X n z) = Homology.mk Y n (cyclesMap φ n z) :=
+  Submodule.mapQ_apply _ _ _ _
+
+/-- **Homology functoriality**: `Hₙ(ψ ∘ φ) = Hₙ(ψ) ∘ Hₙ(φ)`. -/
+theorem Homology.map_comp {X Y Z : TopCat} (ψ : C(↑Y, ↑Z)) (φ : C(↑X, ↑Y)) (n : ℕ) :
+    Homology.map (ψ.comp φ) n = (Homology.map ψ n).comp (Homology.map φ n) := by
+  ext x
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  show Homology.map (ψ.comp φ) n (Homology.mk X n z)
+    = Homology.map ψ n (Homology.map φ n (Homology.mk X n z))
+  simp only [Homology.map_mk]
+  exact congrArg (Homology.mk Z n) (Subtype.ext (mapChain_comp ψ φ n z))
+
 end SKEFTHawking.SingularFunctoriality
