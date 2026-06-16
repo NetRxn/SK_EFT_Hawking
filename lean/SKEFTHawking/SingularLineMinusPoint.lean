@@ -111,4 +111,22 @@ theorem augH_ker_punc1_iso_zmod2 :
     Nonempty (↥(LinearMap.ker (augH (Punc 1))) ≃ₗ[ZMod 2] ZMod 2) :=
   augH_ker_iso_zmod2 isClopen_posSet augH_posSet_bijective augH_posSetCompl_bijective
 
+open SKEFTHawking.SingularSphereAcyclic SKEFTHawking.SingularSphereBottom in
+/-- **`H₁(S¹) ≅ ℤ/2`** — the base case of the sphere-homology induction. The bottom suspension
+`bottomSuspEquiv` gives `H₁(S¹) ≅ H̃₀(equator)`; the equator `S¹∖{v,−v}` is homeomorphic to `ℝ¹∖0`
+(`equatorMap`), so `H̃₀(equator) ≅ H̃₀(ℝ¹∖0) ≅ ℤ/2`. -/
+noncomputable def circleH1Equiv :
+    Homology (SingularSphereAcyclic.Sph 1) 1 ≃ₗ[ZMod 2] ZMod 2 :=
+  (bottomSuspEquiv (n := 1) (v := basePoint 1)).trans
+    ((augHKerEquivOfHomeo (equatorMap (basePoint 1)) (equatorMapInv (basePoint 1))
+          equatorMapInv_comp_equatorMap equatorMap_comp_equatorMapInv).trans
+      augH_ker_punc1_iso_zmod2.some)
+
+open SKEFTHawking.SingularSphereBottom in
+/-- **`Hₘ₊₁(Sᵐ⁺¹) ≅ ℤ/2`** — the top homology of every positive-dimensional sphere is `ℤ/2`
+(`topSphereReduce` down to the circle, then `circleH1Equiv`). -/
+noncomputable def topSphereIso (m : ℕ) :
+    Homology (SingularSphereAcyclic.Sph (m + 1)) (m + 1) ≃ₗ[ZMod 2] ZMod 2 :=
+  (topSphereReduce m).trans circleH1Equiv
+
 end SKEFTHawking.SingularLineMinusPoint

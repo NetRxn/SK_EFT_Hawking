@@ -234,6 +234,28 @@ theorem augH_bijective_of_homeo {X Y : TopCat} (f : C(↑X, ↑Y)) (g : C(↑Y, 
   obtain ⟨x, hx⟩ := hf.surjective y
   exact ⟨x, by rw [← augH_naturality f, hx, hy]⟩
 
+/-- A homeomorphism carries `ker ε̄` onto `ker ε̄` (the augmentation is natural). -/
+theorem augH_ker_map_eq {X Y : TopCat} (f : C(↑X, ↑Y)) (g : C(↑Y, ↑X))
+    (hgf : g.comp f = ContinuousMap.id ↑X) (hfg : f.comp g = ContinuousMap.id ↑Y) :
+    Submodule.map (Homology.map f 0) (LinearMap.ker (augH X)) = LinearMap.ker (augH Y) := by
+  have hf := Homology.map_bijective_of_comp_id_all f g hgf hfg 0
+  ext y
+  simp only [Submodule.mem_map, LinearMap.mem_ker]
+  constructor
+  · rintro ⟨x, hx, rfl⟩; rw [augH_naturality]; exact hx
+  · intro hy
+    obtain ⟨x, hx⟩ := hf.surjective y
+    exact ⟨x, by rw [← augH_naturality f, hx]; exact hy, hx⟩
+
+/-- **`ker ε̄` (reduced `H̃₀`) transports across a homeomorphism**: `H̃₀(X) ≅ H̃₀(Y)`. -/
+noncomputable def augHKerEquivOfHomeo {X Y : TopCat} (f : C(↑X, ↑Y)) (g : C(↑Y, ↑X))
+    (hgf : g.comp f = ContinuousMap.id ↑X) (hfg : f.comp g = ContinuousMap.id ↑Y) :
+    ↥(LinearMap.ker (augH X)) ≃ₗ[ZMod 2] ↥(LinearMap.ker (augH Y)) :=
+  ((LinearEquiv.ofBijective (Homology.map f 0)
+        (Homology.map_bijective_of_comp_id_all f g hgf hfg 0)).submoduleMap
+      (LinearMap.ker (augH X))).trans
+    (LinearEquiv.ofEq _ _ (augH_ker_map_eq f g hgf hfg))
+
 /-- **A nonempty convex subset of a normed space is reduced-acyclic with nonzero `H₀`**: `ε̄` is
 bijective. Injective via the straight-line contraction `(x, t) ↦ (1-t)•x + t•p` to a basepoint `p`
 (stays in `C` by convexity); surjective since `C` is nonempty. The reduced-acyclic input the two
