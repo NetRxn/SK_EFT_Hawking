@@ -12,7 +12,8 @@ homotopy invariance of the homology functor: homotopic maps induce equal maps on
 
 open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularPrism
-open SKEFTHawking.SingularFunctoriality
+open SKEFTHawking.SingularFunctoriality SKEFTHawking.SingularCohomologyMod2
+open SKEFTHawking.SingularExcisionPushforward
 
 namespace SKEFTHawking.SingularHomotopyInvariance
 
@@ -45,5 +46,35 @@ theorem mapChain_slice_add_mem_boundaries {X Y : TopCat} {n : ℕ} (H : C(↑X �
     mapChain (slice H 1) (n + 1) z + mapChain (slice H 0) (n + 1) z ∈ boundaries Y (n + 1) := by
   rw [← endMap_eq_mapChain, ← endMap_eq_mapChain]
   exact endMap_add_mem_boundaries H z hz
+
+/-! ## §2. The constant simplex (towards acyclicity of contractible spaces) -/
+
+/-- The **constant `k`-simplex** at a point `b ∈ X`: the realization `Δᵏ → X` of the constant map. -/
+noncomputable def constSimplex {X : TopCat} (b : ↑X) (k : ℕ) :
+    (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk k)) :=
+  (X.toSSetObjEquiv (op (SimplexCategory.mk k))).symm (ContinuousMap.const _ b)
+
+/-- Every face of a constant simplex is the constant simplex one degree down. -/
+theorem face_constSimplex {X : TopCat} (b : ↑X) (k : ℕ) (i : Fin (k + 2)) :
+    face i (constSimplex b (k + 1)) = constSimplex b k := by
+  apply (X.toSSetObjEquiv (op (SimplexCategory.mk k))).injective
+  simp only [constSimplex, toSSetObjEquiv_symm_face, Equiv.apply_symm_apply]
+  rfl
+
+/-- **The boundary of a constant simplex**: `∂(c_b^{k+1}) = (k : ℤ/2) · c_b^k` — the `k + 2` faces all
+coincide with `c_b^k`, so over ℤ/2 the sum is `(k + 2) ≡ k` copies. This is the heart of the parity
+computation `Hₖ(point) = 0` and of acyclicity. -/
+theorem chainBoundary_constSimplex {X : TopCat} (b : ↑X) (k : ℕ) :
+    chainBoundary X k (Finsupp.single (constSimplex b (k + 1)) 1)
+      = Finsupp.single (constSimplex b k) (k : ZMod 2) := by
+  rw [chainBoundary_single, boundaryBasis]
+  have hface : ∀ i : Fin (k + 2),
+      Finsupp.single (face i (constSimplex b (k + 1))) (1 : ZMod 2)
+        = Finsupp.single (constSimplex b k) 1 :=
+    fun i => congrArg (Finsupp.single · (1 : ZMod 2)) (face_constSimplex b k i)
+  rw [Finset.sum_congr rfl (fun i _ => hface i), Finset.sum_const, Finset.card_univ,
+    Fintype.card_fin, Finsupp.smul_single, nsmul_eq_mul, mul_one]
+  congr 1
+  rw [Nat.cast_add, ZMod.natCast_self, add_zero]
 
 end SKEFTHawking.SingularHomotopyInvariance
