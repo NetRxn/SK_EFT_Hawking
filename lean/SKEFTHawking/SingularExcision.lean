@@ -571,4 +571,24 @@ theorem relative_small_boundary {X : TopCat} {A : Set X} {𝒰 : Set (Set X)}
   exact Submodule.add_mem _ (singularSd_iterate_mem_subspaceChains hw m)
     (iterHomotopy_mem_subspaceChains hz_rcyc m)
 
+/-- **The small-chains theorem at the homology level (surjective)**: every singular homology class has a
+representative that is a `𝒰`-small cycle. (`Homology.mk` is surjective; subdivide the representative —
+`exists_small_cycle_homologous` gives a small cycle in the same class.) -/
+theorem homology_small_representative {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
+    (hcov : (⋃ U ∈ 𝒰, interior U) = Set.univ) (h : Homology X (n + 1)) :
+    ∃ z : cycles X (n + 1), (z : SingularChain X (n + 1)) ∈ smallChains 𝒰 (n + 1)
+      ∧ Homology.mk X (n + 1) z = h := by
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ h
+  obtain ⟨m, hsmall, hcyc, hbdry⟩ := exists_small_cycle_homologous hcov (LinearMap.mem_ker.1 z.2)
+  refine ⟨⟨(⇑(singularSd X (n + 1)))^[m] (z : SingularChain X (n + 1)), LinearMap.mem_ker.2 hcyc⟩,
+    hsmall, ?_⟩
+  show Submodule.Quotient.mk _ = Submodule.Quotient.mk _
+  rw [Submodule.Quotient.eq]
+  refine Submodule.mem_comap.2 ?_
+  show (⇑(singularSd X (n + 1)))^[m] (z : SingularChain X (n + 1)) - (z : SingularChain X (n + 1))
+      ∈ boundaries X (n + 1)
+  rw [sub_eq_add_neg, neg_eq_of_add_eq_zero_right (ZModModule.add_self (z : SingularChain X (n + 1))),
+    add_comm ((⇑(singularSd X (n + 1)))^[m] (z : SingularChain X (n + 1))) (z : SingularChain X (n + 1))]
+  exact hbdry
+
 end SKEFTHawking.SingularExcision
