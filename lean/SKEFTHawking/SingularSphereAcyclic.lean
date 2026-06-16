@@ -186,4 +186,13 @@ theorem equator_to_sphere_bijective (k : ℕ) :
     (Homology.map_bijective_of_comp_id (equatorMap v) (equatorMapInv v)
       equatorMapInv_comp_equatorMap equatorMap_comp_equatorMapInv k)
 
+/-- **The sphere dimension-reduction `Hₖ₊₂(Sⁿ) ≅ Hₖ₊₁(Sⁿ⁻¹)`** — the inductive step for sphere
+homology, as a `ℤ/2`-linear isomorphism (suspension ∘ equator). Note `SingularPuncturedRetract.Sph n`
+(the unit sphere in `ℝⁿ`) is `Sⁿ⁻¹`. -/
+noncomputable def dimReductionEquiv (v : Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1)
+    (k : ℕ) :
+    Homology (Sph n) (k + 2) ≃ₗ[ZMod 2] Homology (SingularPuncturedRetract.Sph n) (k + 1) :=
+  (LinearEquiv.ofBijective _ (sphere_suspension_bijective (v := v) k)).trans
+    (LinearEquiv.ofBijective _ (equator_to_sphere_bijective (v := v) k))
+
 end SKEFTHawking.SingularSphereAcyclic
