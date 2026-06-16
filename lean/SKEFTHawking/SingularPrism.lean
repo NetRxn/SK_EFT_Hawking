@@ -207,4 +207,42 @@ theorem face_last_prismSimplex_last {X Y : TopCat} {n : ℕ} (H : C(↑X × unit
   exact (congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk n))) σ).comp ·)
     prismAlpha_last_comp_faceMap_last).trans (ContinuousMap.comp_id _)
 
+/-! ## §6. The top face is `g_#` -/
+
+/-- The `α`-component of the zeroth prism map restricted along the zeroth coface is the identity. -/
+theorem prismAlpha_zero_comp_faceMap_zero {n : ℕ} :
+    (prismAlpha (0 : Fin (n + 1))).comp (faceMap (0 : Fin (n + 2))) = ContinuousMap.id _ := by
+  rw [prismAlpha_comp_face]
+  simp only [Fin.succAbove_zero, Fin.predAbove_zero_succ]
+  exact affineSimplexStd_vertex_id
+
+/-- The `β`-component of the zeroth prism map restricted along the zeroth coface is constantly `1` —
+the time coordinate of `g_#` (the threshold `0 < l.succ` always holds, so the full sum `= 1`). -/
+theorem prismBeta_zero_comp_faceMap_zero {n : ℕ} :
+    (prismBeta (0 : Fin (n + 1))).comp (faceMap (0 : Fin (n + 2)))
+      = ContinuousMap.const _ (1 : unitInterval) := by
+  ext t
+  have hfilter : Finset.univ.filter
+      (fun l => (0 : Fin (n + 1)).castSucc < (0 : Fin (n + 2)).succAbove l) = Finset.univ := by
+    rw [Finset.filter_true_of_mem]
+    intro l _
+    rw [Fin.succAbove_zero, Fin.castSucc_zero]
+    exact Fin.succ_pos l
+  show (prismBeta (0 : Fin (n + 1)) (faceMap (0 : Fin (n + 2)) t) : ℝ) = ((1 : unitInterval) : ℝ)
+  rw [prismBeta_faceMap_coe, hfilter]
+  exact t.2.2
+
+/-- **The top face of the zeroth prism simplex is `g_#`**: `face_0 (prismSimplex H σ 0) =
+endSimplex H 1 σ`. The α-component collapses to the identity and the β-component to constant `1`. -/
+theorem face_zero_prismSimplex_zero {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) :
+    face (0 : Fin (n + 2)) (prismSimplex H σ (0 : Fin (n + 1))) = endSimplex H 1 σ := by
+  apply (Y.toSSetObjEquiv (op (SimplexCategory.mk n))).injective
+  rw [prismSimplex_face, endSimplex, Equiv.apply_symm_apply]
+  refine congrArg (fun g => H.comp g) ?_
+  refine congr_arg₂ ContinuousMap.prodMk ?_ prismBeta_zero_comp_faceMap_zero
+  rw [ContinuousMap.comp_assoc]
+  exact (congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk n))) σ).comp ·)
+    prismAlpha_zero_comp_faceMap_zero).trans (ContinuousMap.comp_id _)
+
 end SKEFTHawking.SingularPrism
