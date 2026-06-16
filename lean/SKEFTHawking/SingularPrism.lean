@@ -359,6 +359,39 @@ theorem prismBeta_comp_faceMap_eq_w {n : ℕ} {i₀ : Fin (n + 2)} {j₀ : Fin (
   unfold Fin.succAbove
   split_ifs with hc <;> simp only [Fin.lt_def, Fin.val_castSucc, Fin.val_succ] at hc ⊢ <;> omega
 
+/-- **The `v`-side prism side face is a prism of a face**: `face_{i₀.castSucc}(prismSimplex H σ
+(j₀.succ)) = prismSimplex H (face i₀ σ) j₀` (for `i₀ ≤ j₀.castSucc`). These are the `prismOp(∂σ)`
+terms in the boundary identity. -/
+theorem face_prismSimplex_side_v {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) {i₀ : Fin (n + 2)}
+    {j₀ : Fin (n + 1)} (H' : i₀ ≤ j₀.castSucc) :
+    face i₀.castSucc (prismSimplex H σ j₀.succ) = prismSimplex H (face i₀ σ) j₀ := by
+  apply (Y.toSSetObjEquiv (op (SimplexCategory.mk (n + 1)))).injective
+  rw [prismSimplex_face, prismSimplex, Equiv.apply_symm_apply]
+  refine congrArg (fun g => H.comp g) ?_
+  refine congr_arg₂ ContinuousMap.prodMk ?_ (prismBeta_comp_faceMap_eq_v H')
+  refine (ContinuousMap.comp_assoc _ _ _).trans ?_
+  refine (congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk (n + 1)))) σ).comp ·)
+    (prismAlpha_comp_faceMap_eq_v H')).trans ?_
+  refine (ContinuousMap.comp_assoc _ _ _).symm.trans ?_
+  exact congrArg (·.comp (prismAlpha j₀)) (toSSetObjEquiv_face i₀ σ).symm
+
+/-- **The `w`-side prism side face is a prism of a face**: `face_{i₀.succ}(prismSimplex H σ
+(j₀.castSucc)) = prismSimplex H (face i₀ σ) j₀` (for `j₀.castSucc < i₀`). -/
+theorem face_prismSimplex_side_w {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) {i₀ : Fin (n + 2)}
+    {j₀ : Fin (n + 1)} (H' : j₀.castSucc < i₀) :
+    face i₀.succ (prismSimplex H σ j₀.castSucc) = prismSimplex H (face i₀ σ) j₀ := by
+  apply (Y.toSSetObjEquiv (op (SimplexCategory.mk (n + 1)))).injective
+  rw [prismSimplex_face, prismSimplex, Equiv.apply_symm_apply]
+  refine congrArg (fun g => H.comp g) ?_
+  refine congr_arg₂ ContinuousMap.prodMk ?_ (prismBeta_comp_faceMap_eq_w H')
+  refine (ContinuousMap.comp_assoc _ _ _).trans ?_
+  refine (congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk (n + 1)))) σ).comp ·)
+    (prismAlpha_comp_faceMap_eq_w H')).trans ?_
+  refine (ContinuousMap.comp_assoc _ _ _).symm.trans ?_
+  exact congrArg (·.comp (prismAlpha j₀)) (toSSetObjEquiv_face i₀ σ).symm
+
 /-! ## §9. Internal cancellation of the diagonal faces -/
 
 /-- **Internal cancellation**: the shared face `(i.castSucc).succ = (i.succ).castSucc` is the
