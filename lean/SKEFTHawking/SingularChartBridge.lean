@@ -87,4 +87,17 @@ noncomputable def chartLocalIso {M : TopCat} [T1Space ↑M] {x : ↑M} {U : Set 
     ((chartPairEquiv hx e hex (m + 2)).trans
       ((openPointExcisionEquiv hV hq (m + 1)).trans (localHomologyAtPointIso m q)))
 
+/-- **The local homology of a topological manifold is `ℤ/2`** at every point: for `M` a `T1`
+topological manifold modeled on `ℝᵐ⁺²`, `Hₘ₊₂(M, M∖x) ≅ ℤ/2`. The chart `chartAt x` supplies the
+homeomorphism of pairs `chartLocalIso` consumes. The per-point local generator of the fundamental
+class `[M]`. -/
+noncomputable def manifoldLocalIso {m : ℕ} {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (x : M) :
+    RelativeHomology (X := TopCat.of M) {y | y ≠ x} (m + 2) ≃ₗ[ZMod 2] ZMod 2 :=
+  haveI : T1Space ↑(TopCat.of M) := inferInstanceAs (T1Space M)
+  let c := chartAt (EuclideanSpace ℝ (Fin (m + 2))) x
+  chartLocalIso (M := TopCat.of M) (x := x) (U := c.source) (V := c.target) (q := c x)
+    c.open_source (mem_chart_source _ x) c.open_target (mem_chart_target _ x)
+    c.toHomeomorphSourceTarget rfl
+
 end SKEFTHawking.SingularChartBridge
