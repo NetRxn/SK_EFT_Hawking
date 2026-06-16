@@ -53,4 +53,33 @@ theorem augmentation_surjective (X : TopCat) (σ : (TopCat.toSSet.obj X).obj (op
   intro a
   exact ⟨Finsupp.single σ a, augmentation_single X σ a⟩
 
+/-! ## §2. The augmentation on homology `ε̄ : H₀(X;ℤ/2) → ℤ/2` -/
+
+/-- The augmentation vanishes on every boundary `0`-chain (`boundaries X 0 = im ∂₁`). -/
+theorem augmentation_eq_zero_of_mem_boundaries (X : TopCat) (c : SingularChain X 0)
+    (hc : c ∈ boundaries X 0) : augmentation X c = 0 := by
+  obtain ⟨d, rfl⟩ := hc
+  exact augmentation_chainBoundary X d
+
+/-- **The augmentation descended to homology** `ε̄ : H₀(X; ℤ/2) → ℤ/2`. Every `0`-chain is a cycle
+(`cycles X 0 = ⊤`), and `ε` vanishes on boundaries (`augmentation_chainBoundary`), so `ε` descends
+through the homology quotient. Its kernel is **reduced `H̃₀(X)`**; it is surjective always (on a
+nonempty space) and injective exactly when `X` is "reduced-acyclic" (e.g. contractible/path-connected). -/
+noncomputable def augH (X : TopCat) : Homology X 0 →ₗ[ZMod 2] ZMod 2 :=
+  Submodule.liftQ _ ((augmentation X).comp (cycles X 0).subtype) (by
+    rintro ⟨c, hcyc⟩ hc
+    show augmentation X c = 0
+    exact augmentation_eq_zero_of_mem_boundaries X c hc)
+
+@[simp] theorem augH_mk (X : TopCat) (z : cycles X 0) :
+    augH X (Homology.mk X 0 z) = augmentation X (z : SingularChain X 0) :=
+  rfl
+
+/-- `ε̄ : H₀(X; ℤ/2) → ℤ/2` is **surjective** (on a nonempty space): the class of any point's
+`0`-simplex maps to `1`. -/
+theorem augH_surjective (X : TopCat) (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk 0))) :
+    Function.Surjective (augH X) := by
+  intro a
+  exact ⟨Homology.mk X 0 ⟨Finsupp.single σ a, Submodule.mem_top⟩, augmentation_single X σ a⟩
+
 end SKEFTHawking.SingularH0
