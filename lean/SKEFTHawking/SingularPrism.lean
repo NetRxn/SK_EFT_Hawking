@@ -165,4 +165,30 @@ noncomputable def endMap {X Y : TopCat} (H : C(↑X × unitInterval, ↑Y)) (r :
     endMap H r n (Finsupp.single σ a) = Finsupp.single (endSimplex H r σ) a := by
   rw [endMap, Finsupp.linearCombination_single, Finsupp.smul_single, smul_eq_mul, mul_one]
 
+/-! ## §5. The bottom face is `f_#` -/
+
+/-- The `α`-component of the last prism map restricted along the last coface is the identity
+(`predAbove last ∘ succAbove last` is vertex-preserving). -/
+theorem prismAlpha_last_comp_faceMap_last {n : ℕ} :
+    (prismAlpha (Fin.last n)).comp (faceMap (Fin.last (n + 1))) = ContinuousMap.id _ := by
+  rw [prismAlpha_comp_face]
+  simp only [Fin.succAbove_last, Fin.predAbove_last_castSucc]
+  exact affineSimplexStd_vertex_id
+
+/-- The `β`-component of the last prism map restricted along the last coface is constantly `0` —
+the time coordinate of `f_#` (the threshold `last.castSucc < l.castSucc` is never met). -/
+theorem prismBeta_last_comp_faceMap_last {n : ℕ} :
+    (prismBeta (Fin.last n)).comp (faceMap (Fin.last (n + 1)))
+      = ContinuousMap.const _ (0 : unitInterval) := by
+  ext t
+  have hfilter : Finset.univ.filter
+      (fun l => (Fin.last n).castSucc < (Fin.last (n + 1)).succAbove l) = ∅ := by
+    rw [Finset.filter_eq_empty_iff]
+    intro l _
+    rw [Fin.succAbove_last, Fin.castSucc_lt_castSucc_iff]
+    exact Fin.not_lt.2 (Fin.le_last l)
+  show (prismBeta (Fin.last n) (faceMap (Fin.last (n + 1)) t) : ℝ) = ((0 : unitInterval) : ℝ)
+  rw [prismBeta_faceMap_coe, hfilter, Finset.sum_empty]
+  rfl
+
 end SKEFTHawking.SingularPrism
