@@ -190,4 +190,37 @@ noncomputable def splitH0Equiv {X : TopCat} {U : Set ↑X} (hU : IsClopen U) :
     (Homology (sub U) 0 × Homology (sub Uᶜ) 0) ≃ₗ[ZMod 2] Homology X 0 :=
   LinearEquiv.ofBijective (splitH0 U) ⟨splitH0_injective hU, splitH0_surjective hU⟩
 
+/-- **Augmentation compatibility**: under the additivity map, `ε̄_X` is the sum
+`(a, b) ↦ ε̄_U(a) + ε̄_{Uᶜ}(b)` (each inclusion is augmentation-preserving, `augH_homIncl`). -/
+theorem augH_splitH0 {X : TopCat} (U : Set ↑X)
+    (p : Homology (sub U) 0 × Homology (sub Uᶜ) 0) :
+    augH X (splitH0 U p) = augH (sub U) p.1 + augH (sub Uᶜ) p.2 := by
+  rw [splitH0, LinearMap.coprod_apply, map_add, augH_homIncl, augH_homIncl]
+
+/-- **Reduced `H̃₀` of a two-piece clopen space is `ℤ/2`**: if `X` splits as a clopen `U ⊔ Uᶜ` with
+each piece reduced-acyclic *and* `H₀`-nonzero (`ε̄` bijective, e.g. each piece contractible), then
+`H̃₀(X) = ker ε̄_X ≅ ℤ/2`. Dimension count: `H₀(X) ≅ H₀(U) × H₀(Uᶜ)` has `finrank = 1 + 1 = 2`, `ε̄_X`
+is surjective (it already is on each piece), so `finrank(ker ε̄_X) = 2 - 1 = 1`. The base value of the
+sphere/local-homology induction (`H̃₀(S⁰) ≅ ℤ/2`). -/
+theorem augH_ker_iso_zmod2 {X : TopCat} {U : Set ↑X} (hU : IsClopen U)
+    (hUbij : Function.Bijective (augH (sub U))) (hUcbij : Function.Bijective (augH (sub Uᶜ))) :
+    Nonempty (↥(LinearMap.ker (augH X)) ≃ₗ[ZMod 2] ZMod 2) := by
+  let eU := LinearEquiv.ofBijective (augH (sub U)) hUbij
+  let eUc := LinearEquiv.ofBijective (augH (sub Uᶜ)) hUcbij
+  haveI : FiniteDimensional (ZMod 2) (Homology (sub U) 0) := eU.symm.finiteDimensional
+  haveI : FiniteDimensional (ZMod 2) (Homology (sub Uᶜ) 0) := eUc.symm.finiteDimensional
+  haveI : FiniteDimensional (ZMod 2) (Homology X 0) := (splitH0Equiv hU).finiteDimensional
+  have hfX : Module.finrank (ZMod 2) (Homology X 0) = 2 := by
+    rw [← (splitH0Equiv hU).finrank_eq, Module.finrank_prod, eU.finrank_eq, eUc.finrank_eq,
+      Module.finrank_self]
+  have hsurj : Function.Surjective (augH X) := fun t => by
+    obtain ⟨a, ha⟩ := hUbij.surjective t
+    exact ⟨homIncl U 0 a, by rw [augH_homIncl, ha]⟩
+  have hker : Module.finrank (ZMod 2) (LinearMap.ker (augH X)) = 1 := by
+    have h := LinearMap.finrank_range_add_finrank_ker (augH X)
+    rw [LinearMap.range_eq_top.mpr hsurj, finrank_top, Module.finrank_self, hfX] at h
+    omega
+  exact ⟨(Module.finBasisOfFinrankEq (ZMod 2) _ hker).equivFun.trans
+    (LinearEquiv.funUnique (Fin 1) (ZMod 2) (ZMod 2))⟩
+
 end SKEFTHawking.SingularDisjointUnion
