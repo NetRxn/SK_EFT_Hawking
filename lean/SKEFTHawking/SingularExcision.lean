@@ -266,4 +266,41 @@ theorem exists_small_cycle_homologous {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)
     ⟨iterHomotopy X (n + 1) m z, (add_singularSd_iterate_eq_boundary hz m).symm⟩⟩
   rw [singularSd_iterate_chainBoundary, hz, ← Module.End.coe_pow, map_zero]
 
+/-- The degree-raising prism operator `D` preserves smallness (each piece of `D[τ]` is a homotopy
+sub-simplex of `τ`, with image inside `τ`'s). -/
+theorem singularD_mem_smallChains {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
+    {c : SingularChain X n} (hc : c ∈ smallChains 𝒰 n) :
+    singularD X n c ∈ smallChains 𝒰 (n + 1) := by
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ hc
+  · rintro _ ⟨τ, hτ, rfl⟩
+    rw [singularD_single]
+    exact pushChainM_mem_smallChains hτ
+      (linHomotopy_mem_chainsIn (convex_stdSimplex ℝ _) n (idChain_mem n))
+  · rw [map_zero]; exact Submodule.zero_mem _
+  · intro a b _ _ ha hb; rw [map_add]; exact Submodule.add_mem _ ha hb
+  · intro r a _ ha; rw [map_smul]; exact Submodule.smul_mem _ r ha
+
+/-- The iterated homotopy `Dₘ = ∑_{i<m} Sdⁱ∘D` preserves smallness. -/
+theorem iterHomotopy_mem_smallChains {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
+    {c : SingularChain X n} (hc : c ∈ smallChains 𝒰 n) (m : ℕ) :
+    iterHomotopy X n m c ∈ smallChains 𝒰 (n + 1) := by
+  rw [iterHomotopy]
+  exact Submodule.sum_mem _
+    (fun i _ => singularSd_iterate_mem_smallChains (singularD_mem_smallChains hc) i)
+
+/-- **The injective half of the small-chains theorem**: a small cycle `z` that bounds in `C` already
+bounds in `C^𝒰`. (`z = ∂w`; subdivide `w` enough that `Sdᵐ w` is small; then `z = ∂(Sdᵐ w + Dₘ z)`
+— from `∂(Sdᵐ w) = Sdᵐ(∂w) = Sdᵐ z` and the homotopy `z + Sdᵐ z = ∂(Dₘ z)` — with both terms small
+(`Dₘ z` small since `D`, `Sd` preserve smallness).) With surjectivity ⟹ `C^𝒰 ↪ C` a homology iso. -/
+theorem smallChains_boundary_of_boundary {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
+    (hcov : (⋃ U ∈ 𝒰, interior U) = Set.univ) {z : SingularChain X (n + 1)}
+    (hz_small : z ∈ smallChains 𝒰 (n + 1)) (hz_cyc : chainBoundary X n z = 0)
+    {w : SingularChain X (n + 2)} (hw : chainBoundary X (n + 1) w = z) :
+    ∃ w' ∈ smallChains 𝒰 (n + 2), chainBoundary X (n + 1) w' = z := by
+  obtain ⟨m, hm⟩ := exists_iterate_smallChains hcov w
+  refine ⟨(⇑(singularSd X (n + 2)))^[m] w + iterHomotopy X (n + 1) m z,
+    Submodule.add_mem _ hm (iterHomotopy_mem_smallChains hz_small m), ?_⟩
+  rw [map_add, singularSd_iterate_chainBoundary, hw,
+    ← add_singularSd_iterate_eq_boundary hz_cyc m, add_left_comm, ZModModule.add_self, add_zero]
+
 end SKEFTHawking.SingularExcision
