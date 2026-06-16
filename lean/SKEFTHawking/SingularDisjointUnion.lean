@@ -1,5 +1,6 @@
 import Mathlib
 import SKEFTHawking.SingularReducedH0
+import SKEFTHawking.SingularExcision
 
 /-!
 # Reduced `H̃₀` of a two-component space (disjoint-union additivity at degree 0)
@@ -17,6 +18,7 @@ pieces (open rays). This module builds:
 open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularH0
 open SKEFTHawking.SingularFunctoriality SKEFTHawking.SingularReducedH0
+open SKEFTHawking.SingularRelativeHomologyMod2 SKEFTHawking.SingularExcision
 
 namespace SKEFTHawking.SingularDisjointUnion
 
@@ -46,5 +48,24 @@ theorem simplex_range_subset_or_compl {X : TopCat} {U : Set ↑X} (hU : IsClopen
     (isPreconnected_range (X.toSSetObjEquiv (op (SimplexCategory.mk n)) σ).continuous) hU with h | h
   · exact Or.inr (Set.subset_compl_iff_disjoint_right.mpr h)
   · exact Or.inl h
+
+/-- **Every `k`-chain of `X` splits across a clopen partition**: `Cₖ(X) = Cₖ(U) ⊔ Cₖ(Uᶜ)` — each
+simplex lands in one piece (`simplex_range_subset_or_compl`) hence in the image of the corresponding
+inclusion chain map (`single_mem_subspaceChains_of_subordinate`). -/
+theorem subspaceChains_sup_compl_eq_top {X : TopCat} {U : Set ↑X} (hU : IsClopen U) (k : ℕ) :
+    subspaceChains (S := U) k ⊔ subspaceChains (S := Uᶜ) k = ⊤ := by
+  rw [eq_top_iff]
+  rintro c -
+  induction c using Finsupp.induction_linear with
+  | zero => exact Submodule.zero_mem _
+  | add c₁ c₂ h₁ h₂ => exact Submodule.add_mem _ h₁ h₂
+  | single σ a =>
+      have hsmul : Finsupp.single σ a = a • Finsupp.single σ (1 : ZMod 2) := by
+        rw [Finsupp.smul_single, smul_eq_mul, mul_one]
+      rcases simplex_range_subset_or_compl hU σ with h | h
+      · exact hsmul ▸ Submodule.mem_sup_left
+          (Submodule.smul_mem _ a (single_mem_subspaceChains_of_subordinate h))
+      · exact hsmul ▸ Submodule.mem_sup_right
+          (Submodule.smul_mem _ a (single_mem_subspaceChains_of_subordinate h))
 
 end SKEFTHawking.SingularDisjointUnion
