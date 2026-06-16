@@ -24,6 +24,14 @@ noncomputable def augmentation (X : TopCat) : SingularChain X 0 →ₗ[ZMod 2] Z
     augmentation X (Finsupp.single σ a) = a := by
   rw [augmentation, Finsupp.linearCombination_single, smul_eq_mul, mul_one]
 
+/-- The augmentation as the bare `Finsupp` coefficient sum `ε(z) = ∑_σ z_σ`. This is the form
+produced by `mapChain (const_b)` (every simplex pushes to the same point), so the bridge lets the
+constant pushforward `(const_b)_#(z) = ε(z)·c_b` be discharged by the augmentation hypothesis. -/
+theorem augmentation_apply (X : TopCat) (z : SingularChain X 0) :
+    augmentation X z = z.sum fun _ a => a := by
+  rw [augmentation, Finsupp.linearCombination_apply]
+  exact Finsupp.sum_congr fun _ _ => by rw [smul_eq_mul, mul_one]
+
 /-- **The augmentation vanishes on boundaries**: `ε(∂c) = 0` (a 1-simplex has two `0`-faces, which
 cancel over ℤ/2). Hence `boundaries X 0 ≤ ker ε`. -/
 theorem augmentation_chainBoundary (X : TopCat) (c : SingularChain X 1) :

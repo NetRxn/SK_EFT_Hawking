@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.SingularPrism
 import SKEFTHawking.SingularFunctoriality
+import SKEFTHawking.SingularH0
 
 /-!
 # Homotopy invariance, functor level
@@ -217,5 +218,23 @@ theorem cycle_mem_boundaries_of_contraction {U : TopCat} {n : ℕ} (H : C(↑U �
     rw [add_right_comm, ZModModule.add_self, zero_add]
   rw [hz_eq]
   exact (boundaries U (n + 1)).add_mem hkey hconst
+
+/-! ## §4. Reduced `H̃₀ = 0` of a contractible space -/
+
+/-- **Reduced `H̃₀ = 0` from a contraction**: if `U` carries a contraction `H` (`H(·, 0) = id`,
+`H(·, 1) = const_b`), then every `0`-chain in the kernel of the augmentation `ε` is a boundary.
+Since every `0`-chain is a cycle (`cycles U 0 = ⊤`) this says the augmentation `H₀(U; ℤ/2) → ℤ/2`
+is injective, hence (with `augmentation_surjective`) `H₀(U) ≅ ℤ/2` and reduced `H̃₀(U) = 0`.
+
+Degree-`0` analogue of `cycle_mem_boundaries_of_contraction`, but cleaner: the degree-`0` prism
+homotopy `∂ ∘ P = g_# + f_#` has no `P∂` term, so `∂(P z) = (const_b)_#(z) + z`, and the constant
+pushforward `(const_b)_#(z) = ε(z) · c_b⁰` vanishes on `ker ε`. No parity argument is needed. -/
+theorem augmentation_ker_le_boundaries_of_contraction {U : TopCat} (H : C(↑U × unitInterval, ↑U))
+    (b : ↑U) (h0 : slice H 0 = ContinuousMap.id ↑U) (h1 : slice H 1 = ContinuousMap.const ↑U b)
+    (z : SingularChain U 0) (hz : SingularH0.augmentation U z = 0) :
+    z ∈ boundaries U 0 := by
+  refine ⟨prismOp H 0 z, ?_⟩
+  rw [prism_chainHomotopy_zero, endMap_eq_mapChain, endMap_eq_mapChain, h0, h1, mapChain_id,
+    mapChain_const, ← SingularH0.augmentation_apply, hz, Finsupp.single_zero, zero_add]
 
 end SKEFTHawking.SingularHomotopyInvariance
