@@ -106,6 +106,17 @@ theorem Homology.map_bijective_of_homotopyEquiv {X Y : TopCat} (f : C(↑X, ↑Y
     fun x => by rw [← LinearMap.comp_apply, hfg, LinearMap.id_apply]
   exact ⟨hL.injective, hR.surjective⟩
 
+/-- **A pair of maps with identity composites** (e.g. the two halves of a homeomorphism) induces an
+isomorphism on `Hₙ₊₁(·; ℤ/2)`. Special case of `map_bijective_of_homotopyEquiv` with the constant
+homotopies (the composites are literally the identity). -/
+theorem Homology.map_bijective_of_comp_id {X Y : TopCat} (f : C(↑X, ↑Y)) (g : C(↑Y, ↑X))
+    (hgf : g.comp f = ContinuousMap.id ↑X) (hfg : f.comp g = ContinuousMap.id ↑Y) (n : ℕ) :
+    Function.Bijective (Homology.map f (n + 1)) :=
+  Homology.map_bijective_of_homotopyEquiv f g ⟨fun p => p.1, continuous_fst⟩
+    (by rw [hgf]; exact ContinuousMap.ext fun _ => rfl) (ContinuousMap.ext fun _ => rfl)
+    ⟨fun p => p.1, continuous_fst⟩
+    (by rw [hfg]; exact ContinuousMap.ext fun _ => rfl) (ContinuousMap.ext fun _ => rfl) n
+
 /-! ## §2. The constant simplex (towards acyclicity of contractible spaces) -/
 
 /-- The **constant `k`-simplex** at a point `b ∈ X`: the realization `Δᵏ → X` of the constant map. -/
