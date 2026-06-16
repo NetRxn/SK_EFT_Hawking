@@ -1,7 +1,7 @@
 {
   "name": "skeft-local",
   "owner": {
-    "name": "SK_EFT_Hawking project"
+    "name": "SK-EFT Hawking project"
   },
   "metadata": {
     "description": "Local marketplace for SK_EFT_Hawking in-repo developer plugins (tracked in-repo; loaded via .claude/settings.json enabledPlugins).",
