@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.SingularEuclideanAcyclic
 import SKEFTHawking.SingularLocalHomology
+import SKEFTHawking.SingularExcisionIso
 
 /-!
 # The punctured sphere `Sⁿ ∖ {v}` is acyclic
@@ -14,7 +15,8 @@ open CategoryTheory Opposite Metric
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularEuclideanAcyclic SKEFTHawking.SingularFunctoriality
 open SKEFTHawking.SingularHomotopyInvariance SKEFTHawking.SingularLocalHomology
-open SKEFTHawking.SingularPairLES
+open SKEFTHawking.SingularPairLES SKEFTHawking.SingularRelativeHomologyMod2
+open SKEFTHawking.SingularExcisionIso
 
 namespace SKEFTHawking.SingularSphereAcyclic
 
@@ -82,5 +84,53 @@ theorem homProj_sphere_bijective (k : ℕ) :
     Function.Bijective (homProj ({v}ᶜ : Set ↑(Sph n)) (k + 2)) :=
   homProj_bijective_of_acyclic ({v}ᶜ : Set ↑(Sph n)) (k + 1)
     (punctured_sphere_homology_trivial (k + 1)) (punctured_sphere_homology_trivial k)
+
+/-! ## §2. The sphere suspension `Hₖ₊₂(Sⁿ) ≅ Hₖ₊₁(Sⁿ ∖ {N, S})` -/
+
+/-- The antipode `-v` of a sphere point. -/
+def antipode (v : Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) :
+    Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1 :=
+  ⟨-(v : EuclideanSpace ℝ (Fin (n + 1))), by
+    rw [mem_sphere_zero_iff_norm, norm_neg, ← mem_sphere_zero_iff_norm]; exact v.2⟩
+
+theorem ne_antipode (v : Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) : v ≠ antipode v := by
+  intro h
+  have hv : (v : EuclideanSpace ℝ (Fin (n + 1))) = -(v : EuclideanSpace ℝ (Fin (n + 1))) :=
+    congrArg Subtype.val h
+  have hz : (v : EuclideanSpace ℝ (Fin (n + 1))) = 0 := by
+    have h2 : (2 : ℝ) • (v : EuclideanSpace ℝ (Fin (n + 1))) = 0 := by
+      rw [two_smul]; nth_rewrite 2 [hv]; rw [add_neg_cancel]
+    simpa using h2
+  have hn : ‖(v : EuclideanSpace ℝ (Fin (n + 1)))‖ = 1 := mem_sphere_zero_iff_norm.mp v.2
+  rw [hz, norm_zero] at hn
+  exact absurd hn (by norm_num)
+
+/-- The polar cover `{N}ᶜ ∪ {S}ᶜ = Sⁿ` (both complements of points are open). -/
+theorem polar_cover {v w : ↑(Sph n)} (hvw : v ≠ w) :
+    (⋃ U ∈ ({{v}ᶜ, {w}ᶜ} : Set (Set ↑(Sph n))), interior U) = Set.univ := by
+  rw [Set.biUnion_pair, isOpen_compl_singleton.interior_eq, isOpen_compl_singleton.interior_eq]
+  rw [← Set.compl_inter, Set.eq_univ_iff_forall]
+  intro x
+  rw [Set.mem_compl_iff, Set.mem_inter_iff, Set.mem_singleton_iff, Set.mem_singleton_iff]
+  rintro ⟨rfl, rfl⟩
+  exact hvw rfl
+
+/-- **The sphere suspension `Hₖ₊₂(Sⁿ) ≅ Hₖ₊₁(Sⁿ ∖ {v, -v})`**: the composite of the projection
+isomorphism `Hₖ₊₂(Sⁿ) ≅ Hₖ₊₂(Sⁿ, Sⁿ∖{v})` (`v`'s punctured sphere acyclic), the excision
+`Hₖ₊₂(Sⁿ, Sⁿ∖{v}) ≅ Hₖ₊₂(Sⁿ∖{-v}, Sⁿ∖{v,-v})`, and the connecting isomorphism
+`Hₖ₊₂(Sⁿ∖{-v}, Sⁿ∖{v,-v}) ≅ Hₖ₊₁(Sⁿ∖{v,-v})` (`-v`'s punctured sphere acyclic). Composed with
+`Sⁿ∖{v,-v} ≃ Sⁿ⁻¹` this is the suspension `Hₖ(Sⁿ) ≅ Hₖ₋₁(Sⁿ⁻¹)`. -/
+theorem sphere_suspension_bijective (k : ℕ) :
+    Function.Bijective
+      ((connecting (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)) (k + 1)).comp
+        (((excisionEquiv ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ) (k + 1)
+              (polar_cover (ne_antipode v))).symm.toLinearMap).comp
+          (homProj ({v}ᶜ : Set ↑(Sph n)) (k + 2)))) := by
+  rw [LinearMap.coe_comp, LinearMap.coe_comp]
+  exact (connecting_bijective_of_acyclic (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)) (k + 1)
+      (punctured_sphere_homology_trivial (v := antipode v) (k + 1))
+      (punctured_sphere_homology_trivial (v := antipode v) k)).comp
+    (((excisionEquiv ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ) (k + 1)
+      (polar_cover (ne_antipode v))).symm.bijective).comp (homProj_sphere_bijective k))
 
 end SKEFTHawking.SingularSphereAcyclic
