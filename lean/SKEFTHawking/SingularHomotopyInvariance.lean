@@ -77,4 +77,75 @@ theorem chainBoundary_constSimplex {X : TopCat} (b : ↑X) (k : ℕ) :
   congr 1
   rw [Nat.cast_add, ZMod.natCast_self, add_zero]
 
+/-- The pushforward of any simplex along the constant map `const_b` is the constant simplex. -/
+theorem mapSimplex_const {X : TopCat} (b : ↑X) {k : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk k))) :
+    mapSimplex (ContinuousMap.const ↑X b) σ = constSimplex b k := rfl
+
+/-- **The constant chain map collapses to a single constant simplex** weighted by the augmentation
+`ε(z) = ∑_σ z_σ`: `(const_b)_#(z) = ε(z) · c_b^k`. (All simplices push to the same `c_b^k`.) -/
+theorem mapChain_const {X : TopCat} (b : ↑X) {k : ℕ} (z : SingularChain X k) :
+    mapChain (ContinuousMap.const ↑X b) k z
+      = Finsupp.single (constSimplex b k) (z.sum fun _ a => a) := by
+  induction z using Finsupp.induction_linear with
+  | zero => simp
+  | add z₁ z₂ h₁ h₂ =>
+      rw [map_add, h₁, h₂, Finsupp.sum_add_index' (fun _ => rfl) (fun _ _ _ => rfl),
+        Finsupp.single_add]
+  | single σ a => rw [mapChain_single, mapSimplex_const, Finsupp.sum_single_index rfl]
+
+/-- **The constant-simplex chain `m · c_b^{k+1}` is a boundary** when its own boundary vanishes
+(`m · (k : ℤ/2) = 0`). Parity: if `k` is even then `c_b^{k+1}` is itself `∂(c_b^{k+2})`; if `k` is odd
+the cycle condition forces `m = 0`. -/
+theorem single_constSimplex_mem_boundaries {U : TopCat} (b : ↑U) {n : ℕ} (m : ZMod 2)
+    (hcyc : m * (n : ZMod 2) = 0) :
+    Finsupp.single (constSimplex b (n + 1)) m ∈ boundaries U (n + 1) := by
+  by_cases hn : (n : ZMod 2) = 0
+  · have hb : Finsupp.single (constSimplex b (n + 1)) (1 : ZMod 2) ∈ boundaries U (n + 1) := by
+      refine ⟨Finsupp.single (constSimplex b (n + 2)) 1, ?_⟩
+      rw [chainBoundary_constSimplex]
+      congr 1
+      push_cast
+      rw [hn, zero_add]
+    rw [show Finsupp.single (constSimplex b (n + 1)) m
+        = m • Finsupp.single (constSimplex b (n + 1)) (1 : ZMod 2) by
+          rw [Finsupp.smul_single, smul_eq_mul, mul_one]]
+    exact (boundaries U (n + 1)).smul_mem m hb
+  · have hm0 : m = 0 := by
+      have hn1 : (n : ZMod 2) = 1 := (by decide : ∀ a : ZMod 2, a ≠ 0 → a = 1) _ hn
+      rw [hn1, mul_one] at hcyc
+      exact hcyc
+    rw [hm0, Finsupp.single_zero]
+    exact (boundaries U (n + 1)).zero_mem
+
+/-! ## §3. Acyclicity of contractible spaces -/
+
+/-- **Acyclicity from a contraction**: if `U` carries a contraction `H` (a homotopy with
+`H(·, 0) = id` and `H(·, 1) = const_b`), then every cycle in degree `n + 1 ≥ 1` is a boundary —
+`Hₙ₊₁(U; ℤ/2) = 0`. Hence contractible spaces are acyclic in positive degrees.
+
+The contraction gives `z = H₀_#(z) = (H₁_#(z) + H₀_#(z)) + H₁_#(z)`; the first summand is a boundary
+by homotopy invariance and the second is the constant chain `ε(z)·c_b^{n+1}`, a boundary by parity. -/
+theorem cycle_mem_boundaries_of_contraction {U : TopCat} {n : ℕ} (H : C(↑U × unitInterval, ↑U))
+    (b : ↑U) (h0 : slice H 0 = ContinuousMap.id ↑U) (h1 : slice H 1 = ContinuousMap.const ↑U b)
+    (z : SingularChain U (n + 1)) (hz : chainBoundary U n z = 0) :
+    z ∈ boundaries U (n + 1) := by
+  have hkey := mapChain_slice_add_mem_boundaries H z hz
+  rw [h0, h1, mapChain_id] at hkey
+  have hcyc0 : chainBoundary U n (mapChain (ContinuousMap.const ↑U b) (n + 1) z) = 0 := by
+    rw [chainBoundary_mapChain, hz, map_zero]
+  rw [mapChain_const] at hcyc0 hkey
+  have hcyc : (z.sum fun _ a => a) * (n : ZMod 2) = 0 := by
+    rw [show Finsupp.single (constSimplex b (n + 1)) (z.sum fun _ a => a)
+        = (z.sum fun _ a => a) • Finsupp.single (constSimplex b (n + 1)) (1 : ZMod 2) by
+          rw [Finsupp.smul_single, smul_eq_mul, mul_one], map_smul, chainBoundary_constSimplex,
+        Finsupp.smul_single, smul_eq_mul, Finsupp.single_eq_zero] at hcyc0
+    exact hcyc0
+  have hconst := single_constSimplex_mem_boundaries b (z.sum fun _ a => a) hcyc
+  have hz_eq : z = (Finsupp.single (constSimplex b (n + 1)) (z.sum fun _ a => a) + z)
+      + Finsupp.single (constSimplex b (n + 1)) (z.sum fun _ a => a) := by
+    rw [add_right_comm, ZModModule.add_self, zero_add]
+  rw [hz_eq]
+  exact (boundaries U (n + 1)).add_mem hkey hconst
+
 end SKEFTHawking.SingularHomotopyInvariance
