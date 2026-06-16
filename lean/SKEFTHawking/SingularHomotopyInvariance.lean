@@ -80,6 +80,32 @@ theorem Homology.map_slice_eq {X Y : TopCat} (H : C(↑X × unitInterval, ↑Y))
   Homology.map_eq_of_chain_add_mem (slice H 1) (slice H 0) n
     (fun z hz => mapChain_slice_add_mem_boundaries H z hz)
 
+/-- **Homotopic maps induce equal maps on homology** (degree `≥ 1`): if `f` and `g` are the two ends
+of a homotopy `H` then `Hₙ₊₁(f) = Hₙ₊₁(g)`. -/
+theorem Homology.map_eq_of_homotopic {X Y : TopCat} {f g : C(↑X, ↑Y)}
+    (H : C(↑X × unitInterval, ↑Y)) (h0 : slice H 0 = f) (h1 : slice H 1 = g) (n : ℕ) :
+    Homology.map f (n + 1) = Homology.map g (n + 1) := by
+  rw [← h0, ← h1]
+  exact (Homology.map_slice_eq H n).symm
+
+/-- **A homotopy equivalence induces an isomorphism on homology** (degree `≥ 1`): given `f : X → Y`,
+`g : Y → X` with `g ∘ f ≃ id_X` and `f ∘ g ≃ id_Y` (witnessed by homotopies), `Hₙ₊₁(f)` is bijective.
+This is the engine behind `ℝⁿ ∖ 0 ≃ Sⁿ⁻¹` and the Mayer–Vietoris hemisphere identifications. -/
+theorem Homology.map_bijective_of_homotopyEquiv {X Y : TopCat} (f : C(↑X, ↑Y)) (g : C(↑Y, ↑X))
+    (Hgf : C(↑X × unitInterval, ↑X)) (hgf0 : slice Hgf 0 = g.comp f)
+    (hgf1 : slice Hgf 1 = ContinuousMap.id ↑X) (Hfg : C(↑Y × unitInterval, ↑Y))
+    (hfg0 : slice Hfg 0 = f.comp g) (hfg1 : slice Hfg 1 = ContinuousMap.id ↑Y) (n : ℕ) :
+    Function.Bijective (Homology.map f (n + 1)) := by
+  have hgf : (Homology.map g (n + 1)).comp (Homology.map f (n + 1)) = LinearMap.id := by
+    rw [← Homology.map_comp, Homology.map_eq_of_homotopic Hgf hgf0 hgf1, Homology.map_id]
+  have hfg : (Homology.map f (n + 1)).comp (Homology.map g (n + 1)) = LinearMap.id := by
+    rw [← Homology.map_comp, Homology.map_eq_of_homotopic Hfg hfg0 hfg1, Homology.map_id]
+  have hL : Function.LeftInverse (Homology.map g (n + 1)) (Homology.map f (n + 1)) :=
+    fun x => by rw [← LinearMap.comp_apply, hgf, LinearMap.id_apply]
+  have hR : Function.RightInverse (Homology.map g (n + 1)) (Homology.map f (n + 1)) :=
+    fun x => by rw [← LinearMap.comp_apply, hfg, LinearMap.id_apply]
+  exact ⟨hL.injective, hR.surjective⟩
+
 /-! ## §2. The constant simplex (towards acyclicity of contractible spaces) -/
 
 /-- The **constant `k`-simplex** at a point `b ∈ X`: the realization `Δᵏ → X` of the constant map. -/
