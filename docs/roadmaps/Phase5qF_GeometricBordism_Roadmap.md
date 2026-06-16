@@ -1,6 +1,6 @@
 # Phase 5q.F — Geometric Level 4: derive the ℤ₁₆ bordism invariants, discharge `SmithInflow`
 
-**Status:** 🏁 **GOAL COMPLETE 2026-06-15** — all 8 `Lit-Search/Phase-5qF/goal_prompt.md` criteria MET, fresh adversarial review GENUINE. Continuation of [Phase 5q.E](Phase5qE_SixteenConvergence_Roadmap.md) — the "16 convergence."
+**Status:** 🏁 honest-scope goal (`goal_prompt.md`, 8 criteria) COMPLETE 2026-06-15 (review GENUINE). ▶▶ **NOW ACTIVE (user-directed 2026-06-15): the FULL-STRENGTH fully-unconditional goal `goal_prompt_unconditional.md`** — full-carrier `Ω₄^{Pin⁺}≅ℤ/16` with `ker(abkGrade)=0`, NO `PinPlusBordismLandmark`/cap-hypothesis/disclosed Prop. **The "Optional residual strengthening" in the completion summary below is SUPERSEDED — the w₂-floor-collapse (Wu/Poincaré-duality/fundamental-class, the brick-6 PD foundation) is now REQUIRED, not optional.** The user explicitly rejected the "fully-unconditional is precluded/optional" framing as the over-defer reflex (notebook 2026-06-15, l.535): ABK-completeness (Kirby–Taylor) + the floor are a BUILD LIST, not a wall. Active route + brick log: `Lit-Search/Phase-5qF/LAB_NOTEBOOK.md` (brick 6c excision → c8 Lebesgue → 6d/6e/6f). Continuation of [Phase 5q.E](Phase5qE_SixteenConvergence_Roadmap.md) — the "16 convergence."
 **Owner workstream:** public `SK_EFT_Hawking` Lean.
 **Tracker = this file.** Lab notebook (active): `Lit-Search/Phase-5qF/LAB_NOTEBOOK.md`.
 
