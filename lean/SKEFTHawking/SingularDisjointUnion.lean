@@ -19,6 +19,7 @@ open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularH0
 open SKEFTHawking.SingularFunctoriality SKEFTHawking.SingularReducedH0
 open SKEFTHawking.SingularRelativeHomologyMod2 SKEFTHawking.SingularExcision
+open SKEFTHawking.SingularPairLES
 
 namespace SKEFTHawking.SingularDisjointUnion
 
@@ -102,5 +103,30 @@ theorem subspaceChains_inf_compl_eq_bot {X : TopCat} {U : Set ↑X} (k : ℕ) :
   have hxU : x ∈ U := range_realize_simplexIncl U σU hx
   have hxUc : x ∈ Uᶜ := range_realize_simplexIncl Uᶜ σUc (by rw [hσUc]; exact hx)
   exact hxUc hxU
+
+/-! ## §4. The degree-0 additivity isomorphism and reduced `H̃₀` -/
+
+/-- **The degree-0 additivity map** `H₀(U) × H₀(Uᶜ) → H₀(X)`, `(a, b) ↦ i_*(a) + i_*(b)`. -/
+noncomputable def splitH0 {X : TopCat} (U : Set ↑X) :
+    Homology (sub U) 0 × Homology (sub Uᶜ) 0 →ₗ[ZMod 2] Homology X 0 :=
+  (homIncl U 0).coprod (homIncl Uᶜ 0)
+
+/-- `splitH0` is **surjective**: every `0`-chain of `X` splits across the clopen partition
+(`subspaceChains_sup_compl_eq_top`), and every `0`-chain is a cycle. -/
+theorem splitH0_surjective {X : TopCat} {U : Set ↑X} (hU : IsClopen U) :
+    Function.Surjective (splitH0 U) := by
+  intro x
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  have hz : (z : SingularChain X 0) ∈ subspaceChains (S := U) 0 ⊔ subspaceChains (S := Uᶜ) 0 := by
+    rw [subspaceChains_sup_compl_eq_top hU]; exact Submodule.mem_top
+  rw [Submodule.mem_sup] at hz
+  obtain ⟨_, ⟨zU, rfl⟩, _, ⟨zUc, rfl⟩, hsum⟩ := hz
+  refine ⟨(Homology.mk (sub U) 0 ⟨zU, Submodule.mem_top⟩,
+    Homology.mk (sub Uᶜ) 0 ⟨zUc, Submodule.mem_top⟩), ?_⟩
+  show homIncl U 0 (Homology.mk (sub U) 0 _) + homIncl Uᶜ 0 (Homology.mk (sub Uᶜ) 0 _)
+      = Homology.mk X 0 z
+  rw [homIncl_mk, homIncl_mk,
+    show z = (⟨_, Submodule.mem_top⟩ : cycles X 0) + ⟨_, Submodule.mem_top⟩ from Subtype.ext hsum.symm]
+  rfl
 
 end SKEFTHawking.SingularDisjointUnion
