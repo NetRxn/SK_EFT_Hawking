@@ -849,6 +849,10 @@ import SKEFTHawking.SingularSubdivision
 -- heart of excision) — barycenter-to-vertex bound ‖barycenter v − vⱼ‖ ≤ (n/(n+1))·diam (the i=j term
 -- vanishes), the contraction factor n/(n+1)<1 driving diam(Sdᵐ pieces)→0.
 import SKEFTHawking.SingularSubdivisionDiameter
+-- Phase 5q.F (w₂-foundation, brick 6c-c8.4): singular excision — joins the subdivision chain homotopy to
+-- the affine diameter estimate via the iterate connection Sdᵐ[σ]=σ_#((Sd_aff)ᵐ ιₙ); the model simplex ιₙ
+-- has diameter ≤ 1 so iterated subdivision shrinks its pieces below any ε (Lebesgue-smallness seed).
+import SKEFTHawking.SingularExcision
 -- Phase 5q.F (fully-unconditional strengthening, w₂-foundation brick 5, 2026-06-15): the Wu class v₂ from
 -- Poincaré duality — for a PD datum (fundamental-class functional μ:H⁴→ℤ/2 + non-degenerate middle cup
 -- pairing, finite-dim H²), v₂∈H² represents x↦⟨Sq²x,[M]⟩ (wu_relation), the input to the Wu formula
