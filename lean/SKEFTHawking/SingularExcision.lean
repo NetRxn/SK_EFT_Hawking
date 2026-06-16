@@ -472,4 +472,46 @@ theorem subspaceChains_inf {X : TopCat} (A B : Set X) (n : ℕ) :
   · exact fun c hc => mem_subspaceChains_of_support
       (fun τ hτ => (range_of_mem_subspaceChains hc hτ).trans Set.inter_subset_right)
 
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **`D` commutes with the subspace inclusion**: `D ∘ chainIncl A = chainIncl A ∘ D`. -/
+theorem singularD_chainIncl {X : TopCat} (A : Set X) (n : ℕ) (d : SingularChain (sub A) n) :
+    singularD X n (chainIncl A n d) = chainIncl A (n + 1) (singularD (sub A) n d) := by
+  induction d using Finsupp.induction_linear with
+  | zero => simp only [map_zero]
+  | add c d hc hd => simp only [map_add, hc, hd]
+  | single τ' a =>
+    rw [chainIncl_single,
+      show (Finsupp.single (simplexIncl A n τ') a) = a • Finsupp.single (simplexIncl A n τ') (1 : ZMod 2)
+        by rw [Finsupp.smul_single, smul_eq_mul, mul_one],
+      show (Finsupp.single τ' a) = a • Finsupp.single τ' (1 : ZMod 2)
+        by rw [Finsupp.smul_single, smul_eq_mul, mul_one],
+      map_smul, map_smul, map_smul, singularD_single, singularD_single,
+      pushChainM_simplexIncl A τ'
+        (linHomotopy_mem_chainsIn (convex_stdSimplex ℝ _) n (idChain_mem n))]
+
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **`D` preserves subspace chains** `C(A)`. -/
+theorem singularD_mem_subspaceChains {X : TopCat} {A : Set X} {n : ℕ}
+    {c : SingularChain X n} (hc : c ∈ subspaceChains A n) :
+    singularD X n c ∈ subspaceChains A (n + 1) := by
+  obtain ⟨d, rfl⟩ := hc
+  exact ⟨singularD (sub A) n d, (singularD_chainIncl A n d).symm⟩
+
+/-- Iterating `Sd` keeps a subspace chain in the subspace. -/
+theorem singularSd_iterate_mem_subspaceChains {X : TopCat} {A : Set X} {n : ℕ}
+    {c : SingularChain X n} (hc : c ∈ SingularRelativeHomologyMod2.subspaceChains A n) (m : ℕ) :
+    (⇑(singularSd X n))^[m] c ∈ SingularRelativeHomologyMod2.subspaceChains A n := by
+  induction m with
+  | zero => rwa [Function.iterate_zero_apply]
+  | succ k ih => rw [Function.iterate_succ_apply']; exact singularSd_mem_subspaceChains ih
+
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **`Dₘ` preserves subspace chains** — so the chain homotopy descends to `C(X)/C(A)`. -/
+theorem iterHomotopy_mem_subspaceChains {X : TopCat} {A : Set X} {n : ℕ}
+    {c : SingularChain X n} (hc : c ∈ subspaceChains A n) (m : ℕ) :
+    iterHomotopy X n m c ∈ subspaceChains A (n + 1) := by
+  rw [iterHomotopy]
+  exact Submodule.sum_mem _
+    (fun i _ => singularSd_iterate_mem_subspaceChains (singularD_mem_subspaceChains hc) i)
+
 end SKEFTHawking.SingularExcision
