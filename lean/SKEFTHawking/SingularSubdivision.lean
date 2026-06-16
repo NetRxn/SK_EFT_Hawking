@@ -199,7 +199,7 @@ theorem singularD_chainHomotopy (X : TopCat) (n : ℕ) :
       = LinearMap.id + singularSd X (n + 1) := by
   refine LinearMap.ext fun c => ?_
   induction c using Finsupp.induction_linear with
-  | zero => simp only [map_zero, LinearMap.add_apply, add_zero]
+  | zero => simp only [map_zero]
   | add c d hc hd =>
     simp only [LinearMap.add_apply, LinearMap.comp_apply, LinearMap.id_apply, map_add] at hc hd ⊢
     rw [← hc, ← hd, add_add_add_comm]
@@ -265,5 +265,89 @@ theorem iterHomotopy_chainHomotopy (X : TopCat) (m : ℕ) :
           = c + (⇑(singularSd X (n + 1)))^[m + 1] c
             + ((⇑(singularSd X (n + 1)))^[m] c + (⇑(singularSd X (n + 1)))^[m] c) from by abel,
       ZModModule.add_self, add_zero]
+
+/-- The linear map `Δᴹ-vertices → Δᴺ-vertices`, `x ↦ ∑ₖ xₖ • uₖ`, sending the basis vertex `eⱼ` to `uⱼ`.
+Realises the affine simplex on the points `u` as a linear vertex-relabelling, so the subdivision's
+naturality under `mapVerts` carries over to the affine-image pushforward. -/
+noncomputable def vertsMap {N M : ℕ} (u : Fin (M + 1) → (Fin (N + 1) → ℝ)) :
+    (Fin (M + 1) → ℝ) →ₗ[ℝ] (Fin (N + 1) → ℝ) :=
+  ∑ k, (LinearMap.proj k).smulRight (u k)
+
+theorem vertsMap_apply {N M : ℕ} (u : Fin (M + 1) → (Fin (N + 1) → ℝ)) (x : Fin (M + 1) → ℝ) :
+    vertsMap u x = ∑ k, x k • u k := by
+  simp only [vertsMap, LinearMap.coe_sum, Finset.sum_apply, LinearMap.smulRight_apply,
+    LinearMap.proj_apply]
+
+theorem vertsMap_basis {N M : ℕ} (u : Fin (M + 1) → (Fin (N + 1) → ℝ)) (j : Fin (M + 1)) :
+    vertsMap u (Pi.single j 1) = u j := by
+  rw [vertsMap_apply]
+  simp only [Pi.single_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ,
+    if_true]
+
+/-- **The module-valued pushforward is functorial in the simplex (chain level)**: for an affine chain
+`c` on `Δᴹ`, pushing it along `pushSimplexM σ u` equals pushing its affine `vertsMap u`-relabelling
+along `σ`. Reduces (via `chainsIn` span-induction) to `pushSimplexM_pushSimplexM` on each basis simplex,
+identifying the composite vertices `∑ₖ xⱼₖ•uₖ` with `vertsMap u ∘ x`. -/
+theorem pushChainM_pushSimplexM {X : TopCat} {N M n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    {u : Fin (M + 1) → (Fin (N + 1) → ℝ)} (hu : ∀ k, u k ∈ stdSimplex ℝ (Fin (N + 1)))
+    {c : LinChain (Fin (M + 1) → ℝ) n} (hc : c ∈ chainsIn (stdSimplex ℝ (Fin (M + 1))) n) :
+    pushChainM (pushSimplexM σ u) c = pushChainM σ (mapVerts (vertsMap u) n c) := by
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ hc
+  · rintro _ ⟨x, hx, rfl⟩
+    have hv : (fun j => ∑ k, x j k • u k) = ⇑(vertsMap u) ∘ x := by
+      funext j; rw [Function.comp_apply, vertsMap_apply]
+    rw [pushChainM_single, pushSimplexM_pushSimplexM σ hu hx, mapVerts_single, pushChainM_single, hv]
+  · simp only [map_zero]
+  · intro a b _ _ ha hb; simp only [map_add, ha, hb]
+  · intro r a _ ha; simp only [map_smul, ha]
+
+/-- **The singular subdivision is natural under the pushforward**: `Sd(σ_# c) = σ_#(Sd c)` for an affine
+chain `c` on `Δᴺ`. Reduces (via `chainsIn` span-induction) to a basis simplex `[u]`, where both sides are
+`σ`-pushforwards of `Sd(ι_n)` relabelled by `vertsMap u` — matched through `pushChainM_pushSimplexM` and
+the affine naturality `mapVerts_linSubdiv` (with `mapVerts (vertsMap u) ιₙ = [u]` by `vertsMap_basis`). -/
+theorem singularSd_pushChainM {X : TopCat} {N n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    {c : LinChain (Fin (N + 1) → ℝ) n} (hc : c ∈ chainsIn (stdSimplex ℝ (Fin (N + 1))) n) :
+    singularSd X n (pushChainM σ c) = pushChainM σ (linSubdiv n c) := by
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ hc
+  · rintro _ ⟨u, hu, rfl⟩
+    have hbase : mapVerts (vertsMap u) n (idChain n) = Finsupp.single u 1 := by
+      rw [idChain, mapVerts_single]
+      have hcoe : (⇑(vertsMap u) ∘ fun j => (Pi.single j 1 : Fin (n + 1) → ℝ)) = u := by
+        funext j; rw [Function.comp_apply, vertsMap_basis]
+      rw [hcoe]
+    rw [pushChainM_single, singularSd_single,
+      pushChainM_pushSimplexM σ hu
+        (linSubdiv_mem_chainsIn (convex_stdSimplex ℝ _) n (idChain_mem n)),
+      mapVerts_linSubdiv, hbase]
+  · simp only [map_zero]
+  · intro a b _ _ ha hb; simp only [map_add, ha, hb]
+  · intro r a _ ha; simp only [map_smul, ha]
+
+/-- The iterated subdivision of the identity chain stays in `Δⁿ`'s in-simplex chains (subdivision is
+convexity-preserving), so the naturality applies at every iterate. -/
+theorem linSubdiv_iterate_idChain_mem (n m : ℕ) :
+    (⇑(linSubdiv n))^[m] (idChain n) ∈ chainsIn (stdSimplex ℝ (Fin (n + 1))) n := by
+  induction m with
+  | zero => rw [Function.iterate_zero_apply]; exact idChain_mem n
+  | succ k ih =>
+    rw [Function.iterate_succ_apply']
+    exact linSubdiv_mem_chainsIn (convex_stdSimplex ℝ _) n ih
+
+/-- **The iterate connection**: the `m`-fold singular subdivision of a basis simplex `σ` is `σ`
+pushed-forward over the `m`-fold *affine* subdivision of the identity simplex —
+`Sdᵐ[σ] = σ_#((Sd_aff)ᵐ ιₙ)`. The bridge that hands the affine diameter estimate (`linSubdiv_iterate_diamLe`)
+to the singular Lebesgue/excision argument. Induction on `m` from `singularSd_pushChainM`. -/
+theorem singularSd_iterate_single {X : TopCat} {n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) (m : ℕ) :
+    (⇑(singularSd X n))^[m] (Finsupp.single σ 1) = pushChainM σ ((⇑(linSubdiv n))^[m] (idChain n)) := by
+  induction m with
+  | zero =>
+    rw [Function.iterate_zero_apply, Function.iterate_zero_apply, idChain, pushChainM_single,
+      pushSimplexM_vertices]
+  | succ k ih =>
+    rw [Function.iterate_succ_apply', ih,
+      singularSd_pushChainM σ (linSubdiv_iterate_idChain_mem n k), Function.iterate_succ_apply']
 
 end SKEFTHawking.SingularSubdivision
