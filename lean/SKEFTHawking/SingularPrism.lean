@@ -271,4 +271,24 @@ theorem prismAlpha_comp_faceMap_succ {n : ℕ} (i : Fin (n + 1)) :
   simp only [h]
   exact affineSimplexStd_vertex_id
 
+/-- The β-value of the `w`-diagonal face (`j = i.succ`) is the partial stdSimplex sum over `l > i`. -/
+theorem prismBeta_faceMap_succ_eq {n : ℕ} (i : Fin (n + 1)) (t : stdSimplex ℝ (Fin (n + 1))) :
+    ((prismBeta i (faceMap i.succ t) : unitInterval) : ℝ)
+      = ∑ l ∈ Finset.univ.filter (fun l => i < l), (t : Fin (n + 1) → ℝ) l := by
+  rw [prismBeta_faceMap_coe]
+  refine Finset.sum_congr (Finset.filter_congr (fun l _ => ?_)) (fun _ _ => rfl)
+  unfold Fin.succAbove
+  split_ifs with hc <;> simp only [Fin.lt_def, Fin.val_castSucc, Fin.val_succ] at hc ⊢ <;> omega
+
+/-- The β-value of the `v`-diagonal face (`j = i.castSucc`) is the partial stdSimplex sum over
+`l ≥ i`. -/
+theorem prismBeta_faceMap_castSucc_eq {n : ℕ} (i : Fin (n + 1)) (t : stdSimplex ℝ (Fin (n + 1))) :
+    ((prismBeta i (faceMap i.castSucc t) : unitInterval) : ℝ)
+      = ∑ l ∈ Finset.univ.filter (fun l => i ≤ l), (t : Fin (n + 1) → ℝ) l := by
+  rw [prismBeta_faceMap_coe]
+  refine Finset.sum_congr (Finset.filter_congr (fun l _ => ?_)) (fun _ _ => rfl)
+  unfold Fin.succAbove
+  split_ifs with hc <;>
+    simp only [Fin.lt_def, Fin.le_def, Fin.val_castSucc, Fin.val_succ] at hc ⊢ <;> omega
+
 end SKEFTHawking.SingularPrism
