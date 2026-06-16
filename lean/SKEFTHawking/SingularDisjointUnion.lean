@@ -19,7 +19,7 @@ open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularH0
 open SKEFTHawking.SingularFunctoriality SKEFTHawking.SingularReducedH0
 open SKEFTHawking.SingularRelativeHomologyMod2 SKEFTHawking.SingularExcision
-open SKEFTHawking.SingularPairLES
+open SKEFTHawking.SingularPairLES SKEFTHawking.SingularHomotopyInvariance
 
 namespace SKEFTHawking.SingularDisjointUnion
 
@@ -222,5 +222,25 @@ theorem augH_ker_iso_zmod2 {X : TopCat} {U : Set ↑X} (hU : IsClopen U)
     omega
   exact ⟨(Module.finBasisOfFinrankEq (ZMod 2) _ hker).equivFun.trans
     (LinearEquiv.funUnique (Fin 1) (ZMod 2) (ZMod 2))⟩
+
+/-- **A nonempty convex subset of a normed space is reduced-acyclic with nonzero `H₀`**: `ε̄` is
+bijective. Injective via the straight-line contraction `(x, t) ↦ (1-t)•x + t•p` to a basepoint `p`
+(stays in `C` by convexity); surjective since `C` is nonempty. The reduced-acyclic input the two
+pieces of `ℝ¹∖0` (open half-lines, convex) feed to `augH_ker_iso_zmod2`. -/
+theorem convex_augH_bijective {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {C : Set E} (hC : Convex ℝ C) {p : E} (hp : p ∈ C) :
+    Function.Bijective (augH (sub (X := TopCat.of E) C)) := by
+  let hcont : C(↑(sub (X := TopCat.of E) C) × unitInterval, ↑(sub (X := TopCat.of E) C)) :=
+    ⟨fun q => ⟨(1 - (q.2 : ℝ)) • (q.1 : E) + (q.2 : ℝ) • p,
+        hC q.1.2 hp (by linarith [q.2.2.2]) q.2.2.1 (by ring)⟩, by fun_prop⟩
+  refine ⟨augH_injective_of_contraction hcont ⟨p, hp⟩ ?_ ?_,
+    augH_surjective (sub (X := TopCat.of E) C)
+      (constSimplex (⟨p, hp⟩ : ↑(sub (X := TopCat.of E) C)) 0)⟩
+  · refine ContinuousMap.ext fun x => Subtype.ext ?_
+    show (1 - ((0 : unitInterval) : ℝ)) • (x : E) + ((0 : unitInterval) : ℝ) • p = (x : E)
+    simp
+  · refine ContinuousMap.ext fun x => Subtype.ext ?_
+    show (1 - ((1 : unitInterval) : ℝ)) • (x : E) + ((1 : unitInterval) : ℝ) • p = p
+    simp
 
 end SKEFTHawking.SingularDisjointUnion
