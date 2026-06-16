@@ -25,6 +25,7 @@ strictly above `i`).
 
 open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularExcisionPushforward
+open SKEFTHawking.SingularCohomologyMod2
 
 namespace SKEFTHawking.SingularPrism
 
@@ -128,5 +129,18 @@ theorem prismBeta_faceMap_coe {n : ℕ} (i : Fin (n + 1)) (j : Fin (n + 2))
       ((faceMap j t : stdSimplex ℝ (Fin (n + 2))) : Fin (n + 2) → ℝ) k = _
   simp_rw [hcoe]
   exact sum_fiberwise_filter (fun m => j.succAbove m) (fun k => i.castSucc < k) (t : Fin (n + 1) → ℝ)
+
+/-- **Gateway face computation**: the realization of the `j`-th face of the `i`-th prism simplex of
+`σ` is `H` applied to the coface-restricted prism map. The α-component is `prismAlpha i ∘ δ_j`
+(simplifiable by `prismAlpha_comp_face`), the β-component is `prismBeta i ∘ δ_j` (whose value is
+`prismBeta_faceMap_coe`). Each face of `prismSimplex` is then classified by these two. -/
+theorem prismSimplex_face {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) (i : Fin (n + 1)) (j : Fin (n + 2)) :
+    (Y.toSSetObjEquiv (op (SimplexCategory.mk n))) (face j (prismSimplex H σ i))
+      = H.comp
+          ((((X.toSSetObjEquiv (op (SimplexCategory.mk n)) σ).comp (prismAlpha i)).comp
+              (faceMap j)).prodMk ((prismBeta i).comp (faceMap j))) := by
+  rw [prismSimplex, toSSetObjEquiv_symm_face]
+  rfl
 
 end SKEFTHawking.SingularPrism
