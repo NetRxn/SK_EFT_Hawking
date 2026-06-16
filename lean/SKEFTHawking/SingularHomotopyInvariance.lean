@@ -118,6 +118,23 @@ theorem Homology.map_bijective_of_comp_id {X Y : TopCat} (f : C(↑X, ↑Y)) (g 
     ⟨fun p => p.1, continuous_fst⟩
     (by rw [hfg]; exact ContinuousMap.ext fun _ => rfl) (ContinuousMap.ext fun _ => rfl) n
 
+/-- **A two-sided continuous inverse induces an isomorphism on `Hₙ` in EVERY degree** (including
+`n = 0`): unlike `map_bijective_of_comp_id`, this uses only functoriality (`map_comp`, `map_id`), not
+homotopy invariance, so it holds in degree `0` too — the input to the reduced-`H̃₀` bottom of the
+sphere/local-homology computation. -/
+theorem Homology.map_bijective_of_comp_id_all {X Y : TopCat} (f : C(↑X, ↑Y)) (g : C(↑Y, ↑X))
+    (hgf : g.comp f = ContinuousMap.id ↑X) (hfg : f.comp g = ContinuousMap.id ↑Y) (n : ℕ) :
+    Function.Bijective (Homology.map f n) := by
+  have h1 : (Homology.map g n).comp (Homology.map f n) = LinearMap.id := by
+    rw [← Homology.map_comp, hgf, Homology.map_id]
+  have h2 : (Homology.map f n).comp (Homology.map g n) = LinearMap.id := by
+    rw [← Homology.map_comp, hfg, Homology.map_id]
+  refine ⟨fun a b hab => ?_, fun y => ⟨Homology.map g n y, ?_⟩⟩
+  · have := congrArg (Homology.map g n) hab
+    rwa [← LinearMap.comp_apply, ← LinearMap.comp_apply, h1, LinearMap.id_apply,
+      LinearMap.id_apply] at this
+  · rw [← LinearMap.comp_apply, h2, LinearMap.id_apply]
+
 /-! ## §2. The constant simplex (towards acyclicity of contractible spaces) -/
 
 /-- The **constant `k`-simplex** at a point `b ∈ X`: the realization `Δᵏ → X` of the constant map. -/

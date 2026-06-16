@@ -47,4 +47,10 @@ theorem cycle_mem_boundaries (n k : ℕ) (z : SingularChain (Eucl n) (k + 1))
   cycle_mem_boundaries_of_contraction (contraction n) 0 (slice_contraction_zero n)
     (slice_contraction_one n) z hz
 
+/-- **`ℝⁿ` is reduced-acyclic**: the augmentation `ε̄ : H₀(ℝⁿ) → ℤ/2` is injective (`H̃₀(ℝⁿ) = 0`),
+since `ℝⁿ` is contractible. The base reduced-acyclic space for the bottom suspension. -/
+theorem eucl_augH_injective (n : ℕ) : Function.Injective (SingularH0.augH (Eucl n)) :=
+  augH_injective_of_contraction (contraction n) 0 (slice_contraction_zero n)
+    (slice_contraction_one n)
+
 end SKEFTHawking.SingularEuclideanAcyclic
