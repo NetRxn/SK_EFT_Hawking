@@ -77,4 +77,13 @@ theorem bottomSuspMap_range :
   exact connecting_zero_range_of_augH_injective (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))
     (punctured_sphere_augH_injective (v := antipode v))
 
+/-- **The bottom sphere suspension isomorphism** `H₁(Sⁿ) ≅ H̃₀(Sⁿ∖{v,-v}) = ker ε̄`: `bottomSuspMap`
+is injective (`bottomSuspMap_injective`) onto exactly `ker ε̄` (`bottomSuspMap_range`). For `n = 1` this
+is the base `H₁(S¹) ≅ H̃₀(S⁰) ≅ ℤ/2`; for `n ≥ 2` the equator is connected so the right side is `0`. -/
+noncomputable def bottomSuspEquiv :
+    Homology (Sph n) 1 ≃ₗ[ZMod 2]
+      ↥(LinearMap.ker (augH (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))))) :=
+  (LinearEquiv.ofInjective (bottomSuspMap n v) bottomSuspMap_injective).trans
+    (LinearEquiv.ofEq _ _ bottomSuspMap_range)
+
 end SKEFTHawking.SingularSphereBottom
