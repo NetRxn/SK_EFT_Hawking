@@ -28,6 +28,20 @@ theorem homology_trivial_of_acyclic {X : TopCat} {n : ℕ}
   refine (Submodule.Quotient.mk_eq_zero _).mpr ?_
   exact Submodule.mem_comap.mpr (hac z z.2)
 
+/-- The converse: if `Hₙ₊₁(X) = 0` then every `(n+1)`-cycle is a boundary. -/
+theorem boundaries_of_homology_trivial {X : TopCat} {n : ℕ}
+    (h : ∀ x : Homology X (n + 1), x = 0) (z : SingularChain X (n + 1))
+    (hz : chainBoundary X n z = 0) : z ∈ boundaries X (n + 1) :=
+  Submodule.mem_comap.mp ((Submodule.Quotient.mk_eq_zero _).mp (h (Homology.mk X (n + 1) ⟨z, hz⟩)))
+
+/-- **Triviality of homology transports across a homology isomorphism**: if `Hₙ(f)` is bijective
+and `Hₙ(Y) = 0`, then `Hₙ(X) = 0`. Combined with `boundaries_of_homology_trivial` this transports
+acyclicity across a homotopy equivalence. -/
+theorem homology_trivial_of_bijective {X Y : TopCat} {n : ℕ} (f : C(↑X, ↑Y))
+    (hf : Function.Bijective (Homology.map f n)) (hY : ∀ y : Homology Y n, y = 0)
+    (x : Homology X n) : x = 0 :=
+  hf.injective (by rw [map_zero]; exact hY _)
+
 /-- `Hₖ₊₁(ℝⁿ; ℤ/2) = 0` (every class is zero). -/
 theorem eucl_homology_trivial (m k : ℕ) (x : Homology (SingularEuclideanAcyclic.Eucl m) (k + 1)) :
     x = 0 :=
