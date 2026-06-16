@@ -235,6 +235,24 @@ theorem pushSimplexM_face {X : TopCat} {N n : ℕ}
     pushSimplexM_of_mem σ (u := u ∘ i.succAbove) (fun j => hu (i.succAbove j)), pushSimplex_face]
   rfl
 
+/-- **The module-valued pushforward is functorial in the simplex**: pushing the in-simplex tuple `u`
+along `σ`, then pushing the in-simplex tuple `x` along the result, equals pushing the single composite
+tuple `j ↦ ∑ₖ xⱼₖ • uₖ` (the affine image of `x`'s vertices through `u`) along `σ`. Lifts
+`pushSimplex_pushSimplex` to `pushSimplexM` (both tuples corestrict; the composite vertex is the affine
+combination, identified via `affineSimplexStd_coe_apply`). -/
+theorem pushSimplexM_pushSimplexM {X : TopCat} {N M n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    {u : Fin (M + 1) → (Fin (N + 1) → ℝ)} (hu : ∀ k, u k ∈ stdSimplex ℝ (Fin (N + 1)))
+    {x : Fin (n + 1) → (Fin (M + 1) → ℝ)} (hx : ∀ j, x j ∈ stdSimplex ℝ (Fin (M + 1))) :
+    pushSimplexM (pushSimplexM σ u) x = pushSimplexM σ (fun j => ∑ k, x j k • u k) := by
+  have hcomp : ∀ j, (∑ k, x j k • u k) ∈ stdSimplex ℝ (Fin (N + 1)) :=
+    fun j => (convex_stdSimplex ℝ (Fin (N + 1))).sum_mem (fun k _ => (hx j).1 k) (hx j).2
+      (fun k _ => hu k)
+  rw [pushSimplexM_of_mem σ hu, pushSimplexM_of_mem _ hx, pushSimplexM_of_mem σ hcomp,
+    pushSimplex_pushSimplex]
+  refine congrArg (pushSimplex σ) (funext fun j => Subtype.ext ?_)
+  exact affineSimplexStd_coe_apply _ _
+
 /-- **The affine simplex on all the vertices of `Δᴺ` is the identity**: `affineSimplexStd (vertex ·) =
 id` (`∑ⱼ tⱼ eⱼ = t` for `t ∈ Δᴺ`). The "leading term" `ι_N` of the subdivision pushes to `σ` itself. -/
 theorem affineSimplexStd_vertex_id {N : ℕ} :
