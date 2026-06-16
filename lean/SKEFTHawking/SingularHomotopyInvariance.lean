@@ -237,4 +237,24 @@ theorem augmentation_ker_le_boundaries_of_contraction {U : TopCat} (H : C(↑U �
   rw [prism_chainHomotopy_zero, endMap_eq_mapChain, endMap_eq_mapChain, h0, h1, mapChain_id,
     mapChain_const, ← SingularH0.augmentation_apply, hz, Finsupp.single_zero, zero_add]
 
+/-- **The augmentation `ε̄ : H₀(U) → ℤ/2` is injective for a contractible space** — its kernel is
+reduced `H̃₀(U)`, trivial by `augmentation_ker_le_boundaries_of_contraction`. -/
+theorem augH_injective_of_contraction {U : TopCat} (H : C(↑U × unitInterval, ↑U)) (b : ↑U)
+    (h0 : slice H 0 = ContinuousMap.id ↑U) (h1 : slice H 1 = ContinuousMap.const ↑U b) :
+    Function.Injective (SingularH0.augH U) := by
+  rw [← LinearMap.ker_eq_bot, eq_bot_iff]
+  intro x hx
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  rw [LinearMap.mem_ker] at hx
+  refine (Submodule.mem_bot _).mpr ((Submodule.Quotient.mk_eq_zero _).mpr (Submodule.mem_comap.mpr ?_))
+  exact augmentation_ker_le_boundaries_of_contraction H b h0 h1 (z : SingularChain U 0) hx
+
+/-- **`H₀(U; ℤ/2) ≅ ℤ/2` for a contractible space** `U`: the augmentation `ε̄` is bijective
+(surjective on any nonempty space, injective by contractibility). Hence reduced `H̃₀(U) = 0`. -/
+noncomputable def homologyZeroContractibleEquiv {U : TopCat} (H : C(↑U × unitInterval, ↑U)) (b : ↑U)
+    (h0 : slice H 0 = ContinuousMap.id ↑U) (h1 : slice H 1 = ContinuousMap.const ↑U b) :
+    Homology U 0 ≃ₗ[ZMod 2] ZMod 2 :=
+  LinearEquiv.ofBijective (SingularH0.augH U)
+    ⟨augH_injective_of_contraction H b h0 h1, SingularH0.augH_surjective U (constSimplex b 0)⟩
+
 end SKEFTHawking.SingularHomotopyInvariance
