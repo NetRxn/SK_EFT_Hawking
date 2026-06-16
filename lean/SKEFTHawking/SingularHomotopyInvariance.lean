@@ -47,6 +47,39 @@ theorem mapChain_slice_add_mem_boundaries {X Y : TopCat} {n : ℕ} (H : C(↑X �
   rw [← endMap_eq_mapChain, ← endMap_eq_mapChain]
   exact endMap_add_mem_boundaries H z hz
 
+/-- The underlying chain of a cycle-level difference is `f_#(z) + g_#(z)` (over ℤ/2 the subtraction
+is addition). Stated for generic `f`, `g` so the homology-quotient proof never elaborates the
+expensive `slice` map. -/
+private theorem cyclesMap_sub_coe {X Y : TopCat} (f g : C(↑X, ↑Y)) (n : ℕ) (z : cycles X (n + 1)) :
+    (cycles Y (n + 1)).subtype (cyclesMap f (n + 1) z - cyclesMap g (n + 1) z)
+      = mapChain f (n + 1) (z : SingularChain X (n + 1))
+        + mapChain g (n + 1) (z : SingularChain X (n + 1)) := by
+  rw [map_sub, Submodule.subtype_apply, Submodule.subtype_apply, cyclesMap_coe, cyclesMap_coe,
+    sub_eq_add_neg, neg_eq_of_add_eq_zero_right (ZModModule.add_self _)]
+
+/-- **Homology agreement from a chain-level boundary condition**: if `f_#(z) + g_#(z)` is a boundary
+for every cycle `z`, then `f` and `g` induce the same map on `Hₙ₊₁(·; ℤ/2)`. Generic `f`, `g` keeps
+the quotient manipulation away from the expensive `slice` whnf. -/
+theorem Homology.map_eq_of_chain_add_mem {X Y : TopCat} (f g : C(↑X, ↑Y)) (n : ℕ)
+    (hfg : ∀ z : SingularChain X (n + 1), chainBoundary X n z = 0 →
+        mapChain f (n + 1) z + mapChain g (n + 1) z ∈ boundaries Y (n + 1)) :
+    Homology.map f (n + 1) = Homology.map g (n + 1) := by
+  refine LinearMap.ext fun x => ?_
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  rw [Homology.map, Homology.map]
+  refine (Submodule.mapQ_apply _ _ _ _).trans
+    (Eq.trans ((Submodule.Quotient.eq _).mpr (Submodule.mem_comap.mpr ?_))
+      (Submodule.mapQ_apply _ _ _ _).symm)
+  rw [cyclesMap_sub_coe]
+  exact hfg z z.2
+
+/-- **Homotopy invariance of the homology functor** (degree `≥ 1`): the two slices `H(·, 1)` and
+`H(·, 0)` induce the same map on `Hₙ₊₁(·; ℤ/2)`, so homotopic maps are equal on homology. -/
+theorem Homology.map_slice_eq {X Y : TopCat} (H : C(↑X × unitInterval, ↑Y)) (n : ℕ) :
+    Homology.map (slice H 1) (n + 1) = Homology.map (slice H 0) (n + 1) :=
+  Homology.map_eq_of_chain_add_mem (slice H 1) (slice H 0) n
+    (fun z hz => mapChain_slice_add_mem_boundaries H z hz)
+
 /-! ## §2. The constant simplex (towards acyclicity of contractible spaces) -/
 
 /-- The **constant `k`-simplex** at a point `b ∈ X`: the realization `Δᵏ → X` of the constant map. -/
