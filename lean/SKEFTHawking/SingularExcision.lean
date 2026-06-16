@@ -347,4 +347,36 @@ theorem smallChains_two_le {X : TopCat} (A B : Set X) (n : ℕ) :
   · exact Submodule.mem_sup_left (single_mem_subspaceChains_of_subordinate hsub)
   · exact Submodule.mem_sup_right (single_mem_subspaceChains_of_subordinate hsub)
 
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- An included simplex `simplexIncl A τ'` has image inside `A`. -/
+theorem range_simplexIncl_subset {X : TopCat} (A : Set X) {n : ℕ}
+    (τ' : (TopCat.toSSet.obj (sub A)).obj (op (SimplexCategory.mk n))) :
+    Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk n)) (simplexIncl A n τ')) ⊆ A := by
+  rw [toSSetObjEquiv_simplexIncl]
+  rintro _ ⟨t, rfl⟩
+  exact ((sub A).toSSetObjEquiv (op (SimplexCategory.mk n)) τ' t).2
+
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- The subspace chains of a cover member are small (an `A`-simplex has image in `A ∈ 𝒰`). With
+`smallChains_two_le` this gives `smallChains {A, B} = subspaceChains A ⊔ subspaceChains B`. -/
+theorem subspaceChains_le_smallChains {X : TopCat} {A : Set X} {𝒰 : Set (Set X)} (hA : A ∈ 𝒰)
+    (n : ℕ) : subspaceChains A n ≤ smallChains 𝒰 n := by
+  classical
+  rintro _ ⟨d, rfl⟩
+  refine mem_smallChains_of_support (fun τ hτ => ?_)
+  rw [chainIncl, Finsupp.lmapDomain_apply] at hτ
+  obtain ⟨τ', _, rfl⟩ := Finset.mem_image.1 (Finsupp.mapDomain_support hτ)
+  exact ⟨A, hA, range_simplexIncl_subset A τ'⟩
+
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **The two-cover decomposition (equality)** `C^{A,B} = C(A) + C(B)` — the small chains for `{A, B}`
+are exactly the sum of the two subspace chains. The algebraic identity underlying Mayer–Vietoris and
+excision. -/
+theorem smallChains_two_eq {X : TopCat} (A B : Set X) (n : ℕ) :
+    smallChains {A, B} n = subspaceChains A n ⊔ subspaceChains B n := by
+  have hA : A ∈ ({A, B} : Set (Set X)) := Set.mem_insert _ _
+  have hB : B ∈ ({A, B} : Set (Set X)) := Set.mem_insert_of_mem _ rfl
+  refine le_antisymm (smallChains_two_le A B n)
+    (sup_le (subspaceChains_le_smallChains hA n) (subspaceChains_le_smallChains hB n))
+
 end SKEFTHawking.SingularExcision
