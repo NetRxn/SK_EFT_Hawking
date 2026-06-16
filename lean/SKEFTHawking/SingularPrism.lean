@@ -427,4 +427,25 @@ theorem prism_internal_cancel {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterv
     simp only [Fin.lt_def, Fin.le_def, Fin.val_castSucc, Fin.val_succ]
     omega
 
+/-! ## §10. The boundary-identity double sums -/
+
+/-- `∂(prismBasis σ)` as a double sum of single faces of prism simplices. -/
+theorem chainBoundary_prismBasis {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) :
+    chainBoundary Y (n + 1) (prismBasis H (n + 1) σ)
+      = ∑ i : Fin (n + 2), ∑ j : Fin (n + 3), Finsupp.single (face j (prismSimplex H σ i)) 1 := by
+  rw [prismBasis, map_sum]
+  refine Finset.sum_congr rfl (fun i _ => ?_)
+  rw [chainBoundary_single, boundaryBasis]
+
+/-- `prismOp(∂σ)` as a double sum of single prism simplices of faces. -/
+theorem prismOp_chainBoundary {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) :
+    prismOp H n (chainBoundary X n (Finsupp.single σ 1))
+      = ∑ k : Fin (n + 2), ∑ i' : Fin (n + 1),
+          Finsupp.single (prismSimplex H (face k σ) i') 1 := by
+  rw [chainBoundary_single, boundaryBasis, map_sum]
+  refine Finset.sum_congr rfl (fun k _ => ?_)
+  rw [prismOp_single, one_smul, prismBasis]
+
 end SKEFTHawking.SingularPrism
