@@ -532,4 +532,43 @@ theorem relative_add_singularSd_iterate_mem_relBoundaries {X : TopCat} {A : Set 
     (Submodule.Quotient.mk_eq_zero _).2 (iterHomotopy_mem_subspaceChains hc m)
   rw [hadd, ← iterHomotopy_chainHomotopy X m n c, ← hadd, hzero, add_zero]
 
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **The relative small-chains homotopy (injective half)**: a *small* relative cycle `z` (`z ∈ C^𝒰`,
+`∂z ∈ C(A)`) that is a relative boundary `z ≡ ∂w (mod C(A))` is already a relative boundary by a *small*
+chain `w' = Sdᵐw + Dₘz` (small, since `Sdᵐw` and `Dₘz` are). Indeed `z + ∂w' = Sdᵐ(z+∂w) + Dₘ(∂z) ∈ C(A)`
+(both terms in `C(A)` — `Sd`/`Dₘ` preserve `C(A)`, and `z+∂w, ∂z ∈ C(A)`). With the surjective half this
+makes `C^𝒰/C(A) ↪ C(X)/C(A)` a relative homology iso. -/
+theorem relative_small_boundary {X : TopCat} {A : Set X} {𝒰 : Set (Set X)}
+    (hcov : (⋃ U ∈ 𝒰, interior U) = Set.univ) {n : ℕ} {z : SingularChain X (n + 1)}
+    (hz_small : z ∈ smallChains 𝒰 (n + 1)) (hz_rcyc : chainBoundary X n z ∈ subspaceChains A n)
+    {w : SingularChain X (n + 2)} (hw : z + chainBoundary X (n + 1) w ∈ subspaceChains A (n + 1)) :
+    ∃ w' ∈ smallChains 𝒰 (n + 2), z + chainBoundary X (n + 1) w' ∈ subspaceChains A (n + 1) := by
+  obtain ⟨m, hm⟩ := exists_iterate_smallChains hcov w
+  refine ⟨(⇑(singularSd X (n + 2)))^[m] w + iterHomotopy X (n + 1) m z,
+    Submodule.add_mem _ hm (iterHomotopy_mem_smallChains hz_small m), ?_⟩
+  have hsd : chainBoundary X (n + 1) (iterHomotopy X (n + 1) m z)
+      = z + (⇑(singularSd X (n + 1)))^[m] z + iterHomotopy X n m (chainBoundary X n z) := by
+    have h2 : chainBoundary X (n + 1) (iterHomotopy X (n + 1) m z)
+          + (iterHomotopy X n m (chainBoundary X n z) + iterHomotopy X n m (chainBoundary X n z))
+        = z + (⇑(singularSd X (n + 1)))^[m] z + iterHomotopy X n m (chainBoundary X n z) := by
+      rw [← add_assoc, iterHomotopy_chainHomotopy X m n z]
+    rwa [ZModModule.add_self, add_zero] at h2
+  have hsdw : (⇑(singularSd X (n + 1)))^[m] (z + chainBoundary X (n + 1) w)
+      = (⇑(singularSd X (n + 1)))^[m] z + (⇑(singularSd X (n + 1)))^[m] (chainBoundary X (n + 1) w) := by
+    rw [← Module.End.coe_pow, map_add]
+  have key : z + chainBoundary X (n + 1)
+        ((⇑(singularSd X (n + 2)))^[m] w + iterHomotopy X (n + 1) m z)
+      = (⇑(singularSd X (n + 1)))^[m] (z + chainBoundary X (n + 1) w)
+        + iterHomotopy X n m (chainBoundary X n z) := by
+    rw [map_add, singularSd_iterate_chainBoundary, hsd, hsdw,
+      show z + ((⇑(singularSd X (n + 1)))^[m] (chainBoundary X (n + 1) w)
+            + (z + (⇑(singularSd X (n + 1)))^[m] z + iterHomotopy X n m (chainBoundary X n z)))
+          = (z + z) + (((⇑(singularSd X (n + 1)))^[m] z
+              + (⇑(singularSd X (n + 1)))^[m] (chainBoundary X (n + 1) w))
+            + iterHomotopy X n m (chainBoundary X n z)) by abel,
+      ZModModule.add_self, zero_add]
+  rw [key]
+  exact Submodule.add_mem _ (singularSd_iterate_mem_subspaceChains hw m)
+    (iterHomotopy_mem_subspaceChains hz_rcyc m)
+
 end SKEFTHawking.SingularExcision
