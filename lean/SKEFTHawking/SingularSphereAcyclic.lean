@@ -14,6 +14,7 @@ open CategoryTheory Opposite Metric
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularEuclideanAcyclic SKEFTHawking.SingularFunctoriality
 open SKEFTHawking.SingularHomotopyInvariance SKEFTHawking.SingularLocalHomology
+open SKEFTHawking.SingularPairLES
 
 namespace SKEFTHawking.SingularSphereAcyclic
 
@@ -69,5 +70,17 @@ theorem punctured_sphere_acyclic (k : ℕ) (z : SingularChain (Apunc n v) (k + 1
   boundaries_of_homology_trivial
     (homology_trivial_of_bijective (stereoMap n v) (stereoMap_bijective k)
       (eucl_homology_trivial n k)) z hz
+
+/-- The homology of the punctured sphere is trivial in positive degrees. -/
+theorem punctured_sphere_homology_trivial (k : ℕ) (x : Homology (Apunc n v) (k + 1)) : x = 0 :=
+  homology_trivial_of_acyclic (fun z hz => punctured_sphere_acyclic k z hz) x
+
+/-- **`Hₖ₊₂(Sⁿ) ≅ Hₖ₊₂(Sⁿ, Sⁿ ∖ {v})`**: the projection is an isomorphism because the punctured
+sphere `Sⁿ ∖ {v}` is acyclic. This is the first step of the sphere suspension `Hₖ(Sⁿ) ≅ Hₖ₋₁(Sⁿ⁻¹)`
+(the relative group `Hₖ₊₂(Sⁿ, Sⁿ∖{v})` is the half that excision moves to the other pole). -/
+theorem homProj_sphere_bijective (k : ℕ) :
+    Function.Bijective (homProj ({v}ᶜ : Set ↑(Sph n)) (k + 2)) :=
+  homProj_bijective_of_acyclic ({v}ᶜ : Set ↑(Sph n)) (k + 1)
+    (punctured_sphere_homology_trivial (k + 1)) (punctured_sphere_homology_trivial k)
 
 end SKEFTHawking.SingularSphereAcyclic
