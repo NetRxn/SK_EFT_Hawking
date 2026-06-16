@@ -250,4 +250,20 @@ theorem add_singularSd_iterate_eq_boundary {X : TopCat} {n : ℕ} {c : SingularC
   rw [hc, iterHomotopy_zero, add_zero] at h
   exact h.symm
 
+/-- **The surjective half of the small-chains theorem**: every cycle `z` is homologous to a *small*
+cycle, namely `Sdᵐ z` for `m` large enough. (`Sdᵐ z` is small by `exists_iterate_smallChains`; a cycle
+because `Sd` is a chain map (`singularSd_iterate_chainBoundary`) and `∂z = 0`; homologous to `z` by
+`add_singularSd_iterate_eq_boundary`.) So every singular homology class has a `𝒰`-small representative —
+the surjectivity that, with excision's relative version, computes `Hₙ(X,A)` by small chains. -/
+theorem exists_small_cycle_homologous {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
+    (hcov : (⋃ U ∈ 𝒰, interior U) = Set.univ) {z : SingularChain X (n + 1)}
+    (hz : chainBoundary X n z = 0) :
+    ∃ m, (⇑(singularSd X (n + 1)))^[m] z ∈ smallChains 𝒰 (n + 1) ∧
+      chainBoundary X n ((⇑(singularSd X (n + 1)))^[m] z) = 0 ∧
+      z + (⇑(singularSd X (n + 1)))^[m] z ∈ LinearMap.range (chainBoundary X (n + 1)) := by
+  obtain ⟨m, hm⟩ := exists_iterate_smallChains hcov z
+  refine ⟨m, hm, ?_,
+    ⟨iterHomotopy X (n + 1) m z, (add_singularSd_iterate_eq_boundary hz m).symm⟩⟩
+  rw [singularSd_iterate_chainBoundary, hz, ← Module.End.coe_pow, map_zero]
+
 end SKEFTHawking.SingularExcision
