@@ -74,4 +74,36 @@ theorem range_pushSimplexM_subset {X : TopCat} {N n : ℕ}
     _ ≤ ε := norm_sub_affineSimplex_le (u 0) u t hball
     _ < δ := hεδ
 
+/-- **Lebesgue smallness for a singular simplex**: if the interiors of a family `𝒰` cover `X`, then enough
+barycentric subdivisions make every simplex of `Sdᵐ[σ]` subordinate to `𝒰` (image inside some `U ∈ 𝒰`).
+The cover pulls back along `σ̃` to an open cover of the compact `Δⁿ`; a Lebesgue number `δ` and a
+subdivision fine enough that the affine pieces have diameter `< δ` put each `σ`-pushed piece inside a
+ball that `σ̃` maps into a cover element. The geometric input to the small-chains excision theorem. -/
+theorem exists_iterate_subordinate {X : TopCat} {n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n)))
+    {𝒰 : Set (Set X)} (hcov : (⋃ U ∈ 𝒰, interior U) = Set.univ) :
+    ∃ m, ∀ τ ∈ ((⇑(singularSd X n))^[m] (Finsupp.single σ 1)).support,
+      ∃ U ∈ 𝒰, Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk n)) τ) ⊆ U := by
+  classical
+  set f := X.toSSetObjEquiv (op (SimplexCategory.mk n)) σ with hfdef
+  have hopen : ∀ U : ↥𝒰, IsOpen (f ⁻¹' interior (U : Set X)) :=
+    fun U => isOpen_interior.preimage f.continuous
+  have hcover : (Set.univ : Set ↥(stdSimplex ℝ (Fin (n + 1)))) ⊆
+      ⋃ U : ↥𝒰, f ⁻¹' interior (U : Set X) := by
+    intro t _
+    have ht : (f t : X) ∈ ⋃ U ∈ 𝒰, interior U := by rw [hcov]; trivial
+    obtain ⟨U, hU, htU⟩ := Set.mem_iUnion₂.1 ht
+    exact Set.mem_iUnion.2 ⟨⟨U, hU⟩, htU⟩
+  obtain ⟨δ, hδ, hlb⟩ := lebesgue_number_lemma_of_metric isCompact_univ hopen hcover
+  obtain ⟨m, hm⟩ := exists_iterate_idChain_diamLe n (ε := δ / 2) (by positivity)
+  refine ⟨m, fun τ hτ => ?_⟩
+  rw [singularSd_iterate_single, pushChainM, Finsupp.lmapDomain_apply] at hτ
+  obtain ⟨w, hw, rfl⟩ := Finset.mem_image.1 (Finsupp.mapDomain_support hτ)
+  have hu : ∀ j, w j ∈ stdSimplex ℝ (Fin (n + 1)) :=
+    chainsIn_support (linSubdiv_iterate_idChain_mem n m) w hw
+  obtain ⟨U, hUball⟩ := hlb ⟨w 0, hu 0⟩ (Set.mem_univ _)
+  exact ⟨(U : Set X), U.property,
+    (range_pushSimplexM_subset σ hu (by linarith) (fun j => hm w hw 0 j) hUball).trans
+      interior_subset⟩
+
 end SKEFTHawking.SingularExcision
