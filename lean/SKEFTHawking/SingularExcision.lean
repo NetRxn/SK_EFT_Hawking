@@ -379,4 +379,31 @@ theorem smallChains_two_eq {X : TopCat} (A B : Set X) (n : ℕ) :
   refine le_antisymm (smallChains_two_le A B n)
     (sup_le (subspaceChains_le_smallChains hA n) (subspaceChains_le_smallChains hB n))
 
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **Pushforward commutes with the subspace inclusion**: `(simplexIncl A τ')_# w = simplexIncl A ((τ')_# w)`
+— both realizations are `Subtype.val ∘ τ'~ ∘ affineSimplexStd w` (`toSSetObjEquiv` injective). The
+naturality letting `Sd` descend to the subspace chains. -/
+theorem pushSimplexM_simplexIncl {X : TopCat} (A : Set X) {n k : ℕ}
+    (τ' : (TopCat.toSSet.obj (sub A)).obj (op (SimplexCategory.mk n)))
+    {w : Fin (k + 1) → (Fin (n + 1) → ℝ)} (hw : ∀ j, w j ∈ stdSimplex ℝ (Fin (n + 1))) :
+    pushSimplexM (simplexIncl A n τ') w = simplexIncl A k (pushSimplexM τ' w) := by
+  apply (X.toSSetObjEquiv (op (SimplexCategory.mk k))).injective
+  rw [pushSimplexM_realize (simplexIncl A n τ') hw, toSSetObjEquiv_simplexIncl,
+    toSSetObjEquiv_simplexIncl, pushSimplexM_realize τ' hw]
+  rfl
+
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- Chain-level: pushing an in-simplex affine chain along an included simplex equals including the
+pushforward — `(simplexIncl A τ')_# c = chainIncl A ((τ')_# c)`. -/
+theorem pushChainM_simplexIncl {X : TopCat} (A : Set X) {n k : ℕ}
+    (τ' : (TopCat.toSSet.obj (sub A)).obj (op (SimplexCategory.mk n)))
+    {c : LinChain (Fin (n + 1) → ℝ) k} (hc : c ∈ chainsIn (stdSimplex ℝ (Fin (n + 1))) k) :
+    pushChainM (simplexIncl A n τ') c = chainIncl A k (pushChainM τ' c) := by
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ hc
+  · rintro _ ⟨w, hw, rfl⟩
+    rw [pushChainM_single, pushSimplexM_simplexIncl A τ' hw, pushChainM_single, chainIncl_single]
+  · rw [map_zero, map_zero, map_zero]
+  · intro a b _ _ ha hb; rw [map_add, map_add, map_add, ha, hb]
+  · intro r a _ ha; rw [map_smul, map_smul, map_smul, ha]
+
 end SKEFTHawking.SingularExcision
