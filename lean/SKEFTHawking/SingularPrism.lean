@@ -245,4 +245,14 @@ theorem face_zero_prismSimplex_zero {X Y : TopCat} {n : ℕ} (H : C(↑X × unit
   exact (congrArg (((X.toSSetObjEquiv (op (SimplexCategory.mk n))) σ).comp ·)
     prismAlpha_zero_comp_faceMap_zero).trans (ContinuousMap.comp_id _)
 
+/-! ## §7. The diagonal faces (`j = i.castSucc`, `j = i.succ`) collapse the prism map -/
+
+/-- The `α`-component of the `i`-th prism map restricted along the `i.castSucc` coface is the
+identity (`Fin.predAbove_succAbove` — the adjacent codegeneracy ∘ coface law). -/
+theorem prismAlpha_comp_faceMap_castSucc {n : ℕ} (i : Fin (n + 1)) :
+    (prismAlpha i).comp (faceMap i.castSucc) = ContinuousMap.id _ := by
+  rw [prismAlpha_comp_face]
+  simp only [Fin.predAbove_succAbove]
+  exact affineSimplexStd_vertex_id
+
 end SKEFTHawking.SingularPrism
