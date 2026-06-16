@@ -162,4 +162,45 @@ theorem singularSd_mem_smallChains {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
   · intro a b _ _ ha hb; rw [map_add]; exact Submodule.add_mem _ ha hb
   · intro r a _ ha; rw [map_smul]; exact Submodule.smul_mem _ r ha
 
+/-- A chain all of whose support simplices are subordinate is small. -/
+theorem mem_smallChains_of_support {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)} {c : SingularChain X n}
+    (h : ∀ τ ∈ c.support, IsSubordinate 𝒰 τ) : c ∈ smallChains 𝒰 n := by
+  classical
+  rw [← Finsupp.sum_single c, Finsupp.sum]
+  refine Submodule.sum_mem _ (fun τ hτ => ?_)
+  have hτs : Finsupp.single τ (c τ) = (c τ) • Finsupp.single τ (1 : ZMod 2) := by
+    rw [Finsupp.smul_single, smul_eq_mul, mul_one]
+  rw [hτs]
+  exact Submodule.smul_mem _ _ (single_mem_smallChains (h τ hτ))
+
+/-- Iterating `Sd` keeps a small chain small. -/
+theorem singularSd_iterate_mem_smallChains {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
+    {c : SingularChain X n} (hc : c ∈ smallChains 𝒰 n) (m : ℕ) :
+    (⇑(singularSd X n))^[m] c ∈ smallChains 𝒰 n := by
+  induction m with
+  | zero => rwa [Function.iterate_zero_apply]
+  | succ k ih => rw [Function.iterate_succ_apply']; exact singularSd_mem_smallChains ih
+
+/-- **Any chain becomes small under enough subdivisions**: if the interiors of `𝒰` cover `X`, then for
+any singular `n`-chain `c` there is `m` with `Sdᵐ c` small. (Each support simplex needs `m_τ`
+subdivisions — `exists_iterate_subordinate`; take the `Finset.sup`, and `Sd` preserves smallness so the
+extra subdivisions do no harm.) The hypothesis the small-chains chain-homotopy-equivalence consumes. -/
+theorem exists_iterate_smallChains {X : TopCat} {n : ℕ} {𝒰 : Set (Set X)}
+    (hcov : (⋃ U ∈ 𝒰, interior U) = Set.univ) (c : SingularChain X n) :
+    ∃ m, (⇑(singularSd X n))^[m] c ∈ smallChains 𝒰 n := by
+  classical
+  choose! M hM using fun (τ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) =>
+    exists_iterate_subordinate τ hcov
+  obtain ⟨m, hm⟩ : ∃ m, ∀ τ ∈ c.support, M τ ≤ m :=
+    ⟨c.support.sup M, fun _ hτ => Finset.le_sup hτ⟩
+  refine ⟨m, ?_⟩
+  rw [← Finsupp.sum_single c, ← Module.End.coe_pow, Finsupp.sum, map_sum]
+  refine Submodule.sum_mem _ (fun τ hτ => ?_)
+  have hτs : Finsupp.single τ (c τ) = (c τ) • Finsupp.single τ (1 : ZMod 2) := by
+    rw [Finsupp.smul_single, smul_eq_mul, mul_one]
+  rw [hτs, map_smul, Module.End.coe_pow,
+    ← Nat.sub_add_cancel (hm τ hτ), Function.iterate_add_apply]
+  exact Submodule.smul_mem _ _
+    (singularSd_iterate_mem_smallChains (mem_smallChains_of_support (hM τ)) _)
+
 end SKEFTHawking.SingularExcision
