@@ -309,6 +309,28 @@ theorem predAbove_succAbove_of_gt {n : ℕ} {i : Fin (n + 2)} {j : Fin (n + 1)}
     Fin.predAbove j.castSucc (Fin.succAbove i.succ m) = Fin.succAbove i (Fin.predAbove j m) :=
   congrArg (fun f => (ConcreteCategory.hom f) m) (SimplexCategory.δ_comp_σ_of_gt H)
 
+/-- **The `v`-side prism-face α-identity**: `prismAlpha (j₀.succ) ∘ δ_{i₀.castSucc} = δ_{i₀} ∘
+prismAlpha j₀` (for `i₀ ≤ j₀.castSucc`). The vertex data agree by `predAbove_succAbove_of_le`. -/
+theorem prismAlpha_comp_faceMap_eq_v {n : ℕ} {i₀ : Fin (n + 2)} {j₀ : Fin (n + 1)}
+    (H : i₀ ≤ j₀.castSucc) :
+    (prismAlpha j₀.succ).comp (faceMap i₀.castSucc) = (faceMap i₀).comp (prismAlpha j₀) := by
+  rw [prismAlpha_comp_face, prismAlpha, faceMap, stdSimplexMap_comp_affineSimplexStd]
+  congr 1
+  funext m
+  exact (congrArg stdSimplex.vertex (predAbove_succAbove_of_le H m)).trans
+    (stdSimplex.map_vertex _ _).symm
+
+/-- **The `w`-side prism-face α-identity**: `prismAlpha (j₀.castSucc) ∘ δ_{i₀.succ} = δ_{i₀} ∘
+prismAlpha j₀` (for `j₀.castSucc < i₀`). -/
+theorem prismAlpha_comp_faceMap_eq_w {n : ℕ} {i₀ : Fin (n + 2)} {j₀ : Fin (n + 1)}
+    (H : j₀.castSucc < i₀) :
+    (prismAlpha j₀.castSucc).comp (faceMap i₀.succ) = (faceMap i₀).comp (prismAlpha j₀) := by
+  rw [prismAlpha_comp_face, prismAlpha, faceMap, stdSimplexMap_comp_affineSimplexStd]
+  congr 1
+  funext m
+  exact (congrArg stdSimplex.vertex (predAbove_succAbove_of_gt H m)).trans
+    (stdSimplex.map_vertex _ _).symm
+
 /-! ## §9. Internal cancellation of the diagonal faces -/
 
 /-- **Internal cancellation**: the shared face `(i.castSucc).succ = (i.succ).castSucc` is the
