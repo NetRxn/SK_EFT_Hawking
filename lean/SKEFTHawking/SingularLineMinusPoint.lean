@@ -129,4 +129,16 @@ noncomputable def topSphereIso (m : ℕ) :
     Homology (SingularSphereAcyclic.Sph (m + 1)) (m + 1) ≃ₗ[ZMod 2] ZMod 2 :=
   (topSphereReduce m).trans circleH1Equiv
 
+open SKEFTHawking.SingularEuclideanAcyclic SKEFTHawking.SingularLocalHomology
+  SKEFTHawking.SingularPairLES in
+/-- **`Hₙ(ℝⁿ, ℝⁿ ∖ 0) ≅ ℤ/2`** for `n = m + 2` — the **local homology** of Euclidean space at the
+origin, the fundamental-class local model. The connecting iso `Hₙ(ℝⁿ,ℝⁿ∖0) ≅ Hₙ₋₁(ℝⁿ∖0)`
+(`ℝⁿ` acyclic), the deformation retract `Hₙ₋₁(ℝⁿ∖0) ≅ Hₙ₋₁(Sⁿ⁻¹)` (`normalize`), and `Hₙ₋₁(Sⁿ⁻¹) ≅ ℤ/2`
+(`topSphereIso`). -/
+noncomputable def localHomologyIso (m : ℕ) :
+    RelativeHomology (X := Eucl (m + 2)) {x | x ≠ 0} (m + 2) ≃ₗ[ZMod 2] ZMod 2 :=
+  (LinearEquiv.ofBijective _ (connecting_eucl_bijective (m + 2) m)).trans
+    ((LinearEquiv.ofBijective _ (homology_map_normalize_bijective (n := m + 2) m)).trans
+      (topSphereIso m))
+
 end SKEFTHawking.SingularLineMinusPoint
