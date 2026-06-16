@@ -40,6 +40,21 @@ noncomputable def affineSimplexStd {N n : ℕ} (w : Fin (n + 1) → stdSimplex �
   show affineSimplex (fun i => (w i : Fin (N + 1) → ℝ)) t = _
   rw [affineSimplex_apply]
 
+/-- **Affine simplices compose affinely**: realizing `v` (an affine `n`-simplex of `Δᴹ`) then `w` (an
+affine `M`-simplex of `Δᴺ`) is the single affine `n`-simplex of `Δᴺ` on the image vertices
+`j ↦ affineSimplexStd w (v j)`. The functoriality the singular subdivision's naturality consumes. -/
+theorem affineSimplexStd_comp_affineSimplexStd {N M n : ℕ}
+    (w : Fin (M + 1) → stdSimplex ℝ (Fin (N + 1))) (v : Fin (n + 1) → stdSimplex ℝ (Fin (M + 1))) :
+    (affineSimplexStd w).comp (affineSimplexStd v)
+      = affineSimplexStd (fun j => affineSimplexStd w (v j)) := by
+  -- Reduce to a coordinate double-sum by `change` (defeq: `affineSimplexStd`'s coe unfolds through the
+  -- `rfl`-lemma `affineSimplex_apply` to `∑ tᵢ • vᵢ`). This sidesteps the `⇑`/`↑` coercion-head mismatch.
+  ext t m
+  change (∑ k : Fin (M + 1), (∑ i : Fin (n + 1), ⇑t i • ⇑(v i)) k • ⇑(w k)) m
+       = (∑ i : Fin (n + 1), ⇑t i • ∑ k : Fin (M + 1), ⇑(v i) k • ⇑(w k)) m
+  simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Finset.sum_mul, Finset.mul_sum, mul_assoc]
+  rw [Finset.sum_comm]
+
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
 
 /-- **The pushforward of an affine `n`-simplex of `Δᴺ` along a singular `N`-simplex `σ`**: the singular
@@ -64,6 +79,17 @@ theorem pushChain_single {X : TopCat} {N n : ℕ}
     (w : Fin (n + 1) → stdSimplex ℝ (Fin (N + 1))) (a : ZMod 2) :
     pushChain σ (Finsupp.single w a) = Finsupp.single (pushSimplex σ w) a := by
   rw [pushChain, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single]
+
+/-- **The pushforward is functorial in the simplex**: pushing an affine `M`-simplex `w` along `σ`, then
+pushing an affine `n`-simplex `v` along the result, equals pushing the single composite affine simplex
+`j ↦ affineSimplexStd w (v j)` along `σ`. The simplex-level naturality (`σ̃` post-composition is
+associative) the singular subdivision's naturality consumes. -/
+theorem pushSimplex_pushSimplex {X : TopCat} {N M n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk N)))
+    (w : Fin (M + 1) → stdSimplex ℝ (Fin (N + 1))) (v : Fin (n + 1) → stdSimplex ℝ (Fin (M + 1))) :
+    pushSimplex (pushSimplex σ w) v = pushSimplex σ (fun j => affineSimplexStd w (v j)) := by
+  simp only [pushSimplex, Equiv.apply_symm_apply, ContinuousMap.comp_assoc]
+  exact congrArg _ (congrArg _ (affineSimplexStd_comp_affineSimplexStd w v))
 
 /-- **The `toSSetObjEquiv` naturality at a coface `δ i`** (the singular-set simplicial structure):
 applying `face i` to a simplex `= toSSetObjEquiv.symm g` corresponds, under `toSSetObjEquiv`, to
