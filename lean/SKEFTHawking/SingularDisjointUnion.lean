@@ -106,6 +106,11 @@ theorem subspaceChains_inf_compl_eq_bot {X : TopCat} {U : Set ↑X} (k : ℕ) :
 
 /-! ## §4. The degree-0 additivity isomorphism and reduced `H̃₀` -/
 
+/-- Over a `ℤ/2`-module, `a + b = 0` forces `a = b` (every element is its own negative). -/
+private theorem eq_of_add_eq_zero_two {M : Type*} [AddCommGroup M] [Module (ZMod 2) M] {a b : M}
+    (h : a + b = 0) : a = b := by
+  rw [← neg_eq_of_add_eq_zero_left h]; exact neg_eq_of_add_eq_zero_left (ZModModule.add_self b)
+
 /-- **The degree-0 additivity map** `H₀(U) × H₀(Uᶜ) → H₀(X)`, `(a, b) ↦ i_*(a) + i_*(b)`. -/
 noncomputable def splitH0 {X : TopCat} (U : Set ↑X) :
     Homology (sub U) 0 × Homology (sub Uᶜ) 0 →ₗ[ZMod 2] Homology X 0 :=
@@ -128,5 +133,61 @@ theorem splitH0_surjective {X : TopCat} {U : Set ↑X} (hU : IsClopen U) :
   rw [homIncl_mk, homIncl_mk,
     show z = (⟨_, Submodule.mem_top⟩ : cycles X 0) + ⟨_, Submodule.mem_top⟩ from Subtype.ext hsum.symm]
   rfl
+
+/-- **The chain-level injectivity core**: if a `U`-chain plus a `Uᶜ`-chain is a boundary in `X`, then
+each piece is a boundary in its own subspace. Splits the bounding `1`-chain across the clopen
+partition (`subspaceChains_sup_compl_eq_top`) and separates the two pieces (`..._inf_compl_eq_bot`). -/
+theorem chainIncl_add_mem_boundaries_split {X : TopCat} {U : Set ↑X} (hU : IsClopen U)
+    (zU : SingularChain (sub U) 0) (zUc : SingularChain (sub Uᶜ) 0)
+    (h : chainIncl U 0 zU + chainIncl Uᶜ 0 zUc ∈ boundaries X 0) :
+    zU ∈ boundaries (sub U) 0 ∧ zUc ∈ boundaries (sub Uᶜ) 0 := by
+  obtain ⟨w, hw⟩ := h
+  have hwsplit : w ∈ subspaceChains (S := U) 1 ⊔ subspaceChains (S := Uᶜ) 1 := by
+    rw [subspaceChains_sup_compl_eq_top hU]; exact Submodule.mem_top
+  rw [Submodule.mem_sup] at hwsplit
+  obtain ⟨_, ⟨wU, rfl⟩, _, ⟨wUc, rfl⟩, hwsum⟩ := hwsplit
+  rw [← hwsum, map_add, ← chainIncl_chainBoundary, ← chainIncl_chainBoundary] at hw
+  -- hw : chainIncl U (∂wU) + chainIncl Uᶜ (∂wUc) = chainIncl U zU + chainIncl Uᶜ zUc
+  set bU := chainBoundary (sub U) 0 wU
+  set bUc := chainBoundary (sub Uᶜ) 0 wUc
+  have hkey : chainIncl U 0 (bU + zU) = chainIncl Uᶜ 0 (bUc + zUc) := by
+    apply eq_of_add_eq_zero_two
+    rw [map_add, map_add,
+      show chainIncl U 0 bU + chainIncl U 0 zU + (chainIncl Uᶜ 0 bUc + chainIncl Uᶜ 0 zUc)
+        = (chainIncl U 0 bU + chainIncl Uᶜ 0 bUc) + (chainIncl U 0 zU + chainIncl Uᶜ 0 zUc) from by abel,
+      hw, ZModModule.add_self]
+  have hmemU : chainIncl U 0 (bU + zU) ∈ subspaceChains (S := U) 0 ⊓ subspaceChains (S := Uᶜ) 0 :=
+    ⟨⟨_, rfl⟩, hkey ▸ ⟨_, rfl⟩⟩
+  rw [subspaceChains_inf_compl_eq_bot, Submodule.mem_bot] at hmemU
+  have hzU : zU = bU :=
+    (eq_of_add_eq_zero_two (chainIncl_injective U 0 (hmemU.trans (map_zero _).symm))).symm
+  have hzUc : zUc = bUc :=
+    (eq_of_add_eq_zero_two
+      (chainIncl_injective Uᶜ 0 ((hkey ▸ hmemU).trans (map_zero _).symm))).symm
+  exact ⟨⟨wU, hzU.symm⟩, ⟨wUc, hzUc.symm⟩⟩
+
+/-- `splitH0` is **injective** (the chain-level core `chainIncl_add_mem_boundaries_split`). -/
+theorem splitH0_injective {X : TopCat} {U : Set ↑X} (hU : IsClopen U) :
+    Function.Injective (splitH0 U) := by
+  rw [← LinearMap.ker_eq_bot, eq_bot_iff]
+  rintro ⟨a, b⟩ hab
+  rw [LinearMap.mem_ker] at hab
+  obtain ⟨zU, rfl⟩ := Submodule.Quotient.mk_surjective _ a
+  obtain ⟨zUc, rfl⟩ := Submodule.Quotient.mk_surjective _ b
+  rw [show splitH0 U (Submodule.Quotient.mk zU, Submodule.Quotient.mk zUc)
+        = Homology.mk X 0 ⟨chainIncl U 0 (zU : SingularChain (sub U) 0)
+            + chainIncl Uᶜ 0 (zUc : SingularChain (sub Uᶜ) 0), Submodule.mem_top⟩ from rfl] at hab
+  have hab' : chainIncl U 0 (zU : SingularChain (sub U) 0)
+      + chainIncl Uᶜ 0 (zUc : SingularChain (sub Uᶜ) 0) ∈ boundaries X 0 :=
+    (Submodule.Quotient.mk_eq_zero ((boundaries X 0).submoduleOf (cycles X 0))).mp hab
+  obtain ⟨hzU, hzUc⟩ := chainIncl_add_mem_boundaries_split hU _ _ hab'
+  rw [Submodule.mem_bot, Prod.ext_iff]
+  exact ⟨(Submodule.Quotient.mk_eq_zero _).mpr (Submodule.mem_comap.mpr hzU),
+    (Submodule.Quotient.mk_eq_zero _).mpr (Submodule.mem_comap.mpr hzUc)⟩
+
+/-- **Degree-0 disjoint-union additivity**: `H₀(X) ≅ H₀(U) × H₀(Uᶜ)` for a clopen partition. -/
+noncomputable def splitH0Equiv {X : TopCat} {U : Set ↑X} (hU : IsClopen U) :
+    (Homology (sub U) 0 × Homology (sub Uᶜ) 0) ≃ₗ[ZMod 2] Homology X 0 :=
+  LinearEquiv.ofBijective (splitH0 U) ⟨splitH0_injective hU, splitH0_surjective hU⟩
 
 end SKEFTHawking.SingularDisjointUnion
