@@ -472,3 +472,143 @@ theorem prism_diagonal_telescope {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInt
   rw [show (Fin.last (n + 1) : Fin (n + 2)) = Fin.last (n + 1) from rfl, face_last_prismSimplex_last]
   rw [add_assoc, ← add_assoc _ _ (Finsupp.single (endSimplex H 0 σ) (1 : ZMod 2)),
     ZModModule.add_self, zero_add]
+
+/-! ## §11. Assembling the chain-homotopy identity `∂P + P∂ = g_# + f_#` -/
+
+/-- The `i`-th boundary face sum splits into the two **diagonal** faces (`j ∈ {i.castSucc, i.succ}`)
+and the remaining **side** faces (the `prismOp(∂σ)` terms). -/
+private theorem prism_face_sum_split {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) (i : Fin (n + 2)) :
+    ∑ j : Fin (n + 3), Finsupp.single (face j (prismSimplex H σ i)) (1 : ZMod 2)
+      = (Finsupp.single (face i.castSucc (prismSimplex H σ i)) 1
+          + Finsupp.single (face i.succ (prismSimplex H σ i)) 1)
+        + ∑ j ∈ Finset.univ.filter (fun j => ¬ (j = i.castSucc ∨ j = i.succ)),
+            Finsupp.single (face j (prismSimplex H σ i)) (1 : ZMod 2) := by
+  rw [← Finset.sum_filter_add_sum_filter_not Finset.univ
+    (fun j : Fin (n + 3) => j = i.castSucc ∨ j = i.succ)
+    (fun j => Finsupp.single (face j (prismSimplex H σ i)) (1 : ZMod 2))]
+  congr 1
+  have hne : i.castSucc ≠ i.succ := Fin.castSucc_lt_succ.ne
+  have hfilter : Finset.univ.filter (fun j : Fin (n + 3) => j = i.castSucc ∨ j = i.succ)
+      = {i.castSucc, i.succ} := by
+    rw [Finset.filter_or, Finset.filter_eq', Finset.filter_eq', if_pos (Finset.mem_univ _),
+      if_pos (Finset.mem_univ _), Finset.singleton_union]
+  rw [hfilter, Finset.sum_pair hne]
+
+/-- Splitting `∂(prismBasis σ)` into the diagonal sum (telescopes to `g_# + f_#`) and the side sum
+(equals `prismOp(∂σ)`). -/
+private theorem prism_boundary_diag_side {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) :
+    (∑ i : Fin (n + 2), ∑ j : Fin (n + 3),
+        Finsupp.single (face j (prismSimplex H σ i)) (1 : ZMod 2))
+      = (∑ p : Fin (n + 2), (Finsupp.single (face p.castSucc (prismSimplex H σ p)) 1
+          + Finsupp.single (face p.succ (prismSimplex H σ p)) 1))
+        + ∑ i : Fin (n + 2), ∑ j ∈ Finset.univ.filter (fun j => ¬ (j = i.castSucc ∨ j = i.succ)),
+            Finsupp.single (face j (prismSimplex H σ i)) (1 : ZMod 2) := by
+  rw [← Finset.sum_add_distrib]
+  exact Finset.sum_congr rfl (fun i _ => prism_face_sum_split H σ i)
+
+/-- **The side faces are exactly the `prismOp(∂σ)` terms**: the reindexing bijection `(k, i') ↦
+(i, j)` sending each prism-of-a-face simplex to the matching side face of a prism. `v` for
+`k ≤ i'.castSucc` (`(i, j) = (i'.succ, k.castSucc)`), `w` otherwise (`(i'.castSucc, k.succ)`). -/
+private theorem prism_prismOp_eq_side {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) :
+    (∑ k : Fin (n + 2), ∑ i' : Fin (n + 1),
+        Finsupp.single (prismSimplex H (face k σ) i') (1 : ZMod 2))
+      = ∑ i : Fin (n + 2), ∑ j ∈ Finset.univ.filter (fun j => ¬ (j = i.castSucc ∨ j = i.succ)),
+          Finsupp.single (face j (prismSimplex H σ i)) (1 : ZMod 2) := by
+  have hconv : (∑ i : Fin (n + 2),
+        ∑ j ∈ Finset.univ.filter (fun j => ¬ (j = i.castSucc ∨ j = i.succ)),
+          Finsupp.single (face j (prismSimplex H σ i)) (1 : ZMod 2))
+      = ∑ x ∈ (Finset.univ : Finset (Fin (n + 2) × Fin (n + 3))).filter
+            (fun x => ¬ (x.2 = x.1.castSucc ∨ x.2 = x.1.succ)),
+          Finsupp.single (face x.2 (prismSimplex H σ x.1)) (1 : ZMod 2) := by
+    rw [Finset.sum_filter, Fintype.sum_prod_type]
+    exact Finset.sum_congr rfl (fun i _ => Finset.sum_filter _ _)
+  rw [← Finset.sum_product', Finset.univ_product_univ, hconv]
+  refine Finset.sum_bij
+    (fun (a : Fin (n + 2) × Fin (n + 1)) _ =>
+      if a.1 ≤ a.2.castSucc then ((a.2.succ, a.1.castSucc) : Fin (n + 2) × Fin (n + 3))
+      else (a.2.castSucc, a.1.succ)) ?_ ?_ ?_ ?_
+  · intro a _
+    rw [Finset.mem_filter]
+    refine ⟨Finset.mem_univ _, ?_⟩
+    dsimp only
+    split_ifs with h
+    · simp only [Fin.le_def, Fin.val_castSucc] at h
+      simp only [not_or, Fin.ext_iff, Fin.val_castSucc, Fin.val_succ]
+      omega
+    · simp only [not_le, Fin.lt_def, Fin.val_castSucc] at h
+      simp only [not_or, Fin.ext_iff, Fin.val_castSucc, Fin.val_succ]
+      omega
+  · intro a₁ _ a₂ _ h
+    obtain ⟨k₁, i₁⟩ := a₁
+    obtain ⟨k₂, i₂⟩ := a₂
+    dsimp only at h
+    split_ifs at h with h1 h2 <;>
+      simp only [Prod.mk.injEq, Fin.ext_iff, Fin.le_def, not_le, Fin.val_castSucc,
+        Fin.val_succ] at * <;>
+      omega
+  · intro b hb
+    rw [Finset.mem_filter] at hb
+    obtain ⟨i, j⟩ := b
+    obtain ⟨_, hb2⟩ := hb
+    simp only [not_or, Fin.ext_iff, Fin.val_castSucc, Fin.val_succ] at hb2
+    have hilt : (i : ℕ) < n + 2 := i.isLt
+    have hjlt : (j : ℕ) < n + 3 := j.isLt
+    by_cases hreg : (j : ℕ) < (i : ℕ)
+    · refine ⟨(⟨(j : ℕ), by omega⟩, ⟨(i : ℕ) - 1, by omega⟩), Finset.mem_univ _, ?_⟩
+      dsimp only
+      have hc : (⟨(j : ℕ), by omega⟩ : Fin (n + 2))
+          ≤ (⟨(i : ℕ) - 1, by omega⟩ : Fin (n + 1)).castSucc := by
+        simp only [Fin.le_def, Fin.val_castSucc]; omega
+      rw [if_pos hc]
+      simp only [Prod.mk.injEq, Fin.ext_iff, Fin.val_succ, Fin.val_castSucc, and_true]
+      omega
+    · refine ⟨(⟨(j : ℕ) - 1, by omega⟩, ⟨(i : ℕ), by omega⟩), Finset.mem_univ _, ?_⟩
+      dsimp only
+      have hc : ¬ (⟨(j : ℕ) - 1, by omega⟩ : Fin (n + 2))
+          ≤ (⟨(i : ℕ), by omega⟩ : Fin (n + 1)).castSucc := by
+        simp only [not_le, Fin.lt_def, Fin.val_castSucc]; omega
+      rw [if_neg hc]
+      simp only [Prod.mk.injEq, Fin.ext_iff, Fin.val_succ, Fin.val_castSucc, true_and]
+      omega
+  · intro a _
+    dsimp only
+    split_ifs with h
+    · exact congrArg (Finsupp.single · (1 : ZMod 2)) (face_prismSimplex_side_v H σ h).symm
+    · rw [not_le] at h
+      exact congrArg (Finsupp.single · (1 : ZMod 2)) (face_prismSimplex_side_w H σ h).symm
+
+/-- **The chain-homotopy identity on a basis simplex**: `∂P + P∂ = g_# + f_#` evaluated at
+`single σ 1`. The boundary `∂(prismBasis σ)` splits into diagonal faces (telescoping to the two
+endpoints `g_#`, `f_#` via `prism_diagonal_telescope`) and side faces (which double the `prismOp(∂σ)`
+terms and cancel mod 2 via `prism_prismOp_eq_side`). -/
+theorem prism_chainHomotopy_single {X Y : TopCat} {n : ℕ} (H : C(↑X × unitInterval, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (n + 1)))) :
+    chainBoundary Y (n + 1) (prismOp H (n + 1) (Finsupp.single σ 1))
+        + prismOp H n (chainBoundary X n (Finsupp.single σ 1))
+      = endMap H 1 (n + 1) (Finsupp.single σ 1) + endMap H 0 (n + 1) (Finsupp.single σ 1) := by
+  rw [prismOp_single, one_smul, endMap_single, endMap_single, chainBoundary_prismBasis,
+    prismOp_chainBoundary, prism_boundary_diag_side, ← prism_prismOp_eq_side, add_assoc,
+    ZModModule.add_self, add_zero]
+  exact prism_diagonal_telescope H σ
+
+/-- **The prism operator is a chain homotopy** witnessing `f_# ≃ g_#`: for any chain `c`,
+`∂(Pc) + P(∂c) = g_#(c) + f_#(c)` (over ℤ/2). Extends `prism_chainHomotopy_single` off the basis by
+linearity. This is the engine of homotopy invariance of singular ℤ/2 homology. -/
+theorem prism_chainHomotopy {X Y : TopCat} (H : C(↑X × unitInterval, ↑Y)) {n : ℕ}
+    (c : SingularChain X (n + 1)) :
+    chainBoundary Y (n + 1) (prismOp H (n + 1) c) + prismOp H n (chainBoundary X n c)
+      = endMap H 1 (n + 1) c + endMap H 0 (n + 1) c := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp
+  | add c₁ c₂ h₁ h₂ =>
+      simp only [map_add]
+      rw [add_add_add_comm, add_add_add_comm (endMap H 1 (n + 1) c₁), h₁, h₂]
+  | single σ a =>
+      have hsa : Finsupp.single σ a = a • Finsupp.single σ (1 : ZMod 2) := by
+        rw [Finsupp.smul_single, smul_eq_mul, mul_one]
+      rw [hsa]
+      simp only [map_smul, ← smul_add]
+      exact congrArg (a • ·) (prism_chainHomotopy_single H σ)
