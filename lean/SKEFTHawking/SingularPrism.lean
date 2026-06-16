@@ -77,4 +77,18 @@ noncomputable def prismOp {X Y : TopCat} (H : C(↑X × unitInterval, ↑Y)) (n 
     prismOp H n (Finsupp.single σ a) = a • prismBasis H n σ := by
   rw [prismOp, Finsupp.linearCombination_single]
 
+/-! ## §3. Face computations (towards the chain-homotopy identity `∂P + P∂ = f_# + g_#`) -/
+
+/-- The affine `Δⁿ → Δⁿ⁺¹` coface map `δ_j` realized on standard simplices. -/
+noncomputable def faceMap {n : ℕ} (j : Fin (n + 2)) :
+    C(stdSimplex ℝ (Fin (n + 1)), stdSimplex ℝ (Fin (n + 2))) :=
+  ⟨stdSimplex.map (SimplexCategory.δ j), stdSimplex.continuous_map (SimplexCategory.δ j)⟩
+
+/-- The `Δⁿ`-component of the prism map post-composed with a coface is again affine, with vertex
+data `predAbove i ∘ j.succAbove` — the simplicial identity that drives the boundary computation. -/
+theorem prismAlpha_comp_face {n : ℕ} (i : Fin (n + 1)) (j : Fin (n + 2)) :
+    (prismAlpha i).comp (faceMap j)
+      = affineSimplexStd (fun k => stdSimplex.vertex (Fin.predAbove i (j.succAbove k))) :=
+  affineSimplexStd_comp_face (fun k => stdSimplex.vertex (Fin.predAbove i k)) j
+
 end SKEFTHawking.SingularPrism
