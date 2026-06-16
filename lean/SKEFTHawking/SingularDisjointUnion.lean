@@ -68,4 +68,39 @@ theorem subspaceChains_sup_compl_eq_top {X : TopCat} {U : Set ↑X} (hU : IsClop
       · exact hsmul ▸ Submodule.mem_sup_right
           (Submodule.smul_mem _ a (single_mem_subspaceChains_of_subordinate h))
 
+/-- The realization of an included simplex `simplexIncl A σ'` has range inside `A`. -/
+theorem range_realize_simplexIncl {X : TopCat} (A : Set ↑X) {k : ℕ}
+    (σ' : (TopCat.toSSet.obj (sub A)).obj (op (SimplexCategory.mk k))) :
+    Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk k)) (simplexIncl A k σ')) ⊆ A := by
+  rw [toSSetObjEquiv_simplexIncl]
+  rintro x ⟨t, rfl⟩
+  exact (((sub A).toSSetObjEquiv (op (SimplexCategory.mk k)) σ') t).2
+
+/-- **Disjoint supports**: a chain that is both an `U`-chain and a `Uᶜ`-chain is zero — a simplex
+cannot be both `U`-valued and `Uᶜ`-valued (its image is nonempty, so cannot lie in `U ∩ Uᶜ = ∅`).
+The injectivity half of degree-`0` disjoint-union additivity. -/
+theorem subspaceChains_inf_compl_eq_bot {X : TopCat} {U : Set ↑X} (k : ℕ) :
+    subspaceChains (S := U) k ⊓ subspaceChains (S := Uᶜ) k = ⊥ := by
+  rw [eq_bot_iff]
+  rintro c ⟨⟨a, rfl⟩, b, hb⟩
+  rw [Submodule.mem_bot]
+  ext τ
+  rw [Finsupp.coe_zero, Pi.zero_apply]
+  by_contra hne
+  have hτU : τ ∈ Set.range (simplexIncl U k) := by
+    by_contra hnr
+    exact hne (by rw [chainIncl, Finsupp.lmapDomain_apply]; exact Finsupp.mapDomain_notin_range a τ hnr)
+  have hτUc : τ ∈ Set.range (simplexIncl Uᶜ k) := by
+    by_contra hnr
+    refine hne ?_
+    rw [← hb, chainIncl, Finsupp.lmapDomain_apply]
+    exact Finsupp.mapDomain_notin_range b τ hnr
+  obtain ⟨σU, rfl⟩ := hτU
+  obtain ⟨σUc, hσUc⟩ := hτUc
+  obtain ⟨x, hx⟩ :=
+    Set.range_nonempty (X.toSSetObjEquiv (op (SimplexCategory.mk k)) (simplexIncl U k σU))
+  have hxU : x ∈ U := range_realize_simplexIncl U σU hx
+  have hxUc : x ∈ Uᶜ := range_realize_simplexIncl Uᶜ σUc (by rw [hσUc]; exact hx)
+  exact hxUc hxU
+
 end SKEFTHawking.SingularDisjointUnion
