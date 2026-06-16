@@ -133,4 +133,57 @@ theorem sphere_suspension_bijective (k : ℕ) :
     (((excisionEquiv ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ) (k + 1)
       (polar_cover (ne_antipode v))).symm.bijective).comp (homProj_sphere_bijective k))
 
+/-! ## §3. The equatorial homeomorphism `Sⁿ ∖ {v, -v} ≃ ℝⁿ ∖ 0` -/
+
+/-- `v` as a point of `Sⁿ ∖ {-v}` (it is distinct from its antipode). -/
+def vMem (v : Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) :
+    ↥({antipode v}ᶜ : Set ↑(Sph n)) :=
+  ⟨v, by rw [Set.mem_compl_iff, Set.mem_singleton_iff]; exact ne_antipode v⟩
+
+/-- **`Sⁿ ∖ {v, -v} ≃ₜ ℝⁿ ∖ 0`**: restrict the stereographic homeomorphism `Sⁿ ∖ {-v} ≃ ℝⁿ` to
+remove the second point `v` (mapping to `p₀`), then translate `ℝⁿ ∖ {p₀} ≃ ℝⁿ ∖ 0`. -/
+noncomputable def equatorHomeo (v : Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) :
+    ↥(restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)) ≃ₜ
+      ↥({x : EuclideanSpace ℝ (Fin n) | x ≠ 0}) :=
+  (Homeomorph.subtype (p := (· ∈ restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)))
+      (q := (· ≠ puncturedHomeo n (antipode v) (vMem v))) (puncturedHomeo n (antipode v))
+      (fun x => by
+        constructor
+        · intro hx he
+          exact hx (congrArg Subtype.val ((puncturedHomeo n (antipode v)).injective he))
+        · intro hx he
+          exact hx (congrArg (puncturedHomeo n (antipode v)) (Subtype.ext he)))).trans
+    (Homeomorph.subtype (q := (· ≠ (0 : EuclideanSpace ℝ (Fin n))))
+      (Homeomorph.subRight (puncturedHomeo n (antipode v) (vMem v)))
+      (fun _ => sub_ne_zero.symm))
+
+/-- The equatorial homeomorphism as a continuous map `Sⁿ ∖ {v, -v} → ℝⁿ ∖ 0`. -/
+noncomputable def equatorMap (v : Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) :
+    C(↑(sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))), ↑(SingularPuncturedRetract.Punc n)) :=
+  ⟨equatorHomeo v, (equatorHomeo v).continuous⟩
+
+/-- Its inverse. -/
+noncomputable def equatorMapInv (v : Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) :
+    C(↑(SingularPuncturedRetract.Punc n), ↑(sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)))) :=
+  ⟨(equatorHomeo v).symm, (equatorHomeo v).symm.continuous⟩
+
+theorem equatorMapInv_comp_equatorMap :
+    (equatorMapInv v).comp (equatorMap v) = ContinuousMap.id _ :=
+  ContinuousMap.ext fun x => (equatorHomeo v).symm_apply_apply x
+
+theorem equatorMap_comp_equatorMapInv :
+    (equatorMap v).comp (equatorMapInv v) = ContinuousMap.id _ :=
+  ContinuousMap.ext fun x => (equatorHomeo v).apply_symm_apply x
+
+/-- **`Sⁿ ∖ {v, -v} ≃ Sⁿ⁻¹` on homology**: the equatorial homeomorphism `Sⁿ∖{v,-v} ≃ ℝⁿ∖0` composed
+with the retract `ℝⁿ∖0 ≃ Sⁿ⁻¹`. -/
+theorem equator_to_sphere_bijective (k : ℕ) :
+    Function.Bijective
+      ((Homology.map (SingularPuncturedRetract.normalize (n := n)) (k + 1)).comp
+        (Homology.map (equatorMap v) (k + 1))) := by
+  rw [LinearMap.coe_comp]
+  exact (SingularPuncturedRetract.homology_map_normalize_bijective k).comp
+    (Homology.map_bijective_of_comp_id (equatorMap v) (equatorMapInv v)
+      equatorMapInv_comp_equatorMap equatorMap_comp_equatorMapInv k)
+
 end SKEFTHawking.SingularSphereAcyclic
