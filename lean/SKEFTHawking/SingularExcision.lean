@@ -303,4 +303,36 @@ theorem smallChains_boundary_of_boundary {X : TopCat} {n : ℕ} {𝒰 : Set (Set
   rw [map_add, singularSd_iterate_chainBoundary, hw,
     ← add_singularSd_iterate_eq_boundary hz_cyc m, add_left_comm, ZModModule.add_self, add_zero]
 
+/-! ## Relative excision: lifting subordinate simplices into subspace chains -/
+
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **`toSSetObjEquiv` naturality under the subspace inclusion**: the realization of `simplexIncl A σ'`
+(post-composing into `X`) is `Subtype.val` composed with `σ'`'s realization. Definitional, like the
+coface naturality. -/
+theorem toSSetObjEquiv_simplexIncl {X : TopCat} (A : Set X) {n : ℕ}
+    (σ' : (TopCat.toSSet.obj (sub A)).obj (op (SimplexCategory.mk n))) :
+    X.toSSetObjEquiv (op (SimplexCategory.mk n)) (simplexIncl A n σ')
+      = (ConcreteCategory.hom (inclMap A)).comp
+          ((sub A).toSSetObjEquiv (op (SimplexCategory.mk n)) σ') := rfl
+
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **Lifting lemma**: a singular simplex `τ` whose image lies in `A` is the inclusion of a simplex of
+`A` — so `[τ] ∈ subspaceChains A`. (Corestrict the realization `τ̃` to `↥A`; the corestricted simplex
+includes back to `τ` by the `simplexIncl` naturality + `Subtype.val ∘ corestrict = id`.) The geometric
+input letting a chain subordinate to a cover split into the cover's subspace chains. -/
+theorem single_mem_subspaceChains_of_subordinate {X : TopCat} {A : Set X} {n : ℕ}
+    {τ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))}
+    (hτ : Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk n)) τ) ⊆ A) :
+    Finsupp.single τ 1 ∈ subspaceChains A n := by
+  have hmem : ∀ t, X.toSSetObjEquiv (op (SimplexCategory.mk n)) τ t ∈ A := fun t => hτ ⟨t, rfl⟩
+  set g := X.toSSetObjEquiv (op (SimplexCategory.mk n)) τ with hg
+  set σ' := ((sub A).toSSetObjEquiv (op (SimplexCategory.mk n))).symm
+    (⟨fun t => ⟨g t, hmem t⟩, g.continuous.subtype_mk hmem⟩ :
+      C(stdSimplex ℝ (Fin (n + 1)), sub A)) with hσ'
+  have hincl : simplexIncl A n σ' = τ := by
+    apply (X.toSSetObjEquiv (op (SimplexCategory.mk n))).injective
+    rw [toSSetObjEquiv_simplexIncl, hσ', Equiv.apply_symm_apply]
+    rfl
+  exact ⟨Finsupp.single σ' 1, by rw [chainIncl_single, hincl]⟩
+
 end SKEFTHawking.SingularExcision
