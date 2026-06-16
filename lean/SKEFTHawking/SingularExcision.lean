@@ -335,4 +335,16 @@ theorem single_mem_subspaceChains_of_subordinate {X : TopCat} {A : Set X} {n : �
     rfl
   exact ⟨Finsupp.single σ' 1, by rw [chainIncl_single, hincl]⟩
 
+open SKEFTHawking.SingularRelativeHomologyMod2 in
+/-- **The two-cover decomposition**: a chain small for `{A, B}` splits into the subspace chains of `A`
+and `B` (each subordinate simplex lies in one of them, by the lifting lemma). The bridge from the
+small-chains theorem to Mayer–Vietoris and excision. -/
+theorem smallChains_two_le {X : TopCat} (A B : Set X) (n : ℕ) :
+    smallChains {A, B} n ≤ subspaceChains A n ⊔ subspaceChains B n := by
+  refine Submodule.span_le.2 ?_
+  rintro _ ⟨τ, ⟨U, hU, hsub⟩, rfl⟩
+  rcases hU with rfl | rfl
+  · exact Submodule.mem_sup_left (single_mem_subspaceChains_of_subordinate hsub)
+  · exact Submodule.mem_sup_right (single_mem_subspaceChains_of_subordinate hsub)
+
 end SKEFTHawking.SingularExcision
