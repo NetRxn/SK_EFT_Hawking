@@ -39,6 +39,12 @@ rejection — the only correct response is "right, do the next piece."
   that *is* the antipattern. Do the next brick. The loop ends only when the goal is
   genuinely met (→ closure reviewer) or the user redirects.
 
+**Running or arming a managed loop?** See the dev-harness operator's guide —
+[docs/dev-loops/HARNESS_GUIDE.md](docs/dev-loops/HARNESS_GUIDE.md): where to launch
+(from inside this repo — or the workspace root in a multi-repo setup; both resolve cwd-robustly),
+`/skeft-qa:goal-prompt` to arm, the slash-command reference, the System-2 harvest host,
+troubleshooting, and how to refresh the plugin cache after edits.
+
 ---
 
 ## When-to-read references (progressive disclosure)

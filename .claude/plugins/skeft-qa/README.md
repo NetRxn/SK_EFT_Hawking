@@ -3,6 +3,13 @@
 QA review agents **and** the autonomous-development harness for the
 **SK_EFT_Hawking** physics project.
 
+> **▶ Using the harness (launch, arm a `/goal` loop, slash-command reference, harvest
+> host, troubleshooting, cache refresh): see the operator's guide
+> [`docs/dev-loops/HARNESS_GUIDE.md`](../../../docs/dev-loops/HARNESS_GUIDE.md).**
+> Quickstart: launch CC from inside `SK_EFT_Hawking/` (or, in a multi-repo setup, from the
+> workspace root one level up — both work), then
+> `/skeft-qa:goal-prompt <what the loop should achieve>` → paste the printed `/goal …`.
+
 ## Review agents (Stage 13)
 
 Run in a **fresh context window** — no author-side assumptions, no confirmation
