@@ -244,3 +244,112 @@ def build_reorientation_payload(marker, repo_root):
         if len(payload) + _SELF_CHECK_RESERVE < PAYLOAD_MAX_CHARS or n <= 0:
             return payload
         n -= 1
+
+
+# ── Plan 3 (System-2 harvest) helpers ────────────────────────────────────────────────
+# All resolve <repo> via repo_root() (cwd-based) and are FAIL-OPEN unless noted. The
+# watermark is a per-session BYTE-OFFSET (NOT a uuid — uuids are ~39% duplicated in real
+# transcripts, spec A.1), advanced atomically + monotonically only after a findings write.
+
+def watermark_path(root, sid):
+    return harness_dir(root) / "watermarks" / (sid + ".json")
+
+
+def read_watermark(sid):
+    """Per-session byte-offset watermark (0 if absent / unresolved)."""
+    root = repo_root()
+    if root is None:
+        return 0
+    try:
+        return int(json.loads(watermark_path(root, sid).read_text()).get("byte_offset", 0))
+    except Exception:
+        return 0
+
+
+def advance_watermark(sid, offset):
+    """Advance the watermark atomically (temp + os.replace) and MONOTONICALLY (max(old,new))
+    — append-only transcripts make byte offsets stable, so the watermark never regresses.
+    Best-effort / fail-open."""
+    root = repo_root()
+    if root is None:
+        return
+    try:
+        new = max(int(read_watermark(sid)), int(offset))
+        p = watermark_path(root, sid)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        tmp = p.parent / (p.name + ".tmp")
+        tmp.write_text(json.dumps({"session_id": sid, "byte_offset": new}))
+        os.replace(str(tmp), str(p))
+    except Exception:
+        pass
+
+
+def harvest_state_path(root):
+    return harness_dir(root) / "harvest_state.json"
+
+
+def read_harvest_state():
+    """{} if absent (first run -> the SessionStart drift warning stays silent)."""
+    root = repo_root()
+    if root is None:
+        return {}
+    try:
+        return json.loads(harvest_state_path(root).read_text())
+    except Exception:
+        return {}
+
+
+def write_harvest_state(ts, cadence_hours):
+    """Record the harvest's last-run timestamp + configured cadence (the drift warning
+    reads BOTH, so its threshold is 2x cadence, not hardcoded). Atomic / fail-open."""
+    root = repo_root()
+    if root is None:
+        return
+    try:
+        p = harvest_state_path(root)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        tmp = p.parent / (p.name + ".tmp")
+        tmp.write_text(json.dumps({"last_run_ts": ts, "cadence_hours": cadence_hours}))
+        os.replace(str(tmp), str(p))
+    except Exception:
+        pass
+
+
+def gc_dead_markers():
+    """Prune managed markers + their watermarks UNDER THIS REPO whose `jsonl_path` no longer
+    exists (the transcript aged out at cleanupPeriodDays) — so the harvest never iterates
+    hundreds of dead sessions. Leak-safe (only this plugin's repo). Best-effort."""
+    root = repo_root()
+    if root is None:
+        return
+    try:
+        for mf in (harness_dir(root) / "managed").glob("*.json"):
+            try:
+                jp = json.loads(mf.read_text()).get("jsonl_path")
+                if jp and not Path(jp).exists():
+                    mf.unlink()
+                    wf = watermark_path(root, mf.stem)
+                    if wf.exists():
+                        wf.unlink()
+            except Exception:
+                continue
+    except Exception:
+        pass
+
+
+def any_managed_marker_in_workspace(sid):
+    """Self-abort guard (review MAJOR-1): True iff ANY workspace child repo holds a managed
+    marker for `sid`. GENERIC existence scan — no private name in source (the private repo is
+    DISCOVERED by iterating, never hardcoded). FAIL-CLOSED: if the workspace can't be resolved
+    -> True (the harvest must NOT run when it cannot prove it is outside a /goal session)."""
+    ws = find_workspace()
+    if ws is None:
+        return True
+    try:
+        for child in Path(ws).iterdir():
+            if child.is_dir() and (child / ".claude" / "skeft-harness" / "managed"
+                                   / (sid + ".json")).exists():
+                return True
+    except Exception:
+        return True   # fail-closed on any scan error
+    return False

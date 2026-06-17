@@ -197,3 +197,35 @@ def test_guard_fail_open_on_bad_input(monkeypatch, capsys):
     monkeypatch.setattr("sys.stdin", io.StringIO("not json"))
     rc = qg.main()
     assert rc == 0 and capsys.readouterr().out.strip() == ""   # error -> allow
+
+
+# --- Plan 3 Task 2: watermark + harvest-state + self-abort helpers ---
+
+def test_watermark_advance_atomic_monotonic(tmp_path, monkeypatch):
+    monkeypatch.setattr(hc, "repo_root", lambda *a, **k: tmp_path)
+    assert hc.read_watermark("s") == 0
+    hc.advance_watermark("s", 100); assert hc.read_watermark("s") == 100
+    hc.advance_watermark("s", 50);  assert hc.read_watermark("s") == 100   # never goes backward
+
+
+def test_harvest_state_round_trips_ts_and_cadence(tmp_path, monkeypatch):
+    monkeypatch.setattr(hc, "repo_root", lambda *a, **k: tmp_path)
+    assert hc.read_harvest_state() == {}            # absent -> {} (first run, drift warning silent)
+    hc.write_harvest_state(1_000_000, cadence_hours=6)
+    st = hc.read_harvest_state()
+    assert st["last_run_ts"] == 1_000_000 and st["cadence_hours"] == 6
+
+
+def test_any_managed_marker_in_workspace_is_generic_and_failclosed(tmp_path, monkeypatch):
+    """Self-abort guard (MAJOR-1): detect a managed marker in ANY workspace repo — leak-safe
+    (no private name in code, discovered by iterating) — and FAIL CLOSED when unresolvable."""
+    ws = tmp_path / "ws"
+    for repo in ("SK_EFT_Hawking", "PrivateRepo"):
+        (ws / repo / ".claude" / "skeft-harness" / "managed").mkdir(parents=True)
+    (ws / ".mcp.json").write_text("{}")
+    monkeypatch.setattr(hc, "find_workspace", lambda *a, **k: ws)
+    (ws / "PrivateRepo" / ".claude" / "skeft-harness" / "managed" / "sid9.json").write_text("{}")
+    assert hc.any_managed_marker_in_workspace("sid9") is True   # detected even though NOT this repo
+    assert hc.any_managed_marker_in_workspace("nope") is False
+    monkeypatch.setattr(hc, "find_workspace", lambda *a, **k: None)
+    assert hc.any_managed_marker_in_workspace("sid9") is True   # workspace unresolved -> FAIL-CLOSED
