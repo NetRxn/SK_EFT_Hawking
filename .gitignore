@@ -88,3 +88,6 @@ notebooks/.notebook_exec_cache.json
 papers/**/*.pdf
 !papers/**/figures/*.pdf
 
+
+# dev-harness runtime state (markers, watermarks, caches, locks)
+/.claude/skeft-harness/

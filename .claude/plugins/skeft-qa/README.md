@@ -23,30 +23,36 @@ bundle-aware Stage-13 review (anchors in `docs/agents/claims-reviewer-bundle-pro
 Keeps a long-running, multi-agent `/goal` loop on-track across compactions — the
 mechanism that fixes the "lost the big picture / re-scoped the settled goal"
 failure mode. **Default-inert + fail-open:** every hook does nothing unless this
-session is a *managed* loop (a `/dev-goal` marker exists for its `session_id`)
-*and* is not a subagent (`agent_id` present). It never touches Explore/Plan/review
-subagents or non-dev interactive sessions.
+session is a *managed* loop (a `/skeft-qa:goal-prompt` marker exists for its
+`session_id`) *and* is not a subagent (`agent_id` present). It never touches
+Explore/Plan/review subagents or non-dev interactive sessions.
 
-### Commands
+### Skills / commands
 
-| Command | Purpose |
+| Skill | Purpose |
 |---|---|
-| `/dev-goal` | Arm a managed loop: write the per-session marker + compose the self-describing goal prompt, then hand off to native `/goal`. |
-| `/orient` | A ≤200-word compass from the marker + source-of-truth docs (where am I, what's the next brick). |
-| `/debrief` | Synthesize harvested learnings into **proposed** (`agent-reviewed`) QI findings. Never auto-edits CLAUDE.md / hooks / roadmaps. |
+| `/skeft-qa:goal-prompt` | **The unified goal-mode skill** — its core is the always-on operating posture (re-attaches after compaction); on invocation it composes the `/goal` condition + registers the session (writes the 8-field marker, incl. `question_guard:true`). You then run native `/goal`. |
+| `/skeft-qa:goal-guard` | Toggle the AskUserQuestion guard for this managed loop (`on`\|`off`; default on — turn off when you want to be asked). |
+| `/skeft-qa:orient` | A ≤200-word compass from the marker + source-of-truth docs (where am I, what's the next brick). |
 
-### Hooks (`hooks/hooks.json` → `scripts/`)
+(`/skeft-qa:sync` + `/skeft-qa:wave-close` ship in Plan 2; `/skeft-qa:harvest` + `/skeft-qa:debrief` in Plan 3.)
+
+### Hooks (`hooks/hooks.json` → `scripts/`) — exactly two
 
 | Hook | Job |
 |---|---|
-| `SessionStart` (compact\|resume) | Re-inject the role-appropriate goal/roadmap directive — **the durability fix**. |
-| `PreCompact` | Harvest the lab-notebook tail into the QI intake before compaction squashes it. |
-| `PostToolUse(Edit\|Write)` | De-pollution guard: flag escape-language written into the marker's source-of-truth docs (the exact 5q.F re-pollution, at write time). |
-| `PostToolUse(Bash: git commit)` | Refresh counts / inventory / QI register; flag regenerated tracked artifacts for re-commit. |
+| `SessionStart` (compact\|resume) | Re-inject the **shared re-orientation payload** (the `/goal` condition + "re-read CLAUDE.md" + active System-2 issues + heuristics) + a best-effort first-turn self-check — **the durability fix**. |
+| `PreToolUse(AskUserQuestion)` | Deny + redirect a blocking question with the re-orientation payload; log the question to `blocked_questions.jsonl`. Marker-gated, top-level-only, honors `question_guard`, fail-open. |
 
-Harness state (markers, QI intake) lives under `~/.claude/skeft-harness/` — a
-fixed, load-mechanism-independent dir (commands can't compute `$CLAUDE_PLUGIN_DATA`),
-keyed by the globally-unique `session_id`.
+No Stop/SubagentStop (`/goal` owns continuation), no PreCompact (the harvest is
+off-hot-loop), no PostToolUse (the local git pre-commit hook is the sole enforcing
+mechanical gate). Hook commands invoke the repo's uv Python ≥3.14
+(`uv run --no-sync python … 2>/dev/null || true`).
+
+Harness state (markers, watermarks, the active-issues cache, the blocked-question log)
+lives under **`<repo>/.claude/skeft-harness/`** — project-scoped + gitignored, where
+`<repo>` is resolved cwd-based via `find_workspace()`/`REPO_DIR_NAME` (NOT `~/.claude`,
+NOT `$CLAUDE_PLUGIN_DATA`), keyed by the globally-unique `session_id`.
 
 ## Packaging & enablement
 
