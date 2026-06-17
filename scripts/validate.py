@@ -5074,7 +5074,7 @@ Examples:
         print_results(results)
         print(f"  Completed in {elapsed:.1f}s")
 
-    if not args.no_archive and not args.json:
+    if not args.no_archive and not args.json and not args.check:
         path = archive_results(results)
         print(f"\n  Archived to: {path}")
 
