@@ -269,3 +269,21 @@ def test_repo_root_none_on_foreign_git_root(monkeypatch, tmp_path):
     monkeypatch.setattr(hc, "find_workspace", lambda *a, **k: None)
     monkeypatch.setattr(hc, "_git_root", lambda *a, **k: tmp_path / "SomeForeignRepo")
     assert hc.repo_root(str(tmp_path)) is None
+
+
+def test_jsonl_path_reconstructs_deterministically_for_unflushed_first_turn(tmp_path, monkeypatch):
+    """Regression (the first-turn empty-glob): on a brand-new session's FIRST turn the <sid>.jsonl is
+    not yet flushed to disk, so jsonl_path() must RECONSTRUCT ~/.claude/projects/<cwd-slug>/<sid>.jsonl
+    (slug = the cwd with every non-alphanumeric char -> '-', CC's encoding) instead of returning empty
+    (which the old `ls …/<sid>.jsonl` glob did). HOME is redirected so the glob step finds nothing,
+    exercising the deterministic reconstruction path."""
+    monkeypatch.setenv("HOME", str(tmp_path))
+    got = hc.jsonl_path("SID-123", start="/Users/x/Programming/Fluid-Based-Physics-Research")
+    assert got.endswith("/SID-123.jsonl")
+    assert ".claude/projects/" in got
+    assert "-Users-x-Programming-Fluid-Based-Physics-Research" in got   # CC slug encoding (non-alnum -> -)
+
+
+def test_jsonl_path_empty_sid_returns_empty():
+    """A missing/empty session id resolves to '' (the skill then STOPs rather than arm a bad marker)."""
+    assert hc.jsonl_path("", start="/anything") == ""

@@ -5,6 +5,7 @@ unattended harvest skill can call them without import gymnastics. Resolve from a
 
 Subcommands:
   repo-root                      -> print the resolved repo root (empty if unresolved)
+  jsonl-path <sid>               -> print this session's transcript path (deterministic; first-turn-safe)
   is-managed <sid>               -> MANAGED if any workspace marker for <sid> exists, else CLEAR
   gc                             -> prune dead markers + watermarks under this repo
   read-watermark <sid>           -> print the byte-offset watermark (0 if absent)
@@ -27,6 +28,8 @@ def main(argv=None):
         if cmd == "repo-root":
             r = hc.repo_root(os.getcwd())
             print(str(r) if r else "")
+        elif cmd == "jsonl-path":
+            print(hc.jsonl_path(argv[1] if len(argv) > 1 else "", os.getcwd()))
         elif cmd == "is-managed":
             sid = argv[1] if len(argv) > 1 else ""
             print("MANAGED" if (sid and hc.any_managed_marker_in_workspace(sid)) else "CLEAR")

@@ -53,11 +53,14 @@ composition discipline + acceptance criteria.
   `UNRESOLVED` only if launched entirely outside the workspace (or is the `[shell command execution disabled by
   policy]` sentinel — see the A2 note above); in that case STOP and tell the user to launch from the workspace
   root or inside the repo. (`<repo>` below = this resolved path.)
-- **Transcript path (resolve now, while this session is live):**
-  `` !`ls ~/.claude/projects/*/${CLAUDE_SESSION_ID}.jsonl 2>/dev/null | head -1` `` — this session's own JSONL
-  already exists on disk, so glob it directly rather than reconstructing the encoded-cwd slug (robust; the
-  `<slug>` is the cwd with every non-alphanumeric char → `-`, but globbing avoids that fragility). Use this
-  exact path as `jsonl_path`. If empty (or the A2 sentinel), fall back to the slug rule and note it.
+- **Transcript path (deterministic, first-turn-safe — resolve now, while this session is live):**
+  `` !`uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" jsonl-path ${CLAUDE_SESSION_ID}` `` —
+  the harness resolves this session's `<sid>.jsonl` **deterministically**: an existing file if present, else it
+  reconstructs `~/.claude/projects/<cwd-slug>/<sid>.jsonl` (CC's slug = the cwd with every non-alphanumeric → `-`,
+  verified to match incl. worktree dirs). This is **first-turn-safe** — `goal-prompt` runs before CC has flushed
+  the transcript to disk, so a bare `ls` glob would be momentarily empty; the CLI never returns empty for a valid
+  `${CLAUDE_SESSION_ID}`. Use this exact path as `jsonl_path`. (If it is the A2 `[shell command execution disabled
+  by policy]` sentinel, STOP — see the A2 note above.)
 - **Pre-commit gate install-check (review A4):** `` !`R=$(uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); test -n "$R" && test -x "$R/.git/hooks/pre-commit" && echo INSTALLED || echo MISSING` `` — the
   local git pre-commit hook is the **sole enforcing mechanical gate** (the v3.0 CC commit advisory was dropped,
   spec 12 L2), and it fires only where installed; a fresh clone / new worktree may have **no gate at all**. If this

@@ -82,6 +82,28 @@ def repo_root(start=None):
     return None
 
 
+def jsonl_path(sid, start=None):
+    """This session's transcript path, resolved DETERMINISTICALLY — does NOT require the file to
+    exist yet. `goal-prompt` runs on the FIRST turn, before CC has flushed the session's .jsonl to
+    disk, so a glob would be momentarily empty then. (1) If a transcript named <sid>.jsonl already
+    exists under ~/.claude/projects/*/ , return it (exact; covers a resumed session). (2) Else
+    reconstruct ~/.claude/projects/<slug>/<sid>.jsonl where <slug> is the session cwd with every
+    non-alphanumeric char -> '-' (CC's encoding; verified against real slug dirs incl. the
+    double-'-' worktree case). Returns '' if sid is empty. `start` overrides the cwd (tests)."""
+    if not sid:
+        return ""
+    import re
+    proj = Path.home() / ".claude" / "projects"
+    try:
+        hits = sorted(proj.glob("*/" + str(sid) + ".jsonl"))
+        if hits:
+            return str(hits[0])
+    except Exception:
+        pass
+    cwd = str(start) if start else os.getcwd()
+    slug = re.sub(r"[^A-Za-z0-9]", "-", cwd)
+    return str(proj / slug / (str(sid) + ".jsonl"))
+
 def harness_dir(root):
     return root / ".claude" / "dev-harness"
 
