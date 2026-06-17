@@ -97,3 +97,29 @@ def test_find_workspace_resolves_repo_cwd_based(tmp_path):
     assert hc.repo_root(str(ws)) == repo                       # from the workspace root
     assert hc.repo_root(str(ws / "SK_EFT_Hawking")) == repo    # from inside the repo
     assert hc.repo_root(str(tmp_path)) is None                 # outside any workspace -> inert
+
+
+# --- Task 2: SessionStart composer (role-agnostic) ---
+import harness_reinject as hr  # noqa: E402
+
+_PAYLOAD = "SETTLED GOAL (the /goal condition):\nship W4\n\nDecision heuristics: ... TAKE IT ..."
+
+
+def test_directive_is_go_signal_and_carries_payload():
+    ctx = hr.compose_directive("compact", "ship W4", "/r.md", "/n.md", _PAYLOAD)
+    assert "next increment of real work THIS turn" in ctx
+    assert "GO signal" in ctx and "SETTLED" in ctx and "/r.md" in ctx and "/n.md" in ctx
+    assert _PAYLOAD in ctx                                   # shared payload embedded verbatim
+    assert "first" in ctx.lower() and "re-read" in ctx.lower()  # first-turn self-check directive
+
+
+def test_directive_is_role_agnostic_and_prescribes_no_coordination():
+    # spec §4/§5 review item 2: re-injection is ROLE-AGNOSTIC. compose_directive takes no
+    # `role` arg; the SAME settled posture is injected for a solo loop or a team lead, and
+    # the harness NEVER prescribes build-vs-delegate-vs-team (the agent's emergent judgment).
+    ctx = hr.compose_directive("resume", "ship W4", "/r.md", "/n.md", _PAYLOAD)
+    assert "next increment of real work THIS turn" in ctx     # one uniform framing
+    assert _PAYLOAD in ctx and "/r.md" in ctx
+    # NO role-conditioned coordination prescription in either direction:
+    assert "do not start building yourself" not in ctx.lower()
+    assert "lead" not in ctx.lower() and "coordinate" not in ctx.lower()
