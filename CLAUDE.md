@@ -170,7 +170,15 @@ assuming infeasibility. Flag quality tradeoffs explicitly; let the user decide.
 
 ## Process health
 
-Self-improvement findings and meta-process learnings live in
-[docs/QI_REGISTER.md](docs/QI_REGISTER.md) (the Stage-14 QI register: open/closed
-process-level items + best-practices / anti-patterns). Consult it periodically; it is the
-durable store for "what went well / poorly" across waves, tagged by review level.
+**Dev-loop / harness process learnings** — re-orientation, friction, escape attempts, wasted
+cycles ("what went well / poorly about HOW the loop ran") — live in the **System-2 register**
+[docs/dev-loops/SYSTEM2_REGISTER.md](docs/dev-loops/SYSTEM2_REGISTER.md), tiered
+`automatic` < `agent-reviewed` < `human-reviewed`. It is refreshed off the hot loop by the
+`/skeft-qa:harvest` loop and signed off via `/skeft-qa:debrief`; an autonomous `/goal` loop's
+SessionStart re-injection surfaces its open findings in-loop. Consult it periodically; read
+tier-weighted (`human-reviewed > agent-reviewed > automatic`).
+
+This is a **separate store** from the **System-1** paper-correctness QI register
+[docs/QI_REGISTER.md](docs/QI_REGISTER.md) (the Stage-14 paper-production process tracker:
+open/closed process-level items + best-practices / anti-patterns). **System-1 = paper-production
+process; System-2 = dev-loop/harness process** — different domains, consistent tiered pattern.
