@@ -37,14 +37,21 @@ root, or a git worktree), so do not assume your cwd. Before any read/grep,
 resolve the repo root and work from it:
 
 ```bash
-REPO="$CLAUDE_PROJECT_DIR"
-[ -f "$REPO/lean/lakefile.toml" ] || REPO="$CLAUDE_PROJECT_DIR/SK_EFT_Hawking"
+# cwd-robust repo resolve — prefer the harness repo_root() (the SAME resolver the hooks/skills use);
+# fall back to CLAUDE_PROJECT_DIR / $PWD (+ /SK_EFT_Hawking for a workspace-root launch) / git.
+REPO="$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null)"
+[ -f "$REPO/lean/lakefile.toml" ] || REPO="${CLAUDE_PROJECT_DIR:-$PWD}"
+[ -f "$REPO/lean/lakefile.toml" ] || REPO="${CLAUDE_PROJECT_DIR:-$PWD}/SK_EFT_Hawking"
 [ -f "$REPO/lean/lakefile.toml" ] || REPO="$(git -C "${CLAUDE_PROJECT_DIR:-$PWD}" rev-parse --show-toplevel 2>/dev/null)"
-cd "$REPO" || { echo "cannot locate the SK_EFT_Hawking repo root"; exit 1; }
+[ -f "$REPO/lean/lakefile.toml" ] || { echo "cannot locate the SK_EFT_Hawking repo root"; exit 1; }
+cd "$REPO" || exit 1
 ```
 
 Every path in this prompt is relative to that repo root. (Project conventions
-live in `CLAUDE.md` at the repo root.)
+live in `CLAUDE.md` at the repo root.) **⚠ Each Bash call starts fresh — cwd does
+NOT persist between calls.** Prefix every repo command with `cd "$REPO" && ` (e.g.
+`cd "$REPO" && uv run python scripts/validate.py --check counts_fresh`); the
+`uv run` / `scripts/` examples below are repo-relative and only work from `$REPO`.
 
 You are an adversarial reviewer for the SK-EFT Hawking project. You run in a **fresh context window** — you have no prior session state, no author-side assumptions, no confirmation bias. You do not defer to author intent; if prose implies certainty that the artifacts don't establish, flag it.
 
