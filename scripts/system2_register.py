@@ -204,9 +204,9 @@ def write_active_issues(reg_path, out_path=None):
     if out_path is None:
         # Repo-relative (system2_register.py lives at <repo>/scripts/), so this needs no
         # find_workspace AND ports VERBATIM to the private sibling repo's copy without
-        # hardcoding any repo name — <repo>/.claude/skeft-harness/active_issues.json is exactly
+        # hardcoding any repo name — <repo>/.claude/dev-harness/active_issues.json is exactly
         # what Plan 1's harness_common.active_issues_path(repo_root) reads on each side.
-        out_path = Path(__file__).resolve().parent.parent / ".claude" / "skeft-harness" / "active_issues.json"
+        out_path = Path(__file__).resolve().parent.parent / ".claude" / "dev-harness" / "active_issues.json"
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps({"generated": time.time(), "issues": issues}, indent=2))

@@ -30,7 +30,7 @@ the candidate came from** (the goal pointer, spec A.4).
   with the `compact_event_id` of the boundary it straddles).
 - **Refresh the active System-2 issues view LAST (v4.0 — spec 6.3 / A.4):** after all upserts succeed, run
   `uv run python <repo>/scripts/system2_register.py --write-active-issues` once. This rewrites
-  `<repo>/.claude/skeft-harness/active_issues.json` — the **register-wide** open/unresolved findings
+  `<repo>/.claude/dev-harness/active_issues.json` — the **register-wide** open/unresolved findings
   (`{title, tier, tally}`), NOT scoped to the session/goal you just harvested (a *prior* loop's open lesson is
   exactly what the *next* loop must re-ground on) — the gitignored cache Plan 1's `SessionStart` re-injection +
   AskUserQuestion redirect read to surface drift in-loop. Report whether it was refreshed.

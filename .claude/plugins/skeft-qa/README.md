@@ -50,7 +50,7 @@ mechanical gate). Hook commands invoke the repo's uv Python ≥3.14
 (`uv run --no-sync python … 2>/dev/null || true`).
 
 Harness state (markers, watermarks, the active-issues cache, the blocked-question log)
-lives under **`<repo>/.claude/skeft-harness/`** — project-scoped + gitignored, where
+lives under **`<repo>/.claude/dev-harness/`** — project-scoped + gitignored, where
 `<repo>` is resolved cwd-based via `find_workspace()`/`REPO_DIR_NAME` (NOT `~/.claude`,
 NOT `$CLAUDE_PLUGIN_DATA`), keyed by the globally-unique `session_id`.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Regen concurrency lock (spec 12). A per-artifact file lock under
-<repo>/.claude/skeft-harness/locks/ that serializes shared-artifact regen so
+<repo>/.claude/dev-harness/locks/ that serializes shared-artifact regen so
 two concurrent agents (parallel worktrees, lead+workers) can't trigger the
 same regen process at once.
 
@@ -41,7 +41,7 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parent.parent
 
 
-LOCKS_DIR = _repo_root() / ".claude" / "skeft-harness" / "locks"
+LOCKS_DIR = _repo_root() / ".claude" / "dev-harness" / "locks"
 WAIT_SECONDS = 5.0      # short bounded wait before skip-if-locked
 POLL_SECONDS = 0.25
 STALE_SECONDS = 1800.0  # reclaim a lock abandoned > 30 min (>= the ExtractDeps ceiling)

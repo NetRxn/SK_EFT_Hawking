@@ -90,4 +90,4 @@ papers/**/*.pdf
 
 
 # dev-harness runtime state (markers, watermarks, caches, locks)
-/.claude/skeft-harness/
+/.claude/dev-harness/

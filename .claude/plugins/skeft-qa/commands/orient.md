@@ -8,7 +8,7 @@ Produce a tight **≤200-word** compass for the current dev loop. No preamble.
    ```bash
    SID="${CLAUDE_SESSION_ID}"
    REPO="$(git rev-parse --show-toplevel 2>/dev/null || echo UNRESOLVED)"
-   cat "$REPO/.claude/skeft-harness/managed/$SID.json" 2>/dev/null || echo "NO MARKER (not a managed loop)"
+   cat "$REPO/.claude/dev-harness/managed/$SID.json" 2>/dev/null || echo "NO MARKER (not a managed loop)"
    ```
    If there is no marker, say so and stop — there is nothing to orient against.
 

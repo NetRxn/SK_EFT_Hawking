@@ -20,7 +20,7 @@ Let `CLI = ${CLAUDE_SKILL_DIR}/../../scripts/harness_common_cli.py` and `REPO = 
    `MANAGED` (this is a `/goal` session) — or errors / can't resolve the workspace — **STOP immediately**
    (running inside `/goal` would burn its context + confuse the evaluator; an unresolved workspace fails closed).
 
-1. **GC + enumerate.** `uv run python "$CLI" gc`; then read every marker in `$REPO/.claude/skeft-harness/managed/`
+1. **GC + enumerate.** `uv run python "$CLI" gc`; then read every marker in `$REPO/.claude/dev-harness/managed/`
    (this plugin's repo only — leak-safe). For each, take its `jsonl_path` + `session_id` **+ its `goal_id` and the
    `goal_prompt_<goal_id>.md` path** (the marker carries `goal_id`, spec A.5) — these are the **goal pointer**
    (spec A.4) stamped onto every occurrence the consolidator writes for this session. If a marker predates
@@ -37,7 +37,7 @@ Let `CLI = ${CLAUDE_SKILL_DIR}/../../scripts/harness_common_cli.py` and `REPO = 
      `isCompactSummary` entry + early post-boundary turns** — i.e. arrange chunk windows so the Haiku extractor
      can compute the pre-vs-post-compact delta for every boundary (overlap adjacent chunks at boundaries if a
      boundary would otherwise fall on a chunk edge). The per-segment siloing of the v3.0 draft is dropped.
-   - **Locate the blocked-question log span (v4.0 — spec 6.3/10).** `BQLOG=$REPO/.claude/skeft-harness/blocked_questions.jsonl`
+   - **Locate the blocked-question log span (v4.0 — spec 6.3/10).** `BQLOG=$REPO/.claude/dev-harness/blocked_questions.jsonl`
      (Plan 1's `PreToolUse(AskUserQuestion)` guard APPENDS to it). If it exists, byte-range-read its new span the
      same way (a small per-session/per-log watermark, or just read the whole file — it is tiny) → a
      `blocked_questions` span file to hand the extractor. If absent, skip gracefully.

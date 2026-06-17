@@ -76,7 +76,7 @@ composition discipline + acceptance criteria.
   8). This **tracked** file is the **durable, crash-recoverable source** of the `/goal` condition; the marker's
   `goal` field below is only the fast-read copy (spec A.5 — see step 3 crash recovery).
 - **Write the marker with the Write tool** (clean JSON — NOT a `cat >` heredoc) to
-  `<repo>/.claude/skeft-harness/managed/${CLAUDE_SESSION_ID}.json` (the **8-field form**):
+  `<repo>/.claude/dev-harness/managed/${CLAUDE_SESSION_ID}.json` (the **8-field form**):
   `{"role": "<solo|lead>", "goal": "...", "goal_id": "<from above>", "roadmap_path": "...", "notebook_path": "...", "jsonl_path": "<from above>", "repo": "<basename of repo root>", "question_guard": true}`.
   (`role` is descriptive-only; `goal_id` is the minted goal identity; `question_guard` defaults `true` — the
   `PreToolUse(AskUserQuestion)` guard reads it; `/goal-guard` flips it. The Write tool creates the `managed/`
@@ -128,6 +128,6 @@ Then print the composed condition in a fenced block + one line: "run `/goal <con
 The marker is keyed by `${CLAUDE_SESSION_ID}`; if it landed at the wrong key (or an empty session id), **every
 harness hook is inert and the durability fix is a silent no-op**. So as the FINAL step, verify the file exists at
 the resolved key and print **PASS/FAIL** to the user:
-`` !`test -f "$(git rev-parse --show-toplevel 2>/dev/null)/.claude/skeft-harness/managed/${CLAUDE_SESSION_ID}.json" && echo "PASS: marker armed for ${CLAUDE_SESSION_ID}" || echo "FAIL: marker NOT found for ${CLAUDE_SESSION_ID} — the loop is UNMANAGED"` ``
+`` !`test -f "$(git rev-parse --show-toplevel 2>/dev/null)/.claude/dev-harness/managed/${CLAUDE_SESSION_ID}.json" && echo "PASS: marker armed for ${CLAUDE_SESSION_ID}" || echo "FAIL: marker NOT found for ${CLAUDE_SESSION_ID} — the loop is UNMANAGED"` ``
 If this prints **FAIL** (or the A2 sentinel), tell the user the loop is **not** managed (do not start `/goal` until
 the marker is armed at the right key) and re-attempt the Write in step 1.

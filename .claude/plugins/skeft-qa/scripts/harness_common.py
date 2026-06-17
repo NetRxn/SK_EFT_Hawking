@@ -6,7 +6,7 @@ is fine (no legacy interpreter constraint).
 DEFAULT-INERT: acts only for a *managed* /goal loop (a marker exists for this
 session_id in THIS plugin's repo) and NEVER for a subagent (agent_id present).
 
-State is PROJECT-SCOPED at <repo>/.claude/skeft-harness/, where
+State is PROJECT-SCOPED at <repo>/.claude/dev-harness/, where
   <repo> = repo_root() = find_workspace() / REPO_DIR_NAME.
 REPO_DIR_NAME is a constant naming THIS plugin copy's OWN repo dir ("SK_EFT_Hawking").
 (A sibling deployment ships its own copy with its own dir name.) This is:
@@ -83,7 +83,7 @@ def repo_root(start=None):
 
 
 def harness_dir(root):
-    return root / ".claude" / "skeft-harness"
+    return root / ".claude" / "dev-harness"
 
 
 def marker_path(root, sid):
@@ -347,7 +347,7 @@ def any_managed_marker_in_workspace(sid):
         return True
     try:
         for child in Path(ws).iterdir():
-            if child.is_dir() and (child / ".claude" / "skeft-harness" / "managed"
+            if child.is_dir() and (child / ".claude" / "dev-harness" / "managed"
                                    / (sid + ".json")).exists():
                 return True
     except Exception:

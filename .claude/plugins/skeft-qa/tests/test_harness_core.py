@@ -10,7 +10,7 @@ import harness_common as hc  # noqa: E402
 
 
 def _marker(root, sid, m):
-    d = Path(root) / ".claude" / "skeft-harness" / "managed"
+    d = Path(root) / ".claude" / "dev-harness" / "managed"
     d.mkdir(parents=True, exist_ok=True)
     (d / f"{sid}.json").write_text(json.dumps(m))
 
@@ -55,7 +55,7 @@ def test_payload_includes_goal_and_heuristics_without_active_issues(tmp_path):
 
 
 def test_payload_includes_active_issues_when_present(tmp_path):
-    d = tmp_path / ".claude" / "skeft-harness"
+    d = tmp_path / ".claude" / "dev-harness"
     d.mkdir(parents=True, exist_ok=True)
     (d / "active_issues.json").write_text(json.dumps(
         {"issues": [{"summary": "re-polluted roadmap at compaction 3"}]}))
@@ -72,7 +72,7 @@ def test_payload_repo_none_omits_active_issues(tmp_path):
 def test_payload_capped_under_9000_with_full_goal(tmp_path):
     # review C1: an oversized active-issues view must NOT push the payload over the cap;
     # the /goal condition is always kept in full while active-issues is truncated.
-    d = tmp_path / ".claude" / "skeft-harness"
+    d = tmp_path / ".claude" / "dev-harness"
     d.mkdir(parents=True, exist_ok=True)
     big = [{"summary": "drift finding " + str(i) + " " + ("x" * 300),
             "tier": "agent-reviewed", "tally": i} for i in range(200)]
@@ -166,7 +166,7 @@ def test_guard_denies_when_active(tmp_path, monkeypatch, capsys):
     assert hso["hookEventName"] == "PreToolUse" and hso["permissionDecision"] == "deny"
     assert hso["permissionDecisionReason"] and "ship W4" in hso["additionalContext"]
     # contract C — the blocked question is logged:
-    log = (tmp_path / ".claude" / "skeft-harness" / "blocked_questions.jsonl").read_text()
+    log = (tmp_path / ".claude" / "dev-harness" / "blocked_questions.jsonl").read_text()
     assert "which approach?" in log
 
 
@@ -221,10 +221,10 @@ def test_any_managed_marker_in_workspace_is_generic_and_failclosed(tmp_path, mon
     (no private name in code, discovered by iterating) — and FAIL CLOSED when unresolvable."""
     ws = tmp_path / "ws"
     for repo in ("SK_EFT_Hawking", "PrivateRepo"):
-        (ws / repo / ".claude" / "skeft-harness" / "managed").mkdir(parents=True)
+        (ws / repo / ".claude" / "dev-harness" / "managed").mkdir(parents=True)
     (ws / ".mcp.json").write_text("{}")
     monkeypatch.setattr(hc, "find_workspace", lambda *a, **k: ws)
-    (ws / "PrivateRepo" / ".claude" / "skeft-harness" / "managed" / "sid9.json").write_text("{}")
+    (ws / "PrivateRepo" / ".claude" / "dev-harness" / "managed" / "sid9.json").write_text("{}")
     assert hc.any_managed_marker_in_workspace("sid9") is True   # detected even though NOT this repo
     assert hc.any_managed_marker_in_workspace("nope") is False
     monkeypatch.setattr(hc, "find_workspace", lambda *a, **k: None)
