@@ -26,8 +26,8 @@ papers/<bundle>/
   audit_log.jsonl            # claims-reviewer + figure-reviewer audit trail (append-only)
   READINESS_GATES.md         # per-bundle gate panel (analog of per-paper file)
   tables.py                  # optional; spec for auto-rendered tables
-  claims_review.json         # Stage 10 output (physics-qa:claims-reviewer)
-  figures/figure_review_report.json  # Stage 9 output (physics-qa:figure-reviewer)
+  claims_review.json         # Stage 10 output (skeft-qa:claims-reviewer)
+  figures/figure_review_report.json  # Stage 9 output (skeft-qa:figure-reviewer)
   source_manifest.md         # human-facing list of contributing sources (auto-gen)
   change_log.md              # human-readable append history
   append_log.json            # machine-readable append history

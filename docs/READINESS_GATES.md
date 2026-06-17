@@ -224,7 +224,7 @@ Gates in this document are load-bearing: the evaluator, dashboard, pipeline, and
 
 1. Update this doc first (the canonical definition)
 2. Update `scripts/readiness_gates.py` evaluator for the affected gate
-3. Update `.claude/plugins/physics-qa/agents/adversarial-reviewer.md` finding classes to match
+3. Update `.claude/plugins/skeft-qa/agents/adversarial-reviewer.md` finding classes to match
 4. Update `scripts/templates/partials/readiness_tab.html` GATES array (ordering + priority)
 5. Run `validate.py --check readiness_submission_gate` to confirm new gate state surfaces
 

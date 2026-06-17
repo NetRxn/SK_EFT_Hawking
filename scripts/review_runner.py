@@ -10,7 +10,7 @@ producing a per-bundle review document at
 `papers/AutomatedReviews/<DATE>-bundle-stage13/<bundle>.md`.
 
 The actual Stage-13 LLM-driven review work is performed by the
-`physics-qa:claims-reviewer` and `physics-qa:figure-reviewer` agents,
+`skeft-qa:claims-reviewer` and `skeft-qa:figure-reviewer` agents,
 which accept a `bundle_target` argument. This script is the thin
 orchestration layer that:
 

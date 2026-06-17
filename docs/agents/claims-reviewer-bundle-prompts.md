@@ -1,7 +1,7 @@
 # Per-Bundle Stage-13 Review Anchor List
 
 **Purpose:** The Phase 6i Wave 7 bundle architecture requires the
-`physics-qa:claims-reviewer` and `physics-qa:figure-reviewer` agents to
+`skeft-qa:claims-reviewer` and `skeft-qa:figure-reviewer` agents to
 operate at the bundle level rather than the per-paper level. Each
 bundle has a different review profile (depth, scope, breadth, anchor
 list). This document is the canonical per-bundle anchor list — the
@@ -743,5 +743,5 @@ member sentences disagree on the cross-bridge's numerical content.
 
 *Document created 2026-04-29 (Phase 6i Wave 7.2). Companion to
 `PAPER_STRATEGY.md` and `PAPER_DRAFT_MAPPING.md`. Loaded by
-`physics-qa:claims-reviewer` and `physics-qa:figure-reviewer` when
+`skeft-qa:claims-reviewer` and `skeft-qa:figure-reviewer` when
 invoked with `bundle_target=<target>`.*

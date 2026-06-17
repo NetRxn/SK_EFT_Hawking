@@ -383,7 +383,7 @@ uv run python scripts/review_figures.py
 **Purpose:** Catch rendering issues that automated tests cannot detect.
 
 **Actions:**
-- Run LLM figure review agent (`physics-qa:figure-reviewer` plugin agent)
+- Run LLM figure review agent (`skeft-qa:figure-reviewer` plugin agent)
 - Fix ALL issues flagged as FAIL or MINOR in `visualizations.py`
 - Regenerate PNGs, re-review until ALL PASS
 - Report saved to `figures/figure_review_report.json`
@@ -411,11 +411,11 @@ uv run python scripts/review_figures.py
 - Qualitative claims (feasibility, detectability) must be supported by computed quantities — no hallucinated optimism
 - No hardcoded numbers in tex that aren't also in the computation pipeline
 
-**Paper Claims Review (`physics-qa:claims-reviewer` — runs after Stage 10, before Stage 11):**
+**Paper Claims Review (`skeft-qa:claims-reviewer` — runs after Stage 10, before Stage 11):**
 
 After writing or updating a paper draft, run the paper claims reviewer agent
-(`physics-qa:claims-reviewer` plugin). This is analogous to the figure reviewer
-(`physics-qa:figure-reviewer`) in Stage 9 — an LLM sweep that checks content
+(`skeft-qa:claims-reviewer` plugin). This is analogous to the figure reviewer
+(`skeft-qa:figure-reviewer`) in Stage 9 — an LLM sweep that checks content
 accuracy, not just formatting.
 
 The agent reads each paper's `.tex` and cross-references against:
@@ -586,7 +586,7 @@ This stage exists because the April 2026 external adversarial-review round found
 **Actions:**
 
 1. Ensure Stages 1–12 are all green (`validate.py` passes). Stage 13 is meaningful only on a codebase that passes its own internal checks.
-2. Invoke the `adversarial-reviewer` agent (`.claude/plugins/physics-qa/agents/adversarial-reviewer.md`) with the target paper key:
+2. Invoke the `adversarial-reviewer` agent (`.claude/plugins/skeft-qa/agents/adversarial-reviewer.md`) with the target paper key:
    > "Run the adversarial-reviewer on `paper<N>_<name>`"
 3. The agent runs in a fresh-context Opus window and works 8 finding-classes in order (one per readiness gate). It emits a structured markdown report at:
    ```
@@ -608,7 +608,7 @@ This stage exists because the April 2026 external adversarial-review round found
 
 **Do NOT use Stage 13 to fix issues.** The agent output is findings-only. The author fixes; the author re-invokes. Separation of the fix-and-review roles is the whole reason the agent exists.
 
-**Bundle-level review (Phase 6i Wave 7).** When a wave's output lifts into a Tier 1+ bundle (Wave 7 paper-bundle architecture), Stage 13 may also be invoked at the *bundle* level rather than the per-paper level. The reviewers (`physics-qa:claims-reviewer`, `physics-qa:figure-reviewer`) accept a `bundle_target` argument and execute the per-bundle profile per the anchor list at `docs/agents/claims-reviewer-bundle-prompts.md`:
+**Bundle-level review (Phase 6i Wave 7).** When a wave's output lifts into a Tier 1+ bundle (Wave 7 paper-bundle architecture), Stage 13 may also be invoked at the *bundle* level rather than the per-paper level. The reviewers (`skeft-qa:claims-reviewer`, `skeft-qa:figure-reviewer`) accept a `bundle_target` argument and execute the per-bundle profile per the anchor list at `docs/agents/claims-reviewer-bundle-prompts.md`:
 
 - **Tier 0 (F):** review-paper style — verify cited published L*/D* claims against the citation cache.
 - **Tier 1 (D1–D5):** intra-bundle consistency across lifted sections + cross-bundle cross-bridge checks.

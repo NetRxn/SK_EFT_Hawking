@@ -189,11 +189,11 @@ This is the substantive bundle work. The `\section` skeleton from §3 is just st
 
 ### §8. Stage 9 — figure review (LLM visual review)
 
-**Agent:** `physics-qa:figure-reviewer` (plugin agent at `.claude/plugins/physics-qa/agents/figure-reviewer.md`).
+**Agent:** `skeft-qa:figure-reviewer` (plugin agent at `.claude/plugins/skeft-qa/agents/figure-reviewer.md`).
 
 **Invocation:** direct via Skill tool with parameter `bundle_target=<X>`.
 
-**Plugin-agent fallback path.** If `physics-qa:figure-reviewer` is not available as a `subagent_type` in the current runtime (observed during Phase 7a 7a.2/7a.3 execution), fall back to a `general-purpose` Agent invocation prompted to load and follow the agent definition file at `.claude/plugins/physics-qa/agents/figure-reviewer.md`. The fallback path produces equivalent output to the direct Skill invocation but adds ~1 round-trip; prefer the direct path when available.
+**Plugin-agent fallback path.** If `skeft-qa:figure-reviewer` is not available as a `subagent_type` in the current runtime (observed during Phase 7a 7a.2/7a.3 execution), fall back to a `general-purpose` Agent invocation prompted to load and follow the agent definition file at `.claude/plugins/skeft-qa/agents/figure-reviewer.md`. The fallback path produces equivalent output to the direct Skill invocation but adds ~1 round-trip; prefer the direct path when available.
 
 **Output:**
 - `papers/<X>/figures/figure_review_report.json`
@@ -205,7 +205,7 @@ This is the substantive bundle work. The `\section` skeleton from §3 is just st
 
 ### §9. Stage 10 — paper claims review (LLM content review)
 
-**Agent:** `physics-qa:claims-reviewer` (plugin agent at `.claude/plugins/physics-qa/agents/claims-reviewer.md`).
+**Agent:** `skeft-qa:claims-reviewer` (plugin agent at `.claude/plugins/skeft-qa/agents/claims-reviewer.md`).
 
 **Invocation:** direct via Skill tool with parameter `bundle_target=<X>`. Plugin-agent fallback path same as §8.
 
@@ -223,7 +223,7 @@ This is the substantive bundle work. The `\section` skeleton from §3 is just st
 
 ### §10. Stage 13 — adversarial review (fresh-context Opus sweep)
 
-**Agent:** `adversarial-reviewer` (plugin agent at `.claude/plugins/physics-qa/agents/adversarial-reviewer.md`).
+**Agent:** `adversarial-reviewer` (plugin agent at `.claude/plugins/skeft-qa/agents/adversarial-reviewer.md`).
 
 **Orchestrator:** `scripts/review_runner.py --bundle <X> --prep-brief` (Phase 6i Wave 7.4 deliverable; bundle-aware Stage-13 entry point).
 

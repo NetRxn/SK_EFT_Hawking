@@ -200,7 +200,7 @@ Source: paper16_graphene_sk_eft (companion content).
 
 ## 3. Per-bundle Stage-13 review scope
 
-Each bundle gets at least one full-pass Stage 13 adversarial review before submission. The reviewer prompts (`physics-qa:claims-reviewer` + figure reviewer) need to know the *bundle* scope, not just the existing per-paper scope. Per-bundle review fingerprint:
+Each bundle gets at least one full-pass Stage 13 adversarial review before submission. The reviewer prompts (`skeft-qa:claims-reviewer` + figure reviewer) need to know the *bundle* scope, not just the existing per-paper scope. Per-bundle review fingerprint:
 
 - **L1, L2, L3:** stand-alone PRL review, single-paper depth. Each must pass without leaning on other bundles. Each carries a specific Stage-13 anchor (LIGO Δc/c bound for L1; Ext computation + 24 | c₋ chain for L2; Balbinot 2005 + Hawking 1975 for L3).
 - **D1–D5:** deep-paper bundle review. Each bundle has 30+ source-claim sentences from contributing existing drafts; the bundle review confirms (a) no within-bundle inconsistency between lifted sections, (b) cross-bundle consistency with sibling bundles for any cross-bridge claim, (c) the architectural-scope sidebar is correctly slice-restricted. Bundles D3 and D5 are the largest, ~50pp each, and may need two Stage-13 passes.

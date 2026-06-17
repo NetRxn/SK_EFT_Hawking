@@ -175,8 +175,8 @@ Each `freshness-stale` bundle re-invokes the canonical reviewer triple per `BUND
 
 | Stage | Agent | Output | Pass criterion |
 |---|---|---|---|
-| 9 | `physics-qa:figure-reviewer` (`bundle_target=<X>`) | `papers/<X>/figures/figure_review_report.json` | ALL PASS |
-| 10 | `physics-qa:claims-reviewer` (`bundle_target=<X>`) | `papers/<X>/claims_review.json` | zero FAIL |
+| 9 | `skeft-qa:figure-reviewer` (`bundle_target=<X>`) | `papers/<X>/figures/figure_review_report.json` | ALL PASS |
+| 10 | `skeft-qa:claims-reviewer` (`bundle_target=<X>`) | `papers/<X>/claims_review.json` | zero FAIL |
 | 13 | `adversarial-reviewer` via `scripts/review_runner.py --bundle <X> --prep-brief` | `papers/AutomatedReviews/<DATE>-bundle-stage13/<X>.md` | zero BLOCKER |
 
 **BLOCKER resolution:** per `BUNDLE_LIFT_PROCEDURE.md` §11. Author fixes → supersession ledger append → re-invoke same reviewer fresh context → iterate to clean.
