@@ -42,6 +42,18 @@ theorem augH_naturality {X Y : TopCat} (f : C(↑X, ↑Y)) (x : Homology X 0) :
   rw [Homology.map_mk, augH_mk, augH_mk, cyclesMap_coe]
   exact augmentation_mapChain f (z : SingularChain X 0)
 
+/-- **Reduced-acyclicity transports backwards across a homology map**: if `H₀(f)` is injective and
+`Y` is reduced-acyclic (`ε̄_Y` injective), then `X` is reduced-acyclic. In particular a homotopy
+equivalence (or homeomorphism) `X ≃ Y` with `Y` contractible makes `X` reduced-acyclic. -/
+theorem augH_injective_of_map {X Y : TopCat} (f : C(↑X, ↑Y))
+    (hf : Function.Injective (Homology.map f 0)) (hY : Function.Injective (augH Y)) :
+    Function.Injective (augH X) := by
+  intro a b hab
+  apply hf
+  apply hY
+  rw [augH_naturality, augH_naturality]
+  exact hab
+
 /-! ## §2. The augmentation along the inclusion `S ↪ X` -/
 
 /-- The augmentation is preserved by the inclusion chain map `chainIncl : C₀(S) → C₀(X)`. -/
