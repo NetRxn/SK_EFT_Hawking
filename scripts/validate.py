@@ -4984,7 +4984,7 @@ def check_inventory_index_autogen_fresh() -> CheckResult:
 # CLI
 # ═══════════════════════════════════════════════════════════════════════
 
-def main() -> int:
+def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         description="SK-EFT Hawking cross-layer validation suite",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -5020,7 +5020,7 @@ Examples:
               "drafts). Default skips it; it also auto-runs when selected via "
               "--check paper_latex_compiles.")
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     global STRICT_MODE, FORCE_NOTEBOOK_REEXEC, FORCE_LATEX
     STRICT_MODE = args.strict
@@ -5032,6 +5032,16 @@ Examples:
         for spec in _CHECKS:
             print(f"  {spec.name:20s} {spec.description}")
         return 0
+
+    # An UNKNOWN --check name must hard-error, not silently pass: run_checks filters by
+    # spec.name, so an unknown filter yields an empty result set and `all([]) == True`
+    # -> exit 0, silently DISABLING the gate (the commit gate / gate_precheck rely on a
+    # real failure surfacing). Fail loud with rc2 (run_check in pre-commit-sync.sh maps
+    # rc2 -> SKIP-printed; gate_precheck propagates it as FAIL).
+    if args.check and args.check not in {spec.name for spec in _CHECKS}:
+        print(f"ERROR: unknown check {args.check!r}. Run 'validate.py --list' for the registry.",
+              file=sys.stderr)
+        return 2
 
     t0 = time.monotonic()
     results = run_checks(check_filter=args.check)
