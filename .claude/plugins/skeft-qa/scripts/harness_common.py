@@ -83,13 +83,23 @@ def repo_root(start=None):
 
 
 def jsonl_path(sid, start=None):
-    """This session's transcript path, resolved DETERMINISTICALLY — does NOT require the file to
-    exist yet. `goal-prompt` runs on the FIRST turn, before CC has flushed the session's .jsonl to
-    disk, so a glob would be momentarily empty then. (1) If a transcript named <sid>.jsonl already
-    exists under ~/.claude/projects/*/ , return it (exact; covers a resumed session). (2) Else
-    reconstruct ~/.claude/projects/<slug>/<sid>.jsonl where <slug> is the session cwd with every
-    non-alphanumeric char -> '-' (CC's encoding; verified against real slug dirs incl. the
-    double-'-' worktree case). Returns '' if sid is empty. `start` overrides the cwd (tests)."""
+    """Resolve THIS session's transcript path. We do NOT guess or compute a session id: `sid` is the
+    REAL current id, supplied by Claude Code as ${CLAUDE_SESSION_ID} — the same UUID CC names the
+    transcript <sid>.jsonl by. The id is GIVEN; only the PATH around it is assembled, and that path is
+    fully DETERMINISTIC given the id: ~/.claude/projects/<cwd-slug>/<sid>.jsonl. That is what lets
+    goal-prompt record the path on a FIRST-turn arm, when CC has not yet flushed the .jsonl to disk
+    (the harvest reads it later, by which point CC has written it to exactly that path).
+
+      (1) If a transcript literally named <sid>.jsonl already exists under ~/.claude/projects/*/ ,
+          return that actual file (exact; covers a resumed session whose file is already on disk).
+      (2) Else reconstruct ~/.claude/projects/<slug>/<sid>.jsonl, where <slug> = the session cwd with
+          every non-alphanumeric char -> '-' (CC's encoding; verified against real slug dirs incl. the
+          double-'-' `.claude-worktrees` case). This is the exact path CC WILL write this session to.
+
+    FAIL-SAFE: returns '' when `sid` is empty (no id -> goal-prompt STOPs rather than arm a marker
+    pointing at no/the-wrong transcript). It never resolves a DIFFERENT session's file. The glob in (1)
+    is also the safety net: if the dir encoding were ever off, an existing file is still found by id.
+    `start` overrides the cwd (tests)."""
     if not sid:
         return ""
     import re
