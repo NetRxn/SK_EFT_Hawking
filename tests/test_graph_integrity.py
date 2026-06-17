@@ -169,9 +169,16 @@ class TestReviewFindingIntegrity:
         # Wave 6 adversarial-reviewer emits structured output this
         # tightens to == 0.
         assert len(orphans) <= len(findings), "accounting error"
-        # Soft floor: at least 25% of findings should attach to some artifact.
+        # Floor raised 0.25 -> 0.70 on 2026-06-17 after bundle-code attribution
+        # landed: bundle-era reviews (D*/L*/I*/F/E*.md) now resolve through the
+        # inverted PAPER_DRAFT_MAPPING to their source Paper nodes, lifting the
+        # achieved attach-rate from ~46% to ~82%. 0.70 leaves safe margin below
+        # the achieved rate while guarding against regression of either the
+        # paper-key matcher or the bundle-code matcher. The residual orphans are
+        # findings on bundles whose sources are all `_phaseXX_lean_only` dirs
+        # with no Paper node (e.g. I2/I3/D7/D8) — intentionally left unattached.
         attach_rate = 1.0 - (len(orphans) / len(findings))
-        assert attach_rate >= 0.25, (
+        assert attach_rate >= 0.70, (
             f"Only {attach_rate:.0%} of {len(findings)} ReviewFindings are "
             f"attached via FLAGS/SUPERSEDES; heuristic paper-attribution "
             f"may be failing. First 3 orphans: {orphans[:3]}"

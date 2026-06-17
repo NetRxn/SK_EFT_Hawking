@@ -1300,6 +1300,41 @@ def _infer_paper_key_from_text(text: str) -> str | None:
     return None
 
 
+# Bundle codes used as review-filename prefixes by the bundle-era reviews
+# (papers/AutomatedReviews/<date>/D2.md, F_r1.md, I1-figures.md, etc.). These
+# never match `_infer_paper_key_from_text` (no literal "paper<digit>"), so the
+# bundle-coded findings were orphaned. We recognize the code from the
+# *review_name* (md_path.stem) only — matching body text would false-positive
+# on any finding that merely mentions e.g. "D3". The code must be a whole
+# leading token, terminated by `-`, `_`, `.`, or end-of-string (so `F` matches
+# `F` / `F_r1` but not `Deep`; `D5` matches `D5_claims_wave4a_4`).
+#
+# Order matters: the two-character codes (D1-D9, L1-L3, I1-I3, E1-E2) are
+# tried before the bare single-letter `F`. The alternation below lists the
+# digit-bearing codes first; `F` is anchored to require a token boundary so it
+# cannot swallow a longer code.
+_BUNDLE_CODE_RE = re.compile(
+    r'^(?P<code>D[1-9]|L[1-3]|I[1-3]|E[1-2]|F)(?=$|[-_.])'
+)
+
+
+def _infer_bundle_from_text(review_name: str) -> str | None:
+    """Best-effort extraction of a bundle code (D1-D9, L1-L3, I1-I3, E1-E2, F)
+    from a bundle-era review filename stem. Returns None if the name does not
+    start with a recognized bundle code.
+
+    This is the bundle-era sibling of `_infer_paper_key_from_text`. Older
+    reviews are named `paperN_slug.md` and attribute through the paper-key
+    matcher; bundle-era reviews are named after their target bundle (`D2.md`,
+    `F_r1.md`, `I1-figures.md`). `extract_flags_edges` resolves the returned
+    bundle code through the inverted PAPER_DRAFT_MAPPING to the bundle's
+    source paper_keys, then fans out a FLAGS edge to each that has a Paper
+    node in the graph.
+    """
+    m = _BUNDLE_CODE_RE.match(review_name.strip())
+    return m.group('code') if m else None
+
+
 def _load_supersession_ledger() -> dict[str, dict]:
     """Load `docs/review_finding_supersessions.json` and return a dict
     mapping `finding_id` → entry. Phase 6i Wave 2: lets Wave-N close
@@ -1418,6 +1453,12 @@ def extract_review_finding_nodes() -> list[dict]:
             inferred_paper = _infer_paper_key_from_text(
                 heading + " " + body[:400] + " " + review_name
             )
+            # Bundle-era reviews are named after their target bundle code
+            # (D2.md, F_r1.md, …) and never carry a literal "paper<digit>",
+            # so inferred_paper is None for them. Recognize the bundle code
+            # from the review_name; extract_flags_edges resolves it through
+            # the inverted PAPER_DRAFT_MAPPING to the source Paper nodes.
+            inferred_bundle = _infer_bundle_from_text(review_name)
 
             finding_id = f'review:{date_dir}:{review_name}:{section_num}'
             if finding_id in seen_ids:
@@ -1432,6 +1473,7 @@ def extract_review_finding_nodes() -> list[dict]:
                 'review_name': review_name,
                 'section': section_num,
                 'inferred_paper': inferred_paper,
+                'inferred_bundle': inferred_bundle,
             }
             ledger = supersessions.get(finding_id)
             if ledger:
@@ -3030,6 +3072,35 @@ def extract_reports_edges(node_ids: set) -> list[dict]:
     return edges
 
 
+def _invert_bundle_mapping() -> dict[str, list[str]]:
+    """Invert PAPER_DRAFT_MAPPING into bundle_code -> [source paper_keys].
+
+    Reads the canonical mapping via `bundle_migration.parse_mapping` (the
+    same parser ~8 other scripts already consume) and inverts the
+    per-paper `bundle_destinations` lists into a per-bundle source list.
+    Returns {} if the mapping document is unreadable so the caller falls
+    back to paper-key-only resolution rather than crashing the build.
+    """
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        from bundle_migration import parse_mapping, MAPPING_DOC
+    except ImportError as exc:  # pragma: no cover - defensive
+        logger.warning("bundle_migration unavailable; bundle FLAGS skipped: %s", exc)
+        return {}
+    try:
+        assignments = parse_mapping(MAPPING_DOC.read_text())
+    except OSError as exc:  # pragma: no cover - defensive
+        logger.warning("PAPER_DRAFT_MAPPING unreadable; bundle FLAGS skipped: %s", exc)
+        return {}
+    inverted: dict[str, list[str]] = {}
+    for paper_key, info in assignments.items():
+        for bundle in info.get("bundle_destinations", []):
+            inverted.setdefault(bundle, [])
+            if paper_key not in inverted[bundle]:
+                inverted[bundle].append(paper_key)
+    return inverted
+
+
 def extract_flags_edges(node_ids: set) -> list[dict]:
     """FLAGS: ReviewFinding -> Paper / Formula / LeanTheorem / etc.
 
@@ -3048,47 +3119,81 @@ def extract_flags_edges(node_ids: set) -> list[dict]:
     target. If multiple match (e.g., `paper16_graphene_sk_eft` AND
     `paper16_wrt_tqft`), log ambiguity and skip (preserves prior
     behavior for genuinely ambiguous short keys).
+
+    2026-06-17: added bundle-code resolution. Bundle-era reviews are named
+    after their target bundle (`D2.md`, `F_r1.md`, `I1-figures.md`) and
+    never carry a literal "paper<digit>", so `inferred_paper` is None for
+    them. When meta.inferred_bundle is set, resolve the bundle code through
+    the inverted PAPER_DRAFT_MAPPING to its source paper_keys and fan out a
+    FLAGS edge to *each* source Paper node that exists in the graph (deduped
+    via `seen`). Source paper_keys with no Paper node — e.g. the
+    `_phaseXX_lean_only` dirs excluded by the `paper*_*` glob — are left as
+    residual (no Bundle node type, no broadening of the Paper glob).
     """
     findings = extract_review_finding_nodes()
     paper_ids = {nid for nid in node_ids if nid.startswith('paper:')}
+    bundle_to_papers = _invert_bundle_mapping()
     edges = []
     seen: set[tuple[str, str]] = set()
     ambig_warned: set[str] = set()
-    for f in findings:
-        paper = f.get('meta', {}).get('inferred_paper')
-        if not paper:
-            continue
-        paper_id = f'paper:{paper}'
-        if paper_id not in node_ids:
-            # Prefix fallback: paper10 -> paper:paper10_<slug>
-            prefix = f'paper:{paper}_'
-            candidates = [pid for pid in paper_ids if pid.startswith(prefix)]
-            if len(candidates) == 1:
-                paper_id = candidates[0]
-            elif len(candidates) > 1:
-                if paper not in ambig_warned:
-                    logger.info(
-                        "Ambiguous paper-key resolution: %r matches %d Paper nodes "
-                        "(%s) — FLAGS edges skipped for findings inferring this key.",
-                        paper, len(candidates), ", ".join(sorted(candidates))
-                    )
-                    ambig_warned.add(paper)
-                continue
-            else:
-                continue
-        if f['id'] not in node_ids:
-            continue
-        edge_key = (f['id'], paper_id)
+
+    def _emit(source_id: str, target_id: str, finding: dict) -> None:
+        """Append a deduped FLAGS edge (target must be a known node)."""
+        if target_id not in node_ids:
+            return
+        edge_key = (source_id, target_id)
         if edge_key in seen:
-            continue
+            return
         seen.add(edge_key)
         edges.append({
-            'source': f['id'],
-            'target': paper_id,
+            'source': source_id,
+            'target': target_id,
             'type': 'FLAGS',
-            'severity': f.get('meta', {}).get('severity', 'advisory'),
-            'status': f.get('meta', {}).get('status', 'open'),
+            'severity': finding.get('meta', {}).get('severity', 'advisory'),
+            'status': finding.get('meta', {}).get('status', 'open'),
         })
+
+    for f in findings:
+        if f['id'] not in node_ids:
+            continue
+        meta = f.get('meta', {})
+
+        # (1) paper-key resolution (older paperN_slug reviews) — unchanged.
+        paper = meta.get('inferred_paper')
+        if paper:
+            paper_id = f'paper:{paper}'
+            if paper_id not in node_ids:
+                # Prefix fallback: paper10 -> paper:paper10_<slug>
+                prefix = f'paper:{paper}_'
+                candidates = [pid for pid in paper_ids if pid.startswith(prefix)]
+                if len(candidates) == 1:
+                    paper_id = candidates[0]
+                elif len(candidates) > 1:
+                    if paper not in ambig_warned:
+                        logger.info(
+                            "Ambiguous paper-key resolution: %r matches %d Paper nodes "
+                            "(%s) — FLAGS edges skipped for findings inferring this key.",
+                            paper, len(candidates), ", ".join(sorted(candidates))
+                        )
+                        ambig_warned.add(paper)
+                    paper_id = None
+                else:
+                    paper_id = None
+            if paper_id is not None:
+                _emit(f['id'], paper_id, f)
+                continue  # paper-key match takes precedence over bundle fan-out
+
+        # (2) bundle-code resolution (bundle-era D*/L*/I*/F/E* reviews).
+        bundle = meta.get('inferred_bundle')
+        if not bundle:
+            continue
+        for source_key in bundle_to_papers.get(bundle, []):
+            # source_key is a mapping paper_key (e.g. "paper10_modular_generation"
+            # or "_phase6n_W1a_lean_only"). The Paper node id is "paper:<key>".
+            # Keys without a Paper node (lean-only phase dirs, initial-draft
+            # stubs) are silently skipped — left as residual, not broadened.
+            _emit(f['id'], f'paper:{source_key}', f)
+
     return edges
 
 
