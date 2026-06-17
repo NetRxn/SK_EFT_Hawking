@@ -24,6 +24,8 @@ run_check() {  # PASS (rc0) / FAIL (rc1 = real failure) / SKIP (other = crash/12
 #     NOTE: docs/counts.tex is deliberately NOT restaged here — it regenerates only with the
 #     HEAVY counts.json edge (update_counts.py / ExtractDeps), which `--fast` skips; restaging
 #     it would stage an un-regenerated file. Only genuinely cheap-derived artifacts are restaged.
+#     The cheap regen below is serialized by the regen concurrency lock INSIDE sync.py (spec 12
+#     / Task 7), so the gate inherits the lock for free — no shell-side lock is needed here.
 uv run python scripts/sync.py --fast >/tmp/skeft-sync.$$ 2>&1 || true
 for f in SK_EFT_Hawking_Inventory_Index.md $(git ls-files 'papers/*/tables/*.tex'); do
   [ -f "$f" ] && ! git diff --quiet -- "$f" && git add "$f"
