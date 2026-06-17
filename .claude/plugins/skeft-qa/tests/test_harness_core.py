@@ -244,3 +244,28 @@ def test_drift_note_warns_past_2x_cadence():
     now = 1_000_000.0
     note = hr.drift_note(now - 18 * 3600, now, 6)             # 18h elapsed, 2x cadence = 12h -> overdue
     assert note and "harvest hasn't run" in note
+
+
+# --- repo_root() launch-location robustness (regression: the skills originally used a bare
+#     `git rev-parse`, which UNRESOLVED at the workspace root — spec §A.3 launch-location-robust).
+#     repo_root() must resolve from BOTH a standalone in-repo clone (public-distribution launch)
+#     and a workspace-root launch, and stay inert (None) for a foreign git-root (leak-safety). ---
+
+def test_repo_root_standalone_clone_uses_git_root_basename_fallback(monkeypatch, tmp_path):
+    """Public-distribution / in-repo launch: a standalone clone of just this repo, no parent
+    workspace. find_workspace() returns None, so repo_root() falls back to the cwd git-root —
+    accepted ONLY when its basename == REPO_DIR_NAME (spec §A.3 cache-safe/leak-safe fallback)."""
+    repo = tmp_path / hc.REPO_DIR_NAME
+    repo.mkdir()
+    monkeypatch.setattr(hc, "find_workspace", lambda *a, **k: None)
+    monkeypatch.setattr(hc, "_git_root", lambda *a, **k: repo)
+    assert hc.repo_root(str(repo)) == repo
+
+
+def test_repo_root_none_on_foreign_git_root(monkeypatch, tmp_path):
+    """Leak-safety: if find_workspace() fails AND the cwd git-root is some OTHER repo (basename
+    != REPO_DIR_NAME — e.g. the ~/.claude plugin cache, or a sibling repo), repo_root() returns
+    None (inert) rather than resolving a foreign repo's marker."""
+    monkeypatch.setattr(hc, "find_workspace", lambda *a, **k: None)
+    monkeypatch.setattr(hc, "_git_root", lambda *a, **k: tmp_path / "SomeForeignRepo")
+    assert hc.repo_root(str(tmp_path)) is None
