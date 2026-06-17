@@ -4,14 +4,14 @@
     "name": "SK-EFT Hawking project"
   },
   "metadata": {
-    "description": "Local marketplace for SK_EFT_Hawking in-repo developer plugins (tracked in-repo; loaded via .claude/settings.json enabledPlugins).",
+    "description": "Local marketplace for SK_EFT_Hawking in-repo developer plugins. Marketplace catalog is tracked in-repo; plugins are enabled per-machine via .claude/settings.local.json enabledPlugins (untracked).",
     "version": "1.0.0"
   },
   "plugins": [
     {
       "name": "skeft-qa",
       "source": "./.claude/plugins/skeft-qa",
-      "description": "QA review agents for the SK_EFT_Hawking physics project (Stage 13): adversarial-reviewer, claims-reviewer, figure-reviewer."
+      "description": "QA review agents (Stage 13: adversarial-reviewer, claims-reviewer, figure-reviewer) plus the loop-durability dev-harness (SessionStart re-injection + PreToolUse(AskUserQuestion) guard + goal-mode skills)."
     }
   ]
 }
