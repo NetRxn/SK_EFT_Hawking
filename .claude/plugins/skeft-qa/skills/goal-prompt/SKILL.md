@@ -9,7 +9,7 @@ allowed-tools: Bash(git rev-parse *), Bash(ls *), Bash(test *), Bash(date *), Wr
      requirement (spec 11 refined): an agent must NOT be able to auto-kick-off a goal. It is
      a per-skill policy choice (revisitable as the feature matures), not a blanket rule.
      allowed-tools lists the tools Claude ITSELF may call (the Write of the marker + the
-     per-goal prompt file). The `!`cmd`` injections below (git rev-parse / ls / test / date)
+     per-goal prompt file). The `!cmd` shell injections below (git rev-parse / ls / test / date)
      run BEFORE the skill is sent and are gated by `disableSkillShellExecution`, NOT by
      allowed-tools (skills.md:432/477) — see the A2 note before section 1. -->
 
@@ -33,10 +33,10 @@ Native `/goal` is the loop; this skill (1) registers the session and (2) compose
 condition. Do BOTH, concretely. Read `references/goal-prompt-authoring.md` first for the
 composition discipline + acceptance criteria.
 
-> **⚠ Inline-shell gating (review A2 — fail loud, never silently inert).** The `` !`cmd` `` injections below
+> **⚠ Inline-shell gating (review A2 — fail loud, never silently inert).** The `!cmd` shell injections below
 > run **before** this skill is sent to the model and are gated by **`disableSkillShellExecution`** (the
 > managed-settings kill-switch — skills.md:432/477), **NOT** by `allowed-tools` (which governs only the tools
-> *Claude itself* later calls, e.g. the `Write` below). If that kill-switch is set, each `` !`cmd` `` is replaced
+> *Claude itself* later calls, e.g. the `Write` below). If that kill-switch is set, each `!cmd` injection is replaced
 > by the literal sentinel `[shell command execution disabled by policy]`. **Before using any injected value, check
 > for that sentinel; if present, STOP** with a clear message ("shell-command execution is disabled by policy, so
 > the repo / transcript paths could not be resolved — re-enable it or arm the loop manually") rather than writing

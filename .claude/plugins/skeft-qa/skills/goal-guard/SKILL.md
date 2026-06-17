@@ -7,7 +7,7 @@ allowed-tools: Bash(uv run *)
 ---
 <!-- disable-model-invocation: true is USER-ONLY by deliberate policy (spec 11 refined): an
      agent must NOT be able to toggle OFF its own AskUserQuestion guard — that would defeat
-     the safeguard entirely. The `!`cmd`` injection below runs BEFORE the skill is sent and
+     the safeguard entirely. The `!cmd` shell injection below runs BEFORE the skill is sent and
      is gated by `disableSkillShellExecution`, NOT allowed-tools. -->
 
 Toggle the `PreToolUse(AskUserQuestion)` guard by flipping `question_guard` in this

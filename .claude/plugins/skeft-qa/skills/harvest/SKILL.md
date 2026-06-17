@@ -9,7 +9,7 @@ You are the System-2 harvest. Run ONLY off the hot loop. Native CC throughout �
 Let `CLI = ${CLAUDE_SKILL_DIR}/../../scripts/harness_common_cli.py` and `REPO = $(uv run python "$CLI" repo-root)`.
 
 -1. **Disabled-shell fail-loud [BLOCKER/MAJOR A2 — spec 2 "Arm-time guarantees", A.6 step 8(i)].** The
-   `` !`cmd` `` / Bash substitutions above (resolving `CLI`, `REPO`, the `jsonl_path` glob) run **before** the
+   `!cmd` / Bash substitutions above (resolving `CLI`, `REPO`, the `jsonl_path` glob) run **before** the
    skill is sent and are gated by `disableSkillShellExecution`, **not** `allowed-tools`. If that managed-settings
    kill-switch is set, each injection is replaced by the sentinel `[shell command execution disabled by policy]`.
    **Detect that sentinel in `CLI`/`REPO`/any resolved path and STOP immediately with a clear message** — never
