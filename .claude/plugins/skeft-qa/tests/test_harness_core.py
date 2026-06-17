@@ -141,3 +141,59 @@ def test_toggle_sets_question_guard_off_then_on(tmp_path, monkeypatch):
 def test_toggle_missing_marker_is_failopen(tmp_path):
     # No marker -> returns False (nothing to toggle), never raises.
     assert ggt.set_question_guard(tmp_path, "nope", False) is False
+
+
+# --- Task 6: PreToolUse(AskUserQuestion) guard ---
+import io  # noqa: E402
+import json as _json  # noqa: E402
+import harness_question_guard as qg  # noqa: E402
+
+
+def _run_guard(ev, monkeypatch, capsys):
+    monkeypatch.setattr("sys.stdin", io.StringIO(_json.dumps(ev)))
+    rc = qg.main()
+    out = capsys.readouterr().out
+    return rc, out
+
+
+def test_guard_denies_when_active(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(hc, "repo_root", lambda *a, **k: tmp_path)
+    _marker(tmp_path, "abc", {"role": "solo", "goal": "ship W4", "question_guard": True})
+    rc, out = _run_guard({"session_id": "abc", "cwd": str(tmp_path), "tool_name": "AskUserQuestion",
+                          "tool_input": {"questions": [{"question": "which approach?"}]}}, monkeypatch, capsys)
+    j = _json.loads(out)
+    hso = j["hookSpecificOutput"]
+    assert hso["hookEventName"] == "PreToolUse" and hso["permissionDecision"] == "deny"
+    assert hso["permissionDecisionReason"] and "ship W4" in hso["additionalContext"]
+    # contract C — the blocked question is logged:
+    log = (tmp_path / ".claude" / "skeft-harness" / "blocked_questions.jsonl").read_text()
+    assert "which approach?" in log
+
+
+def test_guard_allows_when_no_marker(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(hc, "repo_root", lambda *a, **k: tmp_path)
+    rc, out = _run_guard({"session_id": "none", "cwd": str(tmp_path), "tool_name": "AskUserQuestion",
+                          "tool_input": {"questions": []}}, monkeypatch, capsys)
+    assert rc == 0 and out.strip() == ""   # allow (no deny JSON emitted)
+
+
+def test_guard_allows_for_subagent(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(hc, "repo_root", lambda *a, **k: tmp_path)
+    _marker(tmp_path, "abc", {"role": "solo", "goal": "g", "question_guard": True})
+    rc, out = _run_guard({"session_id": "abc", "agent_id": "sub-1", "cwd": str(tmp_path),
+                          "tool_name": "AskUserQuestion", "tool_input": {"questions": []}}, monkeypatch, capsys)
+    assert rc == 0 and out.strip() == ""   # agent_id present -> inert -> allow
+
+
+def test_guard_allows_when_question_guard_off(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(hc, "repo_root", lambda *a, **k: tmp_path)
+    _marker(tmp_path, "abc", {"role": "solo", "goal": "g", "question_guard": False})
+    rc, out = _run_guard({"session_id": "abc", "cwd": str(tmp_path), "tool_name": "AskUserQuestion",
+                          "tool_input": {"questions": [{"question": "x?"}]}}, monkeypatch, capsys)
+    assert rc == 0 and out.strip() == ""   # guard off -> allow
+
+
+def test_guard_fail_open_on_bad_input(monkeypatch, capsys):
+    monkeypatch.setattr("sys.stdin", io.StringIO("not json"))
+    rc = qg.main()
+    assert rc == 0 and capsys.readouterr().out.strip() == ""   # error -> allow
