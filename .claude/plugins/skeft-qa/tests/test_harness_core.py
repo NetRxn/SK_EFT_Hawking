@@ -123,3 +123,21 @@ def test_directive_is_role_agnostic_and_prescribes_no_coordination():
     # NO role-conditioned coordination prescription in either direction:
     assert "do not start building yourself" not in ctx.lower()
     assert "lead" not in ctx.lower() and "coordinate" not in ctx.lower()
+
+
+# --- Task 5: /goal-guard toggle ---
+import goal_guard_toggle as ggt  # noqa: E402
+
+
+def test_toggle_sets_question_guard_off_then_on(tmp_path, monkeypatch):
+    monkeypatch.setattr(hc, "repo_root", lambda *a, **k: tmp_path)
+    _marker(tmp_path, "abc", {"role": "solo", "goal": "g", "question_guard": True})
+    assert ggt.set_question_guard(tmp_path, "abc", False) is True   # returns success
+    assert hc.read_marker({"session_id": "abc"})["question_guard"] is False
+    ggt.set_question_guard(tmp_path, "abc", True)
+    assert hc.read_marker({"session_id": "abc"})["question_guard"] is True
+
+
+def test_toggle_missing_marker_is_failopen(tmp_path):
+    # No marker -> returns False (nothing to toggle), never raises.
+    assert ggt.set_question_guard(tmp_path, "nope", False) is False
