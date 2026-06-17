@@ -3,7 +3,7 @@ name: goal-prompt
 description: The unified goal-mode skill for an autonomous /goal dev loop. Its core is the always-on operating posture (re-attaches after compaction); on invocation it composes the /goal condition AND registers the session with the harness. Use when starting a managed /goal dev loop, or when asked to write/refine a goal prompt or acceptance criteria for autonomous development.
 argument-hint: <what the loop should achieve> [role=solo|lead]
 disable-model-invocation: true
-allowed-tools: Bash(git rev-parse *), Bash(ls *), Bash(test *), Bash(date *), Write
+allowed-tools: Bash(git rev-parse *), Bash(ls *), Bash(test *), Bash(date *), Write, mcp__scheduled-tasks__list_scheduled_tasks, mcp__scheduled-tasks__create_scheduled_task
 ---
 <!-- disable-model-invocation: true is a deliberate USER-ONLY safety posture, not a technical
      requirement (spec 11 refined): an agent must NOT be able to auto-kick-off a goal. It is
@@ -91,10 +91,30 @@ transcript"); (d) **requires the fresh-context review (GAP-B)** — "not complet
 `skeft-qa:adversarial-reviewer` (and `claims-reviewer` for paper work) ran in a fresh context with **zero BLOCKER
 findings, surfaced in the transcript**"; (e) bounds runtime with `or stop after N turns`.
 
-### 3. Facilitate the harvest host + output
-Facilitate the one-time harvest host (the full procedure is ADDED in Plan 3, when the harvest exists). Then print
-the composed condition in a fenced block + one line: "run `/goal <condition>`" (the assistant cannot set `/goal`
-itself). Confirm both the per-goal prompt file path and the marker path written.
+### 3. Facilitate the harvest host (one-time, idempotent) + output
+Facilitate the one-time System-2 harvest host (spec 6.3). After writing the marker:
+- **(a) Desktop scheduled task (preferred).** If the scheduled-tasks MCP tools are available, call
+  `mcp__scheduled-tasks__list_scheduled_tasks` and look for `taskId = skeft-harvest-<repo>`; if absent, call
+  `mcp__scheduled-tasks__create_scheduled_task` with the **fixed `taskId = skeft-harvest-<repo>`** (→ idempotent
+  singleton; a second arm with the same id is a no-op), **recurring**, prompt = the literal `/skeft-qa:harvest`.
+  This triggers a **one-time user-approval** on first arm; then it runs recurring in the background.
+- **(b) Second-session `/loop` (CLI fallback).** If the Desktop scheduled-tasks tools are not available, **print**
+  the one-line command for the user to run in a **separate** terminal (NEVER this `/goal` session — `/loop` is
+  session-scoped and would compete with `/goal`): `/loop <interval> /skeft-qa:harvest`. Re-arm before the 7-day
+  `/loop` expiry.
+- **Cadence guidance (spec 6.3 — guidance, NOT a hard floor).** Titrate `<interval>` toward the average duration
+  of a ~1M-token session (≈ the auto-compact cadence) — **e.g. hourly** — so the **active System-2 issues** view
+  stays fresh enough to feed the next SessionStart re-injection / AskUserQuestion redirect near-real-time. Pick a
+  sane default (hourly) and tune later; this is the same `cadence_hours` the harvest records in `harvest_state`
+  (which drives the SessionStart drift warning).
+- **State plainly** that this host setup is **one-time** and is **NOT silently auto-spawned** (review C1 / spec 6.3
+  residual): the marker write + this facilitation are automatic, but the host *start* is one deliberate step (a
+  Desktop approval, or starting the second-terminal `/loop`).
+- **Host-permission note:** the unattended host must run with the harvest skill's `allowed-tools` Bash patterns
+  permitted, or `system2_register.py --upsert` auto-denies and the harvest writes nothing.
+
+Then print the composed condition in a fenced block + one line: "run `/goal <condition>`" (the assistant cannot set
+`/goal` itself). Confirm both the per-goal prompt file path and the marker path written.
 
 > **Deterministic persistence / crash recovery (spec A.5).** The gitignored marker is the *fast-read* copy; the
 > tracked `goal_prompt_<goal_id>.md` is the **durable, crash-recoverable source**. If the marker is **lost**

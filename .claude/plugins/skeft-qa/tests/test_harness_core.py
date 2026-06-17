@@ -229,3 +229,18 @@ def test_any_managed_marker_in_workspace_is_generic_and_failclosed(tmp_path, mon
     assert hc.any_managed_marker_in_workspace("nope") is False
     monkeypatch.setattr(hc, "find_workspace", lambda *a, **k: None)
     assert hc.any_managed_marker_in_workspace("sid9") is True   # workspace unresolved -> FAIL-CLOSED
+
+
+# --- Plan 3 Task 4: SessionStart drift warning (pure helper) ---
+
+def test_drift_note_silent_when_fresh_or_absent():
+    assert hr.drift_note(None, 1_000_000.0, None) == ""       # absent harvest_state -> silent
+    assert hr.drift_note(0, 1_000_000.0, 0) == ""             # no cadence -> silent
+    now = 1_000_000.0
+    assert hr.drift_note(now - 3600, now, 6) == ""            # 1h elapsed, cadence 6h (< 2x=12h) -> not overdue
+
+
+def test_drift_note_warns_past_2x_cadence():
+    now = 1_000_000.0
+    note = hr.drift_note(now - 18 * 3600, now, 6)             # 18h elapsed, 2x cadence = 12h -> overdue
+    assert note and "harvest hasn't run" in note
