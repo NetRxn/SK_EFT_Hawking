@@ -215,6 +215,55 @@ def _default_register():
     return Path(__file__).resolve().parent.parent / "docs" / "dev-loops" / "SYSTEM2_REGISTER.md"
 
 
+def _default_proposals_dir():
+    return Path(__file__).resolve().parent.parent / "docs" / "dev-loops" / "proposals"
+
+
+def _distinct_compact_events(finding):
+    return {o.get("compact_event_id") for o in finding.get("occurrences", []) if o.get("compact_event_id")}
+
+
+def _proposal_text(finding, distinct):
+    return (
+        "# GAP-A proposal: structural prevention for `{id}`\n\n".format(id=finding.get("id", "?"))
+        + "> **Draft for HUMAN SIGN-OFF (spec 13 / ADR-004 pathway-2). NOT auto-applied.**\n\n"
+        + "**Finding:** {0}\n\n".format(finding.get("title", ""))
+        + "**Class:** `{0}`  ·  **Tier:** `{1}`\n\n".format(finding.get("class", ""), finding.get("tier", ""))
+        + "**Why it matters:** {0}\n\n".format(finding.get("why", "") or "(see register)")
+        + "**Recurrence:** {0} distinct compact-events: {1}\n\n".format(
+            len(distinct), ", ".join(sorted(str(d) for d in distinct)))
+        + "**Proposed structural prevention** (the recurring discipline mechanized into a gate — "
+        + "fill in + sign off before adding):\n"
+        + "- For a goal-authoring pattern: a `goal-prompt` reference / authoring-checklist tweak.\n"
+        + "- For a harness-component pattern: a new deterministic `validate.py` check (or harness assert).\n"
+        + "- For a tactical-friction pattern: a `/sync`-style automation or a docs fix.\n\n"
+        + "**Suggested how-to-apply (from the finding):** {0}\n\n".format(
+            finding.get("how_to_apply", "") or "(none recorded)")
+        + "_Promote via `/skeft-qa:debrief` (human judgment); never auto-add a hard gate._\n"
+    )
+
+
+def propose_gate(finding, proposals_dir=None):
+    """GAP-A graduation (spec 13): when a finding has recurred across >= 3 DISTINCT compact-events,
+    write a draft proposed-structural-prevention spec to proposals/<id>.md FOR HUMAN SIGN-OFF
+    (never auto-add a gate). Idempotent — one proposal per id. Returns True iff a NEW proposal was
+    written, False otherwise (< 3 distinct events, or already proposed). The threshold counts
+    DISTINCT compact_event_ids (occurrences are idempotent by (session_id, compact_event_id) in
+    upsert), so a pre-vs-post-compact delta counts as one event like any other (counting is
+    decoupled from extraction granularity, spec 13 v4.0 relaxation)."""
+    distinct = _distinct_compact_events(finding)
+    if len(distinct) < 3:
+        return False
+    pdir = Path(proposals_dir) if proposals_dir else _default_proposals_dir()
+    fid = finding.get("id") or slug(finding)
+    out = pdir / (fid + ".md")
+    if out.exists():
+        return False   # idempotent — one proposal per id
+    pdir.mkdir(parents=True, exist_ok=True)
+    out.write_text(_proposal_text(finding, distinct))
+    return True
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="System-2 dev-process findings register.")
     ap.add_argument("--register", default=str(_default_register()),
@@ -223,6 +272,8 @@ def main(argv=None):
     ap.add_argument("--render", action="store_true", help="rewrite the register from its own contents")
     ap.add_argument("--write-active-issues", action="store_true", help="refresh active_issues.json")
     ap.add_argument("--out", default=None, help="active_issues.json path (with --write-active-issues)")
+    ap.add_argument("--propose-gate", action="store_true",
+                    help="draft GAP-A gate proposals for findings recurred across >=3 distinct compact-events")
     a = ap.parse_args(argv)
     if a.upsert:
         try:
@@ -240,6 +291,10 @@ def main(argv=None):
     if getattr(a, "write_active_issues"):
         out = write_active_issues(a.register, a.out)
         print("active-issues -> " + str(out))
+        return 0
+    if getattr(a, "propose_gate"):
+        n = sum(1 for f in load(a.register) if propose_gate(f))
+        print("proposed {0} new GAP-A gate draft(s)".format(n))
         return 0
     ap.print_help()
     return 0

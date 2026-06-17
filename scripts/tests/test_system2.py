@@ -153,3 +153,23 @@ def test_write_active_issues_caps_at_top_8_sorted_by_tier_then_tally(tmp_path):
     tiers = ["human-reviewed", "agent-reviewed", "automatic"]
     keys = [(tiers.index(i["tier"]), -i["tally"]) for i in issues]
     assert keys == sorted(keys)                              # tier desc, then tally desc
+
+
+def test_propose_gate_fires_at_three_distinct_compact_events(tmp_path):
+    """GAP-A (spec 13): >=3 DISTINCT compact-events -> draft proposal; 2 do not; idempotent.
+    Counting is decoupled from extraction granularity — a compact-delta counts as one event."""
+    s2 = _load("system2_register")
+    proposals = tmp_path / "proposals"
+
+    def occ(ids):
+        return [{"date": "2026-06-16", "session_id": "s", "compact_event_id": c} for c in ids]
+
+    f2 = {"id": "friction-two", "class": "friction", "title": "two", "why": "", "how_to_apply": "",
+          "tier": "agent-reviewed", "occurrences": occ(["s:1", "s:2"])}
+    f3 = {"id": "friction-three", "class": "friction", "title": "three", "why": "", "how_to_apply": "",
+          "tier": "agent-reviewed", "occurrences": occ(["s:1", "s:2", "s:3"])}
+    assert s2.propose_gate(f2, proposals) is False     # 2 distinct events -> no proposal
+    assert not (proposals / "friction-two.md").exists()
+    assert s2.propose_gate(f3, proposals) is True      # 3 distinct events -> proposal drafted
+    assert (proposals / "friction-three.md").exists()
+    assert s2.propose_gate(f3, proposals) is False     # idempotent: already proposed -> no-op
