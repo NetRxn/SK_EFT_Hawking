@@ -1,70 +1,246 @@
-"""Shared helpers for the skeft-qa dev-harness hooks/commands. Stdlib only; fail-open.
+"""Shared helpers for the skeft-qa dev-harness (hooks + skills). Stdlib only; fail-open.
+Runs under THIS repo's uv-managed Python (>=3.14) — the hooks invoke it via
+`uv run --no-sync python` and the plugin's requires-python is >=3.14; modern 3.14 syntax
+is fine (no legacy interpreter constraint).
 
-Every harness hook is DEFAULT-INERT: it acts only for a *managed* `/goal` dev
-loop — one for which `/dev-goal` wrote a marker — and NEVER for a subagent
-(`agent_id` present). A non-managed interactive session, an Explore/Plan/review
-subagent, or any error all resolve to "do nothing, exit 0".
+DEFAULT-INERT: acts only for a *managed* /goal loop (a marker exists for this
+session_id in THIS plugin's repo) and NEVER for a subagent (agent_id present).
 
-State lives under a fixed, load-mechanism-independent dir
-(`~/.claude/skeft-harness/`) rather than `$CLAUDE_PLUGIN_DATA`. Reason
-(build-time): `$CLAUDE_PLUGIN_DATA` is injected for hooks but NOT for slash
-commands (`/dev-goal`, `/debrief`), and its `{plugin}-{marketplace}` id varies
-with how the plugin was loaded (e.g. `skeft-qa-skeft-local` vs `skeft-qa-inline`).
-The fixed dir is computable identically by both hooks and commands; markers are
-keyed by the globally-unique `session_id`, so one shared dir is collision-free
-across projects and concurrent loops.
+State is PROJECT-SCOPED at <repo>/.claude/skeft-harness/, where
+  <repo> = repo_root() = find_workspace() / REPO_DIR_NAME.
+REPO_DIR_NAME is a constant naming THIS plugin copy's OWN repo dir ("SK_EFT_Hawking").
+(A sibling deployment ships its own copy with its own dir name.) This is:
+  * cwd-based / CACHE-SAFE: it does NOT walk $CLAUDE_PLUGIN_ROOT — for a marketplace
+    install that path lives in the ~/.claude cache, itself a git repo, so a git-root
+    walk would resolve to ~/.claude, not the project (review BLOCKER);
+  * launch-robust: works from inside the repo OR the non-git workspace root;
+  * leak-safe by construction: this copy's constant is its OWN repo dir name only, so it
+    resolves to (and reads markers in) only its own repo — never a sibling's.
+
+This is the harness's OWN copy of find_workspace (spec A.3, review item 5) — it is
+NOT an import of src.core.workspace. That module is ours and fine for the repo's own
+scripts, but it defaults `start` to Path(__file__) and its fallback derives from
+__file__'s position; for a marketplace-cache plugin that fallback resolves into
+~/.claude (the cache git repo — the A.3 trap). This copy instead (a) takes the hook
+payload's `cwd` (hooks) / os.getcwd() (skills) as `start`, and (b) uses the cache-safe
+fallback (a cwd git-root only if its basename == REPO_DIR_NAME, else None -> inert). It
+shares the structural detection but cannot rely on src.core being importable from a
+plugin and needs cwd-start semantics — hence the own copy, not the import.
 """
 import json
 import os
+import subprocess
 import sys
+from pathlib import Path
+
+# This plugin copy's OWN repo dir name. A sibling deployment ships its own copy + name.
+REPO_DIR_NAME = "SK_EFT_Hawking"
 
 
-def harness_dir() -> str:
-    return os.path.join(os.path.expanduser("~"), ".claude", "skeft-harness")
+def _git_root(start):
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(start), "rev-parse", "--show-toplevel"],
+            capture_output=True, text=True,
+        )
+        if out.returncode == 0 and out.stdout.strip():
+            return Path(out.stdout.strip())
+    except Exception:
+        pass
+    return None
 
 
-def marker_path(session_id: str) -> str:
-    return os.path.join(harness_dir(), "managed", f"{session_id}.json")
+def find_workspace(start=None):
+    """Workspace root: the ancestor (or self) of `start` (default cwd) that contains
+    `.mcp.json` AND `SK_EFT_Hawking/` and is NOT itself a git repo. None if not found.
+    Public-safe: keys only on this repo's own dir name."""
+    try:
+        cur = Path(start or os.getcwd()).resolve()
+    except Exception:
+        return None
+    for d in [cur] + list(cur.parents):
+        try:
+            if (d / ".mcp.json").is_file() and (d / REPO_DIR_NAME).is_dir() \
+                    and not (d / ".git").exists():
+                return d
+        except Exception:
+            continue
+    return None
 
 
-def qi_intake_dir() -> str:
-    return os.path.join(harness_dir(), "qi_intake")
+def repo_root(start=None):
+    """This plugin's OWN repo root. cwd-based, cache-safe, leak-safe. None if unresolved."""
+    ws = find_workspace(start)
+    if ws is not None:
+        cand = ws / REPO_DIR_NAME
+        if cand.is_dir():
+            return cand
+    # Fallback (leak-safe): a cwd git-root, accepted ONLY if its basename is our repo.
+    r = _git_root(Path(start) if start else Path.cwd())
+    if r is not None and r.name == REPO_DIR_NAME:
+        return r
+    return None
 
 
-def read_event() -> dict:
-    """Parse the hook event JSON from stdin; {} on any error."""
+def harness_dir(root):
+    return root / ".claude" / "skeft-harness"
+
+
+def marker_path(root, sid):
+    return harness_dir(root) / "managed" / (sid + ".json")
+
+
+def active_issues_path(root):
+    # Contract: Plan 3's harvest consolidator WRITES this gitignored cache.
+    return harness_dir(root) / "active_issues.json"
+
+
+def blocked_questions_path(root):
+    # Contract C: the guard APPENDS intercepted questions here; Plan 3 reads it.
+    return harness_dir(root) / "blocked_questions.jsonl"
+
+
+def read_event():
     try:
         return json.load(sys.stdin)
     except Exception:
         return {}
 
 
-def read_marker(ev: dict):
-    """Return this session's managed-loop marker dict, or None.
+def read_marker(ev):
+    """This session's managed-loop marker, or None (== inert).
 
-    None ⟺ inert: not a dict event, a subagent (`agent_id`), no session_id, or
-    no marker file for this session.
+    None when: not a dict, a subagent (agent_id), no session_id, repo unresolved,
+    or no marker file for this session in this plugin's repo. The workspace walk
+    starts from the event's `cwd` (authoritative) when present.
     """
     if not isinstance(ev, dict) or ev.get("agent_id"):
         return None
     sid = ev.get("session_id")
-    if not sid:
+    root = repo_root(ev.get("cwd"))
+    if not sid or root is None:
         return None
     try:
-        with open(marker_path(sid)) as f:
-            return json.load(f)
+        return json.loads(marker_path(root, sid).read_text())
     except Exception:
         return None
 
 
-def emit_context(event_name: str, text: str) -> None:
-    """Inject `text` as additionalContext for the given hook event."""
+def emit_context(event_name, text):
     try:
-        print(json.dumps({
-            "hookSpecificOutput": {
-                "hookEventName": event_name,
-                "additionalContext": text,
-            }
-        }))
+        print(json.dumps({"hookSpecificOutput": {
+            "hookEventName": event_name, "additionalContext": text}}))
     except Exception:
         pass
+
+
+# Hard payload budget (review C1): hook `additionalContext` over the 10k cap is REPLACED
+# by a file-path preview (hooks.md:704) — which recreates the exact "model sees a pointer,
+# not the content" failure the durability fix exists to prevent. So the assembled payload
+# MUST stay under this budget; the /goal condition + first-turn self-check are always kept
+# in full, and the active-System-2-issues section is the only truncatable part.
+PAYLOAD_MAX_CHARS = 9000          # hard cap (< the 10k additionalContext limit, hooks.md:704)
+ACTIVE_ISSUES_MAX = 8             # at most the top-N findings, dropped further until under cap
+
+
+def _tier_rank(issue):
+    """Sort key helper: human-reviewed > agent-reviewed > automatic (desc), then tally desc.
+    Tolerates plain-string issues (rank 0 / tally 0). Returns a tuple sorted descending."""
+    order = {"human-reviewed": 3, "agent-reviewed": 2, "automatic": 1}
+    if isinstance(issue, dict):
+        tier = order.get(str(issue.get("tier", "")).lower(), 0)
+        try:
+            tally = int(issue.get("tally", 0) or 0)
+        except Exception:
+            tally = 0
+        return (tier, tally)
+    return (0, 0)
+
+
+def _read_active_issues(root, max_items=ACTIVE_ISSUES_MAX):
+    """The active System-2 issues view (contract: written by Plan 3's harvest).
+    Absent / first-run / malformed -> '' so the payload omits the section gracefully.
+    Returns at most `max_items` findings, sorted by tier (human-reviewed > agent-reviewed
+    > automatic) desc, then tally desc — the truncatable part of the budgeted payload (C1)."""
+    if root is None:
+        return ""
+    try:
+        data = json.loads(active_issues_path(root).read_text())
+    except Exception:
+        return ""
+    # Tolerate either a list of issue strings/objects or a {"issues": [...]} wrapper.
+    items = data.get("issues", data) if isinstance(data, dict) else data
+    if not isinstance(items, list):
+        return ""
+    # Sort by tier desc, then tally desc; keep only the top `max_items`.
+    try:
+        items = sorted(items, key=_tier_rank, reverse=True)
+    except Exception:
+        pass
+    lines = []
+    for it in items[: max(0, int(max_items))]:
+        if isinstance(it, dict):
+            lines.append("- " + str(it.get("summary") or it.get("title") or it))
+        else:
+            lines.append("- " + str(it))
+    return "\n".join(lines)
+
+
+# Short, static decision-heuristics summary (the full text lives in the goal-mode
+# skill's references/decision-heuristics.md; this is the in-loop reminder).
+DECISION_HEURISTICS = (
+    "Decision heuristics: scope is SETTLED — do the next increment of real work THIS "
+    "turn. A stop-hook firing is a GO signal, never a cue to stop/hold/re-scope. If "
+    "you feel blocked, run full diligence first (re-read the roadmap + notebook, "
+    "reason about tradeoffs); if one option is clearly best, TAKE IT and log the "
+    "rationale in the notebook. Legitimate stops only: a kernel-checked no-go or a "
+    "genuine user-only decision."
+)
+
+# Headroom reserved for the first-turn self-check directive the SessionStart composer
+# appends to this payload (harness_reinject._SELF_CHECK). The PreToolUse guard does NOT
+# append it, so reserving it here keeps BOTH callers under the 9000-char cap (C1).
+_SELF_CHECK_RESERVE = 400
+
+
+def build_reorientation_payload(marker, repo_root):
+    """Contract B — the SHARED re-orientation payload, single source of the string.
+    Used by BOTH the SessionStart re-inject (harness_reinject.py) and the
+    PreToolUse(AskUserQuestion) guard (harness_question_guard.py). Assembled from:
+      * the settled /goal condition (marker['goal'] — the FAST-READ copy; the durable,
+        crash-recoverable source is the tracked goal_prompt_<goal_id>.md, spec A.5/A.8),
+      * 're-read CLAUDE.md',
+      * the active System-2 issues view (omitted gracefully if absent),
+      * a short decision-heuristics summary.
+    `marker` is the managed marker dict; `repo_root` is this plugin's resolved repo
+    (may be None -> active-issues section omitted). Fail-soft on any error.
+
+    HARD BUDGET (review C1): the assembled payload MUST stay < PAYLOAD_MAX_CHARS (9000),
+    because hook additionalContext over the 10k cap is replaced by a file-path preview
+    (hooks.md:704) — defeating the durability fix. The /goal condition (marker['goal'])
+    AND the first-turn self-check directive are ALWAYS included in full; only the
+    active-System-2-issues section is truncatable — include at most ACTIVE_ISSUES_MAX (8)
+    findings (sorted by tier then tally, in _read_active_issues), dropping more until the
+    total fits. The SessionStart composer appends the self-check, so to keep this function
+    self-bounded we reserve that headroom here via _SELF_CHECK_RESERVE."""
+    if not isinstance(marker, dict):
+        marker = {}
+    goal = marker.get("goal", "")
+    head = []
+    if goal:
+        head.append("SETTLED GOAL (the /goal condition):\n" + goal)
+    head.append("Re-read CLAUDE.md (the giant-ref pointer that should be re-read).")
+    tail = [DECISION_HEURISTICS]
+    # Budget the truncatable middle: try the full top-N, then drop findings until the
+    # whole payload (incl. the self-check headroom the composer later appends) fits.
+    n = ACTIVE_ISSUES_MAX
+    while True:
+        issues = _read_active_issues(repo_root, n) if n > 0 else ""
+        parts = list(head)
+        if issues:
+            parts.append("Active System-2 issues (current open/recurring drift findings):\n" + issues)
+        parts += tail
+        payload = "\n\n".join(parts)
+        if len(payload) + _SELF_CHECK_RESERVE < PAYLOAD_MAX_CHARS or n <= 0:
+            return payload
+        n -= 1
