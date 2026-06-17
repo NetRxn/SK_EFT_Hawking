@@ -18,7 +18,7 @@ Run the one foolproof mechanical-sync command and report the result.
 
 1. **Resolve the repo root (cwd-robust — works from the workspace root OR inside the repo)** (do NOT use
    `${CLAUDE_PROJECT_DIR}` — it is NOT a skill substitution, only a hooks/MCP/LSP var):
-   `` !`R=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "${R:-UNRESOLVED}"` ``. This uses the harness
+   `` !`R=$(uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "${R:-UNRESOLVED}"` ``. This uses the harness
    `repo_root()` (`find_workspace()` / `REPO_DIR_NAME`, the SAME resolver the hooks use), so it resolves the
    plugin's repo whether CC was launched from the **workspace root** (the lean-lsp launch point) or inside the
    repo, falling back to `git rev-parse`. It is `UNRESOLVED` only if launched entirely outside the workspace — in
@@ -49,8 +49,7 @@ Run the one foolproof mechanical-sync command and report the result.
    anything — installing is the user's deliberate one-time step. `goal-prompt` runs the identical check at
    arm-time — spec 12 L2.) If the warning fires, surface it prominently; do not bury it in the sync output.
 3. From that repo root, run via Bash: `cd "<repo-root>" && uv run python scripts/sync.py --full` — **`cd` into
-   the resolved repo first** so `uv` finds its project (a bare `uv run` from the workspace root fails: no
-   pyproject there). (`sync.py` self-locates its own `ROOT` from `__file__`.)
+   the resolved repo first** so `uv` finds its project (a bare `uv run` from the workspace root runs an ephemeral interpreter WITHOUT the repo's deps (e.g. `src.core` fails to import); `cd` into the repo gives it the project env). (`sync.py` self-locates its own `ROOT` from `__file__`.)
 
 Then state which artifacts were regenerated and remind the user that Aristotle (S4) is excluded by design and
 judgment docs (the prose Inventory, README) are flag-only — never silently regenerated. If any regen failed,

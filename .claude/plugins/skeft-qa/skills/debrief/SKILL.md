@@ -17,7 +17,7 @@ roadmaps (those need their own explicit sign-off — spec 1 principle 6, "self-i
 self-mutating").
 
 1. **Resolve the repo root (cwd-robust — works from the workspace root OR inside the repo):**
-   `` !`R=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "${R:-UNRESOLVED}"` `` (harness `repo_root()`, the
+   `` !`R=$(uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "${R:-UNRESOLVED}"` `` (harness `repo_root()`, the
    same resolver the hooks use, with a `git rev-parse` fallback). `UNRESOLVED` only if launched entirely outside
    the workspace — then ask the user to `cd` into `SK_EFT_Hawking/` and re-run. Use `<repo>` below.
 

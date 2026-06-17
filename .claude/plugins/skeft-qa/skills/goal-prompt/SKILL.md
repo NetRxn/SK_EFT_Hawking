@@ -45,7 +45,7 @@ composition discipline + acceptance criteria.
 
 ### 1. Register the session (write the marker)
 - **Repo root (cwd-robust — resolves from the workspace root OR inside the repo):**
-  `` !`R=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "${R:-UNRESOLVED}"` `` —
+  `` !`R=$(uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "${R:-UNRESOLVED}"` `` —
   this resolves the plugin's OWN repo via the harness `repo_root()` (`find_workspace()` / `REPO_DIR_NAME`), the
   SAME resolver the hooks use, so it works whether CC was launched from the **workspace root** (where `.mcp.json` /
   lean-lsp lives — the usual launch point) or from inside the repo, and the marker lands exactly where the hooks
@@ -58,7 +58,7 @@ composition discipline + acceptance criteria.
   already exists on disk, so glob it directly rather than reconstructing the encoded-cwd slug (robust; the
   `<slug>` is the cwd with every non-alphanumeric char → `-`, but globbing avoids that fragility). Use this
   exact path as `jsonl_path`. If empty (or the A2 sentinel), fall back to the slug rule and note it.
-- **Pre-commit gate install-check (review A4):** `` !`R=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); test -n "$R" && test -x "$R/.git/hooks/pre-commit" && echo INSTALLED || echo MISSING` `` — the
+- **Pre-commit gate install-check (review A4):** `` !`R=$(uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); test -n "$R" && test -x "$R/.git/hooks/pre-commit" && echo INSTALLED || echo MISSING` `` — the
   local git pre-commit hook is the **sole enforcing mechanical gate** (the v3.0 CC commit advisory was dropped,
   spec 12 L2), and it fires only where installed; a fresh clone / new worktree may have **no gate at all**. If this
   prints `MISSING` (or the A2 sentinel), **warn the user loudly** ("⚠ no pre-commit gate installed for this
@@ -133,6 +133,6 @@ Then print the composed condition in a fenced block + one line: "run `/goal <con
 The marker is keyed by `${CLAUDE_SESSION_ID}`; if it landed at the wrong key (or an empty session id), **every
 harness hook is inert and the durability fix is a silent no-op**. So as the FINAL step, verify the file exists at
 the resolved key and print **PASS/FAIL** to the user:
-`` !`R=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); test -n "$R" && test -f "$R/.claude/dev-harness/managed/${CLAUDE_SESSION_ID}.json" && echo "PASS: marker armed for ${CLAUDE_SESSION_ID}" || echo "FAIL: marker NOT found for ${CLAUDE_SESSION_ID} — the loop is UNMANAGED"` ``
+`` !`R=$(uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); test -n "$R" && test -f "$R/.claude/dev-harness/managed/${CLAUDE_SESSION_ID}.json" && echo "PASS: marker armed for ${CLAUDE_SESSION_ID}" || echo "FAIL: marker NOT found for ${CLAUDE_SESSION_ID} — the loop is UNMANAGED"` ``
 If this prints **FAIL** (or the A2 sentinel), tell the user the loop is **not** managed (do not start `/goal` until
 the marker is armed at the right key) and re-attempt the Write in step 1.

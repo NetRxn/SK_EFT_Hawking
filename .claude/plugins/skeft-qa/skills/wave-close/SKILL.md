@@ -21,7 +21,7 @@ Close wave **$ARGUMENTS** in one deliberate pass. Do NOT do this per-task — on
 
 0. **Resolve the repo root (cwd-robust — works from the workspace root OR inside the repo)** (NOT
    `${CLAUDE_PROJECT_DIR}` — not a skill substitution):
-   `` !`R=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "${R:-UNRESOLVED}"` ``. This uses the harness
+   `` !`R=$(uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "${R:-UNRESOLVED}"` ``. This uses the harness
    `repo_root()` (the SAME resolver the hooks use), falling back to `git rev-parse`, so it resolves whether CC was
    launched from the **workspace root** (the lean-lsp launch point) or inside the repo. `UNRESOLVED` only if
    launched entirely outside the workspace — then tell the user to `cd` into `SK_EFT_Hawking/` and re-run. Use
@@ -32,8 +32,7 @@ Close wave **$ARGUMENTS** in one deliberate pass. Do NOT do this per-task — on
    worktree/worker can't race the same regen — spec 12):
    - `cd "<repo-root>" && uv run python scripts/sync.py --full`
    - `cd "<repo-root>" && uv run python scripts/gate_precheck.py s13`
-   (`cd` into the resolved repo so `uv` finds its project — a bare `uv run` from the workspace root has no
-   pyproject there.) If `gate_precheck s13` is FAIL, STOP — fix the red checks first; do not spend an
+   (`cd` into the resolved repo so `uv` finds its project — a bare `uv run` from the workspace root runs an ephemeral interpreter WITHOUT the repo's deps (e.g. `src.core` fails to import); `cd` into the repo gives it the project env.) If `gate_precheck s13` is FAIL, STOP — fix the red checks first; do not spend an
    Opus review on a failing tree.
 
 2. **Dispatch the fresh-context review** (a real model call, the GAP-B safeguard the

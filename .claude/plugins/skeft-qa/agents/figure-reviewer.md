@@ -46,7 +46,7 @@ resolve the repo root and work from it:
 ```bash
 # cwd-robust repo resolve — prefer the harness repo_root() (the SAME resolver the hooks/skills use);
 # fall back to CLAUDE_PROJECT_DIR / $PWD (+ /SK_EFT_Hawking for a workspace-root launch) / git.
-REPO="$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null)"
+REPO="$(uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null)"
 [ -f "$REPO/lean/lakefile.toml" ] || REPO="${CLAUDE_PROJECT_DIR:-$PWD}"
 [ -f "$REPO/lean/lakefile.toml" ] || REPO="${CLAUDE_PROJECT_DIR:-$PWD}/SK_EFT_Hawking"
 [ -f "$REPO/lean/lakefile.toml" ] || REPO="$(git -C "${CLAUDE_PROJECT_DIR:-$PWD}" rev-parse --show-toplevel 2>/dev/null)"

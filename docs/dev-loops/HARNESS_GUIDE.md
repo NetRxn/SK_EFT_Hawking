@@ -118,6 +118,7 @@ claude plugin update skeft-qa@skeft-local --scope local   # run from BOTH the wo
 - **Leak-safe by construction:** the public `skeft-qa` resolves only `SK_EFT_Hawking` (its `REPO_DIR_NAME`); it can never read the private sibling's marker. The public System-2 register additionally drop-scrubs any finding naming the private repo.
 - **Nothing competes with `/goal`:** `/goal` *is* the Stop hook; the harness ships none.
 - **Self-improving, never self-mutating:** findings are tagged by review tier and *proposed*; the agent never edits CLAUDE.md / roadmaps / hooks / gates on the fly.
+- **Runs under the project's Python 3.14, from any cwd.** Harness scripts are invoked with **`uv run --no-sync python`** (which yields the uv-managed 3.14 even at the workspace root, via an ephemeral interpreter), **never bare `python3`** (that's the system 3.9.x). Repo *resolution* and *stdlib* helpers run from any cwd; *project-dependency* scripts (`validate.py`, `system2_register`→`src.core`, `update_counts`, `lake`) `cd` into the repo first so `uv` gives them the repo's deps/pythonpath. **Maintainers: keep `uv run --no-sync python`; do not switch to bare `python3`, and do not add a workspace-root uv project — the project scripts need *each repo's own* env, which a root project can't supply.**
 
 ---
 
