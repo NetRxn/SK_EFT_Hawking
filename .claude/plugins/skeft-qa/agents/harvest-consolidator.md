@@ -24,12 +24,12 @@ the candidate came from** (the goal pointer, spec A.4).
   workspace repo — **drop (do not redact)**, and **never hardcode the private name** (the pre-commit leak-guard
   greps for it). Report the drop count.
 - **Write via Bash, NOT the Write tool** (which auto-denies unattended): for each finding,
-  `echo '<finding-json>' | uv run python <repo>/scripts/system2_register.py --upsert` (it exits nonzero if its
+  `cd "<repo>" && echo '<finding-json>' | uv run python scripts/system2_register.py --upsert` (`cd` into `<repo>` so `uv` finds its project; it exits nonzero if its
   deterministic scrub dropped the finding). The register handles dedup / occurrence-idempotency /
   tier-monotonicity. A **pre-vs-post-compact delta** finding is upserted like any other (one occurrence, stamped
   with the `compact_event_id` of the boundary it straddles).
 - **Refresh the active System-2 issues view LAST (v4.0 — spec 6.3 / A.4):** after all upserts succeed, run
-  `uv run python <repo>/scripts/system2_register.py --write-active-issues` once. This rewrites
+  `cd "<repo>" && uv run python scripts/system2_register.py --write-active-issues` once. This rewrites
   `<repo>/.claude/dev-harness/active_issues.json` — the **register-wide** open/unresolved findings
   (`{title, tier, tally}`), NOT scoped to the session/goal you just harvested (a *prior* loop's open lesson is
   exactly what the *next* loop must re-ground on) — the gitignored cache Plan 1's `SessionStart` re-injection +

@@ -2,7 +2,7 @@
 name: wave-close
 description: Close a wave deterministically — run the gate prerequisites, dispatch the fresh-context adversarial review, and record the close. Use once per wave when the wave's bricks are shipped and validate is green.
 argument-hint: <wave-or-bundle-id>
-allowed-tools: Bash(git rev-parse *), Bash(uv run python *), Agent
+allowed-tools: Bash(git rev-parse *), Bash(cd *), Bash(uv run python *), Agent
 ---
 
 <!-- INVOCABILITY (spec 11 — per-skill invocability fix): NO `disable-model-invocation`
@@ -19,17 +19,21 @@ allowed-tools: Bash(git rev-parse *), Bash(uv run python *), Agent
 
 Close wave **$ARGUMENTS** in one deliberate pass. Do NOT do this per-task — once per wave.
 
-0. **Resolve the repo root** (NOT `${CLAUDE_PROJECT_DIR}` — not a skill substitution; `git rev-parse` here
-   resolves the *user's cwd* repo, distinct from the Plan-1 harness-*state* resolver):
-   `` !`git rev-parse --show-toplevel 2>/dev/null || echo UNRESOLVED` ``. If `UNRESOLVED`, tell the user to
-   `cd` into `SK_EFT_Hawking/` and re-run. Use `<repo-root>` for the absolute script paths below.
+0. **Resolve the repo root (cwd-robust — works from the workspace root OR inside the repo)** (NOT
+   `${CLAUDE_PROJECT_DIR}` — not a skill substitution):
+   `` !`R=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "${R:-UNRESOLVED}"` ``. This uses the harness
+   `repo_root()` (the SAME resolver the hooks use), falling back to `git rev-parse`, so it resolves whether CC was
+   launched from the **workspace root** (the lean-lsp launch point) or inside the repo. `UNRESOLVED` only if
+   launched entirely outside the workspace — then tell the user to `cd` into `SK_EFT_Hawking/` and re-run. Use
+   `<repo-root>` for the paths below.
 
 1. **Full sync + gate prereqs (deterministic).** Run via Bash (the scripts self-locate their own ROOT;
    `sync.py`'s shared-artifact regen is serialized by the Task-7 regen concurrency lock, so a concurrent
    worktree/worker can't race the same regen — spec 12):
-   - `uv run python <repo-root>/scripts/sync.py --full`
-   - `uv run python <repo-root>/scripts/gate_precheck.py s13`
-   If `gate_precheck s13` is FAIL, STOP — fix the red checks first; do not spend an
+   - `cd "<repo-root>" && uv run python scripts/sync.py --full`
+   - `cd "<repo-root>" && uv run python scripts/gate_precheck.py s13`
+   (`cd` into the resolved repo so `uv` finds its project — a bare `uv run` from the workspace root has no
+   pyproject there.) If `gate_precheck s13` is FAIL, STOP — fix the red checks first; do not spend an
    Opus review on a failing tree.
 
 2. **Dispatch the fresh-context review** (a real model call, the GAP-B safeguard the

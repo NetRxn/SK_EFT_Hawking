@@ -2,7 +2,7 @@
 name: debrief
 description: Interactively review the System-2 dev-process harvest — promote agent-reviewed findings to human-reviewed (or close them), and triage GAP-A gate proposals. Use when you want to sign off on what the autonomous loop learned about HOW it ran.
 disable-model-invocation: true
-allowed-tools: Bash(uv run python *), Read
+allowed-tools: Bash(cd *), Bash(uv run python *), Read
 ---
 
 <!-- INVOCABILITY (spec 11): `disable-model-invocation: true` is the deliberate USER-ONLY
@@ -16,8 +16,10 @@ is the **periodic human governor** step — never auto-run; never auto-edit CLAU
 roadmaps (those need their own explicit sign-off — spec 1 principle 6, "self-improving, never
 self-mutating").
 
-1. **Resolve the repo root:** `` !`git rev-parse --show-toplevel 2>/dev/null || echo UNRESOLVED` ``.
-   If `UNRESOLVED`, ask the user to `cd` into `SK_EFT_Hawking/` and re-run.
+1. **Resolve the repo root (cwd-robust — works from the workspace root OR inside the repo):**
+   `` !`R=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "${R:-UNRESOLVED}"` `` (harness `repo_root()`, the
+   same resolver the hooks use, with a `git rev-parse` fallback). `UNRESOLVED` only if launched entirely outside
+   the workspace — then ask the user to `cd` into `SK_EFT_Hawking/` and re-run. Use `<repo>` below.
 
 2. **Read the register + proposals.** Read `<repo>/docs/dev-loops/SYSTEM2_REGISTER.md` (the
    `## Open` section) and any drafts under `<repo>/docs/dev-loops/proposals/`. Cluster the
@@ -35,7 +37,7 @@ self-mutating").
    register own dedup / tier-monotonicity / round-trip). For a finding `F` (its full JSON record
    from the register) with the user's decision applied (`"tier": "human-reviewed"` to promote, or
    `"status": "closed"` + `"evidence": "..."` to close):
-   `echo '<F-json>' | uv run python <repo>/scripts/system2_register.py --upsert`
+   `cd "<repo>" && echo '<F-json>' | uv run python scripts/system2_register.py --upsert`
    (upsert raises tier monotonically — agent-reviewed → human-reviewed is allowed; it never
    downgrades.) A **closed** finding drops out of the register-wide active-issues view on the
    next harvest refresh.
@@ -46,5 +48,5 @@ self-mutating").
    do not implement the gate in this skill.
 
 6. After the pass, refresh the active-issues view so closures take effect immediately:
-   `uv run python <repo>/scripts/system2_register.py --write-active-issues`. Summarize what was
+   `cd "<repo>" && uv run python scripts/system2_register.py --write-active-issues`. Summarize what was
    promoted / closed / left and which proposals were signed off.

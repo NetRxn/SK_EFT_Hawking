@@ -3,7 +3,7 @@ name: goal-guard
 description: Toggle the AskUserQuestion guard for the current managed /goal loop. Turn it off when you want the loop to be able to ask you a question; turn it back on to resume autonomous protection. Use when you want to enable or disable being asked questions during an autonomous dev loop.
 argument-hint: <on|off>
 disable-model-invocation: true
-allowed-tools: Bash(uv run *)
+allowed-tools: Bash(python3 *)
 ---
 <!-- disable-model-invocation: true is USER-ONLY by deliberate policy (spec 11 refined): an
      agent must NOT be able to toggle OFF its own AskUserQuestion guard — that would defeat
@@ -17,7 +17,7 @@ Turn it **off** when you genuinely want to be asked; **on** to resume autonomous
 The session id is passed as an argument (the substituted `${CLAUDE_SESSION_ID}`), so the
 toggle does not depend on an env var being exported to the shell:
 
-Run: `` !`uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/goal_guard_toggle.py" $ARGUMENTS ${CLAUDE_SESSION_ID} 2>/dev/null` ``
+Run: `` !`python3 "${CLAUDE_PLUGIN_ROOT}/scripts/goal_guard_toggle.py" $ARGUMENTS ${CLAUDE_SESSION_ID} 2>/dev/null` ``
 
 Then confirm the new state to the user (`question_guard=on|off`). If the line above is empty
 or reads `[shell command execution disabled by policy]`, tell the user shell execution is

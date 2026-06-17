@@ -1,7 +1,7 @@
 ---
 name: sync
 description: Run the full mechanical Stage-12 sync (counts, tables, deps, citation cache) in one command. Use before a wave gate, or whenever counts/tables/figures may have drifted from the Lean/Python sources.
-allowed-tools: Bash(git rev-parse *), Bash(uv run python *), Bash(grep *)
+allowed-tools: Bash(git rev-parse *), Bash(cd *), Bash(uv run python *), Bash(grep *)
 ---
 
 <!-- INVOCABILITY (spec 11 — per-skill invocability fix): NO `disable-model-invocation`
@@ -16,12 +16,13 @@ allowed-tools: Bash(git rev-parse *), Bash(uv run python *), Bash(grep *)
 
 Run the one foolproof mechanical-sync command and report the result.
 
-1. **Resolve the repo root** (do NOT use `${CLAUDE_PROJECT_DIR}` — it is NOT a skill substitution, only a
-   hooks/MCP/LSP var): `` !`git rev-parse --show-toplevel 2>/dev/null || echo UNRESOLVED` ``. If that is
-   `UNRESOLVED` (launched from the non-git workspace root), tell the user to `cd` into `SK_EFT_Hawking/` and
-   re-run. (NB: `git rev-parse` here correctly resolves the *user's cwd* repo — distinct from, not contradicting,
-   the Plan-1 harness-*state* resolver, which avoids a git-root walk because ITS cwd may be the `~/.claude` plugin
-   cache.)
+1. **Resolve the repo root (cwd-robust — works from the workspace root OR inside the repo)** (do NOT use
+   `${CLAUDE_PROJECT_DIR}` — it is NOT a skill substitution, only a hooks/MCP/LSP var):
+   `` !`R=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "${R:-UNRESOLVED}"` ``. This uses the harness
+   `repo_root()` (`find_workspace()` / `REPO_DIR_NAME`, the SAME resolver the hooks use), so it resolves the
+   plugin's repo whether CC was launched from the **workspace root** (the lean-lsp launch point) or inside the
+   repo, falling back to `git rev-parse`. It is `UNRESOLVED` only if launched entirely outside the workspace — in
+   that case tell the user to `cd` into `SK_EFT_Hawking/` and re-run.
 2. **Verify the L2 pre-commit gate is installed for THIS checkout, and warn loudly if not (review A4 / spec
    12 L2 "Coverage residual").** The L2 commit gate is a *local* git hook (`<repo-root>/.git/hooks/pre-commit`),
    not a plugin mechanism — a **fresh clone / new worktree where the installer never ran** has NO mechanical gate
@@ -47,8 +48,9 @@ Run the one foolproof mechanical-sync command and report the result.
    the leak-guard fails the check and is flagged. This is a non-mutating, deterministic check; it never installs
    anything — installing is the user's deliberate one-time step. `goal-prompt` runs the identical check at
    arm-time — spec 12 L2.) If the warning fires, surface it prominently; do not bury it in the sync output.
-3. From that repo root, run via Bash: `uv run python <repo-root>/scripts/sync.py --full` (the script
-   self-locates its own `ROOT` from `__file__`, so an absolute path is safe from any cwd).
+3. From that repo root, run via Bash: `cd "<repo-root>" && uv run python scripts/sync.py --full` — **`cd` into
+   the resolved repo first** so `uv` finds its project (a bare `uv run` from the workspace root fails: no
+   pyproject there). (`sync.py` self-locates its own `ROOT` from `__file__`.)
 
 Then state which artifacts were regenerated and remind the user that Aristotle (S4) is excluded by design and
 judgment docs (the prose Inventory, README) are flag-only — never silently regenerated. If any regen failed,

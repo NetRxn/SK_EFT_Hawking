@@ -44,16 +44,21 @@ composition discipline + acceptance criteria.
 > no-op).
 
 ### 1. Register the session (write the marker)
-- **Repo root:** `` !`git rev-parse --show-toplevel 2>/dev/null || echo UNRESOLVED` `` — this skill must
-  run **inside the target repo** (the public repo for a public loop). If the line above is `UNRESOLVED`
-  (or the `[shell command execution disabled by policy]` sentinel — see the A2 note above), STOP and tell the
-  user to relaunch from inside the repo, or `cd` into it. (`<repo>` below = this resolved path.)
+- **Repo root (cwd-robust — resolves from the workspace root OR inside the repo):**
+  `` !`R=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "${R:-UNRESOLVED}"` `` —
+  this resolves the plugin's OWN repo via the harness `repo_root()` (`find_workspace()` / `REPO_DIR_NAME`), the
+  SAME resolver the hooks use, so it works whether CC was launched from the **workspace root** (where `.mcp.json` /
+  lean-lsp lives — the usual launch point) or from inside the repo, and the marker lands exactly where the hooks
+  read it. It falls back to `git rev-parse` for an in-repo launch outside the workspace. The line above is
+  `UNRESOLVED` only if launched entirely outside the workspace (or is the `[shell command execution disabled by
+  policy]` sentinel — see the A2 note above); in that case STOP and tell the user to launch from the workspace
+  root or inside the repo. (`<repo>` below = this resolved path.)
 - **Transcript path (resolve now, while this session is live):**
   `` !`ls ~/.claude/projects/*/${CLAUDE_SESSION_ID}.jsonl 2>/dev/null | head -1` `` — this session's own JSONL
   already exists on disk, so glob it directly rather than reconstructing the encoded-cwd slug (robust; the
   `<slug>` is the cwd with every non-alphanumeric char → `-`, but globbing avoids that fragility). Use this
   exact path as `jsonl_path`. If empty (or the A2 sentinel), fall back to the slug rule and note it.
-- **Pre-commit gate install-check (review A4):** `` !`test -x "$(git rev-parse --show-toplevel 2>/dev/null)/.git/hooks/pre-commit" && echo INSTALLED || echo MISSING` `` — the
+- **Pre-commit gate install-check (review A4):** `` !`R=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); test -n "$R" && test -x "$R/.git/hooks/pre-commit" && echo INSTALLED || echo MISSING` `` — the
   local git pre-commit hook is the **sole enforcing mechanical gate** (the v3.0 CC commit advisory was dropped,
   spec 12 L2), and it fires only where installed; a fresh clone / new worktree may have **no gate at all**. If this
   prints `MISSING` (or the A2 sentinel), **warn the user loudly** ("⚠ no pre-commit gate installed for this
@@ -128,6 +133,6 @@ Then print the composed condition in a fenced block + one line: "run `/goal <con
 The marker is keyed by `${CLAUDE_SESSION_ID}`; if it landed at the wrong key (or an empty session id), **every
 harness hook is inert and the durability fix is a silent no-op**. So as the FINAL step, verify the file exists at
 the resolved key and print **PASS/FAIL** to the user:
-`` !`test -f "$(git rev-parse --show-toplevel 2>/dev/null)/.claude/dev-harness/managed/${CLAUDE_SESSION_ID}.json" && echo "PASS: marker armed for ${CLAUDE_SESSION_ID}" || echo "FAIL: marker NOT found for ${CLAUDE_SESSION_ID} — the loop is UNMANAGED"` ``
+`` !`R=$(python3 "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); test -n "$R" && test -f "$R/.claude/dev-harness/managed/${CLAUDE_SESSION_ID}.json" && echo "PASS: marker armed for ${CLAUDE_SESSION_ID}" || echo "FAIL: marker NOT found for ${CLAUDE_SESSION_ID} — the loop is UNMANAGED"` ``
 If this prints **FAIL** (or the A2 sentinel), tell the user the loop is **not** managed (do not start `/goal` until
 the marker is armed at the right key) and re-attempt the Write in step 1.

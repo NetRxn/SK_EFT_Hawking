@@ -6,7 +6,7 @@ allowed-tools: Bash(jq *), Bash(uv run python *), Bash(python3 *), Read, Agent
 ---
 
 You are the System-2 harvest. Run ONLY off the hot loop. Native CC throughout — no headless.
-Let `CLI = ${CLAUDE_SKILL_DIR}/../../scripts/harness_common_cli.py` and `REPO = $(uv run python "$CLI" repo-root)`.
+Let `CLI = ${CLAUDE_SKILL_DIR}/../../scripts/harness_common_cli.py` and `REPO = $(python3 "$CLI" repo-root)`.
 
 -1. **Disabled-shell fail-loud [BLOCKER/MAJOR A2 — spec 2 "Arm-time guarantees", A.6 step 8(i)].** The
    `!cmd` / Bash substitutions above (resolving `CLI`, `REPO`, the `jsonl_path` glob) run **before** the
@@ -16,17 +16,17 @@ Let `CLI = ${CLAUDE_SKILL_DIR}/../../scripts/harness_common_cli.py` and `REPO = 
    proceed to read transcripts or write findings with `UNRESOLVED` paths (a degrade-loudly, not run-silently-wrong
    posture; same guarantee `goal-prompt` enforces at arm-time).
 
-0. **Self-abort guard (FAIL-CLOSED).** `uv run python "$CLI" is-managed ${CLAUDE_SESSION_ID}`. If it prints
+0. **Self-abort guard (FAIL-CLOSED).** `python3 "$CLI" is-managed ${CLAUDE_SESSION_ID}`. If it prints
    `MANAGED` (this is a `/goal` session) — or errors / can't resolve the workspace — **STOP immediately**
    (running inside `/goal` would burn its context + confuse the evaluator; an unresolved workspace fails closed).
 
-1. **GC + enumerate.** `uv run python "$CLI" gc`; then read every marker in `$REPO/.claude/dev-harness/managed/`
+1. **GC + enumerate.** `python3 "$CLI" gc`; then read every marker in `$REPO/.claude/dev-harness/managed/`
    (this plugin's repo only — leak-safe). For each, take its `jsonl_path` + `session_id` **+ its `goal_id` and the
    `goal_prompt_<goal_id>.md` path** (the marker carries `goal_id`, spec A.5) — these are the **goal pointer**
    (spec A.4) stamped onto every occurrence the consolidator writes for this session. If a marker predates
    `goal_id` (older arm), carry it through as absent rather than failing.
 2. **Per session — incremental BYTE-RANGE read (NOT the Read tool — the file is ~110 MB).**
-   `off=$(uv run python "$CLI" read-watermark <sid>)`; if `os.path.getsize(jsonl) <= off`, skip. Read the span
+   `off=$(python3 "$CLI" read-watermark <sid>)`; if `os.path.getsize(jsonl) <= off`, skip. Read the span
    `[off, last-complete-newline]` with a byte reader, e.g.
    `python3 -c "import sys;f=open(sys.argv[1],'rb');f.seek(int(sys.argv[2]));d=f.read();e=d.rfind(b'\n')+1;sys.stdout.buffer.write(d[:e])" <jsonl> <off>`
    → split into ~N-MB chunk files at newline boundaries. Build the canonical compact-event map ONCE per file by
@@ -52,12 +52,12 @@ Let `CLI = ${CLAUDE_SKILL_DIR}/../../scripts/harness_common_cli.py` and `REPO = 
    (the agent's own drop is belt-and-suspenders), then **refreshes `active_issues.json` (register-wide) via
    `system2_register.py --write-active-issues`** (the view Plan 1's re-injection / AskUserQuestion redirect read).
 5. **Commit the watermark LAST:** only after the consolidator's writes succeed,
-   `uv run python "$CLI" advance-watermark <sid> <new_offset>` (atomic, boundary-aligned). Then
-   `uv run python "$CLI" harvest-state-set <now> <cadence_hours>` for the drift warning.
+   `python3 "$CLI" advance-watermark <sid> <new_offset>` (atomic, boundary-aligned). Then
+   `python3 "$CLI" harvest-state-set <now> <cadence_hours>` for the drift warning.
 5b. **GC the blocked-question log [MINOR D2].** ALSO only after the consolidator's writes succeed: advance the
     blocked-question log past the span just ingested so it does NOT grow unbounded and is NOT re-ingested as
     duplicate findings on the next run. Either **truncate** `$BQLOG` (`: > "$BQLOG"` when the whole file was the
-    ingested span) or **watermark** it (`uv run python "$CLI" advance-watermark bqlog <new_bqlog_offset>`, the same
+    ingested span) or **watermark** it (`python3 "$CLI" advance-watermark bqlog <new_bqlog_offset>`, the same
     byte-offset machinery, when only a span was read). Skip gracefully if `$BQLOG` is absent. **Note:**
     `gc_dead_markers` does NOT cover `blocked_questions.jsonl` — it prunes only dead markers + watermarks under
     this repo, so this GC step is its own thing and must run here, not be assumed handled by `gc`.
