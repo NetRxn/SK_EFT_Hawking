@@ -198,4 +198,79 @@ theorem localComposite_eq_zero_iff {m : ℕ} {M : Type} [TopologicalSpace M] [T1
     ↔ SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint hy (m + 2) z = 0
   exact (SKEFTHawking.SingularChartBridge.manifoldLocalIso y).map_eq_zero_iff
 
+/-- **Local constancy of the per-point restriction-vanishing of a fixed class** (Hatcher 3.26): for
+`α : Hₘ₊₂(M)` and any `x₀`, the chart-ball neighbourhood `U = interior((chartAt x₀).symm '' B̄)` is open,
+contains `x₀`, and on it `restrictHomologyToPoint y α = 0 ↔ restrictHomologyToPoint x₀ α = 0`. On a
+chart ball the local-value composite is constant (`localComposite_agree_chartBall`), the composite
+vanishes iff the bare restriction does (`localComposite_eq_zero_iff`), and the restriction to a set
+factors the per-point restriction (`restrictToPoint_restrictHomologyToSet`). The engine that makes the
+vanishing set `{x | restrictHomologyToPoint x α = 0}` clopen — hence (`M` connected) all-or-nothing. -/
+theorem restrictHomologyToPoint_locally_constant {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (α : Homology (TopCat.of M) (m + 2)) (x₀ : M) :
+    ∃ U : Set M, IsOpen U ∧ x₀ ∈ U ∧ ∀ y ∈ U,
+      (restrictHomologyToPoint (X := TopCat.of M) y (m + 2) α = 0
+        ↔ restrictHomologyToPoint (X := TopCat.of M) x₀ (m + 2) α = 0) := by
+  obtain ⟨r, _hr, hrsub, hx₀int⟩ := SingularGoodCompactManifold.exists_chartBall_nbhd (m := m) x₀
+  set c := chartAt (EuclideanSpace ℝ (Fin (m + 2))) x₀ with hc
+  set K : Set M := c.symm '' Metric.closedBall (c x₀) r with hK
+  refine ⟨interior K, isOpen_interior, hx₀int, fun y hy => ?_⟩
+  have hyK : y ∈ K := interior_subset hy
+  have hx₀K : x₀ ∈ K := interior_subset hx₀int
+  have hagree :
+      localComposite (m := m) hx₀K (restrictHomologyToSet (X := TopCat.of M) K (m + 2) α)
+        = localComposite (m := m) hyK (restrictHomologyToSet (X := TopCat.of M) K (m + 2) α) :=
+    localComposite_agree_chartBall (m := m) x₀ hrsub hx₀K hyK _
+  rw [← restrictToPoint_restrictHomologyToSet hyK (m + 2) α,
+      ← restrictToPoint_restrictHomologyToSet hx₀K (m + 2) α,
+      ← localComposite_eq_zero_iff hyK, ← localComposite_eq_zero_iff hx₀K, hagree]
+
+/-- **Injectivity of the per-point restriction on a connected closed manifold** (Hatcher 3.26,
+kernel-triviality half of `Hₘ₊₂(M;ℤ/2) ≅ ℤ/2`): a class `α : Hₘ₊₂(M)` that restricts to `0` at a
+single point `x₀` is `0`. The vanishing set `S = {x | restrictHomologyToPoint x α = 0}` is **clopen**
+(both `S` and `Sᶜ` are open by local constancy, `restrictHomologyToPoint_locally_constant`); `M`
+connected and `x₀ ∈ S` force `S = univ`, so `α` restricts to `0` at every point; then
+`determinedByPoints` (`goodCompact_univ`) gives `α = 0`. (`(univ)ᶜ = ∅`, so the determined-by-points
+class is `(relHomologyEmptyEquiv).symm α`, and `restrictToPoint` of it at `x` is the per-point
+restriction `restrictHomologyToPoint x α` — proof-irrelevantly, as both are `relIncl … ((relHomologyEmptyEquiv).symm α)`.) -/
+theorem restrictHomologyToPoint_injective {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
+    [CompactSpace M] [Nonempty M] [PreconnectedSpace M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] {α : Homology (TopCat.of M) (m + 2)} {x₀ : M}
+    (hx₀ : restrictHomologyToPoint (X := TopCat.of M) x₀ (m + 2) α = 0) : α = 0 := by
+  set S : Set M := {x | restrictHomologyToPoint (X := TopCat.of M) x (m + 2) α = 0} with hS
+  have hSopen : IsOpen S := by
+    rw [isOpen_iff_forall_mem_open]
+    intro x hx
+    obtain ⟨U, hUopen, hxU, hUconst⟩ := restrictHomologyToPoint_locally_constant α x
+    exact ⟨U, fun y hy => (hUconst y hy).mpr hx, hUopen, hxU⟩
+  have hScopen : IsOpen Sᶜ := by
+    rw [isOpen_iff_forall_mem_open]
+    intro x hx
+    obtain ⟨U, hUopen, hxU, hUconst⟩ := restrictHomologyToPoint_locally_constant α x
+    exact ⟨U, fun y hy hyS => hx ((hUconst y hy).mp hyS), hUopen, hxU⟩
+  have hSclopen : IsClopen S := ⟨isOpen_compl_iff.mp hScopen, hSopen⟩
+  have hSuniv : S = Set.univ := hSclopen.eq_univ ⟨x₀, hx₀⟩
+  have hall : ∀ x : M, restrictHomologyToPoint (X := TopCat.of M) x (m + 2) α = 0 :=
+    Set.eq_univ_iff_forall.mp hSuniv
+  -- determined-by-points on `univ`: `ρ_univ α` restricts to `0` at every point, hence is `0`.
+  have hdet := (SingularGoodCompactManifold.goodCompact_univ (m := m) (M := M)).2
+  have hβ0 : restrictHomologyToSet (X := TopCat.of M) (Set.univ : Set ↑(TopCat.of M)) (m + 2) α = 0 :=
+    hdet (restrictHomologyToSet (Set.univ : Set ↑(TopCat.of M)) (m + 2) α)
+      (fun x hx => by rw [restrictToPoint_restrictHomologyToSet hx (m + 2) α]; exact hall x)
+  -- `ρ_univ` is injective: `relIncl (univᶜ ⊆ ∅)` left-inverts `relIncl (∅ ⊆ univᶜ)` (≡ `id` on `H(M|∅)`).
+  have huniv_empty : (Set.univ : Set ↑(TopCat.of M))ᶜ ⊆ (∅ : Set ↑(TopCat.of M)) := Set.compl_univ.subset
+  have hγ : (relHomologyEmptyEquiv (X := TopCat.of M) (m + 2)).symm α = 0 := by
+    have hback : relIncl huniv_empty (m + 2)
+        (restrictHomologyToSet (Set.univ : Set ↑(TopCat.of M)) (m + 2) α)
+        = (relHomologyEmptyEquiv (X := TopCat.of M) (m + 2)).symm α := by
+      show relIncl huniv_empty (m + 2)
+          (relIncl (Set.empty_subset (Set.univ : Set ↑(TopCat.of M))ᶜ) (m + 2)
+            ((relHomologyEmptyEquiv (X := TopCat.of M) (m + 2)).symm α))
+        = (relHomologyEmptyEquiv (X := TopCat.of M) (m + 2)).symm α
+      rw [relIncl_trans, relIncl, SKEFTHawking.SingularRelativeFunctoriality.RelativeHomology.map_id]
+      rfl
+    rw [hβ0, map_zero] at hback
+    exact hback.symm
+  have hα := congrArg (relHomologyEmptyEquiv (X := TopCat.of M) (m + 2)) hγ
+  rwa [LinearEquiv.apply_symm_apply, map_zero] at hα
+
 end SKEFTHawking.SingularFundamentalClass
