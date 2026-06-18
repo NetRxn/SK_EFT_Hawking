@@ -164,6 +164,17 @@ theorem mapChain_ambIncl (S : Set ↑X) (n : ℕ) :
   | add c₁ c₂ h₁ h₂ => rw [map_add, map_add, h₁, h₂]
   | single σ a => rw [mapChain_single, chainIncl_single, mapSimplex_ambIncl]
 
+/-- The functorial `Homology.map (ambIncl S)` equals the pair-LES inclusion-induced map `homIncl S`
+(both descend from the chain inclusion, via `mapChain_ambIncl`). Lets the Mayer–Vietoris complex
+conditions reuse the pair-LES `homIncl_connecting`. -/
+theorem Homology.map_ambIncl (S : Set ↑X) (n : ℕ) :
+    Homology.map (ambIncl S) n = homIncl S n := by
+  refine LinearMap.ext fun x => ?_
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  show Homology.map (ambIncl S) n (Homology.mk (sub S) n z) = homIncl S n (Homology.mk (sub S) n z)
+  rw [Homology.map_mk, homIncl_mk]
+  exact congrArg (Homology.mk X n) (Subtype.ext (by rw [cyclesMap_coe, mapChain_ambIncl]))
+
 /-- **Naturality of the connecting map under excision** (the Barratt–Whitehead commutativity square):
 the inclusion `A ∩ B ↪ A` after the `(B, A∩B)` connecting map equals the `(X, A)` connecting map after
 excision. The crux of Mayer–Vietoris exactness at `Hₙ(A∩B)` and `Hₙ(X)`. -/
