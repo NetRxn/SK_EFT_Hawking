@@ -26,8 +26,10 @@ the next brick), **dispatch a read-only `Explore` agent in parallel and keep bui
 independent part solo** — don't stall the loop waiting for the map. Explore reads and reports; it
 never edits, so it runs safely alongside your own work. This is **distinct from the lean-worker
 fan-out** in `parallel-worktrees.md` (which dispatches *proof* bricks to worktree slots) — Explore
-is read-only reconnaissance: no worktree, no MCP slot. Fold its findings in when it returns; they
-often surface a load-bearing gap you hadn't anticipated.
+is read-only reconnaissance: no worktree, no MCP slot. Verify any findings, and if you agree (i.e. findings are correct and don't match known
+anti-patterns), fold them in; they often surface a load-bearing gap or useful substrate outside
+your immediate context. **Explore runs a lighter, faster model and can echo the loop's
+anti-patterns — treat its output as leads to vet, not conclusions.**
 
 ## Legitimate stops (the only two)
 
