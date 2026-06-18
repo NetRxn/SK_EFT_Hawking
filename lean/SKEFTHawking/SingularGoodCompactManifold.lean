@@ -61,4 +61,39 @@ theorem goodCompact_univ {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M] [
   exact ⟨hclosed, goodCompact_compact_in_chart_source hcompInter
     (hsubKj.trans (hKchart j (ht hj)))⟩
 
+/-- **Restriction to a point of a closed-ball chart neighbourhood is bijective** (M:Type, *concrete*
+chart form of F1): for a closed ball `B̄(chartAt y₀ · y₀, r)` inside the chart target and a point `y` in
+its chart-pullback `K = (chartAt y₀).symm '' B̄`, the restriction `Hₘ₊₂(M|K) → Hₘ₊₂(M|y)` is bijective.
+Applies `SingularGoodCompactChart.restrictToPoint_convexChart_bijective` (F1) with the **concrete** chart
+`(chartAt y₀).toHomeomorphSourceTarget` (whose type pins the topology instances) — sidestepping the
+`isDefEq` wall that an *abstract* chart hypothesis triggers under the `M:Type ↔ TopCat.of M` coercion.
+The local-homology iso the fundamental-class local-constancy argument rides on. -/
+theorem restrictToPoint_chartBall_bijective {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (y₀ : M) {r : ℝ}
+    (hrsub : Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀ y₀) r
+      ⊆ (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀).target)
+    {y : M} (hy : y ∈ (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀).symm ''
+      Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀ y₀) r) :
+    Function.Bijective
+      (SingularManifoldFundamentalClass.restrictToPoint (X := TopCat.of M) hy (m + 2)) := by
+  haveI : T1Space ↑(TopCat.of M) := inferInstanceAs (T1Space M)
+  set c := chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀ with hc
+  have hCcomp : IsCompact (Metric.closedBall (c y₀) r) := isCompact_closedBall _ _
+  have hKsub : c.symm '' Metric.closedBall (c y₀) r ⊆ c.source := by
+    rintro p ⟨z, hz, rfl⟩; exact c.map_target (hrsub hz)
+  have hKcomp : IsCompact (c.symm '' Metric.closedBall (c y₀) r) :=
+    hCcomp.image_of_continuousOn (c.continuousOn_symm.mono hrsub)
+  have hcompat : ∀ u : ↥c.source,
+      ((c.toHomeomorphSourceTarget u : ↑(SingularEuclideanAcyclic.Eucl (m + 2)))
+          ∈ Metric.closedBall (c y₀) r)
+        ↔ ((u : M) ∈ c.symm '' Metric.closedBall (c y₀) r) := by
+    intro u
+    rw [c.toHomeomorphSourceTarget_apply_coe]
+    constructor
+    · intro h; exact ⟨c u, h, c.left_inv u.2⟩
+    · rintro ⟨z, hz, hzu⟩; rw [← hzu, c.right_inv (hrsub hz)]; exact hz
+  exact SKEFTHawking.SingularGoodCompactChart.restrictToPoint_convexChart_bijective hKcomp.isClosed
+    c.open_source hKsub (convex_closedBall _ _) hCcomp c.open_target hrsub
+    c.toHomeomorphSourceTarget hcompat hy
+
 end SKEFTHawking.SingularGoodCompactManifold
