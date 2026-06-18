@@ -5,6 +5,7 @@ import SKEFTHawking.SingularChartBridge
 import SKEFTHawking.SingularEuclideanAcyclic
 import SKEFTHawking.SingularConvexComplementRetract
 import SKEFTHawking.SingularSphereHighDegree
+import SKEFTHawking.SingularMayerVietorisLES
 
 /-!
 # Phase 5q.F (w₂-foundation, brick 6e) — toward the fundamental class `[M]`
@@ -364,5 +365,48 @@ theorem relIncl_map {Y : TopCat} (φ : C(↑X, ↑Y)) {S T : Set ↑X} (hST : S 
   rw [← LinearMap.comp_apply, ← RelativeHomology.map_comp, ← LinearMap.comp_apply,
     ← RelativeHomology.map_comp]
   rfl
+
+/-- **The excision map is `RelativeHomology.map` of the subspace inclusion** `Hₙ(B, A∩B) → Hₙ(X, A)`:
+`excisionMap A B n = RelativeHomology.map (ambIncl B)`, since both are `mapQ` of `chainIncl B`
+(`= mapChain (ambIncl B)` by `mapChain_ambIncl`). Lets `relIncl_map` discharge the excision-transport
+square (next), sidestepping the `restr A B`-vs-`restr A' B` quotient bookkeeping. -/
+theorem excisionMap_eq_map (A B : Set ↑X) (n : ℕ) :
+    excisionMap A B n
+      = RelativeHomology.map (SingularMayerVietorisLES.ambIncl B) (fun _ hp => hp) n := by
+  have hchain : relChainIncl A B n
+      = relMapChain (SingularMayerVietorisLES.ambIncl B) (fun _ hp => hp) n := by
+    refine LinearMap.ext fun c => ?_
+    obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective _ c
+    show relChainIncl A B n (RelativeChain.mk (restr A B) n c)
+        = relMapChain (SingularMayerVietorisLES.ambIncl B) (fun _ hp => hp) n
+          (RelativeChain.mk (restr A B) n c)
+    rw [relChainIncl_mk,
+      show relMapChain (SingularMayerVietorisLES.ambIncl B) (fun _ hp => hp) n
+            (RelativeChain.mk (restr A B) n c)
+          = RelativeChain.mk A n (SingularFunctoriality.mapChain (SingularMayerVietorisLES.ambIncl B) n c)
+        from relMapChain_mk (SingularMayerVietorisLES.ambIncl B) (fun _ hp => hp) n c,
+      SingularMayerVietorisLES.mapChain_ambIncl]
+  refine LinearMap.ext fun z => ?_
+  obtain ⟨z₀, rfl⟩ := Submodule.Quotient.mk_surjective _ z
+  change Submodule.Quotient.mk
+      (⟨relChainIncl A B n (z₀ : RelativeChain (restr A B) n),
+        relChainIncl_mem_relCycles A B n z₀ z₀.2⟩ : relCycles A n)
+    = RelativeHomology.map (SingularMayerVietorisLES.ambIncl B) (fun _ hp => hp) n
+        (Submodule.Quotient.mk z₀)
+  rw [RelativeHomology.map_mk]
+  refine congrArg Submodule.Quotient.mk (Subtype.ext ?_)
+  rw [relCyclesMap_coe]
+  exact DFunLike.congr_fun hchain (z₀ : RelativeChain (restr A B) n)
+
+/-- **Excision-transport naturality**: `relIncl` commutes with `excisionMap` (`A ⊆ A'`). Via the
+`excisionMap = RelativeHomology.map (ambIncl B)` bridge + `relIncl_map`. The square that transports a
+restriction `Hₙ(M|K) → Hₙ(M|x)` across the open-set excision `Hₙ(M, ·) ≅ Hₙ(restr · U, ·)`. -/
+theorem relIncl_excisionMap {A A' B : Set ↑X} (hAA' : A ⊆ A') (n : ℕ)
+    (z : RelativeHomology (restr A B) n) :
+    relIncl hAA' n (excisionMap A B n z)
+      = excisionMap A' B n (relIncl (Set.preimage_mono hAA') n z) := by
+  rw [excisionMap_eq_map, excisionMap_eq_map]
+  exact (relIncl_map (SingularMayerVietorisLES.ambIncl B) (Set.preimage_mono hAA')
+    (fun _ hp => hp) (fun _ hp => hp) hAA' n z).symm
 
 end SKEFTHawking.SingularManifoldFundamentalClass
