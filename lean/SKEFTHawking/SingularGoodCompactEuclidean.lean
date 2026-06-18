@@ -132,4 +132,74 @@ theorem vanishAbove_eucl_compact {m : ℕ} {K : Set (EuclideanSpace ℝ (Fin (m 
       _ = relIncl hC'K (k + 1) 0 := by rw [hβ'0]
       _ = 0 := map_zero _
 
+/-! ## Step 3 (b) — `determinedByPoints` for an arbitrary Euclidean compact -/
+
+/-- **`determinedByPoints (m+2) K` for an arbitrary compact `K ⊆ ℝⁿ`** (Hatcher 3.27 step 3, the
+degree-`n` half): a class `α ∈ Hₘ₊₂(ℝⁿ | K)` restricting to `0` at every point of `K` is `0`. The
+representative factors through `Hₘ₊₂(ℝⁿ | C')` for the convex-compact-union `C' = ⋃ B̄(cⱼ, rⱼ)` whose
+balls are **centred at points of `K`** (`SingularBallCover`). Each ball `B̄(c, r)` is convex with
+`c ∈ K`, so by the radial restriction iso (brick 4g) `β'` restricts to `0` on the whole ball once it
+restricts to `0` at the centre `c` (where it agrees with `α`'s vanishing restriction). Hence `β'`
+restricts to `0` at every point of `C'`, and `determinedByPoints (m+2) C'` (brick 4i) gives `β' = 0`,
+so `α = 0`. -/
+theorem determinedByPoints_eucl_compact {m : ℕ} {K : Set (EuclideanSpace ℝ (Fin (m + 2)))}
+    (hK : IsCompact K) :
+    determinedByPoints (X := SingularEuclideanAcyclic.Eucl (m + 2)) (m + 2) K := by
+  rcases K.eq_empty_or_nonempty with hKe | hKne
+  · rw [hKe]; exact (goodCompact_empty (X := SingularEuclideanAcyclic.Eucl (m + 2)) (m + 2)).2
+  · intro α hα
+    obtain ⟨C, hCcomp, hKC, β, hβ⟩ :=
+      SingularLocalHomologyColimit.exists_factor_through_compact
+        (X := SingularEuclideanAcyclic.Eucl (m + 2)) hK α
+    obtain ⟨s, r, hs, hsK, hrpos, hcov, hsub⟩ :=
+      SingularBallCover.exists_finite_closedBall_cover hK isOpen_interior hKC hKne
+    set C' : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2)) := ⋃ c ∈ s, Metric.closedBall c (r c)
+      with hC'def
+    have hgoodC' : SKEFTHawking.SingularGoodCompact.goodCompact
+        (X := SingularEuclideanAcyclic.Eucl (m + 2)) (m + 2) C' :=
+      goodCompact_biUnion_convex hs (fun c => Metric.closedBall c (r c))
+        (fun c _ => convex_closedBall c (r c)) (fun c _ => isCompact_closedBall c (r c))
+    have hC'C : C' ⊆ C := Set.iUnion₂_subset (fun c hc => (hsub c hc).trans interior_subset)
+    have hKC' : K ⊆ C' := hcov
+    -- `β'` is `β` restricted from `C` to `C'` (`Cᶜ ⊆ C'ᶜ`, written in `restrictToPoint_relIncl`'s
+    -- inlined `compl_subset_compl.mpr` form so all the `rw`s below match syntactically).
+    set β' := relIncl (Set.compl_subset_compl.mpr hC'C) (m + 2) β with hβ'def
+    have hαβ' : relIncl (Set.compl_subset_compl.mpr hKC') (m + 2) β' = α := by
+      rw [hβ'def, relIncl_trans]; exact hβ
+    -- `β'` restricts to `0` at every point of `C'`.
+    have hβ'pt : ∀ (y : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) (hy : y ∈ C'),
+        restrictToPoint hy (m + 2) β' = 0 := by
+      intro y hy
+      obtain ⟨c, hc, hyc⟩ := Set.mem_iUnion₂.mp (hC'def ▸ hy)
+      have hcK : c ∈ K := hsK hc
+      have hcBc : c ∈ Metric.closedBall c (r c) := Metric.mem_closedBall_self (hrpos c hc).le
+      have hBcC' : Metric.closedBall c (r c) ⊆ C' := fun z hz => by
+        rw [hC'def]; exact Set.mem_iUnion₂.mpr ⟨c, hc, hz⟩
+      have hinj := (SingularConvexRadialBase.restrictToPoint_radial_bijective
+        (convex_closedBall c (r c)) (isCompact_closedBall c (r c)) hcBc).injective
+      -- The restriction of `β'` from `C'` to the ball `B̄(c, r c)` vanishes: its value at the centre
+      -- `c ∈ K` is `α`'s vanishing restriction (`hα`), and the radial restriction iso is injective.
+      have hcenter : restrictToPoint hcBc (m + 2)
+          (relIncl (Set.compl_subset_compl.mpr hBcC') (m + 2) β') = 0 := by
+        rw [restrictToPoint_relIncl hBcC' hcBc (m + 2) β']
+        show restrictToPoint (hKC' hcK) (m + 2) β' = 0
+        rw [← restrictToPoint_relIncl hKC' hcK (m + 2) β', hαβ']
+        exact hα c hcK
+      have hballβ' : relIncl (Set.compl_subset_compl.mpr hBcC') (m + 2) β' = 0 :=
+        hinj (by rw [hcenter, map_zero])
+      show restrictToPoint (hBcC' hyc) (m + 2) β' = 0
+      rw [← restrictToPoint_relIncl hBcC' hyc (m + 2) β', hballβ', map_zero]
+    rw [← hαβ', hgoodC'.2 β' hβ'pt, map_zero]
+
+/-! ## Step 3 — assembled: an arbitrary Euclidean compact is `goodCompact` -/
+
+/-- **An arbitrary compact `K ⊆ ℝⁿ` is `goodCompact (m+2)`** (Hatcher 3.27 step 3): both halves
+(`vanishAbove_eucl_compact`, `determinedByPoints_eucl_compact`). The single-chart base case the
+manifold-level finite-union induction (step 4) stacks on toward the fundamental class `[M]`. -/
+theorem goodCompact_eucl_compact {m : ℕ} {K : Set (EuclideanSpace ℝ (Fin (m + 2)))}
+    (hK : IsCompact K) :
+    SKEFTHawking.SingularGoodCompact.goodCompact
+      (X := SingularEuclideanAcyclic.Eucl (m + 2)) (m + 2) K :=
+  ⟨vanishAbove_eucl_compact hK, determinedByPoints_eucl_compact hK⟩
+
 end SKEFTHawking.SingularGoodCompactEuclidean
