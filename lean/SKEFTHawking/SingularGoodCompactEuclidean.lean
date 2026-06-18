@@ -2,6 +2,8 @@ import Mathlib
 import SKEFTHawking.SingularManifoldFundamentalClass
 import SKEFTHawking.SingularGoodCompact
 import SKEFTHawking.SingularConvexRadialBase
+import SKEFTHawking.SingularLocalHomologyColimit
+import SKEFTHawking.SingularBallCover
 
 /-!
 # Phase 5q.F (w₂-foundation, brick 72c-4i) — `goodCompact` for the empty set and finite convex unions
@@ -26,7 +28,7 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 -/
 
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularRelativeHomologyMod2
-open SKEFTHawking.SingularManifoldFundamentalClass
+open SKEFTHawking.SingularManifoldFundamentalClass SKEFTHawking.SingularRelativeMV
 open SKEFTHawking.SingularExcision
 
 namespace SKEFTHawking.SingularGoodCompactEuclidean
@@ -93,5 +95,41 @@ theorem goodCompact_biUnion_convex {m : ℕ} {ι : Type*} {s : Finset ι} (hs : 
       · obtain ⟨O, hO⟩ := hne
         exact SingularConvexRadialBase.goodCompact_convexCompact hconvI hcompI hO
       · rw [Set.not_nonempty_iff_eq_empty.mp hne]; exact goodCompact_empty (m + 2))
+
+/-! ## Step 3 (a) — `vanishAbove` for an arbitrary Euclidean compact -/
+
+/-- **`vanishAbove (m+2) K` for an arbitrary compact `K ⊆ ℝⁿ`** (Hatcher 3.27 step 3, the high-degree
+half): `Hᵢ(ℝⁿ | K) = 0` for `i > m+2`. A class `α` factors through `Hᵢ(ℝⁿ | C)` for a compact
+neighbourhood `C ⊇ K` (the colimit surjectivity `exists_factor_through_compact`, brick 4e); covering
+`K` by finitely many closed balls inside `interior C` yields a convex-compact-union `C'` with
+`K ⊆ C' ⊆ C` and `Hᵢ(ℝⁿ | C') = 0` (brick 4i), so the image of `α`'s representative in `Hᵢ(ℝⁿ | C')`
+vanishes and `α = 0` (`relIncl_trans`). -/
+theorem vanishAbove_eucl_compact {m : ℕ} {K : Set (EuclideanSpace ℝ (Fin (m + 2)))}
+    (hK : IsCompact K) :
+    vanishAbove (X := SingularEuclideanAcyclic.Eucl (m + 2)) (m + 2) K := by
+  rcases K.eq_empty_or_nonempty with hKe | hKne
+  · rw [hKe]; exact (goodCompact_empty (X := SingularEuclideanAcyclic.Eucl (m + 2)) (m + 2)).1
+  · intro i hi α
+    obtain ⟨k, rfl⟩ : ∃ k, i = k + 1 := ⟨i - 1, by omega⟩
+    obtain ⟨C, hCcomp, hKC, β, hβ⟩ :=
+      SingularLocalHomologyColimit.exists_factor_through_compact
+        (X := SingularEuclideanAcyclic.Eucl (m + 2)) hK α
+    obtain ⟨s, r, hs, hsK, hrpos, hcov, hsub⟩ :=
+      SingularBallCover.exists_finite_closedBall_cover hK isOpen_interior hKC hKne
+    have hgoodC' : SKEFTHawking.SingularGoodCompact.goodCompact
+        (X := SingularEuclideanAcyclic.Eucl (m + 2)) (m + 2) (⋃ c ∈ s, Metric.closedBall c (r c)) :=
+      goodCompact_biUnion_convex hs (fun c => Metric.closedBall c (r c))
+        (fun c _ => convex_closedBall c (r c)) (fun c _ => isCompact_closedBall c (r c))
+    have hC'C : (⋃ c ∈ s, Metric.closedBall c (r c)) ⊆ C :=
+      Set.iUnion₂_subset (fun c hc => (hsub c hc).trans interior_subset)
+    have hCC' : (Cᶜ : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2)))
+        ⊆ (⋃ c ∈ s, Metric.closedBall c (r c))ᶜ := Set.compl_subset_compl.mpr hC'C
+    have hC'K : ((⋃ c ∈ s, Metric.closedBall c (r c))ᶜ : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2)))
+        ⊆ Kᶜ := Set.compl_subset_compl.mpr hcov
+    have hβ'0 : relIncl hCC' (k + 1) β = 0 := hgoodC'.1 (k + 1) hi _
+    calc α = relIncl _ (k + 1) β := hβ.symm
+      _ = relIncl hC'K (k + 1) (relIncl hCC' (k + 1) β) := (relIncl_trans hCC' hC'K (k + 1) β).symm
+      _ = relIncl hC'K (k + 1) 0 := by rw [hβ'0]
+      _ = 0 := map_zero _
 
 end SKEFTHawking.SingularGoodCompactEuclidean
