@@ -186,14 +186,10 @@ theorem chainBoundary_mem_mvUnionChains (U V : Set ↑M) (n : ℕ) (c : Singular
   exact Submodule.add_mem_sup (chainBoundary_mem_subspaceChains U n u hu)
     (chainBoundary_mem_subspaceChains V n v hv)
 
-/-- The **third-term chains** `Q_n = C_n(M) / (C_n(U)+C_n(V))`. -/
-def QChain (U V : Set ↑M) (n : ℕ) : Type := SingularChain M n ⧸ mvUnionChains U V n
-
-noncomputable instance (U V : Set ↑M) (n : ℕ) : AddCommGroup (QChain U V n) :=
-  inferInstanceAs (AddCommGroup (_ ⧸ _))
-
-noncomputable instance (U V : Set ↑M) (n : ℕ) : Module (ZMod 2) (QChain U V n) :=
-  inferInstanceAs (Module (ZMod 2) (_ ⧸ _))
+/-- The **third-term chains** `Q_n = C_n(M) / (C_n(U)+C_n(V))`. A reducible abbreviation so the raw
+quotient and `QChain` are transparently identified (Mathlib's quotient `Module`/`AddCommGroup`
+instances apply directly, and `relMvChainSum`'s codomain is defeq-free `QChain`). -/
+abbrev QChain (U V : Set ↑M) (n : ℕ) : Type := SingularChain M n ⧸ mvUnionChains U V n
 
 /-- The `Q`-class of an absolute chain. -/
 noncomputable def QChain.mk (U V : Set ↑M) (n : ℕ) (c : SingularChain M n) : QChain U V n :=
@@ -214,7 +210,7 @@ theorem qBoundary_mk (U V : Set ↑M) (n : ℕ) (c : SingularChain M (n + 1)) :
 
 theorem qBoundary_comp_qBoundary (U V : Set ↑M) (n : ℕ) :
     (qBoundary U V n).comp (qBoundary U V (n + 1)) = 0 := by
-  ext c
+  refine LinearMap.ext fun c => ?_
   obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective _ c
   rw [LinearMap.comp_apply, LinearMap.zero_apply]
   show qBoundary U V n (qBoundary U V (n + 1) (QChain.mk U V (n + 1 + 1) c)) = 0
@@ -264,5 +260,143 @@ theorem QHomology.mk_eq_zero_iff (U V : Set ↑M) (n : ℕ) (z : qCycles U V n) 
   · intro h
     refine (Submodule.Quotient.mk_eq_zero _).2 ?_
     rwa [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype]
+
+/-! ### The relative MV connecting map `δ : QHomology (n+1) → RelativeHomology (U∩V) n`
+
+Built snake-lemma–style on the chain SES `0 → C(M,U∩V) →[Δ] B →[Σ] Q → 0`, `B := C(M,U)×C(M,V)`,
+mirroring `SingularPairLES`. Because `Δ` is **injective** (`relMvChainDiag_injective`), the snake
+extraction `∂_B b ↦ Δ⁻¹(∂_B b)` is a genuine *linear* map (via `LinearEquiv.ofInjective Δ`), avoiding
+any non-canonical `C(U)+C(V)` splitting — the `boundaryExtract` analog. -/
+
+/-- The boundary on the middle term `B = C(M,U) × C(M,V)` (`∂ ⊕ ∂`). -/
+noncomputable def bBoundary (U V : Set ↑M) (n : ℕ) :
+    RelativeChain U (n + 1) × RelativeChain V (n + 1) →ₗ[ZMod 2]
+      RelativeChain U n × RelativeChain V n :=
+  (relBoundary U n).prodMap (relBoundary V n)
+
+theorem bBoundary_mk (U V : Set ↑M) (n : ℕ) (a b : SingularChain M (n + 1)) :
+    bBoundary U V n (RelativeChain.mk U (n + 1) a, RelativeChain.mk V (n + 1) b)
+      = (RelativeChain.mk U n (chainBoundary M n a), RelativeChain.mk V n (chainBoundary M n b)) := by
+  rw [bBoundary, LinearMap.prodMap_apply, relBoundary_mk, relBoundary_mk]
+
+/-- `Δ` is a **chain map**: `Δ ∘ ∂_{U∩V} = ∂_B ∘ Δ`. -/
+theorem relMvChainDiag_chainMap (U V : Set ↑M) (n : ℕ) (w : RelativeChain (U ∩ V) (n + 1)) :
+    relMvChainDiag U V n (relBoundary (U ∩ V) n w)
+      = bBoundary U V n (relMvChainDiag U V (n + 1) w) := by
+  obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective _ w
+  rw [show (Submodule.Quotient.mk c : RelativeChain (U ∩ V) (n + 1))
+        = RelativeChain.mk (U ∩ V) (n + 1) c from rfl,
+    relBoundary_mk, relMvChainDiag_mk, relMvChainDiag_mk, bBoundary_mk]
+
+/-- `Σ` is a **chain map**: `Σ ∘ ∂_B = ∂_Q ∘ Σ`. -/
+theorem relMvChainSum_chainMap (U V : Set ↑M) (n : ℕ)
+    (p : RelativeChain U (n + 1) × RelativeChain V (n + 1)) :
+    relMvChainSum U V n (bBoundary U V n p) = qBoundary U V n (relMvChainSum U V (n + 1) p) := by
+  obtain ⟨pu, pv⟩ := p
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ pu
+  obtain ⟨b, rfl⟩ := Submodule.Quotient.mk_surjective _ pv
+  show relMvChainSum U V n
+      (bBoundary U V n (RelativeChain.mk U (n + 1) a, RelativeChain.mk V (n + 1) b))
+    = qBoundary U V n
+      (relMvChainSum U V (n + 1) (RelativeChain.mk U (n + 1) a, RelativeChain.mk V (n + 1) b))
+  rw [bBoundary_mk, relMvChainSum_mk, relMvChainSum_mk]
+  show Submodule.Quotient.mk (chainBoundary M n a + chainBoundary M n b)
+      = Submodule.Quotient.mk (chainBoundary M n (a + b))
+  rw [map_add]
+
+/-- `∂_B² = 0` on the middle term (pointwise). -/
+theorem bBoundary_bBoundary_apply (U V : Set ↑M) (n : ℕ)
+    (p : RelativeChain U (n + 1 + 1) × RelativeChain V (n + 1 + 1)) :
+    bBoundary U V n (bBoundary U V (n + 1) p) = 0 := by
+  obtain ⟨pu, pv⟩ := p
+  rw [bBoundary, bBoundary, LinearMap.prodMap_apply, LinearMap.prodMap_apply,
+    ← LinearMap.comp_apply, ← LinearMap.comp_apply, relBoundary_comp_relBoundary,
+    relBoundary_comp_relBoundary, LinearMap.zero_apply, LinearMap.zero_apply]
+  rfl
+
+/-- The **lift submodule** `L_n = { b ∈ B_{n+1} | Σ(∂_B b) = 0 }` — middle `(n+1)`-chains whose boundary
+maps to a `Q`-cycle. Every `Q`-`(n+1)`-cycle lifts here (`Σ` surjective). -/
+noncomputable def relLift (U V : Set ↑M) (n : ℕ) :
+    Submodule (ZMod 2) (RelativeChain U (n + 1) × RelativeChain V (n + 1)) :=
+  LinearMap.ker ((relMvChainSum U V n).comp (bBoundary U V n))
+
+/-- For `b ∈ L`, `∂_B b ∈ ker Σ = range Δ` (`relMvChain_exact`). -/
+theorem bBoundary_mem_range_relMvChainDiag (U V : Set ↑M) (n : ℕ) (b : relLift U V n) :
+    bBoundary U V n (b : RelativeChain U (n + 1) × RelativeChain V (n + 1))
+      ∈ LinearMap.range (relMvChainDiag U V n) := by
+  have hsum : relMvChainSum U V n (bBoundary U V n (b : _)) = 0 := by
+    have := LinearMap.mem_ker.mp b.2; rwa [LinearMap.comp_apply] at this
+  obtain ⟨a, ha⟩ := (relMvChain_exact U V n _).mp hsum
+  exact ⟨a, ha⟩
+
+/-- The snake **extraction** `L_n → C(M,U∩V)_n`, `b ↦ Δ⁻¹(∂_B b)` — linear because `Δ` is injective
+(`LinearEquiv.ofInjective`), the `boundaryExtract` analog. -/
+noncomputable def extractA (U V : Set ↑M) (n : ℕ) :
+    relLift U V n →ₗ[ZMod 2] RelativeChain (U ∩ V) n :=
+  (LinearEquiv.ofInjective (relMvChainDiag U V n)
+      (relMvChainDiag_injective U V n)).symm.toLinearMap.comp
+    ((bBoundary U V n).restrict (fun b hb => bBoundary_mem_range_relMvChainDiag U V n ⟨b, hb⟩))
+
+/-- The extraction recovers `∂_B b` after re-applying `Δ`: `Δ (extractA b) = ∂_B b`. -/
+theorem relMvChainDiag_extractA (U V : Set ↑M) (n : ℕ) (b : relLift U V n) :
+    relMvChainDiag U V n (extractA U V n b)
+      = bBoundary U V n (b : RelativeChain U (n + 1) × RelativeChain V (n + 1)) := by
+  rw [extractA, LinearMap.comp_apply, LinearEquiv.coe_coe, LinearEquiv.ofInjective_symm_apply,
+    LinearMap.restrict_coe_apply]
+
+/-- The extracted chain is a **relative cycle** of `(M, U∩V)`: `∂(extractA b) = 0`
+(from `∂_B² = 0` + `Δ` injective). -/
+theorem extractA_mem_relCycles (U V : Set ↑M) (n : ℕ) (b : relLift U V n) :
+    extractA U V n b ∈ relCycles (U ∩ V) n := by
+  cases n with
+  | zero => exact Submodule.mem_top
+  | succ m =>
+    show extractA U V (m + 1) b ∈ LinearMap.ker (relBoundary (U ∩ V) m)
+    rw [LinearMap.mem_ker]
+    apply relMvChainDiag_injective U V m
+    rw [map_zero, relMvChainDiag_chainMap, relMvChainDiag_extractA, bBoundary_bBoundary_apply]
+
+/-- The connecting map on lift-chains: `L_n →ₗ Hₙ(M,U∩V)`, `b ↦ [extractA b]`. -/
+noncomputable def relConnectingLift (U V : Set ↑M) (n : ℕ) :
+    relLift U V n →ₗ[ZMod 2] RelativeHomology (U ∩ V) n :=
+  (Submodule.mkQ _).comp ((extractA U V n).codRestrict (relCycles (U ∩ V) n)
+    (extractA_mem_relCycles U V n))
+
+theorem relConnectingLift_apply (U V : Set ↑M) (n : ℕ) (b : relLift U V n) :
+    relConnectingLift U V n b = RelativeHomology.mk (U ∩ V) n
+      ⟨extractA U V n b, extractA_mem_relCycles U V n b⟩ := rfl
+
+/-- `Σ b` is a `Q`-cycle for `b ∈ L`: `∂_Q (Σ b) = Σ(∂_B b) = 0`. -/
+theorem relMvChainSum_mem_qCycles (U V : Set ↑M) (n : ℕ) (b : relLift U V n) :
+    relMvChainSum U V (n + 1) (b : RelativeChain U (n + 1) × RelativeChain V (n + 1))
+      ∈ qCycles U V (n + 1) := by
+  have h0 : qBoundary U V n (relMvChainSum U V (n + 1) (b : _)) = 0 := by
+    rw [← relMvChainSum_chainMap]
+    have := LinearMap.mem_ker.mp b.2; rwa [LinearMap.comp_apply] at this
+  exact LinearMap.mem_ker.mpr h0
+
+/-- The surjection `L_n ↠ Hₙ₊₁(Q)`, `b ↦ [Σ b]` — every `Q`-`(n+1)`-cycle lifts to the middle term. -/
+noncomputable def relLiftToQHom (U V : Set ↑M) (n : ℕ) :
+    relLift U V n →ₗ[ZMod 2] QHomology U V (n + 1) :=
+  (Submodule.mkQ _).comp
+    ((show relLift U V n →ₗ[ZMod 2] QChain U V (n + 1) from
+        (relMvChainSum U V (n + 1)).comp (relLift U V n).subtype).codRestrict
+      (qCycles U V (n + 1)) (fun b => relMvChainSum_mem_qCycles U V n b))
+
+theorem relLiftToQHom_apply (U V : Set ↑M) (n : ℕ) (b : relLift U V n) :
+    relLiftToQHom U V n b = QHomology.mk U V (n + 1)
+      ⟨relMvChainSum U V (n + 1) (b : _), relMvChainSum_mem_qCycles U V n b⟩ := rfl
+
+theorem relLiftToQHom_surjective (U V : Set ↑M) (n : ℕ) :
+    Function.Surjective (relLiftToQHom U V n) := by
+  intro h
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ h
+  obtain ⟨b, hb⟩ := relMvChainSum_surjective U V (n + 1) (z : QChain U V (n + 1))
+  have hbL : b ∈ relLift U V n := by
+    rw [relLift, LinearMap.mem_ker, LinearMap.comp_apply, relMvChainSum_chainMap, hb]
+    exact LinearMap.mem_ker.mp z.2
+  refine ⟨⟨b, hbL⟩, ?_⟩
+  rw [relLiftToQHom_apply]
+  exact congrArg (QHomology.mk U V (n + 1)) (Subtype.ext hb)
 
 end SKEFTHawking.SingularRelativeMV
