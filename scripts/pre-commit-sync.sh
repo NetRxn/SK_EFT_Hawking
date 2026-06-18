@@ -5,6 +5,26 @@
 # the 30-min clean ExtractDeps — that's /skeft-qa:sync); HARD-BLOCKS only genuine
 # SOUNDNESS breakage, and only on `main`.
 set -uo pipefail
+
+# (−1) Worktree-safety (review BLOCKER). This is a MAIN-oriented gate (auto-restage +
+#      sync.py + incremental lake build). It must NOT run for a commit made in a *linked
+#      worktree* (e.g. a lean-worker slot under .claude/worktrees/): the shared hook would
+#      `cd` to the wrong tree, run heavy uv/lake against the slot, and — worst — stitch a
+#      cloned dependency's files into the slot's commit index (the top-level `.github/*`
+#      Physlib-blob phantom → "error: invalid object … Error building trees"). The pure-bash
+#      leak-guard is chained BEFORE this and already ran on the slot's staged diff, so leaks
+#      are still caught. The lead re-runs the full gate on the authoritative `main` commit
+#      after merging the worker's branch. Detect a worktree by the per-commit --git-dir (= env
+#      GIT_DIR = .git/worktrees/<name>) differing from --git-common-dir (= .git) — env-resolved, so
+#      it is robust to the shared hook having already `cd`'d to the main checkout (which makes the
+#      cwd-based --show-toplevel useless here).
+_gd="$(git rev-parse --path-format=absolute --git-dir 2>/dev/null || true)"
+_gcd="$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+if [ -n "$_gd" ] && [ -n "$_gcd" ] && [ "$_gd" != "$_gcd" ]; then
+  echo "(skeft-sync: worktree commit — leak-guard ran; skipping the main-oriented sync gate (lead re-syncs on merge))"
+  exit 0
+fi
+
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"; cd "$REPO_ROOT"
 BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo HEAD)"
 
