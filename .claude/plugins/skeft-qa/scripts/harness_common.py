@@ -122,6 +122,24 @@ def marker_path(root, sid):
     return harness_dir(root) / "managed" / (sid + ".json")
 
 
+def remove_marker(root, sid):
+    """Tear down THIS session's managed-loop marker (+ its watermark). Used by the explicit
+    `/goal-end` command and the SessionEnd cleanup hook (RC5 — the marker has no teardown on
+    `/goal clear`, so a dead loop's marker keeps the re-inject + guard firing). Best-effort /
+    fail-open; returns True iff a marker existed and was removed. Leak-safe: only this repo."""
+    if root is None or not sid:
+        return False
+    try:
+        mp = marker_path(root, sid)
+        existed = mp.exists()
+        mp.unlink(missing_ok=True)
+        wp = watermark_path(root, sid)
+        wp.unlink(missing_ok=True)
+        return existed
+    except Exception:
+        return False
+
+
 def active_issues_path(root):
     # Contract: Plan 3's harvest consolidator WRITES this gitignored cache.
     return harness_dir(root) / "active_issues.json"
@@ -262,6 +280,11 @@ def build_reorientation_payload(marker, repo_root):
     if goal:
         head.append("SETTLED GOAL (the /goal condition):\n" + goal)
     head.append("Re-read CLAUDE.md (the giant-ref pointer that should be re-read).")
+    head.append(
+        "For in-loop Lean development or worktree fan-out, invoke /skeft-qa:goal-dev — it carries "
+        "the MCP-first proof loop, kernel-purity rules, /reset-slot, and a symptom-indexed friction "
+        "catalog (the dev references that used to be stranded in goal-prompt)."
+    )
     tail = [DECISION_HEURISTICS]
     # Budget the truncatable middle: try the full top-N, then drop findings until the
     # whole payload (incl. the self-check headroom the composer later appends) fits.

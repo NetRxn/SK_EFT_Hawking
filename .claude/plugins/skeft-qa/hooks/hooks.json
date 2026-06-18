@@ -1,5 +1,5 @@
 {
-  "description": "skeft-qa loop-durability hooks (v4.0): SessionStart re-inject + PreToolUse(AskUserQuestion) guard. Default-inert + fail-open.",
+  "description": "skeft-qa loop-durability hooks (v4.1): SessionStart re-inject + PreToolUse(AskUserQuestion) guard + SessionEnd marker cleanup. Default-inert + fail-open.",
   "hooks": {
     "SessionStart": [
       {
@@ -8,6 +8,17 @@
             "type": "command",
             "command": "uv run --no-sync python \"${CLAUDE_PLUGIN_ROOT}/scripts/harness_reinject.py\" 2>/dev/null || true",
             "timeout": 15
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --no-sync python \"${CLAUDE_PLUGIN_ROOT}/scripts/harness_session_end.py\" 2>/dev/null || true",
+            "timeout": 10
           }
         ]
       }
