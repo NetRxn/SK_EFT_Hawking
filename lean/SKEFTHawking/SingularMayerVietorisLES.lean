@@ -200,4 +200,45 @@ theorem inclRA_connecting (A B : Set X) (n : ℕ) (y : RelativeHomology (restr A
     ← mapChain_ambIncl (restr A B), ← mapChain_comp, ← mapChain_comp]
   congr 1
 
+/-! ## Mayer–Vietoris exactness -/
+
+/-- The `A`-inclusion after the seam isomorphism is `Homology.map inclRA` (functoriality;
+`subIncl_{A∩B↪A} ∘ seamHomeo = inclRA`). -/
+theorem map_subInclL_seam (A B : Set X) (n : ℕ) (y : Homology (sub (restr A B)) n) :
+    Homology.map (subIncl (Set.inter_subset_left (s := A) (t := B))) n (seamHomologyEquiv A B n y)
+      = Homology.map (inclRA A B) n y := by
+  rw [show seamHomologyEquiv A B n y
+        = Homology.map ⟨seamHomeo A B, (seamHomeo A B).continuous⟩ n y from rfl,
+    ← LinearMap.comp_apply, ← Homology.map_comp]
+  rfl
+
+/-- The `B`-inclusion after the seam isomorphism is `homIncl (restr A B)` (functoriality + the
+`Homology.map ↔ homIncl` bridge; `subIncl_{A∩B↪B} ∘ seamHomeo = ambIncl (restr A B)`). -/
+theorem map_subInclR_seam (A B : Set X) (n : ℕ) (y : Homology (sub (restr A B)) n) :
+    Homology.map (subIncl (Set.inter_subset_right (s := A) (t := B))) n (seamHomologyEquiv A B n y)
+      = homIncl (restr A B) n y := by
+  rw [show seamHomologyEquiv A B n y
+        = Homology.map ⟨seamHomeo A B, (seamHomeo A B).continuous⟩ n y from rfl,
+    ← LinearMap.comp_apply, ← Homology.map_comp,
+    show (subIncl (Set.inter_subset_right (s := A) (t := B))).comp
+          ⟨seamHomeo A B, (seamHomeo A B).continuous⟩ = ambIncl (restr A B) from rfl,
+    Homology.map_ambIncl]
+
+/-- **MV complex condition at `Hₙ(A∩B)`**: `mvHomDiag ∘ δ = 0`. -/
+theorem mvHomDiag_mvDelta (A B : Set X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set X)), interior U) = Set.univ) (x : Homology X (n + 1)) :
+    mvHomDiag A B n (mvDelta A B n hcov x) = 0 := by
+  refine Prod.ext ?_ ?_
+  · show Homology.map (subIncl (Set.inter_subset_left (s := A) (t := B))) n
+        (seamHomologyEquiv A B n (connecting (restr A B) n
+          ((excisionEquiv A B n hcov).symm (homProj A (n + 1) x)))) = 0
+    rw [map_subInclL_seam, inclRA_connecting,
+      show excisionMap A B (n + 1) ((excisionEquiv A B n hcov).symm (homProj A (n + 1) x))
+        = homProj A (n + 1) x from (excisionEquiv A B n hcov).apply_symm_apply _,
+      connecting_homProj]
+  · show Homology.map (subIncl (Set.inter_subset_right (s := A) (t := B))) n
+        (seamHomologyEquiv A B n (connecting (restr A B) n
+          ((excisionEquiv A B n hcov).symm (homProj A (n + 1) x)))) = 0
+    rw [map_subInclR_seam, homIncl_connecting]
+
 end SKEFTHawking.SingularMayerVietorisLES
