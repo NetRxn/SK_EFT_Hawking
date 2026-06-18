@@ -138,6 +138,103 @@ theorem determinedByPoints_chart {M : TopCat} [T1Space ↑M] {m : ℕ} {K : Set 
     rw [hstep1, hstep2, hstep3]
   rw [← hnat, hα xpt hxK, map_zero]
 
+/-- **Restriction to ANY point of a convex chart set is bijective** `Hₘ₊₂(M|K) → Hₘ₊₂(M|y)` (`y ∈ K`,
+`K` a compact **convex** chart set matched to `C ⊆ ℝⁿ`). The point-transport equiv `Ty` conjugates
+`restrictToPoint hyK` to the Euclidean `restrictToPoint hc` at `c = e y ∈ C`, which is bijective by the
+radial restriction iso (`restrictToPoint_radial_bijective`, `C` convex compact). This is the
+local-homology iso `Hₘ₊₂(M|K) ≅ Hₘ₊₂(M|y)` that makes the fundamental-class restriction value locally
+constant (every point of a convex chart set "sees" the same generator). -/
+theorem restrictToPoint_convexChart_bijective {M : TopCat} [T1Space ↑M] {m : ℕ} {K : Set ↑M}
+    {U : Set ↑M} (hK : IsClosed K) (hU : IsOpen U) (hKU : K ⊆ U)
+    {C : Set (EuclideanSpace ℝ (Fin (m + 2)))} {V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))}
+    (hCconv : Convex ℝ C) (hCcomp : IsCompact C) (hV : IsOpen V) (hCV : C ⊆ V)
+    (e : ↥U ≃ₜ ↥V)
+    (hcompat : ∀ u : ↥U, ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C) ↔ (u : ↑M) ∈ K)
+    {y : ↑M} (hyK : y ∈ K) :
+    Function.Bijective (restrictToPoint (X := M) hyK (m + 2)) := by
+  have hyU : y ∈ U := hKU hyK
+  set yU : ↥U := ⟨y, hyU⟩ with hyU'
+  set c : EuclideanSpace ℝ (Fin (m + 2)) := (e yU : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) with hcdef
+  have hcC : c ∈ C := (hcompat yU).mpr hyK
+  -- The bulk transport `TK : Hₘ₊₂(M|K) ≅ Hₘ₊₂(ℝⁿ|C)`.
+  set TK : RelativeHomology (X := M) Kᶜ (m + 2)
+      ≃ₗ[ZMod 2] RelativeHomology (X := SingularEuclideanAcyclic.Eucl (m + 2)) Cᶜ (m + 2) :=
+    (openSetExcisionEquiv hK hU hKU (m + 1)).symm.trans
+      ((chartPairEquiv_set e hcompat (m + 2)).trans
+        (openSetExcisionEquiv hCcomp.isClosed hV hCV (m + 1))) with hTK
+  -- Point-version chart compatibility: `e u = c ↔ u = y` (modulo coercions).
+  have hcompat' : ∀ u : ↥U,
+      ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2)))
+          ∈ ({c} : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))))
+        ↔ (u : ↑M) ∈ ({y} : Set ↑M) := by
+    intro u
+    simp only [Set.mem_singleton_iff, hcdef]
+    rw [Subtype.coe_inj, e.injective.eq_iff]
+    constructor
+    · intro h; rw [h]
+    · intro h; exact Subtype.ext h
+  have hyV : c ∈ (V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))) := hCV hcC
+  -- The point transport `Ty : Hₘ₊₂(M|y) ≅ Hₘ₊₂(ℝⁿ|c)`.
+  set Ty : RelativeHomology (X := M) ({y}ᶜ) (m + 2)
+      ≃ₗ[ZMod 2] RelativeHomology (X := SingularEuclideanAcyclic.Eucl (m + 2)) ({c}ᶜ) (m + 2) :=
+    (openSetExcisionEquiv isClosed_singleton hU
+        (Set.singleton_subset_iff.mpr hyU) (m + 1)).symm.trans
+      ((chartPairEquiv_set e hcompat' (m + 2)).trans
+        (openSetExcisionEquiv isClosed_singleton hV
+          (Set.singleton_subset_iff.mpr hyV) (m + 1))) with hTy
+  have hKy : (Kᶜ : Set ↑M) ⊆ {y}ᶜ :=
+    Set.compl_subset_compl.mpr (Set.singleton_subset_iff.mpr hyK)
+  have hCc' : (Cᶜ : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ⊆ {c}ᶜ :=
+    Set.compl_subset_compl.mpr (Set.singleton_subset_iff.mpr hcC)
+  -- Naturality `Ty ∘ restrictToPoint hyK = restrictToPoint hc ∘ TK` (the three transport steps).
+  have hnat : ∀ α : RelativeHomology (X := M) Kᶜ (m + 2),
+      Ty (restrictToPoint hyK (m + 2) α) = restrictToPoint hcC (m + 2) (TK α) := by
+    intro α
+    simp only [hTK, hTy, LinearEquiv.trans_apply]
+    have hstep1 : (openSetExcisionEquiv isClosed_singleton hU
+          (Set.singleton_subset_iff.mpr hyU) (m + 1)).symm
+            ((restrictToPoint hyK (m + 2)) α)
+          = relIncl (Set.preimage_mono hKy) (m + 2)
+              ((openSetExcisionEquiv hK hU hKU (m + 1)).symm α) := by
+      apply (openSetExcisionEquiv isClosed_singleton hU (Set.singleton_subset_iff.mpr hyU)
+        (m + 1)).injective
+      rw [LinearEquiv.apply_symm_apply]
+      show (restrictToPoint hyK (m + 2)) α
+        = excisionMap {y}ᶜ U (m + 2)
+            (relIncl (Set.preimage_mono hKy) (m + 2)
+              ((openSetExcisionEquiv hK hU hKU (m + 1)).symm α))
+      rw [← relIncl_excisionMap hKy (m + 2)]
+      show (restrictToPoint hyK (m + 2)) α
+        = relIncl hKy (m + 2)
+            ((openSetExcisionEquiv hK hU hKU (m + 1))
+              ((openSetExcisionEquiv hK hU hKU (m + 1)).symm α))
+      rw [LinearEquiv.apply_symm_apply]
+      rfl
+    have hstep2 : ∀ β, chartPairEquiv_set e hcompat' (m + 2)
+          (relIncl (Set.preimage_mono hKy) (m + 2) β)
+          = relIncl (Set.preimage_mono hCc') (m + 2) (chartPairEquiv_set e hcompat (m + 2) β) :=
+      fun β => relIncl_map (⟨e, e.continuous⟩ : C(↑(sub U), ↑(sub V))) (Set.preimage_mono hKy)
+        (mapsTo_chart_set e hcompat) (mapsTo_chart_set e hcompat') (Set.preimage_mono hCc')
+        (m + 2) β
+    have hstep3 : ∀ γ, openSetExcisionEquiv isClosed_singleton hV
+          (Set.singleton_subset_iff.mpr hyV) (m + 1) (relIncl (Set.preimage_mono hCc') (m + 2) γ)
+          = restrictToPoint hcC (m + 2)
+              (openSetExcisionEquiv hCcomp.isClosed hV hCV (m + 1) γ) :=
+      fun γ => (relIncl_excisionMap hCc' (m + 2) γ).symm
+    rw [hstep1, hstep2, hstep3]
+  -- Conjugation: `restrictToPoint hyK` is bijective because the Euclidean restriction at `c` is.
+  have hkey : ⇑Ty ∘ ⇑(restrictToPoint hyK (m + 2))
+      = ⇑(restrictToPoint hcC (m + 2)) ∘ ⇑TK := funext hnat
+  have hcomp_bij : Function.Bijective (⇑(restrictToPoint hcC (m + 2)) ∘ ⇑TK) :=
+    (SingularConvexRadialBase.restrictToPoint_radial_bijective hCconv hCcomp hcC).comp TK.bijective
+  rw [← hkey] at hcomp_bij
+  have hrw : ⇑(restrictToPoint hyK (m + 2))
+      = ⇑Ty.symm ∘ (⇑Ty ∘ ⇑(restrictToPoint hyK (m + 2))) := by
+    funext β
+    simp only [Function.comp_apply, LinearEquiv.symm_apply_apply]
+  rw [hrw]
+  exact Ty.symm.bijective.comp hcomp_bij
+
 /-- **A compact chart set is `goodCompact`** (Hatcher step 4 base case): combine `vanishAbove_chart`
 and `determinedByPoints_chart`. The single-chart piece the manifold-level finite-union compactness
 induction stacks on toward the fundamental class `[M]`. -/
