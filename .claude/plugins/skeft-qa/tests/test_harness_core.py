@@ -287,3 +287,82 @@ def test_jsonl_path_reconstructs_deterministically_for_unflushed_first_turn(tmp_
 def test_jsonl_path_empty_sid_returns_empty():
     """A missing/empty session id resolves to '' (the skill then STOPs rather than arm a bad marker)."""
     assert hc.jsonl_path("", start="/anything") == ""
+
+
+# --- v4.1 (RC5): marker teardown — remove_marker, the SessionEnd hook, the /goal-end CLI ---
+import harness_session_end as hse  # noqa: E402
+import harness_goal_end as hge      # noqa: E402
+
+
+def test_remove_marker_removes_marker_and_watermark(tmp_path, monkeypatch):
+    monkeypatch.setattr(hc, "repo_root", lambda *a, **k: tmp_path)
+    _marker(tmp_path, "abc", {"role": "solo", "goal": "g"})
+    hc.advance_watermark("abc", 500)                       # also drops a watermark
+    assert hc.marker_path(tmp_path, "abc").exists()
+    assert hc.remove_marker(tmp_path, "abc") is True       # existed -> removed
+    assert not hc.marker_path(tmp_path, "abc").exists()
+    assert not hc.watermark_path(tmp_path, "abc").exists()  # watermark torn down too
+
+
+def test_remove_marker_false_when_absent_and_failopen(tmp_path):
+    assert hc.remove_marker(tmp_path, "nope") is False     # nothing to remove
+    assert hc.remove_marker(None, "x") is False            # repo unresolved -> False, never raises
+
+
+def _run_session_end(ev, monkeypatch):
+    monkeypatch.setattr("sys.stdin", io.StringIO(_json.dumps(ev)))
+    hse.main()
+
+
+def test_session_end_removes_marker_on_clear(tmp_path, monkeypatch):
+    # reason=clear (a /clear that also clears the goal) -> the marker is torn down.
+    monkeypatch.setattr(hse, "repo_root", lambda *a, **k: tmp_path)
+    _marker(tmp_path, "abc", {"role": "solo", "goal": "g"})
+    _run_session_end({"reason": "clear", "session_id": "abc", "cwd": str(tmp_path)}, monkeypatch)
+    assert not hc.marker_path(tmp_path, "abc").exists()
+
+
+def test_session_end_keeps_marker_on_resumable_reasons(tmp_path, monkeypatch):
+    # reason != clear: a goal still active when a session ends is restored on --resume (goal.md),
+    # so the marker must SURVIVE logout/resume/exit — only /clear means the goal is definitively gone.
+    monkeypatch.setattr(hse, "repo_root", lambda *a, **k: tmp_path)
+    _marker(tmp_path, "abc", {"role": "solo", "goal": "g"})
+    for reason in ("logout", "resume", "prompt_input_exit", "other"):
+        _run_session_end({"reason": reason, "session_id": "abc", "cwd": str(tmp_path)}, monkeypatch)
+        assert hc.marker_path(tmp_path, "abc").exists(), f"marker wrongly removed on reason={reason}"
+
+
+def test_session_end_inert_for_subagent(tmp_path, monkeypatch):
+    monkeypatch.setattr(hse, "repo_root", lambda *a, **k: tmp_path)
+    _marker(tmp_path, "abc", {"role": "solo", "goal": "g"})
+    _run_session_end({"reason": "clear", "session_id": "abc", "agent_id": "sub-1",
+                      "cwd": str(tmp_path)}, monkeypatch)
+    assert hc.marker_path(tmp_path, "abc").exists()        # agent_id present -> inert
+
+
+def test_session_end_failopen_on_bad_input(monkeypatch):
+    monkeypatch.setattr("sys.stdin", io.StringIO("not json"))
+    hse.main()                                             # must not raise (fail-open teardown)
+
+
+def test_goal_end_removes_marker(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(hge, "repo_root", lambda *a, **k: tmp_path)
+    monkeypatch.setattr("sys.argv", ["harness_goal_end.py", "abc"])
+    _marker(tmp_path, "abc", {"role": "solo", "goal": "g"})
+    hge.main()
+    assert not hc.marker_path(tmp_path, "abc").exists()
+    assert "marker removed" in capsys.readouterr().out
+
+
+def test_goal_end_graceful_when_no_marker(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(hge, "repo_root", lambda *a, **k: tmp_path)
+    monkeypatch.setattr("sys.argv", ["harness_goal_end.py", "nope"])
+    hge.main()                                             # no marker -> graceful, no raise
+    assert "already unmanaged" in capsys.readouterr().out
+
+
+def test_payload_points_to_goal_dev(tmp_path):
+    """RC1 reachability: the SessionStart re-inject names the in-loop dev skill (`goal-dev`),
+    so a post-compact loop knows where the dev references live (works for both plugin namespaces)."""
+    payload = hc.build_reorientation_payload({"goal": "g"}, tmp_path)
+    assert "goal-dev" in payload
