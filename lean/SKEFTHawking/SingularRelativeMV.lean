@@ -1065,4 +1065,47 @@ theorem relMv_exact_connecting' (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V)
   · rintro ⟨y, rfl⟩
     exact ⟨(iotaEquiv U V hU hV k).symm y, rfl⟩
 
+/-- **The `ι ∘ Σ_* = relMvHomSum` bridge**: the small-chains iso applied to the `Q`-form sum is the
+textbook sum (72c-1, landing in `Hₙ(M, U∪V)`). -/
+theorem iota_relMvHomSumQ (U V : Set ↑M) (n : ℕ)
+    (p : RelativeHomology U n × RelativeHomology V n) :
+    iota U V n (relMvHomSumQ U V n p) = relMvHomSum U V n p := by
+  obtain ⟨pu, pv⟩ := p
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ pu
+  obtain ⟨b, rfl⟩ := Submodule.Quotient.mk_surjective _ pv
+  rw [show relMvHomSumQ U V n (Submodule.Quotient.mk a, Submodule.Quotient.mk b)
+      = QHomology.mk U V n ⟨relMvChainSum U V n ((a : _), (b : _)),
+          relMvChainSum_pair_mem_qCycles U V n a b⟩ from relMvHomSumQ_mk U V n a b, iota_mk,
+    relMvHomSum, LinearMap.coprod_apply, relIncl, relIncl, RelativeHomology.map_mk,
+    RelativeHomology.map_mk]
+  refine congrArg (RelativeHomology.mk (U ∪ V) n) (Subtype.ext ?_)
+  rw [AddMemClass.coe_add, relCyclesMap_coe, relCyclesMap_coe]
+  show piMap U V n (relMvChainSum U V n ((a : RelativeChain U n), (b : RelativeChain V n)))
+      = relMapChain (ContinuousMap.id ↑M) (fun _ hx => Set.subset_union_left hx) n
+          (a : RelativeChain U n)
+        + relMapChain (ContinuousMap.id ↑M) (fun _ hx => Set.subset_union_right hx) n
+          (b : RelativeChain V n)
+  obtain ⟨a', ha'⟩ := Submodule.Quotient.mk_surjective _ (a : RelativeChain U n)
+  obtain ⟨b', hb'⟩ := Submodule.Quotient.mk_surjective _ (b : RelativeChain V n)
+  rw [← ha', ← hb',
+    show (Submodule.Quotient.mk a' : RelativeChain U n) = RelativeChain.mk U n a' from rfl,
+    show (Submodule.Quotient.mk b' : RelativeChain V n) = RelativeChain.mk V n b' from rfl,
+    relMvChainSum_mk, relMapChain_id_mk, relMapChain_id_mk]
+  rfl
+
+/-- **Relative MV exactness at `Hₙ(M,U) ⊕ Hₙ(M,V)`** in textbook form: `range Δ_* = ker(relMvHomSum)`
+(positive degree). Transported from the `Q`-form middle exactness through the iso `ι`. -/
+theorem relMv_exact_middle' (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (k : ℕ) :
+    Function.Exact (relMvHomDiag U V (k + 1)) (relMvHomSum U V (k + 1)) := by
+  intro p
+  constructor
+  · intro hp
+    refine (relMv_exact_middle U V (k + 1) p).mp ?_
+    have h0 : iota U V (k + 1) (relMvHomSumQ U V (k + 1) p) = 0 := by
+      rw [iota_relMvHomSumQ]; exact hp
+    exact (iotaEquiv U V hU hV k).map_eq_zero_iff.mp h0
+  · intro hp
+    rw [← iota_relMvHomSumQ,
+      show relMvHomSumQ U V (k + 1) p = 0 from (relMv_exact_middle U V (k + 1) p).mpr hp, map_zero]
+
 end SKEFTHawking.SingularRelativeMV
