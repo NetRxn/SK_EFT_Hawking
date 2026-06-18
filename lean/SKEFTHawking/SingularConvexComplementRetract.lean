@@ -49,4 +49,24 @@ theorem gauge_radial (hAcomp : IsCompact A) (hA0 : A ∈ nhds (0 : EuclideanSpac
   rw [gauge_smul_of_nonneg (zero_le_one.trans (one_le_radial hAcomp hA0 hx hs)), smul_eq_mul,
     add_mul, one_mul, mul_assoc, inv_mul_cancel₀ hp.ne', mul_one]
 
+/-- `x ∉ A ⟹ x ≠ 0` (since `0 ∈ A`). -/
+theorem ne_zero_of_not_mem (hA0 : A ∈ nhds (0 : EuclideanSpace ℝ (Fin n)))
+    {x : EuclideanSpace ℝ (Fin n)} (hx : x ∉ A) : x ≠ 0 := fun he => hx (he ▸ mem_of_mem_nhds hA0)
+
+/-- The radial-homotopy underlying map `(y, t) ↦ (1 + (1-t)/gauge A y) • y`, continuous on `ℝⁿ ∖ 0`. -/
+theorem continuous_radialHomotopy (hAc : Convex ℝ A) (hAcomp : IsCompact A)
+    (hA0 : A ∈ nhds (0 : EuclideanSpace ℝ (Fin n))) :
+    Continuous (fun p : {x : EuclideanSpace ℝ (Fin n) // x ≠ 0} × unitInterval =>
+      (1 + (1 - (p.2 : ℝ)) * (gauge A (p.1 : EuclideanSpace ℝ (Fin n)))⁻¹)
+        • (p.1 : EuclideanSpace ℝ (Fin n))) := by
+  have hg : Continuous (fun p : {x : EuclideanSpace ℝ (Fin n) // x ≠ 0} × unitInterval =>
+      gauge A (p.1 : EuclideanSpace ℝ (Fin n))) :=
+    (continuous_gauge hAc hA0).comp (continuous_subtype_val.comp continuous_fst)
+  have hinv : Continuous (fun p : {x : EuclideanSpace ℝ (Fin n) // x ≠ 0} × unitInterval =>
+      (gauge A (p.1 : EuclideanSpace ℝ (Fin n)))⁻¹) :=
+    hg.inv₀ (fun p => (gauge_pos_of hAcomp hA0 p.1.2).ne')
+  exact ((continuous_const.add
+    (((continuous_const.sub (continuous_subtype_val.comp continuous_snd)).mul hinv))).smul
+    (continuous_subtype_val.comp continuous_fst))
+
 end SKEFTHawking.SingularConvexComplementRetract
