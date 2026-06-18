@@ -171,4 +171,98 @@ theorem relMvChain_exact (U V : Set ↑M) (n : ℕ) :
   · rintro ⟨w, rfl⟩
     exact relMvChainSum_relMvChainDiag U V n w
 
+/-! ### The third-term complex `Q = C(M)/(C(U)+C(V))` and its homology
+
+A near-verbatim copy of the `RelativeHomology` complex, but quotienting by the union submodule
+`C(U)+C(V)` (still boundary-stable, being a sum of two boundary-stable submodules) rather than by a
+single subspace's chains. This is the third term of the relative MV chain SES; the snake-lemma
+connecting map of that SES (next brick) is `δ : QHomology (n+1) → RelativeHomology (U∩V) n`. -/
+
+/-- The boundary preserves `C(U)+C(V)` (each summand is boundary-stable). -/
+theorem chainBoundary_mem_mvUnionChains (U V : Set ↑M) (n : ℕ) (c : SingularChain M (n + 1))
+    (hc : c ∈ mvUnionChains U V (n + 1)) : chainBoundary M n c ∈ mvUnionChains U V n := by
+  obtain ⟨u, hu, v, hv, rfl⟩ := Submodule.mem_sup.1 hc
+  rw [map_add]
+  exact Submodule.add_mem_sup (chainBoundary_mem_subspaceChains U n u hu)
+    (chainBoundary_mem_subspaceChains V n v hv)
+
+/-- The **third-term chains** `Q_n = C_n(M) / (C_n(U)+C_n(V))`. -/
+def QChain (U V : Set ↑M) (n : ℕ) : Type := SingularChain M n ⧸ mvUnionChains U V n
+
+noncomputable instance (U V : Set ↑M) (n : ℕ) : AddCommGroup (QChain U V n) :=
+  inferInstanceAs (AddCommGroup (_ ⧸ _))
+
+noncomputable instance (U V : Set ↑M) (n : ℕ) : Module (ZMod 2) (QChain U V n) :=
+  inferInstanceAs (Module (ZMod 2) (_ ⧸ _))
+
+/-- The `Q`-class of an absolute chain. -/
+noncomputable def QChain.mk (U V : Set ↑M) (n : ℕ) (c : SingularChain M n) : QChain U V n :=
+  Submodule.Quotient.mk c
+
+theorem QChain.mk_eq_zero_iff (U V : Set ↑M) (n : ℕ) (c : SingularChain M n) :
+    QChain.mk U V n c = 0 ↔ c ∈ mvUnionChains U V n :=
+  Submodule.Quotient.mk_eq_zero _
+
+/-- The induced boundary `∂ : Q_{n+1} → Q_n`. -/
+noncomputable def qBoundary (U V : Set ↑M) (n : ℕ) :
+    QChain U V (n + 1) →ₗ[ZMod 2] QChain U V n :=
+  Submodule.mapQ (mvUnionChains U V (n + 1)) (mvUnionChains U V n) (chainBoundary M n)
+    (fun c hc => chainBoundary_mem_mvUnionChains U V n c hc)
+
+theorem qBoundary_mk (U V : Set ↑M) (n : ℕ) (c : SingularChain M (n + 1)) :
+    qBoundary U V n (QChain.mk U V (n + 1) c) = QChain.mk U V n (chainBoundary M n c) := rfl
+
+theorem qBoundary_comp_qBoundary (U V : Set ↑M) (n : ℕ) :
+    (qBoundary U V n).comp (qBoundary U V (n + 1)) = 0 := by
+  ext c
+  obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective _ c
+  rw [LinearMap.comp_apply, LinearMap.zero_apply]
+  show qBoundary U V n (qBoundary U V (n + 1) (QChain.mk U V (n + 1 + 1) c)) = 0
+  rw [qBoundary_mk, qBoundary_mk, chainBoundary_chainBoundary_apply]
+  rfl
+
+/-- The `Q`-**cycles** (`⊤` in degree 0; `ker ∂` otherwise). -/
+noncomputable def qCycles (U V : Set ↑M) (n : ℕ) : Submodule (ZMod 2) (QChain U V n) :=
+  match n with
+  | 0 => ⊤
+  | m + 1 => LinearMap.ker (qBoundary U V m)
+
+/-- The `Q`-**boundaries** `im ∂`. -/
+noncomputable def qBoundaries (U V : Set ↑M) (n : ℕ) : Submodule (ZMod 2) (QChain U V n) :=
+  LinearMap.range (qBoundary U V n)
+
+theorem qBoundaries_le_qCycles (U V : Set ↑M) (n : ℕ) : qBoundaries U V n ≤ qCycles U V n := by
+  cases n with
+  | zero => exact le_top
+  | succ m =>
+    show LinearMap.range (qBoundary U V (m + 1)) ≤ LinearMap.ker (qBoundary U V m)
+    rw [LinearMap.range_le_ker_iff]
+    exact qBoundary_comp_qBoundary U V m
+
+/-- **The third-term homology** `QHomology n = Hₙ(C(M)/(C(U)+C(V)))`. By the relative small-chains
+theorem (brick 72c-2e) this computes `Hₙ(M, U∪V)` for an open cover `{U, V}`. -/
+def QHomology (U V : Set ↑M) (n : ℕ) : Type :=
+  (qCycles U V n) ⧸ (qBoundaries U V n).submoduleOf (qCycles U V n)
+
+noncomputable instance (U V : Set ↑M) (n : ℕ) : AddCommGroup (QHomology U V n) :=
+  inferInstanceAs (AddCommGroup (_ ⧸ _))
+
+noncomputable instance (U V : Set ↑M) (n : ℕ) : Module (ZMod 2) (QHomology U V n) :=
+  inferInstanceAs (Module (ZMod 2) (_ ⧸ _))
+
+/-- The `Q`-homology class of a `Q`-cycle. -/
+noncomputable def QHomology.mk (U V : Set ↑M) (n : ℕ) (z : qCycles U V n) : QHomology U V n :=
+  Submodule.Quotient.mk z
+
+theorem QHomology.mk_eq_zero_iff (U V : Set ↑M) (n : ℕ) (z : qCycles U V n) :
+    QHomology.mk U V n z = 0 ↔ (z : QChain U V n) ∈ qBoundaries U V n := by
+  constructor
+  · intro h
+    have h2 : z ∈ (qBoundaries U V n).submoduleOf (qCycles U V n) :=
+      (Submodule.Quotient.mk_eq_zero _).1 h
+    rwa [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype] at h2
+  · intro h
+    refine (Submodule.Quotient.mk_eq_zero _).2 ?_
+    rwa [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype]
+
 end SKEFTHawking.SingularRelativeMV
