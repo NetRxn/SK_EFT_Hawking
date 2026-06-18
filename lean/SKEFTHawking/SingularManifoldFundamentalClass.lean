@@ -159,4 +159,18 @@ theorem relMvHomDiag_injective_of_acyclic {U V : Set ↑X} (hU : IsOpen U) (hV :
   obtain ⟨y, hy⟩ := (relMv_exact_connecting' U V hU hV k x).mp hx
   rw [← hy, h y, map_zero]
 
+/-- **MV vanishing propagation** (the "`Hᵢ(M|K) = 0` for `i > n`" half of Hatcher 3.27): if both
+`Hₖ₊₁(M | A) = 0` and `Hₖ₊₁(M | B) = 0`, and `Hₖ₊₂(M | A∩B) = 0`, then `Hₖ₊₁(M | A∪B) = 0`. In the
+`U = M∖A`, `V = M∖B` form: `Hₖ₊₁(M, U∩V) = 0` follows because `relMvHomDiag` is injective (gluing) and
+its target `Hₖ₊₁(M,U) ⊕ Hₖ₊₁(M,V)` vanishes. -/
+theorem relInter_acyclic_of_acyclic {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V) (k : ℕ)
+    (hUV : ∀ x : RelativeHomology (U ∪ V) (k + 1 + 1), x = 0)
+    (hU' : ∀ x : RelativeHomology U (k + 1), x = 0)
+    (hV' : ∀ x : RelativeHomology V (k + 1), x = 0) :
+    ∀ x : RelativeHomology (U ∩ V) (k + 1), x = 0 := by
+  intro x
+  have hinj := relMvHomDiag_injective_of_acyclic hU hV (k + 1) hUV
+  refine (injective_iff_map_eq_zero _).mp hinj x ?_
+  exact Prod.ext (hU' _) (hV' _)
+
 end SKEFTHawking.SingularManifoldFundamentalClass
