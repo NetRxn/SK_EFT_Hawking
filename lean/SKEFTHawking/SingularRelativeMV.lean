@@ -934,4 +934,42 @@ theorem exists_iterate_mvUnion (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) 
   rw [hnat]
   exact chainIncl_mem_mvUnion_of_small U V n _ hm
 
+open SKEFTHawking.SingularExcision SKEFTHawking.SingularSubdivision in
+/-- **`ι` is surjective**: every relative `(U∪V)`-class has a small (`Q`-cycle) representative —
+subdivide its boundary into `C(U)+C(V)` (`exists_iterate_mvUnion`), then `[c] = [Sdᵐc]`
+(`relative_add_singularSd_iterate_mem_relBoundaries`). -/
+theorem iota_surjective (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (n : ℕ) :
+    Function.Surjective (iota U V n) := by
+  intro h
+  obtain ⟨zc, rfl⟩ := Submodule.Quotient.mk_surjective _ h
+  cases n with
+  | zero =>
+    obtain ⟨c', hc'⟩ := Submodule.Quotient.mk_surjective _ (zc : RelativeChain (U ∪ V) 0)
+    refine ⟨QHomology.mk U V 0 ⟨QChain.mk U V 0 c', Submodule.mem_top⟩, ?_⟩
+    rw [iota_mk]
+    refine congrArg (RelativeHomology.mk (U ∪ V) 0) (Subtype.ext ?_)
+    show piMap U V 0 (QChain.mk U V 0 c') = (zc : RelativeChain (U ∪ V) 0)
+    rw [piMap_mk]; exact hc'
+  | succ k =>
+    obtain ⟨c', hc'⟩ := Submodule.Quotient.mk_surjective _ (zc : RelativeChain (U ∪ V) (k + 1))
+    have hbdry : chainBoundary M k c' ∈ subspaceChains (U ∪ V) k := by
+      have hz := LinearMap.mem_ker.mp zc.2
+      rw [← hc', show (Submodule.Quotient.mk c' : RelativeChain (U ∪ V) (k + 1))
+          = RelativeChain.mk (U ∪ V) (k + 1) c' from rfl, relBoundary_mk,
+        RelativeChain.mk_eq_zero_iff] at hz
+      exact hz
+    obtain ⟨m, hm⟩ := exists_iterate_mvUnion U V hU hV k (chainBoundary M k c') hbdry
+    have hqcyc : QChain.mk U V (k + 1) ((⇑(singularSd M (k + 1)))^[m] c') ∈ qCycles U V (k + 1) := by
+      rw [show qCycles U V (k + 1) = LinearMap.ker (qBoundary U V k) from rfl, LinearMap.mem_ker,
+        qBoundary_mk, QChain.mk_eq_zero_iff, singularSd_iterate_chainBoundary]
+      exact hm
+    refine ⟨QHomology.mk U V (k + 1) ⟨_, hqcyc⟩, ?_⟩
+    rw [iota_mk]
+    refine relHomology_mk_eq_of (k + 1) _ zc ?_
+    show piMap U V (k + 1) (QChain.mk U V (k + 1) ((⇑(singularSd M (k + 1)))^[m] c'))
+        - (zc : RelativeChain (U ∪ V) (k + 1)) ∈ relBoundaries (U ∪ V) (k + 1)
+    rw [piMap_mk, ← hc', sub_eq_add_neg, neg_eq_of_add_eq_zero_left (ZModModule.add_self _)]
+    have key := relative_add_singularSd_iterate_mem_relBoundaries hbdry m
+    rwa [add_comm (RelativeChain.mk (U ∪ V) (k + 1) c')] at key
+
 end SKEFTHawking.SingularRelativeMV
