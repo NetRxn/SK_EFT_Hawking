@@ -760,4 +760,61 @@ theorem relMv_exact_middle (U V : Set ↑M) (n : ℕ) :
     rw [relMvChainSum_mk, ZModModule.add_self]
     exact Submodule.zero_mem _
 
+/-- **Relative MV exactness at `Hₙ₊₁(Q)`**: `range Σ_* = ker δ` (the snake at the third term). -/
+theorem relMv_exact_sum (U V : Set ↑M) (n : ℕ) :
+    Function.Exact (relMvHomSumQ U V (n + 1)) (relConnecting U V n) := by
+  intro x
+  constructor
+  · intro hx
+    obtain ⟨b, rfl⟩ := relLiftToQHom_surjective U V n x
+    rw [relConnecting_relLiftToQHom, relConnectingLift_apply, RelativeHomology.mk_eq_zero_iff] at hx
+    obtain ⟨d, hd⟩ := hx
+    have hbc0 : bBoundary U V n
+        ((b : RelativeChain U (n + 1) × RelativeChain V (n + 1)) - relMvChainDiag U V (n + 1) d) = 0 := by
+      rw [map_sub, (relMvChainDiag_extractA U V n b).symm, ← relMvChainDiag_chainMap, hd, sub_self]
+    have ha_cyc : ((b : RelativeChain U (n + 1) × RelativeChain V (n + 1))
+        - relMvChainDiag U V (n + 1) d).1 ∈ relCycles U (n + 1) := by
+      rw [show relCycles U (n + 1) = LinearMap.ker (relBoundary U n) from rfl, LinearMap.mem_ker]
+      simpa only [bBoundary, LinearMap.prodMap_apply, Prod.fst_zero] using congrArg Prod.fst hbc0
+    have hb_cyc : ((b : RelativeChain U (n + 1) × RelativeChain V (n + 1))
+        - relMvChainDiag U V (n + 1) d).2 ∈ relCycles V (n + 1) := by
+      rw [show relCycles V (n + 1) = LinearMap.ker (relBoundary V n) from rfl, LinearMap.mem_ker]
+      simpa only [bBoundary, LinearMap.prodMap_apply, Prod.snd_zero] using congrArg Prod.snd hbc0
+    refine ⟨(RelativeHomology.mk U (n + 1) ⟨_, ha_cyc⟩,
+      RelativeHomology.mk V (n + 1) ⟨_, hb_cyc⟩), ?_⟩
+    rw [relMvHomSumQ_mk, relLiftToQHom_apply]
+    refine congrArg (QHomology.mk U V (n + 1)) (Subtype.ext ?_)
+    show relMvChainSum U V (n + 1)
+        (((b : _) - relMvChainDiag U V (n + 1) d).1, ((b : _) - relMvChainDiag U V (n + 1) d).2)
+      = relMvChainSum U V (n + 1) (b : _)
+    rw [show (((b : RelativeChain U (n + 1) × RelativeChain V (n + 1))
+          - relMvChainDiag U V (n + 1) d).1,
+        ((b : RelativeChain U (n + 1) × RelativeChain V (n + 1))
+          - relMvChainDiag U V (n + 1) d).2)
+        = (b : RelativeChain U (n + 1) × RelativeChain V (n + 1)) - relMvChainDiag U V (n + 1) d from rfl,
+      map_sub, relMvChainSum_relMvChainDiag, sub_zero]
+  · rintro ⟨pab, rfl⟩
+    obtain ⟨pu, pv⟩ := pab
+    obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ pu
+    obtain ⟨b, rfl⟩ := Submodule.Quotient.mk_surjective _ pv
+    have hL : ((a : RelativeChain U (n + 1)), (b : RelativeChain V (n + 1))) ∈ relLift U V n := by
+      rw [relLift, LinearMap.mem_ker, LinearMap.comp_apply, bBoundary, LinearMap.prodMap_apply,
+        LinearMap.mem_ker.mp a.2, LinearMap.mem_ker.mp b.2]
+      exact map_zero _
+    have hSeq : relMvHomSumQ U V (n + 1) (Submodule.Quotient.mk a, Submodule.Quotient.mk b)
+        = relLiftToQHom U V n ⟨((a : _), (b : _)), hL⟩ := by
+      rw [show relMvHomSumQ U V (n + 1) (Submodule.Quotient.mk a, Submodule.Quotient.mk b)
+          = QHomology.mk U V (n + 1) ⟨relMvChainSum U V (n + 1) ((a : _), (b : _)),
+              relMvChainSum_pair_mem_qCycles U V (n + 1) a b⟩ from relMvHomSumQ_mk U V (n + 1) a b,
+        relLiftToQHom_apply]
+    rw [hSeq, relConnecting_relLiftToQHom, relConnectingLift_apply, RelativeHomology.mk_eq_zero_iff]
+    have hextract : extractA U V n ⟨((a : _), (b : _)), hL⟩ = 0 := by
+      apply relMvChainDiag_injective U V n
+      rw [relMvChainDiag_extractA, map_zero, bBoundary, LinearMap.prodMap_apply,
+        LinearMap.mem_ker.mp a.2, LinearMap.mem_ker.mp b.2]
+      rfl
+    show extractA U V n ⟨((a : _), (b : _)), hL⟩ ∈ relBoundaries (U ∩ V) n
+    rw [hextract]
+    exact Submodule.zero_mem _
+
 end SKEFTHawking.SingularRelativeMV
