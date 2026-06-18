@@ -14,7 +14,7 @@ Hatcher 3.27 fundamental-class induction. Kernel-pure (`{propext, Classical.choi
 -/
 
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularHomotopyInvariance
-open SKEFTHawking.SingularPuncturedRetract
+open SKEFTHawking.SingularPuncturedRetract SKEFTHawking.SingularFunctoriality
 
 namespace SKEFTHawking.SingularConvexComplementRetract
 
@@ -94,6 +94,57 @@ noncomputable def pushMap (hAc : Convex ℝ A) (hAcomp : IsCompact A)
     refine Continuous.subtype_mk
       ((h.comp (Continuous.prodMk continuous_id (continuous_const (y := (0 : unitInterval))))).congr
         (fun q => ?_)) _
+    simp
+
+/-- The radial homotopy `(q, t) ↦ (1 + (1-t)/gauge A q) • q` on `ℝⁿ ∖ 0` (witnesses `f ∘ g ≃ id`). -/
+noncomputable def homotopyPunc (hAc : Convex ℝ A) (hAcomp : IsCompact A)
+    (hA0 : A ∈ nhds (0 : EuclideanSpace ℝ (Fin n))) :
+    C(↑(Punc n) × unitInterval, ↑(Punc n)) where
+  toFun p := ⟨(1 + (1 - (p.2 : ℝ)) * (gauge A (p.1 : EuclideanSpace ℝ (Fin n)))⁻¹)
+      • (p.1 : EuclideanSpace ℝ (Fin n)),
+    smul_ne_zero (ne_of_gt (lt_of_lt_of_le zero_lt_one
+      (one_le_radial hAcomp hA0 p.1.2 (sub_nonneg.2 (unitInterval.le_one p.2))))) p.1.2⟩
+  continuous_toFun := Continuous.subtype_mk (continuous_radialHomotopy hAc hAcomp hA0) _
+
+/-- The radial homotopy keeps `ℝⁿ ∖ A` invariant: for `x ∉ A` and `t ∈ I`, the pushed point stays out
+of `A` (its `gauge` is `gauge x + (1-t) ≥ gauge x > 1`). -/
+theorem radial_not_mem (hAc : Convex ℝ A) (hAcomp : IsCompact A)
+    (hA0 : A ∈ nhds (0 : EuclideanSpace ℝ (Fin n))) {x : EuclideanSpace ℝ (Fin n)} (hx : x ∉ A)
+    (t : unitInterval) : (1 + (1 - (t : ℝ)) * (gauge A x)⁻¹) • x ∉ A := by
+  rw [not_mem_iff_one_lt_gauge hAc hAcomp hA0,
+    gauge_radial hAcomp hA0 (ne_zero_of_not_mem hA0 hx) (sub_nonneg.2 (unitInterval.le_one t))]
+  have hg := (not_mem_iff_one_lt_gauge hAc hAcomp hA0 x).mp hx
+  have ht : (0 : ℝ) ≤ 1 - (t : ℝ) := sub_nonneg.2 (unitInterval.le_one t)
+  linarith
+
+/-- The radial homotopy on `ℝⁿ ∖ A` (witnesses `g ∘ f ≃ id`). -/
+noncomputable def homotopyComplA (hAc : Convex ℝ A) (hAcomp : IsCompact A)
+    (hA0 : A ∈ nhds (0 : EuclideanSpace ℝ (Fin n))) :
+    C(↑(ComplA A) × unitInterval, ↑(ComplA A)) where
+  toFun p := ⟨(1 + (1 - (p.2 : ℝ)) * (gauge A (p.1 : EuclideanSpace ℝ (Fin n)))⁻¹)
+      • (p.1 : EuclideanSpace ℝ (Fin n)), radial_not_mem hAc hAcomp hA0 p.1.2 p.2⟩
+  continuous_toFun :=
+    Continuous.subtype_mk ((continuous_radialHomotopy hAc hAcomp hA0).comp
+      (Continuous.prodMk ((inclMap hA0).continuous.comp continuous_fst) continuous_snd)) _
+
+/-- **The complement inclusion `f : ℝⁿ∖A ↪ ℝⁿ∖0` is a homology isomorphism** (positive degree): the
+radial retract `g` (`pushMap`) is a homotopy inverse. The homotopy input to the convex base case. -/
+theorem homology_map_inclMap_bijective (hAc : Convex ℝ A) (hAcomp : IsCompact A)
+    (hA0 : A ∈ nhds (0 : EuclideanSpace ℝ (Fin n))) (k : ℕ) :
+    Function.Bijective (Homology.map (inclMap hA0) (k + 1)) := by
+  refine Homology.map_bijective_of_homotopyEquiv (inclMap hA0) (pushMap hAc hAcomp hA0)
+    (homotopyComplA hAc hAcomp hA0) ?_ ?_ (homotopyPunc hAc hAcomp hA0) ?_ ?_ k
+  · refine ContinuousMap.ext fun p => Subtype.ext ?_
+    show (1 + (1 - ((0 : unitInterval) : ℝ)) * _) • _ = (1 + _) • (p : EuclideanSpace ℝ (Fin n))
+    simp [inclMap]
+  · refine ContinuousMap.ext fun p => Subtype.ext ?_
+    show (1 + (1 - ((1 : unitInterval) : ℝ)) * _) • (p : EuclideanSpace ℝ (Fin n)) = _
+    simp
+  · refine ContinuousMap.ext fun q => Subtype.ext ?_
+    show (1 + (1 - ((0 : unitInterval) : ℝ)) * _) • _ = (1 + _) • (q : EuclideanSpace ℝ (Fin n))
+    simp
+  · refine ContinuousMap.ext fun q => Subtype.ext ?_
+    show (1 + (1 - ((1 : unitInterval) : ℝ)) * _) • (q : EuclideanSpace ℝ (Fin n)) = _
     simp
 
 end SKEFTHawking.SingularConvexComplementRetract
