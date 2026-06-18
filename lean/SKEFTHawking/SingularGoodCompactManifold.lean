@@ -96,4 +96,28 @@ theorem restrictToPoint_chartBall_bijective {m : ℕ} {M : Type} [TopologicalSpa
     c.open_source hKsub (convex_closedBall _ _) hCcomp c.open_target hrsub
     c.toHomeomorphSourceTarget hcompat hy
 
+/-- **A point has a closed-ball chart neighbourhood**: for `x₀` in a charted manifold there is `r > 0`
+with `B̄(chartAt x₀ · x₀, r) ⊆ (chartAt x₀).target` and `x₀` in the **interior** of the chart-pullback
+`(chartAt x₀).symm '' B̄`. The open neighbourhood on which the fundamental-class restriction value is
+locally constant (`localComposite_agree_chartBall`). -/
+theorem exists_chartBall_nbhd {m : ℕ} {M : Type} [TopologicalSpace M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (x₀ : M) :
+    ∃ r > 0, Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) x₀ x₀) r
+        ⊆ (chartAt (EuclideanSpace ℝ (Fin (m + 2))) x₀).target ∧
+      x₀ ∈ interior ((chartAt (EuclideanSpace ℝ (Fin (m + 2))) x₀).symm ''
+        Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) x₀ x₀) r) := by
+  set c := chartAt (EuclideanSpace ℝ (Fin (m + 2))) x₀ with hc
+  obtain ⟨r, hr, hrsub⟩ := Metric.isOpen_iff.mp c.open_target (c x₀) (mem_chart_target _ x₀)
+  refine ⟨r / 2, by positivity,
+    (Metric.closedBall_subset_ball (by linarith)).trans hrsub, ?_⟩
+  -- `x₀ = c.symm (c x₀)` lies in `c.symm '' ball ⊆ interior (c.symm '' closedBall)`.
+  have hball_sub : Metric.ball (c x₀) (r / 2) ⊆ c.target :=
+    (Metric.ball_subset_closedBall.trans
+      ((Metric.closedBall_subset_ball (by linarith)).trans hrsub))
+  have hopen : IsOpen (c.symm '' Metric.ball (c x₀) (r / 2)) :=
+    c.isOpen_image_symm_of_subset_target Metric.isOpen_ball hball_sub
+  apply interior_mono (Set.image_mono Metric.ball_subset_closedBall)
+  rw [hopen.interior_eq]
+  exact ⟨c x₀, Metric.mem_ball_self (by positivity), c.left_inv (mem_chart_source _ x₀)⟩
+
 end SKEFTHawking.SingularGoodCompactManifold
