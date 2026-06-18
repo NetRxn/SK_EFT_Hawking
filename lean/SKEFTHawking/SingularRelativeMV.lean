@@ -1,5 +1,6 @@
 import Mathlib
 import SKEFTHawking.SingularRelativeFunctoriality
+import SKEFTHawking.SingularMayerVietoris
 
 /-!
 # Relative Mayer–Vietoris: the maps `Hₙ(M|A∩B) → Hₙ(M|A) ⊕ Hₙ(M|B) → Hₙ(M|A∪B)`
@@ -816,5 +817,62 @@ theorem relMv_exact_sum (U V : Set ↑M) (n : ℕ) :
     show extractA U V n ⟨((a : _), (b : _)), hL⟩ ∈ relBoundaries (U ∩ V) n
     rw [hextract]
     exact Submodule.zero_mem _
+
+/-! ### The projection `π : Q → C(M, U∪V)` and the small-chains map `ι : Hₙ(Q) → Hₙ(M, U∪V)`
+
+`C(U)+C(V) ⊆ C(U∪V)` gives a projection `π : C(M)/(C(U)+C(V)) → C(M)/C(U∪V) = C(M, U∪V)`, inducing
+`ι := π_* : Hₙ(Q) → Hₙ(M, U∪V)`. By the small-chains theorem `ι` is an isomorphism (the iso half is the
+next brick); `ι ∘ Σ_* = relMvHomSum`, so the textbook relative MV LES transports through `ι`. -/
+
+theorem mvUnionChains_le_subspaceChains_union (U V : Set ↑M) (n : ℕ) :
+    mvUnionChains U V n ≤ subspaceChains (U ∪ V) n :=
+  sup_le (SingularMayerVietoris.subspaceChains_mono Set.subset_union_left n)
+    (SingularMayerVietoris.subspaceChains_mono Set.subset_union_right n)
+
+/-- The projection `π : Q = C(M)/(C(U)+C(V)) → C(M, U∪V) = C(M)/C(U∪V)` (`C(U)+C(V) ⊆ C(U∪V)`). -/
+noncomputable def piMap (U V : Set ↑M) (n : ℕ) :
+    QChain U V n →ₗ[ZMod 2] RelativeChain (U ∪ V) n :=
+  Submodule.mapQ (mvUnionChains U V n) (subspaceChains (U ∪ V) n) LinearMap.id
+    (by rw [Submodule.comap_id]; exact mvUnionChains_le_subspaceChains_union U V n)
+
+theorem piMap_mk (U V : Set ↑M) (n : ℕ) (c : SingularChain M n) :
+    piMap U V n (QChain.mk U V n c) = RelativeChain.mk (U ∪ V) n c := rfl
+
+/-- `π` is a **chain map**: `π ∘ ∂_Q = ∂_{M,U∪V} ∘ π`. -/
+theorem piMap_chainMap (U V : Set ↑M) (n : ℕ) (x : QChain U V (n + 1)) :
+    piMap U V n (qBoundary U V n x) = relBoundary (U ∪ V) n (piMap U V (n + 1) x) := by
+  obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  show piMap U V n (qBoundary U V n (QChain.mk U V (n + 1) c))
+      = relBoundary (U ∪ V) n (piMap U V (n + 1) (QChain.mk U V (n + 1) c))
+  rw [qBoundary_mk, piMap_mk, piMap_mk, relBoundary_mk]
+
+theorem piMap_mem_relCycles (U V : Set ↑M) (n : ℕ) (z : QChain U V n) (hz : z ∈ qCycles U V n) :
+    piMap U V n z ∈ relCycles (U ∪ V) n := by
+  cases n with
+  | zero => exact Submodule.mem_top
+  | succ m =>
+    have hz0 : qBoundary U V m z = 0 := LinearMap.mem_ker.mp hz
+    have h0 : relBoundary (U ∪ V) m (piMap U V (m + 1) z) = 0 := by
+      rw [← piMap_chainMap, hz0, map_zero]
+    exact LinearMap.mem_ker.mpr h0
+
+theorem piMap_mem_relBoundaries (U V : Set ↑M) (n : ℕ) (z : QChain U V n)
+    (hz : z ∈ qBoundaries U V n) : piMap U V n z ∈ relBoundaries (U ∪ V) n := by
+  obtain ⟨w, rfl⟩ := hz
+  exact ⟨piMap U V (n + 1) w, (piMap_chainMap U V n w).symm⟩
+
+/-- **The small-chains map** `ι : Hₙ(Q) → Hₙ(M, U∪V)`, induced by `π`. An isomorphism (next brick). -/
+noncomputable def iota (U V : Set ↑M) (n : ℕ) :
+    QHomology U V n →ₗ[ZMod 2] RelativeHomology (U ∪ V) n :=
+  Submodule.mapQ _ _ (LinearMap.restrict (piMap U V n)
+      (fun z hz => piMap_mem_relCycles U V n z hz))
+    (fun z hz => by
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype,
+        LinearMap.restrict_coe_apply] at hz ⊢
+      exact piMap_mem_relBoundaries U V n _ hz)
+
+theorem iota_mk (U V : Set ↑M) (n : ℕ) (z : qCycles U V n) :
+    iota U V n (QHomology.mk U V n z)
+      = RelativeHomology.mk (U ∪ V) n ⟨piMap U V n z, piMap_mem_relCycles U V n z z.2⟩ := rfl
 
 end SKEFTHawking.SingularRelativeMV
