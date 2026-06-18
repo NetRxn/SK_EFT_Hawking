@@ -2,6 +2,7 @@ import Mathlib
 import SKEFTHawking.SingularPairLES
 import SKEFTHawking.SingularRelativeMV
 import SKEFTHawking.SingularChartBridge
+import SKEFTHawking.SingularEuclideanAcyclic
 
 /-!
 # Phase 5q.F (w₂-foundation, brick 6e) — toward the fundamental class `[M]`
@@ -43,5 +44,22 @@ noncomputable def connectingEquiv_of_acyclic (S : Set ↑X) (n : ℕ)
     (h1 : ∀ x : Homology X (n + 1), x = 0) (h0 : ∀ x : Homology X n, x = 0) :
     RelativeHomology S (n + 1) ≃ₗ[ZMod 2] Homology (sub S) n :=
   LinearEquiv.ofBijective (connecting S n) (connecting_bijective_of_acyclic S n h1 h0)
+
+/-- **`ℝⁿ` is acyclic in positive degree**: `Hₖ₊₁(ℝⁿ; ℤ/2) = 0` (every cycle is a boundary, from the
+straight-line contraction `SingularEuclideanAcyclic.cycle_mem_boundaries`). -/
+theorem eucl_homology_zero (n k : ℕ) (x : Homology (SingularEuclideanAcyclic.Eucl n) (k + 1)) :
+    x = 0 := by
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  refine (Submodule.Quotient.mk_eq_zero _).2 ?_
+  rw [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype]
+  exact SingularEuclideanAcyclic.cycle_mem_boundaries n k z (LinearMap.mem_ker.mp z.2)
+
+/-- **The local relative homology of `ℝⁿ` rel a subset `A`** reduces to the subspace:
+`Hₖ₊₂(ℝⁿ, A) ≅ Hₖ₊₁(A)` (the acyclic-ambient connecting iso, `n = m+2`). -/
+noncomputable def euclRelHomologyEquiv (m : ℕ) (A : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2)))
+    (k : ℕ) :
+    RelativeHomology A (k + 1 + 1) ≃ₗ[ZMod 2] Homology (sub A) (k + 1) :=
+  connectingEquiv_of_acyclic A (k + 1) (eucl_homology_zero (m + 2) (k + 1))
+    (eucl_homology_zero (m + 2) k)
 
 end SKEFTHawking.SingularManifoldFundamentalClass
