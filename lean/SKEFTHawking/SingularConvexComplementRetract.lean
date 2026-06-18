@@ -69,4 +69,31 @@ theorem continuous_radialHomotopy (hAc : Convex ℝ A) (hAcomp : IsCompact A)
     (((continuous_const.sub (continuous_subtype_val.comp continuous_snd)).mul hinv))).smul
     (continuous_subtype_val.comp continuous_fst))
 
+/-- The complement subspace `ℝⁿ ∖ A`. -/
+abbrev ComplA (A : Set (EuclideanSpace ℝ (Fin n))) : TopCat :=
+  TopCat.of {x : EuclideanSpace ℝ (Fin n) // x ∉ A}
+
+/-- The inclusion `f : ℝⁿ∖A ↪ ℝⁿ∖0` (`0 ∈ A`). -/
+def inclMap (hA0 : A ∈ nhds (0 : EuclideanSpace ℝ (Fin n))) :
+    C(↑(ComplA A), ↑(Punc n)) where
+  toFun p := ⟨(p : EuclideanSpace ℝ (Fin n)), ne_zero_of_not_mem hA0 p.2⟩
+  continuous_toFun := Continuous.subtype_mk continuous_subtype_val _
+
+/-- The radial push-out `g(x) = (1 + 1/gauge A x) • x : ℝⁿ∖0 → ℝⁿ∖A`. -/
+noncomputable def pushMap (hAc : Convex ℝ A) (hAcomp : IsCompact A)
+    (hA0 : A ∈ nhds (0 : EuclideanSpace ℝ (Fin n))) : C(↑(Punc n), ↑(ComplA A)) where
+  toFun q := ⟨(1 + (gauge A (q : EuclideanSpace ℝ (Fin n)))⁻¹) • (q : EuclideanSpace ℝ (Fin n)),
+    by
+      rw [not_mem_iff_one_lt_gauge hAc hAcomp hA0,
+        show (1 : ℝ) + (gauge A (q : EuclideanSpace ℝ (Fin n)))⁻¹
+          = 1 + 1 * (gauge A (q : EuclideanSpace ℝ (Fin n)))⁻¹ by rw [one_mul],
+        gauge_radial hAcomp hA0 q.2 zero_le_one]
+      linarith [gauge_pos_of hAcomp hA0 q.2]⟩
+  continuous_toFun := by
+    have h := continuous_radialHomotopy hAc hAcomp hA0
+    refine Continuous.subtype_mk
+      ((h.comp (Continuous.prodMk continuous_id (continuous_const (y := (0 : unitInterval))))).congr
+        (fun q => ?_)) _
+    simp
+
 end SKEFTHawking.SingularConvexComplementRetract
