@@ -1044,4 +1044,25 @@ noncomputable def iotaEquiv (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (k 
   LinearEquiv.ofBijective (iota U V (k + 1))
     ⟨iota_injective U V hU hV k, iota_surjective U V hU hV (k + 1)⟩
 
+/-! ### The textbook relative MV connecting map and exactness (`Hₙ(M, U∪V)` form) -/
+
+/-- **The relative MV connecting map** `δ : Hₙ₊₁(M, U∪V) → Hₙ(M, U∩V)` in textbook form — the `Q`-form
+connecting map `relConnecting` pulled back along the small-chains iso `ι`. -/
+noncomputable def relMvDelta (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (k : ℕ) :
+    RelativeHomology (U ∪ V) (k + 1) →ₗ[ZMod 2] RelativeHomology (U ∩ V) k :=
+  (relConnecting U V k).comp (iotaEquiv U V hU hV k).symm.toLinearMap
+
+/-- **Relative MV exactness at `Hₙ(M, U∩V)`** in textbook form: `range δ = ker(relMvHomDiag)`. The
+gluing step of Hatcher 3.27 (`Hₙ₊₁(M,U∪V) = 0` ⟹ `Hₙ(M,U∩V) → Hₙ(M,U) ⊕ Hₙ(M,V)` injective). -/
+theorem relMv_exact_connecting' (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (k : ℕ) :
+    Function.Exact (relMvDelta U V hU hV k) (relMvHomDiag U V k) := by
+  intro x
+  rw [relMv_exact_connecting U V k x]
+  constructor
+  · rintro ⟨y, rfl⟩
+    refine ⟨iotaEquiv U V hU hV k y, ?_⟩
+    rw [relMvDelta, LinearMap.comp_apply, LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply]
+  · rintro ⟨y, rfl⟩
+    exact ⟨(iotaEquiv U V hU hV k).symm y, rfl⟩
+
 end SKEFTHawking.SingularRelativeMV
