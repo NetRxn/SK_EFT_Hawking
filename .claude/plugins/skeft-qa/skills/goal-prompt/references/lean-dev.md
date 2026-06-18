@@ -47,43 +47,48 @@ Tie the statement to numerical content (falsifiable `norm_num` comparisons, not 
 claims); drop redundant conjuncts; back docstring cross-refs with an actual call; avoid
 self-discharging tautologies (`rfl`/`decide`/identity-wrappers/within-own-±2σ bands).
 
-## Parallel Lean development (worktree fan-out — a `lead` orchestrating Lean subagents)
+## Parallel Lean development (persistent worktree slots — full parallel, per-worker LSP)
 
 When a proof program **branches into independent sub-chains** (NOT a tightly-coupled single-file
 chain — those stay solo with one fast MCP), a `lead` fans the bricks out to the **`lean-worker`
-subagent** (`.claude/agents/lean-worker.md`). Each `lean-worker`:
-- runs in its **own git worktree** (`isolation: worktree`) — file-isolated from every other worker;
-- carries its **own inline `lean-lsp-worker` MCP server** (frontmatter `mcpServers`), pinned to *its*
-  worktree via the relative `--lean-project-path lean` (resolved against the worker's cwd — verified);
-- connects that server **when the subagent starts** — so it works for worktrees created *mid-session*,
-  with **no restart**. This is the fix for the static-`.mcp.json` gotcha (those servers only attach at
-  session start, so they can't serve a worktree spun up mid-loop — see the note below).
+subagent** (`.claude/agents/lean-worker.md`), one per **persistent worktree slot**. Each slot has its
+**own** build-isolated lean-lsp server, so several workers run **fully in parallel with zero
+coordination** — exactly the point of the slots.
 
-**Why a dedicated agent, not `.mcp.json` slots:** inline subagent `mcpServers` connect at *subagent*
-start (not session start) and are honored for **project-level** agents (`.claude/agents/`) — they are
-**ignored for plugin agents**, which is why `lean-worker` lives in the repo's `.claude/agents/`, not in
-`skeft-qa`. Requirements (already wired): `worktree.baseRef: "head"` in `.claude/settings.local.json`
-(this repo has a stale `origin/HEAD`; without it the worktree branches from the wrong base), and the
-agent file must be **loaded at session start** (agent defs are startup-scanned — a freshly-added one
-isn't dispatchable until the next launch).
+| Slot | Worktree (gitignored) | Its server |
+|---|---|---|
+| `wt1` | `SK_EFT_Hawking/.claude/worktrees/wt1/lean` | `mcp__lean-lsp-wt1__*` |
+| `wt2` | `…/wt2/lean` | `mcp__lean-lsp-wt2__*` |
+| `wt3` | `…/wt3/lean` | `mcp__lean-lsp-wt3__*` |
+
+**Why persistent static slots (and not inline per-subagent MCP):** inline `mcpServers` in subagent
+frontmatter **do not surface** via the Agent tool in this environment (verified empirically — the tools
+never appear). Only **inherited** `.mcp.json` servers surface to subagents, and those attach at
+**session start** — so the slot worktrees must already exist when you launch. Hence: pre-create the
+slots once, keep them. Disk is cheap — each slot's `.lake` is an APFS `cp -c` clone (copy-on-write):
+3 slots ≈ **~500 MB real** disk (`du` shows ~43 GB *logical* — it's COW-blind).
+
+**One-time setup:** `scripts/setup_lean_worktree_slots.sh` creates `wt1/2/3` and COW-clones the build
+into each. The `lean-lsp-wt1/2/3` servers are defined in the workspace `.mcp.json` + enabled in
+`.claude/settings.local.json`. **Restart after first setup** so the servers attach. (Re-run the script
+to refresh a slot's clone after main's build advances.)
 
 **Lead's flow (per independent sub-chain):**
-1. **Dispatch** `Agent(subagent_type="lean-worker", prompt="<the one independent brick + its
-   Lit-Search refs + acceptance>")`. The worktree + the worker's `lean-lsp-worker` server are created
-   for you.
-2. The worker **seeds its build** (`cp -c` APFS-clones the main tree's `lean/.lake` → instant,
-   copy-on-write isolated), **self-checks** its MCP is pinned to its own worktree, then proves
-   MCP-first (lean4 skill + `mcp__lean-lsp-worker__*`, never write→`lake build`), kernel-pure, and
-   **commits on its worktree branch**.
-3. **Harvest**: the worktree persists because it has commits — merge/cherry-pick the branch into `main`,
-   re-run the full gate (`lake build SKEFTHawking.ExtractDeps`, `validate.py`), then `git worktree
-   remove` the branch. (A worker that made *no* commits auto-cleans.)
+1. **Reset the slot** to current `main`: `git -C .claude/worktrees/wtN reset --hard main && git -C
+   .claude/worktrees/wtN clean -fdq -e .lake`; if main's build moved since the last clone, re-clone its
+   `.lake` (`rm -rf …/wtN/lean/.lake && cp -c -R lean/.lake …/wtN/lean/.lake`).
+2. **Dispatch** `Agent(subagent_type="lean-worker", prompt="SLOT N=2, path=<abs …/wt2>, use
+   mcp__lean-lsp-wt2__*. <the one independent brick + its Lit-Search refs + acceptance>")`.
+3. The worker proves MCP-first via **its own `mcp__lean-lsp-wtN__*`** (never write→`lake build`),
+   kernel-pure, and **commits on `worktree-wtN`**.
+4. **Harvest**: merge/cherry-pick `worktree-wtN` into `main`, re-run the full gate (`lake build
+   SKEFTHawking.ExtractDeps`, `validate.py`). The slot stays for the next task (reset, don't delete).
 
-**Fan out only when the DAG has genuinely branched** (independent files / sub-lemmas). A tightly-coupled
-chain (each brick depends on the prior, one file) is faster solo with one fast MCP — fanning it out just
-serializes through the dependency with extra coordination cost.
+Dispatch up to 3 workers concurrently (one per slot) for genuinely independent bricks. **Fan out only
+when the DAG has genuinely branched** — a tightly-coupled single-file chain is faster solo with one fast
+MCP.
 
-> ⚠ **Do not revert to static `.mcp.json` `lean-lsp-wtN` slot servers for goal-mode fan-out.** They
-> attach only at *session* start, so a worktree created mid-loop never surfaces its tools (no
-> hot-reload) — the showstopper this `lean-worker` design fixes. (Static slots only work if you
-> pre-create + pre-seed persistent `wt1/2/3` *before* launching, which doesn't fit spin-up/tear-down.)
+> **Launch note:** this works from **either** launch point — the workspace root (where `.mcp.json` lives)
+> or inside `SK_EFT_Hawking/`. The lead manages the slots with plain `git -C <slot>` (no `isolation:
+> worktree`), so there is no non-git-cwd problem. The slot servers use absolute paths, so they serve the
+> slots regardless of the lead's cwd.
