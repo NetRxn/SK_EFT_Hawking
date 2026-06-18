@@ -295,4 +295,32 @@ theorem mv_exact_ambient (A B : Set X) (n : ℕ)
   · obtain ⟨uv, rfl⟩ := hr
     exact mvDelta_mvHomSum A B n hcov uv
 
+/-- **MV exactness at `Hₙ(A∩B)`**: `Function.Exact mvDelta mvHomDiag` (`ker mvHomDiag = im δ`). The
+`B`-component of `mvHomDiag w = 0` gives `homIncl_{(B,A∩B)}(seam⁻¹ w) = 0`, so (`exact_connecting_homIncl`)
+`seam⁻¹ w = connecting y'`; the `A`-component + `inclRA_connecting` + `exact_homProj_connecting`
+produce `x` with `homProj_A x = excisionMap y'`, whence `δ x = w`. -/
+theorem mv_exact_inter (A B : Set X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set X)), interior U) = Set.univ) :
+    Function.Exact (mvDelta A B n hcov) (mvHomDiag A B n) := by
+  intro w
+  refine ⟨fun hw => ?_, fun hr => ?_⟩
+  · have hwA : Homology.map (subIncl (Set.inter_subset_left (s := A) (t := B))) n w = 0 :=
+      congrArg Prod.fst hw
+    have hwB : Homology.map (subIncl (Set.inter_subset_right (s := A) (t := B))) n w = 0 :=
+      congrArg Prod.snd hw
+    have hB : homIncl (restr A B) n ((seamHomologyEquiv A B n).symm w) = 0 := by
+      rw [← map_subInclR_seam, (seamHomologyEquiv A B n).apply_symm_apply]; exact hwB
+    obtain ⟨y', hy'⟩ := (exact_connecting_homIncl (restr A B) n _).mp hB
+    have hA : connecting A n (excisionMap A B (n + 1) y') = 0 := by
+      rw [← inclRA_connecting, hy', ← map_subInclL_seam, (seamHomologyEquiv A B n).apply_symm_apply]
+      exact hwA
+    obtain ⟨x, hx⟩ := (exact_homProj_connecting A n _).mp hA
+    refine ⟨x, ?_⟩
+    show seamHomologyEquiv A B n (connecting (restr A B) n
+        ((excisionEquiv A B n hcov).symm (homProj A (n + 1) x))) = w
+    rw [hx, show (excisionEquiv A B n hcov).symm (excisionMap A B (n + 1) y') = y' from
+        (excisionEquiv A B n hcov).symm_apply_apply _, hy', (seamHomologyEquiv A B n).apply_symm_apply]
+  · obtain ⟨x, rfl⟩ := hr
+    exact mvHomDiag_mvDelta A B n hcov x
+
 end SKEFTHawking.SingularMayerVietorisLES
