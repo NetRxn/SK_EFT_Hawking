@@ -20,7 +20,7 @@ convex base case. Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularPairLES SKEFTHawking.SingularExcisionIso
-open SKEFTHawking.SingularRelativeFunctoriality
+open SKEFTHawking.SingularRelativeFunctoriality SKEFTHawking.SingularRelativeMV
 
 namespace SKEFTHawking.SingularManifoldFundamentalClass
 
@@ -145,5 +145,18 @@ noncomputable def manifoldConvexLocalHomologyIso {M : TopCat} {m : ℕ} {K : Set
     ((chartPairEquiv_set e hcompat (m + 2)).trans
       ((openSetExcisionEquiv hCcomp.isClosed hV hCV (m + 1)).trans
         (euclConvexLocalHomologyIso m hCconv hCcomp hC0)))
+
+/-! ### The relative-MV gluing step of the compactness induction -/
+
+/-- **MV gluing injectivity** (Hatcher 3.27): `Hₖ(M | A∪B) → Hₖ(M | A) ⊕ Hₖ(M | B)` is injective when
+`Hₖ₊₁(M | A∩B) = 0` (the inductive hypothesis). In the `U = M∖A`, `V = M∖B` form: `relMvHomDiag` is
+injective once `Hₖ₊₁(M, U∪V) = 0`, directly from the relative MV exactness `range δ = ker Δ_*`. -/
+theorem relMvHomDiag_injective_of_acyclic {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V) (k : ℕ)
+    (h : ∀ x : RelativeHomology (U ∪ V) (k + 1), x = 0) :
+    Function.Injective (relMvHomDiag U V k) := by
+  rw [injective_iff_map_eq_zero]
+  intro x hx
+  obtain ⟨y, hy⟩ := (relMv_exact_connecting' U V hU hV k x).mp hx
+  rw [← hy, h y, map_zero]
 
 end SKEFTHawking.SingularManifoldFundamentalClass
