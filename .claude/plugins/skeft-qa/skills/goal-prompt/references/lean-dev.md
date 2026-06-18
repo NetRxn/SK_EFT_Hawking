@@ -55,6 +55,16 @@ subagent** (`skeft-qa:lean-worker`, in `.claude/plugins/skeft-qa/agents/`), one 
 **own** build-isolated lean-lsp server, so several workers run **fully in parallel with zero
 coordination** — exactly the point of the slots.
 
+> ✅ **Validated end-to-end (2026-06-17):** slot-pinned isolated LSP → goal on a slot-only file →
+> prove → kernel-pure (`lean_verify` axioms `[]`) → **commit** (worktree-safe hook) → ff-merge into
+> `main` → guardrail-safe slot reset — all green.
+> ⚠ **Maintainer caveat (do not regress):** a worker's slot commit depends on
+> `scripts/pre-commit-sync.sh` detecting a worktree (`git rev-parse --git-dir` ≠ `--git-common-dir`,
+> env-resolved so it survives the shared hook's `cd` to main) and **skipping** the main-oriented sync
+> gate — the pure-bash leak-guard still runs. **Do NOT make that gate always-run:** in a worktree it
+> stitches a cloned dependency's top-level `.github/*` blobs (absent from SK's object store) into the
+> slot's commit tree → `invalid object … Error building trees`, blocking every slot commit.
+
 | Slot | Worktree (gitignored) | Its server |
 |---|---|---|
 | `wt1` | `SK_EFT_Hawking/.claude/worktrees/wt1/lean` | `mcp__lean-lsp-wt1__*` |
