@@ -32,4 +32,21 @@ theorem gauge_pos_of (hAcomp : IsCompact A)
     0 < gauge A x :=
   (gauge_pos (absorbent_nhds_zero hA0) (hAcomp.totallyBounded.isVonNBounded ℝ)).2 hx
 
+/-- The radial push-out scalar `1 + s/gauge A x` is `≥ 1 > 0`. -/
+theorem one_le_radial (hAcomp : IsCompact A) (hA0 : A ∈ nhds (0 : EuclideanSpace ℝ (Fin n)))
+    {x : EuclideanSpace ℝ (Fin n)} (hx : x ≠ 0) {s : ℝ} (hs : 0 ≤ s) :
+    1 ≤ 1 + s * (gauge A x)⁻¹ := by
+  have := gauge_pos_of hAcomp hA0 hx
+  nlinarith [mul_nonneg hs (inv_nonneg.2 this.le)]
+
+/-- **The radial push-out** `(x, s) ↦ (1 + s/gauge A x) • x` has `gauge` value `gauge A x + s`
+(`gauge` is positively homogeneous). For `x ∉ A` (`gauge x > 1`) and `s ≥ 0` it stays out of `A`;
+for `x ≠ 0` and the scalar `> 0` it stays nonzero. -/
+theorem gauge_radial (hAcomp : IsCompact A) (hA0 : A ∈ nhds (0 : EuclideanSpace ℝ (Fin n)))
+    {x : EuclideanSpace ℝ (Fin n)} (hx : x ≠ 0) {s : ℝ} (hs : 0 ≤ s) :
+    gauge A ((1 + s * (gauge A x)⁻¹) • x) = gauge A x + s := by
+  have hp := gauge_pos_of hAcomp hA0 hx
+  rw [gauge_smul_of_nonneg (zero_le_one.trans (one_le_radial hAcomp hA0 hx hs)), smul_eq_mul,
+    add_mul, one_mul, mul_assoc, inv_mul_cancel₀ hp.ne', mul_one]
+
 end SKEFTHawking.SingularConvexComplementRetract
