@@ -331,4 +331,44 @@ theorem homIncl_inclRA (A B : Set X) (n : ℕ) (w : Homology (sub (restr A B)) n
     ← LinearMap.comp_apply, ← Homology.map_comp, ← LinearMap.comp_apply, ← Homology.map_comp]
   rfl
 
+/-- **MV middle exactness** at `Hₙ₊₁(A) ⊕ Hₙ₊₁(B)`: `Function.Exact mvHomDiag mvHomSum`
+(`ker mvHomSum = im mvHomDiag`). The Barratt–Whitehead chase: `i_A u + i_B v = 0` forces (via
+`homProj_homIncl` + excision-injectivity + `excisionMap_homProj`) `v = i_{(B,A∩B)} w''`; then
+`i_A(u + map inclRA w'') = 0` (the `homIncl_inclRA` agreement), so it is `connecting c'`; excise
+`c' = excisionMap c''` and use `inclRA_connecting` to absorb it into `w'' + connecting c''`, whose
+seam image maps to `(u, v)` under `mvHomDiag`. -/
+theorem mv_exact_middle (A B : Set X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set X)), interior U) = Set.univ) :
+    Function.Exact (mvHomDiag A B (n + 1)) (mvHomSum A B (n + 1)) := by
+  intro uv
+  refine ⟨fun huv => ?_, fun hr => ?_⟩
+  · obtain ⟨u, v⟩ := uv
+    have hsum : homIncl A (n + 1) u + homIncl B (n + 1) v = 0 := by
+      simpa only [mvHomSum, LinearMap.coprod_apply, Homology.map_ambIncl] using huv
+    have h1 : homProj A (n + 1) (homIncl B (n + 1) v) = 0 := by
+      have h := congrArg (homProj A (n + 1)) hsum
+      rwa [map_add, homProj_homIncl, zero_add, map_zero] at h
+    have h2 : homProj (restr A B) (n + 1) v = 0 := by
+      apply excisionMap_injective A B n hcov
+      rw [excisionMap_homProj, map_zero]; exact h1
+    obtain ⟨w'', hw''⟩ := (exact_homIncl_homProj (restr A B) (n + 1) _).mp h2
+    have h4 : homIncl A (n + 1) (u + Homology.map (inclRA A B) (n + 1) w'') = 0 := by
+      rw [map_add, homIncl_inclRA, hw'']; exact hsum
+    obtain ⟨c', hc'⟩ := (exact_connecting_homIncl A (n + 1) _).mp h4
+    obtain ⟨c'', hc''⟩ := (excisionEquiv A B (n + 1) hcov).surjective c'
+    have hu : Homology.map (inclRA A B) (n + 1) (w'' + connecting (restr A B) (n + 1) c'') = u := by
+      rw [map_add, inclRA_connecting, show excisionMap A B (n + 2) c'' = c' from hc'', hc',
+        add_comm (Homology.map (inclRA A B) (n + 1) w'') (u + Homology.map (inclRA A B) (n + 1) w''),
+        add_assoc, ZModModule.add_self, add_zero]
+    refine ⟨seamHomologyEquiv A B (n + 1) (w'' + connecting (restr A B) (n + 1) c''), ?_⟩
+    refine Prod.ext ?_ ?_
+    · show Homology.map (subIncl (Set.inter_subset_left (s := A) (t := B))) (n + 1)
+          (seamHomologyEquiv A B (n + 1) (w'' + connecting (restr A B) (n + 1) c'')) = u
+      rw [map_subInclL_seam]; exact hu
+    · show Homology.map (subIncl (Set.inter_subset_right (s := A) (t := B))) (n + 1)
+          (seamHomologyEquiv A B (n + 1) (w'' + connecting (restr A B) (n + 1) c'')) = v
+      rw [map_subInclR_seam, map_add, hw'', homIncl_connecting, add_zero]
+  · obtain ⟨w, rfl⟩ := hr
+    exact mvHomSum_mvHomDiag A B (n + 1) w
+
 end SKEFTHawking.SingularMayerVietorisLES
