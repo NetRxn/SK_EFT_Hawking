@@ -211,4 +211,29 @@ theorem relInter_acyclic_of_acyclic {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpe
   refine (injective_iff_map_eq_zero _).mp hinj x ?_
   exact Prod.ext (hU' _) (hV' _)
 
+/-! ### The compactness induction (Hatcher 3.27): vanishing `Hᵢ(M|K) = 0` for `i > n`
+
+`vanishAbove n K` packages "`Hᵢ(M|K) = 0` for all `i > n`" (`K` compact, `n` the manifold dimension).
+It holds for convex chart pieces (`manifoldConvexLocalHomology_high`) and is closed under union when it
+holds for the two pieces and their intersection (`relCompl_vanish_union`, from the MV vanishing
+propagation). This drives the finite-union induction toward `[M]`. -/
+
+/-- `Hᵢ(M | K) = 0` for all `i > n` — the high-degree-vanishing half of the Hatcher 3.27 property. -/
+def vanishAbove (n : ℕ) (K : Set ↑X) : Prop :=
+  ∀ i, n < i → ∀ x : RelativeHomology Kᶜ i, x = 0
+
+/-- **Vanishing is closed under union**: `vanishAbove n A`, `vanishAbove n B`, `vanishAbove n (A∩B)`
+imply `vanishAbove n (A∪B)`. In the `U = M∖A`, `V = M∖B` form this is the MV vanishing propagation
+(`relInter_acyclic_of_acyclic`): `(A∪B)ᶜ = Aᶜ ∩ Bᶜ` and `(A∩B)ᶜ = Aᶜ ∪ Bᶜ`. -/
+theorem vanishAbove_union {A B : Set ↑X} (hA : IsClosed A) (hB : IsClosed B) {n : ℕ}
+    (hVA : vanishAbove n A) (hVB : vanishAbove n B) (hVAB : vanishAbove n (A ∩ B)) :
+    vanishAbove n (A ∪ B) := by
+  intro i hi
+  obtain ⟨k, rfl⟩ : ∃ k, i = k + 1 := ⟨i - 1, by omega⟩
+  rw [Set.compl_union]
+  refine relInter_acyclic_of_acyclic hA.isOpen_compl hB.isOpen_compl k ?_ ?_ ?_
+  · rw [← Set.compl_inter]; exact hVAB (k + 1 + 1) (by omega)
+  · exact hVA (k + 1) (by omega)
+  · exact hVB (k + 1) (by omega)
+
 end SKEFTHawking.SingularManifoldFundamentalClass
