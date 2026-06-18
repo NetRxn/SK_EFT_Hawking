@@ -129,4 +129,21 @@ noncomputable def euclConvexLocalHomologyIso (m : ℕ)
           (SingularPuncturedRetract.homology_map_normalize_bijective (n := m + 2) m)).trans
         (SingularLineMinusPoint.topSphereIso m)))
 
+/-- **The convex base case (Hatcher 3.27) in a manifold**: `Hₘ₊₂(M | K) = Hₘ₊₂(M, M∖K) ≅ ℤ/2` for `K`
+a compact convex set in a chart, matched by the chart `e` with a compact convex `C ⊆ ℝⁿ` (`0 ∈ int C`).
+Assembled from open-set excision (at `M` and at `ℝⁿ`), the chart-pair transport, and the Euclidean
+convex local model. The base case the relative-MV compactness induction builds on. -/
+noncomputable def manifoldConvexLocalHomologyIso {M : TopCat} {m : ℕ} {K : Set ↑M}
+    {U : Set ↑M} (hK : IsClosed K) (hU : IsOpen U) (hKU : K ⊆ U)
+    {C : Set (EuclideanSpace ℝ (Fin (m + 2)))} {V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))}
+    (hCconv : Convex ℝ C) (hCcomp : IsCompact C)
+    (hC0 : C ∈ nhds (0 : EuclideanSpace ℝ (Fin (m + 2)))) (hV : IsOpen V) (hCV : C ⊆ V)
+    (e : ↥U ≃ₜ ↥V)
+    (hcompat : ∀ u : ↥U, ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C) ↔ (u : ↑M) ∈ K) :
+    RelativeHomology (X := M) Kᶜ (m + 2) ≃ₗ[ZMod 2] ZMod 2 :=
+  (openSetExcisionEquiv hK hU hKU (m + 1)).symm.trans
+    ((chartPairEquiv_set e hcompat (m + 2)).trans
+      ((openSetExcisionEquiv hCcomp.isClosed hV hCV (m + 1)).trans
+        (euclConvexLocalHomologyIso m hCconv hCcomp hC0)))
+
 end SKEFTHawking.SingularManifoldFundamentalClass
