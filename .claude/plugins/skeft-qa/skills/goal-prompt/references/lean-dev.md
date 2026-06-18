@@ -69,11 +69,21 @@ The binding is **by the fixed name** — the server paths are static, so a workt
    worktree-wt1` (or `EnterWorktree name=wt1` / `claude --worktree wt1` — all land at the same
    deterministic path). Do **not** use `Agent isolation: worktree` for a slot — it generates a
    random name no static server matches.
-2. **Seed its Lean build** so the LSP is fast (a fresh worktree's `.lake/` is gitignored → empty):
-   in the slot's `lean/`, `lake exe cache get` (Mathlib oleans from cache) + `lake build`, or list
-   `.lake/` in a `.worktreeinclude` so CC copies the built oleans in at creation. A slot whose
-   worktree doesn't exist yet simply fails to connect, harmlessly.
+2. **Seed its Lean build** so the LSP loads instantly (a fresh worktree's `.lake/` is gitignored →
+   empty). The slot is checked out at the **same commit** as the main tree, so the main build is
+   valid for it — **fastest: symlink (or copy) the main tree's `lean/.lake` into the slot**
+   (`lean-lsp` / `lake env lean` only *read* the oleans → no rebuild; verified instant, main build
+   untouched). From-clean alternative: `lake exe cache get` + `lake build` in the slot's `lean/`, or
+   list `.lake/` in a `.worktreeinclude` so CC copies the oleans in at creation.
 3. **Dispatch one independent sub-chain** to a subagent working under that slot's path.
+
+⚠ **Ordering (load-bearing — verified):** the `lean-lsp-wtN` servers attach at **session start** and
+register their tools only if the worktree path **already exists then**. A slot whose worktree is
+absent fails to connect *harmlessly*, but its tools stay absent for the **whole** session (**no
+mid-session hot-reload** — confirmed: creating a slot mid-session does NOT surface its tools). So
+**create + seed the slots BEFORE launching the consuming session**, or restart it after creating
+them. The clean fit for static servers = **persistent slots**: keep `wt1/2/3` on disk (gitignored),
+`git reset --hard <base>` + re-seed per task, rather than create-and-destroy each time.
 
 **Subagent contract (state it in the dispatch prompt):**
 - Edit files under the slot path and drive proofs with the **`lean4` skill + the matching

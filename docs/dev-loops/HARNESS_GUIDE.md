@@ -130,11 +130,15 @@ For a `lead` orchestrating **independent** Lean sub-chains across subagents, the
 (`--repl`) lean-lsp pinned to `SK_EFT_Hawking/.claude/worktrees/wt{1,2,3}/lean` (enabled in the
 workspace `.claude/settings.local.json`; **a session restart loads them**). The server↔worktree
 binding is **by the fixed name**: create the slot as `wtN` (`git worktree add .claude/worktrees/wt1
--b worktree-wt1`, or `EnterWorktree name=wt1`) and seed its Lean build (`lake exe cache get` +
-`lake build` in the slot's `lean/`, or `.worktreeinclude` to copy `.lake`) before dispatching a
-subagent there. A slot whose worktree doesn't exist yet just fails to connect, harmlessly. Don't
-use `Agent isolation: worktree` for a slot — its random name matches no static server.
-`SK_EFT_Hawking/.claude/worktrees/` is gitignored.
+-b worktree-wt1`, or `EnterWorktree name=wt1`) and seed its Lean build before dispatching a subagent
+there — **fastest: symlink the main tree's `lean/.lake` into the slot** (same commit → oleans valid,
+read-only, verified instant; from-clean alt: `lake exe cache get` + `lake build`, or `.worktreeinclude`).
+**⚠ Ordering (verified):** the servers attach at **session start** and don't hot-reload — a slot must
+exist *before* the consuming session launches (a slot whose worktree is absent fails to connect
+harmlessly, but its tools stay absent until a restart with the worktree present). Simplest: keep
+`wt1/2/3` as **persistent gitignored slots** (`git reset --hard` + re-seed per task) so the servers
+always register. Don't use `Agent isolation: worktree` for a slot — its random name matches no static
+server. `SK_EFT_Hawking/.claude/worktrees/` is gitignored.
 
 Dispatch each Lean subagent into one slot and tell it to use the **`lean4` skill + the matching
 `mcp__lean-lsp-wtN__*` tools** (the MCP-first loop), **not** write→`lake build` cycles; stage its
