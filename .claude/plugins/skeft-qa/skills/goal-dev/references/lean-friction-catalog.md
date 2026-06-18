@@ -67,6 +67,10 @@ FIX. Add a new entry the *first* time a pattern recurs (don't re-solve it per-in
 - **Section `variable`s are NOT auto-included** on a theorem whose *type* doesn't mention them → pass them
   explicitly per-lemma. `local notation` with set-builder can break `quotPrecheck`.
 - **`unitInterval` bounds** `t∈[0,1] ⟹ 0 ≤ t-0` need explicit `sub_nonneg`; `omega`/`linarith` don't bridge.
+- **`unknown constant`/`unknown identifier` for a cross-module map** (`Homology.map`, `RelativeHomology.map`)
+  → the `*.map` lives in a *Functoriality* module you didn't `open` (`SingularFunctoriality`,
+  `SingularRelativeFunctoriality`). `lean_local_search`/`lean_hover_info` the identifier BEFORE writing a
+  cross-module body, then add the missing `open`.
 
 ## simp / unfolding
 
