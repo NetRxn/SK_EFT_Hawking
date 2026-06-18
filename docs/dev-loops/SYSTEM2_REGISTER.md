@@ -90,7 +90,7 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 
 ### compact-delta-post-compaction-successful-domain-transition-apparatus-math-with-s
 
-**Seamless re-orientation post-compact; proof context preserved with high fidelity**  ·  tier: `agent-reviewed`  ·  status: open
+**Seamless re-orientation post-compact; proof context preserved with high fidelity**  ·  tier: `human-reviewed`  ·  status: open
 
 ```json
 {
@@ -98,8 +98,8 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
   "title": "Seamless re-orientation post-compact; proof context preserved with high fidelity",
   "why": "The compact summary captured extensive state: committed Lean code (SingularRelativeMV.lean brick 72c-1 at 1dc64ccc), error log (missing opens, subspaceChains_inf qualification), next-brick architecture (72c-2 relative MV chain SES), referenced notebooks/roadmaps, and the EXACT uncommitted work (relMvChainDiag + injectivity with known issues). Post-compact the assistant immediately resumed at the right sub-task. Zero context-churn. DONE criterion 2 (validate.py 43/43) satisfied at 3ed1016c before compaction, persisting post-compact.",
   "how_to_apply": "Rare success case. Summary content precise (numbered pending tasks load-bearing), boundary at natural pause (after commit + green build), first post-compact turn engaged exact uncommitted state. Ensure compact summaries capture (a) exact last-committed SHA + uncommitted file state, (b) known errors/warnings, (c) exact next brick as numbered item, (d) blocked decisions with arguments.",
-  "evidence": "Pre: SingularMayerVietorisLES.lean committed (d0ea4363), 72c-1 at 1dc64ccc, validate 43/43 at 3ed1016c. Summary captured 9 sections incl exact Lean snippet of uncommitted relMvChainDiag. Post line 327+: diagnoses subspaceChains_inf qualification, applies qualified fix, re-verifies kernel-purity, plans next brick — zero wasted turns.",
-  "tier": "agent-reviewed",
+  "evidence": "Promoted (discussed). Actioned: the compaction-survival checklist (exact last SHA + uncommitted state + open errors/warnings + numbered next brick + blocked decisions) is now an explicit bullet in goal-dev/references/notebook-sharding.md, enforcing the post-compact re-orientation practice in-loop.",
+  "tier": "human-reviewed",
   "status": "open",
   "occurrences": [
     {
@@ -815,35 +815,6 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 }
 ```
 
-### parallel-work-dispatch-explore-read-only-explore-agent-dispatched-for-architectu
-
-**Read-only Explore agent dispatched for architectural mapping without blocking solo work; surfaced load-bearing gap**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "parallel-work-dispatch-explore",
-  "title": "Read-only Explore agent dispatched for architectural mapping without blocking solo work; surfaced load-bearing gap",
-  "why": "On a large unknown (exact L4 interface), dispatched a read-only Explore agent in parallel while continuing the L1 spine solo — delegated info-gathering without blocking forward progress. The Explore report surfaced a load-bearing architectural gap (w2(TM) geometric, not abstract wuClass2; bridged only by the Wu theorem) the main agent had not anticipated.",
-  "how_to_apply": "Capture as guidance: on a large architectural unknown, dispatch a read-only Explore agent in parallel instead of blocking. Ensure the blocked-question guard does NOT intercept read-only external-investigation. Ensure the blocked-question guard does NOT intercept read-only external-investigation; the compact summary must capture such load-bearing architectural unknowns.",
-  "evidence": "'dispatch a read-only Explore agent to map the exact L4 interface, while I keep building the L1 [M] spine solo.' | 'L4 needs the geometric w₂(TM)... not the abstract wuClass2 from a PD datum — different objects bridged only by the Wu theorem. Load-bearing.'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": "70cc8da1-4695-435a-be26-9db4e634a6fa:14425384"
-    }
-  ],
-  "id": "parallel-work-dispatch-explore-read-only-explore-agent-dispatched-for-architectu",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
 ### harness-gap-worktree-slot-git-tree-goes-stale-when-main-advances-after-reset-but
 
 **Worktree slot git-tree goes stale when main advances after reset but before dispatch**  ·  tier: `agent-reviewed`  ·  status: open
@@ -900,6 +871,35 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 ```
 
 ## Closed
+
+### parallel-work-dispatch-explore-read-only-explore-agent-dispatched-for-architectu
+
+**Read-only Explore agent dispatched for architectural mapping without blocking solo work; surfaced load-bearing gap**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "parallel-work-dispatch-explore",
+  "title": "Read-only Explore agent dispatched for architectural mapping without blocking solo work; surfaced load-bearing gap",
+  "why": "On a large unknown (exact L4 interface), dispatched a read-only Explore agent in parallel while continuing the L1 spine solo — delegated info-gathering without blocking forward progress. The Explore report surfaced a load-bearing architectural gap (w2(TM) geometric, not abstract wuClass2; bridged only by the Wu theorem) the main agent had not anticipated.",
+  "how_to_apply": "Capture as guidance: on a large architectural unknown, dispatch a read-only Explore agent in parallel instead of blocking. Ensure the blocked-question guard does NOT intercept read-only external-investigation. Ensure the blocked-question guard does NOT intercept read-only external-investigation; the compact summary must capture such load-bearing architectural unknowns.",
+  "evidence": "Captured: the read-only Explore-dispatch heuristic (parallel reconnaissance on a large architectural unknown while building solo; distinct from the lean-worker worktree fan-out) is now documented in goal-dev/references/decision-heuristics.md.",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": "70cc8da1-4695-435a-be26-9db4e634a6fa:14425384"
+    }
+  ],
+  "id": "parallel-work-dispatch-explore-read-only-explore-agent-dispatched-for-architectu",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
 
 ### friction-search-loop-repeated-mathlib-api-discovery-iterations-iscompact-totally
 
