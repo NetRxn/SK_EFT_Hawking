@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.SingularManifoldFundamentalClass
 import SKEFTHawking.SingularRelativeEmpty
+import SKEFTHawking.SingularGoodCompactManifold
 
 /-!
 # Phase 5q.F (w₂-foundation, brick 72c-4p) — the [M] finale foundations (Hatcher 3.26)
@@ -42,5 +43,18 @@ theorem linearEquiv_zmod2_unique {V : Type*} [AddCommGroup V] [Module (ZMod 2) V
   · rw [h0] at ha; rw [ha] at hb; exact absurd hb (by decide)
   · rw [← h0] at hb; rw [hb] at ha; exact absurd ha (by decide)
   · rw [ha, hb]
+
+/-! ## High-degree vanishing of the closed manifold -/
+
+/-- **A closed manifold has no homology above its dimension**: `Hᵢ(M;ℤ/2) = 0` for `i > m+2`. The
+absolute version of `goodCompact_univ`'s `vanishAbove (m+2) univ` (`Hᵢ(M | univ) = Hᵢ(M, ∅) = Hᵢ(M)`
+via `relHomologyEmptyEquiv`). -/
+theorem homology_vanish_above {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M]
+    [Nonempty M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (i : ℕ) (hi : m + 2 < i)
+    (α : Homology (TopCat.of M) i) : α = 0 := by
+  have h := (SingularGoodCompactManifold.goodCompact_univ (m := m) (M := M)).1 i hi
+  rw [Set.compl_univ] at h
+  exact (relHomologyEmptyEquiv (X := TopCat.of M) i).symm.injective
+    (by rw [h ((relHomologyEmptyEquiv (X := TopCat.of M) i).symm α), map_zero])
 
 end SKEFTHawking.SingularFundamentalClass
