@@ -1,6 +1,6 @@
 {
   "name": "skeft-qa",
-  "description": "Stage-13 QA review agents for the SK_EFT_Hawking physics project: adversarial paper audit, sentence-level claims verification with chain-of-backing, and figure review.",
+  "description": "QA review agents + the autonomous-development harness for the SK_EFT_Hawking physics project. Stage-13 review agents: adversarial paper audit, sentence-level claims verification with chain-of-backing, figure review. Loop-durability dev-harness (keeps native /goal loops on-track across compactions): SessionStart re-inject + PreToolUse(AskUserQuestion) guard + SessionEnd marker-cleanup hooks; skills goal-prompt (launch+posture core), goal-dev (in-loop dev), sync, wave-close, harvest, debrief; commands orient, goal-guard, goal-end, reset-slot.",
   "author": {
     "name": "SK-EFT Hawking project"
   }

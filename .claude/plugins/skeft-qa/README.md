@@ -34,22 +34,33 @@ session is a *managed* loop (a `/skeft-qa:goal-prompt` marker exists for its
 `session_id`) *and* is not a subagent (`agent_id` present). It never touches
 Explore/Plan/review subagents or non-dev interactive sessions.
 
-### Skills / commands
+### Skills (`skills/<name>/SKILL.md`) — progressive-disclosure workflows
 
-| Skill | Purpose |
-|---|---|
-| `/skeft-qa:goal-prompt` | **The unified goal-mode skill** — its core is the always-on operating posture (re-attaches after compaction); on invocation it composes the `/goal` condition + registers the session (writes the 8-field marker, incl. `question_guard:true`). You then run native `/goal`. |
-| `/skeft-qa:goal-guard` | Toggle the AskUserQuestion guard for this managed loop (`on`\|`off`; default on — turn off when you want to be asked). |
-| `/skeft-qa:orient` | A ≤200-word compass from the marker + source-of-truth docs (where am I, what's the next brick). |
+| Skill | Invocation | Purpose |
+|---|---|---|
+| `/skeft-qa:goal-prompt` | you (user-only) | **Goal-mode LAUNCH + the always-on posture core** (re-attaches after compaction). On invocation it composes the `/goal` condition + registers the session (8-field marker, incl. `question_guard:true`). You then run native `/goal`. *Authoring only — in-loop dev guidance is `goal-dev`.* |
+| `/skeft-qa:goal-dev` | you **or** the loop | **The in-loop development skill** — MCP-first proof loop, kernel-purity rules, the worktree fan-out flow, a symptom-indexed Lean friction catalog. Invoke while developing; its `references/` load on demand. |
+| `/skeft-qa:sync` | you **or** the loop | Mechanical Stage-12 sync (counts/tables/deps/citation cache) in one command. Idempotent, regen-lock-serialized. |
+| `/skeft-qa:wave-close` | you **or** the loop | Deterministic per-wave close: prereq checks → dispatch the fresh-context review → record `*_close.md`. |
+| `/skeft-qa:harvest` | scheduled task / 2nd-session `/loop` | Off-hot-loop System-2 harvest (Haiku extract → Opus consolidate → `SYSTEM2_REGISTER.md`). Never inside a `/goal` session. |
+| `/skeft-qa:debrief` | you (user-only) | Interactive promotion `agent-reviewed → human-reviewed`; never auto-edits CLAUDE.md/hooks/roadmaps. |
 
-(`/skeft-qa:sync` + `/skeft-qa:wave-close` ship in Plan 2; `/skeft-qa:harvest` + `/skeft-qa:debrief` in Plan 3.)
+### Commands (`commands/<name>.md`) — atomic, globally-accessible actions
 
-### Hooks (`hooks/hooks.json` → `scripts/`) — exactly two
+| Command | Invocation | Purpose |
+|---|---|---|
+| `/skeft-qa:orient` | you | A ≤200-word compass from the marker + source-of-truth docs (where am I, what's the next brick). |
+| `/skeft-qa:goal-guard <on\|off>` | you (user-only) | Toggle the AskUserQuestion guard (`off` = let the loop ask you a question; `on` = resume autonomous redirect; default on). |
+| `/skeft-qa:goal-end` | you (user-only) | Disarm the loop — remove this session's marker. The explicit teardown for a mid-session `/goal clear` (which fires no hook). |
+| `/skeft-qa:reset-slot <N>` | you **or** the loop | Reset worktree slot `wtN` to `main` the guardrail-safe way (`checkout -B`; **refuses if the slot has commits not yet on `main`**). |
+
+### Hooks (`hooks/hooks.json` → `scripts/`) — three (all default-inert + fail-open)
 
 | Hook | Job |
 |---|---|
-| `SessionStart` (compact\|resume) | Re-inject the **shared re-orientation payload** (the `/goal` condition + "re-read CLAUDE.md" + active System-2 issues + heuristics) + a best-effort first-turn self-check — **the durability fix**. |
+| `SessionStart` (compact\|resume) | Re-inject the **shared re-orientation payload** (the `/goal` condition + "re-read CLAUDE.md" + the **`/skeft-qa:goal-dev` pointer** + active System-2 issues + heuristics) + a best-effort first-turn self-check — **the durability fix**. |
 | `PreToolUse(AskUserQuestion)` | Deny + redirect a blocking question with the re-orientation payload; log the question to `blocked_questions.jsonl`. Marker-gated, top-level-only, honors `question_guard`, fail-open. |
+| `SessionEnd` | **Marker teardown** — removes this session's marker on `reason=clear` only (a `/clear` that also clears the goal), so a dead loop's marker stops re-injecting. Never on `logout`/`resume` (a still-active goal restores on `--resume`). |
 
 No Stop/SubagentStop (`/goal` owns continuation), no PreCompact (the harvest is
 off-hot-loop), no PostToolUse (the local git pre-commit hook is the sole enforcing

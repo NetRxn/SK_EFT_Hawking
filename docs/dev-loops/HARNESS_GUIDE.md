@@ -13,9 +13,10 @@
 
 `skeft-qa` is a Claude Code plugin that keeps a long-running autonomous **native `/goal`** loop on-track across compactions, without competing with `/goal` itself. (A private sibling plugin mirrors the same model for the private repo — lighter wrappers, documented on the private side.)
 
-It ships **exactly two CC hooks** (both default-inert + fail-open, gated on a per-session marker):
-- `SessionStart` — after every compaction/resume, re-injects the settled `/goal` condition + "re-read CLAUDE.md" + active System-2 issues + decision heuristics.
+It ships **three CC hooks** (all default-inert + fail-open, gated on a per-session marker):
+- `SessionStart` — after every compaction/resume, re-injects the settled `/goal` condition + "re-read CLAUDE.md" + the `/skeft-qa:goal-dev` pointer + active System-2 issues + decision heuristics.
 - `PreToolUse(AskUserQuestion)` — when the loop tries to block on a question (and you're not there), it denies + redirects with the same re-orientation payload, so the loop keeps moving instead of stalling.
+- `SessionEnd` — marker teardown on `reason=clear` (a `/clear` that also clears the goal), so a dead loop's marker stops re-injecting. (A mid-session `/goal clear` fires no event → use `/skeft-qa:goal-end`.)
 
 Plus skills you invoke, a mechanical-sync layer, and an off-hot-loop System-2 "what went well/poorly about HOW the loop ran" harvest.
 
@@ -53,15 +54,18 @@ The only `UNRESOLVED` case is launching from somewhere with no path to the repo 
 
 ## 4. Slash-command reference (`/skeft-qa:<name>`)
 
-| Command | Who invokes | What it does |
-|---|---|---|
-| **goal-prompt** | you (user-only) | The unified goal-mode skill. Composes the `/goal` condition + arms the marker + facilitates the harvest host. Its ≤5k core also **re-attaches after every compaction** (the durable anti-drift posture). |
-| **goal-guard `<on\|off>`** | you (user-only) | Toggle the AskUserQuestion guard. **off** = let the loop ask you a question; **on** = resume autonomous redirect. Default on in goal mode. |
-| **orient** | you | A ≤200-word compass from the marker + roadmap/notebook: Goal / Done / Next / Guardrails. |
-| **sync** | you **or** the loop | Run the mechanical Stage-12 sync (counts/tables/deps/citation cache) in one command. Idempotent, regen-lock-serialized. |
-| **wave-close `<wave-id>`** | you **or** the loop | Deterministic per-wave close: gate prereqs → dispatch the fresh-context adversarial review (zero BLOCKERs) → write `<wave>_close.md`. The loop runs this itself to satisfy its acceptance criteria. |
-| **harvest** | scheduled task / second-terminal `/loop` — **never the goal session** | Off-hot-loop System-2 harvest (Haiku extract → Opus consolidate) of process/harness lessons. Self-aborts if run inside a managed loop. |
-| **debrief** | you (user-only) | Interactively promote System-2 `agent-reviewed` findings → `human-reviewed`, triage GAP-A gate proposals. |
+| Name | Kind | Who invokes | What it does |
+|---|---|---|---|
+| **goal-prompt** | skill | you (user-only) | **Goal-mode LAUNCH + posture core.** Composes the `/goal` condition + arms the marker + facilitates the harvest host. Its ≤5k core **re-attaches after every compaction** (the durable anti-drift posture). *Authoring only — in-loop dev guidance is `goal-dev`.* |
+| **goal-dev** | skill | you **or** the loop | **The in-loop development skill** (model-invocable). MCP-first proof loop, kernel-purity rules, worktree fan-out, a symptom-indexed Lean friction catalog; `references/` load on demand. The SessionStart re-inject points here. |
+| **orient** | command | you | A ≤200-word compass from the marker + roadmap/notebook: Goal / Done / Next / Guardrails. |
+| **goal-guard `<on\|off>`** | command | you (user-only) | Toggle the AskUserQuestion guard. **off** = let the loop ask you a question; **on** = resume autonomous redirect. Default on in goal mode. |
+| **goal-end** | command | you (user-only) | Disarm the loop — remove this session's marker. The explicit teardown for a mid-session `/goal clear` (the platform fires no event there). |
+| **reset-slot `<N>`** | command | you **or** the loop | Reset worktree slot `wtN` to `main` the guardrail-safe way (`checkout -B`; **refuses if the slot has commits not on `main`**). Replaces hand-typed `git reset --hard` (which the auto-mode classifier denies). |
+| **sync** | skill | you **or** the loop | Run the mechanical Stage-12 sync (counts/tables/deps/citation cache) in one command. Idempotent, regen-lock-serialized. |
+| **wave-close `<wave-id>`** | skill | you **or** the loop | Deterministic per-wave close: gate prereqs → dispatch the fresh-context adversarial review (zero BLOCKERs) → write `<wave>_close.md`. The loop runs this itself to satisfy its acceptance criteria. |
+| **harvest** | skill | scheduled task / second-terminal `/loop` — **never the goal session** | Off-hot-loop System-2 harvest (Haiku extract → Opus consolidate) of process/harness lessons. Self-aborts if run inside a managed loop. |
+| **debrief** | skill | you (user-only) | Interactively promote System-2 `agent-reviewed` findings → `human-reviewed`, triage GAP-A gate proposals. |
 
 ---
 
@@ -137,16 +141,17 @@ servers do, and those attach at **session start**, so the slots must pre-exist. 
 disk for all 3 — the `.lake` clones are APFS copy-on-write; `du`'s ~43 GB is logical/COW-blind). The
 servers are enabled in `.claude/settings.local.json`; **restart once after first setup** so they attach.
 
-Lead flow, per task: **reset the slot** (`git -C .claude/worktrees/wtN checkout -B worktree-wtN main`
-— guardrail-safe; `reset --hard`/`clean` are blocked by design; re-clone `.lake` if main's build
-advanced) → **dispatch** `Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=2,
-path=<abs …/wt2>, use mcp__lean-lsp-wt2__*. <brick>")` → worker proves MCP-first via its own
-`mcp__lean-lsp-wtN__*`, kernel-pure, commits on `worktree-wtN` → **merge** `worktree-wtN` into `main`,
-re-run the full gate. The slot **stays** for the next task (reset, don't delete). **Fan out only when
-the proof DAG has genuinely branched.** Works from either launch point (root or in-repo) — the lead uses
-plain `git -C <slot>` (no `isolation: worktree`), and the slot servers use absolute paths. Full
-convention: the **Parallel Lean development** section of
-`.claude/plugins/skeft-qa/skills/goal-prompt/references/lean-dev.md`.
+Lead flow, per task: **reset the slot** with **`/skeft-qa:reset-slot N`** (it runs the guardrail-safe
+`git -C .claude/worktrees/wtN checkout -B worktree-wtN main` and **refuses if the slot holds commits not
+yet on `main`** — merge them first; re-clone `.lake` if main's build advanced — **never** hand-type
+`git reset --hard`/`git clean`, which the auto-mode permission classifier denies on a slot) → **dispatch**
+`Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=2, path=<abs …/wt2>, use
+mcp__lean-lsp-wt2__*. <brick>")` → worker proves MCP-first via its own `mcp__lean-lsp-wtN__*`, kernel-pure,
+commits on `worktree-wtN` → **merge** `worktree-wtN` into `main`, re-run the full gate. The slot **stays**
+for the next task (`/reset-slot`, don't delete). **Fan out only when the proof DAG has genuinely branched.**
+Works from either launch point (root or in-repo) — the lead uses plain `git -C <slot>` (no `isolation:
+worktree`), and the slot servers use absolute paths. Full convention: **`parallel-worktrees.md`** in the
+`goal-dev` skill (`.claude/plugins/skeft-qa/skills/goal-dev/references/parallel-worktrees.md`).
 
 ---
 
