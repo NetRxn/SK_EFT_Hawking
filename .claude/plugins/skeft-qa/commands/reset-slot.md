@@ -1,5 +1,5 @@
 ---
-description: Reset a parallel Lean worktree slot (wt1/wt2/wt3) to current main — the guardrail-safe way (checkout -B, refuses if the slot has commits not yet on main). Use before dispatching a lean-worker to a slot.
+description: Reset a parallel Lean worktree slot (wt1/wt2/wt3) to current main — the guardrail-safe way (checkout -B, refuses if the slot has commits not yet on main) and auto-re-clones the slot's .lake build when main advanced. Use before dispatching a lean-worker to a slot.
 argument-hint: <N>
 allowed-tools: Bash(uv run *)
 ---
@@ -13,7 +13,8 @@ Reset worktree slot `wt$ARGUMENTS` to current `main`:
 Run: `` !`uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/reset_slot.py" $ARGUMENTS 2>&1` ``
 
 Report the result. The script does `git -C .claude/worktrees/wtN checkout -B worktree-wtN main` (guardrail-safe;
-**never** `git reset --hard`/`git clean`, which the auto-mode permission classifier denies on a slot) and
-**refuses if the slot holds commits not on `main`** (merge/cherry-pick them first, then re-run). If it asks you
-to re-clone the slot's `.lake` (because `main`'s build advanced), run the printed `cp -c` line. Full fan-out
-flow: the `goal-dev` skill's `references/parallel-worktrees.md`.
+**never** `git reset --hard`/`git clean`, which the auto-mode permission classifier denies on a slot),
+**refuses if the slot holds commits not on `main`** (merge/cherry-pick them first, then re-run), and then
+**auto-re-clones the slot's `.lake` build** (APFS copy-on-write) when main advanced since the slot's last sync —
+so the slot's LSP matches its git tree with no manual step. Full fan-out flow: the `goal-dev` skill's
+`references/parallel-worktrees.md`.

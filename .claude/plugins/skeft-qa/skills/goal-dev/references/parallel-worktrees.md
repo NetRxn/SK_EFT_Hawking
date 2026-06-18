@@ -34,8 +34,10 @@ each. The `lean-lsp-wt1/2/3` servers are defined in the workspace `.mcp.json` + 
      classifier** on a worktree the agent didn't create this session (a Claude Code permission heuristic —
      *not* a dev-harness hook; this plugin ships no Bash guardrail). `/reset-slot` exists precisely so the
      guardrail-safe `checkout -B` is the path of least resistance.
-   - If `main`'s build advanced since the last clone, re-clone the slot's `.lake`
-     (`rm -rf …/wtN/lean/.lake && cp -c -R lean/.lake …/wtN/lean/.lake`) — `/reset-slot` prints the exact line.
+   - `/reset-slot` **auto-re-clones the slot's `.lake`** when main's build advanced since the slot's last
+     sync — an APFS copy-on-write clone of main's `lean/.lake`, **staleness-gated** on main's HEAD SHA
+     (recorded at `.claude/dev-harness/slot_lake/wtN.sha`), so resetting a slot repeatedly while main is
+     unchanged skips the copy. The slot's LSP therefore always matches its git tree; you don't re-clone by hand.
 2. **Dispatch** `Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=2, path=<abs …/wt2>, use
    mcp__lean-lsp-wt2__*. <the one independent brick + its Lit-Search refs + acceptance>")`.
 3. The worker proves MCP-first via **its own `mcp__lean-lsp-wtN__*`** (never write→`lake build`), kernel-pure,
