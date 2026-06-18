@@ -399,4 +399,44 @@ theorem relLiftToQHom_surjective (U V : Set ↑M) (n : ℕ) :
   rw [relLiftToQHom_apply]
   exact congrArg (QHomology.mk U V (n + 1)) (Subtype.ext hb)
 
+/-- **Snake-lemma well-definedness**: `ker(b ↦ [Σ b]) ≤ ker(b ↦ [extractA b])`. If `[Σ b] = 0` in
+`Hₙ₊₁(Q)`, write `Σ b = ∂_Q q'`, lift `q' = Σ b'`; then `b + ∂_B b' = Δ a'` (exactness), whence
+`extractA b = ∂(extractA b)`'s witness `= ∂ a'` is a relative boundary. -/
+theorem relConnecting_ker_le (U V : Set ↑M) (n : ℕ) :
+    LinearMap.ker (relLiftToQHom U V n) ≤ LinearMap.ker (relConnectingLift U V n) := by
+  intro b hb
+  rw [LinearMap.mem_ker, relLiftToQHom_apply, QHomology.mk_eq_zero_iff] at hb
+  rw [LinearMap.mem_ker, relConnectingLift_apply]
+  obtain ⟨q', hq'⟩ := hb
+  obtain ⟨b', hb'⟩ := relMvChainSum_surjective U V (n + 2) q'
+  have hker : relMvChainSum U V (n + 1)
+      ((b : RelativeChain U (n + 1) × RelativeChain V (n + 1)) + bBoundary U V (n + 1) b') = 0 := by
+    rw [map_add, relMvChainSum_chainMap, hb', hq', ZModModule.add_self]
+  obtain ⟨a', ha'⟩ := (relMvChain_exact U V (n + 1) _).mp hker
+  refine (RelativeHomology.mk_eq_zero_iff (U ∩ V) n _).2 ?_
+  show extractA U V n b ∈ relBoundaries (U ∩ V) n
+  have hextract : extractA U V n b = relBoundary (U ∩ V) n a' := by
+    apply relMvChainDiag_injective U V n
+    rw [relMvChainDiag_extractA, relMvChainDiag_chainMap, ha', map_add, bBoundary_bBoundary_apply,
+      add_zero]
+  rw [hextract]
+  exact LinearMap.mem_range_self _ a'
+
+/-- **The relative MV connecting homomorphism** `δ : Hₙ₊₁(M, U∪V) → Hₙ(M, U∩V)` — in its `Q`-form
+`Hₙ₊₁(Q) → Hₙ(M, U∩V)`, the snake descent of `relConnectingLift` through `relLiftToQHom`
+(`relConnecting_ker_le` is well-definedness). The `Hₙ₊₁(Q) ≅ Hₙ₊₁(M, U∪V)` identification (brick
+72c-2e) puts it in final form. -/
+noncomputable def relConnecting (U V : Set ↑M) (n : ℕ) :
+    QHomology U V (n + 1) →ₗ[ZMod 2] RelativeHomology (U ∩ V) n :=
+  (Submodule.liftQ (LinearMap.ker (relLiftToQHom U V n)) (relConnectingLift U V n)
+    (relConnecting_ker_le U V n)).comp
+    (LinearMap.quotKerEquivOfSurjective (relLiftToQHom U V n)
+      (relLiftToQHom_surjective U V n)).symm.toLinearMap
+
+/-- The connecting map on the class of a lift-chain `b ∈ L_n` is `[extractA b]`. -/
+theorem relConnecting_relLiftToQHom (U V : Set ↑M) (n : ℕ) (b : relLift U V n) :
+    relConnecting U V n (relLiftToQHom U V n b) = relConnectingLift U V n b := by
+  rw [relConnecting, LinearMap.comp_apply, LinearEquiv.coe_coe,
+    LinearMap.quotKerEquivOfSurjective_symm_apply, Submodule.liftQ_apply]
+
 end SKEFTHawking.SingularRelativeMV
