@@ -439,4 +439,89 @@ theorem relConnecting_relLiftToQHom (U V : Set ↑M) (n : ℕ) (b : relLift U V 
   rw [relConnecting, LinearMap.comp_apply, LinearEquiv.coe_coe,
     LinearMap.quotKerEquivOfSurjective_symm_apply, Submodule.liftQ_apply]
 
+/-! ### The homology-level sum map `Σ_* : Hₙ(M,U) × Hₙ(M,V) → Hₙ(Q)`
+
+The factor chain maps `relMvFactorL/R : C(M,U)/C(M,V) → Q` induce homology maps (the `homIncl`
+analog), and `Σ_* := relFactorLHom.coprod relFactorRHom`. With the small-chains iso `Hₙ(Q) ≅ Hₙ(M,U∪V)`
+this is `relMvHomSum` (72c-1). -/
+
+/-- `relMvFactorL` is a **chain map**: `Σ_L ∘ ∂_{M,U} = ∂_Q ∘ Σ_L`. -/
+theorem relMvFactorL_chainMap (U V : Set ↑M) (n : ℕ) (x : RelativeChain U (n + 1)) :
+    relMvFactorL U V n (relBoundary U n x) = qBoundary U V n (relMvFactorL U V (n + 1) x) := by
+  obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  rw [show (Submodule.Quotient.mk c : RelativeChain U (n + 1)) = RelativeChain.mk U (n + 1) c from rfl,
+    relBoundary_mk, relMvFactorL_mk, relMvFactorL_mk]
+  rfl
+
+/-- `relMvFactorR` is a **chain map**: `Σ_R ∘ ∂_{M,V} = ∂_Q ∘ Σ_R`. -/
+theorem relMvFactorR_chainMap (U V : Set ↑M) (n : ℕ) (x : RelativeChain V (n + 1)) :
+    relMvFactorR U V n (relBoundary V n x) = qBoundary U V n (relMvFactorR U V (n + 1) x) := by
+  obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  rw [show (Submodule.Quotient.mk c : RelativeChain V (n + 1)) = RelativeChain.mk V (n + 1) c from rfl,
+    relBoundary_mk, relMvFactorR_mk, relMvFactorR_mk]
+  rfl
+
+theorem relMvFactorL_mem_qCycles (U V : Set ↑M) (n : ℕ) (z : RelativeChain U n)
+    (hz : z ∈ relCycles U n) : relMvFactorL U V n z ∈ qCycles U V n := by
+  cases n with
+  | zero => exact Submodule.mem_top
+  | succ m =>
+    have hz0 : relBoundary U m z = 0 := LinearMap.mem_ker.mp hz
+    have h0 : qBoundary U V m (relMvFactorL U V (m + 1) z) = 0 := by
+      rw [← relMvFactorL_chainMap, hz0, map_zero]
+    exact LinearMap.mem_ker.mpr h0
+
+theorem relMvFactorR_mem_qCycles (U V : Set ↑M) (n : ℕ) (z : RelativeChain V n)
+    (hz : z ∈ relCycles V n) : relMvFactorR U V n z ∈ qCycles U V n := by
+  cases n with
+  | zero => exact Submodule.mem_top
+  | succ m =>
+    have hz0 : relBoundary V m z = 0 := LinearMap.mem_ker.mp hz
+    have h0 : qBoundary U V m (relMvFactorR U V (m + 1) z) = 0 := by
+      rw [← relMvFactorR_chainMap, hz0, map_zero]
+    exact LinearMap.mem_ker.mpr h0
+
+theorem relMvFactorL_mem_qBoundaries (U V : Set ↑M) (n : ℕ) (z : RelativeChain U n)
+    (hz : z ∈ relBoundaries U n) : relMvFactorL U V n z ∈ qBoundaries U V n := by
+  obtain ⟨w, rfl⟩ := hz
+  exact ⟨relMvFactorL U V (n + 1) w, (relMvFactorL_chainMap U V n w).symm⟩
+
+theorem relMvFactorR_mem_qBoundaries (U V : Set ↑M) (n : ℕ) (z : RelativeChain V n)
+    (hz : z ∈ relBoundaries V n) : relMvFactorR U V n z ∈ qBoundaries U V n := by
+  obtain ⟨w, rfl⟩ := hz
+  exact ⟨relMvFactorR U V (n + 1) w, (relMvFactorR_chainMap U V n w).symm⟩
+
+/-- The induced map `Hₙ(M,U) → Hₙ(Q)` of the factor chain map `relMvFactorL`. -/
+noncomputable def relFactorLHom (U V : Set ↑M) (n : ℕ) :
+    RelativeHomology U n →ₗ[ZMod 2] QHomology U V n :=
+  Submodule.mapQ _ _ (LinearMap.restrict (relMvFactorL U V n)
+      (fun z hz => relMvFactorL_mem_qCycles U V n z hz))
+    (fun z hz => by
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype,
+        LinearMap.restrict_coe_apply] at hz ⊢
+      exact relMvFactorL_mem_qBoundaries U V n _ hz)
+
+/-- The induced map `Hₙ(M,V) → Hₙ(Q)` of the factor chain map `relMvFactorR`. -/
+noncomputable def relFactorRHom (U V : Set ↑M) (n : ℕ) :
+    RelativeHomology V n →ₗ[ZMod 2] QHomology U V n :=
+  Submodule.mapQ _ _ (LinearMap.restrict (relMvFactorR U V n)
+      (fun z hz => relMvFactorR_mem_qCycles U V n z hz))
+    (fun z hz => by
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype,
+        LinearMap.restrict_coe_apply] at hz ⊢
+      exact relMvFactorR_mem_qBoundaries U V n _ hz)
+
+theorem relFactorLHom_mk (U V : Set ↑M) (n : ℕ) (z : relCycles U n) :
+    relFactorLHom U V n (RelativeHomology.mk U n z)
+      = QHomology.mk U V n ⟨relMvFactorL U V n z, relMvFactorL_mem_qCycles U V n z z.2⟩ := rfl
+
+theorem relFactorRHom_mk (U V : Set ↑M) (n : ℕ) (z : relCycles V n) :
+    relFactorRHom U V n (RelativeHomology.mk V n z)
+      = QHomology.mk U V n ⟨relMvFactorR U V n z, relMvFactorR_mem_qCycles U V n z z.2⟩ := rfl
+
+/-- **The homology-level relative MV sum** `Σ_* : Hₙ(M,U) × Hₙ(M,V) → Hₙ(Q)`, `([a],[b]) ↦ [a+b]`. -/
+noncomputable def relMvHomSumQ (U V : Set ↑M) (n : ℕ) :
+    RelativeHomology U n × RelativeHomology V n →ₗ[ZMod 2] QHomology U V n :=
+  (relFactorLHom U V n).coprod (relFactorRHom U V n)
+
 end SKEFTHawking.SingularRelativeMV
