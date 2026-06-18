@@ -2,6 +2,7 @@ import Mathlib
 import SKEFTHawking.SingularFunctoriality
 import SKEFTHawking.SingularMayerVietoris
 import SKEFTHawking.SingularExcisionIso
+import SKEFTHawking.SingularHomotopyInvariance
 
 /-!
 # Mayer–Vietoris: the homology-level maps `Hₙ(A∩B) → Hₙ(A)⊕Hₙ(B) → Hₙ(X)`
@@ -26,6 +27,7 @@ open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularFunctoriality
 open SKEFTHawking.SingularPairLES SKEFTHawking.SingularExcisionIso
+open SKEFTHawking.SingularHomotopyInvariance
 
 namespace SKEFTHawking.SingularMayerVietorisLES
 
@@ -99,5 +101,38 @@ noncomputable def mvConnecting (A B : Set X) (n : ℕ)
     Homology X (n + 1) →ₗ[ZMod 2] Homology (sub (restr A B)) n :=
   (connecting (restr A B) n).comp
     (((excisionEquiv A B n hcov).symm.toLinearMap).comp (homProj A (n + 1)))
+
+/-! ## The `A ∩ B` representation seam: `Hₙ(sub (restr A B)) ≅ Hₙ(sub (A ∩ B))` -/
+
+/-- The homeomorphism `sub (restr A B) ≃ₜ sub (A ∩ B)` reassociating the nested subtype
+`{p : sub B // p.val ∈ A}` with `{x // x ∈ A ∩ B}`. Both carry the subspace topology on `A ∩ B`;
+the underlying map on `X` is the identity. Bridges `mvConnecting`'s codomain (which excision produces
+as `sub (restr A B)`) to `mvHomDiag`'s domain (`sub (A ∩ B)`). -/
+def seamHomeo (A B : Set X) : ↥(sub (restr A B)) ≃ₜ ↥(sub (A ∩ B)) where
+  toFun p := ⟨p.1.1, p.2, p.1.2⟩
+  invFun q := ⟨⟨q.1, q.2.2⟩, q.2.1⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
+  continuous_toFun := by fun_prop
+  continuous_invFun := by fun_prop
+
+/-- The seam **homology isomorphism** `Hₙ(sub (restr A B)) ≅ Hₙ(sub (A ∩ B))`, induced by `seamHomeo`
+(a homeomorphism, so functoriality + `map_bijective_of_comp_id_all` give the iso in every degree). -/
+noncomputable def seamHomologyEquiv (A B : Set X) (n : ℕ) :
+    Homology (sub (restr A B)) n ≃ₗ[ZMod 2] Homology (sub (A ∩ B)) n :=
+  LinearEquiv.ofBijective
+    (Homology.map ⟨seamHomeo A B, (seamHomeo A B).continuous⟩ n)
+    (Homology.map_bijective_of_comp_id_all ⟨seamHomeo A B, (seamHomeo A B).continuous⟩
+      ⟨(seamHomeo A B).symm, (seamHomeo A B).symm.continuous⟩
+      (ContinuousMap.ext fun _ => rfl) (ContinuousMap.ext fun _ => rfl) n)
+
+/-- **The Mayer–Vietoris connecting map** `δ : Hₙ₊₁(X) → Hₙ(A ∩ B)` in the `sub (A ∩ B)` representation
+— `mvConnecting` post-composed with the seam isomorphism, so its codomain matches `mvHomDiag`'s domain.
+This is the `δ` that closes the Mayer–Vietoris long exact sequence
+`⋯ → Hₙ₊₁(X) →[δ] Hₙ(A∩B) →[mvHomDiag] Hₙ(A)⊕Hₙ(B) →[mvHomSum] Hₙ(X) → ⋯`. -/
+noncomputable def mvDelta (A B : Set X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set X)), interior U) = Set.univ) :
+    Homology X (n + 1) →ₗ[ZMod 2] Homology (sub (A ∩ B)) n :=
+  (seamHomologyEquiv A B n).toLinearMap.comp (mvConnecting A B n hcov)
 
 end SKEFTHawking.SingularMayerVietorisLES
