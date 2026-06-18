@@ -3,6 +3,7 @@ import SKEFTHawking.SingularPairLES
 import SKEFTHawking.SingularRelativeMV
 import SKEFTHawking.SingularChartBridge
 import SKEFTHawking.SingularEuclideanAcyclic
+import SKEFTHawking.SingularConvexComplementRetract
 
 /-!
 # Phase 5q.F (w₂-foundation, brick 6e) — toward the fundamental class `[M]`
@@ -61,5 +62,20 @@ noncomputable def euclRelHomologyEquiv (m : ℕ) (A : Set ↑(SingularEuclideanA
     RelativeHomology A (k + 1 + 1) ≃ₗ[ZMod 2] Homology (sub A) (k + 1) :=
   connectingEquiv_of_acyclic A (k + 1) (eucl_homology_zero (m + 2) (k + 1))
     (eucl_homology_zero (m + 2) k)
+
+/-- **The local homology of `ℝⁿ` rel a compact convex `A`** is `ℤ/2`: `Hₘ₊₂(ℝⁿ, ℝⁿ∖A) ≅ ℤ/2`
+(`n = m+2`, `0 ∈ interior A`). The convex base case of Hatcher 3.27 — assembled from the acyclic
+connecting iso, the convex-complement radial retract (`ℝⁿ∖A ≃ ℝⁿ∖0`), and the punctured/sphere
+local model (`normalize` + `topSphereIso`), exactly as `localHomologyIso` does for a point. -/
+noncomputable def euclConvexLocalHomologyIso (m : ℕ)
+    {A : Set (EuclideanSpace ℝ (Fin (m + 2)))} (hAc : Convex ℝ A) (hAcomp : IsCompact A)
+    (hA0 : A ∈ nhds (0 : EuclideanSpace ℝ (Fin (m + 2)))) :
+    RelativeHomology (X := SingularEuclideanAcyclic.Eucl (m + 2)) Aᶜ (m + 2) ≃ₗ[ZMod 2] ZMod 2 :=
+  (euclRelHomologyEquiv m Aᶜ m).trans
+    ((LinearEquiv.ofBijective _
+        (SingularConvexComplementRetract.homology_map_inclMap_bijective hAc hAcomp hA0 m)).trans
+      ((LinearEquiv.ofBijective _
+          (SingularPuncturedRetract.homology_map_normalize_bijective (n := m + 2) m)).trans
+        (SingularLineMinusPoint.topSphereIso m)))
 
 end SKEFTHawking.SingularManifoldFundamentalClass
