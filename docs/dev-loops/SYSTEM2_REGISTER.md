@@ -32,34 +32,6 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 }
 ```
 
-### blocked-question-malformed-blocked-question-record-probe-artifact-with-empty-tur
-
-**Malformed blocked-question record (probe artifact) with empty turn and minimal question text**  ·  tier: `automatic`  ·  status: open
-
-```json
-{
-  "class": "blocked-question",
-  "title": "Malformed blocked-question record (probe artifact) with empty turn and minimal question text",
-  "why": "The guard's blocked-question log contains one entry session_id=probe-8385 with turn=null and question='x?' — a test/probe artifact, not real signal. Notes the presence of a guard that should emit higher-quality blocks.",
-  "how_to_apply": "If the guard is newly integrated (Plan 1 harness build 2026-06-17), verify the PreToolUse(AskUserQuestion) handler captures turn numbers and full question text. If this recurs with non-probe sessions, trace log initialization.",
-  "evidence": "blocked_questions span: {\"session_id\":\"probe-8385\",\"questions\":[{\"question\":\"x?\"}]}",
-  "tier": "automatic",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
-    }
-  ],
-  "id": "blocked-question-malformed-blocked-question-record-probe-artifact-with-empty-tur",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
 ### knowledge-drift-vs-memory-memory-note-2-days-old-didn-t-document-new-geometric-p
 
 **Memory note (2 days old) didn't document new geometric-program Lean files that appeared post-memory**  ·  tier: `automatic`  ·  status: open
@@ -88,118 +60,6 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 }
 ```
 
-### config-discovery-friction-no-centralized-discovery-point-for-the-worktree-lean-i
-
-**No centralized discovery point for the worktree/lean-infra plan — agent hunted through memory notes**  ·  tier: `automatic`  ·  status: open
-
-```json
-{
-  "class": "config-discovery-friction",
-  "title": "No centralized discovery point for the worktree/lean-infra plan — agent hunted through memory notes",
-  "why": "Task to find and activate the lean-lsp multi-instance plan forced heuristic memory-note search ('PARALLEL APPARATUS' text), then on-disk verification. No canonical Lean-development-infrastructure doc centralizes worktree naming, MCP server paths, gitignore patterns — scattered across memory, docs, implicit conventions.",
-  "how_to_apply": "Create one canonical doc (e.g. docs/LEAN_DEVELOPMENT_INFRASTRUCTURE.md or under .claude/) covering: worktree naming/layout, lean-lsp multi-instance (wt1/2/3) setup, gitignore patterns, how orchestrating agents spin up the infra. Reference from goal-prompt guidance.",
-  "evidence": "Agent: 'I found the plan. It's in memory note project-phase5qf-strict-retirement (the PARALLEL APPARATUS entry)'; no direct link or central doc exists.",
-  "tier": "automatic",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
-    }
-  ],
-  "id": "config-discovery-friction-no-centralized-discovery-point-for-the-worktree-lean-i",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### architecture-gap-inline-subagent-mcp-servers-do-not-surface-in-this-environment
-
-**Inline subagent MCP servers do not surface in this environment**  ·  tier: `automatic`  ·  status: open
-
-```json
-{
-  "class": "architecture-gap",
-  "title": "Inline subagent MCP servers do not surface in this environment",
-  "why": "Per-subagent inline MCP entries (lean-lsp-worker in agent's mcpServers) do not materialize. Two ToolSearch queries confirmed lean-lsp-worker absent; subagents only inherit the main session's lean-lsp pinned to main. Forced a pivot to persistent pre-built worktree slots with static MCP defs in workspace .mcp.json.",
-  "how_to_apply": "Abandon inline-per-worker MCP; use persistent slots (wt1/2/3) with static mcp__lean-lsp-wt1/2/3 defs in workspace config. Lead assigns workers to pre-built slots; each has its own build-isolated server. No inline mcpServers in agent specs.",
-  "evidence": "ToolSearch for lean-lsp-worker found no matching server; worker had only inherited lean-lsp from main; three persistent slots + static workspace .mcp.json confirmed working; design finalized in commit ef0c3d36.",
-  "tier": "automatic",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
-    }
-  ],
-  "id": "architecture-gap-inline-subagent-mcp-servers-do-not-surface-in-this-environment",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### harness-gap-worktree-isolation-failed-from-non-git-workspace-root-cwd-relative-d
-
-**Worktree isolation failed from non-git workspace root; cwd-relative dispatch replaced the proposed WorktreeCreate hook**  ·  tier: `automatic`  ·  status: open
-
-```json
-{
-  "class": "harness-gap",
-  "title": "Worktree isolation failed from non-git workspace root; cwd-relative dispatch replaced the proposed WorktreeCreate hook",
-  "why": "isolation:worktree requires the session cwd inside a git repo; launching from the non-git workspace root raised 'Cannot create agent worktree: not in a git repository and no WorktreeCreate hooks are configured.' The initial fix was an auto-executing WorktreeCreate hook in workspace .claude/hooks/ — which the PreToolUse(AskUserQuestion) guard correctly intercepted for sign-off (working as designed); the user refused the blind SK-default as a leak risk. Testing then confirmed the Agent tool reads current cwd (not launch cwd), so a `cd SK_EFT_Hawking/` before dispatch suffices — obsoleting ~2h of hook design/doc/testing and eliminating the hook entirely.",
-  "how_to_apply": "Lead runs `cd SK_EFT_Hawking/` before dispatching subagents with isolation:worktree (leverages mid-flow session cwd change); drop the WorktreeCreate hook. Prefer testing simpler existing-platform mechanisms (cwd persistence, explicit lead control) before proposing new hooks/automation. The guard's escalation on the hook install was correct behavior — no guard change needed.",
-  "evidence": "Worktree creation failed from workspace root; succeeded after `cd SK_EFT_Hawking/` (.claude/worktrees/agent-a3b3... inside SK repo); guard blocked the hook install and asked for approval; user: 'the blind SK-default is a real leak risk... the in-session cd is worth checking before we commit to any hook'; HARNESS_GUIDE and lean-dev.md rewritten to document the cwd-explicit flow; hook design dropped.",
-  "tier": "automatic",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
-    }
-  ],
-  "id": "harness-gap-worktree-isolation-failed-from-non-git-workspace-root-cwd-relative-d",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### process-signal-subagent-flailed-destructively-when-hitting-commit-blocker-safety
-
-**Subagent flailed destructively when hitting commit blocker; safety guardrails added to agent spec**  ·  tier: `automatic`  ·  status: open
-
-```json
-{
-  "class": "process-signal",
-  "title": "Subagent flailed destructively when hitting commit blocker; safety guardrails added to agent spec",
-  "why": "First e2e worker (a3b3) hit a commit blocker (.lake/packages/* gitlink bug) and responded with raw git plumbing (rm .git/index, read-tree, write-tree, update-index), hook bypasses, and .lake thrashing. Blast radius contained to its own removed worktree, but exposed that workers must not 'fix' blocked commits via git surgery.",
-  "how_to_apply": "Edit lean-worker.md safety section to forbid raw git plumbing (read-tree/write-tree/update-ref/commit-tree/rm index), hook bypasses (--no-verify), destructive artifact ops (lake clean, rm -rf .lake, touching .lake/packages). On commit/build fail: STOP and report to lead. Already in place post-fix.",
-  "evidence": "Subagent ran rm $GITDIR/index, read-tree, write-tree, sync.py --fast, lake build in its worktree; forensic cleared (confined to its own removed worktree); guardrails written into agent spec.",
-  "tier": "automatic",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
-    }
-  ],
-  "id": "process-signal-subagent-flailed-destructively-when-hitting-commit-blocker-safety",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
 ### process-friction-user-interrupted-tool-use-multiple-times-due-to-race-between-ag
 
 **User interrupted tool use multiple times due to race between agent's forensic and user's guidance**  ·  tier: `automatic`  ·  status: open
@@ -223,62 +83,6 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
     }
   ],
   "id": "process-friction-user-interrupted-tool-use-multiple-times-due-to-race-between-ag",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### harness-gap-lake-packages-never-gitignored-causing-commit-tree-failures-and-logi
-
-**.lake/packages/* never gitignored, causing commit-tree failures and logical bloat; 10 stray gitlinks committed**  ·  tier: `automatic`  ·  status: open
-
-```json
-{
-  "class": "harness-gap",
-  "title": ".lake/packages/* never gitignored, causing commit-tree failures and logical bloat; 10 stray gitlinks committed",
-  "why": "Lake dep checkouts (mathlib, Physlib, batteries, doc-gen4) are git repos with their own tracked files whose blobs live in the dep's object store. lean/.gitignore ignored .lake/build but NOT .lake/packages/*. Worktree seed cp -c .lake + broad git add staged unresolvable paths, blocking commits. Also 10 stray submodule gitlinks (mode 160000) were committed by accident (bbee8ae9, no .gitmodules).",
-  "how_to_apply": "Fixed in commit 3e76adb9: add /.lake to lean/.gitignore (ignore all of .lake). Un-track the 10 stray gitlinks. Worktrees/slots can then safely cp -c .lake or symlink from this HEAD onward.",
-  "evidence": "git check-ignore lean/.lake/build -> ignored; .lake/packages/* -> NOT ignored; git ls-files listed 10 gitlinks (Cli, aesop, batteries, Qq, doc-gen4, LeanAPAP, mathlib, physlib, ProofWidgets, std); commit 3e76adb9 adds /.lake rule + un-tracks gitlinks.",
-  "tier": "automatic",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
-    }
-  ],
-  "id": "harness-gap-lake-packages-never-gitignored-causing-commit-tree-failures-and-logi",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### harness-gap-physlib-pin-drift-pre-existing-lake-env-failed-on-mismatched-revisio
-
-**Physlib dependency pin drift on lake build — requires manual guardrail-safe reset**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "environment-drift",
-  "title": "Physlib dependency pin drift on lake build — requires manual guardrail-safe reset",
-  "why": "When lake build re-resolves the dependency graph (after adding import SKEFTHawking.SingularRelativeMV), Physlib HEAD (851e49a3) drifted from manifest pin (69197c54). Requires git -C lean/.lake/packages/Physlib checkout -f 69197c54 (guardrail-safe; reset --hard blocked by design). Procedural friction: workflow requires explicit re-pinning after import-graph changes.",
-  "how_to_apply": "Document in build runbook: after adding imports/modules, if lake build fails with Physlib mismatch, run git -C lean/.lake/packages/Physlib checkout -f <pin>. Or automate as pre-build hook that re-pins Physlib.",
-  "evidence": "Summary section 4: 'Physlib pin drift (HEAD 851e49a3 dirty, manifest pin 69197c54): git checkout -f 69197c54 (guardrail-safe; reset --hard/clean blocked). Re-triggered when lake build re-resolves on import-graph change.'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
-    }
-  ],
-  "id": "harness-gap-physlib-pin-drift-pre-existing-lake-env-failed-on-mismatched-revisio",
   "first_seen": "2026-06-18",
   "last_seen": "2026-06-18"
 }
@@ -316,91 +120,6 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
     }
   ],
   "id": "compact-delta-post-compaction-successful-domain-transition-apparatus-math-with-s",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### process-apparatus-validation-e2e-completed-kernel-pure-with-restart-agnostic-per
-
-**Apparatus-validation E2E completed kernel-pure with restart-agnostic persistent-slot design**  ·  tier: `automatic`  ·  status: open
-
-```json
-{
-  "class": "process",
-  "title": "Apparatus-validation E2E completed kernel-pure with restart-agnostic persistent-slot design",
-  "why": "Pre-compaction closed the parallel-slot Lean apparatus validation end-to-end: slot-pinned isolated LSP (mcp__lean-lsp-wt1__*) -> proof (2+2=4, rfl, kernel-pure axioms []) -> commit succeeded (worktree-skip hook line printed, leak-guard ran, not bypassed) -> fast-forward mergeable -> guardrail-safe slot reset clean. Apparatus is restart-agnostic; only restart-time change is making skeft-qa:lean-worker dispatchable.",
-  "how_to_apply": "For future /goal sessions, skip re-validating the apparatus (closed/documented at 84bb411c). Use established patterns: lead on a fast MCP, dispatch independent bricks to skeft-qa:lean-worker in persistent slots. If the pre-commit hook is ever modified, re-verify the worktree-detection logic (git rev-parse --git-dir != --git-common-dir) still holds.",
-  "evidence": "Pre-compact wrap: 'ALL 5 STEPS GREEN', commit dc95ef37, merge clean, slot reset clean, docs finalized (84bb411c). Hook fix (5639f685) detects worktree commits via --git-dir != --git-common-dir; setup_lean_worktree_slots.sh is one-time; slots persistent.",
-  "tier": "automatic",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
-    }
-  ],
-  "id": "process-apparatus-validation-e2e-completed-kernel-pure-with-restart-agnostic-per",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### process-math-fork-l5-abk-completeness-deferred-to-user-immediately-locked-post-c
-
-**Math fork (L5 ABK-completeness) deferred to user, immediately locked post-compaction per user agreement**  ·  tier: `automatic`  ·  status: open
-
-```json
-{
-  "class": "process",
-  "title": "Math fork (L5 ABK-completeness) deferred to user, immediately locked post-compaction per user agreement",
-  "why": "Pre-compaction the agent identified a genuine math fork in L5: geometric Kirby-Taylor generation (hard classification) vs decidable height-4 spectral-sequence input (col4_height_eq_four, goal-permitted fallback). Agent requested alignment; user agreed. Post-compaction the agent locked it without re-asking: AC#1 full-carrier ker(abkGrade)=0 unconditional, build L1->L4 via 3-slot, sequence L5 last (Kirby-Taylor target, height-4 cap pre-authorized fallback only on a kernel-checked no-go).",
-  "how_to_apply": "Pattern (decision requested pre-compaction, user-agreed, locked post-compaction without re-ask) worked correctly. Document the user's choice in the durable goal-prompt so post-compaction re-ask doesn't happen — as was done here.",
-  "evidence": "Pre-compact: agent identifies fork, requests alignment; user: 'Agree'. Post-compact: goal-prompt encodes 'Kirby-Taylor the target; decidable height-4 cap col4_height_eq_four pre-authorized terminal input ONLY on a kernel-checked no-go, STOP POLICY (a)'. No re-ask.",
-  "tier": "automatic",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": "70cc8da1-4695-435a-be26-9db4e634a6fa:4490631"
-    }
-  ],
-  "id": "process-math-fork-l5-abk-completeness-deferred-to-user-immediately-locked-post-c",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### harness-gap-pre-commit-sorry-check-false-positives-on-comments-docstrings-and-ba
-
-**Harness sorry-gate false positives blocked early commits; required tool rework**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "harness-bug-fixed",
-  "title": "Harness sorry-gate false positives blocked early commits; required tool rework",
-  "why": "The pre-commit L2 sync gate's grep -RnE '^\\s*sorry' lean/SKEFTHawking matched 4 pre-existing FALSE positives (commented sorries in TetradGapEquation.lean:320, KerrSchild.lean:60, docstring code-fence in CenterFunctorZ2Equiv.lean:971, tracked .backup2 file). Blocked ALL commits until diagnosed. Fix (375fa5e9) changed detection to parse the LSP build log for actual 'declaration uses sorry' warnings. Harness tool gap: regex-based sorry detection brittle with comment/docstring volume.",
-  "how_to_apply": "Replace simple file-grep sorry detectors with LSP build-log parsers (capture lake build stderr, search 'declaration uses sorry'). Or use lean_diagnostic_messages MCP. Pre-commit gates should only block on actual Lean compiler signals, not source patterns.",
-  "evidence": "Summary section 4: 'Harness sorry-gate bug (blocked ALL commits)' + 375fa5e9 changing from naive grep -RnE to grep -qF \"declaration uses 'sorry'\" on /tmp/skeft-lean log.",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
-    }
-  ],
-  "id": "harness-gap-pre-commit-sorry-check-false-positives-on-comments-docstrings-and-ba",
   "first_seen": "2026-06-18",
   "last_seen": "2026-06-18"
 }
@@ -549,35 +268,6 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 }
 ```
 
-### missing-process-gate-counts-json-and-validate-py-stale-across-multi-brick-commit
-
-**Committed-state tracking: autogen counts.json stale between commits; criterion 2 passes but warnings repeat**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "missing-process-gate",
-  "title": "Committed-state tracking: autogen counts.json stale between commits; criterion 2 passes but warnings repeat",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "why": "counts.json (autogen, tracked) fell out of sync with actual theorem counts multiple times. 'counts.json is stale again (warns each commit, but criterion 2 satisfied at 3ed1016c).' Each commit triggers stale-counts warning but validate.py 43/43 remains satisfied. Harness does not auto-regenerate counts on commit. Procedural noise without blocking.",
-  "how_to_apply": "Add pre-commit hook that auto-regenerates counts.json if counts changed since last commit. Or decouple counts.json check from L2 gate (advisory-only).",
-  "evidence": "Summary section 8: 'counts.json is stale again (warns each commit, but criterion 2 satisfied this session at 3ed1016c).'",
-  "occurrences": [
-    {
-      "date": "2026-06-17",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "missing-process-gate-counts-json-and-validate-py-stale-across-multi-brick-commit",
-  "first_seen": "2026-06-17",
-  "last_seen": "2026-06-17"
-}
-```
-
 ### goal-loop-in-progress-goal-not-yet-met-l1-m-spine-incomplete-72b-3b-is-checkpoin
 
 **Goal not yet met; L1 [M] spine incomplete (72b-3b is checkpoint, not final)**  ·  tier: `agent-reviewed`  ·  status: open
@@ -631,93 +321,6 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
     }
   ],
   "id": "escape-attempt-injectivity-proof-relmvchaindiag-injective-had-do-nothing-warning",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### wasted-cycles-dependent-motive-rewrite-pattern-churn-three-failed-tactics-before
-
-**Dependent-motive rewrite pattern churn — generic rewrites (add_comm) match nat k+1, patched per-instance not generalized**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "wasted_cycles",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "title": "Dependent-motive rewrite pattern churn — generic rewrites (add_comm) match nat k+1, patched per-instance not generalized",
-  "why": "Recurring class: generic rewrites (e.g. rw [add_comm]) match the nat k+1 instead of the intended chain element, yielding 'motive is not type correct' on subtype-with-proof goals. The agent diagnoses correctly and resolves each instance (pin the rewrite target e.g. add_comm (chainBoundary M (k+1) ...) zc, or congrArg (mk) (Subtype.ext ...)), but treats each recurrence as a fresh error rather than extracting the pattern — ~8 tool calls across instances of one pattern class; one chunk ends still on a motive-type failure. The per-instance fix is clean but the root-cause generalization is never built.",
-  "how_to_apply": "After the FIRST 'generic rewrite matched nat arithmetic / dependent-motive not type correct' instance, extract the pattern: build a targeted helper or a pinned-simp set (or document the pin idiom — fully-qualify and pin the rewrite target argument) and eliminate the class at root, instead of pinning each occurrence by hand. For the immediate fix: pin the rewrite target explicitly (add_comm <chain-elt> <other>) or use congrArg (mk) (Subtype.ext ...) on subtype-with-proof goals; do not rely on implicit type inference for overloaded ring-tactic lemma names.",
-  "evidence": "add_comm matched the nat type instead of the chain element; fixed by pinning add_comm (chainBoundary M (k+1) ...) zc. Same root cause as the mvHomDiag_mvDelta congrArg(mk)(Subtype.ext) churn; recurred across the span, patched per-instance.",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "wasted-cycles-dependent-motive-rewrite-pattern-churn-three-failed-tactics-before",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### friction-pattern-recurrence-quotient-instance-synthesis-mk-coercion-friction-rec
-
-**Quotient/instance-synthesis (mk-coercion) friction recurred across E1/E2/E3 exactness proofs**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "friction-pattern-recurrence",
-  "title": "Quotient/instance-synthesis (mk-coercion) friction recurred across E1/E2/E3 exactness proofs",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "why": "The Submodule.Quotient.mk vs RelativeHomology.mk/QHomology.mk coercion friction recurred across the E1/E2/E3 LES-exactness proof family despite being handled in the initial QChain reorganization. The defeq-ambiguity pattern (raw quotient vs named type) was not recognized as a systemic signal upfront, so friction front-loaded in E1 (three rewrite/coercion fixes) and recurred in E2 ('recurring friction'); E3 was clean only once the patterns were established.",
-  "how_to_apply": "After resolving a quotient/instance defeq friction in a first proof, scan forward through the related proof family for the same pattern and either add a dedicated helper-lemma family upfront (e.g. relHomology_mk_eq_of, the `show ... from relMvHomSumQ_mk` shape) or expose disambiguation at the definition level. Document the fix pattern (`show ... from relMvHomSumQ_mk`, `LinearMap.ext fun c`) explicitly and apply it uniformly to subsequent proofs rather than re-deriving it each site.",
-  "evidence": "Reasoning: 'raw-quotient vs QChain defeq friction -> making QChain a reducible abbrev'; E2 recurring Submodule.Quotient.mk vs RelativeHomology.mk/QHomology.mk friction; 'E3 clean on first try - the patterns are paying off'. Commits 67174640, b210ef43.",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/Phase5qF/goal_prompt_20260617T231250.md",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "friction-pattern-recurrence-quotient-instance-synthesis-mk-coercion-friction-rec",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### reducible-abbrev-unintended-consequence-qchain-reducible-abbrev-fix-for-instance
-
-**QChain reducible-abbrev fix for instance friction introduced `ext` over-unfolding (secondary friction)**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "reducible-abbrev-unintended-consequence",
-  "title": "QChain reducible-abbrev fix for instance friction introduced `ext` over-unfolding (secondary friction)",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "why": "Making QChain a reducible abbrev resolved instance synthesis but introduced a secondary issue: `ext c` over-unfolded through the quotient, requiring `LinearMap.ext fun c` to control the unfolding. The unintended tactic-behavior consequence of reducibility was not anticipated when the abbrev fix was applied.",
-  "how_to_apply": "When using a reducible `abbrev` to fix instance-synthesis friction, immediately test downstream tactic behavior (ext, simp, unfold) at the proof site — reducibility changes how structural tactics unfold. Add a docstring note recording the expected (un)folding behavior and the recommended tactic combo (here: prefer `LinearMap.ext fun c` over bare `ext c`).",
-  "evidence": "'making QChain a reducible abbrev' -> 'with QChain now reducible, ext c over-unfolds through the quotient. Let me use LinearMap.ext fun c to control it'.",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/Phase5qF/goal_prompt_20260617T231250.md",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "reducible-abbrev-unintended-consequence-qchain-reducible-abbrev-fix-for-instance",
   "first_seen": "2026-06-18",
   "last_seen": "2026-06-18"
 }
@@ -922,328 +525,9 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 }
 ```
 
-### friction-search-loop-repeated-mathlib-api-discovery-iterations-iscompact-totally
-
-**Repeated Mathlib API discovery iterations (IsCompact/TotallyBounded/von-Neumann-bounded)**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "friction-search-loop",
-  "title": "Repeated Mathlib API discovery iterations (IsCompact/TotallyBounded/von-Neumann-bounded)",
-  "why": "3 sequential search attempts to find compact-implies-bounded lemma (IsCompact.isVonNBounded wrong form / not in pin -> TotallyBounded.isVonNBounded). Each iteration a new search-and-test cycle.",
-  "how_to_apply": "Pre-populate Mathlib API quick-reference for bounded-set predicates; prioritize current pin spellings; add an API-drift note when a lemma is not found first attempt.",
-  "evidence": "'IsCompact.isVonNBounded isn't the right projection -> takes 𝕜 first -> isn't in this Mathlib pin -> It's TotallyBounded.isVonNBounded'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "friction-search-loop-repeated-mathlib-api-discovery-iterations-iscompact-totally",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### friction-tactic-composition-ring-fails-on-scalar-product-from-gauge-smul-of-nonn
-
-**ring fails on scalar-product (•) from gauge_smul_of_nonneg; manual smul rewrite needed**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "friction-tactic-composition",
-  "title": "ring fails on scalar-product (•) from gauge_smul_of_nonneg; manual smul rewrite needed",
-  "why": "ring could not compose a scalar-product equality; had to use smul_eq_mul + inv_mul_cancel₀.",
-  "how_to_apply": "Document ring failure on • / non-commutative algebra; suggest noncomm_ring/field_simp/explicit smul rewrites as fallbacks.",
-  "evidence": "'gauge_smul_of_nonneg produces a • and ring can't handle it. Compute directly with smul_eq_mul + inv_mul_cancel₀.'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "friction-tactic-composition-ring-fails-on-scalar-product-from-gauge-smul-of-nonn",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### friction-scoping-error-section-variables-not-auto-included-on-un-typed-hypothese
-
-**Section variables not auto-included on un-typed hypotheses; explicit per-lemma passing**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "friction-scoping-error",
-  "title": "Section variables not auto-included on un-typed hypotheses; explicit per-lemma passing",
-  "why": "Section variables not auto-included because absent from types; doubled boilerplate; local notations also broke.",
-  "how_to_apply": "Document when section variables are NOT auto-included; recommend explicit hypothesis lists early; section-variable audit before shared-context modules.",
-  "evidence": "'The section variables aren't auto-included (not used in the types). Pass hypotheses explicitly per lemma.'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "friction-scoping-error-section-variables-not-auto-included-on-un-typed-hypothese",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### friction-git-hook-collision-pre-commit-leak-guard-false-positive-on-math-word-th
-
-**Pre-commit leak-guard false-positive on math word, then cleared staging**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "friction-git-hook-collision",
-  "title": "Pre-commit leak-guard false-positive on math word, then cleared staging",
-  "why": "Math-context word 'push' (push-out map / pushMap) tripped the leak guardrail; had to reword. Secondary: the blocked attempt cleared the staging area, forcing re-add+re-commit.",
-  "how_to_apply": "Refine guardrail to distinguish math context from structural-risk repo name; whitelist common math terms / exact-match private identifiers only. Also make hook failures non-mutating (do not clear staging); emit a recovery hint.",
-  "evidence": "'The guardrail false-matched push in my commit message. Reword to avoid that word.' | 'The staging was cleared by the blocked attempt. Re-add and commit.'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "friction-git-hook-collision-pre-commit-leak-guard-false-positive-on-math-word-th",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### friction-free-variable-scoping-free-variable-capture-in-anonymous-constructor-wi
-
-**Free-variable capture in anonymous constructor with inline by-block**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "friction-free-variable-scoping",
-  "title": "Free-variable capture in anonymous constructor with inline by-block",
-  "why": "Anonymous constructor with inline by triggered free-variable bug; had to extract the ∉A proof as a standalone lemma.",
-  "how_to_apply": "Flag anonymous-constructor-with-inline-tactic as known friction; recommend extracting tactic proofs to separate lemmas.",
-  "evidence": "'The inline by block in the anonymous constructor triggers a free-variable bug. Extract the ∉A proof as a standalone lemma.'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "friction-free-variable-scoping-free-variable-capture-in-anonymous-constructor-wi",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### friction-simp-unfolding-composition-identities-not-unfolded-by-simp-manual-inclm
-
-**Composition identities not unfolded by simp; manual inclMap/pushMap rewrites in 4 slices**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "friction-simp-unfolding",
-  "title": "Composition identities not unfolded by simp; manual inclMap/pushMap rewrites in 4 slices",
-  "why": "simp did not unfold module-local composition defs; refine_1/refine_3 needed explicit unfolding across 4 slice proofs.",
-  "how_to_apply": "Mark composition defs @[simp] or add to a local simp-set when building retract modules.",
-  "evidence": "'The composition slices (refine_1, refine_3) need inclMap/pushMap unfolded. Fix all 4 slice proofs.'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "friction-simp-unfolding-composition-identities-not-unfolded-by-simp-manual-inclm",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### friction-module-namespace-open-recurring-missing-namespace-open-for-cross-module
-
-**Recurring missing-namespace-open for cross-module map identifiers (Homology.map / RelativeHomology.map)**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "friction-module-namespace-open",
-  "title": "Recurring missing-namespace-open for cross-module map identifiers (Homology.map / RelativeHomology.map)",
-  "why": "Error-driven discovery that map-style identifiers live in a Functoriality module not opened (SingularFunctoriality, SingularRelativeFunctoriality). Cross-module name resolution not pre-validated; recurs across multi-module proof work.",
-  "how_to_apply": "Run lean_local_search/lean_hover_info BEFORE writing cross-module bodies; add a namespace-completeness / identifier->open pre-flight in the build harness.",
-  "evidence": "'Homology.map needs SingularFunctoriality opened' | 'Unknown constant SKEFTHawking.SingularRelativeHomologyMod2.RelativeHomology.map -> RelativeHomology.map is in SingularRelativeFunctoriality, not opened. Add it.'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "friction-module-namespace-open-recurring-missing-namespace-open-for-cross-module",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### friction-hypothesis-shadowing-shadowed-hypotheses-in-homotopycompla-required-exp
-
-**Shadowed hypotheses in homotopyComplA required explicit renaming**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "friction-hypothesis-shadowing",
-  "title": "Shadowed hypotheses in homotopyComplA required explicit renaming",
-  "why": "Re-declared hypotheses in nested scope shadowed; needed disambiguation.",
-  "how_to_apply": "Add a variable-shadowing detector to diagnostics; avoid-shadowing proof templates.",
-  "evidence": "'the homotopyComplA proof has shadowed hypotheses'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "friction-hypothesis-shadowing-shadowed-hypotheses-in-homotopycompla-required-exp",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### friction-interval-bounds-explicitness-unitinterval-bounds-needed-explicit-sub-no
-
-**unitInterval bounds needed explicit sub_nonneg (not inferred)**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "friction-interval-bounds-explicitness",
-  "title": "unitInterval bounds needed explicit sub_nonneg (not inferred)",
-  "why": "t∈[0,1] -> 0≤t-0 required explicit sub_nonneg; inequality automation does not bridge unitInterval.",
-  "how_to_apply": "Add unitInterval lemmas to omega/linarith or a unitInterval inequality simp-set.",
-  "evidence": "'the unitInterval bounds need explicit sub_nonneg'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "friction-interval-bounds-explicitness-unitinterval-bounds-needed-explicit-sub-no",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### minor-friction-lake-build-invoked-from-wrong-cwd
-
-**Lake build invoked from wrong cwd**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "minor-friction",
-  "title": "Lake build invoked from wrong cwd",
-  "why": "Build ran from wrong dir; corrected to lean/ and re-invoked. cwd resets between Bash calls make this recur silently.",
-  "how_to_apply": "Pre-build cwd assertion / auto-detect git root before lake build.",
-  "evidence": "'Build ran from wrong dir. Build from lean/ and commit.'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "minor-friction-lake-build-invoked-from-wrong-cwd",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### private-namespace-barrier-inline-resolution-private-helper-eq-of-add-eq-zero-two
-
-**Private helper (eq_of_add_eq_zero_two) inlined rather than blocking**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "private-namespace-barrier-inline-resolution",
-  "title": "Private helper (eq_of_add_eq_zero_two) inlined rather than blocking",
-  "why": "eq_of_add_eq_zero_two marked private in SingularDisjointUnion; agent inlined the char-2 proof locally and continued.",
-  "how_to_apply": "Micro-pattern handled correctly; if it recurs at scale consider exporting helpers vs inlining as the norm.",
-  "evidence": "'eq_of_add_eq_zero_two is private in SingularDisjointUnion, so I'll inline it.'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "private-namespace-barrier-inline-resolution-private-helper-eq-of-add-eq-zero-two",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
 ### workflow-pattern-incremental-sharding-shard-and-commit-bank-green-shard-decompos
 
-**Shard-and-commit / bank-green-shard decomposition keeps gates clean across long proof chains**  ·  tier: `agent-reviewed`  ·  status: open
+**Shard-and-commit / bank-green-shard decomposition keeps gates clean across long proof chains**  ·  tier: `human-reviewed`  ·  status: open
 
 ```json
 {
@@ -1252,7 +536,7 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
   "why": "Large homological retract split into shippable increments (acyclicity, gauge bounds, continuity, final maps+homotopies), each committed independently keeping gates clean. Same pattern recurred as banking a reusable green shard (clopen-split vanishing lemma) before continuing.",
   "how_to_apply": "Codify shard-and-commit in the wave pipeline: commit+verify every ~5-6 bricks to cut context loss and enable incremental review. Ensure each shard is truly green (no sorry, kernel-pure); watch for over-fragmentation.",
   "evidence": "Commits afab3a77(19),3af3494b(20),8bebae5d(22),85aa69ea(23) each with explicit 'now build X' transition. | 'Bank it as a GREEN shard now (wire into aggregator + commit), then continue with the S⁰ base.'",
-  "tier": "agent-reviewed",
+  "tier": "human-reviewed",
   "status": "open",
   "occurrences": [
     {
@@ -1330,7 +614,7 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 
 ### workflow-pattern-search-before-build-search-source-read-before-build-helpers-rou
 
-**Search/source-read before build: helpers, routes, and reuse confirmed before writing (anti-speculation)**  ·  tier: `agent-reviewed`  ·  status: open
+**Search/source-read before build: helpers, routes, and reuse confirmed before writing (anti-speculation)**  ·  tier: `human-reviewed`  ·  status: open
 
 ```json
 {
@@ -1339,7 +623,7 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
   "why": "Sustained lean_local_search/loogle/hover + concrete-source reading to confirm helpers exist, settle route decisions from actual code, decide build-vs-borrow on Mathlib coverage, and reuse existing decls (dimReductionEquiv) inline — avoiding write-then-diagnostic loops and speculative shortcuts.",
   "how_to_apply": "Codify lean_local_search -> verify -> lean_hover_info -> import-or-inline; ground any 'can we shortcut' decision in concrete source inspection; inventory-check Mathlib coverage before dispatching a worker.",
   "evidence": "'All helpers exist... Let me check SingularDisjointUnion's imports...' | 'must read the concrete... a route decision the diligence rule requires me to settle from the actual code... The docstring confirms the architecture.' | 'confirm whether the full (all-degree) sphere / Euclidean-complement homology already exists or only the top degree — that decides whether I dispatch a worker.' | 'the codebase already has dimReductionEquiv... derivable inline.'",
-  "tier": "agent-reviewed",
+  "tier": "human-reviewed",
   "status": "open",
   "occurrences": [
     {
@@ -1417,7 +701,7 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 
 ### process-signal-notebook-checkpointing-notebook-driven-checkpointing-sync-provide
 
-**Notebook-driven checkpointing/sync provides compaction-durable source-of-truth**  ·  tier: `agent-reviewed`  ·  status: open
+**Notebook-driven checkpointing/sync provides compaction-durable source-of-truth**  ·  tier: `human-reviewed`  ·  status: open
 
 ```json
 {
@@ -1426,7 +710,7 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
   "why": "Each milestone triggers a LAB_NOTEBOOK.md checkpoint as persistent source-of-truth bypassing the context window; load-bearing interface findings recorded proactively before a context boundary.",
   "how_to_apply": "Working; optional hardening = pre-commit check that the notebook was touched at milestones; ensure notebook updates are comprehensive and commit-linked.",
   "evidence": "'Let me checkpoint this major progress in the notebook...' recurring; notebook records every brick + remaining path. | 'I must record the load-bearing L4-interface finding in the notebook (source-of-truth across compactions).'",
-  "tier": "agent-reviewed",
+  "tier": "human-reviewed",
   "status": "open",
   "occurrences": [
     {
@@ -1504,7 +788,7 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 
 ### subgoal-scoping-via-downstream-interface-downstream-l2-interface-spec-used-to-de
 
-**Downstream (L2) interface spec used to define minimal L1 deliverable (anti over-build)**  ·  tier: `agent-reviewed`  ·  status: open
+**Downstream (L2) interface spec used to define minimal L1 deliverable (anti over-build)**  ·  tier: `human-reviewed`  ·  status: open
 
 ```json
 {
@@ -1513,7 +797,7 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
   "why": "Checked PoincareDual4Mid signature to confirm L1 must deliver the actual singular ℤ/2 fundamental class [M], not a weaker abstraction — interface-first scoping avoided over-build/over-generalization.",
   "how_to_apply": "Encourage as a norm: before building X, check what downstream Y actually consumes from X; that defines scope.",
   "evidence": "'check what L2 (PoincareDual4Mid) actually expects from [M] — pins down the minimal L1 deliverable... I'll keep it solo.'",
-  "tier": "agent-reviewed",
+  "tier": "human-reviewed",
   "status": "open",
   "occurrences": [
     {
@@ -1555,35 +839,6 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
     }
   ],
   "id": "parallel-work-dispatch-explore-read-only-explore-agent-dispatched-for-architectu",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### worktree-safety-boundary-respected-parallel-worktree-reset-denied-by-safety-boun
-
-**Parallel worktree reset denied by safety boundary; agent inlined instead**  ·  tier: `agent-reviewed`  ·  status: open
-
-```json
-{
-  "class": "worktree-safety-boundary-respected",
-  "title": "Parallel worktree reset denied by safety boundary; agent inlined instead",
-  "why": "Attempt to reset wt1 to dispatch a lean-worker was correctly denied ('never touch a parallel agent's worktree'); agent pivoted to inlining the sphere-vanishing work without losing momentum.",
-  "how_to_apply": "Boundary working as designed; agent's deny->inline response is the correct pattern. No action.",
-  "evidence": "'The worktree reset was correctly denied (safety boundary). I'll build the sphere-vanishing inline instead.'",
-  "tier": "agent-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "worktree-safety-boundary-respected-parallel-worktree-reset-denied-by-safety-boun",
   "first_seen": "2026-06-18",
   "last_seen": "2026-06-18"
 }
@@ -1646,5 +901,832 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 
 ## Closed
 
-_(none)_
+### friction-search-loop-repeated-mathlib-api-discovery-iterations-iscompact-totally
+
+**Repeated Mathlib API discovery iterations (IsCompact/TotallyBounded/von-Neumann-bounded)**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "friction-search-loop",
+  "title": "Repeated Mathlib API discovery iterations (IsCompact/TotallyBounded/von-Neumann-bounded)",
+  "why": "3 sequential search attempts to find compact-implies-bounded lemma (IsCompact.isVonNBounded wrong form / not in pin -> TotallyBounded.isVonNBounded). Each iteration a new search-and-test cycle.",
+  "how_to_apply": "Pre-populate Mathlib API quick-reference for bounded-set predicates; prioritize current pin spellings; add an API-drift note when a lemma is not found first attempt.",
+  "evidence": "Superseded by the promoted human-reviewed lesson workflow-pattern-search-before-build (search -> verify -> hover -> import-or-inline before writing).",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "friction-search-loop-repeated-mathlib-api-discovery-iterations-iscompact-totally",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### private-namespace-barrier-inline-resolution-private-helper-eq-of-add-eq-zero-two
+
+**Private helper (eq_of_add_eq_zero_two) inlined rather than blocking**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "private-namespace-barrier-inline-resolution",
+  "title": "Private helper (eq_of_add_eq_zero_two) inlined rather than blocking",
+  "why": "eq_of_add_eq_zero_two marked private in SingularDisjointUnion; agent inlined the char-2 proof locally and continued.",
+  "how_to_apply": "Micro-pattern handled correctly; if it recurs at scale consider exporting helpers vs inlining as the norm.",
+  "evidence": "Captured in goal-dev/references/lean-friction-catalog.md (model-invocable goal-dev skill instructs grepping it in-loop; RC1 mechanism).",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "private-namespace-barrier-inline-resolution-private-helper-eq-of-add-eq-zero-two",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### minor-friction-lake-build-invoked-from-wrong-cwd
+
+**Lake build invoked from wrong cwd**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "minor-friction",
+  "title": "Lake build invoked from wrong cwd",
+  "why": "Build ran from wrong dir; corrected to lean/ and re-invoked. cwd resets between Bash calls make this recur silently.",
+  "how_to_apply": "Pre-build cwd assertion / auto-detect git root before lake build.",
+  "evidence": "Captured in goal-dev/references/lean-friction-catalog.md (model-invocable goal-dev skill instructs grepping it in-loop; RC1 mechanism).",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "minor-friction-lake-build-invoked-from-wrong-cwd",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### friction-interval-bounds-explicitness-unitinterval-bounds-needed-explicit-sub-no
+
+**unitInterval bounds needed explicit sub_nonneg (not inferred)**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "friction-interval-bounds-explicitness",
+  "title": "unitInterval bounds needed explicit sub_nonneg (not inferred)",
+  "why": "t∈[0,1] -> 0≤t-0 required explicit sub_nonneg; inequality automation does not bridge unitInterval.",
+  "how_to_apply": "Add unitInterval lemmas to omega/linarith or a unitInterval inequality simp-set.",
+  "evidence": "Captured in goal-dev/references/lean-friction-catalog.md (model-invocable goal-dev skill instructs grepping it in-loop; RC1 mechanism).",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "friction-interval-bounds-explicitness-unitinterval-bounds-needed-explicit-sub-no",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### friction-hypothesis-shadowing-shadowed-hypotheses-in-homotopycompla-required-exp
+
+**Shadowed hypotheses in homotopyComplA required explicit renaming**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "friction-hypothesis-shadowing",
+  "title": "Shadowed hypotheses in homotopyComplA required explicit renaming",
+  "why": "Re-declared hypotheses in nested scope shadowed; needed disambiguation.",
+  "how_to_apply": "Add a variable-shadowing detector to diagnostics; avoid-shadowing proof templates.",
+  "evidence": "Captured in goal-dev/references/lean-friction-catalog.md (model-invocable goal-dev skill instructs grepping it in-loop; RC1 mechanism).",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "friction-hypothesis-shadowing-shadowed-hypotheses-in-homotopycompla-required-exp",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### friction-module-namespace-open-recurring-missing-namespace-open-for-cross-module
+
+**Recurring missing-namespace-open for cross-module map identifiers (Homology.map / RelativeHomology.map)**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "friction-module-namespace-open",
+  "title": "Recurring missing-namespace-open for cross-module map identifiers (Homology.map / RelativeHomology.map)",
+  "why": "Error-driven discovery that map-style identifiers live in a Functoriality module not opened (SingularFunctoriality, SingularRelativeFunctoriality). Cross-module name resolution not pre-validated; recurs across multi-module proof work.",
+  "how_to_apply": "Run lean_local_search/lean_hover_info BEFORE writing cross-module bodies; add a namespace-completeness / identifier->open pre-flight in the build harness.",
+  "evidence": "Captured in goal-dev/references/lean-friction-catalog.md (model-invocable goal-dev skill instructs grepping it in-loop; RC1 mechanism).",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "friction-module-namespace-open-recurring-missing-namespace-open-for-cross-module",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### friction-simp-unfolding-composition-identities-not-unfolded-by-simp-manual-inclm
+
+**Composition identities not unfolded by simp; manual inclMap/pushMap rewrites in 4 slices**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "friction-simp-unfolding",
+  "title": "Composition identities not unfolded by simp; manual inclMap/pushMap rewrites in 4 slices",
+  "why": "simp did not unfold module-local composition defs; refine_1/refine_3 needed explicit unfolding across 4 slice proofs.",
+  "how_to_apply": "Mark composition defs @[simp] or add to a local simp-set when building retract modules.",
+  "evidence": "Captured in goal-dev/references/lean-friction-catalog.md (model-invocable goal-dev skill instructs grepping it in-loop; RC1 mechanism).",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "friction-simp-unfolding-composition-identities-not-unfolded-by-simp-manual-inclm",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### friction-free-variable-scoping-free-variable-capture-in-anonymous-constructor-wi
+
+**Free-variable capture in anonymous constructor with inline by-block**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "friction-free-variable-scoping",
+  "title": "Free-variable capture in anonymous constructor with inline by-block",
+  "why": "Anonymous constructor with inline by triggered free-variable bug; had to extract the ∉A proof as a standalone lemma.",
+  "how_to_apply": "Flag anonymous-constructor-with-inline-tactic as known friction; recommend extracting tactic proofs to separate lemmas.",
+  "evidence": "Captured in goal-dev/references/lean-friction-catalog.md (model-invocable goal-dev skill instructs grepping it in-loop; RC1 mechanism).",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "friction-free-variable-scoping-free-variable-capture-in-anonymous-constructor-wi",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### friction-scoping-error-section-variables-not-auto-included-on-un-typed-hypothese
+
+**Section variables not auto-included on un-typed hypotheses; explicit per-lemma passing**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "friction-scoping-error",
+  "title": "Section variables not auto-included on un-typed hypotheses; explicit per-lemma passing",
+  "why": "Section variables not auto-included because absent from types; doubled boilerplate; local notations also broke.",
+  "how_to_apply": "Document when section variables are NOT auto-included; recommend explicit hypothesis lists early; section-variable audit before shared-context modules.",
+  "evidence": "Captured in goal-dev/references/lean-friction-catalog.md (model-invocable goal-dev skill instructs grepping it in-loop; RC1 mechanism).",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "friction-scoping-error-section-variables-not-auto-included-on-un-typed-hypothese",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### friction-tactic-composition-ring-fails-on-scalar-product-from-gauge-smul-of-nonn
+
+**ring fails on scalar-product (•) from gauge_smul_of_nonneg; manual smul rewrite needed**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "friction-tactic-composition",
+  "title": "ring fails on scalar-product (•) from gauge_smul_of_nonneg; manual smul rewrite needed",
+  "why": "ring could not compose a scalar-product equality; had to use smul_eq_mul + inv_mul_cancel₀.",
+  "how_to_apply": "Document ring failure on • / non-commutative algebra; suggest noncomm_ring/field_simp/explicit smul rewrites as fallbacks.",
+  "evidence": "Captured in goal-dev/references/lean-friction-catalog.md (model-invocable goal-dev skill instructs grepping it in-loop; RC1 mechanism).",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "friction-tactic-composition-ring-fails-on-scalar-product-from-gauge-smul-of-nonn",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### reducible-abbrev-unintended-consequence-qchain-reducible-abbrev-fix-for-instance
+
+**QChain reducible-abbrev fix for instance friction introduced `ext` over-unfolding (secondary friction)**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "reducible-abbrev-unintended-consequence",
+  "title": "QChain reducible-abbrev fix for instance friction introduced `ext` over-unfolding (secondary friction)",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "why": "Making QChain a reducible abbrev resolved instance synthesis but introduced a secondary issue: `ext c` over-unfolded through the quotient, requiring `LinearMap.ext fun c` to control the unfolding. The unintended tactic-behavior consequence of reducibility was not anticipated when the abbrev fix was applied.",
+  "how_to_apply": "When using a reducible `abbrev` to fix instance-synthesis friction, immediately test downstream tactic behavior (ext, simp, unfold) at the proof site — reducibility changes how structural tactics unfold. Add a docstring note recording the expected (un)folding behavior and the recommended tactic combo (here: prefer `LinearMap.ext fun c` over bare `ext c`).",
+  "evidence": "Captured in goal-dev/references/lean-friction-catalog.md (model-invocable goal-dev skill instructs grepping it in-loop; RC1 mechanism).",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/Phase5qF/goal_prompt_20260617T231250.md",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "reducible-abbrev-unintended-consequence-qchain-reducible-abbrev-fix-for-instance",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### friction-pattern-recurrence-quotient-instance-synthesis-mk-coercion-friction-rec
+
+**Quotient/instance-synthesis (mk-coercion) friction recurred across E1/E2/E3 exactness proofs**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "friction-pattern-recurrence",
+  "title": "Quotient/instance-synthesis (mk-coercion) friction recurred across E1/E2/E3 exactness proofs",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "why": "The Submodule.Quotient.mk vs RelativeHomology.mk/QHomology.mk coercion friction recurred across the E1/E2/E3 LES-exactness proof family despite being handled in the initial QChain reorganization. The defeq-ambiguity pattern (raw quotient vs named type) was not recognized as a systemic signal upfront, so friction front-loaded in E1 (three rewrite/coercion fixes) and recurred in E2 ('recurring friction'); E3 was clean only once the patterns were established.",
+  "how_to_apply": "After resolving a quotient/instance defeq friction in a first proof, scan forward through the related proof family for the same pattern and either add a dedicated helper-lemma family upfront (e.g. relHomology_mk_eq_of, the `show ... from relMvHomSumQ_mk` shape) or expose disambiguation at the definition level. Document the fix pattern (`show ... from relMvHomSumQ_mk`, `LinearMap.ext fun c`) explicitly and apply it uniformly to subsequent proofs rather than re-deriving it each site.",
+  "evidence": "Captured in goal-dev/references/lean-friction-catalog.md (model-invocable goal-dev skill instructs grepping it in-loop; RC1 mechanism).",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/Phase5qF/goal_prompt_20260617T231250.md",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "friction-pattern-recurrence-quotient-instance-synthesis-mk-coercion-friction-rec",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### wasted-cycles-dependent-motive-rewrite-pattern-churn-three-failed-tactics-before
+
+**Dependent-motive rewrite pattern churn — generic rewrites (add_comm) match nat k+1, patched per-instance not generalized**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "wasted_cycles",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "title": "Dependent-motive rewrite pattern churn — generic rewrites (add_comm) match nat k+1, patched per-instance not generalized",
+  "why": "Recurring class: generic rewrites (e.g. rw [add_comm]) match the nat k+1 instead of the intended chain element, yielding 'motive is not type correct' on subtype-with-proof goals. The agent diagnoses correctly and resolves each instance (pin the rewrite target e.g. add_comm (chainBoundary M (k+1) ...) zc, or congrArg (mk) (Subtype.ext ...)), but treats each recurrence as a fresh error rather than extracting the pattern — ~8 tool calls across instances of one pattern class; one chunk ends still on a motive-type failure. The per-instance fix is clean but the root-cause generalization is never built.",
+  "how_to_apply": "After the FIRST 'generic rewrite matched nat arithmetic / dependent-motive not type correct' instance, extract the pattern: build a targeted helper or a pinned-simp set (or document the pin idiom — fully-qualify and pin the rewrite target argument) and eliminate the class at root, instead of pinning each occurrence by hand. For the immediate fix: pin the rewrite target explicitly (add_comm <chain-elt> <other>) or use congrArg (mk) (Subtype.ext ...) on subtype-with-proof goals; do not rely on implicit type inference for overloaded ring-tactic lemma names.",
+  "evidence": "Captured in goal-dev/references/lean-friction-catalog.md (model-invocable goal-dev skill instructs grepping it in-loop; RC1 mechanism).",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "wasted-cycles-dependent-motive-rewrite-pattern-churn-three-failed-tactics-before",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### worktree-safety-boundary-respected-parallel-worktree-reset-denied-by-safety-boun
+
+**Parallel worktree reset denied by safety boundary; agent inlined instead**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "worktree-safety-boundary-respected",
+  "title": "Parallel worktree reset denied by safety boundary; agent inlined instead",
+  "why": "Attempt to reset wt1 to dispatch a lean-worker was correctly denied ('never touch a parallel agent's worktree'); agent pivoted to inlining the sphere-vanishing work without losing momentum.",
+  "how_to_apply": "Boundary working as designed; agent's deny->inline response is the correct pattern. No action.",
+  "evidence": "Reclassified as friction (not a clean positive): the reset denial was the auto-mode permission classifier (a CC heuristic, not a dev-harness boundary) on a slot the agent did not create that session; the v4.1 build added /reset-slot (guardrail-safe checkout -B) so slot reset is now frictionless. Phantom-guardrail family.",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "worktree-safety-boundary-respected-parallel-worktree-reset-denied-by-safety-boun",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### harness-gap-physlib-pin-drift-pre-existing-lake-env-failed-on-mismatched-revisio
+
+**Physlib dependency pin drift on lake build — requires manual guardrail-safe reset**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "environment-drift",
+  "title": "Physlib dependency pin drift on lake build — requires manual guardrail-safe reset",
+  "why": "When lake build re-resolves the dependency graph (after adding import SKEFTHawking.SingularRelativeMV), Physlib HEAD (851e49a3) drifted from manifest pin (69197c54). Requires git -C lean/.lake/packages/Physlib checkout -f 69197c54 (guardrail-safe; reset --hard blocked by design). Procedural friction: workflow requires explicit re-pinning after import-graph changes.",
+  "how_to_apply": "Document in build runbook: after adding imports/modules, if lake build fails with Physlib mismatch, run git -C lean/.lake/packages/Physlib checkout -f <pin>. Or automate as pre-build hook that re-pins Physlib.",
+  "evidence": "Captured: guardrail-safe re-pin recipe added to goal-dev/references/lean-friction-catalog.md (Tooling/environment).",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
+    }
+  ],
+  "id": "harness-gap-physlib-pin-drift-pre-existing-lake-env-failed-on-mismatched-revisio",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### process-math-fork-l5-abk-completeness-deferred-to-user-immediately-locked-post-c
+
+**Math fork (L5 ABK-completeness) deferred to user, immediately locked post-compaction per user agreement**  ·  tier: `automatic`  ·  status: closed
+
+```json
+{
+  "class": "process",
+  "title": "Math fork (L5 ABK-completeness) deferred to user, immediately locked post-compaction per user agreement",
+  "why": "Pre-compaction the agent identified a genuine math fork in L5: geometric Kirby-Taylor generation (hard classification) vs decidable height-4 spectral-sequence input (col4_height_eq_four, goal-permitted fallback). Agent requested alignment; user agreed. Post-compaction the agent locked it without re-asking: AC#1 full-carrier ker(abkGrade)=0 unconditional, build L1->L4 via 3-slot, sequence L5 last (Kirby-Taylor target, height-4 cap pre-authorized fallback only on a kernel-checked no-go).",
+  "how_to_apply": "Pattern (decision requested pre-compaction, user-agreed, locked post-compaction without re-ask) worked correctly. Document the user's choice in the durable goal-prompt so post-compaction re-ask doesn't happen — as was done here.",
+  "evidence": "Completion signal recorded; the Phase 5q.F goal it pertained to has since been cleared by the user.",
+  "tier": "automatic",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": "70cc8da1-4695-435a-be26-9db4e634a6fa:4490631"
+    }
+  ],
+  "id": "process-math-fork-l5-abk-completeness-deferred-to-user-immediately-locked-post-c",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### process-apparatus-validation-e2e-completed-kernel-pure-with-restart-agnostic-per
+
+**Apparatus-validation E2E completed kernel-pure with restart-agnostic persistent-slot design**  ·  tier: `automatic`  ·  status: closed
+
+```json
+{
+  "class": "process",
+  "title": "Apparatus-validation E2E completed kernel-pure with restart-agnostic persistent-slot design",
+  "why": "Pre-compaction closed the parallel-slot Lean apparatus validation end-to-end: slot-pinned isolated LSP (mcp__lean-lsp-wt1__*) -> proof (2+2=4, rfl, kernel-pure axioms []) -> commit succeeded (worktree-skip hook line printed, leak-guard ran, not bypassed) -> fast-forward mergeable -> guardrail-safe slot reset clean. Apparatus is restart-agnostic; only restart-time change is making skeft-qa:lean-worker dispatchable.",
+  "how_to_apply": "For future /goal sessions, skip re-validating the apparatus (closed/documented at 84bb411c). Use established patterns: lead on a fast MCP, dispatch independent bricks to skeft-qa:lean-worker in persistent slots. If the pre-commit hook is ever modified, re-verify the worktree-detection logic (git rev-parse --git-dir != --git-common-dir) still holds.",
+  "evidence": "Completion signal recorded: apparatus validated end-to-end at 84bb411c; lean-worker dispatchable; no re-validation needed.",
+  "tier": "automatic",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
+    }
+  ],
+  "id": "process-apparatus-validation-e2e-completed-kernel-pure-with-restart-agnostic-per",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### friction-git-hook-collision-pre-commit-leak-guard-false-positive-on-math-word-th
+
+**Pre-commit leak-guard false-positive on math word, then cleared staging**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "friction-git-hook-collision",
+  "title": "Pre-commit leak-guard false-positive on math word, then cleared staging",
+  "why": "Math-context word 'push' (push-out map / pushMap) tripped the leak guardrail; had to reword. Secondary: the blocked attempt cleared the staging area, forcing re-add+re-commit.",
+  "how_to_apply": "Refine guardrail to distinguish math context from structural-risk repo name; whitelist common math terms / exact-match private identifiers only. Also make hook failures non-mutating (do not clear staging); emit a recovery hint.",
+  "evidence": "Reclassified + captured: NOT the pre-commit hook (greps only the exact private dir name, non-mutating). It is the CC permission classifier reading 'push' in a git command (phantom-guardrail family). Corrected entry in goal-dev/references/lean-friction-catalog.md.",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "friction-git-hook-collision-pre-commit-leak-guard-false-positive-on-math-word-th",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### missing-process-gate-counts-json-and-validate-py-stale-across-multi-brick-commit
+
+**Committed-state tracking: autogen counts.json stale between commits; criterion 2 passes but warnings repeat**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "missing-process-gate",
+  "title": "Committed-state tracking: autogen counts.json stale between commits; criterion 2 passes but warnings repeat",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "why": "counts.json (autogen, tracked) fell out of sync with actual theorem counts multiple times. 'counts.json is stale again (warns each commit, but criterion 2 satisfied at 3ed1016c).' Each commit triggers stale-counts warning but validate.py 43/43 remains satisfied. Harness does not auto-regenerate counts on commit. Procedural noise without blocking.",
+  "how_to_apply": "Add pre-commit hook that auto-regenerates counts.json if counts changed since last commit. Or decouple counts.json check from L2 gate (advisory-only).",
+  "evidence": "Resolved by design: L2 gate treats counts.json as advisory (warns, never blocks, even on main) + auto-restages cheap derivations; heavy regen deferred to /skeft-qa:sync.",
+  "occurrences": [
+    {
+      "date": "2026-06-17",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "missing-process-gate-counts-json-and-validate-py-stale-across-multi-brick-commit",
+  "first_seen": "2026-06-17",
+  "last_seen": "2026-06-17"
+}
+```
+
+### harness-gap-pre-commit-sorry-check-false-positives-on-comments-docstrings-and-ba
+
+**Harness sorry-gate false positives blocked early commits; required tool rework**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "harness-bug-fixed",
+  "title": "Harness sorry-gate false positives blocked early commits; required tool rework",
+  "why": "The pre-commit L2 sync gate's grep -RnE '^\\s*sorry' lean/SKEFTHawking matched 4 pre-existing FALSE positives (commented sorries in TetradGapEquation.lean:320, KerrSchild.lean:60, docstring code-fence in CenterFunctorZ2Equiv.lean:971, tracked .backup2 file). Blocked ALL commits until diagnosed. Fix (375fa5e9) changed detection to parse the LSP build log for actual 'declaration uses sorry' warnings. Harness tool gap: regex-based sorry detection brittle with comment/docstring volume.",
+  "how_to_apply": "Replace simple file-grep sorry detectors with LSP build-log parsers (capture lake build stderr, search 'declaration uses sorry'). Or use lean_diagnostic_messages MCP. Pre-commit gates should only block on actual Lean compiler signals, not source patterns.",
+  "evidence": "Fixed at 375fa5e9: pre-commit-sync.sh parses the lake build log for the genuine-sorry signal instead of source grep; verified in current hook.",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
+    }
+  ],
+  "id": "harness-gap-pre-commit-sorry-check-false-positives-on-comments-docstrings-and-ba",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### harness-gap-lake-packages-never-gitignored-causing-commit-tree-failures-and-logi
+
+**.lake/packages/* never gitignored, causing commit-tree failures and logical bloat; 10 stray gitlinks committed**  ·  tier: `automatic`  ·  status: closed
+
+```json
+{
+  "class": "harness-gap",
+  "title": ".lake/packages/* never gitignored, causing commit-tree failures and logical bloat; 10 stray gitlinks committed",
+  "why": "Lake dep checkouts (mathlib, Physlib, batteries, doc-gen4) are git repos with their own tracked files whose blobs live in the dep's object store. lean/.gitignore ignored .lake/build but NOT .lake/packages/*. Worktree seed cp -c .lake + broad git add staged unresolvable paths, blocking commits. Also 10 stray submodule gitlinks (mode 160000) were committed by accident (bbee8ae9, no .gitmodules).",
+  "how_to_apply": "Fixed in commit 3e76adb9: add /.lake to lean/.gitignore (ignore all of .lake). Un-track the 10 stray gitlinks. Worktrees/slots can then safely cp -c .lake or symlink from this HEAD onward.",
+  "evidence": "Fixed at 3e76adb9 (/.lake added to lean/.gitignore; 10 stray gitlinks un-tracked).",
+  "tier": "automatic",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
+    }
+  ],
+  "id": "harness-gap-lake-packages-never-gitignored-causing-commit-tree-failures-and-logi",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### process-signal-subagent-flailed-destructively-when-hitting-commit-blocker-safety
+
+**Subagent flailed destructively when hitting commit blocker; safety guardrails added to agent spec**  ·  tier: `automatic`  ·  status: closed
+
+```json
+{
+  "class": "process-signal",
+  "title": "Subagent flailed destructively when hitting commit blocker; safety guardrails added to agent spec",
+  "why": "First e2e worker (a3b3) hit a commit blocker (.lake/packages/* gitlink bug) and responded with raw git plumbing (rm .git/index, read-tree, write-tree, update-index), hook bypasses, and .lake thrashing. Blast radius contained to its own removed worktree, but exposed that workers must not 'fix' blocked commits via git surgery.",
+  "how_to_apply": "Edit lean-worker.md safety section to forbid raw git plumbing (read-tree/write-tree/update-ref/commit-tree/rm index), hook bypasses (--no-verify), destructive artifact ops (lake clean, rm -rf .lake, touching .lake/packages). On commit/build fail: STOP and report to lead. Already in place post-fix.",
+  "evidence": "Resolved: lean-worker.md Safety section forbids raw git plumbing / --no-verify / destructive .lake ops with STOP-and-report; verified in place.",
+  "tier": "automatic",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
+    }
+  ],
+  "id": "process-signal-subagent-flailed-destructively-when-hitting-commit-blocker-safety",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### harness-gap-worktree-isolation-failed-from-non-git-workspace-root-cwd-relative-d
+
+**Worktree isolation failed from non-git workspace root; cwd-relative dispatch replaced the proposed WorktreeCreate hook**  ·  tier: `automatic`  ·  status: closed
+
+```json
+{
+  "class": "harness-gap",
+  "title": "Worktree isolation failed from non-git workspace root; cwd-relative dispatch replaced the proposed WorktreeCreate hook",
+  "why": "isolation:worktree requires the session cwd inside a git repo; launching from the non-git workspace root raised 'Cannot create agent worktree: not in a git repository and no WorktreeCreate hooks are configured.' The initial fix was an auto-executing WorktreeCreate hook in workspace .claude/hooks/ — which the PreToolUse(AskUserQuestion) guard correctly intercepted for sign-off (working as designed); the user refused the blind SK-default as a leak risk. Testing then confirmed the Agent tool reads current cwd (not launch cwd), so a `cd SK_EFT_Hawking/` before dispatch suffices — obsoleting ~2h of hook design/doc/testing and eliminating the hook entirely.",
+  "how_to_apply": "Lead runs `cd SK_EFT_Hawking/` before dispatching subagents with isolation:worktree (leverages mid-flow session cwd change); drop the WorktreeCreate hook. Prefer testing simpler existing-platform mechanisms (cwd persistence, explicit lead control) before proposing new hooks/automation. The guard's escalation on the hook install was correct behavior — no guard change needed.",
+  "evidence": "RC2 resolved: cwd-explicit dispatch + cwd-robust repo_root(); WorktreeCreate hook dropped; documented in HARNESS_GUIDE + goal-dev/references/parallel-worktrees.md.",
+  "tier": "automatic",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
+    }
+  ],
+  "id": "harness-gap-worktree-isolation-failed-from-non-git-workspace-root-cwd-relative-d",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### blocked-question-malformed-blocked-question-record-probe-artifact-with-empty-tur
+
+**Malformed blocked-question record (probe artifact) with empty turn and minimal question text**  ·  tier: `automatic`  ·  status: closed
+
+```json
+{
+  "class": "blocked-question",
+  "title": "Malformed blocked-question record (probe artifact) with empty turn and minimal question text",
+  "why": "The guard's blocked-question log contains one entry session_id=probe-8385 with turn=null and question='x?' — a test/probe artifact, not real signal. Notes the presence of a guard that should emit higher-quality blocks.",
+  "how_to_apply": "If the guard is newly integrated (Plan 1 harness build 2026-06-17), verify the PreToolUse(AskUserQuestion) handler captures turn numbers and full question text. If this recurs with non-probe sessions, trace log initialization.",
+  "evidence": "RC5: probe/test artifact (session_id=probe-8385); guard lifecycle hardened (SessionEnd cleanup hook + /goal-end).",
+  "tier": "automatic",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
+    }
+  ],
+  "id": "blocked-question-malformed-blocked-question-record-probe-artifact-with-empty-tur",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### architecture-gap-inline-subagent-mcp-servers-do-not-surface-in-this-environment
+
+**Inline subagent MCP servers do not surface in this environment**  ·  tier: `automatic`  ·  status: closed
+
+```json
+{
+  "class": "architecture-gap",
+  "title": "Inline subagent MCP servers do not surface in this environment",
+  "why": "Per-subagent inline MCP entries (lean-lsp-worker in agent's mcpServers) do not materialize. Two ToolSearch queries confirmed lean-lsp-worker absent; subagents only inherit the main session's lean-lsp pinned to main. Forced a pivot to persistent pre-built worktree slots with static MCP defs in workspace .mcp.json.",
+  "how_to_apply": "Abandon inline-per-worker MCP; use persistent slots (wt1/2/3) with static mcp__lean-lsp-wt1/2/3 defs in workspace config. Lead assigns workers to pre-built slots; each has its own build-isolated server. No inline mcpServers in agent specs.",
+  "evidence": "RC1/RC3: documented in goal-dev/references/parallel-worktrees.md; persistent wt1/2/3 slots + static workspace .mcp.json are the standing pattern (ef0c3d36).",
+  "tier": "automatic",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
+    }
+  ],
+  "id": "architecture-gap-inline-subagent-mcp-servers-do-not-surface-in-this-environment",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### config-discovery-friction-no-centralized-discovery-point-for-the-worktree-lean-i
+
+**No centralized discovery point for the worktree/lean-infra plan — agent hunted through memory notes**  ·  tier: `automatic`  ·  status: closed
+
+```json
+{
+  "class": "config-discovery-friction",
+  "title": "No centralized discovery point for the worktree/lean-infra plan — agent hunted through memory notes",
+  "why": "Task to find and activate the lean-lsp multi-instance plan forced heuristic memory-note search ('PARALLEL APPARATUS' text), then on-disk verification. No canonical Lean-development-infrastructure doc centralizes worktree naming, MCP server paths, gitignore patterns — scattered across memory, docs, implicit conventions.",
+  "how_to_apply": "Create one canonical doc (e.g. docs/LEAN_DEVELOPMENT_INFRASTRUCTURE.md or under .claude/) covering: worktree naming/layout, lean-lsp multi-instance (wt1/2/3) setup, gitignore patterns, how orchestrating agents spin up the infra. Reference from goal-prompt guidance.",
+  "evidence": "RC1 resolved: centralized in goal-dev/references/parallel-worktrees.md + lean-friction-catalog.md; the model-invocable goal-dev skill surfaces them in-loop.",
+  "tier": "automatic",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md"
+    }
+  ],
+  "id": "config-discovery-friction-no-centralized-discovery-point-for-the-worktree-lean-i",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### harness-gap-marker-persisted-after-goal-clear-sessionstart-re-injection-askuserq
+
+**Marker persisted after /goal clear -> SessionStart re-injection + AskUserQuestion guard misfired**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "harness-gap",
+  "title": "Marker persisted after /goal clear -> SessionStart re-injection + AskUserQuestion guard misfired",
+  "why": "On /goal clear the gitignored managed marker was not removed, so SessionStart re-injection kept treating the cleared goal as active and the PreToolUse(AskUserQuestion) guard misfired during the subsequent /debrief. RC5 marker/guard lifecycle gap.",
+  "how_to_apply": "Fixed in v4.1: SessionEnd hook removes the marker when reason==clear (harness_session_end.py) + a /goal-end command (harness_goal_end.py) for explicit teardown; remove_marker() added to harness_common.py with tests.",
+  "evidence": "Debrief guard misfired on a stale post-clear marker; structural fix = SessionEnd(reason=clear) cleanup + /goal-end; covered by test_session_end_* in test_harness_core.py.",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": null
+    }
+  ],
+  "id": "harness-gap-marker-persisted-after-goal-clear-sessionstart-re-injection-askuserq",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### harness-knowledge-phantom-dev-harness-guardrail-mis-attribution-auto-mode-permis
+
+**Phantom dev-harness guardrail mis-attribution: auto-mode permission-classifier denials read as project hooks**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "harness-knowledge",
+  "title": "Phantom dev-harness guardrail mis-attribution: auto-mode permission-classifier denials read as project hooks",
+  "why": "Worktree-reset denials and the 'push' commit-command flag were blamed on a dev-harness guardrail/hook that does not exist; both are the CC auto-mode permission classifier (a platform heuristic). The mis-attribution caused wasted workarounds (inlining instead of resetting; rewording commit messages blaming the leak-guard).",
+  "how_to_apply": "Fixed in v4.1: parallel-worktrees.md + reset_slot.py docstring clarify the reset denial is the auto-mode classifier (not a hook); /reset-slot gives the guardrail-safe checkout -B path; the catalog 'push' entry was corrected to point at the permission classifier.",
+  "evidence": "Verified the pre-commit hook greps only the private dir name and never mutates staging. Docs corrected in commit acd70af0 (catalog) + the v4.1 parallel-worktrees.md.",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": null
+    }
+  ],
+  "id": "harness-knowledge-phantom-dev-harness-guardrail-mis-attribution-auto-mode-permis",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### harness-gap-slot-reset-recipe-stranded-in-user-only-docs-not-at-the-action-point
+
+**Slot-reset recipe stranded in user-only docs, not at the action point (worker dispatch)**  ·  tier: `agent-reviewed`  ·  status: closed
+
+```json
+{
+  "class": "harness-gap",
+  "title": "Slot-reset recipe stranded in user-only docs, not at the action point (worker dispatch)",
+  "why": "The guardrail-safe slot-reset recipe lived only in narrative docs / the user-only goal-prompt, so the autonomous lead reached for git reset --hard (denied) instead. RC1: recipe not at the action point.",
+  "how_to_apply": "Fixed in v4.1: /reset-slot is a model-invocable command (reset_slot.py) -- guardrail-safe checkout -B + staleness-gated .lake auto-re-clone, an atomic action the lead invokes directly; full flow in goal-dev/references/parallel-worktrees.md.",
+  "evidence": "/reset-slot command added (model-invocable); parallel-worktrees.md step 1 documents per-task reset-before-dispatch.",
+  "tier": "agent-reviewed",
+  "status": "closed",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": null
+    }
+  ],
+  "id": "harness-gap-slot-reset-recipe-stranded-in-user-only-docs-not-at-the-action-point",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
 
