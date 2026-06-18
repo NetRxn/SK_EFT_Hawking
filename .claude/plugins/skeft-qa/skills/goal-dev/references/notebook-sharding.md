@@ -17,6 +17,11 @@ at launch). It lives in the tracked per-loop home:
 - **One source-of-truth log.** Record each brick: what shipped, the commit, the key
   decision + rationale, and any open thread. This is what `/skeft-qa:orient` and the
   SessionStart re-injection point at — keep it current and honest.
+- **Each checkpoint must survive compaction.** Write enough that a *fresh* post-compaction turn
+  re-grounds with zero re-derivation: **(a)** the exact last-committed SHA + any **uncommitted
+  file state**, **(b)** known **errors/warnings** still open, **(c)** the **next brick as a
+  numbered item**, **(d)** any **blocked decision with its arguments**. A checkpoint missing these
+  costs a 4–5-turn re-orientation; one that has them is a seamless resume.
 - **The lead curates.** In a team loop, workers report up; the lead writes the canonical
   notebook. In a solo loop, the loop is its own lead.
 - **Shard as it grows.** When the active `LAB_NOTEBOOK.md` crosses its size budget (keep the

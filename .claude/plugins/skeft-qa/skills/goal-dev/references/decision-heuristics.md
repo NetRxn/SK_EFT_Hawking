@@ -19,6 +19,16 @@ fires and the goal is not met, that means *do the next increment of real work TH
    shipping everything else meanwhile. A deep-research dispatch is an async external
    dependency: dispatch it and **keep working** on whatever else is shippable.
 
+## Don't block on info-gathering — dispatch a read-only Explore in parallel
+
+On a **large architectural unknown** (an interface you don't yet know, a subsystem to map before
+the next brick), **dispatch a read-only `Explore` agent in parallel and keep building the
+independent part solo** — don't stall the loop waiting for the map. Explore reads and reports; it
+never edits, so it runs safely alongside your own work. This is **distinct from the lean-worker
+fan-out** in `parallel-worktrees.md` (which dispatches *proof* bricks to worktree slots) — Explore
+is read-only reconnaissance: no worktree, no MCP slot. Fold its findings in when it returns; they
+often surface a load-bearing gap you hadn't anticipated.
+
 ## Legitimate stops (the only two)
 
 - A **kernel-checked no-go**: a result the Lean kernel refutes (e.g. a proved no-go lemma),
