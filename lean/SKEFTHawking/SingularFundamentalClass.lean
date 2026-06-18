@@ -110,4 +110,13 @@ theorem homology_vanish_above {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space
   exact (relHomologyEmptyEquiv (X := TopCat.of M) i).symm.injective
     (by rw [h ((relHomologyEmptyEquiv (X := TopCat.of M) i).symm α), map_zero])
 
+theorem restrictToPointNe_chartBall_bijective {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (y₀ : M) {r : ℝ}
+    (hrsub : Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀ y₀) r
+      ⊆ (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀).target)
+    {y : M} (hy : y ∈ (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀).symm ''
+      Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀ y₀) r) :
+    Function.Bijective (restrictToPointNe (X := TopCat.of M) hy (m + 2)) :=
+  SingularGoodCompactManifold.restrictToPoint_chartBall_bijective y₀ hrsub hy
+
 end SKEFTHawking.SingularFundamentalClass
