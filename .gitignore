@@ -91,3 +91,9 @@ papers/**/*.pdf
 
 # dev-harness runtime state (markers, watermarks, caches, locks)
 /.claude/dev-harness/
+
+# parallel-agent worktree slots (wt1/wt2/wt3) — created by `claude --worktree wtN`
+# / EnterWorktree; served by lean-lsp-wt1/2/3 in the workspace .mcp.json.
+# Keep them out of the main checkout's status so a worktree's files never
+# appear as untracked here (and never reach the leak pre-commit scan).
+/.claude/worktrees/

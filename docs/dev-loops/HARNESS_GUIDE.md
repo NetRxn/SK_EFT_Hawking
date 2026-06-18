@@ -123,4 +123,26 @@ claude plugin update skeft-qa@skeft-local --scope local   # run from BOTH the wo
 
 ---
 
+## 9. Parallel Lean apparatus (worktree fan-out)
+
+For a `lead` orchestrating **independent** Lean sub-chains across subagents, the workspace
+`.mcp.json` pre-defines three fixed worktree-slot MCP servers — `lean-lsp-wt1/2/3` — each a fast
+(`--repl`) lean-lsp pinned to `SK_EFT_Hawking/.claude/worktrees/wt{1,2,3}/lean` (enabled in the
+workspace `.claude/settings.local.json`; **a session restart loads them**). The server↔worktree
+binding is **by the fixed name**: create the slot as `wtN` (`git worktree add .claude/worktrees/wt1
+-b worktree-wt1`, or `EnterWorktree name=wt1`) and seed its Lean build (`lake exe cache get` +
+`lake build` in the slot's `lean/`, or `.worktreeinclude` to copy `.lake`) before dispatching a
+subagent there. A slot whose worktree doesn't exist yet just fails to connect, harmlessly. Don't
+use `Agent isolation: worktree` for a slot — its random name matches no static server.
+`SK_EFT_Hawking/.claude/worktrees/` is gitignored.
+
+Dispatch each Lean subagent into one slot and tell it to use the **`lean4` skill + the matching
+`mcp__lean-lsp-wtN__*` tools** (the MCP-first loop), **not** write→`lake build` cycles; stage its
+own paths only; never push. **Fan out only when the proof DAG has genuinely branched** — a
+tightly-coupled single-file chain is faster solo with one fast MCP. Full convention (slot table +
+subagent contract): the **Parallel Lean development** section of
+`.claude/plugins/skeft-qa/skills/goal-prompt/references/lean-dev.md`.
+
+---
+
 *State lives at `<repo>/.claude/dev-harness/` (gitignored): `managed/<sid>.json` markers, `watermarks/`, `active_issues.json`, `blocked_questions.jsonl`, `locks/`. The tracked, crash-recoverable source of each goal condition is `<repo>/docs/dev-loops/<roadmap>/goal_prompt_<goal_id>.md`.*

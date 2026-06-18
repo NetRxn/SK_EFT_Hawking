@@ -46,3 +46,45 @@ user-only decision* (a legitimate stop / ask-once), not an escape.
 Tie the statement to numerical content (falsifiable `norm_num` comparisons, not qualitative
 claims); drop redundant conjuncts; back docstring cross-refs with an actual call; avoid
 self-discharging tautologies (`rfl`/`decide`/identity-wrappers/within-own-±2σ bands).
+
+## Parallel Lean development (worktree fan-out — a `lead` orchestrating Lean subagents)
+
+When a proof program **branches into independent sub-chains** (NOT a tightly-coupled single-file
+chain — those stay solo with one fast MCP), a `lead` can fan the bricks out to subagents, each in
+its own git worktree with its own fast MCP server. The workspace `.mcp.json` pre-defines **three
+fixed slots** (enabled in `.claude/settings.local.json`; **loaded on session restart**):
+
+| Slot (create with this exact name) | Lean project path | MCP server the subagent uses |
+|---|---|---|
+| `wt1` | `<repo>/.claude/worktrees/wt1/lean` | `mcp__lean-lsp-wt1__*` |
+| `wt2` | `<repo>/.claude/worktrees/wt2/lean` | `mcp__lean-lsp-wt2__*` |
+| `wt3` | `<repo>/.claude/worktrees/wt3/lean` | `mcp__lean-lsp-wt3__*` |
+
+The binding is **by the fixed name** — the server paths are static, so a worktree MUST be named
+`wtN` (not a random/`isolation: worktree` name) for `lean-lsp-wtN` to serve it.
+`<repo>/.claude/worktrees/` is gitignored.
+
+**Lead's spin-up, per slot:**
+1. **Create the slot with the matching name:** `git worktree add .claude/worktrees/wt1 -b
+   worktree-wt1` (or `EnterWorktree name=wt1` / `claude --worktree wt1` — all land at the same
+   deterministic path). Do **not** use `Agent isolation: worktree` for a slot — it generates a
+   random name no static server matches.
+2. **Seed its Lean build** so the LSP is fast (a fresh worktree's `.lake/` is gitignored → empty):
+   in the slot's `lean/`, `lake exe cache get` (Mathlib oleans from cache) + `lake build`, or list
+   `.lake/` in a `.worktreeinclude` so CC copies the built oleans in at creation. A slot whose
+   worktree doesn't exist yet simply fails to connect, harmlessly.
+3. **Dispatch one independent sub-chain** to a subagent working under that slot's path.
+
+**Subagent contract (state it in the dispatch prompt):**
+- Edit files under the slot path and drive proofs with the **`lean4` skill + the matching
+  `mcp__lean-lsp-wtN__*` tools** — the MCP-first loop above (`lean_goal` / `lean_multi_attempt` /
+  `lean_diagnostic`), **NOT** write→`lake build` cycles. (Project conventions override the generic
+  skill.)
+- Same hard rules: kernel-pure `{propext, Classical.choice, Quot.sound}`; no new axiom / `sorry` /
+  `native_decide` / `maxHeartbeats`; ≤12-term sub-lemmas; search before prove.
+- **Stage own paths only; never touch another slot's / agent's files.** Commit GREEN shards on the
+  slot's branch; never push (user action).
+
+**Fan out only when the DAG has genuinely branched** (independent files / sub-lemmas). A
+tightly-coupled chain (each brick depends on the prior, one file) is faster solo with one fast MCP
+— fanning it out just serializes through the dependency with extra coordination cost.
