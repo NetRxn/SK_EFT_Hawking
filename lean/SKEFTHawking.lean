@@ -883,6 +883,7 @@ import SKEFTHawking.SingularGoodCompact
 import SKEFTHawking.SingularChainSupport
 import SKEFTHawking.SingularLocalHomologyColimit
 import SKEFTHawking.SingularConvexRadialRetract
+import SKEFTHawking.SingularConvexRadialBase
 -- Phase 5q.F (fully-unconditional strengthening, w₂-foundation brick 5, 2026-06-15): the Wu class v₂ from
 -- Poincaré duality — for a PD datum (fundamental-class functional μ:H⁴→ℤ/2 + non-degenerate middle cup
 -- pairing, finite-dim H²), v₂∈H² represents x↦⟨Sq²x,[M]⟩ (wu_relation), the input to the Wu formula
