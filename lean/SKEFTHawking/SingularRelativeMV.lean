@@ -875,4 +875,63 @@ theorem iota_mk (U V : Set ↑M) (n : ℕ) (z : qCycles U V n) :
     iota U V n (QHomology.mk U V n z)
       = RelativeHomology.mk (U ∪ V) n ⟨piMap U V n z, piMap_mem_relCycles U V n z z.2⟩ := rfl
 
+/-! ### The small-chains transport (core of the `ι` isomorphism) -/
+
+open SKEFTHawking.SingularExcision SKEFTHawking.SingularSubdivision in
+/-- Pushing a `{U', V'}`-small chain of `sub(U∪V)` into `M` lands in `C(U)+C(V)`: a simplex of
+`sub(U∪V)` subordinate to `U' = val⁻¹ U` includes to a simplex of `M` with image in `U`. -/
+theorem chainIncl_mem_mvUnion_of_small (U V : Set ↑M) (n : ℕ)
+    (e : SingularChain (sub (U ∪ V)) n)
+    (he : e ∈ smallChains ({Subtype.val ⁻¹' U, Subtype.val ⁻¹' V} :
+      Set (Set ↥(U ∪ V))) n) :
+    chainIncl (U ∪ V) n e ∈ mvUnionChains U V n := by
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ he
+  · rintro _ ⟨τ', ⟨W, hW, hsub⟩, rfl⟩
+    rw [chainIncl_single]
+    rcases hW with rfl | rfl
+    · refine Submodule.mem_sup_left (single_mem_subspaceChains_of_subordinate ?_)
+      rw [toSSetObjEquiv_simplexIncl]
+      rintro _ ⟨t, rfl⟩
+      exact hsub ⟨t, rfl⟩
+    · refine Submodule.mem_sup_right (single_mem_subspaceChains_of_subordinate ?_)
+      rw [toSSetObjEquiv_simplexIncl]
+      rintro _ ⟨t, rfl⟩
+      exact hsub ⟨t, rfl⟩
+  · rw [map_zero]; exact Submodule.zero_mem _
+  · intro a b _ _ ha hb; rw [map_add]; exact Submodule.add_mem _ ha hb
+  · intro r a _ ha; rw [map_smul]; exact Submodule.smul_mem _ r ha
+
+open SKEFTHawking.SingularExcision SKEFTHawking.SingularSubdivision in
+/-- **The small-chains transport core**: a chain in `C(U∪V)` becomes `C(U)+C(V)`-small after enough
+subdivisions. The geometric input to the `ι` isomorphism (the `{U,V}` cover of `U∪V` is global in the
+subspace `sub(U∪V)`, so `exists_iterate_smallChains` applies there; push back along `chainIncl`). -/
+theorem exists_iterate_mvUnion (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (n : ℕ)
+    (c : SingularChain M n) (hc : c ∈ subspaceChains (U ∪ V) n) :
+    ∃ m, (⇑(singularSd M n))^[m] c ∈ mvUnionChains U V n := by
+  obtain ⟨d, rfl⟩ := hc
+  have hcov : (⋃ W ∈ ({Subtype.val ⁻¹' U, Subtype.val ⁻¹' V} : Set (Set ↥(U ∪ V))),
+      interior W) = Set.univ := by
+    rw [Set.eq_univ_iff_forall]
+    intro p
+    rcases p.2 with hpU | hpV
+    · refine Set.mem_biUnion (Set.mem_insert _ _) ?_
+      rw [((hU.preimage continuous_subtype_val).interior_eq)]
+      exact hpU
+    · refine Set.mem_biUnion (Set.mem_insert_of_mem _ rfl) ?_
+      rw [((hV.preimage continuous_subtype_val).interior_eq)]
+      exact hpV
+  obtain ⟨m, hm⟩ := exists_iterate_smallChains hcov d
+  have hnat : ∀ (k : ℕ) (d' : SingularChain (sub (U ∪ V)) n),
+      (⇑(singularSd M n))^[k] (chainIncl (U ∪ V) n d')
+        = chainIncl (U ∪ V) n ((⇑(singularSd (sub (U ∪ V)) n))^[k] d') := by
+    intro k
+    induction k with
+    | zero => intro d'; rfl
+    | succ j ih =>
+      intro d'
+      rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih, singularSd_chainIncl]
+  refine ⟨m, ?_⟩
+  rw [hnat]
+  exact chainIncl_mem_mvUnion_of_small U V n _ hm
+
 end SKEFTHawking.SingularRelativeMV
