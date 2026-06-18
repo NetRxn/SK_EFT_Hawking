@@ -4,6 +4,7 @@ import SKEFTHawking.SingularRelativeMV
 import SKEFTHawking.SingularChartBridge
 import SKEFTHawking.SingularEuclideanAcyclic
 import SKEFTHawking.SingularConvexComplementRetract
+import SKEFTHawking.SingularSphereHighDegree
 
 /-!
 # Phase 5q.F (w₂-foundation, brick 6e) — toward the fundamental class `[M]`
@@ -129,6 +130,23 @@ noncomputable def euclConvexLocalHomologyIso (m : ℕ)
           (SingularPuncturedRetract.homology_map_normalize_bijective (n := m + 2) m)).trans
         (SingularLineMinusPoint.topSphereIso m)))
 
+/-- **High-degree vanishing of the convex local homology in `ℝⁿ`**: `Hᵢ(ℝⁿ, ℝⁿ∖A) = 0` for `i > n`
+(`n = m+2`, `A` compact convex, `0 ∈ interior A`). Same retract chain as `euclConvexLocalHomologyIso`,
+but landing in `Hᵢ₋₁(Sⁿ⁻¹) = 0` (`sphere_homology_high`) instead of the top `ℤ/2`. The other half of the
+convex base case — `Hᵢ(M|K) = 0` away from the middle dimension. -/
+theorem euclConvexLocalHomology_high (m : ℕ) {A : Set (EuclideanSpace ℝ (Fin (m + 2)))}
+    (hAc : Convex ℝ A) (hAcomp : IsCompact A)
+    (hA0 : A ∈ nhds (0 : EuclideanSpace ℝ (Fin (m + 2)))) (k : ℕ) (hk : m + 1 ≤ k)
+    (x : RelativeHomology (X := SingularEuclideanAcyclic.Eucl (m + 2)) Aᶜ (k + 1 + 1)) : x = 0 := by
+  have e := (euclRelHomologyEquiv m Aᶜ k).trans
+    ((LinearEquiv.ofBijective _
+        (SingularConvexComplementRetract.homology_map_inclMap_bijective hAc hAcomp hA0 k)).trans
+      (LinearEquiv.ofBijective _
+        (SingularPuncturedRetract.homology_map_normalize_bijective (n := m + 2) k)))
+  exact e.injective (by
+    rw [map_zero]
+    exact SingularSphereHighDegree.sphere_homology_high (m + 1) (k + 1) (by omega) (e x))
+
 /-- **The convex base case (Hatcher 3.27) in a manifold**: `Hₘ₊₂(M | K) = Hₘ₊₂(M, M∖K) ≅ ℤ/2` for `K`
 a compact convex set in a chart, matched by the chart `e` with a compact convex `C ⊆ ℝⁿ` (`0 ∈ int C`).
 Assembled from open-set excision (at `M` and at `ℝⁿ`), the chart-pair transport, and the Euclidean
@@ -145,6 +163,26 @@ noncomputable def manifoldConvexLocalHomologyIso {M : TopCat} {m : ℕ} {K : Set
     ((chartPairEquiv_set e hcompat (m + 2)).trans
       ((openSetExcisionEquiv hCcomp.isClosed hV hCV (m + 1)).trans
         (euclConvexLocalHomologyIso m hCconv hCcomp hC0)))
+
+/-- **High-degree vanishing of the convex local homology in a manifold**: `Hᵢ(M | K) = 0` for `i > n`
+(`n = m+2`, `K` a compact convex chart set). Transported (open-set excision + chart-pair) to the
+Euclidean `euclConvexLocalHomology_high`. The "`Hᵢ(M|K) = 0` for `i > n`" base case of the
+relative-MV compactness induction. -/
+theorem manifoldConvexLocalHomology_high {M : TopCat} {m : ℕ} {K : Set ↑M}
+    {U : Set ↑M} (hK : IsClosed K) (hU : IsOpen U) (hKU : K ⊆ U)
+    {C : Set (EuclideanSpace ℝ (Fin (m + 2)))} {V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))}
+    (hCconv : Convex ℝ C) (hCcomp : IsCompact C)
+    (hC0 : C ∈ nhds (0 : EuclideanSpace ℝ (Fin (m + 2)))) (hV : IsOpen V) (hCV : C ⊆ V)
+    (e : ↥U ≃ₜ ↥V)
+    (hcompat : ∀ u : ↥U, ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C) ↔ (u : ↑M) ∈ K)
+    (k : ℕ) (hk : m + 1 ≤ k)
+    (x : RelativeHomology (X := M) Kᶜ (k + 1 + 1)) : x = 0 := by
+  have e' := (openSetExcisionEquiv hK hU hKU (k + 1)).symm.trans
+    ((chartPairEquiv_set e hcompat (k + 1 + 1)).trans
+      (openSetExcisionEquiv hCcomp.isClosed hV hCV (k + 1)))
+  exact e'.injective (by
+    rw [map_zero]
+    exact euclConvexLocalHomology_high m hCconv hCcomp hC0 k hk (e' x))
 
 /-! ### The relative-MV gluing step of the compactness induction -/
 
