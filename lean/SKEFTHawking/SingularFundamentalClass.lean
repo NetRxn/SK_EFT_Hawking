@@ -32,6 +32,27 @@ noncomputable def restrictHomologyToPoint {X : TopCat} (x : ↑X) (n : ℕ) :
   (relIncl (Set.empty_subset ({x}ᶜ : Set ↑X)) n).comp
     (relHomologyEmptyEquiv (X := X) n).symm.toLinearMap
 
+/-- **Restriction of an absolute class to the local homology over a set** `ρ_K : Hₙ(M) → Hₙ(M | K)`,
+the composite `Hₙ(M) ≅ Hₙ(M, ∅) → Hₙ(M, M∖K)`. Factors `restrictHomologyToPoint y` for `y ∈ K`
+(`restrictToPoint_restrictHomologyToSet`). -/
+noncomputable def restrictHomologyToSet {X : TopCat} (K : Set ↑X) (n : ℕ) :
+    Homology X n →ₗ[ZMod 2] RelativeHomology (Kᶜ : Set ↑X) n :=
+  (relIncl (Set.empty_subset (Kᶜ : Set ↑X)) n).comp
+    (relHomologyEmptyEquiv (X := X) n).symm.toLinearMap
+
+/-- **Restriction to a set then to a point equals restriction to the point**: for `y ∈ K`,
+`restrictToPoint hy ∘ ρ_K = ρ_y` (functoriality of `relIncl`, `relIncl_trans`). The factoring that
+lets the per-point restriction value of `α` be read off the single class `ρ_K α ∈ Hₙ(M|K)`. -/
+theorem restrictToPoint_restrictHomologyToSet {X : TopCat} {K : Set ↑X} {y : ↑X} (hy : y ∈ K)
+    (n : ℕ) (α : Homology X n) :
+    SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint hy n
+        (restrictHomologyToSet K n α)
+      = restrictHomologyToPoint y n α := by
+  show relIncl (Set.compl_subset_compl.mpr (Set.singleton_subset_iff.mpr hy)) n
+      (relIncl (Set.empty_subset (Kᶜ : Set ↑X)) n ((relHomologyEmptyEquiv (X := X) n).symm α))
+    = relIncl (Set.empty_subset ({y}ᶜ : Set ↑X)) n ((relHomologyEmptyEquiv (X := X) n).symm α)
+  rw [relIncl_trans]
+
 /-- **Over `ℤ/2` a linear iso to `ℤ/2` is unique**: any two `e₁ e₂ : V ≃ₗ[ZMod 2] ZMod 2` agree, since
 the only nonzero element of `ZMod 2` is `1`. The ℤ/2-orientation triviality underlying Hatcher 3.26. -/
 theorem linearEquiv_zmod2_unique {V : Type*} [AddCommGroup V] [Module (ZMod 2) V]
