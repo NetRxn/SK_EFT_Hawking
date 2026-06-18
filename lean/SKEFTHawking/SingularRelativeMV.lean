@@ -972,4 +972,76 @@ theorem iota_surjective (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (n : �
     have key := relative_add_singularSd_iterate_mem_relBoundaries hbdry m
     rwa [add_comm (RelativeChain.mk (U ∪ V) (k + 1) c')] at key
 
+open SKEFTHawking.SingularExcision SKEFTHawking.SingularSubdivision in
+/-- **`ι` is injective** (positive degree): a `Q`-cycle whose `(U∪V)`-image is a relative boundary is a
+`Q`-boundary — push the boundary witness into `C(U)+C(V)` via the subdivision homotopy
+(`iterHomotopy_chainHomotopy` + `exists_iterate_mvUnion`). -/
+theorem iota_injective (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (k : ℕ) :
+    Function.Injective (iota U V (k + 1)) := by
+  rw [injective_iff_map_eq_zero]
+  intro x hx
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  obtain ⟨zc, hzc⟩ := Submodule.Quotient.mk_surjective _ (z : QChain U V (k + 1))
+  rw [show (Submodule.Quotient.mk z : QHomology U V (k + 1)) = QHomology.mk U V (k + 1) z from rfl,
+    iota_mk, RelativeHomology.mk_eq_zero_iff] at hx
+  change piMap U V (k + 1) (z : QChain U V (k + 1)) ∈ relBoundaries (U ∪ V) (k + 1) at hx
+  rw [show piMap U V (k + 1) (z : QChain U V (k + 1)) = RelativeChain.mk (U ∪ V) (k + 1) zc by
+    rw [← hzc]; rfl] at hx
+  obtain ⟨W, hW⟩ := hx
+  obtain ⟨w, hw⟩ := Submodule.Quotient.mk_surjective _ W
+  have hzcw : zc + chainBoundary M (k + 1) w ∈ subspaceChains (U ∪ V) (k + 1) := by
+    rw [← RelativeChain.mk_eq_zero_iff,
+      show RelativeChain.mk (U ∪ V) (k + 1) (zc + chainBoundary M (k + 1) w)
+        = RelativeChain.mk (U ∪ V) (k + 1) zc
+          + relBoundary (U ∪ V) (k + 1) (RelativeChain.mk (U ∪ V) (k + 2) w) from rfl,
+      show RelativeChain.mk (U ∪ V) (k + 2) w = W from hw, hW, ZModModule.add_self]
+  have hzc_cyc : chainBoundary M k zc ∈ mvUnionChains U V k := by
+    have hq : qBoundary U V k (z : QChain U V (k + 1)) = 0 := LinearMap.mem_ker.mp z.2
+    rw [← hzc, show (Submodule.Quotient.mk zc : QChain U V (k + 1)) = QChain.mk U V (k + 1) zc from rfl,
+      qBoundary_mk, QChain.mk_eq_zero_iff] at hq
+    exact hq
+  set y := zc + chainBoundary M (k + 1) w with hy_def
+  have hdy : chainBoundary M k y ∈ mvUnionChains U V k := by
+    rw [hy_def, map_add, chainBoundary_chainBoundary_apply, add_zero]; exact hzc_cyc
+  obtain ⟨m, hm⟩ := exists_iterate_mvUnion U V hU hV (k + 1) y hzcw
+  have hDdy : iterHomotopy M k m (chainBoundary M k y) ∈ mvUnionChains U V (k + 1) := by
+    rw [show mvUnionChains U V (k + 1) = smallChains ({U, V} : Set (Set ↑M)) (k + 1) from
+      (smallChains_two_eq U V (k + 1)).symm]
+    refine iterHomotopy_mem_smallChains ?_ m
+    rw [show smallChains ({U, V} : Set (Set ↑M)) k = mvUnionChains U V k from smallChains_two_eq U V k]
+    exact hdy
+  have hh := iterHomotopy_chainHomotopy M m k y
+  have h2 : chainBoundary M (k + 1) (iterHomotopy M (k + 1) m y)
+      = y + (⇑(singularSd M (k + 1)))^[m] y + iterHomotopy M k m (chainBoundary M k y) := by
+    rw [← hh, add_assoc (chainBoundary M (k + 1) (iterHomotopy M (k + 1) m y)),
+      ZModModule.add_self (iterHomotopy M k m (chainBoundary M k y)), add_zero]
+  -- the key chain identity: zc + ∂(Dₘy + w) = Sdᵐy + Dₘ(∂y) ∈ C(U)+C(V)
+  have hident : zc + chainBoundary M (k + 1) (iterHomotopy M (k + 1) m y + w)
+      ∈ mvUnionChains U V (k + 1) := by
+    rw [map_add, h2,
+      show zc + (y + (⇑(singularSd M (k + 1)))^[m] y + iterHomotopy M k m (chainBoundary M k y)
+          + chainBoundary M (k + 1) w)
+        = (zc + chainBoundary M (k + 1) w + y) + ((⇑(singularSd M (k + 1)))^[m] y
+          + iterHomotopy M k m (chainBoundary M k y)) by abel,
+      ← hy_def, ZModModule.add_self y, zero_add]
+    exact Submodule.add_mem _ hm hDdy
+  rw [show (Submodule.Quotient.mk z : QHomology U V (k + 1)) = QHomology.mk U V (k + 1) z from rfl,
+    QHomology.mk_eq_zero_iff, ← hzc]
+  refine ⟨QChain.mk U V (k + 2) (iterHomotopy M (k + 1) m y + w), ?_⟩
+  rw [qBoundary_mk]
+  show Submodule.Quotient.mk (chainBoundary M (k + 1) (iterHomotopy M (k + 1) m y + w))
+      = Submodule.Quotient.mk zc
+  rw [Submodule.Quotient.eq, sub_eq_add_neg,
+    neg_eq_of_add_eq_zero_left (ZModModule.add_self zc),
+    add_comm (chainBoundary M (k + 1) (iterHomotopy M (k + 1) m y + w)) zc]
+  exact hident
+
+/-- **The small-chains isomorphism** `ι : Hₙ₊₁(Q) ≅ Hₙ₊₁(M, U∪V)` (`U, V` open) — the projection
+`π : C(M)/(C(U)+C(V)) ↠ C(M, U∪V)` is a homology isomorphism. Lets the relative MV LES be stated in
+its textbook `Hₙ(M, U∪V)` form. -/
+noncomputable def iotaEquiv (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (k : ℕ) :
+    QHomology U V (k + 1) ≃ₗ[ZMod 2] RelativeHomology (U ∪ V) (k + 1) :=
+  LinearEquiv.ofBijective (iota U V (k + 1))
+    ⟨iota_injective U V hU hV k, iota_surjective U V hU hV (k + 1)⟩
+
 end SKEFTHawking.SingularRelativeMV
