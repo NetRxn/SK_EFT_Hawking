@@ -19,11 +19,28 @@ convex base case. Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 -/
 
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularRelativeHomologyMod2
-open SKEFTHawking.SingularPairLES
+open SKEFTHawking.SingularPairLES SKEFTHawking.SingularExcisionIso
 
 namespace SKEFTHawking.SingularManifoldFundamentalClass
 
 variable {X : TopCat}
+
+/-- The open cover `{Kᶜ, V}` of `X` when `K` is closed, `V` open, and `K ⊆ V`. -/
+theorem cover_compl_open {K : Set ↑X} (hK : IsClosed K) {V : Set ↑X} (hV : IsOpen V) (hKV : K ⊆ V) :
+    (⋃ U ∈ ({Kᶜ, V} : Set (Set ↑X)), interior U) = Set.univ := by
+  rw [Set.biUnion_pair, hK.isOpen_compl.interior_eq, hV.interior_eq, Set.eq_univ_iff_forall]
+  intro x
+  by_cases h : x ∈ K
+  · exact Or.inr (hKV h)
+  · exact Or.inl h
+
+/-- **Open-set excision**: `Hₙ₊₁(V, V∖K) ≅ Hₙ₊₁(X, X∖K)` for `K` closed, `V` open, `K ⊆ V`. The
+relative homology of `(X, X∖K)` only sees an open neighborhood of the compact `K` — the set version of
+`openPointExcisionEquiv`. -/
+noncomputable def openSetExcisionEquiv {K : Set ↑X} (hK : IsClosed K) {V : Set ↑X} (hV : IsOpen V)
+    (hKV : K ⊆ V) (n : ℕ) :
+    RelativeHomology (restr Kᶜ V) (n + 1) ≃ₗ[ZMod 2] RelativeHomology Kᶜ (n + 1) :=
+  excisionEquiv Kᶜ V n (cover_compl_open hK hV hKV)
 
 /-- **The pair-LES connecting map is an isomorphism over an acyclic ambient**: if `Hₙ₊₁(X) = 0` and
 `Hₙ(X) = 0`, then `δ : Hₙ₊₁(X, A) → Hₙ(A)` is bijective. (Injective: `ker δ = range j_* = 0` since
