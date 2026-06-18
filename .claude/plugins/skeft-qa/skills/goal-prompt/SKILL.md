@@ -28,7 +28,7 @@ skill carries the posture and (at launch) arms it. Hold this posture every turn:
 - On hard Lean proofs, follow `references/lean-dev.md` — incl. its **Parallel Lean
   development** section if you're a `lead` fanning independent sub-chains out: assign each to a
   persistent slot `wtN` (reset it to `main` first), dispatch the `lean-worker` project agent
-  (`Agent(subagent_type="lean-worker", prompt="SLOT N=…, use mcp__lean-lsp-wtN__*, <brick>")`) —
+  (`Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=…, use mcp__lean-lsp-wtN__*, <brick>")`) —
   each worker gets its own build-isolated `mcp__lean-lsp-wtN__*` (full parallel, no shared LSP),
   proves via the `lean4` skill + MCP, never write→`lake build`, commits on `worktree-wtN` for you
   to merge. Slots are a one-time `scripts/setup_lean_worktree_slots.sh` + restart. When a notebook

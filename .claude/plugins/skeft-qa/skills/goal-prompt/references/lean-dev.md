@@ -51,7 +51,7 @@ self-discharging tautologies (`rfl`/`decide`/identity-wrappers/within-own-±2σ 
 
 When a proof program **branches into independent sub-chains** (NOT a tightly-coupled single-file
 chain — those stay solo with one fast MCP), a `lead` fans the bricks out to the **`lean-worker`
-subagent** (`.claude/agents/lean-worker.md`), one per **persistent worktree slot**. Each slot has its
+subagent** (`skeft-qa:lean-worker`, in `.claude/plugins/skeft-qa/agents/`), one per **persistent worktree slot**. Each slot has its
 **own** build-isolated lean-lsp server, so several workers run **fully in parallel with zero
 coordination** — exactly the point of the slots.
 
@@ -77,7 +77,7 @@ to refresh a slot's clone after main's build advances.)
 1. **Reset the slot** to current `main`: `git -C .claude/worktrees/wtN reset --hard main && git -C
    .claude/worktrees/wtN clean -fdq -e .lake`; if main's build moved since the last clone, re-clone its
    `.lake` (`rm -rf …/wtN/lean/.lake && cp -c -R lean/.lake …/wtN/lean/.lake`).
-2. **Dispatch** `Agent(subagent_type="lean-worker", prompt="SLOT N=2, path=<abs …/wt2>, use
+2. **Dispatch** `Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=2, path=<abs …/wt2>, use
    mcp__lean-lsp-wt2__*. <the one independent brick + its Lit-Search refs + acceptance>")`.
 3. The worker proves MCP-first via **its own `mcp__lean-lsp-wtN__*`** (never write→`lake build`),
    kernel-pure, and **commits on `worktree-wtN`**.
