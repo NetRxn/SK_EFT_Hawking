@@ -184,4 +184,18 @@ theorem localComposite_agree_chartBall {m : ℕ} {M : Type} [TopologicalSpace M]
         (SingularGoodCompactManifold.restrictToPoint_chartBall_bijective y₀ hrsub hy₂)))
     z
 
+/-- **`localComposite hy z = 0 ↔ restrictToPoint hy z = 0`** — `manifoldLocalIso y` is injective on
+values (referenced in the *application* `manifoldLocalIso y (restrictToPoint hy z)`, never composed),
+so the composite vanishes iff the restriction does. The bridge from the (defeq-safe) `localComposite`
+form to the bare `restrictToPoint` form used by `determinedByPoints`. -/
+theorem localComposite_eq_zero_iff {m : ℕ} {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] {K : Set M} {y : M} (hy : y ∈ K)
+    (z : RelativeHomology (X := TopCat.of M) (Kᶜ : Set ↑(TopCat.of M)) (m + 2)) :
+    localComposite (m := m) hy z = 0
+      ↔ SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint hy (m + 2) z = 0 := by
+  show SKEFTHawking.SingularChartBridge.manifoldLocalIso y
+      (SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint hy (m + 2) z) = 0
+    ↔ SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint hy (m + 2) z = 0
+  exact (SKEFTHawking.SingularChartBridge.manifoldLocalIso y).map_eq_zero_iff
+
 end SKEFTHawking.SingularFundamentalClass
