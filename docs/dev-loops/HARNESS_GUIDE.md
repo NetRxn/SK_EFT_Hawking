@@ -137,8 +137,9 @@ servers do, and those attach at **session start**, so the slots must pre-exist. 
 disk for all 3 — the `.lake` clones are APFS copy-on-write; `du`'s ~43 GB is logical/COW-blind). The
 servers are enabled in `.claude/settings.local.json`; **restart once after first setup** so they attach.
 
-Lead flow, per task: **reset the slot** (`git -C .claude/worktrees/wtN reset --hard main`; re-clone
-`.lake` if main's build advanced) → **dispatch** `Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=2,
+Lead flow, per task: **reset the slot** (`git -C .claude/worktrees/wtN checkout -B worktree-wtN main`
+— guardrail-safe; `reset --hard`/`clean` are blocked by design; re-clone `.lake` if main's build
+advanced) → **dispatch** `Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=2,
 path=<abs …/wt2>, use mcp__lean-lsp-wt2__*. <brick>")` → worker proves MCP-first via its own
 `mcp__lean-lsp-wtN__*`, kernel-pure, commits on `worktree-wtN` → **merge** `worktree-wtN` into `main`,
 re-run the full gate. The slot **stays** for the next task (reset, don't delete). **Fan out only when

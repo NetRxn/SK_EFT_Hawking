@@ -74,9 +74,10 @@ into each. The `lean-lsp-wt1/2/3` servers are defined in the workspace `.mcp.jso
 to refresh a slot's clone after main's build advances.)
 
 **Lead's flow (per independent sub-chain):**
-1. **Reset the slot** to current `main`: `git -C .claude/worktrees/wtN reset --hard main && git -C
-   .claude/worktrees/wtN clean -fdq -e .lake`; if main's build moved since the last clone, re-clone its
-   `.lake` (`rm -rf …/wtN/lean/.lake && cp -c -R lean/.lake …/wtN/lean/.lake`).
+1. **Reset the slot** to current `main`: `git -C .claude/worktrees/wtN checkout -B worktree-wtN main`
+   (guardrail-safe — `git reset --hard` / `git clean` are blocked by the dev-harness guardrail by
+   design). If main's build moved since the last clone, re-clone its `.lake`
+   (`rm -rf …/wtN/lean/.lake && cp -c -R lean/.lake …/wtN/lean/.lake`).
 2. **Dispatch** `Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=2, path=<abs …/wt2>, use
    mcp__lean-lsp-wt2__*. <the one independent brick + its Lit-Search refs + acceptance>")`.
 3. The worker proves MCP-first via **its own `mcp__lean-lsp-wtN__*`** (never write→`lake build`),
