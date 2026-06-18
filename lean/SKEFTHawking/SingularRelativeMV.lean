@@ -524,4 +524,96 @@ noncomputable def relMvHomSumQ (U V : Set ↑M) (n : ℕ) :
     RelativeHomology U n × RelativeHomology V n →ₗ[ZMod 2] QHomology U V n :=
   (relFactorLHom U V n).coprod (relFactorRHom U V n)
 
+/-! ### Exactness of the relative MV long exact sequence (`Q`-form) -/
+
+/-- The homology inclusion `relIncl` on the class of a relative cycle. -/
+theorem relIncl_mk {S T : Set ↑M} (h : S ⊆ T) (n : ℕ) (z : relCycles S n) :
+    relIncl h n (RelativeHomology.mk S n z)
+      = RelativeHomology.mk T n (relCyclesMap (ContinuousMap.id ↑M) (fun _ hx => h hx) n z) := by
+  rw [relIncl]
+  exact RelativeHomology.map_mk _ _ n z
+
+/-- The `U`-component of `relMvHomDiag` on `[mk c]` is the relative class `[mk_U c]`. -/
+theorem relMvHomDiag_fst_mk (U V : Set ↑M) (n : ℕ) (c : SingularChain M n)
+    (hc : RelativeChain.mk (U ∩ V) n c ∈ relCycles (U ∩ V) n)
+    (hcU : RelativeChain.mk U n c ∈ relCycles U n) :
+    (relMvHomDiag U V n (RelativeHomology.mk (U ∩ V) n ⟨_, hc⟩)).1
+      = RelativeHomology.mk U n ⟨RelativeChain.mk U n c, hcU⟩ := by
+  show relIncl Set.inter_subset_left n (RelativeHomology.mk (U ∩ V) n ⟨_, hc⟩) = _
+  rw [relIncl_mk]
+  refine congrArg (RelativeHomology.mk U n) (Subtype.ext ?_)
+  rw [relCyclesMap_coe]
+  show relMapChain (ContinuousMap.id ↑M) _ n (RelativeChain.mk (U ∩ V) n c) = RelativeChain.mk U n c
+  rw [relMapChain_mk, mapChain_id]
+
+/-- The `V`-component of `relMvHomDiag` on `[mk c]` is the relative class `[mk_V c]`. -/
+theorem relMvHomDiag_snd_mk (U V : Set ↑M) (n : ℕ) (c : SingularChain M n)
+    (hc : RelativeChain.mk (U ∩ V) n c ∈ relCycles (U ∩ V) n)
+    (hcV : RelativeChain.mk V n c ∈ relCycles V n) :
+    (relMvHomDiag U V n (RelativeHomology.mk (U ∩ V) n ⟨_, hc⟩)).2
+      = RelativeHomology.mk V n ⟨RelativeChain.mk V n c, hcV⟩ := by
+  show relIncl Set.inter_subset_right n (RelativeHomology.mk (U ∩ V) n ⟨_, hc⟩) = _
+  rw [relIncl_mk]
+  refine congrArg (RelativeHomology.mk V n) (Subtype.ext ?_)
+  rw [relCyclesMap_coe]
+  show relMapChain (ContinuousMap.id ↑M) _ n (RelativeChain.mk (U ∩ V) n c) = RelativeChain.mk V n c
+  rw [relMapChain_mk, mapChain_id]
+
+/-- The `U`-factor of `extractA b` is the boundary of `(↑b).1` (so its `Hₙ(M,U)` class vanishes). -/
+theorem relMapChain_extractA_left (U V : Set ↑M) (n : ℕ) (b : relLift U V n) :
+    relMapChain (ContinuousMap.id ↑M) (fun _ hx => Set.inter_subset_left hx) n (extractA U V n b)
+      = relBoundary U n (b : RelativeChain U (n + 1) × RelativeChain V (n + 1)).1 := by
+  have h := relMvChainDiag_extractA U V n b
+  rw [relMvChainDiag, LinearMap.prod_apply, bBoundary, LinearMap.prodMap_apply] at h
+  exact congrArg Prod.fst h
+
+/-- The `V`-factor of `extractA b` is the boundary of `(↑b).2`. -/
+theorem relMapChain_extractA_right (U V : Set ↑M) (n : ℕ) (b : relLift U V n) :
+    relMapChain (ContinuousMap.id ↑M) (fun _ hx => Set.inter_subset_right hx) n (extractA U V n b)
+      = relBoundary V n (b : RelativeChain U (n + 1) × RelativeChain V (n + 1)).2 := by
+  have h := relMvChainDiag_extractA U V n b
+  rw [relMvChainDiag, LinearMap.prod_apply, bBoundary, LinearMap.prodMap_apply] at h
+  exact congrArg Prod.snd h
+
+/-- **Relative MV exactness at `Hₙ(M, U∩V)`**: `range δ = ker(relMvHomDiag)`. With `Hₙ₊₁(Q) = 0`
+(the inductive hypothesis), this gives injectivity of `Hₙ(M,U∩V) → Hₙ(M,U) ⊕ Hₙ(M,V)` — the gluing
+step of Hatcher 3.27. -/
+theorem relMv_exact_connecting (U V : Set ↑M) (n : ℕ) :
+    Function.Exact (relConnecting U V n) (relMvHomDiag U V n) := by
+  intro x
+  constructor
+  · intro hx
+    obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+    have hxU : relIncl Set.inter_subset_left n (RelativeHomology.mk (U ∩ V) n z) = 0 :=
+      congrArg Prod.fst hx
+    have hxV : relIncl Set.inter_subset_right n (RelativeHomology.mk (U ∩ V) n z) = 0 :=
+      congrArg Prod.snd hx
+    rw [relIncl_mk, RelativeHomology.mk_eq_zero_iff, relCyclesMap_coe] at hxU hxV
+    obtain ⟨wU, hwU⟩ := hxU
+    obtain ⟨wV, hwV⟩ := hxV
+    have hbeq : bBoundary U V n (wU, wV) = relMvChainDiag U V n (z : RelativeChain (U ∩ V) n) := by
+      rw [bBoundary, LinearMap.prodMap_apply, hwU, hwV]; rfl
+    have hbL : (wU, wV) ∈ relLift U V n := by
+      rw [relLift, LinearMap.mem_ker, LinearMap.comp_apply, hbeq, relMvChainSum_relMvChainDiag]
+    have hextract : extractA U V n ⟨(wU, wV), hbL⟩ = (z : RelativeChain (U ∩ V) n) := by
+      apply relMvChainDiag_injective U V n
+      rw [relMvChainDiag_extractA]; exact hbeq
+    refine ⟨relLiftToQHom U V n ⟨(wU, wV), hbL⟩, ?_⟩
+    rw [relConnecting_relLiftToQHom, relConnectingLift_apply]
+    exact congrArg (RelativeHomology.mk (U ∩ V) n) (Subtype.ext hextract)
+  · rintro ⟨y, rfl⟩
+    obtain ⟨b, rfl⟩ := relLiftToQHom_surjective U V n y
+    rw [relConnecting_relLiftToQHom, relConnectingLift_apply]
+    refine Prod.ext ?_ ?_
+    · show relIncl Set.inter_subset_left n (RelativeHomology.mk (U ∩ V) n _) = 0
+      rw [relIncl_mk, RelativeHomology.mk_eq_zero_iff, relCyclesMap_coe]
+      show relMapChain (ContinuousMap.id ↑M) _ n (extractA U V n b) ∈ relBoundaries U n
+      rw [relMapChain_extractA_left]
+      exact LinearMap.mem_range_self _ _
+    · show relIncl Set.inter_subset_right n (RelativeHomology.mk (U ∩ V) n _) = 0
+      rw [relIncl_mk, RelativeHomology.mk_eq_zero_iff, relCyclesMap_coe]
+      show relMapChain (ContinuousMap.id ↑M) _ n (extractA U V n b) ∈ relBoundaries V n
+      rw [relMapChain_extractA_right]
+      exact LinearMap.mem_range_self _ _
+
 end SKEFTHawking.SingularRelativeMV
