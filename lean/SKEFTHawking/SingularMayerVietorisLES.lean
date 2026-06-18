@@ -271,4 +271,28 @@ theorem mvDelta_mvHomSum (A B : Set X) (n : ℕ)
         = homProj (restr A B) (n + 1) v from (excisionEquiv A B n hcov).symm_apply_apply _,
     connecting_homProj, map_zero]
 
+/-- **MV exactness at `Hₙ(X)`**: `Function.Exact mvHomSum mvDelta` (`ker δ = im mvHomSum`). The
+Barratt–Whitehead chase: `δ w = 0` ⟹ (seam injective + `exact_homProj_connecting`) the excised
+projection of `w` lifts to a `(B,A∩B)`-projection `j v'`; `excisionMap_homProj` then gives
+`homProj A (w − i_B v') = 0`, so (`exact_homIncl_homProj`) `w − i_B v' = i_A u'`, i.e.
+`w = mvHomSum (u', v')`. -/
+theorem mv_exact_ambient (A B : Set X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set X)), interior U) = Set.univ) :
+    Function.Exact (mvHomSum A B (n + 1)) (mvDelta A B n hcov) := by
+  intro w
+  refine ⟨fun hw => ?_, fun hr => ?_⟩
+  · have h1 : connecting (restr A B) n
+        ((excisionEquiv A B n hcov).symm (homProj A (n + 1) w)) = 0 :=
+      (seamHomologyEquiv A B n).injective (by rw [map_zero]; exact hw)
+    obtain ⟨v', hv'⟩ := (exact_homProj_connecting (restr A B) n _).mp h1
+    have h2 : homProj A (n + 1) (w - homIncl B (n + 1) v') = 0 := by
+      rw [map_sub, ← excisionMap_homProj, hv',
+        show excisionMap A B (n + 1) ((excisionEquiv A B n hcov).symm (homProj A (n + 1) w))
+          = homProj A (n + 1) w from (excisionEquiv A B n hcov).apply_symm_apply _, sub_self]
+    obtain ⟨u', hu'⟩ := (exact_homIncl_homProj A (n + 1) _).mp h2
+    exact ⟨(u', v'), by
+      simp only [mvHomSum, LinearMap.coprod_apply, Homology.map_ambIncl, hu', sub_add_cancel]⟩
+  · obtain ⟨uv, rfl⟩ := hr
+    exact mvDelta_mvHomSum A B n hcov uv
+
 end SKEFTHawking.SingularMayerVietorisLES
