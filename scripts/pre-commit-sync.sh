@@ -59,9 +59,15 @@ if git diff --cached --name-only --diff-filter=ACM | grep -q '\.lean$'; then
       [ "$BRANCH" = "main" ] && { tail -20 /tmp/skeft-lean.$$; exit 1; } || echo "(off-main: warn only)"
     fi
   else echo "(skeft-sync: lake not on PATH — skipping lean guard)"; fi
-  if grep -RnE '^[[:space:]]*sorry' lean/SKEFTHawking >/dev/null 2>&1; then
-    echo "ERROR: new 'sorry' in lean/SKEFTHawking (genuine breakage)."
-    [ "$BRANCH" = "main" ] && exit 1 || echo "(off-main: warn only)"
+  # Genuine-sorry guard (precise). A naive source grep (`grep -RnE '^\s*sorry'`) matches
+  # commented-out `sorry`s, docstring code-fence examples, and `.backup` files — all false
+  # positives, none of them compiled (it blocked EVERY commit once such pre-existing lines
+  # existed). Instead trust the build we just ran: Lean prints "declaration uses 'sorry'"
+  # ONLY for a genuine sorry in a built declaration (and replays it for cached modules), so
+  # the captured build log is the precise, false-positive-free signal.
+  if [ -f /tmp/skeft-lean.$$ ] && grep -qF "declaration uses 'sorry'" /tmp/skeft-lean.$$; then
+    echo "ERROR: genuine 'sorry' in a built lean/SKEFTHawking declaration (lake reported it)."
+    [ "$BRANCH" = "main" ] && { grep -nF "declaration uses 'sorry'" /tmp/skeft-lean.$$ | head -10; exit 1; } || echo "(off-main: warn only)"
   fi
   # counts.json is now stale vs .lean — but its regen IS the 30-min ExtractDeps, so do
   # NOT run it here. Staleness is a METRIC, not soundness → WARN even on `main` (review

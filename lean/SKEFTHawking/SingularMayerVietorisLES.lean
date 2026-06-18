@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.SingularFunctoriality
 import SKEFTHawking.SingularMayerVietoris
+import SKEFTHawking.SingularExcisionIso
 
 /-!
 # Mayer–Vietoris: the homology-level maps `Hₙ(A∩B) → Hₙ(A)⊕Hₙ(B) → Hₙ(X)`
@@ -24,6 +25,7 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularFunctoriality
+open SKEFTHawking.SingularPairLES SKEFTHawking.SingularExcisionIso
 
 namespace SKEFTHawking.SingularMayerVietorisLES
 
@@ -79,5 +81,23 @@ theorem mvHomSum_mvHomDiag (A B : Set ↑X) (n : ℕ) (w : Homology (sub (A ∩ 
         = Homology.map (ambIncl (A ∩ B)) n w by
         rw [← LinearMap.comp_apply, ← Homology.map_comp, ambIncl_comp_subIncl_right]]
   exact ZModModule.add_self _
+
+/-! ## The Mayer–Vietoris connecting homomorphism `δ : Hₙ₊₁(X) → Hₙ(A ∩ B)` -/
+
+/-- **The Mayer–Vietoris connecting homomorphism** `δ : Hₙ₊₁(X) → Hₙ(A ∩ B)`, assembled
+Barratt–Whitehead-style from the already-built pair LES (`SingularPairLES`) and singular excision
+(`SingularExcisionIso`) — no new homology theory needed. It is the composite
+`∂' ∘ excision⁻¹ ∘ j_* : Hₙ₊₁(X) → Hₙ₊₁(X, A) → Hₙ₊₁(B, A ∩ B) → Hₙ(A ∩ B)`: project to the relative
+group (`homProj`), cross the excision isomorphism backwards (`excisionEquiv.symm`), then apply the pair
+connecting map (`connecting`). This is exactly the composite proven for the sphere suspension
+(`SingularSphereBottom.bottomSuspMap`), now stated for an arbitrary space `X` and a two-set cover.
+With `mvHomDiag`/`mvHomSum` it completes the Mayer–Vietoris long exact sequence — the engine of the
+fundamental-class gluing (Hatcher 3.26–3.27). `Hₙ(A ∩ B)` is realized intrinsically as
+`Hₙ(sub (restr A B))` (the form excision produces): `restr A B = Subtype.val ⁻¹' A : Set (sub B)`. -/
+noncomputable def mvConnecting (A B : Set X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set X)), interior U) = Set.univ) :
+    Homology X (n + 1) →ₗ[ZMod 2] Homology (sub (restr A B)) n :=
+  (connecting (restr A B) n).comp
+    (((excisionEquiv A B n hcov).symm.toLinearMap).comp (homProj A (n + 1)))
 
 end SKEFTHawking.SingularMayerVietorisLES
