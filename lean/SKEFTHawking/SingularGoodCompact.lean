@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.SingularManifoldFundamentalClass
 import SKEFTHawking.SingularRelativeMV
+import SKEFTHawking.SingularDeterminedConvex
 
 /-!
 # Phase 5q.F (w₂-foundation) — the finite-union closure of the "good compact" property (Hatcher 3.27)
@@ -144,5 +145,20 @@ theorem goodCompact_biUnion {ι : Type*} [DecidableEq ι] {n : ℕ} :
         exact hsub (insert a t)
           (Finset.insert_subset (Finset.mem_cons_self a s) (ht.trans (Finset.subset_cons ha)))
           (Finset.insert_nonempty a t)
+
+/-- **The `goodCompact` base case for a convex chart set** — combines `vanishAbove_convex_chart` (the
+high-degree vanishing) and `determinedByPoints_convexChart` (the degree-`n` determined-by-points half)
+into `goodCompact (m+2) K` for a compact set `K` matched by a chart to a compact convex `C ⊆ ℝⁿ`
+(`0 ∈ int C`). The base case the `goodCompact_biUnion` compactness induction stacks on. -/
+theorem goodCompact_convexChart {M : TopCat} [T1Space ↑M] {m : ℕ} {K : Set ↑M}
+    {U : Set ↑M} (hK : IsClosed K) (hU : IsOpen U) (hKU : K ⊆ U)
+    {C : Set (EuclideanSpace ℝ (Fin (m + 2)))} {V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))}
+    (hCconv : Convex ℝ C) (hCcomp : IsCompact C)
+    (hC0 : C ∈ nhds (0 : EuclideanSpace ℝ (Fin (m + 2)))) (hV : IsOpen V) (hCV : C ⊆ V)
+    (e : ↥U ≃ₜ ↥V)
+    (hcompat : ∀ u : ↥U, ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C) ↔ (u : ↑M) ∈ K) :
+    goodCompact (m + 2) K :=
+  ⟨vanishAbove_convex_chart hK hU hKU hCconv hCcomp hC0 hV hCV e hcompat,
+   SingularDeterminedConvex.determinedByPoints_convexChart hK hU hKU hCconv hCcomp hC0 hV hCV e hcompat⟩
 
 end SKEFTHawking.SingularGoodCompact
