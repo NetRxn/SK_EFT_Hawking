@@ -319,4 +319,33 @@ theorem vanishAbove_biUnion {ι : Type*} [DecidableEq ι] {n : ℕ} :
           (Finset.insert_subset (Finset.mem_cons_self a s) (ht.trans (Finset.subset_cons ha)))
           (Finset.insert_nonempty a t)
 
+/-! ### The degree-`n` "determined by points" half of Hatcher 3.27
+
+For the fundamental class we also need the degree-`n` statement: a class in `Hₙ(M|K)` is `0` iff its
+restriction to `Hₙ(M|x)` vanishes for every `x ∈ K`. This scaffolds the restriction map and the
+predicate; the convex base case + the MV induction (next bricks) prove it. -/
+
+/-- **Restriction to a point** `Hₙ(M|K) → Hₙ(M|x)` for `x ∈ K` (`Hₙ(M|K) = Hₙ(M, Kᶜ)`): the
+inclusion-of-pairs map for `Kᶜ ⊆ {x}ᶜ` (i.e. `{x} ⊆ K`). The map whose simultaneous vanishing over all
+`x ∈ K` detects `0` in the "determined by points" half of Hatcher 3.27. -/
+noncomputable def restrictToPoint {K : Set ↑X} {x : ↑X} (hx : x ∈ K) (n : ℕ) :
+    RelativeHomology Kᶜ n →ₗ[ZMod 2] RelativeHomology ({x}ᶜ) n :=
+  relIncl (Set.compl_subset_compl.mpr (Set.singleton_subset_iff.mpr hx)) n
+
+/-- **Determined by points** (Hatcher 3.27, the degree-`n` half): every class in `Hₙ(M|K)` that
+restricts to `0` in `Hₙ(M|x)` for all `x ∈ K` is itself `0`. (For a closed `n`-manifold and `K = M`,
+combined with `Hₙ(M|x) ≅ ℤ/2` this pins `Hₙ(M; ℤ/2) ≅ ℤ/2` and produces `[M]`.) -/
+def determinedByPoints (n : ℕ) (K : Set ↑X) : Prop :=
+  ∀ α : RelativeHomology Kᶜ n, (∀ (x : ↑X) (hx : x ∈ K), restrictToPoint hx n α = 0) → α = 0
+
+/-- **Restriction factors through a sub-restriction**: for `K' ⊆ K` and `x ∈ K'`, restricting
+`Hₙ(M|K) → Hₙ(M|x)` equals first restricting `Hₙ(M|K) → Hₙ(M|K')` then `Hₙ(M|K') → Hₙ(M|x)`
+(functoriality of `relIncl`). The compatibility the MV induction uses to transport the
+determined-by-points property across the cover. -/
+theorem restrictToPoint_relIncl {K K' : Set ↑X} (hKK' : K' ⊆ K) {x : ↑X} (hx : x ∈ K') (n : ℕ)
+    (α : RelativeHomology Kᶜ n) :
+    restrictToPoint hx n (relIncl (Set.compl_subset_compl.mpr hKK') n α)
+      = restrictToPoint (hKK' hx) n α := by
+  rw [restrictToPoint, restrictToPoint, relIncl_trans]
+
 end SKEFTHawking.SingularManifoldFundamentalClass
