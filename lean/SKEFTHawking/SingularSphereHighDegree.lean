@@ -20,6 +20,7 @@ points, each homeomorphic to the acyclic `ℝ⁰`). Kernel-pure (`{propext, Clas
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularPairLES
 open SKEFTHawking.SingularLocalHomology SKEFTHawking.SingularDisjointUnion
 open SKEFTHawking.SingularRelativeHomologyMod2 SKEFTHawking.SingularExcision
+open SKEFTHawking.SingularHomotopyInvariance SKEFTHawking.SingularEuclideanAcyclic
 
 namespace SKEFTHawking.SingularSphereHighDegree
 
@@ -70,5 +71,18 @@ theorem homology_trivial_of_clopen_split {X : TopCat} {U : Set ↑X} (hU : IsClo
     exact chainIncl_mem_boundaries Uᶜ (k + 1) b' (boundaries_of_homology_trivial hUctriv b' hcycB)
   rw [← hab]
   exact Submodule.add_mem _ haB hbB
+
+/-- **One-point acyclicity**: a topological space with a unique point is acyclic in positive degree,
+`Hₖ₊₁(X) = 0`. Transported from `Hₖ₊₁(ℝ⁰) = 0` (`eucl_homology_trivial`) along the unique continuous
+maps `X → ℝ⁰` and `ℝ⁰ → X` (both compositions are the identity since both spaces are subsingletons). -/
+theorem homology_unique_trivial {X : TopCat} [Unique ↑X] (k : ℕ) (x : Homology X (k + 1)) : x = 0 := by
+  haveI hs : Subsingleton (EuclideanSpace ℝ (Fin 0)) := ⟨fun a b => by ext i; exact Fin.elim0 i⟩
+  haveI : Subsingleton ↑(Eucl 0) := hs
+  let f : C(↑X, ↑(Eucl 0)) := ⟨fun _ => 0, continuous_const⟩
+  let g : C(↑(Eucl 0), ↑X) := ⟨fun _ => default, continuous_const⟩
+  have hgf : g.comp f = ContinuousMap.id ↑X := ContinuousMap.ext fun z => Subsingleton.elim _ _
+  have hfg : f.comp g = ContinuousMap.id ↑(Eucl 0) := ContinuousMap.ext fun z => Subsingleton.elim _ _
+  exact homology_trivial_of_bijective f
+    (Homology.map_bijective_of_comp_id_all f g hgf hfg (k + 1)) (eucl_homology_trivial 0 k) x
 
 end SKEFTHawking.SingularSphereHighDegree
