@@ -236,4 +236,21 @@ theorem vanishAbove_union {A B : Set ↑X} (hA : IsClosed A) (hB : IsClosed B) {
   · exact hVA (k + 1) (by omega)
   · exact hVB (k + 1) (by omega)
 
+/-- **The convex-chart base case in `vanishAbove` form**: a compact set `K`, matched by a chart `e`
+with a compact convex `C ⊆ ℝⁿ` (`0 ∈ int C`), satisfies `vanishAbove (m+2) K` — i.e. `Hᵢ(M|K) = 0`
+for every `i > m+2`. The predicate-form repackaging of `manifoldConvexLocalHomology_high` (re-indexing
+`i > m+2` as `i = k+1+1` with `m+1 ≤ k`), so the convex chart pieces feed `vanishAbove_union` as the
+base of the Hatcher 3.27 finite-union compactness induction toward `[M]`. -/
+theorem vanishAbove_convex_chart {M : TopCat} {m : ℕ} {K : Set ↑M}
+    {U : Set ↑M} (hK : IsClosed K) (hU : IsOpen U) (hKU : K ⊆ U)
+    {C : Set (EuclideanSpace ℝ (Fin (m + 2)))} {V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))}
+    (hCconv : Convex ℝ C) (hCcomp : IsCompact C)
+    (hC0 : C ∈ nhds (0 : EuclideanSpace ℝ (Fin (m + 2)))) (hV : IsOpen V) (hCV : C ⊆ V)
+    (e : ↥U ≃ₜ ↥V)
+    (hcompat : ∀ u : ↥U, ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C) ↔ (u : ↑M) ∈ K) :
+    vanishAbove (m + 2) K := by
+  intro i hi x
+  obtain ⟨k, rfl⟩ : ∃ k, i = k + 1 + 1 := ⟨i - 2, by omega⟩
+  exact manifoldConvexLocalHomology_high hK hU hKU hCconv hCcomp hC0 hV hCV e hcompat k (by omega) x
+
 end SKEFTHawking.SingularManifoldFundamentalClass
