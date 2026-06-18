@@ -156,4 +156,32 @@ theorem localComposite_bijective {m : ℕ} {M : Type} [TopologicalSpace M] [T1Sp
       (SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint hy (m + 2) z) = w
     rw [hz, hu]
 
+/-- **The two local-value composites on a chart ball agree** (Hatcher 3.26 local constancy, abstract
+form): for `y₁, y₂` in `K = (chartAt y₀).symm '' B̄(chartAt y₀ · y₀, r)`, the composites
+`localComposite hy₁`, `localComposite hy₂ : Hₘ₊₂(M|K) ≃ ℤ/2` agree on every class — each is an iso
+(`localComposite_bijective`), and over `ℤ/2` linear isos to `ℤ/2` are unique (`linearEquiv_zmod2_unique`).
+Applied to `ρ_K α` this says `f(y₁) = f(y₂)` (the fundamental-class restriction value is locally
+constant); the per-point connection `f(y) = localComposite hy (ρ_K α)` is the factoring
+`restrictToPoint_restrictHomologyToSet`. -/
+theorem localComposite_agree_chartBall {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (y₀ : M) {r : ℝ}
+    (hrsub : Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀ y₀) r
+      ⊆ (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀).target) {y₁ y₂ : M}
+    (hy₁ : y₁ ∈ (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀).symm ''
+      Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀ y₀) r)
+    (hy₂ : y₂ ∈ (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀).symm ''
+      Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀ y₀) r)
+    (z : RelativeHomology (X := TopCat.of M)
+      (((chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀).symm ''
+        Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀ y₀) r)ᶜ) (m + 2)) :
+    localComposite (m := m) hy₁ z = localComposite (m := m) hy₂ z :=
+  linearEquiv_zmod2_unique
+    (LinearEquiv.ofBijective (localComposite (m := m) hy₁)
+      (localComposite_bijective hy₁
+        (SingularGoodCompactManifold.restrictToPoint_chartBall_bijective y₀ hrsub hy₁)))
+    (LinearEquiv.ofBijective (localComposite (m := m) hy₂)
+      (localComposite_bijective hy₂
+        (SingularGoodCompactManifold.restrictToPoint_chartBall_bijective y₀ hrsub hy₂)))
+    z
+
 end SKEFTHawking.SingularFundamentalClass
