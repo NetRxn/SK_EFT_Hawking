@@ -135,4 +135,58 @@ noncomputable def mvDelta (A B : Set X) (n : ℕ)
     Homology X (n + 1) →ₗ[ZMod 2] Homology (sub (A ∩ B)) n :=
   (seamHomologyEquiv A B n).toLinearMap.comp (mvConnecting A B n hcov)
 
+/-! ## Naturality of the connecting map under excision (the Barratt–Whitehead square) -/
+
+/-- The inclusion `A ∩ B ↪ A`, from the `restr A B` (inside `sub B`) representation, as a
+`ContinuousMap` `sub (restr A B) → sub A` (`p.1 ∈ restr A B = Subtype.val ⁻¹' A` gives `p.1.1 ∈ A`). -/
+def inclRA (A B : Set X) : C(↥(sub (restr A B)), ↥(sub A)) :=
+  ⟨fun p => ⟨p.1.1, p.2⟩, by fun_prop⟩
+
+/-- The functorial pushforward `mapSimplex (ambIncl S)` along the subspace inclusion coincides with
+`simplexIncl S` (both apply the inclusion `sub S ↪ X` to a singular simplex). -/
+theorem mapSimplex_ambIncl (S : Set ↑X) {n : ℕ}
+    (σ : (TopCat.toSSet.obj (sub S)).obj (op (SimplexCategory.mk n))) :
+    mapSimplex (ambIncl S) σ = simplexIncl S n σ := by
+  apply (X.toSSetObjEquiv (op (SimplexCategory.mk n))).injective
+  rw [SingularExcision.toSSetObjEquiv_simplexIncl]
+  simp only [mapSimplex, Equiv.apply_symm_apply]
+  rfl
+
+/-- **chainIncl–mapChain bridge**: `mapChain (ambIncl S) = chainIncl S` — the LES-side functorial
+pushforward (`Homology.map`/`mapChain`) and the `connecting`-side chain inclusion (`chainIncl`) along
+the subspace inclusion `sub S ↪ X` are the same linear map. Reused throughout Mayer–Vietoris exactness
+to move between the two formulations. -/
+theorem mapChain_ambIncl (S : Set ↑X) (n : ℕ) :
+    mapChain (ambIncl S) n = chainIncl S n := by
+  refine LinearMap.ext fun c => ?_
+  induction c using Finsupp.induction_linear with
+  | zero => simp
+  | add c₁ c₂ h₁ h₂ => rw [map_add, map_add, h₁, h₂]
+  | single σ a => rw [mapChain_single, chainIncl_single, mapSimplex_ambIncl]
+
+/-- **Naturality of the connecting map under excision** (the Barratt–Whitehead commutativity square):
+the inclusion `A ∩ B ↪ A` after the `(B, A∩B)` connecting map equals the `(X, A)` connecting map after
+excision. The crux of Mayer–Vietoris exactness at `Hₙ(A∩B)` and `Hₙ(X)`. -/
+theorem inclRA_connecting (A B : Set X) (n : ℕ) (y : RelativeHomology (restr A B) (n + 1)) :
+    Homology.map (inclRA A B) n (connecting (restr A B) n y)
+      = connecting A n (excisionMap A B (n + 1) y) := by
+  obtain ⟨c, rfl⟩ := relCycleToHom_surjective (restr A B) n y
+  rw [connecting_relCycleToHom]
+  have hc' : chainBoundary X n (chainIncl B (n + 1) (c : SingularChain (sub B) (n + 1)))
+      ∈ subspaceChains A n := by
+    rw [← chainIncl_chainBoundary]
+    exact (chainIncl_mem_subspaceChains_iff A B _).2 (Submodule.mem_comap.mp c.2)
+  have hexc : excisionMap A B (n + 1) (relCycleToHom (restr A B) n c)
+      = relCycleToHom A n ⟨chainIncl B (n + 1) c, hc'⟩ := by
+    rw [relCycleToHom_apply, excisionMap_mk, relCycleToHom_apply]
+    exact congrArg (RelativeHomology.mk A (n + 1)) (Subtype.ext (relChainIncl_mk A B (n + 1) c))
+  rw [hexc, connecting_relCycleToHom, connectingLift_apply, connectingLift_apply, Homology.map_mk]
+  refine congrArg (Homology.mk (sub A) n) (Subtype.ext ?_)
+  rw [cyclesMap_coe]
+  apply chainIncl_injective A n
+  rw [chainIncl_boundaryExtract, ← chainIncl_chainBoundary,
+    ← chainIncl_boundaryExtract (restr A B) n c, ← mapChain_ambIncl A, ← mapChain_ambIncl B,
+    ← mapChain_ambIncl (restr A B), ← mapChain_comp, ← mapChain_comp]
+  congr 1
+
 end SKEFTHawking.SingularMayerVietorisLES
