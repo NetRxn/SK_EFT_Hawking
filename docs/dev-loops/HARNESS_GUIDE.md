@@ -123,28 +123,29 @@ claude plugin update skeft-qa@skeft-local --scope local   # run from BOTH the wo
 
 ---
 
-## 9. Parallel Lean apparatus (worktree fan-out)
+## 9. Parallel Lean apparatus (worktree fan-out via the `lean-worker` agent)
 
-For a `lead` orchestrating **independent** Lean sub-chains across subagents, the workspace
-`.mcp.json` pre-defines three fixed worktree-slot MCP servers — `lean-lsp-wt1/2/3` — each a fast
-(`--repl`) lean-lsp pinned to `SK_EFT_Hawking/.claude/worktrees/wt{1,2,3}/lean` (enabled in the
-workspace `.claude/settings.local.json`; **a session restart loads them**). The server↔worktree
-binding is **by the fixed name**: create the slot as `wtN` (`git worktree add .claude/worktrees/wt1
--b worktree-wt1`, or `EnterWorktree name=wt1`) and seed its Lean build before dispatching a subagent
-there — **fastest: symlink the main tree's `lean/.lake` into the slot** (same commit → oleans valid,
-read-only, verified instant; from-clean alt: `lake exe cache get` + `lake build`, or `.worktreeinclude`).
-**⚠ Ordering (verified):** the servers attach at **session start** and don't hot-reload — a slot must
-exist *before* the consuming session launches (a slot whose worktree is absent fails to connect
-harmlessly, but its tools stay absent until a restart with the worktree present). Simplest: keep
-`wt1/2/3` as **persistent gitignored slots** (`git reset --hard` + re-seed per task) so the servers
-always register. Don't use `Agent isolation: worktree` for a slot — its random name matches no static
-server. `SK_EFT_Hawking/.claude/worktrees/` is gitignored.
+For a `lead` orchestrating **independent** Lean sub-chains, fan out to the **`lean-worker`** project
+agent (`.claude/agents/lean-worker.md`). Each `lean-worker` runs in its **own** `isolation: worktree`
+and carries its **own inline `lean-lsp-worker` MCP** (relative `--lean-project-path lean` → resolves to
+that worktree). Crucially, an **inline subagent MCP connects at *subagent* start, not session start** —
+so a worktree spun up **mid-loop** gets a working fast Lean LSP with **no restart**. (This is the fix
+for the earlier gotcha: static `.mcp.json` `lean-lsp-wtN` slot servers attach only at *session* start
+and don't hot-reload, so they can't serve a mid-loop worktree — they've been removed.)
 
-Dispatch each Lean subagent into one slot and tell it to use the **`lean4` skill + the matching
-`mcp__lean-lsp-wtN__*` tools** (the MCP-first loop), **not** write→`lake build` cycles; stage its
-own paths only; never push. **Fan out only when the proof DAG has genuinely branched** — a
-tightly-coupled single-file chain is faster solo with one fast MCP. Full convention (slot table +
-subagent contract): the **Parallel Lean development** section of
+Wiring (already in place): `worktree.baseRef: "head"` in `.claude/settings.local.json` (this repo has a
+stale `origin/HEAD`); the agent lives in `.claude/agents/` because **inline `mcpServers` are ignored for
+plugin agents**; agent defs are **startup-scanned**, so a freshly-added `lean-worker` is dispatchable
+only after the next launch (one-time). The worker **self-seeds** its build (`cp -c` clones the main
+`lean/.lake` → instant, copy-on-write isolated), self-checks its MCP points at its own worktree, proves
+MCP-first (lean4 skill + `mcp__lean-lsp-worker__*`, never write→`lake build`), kernel-pure, and commits
+on its worktree branch.
+
+Lead flow: `Agent(subagent_type="lean-worker", prompt="<one independent brick>")` → on success
+**merge/cherry-pick the worktree branch into `main`**, re-run the full gate (`lake build
+SKEFTHawking.ExtractDeps`, `validate.py`), then `git worktree remove`. **Fan out only when the proof DAG
+has genuinely branched** — a tightly-coupled single-file chain is faster solo with one fast MCP. Full
+convention: the **Parallel Lean development** section of
 `.claude/plugins/skeft-qa/skills/goal-prompt/references/lean-dev.md`.
 
 ---

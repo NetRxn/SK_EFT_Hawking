@@ -26,10 +26,12 @@ skill carries the posture and (at launch) arms it. Hold this posture every turn:
   If you feel blocked, run full diligence first; if one option is clearly best, TAKE IT
   and log the rationale in the notebook (see `references/decision-heuristics.md`).
 - On hard Lean proofs, follow `references/lean-dev.md` — incl. its **Parallel Lean
-  development** section if you're a `lead` fanning independent sub-chains to Lean subagents
-  (fixed worktree slots `wt1/2/3` ↔ `lean-lsp-wtN` MCP servers; subagents drive proofs via the
-  `lean4` skill + the matching MCP, never write→`lake build`). When a notebook shard crosses its
-  size budget, follow `references/notebook-sharding.md` (the **lead** curates).
+  development** section if you're a `lead` fanning independent sub-chains out: dispatch the
+  `lean-worker` project agent (`Agent(subagent_type="lean-worker", …)`) — it runs in its own
+  worktree with its own inline `lean-lsp-worker` MCP (connects at subagent start → works mid-loop,
+  no restart), drives proofs via the `lean4` skill + MCP, never write→`lake build`, and commits on
+  its worktree branch for you to merge. When a notebook shard crosses its size budget, follow
+  `references/notebook-sharding.md` (the **lead** curates).
 
 ## At launch (invoked by the user) — arm the loop
 Native `/goal` is the loop; this skill (1) registers the session and (2) composes the
