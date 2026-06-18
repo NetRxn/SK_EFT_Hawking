@@ -38,9 +38,21 @@ one per slot; **only ever touch your own slot.**
   `RingQuot` types use `erw` when `rw` "did not find pattern".
 - Read the relevant `Lit-Search/Phase-*/` deep-research file **directly** before a proof that cites it.
 
+## ⛔ Safety — when something fails, STOP and report (never flail)
+You operate on a SHARED git object store and shared build caches. If a `git commit`, `git add`, or build
+step fails, **STOP immediately and report the verbatim error to the lead.** You are FORBIDDEN from:
+- raw git plumbing or index surgery — no `git read-tree`, `write-tree`, `update-ref`, `commit-tree`,
+  `rm .git/index`, `git reset`, `git checkout <rev>` of a dependency, or running `.git/hooks/*` directly;
+- `--no-verify` or any other bypass of the pre-commit hook (it is the leak guard — never circumvent it);
+- deleting, cleaning, or "fixing" build artifacts or dependencies — no `lake clean`, no `rm -rf .lake`
+  (or any path under it), no touching `.lake/packages/*`, no re-checkout/re-fetch of deps.
+A failed commit/build is a signal for the **lead** to fix the environment — not for you to repair git or
+the build. Report and stop; the lead re-dispatches once it's resolved.
+
 ## Finish
 - When the brick is GREEN, finalize against your own slot build: `cd "$SLOT/lean" && lake build <Module>`
-  (this builds in YOUR `.lake` — isolated).
+  (this builds in YOUR `.lake` — isolated). If that build errors for an environment reason (missing oleans,
+  dependency-resolution failure), **STOP and report** — do not try to repair it.
 - `git -C "$SLOT" add <only your own paths>` and `git -C "$SLOT" commit` on `worktree-wtN`. The commit is
   what hands your work to the lead. **Never push. Never touch another slot. Stage only your own paths.**
 - Report back: slot N, the modules/declarations you added, the `lean_verify` axiom line for each

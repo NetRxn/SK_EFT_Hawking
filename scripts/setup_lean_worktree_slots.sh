@@ -26,15 +26,18 @@ N="${1:-3}"
 for i in $(seq 1 "$N"); do
   SLOT=".claude/worktrees/wt$i"; BR="worktree-wt$i"
   if git worktree list --porcelain | grep -qx "worktree $REPO/$SLOT"; then
-    echo "wt$i: exists — resetting source to HEAD"
-    git -C "$SLOT" reset --hard HEAD >/dev/null
-    git -C "$SLOT" clean -fdq -e '.lake' >/dev/null 2>&1 || true
+    echo "wt$i: exists — refreshing its build clone only"
+    # NOTE: we deliberately do NOT 'git reset --hard' / 'git clean' here (the dev-harness
+    # guardrail blocks those, by design). Re-seeding the .lake build clone is what matters
+    # for a stale slot; syncing a slot's SOURCE to main is the lead's per-task job
+    # (e.g. `git -C <slot> merge --ff-only main`), done deliberately, not by this script.
   else
     echo "wt$i: creating worktree on branch $BR"
     git branch -D "$BR" >/dev/null 2>&1 || true
     git worktree add "$SLOT" -b "$BR" >/dev/null
   fi
   # COW-clone the build so the slot's LSP is instant + isolated (writes never touch main).
+  # rm -rf of the gitignored .lake is allowed (not a git reset/clean).
   rm -rf "$SLOT/lean/.lake"
   cp -c -R lean/.lake "$SLOT/lean/.lake"
   echo "wt$i: ready -> $REPO/$SLOT/lean   (served by mcp__lean-lsp-wt${i}__*)"
