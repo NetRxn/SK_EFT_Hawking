@@ -253,4 +253,70 @@ theorem vanishAbove_convex_chart {M : TopCat} {m : ℕ} {K : Set ↑M}
   obtain ⟨k, rfl⟩ : ∃ k, i = k + 1 + 1 := ⟨i - 2, by omega⟩
   exact manifoldConvexLocalHomology_high hK hU hKU hCconv hCcomp hC0 hV hCV e hcompat k (by omega) x
 
+/-! ### The finite-union step of the Hatcher 3.27 compactness induction -/
+
+/-- **Finite-union vanishing** (Hatcher 3.27, the `Hᵢ(M|K)=0` half for a finite union): for a
+nonempty finite family `K i` (`i ∈ s`) all of whose nonempty sub-intersections `⋂ i∈t, K i`
+(`∅ ≠ t ⊆ s`) are closed and satisfy `vanishAbove n`, the union `⋃ i∈s, K i` satisfies `vanishAbove n`.
+Induction on `s` via `vanishAbove_union`; the inductive step's `A ∩ B` term is the union of the
+sub-intersection family `i ↦ K a ∩ K i`, whose nonempty sub-intersections `⋂ i∈t (K a ∩ K i) =
+⋂ i∈insert a t, K i` are again covered by the hypothesis (so the induction re-applies). A finite cover
+of a compact set by convex chart pieces in a common chart meets the hypothesis (convex ∩ convex is a
+convex chart piece — `vanishAbove_convex_chart`). -/
+theorem vanishAbove_biUnion {ι : Type*} [DecidableEq ι] {n : ℕ} :
+    ∀ {s : Finset ι}, s.Nonempty → ∀ (K : ι → Set ↑X),
+      (∀ t : Finset ι, t ⊆ s → t.Nonempty →
+         IsClosed (⋂ i ∈ t, K i) ∧ vanishAbove n (⋂ i ∈ t, K i)) →
+      vanishAbove n (⋃ i ∈ s, K i) := by
+  intro s hs
+  induction hs using Finset.Nonempty.cons_induction with
+  | singleton a =>
+      intro K hsub
+      simpa using (hsub {a} (Finset.Subset.refl _) (Finset.singleton_nonempty a)).2
+  | cons a s ha hs ih =>
+      intro K hsub
+      have hKa := hsub {a} (Finset.singleton_subset_iff.mpr (Finset.mem_cons_self a s))
+        (Finset.singleton_nonempty a)
+      have hUnion : (⋃ i ∈ Finset.cons a s ha, K i) = K a ∪ ⋃ i ∈ s, K i := by
+        ext x
+        simp only [Set.mem_iUnion, Finset.mem_cons, Set.mem_union, exists_prop]
+        constructor
+        · rintro ⟨i, rfl | hi, hx⟩
+          · exact Or.inl hx
+          · exact Or.inr ⟨i, hi, hx⟩
+        · rintro (hx | ⟨i, hi, hx⟩)
+          · exact ⟨a, Or.inl rfl, hx⟩
+          · exact ⟨i, Or.inr hi, hx⟩
+      rw [hUnion]
+      have hKac : IsClosed (K a) := by simpa using hKa.1
+      have hKav : vanishAbove n (K a) := by simpa using hKa.2
+      refine vanishAbove_union hKac ?_ hKav ?_ ?_
+      · refine Set.Finite.isClosed_biUnion s.finite_toSet (fun i hi => ?_)
+        have := hsub {i} (Finset.singleton_subset_iff.mpr (Finset.mem_cons_of_mem hi))
+          (Finset.singleton_nonempty i)
+        simpa using this.1
+      · exact ih K (fun t ht htne => hsub t (ht.trans (Finset.subset_cons ha)) htne)
+      · have hdist : K a ∩ (⋃ i ∈ s, K i) = ⋃ i ∈ s, (K a ∩ K i) := by
+          ext x
+          simp only [Set.mem_inter_iff, Set.mem_iUnion, exists_prop]
+          constructor
+          · rintro ⟨hxa, i, hi, hx⟩; exact ⟨i, hi, hxa, hx⟩
+          · rintro ⟨i, hi, hxa, hx⟩; exact ⟨hxa, i, hi, hx⟩
+        rw [hdist]
+        refine ih (fun i => K a ∩ K i) (fun t ht htne => ?_)
+        have heq : (⋂ i ∈ t, (K a ∩ K i)) = ⋂ i ∈ insert a t, K i := by
+          obtain ⟨j, hj⟩ := htne
+          ext x
+          simp only [Set.mem_iInter, Set.mem_inter_iff, Finset.mem_insert]
+          constructor
+          · rintro h i (rfl | hi)
+            · exact (h j hj).1
+            · exact (h i hi).2
+          · intro h
+            exact fun i hi => ⟨h a (Or.inl rfl), h i (Or.inr hi)⟩
+        rw [heq]
+        exact hsub (insert a t)
+          (Finset.insert_subset (Finset.mem_cons_self a s) (ht.trans (Finset.subset_cons ha)))
+          (Finset.insert_nonempty a t)
+
 end SKEFTHawking.SingularManifoldFundamentalClass
