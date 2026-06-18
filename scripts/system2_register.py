@@ -9,7 +9,9 @@ so it reads familiar, but is a SEPARATE store from System 1 (no ReviewFinding/gr
 Finding record:
   {id, class, title, why, how_to_apply, tier in {automatic,agent-reviewed,human-reviewed},
    first_seen, last_seen, occurrences:[{date, session_id, goal_id, goal_prompt, roadmap,
-   compact_event_id}], status in {open,closed}, evidence}
+   compact_event_id}], status in {open,closed,misfiled}, evidence}
+   (status "misfiled" = harvest noise / goal-specific confirmation that was never a real finding;
+    rendered under ## Misfiled, excluded from the open-only active-issues view like closed.)
 
 Key invariants (test-locked):
   * dedup by `id` (stable slug of class+title); append-or-update, never duplicate.
@@ -158,8 +160,15 @@ def upsert(path, finding):
 
 
 def render(path, findings=None):
-    """Write the register: ## Open / ## Closed sections of `### <id>` blocks, each carrying
-    the full record as a fenced ```json```. Idempotent + round-trip-safe."""
+    """Write the register: ## Open / ## Closed / ## Misfiled sections of `### <id>` blocks, each
+    carrying the full record as a fenced ```json```. Idempotent + round-trip-safe.
+
+    `## Misfiled` (status == "misfiled") is the quarantine bucket for harvest entries that are
+    tactic-level noise or goal-specific single-occurrence confirmations — true but never standing
+    findings. NOT "closed" (those were resolved); "misfiled" = should not have been a finding.
+    A small number of broad catch-all misfiled records absorb the pattern; future repeats append
+    to one rather than opening new findings. write_active_issues() filters open-only, so misfiled
+    (like closed) is excluded from the SessionStart re-injection."""
     if findings is None:
         findings = load(path)
     lines = ["# System-2 Register — dev-process / harness findings",
@@ -176,7 +185,7 @@ def render(path, findings=None):
         body = json.dumps(f, indent=2, ensure_ascii=False)
         return head + "\n```json\n" + body + "\n```\n"
 
-    for status, header in (("open", "## Open"), ("closed", "## Closed")):
+    for status, header in (("open", "## Open"), ("closed", "## Closed"), ("misfiled", "## Misfiled")):
         group = [f for f in findings if f.get("status", "open") == status]
         lines.append(header)
         lines.append("")
