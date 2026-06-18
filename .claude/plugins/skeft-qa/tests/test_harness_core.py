@@ -64,6 +64,19 @@ def test_payload_includes_active_issues_when_present(tmp_path):
     assert "re-polluted roadmap at compaction 3" in payload
 
 
+def test_payload_labels_process_wins(tmp_path):
+    # a process win (kind="win") re-injects with a [WIN] tag so the loop reads it as a
+    # best-practice to follow, not a problem; an issue carries no tag.
+    d = tmp_path / ".claude" / "dev-harness"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "active_issues.json").write_text(json.dumps({"issues": [
+        {"title": "checkpoint contents discipline", "tier": "human-reviewed", "tally": 1, "kind": "win"},
+        {"title": "worktree git-tree staleness", "tier": "agent-reviewed", "tally": 1, "kind": "issue"}]}))
+    payload = hc.build_reorientation_payload({"goal": "g"}, tmp_path)
+    assert "[WIN] checkpoint contents discipline" in payload
+    assert "- worktree git-tree staleness" in payload  # issue: no tag
+
+
 def test_payload_repo_none_omits_active_issues(tmp_path):
     payload = hc.build_reorientation_payload({"goal": "g"}, None)
     assert "Active System-2 issues" not in payload and "g" in payload

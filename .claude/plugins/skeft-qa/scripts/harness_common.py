@@ -230,7 +230,9 @@ def _read_active_issues(root, max_items=ACTIVE_ISSUES_MAX):
     lines = []
     for it in items[: max(0, int(max_items))]:
         if isinstance(it, dict):
-            lines.append("- " + str(it.get("summary") or it.get("title") or it))
+            # label a process win so re-injection reads it as a practice-to-follow, not a problem
+            tag = "[WIN] " if str(it.get("kind", "")).lower() == "win" else ""
+            lines.append("- " + tag + str(it.get("summary") or it.get("title") or it))
         else:
             lines.append("- " + str(it))
     return "\n".join(lines)
@@ -293,7 +295,8 @@ def build_reorientation_payload(marker, repo_root):
         issues = _read_active_issues(repo_root, n) if n > 0 else ""
         parts = list(head)
         if issues:
-            parts.append("Active System-2 issues (current open/recurring drift findings):\n" + issues)
+            parts.append("Active System-2 issues + process wins (open/recurring drift findings to avoid; "
+                         "[WIN] = a best practice to follow):\n" + issues)
         parts += tail
         payload = "\n\n".join(parts)
         if len(payload) + _SELF_CHECK_RESERVE < PAYLOAD_MAX_CHARS or n <= 0:

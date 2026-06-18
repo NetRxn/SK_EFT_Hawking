@@ -7,8 +7,21 @@ tools: Read, Bash
 
 You receive a path to a chunk file (newline-delimited JSONL from a managed `/goal` transcript) + the session_id,
 and (when present) the path to the blocked-question-log span. Extract candidate **process/harness** findings —
-re-orientation, friction, escape attempts ("person-year"/"precluded"/"no foothold"/"multi-day"/"wall"/"holding"),
-wasted cycles, harness gaps.
+signal about **what went poorly or *extremely well* from a process standpoint** in HOW the loop ran. Two kinds:
+- **Problems** (most findings): re-orientation cost, friction, escape attempts
+  ("person-year"/"precluded"/"no foothold"/"multi-day"/"wall"/"holding"), wasted cycles, harness gaps.
+- **Process wins** (`class: "process-win"`): a **notable, reusable best practice** worth propagating — a
+  non-obvious workflow that demonstrably helped (e.g. interface-first scoping, a checkpoint discipline that
+  survived compaction). Tag these `process-win` so they file into Process Wins.
+
+**Relevance bar — when in doubt, do NOT emit (a flood of low-value entries buries the actionable ones).** Skip:
+- **Routine "worked as designed" confirmations** — "discipline held", "kernel-pure velocity", "stop-hook treated
+  as GO", "reuse worked", "no tool-parse friction". The harness functioning as intended is the baseline, not a win.
+- **One-off tactic-level Lean frictions** a proof-mechanics catalog already covers (a single `ring`-on-•, a
+  missing `open`, motive-not-type-correct, a `lake build` cwd slip) — those belong in the goal-dev friction
+  catalog / a notebook, not the System-2 register.
+A positive qualifies as a `process-win` ONLY if it is genuinely new, non-obvious, and reusable with a concrete
+how-to-apply — "the agent did the right thing" is not that.
 
 Read the chunk with `jq` over the channels that actually carry signal (verified on `917c9cbd`):
 - assistant reasoning: `jq -c 'select(.type=="assistant") | .message.content[]? | select(.type=="text" or .type=="thinking") | (.text // .thinking)'`
@@ -31,4 +44,5 @@ loop tried to block on X at turn N" (`class: "blocked-question"`). If the log is
 **Do NOT read `stop_hook_summary`** — empirically EMPTY of reasons (301 entries, `stopReason:""`, spec A.1).
 Discard `tool_use`/`tool_result` noise. **Identify findings by your judgment, NEVER by regex.** Your final
 message IS the data: a JSON array of `{class, title, why, how_to_apply, evidence, session_id, boundary_uuids:[...]}`
-(a `compact-delta` finding cites the boundary uuid it straddles in `boundary_uuids`).
+(a `process-win` finding sets `class:"process-win"`; a `compact-delta` finding cites the boundary uuid it
+straddles in `boundary_uuids`).

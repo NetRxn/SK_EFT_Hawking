@@ -4,188 +4,6 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 
 ## Open
 
-### compact-delta-post-compaction-successful-domain-transition-apparatus-math-with-s
-
-**Seamless re-orientation post-compact; proof context preserved with high fidelity**  ·  tier: `human-reviewed`  ·  status: open
-
-```json
-{
-  "class": "compact-delta",
-  "title": "Seamless re-orientation post-compact; proof context preserved with high fidelity",
-  "why": "The compact summary captured extensive state: committed Lean code (SingularRelativeMV.lean brick 72c-1 at 1dc64ccc), error log (missing opens, subspaceChains_inf qualification), next-brick architecture (72c-2 relative MV chain SES), referenced notebooks/roadmaps, and the EXACT uncommitted work (relMvChainDiag + injectivity with known issues). Post-compact the assistant immediately resumed at the right sub-task. Zero context-churn. DONE criterion 2 (validate.py 43/43) satisfied at 3ed1016c before compaction, persisting post-compact.",
-  "how_to_apply": "Rare success case. Summary content precise (numbered pending tasks load-bearing), boundary at natural pause (after commit + green build), first post-compact turn engaged exact uncommitted state. Ensure compact summaries capture (a) exact last-committed SHA + uncommitted file state, (b) known errors/warnings, (c) exact next brick as numbered item, (d) blocked decisions with arguments.",
-  "evidence": "Promoted (discussed). Actioned: the compaction-survival checklist (exact last SHA + uncommitted state + open errors/warnings + numbered next brick + blocked decisions) is now an explicit bullet in goal-dev/references/notebook-sharding.md, enforcing the post-compact re-orientation practice in-loop.",
-  "tier": "human-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": "70cc8da1-4695-435a-be26-9db4e634a6fa:4490631"
-    },
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": null,
-      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": "70cc8da1-4695-435a-be26-9db4e634a6fa:8854248"
-    }
-  ],
-  "id": "compact-delta-post-compaction-successful-domain-transition-apparatus-math-with-s",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### investigation-cost-decision-gate-before-sinking-n-lines-investigation-cost-gate-
-
-**'Before sinking N lines' investigation-cost gate: apply it upfront, not mid-investigation**  ·  tier: `human-reviewed`  ·  status: open
-
-```json
-{
-  "class": "investigation-cost-decision-gate",
-  "title": "'Before sinking N lines' investigation-cost gate: apply it upfront, not mid-investigation",
-  "tier": "human-reviewed",
-  "status": "open",
-  "why": "Two sides of the same lesson observed in one loop. FAILURE side: after commit 4cfbb566 the loop spent ~8 turns reading excisionEquiv/excisionMap/exists_iterate_smallChains to design the iota iso BEFORE realizing the pure-snake exactness segments (E1/E2/E3) need no iota and were immediately verifiable — the checkpoint fired mid-investigation, not upfront. GOOD side: before sinking ~300 more lines into iota, the agent paused to semantic-search Mathlib for a closed-manifold Z/2 fundamental class, confirmed Mathlib lacks it (only categorical singularHomologyFunctor), and validated the hand-rolled route — preventing waste. The gate works; it must be applied at the decision point, not after committing to the investigation.",
-  "how_to_apply": "Treat 'before sinking N lines' as a formal hard gate applied AT the decision point: (1) name the decision point + its cost (lines/turns); (2) ask 'can I make progress without this answer?' — if yes, defer the investigation and ship the simpler verifiable work first; (3) if the answer is genuinely load-bearing, state what would short-circuit it, run a quick verification (e.g. semantic search for Mathlib coverage), then decide. Run the gate before the investigation, not midway.",
-  "evidence": "Failure: commit 4cfbb566 -> excision/small-chains investigation -> late realization 'exactness segments are verifiable next step' -> E1/E2/E3 (67174640, b210ef43). Good: 'Before sinking ~300 more lines into iota... verify Mathlib genuinely lacks a closed-manifold Z/2 fundamental class' -> 'Confirmed: Mathlib has categorical singularHomologyFunctor but no closed-manifold fundamental class - the project's hand-rolled route is necessary'.",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/Phase5qF/goal_prompt_20260617T231250.md",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "investigation-cost-decision-gate-before-sinking-n-lines-investigation-cost-gate-",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### workflow-pattern-incremental-sharding-shard-and-commit-bank-green-shard-decompos
-
-**Shard-and-commit / bank-green-shard decomposition keeps gates clean across long proof chains**  ·  tier: `human-reviewed`  ·  status: open
-
-```json
-{
-  "class": "workflow-pattern-incremental-sharding",
-  "title": "Shard-and-commit / bank-green-shard decomposition keeps gates clean across long proof chains",
-  "why": "Large homological retract split into shippable increments (acyclicity, gauge bounds, continuity, final maps+homotopies), each committed independently keeping gates clean. Same pattern recurred as banking a reusable green shard (clopen-split vanishing lemma) before continuing.",
-  "how_to_apply": "Codify shard-and-commit in the wave pipeline: commit+verify every ~5-6 bricks to cut context loss and enable incremental review. Ensure each shard is truly green (no sorry, kernel-pure); watch for over-fragmentation.",
-  "evidence": "Commits afab3a77(19),3af3494b(20),8bebae5d(22),85aa69ea(23) each with explicit 'now build X' transition. | 'Bank it as a GREEN shard now (wire into aggregator + commit), then continue with the S⁰ base.'",
-  "tier": "human-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "workflow-pattern-incremental-sharding-shard-and-commit-bank-green-shard-decompos",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### workflow-pattern-search-before-build-search-source-read-before-build-helpers-rou
-
-**Search/source-read before build: helpers, routes, and reuse confirmed before writing (anti-speculation)**  ·  tier: `human-reviewed`  ·  status: open
-
-```json
-{
-  "class": "workflow-pattern-search-before-build",
-  "title": "Search/source-read before build: helpers, routes, and reuse confirmed before writing (anti-speculation)",
-  "why": "Sustained lean_local_search/loogle/hover + concrete-source reading to confirm helpers exist, settle route decisions from actual code, decide build-vs-borrow on Mathlib coverage, and reuse existing decls (dimReductionEquiv) inline — avoiding write-then-diagnostic loops and speculative shortcuts.",
-  "how_to_apply": "Codify lean_local_search -> verify -> lean_hover_info -> import-or-inline; ground any 'can we shortcut' decision in concrete source inspection; inventory-check Mathlib coverage before dispatching a worker.",
-  "evidence": "'All helpers exist... Let me check SingularDisjointUnion's imports...' | 'must read the concrete... a route decision the diligence rule requires me to settle from the actual code... The docstring confirms the architecture.' | 'confirm whether the full (all-degree) sphere / Euclidean-complement homology already exists or only the top degree — that decides whether I dispatch a worker.' | 'the codebase already has dimReductionEquiv... derivable inline.'",
-  "tier": "human-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "workflow-pattern-search-before-build-search-source-read-before-build-helpers-rou",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### process-signal-notebook-checkpointing-notebook-driven-checkpointing-sync-provide
-
-**Notebook-driven checkpointing/sync provides compaction-durable source-of-truth**  ·  tier: `human-reviewed`  ·  status: open
-
-```json
-{
-  "class": "process-signal-notebook-checkpointing",
-  "title": "Notebook-driven checkpointing/sync provides compaction-durable source-of-truth",
-  "why": "Each milestone triggers a LAB_NOTEBOOK.md checkpoint as persistent source-of-truth bypassing the context window; load-bearing interface findings recorded proactively before a context boundary.",
-  "how_to_apply": "Working; optional hardening = pre-commit check that the notebook was touched at milestones; ensure notebook updates are comprehensive and commit-linked.",
-  "evidence": "'Let me checkpoint this major progress in the notebook...' recurring; notebook records every brick + remaining path. | 'I must record the load-bearing L4-interface finding in the notebook (source-of-truth across compactions).'",
-  "tier": "human-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": null
-    }
-  ],
-  "id": "process-signal-notebook-checkpointing-notebook-driven-checkpointing-sync-provide",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
-### subgoal-scoping-via-downstream-interface-downstream-l2-interface-spec-used-to-de
-
-**Downstream (L2) interface spec used to define minimal L1 deliverable (anti over-build)**  ·  tier: `human-reviewed`  ·  status: open
-
-```json
-{
-  "class": "subgoal-scoping-via-downstream-interface",
-  "title": "Downstream (L2) interface spec used to define minimal L1 deliverable (anti over-build)",
-  "why": "Checked PoincareDual4Mid signature to confirm L1 must deliver the actual singular ℤ/2 fundamental class [M], not a weaker abstraction — interface-first scoping avoided over-build/over-generalization.",
-  "how_to_apply": "Encourage as a norm: before building X, check what downstream Y actually consumes from X; that defines scope.",
-  "evidence": "'check what L2 (PoincareDual4Mid) actually expects from [M] — pins down the minimal L1 deliverable... I'll keep it solo.'",
-  "tier": "human-reviewed",
-  "status": "open",
-  "occurrences": [
-    {
-      "date": "2026-06-18",
-      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
-      "goal_id": "20260617T231250",
-      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
-      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
-      "compact_event_id": "70cc8da1-4695-435a-be26-9db4e634a6fa:14425384"
-    }
-  ],
-  "id": "subgoal-scoping-via-downstream-interface-downstream-l2-interface-spec-used-to-de",
-  "first_seen": "2026-06-18",
-  "last_seen": "2026-06-18"
-}
-```
-
 ### harness-gap-worktree-slot-git-tree-goes-stale-when-main-advances-after-reset-but
 
 **Worktree slot git-tree goes stale when main advances after reset but before dispatch**  ·  tier: `agent-reviewed`  ·  status: open
@@ -236,6 +54,190 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
     }
   ],
   "id": "harness-knowledge-command-skill-markdown-is-session-snapshotted-referenced-scrip",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+## Process Wins
+
+### compact-delta-post-compaction-successful-domain-transition-apparatus-math-with-s
+
+**Seamless re-orientation post-compact; proof context preserved with high fidelity**  ·  tier: `human-reviewed`  ·  status: win
+
+```json
+{
+  "class": "compact-delta",
+  "title": "Seamless re-orientation post-compact; proof context preserved with high fidelity",
+  "why": "The compact summary captured extensive state: committed Lean code (SingularRelativeMV.lean brick 72c-1 at 1dc64ccc), error log (missing opens, subspaceChains_inf qualification), next-brick architecture (72c-2 relative MV chain SES), referenced notebooks/roadmaps, and the EXACT uncommitted work (relMvChainDiag + injectivity with known issues). Post-compact the assistant immediately resumed at the right sub-task. Zero context-churn. DONE criterion 2 (validate.py 43/43) satisfied at 3ed1016c before compaction, persisting post-compact.",
+  "how_to_apply": "Rare success case. Summary content precise (numbered pending tasks load-bearing), boundary at natural pause (after commit + green build), first post-compact turn engaged exact uncommitted state. Ensure compact summaries capture (a) exact last-committed SHA + uncommitted file state, (b) known errors/warnings, (c) exact next brick as numbered item, (d) blocked decisions with arguments.",
+  "evidence": "Promoted (discussed). Actioned: the compaction-survival checklist (exact last SHA + uncommitted state + open errors/warnings + numbered next brick + blocked decisions) is now an explicit bullet in goal-dev/references/notebook-sharding.md, enforcing the post-compact re-orientation practice in-loop.",
+  "tier": "human-reviewed",
+  "status": "win",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": "70cc8da1-4695-435a-be26-9db4e634a6fa:4490631"
+    },
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": null,
+      "roadmap": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": "70cc8da1-4695-435a-be26-9db4e634a6fa:8854248"
+    }
+  ],
+  "id": "compact-delta-post-compaction-successful-domain-transition-apparatus-math-with-s",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### investigation-cost-decision-gate-before-sinking-n-lines-investigation-cost-gate-
+
+**'Before sinking N lines' investigation-cost gate: apply it upfront, not mid-investigation**  ·  tier: `human-reviewed`  ·  status: win
+
+```json
+{
+  "class": "investigation-cost-decision-gate",
+  "title": "'Before sinking N lines' investigation-cost gate: apply it upfront, not mid-investigation",
+  "tier": "human-reviewed",
+  "status": "win",
+  "why": "Two sides of the same lesson observed in one loop. FAILURE side: after commit 4cfbb566 the loop spent ~8 turns reading excisionEquiv/excisionMap/exists_iterate_smallChains to design the iota iso BEFORE realizing the pure-snake exactness segments (E1/E2/E3) need no iota and were immediately verifiable — the checkpoint fired mid-investigation, not upfront. GOOD side: before sinking ~300 more lines into iota, the agent paused to semantic-search Mathlib for a closed-manifold Z/2 fundamental class, confirmed Mathlib lacks it (only categorical singularHomologyFunctor), and validated the hand-rolled route — preventing waste. The gate works; it must be applied at the decision point, not after committing to the investigation.",
+  "how_to_apply": "Treat 'before sinking N lines' as a formal hard gate applied AT the decision point: (1) name the decision point + its cost (lines/turns); (2) ask 'can I make progress without this answer?' — if yes, defer the investigation and ship the simpler verifiable work first; (3) if the answer is genuinely load-bearing, state what would short-circuit it, run a quick verification (e.g. semantic search for Mathlib coverage), then decide. Run the gate before the investigation, not midway.",
+  "evidence": "Failure: commit 4cfbb566 -> excision/small-chains investigation -> late realization 'exactness segments are verifiable next step' -> E1/E2/E3 (67174640, b210ef43). Good: 'Before sinking ~300 more lines into iota... verify Mathlib genuinely lacks a closed-manifold Z/2 fundamental class' -> 'Confirmed: Mathlib has categorical singularHomologyFunctor but no closed-manifold fundamental class - the project's hand-rolled route is necessary'.",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/docs/dev-loops/Phase5qF/goal_prompt_20260617T231250.md",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "investigation-cost-decision-gate-before-sinking-n-lines-investigation-cost-gate-",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### workflow-pattern-incremental-sharding-shard-and-commit-bank-green-shard-decompos
+
+**Shard-and-commit / bank-green-shard decomposition keeps gates clean across long proof chains**  ·  tier: `human-reviewed`  ·  status: win
+
+```json
+{
+  "class": "workflow-pattern-incremental-sharding",
+  "title": "Shard-and-commit / bank-green-shard decomposition keeps gates clean across long proof chains",
+  "why": "Large homological retract split into shippable increments (acyclicity, gauge bounds, continuity, final maps+homotopies), each committed independently keeping gates clean. Same pattern recurred as banking a reusable green shard (clopen-split vanishing lemma) before continuing.",
+  "how_to_apply": "Codify shard-and-commit in the wave pipeline: commit+verify every ~5-6 bricks to cut context loss and enable incremental review. Ensure each shard is truly green (no sorry, kernel-pure); watch for over-fragmentation.",
+  "evidence": "Commits afab3a77(19),3af3494b(20),8bebae5d(22),85aa69ea(23) each with explicit 'now build X' transition. | 'Bank it as a GREEN shard now (wire into aggregator + commit), then continue with the S⁰ base.'",
+  "tier": "human-reviewed",
+  "status": "win",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "workflow-pattern-incremental-sharding-shard-and-commit-bank-green-shard-decompos",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### workflow-pattern-search-before-build-search-source-read-before-build-helpers-rou
+
+**Search/source-read before build: helpers, routes, and reuse confirmed before writing (anti-speculation)**  ·  tier: `human-reviewed`  ·  status: win
+
+```json
+{
+  "class": "workflow-pattern-search-before-build",
+  "title": "Search/source-read before build: helpers, routes, and reuse confirmed before writing (anti-speculation)",
+  "why": "Sustained lean_local_search/loogle/hover + concrete-source reading to confirm helpers exist, settle route decisions from actual code, decide build-vs-borrow on Mathlib coverage, and reuse existing decls (dimReductionEquiv) inline — avoiding write-then-diagnostic loops and speculative shortcuts.",
+  "how_to_apply": "Codify lean_local_search -> verify -> lean_hover_info -> import-or-inline; ground any 'can we shortcut' decision in concrete source inspection; inventory-check Mathlib coverage before dispatching a worker.",
+  "evidence": "'All helpers exist... Let me check SingularDisjointUnion's imports...' | 'must read the concrete... a route decision the diligence rule requires me to settle from the actual code... The docstring confirms the architecture.' | 'confirm whether the full (all-degree) sphere / Euclidean-complement homology already exists or only the top degree — that decides whether I dispatch a worker.' | 'the codebase already has dimReductionEquiv... derivable inline.'",
+  "tier": "human-reviewed",
+  "status": "win",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "workflow-pattern-search-before-build-search-source-read-before-build-helpers-rou",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### process-signal-notebook-checkpointing-notebook-driven-checkpointing-sync-provide
+
+**Notebook-driven checkpointing/sync provides compaction-durable source-of-truth**  ·  tier: `human-reviewed`  ·  status: win
+
+```json
+{
+  "class": "process-signal-notebook-checkpointing",
+  "title": "Notebook-driven checkpointing/sync provides compaction-durable source-of-truth",
+  "why": "Each milestone triggers a LAB_NOTEBOOK.md checkpoint as persistent source-of-truth bypassing the context window; load-bearing interface findings recorded proactively before a context boundary.",
+  "how_to_apply": "Working; optional hardening = pre-commit check that the notebook was touched at milestones; ensure notebook updates are comprehensive and commit-linked.",
+  "evidence": "'Let me checkpoint this major progress in the notebook...' recurring; notebook records every brick + remaining path. | 'I must record the load-bearing L4-interface finding in the notebook (source-of-truth across compactions).'",
+  "tier": "human-reviewed",
+  "status": "win",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": null
+    }
+  ],
+  "id": "process-signal-notebook-checkpointing-notebook-driven-checkpointing-sync-provide",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### subgoal-scoping-via-downstream-interface-downstream-l2-interface-spec-used-to-de
+
+**Downstream (L2) interface spec used to define minimal L1 deliverable (anti over-build)**  ·  tier: `human-reviewed`  ·  status: win
+
+```json
+{
+  "class": "subgoal-scoping-via-downstream-interface",
+  "title": "Downstream (L2) interface spec used to define minimal L1 deliverable (anti over-build)",
+  "why": "Checked PoincareDual4Mid signature to confirm L1 must deliver the actual singular ℤ/2 fundamental class [M], not a weaker abstraction — interface-first scoping avoided over-build/over-generalization.",
+  "how_to_apply": "Encourage as a norm: before building X, check what downstream Y actually consumes from X; that defines scope.",
+  "evidence": "'check what L2 (PoincareDual4Mid) actually expects from [M] — pins down the minimal L1 deliverable... I'll keep it solo.'",
+  "tier": "human-reviewed",
+  "status": "win",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": "20260617T231250",
+      "goal_prompt": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/dev-harness/managed/70cc8da1-4695-435a-be26-9db4e634a6fa.json",
+      "roadmap": "docs/roadmaps/Phase5qF_GeometricBordism_Roadmap.md",
+      "compact_event_id": "70cc8da1-4695-435a-be26-9db4e634a6fa:14425384"
+    }
+  ],
+  "id": "subgoal-scoping-via-downstream-interface-downstream-l2-interface-spec-used-to-de",
   "first_seen": "2026-06-18",
   "last_seen": "2026-06-18"
 }

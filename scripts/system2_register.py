@@ -159,10 +159,42 @@ def upsert(path, finding):
     return True
 
 
-def render(path, findings=None):
-    """Write the register: ## Open / ## Closed / ## Misfiled sections of `### <id>` blocks, each
-    carrying the full record as a fenced ```json```. Idempotent + round-trip-safe.
+def group(path, absorb_ids, into):
+    """Combine the findings whose ids are in `absorb_ids` into the single `into` record, REMOVING the
+    originals — the 'combine' op that upsert (add/merge-by-id) lacks, so the register-aware consolidator
+    (and `/debrief`) can collapse semi-related findings into one. GUARDRAIL: a `human-reviewed` finding
+    is NEVER absorbed (human curation is not dissolved unattended — relate / stack / re-open those
+    instead); such ids are skipped and returned. Absorbed occurrences are merged into `into` so the
+    tally/dates survive. The public leak-scrub still applies to `into`. Returns (absorbed, skipped, dropped)."""
+    findings = load(path)
+    by = {f.get("id"): f for f in findings}
+    skipped = [i for i in absorb_ids if i in by and by[i].get("tier") == "human-reviewed"]
+    absorb = {i for i in absorb_ids if i in by and i not in skipped}
+    into = dict(into)
+    into["id"] = into.get("id") or slug(into)
+    into.setdefault("status", "closed")
+    occ = list(into.get("occurrences", []))
+    for i in absorb:
+        occ = _merge_occurrences(occ, by[i].get("occurrences", []))
+    into["occurrences"] = occ
+    dates = [d for d in _occ_dates(into) if d]
+    into.setdefault("first_seen", min(dates) if dates else None)
+    into.setdefault("last_seen", max(dates) if dates else None)
+    kept = [f for f in findings if f.get("id") not in absorb and f.get("id") != into["id"]]
+    if _should_drop(path, into):
+        render(path, kept)
+        return len(absorb), skipped, True
+    kept.append(into)
+    render(path, kept)
+    return len(absorb), skipped, False
 
+
+def render(path, findings=None):
+    """Write the register: ## Open / ## Process Wins / ## Closed / ## Misfiled sections of `### <id>`
+    blocks, each carrying the full record as a fenced ```json```. Idempotent + round-trip-safe.
+
+    `## Process Wins` (status == "win") holds notable, reusable best practices (the "extremely well"
+    side) — preserved + separated from open issues, and (like open issues) surfaced in active-issues.
     `## Misfiled` (status == "misfiled") is the quarantine bucket for harvest entries that are
     tactic-level noise or goal-specific single-occurrence confirmations — true but never standing
     findings. NOT "closed" (those were resolved); "misfiled" = should not have been a finding.
@@ -185,7 +217,8 @@ def render(path, findings=None):
         body = json.dumps(f, indent=2, ensure_ascii=False)
         return head + "\n```json\n" + body + "\n```\n"
 
-    for status, header in (("open", "## Open"), ("closed", "## Closed"), ("misfiled", "## Misfiled")):
+    for status, header in (("open", "## Open"), ("win", "## Process Wins"),
+                           ("closed", "## Closed"), ("misfiled", "## Misfiled")):
         group = [f for f in findings if f.get("status", "open") == status]
         lines.append(header)
         lines.append("")
@@ -199,17 +232,21 @@ def render(path, findings=None):
 
 
 def write_active_issues(reg_path, out_path=None):
-    """Refresh the REGISTER-WIDE active-issues view (spec 6.3/A.4): every open finding,
-    NOT scoped to any session/goal/loop, bounded to the top-ACTIVE_ISSUES_MAX by tier desc
-    then tally desc. Shape: {generated, issues:[{title, tier, tally}]}. The gitignored cache
-    Plan 1's SessionStart re-inject + AskUserQuestion redirect read."""
+    """Refresh the REGISTER-WIDE active-issues view (spec 6.3/A.4): every open finding AND every
+    process win (`status` in {open,win}), NOT scoped to any session/goal/loop, bounded to the
+    top-ACTIVE_ISSUES_MAX by tier desc then tally desc. Shape: {generated, issues:[{title, tier,
+    tally, kind}]} where kind in {issue,win} (so re-injection can label a best-practice win vs an
+    open problem). The gitignored cache Plan 1's SessionStart re-inject + AskUserQuestion redirect read."""
     findings = load(reg_path)
-    open_f = [f for f in findings if f.get("status", "open") == "open"]
-    open_f.sort(key=lambda f: (TIER_PRIORITY.get(f.get("tier", "automatic"), 3),
+    # "Active" = open issues AND process wins: an autonomous loop re-grounds on both the open
+    # problems to watch and the best practices to follow. closed/misfiled are excluded.
+    active = [f for f in findings if f.get("status", "open") in ("open", "win")]
+    active.sort(key=lambda f: (TIER_PRIORITY.get(f.get("tier", "automatic"), 3),
                                -len(f.get("occurrences", []))))
     issues = [{"title": f.get("title", ""), "tier": f.get("tier", "automatic"),
-               "tally": len(f.get("occurrences", []))}
-              for f in open_f[:ACTIVE_ISSUES_MAX]]
+               "tally": len(f.get("occurrences", [])),
+               "kind": ("win" if f.get("status") == "win" else "issue")}
+              for f in active[:ACTIVE_ISSUES_MAX]]
     if out_path is None:
         # Repo-relative (system2_register.py lives at <repo>/scripts/), so this needs no
         # find_workspace AND ports VERBATIM to the private sibling repo's copy without
@@ -281,6 +318,9 @@ def main(argv=None):
     ap.add_argument("--register", default=str(_default_register()),
                     help="register path (default: <repo>/docs/dev-loops/SYSTEM2_REGISTER.md)")
     ap.add_argument("--upsert", action="store_true", help="read one finding as JSON from stdin and upsert")
+    ap.add_argument("--group", action="store_true",
+                    help='combine findings: stdin JSON {"absorb":[ids],"into":{record}} -> remove the '
+                         'originals, write the grouped record (human-reviewed ids are never absorbed)')
     ap.add_argument("--render", action="store_true", help="rewrite the register from its own contents")
     ap.add_argument("--write-active-issues", action="store_true", help="refresh active_issues.json")
     ap.add_argument("--out", default=None, help="active_issues.json path (with --write-active-issues)")
@@ -296,6 +336,22 @@ def main(argv=None):
         ok = upsert(a.register, finding)
         print("upserted" if ok else "dropped (leak-scrub)")
         return 0 if ok else 1
+    if a.group:
+        try:
+            payload = json.load(sys.stdin)
+            absorb_ids, into = payload["absorb"], payload["into"]
+        except Exception as e:
+            print('ERROR: --group expects {"absorb":[ids],"into":{record}} on stdin: ' + str(e), file=sys.stderr)
+            return 2
+        n, skipped, dropped = group(a.register, absorb_ids, into)
+        if dropped:
+            print("grouped: removed {0} originals but target DROPPED by leak-scrub".format(n))
+            return 1
+        msg = "grouped {0} finding(s) -> 1".format(n)
+        if skipped:
+            msg += "; skipped {0} human-reviewed (not absorbed): {1}".format(len(skipped), ", ".join(skipped))
+        print(msg)
+        return 0
     if a.render:
         render(a.register)
         print("rendered " + a.register)
