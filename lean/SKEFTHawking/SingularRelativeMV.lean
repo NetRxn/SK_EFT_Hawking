@@ -1108,4 +1108,21 @@ theorem relMv_exact_middle' (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (k 
     rw [← iota_relMvHomSumQ,
       show relMvHomSumQ U V (k + 1) p = 0 from (relMv_exact_middle U V (k + 1) p).mpr hp, map_zero]
 
+/-- **Relative MV exactness at `Hₙ₊₁(M, U∪V)`** in textbook form: `range(relMvHomSum) = ker δ`
+(positive degree). Transported from the `Q`-form `δ`-`Σ` exactness through the iso `ι`. -/
+theorem relMv_exact_sum' (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (k : ℕ) :
+    Function.Exact (relMvHomSum U V (k + 1)) (relMvDelta U V hU hV k) := by
+  intro x
+  rw [relMvDelta, LinearMap.comp_apply, LinearEquiv.coe_coe,
+    relMv_exact_sum U V k ((iotaEquiv U V hU hV k).symm x)]
+  constructor
+  · rintro ⟨y, hy⟩
+    refine ⟨y, ?_⟩
+    rw [← iota_relMvHomSumQ U V (k + 1) y, hy]
+    exact (iotaEquiv U V hU hV k).apply_symm_apply x
+  · rintro ⟨y, rfl⟩
+    refine ⟨y, ?_⟩
+    rw [← iota_relMvHomSumQ U V (k + 1) y]
+    exact ((iotaEquiv U V hU hV k).symm_apply_apply (relMvHomSumQ U V (k + 1) y)).symm
+
 end SKEFTHawking.SingularRelativeMV
