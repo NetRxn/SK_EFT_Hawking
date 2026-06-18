@@ -241,4 +241,34 @@ theorem mvHomDiag_mvDelta (A B : Set X) (n : ℕ)
           ((excisionEquiv A B n hcov).symm (homProj A (n + 1) x)))) = 0
     rw [map_subInclR_seam, homIncl_connecting]
 
+/-- **Excision–projection naturality**: `excisionMap ∘ j_*^{(B,A∩B)} = j_*^{(X,A)} ∘ i_*^{B}` — the
+inclusion `B ↪ X` then project to `(X,A)` equals excision of the `(B,A∩B)`-projection. Both send a
+`(sub B)`-cycle to the class of its `chainIncl B` image in `(X,A)`. -/
+theorem excisionMap_homProj (A B : Set X) (n : ℕ) (v : Homology (sub B) (n + 1)) :
+    excisionMap A B (n + 1) (homProj (restr A B) (n + 1) v)
+      = homProj A (n + 1) (homIncl B (n + 1) v) := by
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ v
+  show excisionMap A B (n + 1) (homProj (restr A B) (n + 1) (Homology.mk (sub B) (n + 1) z))
+      = homProj A (n + 1) (homIncl B (n + 1) (Homology.mk (sub B) (n + 1) z))
+  rw [homProj_mk, excisionMap_mk, homIncl_mk, homProj_mk]
+  exact congrArg (RelativeHomology.mk A (n + 1)) (Subtype.ext (relChainIncl_mk A B (n + 1) z))
+
+/-- **MV complex condition at `Hₙ(X)`**: `δ ∘ mvHomSum = 0`. The `A`-summand dies under `homProj A`
+(`homProj_homIncl`); the `B`-summand is excision of the `(B,A∩B)`-projection (`excisionMap_homProj`),
+so after `excisionEquiv.symm` it is `j_*^{(B,A∩B)} v`, killed by `connecting_homProj`. -/
+theorem mvDelta_mvHomSum (A B : Set X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set X)), interior U) = Set.univ)
+    (uv : Homology (sub A) (n + 1) × Homology (sub B) (n + 1)) :
+    mvDelta A B n hcov (mvHomSum A B (n + 1) uv) = 0 := by
+  obtain ⟨u, v⟩ := uv
+  have hp : homProj A (n + 1) (mvHomSum A B (n + 1) (u, v))
+      = excisionMap A B (n + 1) (homProj (restr A B) (n + 1) v) := by
+    simp only [mvHomSum, LinearMap.coprod_apply, map_add, Homology.map_ambIncl, homProj_homIncl,
+      zero_add, excisionMap_homProj]
+  show seamHomologyEquiv A B n (connecting (restr A B) n
+      ((excisionEquiv A B n hcov).symm (homProj A (n + 1) (mvHomSum A B (n + 1) (u, v))))) = 0
+  rw [hp, show (excisionEquiv A B n hcov).symm (excisionMap A B (n + 1) (homProj (restr A B) (n + 1) v))
+        = homProj (restr A B) (n + 1) v from (excisionEquiv A B n hcov).symm_apply_apply _,
+    connecting_homProj, map_zero]
+
 end SKEFTHawking.SingularMayerVietorisLES
