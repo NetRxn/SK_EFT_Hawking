@@ -1589,6 +1589,61 @@ Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness pro
 }
 ```
 
+### harness-gap-worktree-slot-git-tree-goes-stale-when-main-advances-after-reset-but
+
+**Worktree slot git-tree goes stale when main advances after reset but before dispatch**  ·  tier: `agent-reviewed`  ·  status: open
+
+```json
+{
+  "class": "harness-gap",
+  "title": "Worktree slot git-tree goes stale when main advances after reset but before dispatch",
+  "why": "E2E 2026-06-18: reset wt1 to main, then committed to main (the auto-re-clone), then dispatched the lean-worker -> the worker built 1 commit behind main. /reset-slot auto-re-clones the slot's .lake but the git TREE is fixed at `checkout -B` time and does NOT auto-advance if main moves later. The probe was independent so it passed, but a brick depending on main's latest would fail or conflict at merge (git merge-base --is-ancestor main worktree-wt1 was false -> diverged).",
+  "how_to_apply": "Reset a slot IMMEDIATELY before dispatching its worker (per task) -- never batch-reset slots and then let main advance. Emphasized in goal-dev/references/parallel-worktrees.md. Optionally fold the reset into the dispatch step, or have dispatch assert the slot HEAD == main.",
+  "evidence": "git diff main worktree-wt1 showed 4 files (the probe + main's auto-re-clone changes the slot lacked).",
+  "tier": "agent-reviewed",
+  "status": "open",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": null,
+      "goal_prompt": null,
+      "roadmap": null
+    }
+  ],
+  "id": "harness-gap-worktree-slot-git-tree-goes-stale-when-main-advances-after-reset-but",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
+### harness-knowledge-command-skill-markdown-is-session-snapshotted-referenced-scrip
+
+**Command/skill markdown is session-snapshotted; referenced scripts are read fresh at run time**  ·  tier: `agent-reviewed`  ·  status: open
+
+```json
+{
+  "class": "harness-knowledge",
+  "title": "Command/skill markdown is session-snapshotted; referenced scripts are read fresh at run time",
+  "why": "E2E 2026-06-18: after editing reset-slot.md + re-caching mid-session, invoking /skeft-qa:reset-slot via the Skill tool rendered the OLD prose (the command MARKDOWN is loaded into context at session start) but ran the NEW reset_slot.py (the !injection reads the script file fresh from the cache at run time).",
+  "how_to_apply": "When iterating on the harness in-session: SCRIPT behaviour changes are testable after a cache resync; MARKDOWN/prose changes (descriptions, command bodies, SKILL.md) require a restart to render in the running session. Verify behaviour via the script, not the rendered prose.",
+  "tier": "agent-reviewed",
+  "status": "open",
+  "occurrences": [
+    {
+      "date": "2026-06-18",
+      "session_id": "70cc8da1-4695-435a-be26-9db4e634a6fa",
+      "goal_id": null,
+      "goal_prompt": null,
+      "roadmap": null
+    }
+  ],
+  "id": "harness-knowledge-command-skill-markdown-is-session-snapshotted-referenced-scrip",
+  "first_seen": "2026-06-18",
+  "last_seen": "2026-06-18"
+}
+```
+
 ## Closed
 
 _(none)_
