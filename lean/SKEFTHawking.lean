@@ -874,6 +874,7 @@ import SKEFTHawking.SingularMayerVietoris
 import SKEFTHawking.SingularMayerVietorisLES
 import SKEFTHawking.SingularRelativeMV
 import SKEFTHawking.SingularConvexComplementRetract
+import SKEFTHawking.SingularSphereHighDegree
 import SKEFTHawking.SingularManifoldFundamentalClass
 -- Phase 5q.F (fully-unconditional strengthening, w₂-foundation brick 5, 2026-06-15): the Wu class v₂ from
 -- Poincaré duality — for a PD datum (fundamental-class functional μ:H⁴→ℤ/2 + non-degenerate middle cup
