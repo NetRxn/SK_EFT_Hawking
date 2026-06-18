@@ -1,0 +1,7 @@
+# Lake build directory + fetched dependency checkouts. None of this is source —
+# `lake` regenerates/fetches it. Previously only `.lake/build` was ignored (via a
+# generic `build/` rule), which let the dependency checkouts under `.lake/packages/`
+# (mathlib, batteries, Physlib, repl, …) leak into `git status` and get committed by
+# accident as stray submodule gitlinks (commit bbee8ae9, no .gitmodules). Those broke
+# every git worktree's tree-build. Ignore the whole tree.
+/.lake
