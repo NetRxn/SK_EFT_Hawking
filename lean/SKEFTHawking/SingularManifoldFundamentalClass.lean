@@ -348,4 +348,21 @@ theorem restrictToPoint_relIncl {K K' : Set ↑X} (hKK' : K' ⊆ K) {x : ↑X} (
       = restrictToPoint (hKK' hx) n α := by
   rw [restrictToPoint, restrictToPoint, relIncl_trans]
 
+/-- **Naturality of `relIncl` under `RelativeHomology.map`**: an inclusion-of-pairs `relIncl`
+commutes with any pair map `RelativeHomology.map φ` (both sides are `RelativeHomology.map φ`, since
+`φ ∘ id = id ∘ φ`). The chart-transport square the (b)-base case rides on — it lets a restriction
+`Hₙ(M|K) → Hₙ(M|x)` be transported across the chart homeomorphism `Hₙ(M|·) ≅ Hₙ(ℝⁿ|·)`. -/
+theorem relIncl_map {Y : TopCat} (φ : C(↑X, ↑Y)) {S T : Set ↑X} (hST : S ⊆ T)
+    {S' T' : Set ↑Y} (hφS : Set.MapsTo φ S S') (hφT : Set.MapsTo φ T T') (hST' : S' ⊆ T') (n : ℕ)
+    (x : RelativeHomology S n) :
+    RelativeHomology.map φ hφT n (relIncl hST n x)
+      = relIncl hST' n (RelativeHomology.map φ hφS n x) := by
+  show RelativeHomology.map φ hφT n
+        (RelativeHomology.map (ContinuousMap.id ↑X) (fun _ hx => hST hx) n x)
+      = RelativeHomology.map (ContinuousMap.id ↑Y) (fun _ hx => hST' hx) n
+        (RelativeHomology.map φ hφS n x)
+  rw [← LinearMap.comp_apply, ← RelativeHomology.map_comp, ← LinearMap.comp_apply,
+    ← RelativeHomology.map_comp]
+  rfl
+
 end SKEFTHawking.SingularManifoldFundamentalClass
