@@ -1,6 +1,6 @@
 ---
 name: goal-prompt
-description: The unified goal-mode skill for an autonomous /goal dev loop. Its core is the always-on operating posture (re-attaches after compaction); on invocation it composes the /goal condition AND registers the session with the harness. Use when starting a managed /goal dev loop, or when asked to write/refine a goal prompt or acceptance criteria for autonomous development.
+description: Goal-mode LAUNCH + always-on posture for an autonomous /goal dev loop. On invocation it composes the /goal condition AND registers the session with the harness; its core posture re-attaches after compaction. Use when STARTING a managed /goal dev loop, or writing/refining a goal prompt + acceptance criteria. (For IN-LOOP development guidance — the MCP proof loop, worktree fan-out, friction catalog — use the goal-dev skill instead.)
 argument-hint: <what the loop should achieve> [role=solo|lead]
 disable-model-invocation: true
 allowed-tools: Bash(git rev-parse *), Bash(ls *), Bash(test *), Bash(date *), Write, mcp__scheduled-tasks__list_scheduled_tasks, mcp__scheduled-tasks__create_scheduled_task
@@ -24,15 +24,12 @@ skill carries the posture and (at launch) arms it. Hold this posture every turn:
   ("person-year / precluded / no foothold / wall / multi-day, next session").
 - **Legitimate stops only:** a kernel-checked no-go, or a genuine user-only decision.
   If you feel blocked, run full diligence first; if one option is clearly best, TAKE IT
-  and log the rationale in the notebook (see `references/decision-heuristics.md`).
-- On hard Lean proofs, follow `references/lean-dev.md` — incl. its **Parallel Lean
-  development** section if you're a `lead` fanning independent sub-chains out: assign each to a
-  persistent slot `wtN` (reset it to `main` first), dispatch the `lean-worker` project agent
-  (`Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=…, use mcp__lean-lsp-wtN__*, <brick>")`) —
-  each worker gets its own build-isolated `mcp__lean-lsp-wtN__*` (full parallel, no shared LSP),
-  proves via the `lean4` skill + MCP, never write→`lake build`, commits on `worktree-wtN` for you
-  to merge. Slots are a one-time `scripts/setup_lean_worktree_slots.sh` + restart. When a notebook
-  shard crosses its size budget, follow `references/notebook-sharding.md` (the **lead** curates).
+  and log the rationale in the notebook.
+- **For the in-loop development work, invoke the `goal-dev` skill** (`/skeft-qa:goal-dev`) — the
+  model-invocable companion that carries the MCP-first proof loop, kernel-purity rules, the worktree
+  fan-out flow (`/reset-slot` + `lean-worker`), a symptom-indexed Lean friction catalog, the full
+  decision heuristics, and notebook-sharding. **This skill (`goal-prompt`) only AUTHORS the goal at
+  launch + holds this re-attaching posture core; `goal-dev` is where the dev references live.**
 
 ## At launch (invoked by the user) — arm the loop
 Native `/goal` is the loop; this skill (1) registers the session and (2) composes the

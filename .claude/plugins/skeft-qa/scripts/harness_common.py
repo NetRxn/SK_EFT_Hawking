@@ -218,7 +218,7 @@ def _read_active_issues(root, max_items=ACTIVE_ISSUES_MAX):
     return "\n".join(lines)
 
 
-# Short, static decision-heuristics summary (the full text lives in the goal-mode
+# Short, static decision-heuristics summary (the full text lives in the goal-dev
 # skill's references/decision-heuristics.md; this is the in-loop reminder).
 DECISION_HEURISTICS = (
     "Decision heuristics: scope is SETTLED — do the next increment of real work THIS "
