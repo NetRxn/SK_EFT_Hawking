@@ -42,8 +42,8 @@ Explore/Plan/review subagents or non-dev interactive sessions.
 | `/skeft-qa:goal-dev` | you **or** the loop | **The in-loop development skill** — MCP-first proof loop, kernel-purity rules, the worktree fan-out flow, a symptom-indexed Lean friction catalog. Invoke while developing; its `references/` load on demand. |
 | `/skeft-qa:sync` | you **or** the loop | Mechanical Stage-12 sync (counts/tables/deps/citation cache) in one command. Idempotent, regen-lock-serialized. |
 | `/skeft-qa:wave-close` | you **or** the loop | Deterministic per-wave close: prereq checks → dispatch the fresh-context review → record `*_close.md`. |
-| `/skeft-qa:harvest` | scheduled task / 2nd-session `/loop` | Off-hot-loop System-2 harvest (Haiku extract → Opus consolidate → `SYSTEM2_REGISTER.md`). Never inside a `/goal` session. |
-| `/skeft-qa:debrief` | you (user-only) | Interactive promotion `agent-reviewed → human-reviewed`; never auto-edits CLAUDE.md/hooks/roadmaps. |
+| `/skeft-qa:harvest` | scheduled task / 2nd-session `/loop` | Off-hot-loop System-2 harvest: Haiku extract → **register-aware Opus consolidate** (files/combines into the four-section `SYSTEM2_REGISTER.md`: re-open recurring closed, group semi-related, route real wins → Process Wins, misfile noise). Never inside a `/goal` session. |
+| `/skeft-qa:debrief` | you (user-only) | Interactive promotion `agent-reviewed → human-reviewed` over the already-organized register; never auto-edits CLAUDE.md/hooks/roadmaps. |
 
 ### Commands (`commands/<name>.md`) — atomic, globally-accessible actions
 
@@ -58,7 +58,7 @@ Explore/Plan/review subagents or non-dev interactive sessions.
 
 | Hook | Job |
 |---|---|
-| `SessionStart` (compact\|resume) | Re-inject the **shared re-orientation payload** (the `/goal` condition + "re-read CLAUDE.md" + the **`/skeft-qa:goal-dev` pointer** + active System-2 issues + heuristics) + a best-effort first-turn self-check — **the durability fix**. |
+| `SessionStart` (compact\|resume) | Re-inject the **shared re-orientation payload** (the `/goal` condition + "re-read CLAUDE.md" + the **`/skeft-qa:goal-dev` pointer** + active System-2 issues **& `[WIN]` process wins** + heuristics) + a best-effort first-turn self-check — **the durability fix**. |
 | `PreToolUse(AskUserQuestion)` | Deny + redirect a blocking question with the re-orientation payload; log the question to `blocked_questions.jsonl`. Marker-gated, top-level-only, honors `question_guard`, fail-open. |
 | `SessionEnd` | **Marker teardown** — removes this session's marker on `reason=clear` only (a `/clear` that also clears the goal), so a dead loop's marker stops re-injecting. Never on `logout`/`resume` (a still-active goal restores on `--resume`). |
 

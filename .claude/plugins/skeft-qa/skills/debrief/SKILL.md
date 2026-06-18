@@ -1,6 +1,6 @@
 ---
 name: debrief
-description: Interactively review the System-2 dev-process harvest — promote agent-reviewed findings to human-reviewed (or close them), and triage GAP-A gate proposals. Use when you want to sign off on what the autonomous loop learned about HOW it ran.
+description: Interactively review the System-2 dev-process harvest — promote agent-reviewed findings to human-reviewed (or close them), and triage GAP-A gate proposals. Runs over the register-aware harvest's already-synthesized register (it files/combines/re-opens continuously); debrief is the human governor — only it promotes to human-reviewed. Use when you want to sign off on what the autonomous loop learned about HOW it ran.
 disable-model-invocation: true
 allowed-tools: Bash(cd *), Bash(uv run python *), Read
 ---

@@ -97,3 +97,25 @@ def test_upsert_reopens_closed_on_new_status(reg):
     R.upsert(reg, {"id": "c", "status": "open", "evidence": "recurred"})
     c = next(f for f in R.load(reg) if f["id"] == "c")
     assert c["status"] == "open" and c["evidence"] == "recurred"
+
+
+def test_group_cli_via_stdin(reg, monkeypatch, capsys):
+    # the --group CLI path the consolidator actually invokes (stdin JSON -> group)
+    import io
+    payload = json.dumps({"absorb": ["a", "b"],
+                          "into": _f("g", "Grouped", status="closed")})
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    rc = R.main(["--register", reg, "--group"])
+    assert rc == 0
+    assert "grouped 2 finding(s)" in capsys.readouterr().out
+    ids = {f["id"] for f in R.load(reg)}
+    assert "g" in ids and "a" not in ids and "b" not in ids
+
+
+def test_group_cli_reports_skipped_human_reviewed(reg, monkeypatch, capsys):
+    import io
+    payload = json.dumps({"absorb": ["a", "w"], "into": _f("g", "Grouped", status="closed")})
+    monkeypatch.setattr("sys.stdin", io.StringIO(payload))
+    R.main(["--register", reg, "--group"])
+    out = capsys.readouterr().out
+    assert "skipped 1 human-reviewed" in out and "w" in out

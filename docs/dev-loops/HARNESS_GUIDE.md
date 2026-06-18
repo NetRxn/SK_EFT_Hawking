@@ -14,11 +14,11 @@
 `skeft-qa` is a Claude Code plugin that keeps a long-running autonomous **native `/goal`** loop on-track across compactions, without competing with `/goal` itself. (A private sibling plugin mirrors the same model for the private repo — lighter wrappers, documented on the private side.)
 
 It ships **three CC hooks** (all default-inert + fail-open, gated on a per-session marker):
-- `SessionStart` — after every compaction/resume, re-injects the settled `/goal` condition + "re-read CLAUDE.md" + the `/skeft-qa:goal-dev` pointer + active System-2 issues + decision heuristics.
+- `SessionStart` — after every compaction/resume, re-injects the settled `/goal` condition + "re-read CLAUDE.md" + the `/skeft-qa:goal-dev` pointer + active System-2 issues **& process wins** (`[WIN]`-labeled) + decision heuristics.
 - `PreToolUse(AskUserQuestion)` — when the loop tries to block on a question (and you're not there), it denies + redirects with the same re-orientation payload, so the loop keeps moving instead of stalling.
 - `SessionEnd` — marker teardown on `reason=clear` (a `/clear` that also clears the goal), so a dead loop's marker stops re-injecting. (A mid-session `/goal clear` fires no event → use `/skeft-qa:goal-end`.)
 
-Plus skills you invoke, a mechanical-sync layer, and an off-hot-loop System-2 "what went well/poorly about HOW the loop ran" harvest.
+Plus skills you invoke, a mechanical-sync layer, and an off-hot-loop System-2 "what went **poorly or extremely well** from a process standpoint" harvest — a **register-aware** consolidator that files & combines each finding into the four-section register (**Open** active issues · **Process Wins** reusable best practices · **Closed** resolved · **Misfiled** harvest noise) so it stays synthesized.
 
 ---
 
@@ -64,14 +64,14 @@ The only `UNRESOLVED` case is launching from somewhere with no path to the repo 
 | **reset-slot `<N>`** | command | you **or** the loop | Reset worktree slot `wtN` to `main` the guardrail-safe way (`checkout -B`; **refuses if the slot has commits not on `main`**). Replaces hand-typed `git reset --hard` (which the auto-mode classifier denies). |
 | **sync** | skill | you **or** the loop | Run the mechanical Stage-12 sync (counts/tables/deps/citation cache) in one command. Idempotent, regen-lock-serialized. |
 | **wave-close `<wave-id>`** | skill | you **or** the loop | Deterministic per-wave close: gate prereqs → dispatch the fresh-context adversarial review (zero BLOCKERs) → write `<wave>_close.md`. The loop runs this itself to satisfy its acceptance criteria. |
-| **harvest** | skill | scheduled task / second-terminal `/loop` — **never the goal session** | Off-hot-loop System-2 harvest (Haiku extract → Opus consolidate) of process/harness lessons. Self-aborts if run inside a managed loop. |
-| **debrief** | skill | you (user-only) | Interactively promote System-2 `agent-reviewed` findings → `human-reviewed`, triage GAP-A gate proposals. |
+| **harvest** | skill | scheduled task / second-terminal `/loop` — **never the goal session** | Off-hot-loop System-2 harvest: Haiku extract → **register-aware Opus consolidate** (reads the standing register; stacks a recurrence onto an open finding, **re-opens** a recurring closed one, **groups** semi-related via `--group`, routes real wins → **Process Wins**, **misfiles** noise). Self-aborts if run inside a managed loop. |
+| **debrief** | skill | you (user-only) | Interactively promote System-2 `agent-reviewed` findings → `human-reviewed`, triage GAP-A gate proposals — over an **already-organized** register (the consolidator keeps it synthesized; promotion to `human-reviewed` is debrief's exclusive call). |
 
 ---
 
 ## 5. The System-2 harvest host (one-time setup)
 
-The harvest reads finished/running loop transcripts off the hot loop and records process lessons into `docs/dev-loops/SYSTEM2_REGISTER.md`. `goal-prompt` facilitates it, but a skill **cannot** silently spawn a standing background process — you complete the host **once**:
+The harvest reads finished/running loop transcripts off the hot loop and records process lessons into the four-section `docs/dev-loops/SYSTEM2_REGISTER.md` (**Open** active issues · **Process Wins** reusable best practices · **Closed** resolved · **Misfiled** harvest noise). The Opus consolidator is **register-aware** — it reads the whole register and files/combines each candidate, so recurrences re-open and semi-related items merge instead of accreting as one-offs; only `/debrief` promotes a finding to `human-reviewed`. `goal-prompt` facilitates the host, but a skill **cannot** silently spawn a standing background process — you complete it **once**:
 
 - **Preferred — Desktop scheduled task:** `goal-prompt` offers to create a recurring task (idempotent) running `/skeft-qa:harvest`. Approve it once; it then runs in the background (~hourly).
 - **CLI fallback — second terminal:** run `/loop <interval> /skeft-qa:harvest` in a **separate** terminal (never the `/goal` session). Re-arm before the 7-day `/loop` expiry.

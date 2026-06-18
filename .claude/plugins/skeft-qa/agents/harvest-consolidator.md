@@ -32,8 +32,8 @@ already exists (Open / Process Wins / Closed / Misfiled). Your job is not "appen
   do NOT open a new finding for it).
 
 **Hard reservations (you may NOT do these unattended — they are `/debrief`'s human judgment):**
-- **Never PROMOTE to `human-reviewed`.** You file at `automatic`/`agent-reviewed`; only `/debrief` raises a
-  finding to `human-reviewed`. (`--upsert` enforces tier-monotonic-up but you must not request human-reviewed.)
+- **Never PROMOTE to `human-reviewed`.** You file at `agent-reviewed` (the harvest tier); only `/debrief` raises
+  a finding to `human-reviewed`. (`--upsert` enforces tier-monotonic-up but you must not request human-reviewed.)
 - **Never dissolve a `human-reviewed` finding into a group.** `--group` refuses to absorb human-reviewed ids
   (it skips + reports them); honor that — relate / stack / re-open those, never combine them away.
 
