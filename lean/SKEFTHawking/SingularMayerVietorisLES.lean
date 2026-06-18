@@ -323,4 +323,12 @@ theorem mv_exact_inter (A B : Set X) (n : ℕ)
   · obtain ⟨x, rfl⟩ := hr
     exact mvHomDiag_mvDelta A B n hcov x
 
+/-- The two routes `A∩B ↪ A ↪ X` and `A∩B ↪ B ↪ X` of a class agree (both are the single inclusion
+`A∩B ↪ X`). Used in the middle Mayer–Vietoris exactness. -/
+theorem homIncl_inclRA (A B : Set X) (n : ℕ) (w : Homology (sub (restr A B)) n) :
+    homIncl A n (Homology.map (inclRA A B) n w) = homIncl B n (homIncl (restr A B) n w) := by
+  rw [← Homology.map_ambIncl A, ← Homology.map_ambIncl B, ← Homology.map_ambIncl (restr A B),
+    ← LinearMap.comp_apply, ← Homology.map_comp, ← LinearMap.comp_apply, ← Homology.map_comp]
+  rfl
+
 end SKEFTHawking.SingularMayerVietorisLES
