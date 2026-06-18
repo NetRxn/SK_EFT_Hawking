@@ -20,6 +20,7 @@ convex base case. Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularPairLES SKEFTHawking.SingularExcisionIso
+open SKEFTHawking.SingularRelativeFunctoriality
 
 namespace SKEFTHawking.SingularManifoldFundamentalClass
 
@@ -41,6 +42,39 @@ noncomputable def openSetExcisionEquiv {K : Set ↑X} (hK : IsClosed K) {V : Set
     (hKV : K ⊆ V) (n : ℕ) :
     RelativeHomology (restr Kᶜ V) (n + 1) ≃ₗ[ZMod 2] RelativeHomology Kᶜ (n + 1) :=
   excisionEquiv Kᶜ V n (cover_compl_open hK hV hKV)
+
+variable {M : TopCat}
+
+/-- The chart homeo `e : U ≃ₜ V` maps `(U, U∖K) → (V, V∖C)` when `e` matches `K` with `C`
+(`e u ∈ C ↔ u ∈ K`). -/
+theorem mapsTo_chart_set {U : Set ↑M} {V : Set ↑X} {K : Set ↑M} {C : Set ↑X} (e : ↥U ≃ₜ ↥V)
+    (hcompat : ∀ u : ↥U, ((e u : ↑X) ∈ C) ↔ (u : ↑M) ∈ K) :
+    Set.MapsTo (⟨e, e.continuous⟩ : C(↑(sub U), ↑(sub V))) (restr Kᶜ U) (restr Cᶜ V) := by
+  intro u hu
+  simp only [restr, Set.mem_preimage, Set.mem_compl_iff, ContinuousMap.coe_mk] at hu ⊢
+  exact fun hC => hu ((hcompat u).mp hC)
+
+/-- The reverse chart map sends `(V, V∖C) → (U, U∖K)`. -/
+theorem mapsTo_chart_set_symm {U : Set ↑M} {V : Set ↑X} {K : Set ↑M} {C : Set ↑X} (e : ↥U ≃ₜ ↥V)
+    (hcompat : ∀ u : ↥U, ((e u : ↑X) ∈ C) ↔ (u : ↑M) ∈ K) :
+    Set.MapsTo (⟨e.symm, e.symm.continuous⟩ : C(↑(sub V), ↑(sub U))) (restr Cᶜ V) (restr Kᶜ U) := by
+  intro v hv
+  simp only [restr, Set.mem_preimage, Set.mem_compl_iff, ContinuousMap.coe_mk] at hv ⊢
+  intro hK
+  exact hv (by rw [← e.apply_symm_apply v]; exact (hcompat (e.symm v)).mpr hK)
+
+/-- **The chart-pair homeomorphism induces a relative-homology iso** `Hₖ(U, U∖K) ≅ Hₖ(V, V∖C)` (the
+set version of `SingularChartBridge.chartPairEquiv`). -/
+noncomputable def chartPairEquiv_set {U : Set ↑M} {V : Set ↑X} {K : Set ↑M} {C : Set ↑X}
+    (e : ↥U ≃ₜ ↥V) (hcompat : ∀ u : ↥U, ((e u : ↑X) ∈ C) ↔ (u : ↑M) ∈ K) (k : ℕ) :
+    RelativeHomology (restr Kᶜ U) k ≃ₗ[ZMod 2] RelativeHomology (restr Cᶜ V) k :=
+  LinearEquiv.ofBijective
+    (RelativeHomology.map (⟨e, e.continuous⟩ : C(↑(sub U), ↑(sub V))) (mapsTo_chart_set e hcompat) k)
+    (RelativeHomology.map_bijective_of_comp_id (⟨e, e.continuous⟩ : C(↑(sub U), ↑(sub V)))
+      (⟨e.symm, e.symm.continuous⟩ : C(↑(sub V), ↑(sub U))) (mapsTo_chart_set e hcompat)
+      (mapsTo_chart_set_symm e hcompat)
+      (ContinuousMap.ext fun v => e.symm_apply_apply v)
+      (ContinuousMap.ext fun u => e.apply_symm_apply u) k)
 
 /-- **The pair-LES connecting map is an isomorphism over an acyclic ambient**: if `Hₙ₊₁(X) = 0` and
 `Hₙ(X) = 0`, then `δ : Hₙ₊₁(X, A) → Hₙ(A)` is bijective. (Injective: `ker δ = range j_* = 0` since
