@@ -119,4 +119,41 @@ theorem restrictToPointNe_chartBall_bijective {m : ℕ} {M : Type} [TopologicalS
     Function.Bijective (restrictToPointNe (X := TopCat.of M) hy (m + 2)) :=
   SingularGoodCompactManifold.restrictToPoint_chartBall_bijective y₀ hrsub hy
 
+/-- **The local-value composite `Hₘ₊₂(M|K) → ℤ/2`** for `y ∈ K`: restrict to the point `y`, then the
+local-homology iso `manifoldLocalIso y`. Built as a **manual** `LinearMap` (`toFun` = the bare
+application, which is well-typed) rather than `manifoldLocalIso y ∘ₗ restrictToPoint hy` — the
+`∘ₗ`/`.trans` *formation* triggers the `{y}ᶜ`↔`{z|z≠y}` `RelativeHomology` congruence wall, but the
+*application* does not. -/
+noncomputable def localComposite {m : ℕ} {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] {K : Set M} {y : M} (hy : y ∈ K) :
+    RelativeHomology (X := TopCat.of M) (Kᶜ : Set ↑(TopCat.of M)) (m + 2) →ₗ[ZMod 2] ZMod 2 where
+  toFun z := SKEFTHawking.SingularChartBridge.manifoldLocalIso y
+    (SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint (X := TopCat.of M) hy (m + 2) z)
+  map_add' a b := by rw [map_add]; exact map_add _ _ _
+  map_smul' c a := by rw [map_smul]; exact map_smul _ _ _
+
+/-- The local-value composite is bijective, given the restriction is bijective — proved **manually**
+via injective+surjective from the component bijectivities (at the application level, so it avoids the
+`∘`/`Function.comp` middle-type match that triggers the `{y}ᶜ`↔`{z|z≠y}` wall). -/
+theorem localComposite_bijective {m : ℕ} {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] {K : Set M} {y : M} (hy : y ∈ K)
+    (hbij : Function.Bijective
+      (SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint (X := TopCat.of M) hy (m + 2))) :
+    Function.Bijective (localComposite (m := m) hy) := by
+  refine ⟨fun a b hab => ?_, fun w => ?_⟩
+  · -- `hab` (defeq) is `manifoldLocalIso (rtp a) = manifoldLocalIso (rtp b)`; `m` is pinned by `rtp`.
+    have hab' : SKEFTHawking.SingularChartBridge.manifoldLocalIso y
+        (SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint hy (m + 2) a)
+      = SKEFTHawking.SingularChartBridge.manifoldLocalIso y
+        (SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint hy (m + 2) b) := hab
+    exact hbij.injective
+      ((SKEFTHawking.SingularChartBridge.manifoldLocalIso y).injective hab')
+  · obtain ⟨u, hu⟩ := (SKEFTHawking.SingularChartBridge.manifoldLocalIso
+      (m := m) (M := M) y).surjective w
+    obtain ⟨z, hz⟩ := hbij.surjective u
+    refine ⟨z, ?_⟩
+    show SKEFTHawking.SingularChartBridge.manifoldLocalIso y
+      (SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint hy (m + 2) z) = w
+    rw [hz, hu]
+
 end SKEFTHawking.SingularFundamentalClass
