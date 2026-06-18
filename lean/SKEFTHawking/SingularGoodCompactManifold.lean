@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.SingularGoodCompact
 import SKEFTHawking.SingularGoodCompactChart
+import SKEFTHawking.SingularCompactChartCover
 
 /-!
 # Phase 5q.F (w₂-foundation, brick 72c-4n) — `goodCompact` for a compact set inside a chart source
@@ -36,5 +37,28 @@ theorem goodCompact_compact_in_chart_source {m : ℕ} {M : Type} [TopologicalSpa
   rw [show (c.toHomeomorphSourceTarget u : EuclideanSpace ℝ (Fin (m + 2))) = c (u : M) from
       c.toHomeomorphSourceTarget_apply_coe u]
   exact (c.injOn.mem_image_iff hKsub u.2)
+
+/-- **A compact charted manifold is `goodCompact` on all of `M`** (Hatcher step 4): cover `M` by
+finitely many compact chart pieces (`exists_finite_compact_chart_cover`), each `goodCompact`
+(`goodCompact_compact_in_chart_source`); every sub-intersection is a closed subset of one of them,
+hence compact inside the same chart source and again `goodCompact`, so `goodCompact_biUnion` gives
+`goodCompact (m+2) (univ : Set M)`. The penultimate step toward the fundamental class `[M]`. -/
+theorem goodCompact_univ {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M]
+    [Nonempty M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] :
+    SKEFTHawking.SingularGoodCompact.goodCompact (X := TopCat.of M) (m + 2)
+      (Set.univ : Set M) := by
+  classical
+  obtain ⟨s, K, hs, hKcomp, hKchart, hcov⟩ :=
+    SingularCompactChartCover.exists_finite_compact_chart_cover (m := m) (M := M)
+  rw [← hcov]
+  refine SingularGoodCompact.goodCompact_biUnion (X := TopCat.of M) hs K (fun t ht htne => ?_)
+  obtain ⟨j, hj⟩ := htne
+  have hsubKj : (⋂ x ∈ t, K x) ⊆ K j := Set.biInter_subset_of_mem hj
+  have hclosed : IsClosed (⋂ x ∈ t, K x) :=
+    isClosed_biInter (fun x hx => (hKcomp x (ht hx)).isClosed)
+  have hcompInter : IsCompact (⋂ x ∈ t, K x) :=
+    (hKcomp j (ht hj)).of_isClosed_subset hclosed hsubKj
+  exact ⟨hclosed, goodCompact_compact_in_chart_source hcompInter
+    (hsubKj.trans (hKchart j (ht hj)))⟩
 
 end SKEFTHawking.SingularGoodCompactManifold
