@@ -967,6 +967,7 @@ import SKEFTHawking.SingularConnSquareCloseM2
 import SKEFTHawking.SingularCoverPartitionExist
 import SKEFTHawking.SingularCohomologySnake
 import SKEFTHawking.SingularConnSquareLHSPairing
+import SKEFTHawking.SingularKroneckerFunctoriality
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
