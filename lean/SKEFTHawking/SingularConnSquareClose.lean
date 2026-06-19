@@ -116,4 +116,48 @@ theorem relKroneckerH_match_of_chain
     relKroneckerH_chainIncl_rcap_eq_kronecker (k := N + 1) (m := p) zR hzRK hzRS gR aR hWR,
     kronecker_chainIncl_rcap_eq_cup gL.1.1 bL.1, kronecker_chainIncl_rcap_eq_cup gR.1.1 aR.1, hcup]
 
+/-- **MATCH-M reduction with the RHS in `relMvDelta` form** (the shape of the actual `hmatch`). The
+RHS pairing is over `U'∩V'` with the homology argument `relMvDelta` of the capped cycle; reversing the
+`relCohomMvConnecting` adjunction (`relKroneckerH_relMvDelta_eq`) puts it in the bare form consumed by
+`relKroneckerH_match_of_chain`. The RHS cohomology becomes `relCohomMvConnecting gR` — supplied here as
+an abstract cocycle rep `gRconn` (with the defining equation `hgRconn`), so the heavy
+`relCohomMvConnecting` composite is a unification variable, never elaborated in the statement type
+(dodging the whnf wall). -/
+theorem relKroneckerH_match_of_chain_relMvDelta
+    {N p : ℕ} {SL KL KR : Set ↑X} {U' V' : Set ↑X} (hU' : IsOpen U') (hV' : IsOpen V')
+    (gL : LinearMap.ker (relCoboundaryₗ SL (N + 1)))
+    (bL : LinearMap.ker (coboundaryₗ (sub KL) (p + 2)))
+    (zL : SingularChain X (N + 1 + (p + 1) + 1)) (hzLK : zL ∈ subspaceChains KL (N + 1 + (p + 1) + 1))
+    (hzLS : chainBoundary X (N + 1 + (p + 1)) zL ∈ subspaceChains SL (N + 1 + (p + 1)))
+    (hWL : RelativeChain.mk SL (N + 1)
+        (chainIncl KL (N + 1) (rcap bL.1 ((subspaceChainsEquiv KL (N + 1 + (p + 1) + 1)).symm ⟨zL, hzLK⟩)))
+        ∈ relCycles SL (N + 1))
+    (gR : RelativeCohomology (U' ∩ V') (N + 1))
+    (gRconn : LinearMap.ker (relCoboundaryₗ (U' ∪ V') (N + 2)))
+    (hgRconn : RelativeCohomology.mk (U' ∪ V') (N + 2) gRconn
+      = SKEFTHawking.SingularRelativeCohomologyMVConnecting.relCohomMvConnecting U' V' hU' hV' N gR)
+    (aR : LinearMap.ker (coboundaryₗ (sub KR) (p + 1)))
+    (zR : SingularChain X (N + 2 + p + 1)) (hzRK : zR ∈ subspaceChains KR (N + 2 + p + 1))
+    (hzRS : chainBoundary X (N + 2 + p) zR ∈ subspaceChains (U' ∪ V') (N + 2 + p))
+    (hWR : RelativeChain.mk (U' ∪ V') (N + 2)
+        (chainIncl KR (N + 2) (rcap aR.1 ((subspaceChainsEquiv KR (N + 2 + p + 1)).symm ⟨zR, hzRK⟩)))
+        ∈ relCycles (U' ∪ V') (N + 2))
+    (hcup : kronecker (cup (pullbackCochain KL (N + 1) gL.1.1) bL.1)
+          ((subspaceChainsEquiv KL (N + 1 + (p + 1) + 1)).symm ⟨zL, hzLK⟩)
+        = kronecker (cup (pullbackCochain KR (N + 2) gRconn.1.1) aR.1)
+          ((subspaceChainsEquiv KR (N + 2 + p + 1)).symm ⟨zR, hzRK⟩)) :
+    relKroneckerH SL (RelativeCohomology.mk SL (N + 1) gL)
+        (RelativeHomology.mk SL (N + 1)
+          ⟨RelativeChain.mk SL (N + 1)
+              (chainIncl KL (N + 1) (rcap bL.1
+                ((subspaceChainsEquiv KL (N + 1 + (p + 1) + 1)).symm ⟨zL, hzLK⟩))), hWL⟩)
+      = relKroneckerH (U' ∩ V') gR
+          (relMvDelta U' V' hU' hV' (N + 1)
+            (RelativeHomology.mk (U' ∪ V') (N + 2)
+              ⟨RelativeChain.mk (U' ∪ V') (N + 2)
+                  (chainIncl KR (N + 2) (rcap aR.1
+                    ((subspaceChainsEquiv KR (N + 2 + p + 1)).symm ⟨zR, hzRK⟩))), hWR⟩)) := by
+  rw [relKroneckerH_relMvDelta_eq U' V' hU' hV' N gR, ← hgRconn]
+  exact relKroneckerH_match_of_chain gL bL zL hzLK hzLS hWL gRconn aR zR hzRK hzRS hWR hcup
+
 end SKEFTHawking.SingularConnSquareClose
