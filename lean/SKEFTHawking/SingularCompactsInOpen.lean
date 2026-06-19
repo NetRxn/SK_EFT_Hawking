@@ -39,4 +39,15 @@ instance (W : Set X) : Nonempty (CompactsIn W) :=
 
 noncomputable instance (W : Set X) : DecidableEq (CompactsIn W) := Classical.decEq _
 
+/-- **Binary split of a compact in a union of opens** (`IsCompact.binary_compact_cover`, packaged for the
+`CompactsIn` index): a compact `K ⊆ U ∪ V` (with `U`, `V` open) is the union `↑K_U ∪ ↑K_V` of a compact
+`K_U ∈ CompactsIn U` and a compact `K_V ∈ CompactsIn V`. The geometric input of the compactly-supported-
+cohomology Mayer–Vietoris middle exactness (the merged colimit-compact splits across the cover). -/
+theorem compactsIn_binary_cover [R1Space X] {U V : Set X} (hU : IsOpen U) (hV : IsOpen V)
+    (K : CompactsIn (U ∪ V)) :
+    ∃ (KU : CompactsIn U) (KV : CompactsIn V), (↑K.1 : Set X) = ↑KU.1 ∪ ↑KV.1 := by
+  obtain ⟨K₁, K₂, hK₁c, hK₂c, hK₁U, hK₂V, hsplit⟩ :=
+    K.1.isCompact'.binary_compact_cover hU hV K.2
+  exact ⟨⟨⟨K₁, hK₁c⟩, hK₁U⟩, ⟨⟨K₂, hK₂c⟩, hK₂V⟩, hsplit⟩
+
 end SKEFTHawking.SingularCompactsInOpen
