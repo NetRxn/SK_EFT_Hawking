@@ -46,19 +46,45 @@ theorem infCompact_coe (U V : Set ↑M) (LU : CompactsIn U) (LV : CompactsIn V) 
     (↑(infCompact U V LU LV).1 : Set ↑M) = ↑LU.1 ∩ ↑LV.1 :=
   TopologicalSpace.Compacts.coe_inf _ _
 
-/-- **The split-explicit raw leg** `rawLeg LU LV : Hᵏ(M | LU∪LV) → Hᵏ⁺¹_c(U∩V)`: the per-`(LU,LV)`
-relative MV connecting map at the split subspaces `(↑LU)ᶜ`, `(↑LV)ᶜ`, landing in the `(LU⊓LV)`-stage of
-`Hᵏ⁺¹_c(U∩V)`. Source `Hᵏ(M, (↑LU)ᶜ ∩ (↑LV)ᶜ) = Hᵏ(M | LU∪LV)`. -/
-noncomputable def rawLeg (U V : Set ↑M) (N : ℕ) (LU : CompactsIn U) (LV : CompactsIn V) :
+/-- **The split-explicit raw leg** `rawLeg LU LV J hJ : Hᵏ(M | LU∪LV) → Hᵏ⁺¹_c(U∩V)`: the per-`(LU,LV)`
+relative MV connecting map at the split subspaces `(↑LU)ᶜ`, `(↑LV)ᶜ`, landing at the `U∩V`-compact stage
+`J` (with `(↑LU)ᶜ∪(↑LV)ᶜ = (↑J)ᶜ`; in use `J = LU⊓LV`). The target stage `J` is an **explicit argument**
+(not `infCompact U V LU LV`) so that `Module.DirectLimit.of J` stays unreduced — keeping the
+`Compacts.coe_inf` whnf out of `rawLeg`'s composition, which `infCompact`-baked-in would stall. Source
+`Hᵏ(M, (↑LU)ᶜ ∩ (↑LV)ᶜ) = Hᵏ(M | LU∪LV)`. -/
+noncomputable def rawLeg (U V : Set ↑M) (N : ℕ) (LU : CompactsIn U) (LV : CompactsIn V)
+    (J : CompactsIn (U ∩ V))
+    (hJ : ((↑LU.1 : Set ↑M)ᶜ ∪ (↑LV.1 : Set ↑M)ᶜ) = (↑J.1 : Set ↑M)ᶜ) :
     RelativeCohomology ((↑LU.1 : Set ↑M)ᶜ ∩ (↑LV.1 : Set ↑M)ᶜ) (N + 1)
       →ₗ[ZMod 2] CompactlySupportedCohomologyOpen (U ∩ V) (N + 2) :=
   (Module.DirectLimit.of (ZMod 2) (CompactsIn (U ∩ V)) (cohomGW (U ∩ V) (N + 2))
-        (cohomFW (U ∩ V) (N + 2)) (infCompact U V LU LV)).comp
-    ((relCohomSetCongr (show ((↑LU.1 : Set ↑M)ᶜ ∪ (↑LV.1 : Set ↑M)ᶜ)
-            = (↑(infCompact U V LU LV).1 : Set ↑M)ᶜ from by
-          rw [infCompact_coe, Set.compl_inter]) (N + 2)).toLinearMap.comp
+        (cohomFW (U ∩ V) (N + 2)) J).comp
+    ((relCohomSetCongr hJ (N + 2)).toLinearMap.comp
       (relCohomMvConnecting ((↑LU.1 : Set ↑M)ᶜ) ((↑LV.1 : Set ↑M)ᶜ)
         LU.1.isCompact'.isClosed.isOpen_compl LV.1.isCompact'.isClosed.isOpen_compl N))
+
+/-- **Computation rule for `rawLeg`** on `y` — the nested application (bypasses the `∘ₗ`/`∘ₛₗ`
+`comp_apply` matcher friction; `J` explicit keeps `of J` unreduced, no `infCompact` whnf). -/
+theorem rawLeg_apply (U V : Set ↑M) (N : ℕ) (LU : CompactsIn U) (LV : CompactsIn V)
+    (J : CompactsIn (U ∩ V))
+    (hJ : ((↑LU.1 : Set ↑M)ᶜ ∪ (↑LV.1 : Set ↑M)ᶜ) = (↑J.1 : Set ↑M)ᶜ)
+    (y : RelativeCohomology ((↑LU.1 : Set ↑M)ᶜ ∩ (↑LV.1 : Set ↑M)ᶜ) (N + 1)) :
+    rawLeg U V N LU LV J hJ y
+      = Module.DirectLimit.of (ZMod 2) (CompactsIn (U ∩ V)) (cohomGW (U ∩ V) (N + 2))
+          (cohomFW (U ∩ V) (N + 2)) J
+          (relCohomSetCongr hJ (N + 2)
+            (relCohomMvConnecting ((↑LU.1 : Set ↑M)ᶜ) ((↑LV.1 : Set ↑M)ᶜ)
+              LU.1.isCompact'.isClosed.isOpen_compl LV.1.isCompact'.isClosed.isOpen_compl N y)) :=
+  rfl
+
+omit [T2Space ↑M] in
+/-- **`relCohomSetCongr` absorbs into the source of `relCohomRestrict`** (the dual order to
+`relCohomRestrict_relCohomSetCongr`): renaming the restriction target `S = S'` is restricting along the
+transported inclusion. (`subst` the set equality.) -/
+theorem relCohomSetCongr_relCohomRestrict {S S' T : Set ↑M} (hSS' : S = S') (h : S ⊆ T) (n : ℕ)
+    (x : RelativeCohomology T n) :
+    relCohomSetCongr hSS' n (relCohomRestrict h n x) = relCohomRestrict (hSS' ▸ h) n x := by
+  subst hSS'; rfl
 
 /-! ## The per-compact leg (binary split of `K ⊆ U∪V` across the cover) -/
 
@@ -82,7 +108,9 @@ theorem legSplit_cover (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (K : Com
 noncomputable def legδ (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (N : ℕ)
     (K : CompactsIn (U ∪ V)) :
     cohomGW (U ∪ V) (N + 1) K →ₗ[ZMod 2] CompactlySupportedCohomologyOpen (U ∩ V) (N + 2) :=
-  (rawLeg U V N (legSplitU U V hU hV K) (legSplitV U V hU hV K)).comp
+  (rawLeg U V N (legSplitU U V hU hV K) (legSplitV U V hU hV K)
+      (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K))
+      (by rw [infCompact_coe, Set.compl_inter])).comp
     (relCohomSetCongr (show ((↑K.1 : Set ↑M)ᶜ)
           = (↑(legSplitU U V hU hV K).1 : Set ↑M)ᶜ ∩ (↑(legSplitV U V hU hV K).1 : Set ↑M)ᶜ from by
         rw [legSplit_cover, Set.compl_union]) (N + 1)).toLinearMap
@@ -131,5 +159,32 @@ theorem relCohomMvConnecting_naturality' (A B A' B' : Set ↑M)
   relCohomMvConnecting_naturality A B A' B' hA hB hA' hB' hAA' hBB' N
     (fun w => SingularRelativeMVNaturality.relMvDelta_naturality A B A' B' hA hB hA' hB' hAA' hBB' (N + 1) w)
     ω
+
+/-! ## `rawLeg` compatibility under enlarging the split compacts -/
+
+/-- **`rawLeg` enlargement compatibility**: for `(LU,LV) ≤ (LU',LV')` (`hAA':(↑LU')ᶜ⊆(↑LU)ᶜ` etc.) at
+target stages `J ≤ J'`, the smaller-compact leg equals the larger-compact leg of the restricted class.
+By the cohomology MV connecting naturality (`relCohomMvConnecting_naturality'`) then the colimit `of_f`. -/
+theorem rawLeg_enlarge (U V : Set ↑M) (N : ℕ)
+    (LU LU' : CompactsIn U) (LV LV' : CompactsIn V) (J J' : CompactsIn (U ∩ V))
+    (hJ : ((↑LU.1 : Set ↑M)ᶜ ∪ (↑LV.1 : Set ↑M)ᶜ) = (↑J.1 : Set ↑M)ᶜ)
+    (hJ' : ((↑LU'.1 : Set ↑M)ᶜ ∪ (↑LV'.1 : Set ↑M)ᶜ) = (↑J'.1 : Set ↑M)ᶜ)
+    (hJJ' : J ≤ J') (hAA' : (↑LU'.1 : Set ↑M)ᶜ ⊆ (↑LU.1 : Set ↑M)ᶜ)
+    (hBB' : (↑LV'.1 : Set ↑M)ᶜ ⊆ (↑LV.1 : Set ↑M)ᶜ)
+    (x : RelativeCohomology ((↑LU.1 : Set ↑M)ᶜ ∩ (↑LV.1 : Set ↑M)ᶜ) (N + 1)) :
+    rawLeg U V N LU LV J hJ x
+      = rawLeg U V N LU' LV' J' hJ' (relCohomRestrict (Set.inter_subset_inter hAA' hBB') (N + 1) x) := by
+  rw [rawLeg_apply, rawLeg_apply,
+    relCohomMvConnecting_naturality' ((↑LU.1 : Set ↑M)ᶜ) ((↑LV.1 : Set ↑M)ᶜ) ((↑LU'.1 : Set ↑M)ᶜ)
+      ((↑LV'.1 : Set ↑M)ᶜ) LU.1.isCompact'.isClosed.isOpen_compl LV.1.isCompact'.isClosed.isOpen_compl
+      LU'.1.isCompact'.isClosed.isOpen_compl LV'.1.isCompact'.isClosed.isOpen_compl hAA' hBB' N x]
+  set z := relCohomMvConnecting ((↑LU.1 : Set ↑M)ᶜ) ((↑LV.1 : Set ↑M)ᶜ)
+    LU.1.isCompact'.isClosed.isOpen_compl LV.1.isCompact'.isClosed.isOpen_compl N x with hz
+  have heq : relCohomSetCongr hJ' (N + 2) (relCohomRestrict (Set.union_subset_union hAA' hBB') (N + 2) z)
+      = cohomFW (U ∩ V) (N + 2) J J' hJJ' (relCohomSetCongr hJ (N + 2) z) := by
+    rw [cohomFW, SingularCohomologyColimit.cohomF, relCohomSetCongr_relCohomRestrict]
+    exact (SingularCSCMayerVietorisMiddle.relCohomRestrict_relCohomSetCongr hJ _ (N + 2) z).symm
+  rw [heq]
+  exact (Module.DirectLimit.of_f).symm
 
 end SKEFTHawking.SingularCSCMayerVietorisConnecting
