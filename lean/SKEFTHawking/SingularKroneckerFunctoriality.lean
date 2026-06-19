@@ -35,6 +35,19 @@ noncomputable def pullbackCochainMap (φ : C(↑X, ↑Y)) (n : ℕ) (f : Singula
     (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) :
     pullbackCochainMap φ n f σ = f (mapSimplex φ σ) := rfl
 
+/-- **Contravariant functoriality**: `(ψ ∘ φ)^* = φ^* ∘ ψ^*` — the cochain pullback reverses
+composition (dual to `mapChain_comp`). Used to compose the two seam pullbacks into one. -/
+theorem pullbackCochainMap_comp {X Y Z : TopCat} (ψ : C(↑Y, ↑Z)) (φ : C(↑X, ↑Y)) (n : ℕ)
+    (f : SingularCochain Z n) :
+    pullbackCochainMap (ψ.comp φ) n f = pullbackCochainMap φ n (pullbackCochainMap ψ n f) := by
+  funext σ
+  rw [pullbackCochainMap_apply, pullbackCochainMap_apply, pullbackCochainMap_apply, mapSimplex_comp]
+
+/-- The pullback along the identity is the identity. -/
+theorem pullbackCochainMap_id {X : TopCat} (n : ℕ) (f : SingularCochain X n) :
+    pullbackCochainMap (ContinuousMap.id ↑X) n f = f := by
+  funext σ; rw [pullbackCochainMap_apply, mapSimplex_id]
+
 /-- **Kronecker naturality (chain level)**: `⟨f, φ_# z⟩ = ⟨φ^* f, z⟩`. -/
 theorem kronecker_mapChain (φ : C(↑X, ↑Y)) (n : ℕ) (f : SingularCochain Y n)
     (z : SingularChain X n) :
