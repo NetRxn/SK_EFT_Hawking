@@ -17,6 +17,7 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 -/
 
 open SKEFTHawking.SingularCompactlySupportedOpen SKEFTHawking.SingularCSCOpenMonotone
+  SKEFTHawking.SingularCompactsInOpen
 
 namespace SKEFTHawking.SingularCSCMayerVietoris
 
@@ -45,5 +46,19 @@ theorem cscMvSum_comp_cscMvDiag (U V : Set ↑M) (k : ℕ) :
       - cscOpenMonotone Set.subset_union_right k (cscOpenMonotone Set.inter_subset_right k x) = 0
   rw [← LinearMap.comp_apply, ← LinearMap.comp_apply, cscOpenMonotone_comp, cscOpenMonotone_comp]
   exact sub_eq_zero.mpr rfl
+
+/-- **Computation rule for the MV diagonal** on a `K`-stage class `of_{U∩V}(K, g)`: `Δ` extends it to the
+two `K`-stage classes over `U` and `V` (the same underlying compact `K`, included into `CompactsIn U` /
+`CompactsIn V`). -/
+@[simp] theorem cscMvDiag_of (U V : Set ↑M) (k : ℕ) (K : CompactsIn (U ∩ V))
+    (g : cohomGW (U ∩ V) k K) :
+    cscMvDiag U V k
+        (Module.DirectLimit.of (ZMod 2) (CompactsIn (U ∩ V)) (cohomGW (U ∩ V) k) (cohomFW (U ∩ V) k) K g)
+      = (Module.DirectLimit.of (ZMod 2) (CompactsIn U) (cohomGW U k) (cohomFW U k)
+            (compactsInIncl Set.inter_subset_left K) g,
+          Module.DirectLimit.of (ZMod 2) (CompactsIn V) (cohomGW V k) (cohomFW V k)
+            (compactsInIncl Set.inter_subset_right K) g) := by
+  rw [cscMvDiag, LinearMap.prod_apply, Pi.prod, cscOpenMonotone_of, cscOpenMonotone_of]
+  rfl
 
 end SKEFTHawking.SingularCSCMayerVietoris
