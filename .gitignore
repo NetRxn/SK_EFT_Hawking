@@ -97,3 +97,4 @@ papers/**/*.pdf
 # Keep them out of the main checkout's status so a worktree's files never
 # appear as untracked here (and never reach the leak pre-commit scan).
 /.claude/worktrees/
+docs/dev-loops/SYSTEM2_REGISTER.md
