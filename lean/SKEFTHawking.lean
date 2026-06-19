@@ -923,6 +923,7 @@ import SKEFTHawking.SingularHomologyColimitTop
 import SKEFTHawking.SingularFundCycleOpen
 import SKEFTHawking.SingularFundamentalDuality
 import SKEFTHawking.SingularDualityEmptyInjective
+import SKEFTHawking.SingularRelativeDualityCongr
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
