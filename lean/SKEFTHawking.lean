@@ -903,6 +903,7 @@ import SKEFTHawking.SingularRelativeCohomologyMod2
 import SKEFTHawking.SingularRelativeCap
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
+import SKEFTHawking.SingularLocalCohomology
 import SKEFTHawking.SingularRelativeDuality
 import SKEFTHawking.PoincareDualityConstruct
 import SKEFTHawking.SingularCohomologyFunctorial
