@@ -970,6 +970,7 @@ import SKEFTHawking.SingularConnSquareLHSPairing
 import SKEFTHawking.SingularKroneckerFunctoriality
 import SKEFTHawking.SingularSeamDualPairing
 import SKEFTHawking.SingularConnSquareMatchLHS
+import SKEFTHawking.SingularPullbackAmbIncl
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
