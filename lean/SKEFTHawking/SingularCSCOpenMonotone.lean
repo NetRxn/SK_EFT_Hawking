@@ -61,4 +61,13 @@ noncomputable def cscOpenMonotone {W W' : Set ↑M} (hWW' : W ⊆ W') (k : ℕ) 
           (compactsInIncl hWW' K) x :=
   Module.DirectLimit.lift_of _ _ x
 
+/-- **Functoriality of the open-monotone maps**: `Hᵏ_c(W) → Hᵏ_c(W') → Hᵏ_c(W'')` is the single map
+`Hᵏ_c(W) → Hᵏ_c(W'')` (the index inclusions compose). -/
+theorem cscOpenMonotone_comp {W W' W'' : Set ↑M} (h1 : W ⊆ W') (h2 : W' ⊆ W'') (k : ℕ) :
+    (cscOpenMonotone h2 k).comp (cscOpenMonotone h1 k) = cscOpenMonotone (h1.trans h2) k := by
+  ext x
+  refine Module.DirectLimit.induction_on x (fun K y => ?_)
+  simp only [LinearMap.comp_apply, cscOpenMonotone_of]
+  rfl
+
 end SKEFTHawking.SingularCSCOpenMonotone
