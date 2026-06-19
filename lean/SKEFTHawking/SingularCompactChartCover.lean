@@ -71,4 +71,52 @@ theorem exists_finite_compact_chart_cover {m : ℕ} {M : Type} [TopologicalSpace
     refine Set.eq_univ_of_univ_subset (hs.trans ?_)
     exact Set.iUnion₂_mono fun x _ => hOK x
 
+/-- **Finite chart-**ball** cover** (the `exists_finite_compact_chart_cover` data with the ball radius
+`r x` exposed): a compact charted manifold is covered by finitely many chart balls
+`(chartAt x).symm '' B̄((chartAt x) x, r x)` with `0 ≤ r x` and `B̄ ⊆ (chartAt x).target`. This is the
+cover the fundamental-class existence induction consumes — each piece is a chart ball
+(`hasFundClass_chartBall`) and a compact subset of a chart source (`goodCompact_compact_in_chart_source`). -/
+theorem exists_finite_chartBall_cover {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
+    [CompactSpace M] [Nonempty M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] :
+    ∃ (s : Finset M) (r : M → ℝ), s.Nonempty ∧
+      (∀ x ∈ s, 0 ≤ r x) ∧
+      (∀ x ∈ s, Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) x x) (r x)
+        ⊆ (chartAt (EuclideanSpace ℝ (Fin (m + 2))) x).target) ∧
+      (⋃ x ∈ s, (chartAt (EuclideanSpace ℝ (Fin (m + 2))) x).symm ''
+        Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) x x) (r x)) = Set.univ := by
+  set c : M → OpenPartialHomeomorph M (EuclideanSpace ℝ (Fin (m + 2))) :=
+    fun x => chartAt (EuclideanSpace ℝ (Fin (m + 2))) x with hc
+  have hball : ∀ x : M, ∃ r : ℝ, 0 < r ∧ Metric.closedBall ((c x) x) r ⊆ (c x).target := by
+    intro x
+    have hmem : (c x) x ∈ (c x).target := mem_chart_target _ x
+    have hopen : IsOpen (c x).target := (c x).open_target
+    rw [Metric.isOpen_iff] at hopen
+    obtain ⟨r, hr, hsub⟩ := hopen _ hmem
+    exact ⟨r / 2, by linarith, (Metric.closedBall_subset_ball (by linarith)).trans hsub⟩
+  choose r hr_pos hr_sub using hball
+  set O : M → Set M := fun x => (c x).symm '' Metric.ball ((c x) x) (r x) with hO
+  have hball_sub_target : ∀ x : M, Metric.ball ((c x) x) (r x) ⊆ (c x).target := fun x =>
+    (Metric.ball_subset_closedBall).trans (hr_sub x)
+  have hO_open : ∀ x : M, IsOpen (O x) := fun x =>
+    (c x).isOpen_image_symm_of_subset_target Metric.isOpen_ball (hball_sub_target x)
+  have hO_mem : ∀ x : M, x ∈ O x := by
+    intro x
+    refine ⟨(c x) x, ?_, (c x).left_inv (mem_chart_source _ x)⟩
+    exact Metric.mem_ball_self (hr_pos x)
+  have hcover : (Set.univ : Set M) ⊆ ⋃ x, O x := fun x _ => Set.mem_iUnion.mpr ⟨x, hO_mem x⟩
+  obtain ⟨s, hs⟩ := isCompact_univ.elim_finite_subcover O hO_open hcover
+  set K : M → Set M := fun x => (c x).symm '' Metric.closedBall ((c x) x) (r x) with hK
+  have hOK : ∀ x : M, O x ⊆ K x := fun x => Set.image_mono Metric.ball_subset_closedBall
+  have hs_ne : s.Nonempty := by
+    rcases Finset.eq_empty_or_nonempty s with hempty | hne
+    · exfalso
+      obtain ⟨x⟩ := ‹Nonempty M›
+      have hx : x ∈ ⋃ i ∈ s, O i := hs (Set.mem_univ x)
+      rw [hempty] at hx
+      simp at hx
+    · exact hne
+  refine ⟨s, r, hs_ne, fun x _ => (hr_pos x).le, fun x _ => hr_sub x, ?_⟩
+  refine Set.eq_univ_of_univ_subset (hs.trans ?_)
+  exact Set.iUnion₂_mono fun x _ => hOK x
+
 end SKEFTHawking.SingularCompactChartCover

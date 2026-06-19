@@ -149,4 +149,108 @@ theorem hasFundClass_union {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
         = relIncl (Set.compl_subset_compl.mpr (Set.singleton_subset_iff.mpr hxB)) (m + 2) αB
       rw [← hvB, relIncl_trans, relIncl_trans]
 
+/-- **Finite-union existence** (Hatcher 3.27(b)): for a nonempty finite family `K i` (`i ∈ s`) each of
+which **has a fundamental class** and all of whose nonempty sub-intersections `⋂ i∈t, K i` are closed
+and `goodCompact`, the union `⋃ i∈s, K i` has a fundamental class. Induction on `s` via
+`hasFundClass_union`, mirroring `goodCompact_biUnion`; the union step's `determinedByPoints (A∩B)` for
+`A = K a`, `B = ⋃_{i∈s} K i` comes from `goodCompact (K a ∩ ⋃ K i) = goodCompact (⋃ (K a ∩ K i))`,
+itself supplied by `goodCompact_biUnion` over the sub-intersection family (covered by the hypothesis). -/
+theorem hasFundClass_biUnion {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] {ι : Type*} [DecidableEq ι] :
+    ∀ {s : Finset ι}, s.Nonempty → ∀ (K : ι → Set M),
+      (∀ t : Finset ι, t ⊆ s → t.Nonempty →
+         IsClosed (⋂ i ∈ t, K i) ∧
+           SKEFTHawking.SingularGoodCompact.goodCompact (X := TopCat.of M) (m + 2) (⋂ i ∈ t, K i)) →
+      (∀ i ∈ s, hasFundClass (m := m) (K i)) →
+      hasFundClass (m := m) (⋃ i ∈ s, K i) := by
+  intro s hs
+  induction hs using Finset.Nonempty.cons_induction with
+  | singleton a =>
+      intro K _hgc hfc
+      simpa using hfc a (Finset.mem_singleton_self a)
+  | cons a s ha hs ih =>
+      intro K hgc hfc
+      have hUnion : (⋃ i ∈ Finset.cons a s ha, K i) = K a ∪ ⋃ i ∈ s, K i := by
+        ext x
+        simp only [Set.mem_iUnion, Finset.mem_cons, Set.mem_union, exists_prop]
+        constructor
+        · rintro ⟨i, rfl | hi, hx⟩
+          · exact Or.inl hx
+          · exact Or.inr ⟨i, hi, hx⟩
+        · rintro (hx | ⟨i, hi, hx⟩)
+          · exact ⟨a, Or.inl rfl, hx⟩
+          · exact ⟨i, Or.inr hi, hx⟩
+      rw [hUnion]
+      have hKa := hgc {a} (Finset.singleton_subset_iff.mpr (Finset.mem_cons_self a s))
+        (Finset.singleton_nonempty a)
+      have hKac : IsClosed (K a) := by simpa using hKa.1
+      have hBc : IsClosed (⋃ i ∈ s, K i) := by
+        refine Set.Finite.isClosed_biUnion s.finite_toSet (fun i hi => ?_)
+        have := hgc {i} (Finset.singleton_subset_iff.mpr (Finset.mem_cons_of_mem hi))
+          (Finset.singleton_nonempty i)
+        simpa using this.1
+      have hfKa : hasFundClass (m := m) (K a) := hfc a (Finset.mem_cons_self a s)
+      have hfB : hasFundClass (m := m) (⋃ i ∈ s, K i) :=
+        ih K (fun t ht htne => hgc t (ht.trans (Finset.subset_cons ha)) htne)
+          (fun i hi => hfc i (Finset.mem_cons_of_mem hi))
+      have hdist : K a ∩ (⋃ i ∈ s, K i) = ⋃ i ∈ s, (K a ∩ K i) := by
+        ext x
+        simp only [Set.mem_inter_iff, Set.mem_iUnion, exists_prop]
+        constructor
+        · rintro ⟨hxa, i, hi, hx⟩; exact ⟨i, hi, hxa, hx⟩
+        · rintro ⟨i, hi, hxa, hx⟩; exact ⟨hxa, i, hi, hx⟩
+      have hgcInter : SKEFTHawking.SingularGoodCompact.goodCompact (X := TopCat.of M) (m + 2)
+          (K a ∩ (⋃ i ∈ s, K i)) := by
+        rw [hdist]
+        refine SKEFTHawking.SingularGoodCompact.goodCompact_biUnion (X := TopCat.of M) hs
+          (fun i => K a ∩ K i) (fun t ht htne => ?_)
+        have heq : (⋂ i ∈ t, (K a ∩ K i)) = ⋂ i ∈ insert a t, K i := by
+          obtain ⟨j, hj⟩ := htne
+          ext x
+          simp only [Set.mem_iInter, Set.mem_inter_iff, Finset.mem_insert]
+          constructor
+          · rintro h i (rfl | hi)
+            · exact (h j hj).1
+            · exact (h i hi).2
+          · intro h
+            exact fun i hi => ⟨h a (Or.inl rfl), h i (Or.inr hi)⟩
+        rw [heq]
+        exact hgc (insert a t)
+          (Finset.insert_subset (Finset.mem_cons_self a s) (ht.trans (Finset.subset_cons ha)))
+          (Finset.insert_nonempty a t)
+      exact hasFundClass_union hKac hBc hgcInter.2 hfKa hfB
+
+/-- **A compact charted manifold has a fundamental class on all of `M`** (Hatcher 3.27(b), manifold
+level): cover `M` by finitely many chart balls (`exists_finite_chartBall_cover`), each with a
+fundamental class (`hasFundClass_chartBall`); every nonempty sub-intersection is a closed compact subset
+of one piece's chart source, hence `goodCompact` (`goodCompact_compact_in_chart_source`), so
+`hasFundClass_biUnion` glues them into `hasFundClass (univ : Set M)`. The surjective half of the
+fundamental class `[M]`. -/
+theorem hasFundClass_univ {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M]
+    [Nonempty M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] :
+    hasFundClass (m := m) (Set.univ : Set M) := by
+  classical
+  obtain ⟨s, r, hs, hr0, hrsub, hcov⟩ :=
+    SingularCompactChartCover.exists_finite_chartBall_cover (m := m) (M := M)
+  set K : M → Set M := fun x => (chartAt (EuclideanSpace ℝ (Fin (m + 2))) x).symm ''
+    Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) x x) (r x) with hK
+  have hKcompact : ∀ x ∈ s, IsCompact (K x) := fun x hx =>
+    (ProperSpace.isCompact_closedBall _ _).image_of_continuousOn
+      ((chartAt (EuclideanSpace ℝ (Fin (m + 2))) x).continuousOn_symm.mono (hrsub x hx))
+  have hKsource : ∀ x ∈ s, K x ⊆ (chartAt (EuclideanSpace ℝ (Fin (m + 2))) x).source := by
+    intro x hx
+    rw [hK, Set.image_subset_iff]
+    exact fun y hy => (chartAt (EuclideanSpace ℝ (Fin (m + 2))) x).symm_mapsTo (hrsub x hx hy)
+  rw [← hcov]
+  refine hasFundClass_biUnion hs K (fun t ht htne => ?_)
+    (fun x hx => hasFundClass_chartBall x (hr0 x hx) (hrsub x hx))
+  obtain ⟨j, hj⟩ := htne
+  have hsubKj : (⋂ i ∈ t, K i) ⊆ K j := Set.biInter_subset_of_mem hj
+  have hclosed : IsClosed (⋂ i ∈ t, K i) :=
+    isClosed_biInter (fun i hi => (hKcompact i (ht hi)).isClosed)
+  have hcompInter : IsCompact (⋂ i ∈ t, K i) :=
+    (hKcompact j (ht hj)).of_isClosed_subset hclosed hsubKj
+  exact ⟨hclosed, SingularGoodCompactManifold.goodCompact_compact_in_chart_source hcompInter
+    (hsubKj.trans (hKsource j (ht hj)))⟩
+
 end SKEFTHawking.SingularFundamentalClass
