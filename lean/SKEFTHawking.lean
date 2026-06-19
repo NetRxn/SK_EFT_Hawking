@@ -874,6 +874,7 @@ import SKEFTHawking.SingularChartBridge
 import SKEFTHawking.SingularMayerVietoris
 import SKEFTHawking.SingularMayerVietorisLES
 import SKEFTHawking.SingularRelativeMV
+import SKEFTHawking.SingularRelativeMVNaturality
 import SKEFTHawking.SingularConvexComplementRetract
 import SKEFTHawking.SingularSphereHighDegree
 import SKEFTHawking.SingularManifoldFundamentalClass
