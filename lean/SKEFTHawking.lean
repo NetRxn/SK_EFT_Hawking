@@ -945,6 +945,7 @@ import SKEFTHawking.SingularCSCMayerVietorisConnecting
 import SKEFTHawking.SingularCSCMayerVietorisConnExact
 import SKEFTHawking.SingularCSCMayerVietorisSumExact
 import SKEFTHawking.SingularOpenDualityMVSquare
+import SKEFTHawking.SingularOpenDualityMVConnSquare
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
