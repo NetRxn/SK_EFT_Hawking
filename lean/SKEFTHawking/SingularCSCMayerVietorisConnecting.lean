@@ -28,6 +28,9 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 open SKEFTHawking.SingularRelativeCohomologyMod2 SKEFTHawking.SingularRelativeCohomologyMVConnecting
   SKEFTHawking.SingularCompactlySupportedOpen SKEFTHawking.SingularCompactsInOpen
   SKEFTHawking.SingularCompactlySupportedTop SKEFTHawking.SingularCSCMayerVietoris
+  SKEFTHawking.SingularRelativeHomologyMod2 SKEFTHawking.SingularRelativeCohomologyRestrict
+  SKEFTHawking.SingularRelativePairing SKEFTHawking.SingularRelativeMV
+  SKEFTHawking.SingularDualityAdjoint SKEFTHawking.SingularRelativeUC
 
 namespace SKEFTHawking.SingularCSCMayerVietorisConnecting
 
@@ -82,5 +85,36 @@ noncomputable def legδ (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (N : �
     (relCohomSetCongr (show ((↑K.1 : Set ↑M)ᶜ)
           = (↑(legSplitU U V hU hV K).1 : Set ↑M)ᶜ ∩ (↑(legSplitV U V hU hV K).1 : Set ↑M)ᶜ from by
         rw [legSplit_cover, Set.compl_union]) (N + 1)).toLinearMap
+
+/-! ## Cohomology MV connecting-map naturality (the `dualMap`-transfer of homology naturality)
+
+The leg compatibility of `δ_csc` needs that the per-pair connecting map `relCohomMvConnecting` commutes
+with shrinking the complement subspaces `A ⊇ A'`, `B ⊇ B'` (i.e. enlarging the compacts). This is the
+`dualMap`-transfer (through the perfect Kronecker pairing) of the **homology** MV connecting naturality
+`relMvDelta_naturality` — supplied here as the hypothesis `homNat` (discharged downstream by
+`SingularRelativeMVNaturality.relMvDelta_naturality`). -/
+
+omit [T2Space ↑M] in
+/-- **Cohomology MV connecting naturality** (given the homology naturality `homNat`): for `A' ⊆ A`,
+`B' ⊆ B`, the connecting map commutes with the restrictions `relCohomRestrict` on the `∩` (source) and `∪`
+(target),
+  `δ_{A',B'} ∘ restrict_∩ = restrict_∪ ∘ δ_{A,B}`.
+The `dualMap`-transfer of `relMvDelta_naturality`: pair both sides against any `w` and use the connecting
+adjunction `relKroneckerH_relCohomMvConnecting` + the restriction adjunction `relKroneckerH_relCohomRestrict'`. -/
+theorem relCohomMvConnecting_naturality (A B A' B' : Set ↑M)
+    (hA : IsOpen A) (hB : IsOpen B) (hA' : IsOpen A') (hB' : IsOpen B')
+    (hAA' : A' ⊆ A) (hBB' : B' ⊆ B) (N : ℕ)
+    (homNat : ∀ w : RelativeHomology (A' ∪ B') (N + 2),
+      relIncl (Set.inter_subset_inter hAA' hBB') (N + 1) (relMvDelta A' B' hA' hB' (N + 1) w)
+        = relMvDelta A B hA hB (N + 1) (relIncl (Set.union_subset_union hAA' hBB') (N + 2) w))
+    (ω : RelativeCohomology (A ∩ B) (N + 1)) :
+    relCohomMvConnecting A' B' hA' hB' N
+        (relCohomRestrict (Set.inter_subset_inter hAA' hBB') (N + 1) ω)
+      = relCohomRestrict (Set.union_subset_union hAA' hBB') (N + 2)
+        (relCohomMvConnecting A B hA hB N ω) := by
+  refine sub_eq_zero.mp (relCohomology_eq_zero_of_relKroneckerH (A' ∪ B') _ (fun w => ?_))
+  rw [map_sub, LinearMap.sub_apply, relKroneckerH_relCohomMvConnecting,
+    relKroneckerH_relCohomRestrict', relKroneckerH_relCohomRestrict',
+    relKroneckerH_relCohomMvConnecting, homNat, sub_self]
 
 end SKEFTHawking.SingularCSCMayerVietorisConnecting
