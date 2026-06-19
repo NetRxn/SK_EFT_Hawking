@@ -60,4 +60,49 @@ theorem kronecker_cup_cap {X : TopCat} {k l : ℕ} (a : SingularCochain X k) (b 
         kronecker_single, cup_apply]
       simp only [smul_eq_mul]; ring
 
+/-! ### Universal-coefficients fact (over ℤ/2): the Kronecker pairing is non-degenerate in homology -/
+
+/-- **Every chain functional is `kronecker` of a cochain** (the dual of `Finsupp` is the full function
+space): `φ = ⟨f, ·⟩` for `f σ = φ (single σ 1)`. -/
+theorem exists_cochain_of_functional {X : TopCat} {n : ℕ}
+    (φ : SingularChain X n →ₗ[ZMod 2] ZMod 2) :
+    ∃ f : SingularCochain X n, ∀ c : SingularChain X n, kronecker f c = φ c := by
+  refine ⟨fun σ => φ (Finsupp.single σ 1), fun c => ?_⟩
+  induction c using Finsupp.induction_linear with
+  | zero => simp [kronecker_apply]
+  | add c d hc hd => rw [kronecker_add_right, map_add, hc, hd]
+  | single σ s =>
+      rw [kronecker_single,
+        show Finsupp.single σ s = s • Finsupp.single σ (1 : ZMod 2) by
+          rw [Finsupp.smul_single, smul_eq_mul, mul_one],
+        map_smul, smul_eq_mul]
+
+/-- **The Kronecker pairing is non-degenerate in the homology argument** (universal coefficients over
+the field `ℤ/2`): a homology class `β` pairing to `0` with every cohomology class is `0`. If `β = [z] ≠ 0`
+then `z` is a cycle not a boundary, so (over a field, `Submodule.exists_le_ker_of_notMem`) a functional
+`φ` separates `z` from the boundaries; `φ = ⟨f, ·⟩` for a cochain `f` (`exists_cochain_of_functional`),
+and `f` is a cocycle (`δf σ = ⟨f, ∂σ⟩ = φ(∂σ) = 0`), giving `⟨[f], β⟩ = φ(z) ≠ 0` — a contradiction. The
+route to `PoincareDual4Mid.nondeg`. -/
+theorem homology_eq_zero_of_kroneckerH {X : TopCat} (n : ℕ) (β : Homology X n)
+    (h : ∀ ω : Cohomology X n, kroneckerH (X := X) n ω β = 0) : β = 0 := by
+  by_contra hβ
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ β
+  have hznb : z.1 ∉ boundaries X n := by
+    intro hz
+    exact hβ ((Submodule.Quotient.mk_eq_zero _).mpr hz)
+  obtain ⟨φ, hφv, hφker⟩ := Submodule.exists_le_ker_of_notMem hznb
+  obtain ⟨f, hf⟩ := exists_cochain_of_functional φ
+  -- `f` is a cocycle: `δf σ = ⟨f, ∂σ⟩ = φ(∂σ) = 0` (`∂σ ∈ boundaries ≤ ker φ`).
+  have hfcocycle : coboundaryₗ X n f = 0 := by
+    ext σ
+    have hbb : boundaryBasis X n σ ∈ boundaries X n :=
+      ⟨Finsupp.single σ 1, chainBoundary_single X n σ⟩
+    show coboundary X n f σ = 0
+    rw [← kronecker_boundaryBasis f σ, hf]
+    exact LinearMap.mem_ker.mp (hφker hbb)
+  -- contradiction: `⟨[f], β⟩ = φ(z) ≠ 0`.
+  have hc := h (Submodule.Quotient.mk ⟨f, hfcocycle⟩)
+  rw [kroneckerH_mk_mk, hf] at hc
+  exact hφv hc
+
 end SKEFTHawking.PoincareDualityConstruct
