@@ -3,6 +3,7 @@ import SKEFTHawking.SingularDualityMVAdjoint
 import SKEFTHawking.SingularDualityFinrank
 import SKEFTHawking.SingularUniversalCoeff
 import SKEFTHawking.SingularRelativeMV
+import SKEFTHawking.SingularRelativeUCSurj
 
 /-!
 # Phase 5q.F (w₂-foundation, brick 72c-PD5b-mid) — relative cohomology MV exactness at the middle
@@ -28,7 +29,7 @@ open SKEFTHawking.SingularRelativePairing SKEFTHawking.SingularRelativeMV
 open SKEFTHawking.SingularRelativeCohomologyRestrict SKEFTHawking.SingularRelativeCohomologyMV
 open SKEFTHawking.SingularDualityAdjoint SKEFTHawking.SingularDualityMVAdjoint
 open SKEFTHawking.SingularDualityFinrank SKEFTHawking.SingularRelativeUC
-open SKEFTHawking.SingularUniversalCoeff
+open SKEFTHawking.SingularUniversalCoeff SKEFTHawking.SingularRelativeUCSurj
 
 namespace SKEFTHawking.SingularRelativeCohomologyMVMiddle
 
@@ -38,7 +39,7 @@ variable {M : TopCat}
 exactness, by duality-transfer (needs `IsOpen U`, `IsOpen V` for the homology exactness and
 `Hₙ(M|A∪B)` finite-dimensional). -/
 theorem ker_relCohomMvSum_le_range_relCohomMvDiag (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V)
-    {N : ℕ} [FiniteDimensional (ZMod 2) (RelativeHomology (U ∪ V) (N + 1))]
+    {N : ℕ}
     (α : RelativeCohomology U (N + 1)) (β : RelativeCohomology V (N + 1))
     (hαβ : (α, β) ∈ LinearMap.ker (relCohomMvSum U V (N + 1))) :
     (α, β) ∈ LinearMap.range (relCohomMvDiag U V (N + 1)) := by
@@ -55,7 +56,7 @@ theorem ker_relCohomMvSum_le_range_relCohomMvDiag (U V : Set ↑M) (hU : IsOpen 
     exact (mem_ker_relCohomMvSum_iff α β).mp hαβ w
   -- Factor `F = g ∘ relMvHomSum`; realize `g = ⟨γ,·⟩`.
   obtain ⟨g, hg⟩ := exists_factor_of_ker_le_ker (relMvHomSum U V (N + 1)) F hker
-  obtain ⟨γ, hγ⟩ := relKroneckerH_surjective (U ∪ V) g
+  obtain ⟨γ, hγ⟩ := relKroneckerH_surjective_field (U ∪ V) g
   -- `⟨γ, relMvHomSum (x,y)⟩ = F (x,y) = ⟨α,x⟩ + ⟨β,y⟩`.
   have hpair : ∀ x y, relKroneckerH (U ∪ V) γ (relMvHomSum U V (N + 1) (x, y))
       = relKroneckerH U α x + relKroneckerH V β y := by
@@ -81,8 +82,7 @@ theorem ker_relCohomMvSum_le_range_relCohomMvDiag (U V : Set ↑M) (hU : IsOpen 
 `Function.Exact (relCohomMvDiag) (relCohomMvSum)`, i.e. `range Δ = ker Σ`. The duality-transfer of
 `SingularRelativeMV.relMv_exact_middle'` (`IsOpen U/V`, `Hₙ(M|A∪B)` finite-dimensional). The middle term
 of the cohomology MV long exact sequence — the top row of the Poincaré-duality `5`-lemma ladder. -/
-theorem relCohomMv_exact_middle (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) {N : ℕ}
-    [FiniteDimensional (ZMod 2) (RelativeHomology (U ∪ V) (N + 1))] :
+theorem relCohomMv_exact_middle (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) {N : ℕ} :
     Function.Exact (relCohomMvDiag U V (N + 1)) (relCohomMvSum U V (N + 1)) := by
   rw [LinearMap.exact_iff]
   refine le_antisymm (fun p hp => ?_) (fun p hp => ?_)
