@@ -921,6 +921,7 @@ import SKEFTHawking.SingularCompactlySupportedTop
 import SKEFTHawking.SingularHomologyHomeo
 import SKEFTHawking.SingularHomologyColimitTop
 import SKEFTHawking.SingularFundCycleOpen
+import SKEFTHawking.SingularFundamentalDuality
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
