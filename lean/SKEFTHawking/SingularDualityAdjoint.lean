@@ -49,4 +49,14 @@ theorem relKroneckerH_relCohomRestrict {S T : Set ↑M} (h : S ⊆ T) {N : ℕ}
     show (z : RelativeChain S (N + 1)) = RelativeChain.mk S (N + 1) c from hc.symm,
     relMapChain_mk, SingularFunctoriality.mapChain_id, relKronecker_mk]
 
+/-- **The restriction/inclusion Kronecker adjunction at the class level** (any `ω`, `β`, not just
+representatives): `⟨relCohomRestrict h ω, β⟩_S = ⟨ω, relIncl h β⟩_T`. -/
+theorem relKroneckerH_relCohomRestrict' {S T : Set ↑M} (h : S ⊆ T) {N : ℕ}
+    (ω : RelativeCohomology T (N + 1)) (β : RelativeHomology S (N + 1)) :
+    relKroneckerH S (relCohomRestrict h (N + 1) ω) β
+      = relKroneckerH T ω (relIncl h (N + 1) β) := by
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ ω
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ β
+  exact relKroneckerH_relCohomRestrict h a z
+
 end SKEFTHawking.SingularDualityAdjoint
