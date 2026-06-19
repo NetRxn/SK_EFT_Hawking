@@ -905,6 +905,7 @@ import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
 import SKEFTHawking.SingularRelativeDuality
+import SKEFTHawking.SingularRelativeDuality0
 import SKEFTHawking.PoincareDualityConstruct
 import SKEFTHawking.SingularCohomologyFunctorial
 import SKEFTHawking.SingularCohomologyDisjoint
