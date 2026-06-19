@@ -187,4 +187,94 @@ theorem rawLeg_enlarge (U V : Set ↑M) (N : ℕ)
   rw [heq]
   exact (Module.DirectLimit.of_f).symm
 
+/-! ## The colimit assembly `δ_csc := DirectLimit.lift (legδ)` -/
+
+/-- **`legδ` as a `rawLeg` at any enlarged split** `(LU,LV) ≥ (legSplitU K, legSplitV K)`: transport
+`g` along the chosen-split complement-congruence, then restrict to the enlarged complements, then
+apply the `(LU,LV)`-`rawLeg`. The bridge for `legδ_compat` — two different `K`-splits share a common
+enlargement, so both per-`K` legs collapse to the same `(LU,LV)`-`rawLeg` of a single class. Unfolds
+`legδ` (`rfl`) then `rawLeg_enlarge`. -/
+theorem legδ_eq_enlarge (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (N : ℕ)
+    (K : CompactsIn (U ∪ V)) (LU : CompactsIn U) (LV : CompactsIn V)
+    (hKULU : (legSplitU U V hU hV K).1 ≤ LU.1) (hKVLV : (legSplitV U V hU hV K).1 ≤ LV.1)
+    (hLUKU : (↑LU.1 : Set ↑M)ᶜ ⊆ (↑(legSplitU U V hU hV K).1)ᶜ)
+    (hLVKV : (↑LV.1 : Set ↑M)ᶜ ⊆ (↑(legSplitV U V hU hV K).1)ᶜ)
+    (hJL : ((↑LU.1 : Set ↑M)ᶜ ∪ (↑LV.1 : Set ↑M)ᶜ) = (↑(infCompact U V LU LV).1 : Set ↑M)ᶜ)
+    (hcongr : ((↑K.1 : Set ↑M)ᶜ)
+        = (↑(legSplitU U V hU hV K).1 : Set ↑M)ᶜ ∩ (↑(legSplitV U V hU hV K).1 : Set ↑M)ᶜ)
+    (g : cohomGW (U ∪ V) (N + 1) K) :
+    legδ U V hU hV N K g
+      = rawLeg U V N LU LV (infCompact U V LU LV) hJL
+          (relCohomRestrict (Set.inter_subset_inter hLUKU hLVKV) (N + 1)
+            (relCohomSetCongr hcongr (N + 1) g)) := by
+  have hbase : legδ U V hU hV N K g
+      = rawLeg U V N (legSplitU U V hU hV K) (legSplitV U V hU hV K)
+          (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K))
+          (by rw [infCompact_coe, Set.compl_inter])
+          (relCohomSetCongr hcongr (N + 1) g) := rfl
+  rw [hbase]
+  exact rawLeg_enlarge U V N (legSplitU U V hU hV K) LU (legSplitV U V hU hV K) LV
+    (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)) (infCompact U V LU LV)
+    (by rw [infCompact_coe, Set.compl_inter]) hJL
+    (Subtype.coe_le_coe.mp (inf_le_inf hKULU hKVLV)) hLUKU hLVKV
+    (relCohomSetCongr hcongr (N + 1) g)
+
+theorem legδ_compat (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (N : ℕ)
+    (K K' : CompactsIn (U ∪ V)) (hKK' : K ≤ K') (g : cohomGW (U ∪ V) (N + 1) K) :
+    legδ U V hU hV N K' (cohomFW (U ∪ V) (N + 1) K K' hKK' g) = legδ U V hU hV N K g := by
+  set KU := legSplitU U V hU hV K with hKU
+  set KV := legSplitV U V hU hV K with hKV
+  set KU' := legSplitU U V hU hV K' with hKU'
+  set KV' := legSplitV U V hU hV K' with hKV'
+  set LU := CompactsIn.sup KU KU' with hLU
+  set LV := CompactsIn.sup KV KV' with hLV
+  have hcoeLU : (↑LU.1 : Set ↑M) = ↑KU.1 ∪ ↑KU'.1 := by
+    rw [hLU, CompactsIn.sup, TopologicalSpace.Compacts.coe_sup]
+  have hcoeLV : (↑LV.1 : Set ↑M) = ↑KV.1 ∪ ↑KV'.1 := by
+    rw [hLV, CompactsIn.sup, TopologicalSpace.Compacts.coe_sup]
+  have hLUKU : (↑LU.1 : Set ↑M)ᶜ ⊆ (↑KU.1)ᶜ :=
+    Set.compl_subset_compl.mpr (by rw [hcoeLU]; exact Set.subset_union_left)
+  have hLVKV : (↑LV.1 : Set ↑M)ᶜ ⊆ (↑KV.1)ᶜ :=
+    Set.compl_subset_compl.mpr (by rw [hcoeLV]; exact Set.subset_union_left)
+  have hLUKU' : (↑LU.1 : Set ↑M)ᶜ ⊆ (↑KU'.1)ᶜ :=
+    Set.compl_subset_compl.mpr (by rw [hcoeLU]; exact Set.subset_union_right)
+  have hLVKV' : (↑LV.1 : Set ↑M)ᶜ ⊆ (↑KV'.1)ᶜ :=
+    Set.compl_subset_compl.mpr (by rw [hcoeLV]; exact Set.subset_union_right)
+  have hJL : ((↑LU.1 : Set ↑M)ᶜ ∪ (↑LV.1 : Set ↑M)ᶜ) = (↑(infCompact U V LU LV).1 : Set ↑M)ᶜ := by
+    rw [infCompact_coe, Set.compl_inter]
+  have hcongrK : ((↑K.1 : Set ↑M)ᶜ) = (↑KU.1 : Set ↑M)ᶜ ∩ (↑KV.1 : Set ↑M)ᶜ := by
+    rw [hKU, hKV, legSplit_cover, Set.compl_union]
+  have hcongrK' : ((↑K'.1 : Set ↑M)ᶜ) = (↑KU'.1 : Set ↑M)ᶜ ∩ (↑KV'.1 : Set ↑M)ᶜ := by
+    rw [hKU', hKV', legSplit_cover, Set.compl_union]
+  rw [legδ_eq_enlarge U V hU hV N K' LU LV (le_sup_right) (le_sup_right) hLUKU' hLVKV' hJL hcongrK',
+    legδ_eq_enlarge U V hU hV N K LU LV (le_sup_left) (le_sup_left) hLUKU hLVKV hJL hcongrK]
+  congr 1
+  have hKKc : (↑K'.1 : Set ↑M)ᶜ ⊆ (↑K.1 : Set ↑M)ᶜ :=
+    Set.compl_subset_compl.mpr (Subtype.coe_le_coe.mpr hKK')
+  have hLcollapse :
+      relCohomSetCongr hcongrK' (N + 1) (cohomFW (U ∪ V) (N + 1) K K' hKK' g)
+        = relCohomRestrict (hcongrK' ▸ hKKc) (N + 1) g := by
+    rw [cohomFW, SingularCohomologyColimit.cohomF]
+    exact relCohomSetCongr_relCohomRestrict hcongrK' hKKc (N + 1) g
+  rw [SingularCSCMayerVietorisMiddle.relCohomRestrict_relCohomSetCongr hcongrK,
+    hLcollapse, relCohomRestrict_trans]
+
+/-- **The compactly-supported-cohomology MV connecting map** `δ_csc : Hᵏ_c(U∪V) → Hᵏ⁺¹_c(U∩V)`
+(`k = N+1`): the `DirectLimit.lift` of the per-compact legs `legδ K` along the cocone compatibility
+`legδ_compat`. The colimit assembly of the relative-cohomology MV connecting map. -/
+noncomputable def cscMvConnecting (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (N : ℕ) :
+    CompactlySupportedCohomologyOpen (U ∪ V) (N + 1) →ₗ[ZMod 2]
+      CompactlySupportedCohomologyOpen (U ∩ V) (N + 2) :=
+  Module.DirectLimit.lift (ZMod 2) (CompactsIn (U ∪ V)) (cohomGW (U ∪ V) (N + 1))
+    (cohomFW (U ∪ V) (N + 1)) (legδ U V hU hV N)
+    (fun K K' h x => legδ_compat U V hU hV N K K' h x)
+
+@[simp] theorem cscMvConnecting_of (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (N : ℕ)
+    (K : CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
+    cscMvConnecting U V hU hV N
+        (Module.DirectLimit.of (ZMod 2) (CompactsIn (U ∪ V)) (cohomGW (U ∪ V) (N + 1))
+          (cohomFW (U ∪ V) (N + 1)) K g)
+      = legδ U V hU hV N K g :=
+  Module.DirectLimit.lift_of _ _ g
+
 end SKEFTHawking.SingularCSCMayerVietorisConnecting
