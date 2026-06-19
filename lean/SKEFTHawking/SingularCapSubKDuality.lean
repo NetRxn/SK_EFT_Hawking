@@ -61,4 +61,17 @@ theorem kroneckerH_relativeDualityK_mk_eq_cup {k m : ℕ} {S K : Set ↑X}
   show kronecker a'.1 (pullbackDualityₗ S K z hzK a) = _
   rw [pullbackDualityₗ_eq_subcap, ← kronecker_cup_cap]
 
+/-- **Kronecker–chainIncl naturality** (the adjoint of `cap_chainIncl`): pairing the pulled-back cochain
+`pullbackCochain S k a` against a `sub S`-chain `c` equals pairing the ambient cochain `a` against its
+inclusion `chainIncl S k c`. On a basis `sub S`-simplex `τ` both are `a(simplexIncl S k τ)`. This moves a
+`sub S`-level Kronecker pairing up to the ambient pairing — used to land the connecting-square RHS pairing
+in the *relative* Kronecker `relKronecker S a c = kronecker a.1 c`. -/
+theorem kronecker_pullbackCochain {k : ℕ} {S : Set ↑X} (a : SingularCochain X k)
+    (c : SingularChain (sub S) k) :
+    kronecker (pullbackCochain S k a) c = kronecker a (chainIncl S k c) := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp only [map_zero, kronecker_apply, Finsupp.sum_zero_index]
+  | add c d hc hd => rw [kronecker_add_right, map_add, kronecker_add_right, hc, hd]
+  | single τ s => rw [chainIncl_single, kronecker_single, kronecker_single, pullbackCochain_apply]
+
 end SKEFTHawking.SingularCapSubKDuality
