@@ -22,8 +22,8 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 -/
 
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
-  SKEFTHawking.SingularCapChainIncl SKEFTHawking.SingularPairLES
-  SKEFTHawking.SingularCapSubKDuality
+  SKEFTHawking.SingularRelativeHomologyMod2 SKEFTHawking.SingularCapChainIncl
+  SKEFTHawking.SingularPairLES SKEFTHawking.SingularCapSubKDuality
 
 namespace SKEFTHawking.SingularConnSquareMatchLHS
 
@@ -36,5 +36,20 @@ theorem kronecker_pullbackCochain_boundaryExtract (S : Set ↑X) (n : ℕ)
     kronecker (pullbackCochain S n a) (boundaryExtract S n c)
       = kronecker (coboundary X n a) (c : SingularChain X (n + 1)) := by
   rw [kronecker_pullbackCochain, chainIncl_boundaryExtract, ← kronecker_coboundary_chainBoundary]
+
+/-- **Cover-partition cap-boundary relation** (cap-Leibniz on the partition): for a cocycle `g` whose cap
+`g ⌢ z` is cover-partitioned as `chainIncl A zA + chainIncl B zB`, the boundary of the cap distributes
+over the partition and equals `g ⌢ ∂z` (the cap commutes with `∂` for a cocycle, `cap_cocycle_chainMap`):
+`chainIncl A (∂zA) + chainIncl B (∂zB) = g ⌢ ∂z`. The chain-level engine of the shared-`z₀` match
+(relating the seam boundary `∂zB` to the fundamental cycle's boundary). -/
+theorem cover_partition_cap_boundary {k m : ℕ} (A B : Set ↑X) (g : SingularCochain X k)
+    (hg : coboundaryₗ X k g = 0) (z : SingularChain X (k + m + 1))
+    (zA : SingularChain (sub A) (m + 1)) (zB : SingularChain (sub B) (m + 1))
+    (hpart : cap g z = chainIncl A (m + 1) zA + chainIncl B (m + 1) zB) :
+    chainIncl A m (chainBoundary (sub A) m zA) + chainIncl B m (chainBoundary (sub B) m zB)
+      = cap g (chainBoundary X (k + m) z) := by
+  have h1 := cap_cocycle_chainMap g hg z
+  rw [hpart, map_add, ← chainIncl_chainBoundary, ← chainIncl_chainBoundary] at h1
+  exact h1
 
 end SKEFTHawking.SingularConnSquareMatchLHS
