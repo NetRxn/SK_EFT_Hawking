@@ -873,6 +873,7 @@ import SKEFTHawking.SingularLocalModelChart
 import SKEFTHawking.SingularChartBridge
 import SKEFTHawking.SingularMayerVietoris
 import SKEFTHawking.SingularMayerVietorisLES
+import SKEFTHawking.SingularMvDeltaPartition
 import SKEFTHawking.SingularRelativeMV
 import SKEFTHawking.SingularRelMvDeltaChain
 import SKEFTHawking.SingularRelativeMVNaturality
