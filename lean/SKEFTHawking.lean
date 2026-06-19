@@ -910,6 +910,8 @@ import SKEFTHawking.SingularDualityFinrank
 import SKEFTHawking.SingularRelativeCohomologyMVMiddle
 import SKEFTHawking.SingularRelativeCap
 import SKEFTHawking.SingularCapSupport
+import SKEFTHawking.SingularSubspaceChainsEquiv
+import SKEFTHawking.SingularLocalDualityK
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
