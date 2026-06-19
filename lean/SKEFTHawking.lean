@@ -914,6 +914,7 @@ import SKEFTHawking.SingularCapSupport
 import SKEFTHawking.SingularCapChainIncl
 import SKEFTHawking.SingularRightCapBoundary
 import SKEFTHawking.SingularCapSubKDuality
+import SKEFTHawking.SingularConnSquareRHSAdjoint
 import SKEFTHawking.SingularCompactSupport
 import SKEFTHawking.SingularSubsetHomology
 import SKEFTHawking.SingularSubHomologyMV
