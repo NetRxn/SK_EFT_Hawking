@@ -932,6 +932,7 @@ import SKEFTHawking.SingularCSCMayerVietoris
 import SKEFTHawking.SingularCSCMayerVietorisMiddle
 import SKEFTHawking.SingularLocalDualityKRestrict
 import SKEFTHawking.SingularLocalDualityKCycle
+import SKEFTHawking.SingularOpenDualityCycle
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
