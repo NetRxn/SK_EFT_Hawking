@@ -912,6 +912,7 @@ import SKEFTHawking.SingularRelativeCohomologyMVMiddle
 import SKEFTHawking.SingularRelativeCap
 import SKEFTHawking.SingularCapSupport
 import SKEFTHawking.SingularCapChainIncl
+import SKEFTHawking.SingularRightCapBoundary
 import SKEFTHawking.SingularCapSubKDuality
 import SKEFTHawking.SingularCompactSupport
 import SKEFTHawking.SingularSubsetHomology
