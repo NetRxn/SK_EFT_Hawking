@@ -914,6 +914,7 @@ import SKEFTHawking.SingularCompactSupport
 import SKEFTHawking.SingularSubsetHomology
 import SKEFTHawking.SingularSubspaceChainsEquiv
 import SKEFTHawking.SingularLocalDualityK
+import SKEFTHawking.SingularCohomologyColimit
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
