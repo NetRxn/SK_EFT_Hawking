@@ -957,6 +957,8 @@ import SKEFTHawking.SingularOpenDualityMVSquare
 import SKEFTHawking.SingularOpenDualityMVConnSquare
 import SKEFTHawking.SingularOpenDualityConnLegdeltaCollapse
 import SKEFTHawking.SingularRelativeDualityKSetCongr
+import SKEFTHawking.SingularConnSquareRHSN2
+import SKEFTHawking.SingularConnSquareMatch
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
