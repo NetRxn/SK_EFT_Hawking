@@ -79,6 +79,27 @@ theorem relMk_mem_relCycles {X : TopCat} (S : Set X) {k : ℕ} (z : SingularChai
   rw [LinearMap.mem_ker, relBoundary_mk]
   exact (RelativeChain.mk_eq_zero_iff S k _).mpr hz
 
+/-- **A relative homology class has an absolute-chain fundamental cycle representative.** Every
+`β ∈ Hₙ(M,S)` (`n = k+1`) is `[z]` for an absolute `(k+1)`-chain `z` with `∂z` a subspace chain. Proved
+abstractly (no manifold structure) — this is the rep-extraction that, applied to the local fundamental
+class, avoids the manifold-context `RelativeHomology`-unfold heartbeat wall (the class unification stays
+structural). -/
+theorem exists_relCycle_chain_rep {X : TopCat} (S : Set X) {k : ℕ}
+    (β : RelativeHomology S (k + 1)) :
+    ∃ (z : SingularChain X (k + 1)) (hz : chainBoundary X k z ∈ subspaceChains S k),
+      RelativeHomology.mk S (k + 1) ⟨RelativeChain.mk S (k + 1) z, relMk_mem_relCycles S z hz⟩ = β := by
+  obtain ⟨zrel, hzrel⟩ := Submodule.Quotient.mk_surjective _ β
+  obtain ⟨z, hz⟩ := Submodule.Quotient.mk_surjective _ zrel.1
+  have hbound : chainBoundary X k z ∈ subspaceChains S k := by
+    have hk : relBoundary S k (RelativeChain.mk S (k + 1) z) = 0 := by
+      rw [show RelativeChain.mk S (k + 1) z = zrel.1 from hz]; exact zrel.2
+    rw [relBoundary_mk, RelativeChain.mk_eq_zero_iff] at hk
+    exact hk
+  refine ⟨z, hbound, ?_⟩
+  rw [show (⟨RelativeChain.mk S (k + 1) z, relMk_mem_relCycles S z hbound⟩ : relCycles S (k + 1))
+    = zrel from Subtype.ext hz]
+  exact hzrel
+
 /-- **The descended duality–pairing bridge** (class level): `augH ∘ D_z⁰ = ⟨·, [z]⟩` on relative
 cohomology, i.e.
   `augH (D_z⁰ [a]) = relKroneckerH [a] [z]`,

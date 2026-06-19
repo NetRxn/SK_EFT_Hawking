@@ -64,4 +64,15 @@ noncomputable def manifoldLocalCohomologyIso {m : ℕ} {M : Type} [TopologicalSp
     intro y
     exact ⟨y • ω₀, by rw [map_smul, smul_eq_mul, hΦ1, mul_one]⟩
 
+/-- **`manifoldLocalCohomologyIso` evaluates by the Kronecker pairing against the local generator**:
+`manifoldLocalCohomologyIso x ω = ⟨ω, (manifoldLocalIso x).symm 1⟩`. The defining `LinearEquiv.ofBijective`
++ `LinearMap.flip` β-reduction, exposed as a rewrite rule so downstream modules avoid re-unfolding the
+whole definition (which triggers the manifold-context `RelativeHomology` heartbeat wall). -/
+@[simp] theorem manifoldLocalCohomologyIso_apply {m : ℕ} {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (x : M)
+    (ω : RelativeCohomology (X := TopCat.of M) {y | y ≠ x} (m + 2)) :
+    manifoldLocalCohomologyIso x ω
+      = relKroneckerH (X := TopCat.of M) {y | y ≠ x} ω ((manifoldLocalIso x).symm 1) :=
+  rfl
+
 end SKEFTHawking.SingularLocalCohomology
