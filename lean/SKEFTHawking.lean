@@ -943,6 +943,7 @@ import SKEFTHawking.SingularLocalDualityKMono
 import SKEFTHawking.SingularOpenDualityNat
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
+import SKEFTHawking.SingularKroneckerEquiv
 import SKEFTHawking.SingularRelativeCohomologyMVConnecting
 import SKEFTHawking.SingularCSCMayerVietorisConnecting
 import SKEFTHawking.SingularCSCMayerVietorisConnExact
