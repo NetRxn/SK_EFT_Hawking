@@ -73,4 +73,47 @@ theorem kronecker_chainIncl_rcap_eq_cup {k l : ℕ} {K : Set ↑X} (α : Singula
       = kronecker (cup (pullbackCochain K k α) b) z_sub := by
   rw [← kronecker_pullbackCochain, kronecker_cup_rcap]
 
+/-- **Abstract MATCH-M reduction to a chain-level cup equality.** Both legs of the connecting-square
+MATCH M are `relKroneckerH` pairings of capped fundamental cycles. Lowering the LHS by
+`relKroneckerH_chainIncl_rcap_eq_kronecker` + `kronecker_chainIncl_rcap_eq_cup` and the RHS by
+`relKroneckerH_relMvDelta_eq` + the same two, both become chain-level cup pairings
+`kronecker (cup (pullbackCochain ·) ·) z_sub`. This lemma packages that reduction abstractly: given
+the lowered chain-cup equality `hcup`, the two `relKroneckerH` legs agree. The covers are threaded as
+the abstract `S, K` of the lowering lemmas — no concrete preimage cover is spelled, dodging the whnf
+wall. (The remaining `hcup` is the genuine `absCohomConn`↔`relCohomMvConnecting` cup-duality on the
+shared fundamental cycle `z₀`.) -/
+theorem relKroneckerH_match_of_chain
+    {N p : ℕ} {SL KL SR KR : Set ↑X}
+    (gL : LinearMap.ker (relCoboundaryₗ SL (N + 1)))
+    (bL : LinearMap.ker (coboundaryₗ (sub KL) (p + 2)))
+    (zL : SingularChain X (N + 1 + (p + 1) + 1)) (hzLK : zL ∈ subspaceChains KL (N + 1 + (p + 1) + 1))
+    (hzLS : chainBoundary X (N + 1 + (p + 1)) zL ∈ subspaceChains SL (N + 1 + (p + 1)))
+    (hWL : RelativeChain.mk SL (N + 1)
+        (chainIncl KL (N + 1) (rcap bL.1 ((subspaceChainsEquiv KL (N + 1 + (p + 1) + 1)).symm ⟨zL, hzLK⟩)))
+        ∈ relCycles SL (N + 1))
+    (gR : LinearMap.ker (relCoboundaryₗ SR (N + 2)))
+    (aR : LinearMap.ker (coboundaryₗ (sub KR) (p + 1)))
+    (zR : SingularChain X (N + 2 + p + 1)) (hzRK : zR ∈ subspaceChains KR (N + 2 + p + 1))
+    (hzRS : chainBoundary X (N + 2 + p) zR ∈ subspaceChains SR (N + 2 + p))
+    (hWR : RelativeChain.mk SR (N + 2)
+        (chainIncl KR (N + 2) (rcap aR.1 ((subspaceChainsEquiv KR (N + 2 + p + 1)).symm ⟨zR, hzRK⟩)))
+        ∈ relCycles SR (N + 2))
+    (hcup : kronecker (cup (pullbackCochain KL (N + 1) gL.1.1) bL.1)
+          ((subspaceChainsEquiv KL (N + 1 + (p + 1) + 1)).symm ⟨zL, hzLK⟩)
+        = kronecker (cup (pullbackCochain KR (N + 2) gR.1.1) aR.1)
+          ((subspaceChainsEquiv KR (N + 2 + p + 1)).symm ⟨zR, hzRK⟩)) :
+    relKroneckerH SL (RelativeCohomology.mk SL (N + 1) gL)
+        (RelativeHomology.mk SL (N + 1)
+          ⟨RelativeChain.mk SL (N + 1)
+              (chainIncl KL (N + 1) (rcap bL.1
+                ((subspaceChainsEquiv KL (N + 1 + (p + 1) + 1)).symm ⟨zL, hzLK⟩))), hWL⟩)
+      = relKroneckerH SR (RelativeCohomology.mk SR (N + 2) gR)
+          (RelativeHomology.mk SR (N + 2)
+            ⟨RelativeChain.mk SR (N + 2)
+                (chainIncl KR (N + 2) (rcap aR.1
+                  ((subspaceChainsEquiv KR (N + 2 + p + 1)).symm ⟨zR, hzRK⟩))), hWR⟩) := by
+  rw [relKroneckerH_chainIncl_rcap_eq_kronecker (k := N) (m := p + 1) zL hzLK hzLS gL bL hWL,
+    relKroneckerH_chainIncl_rcap_eq_kronecker (k := N + 1) (m := p) zR hzRK hzRS gR aR hWR,
+    kronecker_chainIncl_rcap_eq_cup gL.1.1 bL.1, kronecker_chainIncl_rcap_eq_cup gR.1.1 aR.1, hcup]
+
 end SKEFTHawking.SingularConnSquareClose
