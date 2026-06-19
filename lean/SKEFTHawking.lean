@@ -901,6 +901,7 @@ import SKEFTHawking.PoincareDualityWu
 import SKEFTHawking.SingularCapHomology
 import SKEFTHawking.SingularUniversalCoeff
 import SKEFTHawking.SingularRelativeCohomologyMod2
+import SKEFTHawking.SingularRelativeCohomologyRestrict
 import SKEFTHawking.SingularRelativeCap
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
