@@ -75,4 +75,15 @@ theorem kronecker_cap_eq_kronecker_rcap {k l : ℕ} (g : SingularCochain X k) (a
     kronecker a (cap g z) = kronecker g (rcap a z) :=
   (kronecker_cup_cap g a z).symm.trans (kronecker_cup_rcap g a z)
 
+/-- **The cover-wise (`V`-part) cup–cap match** — the match core (`kronecker_cap_eq_kronecker_rcap`)
+applied on the subspace `sub V` with pulled-back cochains, then re-included. This is exactly the form
+the connecting square's two legs land in: the LHS pairs `a` against the `V`-part `chainIncl V (cap (g|_V)
+c)` of `g ⌢ ∂z₀`, the RHS pairs `g` against the `V`-part `chainIncl V (rcap (a|_V) c)` of `a ⌢ʳ ∂z₀`,
+and they agree (`c` = the `V`-part of `∂z₀`). -/
+theorem kronecker_cap_chainIncl_eq_rcap_chainIncl {k l : ℕ} (V : Set ↑X) (g : SingularCochain X k)
+    (a : SingularCochain X l) (c : SingularChain (sub V) (k + l)) :
+    kronecker a (chainIncl V l (cap (pullbackCochain V k g) c))
+      = kronecker g (chainIncl V k (rcap (pullbackCochain V l a) c)) := by
+  rw [← kronecker_pullbackCochain, kronecker_cap_eq_kronecker_rcap, kronecker_pullbackCochain]
+
 end SKEFTHawking.SingularConnSquareMatchLHS
