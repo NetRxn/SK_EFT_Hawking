@@ -920,6 +920,7 @@ import SKEFTHawking.SingularDirectLimitTop
 import SKEFTHawking.SingularCompactlySupportedTop
 import SKEFTHawking.SingularHomologyHomeo
 import SKEFTHawking.SingularHomologyColimitTop
+import SKEFTHawking.SingularFundCycleOpen
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
