@@ -41,4 +41,20 @@ theorem cap_mem_subspaceChains {k m : ℕ} (a : SingularCochain X k)
       exact Submodule.smul_mem _ _ (Submodule.smul_mem _ _
         ⟨Finsupp.single (backFace τ) 1, chainIncl_single S m (backFace τ) 1⟩)
 
+/-- **The relative cap of a `K`-supported fundamental cycle is a cycle supported in `K`.** For a relative
+cocycle `a` (vanishing on `S = M∖K`, `δa = 0`) and an absolute chain `z` **supported in `K`** whose
+boundary `∂z` is a subspace chain of `S` (the rel-cycle condition for the fundamental class of `M|K`), the
+cap `a ⌢ z` is both an **absolute cycle** (`cap_relCycle_isCycle`) and **supported in `K`**
+(`cap_mem_subspaceChains`). This `cycle ⊓ subspaceChains K` element is exactly a cycle of `C(K)`, giving the
+duality class in `H_{n-k}(K)` — the varying target that fits the Mayer–Vietoris `5`-lemma ladder. -/
+theorem cap_relCycle_mem_cycles_inf_K {k m : ℕ} (a : SingularCochain X k)
+    (ha : ∀ (τ : (TopCat.toSSet.obj (sub S)).obj (op (SimplexCategory.mk k))),
+      a (simplexIncl S k τ) = 0)
+    (hδa : coboundaryₗ X k a = 0) {K : Set X} {z : SingularChain X (k + m + 1)}
+    (hzK : z ∈ subspaceChains K (k + m + 1))
+    (hzS : chainBoundary X (k + m) z ∈ subspaceChains S (k + m)) :
+    cap a z ∈ cycles X (m + 1) ⊓ subspaceChains K (m + 1) :=
+  Submodule.mem_inf.mpr
+    ⟨cap_relCycle_isCycle S a ha hδa hzS, cap_mem_subspaceChains K a hzK⟩
+
 end SKEFTHawking.SingularCapSupport
