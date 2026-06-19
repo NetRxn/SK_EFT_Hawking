@@ -253,4 +253,83 @@ theorem hasFundClass_univ {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M] 
   exact ⟨hclosed, SingularGoodCompactManifold.goodCompact_compact_in_chart_source hcompInter
     (hsubKj.trans (hKsource j (ht hj)))⟩
 
+/-! ### The fundamental class `[M]` and `Hₘ₊₂(M;ℤ/2) ≅ ℤ/2` (Hatcher 3.26) -/
+
+/-- **The fundamental class `[M] ∈ Hₘ₊₂(M;ℤ/2)`**: the `hasFundClass univ` witness transported from
+`Hₘ₊₂(M | univ) = Hₘ₊₂(M, ∅)` to `Hₘ₊₂(M)` via `relHomologyEmptyEquiv` (across `(univ)ᶜ = ∅`). -/
+noncomputable def fundamentalClass {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
+    [CompactSpace M] [Nonempty M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] :
+    Homology (TopCat.of M) (m + 2) :=
+  relHomologyEmptyEquiv (X := TopCat.of M) (m + 2)
+    (relIncl (Set.compl_univ (α := ↑(TopCat.of M))).subset (m + 2)
+      (hasFundClass_univ (m := m) (M := M)).choose)
+
+/-- **`[M]` restricts to the local generator at every point** (Hatcher 3.26): `restrictHomologyToPoint x [M]
+= (manifoldLocalIso x).symm 1`. Unfolds `[M]` through `relHomologyEmptyEquiv` and collapses the `relIncl`
+chain to the `hasFundClass univ` witness's per-point value. -/
+theorem fundamentalClass_restricts {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
+    [CompactSpace M] [Nonempty M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (x : M) :
+    restrictHomologyToPoint (X := TopCat.of M) x (m + 2) fundamentalClass
+      = (SKEFTHawking.SingularChartBridge.manifoldLocalIso x).symm 1 := by
+  rw [← (hasFundClass_univ (m := m) (M := M)).choose_spec x (Set.mem_univ x)]
+  show relIncl (Set.empty_subset ({x}ᶜ : Set ↑(TopCat.of M))) (m + 2)
+      ((relHomologyEmptyEquiv (X := TopCat.of M) (m + 2)).symm fundamentalClass)
+    = relIncl (Set.compl_subset_compl.mpr (Set.singleton_subset_iff.mpr (Set.mem_univ x))) (m + 2)
+      (hasFundClass_univ (m := m) (M := M)).choose
+  rw [fundamentalClass, LinearEquiv.symm_apply_apply, relIncl_trans]
+
+/-- **The local-degree map `Φ_{x₀} : Hₘ₊₂(M) → ℤ/2`** at a basepoint, `α ↦ manifoldLocalIso x₀
+(restrictHomologyToPoint x₀ α)`. A manual `LinearMap` (the `manifoldLocalIso ∘ₗ restrictHomologyToPoint`
+formation hits the `{x₀}ᶜ`↔`{y|y≠x₀}` wall; the application does not). -/
+noncomputable def localDegree {m : ℕ} {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (x₀ : M) :
+    Homology (TopCat.of M) (m + 2) →ₗ[ZMod 2] ZMod 2 where
+  toFun α := SKEFTHawking.SingularChartBridge.manifoldLocalIso x₀
+    (restrictHomologyToPoint (X := TopCat.of M) x₀ (m + 2) α)
+  map_add' a b := by rw [map_add]; exact map_add _ _ _
+  map_smul' c a := by rw [map_smul]; exact map_smul _ _ _
+
+/-- **`Φ_{x₀}([M]) = 1`**: the fundamental class has local degree `1` at every basepoint
+(`fundamentalClass_restricts` + `apply_symm_apply`). -/
+theorem localDegree_fundamentalClass {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
+    [CompactSpace M] [Nonempty M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (x₀ : M) :
+    localDegree (m := m) x₀ fundamentalClass = 1 := by
+  show SKEFTHawking.SingularChartBridge.manifoldLocalIso x₀
+      (restrictHomologyToPoint (X := TopCat.of M) x₀ (m + 2) fundamentalClass) = 1
+  rw [fundamentalClass_restricts, LinearEquiv.apply_symm_apply]
+
+/-- **`Φ_{x₀}` is bijective** (Hatcher 3.26): injective by `restrictHomologyToPoint_injective` (and
+`manifoldLocalIso x₀` injective), surjective since `Φ_{x₀}([M]) = 1` generates `ℤ/2`. -/
+theorem localDegree_bijective {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M]
+    [Nonempty M] [PreconnectedSpace M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (x₀ : M) :
+    Function.Bijective (localDegree (m := m) x₀) := by
+  refine ⟨fun a b hab => ?_, fun w => ?_⟩
+  · have hab' : SKEFTHawking.SingularChartBridge.manifoldLocalIso x₀
+        (restrictHomologyToPoint (X := TopCat.of M) x₀ (m + 2) a)
+      = SKEFTHawking.SingularChartBridge.manifoldLocalIso x₀
+        (restrictHomologyToPoint (X := TopCat.of M) x₀ (m + 2) b) := hab
+    have hr := (SKEFTHawking.SingularChartBridge.manifoldLocalIso x₀).injective hab'
+    have hz : restrictHomologyToPoint (X := TopCat.of M) x₀ (m + 2) (a - b) = 0 := by
+      rw [map_sub, hr, sub_self]
+    exact sub_eq_zero.mp (restrictHomologyToPoint_injective hz)
+  · exact ⟨w • fundamentalClass, by rw [map_smul, localDegree_fundamentalClass, smul_eq_mul, mul_one]⟩
+
+/-- **`Hₘ₊₂(M;ℤ/2) ≅ ℤ/2`** for a connected closed charted manifold (Hatcher 3.26), via the bijective
+local-degree map at a basepoint `x₀`. The closed-manifold top-homology computation; the fundamental
+class `[M]` is `Φ_{x₀}⁻¹ 1`. -/
+noncomputable def homologyTopEquivZMod2 {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
+    [CompactSpace M] [Nonempty M] [PreconnectedSpace M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (x₀ : M) :
+    Homology (TopCat.of M) (m + 2) ≃ₗ[ZMod 2] ZMod 2 :=
+  LinearEquiv.ofBijective (localDegree (m := m) x₀) (localDegree_bijective x₀)
+
+/-- **The fundamental class is nonzero** (`Φ_{x₀}([M]) = 1 ≠ 0`). -/
+theorem fundamentalClass_ne_zero {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M]
+    [Nonempty M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (x₀ : M) :
+    fundamentalClass (m := m) (M := M) ≠ 0 := by
+  intro h
+  have := localDegree_fundamentalClass (m := m) x₀
+  rw [h, map_zero] at this
+  exact absurd this.symm (by decide)
+
 end SKEFTHawking.SingularFundamentalClass
