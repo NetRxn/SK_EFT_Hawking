@@ -92,4 +92,14 @@ noncomputable def openDuality {k m : ℕ} {W : Set ↑X} (hW : IsOpen W)
   Module.DirectLimit.lift (ZMod 2) (CompactsIn W) (cohomGW W k) (cohomFW W k)
     (legW hW z₀ hz₀) (fun K K' h x => legW_compat hW z₀ hz₀ K K' h x)
 
+/-- **Computation rule for `D_W`** on a `K`-stage class `of_W K a`: the colimit lift reads off as the
+per-`K` duality leg `legW K a` (`DirectLimit.lift_of`). -/
+@[simp] theorem openDuality_of {k m : ℕ} {W : Set ↑X} (hW : IsOpen W)
+    (z₀ : SingularChain X (k + m + 1)) (hz₀ : chainBoundary X (k + m) z₀ = 0)
+    (K : CompactsIn W) (a : cohomGW W k K) :
+    openDuality hW z₀ hz₀
+        (Module.DirectLimit.of (ZMod 2) (CompactsIn W) (cohomGW W k) (cohomFW W k) K a)
+      = legW hW z₀ hz₀ K a :=
+  Module.DirectLimit.lift_of _ _ a
+
 end SKEFTHawking.SingularOpenDuality
