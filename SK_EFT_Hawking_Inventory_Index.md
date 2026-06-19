@@ -26,9 +26,9 @@
 <!-- AUTOGEN:counts-table BEGIN -->
 | Metric | Value |
 |---|---:|
-| Lean declarations (total) | 22594 |
-| Lean theorems (total) | 13865 |
-| Lean theorems (substantive) | 13839 |
+| Lean declarations (total) | 22596 |
+| Lean theorems (total) | 13867 |
+| Lean theorems (substantive) | 13841 |
 | Lean theorems (placeholder `True := trivial`) | 26 |
 | Lean modules | 1050 |
 | Lean definitions | 7756 |
