@@ -74,4 +74,22 @@ theorem kronecker_pullbackCochain {k : ℕ} {S : Set ↑X} (a : SingularCochain 
   | add c d hc hd => rw [kronecker_add_right, map_add, kronecker_add_right, hc, hd]
   | single τ s => rw [chainIncl_single, kronecker_single, kronecker_single, pullbackCochain_apply]
 
+/-- **The RHS connecting-square pairing, reduced to an ambient `ω`-pairing**: pairing a `sub K`-cocycle
+`a'` against the PD image `relativeDualityK S K z [ω]` equals pairing the *relative* cochain `ω` (ambient
+rep `ω.1.1`) against the inclusion of the **right cap** `(a' ⌢ʳ z_sub)`. Chains c3
+(`kroneckerH_relativeDualityK_mk_eq_cup`, the cup bridge) → `kronecker_cup_rcap` (extract the left factor
+`pullbackCochain ω`) → `kronecker_pullbackCochain` (R2a, lift to the ambient). The `ω`-on-the-left form is
+what lets `relKroneckerH_relCohomMvConnecting` fire when `ω = relCohomMvConnecting …` (via
+`relKronecker_mk`, once the capped chain is recognised as a relative cycle). -/
+theorem kroneckerH_relativeDualityK_mk_eq_rcap {k m : ℕ} {S K : Set ↑X}
+    (z : SingularChain X (k + m + 1)) (hzK : z ∈ subspaceChains K (k + m + 1))
+    (hzS : chainBoundary X (k + m) z ∈ subspaceChains S (k + m))
+    (ω : LinearMap.ker (relCoboundaryₗ S k))
+    (a' : LinearMap.ker (coboundaryₗ (sub K) (m + 1))) :
+    kroneckerH (X := sub K) (m + 1) (Submodule.Quotient.mk a')
+        (relativeDualityK S K k m z hzK hzS (RelativeCohomology.mk S k ω))
+      = kronecker ω.1.1
+          (chainIncl K k (rcap a'.1 ((subspaceChainsEquiv K (k + m + 1)).symm ⟨z, hzK⟩))) := by
+  rw [kroneckerH_relativeDualityK_mk_eq_cup, kronecker_cup_rcap, kronecker_pullbackCochain]
+
 end SKEFTHawking.SingularCapSubKDuality
