@@ -82,4 +82,32 @@ theorem cochainSplit_compl_mem_relCochains (U V : Set ↑X) (n : ℕ) (ω : Sing
 theorem cochainSplit_add_compl (U : Set ↑X) (n : ℕ) (ω : SingularCochain X n) :
     cochainSplit U n ω + (ω - cochainSplit U n ω) = ω := by abel
 
+/-! ## §2. The split coboundary is a **cover-complex cocycle** (snake brick S1)
+
+`δφ` lies in the cover complex `relCochains U ∩ relCochains V`: the `U`-membership is unconditional (`φ`
+is a relative `U`-cochain, and the coboundary preserves relative cochains); the `V`-membership holds when
+`ω` is a cocycle (`δω = 0 ⟹ δφ = δψ` over `ℤ/2`, and `ψ = ω - φ` is a relative `V`-cochain). This is the
+function-level (subdivision-free) Mayer–Vietoris cohomology connecting datum *at the cover level* — where
+`δφ` is a genuine cochain rep (the union-level rep would need the dual small-simplices iso, which the cap
+against an overlap cycle sidesteps via cap-naturality w.r.t. the cover↪union inclusion). -/
+
+/-- **`δφ ∈ relCochains U`** (unconditional): the coboundary of the `U`-part is a relative `U`-cochain. -/
+theorem cochainSplit_coboundary_mem_U (U : Set ↑X) (n : ℕ) (ω : SingularCochain X n) :
+    coboundary X n (cochainSplit U n ω) ∈ relCochains U (n + 1) :=
+  coboundary_mem_relCochains U n _ (cochainSplit_mem_relCochains U n ω)
+
+/-- **`δφ ∈ relCochains V`** when `ω` is a cocycle: from `δ(φ + (ω - φ)) = δω = 0` over `ℤ/2`,
+`δφ = -δ(ω - φ)`, and `ω - φ ∈ relCochains V` (S0) with the coboundary preserving relative cochains. -/
+theorem cochainSplit_coboundary_mem_V (U V : Set ↑X) (n : ℕ) (ω : SingularCochain X n)
+    (hω : ω ∈ relCochains (U ∩ V) n) (hcoc : coboundary X n ω = 0) :
+    coboundary X n (cochainSplit U n ω) ∈ relCochains V (n + 1) := by
+  have hδψ : coboundary X n (ω - cochainSplit U n ω) ∈ relCochains V (n + 1) :=
+    coboundary_mem_relCochains V n _ (cochainSplit_compl_mem_relCochains U V n ω hω)
+  have hsum : coboundary X n (cochainSplit U n ω) + coboundary X n (ω - cochainSplit U n ω) = 0 := by
+    have h := congrArg (coboundaryₗ X n) (cochainSplit_add_compl U n ω)
+    rw [map_add] at h
+    simpa only [coboundaryₗ, LinearMap.coe_mk, AddHom.coe_mk, hcoc] using h
+  rw [eq_neg_of_add_eq_zero_left hsum]
+  exact (relCochains V (n + 1)).neg_mem hδψ
+
 end SKEFTHawking.SingularCohomologySnake
