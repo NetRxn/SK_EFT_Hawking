@@ -930,6 +930,7 @@ import SKEFTHawking.SingularCompactlySupportedOpen
 import SKEFTHawking.SingularCSCOpenMonotone
 import SKEFTHawking.SingularCSCMayerVietoris
 import SKEFTHawking.SingularCSCMayerVietorisMiddle
+import SKEFTHawking.SingularLocalDualityKRestrict
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
