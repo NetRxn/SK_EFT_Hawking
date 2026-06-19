@@ -73,6 +73,21 @@ theorem kronecker_chainIncl_rcap_eq_cup {k l : ℕ} {K : Set ↑X} (α : Singula
       = kronecker (cup (pullbackCochain K k α) b) z_sub := by
   rw [← kronecker_pullbackCochain, kronecker_cup_rcap]
 
+/-- **Chain-level cup pairing as a homology cap-pairing.** For a cocycle `b` (`δb = 0`) over `sub K`
+and a chain `z_sub` whose cap `cap β z_sub` is a cycle, the chain-level cup pairing
+`kronecker (cup β b) z_sub` is the homology cap–Kronecker pairing
+`⟨[b], (capH … [β]) [z_sub]⟩`. By `kronecker_cup_cap` it is `kronecker b (cap β z_sub)`, which is
+`kroneckerH (mk b) (mk (cap β z_sub))` (definitional `kroneckerH_mk_mk`); and `capH … = mk ∘ cap`
+on representatives. The homology-level entry point for the M5a cup–cap adjunction. -/
+theorem kronecker_cup_eq_kroneckerH_cap {l m : ℕ} {K : Set ↑X}
+    (β : LinearMap.ker (coboundaryₗ (sub K) m)) (b : LinearMap.ker (coboundaryₗ (sub K) l))
+    (z_sub : SingularChain (sub K) (m + l))
+    (hcap : cap β.1 z_sub ∈ cycles (sub K) l) :
+    kronecker (cup β.1 b.1) z_sub
+      = kroneckerH (X := sub K) l (Submodule.Quotient.mk b)
+          (Homology.mk (sub K) l ⟨cap β.1 z_sub, hcap⟩) := by
+  rw [kronecker_cup_cap]; rfl
+
 /-- **Abstract MATCH-M reduction to a chain-level cup equality.** Both legs of the connecting-square
 MATCH M are `relKroneckerH` pairings of capped fundamental cycles. Lowering the LHS by
 `relKroneckerH_chainIncl_rcap_eq_kronecker` + `kronecker_chainIncl_rcap_eq_cup` and the RHS by
