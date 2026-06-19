@@ -57,4 +57,21 @@ theorem cap_relCycle_mem_cycles_inf_K {k m : ℕ} (a : SingularCochain X k)
   Submodule.mem_inf.mpr
     ⟨cap_relCycle_isCycle S a ha hδa hzS, cap_mem_subspaceChains K a hzK⟩
 
+/-- **A `K`-supported absolute cycle is the image of a genuine cycle of `sub K`.** If `c` is an absolute
+`(m+1)`-cycle supported in `K` (`c ∈ cycles X (m+1) ⊓ subspaceChains K (m+1)`), then `c = chainIncl K w`
+for a **cycle** `w ∈ cycles (sub K) (m+1)` of the subspace `K` itself — `w = (chainIncl K)⁻¹ c` is a cycle
+because `chainIncl K` is an injective chain map (`chainIncl_chainBoundary` + `chainIncl_injective`). This
+is the pullback that turns the `K`-supported duality cycle into a class in `H_{n-k}(sub K)`. -/
+theorem exists_subK_cycle_of_mem_cycles_inf {K : Set X} {m : ℕ} {c : SingularChain X (m + 1)}
+    (hc : c ∈ cycles X (m + 1) ⊓ subspaceChains K (m + 1)) :
+    ∃ w : SingularChain (sub K) (m + 1),
+      chainBoundary (sub K) m w = 0 ∧ chainIncl K (m + 1) w = c := by
+  obtain ⟨hcyc, hsub⟩ := Submodule.mem_inf.mp hc
+  rw [subspaceChains, LinearMap.mem_range] at hsub
+  obtain ⟨w, rfl⟩ := hsub
+  have hcyc' : chainBoundary X m (chainIncl K (m + 1) w) = 0 := hcyc
+  refine ⟨w, ?_, rfl⟩
+  refine chainIncl_injective K m ?_
+  rw [chainIncl_chainBoundary K m w, hcyc', map_zero]
+
 end SKEFTHawking.SingularCapSupport
