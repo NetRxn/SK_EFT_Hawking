@@ -911,6 +911,7 @@ import SKEFTHawking.SingularLocalDuality
 import SKEFTHawking.SingularPointComplement
 import SKEFTHawking.SingularLocalDualityInjective
 import SKEFTHawking.SingularRelativeCohomologyEmpty
+import SKEFTHawking.SingularDualityEmpty
 import SKEFTHawking.PoincareDualityConstruct
 import SKEFTHawking.SingularCohomologyFunctorial
 import SKEFTHawking.SingularCohomologyDisjoint
