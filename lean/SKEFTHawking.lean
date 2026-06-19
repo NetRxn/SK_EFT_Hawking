@@ -907,6 +907,7 @@ import SKEFTHawking.SingularRelativeCohomologyMVExact
 import SKEFTHawking.SingularDualityAdjoint
 import SKEFTHawking.SingularDualityMVAdjoint
 import SKEFTHawking.SingularDualityFinrank
+import SKEFTHawking.SingularRelativeCohomologyMVMiddle
 import SKEFTHawking.SingularRelativeCap
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
