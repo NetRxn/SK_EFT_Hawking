@@ -134,4 +134,26 @@ theorem fundamentalFunctional_cupH24 {M : Type} [TopologicalSpace M] [T2Space M]
   simp only [cupH24_mk_mk, kroneckerH_mk_mk]
   exact kronecker_cup_cap fa.1 fb.1 zM.1
 
+/-- **`PoincareDual4Mid.nondeg` reduces to PD-injectivity of the duality map** (`m = 2`): if
+`a ↦ a ⌢ [M] : H² → H₂` is injective, the middle cup pairing `(a,b) ↦ ⟨a∪b, [M]⟩` is non-degenerate.
+A class `a` with `⟨a∪b, [M]⟩ = 0` for all `b` has `⟨b, a⌢[M]⟩ = 0` for all `b` (adjunction
+`fundamentalFunctional_cupH24`), so `a⌢[M] = 0` (universal coefficients `homology_eq_zero_of_kroneckerH`),
+so `a = 0` (PD-injectivity). This isolates the remaining `PoincareDual4Mid.nondeg` obligation to exactly
+the Poincaré-duality injectivity of `· ⌢ [M]` (the local-global cap-iso theorem). -/
+theorem nondeg_of_duality_injective {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M]
+    [Nonempty M] [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (hPD : Function.Injective fun a : Cohomology (TopCat.of M) 2 =>
+      capH 2 1 a (fundamentalClass (m := 2) (M := M))) :
+    Function.Injective
+      ⇑((cupH24 (X := TopCat.of M)).compr₂ (fundamentalFunctional (m := 2) (M := M))) := by
+  rw [injective_iff_map_eq_zero]
+  intro a ha
+  refine hPD ?_
+  show capH 2 1 a (fundamentalClass (m := 2) (M := M))
+    = capH 2 1 0 (fundamentalClass (m := 2) (M := M))
+  rw [map_zero, LinearMap.zero_apply]
+  refine homology_eq_zero_of_kroneckerH 2 _ (fun ω => ?_)
+  rw [← fundamentalFunctional_cupH24]
+  exact LinearMap.congr_fun ha ω
+
 end SKEFTHawking.PoincareDualityConstruct
