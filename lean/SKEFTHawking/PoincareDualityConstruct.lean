@@ -40,4 +40,24 @@ Kronecker pairing against `[M]`. -/
       = kroneckerH (X := TopCat.of M) (m + 2) ω fundamentalClass :=
   rfl
 
+/-! ### The cap–cup adjunction (toward Poincaré-duality non-degeneracy of the cup pairing) -/
+
+/-- **Cap–cup adjunction** `⟨a ∪ b, c⟩ = ⟨b, a ⌢ c⟩` (chain level): the Kronecker pairing of a cup
+product against a chain equals the pairing of the right factor against the cap product. Both sides use
+the same Alexander–Whitney front/back split (`a` evaluated on the front `k`-face, `b`/the chain on the
+back `l`-face), so on a basis simplex both equal `a(frontₖσ) · b(backₗσ)`. This is the algebraic bridge
+from the cup pairing `(a,b) ↦ ⟨a∪b, [M]⟩` to the cap-with-`[M]` duality map — the route to the
+`PoincareDual4Mid.nondeg` field once cap descends to homology and `[M] ⌢ ·` is shown to be an iso. -/
+theorem kronecker_cup_cap {X : TopCat} {k l : ℕ} (a : SingularCochain X k) (b : SingularCochain X l)
+    (c : SingularChain X (k + l)) :
+    kronecker (cup a b) c = kronecker b (cap a c) := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp [map_zero]
+  | add c d hc hd =>
+      rw [kronecker_add_right, map_add, kronecker_add_right, hc, hd]
+  | single σ s =>
+      rw [cap_single_smul, capBasis, kronecker_single, kronecker_smul_right, kronecker_smul_right,
+        kronecker_single, cup_apply]
+      simp only [smul_eq_mul]; ring
+
 end SKEFTHawking.PoincareDualityConstruct
