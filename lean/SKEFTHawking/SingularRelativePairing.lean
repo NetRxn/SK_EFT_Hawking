@@ -46,4 +46,31 @@ noncomputable def relKroneckerₗ {n : ℕ} :
     show kronecker (↑(s • a)) c = s * kronecker (↑a) c
     rw [SetLike.val_smul, kronecker_smul_left, smul_eq_mul]
 
+/-- **The relative adjunction** `⟨a, ∂[w]⟩ = ⟨δa, [w]⟩` for the relative Kronecker pairing — descends the
+absolute adjunction `kronecker_coboundary_chainBoundary` through the relative chain quotient. -/
+theorem relKronecker_relBoundary {n : ℕ} (a : relCochains S n) (w : RelativeChain S (n + 1)) :
+    relKronecker S a (relBoundary S n w) = relKronecker S (relCoboundaryₗ S n a) w := by
+  obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective _ w
+  show relKronecker S a (relBoundary S n (RelativeChain.mk S (n + 1) c))
+    = kronecker (relCoboundaryₗ S n a).1 c
+  rw [relBoundary_mk, relKronecker_mk, relCoboundaryₗ_coe, kronecker_coboundary_chainBoundary]
+
+/-- **The relative Kronecker pairing descends to relative homology** for a fixed **relative cocycle** `a`
+(`a ∈ ker (relCoboundaryₗ S n)`): `relKroneckerRightH a : RelativeHomology S n → ℤ/2`, `[z] ↦ ⟨a, z⟩`.
+Well-defined: `a` a relative cocycle ⟹ `relKronecker a` kills the relative boundaries (relative
+adjunction `relKronecker_relBoundary`). The relative analogue of `kroneckerRightH`. -/
+noncomputable def relKroneckerRightH {n : ℕ} (a : LinearMap.ker (relCoboundaryₗ S n)) :
+    RelativeHomology S n →ₗ[ZMod 2] ZMod 2 :=
+  Submodule.liftQ _ ((relKronecker S a.1).domRestrict (relCycles S n))
+    (fun z hz => by
+      obtain ⟨w, hw⟩ := hz
+      rw [LinearMap.mem_ker, LinearMap.domRestrict_apply,
+        show (z : RelativeChain S n) = relBoundary S n w from hw.symm,
+        relKronecker_relBoundary, show relCoboundaryₗ S n a.1 = 0 from LinearMap.mem_ker.mp a.2]
+      exact congrFun (congrArg DFunLike.coe (map_zero (relKroneckerₗ S))) w)
+
+@[simp] theorem relKroneckerRightH_mk {n : ℕ} (a : LinearMap.ker (relCoboundaryₗ S n))
+    (z : relCycles S n) :
+    relKroneckerRightH S a (RelativeHomology.mk S n z) = relKronecker S a.1 z.1 := rfl
+
 end SKEFTHawking.SingularRelativePairing
