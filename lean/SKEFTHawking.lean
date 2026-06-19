@@ -910,6 +910,7 @@ import SKEFTHawking.SingularRelativeDuality0
 import SKEFTHawking.SingularLocalDuality
 import SKEFTHawking.SingularPointComplement
 import SKEFTHawking.SingularLocalDualityInjective
+import SKEFTHawking.SingularRelativeCohomologyEmpty
 import SKEFTHawking.PoincareDualityConstruct
 import SKEFTHawking.SingularCohomologyFunctorial
 import SKEFTHawking.SingularCohomologyDisjoint
