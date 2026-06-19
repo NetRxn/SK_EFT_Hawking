@@ -67,4 +67,43 @@ theorem kronecker_cup_cap {Y : TopCat} {k l : ℕ} (a : SingularCochain Y k) (b 
         kronecker_single, cup_apply]
       simp only [smul_eq_mul]; ring
 
+/-- The **right cap** of an `(k+l)`-simplex `σ` against an `l`-cochain `b` on a *single basis* simplex:
+`σ ⌢ʳ b = b(backₗ σ) • [frontₖ σ]` (evaluate `b` on the back `l`-face, keep the front `k`-face). The
+mirror of `capBasis` with the front/back roles of cochain and chain swapped. -/
+noncomputable def rcapBasis {Y : TopCat} {k l : ℕ} (b : SingularCochain Y l)
+    (σ : (TopCat.toSSet.obj Y).obj (op (SimplexCategory.mk (k + l)))) : SingularChain Y k :=
+  b (backFace σ) • Finsupp.single (frontFace σ) 1
+
+/-- The **right cap product** `⌢ʳ : Cₖ₊ₗ × Cˡ → Cₖ`, the `ℤ/2`-linear extension of
+`σ ↦ b(backₗ σ) • [frontₖ σ]`. Unlike the (left) `cap` it keeps the *front* face and evaluates the
+cochain on the *back*; it is the adjoint used to extract the **left** cup factor in a Kronecker pairing
+(`kronecker_cup_rcap`), where the non-commutative chain-level `cup` blocks `kronecker_cup_cap`. -/
+noncomputable def rcap {Y : TopCat} {k l : ℕ} (b : SingularCochain Y l) :
+    SingularChain Y (k + l) →ₗ[ZMod 2] SingularChain Y k :=
+  Finsupp.linearCombination (ZMod 2) (rcapBasis b)
+
+/-- The right cap on a scaled basis simplex. -/
+theorem rcap_single_smul {Y : TopCat} {k l : ℕ} (b : SingularCochain Y l)
+    (σ : (TopCat.toSSet.obj Y).obj (op (SimplexCategory.mk (k + l)))) (s : ZMod 2) :
+    rcap (k := k) b (Finsupp.single σ s) = s • rcapBasis b σ := by
+  rw [rcap, Finsupp.linearCombination_single]
+
+/-- **Left-factor cap–cup adjunction** `⟨a ∪ b, z⟩ = ⟨a, z ⌢ʳ b⟩` (chain level): the Kronecker pairing of
+a cup product against a chain equals the pairing of the **left** factor `a` against the right cap `z ⌢ʳ b`.
+Both sides are `a(frontₖσ) · b(backₗσ)` on a basis simplex. Mirror of `kronecker_cup_cap` (which extracts
+the right factor `b` via the left cap); needed because the chain-level `cup` is non-commutative, so the
+left factor `a` (e.g. a connecting-map class whose only interface is a Kronecker adjunction) cannot be
+reached through `kronecker_cup_cap`. -/
+theorem kronecker_cup_rcap {Y : TopCat} {k l : ℕ} (a : SingularCochain Y k) (b : SingularCochain Y l)
+    (z : SingularChain Y (k + l)) :
+    kronecker (cup a b) z = kronecker a (rcap b z) := by
+  induction z using Finsupp.induction_linear with
+  | zero => simp [map_zero]
+  | add c d hc hd =>
+      rw [kronecker_add_right, map_add, kronecker_add_right, hc, hd]
+  | single σ s =>
+      rw [rcap_single_smul, rcapBasis, kronecker_single, kronecker_smul_right, kronecker_smul_right,
+        kronecker_single, cup_apply]
+      simp only [smul_eq_mul]; ring
+
 end SKEFTHawking.SingularCapChainIncl
