@@ -897,6 +897,7 @@ import SKEFTHawking.SingularFundamentalClassExist
 -- w₂=v₂+v₁². The PD datum's geometric construction (the ℤ/2 fundamental class + PD) is the next foundation
 -- brick; toward collapsing the unoriented-bordism floor for the full-carrier UNCONDITIONAL Ω₄^{Pin⁺}≅ℤ/16.
 import SKEFTHawking.PoincareDualityWu
+import SKEFTHawking.PoincareDualityConstruct
 import SKEFTHawking.SingularCohomologyFunctorial
 import SKEFTHawking.SingularCohomologyDisjoint
 import SKEFTHawking.KitaevSixteenFold
