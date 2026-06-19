@@ -864,6 +864,7 @@ import SKEFTHawking.SingularDiskAcyclic
 import SKEFTHawking.SingularSphereAcyclic
 import SKEFTHawking.SingularH0
 import SKEFTHawking.SingularReducedH0
+import SKEFTHawking.SingularH0PathConnected
 import SKEFTHawking.SingularSphereBottom
 import SKEFTHawking.SingularDisjointUnion
 import SKEFTHawking.SingularLineMinusPoint
