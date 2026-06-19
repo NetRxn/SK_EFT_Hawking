@@ -929,6 +929,7 @@ import SKEFTHawking.SingularCompactsInOpen
 import SKEFTHawking.SingularCompactlySupportedOpen
 import SKEFTHawking.SingularCSCOpenMonotone
 import SKEFTHawking.SingularCSCMayerVietoris
+import SKEFTHawking.SingularCSCMayerVietorisMiddle
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
