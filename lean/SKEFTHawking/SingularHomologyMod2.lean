@@ -432,4 +432,176 @@ noncomputable def capₗ {X : TopCat} (k m : ℕ) :
 @[simp] theorem capₗ_apply {X : TopCat} {k m : ℕ} (a : SingularCochain X k)
     (c : SingularChain X (k + m)) : capₗ k m a c = cap a c := rfl
 
+/-! ### The cap Leibniz (boundary) rule `∂(a ⌢ c) = (δa) ⌢ c + a ⌢ (∂c)` (mod 2)
+
+The homological analogue of the cup Leibniz `coboundary_cup`, stated cast-free at a basis
+`(k+m+1)`-simplex `σ`. The cap is chain-valued, so the diagonal cancellation is between the
+front-coboundary expansion `(δa)(frontBig σ) = ∑ⱼ a(face j (frontBig σ))` and the `i ≤ k` faces of
+`∂σ`: both contribute the *same* sum `∑_{j≤k} a(face j (frontBig σ)) • [backBig σ]`, which cancels
+over ℤ/2 (`x + x = 0`), leaving the diagonal `a(frontSmall σ) • [backBig σ]`. The `i > k` faces of
+`∂σ` give `a(frontSmall σ) • [face (i-k) (backSmall σ)]`, matching the `j ≥ 1` part of `∂(a ⌢ σ)`. -/
+theorem cap_leibniz_single {X : TopCat} {k m : ℕ} (a : SingularCochain X k)
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (k + m + 1)))) :
+    chainBoundary X m (cap a (Finsupp.single σ 1))
+      = coboundary X k a (frontBig σ) • Finsupp.single (backBig σ) 1
+        + cap a (boundaryBasis X (k + m) σ) := by
+  have h : k + 1 + (m + 1) = k + m + 2 := by omega
+  -- LHS: `∂(a ⌢ σ)` reaches the canonical middle form, peeling the zeroth back-face term.
+  have hL : chainBoundary X m (cap a (Finsupp.single σ 1))
+      = a (frontSmall σ) • Finsupp.single (backBig σ) 1
+        + a (frontSmall σ) • ∑ l : Fin (m + 1), Finsupp.single (face l.succ (backSmall σ)) (1 : ZMod 2) := by
+    rw [cap_single, capBasis, map_smul, chainBoundary_single]
+    show a (frontSmall σ) • boundaryBasis X m (backSmall σ) = _
+    rw [boundaryBasis, Fin.sum_univ_succ, face_zero_backSmall, smul_add]
+  -- `a ⌢ ∂σ` splits `Fin (k+m+2)` at `k`: the `i ≤ k` faces carry `[backBig σ]` with the interior
+  -- front faces; the `i > k` faces carry `[frontSmall σ]` with the interior back faces.
+  have hcap : cap a (boundaryBasis X (k + m) σ)
+      = (∑ j : Fin (k + 1), a (face j.castSucc (frontBig σ)) • Finsupp.single (backBig σ) (1 : ZMod 2))
+        + (∑ l : Fin (m + 1),
+            a (frontSmall σ) • Finsupp.single (face l.succ (backSmall σ)) (1 : ZMod 2)) := by
+    have hsum : cap a (boundaryBasis X (k + m) σ)
+        = ∑ i : Fin (k + m + 2), capBasis a (face i σ) := by
+      rw [boundaryBasis, map_sum]
+      exact Finset.sum_congr rfl (fun i _ => cap_single a (face i σ))
+    rw [hsum, ← Equiv.sum_comp (finCongr h) (fun i => capBasis a (face i σ)), Fin.sum_univ_add]
+    congr 1
+    · refine Finset.sum_congr rfl (fun j _ => ?_)
+      have hle : (finCongr h (Fin.castAdd (m + 1) j)).val ≤ k := by
+        simp only [finCongr_apply, Fin.val_cast, Fin.val_castAdd]; omega
+      rw [capBasis, frontFace_face_of_le σ _ hle, backFace_face_of_le σ _ hle]
+      have hidx : (⟨(finCongr h (Fin.castAdd (m + 1) j)).val, by omega⟩ : Fin (k + 2))
+          = j.castSucc := by
+        apply Fin.ext; simp [Fin.val_castSucc]
+      rw [hidx]
+    · refine Finset.sum_congr rfl (fun l _ => ?_)
+      have hgt : k < (finCongr h (Fin.natAdd (k + 1) l)).val := by
+        simp only [finCongr_apply, Fin.val_cast, Fin.val_natAdd]; omega
+      rw [capBasis, frontFace_face_of_gt σ _ hgt, backFace_face_of_gt σ _ hgt]
+      have hidx : (⟨(finCongr h (Fin.natAdd (k + 1) l)).val - k, by have := l.isLt; omega⟩ : Fin (m + 2))
+          = l.succ := by
+        apply Fin.ext; simp only [Fin.val_succ, finCongr_apply, Fin.val_cast, Fin.val_natAdd]; omega
+      rw [hidx]
+  -- The front-coboundary term peels its last face into the diagonal `a(frontSmall σ)•[backBig σ]`.
+  have hcobound : coboundary X k a (frontBig σ) • Finsupp.single (backBig σ) (1 : ZMod 2)
+      = (∑ j : Fin (k + 1), a (face j.castSucc (frontBig σ)) • Finsupp.single (backBig σ) (1 : ZMod 2))
+        + a (frontSmall σ) • Finsupp.single (backBig σ) (1 : ZMod 2) := by
+    rw [coboundary_apply, Fin.sum_univ_castSucc, face_last_frontBig, add_smul, Finset.sum_smul]
+  -- The two `∑_{j≤k}` front sums coincide and cancel over ℤ/2; what remains is M.
+  have hSS : (∑ j : Fin (k + 1), a (face j.castSucc (frontBig σ)) • Finsupp.single (backBig σ) (1 : ZMod 2))
+        + (∑ j : Fin (k + 1), a (face j.castSucc (frontBig σ)) • Finsupp.single (backBig σ) (1 : ZMod 2))
+      = 0 := by rw [← two_smul (ZMod 2), show (2 : ZMod 2) = 0 from rfl, zero_smul]
+  rw [hL, hcap, hcobound, Finset.smul_sum, add_add_add_comm, hSS, zero_add]
+
+/-- **A cocycle caps to a chain map** (mod 2): if `a` is a cocycle (`δa = 0`) then
+`∂(a ⌢ c) = a ⌢ (∂c)` for every `(k+m+1)`-chain `c` — i.e. `a ⌢ ·` intertwines the chain boundaries.
+Cast-free (the `(δa) ⌢ c` middle term of `cap_leibniz_single` vanishes), the homological analogue of
+`cup_cocycle`: this is the descent fact that makes `a ⌢ ·` well-defined on homology for a cocycle `a`.
+Proved by `Finsupp.induction_linear` reducing to the basis case `cap_leibniz_single`. -/
+theorem cap_cocycle_chainMap {X : TopCat} {k m : ℕ} (a : SingularCochain X k)
+    (ha : coboundaryₗ X k a = 0) (c : SingularChain X (k + m + 1)) :
+    chainBoundary X m (cap a c) = cap a (chainBoundary X (k + m) c) := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp
+  | add c d hc hd => rw [map_add, map_add, map_add, hc, hd, map_add]
+  | single σ s =>
+      rw [cap_single_smul, map_smul, chainBoundary_single_smul, map_smul,
+        show chainBoundary X m (capBasis a σ) = chainBoundary X m (cap a (Finsupp.single σ 1)) by
+          rw [cap_single],
+        cap_leibniz_single]
+      have hδ : coboundary X k a (frontBig σ) = 0 := congrFun ha (frontBig σ)
+      rw [hδ, zero_smul, zero_add]
+
+/-- A degree cast of a singular simplex is the functorial image of the `eqToHom` of the degree equality
+(the cast pushes through `(TopCat.toSSet.obj X).map`). The bridge that lets the cap Leibniz middle term
+`(δa) ⌢ c` — capped at the shifted degree `(k+1)+m` — be evaluated cast-free. -/
+theorem singularSimplex_cast_eq {X : TopCat} {d n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk d))) (h : d = n) :
+    (h ▸ σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n)))
+      = (TopCat.toSSet.obj X).map (eqToHom (by rw [h])).op σ := by
+  subst h; simp
+
+/-- Under the cast `k+m+1 → (k+1)+m`, the split-`(k+1, m)` front face of `σ` is the split-`(k, m)`
+`frontBig σ` — both are the inclusion of the front `k+1` vertices. -/
+theorem frontFace_cast {X : TopCat} {k m : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (k + m + 1)))) (h : k + m + 1 = k + 1 + m) :
+    (frontFace (h ▸ σ) : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (k + 1)))) = frontBig σ := by
+  unfold frontFace frontBig
+  rw [singularSimplex_cast_eq σ h, ← FunctorToTypes.map_comp_apply, ← op_comp]
+  have hmor : (frontIncl (k + 1) m
+      ≫ eqToHom (show SimplexCategory.mk (k + 1 + m) = SimplexCategory.mk (k + m + 1) by rw [h]))
+      = frontBigIncl k m := by
+    apply SimplexCategory.Hom.ext; ext x : 2; apply Fin.ext
+    simp only [SimplexCategory.comp_toOrderHom, OrderHom.comp_coe, Function.comp_apply, frontIncl,
+      frontBigIncl, toOrderHom_mkHom, OrderHom.coe_mk, Fin.val_castLE]
+    rw [SimplexCategory.eqToHom_toOrderHom]
+    simp only [OrderEmbedding.toOrderHom_coe, OrderIso.coe_toOrderEmbedding, Fin.castOrderIso,
+      RelIso.coe_fn_mk, Equiv.coe_fn_mk, Fin.val_cast, Fin.val_castLE]
+  rw [hmor]
+
+/-- Under the cast `k+m+1 → (k+1)+m`, the split-`(k+1, m)` back face of `σ` is the split-`(k, m)`
+`backBig σ` — both are the inclusion of the back `m` vertices. -/
+theorem backFace_cast {X : TopCat} {k m : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (k + m + 1)))) (h : k + m + 1 = k + 1 + m) :
+    (backFace (h ▸ σ) : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk m))) = backBig σ := by
+  unfold backFace backBig
+  rw [singularSimplex_cast_eq σ h, ← FunctorToTypes.map_comp_apply, ← op_comp]
+  have hmor : (backIncl (k + 1) m
+      ≫ eqToHom (show SimplexCategory.mk (k + 1 + m) = SimplexCategory.mk (k + m + 1) by rw [h]))
+      = backBigIncl k m := by
+    apply SimplexCategory.Hom.ext; ext x : 2; apply Fin.ext
+    simp only [SimplexCategory.comp_toOrderHom, OrderHom.comp_coe, Function.comp_apply, backIncl,
+      backBigIncl, toOrderHom_mkHom, OrderHom.coe_mk]
+    rw [SimplexCategory.eqToHom_toOrderHom]
+    simp only [OrderEmbedding.toOrderHom_coe, OrderIso.coe_toOrderEmbedding, Fin.castOrderIso,
+      RelIso.coe_fn_mk, Equiv.coe_fn_mk, Fin.val_cast, Fin.val_natAdd]
+  rw [hmor]
+
+/-- A degree cast of a `Finsupp.single` of a simplex is the `single` of the cast simplex. -/
+theorem singularChain_single_cast {X : TopCat} {d n : ℕ}
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk d))) (s : ZMod 2) (h : d = n) :
+    (h ▸ Finsupp.single σ s : SingularChain X n)
+      = Finsupp.single (h ▸ σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk n))) s := by
+  subst h; rfl
+
+/-- The middle term `(δa) ⌢ σ` of the cap Leibniz rule, evaluated at the cast basis simplex `h ▸ σ`
+(at the `cap (δa)` degree `(k+1)+m`), recovers the cast-free `(δa)(frontBig σ) • [backBig σ]`. -/
+theorem cap_coboundary_single_cast {X : TopCat} {k m : ℕ} (a : SingularCochain X k)
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (k + m + 1)))) (s : ZMod 2)
+    (h : k + m + 1 = k + 1 + m) :
+    cap (coboundary X k a) (h ▸ Finsupp.single σ s)
+      = s • (coboundary X k a (frontBig σ) • Finsupp.single (backBig σ) (1 : ZMod 2)) := by
+  rw [singularChain_single_cast σ s h, cap_single_smul, capBasis, frontFace_cast σ h,
+    backFace_cast σ h]
+
+/-- A degree cast of singular chains is additive. -/
+theorem singularChain_cast_add {X : TopCat} {d n : ℕ} (c d' : SingularChain X d) (h : d = n) :
+    (h ▸ (c + d') : SingularChain X n) = (h ▸ c) + (h ▸ d') := by
+  subst h; rfl
+
+/-- A degree cast sends the zero chain to the zero chain. -/
+theorem singularChain_cast_zero {X : TopCat} {d n : ℕ} (h : d = n) :
+    (h ▸ (0 : SingularChain X d) : SingularChain X n) = 0 := by
+  subst h; rfl
+
+/-- **Cap Leibniz (boundary) rule** (mod 2): `∂(a ⌢ c) = (δa) ⌢ c + a ⌢ (∂c)`, the homological
+analogue of the cup Leibniz `coboundary_cup`, for a `k`-cochain `a` and an arbitrary `(k+m+1)`-chain
+`c`. The middle term `(δa) ⌢ c` caps the `(k+1)`-coboundary `δa` against `c` re-indexed to degree
+`(k+1)+m` (propositionally `= k+m+1`; the `cast` is the homological counterpart of the degree shift
+`coboundary_cup` absorbs via `frontBig`/`backBig`). Proved by `Finsupp.induction_linear` reducing to the
+cast-free basis case `cap_leibniz_single`, with the cast discharged by `cap_coboundary_single_cast`. -/
+theorem cap_leibniz {X : TopCat} {k m : ℕ} (a : SingularCochain X k)
+    (c : SingularChain X (k + m + 1)) (h : k + m + 1 = k + 1 + m) :
+    chainBoundary X m (cap a c)
+      = cap (coboundary X k a) (h ▸ c) + cap a (chainBoundary X (k + m) c) := by
+  induction c using Finsupp.induction_linear with
+  | zero => rw [singularChain_cast_zero h]; simp
+  | add c d hc hd =>
+      rw [map_add, map_add, map_add, hc, hd, singularChain_cast_add c d h, map_add,
+        add_add_add_comm, ← map_add, ← map_add]
+  | single σ s =>
+      rw [cap_single_smul, map_smul, chainBoundary_single_smul, map_smul,
+        show chainBoundary X m (capBasis a σ) = chainBoundary X m (cap a (Finsupp.single σ 1)) by
+          rw [cap_single],
+        cap_leibniz_single, smul_add, cap_coboundary_single_cast a σ s h]
+
 end SKEFTHawking.SingularHomologyMod2
