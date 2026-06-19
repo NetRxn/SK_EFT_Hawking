@@ -52,4 +52,17 @@ theorem cover_partition_cap_boundary {k m : ℕ} (A B : Set ↑X) (g : SingularC
   rw [hpart, map_add, ← chainIncl_chainBoundary, ← chainIncl_chainBoundary] at h1
   exact h1
 
+/-- **Cup pairing over a cover-partition**: for a cover-partition `g ⌢ z = chainIncl A zA + chainIncl B zB`
+of a cap, the cup pairing `⟨g ∪ b, z⟩` reads off as the sum of the partition-part pairings
+`⟨b|_A, zA⟩ + ⟨b|_B, zB⟩` (via `kronecker_cup_cap` + `kronecker_pullbackCochain`). Connects the
+fundamental cup `⟨g ∪ b, z⟩` to the seam parts — the bridge between the two legs of the match. -/
+theorem kronecker_cup_cover_partition {k l : ℕ} (A B : Set ↑X) (g : SingularCochain X k)
+    (b : SingularCochain X l) (z : SingularChain X (k + l))
+    (zA : SingularChain (sub A) l) (zB : SingularChain (sub B) l)
+    (hpart : cap g z = chainIncl A l zA + chainIncl B l zB) :
+    kronecker (cup g b) z
+      = kronecker (pullbackCochain A l b) zA + kronecker (pullbackCochain B l b) zB := by
+  rw [kronecker_cup_cap, hpart, kronecker_add_right, kronecker_pullbackCochain,
+    kronecker_pullbackCochain]
+
 end SKEFTHawking.SingularConnSquareMatchLHS
