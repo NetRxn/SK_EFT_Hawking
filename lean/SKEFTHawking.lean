@@ -902,6 +902,7 @@ import SKEFTHawking.SingularFundamentalClassExist
 -- brick; toward collapsing the unoriented-bordism floor for the full-carrier UNCONDITIONAL Ω₄^{Pin⁺}≅ℤ/16.
 import SKEFTHawking.PoincareDualityWu
 import SKEFTHawking.SingularCapHomology
+import SKEFTHawking.SingularCupCapHomology
 import SKEFTHawking.SingularUniversalCoeff
 import SKEFTHawking.SingularRelativeCohomologyMod2
 import SKEFTHawking.SingularRelativeCohomologyRestrict
