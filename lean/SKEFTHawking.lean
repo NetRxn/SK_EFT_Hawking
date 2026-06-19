@@ -919,6 +919,7 @@ import SKEFTHawking.SingularCompactSupport
 import SKEFTHawking.SingularSubsetHomology
 import SKEFTHawking.SingularSubHomologyMV
 import SKEFTHawking.SingularSubHomologyMVCohomConn
+import SKEFTHawking.SingularConnSquareLHS
 import SKEFTHawking.SingularSubspaceChainsEquiv
 import SKEFTHawking.SingularLocalDualityK
 import SKEFTHawking.SingularCohomologyColimit
