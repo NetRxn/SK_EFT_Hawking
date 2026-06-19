@@ -913,6 +913,7 @@ import SKEFTHawking.SingularRelativeCap
 import SKEFTHawking.SingularCapSupport
 import SKEFTHawking.SingularCompactSupport
 import SKEFTHawking.SingularSubsetHomology
+import SKEFTHawking.SingularSubHomologyMV
 import SKEFTHawking.SingularSubspaceChainsEquiv
 import SKEFTHawking.SingularLocalDualityK
 import SKEFTHawking.SingularCohomologyColimit
