@@ -900,6 +900,7 @@ import SKEFTHawking.PoincareDualityWu
 import SKEFTHawking.SingularCapHomology
 import SKEFTHawking.SingularRelativeCohomologyMod2
 import SKEFTHawking.SingularRelativeCap
+import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeDuality
 import SKEFTHawking.PoincareDualityConstruct
 import SKEFTHawking.SingularCohomologyFunctorial
