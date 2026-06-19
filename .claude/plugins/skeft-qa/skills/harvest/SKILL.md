@@ -54,6 +54,8 @@ Let `CLI = ${CLAUDE_SKILL_DIR}/../../scripts/harness_common_cli.py` and `REPO = 
 5. **Commit the watermark LAST:** only after the consolidator's writes succeed,
    `uv run --no-sync python "$CLI" advance-watermark <sid> <new_offset>` (atomic, boundary-aligned). Then
    `uv run --no-sync python "$CLI" harvest-state-set <now> <cadence_hours>` for the drift warning.
+   Pass `<cadence_hours>` = **the scheduled task's actual cron interval (default 4 — adjustable: this just
+   feeds the "harvest overdue" nudge, which warns past 2× this value, so keep it equal to whatever the cron is set to).**
 5b. **GC the blocked-question log [MINOR D2].** ALSO only after the consolidator's writes succeed: advance the
     blocked-question log past the span just ingested so it does NOT grow unbounded and is NOT re-ingested as
     duplicate findings on the next run. Either **truncate** `$BQLOG` (`: > "$BQLOG"` when the whole file was the
