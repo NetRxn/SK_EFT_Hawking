@@ -65,4 +65,14 @@ theorem kronecker_cup_cover_partition {k l : ℕ} (A B : Set ↑X) (g : Singular
   rw [kronecker_cup_cap, hpart, kronecker_add_right, kronecker_pullbackCochain,
     kronecker_pullbackCochain]
 
+/-- **The cup–cap match core** — *why* the Poincaré-duality connecting square commutes: pairing `a'`
+against the left cap `g ⌢ X` equals pairing `g` against the right cap `a' ⌢ʳ X`, both being
+`⟨g ∪ a', X⟩`. The two legs of the connecting square reduce to these two pairings (the LHS via
+`kronecker_cup_cap`, the RHS via `kronecker_cup_rcap`), so they agree on the shared fundamental
+boundary `X = ∂z₀`. -/
+theorem kronecker_cap_eq_kronecker_rcap {k l : ℕ} (g : SingularCochain X k) (a : SingularCochain X l)
+    (z : SingularChain X (k + l)) :
+    kronecker a (cap g z) = kronecker g (rcap a z) :=
+  (kronecker_cup_cap g a z).symm.trans (kronecker_cup_rcap g a z)
+
 end SKEFTHawking.SingularConnSquareMatchLHS
