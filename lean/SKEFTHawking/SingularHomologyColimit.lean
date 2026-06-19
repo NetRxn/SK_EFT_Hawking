@@ -54,4 +54,10 @@ compact support this is `H_n(M)`; the bottom row of the Poincaré-duality ladder
 noncomputable def HomologyColimit (n : ℕ) : Type :=
   Module.DirectLimit (homG (M := M) n) (homF n)
 
+noncomputable instance (n : ℕ) : AddCommGroup (HomologyColimit (M := M) n) :=
+  inferInstanceAs (AddCommGroup (Module.DirectLimit _ _))
+
+noncomputable instance (n : ℕ) : Module (ZMod 2) (HomologyColimit (M := M) n) :=
+  inferInstanceAs (Module (ZMod 2) (Module.DirectLimit _ _))
+
 end SKEFTHawking.SingularHomologyColimit
