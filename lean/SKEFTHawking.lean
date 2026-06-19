@@ -934,6 +934,7 @@ import SKEFTHawking.SingularLocalDualityKRestrict
 import SKEFTHawking.SingularLocalDualityKCycle
 import SKEFTHawking.SingularOpenDualityCycle
 import SKEFTHawking.SingularOpenDuality
+import SKEFTHawking.SingularLocalDualityKMono
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
