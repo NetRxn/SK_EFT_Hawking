@@ -57,4 +57,10 @@ of the directed system `(cohomG, cohomF)` over the compacts. -/
 noncomputable def CompactlySupportedCohomology (k : ℕ) : Type :=
   Module.DirectLimit (cohomG (M := M) k) (cohomF k)
 
+noncomputable instance (k : ℕ) : AddCommGroup (CompactlySupportedCohomology (M := M) k) :=
+  inferInstanceAs (AddCommGroup (Module.DirectLimit _ _))
+
+noncomputable instance (k : ℕ) : Module (ZMod 2) (CompactlySupportedCohomology (M := M) k) :=
+  inferInstanceAs (Module (ZMod 2) (Module.DirectLimit _ _))
+
 end SKEFTHawking.SingularCohomologyColimit
