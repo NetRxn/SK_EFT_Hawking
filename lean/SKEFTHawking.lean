@@ -919,6 +919,7 @@ import SKEFTHawking.SingularHomologyColimit
 import SKEFTHawking.SingularDirectLimitTop
 import SKEFTHawking.SingularCompactlySupportedTop
 import SKEFTHawking.SingularHomologyHomeo
+import SKEFTHawking.SingularHomologyColimitTop
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
