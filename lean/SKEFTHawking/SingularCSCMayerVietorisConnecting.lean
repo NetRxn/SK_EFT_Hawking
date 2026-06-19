@@ -3,6 +3,7 @@ import SKEFTHawking.SingularRelativeCohomologyMVConnecting
 import SKEFTHawking.SingularCSCMayerVietoris
 import SKEFTHawking.SingularCSCMayerVietorisMiddle
 import SKEFTHawking.SingularCompactlySupportedTop
+import SKEFTHawking.SingularRelativeMVNaturality
 
 /-!
 # Phase 5q.F (w₂-foundation, brick 72c-PD6f-b3) — the compactly-supported cohomology MV connecting map
@@ -116,5 +117,19 @@ theorem relCohomMvConnecting_naturality (A B A' B' : Set ↑M)
   rw [map_sub, LinearMap.sub_apply, relKroneckerH_relCohomMvConnecting,
     relKroneckerH_relCohomRestrict', relKroneckerH_relCohomRestrict',
     relKroneckerH_relCohomMvConnecting, homNat, sub_self]
+
+omit [T2Space ↑M] in
+/-- **Cohomology MV connecting naturality** (unconditional): `relCohomMvConnecting_naturality` with the
+homology naturality hypothesis discharged by `SingularRelativeMVNaturality.relMvDelta_naturality`. -/
+theorem relCohomMvConnecting_naturality' (A B A' B' : Set ↑M)
+    (hA : IsOpen A) (hB : IsOpen B) (hA' : IsOpen A') (hB' : IsOpen B')
+    (hAA' : A' ⊆ A) (hBB' : B' ⊆ B) (N : ℕ) (ω : RelativeCohomology (A ∩ B) (N + 1)) :
+    relCohomMvConnecting A' B' hA' hB' N
+        (relCohomRestrict (Set.inter_subset_inter hAA' hBB') (N + 1) ω)
+      = relCohomRestrict (Set.union_subset_union hAA' hBB') (N + 2)
+        (relCohomMvConnecting A B hA hB N ω) :=
+  relCohomMvConnecting_naturality A B A' B' hA hB hA' hB' hAA' hBB' N
+    (fun w => SingularRelativeMVNaturality.relMvDelta_naturality A B A' B' hA hB hA' hB' hAA' hBB' (N + 1) w)
+    ω
 
 end SKEFTHawking.SingularCSCMayerVietorisConnecting
