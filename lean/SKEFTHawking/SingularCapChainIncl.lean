@@ -48,4 +48,23 @@ theorem cap_chainIncl {k m : ℕ} (a : SingularCochain X k) (c : SingularChain (
         pullbackCochain_apply, frontFace_simplexIncl, backFace_simplexIncl, map_smul, map_smul,
         chainIncl_single]
 
+/-- **Cap–cup adjunction** `⟨a ∪ b, c⟩ = ⟨b, a ⌢ c⟩` (chain level): the Kronecker pairing of a cup
+product against a chain equals the pairing of the right factor against the cap product. Both sides use
+the same Alexander–Whitney front/back split (`a` evaluated on the front `k`-face, `b`/the chain on the
+back `l`-face), so on a basis simplex both equal `a(frontₖσ) · b(backₗσ)`. This is the algebraic bridge
+from the cup pairing `(a,b) ↦ ⟨a∪b, z⟩` to the cap-with-`z` duality map — used both for the
+`PoincareDual4Mid.nondeg` field (cap with `[M]`) and the connecting-square sub-`K` Kronecker bridge
+(cap with a fundamental cycle, `SingularCapSubKDuality`). -/
+theorem kronecker_cup_cap {Y : TopCat} {k l : ℕ} (a : SingularCochain Y k) (b : SingularCochain Y l)
+    (c : SingularChain Y (k + l)) :
+    kronecker (cup a b) c = kronecker b (cap a c) := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp [map_zero]
+  | add c d hc hd =>
+      rw [kronecker_add_right, map_add, kronecker_add_right, hc, hd]
+  | single σ s =>
+      rw [cap_single_smul, capBasis, kronecker_single, kronecker_smul_right, kronecker_smul_right,
+        kronecker_single, cup_apply]
+      simp only [smul_eq_mul]; ring
+
 end SKEFTHawking.SingularCapChainIncl

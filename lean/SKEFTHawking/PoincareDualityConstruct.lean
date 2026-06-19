@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.SingularFundamentalClassExist
 import SKEFTHawking.SingularCapHomology
+import SKEFTHawking.SingularCapChainIncl
 import SKEFTHawking.PoincareDualityWu
 
 /-!
@@ -41,25 +42,12 @@ Kronecker pairing against `[M]`. -/
       = kroneckerH (X := TopCat.of M) (m + 2) ω fundamentalClass :=
   rfl
 
-/-! ### The cap–cup adjunction (toward Poincaré-duality non-degeneracy of the cup pairing) -/
+/-! ### The cap–cup adjunction (toward Poincaré-duality non-degeneracy of the cup pairing)
 
-/-- **Cap–cup adjunction** `⟨a ∪ b, c⟩ = ⟨b, a ⌢ c⟩` (chain level): the Kronecker pairing of a cup
-product against a chain equals the pairing of the right factor against the cap product. Both sides use
-the same Alexander–Whitney front/back split (`a` evaluated on the front `k`-face, `b`/the chain on the
-back `l`-face), so on a basis simplex both equal `a(frontₖσ) · b(backₗσ)`. This is the algebraic bridge
-from the cup pairing `(a,b) ↦ ⟨a∪b, [M]⟩` to the cap-with-`[M]` duality map — the route to the
-`PoincareDual4Mid.nondeg` field once cap descends to homology and `[M] ⌢ ·` is shown to be an iso. -/
-theorem kronecker_cup_cap {X : TopCat} {k l : ℕ} (a : SingularCochain X k) (b : SingularCochain X l)
-    (c : SingularChain X (k + l)) :
-    kronecker (cup a b) c = kronecker b (cap a c) := by
-  induction c using Finsupp.induction_linear with
-  | zero => simp [map_zero]
-  | add c d hc hd =>
-      rw [kronecker_add_right, map_add, kronecker_add_right, hc, hd]
-  | single σ s =>
-      rw [cap_single_smul, capBasis, kronecker_single, kronecker_smul_right, kronecker_smul_right,
-        kronecker_single, cup_apply]
-      simp only [smul_eq_mul]; ring
+The chain-level adjunction `⟨a ∪ b, c⟩ = ⟨b, a ⌢ c⟩` (`SingularCapChainIncl.kronecker_cup_cap`) lives in
+the lower-level cap-infrastructure module so both this fundamental-class construction and the
+connecting-square sub-`K` Kronecker bridge (`SingularCapSubKDuality`) can consume it without an inverted
+dependency on the fundamental-class/Wu tower. -/
 
 /-! ### Universal-coefficients fact (over ℤ/2): the Kronecker pairing is non-degenerate in homology -/
 
@@ -132,7 +120,7 @@ theorem fundamentalFunctional_cupH24 {M : Type} [TopologicalSpace M] [T2Space M]
   obtain ⟨zM, hzM⟩ := Submodule.Quotient.mk_surjective _ (fundamentalClass (m := 2) (M := M))
   rw [fundamentalFunctional_apply, ← hzM]
   simp only [cupH24_mk_mk, kroneckerH_mk_mk]
-  exact kronecker_cup_cap fa.1 fb.1 zM.1
+  exact SKEFTHawking.SingularCapChainIncl.kronecker_cup_cap fa.1 fb.1 zM.1
 
 /-- **`PoincareDual4Mid.nondeg` reduces to PD-injectivity of the duality map** (`m = 2`): if
 `a ↦ a ⌢ [M] : H² → H₂` is injective, the middle cup pairing `(a,b) ↦ ⟨a∪b, [M]⟩` is non-degenerate.
