@@ -927,6 +927,7 @@ import SKEFTHawking.SingularRelativeDualityCongr
 import SKEFTHawking.SingularFundamentalDualityEndpoint
 import SKEFTHawking.SingularCompactsInOpen
 import SKEFTHawking.SingularCompactlySupportedOpen
+import SKEFTHawking.SingularCSCOpenMonotone
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
