@@ -1,5 +1,6 @@
 import Mathlib
 import SKEFTHawking.SingularFundamentalClassExist
+import SKEFTHawking.SingularCapHomology
 import SKEFTHawking.PoincareDualityWu
 
 /-!
@@ -18,7 +19,7 @@ iso). Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 -/
 
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
-open SKEFTHawking.SingularFundamentalClass
+open SKEFTHawking.SingularFundamentalClass SKEFTHawking.SingularCapHomology
 
 namespace SKEFTHawking.PoincareDualityConstruct
 
@@ -104,5 +105,33 @@ theorem homology_eq_zero_of_kroneckerH {X : TopCat} (n : ℕ) (β : Homology X n
   have hc := h (Submodule.Quotient.mk ⟨f, hfcocycle⟩)
   rw [kroneckerH_mk_mk, hf] at hc
   exact hφv hc
+
+/-! ### The descended cap–cup adjunction with `[M]` -/
+
+/-- **`cupH24` on representatives** `[fa] ∪ [gc] = [fa ⌣ gc]`. -/
+theorem cupH24_mk_mk {X : TopCat} (fc gc : LinearMap.ker (coboundaryₗ X 2)) :
+    cupH24 (Submodule.Quotient.mk fc) (Submodule.Quotient.mk gc)
+      = Submodule.Quotient.mk (⟨cup fc.1 gc.1, cup_cocycle fc.1 gc.1
+          (LinearMap.mem_ker.mp fc.2) (LinearMap.mem_ker.mp gc.2)⟩ :
+          LinearMap.ker (coboundaryₗ X 4)) :=
+  cupRightH24_apply_mk fc gc
+
+/-- **The descended cap–cup adjunction with `[M]`** (`m = 2`, 4-manifold): `μ(a ∪ b) = ⟨b, a ⌢ [M]⟩`,
+the cohomology-level form of `kronecker_cup_cap` evaluated against the fundamental class. The bridge from
+the cup pairing `(a,b) ↦ ⟨a∪b, [M]⟩` to the duality map `a ⌢ [M]` — the algebraic heart of
+`PoincareDual4Mid.nondeg` (combined with the UC fact `homology_eq_zero_of_kroneckerH` and the PD-injectivity
+of `a ↦ a ⌢ [M]`). -/
+theorem fundamentalFunctional_cupH24 {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M]
+    [Nonempty M] [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (a b : Cohomology (TopCat.of M) 2) :
+    fundamentalFunctional (m := 2) (M := M) (cupH24 a b)
+      = kroneckerH (X := TopCat.of M) 2 b
+        (capH 2 1 a (fundamentalClass (m := 2) (M := M))) := by
+  obtain ⟨fa, rfl⟩ := Submodule.Quotient.mk_surjective _ a
+  obtain ⟨fb, rfl⟩ := Submodule.Quotient.mk_surjective _ b
+  obtain ⟨zM, hzM⟩ := Submodule.Quotient.mk_surjective _ (fundamentalClass (m := 2) (M := M))
+  rw [fundamentalFunctional_apply, ← hzM]
+  simp only [cupH24_mk_mk, kroneckerH_mk_mk]
+  exact kronecker_cup_cap fa.1 fb.1 zM.1
 
 end SKEFTHawking.PoincareDualityConstruct
