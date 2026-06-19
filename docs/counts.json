@@ -1,8 +1,8 @@
 {
-  "generated": "2026-06-19T02:29:21.515575",
+  "generated": "2026-06-19T02:50:04.105047",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 22685,
+    "total_declarations": 22694,
     "theorems_total": 13928,
     "theorems_substantive": 13902,
     "theorems_placeholder": 26,
@@ -10,7 +10,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 1067,
+    "modules": 1070,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -890,6 +890,7 @@
       "SKEFTHawking.SingularCohomologyMod2",
       "SKEFTHawking.SingularCompactChartCover",
       "SKEFTHawking.SingularCompactSupport",
+      "SKEFTHawking.SingularCompactlySupportedTop",
       "SKEFTHawking.SingularConvexComplementRetract",
       "SKEFTHawking.SingularConvexRadialBase",
       "SKEFTHawking.SingularConvexRadialRetract",
@@ -917,6 +918,8 @@
       "SKEFTHawking.SingularH0",
       "SKEFTHawking.SingularH0PathConnected",
       "SKEFTHawking.SingularHomologyColimit",
+      "SKEFTHawking.SingularHomologyColimitTop",
+      "SKEFTHawking.SingularHomologyHomeo",
       "SKEFTHawking.SingularHomologyMod2",
       "SKEFTHawking.SingularHomotopyInvariance",
       "SKEFTHawking.SingularLineMinusPoint",
@@ -1080,9 +1083,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 7778,
+    "definitions": 7783,
     "structures": 309,
-    "instances": 573,
+    "instances": 577,
     "inductives": 97,
     "native_decide_decl_closure": 546,
     "native_decide_clusters": {
