@@ -70,4 +70,30 @@ theorem augmentation_cap_eq_relKronecker {X : TopCat} (S : Set X) {k : ℕ}
   rw [relKronecker_mk]
   exact augmentation_cap a.1.1 z
 
+/-- A relative-cycle representative: an absolute `(k+1)`-chain `z` with `∂z` a subspace chain projects to
+a relative `(k+1)`-cycle `[z] ∈ relCycles S (k+1)` (`relBoundary [z] = [∂z] = 0`). -/
+theorem relMk_mem_relCycles {X : TopCat} (S : Set X) {k : ℕ} (z : SingularChain X (k + 1))
+    (hz : chainBoundary X k z ∈ subspaceChains S k) :
+    RelativeChain.mk S (k + 1) z ∈ relCycles S (k + 1) := by
+  show RelativeChain.mk S (k + 1) z ∈ LinearMap.ker (relBoundary S k)
+  rw [LinearMap.mem_ker, relBoundary_mk]
+  exact (RelativeChain.mk_eq_zero_iff S k _).mpr hz
+
+/-- **The descended duality–pairing bridge** (class level): `augH ∘ D_z⁰ = ⟨·, [z]⟩` on relative
+cohomology, i.e.
+  `augH (D_z⁰ [a]) = relKroneckerH [a] [z]`,
+where `D_z⁰ = SingularRelativeDuality0.relativeDuality0` and `[z]` is the relative-cycle class of `z`.
+By `relativeDuality0_mk` + `augH_mk` + `relKroneckerH_mk_mk` + the chain-level bridge
+`augmentation_cap_eq_relKronecker`. With `[z]` the local fundamental cycle (the generator of `Hₙ(M|x)`),
+the right side is the relative-UC iso `SingularLocalCohomology.manifoldLocalCohomologyIso`, so
+`augH ∘ D_x` is a bijection — the structural fact that makes `D_x` a Poincaré-duality isomorphism. -/
+theorem augH_relativeDuality0_eq_relKroneckerH {X : TopCat} (S : Set X) {k : ℕ}
+    (z : SingularChain X (k + 1)) (hz : chainBoundary X k z ∈ subspaceChains S k)
+    (a : LinearMap.ker (relCoboundaryₗ S (k + 1))) :
+    augH X (SingularRelativeDuality0.relativeDuality0 S k z hz (RelativeCohomology.mk S (k + 1) a))
+      = relKroneckerH S (RelativeCohomology.mk S (k + 1) a)
+          (RelativeHomology.mk S (k + 1) ⟨RelativeChain.mk S (k + 1) z, relMk_mem_relCycles S z hz⟩) := by
+  rw [SingularRelativeDuality0.relativeDuality0_mk, augH_mk, relKroneckerH_mk_mk]
+  exact augmentation_cap_eq_relKronecker S a z
+
 end SKEFTHawking.SingularLocalDuality
