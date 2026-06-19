@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-19T03:42:00.193982",
+  "generated": "2026-06-19T03:56:16.194229",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 22704,
-    "theorems_total": 13937,
-    "theorems_substantive": 13911,
+    "total_declarations": 22718,
+    "theorems_total": 13938,
+    "theorems_substantive": 13912,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 1075,
+    "modules": 1077,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -890,7 +890,9 @@
       "SKEFTHawking.SingularCohomologyMod2",
       "SKEFTHawking.SingularCompactChartCover",
       "SKEFTHawking.SingularCompactSupport",
+      "SKEFTHawking.SingularCompactlySupportedOpen",
       "SKEFTHawking.SingularCompactlySupportedTop",
+      "SKEFTHawking.SingularCompactsInOpen",
       "SKEFTHawking.SingularConvexComplementRetract",
       "SKEFTHawking.SingularConvexRadialBase",
       "SKEFTHawking.SingularConvexRadialRetract",
@@ -1088,9 +1090,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 7784,
+    "definitions": 7789,
     "structures": 309,
-    "instances": 577,
+    "instances": 585,
     "inductives": 97,
     "native_decide_decl_closure": 546,
     "native_decide_clusters": {
