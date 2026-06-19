@@ -962,6 +962,7 @@ import SKEFTHawking.SingularConnSquareRHSN2
 import SKEFTHawking.SingularLegWCapForm
 import SKEFTHawking.SingularConnSquareMatch
 import SKEFTHawking.SingularConnSquareLHSExplicit
+import SKEFTHawking.SingularConnSquareClose
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
