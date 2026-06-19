@@ -85,4 +85,26 @@ theorem relativeDualityK_cycle_compat_relB {k m : ℕ} {S W : Set ↑X}
   show Submodule.Quotient.mk ((z + z') + chainBoundary X (k + m + 1) w) = 0
   rw [Submodule.Quotient.mk_add, Submodule.Quotient.mk_add, h1, ZModModule.add_self]
 
+omit [T2Space ↑X] in
+/-- **`relBoundaries` transports across a subspace inclusion** `S' ⊆ S`: a relative boundary for the
+smaller subspace `S'` is a relative boundary for the larger `S` (`subspaceChains S' ≤ subspaceChains S`,
+so the same witness works). -/
+theorem relBoundaries_mono {S' S : Set ↑X} (hSS' : S' ⊆ S) {n : ℕ} (c : SingularChain X (n + 1))
+    (hc : RelativeChain.mk S' (n + 1) c ∈ relBoundaries S' (n + 1)) :
+    RelativeChain.mk S (n + 1) c ∈ relBoundaries S (n + 1) := by
+  obtain ⟨wRel, hwRel⟩ := hc
+  obtain ⟨w, rfl⟩ := Submodule.Quotient.mk_surjective _ wRel
+  have hmem : c + chainBoundary X (n + 1) w ∈ subspaceChains S' (n + 1) := by
+    rw [← RelativeChain.mk_eq_zero_iff]
+    show Submodule.Quotient.mk (c + chainBoundary X (n + 1) w) = 0
+    rw [Submodule.Quotient.mk_add,
+      show (Submodule.Quotient.mk (chainBoundary X (n + 1) w) : RelativeChain S' (n + 1))
+        = Submodule.Quotient.mk c from hwRel, ZModModule.add_self]
+  refine ⟨RelativeChain.mk S (n + 2) w, ?_⟩
+  rw [relBoundary_mk]
+  refine (Submodule.Quotient.eq _).mpr ?_
+  rw [show chainBoundary X (n + 1) w - c = c + chainBoundary X (n + 1) w by
+    rw [sub_eq_add_neg, neg_eq_of_add_eq_zero_left (ZModModule.add_self _)]; exact add_comm _ _]
+  exact SKEFTHawking.SingularMayerVietoris.subspaceChains_mono hSS' (n + 1) hmem
+
 end SKEFTHawking.SingularOpenDualityCycle
