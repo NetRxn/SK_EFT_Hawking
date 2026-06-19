@@ -7,7 +7,8 @@ import SKEFTHawking.SingularCapChainIncl
 
 open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
-  SKEFTHawking.SingularCapChainIncl
+  SKEFTHawking.SingularCapChainIncl SKEFTHawking.SingularRelativeHomologyMod2
+  SKEFTHawking.SingularRelativeCap
 
 namespace SKEFTHawking.SingularRightCapBoundary
 
@@ -107,5 +108,23 @@ theorem rcap_cocycle_chainMap {X : TopCat} {k l : ℕ} (b : SingularCochain X l)
       rw [hs, map_smul, map_smul, rcap_leibniz_single, chainBoundary_single_smul, map_smul, smul_add]
       have hδ : coboundary X l b (backSmall σ) = 0 := congrFun hb (backSmall σ)
       rw [hδ, zero_smul, smul_zero, zero_add]
+
+/-- **Right-cap locality**: `b ⌢ʳ c` is supported in `S` whenever `c` is. On a basis `S`-simplex `σ`,
+`σ ⌢ʳ b = b(backₗσ)•[frontₖσ]` and the front face of an `S`-simplex is an `S`-simplex
+(`frontFace_simplexIncl`), so the result lies in `subspaceChains S k`. Mirror of `cap_mem_subspaceChains`
+(front/back swapped) — the support half of the right-cap rel-cycle witness for the connecting-square
+RHS pairing. -/
+theorem rcap_mem_subspaceChains {X : TopCat} (S : Set ↑X) {k l : ℕ} (b : SingularCochain X l)
+    {c : SingularChain X (k + l)} (hc : c ∈ subspaceChains S (k + l)) :
+    rcap (k := k) b c ∈ subspaceChains S k := by
+  rw [subspaceChains, LinearMap.mem_range] at hc
+  obtain ⟨d, rfl⟩ := hc
+  induction d using Finsupp.induction_linear with
+  | zero => rw [map_zero, map_zero]; exact Submodule.zero_mem _
+  | add d e hd he => rw [map_add, map_add]; exact Submodule.add_mem _ hd he
+  | single τ s =>
+      rw [chainIncl_single, rcap_single_smul, rcapBasis, frontFace_simplexIncl S τ]
+      exact Submodule.smul_mem _ _ (Submodule.smul_mem _ _
+        ⟨Finsupp.single (frontFace τ) 1, chainIncl_single S k (frontFace τ) 1⟩)
 
 end SKEFTHawking.SingularRightCapBoundary
