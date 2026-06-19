@@ -941,6 +941,7 @@ import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularRelativeCohomologyMVConnecting
 import SKEFTHawking.SingularCSCMayerVietorisConnecting
+import SKEFTHawking.SingularCSCMayerVietorisSumExact
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
