@@ -972,6 +972,7 @@ import SKEFTHawking.SingularSeamDualPairing
 import SKEFTHawking.SingularConnSquareMatchLHS
 import SKEFTHawking.SingularPullbackAmbIncl
 import SKEFTHawking.SingularRelMvDeltaPartition
+import SKEFTHawking.SingularConnSquareLHSLeg
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
