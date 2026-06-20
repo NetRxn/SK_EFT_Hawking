@@ -20,6 +20,17 @@ Let `CLI = ${CLAUDE_SKILL_DIR}/../../scripts/harness_common_cli.py` and `REPO = 
    `MANAGED` (this is a `/goal` session) — or errors / can't resolve the workspace — **STOP immediately**
    (running inside `/goal` would burn its context + confuse the evaluator; an unresolved workspace fails closed).
 
+0b. **Self-clean leaked prior firings (the cron-leak reaper).**
+   `uv run --no-sync python "${CLAUDE_SKILL_DIR}/../../scripts/harvest_reaper.py" --state-dir "$REPO/.claude/dev-harness"`.
+   This logs THIS firing's `claude` PID and SIGTERMs any PRIOR **self-logged** firing that is now a leaked idle
+   lingerer (the `claude --input-format stream-json` the scheduler never sends EOF, so it never exits). SAFE by
+   construction — it kills ONLY a PID that is self-logged ∧ idle (`stat` S, ~0% CPU) ∧ ≠ current ∧ still a
+   `claude` (PID-reuse guard); it can NEVER touch the launcher (the goal conversation or the Desktop scheduler —
+   neither self-logs) or any live session. Runs AFTER the step-0 self-abort, so it never fires inside a `/goal`.
+   Best-effort: a failure never blocks the harvest. (Append `--dry-run` to preview without killing.) NOTE: it
+   only reaps firings logged from this reaper onward — a pre-reaper backlog of leaked `claude`s is not its job
+   (clears on the next Desktop-app restart, or a one-time manual sweep).
+
 1. **GC + enumerate.** `uv run --no-sync python "$CLI" gc`; then read every marker in `$REPO/.claude/dev-harness/managed/`
    (this plugin's repo only — leak-safe). For each, take its `jsonl_path` + `session_id` **+ its `goal_id` and the
    `goal_prompt_<goal_id>.md` path** (the marker carries `goal_id`, spec A.5) — these are the **goal pointer**
