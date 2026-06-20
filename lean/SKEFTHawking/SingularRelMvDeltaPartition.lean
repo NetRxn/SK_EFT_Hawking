@@ -1,5 +1,6 @@
 import Mathlib
 import SKEFTHawking.SingularRelMvDeltaChain
+import SKEFTHawking.SingularRelativePairing
 
 /-!
 # Phase 5q.F (w₂-foundation, PD6f-c4-M9) — the relative MV connecting map's cover-partition chain action
@@ -19,7 +20,8 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 -/
 
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularRelativeHomologyMod2
-  SKEFTHawking.SingularRelativeMV SKEFTHawking.SingularRelMvDeltaChain
+  SKEFTHawking.SingularRelativeCohomologyMod2 SKEFTHawking.SingularRelativeMV
+  SKEFTHawking.SingularRelMvDeltaChain SKEFTHawking.SingularRelativePairing
 
 namespace SKEFTHawking.SingularRelMvDeltaPartition
 
@@ -69,5 +71,21 @@ theorem relMvDelta_cover_partition (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen
     exact (piMap_mk U V (n + 1) c).symm
   rw [hinput, relMvDelta_iotaEquiv_relLiftToQHom]
   exact congrArg (RelativeHomology.mk (U ∩ V) n) (Subtype.ext hextract)
+
+/-- **The connecting square's RHS leg, explicit**: pairing a relative cocycle `g` against the relative
+MV connecting of a cover-partitioned relative cycle reduces to the chain-level Kronecker pairing of `g`'s
+rep against the `V`-part `w` of `∂c`. Combines `relMvDelta_cover_partition` (M9) with `relKroneckerH_mk_mk`. -/
+theorem relKroneckerH_relMvDelta_cover_partition (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (N : ℕ)
+    (g : LinearMap.ker (relCoboundaryₗ (U ∩ V) (N + 1)))
+    (c : SingularChain M (N + 1 + 1)) (u w : SingularChain M (N + 1))
+    (hu : u ∈ subspaceChains U (N + 1)) (hw : w ∈ subspaceChains V (N + 1))
+    (hbd : chainBoundary M (N + 1) c = u + w)
+    (hwcyc : RelativeChain.mk (U ∩ V) (N + 1) w ∈ relCycles (U ∩ V) (N + 1))
+    (hccyc : RelativeChain.mk (U ∪ V) (N + 1 + 1) c ∈ relCycles (U ∪ V) (N + 1 + 1)) :
+    relKroneckerH (U ∩ V) (RelativeCohomology.mk (U ∩ V) (N + 1) g)
+        (relMvDelta U V hU hV (N + 1)
+          (RelativeHomology.mk (U ∪ V) (N + 1 + 1) ⟨RelativeChain.mk (U ∪ V) (N + 1 + 1) c, hccyc⟩))
+      = relKronecker (U ∩ V) g.1 (RelativeChain.mk (U ∩ V) (N + 1) w) := by
+  rw [relMvDelta_cover_partition U V hU hV (N + 1) c u w hu hw hbd hwcyc hccyc, relKroneckerH_mk_mk]
 
 end SKEFTHawking.SingularRelMvDeltaPartition
