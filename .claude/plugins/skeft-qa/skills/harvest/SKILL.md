@@ -1,6 +1,6 @@
 ---
 name: harvest
-description: Off-hot-loop System-2 harvest. Reads each managed /goal session's transcript from a byte-offset watermark, extracts process/harness signal (Haiku) — crossing the compact boundary for the pre-vs-post-compact delta and ingesting the guard's blocked-question log — and a register-AWARE Opus consolidator files/combines it into the four-section register (Open / Process Wins / Closed / Misfiled) — re-opening a recurring closed finding, grouping semi-related ones, routing real wins to Process Wins, misfiling noise — then refreshes the active-issues + wins view. Invoked by a Desktop scheduled task or a second-session /loop — never inside a /goal session.
+description: Off-hot-loop System-2 harvest. Reads each managed /goal session's transcript from a byte-offset watermark, extracts process/harness signal (Haiku) — crossing the compact boundary for the pre-vs-post-compact delta and ingesting the guard's blocked-question log — and a register-AWARE Opus consolidator files/combines it into the four-section register (Open / Process Wins / Closed / Misfiled) — re-opening a recurring closed finding, grouping semi-related ones, filing real wins to Process Wins (capped at agent-reviewed, never injected), and dropping noise (never writing Misfiled — that is /debrief's human sweep) — then refreshes the open-only active-issues view. Invoked by a Desktop scheduled task or a second-session /loop — never inside a /goal session.
 disallowed-tools: AskUserQuestion
 allowed-tools: Bash(jq *), Bash(uv run python *), Bash(python3 *), Read, Agent
 ---

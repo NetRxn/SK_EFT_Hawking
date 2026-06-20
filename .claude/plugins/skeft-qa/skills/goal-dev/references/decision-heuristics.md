@@ -21,6 +21,12 @@ fires and the goal is not met, that means *do the next increment of real work TH
    shipping everything else meanwhile. A deep-research dispatch is an async external
    dependency: dispatch it and **keep working** on whatever else is shippable.
 
+## Scope to the consumer (anti over-build)
+
+Before building a component, check what its **downstream consumer actually needs** from it, and build exactly
+that minimal deliverable — not a more general abstraction. Interface-first scoping keeps you from over-building
+or over-generalizing work the goal never consumes; the consumer's interface defines the scope.
+
 ## Don't block on info-gathering — dispatch a read-only Explore in parallel
 
 On a **large architectural unknown** (an interface you don't yet know, a subsystem to map before

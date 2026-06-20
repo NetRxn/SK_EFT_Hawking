@@ -76,7 +76,7 @@ After each brick, in the SAME turn it is committed (so the frontier never drifts
 
 ## 4. Shard — automatic, under the budget
 
-At your shard-and-commit checkpoint (every ~5–6 bricks), keep the active shard small:
+At your incremental-commit checkpoint (every ~5–6 bricks), keep the active shard small:
 
 ```
 /skeft-qa:notebook shard        # rolls the OLDEST headed sections into LAB_NOTEBOOK_W<n> until < budget

@@ -37,10 +37,11 @@ Quot.sound}`; **no new project `axiom` without explicit user sign-off**, no new 
 `maxHeartbeats`. Verify each substantive brick with `lean_verify`. A heartbeat wall ⟹ wrong architecture →
 decompose into `have` sub-lemmas (≤ 12-term targets).
 
-## Shard-and-commit discipline
+## Incremental-commit discipline
 
-Commit a **GREEN kernel-pure shard** every ~5–6 bricks (each: zero sorry, `lean_verify` clean, `lake build`
-clean), updating the lab notebook each brick — the notebook is the **compaction-durable source-of-truth**.
+Commit a **GREEN kernel-pure increment** every ~5–6 bricks (each: zero sorry, `lean_verify` clean, `lake build`
+clean) — small batches of finished bricks, never one giant commit — updating the lab notebook each brick; the
+notebook is the **compaction-durable source-of-truth**.
 **Never push** (user action). The notebook is a two-layer system (a bounded always-loaded INDEX +
 chronological shards); maintain it with the **`/skeft-qa:notebook`** command — `sync` each brick, `shard`
 at the checkpoint to keep the active shard under the ~25k-token Read guard automatically. Each brick is its

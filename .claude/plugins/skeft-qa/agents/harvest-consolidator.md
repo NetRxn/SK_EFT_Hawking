@@ -25,22 +25,27 @@ already exists (Open / Process Wins / Closed / Misfiled). Your job is not "appen
   (below) into one synthesized finding instead of leaving N near-duplicates. Prefer combining over spawning
   yet another singleton.
 - **A genuine, NEW, standalone issue** → `--upsert` as a new finding at tier `agent-reviewed`.
-- **A `process-win` candidate that is a real, reusable best practice** → `--upsert` with `"status":"win"` (it
-  lands in `## Process Wins`). **But** if it is a triviality, a "worked as designed" confirmation, or a
-  tactic-level item that belongs in the goal-dev friction catalog / a notebook → it is **noise**:
-  `"status":"misfiled"` into the standing catch-all (append to the existing `misfiled-*` record via `--group`,
-  do NOT open a new finding for it).
+- **A `process-win` candidate** → `--upsert` with `"status":"win"` ONLY if it clears the HIGH BAR: a
+  **reusable + non-obvious + outcome-changing** best practice. A triviality, a "worked as designed"
+  confirmation, or a tactic-level catalog item is **noise — DROP it (log nothing).** Do **NOT** write
+  `misfiled` records: `## Misfiled` is a HUMAN sweep bucket owned by `/debrief`; the harvest never adds to it.
+  (Wins are NOT injected into the loop — a win reaches it via `/debrief` → `human-reviewed` → harness
+  integration (CLAUDE.md / the relevant skill / bootstrap) — so logging a marginal win buys nothing; when in
+  doubt, drop.)
 
 **Hard reservations (you may NOT do these unattended — they are `/debrief`'s human judgment):**
-- **Never PROMOTE to `human-reviewed`.** You file at `agent-reviewed` (the harvest tier); only `/debrief` raises
-  a finding to `human-reviewed`. (`--upsert` enforces tier-monotonic-up but you must not request human-reviewed.)
+- **Never PROMOTE to `human-reviewed`.** You file at `agent-reviewed`; only `/debrief` (the human governor) raises
+  to `human-reviewed`, via the `--promote` flag. This is now **DETERMINISTICALLY ENFORCED**: without `--promote`,
+  `--upsert`/`--group` clamp the tier to `agent-reviewed` (a human-reviewed request is silently capped). Do not
+  treat tier as a visibility lever — wins are not injected, and the cap is structural.
 - **Never dissolve a `human-reviewed` finding into a group.** `--group` refuses to absorb human-reviewed ids
   (it skips + reports them); honor that — relate / stack / re-open those, never combine them away.
 
 **Tools:**
 - Re-file / status-change / stack: `cd "<repo>" && echo '<finding-json>' | uv run python scripts/system2_register.py --upsert`
-  (dedup by id; merge occurrences; new explicit `status` wins — so this re-opens a closed item, marks a win, or
-  misfiles). Stamp every occurrence with its `compact_event_id` AND the session's `goal_id` + `goal_prompt` path.
+  (dedup by id; merge occurrences; new explicit `status` wins — so this re-opens a closed item or marks a win;
+  it does NOT misfile — the harvest never writes misfiled). Stamp every occurrence with its `compact_event_id`
+  AND the session's `goal_id` + `goal_prompt` path. Tier is clamped to `agent-reviewed` (no `--promote` here).
 - Combine: `cd "<repo>" && echo '{"absorb":["id1","id2",...],"into":{<grouped record>}}' | uv run python scripts/system2_register.py --group`
   (removes the originals, writes the grouped record, merges their occurrences; skips any human-reviewed id).
 
@@ -55,9 +60,10 @@ Report the drop count.
 
 **Refresh the active view LAST:** after all writes succeed,
 `cd "<repo>" && uv run python scripts/system2_register.py --write-active-issues` once. It rewrites
-`<repo>/.claude/dev-harness/active_issues.json` — the **register-wide** open findings **AND process wins**
-(`{title, tier, tally, kind}`), NOT session-scoped — the gitignored cache the SessionStart re-injection +
-AskUserQuestion redirect read.
+`<repo>/.claude/dev-harness/active_issues.json` — the **register-wide OPEN findings only** (`{title, tier,
+tally, kind="issue"}`), NOT session-scoped, **wins excluded** (they are not injected) — the gitignored cache
+the SessionStart re-injection + AskUserQuestion redirect read.
 
-Report a one-line summary: candidates in; new / stacked / re-opened / grouped / win / misfiled / leak-dropped;
-active-issues refreshed. **Do NOT touch CLAUDE.md / hooks / roadmaps.**
+Report a one-line summary: candidates in; new / stacked / re-opened / grouped / win / dropped-as-noise /
+leak-dropped; active-issues refreshed. **Do NOT touch CLAUDE.md / hooks / roadmaps. Never write `misfiled`
+(that is `/debrief`'s sweep bucket).**

@@ -10,8 +10,11 @@ Finding record:
   {id, class, title, why, how_to_apply, tier in {automatic,agent-reviewed,human-reviewed},
    first_seen, last_seen, occurrences:[{date, session_id, goal_id, goal_prompt, roadmap,
    compact_event_id}], status in {open,closed,misfiled}, evidence}
-   (status "misfiled" = harvest noise / goal-specific confirmation that was never a real finding;
-    rendered under ## Misfiled, excluded from the open-only active-issues view like closed.)
+   (status "misfiled" = noise / goal-specific confirmation that was never a real finding; rendered under
+    ## Misfiled, excluded from the active-issues view like closed. The HARVEST never writes misfiled —
+    it drops noise instead; misfiled is `/debrief`'s human sweep bucket. Wins (status "win") are NOT
+    injected — they reach the loop via /debrief -> human-reviewed -> harness integration. Tier is clamped
+    to <= agent-reviewed on every write except /debrief's --promote: see _clamp_tier.)
 
 Key invariants (test-locked):
   * dedup by `id` (stable slug of class+title); append-or-update, never duplicate.
@@ -46,6 +49,18 @@ TIER_ORDER = {"automatic": 0, "agent-reviewed": 1, "human-reviewed": 2}
 TIER_PRIORITY = {"human-reviewed": 0, "agent-reviewed": 1, "automatic": 2}
 ACTIVE_ISSUES_MAX = 8   # MUST match Plan 1's build_reorientation_payload top-N
 _JSON_FENCE = re.compile(r"```json\n(.*?)\n```", re.DOTALL)
+
+
+def _clamp_tier(tier, allow_human):
+    """Harvest-origin writes are capped at <= agent-reviewed — the DETERMINISTIC block on the
+    tier-as-visibility-lever self-promotion vector (an agent must not self-promote a finding to
+    human-reviewed to improve its odds of surviving the post-compact active-issues cut). Only
+    `/debrief` (the human governor, via the --promote flag -> allow_human=True) may set
+    human-reviewed. The never-downgrade safeguard for a GENUINE human-reviewed finding is kept
+    separately in upsert/group."""
+    if not allow_human and TIER_ORDER.get(tier, 0) > TIER_ORDER["agent-reviewed"]:
+        return "agent-reviewed"
+    return tier
 
 
 def slug(f):
@@ -118,10 +133,13 @@ def _should_drop(reg_path, finding):
     return any(t in blob for t in toks)
 
 
-def upsert(path, finding):
+def upsert(path, finding, allow_human=False):
     """Insert or merge `finding` into the register at `path`. Returns True if written,
     False if dropped by the public leak-scrub. Dedups by id; merges occurrences
-    idempotently; widens first/last_seen; raises tier monotonically (never downgrades)."""
+    idempotently; widens first/last_seen; raises tier monotonically (never downgrades).
+    Tier is CLAMPED to <= agent-reviewed unless `allow_human` (only `/debrief`'s --promote) —
+    the deterministic block on harvest self-promotion to human-reviewed; the never-downgrade of
+    a GENUINE human-reviewed finding is preserved below (clamped nt never lowers an existing et)."""
     if _should_drop(path, finding):
         return False
     finding = dict(finding)
@@ -129,6 +147,7 @@ def upsert(path, finding):
     finding["id"] = fid
     finding.setdefault("status", "open")
     finding.setdefault("occurrences", [])
+    finding["tier"] = _clamp_tier(finding.get("tier", "automatic"), allow_human)
     findings = load(path)
     idx = next((i for i, x in enumerate(findings) if x.get("id") == fid), None)
     if idx is None:
@@ -159,7 +178,7 @@ def upsert(path, finding):
     return True
 
 
-def group(path, absorb_ids, into):
+def group(path, absorb_ids, into, allow_human=False):
     """Combine the findings whose ids are in `absorb_ids` into the single `into` record, REMOVING the
     originals — the 'combine' op that upsert (add/merge-by-id) lacks, so the register-aware consolidator
     (and `/debrief`) can collapse semi-related findings into one. GUARDRAIL: a `human-reviewed` finding
@@ -173,6 +192,7 @@ def group(path, absorb_ids, into):
     into = dict(into)
     into["id"] = into.get("id") or slug(into)
     into.setdefault("status", "closed")
+    into["tier"] = _clamp_tier(into.get("tier", "automatic"), allow_human)
     occ = list(into.get("occurrences", []))
     for i in absorb:
         occ = _merge_occurrences(occ, by[i].get("occurrences", []))
@@ -232,20 +252,23 @@ def render(path, findings=None):
 
 
 def write_active_issues(reg_path, out_path=None):
-    """Refresh the REGISTER-WIDE active-issues view (spec 6.3/A.4): every open finding AND every
-    process win (`status` in {open,win}), NOT scoped to any session/goal/loop, bounded to the
-    top-ACTIVE_ISSUES_MAX by tier desc then tally desc. Shape: {generated, issues:[{title, tier,
-    tally, kind}]} where kind in {issue,win} (so re-injection can label a best-practice win vs an
-    open problem). The gitignored cache Plan 1's SessionStart re-inject + AskUserQuestion redirect read."""
+    """Refresh the REGISTER-WIDE active-issues view (spec 6.3/A.4): every OPEN finding (NOT scoped to
+    any session/goal/loop), bounded to the top-ACTIVE_ISSUES_MAX by tier desc then tally desc. Shape:
+    {generated, issues:[{title, tier, tally, kind="issue"}]}. Process wins are NOT included (ruling
+    2026-06-20: a win reaches the loop via /debrief -> human-reviewed -> harness integration
+    (CLAUDE.md / skill / bootstrap), never the injection payload). The gitignored cache Plan 1's
+    SessionStart re-inject + AskUserQuestion redirect read."""
     findings = load(reg_path)
-    # "Active" = open issues AND process wins: an autonomous loop re-grounds on both the open
-    # problems to watch and the best practices to follow. closed/misfiled are excluded.
-    active = [f for f in findings if f.get("status", "open") in ("open", "win")]
+    # "Active" = OPEN issues ONLY. Process wins are NOT injected (ruling 2026-06-20): a win's route
+    # to in-loop visibility is /debrief -> human-reviewed -> INTEGRATION into the harness (CLAUDE.md /
+    # the relevant skill / context bootstrap), not the re-injection payload. Injecting wins bloated the
+    # <9000-char payload, was self-congratulatory, and created the tier-as-visibility gaming incentive
+    # (see _clamp_tier). win/closed/misfiled are all excluded here.
+    active = [f for f in findings if f.get("status", "open") == "open"]
     active.sort(key=lambda f: (TIER_PRIORITY.get(f.get("tier", "automatic"), 3),
                                -len(f.get("occurrences", []))))
     issues = [{"title": f.get("title", ""), "tier": f.get("tier", "automatic"),
-               "tally": len(f.get("occurrences", [])),
-               "kind": ("win" if f.get("status") == "win" else "issue")}
+               "tally": len(f.get("occurrences", [])), "kind": "issue"}
               for f in active[:ACTIVE_ISSUES_MAX]]
     if out_path is None:
         # Repo-relative (system2_register.py lives at <repo>/scripts/), so this needs no
@@ -321,6 +344,9 @@ def main(argv=None):
     ap.add_argument("--group", action="store_true",
                     help='combine findings: stdin JSON {"absorb":[ids],"into":{record}} -> remove the '
                          'originals, write the grouped record (human-reviewed ids are never absorbed)')
+    ap.add_argument("--promote", action="store_true",
+                    help="permit setting human-reviewed (DEBRIEF ONLY — the human governor). Without it, "
+                         "--upsert/--group clamp tier to <= agent-reviewed (harvest must NOT self-promote).")
     ap.add_argument("--render", action="store_true", help="rewrite the register from its own contents")
     ap.add_argument("--write-active-issues", action="store_true", help="refresh active_issues.json")
     ap.add_argument("--out", default=None, help="active_issues.json path (with --write-active-issues)")
@@ -333,7 +359,7 @@ def main(argv=None):
         except Exception as e:
             print("ERROR: --upsert expects one finding as JSON on stdin: " + str(e), file=sys.stderr)
             return 2
-        ok = upsert(a.register, finding)
+        ok = upsert(a.register, finding, allow_human=a.promote)
         print("upserted" if ok else "dropped (leak-scrub)")
         return 0 if ok else 1
     if a.group:
@@ -343,7 +369,7 @@ def main(argv=None):
         except Exception as e:
             print('ERROR: --group expects {"absorb":[ids],"into":{record}} on stdin: ' + str(e), file=sys.stderr)
             return 2
-        n, skipped, dropped = group(a.register, absorb_ids, into)
+        n, skipped, dropped = group(a.register, absorb_ids, into, allow_human=a.promote)
         if dropped:
             print("grouped: removed {0} originals but target DROPPED by leak-scrub".format(n))
             return 1

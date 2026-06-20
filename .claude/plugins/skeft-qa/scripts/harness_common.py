@@ -244,10 +244,10 @@ def _read_active_issues(root, max_items=ACTIVE_ISSUES_MAX):
         pass
     lines = []
     for it in items[: max(0, int(max_items))]:
+        # Process wins are NOT injected (ruling 2026-06-20): the active-issues view is open
+        # issues only; a win reaches the loop via /debrief -> human-reviewed -> harness integration.
         if isinstance(it, dict):
-            # label a process win so re-injection reads it as a practice-to-follow, not a problem
-            tag = "[WIN] " if str(it.get("kind", "")).lower() == "win" else ""
-            lines.append("- " + tag + str(it.get("summary") or it.get("title") or it))
+            lines.append("- " + str(it.get("summary") or it.get("title") or it))
         else:
             lines.append("- " + str(it))
     return "\n".join(lines)
@@ -340,8 +340,7 @@ def build_reorientation_payload(marker, repo_root):
         parts = list(head)
         if issues:
             parts.append(
-                "Active System-2 issues + process wins (open/recurring drift findings to avoid; "
-                "[WIN] = a best practice to follow):\n" + issues
+                "Active System-2 issues (open/recurring drift findings to avoid):\n" + issues
             )
         parts += tail
         payload = "\n\n".join(parts)

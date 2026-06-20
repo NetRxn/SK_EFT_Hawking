@@ -28,19 +28,29 @@ self-mutating").
 
 3. **Present one cluster at a time** to the user with: the title, why, how-to-apply, tally
    (distinct compact-events), and goal-origin. For each, ask the user to choose:
-   - **promote** → `human-reviewed` (the lesson is confirmed),
-   - **close** → resolved (`status: closed`, with a one-line `evidence` of why it's resolved —
-     fixed, superseded, or promoted to a System-1 gate),
+   - **promote** → `human-reviewed` (the lesson is confirmed). For an OPEN ISSUE this records the
+     confirmation. For a **process win**, promotion triggers the win **LIFECYCLE**: promote →
+     **integrate the best practice into the harness** (a CLAUDE.md line / the relevant skill /
+     context bootstrap — wins are NOT injected via the active-issues view, so the integration IS the
+     win's in-loop visibility) → then **close** it (it now lives in the harness). Propose the exact
+     edit + target and apply it on the user's OK (the per-win sign-off principle 6 requires); record
+     the integration target in `evidence`.
+   - **close** → resolved (`status: closed`, one-line `evidence` of why — fixed, superseded,
+     integrated into the harness, or promoted to a System-1 gate),
+   - **misfile** → `status: misfiled` (it was never a real finding — harvest noise that slipped
+     through). The harvest no longer writes `misfiled`, so this human sweep is the ONLY path into
+     `## Misfiled`.
    - **leave** → keep `agent-reviewed` (not yet confirmed).
 
 4. **Apply the user's choice via the register CLI** (NOT by hand-editing the markdown — let the
-   register own dedup / tier-monotonicity / round-trip). For a finding `F` (its full JSON record
-   from the register) with the user's decision applied (`"tier": "human-reviewed"` to promote, or
-   `"status": "closed"` + `"evidence": "..."` to close):
-   `cd "<repo>" && echo '<F-json>' | uv run python scripts/system2_register.py --upsert`
-   (upsert raises tier monotonically — agent-reviewed → human-reviewed is allowed; it never
-   downgrades.) A **closed** finding drops out of the register-wide active-issues view on the
-   next harvest refresh.
+   register own dedup / tier-monotonicity / round-trip). For a finding `F` with the decision applied:
+   - **promote** (set `"tier":"human-reviewed"`): `cd "<repo>" && echo '<F-json>' | uv run python scripts/system2_register.py --upsert --promote`
+     — the **`--promote` flag is REQUIRED**. Without it, `--upsert` **deterministically clamps** the
+     tier to `agent-reviewed` (the structural block on harvest self-promotion to human-reviewed —
+     the tier-as-visibility gaming vector). **Only `/debrief` passes `--promote`.**
+   - **close / misfile / leave**: the same `--upsert` **without** `--promote` (`"status":"closed"` or
+     `"misfiled"` + `"evidence"`; *leave* = no write). A closed/misfiled finding drops out of the
+     register-wide active-issues view on the next refresh.
 
 5. **GAP-A proposals.** For each `proposals/<id>.md`, present the proposed structural prevention.
    On the user's sign-off it becomes a **tracked build task** (a new `validate.py` check /

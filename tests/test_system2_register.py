@@ -73,15 +73,16 @@ def test_group_merges_absorbed_occurrences(reg):
     assert len(g["occurrences"]) >= 1
 
 
-def test_active_issues_includes_open_and_win_with_kind(reg, tmp_path):
+def test_active_issues_open_only_excludes_wins(reg, tmp_path):
+    # wins are NOT injected (ruling 2026-06-20): the active view is OPEN-ISSUES-ONLY.
     out = tmp_path / "ai.json"
     R.write_active_issues(reg, str(out))
     issues = json.loads(out.read_text())["issues"]
-    kinds = {i["title"]: i["kind"] for i in issues}
-    assert kinds.get("WinLesson") == "win"
-    assert kinds.get("A") == "issue"
-    # closed 'C' must be excluded from the active view
-    assert "C" not in kinds
+    titles = {i["title"] for i in issues}
+    assert "A" in titles and "B" in titles          # open issues included
+    assert "WinLesson" not in titles                # process win EXCLUDED from the injected view
+    assert "C" not in titles                         # closed excluded
+    assert all(i["kind"] == "issue" for i in issues)
 
 
 def test_active_issues_excludes_misfiled(reg, tmp_path):
@@ -97,6 +98,49 @@ def test_upsert_reopens_closed_on_new_status(reg):
     R.upsert(reg, {"id": "c", "status": "open", "evidence": "recurred"})
     c = next(f for f in R.load(reg) if f["id"] == "c")
     assert c["status"] == "open" and c["evidence"] == "recurred"
+
+
+def test_upsert_clamps_human_reviewed_by_default(reg):
+    # DETERMINISTIC block: a harvest-origin upsert must NOT mint human-reviewed (self-promotion vector)
+    R.upsert(reg, _f("h", "Harvested", tier="human-reviewed"))
+    h = next(f for f in R.load(reg) if f["id"] == "h")
+    assert h["tier"] == "agent-reviewed"
+
+
+def test_upsert_promote_allows_human_reviewed(reg):
+    # /debrief (allow_human=True, via --promote) MAY set human-reviewed
+    R.upsert(reg, _f("h2", "Promoted", tier="human-reviewed"), allow_human=True)
+    h = next(f for f in R.load(reg) if f["id"] == "h2")
+    assert h["tier"] == "human-reviewed"
+
+
+def test_clamp_never_downgrades_existing_human_reviewed(reg):
+    # never-downgrade safeguard preserved: a later clamped harvest upsert of the human-reviewed
+    # win 'w' keeps it human-reviewed (clamp only blocks RAISING, not existing genuine HR).
+    R.upsert(reg, {"id": "w", "status": "win", "evidence": "recurred"})
+    w = next(f for f in R.load(reg) if f["id"] == "w")
+    assert w["tier"] == "human-reviewed"
+
+
+def test_group_clamps_into_tier_by_default(reg):
+    # a harvest --group into-record cannot mint human-reviewed either
+    R.group(reg, ["a", "b"], _f("g", "G", tier="human-reviewed", status="closed"))
+    g = next(f for f in R.load(reg) if f["id"] == "g")
+    assert g["tier"] == "agent-reviewed"
+
+
+def test_upsert_cli_promote_flag(reg, monkeypatch, capsys):
+    # the --promote CLI path /debrief uses to set human-reviewed
+    import io
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps(_f("p", "P", tier="human-reviewed"))))
+    R.main(["--register", reg, "--upsert", "--promote"])
+    p = next(f for f in R.load(reg) if f["id"] == "p")
+    assert p["tier"] == "human-reviewed"
+    # without --promote, the same upsert clamps
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps(_f("p2", "P2", tier="human-reviewed"))))
+    R.main(["--register", reg, "--upsert"])
+    p2 = next(f for f in R.load(reg) if f["id"] == "p2")
+    assert p2["tier"] == "agent-reviewed"
 
 
 def test_group_cli_via_stdin(reg, monkeypatch, capsys):

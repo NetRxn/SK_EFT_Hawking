@@ -20,8 +20,10 @@ signal about **what went poorly or *extremely well* from a process standpoint** 
 - **One-off tactic-level Lean frictions** a proof-mechanics catalog already covers (a single `ring`-on-•, a
   missing `open`, motive-not-type-correct, a `lake build` cwd slip) — those belong in the goal-dev friction
   catalog / a notebook, not the System-2 register.
-A positive qualifies as a `process-win` ONLY if it is genuinely new, non-obvious, and reusable with a concrete
-how-to-apply — "the agent did the right thing" is not that.
+A positive qualifies as a `process-win` ONLY if it is **reusable + non-obvious + outcome-changing** with a
+concrete how-to-apply — "the agent did the right thing" / "the harness worked as designed" is NOT that. When in
+doubt, DROP it. **Never emit a "misfiled" / noise candidate** — if something does not clear the bar, simply do
+not emit it; `## Misfiled` is a human sweep bucket owned by `/debrief`, not output the harvest produces.
 
 Read the chunk with `jq` over the channels that actually carry signal (verified on `917c9cbd`):
 - assistant reasoning: `jq -c 'select(.type=="assistant") | .message.content[]? | select(.type=="text" or .type=="thinking") | (.text // .thinking)'`
