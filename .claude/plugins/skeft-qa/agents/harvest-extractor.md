@@ -14,6 +14,12 @@ signal about **what went poorly or *extremely well* from a process standpoint** 
   non-obvious workflow that demonstrably helped (e.g. interface-first scoping, a checkpoint discipline that
   survived compaction). Tag these `process-win` so they file into Process Wins.
 
+**Subagent dispatches (orchestrator-view only).** When the loop fans out (`Task`/`Agent` → `lean-worker`,
+`Explore`), you see ONLY the dispatch prompt + the subagent's end-summary (`tool_result`) — never its
+internals (subagent transcripts are separate and not harvested yet). If a `tool_result` or the orchestrator's
+reaction hints at an **unproductive subagent grind** (a worker that looped, an enormous result, many reported
+attempts, long wall-clock for a thin outcome), **flag it** — that worker-side signal is otherwise invisible.
+
 **Relevance bar — when in doubt, do NOT emit (a flood of low-value entries buries the actionable ones).** Skip:
 - **Routine "worked as designed" confirmations** — "discipline held", "kernel-pure velocity", "stop-hook treated
   as GO", "reuse worked", "no tool-parse friction". The harness functioning as intended is the baseline, not a win.

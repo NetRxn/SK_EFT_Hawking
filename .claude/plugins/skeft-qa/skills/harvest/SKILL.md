@@ -8,6 +8,16 @@ allowed-tools: Bash(jq *), Bash(uv run python *), Bash(python3 *), Read, Agent
 You are the System-2 harvest. Run ONLY off the hot loop. Native CC throughout — no headless.
 Let `CLI = ${CLAUDE_SKILL_DIR}/../../scripts/harness_common_cli.py` and `REPO = $(uv run --no-sync python "$CLI" repo-root)`.
 
+> **SCOPE (current + known gap, 2026-06-20).** This harvests the **ORCHESTRATOR transcript only** (the
+> marker's `jsonl_path`). When the loop fans out to subagents (`lean-worker`, `Explore`), each runs in its
+> OWN separate transcript that is **NOT harvested** — so you see only the **dispatch prompt + the subagent's
+> end-summary** (the `Task` tool_result), never its internal process. **Frame any worker-related finding as
+> ORCHESTRATOR-OBSERVED** (don't claim completeness about worker process). **KNOWN GAP (TODO "b", tracked in
+> the register):** an unproductive subagent grind (e.g. a worker burning millions of tokens in a loop) +
+> worker-side friction a worker doesn't self-report are invisible here — extending the harvest to enumerate +
+> Haiku-extract subagent transcripts is the planned fix. Until then, if a worker's `Task` tool_result (or the
+> orchestrator's reaction) hints at an unproductive grind, surface it from what's visible.
+
 -1. **Disabled-shell fail-loud [BLOCKER/MAJOR A2 — spec 2 "Arm-time guarantees", A.6 step 8(i)].** The
    `!cmd` / Bash substitutions above (resolving `CLI`, `REPO`, the `jsonl_path` glob) run **before** the
    skill is sent and are gated by `disableSkillShellExecution`, **not** `allowed-tools`. If that managed-settings
