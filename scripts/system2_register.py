@@ -8,8 +8,9 @@ so it reads familiar, but is a SEPARATE store from System 1 (no ReviewFinding/gr
 
 Finding record:
   {id, class, title, why, how_to_apply, tier in {automatic,agent-reviewed,human-reviewed},
-   first_seen, last_seen, occurrences:[{date, session_id, goal_id, goal_prompt, roadmap,
-   compact_event_id}], status in {open,closed,misfiled}, evidence}
+   first_seen, last_seen (ISO-8601 UTC DATETIME — auto-stamped at write time on creation / a new
+   occurrence; finer than a bare date), occurrences:[{date, session_id, goal_id, goal_prompt,
+   roadmap, compact_event_id}], status in {open,closed,misfiled}, evidence}
    (status "misfiled" = noise / goal-specific confirmation that was never a real finding; rendered under
     ## Misfiled, excluded from the active-issues view like closed. The HARVEST never writes misfiled —
     it drops noise instead; misfiled is `/debrief`'s human sweep bucket. Wins (status "win") are NOT
@@ -61,6 +62,14 @@ def _clamp_tier(tier, allow_human):
     if not allow_human and TIER_ORDER.get(tier, 0) > TIER_ORDER["agent-reviewed"]:
         return "agent-reviewed"
     return tier
+
+
+def _now_iso():
+    """UTC datetime at second precision — datetime-granular first/last_seen (vs a bare date), stamped
+    deterministically at write time on finding-creation / a new occurrence (no LLM dependency)."""
+    import datetime
+
+    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def slug(f):
@@ -151,9 +160,9 @@ def upsert(path, finding, allow_human=False):
     findings = load(path)
     idx = next((i for i, x in enumerate(findings) if x.get("id") == fid), None)
     if idx is None:
-        dates = _occ_dates(finding)
-        finding["first_seen"] = finding.get("first_seen") or (min(dates) if dates else None)
-        finding["last_seen"] = finding.get("last_seen") or (max(dates) if dates else None)
+        # F30: datetime-granular seen-stamps — auto-stamp at write time when not supplied.
+        finding["first_seen"] = finding.get("first_seen") or _now_iso()
+        finding["last_seen"] = finding.get("last_seen") or _now_iso()
         findings.append(finding)
     else:
         existing = findings[idx]
@@ -166,13 +175,18 @@ def upsert(path, finding, allow_human=False):
         for k in ("class", "title", "why", "how_to_apply", "evidence"):
             if not existing_is_human and finding.get(k) is not None:
                 merged[k] = finding.get(k)
-        merged["occurrences"] = _merge_occurrences(existing.get("occurrences", []),
-                                                   finding.get("occurrences", []))
+        existing_occ = existing.get("occurrences", [])
+        merged["occurrences"] = _merge_occurrences(existing_occ, finding.get("occurrences", []))
         # status: a new explicit status wins (e.g. /debrief closing a finding)
         merged["status"] = finding.get("status") or existing.get("status", "open")
-        dates = [d for d in (_occ_dates(merged)) if d]
-        merged["first_seen"] = min([d for d in [existing.get("first_seen")] + dates if d] or [None])
-        merged["last_seen"] = max([d for d in [existing.get("last_seen")] + dates if d] or [None])
+        # F30: datetime-granular seen-stamps. first_seen preserved; last_seen bumped to NOW only on a
+        # genuinely-new occurrence (the harvest re-observing it) — NOT on a status/evidence-only edit
+        # (e.g. /debrief closing), so a close never masquerades as a fresh sighting.
+        merged["first_seen"] = existing.get("first_seen") or finding.get("first_seen") or _now_iso()
+        if len(merged["occurrences"]) > len(existing_occ):
+            merged["last_seen"] = _now_iso()
+        else:
+            merged["last_seen"] = existing.get("last_seen") or finding.get("last_seen") or merged["first_seen"]
         findings[idx] = merged
     render(path, findings)
     return True

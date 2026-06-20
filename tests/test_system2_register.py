@@ -122,6 +122,30 @@ def test_clamp_never_downgrades_existing_human_reviewed(reg):
     assert w["tier"] == "human-reviewed"
 
 
+def test_upsert_stamps_datetime_first_last_on_new_finding(reg):
+    # F30: a new finding without supplied first/last gets an ISO-8601 datetime (not a bare date)
+    R.upsert(reg, {"id": "dt", "class": "c", "title": "DT", "tier": "agent-reviewed",
+                   "occurrences": [{"session_id": "s", "compact_event_id": None}]})
+    f = next(x for x in R.load(reg) if x["id"] == "dt")
+    assert "T" in f["first_seen"] and f["first_seen"].endswith("Z")   # datetime
+    assert "T" in f["last_seen"] and f["last_seen"].endswith("Z")
+
+
+def test_upsert_bumps_last_seen_datetime_on_new_occurrence_only(reg):
+    R.upsert(reg, {"id": "g2", "class": "c", "title": "G2", "tier": "agent-reviewed",
+                   "first_seen": "2026-06-01", "last_seen": "2026-06-01",
+                   "occurrences": [{"session_id": "s1", "compact_event_id": None}]})
+    # a genuinely-new occurrence -> last_seen bumped to a datetime; first_seen preserved
+    R.upsert(reg, {"id": "g2", "occurrences": [{"session_id": "s2", "compact_event_id": None}]})
+    f = next(x for x in R.load(reg) if x["id"] == "g2")
+    assert "T" in f["last_seen"] and f["last_seen"].endswith("Z")
+    assert f["first_seen"] == "2026-06-01" and len(f["occurrences"]) == 2
+    # a status/evidence-only edit (no new occurrence) must NOT bump last_seen (close != sighting)
+    R.upsert(reg, {"id": "g2", "status": "closed", "evidence": "done"})
+    f2 = next(x for x in R.load(reg) if x["id"] == "g2")
+    assert f2["last_seen"] == f["last_seen"]   # unchanged
+
+
 def test_group_clamps_into_tier_by_default(reg):
     # a harvest --group into-record cannot mint human-reviewed either
     R.group(reg, ["a", "b"], _f("g", "G", tier="human-reviewed", status="closed"))
