@@ -1,8 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260423T155108Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[FAIL] graph_integrity
-  ERROR: ExtractDeps failed: 
-
-Overall: 0/1 passed

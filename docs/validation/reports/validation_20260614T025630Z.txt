@@ -1,8 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260614T025630Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[PASS] paper_latex_compiles
-  + summary — 18/18 bundle drafts compiled clean (0 missing draft(s) skipped) — 0 with fatal errors
-
-Overall: 1/1 passed

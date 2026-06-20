@@ -1,8 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260613T193632Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[PASS] placeholder_not_cited
-  + all_papers — no placeholder cited as a verified result across 61 paper draft(s)
-
-Overall: 1/1 passed

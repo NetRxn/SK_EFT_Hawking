@@ -1,8 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260614T002838Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[PASS] disclosure_consistency
-  + all_papers — no disclosed-definitional theorem prose-claimed to 'establish' a result across 61 paper draft(s)
-
-Overall: 1/1 passed

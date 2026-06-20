@@ -1,9 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260501T124624Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[FAIL] counts_fresh
-  + staleness — stale: lean_deps.json newer than counts.json
-  - regenerate — update_counts.py not runnable: Command '['uv', 'run', 'python', '/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/update_counts.py']' timed out after 600 seconds
-
-Overall: 0/1 passed

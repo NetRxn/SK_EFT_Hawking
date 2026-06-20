@@ -1,8 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260428T152440Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[FAIL] readiness_submission_gate
-  ERROR: invalid syntax (citations.py, line 665)
-
-Overall: 0/1 passed

@@ -1,9 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260526T131229Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[FAIL] citation_primary_sources_present
-  - summary — 421 bibkeys cited across 58 papers — 292 cached / 30 inprep-exempt / 98 textbook-exempt / 0 need cache / 1 missing-from-registry
-  - missing_from_registry — 1 cited bibkeys absent from CITATION_REGISTRY: PaperStrategyDoc
-
-Overall: 0/1 passed

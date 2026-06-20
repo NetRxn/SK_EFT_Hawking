@@ -1,8 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260617T224832Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[PASS] native_decide_regression
-  + ceiling — native_decide decl-closure 546 ≤ ceiling 546
-
-Overall: 1/1 passed

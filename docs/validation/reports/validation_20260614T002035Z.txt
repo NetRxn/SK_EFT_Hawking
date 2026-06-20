@@ -1,8 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260614T002035Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[PASS] formula_grounding
-  + coverage — 432 Lean refs; 432 resolve; 0 placeholder-grounded; 0 thin-grounded; 0 dangling
-
-Overall: 1/1 passed

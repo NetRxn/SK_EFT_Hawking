@@ -1,5 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260512T224420Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-Overall: 0/0 passed

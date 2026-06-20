@@ -1,9 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260423T150855Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[PASS] tables_fresh
-  + staleness — stale: lean_deps.json newer than oldest output
-  + regenerate — render_paper_tables.py succeeded: 11 table(s) rendered across 8 paper(s)
-
-Overall: 1/1 passed

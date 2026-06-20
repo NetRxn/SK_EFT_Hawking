@@ -1,9 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260613T175235Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[PASS] theorem_name_embedded_citations
-  + summary — 3 year-token declaration name(s) project-wide / 1 prose-mention checks across bundles — 0 embedded-citation mismatch(es) (advisory)
-  + all_embedded_citations_resolved — Every prose-mentioned year-token declaration has matching bibliography / registry coverage
-
-Overall: 1/1 passed

@@ -98,3 +98,13 @@ papers/**/*.pdf
 # appear as untracked here (and never reach the leak pre-commit scan).
 /.claude/worktrees/
 docs/dev-loops/SYSTEM2_REGISTER.md
+# lab notebooks (live brick-log state, AUTO-WRITTEN in full-/goal mode → NEVER committed, so
+# they cannot leak private content into public git). In-repo default home (docs/dev-loops/<roadmap>/)
+# gives stable paths + lets the pre-commit `notebook check` run, but the files themselves stay
+# git-ignored; the tracked durable artifact is the small, reviewable goal_prompt_<goal_id>.md.
+**/LAB_NOTEBOOK*.md
+# auto-generated timestamped validation reports (validate.py / gate_precheck.py write one EVERY
+# run → ~2200 files of noise + repo bloat; originally had archival value, now unhelpful). Generated
+# locally on demand; never tracked. The CURATED review docs in docs/validation/ (VALIDATION_REPORT.md,
+# the phase6x stage-13 reviews, audits) are NOT under reports/ and stay tracked.
+docs/validation/reports/

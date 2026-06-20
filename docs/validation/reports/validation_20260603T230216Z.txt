@@ -1,9 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260603T230216Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[PASS] counts_fresh
-  + staleness — fresh
-  + summary — theorems=10616 (substantive=10590, placeholder=26) | modules=807 | sorry=0 | papers=42 | aristotle_proved=322
-
-Overall: 1/1 passed

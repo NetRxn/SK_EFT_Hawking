@@ -1,8 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260506T233909Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[PASS] bibitem_title_primary_source
-  + skipped — pdfminer.six not installed — check skipped (advisory)
-
-Overall: 1/1 passed

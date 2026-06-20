@@ -1,8 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260613T174240Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[FAIL] placeholder_not_cited
-  - paper7_chirality_formal — presents placeholder(s) as formally verified without a hedge: gauge_emergence_equivalence (signature) (Invariant #9 — placeholders MUST NOT be cited as a paper claim)
-
-Overall: 0/1 passed

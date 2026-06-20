@@ -1,8 +1,0 @@
-SK-EFT Hawking Validation Report
-Generated: 20260614T062835Z
-Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
-
-[PASS] tracked_hypotheses_fresh
-  + tracked_hypotheses — 32 entries; doc matches HYPOTHESIS_REGISTRY
-
-Overall: 1/1 passed
