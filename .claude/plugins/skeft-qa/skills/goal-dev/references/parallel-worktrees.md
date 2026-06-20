@@ -44,8 +44,12 @@ each. The `lean-lsp-wt1/2/3` servers are defined in the workspace `.mcp.json` + 
    mcp__lean-lsp-wt2__*. <the one independent brick + its Lit-Search refs + acceptance>")`.
 3. The worker proves MCP-first via **its own `mcp__lean-lsp-wtN__*`** (never write→`lake build`), kernel-pure,
    and **commits on `worktree-wtN`**.
-4. **Harvest**: merge / cherry-pick `worktree-wtN` into `main`, re-run the full gate (`lake build
-   SKEFTHawking.ExtractDeps`, `validate.py`). The slot stays for the next task (`/reset-slot`, don't delete).
+4. **Harvest**: **`git merge --ff-only worktree-wtN`** into `main` (ancestry-preserving) — **NOT
+   `cherry-pick`**, which mints a new SHA, so the slot's original commit is content-merged but not a
+   SHA-ancestor of `main`, and the next `/reset-slot`'s ancestry-based unmerged-guard then refuses to
+   reset the slot. FF-merge keeps ancestry intact so `/reset-slot` works cleanly on the next cycle.
+   Then re-run the full gate (`lake build SKEFTHawking.ExtractDeps`, `validate.py`). The slot stays
+   for the next task (`/reset-slot`, don't delete).
 
 Dispatch up to 3 workers concurrently (one per slot) for genuinely independent bricks.
 
