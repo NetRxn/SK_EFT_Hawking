@@ -27,6 +27,7 @@ fallback (a cwd git-root only if its basename == REPO_DIR_NAME, else None -> ine
 shares the structural detection but cannot rely on src.core being importable from a
 plugin and needs cwd-start semantics — hence the own copy, not the import.
 """
+
 import json
 import os
 import subprocess
@@ -41,7 +42,8 @@ def _git_root(start):
     try:
         out = subprocess.run(
             ["git", "-C", str(start), "rev-parse", "--show-toplevel"],
-            capture_output=True, text=True,
+            capture_output=True,
+            text=True,
         )
         if out.returncode == 0 and out.stdout.strip():
             return Path(out.stdout.strip())
@@ -60,8 +62,11 @@ def find_workspace(start=None):
         return None
     for d in [cur] + list(cur.parents):
         try:
-            if (d / ".mcp.json").is_file() and (d / REPO_DIR_NAME).is_dir() \
-                    and not (d / ".git").exists():
+            if (
+                (d / ".mcp.json").is_file()
+                and (d / REPO_DIR_NAME).is_dir()
+                and not (d / ".git").exists()
+            ):
                 return d
         except Exception:
             continue
@@ -103,6 +108,7 @@ def jsonl_path(sid, start=None):
     if not sid:
         return ""
     import re
+
     proj = Path.home() / ".claude" / "projects"
     try:
         hits = sorted(proj.glob("*/" + str(sid) + ".jsonl"))
@@ -113,6 +119,7 @@ def jsonl_path(sid, start=None):
     cwd = str(start) if start else os.getcwd()
     slug = re.sub(r"[^A-Za-z0-9]", "-", cwd)
     return str(proj / slug / (str(sid) + ".jsonl"))
+
 
 def harness_dir(root):
     return root / ".claude" / "dev-harness"
@@ -178,8 +185,16 @@ def read_marker(ev):
 
 def emit_context(event_name, text):
     try:
-        print(json.dumps({"hookSpecificOutput": {
-            "hookEventName": event_name, "additionalContext": text}}))
+        print(
+            json.dumps(
+                {
+                    "hookSpecificOutput": {
+                        "hookEventName": event_name,
+                        "additionalContext": text,
+                    }
+                }
+            )
+        )
     except Exception:
         pass
 
@@ -189,8 +204,8 @@ def emit_context(event_name, text):
 # not the content" failure the durability fix exists to prevent. So the assembled payload
 # MUST stay under this budget; the /goal condition + first-turn self-check are always kept
 # in full, and the active-System-2-issues section is the only truncatable part.
-PAYLOAD_MAX_CHARS = 9000          # hard cap (< the 10k additionalContext limit, hooks.md:704)
-ACTIVE_ISSUES_MAX = 8             # at most the top-N findings, dropped further until under cap
+PAYLOAD_MAX_CHARS = 9000  # hard cap (< the 10k additionalContext limit, hooks.md:704)
+ACTIVE_ISSUES_MAX = 8  # at most the top-N findings, dropped further until under cap
 
 
 def _tier_rank(issue):
@@ -255,12 +270,31 @@ DECISION_HEURISTICS = (
 _SELF_CHECK_RESERVE = 400
 
 
+def _frontier_for(marker):
+    """Extract the lab-notebook FRONTIER digest (from the marker's INDEX) for in-context
+    re-grounding — so a post-compaction turn acts on the next brick with ZERO Reads. Guarded +
+    fail-soft: returns '' if notebook_lib / the INDEX / the FRONTIER is unavailable, so the
+    payload degrades cleanly to the INDEX pointer in the SessionStart frame."""
+    try:
+        nb = marker.get("notebook_path", "")
+        if not nb:
+            return ""
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import notebook_lib as nl
+
+        return nl.extract_frontier(nb)
+    except Exception:
+        return ""
+
+
 def build_reorientation_payload(marker, repo_root):
     """Contract B — the SHARED re-orientation payload, single source of the string.
     Used by BOTH the SessionStart re-inject (harness_reinject.py) and the
     PreToolUse(AskUserQuestion) guard (harness_question_guard.py). Assembled from:
       * the settled /goal condition (marker['goal'] — the FAST-READ copy; the durable,
         crash-recoverable source is the tracked goal_prompt_<goal_id>.md, spec A.5/A.8),
+      * the live lab-notebook FRONTIER digest (from the marker's INDEX; capped ~1600 chars,
+        omitted gracefully if absent — lands the next brick in-context for a zero-Read resume),
       * 're-read CLAUDE.md',
       * the active System-2 issues view (omitted gracefully if absent),
       * a short decision-heuristics summary.
@@ -281,11 +315,21 @@ def build_reorientation_payload(marker, repo_root):
     head = []
     if goal:
         head.append("SETTLED GOAL (the /goal condition):\n" + goal)
+    # The live lab-notebook FRONTIER digest, injected verbatim so a post-compaction turn acts on
+    # the next brick with ZERO Reads. Kept (not truncated by the budget loop — only active-issues
+    # is); itself capped (~1600 chars) by extract_frontier. Omitted gracefully if no INDEX/FRONTIER.
+    frontier = _frontier_for(marker)
+    if frontier:
+        head.append(
+            "LAB-NOTEBOOK FRONTIER (the live next-brick digest — act on its NEXT BRICK directly; "
+            "no Read needed; open the INDEX / shards only for deeper context):\n" + frontier
+        )
     head.append("Re-read CLAUDE.md (the giant-ref pointer that should be re-read).")
     head.append(
-        "For in-loop Lean development or worktree fan-out, invoke /skeft-qa:goal-dev — it carries "
-        "the MCP-first proof loop, kernel-purity rules, /reset-slot, and a symptom-indexed friction "
-        "catalog (the dev references that used to be stranded in goal-prompt)."
+        "FIRST ACTION this turn: invoke /skeft-qa:goal-dev before doing anything else — it carries "
+        "the MCP-first proof loop, kernel-purity rules, /reset-slot + worktree fan-out, and the "
+        "symptom-indexed friction catalog; losing it mid-loop is how anti-patterns creep in. "
+        "THEN, if the goal involves Lean development, also invoke the lean4 skill. "
     )
     tail = [DECISION_HEURISTICS]
     # Budget the truncatable middle: try the full top-N, then drop findings until the
@@ -295,8 +339,10 @@ def build_reorientation_payload(marker, repo_root):
         issues = _read_active_issues(repo_root, n) if n > 0 else ""
         parts = list(head)
         if issues:
-            parts.append("Active System-2 issues + process wins (open/recurring drift findings to avoid; "
-                         "[WIN] = a best practice to follow):\n" + issues)
+            parts.append(
+                "Active System-2 issues + process wins (open/recurring drift findings to avoid; "
+                "[WIN] = a best practice to follow):\n" + issues
+            )
         parts += tail
         payload = "\n\n".join(parts)
         if len(payload) + _SELF_CHECK_RESERVE < PAYLOAD_MAX_CHARS or n <= 0:
@@ -309,6 +355,7 @@ def build_reorientation_payload(marker, repo_root):
 # watermark is a per-session BYTE-OFFSET (NOT a uuid — uuids are ~39% duplicated in real
 # transcripts, spec A.1), advanced atomically + monotonically only after a findings write.
 
+
 def watermark_path(root, sid):
     return harness_dir(root) / "watermarks" / (sid + ".json")
 
@@ -319,7 +366,9 @@ def read_watermark(sid):
     if root is None:
         return 0
     try:
-        return int(json.loads(watermark_path(root, sid).read_text()).get("byte_offset", 0))
+        return int(
+            json.loads(watermark_path(root, sid).read_text()).get("byte_offset", 0)
+        )
     except Exception:
         return 0
 
@@ -405,9 +454,13 @@ def any_managed_marker_in_workspace(sid):
         return True
     try:
         for child in Path(ws).iterdir():
-            if child.is_dir() and (child / ".claude" / "dev-harness" / "managed"
-                                   / (sid + ".json")).exists():
+            if (
+                child.is_dir()
+                and (
+                    child / ".claude" / "dev-harness" / "managed" / (sid + ".json")
+                ).exists()
+            ):
                 return True
     except Exception:
-        return True   # fail-closed on any scan error
+        return True  # fail-closed on any scan error
     return False

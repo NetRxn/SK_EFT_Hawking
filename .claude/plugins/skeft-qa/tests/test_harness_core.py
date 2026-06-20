@@ -54,6 +54,24 @@ def test_payload_includes_goal_and_heuristics_without_active_issues(tmp_path):
     assert "Active System-2 issues" not in payload  # absent -> omitted
 
 
+def test_payload_includes_frontier_when_index_present(tmp_path):
+    # the live FRONTIER digest is injected verbatim so a post-compaction turn needs zero Reads
+    import notebook_lib as nbl  # noqa: E402
+    nbl.op_new(tmp_path)
+    idx = tmp_path / "LAB_NOTEBOOK_INDEX.md"
+    idx.write_text(idx.read_text().replace(
+        "- **NEXT BRICK:** (the single next action — numbered).",
+        "- **NEXT BRICK:** ship brick 42."))
+    payload = hc.build_reorientation_payload(
+        {"goal": "g", "notebook_path": str(idx)}, tmp_path)
+    assert "LAB-NOTEBOOK FRONTIER" in payload and "ship brick 42" in payload
+
+
+def test_payload_omits_frontier_without_notebook_path(tmp_path):
+    payload = hc.build_reorientation_payload({"goal": "g"}, tmp_path)
+    assert "LAB-NOTEBOOK FRONTIER" not in payload  # graceful when no notebook_path
+
+
 def test_payload_includes_active_issues_when_present(tmp_path):
     d = tmp_path / ".claude" / "dev-harness"
     d.mkdir(parents=True, exist_ok=True)

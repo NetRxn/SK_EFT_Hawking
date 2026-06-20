@@ -14,12 +14,14 @@ Produce a tight **≤200-word** compass for the current dev loop. No preamble.
    ```
    If there is no marker, say so and stop — there is nothing to orient against.
 
-2. Read the **tail** of the marker's `notebook_path` (recent bricks/lessons) and the
+2. Read the lab-notebook **INDEX** (the `*_INDEX.md` entry point = the marker's `notebook_path` —
+   its FRONTIER block, deliverables checklist, and DECISIONS & DEAD-ENDS give the live state +
+   settled forks in one read; open the active shard only if the FRONTIER is insufficient) and the
    relevant section of `roadmap_path` (the settled scope + next planned brick).
 
 3. Output exactly these four lines, each ≤ 1 sentence:
    - **Goal:** the marker's goal (the settled acceptance criteria).
-   - **Done:** the last shipped brick (from the notebook tail).
+   - **Done:** the last shipped brick (from the INDEX FRONTIER / last flipped CHECKLIST row).
    - **Next:** the single next brick to build now.
    - **Guardrails:** kernel-pure / invariants respected / scope is settled (no re-litigating).
 

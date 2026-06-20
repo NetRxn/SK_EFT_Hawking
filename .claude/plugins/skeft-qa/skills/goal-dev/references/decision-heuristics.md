@@ -6,8 +6,10 @@ fires and the goal is not met, that means *do the next increment of real work TH
 
 ## The diligence-then-decide ladder (when you feel blocked)
 
-1. **Zoom out.** Re-read the settled goal condition, the roadmap, and the lab-notebook tail
-   directly (not a summary — for load-bearing detail, read the source).
+1. **Zoom out.** Re-read the settled goal condition, the roadmap, and the lab-notebook **INDEX**
+   (its FRONTIER + DECISIONS & DEAD-ENDS blocks — settled forks / kernel-checked no-gos live there, so
+   you don't re-explore a known-wrong path); open an active/frozen shard only for load-bearing detail,
+   and read the source then, not a summary.
 2. **Search before concluding.** For Lean: `lean_local_search` → `lean_leansearch`/`loogle`.
    For prior decisions: the roadmap + the relevant `Lit-Search/Phase-*/` deep-research file
    (read it directly; do not delegate depth-reading to a subagent — summaries drop

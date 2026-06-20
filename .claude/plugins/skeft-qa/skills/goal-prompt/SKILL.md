@@ -3,7 +3,7 @@ name: goal-prompt
 description: Goal-mode LAUNCH + always-on posture for an autonomous /goal dev loop. On invocation it composes the /goal condition AND registers the session with the harness; its core posture re-attaches after compaction. Use when STARTING a managed /goal dev loop, or writing/refining a goal prompt + acceptance criteria. (For IN-LOOP development guidance — the MCP proof loop, worktree fan-out, friction catalog — use the goal-dev skill instead.)
 argument-hint: <what the loop should achieve> [role=solo|lead]
 disable-model-invocation: true
-allowed-tools: Bash(git rev-parse *), Bash(ls *), Bash(test *), Bash(date *), Write, mcp__scheduled-tasks__list_scheduled_tasks, mcp__scheduled-tasks__create_scheduled_task
+allowed-tools: Bash(git rev-parse *), Bash(ls *), Bash(test *), Bash(date *), Bash(uv run *), Write, mcp__scheduled-tasks__list_scheduled_tasks, mcp__scheduled-tasks__create_scheduled_task
 ---
 <!-- disable-model-invocation: true is a deliberate USER-ONLY safety posture, not a technical
      requirement (spec 11 refined): an agent must NOT be able to auto-kick-off a goal. It is
@@ -28,7 +28,7 @@ skill carries the posture and (at launch) arms it. Hold this posture every turn:
 - **For the in-loop development work, invoke the `goal-dev` skill** (`/skeft-qa:goal-dev`) — the
   model-invocable companion that carries the MCP-first proof loop, kernel-purity rules, the worktree
   fan-out flow (`/reset-slot` + `lean-worker`), a symptom-indexed Lean friction catalog, the full
-  decision heuristics, and notebook-sharding. **This skill (`goal-prompt`) only AUTHORS the goal at
+  decision heuristics, and the lab-notebook lifecycle. **This skill (`goal-prompt`) only AUTHORS the goal at
   launch + holds this re-attaching posture core; `goal-dev` is where the dev references live.**
 
 ## At launch (invoked by the user) — arm the loop
@@ -79,8 +79,20 @@ composition discipline + acceptance criteria.
   an agent-team orchestrator. **`role` is DESCRIPTIVE METADATA ONLY** (logging / harvest attribution — spec
   5/A.5): it is recorded in the marker but the harness **never branches on it** (the SessionStart re-injection
   is role-agnostic — spec 4). Do **not** treat `lead` vs `solo` as a behavioral switch.
-- Resolve the **tracked** `roadmap_path` + `notebook_path` (under the repo's `docs/dev-loops/<roadmap>/`) and
-  the `goal` text from `$ARGUMENTS`.
+- Resolve the **tracked** `roadmap_path`, the lab-notebook **home**, and the `goal` text from `$ARGUMENTS`.
+  The notebook home **defaults to `docs/dev-loops/<roadmap>/`** (in-repo → stable paths + the pre-commit
+  `notebook check` applies; the notebook files are **git-ignored**, so nothing auto-commits → leak-safe in
+  full-auto mode). **Override** by passing `notebook=<dir>` in `$ARGUMENTS` for a loop whose notebook lives
+  elsewhere (e.g. an existing `Lit-Search/<phase>/` notebook — used as-is, never moved). All consumers read
+  the home from the marker's `notebook_path`, so an override propagates automatically.
+- **Scaffold the lab notebook (bootstrap-if-missing — idempotent, never clobbers):**
+  `uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/notebook_lib.py" new <home> --roadmap <roadmap_path>`.
+  This creates a correct active `LAB_NOTEBOOK.md` **and** `LAB_NOTEBOOK_INDEX.md` (the four live blocks:
+  FRONTIER / DELIVERABLES CHECKLIST / DECISIONS & DEAD-ENDS / SHARD INDEX — progressive disclosure from turn 1,
+  CHECKLIST seeded from the roadmap). The marker's `notebook_path` is the **INDEX**
+  (`<home>/LAB_NOTEBOOK_INDEX.md`) — the entry point the SessionStart re-injection + `/orient` read first.
+  (Re-arm of an existing loop is a no-op here; it never overwrites an in-progress notebook.) Full model:
+  `goal-dev/references/lab-notebook.md`.
 - **Write the per-goal prompt file (the durable source) with the Write tool** to
   `<repo>/docs/dev-loops/<roadmap>/goal_prompt_<goal_id>.md` (NOT a bare `goal_prompt.md` — a roadmap hosts many
   goals over time, so name it uniquely by `goal_id`; goals on the same roadmap never collide / overwrite — spec
@@ -89,7 +101,8 @@ composition discipline + acceptance criteria.
 - **Write the marker with the Write tool** (clean JSON — NOT a `cat >` heredoc) to
   `<repo>/.claude/dev-harness/managed/${CLAUDE_SESSION_ID}.json` (the **8-field form**):
   `{"role": "<solo|lead>", "goal": "...", "goal_id": "<from above>", "roadmap_path": "...", "notebook_path": "...", "jsonl_path": "<from above>", "repo": "<basename of repo root>", "question_guard": true}`.
-  (`role` is descriptive-only; `goal_id` is the minted goal identity; `question_guard` defaults `true` — the
+  (`role` is descriptive-only; `goal_id` is the minted goal identity; `notebook_path` is the **INDEX**
+  `<home>/LAB_NOTEBOOK_INDEX.md` scaffolded above; `question_guard` defaults `true` — the
   `PreToolUse(AskUserQuestion)` guard reads it; `/goal-guard` flips it. The Write tool creates the `managed/`
   dir as needed.)
 

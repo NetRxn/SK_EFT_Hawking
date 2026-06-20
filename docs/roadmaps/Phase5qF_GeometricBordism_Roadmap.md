@@ -2,7 +2,7 @@
 
 **Status:** 🏁 honest-scope goal (`goal_prompt.md`, 8 criteria) COMPLETE 2026-06-15 (review GENUINE). ▶▶ **NOW ACTIVE (user-directed 2026-06-15): the FULL-STRENGTH fully-unconditional goal `goal_prompt_unconditional.md`** — full-carrier `Ω₄^{Pin⁺}≅ℤ/16` with `ker(abkGrade)=0`, NO `PinPlusBordismLandmark`/cap-hypothesis/disclosed Prop. **The "Optional residual strengthening" in the completion summary below is SUPERSEDED — the w₂-floor-collapse (Wu/Poincaré-duality/fundamental-class, the brick-6 PD foundation) is now REQUIRED, not optional.** The user explicitly rejected the "fully-unconditional is precluded/optional" framing as the over-defer reflex (notebook 2026-06-15, l.535): ABK-completeness (Kirby–Taylor) + the floor are a BUILD LIST, not a wall. Active route + brick log: `Lit-Search/Phase-5qF/LAB_NOTEBOOK.md` (brick 6c excision → c8 Lebesgue → 6d/6e/6f). Continuation of [Phase 5q.E](Phase5qE_SixteenConvergence_Roadmap.md) — the "16 convergence."
 **Owner workstream:** public `SK_EFT_Hawking` Lean.
-**Tracker = this file.** Lab notebook (active): `Lit-Search/Phase-5qF/LAB_NOTEBOOK.md`.
+**Tracker = this file.** Lab notebook: `Lit-Search/Phase-5qF/LAB_NOTEBOOK_INDEX.md` (the INDEX entry point — FRONTIER / checklist / decisions / shard pointers; the active + `_W<n>` shards are read on demand).
 
 > **🏁 COMPLETION SUMMARY (2026-06-15, commits `49ad1d2e`→`c1e3365e` on `main`, NOT pushed; 13144 thm/0 axiom/0 sorry/988 mod; validate 43/43; ExtractDeps 9306).** `Ω₄^{Pin⁺} ≅ ℤ/16` is DERIVED on the genuine W4 bordism-group object `DataBordismGrp ξ` (real `SingularManifold`s over manifolds-with-boundary), with Brown/ABK + the decidable height-4 cap as the OBJECTIVE-permitted load-bearing finite inputs; `pin4_abutment` / the `adamsAbutment` modeling def / the posited `Omega4PinPlusBordism` are DEMOTED to finite-substrate corollaries. The geometric Smith map is the DR `Smith_sequence.md` §5.2 typed homomorphism `SmithIsomorphism.smithDataHom` on the genuine carrier (SW-relations the operative content), de-thinned with the genuine manifold layer `smithImageSingularManifold` (bricks 1–2: `PD(a)` a real codim-1 `SingularManifold` over arbitrary `M`). **Honest scope (the goal-PERMITTED disclosures, NOT gaps):** the unoriented-bordism *floor* (Mathlib has no `w₂` of a `SingularManifold`) and the irreducible cited height-4 cap (the "16" provably cannot come from a LES of elementary groups). Re-pointing theorems: `PinPlusDischarge.sixteen_convergence_genuine_carrier`, `Omega5Finite.omega5_quotient_iso_zmod16_genuine_carrier`, the UNCONDITIONAL `PinPlusTangentialData.dataBordism_quotient_abk_equiv_zmod16`. Full log: the lab notebook's 2026-06-15 "🏁 GOAL COMPLETE" entry. **Optional residual strengthening (own /goal, NOT goal-closing):** the w₂-floor-collapse foundation (Wu/Poincaré-duality/Sq², bricks 1–4 already built) for a full-carrier UNCONDITIONAL iso, or the literal HKT Thm 4.1 sphere-bundle Smith iso.
 
@@ -203,3 +203,10 @@ congruence, both of which have *elementary* (handle-calculus, non-APS) proofs. W
 constructive discharge. Any residual that genuinely bottoms out in a named-landmark theorem with no
 constructive Mathlib route will be carried as ONE disclosed tracked `Prop` with a discharge plan and
 flagged here — never an axiom, never a reason to stop building the rest.
+
+## POST-L2 DEFERRED TASKS (user-requested 2026-06-19 — NOT now; address when L2 completes + the adversarial reviewer re-checks)
+
+- **Shard + index the Phase-5qF lab notebook.** ✅ DONE — sharded into `LAB_NOTEBOOK_INDEX.md` (entry point)
+  + active `LAB_NOTEBOOK.md` + frozen `_W1`/`_W2`/`_W3`, now maintained by the two-layer lab-notebook system
+  (`/skeft-qa:notebook`; see `goal-dev/references/lab-notebook.md`). The INDEX carries FRONTIER / checklist /
+  DECISIONS / shard pointers; the active blob can be `roll`-ed to a frozen shard when convenient.

@@ -86,4 +86,18 @@ for c in formula_grounding placeholder_not_cited native_decide_regression; do
     SKIP) echo "(skeft-sync: $c could not run — skipping, not blocking)";;
   esac
 done
+
+# (d) Lab-notebook health (ADVISORY — never blocks). For each managed /goal marker, warn if its
+#     active shard is over the ~25k-token budget, the INDEX lacks a DECISIONS block, or the FRONTIER
+#     SHA is stale vs HEAD. Read-only: the agent self-levels via /skeft-qa:notebook (no hook mutates
+#     the notebook). Fail-open — a missing tool / unreadable marker is silently skipped.
+NB_LIB="$REPO_ROOT/.claude/plugins/skeft-qa/scripts/notebook_lib.py"
+if [ -f "$NB_LIB" ] && [ -d "$REPO_ROOT/.claude/dev-harness/managed" ]; then
+  for mk in "$REPO_ROOT"/.claude/dev-harness/managed/*.json; do
+    [ -f "$mk" ] || continue
+    nbp="$(uv run python -c "import json,sys;print(json.load(open(sys.argv[1])).get('notebook_path',''))" "$mk" 2>/dev/null)" || continue
+    [ -n "$nbp" ] || continue
+    uv run python "$NB_LIB" check "$(dirname "$nbp")" --repo "$REPO_ROOT" 2>/dev/null | grep '⚠' || true
+  done
+fi
 exit 0

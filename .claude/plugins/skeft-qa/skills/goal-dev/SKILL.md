@@ -41,8 +41,11 @@ decompose into `have` sub-lemmas (≤ 12-term targets).
 
 Commit a **GREEN kernel-pure shard** every ~5–6 bricks (each: zero sorry, `lean_verify` clean, `lake build`
 clean), updating the lab notebook each brick — the notebook is the **compaction-durable source-of-truth**.
-**Never push** (user action). When a notebook shard crosses its size budget, follow
-`references/notebook-sharding.md` (the lead curates; workers report up).
+**Never push** (user action). The notebook is a two-layer system (a bounded always-loaded INDEX +
+chronological shards); maintain it with the **`/skeft-qa:notebook`** command — `sync` each brick, `shard`
+at the checkpoint to keep the active shard under the ~25k-token Read guard automatically. Each brick is its
+own `### ` heading; settled forks / kernel-checked no-gos go in the INDEX's append-only DECISIONS block.
+Full model + per-brick discipline: `references/lab-notebook.md` (the lead curates; workers report up).
 
 ## Solo vs. fan-out
 
@@ -71,4 +74,5 @@ the fix. Add a new entry the *first* time a pattern recurs.
 - `references/lean-friction-catalog.md` — symptom-indexed tactic/elaboration frictions.
 - `references/parallel-worktrees.md` — worktree-slot fan-out flow + `/reset-slot`.
 - `references/decision-heuristics.md` — the settled-scope / anti-escape stance, with worked examples.
-- `references/notebook-sharding.md` — lab-notebook sharding + index discipline.
+- `references/lab-notebook.md` — lab-notebook lifecycle (create / maintain / shard / re-orient), the
+  two-layer INDEX model, and the `/skeft-qa:notebook` ops.

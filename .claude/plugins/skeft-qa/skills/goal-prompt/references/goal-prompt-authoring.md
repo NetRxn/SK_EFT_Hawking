@@ -13,7 +13,9 @@ demand by the `goal-prompt` skill at launch.
   transcript. "validate.py prints 43/43 in the transcript" is checkable; "the code is correct"
   is not.
 - **Self-describing.** Name the **tracked** source-of-truth paths so a fresh post-compaction
-  turn can re-read them: `roadmap_path` (`docs/dev-loops/<roadmap>/...`) and the lab notebook.
+  turn can re-read them: `roadmap_path` (`docs/dev-loops/<roadmap>/...`) and the lab-notebook
+  **INDEX** (`<home>/LAB_NOTEBOOK_INDEX.md` — the entry point; its FRONTIER + DECISIONS blocks are
+  the re-grounding read, shards are opened on demand).
 
 ## What the condition must contain
 
@@ -35,8 +37,9 @@ demand by the `goal-prompt` skill at launch.
 ## Template
 
 ```
-GOAL: <one-sentence outcome>. Source-of-truth: <roadmap_path> + <notebook_path> (re-read
-them after any compaction). SCOPE IS SETTLED — build the next brick THIS turn; a stop-hook
+GOAL: <one-sentence outcome>. Source-of-truth: <roadmap_path> + <notebook_index_path> (re-read
+the roadmap + the notebook INDEX after any compaction; open shards on demand). SCOPE IS SETTLED —
+build the next brick THIS turn; a stop-hook
 firing is a GO signal, never a cue to stop/hold/re-scope/hand back. Legitimate stops ONLY:
 a kernel-checked no-go, or a genuine user-only decision (ask once, keep shipping meanwhile).
 DONE when: (1) <measurable end state>; (2) validate.py prints N/N in the transcript;
