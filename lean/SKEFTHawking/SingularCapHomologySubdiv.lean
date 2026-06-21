@@ -34,4 +34,15 @@ theorem cap_homology_singularSd_iterate {k m : ℕ} (a : LinearMap.ker (cobounda
   rw [← capHomology_mk, ← capHomology_mk]
   exact congrArg (capHomology a) (homology_mk_singularSd_iterate X (k + m) j z.1 z.2 _)
 
+/-- **Cocycle-absorb / Kronecker class-invariance**: a cocycle `fc` pairs equally against homologous
+cycles — `[c] = [c']` ⟹ `⟨fc, c⟩ = ⟨fc, c'⟩`. (The Kronecker pairing `kroneckerH` is well-defined on
+homology classes; `kroneckerH_mk_mk` lowers it to the chain pairing.) Lets the connecting-square `hLHS`
+swap the given seam cycle `seam ∂zB` for the clean cap-realized `seam ∂zB'` once their classes agree
+(`boundaryExtract_class_eq_of_partition_homologous`). -/
+theorem kronecker_eq_of_homology_eq {n : ℕ} (fc : LinearMap.ker (coboundaryₗ X n))
+    (c c' : cycles X n) (h : Homology.mk X n c = Homology.mk X n c') :
+    kronecker fc.1 c.1 = kronecker fc.1 c'.1 := by
+  rw [← kroneckerH_mk_mk fc c, ← kroneckerH_mk_mk fc c']
+  exact congrArg (kroneckerH n (Submodule.Quotient.mk fc)) h
+
 end SKEFTHawking.SingularCapHomologySubdiv
