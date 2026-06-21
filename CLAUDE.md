@@ -47,6 +47,38 @@ troubleshooting, and how to refresh the plugin cache after edits.
 
 ---
 
+## Session start: trim Lean MCP servers not pointed at this repo (DO THIS FIRST, every session)
+
+The shared `.mcp.json` used to launch this session may enable `lean-lsp-mcp` servers for Lean
+projects **other than this one**. A session focused on `SK_EFT_Hawking` needs only the server(s)
+whose `--lean-project-path` is **inside this repo** — including the `wt1/2/3` swarm slots, which are
+this repo's own worktrees (`…/SK_EFT_Hawking/.claude/worktrees/wtN/lean`). Any other `lean-lsp-mcp`
+server is dead weight: it holds file descriptors / vnodes and, stacked with concurrent `lake build`s,
+can exhaust the system file table (ENFILE — "Too many open files in system") and break parallel
+build lanes.
+
+Leave the shared `.mcp.json` / `settings.local.json` **untouched** (so the launching config keeps
+working for every session) and instead **kill the off-repo servers at session start**. Select them
+purely by the **absence of this repo's path** — never by what they are:
+
+```bash
+# (1) DRY RUN — lean-lsp-mcp servers (wrapper + python child) NOT pathed inside this repo.
+#     Expect nothing, or a pair per off-repo server. Servers pathed in this repo (incl. wtN)
+#     must NOT appear here.
+ps -eo pid,command | grep lean-lsp-mcp | grep -v grep | grep -v SK_EFT_Hawking
+
+# (2) KILL them — path-based (pid-independent across sessions). Keeps every SK_EFT_Hawking-pathed
+#     server (incl. the wtN swarm slots) and frees the rest. Names nothing it kills.
+pids=$(ps -eo pid,command | grep lean-lsp-mcp | grep -v grep | grep -v SK_EFT_Hawking | grep -oE '^ *[0-9]+')
+[ -n "$pids" ] && kill $pids
+
+# (3) VERIFY — only this repo's lean-lsp servers remain (main `…/SK_EFT_Hawking/lean` + any wtN).
+pgrep -fl lean-lsp-mcp
+```
+
+Heavy `lake build` / floor checks use the **Bash** tool, not these MCP servers, so trimming them
+never affects builds. Killed servers do not respawn within a session.
+
 ## When-to-read references (progressive disclosure)
 
 | Read **before…** | Document |
