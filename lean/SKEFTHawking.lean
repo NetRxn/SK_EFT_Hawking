@@ -981,6 +981,7 @@ import SKEFTHawking.SingularRelMvDeltaPartition
 import SKEFTHawking.SingularConnSquareLHSLeg
 import SKEFTHawking.SingularAbsCohomConnGeom
 import SKEFTHawking.SingularAbsCohomConnClassForm
+import SKEFTHawking.SingularAbsCohomConnClassFormDischarge
 import SKEFTHawking.SingularRelativePairing
 import SKEFTHawking.SingularRelativeUC
 import SKEFTHawking.SingularLocalCohomology
