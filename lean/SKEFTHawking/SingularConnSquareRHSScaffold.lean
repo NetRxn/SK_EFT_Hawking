@@ -124,6 +124,23 @@ theorem exists_cover_split {M : TopCat} (A B : Set ↑M) (hA : IsOpen A) (hB : I
     SingularConnSquareLHSExplicit.exists_chainIncl_partition_of_mem_mvUnionChains A B n _ hm
   exact ⟨m, u, w, hsplit⟩
 
+/-- **Homology equality ⟹ chain-level boundary slack.** If two cycles `z`, `w` are homologous
+(`Homology.mk z = Homology.mk w`) then they differ by a boundary at the chain level: `∃ η, z = w + ∂η`.
+Promotes the homology-level cover-partition hypothesis `hpart` of the connecting-square cross-realization
+into a usable chain equation (the `hpart` entanglement — the obstruction to applying
+`cover_partition_cap_boundary` directly to the legW cycle). -/
+theorem exists_boundary_of_homology_eq {Y : TopCat} {n : ℕ} (z w : cycles Y n)
+    (h : Homology.mk Y n z = Homology.mk Y n w) :
+    ∃ η : SingularChain Y (n + 1),
+      (z : SingularChain Y n) = (w : SingularChain Y n) + chainBoundary Y n η := by
+  rw [Homology.mk, Homology.mk] at h
+  have h2 : z - w ∈ (boundaries Y n).submoduleOf (cycles Y n) := (Submodule.Quotient.eq _).mp h
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] at h2
+  obtain ⟨η, hη⟩ := h2
+  refine ⟨η, ?_⟩
+  rw [hη, Submodule.coe_sub]
+  abel
+
 /-- **Relative-homology subdivision invariance**: `[c] = [Sdᵐc]` in `H(M, S)` — the rep-swap the W5 RHS
 dance needs before `relMvDelta_cover_partition`. Via `relHomology_mk_eq_of` +
 `relative_add_singularSd_iterate_mem_relBoundaries`. -/
