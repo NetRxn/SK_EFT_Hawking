@@ -5,6 +5,8 @@ import SKEFTHawking.SingularRelCohomMvConnectingGeom
 import SKEFTHawking.SingularOpenDualityCycle
 import SKEFTHawking.SingularCapSubKDuality
 import SKEFTHawking.SingularSubdivision
+import SKEFTHawking.SingularConnSquareLHSExplicit
+import SKEFTHawking.SingularRelativeMV
 
 /-!
 # Phase 5q.F (w₂-foundation, PD6f-c4) — RHS-reduction scaffold for the connecting-square match
@@ -93,5 +95,37 @@ theorem kronecker_chainIncl_rcap_eq_cup {k l : ℕ} {K : Set ↑X} (σ : Singula
     kronecker σ (chainIncl K k (rcap a' c))
       = kronecker (cup (pullbackCochain K k σ) a') c := by
   rw [← SingularCapSubKDuality.kronecker_pullbackCochain, ← kronecker_cup_rcap]
+
+/-- **Cover-fine subdivision of a fundamental cycle's boundary.** For `z` whose boundary lands in
+`C(U' ∪ V')`, some barycentric subdivision `Sdʲz` has boundary splitting cover-subordinately. Composes
+`exists_iterate_mvUnion` + `exists_chainIncl_partition_of_mem_mvUnionChains` + `singularSd_iterate_chainBoundary`. -/
+theorem exists_cover_fine_subdivision {n : ℕ} {U' V' : Set ↑X} (hU' : IsOpen U') (hV' : IsOpen V')
+    (z : SingularChain X (n + 1)) (hz : chainBoundary X n z ∈ subspaceChains (U' ∪ V') n) :
+    ∃ (j : ℕ) (u' : SingularChain (sub U') n) (w' : SingularChain (sub V') n),
+      chainBoundary X n ((⇑(SingularSubdivision.singularSd X (n + 1)))^[j] z)
+        = chainIncl U' n u' + chainIncl V' n w' := by
+  obtain ⟨j, hj⟩ := SingularRelativeMV.exists_iterate_mvUnion U' V' hU' hV' n
+    (chainBoundary X n z) hz
+  obtain ⟨u', w', hsplit⟩ :=
+    SingularConnSquareLHSExplicit.exists_chainIncl_partition_of_mem_mvUnionChains U' V' n _ hj
+  exact ⟨j, u', w', by rw [SingularSubdivision.singularSd_iterate_chainBoundary]; exact hsplit⟩
+
+/-- **Relative-homology subdivision invariance**: `[c] = [Sdᵐc]` in `H(M, S)` — the rep-swap the W5 RHS
+dance needs before `relMvDelta_cover_partition`. Via `relHomology_mk_eq_of` +
+`relative_add_singularSd_iterate_mem_relBoundaries`. -/
+theorem relHomology_mk_singularSd_iterate {n : ℕ} {S : Set ↑X}
+    (c : SingularChain X (n + 1)) (hc : chainBoundary X n c ∈ subspaceChains S n)
+    (hccyc : RelativeChain.mk S (n + 1) c ∈ relCycles S (n + 1)) (m : ℕ)
+    (hSdcyc : RelativeChain.mk S (n + 1) ((⇑(SingularSubdivision.singularSd X (n + 1)))^[m] c)
+      ∈ relCycles S (n + 1)) :
+    RelativeHomology.mk S (n + 1) ⟨RelativeChain.mk S (n + 1) c, hccyc⟩
+      = RelativeHomology.mk S (n + 1)
+          ⟨RelativeChain.mk S (n + 1) ((⇑(SingularSubdivision.singularSd X (n + 1)))^[m] c), hSdcyc⟩ := by
+  refine SingularRelativeMV.relHomology_mk_eq_of (n + 1) _ _ ?_
+  show RelativeChain.mk S (n + 1) c
+      - RelativeChain.mk S (n + 1) ((⇑(SingularSubdivision.singularSd X (n + 1)))^[m] c)
+      ∈ relBoundaries S (n + 1)
+  rw [ZModModule.sub_eq_add]
+  exact SingularExcision.relative_add_singularSd_iterate_mem_relBoundaries hc m
 
 end SKEFTHawking.SingularConnSquareRHSScaffold
