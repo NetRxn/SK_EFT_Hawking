@@ -110,6 +110,20 @@ theorem exists_cover_fine_subdivision {n : ℕ} {U' V' : Set ↑X} (hU' : IsOpen
     SingularConnSquareLHSExplicit.exists_chainIncl_partition_of_mem_mvUnionChains U' V' n _ hj
   exact ⟨j, u', w', by rw [SingularSubdivision.singularSd_iterate_chainBoundary]; exact hsplit⟩
 
+/-- **Shared cover-split of a chain** (the chain analogue of `exists_cover_fine_subdivision`, dropping the
+`∂`): for `z ∈ C(A ∪ B)`, some barycentric subdivision `Sdᵐz` splits cover-subordinately as
+`chainIncl A u + chainIncl B w`. The foundation of the connecting-square cross-realization: applied to
+`castChain z₀ ∈ C(val⁻¹U ∪ val⁻¹V = univ)` it yields the SHARED cover-partition both legs of the match
+derive from. Composes `exists_iterate_mvUnion` + `exists_chainIncl_partition_of_mem_mvUnionChains`. -/
+theorem exists_cover_split {M : TopCat} (A B : Set ↑M) (hA : IsOpen A) (hB : IsOpen B) (n : ℕ)
+    (z : SingularChain M n) (hz : z ∈ subspaceChains (A ∪ B) n) :
+    ∃ (m : ℕ) (u : SingularChain (sub A) n) (w : SingularChain (sub B) n),
+      (⇑(SingularSubdivision.singularSd M n))^[m] z = chainIncl A n u + chainIncl B n w := by
+  obtain ⟨m, hm⟩ := SingularRelativeMV.exists_iterate_mvUnion A B hA hB n z hz
+  obtain ⟨u, w, hsplit⟩ :=
+    SingularConnSquareLHSExplicit.exists_chainIncl_partition_of_mem_mvUnionChains A B n _ hm
+  exact ⟨m, u, w, hsplit⟩
+
 /-- **Relative-homology subdivision invariance**: `[c] = [Sdᵐc]` in `H(M, S)` — the rep-swap the W5 RHS
 dance needs before `relMvDelta_cover_partition`. Via `relHomology_mk_eq_of` +
 `relative_add_singularSd_iterate_mem_relBoundaries`. -/
