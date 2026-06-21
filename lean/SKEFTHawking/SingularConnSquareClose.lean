@@ -252,6 +252,91 @@ theorem subHomConnecting_openDuality_of_hcup {N p : ℕ} {U V : Set ↑X} (hU : 
     rw [infCompact_coe U V (legSplitU U V hU hV K) (legSplitV U V hU hV K), Set.compl_inter] at hbdy
     exact hbdy
 
+open SKEFTHawking.SingularCSCMayerVietorisConnecting
+  SKEFTHawking.SingularRelativeCohomologyMVConnecting in
+/-- **Linked variant of `subHomConnecting_openDuality_of_hcup`.** Identical reduction, but the `hcup`
+hypothesis is *constrained* to the specific reps that actually arise — `b = absCohomConn(a'rep)` and
+`gRconn = relCohomMvConnecting(grep)`. This makes `hcup` the TRUE cap-naturality cup-duality on `z₀`
+(the unconstrained `_of_hcup` version is false ∀ `b`/`gRconn`, hence undischargeable). Proof is
+`_of_hcup`'s body, passing the in-context `hb`/`hgRconn` links to the constrained `hcup`. -/
+theorem subHomConnecting_openDuality_of_hcup_linked {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U)
+    (hV : IsOpen V) (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
+    (K : SingularCompactsInOpen.CompactsIn (U ∪ V))
+    (g : cohomGW (U ∪ V) (N + 1) K)
+    (hcup : ∀ (a'rep : LinearMap.ker (coboundaryₗ (sub (U ∩ V)) (p + 1)))
+        (b : LinearMap.ker (coboundaryₗ (sub (U ∪ V)) (p + 2)))
+        (grep : LinearMap.ker (relCoboundaryₗ ((↑K.1 : Set ↑X)ᶜ) (N + 1)))
+        (gRconn : LinearMap.ker (relCoboundaryₗ
+          ((↑(legSplitU U V hU hV K).1 : Set ↑X)ᶜ ∪ (↑(legSplitV U V hU hV K).1 : Set ↑X)ᶜ) (N + 2))),
+        RelativeCohomology.mk ((↑K.1 : Set ↑X)ᶜ) (N + 1) grep
+            = (g : RelativeCohomology ((↑K.1 : Set ↑X)ᶜ) (N + 1)) →
+        Submodule.Quotient.mk b
+            = SingularSubHomologyMVCohomConn.absCohomConn U V hU hV p (Submodule.Quotient.mk a'rep) →
+        Submodule.Quotient.mk gRconn
+            = relCohomMvConnecting ((↑(legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
+                ((↑(legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
+                (legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+                (legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl N
+                ((SingularRelativeCohomologyRestrict.relCohomRestrict
+                    (Set.inter_subset_inter subset_rfl subset_rfl) (N + 1))
+                  ((SingularCompactlySupportedTop.relCohomSetCongr
+                      (by rw [legSplit_cover U V hU hV K, Set.compl_union]) (N + 1)
+                      (Submodule.Quotient.mk grep)))) →
+        kronecker (cup (pullbackCochain (U ∪ V) (N + 1) grep.1.1) b.1)
+            ((subspaceChainsEquiv (U ∪ V) (N + 1 + (p + 1) + 1)).symm
+              ⟨fundCycleW (hU.union hV)
+                  (SingularOpenDualityMVConnSquare.castChain
+                    (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+                  (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero
+                    (by omega) (by omega) z₀ hz₀) K,
+                fundCycleW_mem_W (hU.union hV) _ _ _⟩)
+          = kronecker (cup (pullbackCochain (U ∩ V) (N + 2) gRconn.1.1) a'rep.1)
+            ((subspaceChainsEquiv (U ∩ V) (N + 2 + p + 1)).symm
+              ⟨fundCycleW (hU.inter hV)
+                  (SingularOpenDualityMVConnSquare.castChain
+                    (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+                  (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero
+                    (by omega) (by omega) z₀ hz₀)
+                  (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)),
+                fundCycleW_mem_W (hU.inter hV) _ _ _⟩)) :
+    SKEFTHawking.SingularSubHomologyMV.subHomConnecting U V hU hV (p + 1)
+        (SKEFTHawking.SingularOpenDuality.legW (k := N + 1) (m := p + 1) (hU.union hV)
+          (SingularOpenDualityMVConnSquare.castChain
+            (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+          (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+          K g)
+      = SKEFTHawking.SingularOpenDuality.openDuality (k := N + 2) (m := p) (hU.inter hV)
+          (SingularOpenDualityMVConnSquare.castChain
+            (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+          (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+          (SKEFTHawking.SingularCSCMayerVietorisConnecting.legδ U V hU hV N K g) := by
+  apply SingularConnSquareMatch.subHomConnecting_openDuality_of_match hU hV z₀ hz₀ K g
+  intro a'rep b hb
+  obtain ⟨gL, hgL⟩ := Submodule.Quotient.mk_surjective _ g
+  rw [← hgL]
+  obtain ⟨gRconn, hgRconn⟩ := Submodule.Quotient.mk_surjective _
+    (relCohomMvConnecting ((↑(legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
+      ((↑(legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
+      (legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+      (legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl N
+      ((SingularRelativeCohomologyRestrict.relCohomRestrict
+          (Set.inter_subset_inter subset_rfl subset_rfl) (N + 1))
+        ((SingularCompactlySupportedTop.relCohomSetCongr
+            (by rw [legSplit_cover U V hU hV K, Set.compl_union]) (N + 1)
+            (Submodule.Quotient.mk gL)))))
+  refine relKroneckerH_match_of_chain_relMvDelta
+    (legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+    (legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+    gL b _ (fundCycleW_mem_W (hU.union hV) _ _ _) (fundCycleW_boundary (hU.union hV) _ _ _) ?_
+    _ gRconn hgRconn a'rep _ (fundCycleW_mem_W (hU.inter hV) _ _ _) ?_ ?_
+    (hcup a'rep b gL gRconn hgL hb hgRconn)
+  · have hbdy := fundCycleW_boundary (hU.inter hV)
+      (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+      (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K))
+    rw [infCompact_coe U V (legSplitU U V hU hV K) (legSplitV U V hU hV K), Set.compl_inter] at hbdy
+    exact hbdy
+
 end
 
 end SKEFTHawking.SingularConnSquareClose
