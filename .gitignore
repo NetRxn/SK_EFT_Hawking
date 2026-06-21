@@ -108,3 +108,8 @@ docs/dev-loops/SYSTEM2_REGISTER.md
 # locally on demand; never tracked. The CURATED review docs in docs/validation/ (VALIDATION_REPORT.md,
 # the phase6x stage-13 reviews, audits) are NOT under reports/ and stay tracked.
 docs/validation/reports/
+
+# Web-egress denylist — operator-installed LOCAL copy (untracked; may hold private
+# literals incl. firewall terms). Committed template = research_egress_denylist.sample.txt.
+# Match the basename anywhere (never the .sample.txt template).
+research_egress_denylist.txt

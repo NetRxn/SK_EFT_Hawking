@@ -206,6 +206,24 @@ assuming infeasibility. Flag quality tradeoffs explicitly; let the user decide.
 
 ---
 
+## Research ladder & web-egress security
+
+When a loop needs information it lacks locally, follow the **three-tier research ladder** (full
+spec: the workspace-level `Lit-Search/README.md`):
+- **Tier 0 — local:** read the `Lit-Search/Phase-*/` corpus directly.
+- **Tier 1 — on-the-fly (sandboxed):** dispatch the **`research-scout`** agent (the only web-tool
+  holder; read-only) or `/deep-research`; the lead vets the cited report and files it with a
+  provenance header. Use this instead of reinventing a known result or waiting on a human.
+- **Tier 2 — async human dispatch:** `Lit-Search/Tasks/submitted/` — last resort.
+
+**Web egress is guarded (fail-closed).** A `PreToolUse(WebSearch|WebFetch)` hook (skeft-qa) denies
+any query/URL containing a denylisted local path / identifier and any fetch outside the
+scholarly-domain whitelist. The denylist is split: a committed template
+(`.claude/plugins/skeft-qa/scripts/research_egress_denylist.sample.txt`) + an **untracked local**
+copy (`…/research_egress_denylist.txt`) the operator installs with their own identifiers.
+**First-run setup:** run `.claude/plugins/skeft-qa/scripts/install_egress_denylist.sh` (or copy the
+sample) and fill in the FILL-IN rows; until then only the generic absolute-path baseline applies.
+
 ## Process health
 
 **Dev-loop / harness process learnings** — re-orientation, friction, escape attempts, wasted

@@ -1,5 +1,5 @@
 {
-  "description": "skeft-qa loop-durability hooks (v4.1): SessionStart re-inject + PreToolUse(AskUserQuestion) guard + SessionEnd marker cleanup. Default-inert + fail-open.",
+  "description": "skeft-qa loop-durability + egress hooks (v4.2): SessionStart re-inject + PreToolUse(AskUserQuestion) guard + SessionEnd marker cleanup (default-inert, fail-open) + PreToolUse(WebSearch|WebFetch) web-egress guard (unconditional, fail-closed).",
   "hooks": {
     "SessionStart": [
       {
@@ -30,6 +30,16 @@
           {
             "type": "command",
             "command": "uv run --no-sync python \"${CLAUDE_PLUGIN_ROOT}/scripts/harness_question_guard.py\" 2>/dev/null || true",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "WebSearch|WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --no-sync python \"${CLAUDE_PLUGIN_ROOT}/scripts/harness_web_egress_guard.py\" || printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"[web-egress] guard failed to launch; failing closed.\"}}'",
             "timeout": 15
           }
         ]

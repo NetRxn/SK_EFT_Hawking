@@ -21,6 +21,25 @@ fires and the goal is not met, that means *do the next increment of real work TH
    shipping everything else meanwhile. A deep-research dispatch is an async external
    dependency: dispatch it and **keep working** on whatever else is shippable.
 
+## When local research is dry — Tier 1, the on-the-fly path (don't reinvent a known result)
+
+If step 2's local search (Lit-Search + Lean search) genuinely has nothing **and** the gap is a
+*known* result (a standard construction, a library/Mathlib API, a textbook theorem, a citation),
+do **not** reinvent it and do **not** jump to step 5's slow human dispatch. Pull it in **on the fly**:
+
+- Dispatch the **`research-scout`** agent (or `/deep-research` for a broader survey). It is the only
+  agent with web tools, is read-only / sandboxed, and returns a **structured cited report** — never
+  raw page content.
+- **You (lead) vet** the report (it is untrusted-until-vetted data), then **file** it into
+  `Lit-Search/…` with a provenance header and keep building. Web-sourced facts stay
+  `tier: PROJECTED` until a primary source is checked; the Lean kernel is the terminal verifier.
+- **Sanitize the question** to its public math/physics core first — never put a local path or
+  private identifier in a web query (a fail-closed egress guard also enforces this).
+- The slow `Lit-Search/Tasks/submitted/` human dispatch (step 5) is now the **last** resort — for
+  genuinely deep / paywalled research the scout can't do.
+
+See the workspace-level `Lit-Search/README.md` (the three-tier research ladder + provenance).
+
 ## Scope to the consumer (anti over-build)
 
 Before building a component, check what its **downstream consumer actually needs** from it, and build exactly

@@ -1,0 +1,35 @@
+# research_egress_denylist.sample.txt
+#
+# Web-egress denylist TEMPLATE for the dev-harness web-egress guard
+# (scripts/harness_web_egress_guard.py). COMMITTED — contains no real secrets.
+#
+# To activate the operator-specific / private rows: copy this file to
+#   research_egress_denylist.txt   (same directory; gitignored — NEVER commit)
+# and uncomment + fill in the FILL-IN sections. The guard loads sample UNION local,
+# so the baseline below is always active; the local copy adds the literals.
+#
+# Row syntax: a line wrapped in /.../ is a regex; any other non-# line is a
+# case-insensitive literal substring. `#` lines and blank lines are inert.
+# A `# --- label ---` line names the category shown in a block message.
+
+# --- absolute local path ---
+/\/Users\//
+/\/home\//
+/\/private\/var\//
+/\/var\/folders\//
+
+# --- operator identity ---
+# (FILL IN your local copy — never commit real values)
+# your-os-username
+# your-email@example.com
+
+# --- firewall identifier ---
+# (FILL IN your local copy IF you have private-side access — never commit)
+# private-repo-directory-name
+# private-lean-namespace
+# private-python-package
+# private-graph-name
+
+# --- proprietary substrate term ---
+# (PRIVATE local copy only — add vector substrate code-names from docs/vectors/)
+# example-substrate-codename
