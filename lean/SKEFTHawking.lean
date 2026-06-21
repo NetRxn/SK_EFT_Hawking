@@ -901,6 +901,12 @@ import SKEFTHawking.SingularFundamentalClassExist
 -- w₂=v₂+v₁². The PD datum's geometric construction (the ℤ/2 fundamental class + PD) is the next foundation
 -- brick; toward collapsing the unoriented-bordism floor for the full-carrier UNCONDITIONAL Ω₄^{Pin⁺}≅ℤ/16.
 import SKEFTHawking.PoincareDualityWu
+-- L3 w₂-tower realizations of the abstract `PoincareDual4Lo` operations: the H¹×H³ cup pairing
+-- (`cupH13` → `cup13`), the singular Wu formula `w₂ = v₂ + v₁²`, and the mod-2 Bockstein
+-- `Sq¹ : H³ → H⁴` (`Sq1` → `sq1₃`, the connecting hom of `0 → ℤ/2 →·2 ℤ/4 → ℤ/2 → 0`).
+import SKEFTHawking.SingularCupH13
+import SKEFTHawking.PoincareDualityWuFormula
+import SKEFTHawking.SingularBockstein
 import SKEFTHawking.SingularCapHomology
 import SKEFTHawking.SingularCupCapHomology
 import SKEFTHawking.SingularUniversalCoeff
