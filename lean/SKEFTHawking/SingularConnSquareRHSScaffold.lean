@@ -141,6 +141,22 @@ theorem exists_boundary_of_homology_eq {Y : TopCat} {n : ℕ} (z w : cycles Y n)
   rw [hη, Submodule.coe_sub]
   abel
 
+/-- **Exact cap cover-partition** (resolves the homology slack in `cover_partition_cap_boundary`): for a
+cochain `g` and chain `z ∈ C(A ∪ B)`, some subdivision `Sdᵐz` splits cover-subordinately AND its cap
+`g ⌢ Sdᵐz` is the EXACT cover-partition `chainIncl A (g|_A ⌢ u) + chainIncl B (g|_B ⌢ w)` (no boundary
+slack) — because cap distributes over `chainIncl` (`cap_chainIncl`). Composes `exists_cover_split` +
+`cap_chainIncl`; the V-part `g|_B ⌢ w` is a genuine cap, so `cover_partition_cap_boundary` applies and
+the connecting cycle is `cap`-realized. -/
+theorem exists_cap_cover_partition {M : TopCat} {k l : ℕ} (A B : Set ↑M) (hA : IsOpen A) (hB : IsOpen B)
+    (g : SingularCochain M k) (z : SingularChain M (k + l)) (hz : z ∈ subspaceChains (A ∪ B) (k + l)) :
+    ∃ (m : ℕ) (u : SingularChain (sub A) (k + l)) (w : SingularChain (sub B) (k + l)),
+      (⇑(SingularSubdivision.singularSd M (k + l)))^[m] z
+          = chainIncl A (k + l) u + chainIncl B (k + l) w ∧
+      cap g ((⇑(SingularSubdivision.singularSd M (k + l)))^[m] z)
+        = chainIncl A l (cap (pullbackCochain A k g) u) + chainIncl B l (cap (pullbackCochain B k g) w) := by
+  obtain ⟨m, u, w, hsplit⟩ := exists_cover_split A B hA hB (k + l) z hz
+  exact ⟨m, u, w, hsplit, by rw [hsplit, map_add, cap_chainIncl, cap_chainIncl]⟩
+
 /-- **Relative-homology subdivision invariance**: `[c] = [Sdᵐc]` in `H(M, S)` — the rep-swap the W5 RHS
 dance needs before `relMvDelta_cover_partition`. Via `relHomology_mk_eq_of` +
 `relative_add_singularSd_iterate_mem_relBoundaries`. -/
