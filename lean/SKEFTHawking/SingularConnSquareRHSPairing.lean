@@ -3,6 +3,7 @@ import SKEFTHawking.SingularConnSquareRHSScaffold
 import SKEFTHawking.SingularRelCohomMvConnectingGeom
 import SKEFTHawking.SingularExcisionIso
 import SKEFTHawking.SingularCohomologySnake
+import SKEFTHawking.SingularCapSubKDuality
 
 /-!
 # Phase 5q.F (w₂-foundation, PD6f-c4) — RHS pairing reduction (gap-free, pairing form)
@@ -140,5 +141,30 @@ theorem cup_cocycle {X : TopCat} {p q : ℕ} (f : SingularCochain X p) (g : Sing
   funext τ
   rw [SingularCohomologyMod2.coboundary_cup, hf, hg]
   simp
+
+/-- **Cup with a relative cochain stays relative** (the `hcv` shape for the cup-form match leg):
+if `f` vanishes on chains in `A` (`f ∈ relCochains A`), so does `f ⌣ g`. No front-face argument —
+via `kronecker_cup_rcap` (`⟨f⌣g, c⟩ = ⟨f, rcap g c⟩`, extracting the *left* factor `f`) and
+`rcap_mem_subspaceChains` (the right cap preserves `A`-support), so `f`'s vanishing closes it. -/
+theorem cup_mem_relCochains {X : TopCat} {A : Set ↑X} {p q : ℕ}
+    (f : SingularCochain X p) (g : SingularCochain X q) (hf : f ∈ relCochains A p) :
+    SingularCohomologyMod2.cup f g ∈ relCochains A (p + q) := by
+  rw [SingularRelativeCohomologyMod2.mem_relCochains]
+  intro c hc
+  rw [SingularCapChainIncl.kronecker_cup_rcap]
+  exact (SingularRelativeCohomologyMod2.mem_relCochains (S := A) p f).1 hf _
+    (SingularRightCapBoundary.rcap_mem_subspaceChains A g hc)
+
+/-- **Pullback of a relative cochain is relative on the preimage subspace** (the second `hcv` piece):
+`pullbackCochain S f ∈ relCochains (val⁻¹A)` when `f ∈ relCochains A`. Via `kronecker_pullbackCochain`
+(`⟨pb f, c⟩ = ⟨f, chainIncl c⟩`) and `chainIncl_mem_subspaceChains_iff` (`chainIncl c ∈ C(A) ↔ c ∈ C(val⁻¹A)`). -/
+theorem pullbackCochain_mem_relCochains {X : TopCat} {S A : Set ↑X} {n : ℕ}
+    (f : SingularCochain X n) (hf : f ∈ relCochains A n) :
+    SingularCapChainIncl.pullbackCochain S n f ∈ relCochains (Subtype.val ⁻¹' A : Set ↑(sub S)) n := by
+  rw [SingularRelativeCohomologyMod2.mem_relCochains]
+  intro c hc
+  rw [SingularCapSubKDuality.kronecker_pullbackCochain]
+  exact (SingularRelativeCohomologyMod2.mem_relCochains (S := A) n f).1 hf _
+    ((chainIncl_mem_subspaceChains_iff A S c).2 hc)
 
 end SKEFTHawking.SingularConnSquareRHSPairing
