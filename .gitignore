@@ -98,6 +98,7 @@ papers/**/*.pdf
 # appear as untracked here (and never reach the leak pre-commit scan).
 /.claude/worktrees/
 docs/dev-loops/SYSTEM2_REGISTER.md
+docs/dev-loops/SYSTEM2_ARCHIVE.md
 # lab notebooks (live brick-log state, AUTO-WRITTEN in full-/goal mode → NEVER committed, so
 # they cannot leak private content into public git). In-repo default home (docs/dev-loops/<roadmap>/)
 # gives stable paths + lets the pre-commit `notebook check` run, but the files themselves stay
@@ -113,3 +114,9 @@ docs/validation/reports/
 # literals incl. firewall terms). Committed template = research_egress_denylist.sample.txt.
 # Match the basename anywhere (never the .sample.txt template).
 research_egress_denylist.txt
+
+# ExtractDeps incremental build caches (ADR-005 D-G.2). Machine-local, regenerated on demand,
+# pin-/declHash-keyed; never tracked (they only change extraction wall-time, never results).
+lean/.lean_immref_cache.json
+lean/.lean_mathlib_closure_cache.json
+lean/.lean_typestr_cache.json

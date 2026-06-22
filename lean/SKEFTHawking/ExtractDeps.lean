@@ -146,10 +146,10 @@ project-local names (and drop self-references) to emit `name_deps_project`, the 
 edges — at ZERO extra cost, with no second `getUsedConstantsAsSet` walk (ADR-005 D-G). -/
 private def processDecl (env : Environment) (name : Name) (ci : ConstantInfo)
     (closures : Std.HashMap Name (Array Name)) (immDeps : Std.HashMap Name (Array Name))
+    (typeStr : String)
     : MetaM Json := do
   let kind ← classifyDecl env name ci
   let moduleName := getModuleName env name
-  let typeStr ← ppExprStr ci.type
 
   -- Transitive axiom dependencies via the batched memoized closure (`AxiomClosure.axiomClosuresWithDeps`,
   -- computed once in `extractAll`): set-identical to per-decl `collectAxioms` (parity-validated)
@@ -185,11 +185,151 @@ private def processDecl (env : Environment) (name : Name) (ci : ConstantInfo)
   ]
   return json
 
+/-- Persistent immediate-ref cache file (ADR-005 D-G.2), relative to the `lean/` cwd. Gitignored. -/
+private def immRefCachePath : System.FilePath := ".lean_immref_cache.json"
+
+/-- Load the incremental immediate-ref cache (`name ↦ (declHash, immediate refs)`). Fail-soft: a
+missing/corrupt cache yields an empty map → a full cold walk (still correct). -/
+private def loadImmRefCache : IO (Std.HashMap Name (UInt64 × Array Name)) := do
+  if !(← immRefCachePath.pathExists) then return {}
+  try
+    let content ← IO.FS.readFile immRefCachePath
+    match Json.parse content with
+    | .error _ => return {}
+    | .ok j =>
+      match j.getArr? with
+      | .error _ => return {}
+      | .ok arr =>
+        let mut m : Std.HashMap Name (UInt64 × Array Name) := {}
+        for entry in arr do
+          match entry.getArr? with
+          | .ok #[jn, jh, jr] =>
+            match jn.getStr?, jh.getStr?, jr.getArr? with
+            | .ok ns, .ok hs, .ok refsJ =>
+              let refs := refsJ.filterMap (fun x => (x.getStr?.toOption).map String.toName)
+              m := m.insert ns.toName ((hs.toNat?.getD 0).toUInt64, refs)
+            | _, _, _ => pure ()
+          | _ => pure ()
+        return m
+  catch _ => return {}
+
+/-- Persist the updated immediate-ref cache (one JSON array of `[name, declHash, [refs…]]`). -/
+private def saveImmRefCache (cache : Std.HashMap Name (UInt64 × Array Name)) : IO Unit := do
+  let arr : Array Json := cache.toArray.map (fun (n, (h, refs)) =>
+    Json.arr #[Json.str n.toString, Json.str (toString h),
+               Json.arr (refs.map (fun r => Json.str r.toString))])
+  IO.FS.writeFile immRefCachePath (toString (Json.arr arr))
+
+/-- Persistent **Mathlib boundary axiom-closure** cache (ADR-005 D-G.2), relative to `lean/` cwd.
+Gitignored. Stores the transitive axiom closures of the project→Mathlib boundary consts so the
+extraction Tarjan treats them as leaves (no recursion into Mathlib proof terms — the dominant cost).
+Tagged with a pin key; discarded wholesale on any toolchain/dependency bump. -/
+private def mathlibCachePath : System.FilePath := ".lean_mathlib_closure_cache.json"
+
+/-- Pin key: a content hash of `lake-manifest.json` (the resolved dep revs — Mathlib, Physlib, …) +
+`lean-toolchain`. The Mathlib boundary closures are stable ONLY for a fixed library pin, so the cache
+is tagged with this key and discarded wholesale on any bump (fail-safe: a stale/missing key ⇒ a cold
+walk that repopulates it, never a wrong closure). -/
+private def computePinKey : IO String := do
+  let readIf (p : System.FilePath) : IO String := do
+    if ← p.pathExists then IO.FS.readFile p else pure ""
+  let manifest ← readIf "lake-manifest.json"
+  let toolchain ← readIf "lean-toolchain"
+  return toString (mixHash manifest.hash toolchain.hash)
+
+/-- Load the Mathlib boundary closure cache IFF its stored pin key matches `pin`; otherwise
+(missing/corrupt/stale-pin) return empty → a full cold walk that repopulates it. Fail-soft. -/
+private def loadMathlibCache (pin : String) : IO (Std.HashMap Name (Array Name)) := do
+  if !(← mathlibCachePath.pathExists) then return {}
+  try
+    let content ← IO.FS.readFile mathlibCachePath
+    match Json.parse content with
+    | .error _ => return {}
+    | .ok j =>
+      match j.getObjVal? "pin" with
+      | .ok (.str p) => if p != pin then return {}
+      | _ => return {}
+      match j.getObjVal? "closures" with
+      | .error _ => return {}
+      | .ok cj =>
+        match cj.getArr? with
+        | .error _ => return {}
+        | .ok arr =>
+          let mut m : Std.HashMap Name (Array Name) := {}
+          for entry in arr do
+            match entry.getArr? with
+            | .ok #[jn, jax] =>
+              match jn.getStr?, jax.getArr? with
+              | .ok ns, .ok axJ =>
+                let axs := axJ.filterMap (fun x => (x.getStr?.toOption).map String.toName)
+                m := m.insert ns.toName axs
+              | _, _ => pure ()
+            | _ => pure ()
+          return m
+  catch _ => return {}
+
+/-- Persist the Mathlib boundary closure cache, tagged with the current pin key. One JSON object
+`{"pin": "...", "closures": [[name, [axiom-names…]], …]}`. -/
+private def saveMathlibCache (pin : String) (cache : Std.HashMap Name (Array Name)) : IO Unit := do
+  let arr : Array Json := cache.toArray.map (fun (n, axs) =>
+    Json.arr #[Json.str n.toString, Json.arr (axs.map (fun a => Json.str a.toString))])
+  let j := Json.mkObj [("pin", Json.str pin), ("closures", Json.arr arr)]
+  IO.FS.writeFile mathlibCachePath (toString j)
+
+/-- Persistent pretty-printed-type cache (ADR-005 D-G.2), relative to `lean/` cwd. Gitignored.
+`ppExpr` of ~23k type signatures is a CO-DOMINANT extraction cost (~150 s, benched) recomputed every
+run; this caches `name ↦ (declHash, typeStr)` so an unchanged decl reuses its rendered type. Gated by
+BOTH the per-decl `declHash` (catches a changed type) AND the library pin (catches a delaborator /
+notation change that would re-render the SAME type `Expr` differently). -/
+private def typeStrCachePath : System.FilePath := ".lean_typestr_cache.json"
+
+/-- Load the type-string cache IFF its stored pin matches `pin`; else (missing/corrupt/stale) empty
+→ a cold ppExpr of every type that repopulates it. Fail-soft. -/
+private def loadTypeStrCache (pin : String) : IO (Std.HashMap Name (UInt64 × String)) := do
+  if !(← typeStrCachePath.pathExists) then return {}
+  try
+    let content ← IO.FS.readFile typeStrCachePath
+    match Json.parse content with
+    | .error _ => return {}
+    | .ok j =>
+      match j.getObjVal? "pin" with
+      | .ok (.str p) => if p != pin then return {}
+      | _ => return {}
+      match j.getObjVal? "types" with
+      | .error _ => return {}
+      | .ok tj =>
+        match tj.getArr? with
+        | .error _ => return {}
+        | .ok arr =>
+          let mut m : Std.HashMap Name (UInt64 × String) := {}
+          for entry in arr do
+            match entry.getArr? with
+            | .ok #[jn, jh, jt] =>
+              match jn.getStr?, jh.getStr?, jt.getStr? with
+              | .ok ns, .ok hs, .ok ts => m := m.insert ns.toName ((hs.toNat?.getD 0).toUInt64, ts)
+              | _, _, _ => pure ()
+            | _ => pure ()
+          return m
+  catch _ => return {}
+
+/-- Persist the type-string cache, tagged with the current pin. JSON object
+`{"pin": "...", "types": [[name, declHash, typeStr], …]}`. -/
+private def saveTypeStrCache (pin : String) (cache : Std.HashMap Name (UInt64 × String)) : IO Unit := do
+  let arr : Array Json := cache.toArray.map (fun (n, (h, ts)) =>
+    Json.arr #[Json.str n.toString, Json.str (toString h), Json.str ts])
+  let j := Json.mkObj [("pin", Json.str pin), ("types", Json.arr arr)]
+  IO.FS.writeFile typeStrCachePath (toString j)
+
 /-- Main extraction: iterate over all constants, filter, process.
     Filters by module membership in the SKEFTHawking package, not by namespace.
     This catches Phase-4 modules (FermionBag4D, SO4Weingarten, etc.) whose
     declarations live at root/sub-namespace but in a SKEFTHawking.* module. -/
-private def extractAll (env : Environment) : MetaM (Array Json) := do
+private def extractAll (env : Environment) (valCache : Std.HashMap Name (UInt64 × Array Name))
+    (mathlibCache : Std.HashMap Name (Array Name))
+    (typeCache : Std.HashMap Name (UInt64 × String))
+    : MetaM (Array Json × Std.HashMap Name (UInt64 × Array Name)
+             × Std.HashMap Name (Array Name)
+             × Std.HashMap Name (UInt64 × String)) := do
   -- Collect all declaration names from modules in the SKEFTHawking package
   let declNames : Array (Name × ConstantInfo) :=
     env.constants.fold (init := #[]) fun acc name ci =>
@@ -198,17 +338,29 @@ private def extractAll (env : Environment) : MetaM (Array Json) := do
         acc.push (name, ci)
       else
         acc
-  -- Sort by name for deterministic output
-  let declNames := declNames.qsort (fun a b => toString a.1 < toString b.1)
-  -- ONE Tarjan pass over the shared constant graph yields BOTH the batched memoized axiom closures
-  -- AND the immediate-dependency map (`depCache`). `name_deps_project` is derived from the latter in
-  -- `processDecl` — no separate proof-term walk (ADR-005 D-G).
-  let (closures, immDeps) ← SKEFTHawking.AxiomClosure.axiomClosuresWithDeps (declNames.map (·.1))
+  -- Sort by name for deterministic output. Precompute each decl's `toString` key ONCE (not O(n log n)
+  -- times inside the comparator — the comparator-side `toString` was a measurable slice of env-scan).
+  let declNames := ((declNames.map (fun p => (toString p.1, p))).qsort (fun a b => a.1 < b.1)).map (·.2)
+  -- ONE Tarjan pass yields the batched axiom closures + the immediate-dependency map (`depCache`)
+  -- + the updated incremental immref cache (`newCache`) + the updated Mathlib boundary leaf cache
+  -- (`newMathlib`), all ADR-005 D-G.2. `name_deps_project` derives from `depCache` in `processDecl`
+  -- — no separate proof-term walk (ADR-005 D-G). Mathlib consts in `mathlibCache` are walk leaves.
+  let (closures, immDeps, newCache, newMathlib) ←
+    SKEFTHawking.AxiomClosure.axiomClosuresWithDepsCached (declNames.map (·.1))
+      (fun n => inSKPackage env n) valCache mathlibCache
   let mut results : Array Json := #[]
+  let mut newTypeCache : Std.HashMap Name (UInt64 × String) := {}
   for (name, ci) in declNames do
-    let json ← processDecl env name ci closures immDeps
+    -- Reuse the rendered type for an unchanged decl (declHash hit, ADR-005 D-G.2); ppExpr only on a
+    -- miss. `declHash` is shared with AxiomClosure so the type/immref/closure caches age in lockstep.
+    let h := SKEFTHawking.AxiomClosure.declHash env name
+    let typeStr ← match typeCache[name]? with
+      | some (ch, ts) => if ch == h then pure ts else ppExprStr ci.type
+      | none          => ppExprStr ci.type
+    newTypeCache := newTypeCache.insert name (h, typeStr)
+    let json ← processDecl env name ci closures immDeps typeStr
     results := results.push json
-  return results
+  return (results, newCache, newMathlib, newTypeCache)
 
 /-- Entry point: load environment, run extraction, print JSON. -/
 unsafe def main : IO Unit := do
@@ -227,10 +379,19 @@ unsafe def main : IO Unit := do
     maxHeartbeats := 0  -- unlimited
   }
   let coreState : Lean.Core.State := { env := env }
-  let results ← Lean.Core.CoreM.toIO'
-    (MetaM.run' (extractAll env)) coreCtx coreState
+  -- Load the three ADR-005 D-G.2 caches (per-decl immref + pin-keyed Mathlib leaf + pin-keyed
+  -- type-string); run; persist all three.
+  let pin ← computePinKey
+  let valCache ← loadImmRefCache
+  let mathlibCache ← loadMathlibCache pin
+  let typeCache ← loadTypeStrCache pin
+  let (results, newCache, newMathlib, newTypeCache) ← Lean.Core.CoreM.toIO'
+    (MetaM.run' (extractAll env valCache mathlibCache typeCache)) coreCtx coreState
+  saveImmRefCache newCache
+  saveMathlibCache pin newMathlib
+  saveTypeStrCache pin newTypeCache
   -- Output JSON array (stdout consumed by scripts/extract_lean_deps.py)
   let jsonArray := Json.arr results
   IO.println (toString jsonArray)
   -- Status on stderr (stdout is captured by the Python wrapper).
-  IO.eprintln s!"[name_deps] proof-dep edges derived from the axiom-closure pass (ADR-005 D-G) — populated for {results.size} decls."
+  IO.eprintln s!"[name_deps] proof-dep edges from the axiom-closure pass (ADR-005 D-G) — {results.size} decls; immref cache {valCache.size}->{newCache.size}; mathlib leaf cache {mathlibCache.size}->{newMathlib.size}; typestr cache {typeCache.size}->{newTypeCache.size} (D-G.2)."
