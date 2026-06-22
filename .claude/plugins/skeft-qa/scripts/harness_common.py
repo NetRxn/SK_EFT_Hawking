@@ -32,6 +32,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 # This plugin copy's OWN repo dir name. A sibling deployment ships its own copy + name.
@@ -199,12 +200,21 @@ def emit_context(event_name, text):
         pass
 
 
-# Hard payload budget (review C1): hook `additionalContext` over the 10k cap is REPLACED
-# by a file-path preview (hooks.md:704) — which recreates the exact "model sees a pointer,
-# not the content" failure the durability fix exists to prevent. So the assembled payload
-# MUST stay under this budget; the /goal condition + first-turn self-check are always kept
-# in full, and the active-System-2-issues section is the only truncatable part.
-PAYLOAD_MAX_CHARS = 9000  # hard cap (< the 10k additionalContext limit, hooks.md:704)
+# The platform HARD LIMIT on a hook's hookSpecificOutput.additionalContext is 10,000 chars. Over it,
+# Claude Code does NOT truncate — it writes the text to a session file and hands the model a path +
+# short preview (verified against the official hooks docs), recreating the exact "model sees a pointer,
+# not the content" failure the post-compaction durability fix exists to prevent. So the EMITTED
+# additionalContext must stay under this END-TO-END (payload + the compose_directive frame + notes).
+ADDITIONAL_CONTEXT_LIMIT = 10000
+# Reserve for what is appended AFTER the payload (the trimmed compose_directive frame one-liner + the
+# conditional drift/notebook notes) + a safety margin — so bounding the PAYLOAD alone guarantees the
+# emitted additionalContext stays under the limit end-to-end.
+_WRAPPER_RESERVE = 700
+# Effective PAYLOAD budget. The /goal condition (≤4k, ALWAYS full — overrides every other item) and the
+# always-on RE_ANCHOR are kept in full; only the per-goal COACHING BLOCK is droppable. The pre-decisions
+# are NO LONGER injected — they are a MANDATORY READ (FIRST_ACTION), so they grow UNBOUNDED in
+# docs/dev-loops/PRE_DECISIONS.md with zero payload-budget pressure (CORE_MAX_CHARS retired).
+PAYLOAD_MAX_CHARS = ADDITIONAL_CONTEXT_LIMIT - _WRAPPER_RESERVE
 ACTIVE_ISSUES_MAX = 8  # at most the top-N findings, dropped further until under cap
 
 
@@ -264,10 +274,8 @@ DECISION_HEURISTICS = (
     "genuine user-only decision."
 )
 
-# Headroom reserved for the first-turn self-check directive the SessionStart composer
-# appends to this payload (harness_reinject._SELF_CHECK). The PreToolUse guard does NOT
-# append it, so reserving it here keeps BOTH callers under the 9000-char cap (C1).
-_SELF_CHECK_RESERVE = 400
+# (self-check headroom retired — the budget is now end-to-end via _WRAPPER_RESERVE, and the
+# separate first-turn self-check is folded into the always-injected RE_ANCHOR.)
 
 
 def _frontier_for(marker):
@@ -287,66 +295,179 @@ def _frontier_for(marker):
         return ""
 
 
-def build_reorientation_payload(marker, repo_root):
-    """Contract B — the SHARED re-orientation payload, single source of the string.
-    Used by BOTH the SessionStart re-inject (harness_reinject.py) and the
-    PreToolUse(AskUserQuestion) guard (harness_question_guard.py). Assembled from:
-      * the settled /goal condition (marker['goal'] — the FAST-READ copy; the durable,
-        crash-recoverable source is the tracked goal_prompt_<goal_id>.md, spec A.5/A.8),
-      * the live lab-notebook FRONTIER digest (from the marker's INDEX; capped ~1600 chars,
-        omitted gracefully if absent — lands the next brick in-context for a zero-Read resume),
-      * 're-read CLAUDE.md',
-      * the active System-2 issues view (omitted gracefully if absent),
-      * a short decision-heuristics summary.
-    `marker` is the managed marker dict; `repo_root` is this plugin's resolved repo
-    (may be None -> active-issues section omitted). Fail-soft on any error.
+def frontier_from_atlas(root, max_items=8):
+    """Read the DERIVED atlas frontier (`<repo>/lean/atlas_view.json`, ADR-005 D-I) — the project's
+    OPEN assumptions ranked by how much each gates — for atlas-GUIDED fan-out (vs roadmap-opaque work
+    selection). Returns ``{"frontier": [top max_items], "apex_ids": [...], "tracks": {...}}`` or
+    ``None`` if the atlas is absent/unreadable. FAIL-SOFT by design: the atlas is a VIEW the lead
+    CONSULTS to prioritize, never a dependency — a missing/stale atlas degrades to ``None`` and the
+    loop falls back to the roadmap + lab-notebook frontier. Read-only (never triggers extraction)."""
+    if root is None:
+        return None
+    try:
+        atlas = json.loads((root / "lean" / "atlas_view.json").read_text())
+    except Exception:
+        return None
+    return {
+        "frontier": list(atlas.get("frontier", []))[: max(0, int(max_items))],
+        "apex_ids": list(atlas.get("summary", {}).get("apex_ids", [])),
+        "tracks": dict(atlas.get("tracks", {})),
+    }
 
-    HARD BUDGET (review C1): the assembled payload MUST stay < PAYLOAD_MAX_CHARS (9000),
-    because hook additionalContext over the 10k cap is replaced by a file-path preview
-    (hooks.md:704) — defeating the durability fix. The /goal condition (marker['goal'])
-    AND the first-turn self-check directive are ALWAYS included in full; only the
-    active-System-2-issues section is truncatable — include at most ACTIVE_ISSUES_MAX (8)
-    findings (sorted by tier then tally, in _read_active_issues), dropping more until the
-    total fits. The SessionStart composer appends the self-check, so to keep this function
-    self-bounded we reserve that headroom here via _SELF_CHECK_RESERVE."""
+
+def format_atlas_frontier(root, max_items=8):
+    """Bounded plain-text digest of :func:`frontier_from_atlas` — the lead's atlas-guided fan-out
+    compass (a per-track rollup + the most-gating open assumptions). FAIL-SOFT -> ``''`` if the atlas
+    is absent, so callers can ``if s: ...``. ASCII-only (it rides the SessionStart payload)."""
+    data = frontier_from_atlas(root, max_items)
+    if not data or not data.get("frontier"):
+        return ""
+    lines = []
+    tracks = data.get("tracks") or {}
+    if tracks:
+        roll = ", ".join(
+            "%s:%d%s" % (t, v.get("open_count", 0),
+                        ("/%dapex" % v["apex_count"]) if v.get("apex_count") else "")
+            for t, v in tracks.items()
+        )
+        lines.append("tracks (open by area): " + roll)
+    lines.append("most-gating OPEN assumptions (discharge unlocks the most downstream):")
+    for f in data["frontier"]:
+        star = " *apex" if f.get("is_apex") else ""
+        lines.append("  %3d  %s  [%s/%s]%s" % (
+            int(f.get("frontier_impact", 0)), f.get("id", "?"),
+            f.get("tier", "?"), f.get("eliminability", "?"), star))
+    return "\n".join(lines)
+
+
+def _read_predecisions_core(root):
+    """The pre-decisions CORE — the `## Core` section of the tracked docs/dev-loops/PRE_DECISIONS.md.
+    NO LONGER injected into the payload (the Core is now a MANDATORY READ — see FIRST_ACTION — so it
+    grows unbounded with zero payload pressure); kept as a helper (coach / tests / future checks).
+    The store lives in docs/ (NOT the plugin) so /debrief graduates a pre-decision by editing that file
+    alone — no plugin cache refresh. Fail-soft: returns the static DECISION_HEURISTICS digest if the
+    file / the Core section is absent or unreadable."""
+    if root is None:
+        return DECISION_HEURISTICS
+    try:
+        import re
+        text = (root / "docs" / "dev-loops" / "PRE_DECISIONS.md").read_text()
+        m = re.search(r"\n## Core\b.*?(?=\n## )", "\n" + text, re.DOTALL)
+        core = re.sub(r"^## Core[^\n]*\n+", "", m.group(0).strip()).strip() if m else ""
+        return ("PRE-DECISIONS (always-on — apply WITHOUT asking):\n" + core) if core else DECISION_HEURISTICS
+    except Exception:
+        return DECISION_HEURISTICS
+
+
+RE_ANCHOR = (
+    "RE-ANCHOR before resuming (do this FIRST): a compaction summary optimizes tactical continuity "
+    "over strategic anchoring — it can surface a mid-air tactic and drop the close-path. Before "
+    "continuing whatever tactic the summary surfaced, confirm it still matches the close-path: the "
+    "live LAB-NOTEBOOK FRONTIER below (always current — the loop's own latest state) and the COACHING "
+    "BLOCK if present (an external harvest read — sharper analysis, but it may lag). If they conflict "
+    "and the coaching block is recent, the harvest likely caught a drift you can't self-see."
+)
+
+FIRST_ACTION = (
+    "FIRST ACTION this turn, before anything else: (1) READ docs/dev-loops/PRE_DECISIONS.md — the "
+    "standing pre-decisions you MUST apply this turn (when to stop, climb the ladder, bank a "
+    "hypothesis, re-anchor at a boundary); do NOT skip — they are not injected here, this read is how "
+    "you load them. (2) Invoke /skeft-qa:goal-dev (the MCP-first proof loop, kernel-purity rules, "
+    "/reset-slot + worktree fan-out, the symptom-indexed friction catalog). (3) If the goal involves "
+    "Lean, also invoke lean4. Then resume the next increment."
+)
+
+
+def coaching_path(root, goal_id):
+    """Per-goal COACHING BLOCK cache (the tier-2 re-orientation brief). Contract: the
+    /skeft-qa:harvest consolidator WRITES it; build_reorientation_payload READS it. Per-goal so a
+    multi-goal workspace can't cross-contaminate. Gitignored; absent until the first harvest."""
+    return harness_dir(root) / "coaching" / (str(goal_id) + ".json")
+
+
+def _read_coaching_block(root, goal_id, now):
+    """Read the per-goal COACHING BLOCK (harvest-authored re-orientation) -> {"text","age_label"} or
+    None. OPTIONAL BY DESIGN: absent for a new goal until the first harvest (≤ the cadence, default
+    4h) and it AGES between harvests — so it is NEVER a dependency; the always-injected RE_ANCHOR + the
+    live FRONTIER are the baseline. The age_label lets the loop treat a laggy block as advisory and
+    defer to the live frontier. Fail-soft -> None."""
+    if root is None or not goal_id:
+        return None
+    try:
+        data = json.loads(coaching_path(root, goal_id).read_text())
+    except Exception:
+        return None
+    text = str(data.get("text") or data.get("block") or "").strip()
+    if not text:
+        return None
+    try:
+        age_h = max(0.0, (float(now) - float(data.get("authored_ts", 0))) / 3600.0)
+    except Exception:
+        age_h = 0.0
+    if age_h < 1.0:
+        age_label = "harvest-authored <1h ago"
+    elif age_h < 8.0:
+        age_label = "harvest-authored ~%.0fh ago" % age_h
+    else:
+        age_label = "harvest-authored ~%.0fh ago — LIKELY SUPERSEDED, treat as advisory" % age_h
+    return {"text": text, "age_label": age_label}
+
+
+def build_reorientation_payload(marker, repo_root):
+    """Contract B — the SHARED re-orientation payload (SessionStart re-inject + the
+    PreToolUse(AskUserQuestion) guard). Structure (post-redesign):
+      * SETTLED GOAL (marker['goal'], ≤4k, ALWAYS in full — overrides every other budget item; the
+        durable copy is the tracked goal_prompt_<goal_id>.md),
+      * RE_ANCHOR — the always-on generic re-anchor (PD-4 essence; coaching-INDEPENDENT, so it
+        survives an absent/lagging coaching block),
+      * the live LAB-NOTEBOOK FRONTIER digest (always current; a ZERO-Read next brick),
+      * a 're-read CLAUDE.md' pointer,
+      * FIRST_ACTION — mandates the pre-decisions READ + goal-dev (the pre-decisions are NO LONGER
+        injected; the read is how they load -> they grow unbounded with no payload pressure),
+      * the per-goal COACHING BLOCK if present (staleness-labeled; the droppable ENHANCEMENT —
+        included whole only if it fits, never required, never truncated mid-text).
+    `marker` is the managed marker; `repo_root` may be None (coaching omitted). Fail-soft.
+
+    END-TO-END BUDGET: the payload stays < PAYLOAD_MAX_CHARS (= ADDITIONAL_CONTEXT_LIMIT −
+    _WRAPPER_RESERVE), so the EMITTED additionalContext (payload + the compose_directive frame +
+    conditional notes) stays under the real 10k platform limit. Goal + RE_ANCHOR are always full;
+    only the COACHING BLOCK is droppable."""
     if not isinstance(marker, dict):
         marker = {}
     goal = marker.get("goal", "")
-    head = []
+    parts = []
     if goal:
-        head.append("SETTLED GOAL (the /goal condition):\n" + goal)
-    # The live lab-notebook FRONTIER digest, injected verbatim so a post-compaction turn acts on
-    # the next brick with ZERO Reads. Kept (not truncated by the budget loop — only active-issues
-    # is); itself capped (~1600 chars) by extract_frontier. Omitted gracefully if no INDEX/FRONTIER.
+        parts.append("SETTLED GOAL (the /goal condition):\n" + goal)
+    parts.append(RE_ANCHOR)
     frontier = _frontier_for(marker)
     if frontier:
-        head.append(
-            "LAB-NOTEBOOK FRONTIER (the live next-brick digest — act on its NEXT BRICK directly; "
-            "no Read needed; open the INDEX / shards only for deeper context):\n" + frontier
+        parts.append(
+            "LAB-NOTEBOOK FRONTIER (the live, always-current next-brick digest — act on its NEXT "
+            "BRICK directly; no Read needed; open the INDEX / shards only for deeper context):\n" + frontier
         )
-    head.append("Re-read CLAUDE.md (the giant-ref pointer that should be re-read).")
-    head.append(
-        "FIRST ACTION this turn: invoke /skeft-qa:goal-dev before doing anything else — it carries "
-        "the MCP-first proof loop, kernel-purity rules, /reset-slot + worktree fan-out, and the "
-        "symptom-indexed friction catalog; losing it mid-loop is how anti-patterns creep in. "
-        "THEN, if the goal involves Lean development, also invoke the lean4 skill. "
-    )
-    tail = [DECISION_HEURISTICS]
-    # Budget the truncatable middle: try the full top-N, then drop findings until the
-    # whole payload (incl. the self-check headroom the composer later appends) fits.
-    n = ACTIVE_ISSUES_MAX
-    while True:
-        issues = _read_active_issues(repo_root, n) if n > 0 else ""
-        parts = list(head)
-        if issues:
-            parts.append(
-                "Active System-2 issues (open/recurring drift findings to avoid):\n" + issues
-            )
-        parts += tail
-        payload = "\n\n".join(parts)
-        if len(payload) + _SELF_CHECK_RESERVE < PAYLOAD_MAX_CHARS or n <= 0:
-            return payload
-        n -= 1
+    parts.append("Re-read CLAUDE.md (the giant-ref pointer that should be re-read).")
+    parts.append(FIRST_ACTION)
+    # ATLAS FRONTIER (ADR-005 D-I) — the cross-project most-gating OPEN assumptions, a complementary
+    # lens to the lab-notebook's LOCAL next-brick: consult it to aim fan-out at high-leverage provable
+    # work. Small + droppable (included only if it fits the budget); fail-soft -> '' (never a dependency).
+    atlas_fr = format_atlas_frontier(repo_root)
+    if atlas_fr:
+        block = ("ATLAS FRONTIER (derived; most-gating OPEN assumptions across the project — consult to "
+                 "aim fan-out, `/skeft-qa:frontier` for the full ranked list):\n" + atlas_fr)
+        if len("\n\n".join(parts + [block])) < PAYLOAD_MAX_CHARS:
+            parts.append(block)
+    # COACHING BLOCK — the OPTIONAL enhancement (see _read_coaching_block). Included whole only if the
+    # whole payload still fits the budget; else dropped (graceful — the RE_ANCHOR + live FRONTIER above
+    # are the baseline). Never required, never truncated mid-text.
+    coaching = _read_coaching_block(repo_root, marker.get("goal_id"), time.time())
+    if coaching:
+        block = (
+            "COACHING BLOCK (%s — an external harvest read; advisory, defer to the live FRONTIER if "
+            "they conflict and this is old):\n%s" % (coaching["age_label"], coaching["text"])
+        )
+        if len("\n\n".join(parts + [block])) < PAYLOAD_MAX_CHARS:
+            parts.append(block)
+    return "\n\n".join(parts)
 
 
 # ── Plan 3 (System-2 harvest) helpers ────────────────────────────────────────────────

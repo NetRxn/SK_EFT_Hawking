@@ -12,6 +12,8 @@ Subcommands:
   advance-watermark <sid> <off>  -> advance the watermark (atomic, monotonic)
   harvest-state-get              -> print the harvest_state JSON ({} if absent)
   harvest-state-set <ts> <cad>   -> record last_run_ts + cadence_hours
+  atlas-frontier [N]             -> print the derived atlas frontier digest (top N open assumptions
+                                    ranked by impact; ADR-005 D-I). Empty if the atlas is unbuilt.
 """
 import json
 import os
@@ -46,6 +48,9 @@ def main(argv=None):
         elif cmd == "harvest-state-set":
             hc.write_harvest_state(float(argv[1]), float(argv[2]))
             print("ok")
+        elif cmd == "atlas-frontier":
+            n = int(argv[1]) if len(argv) > 1 else 8
+            print(hc.format_atlas_frontier(hc.repo_root(os.getcwd()), n))
         else:
             print(__doc__)
             return 2
