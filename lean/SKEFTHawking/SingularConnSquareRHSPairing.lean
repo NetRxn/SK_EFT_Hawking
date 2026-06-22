@@ -132,4 +132,13 @@ theorem exists_relBoundary_witness {X : TopCat} {S : Set ↑X} {n : ℕ} (w : Si
     rwa [ZModModule.sub_eq_add] at hd
   · rw [← add_assoc, ZModModule.add_self, zero_add]
 
+/-- **Cup of two cocycles is a cocycle** (over ℤ/2, the `hc` for the cup-form match leg
+`c := cup (gL↾) b`): `δ(f ⌣ g) = 0` when `δf = 0` and `δg = 0`, via the cup-Leibniz `coboundary_cup`. -/
+theorem cup_cocycle {X : TopCat} {p q : ℕ} (f : SingularCochain X p) (g : SingularCochain X q)
+    (hf : coboundary X p f = 0) (hg : coboundary X q g = 0) :
+    coboundary X (p + q) (SingularCohomologyMod2.cup f g) = 0 := by
+  funext τ
+  rw [SingularCohomologyMod2.coboundary_cup, hf, hg]
+  simp
+
 end SKEFTHawking.SingularConnSquareRHSPairing
