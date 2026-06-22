@@ -323,6 +323,12 @@ def format_atlas_frontier(root, max_items=8):
     if not data or not data.get("frontier"):
         return ""
     lines = []
+    # KEYSTONE: the single most-gating open node — "focus here now" (node-count reference-class ONLY;
+    # never a calendar/person-year estimate — honors feedback-ignore-pm-estimates). The frontier is
+    # pre-sorted by frontier_impact desc, so frontier[0] is the keystone.
+    kf = data["frontier"][0]
+    lines.append("KEYSTONE (the open node whose closure unblocks the most - focus here): %s  gates %d%s" % (
+        kf.get("id", "?"), int(kf.get("frontier_impact", 0)), " *apex" if kf.get("is_apex") else ""))
     tracks = data.get("tracks") or {}
     if tracks:
         roll = ", ".join(
@@ -386,11 +392,13 @@ def coaching_path(root, goal_id):
 
 
 def _read_coaching_block(root, goal_id, now):
-    """Read the per-goal COACHING BLOCK (harvest-authored re-orientation) -> {"text","age_label"} or
-    None. OPTIONAL BY DESIGN: absent for a new goal until the first harvest (≤ the cadence, default
-    4h) and it AGES between harvests — so it is NEVER a dependency; the always-injected RE_ANCHOR + the
-    live FRONTIER are the baseline. The age_label lets the loop treat a laggy block as advisory and
-    defer to the live frontier. Fail-soft -> None."""
+    """Read the per-goal COACHING BLOCK (harvest-authored re-orientation) -> {"text","facts"} or None.
+    OPTIONAL BY DESIGN: absent for a new goal until the first harvest (the harvest is async, ~4h
+    cadence) and it AGES between harvests — so it is NEVER a dependency; the always-injected RE_ANCHOR +
+    the live FRONTIER are the baseline. We surface the AUTHORING FACTS only (absolute timestamp, age,
+    and the transcript high-water-mark it was authored as-of) and let the loop judge — NO staleness
+    verdict is baked in here (a fixed age threshold would misjudge a fast goal vs a slow one, and could
+    introduce failure modes we don't anticipate). Fail-soft -> None."""
     if root is None or not goal_id:
         return None
     try:
@@ -400,17 +408,41 @@ def _read_coaching_block(root, goal_id, now):
     text = str(data.get("text") or data.get("block") or "").strip()
     if not text:
         return None
+    facts = []
+    ts = data.get("authored_ts")
+    if ts:
+        try:
+            import datetime
+            iso = datetime.datetime.fromtimestamp(
+                float(ts), datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+            age_h = max(0.0, (float(now) - float(ts)) / 3600.0)
+            age = ("~%.0fh ago" % age_h) if age_h < 48 else ("~%.0fd ago" % (age_h / 24.0))
+            facts.append("authored %s (%s)" % (iso, age))
+        except Exception:
+            pass
+    wm = data.get("watermark")
+    if wm is not None:
+        facts.append("as of transcript high-water-mark %s" % wm)
+    return {"text": text, "facts": "; ".join(facts)}
+
+
+def write_coaching_block(root, goal_id, text, watermark=None, now=None):
+    """WRITE the per-goal COACHING BLOCK cache — the harvest consolidator's authoring side (pairs with
+    _read_coaching_block). Stamps authored_ts (so the reader can surface the age) + the OPTIONAL
+    transcript high-water-mark the harvest authored as-of (a fixed reference the loop can pin against).
+    Best-effort / fail-soft: returns False on any error or empty text/goal_id, True on write."""
+    if root is None or not goal_id or not str(text).strip():
+        return False
     try:
-        age_h = max(0.0, (float(now) - float(data.get("authored_ts", 0))) / 3600.0)
+        p = coaching_path(root, goal_id)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        rec = {"authored_ts": float(now) if now is not None else time.time(), "text": str(text).strip()}
+        if watermark is not None:
+            rec["watermark"] = watermark
+        p.write_text(json.dumps(rec, indent=2))
+        return True
     except Exception:
-        age_h = 0.0
-    if age_h < 1.0:
-        age_label = "harvest-authored <1h ago"
-    elif age_h < 8.0:
-        age_label = "harvest-authored ~%.0fh ago" % age_h
-    else:
-        age_label = "harvest-authored ~%.0fh ago — LIKELY SUPERSEDED, treat as advisory" % age_h
-    return {"text": text, "age_label": age_label}
+        return False
 
 
 def build_reorientation_payload(marker, repo_root):
@@ -461,9 +493,11 @@ def build_reorientation_payload(marker, repo_root):
     # are the baseline). Never required, never truncated mid-text.
     coaching = _read_coaching_block(repo_root, marker.get("goal_id"), time.time())
     if coaching:
+        meta = (" — " + coaching["facts"]) if coaching["facts"] else ""
         block = (
-            "COACHING BLOCK (%s — an external harvest read; advisory, defer to the live FRONTIER if "
-            "they conflict and this is old):\n%s" % (coaching["age_label"], coaching["text"])
+            "COACHING BLOCK (harvest-authored re-orientation; the harvest runs asynchronously so this "
+            "may predate your current state%s — weigh it against the live FRONTIER above and your "
+            "current state):\n%s" % (meta, coaching["text"])
         )
         if len("\n\n".join(parts + [block])) < PAYLOAD_MAX_CHARS:
             parts.append(block)
