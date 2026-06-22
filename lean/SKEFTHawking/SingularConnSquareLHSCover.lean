@@ -47,4 +47,25 @@ theorem cup_pullback_relCocycle {X : TopCat} {N p : ℕ} {S W : Set ↑X}
       ((SingularRelativeCohomologyMod2.mem_relCochains (S := S) (N + 1) gL.1.1).2
         (SingularConnSquareRHSPairing.relCocycle_props gL).2))
 
+/-- **Cover-partition cup-pairing readoff** (on an already-subdivided chain). For a cover `{A, B}` and
+the `(A∪B)`-supported `fund`, some subdivision `Sdᵐfund` cover-splits so the cup pairing
+`⟨g ⌣ b, Sdᵐfund⟩` reads off as the sum of the two cover-part pairings (via `exists_cap_cover_partition`
++ `kronecker_cup_cover_partition`). This is the wall-free half of the LHS-leg cover reduction: it carries
+the single `Sdᵐ` of the cover-partition, so it has none of the `singularSd (n+1)` vs `singularSd (k+l)`
+`Function.iterate`-defeq friction that composing it with `kronecker_relCocycle_singularSd_invariant` in a
+single term provokes — the subdivision-invariance step is applied separately at the concrete-degree use site. -/
+theorem cup_cover_pairing_sd {M : TopCat} {N p : ℕ} (A B : Set ↑M) (hA : IsOpen A) (hB : IsOpen B)
+    (g : SingularCochain M (N + 1)) (b : SingularCochain M (p + 2))
+    (fund : SingularChain M (N + 1 + (p + 2)))
+    (hfund_mem : fund ∈ subspaceChains (A ∪ B) (N + 1 + (p + 2))) :
+    ∃ (m : ℕ) (u : SingularChain (sub A) (N + 1 + (p + 2))) (w : SingularChain (sub B) (N + 1 + (p + 2))),
+      kronecker (cup g b) ((SingularSubdivision.singularSd M (N + 1 + (p + 2)))^[m] fund)
+        = kronecker (SingularCapChainIncl.pullbackCochain A (p + 2) b)
+            (cap (SingularCapChainIncl.pullbackCochain A (N + 1) g) u)
+          + kronecker (SingularCapChainIncl.pullbackCochain B (p + 2) b)
+            (cap (SingularCapChainIncl.pullbackCochain B (N + 1) g) w) := by
+  obtain ⟨m, u, w, hsplit, hcap⟩ :=
+    SingularConnSquareRHSScaffold.exists_cap_cover_partition A B hA hB g fund hfund_mem
+  exact ⟨m, u, w, SingularConnSquareMatchLHS.kronecker_cup_cover_partition (b := b) (hpart := hcap)⟩
+
 end SKEFTHawking.SingularConnSquareLHSCover
