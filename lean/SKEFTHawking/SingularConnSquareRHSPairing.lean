@@ -84,4 +84,34 @@ theorem rhs_pairing_reduce {M : TopCat} [T2Space ↑M] {N : ℕ} (U' V' : Set �
     relKroneckerH_relCohomMvConnecting_cover_partition U' V' hU' hV' N ωR _
       (chainIncl U' (N + 1) u') (chainIncl V' (N + 1) w') hu hw hsplit hwcyc hSdcyc]
 
+/-- **Fundamental-cycle → `z₀` pairing reduction** (the cap-not-cycle resolution / shared-z₀ bridge):
+a cocycle `c` (e.g. `gL ∪ b`, where `gL` is *relative* on `A=Kᶜ`) that **vanishes on `C(A)`** pairs
+identically against `fund` and `z₀` whenever they differ by a boundary plus an `A`-chain
+(`fund + z₀ = ∂η + a`, `a ∈ C(A)` — supplied by `fundCycleW_relHomologous`: `fund + z₀ ∈ relBoundaries A`).
+Because `⟨c, ∂η⟩ = ⟨δc, η⟩ = 0` (cocycle) and `⟨c, a⟩ = 0` (vanishing on `A`). This is what lets the
+connecting-square match reduce **both legs to pairings against the single shared absolute cycle `z₀`**
+(`∂z₀ = 0`), the goal's "⟨g∪a', ∂z₀⟩ over the shared z₀". Over ℤ/2. Kernel-pure. -/
+theorem pair_fund_eq_pair_z0 {X : TopCat} {n : ℕ} {A : Set ↑X} (c : SingularCochain X n)
+    (hc : coboundary X n c = 0) (hcv : ∀ d ∈ subspaceChains A n, kronecker c d = 0)
+    (fund z₀ : SingularChain X n) (η : SingularChain X (n + 1)) (a : SingularChain X n)
+    (ha : a ∈ subspaceChains A n) (heq : fund + z₀ = chainBoundary X n η + a) :
+    kronecker c fund = kronecker c z₀ := by
+  have hca : kronecker c a = 0 := hcv a ha
+  have h0 : kronecker c fund + kronecker c z₀ = 0 := by
+    rw [← kronecker_add_right, heq, kronecker_add_right, ← kronecker_coboundary_chainBoundary, hc, hca]
+    simp
+  exact eq_of_sub_eq_zero (by rw [ZModModule.sub_eq_add]; exact h0)
+
+/-- **A relative cocycle's ambient representative is an absolute cocycle that vanishes on `C(A)`** —
+the two `pair_fund_eq_pair_z0` hypotheses, extracted from `gL : ker (relCoboundaryₗ A n)`. The absolute
+cocycle part is `relCoboundaryₗ_coe` (`↑(relCoboundaryₗ f) = coboundary ↑f`) + the kernel hypothesis; the
+vanishing part is `mem_relCochains` (a relative cochain pairs to 0 against every `C(A)`-chain). Lets the
+connecting-square match instantiate `pair_fund_eq_pair_z0` with `c := gL.1.1`, `A := Kᶜ`. -/
+theorem relCocycle_props {X : TopCat} {A : Set ↑X} {n : ℕ} (gL : LinearMap.ker (relCoboundaryₗ A n)) :
+    coboundary X n gL.1.1 = 0 ∧ (∀ c ∈ subspaceChains A n, kronecker gL.1.1 c = 0) := by
+  refine ⟨?_, (mem_relCochains (S := A) n gL.1.1).1 gL.1.2⟩
+  have h := congrArg Subtype.val gL.2
+  rw [relCoboundaryₗ_coe] at h
+  simpa using h
+
 end SKEFTHawking.SingularConnSquareRHSPairing
