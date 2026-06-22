@@ -2737,6 +2737,76 @@ def check_graph_integrity() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK: Derived proof-atlas integrity (ADR-005 D-F)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("atlas_integrity",
+                "Derived proof-atlas (ADR-005) is consistent: no kind conflicts, no undisclosed "
+                "project axioms, open nodes registry-backed, no apex silently closed")
+def check_atlas_integrity() -> CheckResult:
+    """Gate the derived atlas VIEW (``scripts/atlas_view.py``) — a projection of
+    ``lean_deps.json`` ∪ ``HYPOTHESIS_REGISTRY`` ∪ ``AXIOM_METADATA``. ``native_decide`` compiler
+    axioms are excluded from the axiom-taint leg (ADR-002 owns that surface). The
+    ``apex_not_closed`` leg is a structural placeholder until the ``@[atlas_node]`` apex attribute
+    lands in Phase 2."""
+    try:
+        sys.path.insert(0, str(SCRIPT_DIR))
+        import atlas_view
+        from src.core.constants import AXIOM_METADATA
+        lean_deps = atlas_view.load_lean_deps_file()
+        atlas = atlas_view.build_atlas(lean_deps)
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, error=f"atlas build failed: {exc}")
+
+    details: List[Detail] = []
+    nodes = atlas["nodes"]
+    unknowns = atlas["unknowns"]
+
+    # (1) Kind consistency: no FQN classified as more than one atlas kind.
+    seen: dict = {}
+    conflicts = []
+    for n in nodes:
+        prev = seen.setdefault(n["fqn"], n["atlas_kind"])
+        if prev != n["atlas_kind"]:
+            conflicts.append(n["fqn"])
+    details.append(Detail("kind_consistency", not conflicts,
+        "no FQN has conflicting atlas kinds" if not conflicts
+        else f"{len(conflicts)} FQNs with conflicting kinds: {conflicts[:5]}"))
+
+    # (2) No undisclosed project axiom: every GENUINE project axiom (native_decide excluded) in any
+    #     closure must be disclosed in AXIOM_METADATA. Currently 0 — catches a future stray axiom.
+    allow = set(AXIOM_METADATA.keys())
+    untracked = []
+    for r in lean_deps:
+        for a in atlas_view._genuine_project_axioms(r):
+            if a.split(".")[-1] not in allow:
+                untracked.append(f"{r['name']} <- {a}")
+    details.append(Detail("no_undisclosed_project_axiom", not untracked,
+        "all genuine project axioms disclosed in AXIOM_METADATA (or none)" if not untracked
+        else f"{len(untracked)} undisclosed: {untracked[:5]}"))
+
+    # (3) Every open (UNKNOWN) atlas node is registry-backed. The converse — no consumed
+    #     unregistered Prop — is enforced by the tracked_hypothesis_ledger check.
+    malformed = [u.get("id") for u in unknowns
+                 if not str(u.get("id", "")).startswith("hyp:") or u.get("atlas_kind") != "UNKNOWN"]
+    details.append(Detail("open_nodes_registry_backed", not malformed,
+        f"{len(unknowns)} open nodes, all from HYPOTHESIS_REGISTRY" if not malformed
+        else f"{len(malformed)} malformed open nodes: {malformed[:5]}"))
+
+    # (4) Apex-never-silently-closed (structural; vacuous until the Phase-2 @[atlas_node] attribute).
+    apex = [n for n in nodes if n.get("is_apex")]
+    closed_apex = [n["fqn"] for n in apex
+                   if n.get("atlas_status") in ("PROVED", "OBSTRUCTION", "FULLY_CLOSED")]
+    details.append(Detail("apex_not_closed", not closed_apex,
+        "no apex nodes yet (attribute lands in Phase 2)" if not apex
+        else ("no apex silently closed" if not closed_apex
+              else f"{len(closed_apex)} apex silently closed: {closed_apex[:5]}")))
+
+    passed = all(d.passed for d in details)
+    return CheckResult(passed=passed, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CHECK 17: Count literals in paper .tex (Phase 5v Wave 1b)
 # ═══════════════════════════════════════════════════════════════════════
 

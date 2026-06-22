@@ -118,10 +118,16 @@ partial def strongconnect (v : Name) : M Unit := do
       sccClosure := s.sccClosure.insert scc acc.toArray
       nextScc := scc + 1 }
 
-/-- **Compute the transitive axiom closure for each root.** One Tarjan pass over the shared
-constant-dependency graph; returns `root ↦ sorted axiom-name array` (identical set to
-`collectAxioms`, validated by the parity check). -/
-def axiomClosures (roots : Array Name) : CoreM (Std.HashMap Name (Array Name)) := do
+/-- **Compute the transitive axiom closure AND the immediate constant-dependency graph for each
+root**, in ONE Tarjan pass over the shared constant-dependency graph. Returns
+`(root ↦ sorted axiom-name array, const ↦ immediate union deps)`.
+
+The first map is identical to `collectAxioms` (validated by the parity check). The second is
+`depCache` — every visited const's immediate `type ∪ value` references — which `ExtractDeps` filters
+to project-local names to emit the proof-dependency edges (`name_deps_project`) **without a second
+`getUsedConstantsAsSet` walk** (ADR-005 D-G: the O(total-expr-size) traversal is already paid here). -/
+def axiomClosuresWithDeps (roots : Array Name) :
+    CoreM (Std.HashMap Name (Array Name) × Std.HashMap Name (Array Name)) := do
   let go : M Unit := roots.forM fun r => do
     unless (← get).index.contains r do strongconnect r
   let (_, s) ← go.run {}
@@ -130,6 +136,13 @@ def axiomClosures (roots : Array Name) : CoreM (Std.HashMap Name (Array Name)) :
     if let some scc := s.sccId[r]? then
       let cl := (s.sccClosure[scc]?.getD #[]).qsort (·.toString < ·.toString)
       res := res.insert r cl
-  return res
+  return (res, s.depCache)
+
+/-- **Transitive axiom closure for each root** — back-compat wrapper over `axiomClosuresWithDeps`
+(drops the immediate-dependency map). One Tarjan pass; `root ↦ sorted axiom-name array`, identical
+set to `collectAxioms` (validated by the parity check). -/
+def axiomClosures (roots : Array Name) : CoreM (Std.HashMap Name (Array Name)) := do
+  let (closures, _) ← axiomClosuresWithDeps roots
+  return closures
 
 end SKEFTHawking.AxiomClosure

@@ -3516,6 +3516,42 @@ def write_graph_to_pg(graph: dict) -> None:
 # Full graph builder
 # ═══════════════════════════════════════════════════════════════════════
 
+def _overlay_atlas(nodes: list[dict]) -> None:
+    """Overlay the derived proof-atlas classification (ADR-005 Phase 1a) onto existing Lean +
+    Hypothesis nodes IN PLACE: ``meta.atlas_kind / atlas_status / frontier_impact / native_decide``.
+
+    The atlas is a VIEW, not a store — it adds NO new nodes or edges here: the implication DAG is
+    already the existing ``USES`` (proof-dep, from ``name_deps``) + ``ASSUMES`` (theorem→hypothesis)
+    edges; this only annotates each node's atlas trust-state so the graph/AGE/dashboard can render
+    the positive/negative/open map. Fail-soft: a classifier error logs + skips (the graph still builds).
+    """
+    try:
+        sys.path.insert(0, str(SCRIPT_DIR))
+        import atlas_view
+        atlas = atlas_view.build_atlas(atlas_view.load_lean_deps_file())
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("atlas overlay skipped (%s)", exc)
+        return
+    by_fqn = {n["fqn"]: n for n in atlas["nodes"]}
+    by_hyp = {u["id"]: u for u in atlas["unknowns"]}
+    overlaid = 0
+    for nd in nodes:
+        nid = nd.get("id", "")
+        a = by_fqn.get(nid[5:]) if nid.startswith("lean:") else None
+        if a is None:
+            a = by_hyp.get(nid)
+        if a is None:
+            continue
+        m = nd.setdefault("meta", {})
+        m["atlas_kind"] = a["atlas_kind"]
+        m["atlas_status"] = a["atlas_status"]
+        m["frontier_impact"] = a.get("frontier_impact", 0)
+        if "native_decide" in a:
+            m["native_decide"] = a["native_decide"]
+        overlaid += 1
+    logger.info("atlas overlay: annotated %d nodes (atlas_kind/atlas_status/frontier_impact)", overlaid)
+
+
 def build_graph_json(*, sync_pg: bool = False) -> dict:
     """Build the complete graph and return as a JSON-serializable dict.
 
@@ -3531,6 +3567,7 @@ def build_graph_json(*, sync_pg: bool = False) -> dict:
     nodes = extract_all_nodes()
     node_ids = {n['id'] for n in nodes}
     edges = extract_all_edges(node_ids)
+    _overlay_atlas(nodes)  # ADR-005: annotate Lean/Hypothesis nodes with derived atlas trust-state
 
     # Phase 5v Waves 10b/10c — verification change-bus + freshness propagation.
     # Use the canonical {nodes, links} shape (D3 convention; matches

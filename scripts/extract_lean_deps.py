@@ -59,7 +59,33 @@ def _needs_refresh() -> bool:
 
 
 def _run_extraction() -> None:
-    """Run the Lean extraction script and write the JSON output."""
+    """Run the Lean extraction script and write the JSON output.
+
+    Serialized at the extraction CHOKEPOINT by the shared ``regen_lock("lean_deps")``
+    (ADR-005 D-G.1). The regen lock was previously applied only at the ``/sync``
+    orchestration layer, so direct ``load_lean_deps()`` callers (``validate.py``
+    ``graph_integrity``, ``build_graph.py``, the dashboard, a swarm lead) bypassed it and
+    could launch competing ~5-min extractions — the multi-agent stampede. Wrapping it here
+    means EVERY entry point inherits single-writer serialization: if another process holds
+    the lock, SKIP and let the caller proceed on the existing cache rather than racing.
+    """
+    # Local import + path guard: harness_lock lives alongside this script.
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import harness_lock  # noqa: E402
+
+    with harness_lock.regen_lock("lean_deps") as got:
+        if not got:
+            logger.info(
+                "lean_deps regen already in progress (lock held by another process) — "
+                "using existing cache"
+            )
+            return
+        _run_extraction_locked()
+
+
+def _run_extraction_locked() -> None:
+    """The actual extraction body (runs only while holding the lean_deps regen lock)."""
     logger.info("Lean deps stale — running ExtractDeps.lean...")
     try:
         # Timeout: 1800s = 30 min. ExtractDeps walks every declaration in

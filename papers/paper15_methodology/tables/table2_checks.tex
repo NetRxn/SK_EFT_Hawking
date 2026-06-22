@@ -36,18 +36,19 @@
 28 & \texttt{claim\_clusters\_fresh} & papers/claim\_clusters.json is up-to-date vs. v2 claims\_review.json files \\
 29 & \texttt{numerical\_literals} & Paper .tex files free of inline numerical literals outside \texttt{\textbackslash input\{\}} blocks \\
 30 & \texttt{graph\_integrity} & Knowledge graph integrity --- orphans, conflicts, broken chains \\
-31 & \texttt{count\_literals} & Paper .tex files reference counts via \texttt{\textbackslash input\{counts.tex\}} macros, not literals \\
-32 & \texttt{readiness\_submission\_gate} & Every paper has all P1 readiness gates passed (Phase 5v Wave 4) \\
-33 & \texttt{citation\_primary\_sources\_present} & Every external bibitem cited in papers has a primary-source cache file \\
-34 & \texttt{provenance\_doi\_in\_registry} & PARAMETER\_PROVENANCE source DOIs resolve to CITATION\_REGISTRY bibkeys \\
-35 & \texttt{bundle\_consistency} & Cross-bundle clusters' member sentences agree on numerical content across bundle boundaries \\
-36 & \texttt{bundle\_source\_freshness} & Bundle source-paper mtime $\leq$ bundle last\_lift; flag stale bundles \\
-37 & \texttt{bibitem\_title\_primary\_source} & Registry titles match primary-source cache PDF page-1 titles (drift detector) \\
-38 & \texttt{quantum\_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
-39 & \texttt{paper\_latex\_compiles} & Bundle drafts compile under pdflatex (advisory; slow --- pass --force-latex or --check paper\_latex\_compiles) \\
-40 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
-41 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft \texttt{} Lean references resolve in lean\_deps.json \\
-42 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
-43 & \texttt{inventory\_index\_autogen\_fresh} & Advisory: SK\_EFT\_Hawking\_Inventory\_Index.md autogen blocks match docs/counts.json \\
+31 & \texttt{atlas\_integrity} & Derived proof-atlas (ADR-005) is consistent: no kind conflicts, no undisclosed project axioms, open nodes registry-backed, no apex silently closed \\
+32 & \texttt{count\_literals} & Paper .tex files reference counts via \texttt{\textbackslash input\{counts.tex\}} macros, not literals \\
+33 & \texttt{readiness\_submission\_gate} & Every paper has all P1 readiness gates passed (Phase 5v Wave 4) \\
+34 & \texttt{citation\_primary\_sources\_present} & Every external bibitem cited in papers has a primary-source cache file \\
+35 & \texttt{provenance\_doi\_in\_registry} & PARAMETER\_PROVENANCE source DOIs resolve to CITATION\_REGISTRY bibkeys \\
+36 & \texttt{bundle\_consistency} & Cross-bundle clusters' member sentences agree on numerical content across bundle boundaries \\
+37 & \texttt{bundle\_source\_freshness} & Bundle source-paper mtime $\leq$ bundle last\_lift; flag stale bundles \\
+38 & \texttt{bibitem\_title\_primary\_source} & Registry titles match primary-source cache PDF page-1 titles (drift detector) \\
+39 & \texttt{quantum\_network} & QN Python formulas satisfy the QuantumNetwork Lean theorem identities \\
+40 & \texttt{paper\_latex\_compiles} & Bundle drafts compile under pdflatex (advisory; slow --- pass --force-latex or --check paper\_latex\_compiles) \\
+41 & \texttt{axiom\_count\_prose\_consistency} & Paper prose axiom-count claims agree with docs/counts.json \\
+42 & \texttt{prose\_theorem\_reference\_coverage} & Bundle-draft \texttt{} Lean references resolve in lean\_deps.json \\
+43 & \texttt{theorem\_name\_embedded\_citations} & Declaration names embedding author+year have matching bibliography entries \\
+44 & \texttt{inventory\_index\_autogen\_fresh} & Advisory: SK\_EFT\_Hawking\_Inventory\_Index.md autogen blocks match docs/counts.json \\
 \hline
 \end{tabular}
