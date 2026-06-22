@@ -3548,8 +3548,13 @@ def _overlay_atlas(nodes: list[dict]) -> None:
         m["frontier_impact"] = a.get("frontier_impact", 0)
         if "native_decide" in a:
             m["native_decide"] = a["native_decide"]
+        # Phase 2 (ADR-005 D-H): the open-node TRACK axis — tier/eliminability/apex — so the graph can
+        # be queried/grouped by workstream ("separate areas"). Present only on hypothesis nodes.
+        for fld in ("tier", "eliminability", "is_apex"):
+            if a.get(fld) is not None:
+                m[f"atlas_{fld}"] = a[fld]
         overlaid += 1
-    logger.info("atlas overlay: annotated %d nodes (atlas_kind/atlas_status/frontier_impact)", overlaid)
+    logger.info("atlas overlay: annotated %d nodes (atlas_kind/atlas_status/frontier_impact/tier/apex)", overlaid)
 
 
 def build_graph_json(*, sync_pg: bool = False) -> dict:

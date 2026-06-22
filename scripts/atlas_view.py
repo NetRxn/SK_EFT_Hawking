@@ -148,13 +148,17 @@ def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
         deps = list(h.get("dependent_theorems", []) or [])
         st = _hyp_status(h)
         node_id = f"hyp:{key}"
+        tier = h.get("tier")
         unknowns.append({
             "id": node_id,
             "atlas_kind": "UNKNOWN",
             "atlas_status": st,
-            "tier": h.get("tier"),
+            "tier": tier,
             "eliminability": h.get("eliminability"),
             "module": h.get("module"),
+            # is_apex: a HEADLINE-tier open target — the bit the D-E `@[atlas_node apex]` attribute was
+            # to carry, but it is already structured in HYPOTHESIS_REGISTRY for open nodes (ADR-005 D-H).
+            "is_apex": (tier == "headline"),
             "frontier_impact": len(deps),
             "dependent_theorems": deps,
         })
@@ -163,24 +167,44 @@ def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
             edges.append({"source": node_id, "type": "ASSUMED_BY", "target": d})
 
     # Frontier (Phase-1a sense): open assumptions ranked by how much they gate, highest first —
-    # "which open node, if discharged, unlocks the most." (The provable-theorem frontier becomes
-    # meaningful once STATED-but-unproven targets exist — Phase 2/3.)
+    # "which open node, if discharged, unlocks the most." Each entry carries its TRACK (`tier`) +
+    # `eliminability` + `is_apex` so the frontier is navigable by workstream, not just a flat list
+    # (ADR-005 D-H: the atlas serves "many open phases/waves working separate areas").
     frontier = sorted(
-        ({"id": u["id"], "frontier_impact": u["frontier_impact"], "status": u["atlas_status"]}
+        ({"id": u["id"], "frontier_impact": u["frontier_impact"], "status": u["atlas_status"],
+          "tier": u["tier"], "eliminability": u["eliminability"], "is_apex": u["is_apex"]}
          for u in unknowns),
         key=lambda x: (-x["frontier_impact"], x["id"]),
     )
+
+    # Per-TRACK rollup (the "separate areas" view): one bucket per `tier`, soft "unclassified" for any
+    # node lacking one (ADR-005 D-H — unclassified degrades softly, never a hard failure).
+    tracks: dict[str, dict] = {}
+    for u in unknowns:
+        t = u["tier"] or "unclassified"
+        tr = tracks.setdefault(t, {"open_count": 0, "total_impact": 0, "apex_count": 0, "node_ids": []})
+        tr["open_count"] += 1
+        tr["total_impact"] += u["frontier_impact"]
+        tr["apex_count"] += 1 if u["is_apex"] else 0
+        tr["node_ids"].append(u["id"])
+    for tr in tracks.values():
+        tr["node_ids"].sort()
+    apex_ids = sorted(u["id"] for u in unknowns if u["is_apex"])
 
     return {
         "nodes": nodes,
         "unknowns": unknowns,
         "edges": edges,
         "frontier": frontier,
+        "tracks": {t: tracks[t] for t in sorted(tracks)},
         "summary": {
             "theorem_nodes": len(nodes),
             "unknown_nodes": len(unknowns),
             "implies_edges": len(edges),
+            "apex_nodes": len(apex_ids),
+            "apex_ids": apex_ids,
             "by_kind_status": dict(sorted(counts.items())),
+            "by_tier": {t: tracks[t]["open_count"] for t in sorted(tracks)},
         },
     }
 
@@ -201,16 +225,25 @@ def main(argv: list[str] | None = None) -> int:
 
     atlas = build_atlas(load_lean_deps_file())
     s = atlas["summary"]
-    print("Derived Proof Atlas (Phase 1a)")
+    print("Derived Proof Atlas (Phase 2: tracks + apexes)")
     print(f"  theorem nodes : {s['theorem_nodes']}")
     print(f"  unknown nodes : {s['unknown_nodes']}  (tracked open assumptions)")
     print(f"  IMPLIES edges : {s['implies_edges']}")
+    print(f"  apex (headline) open targets : {s['apex_nodes']}")
     print("  by kind:status:")
     for k, v in s["by_kind_status"].items():
         print(f"    {k:32s} {v}")
-    print("  top frontier (most-gating open assumptions):")
+    print("  open frontier by TRACK (separate areas — ADR-005 D-H):")
+    for t, tr in atlas["tracks"].items():
+        apex = f", {tr['apex_count']} apex" if tr["apex_count"] else ""
+        print(f"    {t:20s} {tr['open_count']:2d} open, gating {tr['total_impact']:4d} decls{apex}")
+    print("  apex (headline) targets:")
+    for fr in (f for f in atlas["frontier"] if f["is_apex"]):
+        print(f"    {fr['frontier_impact']:4d}  {fr['id']}  [{fr['eliminability']}]")
+    print("  top frontier overall (most-gating open assumptions):")
     for fr in atlas["frontier"][:5]:
-        print(f"    {fr['frontier_impact']:4d}  {fr['id']}  [{fr['status']}]")
+        tag = " ★apex" if fr["is_apex"] else ""
+        print(f"    {fr['frontier_impact']:4d}  {fr['id']}  [{fr['tier']}/{fr['eliminability']}]{tag}")
 
     if a.write:
         ATLAS_VIEW_PATH.write_text(json.dumps(atlas, indent=2))

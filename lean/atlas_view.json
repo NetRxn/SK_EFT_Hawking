@@ -127611,6 +127611,7 @@
       "tier": "external_boundary",
       "eliminability": "very_hard",
       "module": "SpinRokhlinInterface (Phase 5q.B, rewired to latticeSig); E8Signature + LatticeSignatureCongr + BlockSignature + GeneratorNondeg + LatticeSigBlock + RokhlinClassification (signature calculus, classification route); LatticePrimitive + EvenLatticeForm (classification scaffolding [E1]/[E2]); LatticeSignature (latticeSig); RokhlinBridge (legacy hypothesis form)",
+      "is_apex": false,
       "frontier_impact": 11,
       "dependent_theorems": [
         "SKEFTHawking.SmoothSpinManifold4.rokhlin",
@@ -127633,6 +127634,7 @@
       "tier": "discharge_future",
       "eliminability": "very_hard",
       "module": "CommonOrigin (Phase 5q.E W5 + W6); Pin\u207a half from SymTFT/PinPlusBordism4 (Phase 6r); \u03a9\u2085 substrate + constructed Smith from SymTFT/SpinZ4Bordism5 (W6); Kitaev reading from KitaevSixteenFold (W1)",
+      "is_apex": false,
       "frontier_impact": 12,
       "dependent_theorems": [
         "SKEFTHawking.CommonOrigin.sixteen_convergence_common_origin",
@@ -127656,6 +127658,7 @@
       "tier": "external_boundary",
       "eliminability": "hard",
       "module": "WangBridge",
+      "is_apex": false,
       "frontier_impact": 2,
       "dependent_theorems": [
         "SKEFTHawking.wang_bridge_full_chain",
@@ -127669,6 +127672,7 @@
       "tier": "external_boundary",
       "eliminability": "algebraic",
       "module": "WangBridge",
+      "is_apex": false,
       "frontier_impact": 1,
       "dependent_theorems": [
         "SKEFTHawking.central_charge_from_sm"
@@ -127681,6 +127685,7 @@
       "tier": "external_boundary",
       "eliminability": "hard",
       "module": "AlgebraicRokhlin (alternate route; no longer on the SpinRokhlinInterface wiring path)",
+      "is_apex": false,
       "frontier_impact": 1,
       "dependent_theorems": [
         "SKEFTHawking.serre_even_unimodular_mod8"
@@ -127693,6 +127698,7 @@
       "tier": "external_boundary",
       "eliminability": "very_hard",
       "module": "proposed: SpinBordism.lean",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127703,6 +127709,7 @@
       "tier": "external_boundary",
       "eliminability": "hard",
       "module": "EWBaryogenesisChiralityWall",
+      "is_apex": false,
       "frontier_impact": 2,
       "dependent_theorems": [
         "SKEFTHawking.EWBaryogenesisChiralityWall.sm_with_3nu_R_ewbg_forbidden_under_klrs",
@@ -127716,6 +127723,7 @@
       "tier": "discharge_future",
       "eliminability": "hard",
       "module": "ScalarRungInterpretation",
+      "is_apex": false,
       "frontier_impact": 2,
       "dependent_theorems": [
         "SKEFTHawking.mexican_hat_vev_under_supercritical_bridge",
@@ -127729,6 +127737,7 @@
       "tier": "external_boundary",
       "eliminability": "open",
       "module": "GravitationalWaves",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127739,6 +127748,7 @@
       "tier": "discharge_future",
       "eliminability": "hard",
       "module": "FLRWDynamics",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127749,6 +127759,7 @@
       "tier": "external_boundary",
       "eliminability": "open",
       "module": "RTCasiniHuertaBounds",
+      "is_apex": false,
       "frontier_impact": 4,
       "dependent_theorems": [
         "SKEFTHawking.rt_entropy_pos",
@@ -127764,6 +127775,7 @@
       "tier": "external_boundary",
       "eliminability": "open",
       "module": "SPTClassification",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127774,6 +127786,7 @@
       "tier": "external_boundary",
       "eliminability": "hard",
       "module": "RTCasiniHuertaBounds",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127784,6 +127797,7 @@
       "tier": "external_boundary",
       "eliminability": "hard",
       "module": "BHEntropyMicroscopic",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127794,6 +127808,7 @@
       "tier": "external_boundary",
       "eliminability": "hard",
       "module": "InducedGravityEntropy",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127804,6 +127819,7 @@
       "tier": "external_boundary",
       "eliminability": "hard",
       "module": "BHThermodynamicsFourLaws",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127814,6 +127830,7 @@
       "tier": "external_boundary",
       "eliminability": "hard",
       "module": "LinearizedEFE",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127824,6 +127841,7 @@
       "tier": "headline",
       "eliminability": "hard",
       "module": "NeutrinoMixing",
+      "is_apex": true,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127834,6 +127852,7 @@
       "tier": "discharge_future",
       "eliminability": "hard",
       "module": "LightQuarkHierarchyFallthrough",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127844,6 +127863,7 @@
       "tier": "discharge_future",
       "eliminability": "hard",
       "module": "DarkSectorSynthesis",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127854,6 +127874,7 @@
       "tier": "external_boundary",
       "eliminability": "hard",
       "module": "HiddenSectorMixedCharge",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127864,6 +127885,7 @@
       "tier": "discharge_future",
       "eliminability": "hard",
       "module": "MajoranaRung",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127874,6 +127896,7 @@
       "tier": "discharge_future",
       "eliminability": "hard",
       "module": "MajoranaRungSMG",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127884,6 +127907,7 @@
       "tier": "discharge_future",
       "eliminability": "hard",
       "module": "MajoranaRungSMG",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127894,6 +127918,7 @@
       "tier": "local",
       "eliminability": "hard",
       "module": "MajoranaRungDecoupling",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127904,6 +127929,7 @@
       "tier": "local",
       "eliminability": "hard",
       "module": "BHLGaugeEmbedding",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127914,6 +127940,7 @@
       "tier": "local",
       "eliminability": "hard",
       "module": "BHLGaugeEmbedding",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127924,6 +127951,7 @@
       "tier": "local",
       "eliminability": "hard",
       "module": "PenroseSingularityCurveTheoretic",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127934,6 +127962,7 @@
       "tier": "headline",
       "eliminability": "hard",
       "module": "FKLW.CartanSubstrate",
+      "is_apex": true,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127944,6 +127973,7 @@
       "tier": "headline",
       "eliminability": "hard",
       "module": "FKLW.CartanSubstrate",
+      "is_apex": true,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127954,6 +127984,7 @@
       "tier": "headline",
       "eliminability": "hard",
       "module": "FKLW.CartanSubstrate",
+      "is_apex": true,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127964,6 +127995,7 @@
       "tier": "local",
       "eliminability": "hard",
       "module": "CenterFunctorZ2Equiv",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     },
@@ -127974,6 +128006,7 @@
       "tier": "local",
       "eliminability": "hard",
       "module": "CenterFunctorZ2Equiv",
+      "is_apex": false,
       "frontier_impact": 0,
       "dependent_theorems": []
     }
@@ -128159,178 +128192,353 @@
     {
       "id": "hyp:smith_inflow_z16",
       "frontier_impact": 12,
-      "status": "PLANNED"
+      "status": "PLANNED",
+      "tier": "discharge_future",
+      "eliminability": "very_hard",
+      "is_apex": false
     },
     {
       "id": "hyp:rokhlin_sigma_mod_16",
       "frontier_impact": 11,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "very_hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_RT_Formula_Valid",
       "frontier_impact": 4,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "open",
+      "is_apex": false
     },
     {
       "id": "hyp:H_KLRS_SM_Crossover",
       "frontier_impact": 2,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_ScalarChannelIsTetradBifurcationOutput",
       "frontier_impact": 2,
-      "status": "PLANNED"
+      "status": "PLANNED",
+      "tier": "discharge_future",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:modular_invariance_framing",
       "frontier_impact": 2,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:c_minus_equals_8Nf",
       "frontier_impact": 1,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "algebraic",
+      "is_apex": false
     },
     {
       "id": "hyp:characteristic_square_mod_8",
       "frontier_impact": 1,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_BilocalPointlikeLimit",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "local",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_CFZ2_sq_a",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "local",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_CFZ2_sq_e",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "local",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_CasiniHuerta_Bound_Valid",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_DESICompatibility",
       "frontier_impact": 0,
-      "status": "PLANNED"
+      "status": "PLANNED",
+      "tier": "discharge_future",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_DecouplingBoundDim6",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "local",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_Fib_NonCentralConjugateWitness",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "headline",
+      "eliminability": "hard",
+      "is_apex": true
     },
     {
       "id": "hyp:H_Fib_TwoLITangents",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "headline",
+      "eliminability": "hard",
+      "is_apex": true
     },
     {
       "id": "hyp:H_Fib_v4_witness",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "headline",
+      "eliminability": "hard",
+      "is_apex": true
     },
     {
       "id": "hyp:H_HSCovariantBosonisation",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "local",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_HorizonBoundaryCondition",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_MR_FromADWSubstrate_BCS_LNV",
       "frontier_impact": 0,
-      "status": "PLANNED"
+      "status": "PLANNED",
+      "tier": "discharge_future",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_MR_FromSMGGap",
       "frontier_impact": 0,
-      "status": "PLANNED"
+      "status": "PLANNED",
+      "tier": "discharge_future",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_MixedChannelZ16Cancels",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_PMNSAnglesFromExactSubstrate",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "headline",
+      "eliminability": "hard",
+      "is_apex": true
     },
     {
       "id": "hyp:H_RegimePartition",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_Sakharov",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_SubstrateNearSMGFixedPoint",
       "frontier_impact": 0,
-      "status": "PLANNED"
+      "status": "PLANNED",
+      "tier": "discharge_future",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_VergelesPositivity",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:H_VestigialModeIsGraviton",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "open",
+      "is_apex": false
     },
     {
       "id": "hyp:H_VestigialRelicCarriesZ16Charge",
       "frontier_impact": 0,
-      "status": "PLANNED"
+      "status": "PLANNED",
+      "tier": "discharge_future",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:IsCurveTheoreticPenroseHypothesis",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "local",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:Phase6hHyperchargeSplittingHypothesis",
       "frontier_impact": 0,
-      "status": "PLANNED"
+      "status": "PLANNED",
+      "tier": "discharge_future",
+      "eliminability": "hard",
+      "is_apex": false
     },
     {
       "id": "hyp:TPFConjecture",
       "frontier_impact": 0,
-      "status": "STATED"
+      "status": "STATED",
+      "tier": "external_boundary",
+      "eliminability": "open",
+      "is_apex": false
     },
     {
       "id": "hyp:spin_bordism_iso_Z",
       "frontier_impact": 0,
-      "status": "PLANNED"
+      "status": "PLANNED",
+      "tier": "external_boundary",
+      "eliminability": "very_hard",
+      "is_apex": false
     }
   ],
+  "tracks": {
+    "discharge_future": {
+      "open_count": 8,
+      "total_impact": 14,
+      "apex_count": 0,
+      "node_ids": [
+        "hyp:H_DESICompatibility",
+        "hyp:H_MR_FromADWSubstrate_BCS_LNV",
+        "hyp:H_MR_FromSMGGap",
+        "hyp:H_ScalarChannelIsTetradBifurcationOutput",
+        "hyp:H_SubstrateNearSMGFixedPoint",
+        "hyp:H_VestigialRelicCarriesZ16Charge",
+        "hyp:Phase6hHyperchargeSplittingHypothesis",
+        "hyp:smith_inflow_z16"
+      ]
+    },
+    "external_boundary": {
+      "open_count": 15,
+      "total_impact": 21,
+      "apex_count": 0,
+      "node_ids": [
+        "hyp:H_CasiniHuerta_Bound_Valid",
+        "hyp:H_HorizonBoundaryCondition",
+        "hyp:H_KLRS_SM_Crossover",
+        "hyp:H_MixedChannelZ16Cancels",
+        "hyp:H_RT_Formula_Valid",
+        "hyp:H_RegimePartition",
+        "hyp:H_Sakharov",
+        "hyp:H_VergelesPositivity",
+        "hyp:H_VestigialModeIsGraviton",
+        "hyp:TPFConjecture",
+        "hyp:c_minus_equals_8Nf",
+        "hyp:characteristic_square_mod_8",
+        "hyp:modular_invariance_framing",
+        "hyp:rokhlin_sigma_mod_16",
+        "hyp:spin_bordism_iso_Z"
+      ]
+    },
+    "headline": {
+      "open_count": 4,
+      "total_impact": 0,
+      "apex_count": 4,
+      "node_ids": [
+        "hyp:H_Fib_NonCentralConjugateWitness",
+        "hyp:H_Fib_TwoLITangents",
+        "hyp:H_Fib_v4_witness",
+        "hyp:H_PMNSAnglesFromExactSubstrate"
+      ]
+    },
+    "local": {
+      "open_count": 6,
+      "total_impact": 0,
+      "apex_count": 0,
+      "node_ids": [
+        "hyp:H_BilocalPointlikeLimit",
+        "hyp:H_CFZ2_sq_a",
+        "hyp:H_CFZ2_sq_e",
+        "hyp:H_DecouplingBoundDim6",
+        "hyp:H_HSCovariantBosonisation",
+        "hyp:IsCurveTheoreticPenroseHypothesis"
+      ]
+    }
+  },
   "summary": {
     "theorem_nodes": 14178,
     "unknown_nodes": 33,
     "implies_edges": 35,
+    "apex_nodes": 4,
+    "apex_ids": [
+      "hyp:H_Fib_NonCentralConjugateWitness",
+      "hyp:H_Fib_TwoLITangents",
+      "hyp:H_Fib_v4_witness",
+      "hyp:H_PMNSAnglesFromExactSubstrate"
+    ],
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 210,
       "TRUE:PROVED": 13968,
       "UNKNOWN:PLANNED": 9,
       "UNKNOWN:STATED": 24
+    },
+    "by_tier": {
+      "discharge_future": 8,
+      "external_boundary": 15,
+      "headline": 4,
+      "local": 6
     }
   }
 }

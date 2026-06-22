@@ -2747,8 +2747,8 @@ def check_atlas_integrity() -> CheckResult:
     """Gate the derived atlas VIEW (``scripts/atlas_view.py``) — a projection of
     ``lean_deps.json`` ∪ ``HYPOTHESIS_REGISTRY`` ∪ ``AXIOM_METADATA``. ``native_decide`` compiler
     axioms are excluded from the axiom-taint leg (ADR-002 owns that surface). The
-    ``apex_not_closed`` leg is a structural placeholder until the ``@[atlas_node]`` apex attribute
-    lands in Phase 2."""
+    ``apex_not_closed`` leg is ACTIVE as of Phase 2 (apexes = HEADLINE-tier open targets from the
+    hypothesis registry; ADR-005 D-H)."""
     try:
         sys.path.insert(0, str(SCRIPT_DIR))
         import atlas_view
@@ -2793,13 +2793,24 @@ def check_atlas_integrity() -> CheckResult:
         f"{len(unknowns)} open nodes, all from HYPOTHESIS_REGISTRY" if not malformed
         else f"{len(malformed)} malformed open nodes: {malformed[:5]}"))
 
-    # (4) Apex-never-silently-closed (structural; vacuous until the Phase-2 @[atlas_node] attribute).
-    apex = [n for n in nodes if n.get("is_apex")]
-    closed_apex = [n["fqn"] for n in apex
-                   if n.get("atlas_status") in ("PROVED", "OBSTRUCTION", "FULLY_CLOSED")]
+    # (4) Apex-never-silently-closed (ADR-005 D-F/D-H). Apexes = HEADLINE-tier OPEN targets (`is_apex`,
+    #     now sourced from HYPOTHESIS_REGISTRY; the D-E `@[atlas_node apex]` attribute would only ADD
+    #     apex-marking onto PROVED theorems and is not yet used). The worst failure: a headline OPEN
+    #     target that is no longer genuinely open — either its status flipped to a closed one, or a
+    #     project theorem named exactly after the hypothesis key already proves it (the goal secretly
+    #     became a theorem but the registry still lists it open, misleading the frontier).
+    apexes = [u for u in unknowns if u.get("is_apex")]
+    proved = {n["fqn"] for n in nodes if n.get("atlas_status") == "PROVED"}
+    proved_last = {fqn.split(".")[-1] for fqn in proved}
+    closed_apex = []
+    for u in apexes:
+        key = str(u.get("id", ""))[len("hyp:"):]
+        open_status = str(u.get("atlas_status", "")).upper() in ("STATED", "PLANNED", "ACTIVE", "OPEN")
+        if (not open_status) or (key in proved_last):
+            closed_apex.append(u.get("id"))
     details.append(Detail("apex_not_closed", not closed_apex,
-        "no apex nodes yet (attribute lands in Phase 2)" if not apex
-        else ("no apex silently closed" if not closed_apex
+        f"{len(apexes)} apex (headline) open target(s), none silently closed" if apexes and not closed_apex
+        else ("no apex (headline-tier) nodes" if not apexes
               else f"{len(closed_apex)} apex silently closed: {closed_apex[:5]}")))
 
     passed = all(d.passed for d in details)
