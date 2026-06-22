@@ -72,6 +72,40 @@ def _index_autogen_stale() -> bool:
         return True
 
 
+def _atlas_view_stale() -> bool:
+    """True if lean/atlas_view.json differs from a fresh build (ADR-005). Content-compare against the
+    serialization `--write` would emit, so it catches ANY input change (lean_deps.json OR the
+    HYPOTHESIS_REGISTRY) — the atlas is a derived VIEW, kept consistent with the committed
+    lean_deps.json (read directly; no extraction)."""
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        import json as _json
+        import atlas_view
+        p = LEAN / "atlas_view.json"
+        if not p.exists():
+            return True
+        fresh = _json.dumps(atlas_view.build_atlas(atlas_view.load_lean_deps_file()), indent=2)
+        return fresh != p.read_text()
+    except Exception:
+        return True  # fail-stale (safe)
+
+
+def _atlas_heatmap_stale() -> bool:
+    """True if docs/ATLAS_HEATMAP.md differs from a fresh render (ADR-005 Phase 3). Same content-compare
+    contract as `_atlas_view_stale`."""
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        import atlas_heatmap
+        import atlas_view
+        p = ROOT / "docs" / "ATLAS_HEATMAP.md"
+        if not p.exists():
+            return True
+        fresh = atlas_heatmap.render(atlas_view.build_atlas(atlas_view.load_lean_deps_file()))
+        return fresh != p.read_text()
+    except Exception:
+        return True
+
+
 UV = ["uv", "run", "python"]
 
 EDGES: list[Edge] = [
@@ -83,6 +117,11 @@ EDGES: list[Edge] = [
          UV + ["scripts/render_paper_tables.py"], _tables_stale, "cheap"),
     Edge("SK_EFT_Hawking_Inventory_Index.md (autogen blocks)", "docs/counts.json",
          UV + ["scripts/update_inventory_index.py"], _index_autogen_stale, "cheap"),
+    # ADR-005 atlas surfaces — derived from lean_deps.json ∪ HYPOTHESIS_REGISTRY; cheap (no extraction).
+    Edge("lean/atlas_view.json", "lean/lean_deps.json, src/core/constants.py (HYPOTHESIS_REGISTRY)",
+         UV + ["scripts/atlas_view.py", "--write"], _atlas_view_stale, "cheap"),
+    Edge("docs/ATLAS_HEATMAP.md", "lean/lean_deps.json, src/core/constants.py (HYPOTHESIS_REGISTRY)",
+         UV + ["scripts/atlas_heatmap.py", "--write"], _atlas_heatmap_stale, "cheap"),
 ]
 
 
