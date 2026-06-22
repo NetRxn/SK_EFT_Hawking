@@ -42,7 +42,6 @@ theorem rhs_pairing_reduce {M : TopCat} [T2Space ↑M] {N : ℕ} (U' V' : Set �
     (hU' : IsOpen U') (hV' : IsOpen V')
     (ωR : LinearMap.ker (relCoboundaryₗ (U' ∩ V') (N + 1)))
     (c : SingularChain M (N + 1 + 1))
-    (hc : chainBoundary M (N + 1) c ∈ subspaceChains (U' ∪ V') (N + 1))
     (hccyc : RelativeChain.mk (U' ∪ V') (N + 1 + 1) c ∈ relCycles (U' ∪ V') (N + 1 + 1)) :
     ∃ j : ℕ,
       relKroneckerH (U' ∪ V')
@@ -51,6 +50,11 @@ theorem rhs_pairing_reduce {M : TopCat} [T2Space ↑M] {N : ℕ} (U' V' : Set �
             ⟨RelativeChain.mk (U' ∪ V') (N + 1 + 1) c, hccyc⟩)
         = kronecker (coboundary M (N + 1) (cochainSplit U' (N + 1) ωR.1.1))
             ((⇑(SingularSubdivision.singularSd M (N + 1 + 1)))^[j] c) := by
+  have hc : chainBoundary M (N + 1) c ∈ subspaceChains (U' ∪ V') (N + 1) := by
+    have h := hccyc
+    rw [show relCycles (U' ∪ V') (N + 1 + 1) = LinearMap.ker (relBoundary (U' ∪ V') (N + 1)) from rfl,
+      LinearMap.mem_ker, relBoundary_mk, RelativeChain.mk_eq_zero_iff] at h
+    exact h
   obtain ⟨j, u', w', hsplit⟩ := exists_cover_fine_subdivision hU' hV' c hc
   refine ⟨j, ?_⟩
   have hu : chainIncl U' (N + 1) u' ∈ subspaceChains U' (N + 1) := ⟨u', rfl⟩
