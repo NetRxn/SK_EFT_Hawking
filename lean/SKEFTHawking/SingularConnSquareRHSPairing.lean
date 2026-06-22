@@ -167,4 +167,22 @@ theorem pullbackCochain_mem_relCochains {X : TopCat} {S A : Set ↑X} {n : ℕ}
   exact (SingularRelativeCohomologyMod2.mem_relCochains (S := A) n f).1 hf _
     ((chainIncl_mem_subspaceChains_iff A S c).2 hc)
 
+/-- **Relative subdivision-invariance of the cocycle pairing** (the LHS-leg subdivision step): for a
+cocycle `c` that vanishes on `S`-chains (a relative cocycle) and a chain `z` whose boundary lies in `C(S)`
+(a relative cycle, NOT necessarily an absolute cycle), the Kronecker pairing is unchanged by iterated
+barycentric subdivision: `⟨c, z⟩ = ⟨c, Sdᵐ z⟩`. Via `relative_add_singularSd_iterate_mem_relBoundaries`
+(`z + Sdᵐz ∈ relBoundaries S`) → `exists_relBoundary_witness` → `pair_fund_eq_pair_z0`. This is the
+relative generalization of `kronecker_singularSd_iterate_cocycle` (which needs `∂z = 0`); the
+connecting-square `fund_∪` is only a *relative* cycle (`∂fund_∪ ∈ C((↑K)ᶜ)`), so the relative form is
+what the cup-form LHS leg actually needs before the cover-partition readoff. -/
+theorem kronecker_relCocycle_singularSd_invariant {X : TopCat} {n : ℕ} {S : Set ↑X}
+    (c : SingularCochain X (n + 1)) (hc : coboundary X (n + 1) c = 0)
+    (hcv : ∀ d ∈ subspaceChains S (n + 1), kronecker c d = 0)
+    (z : SingularChain X (n + 1)) (hz : chainBoundary X n z ∈ subspaceChains S n) (m : ℕ) :
+    kronecker c z = kronecker c ((SingularSubdivision.singularSd X (n + 1))^[m] z) := by
+  have h := SingularExcision.relative_add_singularSd_iterate_mem_relBoundaries hz m
+  erw [← Submodule.Quotient.mk_add] at h
+  obtain ⟨η, a, ha, heq⟩ := exists_relBoundary_witness _ h
+  exact pair_fund_eq_pair_z0 c hc hcv z _ η a ha heq
+
 end SKEFTHawking.SingularConnSquareRHSPairing
