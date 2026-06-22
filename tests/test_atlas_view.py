@@ -74,3 +74,15 @@ def test_unclassified_tier_degrades_softly():
 def test_build_atlas_is_deterministic():
     a, b = _atlas(), _atlas()
     assert a == b
+
+
+def test_heatmap_render_has_sections_and_is_deterministic():
+    import atlas_heatmap  # Phase 3 surface (renders build_atlas → Markdown)
+    md = atlas_heatmap.render(_atlas())
+    for section in ("# Atlas Heatmap", "## Landscape", 'Open frontier by track',
+                    "## Apex (headline) targets", "Most-gating open assumptions"):
+        assert section in md, f"missing section: {section}"
+    # track buckets + the apex node surface in the rendered table
+    assert "`headline`" in md and "`external_boundary`" in md
+    assert "hyp:headline_goal" in md
+    assert md == atlas_heatmap.render(_atlas())  # pure / deterministic
