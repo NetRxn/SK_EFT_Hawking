@@ -105,7 +105,7 @@ uv sync                                       # install/sync deps
 uv run python -m pytest tests/ -v             # fast tests (~2s; deselects 'slow')
 uv run python -m pytest tests/ -m slow -v     # slow tests (~10 min: Lean ExtractDeps + graph)
 uv run python -m pytest tests/ -m '' -v       # everything — before PR / submission / wave close
-uv run python scripts/validate.py             # full validation suite (105 checks)
+uv run python scripts/validate.py             # full validation suite (106 checks)
 uv run python scripts/validate.py --list      # list checks; --check <name> runs one
 uv run python scripts/review_figures.py       # PNGs + structural figure checks
 uv run python scripts/provenance_dashboard.py # provenance command center (localhost:8050)
@@ -228,17 +228,22 @@ sample) and fill in the FILL-IN rows; until then only the generic absolute-path 
 
 **Dev-loop / harness process learnings** — re-orientation, friction, escape attempts, wasted
 cycles ("what went **poorly or extremely well** from a process standpoint in HOW the loop ran") —
-live in the **System-2 register** [docs/dev-loops/SYSTEM2_REGISTER.md](docs/dev-loops/SYSTEM2_REGISTER.md),
-tiered `automatic` < `agent-reviewed` < `human-reviewed`, in four sections: **Open** (active
-issues), **Process Wins** (notable reusable best practices — the "extremely well" side), **Closed**
-(resolved), **Misfiled** (harvest noise / "worked as designed" confirmations that were never
-findings). It is refreshed off the hot loop by the `/skeft-qa:harvest` loop — whose Opus
-consolidator is **register-aware** (reads the standing register and files/combines each candidate,
-re-opening a closed item on recurrence and grouping semi-related ones, so the register stays
-synthesized) — and signed off via `/skeft-qa:debrief` (the human governor: promotion to
-`human-reviewed` is its exclusive call). An autonomous `/goal` loop's SessionStart re-injection
-surfaces both open findings and process wins in-loop. Consult it periodically; read tier-weighted
-(`human-reviewed > agent-reviewed > automatic`).
+live in the **System-2 register**, tiered `automatic` < `agent-reviewed` < `human-reviewed`. It is
+**sharded** for size: the active [docs/dev-loops/SYSTEM2_REGISTER.md](docs/dev-loops/SYSTEM2_REGISTER.md)
+(an `## Index` + **Open** active issues + **Process Wins**) and the archive `SYSTEM2_ARCHIVE.md`
+(**Closed** + **Misfiled**, read on demand); both gitignored (local, auto-written). It is refreshed off
+the hot loop by the `/skeft-qa:harvest` loop — whose Opus consolidator is **register-aware**
+(files/combines each candidate, re-opening a closed item on recurrence and grouping semi-related ones)
+— and signed off via `/skeft-qa:debrief` (the human governor: promotion to `human-reviewed`, and
+graduating a recurring lesson into a **pre-decision**, are its exclusive calls).
+
+**Standing pre-decisions** the autonomous loop applies WITHOUT asking live in
+[docs/dev-loops/PRE_DECISIONS.md](docs/dev-loops/PRE_DECISIONS.md) (Core keystones + a Full reference;
+grown by `/debrief`). After a compaction the SessionStart re-injection carries the settled `/goal`
+condition + an always-on **RE-ANCHOR** + the live lab-notebook **FRONTIER** + a **mandatory read** of
+PRE_DECISIONS.md + (when the harvest has authored one) a per-goal **coaching block** — the synthesized,
+forward-framed re-orientation that replaced the old blind active-issues injection. Consult the register
+periodically; read tier-weighted (`human-reviewed > agent-reviewed > automatic`).
 
 This is a **separate store** from the **System-1** paper-correctness QI register
 [docs/QI_REGISTER.md](docs/QI_REGISTER.md) (the Stage-14 paper-production process tracker:

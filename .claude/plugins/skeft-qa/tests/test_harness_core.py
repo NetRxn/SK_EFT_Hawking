@@ -2,6 +2,7 @@
 Run: uv run python -m pytest SK_EFT_Hawking/.claude/plugins/skeft-qa/tests/ -v"""
 import json
 import sys
+import time
 from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
@@ -45,13 +46,29 @@ def test_returns_marker_when_present(tmp_path, monkeypatch):
     assert m["goal_id"] == "20260617T101500"   # 8-field marker carries goal_id (spec A.5)
 
 
-def test_payload_includes_goal_and_heuristics_without_active_issues(tmp_path):
-    # active_issues.json absent -> section omitted gracefully, no error.
-    payload = hc.build_reorientation_payload({"goal": "ship Wave 4"}, tmp_path)
+def test_payload_baseline_without_coaching(tmp_path):
+    # No coaching cache -> the baseline (goal + RE-ANCHOR + re-read + the MANDATED PRE_DECISIONS read)
+    # is fully functional; the coaching block is a pure enhancement, never required.
+    payload = hc.build_reorientation_payload({"goal": "ship Wave 4", "goal_id": "g1"}, tmp_path)
     assert "ship Wave 4" in payload
-    assert "re-read claude.md" in payload.lower()   # case-insensitive: payload has "Re-read CLAUDE.md"
-    assert "Decision heuristics" in payload
-    assert "Active System-2 issues" not in payload  # absent -> omitted
+    assert "RE-ANCHOR before resuming" in payload                  # always-on re-anchor present
+    assert "re-read claude.md" in payload.lower()
+    assert "READ docs/dev-loops/PRE_DECISIONS.md" in payload       # pre-decisions = MANDATORY READ
+    assert "Decision heuristics" not in payload                    # Core/heuristics NOT injected anymore
+    assert "COACHING BLOCK (" not in payload                       # absent -> omitted (RE_ANCHOR names it, hence "(")
+
+
+def test_payload_mandates_predecisions_read_not_injected(tmp_path):
+    # Pre-decisions are NO LONGER injected (they grow unbounded) — the payload MANDATES reading
+    # docs/dev-loops/PRE_DECISIONS.md instead; even when the file exists its body is NOT inlined.
+    pd = tmp_path / "docs" / "dev-loops" / "PRE_DECISIONS.md"
+    pd.parent.mkdir(parents=True, exist_ok=True)
+    pd.write_text("# Pre-Decisions\n\n## Core\n\n### PD-0 — keystone\nscale pre-accepted.\n\n## Full\n\ntail.\n")
+    payload = hc.build_reorientation_payload({"goal": "g", "goal_id": "g1"}, tmp_path)
+    assert "READ docs/dev-loops/PRE_DECISIONS.md" in payload       # the mandatory read
+    assert "scale pre-accepted" not in payload                    # Core body NOT inlined
+    assert "PRE-DECISIONS (always-on" not in payload              # the old injected prefix is gone
+    assert hc._read_predecisions_core(None) == hc.DECISION_HEURISTICS   # helper kept; fail-soft on None
 
 
 def test_payload_includes_frontier_when_index_present(tmp_path):
@@ -64,58 +81,81 @@ def test_payload_includes_frontier_when_index_present(tmp_path):
         "- **NEXT BRICK:** ship brick 42."))
     payload = hc.build_reorientation_payload(
         {"goal": "g", "notebook_path": str(idx)}, tmp_path)
-    assert "LAB-NOTEBOOK FRONTIER" in payload and "ship brick 42" in payload
+    assert "LAB-NOTEBOOK FRONTIER (" in payload and "ship brick 42" in payload
 
 
 def test_payload_omits_frontier_without_notebook_path(tmp_path):
     payload = hc.build_reorientation_payload({"goal": "g"}, tmp_path)
-    assert "LAB-NOTEBOOK FRONTIER" not in payload  # graceful when no notebook_path
+    assert "LAB-NOTEBOOK FRONTIER (" not in payload  # graceful when no notebook_path (RE_ANCHOR names it)
 
 
-def test_payload_includes_active_issues_when_present(tmp_path):
-    d = tmp_path / ".claude" / "dev-harness"
+def test_payload_includes_coaching_block_when_present(tmp_path):
+    # the per-goal coaching block (harvest-authored) is injected with a freshness label
+    d = tmp_path / ".claude" / "dev-harness" / "coaching"
     d.mkdir(parents=True, exist_ok=True)
-    (d / "active_issues.json").write_text(json.dumps(
-        {"issues": [{"summary": "re-polluted roadmap at compaction 3"}]}))
-    payload = hc.build_reorientation_payload({"goal": "g"}, tmp_path)
-    assert "Active System-2 issues" in payload
-    assert "re-polluted roadmap at compaction 3" in payload
+    (d / "g1.json").write_text(json.dumps(
+        {"authored_ts": time.time(), "text": "close-path: discharge subHomConnecting_openDuality"}))
+    payload = hc.build_reorientation_payload({"goal": "g", "goal_id": "g1"}, tmp_path)
+    assert "COACHING BLOCK (" in payload
+    assert "close-path: discharge subHomConnecting_openDuality" in payload
+    assert "authored" in payload and "ago" in payload            # authoring FACTS (timestamp + age), not a verdict
 
 
-def test_payload_does_not_tag_wins(tmp_path):
-    # wins are NOT injected (ruling 2026-06-20); the active-issues view is open-issues-only.
-    # Even if a win-kind row somehow appears, re-injection must NOT add a [WIN] tag / special
-    # framing — every row is listed plainly as an issue to avoid.
-    d = tmp_path / ".claude" / "dev-harness"
+def test_payload_coaching_block_carries_facts_not_a_verdict(tmp_path):
+    # The harness surfaces AUTHORING FACTS (timestamp, age, transcript high-water-mark) + a brief
+    # process note, and lets the loop judge — it does NOT bake in a staleness verdict (a fixed age
+    # threshold would misjudge a fast goal vs a slow one and could add unanticipated failure modes).
+    d = tmp_path / ".claude" / "dev-harness" / "coaching"
     d.mkdir(parents=True, exist_ok=True)
-    (d / "active_issues.json").write_text(json.dumps({"issues": [
-        {"title": "worktree git-tree staleness", "tier": "agent-reviewed", "tally": 1, "kind": "issue"}]}))
-    payload = hc.build_reorientation_payload({"goal": "g"}, tmp_path)
-    assert "[WIN]" not in payload
-    assert "process wins" not in payload.lower()
-    assert "- worktree git-tree staleness" in payload
+    (d / "g1.json").write_text(json.dumps(
+        {"authored_ts": time.time() - 10 * 3600, "watermark": 48213, "text": "old close-path"}))
+    payload = hc.build_reorientation_payload({"goal": "g", "goal_id": "g1"}, tmp_path)
+    assert "~10h ago" in payload                          # the age FACT (a timedelta, not a verdict)
+    assert "high-water-mark 48213" in payload             # the fixed transcript reference point
+    assert "SUPERSEDED" not in payload                    # NO baked-in staleness verdict
+    assert "may predate" in payload.lower()               # the brief process note
 
 
-def test_payload_repo_none_omits_active_issues(tmp_path):
-    payload = hc.build_reorientation_payload({"goal": "g"}, None)
-    assert "Active System-2 issues" not in payload and "g" in payload
+def test_write_then_read_coaching_block_roundtrips(tmp_path):
+    # the harvest's authoring side (write_coaching_block) pairs with the reader; stamps the facts.
+    ok = hc.write_coaching_block(tmp_path, "g1", "close-path X; on-track", watermark=512, now=time.time())
+    assert ok is True
+    cb = hc._read_coaching_block(tmp_path, "g1", time.time())
+    assert cb and cb["text"] == "close-path X; on-track"
+    assert "high-water-mark 512" in cb["facts"] and "authored" in cb["facts"]
+    assert hc.write_coaching_block(tmp_path, "g1", "   ") is False   # empty text -> no write
+    assert hc.write_coaching_block(tmp_path, "", "x") is False        # no goal_id -> no write
 
 
-def test_payload_capped_under_9000_with_full_goal(tmp_path):
-    # review C1: an oversized active-issues view must NOT push the payload over the cap;
-    # the /goal condition is always kept in full while active-issues is truncated.
-    d = tmp_path / ".claude" / "dev-harness"
+def test_payload_repo_none_omits_coaching(tmp_path):
+    payload = hc.build_reorientation_payload({"goal": "g", "goal_id": "g1"}, None)
+    assert "COACHING BLOCK (" not in payload and "g" in payload    # repo None -> coaching omitted
+    assert "RE-ANCHOR before resuming" in payload                  # baseline intact
+
+
+def test_payload_capped_drops_coaching_keeps_goal(tmp_path):
+    # The /goal condition (<=4k) is ALWAYS in full; an oversized coaching block that would push the
+    # payload over budget is DROPPED (graceful) — never the goal or the re-anchor.
+    d = tmp_path / ".claude" / "dev-harness" / "coaching"
     d.mkdir(parents=True, exist_ok=True)
-    big = [{"summary": "drift finding " + str(i) + " " + ("x" * 300),
-            "tier": "agent-reviewed", "tally": i} for i in range(200)]
-    (d / "active_issues.json").write_text(json.dumps({"issues": big}))
-    goal = "GOAL: ship Wave 4; validate.py prints 43/43 in the transcript " + ("z" * 3000)
-    payload = hc.build_reorientation_payload({"goal": goal}, tmp_path)
-    assert len(payload) < 9000                       # hard cap (< the 10k additionalContext limit)
-    assert goal in payload                           # the /goal condition is always in full
-    assert "Decision heuristics" in payload          # heuristics retained
-    # at most the top-8 findings survive (truncated further to fit the cap):
-    assert payload.count("- drift finding ") <= 8
+    (d / "g1.json").write_text(json.dumps({"authored_ts": time.time(), "text": "y" * 6000}))   # huge
+    goal = "GOAL: ship Wave 4 " + ("z" * 3900)        # near the 4k goal max
+    payload = hc.build_reorientation_payload({"goal": goal, "goal_id": "g1"}, tmp_path)
+    assert len(payload) < hc.PAYLOAD_MAX_CHARS         # within the payload budget
+    assert goal in payload                            # goal always in full
+    assert "RE-ANCHOR before resuming" in payload     # re-anchor never dropped
+    assert "COACHING BLOCK (" not in payload          # oversized coaching dropped gracefully
+
+
+def test_emitted_additionalcontext_under_limit_at_max_goal(tmp_path):
+    # END-TO-END: payload + the compose_directive frame must stay under the real 10k platform limit
+    # even at the 4k goal max (the _WRAPPER_RESERVE covers the frame + conditional notes).
+    import harness_reinject as hr  # noqa: E402
+    goal = "GOAL " + ("z" * 3990)
+    payload = hc.build_reorientation_payload({"goal": goal, "goal_id": "g1"}, tmp_path)
+    ctx = hr.compose_directive("compact", goal, "/roadmap.md", "/nb.md", payload)
+    assert len(payload) < hc.PAYLOAD_MAX_CHARS
+    assert len(ctx) < hc.ADDITIONAL_CONTEXT_LIMIT
 
 
 def test_find_workspace_resolves_repo_cwd_based(tmp_path):
@@ -142,7 +182,8 @@ def test_directive_is_go_signal_and_carries_payload():
     assert "next increment of real work THIS turn" in ctx
     assert "GO signal" in ctx and "SETTLED" in ctx and "/r.md" in ctx and "/n.md" in ctx
     assert _PAYLOAD in ctx                                   # shared payload embedded verbatim
-    assert "first" in ctx.lower() and "re-read" in ctx.lower()  # first-turn self-check directive
+    assert "RE-ANCHOR" in ctx                                # frame points at the payload's re-anchor
+    assert "self-check" not in ctx.lower()                   # the separate trailing self-check is gone
 
 
 def test_directive_is_role_agnostic_and_prescribes_no_coordination():
@@ -197,6 +238,8 @@ def test_guard_denies_when_active(tmp_path, monkeypatch, capsys):
     hso = j["hookSpecificOutput"]
     assert hso["hookEventName"] == "PreToolUse" and hso["permissionDecision"] == "deny"
     assert hso["permissionDecisionReason"] and "ship W4" in hso["additionalContext"]
+    # tier-3: the redirect dispatches the in-time coach (not a static "make the call" deny)
+    assert "skeft-qa:coach" in hso["permissionDecisionReason"]
     # contract C — the blocked question is logged:
     log = (tmp_path / ".claude" / "dev-harness" / "blocked_questions.jsonl").read_text()
     assert "which approach?" in log

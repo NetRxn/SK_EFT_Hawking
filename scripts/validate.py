@@ -2817,6 +2817,56 @@ def check_atlas_integrity() -> CheckResult:
     return CheckResult(passed=passed, details=details)
 
 
+def _hyp_module_stem(module):
+    """Leading module-path token of an atlas ``module`` field (often annotated "Foo (Phase X...)")."""
+    if not module:
+        return "(none)"
+    head = str(module).split("(", 1)[0].strip()
+    toks = head.split()
+    return toks[0] if toks else "(none)"
+
+
+@register_check("atlas_hypothesis_discipline",
+                "INFO: tracked-hypothesis distribution (total / gating vs orphan-landmark / per-module) "
+                "for PD-2 visibility — NEVER a gate; the bank-or-grind discipline lives in the coach")
+def check_atlas_hypothesis_discipline() -> CheckResult:
+    """PD-2 visibility (``docs/dev-loops/proposals/hypothesis-banking-discharge.md``; reshaped
+    2026-06-22 against live data + a deliberate design ruling). A tracked hypothesis is a DISCLOSED
+    ASSUMPTION (a liability the project leans on), DISTINCT from accrued proved work (assets — PROVED /
+    OBSTRUCTION nodes, which this check NEVER touches). On a clean tree most tracked hypotheses are
+    legitimately ORPHAN (external-boundary / future landmarks that gate no current theorem — precise
+    parked statements, not debt), so this is INFO-ONLY: it NEVER fails the build and NEVER culls
+    anything. The real PD-2 discipline is PER-DECISION — the coach's bank-or-grind unlock-check (does a
+    NEW assumption actually unlock the load-bearing residual?) + the stall-detector's route-proliferation.
+    This check just reports the distribution so ``/debrief`` can SEE scatter developing without
+    auto-failing."""
+    try:
+        sys.path.insert(0, str(SCRIPT_DIR))
+        import atlas_view
+        atlas = atlas_view.build_atlas(atlas_view.load_lean_deps_file())
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=False, error=f"atlas build failed: {exc}")
+    unknowns = atlas["unknowns"]
+    gating = [u for u in unknowns if (u.get("dependent_theorems") or [])]
+    orphan = [u for u in unknowns if not (u.get("dependent_theorems") or [])]
+    by_mod: dict = {}
+    for u in unknowns:
+        s = _hyp_module_stem(u.get("module"))
+        by_mod[s] = by_mod.get(s, 0) + 1
+    top = sorted(by_mod.items(), key=lambda kv: (-kv[1], kv[0]))[:3]
+    details: List[Detail] = [
+        Detail("tracked_hypotheses_total", True,
+               f"{len(unknowns)} tracked hypotheses (disclosed assumptions; accrued PROVED/no-go assets are NOT counted here)"),
+        Detail("gating_vs_orphan", True,
+               f"{len(gating)} gate >=1 downstream theorem; {len(orphan)} orphan landmarks "
+               f"(external-boundary / future — legitimately gate nothing yet; NOT debt, NOT culled)"),
+        Detail("per_module_distribution", True,
+               (f"open hypotheses over {len(by_mod)} modules; densest: " +
+                ", ".join(f"{m}={c}" for m, c in top)) if by_mod else "no tracked hypotheses"),
+    ]
+    return CheckResult(passed=True, details=details)   # INFO-ONLY: never fails the build
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # CHECK 17: Count literals in paper .tex (Phase 5v Wave 1b)
 # ═══════════════════════════════════════════════════════════════════════

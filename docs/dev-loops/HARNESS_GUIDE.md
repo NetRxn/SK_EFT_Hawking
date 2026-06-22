@@ -14,11 +14,11 @@
 `skeft-qa` is a Claude Code plugin that keeps a long-running autonomous **native `/goal`** loop on-track across compactions, without competing with `/goal` itself. (A private sibling plugin mirrors the same model for the private repo — lighter wrappers, documented on the private side.)
 
 It ships **three CC hooks** (all default-inert + fail-open, gated on a per-session marker):
-- `SessionStart` — after every compaction/resume, re-injects the settled `/goal` condition + "re-read CLAUDE.md" + the `/skeft-qa:goal-dev` pointer + active System-2 issues **& process wins** (`[WIN]`-labeled) + decision heuristics.
+- `SessionStart` — after every compaction/resume, re-injects the settled `/goal` condition + an always-on **RE-ANCHOR** + the live lab-notebook **FRONTIER** + a **mandatory read** of `PRE_DECISIONS.md` + the `/skeft-qa:goal-dev` pointer + (when the harvest authored one) the per-goal **coaching block**. (This replaced the old blind active-issues/wins/heuristics injection; the pre-decisions are now READ, not inlined — so they grow unbounded, and the emitted payload sits well under the 10,000-char `additionalContext` limit.)
 - `PreToolUse(AskUserQuestion)` — when the loop tries to block on a question (and you're not there), it denies + redirects with the same re-orientation payload, so the loop keeps moving instead of stalling.
 - `SessionEnd` — marker teardown on `reason=clear` (a `/clear` that also clears the goal), so a dead loop's marker stops re-injecting. (A mid-session `/goal clear` fires no event → use `/skeft-qa:goal-end`.)
 
-Plus skills you invoke, a mechanical-sync layer, and an off-hot-loop System-2 "what went **poorly or extremely well** from a process standpoint" harvest — a **register-aware** consolidator that files & combines each finding into the four-section register (**Open** active issues · **Process Wins** reusable best practices · **Closed** resolved · **Misfiled** harvest noise) so it stays synthesized.
+Plus skills you invoke, a mechanical-sync layer, and an off-hot-loop System-2 "what went **poorly or extremely well** from a process standpoint" harvest — a **register-aware** consolidator that files & combines each finding into the **sharded** register (active `SYSTEM2_REGISTER.md`: `## Index` + **Open** + **Process Wins**; archive `SYSTEM2_ARCHIVE.md`: **Closed** + **Misfiled**) so it stays synthesized, and **authors the per-goal coaching block** (the synthesized re-orientation the SessionStart re-inject surfaces).
 
 ---
 
@@ -71,7 +71,7 @@ The only `UNRESOLVED` case is launching from somewhere with no path to the repo 
 
 ## 5. The System-2 harvest host (one-time setup)
 
-The harvest reads finished/running loop transcripts off the hot loop and records process lessons into the four-section `docs/dev-loops/SYSTEM2_REGISTER.md` (**Open** active issues · **Process Wins** reusable best practices · **Closed** resolved · **Misfiled** harvest noise). The Opus consolidator is **register-aware** — it reads the whole register and files/combines each candidate, so recurrences re-open and semi-related items merge instead of accreting as one-offs; only `/debrief` promotes a finding to `human-reviewed`. `goal-prompt` facilitates the host, but a skill **cannot** silently spawn a standing background process — you complete it **once**:
+The harvest reads finished/running loop transcripts off the hot loop and records process lessons into the **sharded** System-2 register (active `docs/dev-loops/SYSTEM2_REGISTER.md`: `## Index` + **Open** + **Process Wins**; archive `SYSTEM2_ARCHIVE.md`: **Closed** + **Misfiled**), and authors the per-goal **coaching block** (`.claude/dev-harness/coaching/<goal_id>.json`) the SessionStart re-inject surfaces (computed off the derived atlas + `stall_detector.py`). The Opus consolidator is **register-aware** — it reads the whole register and files/combines each candidate, so recurrences re-open and semi-related items merge instead of accreting as one-offs; only `/debrief` promotes a finding to `human-reviewed`. `goal-prompt` facilitates the host, but a skill **cannot** silently spawn a standing background process — you complete it **once**:
 
 - **Preferred — Desktop scheduled task:** `goal-prompt` offers to create a recurring task (idempotent) running `/skeft-qa:harvest`. Approve it once; it then runs in the background (~hourly).
 - **CLI fallback — second terminal:** run `/loop <interval> /skeft-qa:harvest` in a **separate** terminal (never the `/goal` session). Re-arm before the 7-day `/loop` expiry.
@@ -155,4 +155,4 @@ worktree`), and the slot servers use absolute paths. Full convention: **`paralle
 
 ---
 
-*State lives at `<repo>/.claude/dev-harness/` (gitignored): `managed/<sid>.json` markers, `watermarks/`, `active_issues.json`, `blocked_questions.jsonl`, `locks/`. The tracked, crash-recoverable source of each goal condition is `<repo>/docs/dev-loops/<roadmap>/goal_prompt_<goal_id>.md`.*
+*State lives at `<repo>/.claude/dev-harness/` (gitignored): `managed/<sid>.json` markers, `watermarks/`, `active_issues.json`, `coaching/<goal_id>.json` (the per-goal coaching block), `stall_history/<goal_id>.json` (the per-goal stall-detector observations), `blocked_questions.jsonl`, `locks/`. The standing **pre-decisions** the loop reads are tracked at `<repo>/docs/dev-loops/PRE_DECISIONS.md`; the crash-recoverable source of each goal condition is `<repo>/docs/dev-loops/<roadmap>/goal_prompt_<goal_id>.md`.*

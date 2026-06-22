@@ -14,6 +14,8 @@ Subcommands:
   harvest-state-set <ts> <cad>   -> record last_run_ts + cadence_hours
   atlas-frontier [N]             -> print the derived atlas frontier digest (top N open assumptions
                                     ranked by impact; ADR-005 D-I). Empty if the atlas is unbuilt.
+  write-coaching <gid> [wm]      -> author the per-goal COACHING BLOCK (text from STDIN; optional
+                                    transcript watermark <wm>). The harvest consolidator's write side.
 """
 import json
 import os
@@ -51,6 +53,15 @@ def main(argv=None):
         elif cmd == "atlas-frontier":
             n = int(argv[1]) if len(argv) > 1 else 8
             print(hc.format_atlas_frontier(hc.repo_root(os.getcwd()), n))
+        elif cmd == "write-coaching":
+            gid = argv[1] if len(argv) > 1 else ""
+            wm = argv[2] if len(argv) > 2 else None
+            text = sys.stdin.read()
+            ok = hc.write_coaching_block(
+                hc.repo_root(os.getcwd()), gid, text,
+                watermark=(int(wm) if wm not in (None, "") else None))
+            print("coaching written" if ok else "coaching NOT written (empty text / no goal_id / repo unresolved)")
+            return 0 if ok else 1
         else:
             print(__doc__)
             return 2

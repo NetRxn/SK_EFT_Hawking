@@ -19,10 +19,12 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import harness_common as hc
 
-_REDIRECT = ("[dev-harness] This is an autonomous /goal loop and the user is intentionally "
-             "out of the loop — a blocking question can't be answered. Consult the heuristics "
-             "below, make the best-supported call, log any genuine open decision in the lab "
-             "notebook, and continue the next increment.")
+_REDIRECT = ("[dev-harness] Autonomous /goal loop; the user is intentionally out of the loop, so "
+             "this question can't be answered live. Do NOT self-veto or stall. Dispatch the in-time "
+             "coach — Agent(subagent_type=\"skeft-qa:coach\") with the question + a pointer to your "
+             "residual — it applies the pre-decisions (below) and returns one decision + one next "
+             "action; act on it. If the coach is unavailable, apply the PRE-DECISIONS below "
+             "yourself, make the best-supported call, and continue the next increment.")
 
 
 def _log_blocked_question(root, ev):

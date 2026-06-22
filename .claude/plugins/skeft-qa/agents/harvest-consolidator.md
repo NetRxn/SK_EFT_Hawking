@@ -64,6 +64,39 @@ Report the drop count.
 tally, kind="issue"}`), NOT session-scoped, **wins excluded** (they are not injected) — the gitignored cache
 the SessionStart re-injection + AskUserQuestion redirect read.
 
+**Author the per-goal COACHING BLOCK (the post-compaction re-orientation the loop reads).** After the
+register writes, author ONE coaching block for THIS harvest's `goal_id` — the forward-framed,
+goal-relevant note the SessionStart re-inject surfaces (it SUPERSEDES the old blind active-issues
+injection). OPTIONAL + OFF-LOOP + INFORMATIONAL — never a gate; if you can't author one, the loop's
+baseline (the always-injected RE-ANCHOR + the live FRONTIER) still carries it.
+
+1. **Stall signal.** If `lean/atlas_view.json` exists, run the detector (else skip to step 2's
+   on-track branch, authored from commit/notebook cadence alone):
+   - Build `.claude/dev-harness/stall_commits.json` = `{module-stem: commit_count}` from
+     `git -C "<repo>" log --since="<last harvest ts — harvest-state-get>" --name-only -- lean/SKEFTHawking/`,
+     keying each changed `lean/SKEFTHawking/<Path>.lean` by its dotted stem `<Path>` (slashes→dots; e.g.
+     `lean/SKEFTHawking/FKLW/CartanSubstrate.lean` → `FKLW.CartanSubstrate`).
+   - `cd "<repo>" && uv run python .claude/plugins/skeft-qa/scripts/stall_detector.py
+      --atlas lean/atlas_view.json --history .claude/dev-harness/stall_history/<goal_id>.json
+      --commits .claude/dev-harness/stall_commits.json --compact-event <the most recent compact_event_id
+      in this span> [--apex <the goal's curated apex residual id, if the goal_prompt names one>]`. It
+     prints the signal JSON AND appends this pass's observation to the per-goal history (so future passes
+     can detect no-advance — the signal is meaningful only once a few passes have accrued).
+
+2. **Author the text** — terse, forward-framed; NO "nuke"/destructive language; NO staleness verdict (the
+   reader stamps the facts: timestamp, age, watermark). Lead with the **close-path** = the signal's
+   `residual_id` (+ `frontier_impact`, `is_apex`). Then ONE branch:
+   - **On-track** (`stall=false`, or no signal): brief reassurance — the close-path + what's advancing +
+     the next node.
+   - **Stalled** (`stall=true`): course-correction — "`<residual_id>` has not advanced across
+     `<no_advance_events>` compact-events while `<untouched_count>` other open residuals sit untouched;
+     climb the PD-1 ladder at rung `<matched_rung>`" (escalate if `no_advance_events` keeps rising).
+
+3. **Write it:** `cd "<repo>" && printf '%s' "<the coaching text>" | uv run python
+   .claude/plugins/skeft-qa/scripts/harness_common_cli.py write-coaching <goal_id> [<watermark>]` — pass
+   `<watermark>` = `… read-watermark <sid>` if you have this session's id (so the reader pins the exact
+   transcript stop point), else omit it. Writes the gitignored per-goal cache the re-inject reads.
+
 Report a one-line summary: candidates in; new / stacked / re-opened / grouped / win / dropped-as-noise /
-leak-dropped; active-issues refreshed. **Do NOT touch CLAUDE.md / hooks / roadmaps. Never write `misfiled`
-(that is `/debrief`'s sweep bucket).**
+leak-dropped; active-issues refreshed; coaching block authored (on-track / stalled / skipped). **Do NOT
+touch CLAUDE.md / hooks / roadmaps. Never write `misfiled` (that is `/debrief`'s sweep bucket).**

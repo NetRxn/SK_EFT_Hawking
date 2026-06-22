@@ -28,19 +28,31 @@ def reg(tmp_path):
     return str(p)
 
 
-def test_four_sections_render(reg):
+def test_shard_active_has_open_wins_archive_has_closed_misfiled(reg):
     body = Path(reg).read_text()
-    for h in ("## Open", "## Process Wins", "## Closed", "## Misfiled"):
-        assert h in body
-    # ordering: Open < Process Wins < Closed < Misfiled
-    idx = [body.index(h) for h in ("## Open", "## Process Wins", "## Closed", "## Misfiled")]
-    assert idx == sorted(idx)
+    arch = Path(R._archive_path(reg)).read_text()
+    # ACTIVE surface = Index + Open + Process Wins (resolved/noise are NOT here)
+    assert "## Index" in body and "## Open" in body and "## Process Wins" in body
+    assert "## Closed" not in body and "## Misfiled" not in body
+    # ARCHIVE = Closed + Misfiled (no Open/Wins)
+    assert "## Closed" in arch and "## Misfiled" in arch
+    assert "## Open" not in arch and "## Process Wins" not in arch
+    # the closed finding 'c' lives in the archive, not the active surface
+    assert '"id": "c"' in arch and '"id": "c"' not in body
 
 
 def test_win_renders_under_process_wins(reg):
     body = Path(reg).read_text()
-    assert body.index("WinLesson") > body.index("## Process Wins")
-    assert body.index("WinLesson") < body.index("## Closed")
+    # the win's full record sits in the Process Wins section (its id appears only there)
+    assert body.index('"id": "w"') > body.index("## Process Wins")
+
+
+def test_index_lists_only_active_findings(reg):
+    head = Path(reg).read_text().split("## Open")[0]   # the index region is above the sections
+    assert "| id | tier | status | tally | title |" in head
+    for fid in ("a", "b", "w"):
+        assert "`%s`" % fid in head
+    assert "`c`" not in head    # the closed finding is indexed in the archive, not here
 
 
 def test_round_trip_stable(reg):

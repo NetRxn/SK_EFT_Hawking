@@ -78,18 +78,43 @@ def slug(f):
     return re.sub(r"[^a-z0-9]+", "-", raw).strip("-")[:80] or "finding"
 
 
-def load(path):
-    """Parse every fenced ```json``` block into a finding dict. Absent file -> []."""
+def _archive_path(path):
+    """Companion archive file beside the active register (the byte-reduction shard):
+    `SYSTEM2_REGISTER.md` -> `SYSTEM2_ARCHIVE.md`. Closed + misfiled findings live there
+    (read on demand, never injected) so the active register stays small enough to read in
+    full at /debrief and to inject without truncation. Falls back to `<stem>_ARCHIVE<suffix>`
+    when the active name does not contain `REGISTER` (e.g. a test tmp file)."""
     p = Path(path)
-    if not p.exists():
-        return []
+    if "REGISTER" in p.stem:
+        return p.with_name(p.stem.replace("REGISTER", "ARCHIVE") + p.suffix)
+    return p.with_name(p.stem + "_ARCHIVE" + p.suffix)
+
+
+def _parse_findings(text):
     out = []
-    for m in _JSON_FENCE.finditer(p.read_text()):
+    for m in _JSON_FENCE.finditer(text):
         try:
             out.append(json.loads(m.group(1)))
         except Exception:
             continue
     return out
+
+
+def load(path):
+    """Parse every fenced ```json``` block into a finding dict, reading BOTH the active register
+    (`path`) AND its companion archive (`_archive_path`), so upsert/group/write_active_issues see
+    the full set and a re-opened closed finding moves active<->archive automatically on the next
+    render. De-duped by id (active wins). Absent files -> []."""
+    findings, seen = [], set()
+    for p in (Path(path), _archive_path(path)):
+        if p.exists():
+            for f in _parse_findings(p.read_text()):
+                fid = f.get("id")
+                if fid in seen:
+                    continue
+                seen.add(fid)
+                findings.append(f)
+    return findings
 
 
 def _occ_dates(finding):
@@ -224,25 +249,16 @@ def group(path, absorb_ids, into, allow_human=False):
 
 
 def render(path, findings=None):
-    """Write the register: ## Open / ## Process Wins / ## Closed / ## Misfiled sections of `### <id>`
-    blocks, each carrying the full record as a fenced ```json```. Idempotent + round-trip-safe.
-
-    `## Process Wins` (status == "win") holds notable, reusable best practices (the "extremely well"
-    side) — preserved + separated from open issues, and (like open issues) surfaced in active-issues.
-    `## Misfiled` (status == "misfiled") is the quarantine bucket for harvest entries that are
-    tactic-level noise or goal-specific single-occurrence confirmations — true but never standing
-    findings. NOT "closed" (those were resolved); "misfiled" = should not have been a finding.
-    A small number of broad catch-all misfiled records absorb the pattern; future repeats append
-    to one rather than opening new findings. write_active_issues() filters open-only, so misfiled
-    (like closed) is excluded from the SessionStart re-injection."""
+    """Write the register as TWO files (the byte-reduction shard, mirroring the proven two-layer
+    lab-notebook pattern):
+      * ACTIVE `path` — an `## Index` (one navigable line per finding) + `## Open` + `## Process
+        Wins`; the /debrief-read + injected surface, kept small enough to read in full.
+      * ARCHIVE `_archive_path(path)` — `## Index` + `## Closed` + `## Misfiled`; read on demand,
+        NEVER injected.
+    Each finding block carries the full record as a fenced ```json``` (round-trip-safe; `load` reads
+    BOTH files, so a re-opened closed finding migrates active<->archive automatically on render)."""
     if findings is None:
         findings = load(path)
-    lines = ["# System-2 Register — dev-process / harness findings",
-             "",
-             "Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness "
-             "process findings. SEPARATE from System 1 (paper-correctness QI / `QI_REGISTER.md`). "
-             "Each block's fenced `json` payload is the source of truth (round-trip-safe).",
-             ""]
 
     def _block(f):
         head = "### {0}\n\n**{1}**  ·  tier: `{2}`  ·  status: {3}\n".format(
@@ -251,18 +267,49 @@ def render(path, findings=None):
         body = json.dumps(f, indent=2, ensure_ascii=False)
         return head + "\n```json\n" + body + "\n```\n"
 
-    for status, header in (("open", "## Open"), ("win", "## Process Wins"),
-                           ("closed", "## Closed"), ("misfiled", "## Misfiled")):
-        group = [f for f in findings if f.get("status", "open") == status]
-        lines.append(header)
-        lines.append("")
+    def _index(group):
         if not group:
-            lines.append("_(none)_")
-            lines.append("")
+            return "_(none)_"
+        rows = ["| id | tier | status | tally | title |", "|---|---|---|---|---|"]
         for f in group:
-            lines.append(_block(f))
+            rows.append("| `{0}` | {1} | {2} | {3} | {4} |".format(
+                f.get("id", "?"), f.get("tier", "automatic"), f.get("status", "open"),
+                len(f.get("occurrences", [])),
+                str(f.get("title", "")).replace("|", "\\|").replace("\n", " ")[:100]))
+        return "\n".join(rows)
+
+    def _sections(items, specs):
+        out = []
+        for status, header in specs:
+            grp = [f for f in items if f.get("status", "open") == status]
+            out += [header, ""]
+            if not grp:
+                out += ["_(none)_", ""]
+            for f in grp:
+                out.append(_block(f))
+        return out
+
+    active = [f for f in findings if f.get("status", "open") in ("open", "win")]
+    archived = [f for f in findings if f.get("status", "open") in ("closed", "misfiled")]
+    arch = _archive_path(path)
+    intro = ("Tiered (`automatic` < `agent-reviewed` < `human-reviewed`), dev-loop/harness process "
+             "findings. SEPARATE from System 1 (paper-correctness QI / `QI_REGISTER.md`). Each "
+             "block's fenced `json` payload is the source of truth (round-trip-safe).")
+
+    active_doc = (["# System-2 Register — dev-process / harness findings", "", intro, "",
+                   "## Index", "",
+                   "Active findings (full records below). Resolved + misfiled are in "
+                   "[`{0}`]({0}).".format(arch.name), "", _index(active), ""]
+                  + _sections(active, (("open", "## Open"), ("win", "## Process Wins"))))
     Path(path).parent.mkdir(parents=True, exist_ok=True)
-    Path(path).write_text("\n".join(lines) + "\n")
+    Path(path).write_text("\n".join(active_doc) + "\n")
+
+    archive_doc = (["# System-2 Register — Archive (resolved + misfiled)", "",
+                    "Closed + misfiled findings; read on demand, NOT injected. Active findings: "
+                    "[`{0}`]({0}).".format(Path(path).name), "",
+                    "## Index", "", _index(archived), ""]
+                   + _sections(archived, (("closed", "## Closed"), ("misfiled", "## Misfiled"))))
+    arch.write_text("\n".join(archive_doc) + "\n")
 
 
 def write_active_issues(reg_path, out_path=None):

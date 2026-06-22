@@ -137,6 +137,15 @@ Facilitate the one-time System-2 harvest host (spec 6.3). After writing the mark
 - **Host-permission note:** the unattended host must run with the harvest skill's `allowed-tools` Bash patterns
   permitted, or `system2_register.py --upsert` auto-denies and the harvest writes nothing.
 
+**Emit the atlas critical-path map (so the user can re-scope BEFORE arming).** Print the derived-atlas
+critical-path map — the **KEYSTONE** (the single most-gating open node), the per-area track rollup, and
+the most-gating open assumptions — so the goal's structure (e.g. "one keystone open while N other areas
+sit available") is visible before `/goal` is run:
+`cd "<repo>" && uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" atlas-frontier 12`.
+**Node-count reference-class ONLY** — never a calendar / person-year estimate (honors the
+ignore-PM-estimates rule). Empty if the atlas is unbuilt → skip silently. This same CLI is the
+**on-demand `/orient`** view: re-run it any time mid-loop to re-anchor on the critical path.
+
 Then print the composed condition in a fenced block + one line: "run `/goal <condition>`" (the assistant cannot set
 `/goal` itself). Confirm both the per-goal prompt file path and the marker path written.
 

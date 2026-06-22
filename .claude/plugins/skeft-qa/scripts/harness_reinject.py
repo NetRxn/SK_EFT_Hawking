@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """SessionStart re-injection — the Phase-5q.F durability fix (v4.0).
 On source=compact|resume, re-inject the SHARED re-orientation payload (contract B —
-build_reorientation_payload: the /goal condition + 're-read CLAUDE.md' + active System-2
-issues + decision heuristics) for THIS session's managed marker, wrapped with UNIFORM,
-ROLE-AGNOSTIC framing (spec 4/5 review item 2 — the harness does NOT prescribe
-build-vs-delegate-vs-team; that is the agent's emergent judgment, unknowable at launch,
-so the SAME settled posture is injected regardless of the marker's `role`) + a BEST-EFFORT
-first-turn self-check directive (review A3 — its ordering vs /goal's restored continuation
-is not doc-guaranteed; the re-attached posture core is the durable backstop). The marker's
+build_reorientation_payload: the /goal condition + the always-on RE-ANCHOR + the live FRONTIER +
+a MANDATED PRE_DECISIONS.md read + the OPTIONAL staleness-labeled coaching block) for THIS session's
+managed marker, wrapped with UNIFORM, ROLE-AGNOSTIC framing (spec 4/5 review item 2 — the harness does
+NOT prescribe build-vs-delegate-vs-team; that is the agent's emergent judgment, unknowable at launch,
+so the SAME settled posture is injected regardless of the marker's `role`). The first-turn self-check
+is folded into the payload's RE_ANCHOR (no separate trailing directive). The marker's
 `role` is DESCRIPTIVE METADATA ONLY (logging / harvest attribution — spec 5/A.5): it is
 READ into the marker but NEVER acted on here (no role branch, no ~/.claude/teams lookup).
 Default-inert + fail-open. startup/clear are intentionally inert (startup has fresh
@@ -28,18 +27,9 @@ from harness_common import (
     harvest_state_path,
 )
 
-# First-turn self-check (13): the per-compaction analog of the once-per-wave review.
-# BEST-EFFORT (review A3): this directive lands in the SessionStart(compact) additionalContext,
-# but whether the model acts on it BEFORE /goal's own restored continuation reason drives turn 1
-# is NOT doc-guaranteed — so it is a best-effort re-grounding, not a hard gate. (The always-on
-# posture core, which re-attaches every compaction, is the durable backstop. The harness self-test
-# Task 10 Step 5 confirms, on a real compaction, that the directive is present AND acted on first.)
-_SELF_CHECK = (
-    "BEST-EFFORT FIRST-TURN SELF-CHECK: ideally, before resuming, re-read the above "
-    "(goal prompt + CLAUDE.md + active issues + heuristics), confirm you are aligned "
-    "with the SETTLED scope, then do the next increment. If /goal's restored "
-    "continuation already drove this turn, do the self-check at the first natural break."
-)
+# The first-turn self-check is folded into the payload's always-on RE_ANCHOR (harness_common.RE_ANCHOR)
+# — a concrete "confirm the close-path before resuming the summary's tactic", rather than a separate
+# hedged trailing directive. So there is no longer a _SELF_CHECK appended here.
 
 
 def drift_note(last_ts, now, cadence_hours):
@@ -84,22 +74,20 @@ def notebook_note(notebook_path, repo):
 
 
 def compose_directive(src, goal, roadmap, notebook, payload):
-    """Wrap the shared re-orientation `payload` with UNIFORM, ROLE-AGNOSTIC framing + the
-    best-effort first-turn self-check (review A3 — not a hard ordering gate). There is NO
-    `role` parameter and NO role branch (spec 4/5 review item 2): the harness injects the
-    SAME settled posture for a solo loop or a team lead, and never prescribes
-    build-vs-delegate-vs-team — that is the agent's emergent judgment, unknowable at launch."""
+    """Wrap the shared `payload` with a MINIMAL, role-agnostic frame: a single GO-signal line — the
+    irreducible anti-over-defer posture, kept INJECTED as a backstop even if the mandated
+    PRE_DECISIONS.md read is skipped. The concrete re-orientation lives in the payload (RE_ANCHOR +
+    the live FRONTIER + the coaching block); the full discipline is the mandated read. No `role`
+    parameter / branch (spec 4/5): the SAME settled posture for a solo loop or a team lead — the
+    harness never prescribes build-vs-delegate-vs-team (the agent's emergent judgment)."""
     frame = (
-        f"[dev-harness] Autonomous /goal dev loop; context was just restored ({src}). "
-        f"The scope is SETTLED — do the next increment of real work THIS turn; a "
-        f"stop-hook firing is a GO signal, never a cue to stop, hold, or re-scope. "
-        f"Re-read the roadmap ({roadmap}). The lab-notebook FRONTIER digest is included below — act "
-        f"on its NEXT BRICK directly (zero Reads); open the INDEX ({notebook}) or its shards only for "
-        f"deeper context (progressive disclosure — do NOT re-read the full notebook log). Then "
-        f"continue the next brick. Legitimate stops only: a kernel-checked no-go or a genuine user "
-        f"decision."
+        f"[dev-harness] Autonomous /goal loop; context restored ({src}). Scope is SETTLED — do the "
+        f"next increment of real work THIS turn; a stop-hook firing is a GO signal, not a cue to "
+        f"stop/hold/re-scope. Roadmap: {roadmap}. Re-orient from the RE-ANCHOR + coaching block below, "
+        f"then ship the next brick (open the notebook INDEX {notebook} only for deeper context — "
+        f"don't re-read the full log)."
     )
-    return frame + "\n\n" + payload + "\n\n" + _SELF_CHECK
+    return frame + "\n\n" + payload
 
 
 def main():
