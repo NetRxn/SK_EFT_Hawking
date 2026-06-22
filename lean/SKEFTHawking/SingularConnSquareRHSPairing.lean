@@ -114,4 +114,22 @@ theorem relCocycle_props {X : TopCat} {A : Set ↑X} {n : ℕ} (gL : LinearMap.k
   rw [relCoboundaryₗ_coe] at h
   simpa using h
 
+/-- **Relative-boundary chain witness** (the `heq` foundation): if `mk_S w` is a relative boundary then
+`w` differs from a genuine boundary by an `S`-chain — `∃ η a, a ∈ C(S) ∧ w = ∂η + a`. Extracts the
+`range (relBoundary S n)` membership down to the chain level (`relBoundary_mk` + the
+`RelativeChain.mk` kernel = `C(S)`). Feeds `pair_fund_eq_pair_z0`'s `heq` from `fundCycleW_relHomologous`
+(`mk_Kᶜ(z₀ + fund) ∈ relBoundaries Kᶜ`). Over ℤ/2 (`a := ∂η + w`). Kernel-pure. -/
+theorem exists_relBoundary_witness {X : TopCat} {S : Set ↑X} {n : ℕ} (w : SingularChain X n)
+    (hw : RelativeChain.mk S n w ∈ relBoundaries S n) :
+    ∃ (η : SingularChain X (n + 1)) (a : SingularChain X n),
+      a ∈ subspaceChains S n ∧ w = chainBoundary X n η + a := by
+  obtain ⟨rc, hrc⟩ := hw
+  obtain ⟨η, rfl⟩ := Submodule.Quotient.mk_surjective _ rc
+  erw [relBoundary_mk] at hrc
+  refine ⟨η, chainBoundary X n η + w, ?_, ?_⟩
+  · have hd : chainBoundary X n η - w ∈ subspaceChains S n :=
+      (Submodule.Quotient.eq (subspaceChains S n)).mp hrc
+    rwa [ZModModule.sub_eq_add] at hd
+  · rw [← add_assoc, ZModModule.add_self, zero_add]
+
 end SKEFTHawking.SingularConnSquareRHSPairing
