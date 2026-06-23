@@ -403,6 +403,19 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
     ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
     (N + 1) ω'_rep.1.1 ω'_rep.1.2 hcoc
+  -- SEAM-TERM (Term2) localization via brick 5: `cap φ (∂fund) = chainIncl_legSplitVᶜ(cap (pb φ) w')`
+  --  + ∂(cap φ Dⱼ) + cap(δφ)(Dⱼ).  φ = cochainSplit ω' ∈ relCochains(legSplitUᶜ) (cochainSplit_mem),
+  --  w = ∂(chainIncl F) is a cycle (∂∂=0) and (legSplitUᶜ∪legSplitVᶜ)-supported (hcov). The legSplitVᶜ
+  --  cover-part heads to the V-link; ∂(cap φ Dⱼ) + cap(δφ)Dⱼ are the subdivision δφ-slack folded with χ.
+  obtain ⟨jseam, wseam, hseam⟩ := seam_cap_localize
+    ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
+    ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
+    (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+    (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+    (SingularCohomologySnake.cochainSplit
+      ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ) (N + 1) ω'_rep.1.1)
+    (SingularCohomologySnake.cochainSplit_mem_relCochains _ (N + 1) ω'_rep.1.1)
+    (chainBoundary_chainBoundary_apply X (N + 1 + p) _) hcov
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
