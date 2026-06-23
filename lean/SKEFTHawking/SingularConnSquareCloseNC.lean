@@ -320,6 +320,18 @@ theorem cover_partition_cap_boundary_mod {k m : ℕ} (A B : Set ↑X) (g : Singu
     add_zero] at h1
   exact h1
 
+/-- **`boundaryExtract` naturality w.r.t. an ambient pushforward** (the seam-transport building block).
+`mapChain φ` of the realized connecting image `chainIncl S (boundaryExtract S w)` equals the ambient
+boundary of the pushed-forward lift `mapChain φ (↑w)`, because `chainIncl ∘ boundaryExtract = ∂` (PairLES
+`chainIncl_boundaryExtract`) and `mapChain` is a chain map (`chainBoundary_mapChain`). The chain-level
+seam-naturality of `boundaryExtract` the connecting-square V-link needs, built fresh (no committed engine
+fired — `mapChain_boundaryExtract`/`boundaryExtract_seam` are empty). -/
+theorem mapChain_chainIncl_boundaryExtract {Y Z : TopCat} (φ : C(↑Y, ↑Z)) {S : Set ↑Y} {n : ℕ}
+    (w : SingularPairLES.relCycleLift S n) :
+    SingularFunctoriality.mapChain φ n (chainIncl S n (SingularPairLES.boundaryExtract S n w))
+      = chainBoundary Z n (SingularFunctoriality.mapChain φ (n + 1) (w : SingularChain Y (n + 1))) := by
+  rw [SingularPairLES.chainIncl_boundaryExtract, ← SingularFunctoriality.chainBoundary_mapChain]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
