@@ -389,6 +389,28 @@ theorem cap_relCochains_cover_partition_eq_zero {U V : Set ↑X} {k m : ℕ}
       ← capₗ_apply, map_zero, LinearMap.zero_apply, map_zero]
   rw [hsplit, hU0, hV0, add_zero]
 
+/-- **One-leg cap vanishing**: a cochain `a` vanishing on `S`-chains (`a ∈ relCochains S`) caps to `0`
+against any `S`-supported chain `chainIncl S c`. The building block of `cap_relCochains_cover_partition_eq_zero`
+and the V-part U-leg drop: `cap_chainIncl` + `pullbackCochain_relCochains_eq_zero`. -/
+theorem cap_relCochains_chainIncl_eq_zero {S : Set ↑X} {k m : ℕ}
+    (a : SingularCochain X k) (ha : a ∈ relCochains S k) (c : SingularChain (sub S) (k + m)) :
+    cap a (chainIncl S (k + m) c) = 0 := by
+  rw [SingularCapChainIncl.cap_chainIncl, pullbackCochain_relCochains_eq_zero k a ha,
+    ← capₗ_apply, map_zero, LinearMap.zero_apply, map_zero]
+
+/-- **U-leg drop of a relative-`U` cochain against a cover-partition**: for `a ∈ relCochains U`, capping `a`
+against a cover-subordinate partition `chainIncl U u + chainIncl V w` drops the `U`-leg (it vanishes,
+`cap_relCochains_chainIncl_eq_zero`), leaving `cap a (chainIncl V w)`. This is the V-part step for option-A:
+`φ = cochainSplit U g_rep ∈ relCochains U`, so `cap φ (∂(Sdʲ fund_∩)) = cap φ (chainIncl V w')` — the seam
+V-leg that the cross-realization identifies with `chain_L`. -/
+theorem cap_relCochains_U_cover_drop {U V : Set ↑X} {k m : ℕ}
+    (a : SingularCochain X k) (ha : a ∈ relCochains U k)
+    (u : SingularChain (sub U) (k + m)) (w : SingularChain (sub V) (k + m)) :
+    cap a (chainIncl U (k + m) u + chainIncl V (k + m) w) = cap a (chainIncl V (k + m) w) := by
+  rw [show cap a (chainIncl U (k + m) u + chainIncl V (k + m) w)
+        = cap a (chainIncl U (k + m) u) + cap a (chainIncl V (k + m) w) from map_add (capₗ k m a) _ _,
+    cap_relCochains_chainIncl_eq_zero a ha u, zero_add]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
