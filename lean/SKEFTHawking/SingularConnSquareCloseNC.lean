@@ -100,6 +100,27 @@ theorem cap_pullback_chainBoundary_chainIncl {M : TopCat} {S : Set ↑M} {k m : 
       = cap φ (chainBoundary M (k + m) (chainIncl S (k + m + 1) c)) := by
   rw [← SingularCapChainIncl.cap_chainIncl, chainIncl_chainBoundary]
 
+/-- **Cap subdivision-invariance with the δφ-coupling made explicit** (chain-altitude). For a cycle `z`
+(`∂z = 0`), `cap φ z` equals `cap φ (Sdʲz)` up to a boundary `∂(cap φ Dⱼz)` PLUS the non-cocycle correction
+`cap (δφ)(Dⱼz)` (since `φ` need not be a cocycle), where `Dⱼz = iterHomotopy` is the subdivision chain
+homotopy. From `add_singularSd_iterate_eq_boundary` (`z + Sdʲz = ∂Dⱼz`, type-ascribed to the `k+(m+1)` degree
+so it matches `cap_leibniz`'s output) + `cap_leibniz`. The `δφ`-term folds the seam-term subdivision into the
+χ-term (the two facts are coupled); the boundary term absorbs into the bounding chain `W`. -/
+theorem cap_singularSd_iterate {M : TopCat} {k m : ℕ} (φ : SingularCochain M k)
+    {z : SingularChain M (k + (m + 1))} (hz : chainBoundary M (k + m) z = 0) (j : ℕ) :
+    cap φ z = cap φ ((⇑(SingularSubdivision.singularSd M (k + (m + 1))))^[j] z)
+        + chainBoundary M (m + 1) (cap φ (SingularSubdivision.iterHomotopy M (k + (m + 1)) j z))
+        + cap (coboundary M k φ) ((show k + (m + 1) + 1 = k + 1 + (m + 1) from by omega) ▸
+            SingularSubdivision.iterHomotopy M (k + (m + 1)) j z) := by
+  have hb : z + (⇑(SingularSubdivision.singularSd M (k + (m + 1))))^[j] z
+      = chainBoundary M (k + (m + 1)) (SingularSubdivision.iterHomotopy M (k + (m + 1)) j z) :=
+    SingularExcision.add_singularSd_iterate_eq_boundary hz j
+  have hcl := cap_leibniz φ (SingularSubdivision.iterHomotopy M (k + (m + 1)) j z)
+    (show k + (m + 1) + 1 = k + 1 + (m + 1) from by omega)
+  rw [hcl, ← hb, map_add]
+  abel_nf
+  simp only [two_smul, ZModModule.add_self, zero_add]
+
 /-- **A cocycle pairs to zero against any boundary** (chain-altitude, whnf-free): `⟨a, ∂W⟩ = ⟨δa, W⟩ = 0`.
 Stated over an abstract space/degree so its proof never whnf's the giant `fundCycleW` carriers — the
 chain-pairing engine that closes the hLHS leg without lifting to the (whnf-walled) homology class square. -/
