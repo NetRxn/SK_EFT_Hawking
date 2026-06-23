@@ -254,6 +254,24 @@ theorem two_facts_via_ambient {S : Set ↑X} {N p : ℕ}
     cap_pullback_chainBoundary_chainIncl, ← SingularCapChainIncl.cap_chainIncl]
   exact hamb
 
+/-- **Cap–`boundaryExtract` naturality, non-cocycle form** (the V-link cap↔boundary engine). The committed
+`cap_boundaryExtract_naturality` (HLHSBridge:36) requires `a` a cocycle (`cap_cocycle_chainMap`); dropping that,
+cap-Leibniz adds exactly the δa-correction:
+  `chainIncl (cap (pullbackCochain a)(boundaryExtract w)) = ∂(cap a w) + cap (δa)(w)`.
+This is the non-cocycle generalization that `cochainSplit` (a NON-cocycle, `δφ ≠ 0`) needs — the same δφ slack
+the seam engine extracts. From `cap_chainIncl` + `chainIncl_boundaryExtract` + `cap_leibniz`. -/
+theorem cap_boundaryExtract_naturality_noncocycle {S : Set ↑X} {k m : ℕ}
+    (a : SingularCochain X k) (w : SingularPairLES.relCycleLift S (k + m)) :
+    chainIncl S m (cap (SingularCapChainIncl.pullbackCochain S k a)
+        (SingularPairLES.boundaryExtract S (k + m) w))
+      = chainBoundary X m (cap a (w : SingularChain X (k + m + 1)))
+        + cap (coboundary X k a)
+            ((show k + m + 1 = k + 1 + m from by omega) ▸ (w : SingularChain X (k + m + 1))) := by
+  rw [← SingularCapChainIncl.cap_chainIncl, SingularPairLES.chainIncl_boundaryExtract,
+    cap_leibniz a (w : SingularChain X (k + m + 1)) (show k + m + 1 = k + 1 + m from by omega)]
+  abel_nf
+  simp only [two_smul, ZModModule.add_self, zero_add]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
