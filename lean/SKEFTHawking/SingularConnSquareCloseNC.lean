@@ -425,11 +425,14 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --       residual `∂W = chain_L + pd`. (2) ∂W cap-Leibniz-expands (g_rep COCYCLE ⟹ δ-term = 0) to the
   --       two-facts LHS. (3) `two_facts_via_ambient` (NC:240) → AMBIENT hamb (chainIncl-injective, whnf-dodged):
   --       `cap g_rep (∂(chainIncl fund_∩)) = chainIncl chain_L + cap σR (chainIncl FR)` in X.
-  --   hamb = THREE sub-bricks: (i) σR↔g_rep connecting (`hσR`/relCohomMvConnecting — the bounding-chain cochain
-  --       is g_rep transported Kᶜ→infCompactᶜ, since g_rep ∉ relCochains(infCompactᶜ); GATING). (ii) V-part
-  --       chain_L ↔ ∂zB-realize (seamHomeo MVLES:111 + subSeamHomeo + boundaryExtract; cap_boundaryExtract_naturality
-  --       HLHSBridge:36). (iii) hbd (f1fcc707) links the cover-partition ∂ to cap g_rep ∂fund_{U∪V}; need fund_∩↔fund_{U∪V}.
-  --   NEXT BRICK = (i) the σR connecting relation (gates W). Full map: notebook INDEX FRONTIER step 4.
+  --   hamb = THREE sub-bricks: (i) the χ / bounding-chain cochain [GATING] — W-cochain = `cochainSplit g_rep`
+  --       (the U-leg over infCompactᶜ; g_rep itself ∉ relCochains(infCompactᶜ)). χ = `σR − δ(cochainSplit g_rep)`
+  --       (coboundary) absorbed at CHAIN altitude via cover-fine Sdʲ (coach-locked A, 2026-06-23; B/C ruled out;
+  --       see notebook DECISIONS). (ii) V-part chain_L ↔ ∂zB-realize (seamHomeo MVLES:111 = identity-on-points +
+  --       subSeamHomeo + boundaryExtract). (iii) hbd (f1fcc707) links cover-partition ∂ to cap g_rep ∂fund_{U∪V}.
+  --   NEXT BRICK = (i) cover-subordinate split `cap (δ(cochainSplit g_rep)) (Sdʲ fund_∩) = ∂(primitive_U) + slack`
+  --       via `exists_cover_fine_subdivision` (RHSScaffold:102, template = rhs_pairing_reduce proof) + `cap_leibniz`
+  --       + cochainSplit_coboundary_mem_U/V. The chain-level analog of rhs_pairing_reduce's kronecker internals.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
