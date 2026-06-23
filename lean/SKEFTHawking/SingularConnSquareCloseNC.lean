@@ -433,6 +433,25 @@ theorem realize_cap_leibniz {K : Set ↑X} {k m : ℕ} (a : SingularCochain X k)
   rw [Submodule.coe_add]
   exact cap_leibniz a c h
 
+/-- **The two cap-Leibniz terms, realized, sum to a boundary** (the cross-realization ASSEMBLY ENTRY).
+Glues `realize_cap_leibniz` (the split `realize(∂(cap a c)) = realize(cap(δa)) + realize(cap a ∂c)`) with
+`realize_chainBoundary_cap_mem_boundaries` (the membership `realize(∂(cap a c)) ∈ boundaries`). The KEY goal
+`chain_L + pd ∈ boundaries` reduces through this: identify `pd = realize(cap(δφ)fund')` (U-part) and
+`chain_L = realize(cap φ ∂fund')` (V-part), then this lemma closes it. -/
+theorem realize_cap_leibniz_terms_mem_boundaries {K : Set ↑X} {k n : ℕ} (a : SingularCochain X k)
+    (c : SingularChain X (k + (n + 1) + 1)) (h : k + (n + 1) + 1 = k + 1 + (n + 1))
+    (hd : cap a c ∈ subspaceChains K (n + 2))
+    (hsum : chainBoundary X (n + 1) (cap a c) ∈ subspaceChains K (n + 1))
+    (h1 : cap (coboundary X k a) (h ▸ c) ∈ subspaceChains K (n + 1))
+    (h2 : cap a (chainBoundary X (k + (n + 1)) c) ∈ subspaceChains K (n + 1)) :
+    (SingularSubspaceChainsEquiv.subspaceChainsEquiv K (n + 1)).symm
+          ⟨cap (coboundary X k a) (h ▸ c), h1⟩
+        + (SingularSubspaceChainsEquiv.subspaceChainsEquiv K (n + 1)).symm
+          ⟨cap a (chainBoundary X (k + (n + 1)) c), h2⟩
+      ∈ boundaries (sub K) (n + 1) := by
+  rw [← realize_cap_leibniz a c h hsum h1 h2]
+  exact realize_chainBoundary_cap_mem_boundaries K a c hd hsum
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
