@@ -481,6 +481,25 @@ theorem chainIncl_mapChain_seamHomeo {Y : TopCat} (A B : Set ↑Y) {n : ℕ}
     ← SingularFunctoriality.mapChain_comp]
   rfl
 
+/-- **chain_L realizes to the cover-partition V-part** (the V-link CONNECTION). Chaining the two seam-transport
+lemmas + `chainIncl_boundaryExtract` (`chainIncl(restr)∘boundaryExtract = ∂`) + `chainIncl_chainBoundary`
+(`chainIncl∘∂ = ∂∘chainIncl`): the `chainIncl T` of the seam-transported `boundaryExtract w` (= the shape of
+`chain_L`) equals `chainIncl S (∂(chainIncl B ↑w))`. For the goal (`S=U∪V`, `B=val⁻¹V`, `T=U∩V`, `↑w=zB`) this is
+`chainIncl(U∩V)(chain_L) = chainIncl(U∪V)(∂(chainIncl_B zB))` = the V-part of `hbd` — so `chain_L` links to the
+committed cover-partition machinery WITHOUT constructing the bounding chain's `φ`/`fund'`. -/
+theorem chainIncl_seam_boundaryExtract {S : Set ↑X} {A B : Set ↑(sub S)} {T : Set ↑X}
+    (hTS : T ⊆ S) (hmem : ∀ p : ↥(sub S), p ∈ A ∩ B ↔ (p : ↑X) ∈ T) {n : ℕ}
+    (w : SingularPairLES.relCycleLift (SingularExcisionIso.restr A B) n) :
+    chainIncl T n (SingularFunctoriality.mapChain
+        ⟨subSeamHomeo hTS hmem, (subSeamHomeo hTS hmem).continuous⟩ n
+        (SingularFunctoriality.mapChain
+          ⟨SingularMayerVietorisLES.seamHomeo A B, (SingularMayerVietorisLES.seamHomeo A B).continuous⟩ n
+          (SingularPairLES.boundaryExtract (SingularExcisionIso.restr A B) n w)))
+      = chainIncl S n (chainBoundary (sub S) n
+          (chainIncl B (n + 1) (w : SingularChain (sub B) (n + 1)))) := by
+  rw [chainIncl_mapChain_subSeamHomeo, chainIncl_mapChain_seamHomeo,
+    SingularPairLES.chainIncl_boundaryExtract, SingularRelativeHomologyMod2.chainIncl_chainBoundary]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
