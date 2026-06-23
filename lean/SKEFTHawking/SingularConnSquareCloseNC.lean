@@ -369,6 +369,11 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   (seam-transport, mapChain_chainIncl_boundaryExtract), chain_R = U-part (σR=connecting-of-g_rep).
   --   Engines committed: relativeDualityK_mk, exists_boundary_of_homology_eq, cover_partition_cap_boundary_mod,
   --   mapChain_chainIncl_boundaryExtract. Build chain cover-partition (hzc0+hpart+relativeDualityK_mk) FIRST.
+  -- Step 1 (NEXT brick): chain cover-partition. ⚠ FRICTION: `unfold legW` works, but `relativeDualityK_mk`
+  --   on the CONCRETE hzc0 (fundCycleW carriers) whnf-walls (200k) — the friction-catalog wall. FIX: build
+  --   an ABSTRACT `legW = [pullbackDualityₗ]` lemma over FREE carriers (the two_facts_via_ambient pattern,
+  --   all-underscore refine) then apply to hzc0; then `exists_boundary_of_homology_eq` (hpart) →
+  --   pullbackDualityₗ = chainIncl_A zA + chainIncl_B zB + ∂η → `cover_partition_cap_boundary_mod`.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
