@@ -392,6 +392,17 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   -- V-link: extract hpart's chain-level cover-partition `[zc0] = [chainIncl_A zA + chainIncl_B zB]` to
   -- `zc0 − (chainIncl_A zA + chainIncl_B zB) ∈ boundaries` (the link relating fund's cap to the V-part zB).
   have hpart_chain := (Submodule.Quotient.eq _).mp hpart
+  -- χ per-leg structure (cover-level, the cap-altitude χ route): δφ = `coboundary (cochainSplit legSplitUᶜ ω')`
+  -- is a relative `legSplitUᶜ`-cochain (unconditional) AND a relative `legSplitVᶜ`-cochain (ω'_rep a cocycle).
+  -- The cocycle fact `δω'_rep = 0` is the ker witness projected to the underlying cochain.
+  have hcoc : coboundary X (N + 1) ω'_rep.1.1 = 0 :=
+    congrArg Subtype.val (LinearMap.mem_ker.mp ω'_rep.2)
+  have hdU := SingularCohomologySnake.cochainSplit_coboundary_mem_U
+    ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ) (N + 1) ω'_rep.1.1
+  have hdV := SingularCohomologySnake.cochainSplit_coboundary_mem_V
+    ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
+    ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
+    (N + 1) ω'_rep.1.1 ω'_rep.1.2 hcoc
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
