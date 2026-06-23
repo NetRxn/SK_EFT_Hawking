@@ -361,102 +361,14 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   + the two facts (i) χ-term, (ii) seam-term. NO subdivision (cover-level). Cup-form/CrossReal = re-seed, discarded.
   refine hmatch_close _ _ (p + 1) a'rep _ _ ?_
   refine factB_transport _ _ _ _ ?_
-  -- now at KEY (boundary-membership in sub(U∩V)); apply the cap-Leibniz scaffold + the two facts.
-  -- ▶ Obtain the connecting INPUT cochain rep ω'_rep (the (N+1)-cochain whose `cochainSplit` gives the
-  --   absolute-coboundary rep of σR_rep), via hσR's input class (per CrossReal:97-102).
-  obtain ⟨ω'_rep, hω'⟩ := Submodule.Quotient.mk_surjective _
-    ((SingularRelativeCohomologyRestrict.relCohomRestrict (Set.inter_subset_inter subset_rfl subset_rfl)
-        (N + 1))
-      ((SingularCompactlySupportedTop.relCohomSetCongr
-          (by rw [SingularCSCMayerVietorisConnecting.legSplit_cover U V hU hV K, Set.compl_union]) (N + 1))
-        (Submodule.Quotient.mk g_rep)))
-  -- bounding chain `W = cap(pullbackCochain(cochainSplit (legSplitUᶜ) ω'_rep))(realize F)` (deg p+2; per
-  --   CrossReal:105-115); ∂W via cap_leibniz ⟹ two facts (ii) seam-term + (i) χ-term.
-  refine ⟨cap (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 1)
-        (SingularCohomologySnake.cochainSplit
-          ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ) (N + 1) ω'_rep.1.1))
-      ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1 + (p + 1 + 1))).symm
-        ⟨SingularOpenDualityCycle.fundCycleW (hU.inter hV)
-            (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + (p + 1 + 1) by omega) z₀)
-            (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
-            (SingularCSCMayerVietorisConnecting.infCompact U V
-              (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
-              (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)),
-          SingularOpenDualityCycle.fundCycleW_mem_W (hU.inter hV) _ _ _⟩), ?_⟩
-  -- ∂W via cap_leibniz ⟹ `cap(δφ)(h▸F) + cap(φ)(∂F) = chain_L + chain_R`, φ = pullbackCochain(cochainSplit ω'_rep).
-  -- `erw` (NOT `rw`): the factB_transport path left the goal's space as `sub (U ∩ Membership.mem V)`, defeq but
-  -- not syntactically `sub (U ∩ V)`, which blocks `rw` at reducible transparency (MCP-confirmed erw fires clean).
-  erw [SingularHomologyMod2.cap_leibniz _ _ (show N + 1 + (p + 1) + 1 = N + 1 + 1 + (p + 1) by omega)]
-  -- ▶ TWO FACTS (cap-naturality core): (i) χ-term `cap(δφ)(F) ~ pullbackDualityₗ σR` (cover-level), (ii) seam-term
-  --   `cap(φ)(∂F) ~ seam²(boundaryExtract zB)` (cap_boundaryExtract_naturality + hpart/hzc0). Grind (ii) first.
-  -- χ-side prep: move the coboundary inside ⟹ Term1 = `cap(pullbackCochain(δ(cochainSplit ω'_rep)))(F)`.
-  erw [SingularConnSquareCloseFinal.coboundary_pullbackCochain]
-  -- align chain_R `pullbackDualityₗ σR` to the explicit cap form `cap(pullbackCochain σR_rep)(realize F)`
-  --   (CrossReal:89) — now Term1 (χ) and chain_R share `cap(pullbackCochain ·)(realize F)`.
-  rw [SingularCapSubKDuality.pullbackDualityₗ_eq_subcap]
-  -- ▶ ASSEMBLY: chainIncl-inject the whole two-facts goal to ambient X (where the seam-localization engine
-  --   + cap_chainIncl live), then distribute over the two sums.
-  -- reduce the sub(U∩V) two-facts to the ambient two-facts via the whnf-dodging abstract reduction
-  -- (underscores = the concrete fundCycleW carriers, inferred structurally — no 200k-whnf wall).
-  refine two_facts_via_ambient _ _ _ _ _ _ _ ?_
-  -- ▶ AMBIENT TWO-FACTS (the V-link + χ cross-realization core):
-  --   `cap δφ (chainIncl F) + cap φ (∂(chainIncl F)) = chainIncl(seam²(boundaryExtract zB)) + cap σR (chainIncl F)`.
-  -- seam-term cover-support: `∂(chainIncl F) ∈ subspaceChains(legSplitUᶜ ∪ legSplitVᶜ)` (brick 8 + brick 9 + fundCycleW_boundary).
-  have hcov : chainBoundary X (N + 1 + (p + 1))
-        (chainIncl (U ∩ V) (N + 1 + (p + 1) + 1)
-          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1 + (p + 1 + 1))).symm
-            ⟨SingularOpenDualityCycle.fundCycleW (hU.inter hV)
-                (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + (p + 1 + 1) by omega) z₀)
-                (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
-                (SingularCSCMayerVietorisConnecting.infCompact U V
-                  (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
-                  (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)),
-              SingularOpenDualityCycle.fundCycleW_mem_W (hU.inter hV) _ _ _⟩))
-      ∈ subspaceChains
-          ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ ∪
-            (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1)ᶜ) (N + 1 + (p + 1)) := by
-    refine chainBoundary_chainIncl_subspaceChainsEquiv_symm_mem _ ?_
-    rw [← infCompact_compl_legSplit hU hV K]
-    exact SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV)
-      (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + (p + 1 + 1) by omega) z₀)
-      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
-      (SingularCSCMayerVietorisConnecting.infCompact U V
-        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
-        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
-  -- V-link: extract hpart's chain-level cover-partition `[zc0] = [chainIncl_A zA + chainIncl_B zB]` to
-  -- `zc0 − (chainIncl_A zA + chainIncl_B zB) ∈ boundaries` (the link relating fund's cap to the V-part zB).
-  have hpart_chain := (Submodule.Quotient.eq _).mp hpart
-  -- χ per-leg structure (cover-level, the cap-altitude χ route): δφ = `coboundary (cochainSplit legSplitUᶜ ω')`
-  -- is a relative `legSplitUᶜ`-cochain (unconditional) AND a relative `legSplitVᶜ`-cochain (ω'_rep a cocycle).
-  -- The cocycle fact `δω'_rep = 0` is the ker witness projected to the underlying cochain.
-  have hcoc : coboundary X (N + 1) ω'_rep.1.1 = 0 :=
-    congrArg Subtype.val (LinearMap.mem_ker.mp ω'_rep.2)
-  have hdU := SingularCohomologySnake.cochainSplit_coboundary_mem_U
-    ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ) (N + 1) ω'_rep.1.1
-  have hdV := SingularCohomologySnake.cochainSplit_coboundary_mem_V
-    ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
-    ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
-    (N + 1) ω'_rep.1.1 ω'_rep.1.2 hcoc
-  -- SEAM-TERM (Term2) localization via brick 5: `cap φ (∂fund) = chainIncl_legSplitVᶜ(cap (pb φ) w')`
-  --  + ∂(cap φ Dⱼ) + cap(δφ)(Dⱼ).  φ = cochainSplit ω' ∈ relCochains(legSplitUᶜ) (cochainSplit_mem),
-  --  w = ∂(chainIncl F) is a cycle (∂∂=0) and (legSplitUᶜ∪legSplitVᶜ)-supported (hcov). The legSplitVᶜ
-  --  cover-part heads to the V-link; ∂(cap φ Dⱼ) + cap(δφ)Dⱼ are the subdivision δφ-slack folded with χ.
-  obtain ⟨jseam, wseam, hseam⟩ := seam_cap_localize
-    ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
-    ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
-    (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
-    (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
-    (SingularCohomologySnake.cochainSplit
-      ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ) (N + 1) ω'_rep.1.1)
-    (SingularCohomologySnake.cochainSplit_mem_relCochains _ (N + 1) ω'_rep.1.1)
-    (chainBoundary_chainBoundary_apply X (N + 1 + p) _) hcov
-  -- Expand the seam-term (Term2) into its three ambient summands (W is already closed over by
-  -- two_facts_via_ambient — the corrections live in the ambient residual, not the sub-witness).
-  erw [hseam]
-  -- Convert the B-cover-part `chainIncl_legSplitVᶜ(cap (pb φ) wseam)` to the ambient cap form
-  -- `cap φ (chainIncl_legSplitVᶜ wseam)` — the form the V-link class-compatibility consumes (relate
-  -- this V-realization to `chainIncl(seam²(boundaryExtract zB))` via hpart through the connecting map).
-  rw [← SingularCapChainIncl.cap_chainIncl]
+  -- ▶ COCYCLE-g_rep CLOSE (route-corrected 2026-06-23): KEY goal = the connecting-square match
+  --   `seam²(boundaryExtract zB) + pullbackDualityₗ(infCompactᶜ)(U∩V)(fundCycleW) σR_rep ∈ boundaries(sub(U∩V))`.
+  --   g_rep is a COCYCLE ⟹ ∂(cap g_rep fund) = cap g_rep ∂fund EXACTLY (NO χ-term; the φ-route's χ was the
+  --   non-cocycle cochainSplit's δ). Close: W' = realize(cap g_rep fund); ∂W' = realize(cap g_rep ∂fund) =
+  --   realize(chainIncl_A ∂zA + chainIncl_B ∂zB) [cover_partition_cap_boundary_mod]; chain_L = V-part
+  --   (seam-transport, mapChain_chainIncl_boundaryExtract), chain_R = U-part (σR=connecting-of-g_rep).
+  --   Engines committed: relativeDualityK_mk, exists_boundary_of_homology_eq, cover_partition_cap_boundary_mod,
+  --   mapChain_chainIncl_boundaryExtract. Build chain cover-partition (hzc0+hpart+relativeDualityK_mk) FIRST.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
