@@ -367,6 +367,28 @@ theorem cover_partition_of_legW {W : Set ↑X} {k m : ℕ} (hW : IsOpen W)
         (SingularOpenDualityCycle.fundCycleW_boundary hW z₀ hz₀ K) a⟩
     w (hzc0.symm.trans hpart)
 
+/-- **A cover-complex cocycle caps to 0 against any cover-partition** (the chain-level leg-local vanishing —
+the cap analog of `rhs_pairing_reduce`'s kronecker vanishing; coach-locked option-A χ-engine 2026-06-23).
+A cochain `a` vanishing on BOTH `U`- and `V`-chains (`a ∈ relCochains U ∩ relCochains V`, e.g.
+`δ(cochainSplit U g_rep)` for a cocycle `g_rep`, via `cochainSplit_coboundary_mem_U/V`) caps to `0` against
+a cover-subordinate partition `chainIncl U u + chainIncl V w`: `cap_chainIncl` pushes the cap inside each
+`chainIncl`, where `pullbackCochain_relCochains_eq_zero` kills the relative-cochain leg. The χ-vanishing for
+option-A (Sdʲ chain-level absorption): `δφ` capped against the cover-fine boundary `∂(Sdʲ fund_∩)`. -/
+theorem cap_relCochains_cover_partition_eq_zero {U V : Set ↑X} {k m : ℕ}
+    (a : SingularCochain X k) (haU : a ∈ relCochains U k) (haV : a ∈ relCochains V k)
+    (u : SingularChain (sub U) (k + m)) (w : SingularChain (sub V) (k + m)) :
+    cap a (chainIncl U (k + m) u + chainIncl V (k + m) w) = 0 := by
+  have hsplit : cap a (chainIncl U (k + m) u + chainIncl V (k + m) w)
+      = cap a (chainIncl U (k + m) u) + cap a (chainIncl V (k + m) w) :=
+    map_add (capₗ k m a) _ _
+  have hU0 : cap a (chainIncl U (k + m) u) = 0 := by
+    rw [SingularCapChainIncl.cap_chainIncl, pullbackCochain_relCochains_eq_zero k a haU,
+      ← capₗ_apply, map_zero, LinearMap.zero_apply, map_zero]
+  have hV0 : cap a (chainIncl V (k + m) w) = 0 := by
+    rw [SingularCapChainIncl.cap_chainIncl, pullbackCochain_relCochains_eq_zero k a haV,
+      ← capₗ_apply, map_zero, LinearMap.zero_apply, map_zero]
+  rw [hsplit, hU0, hV0, add_zero]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
