@@ -419,6 +419,10 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   -- Expand the seam-term (Term2) into its three ambient summands (W is already closed over by
   -- two_facts_via_ambient — the corrections live in the ambient residual, not the sub-witness).
   erw [hseam]
+  -- Convert the B-cover-part `chainIncl_legSplitVᶜ(cap (pb φ) wseam)` to the ambient cap form
+  -- `cap φ (chainIncl_legSplitVᶜ wseam)` — the form the V-link class-compatibility consumes (relate
+  -- this V-realization to `chainIncl(seam²(boundaryExtract zB))` via hpart through the connecting map).
+  rw [← SingularCapChainIncl.cap_chainIncl]
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
