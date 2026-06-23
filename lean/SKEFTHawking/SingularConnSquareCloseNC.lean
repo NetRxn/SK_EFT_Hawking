@@ -231,6 +231,29 @@ theorem realize_chainBoundary_cap_mem_boundaries (K : Set ↑X) {k n : ℕ} (a :
         ⟨chainBoundary X (n + 1) (cap a c), hsum⟩ ∈ boundaries (sub K) (n + 1) :=
   SingularSubspaceChainsEquiv.subspaceChainsEquiv_symm_mem_boundaries K n _ hsum (cap a c) hd rfl
 
+/-- **Two-facts ambient reduction** (whnf-dodging). The sub-`S` two-facts equality reduces to its ambient
+`chainIncl`-image, via `chainIncl_injective` + per-term `cap_chainIncl` / `cap_pullback_chainBoundary_chainIncl`.
+Stated over ABSTRACT carriers `Fcast, F, FR, chainL` so the per-term `cap_chainIncl` rewrites never whnf the
+concrete `fundCycleW` (the 200k-whnf wall); applied to the concrete goal via `refine two_facts_via_ambient _ … ?_`
+(underscores = the carriers, inferred structurally). The `?_` residual is the ambient two-facts = the V-link + χ
+cross-realization core. -/
+theorem two_facts_via_ambient {S : Set ↑X} {N p : ℕ}
+    (dphi sigmaR : SingularCochain X (N + 2)) (phi : SingularCochain X (N + 1))
+    (Fcast FR : SingularChain (sub S) (N + 2 + (p + 1)))
+    (F : SingularChain (sub S) (N + 1 + (p + 1) + 1))
+    (chainL : SingularChain (sub S) (p + 1))
+    (hamb : cap dphi (chainIncl S (N + 2 + (p + 1)) Fcast)
+          + cap phi (chainBoundary X (N + 1 + (p + 1)) (chainIncl S (N + 1 + (p + 1) + 1) F))
+        = chainIncl S (p + 1) chainL + cap sigmaR (chainIncl S (N + 2 + (p + 1)) FR)) :
+    cap (SingularCapChainIncl.pullbackCochain S (N + 2) dphi) Fcast
+        + cap (SingularCapChainIncl.pullbackCochain S (N + 1) phi)
+            (chainBoundary (sub S) (N + 1 + (p + 1)) F)
+      = chainL + cap (SingularCapChainIncl.pullbackCochain S (N + 2) sigmaR) FR := by
+  apply chainIncl_injective
+  rw [map_add, map_add, ← SingularCapChainIncl.cap_chainIncl,
+    cap_pullback_chainBoundary_chainIncl, ← SingularCapChainIncl.cap_chainIncl]
+  exact hamb
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
@@ -293,6 +316,13 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   -- align chain_R `pullbackDualityₗ σR` to the explicit cap form `cap(pullbackCochain σR_rep)(realize F)`
   --   (CrossReal:89) — now Term1 (χ) and chain_R share `cap(pullbackCochain ·)(realize F)`.
   rw [SingularCapSubKDuality.pullbackDualityₗ_eq_subcap]
+  -- ▶ ASSEMBLY: chainIncl-inject the whole two-facts goal to ambient X (where the seam-localization engine
+  --   + cap_chainIncl live), then distribute over the two sums.
+  -- reduce the sub(U∩V) two-facts to the ambient two-facts via the whnf-dodging abstract reduction
+  -- (underscores = the concrete fundCycleW carriers, inferred structurally — no 200k-whnf wall).
+  refine two_facts_via_ambient _ _ _ _ _ _ _ ?_
+  -- ▶ AMBIENT TWO-FACTS (the V-link + χ cross-realization core):
+  --   `cap δφ (chainIncl F) + cap φ (∂(chainIncl F)) = chainIncl(seam²(boundaryExtract zB)) + cap σR (chainIncl F)`.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
