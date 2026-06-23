@@ -11,6 +11,8 @@ import SKEFTHawking.SingularCoverPartitionExist
 import SKEFTHawking.SingularConnSquareLHSExplicit
 import SKEFTHawking.SingularAbsCohomConnGeom
 import SKEFTHawking.SingularConnSquareLHSRealize
+import SKEFTHawking.SingularRelCohomSetCongrMk
+import SKEFTHawking.SingularConnSquareMatchCross
 
 /-!
 # Phase 5q.F (w₂-foundation, PD6f-c4-NC) — non-circular connecting-square closure (WIP)
@@ -113,6 +115,9 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   LVc=legSplitVᶜ, c = z₀-realized cap, ONCE) → hRHS (`chainIncl_rcap_cover_agree`) + hLHS (sub-lemma A core).
   rw [SingularDualityAdjoint.relKroneckerH_relCohomRestrict']  -- cast-FREE: relIncl onto homology, no `▸`
   erw [SingularRelativeMV.relIncl_mk]  -- push relIncl THROUGH mk (erw clears the LinearMap-coe that blocked rw)
+  erw [SingularRelCohomSetCongrMk.relCohomSetCongr_mk]  -- collapse relCohomSetCongr ⟹ cohomology now `mk (h ▸ grep)`
+  erw [SingularRelativePairing.relKroneckerH_mk_mk, SingularRelativePairing.relKronecker_mk]  -- ⟹ both sides `kronecker`
+  simp only [SingularFunctoriality.mapChain_id]  -- RHS = `kronecker (h ▸ grep) (chainIncl legSplitVᶜ w')` — the cross-match shape
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
