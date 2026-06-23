@@ -500,6 +500,19 @@ theorem chainIncl_seam_boundaryExtract {S : Set ↑X} {A B : Set ↑(sub S)} {T 
   rw [chainIncl_mapChain_subSeamHomeo, chainIncl_mapChain_seamHomeo,
     SingularPairLES.chainIncl_boundaryExtract, SingularRelativeHomologyMod2.chainIncl_chainBoundary]
 
+/-- **Cover form of `∂(fundCycleW)`'s support**: `fundCycleW_boundary` lands `∂fund` in `subspaceChains(Kᶜ)`;
+when `Kᶜ` is a cover `P ∪ Q` (for `K = infCompact`, `P ∪ Q = legSplitUᶜ ∪ legSplitVᶜ` via
+`infCompact_compl_legSplit`), `∂fund ∈ subspaceChains(P ∪ Q)` — so it splits cover-subordinately for the
+V-part leg drop (`cap_relCochains_U_cover_drop`). -/
+theorem fundCycleW_boundary_cover {W : Set ↑X} {k m : ℕ} (hW : IsOpen W)
+    (z₀ : SingularChain X (k + m + 1)) (hz₀ : chainBoundary X (k + m) z₀ = 0)
+    (K : SingularCompactsInOpen.CompactsIn W) {P Q : Set ↑X}
+    (hcover : ((↑K.1 : Set ↑X)ᶜ) = P ∪ Q) :
+    chainBoundary X (k + m) (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K)
+      ∈ subspaceChains (P ∪ Q) (k + m) := by
+  rw [← hcover]
+  exact SingularOpenDualityCycle.fundCycleW_boundary hW z₀ hz₀ K
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
