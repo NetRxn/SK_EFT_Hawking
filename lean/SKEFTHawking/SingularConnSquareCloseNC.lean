@@ -416,6 +416,9 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ) (N + 1) ω'_rep.1.1)
     (SingularCohomologySnake.cochainSplit_mem_relCochains _ (N + 1) ω'_rep.1.1)
     (chainBoundary_chainBoundary_apply X (N + 1 + p) _) hcov
+  -- Expand the seam-term (Term2) into its three ambient summands (W is already closed over by
+  -- two_facts_via_ambient — the corrections live in the ambient residual, not the sub-witness).
+  erw [hseam]
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
