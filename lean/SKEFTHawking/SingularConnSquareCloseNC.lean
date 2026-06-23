@@ -409,8 +409,17 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   🔑 the application MUST infer `w` from hpart (NOT pass the explicit ⟨chainIncl..,hcyc⟩) — the explicit
   --   anonymous-constructor forces an elaboration order that whnf-walls; `_` (inferred) dodges it.
   obtain ⟨η, hcp⟩ := cover_partition_of_legW _ _ _ _ g_rep zc0 _ hzc0 hpart
-  -- Step 2 (NEXT): push hcp through chainIncl(U∪V) → `cap g_rep fund = chainIncl_A zA + chainIncl_B zB + ∂η'`
-  --   (chainIncl_pullbackDualityₗ + chainIncl composition) → cover_partition_cap_boundary_mod → seam/σR transport.
+  -- Step 2: push hcp through chainIncl(U∪V) → absolute X: `cap g_rep fund = chainIncl(U∪V)(chainIncl_A zA)
+  --   + chainIncl(U∪V)(chainIncl_B zB) + ∂(chainIncl(U∪V) η)` (chainIncl_pullbackDualityₗ + map_add + chainIncl_∂).
+  have hcp_abs := congrArg (⇑(chainIncl (U ∪ V) (p + 1 + 1))) hcp
+  simp only [map_add, SingularLocalDualityK.chainIncl_pullbackDualityₗ,
+    SingularRelativeHomologyMod2.chainIncl_chainBoundary] at hcp_abs
+  -- Step 3: cover_partition_cap_boundary_mod on hcp_abs (A=B=U∪V; zA':=chainIncl(val⁻¹U)zA, zB':=chainIncl(val⁻¹V)zB,
+  --   η':=chainIncl(U∪V)η) → `chainIncl(U∪V)(∂(chainIncl_A zA)) + chainIncl(U∪V)(∂(chainIncl_B zB)) = cap g_rep ∂fund`.
+  have hbd := cover_partition_cap_boundary_mod (U ∪ V) (U ∪ V) _
+    (SingularRelativeDuality.relCocycle_coboundary_zero _ g_rep) _ _ _ _ hcp_abs
+  -- Step 4 (NEXT): seam V-part `chain_L = seam²(boundaryExtract zB) = chainIncl_B(∂zB)` transport
+  --   (mapChain_chainIncl_boundaryExtract) + σR U-part (chain_R = chainIncl_A(∂zA) via σR) → assemble via hbd.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
