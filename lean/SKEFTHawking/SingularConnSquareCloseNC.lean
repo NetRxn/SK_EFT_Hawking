@@ -88,6 +88,18 @@ theorem cap_cover_localize_to_B {M : TopCat} {k l : ℕ} (A B : Set ↑M) (hA : 
     rw [pullbackCochain_relCochains_eq_zero k g hg, ← capₗ_apply, map_zero, LinearMap.zero_apply]
   rw [hA0, map_zero, zero_add]
 
+/-- **chainIncl-injection of the seam-term cap** (whnf-free glue). The sub-space cap of a pulled-back
+cochain against a sub-space boundary `chainIncl`-injects to the *ambient* cap of the original cochain
+against the ambient boundary: `chainIncl (cap (pullbackCochain S φ) (∂c)) = cap φ (∂(chainIncl c))`, via
+`cap_chainIncl` (cap–chainIncl naturality) + `chainIncl_chainBoundary` (chainIncl is a chain map). This is
+the bridge that lifts the concrete seam-term into the ambient `X` where `cap_cover_localize_to_B` applies
+(the `{M, S}` binders keep it whnf-free over the concrete `realize F`). -/
+theorem cap_pullback_chainBoundary_chainIncl {M : TopCat} {S : Set ↑M} {k m : ℕ}
+    (φ : SingularCochain M k) (c : SingularChain (sub S) (k + m + 1)) :
+    chainIncl S m (cap (SingularCapChainIncl.pullbackCochain S k φ) (chainBoundary (sub S) (k + m) c))
+      = cap φ (chainBoundary M (k + m) (chainIncl S (k + m + 1) c)) := by
+  rw [← SingularCapChainIncl.cap_chainIncl, chainIncl_chainBoundary]
+
 /-- **A cocycle pairs to zero against any boundary** (chain-altitude, whnf-free): `⟨a, ∂W⟩ = ⟨δa, W⟩ = 0`.
 Stated over an abstract space/degree so its proof never whnf's the giant `fundCycleW` carriers — the
 chain-pairing engine that closes the hLHS leg without lifting to the (whnf-walled) homology class square. -/
