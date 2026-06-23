@@ -105,6 +105,14 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   obtain ⟨zseam, hLHS⟩ :=
     SingularConnSquareLHSRealize.kroneckerH_absCohomConn_coverClass U V hU ‹IsOpen V› p a'rep _
   erw [hLHS]
+  -- (C) FINAL match — RHS bridge (cast-free path): `relKroneckerH_relCohomRestrict'` peels relCohomRestrict
+  --   (→ relIncl on homology); `SingularRelativeMV.relIncl_mk` pushes relIncl THROUGH `mk` (no cast — the
+  --   `relCohomSetCongr_relIncl_collapse` route makes a blocking `hSet ▸`, AVOID it); then handle
+  --   relCohomSetCongr(mk grep) + `relKroneckerH_mk_mk` + `relKronecker_mk` ⟹ `kronecker grep (chainIncl
+  --   legSplitVᶜ w')`. Then `apply SingularConnSquareMatchCross.cross_realization_match` (W=U∩V, gamb=grep,
+  --   LVc=legSplitVᶜ, c = z₀-realized cap, ONCE) → hRHS (`chainIncl_rcap_cover_agree`) + hLHS (sub-lemma A core).
+  rw [SingularDualityAdjoint.relKroneckerH_relCohomRestrict']  -- cast-FREE: relIncl onto homology, no `▸`
+  erw [SingularRelativeMV.relIncl_mk]  -- push relIncl THROUGH mk (erw clears the LinearMap-coe that blocked rw)
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
