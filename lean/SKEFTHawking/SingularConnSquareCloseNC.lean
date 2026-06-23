@@ -389,6 +389,9 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       (SingularCSCMayerVietorisConnecting.infCompact U V
         (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
         (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
+  -- V-link: extract hpart's chain-level cover-partition `[zc0] = [chainIncl_A zA + chainIncl_B zB]` to
+  -- `zc0 − (chainIncl_A zA + chainIncl_B zB) ∈ boundaries` (the link relating fund's cap to the V-part zB).
+  have hpart_chain := (Submodule.Quotient.eq _).mp hpart
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
