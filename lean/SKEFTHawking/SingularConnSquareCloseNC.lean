@@ -452,6 +452,21 @@ theorem realize_cap_leibniz_terms_mem_boundaries {K : Set ↑X} {k n : ℕ} (a :
   rw [← realize_cap_leibniz a c h hsum h1 h2]
   exact realize_chainBoundary_cap_mem_boundaries K a c hd hsum
 
+/-- **Seam-transport `chainIncl` compatibility** (the V-link seam piece): `subSeamHomeo` is identity-on-points,
+so including the `subSeamHomeo`-reindex into `X` (`chainIncl T ∘ mapChain⟨subSeamHomeo⟩`) equals the direct
+nested inclusion `chainIncl S ∘ chainIncl R`. Both are `mapChain` of the underlying inclusion (`mapChain_ambIncl`),
+fused by `mapChain_comp`; the two composite continuous maps agree pointwise (identity-on-points → `rfl`). Lets
+`chainIncl(U∩V)(chain_L)` be rewritten off the seam transport onto the direct inclusion of `boundaryExtract zB`. -/
+theorem chainIncl_mapChain_subSeamHomeo {S : Set ↑X} {R : Set ↑(sub S)} {T : Set ↑X} (hTS : T ⊆ S)
+    (hmem : ∀ p : ↥(sub S), p ∈ R ↔ (p : ↑X) ∈ T) {n : ℕ} (x : SingularChain (sub R) n) :
+    chainIncl T n (SingularFunctoriality.mapChain
+        ⟨subSeamHomeo hTS hmem, (subSeamHomeo hTS hmem).continuous⟩ n x)
+      = chainIncl S n (chainIncl R n x) := by
+  rw [← SingularMayerVietorisLES.mapChain_ambIncl, ← SingularMayerVietorisLES.mapChain_ambIncl,
+    ← SingularMayerVietorisLES.mapChain_ambIncl, ← SingularFunctoriality.mapChain_comp,
+    ← SingularFunctoriality.mapChain_comp]
+  rfl
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
