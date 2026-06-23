@@ -121,6 +121,25 @@ theorem cap_singularSd_iterate {M : TopCat} {k m : ℕ} (φ : SingularCochain M 
   abel_nf
   simp only [two_smul, ZModModule.add_self, zero_add]
 
+/-- **Seam-localization composite** (bricks 2 + 4 assembled, chain-altitude, whnf-free). For a cover `{A, B}`,
+a cochain `φ` vanishing on `A` (`φ ∈ relCochains A`), and an `(A∪B)`-supported cycle `w`, the cap `cap φ w`
+decomposes as the pure `B`-cover-part `chainIncl B (cap (pullbackCochain B φ) w')` (the `A`-part dies — brick 2)
+PLUS a boundary `∂(cap φ Dⱼw)` PLUS the non-cocycle δφ-correction `cap (δφ)(Dⱼw)` (brick 4). The subdivision
+count `j` is the one `cap_cover_localize_to_B` produces; `cap_singularSd_iterate` is applied at that same `j`.
+This is the engine the concrete seam-term consumes (via `cap_pullback_chainBoundary_chainIncl` to reach the
+ambient cap): the `B`-part heads to the V-link, the δφ-term folds into the χ. -/
+theorem seam_cap_localize {M : TopCat} {k m : ℕ} (A B : Set ↑M) (hA : IsOpen A) (hB : IsOpen B)
+    (φ : SingularCochain M k) (hφ : φ ∈ relCochains A k)
+    {w : SingularChain M (k + (m + 1))} (hw_cyc : chainBoundary M (k + m) w = 0)
+    (hw : w ∈ subspaceChains (A ∪ B) (k + (m + 1))) :
+    ∃ (j : ℕ) (w' : SingularChain (sub B) (k + (m + 1))),
+      cap φ w = chainIncl B (m + 1) (cap (SingularCapChainIncl.pullbackCochain B k φ) w')
+        + chainBoundary M (m + 1) (cap φ (SingularSubdivision.iterHomotopy M (k + (m + 1)) j w))
+        + cap (coboundary M k φ) ((show k + (m + 1) + 1 = k + 1 + (m + 1) from by omega) ▸
+            SingularSubdivision.iterHomotopy M (k + (m + 1)) j w) := by
+  obtain ⟨j, w', hloc⟩ := cap_cover_localize_to_B A B hA hB φ hφ w hw
+  exact ⟨j, w', by rw [cap_singularSd_iterate φ hw_cyc j, hloc]⟩
+
 /-- **A cocycle pairs to zero against any boundary** (chain-altitude, whnf-free): `⟨a, ∂W⟩ = ⟨δa, W⟩ = 0`.
 Stated over an abstract space/degree so its proof never whnf's the giant `fundCycleW` carriers — the
 chain-pairing engine that closes the hLHS leg without lifting to the (whnf-walled) homology class square. -/
