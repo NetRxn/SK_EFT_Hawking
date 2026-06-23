@@ -411,6 +411,28 @@ theorem cap_relCochains_U_cover_drop {U V : Set ↑X} {k m : ℕ}
         = cap a (chainIncl U (k + m) u) + cap a (chainIncl V (k + m) w) from map_add (capₗ k m a) _ _,
     cap_relCochains_chainIncl_eq_zero a ha u, zero_add]
 
+/-- **Realize cap-Leibniz split** (the cross-realization structural backbone): the `K`-realization of the
+boundary `∂(cap a c)` splits as the realize of the two cap-Leibniz terms `cap(δa)c` (the U-part / connecting)
+and `cap a (∂c)` (the V-part). `subspaceChainsEquiv K`'s `.symm` is a `LinearEquiv` so it's additive
+(`map_add`); the underlying split is `cap_leibniz`. Lets `∂W = realize(∂(cap (cochainSplit g_rep) fund'))`
+be matched termwise against `pd + chain_L`. -/
+theorem realize_cap_leibniz {K : Set ↑X} {k m : ℕ} (a : SingularCochain X k)
+    (c : SingularChain X (k + m + 1)) (h : k + m + 1 = k + 1 + m)
+    (h0 : chainBoundary X m (cap a c) ∈ subspaceChains K m)
+    (h1 : cap (coboundary X k a) (h ▸ c) ∈ subspaceChains K m)
+    (h2 : cap a (chainBoundary X (k + m) c) ∈ subspaceChains K m) :
+    (SingularSubspaceChainsEquiv.subspaceChainsEquiv K m).symm
+        ⟨chainBoundary X m (cap a c), h0⟩
+      = (SingularSubspaceChainsEquiv.subspaceChainsEquiv K m).symm
+            ⟨cap (coboundary X k a) (h ▸ c), h1⟩
+        + (SingularSubspaceChainsEquiv.subspaceChainsEquiv K m).symm
+            ⟨cap a (chainBoundary X (k + m) c), h2⟩ := by
+  rw [← map_add]
+  congr 1
+  apply Subtype.ext
+  rw [Submodule.coe_add]
+  exact cap_leibniz a c h
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
