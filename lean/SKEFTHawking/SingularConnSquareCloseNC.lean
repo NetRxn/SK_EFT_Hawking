@@ -467,6 +467,20 @@ theorem chainIncl_mapChain_subSeamHomeo {S : Set ↑X} {R : Set ↑(sub S)} {T :
     ← SingularFunctoriality.mapChain_comp]
   rfl
 
+/-- **Seam-transport `chainIncl` compatibility (seamHomeo)**: the inner-seam companion of
+`chainIncl_mapChain_subSeamHomeo`. `seamHomeo A B : sub(restr A B) ≃ sub(A∩B)` is identity-on-points, so
+`chainIncl (A∩B) ∘ mapChain⟨seamHomeo A B⟩ = chainIncl B ∘ chainIncl (restr A B)`. Same `mapChain_ambIncl` +
+`mapChain_comp` + `rfl` proof. Lets `chainIncl(...)(chain_L)` peel the INNER seam. -/
+theorem chainIncl_mapChain_seamHomeo {Y : TopCat} (A B : Set ↑Y) {n : ℕ}
+    (x : SingularChain (sub (SingularExcisionIso.restr A B)) n) :
+    chainIncl (A ∩ B) n (SingularFunctoriality.mapChain
+        ⟨SingularMayerVietorisLES.seamHomeo A B, (SingularMayerVietorisLES.seamHomeo A B).continuous⟩ n x)
+      = chainIncl B n (chainIncl (SingularExcisionIso.restr A B) n x) := by
+  rw [← SingularMayerVietorisLES.mapChain_ambIncl, ← SingularMayerVietorisLES.mapChain_ambIncl,
+    ← SingularMayerVietorisLES.mapChain_ambIncl, ← SingularFunctoriality.mapChain_comp,
+    ← SingularFunctoriality.mapChain_comp]
+  rfl
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
