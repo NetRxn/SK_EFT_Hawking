@@ -13,6 +13,11 @@ import SKEFTHawking.SingularAbsCohomConnGeom
 import SKEFTHawking.SingularConnSquareLHSRealize
 import SKEFTHawking.SingularRelCohomSetCongrMk
 import SKEFTHawking.SingularConnSquareMatchCross
+import SKEFTHawking.SingularConnSquareHLHSBridge
+import SKEFTHawking.SingularConnSquarePartitionRelate
+import SKEFTHawking.SingularRcapCoverAgree
+import SKEFTHawking.SingularMvDeltaPartition
+import SKEFTHawking.SingularConnSquareCloseChainMap
 
 /-!
 # Phase 5q.F (w₂-foundation, PD6f-c4-NC) — non-circular connecting-square closure (WIP)
@@ -37,6 +42,143 @@ namespace SKEFTHawking.SingularConnSquareCloseNC
 
 variable {X : TopCat} [T2Space ↑X]
 
+/-- **Seam-telescope (whnf-free, explicit seam variables).** With the two seam homeos as EXPLICIT `C(·,·)`
+variables (NOT the anonymous `{toFun, continuous_toFun}` structs of the concrete `hmatch` goal, which whnf-wall
+the `kronecker_mapChain` `rw` — the documented HLHSBridge obstacle), the double `pullbackCochainMap` on the
+cochain telescopes onto the chain as the double `mapChain`. Applied to `SingularConnSquareCloseChainMap`'s
+`hmatch` to move the seam transport off `a'rep` (Lean instantiates the variables to the concrete seam structs). -/
+theorem kronecker_double_pullback {Y Z W : TopCat} (φseam : C(↑Y, ↑Z)) (φsub : C(↑W, ↑Y)) (n : ℕ)
+    (a : SingularCochain Z n) (c : SingularChain W n) :
+    kronecker (SingularKroneckerFunctoriality.pullbackCochainMap φsub n
+        (SingularKroneckerFunctoriality.pullbackCochainMap φseam n a)) c
+      = kronecker a (SingularFunctoriality.mapChain φseam n (SingularFunctoriality.mapChain φsub n c)) := by
+  rw [← SingularKroneckerFunctoriality.kronecker_mapChain,
+    ← SingularKroneckerFunctoriality.kronecker_mapChain]
+
+/-- **Pullback of a relative cochain vanishes.** A cochain `a` that vanishes on the subspace chains
+`subspaceChains S` (i.e. `a ∈ relCochains S`) pulls back to `0` along `sub S ↪ X`: on a basis `sub S`-simplex
+`τ`, `pullbackCochain S a τ = a (simplexIncl S τ) = ⟨a, chainIncl S (single τ 1)⟩ = 0`. This is the
+`legSplitUᶜ`-part-vanishing engine for the seam-term cover-partition: in `exists_cap_cover_partition` the
+`A`-part `cap (pullbackCochain A (cochainSplit A ω)) u` dies because `cochainSplit A ω ∈ relCochains A`. -/
+theorem pullbackCochain_relCochains_eq_zero {M₀ : TopCat} {S : Set ↑M₀} (k : ℕ)
+    (a : SingularCochain M₀ k) (ha : a ∈ relCochains S k) :
+    SingularCapChainIncl.pullbackCochain S k a = 0 := by
+  funext τ
+  rw [SingularCapChainIncl.pullbackCochain_apply]
+  have h0 := ha _ (LinearMap.mem_range_self (chainIncl S k) (Finsupp.single τ 1))
+  rwa [chainIncl_single, kronecker_single, one_mul] at h0
+
+/-- **Cap cover-localization to the `B`-part** (chain-altitude; the cap analogue of LHSCover's
+`cup_cover_pairing_sd`). For a cover `{A, B}`, a cochain `g` that vanishes on `A` (`g ∈ relCochains A`),
+and an `(A∪B)`-supported chain `z`, some subdivision `Sdᵐz` cover-splits and the `A`-part of the cap
+`cap g (Sdᵐz)` dies (`pullbackCochain A g = 0`), localizing the whole cap onto the `B`-part. This is the
+seam-localization engine: with `g = cochainSplit (legSplitUᶜ) ω'`, `A = legSplitUᶜ`, `B = legSplitVᶜ`, the
+seam-term cap onto `∂F ∈ subspaceChains(legSplitUᶜ ∪ legSplitVᶜ)` reads off as the pure `legSplitVᶜ`-part. -/
+theorem cap_cover_localize_to_B {M : TopCat} {k l : ℕ} (A B : Set ↑M) (hA : IsOpen A) (hB : IsOpen B)
+    (g : SingularCochain M k) (hg : g ∈ relCochains A k) (z : SingularChain M (k + l))
+    (hz : z ∈ subspaceChains (A ∪ B) (k + l)) :
+    ∃ (m : ℕ) (w : SingularChain (sub B) (k + l)),
+      cap g ((⇑(SingularSubdivision.singularSd M (k + l)))^[m] z)
+        = chainIncl B l (cap (SingularCapChainIncl.pullbackCochain B k g) w) := by
+  obtain ⟨m, u, w, _, hcap⟩ :=
+    SingularConnSquareRHSScaffold.exists_cap_cover_partition A B hA hB g z hz
+  refine ⟨m, w, ?_⟩
+  rw [hcap]
+  have hA0 : (cap (SingularCapChainIncl.pullbackCochain A k g)) u = 0 := by
+    rw [pullbackCochain_relCochains_eq_zero k g hg, ← capₗ_apply, map_zero, LinearMap.zero_apply]
+  rw [hA0, map_zero, zero_add]
+
+/-- **A cocycle pairs to zero against any boundary** (chain-altitude, whnf-free): `⟨a, ∂W⟩ = ⟨δa, W⟩ = 0`.
+Stated over an abstract space/degree so its proof never whnf's the giant `fundCycleW` carriers — the
+chain-pairing engine that closes the hLHS leg without lifting to the (whnf-walled) homology class square. -/
+theorem kronecker_cocycle_boundary_eq_zero {Y : TopCat} {n : ℕ}
+    (a : ↥(coboundaryₗ Y n).ker) {c : SingularChain Y n} (hc : c ∈ boundaries Y n) :
+    kronecker (↑a) c = 0 := by
+  obtain ⟨W, hW⟩ := hc
+  rw [← hW, ← kronecker_coboundary_chainBoundary,
+    show coboundary Y n ↑a = 0 from LinearMap.mem_ker.mp a.2]
+  simp
+
+/-- **hmatch close (explicit seams).** Given the seam-localization `hseam` (the V-part boundary `lhs` equals
+the double-seam-transport of the duality chain `d`, **mod a boundary**), the `hmatch` pairing closes:
+telescope the double `pullbackCochainMap` off the cochain (`kronecker_double_pullback`), then the cocycle `a`
+absorbs the boundary slack (`kronecker_cocycle_boundary_eq_zero`). The seams are EXPLICIT `C(·,·)` variables
+so the `_of_chainMatch` call site supplies them by **unification** — which, unlike `rw`, sees through the
+concrete anonymous `{toFun, continuous_toFun}` seam structs that whnf-wall the direct rewrite. This isolates
+the genuine residual (the seam-localization) as the sole hypothesis `hseam`. -/
+theorem hmatch_close {Y Z W : TopCat} (φseam : C(↑Y, ↑Z)) (φsub : C(↑W, ↑Y)) (n : ℕ)
+    (a : ↥(coboundaryₗ Z n).ker) (lhs : SingularChain Z n) (d : SingularChain W n)
+    (hseam : lhs + SingularFunctoriality.mapChain φseam n
+        (SingularFunctoriality.mapChain φsub n d) ∈ boundaries Z n) :
+    kronecker (↑a) lhs
+      = kronecker (SingularKroneckerFunctoriality.pullbackCochainMap φsub n
+          (SingularKroneckerFunctoriality.pullbackCochainMap φseam n (↑a))) d := by
+  rw [kronecker_double_pullback]
+  have h := kronecker_cocycle_boundary_eq_zero a hseam
+  rw [kronecker_add_right] at h
+  exact eq_of_sub_eq_zero (by rw [ZModModule.sub_eq_add]; exact h)
+
+/-- **A reindexing homeomorphism's `mapChain` preserves AND reflects boundary-membership** (it is invertible:
+`mapChain ⟨φ.symm,_⟩ ∘ mapChain ⟨φ,_⟩ = id` via `mapChain_comp` + `mapChain_id`). Lets the `hmatch` seam
+transport (built from the reindexing homeos `seamHomeo` / `subSeamHomeo`) be peeled off the RHS, transporting
+the residual to a single subspace. -/
+theorem mapChain_homeo_mem_boundaries {Y Z : TopCat} (φ : ↥Y ≃ₜ ↥Z) {n : ℕ} (w : SingularChain Y n) :
+    SingularFunctoriality.mapChain ⟨φ, φ.continuous⟩ n w ∈ boundaries Z n ↔ w ∈ boundaries Y n := by
+  refine ⟨fun h => ?_, fun h => SingularFunctoriality.mapChain_mem_boundaries _ h⟩
+  have h2 := SingularFunctoriality.mapChain_mem_boundaries (⟨φ.symm, φ.symm.continuous⟩ : C(↑Z, ↑Y)) h
+  rwa [← SingularFunctoriality.mapChain_comp,
+    show (⟨φ.symm, φ.symm.continuous⟩ : C(↑Z, ↑Y)).comp ⟨φ, φ.continuous⟩ = ContinuousMap.id ↑Y from
+      by ext x; exact φ.symm_apply_apply x,
+    SingularFunctoriality.mapChain_id] at h2
+
+/-- **Reindexing-homeo `mapChain` round-trip cancels.** `mapChain ⟨φ.symm,_⟩ ∘ mapChain ⟨φ,_⟩ = id` — lets the
+`hmatch` seam transport be peeled off the V-part boundary to land the residual in a single subspace. -/
+theorem mapChain_homeo_symm_self {Y Z : TopCat} (φ : ↥Y ≃ₜ ↥Z) {n : ℕ} (w : SingularChain Y n) :
+    SingularFunctoriality.mapChain ⟨φ.symm, φ.symm.continuous⟩ n
+        (SingularFunctoriality.mapChain ⟨φ, φ.continuous⟩ n w) = w := by
+  rw [← SingularFunctoriality.mapChain_comp,
+    show (⟨φ.symm, φ.symm.continuous⟩ : C(↑Z, ↑Y)).comp ⟨φ, φ.continuous⟩ = ContinuousMap.id ↑Y from
+      by ext x; exact φ.symm_apply_apply x,
+    SingularFunctoriality.mapChain_id]
+
+/-- **Fact-B seam transport (abstract, whnf-safe).** Over ABSTRACT `bz`/`pd` (the concrete `fundCycleW` never
+enters, so no whnf wall), the reindexing seam isos move the residual: Fact B in `W` follows from `key` in `V'`
+— pull `bz` down through both homeos, `pd` stays direct. The NC call site supplies `bz`/`pd` by unification
+(metavar assignment — no whnf). -/
+theorem factB_transport {W Z V' : TopCat} (φseam : ↥W ≃ₜ ↥Z) (φsub : ↥Z ≃ₜ ↥V') {n : ℕ}
+    (bz : SingularChain W n) (pd : SingularChain V' n)
+    (key : SingularFunctoriality.mapChain ⟨φsub, φsub.continuous⟩ n
+        (SingularFunctoriality.mapChain ⟨φseam, φseam.continuous⟩ n bz) + pd ∈ boundaries V' n) :
+    bz + SingularFunctoriality.mapChain ⟨φseam.symm, φseam.symm.continuous⟩ n
+        (SingularFunctoriality.mapChain ⟨φsub.symm, φsub.symm.continuous⟩ n pd) ∈ boundaries W n := by
+  have hb := SingularFunctoriality.mapChain_mem_boundaries (⟨φseam.symm, φseam.symm.continuous⟩ : C(↑Z, ↑W))
+    (SingularFunctoriality.mapChain_mem_boundaries (⟨φsub.symm, φsub.symm.continuous⟩ : C(↑V', ↑Z)) key)
+  rw [map_add, map_add, mapChain_homeo_symm_self, mapChain_homeo_symm_self] at hb
+  exact hb
+
+/-- **Cap-Leibniz membership** (the bounding-chain core of KEY): the cap-Leibniz two-term sum
+`cap(δa)(c) + cap a (∂c)` is exactly `∂(cap a c)`, hence in `boundaries`. The ambient skeleton of KEY's
+bounding chain `W = cap (cochainSplit g) F`. -/
+theorem cap_leibniz_mem_boundaries {k m : ℕ} (a : SingularCochain X k)
+    (c : SingularChain X (k + m + 1)) (h : k + m + 1 = k + 1 + m) :
+    cap (coboundary X k a) (h ▸ c) + cap a (chainBoundary X (k + m) c) ∈ boundaries X m := by
+  rw [← cap_leibniz a c h]
+  exact ⟨cap a c, rfl⟩
+
+/-- **Subspace cap-Leibniz realization** (KEY's bounding chain, realized in `sub K`): the `K`-realization
+of the cap-Leibniz sum `cap(δa)(h▸c) + cap a (∂c)` is a boundary of `sub K`, bounded by the realization of
+`cap a c`. Composes `subspaceChainsEquiv_symm_mem_boundaries` (the `chainIncl`-injective subspace bridge).
+This is KEY's bounding chain `W = realize(cap (cochainSplit g) F)` — abstract over `a`, `c` (the concrete
+`fundCycleW` never enters → no whnf wall). The cap-Leibniz expansion of `∂(cap a c)` happens in the
+term-identification bricks downstream. -/
+theorem realize_chainBoundary_cap_mem_boundaries (K : Set ↑X) {k n : ℕ} (a : SingularCochain X k)
+    (c : SingularChain X (k + (n + 1) + 1))
+    (hd : cap a c ∈ subspaceChains K (n + 2))
+    (hsum : chainBoundary X (n + 1) (cap a c) ∈ subspaceChains K (n + 1)) :
+    (SingularSubspaceChainsEquiv.subspaceChainsEquiv K (n + 1)).symm
+        ⟨chainBoundary X (n + 1) (cap a c), hsum⟩ ∈ boundaries (sub K) (n + 1) :=
+  SingularSubspaceChainsEquiv.subspaceChainsEquiv_symm_mem_boundaries K n _ hsum (cap a c) hd rfl
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
@@ -51,73 +193,54 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
             (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
           (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
           (SKEFTHawking.SingularCSCMayerVietorisConnecting.legδ U V hU hV N K g) := by
-  -- ▶ ROUTE B (2026-06-22): reduce the whole connecting square to the single MATCH M `hmatch` via
-  --   `_of_match` (it discharges leg/colimit machinery through Kronecker non-degeneracy), then close
-  --   `hmatch` by the cup-form pairing route (both legs → ⟨grep∪a', z₀⟩ via `pair_fund_eq_pair_z0`).
-  apply subHomConnecting_openDuality_of_match hU hV z₀ hz₀ K g
-  intro a'rep b hb
-  -- ▶ hmatch : `relKroneckerH g [chainIncl(rcap b fund_∪)] = relKroneckerH g↾ (relMvDelta[chainIncl(rcap a' fund_∩)])`.
-  -- ▶ THE HMATCH (the clean `_of_match` output = the documented close-path (C) surface, TRACE:194–199):
-  --   `relKroneckerH g [chainIncl(rcap b fund_∪)] = relKroneckerH σ (relMvDelta[chainIncl(rcap a'rep fund_∩)])`,
-  --   `b` reps `absCohomConn a'rep` (`hb`), `σ = g↾`; both `fund = fundCycleW(castChain z₀)` of the SAME z₀.
-  -- ▶ CLOSE (C) — the documented path (brick-1's ambient lowering was BELOW this surface; reverted 2026-06-22):
-  --   • RHS V-part: `rhs_relMvDelta_rcap_eq_legVpart` (HcrossClose:120, bundles the cover-split, returns
-  --     `hwcyc`) → `relKroneckerH σ [chainIncl(legSplitVᶜ) w']` → descend → `kronecker grep↾ (chainIncl w')`.
-  --   • LHS V-part: `kroneckerH_subHomConnecting_legW` (LHS:40) → `⟨a', subHomConnecting(legW K g)⟩`, then
-  --     `kroneckerH_subHomConnecting_seam` (LHSLeg:34, whnf carried abstractly) → `kronecker a'rep (seam zseam)`.
-  --   • FINAL cross-space match `kronecker a'rep (seam zseam) = kronecker grep↾ (chainIncl(legSplitVᶜ) w')` —
-  --     the two V-parts over the shared z₀, matched by the cup–cap core `kronecker_cap_eq_kronecker_rcap`
-  --     (MatchLHS:73) + `chainIncl_rcap_cover_agree` + `relativeDualityK_cycle_compat_relB`. The genuine core.
-  --   See LAB_NOTEBOOK.md (the complete (C) close-path map).
-  -- ── (C) RHS V-part (whnf-free): `relMvDelta[chainIncl(rcap a'rep fund_∩)]` → the `legSplitVᶜ` V-part `w'`.
-  have hbdRHS := SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV)
-    (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + 1 + p + 1 by omega) z₀)
-    (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
-    (SingularCSCMayerVietorisConnecting.infCompact U V
-      (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
-      (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
-  rw [SingularCSCMayerVietorisConnecting.infCompact_coe, Set.compl_inter] at hbdRHS
-  obtain ⟨w', hwcyc, hV⟩ := SingularHcrossClose.rhs_relMvDelta_rcap_eq_legVpart
-    (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
-    (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
-    _ (SingularOpenDualityCycle.fundCycleW_mem_W (hU.inter hV) _ _ _) a'rep
-    (SingularCapSubKDuality.chainIncl_rcap_mem_relCycles _ _ hbdRHS a'rep)
-  erw [hV]
-  -- ── (C) LHS: realize the relative pairing as `⟨a', subHomConnecting(legW K g)⟩` (kroneckerH_subHomConnecting_legW).
-  rw [← SingularConnSquareLHS.kroneckerH_subHomConnecting_legW (a' := Submodule.Quotient.mk a'rep) (hb := hb)]
-  -- (C) LHS step (a): Kronecker adjunction `⟨a', subHomConnecting w⟩ = ⟨absCohomConn a', w⟩` — moves the
-  --   connecting map off the homology side onto the (opaque, but cover-partitionable) absolute cohomology class.
-  rw [← SingularSubHomologyMVCohomConn.kroneckerH_absCohomConn]
-  -- (C) LHS step (b): `g : cohomGW = H(M|K)` is a quotient class; take a cocycle rep `grep` so that
-  --   `legW_mk` can realize `legW K g` as the cap-with-fundamental-cycle `[pullbackDualityₗ … grep]`.
-  obtain ⟨grep, rfl⟩ := Submodule.Quotient.mk_surjective _ g
-  -- (C) LHS step (b cont.): realize `legW K (mk grep)` as the homology class of `grep ⌢ fundCycleW`
-  --   (`pullbackDualityₗ`). `erw` (not `rw`): `legW_mk` wants the `RelativeCohomology.mk` spelling, defeq to
-  --   the `Submodule.Quotient.mk` the rep-extraction produced.
-  erw [SingularLegWCapForm.legW_mk]
-  -- ▶ REMAINING (the genuine 5-day core): cover-split `grep ⌢ fundCycleW` by subdivision
-  --   (`homology_mk_singularSd_iterate` → `exists_iterate_mvUnion`/`mem_subspaceChains_preimage_union`
-  --   → `exists_chainIncl_partition_of_mem_mvUnionChains` ⇒ zA,zB), then `kroneckerH_absCohomConn_cover_partition`
-  --   (whnf-dodge; z_seam ∃-bound) ⇒ `kronecker a'rep (seam ∂zB)`; then the FINAL cross-space match to the RHS
-  --   V-part `chainIncl(legSplitVᶜ) w'` via `kronecker_cap_eq_kronecker_rcap` + `chainIncl_rcap_cover_agree`
-  --   + `relativeDualityK_cycle_compat_relB` (both legs → ⟨grep ∪ a', z₀⟩ over the shared z₀).
-  -- (C) LHS step (c): realize the cap-cycle's pairing as the seam V-part via the abstract-w shard
-  --   `kroneckerH_absCohomConn_coverClass` — `_` for the cycle is assigned by `erw` STRUCTURALLY (no whnf;
-  --   the shard does the cover-split + cover_partition internally over an abstract cycle `w`).
-  obtain ⟨zseam, hLHS⟩ :=
-    SingularConnSquareLHSRealize.kroneckerH_absCohomConn_coverClass U V hU ‹IsOpen V› p a'rep _
-  erw [hLHS]
-  -- (C) FINAL match — RHS bridge (cast-free path): `relKroneckerH_relCohomRestrict'` peels relCohomRestrict
-  --   (→ relIncl on homology); `SingularRelativeMV.relIncl_mk` pushes relIncl THROUGH `mk` (no cast — the
-  --   `relCohomSetCongr_relIncl_collapse` route makes a blocking `hSet ▸`, AVOID it); then handle
-  --   relCohomSetCongr(mk grep) + `relKroneckerH_mk_mk` + `relKronecker_mk` ⟹ `kronecker grep (chainIncl
-  --   legSplitVᶜ w')`. Then `apply SingularConnSquareMatchCross.cross_realization_match` (W=U∩V, gamb=grep,
-  --   LVc=legSplitVᶜ, c = z₀-realized cap, ONCE) → hRHS (`chainIncl_rcap_cover_agree`) + hLHS (sub-lemma A core).
-  rw [SingularDualityAdjoint.relKroneckerH_relCohomRestrict']  -- cast-FREE: relIncl onto homology, no `▸`
-  erw [SingularRelativeMV.relIncl_mk]  -- push relIncl THROUGH mk (erw clears the LinearMap-coe that blocked rw)
-  erw [SingularRelCohomSetCongrMk.relCohomSetCongr_mk]  -- collapse relCohomSetCongr ⟹ cohomology now `mk (h ▸ grep)`
-  erw [SingularRelativePairing.relKroneckerH_mk_mk, SingularRelativePairing.relKronecker_mk]  -- ⟹ both sides `kronecker`
-  simp only [SingularFunctoriality.mapChain_id]  -- RHS = `kronecker (h ▸ grep) (chainIncl legSplitVᶜ w')` — the cross-match shape
+  -- ▶ ROUTE B (2026-06-23, harness v4.2) — the CHAIN-SAFE route. `_of_chainMatch` reduces the whole
+  --   connecting square to the single chain-level residual `hmatch`: the V-part boundary `∂zB`
+  --   (`boundaryExtract`) paired against the double-seam-pullback of `a'rep` over the cap realization
+  --   (`pullbackDualityₗ` of the cohomology-connecting `σR`). This is the whnf-safe HLHSBridge form
+  --   (explicit seam-homeo cochains via `pullbackCochainMap`), NOT the `relativeDualityK`/`absCohomConn`
+  --   class lift that walls. Discharge `hmatch` via `SingularConnSquareHLHSBridge.hLHS_cap_mapChain_bridge_mod`
+  --   (+ residual `hdual`/`cap_boundaryExtract_naturality`) — the genuine local-PD content over the shared z₀.
+  apply SingularConnSquareCloseChainMap.subHomConnecting_openDuality_of_chainMatch hU hV z₀ hz₀ K g
+  intro g_rep zc0 hzc0 zA zB hcyc hpart a'rep hzBmem σR_rep hσR
+  -- ▶ COACH-LOCKED ROUTE (cap-Leibniz scaffold): hmatch_close (cocycle pairs to 0 against a boundary) →
+  --   factB_transport (seam-iso reindex) → KEY (`seam²(boundaryExtract zB) + pullbackDualityₗ σR ∈
+  --   boundaries(sub(U∩V))`), then `realize_chainBoundary_cap_mem_boundaries` on `W = cap(cochainSplit g_rep)(F)`
+  --   + the two facts (i) χ-term, (ii) seam-term. NO subdivision (cover-level). Cup-form/CrossReal = re-seed, discarded.
+  refine hmatch_close _ _ (p + 1) a'rep _ _ ?_
+  refine factB_transport _ _ _ _ ?_
+  -- now at KEY (boundary-membership in sub(U∩V)); apply the cap-Leibniz scaffold + the two facts.
+  -- ▶ Obtain the connecting INPUT cochain rep ω'_rep (the (N+1)-cochain whose `cochainSplit` gives the
+  --   absolute-coboundary rep of σR_rep), via hσR's input class (per CrossReal:97-102).
+  obtain ⟨ω'_rep, hω'⟩ := Submodule.Quotient.mk_surjective _
+    ((SingularRelativeCohomologyRestrict.relCohomRestrict (Set.inter_subset_inter subset_rfl subset_rfl)
+        (N + 1))
+      ((SingularCompactlySupportedTop.relCohomSetCongr
+          (by rw [SingularCSCMayerVietorisConnecting.legSplit_cover U V hU hV K, Set.compl_union]) (N + 1))
+        (Submodule.Quotient.mk g_rep)))
+  -- bounding chain `W = cap(pullbackCochain(cochainSplit (legSplitUᶜ) ω'_rep))(realize F)` (deg p+2; per
+  --   CrossReal:105-115); ∂W via cap_leibniz ⟹ two facts (ii) seam-term + (i) χ-term.
+  refine ⟨cap (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 1)
+        (SingularCohomologySnake.cochainSplit
+          ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ) (N + 1) ω'_rep.1.1))
+      ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1 + (p + 1 + 1))).symm
+        ⟨SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+            (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + (p + 1 + 1) by omega) z₀)
+            (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+            (SingularCSCMayerVietorisConnecting.infCompact U V
+              (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+              (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)),
+          SingularOpenDualityCycle.fundCycleW_mem_W (hU.inter hV) _ _ _⟩), ?_⟩
+  -- ∂W via cap_leibniz ⟹ `cap(δφ)(h▸F) + cap(φ)(∂F) = chain_L + chain_R`, φ = pullbackCochain(cochainSplit ω'_rep).
+  -- `erw` (NOT `rw`): the factB_transport path left the goal's space as `sub (U ∩ Membership.mem V)`, defeq but
+  -- not syntactically `sub (U ∩ V)`, which blocks `rw` at reducible transparency (MCP-confirmed erw fires clean).
+  erw [SingularHomologyMod2.cap_leibniz _ _ (show N + 1 + (p + 1) + 1 = N + 1 + 1 + (p + 1) by omega)]
+  -- ▶ TWO FACTS (cap-naturality core): (i) χ-term `cap(δφ)(F) ~ pullbackDualityₗ σR` (cover-level), (ii) seam-term
+  --   `cap(φ)(∂F) ~ seam²(boundaryExtract zB)` (cap_boundaryExtract_naturality + hpart/hzc0). Grind (ii) first.
+  -- χ-side prep: move the coboundary inside ⟹ Term1 = `cap(pullbackCochain(δ(cochainSplit ω'_rep)))(F)`.
+  erw [SingularConnSquareCloseFinal.coboundary_pullbackCochain]
+  -- align chain_R `pullbackDualityₗ σR` to the explicit cap form `cap(pullbackCochain σR_rep)(realize F)`
+  --   (CrossReal:89) — now Term1 (χ) and chain_R share `cap(pullbackCochain ·)(realize F)`.
+  rw [SingularCapSubKDuality.pullbackDualityₗ_eq_subcap]
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
