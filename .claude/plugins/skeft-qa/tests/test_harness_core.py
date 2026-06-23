@@ -52,6 +52,7 @@ def test_payload_baseline_without_coaching(tmp_path):
     payload = hc.build_reorientation_payload({"goal": "ship Wave 4", "goal_id": "g1"}, tmp_path)
     assert "ship Wave 4" in payload
     assert "RE-ANCHOR before resuming" in payload                  # always-on re-anchor present
+    assert "LIVENESS" in payload and "/goal-end" in payload         # the liveness self-check (don't resume a dead goal)
     assert "re-read claude.md" in payload.lower()
     assert "READ docs/dev-loops/PRE_DECISIONS.md" in payload       # pre-decisions = MANDATORY READ
     assert "Decision heuristics" not in payload                    # Core/heuristics NOT injected anymore

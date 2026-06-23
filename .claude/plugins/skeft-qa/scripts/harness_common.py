@@ -366,12 +366,17 @@ def _read_predecisions_core(root):
 
 
 RE_ANCHOR = (
-    "RE-ANCHOR before resuming (do this FIRST): a compaction summary optimizes tactical continuity "
-    "over strategic anchoring — it can surface a mid-air tactic and drop the close-path. Before "
-    "continuing whatever tactic the summary surfaced, confirm it still matches the close-path: the "
-    "live LAB-NOTEBOOK FRONTIER below (always current — the loop's own latest state) and the COACHING "
-    "BLOCK if present (an external harvest read — sharper analysis, but it may lag). If they conflict "
-    "and the coaching block is recent, the harvest likely caught a drift you can't self-see."
+    "RE-ANCHOR before resuming (do this FIRST): "
+    "(0) LIVENESS — confirm the SETTLED GOAL above is still your ACTIVE /goal and is not already met. "
+    "A marker can outlive its goal (it is torn down only by /goal-end or session end, NEVER by a native "
+    "/goal clear or /goal change), so if this goal is already satisfied, or you have cleared/replaced "
+    "it, run /goal-end and STOP — do NOT resume a finished or abandoned goal. "
+    "(1) A compaction summary optimizes tactical continuity over strategic anchoring — it can surface a "
+    "mid-air tactic and drop the close-path. Before continuing whatever tactic the summary surfaced, "
+    "confirm it still matches the close-path: the live LAB-NOTEBOOK FRONTIER below (always current — the "
+    "loop's own latest state) and the COACHING BLOCK if present (an external harvest read — sharper "
+    "analysis, but it may lag). If they conflict and the coaching block is recent, the harvest likely "
+    "caught a drift you can't self-see."
 )
 
 FIRST_ACTION = (
