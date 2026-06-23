@@ -513,6 +513,16 @@ theorem fundCycleW_boundary_cover {W : Set ↑X} {k m : ℕ} (hW : IsOpen W)
   rw [← hcover]
   exact SingularOpenDualityCycle.fundCycleW_boundary hW z₀ hz₀ K
 
+/-- **cap-Leibniz on a cycle argument** (the V-link Leibniz core, per the hcross DR / Hatcher pp.246-247):
+for a cycle `c` (`∂c = 0`), `∂(cap a c) = cap(δa)(h▸c)` — the `cap a (∂c)` Leibniz term drops. This is the
+boundary-tracking step of the connecting-square: capping the cover-split cochain `δφ` against the cycle `z₀`
+IS the boundary of `cap φ z₀`, with no content beyond `cap_leibniz` + `∂z₀=0`. -/
+theorem chainBoundary_cap_cycle_arg {k m : ℕ} (a : SingularCochain X k)
+    (c : SingularChain X (k + m + 1)) (hc : chainBoundary X (k + m) c = 0)
+    (h : k + m + 1 = k + 1 + m) :
+    chainBoundary X m (cap a c) = cap (coboundary X k a) (h ▸ c) := by
+  rw [cap_leibniz a c h, hc, ← capₗ_apply, map_zero, add_zero]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
