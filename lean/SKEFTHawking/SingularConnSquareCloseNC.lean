@@ -367,6 +367,28 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   refine two_facts_via_ambient _ _ _ _ _ _ _ ?_
   -- ▶ AMBIENT TWO-FACTS (the V-link + χ cross-realization core):
   --   `cap δφ (chainIncl F) + cap φ (∂(chainIncl F)) = chainIncl(seam²(boundaryExtract zB)) + cap σR (chainIncl F)`.
+  -- seam-term cover-support: `∂(chainIncl F) ∈ subspaceChains(legSplitUᶜ ∪ legSplitVᶜ)` (brick 8 + brick 9 + fundCycleW_boundary).
+  have hcov : chainBoundary X (N + 1 + (p + 1))
+        (chainIncl (U ∩ V) (N + 1 + (p + 1) + 1)
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1 + (p + 1 + 1))).symm
+            ⟨SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+                (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + (p + 1 + 1) by omega) z₀)
+                (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+                (SingularCSCMayerVietorisConnecting.infCompact U V
+                  (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+                  (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)),
+              SingularOpenDualityCycle.fundCycleW_mem_W (hU.inter hV) _ _ _⟩))
+      ∈ subspaceChains
+          ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ ∪
+            (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1)ᶜ) (N + 1 + (p + 1)) := by
+    refine chainBoundary_chainIncl_subspaceChainsEquiv_symm_mem _ ?_
+    rw [← infCompact_compl_legSplit hU hV K]
+    exact SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV)
+      (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + (p + 1 + 1) by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+      (SingularCSCMayerVietorisConnecting.infCompact U V
+        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
