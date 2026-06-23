@@ -298,6 +298,28 @@ theorem infCompact_compl_legSplit {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen 
         ∪ (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1)ᶜ := by
   rw [SingularCSCMayerVietorisConnecting.infCompact_coe, Set.compl_inter]
 
+/-- **Mod-boundary cover-partition cap-boundary** — the `hpart`-entanglement version of
+`SingularConnSquareMatchLHS.cover_partition_cap_boundary`. When the cap of a cocycle `g` against `z` is
+cover-partitioned only MODULO A BOUNDARY `cap g z = chainIncl A zA + chainIncl B zB + ∂η` (the form
+`hpart`+`hzc0` yield via `exists_boundary_of_homology_eq`), the boundary identity STILL holds — the `∂η`
+term drops by `∂∂ = 0` (`chainBoundary_chainBoundary_apply`). This is the V-link chain engine that
+consumes the homology-level cover-partition directly: `cap g (∂z) = chainIncl A (∂zA) + chainIncl B (∂zB)`,
+relating the seam V-part boundary `∂zB` to the fundamental cycle's boundary `∂z`. The cocycle-`g_rep`
+route (NOT the `φ = cochainSplit` route) the connecting square is built on. -/
+theorem cover_partition_cap_boundary_mod {k m : ℕ} (A B : Set ↑X) (g : SingularCochain X k)
+    (hg : coboundaryₗ X k g = 0) (z : SingularChain X (k + m + 1))
+    (zA : SingularChain (sub A) (m + 1)) (zB : SingularChain (sub B) (m + 1))
+    (η : SingularChain X (m + 1 + 1))
+    (hpart : cap g z = chainIncl A (m + 1) zA + chainIncl B (m + 1) zB
+      + chainBoundary X (m + 1) η) :
+    chainIncl A m (chainBoundary (sub A) m zA) + chainIncl B m (chainBoundary (sub B) m zB)
+      = cap g (chainBoundary X (k + m) z) := by
+  have h1 := SingularHomologyMod2.cap_cocycle_chainMap g hg z
+  rw [hpart, map_add, map_add, ← SingularRelativeHomologyMod2.chainIncl_chainBoundary,
+    ← SingularRelativeHomologyMod2.chainIncl_chainBoundary, chainBoundary_chainBoundary_apply,
+    add_zero] at h1
+  exact h1
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
