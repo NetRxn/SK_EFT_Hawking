@@ -418,8 +418,18 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   η':=chainIncl(U∪V)η) → `chainIncl(U∪V)(∂(chainIncl_A zA)) + chainIncl(U∪V)(∂(chainIncl_B zB)) = cap g_rep ∂fund`.
   have hbd := cover_partition_cap_boundary_mod (U ∪ V) (U ∪ V) _
     (SingularRelativeDuality.relCocycle_coboundary_zero _ g_rep) _ _ _ _ hcp_abs
-  -- Step 4 (NEXT): seam V-part `chain_L = seam²(boundaryExtract zB) = chainIncl_B(∂zB)` transport
-  --   (mapChain_chainIncl_boundaryExtract) + σR U-part (chain_R = chainIncl_A(∂zA) via σR) → assemble via hbd.
+  -- ▶ CROSS-REALIZATION CORE (cap-product MV-naturality, Hatcher 3.36 — the genuine remaining theorem; both
+  --   NC + CrossReal historically stall HERE; surrounding machinery steps 1-3 = hcp/hcp_abs/hbd, now in scope).
+  --   Goal = `chain_L + pd ∈ boundaries(sub(U∩V))`. ASSEMBLY MAP (all engines committed):
+  --   (1) `refine ⟨W, ?_⟩`, bounding chain W = realize(cap (pullbackCochain g_rep) fund_∩) [a (p+2)-chain];
+  --       residual `∂W = chain_L + pd`. (2) ∂W cap-Leibniz-expands (g_rep COCYCLE ⟹ δ-term = 0) to the
+  --       two-facts LHS. (3) `two_facts_via_ambient` (NC:240) → AMBIENT hamb (chainIncl-injective, whnf-dodged):
+  --       `cap g_rep (∂(chainIncl fund_∩)) = chainIncl chain_L + cap σR (chainIncl FR)` in X.
+  --   hamb = THREE sub-bricks: (i) σR↔g_rep connecting (`hσR`/relCohomMvConnecting — the bounding-chain cochain
+  --       is g_rep transported Kᶜ→infCompactᶜ, since g_rep ∉ relCochains(infCompactᶜ); GATING). (ii) V-part
+  --       chain_L ↔ ∂zB-realize (seamHomeo MVLES:111 + subSeamHomeo + boundaryExtract; cap_boundaryExtract_naturality
+  --       HLHSBridge:36). (iii) hbd (f1fcc707) links the cover-partition ∂ to cap g_rep ∂fund_{U∪V}; need fund_∩↔fund_{U∪V}.
+  --   NEXT BRICK = (i) the σR connecting relation (gates W). Full map: notebook INDEX FRONTIER step 4.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
