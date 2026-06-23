@@ -332,6 +332,41 @@ theorem mapChain_chainIncl_boundaryExtract {Y Z : TopCat} (φ : C(↑Y, ↑Z)) {
       = chainBoundary Z n (SingularFunctoriality.mapChain φ (n + 1) (w : SingularChain Y (n + 1))) := by
   rw [SingularPairLES.chainIncl_boundaryExtract, ← SingularFunctoriality.chainBoundary_mapChain]
 
+/-- **Chain cover-partition from the `legW` homology hypotheses** (the whnf-dodging bridge — friction
+catalog). Stated `legW`-HEADED (not `relativeDualityK`-headed): at application the concrete `hzc0`'s
+`legW … (Submodule.Quotient.mk g_rep)` matches the `legW` head SYNTACTICALLY, with `hW`/`z₀`/`hz₀`/`K`/`a`
+inferred structurally — so the elaborator NEVER WHNF-reduces `legW (mk g_rep)` (which would reduce the
+`liftQ`-on-`mk` straight through to the concrete `cap g_rep fundCycleW`, the 200k whnf wall). Inside, over
+FREE carriers, `unfold legW` + `relativeDualityK_mk` reduce symbolically (no concrete cap), then
+`exists_boundary_of_homology_eq` extracts `pullbackDualityₗ … a = w + ∂η` from `[zc0] = legW [a]` (hzc0)
++ `[zc0] = [w]` (hpart). This is the cocycle-`g_rep` close-path step 2 (the chain cover-partition). -/
+theorem cover_partition_of_legW {W : Set ↑X} {k m : ℕ} (hW : IsOpen W)
+    (z₀ : SingularChain X (k + m + 1)) (hz₀ : chainBoundary X (k + m) z₀ = 0)
+    (K : SingularCompactsInOpen.CompactsIn W)
+    (a : LinearMap.ker (relCoboundaryₗ ((↑K.1 : Set ↑X)ᶜ) k))
+    (zc0 w : cycles (sub W) (m + 1))
+    (hzc0 : Homology.mk (sub W) (m + 1) zc0
+        = legW hW z₀ hz₀ K (Submodule.Quotient.mk a))
+    (hpart : Homology.mk (sub W) (m + 1) zc0 = Homology.mk (sub W) (m + 1) w) :
+    ∃ η : SingularChain (sub W) (m + 1 + 1),
+      SingularLocalDualityK.pullbackDualityₗ ((↑K.1 : Set ↑X)ᶜ) W
+          (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K)
+          (SingularOpenDualityCycle.fundCycleW_mem_W hW z₀ hz₀ K) a
+        = (w : SingularChain (sub W) (m + 1)) + chainBoundary (sub W) (m + 1) η := by
+  unfold legW at hzc0
+  -- `relativeDualityK … (mk a) = Homology.mk ⟨pullbackDualityₗ …⟩` is `relativeDualityK_mk`'s own `rfl` —
+  -- over FREE carriers (symbolic `fundCycleW`) the defeq is cheap, so `exact` closes it without an `rw`
+  -- (which fails on the shared-`?S` representation `(↑↑K)ᶜ` vs `(↑K.1)ᶜ`).
+  exact SingularConnSquareRHSScaffold.exists_boundary_of_homology_eq
+    ⟨SingularLocalDualityK.pullbackDualityₗ ((↑K.1 : Set ↑X)ᶜ) W
+        (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K)
+        (SingularOpenDualityCycle.fundCycleW_mem_W hW z₀ hz₀ K) a,
+      SingularLocalDualityK.pullbackDualityₗ_mem_cycles ((↑K.1 : Set ↑X)ᶜ) W
+        (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K)
+        (SingularOpenDualityCycle.fundCycleW_mem_W hW z₀ hz₀ K)
+        (SingularOpenDualityCycle.fundCycleW_boundary hW z₀ hz₀ K) a⟩
+    w (hzc0.symm.trans hpart)
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
@@ -369,11 +404,13 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   (seam-transport, mapChain_chainIncl_boundaryExtract), chain_R = U-part (σR=connecting-of-g_rep).
   --   Engines committed: relativeDualityK_mk, exists_boundary_of_homology_eq, cover_partition_cap_boundary_mod,
   --   mapChain_chainIncl_boundaryExtract. Build chain cover-partition (hzc0+hpart+relativeDualityK_mk) FIRST.
-  -- Step 1 (NEXT brick): chain cover-partition. ⚠ FRICTION: `unfold legW` works, but `relativeDualityK_mk`
-  --   on the CONCRETE hzc0 (fundCycleW carriers) whnf-walls (200k) — the friction-catalog wall. FIX: build
-  --   an ABSTRACT `legW = [pullbackDualityₗ]` lemma over FREE carriers (the two_facts_via_ambient pattern,
-  --   all-underscore refine) then apply to hzc0; then `exists_boundary_of_homology_eq` (hpart) →
-  --   pullbackDualityₗ = chainIncl_A zA + chainIncl_B zB + ∂η → `cover_partition_cap_boundary_mod`.
+  -- Step 1 [DONE — whnf-dodged via cover_partition_of_legW, the legW-headed free-carrier bridge]:
+  --   chain cover-partition `pullbackDualityₗ(Kᶜ)(U∪V)(fundCycleW) g_rep = chainIncl_A zA + chainIncl_B zB + ∂η`.
+  --   🔑 the application MUST infer `w` from hpart (NOT pass the explicit ⟨chainIncl..,hcyc⟩) — the explicit
+  --   anonymous-constructor forces an elaboration order that whnf-walls; `_` (inferred) dodges it.
+  obtain ⟨η, hcp⟩ := cover_partition_of_legW _ _ _ _ g_rep zc0 _ hzc0 hpart
+  -- Step 2 (NEXT): push hcp through chainIncl(U∪V) → `cap g_rep fund = chainIncl_A zA + chainIncl_B zB + ∂η'`
+  --   (chainIncl_pullbackDualityₗ + chainIncl composition) → cover_partition_cap_boundary_mod → seam/σR transport.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
