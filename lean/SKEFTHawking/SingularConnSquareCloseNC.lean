@@ -1151,6 +1151,8 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     -- seam-leg: peel both seam homeos onto the cochain (kronecker_mapChain), then ℤ/2 reframe → the cap-Leibniz match.
     rw [SingularKroneckerFunctoriality.kronecker_mapChain, SingularKroneckerFunctoriality.kronecker_mapChain]
     rw [← ZModModule.sub_eq_add, sub_eq_zero]
+    -- pd-leg: δφ↔∂ adjunction → `kronecker (cochainSplit ωfc) (∂(Sdʲ c))` (exposes the cap-Leibniz V-part).
+    rw [kronecker_coboundary_chainBoundary]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
