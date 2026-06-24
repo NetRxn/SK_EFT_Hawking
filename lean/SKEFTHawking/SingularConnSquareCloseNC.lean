@@ -995,6 +995,24 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   apply SKEFTHawking.SingularConnSquareClose.subHomConnecting_openDuality_of_hcup_linked hU hV z₀ hz₀ K g
   intro a'rep b grep gRconn hgrep hb hgRconn
   simp only [SingularCapChainIncl.kronecker_cup_rcap, SingularCapSubKDuality.kronecker_pullbackCochain]
+  -- ▶ Lift both sides to the class-pairing form (kronecker_eq_relKroneckerH_mk) via the rcap cycle wrappers,
+  --   then the connecting reduction on the RHS (relKroneckerH_relCohomMvConnecting_rep). hcL/hcR = X_L/X_R cycles.
+  have hcL := SingularCapSubKDuality.chainIncl_rcap_mem_relCycles
+    (SingularOpenDualityCycle.fundCycleW (hU.union hV)
+      (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀) K)
+    (SingularOpenDualityCycle.fundCycleW_mem_W (hU.union hV) _ _ _)
+    (SingularOpenDualityCycle.fundCycleW_boundary (hU.union hV) _ _ _) b
+  have hcR := SingularCapSubKDuality.chainIncl_rcap_mem_relCycles
+    (SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+      (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+      (SingularCSCMayerVietorisConnecting.infCompact U V
+        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)))
+    (SingularOpenDualityCycle.fundCycleW_mem_W (hU.inter hV) _ _ _)
+    (fundCycleW_boundary_cover (hU.inter hV) _ _ _ (infCompact_compl_legSplit hU hV K)) a'rep
+  rw [kronecker_eq_relKroneckerH_mk grep _ hcL, kronecker_eq_relKroneckerH_mk gRconn _ hcR]
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
