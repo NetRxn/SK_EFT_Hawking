@@ -1127,6 +1127,44 @@ theorem rhs_pairing_reduce_fund {N p : ℕ} (U' V' K : Set ↑X) (hU' : IsOpen U
     (SingularCapSubKDuality.chainIncl_rcap_mem_relCycles
       (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc) hzK hzS fc)
 
+/-- **Partition-exposing fundCycleW-headed wrapper** — `rhs_pairing_reduce_fund` (`ae6a1210`) but threading
+out the cover-partition `∂(Sdʲc) = chainIncl U' u' + chainIncl V' w'` from `rhs_pairing_reduce_partition`
+(step 8), `c = chainIncl K (rcap fc (eqv.symm fund))`. The pd-leg chain (after the δ↔∂ adjunction) is
+exactly `∂(Sdʲc)`; this exposes its cover-split so the `legSplitVᶜ` V-leg can be extracted by the
+`kronecker_relCochains_mvUnion_eq` leg-drop. Same shallow head as `rhs_pairing_reduce_fund` (whnf-safe). -/
+theorem rhs_pairing_reduce_fund_partition {N p : ℕ} (U' V' K : Set ↑X) (hU' : IsOpen U') (hV' : IsOpen V')
+    (ωR : LinearMap.ker (relCoboundaryₗ (U' ∩ V') (N + 1)))
+    {Wset : Set ↑X} (hW : IsOpen Wset) (z₀ : SingularChain X (N + 2 + p + 1))
+    (hz₀ : chainBoundary X (N + 2 + p) z₀ = 0) (Kc : SingularCompactsInOpen.CompactsIn Wset)
+    (hzK : SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc ∈ subspaceChains K (N + 2 + p + 1))
+    (hzS : chainBoundary X (N + 2 + p) (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc)
+        ∈ subspaceChains (U' ∪ V') (N + 2 + p))
+    (fc : LinearMap.ker (coboundaryₗ (sub K) (p + 1))) :
+    ∃ (j : ℕ) (u' : SingularChain (sub U') (N + 1)) (w' : SingularChain (sub V') (N + 1)),
+      SingularRelativePairing.relKroneckerH (U' ∪ V')
+          (SingularRelativeCohomologyMVConnecting.relCohomMvConnecting U' V' hU' hV' N
+            (RelativeCohomology.mk (U' ∩ V') (N + 1) ωR))
+          (RelativeHomology.mk (U' ∪ V') (N + 1 + 1)
+            ⟨RelativeChain.mk (U' ∪ V') (N + 1 + 1)
+              (chainIncl K (N + 2) (SingularCapChainIncl.rcap fc.1
+                ((SingularSubspaceChainsEquiv.subspaceChainsEquiv K (N + 2 + p + 1)).symm
+                  ⟨SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc, hzK⟩))),
+              SingularCapSubKDuality.chainIncl_rcap_mem_relCycles
+                (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc) hzK hzS fc⟩)
+        = kronecker (coboundary X (N + 1) (cochainSplit U' (N + 1) ωR.1.1))
+            ((⇑(SingularSubdivision.singularSd X (N + 1 + 1)))^[j]
+              (chainIncl K (N + 2) (SingularCapChainIncl.rcap fc.1
+                ((SingularSubspaceChainsEquiv.subspaceChainsEquiv K (N + 2 + p + 1)).symm
+                  ⟨SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc, hzK⟩))))
+      ∧ chainBoundary X (N + 1) ((⇑(SingularSubdivision.singularSd X (N + 1 + 1)))^[j]
+              (chainIncl K (N + 2) (SingularCapChainIncl.rcap fc.1
+                ((SingularSubspaceChainsEquiv.subspaceChainsEquiv K (N + 2 + p + 1)).symm
+                  ⟨SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc, hzK⟩))))
+        = chainIncl U' (N + 1) u' + chainIncl V' (N + 1) w' :=
+  SingularConnSquareRHSPairing.rhs_pairing_reduce_partition U' V' hU' hV' ωR _
+    (SingularCapSubKDuality.chainIncl_rcap_mem_relCycles
+      (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc) hzK hzS fc)
+
 /-- **Combined pd-leg fold (fundCycleW-headed, whnf-safe)** — the σR/pd leg folded all the way to the cap form in
 ONE step. LHS = the SHALLOW `kronecker fc (pullbackDualityₗ fundCycleW σR)` (same head as
 `kronecker_pullbackDualityₗ_connecting_fund`, which matches in-proof without whnf), so an application matches the
