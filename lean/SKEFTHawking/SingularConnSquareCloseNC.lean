@@ -991,7 +991,8 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   (∂(cap ξ fund) = cap(δξ) fund). hcp/hbd (above) reused for the cover-partition g_rep boundary part.
   -- ▶ Cap-Leibniz engine (settled-register locked, coach 7th): ω = g_rep set-cast to legSplitUᶜ ∩ legSplitVᶜ,
   --   cover legSplitUᶜ/legSplitVᶜ, fund = fund_∩ over infCompact. Gives the g_rep/δφ-side relation `heng`.
-  have heng := cap_coboundary_cochainSplit_subdiv_fund
+  have hgr : N + 1 + (p + 1) + 1 = N + 1 + 1 + (p + 1) := by omega
+  obtain ⟨j, w, heng⟩ := cap_coboundary_cochainSplit_subdiv_fund
     ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
     ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
     (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
@@ -1004,7 +1005,23 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
       (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
     (fundCycleW_boundary_cover (hU.inter hV) _ _ _ (infCompact_compl_legSplit hU hV K))
-    (by omega)
+    hgr
+  -- Extract the V-leg `hVleg : cap g_rep (chainIncl legSplitVᶜ w) = cap φ (∂(Sdʲ fund_∩))`. A second
+  --   cap_leibniz on `∂(cap φ Sdʲ fund)` rewrites heng into `A = B + (A + C)` (A = cap(δφ)(Sdʲ fund), B = the
+  --   V-leg, C = cap φ ∂(Sdʲ fund)); `add_mid_cancel_zmod2` then gives `B = C` (the ∂-cap term cancels, ℤ/2).
+  have hleib := cap_leibniz
+    (cochainSplit ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ) (N + 1)
+      ↑↑(gRep_ker_legSplit_cast hU hV K g_rep))
+    ((⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1) + 1)))^[j]
+      (SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+        (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+        (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+        (SingularCSCMayerVietorisConnecting.infCompact U V
+          (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+          (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))))
+    hgr
+  rw [hleib] at heng
+  have hVleg := add_mid_cancel_zmod2 heng
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
