@@ -968,12 +968,18 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       SingularTwoCoverBridge.relKroneckerH_relCohomSetCongr_relIncl_collapse]
     -- ⊢ … = relKroneckerH (legSplitUᶜ∪legSplitVᶜ) (relCohomMvConnecting (legSplitUᶜ)(legSplitVᶜ)
     --     (relCohomRestrict (relCohomSetCongr (mk g_rep)))) (⋯ ▸ [chainIncl(rcap ω fund)])
-    -- ▶ NEXT: (a) reduce the MvConnecting's cohomology arg `relCohomRestrict (relCohomSetCongr (mk g_rep))` →
-    --   `mk (g_rep↾)` (a cochain quotient) via `relCohomRestrict_mk` + `relCohomSetCongr_mk`; handle the `⋯ ▸`
-    --   homology transport; (b) `rhs_pairing_reduce_partition` (RHSPairing:94) → `kronecker(δ(cochainSplit g_rep↾))(Sdʲc)`
-    --   + cover-partition `∂(Sdʲc)=chainIncl u'+chainIncl w'`; (c) SEAM leg `kronecker ω.1 (seam²(boundaryExtract zB))`
-    --   → V-leg w' match (boundaryExtract/seam = cover-partition V-part; z₀-reduction via fundCycleW_relHomologous if
-    --   the Sdʲ slack needs killing).
+    -- REDUCE the MvConnecting's cohomology arg to `mk (g_rep↾)` (push the bridges through mk): convert
+    -- `Quotient.mk g_rep → RelativeCohomology.mk` (rfl), then `relCohomSetCongr_mk` + `relCohomRestrict_mk`.
+    conv_rhs => rw [show (Submodule.Quotient.mk g_rep : RelativeCohomology _ (N + 1))
+        = RelativeCohomology.mk _ (N + 1) g_rep from rfl,
+      SingularRelCohomSetCongrMk.relCohomSetCongr_mk,
+      SingularRelativeCohomologyRestrict.relCohomRestrict_mk]
+    -- ⊢ … = relKroneckerH (legSplitUᶜ∪legSplitVᶜ) (relCohomMvConnecting (legSplitUᶜ)(legSplitVᶜ)
+    --     (mk (relCocycleRestrict (⋯ ▸ g_rep)))) (⋯ ▸ [chainIncl(rcap ω fund)])  — the rhs_pairing_reduce form.
+    -- ▶ NEXT: (a) `rhs_pairing_reduce`/`_partition` (RHSPairing:42/94) → `kronecker(δ(cochainSplit g_rep↾))(Sdʲc)`
+    --   + cover-partition `∂(Sdʲc)=chainIncl u'+chainIncl w'` (handle the `⋯ ▸` homology transport); (b) SEAM leg
+    --   `kronecker ω.1 (seam²(boundaryExtract zB))` → V-leg w' match (boundaryExtract/seam = cover-partition V-part;
+    --   z₀-reduction via fundCycleW_relHomologous if the Sdʲ slack needs killing).
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
