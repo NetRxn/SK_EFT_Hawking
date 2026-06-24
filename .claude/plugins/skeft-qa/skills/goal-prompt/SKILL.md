@@ -117,9 +117,11 @@ composition discipline + acceptance criteria.
     a Lean goal, set `"mode": "lean"`, else `"general"`.** (No criteria to evaluate — you are composing
     the goal, so you already know; this single switch gates whether `repo_state_probe.py` and the
     re-injection surface Lean-specific state. **Default `general`** if ever unsure.)
-  - **`arm_sha`** = `` !`git rev-parse HEAD 2>/dev/null` `` — the exact "since-arm" origin for the live
-    repo-state probe (rebase-safe). If empty (shell disabled / git error), write `""` — the probe
-    degrades down its timestamp/last-N cascade.
+  - **`arm_sha`** = `` !`R=$(uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "$(git -C "${R:-.}" rev-parse HEAD 2>/dev/null)"` `` — the exact "since-arm" origin for the live
+    repo-state probe (rebase-safe). Uses the harness `repo_root()` resolver (the SAME one the hooks/other
+    probes use) so it works from the workspace root too, then `git -C "$R"`; the outer `echo` keeps exit 0 so
+    it degrades to `""` (shell disabled / git error / launched outside the repo) — NOT a hard abort. If empty,
+    write `""` — the probe degrades down its timestamp/last-N cascade.
   - **`armed_ts`** = `` !`date +%s` `` — arm wall-clock (epoch int), the probe's timestamp fallback.
 
 ### 2. Compose the /goal condition (≤ 4,000 chars; transcript-evaluable only — goal.md)
