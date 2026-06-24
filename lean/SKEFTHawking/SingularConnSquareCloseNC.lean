@@ -870,6 +870,18 @@ theorem cap_chainBoundary_relBoundaries_transport {S : Set ↑X} {k n : ℕ} (g 
     abel_nf
     simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
 
+/-- **Connecting-square V-side assembly** (ℤ/2). The cover-partition seam V-part `chainL` cancels via
+`hUV` (the cocycle-`g_rep` cover-partition boundary identity), reducing the connecting-square match
+`chainL + capσR = capg_∂fund` to the U-side χ `capσR = U_A + capg_∂ρ`. Pure ZMod-2 additive algebra over
+ABSTRACT carriers — the concrete `fundCycleW` never enters, so no whnf wall. -/
+theorem connecting_assembly_zmod2 {m : ℕ} (chainL capσR capgDfund U_A capgDrho : SingularChain X m)
+    (hChi : capσR = U_A + capgDrho)
+    (hUV : U_A + chainL = capgDfund + capgDrho) :
+    chainL + capσR = capgDfund := by
+  rw [hChi, show chainL + (U_A + capgDrho) = U_A + chainL + capgDrho from by abel, hUV]
+  abel_nf
+  simp only [two_smul, ZModModule.add_self, add_zero]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
@@ -1016,12 +1028,15 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   -- htrans : cap g_rep ∂fund_K = cap g_rep ∂fund_∩ + cap g_rep ∂ρ. Combine with hbd via a pure TERM (no rw —
   -- htrans/hbd carry my proofs, the goal carries the descent's: defeq-not-syntactic ⟹ rw's motive is ill-typed):
   have hUV := hbd.trans htrans
-  -- ▶ Z₀-REDUCTION (committed-lemma cap_fund_eq_cap_z0 NC:646 = goal-condition "both V-parts onto z₀") is the
-  --   SOUND path. EXHAUSTIVELY whnf-walls (200k) on the infCompact (`compactsIn_binary_cover.choose`) choice-term
-  --   in ANY unification against σR_rep's fixed set `(↑↑infCompact)ᶜ` (hcv/S unification). Dodges that FAILED:
-  --   raw cap_fund_eq_cap_z0, the fundCycleW-headed wrapper, hS:=rfl, hS:=`ext x; rfl`. The blocker is a deep Lean
-  --   elaboration whnf, NOT a math gap. NEXT: align σR_rep's set form at the SOURCE (of_chainMatch hmatch /
-  --   descent helper), OR Aristotle (different toolchain), OR a `generalize`-the-infCompact-set restructuring.
+  -- ⛔ SETTLED FORK (coach 6th + memory `project-l2-sigmar-connecting-resolved`): σR_rep is NEVER cap-reduced;
+  --   it enters ONLY via Fact A `cap(δφ) ≈ cap σR_rep` (hσR).
+  -- ▶ V-SIDE CANCELS via hUV (the cover-partition seam `chain_L` is already in hUV from hbd's cover-partition):
+  --   `connecting_assembly_zmod2` reduces the connecting-square match to the U-side χ. Residual `?_` = the χ.
+  refine connecting_assembly_zmod2 _ _ _ _ _ ?_ hUV
+  -- ?_ : cap σR_rep fund_∩ = chainIncl(U∪V)(∂(chainIncl_U zA)) + cap g_rep ∂ρ  — the U-side connecting relation.
+  --   σR_rep = relCohomMvConnecting g_rep (hσR); the U-leg ∂zA links to cap(δ(cochainSplit g_rep)) via the
+  --   cover-partition (hpart/hzc0) + Fact-A χ-correction (cover-level, `cochainSplit_coboundary_mem_U/V` +
+  --   cap-naturality — NOT the banned union-rep formula).
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
