@@ -751,6 +751,22 @@ theorem add_mid_cancel_zmod2 {M : Type*} [AddCommGroup M] [Module (ZMod 2) M] {a
   have hbc : b + c = 0 := add_left_cancel (h2.trans (add_zero a).symm)
   exact sub_eq_zero.mp (by rw [ZModModule.sub_eq_add]; exact hbc)
 
+/-- **fundCycleW-headed `cap_fund_eq_cap_z0`** (the shared-z₀ reduction for a cocycle `c` vanishing on the
+compact complement): `cap c (fundCycleW …) = cap c z + ∂(cap c η)`. Composes `fundCycleW_chain_rel` (giving
+`fundCycleW + z = ∂η + a`, `a` over `Kᶜ`) with `cap_fund_eq_cap_z0`. Stated fundCycleW-headed + over abstract
+`k`/`n` so an application matches the head structurally and amortizes the elaboration (the concrete-`fundCycleW`
+`cap_fund_eq_cap_z0` application whnf-walls in the full build). -/
+theorem cap_fundCycleW_eq_cap_z0 {W : Set ↑X} {k n : ℕ} (hW : IsOpen W)
+    (z : SingularChain X (k + n + 1)) (hz : chainBoundary X (k + n) z = 0)
+    (Kc : SingularCompactsInOpen.CompactsIn W)
+    (c : SingularCochain X k) (hc : coboundary X k c = 0)
+    (hcv : ∀ d ∈ subspaceChains ((↑Kc.1 : Set ↑X)ᶜ) (k + (n + 1)), cap c d = 0) :
+    ∃ η : SingularChain X (k + (n + 1) + 1),
+      cap c (SingularOpenDualityCycle.fundCycleW hW z hz Kc)
+        = cap c z + chainBoundary X (n + 1) (cap c η) := by
+  obtain ⟨η, a, heq, hmem⟩ := fundCycleW_chain_rel hW z hz Kc
+  exact ⟨η, cap_fund_eq_cap_z0 (m := n + 1) c hc hcv _ _ η a hmem heq⟩
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
@@ -870,9 +886,13 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   -- V-leg extracted (ℤ/2 mid-cancel, motive-safe via the abstract lemma):
   --   hVleg : cap g_rep (chainIncl_legSplitVᶜ w) = cap (cochainSplit g_rep) (∂(Sdʲ fund_∩)).
   have hVleg := add_mid_cancel_zmod2 heng
-  -- NEXT: Fact B (V-leg ↔ chain_L seam, via the cover-partition link w↔zB + chainIncl_seam_boundaryExtract);
-  --   σR z₀-reduction (`cap_fund_eq_cap_z0` + `fundCycleW_chain_rel`, σR_rep vanishes on C(infCompactᶜ) ✓) for
-  --   Fact A (cap σR_rep ≈ cap(δφ) on z₀ where ∂z₀=0 kills the Sdʲ slack); exact ℤ/2 assemble.
+  -- σR z₀-reduction engine `cap_fundCycleW_eq_cap_z0` BUILT (coach-forced Option B: both caps onto the shared
+  -- cycle z₀=castChain z₀). The σR application is MCP-verified type-correct (cap σR_rep fund_∩ = cap σR_rep z₀ +
+  -- ∂(cap σR_rep η)) but whnf-walls @200k in the FULL build — the application unifies the concrete
+  -- infCompact/castChain coercion forms ((↑Kc.1)ᶜ vs infCompactᶜ in hcv; the σR `↑↑`/relCocycle coercions).
+  -- NEXT (whnf-dodge the σR application): tighten the lemma's hcv form to match `cap_relCochains_subspaceChains_eq_zero`'s
+  --   output set/degree (or pre-`erw` the infCompactᶜ coercion); then mirror g_rep side onto z₀ (over A=Kᶜ),
+  --   on-z₀ χ (δ(cochainSplit g_rep) ≈ σR_rep, Sdʲ slack dead ∂z₀=0) via hVleg; exact ℤ/2 assemble.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
