@@ -951,8 +951,14 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     -- (ω paired against the cap of σR_rep = the connecting of g_rep) — this IS hcross at the pairing level.
     rw [kronecker_add_right, add_eq_zero_iff_eq_neg, CharTwo.neg_eq]
     -- ⊢ kronecker ω.1 (seam²(boundaryExtract zB)) = kronecker ω.1 (pullbackDualityₗ(infCompactᶜ)(U∩V)(fund) σR_rep)
-    -- σR leg: chainIncl_pullbackDualityₗ → cup-cap adjunction (kronecker_cap_eq_kronecker_rcap) → Geom:73 + hσR
-    --   (the connecting pairing, slack dies on the cover-fine subdivided cocycle); seam leg: boundaryExtract pairing.
+    -- σR-LEG REDUCTION (GREEN): present the σR cap as `relativeDualityK` (defeq via relativeDualityK_mk +
+    -- kroneckerH_mk_mk), then the bridge `kroneckerH_relativeDualityK_mk_eq_relKroneckerH` → the relKroneckerH
+    -- connecting pairing form. (hWcyc discharged inline via chainIncl_rcap_mem_relCycles + fundCycleW_boundary.)
+    conv_rhs => change kroneckerH (p + 1) (Submodule.Quotient.mk ω) (SingularLocalDualityK.relativeDualityK _ _ (N + 1 + 1) p _ _ (SingularOpenDualityCycle.fundCycleW_boundary _ _ _ _) (RelativeCohomology.mk _ (N + 1 + 1) σR_rep))
+    rw [SingularCapSubKDuality.kroneckerH_relativeDualityK_mk_eq_relKroneckerH _ _ _ _ _ (SingularCapSubKDuality.chainIncl_rcap_mem_relCycles _ _ (SingularOpenDualityCycle.fundCycleW_boundary _ _ _ _) ω)]
+    -- ⊢ kronecker ω.1 (seam²(boundaryExtract zB)) = relKroneckerH (infCompactᶜ) (mk σR_rep) [chainIncl(rcap ω fund)]
+    -- ▶ NEXT: hσR (σR_rep = relCohomMvConnecting g_rep↾) + Geom:73/rhs_pairing_reduce → the connecting pairing
+    --   kronecker(δφ)(Sdʲ…); then the SEAM leg → cover-partition V-part → match.
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC

@@ -287,13 +287,18 @@ Each gate: target · consumes · DONE criteria · status. **G1 is the unlock; G2
   - **◐ Brick 4 (the pairing discharge) — DECOMPOSED (turn 13):**
     - **✅ ℤ/2 wrapper PROVEN GREEN:** `rw [kronecker_add_right, add_eq_zero_iff_eq_neg, CharTwo.neg_eq]` splits +
       ℤ/2-reduces Goal B to the **LEG MATCH** (NC:949–956). (Note `CharTwo.add_eq_zero_iff_eq` does NOT exist.)
-    - **▶ Leg-match (the ONLY remaining L2 sorry, NC:956) — the genuine open core (= hcross at the pairing level):**
-      `kronecker ω.1 (seam²(boundaryExtract zB)) = kronecker ω.1 (pullbackDualityₗ(infCompactᶜ)(U∩V)(fund) σR_rep)`.
-      σR leg: `chainIncl_pullbackDualityₗ` + cup-cap adjunction `kronecker_cap_eq_kronecker_rcap` → relKroneckerH
-      connecting form → `rhs_pairing_reduce` (RHSPairing:42) / Geom:73 + hσR (σR = connecting of g_rep). seam leg:
-      `boundaryExtract`/seam pairing → cover-partition V-part. The bridge from the intrinsic `sub(U∩V)` kronecker
-      pairing to the relKroneckerH connecting form is the crux to build. (This is the sanctioned-route content the
-      project never finished — of_hcup did it via the BANNED cup route.) Observe the banned-route tell.
+    - **◐ Leg-match (= hcross at the pairing level) — σR-LEG DONE (turn 15, GREEN):** the ℤ/2 wrapper reduces Goal B
+      to `kronecker ω.1 (seam²(boundaryExtract zB)) = kronecker ω.1 (pullbackDualityₗ σR_rep fund)`. **✅ σR-leg
+      reduced:** `conv_rhs => change kroneckerH (p+1) (mk ω) (relativeDualityK _ _ (N+1+1) p _ _ fundCycleW_boundary
+      (RelativeCohomology.mk _ (N+1+1) σR_rep))` (defeq via relativeDualityK_mk + kroneckerH_mk_mk) then
+      `rw [kroneckerH_relativeDualityK_mk_eq_relKroneckerH … (chainIncl_rcap_mem_relCycles … fundCycleW_boundary … ω)]`
+      → the σR side is now `relKroneckerH (infCompactᶜ) (mk σR_rep) [chainIncl(U∩V)(rcap ω fund)]`. (Friction notes:
+      `change` needs k written as `N+1+1` not `N+2`, and the cohomology as `RelativeCohomology.mk` not `Quotient.mk`,
+      to match the bridge pattern; hWcyc provided inline.)
+    - **▶ Leg-match remaining (the ONLY L2 sorry, NC:962):** `kronecker ω.1 (seam²(boundaryExtract zB)) =
+      relKroneckerH (infCompactᶜ) (mk σR_rep) [chainIncl(rcap ω fund)]`. NEXT: `hσR` (σR_rep = relCohomSetCongr
+      (relCohomMvConnecting g_rep↾)) → Geom:73 / `rhs_pairing_reduce` (RHSPairing:42) evaluates the connecting pairing
+      → `kronecker(δφ)(Sdʲ…)`; then the SEAM leg → cover-partition V-part → match. Observe the banned-route tell.
   - Then re-home the χ + engines into an imported module and wire the cross-realization descent →
     `PoincareDual4Mid`/`Lo` become theorems. (Turns 1–10 = re-seed-correction + the architecture audit/resolution;
     turn 11 = first Lean brick.)
