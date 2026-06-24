@@ -852,8 +852,16 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     (show N + 1 + (p + 1) + 1 = N + 1 + 1 + (p + 1) by omega)
   -- hengine : ∃ j w, cap(δ(cochainSplit legSplitUᶜ g_rep))(Sdʲ fund_∩)
   --             = cap g_rep (chainIncl legSplitVᶜ w) + ∂(cap (cochainSplit g_rep)(Sdʲ fund_∩)).
-  -- NEXT: obtain ⟨j, w, heng⟩; (Fact B) V-leg cap g_rep (chainIncl_legSplitVᶜ w) ↔ chain_L (seam); (Fact A)
-  --   cap(δ(cochainSplit g_rep)) ≈ cap σR_rep via hσR; Sdʲ-bridge onto z₀ (∂z₀=0 kills slack); ℤ/2 assemble.
+  obtain ⟨j, w, heng⟩ := hengine
+  -- cap-Leibniz expand the ∂(cap φ ·) term: heng becomes
+  --   cap(δφ)(Sdʲ fund) = cap g_rep (chainIncl_V w) + (cap(δφ)(Sdʲ fund) + cap φ (∂Sdʲ fund)),
+  -- so in ℤ/2 the V-leg relation `cap g_rep (chainIncl_V w) = cap φ (∂Sdʲ fund)` is one cancel away.
+  rw [cap_leibniz _ _ (show N + 1 + (p + 1) + 1 = N + 1 + 1 + (p + 1) by omega)] at heng
+  -- NEXT: extract the V-leg `cap g_rep w = cap φ (∂Sdʲ fund)` (⚠ motive friction: the `⋯ ▸ Sdʲ fund` dependent
+  --   cast blocks `rw [add_*]` — generalize the cast-terms first, then ℤ/2 cancel). Then: Fact B (V-leg ↔ chain_L
+  --   seam, via the cover-partition link w↔zB + chainIncl_seam_boundaryExtract); σR z₀-reduction
+  --   (`cap_fund_eq_cap_z0` + `fundCycleW_chain_rel`, σR_rep vanishes on C(infCompactᶜ) ✓) for Fact A
+  --   (cap σR_rep ≈ cap(δφ) on z₀ where ∂z₀=0 kills the Sdʲ slack); exact ℤ/2 assemble.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
