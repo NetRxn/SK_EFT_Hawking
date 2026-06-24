@@ -605,21 +605,19 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   η':=chainIncl(U∪V)η) → `chainIncl(U∪V)(∂(chainIncl_A zA)) + chainIncl(U∪V)(∂(chainIncl_B zB)) = cap g_rep ∂fund`.
   have hbd := cover_partition_cap_boundary_mod (U ∪ V) (U ∪ V) _
     (SingularRelativeDuality.relCocycle_coboundary_zero _ g_rep) _ _ _ _ hcp_abs
-  -- ▶ CROSS-REALIZATION CORE (cap-product MV-naturality, Hatcher 3.36 — the genuine remaining theorem; both
-  --   NC + CrossReal historically stall HERE; surrounding machinery steps 1-3 = hcp/hcp_abs/hbd, now in scope).
-  --   Goal = `chain_L + pd ∈ boundaries(sub(U∩V))`. ASSEMBLY MAP (all engines committed):
-  --   (1) `refine ⟨W, ?_⟩`, bounding chain W = realize(cap (pullbackCochain g_rep) fund_∩) [a (p+2)-chain];
-  --       residual `∂W = chain_L + pd`. (2) ∂W cap-Leibniz-expands (g_rep COCYCLE ⟹ δ-term = 0) to the
-  --       two-facts LHS. (3) `two_facts_via_ambient` (NC:240) → AMBIENT hamb (chainIncl-injective, whnf-dodged):
-  --       `cap g_rep (∂(chainIncl fund_∩)) = chainIncl chain_L + cap σR (chainIncl FR)` in X.
-  --   hamb = THREE sub-bricks: (i) the χ / bounding-chain cochain [GATING] — W-cochain = `cochainSplit g_rep`
-  --       (the U-leg over infCompactᶜ; g_rep itself ∉ relCochains(infCompactᶜ)). χ = `σR − δ(cochainSplit g_rep)`
-  --       (coboundary) absorbed at CHAIN altitude via cover-fine Sdʲ (coach-locked A, 2026-06-23; B/C ruled out;
-  --       see notebook DECISIONS). (ii) V-part chain_L ↔ ∂zB-realize (seamHomeo MVLES:111 = identity-on-points +
-  --       subSeamHomeo + boundaryExtract). (iii) hbd (f1fcc707) links cover-partition ∂ to cap g_rep ∂fund_{U∪V}.
-  --   NEXT BRICK = (i) cover-subordinate split `cap (δ(cochainSplit g_rep)) (Sdʲ fund_∩) = ∂(primitive_U) + slack`
-  --       via `exists_cover_fine_subdivision` (RHSScaffold:102, template = rhs_pairing_reduce proof) + `cap_leibniz`
-  --       + cochainSplit_coboundary_mem_U/V. The chain-level analog of rhs_pairing_reduce's kronecker internals.
+  -- ▶ CLEANER-WITNESS CLOSE (supersedes the cochainSplit/χ route — the cleaner witness d = cap g_rep fund_∩
+  --   is U∩V-supported [cap_fundCycleW_mem] and ∂d = cap g_rep ∂fund_∩ has NO δ-term [chainBoundary_cap_cocycle_arg,
+  --   g_rep cocycle], so the WITNESS sidesteps the χ entirely; engines all committed):
+  --   (1) hd = cap_fundCycleW_mem (cap g_rep fund_∩ ∈ subspaceChains(U∩V)); hsum = chainBoundary_mem_subspaceChains hd.
+  --   (2) rw [show chain_L + pd = realize⟨∂(cap g_rep fund_∩), hsum⟩ from chainIncl_injective ...];
+  --       exact realize_chainBoundary_cap_mem_boundaries (U∩V) g_rep fund_∩ hd hsum.
+  --   (3) the chainIncl_injective residual = the CONNECTING-SQUARE IDENTITY (X-level):
+  --       chainIncl(U∪V)(∂(chainIncl_B zB)) [= chainIncl(chain_L), chainIncl_seam_boundaryExtract d6c8a848]
+  --         + cap σR_rep fund_∩ [= chainIncl(pd), chainIncl_pullbackDualityₗ]
+  --         = cap g_rep ∂fund_∩ [= ∂d, chainBoundary_cap_cocycle_arg].
+  --   V-part of the identity: hbd (f1fcc707) links chainIncl(U∪V)(∂(chainIncl_B zB)) to cap g_rep ∂fund_{U∪V}.
+  --   U-part (cap σR_rep fund_∩ ↔ cap g_rep ∂fund_∩, the cap-level CONNECTING RELATION) = the genuine residual —
+  --   needs relCohomMvConnecting (σR=connecting g_rep via hσR) + fundCycleW_relHomologous (fund_∩↔fund_{U∪V}↔z₀).
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
