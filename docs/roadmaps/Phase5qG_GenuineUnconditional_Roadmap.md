@@ -284,6 +284,17 @@ Each gate: target · consumes · DONE criteria · status. **G1 is the unlock; G2
 - The 5q.G `/goal-prompt` is authored via `/skeft-qa:goal-prompt` against the **live-anchor harness**
   (commit `7cf6a5d4` + `LIVE_ANCHOR_REDESIGN_SPEC.md`) with §1's anti-spiral rules baked in. **It must not
   contain a frozen "CURRENT STATE" naming engines** (the 5q.F re-seed vector).
+- **DURABLE-ONLY condition rule (the deeper form of the same lesson):** the persistent `/goal` condition is
+  re-injected verbatim every compaction, so it must hold ONLY **durable, position-independent** rules
+  (the gate goal, source-of-truth pointers, the altitude lock, kernel-purity, SETTLED_FORKS-first, the
+  per-gate DONE criteria, legitimate stops). It must NOT hold any **transient/positional kickoff** — no
+  "first do the audit," no "start at G1," no "current state = …". A one-time instruction baked into a
+  forever-re-injected condition re-creates the 5q.F driver: after the loop is past that step, the condition
+  keeps ordering it redone. **All transient next-step state lives ONLY in the recomputed live FRONTIER**
+  (notebook INDEX, recomputed from git each turn), never in the condition. One-time kickoffs (e.g. the G1
+  exact-vs-mod-boundary **audit**) are done in an **early interactive session**, off the persistent loop;
+  only their *outcome* is recorded (in the FRONTIER + the relevant gate), and the persistent loop is armed
+  from the post-kickoff state.
 - Source-of-truth on every compaction: this roadmap + `Lit-Search/Phase-5qG/LAB_NOTEBOOK_INDEX.md` (FRONTIER
   + the §4 settled-forks register) + `docs/dev-loops/SETTLED_FORKS.md` + `docs/dev-loops/PRE_DECISIONS.md`.
 - Vetting discipline (the reason 5q.G is clean): **no item is added to this roadmap or the notebook without
