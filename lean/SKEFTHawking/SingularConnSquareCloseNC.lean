@@ -961,10 +961,19 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     conv_rhs => rw [show RelativeCohomology.mk _ (N + 1 + 1) σR_rep = Submodule.Quotient.mk σR_rep from rfl, hσR]
     -- ⊢ … = relKroneckerH (infCompactᶜ) (relCohomSetCongr(relCohomMvConnecting (legSplitUᶜ)(legSplitVᶜ)
     --     (relCohomRestrict (relCohomSetCongr (mk g_rep))))) [chainIncl(rcap ω fund)]
-    -- ▶ NEXT: peel set-congr (`relKroneckerH_relCohomSetCongr_relIncl_collapse` TwoCoverBridge:84) + restrict
-    --   (`relKroneckerH_relCohomRestrict'` DualityAdjoint:54) → `relKroneckerH (legSplitUᶜ∪legSplitVᶜ)
-    --   (relCohomMvConnecting (mk g_rep↾)) [...]` → `rhs_pairing_reduce_partition` (RHSPairing:94) → kronecker(δφ)(Sdʲc)
-    --   + the cover-partition; the SEAM leg → cover-partition V-part (via the boundaryExtract/seam relation) → match.
+    -- PEEL the OUTER set-congr (σR_rep over infCompactᶜ = legSplitUᶜ∪legSplitVᶜ): present the homology as
+    -- `relIncl refl …` (shape `y` so the `←` rw pattern isn't a bare metavar), then collapse (TwoCoverBridge:84).
+    conv_rhs => rw [← SingularTwoCoverBridge.relIncl_refl_apply (Set.Subset.refl _)
+      (RelativeHomology.mk _ (N + 1 + 1) _),
+      SingularTwoCoverBridge.relKroneckerH_relCohomSetCongr_relIncl_collapse]
+    -- ⊢ … = relKroneckerH (legSplitUᶜ∪legSplitVᶜ) (relCohomMvConnecting (legSplitUᶜ)(legSplitVᶜ)
+    --     (relCohomRestrict (relCohomSetCongr (mk g_rep)))) (⋯ ▸ [chainIncl(rcap ω fund)])
+    -- ▶ NEXT: (a) reduce the MvConnecting's cohomology arg `relCohomRestrict (relCohomSetCongr (mk g_rep))` →
+    --   `mk (g_rep↾)` (a cochain quotient) via `relCohomRestrict_mk` + `relCohomSetCongr_mk`; handle the `⋯ ▸`
+    --   homology transport; (b) `rhs_pairing_reduce_partition` (RHSPairing:94) → `kronecker(δ(cochainSplit g_rep↾))(Sdʲc)`
+    --   + cover-partition `∂(Sdʲc)=chainIncl u'+chainIncl w'`; (c) SEAM leg `kronecker ω.1 (seam²(boundaryExtract zB))`
+    --   → V-leg w' match (boundaryExtract/seam = cover-partition V-part; z₀-reduction via fundCycleW_relHomologous if
+    --   the Sdʲ slack needs killing).
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
