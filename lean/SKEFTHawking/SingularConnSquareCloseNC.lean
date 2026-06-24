@@ -684,8 +684,12 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   V `chainIncl(U∩V) chain_L = chainIncl(U∪V)(∂(chainIncl_B zB))` [chainIncl_seam_boundaryExtract]+hbd;
   --   chainIncl(U∩V) pd = cap σR_rep fund_∩ [chainIncl_pullbackDualityₗ]. U (cap σR_rep fund_∩ ↔ cap g_rep ∂Fg,
   --   cap connecting relation via hσR/relCohomMvConnecting + Fg↔fund_∩ cast) = residual.
-  -- V-part rw: `chainIncl_seam_boundaryExtract` needs hTS/hmem provided (Prop args, not pattern-determined);
-  -- `chainIncl_pullbackDualityₗ` for the pd term. Then hbd + hσR connecting + fundCycleW_relHomologous.
+  -- U-part rw (works): `chainIncl_pullbackDualityₗ` → chainIncl pd = cap σR_rep fund_∩.
+  rw [SingularLocalDualityK.chainIncl_pullbackDualityₗ]
+  -- Goal: chainIncl(U∩V) chain_L + cap σR_rep fund_∩ = cap g_rep ∂Fg.
+  --   NEXT: V-part `chainIncl_seam_boundaryExtract` (needs the subSeamHomeo's exact hmem/T — the goal's T is not
+  --   defeq-`Iff.rfl`-shaped; supply the goal's own hmem term or a matching `by simp`), then hbd + hσR connecting
+  --   relation (cap σR_rep fund_∩ ↔ cap g_rep ∂Fg via hσR/relCohomMvConnecting) + fundCycleW_relHomologous.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
