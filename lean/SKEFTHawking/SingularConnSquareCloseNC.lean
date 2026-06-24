@@ -534,6 +534,16 @@ theorem cap_fundCycleW_mem {W : Set ↑X} {k m : ℕ} (hW : IsOpen W)
     cap a (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K) ∈ subspaceChains W (m + 1) :=
   SingularCapSupport.cap_mem_subspaceChains W a (SingularOpenDualityCycle.fundCycleW_mem_W hW z₀ hz₀ K)
 
+/-- **cap-Leibniz on a cocycle cochain** (the witness `∂d` engine): for a cocycle `a` (`δa = 0`),
+`∂(cap a c) = cap a (∂c)` — the `cap(δa)(h▸c)` Leibniz term drops. With `a = g_rep` (cocycle), this is
+`∂(cap g_rep fund_∩) = cap g_rep ∂fund_∩` — the boundary of the cleaner witness `d = cap g_rep fund_∩`, with
+no δ-term. Dual to `chainBoundary_cap_cycle_arg` (which drops the `cap a (∂c)` term for a cycle `c`). -/
+theorem chainBoundary_cap_cocycle_arg {k m : ℕ} (a : SingularCochain X k)
+    (ha : coboundary X k a = 0) (c : SingularChain X (k + m + 1)) (h : k + m + 1 = k + 1 + m) :
+    chainBoundary X m (cap a c) = cap a (chainBoundary X (k + m) c) := by
+  rw [cap_leibniz a c h, ha]
+  rw [← capₗ_apply, map_zero, LinearMap.zero_apply, zero_add]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
