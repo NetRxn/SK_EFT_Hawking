@@ -989,6 +989,22 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   W := realize(cap (g_rep + ξ) fund_∩) via `realize_chainBoundary_cap_mem_boundaries` (NC:251); ξ from hσR
   --   absorbs the rep-difference via the shipped `cap_coboundary_relCochains_fund_eq_boundary`
   --   (∂(cap ξ fund) = cap(δξ) fund). hcp/hbd (above) reused for the cover-partition g_rep boundary part.
+  -- ▶ Cap-Leibniz engine (settled-register locked, coach 7th): ω = g_rep set-cast to legSplitUᶜ ∩ legSplitVᶜ,
+  --   cover legSplitUᶜ/legSplitVᶜ, fund = fund_∩ over infCompact. Gives the g_rep/δφ-side relation `heng`.
+  have heng := cap_coboundary_cochainSplit_subdiv_fund
+    ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
+    ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
+    (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+    (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+    (gRep_ker_legSplit_cast hU hV K g_rep)
+    (hU.inter hV)
+    (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+    (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+    (SingularCSCMayerVietorisConnecting.infCompact U V
+      (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+      (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
+    (fundCycleW_boundary_cover (hU.inter hV) _ _ _ (infCompact_compl_legSplit hU hV K))
+    (by omega)
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
