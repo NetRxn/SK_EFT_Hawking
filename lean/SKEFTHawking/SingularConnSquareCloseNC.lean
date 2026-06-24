@@ -523,6 +523,17 @@ theorem chainBoundary_cap_cycle_arg {k m : ℕ} (a : SingularCochain X k)
     chainBoundary X m (cap a c) = cap (coboundary X k a) (h ▸ c) := by
   rw [cap_leibniz a c h, hc, ← capₗ_apply, map_zero, add_zero]
 
+/-- **The cap of a cochain against `fundCycleW` is `W`-supported** (the cleaner-witness support fact):
+`fundCycleW ∈ subspaceChains W` (`fundCycleW_mem_W`) and cap preserves support (`cap_mem_subspaceChains`),
+so `cap a (fundCycleW) ∈ subspaceChains W`. For `W = U∩V`, `K = infCompact`, `a = g_rep`, this makes
+`d = cap g_rep fund_∩` a `U∩V`-supported witness — and `∂d = cap g_rep ∂fund_∩` has NO δ-term (g_rep cocycle),
+so the witness sidesteps the cochainSplit χ entirely. -/
+theorem cap_fundCycleW_mem {W : Set ↑X} {k m : ℕ} (hW : IsOpen W)
+    (z₀ : SingularChain X (k + m + 1)) (hz₀ : chainBoundary X (k + m) z₀ = 0)
+    (K : SingularCompactsInOpen.CompactsIn W) (a : SingularCochain X k) :
+    cap a (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K) ∈ subspaceChains W (m + 1) :=
+  SingularCapSupport.cap_mem_subspaceChains W a (SingularOpenDualityCycle.fundCycleW_mem_W hW z₀ hz₀ K)
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
