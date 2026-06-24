@@ -741,6 +741,16 @@ theorem cap_coboundary_cochainSplit_subdiv_fund (U V : Set ↑X) (hU : IsOpen U)
   cap_coboundary_cochainSplit_subdiv U V hU hV ω
     (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc) hbd h
 
+/-- **ℤ/2 mid-cancellation**: `a = b + (a + c) ⟹ b = c` in a `ZMod 2` module. Used to extract the V-leg from
+the cap-Leibniz-expanded engine relation `heng`. Stated abstractly over `M` so applying it to the concrete
+`heng` infers `a`/`b`/`c` with NO dependent-cast motive issue (the `rw [add_*]`/`linear_combination` route fails
+on the `⋯ ▸ Sdʲ fund` cast). -/
+theorem add_mid_cancel_zmod2 {M : Type*} [AddCommGroup M] [Module (ZMod 2) M] {a b c : M}
+    (h : a = b + (a + c)) : b = c := by
+  have h2 : a + (b + c) = a := by nth_rewrite 2 [h]; abel
+  have hbc : b + c = 0 := add_left_cancel (h2.trans (add_zero a).symm)
+  exact sub_eq_zero.mp (by rw [ZModModule.sub_eq_add]; exact hbc)
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
@@ -857,11 +867,12 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   cap(δφ)(Sdʲ fund) = cap g_rep (chainIncl_V w) + (cap(δφ)(Sdʲ fund) + cap φ (∂Sdʲ fund)),
   -- so in ℤ/2 the V-leg relation `cap g_rep (chainIncl_V w) = cap φ (∂Sdʲ fund)` is one cancel away.
   rw [cap_leibniz _ _ (show N + 1 + (p + 1) + 1 = N + 1 + 1 + (p + 1) by omega)] at heng
-  -- NEXT: extract the V-leg `cap g_rep w = cap φ (∂Sdʲ fund)` (⚠ motive friction: the `⋯ ▸ Sdʲ fund` dependent
-  --   cast blocks `rw [add_*]` — generalize the cast-terms first, then ℤ/2 cancel). Then: Fact B (V-leg ↔ chain_L
-  --   seam, via the cover-partition link w↔zB + chainIncl_seam_boundaryExtract); σR z₀-reduction
-  --   (`cap_fund_eq_cap_z0` + `fundCycleW_chain_rel`, σR_rep vanishes on C(infCompactᶜ) ✓) for Fact A
-  --   (cap σR_rep ≈ cap(δφ) on z₀ where ∂z₀=0 kills the Sdʲ slack); exact ℤ/2 assemble.
+  -- V-leg extracted (ℤ/2 mid-cancel, motive-safe via the abstract lemma):
+  --   hVleg : cap g_rep (chainIncl_legSplitVᶜ w) = cap (cochainSplit g_rep) (∂(Sdʲ fund_∩)).
+  have hVleg := add_mid_cancel_zmod2 heng
+  -- NEXT: Fact B (V-leg ↔ chain_L seam, via the cover-partition link w↔zB + chainIncl_seam_boundaryExtract);
+  --   σR z₀-reduction (`cap_fund_eq_cap_z0` + `fundCycleW_chain_rel`, σR_rep vanishes on C(infCompactᶜ) ✓) for
+  --   Fact A (cap σR_rep ≈ cap(δφ) on z₀ where ∂z₀=0 kills the Sdʲ slack); exact ℤ/2 assemble.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
