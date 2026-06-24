@@ -211,16 +211,29 @@ hypothesis-free, real Mathlib content, no posit.** ("Key declarations" lists the
 Each gate: target · consumes · DONE criteria · status. **G1 is the unlock; G2–G5 cascade from it.**
 
 ### G1 — L2 close (THE UNLOCK): discharge Poincaré duality
-- **Target:** discharge the single cap-altitude χ
-  (`cap σR_rep fund_∩ = chainIncl(U∪V)(∂(chainIncl_U zA)) + cap g_rep ∂ρ`, the U-side connecting relation),
-  wire the cross-realization descent, and turn `PoincareDual4Mid`/`PoincareDual4Lo` from hypotheses into
-  theorems.
-- **Posture (user-decided 2026-06-24): AUDIT-FIRST, bounded.** The χ demands an **exact chain equality** but
-  `σR_rep` is opaque (its only interface, `relKroneckerH_relCohomMvConnecting`, yields a *mod-boundary*
-  fact). The "one cap-Leibniz brick from closing" framing failed across ~6 compactions. **First increment =
-  a forensic audit** of the exact-chain-vs-mod-boundary gap: is the exact χ reachable from cap-altitude, or
-  must the close-architecture be (soundly) adjusted? Decision: reachable → grind the one brick; not →
-  escalate ONCE with the specific gap named (NOT a kronecker re-spin).
+- **✅ BOUNDARY AUDIT COMPLETE (2026-06-24, interactive, source-grounded) — target CORRECTED.** The audit
+  (full record: 5q.G notebook FRONTIER + the 2026-06-24 log entry) found the 5q.F exact-chain χ
+  (`cap σR_rep fund_∩ = chainIncl(U∪V)(∂(chainIncl_U zA)) + cap g_rep ∂ρ`, WIP `SingularConnSquareCloseNC.lean:1040`)
+  is **unreachable by construction**: it needs `σR_rep` as a cochain, but `relCohomMvConnecting`'s only
+  interfaces are the unconditional **pairing** form (yields a *scalar*, never a cochain) and the **banned**
+  cochain realization (`relCohomMvConnecting_eq_mk_coboundary_cochainSplit`, false `hmem`); the pairing-form
+  slack dies only on a CYCLE, and `fund_∩` is a non-cycle. The exact χ came from an OVER-REDUCTION
+  (`connecting_assembly_zmod2` + `cap_chainBoundary_relBoundaries_transport`) — same over-strength class as
+  the reverted `b02b0d08` X=Y route.
+- **▶ Target (corrected by the audit; sanctioned, reachable; NOT a user-decision; NOT a kronecker re-spin):**
+  discharge at the **∈-BOUNDARIES goal** (`SingularConnSquareCloseNC.lean:915`,
+  `seam²(boundaryExtract zB) + pullbackDualityₗ(…)σR_rep ∈ boundaries`) via the PAIRING route
+  (`mem_boundaries_of_kroneckerH_zero`): pair the whole goal against the cocycle `a'rep` (cap↔rcap adjunction)
+  so the σR leg is handled by the unconditional `relKroneckerH_relCohomMvConnecting_cover_partition` (slack
+  dies, cocycle pairing); seam + g_rep legs via the committed cap engines; **drop `connecting_assembly_zmod2`**.
+  Then wire the cross-realization descent → `PoincareDual4Mid`/`PoincareDual4Lo` become theorems.
+- **Altitude-lock guard:** the pairing is the FINAL ∈-boundaries discharge ONLY — the cap-Leibniz engines stay
+  the SPINE. `of_crossRealization`/`kronecker_pd_fold_fund` as the spine is the BANNED re-seed
+  (`SETTLED_FORKS.md` `kronecker-altitude-respine`). Final-discharge homology non-deg = `kroneckerH_injective`
+  (LEGIT); chain-level Kronecker σR↔g_rep bridging is the BANNED non-deg. The of_chainMatch castChain whnf →
+  dodge at cap-altitude via def-head-match, NEVER via the kronecker fold (that whnf-dodge-as-re-spine WAS the
+  5q.F spiral). If the cap-altitude whnf-dodge proves intractable after a BOUNDED grind → genuine tactical
+  wall, escalate (the architecture is now settled by this audit).
 - **Consumes:** the in-library descent reducers + cap-Leibniz engines (§3a/§3b); the salvageable leads (§3c).
 - **⚠ Integration scope:** the descent reducer `subHomConnecting_openDuality_of_hcup_linked` is in-library
   (`SingularConnSquareClose`) but the WIP χ files (`SingularConnSquareCloseNC`, `SingularChainComplexCat`)
@@ -230,8 +243,9 @@ Each gate: target · consumes · DONE criteria · status. **G1 is the unlock; G2
 - **DONE:** the L2 close file is zero-sorry & wired into the library; `#print axioms` of the close theorem =
   EXACTLY `{propext, Classical.choice, Quot.sound}`; `PoincareDual4Mid`/`Lo` are theorems; `lake build` +
   `validate.py` clean; fresh `skeft-qa:adversarial-reviewer` (separate context) ZERO BLOCKER.
-- **Status:** OPEN. Live residual = the cap-altitude χ (5q.F WIP `SingularConnSquareCloseNC.lean:1040`, to be
-  re-homed cleanly in 5q.G).
+- **Status:** OPEN — audit done, target corrected. Next 5q.G action = re-home the ∈-boundaries pairing close
+  into an imported module and grind the cap-altitude whnf-dodge of the pairing discharge. Nothing built in
+  5q.G yet.
 
 ### G2 — L3 instantiation: w₂ floor-collapse criterion on the genuine PD
 - **Target:** instantiate `wuW2_eq_zero_iff` (proven parametric, §3b) on the genuine PD instance from G1.
