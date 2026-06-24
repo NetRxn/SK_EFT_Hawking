@@ -1075,6 +1075,10 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     -- ℤ/2: `A + B = 0 ⟺ A = B`. The match target is `seam-leg = pd-leg` (both → the same relKroneckerH σ
     --   (relMvDelta [rcap fc fund]) by cap-product MV-naturality; then X = X ⟹ X + X = 0).
     rw [← ZModModule.sub_eq_add, sub_eq_zero]
+    -- pd-side: move the MV connecting off the relMvDelta onto the cohomology argument (relKroneckerH_relMvDelta_eq,
+    --   clean — no cover-partition), giving `relKroneckerH (legSplit∪=infCompactᶜ) (relCohomMvConnecting σ) [rcap fc fund]`
+    --   — where relCohomMvConnecting σ ≈ σR_rep via hσR.
+    rw [SKEFTHawking.SingularConnSquareClose.relKroneckerH_relMvDelta_eq]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
