@@ -913,13 +913,15 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   -- V-leg extracted (ℤ/2 mid-cancel, motive-safe via the abstract lemma):
   --   hVleg : cap g_rep (chainIncl_legSplitVᶜ w) = cap (cochainSplit g_rep) (∂(Sdʲ fund_∩)).
   have hVleg := add_mid_cancel_zmod2 heng
-  -- ⛔ LOCKED PATH (coach 6th, 2026-06-23w — supersedes the σR z₀-reduction DRIFT): σR_rep is NEVER cap-reduced /
-  -- class-extracted; it enters ONLY via Fact A `cap(δ(cochainSplit g_rep))(Sdʲ fund) ≈ cap σR_rep fund_∩` (hσR).
-  -- The whnf was the off-path σR-z₀-reduction's symptom (`cap_fundCycleW_eq_cap_z0` stays UNUSED). Close from the
-  -- firing engine: hVleg (V-leg cap g_rep w = cap φ ∂Sdʲ fund).
-  -- NEXT (build-verify, NOT MCP): Fact B (V-leg cap g_rep w ↔ chain_L seam via hVleg + chainIncl_seam_boundaryExtract
-  --   + hVeq + w↔zB) → Fact A (cap δφ ≈ cap σR via hσR; rel residue dropped by cap_relCochains on the g_rep/rel
-  --   side, NEVER σR) → cover_partition_cap_boundary_mod on the Sdʲ split → ℤ/2 assemble.
+  -- Sdʲ-bridge (brick `cap_singularSd_iterate_chainBoundary_arg`): land the recipe's Sdʲ-FREE Term2 form.
+  -- hVleg now: `cap g_rep (chainIncl_V w) = cap φ (∂fund_∩)  +  ∂(cap φ (Dⱼ ∂fund_∩))  +  cap(δφ)((▸)Dⱼ ∂fund_∩)`
+  --   (φ = cochainSplit legSplitUᶜ g_rep). Term1 = the recipe's `cap φ (∂fund)` → seam-localizes to chain_L
+  --   (Term2/(B)); the ∂(…) is a boundary; the cap(δφ)(…) folds into Fact A (χ).
+  rw [cap_singularSd_iterate_chainBoundary_arg] at hVleg
+  -- ⛔ LOCKED PATH (coach 6th): σR_rep is NEVER cap-reduced; enters ONLY via Fact A `cap(δφ) ≈ cap σR_rep` (hσR).
+  -- NEXT (build-verify): Term2/(B) seam-localization `cap φ (∂fund_∩) = mapChain²(boundaryExtract zB)` via brick 7
+  --   `cap_boundaryExtract_naturality_noncocycle` + cover-partition hpart/hzc0/hcp_abs + seam transport hVeq;
+  --   then Fact A (χ via hσR, rel residue via cap_relCochains on the g_rep/rel side, NEVER σR); then ℤ/2.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
