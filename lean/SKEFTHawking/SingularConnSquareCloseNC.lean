@@ -544,6 +544,16 @@ theorem chainBoundary_cap_cocycle_arg {k m : ℕ} (a : SingularCochain X k)
   rw [cap_leibniz a c h, ha]
   rw [← capₗ_apply, map_zero, LinearMap.zero_apply, zero_add]
 
+/-- **`subspaceChains` is closed under `∂`** (the witness `hsum` support): if `c ∈ subspaceChains K (n+1)`
+(i.e. `c = chainIncl K x`) then `∂c = ∂(chainIncl K x) = chainIncl K (∂x) ∈ subspaceChains K n`
+(`chainIncl_chainBoundary`). Gives `∂(cap g_rep fund_∩) ∈ subspaceChains(U∩V)` for the reflection. -/
+theorem chainBoundary_mem_subspaceChains {K : Set ↑X} {n : ℕ} (c : SingularChain X (n + 1))
+    (hc : c ∈ subspaceChains K (n + 1)) :
+    chainBoundary X n c ∈ subspaceChains K n := by
+  rw [subspaceChains, LinearMap.mem_range] at hc ⊢
+  obtain ⟨x, rfl⟩ := hc
+  exact ⟨chainBoundary (sub K) n x, by rw [SingularRelativeHomologyMod2.chainIncl_chainBoundary]⟩
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
