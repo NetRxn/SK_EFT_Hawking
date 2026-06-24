@@ -554,6 +554,30 @@ theorem chainBoundary_mem_subspaceChains {K : Set ↑X} {n : ℕ} (c : SingularC
   obtain ⟨x, rfl⟩ := hc
   exact ⟨chainBoundary (sub K) n x, by rw [SingularRelativeHomologyMod2.chainIncl_chainBoundary]⟩
 
+/-- **Connecting-square reflection close** (abstract over free carriers — dodges the concrete `fundCycleW`
+whnf wall, the proven `two_facts_via_ambient` technique). Given the cleaner witness `cap a c` is
+`K`-supported (`hd`) and the X-level **connecting-square identity** `chainIncl chainL + chainIncl pd =
+∂(cap a c)` (`hident`), the sub-`K` chain `chainL + pd` is a boundary: realize `cap a c` in `sub K`
+(`realize_chainBoundary_cap_mem_boundaries`), whose `∂` IS `chainL + pd` by `chainIncl`-injectivity +
+the realize round-trip. Applied all-underscore so the verbose `fund_∩`/seam terms infer structurally;
+isolates `hident` (the genuine cap-product MV-naturality content) as the sole residual. -/
+theorem connecting_square_close (K : Set ↑X) {k n : ℕ} (a : SingularCochain X k)
+    (c : SingularChain X (k + (n + 1) + 1)) (hd : cap a c ∈ subspaceChains K (n + 2))
+    (chainL pd : SingularChain (sub K) (n + 1))
+    (hident : chainIncl K (n + 1) chainL + chainIncl K (n + 1) pd
+        = chainBoundary X (n + 1) (cap a c)) :
+    chainL + pd ∈ boundaries (sub K) (n + 1) := by
+  have hsum : chainBoundary X (n + 1) (cap a c) ∈ subspaceChains K (n + 1) :=
+    chainBoundary_mem_subspaceChains _ hd
+  have heq : chainL + pd =
+      (SingularSubspaceChainsEquiv.subspaceChainsEquiv K (n + 1)).symm
+        ⟨chainBoundary X (n + 1) (cap a c), hsum⟩ := by
+    apply SingularRelativeHomologyMod2.chainIncl_injective K (n + 1)
+    rw [map_add, SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm]
+    exact hident
+  rw [heq]
+  exact realize_chainBoundary_cap_mem_boundaries K a c hd hsum
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
