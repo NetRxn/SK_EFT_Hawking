@@ -629,15 +629,19 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   η':=chainIncl(U∪V)η) → `chainIncl(U∪V)(∂(chainIncl_A zA)) + chainIncl(U∪V)(∂(chainIncl_B zB)) = cap g_rep ∂fund`.
   have hbd := cover_partition_cap_boundary_mod (U ∪ V) (U ∪ V) _
     (SingularRelativeDuality.relCocycle_coboundary_zero _ g_rep) _ _ _ _ hcp_abs
-  -- ▶ CLEANER-WITNESS REFLECTION (engines committed: connecting_square_close NC + cap_fundCycleW_mem +
-  --   chainBoundary_cap_cocycle_arg + chainBoundary_mem_subspaceChains). Goal `chain_L + pd ∈ boundaries(sub(U∩V))`.
-  --   ⚠ GRADING NOTE (2026-06-23): the witness `cap g_rep fund_∩` makes g_rep (deg N+1) and σR (deg N+2) cap the
-  --   SAME fund_∩ at ADJACENT degrees — a succ_add defeq clash (k+(n+1)+1 vs k+1+(n+1)) blocks the σC-exposed
-  --   wrapper. The original cocycle route dodged it via SEPARATE fundamentals (fund_{U∪V} for g_rep [hbd], fund_∩
-  --   for σR [pd]). NEXT BRICK: wire connecting_square_close with c=fund_∩ pinned via `castChain` on the witness
-  --   grading (so cap g_rep fund_∩ reads at N+1 cleanly), OR realize via the goal's pd-typed fund_∩ + a cast
-  --   bridging the two cap-views. Residual after wiring = `chainIncl(U∩V) chain_L + cap σR_rep fund_∩ =
-  --   ∂(cap g_rep fund_∩)` (V-part: chainIncl_seam_boundaryExtract+hbd; U-part: σR connecting via hσR).
+  -- ▶ CLEANER-WITNESS REFLECTION (connecting_square_close NC). Witness = `cap g_rep Fg`, Fg = the g_rep-typed
+  --   infCompact fundamental (`castChain z₀` to the N+1-cap grading (N+1)+(p+1)+1 — dodges the succ_add clash;
+  --   the goal's pd-typed fund_∩ is at the σR grading (N+2)+(p+1)).
+  --   ✅ GRADING BRIDGE WORKS: `have hd := cap_fundCycleW_mem (hU.inter hV) (castChain (show N+p+3 = N+1+(p+1)+1)
+  --      z₀) (chainBoundary_castChain_eq_zero (show ..)(show ..) z₀ hz₀) (infCompact U V (legSplitU ..)(legSplitV ..))
+  --      (↑↑g_rep : SingularCochain X (N+1))` ELABORATES CLEAN (the witness support, g_rep-typed).
+  --   ⚠ WHNF WALL on the APPLICATION (`apply/refine connecting_square_close .. hd ..` = 200k whnf @581) — unifying
+  --      the concrete Fg into connecting_square_close re-walls (the `have hd` alone is fine; the lemma application
+  --      is not). NEXT: whnf-dodge the application itself — either (a) connecting_square_close stated so c stays
+  --      opaque through the conclusion/hident unification, or (b) a legW-headed handle on cap g_rep fund_∩ (cf.
+  --      cover_partition_of_legW), or (c) the goal's chain_L (mapChain⟨seam⟩) unification is the culprit — probe by
+  --      generalizing chain_L/pd first. Residual after wiring = chainIncl(U∩V) chain_L + cap σR_rep fund_∩ =
+  --      ∂(cap g_rep Fg) (V: chainIncl_seam_boundaryExtract+hbd; U: σR connecting via hσR; Fg↔fund_∩ cast bridge).
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
