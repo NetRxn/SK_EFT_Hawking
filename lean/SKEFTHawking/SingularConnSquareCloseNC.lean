@@ -930,6 +930,17 @@ noncomputable def gRep_ker_legSplit_cast {N : ℕ} {U V : Set ↑X} (hU : IsOpen
         ∩ (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ from by
     rw [SingularCSCMayerVietorisConnecting.legSplit_cover U V hU hV K, Set.compl_union]) ▸ g_rep
 
+/-- **A cycle is a boundary iff its class pairs to 0 against every cohomology class** (the homology-lift
+packaging for the pairing close — universal coefficients over ℤ/2, `homology_eq_zero_of_kroneckerH`). Applied
+to the connecting-square residual, the goal `x ∈ boundaries` infers the cycle `z = ⟨x, hcyc⟩` and reduces to the
+∀-cocycle pairing obligation (computed downstream via `kronecker_cap_eq_kronecker_rcap` + Geom:73). Term-agnostic
+(free carrier `z`), so the application never writes the verbose residual term. ℤ/2. -/
+theorem mem_boundaries_of_kroneckerH_zero {Y : TopCat} {n : ℕ} (z : cycles Y n)
+    (h : ∀ ω : Cohomology Y n, kroneckerH n ω (Homology.mk Y n z) = 0) :
+    (z : SingularChain Y n) ∈ boundaries Y n := by
+  have hz := SKEFTHawking.PoincareDualityConstruct.homology_eq_zero_of_kroneckerH n (Homology.mk Y n z) h
+  exact Submodule.mem_comap.mp ((Submodule.Quotient.mk_eq_zero _).mp hz)
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
