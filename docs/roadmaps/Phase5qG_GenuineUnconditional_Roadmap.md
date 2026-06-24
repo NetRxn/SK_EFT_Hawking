@@ -284,10 +284,16 @@ Each gate: target · consumes · DONE criteria · status. **G1 is the unlock; G2
   - **✅ Brick 3 (turn 12, GREEN — verified `goals:[] diagnostics:[]`):** Goal A (the KEY chain is a cycle):
     `add_mem` of `mapChain_mem_cycles ×2 ∘ boundaryExtract_mem_cycles` (seam leg) and `pullbackDualityₗ_mem_cycles`
     with `hzS = fundCycleW_boundary` (σR leg). NC:938–947.
-  - **▶ Brick 4 (the only remaining sorry, NC:949) — the pairing discharge:** ∀ cocycle `ω : ker(coboundaryₗ(sub(U∩V))(p+1))`,
-    `kronecker ω.1 (seam²(boundaryExtract zB) + pullbackDualityₗ σR_rep fund) = 0` — σR leg via cup-cap adjunction
-    `kronecker_cap_eq_kronecker_rcap` + Geom:73 + hσR (slack dies on the cocycle), seam leg via ∂zB pairing; cancel.
-    Observe the banned-route tell.
+  - **◐ Brick 4 (the pairing discharge) — DECOMPOSED (turn 13):**
+    - **✅ ℤ/2 wrapper PROVEN GREEN:** `rw [kronecker_add_right, add_eq_zero_iff_eq_neg, CharTwo.neg_eq]` splits +
+      ℤ/2-reduces Goal B to the **LEG MATCH** (NC:949–956). (Note `CharTwo.add_eq_zero_iff_eq` does NOT exist.)
+    - **▶ Leg-match (the ONLY remaining L2 sorry, NC:956) — the genuine open core (= hcross at the pairing level):**
+      `kronecker ω.1 (seam²(boundaryExtract zB)) = kronecker ω.1 (pullbackDualityₗ(infCompactᶜ)(U∩V)(fund) σR_rep)`.
+      σR leg: `chainIncl_pullbackDualityₗ` + cup-cap adjunction `kronecker_cap_eq_kronecker_rcap` → relKroneckerH
+      connecting form → `rhs_pairing_reduce` (RHSPairing:42) / Geom:73 + hσR (σR = connecting of g_rep). seam leg:
+      `boundaryExtract`/seam pairing → cover-partition V-part. The bridge from the intrinsic `sub(U∩V)` kronecker
+      pairing to the relKroneckerH connecting form is the crux to build. (This is the sanctioned-route content the
+      project never finished — of_hcup did it via the BANNED cup route.) Observe the banned-route tell.
   - Then re-home the χ + engines into an imported module and wire the cross-realization descent →
     `PoincareDual4Mid`/`Lo` become theorems. (Turns 1–10 = re-seed-correction + the architecture audit/resolution;
     turn 11 = first Lean brick.)

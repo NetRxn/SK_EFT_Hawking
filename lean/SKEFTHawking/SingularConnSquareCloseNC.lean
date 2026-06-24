@@ -946,6 +946,13 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       exact SingularOpenDualityCycle.fundCycleW_boundary _ _ _ _
   · -- (B) pairing: ∀ cocycle ω, kronecker ω.1 (seam²(boundaryExtract zB) + pullbackDualityₗ … σR_rep) = 0.
     intro ω
+    -- split (kronecker bilinear) + ℤ/2 reduce (`a+b=0 ↔ a=b`) to the connecting-square LEG MATCH:
+    -- the seam leg (ω paired against the V-part `seam²(boundaryExtract zB)` of ∂z₀) equals the σR leg
+    -- (ω paired against the cap of σR_rep = the connecting of g_rep) — this IS hcross at the pairing level.
+    rw [kronecker_add_right, add_eq_zero_iff_eq_neg, CharTwo.neg_eq]
+    -- ⊢ kronecker ω.1 (seam²(boundaryExtract zB)) = kronecker ω.1 (pullbackDualityₗ(infCompactᶜ)(U∩V)(fund) σR_rep)
+    -- σR leg: chainIncl_pullbackDualityₗ → cup-cap adjunction (kronecker_cap_eq_kronecker_rcap) → Geom:73 + hσR
+    --   (the connecting pairing, slack dies on the cover-fine subdivided cocycle); seam leg: boundaryExtract pairing.
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
