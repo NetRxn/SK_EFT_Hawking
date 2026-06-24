@@ -882,6 +882,22 @@ theorem connecting_assembly_zmod2 {m : ℕ} (chainL capσR capgDfund U_A capgDrh
   abel_nf
   simp only [two_smul, ZModModule.add_self, add_zero]
 
+/-- **Cap of a relative coboundary against a fundamental is a boundary** (the Fact-A mod-boundary transport).
+For `ψ ∈ relCochains S` and `fund` with `∂fund ∈ subspaceChains S`: `cap (δψ) fund = ∂(cap ψ fund)` — the
+`cap ψ ∂fund` Leibniz term vanishes (`ψ` vanishes on `S`-chains, `cap_relCochains_subspaceChains_eq_zero`).
+This is the mod-boundary cap transport for a coboundary-difference: when two cochains `a, b` are cohomologous
+over `S` (`a − b = δψ`, `ψ ∈ relCochains S`) and `∂fund ∈ subspaceChains S`, then
+`cap a fund = cap b fund + ∂(cap ψ fund)` — the Fact-A wiring of `σR_rep ↔ δφ` WITHOUT any cochain-`mk`
+class equality (the banned `relCohomMvConnecting_eq_mk_coboundary_cochainSplit`). ℤ/2. -/
+theorem cap_coboundary_relCochains_fund_eq_boundary {S : Set ↑X} {k m : ℕ} (ψ : SingularCochain X k)
+    (hψ : ψ ∈ relCochains S k) (fund : SingularChain X (k + m + 1))
+    (hbd : chainBoundary X (k + m) fund ∈ subspaceChains S (k + m))
+    (h : k + m + 1 = k + 1 + m) :
+    cap (coboundary X k ψ) (h ▸ fund) = chainBoundary X m (cap ψ fund) := by
+  have hleib := cap_leibniz ψ fund h
+  rw [cap_relCochains_subspaceChains_eq_zero ψ hψ _ hbd, add_zero] at hleib
+  exact hleib.symm
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
