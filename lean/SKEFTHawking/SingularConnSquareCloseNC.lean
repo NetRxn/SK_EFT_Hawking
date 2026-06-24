@@ -612,6 +612,26 @@ theorem connecting_square_close_cocycle_fund (K' : Set ↑X) {k n : ℕ} (a : Si
   connecting_square_close_cocycle K' a ha (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc)
     (cap_fundCycleW_mem hW z₀ hz₀ Kc a) chainL pd hident
 
+/-- **Cap analog of `pair_fund_eq_pair_z0`** (the shared-z₀ reduction). For a COCYCLE `c` (`hc`) that
+vanishes on `C(A)` (`hcv` — e.g. `c ∈ relCochains A`, via `cap_relCochains_chainIncl_eq_zero`), capping a
+`fund` that is rel-`A`-homologous to `z₀` (`fund + z₀ = ∂η + a`, `a ∈ subspaceChains A` — from
+`fundCycleW_relHomologous`) equals capping `z₀`, up to a boundary: `cap c fund = cap c z₀ + ∂(cap c η)`.
+Because `cap c ∂η = ∂(cap c η)` (cocycle, `chainBoundary_cap_cocycle_arg`) and `cap c a = 0` (vanishing).
+Reduces both `cap σR_rep fund_∩` and `cap g_rep fund_{U∪V}` to caps against the single shared `z₀`. ℤ/2. -/
+theorem cap_fund_eq_cap_z0 {A : Set ↑X} {k m : ℕ} (c : SingularCochain X k)
+    (hc : coboundary X k c = 0) (hcv : ∀ d ∈ subspaceChains A (k + m), cap c d = 0)
+    (fund z₀ : SingularChain X (k + m)) (η : SingularChain X (k + m + 1))
+    (a : SingularChain X (k + m)) (ha : a ∈ subspaceChains A (k + m))
+    (heq : fund + z₀ = chainBoundary X (k + m) η + a) :
+    cap c fund = cap c z₀ + chainBoundary X m (cap c η) := by
+  have hca : cap c a = 0 := hcv a ha
+  have hb : cap c (chainBoundary X (k + m) η) = chainBoundary X m (cap c η) :=
+    (chainBoundary_cap_cocycle_arg c hc η (by omega)).symm
+  have hsum : cap c (fund + z₀) = chainBoundary X m (cap c η) := by
+    rw [heq, ← capₗ_apply, map_add, capₗ_apply, capₗ_apply, hb, hca, add_zero]
+  rw [← capₗ_apply, map_add, capₗ_apply, capₗ_apply] at hsum
+  exact eq_of_sub_eq_zero (by rw [ZModModule.sub_eq_add, ← add_assoc, hsum]; exact ZModModule.add_self _)
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
