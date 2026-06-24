@@ -1069,6 +1069,9 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
       (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
       hJL _ _ _ _ _ hbdyUV hbdy _ _ _ hσR]
+    -- seam-leg: peel both seam homeos onto the cochain (kronecker_mapChain forward) → kronecker (seam²-transported
+    --   fc) (boundaryExtract zB) — the seamTransport-vs-boundaryExtract form, toward the same relMvDelta as the pd-leg.
+    rw [SingularKroneckerFunctoriality.kronecker_mapChain, SingularKroneckerFunctoriality.kronecker_mapChain]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
