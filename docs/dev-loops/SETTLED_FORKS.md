@@ -78,3 +78,13 @@ retire) — no entry is immutable. Every entry carries datetime metadata.
 - memory: [[project-L2-sigmaR-connecting-resolved-2026-06-23]]
 - created_ts: 2026-06-23T00:00:00Z
 - reviewed_ts: 2026-06-24T00:00:00Z
+
+## kronecker-altitude-respine
+- verdict: banned
+- tier: human-reviewed
+- authored_by: coach
+- killed_by: reverts `a79f1912` (of_hcup_linked re-seed → cap-altitude `8cb87e5c`) + `3ea6b739` (kronecker_pd_fold_fund / `_of_crossRealization` re-seed, ~15 commits `ae6a1210`→`ac415397` → cap-altitude `ccdd0aef`); user + coach (2nd dispatch) goldfish-reseed ruling
+- reason: re-spining the L2 close to the KRONECKER ALTITUDE (the `_of_crossRealization` / `kronecker_pd_fold_fund` / `of_hcup_linked`-as-spine family) is THE dominant 5q.F spiral — started 3×, hard-reverted 2×, each time framed as a "whnf-dodge breakthrough" (that framing is the re-seed tell). The L2 close SPINE stays at CAP altitude (cap-Leibniz); the σR side joins via the pairing adjunction `relKroneckerH_relCohomMvConnecting` as a SUB-step (Fact A), never as the spine. The ban is on the ALTITUDE, not on any single lemma name (kronecker sub-lemmas inside the Fact-A step are fine). The tactical cap-altitude whnf is a SYMPTOM, dodged AT cap altitude (def-head-match), never by re-spining. Verify present state by ROUTE/ALTITUDE, not "commit present."
+- memory: [[project-L2-kronecker-reseed-reverted-2026-06-24]]
+- created_ts: 2026-06-24T00:00:00Z
+- reviewed_ts: 2026-06-24T00:00:00Z
