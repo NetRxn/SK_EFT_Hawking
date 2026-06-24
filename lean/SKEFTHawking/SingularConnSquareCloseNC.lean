@@ -941,6 +941,37 @@ theorem mem_boundaries_of_kroneckerH_zero {Y : TopCat} {n : ℕ} (z : cycles Y n
   have hz := SKEFTHawking.PoincareDualityConstruct.homology_eq_zero_of_kroneckerH n (Homology.mk Y n z) h
   exact Submodule.mem_comap.mp ((Submodule.Quotient.mk_eq_zero _).mp hz)
 
+/-- **The σR/pd leg of the connecting-square pairing** (the kronecker-level wrapper of the RHSN2 engine, =
+SCMatch's `hRHS`). For `σR` a representative of the set-congr'd MV-connecting class (`hσR`), the kronecker
+pairing of a cocycle `fc` against `pullbackDualityₗ S' K z σR` equals `relKroneckerH σ (relMvDelta [rcap fc z])`.
+Proof: lift to `kroneckerH` (`kroneckerH_mk_mk`) → the cycle class is `relativeDualityK(mk σR)` (`relativeDualityK_mk`,
+rfl) → `hσR` exposes the set-congr'd connecting → the RHSN2 engine fires. ℤ/2, kernel-pure. -/
+theorem kronecker_pullbackDualityₗ_connecting {N p : ℕ} {U' V' K S' : Set ↑X}
+    (hU' : IsOpen U') (hV' : IsOpen V') (hSeq : U' ∪ V' = S')
+    (z : SingularChain X (N + 2 + p + 1)) (hzK : z ∈ subspaceChains K (N + 2 + p + 1))
+    (hzS : chainBoundary X (N + 2 + p) z ∈ subspaceChains (U' ∪ V') (N + 2 + p))
+    (hzS' : chainBoundary X (N + 2 + p) z ∈ subspaceChains S' (N + 2 + p))
+    (fc : LinearMap.ker (coboundaryₗ (sub K) (p + 1)))
+    (σR : LinearMap.ker (relCoboundaryₗ S' (N + 2)))
+    (σ : RelativeCohomology (U' ∩ V') (N + 1))
+    (hσR : RelativeCohomology.mk S' (N + 2) σR
+      = SingularCompactlySupportedTop.relCohomSetCongr hSeq (N + 2)
+          (SingularRelativeCohomologyMVConnecting.relCohomMvConnecting U' V' hU' hV' N σ)) :
+    kronecker fc.1 (SingularLocalDualityK.pullbackDualityₗ S' K z hzK σR)
+      = SingularRelativePairing.relKroneckerH (U' ∩ V') σ
+          (SingularRelativeMV.relMvDelta U' V' hU' hV' (N + 1)
+            (RelativeHomology.mk (U' ∪ V') (N + 2)
+              ⟨RelativeChain.mk (U' ∪ V') (N + 2)
+                  (chainIncl K (N + 2) (SingularCapChainIncl.rcap fc.1
+                    ((SingularSubspaceChainsEquiv.subspaceChainsEquiv K (N + 2 + p + 1)).symm ⟨z, hzK⟩))),
+                SingularCapSubKDuality.chainIncl_rcap_mem_relCycles z hzK hzS fc⟩)) := by
+  have key := SingularConnSquareRHSN2.kroneckerH_relativeDualityK_setCongr_relCohomMvConnecting_N2
+    hU' hV' hSeq z hzK hzS hzS' fc σ
+  rw [← hσR, SingularLocalDualityK.relativeDualityK_mk S' K (N + 2) p z hzK hzS' σR] at key
+  simp only [SingularHomologyMod2.Homology.mk] at key
+  rw [SingularHomologyMod2.kroneckerH_mk_mk] at key
+  exact key
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
