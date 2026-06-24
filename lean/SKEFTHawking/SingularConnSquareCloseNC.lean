@@ -916,6 +916,20 @@ theorem cap_cocycle_relCochains_boundary_zero {S : Set ↑X} {k m : ℕ} (a : Si
     rw [← capₗ_apply, map_zero, LinearMap.zero_apply]
   exact hleib.trans hz
 
+/-- **g_rep set-cast to the legSplit cover.** The cap-Leibniz engine `cap_coboundary_cochainSplit_subdiv_fund`
+needs `ω ∈ ker(relCoboundaryₗ(legSplitUᶜ ∩ legSplitVᶜ))`, but `g_rep` lives over `(↑↑K)ᶜ`. Since
+`K = legSplitU ∪ legSplitV` (`legSplit_cover`), de Morgan gives `(↑↑K)ᶜ = legSplitUᶜ ∩ legSplitVᶜ`; transport the
+ker membership along it (the underlying cochain `g_rep.1.1` is unchanged). ℤ/2, kernel-pure. -/
+noncomputable def gRep_ker_legSplit_cast {N : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
+    (K : SingularCompactsInOpen.CompactsIn (U ∪ V))
+    (g_rep : ↥(relCoboundaryₗ ((↑K.1 : Set ↑X)ᶜ) (N + 1)).ker) :
+    ↥(relCoboundaryₗ ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ
+        ∩ (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ) (N + 1)).ker :=
+  (show ((↑K.1 : Set ↑X)ᶜ)
+      = (↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ
+        ∩ (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ from by
+    rw [SingularCSCMayerVietorisConnecting.legSplit_cover U V hU hV K, Set.compl_union]) ▸ g_rep
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
