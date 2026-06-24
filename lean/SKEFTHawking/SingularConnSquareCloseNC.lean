@@ -1097,7 +1097,11 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     intro ω
     obtain ⟨fc, rfl⟩ := Submodule.Quotient.mk_surjective _ ω
     simp only [SingularHomologyMod2.Homology.mk]
-    rw [SingularHomologyMod2.kroneckerH_mk_mk, SingularHomologyMod2.kronecker_add_right]
+    rw [SingularHomologyMod2.kroneckerH_mk_mk, SingularHomologyMod2.kronecker_add_right,
+      SingularKroneckerFunctoriality.kronecker_mapChain, SingularKroneckerFunctoriality.kronecker_mapChain]
+    -- seam leg now `kronecker (seamTransport fc)(boundaryExtract zB)`; pd leg `kronecker fc pd`. Match via
+    --   the pd-leg helper (→ relMvDelta of the rcap V-part) + the cross-realization (boundaryExtract zB = that
+    --   V-part, via hbd/cover-partition); ℤ/2.
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
