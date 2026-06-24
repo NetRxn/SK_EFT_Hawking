@@ -1122,7 +1122,14 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     obtain ⟨fc, rfl⟩ := Submodule.Quotient.mk_surjective _ ω
     simp only [SingularHomologyMod2.Homology.mk]
     rw [SingularHomologyMod2.kroneckerH_mk_mk, kronecker_add_right]
-    -- pd-leg via kronecker_pullbackDualityₗ_connecting_fund (whnf-safe; mirrors SCMatch of_match hRHS) → relKroneckerH.
+    -- ▶ fold the pd-leg to the cap form in ONE step (combined engine kronecker_pd_fold_fund — shallow LHS → no whnf;
+    --   INDEX line 45 dodge). First expose σ as `mk ωfc` + build the boundary-support haves.
+    obtain ⟨ωfc, hωfc⟩ := Submodule.Quotient.mk_surjective _
+      ((SingularRelativeCohomologyRestrict.relCohomRestrict (Set.inter_subset_inter subset_rfl subset_rfl) (N + 1))
+        ((SingularCompactlySupportedTop.relCohomSetCongr
+          (by rw [SingularCSCMayerVietorisConnecting.legSplit_cover U V hU hV K, Set.compl_union]) (N + 1))
+          (Submodule.Quotient.mk g_rep)))
+    rw [← hωfc] at hσR
     have hJL : ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ
           ∪ (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
         = ((↑(SingularCSCMayerVietorisConnecting.infCompact U V
@@ -1136,27 +1143,14 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
         (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
         (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
     have hbdyUV := hJL.symm ▸ hbdy
-    rw [kronecker_pullbackDualityₗ_connecting_fund
+    obtain ⟨jSd, hpd⟩ := kronecker_pd_fold_fund _ _ _ _
       (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
       (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
-      hJL _ _ _ _ _ hbdyUV hbdy _ _ _ hσR]
-    -- seam-leg: peel both seam homeos onto the cochain (kronecker_mapChain forward) → kronecker (seam²-transported
-    --   fc) (boundaryExtract zB) — the seamTransport-vs-boundaryExtract form, toward the same relMvDelta as the pd-leg.
+      hJL _ _ _ _ _ hbdyUV hbdy fc σR_rep ωfc hσR
+    rw [hpd]
+    -- seam-leg: peel both seam homeos onto the cochain (kronecker_mapChain), then ℤ/2 reframe → the cap-Leibniz match.
     rw [SingularKroneckerFunctoriality.kronecker_mapChain, SingularKroneckerFunctoriality.kronecker_mapChain]
-    -- ℤ/2: `A + B = 0 ⟺ A = B`. The match target is `seam-leg = pd-leg` (both → the same relKroneckerH σ
-    --   (relMvDelta [rcap fc fund]) by cap-product MV-naturality; then X = X ⟹ X + X = 0).
     rw [← ZModModule.sub_eq_add, sub_eq_zero]
-    -- pd-side: move the MV connecting off the relMvDelta onto the cohomology argument (relKroneckerH_relMvDelta_eq,
-    --   clean — no cover-partition), giving `relKroneckerH (legSplit∪=infCompactᶜ) (relCohomMvConnecting σ) [rcap fc fund]`
-    --   — where relCohomMvConnecting σ ≈ σR_rep via hσR.
-    rw [SKEFTHawking.SingularConnSquareClose.relKroneckerH_relMvDelta_eq]
-    -- expose σ as `mk ωfc` so `relCohomMvConnecting (mk ωfc)` matches the cover-partition engine (Geom:73).
-    obtain ⟨ωfc, hωfc⟩ := Submodule.Quotient.mk_surjective _
-      ((SingularRelativeCohomologyRestrict.relCohomRestrict (Set.inter_subset_inter subset_rfl subset_rfl) (N + 1))
-        ((SingularCompactlySupportedTop.relCohomSetCongr
-          (by rw [SingularCSCMayerVietorisConnecting.legSplit_cover U V hU hV K, Set.compl_union]) (N + 1))
-          (Submodule.Quotient.mk g_rep)))
-    rw [← hωfc]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
