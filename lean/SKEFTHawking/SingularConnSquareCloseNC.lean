@@ -218,6 +218,21 @@ theorem mapChain_homeo_symm_self {Y Z : TopCat} (φ : ↥Y ≃ₜ ↥Z) {n : ℕ
       by ext x; exact φ.symm_apply_apply x,
     SingularFunctoriality.mapChain_id]
 
+/-- **Direct-equality seam transport (abstract, whnf-safe)** — the equality analog of `factB_transport`.
+Reduces the INVERSE-seam chain equality `bz = mapChain seam⁻¹ (mapChain subSeam⁻¹ pd)` (the direct-hmatch
+residual after the kronecker peels) to the FORWARD-seam cross-realization `mapChain subSeam (mapChain seam bz)
+= pd` — the form on which `chainIncl_seam_boundaryExtract` (NC:515) + `chainIncl_pullbackDualityₗ` + the
+cap-Leibniz engine `cap_coboundary_cochainSplit_subdiv_fund` all apply directly (no inverse-seam friction).
+Proof = substitute `hfwd` then collapse the two homeo round-trips via `mapChain_homeo_symm_self`. The NC call
+site supplies `bz`/`pd` by unification (metavar assignment — no whnf on the concrete fundamental). -/
+theorem chainEq_via_forward_seam {W Z V' : TopCat} (φseam : ↥W ≃ₜ ↥Z) (φsub : ↥Z ≃ₜ ↥V') {n : ℕ}
+    (bz : SingularChain W n) (pd : SingularChain V' n)
+    (hfwd : SingularFunctoriality.mapChain ⟨φsub, φsub.continuous⟩ n
+        (SingularFunctoriality.mapChain ⟨φseam, φseam.continuous⟩ n bz) = pd) :
+    bz = SingularFunctoriality.mapChain ⟨φseam.symm, φseam.symm.continuous⟩ n
+        (SingularFunctoriality.mapChain ⟨φsub.symm, φsub.symm.continuous⟩ n pd) := by
+  rw [← hfwd, mapChain_homeo_symm_self, mapChain_homeo_symm_self]
+
 /-- **Fact-B seam transport (abstract, whnf-safe).** Over ABSTRACT `bz`/`pd` (the concrete `fundCycleW` never
 enters, so no whnf wall), the reindexing seam isos move the residual: Fact B in `W` follows from `key` in `V'`
 — pull `bz` down through both homeos, `pd` stays direct. The NC call site supplies `bz`/`pd` by unification
@@ -1037,6 +1052,9 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   simp only [← SingularKroneckerFunctoriality.kronecker_mapChain]
   erw [← SingularKroneckerFunctoriality.kronecker_mapChain]
   refine congrArg (kronecker a'rep.1) ?_
+  -- Reduce the inverse-seam chain equality to the FORWARD-seam cross-realization (where the committed engines
+  --   chainIncl_seam_boundaryExtract + chainIncl_pullbackDualityₗ + cap_coboundary_cochainSplit_subdiv_fund apply).
+  apply chainEq_via_forward_seam
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
