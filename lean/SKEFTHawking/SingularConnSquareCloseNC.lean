@@ -311,6 +311,35 @@ theorem chainBoundary_chainIncl_subspaceChainsEquiv_symm_mem {S K : Set ↑X} {n
   rw [SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm]
   exact hbd
 
+omit [T2Space ↑X] in
+/-- **rcap-Leibniz in the cast-free `subspaceChainsEquiv` form** (the cap-Leibniz match prerequisite). For a
+`sub K`-cocycle `fc`, `∂(rcap fc (eqv.symm z)) = rcap fc (∂(eqv.symm z))` — the right-cap chain-map property of
+`rcap_cocycle_chainMap`, restated for the `subspaceChainsEquiv K _`-headed carrier the connecting-square engines
+produce (no syntactic `▸` cast on the chain), so it `rw`s in-proof without the cast fight. Proof: `generalize` the
+structured carrier to a free `c` (no whnf surface), then `convert` against `rcap_cocycle_chainMap`; the residual
+degree-association casts (`n+2+p+1` vs `n+1+(p+1)+1`) are closed by cast-cancellation. -/
+theorem chainBoundary_rcap_subspaceChainsEquiv_symm {K : Set ↑X} {n p : ℕ}
+    (fc : ↥(coboundaryₗ (sub K) (p + 1)).ker)
+    (z : ↥(subspaceChains K (n + 2 + p + 1))) :
+    chainBoundary (sub K) (n + 1)
+        (SingularCapChainIncl.rcap fc.1
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv K (n + 2 + p + 1)).symm z))
+      = SingularCapChainIncl.rcap fc.1
+          ((by omega : n + 2 + p = n + 1 + (p + 1)) ▸
+            chainBoundary (sub K) (n + 2 + p)
+              ((SingularSubspaceChainsEquiv.subspaceChainsEquiv K (n + 2 + p + 1)).symm z)) := by
+  generalize (SingularSubspaceChainsEquiv.subspaceChainsEquiv K (n + 2 + p + 1)).symm z = c
+  have hcast : ∀ {d₁ d₂ : ℕ} (h : d₁ = d₂) (h' : d₁ + 1 = d₂ + 1) (cc : SingularChain (sub K) (d₁ + 1)),
+      (h ▸ chainBoundary (sub K) d₁ cc : SingularChain (sub K) d₂)
+        = chainBoundary (sub K) d₂ (h' ▸ cc) := by
+    rintro d₁ d₂ rfl h' cc
+    rfl
+  convert SingularRightCapBoundary.rcap_cocycle_chainMap (X := sub K) (k := n + 1) (l := p + 1)
+    fc.1 (LinearMap.mem_ker.mp fc.2)
+    ((by omega : n + 2 + p + 1 = n + 1 + (p + 1) + 1) ▸ c) using 2
+  · simp only [eqRec_eq_cast, cast_cast, cast_eq]
+  · exact hcast (by omega) (by omega) c
+
 /-- **infCompactᶜ = legSplitUᶜ ∪ legSplitVᶜ** (the cover-support set identity). `fundCycleW_boundary` lands
 `∂fund` in `subspaceChains(Kᶜ)` with `K = infCompact = legSplitU ∩ legSplitV` (`infCompact_coe`); de Morgan
 (`Set.compl_inter`) rewrites that to the cover `legSplitUᶜ ∪ legSplitVᶜ` the seam-localization engine consumes. -/
@@ -1156,6 +1185,9 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     -- push ∂ through Sdʲ (∂∘Sdʲ = Sdʲ∘∂) → `kronecker (cochainSplit ωfc) (Sdʲ (∂(chainIncl(rcap fc fund))))`.
     rw [SingularSubdivision.singularSd_iterate_chainBoundary,
       ← SingularRelativeHomologyMod2.chainIncl_chainBoundary]
+    -- Push ∂ through the rcap (fc cocycle): `∂(rcap fc fund) = rcap fc (∂fund)`, exposing the
+    -- cover-supported `∂fund` (the seam V-part, `hbdy`) that links the pd-leg to the seam-leg.
+    rw [chainBoundary_rcap_subspaceChainsEquiv_symm]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
