@@ -562,7 +562,7 @@ whnf wall, the proven `two_facts_via_ambient` technique). Given the cleaner witn
 the realize round-trip. Applied all-underscore so the verbose `fund_∩`/seam terms infer structurally;
 isolates `hident` (the genuine cap-product MV-naturality content) as the sole residual. -/
 theorem connecting_square_close (K : Set ↑X) {k n : ℕ} (a : SingularCochain X k)
-    (c : SingularChain X (k + (n + 1) + 1)) (hd : cap a c ∈ subspaceChains K (n + 2))
+    (c : SingularChain X (k + (n + 1) + 1)) (hd : cap a c ∈ subspaceChains K (n + 1 + 1))
     (chainL pd : SingularChain (sub K) (n + 1))
     (hident : chainIncl K (n + 1) chainL + chainIncl K (n + 1) pd
         = chainBoundary X (n + 1) (cap a c)) :
@@ -577,6 +577,23 @@ theorem connecting_square_close (K : Set ↑X) {k n : ℕ} (a : SingularCochain 
     exact hident
   rw [heq]
   exact realize_chainBoundary_cap_mem_boundaries K a c hd hsum
+
+/-- **Connecting-square close, cocycle / cap-of-boundary form.** For a COCYCLE `a` (`ha : coboundary a = 0`),
+states the residual identity with `cap a (∂c)` (cap-of-boundary) instead of `∂(cap a c)` (boundary-of-cap):
+on application with a concrete `fundCycleW` witness `c`, `∂(cap a c)` whnf-walls (`chainBoundary` of a cap on
+a concrete fundCycleW = 200k) but `cap a (∂c)` does NOT (same form as `cover_partition_cap_boundary_mod`'s
+RHS, which builds). Internally bridges via `chainBoundary_cap_cocycle_arg` (`∂(cap a c) = cap a ∂c`, cocycle a),
+proven over the ABSTRACT `c` so no wall. -/
+theorem connecting_square_close_cocycle (K : Set ↑X) {k n : ℕ} (a : SingularCochain X k)
+    (ha : coboundary X k a = 0)
+    (c : SingularChain X (k + (n + 1) + 1)) (hd : cap a c ∈ subspaceChains K (n + 1 + 1))
+    (chainL pd : SingularChain (sub K) (n + 1))
+    (hident : chainIncl K (n + 1) chainL + chainIncl K (n + 1) pd
+        = cap a (chainBoundary X (k + (n + 1)) c)) :
+    chainL + pd ∈ boundaries (sub K) (n + 1) := by
+  refine connecting_square_close K a c hd chainL pd ?_
+  rw [chainBoundary_cap_cocycle_arg a ha c (by omega)]
+  exact hident
 
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
@@ -631,17 +648,22 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     (SingularRelativeDuality.relCocycle_coboundary_zero _ g_rep) _ _ _ _ hcp_abs
   -- ▶ CLEANER-WITNESS REFLECTION (connecting_square_close NC). Witness = `cap g_rep Fg`, Fg = the g_rep-typed
   --   infCompact fundamental (`castChain z₀` to the N+1-cap grading (N+1)+(p+1)+1 — dodges the succ_add clash;
-  --   the goal's pd-typed fund_∩ is at the σR grading (N+2)+(p+1)).
-  --   ✅ GRADING BRIDGE WORKS: `have hd := cap_fundCycleW_mem (hU.inter hV) (castChain (show N+p+3 = N+1+(p+1)+1)
-  --      z₀) (chainBoundary_castChain_eq_zero (show ..)(show ..) z₀ hz₀) (infCompact U V (legSplitU ..)(legSplitV ..))
-  --      (↑↑g_rep : SingularCochain X (N+1))` ELABORATES CLEAN (the witness support, g_rep-typed).
-  --   ⚠ WHNF WALL on the APPLICATION (`apply/refine connecting_square_close .. hd ..` = 200k whnf @581) — unifying
-  --      the concrete Fg into connecting_square_close re-walls (the `have hd` alone is fine; the lemma application
-  --      is not). NEXT: whnf-dodge the application itself — either (a) connecting_square_close stated so c stays
-  --      opaque through the conclusion/hident unification, or (b) a legW-headed handle on cap g_rep fund_∩ (cf.
-  --      cover_partition_of_legW), or (c) the goal's chain_L (mapChain⟨seam⟩) unification is the culprit — probe by
-  --      generalizing chain_L/pd first. Residual after wiring = chainIncl(U∩V) chain_L + cap σR_rep fund_∩ =
-  --      ∂(cap g_rep Fg) (V: chainIncl_seam_boundaryExtract+hbd; U: σR connecting via hσR; Fg↔fund_∩ cast bridge).
+  --   the goal's pd-typed fund_∩ is at the σR grading (N+2)+(p+1)). hd's grading `(p+1)+1` now matches the lemma's
+  --   `(n+1)+1` syntactically (avoids the subspaceChains defeq-unfold that whnf-walled the concrete Fg).
+  -- ▶ CLEANER-WITNESS REFLECTION — engines committed: connecting_square_close (NC) + connecting_square_close_cocycle
+  --   (NC, cap-of-boundary form) + cap_fundCycleW_mem + chainBoundary_cap_cocycle_arg + chainBoundary_mem_subspaceChains.
+  --   ✅ The g_rep-typed witness support builds: `have hd := cap_fundCycleW_mem (hU.inter hV) (castChain (show
+  --      N+p+3 = N+1+(p+1)+1) z₀) (chainBoundary_castChain_eq_zero (show ..)(show ..) z₀ hz₀) (infCompact U V
+  --      (legSplitU)(legSplitV)) (↑↑g_rep : SingularCochain X (N+1))`. Cocycle proof = `show coboundary X (N+1)
+  --      (↑↑g_rep : ..) = 0 from relCocycle_coboundary_zero _ g_rep` (coboundaryₗ = coboundary by rfl).
+  --   ⚠ WHNF WALL (still open): `apply connecting_square_close[_cocycle] .. hd` 200k-walls @theorem — substituting
+  --      the CONCRETE Fg into c makes Lean whnf-reduce `cap g_rep Fg` (a concrete value; an abstract c metavar
+  --      stays opaque — the c-abstract probe builds). NOT dodged by: grading-form match, cap-of-boundary hident,
+  --      apply-vs-refine, conclusion-isolation. The concrete-fundCycleW cap wall (friction catalog) at the LEMMA
+  --      APPLICATION. NEXT (coach-flagged): a legW-headed handle over the U∩V side (cf. cover_partition_of_legW —
+  --      never construct the concrete fundamental in the application), OR decompose into ≤12-term have sub-lemmas
+  --      that keep c opaque. Residual identity after wiring = chainIncl(U∩V) chain_L + cap σR_rep fund_∩ =
+  --      cap g_rep ∂Fg (V: chainIncl_seam_boundaryExtract+hbd; U: σR connecting via hσR).
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
