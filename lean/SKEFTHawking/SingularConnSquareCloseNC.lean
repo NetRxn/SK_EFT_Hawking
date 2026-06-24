@@ -839,6 +839,37 @@ theorem fundCycleW_pair_relHomologous {k m : ℕ} {W₁ W₂ : Set ↑X} (hW₁ 
     simp only [two_smul, ZModModule.add_self, zero_add, add_zero]
   rw [hcalc]; exact hsum
 
+/-- **Chain-altitude cross-realization transport** (step 2 of the close, lock-#2-compliant — NO homology-class
+lift). For a cocycle `g` and chains `a, b` whose relative sum `mk_S(a+b)` is a relative boundary, there is an
+`S`-supported residual `ρ` with `cap g (∂a) = cap g (∂b) + cap g (∂ρ)`. Pure chains: extract `a+b = ∂D + ρ`
+(`ρ ∈ subspaceChains S`) from `relBoundaries = range(relBoundary)`, then `∂(a+b) = ∂ρ` (`∂² = 0`) and `cap g`
+linearity. The residual `cap g (∂ρ)` (with `ρ` over `S = infCompactᶜ`) is the term that couples the
+cross-realization into the χ/σR step — it is NOT a free boundary. Generic ⟹ whnf-free. -/
+theorem cap_chainBoundary_relBoundaries_transport {S : Set ↑X} {k n : ℕ} (g : SingularCochain X k)
+    (hg : coboundary X k g = 0) (a b : SingularChain X (k + n + 1))
+    (hrel : RelativeChain.mk S (k + n + 1) (a + b) ∈ relBoundaries S (k + n + 1)) :
+    ∃ ρ : SingularChain X (k + n + 1), ρ ∈ subspaceChains S (k + n + 1) ∧
+      cap g (chainBoundary X (k + n) a)
+        = cap g (chainBoundary X (k + n) b) + cap g (chainBoundary X (k + n) ρ) := by
+  obtain ⟨y, hy⟩ := hrel
+  obtain ⟨D, rfl⟩ := Submodule.Quotient.mk_surjective _ y
+  erw [relBoundary_mk] at hy
+  refine ⟨chainBoundary X (k + n + 1) D + (a + b), ?_, ?_⟩
+  · have hz0 : RelativeChain.mk S (k + n + 1) (chainBoundary X (k + n + 1) D + (a + b)) = 0 := by
+      have hsplit : RelativeChain.mk S (k + n + 1) (chainBoundary X (k + n + 1) D + (a + b))
+          = RelativeChain.mk S (k + n + 1) (chainBoundary X (k + n + 1) D)
+            + RelativeChain.mk S (k + n + 1) (a + b) := rfl
+      rw [hsplit, hy]
+      exact ZModModule.add_self _
+    exact (Submodule.Quotient.mk_eq_zero _).mp hz0
+  · have hdr : chainBoundary X (k + n) (chainBoundary X (k + n + 1) D + (a + b))
+        = chainBoundary X (k + n) a + chainBoundary X (k + n) b := by
+      rw [map_add, map_add, chainBoundary_chainBoundary_apply, zero_add]
+    rw [hdr, ← capₗ_apply g (chainBoundary X (k + n) a + chainBoundary X (k + n) b), map_add,
+      capₗ_apply, capₗ_apply]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
