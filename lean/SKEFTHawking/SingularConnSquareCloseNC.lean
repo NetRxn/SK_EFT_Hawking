@@ -794,6 +794,51 @@ theorem cap_fundCycleW_eq_cap_z0 {W : Set ↑X} {k n : ℕ} (hW : IsOpen W)
   rw [hS] at hmem
   exact ⟨η, cap_fund_eq_cap_z0 (A := S) (m := n + 1) c hc hcv _ _ η a hmem heq⟩
 
+/-- **Paired `fundCycleW` rel-homology** (the cross-realization bridge ingredient): for nested compacts
+`K₂ ⊆ K₁` in opens `W₁, W₂` sharing the same `z₀`, the two fundamental cycles `fundCycleW(K₁)`, `fundCycleW(K₂)`
+are rel-`K₂ᶜ` homologous — `fund₁ + fund₂ ∈ relBoundaries(K₂ᶜ)` — because each is rel-homologous to the SAME `z₀`
+(`fundCycleW_relHomologous`) and `relBoundaries_mono` (K₁ᶜ ⊆ K₂ᶜ) lifts the `K₁` relation to `K₂ᶜ`, where the
+shared `z₀` cancels (ℤ/2). Generic in `K₁, K₂, z₀` ⟹ whnf-free; feeds `relativeDualityK_cycle_compat_relB` to
+transport the descent's `fund_K` cover-partition to `fund_∩` (the cross-realization). -/
+theorem fundCycleW_pair_relHomologous {k m : ℕ} {W₁ W₂ : Set ↑X} (hW₁ : IsOpen W₁) (hW₂ : IsOpen W₂)
+    (z₀ : SingularChain X (k + m + 1)) (hz₀ : chainBoundary X (k + m) z₀ = 0)
+    (K₁ : SingularCompactsInOpen.CompactsIn W₁) (K₂ : SingularCompactsInOpen.CompactsIn W₂)
+    (hsub : (↑K₂.1 : Set ↑X) ⊆ (↑K₁.1 : Set ↑X)) :
+    RelativeChain.mk ((↑K₂.1 : Set ↑X)ᶜ) (k + m + 1)
+          (SingularOpenDualityCycle.fundCycleW hW₁ z₀ hz₀ K₁)
+        + RelativeChain.mk ((↑K₂.1 : Set ↑X)ᶜ) (k + m + 1)
+          (SingularOpenDualityCycle.fundCycleW hW₂ z₀ hz₀ K₂)
+      ∈ relBoundaries ((↑K₂.1 : Set ↑X)ᶜ) (k + m + 1) := by
+  have hcompl : (↑K₁.1 : Set ↑X)ᶜ ⊆ (↑K₂.1 : Set ↑X)ᶜ := Set.compl_subset_compl.mpr hsub
+  have h1 := SingularOpenDualityCycle.fundCycleW_relHomologous hW₁ z₀ hz₀ K₁
+  have h2 := SingularOpenDualityCycle.fundCycleW_relHomologous hW₂ z₀ hz₀ K₂
+  have hadd : ∀ (S : Set ↑X) (a b : SingularChain X (k + m + 1)),
+      RelativeChain.mk S (k + m + 1) (a + b)
+        = RelativeChain.mk S (k + m + 1) a + RelativeChain.mk S (k + m + 1) b := by
+    intro S a b; rfl
+  have hc1 : RelativeChain.mk ((↑K₁.1 : Set ↑X)ᶜ) (k + m + 1)
+      (z₀ + SingularOpenDualityCycle.fundCycleW hW₁ z₀ hz₀ K₁)
+      ∈ relBoundaries ((↑K₁.1 : Set ↑X)ᶜ) (k + m + 1) := by
+    rw [hadd]; exact h1
+  have h1' := SingularOpenDualityCycle.relBoundaries_mono hcompl _ hc1
+  have hc2 : RelativeChain.mk ((↑K₂.1 : Set ↑X)ᶜ) (k + m + 1)
+      (z₀ + SingularOpenDualityCycle.fundCycleW hW₂ z₀ hz₀ K₂)
+      ∈ relBoundaries ((↑K₂.1 : Set ↑X)ᶜ) (k + m + 1) := by
+    rw [hadd]; exact h2
+  have hsum := Submodule.add_mem _ h1' hc2
+  have hcalc : RelativeChain.mk ((↑K₂.1 : Set ↑X)ᶜ) (k + m + 1)
+          (SingularOpenDualityCycle.fundCycleW hW₁ z₀ hz₀ K₁)
+        + RelativeChain.mk ((↑K₂.1 : Set ↑X)ᶜ) (k + m + 1)
+          (SingularOpenDualityCycle.fundCycleW hW₂ z₀ hz₀ K₂)
+      = RelativeChain.mk ((↑K₂.1 : Set ↑X)ᶜ) (k + m + 1)
+            (z₀ + SingularOpenDualityCycle.fundCycleW hW₁ z₀ hz₀ K₁)
+        + RelativeChain.mk ((↑K₂.1 : Set ↑X)ᶜ) (k + m + 1)
+            (z₀ + SingularOpenDualityCycle.fundCycleW hW₂ z₀ hz₀ K₂) := by
+    rw [hadd, hadd]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, zero_add, add_zero]
+  rw [hcalc]; exact hsum
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
