@@ -1079,6 +1079,13 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     --   clean — no cover-partition), giving `relKroneckerH (legSplit∪=infCompactᶜ) (relCohomMvConnecting σ) [rcap fc fund]`
     --   — where relCohomMvConnecting σ ≈ σR_rep via hσR.
     rw [SKEFTHawking.SingularConnSquareClose.relKroneckerH_relMvDelta_eq]
+    -- expose σ as `mk ωfc` so `relCohomMvConnecting (mk ωfc)` matches the cover-partition engine (Geom:73).
+    obtain ⟨ωfc, hωfc⟩ := Submodule.Quotient.mk_surjective _
+      ((SingularRelativeCohomologyRestrict.relCohomRestrict (Set.inter_subset_inter subset_rfl subset_rfl) (N + 1))
+        ((SingularCompactlySupportedTop.relCohomSetCongr
+          (by rw [SingularCSCMayerVietorisConnecting.legSplit_cover U V hU hV K, Set.compl_union]) (N + 1))
+          (Submodule.Quotient.mk g_rep)))
+    rw [← hωfc]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
