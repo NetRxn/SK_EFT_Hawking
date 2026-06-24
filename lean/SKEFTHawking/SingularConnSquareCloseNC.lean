@@ -951,6 +951,18 @@ theorem relKroneckerH_relCohomMvConnecting_rep {U' V' : Set ↑X} (hU' : IsOpen 
             (RelativeHomology.mk (U' ∪ V') (N + 2) z)) := by
   rw [hgRconn, SingularRelativeCohomologyMVConnecting.relKroneckerH_relCohomMvConnecting]
 
+/-- **Kronecker → relKroneckerH lift** (for a relative cocycle against a relative cycle): the absolute Kronecker
+pairing `kronecker a.1.1 c` equals the class pairing `relKroneckerH (mk a)(mk ⟨mk c, hc⟩)`. Composes
+`relKroneckerH_mk_mk` (class → relKronecker) + `relKronecker_mk` (relKronecker → kronecker). Lifts each side of
+the hcup absolute residual to the class-pairing form where the connecting adjunction (`relKroneckerH_relCohomMvConnecting_rep`)
+applies. ℤ/2. -/
+theorem kronecker_eq_relKroneckerH_mk {S : Set ↑X} {N : ℕ} (a : LinearMap.ker (relCoboundaryₗ S (N + 1)))
+    (c : SingularChain X (N + 1)) (hc : RelativeChain.mk S (N + 1) c ∈ relCycles S (N + 1)) :
+    kronecker a.1.1 c
+      = SingularRelativePairing.relKroneckerH S (RelativeCohomology.mk S (N + 1) a)
+          (RelativeHomology.mk S (N + 1) ⟨RelativeChain.mk S (N + 1) c, hc⟩) := by
+  rw [SingularRelativePairing.relKroneckerH_mk_mk, SingularRelativePairing.relKronecker_mk]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
