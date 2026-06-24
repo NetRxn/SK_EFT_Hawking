@@ -1005,6 +1005,39 @@ theorem kronecker_pullbackDualityₗ_connecting_fund {N p : ℕ} {U' V' K Wset S
   kronecker_pullbackDualityₗ_connecting hU' hV' hSeq
     (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc) hzK hzS hzS' fc σR σ hσR
 
+/-- **fundCycleW-headed wrapper of `rhs_pairing_reduce`** (RHSPairing:42, the gap-free χ engine, whnf-dodge).
+Stated with the rcap-of-fundCycleW chain in the `c` slot so an application matches the head SYNTACTICALLY and infers
+the components (`hW`/`z₀`/`hz₀`/`Kc`/`hzK`/`hzS`/`fc`) — never assembling + whnf-reducing the concrete fundamental into
+the relKroneckerH (the documented 200k wall). Folds the pd-side `relKroneckerH (U'∪V') (relCohomMvConnecting (mk ωR))
+[chainIncl(rcap fc fund)]` to `kronecker (δ(cochainSplit U' ωR)) (Sdʲ (chainIncl(rcap fc fund)))` (Sdʲ internal). -/
+theorem rhs_pairing_reduce_fund {N p : ℕ} (U' V' K : Set ↑X) (hU' : IsOpen U') (hV' : IsOpen V')
+    (ωR : LinearMap.ker (relCoboundaryₗ (U' ∩ V') (N + 1)))
+    {Wset : Set ↑X} (hW : IsOpen Wset) (z₀ : SingularChain X (N + 2 + p + 1))
+    (hz₀ : chainBoundary X (N + 2 + p) z₀ = 0) (Kc : SingularCompactsInOpen.CompactsIn Wset)
+    (hzK : SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc ∈ subspaceChains K (N + 2 + p + 1))
+    (hzS : chainBoundary X (N + 2 + p) (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc)
+        ∈ subspaceChains (U' ∪ V') (N + 2 + p))
+    (fc : LinearMap.ker (coboundaryₗ (sub K) (p + 1))) :
+    ∃ j : ℕ,
+      SingularRelativePairing.relKroneckerH (U' ∪ V')
+          (SingularRelativeCohomologyMVConnecting.relCohomMvConnecting U' V' hU' hV' N
+            (RelativeCohomology.mk (U' ∩ V') (N + 1) ωR))
+          (RelativeHomology.mk (U' ∪ V') (N + 1 + 1)
+            ⟨RelativeChain.mk (U' ∪ V') (N + 1 + 1)
+              (chainIncl K (N + 2) (SingularCapChainIncl.rcap fc.1
+                ((SingularSubspaceChainsEquiv.subspaceChainsEquiv K (N + 2 + p + 1)).symm
+                  ⟨SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc, hzK⟩))),
+              SingularCapSubKDuality.chainIncl_rcap_mem_relCycles
+                (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc) hzK hzS fc⟩)
+        = kronecker (coboundary X (N + 1) (cochainSplit U' (N + 1) ωR.1.1))
+            ((⇑(SingularSubdivision.singularSd X (N + 1 + 1)))^[j]
+              (chainIncl K (N + 2) (SingularCapChainIncl.rcap fc.1
+                ((SingularSubspaceChainsEquiv.subspaceChainsEquiv K (N + 2 + p + 1)).symm
+                  ⟨SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc, hzK⟩)))) :=
+  SingularConnSquareRHSPairing.rhs_pairing_reduce U' V' hU' hV' ωR _
+    (SingularCapSubKDuality.chainIncl_rcap_mem_relCycles
+      (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc) hzK hzS fc)
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
