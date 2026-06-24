@@ -759,13 +759,15 @@ compact complement): `cap c (fundCycleW …) = cap c z + ∂(cap c η)`. Compose
 theorem cap_fundCycleW_eq_cap_z0 {W : Set ↑X} {k n : ℕ} (hW : IsOpen W)
     (z : SingularChain X (k + n + 1)) (hz : chainBoundary X (k + n) z = 0)
     (Kc : SingularCompactsInOpen.CompactsIn W)
+    {S : Set ↑X} (hS : (↑Kc.1 : Set ↑X)ᶜ = S)
     (c : SingularCochain X k) (hc : coboundary X k c = 0)
-    (hcv : ∀ d ∈ subspaceChains ((↑Kc.1 : Set ↑X)ᶜ) (k + (n + 1)), cap c d = 0) :
+    (hcv : ∀ d ∈ subspaceChains S (k + (n + 1)), cap c d = 0) :
     ∃ η : SingularChain X (k + (n + 1) + 1),
       cap c (SingularOpenDualityCycle.fundCycleW hW z hz Kc)
         = cap c z + chainBoundary X (n + 1) (cap c η) := by
   obtain ⟨η, a, heq, hmem⟩ := fundCycleW_chain_rel hW z hz Kc
-  exact ⟨η, cap_fund_eq_cap_z0 (m := n + 1) c hc hcv _ _ η a hmem heq⟩
+  rw [hS] at hmem
+  exact ⟨η, cap_fund_eq_cap_z0 (A := S) (m := n + 1) c hc hcv _ _ η a hmem heq⟩
 
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
@@ -886,13 +888,13 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   -- V-leg extracted (ℤ/2 mid-cancel, motive-safe via the abstract lemma):
   --   hVleg : cap g_rep (chainIncl_legSplitVᶜ w) = cap (cochainSplit g_rep) (∂(Sdʲ fund_∩)).
   have hVleg := add_mid_cancel_zmod2 heng
-  -- σR z₀-reduction (`cap_fundCycleW_eq_cap_z0`): whnf-wall ISOLATED (sorry-bisection) to the `hcv` arg
-  -- `cap_relCochains_subspaceChains_eq_zero ↑↑σR_rep σR_rep.1.2` — its set `(↑↑infCompact)ᶜ` (σR_rep.1.2's
-  -- coercion) ≠ the lemma/`fundCycleW_chain_rel` `(↑Kc.1)ᶜ` form (NOT defeq: `↑↑Kc ≠ ↑Kc.1` even abstract), and
-  -- unifying the two coercion forms over the verbose `infCompact` term whnf-LOOPS (NOT heartbeats: 2M still
-  -- walls). NEXT (clean isolated sub-brick): a set-coercion bridge — convert σR_rep.1.2's membership to the
-  -- `(↑Kc.1)ᶜ` form (find `↑↑Kc = ↑Kc.1`-style coercion eq, or parametrize the lemma's set S + explicit hS),
-  -- then hcv matches syntactically. (Degree-view / σR-view castChain do NOT help — confirmed; it's the set.)
+  -- ⛔ LOCKED PATH (coach 6th, 2026-06-23w — supersedes the σR z₀-reduction DRIFT): σR_rep is NEVER cap-reduced /
+  -- class-extracted; it enters ONLY via Fact A `cap(δ(cochainSplit g_rep))(Sdʲ fund) ≈ cap σR_rep fund_∩` (hσR).
+  -- The whnf was the off-path σR-z₀-reduction's symptom (`cap_fundCycleW_eq_cap_z0` stays UNUSED). Close from the
+  -- firing engine: hVleg (V-leg cap g_rep w = cap φ ∂Sdʲ fund).
+  -- NEXT (build-verify, NOT MCP): Fact B (V-leg cap g_rep w ↔ chain_L seam via hVleg + chainIncl_seam_boundaryExtract
+  --   + hVeq + w↔zB) → Fact A (cap δφ ≈ cap σR via hσR; rel residue dropped by cap_relCochains on the g_rep/rel
+  --   side, NEVER σR) → cover_partition_cap_boundary_mod on the Sdʲ split → ℤ/2 assemble.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
