@@ -32,7 +32,7 @@ rel-homologous). The hmem/excision gap is cap-form/class-altitude only; the pair
 (`relKroneckerH_relMvDelta_pairing` is unconditional).
 -/
 
-open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
+open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2 SKEFTHawking.SingularCohomologySnake
   SKEFTHawking.SingularRelativeHomologyMod2 SKEFTHawking.SingularRelativeCohomologyMod2
   SKEFTHawking.SingularSubHomologyMV SKEFTHawking.SingularConnSquareMatch
   SKEFTHawking.SingularOpenDuality SKEFTHawking.SingularCompactlySupportedOpen
@@ -663,6 +663,37 @@ theorem cap_relCochains_subspaceChains_eq_zero {S : Set ↑X} {k m : ℕ} (a : S
   rw [subspaceChains, LinearMap.mem_range] at hd
   obtain ⟨c, rfl⟩ := hd
   exact cap_relCochains_chainIncl_eq_zero a ha c
+
+/-- **Cap analog of `kronecker_coboundary_cochainSplit_eq`** (Geom:50 — the σR-connecting engine, cap
+altitude). For `ω ∈ ker(relCoboundaryₗ(U∩V))` and a chain `c` whose boundary cover-partitions `∂c = u + w`
+(`u ∈ C(U)`, `w ∈ C(V)`): `cap (δ(cochainSplit U ω)) c = cap ω w + ∂(cap (cochainSplit U ω) c)`. Mirrors
+the kronecker proof (cap_leibniz instead of the adjunction, so the chain-level `∂(cap φ c)` boundary
+appears): `cap φ ∂c = cap φ (u+w) = cap φ w` (`cap φ u = 0`, `φ ∈ relCochains U`); `cap φ w = cap ω w`
+(`ω - φ ∈ relCochains V`, `cap (ω-φ) w = 0`). The cap analog the coach named — wires σR_rep (= ω via hσR)
+to the V-leg `w` of a cover-partition. ℤ/2. -/
+theorem cap_coboundary_cochainSplit_eq (U V : Set ↑X) {N m : ℕ}
+    (ω : LinearMap.ker (relCoboundaryₗ (U ∩ V) (N + 1)))
+    (c : SingularChain X (N + 1 + m + 1)) (u w : SingularChain X (N + 1 + m))
+    (hu : u ∈ subspaceChains U (N + 1 + m)) (hw : w ∈ subspaceChains V (N + 1 + m))
+    (hbd : chainBoundary X (N + 1 + m) c = u + w) (h : N + 1 + m + 1 = N + 1 + 1 + m) :
+    cap (coboundary X (N + 1) (cochainSplit U (N + 1) ω.1.1)) (h ▸ c)
+      = cap ω.1.1 w + chainBoundary X m (cap (cochainSplit U (N + 1) ω.1.1) c) := by
+  have hu0 : cap (cochainSplit U (N + 1) ω.1.1) u = 0 :=
+    cap_relCochains_subspaceChains_eq_zero _ (cochainSplit_mem_relCochains U (N + 1) ω.1.1) u hu
+  have hωw : cap ω.1.1 w = cap (cochainSplit U (N + 1) ω.1.1) w := by
+    have hψw : cap (ω.1.1 - cochainSplit U (N + 1) ω.1.1) w = 0 :=
+      cap_relCochains_subspaceChains_eq_zero _
+        (cochainSplit_compl_mem_relCochains U V (N + 1) ω.1.1 ω.1.2) w hw
+    rw [show ω.1.1 - cochainSplit U (N + 1) ω.1.1 = ω.1.1 + cochainSplit U (N + 1) ω.1.1 from by
+      rw [ZModModule.sub_eq_add], cap_add_cochain] at hψw
+    exact eq_of_sub_eq_zero (by rw [ZModModule.sub_eq_add]; exact hψw)
+  have hφbd : cap (cochainSplit U (N + 1) ω.1.1) (chainBoundary X (N + 1 + m) c) = cap ω.1.1 w := by
+    rw [hbd, ← capₗ_apply, map_add, capₗ_apply, capₗ_apply, hu0, zero_add, ← hωw]
+  have hleib := cap_leibniz (cochainSplit U (N + 1) ω.1.1) c h
+  rw [hφbd] at hleib
+  rw [hleib]
+  abel_nf
+  simp only [two_smul, ZModModule.add_self, zero_add, add_zero]
 
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
