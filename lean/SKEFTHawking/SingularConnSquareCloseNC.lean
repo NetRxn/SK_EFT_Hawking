@@ -717,6 +717,30 @@ theorem cap_coboundary_cochainSplit_subdiv (U V : Set ↑X) (hU : IsOpen U) (hV 
   exact ⟨j, w', cap_coboundary_cochainSplit_eq U V ω _ (chainIncl U (N + 1 + m) u')
     (chainIncl V (N + 1 + m) w') ⟨u', rfl⟩ ⟨w', rfl⟩ hsplit h⟩
 
+/-- **fundCycleW-headed wrapper of `cap_coboundary_cochainSplit_subdiv`** (def-head-match whnf-dodge).
+Stated with `fundCycleW hW z₀ hz₀ Kc` directly in the `fund` slot so an application matches the head
+SYNTACTICALLY and infers the components (`hW`/`z₀`/`hz₀`/`Kc`) by unification, never assembling +
+whnf-reducing the concrete fundamental into the cap (the documented 200k wall). Body = the engine applied
+over free carriers (no whnf). Same technique as `connecting_square_close_cocycle_fund` / `factB_transport`. -/
+theorem cap_coboundary_cochainSplit_subdiv_fund (U V : Set ↑X) (hU : IsOpen U) (hV : IsOpen V) {N m : ℕ}
+    (ω : LinearMap.ker (relCoboundaryₗ (U ∩ V) (N + 1)))
+    {Wset : Set ↑X} (hW : IsOpen Wset) (z₀ : SingularChain X (N + 1 + m + 1))
+    (hz₀ : chainBoundary X (N + 1 + m) z₀ = 0) (Kc : SingularCompactsInOpen.CompactsIn Wset)
+    (hbd : chainBoundary X (N + 1 + m) (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc)
+        ∈ subspaceChains (U ∪ V) (N + 1 + m))
+    (h : N + 1 + m + 1 = N + 1 + 1 + m) :
+    ∃ (j : ℕ) (w : SingularChain (sub V) (N + 1 + m)),
+      cap (coboundary X (N + 1) (cochainSplit U (N + 1) ω.1.1))
+          (h ▸ (⇑(SingularSubdivision.singularSd X (N + 1 + m + 1)))^[j]
+            (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc))
+        = cap ω.1.1 (chainIncl V (N + 1 + m) w)
+          + chainBoundary X m
+            (cap (cochainSplit U (N + 1) ω.1.1)
+              ((⇑(SingularSubdivision.singularSd X (N + 1 + m + 1)))^[j]
+                (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc))) :=
+  cap_coboundary_cochainSplit_subdiv U V hU hV ω
+    (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc) hbd h
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
