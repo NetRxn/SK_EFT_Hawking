@@ -695,6 +695,28 @@ theorem cap_coboundary_cochainSplit_eq (U V : Set ↑X) {N m : ℕ}
   abel_nf
   simp only [two_smul, ZModModule.add_self, zero_add, add_zero]
 
+/-- **Subdivision + σR-connecting engine** (step (a), the first consumer of `cap_coboundary_cochainSplit_eq`).
+For `ω ∈ ker(relCoboundaryₗ(U∩V))` and `fund` with `∂fund ∈ subspaceChains(U∪V)`, cover-fine subdivide
+(`exists_cover_fine_subdivision` gives `∂(Sdʲ fund) = chainIncl_U u' + chainIncl_V w'`), then apply the engine:
+`cap(δ(cochainSplit U ω))(Sdʲ fund) = cap ω (chainIncl_V w') + ∂(cap (cochainSplit U ω)(Sdʲ fund))`. The V-leg
+`chainIncl_V w'` is the cover-partition piece that matches the seam term downstream. Kernel-pure. -/
+theorem cap_coboundary_cochainSplit_subdiv (U V : Set ↑X) (hU : IsOpen U) (hV : IsOpen V) {N m : ℕ}
+    (ω : LinearMap.ker (relCoboundaryₗ (U ∩ V) (N + 1)))
+    (fund : SingularChain X (N + 1 + m + 1))
+    (hbd : chainBoundary X (N + 1 + m) fund ∈ subspaceChains (U ∪ V) (N + 1 + m))
+    (h : N + 1 + m + 1 = N + 1 + 1 + m) :
+    ∃ (j : ℕ) (w : SingularChain (sub V) (N + 1 + m)),
+      cap (coboundary X (N + 1) (cochainSplit U (N + 1) ω.1.1))
+          (h ▸ (⇑(SingularSubdivision.singularSd X (N + 1 + m + 1)))^[j] fund)
+        = cap ω.1.1 (chainIncl V (N + 1 + m) w)
+          + chainBoundary X m
+            (cap (cochainSplit U (N + 1) ω.1.1)
+              ((⇑(SingularSubdivision.singularSd X (N + 1 + m + 1)))^[j] fund)) := by
+  obtain ⟨j, u', w', hsplit⟩ :=
+    SKEFTHawking.SingularConnSquareRHSScaffold.exists_cover_fine_subdivision hU hV fund hbd
+  exact ⟨j, w', cap_coboundary_cochainSplit_eq U V ω _ (chainIncl U (N + 1 + m) u')
+    (chainIncl V (N + 1 + m) w') ⟨u', rfl⟩ ⟨w', rfl⟩ hsplit h⟩
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
