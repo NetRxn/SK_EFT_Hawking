@@ -1061,7 +1061,12 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
           (SingularPairLES.boundaryExtract_mem_cycles _ (p + 1) ⟨zB, hzBmem⟩))
     · exact SingularLocalDualityK.pullbackDualityₗ_mem_cycles _ _ _ _
         (SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV) _ _ _) σR_rep
-  · -- (b) ∀-ω pairing
+  · -- (b) ∀-ω pairing: kroneckerH ω [chainL_seam + pd] = 0 for every cocycle ω. Drop to the concrete kronecker
+    --   pairing on a representative, split additively into the seam leg + the σR (pd) leg.
+    intro ω
+    obtain ⟨fc, rfl⟩ := Submodule.Quotient.mk_surjective _ ω
+    simp only [SingularHomologyMod2.Homology.mk]
+    rw [SingularHomologyMod2.kroneckerH_mk_mk, SingularHomologyMod2.kronecker_add_right]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
