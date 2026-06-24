@@ -142,16 +142,20 @@ hypothesis-free, real Mathlib content, no posit.** ("Key declarations" lists the
 | W8 `sixteen_convergence_finite_discharge` / `_genuine_carrier` | carry `pin4_abutment` / `PinPlusBordismLandmark` (bundling Kirby–Taylor ≥16 + AHSS ≤16 as **hypothesis fields**) | drop the binders after G3+G4 (G5) |
 | L3 Wu/Sq² | `wuW2_eq_zero_iff` proven **parametric over abstract PD data**; consumer is the L2 PD instance | instantiate on the genuine PD from G1/L2 (G2) |
 
-### 3c. Salvageable engine leads (NOT bedrock — re-vet before use)
-- `HcupAbstract.cap_relCycle_homology_singularSd` (untracked, appears sorry-free) — a cap subdivision-invariance
-  lemma; **re-verify it builds kernel-pure** before relying on it.
-- `mvSes_shortExact` (`SingularChainComplexCat.lean:232`) — route-c's SES brick; 0-sorry in source **but NOT
-  in the built library** (imported by 0 files), so the project's kernel-purity gate has never certified it —
-  **re-verify it builds kernel-pure** before relying on it. Route-c is banned as a *route* but this component
-  is sound and reusable.
-- `cap_fund_eq_cap_z0` / `cap_fundCycleW_eq_cap_z0` (`SingularConnSquareCloseNC.lean`, a non-library WIP file)
-  — proven in source, currently **unused/off-path** (NOT a no-go); re-vet on import; available if a future
-  close-path needs them.
+### 3c. Salvageable engine leads (NOT bedrock — OFF the corrected G1 path; re-vet before use)
+> Two leads were uncommitted 5q.F WIP; to keep the 5q.G working tree clean for the arm they were **stashed**
+> 2026-06-24 (`git stash@{0}` "5qf leads preserved pre-5qG arm"). Recover with `git stash show -p stash@{0}` /
+> `git stash pop`. Both are OFF the corrected G1 ∈-boundaries route (per the audit), so they are LOW-value now
+> — recoverable insurance, not part of the live plan:
+- `cap_relCycle_homology_singularSd` (was untracked `HcupAbstract.lean`, sorry-free) — cap subdivision-invariance
+  (homology-class); the corrected G1 route uses the pairing form, not this. **Stashed; re-verify kernel-pure
+  before any use.**
+- `mvSes_shortExact` (was an uncommitted edit to `SingularChainComplexCat.lean`, NOT in committed HEAD / not
+  in the library) — route-c's SES brick; route-c is policy-banned. **Stashed; re-verify kernel-pure before any
+  use.**
+- `cap_fund_eq_cap_z0` / `cap_fundCycleW_eq_cap_z0` (committed in `SingularConnSquareCloseNC.lean`, a non-library
+  WIP file) — proven in source, currently **unused/off-path** (NOT a no-go); re-vet on import; available if a
+  future close-path needs them.
 
 ---
 
