@@ -684,12 +684,15 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   V `chainIncl(U∩V) chain_L = chainIncl(U∪V)(∂(chainIncl_B zB))` [chainIncl_seam_boundaryExtract]+hbd;
   --   chainIncl(U∩V) pd = cap σR_rep fund_∩ [chainIncl_pullbackDualityₗ]. U (cap σR_rep fund_∩ ↔ cap g_rep ∂Fg,
   --   cap connecting relation via hσR/relCohomMvConnecting + Fg↔fund_∩ cast) = residual.
-  -- U-part rw (works): `chainIncl_pullbackDualityₗ` → chainIncl pd = cap σR_rep fund_∩.
+  -- U-part rw: `chainIncl_pullbackDualityₗ` → chainIncl pd = cap σR_rep fund_∩.
   rw [SingularLocalDualityK.chainIncl_pullbackDualityₗ]
-  -- Goal: chainIncl(U∩V) chain_L + cap σR_rep fund_∩ = cap g_rep ∂Fg.
-  --   NEXT: V-part `chainIncl_seam_boundaryExtract` (needs the subSeamHomeo's exact hmem/T — the goal's T is not
-  --   defeq-`Iff.rfl`-shaped; supply the goal's own hmem term or a matching `by simp`), then hbd + hσR connecting
-  --   relation (cap σR_rep fund_∩ ↔ cap g_rep ∂Fg via hσR/relCohomMvConnecting) + fundCycleW_relHomologous.
+  -- V-part: establish the seam equation as a `have` (kabstract matches the proof-irrelevant hTS/hmem up to defeq).
+  have hVeq := chainIncl_seam_boundaryExtract (S := U ∪ V) (T := U ∩ V) (A := Subtype.val ⁻¹' U)
+    (B := Subtype.val ⁻¹' V) (Set.inter_subset_left.trans Set.subset_union_left) (fun _ => Iff.rfl)
+    ⟨zB, hzBmem⟩
+  erw [hVeq]
+  -- Goal: chainIncl(U∪V)(∂(chainIncl_V zB)) + cap σR_rep fund_∩ = cap g_rep ∂Fg.
+  --   NEXT: hbd (V-part ↔ cap g_rep ∂fund_{U∪V}) + hσR connecting (cap σR_rep fund_∩ ↔ cap g_rep ∂Fg).
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
