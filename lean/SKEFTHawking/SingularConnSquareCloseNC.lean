@@ -1046,6 +1046,11 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       (SingularPairLES.boundaryExtract_mem_cycles _ (p + 1) _)))
     (SingularLocalDualityK.pullbackDualityₗ_mem_cycles _ _ _ _ ?_ _)⟩ ?_
   · exact SingularOpenDualityCycle.fundCycleW_boundary _ _ _ _
-  · sorry
+  · -- The pairing: split into seam-leg + pd-leg (kronecker additive); they match (cancel in ℤ/2) by MV-naturality.
+    intro ω
+    obtain ⟨fc, rfl⟩ := Submodule.Quotient.mk_surjective _ ω
+    simp only [SingularHomologyMod2.Homology.mk]
+    rw [SingularHomologyMod2.kroneckerH_mk_mk, kronecker_add_right]
+    sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
