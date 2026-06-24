@@ -964,6 +964,7 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   banned false-hmem class square). REMAINING = `hcup`, the connecting cup-naturality on z₀.
   apply SKEFTHawking.SingularConnSquareClose.subHomConnecting_openDuality_of_hcup_linked hU hV z₀ hz₀ K g
   intro a'rep b grep gRconn hgrep hb hgRconn
+  simp only [SingularCapChainIncl.kronecker_cup_rcap, SingularCapSubKDuality.kronecker_pullbackCochain]
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
