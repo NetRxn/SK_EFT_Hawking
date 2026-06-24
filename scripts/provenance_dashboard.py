@@ -70,6 +70,45 @@ logger = logging.getLogger(__name__)
 
 
 # ════════════════════════════════════════════════════════════════════
+# Security helpers (CodeQL remediation — defense-in-depth even though this
+# is a local single-user dashboard; live the moment it binds to 0.0.0.0)
+# ════════════════════════════════════════════════════════════════════
+from markupsafe import escape as _esc          # noqa: E402 — HTML-escape reflected input
+from urllib.parse import quote as _urlquote     # noqa: E402 — encode redirect query values
+
+
+def _safe_paper_dir(paper_id):
+    """Path-injection guard (py/path-injection). Resolve ``papers/<paper_id>``
+    and confine it under ``papers/`` via realpath + containment, rejecting any
+    id that is not a single safe path component. Returns the resolved ``Path``
+    or ``None`` (caller treats ``None`` like a missing paper). Every
+    user-``paper_id``-derived filesystem path MUST route through this."""
+    if (not isinstance(paper_id, str) or not paper_id
+            or paper_id in ('.', '..')
+            or '/' in paper_id or '\\' in paper_id or '\x00' in paper_id):
+        return None
+    papers = (PROJECT_ROOT / 'papers').resolve()
+    try:
+        target = (papers / paper_id).resolve()
+    except (OSError, ValueError):
+        return None
+    if target != papers and papers not in target.parents:
+        return None
+    return target
+
+
+def _json_error(exc, status, public_msg, **extra):
+    """Stack-trace-exposure guard (py/stack-trace-exposure). Log the full
+    exception server-side ONLY and return a generic message to the client —
+    never the exception text / traceback. ``extra`` adds safe, non-exc fields
+    (e.g. a static ``hint``)."""
+    logger.warning("dashboard error [%s] %s: %s", status, public_msg, exc)
+    payload = {"error": public_msg}
+    payload.update(extra)
+    return jsonify(payload), status
+
+
+# ════════════════════════════════════════════════════════════════════
 # Graph cache — Phase 5v Wave 9 perf fix
 # ════════════════════════════════════════════════════════════════════
 #
@@ -1191,7 +1230,10 @@ def bundle_submission_event_form():
     if bundle not in _TIER_OF or action not in valid_actions:
         return redirect("/?tab=bundles&submit_error=1")
     append_submission_event(bundle, action, evidence)
-    return redirect(f"/?tab=bundles&submitted={bundle}")
+    # url-redirection guard: `bundle` is already allowlisted (∈ _TIER_OF above) and
+    # appears only as a query param on a RELATIVE path; encode it so it can never alter
+    # the path/host even if the allowlist changes.
+    return redirect(f"/?tab=bundles&submitted={_urlquote(bundle, safe='')}")
 
 
 @app.route("/verify", methods=["POST"])
@@ -1220,7 +1262,7 @@ def verify_param():
     # Update provenance.py in memory and prepare for batch save
     from src.core.provenance import PARAMETER_PROVENANCE
     if key not in PARAMETER_PROVENANCE:
-        return f"Unknown key: {key}", 404
+        return f"Unknown key: {_esc(key)}", 404
 
     entry = PARAMETER_PROVENANCE[key]
     now = datetime.now(timezone.utc).strftime('%Y-%m-%d')
@@ -1240,7 +1282,7 @@ def verify_param():
         status_class = 'status-unverified'
         status_text = f'FLAGGED: {notes}'
     else:
-        return f"Unknown action: {action}", 400
+        return f"Unknown action: {_esc(action)}", 400
 
     # Wave 10c — change-bus event. Failure to record a verification
     # event must not break the in-memory PARAMETER_PROVENANCE update
@@ -1259,8 +1301,9 @@ def verify_param():
     except Exception as exc:  # noqa: BLE001 — defensive on dashboard request path
         logger.warning("verification_state.record_event failed: %s", exc)
 
-    # Return updated card fragment via HTMX
-    return f'''<span class="status-badge {status_class}">{status_text}</span>
+    # Return updated card fragment via HTMX. status_class is a fixed internal literal;
+    # status_text can embed user `notes` (reflected-xss guard → HTML-escape it).
+    return f'''<span class="status-badge {status_class}">{_esc(status_text)}</span>
     <small class="verify-date">{now}</small>'''
 
 
@@ -1321,10 +1364,10 @@ def api_verification_event():
             triggered_by=triggered_by,
         )
     except ValueError as exc:
-        return jsonify({"error": str(exc)}), 400
+        return _json_error(exc, 400, "invalid request")
     except Exception as exc:  # noqa: BLE001
         logger.exception("record_event unexpected failure")
-        return jsonify({"error": f"unexpected: {exc}"}), 500
+        return _json_error(exc, 500, "internal error recording event")
 
     _invalidate_graph_cache()
     return jsonify({"event": ev}), 200
@@ -1344,7 +1387,7 @@ def api_verification_state():
     try:
         from verification_state import read_events, latest_per_node
     except ImportError as exc:
-        return jsonify({"error": f"verification_state not importable: {exc}"}), 500
+        return _json_error(exc, 500, "verification_state unavailable")
 
     node_id = request.args.get('node_id')
     artifact_type = request.args.get('artifact_type')
@@ -1480,7 +1523,7 @@ def api_refresh_lean_deps():
         return jsonify({"refreshed": True,
                         "hint": "Next /api/graph call will rebuild with fresh Lean deps."})
     except Exception as exc:
-        return jsonify({"refreshed": False, "error": str(exc)}), 500
+        return _json_error(exc, 500, "graph refresh failed", refreshed=False)
 
 
 @app.route("/api/graph/trace/<path:node_id>")
@@ -1609,9 +1652,13 @@ def api_integrity():
 #     validate their own query strings.
 
 _CYPHER_READ_ONLY_RX = re.compile(
-    r'\b(CREATE|DELETE|MERGE|SET|REMOVE|DROP|DETACH|CALL\s+db\.)\b',
+    r'\b(CREATE|DELETE|MERGE|SET|REMOVE|DROP|DETACH|TRUNCATE|INSERT|UPDATE|'
+    r'GRANT|REVOKE|ALTER|COPY|LOAD|CALL\s+db\.)\b',
     re.IGNORECASE,
 )
+# SQL statement-stacking / comment-obfuscation vectors (not needed for a single read
+# Cypher query; `//` line-comments stay allowed). Defense-in-depth for the console below.
+_CYPHER_STACK_RX = re.compile(r';|--|/\*')
 
 
 @app.route("/api/graph/cypher", methods=["POST"])
@@ -1633,8 +1680,12 @@ def api_cypher():
     if _CYPHER_READ_ONLY_RX.search(query):
         return jsonify({
             "error": "write clauses are not permitted on /api/graph/cypher",
-            "hint": "CREATE / DELETE / MERGE / SET / REMOVE / DROP are blocked; "
-                    "use scripts/sync_graph_to_pg.py for writes.",
+            "hint": "CREATE / DELETE / MERGE / SET / REMOVE / DROP / INSERT / UPDATE / "
+                    "ALTER / COPY / LOAD are blocked; use scripts/sync_graph_to_pg.py for writes.",
+        }), 400
+    if _CYPHER_STACK_RX.search(query):
+        return jsonify({
+            "error": "statement separators (;) and SQL comments (--, /*) are not permitted",
         }), 400
 
     try:
@@ -1658,6 +1709,14 @@ def api_cypher():
             # wrap the whole result in a single agtype column — the
             # caller gets stringified agtype values back and parses them
             # themselves. That's the simplest reliable path.
+            # SECURITY (py/sql-injection): this is an INTENTIONAL read-only Cypher console —
+            # the user-supplied Cypher MUST be inlined into AGE's cypher('graph', $$ … $$)
+            # block (AGE does not accept the query as a bind parameter), so true
+            # parameterization is impossible by design. Mitigations (layered, above + here):
+            # read-only verb denylist, statement-stacking/comment denylist, 4000-char cap, and
+            # the $$→\$\$ escape below that prevents the body from terminating the dollar-quote
+            # (the only way to break out into raw SQL). It is also bound to localhost only.
+            # The residual CodeQL alert is accepted/triaged, not a missing fix.
             escaped = query.replace("$$", "\\$\\$")
             wrapped = (
                 f"SELECT agtype_out(r) FROM cypher('sk_eft', $$ "
@@ -1667,13 +1726,11 @@ def api_cypher():
             cur.execute(wrapped)
             rows = cur.fetchall()
     except psycopg.OperationalError as exc:
-        return jsonify({
-            "error": f"PG unreachable: {exc}",
-            "hint": "Confirm docker container is running "
-                    "(port 5433, sk_eft_provenance DB).",
-        }), 503
+        return _json_error(exc, 503, "database unreachable",
+                           hint="Confirm docker container is running "
+                                "(port 5433, sk_eft_provenance DB).")
     except Exception as exc:
-        return jsonify({"error": f"cypher execution failed: {exc}"}), 500
+        return _json_error(exc, 500, "cypher execution failed")
 
     t1 = __import__('time').monotonic()
 
@@ -2415,8 +2472,9 @@ def _pp_compute_stale_findings(
 
 def _pp_load_claims_review(paper_id: str) -> dict | None:
     """Load `papers/<paper>/claims_review.json` if present."""
-    path = PROJECT_ROOT / 'papers' / paper_id / 'claims_review.json'
-    if not path.exists():
+    d = _safe_paper_dir(paper_id)                       # path-injection guard
+    path = (d / 'claims_review.json') if d else None
+    if path is None or not path.exists():
         return None
     try:
         return json.loads(path.read_text())
@@ -2427,8 +2485,9 @@ def _pp_load_claims_review(paper_id: str) -> dict | None:
 
 def _pp_load_figure_review(paper_id: str) -> dict | None:
     """Load `papers/<paper>/figures/figure_review_report.json` if present."""
-    path = PROJECT_ROOT / 'papers' / paper_id / 'figures' / 'figure_review_report.json'
-    if not path.exists():
+    d = _safe_paper_dir(paper_id)                       # path-injection guard
+    path = (d / 'figures' / 'figure_review_report.json') if d else None
+    if path is None or not path.exists():
         return None
     try:
         return json.loads(path.read_text())
@@ -2461,8 +2520,9 @@ def _pp_load_prose_state(paper_id: str) -> dict:
        "sentences": {<sentence_id>: {"human_state", "human_ratified_at",
                                      "human_ratified_by", "human_notes"}}}
     """
-    path = PROJECT_ROOT / 'papers' / paper_id / 'prose_state.json'
-    if not path.exists():
+    d = _safe_paper_dir(paper_id)                       # path-injection guard
+    path = (d / 'prose_state.json') if d else None
+    if path is None or not path.exists():
         return {'version': 1, 'paper': paper_id, 'sentences': {}}
     try:
         data = json.loads(path.read_text())
@@ -2479,8 +2539,9 @@ def _pp_load_audit_log(paper_id: str, *, limit: int = 0) -> list[dict]:
     ``limit`` — if > 0, return only the most recent N events.
     Skips malformed lines with a warning rather than failing the whole load.
     """
-    path = PROJECT_ROOT / 'papers' / paper_id / 'audit_log.jsonl'
-    if not path.exists():
+    d = _safe_paper_dir(paper_id)                       # path-injection guard
+    path = (d / 'audit_log.jsonl') if d else None
+    if path is None or not path.exists():
         return []
     events: list[dict] = []
     try:
@@ -2910,7 +2971,7 @@ def api_paper_sentence_verify(paper_id: str, sentence_id: str):
     try:
         from sentence_state import cmd_mark
     except ImportError as exc:
-        return jsonify({"error": f"sentence_state not importable: {exc}"}), 500
+        return _json_error(exc, 500, "sentence_state unavailable")
 
     import argparse as _ap
     args = _ap.Namespace(
@@ -2935,10 +2996,7 @@ def api_paper_sentence_verify(paper_id: str, sentence_id: str):
         err_buf.write(str(exc) + "\n")
     except Exception as exc:  # noqa: BLE001
         logger.exception("cmd_mark unexpected failure")
-        return jsonify({
-            "error": f"cmd_mark unexpected: {exc}",
-            "stderr": err_buf.getvalue(),
-        }), 500
+        return _json_error(exc, 500, "cmd_mark failed unexpectedly")
 
     if rc != 0:
         return jsonify({
@@ -3005,7 +3063,7 @@ def api_cluster_propagate(paper_id: str, cluster_id: str):
     try:
         from sentence_state import cmd_mark
     except ImportError as exc:
-        return jsonify({"error": f"sentence_state not importable: {exc}"}), 500
+        return _json_error(exc, 500, "sentence_state unavailable")
 
     # Append `(propagated from sentence_id)` to notes so the audit trail is
     # readable. cmd_mark's argparse Namespace doesn't take propagated_from
@@ -3106,9 +3164,10 @@ def _pp_build_data(paper_id: str) -> dict | None:
     schema (``sentences[]``), routes to :func:`_pp_build_data_v2` for
     the 3-column UI. Legacy 8-layer dossier flow stays for v1 papers.
     """
-    papers_dir = PROJECT_ROOT / 'papers'
-    paper_dir = papers_dir / paper_id
-    tex = paper_dir / 'paper_draft.tex'
+    paper_dir = _safe_paper_dir(paper_id)               # path-injection guard
+    if paper_dir is None:
+        return None
+    tex = paper_dir / 'paper_draft.tex'                 # confined → safe for _pp_build_data_v2 too
     if not tex.exists():
         return None
 
@@ -5025,7 +5084,10 @@ def _qi_build_data() -> dict:
     try:
         from qi_register import load_review_findings, cluster_findings
     except ImportError as exc:
-        return {'error': f'qi_register unavailable: {exc}'}
+        # stack-trace-exposure guard: the caller surfaces data['error'] to the
+        # client (HTTP 500); log the import detail server-side, return generic.
+        logger.warning("qi_register unavailable: %s", exc)
+        return {'error': 'qi_register unavailable'}
     findings = load_review_findings()
     items = cluster_findings(findings)
     return {
