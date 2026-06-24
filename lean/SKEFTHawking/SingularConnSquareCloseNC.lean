@@ -340,6 +340,21 @@ theorem chainBoundary_rcap_subspaceChainsEquiv_symm {K : Set ↑X} {n p : ℕ}
   · simp only [eqRec_eq_cast, cast_cast, cast_eq]
   · exact hcast (by omega) (by omega) c
 
+omit [T2Space ↑X] in
+/-- **Iterated `singularSd` commutes through `chainIncl`** (the iterate of `SingularExcision.singularSd_chainIncl`).
+`Sdʲ (chainIncl A d) = chainIncl A (Sdʲ d)` — subdivision is natural under the subspace inclusion, so a
+cover-fine subdivision applied to an included `sub A`-chain may be moved inside the inclusion. Pushes the
+`rhs_pairing_reduce` Sdʲ inside the realized rcap so the pairing reduces to a `sub (U∩V)`-internal one
+(`kronecker_pullbackCochain` + `kronecker_singularSd_iterate_cocycle`). -/
+theorem singularSd_iterate_chainIncl {A : Set ↑X} {n : ℕ} (j : ℕ) (d : SingularChain (sub A) n) :
+    (⇑(SingularSubdivision.singularSd X n))^[j] (chainIncl A n d)
+      = chainIncl A n ((⇑(SingularSubdivision.singularSd (sub A) n))^[j] d) := by
+  induction j with
+  | zero => rfl
+  | succ k ih =>
+    rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih,
+      SingularExcision.singularSd_chainIncl]
+
 /-- **infCompactᶜ = legSplitUᶜ ∪ legSplitVᶜ** (the cover-support set identity). `fundCycleW_boundary` lands
 `∂fund` in `subspaceChains(Kᶜ)` with `K = infCompact = legSplitU ∩ legSplitV` (`infCompact_coe`); de Morgan
 (`Set.compl_inter`) rewrites that to the cover `legSplitUᶜ ∪ legSplitVᶜ` the seam-localization engine consumes. -/
@@ -1188,6 +1203,11 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     -- Push ∂ through the rcap (fc cocycle): `∂(rcap fc fund) = rcap fc (∂fund)`, exposing the
     -- cover-supported `∂fund` (the seam V-part, `hbdy`) that links the pd-leg to the seam-leg.
     rw [chainBoundary_rcap_subspaceChainsEquiv_symm]
+    -- Push the cover-fine Sdʲ inside the realized inclusion (`singularSd_chainIncl` naturality): the pd-leg
+    -- chain becomes a `sub (U∩V)`-internal subdivided rcap — the form the cover-partition leg-drop consumes.
+    -- ⚠ the Sdʲ is NOT droppable by cocycle-invariance here (`cochainSplit ωfc` is NON-cocycle: its δ IS the
+    -- connecting), so `kronecker_singularSd_iterate_cocycle` does not apply; the leg-drop is the mechanism.
+    rw [singularSd_iterate_chainIncl]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
