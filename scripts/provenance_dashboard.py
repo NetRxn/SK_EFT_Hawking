@@ -1149,7 +1149,9 @@ def index():
                 'cross_bundle_count': 0,
                 'cross_bundle_clusters': [],
                 'submission_events': [],
-                'error': str(exc),
+                # stack-trace-exposure guard: this flows to render_template → client.
+                # Full detail is in the server-side traceback.print_exc() above.
+                'error': 'failed to load bundle summary (see server log)',
             }
 
     return render_template("dashboard.html",
@@ -1709,19 +1711,23 @@ def api_cypher():
             # wrap the whole result in a single agtype column — the
             # caller gets stringified agtype values back and parses them
             # themselves. That's the simplest reliable path.
-            # SECURITY (py/sql-injection): this is an INTENTIONAL read-only Cypher console —
-            # the user-supplied Cypher MUST be inlined into AGE's cypher('graph', $$ … $$)
-            # block (AGE does not accept the query as a bind parameter), so true
-            # parameterization is impossible by design. Mitigations (layered, above + here):
-            # read-only verb denylist, statement-stacking/comment denylist, 4000-char cap, and
-            # the $$→\$\$ escape below that prevents the body from terminating the dollar-quote
-            # (the only way to break out into raw SQL). It is also bound to localhost only.
-            # The residual CodeQL alert is accepted/triaged, not a missing fix.
-            escaped = query.replace("$$", "\\$\\$")
+            # SECURITY (py/sql-injection): this is an INTENTIONAL read-only Cypher console — the
+            # user query MUST be inlined into AGE's cypher('graph', $tag$ … $tag$) block (AGE does
+            # not accept the Cypher as a bind parameter), so true parameterization is impossible by
+            # design. Breakout into raw SQL requires terminating the dollar-quote; we use a RANDOM,
+            # unguessable tag (a fixed `$$` is escapable — an odd-count `$` run survives a naive
+            # replace) and refuse the astronomically-unlikely query that contains it. Layered with
+            # the read-only verb denylist + stacking/comment denylist + 4000-char cap + localhost-
+            # only binding. The residual CodeQL alert is an accepted triage (a guard CodeQL can't
+            # verify), not a missing fix.
+            import secrets
+            _dq = "cyq" + secrets.token_hex(8)            # random dollar-quote tag, per request
+            if f"${_dq}$" in query:                       # impossible in practice; refuse anyway
+                return jsonify({"error": "query rejected"}), 400
             wrapped = (
-                f"SELECT agtype_out(r) FROM cypher('sk_eft', $$ "
-                f"{escaped} "
-                f"$$) AS (r agtype)"
+                f"SELECT agtype_out(r) FROM cypher('sk_eft', ${_dq}$ "
+                f"{query} "
+                f"${_dq}$) AS (r agtype)"
             )
             cur.execute(wrapped)
             rows = cur.fetchall()
@@ -3102,7 +3108,10 @@ def api_cluster_propagate(paper_id: str, cluster_id: str):
         except Exception as exc:  # noqa: BLE001
             logger.exception("cmd_mark unexpected failure for %s", sid)
             rc = -1
-            err_buf.write(str(exc))
+            # stack-trace-exposure guard: this err_buf is returned to the client as `stderr`;
+            # log the real exc server-side, surface only a generic line (the SystemExit branch
+            # above carries our own controlled validation messages, which are safe to show).
+            err_buf.write("internal error (see server log)")
         try:
             evj = json.loads(out_buf.getvalue().strip().splitlines()[-1])
         except Exception:
@@ -3797,9 +3806,12 @@ def _pp_paper_body_html(data: dict, active_claim: str) -> str:
         sub_inner = _latex_to_html(subtitle.strip()).removeprefix('<p>').removesuffix('</p>')
         subtitle_html = f'<div class="pp-paper__subtitle">{sub_inner}</div>'
 
-    # Render abstract; fall back to a placeholder if none available
-    tex_path = PROJECT_ROOT / 'papers' / paper_id / 'paper_draft.tex'
-    abstract_raw = _pp_extract_abstract(tex_path) if paper_id else ''
+    # Render abstract; fall back to a placeholder if none available.
+    # path-injection guard (defense-in-depth — paper_id is vetted upstream, but build
+    # the path locally through the same confinement so it can't regress on refactor).
+    _pdir = _safe_paper_dir(paper_id)
+    tex_path = (_pdir / 'paper_draft.tex') if _pdir else None
+    abstract_raw = _pp_extract_abstract(tex_path) if tex_path else ''
     if abstract_raw:
         # Build a {bibkey: claim_id} lookup so \cite{Bibkey} renders
         # inline as a highlighted claim span. Wave 9g-3 (\claim{}
@@ -4755,7 +4767,8 @@ def _pp_v2_artifact_preview_html(kind: str, target: str, link: dict) -> str:
         return f'<em>Unknown link kind: {esc(kind)}</em>'
     except Exception as exc:  # noqa: BLE001
         logger.warning("artifact preview failed for %s/%s: %s", kind, target, exc)
-        return f'<em>(unable to load preview: {esc(str(exc))})</em>'
+        # stack-trace-exposure guard: detail logged above; client gets a generic message.
+        return '<em>(unable to load preview — see server log)</em>'
 
 
 def _pp_v2_audit_log_html(data: dict, active_sentence: str) -> str:
