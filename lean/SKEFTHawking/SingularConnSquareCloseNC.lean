@@ -898,6 +898,24 @@ theorem cap_coboundary_relCochains_fund_eq_boundary {S : Set ↑X} {k m : ℕ} (
   rw [cap_relCochains_subspaceChains_eq_zero ψ hψ _ hbd, add_zero] at hleib
   exact hleib.symm
 
+/-- **Cap of a relative cocycle against a relatively-bounded chain is a cycle.** For `a` an absolute cocycle
+(`δa = 0`) that also vanishes on `S`-chains (`a ∈ relCochains S`), and `c` whose boundary is `S`-supported
+(`∂c ∈ subspaceChains S`): `∂(cap a c) = 0` — both cap-Leibniz terms vanish (`cap (δa) c = 0` since `δa = 0`;
+`cap a ∂c = 0` since `a ∈ relCochains S`, `∂c ∈ subspaceChains S`). So `pd = cap σR_rep fund_∩` is a CYCLE
+(σR_rep an absolute+relative cocycle over infCompactᶜ via `relCocycle_coboundary_zero`, ∂fund_∩ ∈
+subspaceChains infCompactᶜ via `fundCycleW_boundary`) — the σR-leg the flexible-witness `∈ boundaries` close
+adds to the boundary `chainL_seam`. ℤ/2. -/
+theorem cap_cocycle_relCochains_boundary_zero {S : Set ↑X} {k m : ℕ} (a : SingularCochain X k)
+    (hac : coboundary X k a = 0) (ha : a ∈ relCochains S k)
+    (c : SingularChain X (k + m + 1)) (hbd : chainBoundary X (k + m) c ∈ subspaceChains S (k + m))
+    (h : k + m + 1 = k + 1 + m) :
+    chainBoundary X m (cap a c) = 0 := by
+  have hleib := cap_leibniz a c h
+  rw [hac, cap_relCochains_subspaceChains_eq_zero a ha _ hbd, add_zero] at hleib
+  have hz : cap (0 : SingularCochain X (k + 1)) (h ▸ c) = 0 := by
+    rw [← capₗ_apply, map_zero, LinearMap.zero_apply]
+  exact hleib.trans hz
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
