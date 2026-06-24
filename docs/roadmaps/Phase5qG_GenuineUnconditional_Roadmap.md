@@ -278,10 +278,16 @@ Each gate: target · consumes · DONE criteria · status. **G1 is the unlock; G2
     `mem_boundaries_of_kroneckerH_zero` (`SingularConnSquareCloseNC.lean:889`) — the route-ii **final
     ∈-boundaries discharge engine**: a cycle pairing to 0 against every cocycle is a boundary
     (`homology_eq_zero_of_kroneckerH` + `Homology.mk_eq_zero`). General, reusable, no banned formula.
-  - **▶ Remaining route-ii grind:** (2) back the apex proof up from `NC:~924` (drop the witness route 924–1055 +
-    `connecting_assembly_zmod2`); (3) prove the KEY chain is a cycle (`∂ = 0`) so brick 1 applies; (4) per cocycle
-    `a'rep`, split the pairing — σR leg via cup-cap adjunction `kronecker_cap_eq_kronecker_rcap` + Geom:73 + hσR
-    (slack dies), seam + g_rep legs via the committed cap engines — and cancel; observing the banned-route tell.
+  - **✅ Brick 2 (turn 12):** backed the apex up — dropped the witness route (old 924–1055) + `connecting_assembly_zmod2`;
+    `subHomConnecting_openDuality` now applies `mem_boundaries_of_kroneckerH_zero` at the ∈-boundaries KEY (NC:937),
+    splitting into (A) cycle + (B) pairing.
+  - **✅ Brick 3 (turn 12, GREEN — verified `goals:[] diagnostics:[]`):** Goal A (the KEY chain is a cycle):
+    `add_mem` of `mapChain_mem_cycles ×2 ∘ boundaryExtract_mem_cycles` (seam leg) and `pullbackDualityₗ_mem_cycles`
+    with `hzS = fundCycleW_boundary` (σR leg). NC:938–947.
+  - **▶ Brick 4 (the only remaining sorry, NC:949) — the pairing discharge:** ∀ cocycle `ω : ker(coboundaryₗ(sub(U∩V))(p+1))`,
+    `kronecker ω.1 (seam²(boundaryExtract zB) + pullbackDualityₗ σR_rep fund) = 0` — σR leg via cup-cap adjunction
+    `kronecker_cap_eq_kronecker_rcap` + Geom:73 + hσR (slack dies on the cocycle), seam leg via ∂zB pairing; cancel.
+    Observe the banned-route tell.
   - Then re-home the χ + engines into an imported module and wire the cross-realization descent →
     `PoincareDual4Mid`/`Lo` become theorems. (Turns 1–10 = re-seed-correction + the architecture audit/resolution;
     turn 11 = first Lean brick.)
