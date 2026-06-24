@@ -1050,6 +1050,18 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     cap_cocycle_relCochains_boundary_zero σR_rep.1.1
       (SingularRelativeDuality.relCocycle_coboundary_zero _ σR_rep) σR_rep.1.2 _
       (SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV) _ _ _) (by omega)
-  sorry
+  -- ▶ PAIRING CLOSE (Route B PAIRING): the residual is a cycle whose class pairs to 0 against every cocycle.
+  refine mem_boundaries_of_kroneckerH_zero ⟨_, ?_⟩ ?_
+  · -- (a) cycle obligation: residual = chainL_seam + pd ∈ cycles, both summands cycles. chainL_seam =
+    --   seam²(boundaryExtract zB) (mapChain preserves cycles + boundaryExtract_mem_cycles); pd is a cycle by
+    --   pullbackDualityₗ_mem_cycles (σR_rep a cocycle, ∂fund_∩ ∈ subspaceChains infCompactᶜ). Structural — no set rw.
+    refine Submodule.add_mem _ ?_ ?_
+    · exact SingularFunctoriality.mapChain_mem_cycles _
+        (SingularFunctoriality.mapChain_mem_cycles _
+          (SingularPairLES.boundaryExtract_mem_cycles _ (p + 1) ⟨zB, hzBmem⟩))
+    · exact SingularLocalDualityK.pullbackDualityₗ_mem_cycles _ _ _ _
+        (SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV) _ _ _) σR_rep
+  · -- (b) ∀-ω pairing
+    sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
