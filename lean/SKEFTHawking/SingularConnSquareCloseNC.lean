@@ -383,6 +383,23 @@ theorem kronecker_relCochains_chainIncl_eq_zero {S : Set ↑X} {k : ℕ} (a : Si
   rw [← SingularCapSubKDuality.kronecker_pullbackCochain, pullbackCochain_relCochains_eq_zero k a ha]
   simp
 
+omit [T2Space ↑X] in
+/-- **Kronecker cover-fine leg-drop**: for `a ∈ relCochains A` and a cover-fine chain `z ∈ mvUnionChains A B`
+(`= subspaceChains A + subspaceChains B`), the pairing drops to the `B`-leg: `kronecker a z = kronecker a
+(chainIncl B w)` for the `B`-part `w` of the cover-split. The `A`-part vanishes by
+`kronecker_relCochains_chainIncl_eq_zero`. The pd-leg's cover-partition leg-drop: `cochainSplit ωfc ∈
+relCochains legSplitUᶜ` ⟹ only the `legSplitVᶜ` V-leg survives. -/
+theorem kronecker_relCochains_mvUnion_eq {A B : Set ↑X} {k : ℕ} (a : SingularCochain X k)
+    (ha : a ∈ relCochains A k) (z : SingularChain X k)
+    (hz : z ∈ SingularRelativeMV.mvUnionChains A B k) :
+    ∃ w : SingularChain (sub B) k, kronecker a z = kronecker a (chainIncl B k w) := by
+  rw [SingularRelativeMV.mvUnionChains] at hz
+  obtain ⟨uA, huA, uB, huB, rfl⟩ := Submodule.mem_sup.mp hz
+  rw [subspaceChains, LinearMap.mem_range] at huA huB
+  obtain ⟨uA', rfl⟩ := huA
+  obtain ⟨w, rfl⟩ := huB
+  exact ⟨w, by rw [kronecker_add_right, kronecker_relCochains_chainIncl_eq_zero a ha, zero_add]⟩
+
 /-- **infCompactᶜ = legSplitUᶜ ∪ legSplitVᶜ** (the cover-support set identity). `fundCycleW_boundary` lands
 `∂fund` in `subspaceChains(Kᶜ)` with `K = infCompact = legSplitU ∩ legSplitV` (`infCompact_coe`); de Morgan
 (`Set.compl_inter`) rewrites that to the cover `legSplitUᶜ ∪ legSplitVᶜ` the seam-localization engine consumes. -/
