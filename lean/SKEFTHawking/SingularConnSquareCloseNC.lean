@@ -653,6 +653,17 @@ theorem fundCycleW_chain_rel {W : Set ↑X} {k m : ℕ} (hW : IsOpen W)
       add_comm z₀ (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K)] at hw
     exact hw
 
+/-- **`hcv` helper** — a relative cochain `a ∈ relCochains S` caps to 0 against every `subspaceChains S`
+chain (`d = chainIncl S c`, `cap a (chainIncl S c) = 0` by `cap_relCochains_chainIncl_eq_zero`). The
+vanishing hypothesis `cap_fund_eq_cap_z0` needs, for both `σR_rep` (S = infCompactᶜ) and `g_rep` (S = Kᶜ). -/
+theorem cap_relCochains_subspaceChains_eq_zero {S : Set ↑X} {k m : ℕ} (a : SingularCochain X k)
+    (ha : a ∈ relCochains S k) :
+    ∀ d ∈ subspaceChains S (k + m), cap a d = 0 := by
+  intro d hd
+  rw [subspaceChains, LinearMap.mem_range] at hd
+  obtain ⟨c, rfl⟩ := hd
+  exact cap_relCochains_chainIncl_eq_zero a ha c
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
