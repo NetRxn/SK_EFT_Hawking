@@ -309,6 +309,12 @@ Each gate: target · consumes · DONE criteria · status. **G1 is the unlock; G2
   exact-vs-mod-boundary **audit**) are done in an **early interactive session**, off the persistent loop;
   only their *outcome* is recorded (in the FRONTIER + the relevant gate), and the persistent loop is armed
   from the post-kickoff state.
+- **The done-evaluator sees ONLY the transcript — inline the granular ACs.** The `/goal` done-condition is
+  judged by an evaluator that does NOT read this roadmap or the notebook, so every gate's checkable AC
+  (G1→G6) must be inlined verbatim in the composed condition (named theorems/anchors, the build/validate/axiom
+  checks, the binder-drop), not deferred to "per roadmap §5." The staged condition with these ACs inlined is
+  `docs/dev-loops/Phase5qG/goal_condition_DRAFT.md` (durable-only, < 4000 chars, post-G1-audit) — the input
+  for `/skeft-qa:goal-prompt`.
 - Source-of-truth on every compaction: this roadmap + `Lit-Search/Phase-5qG/LAB_NOTEBOOK_INDEX.md` (FRONTIER
   + the §4 settled-forks register) + `docs/dev-loops/SETTLED_FORKS.md` + `docs/dev-loops/PRE_DECISIONS.md`.
 - Vetting discipline (the reason 5q.G is clean): **no item is added to this roadmap or the notebook without
