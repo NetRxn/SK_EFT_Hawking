@@ -797,7 +797,15 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     ⟨zB, hzBmem⟩
   erw [hVeq]
   -- Goal: chainIncl(U∪V)(∂(chainIncl_V zB)) + cap σR_rep fund_∩ = cap g_rep ∂Fg.
-  --   NEXT: hbd (V-part ↔ cap g_rep ∂fund_{U∪V}) + hσR connecting (cap σR_rep fund_∩ ↔ cap g_rep ∂Fg).
+  -- ⛔ SETTLED (coach 4×, see notebook SETTLED-FORKS register + memory project-l2-sigmar-connecting-resolved):
+  --   the σR-connecting is GAP-FREE via cap_coboundary_cochainSplit_subdiv (ω:=σR_rep, shared cycle z₀, slack
+  --   dies ∂z₀=0). NEVER re-derive the "needs banned formula" worry; NEVER relCohomMvConnecting_eq / _of_crossRealization.
+  -- NEXT (whnf-dodge the application — concrete fund_∩ in cap walls; provide fundCycleW COMPONENTS, infer, don't
+  --   assemble; cf. connecting_square_close_cocycle_fund): apply cap_coboundary_cochainSplit_subdiv (ω=σR_rep,
+  --   fund=fund_∩, hbd=∂fund_∩∈subspaceChains(U∪V) via fundCycleW_boundary_cover+infCompact_compl_legSplit) →
+  --   V-leg cap σR_rep (chainIncl_V w') matched to seam via chainIncl_seam_boundaryExtract(NC:490)+hbd; ∂(cap φ·)
+  --   is a (U∩V)-boundary into pd; ℤ/2 cancel. The bare-underscore probe whnf-timeouts (concrete-cover unification)
+  --   — head-match-dodge it, do NOT re-conclude "ω=σR_rep type-wrong".
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
