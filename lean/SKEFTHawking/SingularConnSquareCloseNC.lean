@@ -881,6 +881,21 @@ theorem connecting_assembly_zmod2 {m : ℕ} (chainL capσR capgDfund U_A capgDrh
   rw [hChi, show chainL + (U_A + capgDrho) = U_A + chainL + capgDrho from by abel, hUV]
   abel_nf
   simp only [two_smul, ZModModule.add_self, add_zero]
+/-- **∈-boundaries ← pairing-zero** (route-ii final discharge engine). A cycle `z` whose Kronecker
+pairing against EVERY cocycle vanishes is a boundary — homology Kronecker non-degeneracy
+(`homology_eq_zero_of_kroneckerH`) + `Homology.mk_eq_zero`. This is the sanctioned final ∈-boundaries
+discharge of the L2 KEY: the σR leg pairs via the Fact-A adjunction (sub-step), the spine stays
+cap-Leibniz. Kernel-pure; no banned formula, no kronecker spine. -/
+theorem mem_boundaries_of_kroneckerH_zero {n : ℕ} (z : SingularChain X n) (hz : z ∈ cycles X n)
+    (h : ∀ ω : LinearMap.ker (coboundaryₗ X n), kronecker ω.1 z = 0) :
+    z ∈ boundaries X n := by
+  have hmk : Homology.mk X n ⟨z, hz⟩ = 0 := by
+    apply SKEFTHawking.PoincareDualityConstruct.homology_eq_zero_of_kroneckerH
+    intro ω
+    obtain ⟨ωc, rfl⟩ := Submodule.Quotient.mk_surjective _ ω
+    exact h ωc
+  rw [SKEFTHawking.SingularCapHomology.Homology.mk_eq_zero] at hmk
+  exact hmk
 
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)

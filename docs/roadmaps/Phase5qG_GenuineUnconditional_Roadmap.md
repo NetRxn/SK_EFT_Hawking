@@ -273,11 +273,18 @@ Each gate: target · consumes · DONE criteria · status. **G1 is the unlock; G2
 - **DONE:** the L2 close file is zero-sorry & wired into the library; `#print axioms` of the close theorem =
   EXACTLY `{propext, Classical.choice, Quot.sound}`; `PoincareDual4Mid`/`Lo` are theorems; `lake build` +
   `validate.py` clean; fresh `skeft-qa:adversarial-reviewer` (separate context) ZERO BLOCKER.
-- **Status:** OPEN — **architecture FINAL (route ii, resolved turn 10); only the grind remains.** Next 5q.G action =
-  grind route (ii) in Lean: back the proof up from `NC:~924`, prove the KEY chain is a cycle, then the pairing
-  discharge (`Homology.mk_eq_zero` → `homology_eq_zero_of_kroneckerH` → cup-cap adjunction → Geom:73 + hσR → cancel),
-  observing the banned-route tell; then re-home the χ + engines into an imported module and wire the descent. No Lean
-  shipped in 5q.G yet (turns 1–10 were re-seed-correction + the architecture audit that produced this resolution).
+- **Status:** OPEN — **architecture FINAL (route ii, resolved turn 10); grinding.**
+  - **✅ Brick 1 (turn 11, GREEN + kernel-pure `{propext, Classical.choice, Quot.sound}`):**
+    `mem_boundaries_of_kroneckerH_zero` (`SingularConnSquareCloseNC.lean:889`) — the route-ii **final
+    ∈-boundaries discharge engine**: a cycle pairing to 0 against every cocycle is a boundary
+    (`homology_eq_zero_of_kroneckerH` + `Homology.mk_eq_zero`). General, reusable, no banned formula.
+  - **▶ Remaining route-ii grind:** (2) back the apex proof up from `NC:~924` (drop the witness route 924–1055 +
+    `connecting_assembly_zmod2`); (3) prove the KEY chain is a cycle (`∂ = 0`) so brick 1 applies; (4) per cocycle
+    `a'rep`, split the pairing — σR leg via cup-cap adjunction `kronecker_cap_eq_kronecker_rcap` + Geom:73 + hσR
+    (slack dies), seam + g_rep legs via the committed cap engines — and cancel; observing the banned-route tell.
+  - Then re-home the χ + engines into an imported module and wire the cross-realization descent →
+    `PoincareDual4Mid`/`Lo` become theorems. (Turns 1–10 = re-seed-correction + the architecture audit/resolution;
+    turn 11 = first Lean brick.)
 
 ### G2 — L3 instantiation: w₂ floor-collapse criterion on the genuine PD
 - **Target:** instantiate `wuW2_eq_zero_iff` (proven parametric, §3b) on the genuine PD instance from G1.
