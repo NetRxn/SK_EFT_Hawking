@@ -121,6 +121,31 @@ theorem cap_singularSd_iterate {M : TopCat} {k m : ℕ} (φ : SingularCochain M 
   abel_nf
   simp only [two_smul, ZModModule.add_self, zero_add]
 
+/-- **Sdʲ-bridge on a `∂`-argument** (the NC engine introduces a `Sdʲ` the recipe's Term2/(B) lacks; this
+removes it). For ANY cochain `φ` and chain `c`, the cap of `φ` against the boundary of the `j`-fold
+subdivision of `c` equals the cap against the un-subdivided boundary, modulo a boundary and the non-cocycle
+`δφ`-correction. Pure `singularSd_iterate_chainBoundary` (`∂∘Sdʲ = Sdʲ∘∂`, on the `∂c` cycle) + the shipped
+`cap_singularSd_iterate` (at `z = ∂c`); the ℤ/2 swap closes it. Generic in `φ, c` ⟹ **whnf-free**: `rw` it at
+the concrete `hVleg` to land the recipe's Sdʲ-free `cap φ (∂fund)` without ever assembling the concrete cap. -/
+theorem cap_singularSd_iterate_chainBoundary_arg {M : TopCat} {k m : ℕ} (φ : SingularCochain M k)
+    (c : SingularChain M (k + (m + 1) + 1)) (j : ℕ) :
+    cap φ (chainBoundary M (k + (m + 1))
+        ((⇑(SingularSubdivision.singularSd M (k + (m + 1) + 1)))^[j] c))
+      = cap φ (chainBoundary M (k + (m + 1)) c)
+        + chainBoundary M (m + 1)
+            (cap φ (SingularSubdivision.iterHomotopy M (k + (m + 1)) j
+                (chainBoundary M (k + (m + 1)) c)))
+        + cap (coboundary M k φ)
+            ((show k + (m + 1) + 1 = k + 1 + (m + 1) from by omega) ▸
+              SingularSubdivision.iterHomotopy M (k + (m + 1)) j
+                (chainBoundary M (k + (m + 1)) c)) := by
+  rw [SingularSubdivision.singularSd_iterate_chainBoundary]
+  have hz : chainBoundary M (k + m) (chainBoundary M (k + (m + 1)) c) = 0 :=
+    chainBoundary_chainBoundary_apply M (k + m) c
+  rw [cap_singularSd_iterate φ hz j]
+  abel_nf
+  simp only [two_smul, ZModModule.add_self, zero_add, add_zero]
+
 /-- **Seam-localization composite** (bricks 2 + 4 assembled, chain-altitude, whnf-free). For a cover `{A, B}`,
 a cochain `φ` vanishing on `A` (`φ ∈ relCochains A`), and an `(A∪B)`-supported cycle `w`, the cap `cap φ w`
 decomposes as the pure `B`-cover-part `chainIncl B (cap (pullbackCochain B φ) w')` (the `A`-part dies — brick 2)
