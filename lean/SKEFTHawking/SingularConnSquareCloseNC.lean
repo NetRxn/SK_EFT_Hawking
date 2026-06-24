@@ -1039,6 +1039,13 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   `seam²(boundaryExtract zB) + pd ∈ boundaries(sub(U∩V))` — the cap-Leibniz ∈ boundaries close (chainL_seam +
   --   the σR cap, both boundaries via cap_coboundary_cochainSplit_subdiv_fund over the cover-partition / z₀).
   refine factB_transport _ _ _ _ ?_
-  sorry
+  -- ∈ boundaries via UCT (mem_boundaries_of_kroneckerH_zero): the residual is a CYCLE (seam²(boundaryExtract zB)
+  --   + pd, both cycles) that pairs to 0 against every cohomology class. Cycle obligation first.
+  refine mem_boundaries_of_kroneckerH_zero ⟨_, Submodule.add_mem _
+    (SingularFunctoriality.mapChain_mem_cycles _ (SingularFunctoriality.mapChain_mem_cycles _
+      (SingularPairLES.boundaryExtract_mem_cycles _ (p + 1) _)))
+    (SingularLocalDualityK.pullbackDualityₗ_mem_cycles _ _ _ _ ?_ _)⟩ ?_
+  · exact SingularOpenDualityCycle.fundCycleW_boundary _ _ _ _
+  · sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
