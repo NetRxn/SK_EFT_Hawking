@@ -370,6 +370,19 @@ theorem chainBoundary_rcap_chainBoundary_eq_zero {K : Set ↑X} {k l : ℕ}
         (chainBoundary (sub K) (k + l + 1) c),
     SingularHomologyMod2.chainBoundary_chainBoundary_apply, map_zero]
 
+omit [T2Space ↑X] in
+/-- **Kronecker one-leg drop**: a cochain `a` vanishing on `S`-chains (`a ∈ relCochains S`) pairs to `0`
+against any `S`-supported chain `chainIncl S c`. The kronecker mirror of `cap_relCochains_chainIncl_eq_zero`:
+`kronecker_pullbackCochain` lifts the pairing to `sub S`, where `pullbackCochain a = 0`
+(`pullbackCochain_relCochains_eq_zero`). The leg-drop the cover-partitioned pd-leg uses:
+`cochainSplit ωfc ∈ relCochains legSplitUᶜ`, so its pairing against the `legSplitUᶜ`-part of the
+cover-fine chain vanishes, leaving the `legSplitVᶜ` V-leg. -/
+theorem kronecker_relCochains_chainIncl_eq_zero {S : Set ↑X} {k : ℕ} (a : SingularCochain X k)
+    (ha : a ∈ relCochains S k) (c : SingularChain (sub S) k) :
+    kronecker a (chainIncl S k c) = 0 := by
+  rw [← SingularCapSubKDuality.kronecker_pullbackCochain, pullbackCochain_relCochains_eq_zero k a ha]
+  simp
+
 /-- **infCompactᶜ = legSplitUᶜ ∪ legSplitVᶜ** (the cover-support set identity). `fundCycleW_boundary` lands
 `∂fund` in `subspaceChains(Kᶜ)` with `K = infCompact = legSplitU ∩ legSplitV` (`infCompact_coe`); de Morgan
 (`Set.compl_inter`) rewrites that to the cover `legSplitUᶜ ∪ legSplitVᶜ` the seam-localization engine consumes. -/
