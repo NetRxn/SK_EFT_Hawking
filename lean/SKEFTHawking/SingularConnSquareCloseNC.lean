@@ -933,6 +933,24 @@ theorem cup_pair_fund_eq_pair_z0 {Y : TopCat} {A : Set ↑Y} {p q : ℕ}
       (SingularConnSquareRHSPairing.cup_mem_relCochains f g hfA))
     fund z₀ η a ha heq
 
+/-- **RHS connecting reduction** (the hcup σR-side, gap-free, slack-free pairing form): the relative Kronecker
+pairing of a representative `gRconn` of the MV-connecting class `relCohomMvConnecting σ` (`hgRconn`) against a
+relative `(U'∪V')`-cycle `z` equals the pairing of `σ` against `relMvDelta z` (the homology MV connecting). Lift
+`relKroneckerH_mk_mk` + `hgRconn` + the connecting adjunction `relKroneckerH_relCohomMvConnecting` (MVConnecting:49,
+σR's sole interface — NO false hmem). The connecting half of the hcup absolute residual. -/
+theorem relKroneckerH_relCohomMvConnecting_rep {U' V' : Set ↑X} (hU' : IsOpen U') (hV' : IsOpen V') {N : ℕ}
+    (σ : RelativeCohomology (U' ∩ V') (N + 1))
+    (gRconn : LinearMap.ker (relCoboundaryₗ (U' ∪ V') (N + 2)))
+    (hgRconn : RelativeCohomology.mk (U' ∪ V') (N + 2) gRconn
+      = SingularRelativeCohomologyMVConnecting.relCohomMvConnecting U' V' hU' hV' N σ)
+    (z : relCycles (U' ∪ V') (N + 2)) :
+    SingularRelativePairing.relKroneckerH (U' ∪ V') (RelativeCohomology.mk (U' ∪ V') (N + 2) gRconn)
+        (RelativeHomology.mk (U' ∪ V') (N + 2) z)
+      = SingularRelativePairing.relKroneckerH (U' ∩ V') σ
+          (SingularRelativeMV.relMvDelta U' V' hU' hV' (N + 1)
+            (RelativeHomology.mk (U' ∪ V') (N + 2) z)) := by
+  rw [hgRconn, SingularRelativeCohomologyMVConnecting.relKroneckerH_relCohomMvConnecting]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
