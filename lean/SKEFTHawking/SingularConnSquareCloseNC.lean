@@ -995,9 +995,29 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   (Term2/(B)); the ∂(…) is a boundary; the cap(δφ)(…) folds into Fact A (χ).
   rw [cap_singularSd_iterate_chainBoundary_arg] at hVleg
   -- ⛔ LOCKED PATH (coach 6th): σR_rep is NEVER cap-reduced; enters ONLY via Fact A `cap(δφ) ≈ cap σR_rep` (hσR).
-  -- NEXT (build-verify): Term2/(B) seam-localization `cap φ (∂fund_∩) = mapChain²(boundaryExtract zB)` via brick 7
-  --   `cap_boundaryExtract_naturality_noncocycle` + cover-partition hpart/hzc0/hcp_abs + seam transport hVeq;
-  --   then Fact A (χ via hσR, rel residue via cap_relCochains on the g_rep/rel side, NEVER σR); then ℤ/2.
+  -- Close steps 3+4: cross-realization transport (cap g_rep ∂fund_∩ ← cap g_rep ∂fund_K + cap g_rep ∂ρ) + hbd,
+  -- reducing the goal to the χ. fund_K↔fund_∩ bridge = `fundCycleW_pair_relHomologous` (nested infCompact⊆K, shared z₀).
+  have hsub : (↑(SingularCSCMayerVietorisConnecting.infCompact U V
+        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)).1 : Set ↑X) ⊆ (↑K.1 : Set ↑X) := by
+    rw [SingularCSCMayerVietorisConnecting.infCompact_coe,
+      SingularCSCMayerVietorisConnecting.legSplit_cover U V hU hV K]
+    exact Set.inter_subset_left.trans Set.subset_union_left
+  have hpair := fundCycleW_pair_relHomologous (hU.union hV) (hU.inter hV)
+    (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+    (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+    K (SingularCSCMayerVietorisConnecting.infCompact U V
+        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)) hsub
+  -- transport: a=fund_K, b=fund_∩ inferred from hpair (mk(a+b)=mk a+mk b is defeq/rfl, so the mk+mk form unifies).
+  obtain ⟨ρ, hρmem, htrans⟩ := cap_chainBoundary_relBoundaries_transport (↑↑g_rep)
+    (show coboundary X (N + 1) (↑↑g_rep : SingularCochain X (N + 1)) = 0 from
+      SingularRelativeDuality.relCocycle_coboundary_zero _ g_rep) _ _ hpair
+  -- htrans : cap g_rep ∂fund_K = cap g_rep ∂fund_∩ + cap g_rep ∂ρ. Combine with hbd via a pure TERM (no rw —
+  -- htrans/hbd carry my proofs, the goal carries the descent's: defeq-not-syntactic ⟹ rw's motive is ill-typed):
+  have hUV := hbd.trans htrans
+  -- hUV : U-leg + V-leg = cap g_rep ∂fund_∩ + cap g_rep ∂ρ — the cross-realization + descent, combined (steps 3+4).
+  -- remaining = the χ + ℤ/2 assembly (uses hUV + the committed engine hVleg + hσR; chain_L = V-leg cancels). NEXT brick.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
