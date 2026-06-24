@@ -1016,10 +1016,12 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   -- htrans : cap g_rep ∂fund_K = cap g_rep ∂fund_∩ + cap g_rep ∂ρ. Combine with hbd via a pure TERM (no rw —
   -- htrans/hbd carry my proofs, the goal carries the descent's: defeq-not-syntactic ⟹ rw's motive is ill-typed):
   have hUV := hbd.trans htrans
-  -- ▶ Z₀-REDUCTION is the committed-lemma path (cap_fund_eq_cap_z0 NC:646 docstring = "reduce BOTH σR + g_rep
-  --   to z₀"; = goal-condition "both V-parts onto z₀"). EMPIRICALLY whnf-walls (200k) on the infCompact-coercion
-  --   A-mismatch: hcv `(↑↑infCompact)ᶜ` vs heq `(↑infCompact.1)ᶜ`. NEXT = the coercion-eq dodge (align A via an
-  --   ABSTRACT `↑↑Kc = ↑Kc.1` lemma applied to infCompact, never unfolding the choice-term).
+  -- ▶ Z₀-REDUCTION (committed-lemma cap_fund_eq_cap_z0 NC:646 = goal-condition "both V-parts onto z₀") is the
+  --   SOUND path. EXHAUSTIVELY whnf-walls (200k) on the infCompact (`compactsIn_binary_cover.choose`) choice-term
+  --   in ANY unification against σR_rep's fixed set `(↑↑infCompact)ᶜ` (hcv/S unification). Dodges that FAILED:
+  --   raw cap_fund_eq_cap_z0, the fundCycleW-headed wrapper, hS:=rfl, hS:=`ext x; rfl`. The blocker is a deep Lean
+  --   elaboration whnf, NOT a math gap. NEXT: align σR_rep's set form at the SOURCE (of_chainMatch hmatch /
+  --   descent helper), OR Aristotle (different toolchain), OR a `generalize`-the-infCompact-set restructuring.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
