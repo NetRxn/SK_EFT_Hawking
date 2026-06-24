@@ -1035,6 +1035,8 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   -- Peel the inverse-seam pullbackCochainMaps onto the chain. The goal reduces to the V-part cross-realization
   --   chain equality `boundaryExtract zB = mapChain seam⁻¹ (mapChain subSeam⁻¹ pd)` (a'-independent, over z₀).
   simp only [← SingularKroneckerFunctoriality.kronecker_mapChain]
+  erw [← SingularKroneckerFunctoriality.kronecker_mapChain]
+  refine congrArg (kronecker a'rep.1) ?_
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
