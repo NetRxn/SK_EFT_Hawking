@@ -1016,8 +1016,10 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   -- htrans : cap g_rep ∂fund_K = cap g_rep ∂fund_∩ + cap g_rep ∂ρ. Combine with hbd via a pure TERM (no rw —
   -- htrans/hbd carry my proofs, the goal carries the descent's: defeq-not-syntactic ⟹ rw's motive is ill-typed):
   have hUV := hbd.trans htrans
-  -- hUV : U-leg + V-leg = cap g_rep ∂fund_∩ + cap g_rep ∂ρ — the cross-realization + descent, combined (steps 3+4).
-  -- remaining = the χ + ℤ/2 assembly (uses hUV + the committed engine hVleg + hσR; chain_L = V-leg cancels). NEXT brick.
+  -- ▶ Z₀-REDUCTION is the committed-lemma path (cap_fund_eq_cap_z0 NC:646 docstring = "reduce BOTH σR + g_rep
+  --   to z₀"; = goal-condition "both V-parts onto z₀"). EMPIRICALLY whnf-walls (200k) on the infCompact-coercion
+  --   A-mismatch: hcv `(↑↑infCompact)ᶜ` vs heq `(↑infCompact.1)ᶜ`. NEXT = the coercion-eq dodge (align A via an
+  --   ABSTRACT `↑↑Kc = ↑Kc.1` lemma applied to infCompact, never unfolding the choice-term).
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
