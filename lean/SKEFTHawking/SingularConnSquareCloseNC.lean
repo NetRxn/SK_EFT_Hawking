@@ -937,44 +937,16 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   (explicit seam-homeo cochains via `pullbackCochainMap`), NOT the `relativeDualityK`/`absCohomConn`
   --   class lift that walls. Discharge `hmatch` via `SingularConnSquareHLHSBridge.hLHS_cap_mapChain_bridge_mod`
   --   (+ residual `hdual`/`cap_boundaryExtract_naturality`) — the genuine local-PD content over the shared z₀.
-  apply SingularConnSquareCloseChainMap.subHomConnecting_openDuality_of_chainMatch hU hV z₀ hz₀ K g
-  intro g_rep zc0 hzc0 zA zB hcyc hpart a'rep hzBmem σR_rep hσR
-  -- ▶ COACH-LOCKED ROUTE (cap-Leibniz scaffold): hmatch_close (cocycle pairs to 0 against a boundary) →
-  --   factB_transport (seam-iso reindex) → KEY (`seam²(boundaryExtract zB) + pullbackDualityₗ σR ∈
-  --   boundaries(sub(U∩V))`), then `realize_chainBoundary_cap_mem_boundaries` on `W = cap(cochainSplit g_rep)(F)`
-  --   + the two facts (i) χ-term, (ii) seam-term. NO subdivision (cover-level). Cup-form/CrossReal = re-seed, discarded.
-  refine hmatch_close _ _ (p + 1) a'rep _ _ ?_
-  refine factB_transport _ _ _ _ ?_
-  -- ▶ COCYCLE-g_rep CLOSE (route-corrected 2026-06-23): KEY goal = the connecting-square match
-  --   `seam²(boundaryExtract zB) + pullbackDualityₗ(infCompactᶜ)(U∩V)(fundCycleW) σR_rep ∈ boundaries(sub(U∩V))`.
-  --   g_rep is a COCYCLE ⟹ ∂(cap g_rep fund) = cap g_rep ∂fund EXACTLY (NO χ-term; the φ-route's χ was the
-  --   non-cocycle cochainSplit's δ). Close: W' = realize(cap g_rep fund); ∂W' = realize(cap g_rep ∂fund) =
-  --   realize(chainIncl_A ∂zA + chainIncl_B ∂zB) [cover_partition_cap_boundary_mod]; chain_L = V-part
-  --   (seam-transport, mapChain_chainIncl_boundaryExtract), chain_R = U-part (σR=connecting-of-g_rep).
-  --   Engines committed: relativeDualityK_mk, exists_boundary_of_homology_eq, cover_partition_cap_boundary_mod,
-  --   mapChain_chainIncl_boundaryExtract. Build chain cover-partition (hzc0+hpart+relativeDualityK_mk) FIRST.
-  -- Step 1 [DONE — whnf-dodged via cover_partition_of_legW, the legW-headed free-carrier bridge]:
-  --   chain cover-partition `pullbackDualityₗ(Kᶜ)(U∪V)(fundCycleW) g_rep = chainIncl_A zA + chainIncl_B zB + ∂η`.
-  --   🔑 the application MUST infer `w` from hpart (NOT pass the explicit ⟨chainIncl..,hcyc⟩) — the explicit
-  --   anonymous-constructor forces an elaboration order that whnf-walls; `_` (inferred) dodges it.
-  obtain ⟨η, hcp⟩ := cover_partition_of_legW _ _ _ _ g_rep zc0 _ hzc0 hpart
-  -- Step 2: push hcp through chainIncl(U∪V) → absolute X: `cap g_rep fund = chainIncl(U∪V)(chainIncl_A zA)
-  --   + chainIncl(U∪V)(chainIncl_B zB) + ∂(chainIncl(U∪V) η)` (chainIncl_pullbackDualityₗ + map_add + chainIncl_∂).
-  have hcp_abs := congrArg (⇑(chainIncl (U ∪ V) (p + 1 + 1))) hcp
-  simp only [map_add, SingularLocalDualityK.chainIncl_pullbackDualityₗ,
-    SingularRelativeHomologyMod2.chainIncl_chainBoundary] at hcp_abs
-  -- Step 3: cover_partition_cap_boundary_mod on hcp_abs (A=B=U∪V; zA':=chainIncl(val⁻¹U)zA, zB':=chainIncl(val⁻¹V)zB,
-  --   η':=chainIncl(U∪V)η) → `chainIncl(U∪V)(∂(chainIncl_A zA)) + chainIncl(U∪V)(∂(chainIncl_B zB)) = cap g_rep ∂fund`.
-  have hbd := cover_partition_cap_boundary_mod (U ∪ V) (U ∪ V) _
-    (SingularRelativeDuality.relCocycle_coboundary_zero _ g_rep) _ _ _ _ hcp_abs
-  -- ▶ FLEXIBLE-WITNESS CLOSE (coach 9th, 2026-06-24 — the rep-dependence PIVOT). The goal `factB_transport`
-  --   leaves is the MEMBERSHIP `seam²(boundaryExtract zB) + pullbackDualityₗ(infCompactᶜ)(U∩V) fund_∩ σR_rep
-  --   ∈ boundaries(sub(U∩V))(p+1)` — rep-invariant ONLY mod-boundary, so close it with a σR-DEPENDENT (flexible)
-  --   chain witness, NOT the fixed-exact-witness `connecting_square_close_cocycle_fund` (its exact hident is
-  --   rep-dependent ⟹ UNACHIEVABLE for the ∀-rep _of_chainMatch binder; kernel-confirmed). Witness
-  --   W := realize(cap (g_rep + ξ) fund_∩) via `realize_chainBoundary_cap_mem_boundaries` (NC:251); ξ from hσR
-  --   absorbs the rep-difference via the shipped `cap_coboundary_relCochains_fund_eq_boundary`
-  --   (∂(cap ξ fund) = cap(δξ) fund). hcp/hbd (above) reused for the cover-partition g_rep boundary part.
+  -- ▶ KRONECKER-ALTITUDE CLOSE (of_hcup_linked, PROVEN). The cap path (of_chainMatch) is PROVEN DEAD —
+  --   rep-dependence (coach 9th): the exact `hident` is unachievable for the ∀-rep `_of_chainMatch` binder
+  --   (`cap σR_rep fund_∩` rep-invariant only mod-boundary; RHS rep-independent). The connecting link is
+  --   gap-free at the SCALAR pairing level (Geom:73 / rhs_pairing_reduce, UNCONDITIONAL) on the shared CYCLE
+  --   z₀ where the Sdʲ-homotopy slack ⟨δφ, T(∂z₀)⟩ = ⟨δφ, T(0)⟩ = 0 DIES (∂z₀=0) — NOT at the cap level
+  --   (fund_∩ non-cycle, live slack). of_hcup_linked handles the scalar→subhomology lift internally
+  --   (`relKroneckerH_match_of_chain` + kroneckerH_injective, inside the committed proof — NOT me lifting the
+  --   banned false-hmem class square). REMAINING = `hcup`, the connecting cup-naturality on z₀.
+  apply SKEFTHawking.SingularConnSquareClose.subHomConnecting_openDuality_of_hcup_linked hU hV z₀ hz₀ K g
+  intro a'rep b grep gRconn hgrep hb hgRconn
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
