@@ -1027,6 +1027,18 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   over sub(U∪V) is defeq to {p | ↑p ∈ U∩V}.)
   have hseam := chainIncl_seam_boundaryExtract (S := U ∪ V) (T := U ∩ V)
     (fun _ hx => Or.inl hx.1) (fun _ => Iff.rfl) ⟨zB, hzBmem⟩
+  -- pd = cap σR_rep fund_∩ is a CYCLE (∂pd = 0): σR_rep is an (absolute+relative) cocycle over infCompactᶜ and
+  --   ∂fund_∩ ∈ subspaceChains infCompactᶜ, so both cap-Leibniz terms vanish. Necessary condition for the close.
+  have hpd_cycle : chainBoundary X p (cap ↑↑σR_rep
+      (SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+        (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+        (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+        (SingularCSCMayerVietorisConnecting.infCompact U V
+          (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+          (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)))) = 0 :=
+    cap_cocycle_relCochains_boundary_zero σR_rep.1.1
+      (SingularRelativeDuality.relCocycle_coboundary_zero _ σR_rep) σR_rep.1.2 _
+      (SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV) _ _ _) (by omega)
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
