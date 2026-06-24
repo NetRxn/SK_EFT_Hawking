@@ -1022,6 +1022,11 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     hgr
   rw [hleib] at heng
   have hVleg := add_mid_cancel_zmod2 heng
+  -- Seam-side relation: the goal's seam term, realized to X via chainIncl(U∩V), equals the V-part boundary
+  --   chainIncl(U∪V)(∂(chainIncl_{val⁻¹V} zB)) — which is the V-leg of hbd. (hmem = Iff.rfl: val⁻¹U ∩ val⁻¹V
+  --   over sub(U∪V) is defeq to {p | ↑p ∈ U∩V}.)
+  have hseam := chainIncl_seam_boundaryExtract (S := U ∪ V) (T := U ∩ V)
+    (fun _ hx => Or.inl hx.1) (fun _ => Iff.rfl) ⟨zB, hzBmem⟩
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
