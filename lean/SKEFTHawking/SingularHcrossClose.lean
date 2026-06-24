@@ -32,14 +32,19 @@ This file ships two kernel-pure bricks that reduce the RHS of `hcross` to its V-
 
 These shrink `hcross` to its **irreducible reconciliation core**: matching the LHS
 `[chainIncl (U∪V) (rcap b z_K)]` to the RHS V-part `[chainIncl legSplitVᶜ w']`. That core is the
-**cap-naturality of the MV connecting on the shared `z₀`** under `[b] = absCohomConn [a']`. The genuine
-obstruction (see the module-end note) is that `absCohomConn` is **Kronecker-defined** (the
-`dualMap`-conjugate through the perfect pairing; `SingularSubHomologyMVCohomConn.absCohomConn`), so
-`[b] = absCohomConn [a']` yields no chain-level handle on `b` — only the pairing adjunction. Closing the
-core non-circularly needs a **class-form representative** of `absCohomConn` (the absolute mirror of
-`SingularRelCohomMvConnectingGeom.relCohomMvConnecting_eq_mk_coboundary_cochainSplit`, giving
-`b = δ(cochainSplit …)` as an explicit cocycle), which is not yet committed — building it crosses the
-documented doubly-nested `restr (val⁻¹U) (val⁻¹V)` whnf wall and is the next brick.
+**cap-naturality of the MV connecting on the shared `z₀`** under `[b] = absCohomConn [a']`.
+
+⚠️ **STALE-WORDING CORRECTION (2026-06-24, coach 8th — do NOT re-mine this as a "next brick"):** the original
+text below claimed the class-form representative `b = δ(cochainSplit …)` is "not yet committed / the next brick."
+That is FALSE and was re-seeding a goldfish escalation across compaction boundaries. The class-form
+**IS committed and sorry-free** (`SingularAbsCohomConnClassForm.absCohomConn_eq_mk_of_pair`), but it is
+**Kronecker-CIRCULAR** — `absCohomConn` is Kronecker-defined (`dualMap`-conjugate through the perfect pairing,
+`SingularSubHomologyMVCohomConn.absCohomConn`), so it yields only the pairing adjunction, NOT a free chain-level
+handle on `b` (the authoritative note is `SingularConnSquareCloseM2.lean` lines 8-30). This `hcross` /
+`of_crossRealization` route is the homology-CLASS square that **lock #2 bans**; the live close is NC's
+**`of_chainMatch`** (chain altitude), where σR joins g_rep/δφ gap-free through the pairing adjunction
+`relKroneckerH_relCohomMvConnecting` AT THE CONSUMER (cover-fine Sdʲ unconditional, z₀-slack dies). Do NOT switch
+to this path; do NOT rebuild the class-form.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 -/
