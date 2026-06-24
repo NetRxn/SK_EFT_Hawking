@@ -1153,6 +1153,9 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     rw [← ZModModule.sub_eq_add, sub_eq_zero]
     -- pd-leg: δφ↔∂ adjunction → `kronecker (cochainSplit ωfc) (∂(Sdʲ c))` (exposes the cap-Leibniz V-part).
     rw [kronecker_coboundary_chainBoundary]
+    -- push ∂ through Sdʲ (∂∘Sdʲ = Sdʲ∘∂) → `kronecker (cochainSplit ωfc) (Sdʲ (∂(chainIncl(rcap fc fund))))`.
+    rw [SingularSubdivision.singularSd_iterate_chainBoundary,
+      ← SingularRelativeHomologyMod2.chainIncl_chainBoundary]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
