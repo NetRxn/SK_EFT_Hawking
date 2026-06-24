@@ -103,8 +103,9 @@ The four-facet convergence (5q.E built every box at the ℤ₁₆-algebra level;
 4. `CommonOrigin.sixteen_convergence_*` drops `SmithInflow` / `pin4_abutment` / `PinPlusBordismLandmark`.
 
 The L1→L5 w₂/Wu tower is the route: L1 `[M]` fundamental class ✅ → **L2 Poincaré duality (the unlock —
-the ONE rung with a genuine open *math* question, not just formalization friction: the χ wants an exact
-chain equality but `σR_rep` is opaque; see G1)** → L3 Wu/Sq² floor-collapse criterion ✅(parametric) →
+architecture now RESOLVED, see G1: the close is the ∈-boundaries PAIRING discharge of the KEY [route ii],
+NOT the exact χ [route i, unreachable — σR has no exact-chain bridge] and NOT a kronecker re-spine [route
+iii, banned]; remaining work is the grind, not the route)** → L3 Wu/Sq² floor-collapse criterion ✅(parametric) →
 L4 build the faithful grade + w₂ bordism-invariance ⟹ `ker = ⊥` → L5 ABK completeness + geometric `hGM`
 ⟹ surjective / `≤16` cap discharged.
 
@@ -215,29 +216,54 @@ hypothesis-free, real Mathlib content, no posit.** ("Key declarations" lists the
 Each gate: target · consumes · DONE criteria · status. **G1 is the unlock; G2–G5 cascade from it.**
 
 ### G1 — L2 close (THE UNLOCK): discharge Poincaré duality
-- **✅ BOUNDARY AUDIT COMPLETE (2026-06-24, interactive, source-grounded) — target CORRECTED.** The audit
-  (full record: 5q.G notebook FRONTIER + the 2026-06-24 log entry) found the 5q.F exact-chain χ
-  (`cap σR_rep fund_∩ = chainIncl(U∪V)(∂(chainIncl_U zA)) + cap g_rep ∂ρ`, WIP `SingularConnSquareCloseNC.lean:1040`)
-  is **unreachable by construction**: it needs `σR_rep` as a cochain, but `relCohomMvConnecting`'s only
-  interfaces are the unconditional **pairing** form (yields a *scalar*, never a cochain) and the **banned**
-  cochain realization (`relCohomMvConnecting_eq_mk_coboundary_cochainSplit`, false `hmem`); the pairing-form
-  slack dies only on a CYCLE, and `fund_∩` is a non-cycle. The exact χ came from an OVER-REDUCTION
-  (`connecting_assembly_zmod2` + `cap_chainBoundary_relBoundaries_transport`) — same over-strength class as
-  the reverted `b02b0d08` X=Y route.
-- **▶ Target (corrected by the audit; sanctioned, reachable; NOT a user-decision; NOT a kronecker re-spin):**
-  discharge at the **∈-BOUNDARIES goal** (`SingularConnSquareCloseNC.lean:915`,
-  `seam²(boundaryExtract zB) + pullbackDualityₗ(…)σR_rep ∈ boundaries`) via the PAIRING route
-  (`mem_boundaries_of_kroneckerH_zero`): pair the whole goal against the cocycle `a'rep` (cap↔rcap adjunction)
-  so the σR leg is handled by the unconditional `relKroneckerH_relCohomMvConnecting_cover_partition` (slack
-  dies, cocycle pairing); seam + g_rep legs via the committed cap engines; **drop `connecting_assembly_zmod2`**.
-  Then wire the cross-realization descent → `PoincareDual4Mid`/`PoincareDual4Lo` become theorems.
-- **Altitude-lock guard:** the pairing is the FINAL ∈-boundaries discharge ONLY — the cap-Leibniz engines stay
-  the SPINE. `of_crossRealization`/`kronecker_pd_fold_fund` as the spine is the BANNED re-seed
-  (`SETTLED_FORKS.md` `kronecker-altitude-respine`). Final-discharge homology non-deg = `kroneckerH_injective`
-  (LEGIT); chain-level Kronecker σR↔g_rep bridging is the BANNED non-deg. The of_chainMatch castChain whnf →
-  dodge at cap-altitude via def-head-match, NEVER via the kronecker fold (that whnf-dodge-as-re-spine WAS the
-  5q.F spiral). If the cap-altitude whnf-dodge proves intractable after a BOUNDED grind → genuine tactical
-  wall, escalate (the architecture is now settled by this audit).
+- **⛔⛔ RESOLVED — DO NOT RE-LITIGATE (the close architecture is FINAL; this is the project's single most
+  re-discovered fork — 5q.F: 5 reverts in ~36 h; 5q.G turns 1–10 re-derived it AGAIN). The L2 close is ROUTE (ii):
+  the PAIRING discharge of the ∈-boundaries KEY, keeping `of_chainMatch` as the cap-Leibniz SPINE.** Any future
+  session that concludes "grind the exact χ at NC:1040" (route i) OR "re-spine via `of_hcup_linked`/`of_match`/
+  `of_crossRealization`" (banned) has re-entered the spiral → STOP and re-read this block. Verified end-to-end
+  against the live proof + engine signatures + git history on 2026-06-24 (turn 10).
+
+- **The three routes, with FINAL status (code-grounded — engine signatures are the arbiter):**
+  - **(i) Witness / exact-χ route** — `connecting_square_close_cocycle_fund` → the exact CHAIN χ@`NC:1040`
+    `cap σR_rep fund_∩ = chainIncl(U∪V)(∂(chainIncl_U zA)) + cap g_rep ∂ρ`. ❌ **UNREACHABLE BY CONSTRUCTION:** it
+    needs `σR_rep` as an EXACT chain, but `relCohomMvConnecting` has only (a) the **banned** cochain realization
+    (`relCohomMvConnecting_eq_mk_coboundary_cochainSplit` Geom:134) whose `hmem` is genuinely false (δφ is not a
+    union-cochain un-subdivided — *even at `infCompactᶜ`, which is itself the union `legSplitUᶜ∪legSplitVᶜ`, same
+    straddling simplices*), and (b) the scalar pairing (Geom:73; + non-deg ⟹ **mod-boundary**, never an exact
+    chain). The χ@1040 is an OVER-REDUCTION (`connecting_assembly_zmod2` + `cap_chainBoundary_relBoundaries_transport`),
+    same over-strength class as the reverted `b02b0d08` X=Y route. ⚠ **The turn-6 "coach decision B" correctly
+    banned of_hcup-as-spine but then WRONGLY pointed the FRONTIER at this route** ("the cap-altitude χ at NC:1040");
+    that pointer was itself a drift, repeated again at the turn-8 coach. The claim "`cap_coboundary_cochainSplit_subdiv_fund`
+    discharges the σR-side gap-free" is imprecise — that engine (ω=g_rep) discharges the **g_rep/δφ** side (`hVleg`);
+    σR still needs Fact-A. **DO NOT grind route (i).**
+  - **(ii) Pairing discharge of the ∈-boundaries KEY — ✅ THE CLOSE.** The spine (`of_chainMatch` → `hmatch_close`
+    → `factB_transport`, NC:885–915) already leaves the **∈-boundaries KEY** (`NC:~924`, confirmed by `lean_goal`):
+    `seam²(boundaryExtract zB) + pullbackDualityₗ(infCompactᶜ)(U∩V)(fundCycleW…) σR_rep ∈ boundaries(sub(U∩V))(p+1)`.
+    Discharge it via the PAIRING: `Homology.mk_eq_zero` (SingularCapHomology:48 — the KEY chain is a cycle) →
+    `homology_eq_zero_of_kroneckerH` (PD:75) → ∀ cocycle `a'rep`, cup-cap adjunction `kronecker_cap_eq_kronecker_rcap`
+    (MatchLHS:73) → the σR leg via the UNCONDITIONAL `relKroneckerH_relCohomMvConnecting_cover_partition` (Geom:73)
+    + `hσR` (cocycle pairing — slack dies); seam + g_rep legs via the committed cap engines → cancel. **DROP**
+    `connecting_assembly_zmod2` + the entire witness route (NC:924–1040). σR is handled ONLY via the pairing —
+    there is NO exact-chain σR bridge; this is a MATH FACT, not a route preference. Then wire the cross-realization
+    descent → `PoincareDual4Mid`/`PoincareDual4Lo` become theorems.
+  - **(iii) `of_match` / `of_hcup_linked` / `of_crossRealization` AS THE SPINE** — ❌ **BANNED** (`SETTLED_FORKS.md`
+    `kronecker-altitude-respine`; reverts `a79f1912`, `3ea6b739`, `673c075d`). These pair the WHOLE square at the
+    top (re-spine the close to kronecker altitude). **Categorically different from (ii)**, which keeps the cap-Leibniz
+    spine and pairs only the final KEY sub-step.
+
+- **🔑 THE distinction that ENDS the spiral (spine vs sub-step):** routes (ii) and (iii) both *use the pairing*, but
+  (ii) uses it as the **final ∈-boundaries SUB-step discharge** of the KEY (cap-Leibniz spine kept) while (iii) makes
+  it the **SPINE**. `SETTLED_FORKS` says it exactly: *"Kronecker sub-lemmas inside the Fact-A pairing step are fine;
+  the ban is on the spine."* And the ALTITUDE LOCK: *"σR joins via the pairing adjunction … as a SUB-step / the final
+  ∈-boundaries discharge, NEVER as the spine."* Route (ii) IS that sanctioned sub-step. Both prior errors —
+  route (i) (turns 6–9: doomed exact χ) and route (iii) (turns 1–5 + the 5q.F reverts: banned re-spine) — are now
+  named and closed.
+- **Banned-route tell (safeguard while grinding (ii)):** if the discharge needs the SPECIFIC `a79f1912`-reverted
+  bricks (`cup_pair_fund_eq_pair_z0`, the cup→absolute simp, `relKroneckerH_relCohomMvConnecting_rep`,
+  `kronecker_eq_relKroneckerH_mk`), that is spine-relocation in disguise → STOP. Use Geom:73 + the standard cup-cap
+  adjunction (`kronecker_cap_eq_kronecker_rcap`) only. Final-discharge homology non-deg = `kroneckerH_injective`
+  (LEGIT); chain-level Kronecker σR↔g_rep bridging is the BANNED non-deg. The `of_chainMatch` castChain whnf →
+  dodge at cap-altitude via def-head-match, NEVER via the kronecker fold (that whnf-dodge-as-re-spine WAS the spiral).
 - **Consumes:** the in-library descent reducers + cap-Leibniz engines (§3a/§3b); the salvageable leads (§3c).
 - **⚠ Integration scope:** the descent reducer `subHomConnecting_openDuality_of_hcup_linked` is in-library
   (`SingularConnSquareClose`) but the WIP χ files (`SingularConnSquareCloseNC`, `SingularChainComplexCat`)
@@ -247,9 +273,11 @@ Each gate: target · consumes · DONE criteria · status. **G1 is the unlock; G2
 - **DONE:** the L2 close file is zero-sorry & wired into the library; `#print axioms` of the close theorem =
   EXACTLY `{propext, Classical.choice, Quot.sound}`; `PoincareDual4Mid`/`Lo` are theorems; `lake build` +
   `validate.py` clean; fresh `skeft-qa:adversarial-reviewer` (separate context) ZERO BLOCKER.
-- **Status:** OPEN — audit done, target corrected. Next 5q.G action = re-home the ∈-boundaries pairing close
-  into an imported module and grind the cap-altitude whnf-dodge of the pairing discharge. Nothing built in
-  5q.G yet.
+- **Status:** OPEN — **architecture FINAL (route ii, resolved turn 10); only the grind remains.** Next 5q.G action =
+  grind route (ii) in Lean: back the proof up from `NC:~924`, prove the KEY chain is a cycle, then the pairing
+  discharge (`Homology.mk_eq_zero` → `homology_eq_zero_of_kroneckerH` → cup-cap adjunction → Geom:73 + hσR → cancel),
+  observing the banned-route tell; then re-home the χ + engines into an imported module and wire the descent. No Lean
+  shipped in 5q.G yet (turns 1–10 were re-seed-correction + the architecture audit that produced this resolution).
 
 ### G2 — L3 instantiation: w₂ floor-collapse criterion on the genuine PD
 - **Target:** instantiate `wuW2_eq_zero_iff` (proven parametric, §3b) on the genuine PD instance from G1.
