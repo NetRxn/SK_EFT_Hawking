@@ -1334,6 +1334,10 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     -- transported-cochain form). Then bridge the seam-leg V-part `zB` to the pd V-leg part `wPart` over z₀.
     rw [← SingularKroneckerFunctoriality.kronecker_mapChain,
       ← SingularKroneckerFunctoriality.kronecker_mapChain]
+    -- Bring the V-leg DOWN to a `sub legSplitVᶜ`-level pairing (← kronecker_pullbackCochain): both legs are
+    -- now sub-level (LHS over sub(U∩V) via the seam, RHS over sub(legSplitVᶜ)). δ(pullbackCochain (cochainSplit
+    -- ωfc)) = the connecting restricted, linking via hσR to the seam-side MV connecting of zB over the shared z₀.
+    rw [← SingularCapSubKDuality.kronecker_pullbackCochain]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
