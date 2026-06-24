@@ -886,13 +886,13 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   -- V-leg extracted (ℤ/2 mid-cancel, motive-safe via the abstract lemma):
   --   hVleg : cap g_rep (chainIncl_legSplitVᶜ w) = cap (cochainSplit g_rep) (∂(Sdʲ fund_∩)).
   have hVleg := add_mid_cancel_zmod2 heng
-  -- σR z₀-reduction engine `cap_fundCycleW_eq_cap_z0` BUILT (coach-forced Option B: both caps onto the shared
-  -- cycle z₀=castChain z₀). The σR application is MCP-verified type-correct (cap σR_rep fund_∩ = cap σR_rep z₀ +
-  -- ∂(cap σR_rep η)) but whnf-walls @200k in the FULL build — the application unifies the concrete
-  -- infCompact/castChain coercion forms ((↑Kc.1)ᶜ vs infCompactᶜ in hcv; the σR `↑↑`/relCocycle coercions).
-  -- NEXT (whnf-dodge the σR application): tighten the lemma's hcv form to match `cap_relCochains_subspaceChains_eq_zero`'s
-  --   output set/degree (or pre-`erw` the infCompactᶜ coercion); then mirror g_rep side onto z₀ (over A=Kᶜ),
-  --   on-z₀ χ (δ(cochainSplit g_rep) ≈ σR_rep, Sdʲ slack dead ∂z₀=0) via hVleg; exact ℤ/2 assemble.
+  -- σR z₀-reduction (`cap_fundCycleW_eq_cap_z0`): whnf-wall ISOLATED (sorry-bisection) to the `hcv` arg
+  -- `cap_relCochains_subspaceChains_eq_zero ↑↑σR_rep σR_rep.1.2` — its set `(↑↑infCompact)ᶜ` (σR_rep.1.2's
+  -- coercion) ≠ the lemma/`fundCycleW_chain_rel` `(↑Kc.1)ᶜ` form (NOT defeq: `↑↑Kc ≠ ↑Kc.1` even abstract), and
+  -- unifying the two coercion forms over the verbose `infCompact` term whnf-LOOPS (NOT heartbeats: 2M still
+  -- walls). NEXT (clean isolated sub-brick): a set-coercion bridge — convert σR_rep.1.2's membership to the
+  -- `(↑Kc.1)ᶜ` form (find `↑↑Kc = ↑Kc.1`-style coercion eq, or parametrize the lemma's set S + explicit hS),
+  -- then hcv matches syntactically. (Degree-view / σR-view castChain do NOT help — confirmed; it's the set.)
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
