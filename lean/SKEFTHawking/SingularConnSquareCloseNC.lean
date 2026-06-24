@@ -629,19 +629,15 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   η':=chainIncl(U∪V)η) → `chainIncl(U∪V)(∂(chainIncl_A zA)) + chainIncl(U∪V)(∂(chainIncl_B zB)) = cap g_rep ∂fund`.
   have hbd := cover_partition_cap_boundary_mod (U ∪ V) (U ∪ V) _
     (SingularRelativeDuality.relCocycle_coboundary_zero _ g_rep) _ _ _ _ hcp_abs
-  -- ▶ CLEANER-WITNESS CLOSE (supersedes the cochainSplit/χ route — the cleaner witness d = cap g_rep fund_∩
-  --   is U∩V-supported [cap_fundCycleW_mem] and ∂d = cap g_rep ∂fund_∩ has NO δ-term [chainBoundary_cap_cocycle_arg,
-  --   g_rep cocycle], so the WITNESS sidesteps the χ entirely; engines all committed):
-  --   (1) hd = cap_fundCycleW_mem (cap g_rep fund_∩ ∈ subspaceChains(U∩V)); hsum = chainBoundary_mem_subspaceChains hd.
-  --   (2) rw [show chain_L + pd = realize⟨∂(cap g_rep fund_∩), hsum⟩ from chainIncl_injective ...];
-  --       exact realize_chainBoundary_cap_mem_boundaries (U∩V) g_rep fund_∩ hd hsum.
-  --   (3) the chainIncl_injective residual = the CONNECTING-SQUARE IDENTITY (X-level):
-  --       chainIncl(U∪V)(∂(chainIncl_B zB)) [= chainIncl(chain_L), chainIncl_seam_boundaryExtract d6c8a848]
-  --         + cap σR_rep fund_∩ [= chainIncl(pd), chainIncl_pullbackDualityₗ]
-  --         = cap g_rep ∂fund_∩ [= ∂d, chainBoundary_cap_cocycle_arg].
-  --   V-part of the identity: hbd (f1fcc707) links chainIncl(U∪V)(∂(chainIncl_B zB)) to cap g_rep ∂fund_{U∪V}.
-  --   U-part (cap σR_rep fund_∩ ↔ cap g_rep ∂fund_∩, the cap-level CONNECTING RELATION) = the genuine residual —
-  --   needs relCohomMvConnecting (σR=connecting g_rep via hσR) + fundCycleW_relHomologous (fund_∩↔fund_{U∪V}↔z₀).
+  -- ▶ CLEANER-WITNESS REFLECTION (engines committed: connecting_square_close NC + cap_fundCycleW_mem +
+  --   chainBoundary_cap_cocycle_arg + chainBoundary_mem_subspaceChains). Goal `chain_L + pd ∈ boundaries(sub(U∩V))`.
+  --   ⚠ GRADING NOTE (2026-06-23): the witness `cap g_rep fund_∩` makes g_rep (deg N+1) and σR (deg N+2) cap the
+  --   SAME fund_∩ at ADJACENT degrees — a succ_add defeq clash (k+(n+1)+1 vs k+1+(n+1)) blocks the σC-exposed
+  --   wrapper. The original cocycle route dodged it via SEPARATE fundamentals (fund_{U∪V} for g_rep [hbd], fund_∩
+  --   for σR [pd]). NEXT BRICK: wire connecting_square_close with c=fund_∩ pinned via `castChain` on the witness
+  --   grading (so cap g_rep fund_∩ reads at N+1 cleanly), OR realize via the goal's pd-typed fund_∩ + a cast
+  --   bridging the two cap-views. Residual after wiring = `chainIncl(U∩V) chain_L + cap σR_rep fund_∩ =
+  --   ∂(cap g_rep fund_∩)` (V-part: chainIncl_seam_boundaryExtract+hbd; U-part: σR connecting via hσR).
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
