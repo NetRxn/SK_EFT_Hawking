@@ -85,6 +85,60 @@ theorem rhs_pairing_reduce {M : TopCat} [T2Space ↑M] {N : ℕ} (U' V' : Set �
     relKroneckerH_relCohomMvConnecting_cover_partition U' V' hU' hV' N ωR _
       (chainIncl U' (N + 1) u') (chainIncl V' (N + 1) w') hu hw hsplit hwcyc hSdcyc]
 
+/-- **Partition-exposing variant of `rhs_pairing_reduce`** — same pairing reduction, but ALSO returns the
+cover-fine cover-partition `∂(Sdʲc) = chainIncl U' u' + chainIncl V' w'` (the `exists_cover_fine_subdivision`
+witness that `rhs_pairing_reduce` consumed internally). The connecting-square match needs this exposed: the
+pd-leg chain is `∂(Sdʲc)`, and the cover-partition + a `relCochains U'`-cochain leg-drop
+(`kronecker_relCochains_mvUnion_eq`) extract its `V'`-leg to match the seam-leg. The single shared `j` ties
+the pairing and the partition (both come from one `exists_cover_fine_subdivision` call). -/
+theorem rhs_pairing_reduce_partition {M : TopCat} [T2Space ↑M] {N : ℕ} (U' V' : Set ↑M)
+    (hU' : IsOpen U') (hV' : IsOpen V')
+    (ωR : LinearMap.ker (relCoboundaryₗ (U' ∩ V') (N + 1)))
+    (c : SingularChain M (N + 1 + 1))
+    (hccyc : RelativeChain.mk (U' ∪ V') (N + 1 + 1) c ∈ relCycles (U' ∪ V') (N + 1 + 1)) :
+    ∃ (j : ℕ) (u' : SingularChain (sub U') (N + 1)) (w' : SingularChain (sub V') (N + 1)),
+      relKroneckerH (U' ∪ V')
+          (relCohomMvConnecting U' V' hU' hV' N (RelativeCohomology.mk (U' ∩ V') (N + 1) ωR))
+          (RelativeHomology.mk (U' ∪ V') (N + 1 + 1)
+            ⟨RelativeChain.mk (U' ∪ V') (N + 1 + 1) c, hccyc⟩)
+        = kronecker (coboundary M (N + 1) (cochainSplit U' (N + 1) ωR.1.1))
+            ((⇑(SingularSubdivision.singularSd M (N + 1 + 1)))^[j] c)
+      ∧ chainBoundary M (N + 1) ((⇑(SingularSubdivision.singularSd M (N + 1 + 1)))^[j] c)
+        = chainIncl U' (N + 1) u' + chainIncl V' (N + 1) w' := by
+  have hc : chainBoundary M (N + 1) c ∈ subspaceChains (U' ∪ V') (N + 1) := by
+    have h := hccyc
+    rw [show relCycles (U' ∪ V') (N + 1 + 1) = LinearMap.ker (relBoundary (U' ∪ V') (N + 1)) from rfl,
+      LinearMap.mem_ker, relBoundary_mk, RelativeChain.mk_eq_zero_iff] at h
+    exact h
+  obtain ⟨j, u', w', hsplit⟩ := exists_cover_fine_subdivision hU' hV' c hc
+  refine ⟨j, u', w', ?_, hsplit⟩
+  have hu : chainIncl U' (N + 1) u' ∈ subspaceChains U' (N + 1) := ⟨u', rfl⟩
+  have hw : chainIncl V' (N + 1) w' ∈ subspaceChains V' (N + 1) := ⟨w', rfl⟩
+  have hSdcyc : RelativeChain.mk (U' ∪ V') (N + 1 + 1)
+      ((⇑(SingularSubdivision.singularSd M (N + 1 + 1)))^[j] c) ∈ relCycles (U' ∪ V') (N + 1 + 1) := by
+    rw [show relCycles (U' ∪ V') (N + 1 + 1) = LinearMap.ker (relBoundary (U' ∪ V') (N + 1)) from rfl,
+      LinearMap.mem_ker, relBoundary_mk, RelativeChain.mk_eq_zero_iff, hsplit]
+    exact Submodule.add_mem _
+      (SKEFTHawking.SingularMayerVietoris.subspaceChains_mono Set.subset_union_left (N + 1) hu)
+      (SKEFTHawking.SingularMayerVietoris.subspaceChains_mono Set.subset_union_right (N + 1) hw)
+  have hwcyc : RelativeChain.mk (U' ∩ V') (N + 1) (chainIncl V' (N + 1) w')
+      ∈ relCycles (U' ∩ V') (N + 1) := by
+    rw [show relCycles (U' ∩ V') (N + 1) = LinearMap.ker (relBoundary (U' ∩ V') N) from rfl,
+      LinearMap.mem_ker, relBoundary_mk, RelativeChain.mk_eq_zero_iff,
+      ← SingularExcision.subspaceChains_inf]
+    refine Submodule.mem_inf.2 ⟨?_, ?_⟩
+    · have hUcyc : chainBoundary M N (chainIncl U' (N + 1) u')
+          + chainBoundary M N (chainIncl V' (N + 1) w') = 0 := by
+        rw [← map_add, ← hsplit]; exact chainBoundary_chainBoundary_apply M N _
+      have hVU : chainBoundary M N (chainIncl V' (N + 1) w')
+          = chainBoundary M N (chainIncl U' (N + 1) u') :=
+        eq_of_sub_eq_zero (by rw [ZModModule.sub_eq_add, add_comm]; exact hUcyc)
+      rw [hVU, ← chainIncl_chainBoundary]; exact ⟨_, rfl⟩
+    · rw [← chainIncl_chainBoundary]; exact ⟨_, rfl⟩
+  rw [relHomology_mk_singularSd_iterate c hc hccyc j hSdcyc,
+    relKroneckerH_relCohomMvConnecting_cover_partition U' V' hU' hV' N ωR _
+      (chainIncl U' (N + 1) u') (chainIncl V' (N + 1) w') hu hw hsplit hwcyc hSdcyc]
+
 /-- **Fundamental-cycle → `z₀` pairing reduction** (the cap-not-cycle resolution / shared-z₀ bridge):
 a cocycle `c` (e.g. `gL ∪ b`, where `gL` is *relative* on `A=Kᶜ`) that **vanishes on `C(A)`** pairs
 identically against `fund` and `z₀` whenever they differ by a boundary plus an `A`-chain
