@@ -1072,6 +1072,9 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     -- seam-leg: peel both seam homeos onto the cochain (kronecker_mapChain forward) → kronecker (seam²-transported
     --   fc) (boundaryExtract zB) — the seamTransport-vs-boundaryExtract form, toward the same relMvDelta as the pd-leg.
     rw [SingularKroneckerFunctoriality.kronecker_mapChain, SingularKroneckerFunctoriality.kronecker_mapChain]
+    -- ℤ/2: `A + B = 0 ⟺ A = B`. The match target is `seam-leg = pd-leg` (both → the same relKroneckerH σ
+    --   (relMvDelta [rcap fc fund]) by cap-product MV-naturality; then X = X ⟹ X + X = 0).
+    rw [← ZModModule.sub_eq_add, sub_eq_zero]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
