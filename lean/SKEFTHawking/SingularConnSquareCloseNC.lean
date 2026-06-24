@@ -916,6 +916,23 @@ theorem cap_cocycle_relCochains_boundary_zero {S : Set ↑X} {k m : ℕ} (a : Si
     rw [← capₗ_apply, map_zero, LinearMap.zero_apply]
   exact hleib.trans hz
 
+/-- **Cup z₀-reduction** (the `hcup` leg-reduction): a relative cocycle `f ∈ relCochains A` (`δf = 0`) cupped
+with a cocycle `g` (`δg = 0`) pairs identically against `fund` and `z₀` when they differ by a boundary plus an
+`A`-chain (`fund + z₀ = ∂η + a`, `a ∈ C(A)`). Assembles `cup_cocycle` (the cup is a cocycle) + `cup_mem_relCochains`
+(the cup vanishes on `C(A)`) into `pair_fund_eq_pair_z0` (the slack dies because the cup is a cocycle). Reduces
+each `hcup` cup-pairing onto the single shared cycle z₀. ℤ/2. -/
+theorem cup_pair_fund_eq_pair_z0 {Y : TopCat} {A : Set ↑Y} {p q : ℕ}
+    (f : SingularCochain Y p) (g : SingularCochain Y q)
+    (hf : coboundary Y p f = 0) (hfA : f ∈ relCochains A p) (hg : coboundary Y q g = 0)
+    (fund z₀ : SingularChain Y (p + q)) (η : SingularChain Y (p + q + 1)) (a : SingularChain Y (p + q))
+    (ha : a ∈ subspaceChains A (p + q)) (heq : fund + z₀ = chainBoundary Y (p + q) η + a) :
+    kronecker (SingularCohomologyMod2.cup f g) fund = kronecker (SingularCohomologyMod2.cup f g) z₀ :=
+  SingularConnSquareRHSPairing.pair_fund_eq_pair_z0 (SingularCohomologyMod2.cup f g)
+    (SingularConnSquareRHSPairing.cup_cocycle f g hf hg)
+    ((SingularRelativeCohomologyMod2.mem_relCochains (S := A) (p + q) (SingularCohomologyMod2.cup f g)).1
+      (SingularConnSquareRHSPairing.cup_mem_relCochains f g hfA))
+    fund z₀ η a ha heq
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
