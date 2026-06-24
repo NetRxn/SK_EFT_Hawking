@@ -957,8 +957,14 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     conv_rhs => change kroneckerH (p + 1) (Submodule.Quotient.mk ω) (SingularLocalDualityK.relativeDualityK _ _ (N + 1 + 1) p _ _ (SingularOpenDualityCycle.fundCycleW_boundary _ _ _ _) (RelativeCohomology.mk _ (N + 1 + 1) σR_rep))
     rw [SingularCapSubKDuality.kroneckerH_relativeDualityK_mk_eq_relKroneckerH _ _ _ _ _ (SingularCapSubKDuality.chainIncl_rcap_mem_relCycles _ _ (SingularOpenDualityCycle.fundCycleW_boundary _ _ _ _) ω)]
     -- ⊢ kronecker ω.1 (seam²(boundaryExtract zB)) = relKroneckerH (infCompactᶜ) (mk σR_rep) [chainIncl(rcap ω fund)]
-    -- ▶ NEXT: hσR (σR_rep = relCohomMvConnecting g_rep↾) + Geom:73/rhs_pairing_reduce → the connecting pairing
-    --   kronecker(δφ)(Sdʲ…); then the SEAM leg → cover-partition V-part → match.
+    -- hσR: σR_rep's class IS the connecting of g_rep (relCohomSetCongr/relCohomRestrict-bridged relCohomMvConnecting).
+    conv_rhs => rw [show RelativeCohomology.mk _ (N + 1 + 1) σR_rep = Submodule.Quotient.mk σR_rep from rfl, hσR]
+    -- ⊢ … = relKroneckerH (infCompactᶜ) (relCohomSetCongr(relCohomMvConnecting (legSplitUᶜ)(legSplitVᶜ)
+    --     (relCohomRestrict (relCohomSetCongr (mk g_rep))))) [chainIncl(rcap ω fund)]
+    -- ▶ NEXT: peel set-congr (`relKroneckerH_relCohomSetCongr_relIncl_collapse` TwoCoverBridge:84) + restrict
+    --   (`relKroneckerH_relCohomRestrict'` DualityAdjoint:54) → `relKroneckerH (legSplitUᶜ∪legSplitVᶜ)
+    --   (relCohomMvConnecting (mk g_rep↾)) [...]` → `rhs_pairing_reduce_partition` (RHSPairing:94) → kronecker(δφ)(Sdʲc)
+    --   + the cover-partition; the SEAM leg → cover-partition V-part (via the boundaryExtract/seam relation) → match.
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
