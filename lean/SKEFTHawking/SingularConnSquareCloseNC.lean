@@ -632,6 +632,27 @@ theorem cap_fund_eq_cap_z0 {A : Set ↑X} {k m : ℕ} (c : SingularCochain X k)
   rw [← capₗ_apply, map_add, capₗ_apply, capₗ_apply] at hsum
   exact eq_of_sub_eq_zero (by rw [ZModModule.sub_eq_add, ← add_assoc, hsum]; exact ZModModule.add_self _)
 
+/-- **Chain-level form of `fundCycleW_relHomologous`** (the `heq` input for `cap_fund_eq_cap_z0`): the
+relBoundaries membership `mk z₀ + mk fund ∈ relBoundaries(Kᶜ)` unfolds to a concrete `fund + z₀ = ∂η + a`
+with `a ∈ subspaceChains(Kᶜ)` (`relBoundary_mk` + `mk` surjective + `mk_eq_zero_iff`, all over ℤ/2). -/
+theorem fundCycleW_chain_rel {W : Set ↑X} {k m : ℕ} (hW : IsOpen W)
+    (z₀ : SingularChain X (k + m + 1)) (hz₀ : chainBoundary X (k + m) z₀ = 0)
+    (K : SingularCompactsInOpen.CompactsIn W) :
+    ∃ (η : SingularChain X (k + m + 1 + 1)) (a : SingularChain X (k + m + 1)),
+      SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K + z₀
+          = chainBoundary X (k + m + 1) η + a ∧
+        a ∈ subspaceChains ((↑K.1 : Set ↑X)ᶜ) (k + m + 1) := by
+  obtain ⟨w, hw⟩ := SingularOpenDualityCycle.fundCycleW_relHomologous hW z₀ hz₀ K
+  obtain ⟨η, rfl⟩ := Submodule.Quotient.mk_surjective _ w
+  erw [SingularRelativeHomologyMod2.relBoundary_mk] at hw
+  refine ⟨η, chainBoundary X (k + m + 1) η + (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K + z₀), ?_, ?_⟩
+  · abel_nf
+    simp only [two_smul, ZModModule.add_self, zero_add, add_zero]
+  · erw [← Submodule.Quotient.mk_add, Submodule.Quotient.eq] at hw
+    rw [ZModModule.sub_eq_add,
+      add_comm z₀ (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K)] at hw
+    exact hw
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
