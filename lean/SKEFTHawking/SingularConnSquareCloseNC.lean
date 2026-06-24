@@ -1203,6 +1203,49 @@ theorem kronecker_pd_fold_fund {N p : ℕ} (U' V' K S' : Set ↑X) (hU' : IsOpen
     SKEFTHawking.SingularConnSquareClose.relKroneckerH_relMvDelta_eq]
   exact hfold
 
+/-- **Partition-exposing combined pd-leg fold** — `kronecker_pd_fold_fund` but threading out the cover-partition
+`∂(Sdʲ(chainIncl K (rcap fc fund))) = chainIncl U' u' + chainIncl V' w'` (from `rhs_pairing_reduce_fund_partition`,
+step 9) with the SAME `jSd` as the pd-leg pairing. This is the engine the NC match applies: the pd-leg chain
+(after δ↔∂ + the ∂/Sdʲ pushes) is exactly `∂(Sdʲ(chainIncl K (rcap fc fund)))`, so the exposed cover-split feeds
+the `kronecker_relCochains_mvUnion_eq` leg-drop (`cochainSplit ωfc ∈ relCochains U'`) to extract the `V'` V-leg
+that matches the seam-leg's `boundaryExtract zB`. -/
+theorem kronecker_pd_fold_fund_partition {N p : ℕ} (U' V' K S' : Set ↑X) (hU' : IsOpen U') (hV' : IsOpen V')
+    (hSeq : U' ∪ V' = S')
+    {Wset : Set ↑X} (hW : IsOpen Wset) (z₀ : SingularChain X (N + 2 + p + 1))
+    (hz₀ : chainBoundary X (N + 2 + p) z₀ = 0) (Kc : SingularCompactsInOpen.CompactsIn Wset)
+    (hzK : SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc ∈ subspaceChains K (N + 2 + p + 1))
+    (hzS : chainBoundary X (N + 2 + p) (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc)
+        ∈ subspaceChains (U' ∪ V') (N + 2 + p))
+    (hzS' : chainBoundary X (N + 2 + p) (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc)
+        ∈ subspaceChains S' (N + 2 + p))
+    (fc : LinearMap.ker (coboundaryₗ (sub K) (p + 1)))
+    (σR : LinearMap.ker (relCoboundaryₗ S' (N + 2)))
+    (ωfc : LinearMap.ker (relCoboundaryₗ (U' ∩ V') (N + 1)))
+    (hσR : RelativeCohomology.mk S' (N + 2) σR
+      = SingularCompactlySupportedTop.relCohomSetCongr hSeq (N + 2)
+          (SingularRelativeCohomologyMVConnecting.relCohomMvConnecting U' V' hU' hV' N
+            (RelativeCohomology.mk (U' ∩ V') (N + 1) ωfc))) :
+    ∃ (j : ℕ) (u' : SingularChain (sub U') (N + 1)) (w' : SingularChain (sub V') (N + 1)),
+      kronecker fc.1 (SingularLocalDualityK.pullbackDualityₗ S' K
+          (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc) hzK σR)
+        = kronecker (coboundary X (N + 1) (cochainSplit U' (N + 1) ωfc.1.1))
+            ((⇑(SingularSubdivision.singularSd X (N + 1 + 1)))^[j]
+              (chainIncl K (N + 2) (SingularCapChainIncl.rcap fc.1
+                ((SingularSubspaceChainsEquiv.subspaceChainsEquiv K (N + 2 + p + 1)).symm
+                  ⟨SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc, hzK⟩))))
+      ∧ chainBoundary X (N + 1) ((⇑(SingularSubdivision.singularSd X (N + 1 + 1)))^[j]
+              (chainIncl K (N + 2) (SingularCapChainIncl.rcap fc.1
+                ((SingularSubspaceChainsEquiv.subspaceChainsEquiv K (N + 2 + p + 1)).symm
+                  ⟨SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc, hzK⟩))))
+        = chainIncl U' (N + 1) u' + chainIncl V' (N + 1) w' := by
+  obtain ⟨jSd, u', w', hfold, hpart⟩ :=
+    rhs_pairing_reduce_fund_partition U' V' K hU' hV' ωfc hW z₀ hz₀ Kc hzK hzS fc
+  refine ⟨jSd, u', w', ?_, hpart⟩
+  rw [kronecker_pullbackDualityₗ_connecting_fund hU' hV' hSeq hW z₀ hz₀ Kc hzK hzS hzS' fc σR
+      (RelativeCohomology.mk (U' ∩ V') (N + 1) ωfc) hσR,
+    SKEFTHawking.SingularConnSquareClose.relKroneckerH_relMvDelta_eq]
+  exact hfold
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
