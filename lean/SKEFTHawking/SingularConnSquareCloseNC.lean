@@ -1313,7 +1313,7 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
         (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
         (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
     have hbdyUV := hJL.symm ▸ hbdy
-    obtain ⟨jSd, hpd⟩ := kronecker_pd_fold_fund _ _ _ _
+    obtain ⟨jSd, uPart, wPart, hpd, hpfold⟩ := kronecker_pd_fold_fund_partition _ _ _ _
       (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
       (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
       hJL _ _ _ _ _ hbdyUV hbdy fc σR_rep ωfc hσR
@@ -1321,19 +1321,14 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     -- seam-leg: peel both seam homeos onto the cochain (kronecker_mapChain), then ℤ/2 reframe → the cap-Leibniz match.
     rw [SingularKroneckerFunctoriality.kronecker_mapChain, SingularKroneckerFunctoriality.kronecker_mapChain]
     rw [← ZModModule.sub_eq_add, sub_eq_zero]
-    -- pd-leg: δφ↔∂ adjunction → `kronecker (cochainSplit ωfc) (∂(Sdʲ c))` (exposes the cap-Leibniz V-part).
+    -- pd-leg: δφ↔∂ adjunction → `kronecker (cochainSplit ωfc) (∂(Sdʲ c))`.
     rw [kronecker_coboundary_chainBoundary]
-    -- push ∂ through Sdʲ (∂∘Sdʲ = Sdʲ∘∂) → `kronecker (cochainSplit ωfc) (Sdʲ (∂(chainIncl(rcap fc fund))))`.
-    rw [SingularSubdivision.singularSd_iterate_chainBoundary,
-      ← SingularRelativeHomologyMod2.chainIncl_chainBoundary]
-    -- Push ∂ through the rcap (fc cocycle): `∂(rcap fc fund) = rcap fc (∂fund)`, exposing the
-    -- cover-supported `∂fund` (the seam V-part, `hbdy`) that links the pd-leg to the seam-leg.
-    rw [chainBoundary_rcap_subspaceChainsEquiv_symm]
-    -- Push the cover-fine Sdʲ inside the realized inclusion (`singularSd_chainIncl` naturality): the pd-leg
-    -- chain becomes a `sub (U∩V)`-internal subdivided rcap — the form the cover-partition leg-drop consumes.
-    -- ⚠ the Sdʲ is NOT droppable by cocycle-invariance here (`cochainSplit ωfc` is NON-cocycle: its δ IS the
-    -- connecting), so `kronecker_singularSd_iterate_cocycle` does not apply; the leg-drop is the mechanism.
-    rw [singularSd_iterate_chainIncl]
+    -- COVER-PARTITION LEG-DROP (steps 8–10 + step 7): the pd-leg chain `∂(Sdʲ c)` cover-splits (`hpfold`,
+    -- the partition exposed with the goal's `jSd`) into `chainIncl legSplitUᶜ uPart + chainIncl legSplitVᶜ wPart`.
+    -- `cochainSplit ωfc ∈ relCochains legSplitUᶜ` (`cochainSplit_mem_relCochains`) ⟹ the legSplitUᶜ-part pairs
+    -- to 0 (`kronecker_relCochains_chainIncl_eq_zero`), leaving the legSplitVᶜ V-leg.
+    rw [hpfold, kronecker_add_right,
+      kronecker_relCochains_chainIncl_eq_zero _ (cochainSplit_mem_relCochains _ _ _), zero_add]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
