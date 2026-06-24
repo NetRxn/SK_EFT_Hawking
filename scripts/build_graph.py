@@ -644,8 +644,10 @@ def _parse_tex_title(tex_path: Path) -> str | None:
         text = tex_path.read_text()
     except (OSError, UnicodeDecodeError):
         return None
-    # Non-greedy match; allow balanced-ish braces inside
-    m = re.search(r'\\title\{([^}]*(?:\\\\[^}]*)*)\}', text)
+    # Title text up to the first '}' (backslashes included — they're not '}').
+    # Linear, no nested quantifier (the old `([^}]*(?:\\\\[^}]*)*)` was redundant —
+    # `[^}]*` already matches '\\' — and caused exponential backtracking: ReDoS fix.
+    m = re.search(r'\\title\{([^}]*)\}', text)
     if not m:
         return None
     title = m.group(1).replace(r'\\', ' ').strip()

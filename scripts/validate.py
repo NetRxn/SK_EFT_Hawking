@@ -418,8 +418,8 @@ _TRIVIAL_BODY_RES = [
     # the deliberate non-flagging of substantive constructors at finding C2).
     (re.compile(
         r"^(by\s+exact\s+)?⟨\s*"
-        r"(\(?\s*Equiv\.refl[\s\w]*\)?(\.\w+)?|rfl|trivial)"
-        r"(\s*,\s*(\(?\s*Equiv\.refl[\s\w]*\)?(\.\w+)?|rfl|trivial))*\s*⟩$"),
+        r"(\(?\s*Equiv\.refl[\s\w]*+\)?(\.\w+)?|rfl|trivial)"
+        r"(\s*,\s*(\(?\s*Equiv\.refl[\s\w]*+\)?(\.\w+)?|rfl|trivial))*\s*⟩$"),
      "⟨Equiv.refl,…⟩ (self-discharging existential)"),
 ]
 # Substantive-tactic markers: if the body contains any of these it is NOT a
