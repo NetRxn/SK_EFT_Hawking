@@ -881,6 +881,20 @@ theorem connecting_assembly_zmod2 {m : ℕ} (chainL capσR capgDfund U_A capgDrh
   rw [hChi, show chainL + (U_A + capgDrho) = U_A + chainL + capgDrho from by abel, hUV]
   abel_nf
   simp only [two_smul, ZModModule.add_self, add_zero]
+
+/-- **Set-congruence transport of a `RelativeHomology.mk`** (whnf-safe glue for the σR-leg pairing). A
+relative-homology class `[mk c]` over `S'` transported along `hSet : S = S'` is the class `[mk c]` over
+`S` of the same ambient chain `c` — `subst hSet` collapses the `▸` and the cycle-membership proofs are
+irrelevant. Lets the goal's `hSet ▸ RelativeHomology.mk (infCompactᶜ) …` (produced by
+`relKroneckerH_relCohomSetCongr_relIncl_collapse`) be re-expressed over `legSplitUᶜ ∪ legSplitVᶜ`, the set
+the pairing-form reduction `rhs_pairing_reduce_partition` consumes. -/
+theorem relHomology_mk_setCongr_transport {S S' : Set ↑X} (hSet : S = S') {n : ℕ}
+    (c : SingularChain X n) (hc' : RelativeChain.mk S' n c ∈ relCycles S' n)
+    (hc : RelativeChain.mk S n c ∈ relCycles S n) :
+    (hSet ▸ RelativeHomology.mk S' n ⟨RelativeChain.mk S' n c, hc'⟩)
+      = RelativeHomology.mk S n ⟨RelativeChain.mk S n c, hc⟩ := by
+  subst hSet; rfl
+
 /-- **∈-boundaries ← pairing-zero** (route-ii final discharge engine). A cycle `z` whose Kronecker
 pairing against EVERY cocycle vanishes is a boundary — homology Kronecker non-degeneracy
 (`homology_eq_zero_of_kroneckerH`) + `Homology.mk_eq_zero`. This is the sanctioned final ∈-boundaries
@@ -980,6 +994,58 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     --   + cover-partition `∂(Sdʲc)=chainIncl u'+chainIncl w'` (handle the `⋯ ▸` homology transport); (b) SEAM leg
     --   `kronecker ω.1 (seam²(boundaryExtract zB))` → V-leg w' match (boundaryExtract/seam = cover-partition V-part;
     --   z₀-reduction via fundCycleW_relHomologous if the Sdʲ slack needs killing).
+    -- STEP 1: push the cover-identity transport `hSet ▸` through `RelativeHomology.mk`/`RelativeChain.mk`
+    --   so the σR-leg homology is over `legSplitUᶜ ∪ legSplitVᶜ` — the set `rhs_pairing_reduce_partition` reads.
+    rw [relHomology_mk_setCongr_transport]
+    rotate_left
+    · exact (infCompact_compl_legSplit hU hV K).symm
+    · -- the transported chain `chainIncl(U∩V)(rcap ω fund)` is a `(legSplitUᶜ∪legSplitVᶜ)`-rel cycle.
+      have hbd := SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV)
+        (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+        (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+        (SingularCSCMayerVietorisConnecting.infCompact U V
+          (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+          (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
+      rw [SingularCSCMayerVietorisConnecting.infCompact_coe, Set.compl_inter] at hbd
+      exact SingularCapSubKDuality.chainIncl_rcap_mem_relCycles _
+        (SingularOpenDualityCycle.fundCycleW_mem_W (hU.inter hV) _ _ _) hbd ω
+    -- STEP 2: reduce the σR-leg connecting PAIRING to the explicit cochain Kronecker pairing
+    --   `kronecker (δ(cochainSplit P g_rep↾)) (Sdʲ c)` + the cover-partition `∂(Sdʲc) = chainIncl P u' + chainIncl Q w'`.
+    obtain ⟨j, u', w', hpair, hsplit⟩ :=
+      SingularConnSquareRHSPairing.rhs_pairing_reduce_partition (M := X) (N := N)
+        ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
+        ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
+        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+        _ _ _
+    rw [hpair]
+    -- σR-leg now reads `kronecker (δ(cochainSplit P g_rep↾)) (Sdʲ c)`. Push δ over ∂ (cochain–boundary
+    --   adjunction), substitute the cover-partition `∂(Sdʲ c) = chainIncl P u' + chainIncl Q w'`, and drop
+    --   the P-leg (the split cochain vanishes on `C(P)`) → `kronecker (cochainSplit P g_rep↾) (chainIncl Q w')`.
+    rw [SingularHomologyMod2.kronecker_coboundary_chainBoundary, hsplit, kronecker_add_right,
+      (mem_relCochains _ _ _).1 (cochainSplit_mem_relCochains _ _ _) _ ⟨u', rfl⟩, zero_add]
+    -- STEP 3 (REMAINING): the SEAM-LEG MATCH — the cap-product MV-naturality of the connecting map on the
+    --   shared `z₀`. Goal (clean chain-pairing altitude, both sides cocycle×cycle):
+    --     `kronecker ω (seam²(boundaryExtract zB)) = kronecker (cochainSplit P g_rep↾) (chainIncl Q w')`
+    --   with `P = legSplitUᶜ`, `Q = legSplitVᶜ`, `w'` = the Q-part of `∂(Sdʲ(chainIncl(U∩V)(rcap ω fund_∩)))`
+    --   (from `hsplit`), `zB` = the seam V-part of `cap g_rep fund_{U∪V}` (via `hpart`/`hzc0`).
+    --   ▶ PIVOT = `SingularConnSquareMatchCross.cross_realization_match` (a' := ω.1, gamb := cochainSplit P g_rep↾,
+    --     lhsChain := seam²(boundaryExtract zB), LVc := Q, w' := w'), which reduces it (cap↔rcap adjunction
+    --     `kronecker_cap_eq_kronecker_rcap` MatchLHS:73 + `kronecker_pullbackCochain`) to TWO obligations over a
+    --     shared `c : SingularChain (sub(U∩V)) (N+1+(p+1))`:
+    --       hLHS : kronecker ω (seam²(boundaryExtract zB)) = kronecker ω (cap (pullbackCochain (U∩V) (cochainSplit P g_rep↾)) c)
+    --              — the LHS seam–cap naturality (engines: `chainIncl_seam_boundaryExtract` NC:515 +
+    --                `cap_boundaryExtract_naturality_noncocycle` NC:288 + `hLHS_cap_mapChain_bridge_mod` HLHSBridge:62,
+    --                ω-cocycle absorbs the seam-transport boundary slack).
+    --       hRHS : kronecker (cochainSplit P g_rep↾) (chainIncl(U∩V)(rcap ω c)) = kronecker (cochainSplit P g_rep↾) (chainIncl Q w')
+    --              — the rcap cover-agreement (engine `chainIncl_rcap_cover_agree` RcapCoverAgree:32, over z₀).
+    --   ⚠ OPEN SUBTLETY: `c`'s degree is `N+p+2` while `fund_∩` (= fundCycleW infCompact) is degree `N+p+3` — the
+    --     1-degree gap is exactly the `Sdʲ`-boundary shift in `w'` (`∂` drops degree by 1). So `c` is NOT the bare
+    --     fundamental cycle; the boundary-relating step (`cap_singularSd_iterate_chainBoundary_arg` NC:130 /
+    --     `cap_coboundary_cochainSplit_eq` NC:699 over the shared cycle z₀, where ∂z₀=0 kills the slack) must bridge
+    --     it. This is the genuine cap-product naturality core; closing it needs ~2–4 new kernel-pure seam/rcap
+    --     bricks fitting hLHS/hRHS. Do NOT re-route the apex spine (route ii / `of_chainMatch` is fixed; never
+    --     `of_crossRealization`/`of_hcup_linked`/`kronecker_pd_fold_fund`).
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
