@@ -1051,6 +1051,24 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     obtain ⟨fc, rfl⟩ := Submodule.Quotient.mk_surjective _ ω
     simp only [SingularHomologyMod2.Homology.mk]
     rw [SingularHomologyMod2.kroneckerH_mk_mk, kronecker_add_right]
+    -- pd-leg via kronecker_pullbackDualityₗ_connecting_fund (whnf-safe; mirrors SCMatch of_match hRHS) → relKroneckerH.
+    have hJL : ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ
+          ∪ (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
+        = ((↑(SingularCSCMayerVietorisConnecting.infCompact U V
+            (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+            (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)).1 : Set ↑X)ᶜ) := by
+      rw [SingularCSCMayerVietorisConnecting.infCompact_coe, Set.compl_inter]
+    have hbdy := SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV)
+      (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+      (SingularCSCMayerVietorisConnecting.infCompact U V
+        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
+    have hbdyUV := hJL.symm ▸ hbdy
+    rw [kronecker_pullbackDualityₗ_connecting_fund
+      (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+      (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+      hJL _ _ _ _ _ hbdyUV hbdy _ _ _ hσR]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
