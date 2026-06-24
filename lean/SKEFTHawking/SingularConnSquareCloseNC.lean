@@ -1055,6 +1055,12 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   -- Reduce the inverse-seam chain equality to the FORWARD-seam cross-realization (where the committed engines
   --   chainIncl_seam_boundaryExtract + chainIncl_pullbackDualityₗ + cap_coboundary_cochainSplit_subdiv_fund apply).
   apply chainEq_via_forward_seam
+  -- chainIncl(U∩V)-injective collapses the forward-seam goal to the AMBIENT cap-Leibniz target:
+  --   LHS via chainIncl_seam_boundaryExtract → chainIncl(U∪V)(∂chainIncl_V zB); RHS via chainIncl_pullbackDualityₗ
+  --   → cap σR_rep fund_∩.
+  apply SingularRelativeHomologyMod2.chainIncl_injective (S := U ∩ V) (p + 1)
+  erw [chainIncl_seam_boundaryExtract]
+  rw [SingularLocalDualityK.chainIncl_pullbackDualityₗ]
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
