@@ -355,6 +355,21 @@ theorem singularSd_iterate_chainIncl {A : Set ↑X} {n : ℕ} (j : ℕ) (d : Sin
     rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih,
       SingularExcision.singularSd_chainIncl]
 
+omit [T2Space ↑X] in
+/-- **The realized rcap of a boundary is a cycle** (`fc` a cocycle): `∂(rcap fc (∂c)) = 0`. Since `rcap fc`
+is a chain map for a cocycle `fc` (`rcap_cocycle_chainMap`: `∂ ∘ rcap fc = rcap fc ∘ ∂`), it sends the
+boundary `∂c` to a cycle (`∂∂ = 0`). The load-bearing cycle witness for the realization-level close: the
+pd-leg's `rcap fc (∂fund)` (with `∂fund = ∂(eqv.symm fund)`) is a cycle, so its realization lifts to a
+homology/relative class for `chainIncl_rcap_cover_agree`. Stated in `rcap_cocycle_chainMap`'s cast form. -/
+theorem chainBoundary_rcap_chainBoundary_eq_zero {K : Set ↑X} {k l : ℕ}
+    (fc : LinearMap.ker (coboundaryₗ (sub K) l)) (c : SingularChain (sub K) (k + l + 1 + 1)) :
+    chainBoundary (sub K) k
+        (SingularCapChainIncl.rcap (k := k + 1) fc.1
+          ((by omega : k + l + 1 = k + 1 + l) ▸ chainBoundary (sub K) (k + l + 1) c)) = 0 := by
+  rw [SingularRightCapBoundary.rcap_cocycle_chainMap fc.1 (LinearMap.mem_ker.mp fc.2)
+        (chainBoundary (sub K) (k + l + 1) c),
+    SingularHomologyMod2.chainBoundary_chainBoundary_apply, map_zero]
+
 /-- **infCompactᶜ = legSplitUᶜ ∪ legSplitVᶜ** (the cover-support set identity). `fundCycleW_boundary` lands
 `∂fund` in `subspaceChains(Kᶜ)` with `K = infCompact = legSplitU ∩ legSplitV` (`infCompact_coe`); de Morgan
 (`Set.compl_inter`) rewrites that to the cover `legSplitUᶜ ∪ legSplitVᶜ` the seam-localization engine consumes. -/
