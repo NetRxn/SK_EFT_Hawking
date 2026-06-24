@@ -820,16 +820,40 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     (B := Subtype.val ⁻¹' V) (Set.inter_subset_left.trans Set.subset_union_left) (fun _ => Iff.rfl)
     ⟨zB, hzBmem⟩
   erw [hVeq]
-  -- Goal: chainIncl(U∪V)(∂(chainIncl_V zB)) + cap σR_rep fund_∩ = cap g_rep ∂Fg.
-  -- ⛔ SETTLED (coach 4×, see notebook SETTLED-FORKS register + memory project-l2-sigmar-connecting-resolved):
-  --   the σR-connecting is GAP-FREE via cap_coboundary_cochainSplit_subdiv (ω:=σR_rep, shared cycle z₀, slack
-  --   dies ∂z₀=0). NEVER re-derive the "needs banned formula" worry; NEVER relCohomMvConnecting_eq / _of_crossRealization.
-  -- NEXT (whnf-dodge the application — concrete fund_∩ in cap walls; provide fundCycleW COMPONENTS, infer, don't
-  --   assemble; cf. connecting_square_close_cocycle_fund): apply cap_coboundary_cochainSplit_subdiv (ω=σR_rep,
-  --   fund=fund_∩, hbd=∂fund_∩∈subspaceChains(U∪V) via fundCycleW_boundary_cover+infCompact_compl_legSplit) →
-  --   V-leg cap σR_rep (chainIncl_V w') matched to seam via chainIncl_seam_boundaryExtract(NC:490)+hbd; ∂(cap φ·)
-  --   is a (U∩V)-boundary into pd; ℤ/2 cancel. The bare-underscore probe whnf-timeouts (concrete-cover unification)
-  --   — head-match-dodge it, do NOT re-conclude "ω=σR_rep type-wrong".
+  -- Goal: chainIncl(U∪V)(∂(chainIncl_V zB)) + cap σR_rep fund_∩ = cap g_rep ∂fund_∩.
+  -- The cap-product MV-naturality (Hatcher 3.36): ∂(witness cap g_rep fund_∩) splits into the V-leg (chain_L,
+  -- seam) + the connecting U-leg (cap σR_rep fund_∩). 🔑 ENGINE: ω = g_rep (the SOURCE cocycle, source-verified
+  -- Kᶜ = legSplitUᶜ ∩ legSplitVᶜ via legSplit_cover; NOT σR_rep), cover legSplitUᶜ/legSplitVᶜ. δ(cochainSplit g_rep)
+  -- lands over legSplitUᶜ ∪ legSplitVᶜ = infCompactᶜ ≈ σR_rep (the χ identification, Fact A).
+  -- ✅ σR-CONNECTING ENGINE FIRES (kernel-pure, MCP-verified): hengine = the cover-partition cap relation on Sdʲ fund_∩.
+  have hengine := cap_coboundary_cochainSplit_subdiv_fund
+    ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
+    ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
+    ((SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl)
+    ((SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl)
+    ((show (↑K.1 : Set ↑X)ᶜ = (↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ
+        ∩ (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ from by
+        rw [SingularCSCMayerVietorisConnecting.legSplit_cover, Set.compl_union]) ▸ g_rep)
+    (hU.inter hV)
+    (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+    (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) (show N + p + 2 = N + 1 + (p + 1) by omega) z₀ hz₀)
+    (SingularCSCMayerVietorisConnecting.infCompact U V
+      (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+      (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
+    (fundCycleW_boundary_cover (hU.inter hV)
+      (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero
+        (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) (show N + p + 2 = N + 1 + (p + 1) by omega) z₀ hz₀)
+      (SingularCSCMayerVietorisConnecting.infCompact U V
+        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
+      (SingularConnSquareCloseNC.infCompact_compl_legSplit hU hV K))
+    (show N + 1 + (p + 1) + 1 = N + 1 + 1 + (p + 1) by omega)
+  -- hengine : ∃ j w, cap(δ(cochainSplit legSplitUᶜ g_rep))(Sdʲ fund_∩)
+  --             = cap g_rep (chainIncl legSplitVᶜ w) + ∂(cap (cochainSplit g_rep)(Sdʲ fund_∩)).
+  -- NEXT: obtain ⟨j, w, heng⟩; (Fact B) V-leg cap g_rep (chainIncl_legSplitVᶜ w) ↔ chain_L (seam); (Fact A)
+  --   cap(δ(cochainSplit g_rep)) ≈ cap σR_rep via hσR; Sdʲ-bridge onto z₀ (∂z₀=0 kills slack); ℤ/2 assemble.
   sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
