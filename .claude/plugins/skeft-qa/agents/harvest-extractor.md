@@ -41,8 +41,8 @@ Read the chunk with `jq` over the channels that actually carry signal (verified 
 segments** and compare **what the agent knew / was doing *before* compaction N** (the tail of the pre-boundary
 segment) **versus what survived into the post-compaction summary (`isCompactSummary` entry) + the early
 post-boundary turns**. Surface that delta — knowledge/plan/scope that was present before and lost or distorted
-after — as a first-class finding (`class: "compact-delta"`); this IS the 5q.F failure mode (big picture lost
-across compaction). Do not merely wall segments off at the boundary.
+after — as a first-class finding (`class: "compact-delta"`); this IS the classic compaction failure mode
+(big picture lost across the boundary). Do not merely wall segments off at the boundary.
 
 **Also fold in the guard's blocked-question log (v4.0, spec 6.3/10).** If you are handed the
 `blocked_questions.jsonl` span (Plan 1's `PreToolUse(AskUserQuestion)` guard APPENDS one record per intercepted

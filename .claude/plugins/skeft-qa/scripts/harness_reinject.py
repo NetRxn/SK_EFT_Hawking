@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """SessionStart re-injection — the Phase-5q.F durability fix (v4.0).
 On source=compact|resume, re-inject the SHARED re-orientation payload (contract B —
-build_reorientation_payload: the /goal condition + the always-on RE-ANCHOR + the live FRONTIER +
+build_reorientation_payload: the /goal condition + the always-on RE-ANCHOR + the live HEAD anchor +
 a MANDATED PRE_DECISIONS.md read + the OPTIONAL staleness-labeled coaching block) for THIS session's
 managed marker, wrapped with UNIFORM, ROLE-AGNOSTIC framing (spec 4/5 review item 2 — the harness does
 NOT prescribe build-vs-delegate-vs-team; that is the agent's emergent judgment, unknowable at launch,
@@ -54,10 +54,12 @@ def drift_note(last_ts, now, cadence_hours):
 
 def notebook_note(notebook_path, repo):
     """Read-only nudge (the SessionStart half of the lab-notebook self-leveling backstop):
-    if the active shard is over the token budget, the INDEX lacks the DECISIONS block, or the
-    FRONTIER SHA is stale vs git HEAD, surface a one-line warning so it can't go silent. Never
-    mutates the notebook (self-improving, never self-mutating); best-effort + guarded so a read
-    error never blocks the durability re-injection."""
+    if the active shard is over the token budget or the INDEX lacks the DECISIONS block, surface a
+    one-line warning so it can't go silent. The FRONTIER-staleness warning is DEMOTED to
+    notebook-hygiene here (spec D / finding 1.8): the prose FRONTIER is no longer the post-compaction
+    anchor — the live repo-state probe is — so a stale-FRONTIER nag in the re-injection is
+    misleading; it stays visible only via `/skeft-qa:notebook check`. Never mutates the notebook;
+    best-effort + guarded so a read error never blocks the durability re-injection."""
     try:
         if not notebook_path:
             return ""
@@ -65,7 +67,11 @@ def notebook_note(notebook_path, repo):
         from pathlib import Path
 
         res = nl.op_check(str(Path(notebook_path).parent), repo=repo)
-        warns = res.get("warnings", [])
+        # Surface the load-bearing warnings (over-budget shard, missing DECISIONS); drop the
+        # frontier-staleness one (demoted to hygiene — see docstring). Filter by EXACT-MATCH against
+        # op_check's `frontier_stale_msg` field (reword-proof, finding m4), not a substring.
+        stale_msg = res.get("frontier_stale_msg")
+        warns = [w for w in res.get("warnings", []) if w != stale_msg]
         if warns:
             return "\n\n⚠ lab-notebook: " + " ".join(warns) + " (run /skeft-qa:notebook sync|shard)"
     except Exception:
@@ -77,7 +83,7 @@ def compose_directive(src, goal, roadmap, notebook, payload):
     """Wrap the shared `payload` with a MINIMAL, role-agnostic frame: a single GO-signal line — the
     irreducible anti-over-defer posture, kept INJECTED as a backstop even if the mandated
     PRE_DECISIONS.md read is skipped. The concrete re-orientation lives in the payload (RE_ANCHOR +
-    the live FRONTIER + the coaching block); the full discipline is the mandated read. No `role`
+    the live HEAD anchor + the coaching block); the full discipline is the mandated read. No `role`
     parameter / branch (spec 4/5): the SAME settled posture for a solo loop or a team lead — the
     harness never prescribes build-vs-delegate-vs-team (the agent's emergent judgment)."""
     frame = (

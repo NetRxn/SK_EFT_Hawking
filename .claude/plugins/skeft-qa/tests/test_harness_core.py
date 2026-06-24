@@ -72,8 +72,10 @@ def test_payload_mandates_predecisions_read_not_injected(tmp_path):
     assert hc._read_predecisions_core(None) == hc.DECISION_HEURISTICS   # helper kept; fail-soft on None
 
 
-def test_payload_includes_frontier_when_index_present(tmp_path):
-    # the live FRONTIER digest is injected verbatim so a post-compaction turn needs zero Reads
+def test_payload_never_injects_prose_frontier(tmp_path):
+    # Live-Anchor redesign (Move 1): the prose LAB-NOTEBOOK FRONTIER — the proven drift vector
+    # (System-2 `compaction-summary-quality`) — is NO LONGER injected, even when a notebook with a
+    # next-brick is present. Positive state is recomputed live via repo_state_probe.py (FIRST_ACTION).
     import notebook_lib as nbl  # noqa: E402
     nbl.op_new(tmp_path)
     idx = tmp_path / "LAB_NOTEBOOK_INDEX.md"
@@ -82,7 +84,9 @@ def test_payload_includes_frontier_when_index_present(tmp_path):
         "- **NEXT BRICK:** ship brick 42."))
     payload = hc.build_reorientation_payload(
         {"goal": "g", "notebook_path": str(idx)}, tmp_path)
-    assert "LAB-NOTEBOOK FRONTIER (" in payload and "ship brick 42" in payload
+    assert "LAB-NOTEBOOK FRONTIER (" not in payload    # prose frontier removed
+    assert "ship brick 42" not in payload              # its content not injected
+    assert "repo_state_probe.py" in payload            # the live anchor replaces it (FIRST_ACTION)
 
 
 def test_payload_omits_frontier_without_notebook_path(tmp_path):

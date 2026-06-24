@@ -280,7 +280,9 @@ def op_check(home, budget_bytes=BUDGET_BYTES, repo=None):
     stale = _frontier_stale(p["index"], repo)
     if stale:
         res["frontier_stale"] = True
-        warns.append(stale)
+        res["frontier_stale_msg"] = stale   # the exact message — lets consumers demote it
+                                            # reword-proof (finding m4), not by substring sniffing
+        warns.append(stale)                 # kept in `warnings` for `notebook check`/`sync` (hygiene)
     return res
 
 

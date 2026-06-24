@@ -209,7 +209,9 @@ ADDITIONAL_CONTEXT_LIMIT = 10000
 # Reserve for what is appended AFTER the payload (the trimmed compose_directive frame one-liner + the
 # conditional drift/notebook notes) + a safety margin — so bounding the PAYLOAD alone guarantees the
 # emitted additionalContext stays under the limit end-to-end.
-_WRAPPER_RESERVE = 700
+_WRAPPER_RESERVE = 950  # frame one-liner + the drift/notebook notes (appended AFTER the budget
+# check in harness_reinject) + the always-on live HEAD anchor headroom (finding m1) — bounding the
+# PAYLOAD alone keeps the EMITTED additionalContext (payload + frame + both notes) < the 10k limit.
 # Effective PAYLOAD budget. The /goal condition (≤4k, ALWAYS full — overrides every other item) and the
 # always-on RE_ANCHOR are kept in full; only the per-goal COACHING BLOCK is droppable. The pre-decisions
 # are NO LONGER injected — they are a MANDATORY READ (FIRST_ACTION), so they grow UNBOUNDED in
@@ -373,19 +375,25 @@ RE_ANCHOR = (
     "it, run /goal-end and STOP — do NOT resume a finished or abandoned goal. "
     "(1) A compaction summary optimizes tactical continuity over strategic anchoring — it can surface a "
     "mid-air tactic and drop the close-path. Before continuing whatever tactic the summary surfaced, "
-    "confirm it still matches the close-path: the live LAB-NOTEBOOK FRONTIER below (always current — the "
-    "loop's own latest state) and the COACHING BLOCK if present (an external harvest read — sharper "
-    "analysis, but it may lag). If they conflict and the coaching block is recent, the harvest likely "
-    "caught a drift you can't self-see."
+    "confirm it still matches the close-path: the LIVE REPO-STATE ANCHOR (your FIRST_ACTION probe — "
+    "git/Lean/atlas, computed now — supersedes any narrated frontier/summary) and the COACHING BLOCK if "
+    "present (an external harvest read — sharper analysis, but it may lag). If they conflict and the "
+    "coaching block is recent, the harvest likely caught a drift you can't self-see."
 )
 
 FIRST_ACTION = (
-    "FIRST ACTION this turn, before anything else: (1) READ docs/dev-loops/PRE_DECISIONS.md — the "
-    "standing pre-decisions you MUST apply this turn (when to stop, climb the ladder, bank a "
-    "hypothesis, re-anchor at a boundary); do NOT skip — they are not injected here, this read is how "
-    "you load them. (2) Invoke /skeft-qa:goal-dev (the MCP-first proof loop, kernel-purity rules, "
-    "/reset-slot + worktree fan-out, the symptom-indexed friction catalog). (3) If the goal involves "
-    "Lean, also invoke lean4. Then resume the next increment."
+    "FIRST ACTION this turn, before anything else: "
+    "(1) ESTABLISH THE LIVE ANCHOR — run `uv run python scripts/repo_state_probe.py` (the computed "
+    "repo state: commits since arm, working-tree, and — in a Lean goal — the atlas engine inventory; "
+    "it SUPERSEDES any narrated frontier/summary, and if a `regen_requested.flag` is present and Lean "
+    "slots are idle, run the EXACT single-flighted regen command the probe prints, in the background). "
+    "For a Lean "
+    "goal also run `lean_diagnostic_messages` on the active file for the authoritative live sorry. "
+    "(2) READ docs/dev-loops/PRE_DECISIONS.md (standing pre-decisions — not injected; this read loads "
+    "them) and docs/dev-loops/SETTLED_FORKS.md BEFORE any 'impossible / needs-a-banned-route' reasoning "
+    "(grep the register FIRST; record any NEW dead-end/fork/crux-map/tactic to it, the notebook, or "
+    "project memory — the summary won't preserve what isn't written). "
+    "(3) Invoke /skeft-qa:goal-dev (and lean4 for a Lean goal). Then resume the next increment."
 )
 
 
@@ -400,7 +408,7 @@ def _read_coaching_block(root, goal_id, now):
     """Read the per-goal COACHING BLOCK (harvest-authored re-orientation) -> {"text","facts"} or None.
     OPTIONAL BY DESIGN: absent for a new goal until the first harvest (the harvest is async, ~4h
     cadence) and it AGES between harvests — so it is NEVER a dependency; the always-injected RE_ANCHOR +
-    the live FRONTIER are the baseline. We surface the AUTHORING FACTS only (absolute timestamp, age,
+    the live HEAD anchor are the baseline. We surface the AUTHORING FACTS only (absolute timestamp, age,
     and the transcript high-water-mark it was authored as-of) and let the loop judge — NO staleness
     verdict is baked in here (a fixed age threshold would misjudge a fast goal vs a slow one, and could
     introduce failure modes we don't anticipate). Fail-soft -> None."""
@@ -450,6 +458,40 @@ def write_coaching_block(root, goal_id, text, watermark=None, now=None):
         return False
 
 
+def live_head_anchor(root):
+    """A minimal, git-cheap, DRIFT-FREE HEAD anchor for the re-orientation payload (spec 1.10).
+    The prose FRONTIER is gone (the proven drift vector); this replaces it with a small ACCURATE,
+    computed-now fact so a post-compact turn that SKIPS the FIRST_ACTION probe still has a true
+    anchor. Pointer-grade (~1 line) — NOT the unbounded probe output (which the agent runs). No LSP
+    (a hook can't reach it); git only. Mode-agnostic (any goal). Fail-soft -> '' (payload omits it)."""
+    if root is None:
+        return ""
+    try:
+        def g(args):
+            try:
+                o = subprocess.run(["git", "-C", str(root)] + args,
+                                   capture_output=True, text=True, timeout=5)
+                return o.stdout.strip() if o.returncode == 0 else ""
+            except Exception:
+                return ""
+        sha = g(["rev-parse", "--short=8", "HEAD"])
+        if not sha:
+            return ""
+        subj = g(["log", "-1", "--pretty=%s"])[:80]
+        last = ""
+        for ln in g(["log", "-1", "--name-only", "--pretty=format:"]).splitlines():
+            if ln.strip():
+                last = ln.strip()
+                break
+        a = ("LIVE ANCHOR (git, computed now — run `scripts/repo_state_probe.py` for the full state): "
+             "HEAD=%s \"%s\"" % (sha, subj))
+        if last:
+            a += "; last-touched %s" % last
+        return a
+    except Exception:
+        return ""
+
+
 def build_reorientation_payload(marker, repo_root):
     """Contract B — the SHARED re-orientation payload (SessionStart re-inject + the
     PreToolUse(AskUserQuestion) guard). Structure (post-redesign):
@@ -457,7 +499,7 @@ def build_reorientation_payload(marker, repo_root):
         durable copy is the tracked goal_prompt_<goal_id>.md),
       * RE_ANCHOR — the always-on generic re-anchor (PD-4 essence; coaching-INDEPENDENT, so it
         survives an absent/lagging coaching block),
-      * the live LAB-NOTEBOOK FRONTIER digest (always current; a ZERO-Read next brick),
+      * the live HEAD anchor (git-computed, drift-free; skip-resilience for the FIRST_ACTION probe),
       * a 're-read CLAUDE.md' pointer,
       * FIRST_ACTION — mandates the pre-decisions READ + goal-dev (the pre-decisions are NO LONGER
         injected; the read is how they load -> they grow unbounded with no payload pressure),
@@ -476,12 +518,14 @@ def build_reorientation_payload(marker, repo_root):
     if goal:
         parts.append("SETTLED GOAL (the /goal condition):\n" + goal)
     parts.append(RE_ANCHOR)
-    frontier = _frontier_for(marker)
-    if frontier:
-        parts.append(
-            "LAB-NOTEBOOK FRONTIER (the live, always-current next-brick digest — act on its NEXT "
-            "BRICK directly; no Read needed; open the INDEX / shards only for deeper context):\n" + frontier
-        )
+    # LIVE HEAD ANCHOR (spec 1.10 skip-resilience): a minimal, git-cheap, drift-free anchor so a
+    # post-compact turn that SKIPS the FIRST_ACTION probe STILL has a true HEAD anchor (the prose
+    # FRONTIER — the proven drift vector — is removed; this replaces it with a small ACCURATE fact,
+    # not a remembered narrative). Pointer-grade (~1 line), NOT the unbounded probe output; the full
+    # state is the agent-run repo_state_probe.py (progressive disclosure). Fail-soft -> '' (omitted).
+    anchor = live_head_anchor(repo_root)
+    if anchor:
+        parts.append(anchor)
     parts.append("Re-read CLAUDE.md (the giant-ref pointer that should be re-read).")
     parts.append(FIRST_ACTION)
     # ATLAS FRONTIER (ADR-005 D-I) — the cross-project most-gating OPEN assumptions, a complementary
@@ -494,15 +538,15 @@ def build_reorientation_payload(marker, repo_root):
         if len("\n\n".join(parts + [block])) < PAYLOAD_MAX_CHARS:
             parts.append(block)
     # COACHING BLOCK — the OPTIONAL enhancement (see _read_coaching_block). Included whole only if the
-    # whole payload still fits the budget; else dropped (graceful — the RE_ANCHOR + live FRONTIER above
+    # whole payload still fits the budget; else dropped (graceful — the RE_ANCHOR + live HEAD anchor above
     # are the baseline). Never required, never truncated mid-text.
     coaching = _read_coaching_block(repo_root, marker.get("goal_id"), time.time())
     if coaching:
         meta = (" — " + coaching["facts"]) if coaching["facts"] else ""
         block = (
             "COACHING BLOCK (harvest-authored re-orientation; the harvest runs asynchronously so this "
-            "may predate your current state%s — weigh it against the live FRONTIER above and your "
-            "current state):\n%s" % (meta, coaching["text"])
+            "may predate your current state%s — weigh it against the LIVE ANCHOR above / your "
+            "FIRST_ACTION probe and your current state):\n%s" % (meta, coaching["text"])
         )
         if len("\n\n".join(parts + [block])) < PAYLOAD_MAX_CHARS:
             parts.append(block)

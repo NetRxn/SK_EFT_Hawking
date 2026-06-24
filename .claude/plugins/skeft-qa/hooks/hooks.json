@@ -1,6 +1,17 @@
 {
-  "description": "skeft-qa loop-durability + egress hooks (v4.2): SessionStart re-inject + PreToolUse(AskUserQuestion) guard + SessionEnd marker cleanup (default-inert, fail-open) + PreToolUse(WebSearch|WebFetch) web-egress guard (unconditional, fail-closed).",
+  "description": "skeft-qa loop-durability + egress hooks (v4.3): SessionStart re-inject (live-anchor) + PreToolUse(AskUserQuestion) guard + SessionEnd marker cleanup + PreCompact durable-channel staging (snapshot + lean regen flag; synchronous, no context injection) (default-inert, fail-open) + PreToolUse(WebSearch|WebFetch) web-egress guard (unconditional, fail-closed).",
   "hooks": {
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --no-sync python \"${CLAUDE_PLUGIN_ROOT}/scripts/harness_precompact.py\" 2>/dev/null || true",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [

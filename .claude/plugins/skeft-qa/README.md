@@ -54,18 +54,25 @@ Explore/Plan/review subagents or non-dev interactive sessions.
 | `/skeft-qa:goal-end` | you (user-only) | Disarm the loop — remove this session's marker. The explicit teardown for a mid-session `/goal clear` (which fires no hook). |
 | `/skeft-qa:reset-slot <N>` | you **or** the loop | Reset worktree slot `wtN` to `main` the guardrail-safe way (`checkout -B`; **refuses if the slot has commits not yet on `main`**). |
 
-### Hooks (`hooks/hooks.json` → `scripts/`) — three (all default-inert + fail-open)
+### Hooks (`hooks/hooks.json` → `scripts/`) — four (all default-inert + fail-open)
 
 | Hook | Job |
 |---|---|
-| `SessionStart` (compact\|resume) | Re-inject the **shared re-orientation payload** (the `/goal` condition + "re-read CLAUDE.md" + the **`/skeft-qa:goal-dev` pointer** + active System-2 issues **& `[WIN]` process wins** + heuristics) + a best-effort first-turn self-check — **the durability fix**. |
+| `SessionStart` (compact\|resume) | Re-inject the **shared re-orientation payload** (the `/goal` condition + the always-on RE-ANCHOR + a **live git HEAD anchor** + the **FIRST_ACTION** mandating `repo_state_probe.py` (the LIVE REPO-STATE anchor — supersedes any narrated frontier) + `PRE_DECISIONS.md` + `SETTLED_FORKS.md` reads + the `/skeft-qa:goal-dev` pointer + the optional coaching block) — **the durability fix**. The prose lab-notebook FRONTIER is NO LONGER injected (the proven drift vector). |
 | `PreToolUse(AskUserQuestion)` | Deny + redirect a blocking question with the re-orientation payload; log the question to `blocked_questions.jsonl`. Marker-gated, top-level-only, honors `question_guard`, fail-open. |
+| `PreCompact` | **Durable-channel staging only** (Live-Anchor Move 3): synchronously write the gitignored pre-loss **snapshot** artifact (last substantive message + HEAD) and — for a `mode=lean` goal — a `regen_requested.flag` staging the boundary atlas regen (the agent executes the regen post-compact via backgrounded Bash). Marker+mode-gated; **NO context injection / NO summary steer** (aligns to autocompact, never owns it); **writes ONLY under the gitignored `.claude/dev-harness/`** — never a git-tracked path (QI invariant). |
 | `SessionEnd` | **Marker teardown** — removes this session's marker on `reason=clear` only (a `/clear` that also clears the goal), so a dead loop's marker stops re-injecting. Never on `logout`/`resume` (a still-active goal restores on `--resume`). |
 
-No Stop/SubagentStop (`/goal` owns continuation), no PreCompact (the harvest is
-off-hot-loop), no PostToolUse (the local git pre-commit hook is the sole enforcing
-mechanical gate). Hook commands invoke the repo's uv Python ≥3.14
+No Stop/SubagentStop (`/goal` owns continuation), no PostToolUse (the local git pre-commit hook is
+the sole enforcing mechanical gate). PreCompact is **synchronous staging only** — the harvest
+remains off-hot-loop. Hook commands invoke the repo's uv Python ≥3.14
 (`uv run --no-sync python … 2>/dev/null || true`).
+
+**Standing invariant (QI, 2026-06-24):** a hook MUST NOT write a git-tracked path — all
+harness-written artifacts live under the gitignored `.claude/dev-harness/`. They resolve there
+launch-independently (hooks via `repo_root()`/`REPO_DIR_NAME`; repo scripts via `__file__`), so the
+launch point (workspace parent vs. inside the repo) never changes the destination, and the public
+harness never writes the private repo.
 
 Harness state (markers, watermarks, the active-issues cache, the blocked-question log)
 lives under **`<repo>/.claude/dev-harness/`** — project-scoped + gitignored, where

@@ -16,6 +16,30 @@ demand by the `goal-prompt` skill at launch.
   turn can re-read them: `roadmap_path` (`docs/dev-loops/<roadmap>/...`) and the lab-notebook
   **INDEX** (`<home>/LAB_NOTEBOOK_INDEX.md` — the entry point; its FRONTIER + DECISIONS blocks are
   the re-grounding read, shards are opened on demand).
+- **DURABLE CONTENT ONLY — never mutable tactical state (the #1 authoring failure).** The
+  condition is re-stated to the model **every single turn** by native `/goal` (we ship no Stop
+  hook of our own — native `/goal` owns continuation), and it is also pinned at the top of the
+  SessionStart re-injection. So **anything in it is asserted as "live" on every turn forever.**
+  That is fine for DURABLE facts (the success criteria; settled locks / non-negotiables; the
+  source-of-truth paths) — they don't change. It is **toxic** for MUTABLE tactical state, which
+  goes stale within turns and then re-seeds whatever it names:
+  - **FORBIDDEN in the condition:** the current sorry line/number, "close-path engines: X/Y/Z",
+    which lemma/route is "live" or "the breakthrough", current commit SHAs, "NEXT BRICK", progress
+    framing ("one brick from closing"). These are **mutable** — the moment the proof moves, the
+    condition is lying, and native `/goal` keeps re-injecting the lie every turn, **out-ranking**
+    the lower-priority SETTLED_FORKS / PRE_DECISIONS reads. **Worked failure mode:** a condition
+    baked `Close-path engines: <lemmaA> + <lemmaB>` (the routes that looked live when it was
+    authored); a later turn proved those routes dead and recorded them in `SETTLED_FORKS.md`, but
+    the condition kept re-injecting them as the live close-path every turn — out-ranking the
+    recorded ban — so an entire multi-commit session was built on the dead route before it was
+    caught and reverted.
+  - **Where mutable state lives instead:** the **live probe** `scripts/repo_state_probe.py`
+    (recomputes the *real* current sorry + committed engines fresh each turn — run as FIRST_ACTION),
+    `docs/dev-loops/SETTLED_FORKS.md` (dead/banned/superseded routes), and the lab-notebook FRONTIER
+    (the loop's own next-brick, which the loop updates). The condition POINTS at these; it never
+    snapshots them.
+  - **Naming a route is allowed ONLY to BAN it** (a durable lock: "never re-open Route C"), never
+    to PROMOTE it as the live close-path (mutable). Prefer "see SETTLED_FORKS.md" over inlining.
 
 ## What the condition must contain
 
@@ -49,6 +73,14 @@ ZERO BLOCKER findings surfaced in the transcript. — or stop after <N> turns.
 
 ## Anti-patterns (do not write)
 
+- **Mutable tactical state in the condition** — current sorry line, "close-path engines: …",
+  the "live"/"breakthrough" lemma, commit SHAs, "NEXT BRICK", "one brick from closing". It is
+  re-injected EVERY turn by native `/goal`, goes stale the moment the proof moves, and re-seeds
+  whatever route it names — out-ranking SETTLED_FORKS/PRE_DECISIONS (this has cost an entire
+  session built on a route that was already recorded as dead).
+  Tactical state belongs in the live probe (`repo_state_probe.py`) / `SETTLED_FORKS.md` / the
+  notebook FRONTIER. The condition points at them; it never snapshots them. **Test before writing
+  each line: "will this still be true in 30 turns?" If no, it does not go in the condition.**
 - Vibes-based completion ("the physics is right") — not transcript-checkable.
 - Open scope ("do the rest of the phase") — that is the *whole wave*, not a `/goal`; pick a
   measurable wave-sized end state.

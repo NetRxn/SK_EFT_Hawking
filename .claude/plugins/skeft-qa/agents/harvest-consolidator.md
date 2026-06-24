@@ -75,7 +75,7 @@ baseline (the always-injected RE-ANCHOR + the live FRONTIER) still carries it.
    - Build `.claude/dev-harness/stall_commits.json` = `{module-stem: commit_count}` from
      `git -C "<repo>" log --since="<last harvest ts — harvest-state-get>" --name-only -- lean/SKEFTHawking/`,
      keying each changed `lean/SKEFTHawking/<Path>.lean` by its dotted stem `<Path>` (slashes→dots; e.g.
-     `lean/SKEFTHawking/FKLW/CartanSubstrate.lean` → `FKLW.CartanSubstrate`).
+     `lean/SKEFTHawking/Foo/Bar.lean` → `Foo.Bar`).
    - `cd "<repo>" && uv run python .claude/plugins/skeft-qa/scripts/stall_detector.py
       --atlas lean/atlas_view.json --history .claude/dev-harness/stall_history/<goal_id>.json
       --commits .claude/dev-harness/stall_commits.json --compact-event <the most recent compact_event_id

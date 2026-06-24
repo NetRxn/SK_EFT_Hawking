@@ -33,6 +33,10 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 LEAN_DEPS_PATH = PROJECT_ROOT / "lean" / "lean_deps.json"
 ATLAS_VIEW_PATH = PROJECT_ROOT / "lean" / "atlas_view.json"
+# Boundary atlas: the GITIGNORED post-compaction freshness artifact (Live-Anchor Move 3). Written by
+# `--write-boundary` so a hook/agent NEVER dirties the git-tracked ATLAS_VIEW_PATH (harness QI
+# invariant: a hook MUST NOT write a tracked path). The live-anchor probe prefers it when fresher.
+BOUNDARY_ATLAS_PATH = PROJECT_ROOT / ".claude" / "dev-harness" / "atlas_view.boundary.json"
 
 # Kernel-trust baseline (ADR-002). A decl is kernel-pure iff its core axiom closure is a subset of
 # these AND it carries no project-local axiom and no `sorryAx`.
@@ -220,7 +224,10 @@ def load_lean_deps_file() -> list[dict]:
 def main(argv: list[str] | None = None) -> int:
     import argparse
     ap = argparse.ArgumentParser(description="Derived proof-atlas view (ADR-005 Phase 1a).")
-    ap.add_argument("--write", action="store_true", help=f"write {ATLAS_VIEW_PATH}")
+    ap.add_argument("--write", action="store_true", help=f"write {ATLAS_VIEW_PATH} (tracked)")
+    ap.add_argument("--write-boundary", action="store_true",
+                    help="write the GITIGNORED boundary atlas (.claude/dev-harness/"
+                         "atlas_view.boundary.json) — post-compaction freshness; NEVER the tracked file")
     a = ap.parse_args(argv)
 
     atlas = build_atlas(load_lean_deps_file())
@@ -248,6 +255,10 @@ def main(argv: list[str] | None = None) -> int:
     if a.write:
         ATLAS_VIEW_PATH.write_text(json.dumps(atlas, indent=2))
         print(f"wrote {ATLAS_VIEW_PATH}")
+    if a.write_boundary:
+        BOUNDARY_ATLAS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        BOUNDARY_ATLAS_PATH.write_text(json.dumps(atlas, indent=2))
+        print(f"wrote {BOUNDARY_ATLAS_PATH}")
     return 0
 
 

@@ -36,6 +36,14 @@ Native `/goal` is the loop; this skill (1) registers the session and (2) compose
 condition. Do BOTH, concretely. Read `references/goal-prompt-authoring.md` first for the
 composition discipline + acceptance criteria.
 
+> **The one rule that matters most when composing the condition:** it is re-stated to the model
+> **every turn** by native `/goal` — so it must hold **DURABLE content only** (success criteria,
+> settled locks/non-negotiables, source-of-truth paths). **NEVER** bake in mutable tactical state
+> (current sorry line, "close-path engines: X/Y/Z", the "live"/"breakthrough" lemma, commit SHAs,
+> "next brick") — it goes stale and re-seeds whatever route it names, every turn. Mutable state is
+> the **live probe**'s job (`scripts/repo_state_probe.py`, run as FIRST_ACTION) + `SETTLED_FORKS.md`
+> + the notebook FRONTIER. Per-line test: *"true in 30 turns?"*
+
 > **⚠ Inline-shell gating (review A2 — fail loud, never silently inert).** The `!cmd` shell injections below
 > run **before** this skill is sent to the model and are gated by **`disableSkillShellExecution`** (the
 > managed-settings kill-switch — skills.md:432/477), **NOT** by `allowed-tools` (which governs only the tools
@@ -99,12 +107,20 @@ composition discipline + acceptance criteria.
   8). This **tracked** file is the **durable, crash-recoverable source** of the `/goal` condition; the marker's
   `goal` field below is only the fast-read copy (spec A.5 — see step 3 crash recovery).
 - **Write the marker with the Write tool** (clean JSON — NOT a `cat >` heredoc) to
-  `<repo>/.claude/dev-harness/managed/${CLAUDE_SESSION_ID}.json` (the **8-field form**):
-  `{"role": "<solo|lead>", "goal": "...", "goal_id": "<from above>", "roadmap_path": "...", "notebook_path": "...", "jsonl_path": "<from above>", "repo": "<basename of repo root>", "question_guard": true}`.
+  `<repo>/.claude/dev-harness/managed/${CLAUDE_SESSION_ID}.json` (the **11-field form**):
+  `{"role": "<solo|lead>", "goal": "...", "goal_id": "<from above>", "mode": "<lean|general>", "arm_sha": "<from below>", "armed_ts": <from below>, "roadmap_path": "...", "notebook_path": "...", "jsonl_path": "<from above>", "repo": "<basename of repo root>", "question_guard": true}`.
   (`role` is descriptive-only; `goal_id` is the minted goal identity; `notebook_path` is the **INDEX**
   `<home>/LAB_NOTEBOOK_INDEX.md` scaffolded above; `question_guard` defaults `true` — the
   `PreToolUse(AskUserQuestion)` guard reads it; `/goal-guard` flips it. The Write tool creates the `managed/`
   dir as needed.)
+  - **`mode`** (the live-anchor scope switch — LIVE_ANCHOR_REDESIGN_SPEC §B / principle 8): **if this is
+    a Lean goal, set `"mode": "lean"`, else `"general"`.** (No criteria to evaluate — you are composing
+    the goal, so you already know; this single switch gates whether `repo_state_probe.py` and the
+    re-injection surface Lean-specific state. **Default `general`** if ever unsure.)
+  - **`arm_sha`** = `` !`git rev-parse HEAD 2>/dev/null` `` — the exact "since-arm" origin for the live
+    repo-state probe (rebase-safe). If empty (shell disabled / git error), write `""` — the probe
+    degrades down its timestamp/last-N cascade.
+  - **`armed_ts`** = `` !`date +%s` `` — arm wall-clock (epoch int), the probe's timestamp fallback.
 
 ### 2. Compose the /goal condition (≤ 4,000 chars; transcript-evaluable only — goal.md)
 Per `references/goal-prompt-authoring.md`, produce a condition that: (a) is **self-describing** (names the
