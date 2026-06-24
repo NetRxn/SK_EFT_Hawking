@@ -1329,6 +1329,11 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     -- to 0 (`kronecker_relCochains_chainIncl_eq_zero`), leaving the legSplitVᶜ V-leg.
     rw [hpfold, kronecker_add_right,
       kronecker_relCochains_chainIncl_eq_zero _ (cochainSplit_mem_relCochains _ _ _), zero_add]
+    -- FINAL MATCH: un-peel the seam homeos off the cochain (← kronecker_mapChain ×2) → `kronecker fc
+    -- (seam²(boundaryExtract zB))`, the form `chainIncl_seam_boundaryExtract` consumes (vs the peeled
+    -- transported-cochain form). Then bridge the seam-leg V-part `zB` to the pd V-leg part `wPart` over z₀.
+    rw [← SingularKroneckerFunctoriality.kronecker_mapChain,
+      ← SingularKroneckerFunctoriality.kronecker_mapChain]
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
