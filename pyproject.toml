@@ -11,8 +11,9 @@ dependencies = [
     # Core scientific
     "numpy>=2.0",
     "scipy>=1.14",
-    # Aristotle theorem prover
-    "aristotlelib>=1.0.0",
+    # Aristotle theorem prover (>=2.1.0: 1.0.0 spoke the now-deprecated v2 API; the
+    # server requires v3 — see ADR-006 / the safe submission process)
+    "aristotlelib>=2.1.0",
     # Symbolic math (Phase 2 WKB expansion)
     "sympy>=1.12",
     "mpmath>=1.3",

@@ -388,7 +388,8 @@ def retrieve(job_id: str, dest: Optional[Path] = None) -> Path:
     dest = Path(dest)
     dest.mkdir(parents=True, exist_ok=True)
     tar = dest / "result.tar.gz"
-    subprocess.run(["aristotle", "result", job_id, "--destination", str(tar),
+    # aristotlelib v2.1.0+ (API v3): `download` replaces the old `result` subcommand.
+    subprocess.run(["aristotle", "download", job_id, "--destination", str(tar),
                     "--api-key", _api_key()], check=True, cwd=str(PROJECT_ROOT))
     extracted = dest / "extracted"
     extracted.mkdir(exist_ok=True)
