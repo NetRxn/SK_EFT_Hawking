@@ -1377,6 +1377,68 @@ theorem joint_close_seam_sigmaR {N p : ℕ} {T A B : Set ↑X}
   exact joint_cap_rcap_match ω.1 (LinearMap.mem_ker.mp ω.2) gM hgM F seam
     (SingularCapChainIncl.rcap ω.1 F + chainBoundary (sub T) (N + 1) e₂) e₁ e₂ hL rfl
 
+omit [T2Space ↑X] in
+/-- **LHS cap-realization on the common space, modulo a `sub T`-boundary** (the genuine local-PD `?hL`
+brick — whnf-dodging GREEN). The `mod`-boundary upgrade of `cap_realize_on_sub`: when the ambient
+realize equality only holds up to a `sub T`-boundary `∂(chainIncl E)`, the `sub T`-chain `L` is the cap of
+the pulled-back cochain against `F` *plus the same boundary `∂E`*. Via `chainIncl`-injectivity, `cap_chainIncl`
+(pushes the cap inside `chainIncl`), and `chainIncl_chainBoundary` (`∂` commutes with `chainIncl`). This is the
+form `joint_cap_rcap_match`'s `hL` consumes, with the essential subdivision/cover slack `∂E` retained — the
+on-the-nose `cap_realize_on_sub` is too rigid (the two fundamental realizations agree only mod `∂`). -/
+theorem cap_realize_on_sub_mod {T : Set ↑X} {k m : ℕ} (g : SingularCochain X k)
+    (L : SingularChain (sub T) m) (F : SingularChain (sub T) (k + m))
+    (E : SingularChain (sub T) (m + 1))
+    (hLF : chainIncl T m L = cap g (chainIncl T (k + m) F)
+        + chainBoundary X m (chainIncl T (m + 1) E)) :
+    L = cap (SingularCapChainIncl.pullbackCochain T k g) F + chainBoundary (sub T) m E := by
+  apply chainIncl_injective T m
+  rw [map_add, hLF, SingularCapChainIncl.cap_chainIncl,
+    SingularRelativeHomologyMod2.chainIncl_chainBoundary]
+
+omit [T2Space ↑X] in
+/-- **RHS rcap-realization on the common space, modulo a `sub T`-boundary** (the genuine local-PD `?hR`
+brick — whnf-dodging GREEN). The right-cap mirror of `cap_realize_on_sub_mod`: a `sub T`-chain `R` whose
+`chainIncl T` equals the ambient right cap of a `sub T`-realized `F` up to a `sub T`-boundary is the right cap
+of the pulled-back cochain plus the same boundary. Via `chainIncl`-injectivity, `rcap_chainIncl`
+(CapSubKDuality:120), and `chainIncl_chainBoundary`. The form `joint_cap_rcap_match`'s `hR` consumes. -/
+theorem rcap_realize_on_sub_mod {T : Set ↑X} {k l : ℕ} (b : SingularCochain X l)
+    (R : SingularChain (sub T) k) (F : SingularChain (sub T) (k + l))
+    (E : SingularChain (sub T) (k + 1))
+    (hRF : chainIncl T k R = SingularCapChainIncl.rcap b (chainIncl T (k + l) F)
+        + chainBoundary X k (chainIncl T (k + 1) E)) :
+    R = SingularCapChainIncl.rcap (SingularCapChainIncl.pullbackCochain T l b) F
+        + chainBoundary (sub T) k E := by
+  apply chainIncl_injective T k
+  rw [map_add, hRF, SingularCapSubKDuality.rcap_chainIncl,
+    SingularRelativeHomologyMod2.chainIncl_chainBoundary]
+
+omit [T2Space ↑X] in
+/-- **Joint cap/rcap realize-close on the common space `sub T`** (the G1 close assembly, whnf-dodging GREEN).
+Packages the two realize-mod bricks (`cap_realize_on_sub_mod`, `rcap_realize_on_sub_mod`) with
+`joint_cap_rcap_match`. Given the genuine local-PD ambient identities — the seam `L` realizes the ambient cap
+`cap g (chainIncl F)` mod a `sub T`-boundary (`hLF`), and `R` realizes the ambient right cap `rcap ω (chainIncl F)`
+mod a `sub T`-boundary (`hRF`) — the two Kronecker legs agree: `kronecker ω L = kronecker (pullbackCochain g) R`.
+Stated over FREE carriers `g, ω, F, L, R, e₁, e₂` so the concrete `fundCycleW`/`seam`/`relCocycleRestrict` terms
+infer STRUCTURALLY at application — no 200k whnf wall. Reduces the apex to exactly the two ambient identities
+`hLF`, `hRF` (the genuine fund-class compatibility over the shared `z₀`). ℤ/2. Kernel-pure. -/
+theorem joint_realize_match {T : Set ↑X} {N p : ℕ} (g : SingularCochain X (N + 1))
+    (ω : SingularCochain X (p + 1))
+    (hω : coboundary (sub T) (p + 1) (SingularCapChainIncl.pullbackCochain T (p + 1) ω) = 0)
+    (hg : coboundary (sub T) (N + 1) (SingularCapChainIncl.pullbackCochain T (N + 1) g) = 0)
+    (F : SingularChain (sub T) (N + 1 + (p + 1))) (L : SingularChain (sub T) (p + 1))
+    (R : SingularChain (sub T) (N + 1))
+    (e₁ : SingularChain (sub T) (p + 1 + 1)) (e₂ : SingularChain (sub T) (N + 1 + 1))
+    (hLF : chainIncl T (p + 1) L = cap g (chainIncl T (N + 1 + (p + 1)) F)
+        + chainBoundary X (p + 1) (chainIncl T (p + 1 + 1) e₁))
+    (hRF : chainIncl T (N + 1) R = SingularCapChainIncl.rcap ω (chainIncl T (N + 1 + (p + 1)) F)
+        + chainBoundary X (N + 1) (chainIncl T (N + 1 + 1) e₂)) :
+    kronecker (SingularCapChainIncl.pullbackCochain T (p + 1) ω) L
+      = kronecker (SingularCapChainIncl.pullbackCochain T (N + 1) g) R :=
+  joint_cap_rcap_match (SingularCapChainIncl.pullbackCochain T (p + 1) ω) hω
+    (SingularCapChainIncl.pullbackCochain T (N + 1) g) hg F L R e₁ e₂
+    (cap_realize_on_sub_mod g L F e₁ hLF)
+    (rcap_realize_on_sub_mod ω R F e₂ hRF)
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
@@ -1528,13 +1590,28 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     refine joint_cap_rcap_match ω.1 (LinearMap.mem_ker.mp ω.2)
       (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 1) (RR (hKeq ▸ g_rep)).1.1) hgMcocyc
       ?F _ R_sub ?e1 ?e2 ?hL ?hR
-    -- ▶ PART 2 RESIDUAL (the genuine local-PD fund-class compatibility over the shared z₀ — the last brick).
-    --   `?F := ∂fund_∩` (cast-reconciled to deg `N+1+(p+1)`); both realize goals are over `M = sub(U∩V)`:
-    --   • hL (seam realize): `seam²(boundaryExtract zB) = cap (pullbackCochain gRk.1.1) ?F + ∂?e1` via
-    --     `chainIncl_seam_boundaryExtract` (NC:568) + `cover_partition_of_legW` (NC:421) + `cap_realize_on_sub` (NC:1243),
-    --     funds reconciled over z₀ (`fundCycleW_pair_relHomologous` NC:856 + `castChain_cast_reconcile` NC:1271 +
-    --     `cap_chainBoundary_relBoundaries_transport` NC:901).
-    --   • hR (R_sub realize): `R_sub = rcap ω ?F + ∂?e2` via `rcap_realize_on_sub` (NC:1256) on the same `?F`.
+    -- ▶ PART 2 RESIDUAL (the genuine local-PD fund-class compatibility over the shared z₀). VERIFIED inputs:
+    --   • `?F` is constructible (lean_multi_attempt GREEN) as the boundary of the realized fundamental at the
+    --     `N+1+(p+1)+1` parenthesization (the cast that matches `joint_cap_rcap_match`'s `F : …(N+1+(p+1))`):
+    --       `?F := chainBoundary (sub (U∩V)) (N+1+(p+1))
+    --                ((subspaceChainsEquiv (U∩V) (N+1+(p+1)+1)).symm
+    --                  ⟨fundCycleW (k:=N+1) (m:=p+1) (hU.inter hV)
+    --                    (castChain (show N+p+3 = N+1+(p+1)+1 by omega) z₀)
+    --                    (chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+    --                    (infCompact U V (legSplitU …) (legSplitV …)),
+    --                   fundCycleW_mem_W _ _ _ _⟩)`
+    --     This is a DIFFERENT cast than the σR-leg's `subspaceChainsEquiv (U∩V) (N+1+1+p+1)` realization
+    --     (= openDuality cast `N+2+p+1`), so the legs must be reconciled via `castChain_cast_reconcile`
+    --     (NC:1271) + `fundCycleW_pair_relHomologous` (NC:856).
+    --   • Both `?hL`/`?hR` are pure `sub(U∩V)`-level cap/rcap identities (the realize-mod bricks
+    --     `cap_realize_on_sub_mod`/`rcap_realize_on_sub_mod` above package the `∂`-slack):
+    --     - hL (cap side, gM = pullbackCochain g↾ IS a pullback ⟹ `cap_realize_on_sub_mod` fits): reduces to the
+    --       ambient `chainIncl seam = cap g↾ (chainIncl ?F) + ∂(chainIncl ?e1)` via `chainIncl_seam_boundaryExtract`
+    --       (NC:568) + `cover_partition_of_legW` (NC:421), funds reconciled over z₀.
+    --     - hR (rcap side, ω.1 is a RAW sub-cochain ⟹ NOT `rcap_realize_on_sub_mod`): direct sub-level
+    --       rcap-Leibniz `rcap ω.1 (∂Φ') = ∂(rcap ω.1 Φ')` (`rcap_cocycle_chainMap`, ω.1 cocycle by ω.2) +
+    --       Sd-slack (`rcap_singularSd_iterate_chainBoundary_arg` NC:184) + cover-V-leg (`R_sub` = V-leg of
+    --       `∂(Sdʲ(chainIncl(rcap ω.1 Φ)))` via `hsplit`/`hVleg`/`hRsubeq`).
     all_goals sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
