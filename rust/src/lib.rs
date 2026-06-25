@@ -713,6 +713,121 @@ fn lanczos_smallest_eigenpairs_eo(
     }
 }
 
+/// Single-shift CG: solve (M_e + σ) x = b on the even sublattice.
+/// (M_e + σ) is SPD for σ > 0, so plain CG converges. Returns (x, n_iter).
+fn cg_me_shifted(
+    h: &[f64], b: &[f64], sigma: f64,
+    fwd: &[[usize; 4]], bwd: &[[usize; 4]], eo: &EvenOddTables,
+    cg_entries: &[CgEntry], tol: f64, max_iter: usize,
+    scratch_odd: &mut [f64],
+) -> (Vec<f64>, usize) {
+    let dim = 8 * eo.n_even;
+    let mut x = vec![0.0_f64; dim];
+    let mut r = b.to_vec();          // r = b - (M_e+σ)·0 = b
+    let mut p = r.clone();
+    let mut rs_old = dot(&r, &r);
+    let bnorm = dot(b, b).sqrt().max(1e-300);
+    let mut ap = vec![0.0_f64; dim];
+    let mut iters = 0usize;
+    for it in 0..max_iter {
+        iters = it + 1;
+        apply_me_shifted(h, &p, &mut ap, sigma, fwd, bwd, eo, scratch_odd, cg_entries);
+        let denom = dot(&p, &ap);
+        if denom.abs() < 1e-300 { break; }
+        let alpha = rs_old / denom;
+        axpy(alpha, &p, &mut x);
+        axpy(-alpha, &ap, &mut r);
+        let rs_new = dot(&r, &r);
+        if rs_new.sqrt() / bnorm < tol { break; }
+        let beta = rs_new / rs_old;
+        for i in 0..dim { p[i] = r[i] + beta * p[i]; }
+        rs_old = rs_new;
+    }
+    (x, iters)
+}
+
+/// Shift-invert Lanczos for the K SMALLEST eigenpairs of M_e.
+///
+/// Runs Lanczos on B = (M_e + σ)^{-1} — each matvec is a CG solve of
+/// (M_e + σ) w = q. The smallest eigenvalues λ of M_e map to the LARGEST
+/// eigenvalues μ = 1/(λ+σ) of B, which Lanczos converges first — so even a
+/// modest subspace resolves the clustered near-zero modes to tiny residual
+/// (unlike plain Lanczos, which converges largest-λ first). Eigenvectors of B
+/// are eigenvectors of M_e; recovered λ = 1/μ − σ.
+///
+/// σ should sit near the top of the band to be deflated (σ ~ 0.1 captures
+/// modes with λ ≲ 0.1 at κ(M_e+σ) ~ λ_max/σ, keeping the CG cheap).
+fn shift_invert_smallest_eigenpairs_eo(
+    h: &[f64], k_want: usize, sigma: f64, m: usize,
+    cg_tol: f64, cg_max_iter: usize,
+    fwd: &[[usize; 4]], bwd: &[[usize; 4]], eo: &EvenOddTables,
+    cg_entries: &[CgEntry], rng: &mut ChaCha20Rng,
+) -> DeflationData {
+    let dim = 8 * eo.n_even;
+    let m = m.min(dim).max(k_want + 1);
+    let mut scratch_odd = vec![0.0_f64; 8 * eo.n_odd];
+
+    let mut q: Vec<Vec<f64>> = Vec::with_capacity(m);
+    let mut q0: Vec<f64> = (0..dim).map(|_| rand_normal(rng)).collect();
+    let n0 = dot(&q0, &q0).sqrt();
+    for x in q0.iter_mut() { *x /= n0; }
+    q.push(q0);
+
+    let mut alphas = Vec::with_capacity(m);
+    let mut betas = Vec::with_capacity(m);
+    let mut beta_prev = 0.0_f64;
+    let mut q_prev = vec![0.0_f64; dim];
+
+    for j in 0..m {
+        // w = B q_j = (M_e + σ)^{-1} q_j
+        let (mut w, _it) = cg_me_shifted(
+            h, &q[j], sigma, fwd, bwd, eo, cg_entries, cg_tol, cg_max_iter, &mut scratch_odd);
+        let a_j = dot(&q[j], &w);
+        alphas.push(a_j);
+        for i in 0..dim { w[i] -= a_j * q[j][i] + beta_prev * q_prev[i]; }
+        // full reorthogonalization
+        for qk in &q {
+            let proj = dot(&w, qk);
+            axpy(-proj, qk, &mut w);
+        }
+        let b_j = dot(&w, &w).sqrt();
+        if j < m - 1 {
+            betas.push(b_j);
+            if b_j < 1e-14 { break; }   // invariant subspace
+            q_prev = q[j].clone();
+            for x in w.iter_mut() { *x /= b_j; }
+            q.push(w);
+            beta_prev = b_j;
+        }
+    }
+
+    // Eigenpairs of the tridiagonal = Ritz pairs of B (μ values).
+    let (mu_sorted, evecs_t) = tridiag_eigen_jacobi(&alphas, &betas);
+    let n_l = mu_sorted.len();
+    let k_actual = k_want.min(n_l);
+
+    // Largest μ (= smallest λ) are at the top of the ascending list.
+    let mut pairs: Vec<(f64, Vec<f64>)> = Vec::with_capacity(k_actual);
+    for idx in 0..k_actual {
+        let ti = n_l - 1 - idx;
+        let mu = mu_sorted[ti];
+        if mu <= 0.0 { continue; }                 // guard: B is SPD ⇒ μ>0
+        let s = &evecs_t[ti];
+        let mut v = vec![0.0_f64; dim];
+        for (l_idx, sl) in s.iter().enumerate() {
+            if l_idx < q.len() { axpy(*sl, &q[l_idx], &mut v); }
+        }
+        let vn = dot(&v, &v).sqrt();
+        if vn > 1e-15 { for x in v.iter_mut() { *x /= vn; } }
+        let lambda = 1.0 / mu - sigma;
+        pairs.push((lambda, v));
+    }
+    pairs.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
+    let evals: Vec<f64> = pairs.iter().map(|p| p.0).collect();
+    let evecs: Vec<Vec<f64>> = pairs.into_iter().map(|p| p.1).collect();
+    DeflationData { k: evecs.len(), evecs, evals }
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // Multi-shift CG solver (shared Krylov space)
 //
@@ -2577,6 +2692,57 @@ fn lanczos_smallest_eigenpairs_eo_py<'py>(
         PyArray1::from_vec(py, residuals).into()))
 }
 
+/// Shift-invert eigensolver for the k smallest eigenpairs of M_e — the deflation
+/// foundation. Returns (eigenvalues ascending, residuals ||M_e v - λ v||).
+///
+/// Args:
+///     h: full-lattice h-field, length 16*l^4
+///     l, k_want, sigma (shift), m (Lanczos subspace), cg_tol, cg_max_iter, seed
+///     cg_*: stencil entries from constants.py
+#[pyfunction]
+fn shift_invert_smallest_eigenpairs_eo_py<'py>(
+    py: Python<'py>,
+    h: PyReadonlyArray1<'py, f64>,
+    l: usize,
+    k_want: usize,
+    sigma: f64,
+    m: usize,
+    cg_tol: f64,
+    cg_max_iter: usize,
+    seed: u64,
+    cg_a: PyReadonlyArray1<'py, i64>,
+    cg_i: PyReadonlyArray1<'py, i64>,
+    cg_j: PyReadonlyArray1<'py, i64>,
+    cg_val: PyReadonlyArray1<'py, f64>,
+) -> PyResult<(Py<PyArray1<f64>>, Py<PyArray1<f64>>)> {
+    let h_slice = h.as_slice()?;
+    let cg_entries = parse_cg_entries(cg_a.as_slice()?, cg_i.as_slice()?,
+                                       cg_j.as_slice()?, cg_val.as_slice()?);
+    let (fwd, bwd) = build_neighbors(l);
+    let eo = build_even_odd(l);
+    let mut rng = ChaCha20Rng::seed_from_u64(seed);
+
+    let defl = shift_invert_smallest_eigenpairs_eo(
+        h_slice, k_want, sigma, m, cg_tol, cg_max_iter,
+        &fwd, &bwd, &eo, &cg_entries, &mut rng);
+
+    let dim_e = 8 * eo.n_even;
+    let mut scratch_odd = vec![0.0_f64; 8 * eo.n_odd];
+    let mut residuals = Vec::with_capacity(defl.k);
+    for j in 0..defl.k {
+        let v = &defl.evecs[j];
+        let mut mv = vec![0.0_f64; dim_e];
+        apply_me_shifted(h_slice, v, &mut mv, 0.0, &fwd, &bwd, &eo, &mut scratch_odd, &cg_entries);
+        let lambda = defl.evals[j];
+        let mut r = 0.0_f64;
+        for i in 0..dim_e { let d = mv[i] - lambda * v[i]; r += d * d; }
+        residuals.push(r.sqrt());
+    }
+
+    Ok((PyArray1::from_vec(py, defl.evals).into(),
+        PyArray1::from_vec(py, residuals).into()))
+}
+
 /// Even-odd RHMC: half-lattice CG with x^{-1/2} Zolotarev.
 /// Physics: Pf(A) = det(M_e)^{1/2} where M_e = A_eo·A_eo^T on even sites.
 /// Zolotarev powers: action x^{-1/2}, heatbath x^{-3/4} (passed from Python).
@@ -3362,5 +3528,6 @@ fn sk_eft_rhmc(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(apply_fermion_matrix_py, m)?)?;
     m.add_function(wrap_pyfunction!(estimate_spectral_range_py, m)?)?;
     m.add_function(wrap_pyfunction!(lanczos_smallest_eigenpairs_eo_py, m)?)?;
+    m.add_function(wrap_pyfunction!(shift_invert_smallest_eigenpairs_eo_py, m)?)?;
     Ok(())
 }
