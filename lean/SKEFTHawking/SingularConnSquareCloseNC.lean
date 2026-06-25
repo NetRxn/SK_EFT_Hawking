@@ -895,6 +895,46 @@ theorem relHomology_mk_setCongr_transport {S S' : Set ↑X} (hSet : S = S') {n :
       = RelativeHomology.mk S n ⟨RelativeChain.mk S n c, hc⟩ := by
   subst hSet; rfl
 
+/-- **Kronecker analog of `cap_coboundary_cochainSplit_eq`** (NC:699 — the σR-connecting engine at the
+kronecker altitude; a SUB-step inside the `of_chainMatch` spine, NOT a re-spine). For `ω` a relative
+cocycle on `U∩V` and a chain `c` whose boundary cover-partitions `∂c = chainIncl U u + chainIncl V w`:
+`kronecker (δ(cochainSplit U ω)) c = kronecker ω (chainIncl V w)`. The adjunction
+`kronecker (δφ) c = kronecker φ (∂c)` (`kronecker_coboundary_chainBoundary`) drops the cap-Leibniz boundary
+term that the cap version carries; the `U`-leg dies (`cochainSplit ∈ relCochains U`) and the `V`-leg's
+`φ ↦ ω` swap is the `ω - φ ∈ relCochains V` vanishing (`cochainSplit_compl_mem_relCochains`). ℤ/2. -/
+theorem kronecker_coboundary_cochainSplit_eq (U V : Set ↑X) {N : ℕ}
+    (ω : LinearMap.ker (relCoboundaryₗ (U ∩ V) (N + 1)))
+    (c : SingularChain X (N + 1 + 1))
+    (uu : SingularChain (sub U) (N + 1)) (ww : SingularChain (sub V) (N + 1))
+    (hbd : chainBoundary X (N + 1) c = chainIncl U (N + 1) uu + chainIncl V (N + 1) ww) :
+    kronecker (coboundary X (N + 1) (cochainSplit U (N + 1) ω.1.1)) c
+      = kronecker ω.1.1 (chainIncl V (N + 1) ww) := by
+  rw [kronecker_coboundary_chainBoundary, hbd, kronecker_add_right]
+  have hU0 : kronecker (cochainSplit U (N + 1) ω.1.1) (chainIncl U (N + 1) uu) = 0 :=
+    cochainSplit_mem_relCochains U (N + 1) ω.1.1 _ ⟨uu, rfl⟩
+  have hVeq : kronecker (cochainSplit U (N + 1) ω.1.1) (chainIncl V (N + 1) ww)
+      = kronecker ω.1.1 (chainIncl V (N + 1) ww) := by
+    have hψ : kronecker (ω.1.1 - cochainSplit U (N + 1) ω.1.1) (chainIncl V (N + 1) ww) = 0 :=
+      cochainSplit_compl_mem_relCochains U V (N + 1) ω.1.1 ω.1.2 _ ⟨ww, rfl⟩
+    rw [ZModModule.sub_eq_add, kronecker_add_left, add_eq_zero_iff_eq_neg, CharTwo.neg_eq] at hψ
+    exact hψ.symm
+  rw [hU0, zero_add, hVeq]
+
+/-- **V-leg `cochainSplit ↦ ω` swap** (the kronecker leg-lemma): for `ω` a relative cocycle on `U∩V`,
+`kronecker (cochainSplit U ω) (chainIncl V w) = kronecker ω (chainIncl V w)`. The `V`-leg half of
+`kronecker_coboundary_cochainSplit_eq`, isolated: `ω - cochainSplit U ω ∈ relCochains V` vanishes on the
+`V`-supported chain `chainIncl V w`. Used to present the goal RHS `kronecker (cochainSplit U ω↾)(chainIncl V w')`
+in `ω↾`-on-the-left form so `kronecker_coboundary_cochainSplit_eq` joins it to `δ(cochainSplit)·(Sdʲ ·)`. -/
+theorem kronecker_cochainSplit_V_leg_eq (U V : Set ↑X) {N : ℕ}
+    (ω : LinearMap.ker (relCoboundaryₗ (U ∩ V) (N + 1)))
+    (w : SingularChain (sub V) (N + 1)) :
+    kronecker (cochainSplit U (N + 1) ω.1.1) (chainIncl V (N + 1) w)
+      = kronecker ω.1.1 (chainIncl V (N + 1) w) := by
+  have hψ : kronecker (ω.1.1 - cochainSplit U (N + 1) ω.1.1) (chainIncl V (N + 1) w) = 0 :=
+    cochainSplit_compl_mem_relCochains U V (N + 1) ω.1.1 ω.1.2 _ ⟨w, rfl⟩
+  rw [ZModModule.sub_eq_add, kronecker_add_left, add_eq_zero_iff_eq_neg, CharTwo.neg_eq] at hψ
+  exact hψ.symm
+
 /-- **∈-boundaries ← pairing-zero** (route-ii final discharge engine). A cycle `z` whose Kronecker
 pairing against EVERY cocycle vanishes is a boundary — homology Kronecker non-degeneracy
 (`homology_eq_zero_of_kroneckerH`) + `Homology.mk_eq_zero`. This is the sanctioned final ∈-boundaries
