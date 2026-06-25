@@ -1868,6 +1868,30 @@ class AristotleResult:
         return self.status in ("COMPLETE", "COMPLETE_WITH_ERRORS", "OUT_OF_BUDGET")
 
 
+def _adr006_full_project_disabled(method: str):
+    """ADR-006: the full-project Aristotle submission path is DISABLED.
+
+    WHY: the guarded method uploaded the ENTIRE Lean project (~1,172 files /
+    17 MB) on every call — a foot-gun at the current substrate scale. It is
+    replaced by the safe partial-submission + verify-then-graft CLI
+    (scripts/submit_to_aristotle.py) backed by src/core/aristotle_submit.py.
+    See docs/adrs/ADR-006-aristotle-submission-rewrite.md.
+
+    The original implementation is preserved intact below each guard (and in
+    scripts/archive/submit_to_aristotle.py) as Methods-of-record for prior
+    papers. RE-ENABLE only to reproduce a prior full-project run: delete the
+    'ADR-006 NO-OP GUARD' block in the calling method; the original code runs
+    again once the guard is gone.
+    """
+    raise RuntimeError(
+        f"[ADR-006] {method} is DISABLED: full-project Aristotle submission is a "
+        f"foot-gun at the current substrate scale. Use the safe partial-submission "
+        f"CLI (scripts/submit_to_aristotle.py). To reproduce the old full-project "
+        f"behaviour, delete the 'ADR-006 NO-OP GUARD' block in {method} (the original "
+        f"implementation is preserved intact below it)."
+    )
+
+
 class AristotleRunner:
     """Interface to the Aristotle API for Lean sorry-filling.
 
@@ -1927,6 +1951,11 @@ class AristotleRunner:
 
         Results are saved to docs/aristotle_results/ for reproducibility.
         """
+        # >>> ADR-006 NO-OP GUARD — BEGIN (delete this block to re-enable the foot-gun) >>>
+        # This method hardcodes `--project-dir self.lean_dir` below = the full ~1,172-file
+        # project upload. Disabled per ADR-006; use the safe partial-submission CLI instead.
+        _adr006_full_project_disabled("AristotleRunner.submit_and_wait")
+        # <<< ADR-006 NO-OP GUARD — END <<<
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
         # Save patched files to a timestamped directory for review
@@ -1989,6 +2018,9 @@ class AristotleRunner:
     ) -> AristotleResult:
         """Submit a targeted request for a specific sorry gap.
 
+        [ADR-006 DISABLED] Routes through submit_and_wait, which is no-op-disabled
+        (full-project upload foot-gun). Retained for prior-paper provenance.
+
         More focused than submit_and_wait: tells Aristotle exactly
         which theorem to prove and gives a strategy hint.
 
@@ -2012,6 +2044,10 @@ class AristotleRunner:
         timeout_seconds: int = 3600,
     ) -> AristotleResult:
         """Submit all sorry gaps up to a given priority level.
+
+        [ADR-006 DISABLED] Routes through submit_and_wait, which is no-op-disabled
+        (full-project upload foot-gun); the name only ever filtered the prompt hint,
+        never the upload scope. Retained for prior-paper provenance.
 
         Priority 1 = most tractable (pure algebra).
         Priority 2 = moderate (algebra + inequalities).
