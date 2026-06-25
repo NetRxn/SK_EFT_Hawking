@@ -171,90 +171,82 @@ The strengthening-pass memory (`feedback_post_wave_strengthening_audit.md`) cata
 
 ## Stage 4: ARISTOTLE (FALLBACK)
 
-**Purpose:** Fill sorry gaps that Stage 3a's interactive MCP loop could not close. Also used for cross-cutting batch submissions in future phases where interactive iteration is impractical.
+**Purpose:** Fill sorry gaps that Stage 3a's interactive MCP loop could not close.
+
+As of 2026-06-25 (**[ADR-006](adrs/ADR-006-aristotle-submission-rewrite.md)**) Stage 4 uses the **safe partial-submission + verify-then-graft** process. The pre-2026-06-25 full-project process (full upload + blind whole-file `--integrate`) is **archived and disabled** at `scripts/archive/submit_to_aristotle.py` — retained only as the Methods-of-record for prior papers, and must not be re-enabled for new work.
+
+All Stage-4 steps use the canonical CLI `scripts/submit_to_aristotle.py` (subcommands), a thin wrapper over the engine `src/core/aristotle_submit.py`.
 
 **When to use Stage 4:**
 - Stage 3a's interactive MCP loop on `lean_multi_attempt` has been fully exhausted for the remaining sorries
-- The remaining sorries have been pre-decomposed into sector/sub-lemma `have` targets (≤12 terms each) — Aristotle can handle granular targets much better than monolithic 50+ term goals
+- The remaining sorries have been pre-decomposed into sector/sub-lemma `have` targets (≤12 terms each) — Aristotle handles granular targets far better than monolithic 50+ term goals
 - Every sorry has a thorough `PROVIDED SOLUTION` comment referencing relevant deep research
-- Registry in `src/core/aristotle_interface.py` is accurate (no stale `filled=False` entries for theorems that are actually filled)
-- **User has explicitly authorized the submission.** Each Aristotle batch submits the whole project and takes ~1 day to return.
+- **User has explicitly authorized the submission** (the CLI enforces this via `--yes-i-authorize`). Submission is **async / non-blocking**; Aristotle runs server-side (~hours–day).
 
 **When NOT to use Stage 4:**
-- When Stage 3a hasn't been seriously attempted (MCP loop gives 1000× speedup vs. `lake build` iteration)
-- When re-submitting a previously-failed batch without a **materially changed state** — Aristotle failing the same cubic and then being resubmitted on the same state produces the same failure. Insanity is doing the same thing and expecting different results.
-- When some sorries in the batch are still monolithic (50+ terms) — decompose first via Stage 3a scaffolding, THEN submit
+- When Stage 3a hasn't been seriously attempted (the MCP loop gives a ~1000× speedup vs. `lake build` iteration)
+- When re-submitting a previously-failed target without a **materially changed state** (the CLI's manifest dedup refuses an identical closure unless `--force`)
+- When some sorries are still monolithic (50+ terms) — decompose first via Stage 3a scaffolding, THEN submit
 
-**Pre-requisite:** Read `docs/references/Theorm_Proving_Aristotle_Lean.md` before every Aristotle session. It covers Aristotle's capabilities, prompt strategies, and project-specific integration behavior.
+**Toolchain note:** Aristotle runs Lean/Mathlib **4.28.0**; we run **4.29.1**. The mismatch is a known, tolerated risk — the verification gauntlet (4d) rejects anything that does not build + kernel-verify on our toolchain, so a mismatch costs a *run*, not substrate integrity. No local 4.28.0 pre-build is required.
 
-### 4a. Submit
+**Pre-requisite:** Read `docs/references/Theorm_Proving_Aristotle_Lean.md` before every Aristotle session.
 
-**One job at a time.** Every submission sends the entire Lean project — parallel jobs duplicate work. The script blocks submission if a job is already running.
+### 4a. Stage + Submit (partial, async)
 
-**Priority batching:** When there are many sorry gaps across multiple modules, group them into priority batches and submit sequentially (highest priority first). Each batch should contain related modules so Aristotle can leverage shared context. Register all sorry gaps with priorities in `SORRY_GAPS` (in `aristotle_interface.py`) before submitting. See `docs/references/aristotle_batch_plan.md` for the current batch plan.
+Submission uploads ONLY the target file's transitive `SKEFTHawking` import-closure (a minimal staged project), never the full project. A "target" is a module (`SKEFTHawking.Foo`), a path, a `*.lean` name, or a bare leaf.
 
 ```bash
-# Preview what would be submitted:
-uv run python scripts/submit_to_aristotle.py --dry-run
+# 1. Current sorry gaps (Lean primitive: sorryAx in the kernel axiom closure):
+uv run python scripts/submit_to_aristotle.py sorries [<target>...]
 
-# Submit with priority (1=highest, 3=lowest):
-uv run python scripts/submit_to_aristotle.py --submit --priority 1
+# 2. Stage the minimal closure and review it (no submission):
+uv run python scripts/submit_to_aristotle.py stage <target>...
 
-# For custom prompts targeting specific modules, use the CLI directly:
-cd lean && source ../.env && export ARISTOTLE_API_KEY
-uv run aristotle submit "Fill sorry gaps in [Module1.lean] and [Module2.lean]. [Strategy hints.]" \
-  --project-dir . --priority 1
+# 3. Submit (ASYNC — returns immediately, never --wait). Requires explicit authorization:
+uv run python scripts/submit_to_aristotle.py submit <target>... --yes-i-authorize
 ```
 
-Do not pass `--integrate` at submission time — integration is a separate step (4c). Ensure every sorry theorem has a `PROVIDED SOLUTION` hint in its docstring before submitting.
+Ensure every target sorry has a `PROVIDED SOLUTION` hint in its docstring before submitting.
 
 ### 4b. Monitor
 
 ```bash
-# Source .env for the CLI key, then check status:
+uv run python scripts/submit_to_aristotle.py status      # recorded submissions + status
 source .env && export ARISTOTLE_API_KEY && uv run aristotle list --limit 5
 ```
 
-Move on to non-dependent work while waiting. Do NOT submit additional jobs while one is running.
+Submission is non-blocking by design — continue non-dependent work while Aristotle runs. (This is what lets Stage 4 run inside a `/goal` loop without the loop blocking on Aristotle's return.)
 
 ### 4c. Retrieve and Review
 
-Retrieve first, review the diff, then integrate selectively.
-
 ```bash
-# 1. Retrieve (no --integrate)
-uv run python scripts/submit_to_aristotle.py --retrieve <UUID>
+# Download + extract (NO integration):
+uv run python scripts/submit_to_aristotle.py retrieve <job_id>
 
-# 2. Review the diff
-cat docs/aristotle_results/run_<timestamp>/diff.patch
-
-# 3. If clean: re-run with --integrate
-uv run python scripts/submit_to_aristotle.py --retrieve <UUID> --integrate
-
-# 3. If regressions: manually copy only the filled proof blocks
+# Review the target-file diff(s) without applying anything:
+uv run python scripts/submit_to_aristotle.py graft <extracted_dir> <target>...
 ```
 
-See the [Aristotle reference doc](references/Theorm_Proving_Aristotle_Lean.md#project-integration) for details on `--integrate` behavior and regression risks.
-
-### 4d. Resume OUT_OF_BUDGET runs
+### 4d. Graft + Verify (verify-then-graft, auto-revert)
 
 ```bash
-uv run python scripts/submit_to_aristotle.py --resume <UUID>
+uv run python scripts/submit_to_aristotle.py graft <extracted_dir> <target>... --apply
 ```
 
-### 4e. Verify quality
+`--apply` grafts ONLY the target file(s) — refusing if Aristotle touched any non-target closure file — then runs the **verification gauntlet**: `lake build` (zero sorry) → fresh ExtractDeps → kernel-purity/axiom audit of the target decls → `validate.py` (`axiom_closure_allowlist` + `native_decide_regression`) → tests. It **keeps the graft on pass and AUTO-REVERTS on failure**, so the tree is never left worse than found. Standalone gauntlet: `... verify <target>...`.
 
-- Does the proof exercise the hypotheses? Check for trivial proofs (total division, vacuous satisfaction).
-- `lake build` — zero errors, sorry warnings only for genuinely unfilled gaps.
-- If strengthening is needed: stop, explain to user, prepare correction.
+Quality (folded into the gauntlet): the proof must exercise its hypotheses (no total-division / vacuous proofs) and be kernel-pure (no new `sorry`, no `native_decide` regression, no un-signed-off axiom). If strengthening is needed, stop and prepare a correction.
 
-### 4f. Register
+### 4e. Register (attribution)
 
-- Update `SorryGap(filled=True)` in `src/core/aristotle_interface.py`
-- Add run UUID to `ARISTOTLE_THEOREMS` in `src/core/constants.py`
-- Update `formulas.py` docstrings: `Aristotle: pending` → `Aristotle: <run_id>`
+Only after a graft is kept:
+- Add the run UUID to `ARISTOTLE_THEOREMS` in `src/core/constants.py`, **bumping the hardcoded `322` in the SAME commit in both places**: `constants.py` (`assert ARISTOTLE_PROVED_COUNT == 322`) and `scripts/validate.py` (CHECK 5).
+- Set `SorryGap(filled=True)` in `src/core/aristotle_interface.py` (the historical registry — append/update, never delete; `test_lean_integrity` requires ≥45 entries as provenance).
+- `uv run python scripts/update_counts.py` (regenerates `counts.json` / `\aristotleproved`); `scripts/aristotle_usage_by_bundle.py` re-derives per-bundle disclosure; reconcile `ATTRIBUTION.md`.
+- Update `formulas.py` docstrings: `Aristotle: pending` → `Aristotle: <run_id>`.
 
-**Gate:** All sorry gaps filled (or documented as manual with explanation). `lake build` clean with zero sorry.
+**Gate:** All sorry gaps filled (or documented as manual). `lake build` clean with zero sorry; the verification gauntlet passed.
 
 ---
 

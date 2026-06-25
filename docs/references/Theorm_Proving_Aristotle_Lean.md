@@ -2,14 +2,23 @@
 
 ## Project-Specific Guidance
 
-**Before submitting:** Read the batch plan at `docs/references/aristotle_batch_plan.md` for current priorities, batch assignments, and submission prompts. Sorry gaps are registered with priorities in `SORRY_GAPS` (`src/core/aristotle_interface.py`). Submit one batch at a time, highest priority first. See Stage 4 in `docs/WAVE_EXECUTION_PIPELINE.md` for the full submission protocol.
+> **⚠ ADR-006 (2026-06-25) — the active Aristotle process is the SAFE partial-submission + verify-then-graft CLI.**
+> Use `scripts/submit_to_aristotle.py` (subcommands `sorries` / `stage` / `submit --yes-i-authorize` /
+> `status` / `retrieve` / `graft --apply` / `verify`), backed by the engine `src/core/aristotle_submit.py`.
+> It submits ONLY a target's minimal `SKEFTHawking` import-closure (never the full project) and
+> re-incorporates via review → graft target-files-only → verification gauntlet (auto-revert on failure).
+> The pre-2026-06-25 full-project script (full upload + blind whole-file `--integrate`) is **archived and
+> disabled** at `scripts/archive/submit_to_aristotle.py`, retained only as the Methods-of-record for prior
+> papers. Follow [ADR-006](../adrs/ADR-006-aristotle-submission-rewrite.md) and Stage 4 in
+> [WAVE_EXECUTION_PIPELINE.md](../WAVE_EXECUTION_PIPELINE.md). The **"Submit Script"** section far below
+> describes the now-archived script and is kept for provenance; the **"Registration"** step still applies
+> (with the count-bump noted there).
 
 **Key project conventions:**
 - Every sorry theorem MUST have a `PROVIDED SOLUTION` hint in its docstring
-- Register each sorry in `SORRY_GAPS` with priority (1=highest) before submitting
-- Use `--priority` flag matching the batch priority
-- After retrieval: `lake build` to verify (never grep for sorry — comments contain the word)
-- Integration: review diff first, then `--integrate`
+- Submit one target's minimal closure at a time; submission is async (non-blocking) — continue other work while it runs
+- Verify via the gauntlet (`lake build` + axiom/kernel-purity audit + `validate.py` + tests), never grep for sorry (comments contain the word)
+- Re-incorporation is `graft <dir> <targets> --apply` (target-files-only, auto-revert), never a whole-file copy
 
 ---
 
@@ -216,7 +225,12 @@ The API key lives in `.env` at the project root (`SK_EFT_Hawking/.env`). The sub
 source .env && export ARISTOTLE_API_KEY && uv run list --limit 5
 ```
 
-### Submit Script (`scripts/submit_to_aristotle.py`)
+### Submit Script (ARCHIVED — `scripts/archive/submit_to_aristotle.py`)
+
+> **This section documents the now-archived full-project script** (ADR-006), kept for the
+> provenance of prior-paper Methods. The script is disabled by a no-op guard; for new work use
+> the safe CLI per the banner at the top of this doc. The full-project behaviour below is what
+> prior papers' Methods sections describe.
 
 The script wraps the Aristotle API for our project.
 
@@ -295,11 +309,12 @@ The summary file is the best starting point for review — it describes proof st
 
 ### Registration
 
-After verifying a proof, register it in three places:
+After the verification gauntlet passes and the graft is kept, register the run:
 
-1. **`src/core/aristotle_interface.py`** — Set `SorryGap(filled=True)` for the theorem
-2. **`src/core/constants.py`** — Add the run UUID (first 8 chars, from `aristotle list`) to `ARISTOTLE_THEOREMS`
-3. **`src/core/formulas.py`** — Update docstring: `Aristotle: pending` → `Aristotle: <run_id>`
+1. **`src/core/constants.py`** — Add the run UUID to `ARISTOTLE_THEOREMS`, and **bump the hardcoded `322` in the SAME commit in BOTH** `constants.py` (`assert ARISTOTLE_PROVED_COUNT == 322`) and `scripts/validate.py` (CHECK 5). These are intentional drift-detectors.
+2. **`src/core/aristotle_interface.py`** — Set `SorryGap(filled=True)` for the theorem (historical registry — append/update, never delete; `test_lean_integrity` requires ≥45 entries as provenance).
+3. **Counts + disclosure** — `uv run python scripts/update_counts.py` (regenerates `counts.json` / `\aristotleproved`); `scripts/aristotle_usage_by_bundle.py` re-derives per-bundle disclosure; reconcile `ATTRIBUTION.md` (the registry is the source of truth).
+4. **`src/core/formulas.py`** — Update docstring: `Aristotle: pending` → `Aristotle: <run_id>`.
 
 ---
 

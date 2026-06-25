@@ -23,14 +23,18 @@ This project was developed with extensive assistance from AI tools. Varying degr
 
 ### Aristotle (Harmonic)
 - Automated theorem proving for Lean 4 sorry gaps
-- 307 theorems proved across 43+ submissions
+- 322 theorems tracked in the Aristotle registry across 44 submissions (a few were
+  ultimately completed manually; see `ARISTOTLE_THEOREMS` for the per-theorem run IDs)
 - Key contributions (non-exhaustive list): Hopf algebra structure (U_q(sl_2) coproduct/counit/antipode),
   categorical infrastructure (quantum dimensions, trace properties),
   Onsager algebra (Davies isomorphism, Chevalley embedding),
   number field computations (F-symbol involutory, associativity),
   S-matrix verification (unitarity, Verlinde formula),
   and statistical estimator bounds
-- Run IDs tracked in `src/core/constants.py` → `ARISTOTLE_THEOREMS`
+- Run IDs + the canonical, live theorem count live in `src/core/constants.py` →
+  `ARISTOTLE_THEOREMS` (the source of truth; the counts above are reconciled to it — ADR-006)
+- New runs use the safe partial-submission process (`scripts/submit_to_aristotle.py`); the
+  pre-2026-06-25 full-project process is archived at `scripts/archive/submit_to_aristotle.py`
 - https://aristotle.harmonic.fun
 - Citation per Aristotle docs: https://aristotle.harmonic.fun/dashboard/docs/citation
 
