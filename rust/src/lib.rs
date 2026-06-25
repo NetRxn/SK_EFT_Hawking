@@ -828,6 +828,115 @@ fn shift_invert_smallest_eigenpairs_eo(
     DeflationData { k: evecs.len(), evecs, evals }
 }
 
+/// Cholesky factor L (lower) of a small SPD matrix E (k×k, row-major). E = L Lᵀ.
+fn chol_factor(e: &[Vec<f64>]) -> Vec<Vec<f64>> {
+    let k = e.len();
+    let mut l = vec![vec![0.0_f64; k]; k];
+    for i in 0..k {
+        for j in 0..=i {
+            let mut s = e[i][j];
+            for m in 0..j { s -= l[i][m] * l[j][m]; }
+            if i == j {
+                l[i][j] = s.max(1e-300).sqrt();
+            } else {
+                l[i][j] = s / l[j][j];
+            }
+        }
+    }
+    l
+}
+
+/// Solve E x = b given the Cholesky factor L (E = L Lᵀ).
+fn chol_solve(l: &[Vec<f64>], b: &[f64]) -> Vec<f64> {
+    let k = b.len();
+    let mut y = vec![0.0_f64; k];
+    for i in 0..k {
+        let mut s = b[i];
+        for m in 0..i { s -= l[i][m] * y[m]; }
+        y[i] = s / l[i][i];
+    }
+    let mut x = vec![0.0_f64; k];
+    for i in (0..k).rev() {
+        let mut s = y[i];
+        for m in (i + 1)..k { s -= l[m][i] * x[m]; }
+        x[i] = s / l[i][i];
+    }
+    x
+}
+
+/// Deflated CG (Saad et al. 2000): solve (M_e + σ) x = b with the search
+/// directions kept A-conjugate to the deflation subspace V (the low eigenvectors
+/// of M_e). Provably converges to the SAME solution as plain CG (no bias) — the
+/// projection only removes the near-zero modes that throttle convergence. With V
+/// imperfect, it just accelerates less; it never returns a wrong answer.
+///
+/// Cost: k extra matvecs up front (AV) + cheap k-space ops per iteration; one
+/// matvec (A p) per iteration, same as plain CG.
+fn cg_me_shifted_deflated(
+    h: &[f64], b: &[f64], sigma: f64,
+    vdefl: &[Vec<f64>],
+    fwd: &[[usize; 4]], bwd: &[[usize; 4]], eo: &EvenOddTables,
+    cg_entries: &[CgEntry], tol: f64, max_iter: usize,
+    scratch_odd: &mut [f64],
+) -> (Vec<f64>, usize) {
+    let dim = 8 * eo.n_even;
+    let k = vdefl.len();
+    if k == 0 {
+        return cg_me_shifted(h, b, sigma, fwd, bwd, eo, cg_entries, tol, max_iter, scratch_odd);
+    }
+    // AV_j = (M_e + σ) v_j
+    let mut av: Vec<Vec<f64>> = Vec::with_capacity(k);
+    for v in vdefl {
+        let mut a = vec![0.0_f64; dim];
+        apply_me_shifted(h, v, &mut a, sigma, fwd, bwd, eo, scratch_odd, cg_entries);
+        av.push(a);
+    }
+    // E = Vᵀ A V  (k×k, SPD), Cholesky factor once.
+    let mut e = vec![vec![0.0_f64; k]; k];
+    for i in 0..k { for j in 0..k { e[i][j] = dot(&vdefl[i], &av[j]); } }
+    let lchol = chol_factor(&e);
+
+    // Projection P w = w - V E⁻¹ (AVᵀ w)  ⇒ Vᵀ A (P w) = 0.
+    let project = |w: &[f64]| -> Vec<f64> {
+        let avtw: Vec<f64> = av.iter().map(|a| dot(a, w)).collect();
+        let mu = chol_solve(&lchol, &avtw);
+        let mut p = w.to_vec();
+        for j in 0..k { axpy(-mu[j], &vdefl[j], &mut p); }
+        p
+    };
+
+    // x0 = V E⁻¹ (Vᵀ b)  ⇒  Vᵀ r0 = 0.
+    let vtb: Vec<f64> = vdefl.iter().map(|v| dot(v, b)).collect();
+    let c = chol_solve(&lchol, &vtb);
+    let mut x = vec![0.0_f64; dim];
+    for j in 0..k { axpy(c[j], &vdefl[j], &mut x); }
+    let mut ax = vec![0.0_f64; dim];
+    apply_me_shifted(h, &x, &mut ax, sigma, fwd, bwd, eo, scratch_odd, cg_entries);
+    let mut r: Vec<f64> = (0..dim).map(|i| b[i] - ax[i]).collect();
+    let mut p = project(&r);
+
+    let bnorm = dot(b, b).sqrt().max(1e-300);
+    let mut rs_old = dot(&r, &r);
+    let mut ap = vec![0.0_f64; dim];
+    let mut iters = 0usize;
+    for it in 0..max_iter {
+        iters = it + 1;
+        apply_me_shifted(h, &p, &mut ap, sigma, fwd, bwd, eo, scratch_odd, cg_entries);
+        let denom = dot(&p, &ap);
+        if denom.abs() < 1e-300 { break; }
+        let alpha = rs_old / denom;
+        axpy(alpha, &p, &mut x);
+        axpy(-alpha, &ap, &mut r);
+        let rs_new = dot(&r, &r);
+        if rs_new.sqrt() / bnorm < tol { break; }
+        let beta = rs_new / rs_old;
+        let s: Vec<f64> = (0..dim).map(|i| r[i] + beta * p[i]).collect();
+        p = project(&s);
+        rs_old = rs_new;
+    }
+    (x, iters)
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // Multi-shift CG solver (shared Krylov space)
 //
@@ -3518,6 +3627,59 @@ fn run_rhmc_rust_eo_2pf_hasenbusch<'py>(
     Ok(dict.into())
 }
 
+/// Validation: compare plain vs deflated single-shift CG solving (M_e+β)x=φ,
+/// using a shift-invert deflation subspace of k_defl modes.
+/// Returns (iters_plain, iters_defl, rel_solution_diff, lam_min_subspace).
+///   - At a β where plain CG converges, rel_solution_diff ~ tol proves the
+///     deflated solver is UNBIASED (same solution).
+///   - At β≈0, plain hits the iteration cap while deflated converges fast —
+///     iters_defl ≪ iters_plain shows deflation makes the solve tractable.
+#[pyfunction]
+fn solve_compare_deflation_py<'py>(
+    _py: Python<'py>,
+    h: PyReadonlyArray1<'py, f64>,
+    l: usize,
+    beta: f64,
+    k_defl: usize,
+    sigma_eig: f64,
+    m_eig: usize,
+    cg_tol: f64,
+    cg_max_iter: usize,
+    seed: u64,
+    cg_a: PyReadonlyArray1<'py, i64>,
+    cg_i: PyReadonlyArray1<'py, i64>,
+    cg_j: PyReadonlyArray1<'py, i64>,
+    cg_val: PyReadonlyArray1<'py, f64>,
+) -> PyResult<(usize, usize, f64, f64)> {
+    let h_slice = h.as_slice()?;
+    let cg_entries = parse_cg_entries(cg_a.as_slice()?, cg_i.as_slice()?,
+                                       cg_j.as_slice()?, cg_val.as_slice()?);
+    let (fwd, bwd) = build_neighbors(l);
+    let eo = build_even_odd(l);
+    let mut rng = ChaCha20Rng::seed_from_u64(seed);
+
+    let defl = shift_invert_smallest_eigenpairs_eo(
+        h_slice, k_defl, sigma_eig, m_eig, cg_tol, cg_max_iter,
+        &fwd, &bwd, &eo, &cg_entries, &mut rng);
+    let lam_min = defl.evals.first().copied().unwrap_or(0.0);
+
+    let dim = 8 * eo.n_even;
+    let mut scratch_odd = vec![0.0_f64; 8 * eo.n_odd];
+    let phi: Vec<f64> = (0..dim).map(|_| rand_normal(&mut rng)).collect();
+
+    let (x_plain, it_plain) = cg_me_shifted(
+        h_slice, &phi, beta, &fwd, &bwd, &eo, &cg_entries, cg_tol, cg_max_iter, &mut scratch_odd);
+    let (x_defl, it_defl) = cg_me_shifted_deflated(
+        h_slice, &phi, beta, &defl.evecs, &fwd, &bwd, &eo, &cg_entries, cg_tol, cg_max_iter, &mut scratch_odd);
+
+    let mut diff = 0.0_f64;
+    let mut nrm = 0.0_f64;
+    for i in 0..dim { let d = x_plain[i] - x_defl[i]; diff += d * d; nrm += x_plain[i] * x_plain[i]; }
+    let rel = (diff / nrm.max(1e-300)).sqrt();
+
+    Ok((it_plain, it_defl, rel, lam_min))
+}
+
 #[pymodule]
 fn sk_eft_rhmc(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(run_rhmc_rust, m)?)?;
@@ -3529,5 +3691,6 @@ fn sk_eft_rhmc(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(estimate_spectral_range_py, m)?)?;
     m.add_function(wrap_pyfunction!(lanczos_smallest_eigenpairs_eo_py, m)?)?;
     m.add_function(wrap_pyfunction!(shift_invert_smallest_eigenpairs_eo_py, m)?)?;
+    m.add_function(wrap_pyfunction!(solve_compare_deflation_py, m)?)?;
     Ok(())
 }
