@@ -1474,5 +1474,34 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   route (NC:1465-1468): KEY `seam²(boundaryExtract zB) + pullbackDualityₗ σR_rep ∈ boundaries(sub(U∩V))` discharges via
   --   `realize_chainBoundary_cap_mem_boundaries` (NC:304) on `W := cap (cochainSplit g_rep) F` + the two facts (χ-term via
   --   the cover-level engine `cap_coboundary_cochainSplit_eq` NC:752, seam-term) — the Sdʲ-slack lives IN the ∂W boundary.
+  -- STEP A: cover-fine subdivision of ∂fund_∩ over (legSplitUᶜ, legSplitVᶜ) (= infCompactᶜ).
+  obtain ⟨jSd, u', w', hsplit⟩ := SingularConnSquareRHSScaffold.exists_cover_fine_subdivision
+    (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+    (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+    (SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+      (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 1 + (p + 1) + 1) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+      (SingularCSCMayerVietorisConnecting.infCompact U V
+        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)))
+    (by
+      have h := SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV)
+        (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 1 + (p + 1) + 1) z₀)
+        (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+        (SingularCSCMayerVietorisConnecting.infCompact U V
+          (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+          (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
+      rwa [SingularCSCMayerVietorisConnecting.infCompact_coe, Set.compl_inter] at h)
+  -- STEP B: the cover-level σR-connecting engine on (legSplitUᶜ, legSplitVᶜ); ω := g_rep (kernel type
+  -- `relCoboundaryₗ (legSplitUᶜ∩legSplitVᶜ)` = `relCoboundaryₗ Kᶜ` via hKeq). χ-identity heng:
+  -- cap(δ(cochainSplit legSplitUᶜ g_rep))(Sdʲ fund) = cap g_rep w' + ∂(cap (cochainSplit legSplitUᶜ g_rep)(Sdʲ fund)).
+  have hKeq : ((↑K.1 : Set ↑X))ᶜ
+      = (↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ
+        ∩ (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ := by
+    rw [SingularCSCMayerVietorisConnecting.legSplit_cover U V hU hV K, Set.compl_union]
+  have heng := cap_coboundary_cochainSplit_eq
+    ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
+    ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
+    (hKeq ▸ g_rep) _ _ _ ⟨u', rfl⟩ ⟨w', rfl⟩ hsplit (by omega)
   sorry
 end SKEFTHawking.SingularConnSquareCloseNC
