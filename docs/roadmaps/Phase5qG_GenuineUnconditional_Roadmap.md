@@ -299,6 +299,15 @@ Each gate: target · consumes · DONE criteria · status. **G1 is the unlock; G2
       relKroneckerH (infCompactᶜ) (mk σR_rep) [chainIncl(rcap ω fund)]`. NEXT: `hσR` (σR_rep = relCohomSetCongr
       (relCohomMvConnecting g_rep↾)) → Geom:73 / `rhs_pairing_reduce` (RHSPairing:42) evaluates the connecting pairing
       → `kronecker(δφ)(Sdʲ…)`; then the SEAM leg → cover-partition V-part → match. Observe the banned-route tell.
+  - **🧭 turn-28 DILIGENCE RE-ORIENTATION (2026-06-24):** the turns-23–27 grind (rcap-on-∂ bricks + `cross_realization_match`
+    SPLIT → non-cocycle `gamb` → surviving small-chains slack) was a DIVERGENCE — it avoided the committed CAP ENGINES.
+    Per SETTLED_FORK `cap-sigmaR-connecting-needs-banned-formula` (superseded) + lines 244-245: the sanctioned close is the
+    **CAP-engine JOINT z₀ cancellation** — σR leg via the pairing (δφ a cocycle ⟹ Sdʲ slack dies on z₀, ∂z₀=0); seam+g_rep
+    legs via `cap_coboundary_cochainSplit_subdiv` (NC:728, ω=g_rep) → cover-FINE V-part + boundary; the V-parts CANCEL, the
+    boundaries die. The 11th agent's "leaves couple over z₀" diagnosis = exactly this joint cancellation. **REPLACE the
+    STEP-3 `cross_realization_match` split with the cap-engine joint close**; keep the rcap/small-chains helpers as reusable
+    standalone lemmas. Allowed: `pair_fund_eq_pair_z0` (fund→z₀ slack-kill), `kronecker_cap_eq_kronecker_rcap`, the cap
+    engines. ⚠ `relKroneckerH_relCohomMvConnecting_cover_partition` ("Geom:73") is a STALE name (not in source).
   - Then re-home the χ + engines into an imported module and wire the cross-realization descent →
     `PoincareDual4Mid`/`Lo` become theorems. (Turns 1–10 = re-seed-correction + the architecture audit/resolution;
     turn 11 = first Lean brick.)
