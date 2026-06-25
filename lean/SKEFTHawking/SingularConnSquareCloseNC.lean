@@ -1030,6 +1030,187 @@ theorem kronecker_relCochains_cover_partition_eq_zero {P Q : Set ↑X} {n : ℕ}
   rw [kronecker_add_right, (mem_relCochains _ _ _).1 haP _ ⟨u, rfl⟩,
     (mem_relCochains _ _ _).1 haQ _ ⟨w, rfl⟩, add_zero]
 
+/-! ## Small-chains cover-kill infrastructure (LEAF 2, Hatcher Prop 2.21 / excision form)
+
+Foundational kernel-pure bricks assembling the existing machinery (`subspaceChainsEquiv`,
+`kronecker_pullbackCochain`, `coboundary_pullbackCochain`, `exists_mvUnion_partition`,
+`kronecker_relCochains_cover_partition_eq_zero`) for the cover-supported boundary-cycle kill. Each brick is
+a standalone verified statement; the apex assembly carries irreducible subdivision-homotopy slack (see the
+residual note at the end). NO banned brick (`_of_crossRealization`/`_of_hcup`/`kronecker_pd_fold_fund`),
+no new axiom/sorry. -/
+
+/-- **STEP 1 (subspace boundary lift).** An ambient `(P∪Q)`-supported boundary relation `chainIncl W S_sub
+= ∂(chainIncl W COMM_sub)` (with `W = P∪Q`, both chains lifted from `sub W`) transports to the subspace:
+`∂COMM_sub = S_sub` in `SingularChain (sub W)`. `chainIncl` is an injective chain map
+(`chainIncl_chainBoundary` + `chainIncl_injective`), so the ambient boundary identity descends. This is the
+Step-1 lift that turns the cover-supported ambient bounding into a genuine `sub W`-boundary relation, ready
+for the `pullbackCochain` transport (Step 2). -/
+theorem chainBoundary_sub_of_chainIncl_eq {W : Set ↑X} {n : ℕ}
+    (S_sub : SingularChain (sub W) n) (COMM_sub : SingularChain (sub W) (n + 1))
+    (hbd : chainIncl W n S_sub = chainBoundary X n (chainIncl W (n + 1) COMM_sub)) :
+    chainBoundary (sub W) n COMM_sub = S_sub := by
+  apply chainIncl_injective W n
+  rw [chainIncl_chainBoundary]
+  exact hbd.symm
+
+/-- **STEP 2 (pullbackCochain transport).** Pairing the ambient cochain `gamb` against the inclusion of a
+`sub W`-chain equals pairing the pulled-back cochain `pullbackCochain W gamb` against the `sub W`-chain:
+`kronecker gamb (chainIncl W c) = kronecker (pullbackCochain W gamb) c`. The `kronecker_pullbackCochain`
+adjunction, oriented `gamb`-on-the-ambient side. This moves the whole pairing down into `sub W`, where the
+cover `{val⁻¹P, val⁻¹Q}` is global (their union is `univ`). -/
+theorem kronecker_chainIncl_eq_pullbackCochain {W : Set ↑X} {n : ℕ}
+    (gamb : SingularCochain X n) (c : SingularChain (sub W) n) :
+    kronecker gamb (chainIncl W n c) = kronecker (SingularCapChainIncl.pullbackCochain W n gamb) c :=
+  (SingularCapSubKDuality.kronecker_pullbackCochain gamb c).symm
+
+/-- **STEP 3a (δ commutes with pullback).** The subspace coboundary of a pulled-back cochain is the
+pullback of the ambient coboundary: `δ(pullbackCochain W gamb) = pullbackCochain W (δgamb)`
+(`coboundary_pullbackCochain`). In particular `δ(pullbackCochain W gamb)` is a **cocycle** in `sub W`
+(it is a coboundary), so its pairing is subdivision-invariant — the property that the non-cocycle `gamb`
+itself lacks. -/
+theorem coboundary_pullbackCochain_eq {W : Set ↑X} {n : ℕ} (gamb : SingularCochain X n) :
+    coboundary (sub W) n (SingularCapChainIncl.pullbackCochain W n gamb)
+      = SingularCapChainIncl.pullbackCochain W (n + 1) (coboundary X n gamb) :=
+  SingularConnSquareCloseFinal.coboundary_pullbackCochain n gamb
+
+/-- **STEP 3b (δgamb pulls back into both cover-leg relCochains).** When the ambient coboundary
+`δgamb = coboundary X n gamb` vanishes on `P`-chains AND `Q`-chains (`δgamb ∈ relCochains P ∩ relCochains
+Q` — the `cochainSplit_coboundary_mem_U/V` situation), its `sub W`-pullback `δ(pullbackCochain W gamb)`
+lands in `relCochains (val⁻¹P) ∩ relCochains (val⁻¹Q)` over `sub W`. Via `coboundary_pullbackCochain_eq`
+(δ↔pullback commutation) + `pullbackCochain_mem_relCochains` (relCochains transports along the inclusion).
+This is the cover-fine-kill datum (Step 4 consumes it). -/
+theorem coboundary_pullbackCochain_mem_relCochains_cover {W P Q : Set ↑X} {n : ℕ}
+    (gamb : SingularCochain X n) (hP : coboundary X n gamb ∈ relCochains P (n + 1))
+    (hQ : coboundary X n gamb ∈ relCochains Q (n + 1)) :
+    coboundary (sub W) n (SingularCapChainIncl.pullbackCochain W n gamb)
+        ∈ relCochains (Subtype.val ⁻¹' P : Set ↑(sub W)) (n + 1)
+      ∧ coboundary (sub W) n (SingularCapChainIncl.pullbackCochain W n gamb)
+        ∈ relCochains (Subtype.val ⁻¹' Q : Set ↑(sub W)) (n + 1) := by
+  rw [coboundary_pullbackCochain_eq]
+  exact ⟨SingularConnSquareRHSPairing.pullbackCochain_mem_relCochains _ hP,
+    SingularConnSquareRHSPairing.pullbackCochain_mem_relCochains _ hQ⟩
+
+/-- **STEP 4a (cocycle subdivision shift for a general chain).** For an absolute cocycle `a` and ANY chain
+`d` of degree `n+1` (NOT required to be a cycle), the pairing decomposes as
+`⟨a, d⟩ = ⟨a, Sdᵐd⟩ + ⟨a, Dₘ(∂d)⟩`. From the general (non-cycle) chain-homotopy identity
+`∂(Dₘd) + Dₘ(∂d) = d + Sdᵐd` (`iterHomotopy_chainHomotopy`): the `∂(Dₘd)` term dies under the cocycle
+(`⟨a, ∂h⟩ = ⟨δa, h⟩ = 0`), leaving the `Sdᵐd` (subdivided) and `Dₘ(∂d)` (boundary-homotopy) terms. The
+`Sdᵐd` term is what `kronecker_relCochains_cover_partition_eq_zero` kills after cover-fine subdivision; the
+`Dₘ(∂d)` term is the irreducible boundary slack that the apex match absorbs over the shared `z₀`. ℤ/2.
+Generalizes `kronecker_singularSd_iterate_cocycle` (Uncond:97, which needs `∂d = 0` to drop the slack). -/
+theorem cocycle_kronecker_singularSd_shift {n : ℕ} (a : LinearMap.ker (coboundaryₗ X (n + 1)))
+    (d : SingularChain X (n + 1)) (m : ℕ) :
+    kronecker a.1 d
+      = kronecker a.1 ((⇑(SingularSubdivision.singularSd X (n + 1)))^[m] d)
+        + kronecker a.1 (SingularSubdivision.iterHomotopy X n m (chainBoundary X n d)) := by
+  have hh := SingularSubdivision.iterHomotopy_chainHomotopy X m n d
+  have hmid : kronecker a.1
+      (chainBoundary X (n + 1) (SingularSubdivision.iterHomotopy X (n + 1) m d)) = 0 := by
+    rw [← kronecker_coboundary_chainBoundary,
+      show coboundary X (n + 1) a.1 = coboundaryₗ X (n + 1) a.1 from rfl, LinearMap.mem_ker.mp a.2,
+      ← kroneckerₗ_apply, map_zero, LinearMap.zero_apply]
+  have hd : d = (⇑(SingularSubdivision.singularSd X (n + 1)))^[m] d
+      + chainBoundary X (n + 1) (SingularSubdivision.iterHomotopy X (n + 1) m d)
+      + SingularSubdivision.iterHomotopy X n m (chainBoundary X n d) := by
+    rw [add_assoc, hh, add_comm d ((⇑(SingularSubdivision.singularSd X (n + 1)))^[m] d),
+      ← add_assoc, ZModModule.add_self, zero_add]
+  conv_lhs => rw [hd]
+  rw [kronecker_add_right, kronecker_add_right, hmid, add_zero]
+
+/-- **STEP 4b (cover-fine subdivision exists in the subspace).** In `sub (P∪Q)` the cover
+`{val⁻¹P, val⁻¹Q}` is global (their union is `univ`, `preimage_union_eq_univ`), so every chain becomes
+cover-fine after enough barycentric subdivisions: `∃ m, Sdᵐ COMM_sub ∈ mvUnionChains (val⁻¹P) (val⁻¹Q)`.
+The geometric input (`exists_iterate_mvUnion` at the global cover) for splitting the subdivided bounding
+chain cover-subordinately (Step 4c). -/
+theorem exists_iterate_mvUnion_sub {P Q : Set ↑X} (hP : IsOpen P) (hQ : IsOpen Q) (n : ℕ)
+    (COMM_sub : SingularChain (sub (P ∪ Q)) n) :
+    ∃ m, (⇑(SingularSubdivision.singularSd (sub (P ∪ Q)) n))^[m] COMM_sub
+      ∈ SingularRelativeMV.mvUnionChains (Subtype.val ⁻¹' P : Set ↑(sub (P ∪ Q)))
+          (Subtype.val ⁻¹' Q) n := by
+  apply SingularRelativeMV.exists_iterate_mvUnion
+  · exact hP.preimage continuous_subtype_val
+  · exact hQ.preimage continuous_subtype_val
+  · rw [SingularConnSquareLHSExplicit.preimage_union_eq_univ]
+    exact SingularExcision.mem_subspaceChains_of_support (fun _ _ => Set.subset_univ _)
+
+/-- **STEP 4c (cocycle pairing isolates the boundary slack).** For a cocycle `c` in `sub (P∪Q)` lying in
+BOTH cover-leg relative cochains (`c ∈ relCochains (val⁻¹P) ∩ relCochains (val⁻¹Q)` — the
+`δ(pullbackCochain (P∪Q) gamb)` situation from `coboundary_pullbackCochain_mem_relCochains_cover`), pairing
+`c` against any chain `COMM_sub` reduces to the pure boundary-homotopy slack:
+`kronecker c COMM_sub = kronecker c (Dₘ(∂COMM_sub))`. The `Sdᵐ COMM_sub` term of `cocycle_kronecker_singularSd_shift`
+is cover-fine (`exists_iterate_mvUnion_sub`), so it splits cover-subordinately and vanishes
+(`kronecker_relCochains_cover_partition_eq_zero`). What remains is `⟨c, Dₘ(∂COMM_sub)⟩` — the irreducible
+subdivision-homotopy slack on the boundary, which the apex cap-Leibniz match absorbs over the shared `z₀`.
+This is the honest distillation of the cover-kill: cover-fine subdivision kills the bulk, leaving exactly
+the boundary slack. ℤ/2. -/
+theorem cocycle_kronecker_eq_boundary_slack {P Q : Set ↑X} (hP : IsOpen P) (hQ : IsOpen Q) {n : ℕ}
+    (c : LinearMap.ker (coboundaryₗ (sub (P ∪ Q)) (n + 1)))
+    (hcP : c.1 ∈ relCochains (Subtype.val ⁻¹' P : Set ↑(sub (P ∪ Q))) (n + 1))
+    (hcQ : c.1 ∈ relCochains (Subtype.val ⁻¹' Q : Set ↑(sub (P ∪ Q))) (n + 1))
+    (COMM_sub : SingularChain (sub (P ∪ Q)) (n + 1)) :
+    ∃ m, kronecker c.1 COMM_sub
+      = kronecker c.1 (SingularSubdivision.iterHomotopy (sub (P ∪ Q)) n m
+          (chainBoundary (sub (P ∪ Q)) n COMM_sub)) := by
+  obtain ⟨m, hm⟩ := exists_iterate_mvUnion_sub hP hQ (n + 1) COMM_sub
+  obtain ⟨u, w, hsplit⟩ :=
+    SingularConnSquareLHSExplicit.exists_chainIncl_partition_of_mem_mvUnionChains
+      (Subtype.val ⁻¹' P : Set ↑(sub (P ∪ Q))) (Subtype.val ⁻¹' Q) (n + 1) _ hm
+  refine ⟨m, ?_⟩
+  rw [cocycle_kronecker_singularSd_shift c COMM_sub m, hsplit,
+    kronecker_relCochains_cover_partition_eq_zero c.1 hcP hcQ u w, zero_add]
+
+/-- **STEP 5 (apex reduction to the boundary slack).** The full small-chains cover-kill assembly, reduced
+to its honest residual. For `P Q` open, `gamb = cochainSplit P φ` whose ambient coboundary lies in both
+cover-leg relative cochains (`δgamb ∈ relCochains P ∩ relCochains Q` — the cocycle-`φ` situation via
+`cochainSplit_coboundary_mem_U/V`), and a cover-supported boundary relation `chainIncl W S_sub =
+∂(chainIncl W COMM_sub)` with `W = P∪Q`: the target pairing `kronecker gamb (chainIncl W S_sub)` equals
+EXACTLY the subdivision-homotopy boundary slack `kronecker (δ(pullbackCochain W gamb)) (Dₘ S_sub)` for some
+`m`, where `S_sub = ∂COMM_sub`.
+
+Chain of the assembly: Step 2 (`kronecker_chainIncl_eq_pullbackCochain`) moves the pairing into `sub W`;
+Step 1 (`chainBoundary_sub_of_chainIncl_eq`) gives `∂COMM_sub = S_sub`; the δ-adjunction
+(`kronecker_coboundary_chainBoundary`) turns `gamb`-against-`∂COMM_sub` into the **cocycle**
+`δ(pullbackCochain W gamb)`-against-`COMM_sub` (Step 3a/3b make it a cocycle in both cover-leg relCochains);
+Step 4c (`cocycle_kronecker_eq_boundary_slack`) kills the cover-fine bulk, leaving the slack.
+
+This is the genuine reduction of LEAF 2's open crux to a single clean residual: the slack `⟨δ(pb gamb),
+Dₘ(∂COMM_sub)⟩` is NOT cover-fine-killable in isolation (the subdivision homotopy `Dₘ` of the cover-spanning
+cycle `S_sub` need not be cover-subordinate), which is exactly why the apex match absorbs it over the shared
+`z₀` rather than closing it locally. ℤ/2. -/
+theorem kronecker_cochainSplit_coverSupported_boundary_eq_slack {P Q : Set ↑X} (hP : IsOpen P)
+    (hQ : IsOpen Q) {n : ℕ} (φ : SingularCochain X n)
+    (hP' : coboundary X n (cochainSplit P n φ) ∈ relCochains P (n + 1))
+    (hQ' : coboundary X n (cochainSplit P n φ) ∈ relCochains Q (n + 1))
+    (S_sub : SingularChain (sub (P ∪ Q)) n) (COMM_sub : SingularChain (sub (P ∪ Q)) (n + 1))
+    (hbd : chainIncl (P ∪ Q) n S_sub
+      = chainBoundary X n (chainIncl (P ∪ Q) (n + 1) COMM_sub)) :
+    ∃ m, kronecker (cochainSplit P n φ) (chainIncl (P ∪ Q) n S_sub)
+      = kronecker (coboundary (sub (P ∪ Q)) n
+            (SingularCapChainIncl.pullbackCochain (P ∪ Q) n (cochainSplit P n φ)))
+          (SingularSubdivision.iterHomotopy (sub (P ∪ Q)) n m S_sub) := by
+  -- the pulled-back cocycle datum
+  obtain ⟨hcP, hcQ⟩ :=
+    coboundary_pullbackCochain_mem_relCochains_cover (W := P ∪ Q) (cochainSplit P n φ) hP' hQ'
+  set c : LinearMap.ker (coboundaryₗ (sub (P ∪ Q)) (n + 1)) :=
+    ⟨coboundary (sub (P ∪ Q)) n
+        (SingularCapChainIncl.pullbackCochain (P ∪ Q) n (cochainSplit P n φ)),
+      by rw [LinearMap.mem_ker]
+         exact coboundary_comp_coboundary (sub (P ∪ Q)) n _⟩ with hc_def
+  -- Step 1: the subspace boundary relation `∂COMM_sub = S_sub`
+  have hsub : chainBoundary (sub (P ∪ Q)) n COMM_sub = S_sub :=
+    chainBoundary_sub_of_chainIncl_eq S_sub COMM_sub hbd
+  -- Step 4c on the cocycle `c` against `COMM_sub`
+  obtain ⟨m, hslack⟩ := cocycle_kronecker_eq_boundary_slack hP hQ c hcP hcQ COMM_sub
+  refine ⟨m, ?_⟩
+  -- Step 2: move into `sub W`
+  rw [kronecker_chainIncl_eq_pullbackCochain]
+  -- present `S_sub = ∂COMM_sub`, then the δ-adjunction `⟨pb gamb, ∂COMM_sub⟩ = ⟨δ(pb gamb), COMM_sub⟩`
+  rw [← hsub, ← kronecker_coboundary_chainBoundary]
+  -- ⊢ kronecker (δ(pb gamb)) COMM_sub = kronecker (δ(pb gamb)) (Dₘ S_sub)
+  rw [show coboundary (sub (P ∪ Q)) n
+        (SingularCapChainIncl.pullbackCochain (P ∪ Q) n (cochainSplit P n φ)) = c.1 from rfl,
+    hslack, hsub]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
