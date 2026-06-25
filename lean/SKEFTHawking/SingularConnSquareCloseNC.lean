@@ -1567,10 +1567,21 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       (Set.Subset.refl _) (N + 1)) = RR
     obtain ⟨b, hVleg⟩ := rhs_realize_V_leg (RR (hKeq ▸ g_rep)).1.1 (RR (hKeq ▸ g_rep)).1.2 u' w' hMem0
     rw [hVleg]
-    -- ⊢ kronecker ω (seam²(boundaryExtract zB)) = kronecker gRk.1.1 (chainIncl (legSplitVᶜ ∩ (U∩V)) b)
-    -- ▶ Realize the σR V-leg chain on the common space `M = sub(U∩V)`: `legSplitVᶜ ∩ (U∩V) ⊆ U∩V`, so the
-    --   ambient `chainIncl (B∩T) b` is `(U∩V)`-supported, hence `= chainIncl(U∩V) R_sub` (adjoint to a
-    --   `pullbackCochain(U∩V)`-pairing over `sub(U∩V)`). The σR leg now reads `kronecker (pullbackCochain gRk.1.1) R_sub`.
+    -- ⊢ kronecker ω (seam²(boundaryExtract zB)) = kronecker gRk (chainIncl (legSplitVᶜ ∩ (U∩V)) b)  — the GENUINE
+    --   G1 residual (the cross-realization of the seam V-part against the σR cover-fine V-leg over the shared z₀).
+    --
+    -- ▶ FINDING (this agent): the prescribed `joint_cap_rcap_match` assembly (apex `refine … ?F _ R_sub ?e1 ?e2 ?hL ?hR`)
+    --   is mathematically UNSOUND for the residual. `?F` was VERIFIED to construct as
+    --     `∂((subspaceChainsEquiv (U∩V) (N+1+(p+1)+1)).symm ⟨fundCycleW …, …⟩)`  (case F GREEN, kept below).
+    --   But with `gM := pullbackCochain (U∩V) gRk` a COCYCLE (`hgMcocyc`), `cap gM ?F = cap gM (∂(realize fund))`
+    --   `= ∂(cap gM (realize fund))` is a BOUNDARY (`chainBoundary_cap_cocycle_arg`). So the `joint_cap_rcap_match`
+    --   hypothesis `?hL : seam²(boundaryExtract zB) = cap gM ?F + ∂?e1` forces `seam²(boundaryExtract zB)` to be a
+    --   boundary — but it is a CYCLE (proven: `boundaryExtract_mem_cycles` + `mapChain_mem_cycles`), not generally
+    --   nullhomologous. Symmetric for `?hR`/R_sub. Hence the two chain-level realize identities `?hL`/`?hR` are FALSE,
+    --   and `joint_cap_rcap_match` cannot be discharged. The residual that IS true is this KRONECKER identity (the
+    --   slacks live under the pairing). It is the genuine local-PD fund-class compatibility over the shared z₀ — the
+    --   cross-realization core, NOT a mechanical 2-brick wiring. The `?F` term + cast-bridge tools (`castChain_cast_reconcile`
+    --   NC:1271, `fundCycleW_pair_relHomologous` NC:856) remain valid ingredients for the genuine pairing proof.
     have hbmem := SingularMayerVietoris.subspaceChains_mono (X := X) (B := U ∩ V)
       Set.inter_subset_right (N + 1) ⟨b, rfl⟩
     set R_sub := (SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1)).symm ⟨_, hbmem⟩
@@ -1579,39 +1590,6 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
         = chainIncl ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ ∩ (U ∩ V))
             (N + 1) b :=
       SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (S := U ∩ V) (N + 1) ⟨_, hbmem⟩
-    rw [← hRsubeq, kronecker_chainIncl_eq_pullbackCochain]
-    -- ⊢ kronecker ω seam² = kronecker (pullbackCochain(U∩V) gRk.1.1) R_sub  — the `joint_cap_rcap_match` shape
-    --   on the common space `M = sub(U∩V)`. `gM := pullbackCochain(U∩V) gRk.1.1` is a cocycle (gRk is).
-    have hgMcocyc : coboundary (sub (U ∩ V)) (N + 1)
-        (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 1) (RR (hKeq ▸ g_rep)).1.1) = 0 := by
-      rw [coboundary_pullbackCochain_eq,
-        (SingularConnSquareRHSPairing.relCocycle_props (RR (hKeq ▸ g_rep))).1]
-      rfl
-    refine joint_cap_rcap_match ω.1 (LinearMap.mem_ker.mp ω.2)
-      (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 1) (RR (hKeq ▸ g_rep)).1.1) hgMcocyc
-      ?F _ R_sub ?e1 ?e2 ?hL ?hR
-    -- ▶ PART 2 RESIDUAL (the genuine local-PD fund-class compatibility over the shared z₀). VERIFIED inputs:
-    --   • `?F` is constructible (lean_multi_attempt GREEN) as the boundary of the realized fundamental at the
-    --     `N+1+(p+1)+1` parenthesization (the cast that matches `joint_cap_rcap_match`'s `F : …(N+1+(p+1))`):
-    --       `?F := chainBoundary (sub (U∩V)) (N+1+(p+1))
-    --                ((subspaceChainsEquiv (U∩V) (N+1+(p+1)+1)).symm
-    --                  ⟨fundCycleW (k:=N+1) (m:=p+1) (hU.inter hV)
-    --                    (castChain (show N+p+3 = N+1+(p+1)+1 by omega) z₀)
-    --                    (chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
-    --                    (infCompact U V (legSplitU …) (legSplitV …)),
-    --                   fundCycleW_mem_W _ _ _ _⟩)`
-    --     This is a DIFFERENT cast than the σR-leg's `subspaceChainsEquiv (U∩V) (N+1+1+p+1)` realization
-    --     (= openDuality cast `N+2+p+1`), so the legs must be reconciled via `castChain_cast_reconcile`
-    --     (NC:1271) + `fundCycleW_pair_relHomologous` (NC:856).
-    --   • Both `?hL`/`?hR` are pure `sub(U∩V)`-level cap/rcap identities (the realize-mod bricks
-    --     `cap_realize_on_sub_mod`/`rcap_realize_on_sub_mod` above package the `∂`-slack):
-    --     - hL (cap side, gM = pullbackCochain g↾ IS a pullback ⟹ `cap_realize_on_sub_mod` fits): reduces to the
-    --       ambient `chainIncl seam = cap g↾ (chainIncl ?F) + ∂(chainIncl ?e1)` via `chainIncl_seam_boundaryExtract`
-    --       (NC:568) + `cover_partition_of_legW` (NC:421), funds reconciled over z₀.
-    --     - hR (rcap side, ω.1 is a RAW sub-cochain ⟹ NOT `rcap_realize_on_sub_mod`): direct sub-level
-    --       rcap-Leibniz `rcap ω.1 (∂Φ') = ∂(rcap ω.1 Φ')` (`rcap_cocycle_chainMap`, ω.1 cocycle by ω.2) +
-    --       Sd-slack (`rcap_singularSd_iterate_chainBoundary_arg` NC:184) + cover-V-leg (`R_sub` = V-leg of
-    --       `∂(Sdʲ(chainIncl(rcap ω.1 Φ)))` via `hsplit`/`hVleg`/`hRsubeq`).
-    all_goals sorry
+    sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
