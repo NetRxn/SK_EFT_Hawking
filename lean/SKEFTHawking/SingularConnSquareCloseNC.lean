@@ -1274,6 +1274,67 @@ theorem castChain_cast_reconcile {a b c : ℕ} (h₁ : a = b) (h₂ : a = c) (hb
       = SingularOpenDualityMVConnSquare.castChain h₂ z := by
   subst hb; rfl
 
+omit [T2Space ↑X] in
+/-- **Support-preserving cover re-partition** (the STEP-A fix — the genuine resolution of the cross-realization
+V-leg support, kernel-pure GREEN). The `Submodule.mem_sup` partition `c = chainIncl A cA + chainIncl B cB`
+loses support: the legs need NOT individually inherit the parent's `S`-support (cancellation across legs).
+But if the *parent* chain is `S`-supported (`hS`), a **per-simplex** re-partition assigns each cover-fine
+support simplex (each in `A` or `B`, since it survives the ℤ/2 sum) to a leg, where it is ALSO in `S` — so the
+re-partition's legs land in `A ∩ S` and `B ∩ S`. Proof: each support simplex `τ` of `c` is subordinate to
+`{A∩S, B∩S}` (`range τ ⊆ A` or `⊆ B` via `range_of_mem_subspaceChains` on each leg + `Finsupp.support_add`;
+and `⊆ S` via `hS`), so `c ∈ smallChains {A∩S, B∩S} = subspaceChains(A∩S) ⊔ subspaceChains(B∩S)`
+(`smallChains_two_eq`), then `exists_chainIncl_partition_of_mem_mvUnionChains`. The V-leg `b` is now over
+`sub (B ∩ S)` with `B ∩ S ⊆ S` — exactly the support needed to realize it on the common space. -/
+theorem repartition_subspaceChains {A B S : Set ↑X} {n : ℕ}
+    (cA : SingularChain (sub A) n) (cB : SingularChain (sub B) n)
+    (hS : chainIncl A n cA + chainIncl B n cB ∈ subspaceChains S n) :
+    ∃ (a : SingularChain (sub (A ∩ S)) n) (b : SingularChain (sub (B ∩ S)) n),
+      chainIncl A n cA + chainIncl B n cB = chainIncl (A ∩ S) n a + chainIncl (B ∩ S) n b := by
+  classical
+  set c := chainIncl A n cA + chainIncl B n cB with hc
+  have hsmall : c ∈ SingularExcision.smallChains ({A ∩ S, B ∩ S} : Set (Set ↑X)) n := by
+    refine SingularExcision.mem_smallChains_of_support (fun τ hτ => ?_)
+    have hτAB : τ ∈ (chainIncl A n cA).support ∪ (chainIncl B n cB).support :=
+      Finsupp.support_add hτ
+    have hτS : Set.range (X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk n)) τ) ⊆ S :=
+      SingularExcision.range_of_mem_subspaceChains hS hτ
+    rcases Finset.mem_union.1 hτAB with hA | hB
+    · exact ⟨A ∩ S, Set.mem_insert _ _,
+        Set.subset_inter (SingularExcision.range_of_mem_subspaceChains ⟨cA, rfl⟩ hA) hτS⟩
+    · exact ⟨B ∩ S, Set.mem_insert_of_mem _ rfl,
+        Set.subset_inter (SingularExcision.range_of_mem_subspaceChains ⟨cB, rfl⟩ hB) hτS⟩
+  rw [SingularExcision.smallChains_two_eq] at hsmall
+  obtain ⟨a, b, hab⟩ :=
+    SingularConnSquareLHSExplicit.exists_chainIncl_partition_of_mem_mvUnionChains (A ∩ S) (B ∩ S) n c hsmall
+  exact ⟨a, b, hab⟩
+
+omit [T2Space ↑X] in
+/-- **RHS V-leg realization** (the σR-side cross-realization step, whnf-dodging via `repartition_subspaceChains`).
+Pairs `cochainSplit A gR` against a cover-fine cover-partition `chainIncl A u + chainIncl B w` whose SUM is
+`S`-supported (`hS`): the support-preserving re-partition lands the legs in `A∩S` (where `cochainSplit A gR`,
+being relative on `A`, drops it) and `B∩S` (where, since `gR ∈ relCochains(A∩B)`, the swap `cochainSplit A gR
+↦ gR` holds, `cochainSplit_compl_mem_relCochains`). The output `kronecker gR (chainIncl (B∩S) b)` is paired with
+the *bare* cocycle `gR` against a chain supported in `B ∩ S ⊆ S` — ready to be realized on the common space
+`sub S`. This is the leg-extraction the connecting-square σR side needs (`gR = g_rep↾`, `A = legSplitUᶜ`,
+`B = legSplitVᶜ`, `S = U ∩ V`); the `Submodule.mem_sup` `w'` itself is bypassed. Over ℤ/2. Kernel-pure. -/
+theorem rhs_realize_V_leg {A B S : Set ↑X} {n : ℕ}
+    (gR : SingularCochain X n) (hgR : gR ∈ relCochains (A ∩ B) n)
+    (u : SingularChain (sub A) n) (w : SingularChain (sub B) n)
+    (hS : chainIncl A n u + chainIncl B n w ∈ subspaceChains S n) :
+    ∃ (b : SingularChain (sub (B ∩ S)) n),
+      kronecker (cochainSplit A n gR) (chainIncl A n u + chainIncl B n w)
+        = kronecker gR (chainIncl (B ∩ S) n b) := by
+  obtain ⟨a, b, hab⟩ := repartition_subspaceChains u w hS
+  refine ⟨b, ?_⟩
+  rw [hab, kronecker_add_right,
+    (mem_relCochains _ _ _).1 (cochainSplit_mem_relCochains _ _ _) _
+      (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left n ⟨a, rfl⟩), zero_add]
+  have hψ := (mem_relCochains _ _ _).1
+    (cochainSplit_compl_mem_relCochains A B n gR hgR)
+    _ (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left n ⟨b, rfl⟩)
+  rw [ZModModule.sub_eq_add, kronecker_add_left, add_eq_zero_iff_eq_neg, CharTwo.neg_eq] at hψ
+  exact hψ.symm
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
@@ -1382,59 +1443,32 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
         (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
         _ _ _
     rw [hpair]
-    -- ▶ SANCTIONED JOINT COCYCLE CLOSE (roadmap §G1 turn-28). The σR-leg reads `kronecker (δgamb)(Sdʲ c_fund)`
-    --   with `δgamb` a COCYCLE. The adjunction `⟨δgamb, Sdʲ c_fund⟩ = ⟨gamb, ∂(Sdʲ c_fund)⟩` (cover-partition
-    --   `∂(Sdʲ c_fund) = chainIncl P u' + chainIncl Q w'`, `hsplit`; P-leg drops, `gamb ∈ relCochains P`) lands the
-    --   σR-leg at `⟨gamb, chainIncl Q w'⟩` — a VALID, reversible step (NOT the divergence; the divergence was the
-    --   subsequent `cross_realization_match` SPLIT into independent hLHS/hRHS leaves, which couple over z₀).
-    rw [SingularHomologyMod2.kronecker_coboundary_chainBoundary, hsplit, kronecker_add_right,
-      (mem_relCochains _ _ _).1 (cochainSplit_mem_relCochains _ _ _) _ ⟨u', rfl⟩, zero_add]
-    -- ⊢ kronecker ω (seam²(boundaryExtract zB)) = kronecker gamb (chainIncl Q w')   (gamb = cochainSplit P g_rep↾)
-    -- ▶ RESIDUAL = the genuine cap-product MV-naturality CROSS-REALIZATION (the project's deepest open core,
-    --   unclosed across ~6 5q.F compactions). The two legs pair DIFFERENT cochains in DIFFERENT spaces/degrees:
-    --     LHS  = ⟨ω, V-part of `cap g_rep fund_{U∪V}`⟩   (ω cocycle on `sub(U∩V)`, deg p+1; zB = the V-part of
-    --            `cap g_rep fund_{U∪V}` via hpart/hzc0; seam-transported by `chainIncl_seam_boundaryExtract` NC:568)
-    --     RHS  = ⟨g_rep↾, V-part of `∂(Sdʲ(chainIncl(U∩V)(rcap ω fund_∩)))`⟩   (gamb = cochainSplit P g_rep↾, deg N+1)
-    --   They are joined by the cup-cap MATCH CORE `kronecker_cap_eq_kronecker_rcap` (MatchLHS:73,
-    --   `⟨ω, cap g_rep z⟩ = ⟨g_rep, rcap ω z⟩` = `⟨g_rep ∪ ω, z⟩`) / `kronecker_cap_chainIncl_eq_rcap_chainIncl`
-    --   (MatchLHS:83, the cover-wise V-part form), over the SHARED z₀ where the Sdʲ slack dies (∂z₀ = 0,
-    --   `pair_fund_eq_pair_z0` RHSPairing:149 / `kronecker_relCocycle_singularSd_invariant` RHSPairing:232).
-    --   This is a JOINT close (the legs couple over z₀) — NOT the divergent `cross_realization_match` independent
-    --   hLHS/hRHS leaf-split (which is why that split walled). It needs a fresh cross-realization bridge that
-    --   carries fund_{U∪V} (the LHS realization) and fund_∩ (the RHS realization) to the SAME z₀ and matches via
-    --   the cup-cap core — built over abstract carriers to dodge the concrete-fundCycleW whnf wall (200k).
-    --   CONSTRAINT-CLEAN: NO `cup_pair_fund_eq_pair_z0` (cup version banned), NO `relCohomMvConnecting_eq*`,
-    --   NO `_of_crossRealization`/`of_hcup_linked`/`kronecker_pd_fold_fund` (spine stays `of_chainMatch`).
-    -- ▶ BRICK A (turn 30, GREEN): drop the cochainSplit on the σR V-leg (`kronecker_cochainSplit_V_leg_eq` NC:928,
-    --   inferred args — explicit `legSplitUᶜ` args hit the whnf wall). RHS → bare `g_rep↾`-on-the-left.
-    rw [kronecker_cochainSplit_V_leg_eq]
-    -- ⊢ kronecker ω (seam²(boundaryExtract zB)) = kronecker g_rep↾ (chainIncl (legSplitVᶜ) w')
-    -- ▶ ROUTE MAPPED + ASSEMBLY HELPER BUILT (2026-06-24, joint-match). The close is the cup-cap match on the
-    --   COMMON space `M := sub (U ∩ V)` via the verified kernel-pure `joint_cap_rcap_match` (NC, above): once
-    --   BOTH legs are realized on M as `L = cap gM F + ∂e₁` (LHS) and `R = rcap ω F + ∂e₂` (RHS) with the SAME
-    --   fundamental F and `gM = pullbackCochain (U∩V) g_rep↾`, the match is `kronecker_cap_eq_kronecker_rcap`
-    --   (MatchLHS:73) and the slacks die because ω, gM are cocycles (ω by hyp; gM via `relCocycle_props`(1) +
-    --   `coboundary_pullbackCochain`). The `relCocycle_props` lever (RHSPairing:165) is USED for gM's cocycle
-    --   property (slack-killing); it does NOT collapse the σR cover-fine subdivision (the V/U legs of `hsplit`
-    --   each survive: g_rep↾ vanishes only on A=legSplitUᶜ∩legSplitVᶜ chains, not on legSplitUᶜ or legSplitVᶜ
-    --   separately — so the cup-cap match is irreducible, confirmed this session).
-    -- ▶ VERIFIED INGREDIENTS (build with `lean_run_code` / `lean_multi_attempt` this session):
-    --   (a) σR-side step-0: `rw [kronecker_chainIncl_eq_pullbackCochain]` ⟹ RHS = `kronecker (pullbackCochain
-    --       legSplitVᶜ g_rep↾) w'` (clean, GREEN).
-    --   (b) LHS cap-realization: `cover_partition_of_legW (hU.union hV) (castChain z₀) … K _ zc0 _ hzc0 hpart`
-    --       ⟹ `hcp : cap g_rep fund_{U∪V} = chainIncl(val⁻¹U) zA + chainIncl(val⁻¹V) zB + ∂η` (zB = the V-part of
-    --       `cap g_rep fund_{U∪V}`; GREEN, fires all-underscore).
-    --   (c) σR structural fact: `∂(Sdʲ chainIncl(U∩V) c_sub) = chainIncl(U∩V)(∂ Sdʲ_sub c_sub)` via
-    --       `singularSd_iterate_chainIncl` + `chainIncl_chainBoundary` ⟹ the whole `hsplit` sum =
-    --       `chainIncl(U∩V)(∂ Sdʲ_sub (rcap ω F_sub))` (GREEN).
-    -- ▶ RESIDUAL (the irreducible MV-naturality cross-realization, 3 bricks): (1) realize the LHS seam V-part
-    --   `seam²(boundaryExtract zB)` ON M as `cap gM F_∩ + ∂e₁` via (b)'s `hcp` + `chainIncl_seam_boundaryExtract`
-    --   (NC:568) + `cover_partition_cap_boundary_mod` (NC:387); (2) realize the RHS leg `chainIncl legSplitVᶜ w'`
-    --   ON M as `rcap ω F_∩ + ∂e₂` via (c) + `chainIncl_rcap_cover_agree` (RcapCoverAgree:32); (3) reconcile the
-    --   LHS fund_{U∪V} with the RHS fund_∩ to the SAME F over z₀ via `fundCycleW_pair_relHomologous` (NC:856) +
-    --   `cap_chainBoundary_relBoundaries_transport` (NC:901) [the ρ-residual couples in, killed in ℤ/2]. Then
-    --   `refine joint_cap_rcap_match _ ?_ _ ?_ _ _ _ _ _ ?_ ?_` (all-underscore, abstract carriers — dodges whnf).
-    --   CONSTRAINT-CLEAN: spine stays `of_chainMatch`; NO banned brick; helper + ingredients all kernel-pure.
+    -- ▶ THE CROSS-REALIZATION CLOSE (G1, support-preserving repartition route). After `hpair` the σR-leg is
+    --   `⟨δφ, Sdʲ c_X⟩` with `φ := cochainSplit legSplitUᶜ g_rep↾` and `c_X := chainIncl(U∩V)(rcap ω fund_∩)`.
+    --   The adjunction `⟨δφ, Sdʲ c_X⟩ = ⟨φ, ∂(Sdʲ c_X)⟩`; `hsplit` cover-partitions `∂(Sdʲ c_X)`.
+    rw [SingularHomologyMod2.kronecker_coboundary_chainBoundary, hsplit]
+    -- ⊢ kronecker ω (seam²(boundaryExtract zB)) = kronecker φ (chainIncl legSplitUᶜ u' + chainIncl legSplitVᶜ w')
+    -- ▶ STEP A FIX (`repartition_subspaceChains`, `rhs_realize_V_leg`, GREEN above): the `Submodule.mem_sup` `w'`
+    --   is NOT (U∩V)-supported (cancellation across legs — the *literal* STEP-A claim is FALSE for the arbitrary
+    --   `w'`), but the per-simplex re-partition lands the legs in `legSplitUᶜ∩(U∩V)` / `legSplitVᶜ∩(U∩V)`, so the
+    --   re-partitioned V-leg `b` IS (U∩V)-supported and realizable on `M = sub(U∩V)`. The whole sum is
+    --   (U∩V)-supported (Sdʲ + ∂ preserve `chainIncl(U∩V)`-support) — the `hMem0` that `rhs_realize_V_leg` consumes,
+    --   proven GREEN (whnf-safe via the `(c := chainIncl (U ∩ V) (N + 1 + 1) _)` hint) by:
+    --     `have hMem0 : (chainIncl _ (N+1)) u' + (chainIncl _ (N+1)) w' ∈ subspaceChains (U ∩ V) (N+1) := by`
+    --       `rw [← hsplit]; exact chainBoundary_mem_subspaceChains _`
+    --         `(SingularExcision.singularSd_iterate_mem_subspaceChains (c := chainIncl (U ∩ V) (N+1+1) _) ⟨_, rfl⟩ j)`
+    -- ▶ RESIDUAL (2 parts, precisely localized — see lab notebook turn 39):
+    --   (i) WIRING: `rhs_realize_V_leg` reduces the σR leg to `kronecker g_rep↾ (chainIncl (legSplitVᶜ∩(U∩V)) b)`
+    --       with `b` (U∩V)-supported, BUT firing it needs unifying `gR := g_rep↾ = relCocycleRestrict (…▸…) g_rep`
+    --       and its `relCochains(legSplitUᶜ∩legSplitVᶜ)` set — the `relCocycleRestrict` `▸`-cast blows the 200k
+    --       `whnf` budget (the documented concrete-`relCocycleRestrict` whnf wall). Dodge: `set`/`generalize` the
+    --       cochain opaque, or feed `rhs_realize_V_leg` a pre-proven opaque `hgR` bundle. `hMem0` (GREEN) is ready.
+    --   (ii) LOCAL-PD FUND-CLASS COMPATIBILITY over the shared z₀ (Sun blueprint, the genuine unbuilt MV
+    --       cap-naturality): close via `joint_cap_rcap_match` (GREEN) with F = ∂fund_∩, gM = pullbackCochain(U∩V)
+    --       g_rep↾ (cocycle via `coboundary_pullbackCochain_eq` + `relCocycle_props`(1)), needing the LHS realize
+    --       `seam² = cap gM F + ∂e₁` (`hLincl`/`hcp`/`chainIncl_seam_boundaryExtract`) and the RHS realize via
+    --       `rcap_realize_on_sub`, with the two funds reconciled over z₀ (`fundCycleW_pair_relHomologous` +
+    --       `castChain_cast_reconcile` + `cap_chainBoundary_relBoundaries_transport`).
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
