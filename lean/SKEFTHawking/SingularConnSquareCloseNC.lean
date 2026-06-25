@@ -1468,20 +1468,11 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   + the two facts (i) χ-term, (ii) seam-term. NO subdivision (cover-level). Cup-form/CrossReal = re-seed, discarded.
   refine hmatch_close _ _ (p + 1) a'rep _ _ ?_
   refine factB_transport _ _ _ _ ?_
-  -- ▶ SANCTIONED CLOSE (turn 48, cover-level COACH-LOCKED ROUTE NC:1465-1468). The ROUTE-ii ∀ω-pairing
-  --   (`mem_boundaries_of_kroneckerH_zero`) → `rhs_realize_V_leg` → kronecker cross-realization descent it
-  --   replaced was the SUPERSEDED `cap-sigmaR-connecting` re-seed (SETTLED_FORKS; 25 commits, caught turn 47).
-  --   KEY `seam²(boundaryExtract zB) + pullbackDualityₗ σR_rep ∈ boundaries(sub(U∩V))` closes via the
-  --   cleaner-witness `connecting_square_close_cocycle_fund` (NC:683): a := g_rep (ABSOLUTE cocycle via
-  --   `relCoboundaryₗ_coe`), fund := fund_∩; residual `hident` (cap-of-boundary) via the 3 cover-partition bricks.
-  refine connecting_square_close_cocycle_fund (U ∩ V) g_rep.1.1 ?ha (hU.inter hV)
-      (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 1 + (p + 1) + 1) z₀) ?hz0
-      (SingularCSCMayerVietorisConnecting.infCompact U V
-        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
-        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)) _ _ ?hident
-  case ha => exact SingularRelativeDuality.relCocycle_coboundary_zero _ g_rep
-  case hz0 =>
-    exact SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀
-  case hident => sorry
-
+  -- ▶ S1 ∈-BOUNDARIES ROUTE (turn 53). S2 exact-hident is DEAD (SETTLED_FORKS `L2-hident-exact-equality-dead`): the
+  --   exact `chainIncl seam + chainIncl pd = cap g_rep ∂fund` cannot absorb the non-zero Sdʲ-slack — `seam[zB]` relates
+  --   to the cover-split `[w']` only HOMOLOGICALLY (hpart is homology-level), not exactly. The COACH-LOCKED ∈-boundaries
+  --   route (NC:1465-1468): KEY `seam²(boundaryExtract zB) + pullbackDualityₗ σR_rep ∈ boundaries(sub(U∩V))` discharges via
+  --   `realize_chainBoundary_cap_mem_boundaries` (NC:304) on `W := cap (cochainSplit g_rep) F` + the two facts (χ-term via
+  --   the cover-level engine `cap_coboundary_cochainSplit_eq` NC:752, seam-term) — the Sdʲ-slack lives IN the ∂W boundary.
+  sorry
 end SKEFTHawking.SingularConnSquareCloseNC

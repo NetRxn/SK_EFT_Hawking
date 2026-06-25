@@ -88,3 +88,16 @@ retire) — no entry is immutable. Every entry carries datetime metadata.
 - memory: [[project-L2-kronecker-reseed-reverted-2026-06-24]]
 - created_ts: 2026-06-24T00:00:00Z
 - reviewed_ts: 2026-06-24T00:00:00Z
+
+## L2-hident-exact-equality-dead
+- verdict: dead-end (kernel-level)
+- tier: self-derived (turn 52, 2026-06-25)
+- killed_by: `cap_homology_singularSd_iterate` (SingularCapHomologySubdiv:28) = cap-Sd-shift is HOMOLOGY-level (up-to-boundary), not exact
+- reason: closing the L2 KEY via `connecting_square_close_cocycle_fund` (or `connecting_square_close`) forces `hident` as an
+  EXACT chain equality `chainIncl seam + chainIncl pd = cap g_rep ∂fund`. But the cover-split of `∂fund_∩` is available ONLY
+  via subdivision (`exists_cover_fine_subdivision`, Sdʲ), introducing a non-zero boundary slack `∂(cap g_rep · subdiv-homotopy ∂fund)`
+  that the exact equality cannot absorb (seam/pd are un-subdivided + fixed). The S2 cleaner-witness route is a DEAD END for L2.
+  ✅ USE the COACH-LOCKED ∈-boundaries route (NC:1465-1468): `realize_chainBoundary_cap_mem_boundaries` on `W = cap(cochainSplit
+  g_rep)(F)` (F = cover-V-projection) + the two facts (χ-term via the engine `cap_coboundary_cochainSplit_eq`, seam-term) — the slack
+  lives IN the boundary so no exact-cancellation needed. This is the engine/realize route the coaching block named all along.
+- created_ts: 2026-06-25T00:00:00Z
