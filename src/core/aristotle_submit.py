@@ -40,6 +40,7 @@ integration), without re-plumbing the workflow.
 
 from __future__ import annotations
 
+import difflib
 import json
 import os
 import re
@@ -396,6 +397,83 @@ def retrieve(job_id: str, dest: Optional[Path] = None) -> Path:
 
 
 # --------------------------------------------------------------------------- #
+# Graft — apply ONLY the target file(s), reviewably, with auto-revert
+# --------------------------------------------------------------------------- #
+@dataclass
+class GraftPlan:
+    target_files: list[Path]            # our-tree paths that would change
+    other_files_changed: list[str]      # closure modules Aristotle edited beyond the targets
+    diffs: dict[str, str]               # target module -> unified diff (ours -> aristotle)
+    retrieved_root: Path
+
+    @property
+    def safe(self) -> bool:
+        """Safe to auto-apply only if Aristotle confined its edits to the named
+        targets (the old --integrate foot-gun was that it copied ANY differing
+        file). If other closure files changed, a human reviews."""
+        return not self.other_files_changed and bool(self.diffs)
+
+
+def _retrieved_module_file(retrieved_root: Path, module: str) -> Optional[Path]:
+    rel = Path("SKEFTHawking", *module.split(".")[1:]).with_suffix(".lean")
+    for cand in retrieved_root.rglob(rel.name):
+        if cand.as_posix().endswith(rel.as_posix()):
+            return cand
+    return None
+
+
+def plan_graft(retrieved_root: Path, targets: list[str]) -> GraftPlan:
+    """Diff our target file(s) against Aristotle's returned versions, and detect
+    whether Aristotle modified any OTHER closure file (which would make a blind
+    apply unsafe). Surfaces the diffs for review — never applies anything."""
+    norm = [_normalize_target(t) for t in targets]
+    closure = transitive_import_closure(norm)
+    target_set = set(norm)
+
+    diffs: dict[str, str] = {}
+    target_files: list[Path] = []
+    for m in norm:
+        ours, theirs = _module_to_path(m), _retrieved_module_file(retrieved_root, m)
+        if ours is None or theirs is None:
+            continue
+        a = ours.read_text().splitlines(keepends=True)
+        b = theirs.read_text().splitlines(keepends=True)
+        if a != b:
+            diffs[m] = "".join(difflib.unified_diff(a, b, fromfile=f"ours/{m}", tofile=f"aristotle/{m}"))
+            target_files.append(ours)
+
+    other_changed = []
+    for m in closure - target_set:
+        ours, theirs = _module_to_path(m), _retrieved_module_file(retrieved_root, m)
+        if ours and theirs and ours.read_text() != theirs.read_text():
+            other_changed.append(m)
+
+    return GraftPlan(target_files=target_files, other_files_changed=sorted(other_changed),
+                     diffs=diffs, retrieved_root=retrieved_root)
+
+
+def apply_graft(plan: GraftPlan) -> dict[Path, str]:
+    """Write Aristotle's target file(s) into our tree; return {path: original}
+    backups for revert. Refuses if Aristotle touched non-target files."""
+    if plan.other_files_changed:
+        raise RuntimeError(
+            f"Refusing to graft: Aristotle modified non-target files "
+            f"{plan.other_files_changed}. Review manually."
+        )
+    backups: dict[Path, str] = {}
+    for ours in plan.target_files:
+        theirs = _retrieved_module_file(plan.retrieved_root, _path_to_module(ours))
+        backups[ours] = ours.read_text()
+        shutil.copy2(theirs, ours)
+    return backups
+
+
+def revert_graft(backups: dict[Path, str]) -> None:
+    for path, original in backups.items():
+        path.write_text(original)
+
+
+# --------------------------------------------------------------------------- #
 # Verification gauntlet (run BEFORE keeping any grafted proof)
 # --------------------------------------------------------------------------- #
 @dataclass
@@ -463,3 +541,39 @@ def run_verification_gauntlet(targets: list[str], *, run_tests: bool = True) -> 
     else:
         res.tests_ok = True
     return res
+
+
+# --------------------------------------------------------------------------- #
+# Orchestrator — verify-then-graft (autonomy-ready, never worsens the tree)
+# --------------------------------------------------------------------------- #
+@dataclass
+class ReintegrationResult:
+    grafted: bool
+    plan: GraftPlan
+    gauntlet: Optional[GauntletResult] = None
+    reverted: bool = False
+    note: str = ""
+
+
+def graft_and_verify(retrieved_root: Path, targets: list[str], *,
+                     run_tests: bool = True) -> ReintegrationResult:
+    """Safe re-incorporation: plan -> apply (target files ONLY) -> gauntlet ->
+    KEEP on pass, AUTO-REVERT on fail. Never leaves the tree worse than found —
+    the property that makes this safe to run unattended in a /goal loop.
+    Caller registers attribution (ADR-006 D4) only when grafted is True.
+    """
+    plan = plan_graft(retrieved_root, targets)
+    if not plan.diffs:
+        return ReintegrationResult(False, plan, note="No changes in target files to graft.")
+    if plan.other_files_changed:
+        return ReintegrationResult(
+            False, plan,
+            note=f"Aristotle modified non-target files {plan.other_files_changed}; "
+                 f"manual review required (not auto-grafted).")
+    backups = apply_graft(plan)
+    gauntlet = run_verification_gauntlet(targets, run_tests=run_tests)
+    if gauntlet.passed:
+        return ReintegrationResult(True, plan, gauntlet, note="Gauntlet passed; graft kept.")
+    revert_graft(backups)
+    return ReintegrationResult(False, plan, gauntlet, reverted=True,
+                               note="Gauntlet FAILED; graft reverted — tree unchanged.")
