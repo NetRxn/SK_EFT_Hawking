@@ -1211,6 +1211,28 @@ theorem kronecker_cochainSplit_coverSupported_boundary_eq_slack {P Q : Set ↑X}
         (SingularCapChainIncl.pullbackCochain (P ∪ Q) n (cochainSplit P n φ)) = c.1 from rfl,
     hslack, hsub]
 
+/-- **Abstract cup–cap joint-match assembly** (the genuine MV-naturality match core, whnf-dodging form).
+On a common space `M` (instantiated `M = sub (U ∩ V)`), once BOTH connecting-square legs are realized as
+the cap / rcap of the SAME fundamental `F` modulo a boundary, the match closes by the cup-cap duality core
+`kronecker_cap_eq_kronecker_rcap` (MatchLHS:73). The boundary slacks `∂e₁` (LHS) and `∂e₂` (RHS) die because
+the test cochains `ω` (LHS) and `gM` (RHS) are absolute cocycles (`hω`, `hgM`) — exactly the cocycle property
+`SingularConnSquareRHSPairing.relCocycle_props` supplies for the restricted `g_rep↾` (and `ω` carries by
+hypothesis). Stated over FREE carriers `ω, gM, F, L, R, e₁, e₂` so the concrete `fundCycleW`/`seam`/`rcap`
+terms infer structurally at application (no 200k whnf wall). Over ℤ/2. Kernel-pure. -/
+theorem joint_cap_rcap_match {M : TopCat} {N p : ℕ}
+    (ω : SingularCochain M (p + 1)) (hω : coboundary M (p + 1) ω = 0)
+    (gM : SingularCochain M (N + 1)) (hgM : coboundary M (N + 1) gM = 0)
+    (F : SingularChain M (N + 1 + (p + 1)))
+    (L : SingularChain M (p + 1)) (R : SingularChain M (N + 1))
+    (e₁ : SingularChain M (p + 1 + 1)) (e₂ : SingularChain M (N + 1 + 1))
+    (hL : L = cap gM F + chainBoundary M (p + 1) e₁)
+    (hR : R = SingularCapChainIncl.rcap ω F + chainBoundary M (N + 1) e₂) :
+    kronecker ω L = kronecker gM R := by
+  rw [hL, hR, kronecker_add_right, kronecker_add_right,
+    ← kronecker_coboundary_chainBoundary, ← kronecker_coboundary_chainBoundary, hω, hgM,
+    SingularConnSquareMatchLHS.kronecker_cap_eq_kronecker_rcap gM ω F]
+  simp
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
@@ -1346,9 +1368,32 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     --   inferred args — explicit `legSplitUᶜ` args hit the whnf wall). RHS → bare `g_rep↾`-on-the-left.
     rw [kronecker_cochainSplit_V_leg_eq]
     -- ⊢ kronecker ω (seam²(boundaryExtract zB)) = kronecker g_rep↾ (chainIncl (legSplitVᶜ) w')
-    -- ▶ NEXT (cup-cap joint match): seam²(boundaryExtract zB) = chainIncl (legSplitVᶜ) (cap (pullbackCochain g_rep↾) c)
-    --   [seam↔cap, local-PD] and chainIncl w' = chainIncl (legSplitVᶜ) (rcap (pullbackCochain ω) c) [σR↔rcap], shared
-    --   c = V-part of ∂z₀; then `kronecker_cap_chainIncl_eq_rcap_chainIncl` (MatchLHS:83) matches. Slacks die over z₀.
+    -- ▶ ROUTE MAPPED + ASSEMBLY HELPER BUILT (2026-06-24, joint-match). The close is the cup-cap match on the
+    --   COMMON space `M := sub (U ∩ V)` via the verified kernel-pure `joint_cap_rcap_match` (NC, above): once
+    --   BOTH legs are realized on M as `L = cap gM F + ∂e₁` (LHS) and `R = rcap ω F + ∂e₂` (RHS) with the SAME
+    --   fundamental F and `gM = pullbackCochain (U∩V) g_rep↾`, the match is `kronecker_cap_eq_kronecker_rcap`
+    --   (MatchLHS:73) and the slacks die because ω, gM are cocycles (ω by hyp; gM via `relCocycle_props`(1) +
+    --   `coboundary_pullbackCochain`). The `relCocycle_props` lever (RHSPairing:165) is USED for gM's cocycle
+    --   property (slack-killing); it does NOT collapse the σR cover-fine subdivision (the V/U legs of `hsplit`
+    --   each survive: g_rep↾ vanishes only on A=legSplitUᶜ∩legSplitVᶜ chains, not on legSplitUᶜ or legSplitVᶜ
+    --   separately — so the cup-cap match is irreducible, confirmed this session).
+    -- ▶ VERIFIED INGREDIENTS (build with `lean_run_code` / `lean_multi_attempt` this session):
+    --   (a) σR-side step-0: `rw [kronecker_chainIncl_eq_pullbackCochain]` ⟹ RHS = `kronecker (pullbackCochain
+    --       legSplitVᶜ g_rep↾) w'` (clean, GREEN).
+    --   (b) LHS cap-realization: `cover_partition_of_legW (hU.union hV) (castChain z₀) … K _ zc0 _ hzc0 hpart`
+    --       ⟹ `hcp : cap g_rep fund_{U∪V} = chainIncl(val⁻¹U) zA + chainIncl(val⁻¹V) zB + ∂η` (zB = the V-part of
+    --       `cap g_rep fund_{U∪V}`; GREEN, fires all-underscore).
+    --   (c) σR structural fact: `∂(Sdʲ chainIncl(U∩V) c_sub) = chainIncl(U∩V)(∂ Sdʲ_sub c_sub)` via
+    --       `singularSd_iterate_chainIncl` + `chainIncl_chainBoundary` ⟹ the whole `hsplit` sum =
+    --       `chainIncl(U∩V)(∂ Sdʲ_sub (rcap ω F_sub))` (GREEN).
+    -- ▶ RESIDUAL (the irreducible MV-naturality cross-realization, 3 bricks): (1) realize the LHS seam V-part
+    --   `seam²(boundaryExtract zB)` ON M as `cap gM F_∩ + ∂e₁` via (b)'s `hcp` + `chainIncl_seam_boundaryExtract`
+    --   (NC:568) + `cover_partition_cap_boundary_mod` (NC:387); (2) realize the RHS leg `chainIncl legSplitVᶜ w'`
+    --   ON M as `rcap ω F_∩ + ∂e₂` via (c) + `chainIncl_rcap_cover_agree` (RcapCoverAgree:32); (3) reconcile the
+    --   LHS fund_{U∪V} with the RHS fund_∩ to the SAME F over z₀ via `fundCycleW_pair_relHomologous` (NC:856) +
+    --   `cap_chainBoundary_relBoundaries_transport` (NC:901) [the ρ-residual couples in, killed in ℤ/2]. Then
+    --   `refine joint_cap_rcap_match _ ?_ _ ?_ _ _ _ _ _ ?_ ?_` (all-underscore, abstract carriers — dodges whnf).
+    --   CONSTRAINT-CLEAN: spine stays `of_chainMatch`; NO banned brick; helper + ingredients all kernel-pure.
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
