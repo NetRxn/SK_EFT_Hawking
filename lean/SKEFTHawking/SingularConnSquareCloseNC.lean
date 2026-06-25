@@ -1342,6 +1342,13 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     --   the cup-cap core — built over abstract carriers to dodge the concrete-fundCycleW whnf wall (200k).
     --   CONSTRAINT-CLEAN: NO `cup_pair_fund_eq_pair_z0` (cup version banned), NO `relCohomMvConnecting_eq*`,
     --   NO `_of_crossRealization`/`of_hcup_linked`/`kronecker_pd_fold_fund` (spine stays `of_chainMatch`).
+    -- ▶ BRICK A (turn 30, GREEN): drop the cochainSplit on the σR V-leg (`kronecker_cochainSplit_V_leg_eq` NC:928,
+    --   inferred args — explicit `legSplitUᶜ` args hit the whnf wall). RHS → bare `g_rep↾`-on-the-left.
+    rw [kronecker_cochainSplit_V_leg_eq]
+    -- ⊢ kronecker ω (seam²(boundaryExtract zB)) = kronecker g_rep↾ (chainIncl (legSplitVᶜ) w')
+    -- ▶ NEXT (cup-cap joint match): seam²(boundaryExtract zB) = chainIncl (legSplitVᶜ) (cap (pullbackCochain g_rep↾) c)
+    --   [seam↔cap, local-PD] and chainIncl w' = chainIncl (legSplitVᶜ) (rcap (pullbackCochain ω) c) [σR↔rcap], shared
+    --   c = V-part of ∂z₀; then `kronecker_cap_chainIncl_eq_rcap_chainIncl` (MatchLHS:83) matches. Slacks die over z₀.
     sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
