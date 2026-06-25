@@ -47,15 +47,33 @@ def build_cg_entries():
             np.array(cg_j, dtype=np.int64), np.array(cg_val, dtype=np.float64))
 
 
-def make_coeffs(L, g, seed, cg, n_poles):
+def make_coeffs(L, g, seed, cg, n_poles, mass=0.0):
+    """Zolotarev coefficients for x^{-1/4} (action) and x^{-7/8} (heatbath).
+
+    With a Majorana mass m (the J1*gamma5 regulator), the even-odd operator is
+    EXACTLY M_e^m = M_e + m^2*I -- because {A, J1*gamma5}=0, the off-diagonal
+    blocks of A_mass^2 cancel. So we build the rational approx on the massive
+    range [lam_min+m^2, lam_max+m^2] and pass shifts (beta_k + m^2) to the BARE
+    M_e operator, since M_e + (beta_k + m^2) = M_e^m + beta_k. The force
+    contraction is unchanged (the mass is h-independent: dM_e^m/dh = dM_e/dh),
+    and the smallest CG shift rises from ~0 to m^2 -- which is what makes the
+    near-zero-mode-ridden solve converge.
+    """
     import sk_eft_rhmc
     cg_a, cg_i, cg_j, cg_val = cg
     lam_min, lam_max = sk_eft_rhmc.estimate_spectral_range_py(L, g, seed, 50, cg_a, cg_i, cg_j, cg_val)
-    a0, alphas, betas = compute_zolotarev_coefficients(n_poles, lam_min, lam_max, -0.25)
-    a0_hb, alphas_hb, betas_hb = compute_zolotarev_coefficients(n_poles, lam_min, lam_max, -0.875)
-    return dict(a0=float(a0), alphas=np.asarray(alphas), betas=np.asarray(betas),
-                a0_hb=float(a0_hb), alphas_hb=np.asarray(alphas_hb), betas_hb=np.asarray(betas_hb),
-                lam_min=float(lam_min), lam_max=float(lam_max))
+    msq = mass * mass
+    # Massive lower bound is RIGOROUS: M_e is PSD ⇒ M_e + m^2 I ≥ m^2 I, so the
+    # smallest eigenvalue is ≥ m^2 (the estimator OVER-reports lam_min ~1500x and
+    # must NOT be used here, else Zolotarev misses the [m^2, lam_min_est] modes).
+    # At m=0 fall back to the (under-resolved) estimate.
+    lo = msq if mass > 0.0 else lam_min
+    hi = lam_max + msq
+    a0, alphas, betas = compute_zolotarev_coefficients(n_poles, lo, hi, -0.25)
+    a0_hb, alphas_hb, betas_hb = compute_zolotarev_coefficients(n_poles, lo, hi, -0.875)
+    return dict(a0=float(a0), alphas=np.asarray(alphas), betas=np.asarray(betas) + msq,
+                a0_hb=float(a0_hb), alphas_hb=np.asarray(alphas_hb), betas_hb=np.asarray(betas_hb) + msq,
+                lam_min=float(lo), lam_max=float(hi), mass=float(mass))
 
 
 def _run_one(task):
@@ -144,6 +162,9 @@ def main():
     ap.add_argument('--workers', type=int, default=3)
     ap.add_argument('--seed', type=int, default=4242)
     ap.add_argument('--warm-from', type=str, default=str(DEFAULT_WARM))
+    ap.add_argument('--mass', type=float, default=0.0,
+                    help='Majorana J1*gamma5 mass regulator. m>0 gaps M_e (lam_min -> m^2), '
+                         'so CG converges. Use to verify the integrator scaling recovers (p->+2).')
     ap.add_argument('--probe', action='store_true',
                     help='1-trajectory timing probe at md=--probe-md, then exit (for sizing).')
     ap.add_argument('--probe-md', type=int, default=40)
@@ -151,10 +172,12 @@ def main():
 
     L, g, tau = args.l, args.g, args.tau
     cg = build_cg_entries()
-    print(f"L={L} g={g} tau={tau}  building Zolotarev coeffs (n_poles={args.n_poles})...", flush=True)
-    coeffs = make_coeffs(L, g, args.seed, cg, args.n_poles)
-    print(f"  spectral range [{coeffs['lam_min']:.3f}, {coeffs['lam_max']:.1f}]  "
-          f"kappa={coeffs['lam_max']/coeffs['lam_min']:.0f}", flush=True)
+    print(f"L={L} g={g} tau={tau} mass={args.mass}  building Zolotarev coeffs "
+          f"(n_poles={args.n_poles})...", flush=True)
+    coeffs = make_coeffs(L, g, args.seed, cg, args.n_poles, mass=args.mass)
+    print(f"  massive spectral range [{coeffs['lam_min']:.4f}, {coeffs['lam_max']:.1f}]  "
+          f"kappa={coeffs['lam_max']/coeffs['lam_min']:.0f}  (mass={args.mass}, lam_min≈m^2={args.mass**2:.4f})",
+          flush=True)
     warm_h = load_warm(args.warm_from)
 
     if args.probe:
