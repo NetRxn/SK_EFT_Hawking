@@ -951,6 +951,32 @@ theorem mem_boundaries_of_kroneckerH_zero {n : ℕ} (z : SingularChain X n) (hz 
   rw [SKEFTHawking.SingularCapHomology.Homology.mk_eq_zero] at hmk
   exact hmk
 
+/-- **Iterated subdivision commutes with `chainIncl`** (the iterate of `singularSd_chainIncl`). For a
+`sub S`-chain `d`, `Sdⱼ^X (chainIncl S d) = chainIncl S (Sdⱼ^{sub S} d)`. Subdivision is natural w.r.t.
+the inclusion `sub S ↪ X`. Plain induction on `j` from `SingularExcision.singularSd_chainIncl`. Feeds
+the STEP-3 seam/σR cross-realization (relating the un-subdivided seam leg to the cover-fine σR leg). -/
+theorem singularSd_iterate_chainIncl {S : Set ↑X} {n : ℕ} (j : ℕ) (d : SingularChain (sub S) n) :
+    (⇑(SingularSubdivision.singularSd X n))^[j] (chainIncl S n d)
+      = chainIncl S n ((⇑(SingularSubdivision.singularSd (sub S) n))^[j] d) := by
+  induction j generalizing d with
+  | zero => rfl
+  | succ j ih =>
+    rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih,
+      SingularExcision.singularSd_chainIncl]
+
+/-- **Kronecker cover-partition vanishing** (the kronecker analog of `cap_relCochains_cover_partition_eq_zero`,
+NC:402). A cochain `a` vanishing on BOTH `P`- and `Q`-chains (`a ∈ relCochains P ∩ relCochains Q`, e.g.
+`δ(cochainSplit P g_rep↾)` for a cocycle `g_rep↾`, via `cochainSplit_coboundary_mem_U/V`) pairs to `0`
+against a cover-subordinate partition `chainIncl P u + chainIncl Q w`: each leg vanishes by
+`(mem_relCochains).1`. The STEP-3 hRHS χ-vanishing at the kronecker altitude: `δgamb` paired against the
+cover-fine residual `chainIncl P u' + chainIncl Q w'` is zero. ℤ/2. -/
+theorem kronecker_relCochains_cover_partition_eq_zero {P Q : Set ↑X} {n : ℕ}
+    (a : SingularCochain X n) (haP : a ∈ relCochains P n) (haQ : a ∈ relCochains Q n)
+    (u : SingularChain (sub P) n) (w : SingularChain (sub Q) n) :
+    kronecker a (chainIncl P n u + chainIncl Q n w) = 0 := by
+  rw [kronecker_add_right, (mem_relCochains _ _ _).1 haP _ ⟨u, rfl⟩,
+    (mem_relCochains _ _ _).1 haQ _ ⟨w, rfl⟩, add_zero]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
