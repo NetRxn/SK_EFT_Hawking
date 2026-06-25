@@ -37,7 +37,7 @@ Three read-only agents mapped the impact (claims/disclosure · automated process
 - **Archive-not-delete is already a coded invariant.** `tests/test_lean_integrity.py:174-176` requires `len(SORRY_GAPS) >= 45` *"as provenance."* Deleting historical registry entries would fail an existing test.
 - **Prior papers describe the old process verbatim.** `papers/I1/paper_draft.tex:256-264,1119` and `papers/paper15_methodology/paper_draft.tex:100,110,121` state *"the entire Lean project is submitted."* `papers/D1/paper_draft.tex:835-851` is a case study on an Aristotle-discovered counterexample (run `270e77a0`). These Methods sections, and every cited run-ID, are an **immutable record** of how prior results were produced.
 - **Only three code sites import the tooling module** — `src/core/__init__.py:40-44/59-62`, `scripts/submit_to_aristotle.py:50`, `tests/test_lean_integrity.py:168` — all importing the **data layer** (`SorryGap`, `SORRY_GAPS`, `AristotleResult`, `AristotleRunner`). Archiving must keep the data layer importable.
-- **Toolchain mismatch is documented but Aristotle's actual version is unverified.** Our pin is `leanprover/lean4:v4.29.1` ([lean/lean-toolchain](../../lean/lean-toolchain)); CLAUDE.md asserts Aristotle runs **4.28.0**; the Aristotle reference doc states **no** version. This assertion predates the substrate's growth and **must be re-verified before any submission** (gating check below).
+- **Toolchain mismatch is a known, tolerated risk.** Our pin is `leanprover/lean4:v4.29.1` ([lean/lean-toolchain](../../lean/lean-toolchain)); Aristotle is confirmed **still on 4.28.0** (re-checked 2026-06-25 — unchanged since we last looked). One cross-version submission since moving to 4.29.x **succeeded** (cherry-picked rather than `--integrate`d — the very foot-gun this ADR removes). The mismatch is therefore real but empirically survivable; the verify-then-graft gauntlet (D2) is the safety net, not a mandatory pre-flight build (see D6).
 
 ---
 
@@ -80,9 +80,9 @@ Layer B is unchanged. A newly Aristotle-proved theorem flows through the **exist
 - New CLI `scripts/aristotle_submit.py` is the user-facing entry; it requires **explicit user authorization** before any submission (Stage 4 already mandates "user gets first & last call") and reads manifests on start to refuse duplicate-closure resubmission (fixing the write-only-manifest gap).
 - `WAVE_EXECUTION_PIPELINE.md` Stage 4 and the Aristotle reference doc are updated to describe the new process and point to the archived one.
 
-### D6 — Toolchain alignment is a hard pre-submission gate
+### D6 — Toolchain mismatch is a documented known-risk, not a mandatory pre-build gate
 
-Before *any* real submission, **verify Aristotle's current Lean/Mathlib toolchain** (the "4.28.0" claim is unverified and predates the substrate's growth) and **test-build the staged minimal closure against that toolchain**. If the closure cannot build on Aristotle's side, the submission does not go out. This gate is independent of, and prior to, the L2 submission.
+Aristotle runs **Lean/Mathlib 4.28.0**; we run **4.29.1** (confirmed unchanged 2026-06-25). This cross-version mismatch is real but empirically survivable — one submission since moving to 4.29.x succeeded. We therefore do **not** require a formal local 4.28.0 test-build before submitting. The **verify-then-graft gauntlet (D2) is the safety mechanism**: any returned proof that does not `lake build` + kernel-verify on our 4.29.1 is rejected, so a toolchain-induced failure costs a *run*, not substrate integrity. A local staged-closure test-build remains an **optional diagnostic** — worth doing only if a submission fails or the closure is unusually 4.29-API-heavy — never a gate that blocks an attempt.
 
 ---
 
@@ -112,9 +112,9 @@ Before *any* real submission, **verify Aristotle's current Lean/Mathlib toolchai
 - Candidate new invariant (optional, implementation-time): assert `len(set(ARISTOTLE_THEOREMS.values())) == counts.json::aristotle_runs` to keep run-dedup honest.
 
 **Risks / open items:**
-- **Toolchain (highest risk):** unresolved until D6's verification; the L2 closure is heavy custom homological algebra — the code most exposed to 4.28↔4.29 Mathlib API drift.
+- **Toolchain (known risk, accepted):** Aristotle's 4.28.0 vs our 4.29.1, mitigated by the D2 gauntlet (reject-on-fail) with empirical precedent (one successful cross-version run). The L2 closure is heavy custom homological algebra — the code most exposed to 4.28↔4.29 Mathlib API drift — so a failed run is plausible; that costs a submission, not the substrate.
 - **Closure completeness:** the import-closure staging must be exact, or the minimal project won't build on Aristotle's side; reuse ADR-005 graph machinery and test the staged build locally first.
-- **Pre-existing nit (not fixed here):** `ATTRIBUTION.md:26` says "307 theorems … across 43+ submissions" while `ARISTOTLE_THEOREMS` holds 322 (319 machine + 3 manual) — a stale count to reconcile when the attribution layer is next touched.
+- **Count drift — `ARISTOTLE_THEOREMS` is the source of truth.** `ATTRIBUTION.md:26` says "307 theorems … across 43+ submissions" while the registry holds 322 (319 machine + 3 manual); the 307 simply predates the last submission. The registry is canonical; `ATTRIBUTION.md` is reconciled to it (and, where cheap, made registry-derived to prevent re-drift) as part of the D4 attribution-wiring work — not left as a standalone nit.
 
 ---
 
