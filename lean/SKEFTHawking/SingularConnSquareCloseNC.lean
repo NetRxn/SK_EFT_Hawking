@@ -1468,128 +1468,20 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   --   + the two facts (i) χ-term, (ii) seam-term. NO subdivision (cover-level). Cup-form/CrossReal = re-seed, discarded.
   refine hmatch_close _ _ (p + 1) a'rep _ _ ?_
   refine factB_transport _ _ _ _ ?_
-  -- ▶ ROUTE ii (resolved turn 10, roadmap §G1): discharge the ∈-boundaries KEY via the PAIRING — the
-  --   sanctioned FINAL ∈-boundaries discharge (σR enters via the Fact-A pairing SUB-step; the cap-Leibniz
-  --   `of_chainMatch` spine is kept; this is NOT the banned `of_hcup`-as-spine). KEY =
-  --   `seam²(boundaryExtract zB) + pullbackDualityₗ(infCompactᶜ)(U∩V)(fundCycleW) σR_rep ∈ boundaries(sub(U∩V))`.
-  --   Via `mem_boundaries_of_kroneckerH_zero` (brick 1): (A) the KEY chain is a cycle; (B) it pairs to 0 against
-  --   every cocycle (σR leg: cup-cap adjunction `kronecker_cap_eq_kronecker_rcap` + Geom:73 + hσR, slack dies on
-  --   the cocycle; seam leg: ∂zB pairing). The exact-χ witness route (route i) is dropped: σR has no exact-chain
-  --   bridge (banned hmem) — see roadmap §G1.
-  refine mem_boundaries_of_kroneckerH_zero _ ?_ ?_
-  · -- (A) cycle: the KEY chain is a cycle. Seam-mapped `boundaryExtract` (boundaryExtract_mem_cycles +
-    --   mapChain_mem_cycles ×2) ⊕ pullbackDualityₗ of the σR-cocycle on the infCompact fundamental
-    --   (pullbackDualityₗ_mem_cycles; hzS = fundCycleW_boundary).
-    refine add_mem ?_ ?_
-    · apply SingularFunctoriality.mapChain_mem_cycles
-      apply SingularFunctoriality.mapChain_mem_cycles
-      apply SingularPairLES.boundaryExtract_mem_cycles
-    · apply SingularLocalDualityK.pullbackDualityₗ_mem_cycles
-      exact SingularOpenDualityCycle.fundCycleW_boundary _ _ _ _
-  · -- (B) pairing: ∀ cocycle ω, kronecker ω.1 (seam²(boundaryExtract zB) + pullbackDualityₗ … σR_rep) = 0.
-    intro ω
-    -- split (kronecker bilinear) + ℤ/2 reduce (`a+b=0 ↔ a=b`) to the connecting-square LEG MATCH:
-    -- the seam leg (ω paired against the V-part `seam²(boundaryExtract zB)` of ∂z₀) equals the σR leg
-    -- (ω paired against the cap of σR_rep = the connecting of g_rep) — this IS hcross at the pairing level.
-    rw [kronecker_add_right, add_eq_zero_iff_eq_neg, CharTwo.neg_eq]
-    -- ⊢ kronecker ω.1 (seam²(boundaryExtract zB)) = kronecker ω.1 (pullbackDualityₗ(infCompactᶜ)(U∩V)(fund) σR_rep)
-    -- σR-LEG REDUCTION (GREEN): present the σR cap as `relativeDualityK` (defeq via relativeDualityK_mk +
-    -- kroneckerH_mk_mk), then the bridge `kroneckerH_relativeDualityK_mk_eq_relKroneckerH` → the relKroneckerH
-    -- connecting pairing form. (hWcyc discharged inline via chainIncl_rcap_mem_relCycles + fundCycleW_boundary.)
-    conv_rhs => change kroneckerH (p + 1) (Submodule.Quotient.mk ω) (SingularLocalDualityK.relativeDualityK _ _ (N + 1 + 1) p _ _ (SingularOpenDualityCycle.fundCycleW_boundary _ _ _ _) (RelativeCohomology.mk _ (N + 1 + 1) σR_rep))
-    rw [SingularCapSubKDuality.kroneckerH_relativeDualityK_mk_eq_relKroneckerH _ _ _ _ _ (SingularCapSubKDuality.chainIncl_rcap_mem_relCycles _ _ (SingularOpenDualityCycle.fundCycleW_boundary _ _ _ _) ω)]
-    -- ⊢ kronecker ω.1 (seam²(boundaryExtract zB)) = relKroneckerH (infCompactᶜ) (mk σR_rep) [chainIncl(rcap ω fund)]
-    -- hσR: σR_rep's class IS the connecting of g_rep (relCohomSetCongr/relCohomRestrict-bridged relCohomMvConnecting).
-    conv_rhs => rw [show RelativeCohomology.mk _ (N + 1 + 1) σR_rep = Submodule.Quotient.mk σR_rep from rfl, hσR]
-    -- ⊢ … = relKroneckerH (infCompactᶜ) (relCohomSetCongr(relCohomMvConnecting (legSplitUᶜ)(legSplitVᶜ)
-    --     (relCohomRestrict (relCohomSetCongr (mk g_rep))))) [chainIncl(rcap ω fund)]
-    -- PEEL the OUTER set-congr (σR_rep over infCompactᶜ = legSplitUᶜ∪legSplitVᶜ): present the homology as
-    -- `relIncl refl …` (shape `y` so the `←` rw pattern isn't a bare metavar), then collapse (TwoCoverBridge:84).
-    conv_rhs => rw [← SingularTwoCoverBridge.relIncl_refl_apply (Set.Subset.refl _)
-      (RelativeHomology.mk _ (N + 1 + 1) _),
-      SingularTwoCoverBridge.relKroneckerH_relCohomSetCongr_relIncl_collapse]
-    -- ⊢ … = relKroneckerH (legSplitUᶜ∪legSplitVᶜ) (relCohomMvConnecting (legSplitUᶜ)(legSplitVᶜ)
-    --     (relCohomRestrict (relCohomSetCongr (mk g_rep)))) (⋯ ▸ [chainIncl(rcap ω fund)])
-    -- REDUCE the MvConnecting's cohomology arg to `mk (g_rep↾)` (push the bridges through mk): convert
-    -- `Quotient.mk g_rep → RelativeCohomology.mk` (rfl), then `relCohomSetCongr_mk` + `relCohomRestrict_mk`.
-    conv_rhs => rw [show (Submodule.Quotient.mk g_rep : RelativeCohomology _ (N + 1))
-        = RelativeCohomology.mk _ (N + 1) g_rep from rfl,
-      SingularRelCohomSetCongrMk.relCohomSetCongr_mk,
-      SingularRelativeCohomologyRestrict.relCohomRestrict_mk]
-    -- ⊢ … = relKroneckerH (legSplitUᶜ∪legSplitVᶜ) (relCohomMvConnecting (legSplitUᶜ)(legSplitVᶜ)
-    --     (mk (relCocycleRestrict (⋯ ▸ g_rep)))) (⋯ ▸ [chainIncl(rcap ω fund)])  — the rhs_pairing_reduce form.
-    -- ▶ NEXT: (a) `rhs_pairing_reduce`/`_partition` (RHSPairing:42/94) → `kronecker(δ(cochainSplit g_rep↾))(Sdʲc)`
-    --   + cover-partition `∂(Sdʲc)=chainIncl u'+chainIncl w'` (handle the `⋯ ▸` homology transport); (b) SEAM leg
-    --   `kronecker ω.1 (seam²(boundaryExtract zB))` → V-leg w' match (boundaryExtract/seam = cover-partition V-part;
-    --   z₀-reduction via fundCycleW_relHomologous if the Sdʲ slack needs killing).
-    -- STEP 1: push the cover-identity transport `hSet ▸` through `RelativeHomology.mk`/`RelativeChain.mk`
-    --   so the σR-leg homology is over `legSplitUᶜ ∪ legSplitVᶜ` — the set `rhs_pairing_reduce_partition` reads.
-    rw [relHomology_mk_setCongr_transport]
-    rotate_left
-    · exact (infCompact_compl_legSplit hU hV K).symm
-    · -- the transported chain `chainIncl(U∩V)(rcap ω fund)` is a `(legSplitUᶜ∪legSplitVᶜ)`-rel cycle.
-      have hbd := SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV)
-        (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
-        (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
-        (SingularCSCMayerVietorisConnecting.infCompact U V
-          (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
-          (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
-      rw [SingularCSCMayerVietorisConnecting.infCompact_coe, Set.compl_inter] at hbd
-      exact SingularCapSubKDuality.chainIncl_rcap_mem_relCycles _
-        (SingularOpenDualityCycle.fundCycleW_mem_W (hU.inter hV) _ _ _) hbd ω
-    -- STEP 2: reduce the σR-leg connecting PAIRING to the explicit cochain Kronecker pairing
-    --   `kronecker (δ(cochainSplit P g_rep↾)) (Sdʲ c)` + the cover-partition `∂(Sdʲc) = chainIncl P u' + chainIncl Q w'`.
-    obtain ⟨j, u', w', hpair, hsplit⟩ :=
-      SingularConnSquareRHSPairing.rhs_pairing_reduce_partition (M := X) (N := N)
-        ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
-        ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
-        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
-        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
-        _ _ _
-    rw [hpair]
-    -- ▶ THE CROSS-REALIZATION CLOSE (G1, support-preserving repartition route). After `hpair` the σR-leg is
-    --   `⟨δφ, Sdʲ c_X⟩` with `φ := cochainSplit legSplitUᶜ g_rep↾` and `c_X := chainIncl(U∩V)(rcap ω fund_∩)`.
-    --   The adjunction `⟨δφ, Sdʲ c_X⟩ = ⟨φ, ∂(Sdʲ c_X)⟩`; `hsplit` cover-partitions `∂(Sdʲ c_X)`.
-    rw [SingularHomologyMod2.kronecker_coboundary_chainBoundary, hsplit]
-    -- ⊢ kronecker ω (seam²(boundaryExtract zB)) = kronecker φ (chainIncl legSplitUᶜ u' + chainIncl legSplitVᶜ w')
-    -- ▶ hMem0 (GREEN, whnf-safe via `hsplit ▸` + the abstract `chainBoundary_singularSd_iterate_chainIncl_mem`
-    --   with `(T := U ∩ V)`, `d` inferred STRUCTURALLY — no concrete cap-chain whnf). The cover-partition sum
-    --   `chainIncl A u' + chainIncl B w'` is `(U∩V)`-supported (it equals `∂(Sdʲ(chainIncl(U∩V) (rcap ω fund_∩)))`).
-    have hMem0 := hsplit ▸ chainBoundary_singularSd_iterate_chainIncl_mem (T := U ∩ V) j _
-    -- ▶ σR-LEG (PART 1, whnf-dodge via `generalize`): the cochain `g_rep↾ = relCocycleRestrict ⋯ (⋯ ▸ g_rep)`'s
-    --   `relCocycleRestrict`-map is `generalize`d to an opaque `RR` BEFORE `rhs_realize_V_leg` fires — this dodges
-    --   the documented 200k `relCocycleRestrict ▸`-cast whnf wall (the map term no longer whnf-reduces).
-    have hKeq : ((↑K.1 : Set ↑X))ᶜ
-        = (↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ
-          ∩ (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ := by
-      rw [SingularCSCMayerVietorisConnecting.legSplit_cover U V hU hV K, Set.compl_union]
-    generalize hRRdef : (SingularRelativeCohomologyRestrict.relCocycleRestrict
-      (Set.Subset.refl _) (N + 1)) = RR
-    obtain ⟨b, hVleg⟩ := rhs_realize_V_leg (RR (hKeq ▸ g_rep)).1.1 (RR (hKeq ▸ g_rep)).1.2 u' w' hMem0
-    rw [hVleg]
-    -- ⊢ kronecker ω (seam²(boundaryExtract zB)) = kronecker gRk (chainIncl (legSplitVᶜ ∩ (U∩V)) b)  — the GENUINE
-    --   G1 residual (the cross-realization of the seam V-part against the σR cover-fine V-leg over the shared z₀).
-    --
-    -- ▶ FINDING (this agent): the prescribed `joint_cap_rcap_match` assembly (apex `refine … ?F _ R_sub ?e1 ?e2 ?hL ?hR`)
-    --   is mathematically UNSOUND for the residual. `?F` was VERIFIED to construct as
-    --     `∂((subspaceChainsEquiv (U∩V) (N+1+(p+1)+1)).symm ⟨fundCycleW …, …⟩)`  (case F GREEN, kept below).
-    --   But with `gM := pullbackCochain (U∩V) gRk` a COCYCLE (`hgMcocyc`), `cap gM ?F = cap gM (∂(realize fund))`
-    --   `= ∂(cap gM (realize fund))` is a BOUNDARY (`chainBoundary_cap_cocycle_arg`). So the `joint_cap_rcap_match`
-    --   hypothesis `?hL : seam²(boundaryExtract zB) = cap gM ?F + ∂?e1` forces `seam²(boundaryExtract zB)` to be a
-    --   boundary — but it is a CYCLE (proven: `boundaryExtract_mem_cycles` + `mapChain_mem_cycles`), not generally
-    --   nullhomologous. Symmetric for `?hR`/R_sub. Hence the two chain-level realize identities `?hL`/`?hR` are FALSE,
-    --   and `joint_cap_rcap_match` cannot be discharged. The residual that IS true is this KRONECKER identity (the
-    --   slacks live under the pairing). It is the genuine local-PD fund-class compatibility over the shared z₀ — the
-    --   cross-realization core, NOT a mechanical 2-brick wiring. The `?F` term + cast-bridge tools (`castChain_cast_reconcile`
-    --   NC:1271, `fundCycleW_pair_relHomologous` NC:856) remain valid ingredients for the genuine pairing proof.
-    have hbmem := SingularMayerVietoris.subspaceChains_mono (X := X) (B := U ∩ V)
-      Set.inter_subset_right (N + 1) ⟨b, rfl⟩
-    set R_sub := (SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1)).symm ⟨_, hbmem⟩
-      with hRsubdef
-    have hRsubeq : chainIncl (U ∩ V) (N + 1) R_sub
-        = chainIncl ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ ∩ (U ∩ V))
-            (N + 1) b :=
-      SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (S := U ∩ V) (N + 1) ⟨_, hbmem⟩
-    sorry
+  -- ▶ SANCTIONED CLOSE (turn 48, cover-level COACH-LOCKED ROUTE NC:1465-1468). The ROUTE-ii ∀ω-pairing
+  --   (`mem_boundaries_of_kroneckerH_zero`) → `rhs_realize_V_leg` → kronecker cross-realization descent it
+  --   replaced was the SUPERSEDED `cap-sigmaR-connecting` re-seed (SETTLED_FORKS; 25 commits, caught turn 47).
+  --   KEY `seam²(boundaryExtract zB) + pullbackDualityₗ σR_rep ∈ boundaries(sub(U∩V))` closes via the
+  --   cleaner-witness `connecting_square_close_cocycle_fund` (NC:683): a := g_rep (ABSOLUTE cocycle via
+  --   `relCoboundaryₗ_coe`), fund := fund_∩; residual `hident` (cap-of-boundary) via the 3 cover-partition bricks.
+  refine connecting_square_close_cocycle_fund (U ∩ V) g_rep.1.1 ?ha (hU.inter hV)
+      (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 1 + (p + 1) + 1) z₀) ?hz0
+      (SingularCSCMayerVietorisConnecting.infCompact U V
+        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)) _ _ ?hident
+  case ha => exact SingularRelativeDuality.relCocycle_coboundary_zero _ g_rep
+  case hz0 =>
+    exact SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀
+  case hident => sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
