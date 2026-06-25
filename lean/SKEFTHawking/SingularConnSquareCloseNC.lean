@@ -146,6 +146,59 @@ theorem cap_singularSd_iterate_chainBoundary_arg {M : TopCat} {k m : ℕ} (φ : 
   abel_nf
   simp only [two_smul, ZModModule.add_self, zero_add, add_zero]
 
+/-- **`rcap` subdivision-invariance on a cycle, cocycle form** (STEP-A brick (a), the `rcap` analog of
+`cap_singularSd_iterate`). Cochain degree is `l+1` (a successor) so the chain degree `k+(l+1) = (k+l)+1`
+is successor-shaped DEFINITIONALLY — `rcap (k:=k) ω z` and `add_singularSd_iterate_eq_boundary` both
+apply cast-free (the application has `ω : C^{p+1}`, `l := p`). For a cycle `z` (`∂z = 0`) and a COCYCLE
+`ω` (`δω = 0`), `rcap ω z = rcap ω (Sdʲz) + ∂(rcap ω (Dⱼz))` — NO δω-correction term (the cap version
+carries `cap (δφ)(Dⱼz)`; for a cocycle that vanishes). From `add_singularSd_iterate_eq_boundary`
+(`z + Sdʲz = ∂(Dⱼz)`) → `map_add` → `rcap_cocycle_chainMap (k:=k)` (`∂(rcap (k:=k+1) ω (cast ▸ Dⱼz)) =
+rcap (k:=k) ω (∂Dⱼz)`). The single `rcap (k:=k+1)` cast on the `Dⱼz` term matches the chain-map's native
+cast. This routes the Sd-slack of `rcap ω` through `∂c`, the precise gap the seam-match needs. -/
+theorem rcap_singularSd_iterate {M : TopCat} {k l : ℕ} (ω : SingularCochain M (l + 1))
+    (hω : coboundaryₗ M (l + 1) ω = 0) {z : SingularChain M (k + (l + 1))}
+    (hz : chainBoundary M (k + l) z = 0) (j : ℕ) :
+    SingularCapChainIncl.rcap (k := k) ω z
+      = SingularCapChainIncl.rcap (k := k) ω
+          ((⇑(SingularSubdivision.singularSd M (k + (l + 1))))^[j] z)
+        + chainBoundary M k
+            (SingularCapChainIncl.rcap (k := k + 1) ω
+              ((show k + (l + 1) + 1 = k + 1 + (l + 1) from by omega) ▸
+                SingularSubdivision.iterHomotopy M (k + (l + 1)) j z)) := by
+  have hb : z + (⇑(SingularSubdivision.singularSd M (k + (l + 1))))^[j] z
+      = chainBoundary M (k + (l + 1)) (SingularSubdivision.iterHomotopy M (k + (l + 1)) j z) :=
+    SingularExcision.add_singularSd_iterate_eq_boundary hz j
+  have hcm := SingularRightCapBoundary.rcap_cocycle_chainMap (k := k) ω hω
+    (SingularSubdivision.iterHomotopy M (k + (l + 1)) j z)
+  rw [hcm, ← hb, map_add]
+  abel_nf
+  simp only [two_smul, ZModModule.add_self, zero_add]
+
+/-- **`rcap` Sd-bridge on a `∂`-argument, cocycle form** (STEP-A brick (b); the `rcap` analog of
+`cap_singularSd_iterate_chainBoundary_arg`). For a COCYCLE `ω` (`δω = 0`) and ANY chain `c`, capping `ω`
+against the boundary of the `j`-fold subdivision of `c` equals capping against the un-subdivided boundary,
+modulo a boundary (NO δω-correction — `ω` is a cocycle). Pure `singularSd_iterate_chainBoundary`
+(`∂(Sdʲc) = Sdʲ(∂c)`) + brick (a) `rcap_singularSd_iterate` on the cycle `z := ∂c` (`∂z = ∂∂c = 0`); ℤ/2
+swap. Generic in `c` (cochain degree `l+1`, successor) ⟹ whnf-free; this is the brick STEP-B's hRHS
+consumes to route the rcap-Sd slack through `∂c` (cover-supported) rather than `c`. -/
+theorem rcap_singularSd_iterate_chainBoundary_arg {M : TopCat} {k l : ℕ}
+    (ω : SingularCochain M (l + 1)) (hω : coboundaryₗ M (l + 1) ω = 0)
+    (c : SingularChain M (k + (l + 1) + 1)) (j : ℕ) :
+    SingularCapChainIncl.rcap (k := k) ω
+        (chainBoundary M (k + (l + 1)) ((⇑(SingularSubdivision.singularSd M (k + (l + 1) + 1)))^[j] c))
+      = SingularCapChainIncl.rcap (k := k) ω (chainBoundary M (k + (l + 1)) c)
+        + chainBoundary M k
+            (SingularCapChainIncl.rcap (k := k + 1) ω
+              ((show k + (l + 1) + 1 = k + 1 + (l + 1) from by omega) ▸
+                SingularSubdivision.iterHomotopy M (k + (l + 1)) j
+                  (chainBoundary M (k + (l + 1)) c))) := by
+  rw [SingularSubdivision.singularSd_iterate_chainBoundary]
+  have hz : chainBoundary M (k + l) (chainBoundary M (k + (l + 1)) c) = 0 :=
+    chainBoundary_chainBoundary_apply M (k + l) c
+  rw [rcap_singularSd_iterate ω hω hz j]
+  abel_nf
+  simp only [two_smul, ZModModule.add_self, add_zero]
+
 /-- **Seam-localization composite** (bricks 2 + 4 assembled, chain-altitude, whnf-free). For a cover `{A, B}`,
 a cochain `φ` vanishing on `A` (`φ ∈ relCochains A`), and an `(A∪B)`-supported cycle `w`, the cap `cap φ w`
 decomposes as the pure `B`-cover-part `chainIncl B (cap (pullbackCochain B φ) w')` (the `A`-part dies — brick 2)
@@ -1112,6 +1165,57 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     --     it. This is the genuine cap-product naturality core; closing it needs ~2–4 new kernel-pure seam/rcap
     --     bricks fitting hLHS/hRHS. Do NOT re-route the apex spine (route ii / `of_chainMatch` is fixed; never
     --     `of_crossRealization`/`of_hcup_linked`/`kronecker_pd_fold_fund`).
-    sorry
+    -- ▶ STEP-B ASSEMBLY (cross_realization_match pivot). Construct the shared cap chain `c` as the
+    --   `∂(Sdʲ ·)` of the `sub(U∩V)`-realized fundamental (same `fundsub`/`j` as `hpair`/`hsplit`).
+    refine SingularConnSquareMatchCross.cross_realization_match (W := U ∩ V)
+      (LVc := (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
+      ω.1 _ _
+      (chainBoundary (sub (U ∩ V)) (N + 1 + (p + 1))
+        ((⇑(SingularSubdivision.singularSd (sub (U ∩ V)) (N + 1 + (p + 1) + 1)))^[j]
+          ((show N + 1 + 1 + p + 1 = N + 1 + (p + 1) + 1 from by omega) ▸
+            (SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ Membership.mem V)
+                (N + 1 + 1 + p + 1)).symm
+              ⟨SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+                  (SingularOpenDualityMVConnSquare.castChain
+                    (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+                  (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero
+                    (by omega) (by omega) z₀ hz₀)
+                  (SingularCSCMayerVietorisConnecting.infCompact U V
+                    (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+                    (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)),
+                SingularOpenDualityCycle.fundCycleW_mem_W (hU.inter hV) _ _ _⟩)))
+      w' ?hLHS ?hRHS
+    -- hLHS : kronecker ω (seam²(boundaryExtract zB))
+    --        = kronecker ω (cap (pullbackCochain (U∩V) (cochainSplit P g_rep↾)) c)
+    --   The LHS seam–cap naturality. Engines: `chainIncl_seam_boundaryExtract` (NC:515) +
+    --   `cap_boundaryExtract_naturality_noncocycle` (NC:288) + `hLHS_cap_mapChain_bridge_mod`
+    --   (HLHSBridge:62); ω-cocycle absorbs the seam-transport boundary slack via
+    --   `kronecker_eq_of_homology_eq` (HLHSBridge:82) + `boundaryExtract_class_eq_of_partition_homologous`
+    --   (PartitionRelate:33), with `hhom` from hz₀ + hpart/hzc0. The seam V-part of `cap g_rep fund_{U∪V}`
+    --   (zB) and the cap of gamb against `c` rep the SAME legW class mod boundary.
+    case hLHS => sorry
+    case hRHS =>
+      -- STEP-B brick (b) fires: route the rcap-Sd slack through `∂fundsub` (cover-supported), not `fundsub`.
+      -- `rcap ω (∂(Sdʲ fundsub)) = rcap ω (∂fundsub) + ∂(rcap ω (Dⱼ(∂fundsub)))` (`ω` cocycle, `δω = 0`).
+      rw [rcap_singularSd_iterate_chainBoundary_arg]
+      rotate_left
+      · exact LinearMap.mem_ker.mp ω.2
+      -- ⊢ kronecker gamb (chainIncl(U∩V)(rcap ω (∂fundsub) + ∂(rcap ω Dⱼ(∂fundsub)))) = kronecker gamb (chainIncl Q w')
+      -- REMAINING (documented residual): both terms of the LHS are `sub(U∩V)`-BOUNDARIES —
+      --   (i)  `rcap ω (∂fundsub) = ∂(rcap (k:=N+2) ω (cast ▸ fundsub))` by `rcap_cocycle_chainMap` (ω cocycle),
+      --   (ii) `∂(rcap ω Dⱼ(∂fundsub))` is patently a `∂_{sub}`.
+      --   So `chainIncl(U∩V)(rcap ω c) = ∂_X(chainIncl(U∩V) Y)` (`chainIncl_chainBoundary`), hence
+      --   `kronecker gamb (chainIncl(U∩V)(rcap ω c)) = kronecker (δgamb) Y` (`kronecker_coboundary_chainBoundary`).
+      --   The RHS `kronecker gamb (chainIncl Q w')`: from `hsplit` (`∂(Sdʲ(chainIncl(U∩V)(rcap ω fundsub)))
+      --   = chainIncl P u' + chainIncl Q w'`), `kronecker gamb (chainIncl Q w') = kronecker gamb (∂Z)
+      --   = kronecker (δgamb) Z` (the P-leg `kronecker gamb (chainIncl P u') = 0`, `gamb ∈ relCochains P`).
+      --   The two `δgamb`-pairings (`Y` = rcap-then-Sd interior, `Z` = `Sdʲ_X(chainIncl(rcap ω fundsub))`
+      --   = `chainIncl(Sdʲ_{sub}(rcap ω fundsub))` via `singularSd_iterate_chainIncl`) differ by the
+      --   rcap↔Sdʲ position swap, a `∂_{sub}`-boundary killed under `δgamb` by `δ² = 0`
+      --   (`coboundary_coboundary`/`kronecker_coboundary_chainBoundary` twice). The δgamb cover-partition
+      --   vanishing closes via `kronecker_relCochains_cover_partition_eq_zero` (NC:973) with
+      --   `δgamb ∈ relCochains P ∩ relCochains Q` (`cochainSplit_coboundary_mem_U/V`). This residual needs
+      --   the rcap↔Sdʲ swap-boundary brick + the `δgamb`-cover assembly (cast-heavy; ~2 bricks).
+      sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
