@@ -2521,6 +2521,62 @@ fn estimate_spectral_range_py<'py>(
     Ok((lam_min, lam_max))
 }
 
+/// Validation harness for the deflation eigensolver: compute the k smallest
+/// eigenpairs of M_e on an EXTERNAL config h, returning (eigenvalues, residuals).
+///
+/// residual_j = || M_e v_j - λ_j v_j ||. Lets Python validate that the Lanczos
+/// routine actually resolves the clustered near-zero modes (the deflation
+/// foundation) before it is wired into the force CG.
+///
+/// Args:
+///     h: full-lattice h-field, length 16*l^4
+///     l, k_want, m (Lanczos subspace per cycle), tol, max_restarts, seed
+///     cg_*: stencil entries from constants.py
+/// Returns: (evals ascending, residuals) — both length = #converged eigenpairs.
+#[pyfunction]
+fn lanczos_smallest_eigenpairs_eo_py<'py>(
+    py: Python<'py>,
+    h: PyReadonlyArray1<'py, f64>,
+    l: usize,
+    k_want: usize,
+    m: usize,
+    tol: f64,
+    max_restarts: usize,
+    seed: u64,
+    cg_a: PyReadonlyArray1<'py, i64>,
+    cg_i: PyReadonlyArray1<'py, i64>,
+    cg_j: PyReadonlyArray1<'py, i64>,
+    cg_val: PyReadonlyArray1<'py, f64>,
+) -> PyResult<(Py<PyArray1<f64>>, Py<PyArray1<f64>>)> {
+    let h_slice = h.as_slice()?;
+    let cg_entries = parse_cg_entries(cg_a.as_slice()?, cg_i.as_slice()?,
+                                       cg_j.as_slice()?, cg_val.as_slice()?);
+    let (fwd, bwd) = build_neighbors(l);
+    let eo = build_even_odd(l);
+    let mut rng = ChaCha20Rng::seed_from_u64(seed);
+
+    let defl = lanczos_smallest_eigenpairs_eo(
+        h_slice, k_want, m, tol, max_restarts,
+        &fwd, &bwd, &eo, &cg_entries, None, &mut rng);
+
+    // Recompute residuals ||M_e v - λ v|| for the returned eigenpairs.
+    let dim_e = 8 * eo.n_even;
+    let mut scratch_odd = vec![0.0_f64; 8 * eo.n_odd];
+    let mut residuals = Vec::with_capacity(defl.k);
+    for j in 0..defl.k {
+        let v = &defl.evecs[j];
+        let mut mv = vec![0.0_f64; dim_e];
+        apply_me_shifted(h_slice, v, &mut mv, 0.0, &fwd, &bwd, &eo, &mut scratch_odd, &cg_entries);
+        let lambda = defl.evals[j];
+        let mut r = 0.0_f64;
+        for i in 0..dim_e { let d = mv[i] - lambda * v[i]; r += d * d; }
+        residuals.push(r.sqrt());
+    }
+
+    Ok((PyArray1::from_vec(py, defl.evals).into(),
+        PyArray1::from_vec(py, residuals).into()))
+}
+
 /// Even-odd RHMC: half-lattice CG with x^{-1/2} Zolotarev.
 /// Physics: Pf(A) = det(M_e)^{1/2} where M_e = A_eo·A_eo^T on even sites.
 /// Zolotarev powers: action x^{-1/2}, heatbath x^{-3/4} (passed from Python).
@@ -3305,5 +3361,6 @@ fn sk_eft_rhmc(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(run_rhmc_rust_eo_2pf_hasenbusch, m)?)?;
     m.add_function(wrap_pyfunction!(apply_fermion_matrix_py, m)?)?;
     m.add_function(wrap_pyfunction!(estimate_spectral_range_py, m)?)?;
+    m.add_function(wrap_pyfunction!(lanczos_smallest_eigenpairs_eo_py, m)?)?;
     Ok(())
 }
