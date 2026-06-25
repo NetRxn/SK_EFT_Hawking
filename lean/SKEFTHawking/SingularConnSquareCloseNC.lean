@@ -1233,6 +1233,33 @@ theorem joint_cap_rcap_match {M : TopCat} {N p : ℕ}
     SingularConnSquareMatchLHS.kronecker_cap_eq_kronecker_rcap gM ω F]
   simp
 
+/-- **LHS cap-realization on the common space `M = sub T`** (joint-match brick (1), whnf-dodging GREEN).
+A `sub T`-chain `L` whose `chainIncl T` equals the ambient cap `cap g_amb (chainIncl T F)` of a `sub T`-realized
+fundamental `F` *is itself* the cap of the **pulled-back** cochain `pullbackCochain T g_amb` against `F`:
+`L = cap (pullbackCochain T g_amb) F`. Via `chainIncl`-injectivity + `cap_chainIncl`
+(`cap g (chainIncl c) = chainIncl (cap (pullbackCochain g) c)`). This is the form `joint_cap_rcap_match`'s
+`hL` consumes (with `gM := pullbackCochain T g_amb`), reached *without* ever whnf-reducing the concrete
+`fundCycleW` (the ambient identity `hLF` is supplied separately by the fund-compatibility step). -/
+theorem cap_realize_on_sub {T : Set ↑X} {k m : ℕ} (g : SingularCochain X k)
+    (L : SingularChain (sub T) m) (F : SingularChain (sub T) (k + m))
+    (hLF : chainIncl T m L = cap g (chainIncl T (k + m) F)) :
+    L = cap (SingularCapChainIncl.pullbackCochain T k g) F := by
+  apply chainIncl_injective T m
+  rw [hLF, SingularCapChainIncl.cap_chainIncl]
+
+/-- **RHS rcap-realization on the common space `M = sub T`** (joint-match brick (2), whnf-dodging GREEN).
+The right-cap mirror of `cap_realize_on_sub`: a `sub T`-chain `R` whose `chainIncl T` equals the ambient
+right cap `rcap b (chainIncl T F)` *is itself* the right cap of the **pulled-back** cochain
+`pullbackCochain T b` against `F`: `R = rcap (pullbackCochain T b) F`. Via `chainIncl`-injectivity +
+`rcap_chainIncl` (CapSubKDuality:120). This is the form `joint_cap_rcap_match`'s `hR` consumes (with
+`ω := pullbackCochain T b`), again without whnf-reducing the concrete fundamental. -/
+theorem rcap_realize_on_sub {T : Set ↑X} {k l : ℕ} (b : SingularCochain X l)
+    (R : SingularChain (sub T) k) (F : SingularChain (sub T) (k + l))
+    (hRF : chainIncl T k R = SingularCapChainIncl.rcap b (chainIncl T (k + l) F)) :
+    R = SingularCapChainIncl.rcap (SingularCapChainIncl.pullbackCochain T l b) F := by
+  apply chainIncl_injective T k
+  rw [hRF, SingularCapSubKDuality.rcap_chainIncl]
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
