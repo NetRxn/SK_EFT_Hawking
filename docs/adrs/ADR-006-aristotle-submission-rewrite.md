@@ -62,13 +62,13 @@ The new retrieve path is **retrieve → review diff → hand-graft only the targ
 
 A returned proof that fails any gate is rejected, not grafted.
 
-### D3 — Archive, do not delete, the old full-project process
+### D3 — Archive (no-op disabled), do not delete, the old full-project process
 
-The old tooling is **prominently labeled DEPRECATED / full-project-oriented and archived**, kept functional only for reproducing prior papers' Methods, and gated so it cannot run by accident:
+The canonical name `scripts/submit_to_aristotle.py` is **kept for the new safe CLI** (D5). The old full-project tooling is preserved as an **archived backup that is completely disabled by a no-op wrapper** — not merely banner-warned — so it cannot run even on deliberate invocation, while its code stays readable as the Methods-of-record for prior papers:
 
-- `scripts/submit_to_aristotle.py` → archived (relocated and/or banner-guarded so an unguarded invocation refuses and points to the new tool). No internal module imports it, so this is low-risk.
-- `AristotleRunner`'s full-project submission/integration methods → retained in place but banner-deprecated and guarded (an explicit, documented escape hatch is required to run the archived full-project path).
-- The **data layer** (`SorryGap`, `SORRY_GAPS`, `AristotleResult`) stays importable so the three import sites and the provenance tests keep working.
+- The current `scripts/submit_to_aristotle.py` is copied verbatim to **`scripts/archive/submit_to_aristotle.py`** (the archived backup, paralleling the existing `docs/archive/`). A **no-op guard at the very top of the module** (above all imports) aborts immediately on any invocation, printing: (i) the **why** — this is the deprecated full-project process, retained only as prior-paper Methods provenance, replaced by the safe partial-submission CLI per ADR-006; and (ii) the **how-to-re-enable** — the foot-guns are reachable only by deliberately deleting the no-op wrapper from the code. The original body is retained, inert, below the guard.
+- `AristotleRunner`'s full-project submission methods (`submit_and_wait`, `submit_priority_batch`, `submit_targeted`) are **no-op-disabled in place** in `aristotle_interface.py` — each raises with the same why + how-to-re-enable message — so no importer can trigger a full-project upload. The new safe engine lives in `src/core/aristotle_submit.py` (D5).
+- The **data layer** (`SorryGap`, `SORRY_GAPS`, `AristotleResult`) stays live and importable in `aristotle_interface.py`, so the import sites (`src/core/__init__.py`, `tests/test_lean_integrity.py`) and the provenance tests keep working unchanged.
 
 ### D4 — Preserve the provenance/attribution layer and its registration chain
 
@@ -77,7 +77,7 @@ Layer B is unchanged. A newly Aristotle-proved theorem flows through the **exist
 ### D5 — Attachment seam (minimal architectural change)
 
 - New module `src/core/aristotle_submit.py` (`SafeAristotleRunner`): `stage_minimal_closure(target) → Path`, `submit_safe(closure_dir, prompt, …)`, `retrieve_review(run_id)`, `graft_targeted(...)`, `run_verification_gauntlet(...)`. It **reuses** `AristotleResult` / `SorryGap` from the preserved data layer.
-- New CLI `scripts/aristotle_submit.py` is the user-facing entry; it requires **explicit user authorization** before any submission (Stage 4 already mandates "user gets first & last call") and reads manifests on start to refuse duplicate-closure resubmission (fixing the write-only-manifest gap).
+- The **canonical CLI `scripts/submit_to_aristotle.py` (name retained)** is rewritten as the user-facing entry for the new safe process; it requires **explicit user authorization** before any submission (Stage 4 already mandates "user gets first & last call") and reads manifests on start to refuse duplicate-closure resubmission (fixing the write-only-manifest gap). The pre-rewrite version lives at `scripts/archive/submit_to_aristotle.py` per D3.
 - `WAVE_EXECUTION_PIPELINE.md` Stage 4 and the Aristotle reference doc are updated to describe the new process and point to the archived one.
 
 ### D6 — Toolchain mismatch is a documented known-risk, not a mandatory pre-build gate
