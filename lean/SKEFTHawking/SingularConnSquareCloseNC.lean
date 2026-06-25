@@ -1319,84 +1319,29 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
         (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
         _ _ _
     rw [hpair]
-    -- σR-leg now reads `kronecker (δ(cochainSplit P g_rep↾)) (Sdʲ c)`. Push δ over ∂ (cochain–boundary
-    --   adjunction), substitute the cover-partition `∂(Sdʲ c) = chainIncl P u' + chainIncl Q w'`, and drop
-    --   the P-leg (the split cochain vanishes on `C(P)`) → `kronecker (cochainSplit P g_rep↾) (chainIncl Q w')`.
+    -- ▶ SANCTIONED JOINT COCYCLE CLOSE (roadmap §G1 turn-28). The σR-leg reads `kronecker (δgamb)(Sdʲ c_fund)`
+    --   with `δgamb` a COCYCLE. The adjunction `⟨δgamb, Sdʲ c_fund⟩ = ⟨gamb, ∂(Sdʲ c_fund)⟩` (cover-partition
+    --   `∂(Sdʲ c_fund) = chainIncl P u' + chainIncl Q w'`, `hsplit`; P-leg drops, `gamb ∈ relCochains P`) lands the
+    --   σR-leg at `⟨gamb, chainIncl Q w'⟩` — a VALID, reversible step (NOT the divergence; the divergence was the
+    --   subsequent `cross_realization_match` SPLIT into independent hLHS/hRHS leaves, which couple over z₀).
     rw [SingularHomologyMod2.kronecker_coboundary_chainBoundary, hsplit, kronecker_add_right,
       (mem_relCochains _ _ _).1 (cochainSplit_mem_relCochains _ _ _) _ ⟨u', rfl⟩, zero_add]
-    -- STEP 3 (REMAINING): the SEAM-LEG MATCH — the cap-product MV-naturality of the connecting map on the
-    --   shared `z₀`. Goal (clean chain-pairing altitude, both sides cocycle×cycle):
-    --     `kronecker ω (seam²(boundaryExtract zB)) = kronecker (cochainSplit P g_rep↾) (chainIncl Q w')`
-    --   with `P = legSplitUᶜ`, `Q = legSplitVᶜ`, `w'` = the Q-part of `∂(Sdʲ(chainIncl(U∩V)(rcap ω fund_∩)))`
-    --   (from `hsplit`), `zB` = the seam V-part of `cap g_rep fund_{U∪V}` (via `hpart`/`hzc0`).
-    --   ▶ PIVOT = `SingularConnSquareMatchCross.cross_realization_match` (a' := ω.1, gamb := cochainSplit P g_rep↾,
-    --     lhsChain := seam²(boundaryExtract zB), LVc := Q, w' := w'), which reduces it (cap↔rcap adjunction
-    --     `kronecker_cap_eq_kronecker_rcap` MatchLHS:73 + `kronecker_pullbackCochain`) to TWO obligations over a
-    --     shared `c : SingularChain (sub(U∩V)) (N+1+(p+1))`:
-    --       hLHS : kronecker ω (seam²(boundaryExtract zB)) = kronecker ω (cap (pullbackCochain (U∩V) (cochainSplit P g_rep↾)) c)
-    --              — the LHS seam–cap naturality (engines: `chainIncl_seam_boundaryExtract` NC:515 +
-    --                `cap_boundaryExtract_naturality_noncocycle` NC:288 + `hLHS_cap_mapChain_bridge_mod` HLHSBridge:62,
-    --                ω-cocycle absorbs the seam-transport boundary slack).
-    --       hRHS : kronecker (cochainSplit P g_rep↾) (chainIncl(U∩V)(rcap ω c)) = kronecker (cochainSplit P g_rep↾) (chainIncl Q w')
-    --              — the rcap cover-agreement (engine `chainIncl_rcap_cover_agree` RcapCoverAgree:32, over z₀).
-    --   ⚠ OPEN SUBTLETY: `c`'s degree is `N+p+2` while `fund_∩` (= fundCycleW infCompact) is degree `N+p+3` — the
-    --     1-degree gap is exactly the `Sdʲ`-boundary shift in `w'` (`∂` drops degree by 1). So `c` is NOT the bare
-    --     fundamental cycle; the boundary-relating step (`cap_singularSd_iterate_chainBoundary_arg` NC:130 /
-    --     `cap_coboundary_cochainSplit_eq` NC:699 over the shared cycle z₀, where ∂z₀=0 kills the slack) must bridge
-    --     it. This is the genuine cap-product naturality core; closing it needs ~2–4 new kernel-pure seam/rcap
-    --     bricks fitting hLHS/hRHS. Do NOT re-route the apex spine (route ii / `of_chainMatch` is fixed; never
-    --     `of_crossRealization`/`of_hcup_linked`/`kronecker_pd_fold_fund`).
-    -- ▶ STEP-B ASSEMBLY (cross_realization_match pivot). Construct the shared cap chain `c` as the
-    --   `∂(Sdʲ ·)` of the `sub(U∩V)`-realized fundamental (same `fundsub`/`j` as `hpair`/`hsplit`).
-    refine SingularConnSquareMatchCross.cross_realization_match (W := U ∩ V)
-      (LVc := (↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
-      ω.1 _ _
-      (chainBoundary (sub (U ∩ V)) (N + 1 + (p + 1))
-        ((⇑(SingularSubdivision.singularSd (sub (U ∩ V)) (N + 1 + (p + 1) + 1)))^[j]
-          ((show N + 1 + 1 + p + 1 = N + 1 + (p + 1) + 1 from by omega) ▸
-            (SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ Membership.mem V)
-                (N + 1 + 1 + p + 1)).symm
-              ⟨SingularOpenDualityCycle.fundCycleW (hU.inter hV)
-                  (SingularOpenDualityMVConnSquare.castChain
-                    (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
-                  (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero
-                    (by omega) (by omega) z₀ hz₀)
-                  (SingularCSCMayerVietorisConnecting.infCompact U V
-                    (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
-                    (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)),
-                SingularOpenDualityCycle.fundCycleW_mem_W (hU.inter hV) _ _ _⟩)))
-      w' ?hLHS ?hRHS
-    -- hLHS : kronecker ω (seam²(boundaryExtract zB))
-    --        = kronecker ω (cap (pullbackCochain (U∩V) (cochainSplit P g_rep↾)) c)
-    --   The LHS seam–cap naturality. Engines: `chainIncl_seam_boundaryExtract` (NC:515) +
-    --   `cap_boundaryExtract_naturality_noncocycle` (NC:288) + `hLHS_cap_mapChain_bridge_mod`
-    --   (HLHSBridge:62); ω-cocycle absorbs the seam-transport boundary slack via
-    --   `kronecker_eq_of_homology_eq` (HLHSBridge:82) + `boundaryExtract_class_eq_of_partition_homologous`
-    --   (PartitionRelate:33), with `hhom` from hz₀ + hpart/hzc0. The seam V-part of `cap g_rep fund_{U∪V}`
-    --   (zB) and the cap of gamb against `c` rep the SAME legW class mod boundary.
-    case hLHS => sorry
-    case hRHS =>
-      -- STEP-B brick (b) fires: route the rcap-Sd slack through `∂fundsub` (cover-supported), not `fundsub`.
-      -- `rcap ω (∂(Sdʲ fundsub)) = rcap ω (∂fundsub) + ∂(rcap ω (Dⱼ(∂fundsub)))` (`ω` cocycle, `δω = 0`).
-      rw [rcap_singularSd_iterate_chainBoundary_arg]
-      rotate_left
-      · exact LinearMap.mem_ker.mp ω.2
-      -- ⊢ kronecker gamb (chainIncl(U∩V)(rcap ω (∂fundsub) + ∂(rcap ω Dⱼ(∂fundsub)))) = kronecker gamb (chainIncl Q w')
-      -- REMAINING (documented residual): both terms of the LHS are `sub(U∩V)`-BOUNDARIES —
-      --   (i)  `rcap ω (∂fundsub) = ∂(rcap (k:=N+2) ω (cast ▸ fundsub))` by `rcap_cocycle_chainMap` (ω cocycle),
-      --   (ii) `∂(rcap ω Dⱼ(∂fundsub))` is patently a `∂_{sub}`.
-      --   So `chainIncl(U∩V)(rcap ω c) = ∂_X(chainIncl(U∩V) Y)` (`chainIncl_chainBoundary`), hence
-      --   `kronecker gamb (chainIncl(U∩V)(rcap ω c)) = kronecker (δgamb) Y` (`kronecker_coboundary_chainBoundary`).
-      --   The RHS `kronecker gamb (chainIncl Q w')`: from `hsplit` (`∂(Sdʲ(chainIncl(U∩V)(rcap ω fundsub)))
-      --   = chainIncl P u' + chainIncl Q w'`), `kronecker gamb (chainIncl Q w') = kronecker gamb (∂Z)
-      --   = kronecker (δgamb) Z` (the P-leg `kronecker gamb (chainIncl P u') = 0`, `gamb ∈ relCochains P`).
-      --   The two `δgamb`-pairings (`Y` = rcap-then-Sd interior, `Z` = `Sdʲ_X(chainIncl(rcap ω fundsub))`
-      --   = `chainIncl(Sdʲ_{sub}(rcap ω fundsub))` via `singularSd_iterate_chainIncl`) differ by the
-      --   rcap↔Sdʲ position swap, a `∂_{sub}`-boundary killed under `δgamb` by `δ² = 0`
-      --   (`coboundary_coboundary`/`kronecker_coboundary_chainBoundary` twice). The δgamb cover-partition
-      --   vanishing closes via `kronecker_relCochains_cover_partition_eq_zero` (NC:973) with
-      --   `δgamb ∈ relCochains P ∩ relCochains Q` (`cochainSplit_coboundary_mem_U/V`). This residual needs
-      --   the rcap↔Sdʲ swap-boundary brick + the `δgamb`-cover assembly (cast-heavy; ~2 bricks).
-      sorry
+    -- ⊢ kronecker ω (seam²(boundaryExtract zB)) = kronecker gamb (chainIncl Q w')   (gamb = cochainSplit P g_rep↾)
+    -- ▶ RESIDUAL = the genuine cap-product MV-naturality CROSS-REALIZATION (the project's deepest open core,
+    --   unclosed across ~6 5q.F compactions). The two legs pair DIFFERENT cochains in DIFFERENT spaces/degrees:
+    --     LHS  = ⟨ω, V-part of `cap g_rep fund_{U∪V}`⟩   (ω cocycle on `sub(U∩V)`, deg p+1; zB = the V-part of
+    --            `cap g_rep fund_{U∪V}` via hpart/hzc0; seam-transported by `chainIncl_seam_boundaryExtract` NC:568)
+    --     RHS  = ⟨g_rep↾, V-part of `∂(Sdʲ(chainIncl(U∩V)(rcap ω fund_∩)))`⟩   (gamb = cochainSplit P g_rep↾, deg N+1)
+    --   They are joined by the cup-cap MATCH CORE `kronecker_cap_eq_kronecker_rcap` (MatchLHS:73,
+    --   `⟨ω, cap g_rep z⟩ = ⟨g_rep, rcap ω z⟩` = `⟨g_rep ∪ ω, z⟩`) / `kronecker_cap_chainIncl_eq_rcap_chainIncl`
+    --   (MatchLHS:83, the cover-wise V-part form), over the SHARED z₀ where the Sdʲ slack dies (∂z₀ = 0,
+    --   `pair_fund_eq_pair_z0` RHSPairing:149 / `kronecker_relCocycle_singularSd_invariant` RHSPairing:232).
+    --   This is a JOINT close (the legs couple over z₀) — NOT the divergent `cross_realization_match` independent
+    --   hLHS/hRHS leaf-split (which is why that split walled). It needs a fresh cross-realization bridge that
+    --   carries fund_{U∪V} (the LHS realization) and fund_∩ (the RHS realization) to the SAME z₀ and matches via
+    --   the cup-cap core — built over abstract carriers to dodge the concrete-fundCycleW whnf wall (200k).
+    --   CONSTRAINT-CLEAN: NO `cup_pair_fund_eq_pair_z0` (cup version banned), NO `relCohomMvConnecting_eq*`,
+    --   NO `_of_crossRealization`/`of_hcup_linked`/`kronecker_pd_fold_fund` (spine stays `of_chainMatch`).
+    sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
