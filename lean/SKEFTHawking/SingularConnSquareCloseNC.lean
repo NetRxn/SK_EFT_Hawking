@@ -1508,5 +1508,20 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
   have hpdg := cover_partition_of_legW _ _ _ K g_rep zc0 ⟨_, hcyc⟩ hzc0 hpart
   -- REMAINING: assemble (heng χ-V-leg, the seam from hpdg's zB, pd from hσR) via the ℤ/2 cancellation seam+pd~2·(cap g_rep w')=0,
   -- bridging the U∪V W-leg (hpdg) to the U∩V cap (heng) over the shared z₀ (fundCycleW_pair_relHomologous NC:856).
+  -- STEP D: the fund-compat bridge — fund_{U∪V}(K) ~ fund_∩(infCompact) over infCompactᶜ (shared z₀, K₂=infCompact ⊆ K₁=K).
+  -- Connects the U∪V W-leg (hpdg) to the U∩V cap (heng/pd) — the cross-realization over z₀.
+  have hsub : (↑(SingularCSCMayerVietorisConnecting.infCompact U V
+        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)).1 : Set ↑X) ⊆ (↑K.1 : Set ↑X) := by
+    rw [SingularCSCMayerVietorisConnecting.infCompact_coe, SingularCSCMayerVietorisConnecting.legSplit_cover U V hU hV K]
+    exact fun x hx => Or.inl hx.1
+  have hfc := fundCycleW_pair_relHomologous (hU.union hV) (hU.inter hV)
+    (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 1 + (p + 1) + 1) z₀)
+    (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+    K (SingularCSCMayerVietorisConnecting.infCompact U V
+      (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+      (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)) hsub
+  -- REMAINING: assemble (hpdg W-leg = zA+zB+∂η; hfc funds rel-homologous; heng χ = cap g_rep w'; hsplit ∂fund split)
+  -- via relativeDualityK_cycle_compat_relB (transport over hfc) + seam(zB)/pd(σR) ~ cap g_rep w' + the ℤ/2 cancellation.
   sorry
 end SKEFTHawking.SingularConnSquareCloseNC
