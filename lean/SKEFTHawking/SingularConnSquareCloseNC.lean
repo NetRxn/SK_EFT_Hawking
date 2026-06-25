@@ -1260,6 +1260,20 @@ theorem rcap_realize_on_sub {T : Set ↑X} {k l : ℕ} (b : SingularCochain X l)
   apply chainIncl_injective T k
   rw [hRF, SingularCapSubKDuality.rcap_chainIncl]
 
+/-- **Cast-reconciliation of two equal-degree `castChain`s** (STEP 0, the mechanical blocker). The two
+fundamental cycles in the connecting square are built from `castChain h₁ z₀` (LHS, target `N+1+(p+1)+1`)
+and `castChain h₂ z₀` (RHS, target `N+2+p+1`); these degree expressions are propositionally — but not
+definitionally — equal (`Nat.add` recurses on the 2nd argument). Transporting the first along the numerical
+equality `hb : a = c` (with `a, c` the two targets) yields the second, by cast composition + `Nat`-equality
+proof irrelevance (`subst hb` collapses the two proofs `h₁.trans hb` and `h₂` to the same `rfl`-shape).
+Generic in `z₀`, `h₁`, `h₂`, `hb` ⟹ whnf-free; the reconciliation `fundCycleW_pair_relHomologous`
+needs to present both fund's over one shared chain. -/
+theorem castChain_cast_reconcile {a b c : ℕ} (h₁ : a = b) (h₂ : a = c) (hb : b = c)
+    (z : SingularChain X a) :
+    hb ▸ SingularOpenDualityMVConnSquare.castChain h₁ z
+      = SingularOpenDualityMVConnSquare.castChain h₂ z := by
+  subst hb; rfl
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
