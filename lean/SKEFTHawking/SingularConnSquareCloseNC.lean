@@ -1503,5 +1503,10 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     ((↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ)
     ((↑(SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1 : Set ↑X)ᶜ)
     (hKeq ▸ g_rep) _ _ _ ⟨u', rfl⟩ ⟨w', rfl⟩ hsplit (by omega)
+  -- STEP C: the W-leg cover-partition (the seam side). `pullbackDualityₗ g_rep (U∪V) = (chainIncl zA + chainIncl zB) + ∂η`
+  -- via cover_partition_of_legW (hzc0: zc0 ~ legW(g_rep); hpart: zc0 ~ chainIncl zA + chainIncl zB). zB drives the seam.
+  have hpdg := cover_partition_of_legW _ _ _ K g_rep zc0 ⟨_, hcyc⟩ hzc0 hpart
+  -- REMAINING: assemble (heng χ-V-leg, the seam from hpdg's zB, pd from hσR) via the ℤ/2 cancellation seam+pd~2·(cap g_rep w')=0,
+  -- bridging the U∪V W-leg (hpdg) to the U∩V cap (heng) over the shared z₀ (fundCycleW_pair_relHomologous NC:856).
   sorry
 end SKEFTHawking.SingularConnSquareCloseNC
