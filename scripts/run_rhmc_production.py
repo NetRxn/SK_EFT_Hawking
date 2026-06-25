@@ -109,7 +109,7 @@ def _run_coupling_chunked(args):
 
     (L, g, n_traj_total, n_therm, n_md_steps, tau,
      a0, alphas, betas, a0_hb, alphas_hb, betas_hb,
-     base_seed, cg, chunk_size) = args
+     base_seed, cg, chunk_size, mass) = args
     cg_a, cg_i, cg_j, cg_val = cg
 
     existing, h_resume = _load_checkpoint(L, g)
@@ -164,6 +164,7 @@ def _run_coupling_chunked(args):
         existing['g'] = np.float64(g)
         existing['L'] = np.int64(L)
         existing['n_md_steps'] = np.int64(n_md_steps)
+        existing['mass'] = np.float64(mass)
         _save_checkpoint(L, g, existing)
 
         n_done += chunk
@@ -316,7 +317,26 @@ def main():
     parser.add_argument('--g-values', type=str, default=None,
                         help='Comma-separated explicit g values, e.g. "3.3846" or '
                              '"1.5,2.5,3.5". Overrides --g-min/--g-max/--n-couplings.')
+    parser.add_argument('--mass', type=float, default=0.0,
+                        help='Majorana J1*gamma5 mass regulator m. REQUIRED at L>=8: '
+                             'the ADW fermion is intrinsically massless (kappa~1e7, dense '
+                             'near-zero modes) so CG never converges at m=0. m>0 gaps the '
+                             'operator (M_e^m = M_e + m^2*I exactly, since {A,J1*gamma5}=0), '
+                             'kappa = lam_max/m^2. Run a few m (e.g. 0.05,0.1,0.2) and '
+                             'extrapolate observables m->0. Each m writes to its own '
+                             'data/rhmc/L{L}_m{m}/ dir. Validated: integrator p->+2 at m=0.1.')
     args = parser.parse_args()
+
+    # Mass regulator validation guard.
+    if args.mass > 0.0 and args.hasenbusch:
+        parser.error("--mass is not supported with --hasenbusch (untested combo; the "
+                     "validated mass path is plain 2-PF even-odd).")
+    msq = args.mass * args.mass
+
+    # Isolate each mass in its own data dir (so the m->0 extrapolation set never
+    # collides), unless an explicit --output-subdir is given.
+    if args.output_subdir is None and args.mass > 0.0:
+        args.output_subdir = f"L{args.l}_m{args.mass:g}"
 
     # Apply output-subdir override BEFORE any _data_dir() call. Export to
     # environment so spawn-mode workers inherit at import time.
@@ -354,7 +374,8 @@ def main():
     eps = tau / args.n_md_steps
     print(f"{'='*70}")
     print(f"RHMC Production: L={L}, {len(g_values)} couplings x {args.n_traj} traj")
-    print(f"  Clark-Kennedy 2-PF even-odd, {n_poles}-pole Zolotarev x^{{-1/4}}")
+    print(f"  Clark-Kennedy 2-PF even-odd, {n_poles}-pole Zolotarev x^{{-1/4}}"
+          + (f", Majorana mass m={args.mass} (J1*gamma5 regulator)" if args.mass > 0 else ""))
     print(f"  tau={tau:.3f}, eps={eps:.6f}, MD steps={args.n_md_steps}")
     print(f"  Progress: {n_complete} complete, {n_partial} partial, "
           f"{len(g_values) - n_complete - n_partial} new")
@@ -370,7 +391,17 @@ def main():
     import sk_eft_rhmc
     lam_min, lam_max = sk_eft_rhmc.estimate_spectral_range_py(
         L, g_values[len(g_values)//2], args.seed, 50, *cg)
-    print(f"  Spectrum: [{lam_min:.3f}, {lam_max:.1f}], kappa={lam_max/lam_min:.0f}")
+    # With the mass regulator the rational approx must cover the MASSIVE operator
+    # M_e^m = M_e + m^2. Its lower bound is RIGOROUS (M_e is PSD => eigenvalues >= m^2),
+    # so use m^2 directly -- NOT the estimator's lam_min, which over-reports ~1500x and
+    # would leave the [m^2, lam_min_est] modes outside the approximation range.
+    zol_lo = msq if args.mass > 0.0 else lam_min
+    zol_hi = lam_max + msq
+    if args.mass > 0.0:
+        print(f"  Spectrum: M_e=[{lam_min:.3f}, {lam_max:.1f}]  ->  "
+              f"M_e^m=[{zol_lo:.4f}, {zol_hi:.1f}]  kappa={zol_hi/zol_lo:.0f}  (m={args.mass})")
+    else:
+        print(f"  Spectrum: [{lam_min:.3f}, {lam_max:.1f}], kappa={lam_max/lam_min:.0f}")
 
     # Clark-Kennedy 2-PF even-odd RHMC:
     #   Action: x^{-1/4} on M_e (each of 2 PFs contributes det(M_e)^{1/4})
@@ -393,15 +424,20 @@ def main():
             tasks.append((L, g, args.n_traj, args.n_therm, tau, hcoeffs,
                            args.seed + i * 10000, cg, args.chunk_size))
     else:
-        a0, alphas, betas = compute_zolotarev_coefficients(n_poles, lam_min, lam_max, -0.25)
-        a0_hb, alphas_hb, betas_hb = compute_zolotarev_coefficients(n_poles, lam_min, lam_max, -0.875)
+        a0, alphas, betas = compute_zolotarev_coefficients(n_poles, zol_lo, zol_hi, -0.25)
+        a0_hb, alphas_hb, betas_hb = compute_zolotarev_coefficients(n_poles, zol_lo, zol_hi, -0.875)
+        # Shifts applied to the BARE M_e operator must be (beta_k + m^2) so that
+        # M_e + (beta_k + m^2) = (M_e + m^2) + beta_k = M_e^m + beta_k. At m=0 this
+        # is a no-op. The force contraction is unchanged (mass is h-independent).
+        betas = np.array(betas) + msq
+        betas_hb = np.array(betas_hb) + msq
 
         tasks = []
         for i, g in enumerate(g_values):
             tasks.append((L, g, args.n_traj, args.n_therm, args.n_md_steps, tau,
-                           a0, np.array(alphas), np.array(betas),
-                           a0_hb, np.array(alphas_hb), np.array(betas_hb),
-                           args.seed + i * 10000, cg, args.chunk_size))
+                           a0, np.array(alphas), betas,
+                           a0_hb, np.array(alphas_hb), betas_hb,
+                           args.seed + i * 10000, cg, args.chunk_size, args.mass))
 
     print(f"\n  Starting...\n", flush=True)
     t0 = time.time()
