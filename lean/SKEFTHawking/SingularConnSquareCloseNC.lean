@@ -1335,6 +1335,48 @@ theorem rhs_realize_V_leg {A B S : Set ↑X} {n : ℕ}
   rw [ZModModule.sub_eq_add, kronecker_add_left, add_eq_zero_iff_eq_neg, CharTwo.neg_eq] at hψ
   exact hψ.symm
 
+/-- **`∂(Sdʲ(chainIncl T d))` is `T`-supported** (the σR-leg `hMem0` brick, abstract whnf-dodging GREEN).
+A `chainIncl T`-supported chain stays `T`-supported under iterated barycentric subdivision
+(`singularSd_iterate_mem_subspaceChains`) and under `∂` (`chainBoundary_mem_subspaceChains`). Stated over a
+FREE `sub T`-chain `d` so the concrete `rcap ω fund_∩` cap-chain infers structurally at application — the
+explicit-`legSplitᶜ` type ascription that defeq-walls is bypassed. Feeds `rhs_realize_V_leg`'s support
+hypothesis after `rw [← hsplit]`. ℤ/2. Kernel-pure. -/
+theorem chainBoundary_singularSd_iterate_chainIncl_mem {T : Set ↑X} {n : ℕ} (j : ℕ)
+    (d : SingularChain (sub T) (n + 1)) :
+    chainBoundary X n ((⇑(SingularSubdivision.singularSd X (n + 1)))^[j] (chainIncl T (n + 1) d))
+      ∈ subspaceChains T n :=
+  chainBoundary_mem_subspaceChains _
+    (SingularExcision.singularSd_iterate_mem_subspaceChains
+      (c := chainIncl T (n + 1) d) ⟨d, rfl⟩ j)
+
+omit [T2Space ↑X] in
+/-- **Joint cross-realization assembly** (the G1 close skeleton, whnf-dodging GREEN). Combines the two
+realized legs on the common space `M = sub T` (with `T = U ∩ V`) into the connecting-square match. The
+SEAM leg is supplied realized as `cap gM F + ∂e₁` (`hL`, PART-2 fund-compat output); the σR leg is supplied
+as the ambient pairing reduced to `kronecker gM (rcap ω F + ∂e₂)` (`hR`, PART-1 σR-realize output). The
+join is the cup–cap duality core `joint_cap_rcap_match` (both `ω` and `gM` are absolute cocycles, so the
+boundary slacks `∂e₁`/`∂e₂` die). Stated over FREE carriers `gM, F, seam, u', w', e₁, e₂` so the concrete
+`fundCycleW`/`seam`/`relCocycleRestrict` terms infer structurally at application — no 200k whnf wall.
+Reduces the apex `refine_2` goal to exactly the two realize equalities `hL`, `hR`. ℤ/2. Kernel-pure. -/
+theorem joint_close_seam_sigmaR {N p : ℕ} {T A B : Set ↑X}
+    (ω : LinearMap.ker (coboundaryₗ (sub T) (p + 1)))
+    (gM : SingularCochain (sub T) (N + 1)) (hgM : coboundary (sub T) (N + 1) gM = 0)
+    (gR : SingularCochain X (N + 1))
+    (F : SingularChain (sub T) (N + 1 + (p + 1)))
+    (seam : SingularChain (sub T) (p + 1))
+    (u' : SingularChain (sub A) (N + 1)) (w' : SingularChain (sub B) (N + 1))
+    (e₁ : SingularChain (sub T) (p + 1 + 1)) (e₂ : SingularChain (sub T) (N + 1 + 1))
+    (hL : seam = cap gM F + chainBoundary (sub T) (p + 1) e₁)
+    (hR : kronecker (cochainSplit A (N + 1) gR)
+            (chainIncl A (N + 1) u' + chainIncl B (N + 1) w')
+          = kronecker gM (SingularCapChainIncl.rcap ω.1 F + chainBoundary (sub T) (N + 1) e₂)) :
+    kronecker ω.1 seam
+      = kronecker (cochainSplit A (N + 1) gR)
+          (chainIncl A (N + 1) u' + chainIncl B (N + 1) w') := by
+  rw [hR]
+  exact joint_cap_rcap_match ω.1 (LinearMap.mem_ker.mp ω.2) gM hgM F seam
+    (SingularCapChainIncl.rcap ω.1 F + chainBoundary (sub T) (N + 1) e₂) e₁ e₂ hL rfl
+
 theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
     (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
@@ -1469,6 +1511,31 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
     --       `seam² = cap gM F + ∂e₁` (`hLincl`/`hcp`/`chainIncl_seam_boundaryExtract`) and the RHS realize via
     --       `rcap_realize_on_sub`, with the two funds reconciled over z₀ (`fundCycleW_pair_relHomologous` +
     --       `castChain_cast_reconcile` + `cap_chainBoundary_relBoundaries_transport`).
-    sorry
+    -- ════════════════════════════════════════════════════════════════════════════════════════════════
+    -- G1 CLOSE. Reduce to the two realize equalities via the whnf-dodging assembly skeleton.
+    -- ════════════════════════════════════════════════════════════════════════════════════════════════
+    -- The whnf-dodging assembly skeleton reduces the apex to (hgM SOLVED) + the two genuine realize
+    -- residuals hL (PART 2 fund-compat) and hR (PART 1 σR-realize). `gM := pullbackCochain g_rep↾`
+    -- (so `?gR` is matched from the conclusion's `cochainSplit A g_rep↾`, never whnf-reducing the
+    -- concrete `relCocycleRestrict ▸`-cast — the documented 200k wall is dodged).
+    refine joint_close_seam_sigmaR ω (gM := SingularCapChainIncl.pullbackCochain _ (N + 1) ?gR)
+      ?hgM ?gR (F := ?F) ?seam u' w' (e₁ := ?e1) (e₂ := ?e2) ?hL ?hR
+    case hgM =>
+      rw [coboundary_pullbackCochain_eq,
+        (SingularConnSquareRHSPairing.relCocycle_props _).1]
+      rfl
+    -- ▶ RESIDUAL (precisely localized — see lab notebook turn 40). `?F := ∂fund_∩` where `fund_∩` is
+    --   `castChain`-reconciled to degree `N+1+(p+1)+1` (the `castChain_cast_reconcile` of the goal's
+    --   `N+1+1+p+1` σR cast vs the `joint_cap_rcap_match` `N+1+(p+1)+1` requirement — a genuine z₀-cast
+    --   bridge, NOT a free metavar). Both `?F`, `?e1`, `?e2` are pinned by the two realize proofs:
+    --   • hR (PART 1, σR-leg ambient→sub realize, "engineering"): `rhs_realize_V_leg` (hMem0 GREEN via
+    --     `chainBoundary_mem_subspaceChains` + `singularSd_iterate_chainIncl`) →
+    --     `chainIncl_rcap_cover_agree` → `kronecker_chainIncl_eq_pullbackCochain` → `rcap_realize_on_sub`.
+    --   • hL (PART 2, local-PD fund-compat over z₀, the genuine unbuilt MV cap-naturality): `seam² =
+    --     cap (pullbackCochain g_rep↾) ∂fund_∩ + ∂e₁` via `chainIncl_seam_boundaryExtract` +
+    --     `cover_partition_of_legW` + `cap_realize_on_sub`, the two funds reconciled over z₀
+    --     (`fundCycleW_pair_relHomologous` + `castChain_cast_reconcile` +
+    --     `cap_chainBoundary_relBoundaries_transport`).
+    all_goals sorry
 
 end SKEFTHawking.SingularConnSquareCloseNC
