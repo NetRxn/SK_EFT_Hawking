@@ -38,10 +38,14 @@ _WHITELIST = (
     "leanprover-community.github.io", "leanprover.github.io", "oeis.org", "pdg.lbl.gov",
     "en.wikipedia.org", "ncatlab.org", "encyclopediaofmath.org",
     "mathoverflow.net", "math.stackexchange.com",
-    # Project tooling/infrastructure (NOT scholarly primaries): the Aristotle theorem
-    # prover's own dashboard/API docs. User-authorized 2026-06-29 (we submit to Aristotle
-    # as part of the Stage-4 Lean pipeline; its docs are operational reference).
-    "aristotle.harmonic.fun", "harmonic.fun",
+    # Project tooling/infrastructure (NOT scholarly primaries), user-authorized 2026-06-29:
+    #  - Aristotle theorem prover's dashboard/API docs (we submit to it as part of the
+    #    Stage-4 Lean pipeline; its docs are operational reference).
+    #  - anthropic.com + claude.com, all subdomains: Anthropic engineering blog
+    #    (www.anthropic.com) + API docs (docs.anthropic.com) + the Claude Code product docs
+    #    (code.claude.com). This repo's autonomous-dev harness IS Claude Code, so these are
+    #    operational reference.
+    "aristotle.harmonic.fun", "harmonic.fun", "anthropic.com", "claude.com",
 )
 
 _HEADER = re.compile(r"^#\s*-+\s*(.+?)\s*-+\s*$")
