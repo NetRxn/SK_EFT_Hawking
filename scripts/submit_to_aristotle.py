@@ -69,6 +69,14 @@ def cmd_stage(args) -> None:
     print(f"Staged minimal project: {staged.root}")
     print(f"  targets : {staged.targets}")
     print(f"  closure : {len(staged.closure)} modules (hash {staged.closure_hash})")
+    print(f"  pruned  : {staged.pruned_requires or '(none)'} "
+          f"(D7 closure-aware require/manifest prune — staged copy only)")
+    if getattr(args, "verify_build", False):
+        print("\nD7 staged-build gate (lake build under our 4.29.1; minutes)...")
+        gate = A.verify_staged_build(staged)
+        for d in gate.details:
+            print("   ", d)
+        print(f"  gate: {'GREEN' if gate.ok else 'RED'}")
     stale = A.lean_deps_stale_for(set(staged.closure))
     if stale:
         print(f"  note    : {len(stale)} closure module(s) newer than lean_deps.json")
@@ -82,10 +90,21 @@ def cmd_stage(args) -> None:
 
 def cmd_submit(args) -> None:
     staged = A.stage_minimal_project(args.targets)
+    print(f"Staged {len(staged.closure)} modules; pruned requires (D7): {staged.pruned_requires or '(none)'}")
     if not args.yes_i_authorize:
         print("Refusing to submit: pass --yes-i-authorize (ADR-006 Stage-4 human-in-the-loop gate).")
         print(f"Staged at {staged.root}; closure {len(staged.closure)} modules (hash {staged.closure_hash}).")
         raise SystemExit(2)
+    if not args.skip_build_gate:
+        print("D7 staged-build gate (lake build the pruned project under our 4.29.1; minutes)...")
+        gate = A.verify_staged_build(staged)
+        for d in gate.details:
+            print("   ", d)
+        if not gate.ok:
+            print("Refusing to submit: staged-build gate RED. Fix the staged closure/manifest, "
+                  "or pass --skip-build-gate to override (NOT recommended — risks wasting Aristotle budget).")
+            raise SystemExit(3)
+        print("Staged-build gate GREEN — proceeding to submit.")
     man = A.submit_async(staged, args.prompt, authorized=True, force=args.force)
     print(f"Submitted (ASYNC — did not wait). job_id = {man.job_id}")
     print(f"  manifest : {man.path()}")
@@ -166,6 +185,8 @@ def main() -> None:
 
     s = sub.add_parser("stage", help="Stage the minimal import-closure project for target(s).")
     s.add_argument("targets", nargs="+")
+    s.add_argument("--verify-build", action="store_true",
+                   help="Also run the D7 staged-build gate (lake build under our 4.29.1).")
     s.set_defaults(func=cmd_stage)
 
     s = sub.add_parser("submit", help="Stage + submit (async). Requires --yes-i-authorize.")
@@ -174,6 +195,8 @@ def main() -> None:
     s.add_argument("--yes-i-authorize", action="store_true",
                    help="Required: explicit Stage-4 authorization to submit.")
     s.add_argument("--force", action="store_true", help="Resubmit even if an identical closure is open.")
+    s.add_argument("--skip-build-gate", action="store_true",
+                   help="Skip the D7 staged-build gate (NOT recommended; risks wasting Aristotle budget).")
     s.set_defaults(func=cmd_submit)
 
     s = sub.add_parser("status", help="List recorded submissions + status.")

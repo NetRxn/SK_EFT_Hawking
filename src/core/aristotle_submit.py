@@ -207,21 +207,113 @@ def sorry_decls_in_modules(modules: set[str]) -> dict[str, list[str]]:
 # --------------------------------------------------------------------------- #
 # Staging a minimal project
 # --------------------------------------------------------------------------- #
-def _staged_lakefile(src_lakefile: str) -> str:
-    """Our lakefile with the `[[lean_exe]]` stanzas stripped (their roots —
-    ExtractDeps / AxiomAudit — are metaprograms outside any proof closure, so
-    keeping them would reference missing roots). Requires + lean_lib are kept;
-    Mathlib/Physlib/repl resolve from the copied lake-manifest."""
-    out, skip = [], False
-    for line in src_lakefile.splitlines():
-        if line.strip().startswith("[[lean_exe]]"):
-            skip = True
+# Lakefile [[require]] package name (lowercased) -> the import-root namespace it
+# provides. D7 prunes a require iff the staged closure imports none of its modules.
+# Mathlib is universally needed and always kept; `repl` (the lean-lsp REPL binary
+# dep) is imported by no proof source; `Physlib` is imported only by the
+# QuantumNetwork modules, so it survives for those closures and is pruned for L2.
+_PKG_IMPORT_ROOT = {
+    "mathlib": "Mathlib",
+    "physlib": "Physlib",
+    "repl": "REPL",
+    "batteries": "Batteries",
+}
+
+
+def _parse_lakefile_blocks(src: str) -> list[str]:
+    """Split a lakefile into a preamble block + one string per top-level `[[...]]`
+    stanza (comments preceding a stanza attach to the prior block's tail)."""
+    blocks: list[list[str]] = [[]]
+    for line in src.splitlines():
+        if line.lstrip().startswith("[["):
+            blocks.append([line])
+        else:
+            blocks[-1].append(line)
+    return ["\n".join(b) for b in blocks]
+
+
+def _require_block_name(block: str) -> Optional[str]:
+    """The `name = "..."` of a `[[require]]` stanza block, or None."""
+    for line in block.splitlines():
+        ls = line.strip()
+        if ls.startswith("name") and "=" in ls:
+            return ls.split("=", 1)[1].strip().strip('"').strip("'")
+    return None
+
+
+def _closure_import_roots(modules: set[str]) -> set[str]:
+    """Top-level import namespaces used by any module in the staged closure (first
+    dotted component of each `import X...` line) — lets D7 decide which external
+    `[[require]]`s the closure actually needs (e.g. {`Mathlib`, `SKEFTHawking`})."""
+    roots: set[str] = set()
+    for m in modules:
+        p = _module_to_path(m)
+        if p is None:
             continue
-        if skip and line.strip().startswith("[["):
-            skip = False
-        if not skip:
-            out.append(line)
+        for line in p.read_text().splitlines():
+            ls = line.strip()
+            if ls.startswith("import "):
+                first = ls[len("import "):].lstrip().split()[0].split(".")[0]
+                if first:
+                    roots.add(first)
+    return roots
+
+
+def _prunable_require_names(src_lakefile: str, closure_roots: set[str]) -> set[str]:
+    """Names of `[[require]]` packages NOT reachable from the staged closure (D7).
+    Mathlib is always kept. For an L2 (singular-homology) closure this returns
+    {`Physlib`, `repl`} — the deps Aristotle's sandbox can't fetch."""
+    prune: set[str] = set()
+    for block in _parse_lakefile_blocks(src_lakefile):
+        if not block.lstrip().startswith("[[require]]"):
+            continue
+        name = _require_block_name(block)
+        if not name or name.lower() == "mathlib":
+            continue
+        root = _PKG_IMPORT_ROOT.get(name.lower(), name)
+        if root not in closure_roots and name not in closure_roots:
+            prune.add(name)
+    return prune
+
+
+def _staged_lakefile(src_lakefile: str, prune_requires: frozenset[str] = frozenset()) -> str:
+    """Stripped lakefile for the staged minimal project (ADR-006 D1 + D7):
+      - drop `[[lean_exe]]` stanzas (ExtractDeps / AxiomAudit metaprograms are
+        outside any proof closure; keeping them references missing roots);
+      - drop `[[require]]` blocks whose package is in `prune_requires` (D7:
+        closure-unreachable deps Aristotle's sandbox can't fetch — Physlib/repl
+        for an L2 closure). Mathlib + `[[lean_lib]]` are always kept."""
+    out: list[str] = []
+    for block in _parse_lakefile_blocks(src_lakefile):
+        head = block.lstrip()
+        if head.startswith("[[lean_exe]]"):
+            continue
+        if head.startswith("[[require]]"):
+            nm = _require_block_name(block)
+            if nm and nm in prune_requires:
+                continue
+        out.append(block)
     return "\n".join(out).rstrip() + "\n"
+
+
+def _staged_manifest(src_manifest_json: str, prune_requires: frozenset[str]) -> str:
+    """Drop the pinned `packages` entries for pruned requires (D7), keeping mathlib
+    + its transitive deps. Derived from the real manifest each stage, so a mathlib
+    pin bump is tracked automatically. A pruned package's transitive-only deps
+    become unreferenced (inert) — harmless; the staged-build gate is the
+    consistency check (`verify_staged_build`)."""
+    try:
+        data = json.loads(src_manifest_json)
+    except json.JSONDecodeError:
+        return src_manifest_json
+    pkgs = data.get("packages")
+    if isinstance(pkgs, list):
+        prune_lc = {p.lower() for p in prune_requires}
+        data["packages"] = [
+            p for p in pkgs
+            if not (isinstance(p, dict) and str(p.get("name", "")).lower() in prune_lc)
+        ]
+    return json.dumps(data, indent=2) + "\n"
 
 
 @dataclass
@@ -230,6 +322,7 @@ class StagedProject:
     targets: list[str]
     closure: list[str]
     closure_hash: str
+    pruned_requires: list[str] = field(default_factory=list)   # D7: requires dropped for this closure
 
 
 def _closure_hash(modules: set[str]) -> str:
@@ -259,12 +352,19 @@ def stage_minimal_project(targets: list[str], dest: Optional[Path] = None) -> St
         shutil.rmtree(dest)
     (dest / "SKEFTHawking").mkdir(parents=True)
 
-    # toolchain + manifest verbatim (Mathlib pin resolves from the manifest)
+    # D7: closure-aware pre-clean of the staged build env (operates ONLY on this
+    # throwaway copy; the real lakefile/manifest keep Physlib + repl). Prune the
+    # [[require]] blocks (+ their manifest entries) the closure doesn't import, so
+    # Aristotle's sandbox never tries to fetch deps it can't (~0 setup budget).
+    src_lakefile = (LEAN_DIR / "lakefile.toml").read_text()
+    prune = _prunable_require_names(src_lakefile, _closure_import_roots(closure))
+    prune_fz = frozenset(prune)
+
     shutil.copy2(LEAN_DIR / "lean-toolchain", dest / "lean-toolchain")
     manifest = LEAN_DIR / "lake-manifest.json"
     if manifest.exists():
-        shutil.copy2(manifest, dest / "lake-manifest.json")
-    (dest / "lakefile.toml").write_text(_staged_lakefile((LEAN_DIR / "lakefile.toml").read_text()))
+        (dest / "lake-manifest.json").write_text(_staged_manifest(manifest.read_text(), prune_fz))
+    (dest / "lakefile.toml").write_text(_staged_lakefile(src_lakefile, prune_fz))
 
     # only the closure files (preserving nested module paths)
     for m in closure:
@@ -276,8 +376,56 @@ def stage_minimal_project(targets: list[str], dest: Optional[Path] = None) -> St
         out.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, out)
 
+    # The `[[lean_lib]] SKEFTHawking` resolves its modules from a root
+    # `SKEFTHawking.lean`. The real root imports all ~1,172 modules; the staged
+    # lib must import ONLY the target(s) — whose transitive closure is exactly the
+    # staged files — so `lake build SKEFTHawking` builds the closure with nothing
+    # missing. Without this, the build fails "no such file: SKEFTHawking.lean".
+    (dest / "SKEFTHawking.lean").write_text("".join(f"import {t}\n" for t in norm_targets))
+
     return StagedProject(root=dest, targets=norm_targets, closure=sorted(closure),
-                         closure_hash=_closure_hash(closure))
+                         closure_hash=_closure_hash(closure), pruned_requires=sorted(prune))
+
+
+@dataclass
+class StagedBuildResult:
+    ok: bool
+    cache_ok: bool
+    details: list[str] = field(default_factory=list)
+
+
+def verify_staged_build(staged: StagedProject, *, fetch_cache: bool = True,
+                        timeout: int = 3600) -> StagedBuildResult:
+    """D7 staged-build gate: prove the *pruned* minimal project resolves + builds
+    under OUR 4.29.1 BEFORE submission. The staged dir is fresh (no `.lake`), so we
+    fetch the mathlib cache first, then `lake build` the `SKEFTHawking` lean_lib.
+
+    Green here ⟹ green in Aristotle's sandbox (same toolchain via `lake update`),
+    so the prover spends ~0 budget on environment setup. A failure (e.g. a closure
+    module secretly importing a pruned dep) costs one local build, not a run.
+
+    NOTE: this compiles the full closure against mathlib — minutes, plus a possible
+    mathlib-cache download into the fresh staged dir. Deliberate, per-submission."""
+    root = str(staged.root)
+    details: list[str] = [f"staged: {root}", f"pruned requires: {staged.pruned_requires or '(none)'}"]
+    cache_ok = not fetch_cache
+    if fetch_cache:
+        for cmd in (["lake", "exe", "cache", "get"], ["lake", "cache", "get"]):
+            r = subprocess.run(cmd, cwd=root, capture_output=True, text=True, timeout=timeout)
+            details.append(f"$ {' '.join(cmd)} -> exit {r.returncode}")
+            if r.returncode == 0:
+                cache_ok = True
+                break
+    r = subprocess.run(["lake", "build", "SKEFTHawking"], cwd=root,
+                       capture_output=True, text=True, timeout=timeout)
+    details.append(f"$ lake build SKEFTHawking -> exit {r.returncode}")
+    ok = r.returncode == 0
+    if not ok:
+        details.append("--- build output (tail; stdout+stderr) ---")
+        # lake prints compile errors to stdout and "build failed" to stderr —
+        # capture both so the real error is never hidden.
+        details.append(((r.stdout or "") + "\n" + (r.stderr or ""))[-3000:])
+    return StagedBuildResult(ok=ok, cache_ok=cache_ok, details=details)
 
 
 # --------------------------------------------------------------------------- #
