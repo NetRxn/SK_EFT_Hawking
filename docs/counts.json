@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-22T13:27:44.982971",
+  "generated": "2026-06-29T15:10:28.140823",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 23020,
-    "theorems_total": 14178,
-    "theorems_substantive": 14152,
+    "total_declarations": 23079,
+    "theorems_total": 14224,
+    "theorems_substantive": 14198,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 1131,
+    "modules": 1134,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -619,6 +619,7 @@
       "SKEFTHawking.LDP.LDPCompatibleSKEFT",
       "SKEFTHawking.LDP.Sanov",
       "SKEFTHawking.LDP.Varadhan",
+      "SKEFTHawking.LandauerConductance",
       "SKEFTHawking.LaplaceMethod",
       "SKEFTHawking.LaplaceMethodAsymptotic",
       "SKEFTHawking.LatticeContent",
@@ -655,6 +656,8 @@
       "SKEFTHawking.MugerCenter",
       "SKEFTHawking.MultivarPoisson",
       "SKEFTHawking.MultivarPoissonDescent",
+      "SKEFTHawking.NEGFGreenFunction",
+      "SKEFTHawking.NEGFTransportCertificate",
       "SKEFTHawking.NbReTripletSPT",
       "SKEFTHawking.NbReWindingNumber",
       "SKEFTHawking.NeutrinoMixing",
@@ -1144,7 +1147,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 7850,
+    "definitions": 7863,
     "structures": 310,
     "instances": 585,
     "inductives": 97,
@@ -1157,9 +1160,9 @@
     }
   },
   "python": {
-    "python_modules": 133,
-    "test_files": 122,
-    "pytest_cases": 4738,
+    "python_modules": 134,
+    "test_files": 124,
+    "pytest_cases": 4753,
     "notebooks": 89,
     "papers": 42,
     "figures": 163
