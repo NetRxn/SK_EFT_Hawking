@@ -67,7 +67,7 @@ firing is a GO signal, never a cue to stop/hold/re-scope/hand back. Legitimate s
 a kernel-checked no-go, or a genuine user-only decision (ask once, keep shipping meanwhile).
 DONE when: (1) <measurable end state>; (2) validate.py prints N/N in the transcript;
 (3) the fresh-context skeft-qa:adversarial-reviewer [+ claims-reviewer for papers] ran with
-ZERO BLOCKER findings surfaced in the transcript. — or stop after <N> turns.
+ZERO BLOCKER findings surfaced in the transcript.
 ```
 
 ## Anti-patterns (do not write)
