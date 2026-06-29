@@ -25,22 +25,28 @@
 - **Goal:** a periodic acoustic/elastic operator (mass-spring / Helmholtz lattice); Bloch–Floquet spectrum + Brillouin zone (PBC), porting the TB template. **Verdict: reachable** — structural port of a proven model.
 - **Why:** the spectral object whose gaps the phase certifies.
 - **Bricks:** PhysLib `TightBindingChain`; Mathlib self-adjoint spectral theory.
-- **Gate:** `acousticBloch_spectrum` (real, bounded-below) kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `AcousticBlochOperator.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
+  - [ ] diatomic (≥2-band) acoustic Bloch operator; `acousticBloch_spectrum` (real, bounded-below) proven
 
 ## Wave 2 — band-gap existence
 - **Goal:** min-max (Rayleigh) + k-th-eigenvalue **Courant–Fischer**; a spectral gap `[ω₋, ω₊]` proven for a concrete **diatomic (two-sublattice)** crystal — the gap opens between the acoustic and optical branches (no eigenvalue in the open interval). **Verdict: reachable-moderate.**
 - **Why:** the headline result — a *proven* phononic band gap.
 - **Bricks:** W1; Mathlib `Rayleigh`; new Courant–Fischer.
-- **Gate:** `phononic_band_gap_exists` + falsifier (`∃ mode in (ω₋,ω₊) ⇒ ⊥`), kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `PhononicBandGap.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `phononic_band_gap_exists` (gap between acoustic & optical branches) + falsifier (`∃ mode in (ω₋,ω₊) ⇒ ⊥`) proven
 
 ## Wave 3 — certified gap enclosure
 - **Goal:** interval-arithmetic bounds on the gap edges (`expNeg_enclosure`-style); a rational enclosure usable with no floating-point. **Verdict: reachable.**
 - **Why:** turns the existence theorem into a certificate-grade numerical bound.
 - **Bricks:** W2; `expNeg_enclosure`.
-- **Gate:** `band_gap_rational_enclosure` (`norm_num`-backed) kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `BandGapEnclosure.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `band_gap_rational_enclosure` (`norm_num`-backed, no floating-point) proven
 
 ## Sequencing
 W1 (operator) → W2 (gap existence) → W3 (enclosure). Independent of 6CA/6CC/6CD/6CE; one of the two fast materials phases (with 6CD).
 
-## Closure
+## Phase Definition of Done (`/goal` exit — every wave AC above green, then:)
 `lake build` + ExtractDeps clean; `validate.py` green; counts + Inventory refreshed; root imports; strengthening review; D11 §phononic row staged for first-lift; roadmap status updated.

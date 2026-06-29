@@ -25,22 +25,28 @@
 - **Goal:** a non-Hermitian 2-band Bloch Hamiltonian on Schur; the **exceptional point** = simultaneous eigenvalue + eigenvector coalescence (a defective block); the EP/defectiveness primitive (eigenspace-dimension comparison — **not** full JNF). **Verdict: reachable** — finite-dim linear algebra on Schur.
 - **Why:** EPs are the defining feature of non-Hermitian band physics; the defectiveness primitive is reusable infrastructure.
 - **Bricks:** PhysLib `Matrix.schur_triangulation`; Mathlib `Module.End.eigenspace`; project dissipative algebra.
-- **Gate:** `exceptional_point_defective` (algebraic mult > geometric mult at the EP) kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `NonHermitianBloch.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
+  - [ ] non-Hermitian 2-band Bloch Hamiltonian on Schur; `exceptional_point_defective` (alg. mult > geom. mult via `Module.End.eigenspace` dims — **not** full JNF) proven
 
 ## Wave 2 — PT-symmetry + EP order
 - **Goal:** the PT-symmetric real-spectrum criterion; EP-order classification (EP2/EP3); the square-root spectral splitting near an EP. **Verdict: reachable.**
 - **Why:** PT-symmetry breaking is the experimentally salient transition; EP order sets the sensing response.
 - **Bricks:** W1; characteristic-polynomial discriminant.
-- **Gate:** `pt_symmetric_real_spectrum_iff` (biconditional) kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `ExceptionalPoint.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `pt_symmetric_real_spectrum_iff` (biconditional) + EP-order (EP2/EP3) classification proven
 
 ## Wave 3 — skin effect + certified EP-proximity bound
 - **Goal:** (optional) non-Hermitian winding / the skin effect; a certified EP-proximity bound (enclosure on the spectral-gap closing). **Verdict: reachable.**
 - **Why:** the skin effect is the bulk topological signature; the proximity bound is the certificate-grade output.
 - **Bricks:** W1/W2; `expNeg_enclosure`.
-- **Gate:** `ep_proximity_enclosure` (`norm_num`-backed) kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `NonHermitianWinding.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `ep_proximity_enclosure` (`norm_num`-backed) proven; (optional) skin-effect / winding
 
 ## Sequencing
 W1 (EP/JNF primitive) → W2 (PT + order) → W3 (skin/proximity). Independent of 6CA/6CB/6CC/6CE; one of the two fast materials phases (with 6CB).
 
-## Closure
+## Phase Definition of Done (`/goal` exit — every wave AC above green, then:)
 `lake build` + ExtractDeps clean; `validate.py` green; counts + Inventory refreshed; root imports; strengthening review; the finite-dim JNF/EP primitive flagged as Mathlib-PR-eligible; D11 §non-Hermitian row staged for first-lift; roadmap status updated.

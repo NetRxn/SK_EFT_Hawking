@@ -25,22 +25,28 @@
 - **Goal:** a 2-band Bloch Hamiltonian on the PhysLib TB template; Berry connection `A(k)` and curvature `F(k) = ∂_{k₁}A_{k₂} − ∂_{k₂}A_{k₁}`. **Verdict: reachable** — differential-geometric layer over the proven band model.
 - **Why:** the geometric substrate the Chern number integrates.
 - **Bricks:** PhysLib `TightBindingChain`; Mathlib differentiation on the torus/BZ.
-- **Gate:** `berryCurvature_def` + gauge-covariance, kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `BlochBundle.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
+  - [ ] 2-band Bloch Hamiltonian on the TB template; `berryCurvature_def` + gauge-covariance proven
 
 ## Wave 2 — Chern-number integrality
 - **Goal:** `C = (1/2π) ∫_BZ F ∈ ℤ` (winding-number computation); a concrete `C = ±1` two-band model + falsifier (`C ∉ ℤ ⇒ ⊥`). **Verdict: reachable-moderate.**
 - **Why:** the headline topological invariant; integrality is the falsifiable claim.
 - **Bricks:** W1; Mathlib winding number / degree theory.
-- **Gate:** `chern_number_integer` + a worked `C = 1` model, kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `ChernNumber.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `chern_number_integer` (`C = (1/2π)∫F ∈ ℤ`) + a worked `C = ±1` model + falsifier (`C ∉ ℤ ⇒ ⊥`) proven
 
 ## Wave 3 — bulk–boundary correspondence *(DEEP → CONDITIONAL)*
 - **Goal:** edge-mode count `= C` (the bulk–boundary correspondence). **Verdict: DEEP** — index / K-theory; matches the 5qF/5qG-L2 deep-topology weakness. **Ship CONDITIONAL** on a disclosed `H_BulkBoundaryLandmark` tracked Prop (the index-theorem step), exactly like the H1/H3/H4 generation-constraint hypotheses; the unconditional discharge is deferred, not blocking.
 - **Why:** the physically observable consequence (protected edge states); shipping it conditional demonstrates the result while the deep index theorem is built.
 - **Bricks:** W2; project index-theory toeholds (`HeatKernelExpansion`); tracked-Prop pattern.
-- **Gate:** `bulk_boundary_correspondence` (conditional on `H_BulkBoundaryLandmark`), kernel-pure, landmark disclosed in statement + header. **No new axiom.**
+- **Done (AC / `/goal` condition):**
+  - [ ] `BulkBoundaryCorrespondence.lean` builds clean — 0 sorry, kernel-pure, **no new axiom** (only the disclosed `H_BulkBoundaryLandmark` tracked Prop)
+  - [ ] `bulk_boundary_correspondence` (conditional on `H_BulkBoundaryLandmark`) proven; landmark disclosed in statement + header; unconditional discharge explicitly deferred
 
 ## Sequencing
 W1 (Berry) → W2 (Chern) → W3 (bulk–boundary, conditional). W1→W2 are fast-moderate; W3 is the only deep wave (conditional escape hatch). Independent of 6CB–6CE.
 
-## Closure
+## Phase Definition of Done (`/goal` exit — every wave AC above green, then:)
 `lake build` + ExtractDeps clean; `validate.py` green; counts + Inventory refreshed; root imports; strengthening review; the W3 landmark logged in the tracked-hypothesis register; D11 §topological-bands row staged for first-lift; roadmap status updated.

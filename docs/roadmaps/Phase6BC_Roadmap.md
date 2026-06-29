@@ -26,28 +26,36 @@
 - **Goal:** `ℒ(ρ) = −i[H,ρ] + Σ_k (L_k ρ L_k† − ½{L_k†L_k, ρ})`; complete positivity of the generated map via PhysLib Choi (`choi_PSD_iff_CP_map`). **Verdict: reachable** — generator over the existing CPTP layer.
 - **Why:** the central object of open-system dynamics; CP is the physical-consistency condition.
 - **Bricks:** PhysLib CPTP/Choi; `HermitianMat` CFC.
-- **Gate:** `lindblad_generator_CP` kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `LindbladGenerator.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
+  - [ ] GKSL generator `ℒ` defined; `lindblad_generator_CP` (complete positivity via PhysLib Choi) proven
 
 ## Wave 2 — structure theorem (trace preservation + canonical form)
 - **Goal:** `Tr ℒ(ρ) = 0` (trace preservation); the canonical Hamiltonian-vs-dissipator decomposition; gauge freedom of the jump operators. **Verdict: reachable.**
 - **Why:** the structural backbone (the "GKSL form") downstream constructions cite.
 - **Bricks:** W1; Mathlib trace + Hermitian structure.
-- **Gate:** `gksl_trace_preserving` + `gksl_canonical_form`, kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `GKSLStructure.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `gksl_trace_preserving` (`Tr ℒ(ρ)=0`) + `gksl_canonical_form` (Hamiltonian/dissipator split) proven
 
 ## Wave 3 — Markovian semigroup + contractivity
 - **Goal:** `Λ_t = e^{tℒ}` via Mathlib `Matrix.exp` on the vectorized (non-Hermitian) Liouvillian; the semigroup law `Λ_t ∘ Λ_s = Λ_{t+s}`; trace-distance monotonicity (data-processing under the dynamical map). **Verdict: reachable.**
 - **Why:** Markovianity + contractivity are the dynamical guarantees a certificate would invoke.
 - **Bricks:** W1/W2; Mathlib `Matrix.exp` (the Liouvillian is **non-Hermitian** — *not* `HermitianMat.exp`); project diamond-norm/trace-distance.
-- **Gate:** `lindblad_semigroup` + `traceDist_lindblad_monotone`, kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `LindbladSemigroup.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `lindblad_semigroup` (`Λ_t∘Λ_s=Λ_{t+s}` via Mathlib `Matrix.exp`) + `traceDist_lindblad_monotone` (data-processing) proven
 
 ## Wave 4 — concrete certified model
 - **Goal:** a damped two-level / vibrational-relaxation model instantiating the generator, with a **certified exponential decay envelope** (rational-enclosure corollary, no floating-point). **Verdict: reachable.**
 - **Why:** a worked, falsifiable instance that grounds the abstract substrate.
 - **Bricks:** W1–W3; `expNeg_enclosure`.
-- **Gate:** `dampedTwoLevel_decay_envelope` with a `norm_num`-backed bound, kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `DampedTwoLevel.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `dampedTwoLevel_decay_envelope` with a `norm_num`-backed bound proven; two-layer-honesty note in the module header
 
 ## Sequencing
 W1 (generator) → W2 (structure) → W3 (semigroup) → W4 (model). Independent of 6BA/6BB/6BD; the fastest chemistry phase (PhysLib does the most here).
 
-## Closure
+## Phase Definition of Done (`/goal` exit — every wave AC above green, then:)
 `lake build` + ExtractDeps clean; `validate.py` green; counts + Inventory refreshed; root imports; strengthening review; D10 §open-systems row staged for first-lift; roadmap status updated.

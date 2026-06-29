@@ -27,16 +27,20 @@
 - **Goal:** the JW string map between fermionic modes and qubit operators; fermionic CCR on the PhysLib ladder/CCR substrate. **Verdict: reachable** (first in Lean; cite QBlue prior art).
 - **Why:** the standard fermion-to-qubit encoding any simulation resource estimate needs.
 - **Bricks:** PhysLib ladder/CCR; `PauliMatrices`.
-- **Gate:** `jordanWigner_anticommutation` kernel-pure; QBlue prior-art disclosed in header.
+- **Done (AC / `/goal` condition):**
+  - [ ] `JordanWigner.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
+  - [ ] `jordanWigner_anticommutation` proven; QBlue prior-art disclosed in the module header; **no** first-in-prover claim
 
 ## Wave 2 — Trotter error bound
 - **Goal:** the non-commuting Trotter–Suzuki bound `‖e^{(A+B)t} − (e^{At/n}e^{Bt/n})ⁿ‖ ≤ …` via the project's `MatrixBCH` (Mathlib `Matrix.exp` is commuting-case only). **Verdict: reachable.**
 - **Why:** the resource/error primitive for digital quantum simulation.
 - **Bricks:** `MatrixBCH`; W1.
-- **Gate:** `trotter_suzuki_error_bound` kernel-pure; no first-in-prover claim.
+- **Done (AC / `/goal` condition):**
+  - [ ] `TrotterError.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `trotter_suzuki_error_bound` proven via `MatrixBCH.norm_exp_*`; no first-in-prover claim
 
 ## Sequencing
 Schedule only on a D8-consumer pull. W1 → W2. Independent of all other 6B*/6C* phases.
 
-## Closure
+## Phase Definition of Done (`/goal` exit — every wave AC above green, then:)
 If scheduled: `lake build` + ExtractDeps clean; `validate.py` green; counts + Inventory refreshed; QBlue prior-art disclosure; absorb into D8 via the late-absorption protocol; roadmap status updated.

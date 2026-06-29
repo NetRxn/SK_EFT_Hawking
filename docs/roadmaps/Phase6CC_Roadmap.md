@@ -29,16 +29,20 @@
 - **Goal:** the **2D class-D** sixteen-fold classification of topological superconductors in materials language, CONDITIONAL on the disclosed `H_PinPlusBordismLandmark`; cites the existing arc and adds the condensed-matter interpretation layer. **Verdict: reachable (conditional)** — interpretation over already-proven structure.
 - **Why:** restates a marquee program result in the language of the condensed-matter audience; broadens reach at near-zero marginal cost.
 - **Bricks:** `KitaevSixteenFold`, `RokhlinClassification`, `Omega5FiniteIso`; the existing landmark tracked Prop.
-- **Gate:** `topSuperconductor_sixteenfold_classification` (conditional on `H_PinPlusBordismLandmark`), kernel-pure, 2D-class-D, landmark disclosed. **No new axiom.**
+- **Done (AC / `/goal` condition):**
+  - [ ] `TopSuperconductorSPT.lean` builds clean — 0 sorry, kernel-pure, **no new axiom** (uses the *existing* disclosed `H_PinPlusBordismLandmark`, not a new one)
+  - [ ] `topSuperconductor_sixteenfold_classification` (conditional, **2D class-D**) proven, consuming `KitaevSixteenFold.kitaevClass`; landmark disclosed; 5q.G coordination confirmed before start
 
 ## Wave 2 — SPT stacking / group structure
 - **Goal:** the stacking law / ℤ/16 group structure in materials language, on the existing `SPTStacking`. **Verdict: reachable.**
 - **Why:** completes the classification as a group (stacking = addition mod 16).
 - **Bricks:** W1; `SPTStacking`/`SPTClassification`.
-- **Gate:** `spt_stacking_z16` kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `SPTStackingMaterials.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `spt_stacking_z16` (materials-language wrapper on the already-proven `SPTStacking.SPTPhase.stack` group) proven
 
 ## Sequencing
 Coordinate with `5q.G` **before** starting (gate G-6CC.0). W1 (classification) → W2 (stacking). Independent of 6CA/6CB/6CD/6CE. The smallest materials phase (reframe, not new derivation).
 
-## Closure
+## Phase Definition of Done (`/goal` exit — every wave AC above green, then:)
 `lake build` + ExtractDeps clean; `validate.py` green; counts + Inventory refreshed; root imports; strengthening review; explicit cross-ref to D2 + to the active 5q.G unconditional work; bundle row staged for first-lift; roadmap status updated.

@@ -26,22 +26,28 @@
 - **Goal:** `G^{R/A}(E) = (E − H ± iη)⁻¹`; self-energy `Σ`; spectral function `A = i(G^R − G^A)`; sum rule `∫ A dE/2π = 1`. **Verdict: reachable** — resolvent on existing operator substrate.
 - **Why:** the load-bearing object every transport quantity is built from.
 - **Bricks:** PhysLib `SpectralTheory.Basic.resolvent` (on `H →ₗ.[ℂ] H`); Mathlib `LinearPMap`; finite-dim `Matrix`. (Broadening matrices `Γ` are defined here — new, not from DKMBootstrap.)
-- **Gate:** `negf_spectral_sum_rule` (or equivalent) kernel-pure; `A ⪰ 0`.
+- **Done (AC / `/goal` condition):**
+  - [ ] `NEGFGreenFunction.lean` builds clean — 0 sorry, kernel-pure (`lean_verify` = `{propext, Classical.choice, Quot.sound}`), no new project-local axiom
+  - [ ] `G^{R/A}`/`Σ`/`A` defined; `negf_spectral_sum_rule` (`∫A dE/2π = 1`) + `A ⪰ 0` proven (substantive, passes the strengthening checklist)
 
 ## Wave 2 — Landauer–Büttiker conductance
 - **Goal:** transmission `T(E) = Tr[Γ_L G^R Γ_R G^A]` (Caroli/Meir–Wingreen); `G = (2e²/h)∫ T(E)(−∂f/∂E) dE`. **Verdict: reachable** — trace formula over W1.
 - **Why:** the headline observable.
 - **Bricks:** W1 Green's functions; broadening matrices `Γ`; Mathlib `Matrix.trace`.
-- **Gate:** `landauer_conductance_def` + linear-response limit, kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `LandauerConductance.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `T(E)=Tr[Γ_L G^R Γ_R G^A]` + `landauer_conductance_def` + the linear-response limit proven
 
 ## Wave 3 — certified transport bound
 - **Goal:** steady-state current; conductance-**quantization theorem** `G = n·G₀` for n open channels + falsifier (`G > n·G₀ ⇒ ⊥`); resolvent-bound envelope. **Verdict: reachable.**
 - **Why:** the falsifiable, certificate-grade result.
 - **Bricks:** W1+W2; `expNeg_enclosure`-style enclosure.
-- **Gate:** `conductance_quantization` + the `norm_num`-backed falsifier, kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `NEGFTransportCertificate.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `conductance_quantization` (`G = n·G₀`) + the `norm_num`-backed falsifier (`G > n·G₀ ⇒ ⊥`) proven
 
 ## Sequencing
 W1 (substrate) → W2 (conductance) → W3 (certified bound). W1 unblocks all. 6BA is independent of 6BB/6BC/6BD.
 
-## Closure
+## Phase Definition of Done (`/goal` exit — every wave AC above green, then:)
 `lake build` + `lake build SKEFTHawking.ExtractDeps` clean; `validate.py` green; counts + Inventory refreshed; root `SKEFTHawking.lean` imports; Stage-13-style strengthening review of new statements; D10 §transport row staged for first-lift; roadmap status updated.

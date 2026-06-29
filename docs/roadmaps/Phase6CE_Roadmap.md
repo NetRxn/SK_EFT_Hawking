@@ -27,22 +27,28 @@
 - **Goal:** the quasi-static effective permittivity `ε_eff(ε_h, ε_i, f)` (host `ε_h`, inclusion `ε_i`, fill fraction `f`); the Clausius–Mossotti derivation in the dilute limit. **Verdict: reachable** — algebraic identity + a clean limit.
 - **Why:** the canonical macroscale effective-parameter formula metamaterial design relies on.
 - **Bricks:** finite-dim algebra; Mathlib field arithmetic.
-- **Gate:** `maxwellGarnett_eps_eff` + the `f → 0` host-recovery limit, kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `MaxwellGarnett.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
+  - [ ] `maxwellGarnett_eps_eff` + the `f → 0` host-recovery limit proven (algebraic path only — no two-scale)
 
 ## Wave 2 — certified effective-parameter bounds
 - **Goal:** a **Hashin–Shtrikman**-style two-sided enclosure on `ε_eff`; an interval-arithmetic certificate (rational brackets). **Verdict: reachable.**
 - **Why:** turns the formula into a certificate-grade bound (the design-relevant guarantee).
 - **Bricks:** W1; `expNeg_enclosure`-style interval arithmetic.
-- **Gate:** `effectiveMedium_hashinShtrikman_enclosure` (`norm_num`-backed) kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `EffectiveMediumBounds.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `effectiveMedium_hashinShtrikman_enclosure` (`norm_num`-backed two-sided bound) proven
 
 ## Wave 3 — elastic / acoustic effective moduli
 - **Goal:** the effective bulk/shear moduli of a composite via the same algebraic mixing + enclosure (the elastic analog of W1/W2). **Verdict: reachable.**
 - **Why:** extends the certificate from electromagnetic to mechanical metamaterials (ties to 6CB's acoustic substrate).
 - **Bricks:** W1/W2; elastic-modulus mixing rules.
-- **Gate:** `effectiveModuli_enclosure` kernel-pure.
+- **Done (AC / `/goal` condition):**
+  - [ ] `EffectiveModuli.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [ ] `effectiveModuli_enclosure` (elastic bulk/shear analog) proven
 
 ## Sequencing
 W1 (formula) → W2 (bounds) → W3 (elastic analog). Independent of 6CA–6CD. Algebraic path throughout — two-scale stays out of scope.
 
-## Closure
+## Phase Definition of Done (`/goal` exit — every wave AC above green, then:)
 `lake build` + ExtractDeps clean; `validate.py` green; counts + Inventory refreshed; root imports; strengthening review; algebraic-path-only + two-scale-out-of-scope documented; D11 §homogenization row staged for first-lift; roadmap status updated.
