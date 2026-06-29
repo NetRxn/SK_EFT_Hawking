@@ -99,3 +99,20 @@ def test_staged_manifest_drops_pruned_package_entries():
 
 def test_staged_manifest_invalid_json_is_returned_verbatim():
     assert A._staged_manifest("not json", frozenset({"repl"})) == "not json"
+
+
+# --- D7 / Amendment B: standing v4.28 sandbox note prepended to submission prompts ---
+
+def test_v428_note_loads_and_prepends():
+    note = A._v428_sandbox_note()
+    # The note doc ships with the repo; if present it carries the marker.
+    if note:
+        assert A._V428_MARKER in note
+        out = A._with_v428_note("TASK BODY")
+        assert out.startswith(note) and out.rstrip().endswith("TASK BODY")
+
+
+def test_with_v428_note_is_idempotent():
+    p = A._with_v428_note("close the square")
+    # second application must not double-prepend (marker already present)
+    assert A._with_v428_note(p) == p

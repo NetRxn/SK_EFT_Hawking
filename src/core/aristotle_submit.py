@@ -59,6 +59,10 @@ LEAN_DEPS = LEAN_DIR / "lean_deps.json"
 RESULTS_DIR = PROJECT_ROOT / "docs" / "aristotle_results"
 STAGING_DIR = RESULTS_DIR / "staging"
 MANIFESTS_DIR = RESULTS_DIR / "manifests"
+# Standing v4.28.0-sandbox down-shift note, prepended to every submission prompt so
+# Aristotle spends budget on the math, not on re-deriving the env (ADR-006 Amendment B).
+V428_NOTES_DOC = PROJECT_ROOT / "docs" / "references" / "aristotle_v428_sandbox_notes.md"
+_V428_MARKER = "Aristotle v4.28.0 sandbox"
 
 # Kernel-trust baseline (ADR-002), kept in sync with scripts/atlas_view.py.
 KERNEL_AXIOMS = frozenset({"propext", "Classical.choice", "Quot.sound"})
@@ -400,9 +404,13 @@ def verify_staged_build(staged: StagedProject, *, fetch_cache: bool = True,
     under OUR 4.29.1 BEFORE submission. The staged dir is fresh (no `.lake`), so we
     fetch the mathlib cache first, then `lake build` the `SKEFTHawking` lean_lib.
 
-    Green here ⟹ green in Aristotle's sandbox (same toolchain via `lake update`),
-    so the prover spends ~0 budget on environment setup. A failure (e.g. a closure
-    module secretly importing a pruned dep) costs one local build, not a run.
+    SCOPE (corrected per ADR-006 Amendment B): this verifies our-side correctness —
+    that the closure builds and the D7 prune/manifest/root are self-consistent (it
+    caught the missing-lib-root gap). It does NOT verify Aristotle-sandbox-env compat:
+    the sandbox is a v4.28.0 environment, and a 4.29.1-green build here does not prove
+    a 4.28.0 build there. That cross-version friction is handled by the standing v4.28
+    note (`_with_v428_note`) + Aristotle's own down-shift, NOT by this gate. A failure
+    here (e.g. a closure module secretly importing a pruned dep) costs one local build.
 
     NOTE: this compiles the full closure against mathlib — minutes, plus a possible
     mathlib-cache download into the fresh staged dir. Deliberate, per-submission."""
@@ -487,6 +495,24 @@ def _api_key() -> str:
 _PROJECT_ID_RE = re.compile(r"\b([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\b")
 
 
+def _v428_sandbox_note() -> str:
+    """The standing v4.28.0 down-shift note (V428_NOTES_DOC), or '' if absent.
+    Prepended to submission prompts so Aristotle gets the env knowledge up front
+    (ADR-006 Amendment B) — append-only doc, no code change needed to update it."""
+    try:
+        return V428_NOTES_DOC.read_text().strip()
+    except OSError:
+        return ""
+
+
+def _with_v428_note(prompt: str) -> str:
+    """Prepend the standing v4.28 sandbox note to a task prompt (idempotent)."""
+    note = _v428_sandbox_note()
+    if not note or _V428_MARKER in prompt:
+        return prompt
+    return f"{note}\n\n---\n\nTASK\n\n{prompt}"
+
+
 def submit_async(staged: StagedProject, prompt: str, *, authorized: bool = False,
                  force: bool = False) -> SubmissionManifest:
     """Submit the staged minimal project to Aristotle WITHOUT waiting, persist a
@@ -509,7 +535,8 @@ def submit_async(staged: StagedProject, prompt: str, *, authorized: bool = False
             f"(status {dup['status']}). Use force=True to resubmit."
         )
 
-    cmd = ["aristotle", "submit", prompt, "--project-dir", str(staged.root),
+    # Prepend the standing v4.28 sandbox down-shift note (ADR-006 Amendment B).
+    cmd = ["aristotle", "submit", _with_v428_note(prompt), "--project-dir", str(staged.root),
            "--api-key", _api_key()]   # NOTE: no --wait -> returns immediately (async)
     proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(PROJECT_ROOT))
     out = proc.stdout + proc.stderr

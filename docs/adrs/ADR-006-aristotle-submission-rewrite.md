@@ -157,3 +157,28 @@ D6's core stance is **refined, not overturned**, by separating two boundaries:
 ### Process note (interactive submissions)
 
 The live run used Aristotle's **interactive multi-turn** mode (`aristotle continue --mode {ask,instruct}`), not a one-shot batch. This is a capability the engine can leverage deliberately for hard targets (decompose → ask → instruct), and the reasoning/CoT is retrievable only via the paginated events API (`AgentTask.get_events(limit≤100, newest_first=False)`) — `download` returns files only. Capturing those logs alongside the retrieved files is now part of the retrieve step.
+
+---
+
+## Amendment B (2026-06-29) — the toolchain mismatch is irreducible; we do NOT down-port
+
+The second live run (job `65df13df`, the refined L2 resubmit) revealed that D7/Amendment A's staged-build gate did **not** close the environment-budget hole, and its docstring overclaimed. Its CoT showed the real mechanism, and thinking it through settled a policy.
+
+### What the gate missed
+
+The gate builds the staged closure under **our 4.29.1**, then claimed "green here ⟹ green in the sandbox (same toolchain via `lake update`)." That inference is false. Aristotle's sandbox is a **v4.28.0 environment**: the vendored deps are prebuilt at v4.28.0 (mathlib `8f9d9cff`, Batteries/Aesop/Qq at their v4.28.0 revs), and its v4.29.1 toolchain is *incomplete*. Our staged v4.29.1 toolchain therefore invalidates the whole prebuilt community-dep tree at once (olean toolchain-hash mismatch) → lake rebuilds Batteries/Aesop/Qq/mathlib from source → fails. (Physlib was one symptom — an *unfetchable* require, pruned by D7; Batteries et al. are the same class via a different mechanism — *un-rebuildable* under the mismatched toolchain.) The gate, run under 4.29.1, structurally cannot see this. Its scope is corrected in code to "our-side build + prune self-consistency," not sandbox-env compat.
+
+### Decision — knowledge, not a shadow
+
+A v4.28.0 **staging shadow** (toolchain swap + manifest swap + source-port overlay, automatic or hand-rolled) was considered and **rejected**. It inverts our own roadmap: we moved to ≥4.29 *because we depend on its features*, so a maintained down-port (a) is a second source-of-truth that must track the first in lockstep, (b) drifts further with every Mathlib/toolchain bump, and (c) cannot be fully automatic — auto-down-shift is the inverse of "the upgrade wasn't free," and it breaks the moment a closure uses a genuine 4.29-only feature. Hand-rolling it ourselves merely duplicates the down-shift Aristotle already performs autonomously per run.
+
+Instead:
+
+1. **Keep our real source on v4.29.1, unconditionally.** Where a 4.29 feature is better than a 4.28-compatible form, we keep the 4.29 form and accept the per-submission Aristotle friction (user decision 2026-06-29). We do **not** modify project source to ease v4.28 builds.
+2. **Encode the down-shift *knowledge* in the submission prompt**, not in code. A standing, append-only note (`docs/references/aristotle_v428_sandbox_notes.md`) is prepended to every submission by `aristotle_submit.submit_async` (`_with_v428_note`, idempotent). It tells Aristotle the sandbox is v4.28.0, to align the toolchain to the vendored deps, and lists the known statement-preserving drift repairs (e.g. the `SimplexCategory` simp-normal-form fix via `change` + `split_ifs`). This removes the *expensive* part of the burn — detection + re-development — at zero lockstep-maintenance cost, and adapts as the note grows. It does **not** eliminate the mechanical dep-rebuild, which is accepted as irreducible.
+3. **Graft-time 4.28→4.29 upgrades are case-by-case.** If a returned proof uses a v4.28 construct that is cleaner/faster/more elegant in v4.29, upgrade it during the D2 graft review — never by down-shifting source. The D2 gauntlet still verifies every returned proof under our 4.29.1, so graft-back correctness is unaffected.
+4. **A genuine 4.29-only closure may not be Aristotle-doable** on the 4.28 sandbox; that is a known limitation to route around (close it ourselves via the MCP loop), not a thing to engineer a fragile workaround for.
+
+### Reconciliation
+
+D7's closure-aware prune (Physlib/repl) stays — it is closure-*derived*, automatic, and shadow-free, and remains correct. Amendment A's "stage-at-v4.28 / bake the ports" leaning is **superseded** by this amendment: no toolchain swap, no manifest swap, no port overlay in staging. The staged-build gate stays as an our-side correctness check (with its scope corrected), and the standing note carries the sandbox knowledge.
