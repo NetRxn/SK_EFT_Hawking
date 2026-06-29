@@ -131,7 +131,7 @@ is a GO signal, never a cue to stop/hold/re-scope; legitimate stops = a kernel-c
 decision"; (c) has **one measurable end state with a transcript-visible check** ("validate.py prints N/N in the
 transcript"); (d) **requires the fresh-context review (GAP-B)** — "not complete until the
 `skeft-qa:adversarial-reviewer` (and `claims-reviewer` for paper work) ran in a fresh context with **zero BLOCKER
-findings, surfaced in the transcript**"; (e) bounds runtime with `or stop after N turns`.
+findings, surfaced in the transcript**"
 
 ### 3. Facilitate the harvest host (one-time, idempotent) + output
 Facilitate the one-time System-2 harvest host (spec 6.3). After writing the marker:

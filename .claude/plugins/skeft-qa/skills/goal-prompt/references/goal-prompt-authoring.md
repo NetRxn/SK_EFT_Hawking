@@ -56,7 +56,6 @@ demand by the `goal-prompt` skill at launch.
    Because the evaluator judges only the transcript, the loop cannot mark itself complete
    until that review evidence is literally present. (`/skeft-qa:wave-close` is the explicit
    companion path; this bakes the same bar into `/goal` itself.)
-4. **Runtime bound.** End with `or stop after N turns` so the loop has a hard ceiling.
 
 ## Template
 
