@@ -55819,6 +55819,420 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.NEGF.advancedArg.congr_simp",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.advancedArg.eq_1",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.advancedArg_eq_conjTranspose",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.advancedArg_isUnit",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.broadening_isHermitian",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.channelConductance.eq_1",
+      "module": "SKEFTHawking.NEGFTransportCertificate",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.channelConductance_eq_landauer",
+      "module": "SKEFTHawking.NEGFTransportCertificate",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.channelConductance_le_quantum",
+      "module": "SKEFTHawking.NEGFTransportCertificate",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.conductance_quantization",
+      "module": "SKEFTHawking.NEGFTransportCertificate",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.conductance_quantization_falsifier",
+      "module": "SKEFTHawking.NEGFTransportCertificate",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.fermi.eq_1",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.fermiWindow.eq_1",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.fermiWindow_integral_eq_one",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.gAdvanced.eq_1",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.gAdvanced_diag",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.gAdvanced_eq_conjTranspose",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.gRetarded.eq_1",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.gRetarded_diag",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.landauerConductance.eq_1",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.landauerConductance_const_transmission",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.landauerConductance_const_transmission'",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.landauer_conductance_def",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.lorentzian_integral_inv",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.negf_spectral_sum_rule",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.posSemidef_exists_mul_conjTranspose",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.resolvent_diag",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.retardedArg.congr_simp",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.retardedArg.eq_1",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.retardedArg_eq_sub_selfEnergy",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.retardedArg_isUnit",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.selfEnergy.eq_1",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.selfEnergy_broadening",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.spectralFn.congr_simp",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.spectralFn.eq_1",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.spectralFn_diag",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.spectralFn_eq_gR_broadening_gA",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.spectralFn_eq_two_mul_eta",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.spectralFn_posSemidef",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.sub_eigenvalue_ne_zero_of_im_ne",
+      "module": "SKEFTHawking.NEGFGreenFunction",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.transmission.eq_1",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.transmissionReal.eq_1",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.transmissionReal_ofReal",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.transmission_eq_gAdvanced",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.transmission_isReal",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.transmission_nonneg",
+      "module": "SKEFTHawking.LandauerConductance",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NEGF.two_channel_no_three_quanta",
+      "module": "SKEFTHawking.NEGFTransportCertificate",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.NbReTripletSPT.H_NbReWindingNumberIdentity_holds",
       "module": "SKEFTHawking.NbReTripletSPT",
       "atlas_kind": "TRUE",
@@ -128518,7 +128932,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 14178,
+    "theorem_nodes": 14224,
     "unknown_nodes": 33,
     "implies_edges": 35,
     "apex_nodes": 4,
@@ -128530,7 +128944,7 @@
     ],
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 210,
-      "TRUE:PROVED": 13968,
+      "TRUE:PROVED": 14014,
       "UNKNOWN:PLANNED": 9,
       "UNKNOWN:STATED": 24
     },
