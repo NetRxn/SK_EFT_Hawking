@@ -2,7 +2,10 @@
 
 **Status: PLANNED (authorized 2026-06-29).** Bloch–Floquet band theory for a periodic acoustic/elastic medium and a **certified band-gap existence theorem** for a concrete phononic crystal. Clean whitespace (no Bloch/Floquet for acoustics in any prover). Distinct phase in the `6C*` materials series.
 
-> **⚠️ CHECK PhysLib FIRST.** Port PhysLib `CondensedMatter/TightBindingChain/Basic.lean` (proven 1D band model) from quantum hopping to an acoustic Bloch operator. Mathlib `Analysis.InnerProductSpace.Rayleigh` gives the extremal-eigenvalue variational (min-max); the **k-th-eigenvalue Courant–Fischer** is the new piece (build it). Project `expNeg_enclosure` gives the certified enclosure. Verify by search before re-deriving.
+**Substrate (verified 2026-06-29 — PhysLib source read + lean MCP):**
+- **Reuse (exists):** PhysLib `CondensedMatter/TightBindingChain/Basic.lean` — the band-model template (`hamiltonian_energyEigenstate` TISE, `BrillouinZone`, `energyEigenvalue`, `energyEigenstate_orthogonal`); Mathlib `Analysis.InnerProductSpace.Rayleigh` — `LinearMap.IsSymmetric.hasEigenvalue_iSup/iInf_of_finiteDimensional` (**extremal** eigenvalue only); project `QuantumNetwork/NumericalBounds.expNeg_enclosure` (rational enclosure).
+- **Absent → build:** `Floquet` (0 in PhysLib); the acoustic Bloch operator; the **band-gap** theorem. **Key nuance (verified):** the PhysLib TB model is a *single* `E₀−2t·cos(ka)` band with **no gap** — a gap requires a **≥2-band (diatomic / two-sublattice) acoustic chain** (gap between acoustic & optical branches). The **k-th-eigenvalue Courant–Fischer** is also new (Mathlib has only extremal Rayleigh).
+- **New content:** the diatomic mass-spring acoustic Bloch operator (≥2 bands); band-gap existence via min-max + the new Courant–Fischer; certified gap enclosure.
 
 **Standing invariants:** kernel-pure `{propext, Classical.choice, Quot.sound}`; no new project-local axioms (#15); no `native_decide`; no `maxHeartbeats` (#10); preemptive-strengthening checklist; never push. **Two-layer honesty:** the band/gap *theorems* are Lean-verified; the physical-crystal identification stays literature-cited in the module header. Wave sizing ≈ one `/goal` (≤ ~5M tokens). Frame purely as physics (dual acoustics publication + flagship scope).
 
@@ -17,7 +20,7 @@
 - **Gate:** `acousticBloch_spectrum` (real, bounded-below) kernel-pure.
 
 ## Wave 2 — band-gap existence
-- **Goal:** min-max (Rayleigh) + k-th-eigenvalue **Courant–Fischer**; a spectral gap `[ω₋, ω₊]` proven for a concrete 1D/2D crystal (no eigenvalue in the open interval). **Verdict: reachable-moderate.**
+- **Goal:** min-max (Rayleigh) + k-th-eigenvalue **Courant–Fischer**; a spectral gap `[ω₋, ω₊]` proven for a concrete **diatomic (two-sublattice)** crystal — the gap opens between the acoustic and optical branches (no eigenvalue in the open interval). **Verdict: reachable-moderate.**
 - **Why:** the headline result — a *proven* phononic band gap.
 - **Bricks:** W1; Mathlib `Rayleigh`; new Courant–Fischer.
 - **Gate:** `phononic_band_gap_exists` + falsifier (`∃ mode in (ω₋,ω₊) ⇒ ⊥`), kernel-pure.

@@ -2,7 +2,11 @@
 
 **Status: PLANNED (authorized 2026-06-29).** The verified Lindblad / Gorini–Kossakowski–Sudarshan (GKSL) master equation for open-system molecular dynamics. PhysLib ships the full CPTP/Choi/Kraus channel layer — the **static half is done**; the new content is the *generator* and the Markovian semigroup. Distinct phase in the `6B*` chemistry series.
 
-> **⚠️ CHECK PhysLib FIRST.** PhysLib `QuantumInfo/Channels/CPTP.lean` + `MatrixMap.lean` ship `CPTPMap`, `choi_PSD_iff_CP_map`, `exists_kraus`, `exists_purify`; `ForMathlib/HermitianMat/*` ships operator-monotone/CFC `exp`/`log`. The channel object is free — only the GKSL generator + semigroup are new. The project `QuantumNetwork/*` supplies diamond-norm / trace-distance. Verify by search before re-deriving.
+**Substrate (verified 2026-06-29 — PhysLib source read + lean MCP):**
+- **Reuse (exists):** PhysLib `QuantumInfo/Finite/CPTPMap/CPTP.lean` — `CPTPMap`, `choi_PSD_of_CPTP`, `Tr_of_choi_of_CPTP`, `CPTP_of_choi_PSD_Tr` (construct from PSD + unit trace), `CPTPMap.compose`; `…/MatrixMap.lean` — `choi_matrix`, `choi_equiv` (the Choi iso), `of_kraus`, `exists_kraus`. PhysLib `…/HermitianMat/LogExp.lean` — `HermitianMat.exp`/`.log`/`exp_pos` + `…/CFC.lean` (CFC) for the **Hermitian** Hamiltonian/Gibbs parts. Project `QuantumCrooks/ReservoirCoupled.lean` — `IsLindbladDetailedBalance` (predicate) + a 2-state Lindblad data structure + `HasLindbladDetailedBalanceWitness` (existing detailed-balance toehold to consume). Project `QuantumNetwork/*` diamond-norm / trace-distance.
+- **Absent → build:** the GKSL generator object, CP-of-the-generated-map, the semigroup law — 0 `Lindblad`/`GKSL` generator content in PhysLib; the project has only the *predicate* above.
+- **New content:** the generator `ℒ`; CP via PhysLib Choi; structure theorem; the semigroup `e^{tℒ}`.
+- **Correction (was a planning miss):** the Markovian semigroup `e^{tℒ}` is the exponential of the **non-Hermitian Liouvillian** superoperator — use Mathlib `Matrix.exp` on the vectorized `ℒ` (or project `MatrixBCH`), **not** `HermitianMat.exp` (which only applies to Hermitian operators like `H`, `ρ`).
 
 **Standing invariants:** kernel-pure `{propext, Classical.choice, Quot.sound}`; no new project-local axioms (#15); no `native_decide`; no `maxHeartbeats` (#10); preemptive-strengthening checklist; never push. **Two-layer honesty:** the generator/semigroup *formulas* are Lean-verified; the physical-channel identification (which bath, which jump operators) stays literature-cited in the module header. Wave sizing ≈ one `/goal` (≤ ~5M tokens). Frame purely as physics.
 
@@ -23,9 +27,9 @@
 - **Gate:** `gksl_trace_preserving` + `gksl_canonical_form`, kernel-pure.
 
 ## Wave 3 — Markovian semigroup + contractivity
-- **Goal:** `Λ_t = e^{tℒ}` (HermitianMat CFC-exp); the semigroup law `Λ_t ∘ Λ_s = Λ_{t+s}`; trace-distance monotonicity (data-processing under the dynamical map). **Verdict: reachable.**
+- **Goal:** `Λ_t = e^{tℒ}` via Mathlib `Matrix.exp` on the vectorized (non-Hermitian) Liouvillian; the semigroup law `Λ_t ∘ Λ_s = Λ_{t+s}`; trace-distance monotonicity (data-processing under the dynamical map). **Verdict: reachable.**
 - **Why:** Markovianity + contractivity are the dynamical guarantees a certificate would invoke.
-- **Bricks:** W1/W2; `HermitianMat` exp; project diamond-norm/trace-distance.
+- **Bricks:** W1/W2; Mathlib `Matrix.exp` (the Liouvillian is **non-Hermitian** — *not* `HermitianMat.exp`); project diamond-norm/trace-distance.
 - **Gate:** `lindblad_semigroup` + `traceDist_lindblad_monotone`, kernel-pure.
 
 ## Wave 4 — concrete certified model

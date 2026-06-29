@@ -10,6 +10,11 @@
 
 **Bundle target:** **D2** (existing — anomaly/SM; already owns the 16-convergence, Rokhlin's 16, Kitaev DIII) as a condensed-matter-reframe section — **or** D11; decided at Stage 1 (first-lift). Absorb via `LATE_PHASE6_ABSORPTION_PROTOCOL`.
 
+**Substrate (verified 2026-06-29 — lean MCP + source read):**
+- **Consume (exists, proven):** project `KitaevSixteenFold.lean` — `kitaevClass : ℤ → ZMod 16`, `kitaevCentralCharge`, `kitaevCentralCharge_period16`, `kitaev_integral_charge_iff_even`, `kitaev_eight_bosonic_phases`; `SPTStacking.lean` — `SPTPhase.stack` with `stack_assoc` + `stack_trivial_left/right` + `stack_inverse_left/right` (**the ℤ/16 group structure is already proven** — so W2 is a thin materials-language wrapper, not a new derivation); `RokhlinClassification`, `Omega5FiniteIso`, `BordismGroup`.
+- **Disclosed landmark (not an axiom):** the existing KEEP tracked Prop "Kirby–Taylor Pin⁺ bordism geometric ISO" (Deferred-Targets item 15) — the geometric full-carrier identification the active 5q.G `/goal` discharges unconditionally.
+- **New content:** the **2D class-D** condensed-matter interpretation layer over the above (conditional on the landmark). No new mathematics beyond the reframe + the conditional geometric ID.
+
 ---
 
 ## Wave 1 — topological-superconductor SPT classification *(CONDITIONAL)*

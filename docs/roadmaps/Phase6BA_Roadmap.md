@@ -1,8 +1,12 @@
 # Phase 6BA — Verified Quantum Transport (NEGF / Landauer–Büttiker)
 
-**Status: PLANNED (authorized 2026-06-29).** First machine-checked non-equilibrium Green's-function (NEGF) steady-state transport: retarded/advanced Green's functions, the Landauer–Büttiker / Meir–Wingreen conductance, and a certified conductance-quantization bound. No Landauer/NEGF transport exists in any proof assistant (clean whitespace). One of the public substrate-breadth phases scoped 2026-06-29 (companion chemistry phases 6BB–6BD; materials phases 6CA–6CE); the PhysLib operator/resolvent substrate makes the new transport layer MODERATE, not greenfield-expensive. Distinct double-letter phase in the `6B*` (computational-chemistry) series, independent of the unrelated `6A`/`6b`.
+**Status: PLANNED (authorized 2026-06-29).** First machine-checked non-equilibrium Green's-function (NEGF) steady-state transport: retarded/advanced Green's functions, the Landauer–Büttiker / Meir–Wingreen conductance, and a certified conductance-quantization bound. No NEGF Green's-function / Landauer-*conductance* transport exists in any proof assistant. One of the public substrate-breadth phases scoped 2026-06-29 (companion chemistry phases 6BB–6BD; materials phases 6CA–6CE); the PhysLib unbounded-operator resolvent makes the new transport layer MODERATE, not greenfield-expensive. Distinct double-letter phase in the `6B*` (computational-chemistry) series, independent of the unrelated `6A`/`6b`.
 
-> **⚠️ CHECK PhysLib + project substrate FIRST.** Build on `DKMBootstrap/` (broadening-matrix / spectral-function infra, Phase 6q), Mathlib resolvent + `InnerProductSpace.LinearPMap`; the new content is the transport object itself. Verify by `lean_leansearch`/`loogle` before deriving any operator lemma from scratch.
+**Substrate (verified 2026-06-29 — PhysLib source read + lean MCP `loogle`/`leansearch`):**
+- **Reuse (exists):** PhysLib `…/Operators/SpectralTheory/Basic.lean` — `resolvent (T : H →ₗ.[ℂ] H) (z) := (T - z • 1).inverse` (unbounded-operator resolvent on Mathlib `LinearPMap`) + `defectNumber`/numerical-range API; project `GrapheneNoiseFormula.lean` — `hawkingNoisePSD`, `johnsonNyquistPSD`, `snrPerBin` (the existing Keldysh + Landauer–Büttiker *noise* spectrum the conductance result ties into); project `QuantumNetwork/NumericalBounds.lean` `expNeg_enclosure` (rational enclosure).
+- **Absent → build (confirmed):** NEGF Green's functions + Landauer *conductance* — 0 hits in Mathlib, PhysLib, and the project (the project's only Landauer–Büttiker content is the noise PSD above, **not** the Green's-function conductance).
+- **New content:** `G^{R/A}`, spectral function `A`, transmission `T(E)=Tr[Γ G^R Γ G^A]`, conductance — on PhysLib `resolvent` + Mathlib finite-dim `Matrix`.
+- **Correction (was a planning miss):** `DKMBootstrap/` is **not** a brick — it is an SK-EFT SDP transport *bootstrap* (`IsDKMSpectralFunction` predicate, `horizon_transport_uniqueness_graphene_witness_one_half`, `sharpened_no_go_super_factorial`) with **no** NEGF broadening/Green's-function machinery; at most a thematic SK-EFT transport cross-bridge, not load-bearing here.
 
 **Standing invariants:** kernel-pure `{propext, Classical.choice, Quot.sound}`; no new project-local axioms (#15); no `native_decide`; no `maxHeartbeats` in proof bodies (#10); preemptive-strengthening checklist before each statement; decompose-before-asserting-walls; never push. **Two-layer honesty:** the transport *formulas* are Lean-verified; the device/material identification stays literature-cited in the module header. Wave sizing ≈ one `/goal` (≤ ~5M tokens) — a chunking heuristic, not a time estimate (PM/time estimates remain banned). Frame purely as physics (dual publication + flagship scope).
 
@@ -13,7 +17,7 @@
 ## Wave 1 — NEGF Green's-function substrate
 - **Goal:** `G^{R/A}(E) = (E − H ± iη)⁻¹`; self-energy `Σ`; spectral function `A = i(G^R − G^A)`; sum rule `∫ A dE/2π = 1`. **Verdict: reachable** — resolvent on existing operator substrate.
 - **Why:** the load-bearing object every transport quantity is built from.
-- **Bricks:** Mathlib resolvent; `DKMBootstrap/` broadening matrix; `InnerProductSpace.LinearPMap`.
+- **Bricks:** PhysLib `SpectralTheory.Basic.resolvent` (on `H →ₗ.[ℂ] H`); Mathlib `LinearPMap`; finite-dim `Matrix`. (Broadening matrices `Γ` are defined here — new, not from DKMBootstrap.)
 - **Gate:** `negf_spectral_sum_rule` (or equivalent) kernel-pure; `A ⪰ 0`.
 
 ## Wave 2 — Landauer–Büttiker conductance

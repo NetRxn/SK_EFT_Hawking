@@ -2,7 +2,10 @@
 
 **Status: PLANNED (authorized 2026-06-29).** Non-Hermitian Bloch Hamiltonians, exceptional-point (EP) degeneracies via Jordan-block coalescence, and PT-symmetry / real-spectrum criteria. Clean physics whitespace. Distinct phase in the `6C*` materials series.
 
-> **⚠️ CHECK PhysLib FIRST.** PhysLib `Mathematics/SchurTriangulation.lean` (`A = U·T·U†` over ℂ) is the home for defective/non-normal analysis. Project `CGLTransform`/`HigherOrderSK`/`SecondOrderSK` supply the dissipative SK-EFT algebra. Mathlib lacks matrix Jordan Normal Form (`loogle JordanNormalForm` → empty) — **build the finite-dim EP/Jordan primitive** (a fast finite-dim construction; Isabelle AFP's JNF is a reference cross-check). "Absent from Mathlib" is *not* a park reason.
+**Substrate (verified 2026-06-29 — PhysLib source read + lean MCP `loogle`):**
+- **Reuse (exists):** PhysLib `Mathematics/SchurTriangulation.lean` — `Matrix.schur_triangulation` (`A = U·T·star U`), `schurTriangulationUnitary`, `schurTriangulation`, `IsUpperTriangular`, `UpperTriangular` (over `RCLike` + `IsAlgClosed`, i.e. ℂ); Mathlib `Module.End.eigenspace` + `LinearAlgebra.Eigenspace.Triangularizable` (Schur's own import); PhysLib `…/SpectralTheory/Symmetric.lean` `numericalRange` (Toeplitz–Hausdorff); project `CGLTransform`/`HigherOrderSK`/`SecondOrderSK` (dissipative SK-EFT algebra); project `QuantumNetwork/NumericalBounds.expNeg_enclosure`.
+- **Absent → build (confirmed `loogle`):** `JordanNormalForm` returns **No results found** in Mathlib; `exceptionalPoint`/`ExceptionalPoint` 0 in PhysLib + project.
+- **New content:** the non-Hermitian Bloch Hamiltonian + the **EP = defective-eigenvalue** criterion — algebraic mult > geometric mult, read off `Module.End.eigenspace` dimensions over the Schur form. **Full JNF is NOT required** — only the eigenspace-dimension comparison (Isabelle AFP's JNF is a reference cross-check only). Plus PT-symmetry + EP order.
 
 **Standing invariants:** kernel-pure `{propext, Classical.choice, Quot.sound}`; no new project-local axioms (#15); no `native_decide`; no `maxHeartbeats` (#10); preemptive-strengthening checklist; never push. Wave sizing ≈ one `/goal` (≤ ~5M tokens). Frame purely as physics.
 
@@ -11,9 +14,9 @@
 ---
 
 ## Wave 1 — non-Hermitian Bloch + exceptional point
-- **Goal:** a non-Hermitian 2-band Bloch Hamiltonian on Schur; the **exceptional point** = simultaneous eigenvalue + eigenvector coalescence (a defective Jordan block); the finite-dim EP/JNF primitive. **Verdict: reachable** — finite-dim linear algebra on Schur.
-- **Why:** EPs are the defining feature of non-Hermitian band physics; the JNF primitive is reusable infrastructure.
-- **Bricks:** PhysLib `SchurTriangulation`; project dissipative algebra.
+- **Goal:** a non-Hermitian 2-band Bloch Hamiltonian on Schur; the **exceptional point** = simultaneous eigenvalue + eigenvector coalescence (a defective block); the EP/defectiveness primitive (eigenspace-dimension comparison — **not** full JNF). **Verdict: reachable** — finite-dim linear algebra on Schur.
+- **Why:** EPs are the defining feature of non-Hermitian band physics; the defectiveness primitive is reusable infrastructure.
+- **Bricks:** PhysLib `Matrix.schur_triangulation`; Mathlib `Module.End.eigenspace`; project dissipative algebra.
 - **Gate:** `exceptional_point_defective` (algebraic mult > geometric mult at the EP) kernel-pure.
 
 ## Wave 2 — PT-symmetry + EP order

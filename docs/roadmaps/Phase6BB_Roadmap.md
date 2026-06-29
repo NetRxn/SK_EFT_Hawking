@@ -2,7 +2,10 @@
 
 **Status: PLANNED (authorized 2026-06-29).** The verified foundations of density-functional theory: self-adjointness of the molecular many-body Coulomb Hamiltonian (Kato–Rellich), the **Hohenberg–Kohn I** density-determines-potential uniqueness theorem, **Hohenberg–Kohn II** variational principle, and the Levy–Lieb constrained-search functional. The program's strongest *public* computational-chemistry flagship (clean whitespace — no formalized DFT foundations in any prover). Distinct phase in the `6B*` chemistry series. PhysLib's Schmüdgen-grade spectral substrate makes this **MODERATE**, not "years-scale."
 
-> **⚠️ CHECK PhysLib FIRST.** PhysLib `QuantumMechanics/DDimensions/Operators/SpectralTheory/*` + `Unbounded.lean` ship spectrum decomposition, resolvent identities, `U†† = closure`, momentum/position **proven symmetric**, HO completeness via Plancherel — the self-adjointness foundation largely exists. New work = the N-body Coulomb potential + HK uniqueness/variational. Verify by search before re-deriving.
+**Substrate (verified 2026-06-29 — PhysLib source read + lean MCP):**
+- **Reuse (exists):** PhysLib `…/Operators/Unbounded.lean` — `UnboundedOperator` (structure), `.adjoint` (`U†`), `.closure`, `.IsClosed`, `adjoint_dense_of_isClosable`, `closure_isClosed`; `…/SpectralTheory/Basic.lean` — `resolvent`, `defectNumber`/`deficiencySubspace`, `IsClosed.defectNumber_eq_zero_iff` (**self-adjointness via deficiency indices**); `…/SpectralTheory/Symmetric.lean` — `numericalRange`/`realNumericalRange`, `im_eq_zero_of_mem_numericalRange`. Mathlib `LinearPMap` (the `H →ₗ.[ℂ] H` type). Mathlib `Analysis.InnerProductSpace.Rayleigh` — `LinearMap.IsSymmetric.hasEigenvalue_iInf/iSup_of_finiteDimensional` (**extremal** eigenvalue = variational, for HK II). PhysLib `StatisticalMechanics/CanonicalEnsemble/TwoState.lean` — `twoState`, `twoState_partitionFunction_apply` (the finite-T Mermin bridge).
+- **Absent → build:** Kato–Rellich relative-boundedness for the molecular Coulomb potential (no ready molecular self-adjointness in Mathlib); HK uniqueness/variational; Levy–Lieb. (Mathlib `Rayleigh` gives only the *extremal* eigenvalue — fine for HK II.)
+- **New content:** N-body Coulomb potential + Kato–Rellich ⇒ essential self-adjointness on PhysLib's deficiency machinery; HK I; HK II (via `Rayleigh` extremal); Levy–Lieb.
 
 **Standing invariants:** kernel-pure `{propext, Classical.choice, Quot.sound}`; **no new project-local axioms (#15)** — HK I is a constructive reductio, not an axiom; no `native_decide`; no `maxHeartbeats` (#10); preemptive-strengthening checklist; never push. Wave sizing ≈ one `/goal` (≤ ~5M tokens). Frame purely as physics (dual publication — quantum-chemistry venues — + flagship scope).
 
@@ -31,7 +34,7 @@
 ## Wave 4 — Levy–Lieb constrained search
 - **Goal:** the constructive `F_LL[n] = inf_{ψ→n} ⟨ψ| T + V_ee |ψ⟩`; agreement with `F[n]` on v-representable densities; optional finite-T **Mermin** bridge via PhysLib `CanonicalEnsemble`. **Verdict: reachable.**
 - **Why:** turns HK II into a constructive object; the finite-T bridge connects to statistical-mechanics substrate.
-- **Bricks:** W3; PhysLib `CanonicalEnsemble`/`thermalExcitedPop`.
+- **Bricks:** W3; PhysLib `CanonicalEnsemble.twoState` + `twoState_partitionFunction_apply` (the project's `thermalExcitedPop` is *derived* from this in 6AQ — reuse that derivation pattern).
 - **Gate:** `levyLieb_functional` + `levyLieb_eq_HK_on_vrep`, kernel-pure.
 
 ## Sequencing

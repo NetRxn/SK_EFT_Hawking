@@ -4,6 +4,11 @@
 
 > **⚠️ NOVELTY REFUTED.** QBlue (Rocq, arXiv:2509.18583, 2025) already machine-checked Trotter + Jordan–Wigner. Any result here is **"first in Lean" only, NOT first in any proof assistant** — state this in every module header and claim **no** first-in-prover headline. This phase exists only as a *feature consumed by the verified-compilation arc (the D8 family)* when a downstream resource estimate needs it. Schedule **only** if a D8 consumer pulls it.
 
+**Substrate (verified 2026-06-29 — PhysLib source read + lean MCP):**
+- **Reuse (exists):** PhysLib `QFT/PerturbationTheory/CreateAnnihilate.lean` + `FieldSpecification/{CrAnFieldOp,NormalOrder}.lean` + `FieldOpFreeAlgebra/` (a real create–annihilate + normal-ordering field-operator algebra) and `PhyslibAlpha/QuantumMechanics/QuantumHarmonicOscillator.lean` (ladder operators); project `PauliMatrices.lean`; project `MatrixBCH.lean` — `BCHOrder2Bound`, `norm_exp_smul_le_exp_norm`, `norm_exp_smul_sub_one_le`, `exp_neg_commutator_first_order_diff` (the non-commuting Trotter substrate; Mathlib `Matrix.exp` is commuting-case only).
+- **Absent → build:** `JordanWigner` — 0 in PhysLib and the project (first in Lean; QBlue did it in Rocq).
+- **New content:** the JW string map (PhysLib create–annihilate → project Pauli strings); Trotter–Suzuki bound via `MatrixBCH.norm_exp_*`.
+
 **Standing invariants:** kernel-pure `{propext, Classical.choice, Quot.sound}`; no new project-local axioms (#15); no `native_decide`; no `maxHeartbeats` (#10); preemptive-strengthening checklist; never push. Wave sizing ≈ one `/goal` (≤ ~5M tokens).
 
 **Bundle target:** **D8** (existing — verified-compilation arc), *not* D10 — JW/Trotter resource content is a compilation-substrate feature. Absorb via `LATE_PHASE6_ABSORPTION_PROTOCOL` if scheduled.

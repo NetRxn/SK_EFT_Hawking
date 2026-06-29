@@ -2,7 +2,12 @@
 
 **Status: PLANNED (authorized 2026-06-29).** A certified quasi-static effective-medium theory via the **algebraic Maxwell–Garnett** mixing formula, plus certified effective-parameter bounds. Clean whitespace (no two-scale / Maxwell–Garnett in any prover). Distinct phase in the `6C*` materials series.
 
-> **⚠️ SUBSTRATE-STALL GUARDRAIL — algebraic path ONLY.** Do **not** attempt full two-scale / periodic-homogenization convergence: PhysLib `Optics/` is an empty placeholder, `OpticalMedium` is undefined, and Mathlib has Sobolev *inequalities* (`FunctionalSpaces.SobolevInequality`) but **no** periodic-Sobolev / two-scale convergence. Full homogenization is a documented substrate-stall — gated on new substrate, out of scope here. Use the algebraic quasi-static (Clausius–Mossotti / Maxwell–Garnett) derivation, which needs only finite-dim algebra + `expNeg_enclosure`.
+**Substrate (verified 2026-06-29 — PhysLib source read + lean MCP):**
+- **Reuse (exists):** Mathlib field arithmetic; project `QuantumNetwork/NumericalBounds.expNeg_enclosure` (rational two-sided enclosure); Mathlib `FunctionalSpaces.SobolevInequality` (GNS *inequalities* only).
+- **Absent → build:** `MaxwellGarnett` 0 in PhysLib + project; two-scale / periodic homogenization absent — Mathlib has Sobolev *inequalities*, not two-scale convergence, and PhysLib `Optics/Basic.lean` is an **explicit placeholder** (its own docstring reads *"This directory is currently a place holder"*; only `Optics/Polarization` exists, unrelated; no `OpticalMedium` / effective-medium type).
+- **New content:** the algebraic quasi-static Clausius–Mossotti / Maxwell–Garnett `ε_eff`; Hashin–Shtrikman two-sided enclosure; elastic analog.
+
+> **⚠️ GUARDRAIL — algebraic path ONLY.** Do **not** attempt full two-scale / periodic-homogenization convergence (the documented substrate-stall above). Use only the algebraic derivation — finite-dim algebra + `expNeg_enclosure`.
 
 **Standing invariants:** kernel-pure `{propext, Classical.choice, Quot.sound}`; no new project-local axioms (#15); no `native_decide`; no `maxHeartbeats` (#10); preemptive-strengthening checklist; never push. **Two-layer honesty:** the mixing *formula* + bounds are Lean-verified; the physical-composite identification (dilute limit, sphere geometry) stays literature-cited in the module header. Wave sizing ≈ one `/goal` (≤ ~5M tokens). Frame purely as physics.
 
