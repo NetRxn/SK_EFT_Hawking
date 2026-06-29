@@ -9,6 +9,14 @@
 - **Absent → build:** `JordanWigner` — 0 in PhysLib and the project (first in Lean; QBlue did it in Rocq).
 - **New content:** the JW string map (PhysLib create–annihilate → project Pauli strings); Trotter–Suzuki bound via `MatrixBCH.norm_exp_*`.
 
+> **AGENT INSTRUCTIONS — READ BEFORE ANY WORK.** *(Compaction / sub-agent backstop: if `CLAUDE.md` or the mandatory references were missed in a context-recovery or a sub-agent handoff, this is the floor — do not start proving without it.)*
+>
+> 1. **Bootstrap reads, in order:** workspace `../../CLAUDE.md` + `SK_EFT_Hawking/CLAUDE.md` → `docs/WAVE_EXECUTION_PIPELINE.md` (the **14-stage law** — no skipping/reordering; each stage gates the next) → `SK_EFT_Hawking_Inventory_Index.md`. Paper-shaped output also reads `docs/PAPER_STRATEGY.md` + `docs/BUNDLE_LIFT_PROCEDURE.md` + `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` (D8 absorption).
+> 2. **Read this roadmap end-to-end** before claiming a wave. The **Substrate** block and each wave's **Bricks** name the *exact* PhysLib/project declarations (verified 2026-06-29) — read those sources **directly**; never delegate depth-reading of substrate or `Lit-Search/Phase-*` files to a sub-agent.
+> 3. **Dev loop is MCP-first** (`lean-lsp-mcp`): `lean_file_outline` → statement + `sorry` → `lean_goal` → `lean_multi_attempt` (4–6 tactics) → write winner → repeat → `lake build` to finalize. Not write→`lake build`→parse-error.
+> 4. **Pipeline disciplines (hard gates):** (a) **Stage 1 — bundle assignment mandatory (Invariant #14):** target is the **existing D8** (verified-compilation arc), **not** D10 — absorb via `LATE_PHASE6_ABSORPTION_PROTOCOL`. (b) **Stage 3 — preemptive-strengthening checklist before EVERY theorem** (drop-conjunct P2 · `norm_num` numerical content · cross-module bridge P6 · trivial-discharge P3/P4/P5 · defining-the-conclusion) + ruthless post-wave audit. (c) **Kernel-purity** `{propext, Classical.choice, Quot.sound}`, zero `sorry`/`native_decide` regression (`lean_verify`); **no new project-local `axiom` without explicit user sign-off (Invariant #15)**. (d) **No `set_option maxHeartbeats` in a proof body (Invariant #10)** — decompose into `have` sub-lemmas.
+> 5. **This phase:** **DEPRIORITIZED — do not schedule standalone.** Novelty is **refuted** (QBlue, Rocq, arXiv:2509.18583) → first-in-Lean only; claim **no** first-in-prover headline; state QBlue prior art in every module header. Schedule **only** on a D8-consumer pull.
+
 **Standing invariants:** kernel-pure `{propext, Classical.choice, Quot.sound}`; no new project-local axioms (#15); no `native_decide`; no `maxHeartbeats` (#10); preemptive-strengthening checklist; never push. Wave sizing ≈ one `/goal` (≤ ~5M tokens).
 
 **Bundle target:** **D8** (existing — verified-compilation arc), *not* D10 — JW/Trotter resource content is a compilation-substrate feature. Absorb via `LATE_PHASE6_ABSORPTION_PROTOCOL` if scheduled.
