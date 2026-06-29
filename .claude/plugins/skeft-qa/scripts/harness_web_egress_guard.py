@@ -38,6 +38,10 @@ _WHITELIST = (
     "leanprover-community.github.io", "leanprover.github.io", "oeis.org", "pdg.lbl.gov",
     "en.wikipedia.org", "ncatlab.org", "encyclopediaofmath.org",
     "mathoverflow.net", "math.stackexchange.com",
+    # Project tooling/infrastructure (NOT scholarly primaries): the Aristotle theorem
+    # prover's own dashboard/API docs. User-authorized 2026-06-29 (we submit to Aristotle
+    # as part of the Stage-4 Lean pipeline; its docs are operational reference).
+    "aristotle.harmonic.fun", "harmonic.fun",
 )
 
 _HEADER = re.compile(r"^#\s*-+\s*(.+?)\s*-+\s*$")
