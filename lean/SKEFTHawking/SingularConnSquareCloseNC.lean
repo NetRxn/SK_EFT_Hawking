@@ -690,6 +690,29 @@ theorem connecting_square_close_cocycle_fund (K' : Set ↑X) {k n : ℕ} (a : Si
   connecting_square_close_cocycle K' a ha (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ Kc)
     (cap_fundCycleW_mem hW z₀ hz₀ Kc a) chainL pd hident
 
+/-- **Homology-level connecting-square closer (Approach D1).** Over ℤ/2, two cycles whose homology
+classes agree sum to a boundary (`[a] = [b] ⟺ [a + b] = 0`, and `a + a = 0`). This replaces the
+on-the-nose chain closer `connecting_square_close` with a *class-level* one: the remaining obligation is
+the homology-class square `[seam] = [pd]`, where the subdivision / coboundary slack terms are boundaries
+and hence vanish. (Approach-D scaffold reached by Aristotle run 946db1c6, verify-then-graft 2026-06-29.) -/
+theorem mem_boundaries_of_mk_eq (K : Set ↑X) {n : ℕ}
+    (chainL pd : SingularChain (sub K) (n + 1))
+    (hLcyc : chainBoundary (sub K) n chainL = 0)
+    (hpdcyc : chainBoundary (sub K) n pd = 0)
+    (hmk : Homology.mk (sub K) (n + 1) ⟨chainL, hLcyc⟩
+         = Homology.mk (sub K) (n + 1) ⟨pd, hpdcyc⟩) :
+    chainL + pd ∈ boundaries (sub K) (n + 1) := by
+  have hsumcyc : chainBoundary (sub K) n (chainL + pd) = 0 := by
+    rw [map_add, hLcyc, hpdcyc, add_zero]
+  have hz : Homology.mk (sub K) (n + 1) ⟨chainL + pd, hsumcyc⟩ = 0 := by
+    rw [show (⟨chainL + pd, hsumcyc⟩ : cycles (sub K) (n + 1))
+          = ⟨chainL, hLcyc⟩ + ⟨pd, hpdcyc⟩ from rfl,
+        SingularCapHomology.Homology.mk_add, hmk,
+        ← SingularCapHomology.Homology.mk_add, ZModModule.add_self]
+    rfl
+  rw [SingularCapHomology.Homology.mk_eq_zero] at hz
+  simpa using Submodule.mem_comap.mp hz
+
 /-- **Cap analog of `pair_fund_eq_pair_z0`** (the shared-z₀ reduction). For a COCYCLE `c` (`hc`) that
 vanishes on `C(A)` (`hcv` — e.g. `c ∈ relCochains A`, via `cap_relCochains_chainIncl_eq_zero`), capping a
 `fund` that is rel-`A`-homologous to `z₀` (`fund + z₀ = ∂η + a`, `a ∈ subspaceChains A` — from
@@ -1523,5 +1546,25 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)) hsub
   -- REMAINING: assemble (hpdg W-leg = zA+zB+∂η; hfc funds rel-homologous; heng χ = cap g_rep w'; hsplit ∂fund split)
   -- via relativeDualityK_cycle_compat_relB (transport over hfc) + seam(zB)/pd(σR) ~ cap g_rep w' + the ℤ/2 cancellation.
-  sorry
+  -- APPROACH D (homology-level closer; Aristotle 946db1c6 scaffold, grafted 2026-06-29). Instead of the
+  -- on-the-nose chain closer (residual false modulo a non-zero Sdʲ slack), close the membership
+  -- `seam + pd ∈ boundaries (sub (U∩V))` at HOMOLOGY-CLASS level via `mem_boundaries_of_mk_eq`: both
+  -- `seam` and `pd` are cycles, and the remaining obligation is the class square `[seam] = [pd]`.
+  refine mem_boundaries_of_mk_eq (U ∩ V) _ _ ?cycSeam ?cycPd ?hmk
+  case cycSeam =>
+    exact SingularFunctoriality.mapChain_mem_cycles _
+      (SingularFunctoriality.mapChain_mem_cycles _
+        (SingularPairLES.boundaryExtract_mem_cycles _ (p + 1) ⟨zB, hzBmem⟩))
+  case cycPd =>
+    refine SingularLocalDualityK.pullbackDualityₗ_mem_cycles _ _ _ _ ?_ σR_rep
+    have hbd := SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV)
+      (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 2 + p + 1) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+      (SingularCSCMayerVietorisConnecting.infCompact U V
+        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
+    exact hbd
+  case hmk =>
+    -- The class-level Poincaré-duality / Mayer–Vietoris-connecting square `[seam] = [pd]` (Approach D2).
+    sorry
 end SKEFTHawking.SingularConnSquareCloseNC
