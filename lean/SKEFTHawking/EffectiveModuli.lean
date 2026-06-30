@@ -57,6 +57,15 @@ lemma reuss_le_voigt (M1 M2 f : ℝ) (h1 : 0 < M1) (h2 : 0 < M2) (hf0 : 0 ≤ f)
   unfold voigtModulus
   nlinarith [mul_nonneg (mul_nonneg hf0 (by linarith : (0:ℝ) ≤ 1 - f)) (sq_nonneg (M1 - M2))]
 
+/-- **The exact AM–HM gap:** `M_Voigt − M_Reuss = f(1−f)(M₁−M₂)² / ((1−f)M₂ + f M₁)`. This is the
+identity underlying `reuss_le_voigt` (the right side is manifestly `≥ 0`). -/
+lemma voigt_sub_reuss_eq (M1 M2 f : ℝ) (h1 : 0 < M1) (h2 : 0 < M2) (hf0 : 0 ≤ f) (hf1 : f ≤ 1) :
+    voigtModulus M1 M2 f - reussModulus M1 M2 f
+      = f * (1 - f) * (M1 - M2) ^ 2 / ((1 - f) * M2 + f * M1) := by
+  rw [voigtModulus, reussModulus]
+  field_simp [ne_of_gt (reuss_denom_pos M1 M2 f h1 h2 hf0 hf1)]
+  ring
+
 /-- The Reuss average is at least the lower constituent `M₁`. -/
 lemma reuss_ge_host (M1 M2 f : ℝ) (h1 : 0 < M1) (h2 : 0 < M2) (ho : M1 ≤ M2) (hf0 : 0 ≤ f)
     (hf1 : f ≤ 1) : M1 ≤ reussModulus M1 M2 f := by
