@@ -1192,4 +1192,31 @@ def gatherLM {N : ℕ} (i : Fin N) : Space 3 →ₗ[ℝ] Space (3 * N) where
     · rfl
     · simp
 
+@[simp] lemma gatherLM_apply {N : ℕ} (i : Fin N) (y : Space 3) (k : Fin (3 * N)) :
+    (gatherLM i y) k
+      = if k.val / 3 = i.val then y.val ⟨k.val % 3, Nat.mod_lt _ (by norm_num)⟩ else 0 := rfl
+
+/-- **`gatherLM` is norm-preserving** (an isometry onto electron `i`'s coordinate block): each of `y`'s
+three coordinates lands in exactly one slot of `Space (3N)` and the rest are zero, so
+`‖gatherLM i y‖ = ‖y‖`. The sum reindexes via `electronCoordEquiv`. This gives `AntilipschitzWith 1` for the
+fiber injection — the hypothesis `SchwartzMap.compCLMOfAntilipschitz` needs. -/
+lemma norm_gatherLM {N : ℕ} (i : Fin N) (y : Space 3) : ‖gatherLM i y‖ = ‖y‖ := by
+  rw [Space.norm_eq, Space.norm_eq]
+  congr 1
+  rw [← Fintype.sum_subtype_add_sum_subtype (fun k => electronCoord i k)
+    (fun k => ((gatherLM i y) k) ^ 2)]
+  have hblock : ∑ k : {k // electronCoord i k}, ((gatherLM i y) k.1) ^ 2 = ∑ j : Fin 3, (y j) ^ 2 := by
+    rw [← Fintype.sum_equiv (electronCoordEquiv i)
+      (fun k : {k // electronCoord i k} => ((gatherLM i y) k.1) ^ 2) (fun j => (y j) ^ 2)]
+    intro k
+    have hk : k.1.val / 3 = i.val := k.2
+    simp only [gatherLM_apply, hk, if_true]
+    rfl
+  have hrest : ∑ k : {k // ¬ electronCoord i k}, ((gatherLM i y) k.1) ^ 2 = 0 := by
+    refine Finset.sum_eq_zero fun k _ => ?_
+    have hk : ¬ k.1.val / 3 = i.val := k.2
+    simp only [gatherLM_apply, hk, if_false]
+    ring
+  rw [hblock, hrest, add_zero]
+
 end SKEFTHawking.DFT
