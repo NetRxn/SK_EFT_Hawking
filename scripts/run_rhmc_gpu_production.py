@@ -53,12 +53,18 @@ def atomic_savez(path, **data):
     os.replace(tmp + '.npz', path)
 
 
-def run_coupling(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, device, seed):
-    """Run/extend one coupling's batched-replica mixed chain; save npz. Returns summary."""
+def run_coupling(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, device, seed,
+                 solver='refined'):
+    """Run/extend one coupling's batched-replica mixed chain; save npz. Returns summary.
+
+    solver='refined' offloads the FP64-exact accept/reject to FP32-inner refinement on
+    `device` (≈the dominant cost on a device that can't run FP64, e.g. MPS); 'mixed'
+    keeps the accept/reject as a pure-FP64 CPU solve. Both are FP64-exact Metropolis."""
     V = L ** 4
     cpu = torch.device('cpu')
     fwd_c, back_c = st.neighbor_tables(L, cpu)
     fwd_d, back_d = st.neighbor_tables(L, device)
+    trajectory = st.rhmc_trajectory_refined if solver == 'refined' else st.rhmc_trajectory_mixed
 
     # resume
     hist = {k: [] for k in ('h_sq', 'dH', 'tet', 'trq')}
@@ -89,8 +95,8 @@ def run_coupling(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, device,
     target = n_meas - n_done
     t0 = time.time()
     for t in range(therm_left + max(target, 0)):
-        h, dH, acc = st.rhmc_trajectory_mixed(h, g, msq, coeffs, fwd_c, back_c, fwd_d, back_d,
-                                              L, eps, n_md, device, gen_dev, gen_cpu)
+        h, dH, acc = trajectory(h, g, msq, coeffs, fwd_c, back_c, fwd_d, back_d,
+                                L, eps, n_md, device, gen_dev, gen_cpu)
         nacc += int(acc.sum()); ntot += acc.numel()
         if t >= therm_left:
             h_sq = float((h * h).mean())
@@ -137,6 +143,9 @@ def main():
     ap.add_argument('--seed', type=int, default=2026)
     ap.add_argument('--outdir', type=str, default=None)
     ap.add_argument('--device', type=str, default='mps', choices=['mps', 'cpu'])
+    ap.add_argument('--solver', type=str, default='refined', choices=['refined', 'mixed'],
+                    help='refined = FP32-inner/FP64-residual accept/reject on device (fast); '
+                         'mixed = pure-FP64 CPU accept/reject (slower fallback). Both FP64-exact.')
     ap.add_argument('--couplings-only', type=float, nargs='*', help='run only these g values')
     args = ap.parse_args()
 
@@ -146,8 +155,8 @@ def main():
     os.makedirs(outdir, exist_ok=True)
     gs = args.couplings_only if args.couplings_only else coupling_grid(args.n_couplings, args.g_lo, args.g_hi)
 
-    print(f"GPU production: L={L} m={args.mass} device={device.type} R={args.replicas} "
-          f"n_md={args.n_md} eps={args.eps} n_poles={args.n_poles}  "
+    print(f"GPU production: L={L} m={args.mass} device={device.type} solver={args.solver} "
+          f"R={args.replicas} n_md={args.n_md} eps={args.eps} n_poles={args.n_poles}  "
           f"{len(gs)} couplings × {args.n_meas} traj × {args.replicas} replicas → {outdir}", flush=True)
     for i, g in enumerate(gs):
         g = float(g)
@@ -155,7 +164,7 @@ def main():
         coeffs, lam = build_coeffs(L, g, msq, args.n_poles, args.seed + i)
         print(f"\n[{i+1}/{len(gs)}] g={g:.3f}  range[{msq:.4g},{lam+msq:.1f}] κ={(lam+msq)/msq:.0f}", flush=True)
         s = run_coupling(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
-                         args.n_meas, args.n_therm, device, args.seed + i)
+                         args.n_meas, args.n_therm, device, args.seed + i, solver=args.solver)
         print(f"  → done g={g:.3f}: acc={s['acc']:.2f} <tet>={s['tet']:.4f} "
               f"n={s['n']} {s['s_per_traj']*1000:.0f} ms/traj", flush=True)
     print(f"\nComplete → {outdir}  (monitor: rhmc_monitor.py {outdir} --watch 300)", flush=True)

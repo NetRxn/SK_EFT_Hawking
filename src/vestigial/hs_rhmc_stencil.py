@@ -137,6 +137,108 @@ def multishift_cg(b, blocks, fwd, back, shifts, tol=1e-8, max_iter=2000):
     return x
 
 
+def _cg_shifted(rhs, blocks_k, fwd, back, sigma, tol=1e-8, max_iter=4000):
+    """Batched CG for (A†A + σ) x = rhs with a PER-SHIFT right-hand side.
+
+    Generalizes `multishift_cg`: there the K systems share one source b (broadcast);
+    here each system k carries its own `rhs[..., k, :, :]` (the iterative-refinement
+    correction step). Same per-iteration cost — one wide batched matvec over the
+    K axis — with per-(config,shift) convergence masking.
+
+    rhs:      (*batch, K, V, 8)   — distinct source per shift
+    blocks_k: (*batch, 1, V, 4, 8, 8)  from `blocks.unsqueeze(nb)` (broadcast over K)
+    sigma:    (*batch, K, 1, 1)   — shift σ_k ≥ 0
+    Returns x: (*batch, K, V, 8).
+    """
+    x = torch.zeros_like(rhs)
+    r = rhs.clone()
+    p = rhs.clone()
+    rs = (r * r).sum(dim=(-2, -1))                                  # (*B, K)
+    tol_sq = tol * tol * rs.clamp_min(1e-300)
+    converged = rs <= tol_sq
+
+    for _ in range(max_iter):
+        if bool(converged.all()):
+            break
+        Ap = apply_AtA(p, blocks_k, fwd, back) + sigma * p
+        pAp = (p * Ap).sum(dim=(-2, -1))
+        alpha = torch.where(converged, torch.zeros_like(rs), rs / pAp)
+        x = x + alpha[..., None, None] * p
+        r = r - alpha[..., None, None] * Ap
+        rs_new = (r * r).sum(dim=(-2, -1))
+        beta = torch.where(converged, torch.zeros_like(rs), rs_new / rs)
+        p = r + beta[..., None, None] * p
+        rs = rs_new
+        converged = converged | (rs <= tol_sq)
+
+    return x
+
+
+def multishift_cg_refined(b64, h64, shifts, fwd64, back64, fwd_dev, back_dev, L, device,
+                          tol=1e-10, inner_tol=3e-4, max_outer=12, max_inner=4000):
+    """FP64-accurate multishift solve via FP32-inner / FP64-residual ITERATIVE REFINEMENT.
+
+    Solves (A†A + σ_k) x_k = b64 for all k to FP64 relative residual `tol`, doing the
+    heavy CG work in FP32 on `device` (GPU) and the residual + accumulation in FP64 on
+    b64.device (CPU). This is the standard mixed-precision lattice solver: each outer
+    pass shrinks the TRUE (FP64) residual by ~`inner_tol`, so ~3–4 passes reach FP64
+    accuracy while every CG iteration runs at FP32 speed.
+
+    The exact FP64 Metropolis test is preserved (x_k are FP64-accurate) at a fraction
+    of the cost of a pure-FP64 CG — the fix for the accept/reject bottleneck that the
+    Mac cannot accelerate (MPS is FP32-only).
+
+    b64: (*batch, V, 8) FP64 source;  h64: (*batch, V, 4, 4) FP64 config.
+    Returns x: FP64 (*batch, K, V, 8) on b64.device.
+    """
+    res_dev = b64.device
+    nb = b64.dim() - 2
+    Bshape = b64.shape[:nb]
+    V, S = b64.shape[-2], b64.shape[-1]
+
+    shifts64 = torch.as_tensor(shifts, dtype=torch.float64, device=res_dev)
+    K = shifts64.shape[-1]
+    if shifts64.dim() == 1:
+        shifts64 = shifts64.reshape((1,) * nb + (K,))
+    sigma64 = shifts64.expand(*Bshape, K).reshape(*Bshape, K, 1, 1)
+    sigma32 = sigma64.to(dtype=torch.float32, device=device)
+
+    blocks64 = hopping_blocks(h64, L, device=res_dev, dtype=torch.float64).unsqueeze(nb)
+    blocks32 = hopping_blocks(h64, L, device=device, dtype=torch.float32).unsqueeze(nb)
+
+    x = b64.new_zeros(*Bshape, K, V, S)                            # FP64 accumulator
+    bk64 = b64.unsqueeze(nb).expand(*Bshape, K, V, S)              # FP64 source per shift
+    bnorm = bk64.norm(dim=(-2, -1)).clamp_min(1e-300)             # (*B, K)
+
+    for _ in range(max_outer):
+        Ax = apply_AtA(x, blocks64, fwd64, back64) + sigma64 * x   # FP64 residual on CPU
+        r64 = bk64 - Ax
+        if bool((r64.norm(dim=(-2, -1)) <= tol * bnorm).all()):
+            break
+        r32 = r64.to(dtype=torch.float32).to(device=device)       # FP32 inner solve on device
+        d32 = _cg_shifted(r32, blocks32, fwd_dev, back_dev, sigma32, tol=inner_tol, max_iter=max_inner)
+        x = x + d32.to(device=res_dev).to(dtype=torch.float64)     # move off device BEFORE f64 cast (MPS)
+
+    return x
+
+
+def action_refined(h, phi, g, alpha_0, alphas, betas, fwd64, back64, fwd_dev, back_dev, L, device,
+                   tol=1e-10, inner_tol=3e-4, max_outer=12, max_inner=4000):
+    """`action` with the multishift solve done by the mixed-precision refined solver.
+
+    Identical value to `action` (to FP64 `tol`); the FP64 reductions are unchanged, only
+    ψ_k = (A†A+β_k)⁻¹φ is computed via FP32-inner/FP64-residual refinement on `device`."""
+    alphas = torch.as_tensor(alphas, dtype=h.dtype, device=h.device)
+    betas = torch.as_tensor(betas, dtype=h.dtype, device=h.device)
+    psi = multishift_cg_refined(phi, h, betas, fwd64, back64, fwd_dev, back_dev, L, device,
+                                tol=tol, inner_tol=inner_tol, max_outer=max_outer, max_inner=max_inner)
+    s_aux = (h * h).sum(dim=(-3, -2, -1)) / (4.0 * g)
+    phi_phi = (phi * phi).sum(dim=(-2, -1))
+    phi_psi = (phi.unsqueeze(-3) * psi).sum(dim=(-2, -1))
+    s_pf = float(alpha_0) * phi_phi + (alphas * phi_psi).sum(dim=-1)
+    return s_aux + s_pf
+
+
 def action(h, phi, g, alpha_0, alphas, betas, fwd, back, L, tol=1e-10, max_iter=5000):
     """RHMC h-action S = Σh²/(4g) + α₀ φ†φ + Σ_k α_k φ†ψ_k,  ψ_k=(A†A+β_k)⁻¹φ.
 
@@ -242,6 +344,71 @@ def heatbath(xi, blocks, fwd, back, coeffs, msq, tol=1e-10, max_iter=8000):
     psi = multishift_cg(xi, blocks, fwd, back, betas_hb, tol=tol, max_iter=max_iter)  # (*B,K,V,8)
     v = float(coeffs['a0_hb']) * xi + (alphas_hb[..., None, None] * psi).sum(dim=-3)   # r_{-3/4}ξ
     return apply_AtA(v, blocks, fwd, back) + msq * v                                    # (A†A+m²) v
+
+
+def heatbath_refined(xi, h64, coeffs, msq, fwd64, back64, fwd_dev, back_dev, L, device,
+                     tol=1e-10, inner_tol=3e-4, max_outer=12, max_inner=4000):
+    """`heatbath` with the (A†A+m²)^{-3/4} multishift solve done by the refined solver.
+
+    Same φ (to FP64 `tol`) as `heatbath`; the heavy CG runs FP32 on `device`. The final
+    (A†A+m²)·v matvec stays FP64 on xi.device — it is one matvec, not a solve."""
+    betas_hb = torch.as_tensor(coeffs['betas_hb'], dtype=torch.float64, device=xi.device) + msq
+    alphas_hb = torch.as_tensor(coeffs['alphas_hb'], dtype=torch.float64, device=xi.device)
+    psi = multishift_cg_refined(xi, h64, betas_hb, fwd64, back64, fwd_dev, back_dev, L, device,
+                                tol=tol, inner_tol=inner_tol, max_outer=max_outer, max_inner=max_inner)
+    v = float(coeffs['a0_hb']) * xi + (alphas_hb[..., None, None] * psi).sum(dim=-3)   # r_{-3/4}ξ
+    blocks64 = hopping_blocks(h64, L, device=xi.device, dtype=torch.float64)
+    return apply_AtA(v, blocks64, fwd64, back64) + msq * v                              # (A†A+m²) v
+
+
+def rhmc_trajectory_refined(h64, g, msq, coeffs, fwd64, back64, fwd_dev, back_dev, L,
+                            eps, n_md, device, gen_dev, gen_cpu,
+                            tol_md=1e-5, tol_acc=1e-10, inner_tol=3e-4,
+                            max_outer=12, max_inner=4000):
+    """Mixed-precision trajectory with the accept/reject solves ALSO offloaded to
+    `device` (FP32 inner + FP64 residual refinement) — FP64-EXACT Metropolis at GPU
+    speed. This removes the pure-FP64 CPU heatbath + Hamiltonians that dominate the
+    `rhmc_trajectory_mixed` cost on a device (MPS) that cannot run FP64.
+
+    RNG draw order (xi, pi, u) matches `rhmc_trajectory_mixed` exactly, so the two are
+    interchangeable. h64: FP64 (*batch, V, 4, 4) on CPU."""
+    Bshape = h64.shape[:-3]
+    V = L ** 4
+
+    xi = torch.randn(*Bshape, V, 8, dtype=torch.float64, generator=gen_cpu)
+    phi64 = heatbath_refined(xi, h64, coeffs, msq, fwd64, back64, fwd_dev, back_dev, L, device,
+                             tol=tol_acc, inner_tol=inner_tol, max_outer=max_outer, max_inner=max_inner)
+    pi64 = torch.randn(*Bshape, V, 4, 4, dtype=torch.float64, generator=gen_cpu)
+
+    a0 = float(coeffs['a0'])
+    al64 = torch.as_tensor(coeffs['alphas'], dtype=torch.float64)
+    be64 = torch.as_tensor(coeffs['betas'], dtype=torch.float64) + msq
+
+    def H(hh, pp):
+        kin = 0.5 * (pp * pp).sum(dim=(-3, -2, -1))
+        return kin + action_refined(hh, phi64, g, a0, al64, be64, fwd64, back64, fwd_dev, back_dev,
+                                     L, device, tol=tol_acc, inner_tol=inner_tol,
+                                     max_outer=max_outer, max_inner=max_inner)
+
+    H_old = H(h64, pi64)
+
+    # --- FP32 (device): MD proposal (unchanged) ---
+    h32 = h64.to(dtype=torch.float32, device=device)
+    pi32 = pi64.to(dtype=torch.float32, device=device)
+    phi32 = phi64.to(dtype=torch.float32, device=device)
+    al32 = al64.to(dtype=torch.float32, device=device)
+    be32 = be64.to(dtype=torch.float32, device=device)
+    h_new32, pi_new32 = integrate(h32, pi32, phi32, g, al32, be32, fwd_dev, back_dev, L,
+                                  eps, n_md, tol=tol_md, max_iter=max_inner)
+
+    h_new64 = h_new32.cpu().to(dtype=torch.float64)
+    pi_new64 = pi_new32.cpu().to(dtype=torch.float64)
+    dH = H(h_new64, pi_new64) - H_old
+
+    u = torch.rand(Bshape, dtype=torch.float64, generator=gen_cpu)
+    accept = u < torch.exp(torch.clamp(-dH, max=0.0))
+    h_out = torch.where(accept[..., None, None, None], h_new64, h64)
+    return h_out, dH, accept
 
 
 def rhmc_trajectory(h, g, msq, coeffs, fwd, back, L, eps, n_md, rng_gen,

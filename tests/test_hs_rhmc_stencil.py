@@ -257,6 +257,106 @@ def test_creutz_identity_unbiased_chain():
     assert abs(creutz - 1.0) < 0.05, (creutz, acc_rate)
 
 
+def test_cg_shifted_per_shift_distinct_rhs():
+    # The refinement primitive: each shift carries its OWN rhs (unlike multishift's
+    # shared b). Batched-shifted CG must solve (A†A+σ_k) x_k = rhs_k per k.
+    L, V = 2, 2 ** 4
+    rng = np.random.default_rng(20)
+    h = rng.standard_normal((V, 4, 4))
+    shifts = np.array([0.5, 1.0, 3.0])
+    rhs = rng.standard_normal((len(shifts), V, 8))            # DISTINCT per shift
+
+    A = _dense(h, L)
+    AtA = -A @ A
+    eye = np.eye(8 * V)
+    expected = np.stack([np.linalg.solve(AtA + s * eye, rhs[k].reshape(-1))
+                         for k, s in enumerate(shifts)])       # (K, 8V)
+
+    fwd, back = st.neighbor_tables(L, CPU)
+    blocks = st.hopping_blocks(torch.tensor(h), L, device=CPU, dtype=F64)
+    blocks_k = blocks.unsqueeze(0)                            # (1, V, 4, 8, 8) broadcast over K
+    sigma = torch.tensor(shifts).reshape(-1, 1, 1)            # (K, 1, 1)
+    x = st._cg_shifted(torch.tensor(rhs), blocks_k, fwd, back, sigma, tol=1e-10, max_iter=4000)
+
+    assert x.shape == (len(shifts), V, 8)
+    for k in range(len(shifts)):
+        assert np.allclose(x[k].reshape(-1).numpy(), expected[k], atol=1e-6)
+
+
+def test_multishift_cg_refined_matches_fp64_with_fp32_inner():
+    # Core certification: FP32 inner solves + FP64 residual refinement reproduce the
+    # pure-FP64 multishift solution to ~1e-8, including the ill-conditioned small shift
+    # (the one that drives the cost). device=CPU runs the inner solve in FP32 on CPU,
+    # exercising the precision mix without needing MPS.
+    L, V = 3, 3 ** 4
+    rng = np.random.default_rng(21)
+    h = rng.standard_normal((V, 4, 4))
+    b = rng.standard_normal((V, 8))
+    shifts = np.array([0.01, 0.05, 0.3, 1.0, 4.0, 20.0])      # small shift = ill-conditioned
+
+    h64 = torch.tensor(h)
+    b64 = torch.tensor(b)
+    fwd, back = st.neighbor_tables(L, CPU)
+    blocks = st.hopping_blocks(h64, L, device=CPU, dtype=F64)
+    x_fp64 = st.multishift_cg(b64, blocks, fwd, back, torch.tensor(shifts), tol=1e-12, max_iter=8000)
+
+    x_ref = st.multishift_cg_refined(b64, h64, torch.tensor(shifts), fwd, back, fwd, back, L, CPU,
+                                     tol=1e-10, inner_tol=3e-4, max_outer=20, max_inner=8000)
+
+    assert x_ref.dtype == torch.float64 and x_ref.shape == x_fp64.shape
+    assert torch.allclose(x_ref, x_fp64, atol=1e-8, rtol=1e-6), \
+        float((x_ref - x_fp64).abs().max())
+
+
+def test_refined_action_matches_fp64_action():
+    # Integration: action via the refined solver matches the pure-FP64 action to ~1e-7
+    # ⟹ the accept/reject ΔH is FP64-exact ⟹ no bias (the property the chain needs).
+    L, V, g = 3, 3 ** 4, 1.5
+    rng = np.random.default_rng(22)
+    h = torch.tensor(rng.standard_normal((V, 4, 4)))
+    phi = torch.tensor(rng.standard_normal((V, 8)))
+    msq = 0.01
+    fwd, back = st.neighbor_tables(L, CPU)
+    blocks = st.hopping_blocks(h, L, device=CPU, dtype=F64)
+    lam = float(st.estimate_lambda_max(blocks, fwd, back, V, n_iter=300, seed=0))
+    coeffs = st.make_rhmc_coeffs(1.3 * lam, msq, n_poles=14)
+    al = torch.as_tensor(coeffs['alphas'], dtype=F64)
+    be = torch.as_tensor(coeffs['betas'], dtype=F64) + msq
+    a0 = float(coeffs['a0'])
+
+    S_fp64 = float(st.action(h, phi, g, a0, al, be, fwd, back, L, tol=1e-12, max_iter=8000))
+    S_ref = float(st.action_refined(h, phi, g, a0, al, be, fwd, back, fwd, back, L, CPU,
+                                    tol=1e-10, inner_tol=3e-4, max_outer=20, max_inner=8000))
+
+    assert abs(S_ref - S_fp64) < 1e-6 * max(1.0, abs(S_fp64)), (S_ref, S_fp64)
+
+
+def test_refined_trajectory_matches_mixed_dH():
+    # Certification (unit-scale): offloading the accept/reject solves to FP32-inner
+    # refinement reproduces the pure-FP64 mixed trajectory's ΔH for identical RNG ⟹
+    # identical Metropolis decisions ⟹ no bias. Same draw order (xi, pi, u) in both.
+    L, V, B = 2, 2 ** 4, 3
+    rng = np.random.default_rng(23)
+    h0 = torch.tensor(rng.standard_normal((B, V, 4, 4)))
+    fwd, back = st.neighbor_tables(L, CPU)
+    lam = float(st.estimate_lambda_max(st.hopping_blocks(h0[0], L, device=CPU, dtype=F64),
+                                       fwd, back, V, n_iter=200, seed=0))
+    coeffs = st.make_rhmc_coeffs(1.3 * lam, 0.04, n_poles=12)
+    kw = dict(coeffs=coeffs, fwd64=fwd, back64=back, fwd_dev=fwd, back_dev=back, L=L,
+              eps=0.05, n_md=8, device=CPU)
+
+    g1 = torch.Generator().manual_seed(7)
+    _, dH_m, acc_m = st.rhmc_trajectory_mixed(h0.clone(), 1.5, 0.04, coeffs, fwd, back, fwd, back,
+                                              L, 0.05, 8, CPU, g1, g1)
+    g2 = torch.Generator().manual_seed(7)
+    h_r, dH_r, acc_r = st.rhmc_trajectory_refined(h0.clone(), 1.5, 0.04, gen_dev=g2, gen_cpu=g2,
+                                                  inner_tol=3e-4, max_outer=20, **kw)
+
+    assert h_r.dtype == torch.float64 and h_r.shape == (B, V, 4, 4)
+    assert torch.allclose(dH_m, dH_r, atol=1e-5, rtol=1e-4), (dH_m, dH_r)
+    assert torch.equal(acc_m, acc_r)
+
+
 def test_measure_observables_matches_numpy():
     # Batched measurement (tet_m2, trQ2 + m_h, Q instrumentation) vs the existing
     # numpy reference; per config.
