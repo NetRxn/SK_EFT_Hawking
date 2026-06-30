@@ -1480,4 +1480,24 @@ lemma lintegral_coulombSq_center_le {R : Space 3} {v : 𝓢(Space 3, ℂ)} {A B 
   have hI : 0 ≤ ∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2 := integral_nonneg fun y => sq_nonneg _
   nlinarith [Real.sq_sqrt hI, Real.sqrt_nonneg (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2), hb, hA, hB]
 
+/-- **Molecular L²-Fubini for `‖u‖²`** (the spectator analog of W3-53, no Coulomb factor): the molecular
+`L²` lower integral of `u` equals the iterated integral of the fibers' `L²` densities. (Round-trip through
+the split equiv via `molecularSplit_lintegral`.) Used to relate the spectator-integrated fiber `L²`/kinetic
+norms back to the molecular ones. -/
+lemma molecular_normSq_lintegral {N : ℕ} (i : Fin N) {u : Space (3 * N) → ℂ} (hu : Measurable u) :
+    ∫⁻ x, (ENNReal.ofReal (‖u x‖)) ^ 2 ∂(volume : MeasureTheory.Measure (Space (3 * N)))
+      = ∫⁻ z, ∫⁻ y, (ENNReal.ofReal (‖u ((molecularSplitEquiv i).symm (y, z))‖)) ^ 2
+          ∂(volume : MeasureTheory.Measure (Space 3))
+          ∂(volume : MeasureTheory.Measure ({k // ¬ electronCoord i k} → ℝ)) := by
+  have hG : Measurable (fun p : Space 3 × ({k // ¬ electronCoord i k} → ℝ) =>
+      (ENNReal.ofReal (‖u ((molecularSplitEquiv i).symm p)‖)) ^ 2) :=
+    (ENNReal.measurable_ofReal.comp
+      (hu.comp (molecularSplitEquiv i).symm.measurable).norm).pow_const 2
+  have hpt : (fun x => (ENNReal.ofReal (‖u x‖)) ^ 2)
+      = (fun x => (ENNReal.ofReal (‖u ((molecularSplitEquiv i).symm (molecularSplitMap i x))‖)) ^ 2) := by
+    funext x
+    rw [← coe_molecularSplitEquiv, MeasurableEquiv.symm_apply_apply]
+  rw [hpt]
+  exact molecularSplit_lintegral i _ hG
+
 end SKEFTHawking.DFT
