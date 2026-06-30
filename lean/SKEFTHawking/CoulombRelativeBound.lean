@@ -223,4 +223,21 @@ lemma norm_le_weighted_L2_sup (u : 𝓢(Space 3, ℂ))
               Real.sqrt (∫ ξ : Space 3, ((1 + ‖ξ‖ ^ 2) * ‖(𝓕 u) ξ‖) ^ 2) :=
   (norm_le_integral_norm_fourier u x).trans (integral_norm_le_weighted_L2 hb)
 
+/-- **Discharge of the sup-norm hypothesis `hb`:** the weighted Fourier transform `(1+‖ξ‖²)·‖û‖` is in
+`L²(ℝ³)`, because `(1+‖ξ‖²)·û` is a Schwartz function (`smulLeftCLM` by the temperate-growth weight
+`1+‖ξ‖²`) and every Schwartz function is in `L²` (`SchwartzMap.memLp`). This makes `norm_le_weighted_L2_sup`
+unconditional for any Schwartz `u`. -/
+lemma memLp_weighted_fourier (u : 𝓢(Space 3, ℂ)) :
+    MemLp (fun ξ : Space 3 => ((1 + ‖ξ‖ ^ 2) * ‖(𝓕 u) ξ‖ : ℝ)) 2 volume := by
+  have hgr : Function.HasTemperateGrowth (fun ξ : Space 3 => (1 + ‖ξ‖ ^ 2 : ℝ)) :=
+    (Function.HasTemperateGrowth.const (1 : ℝ)).add (Function.hasTemperateGrowth_norm_sq (H := Space 3))
+  have hg : Function.HasTemperateGrowth (fun ξ : Space 3 => ((1 + ‖ξ‖ ^ 2 : ℝ) : ℂ)) :=
+    Complex.ofRealCLM.hasTemperateGrowth.comp hgr
+  have hmem : MemLp (fun ξ : Space 3 =>
+      ‖(SchwartzMap.smulLeftCLM ℂ (fun ξ : Space 3 => ((1 + ‖ξ‖ ^ 2 : ℝ) : ℂ)) (𝓕 u)) ξ‖) 2 volume :=
+    (SchwartzMap.memLp _ 2 volume).norm
+  refine hmem.ae_eq (Filter.Eventually.of_forall fun ξ => ?_)
+  rw [SchwartzMap.smulLeftCLM_apply_apply hg, norm_smul, Complex.norm_real, Real.norm_eq_abs,
+    abs_of_nonneg (by positivity : (0 : ℝ) ≤ 1 + ‖ξ‖ ^ 2)]
+
 end SKEFTHawking.DFT
