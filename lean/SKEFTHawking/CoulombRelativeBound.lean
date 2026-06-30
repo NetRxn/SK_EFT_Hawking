@@ -690,4 +690,65 @@ lemma exists_sup_relbound (f : 𝓢(Space 3, ℂ)) {ε : ℝ} (hε : 0 < ε) :
     field_simp
   rw [hkin]; ring
 
+open QuantumMechanics in
+/-- **The single-electron Coulomb relative bound** (3D model of each molecular Coulomb term): for every
+`ε > 0`, `‖(1/‖x‖)·u‖₂ ≤ ε·‖∑pᵢ²u‖₂ + C·‖u‖₂`. Split `1/‖x‖ = V₁+V₂` (disjoint, W3-33), bound the near part
+`‖V₁u‖₂ ≤ ‖V₁‖₂·‖u‖_∞` (W3-6) with `‖u‖_∞ ≤ ε'·K + C'·L` from the ε-sup-estimate (W3-28), the far part
+`‖V₂u‖₂ ≤ ‖u‖₂` (W3-7, `V₂≤1`); calibrate `ε' = ε/‖V₁‖₂` (W3-29). -/
+lemma exists_coulomb_relbound (u : 𝓢(Space 3, ℂ)) {ε : ℝ} (hε : 0 < ε) :
+    ∃ C : ℝ, 0 ≤ C ∧
+      Real.sqrt (∫ x : Space 3, (‖x‖⁻¹ * ‖u x‖) ^ 2)
+        ≤ ε * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i u)) y‖ ^ 2)
+          + C * Real.sqrt (∫ y : Space 3, ‖u y‖ ^ 2) := by
+  have hsub : ∀ a b : ℝ, 0 ≤ a → 0 ≤ b → Real.sqrt (a + b) ≤ Real.sqrt a + Real.sqrt b := by
+    intro a b ha hb
+    have h := Real.sqrt_le_sqrt (show a + b ≤ (Real.sqrt a + Real.sqrt b) ^ 2 by
+      nlinarith [Real.sq_sqrt ha, Real.sq_sqrt hb,
+        mul_nonneg (Real.sqrt_nonneg a) (Real.sqrt_nonneg b)])
+    rwa [Real.sqrt_sq (by positivity)] at h
+  have hrec : ∀ x : Space 3, (if ‖x‖ ≤ 1 then ‖x‖⁻¹ else 0) ^ 2
+      = if ‖x‖ ≤ 1 then ‖x‖ ^ (-2 : ℝ) else 0 := by
+    intro x
+    split_ifs with h
+    · rcases eq_or_lt_of_le (norm_nonneg x) with hx0 | hx0
+      · rw [← hx0]; simp [Real.zero_rpow (show (-2 : ℝ) ≠ 0 by norm_num)]
+      · rw [Real.rpow_neg hx0.le, show (2 : ℝ) = ((2 : ℕ) : ℝ) by norm_num, Real.rpow_natCast,
+          ← inv_pow]
+    · ring
+  set nV1 := Real.sqrt (∫ x : Space 3, if ‖x‖ ≤ 1 then ‖x‖ ^ (-2 : ℝ) else 0) with hnV1def
+  have hnV1 : 0 < nV1 := Real.sqrt_pos.mpr integral_coulombNear_sq_pos
+  set K := Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i u)) y‖ ^ 2)
+  set L := Real.sqrt (∫ y : Space 3, ‖u y‖ ^ 2)
+  have hK0 : 0 ≤ K := Real.sqrt_nonneg _
+  have hL0 : 0 ≤ L := Real.sqrt_nonneg _
+  obtain ⟨C', hC'0, hsup⟩ := exists_sup_relbound u (show (0 : ℝ) < ε / nV1 by positivity)
+  refine ⟨C' * nV1 + 1, by positivity, ?_⟩
+  set M := ε / nV1 * K + C' * L with hMdef
+  have hM0 : 0 ≤ M := by rw [hMdef]; positivity
+  have hV1 : ∫ x : Space 3, ((if ‖x‖ ≤ 1 then ‖x‖⁻¹ else 0) * ‖u x‖) ^ 2 ≤ M ^ 2 * nV1 ^ 2 := by
+    have h6 := integral_mul_sq_le_sup_sq_mul (M := M)
+      (V := fun x => if ‖x‖ ≤ 1 then ‖x‖⁻¹ else 0) (u := fun x => ‖u x‖)
+      (fun x => by rw [abs_of_nonneg (norm_nonneg _)]; exact hsup x)
+      (integrable_coulombNear_sq.congr (Filter.Eventually.of_forall fun x => (hrec x).symm))
+    have hint : ∫ x : Space 3, (if ‖x‖ ≤ 1 then ‖x‖⁻¹ else 0) ^ 2 = nV1 ^ 2 := by
+      rw [integral_congr_ae (Filter.Eventually.of_forall hrec), hnV1def,
+        Real.sq_sqrt (le_of_lt integral_coulombNear_sq_pos)]
+    rwa [hint] at h6
+  have hV2 : ∫ x : Space 3, ((if 1 < ‖x‖ then ‖x‖⁻¹ else 0) * ‖u x‖) ^ 2
+      ≤ ∫ y : Space 3, ‖u y‖ ^ 2 := by
+    refine integral_bdd_mul_sq_le (fun x => by positivity) (fun x => ?_) (integrable_normSq_schwartz u)
+    split_ifs with h
+    · exact inv_le_one_of_one_le₀ (le_of_lt h)
+    · norm_num
+  rw [coulomb_integral_split u]
+  refine (hsub _ _ (integral_nonneg fun x => sq_nonneg _)
+    (integral_nonneg fun x => sq_nonneg _)).trans ?_
+  have hb1 : Real.sqrt (∫ x : Space 3, ((if ‖x‖ ≤ 1 then ‖x‖⁻¹ else 0) * ‖u x‖) ^ 2) ≤ M * nV1 :=
+    (Real.sqrt_le_sqrt hV1).trans_eq (by
+      rw [show M ^ 2 * nV1 ^ 2 = (M * nV1) ^ 2 from by ring, Real.sqrt_sq (by positivity)])
+  have hb2 : Real.sqrt (∫ x : Space 3, ((if 1 < ‖x‖ then ‖x‖⁻¹ else 0) * ‖u x‖) ^ 2) ≤ L :=
+    Real.sqrt_le_sqrt hV2
+  refine (add_le_add hb1 hb2).trans_eq ?_
+  rw [hMdef]; field_simp; ring
+
 end SKEFTHawking.DFT
