@@ -257,6 +257,37 @@ def test_creutz_identity_unbiased_chain():
     assert abs(creutz - 1.0) < 0.05, (creutz, acc_rate)
 
 
+@pytest.mark.slow
+def test_creutz_identity_refined_chain_unbiased():
+    # Chain-level certification of the mixed-precision refined trajectory: the FP32-inner
+    # accept/reject must keep the FULL chain unbiased ⟹ ⟨exp(−ΔH)⟩ = 1 in equilibrium.
+    # (device=CPU runs the inner solve in FP32 on CPU — exercises the precision mix.)
+    L, V, g = 2, 2 ** 4, 2.0
+    msq = 0.04
+    fwd, back = st.neighbor_tables(L, CPU)
+    gen = torch.Generator().manual_seed(0)
+    h = 0.1 * torch.randn(V, 4, 4, dtype=F64, generator=gen)
+
+    blk0 = st.hopping_blocks(2.0 * torch.randn(V, 4, 4, dtype=F64, generator=gen), L, device=CPU, dtype=F64)
+    lam_max = 1.5 * float(st.estimate_lambda_max(blk0, fwd, back, V, n_iter=300, seed=1))
+    coeffs = st.make_rhmc_coeffs(lam_max, msq, n_poles=16)
+
+    dHs, naccept = [], 0
+    n_therm, n_meas = 25, 120
+    for t in range(n_therm + n_meas):
+        h, dH, acc = st.rhmc_trajectory_refined(h, g, msq, coeffs, fwd, back, fwd, back,
+                                                L, eps=0.1, n_md=10, device=CPU,
+                                                gen_dev=gen, gen_cpu=gen,
+                                                inner_tol=3e-4, max_outer=20)
+        if t >= n_therm:
+            dHs.append(float(dH))
+            naccept += int(bool(acc))
+    creutz = float(np.mean(np.exp(-np.array(dHs))))
+    acc_rate = naccept / n_meas
+    assert acc_rate > 0.7, acc_rate
+    assert abs(creutz - 1.0) < 0.05, (creutz, acc_rate)
+
+
 def test_cg_shifted_per_shift_distinct_rhs():
     # The refinement primitive: each shift carries its OWN rhs (unlike multishift's
     # shared b). Batched-shifted CG must solve (A†A+σ_k) x_k = rhs_k per k.
