@@ -387,6 +387,69 @@ lemma norm_exp_mul_exp_sub_exp_add_le {𝔸 : Type*} [NormedRing 𝔸] [NormOneC
         gcongr; exact (norm_add_le _ _).trans (by gcongr; exact norm_add_le _ _)
     _ ≤ 4 * (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖) := by linarith [hb1, hb2, hb3, hb4]
 
+/-- Per-step Lie–Trotter bound: `‖(e^{X/n}e^{Y/n})ⁿ - e^{X+Y}‖ ≤ 4(‖X‖+‖Y‖)²·exp(‖X‖+‖Y‖)/n`. -/
+private lemma trotter_step_bound {𝔸 : Type*} [NormedRing 𝔸] [NormOneClass 𝔸]
+    [NormedAlgebra ℂ 𝔸] [NormedAlgebra ℚ 𝔸] [CompleteSpace 𝔸] (X Y : 𝔸) {n : ℕ} (hn : 1 ≤ n) :
+    ‖(NormedSpace.exp ((n:ℝ)⁻¹ • X) * NormedSpace.exp ((n:ℝ)⁻¹ • Y)) ^ n - NormedSpace.exp (X + Y)‖
+      ≤ 4 * (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖) / n := by
+  have hn0 : (0:ℝ) < n := by exact_mod_cast hn
+  set s := ‖X‖ + ‖Y‖ with hs
+  set a := NormedSpace.exp ((n:ℝ)⁻¹ • X) * NormedSpace.exp ((n:ℝ)⁻¹ • Y) with ha
+  set b := NormedSpace.exp ((n:ℝ)⁻¹ • (X + Y)) with hb
+  have hnX : ‖(n:ℝ)⁻¹ • X‖ = (n:ℝ)⁻¹ * ‖X‖ := by
+    rw [norm_smul, Real.norm_eq_abs, abs_of_pos (by positivity)]
+  have hnY : ‖(n:ℝ)⁻¹ • Y‖ = (n:ℝ)⁻¹ * ‖Y‖ := by
+    rw [norm_smul, Real.norm_eq_abs, abs_of_pos (by positivity)]
+  have hsum : (n:ℝ)⁻¹ * ‖X‖ + (n:ℝ)⁻¹ * ‖Y‖ = (n:ℝ)⁻¹ * s := by rw [hs]; ring
+  have hMa : ‖a‖ ≤ Real.exp ((n:ℝ)⁻¹ * s) := by
+    refine (norm_mul_le _ _).trans ?_
+    calc ‖NormedSpace.exp ((n:ℝ)⁻¹ • X)‖ * ‖NormedSpace.exp ((n:ℝ)⁻¹ • Y)‖
+        ≤ Real.exp ‖(n:ℝ)⁻¹ • X‖ * Real.exp ‖(n:ℝ)⁻¹ • Y‖ :=
+          mul_le_mul (norm_exp_le _) (norm_exp_le _) (norm_nonneg _) (Real.exp_pos _).le
+      _ = Real.exp ((n:ℝ)⁻¹ * s) := by rw [← Real.exp_add, hnX, hnY, hsum]
+  have hMb : ‖b‖ ≤ Real.exp ((n:ℝ)⁻¹ * s) := by
+    refine (norm_exp_le _).trans (Real.exp_le_exp.mpr ?_)
+    rw [norm_smul, Real.norm_eq_abs, abs_of_pos (by positivity)]
+    gcongr
+    exact norm_add_le _ _
+  have hbn : b ^ n = NormedSpace.exp (X + Y) := by
+    rw [hb, ← NormedSpace.exp_nsmul]
+    congr 1
+    rw [← Nat.cast_smul_eq_nsmul ℝ, smul_smul, mul_inv_cancel₀ (ne_of_gt hn0), one_smul]
+  have hab : ‖a - b‖ ≤ 4 * ((n:ℝ)⁻¹ * s) ^ 2 * Real.exp ((n:ℝ)⁻¹ * s) := by
+    have h7c := norm_exp_mul_exp_sub_exp_add_le ((n:ℝ)⁻¹ • X) ((n:ℝ)⁻¹ • Y)
+    rw [ha, hb, smul_add]
+    refine h7c.trans (le_of_eq ?_)
+    rw [hnX, hnY, hsum]
+  have hexp_arg : (n:ℝ) * ((n:ℝ)⁻¹ * s) = s := by
+    rw [← mul_assoc, mul_inv_cancel₀ (ne_of_gt hn0), one_mul]
+  have hM : Real.exp ((n:ℝ)⁻¹ * s) ^ (n - 1) * Real.exp ((n:ℝ)⁻¹ * s) = Real.exp s := by
+    rw [← pow_succ, Nat.sub_add_cancel hn, ← Real.exp_nat_mul, hexp_arg]
+  rw [show NormedSpace.exp (X + Y) = b ^ n from hbn.symm]
+  refine (norm_pow_sub_pow_le a b hMa hMb n).trans ?_
+  calc (n:ℝ) * Real.exp ((n:ℝ)⁻¹ * s) ^ (n - 1) * ‖a - b‖
+      ≤ (n:ℝ) * Real.exp ((n:ℝ)⁻¹ * s) ^ (n - 1)
+          * (4 * ((n:ℝ)⁻¹ * s) ^ 2 * Real.exp ((n:ℝ)⁻¹ * s)) := by gcongr
+    _ = 4 * ((n:ℝ) * ((n:ℝ)⁻¹ * s) ^ 2)
+          * (Real.exp ((n:ℝ)⁻¹ * s) ^ (n - 1) * Real.exp ((n:ℝ)⁻¹ * s)) := by ring
+    _ = 4 * s ^ 2 * Real.exp s / n := by rw [hM]; field_simp
+
+/-- **The matrix Lie–Trotter product formula** (built from scratch — absent from Mathlib):
+`(e^{X/n} e^{Y/n})ⁿ → e^{X+Y}`. The telescoping `‖aⁿ-bⁿ‖`-bound (7b) times the `O(1/n²)` one-step error
+(7c′) gives `‖(e^{X/n}e^{Y/n})ⁿ - e^{X+Y}‖ ≤ C/n → 0`. -/
+lemma tendsto_trotter {𝔸 : Type*} [NormedRing 𝔸] [NormOneClass 𝔸]
+    [NormedAlgebra ℂ 𝔸] [NormedAlgebra ℚ 𝔸] [CompleteSpace 𝔸] (X Y : 𝔸) :
+    Filter.Tendsto
+      (fun n : ℕ => (NormedSpace.exp ((n:ℝ)⁻¹ • X) * NormedSpace.exp ((n:ℝ)⁻¹ • Y)) ^ n)
+      Filter.atTop (nhds (NormedSpace.exp (X + Y))) := by
+  rw [tendsto_iff_norm_sub_tendsto_zero]
+  refine squeeze_zero' (Filter.Eventually.of_forall fun n => norm_nonneg _)
+    (Filter.eventually_atTop.mpr ⟨1, fun n hn => trotter_step_bound X Y hn⟩) ?_
+  have : Filter.Tendsto (fun n : ℕ => (4 * (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖)) / (n : ℝ))
+      Filter.atTop (nhds 0) :=
+    tendsto_const_div_atTop_nhds_zero_nat _
+  simpa using this
+
 end Trotter
 
 end SKEFTHawking.OpenSystems
