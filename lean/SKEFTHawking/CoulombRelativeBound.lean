@@ -1390,4 +1390,46 @@ lemma momentumCLM_translateSchwartz {d : ℕ} (i : Fin d) (R : Space d) (v : �
   show (fderiv ℝ (⇑(translateSchwartz R v)) x) (Space.basis i) = (fderiv ℝ (⇑v) (x + R)) (Space.basis i)
   rw [hfd]
 
+open QuantumMechanics in
+/-- **The kinetic operator `∑ᵢ pᵢ²` commutes with translation** (W3-79 applied twice per component, then
+`translateSchwartz`'s linearity `map_sum`). -/
+lemma kineticSq_translateSchwartz {d : ℕ} (R : Space d) (v : 𝓢(Space d, ℂ)) :
+    (∑ i, momentumCLM i (momentumCLM i (translateSchwartz R v)))
+      = translateSchwartz R (∑ i, momentumCLM i (momentumCLM i v)) := by
+  have hsum : translateSchwartz R (∑ i, momentumCLM i (momentumCLM i v))
+      = ∑ i, translateSchwartz R (momentumCLM i (momentumCLM i v)) :=
+    map_sum (SchwartzMap.compCLMOfAntilipschitz ℝ (hasTemperateGrowth_translate R)
+      (antilipschitz_translate R)) _ _
+  rw [hsum]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [momentumCLM_translateSchwartz, momentumCLM_translateSchwartz]
+
+open QuantumMechanics in
+/-- **The kinetic L² norm is translation-invariant:** `∫ ‖∑pᵢ²(translateSchwartz R v)‖² = ∫ ‖∑pᵢ²v‖²`. -/
+lemma integral_kineticSq_translateSchwartz {d : ℕ} (R : Space d) (v : 𝓢(Space d, ℂ)) :
+    ∫ y : Space d, ‖(∑ i, momentumCLM i (momentumCLM i (translateSchwartz R v))) y‖ ^ 2
+      = ∫ y : Space d, ‖(∑ i, momentumCLM i (momentumCLM i v)) y‖ ^ 2 := by
+  rw [kineticSq_translateSchwartz]
+  exact integral_normSq_translateSchwartz R (∑ i, momentumCLM i (momentumCLM i v))
+
+open QuantumMechanics in
+/-- **Center-`R` uniform Coulomb relative bound** — the single-electron bound for a Coulomb singularity
+centered at an arbitrary `R : Space 3` (not just the origin). For every `ε > 0` there is a uniform
+`C` such that `√(∫(‖y−R‖⁻¹‖v y‖)²) ≤ ε√(∫‖∑pᵢ²v‖²) + C√(∫‖v‖²)` for all `v` and `R`. Derived from the
+origin bound (`exists_coulomb_relbound_uniform`) applied to `translateSchwartz R v`, then the three
+translation identities (Coulomb W3-78, kinetic W3-81, L² W3-77) recenter it. This is the fiberwise tool
+the molecular lift applies to each nuclear term (`R` = nucleus) and each e-e term (`R` = electron `j`'s
+position, fixed by the spectator coordinates). -/
+lemma exists_coulomb_relbound_center {ε : ℝ} (hε : 0 < ε) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (v : 𝓢(Space 3, ℂ)) (R : Space 3),
+      Real.sqrt (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2)
+        ≤ ε * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i v)) y‖ ^ 2)
+          + C * Real.sqrt (∫ y : Space 3, ‖v y‖ ^ 2) := by
+  obtain ⟨C, hC0, hbound⟩ := exists_coulomb_relbound_uniform hε
+  refine ⟨C, hC0, fun v R => ?_⟩
+  have h := hbound (translateSchwartz R v)
+  rw [integral_coulombSq_translate, integral_kineticSq_translateSchwartz,
+    integral_normSq_translateSchwartz] at h
+  exact h
+
 end SKEFTHawking.DFT
