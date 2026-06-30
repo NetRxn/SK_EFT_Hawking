@@ -822,4 +822,14 @@ lemma coulombTerm_mul_sq_measurable {N : ℕ} (i : Fin N) (R : Space 3) {u : Spa
     Measurable (fun x : Space (3 * N) => (‖electronPos x i - R‖⁻¹ * ‖u x‖) ^ 2) :=
   ((coulombTerm_measurable i R).mul hu.norm.measurable).pow_const 2
 
+/-- **`Space d ↔ EuclideanSpace ℝ (Fin d)` is measure-preserving** via the orthonormal-basis isometry
+`Space.basis.repr` (a `LinearIsometryEquiv`, hence volume-preserving). This is the bridge that lets the
+molecular lift reuse Mathlib's full `EuclideanSpace` coordinate-split + Fubini machinery
+(`volume_preserving_piEquivPiSubtypeProd`) on `Space (3N)`. -/
+lemma basis_repr_measurePreserving {d : ℕ} :
+    MeasureTheory.MeasurePreserving (Space.basis (d := d)).repr
+      (volume : MeasureTheory.Measure (Space d))
+      (volume : MeasureTheory.Measure (EuclideanSpace ℝ (Fin d))) :=
+  (Space.basis (d := d)).repr.measurePreserving
+
 end SKEFTHawking.DFT
