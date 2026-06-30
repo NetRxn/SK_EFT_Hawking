@@ -751,4 +751,17 @@ lemma exists_coulomb_relbound (u : 𝓢(Space 3, ℂ)) {ε : ℝ} (hε : 0 < ε)
   refine (add_le_add hb1 hb2).trans_eq ?_
   rw [hMdef]; field_simp; ring
 
+/-- **`electronPos` is additive** — the projection onto electron `i`'s 3 coordinates is linear. Foundational
+for the coordinate-split machinery of the molecular lift (`Space(3N) ≃ Space 3 × Space(3(N-1))`). -/
+lemma electronPos_add {N : ℕ} (x y : Space (3 * N)) (i : Fin N) :
+    electronPos (x + y) i = electronPos x i + electronPos y i := by
+  ext j
+  simp [electronPos]
+
+/-- **`electronPos` is homogeneous** — companion of `electronPos_add`. -/
+lemma electronPos_smul {N : ℕ} (c : ℝ) (x : Space (3 * N)) (i : Fin N) :
+    electronPos (c • x) i = c • electronPos x i := by
+  ext j
+  simp [electronPos]
+
 end SKEFTHawking.DFT
