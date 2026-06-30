@@ -323,4 +323,27 @@ lemma integral_normSq_weight_eq_momentumSq (f : 𝓢(Space 3, ℂ)) :
   rw [← SchwartzMap.integral_norm_sq_fourier (∑ i, momentumCLM i (momentumCLM i f)),
     integral_congr_ae (Filter.Eventually.of_forall hpt), integral_const_mul]
 
+/-- `‖û‖² ∈ L¹` — the `h0` integrability `sqrt_weighted_le` (W3-13) consumes (`û` Schwartz ⟹ `MemLp 2`). -/
+lemma integrable_normSq_fourier (f : 𝓢(Space 3, ℂ)) :
+    Integrable (fun ξ : Space 3 => ‖(𝓕 f) ξ‖ ^ 2) := by
+  have h := (SchwartzMap.memLp (𝓕 f) 2 volume).norm
+  rw [memLp_two_iff_integrable_sq (𝓕 f).continuous.norm.aestronglyMeasurable] at h
+  simpa only [norm_norm] using h
+
+/-- `‖ξ‖⁴‖û‖² ∈ L¹` — the `h4` integrability `sqrt_weighted_le` (W3-13) consumes. Equals `‖(‖ξ‖²·û)‖²`,
+integrable because `‖ξ‖²·û` is Schwartz (`smulLeftCLM`). -/
+lemma integrable_weight4_normSq_fourier (f : 𝓢(Space 3, ℂ)) :
+    Integrable (fun ξ : Space 3 => ‖ξ‖ ^ 4 * ‖(𝓕 f) ξ‖ ^ 2) := by
+  have hg2 : Function.HasTemperateGrowth (fun ξ : Space 3 => ((‖ξ‖ ^ 2 : ℝ) : ℂ)) :=
+    Complex.ofRealCLM.hasTemperateGrowth.comp (Function.hasTemperateGrowth_norm_sq (H := Space 3))
+  have hwint := (SchwartzMap.memLp
+    (SchwartzMap.smulLeftCLM ℂ (fun ξ : Space 3 => ((‖ξ‖ ^ 2 : ℝ) : ℂ)) (𝓕 f)) 2 volume).norm
+  rw [memLp_two_iff_integrable_sq (SchwartzMap.smulLeftCLM ℂ (fun ξ : Space 3 => ((‖ξ‖ ^ 2 : ℝ) : ℂ))
+    (𝓕 f)).continuous.norm.aestronglyMeasurable] at hwint
+  refine hwint.congr (Filter.Eventually.of_forall fun ξ => ?_)
+  dsimp only
+  rw [SchwartzMap.smulLeftCLM_apply_apply hg2, norm_smul, Complex.norm_real, Real.norm_eq_abs,
+    abs_of_nonneg (by positivity : (0 : ℝ) ≤ ‖ξ‖ ^ 2), mul_pow]
+  ring
+
 end SKEFTHawking.DFT
