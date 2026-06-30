@@ -1250,4 +1250,36 @@ lemma electronPos_gatherLM {N : ℕ} (i : Fin N) (y : Space 3) :
   apply Fin.ext
   simp
 
+/-- **The fiber injection is affine:** `(molecularSplitEquiv i).symm (y, z) = gatherLM i y + c_z`, where
+`c_z := (molecularSplitEquiv i).symm (0, z)` (constant in `y`). Proven by injectivity of the split equiv +
+the round-trip helpers (`molecularSplitMap_fst`/`_snd`, `electronPos_add`, `electronPos_gatherLM`): applying
+`molecularSplitEquiv i` to `gatherLM i y + c_z` recovers `(y, z)`. This translation structure carries
+`gatherLM`'s isometry / temperate growth to the full fiber map. -/
+lemma molecularSplit_symm_eq {N : ℕ} (i : Fin N) (y : Space 3)
+    (z : {k // ¬ electronCoord i k} → ℝ) :
+    (molecularSplitEquiv i).symm (y, z)
+      = gatherLM i y + (molecularSplitEquiv i).symm (0, z) := by
+  have h0 : molecularSplitMap i ((molecularSplitEquiv i).symm (0, z)) = (0, z) := by
+    rw [← coe_molecularSplitEquiv, MeasurableEquiv.apply_symm_apply]
+  have hz1 : electronPos ((molecularSplitEquiv i).symm (0, z)) i = 0 := by
+    rw [← molecularSplitMap_fst, h0]
+  have hz2 : ∀ k : {k // ¬ electronCoord i k}, ((molecularSplitEquiv i).symm (0, z)).val k.1 = z k := by
+    intro k
+    have h := congrArg Prod.snd h0
+    rw [molecularSplitMap_snd] at h
+    exact congrFun h k
+  apply (molecularSplitEquiv i).injective
+  rw [MeasurableEquiv.apply_symm_apply, coe_molecularSplitEquiv]
+  refine Prod.ext ?_ ?_
+  · show y = (molecularSplitMap i (gatherLM i y + (molecularSplitEquiv i).symm (0, z))).1
+    rw [molecularSplitMap_fst, electronPos_add, electronPos_gatherLM, hz1, add_zero]
+  · show z = (molecularSplitMap i (gatherLM i y + (molecularSplitEquiv i).symm (0, z))).2
+    rw [molecularSplitMap_snd]
+    funext k
+    rw [Space.add_val]
+    simp only [Pi.add_apply, gatherLM_apply]
+    split_ifs with h
+    · exact absurd h k.2
+    · rw [hz2 k, zero_add]
+
 end SKEFTHawking.DFT
