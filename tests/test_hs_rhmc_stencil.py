@@ -275,3 +275,24 @@ def test_measure_observables_matches_numpy():
         assert np.isclose(float(trq[b]), trq2n, atol=1e-10)
         assert np.allclose(m_h[b].numpy(), mhn, atol=1e-10)
         assert np.allclose(Q[b].numpy(), Qn, atol=1e-10)
+
+
+def test_mixed_trajectory_mechanics():
+    # Mechanics of the mixed scheme (FP32 MD + FP64 accept/reject): runs, returns
+    # FP64 configs, finite ΔH, boolean accept. (Device='cpu' exercises the precision
+    # mixing without needing MPS; full unbiasedness is in validate_rhmc_gpu.py.)
+    L, V, B = 2, 2 ** 4, 4
+    rng = np.random.default_rng(13)
+    h = torch.tensor(rng.standard_normal((B, V, 4, 4)))            # FP64
+    fwd, back = st.neighbor_tables(L, CPU)
+    lam_max = float(st.estimate_lambda_max(st.hopping_blocks(h[0], L, device=CPU, dtype=F64),
+                                           fwd, back, V, n_iter=200, seed=0))
+    coeffs = st.make_rhmc_coeffs(1.3 * lam_max, 0.04, n_poles=12)
+    gen = torch.Generator().manual_seed(0)
+
+    for _ in range(3):
+        h, dH, acc = st.rhmc_trajectory_mixed(h, 1.5, 0.04, coeffs, fwd, back, fwd, back,
+                                              L, 0.05, 8, CPU, gen, gen)
+        assert h.dtype == torch.float64 and h.shape == (B, V, 4, 4)
+        assert dH.shape == (B,) and torch.isfinite(dH).all()
+        assert acc.dtype == torch.bool and acc.shape == (B,)

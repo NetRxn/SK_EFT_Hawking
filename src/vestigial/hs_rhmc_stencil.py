@@ -279,6 +279,52 @@ def rhmc_trajectory(h, g, msq, coeffs, fwd, back, L, eps, n_md, rng_gen,
     return h_out, dH, accept
 
 
+def rhmc_trajectory_mixed(h64, g, msq, coeffs, fwd64, back64, fwd_dev, back_dev, L,
+                          eps, n_md, device, gen_dev, gen_cpu,
+                          tol_md=1e-5, tol_acc=1e-10, max_iter=4000):
+    """Mixed-precision trajectory: FP32 MD proposal on `device` (GPU) + FP64
+    accept/reject on CPU. Heatbath and both Hamiltonians are FP64-tight, so the
+    Metropolis test is EXACT — the FP32 MD only affects acceptance, never the
+    sampled distribution. h64: FP64 (*batch, V, 4, 4) on CPU."""
+    Bshape = h64.shape[:-3]
+    V = L ** 4
+
+    # --- FP64 (CPU): heatbath + momenta + H_old (exact) ---
+    blocks64 = hopping_blocks(h64, L, device=h64.device, dtype=torch.float64)
+    xi = torch.randn(*Bshape, V, 8, dtype=torch.float64, generator=gen_cpu)
+    phi64 = heatbath(xi, blocks64, fwd64, back64, coeffs, msq, tol=tol_acc, max_iter=max_iter)
+    pi64 = torch.randn(*Bshape, V, 4, 4, dtype=torch.float64, generator=gen_cpu)
+
+    a0 = float(coeffs['a0'])
+    al64 = torch.as_tensor(coeffs['alphas'], dtype=torch.float64)
+    be64 = torch.as_tensor(coeffs['betas'], dtype=torch.float64) + msq
+
+    def H(hh, pp, phi):
+        kin = 0.5 * (pp * pp).sum(dim=(-3, -2, -1))
+        return kin + action(hh, phi, g, a0, al64, be64, fwd64, back64, L, tol=tol_acc, max_iter=max_iter)
+
+    H_old = H(h64, pi64, phi64)
+
+    # --- FP32 (device): MD proposal ---
+    h32 = h64.to(dtype=torch.float32, device=device)
+    pi32 = pi64.to(dtype=torch.float32, device=device)
+    phi32 = phi64.to(dtype=torch.float32, device=device)
+    al32 = al64.to(dtype=torch.float32, device=device)
+    be32 = be64.to(dtype=torch.float32, device=device)
+    h_new32, pi_new32 = integrate(h32, pi32, phi32, g, al32, be32, fwd_dev, back_dev, L,
+                                  eps, n_md, tol=tol_md, max_iter=max_iter)
+
+    # --- FP64 (CPU): H_new + exact Metropolis (move off MPS BEFORE casting to f64) ---
+    h_new64 = h_new32.cpu().to(dtype=torch.float64)
+    pi_new64 = pi_new32.cpu().to(dtype=torch.float64)
+    dH = H(h_new64, pi_new64, phi64) - H_old
+
+    u = torch.rand(Bshape, dtype=torch.float64, generator=gen_cpu)
+    accept = u < torch.exp(torch.clamp(-dH, max=0.0))
+    h_out = torch.where(accept[..., None, None, None], h_new64, h64)
+    return h_out, dH, accept
+
+
 def measure_observables(h, L):
     """h-field order parameters, batched. h: (*batch, V, 4, 4) [site, μ, a].
 
