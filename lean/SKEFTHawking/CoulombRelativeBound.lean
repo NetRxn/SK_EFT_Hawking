@@ -3,6 +3,7 @@ import SKEFTHawking.KineticEssentialSelfAdjoint
 import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
 import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+import Physlib.QuantumMechanics.DDimensions.Operators.Commutation
 
 /-!
 # W3 (Phase 6BB Wave 3) — discharge of `hrel`: the Coulomb relative bound, via Fourier–Kato–Rellich
@@ -1583,5 +1584,12 @@ lemma molecular_kineticSq_lintegral {N : ℕ} (iₑ : Fin N) (u : 𝓢(Space (3 
   rw [molecular_normSq_lintegral iₑ hw]
   refine lintegral_congr fun z => lintegral_congr fun y => ?_
   rw [kineticSq_fiberSchwartz, fiberSchwartz_apply]
+
+open QuantumMechanics in
+/-- **Momentum operators commute** (Schwartz level): `𝐩ᵢ (𝐩ⱼ f) = 𝐩ⱼ (𝐩ᵢ f)` — from PhysLib's
+`momentum_comp_commute`. Building block for the kinetic-partial≤full cross-term. -/
+lemma momentumCLM_comm {d : ℕ} (i j : Fin d) (f : 𝓢(Space d, ℂ)) :
+    momentumCLM i (momentumCLM j f) = momentumCLM j (momentumCLM i f) := by
+  rw [← ContinuousLinearMap.comp_apply, momentum_comp_commute, ContinuousLinearMap.comp_apply]
 
 end SKEFTHawking.DFT
