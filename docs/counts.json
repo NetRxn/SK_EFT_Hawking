@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-30T07:53:54.004837",
+  "generated": "2026-06-30T08:08:37.661108",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 23284,
-    "theorems_total": 14357,
-    "theorems_substantive": 14331,
+    "total_declarations": 23301,
+    "theorems_total": 14371,
+    "theorems_substantive": 14345,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 1149,
+    "modules": 1152,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -133,6 +133,8 @@
       "SKEFTHawking.ETH.RefutationTableau",
       "SKEFTHawking.EWBaryogenesisChiralityWall",
       "SKEFTHawking.EWPhaseTransition",
+      "SKEFTHawking.EffectiveMediumBounds",
+      "SKEFTHawking.EffectiveModuli",
       "SKEFTHawking.EinsteinCartanExtension",
       "SKEFTHawking.EinsteinTensor",
       "SKEFTHawking.EmergentGravityBounds",
@@ -660,6 +662,7 @@
       "SKEFTHawking.MatrixBCHCubicMathlibPR",
       "SKEFTHawking.MatrixExpLocalHomeomorphMathlibPR",
       "SKEFTHawking.MatrixTaylor",
+      "SKEFTHawking.MaxwellGarnett",
       "SKEFTHawking.MazurSigmaModelRigidity",
       "SKEFTHawking.MicroscopicCoefficientMatch",
       "SKEFTHawking.ModularInvarianceConstraint",
@@ -1162,7 +1165,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 7930,
+    "definitions": 7933,
     "structures": 315,
     "instances": 585,
     "inductives": 97,
@@ -1177,7 +1180,7 @@
   "python": {
     "python_modules": 136,
     "test_files": 126,
-    "pytest_cases": 4825,
+    "pytest_cases": 4829,
     "notebooks": 89,
     "papers": 42,
     "figures": 163

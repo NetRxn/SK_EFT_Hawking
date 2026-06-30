@@ -55765,6 +55765,132 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.Metamaterial.effectiveMedium_constituent_bounds",
+      "module": "SKEFTHawking.EffectiveMediumBounds",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.effectiveMedium_hashinShtrikman_enclosure",
+      "module": "SKEFTHawking.EffectiveMediumBounds",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.effectiveModuli_enclosure",
+      "module": "SKEFTHawking.EffectiveModuli",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.maxwellGarnett.eq_1",
+      "module": "SKEFTHawking.MaxwellGarnett",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.maxwellGarnett_clausius_mossotti",
+      "module": "SKEFTHawking.MaxwellGarnett",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.maxwellGarnett_ge_host",
+      "module": "SKEFTHawking.EffectiveMediumBounds",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.maxwellGarnett_host_recovery",
+      "module": "SKEFTHawking.MaxwellGarnett",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.maxwellGarnett_le_inclusion",
+      "module": "SKEFTHawking.EffectiveMediumBounds",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.mg_denom_pos",
+      "module": "SKEFTHawking.EffectiveMediumBounds",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.reussModulus.eq_1",
+      "module": "SKEFTHawking.EffectiveModuli",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.reuss_denom_pos",
+      "module": "SKEFTHawking.EffectiveModuli",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.reuss_ge_host",
+      "module": "SKEFTHawking.EffectiveModuli",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.reuss_le_voigt",
+      "module": "SKEFTHawking.EffectiveModuli",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.voigt_bounds",
+      "module": "SKEFTHawking.EffectiveModuli",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.MicroscopicCoefficientMatch.dirac_H_MicroscopicCoefficientMatch_at_alpha_one",
       "module": "SKEFTHawking.MicroscopicCoefficientMatch",
       "atlas_kind": "TRUE",
@@ -130129,7 +130255,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 14357,
+    "theorem_nodes": 14371,
     "unknown_nodes": 33,
     "implies_edges": 35,
     "apex_nodes": 4,
@@ -130141,7 +130267,7 @@
     ],
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 210,
-      "TRUE:PROVED": 14147,
+      "TRUE:PROVED": 14161,
       "UNKNOWN:PLANNED": 9,
       "UNKNOWN:STATED": 24
     },
