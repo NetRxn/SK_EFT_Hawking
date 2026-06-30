@@ -785,4 +785,22 @@ noncomputable def electronRelCLM {N : ℕ} (i j : Fin N) : Space (3 * N) →L[�
     electronRelCLM i j x = electronPos x i - electronPos x j := by
   simp [electronRelCLM]
 
+open QuantumMechanics in
+/-- **Pointwise triangle bound for the molecular Coulomb potential:** `|V_mol(x)|` is bounded by the sum of
+the absolute values of all nuclear-attraction and electron-repulsion terms. Reduces the molecular relative
+bound to the per-term single-electron Coulomb bound (W3-34, lifted to 3N by the slice-Fubini). -/
+lemma molecularCoulombPotential_abs_le {N : ℕ} (nuclei : Finset (Space 3 × ℝ)) (x : Space (3 * N)) :
+    |molecularCoulombPotential nuclei x|
+      ≤ (∑ i : Fin N, ∑ p ∈ nuclei, |p.2| / ‖electronPos x i - p.1‖)
+        + ∑ i : Fin N, ∑ j ∈ Finset.univ.filter (i < ·), 1 / ‖electronPos x i - electronPos x j‖ := by
+  unfold molecularCoulombPotential
+  refine (abs_add_le _ _).trans (add_le_add ?_ ?_)
+  · rw [abs_neg]
+    refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun i _ => ?_)
+    refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun p _ => ?_)
+    rw [abs_div, abs_of_nonneg (norm_nonneg _)]
+  · refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun i _ => ?_)
+    refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun j _ => ?_)
+    rw [abs_of_nonneg (by positivity)]
+
 end SKEFTHawking.DFT
