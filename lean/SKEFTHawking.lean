@@ -3648,6 +3648,8 @@ import SKEFTHawking.BandGapEnclosure
 import SKEFTHawking.NonHermitianBloch
 import SKEFTHawking.ExceptionalPoint
 import SKEFTHawking.NonHermitianWinding
+-- Phase 6CE (D11 materials series) — effective-medium homogenization (Maxwell–Garnett)
+import SKEFTHawking.MaxwellGarnett
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
