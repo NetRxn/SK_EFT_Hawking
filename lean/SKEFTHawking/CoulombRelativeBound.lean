@@ -1500,4 +1500,14 @@ lemma molecular_normSq_lintegral {N : ℕ} (i : Fin N) {u : Space (3 * N) → �
   rw [hpt]
   exact molecularSplit_lintegral i _ hG
 
+/-- **`gatherLM` sends the block basis vector to the molecular basis vector** `gatherLM iₑ (eⱼ) = e_{3iₑ+j}`:
+the scatter places electron `iₑ`'s `j`-th coordinate direction at slot `3iₑ+j`. This identifies the fiber's
+block momentum direction with electron `iₑ`'s coordinate momentum in the full system. -/
+lemma gatherLM_basis {N : ℕ} (iₑ : Fin N) (j : Fin 3) :
+    gatherLM iₑ (Space.basis j)
+      = Space.basis ⟨3 * iₑ.val + j.val, by have := iₑ.isLt; have := j.isLt; omega⟩ := by
+  ext k
+  simp only [gatherLM_apply, Space.basis_apply, Fin.ext_iff]
+  split_ifs with h1 h2 h3 h3 <;> first | rfl | (exfalso; omega)
+
 end SKEFTHawking.DFT
