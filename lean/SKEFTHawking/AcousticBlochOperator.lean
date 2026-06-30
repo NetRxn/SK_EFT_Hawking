@@ -174,6 +174,53 @@ lemma acousticBloch_branch_secular (k : ℝ) {lam : ℝ}
       = (((D.diag₁ - lam) * (D.diag₂ - lam) - D.normSqOff k : ℝ) : ℂ) := by push_cast; ring
   rw [hcast, hsec, Complex.ofReal_zero]
 
+/-! ### Completeness: the two branches exhaust the spectrum -/
+
+/-- Vieta sum: the two branches sum to the trace `diag₁ + diag₂`. -/
+lemma branchMinus_add_branchPlus (k : ℝ) : D.branchMinus k + D.branchPlus k = D.diag₁ + D.diag₂ := by
+  simp only [DiatomicChain.branchMinus, DiatomicChain.branchPlus, DiatomicChain.mid,
+    DiatomicChain.diag₁, DiatomicChain.diag₂]; ring
+
+/-- Vieta product: the two branches multiply to `diag₁·diag₂ − |off|²` (the determinant of `D(k)`). -/
+lemma branchMinus_mul_branchPlus (k : ℝ) :
+    D.branchMinus k * D.branchPlus k = D.diag₁ * D.diag₂ - D.normSqOff k := by
+  have hs2 : Real.sqrt (D.disc k) ^ 2 = D.gap ^ 2 + D.normSqOff k := by
+    rw [Real.sq_sqrt (D.disc_nonneg k)]; rfl
+  have hmg : D.mid ^ 2 - D.gap ^ 2 = D.diag₁ * D.diag₂ := by
+    simp only [DiatomicChain.mid, DiatomicChain.gap, DiatomicChain.diag₁, DiatomicChain.diag₂]; ring
+  simp only [DiatomicChain.branchMinus, DiatomicChain.branchPlus]
+  linear_combination hmg - hs2
+
+/-- **The characteristic polynomial factors over the two branches:**
+`det(D(k) − λ·I) = (λ − ω²₋(k))(λ − ω²₊(k))` for *every* `λ`. Hence the two branches are not merely
+*some* eigenvalues — they are the **complete** spectrum: any `λ` with `det(D(k) − λ·I) = 0` equals
+one of them (`acousticBloch_eigenvalue_iff`). -/
+lemma acousticBloch_charpoly_factor (k : ℝ) (lam : ℂ) :
+    (D.blochMatrix k - lam • 1).det = (lam - (D.branchMinus k : ℂ)) * (lam - (D.branchPlus k : ℂ)) := by
+  have hoff := D.off_mul_conj k
+  have hsumC : (D.diag₁ : ℂ) + (D.diag₂ : ℂ) = (D.branchMinus k : ℂ) + (D.branchPlus k : ℂ) := by
+    exact_mod_cast (D.branchMinus_add_branchPlus k).symm
+  have hprodC : (D.diag₁ : ℂ) * (D.diag₂ : ℂ) - (D.normSqOff k : ℂ)
+      = (D.branchMinus k : ℂ) * (D.branchPlus k : ℂ) := by
+    exact_mod_cast (D.branchMinus_mul_branchPlus k).symm
+  rw [Matrix.det_fin_two]
+  simp only [blochMatrix, Matrix.sub_apply, Matrix.smul_apply, Matrix.cons_val_zero,
+    Matrix.cons_val_one, Matrix.one_apply_eq, smul_eq_mul, mul_one, Matrix.of_apply,
+    Matrix.cons_val']
+  rw [Matrix.one_apply_ne (show (0 : Fin 2) ≠ 1 by decide),
+    Matrix.one_apply_ne (show (1 : Fin 2) ≠ 0 by decide)]
+  simp only [mul_zero, sub_zero]
+  rw [hoff]
+  linear_combination (-lam) * hsumC + hprodC
+
+/-- **Spectral completeness.** A real `λ` is an eigenvalue of `D(k)` (annihilates the secular
+determinant) **iff** it is one of the two branches — the diatomic Bloch operator has exactly the
+acoustic and optical squared-frequency eigenvalues, no others. -/
+lemma acousticBloch_eigenvalue_iff (k : ℝ) (lam : ℝ) :
+    (D.blochMatrix k - (lam : ℂ) • 1).det = 0 ↔ lam = D.branchMinus k ∨ lam = D.branchPlus k := by
+  rw [D.acousticBloch_charpoly_factor k, mul_eq_zero, sub_eq_zero, sub_eq_zero,
+    Complex.ofReal_inj, Complex.ofReal_inj]
+
 /-! ### Branch ordering and lower bound -/
 
 lemma branchMinus_le_branchPlus (k : ℝ) : D.branchMinus k ≤ D.branchPlus k := by

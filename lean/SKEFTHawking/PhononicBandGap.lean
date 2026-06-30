@@ -72,6 +72,28 @@ lemma optical_ge_two (k : ℝ) : 2 ≤ diatomicCrystal.branchPlus k := by
   rw [mid_eq]
   linarith [sqrt_disc_ge_half k]
 
+/-- At the Brillouin-zone edge `k = π` the discriminant bottoms out at `1/4` (`cos π = −1`,
+`normSqOff = 0`): the two branches are closest there. -/
+lemma disc_at_pi : diatomicCrystal.disc Real.pi = 1 / 4 := by
+  unfold DiatomicChain.disc DiatomicChain.normSqOff
+  rw [gap_eq]
+  simp only [diatomicCrystal, mul_one, Real.cos_pi]
+  norm_num
+
+/-- **The gap bottom is attained:** the acoustic branch reaches exactly `1` at `k = π`. So the
+`≤ 1` bound of `acoustic_le_one` is tight (not a loose over-estimate). -/
+lemma branchMinus_at_pi : diatomicCrystal.branchMinus Real.pi = 1 := by
+  unfold DiatomicChain.branchMinus
+  rw [mid_eq, disc_at_pi, show (1 : ℝ) / 4 = (1 / 2) ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]
+  norm_num
+
+/-- **The gap top is attained:** the optical branch reaches exactly `2` at `k = π`. So the `2 ≤`
+bound of `optical_ge_two` is tight. -/
+lemma branchPlus_at_pi : diatomicCrystal.branchPlus Real.pi = 2 := by
+  unfold DiatomicChain.branchPlus
+  rw [mid_eq, disc_at_pi, show (1 : ℝ) / 4 = (1 / 2) ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]
+  norm_num
+
 end diatomicCrystal
 
 /-- **Phononic band gap (Phase 6CB W2).** There is a non-empty squared-frequency interval
@@ -82,19 +104,19 @@ theorem phononic_band_gap_exists :
       ∀ k : ℝ, diatomicCrystal.branchMinus k ≤ lo ∧ hi ≤ diatomicCrystal.branchPlus k :=
   ⟨1, 2, by norm_num, fun k => ⟨diatomicCrystal.acoustic_le_one k, diatomicCrystal.optical_ge_two k⟩⟩
 
-/-- **Gap falsifier (Phase 6CB W2).** No Bloch eigenmode lies strictly inside the gap `(1, 2)`: if a
-real squared frequency `ω²` is one of the two eigenvalue branches at some `k` — each of which
-annihilates the secular determinant `det(D(k) − ω²·I) = 0` — then `ω²` cannot satisfy `1 < ω² < 2`. -/
+/-- **Gap falsifier (Phase 6CB W2).** No Bloch eigenmode lies strictly inside the gap `(1, 2)` — for
+*any* eigenvalue, not just a named branch. If a real squared frequency `ω²` annihilates the secular
+determinant `det(D(k) − ω²·I) = 0` (i.e. `ω²` is a genuine eigenvalue of the Bloch operator at some
+`k`) then `ω²` cannot satisfy `1 < ω² < 2`. Uses spectral completeness
+(`acousticBloch_eigenvalue_iff`): every eigenvalue is one of the two branches. -/
 theorem band_gap_falsifier (k : ℝ) {ω : ℝ}
-    (hω : ω = diatomicCrystal.branchPlus k ∨ ω = diatomicCrystal.branchMinus k)
+    (heig : (diatomicCrystal.blochMatrix k - (ω : ℂ) • 1).det = 0)
     (hmode : 1 < ω ∧ ω < 2) : False := by
-  -- ω is a genuine Bloch eigenvalue: it annihilates the secular determinant (W1).
-  have _hsec : (diatomicCrystal.blochMatrix k - (ω : ℂ) • 1).det = 0 :=
-    diatomicCrystal.acousticBloch_branch_secular k hω
-  rcases hω with h | h
-  · have := diatomicCrystal.optical_ge_two k
-    rw [← h] at this; linarith [hmode.2]
+  rw [diatomicCrystal.acousticBloch_eigenvalue_iff] at heig
+  rcases heig with h | h
   · have := diatomicCrystal.acoustic_le_one k
     rw [← h] at this; linarith [hmode.1]
+  · have := diatomicCrystal.optical_ge_two k
+    rw [← h] at this; linarith [hmode.2]
 
 end SKEFTHawking.Phononic
