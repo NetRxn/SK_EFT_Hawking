@@ -360,6 +360,18 @@ lemma momSqSymbol_mul_resolvent (μ : ℝ) (hμ : μ ≠ 0) (ξ : Space d) :
       * ((((2 * Real.pi * Constants.ℏ) ^ 2 * ‖ξ‖ ^ 2 : ℝ) : ℂ) - Complex.I * (μ : ℂ))⁻¹ = 1 :=
   mul_inv_cancel₀ (momSqSymbol_sub_ne_zero μ hμ ξ)
 
+/-- Fourier multipliers subtract over their symbols. -/
+lemma fourierMultiplierCLM_sub_apply {g₁ g₂ : Space d → ℂ} (hg₁ : g₁.HasTemperateGrowth)
+    (hg₂ : g₂.HasTemperateGrowth) (f : 𝓢(Space d, ℂ)) :
+    fourierMultiplierCLM ℂ g₁ f - fourierMultiplierCLM ℂ g₂ f
+      = fourierMultiplierCLM ℂ (g₁ - g₂) f := by
+  have hCLM : fourierMultiplierCLM ℂ g₁ - fourierMultiplierCLM ℂ g₂
+      = fourierMultiplierCLM ℂ (g₁ - g₂) := by
+    unfold fourierMultiplierCLM
+    rw [SchwartzMap.smulLeftCLM_sub hg₁ hg₂, ContinuousLinearMap.sub_comp,
+      ContinuousLinearMap.comp_sub]
+  rw [← ContinuousLinearMap.sub_apply, hCLM]
+
 end Wave2
 
 end SKEFTHawking.DFT
