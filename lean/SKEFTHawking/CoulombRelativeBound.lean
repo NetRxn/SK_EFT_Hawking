@@ -89,4 +89,14 @@ lemma integral_normSq_weight_le (f : Space 3 → ℂ)
   rw [i1, i2, i3, Real.sqrt_eq_rpow, Real.sqrt_eq_rpow]
   exact hcs
 
+/-- **The far part of the Coulomb singularity is in `L^∞`:** `(1/‖x‖)·1_{‖x‖>1} ≤ 1`. Together with
+the (forthcoming) near part `(1/‖x‖)·1_{‖x‖≤1} ∈ L²`, this is the `L² + L^∞` decomposition of the
+Coulomb potential `1/‖x‖` that the Kato–Rellich bound consumes. -/
+lemma coulomb_far_le_one (x : Space 3) :
+    Set.indicator {y : Space 3 | 1 < ‖y‖} (fun y => 1 / ‖y‖) x ≤ 1 := by
+  rw [Set.indicator_apply]
+  split_ifs with hx
+  · exact (div_le_one (by exact lt_trans one_pos hx)).mpr (le_of_lt hx)
+  · norm_num
+
 end SKEFTHawking.DFT
