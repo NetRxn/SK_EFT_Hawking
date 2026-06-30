@@ -967,4 +967,24 @@ lemma molecularSplit_lintegral {N : ℕ} (i : Fin N)
   rw [(molecularSplit_measurePreserving i).lintegral_comp hG]
   exact lintegral_prod_symm G hG.aemeasurable
 
+/-- **The molecular coordinate split as a measurable equivalence** `Space (3N) ≃ᵐ Space 3 × (spectator)`.
+The same composition as `molecularSplitMap` packaged as a `MeasurableEquiv`, so it carries `.symm`
+(needed to express `u x` as a function of the split image in the integrand factorization) and the round-trip
+identities. -/
+noncomputable def molecularSplitEquiv {N : ℕ} (i : Fin N) :
+    Space (3 * N) ≃ᵐ Space 3 × ({k // ¬ electronCoord i k} → ℝ) :=
+  (((Space.basis (d := 3 * N)).repr.toHomeomorph.toMeasurableEquiv.trans
+      (EuclideanSpace.measurableEquiv (Fin (3 * N)))).trans
+    (MeasurableEquiv.piEquivPiSubtypeProd (fun _ : Fin (3 * N) => ℝ) (electronCoord i))).trans
+    (MeasurableEquiv.prodCongr
+      (((MeasurableEquiv.piCongrLeft (fun _ : {k // electronCoord i k} => ℝ)
+            (electronCoordEquiv i).symm).symm.trans
+          (EuclideanSpace.measurableEquiv (Fin 3)).symm).trans
+        (Space.basis (d := 3)).repr.toHomeomorph.toMeasurableEquiv.symm)
+      (MeasurableEquiv.refl ({k // ¬ electronCoord i k} → ℝ)))
+
+/-- `molecularSplitEquiv` and `molecularSplitMap` are the same map. -/
+lemma coe_molecularSplitEquiv {N : ℕ} (i : Fin N) :
+    ⇑(molecularSplitEquiv i) = molecularSplitMap i := rfl
+
 end SKEFTHawking.DFT
