@@ -124,4 +124,42 @@ theorem isSelfAdjoint_closure_of_dense_range [CompleteSpace H] {S : H →ₗ.[�
   obtain ⟨x, hx⟩ := surj (-μ) (neg_ne_zero.mpr hμ) hneg z
   exact ⟨x, by rw [← hx]; push_cast; module⟩
 
+/-! ### Wave 2 — discharge of `hkin`: the kinetic operator is essentially self-adjoint.
+
+`kineticOperator = ofReal (2m)⁻¹ • momentumSqOperator` (PhysLib `kineticOperator_eq`); real-scalar
+invariance reduces `IsSelfAdjoint kineticOperator.closure` to `IsSelfAdjoint momentumSqOperator.closure`.
+The latter is the Wave-1 criterion `isSelfAdjoint_closure_of_dense_range` applied to `momentumSqOperator`:
+it is symmetric with dense (Schwartz) domain, and `momentumSqOperator ± i` has dense range because in
+the Fourier representation it is multiplication by `s(ξ) = ℏ²(2π)²‖ξ‖² ≥ 0`, whose shifted inverse
+`(s ± i)⁻¹` is a Schwartz-preserving (temperate) multiplier. -/
+
+section Wave2
+open QuantumMechanics
+
+variable {d : ℕ}
+
+/-- `A.comp A` (with `A` mapping its domain into itself) is symmetric when `A` is symmetric. -/
+lemma isSymmetricPMap_comp_self
+    (A : SpaceDHilbertSpace d →ₗ.[ℂ] SpaceDHilbertSpace d) (hA : A.IsSymmetric)
+    (hr : ∀ x : A.domain, A x ∈ A.domain) :
+    (A.comp A hr).IsSymmetric := by
+  intro x y
+  exact (hA ⟨A x, hr x⟩ y).trans (hA x ⟨A y, hr y⟩)
+
+/-- The momentum-square operator `∑ᵢ 𝓟ᵢ²` is symmetric. -/
+lemma momentumSqOperator_isSymmetric :
+    (momentumSqOperator (d := d)).IsSymmetric := by
+  rw [momentumSqOperator_eq]
+  exact LinearPMap.IsSymmetric.sum fun i =>
+    isSymmetricPMap_comp_self (momentumOperator i) (momentumOperator_isSymmetric i)
+      (momentumOperator_range i)
+
+/-- The momentum-square operator has dense (Schwartz) domain. -/
+lemma momentumSqOperator_hasDenseDomain :
+    Dense ((momentumSqOperator (d := d)).domain : Set (SpaceDHilbertSpace d)) := by
+  rw [momentumSqOperator_domain_eq]
+  exact SpaceDHilbertSpace.SchwartzSubmodule.dense d
+
+end Wave2
+
 end SKEFTHawking.DFT
