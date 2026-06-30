@@ -1234,4 +1234,20 @@ lemma isometry_gatherLM {N : ℕ} (i : Fin N) : Isometry (gatherLM i) :=
 lemma antilipschitz_gatherLM {N : ℕ} (i : Fin N) : AntilipschitzWith 1 (gatherLM i) :=
   (isometry_gatherLM i).antilipschitz
 
+/-- The **spectator factor** of the molecular split reads the non-`i` coordinates: `(molecularSplitMap i x).2`
+is `fun k => x.val k.1`. (Definitional, like `molecularSplitMap_fst`.) -/
+lemma molecularSplitMap_snd {N : ℕ} (i : Fin N) (x : Space (3 * N)) :
+    (molecularSplitMap i x).2 = fun k : {k // ¬ electronCoord i k} => x.val k.1 := rfl
+
+/-- **`electronPos ∘ gatherLM = id`** — scattering `y` into electron `i`'s coordinates and reading them back
+returns `y`. (`gatherLM` is a right inverse of the `electronPos` projection.) -/
+lemma electronPos_gatherLM {N : ℕ} (i : Fin N) (y : Space 3) :
+    electronPos (gatherLM i y) i = y := by
+  ext j
+  simp only [electronPos, gatherLM_apply]
+  rw [if_pos (by omega : (3 * i.val + j.val) / 3 = i.val)]
+  congr 1
+  apply Fin.ext
+  simp
+
 end SKEFTHawking.DFT
