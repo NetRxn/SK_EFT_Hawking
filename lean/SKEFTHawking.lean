@@ -3639,6 +3639,7 @@ import SKEFTHawking.LindbladGenerator
 import SKEFTHawking.GKSLStructure
 import SKEFTHawking.LindbladSemigroup
 import SKEFTHawking.DampedTwoLevel
+import SKEFTHawking.KineticEssentialSelfAdjoint
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
