@@ -564,4 +564,18 @@ lemma norm_sup_le_kinetic_t (f : 𝓢(Space 3, ℂ)) {t : ℝ} (ht : 0 < t) (x :
         mul_le_mul_of_nonneg_left h13 (Real.sqrt_nonneg _)
     _ = _ := by rw [hpl, hmom]; ring
 
+/-- **The sup-norm constant `C₀² = ∫((1+‖ξ‖²)⁻¹)²` is strictly positive** — the integrand is everywhere
+positive and integrable (W3-2a), and `volume (ℝ³) ≠ 0`. Needed so the ε-trick can divide by `C₀`. -/
+lemma integral_weightInv_sq_pos : 0 < ∫ ξ : Space 3, (((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2 := by
+  have hint : Integrable (fun ξ : Space 3 => (((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2) := by
+    have h := memLp_two_oneAddNormSq_inv
+    rwa [memLp_two_iff_integrable_sq (Continuous.inv₀ (by fun_prop)
+      (fun ξ => (by positivity : (0 : ℝ) < 1 + ‖ξ‖ ^ 2).ne')).aestronglyMeasurable] at h
+  rw [integral_pos_iff_support_of_nonneg (fun ξ => by positivity) hint]
+  have hsupp : Function.support (fun ξ : Space 3 => (((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2) = Set.univ :=
+    Set.eq_univ_of_forall fun ξ =>
+      Function.mem_support.mpr (by positivity : (0 : ℝ) < (((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2).ne'
+  rw [hsupp]
+  simp
+
 end SKEFTHawking.DFT
