@@ -1,0 +1,28 @@
+{
+  "bundle_target": "D10",
+  "events": [
+    {
+      "date": "2026-06-30T01:41:08Z",
+      "source_paper": "D10_initial_draft",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a71",
+      "lean_modules_referenced": [
+        "NEGFGreenFunction",
+        "LandauerConductance",
+        "NEGFTransportCertificate",
+        "MolecularHamiltonian",
+        "HohenbergKohnUniqueness",
+        "HohenbergKohnVariational",
+        "LevyLiebFunctional",
+        "LindbladGenerator",
+        "GKSLStructure",
+        "LindbladSemigroup",
+        "DampedTwoLevel"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-06-30T01:41:08Z",
+      "notes": "Sourceless synthesis: substrate is 11 Lean modules across Phases 6BA (NEGF transport), 6BB (DFT foundations), 6BC (Lindblad/GKSL open-system dynamics); no per-paper-draft sources. First content-lift of the 2026-06-29-authorized D10 bundle."
+    }
+  ]
+}

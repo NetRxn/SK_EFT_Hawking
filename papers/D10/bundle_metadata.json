@@ -1,0 +1,23 @@
+{
+  "bundle_target": "D10",
+  "tier": 1,
+  "title": "Kernel-Verified Foundations of Computational Quantum Chemistry & Open-System Dynamics",
+  "target_journal": "PRD | PRX Quantum | J. Chem. Phys.",
+  "phase7_subphase": "6BA-BC",
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
+  "stage13_redo_required": true,
+  "freshness_stale": false,
+  "source_manifest_last_regen": "2026-06-30T01:41:08Z",
+  "last_lift": "2026-06-30T01:41:08Z",
+  "last_stage9_review": null,
+  "last_stage10_review": null,
+  "last_stage13_review": null,
+  "blockers_open": 0,
+  "advisories_open": 0,
+  "stage13_review_doc": null,
+  "audit_log_path": "papers/D10/audit_log.jsonl",
+  "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
+  "notes": null
+}

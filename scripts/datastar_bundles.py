@@ -32,7 +32,7 @@ REVIEWS_DIR = PAPERS_DIR / "AutomatedReviews"
 # Tier metadata. Phase 6i Wave 7.5.
 _TIER_OF = {
     "F": 0,
-    "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1, "D9": 1,
+    "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1, "D9": 1, "D10": 1,
     "L1": 2, "L2": 2, "L3": 2,
     "I1": 3, "I2": 3, "I3": 3,
     "E1": 4, "E2": 4,
