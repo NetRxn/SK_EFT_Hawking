@@ -196,6 +196,35 @@ lemma toLin_exp_toMatrix_mulRight (b : Module.Basis (d × d) ℂ (Matrix d d ℂ
     rw [← Matrix.exp_transpose, Matrix.transpose_smul, Matrix.transpose_transpose]
   rw [hBT, mulRight_eq_transpose_conj, Matrix.transpose_transpose, ← hT, LinearMap.comp_assoc]
 
+/-- **The drift factor `e^{sℒ_drift}` is completely positive** — it is conjugation by `e^{sA}`
+(`A = -iH - ½∑Lₖ†Lₖ`), hence CP by PhysLib's `congruence_CP`. The two commuting one-sided factors
+exponentiate to `mulLeft(e^{sA})` and `mulRight(e^{sAᴴ}) = mulRight((e^{sA})ᴴ)`. -/
+lemma isCompletelyPositive_toLin_exp_drift (H : Matrix d d ℂ) (hH : H.IsHermitian)
+    (L : κ → Matrix d d ℂ) (s : ℝ) :
+    MatrixMap.IsCompletelyPositive (Matrix.toLin (Matrix.stdBasis ℂ d d) (Matrix.stdBasis ℂ d d)
+      (NormedSpace.exp ((s : ℂ) • LinearMap.toMatrix (Matrix.stdBasis ℂ d d) (Matrix.stdBasis ℂ d d)
+        (lindbladHamPart H + lindbladAnticommPart L)))) := by
+  set b := Matrix.stdBasis ℂ d d
+  set A := driftMatrix H L with hA
+  have hcomm : Commute (LinearMap.toMatrix b b (LinearMap.mulLeft ℂ A))
+      (LinearMap.toMatrix b b (LinearMap.mulRight ℂ Aᴴ)) :=
+    (LinearMap.commute_mulLeft_right A Aᴴ).map (LinearMap.toMatrixAlgEquiv b)
+  have heq : Matrix.toLin b b (NormedSpace.exp ((s : ℂ) • LinearMap.toMatrix b b
+      (lindbladHamPart H + lindbladAnticommPart L)))
+      = MatrixMap.conj (NormedSpace.exp ((s : ℂ) • A)) := by
+    rw [lindbladDrift_eq H hH L, map_add, smul_add,
+      Matrix.exp_add_of_commute _ _ ((hcomm.smul_left (s : ℂ)).smul_right (s : ℂ)),
+      Matrix.toLin_mul b b b, toLin_exp_toMatrix_mulLeft, toLin_exp_toMatrix_mulRight]
+    have hadj : NormedSpace.exp ((s : ℂ) • Aᴴ) = (NormedSpace.exp ((s : ℂ) • A))ᴴ := by
+      rw [← Matrix.exp_conjTranspose, Matrix.conjTranspose_smul, Complex.star_def,
+        Complex.conj_ofReal]
+    rw [hadj]
+    refine LinearMap.ext fun ρ => ?_
+    simp only [LinearMap.coe_comp, Function.comp_apply, LinearMap.mulLeft_apply,
+      LinearMap.mulRight_apply, MatrixMap.conj_apply, Matrix.mul_assoc]
+  rw [heq]
+  exact MatrixMap.congruence_CP _
+
 end Drift
 
 end SKEFTHawking.OpenSystems
