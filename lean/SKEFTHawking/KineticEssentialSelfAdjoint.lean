@@ -1,4 +1,5 @@
 import SKEFTHawking.MolecularHamiltonian
+import Mathlib.Analysis.Distribution.FourierMultiplier
 
 /-!
 # Essential self-adjointness criterion (Phase 6BB Wave 6 — discharge of `hkin`)
@@ -134,7 +135,7 @@ the Fourier representation it is multiplication by `s(ξ) = ℏ²(2π)²‖ξ‖
 `(s ± i)⁻¹` is a Schwartz-preserving (temperate) multiplier. -/
 
 section Wave2
-open QuantumMechanics
+open QuantumMechanics SchwartzMap
 
 variable {d : ℕ}
 
@@ -159,6 +160,51 @@ lemma momentumSqOperator_hasDenseDomain :
     Dense ((momentumSqOperator (d := d)).domain : Set (SpaceDHilbertSpace d)) := by
   rw [momentumSqOperator_domain_eq]
   exact SpaceDHilbertSpace.SchwartzSubmodule.dense d
+
+/-- **C1a (linchpin).** PhysLib's `momentumCLM i` is `-iℏ` times Mathlib's directional derivative
+along `Space.basis i`; both unfold to `x ↦ fderiv ℝ ψ x (Space.basis i)`. -/
+lemma momentumCLM_eq_smul_lineDeriv (i : Fin d) (f : 𝓢(Space d, ℂ)) :
+    momentumCLM i f = (-Complex.I * Constants.ℏ) • LineDeriv.lineDerivOp (Space.basis i) f := rfl
+
+/-- The linear coordinate symbol `ξ ↦ ⟨ξ, basis i⟩` has temperate growth. -/
+lemma innerBasis_hasTemperateGrowth (i : Fin d) :
+    Function.HasTemperateGrowth (fun ξ : Space d => (inner ℝ ξ (Space.basis i) : ℝ)) := by
+  fun_prop
+
+/-- **C1b.** The momentum component is `2πℏ` times the Fourier multiplier with the (ℂ-cast) linear
+symbol `⟨ξ, basis i⟩` (`(-iℏ)·(2πi) = 2πℏ`). -/
+lemma momentumCLM_eq_fourierMultiplier (i : Fin d) (f : 𝓢(Space d, ℂ)) :
+    momentumCLM i f
+      = (2 * Real.pi * Constants.ℏ : ℂ) •
+        fourierMultiplierCLM ℂ (fun ξ : Space d => ((inner ℝ ξ (Space.basis i) : ℝ) : ℂ)) f := by
+  rw [momentumCLM_eq_smul_lineDeriv, lineDeriv_eq_fourierMultiplierCLM,
+    ← fourierMultiplierCLM_ofReal ℂ (innerBasis_hasTemperateGrowth i), smul_smul]
+  congr 1
+  ring_nf
+  rw [Complex.I_sq]
+  ring
+
+/-- The ℂ-cast linear coordinate symbol has temperate growth. -/
+lemma innerBasisC_hasTemperateGrowth (i : Fin d) :
+    Function.HasTemperateGrowth (fun ξ : Space d => ((inner ℝ ξ (Space.basis i) : ℝ) : ℂ)) := by
+  fun_prop
+
+/-- **C1c.** The squared momentum component is `(2πℏ)²` times the Fourier multiplier with symbol
+`⟨ξ, basis i⟩²`. -/
+lemma momentumCLM_sq_eq_fourierMultiplier (i : Fin d) (f : 𝓢(Space d, ℂ)) :
+    momentumCLM i (momentumCLM i f)
+      = ((2 * Real.pi * Constants.ℏ) ^ 2 : ℂ) •
+        fourierMultiplierCLM ℂ (fun ξ : Space d => ((inner ℝ ξ (Space.basis i) : ℝ) : ℂ) ^ 2) f := by
+  have hsymb : (fun ξ : Space d => ((inner ℝ ξ (Space.basis i) : ℝ) : ℂ))
+        * (fun ξ : Space d => ((inner ℝ ξ (Space.basis i) : ℝ) : ℂ))
+      = (fun ξ : Space d => ((inner ℝ ξ (Space.basis i) : ℝ) : ℂ) ^ 2) := by
+    funext ξ; simp [Pi.mul_apply, sq]
+  simp only [momentumCLM_eq_fourierMultiplier]
+  rw [_root_.map_smul, smul_smul,
+    fourierMultiplierCLM_fourierMultiplierCLM_apply (innerBasisC_hasTemperateGrowth i)
+      (innerBasisC_hasTemperateGrowth i), hsymb]
+  congr 1
+  ring
 
 end Wave2
 
