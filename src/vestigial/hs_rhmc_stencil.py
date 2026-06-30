@@ -85,3 +85,53 @@ def apply_AtA(psi, blocks, fwd, back, shift=0.0):
     if shift:
         out = out + shift * psi
     return out
+
+
+def multishift_cg(b, blocks, fwd, back, shifts, tol=1e-8, max_iter=2000):
+    """Solve (A†A + σ_k) x_k = b for all shifts σ_k, batched over configs.
+
+    K-parallel conjugate gradient: each (config, shift) system is a standard CG,
+    all sharing ONE wide batched stencil matvec per iteration; converged systems
+    are masked out of further updates. (True multishift ζ-recurrence would do
+    fewer matvecs but on a narrower batch — a profiling-driven optimization; the
+    solutions are identical to CG tolerance.)
+
+    b:      (*batch, V, 8) source (shared across shifts within a config)
+    blocks: (*batch, V, 4, 8, 8) from `hopping_blocks`
+    shifts: (K,) or (*batch, K)  — σ_k ≥ 0
+    Returns x: (*batch, K, V, 8).
+    """
+    nb = b.dim() - 2                                  # number of leading batch dims
+    Bshape = b.shape[:nb]
+    V, S = b.shape[-2], b.shape[-1]
+    shifts = torch.as_tensor(shifts, dtype=b.dtype, device=b.device)
+    K = shifts.shape[-1]
+    if shifts.dim() == 1:
+        shifts = shifts.reshape((1,) * nb + (K,))
+    sigma = shifts.expand(*Bshape, K).reshape(*Bshape, K, 1, 1)   # (*B, K, 1, 1)
+
+    blocks_k = blocks.unsqueeze(nb)                   # (*B, 1, V, 4, 8, 8) — broadcast over K
+    bk = b.unsqueeze(nb).expand(*Bshape, K, V, S)     # (*B, K, V, 8)
+
+    x = torch.zeros_like(bk)
+    r = bk.clone()
+    p = bk.clone()
+    rs = (r * r).sum(dim=(-2, -1))                    # (*B, K)
+    tol_sq = tol * tol * rs.clamp_min(1e-300)
+    converged = rs <= tol_sq
+
+    for _ in range(max_iter):
+        if bool(converged.all()):
+            break
+        Ap = apply_AtA(p, blocks_k, fwd, back) + sigma * p          # (*B, K, V, 8)
+        pAp = (p * Ap).sum(dim=(-2, -1))                            # (*B, K)
+        alpha = torch.where(converged, torch.zeros_like(rs), rs / pAp)
+        x = x + alpha[..., None, None] * p
+        r = r - alpha[..., None, None] * Ap
+        rs_new = (r * r).sum(dim=(-2, -1))
+        beta = torch.where(converged, torch.zeros_like(rs), rs_new / rs)
+        p = r + beta[..., None, None] * p
+        rs = rs_new
+        converged = converged | (rs <= tol_sq)
+
+    return x

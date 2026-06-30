@@ -92,3 +92,46 @@ def test_apply_A_broadcasts_config_over_poles():
         for k in range(K):
             expected = (A @ psi[b, k].reshape(-1)).reshape(V, 8)
             assert np.allclose(got[b, k], expected, atol=1e-10)
+
+
+def test_multishift_cg_matches_dense_solve_single_config():
+    # Solve (A†A + σ_k) x_k = b for all shifts; match a dense linear solve.
+    L, V = 2, 2 ** 4
+    rng = np.random.default_rng(4)
+    h = rng.standard_normal((V, 4, 4))
+    b = rng.standard_normal((V, 8))
+    shifts = np.array([0.5, 1.0, 2.0, 5.0])
+
+    A = _dense(h, L)
+    AtA = -A @ A
+    eye = np.eye(8 * V)
+    expected = np.stack([np.linalg.solve(AtA + s * eye, b.reshape(-1)) for s in shifts])  # (K, 8V)
+
+    fwd, back = st.neighbor_tables(L, CPU)
+    blocks = st.hopping_blocks(torch.tensor(h), L, device=CPU, dtype=F64)
+    x = st.multishift_cg(torch.tensor(b), blocks, fwd, back,
+                         torch.tensor(shifts), tol=1e-10, max_iter=4000)  # (K, V, 8)
+
+    for k in range(len(shifts)):
+        assert np.allclose(x[k].reshape(-1).numpy(), expected[k], atol=1e-6)
+
+
+def test_multishift_cg_batched_over_configs():
+    L, V, B = 2, 2 ** 4, 3
+    rng = np.random.default_rng(5)
+    h = rng.standard_normal((B, V, 4, 4))
+    b = rng.standard_normal((B, V, 8))
+    shifts = np.array([0.5, 2.0])
+
+    fwd, back = st.neighbor_tables(L, CPU)
+    blocks = st.hopping_blocks(torch.tensor(h), L, device=CPU, dtype=F64)
+    x = st.multishift_cg(torch.tensor(b), blocks, fwd, back,
+                         torch.tensor(shifts), tol=1e-10, max_iter=4000)  # (B, K, V, 8)
+
+    for bi in range(B):
+        A = _dense(h[bi], L)
+        AtA = -A @ A
+        eye = np.eye(8 * V)
+        for k, s in enumerate(shifts):
+            expected = np.linalg.solve(AtA + s * eye, b[bi].reshape(-1))
+            assert np.allclose(x[bi, k].reshape(-1).numpy(), expected, atol=1e-6)
