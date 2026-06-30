@@ -3631,6 +3631,12 @@ import SKEFTHawking.FKLW.CompiledGateDiamond
 -- endpoints (T→0⁺ ⇒ 0; high-T ⇒ ½), rational enclosures, combined max-floor capstone.
 import SKEFTHawking.QuantumNetwork.ReadoutRelaxationBound
 import SKEFTHawking.QuantumNetwork.ThermalAssignmentFloor
+import SKEFTHawking.MolecularHamiltonian
+import SKEFTHawking.HohenbergKohnUniqueness
+import SKEFTHawking.HohenbergKohnVariational
+import SKEFTHawking.LevyLiebFunctional
+import SKEFTHawking.LindbladGenerator
+import SKEFTHawking.GKSLStructure
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
