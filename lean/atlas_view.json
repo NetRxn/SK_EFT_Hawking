@@ -57412,6 +57412,69 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.NonHermitian.exceptional_point_defective",
+      "module": "SKEFTHawking.NonHermitianBloch",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NonHermitian.ptBloch.eq_1",
+      "module": "SKEFTHawking.NonHermitianBloch",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NonHermitian.ptBlochEP.eq_1",
+      "module": "SKEFTHawking.NonHermitianBloch",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.NonHermitian.ptBlochEP_eigenvector",
+      "module": "SKEFTHawking.NonHermitianBloch",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NonHermitian.ptBlochEP_kernel_line",
+      "module": "SKEFTHawking.NonHermitianBloch",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NonHermitian.ptBlochEP_nilpotent",
+      "module": "SKEFTHawking.NonHermitianBloch",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.NonHermitian.ptBlochEP_not_eigenvector",
+      "module": "SKEFTHawking.NonHermitianBloch",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.NonlinearDiffInvariance.EffectiveLagrangianCoefs.mk.inj",
       "module": "SKEFTHawking.NonlinearDiffInvariance",
       "atlas_kind": "TRUE",
@@ -58147,7 +58210,25 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.acousticBloch_charpoly_factor",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.acousticBloch_eigenvalue_iff",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.Phononic.DiatomicChain.acousticBloch_spectrum",
@@ -58186,7 +58267,25 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.branchMinus_add_branchPlus",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.Phononic.DiatomicChain.branchMinus_le_branchPlus",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.branchMinus_mul_branchPlus",
       "module": "SKEFTHawking.AcousticBlochOperator",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
@@ -58255,7 +58354,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.Phononic.DiatomicChain.gap.eq_1",
@@ -58363,7 +58462,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.Phononic.DiatomicChain.secular_real",
@@ -58420,6 +58519,33 @@
       "frontier_impact": 3
     },
     {
+      "fqn": "SKEFTHawking.Phononic.diatomicCrystal.branchMinus_at_pi",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.diatomicCrystal.branchPlus_at_pi",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.diatomicCrystal.disc_at_pi",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
       "fqn": "SKEFTHawking.Phononic.diatomicCrystal.disc_ge_quarter",
       "module": "SKEFTHawking.PhononicBandGap",
       "atlas_kind": "TRUE",
@@ -58444,7 +58570,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.Phononic.diatomicCrystal.mid_eq",
@@ -58453,7 +58579,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.Phononic.diatomicCrystal.optical_freq_ge",
@@ -129931,7 +130057,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 14335,
+    "theorem_nodes": 14349,
     "unknown_nodes": 33,
     "implies_edges": 35,
     "apex_nodes": 4,
@@ -129943,7 +130069,7 @@
     ],
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 210,
-      "TRUE:PROVED": 14125,
+      "TRUE:PROVED": 14139,
       "UNKNOWN:PLANNED": 9,
       "UNKNOWN:STATED": 24
     },
