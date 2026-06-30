@@ -868,4 +868,36 @@ lemma electron_split_measurePreserving {N : ℕ} (i : Fin N) :
   (volume_preserving_piEquivPiSubtypeProd (fun _ : Fin (3 * N) => ℝ) (electronCoord i)).comp
     space_pi_measurePreserving
 
+/-- **Electron `i`'s 3-coordinate block is canonically `Fin 3`.** The bijection `j ↦ 3i+j` (inverse
+`k ↦ k % 3`) identifies `{k : Fin (3N) // k/3 = i}` with `Fin 3` — the reassembly that makes the fiber
+`Space 3`-shaped, so the single-electron Coulomb bound (`exists_coulomb_relbound`) applies to electron `i`'s
+coordinates inside the molecular L²-Fubini. -/
+def electronCoordEquiv {N : ℕ} (i : Fin N) : {k : Fin (3 * N) // electronCoord i k} ≃ Fin 3 where
+  toFun k := ⟨k.1.val % 3, Nat.mod_lt _ (by norm_num)⟩
+  invFun j := ⟨⟨3 * i.val + j.val, by have hj := j.isLt; have hi := i.isLt; omega⟩, by
+    have hj := j.isLt; show (3 * i.val + j.val) / 3 = i.val; omega⟩
+  left_inv := by
+    rintro ⟨⟨k, hk⟩, hik⟩
+    simp only [electronCoord] at hik
+    apply Subtype.ext; apply Fin.ext
+    show 3 * i.val + k % 3 = k
+    omega
+  right_inv := by
+    intro j
+    apply Fin.ext
+    have hj := j.isLt
+    show (3 * i.val + j.val) % 3 = j.val
+    omega
+
+/-- **The block-coordinate function space is measure-preservingly `Fin 3 → ℝ`.** Lifts `electronCoordEquiv`
+through `volume_measurePreserving_piCongrLeft`: `(Fin 3 → ℝ) ≃ᵐ ({k // electronCoord i k} → ℝ)`, volume to
+volume. Composed with `space_pi_measurePreserving` (at `d = 3`) this gives electron `i`'s fiber as a
+`Space 3`, the home of `exists_coulomb_relbound`. -/
+lemma electronBlock_piCongr_measurePreserving {N : ℕ} (i : Fin N) :
+    MeasureTheory.MeasurePreserving
+      (MeasurableEquiv.piCongrLeft (fun _ : {k // electronCoord i k} => ℝ) (electronCoordEquiv i).symm)
+      (volume : MeasureTheory.Measure (Fin 3 → ℝ))
+      (volume : MeasureTheory.Measure ({k // electronCoord i k} → ℝ)) :=
+  volume_measurePreserving_piCongrLeft (fun _ : {k // electronCoord i k} => ℝ) (electronCoordEquiv i).symm
+
 end SKEFTHawking.DFT
