@@ -1365,4 +1365,29 @@ lemma integral_coulombSq_translate {d : ℕ} (R : Space d) (v : 𝓢(Space d, �
     (fun y => (‖y - R‖⁻¹ * ‖v y‖) ^ 2)]
   simp only [translateSchwartz_apply, add_sub_cancel_right]
 
+open QuantumMechanics in
+/-- **Momentum commutes with translation:** `𝐩ᵢ (translateSchwartz R v) = translateSchwartz R (𝐩ᵢ v)`.
+The momentum operator is `-iℏ ∂ᵢ`, and `∂ᵢ(v(·+R)) = (∂ᵢv)(·+R)` (chain rule, translation has identity
+derivative). Consequence: the kinetic L² norm is translation-invariant. -/
+lemma momentumCLM_translateSchwartz {d : ℕ} (i : Fin d) (R : Space d) (v : 𝓢(Space d, ℂ)) :
+    momentumCLM i (translateSchwartz R v) = translateSchwartz R (momentumCLM i v) := by
+  have hfd : ∀ x : Space d,
+      fderiv ℝ (⇑(translateSchwartz R v)) x = fderiv ℝ (⇑v) (x + R) := by
+    intro x
+    have hc : ⇑(translateSchwartz R v) = fun x => (⇑v) (x + R) := by
+      funext y; exact translateSchwartz_apply R v y
+    rw [hc]
+    have h1 : HasFDerivAt (fun x : Space d => x + R) (ContinuousLinearMap.id ℝ (Space d)) x :=
+      (hasFDerivAt_id x).add_const R
+    have h2 : HasFDerivAt (⇑v) (fderiv ℝ (⇑v) (x + R)) (x + R) :=
+      v.differentiableAt.hasFDerivAt
+    have h3 := h2.comp x h1
+    rw [ContinuousLinearMap.comp_id] at h3
+    exact h3.fderiv
+  ext x
+  rw [momentumCLM_apply, translateSchwartz_apply, momentumCLM_apply]
+  congr 1
+  show (fderiv ℝ (⇑(translateSchwartz R v)) x) (Space.basis i) = (fderiv ℝ (⇑v) (x + R)) (Space.basis i)
+  rw [hfd]
+
 end SKEFTHawking.DFT
