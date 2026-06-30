@@ -1445,4 +1445,26 @@ lemma integrable_coulombSq (u : 𝓢(Space 3, ℂ)) :
   · rw [if_pos h, if_neg (not_lt.mpr h)]; ring
   · rw [if_neg h, if_pos (not_le.mp h)]; ring
 
+/-- **Center-`R` Coulomb-squared integrability** `Integrable (fun y => (‖y − R‖⁻¹‖v y‖)²)` — by translating
+the origin version (`integrable_coulombSq` on `translateSchwartz R v`) through the measure-preserving
+`(· − R)`. -/
+lemma integrable_coulombSq_center (R : Space 3) (v : 𝓢(Space 3, ℂ)) :
+    Integrable (fun y : Space 3 => (‖y - R‖⁻¹ * ‖v y‖) ^ 2) := by
+  have h := ((measurePreserving_translate (-R)).integrable_comp_emb
+    (measurableEmbedding_addRight (-R))).mpr (integrable_coulombSq (translateSchwartz R v))
+  refine h.congr (Filter.Eventually.of_forall fun y => ?_)
+  simp only [Function.comp_apply, translateSchwartz_apply, ← sub_eq_add_neg, sub_add_cancel]
+
+/-- **lintegral↔Bochner bridge for the center-`R` Coulomb integrand:**
+`∫⁻ (ofReal (‖y − R‖⁻¹‖v y‖))² = ENNReal.ofReal (∫ (‖y − R‖⁻¹‖v y‖)²)`. Turns the inner `Space 3` lower
+integral of the molecular Fubini (W3-53) into a Bochner integral, so the Bochner-form center-`R` bound
+(`exists_coulomb_relbound_center`) applies. -/
+lemma lintegral_coulombSq_center_eq (R : Space 3) (v : 𝓢(Space 3, ℂ)) :
+    ∫⁻ y : Space 3, (ENNReal.ofReal (‖y - R‖⁻¹ * ‖v y‖)) ^ 2
+      = ENNReal.ofReal (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2) := by
+  rw [ofReal_integral_eq_lintegral_ofReal (integrable_coulombSq_center R v)
+    (Filter.Eventually.of_forall fun y => by positivity)]
+  refine lintegral_congr fun y => ?_
+  rw [ENNReal.ofReal_pow (by positivity)]
+
 end SKEFTHawking.DFT
