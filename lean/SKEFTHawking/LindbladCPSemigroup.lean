@@ -227,4 +227,26 @@ lemma isCompletelyPositive_toLin_exp_drift (H : Matrix d d ℂ) (hH : H.IsHermit
 
 end Drift
 
+section Trotter
+
+/-- **Noncommutative telescoping:** `aⁿ - bⁿ = ∑_{i<n} aⁱ (a - b) bⁿ⁻¹⁻ⁱ` in any ring (no
+commutativity). The algebraic core of the Lie–Trotter product-formula norm estimate. -/
+lemma pow_sub_pow_eq_telescope {R : Type*} [Ring R] (a b : R) (n : ℕ) :
+    a ^ n - b ^ n = ∑ i ∈ Finset.range n, a ^ i * (a - b) * b ^ (n - 1 - i) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [Finset.sum_range_succ, Nat.add_sub_cancel, Nat.sub_self, pow_zero, mul_one]
+    have hsplit : ∑ i ∈ Finset.range n, a ^ i * (a - b) * b ^ (n - i)
+        = (∑ i ∈ Finset.range n, a ^ i * (a - b) * b ^ (n - 1 - i)) * b := by
+      rw [Finset.sum_mul]
+      refine Finset.sum_congr rfl fun i hi => ?_
+      have hi' : i < n := Finset.mem_range.mp hi
+      have hexp : n - i = n - 1 - i + 1 := by omega
+      rw [hexp, pow_succ, ← mul_assoc]
+    rw [hsplit, ← ih, pow_succ, pow_succ]
+    noncomm_ring
+
+end Trotter
+
 end SKEFTHawking.OpenSystems
