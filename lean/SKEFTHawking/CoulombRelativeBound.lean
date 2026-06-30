@@ -1564,4 +1564,24 @@ lemma kineticSq_fiberSchwartz {N : ℕ} (iₑ : Fin N) (z : {k // ¬ electronCoo
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [momentumCLM_fiberSchwartz, momentumCLM_fiberSchwartz]
 
+open QuantumMechanics in
+/-- **Molecular kinetic L²-Fubini (Kᶠ Fubini-reverse):** the spectator-iterated lower integral of the fiber's
+block-kinetic density equals the molecular lower integral of the electron-`iₑ` block kinetic of `u`. Combines
+the fiber kinetic commutation (W3-90) with the L²-Fubini (W3-87, applied to `∑ⱼ𝐩_{3iₑ+j}² u`). -/
+lemma molecular_kineticSq_lintegral {N : ℕ} (iₑ : Fin N) (u : 𝓢(Space (3 * N), ℂ)) :
+    ∫⁻ z, ∫⁻ y, (ENNReal.ofReal ‖(∑ j, momentumCLM j (momentumCLM j (fiberSchwartz iₑ z u))) y‖) ^ 2
+        ∂(volume : MeasureTheory.Measure (Space 3))
+        ∂(volume : MeasureTheory.Measure ({k // ¬ electronCoord iₑ k} → ℝ))
+      = ∫⁻ x, (ENNReal.ofReal ‖(∑ j : Fin 3, momentumCLM ⟨3 * iₑ.val + j.val, by
+            have := iₑ.isLt; have := j.isLt; omega⟩
+          (momentumCLM ⟨3 * iₑ.val + j.val, by have := iₑ.isLt; have := j.isLt; omega⟩ u)) x‖) ^ 2
+          ∂(volume : MeasureTheory.Measure (Space (3 * N))) := by
+  have hw : Measurable (⇑(∑ j : Fin 3, momentumCLM ⟨3 * iₑ.val + j.val, by
+      have := iₑ.isLt; have := j.isLt; omega⟩
+    (momentumCLM ⟨3 * iₑ.val + j.val, by have := iₑ.isLt; have := j.isLt; omega⟩ u))) :=
+    (SchwartzMap.continuous _).measurable
+  rw [molecular_normSq_lintegral iₑ hw]
+  refine lintegral_congr fun z => lintegral_congr fun y => ?_
+  rw [kineticSq_fiberSchwartz, fiberSchwartz_apply]
+
 end SKEFTHawking.DFT
