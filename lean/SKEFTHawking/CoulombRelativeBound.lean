@@ -953,4 +953,18 @@ lemma molecularSplit_measurePreserving {N : ℕ} (i : Fin N) :
   rw [Measure.volume_eq_prod] at hsplit
   exact ((block_pi_measurePreserving_space3 i).prod (MeasureTheory.MeasurePreserving.id _)).comp hsplit
 
+/-- **Fubini through the molecular split.** For any measurable `G : Space 3 × (spectator) → ℝ≥0∞`, the
+molecular `Space (3N)` lower integral of `G ∘ molecularSplitMap` is the iterated integral with electron
+`i`'s block (`Space 3`) on the inside and the spectator coordinates on the outside. Composes the
+measure-preserving change of variables (`molecularSplit_measurePreserving`, `lintegral_comp`) with Tonelli
+(`lintegral_prod_symm`). This is the reusable identity that reduces a molecular Coulomb-term `L²` integral
+to `∫_spectator (∫_{Space 3} …)`, where the inner integral is exactly the single-electron bound's left side. -/
+lemma molecularSplit_lintegral {N : ℕ} (i : Fin N)
+    (G : Space 3 × ({k // ¬ electronCoord i k} → ℝ) → ENNReal) (hG : Measurable G) :
+    ∫⁻ x, G (molecularSplitMap i x) ∂(volume : MeasureTheory.Measure (Space (3 * N)))
+      = ∫⁻ z, ∫⁻ y, G (y, z) ∂(volume : MeasureTheory.Measure (Space 3))
+          ∂(volume : MeasureTheory.Measure ({k // ¬ electronCoord i k} → ℝ)) := by
+  rw [(molecularSplit_measurePreserving i).lintegral_comp hG]
+  exact lintegral_prod_symm G hG.aemeasurable
+
 end SKEFTHawking.DFT
