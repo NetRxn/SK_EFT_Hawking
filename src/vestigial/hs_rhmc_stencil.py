@@ -178,3 +178,26 @@ def compute_force(h, phi, g, alphas, betas, fwd, back, L, tol=1e-10, max_iter=50
         weighted = torch.einsum('k,...akv->...av', alphas, -2.0 * (term1 - term2))  # (*B,a,V)
         F[..., :, mu, :] = F[..., :, mu, :] + weighted.transpose(-1, -2)   # (*B,V,a)
     return F
+
+
+OMELYAN_LAMBDA = 0.1931833275037836   # 2MN minimal-norm coefficient
+
+
+def integrate(h, pi, phi, g, alphas, betas, fwd, back, L, eps, n_steps,
+              lam=OMELYAN_LAMBDA, tol=1e-10, max_iter=5000):
+    """Omelyan 2MN (2nd-order minimal-norm) molecular-dynamics evolution.
+
+    One step: π+=λεF; h+=ε/2·π; π+=(1−2λ)εF; h+=ε/2·π; π+=λεF.
+    Reversible + symplectic ⟹ the Metropolis accept/reject on ΔH is exact.
+    Returns (h, π) after n_steps."""
+    def force(hh):
+        return compute_force(hh, phi, g, alphas, betas, fwd, back, L, tol=tol, max_iter=max_iter)
+
+    half = 0.5 * eps
+    for _ in range(n_steps):
+        pi = pi + (lam * eps) * force(h)
+        h = h + half * pi
+        pi = pi + ((1.0 - 2.0 * lam) * eps) * force(h)
+        h = h + half * pi
+        pi = pi + (lam * eps) * force(h)
+    return h, pi

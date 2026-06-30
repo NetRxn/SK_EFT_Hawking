@@ -164,3 +164,24 @@ def test_force_equals_negative_action_gradient():
         hm = h.copy(); hm[x, mu, a] -= eps
         fd = -(action(hp) - action(hm)) / (2 * eps)
         assert abs(F[x, mu, a] - fd) <= 1e-4 * max(1.0, abs(fd)), (x, mu, a, F[x, mu, a], fd)
+
+
+def test_omelyan_integrator_is_reversible():
+    # Reversibility (⟹ detailed balance): integrate forward, flip momenta,
+    # integrate forward again → return to the start (FP64 round-off).
+    L, V, g = 2, 2 ** 4, 1.5
+    rng = np.random.default_rng(8)
+    h0 = torch.tensor(rng.standard_normal((V, 4, 4)))
+    pi0 = torch.tensor(rng.standard_normal((V, 4, 4)))
+    phi = torch.tensor(rng.standard_normal((V, 8)))
+    al = torch.tensor([0.5, 0.3, 0.2])
+    be = torch.tensor([0.3, 1.0, 3.0])
+    fwd, back = st.neighbor_tables(L, CPU)
+    kw = dict(fwd=fwd, back=back, L=L, eps=0.1, n_steps=5, tol=1e-12, max_iter=5000)
+
+    h1, pi1 = st.integrate(h0, pi0, phi, g, al, be, **kw)
+    assert not torch.allclose(h1, h0)                       # it actually moved
+    h2, pi2 = st.integrate(h1, -pi1, phi, g, al, be, **kw)
+
+    assert torch.allclose(h2, h0, atol=1e-9)
+    assert torch.allclose(pi2, -pi0, atol=1e-9)
