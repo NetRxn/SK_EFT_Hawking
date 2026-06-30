@@ -372,6 +372,58 @@ lemma fourierMultiplierCLM_sub_apply {g₁ g₂ : Space d → ℂ} (hg₁ : g₁
       ContinuousLinearMap.comp_sub]
   rw [← ContinuousLinearMap.sub_apply, hCLM]
 
+/-- The resolvent multiplier symbol `(s - iμ)⁻¹` for `s(ξ) = (2πℏ)²‖ξ‖²`. -/
+noncomputable def resSym (μ : ℝ) : Space d → ℂ :=
+  fun ξ => ((((2 * Real.pi * Constants.ℏ) ^ 2 * ‖ξ‖ ^ 2 : ℝ) : ℂ) - Complex.I * (μ : ℂ))⁻¹
+
+lemma resSym_hasTemperateGrowth (μ : ℝ) (hμ : μ ≠ 0) :
+    (resSym (d := d) μ).HasTemperateGrowth :=
+  resolventSymbol_hasTemperateGrowth ((2 * Real.pi * Constants.ℏ) ^ 2) μ hμ
+
+/-- The ℂ-cast norm-square symbol `↑‖ξ‖²` has temperate growth. -/
+lemma normSymC_hasTemperateGrowth :
+    Function.HasTemperateGrowth (fun ξ : Space d => ((‖ξ‖ ^ 2 : ℝ) : ℂ)) :=
+  Function.HasTemperateGrowth.comp Function.Complex.hasTemperateGrowth_ofReal
+    (Function.hasTemperateGrowth_norm_sq (H := Space d))
+
+/-- The combined resolvent symbol collapses to `1`: `(2πℏ)²·↑‖ξ‖²·r - iμ·r = 1`. -/
+lemma resolvent_symbol_eq_one (μ : ℝ) (hμ : μ ≠ 0) :
+    (((2 * Real.pi * Constants.ℏ) ^ 2 : ℂ) • ((fun ξ : Space d => ((‖ξ‖ ^ 2 : ℝ) : ℂ)) * resSym μ)
+      - (Complex.I * (μ : ℂ)) • resSym μ) = fun _ : Space d => (1 : ℂ) := by
+  funext ξ
+  simp only [Pi.sub_apply, Pi.smul_apply, Pi.mul_apply, smul_eq_mul, resSym]
+  rw [show ((2 * Real.pi * Constants.ℏ) ^ 2 : ℂ)
+          * (((‖ξ‖ ^ 2 : ℝ) : ℂ)
+            * ((((2 * Real.pi * Constants.ℏ) ^ 2 * ‖ξ‖ ^ 2 : ℝ) : ℂ) - Complex.I * (μ : ℂ))⁻¹)
+        - Complex.I * (μ : ℂ)
+          * ((((2 * Real.pi * Constants.ℏ) ^ 2 * ‖ξ‖ ^ 2 : ℝ) : ℂ) - Complex.I * (μ : ℂ))⁻¹
+      = ((((2 * Real.pi * Constants.ℏ) ^ 2 * ‖ξ‖ ^ 2 : ℝ) : ℂ) - Complex.I * (μ : ℂ))
+          * ((((2 * Real.pi * Constants.ℏ) ^ 2 * ‖ξ‖ ^ 2 : ℝ) : ℂ) - Complex.I * (μ : ℂ))⁻¹
+      from by push_cast; ring]
+  exact momSqSymbol_mul_resolvent μ hμ ξ
+
+/-- A constant scalar times a temperate function is temperate (in the `c • g` form). -/
+lemma smul_hasTemperateGrowth {g : Space d → ℂ} (c : ℂ) (hg : g.HasTemperateGrowth) :
+    Function.HasTemperateGrowth (c • g) :=
+  (Function.HasTemperateGrowth.const c).smul hg
+
+/-- **Operator identity.** `x := M[r]G` solves `(momentumSq − iμ)x = G` at the Schwartz level:
+`(2πℏ)²·M[‖·‖²](M[r]G) − iμ·M[r]G = G`. -/
+lemma resolvent_solves (μ : ℝ) (hμ : μ ≠ 0) (G : 𝓢(Space d, ℂ)) :
+    ((2 * Real.pi * Constants.ℏ) ^ 2 : ℂ)
+        • fourierMultiplierCLM ℂ (fun ξ : Space d => ((‖ξ‖ ^ 2 : ℝ) : ℂ))
+          (fourierMultiplierCLM ℂ (resSym μ) G)
+      - (Complex.I * (μ : ℂ)) • fourierMultiplierCLM ℂ (resSym μ) G = G := by
+  have hr := resSym_hasTemperateGrowth (d := d) μ hμ
+  have hn := normSymC_hasTemperateGrowth (d := d)
+  rw [fourierMultiplierCLM_fourierMultiplierCLM_apply hn hr G,
+    ← ContinuousLinearMap.smul_apply, ← fourierMultiplierCLM_smul (hn.mul hr),
+    ← ContinuousLinearMap.smul_apply, ← fourierMultiplierCLM_smul hr,
+    fourierMultiplierCLM_sub_apply (smul_hasTemperateGrowth _ (hn.mul hr))
+      (smul_hasTemperateGrowth _ hr),
+    resolvent_symbol_eq_one μ hμ, fourierMultiplierCLM_const]
+  simp
+
 end Wave2
 
 end SKEFTHawking.DFT
