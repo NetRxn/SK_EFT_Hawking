@@ -1342,4 +1342,11 @@ noncomputable def translateSchwartz {d : ℕ} (R : Space d) (v : 𝓢(Space d, �
 @[simp] lemma translateSchwartz_apply {d : ℕ} (R : Space d) (v : 𝓢(Space d, ℂ)) (y : Space d) :
     translateSchwartz R v y = v (y + R) := rfl
 
+/-- **Translation is measure-preserving on `Space d`** — its volume is add-right-invariant (Haar). This is
+the change of variables `∫ f(y) dy = ∫ f(y' + R) dy'` underpinning the recentering of a Coulomb term. -/
+lemma measurePreserving_translate {d : ℕ} (R : Space d) :
+    MeasureTheory.MeasurePreserving (fun y : Space d => y + R)
+      (volume : MeasureTheory.Measure (Space d)) (volume : MeasureTheory.Measure (Space d)) :=
+  measurePreserving_add_right volume R
+
 end SKEFTHawking.DFT
