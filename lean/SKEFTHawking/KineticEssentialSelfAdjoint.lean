@@ -206,6 +206,29 @@ lemma momentumCLM_sq_eq_fourierMultiplier (i : Fin d) (f : 𝓢(Space d, ℂ)) :
   congr 1
   ring
 
+/-- The squared ℂ-cast coordinate symbol has temperate growth. -/
+lemma innerBasisCSq_hasTemperateGrowth (i : Fin d) :
+    Function.HasTemperateGrowth (fun ξ : Space d => ((inner ℝ ξ (Space.basis i) : ℝ) : ℂ) ^ 2) := by
+  fun_prop
+
+/-- **C1d.** The full momentum-square Schwartz action `∑ᵢ 𝐩ᵢ²` is `(2πℏ)²` times the Fourier
+multiplier with symbol `‖ξ‖²`. -/
+lemma momentumSq_schwartz_eq_fourierMultiplier (f : 𝓢(Space d, ℂ)) :
+    (∑ i, momentumCLM i (momentumCLM i f))
+      = ((2 * Real.pi * Constants.ℏ) ^ 2 : ℂ) •
+        fourierMultiplierCLM ℂ (fun ξ : Space d => ((‖ξ‖ ^ 2 : ℝ) : ℂ)) f := by
+  have hsum : (fun ξ : Space d => ((‖ξ‖ ^ 2 : ℝ) : ℂ))
+      = (fun ξ : Space d => ∑ i, ((inner ℝ ξ (Space.basis i) : ℝ) : ℂ) ^ 2) := by
+    funext ξ
+    rw [← Space.basis.sum_sq_inner_left ξ]
+    push_cast
+    ring
+  simp only [momentumCLM_sq_eq_fourierMultiplier]
+  rw [← Finset.smul_sum]
+  congr 1
+  rw [← ContinuousLinearMap.sum_apply,
+    ← fourierMultiplierCLM_sum ℂ (fun i _ => innerBasisCSq_hasTemperateGrowth i), ← hsum]
+
 end Wave2
 
 end SKEFTHawking.DFT
