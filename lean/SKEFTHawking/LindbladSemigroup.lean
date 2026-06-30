@@ -74,18 +74,11 @@ theorem lindblad_semigroup (H : Matrix d d ℂ) (L : κ → Matrix d d ℂ) (t s
   exact (Matrix.exp_add_of_commute _ _
     (((Commute.refl (lindbladLiouvillian H L)).smul_left (t : ℂ)).smul_right (s : ℂ))).symm
 
-/-- **Trace-distance contractivity (data processing).** The GKSL dynamical map contracts the trace
-distance, `D(Λ_t ρ, Λ_t σ) ≤ D(ρ, σ)`. Contractivity holds because `Λ_t` is a CPTP channel; that
-property is disclosed via `hreal` — the propagator's action is realized by a Kraus channel `K`
-(`IsKrausChannel K`), the GKSL theorem's physical content — and the bound is the project's CPTP
-data-processing inequality. -/
-theorem traceDist_lindblad_monotone (H : Matrix d d ℂ) (L : κ → Matrix d d ℂ) (t : ℝ)
-    {m : ℕ} (K : Fin m → Matrix d d ℂ) (hK : IsKrausChannel K)
-    (hreal : ∀ ρ : Matrix d d ℂ, lindbladPropagatorAction H L t ρ = krausMap K ρ)
-    {ρ σ : Matrix d d ℂ} (hρ : ρ.IsHermitian) (hσ : σ.IsHermitian) :
-    traceDist (lindbladPropagatorAction H L t ρ) (lindbladPropagatorAction H L t σ)
-      ≤ traceDist ρ σ := by
-  rw [hreal ρ, hreal σ]
-  exact traceDist_krausMap_le hK hρ hσ
+/- **Trace-distance contractivity (`traceDist_lindblad_monotone`)** now lives — *unconditionally* — in
+`SKEFTHawking.LindbladCPSemigroup`. It formerly disclosed `hreal` (the propagator's action realized by a
+Kraus channel) as a hypothesis; that hypothesis has since been **discharged**: the propagator is proven
+completely positive (`isCompletelyPositive_lindbladPropagatorAction`) and trace-preserving
+(`trace_lindbladPropagatorAction`), hence CPTP, so the realization is extracted (`exists_kraus`) rather
+than assumed. The unconditional theorem is stated downstream because the CP proof depends on this module. -/
 
 end SKEFTHawking.OpenSystems

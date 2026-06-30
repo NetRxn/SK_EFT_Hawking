@@ -566,6 +566,39 @@ theorem trace_lindbladPropagatorAction (H : Matrix d d ℂ) (L : κ → Matrix d
   rw [← hHasSum.tsum_eq, tsum_eq_single 0 hzero, hterm 0]
   simp
 
+open SKEFTHawking.QuantumNetwork in
+/-- **Trace-distance contractivity of the GKSL dynamical map — UNCONDITIONAL.**
+`D(Λ_t ρ, Λ_t σ) ≤ D(ρ, σ)` for Hermitian `H` and `t ≥ 0`, with **no disclosed realization
+hypothesis**: `Λ_t` is proven completely positive (`isCompletelyPositive_lindbladPropagatorAction`)
+and trace-preserving (`trace_lindbladPropagatorAction`), hence a Kraus channel, and the bound is the
+CPTP data-processing inequality `traceDist_krausMap_le`. This discharges the former `hreal`. -/
+theorem traceDist_lindblad_monotone (H : Matrix d d ℂ) (hH : H.IsHermitian) (L : κ → Matrix d d ℂ)
+    {t : ℝ} (ht : 0 ≤ t) {ρ σ : Matrix d d ℂ} (hρ : ρ.IsHermitian) (hσ : σ.IsHermitian) :
+    traceDist (lindbladPropagatorAction H L t ρ) (lindbladPropagatorAction H L t σ)
+      ≤ traceDist ρ σ := by
+  obtain ⟨K, hKeq⟩ := (isCompletelyPositive_lindbladPropagatorAction H hH L ht).exists_kraus
+  set e := Fintype.equivFin (d × d) with he
+  set K' : Fin (Fintype.card (d × d)) → Matrix d d ℂ := fun i => K (e.symm i) with hK'
+  have hreal : ∀ x : Matrix d d ℂ, lindbladPropagatorAction H L t x = krausMap K' x := by
+    intro x
+    rw [hKeq]
+    have hof : (MatrixMap.of_kraus K K) x = ∑ k : d × d, K k * x * (K k)ᴴ := by
+      simp only [MatrixMap.of_kraus, LinearMap.coe_sum, Finset.sum_apply, LinearMap.coe_mk,
+        AddHom.coe_mk]
+    rw [hof, krausMap]
+    exact (Equiv.sum_comp e.symm (fun k => K k * x * (K k)ᴴ)).symm
+  have hchannel : IsKrausChannel K' := by
+    rw [IsKrausChannel, Matrix.ext_iff_trace_mul_right]
+    intro x
+    rw [one_mul]
+    have htp := trace_lindbladPropagatorAction H L t x
+    rw [hreal x, krausMap] at htp
+    rw [← htp, Finset.sum_mul, Matrix.trace_sum, Matrix.trace_sum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [Matrix.trace_mul_comm (K' i * x) (K' i)ᴴ, ← Matrix.mul_assoc]
+  rw [hreal ρ, hreal σ]
+  exact traceDist_krausMap_le hchannel hρ hσ
+
 end Propagator
 
 end SKEFTHawking.OpenSystems
