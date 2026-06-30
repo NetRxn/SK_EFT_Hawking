@@ -246,6 +246,61 @@ lemma oneAdd_mulSq_inv_hasTemperateGrowth (a : ℝ) :
     funext t; rw [Real.norm_eq_abs, sq_abs, Real.rpow_neg_one]
   rw [heq]; exact hcomp
 
+/-- The real denominator inverse `(k²t² + μ²)⁻¹` (one variable) has temperate growth. -/
+lemma denomInv1D_hasTemperateGrowth (k μ : ℝ) (hμ : μ ≠ 0) :
+    Function.HasTemperateGrowth (fun t : ℝ => (k ^ 2 * t ^ 2 + μ ^ 2)⁻¹) := by
+  have hb := (Function.HasTemperateGrowth.const (E := ℝ) ((μ ^ 2)⁻¹ : ℝ)).mul
+    (oneAdd_mulSq_inv_hasTemperateGrowth (k / μ))
+  have heq : (fun t : ℝ => (k ^ 2 * t ^ 2 + μ ^ 2)⁻¹)
+      = (fun t : ℝ => (μ ^ 2)⁻¹ * (1 + (k / μ * t) ^ 2)⁻¹) := by
+    funext t
+    rw [← mul_inv]
+    congr 1
+    field_simp
+    ring
+  rw [heq]; exact hb
+
+/-- The 1-D resolvent symbol `(↑(k·t) - iμ)⁻¹` has temperate growth (conjugate form). -/
+lemma phi1D_hasTemperateGrowth (k μ : ℝ) (hμ : μ ≠ 0) :
+    Function.HasTemperateGrowth
+      (fun t : ℝ => (((k * t : ℝ) : ℂ) - Complex.I * (μ : ℂ))⁻¹) := by
+  have hnum : Function.HasTemperateGrowth
+      (fun t : ℝ => ((k * t : ℝ) : ℂ) + Complex.I * (μ : ℂ)) := by fun_prop
+  have hden : Function.HasTemperateGrowth
+      (fun t : ℝ => (((k ^ 2 * t ^ 2 + μ ^ 2)⁻¹ : ℝ) : ℂ)) :=
+    Function.HasTemperateGrowth.comp Function.Complex.hasTemperateGrowth_ofReal
+      (denomInv1D_hasTemperateGrowth k μ hμ)
+  have heq : (fun t : ℝ => (((k * t : ℝ) : ℂ) - Complex.I * (μ : ℂ))⁻¹)
+      = (fun t : ℝ => (((k * t : ℝ) : ℂ) + Complex.I * (μ : ℂ))
+          * (((k ^ 2 * t ^ 2 + μ ^ 2)⁻¹ : ℝ) : ℂ)) := by
+    funext t
+    have hne : ((k * t : ℝ) : ℂ) - Complex.I * (μ : ℂ) ≠ 0 := by
+      intro h
+      apply hμ
+      have him := congrArg Complex.im h
+      simp at him
+      linarith
+    have hwne : ((k * t : ℝ) : ℂ) + Complex.I * (μ : ℂ) ≠ 0 := by
+      intro h
+      apply hμ
+      have him := congrArg Complex.im h
+      simp at him
+      linarith
+    have hzw : (((k * t : ℝ) : ℂ) - Complex.I * (μ : ℂ))
+        * (((k * t : ℝ) : ℂ) + Complex.I * (μ : ℂ)) = ((k ^ 2 * t ^ 2 + μ ^ 2 : ℝ) : ℂ) := by
+      push_cast; ring_nf; rw [Complex.I_sq]; ring
+    rw [Complex.ofReal_inv, ← hzw]
+    field_simp
+  rw [heq]; exact hnum.mul hden
+
+/-- **C2.** The resolvent symbol `(↑(k‖ξ‖²) - iμ)⁻¹` has temperate growth for `μ ≠ 0` (any real
+`k`), since the denominator never vanishes (its imaginary part is `-μ`). Built by composing the
+1-D resolvent `φ` with `‖·‖²`. -/
+lemma resolventSymbol_hasTemperateGrowth (k μ : ℝ) (hμ : μ ≠ 0) :
+    Function.HasTemperateGrowth
+      (fun ξ : Space d => (((k * ‖ξ‖ ^ 2 : ℝ) : ℂ) - Complex.I * (μ : ℂ))⁻¹) :=
+  (phi1D_hasTemperateGrowth k μ hμ).comp (Function.hasTemperateGrowth_norm_sq (H := Space d))
+
 end Wave2
 
 end SKEFTHawking.DFT
