@@ -471,28 +471,13 @@ noncomputable def molecularSystem (N : ℕ) (m : ℝ) (hm : 0 < m) (nuclei : Fin
   hm := hm
   potential := molecularCoulombPotential nuclei
 
-open QuantumMechanics in
-/-- **The N-electron molecular Coulomb Hamiltonian is essentially self-adjoint**, via Kato–Rellich.
-
-`hkin` — the **closure** of the kinetic operator is self-adjoint, i.e. the kinetic energy is
-*essentially* self-adjoint on the Schwartz core (free-Laplacian self-adjointness via the Fourier
-multiplier `|p|²`) — and `hrel` — the Coulomb potential is relatively `T̄`-bounded with bound `a < 1`
-(Kato's/Hardy's inequality in 3D) — are the two genuinely Mathlib-scale analytic inputs, carried as
-**disclosed, load-bearing hypotheses** (NOT axioms; both are TRUE for the molecular operator, and
-`hrel`'s `a < 1` is used essentially in the Kato–Rellich reduction). The reduction itself is fully
-proven (`katoRellich`). The conclusion `IsSelfAdjoint (T̄ + V)` is the self-adjoint molecular
-Hamiltonian realization. `hpot` (the real multiplication operator is symmetric) is discharge-able from
-measurability of the Coulomb potential. -/
-theorem molecularHamiltonian_essSelfAdjoint (N : ℕ) (m : ℝ) (hm : 0 < m)
-    (nuclei : Finset (Space 3 × ℝ))
-    (hkin : IsSelfAdjoint (molecularSystem N m hm nuclei).kineticOperator.closure)
-    (hpot : IsSymmetricPMap (molecularSystem N m hm nuclei).potentialOperator)
-    {a b : ℝ} (ha0 : 0 ≤ a) (ha : a < 1) (hb : 0 ≤ b)
-    (hrel : IsRelBounded (molecularSystem N m hm nuclei).kineticOperator.closure
-      (molecularSystem N m hm nuclei).potentialOperator a b) :
-    IsSelfAdjoint ((molecularSystem N m hm nuclei).kineticOperator.closure
-      + (molecularSystem N m hm nuclei).potentialOperator) :=
-  spaceDQuantumSystem_hamiltonian_isSelfAdjoint _ hkin hpot ha0 ha hb hrel
+/- **Apex theorems relocated (Phase 6BB Wave 6, `hkin` discharge).** `molecularHamiltonian_essSelfAdjoint`
+and `molecularHamiltonian_essSelfAdjoint_of_kinetic` now live in
+`SKEFTHawking/KineticEssentialSelfAdjoint.lean`, where the kinetic operator's essential
+self-adjointness (`kineticOperator_isSelfAdjoint_closure`, the discharge of the former `hkin`
+hypothesis) is available — they no longer take an `hkin` argument. The Kato–Rellich substrate
+(`spaceDQuantumSystem_hamiltonian_isSelfAdjoint`, `katoRellich`) and the `hpot` discharge
+(`molecularPotentialOperator_isSymmetric`, below) remain here. -/
 
 /-! ### Wave 5 — discharge of `hpot` (the potential is symmetric), via measurability of the
 molecular Coulomb potential. -/
@@ -526,20 +511,5 @@ lemma molecularPotentialOperator_isSymmetric (N : ℕ) (m : ℝ) (hm : 0 < m)
   IsSelfAdjoint.isSymmetricPMap
     ((molecularSystem N m hm nuclei).potentialOperator_isSelfAdjoint
       (molecularCoulombPotential_measurable nuclei).aestronglyMeasurable)
-
-open QuantumMechanics in
-/-- **Molecular essential self-adjointness with `hpot` discharged.** Only the two genuinely
-Mathlib-scale analytic inputs remain disclosed: `hkin` (kinetic ess-s.a.) and `hrel` (Coulomb
-relative-boundedness `a < 1`). -/
-theorem molecularHamiltonian_essSelfAdjoint_of_kinetic (N : ℕ) (m : ℝ) (hm : 0 < m)
-    (nuclei : Finset (Space 3 × ℝ))
-    (hkin : IsSelfAdjoint (molecularSystem N m hm nuclei).kineticOperator.closure)
-    {a b : ℝ} (ha0 : 0 ≤ a) (ha : a < 1) (hb : 0 ≤ b)
-    (hrel : IsRelBounded (molecularSystem N m hm nuclei).kineticOperator.closure
-      (molecularSystem N m hm nuclei).potentialOperator a b) :
-    IsSelfAdjoint ((molecularSystem N m hm nuclei).kineticOperator.closure
-      + (molecularSystem N m hm nuclei).potentialOperator) :=
-  spaceDQuantumSystem_hamiltonian_isSelfAdjoint _ hkin
-    (molecularPotentialOperator_isSymmetric N m hm nuclei) ha0 ha hb hrel
 
 end SKEFTHawking.DFT

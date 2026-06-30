@@ -463,6 +463,35 @@ theorem kineticOperator_isSelfAdjoint_closure (N : ℕ) (m : ℝ) (hm : 0 < m)
   exact LinearPMap.IsSelfAdjoint.smul momentumSqOperator_isSelfAdjoint_closure
     (Complex.ofReal_ne_zero.mpr hm2) (Complex.conj_ofReal _)
 
+/-- **The N-electron molecular Coulomb Hamiltonian is essentially self-adjoint**, via Kato–Rellich,
+with `hkin` **discharged** (`kineticOperator_isSelfAdjoint_closure`). The kinetic operator's essential
+self-adjointness — previously a disclosed hypothesis — is now a proven theorem, so this no longer
+takes an `hkin` argument. Only `hrel` (Coulomb relative-bound `a < 1`, Kato/Hardy — Phase 6BB Wave 3)
+remains disclosed [plus `hpot`, itself dischargeable via `molecularPotentialOperator_isSymmetric`]. -/
+theorem _root_.SKEFTHawking.DFT.molecularHamiltonian_essSelfAdjoint (N : ℕ) (m : ℝ) (hm : 0 < m)
+    (nuclei : Finset (Space 3 × ℝ))
+    (hpot : IsSymmetricPMap (molecularSystem N m hm nuclei).potentialOperator)
+    {a b : ℝ} (ha0 : 0 ≤ a) (ha : a < 1) (hb : 0 ≤ b)
+    (hrel : IsRelBounded (molecularSystem N m hm nuclei).kineticOperator.closure
+      (molecularSystem N m hm nuclei).potentialOperator a b) :
+    IsSelfAdjoint ((molecularSystem N m hm nuclei).kineticOperator.closure
+      + (molecularSystem N m hm nuclei).potentialOperator) :=
+  spaceDQuantumSystem_hamiltonian_isSelfAdjoint _
+    (kineticOperator_isSelfAdjoint_closure N m hm nuclei) hpot ha0 ha hb hrel
+
+/-- **Molecular essential self-adjointness with `hkin` and `hpot` both discharged.** Only `hrel`
+(Coulomb relative-boundedness `a < 1`) remains disclosed. -/
+theorem _root_.SKEFTHawking.DFT.molecularHamiltonian_essSelfAdjoint_of_kinetic
+    (N : ℕ) (m : ℝ) (hm : 0 < m) (nuclei : Finset (Space 3 × ℝ))
+    {a b : ℝ} (ha0 : 0 ≤ a) (ha : a < 1) (hb : 0 ≤ b)
+    (hrel : IsRelBounded (molecularSystem N m hm nuclei).kineticOperator.closure
+      (molecularSystem N m hm nuclei).potentialOperator a b) :
+    IsSelfAdjoint ((molecularSystem N m hm nuclei).kineticOperator.closure
+      + (molecularSystem N m hm nuclei).potentialOperator) :=
+  spaceDQuantumSystem_hamiltonian_isSelfAdjoint _
+    (kineticOperator_isSelfAdjoint_closure N m hm nuclei)
+    (molecularPotentialOperator_isSymmetric N m hm nuclei) ha0 ha hb hrel
+
 end Wave2
 
 end SKEFTHawking.DFT
