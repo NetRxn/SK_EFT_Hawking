@@ -46,4 +46,15 @@ lemma memLp_two_oneAddNormSq_inv :
   filter_upwards with ξ
   rw [Real.rpow_neg (by positivity), Real.rpow_two, ← inv_pow]
 
+/-- **Young's inequality, the relative-bound ε-step:** `2·√(A·B) ≤ ε·A + ε⁻¹·B` for `A, B ≥ 0`,
+`ε > 0`. This converts the Hardy/interpolation estimate `‖Vu‖ ≤ 2·(‖Δu‖·‖u‖)^{1/2}` into the Kato
+relative-bound form `a‖Δu‖ + b‖u‖` with `a = ε` arbitrarily small (so `a < 1`). -/
+lemma two_sqrt_mul_le_smul_add {A B ε : ℝ} (hA : 0 ≤ A) (hB : 0 ≤ B) (hε : 0 < ε) :
+    2 * Real.sqrt (A * B) ≤ ε * A + ε⁻¹ * B := by
+  have h1 : A * B = (ε * A) * (ε⁻¹ * B) := by field_simp
+  have hkey := two_mul_le_add_sq (Real.sqrt (ε * A)) (Real.sqrt (ε⁻¹ * B))
+  rw [Real.sq_sqrt (by positivity), Real.sq_sqrt (by positivity)] at hkey
+  rw [h1, Real.sqrt_mul (by positivity)]
+  nlinarith [hkey]
+
 end SKEFTHawking.DFT
