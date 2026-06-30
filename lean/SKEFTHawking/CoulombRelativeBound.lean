@@ -390,4 +390,22 @@ lemma integral_normSq_comp_smul (u : Space 3 → ℂ) {R : ℝ} (hR : 0 < R) :
   rw [MeasureTheory.Measure.integral_comp_smul volume (fun x => ‖u x‖ ^ 2) R, h3, smul_eq_mul,
     abs_of_pos (by positivity)]
 
+/-- **Weight-constant scaling:** `∫ ((1+t‖ξ‖²)⁻¹)² = (√t)⁻³ · ∫ ((1+‖ξ‖²)⁻¹)²` for `t > 0`. The
+substitution `ξ = (1/√t)·η` collapses `1+t‖ξ‖² = 1+‖√t·ξ‖²` to the unit weight (`integral_comp_smul`,
+`dim 3`). This is the `t`-dependence of the sup-norm constant `C₀(t) = (√t)^{-3/2}C₀`, whose `t^{-3/4}`
+growth trades against the `t^{1/4}` shrink of the kinetic coefficient — the engine of the Kato ε-trick. -/
+lemma integral_weightInv_sq_smul {t : ℝ} (ht : 0 < t) :
+    ∫ ξ : Space 3, (((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2
+      = ((Real.sqrt t) ^ 3)⁻¹ * ∫ ξ : Space 3, (((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2 := by
+  have hst : 0 < Real.sqrt t := Real.sqrt_pos.mpr ht
+  have h3 : Module.finrank ℝ (Space 3) = 3 := by simp
+  have hrw : ∀ ξ : Space 3, (((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2
+      = (fun η : Space 3 => (((1 + ‖η‖ ^ 2)⁻¹ : ℝ)) ^ 2) (Real.sqrt t • ξ) := by
+    intro ξ
+    simp only [norm_smul, Real.norm_eq_abs, abs_of_pos hst, mul_pow, Real.sq_sqrt ht.le]
+  rw [integral_congr_ae (Filter.Eventually.of_forall hrw),
+    MeasureTheory.Measure.integral_comp_smul volume
+      (fun η : Space 3 => (((1 + ‖η‖ ^ 2)⁻¹ : ℝ)) ^ 2) (Real.sqrt t),
+    h3, smul_eq_mul, abs_of_pos (by positivity)]
+
 end SKEFTHawking.DFT
