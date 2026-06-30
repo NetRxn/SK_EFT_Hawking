@@ -1542,4 +1542,26 @@ lemma momentumCLM_fiberSchwartz {N : ℕ} (iₑ : Fin N) (j : Fin 3)
           (Space.basis ⟨3 * iₑ.val + j.val, by have := iₑ.isLt; have := j.isLt; omega⟩)
   rw [hfd, ContinuousLinearMap.comp_apply, gatherCLM_apply, gatherLM_basis]
 
+open QuantumMechanics in
+/-- **The fiber's block kinetic operator `∑ⱼ 𝐩ⱼ²` is the fiber of `u`'s electron-`iₑ` block kinetic**:
+`∑_{j:Fin 3} 𝐩ⱼ² (fiberSchwartz iₑ z u) = fiberSchwartz iₑ z (∑_{j:Fin 3} 𝐩_{3iₑ+j}² u)` (W3-89 twice per
+component + `fiberSchwartz`'s linearity `map_sum`). -/
+lemma kineticSq_fiberSchwartz {N : ℕ} (iₑ : Fin N) (z : {k // ¬ electronCoord iₑ k} → ℝ)
+    (u : 𝓢(Space (3 * N), ℂ)) :
+    (∑ j, momentumCLM j (momentumCLM j (fiberSchwartz iₑ z u)))
+      = fiberSchwartz iₑ z (∑ j : Fin 3, momentumCLM ⟨3 * iₑ.val + j.val, by
+            have := iₑ.isLt; have := j.isLt; omega⟩
+          (momentumCLM ⟨3 * iₑ.val + j.val, by have := iₑ.isLt; have := j.isLt; omega⟩ u)) := by
+  have hsum : fiberSchwartz iₑ z (∑ j : Fin 3, momentumCLM ⟨3 * iₑ.val + j.val, by
+        have := iₑ.isLt; have := j.isLt; omega⟩
+      (momentumCLM ⟨3 * iₑ.val + j.val, by have := iₑ.isLt; have := j.isLt; omega⟩ u))
+      = ∑ j : Fin 3, fiberSchwartz iₑ z (momentumCLM ⟨3 * iₑ.val + j.val, by
+            have := iₑ.isLt; have := j.isLt; omega⟩
+          (momentumCLM ⟨3 * iₑ.val + j.val, by have := iₑ.isLt; have := j.isLt; omega⟩ u)) :=
+    map_sum (SchwartzMap.compCLMOfAntilipschitz ℝ (hasTemperateGrowth_fiber iₑ z)
+      (antilipschitz_fiber iₑ z)) _ _
+  rw [hsum]
+  refine Finset.sum_congr rfl fun j _ => ?_
+  rw [momentumCLM_fiberSchwartz, momentumCLM_fiberSchwartz]
+
 end SKEFTHawking.DFT
