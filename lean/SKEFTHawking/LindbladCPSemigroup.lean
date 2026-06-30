@@ -115,4 +115,28 @@ lemma isCompletelyPositive_toLin_exp {M : MatrixMap d d ℂ} (hM : M.IsCompletel
 
 end ExpCP
 
+section Drift
+variable {d : Type*} [Fintype d] [DecidableEq d] {κ : Type*} [Fintype κ]
+
+/-- The **drift generator** `A := −iH − ½∑ₖ Lₖ†Lₖ`. Its conjugation `ρ ↦ e^{sA} ρ e^{sA†}` is the
+no-jump part of the GKSL dynamics. -/
+noncomputable def driftMatrix (H : Matrix d d ℂ) (L : κ → Matrix d d ℂ) : Matrix d d ℂ :=
+  -Complex.I • H - (2⁻¹ : ℂ) • ∑ k, (L k)ᴴ * L k
+
+/-- The drift part `−i[H,·] − ½{∑Lₖ†Lₖ, ·}` of the GKSL generator equals `ρ ↦ Aρ + ρA†` for `A` the
+drift generator, when `H` is Hermitian — a left-plus-right multiplication (the conjugation generator). -/
+lemma lindbladDrift_eq (H : Matrix d d ℂ) (hH : H.IsHermitian) (L : κ → Matrix d d ℂ) :
+    lindbladHamPart H + lindbladAnticommPart L
+      = LinearMap.mulLeft ℂ (driftMatrix H L) + LinearMap.mulRight ℂ (driftMatrix H L)ᴴ := by
+  have hAdj : (driftMatrix H L)ᴴ = Complex.I • H - (2⁻¹ : ℂ) • ∑ k, (L k)ᴴ * L k := by
+    simp only [driftMatrix, conjTranspose_sub, conjTranspose_smul,
+      conjTranspose_sum, conjTranspose_mul, conjTranspose_conjTranspose, hH.eq, star_inv₀,
+      Complex.star_def, map_neg, Complex.conj_I, neg_neg, star_ofNat]
+  refine LinearMap.ext fun ρ => ?_
+  rw [LinearMap.add_apply, lindbladHamPart_apply, lindbladAnticommPart_apply,
+    LinearMap.add_apply, LinearMap.mulLeft_apply, LinearMap.mulRight_apply, hAdj, driftMatrix]
+  simp only [sub_mul, mul_sub, smul_mul_assoc, mul_smul_comm]; module
+
+end Drift
+
 end SKEFTHawking.OpenSystems
