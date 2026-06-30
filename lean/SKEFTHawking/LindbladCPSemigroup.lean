@@ -529,6 +529,43 @@ theorem lindblad_generator_traceZero (H : Matrix d d ℂ) (L : κ → Matrix d d
     smul_eq_mul]
   ring
 
+omit [Nonempty d] in
+/-- **The GKSL propagator is trace-preserving:** `Tr(Λ_t ρ) = Tr(ρ)`. Pushing the continuous-linear
+functional `M ↦ Tr(toLin M ρ)` through the exponential series, only the `k = 0` term survives since
+`Tr(ℒᵏρ) = 0` for `k ≥ 1` (trace-annihilation). Hence `Λ_t` is trace-preserving (CPTP). -/
+theorem trace_lindbladPropagatorAction (H : Matrix d d ℂ) (L : κ → Matrix d d ℂ) (t : ℝ)
+    (ρ : Matrix d d ℂ) :
+    (lindbladPropagatorAction H L t ρ).trace = ρ.trace := by
+  set b := Matrix.stdBasis ℂ d d with hb
+  set A : Matrix (d × d) (d × d) ℂ := (t : ℂ) • lindbladLiouvillian H L with hA
+  set ℒ := lindbladGenerator H L with hℒ
+  let φ : Matrix (d × d) (d × d) ℂ →ₗ[ℂ] ℂ :=
+    { toFun := fun M => (Matrix.toLin b b M ρ).trace
+      map_add' := fun M N => by simp [map_add]
+      map_smul' := fun c M => by simp [map_smul] }
+  have hpow : ∀ k, Matrix.toLin b b ((lindbladLiouvillian H L) ^ k) = ℒ ^ k := fun k => by
+    rw [toLin_pow, hℒ, lindbladLiouvillian, Matrix.toLin_toMatrix]
+  have hterm : ∀ k : ℕ, φ (NormedSpace.expSeries ℂ (Matrix (d × d) (d × d) ℂ) k (fun _ => A))
+      = ((k.factorial : ℂ)⁻¹ * (t : ℂ) ^ k) * ((ℒ ^ k) ρ).trace := by
+    intro k
+    show (Matrix.toLin b b (NormedSpace.expSeries ℂ _ k (fun _ => A)) ρ).trace = _
+    rw [NormedSpace.expSeries_apply_eq, hA, smul_pow, map_smul, map_smul, hpow,
+      LinearMap.smul_apply, LinearMap.smul_apply, Matrix.trace_smul, Matrix.trace_smul,
+      smul_eq_mul, smul_eq_mul, ← mul_assoc]
+  have hzero : ∀ k : ℕ, k ≠ 0 →
+      φ (NormedSpace.expSeries ℂ (Matrix (d × d) (d × d) ℂ) k (fun _ => A)) = 0 := by
+    intro k hk
+    rw [hterm k]
+    obtain ⟨j, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hk
+    rw [pow_succ' ℒ j, Module.End.mul_apply, hℒ, lindblad_generator_traceZero, mul_zero]
+  have hHasSum : HasSum
+      (fun k => φ (NormedSpace.expSeries ℂ (Matrix (d × d) (d × d) ℂ) k (fun _ => A)))
+      (φ (NormedSpace.exp A)) :=
+    φ.toContinuousLinearMap.hasSum (NormedSpace.expSeries_hasSum_exp A)
+  show φ (NormedSpace.exp A) = ρ.trace
+  rw [← hHasSum.tsum_eq, tsum_eq_single 0 hzero, hterm 0]
+  simp
+
 end Propagator
 
 end SKEFTHawking.OpenSystems
