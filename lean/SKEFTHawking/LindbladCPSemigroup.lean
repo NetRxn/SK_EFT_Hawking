@@ -137,6 +137,21 @@ lemma lindbladDrift_eq (H : Matrix d d ℂ) (hH : H.IsHermitian) (L : κ → Mat
     LinearMap.add_apply, LinearMap.mulLeft_apply, LinearMap.mulRight_apply, hAdj, driftMatrix]
   simp only [sub_mul, mul_sub, smul_mul_assoc, mul_smul_comm]; module
 
+/-- **`exp` of the vectorized left-multiplication generator is left-multiplication by the matrix
+exponential:** `toLin(exp(s • toMatrix(mulLeft A))) = mulLeft(exp(sA))`. Proof: `map_exp` on the
+continuous algebra hom `toMatrixAlgEquiv ∘ Algebra.lmul`, then `toLin ∘ toMatrix = id`. -/
+lemma toLin_exp_toMatrix_mulLeft (b : Module.Basis (d × d) ℂ (Matrix d d ℂ))
+    (A : Matrix d d ℂ) (s : ℂ) :
+    Matrix.toLin b b (NormedSpace.exp (s • LinearMap.toMatrix b b (LinearMap.mulLeft ℂ A)))
+      = LinearMap.mulLeft ℂ (NormedSpace.exp (s • A)) := by
+  set ψ : Matrix d d ℂ →ₐ[ℂ] Matrix (d × d) (d × d) ℂ :=
+    (LinearMap.toMatrixAlgEquiv b).toAlgHom.comp (Algebra.lmul ℂ (Matrix d d ℂ)) with hψ
+  have hψ_apply : ∀ x, ψ x = LinearMap.toMatrix b b (LinearMap.mulLeft ℂ x) := fun x => rfl
+  have hcont : Continuous ψ := ψ.toLinearMap.continuous_of_finiteDimensional
+  have key := NormedSpace.map_exp ψ hcont (s • A)
+  rw [_root_.map_smul ψ, hψ_apply, hψ_apply] at key
+  rw [← key, Matrix.toLin_toMatrix]
+
 end Drift
 
 end SKEFTHawking.OpenSystems
