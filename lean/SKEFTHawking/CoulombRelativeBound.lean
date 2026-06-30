@@ -987,4 +987,13 @@ noncomputable def molecularSplitEquiv {N : ℕ} (i : Fin N) :
 lemma coe_molecularSplitEquiv {N : ℕ} (i : Fin N) :
     ⇑(molecularSplitEquiv i) = molecularSplitMap i := rfl
 
+/-- **The split's `Space 3` factor IS electron `i`'s position.** The first component of the molecular split
+reads exactly electron `i`'s three coordinates — so a Coulomb term `‖electronPos x i − R‖⁻¹` depends only on
+the block factor, and the inner `∫⁻_{Space 3}` of `molecularSplit_lintegral` is a genuine single-electron
+integral. -/
+lemma molecularSplitMap_fst {N : ℕ} (i : Fin N) (x : Space (3 * N)) :
+    (molecularSplitMap i x).1 = electronPos x i := by
+  ext j
+  rfl
+
 end SKEFTHawking.DFT
