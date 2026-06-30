@@ -152,6 +152,50 @@ lemma toLin_exp_toMatrix_mulLeft (b : Module.Basis (d × d) ℂ (Matrix d d ℂ)
   rw [_root_.map_smul ψ, hψ_apply, hψ_apply] at key
   rw [← key, Matrix.toLin_toMatrix]
 
+/-- Right-multiplication is left-multiplication by the transpose, conjugated by the transpose
+involution `T`: `mulRight B = T ∘ mulLeft Bᵀ ∘ T` (since `ρB = (Bᵀ ρᵀ)ᵀ`). -/
+lemma mulRight_eq_transpose_conj (B : Matrix d d ℂ) :
+    LinearMap.mulRight ℂ B
+      = (Matrix.transposeLinearEquiv d d ℂ ℂ).toLinearMap ∘ₗ LinearMap.mulLeft ℂ Bᵀ
+          ∘ₗ (Matrix.transposeLinearEquiv d d ℂ ℂ).toLinearMap := by
+  refine LinearMap.ext fun ρ => ?_
+  simp only [LinearMap.coe_comp, Function.comp_apply, LinearEquiv.coe_coe,
+    LinearMap.mulLeft_apply, LinearMap.mulRight_apply]
+  show ρ * B = (Bᵀ * ρᵀ)ᵀ
+  rw [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.transpose_transpose]
+
+/-- **`exp` of the vectorized right-multiplication generator is right-multiplication by the matrix
+exponential:** `toLin(exp(s • toMatrix(mulRight B))) = mulRight(exp(sB))`. Via the transpose trick —
+conjugate `mulLeft Bᵀ` by the transpose involution (`exp_units_conj`), reuse the left-mult lemma,
+then `exp_transpose`. -/
+lemma toLin_exp_toMatrix_mulRight (b : Module.Basis (d × d) ℂ (Matrix d d ℂ))
+    (B : Matrix d d ℂ) (s : ℂ) :
+    Matrix.toLin b b (NormedSpace.exp (s • LinearMap.toMatrix b b (LinearMap.mulRight ℂ B)))
+      = LinearMap.mulRight ℂ (NormedSpace.exp (s • B)) := by
+  set T : Matrix d d ℂ →ₗ[ℂ] Matrix d d ℂ := (Matrix.transposeLinearEquiv d d ℂ ℂ).toLinearMap with hT
+  have hTT : T ∘ₗ T = LinearMap.id := by
+    refine LinearMap.ext fun ρ => ?_; show (ρᵀ)ᵀ = ρ; rw [Matrix.transpose_transpose]
+  set P : Matrix (d × d) (d × d) ℂ := LinearMap.toMatrix b b T with hP
+  have hPP : P * P = 1 := by
+    rw [hP, ← LinearMap.toMatrix_comp b b b, hTT, LinearMap.toMatrix_id]
+  set M : Matrix (d × d) (d × d) ℂ := LinearMap.toMatrix b b (LinearMap.mulLeft ℂ Bᵀ) with hMdef
+  have hM : LinearMap.toMatrix b b (LinearMap.mulRight ℂ B) = P * M * P := by
+    rw [mulRight_eq_transpose_conj, LinearMap.toMatrix_comp b b b, LinearMap.toMatrix_comp b b b,
+      ← hT, ← hP, ← hMdef, mul_assoc]
+  rw [hM]
+  set U : (Matrix (d × d) (d × d) ℂ)ˣ := ⟨P, P, hPP, hPP⟩ with hU
+  have hsmul : s • (P * M * P)
+      = (U : Matrix (d × d) (d × d) ℂ) * (s • M) * (↑U⁻¹ : Matrix (d × d) (d × d) ℂ) := by
+    show s • (P * M * P) = P * (s • M) * P
+    rw [Matrix.mul_smul, Matrix.smul_mul]
+  rw [hsmul, Matrix.exp_units_conj]
+  show Matrix.toLin b b (P * NormedSpace.exp (s • M) * P) = LinearMap.mulRight ℂ (NormedSpace.exp (s • B))
+  rw [Matrix.toLin_mul b b b, Matrix.toLin_mul b b b, hP, Matrix.toLin_toMatrix, hMdef,
+    toLin_exp_toMatrix_mulLeft]
+  have hBT : NormedSpace.exp (s • B) = (NormedSpace.exp (s • Bᵀ))ᵀ := by
+    rw [← Matrix.exp_transpose, Matrix.transpose_smul, Matrix.transpose_transpose]
+  rw [hBT, mulRight_eq_transpose_conj, Matrix.transpose_transpose, ← hT, LinearMap.comp_assoc]
+
 end Drift
 
 end SKEFTHawking.OpenSystems
