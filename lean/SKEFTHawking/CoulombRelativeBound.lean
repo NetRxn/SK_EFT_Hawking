@@ -1319,4 +1319,27 @@ noncomputable def fiberSchwartz {N : ℕ} (i : Fin N) (z : {k // ¬ electronCoor
     (u : 𝓢(Space (3 * N), ℂ)) (y : Space 3) :
     fiberSchwartz i z u y = u ((molecularSplitEquiv i).symm (y, z)) := rfl
 
+/-- The translation `y ↦ y + R` has **temperate growth** (affine: `id + const`). -/
+lemma hasTemperateGrowth_translate {d : ℕ} (R : Space d) :
+    Function.HasTemperateGrowth (fun y : Space d => y + R) := by
+  have he : (fun y : Space d => y + R)
+      = (fun y => ContinuousLinearMap.id ℝ (Space d) y) + (fun _ => R) := by funext y; simp
+  rw [he]
+  exact (ContinuousLinearMap.id ℝ (Space d)).hasTemperateGrowth.add
+    (Function.HasTemperateGrowth.const _)
+
+/-- The translation `y ↦ y + R` is **`AntilipschitzWith 1`** (it is an isometry). -/
+lemma antilipschitz_translate {d : ℕ} (R : Space d) :
+    AntilipschitzWith 1 (fun y : Space d => y + R) :=
+  (Isometry.of_dist_eq fun a b => dist_add_right a b R).antilipschitz
+
+/-- **Translation of a Schwartz map** `v ↦ v(· + R)` is again Schwartz (translation is an affine isometry).
+This recenters a Coulomb singularity `‖y − R‖⁻¹` to the origin so the uniform single-electron bound
+`exists_coulomb_relbound_uniform` (stated at the origin) applies to a `R`-centered term. -/
+noncomputable def translateSchwartz {d : ℕ} (R : Space d) (v : 𝓢(Space d, ℂ)) : 𝓢(Space d, ℂ) :=
+  SchwartzMap.compCLMOfAntilipschitz ℝ (hasTemperateGrowth_translate R) (antilipschitz_translate R) v
+
+@[simp] lemma translateSchwartz_apply {d : ℕ} (R : Space d) (v : 𝓢(Space d, ℂ)) (y : Space d) :
+    translateSchwartz R v y = v (y + R) := rfl
+
 end SKEFTHawking.DFT
