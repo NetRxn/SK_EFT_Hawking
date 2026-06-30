@@ -832,4 +832,14 @@ lemma basis_repr_measurePreserving {d : ℕ} :
       (volume : MeasureTheory.Measure (EuclideanSpace ℝ (Fin d))) :=
   (Space.basis (d := d)).repr.measurePreserving
 
+/-- **`Space d ↔ (Fin d → ℝ)` is measure-preserving** — composing the `Space ↔ EuclideanSpace` bridge
+(`basis_repr_measurePreserving`) with Mathlib's `EuclideanSpace ↔ Pi` (`volume_preserving_measurableEquiv`).
+Puts `Space (3N)` at the `Pi` level where `volume_preserving_piEquivPiSubtypeProd` isolates electron `i`'s
+coordinate block — the start of the L²-Fubini for the molecular lift. -/
+lemma space_pi_measurePreserving {d : ℕ} :
+    MeasureTheory.MeasurePreserving
+      (fun x : Space d => (EuclideanSpace.measurableEquiv (Fin d)) ((Space.basis (d := d)).repr x))
+      (volume : MeasureTheory.Measure (Space d)) (volume : MeasureTheory.Measure (Fin d → ℝ)) :=
+  (EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp (Fin d)).comp basis_repr_measurePreserving
+
 end SKEFTHawking.DFT
