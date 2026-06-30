@@ -578,4 +578,36 @@ lemma integral_weightInv_sq_pos : 0 < ∫ ξ : Space 3, (((1 + ‖ξ‖ ^ 2)⁻�
   rw [hsupp]
   simp
 
+open QuantumMechanics in
+/-- **The ε-form single-particle Kato sup-estimate** (culmination of the ε-trick): for every `ε > 0`,
+`‖f x‖ ≤ ε·‖∑pᵢ²f‖₂ + C_ε·‖f‖₂` for some `C_ε ≥ 0` and all `x`. Pick `t = δ⁴`, `δ = ε(2πℏ)²/(C₀√2)`;
+then `C₀(δ⁴) = δ⁻³C₀` (W3-21 + `Real.sqrt_sq`) collapses the kinetic coefficient of `norm_sup_le_kinetic_t`
+to exactly `ε`. This is the form Kato–Rellich consumes — the kinetic relative bound is arbitrarily small. -/
+lemma exists_sup_relbound (f : 𝓢(Space 3, ℂ)) {ε : ℝ} (hε : 0 < ε) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ x : Space 3,
+      ‖f x‖ ≤ ε * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i f)) y‖ ^ 2)
+            + C * Real.sqrt (∫ y : Space 3, ‖f y‖ ^ 2) := by
+  have hℏ := Constants.ℏ_pos
+  have hC0 : 0 < Real.sqrt (∫ ξ : Space 3, (((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2) :=
+    Real.sqrt_pos.mpr integral_weightInv_sq_pos
+  set C₀ := Real.sqrt (∫ ξ : Space 3, (((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2) with hC0def
+  set δ := ε * (2 * Real.pi * Constants.ℏ) ^ 2 / (C₀ * Real.sqrt 2) with hδdef
+  have hδ : 0 < δ := by rw [hδdef]; positivity
+  refine ⟨(δ ^ 3)⁻¹ * C₀ * Real.sqrt 2, by positivity, fun x => ?_⟩
+  have hC0t : Real.sqrt (∫ ξ : Space 3, (((1 + δ ^ 4 * ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2) = (δ ^ 3)⁻¹ * C₀ := by
+    rw [integral_weightInv_sq_smul (by positivity : (0 : ℝ) < δ ^ 4),
+      show Real.sqrt (δ ^ 4) = δ ^ 2 from by
+        rw [show (δ : ℝ) ^ 4 = (δ ^ 2) ^ 2 from by ring, Real.sqrt_sq (by positivity)],
+      Real.sqrt_mul (by positivity), ← hC0def, Real.sqrt_inv,
+      show ((δ ^ 2) ^ 3 : ℝ) = (δ ^ 3) ^ 2 from by ring, Real.sqrt_sq (by positivity)]
+  have h26 := norm_sup_le_kinetic_t f (by positivity : (0 : ℝ) < δ ^ 4) x
+  rw [hC0t] at h26
+  refine h26.trans (le_of_eq ?_)
+  have hkin : (δ ^ 3)⁻¹ * C₀ * Real.sqrt 2 * δ ^ 4 / (2 * Real.pi * Constants.ℏ) ^ 2 = ε := by
+    rw [show (δ ^ 3)⁻¹ * C₀ * Real.sqrt 2 * δ ^ 4
+          = (δ ^ 3)⁻¹ * δ ^ 4 * (C₀ * Real.sqrt 2) from by ring,
+      show (δ ^ 3)⁻¹ * δ ^ 4 = δ from by field_simp, hδdef]
+    field_simp
+  rw [hkin]; ring
+
 end SKEFTHawking.DFT
