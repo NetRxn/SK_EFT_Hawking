@@ -578,6 +578,14 @@ lemma integral_weightInv_sq_pos : 0 < ∫ ξ : Space 3, (((1 + ‖ξ‖ ^ 2)⁻�
   rw [hsupp]
   simp
 
+/-- `‖g‖² ∈ L¹` for any Schwartz `g` (Schwartz ⟹ `MemLp 2`). The L²-integrability of `u` itself that the
+Coulomb `L^∞·L²` step (W3-7) consumes. -/
+lemma integrable_normSq_schwartz (g : 𝓢(Space 3, ℂ)) :
+    Integrable (fun x : Space 3 => ‖g x‖ ^ 2) := by
+  have h := (SchwartzMap.memLp g 2 volume).norm
+  rw [memLp_two_iff_integrable_sq g.continuous.norm.aestronglyMeasurable] at h
+  simpa only [norm_norm] using h
+
 /-- **The near-Coulomb L² norm is strictly positive:** `0 < ∫ ‖x‖⁻²·1_{‖x‖≤1}` (= `‖V₁‖₂²`). The integrand
 is positive on the punctured unit ball (positive volume) and integrable (W3-9). Lets the single-electron
 Coulomb relative bound divide by `‖V₁‖₂` when calibrating the ε-trick. -/
