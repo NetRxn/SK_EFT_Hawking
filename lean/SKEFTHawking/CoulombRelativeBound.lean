@@ -205,7 +205,7 @@ lemma norm_le_integral_norm_fourier (u : 𝓢(Space 3, ℂ)) (x : Space 3) :
     ‖u x‖ ≤ ∫ ξ : Space 3, ‖(𝓕 u) ξ‖ := by
   have h1 : (u : Space 3 → ℂ) = 𝓕⁻ ((𝓕 u : 𝓢(Space 3, ℂ)) : Space 3 → ℂ) := by
     rw [← SchwartzMap.fourierInv_coe]
-    exact congrArg DFunLike.coe (SchwartzMap.fourier_inversion u).symm
+    exact congrArg DFunLike.coe (FourierPair.fourierInv_fourier_eq u).symm
   rw [show ‖u x‖ = ‖𝓕⁻ ((𝓕 u : 𝓢(Space 3, ℂ)) : Space 3 → ℂ) x‖ from by rw [h1],
     Real.fourierInv_eq]
   have heq : ∫ v : Space 3, ‖𝐞 (inner ℝ v x) • (𝓕 u) v‖ = ∫ ξ : Space 3, ‖(𝓕 u) ξ‖ :=
@@ -287,6 +287,18 @@ lemma sqrt_weighted_le {g : Space 3 → ℂ}
 `‖ξ‖²û` weight in the sup-norm bound. -/
 lemma fourier_fourierMultiplierCLM (g : Space 3 → ℂ) (f : 𝓢(Space 3, ℂ)) :
     𝓕 (SchwartzMap.fourierMultiplierCLM ℂ g f) = SchwartzMap.smulLeftCLM ℂ g (𝓕 f) := by
-  rw [SchwartzMap.fourierMultiplierCLM_apply, SchwartzMap.fourier_inversion_inv]
+  rw [SchwartzMap.fourierMultiplierCLM_apply, FourierInvPair.fourier_fourierInv_eq]
+
+open QuantumMechanics in
+/-- **Fourier-side form of the momentum-square operator:** `𝓕(∑ pᵢ²f) = (2πℏ)²·(‖ξ‖²·û)`. Apply `𝓕` to
+W2's `momentumSq_schwartz_eq_fourierMultiplier` (`∑pᵢ²f = (2πℏ)²·M[‖ξ‖²]f`) using `𝓕`-linearity and the
+multiplier-Fourier identity `fourier_fourierMultiplierCLM`. This is the operator→Fourier bridge feeding
+the momentum-norm identity (Plancherel then connects `∫‖ξ‖⁴‖û‖²` to `‖∑pᵢ²f‖₂`). -/
+lemma fourier_momentumSq (f : 𝓢(Space 3, ℂ)) :
+    𝓕 (∑ i, momentumCLM i (momentumCLM i f))
+      = ((2 * Real.pi * Constants.ℏ) ^ 2 : ℂ) •
+        SchwartzMap.smulLeftCLM ℂ (fun ξ : Space 3 => ((‖ξ‖ ^ 2 : ℝ) : ℂ)) (𝓕 f) := by
+  rw [momentumSq_schwartz_eq_fourierMultiplier, FourierTransform.fourier_smul,
+    fourier_fourierMultiplierCLM]
 
 end SKEFTHawking.DFT
