@@ -185,3 +185,73 @@ def test_omelyan_integrator_is_reversible():
 
     assert torch.allclose(h2, h0, atol=1e-9)
     assert torch.allclose(pi2, -pi0, atol=1e-9)
+
+
+def test_lambda_max_matches_dense():
+    L, V = 2, 2 ** 4
+    rng = np.random.default_rng(9)
+    h = rng.standard_normal((V, 4, 4))
+    A = _dense(h, L)
+    lam_true = np.linalg.eigvalsh(-A @ A).max()
+
+    fwd, back = st.neighbor_tables(L, CPU)
+    blocks = st.hopping_blocks(torch.tensor(h), L, device=CPU, dtype=F64)
+    lam = float(st.estimate_lambda_max(blocks, fwd, back, V, n_iter=400, seed=0))
+
+    assert abs(lam - lam_true) / lam_true < 1e-2
+
+
+def test_heatbath_consistency_S_PF_equals_xi_norm():
+    # Convention-independent gate: heatbath = (action operator)^{-1/2} ⟹
+    # S_PF(heatbath(ξ)) = ‖ξ‖² (to Zolotarev accuracy).
+    L, V, g = 2, 2 ** 4, 1.5
+    msq = 0.04                                              # m = 0.2 regulator
+    rng = np.random.default_rng(10)
+    h = torch.tensor(rng.standard_normal((V, 4, 4)))
+    fwd, back = st.neighbor_tables(L, CPU)
+    blocks = st.hopping_blocks(h, L, device=CPU, dtype=F64)
+    lam_max = float(st.estimate_lambda_max(blocks, fwd, back, V, n_iter=400, seed=0))
+    coeffs = st.make_rhmc_coeffs(lam_max, msq, n_poles=18)
+
+    gen = torch.Generator().manual_seed(0)
+    xi = torch.randn(V, 8, dtype=F64, generator=gen)
+    phi = st.heatbath(xi, blocks, fwd, back, coeffs, msq)
+
+    # S_PF = φ · r_{-1/2}(A†A+m²) · φ  (action operator)
+    betas = torch.as_tensor(coeffs['betas'], dtype=F64) + msq
+    psi = st.multishift_cg(phi, blocks, fwd, back, betas, tol=1e-12, max_iter=8000)  # (K,V,8)
+    alphas = torch.as_tensor(coeffs['alphas'], dtype=F64)
+    s_pf = float(coeffs['a0']) * (phi * phi).sum() + (alphas * (phi.unsqueeze(-3) * psi).sum((-2, -1))).sum()
+    xi_norm = (xi * xi).sum()
+
+    assert abs(float(s_pf) - float(xi_norm)) / float(xi_norm) < 0.03
+
+
+@pytest.mark.slow
+def test_creutz_identity_unbiased_chain():
+    # The integrated correctness gate: a correct heatbath + force + reversible
+    # integrator + Metropolis ⟹ ⟨exp(−ΔH)⟩ = 1 in equilibrium.
+    L, V, g = 2, 2 ** 4, 2.0
+    msq = 0.04
+    fwd, back = st.neighbor_tables(L, CPU)
+    gen = torch.Generator().manual_seed(0)
+    h = 0.1 * torch.randn(V, 4, 4, dtype=F64, generator=gen)
+
+    # fix coeffs from a generous spectral range (bounds the chain's λmax)
+    blk0 = st.hopping_blocks(2.0 * torch.randn(V, 4, 4, dtype=F64, generator=gen), L, device=CPU, dtype=F64)
+    lam_max = 1.5 * float(st.estimate_lambda_max(blk0, fwd, back, V, n_iter=300, seed=1))
+    coeffs = st.make_rhmc_coeffs(lam_max, msq, n_poles=16)
+
+    kw = dict(g=g, msq=msq, coeffs=coeffs, fwd=fwd, back=back, L=L, eps=0.1, n_md=10,
+              rng_gen=gen, tol=1e-11, max_iter=8000)
+    dHs, naccept = [], 0
+    n_therm, n_meas = 25, 120
+    for t in range(n_therm + n_meas):
+        h, dH, acc = st.rhmc_trajectory(h, **kw)
+        if t >= n_therm:
+            dHs.append(float(dH))
+            naccept += int(bool(acc))
+    creutz = float(np.mean(np.exp(-np.array(dHs))))
+    acc_rate = naccept / n_meas
+    assert acc_rate > 0.7, acc_rate
+    assert abs(creutz - 1.0) < 0.05, (creutz, acc_rate)

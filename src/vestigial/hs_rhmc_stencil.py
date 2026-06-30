@@ -201,3 +201,79 @@ def integrate(h, pi, phi, g, alphas, betas, fwd, back, L, eps, n_steps,
         h = h + half * pi
         pi = pi + (lam * eps) * force(h)
     return h, pi
+
+
+def estimate_lambda_max(blocks, fwd, back, V, n_iter=200, seed=0, v0=None):
+    """Largest eigenvalue of A†A per config, via power iteration. Returns (*batch,)."""
+    Bshape = blocks.shape[:-4]
+    dtype, device = blocks.dtype, blocks.device
+    if v0 is None:
+        gen = torch.Generator(device=device).manual_seed(seed)
+        v = torch.randn(*Bshape, V, 8, dtype=dtype, device=device, generator=gen)
+    else:
+        v = v0.clone()
+    for _ in range(n_iter):
+        w = apply_AtA(v, blocks, fwd, back)
+        v = w / (w * w).sum(dim=(-2, -1), keepdim=True).sqrt().clamp_min(1e-300)
+    w = apply_AtA(v, blocks, fwd, back)
+    return (v * w).sum(dim=(-2, -1)) / (v * v).sum(dim=(-2, -1))
+
+
+def make_rhmc_coeffs(lam_max, msq, n_poles, action_power=-0.5, hb_power=-0.75):
+    """Zolotarev partial-fraction coeffs for the FULL real operator A†A+m².
+
+    Action ≈ (A†A+m²)^{-1/2} (real φ ⟹ weight det(A†A)^{1/4}); heatbath builds
+    (A†A+m²)^{+1/4} = (A†A+m²)·(A†A+m²)^{-3/4}. Spectral range [m², λmax+m²];
+    raw `betas` are added to m² at CG-call sites (mirrors production make_coeffs)."""
+    from src.vestigial.hs_rhmc import compute_zolotarev_coefficients
+    lo = msq if msq > 0 else max(float(lam_max) * 1e-7, 1e-12)
+    hi = float(lam_max) + msq
+    a0, alphas, betas = compute_zolotarev_coefficients(n_poles, lo, hi, action_power)
+    a0_hb, alphas_hb, betas_hb = compute_zolotarev_coefficients(n_poles, lo, hi, hb_power)
+    return dict(a0=float(a0), alphas=np.asarray(alphas), betas=np.asarray(betas),
+                a0_hb=float(a0_hb), alphas_hb=np.asarray(alphas_hb), betas_hb=np.asarray(betas_hb))
+
+
+def heatbath(xi, blocks, fwd, back, coeffs, msq, tol=1e-10, max_iter=8000):
+    """φ = (A†A+m²)^{1/4} ξ = (A†A+m²)·r_{-3/4}(A†A+m²)·ξ, so that the action
+    S_PF(φ)=φ·(A†A+m²)^{-1/2}·φ samples ξ~N(0,1) correctly. ξ: (*batch, V, 8)."""
+    betas_hb = torch.as_tensor(coeffs['betas_hb'], dtype=xi.dtype, device=xi.device) + msq
+    alphas_hb = torch.as_tensor(coeffs['alphas_hb'], dtype=xi.dtype, device=xi.device)
+    psi = multishift_cg(xi, blocks, fwd, back, betas_hb, tol=tol, max_iter=max_iter)  # (*B,K,V,8)
+    v = float(coeffs['a0_hb']) * xi + (alphas_hb[..., None, None] * psi).sum(dim=-3)   # r_{-3/4}ξ
+    return apply_AtA(v, blocks, fwd, back) + msq * v                                    # (A†A+m²) v
+
+
+def rhmc_trajectory(h, g, msq, coeffs, fwd, back, L, eps, n_md, rng_gen,
+                    tol=1e-10, max_iter=8000):
+    """One full RHMC trajectory: heatbath → Omelyan MD → Metropolis accept/reject.
+
+    Returns (h_out, ΔH, accept) — ΔH and accept are per-config (*batch,).
+    Run the integrator and ΔH in the working dtype; for the GPU path use FP32 MD
+    and an FP64 accept/reject (here single-dtype for the FP64 validation chain)."""
+    V = L ** 4
+    Bshape = h.shape[:-3]
+    dtype, device = h.dtype, h.device
+    blocks = hopping_blocks(h, L, device=device, dtype=dtype)
+
+    xi = torch.randn(*Bshape, V, 8, dtype=dtype, device=device, generator=rng_gen)
+    phi = heatbath(xi, blocks, fwd, back, coeffs, msq, tol=tol, max_iter=max_iter)
+    pi = torch.randn(*Bshape, V, 4, 4, dtype=dtype, device=device, generator=rng_gen)
+
+    a0 = float(coeffs['a0'])
+    alphas = torch.as_tensor(coeffs['alphas'], dtype=dtype, device=device)
+    betas = torch.as_tensor(coeffs['betas'], dtype=dtype, device=device) + msq
+
+    def hamiltonian(hh, pp):
+        kin = 0.5 * (pp * pp).sum(dim=(-3, -2, -1))
+        return kin + action(hh, phi, g, a0, alphas, betas, fwd, back, L, tol=tol, max_iter=max_iter)
+
+    h_old_H = hamiltonian(h, pi)
+    h_new, pi_new = integrate(h, pi, phi, g, alphas, betas, fwd, back, L,
+                              eps, n_md, tol=tol, max_iter=max_iter)
+    dH = hamiltonian(h_new, pi_new) - h_old_H                       # (*B,)
+
+    u = torch.rand(Bshape, dtype=dtype, device=device, generator=rng_gen)
+    accept = u < torch.exp(torch.clamp(-dH, max=0.0))              # Metropolis (*B,)
+    h_out = torch.where(accept[..., None, None, None], h_new, h)
+    return h_out, dH, accept
