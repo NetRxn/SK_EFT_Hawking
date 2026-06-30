@@ -247,6 +247,30 @@ lemma pow_sub_pow_eq_telescope {R : Type*} [Ring R] (a b : R) (n : ℕ) :
     rw [hsplit, ← ih, pow_succ, pow_succ]
     noncomm_ring
 
+/-- **Norm estimate from the telescoping identity:** `‖aⁿ - bⁿ‖ ≤ n · Mⁿ⁻¹ · ‖a - b‖` for any
+common norm bound `M ≥ ‖a‖, ‖b‖`. The Lipschitz-in-`a-b` control that makes the Trotter error
+sum to `O(1/n)`. -/
+lemma norm_pow_sub_pow_le {R : Type*} [NormedRing R] [NormOneClass R] (a b : R) {M : ℝ}
+    (ha : ‖a‖ ≤ M) (hb : ‖b‖ ≤ M) (n : ℕ) :
+    ‖a ^ n - b ^ n‖ ≤ n * M ^ (n - 1) * ‖a - b‖ := by
+  have hM : 0 ≤ M := le_trans (norm_nonneg a) ha
+  rw [pow_sub_pow_eq_telescope]
+  calc ‖∑ i ∈ Finset.range n, a ^ i * (a - b) * b ^ (n - 1 - i)‖
+      ≤ ∑ i ∈ Finset.range n, ‖a ^ i * (a - b) * b ^ (n - 1 - i)‖ := norm_sum_le _ _
+    _ ≤ ∑ _i ∈ Finset.range n, M ^ (n - 1) * ‖a - b‖ := by
+        refine Finset.sum_le_sum fun i hi => ?_
+        have hi' : i < n := Finset.mem_range.mp hi
+        calc ‖a ^ i * (a - b) * b ^ (n - 1 - i)‖
+            ≤ ‖a ^ i‖ * ‖a - b‖ * ‖b ^ (n - 1 - i)‖ :=
+              (norm_mul_le _ _).trans (by gcongr; exact norm_mul_le _ _)
+          _ ≤ M ^ i * ‖a - b‖ * M ^ (n - 1 - i) := by
+              gcongr
+              · exact (norm_pow_le _ _).trans (pow_le_pow_left₀ (norm_nonneg a) ha _)
+              · exact (norm_pow_le _ _).trans (pow_le_pow_left₀ (norm_nonneg b) hb _)
+          _ = M ^ (n - 1) * ‖a - b‖ := by
+              rw [mul_right_comm, ← pow_add, show i + (n - 1 - i) = n - 1 from by omega]
+    _ = n * M ^ (n - 1) * ‖a - b‖ := by rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul]; ring
+
 end Trotter
 
 end SKEFTHawking.OpenSystems
