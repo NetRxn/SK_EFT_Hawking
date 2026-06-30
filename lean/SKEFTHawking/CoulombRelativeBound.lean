@@ -1219,4 +1219,19 @@ lemma norm_gatherLM {N : ℕ} (i : Fin N) (y : Space 3) : ‖gatherLM i y‖ = �
     ring
   rw [hblock, hrest, add_zero]
 
+/-- `gatherLM` as a continuous linear map (`Space 3` is finite-dimensional). -/
+noncomputable def gatherCLM {N : ℕ} (i : Fin N) : Space 3 →L[ℝ] Space (3 * N) :=
+  (gatherLM i).toContinuousLinearMap
+
+@[simp] lemma gatherCLM_apply {N : ℕ} (i : Fin N) (y : Space 3) :
+    gatherCLM i y = gatherLM i y := rfl
+
+/-- The coordinate scatter is an **isometry** (`norm_gatherLM`). -/
+lemma isometry_gatherLM {N : ℕ} (i : Fin N) : Isometry (gatherLM i) :=
+  AddMonoidHomClass.isometry_of_norm (gatherLM i) (norm_gatherLM i)
+
+/-- The coordinate scatter is `AntilipschitzWith 1` — the hypothesis `compCLMOfAntilipschitz` consumes. -/
+lemma antilipschitz_gatherLM {N : ℕ} (i : Fin N) : AntilipschitzWith 1 (gatherLM i) :=
+  (isometry_gatherLM i).antilipschitz
+
 end SKEFTHawking.DFT
