@@ -815,4 +815,11 @@ lemma coulombTermRel_measurable {N : ℕ} (i j : Fin N) :
     Measurable (fun x : Space (3 * N) => ‖electronPos x i - electronPos x j‖⁻¹) :=
   (((electronPos_continuous i).sub (electronPos_continuous j)).norm).measurable.inv
 
+/-- The squared electron-nucleus Coulomb-term·`u` integrand `(‖eᵢ-R‖⁻¹·‖u‖)²` is measurable — the per-term
+`L²` integrand of the molecular lift. -/
+lemma coulombTerm_mul_sq_measurable {N : ℕ} (i : Fin N) (R : Space 3) {u : Space (3 * N) → ℂ}
+    (hu : Continuous u) :
+    Measurable (fun x : Space (3 * N) => (‖electronPos x i - R‖⁻¹ * ‖u x‖) ^ 2) :=
+  ((coulombTerm_measurable i R).mul hu.norm.measurable).pow_const 2
+
 end SKEFTHawking.DFT
