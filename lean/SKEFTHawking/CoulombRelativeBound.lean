@@ -1116,4 +1116,61 @@ lemma molecular_coulombTerm_lintegral {N : ℕ} (i : Fin N) (R : Space 3)
   rw [hpt]
   exact molecularSplit_lintegral i _ hG
 
+/-- **L² integral triangle inequality (params-Minkowski).** For nonnegative `F, G ∈ L²(μ)`,
+`√(∫(F+G)²) ≤ √(∫F²) + √(∫G²)`. Proven via the algebraic expansion plus the integral Cauchy–Schwarz
+(`integral_mul_le_Lp_mul_Lq_of_nonneg`, `p = q = 2`). This is the reassembly step of the molecular lift: the
+fiberwise single-electron bound `√(inner z) ≤ ε√(K z) + C√(M z)` is integrated over the spectator parameter
+`z` and recombined into the molecular `‖V u‖₂ ≤ ε‖T u‖₂ + C‖u‖₂` via this inequality (with `F = ε√K`,
+`G = C√M`). -/
+lemma sqrt_integral_add_sq_le {α : Type*} [MeasurableSpace α] {μ : MeasureTheory.Measure α}
+    {F G : α → ℝ} (hF : MemLp F 2 μ) (hG : MemLp G 2 μ) :
+    Real.sqrt (∫ a, (F a + G a) ^ 2 ∂μ)
+      ≤ Real.sqrt (∫ a, F a ^ 2 ∂μ) + Real.sqrt (∫ a, G a ^ 2 ∂μ) := by
+  have hF2 : Integrable (fun a => F a ^ 2) μ := hF.integrable_sq
+  have hG2 : Integrable (fun a => G a ^ 2) μ := hG.integrable_sq
+  have hFG : Integrable (fun a => F a * G a) μ := hF.integrable_mul hG
+  have hIF : 0 ≤ ∫ a, F a ^ 2 ∂μ := integral_nonneg fun a => sq_nonneg _
+  have hIG : 0 ≤ ∫ a, G a ^ 2 ∂μ := integral_nonneg fun a => sq_nonneg _
+  -- Cauchy–Schwarz via the discriminant of `0 ≤ ∫ (F - t G)²`.
+  have hquad : ∀ t : ℝ,
+      0 ≤ (∫ a, G a ^ 2 ∂μ) * (t * t) + -(2 * ∫ a, F a * G a ∂μ) * t + ∫ a, F a ^ 2 ∂μ := by
+    intro t
+    have hcongr : ∫ a, (F a - t * G a) ^ 2 ∂μ
+        = (∫ a, G a ^ 2 ∂μ) * (t * t) + -(2 * ∫ a, F a * G a ∂μ) * t + ∫ a, F a ^ 2 ∂μ := by
+      have h1 : Integrable (fun a => (t * t) * G a ^ 2) μ := hG2.const_mul (t * t)
+      have h2 : Integrable (fun a => (-(2 * t)) * (F a * G a)) μ := hFG.const_mul (-(2 * t))
+      have key : ∀ a, (F a - t * G a) ^ 2
+          = (t * t) * G a ^ 2 + ((-(2 * t)) * (F a * G a) + F a ^ 2) := fun a => by ring
+      simp_rw [key]
+      rw [integral_add h1 (show Integrable (fun a => (-(2 * t)) * (F a * G a) + F a ^ 2) μ from
+            h2.add hF2),
+        integral_add h2 hF2, integral_const_mul, integral_const_mul]
+      ring
+    rw [← hcongr]; exact integral_nonneg fun a => sq_nonneg _
+  have hdisc := discrim_le_zero hquad
+  rw [discrim] at hdisc
+  have hcs2 : (∫ a, F a * G a ∂μ) ^ 2 ≤ (∫ a, F a ^ 2 ∂μ) * (∫ a, G a ^ 2 ∂μ) := by nlinarith [hdisc]
+  have hcs : ∫ a, F a * G a ∂μ ≤ Real.sqrt (∫ a, F a ^ 2 ∂μ) * Real.sqrt (∫ a, G a ^ 2 ∂μ) := by
+    rw [← Real.sqrt_mul hIF]
+    calc ∫ a, F a * G a ∂μ ≤ |∫ a, F a * G a ∂μ| := le_abs_self _
+      _ = Real.sqrt ((∫ a, F a * G a ∂μ) ^ 2) := (Real.sqrt_sq_eq_abs _).symm
+      _ ≤ Real.sqrt ((∫ a, F a ^ 2 ∂μ) * (∫ a, G a ^ 2 ∂μ)) := Real.sqrt_le_sqrt hcs2
+  have hint : ∫ a, (F a + G a) ^ 2 ∂μ
+      = ∫ a, F a ^ 2 ∂μ + 2 * (∫ a, F a * G a ∂μ) + ∫ a, G a ^ 2 ∂μ := by
+    have h1 : Integrable (fun a => 2 * (F a * G a)) μ := hFG.const_mul 2
+    have key : ∀ a, (F a + G a) ^ 2 = F a ^ 2 + (2 * (F a * G a) + G a ^ 2) := fun a => by ring
+    simp_rw [key]
+    rw [integral_add hF2 (show Integrable (fun a => 2 * (F a * G a) + G a ^ 2) μ from h1.add hG2),
+      integral_add h1 hG2, integral_const_mul]
+    ring
+  rw [hint]
+  have hsq : ∫ a, F a ^ 2 ∂μ + 2 * (∫ a, F a * G a ∂μ) + ∫ a, G a ^ 2 ∂μ
+      ≤ (Real.sqrt (∫ a, F a ^ 2 ∂μ) + Real.sqrt (∫ a, G a ^ 2 ∂μ)) ^ 2 := by
+    nlinarith [hcs, Real.sq_sqrt hIF, Real.sq_sqrt hIG]
+  calc Real.sqrt (∫ a, F a ^ 2 ∂μ + 2 * (∫ a, F a * G a ∂μ) + ∫ a, G a ^ 2 ∂μ)
+      ≤ Real.sqrt ((Real.sqrt (∫ a, F a ^ 2 ∂μ) + Real.sqrt (∫ a, G a ^ 2 ∂μ)) ^ 2) :=
+        Real.sqrt_le_sqrt hsq
+    _ = Real.sqrt (∫ a, F a ^ 2 ∂μ) + Real.sqrt (∫ a, G a ^ 2 ∂μ) :=
+        Real.sqrt_sq (by positivity)
+
 end SKEFTHawking.DFT
