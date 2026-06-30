@@ -1,4 +1,5 @@
 import SKEFTHawking.MolecularHamiltonian
+import SKEFTHawking.KineticEssentialSelfAdjoint
 import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
 import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
@@ -277,5 +278,15 @@ lemma sqrt_weighted_le {g : Space 3 → ℂ}
     _ = Real.sqrt 2 * Real.sqrt (∫ ξ : Space 3, ‖g ξ‖ ^ 2)
           + Real.sqrt 2 * Real.sqrt (∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2) := by
         rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 2), Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 2)]
+
+/-- **The Fourier multiplier acts as pointwise multiplication on the transform:**
+`𝓕(fourierMultiplierCLM g f) = g · 𝓕f`. Immediate from the definition
+`fourierMultiplierCLM g f = 𝓕⁻(g · 𝓕f)` (`fourierMultiplierCLM_apply`) and `𝓕 ∘ 𝓕⁻ = id`
+(`fourier_inversion_inv`). Applied to W2's `momentumSq_schwartz_eq_fourierMultiplier` this turns
+`∑ pᵢ²u` into `(2πℏ)²·‖ξ‖²·û` on the Fourier side — the bridge from the momentum operator to the
+`‖ξ‖²û` weight in the sup-norm bound. -/
+lemma fourier_fourierMultiplierCLM (g : Space 3 → ℂ) (f : 𝓢(Space 3, ℂ)) :
+    𝓕 (SchwartzMap.fourierMultiplierCLM ℂ g f) = SchwartzMap.smulLeftCLM ℂ g (𝓕 f) := by
+  rw [SchwartzMap.fourierMultiplierCLM_apply, SchwartzMap.fourier_inversion_inv]
 
 end SKEFTHawking.DFT
