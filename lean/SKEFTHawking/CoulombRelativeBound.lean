@@ -113,4 +113,17 @@ lemma integral_mul_sq_le_sup_sq_mul {V u : Space 3 → ℝ} {M : ℝ}
     _ ≤ V x ^ 2 * M ^ 2 := mul_le_mul_of_nonneg_left hux (sq_nonneg (V x))
     _ = M ^ 2 * V x ^ 2 := by ring
 
+/-- **The L^∞·L² step (far Coulomb part):** `∫ (V·u)² ≤ ∫ u²` for `0 ≤ V ≤ 1`. With `V = V₂` (the bounded
+far part, `V₂ ≤ 1` by `coulomb_far_le_one`), this is `‖V₂ u‖₂ ≤ ‖u‖₂` — the bound on the bounded part of
+the Coulomb potential, the companion of `integral_mul_sq_le_sup_sq_mul` (the singular part). -/
+lemma integral_bdd_mul_sq_le {V u : Space 3 → ℝ} (hV0 : ∀ x, 0 ≤ V x) (hV1 : ∀ x, V x ≤ 1)
+    (hu : Integrable (fun x => u x ^ 2)) :
+    ∫ x, (V x * u x) ^ 2 ≤ ∫ x, u x ^ 2 := by
+  refine integral_mono_of_nonneg (Filter.Eventually.of_forall fun x => by positivity) hu
+    (Filter.Eventually.of_forall fun x => ?_)
+  have hV2 : V x ^ 2 ≤ 1 := by nlinarith [hV0 x, hV1 x]
+  calc (V x * u x) ^ 2 = V x ^ 2 * u x ^ 2 := by ring
+    _ ≤ 1 * u x ^ 2 := mul_le_mul_of_nonneg_right hV2 (sq_nonneg _)
+    _ = u x ^ 2 := one_mul _
+
 end SKEFTHawking.DFT
