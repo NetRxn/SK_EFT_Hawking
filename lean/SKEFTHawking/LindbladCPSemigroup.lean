@@ -65,4 +65,17 @@ lemma isCompletelyPositive_pow {M : MatrixMap A A ℂ} (hM : M.IsCompletelyPosit
   | 0 => by rw [pow_zero]; exact MatrixMap.IsCompletelyPositive.id
   | k + 1 => by rw [pow_succ]; exact hM.comp (isCompletelyPositive_pow hM k)
 
+section ExpCP
+variable {d : Type*} [Fintype d] [DecidableEq d]
+
+/-- `Matrix.toLin` (same basis) carries matrix powers to endomorphism powers — it is the underlying
+map of the algebra equivalence `Matrix.toLinAlgEquiv`. -/
+lemma toLin_pow (b : Module.Basis (d × d) ℂ (Matrix d d ℂ)) (X : Matrix (d × d) (d × d) ℂ) (k : ℕ) :
+    Matrix.toLin b b (X ^ k) = (Matrix.toLin b b X) ^ k := by
+  induction k with
+  | zero => rw [pow_zero, pow_zero, Matrix.toLin_one]; rfl
+  | succ k ih => rw [pow_succ, Matrix.toLin_mul b b b, ih, pow_succ]; rfl
+
+end ExpCP
+
 end SKEFTHawking.OpenSystems
