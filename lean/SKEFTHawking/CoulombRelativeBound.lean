@@ -452,4 +452,25 @@ lemma sqrt_weighted_le_t {g : Space 3 → ℂ} {t : ℝ} (ht : 0 < t)
           + Real.sqrt (2 * t ^ 2 * ∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2) := hsub _ _ hA hB
     _ = _ := by rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 2), e2]
 
+/-- **The t-weight `(1+t‖ξ‖²)⁻¹ ∈ L²(ℝ³)`** for any `t > 0`. Since `(1+t‖ξ‖²)⁻¹ = (1+‖√t·ξ‖²)⁻¹` is a
+dilation of the unit weight (`memLp_two_oneAddNormSq_inv`, W3-2a) and dilation preserves integrability
+(`integrable_comp_smul_iff`). The L² weight that the t-Hölder pairs against `(1+t‖ξ‖²)·û`. -/
+lemma memLp_two_oneAddTNormSq_inv {t : ℝ} (ht : 0 < t) :
+    MemLp (fun ξ : Space 3 => ((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)) 2 volume := by
+  have hst : Real.sqrt t ≠ 0 := (Real.sqrt_pos.mpr ht).ne'
+  have hcont : Continuous (fun ξ : Space 3 => ((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)) :=
+    Continuous.inv₀ (by fun_prop) (fun ξ => (by positivity : (0 : ℝ) < 1 + t * ‖ξ‖ ^ 2).ne')
+  have hcont0 : Continuous (fun ξ : Space 3 => ((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) :=
+    Continuous.inv₀ (by fun_prop) (fun ξ => (by positivity : (0 : ℝ) < 1 + ‖ξ‖ ^ 2).ne')
+  have hg2 : Integrable (fun η : Space 3 => (((1 + ‖η‖ ^ 2)⁻¹ : ℝ)) ^ 2) := by
+    have h := memLp_two_oneAddNormSq_inv
+    rwa [memLp_two_iff_integrable_sq hcont0.aestronglyMeasurable] at h
+  rw [memLp_two_iff_integrable_sq hcont.aestronglyMeasurable]
+  refine ((integrable_comp_smul_iff volume
+    (fun η : Space 3 => (((1 + ‖η‖ ^ 2)⁻¹ : ℝ)) ^ 2) hst).mpr hg2).congr ?_
+  filter_upwards with ξ
+  have hsm : ‖(Real.sqrt t • ξ : Space 3)‖ ^ 2 = t * ‖ξ‖ ^ 2 := by
+    rw [norm_smul, Real.norm_eq_abs, abs_of_pos (Real.sqrt_pos.mpr ht), mul_pow, Real.sq_sqrt ht.le]
+  simp only [hsm]
+
 end SKEFTHawking.DFT
