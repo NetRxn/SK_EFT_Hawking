@@ -342,6 +342,51 @@ lemma norm_exp_sub_one_sub_self_le {𝔸 : Type*} [NormedRing 𝔸] [NormOneClas
   rw [show NormedSpace.exp Z - 1 - Z = NormedSpace.exp Z - (1 + Z) by abel]
   exact h
 
+/-- **The Lie–Trotter one-step error is `O((‖X‖+‖Y‖)²)`:**
+`‖eˣ·eʸ - e^{X+Y}‖ ≤ 4·(‖X‖+‖Y‖)²·exp(‖X‖+‖Y‖)`. From the identity
+`eˣeʸ - 1 - (X+Y) = (eʸ-1-Y) + (eˣ-1-X)eʸ + X(eʸ-1)`, each summand `O(quadratic)` via the remainder
+corollaries; the dominant term cancels against `e^{X+Y}-1-(X+Y)`. -/
+lemma norm_exp_mul_exp_sub_exp_add_le {𝔸 : Type*} [NormedRing 𝔸] [NormOneClass 𝔸]
+    [NormedAlgebra ℂ 𝔸] [CompleteSpace 𝔸] (X Y : 𝔸) :
+    ‖NormedSpace.exp X * NormedSpace.exp Y - NormedSpace.exp (X + Y)‖
+      ≤ 4 * (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖) := by
+  have hYP : ‖Y‖ ≤ ‖X‖ + ‖Y‖ := by linarith [norm_nonneg X]
+  have hXP : ‖X‖ ≤ ‖X‖ + ‖Y‖ := by linarith [norm_nonneg Y]
+  have hXYP : ‖X + Y‖ ≤ ‖X‖ + ‖Y‖ := norm_add_le _ _
+  -- the four summands, each ≤ (‖X‖+‖Y‖)² · exp(‖X‖+‖Y‖)
+  have hb1 : ‖NormedSpace.exp Y - 1 - Y‖ ≤ (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖) :=
+    (norm_exp_sub_one_sub_self_le Y).trans (by gcongr)
+  have hb2 : ‖(NormedSpace.exp X - 1 - X) * NormedSpace.exp Y‖
+      ≤ (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖) := by
+    refine (norm_mul_le _ _).trans ?_
+    calc ‖NormedSpace.exp X - 1 - X‖ * ‖NormedSpace.exp Y‖
+        ≤ (‖X‖ ^ 2 * Real.exp ‖X‖) * Real.exp ‖Y‖ :=
+          mul_le_mul (norm_exp_sub_one_sub_self_le X) (norm_exp_le Y) (norm_nonneg _) (by positivity)
+      _ = ‖X‖ ^ 2 * Real.exp (‖X‖ + ‖Y‖) := by rw [Real.exp_add]; ring
+      _ ≤ (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖) := by gcongr
+  have hb3 : ‖X * (NormedSpace.exp Y - 1)‖ ≤ (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖) := by
+    refine (norm_mul_le _ _).trans ?_
+    calc ‖X‖ * ‖NormedSpace.exp Y - 1‖
+        ≤ ‖X‖ * (‖Y‖ * Real.exp ‖Y‖) := by gcongr; exact norm_exp_sub_one_le Y
+      _ ≤ (‖X‖ + ‖Y‖) * ((‖X‖ + ‖Y‖) * Real.exp (‖X‖ + ‖Y‖)) := by gcongr
+      _ = (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖) := by ring
+  have hb4 : ‖NormedSpace.exp (X + Y) - 1 - (X + Y)‖ ≤ (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖) :=
+    (norm_exp_sub_one_sub_self_le (X + Y)).trans (by gcongr)
+  have hident : NormedSpace.exp X * NormedSpace.exp Y - NormedSpace.exp (X + Y)
+      = ((NormedSpace.exp Y - 1 - Y) + (NormedSpace.exp X - 1 - X) * NormedSpace.exp Y
+          + X * (NormedSpace.exp Y - 1)) - (NormedSpace.exp (X + Y) - 1 - (X + Y)) := by
+    noncomm_ring
+  rw [hident]
+  calc ‖((NormedSpace.exp Y - 1 - Y) + (NormedSpace.exp X - 1 - X) * NormedSpace.exp Y
+          + X * (NormedSpace.exp Y - 1)) - (NormedSpace.exp (X + Y) - 1 - (X + Y))‖
+      ≤ ‖(NormedSpace.exp Y - 1 - Y) + (NormedSpace.exp X - 1 - X) * NormedSpace.exp Y
+          + X * (NormedSpace.exp Y - 1)‖ + ‖NormedSpace.exp (X + Y) - 1 - (X + Y)‖ :=
+        norm_sub_le _ _
+    _ ≤ (‖NormedSpace.exp Y - 1 - Y‖ + ‖(NormedSpace.exp X - 1 - X) * NormedSpace.exp Y‖
+          + ‖X * (NormedSpace.exp Y - 1)‖) + ‖NormedSpace.exp (X + Y) - 1 - (X + Y)‖ := by
+        gcongr; exact (norm_add_le _ _).trans (by gcongr; exact norm_add_le _ _)
+    _ ≤ 4 * (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖) := by linarith [hb1, hb2, hb3, hb4]
+
 end Trotter
 
 end SKEFTHawking.OpenSystems
