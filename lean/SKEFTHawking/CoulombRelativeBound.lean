@@ -586,6 +586,25 @@ lemma integrable_normSq_schwartz (g : 𝓢(Space 3, ℂ)) :
   rw [memLp_two_iff_integrable_sq g.continuous.norm.aestronglyMeasurable] at h
   simpa only [norm_norm] using h
 
+/-- `((1/‖x‖)·1_{‖x‖>1}·‖u‖)² ∈ L¹` — the far-Coulomb·u part, dominated by `‖u‖²` (since `V₂ ≤ 1`,
+W3-30). One of the two integrability inputs of the single-electron Coulomb relative bound. -/
+lemma integrable_coulombFar_mul_sq (u : 𝓢(Space 3, ℂ)) :
+    Integrable (fun x : Space 3 => ((if 1 < ‖x‖ then ‖x‖⁻¹ else 0) * ‖u x‖) ^ 2) := by
+  refine (integrable_normSq_schwartz u).mono'
+    (Measurable.aestronglyMeasurable (by
+      apply Measurable.pow_const
+      exact (Measurable.ite (measurableSet_lt measurable_const measurable_norm)
+        measurable_norm.inv measurable_const).mul u.continuous.norm.measurable))
+    (Filter.Eventually.of_forall fun x => ?_)
+  rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
+  have hV2le : (if 1 < ‖x‖ then ‖x‖⁻¹ else 0) ≤ 1 := by
+    split_ifs with h
+    · exact inv_le_one_of_one_le₀ (le_of_lt h)
+    · norm_num
+  have hV2nn : 0 ≤ (if 1 < ‖x‖ then ‖x‖⁻¹ else 0) := by positivity
+  nlinarith [mul_le_mul_of_nonneg_right hV2le (norm_nonneg (u x)),
+    mul_nonneg hV2nn (norm_nonneg (u x)), norm_nonneg (u x)]
+
 /-- **The near-Coulomb L² norm is strictly positive:** `0 < ∫ ‖x‖⁻²·1_{‖x‖≤1}` (= `‖V₁‖₂²`). The integrand
 is positive on the punctured unit ball (positive volume) and integrable (W3-9). Lets the single-electron
 Coulomb relative bound divide by `‖V₁‖₂` when calibrating the ε-trick. -/
