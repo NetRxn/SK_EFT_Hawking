@@ -255,3 +255,23 @@ def test_creutz_identity_unbiased_chain():
     acc_rate = naccept / n_meas
     assert acc_rate > 0.7, acc_rate
     assert abs(creutz - 1.0) < 0.05, (creutz, acc_rate)
+
+
+def test_measure_observables_matches_numpy():
+    # Batched measurement (tet_m2, trQ2 + m_h, Q instrumentation) vs the existing
+    # numpy reference; per config.
+    from src.vestigial.hs_rhmc import hs_auxiliary_field_metric
+    L, V, B = 2, 2 ** 4, 3
+    rng = np.random.default_rng(11)
+    h = rng.standard_normal((B, V, 4, 4))
+
+    tet, trq, m_h, Q = st.measure_observables(torch.tensor(h), L)
+
+    for b in range(B):
+        Qn, trq2n = hs_auxiliary_field_metric(h[b].reshape(L, L, L, L, 4, 4), L)
+        mhn = h[b].reshape(V, 4, 4).mean(0)
+        tetn = float((mhn ** 2).sum())
+        assert np.isclose(float(tet[b]), tetn, atol=1e-10)
+        assert np.isclose(float(trq[b]), trq2n, atol=1e-10)
+        assert np.allclose(m_h[b].numpy(), mhn, atol=1e-10)
+        assert np.allclose(Q[b].numpy(), Qn, atol=1e-10)

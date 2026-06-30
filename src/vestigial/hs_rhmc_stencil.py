@@ -277,3 +277,24 @@ def rhmc_trajectory(h, g, msq, coeffs, fwd, back, L, eps, n_md, rng_gen,
     accept = u < torch.exp(torch.clamp(-dH, max=0.0))              # Metropolis (*B,)
     h_out = torch.where(accept[..., None, None, None], h_new, h)
     return h_out, dH, accept
+
+
+def measure_observables(h, L):
+    """h-field order parameters, batched. h: (*batch, V, 4, 4) [site, μ, a].
+
+    Returns (tet_m2, trQ2, m_h, Q):
+      m_h   = (1/V) Σ_x h            (*batch, 4, 4)   — tetrad proxy ⟨h⟩_vol
+      tet_m2 = |m_h|²                (*batch,)
+      M_μν  = (1/V) Σ_{x,a} h_μ h_ν;  Q = M − (TrM/4)I  (*batch, 4, 4) — traceless metric
+      trQ2  = Tr Q²                  (*batch,)
+    m_h and Q are the per-trajectory instrumentation that lets the noise-immune
+    detectors (Binder cumulant, ensemble shuffle floor) be formed post-hoc."""
+    V = L ** 4
+    m_h = h.mean(dim=-3)                                            # (*B, 4, 4)
+    tet_m2 = (m_h * m_h).sum(dim=(-2, -1))
+    M = torch.einsum('...vma,...vna->...mn', h, h) / V             # (*B, 4, 4)
+    tr = M.diagonal(dim1=-2, dim2=-1).sum(dim=-1)                  # (*B,)
+    eye = torch.eye(4, dtype=h.dtype, device=h.device)
+    Q = M - (tr / 4.0)[..., None, None] * eye
+    trQ2 = (Q * Q).sum(dim=(-2, -1))
+    return tet_m2, trQ2, m_h, Q
