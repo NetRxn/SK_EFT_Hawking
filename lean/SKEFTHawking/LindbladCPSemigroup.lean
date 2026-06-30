@@ -387,9 +387,21 @@ lemma norm_exp_mul_exp_sub_exp_add_le {𝔸 : Type*} [NormedRing 𝔸] [NormOneC
         gcongr; exact (norm_add_le _ _).trans (by gcongr; exact norm_add_le _ _)
     _ ≤ 4 * (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖) := by linarith [hb1, hb2, hb3, hb4]
 
+/-- `exp (n • W) = (exp W)ⁿ` over a complex Banach algebra — proven from `exp_add_of_commute_of_mem_ball`
+(which needs only `CharZero ℂ`), avoiding Mathlib's `exp_nsmul` (gated on `[NormedAlgebra ℚ 𝔸]`, an
+instance the matrix algebra does not carry). -/
+private lemma exp_nsmul_eq_pow {𝔸 : Type*} [NormedRing 𝔸] [NormedAlgebra ℂ 𝔸] [CompleteSpace 𝔸]
+    (W : 𝔸) : ∀ n : ℕ, NormedSpace.exp (n • W) = NormedSpace.exp W ^ n
+  | 0 => by rw [zero_smul, pow_zero, NormedSpace.exp_zero]
+  | k + 1 => by
+      have hmem : ∀ z : 𝔸, z ∈ Metric.eball (0 : 𝔸) (NormedSpace.expSeries ℂ 𝔸).radius :=
+        fun z => (NormedSpace.expSeries_radius_eq_top ℂ 𝔸).symm ▸ edist_lt_top _ _
+      rw [succ_nsmul, NormedSpace.exp_add_of_commute_of_mem_ball
+        (Commute.smul_left (Commute.refl W) k) (hmem _) (hmem _), exp_nsmul_eq_pow W k, pow_succ]
+
 /-- Per-step Lie–Trotter bound: `‖(e^{X/n}e^{Y/n})ⁿ - e^{X+Y}‖ ≤ 4(‖X‖+‖Y‖)²·exp(‖X‖+‖Y‖)/n`. -/
 private lemma trotter_step_bound {𝔸 : Type*} [NormedRing 𝔸] [NormOneClass 𝔸]
-    [NormedAlgebra ℂ 𝔸] [NormedAlgebra ℚ 𝔸] [CompleteSpace 𝔸] (X Y : 𝔸) {n : ℕ} (hn : 1 ≤ n) :
+    [NormedAlgebra ℂ 𝔸] [CompleteSpace 𝔸] (X Y : 𝔸) {n : ℕ} (hn : 1 ≤ n) :
     ‖(NormedSpace.exp ((n:ℝ)⁻¹ • X) * NormedSpace.exp ((n:ℝ)⁻¹ • Y)) ^ n - NormedSpace.exp (X + Y)‖
       ≤ 4 * (‖X‖ + ‖Y‖) ^ 2 * Real.exp (‖X‖ + ‖Y‖) / n := by
   have hn0 : (0:ℝ) < n := by exact_mod_cast hn
@@ -413,7 +425,7 @@ private lemma trotter_step_bound {𝔸 : Type*} [NormedRing 𝔸] [NormOneClass 
     gcongr
     exact norm_add_le _ _
   have hbn : b ^ n = NormedSpace.exp (X + Y) := by
-    rw [hb, ← NormedSpace.exp_nsmul]
+    rw [hb, ← exp_nsmul_eq_pow]
     congr 1
     rw [← Nat.cast_smul_eq_nsmul ℝ, smul_smul, mul_inv_cancel₀ (ne_of_gt hn0), one_smul]
   have hab : ‖a - b‖ ≤ 4 * ((n:ℝ)⁻¹ * s) ^ 2 * Real.exp ((n:ℝ)⁻¹ * s) := by
@@ -438,7 +450,7 @@ private lemma trotter_step_bound {𝔸 : Type*} [NormedRing 𝔸] [NormOneClass 
 `(e^{X/n} e^{Y/n})ⁿ → e^{X+Y}`. The telescoping `‖aⁿ-bⁿ‖`-bound (7b) times the `O(1/n²)` one-step error
 (7c′) gives `‖(e^{X/n}e^{Y/n})ⁿ - e^{X+Y}‖ ≤ C/n → 0`. -/
 lemma tendsto_trotter {𝔸 : Type*} [NormedRing 𝔸] [NormOneClass 𝔸]
-    [NormedAlgebra ℂ 𝔸] [NormedAlgebra ℚ 𝔸] [CompleteSpace 𝔸] (X Y : 𝔸) :
+    [NormedAlgebra ℂ 𝔸] [CompleteSpace 𝔸] (X Y : 𝔸) :
     Filter.Tendsto
       (fun n : ℕ => (NormedSpace.exp ((n:ℝ)⁻¹ • X) * NormedSpace.exp ((n:ℝ)⁻¹ • Y)) ^ n)
       Filter.atTop (nhds (NormedSpace.exp (X + Y))) := by
