@@ -12331,13 +12331,22 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DFT.IsSymmetricPMap.isClosed_range_sub_I_smul_of_isClosed",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DFT.IsSymmetricPMap.isSelfAdjoint_of_surjective",
       "module": "SKEFTHawking.MolecularHamiltonian",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DFT.IsSymmetricPMap.mul_norm_le_norm_sub_I_smul",
@@ -12346,7 +12355,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.DFT.IsSymmetricPMap.norm_le_norm_sub_I_smul",
@@ -12448,6 +12457,15 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.DFT.isSelfAdjoint_closure_of_dense_range",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.DFT.katoRellich",
       "module": "SKEFTHawking.MolecularHamiltonian",
       "atlas_kind": "TRUE",
@@ -12513,6 +12531,15 @@
     {
       "fqn": "SKEFTHawking.DFT.molecularPotentialOperator_isSymmetric",
       "module": "SKEFTHawking.MolecularHamiltonian",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.rangeSubISmul_le_closure",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -58103,6 +58130,375 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.a_pos",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.acousticBloch_branch_secular",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.acousticBloch_spectrum",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.blochMatrix.eq_1",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.blochMatrix_isHermitian",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.branchMinus.eq_1",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.branchMinus_le_branchPlus",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.branchMinus_nonneg",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.branchPlus.eq_1",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.diag\u2081.eq_1",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.diag\u2081_sub_mid",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.diag\u2082.eq_1",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.diag\u2082_sub_mid",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.disc_nonneg",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.gap.eq_1",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.mid.eq_1",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.mid_pos",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.mk.congr_simp",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.mk.inj",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.mk.injEq",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.mk.sizeOf_spec",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.m\u2081_pos",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.m\u2081m\u2082_pos",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.m\u2082_pos",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.normSqOff_nonneg",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.off_mul_conj",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.secular_real",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.DiatomicChain.\u03ba_pos",
+      "module": "SKEFTHawking.AcousticBlochOperator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.band_gap_falsifier",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.band_gap_rational_enclosure",
+      "module": "SKEFTHawking.BandGapEnclosure",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.diatomicCrystal.acoustic_freq_le_one",
+      "module": "SKEFTHawking.BandGapEnclosure",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.diatomicCrystal.acoustic_le_one",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.diatomicCrystal.disc_ge_quarter",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.diatomicCrystal.eq_1",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.diatomicCrystal.gap_eq",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.diatomicCrystal.mid_eq",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.diatomicCrystal.optical_freq_ge",
+      "module": "SKEFTHawking.BandGapEnclosure",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.diatomicCrystal.optical_ge_two",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.diatomicCrystal.sqrt_disc_ge_half",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.phononic_band_gap_exists",
+      "module": "SKEFTHawking.PhononicBandGap",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Phononic.sqrt_two_enclosure",
+      "module": "SKEFTHawking.BandGapEnclosure",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.PinHeight4.col0_survivors",
@@ -129535,7 +129931,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 14291,
+    "theorem_nodes": 14335,
     "unknown_nodes": 33,
     "implies_edges": 35,
     "apex_nodes": 4,
@@ -129547,7 +129943,7 @@
     ],
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 210,
-      "TRUE:PROVED": 14081,
+      "TRUE:PROVED": 14125,
       "UNKNOWN:PLANNED": 9,
       "UNKNOWN:STATED": 24
     },
