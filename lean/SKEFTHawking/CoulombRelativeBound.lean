@@ -1,5 +1,6 @@
 import SKEFTHawking.MolecularHamiltonian
 import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
+import Mathlib.MeasureTheory.Constructions.HaarToSphere
 
 /-!
 # W3 (Phase 6BB Wave 3) — discharge of `hrel`: the Coulomb relative bound, via Fourier–Kato–Rellich
@@ -164,5 +165,32 @@ lemma integral_norm_le_weighted_L2 {g : Space 3 → ℂ}
     integral_congr_ae (Filter.Eventually.of_forall fun ξ => (eb ξ).symm)
   rw [i0, ia, ib, Real.sqrt_eq_rpow, Real.sqrt_eq_rpow]
   exact hcs
+
+/-- **The Coulomb near part is in `L²`:** `(1/‖x‖)·1_{‖x‖≤1} ∈ L²(ℝ³)`, equivalently
+`‖x‖⁻² ·1_{‖x‖≤1} ∈ L¹`. Via the polar-coordinate reduction (`integrable_fun_norm_addHaar`): the radial
+integrand `y^(3-1)·(y⁻² 1_{y≤1}) = 1_{0<y≤1}` is integrable. This is `V₁ ∈ L²`, the singular part of the
+`L²+L^∞` Coulomb split (the bounded part `V₂` is `coulomb_far_le_one`), feeding `integral_mul_sq_le_sup_sq_mul`. -/
+lemma integrable_coulombNear_sq :
+    Integrable (fun x : Space 3 => if ‖x‖ ≤ 1 then ‖x‖ ^ (-2 : ℝ) else 0) volume := by
+  have hdim : Module.finrank ℝ (Space 3) = 3 := by simp
+  rw [integrable_fun_norm_addHaar (μ := volume) (f := fun r : ℝ => if r ≤ 1 then r ^ (-2 : ℝ) else 0),
+    hdim]
+  have h2 : (3 : ℕ) - 1 = 2 := rfl
+  rw [h2, ← Set.Ioc_union_Ioi_eq_Ioi (zero_le_one), integrableOn_union]
+  refine ⟨?_, ?_⟩
+  · -- on Ioc 0 1 the radial integrand `y² · y⁻²` equals the constant 1
+    have hμs : volume (Set.Ioc (0 : ℝ) 1) ≠ ⊤ := by rw [Real.volume_Ioc]; exact ENNReal.ofReal_ne_top
+    have hconst : IntegrableOn (fun _ : ℝ => (1 : ℝ)) (Set.Ioc 0 1) volume :=
+      integrableOn_const hμs (by simp)
+    refine hconst.congr_fun ?_ measurableSet_Ioc
+    rintro y ⟨hy0, hy1⟩
+    simp only [if_pos hy1, smul_eq_mul]
+    rw [← Real.rpow_natCast y 2, ← Real.rpow_add hy0]
+    norm_num
+  · -- on Ioi 1 the radial integrand vanishes (the indicator is off)
+    refine integrableOn_zero.congr_fun ?_ measurableSet_Ioi
+    intro y hy
+    simp only [Set.mem_Ioi] at hy
+    simp only [if_neg (by linarith : ¬ y ≤ 1), smul_zero]
 
 end SKEFTHawking.DFT
