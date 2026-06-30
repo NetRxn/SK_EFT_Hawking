@@ -48,3 +48,17 @@ this is strong negative evidence, not exhaustive full-text reads (AFP/ACM hosts 
 verbatim "no transport/DFT/Lindblad tool exists" citation can be hardened by Reading the locally-cached survey
 PDF. Claims 1 and 3 are publication-ready as "first" with the carve-outs; claim 2's self-adjointness sub-part
 needs the one-line Mathlib scope check above.
+
+## Verification updates (2026-06-30, post Stage-13 adversarial review)
+
+- **Kato–Rellich Mathlib scope check — DONE, confirms claim-2 safety.** A direct search of
+  `lean/.lake/packages/mathlib` (Stage-13 reviewer) found **no** Kato–Rellich / relative-boundedness /
+  "Rellich" / essentially-self-adjoint-perturbation surface; the only `LinearPMap` self-adjoint surface is
+  the abstract definition `A† = A`. The molecular-Coulomb self-adjointness "first" (scoped to the molecular
+  many-body Coulomb Hamiltonian, as phrased in the draft) is therefore confirmed safe. This closes the
+  Gate-10 FirstClaimVerification hardening recommended above.
+- **Citation-author corrections (Stage-13 M1/M2).** The scout captured the arXiv ID + title correctly for
+  every ITP reference but did **not** transcribe two author lists: CoqQ (arXiv:2207.11350) is
+  Zhou/Barthe/**Strub**/**Liu**/Ying (not Hsu/Yu), and the Lean Stein's-Lemma paper (arXiv:2510.08672) is
+  **Meiburg/Lessa/Soldati** (not the placeholder "PhysLib contributors"). `bibliography.bib` corrected.
+  Process lesson (QI candidate): scout-sourced bibitems need their author lists fetch-verified before Gate 1.

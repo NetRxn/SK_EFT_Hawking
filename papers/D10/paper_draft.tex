@@ -25,9 +25,10 @@ PhysLib physics library, of three pillars of the electronic-structure and open-s
 computational quantum physics: (i) non-equilibrium Green's-function (NEGF) quantum transport --- the
 retarded/advanced Green's functions, the fundamental spectral relation $A = G^{R}\Gamma G^{A}$, the
 Landauer--B\"uttiker/Meir--Wingreen conductance, and a conductance-quantization certificate with an
-explicit falsifier; (ii) density-functional-theory (DFT) foundations --- essential self-adjointness of
-the molecular many-body Coulomb Hamiltonian via an in-tree Kato--Rellich development, the
-Hohenberg--Kohn uniqueness and variational theorems, and the Levy--Lieb constrained-search functional;
+explicit falsifier; (ii) density-functional-theory (DFT) foundations --- a Kato--Rellich reduction establishing essential
+self-adjointness of the molecular many-body Coulomb Hamiltonian conditional on two disclosed analytic
+inputs (kinetic essential self-adjointness and the Coulomb relative bound), the Hohenberg--Kohn
+uniqueness and variational theorems, and the Levy--Lieb constrained-search functional;
 and (iii) open-system dynamics --- the Gorini--Kossakowski--Sudarshan--Lindblad (GKSL) generator with
 complete positivity of its dissipator, the GKSL structure theorem, and the Markovian dynamical
 semigroup $e^{t\mathcal{L}}$ realized as a matrix exponential of the non-Hermitian Liouvillian. Every
@@ -106,9 +107,14 @@ Sec.~\ref{sec:lindblad}. We hold every headline theorem to a \emph{kernel-purity
 axiom dependency, as reported by \Lean{}'s \texttt{\#print axioms}, is exactly
 $\{\texttt{propext},\,\texttt{Classical.choice},\,\texttt{Quot.sound}\}$ --- the three standard
 classical axioms underlying Mathlib --- with \emph{no} project-local axioms, no \texttt{sorry}, no
-\texttt{native\_decide}, and no proof that relies on raising the elaborator's heartbeat limit. A single
-disclosed tracked hypothesis appears in Sec.~\ref{sec:lindblad} (the CPTP realization of the time-$t$
-propagator); it is a \Lean{} \texttt{Prop} hypothesis, not an axiom, and carries a discharge plan.
+\texttt{native\_decide}, and no proof that relies on raising the elaborator's heartbeat limit. Several
+theorems carry \emph{disclosed tracked hypotheses} --- \Lean{} \texttt{Prop}s, not axioms, each with a
+discharge plan --- which scope the conditional content explicitly: the DFT self-adjointness apex of
+Sec.~\ref{sec:dft} is conditional on kinetic essential self-adjointness and the Coulomb relative bound
+(and the variational and Levy--Lieb theorems on semibounded-functional inputs), and the open-system
+contractivity of Sec.~\ref{sec:lindblad} is conditional on the CPTP realization of the time-$t$
+propagator. These conditional inputs are tractable but Mathlib-scale; they are enumerated again, with
+their discharge plans, in Sec.~\ref{sec:synthesis}.
 
 Quantitative claims are backed by rational \emph{enclosures} rather than floating-point evaluation:
 where a transcendental such as $e^{-\gamma t}$ appears, we bracket it by rational endpoints

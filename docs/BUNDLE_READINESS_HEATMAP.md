@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-06-11
+**Auto-generated:** 2026-06-30
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable; GREEN semantics tightened 2026-06-10 (S5 closure — see legend).
@@ -30,6 +30,7 @@
 | **D7** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
 | **D8** | 1 | 13 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
 | **D9** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
+| **D10** | 1 | 1 | 0 | 0 | _(none)_ | 2026-06-30 | 🟢 GREEN |
 | **L1** | 2 | 2 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
 | **L2** | 2 | 1 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
 | **L3** | 2 | 4 | 0 | 0 | _(none)_ | 2026-06-10 | 🟢 GREEN |
@@ -55,6 +56,7 @@
 | **D7** |  |
 | **D8** |  |
 | **D9** |  |
+| **D10** |  |
 | **L1** |  |
 | **L2** |  |
 | **L3** |  |
