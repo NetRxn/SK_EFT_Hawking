@@ -900,4 +900,26 @@ lemma electronBlock_piCongr_measurePreserving {N : ℕ} (i : Fin N) :
       (volume : MeasureTheory.Measure ({k // electronCoord i k} → ℝ)) :=
   volume_measurePreserving_piCongrLeft (fun _ : {k // electronCoord i k} => ℝ) (electronCoordEquiv i).symm
 
+/-- **Electron `i`'s block function-space is measure-preservingly `Space 3`.** Chains the reversed pi-congr
+(`electronBlock_piCongr_measurePreserving`, `BlockPi → Fin 3 → ℝ`), the reversed Euclidean↔Pi
+(`EuclideanSpace.measurableEquiv (Fin 3)`), and the reversed orthonormal-basis isometry
+(`Space.basis.repr.symm`) into one measure-preserving map `({k // electronCoord i k} → ℝ) → Space 3`. This
+is what transports the inner (block) Fubini integral onto `Space 3`, the domain of the single-electron
+Coulomb bound `exists_coulomb_relbound`. -/
+lemma block_pi_measurePreserving_space3 {N : ℕ} (i : Fin N) :
+    MeasureTheory.MeasurePreserving
+      (fun b : {k // electronCoord i k} → ℝ =>
+        (Space.basis (d := 3)).repr.symm
+          ((EuclideanSpace.measurableEquiv (Fin 3)).symm
+            ((MeasurableEquiv.piCongrLeft (fun _ : {k // electronCoord i k} => ℝ)
+                (electronCoordEquiv i).symm).symm b)))
+      (volume : MeasureTheory.Measure ({k // electronCoord i k} → ℝ))
+      (volume : MeasureTheory.Measure (Space 3)) :=
+  (((Space.basis (d := 3)).repr.symm.measurePreserving).comp
+      (MeasureTheory.MeasurePreserving.symm (EuclideanSpace.measurableEquiv (Fin 3))
+        (EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp (Fin 3)))).comp
+    (MeasureTheory.MeasurePreserving.symm
+      (MeasurableEquiv.piCongrLeft (fun _ : {k // electronCoord i k} => ℝ) (electronCoordEquiv i).symm)
+      (electronBlock_piCongr_measurePreserving i))
+
 end SKEFTHawking.DFT
