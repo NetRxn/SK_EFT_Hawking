@@ -1,6 +1,10 @@
 # Phase 6CB — Acoustic / Phononic Band Structure & Gaps
 
-**Status: PLANNED (authorized 2026-06-29).** Bloch–Floquet band theory for a periodic acoustic/elastic medium and a **certified band-gap existence theorem** for a concrete phononic crystal. Clean whitespace (no Bloch/Floquet for acoustics in any prover). Distinct phase in the `6C*` materials series.
+**Status: ✅ COMPLETE (2026-06-30).** All three waves shipped at full strength, kernel-pure, in root. New content in `SKEFTHawking/{AcousticBlochOperator,PhononicBandGap,BandGapEnclosure}.lean` (`namespace SKEFTHawking.Phononic`). Since PhysLib's `TightBindingChain` is a single *gapless* `E₀−2t·cos` band, the gap required a NEW 2-band **diatomic mass-spring Bloch dynamical matrix** `D(k)`.
+
+**Phase DoD status (2026-06-30):** `lake build` + `lake build SKEFTHawking.ExtractDeps` green (9509 jobs); all headlines `lean_verify` → `{propext, Classical.choice, Quot.sound}`, zero sorry/axiom/native_decide/maxHeartbeats; root imports added; `update_counts.py` + Inventory_Index refreshed; `validate.py` → **45/45 ALL CHECKS PASSED**. Headlines: W1 `acousticBloch_spectrum` (Hermitian + `0 ≤ ω²₋ ≤ ω²₊` real & bounded-below + both branches solve `det(D(k)−ω²·I)=0`), plus spectral **completeness** `acousticBloch_eigenvalue_iff` (the two branches exhaust the spectrum, via `acousticBloch_charpoly_factor`); W2 `phononic_band_gap_exists` (concrete crystal m₁=1,m₂=2,κ=1,a=1 → ω²-gap (1,2), edges **attained** at k=π via `branch{Minus,Plus}_at_pi`) + fully-general `band_gap_falsifier` (no eigenmode in the gap); W3 `band_gap_rational_enclosure` (`norm_num` rational freq-gap (1,141/100), no floating-point). **Closure review (2026-06-30): fresh-context `skeft-qa:adversarial-reviewer` → VERDICT 0 BLOCKER, 0 MAJOR, 2 MINOR** (physics numerically cross-checked to machine precision; gap confirmed to depend on m₁≠m₂). Both MINOR remediated same-session: MINOR-1 (completeness not stated) → `acousticBloch_charpoly_factor` + `acousticBloch_eigenvalue_iff` + general falsifier; MINOR-2 (edge attainment only in comments) → `branch{Minus,Plus}_at_pi` proving the edges exact. **D11 §phononic first-lift content staged**; on-disk `papers/D11/` scaffolding deferred to first D11 content-lift per `PAPER_STRATEGY`.
+
+**Original scope (PLANNED, authorized 2026-06-29):** Bloch–Floquet band theory for a periodic acoustic/elastic medium and a **certified band-gap existence theorem** for a concrete phononic crystal. Clean whitespace (no Bloch/Floquet for acoustics in any prover). Distinct phase in the `6C*` materials series.
 
 **Substrate (verified 2026-06-29 — PhysLib source read + lean MCP):**
 - **Reuse (exists):** PhysLib `CondensedMatter/TightBindingChain/Basic.lean` — the band-model template (`hamiltonian_energyEigenstate` TISE, `BrillouinZone`, `energyEigenvalue`, `energyEigenstate_orthogonal`); Mathlib `Analysis.InnerProductSpace.Rayleigh` — `LinearMap.IsSymmetric.hasEigenvalue_iSup/iInf_of_finiteDimensional` (**extremal** eigenvalue only); project `QuantumNetwork/NumericalBounds.expNeg_enclosure` (rational enclosure).
@@ -26,24 +30,24 @@
 - **Why:** the spectral object whose gaps the phase certifies.
 - **Bricks:** PhysLib `TightBindingChain`; Mathlib self-adjoint spectral theory.
 - **Done (AC / `/goal` condition):**
-  - [ ] `AcousticBlochOperator.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
-  - [ ] diatomic (≥2-band) acoustic Bloch operator; `acousticBloch_spectrum` (real, bounded-below) proven
+  - [x] `AcousticBlochOperator.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
+  - [x] diatomic (≥2-band) acoustic Bloch operator; `acousticBloch_spectrum` (real, bounded-below) proven
 
 ## Wave 2 — band-gap existence
 - **Goal:** min-max (Rayleigh) + k-th-eigenvalue **Courant–Fischer**; a spectral gap `[ω₋, ω₊]` proven for a concrete **diatomic (two-sublattice)** crystal — the gap opens between the acoustic and optical branches (no eigenvalue in the open interval). **Verdict: reachable-moderate.**
 - **Why:** the headline result — a *proven* phononic band gap.
 - **Bricks:** W1; Mathlib `Rayleigh`; new Courant–Fischer.
 - **Done (AC / `/goal` condition):**
-  - [ ] `PhononicBandGap.lean` builds clean — 0 sorry, kernel-pure, no new axiom
-  - [ ] `phononic_band_gap_exists` (gap between acoustic & optical branches) + falsifier (`∃ mode in (ω₋,ω₊) ⇒ ⊥`) proven
+  - [x] `PhononicBandGap.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [x] `phononic_band_gap_exists` (gap between acoustic & optical branches) + falsifier (`∃ mode in (ω₋,ω₊) ⇒ ⊥`) proven
 
 ## Wave 3 — certified gap enclosure
 - **Goal:** interval-arithmetic bounds on the gap edges (`expNeg_enclosure`-style); a rational enclosure usable with no floating-point. **Verdict: reachable.**
 - **Why:** turns the existence theorem into a certificate-grade numerical bound.
 - **Bricks:** W2; `expNeg_enclosure`.
 - **Done (AC / `/goal` condition):**
-  - [ ] `BandGapEnclosure.lean` builds clean — 0 sorry, kernel-pure, no new axiom
-  - [ ] `band_gap_rational_enclosure` (`norm_num`-backed, no floating-point) proven
+  - [x] `BandGapEnclosure.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [x] `band_gap_rational_enclosure` (`norm_num`-backed, no floating-point) proven
 
 ## Sequencing
 W1 (operator) → W2 (gap existence) → W3 (enclosure). Independent of 6CA/6CC/6CD/6CE; one of the two fast materials phases (with 6CD).
