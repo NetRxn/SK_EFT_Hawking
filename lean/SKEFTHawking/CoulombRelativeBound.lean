@@ -1349,4 +1349,20 @@ lemma measurePreserving_translate {d : ℕ} (R : Space d) :
       (volume : MeasureTheory.Measure (Space d)) (volume : MeasureTheory.Measure (Space d)) :=
   measurePreserving_add_right volume R
 
+/-- **L² norm is translation-invariant:** `∫ ‖translateSchwartz R v‖² = ∫ ‖v‖²`. -/
+lemma integral_normSq_translateSchwartz {d : ℕ} (R : Space d) (v : 𝓢(Space d, ℂ)) :
+    ∫ y : Space d, ‖translateSchwartz R v y‖ ^ 2 = ∫ y : Space d, ‖v y‖ ^ 2 := by
+  simp only [translateSchwartz_apply]
+  exact (measurePreserving_translate R).integral_comp (measurableEmbedding_addRight R)
+    (fun y => ‖v y‖ ^ 2)
+
+/-- **Recentering identity:** the origin-Coulomb integral of the translated `translateSchwartz R v` equals the
+`R`-centered Coulomb integral of `v`. (Change of variables `y' = y − R`.) -/
+lemma integral_coulombSq_translate {d : ℕ} (R : Space d) (v : 𝓢(Space d, ℂ)) :
+    ∫ y : Space d, (‖y‖⁻¹ * ‖translateSchwartz R v y‖) ^ 2
+      = ∫ y : Space d, (‖y - R‖⁻¹ * ‖v y‖) ^ 2 := by
+  rw [← (measurePreserving_translate R).integral_comp (measurableEmbedding_addRight R)
+    (fun y => (‖y - R‖⁻¹ * ‖v y‖) ^ 2)]
+  simp only [translateSchwartz_apply, add_sub_cancel_right]
+
 end SKEFTHawking.DFT
