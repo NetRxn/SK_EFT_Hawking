@@ -530,4 +530,38 @@ lemma memLp_weighted_fourier_t (u : 𝓢(Space 3, ℂ)) {t : ℝ} (ht : 0 ≤ t)
   rw [SchwartzMap.smulLeftCLM_apply_apply hg, norm_smul, Complex.norm_real, Real.norm_eq_abs,
     abs_of_nonneg (by positivity : (0 : ℝ) ≤ 1 + t * ‖ξ‖ ^ 2)]
 
+open QuantumMechanics in
+/-- **The t-parameterized operator-form sup-norm bound:**
+`‖f x‖ ≤ C₀(t)√2·‖f‖₂ + (C₀(t)√2·t/(2πℏ)²)·‖∑pᵢ²f‖₂`, where `C₀(t) = ‖(1+t‖ξ‖²)⁻¹‖₂`. The t-version of
+`norm_sup_le_kinetic` (W3-19), composing the t-Hölder (W3-24, hb=W3-25), the t-split (W3-22, h0/h4=W3-17/18),
+the free Plancherel, and the momentum-norm identity (W3-16). The kinetic coefficient carries the explicit
+factor `t` — combined with `C₀(t)=(√t)^{-3/2}C₀` (W3-21) it is `∝ t^{1/4}`, shrinkable to any `ε` (next). -/
+lemma norm_sup_le_kinetic_t (f : 𝓢(Space 3, ℂ)) {t : ℝ} (ht : 0 < t) (x : Space 3) :
+    ‖f x‖ ≤ Real.sqrt (∫ ξ : Space 3, (((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2) * Real.sqrt 2
+              * Real.sqrt (∫ y : Space 3, ‖f y‖ ^ 2)
+          + Real.sqrt (∫ ξ : Space 3, (((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2) * Real.sqrt 2 * t
+              / (2 * Real.pi * Constants.ℏ) ^ 2
+              * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i f)) y‖ ^ 2) := by
+  have h11 := (norm_le_integral_norm_fourier f x).trans
+    (integral_norm_le_weighted_L2_t ht (memLp_weighted_fourier_t f ht.le))
+  have h13 := sqrt_weighted_le_t ht (integrable_normSq_fourier f) (integrable_weight4_normSq_fourier f)
+  have hpl : Real.sqrt (∫ ξ : Space 3, ‖(𝓕 f) ξ‖ ^ 2) = Real.sqrt (∫ y : Space 3, ‖f y‖ ^ 2) := by
+    rw [SchwartzMap.integral_norm_sq_fourier]
+  have hmom : Real.sqrt (∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖(𝓕 f) ξ‖ ^ 2)
+      = Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i f)) y‖ ^ 2)
+        / (2 * Real.pi * Constants.ℏ) ^ 2 := by
+    have hℏ := Constants.ℏ_pos
+    rw [eq_div_iff (by positivity : (2 * Real.pi * Constants.ℏ) ^ 2 ≠ 0),
+      ← integral_normSq_weight_eq_momentumSq f, Real.sqrt_mul (by positivity),
+      Real.sqrt_sq (by positivity)]
+    ring
+  calc ‖f x‖
+      ≤ Real.sqrt (∫ ξ : Space 3, (((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2)
+          * Real.sqrt (∫ ξ : Space 3, ((1 + t * ‖ξ‖ ^ 2) * ‖(𝓕 f) ξ‖) ^ 2) := h11
+    _ ≤ Real.sqrt (∫ ξ : Space 3, (((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2)
+          * (Real.sqrt 2 * Real.sqrt (∫ ξ : Space 3, ‖(𝓕 f) ξ‖ ^ 2)
+            + Real.sqrt 2 * t * Real.sqrt (∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖(𝓕 f) ξ‖ ^ 2)) :=
+        mul_le_mul_of_nonneg_left h13 (Real.sqrt_nonneg _)
+    _ = _ := by rw [hpl, hmom]; ring
+
 end SKEFTHawking.DFT
