@@ -578,6 +578,21 @@ lemma integral_weightInv_sq_pos : 0 < ∫ ξ : Space 3, (((1 + ‖ξ‖ ^ 2)⁻�
   rw [hsupp]
   simp
 
+/-- **The near-Coulomb L² norm is strictly positive:** `0 < ∫ ‖x‖⁻²·1_{‖x‖≤1}` (= `‖V₁‖₂²`). The integrand
+is positive on the punctured unit ball (positive volume) and integrable (W3-9). Lets the single-electron
+Coulomb relative bound divide by `‖V₁‖₂` when calibrating the ε-trick. -/
+lemma integral_coulombNear_sq_pos :
+    0 < ∫ x : Space 3, if ‖x‖ ≤ 1 then ‖x‖ ^ (-2 : ℝ) else 0 := by
+  rw [integral_pos_iff_support_of_nonneg (fun x => by positivity) integrable_coulombNear_sq]
+  refine lt_of_lt_of_le ?_
+    (measure_mono (show Metric.ball (0 : Space 3) 1 \ {0} ⊆ _ from ?_))
+  · rw [measure_diff_null (measure_singleton 0)]
+    exact Metric.measure_ball_pos volume 0 one_pos
+  · intro x hx
+    rw [Set.mem_diff, Metric.mem_ball, dist_zero_right, Set.mem_singleton_iff] at hx
+    rw [Function.mem_support, if_pos (le_of_lt hx.1)]
+    exact (Real.rpow_pos_of_pos (norm_pos_iff.mpr hx.2) (-2)).ne'
+
 open QuantumMechanics in
 /-- **The ε-form single-particle Kato sup-estimate** (culmination of the ε-trick): for every `ε > 0`,
 `‖f x‖ ≤ ε·‖∑pᵢ²f‖₂ + C_ε·‖f‖₂` for some `C_ε ≥ 0` and all `x`. Pick `t = δ⁴`, `δ = ε(2πℏ)²/(C₀√2)`;
