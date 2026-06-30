@@ -1467,4 +1467,17 @@ lemma lintegral_coulombSq_center_eq (R : Space 3) (v : 𝓢(Space 3, ℂ)) :
   refine lintegral_congr fun y => ?_
   rw [ENNReal.ofReal_pow (by positivity)]
 
+/-- **Per-fiber squared Coulomb bound (lintegral form).** Given the center-`R` relative bound
+`√(∫(‖y−R‖⁻¹‖v y‖)²) ≤ A + B` (with `A, B ≥ 0` the kinetic and L² contributions), the inner `Space 3` lower
+integral is bounded: `∫⁻(ofReal(‖y−R‖⁻¹‖v y‖))² ≤ ENNReal.ofReal ((A + B)²)`. (Square the bound through the
+lintegral↔Bochner bridge.) The per-spectator input to the params-Minkowski reassembly. -/
+lemma lintegral_coulombSq_center_le {R : Space 3} {v : 𝓢(Space 3, ℂ)} {A B : ℝ}
+    (hA : 0 ≤ A) (hB : 0 ≤ B)
+    (hb : Real.sqrt (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2) ≤ A + B) :
+    ∫⁻ y : Space 3, (ENNReal.ofReal (‖y - R‖⁻¹ * ‖v y‖)) ^ 2 ≤ ENNReal.ofReal ((A + B) ^ 2) := by
+  rw [lintegral_coulombSq_center_eq]
+  apply ENNReal.ofReal_le_ofReal
+  have hI : 0 ≤ ∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2 := integral_nonneg fun y => sq_nonneg _
+  nlinarith [Real.sq_sqrt hI, Real.sqrt_nonneg (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2), hb, hA, hB]
+
 end SKEFTHawking.DFT
