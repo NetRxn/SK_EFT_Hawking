@@ -1282,4 +1282,29 @@ lemma molecularSplit_symm_eq {N : ℕ} (i : Fin N) (y : Space 3)
     · exact absurd h k.2
     · rw [hz2 k, zero_add]
 
+/-- The fiber injection `y ↦ (molecularSplitEquiv i).symm (y, z)` has **temperate growth** — it is affine
+(`molecularSplit_symm_eq`): a continuous linear map (`gatherCLM`, temperate growth) plus a constant. -/
+lemma hasTemperateGrowth_fiber {N : ℕ} (i : Fin N) (z : {k // ¬ electronCoord i k} → ℝ) :
+    Function.HasTemperateGrowth (fun y : Space 3 => (molecularSplitEquiv i).symm (y, z)) := by
+  have he : (fun y : Space 3 => (molecularSplitEquiv i).symm (y, z))
+      = (fun y => gatherCLM i y) + (fun _ => (molecularSplitEquiv i).symm (0, z)) := by
+    funext y
+    simp only [Pi.add_apply, gatherCLM_apply]
+    exact molecularSplit_symm_eq i y z
+  rw [he]
+  exact (gatherCLM i).hasTemperateGrowth.add (Function.HasTemperateGrowth.const _)
+
+/-- The fiber injection is an **isometry** — `gatherLM`'s isometry (`norm_gatherLM`) plus a translation. -/
+lemma isometry_fiber {N : ℕ} (i : Fin N) (z : {k // ¬ electronCoord i k} → ℝ) :
+    Isometry (fun y : Space 3 => (molecularSplitEquiv i).symm (y, z)) := by
+  refine Isometry.of_dist_eq fun y₁ y₂ => ?_
+  rw [molecularSplit_symm_eq i y₁ z, molecularSplit_symm_eq i y₂ z, dist_add_right]
+  exact (isometry_gatherLM i).dist_eq y₁ y₂
+
+/-- The fiber injection is **`AntilipschitzWith 1`** (from `isometry_fiber`) — the last hypothesis
+`compCLMOfAntilipschitz` needs. -/
+lemma antilipschitz_fiber {N : ℕ} (i : Fin N) (z : {k // ¬ electronCoord i k} → ℝ) :
+    AntilipschitzWith 1 (fun y : Space 3 => (molecularSplitEquiv i).symm (y, z)) :=
+  (isometry_fiber i z).antilipschitz
+
 end SKEFTHawking.DFT
