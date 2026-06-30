@@ -605,6 +605,30 @@ lemma integrable_coulombFar_mul_sq (u : 𝓢(Space 3, ℂ)) :
   nlinarith [mul_le_mul_of_nonneg_right hV2le (norm_nonneg (u x)),
     mul_nonneg hV2nn (norm_nonneg (u x)), norm_nonneg (u x)]
 
+/-- `((1/‖x‖)·1_{‖x‖≤1}·‖u‖)² ∈ L¹` — the near-Coulomb·u part, dominated by `(seminorm₀₀ u)²·‖x‖⁻²·1_{‖x‖≤1}`
+(`SchwartzMap.norm_le_seminorm` + W3-9). The second integrability input of the single-electron Coulomb bound. -/
+lemma integrable_coulombNear_mul_sq (u : 𝓢(Space 3, ℂ)) :
+    Integrable (fun x : Space 3 => ((if ‖x‖ ≤ 1 then ‖x‖⁻¹ else 0) * ‖u x‖) ^ 2) := by
+  have hrec : ∀ x : Space 3, (if ‖x‖ ≤ 1 then ‖x‖⁻¹ else 0) ^ 2
+      = if ‖x‖ ≤ 1 then ‖x‖ ^ (-2 : ℝ) else 0 := by
+    intro x
+    split_ifs with h
+    · rcases eq_or_lt_of_le (norm_nonneg x) with hx0 | hx0
+      · rw [← hx0]; simp [Real.zero_rpow (show (-2 : ℝ) ≠ 0 by norm_num)]
+      · rw [Real.rpow_neg hx0.le, show (2 : ℝ) = ((2 : ℕ) : ℝ) by norm_num, Real.rpow_natCast,
+          ← inv_pow]
+    · ring
+  refine (integrable_coulombNear_sq.const_mul (((SchwartzMap.seminorm ℂ 0 0) u) ^ 2)).mono'
+    (Measurable.aestronglyMeasurable (by
+      apply Measurable.pow_const
+      exact (Measurable.ite (measurableSet_le measurable_norm measurable_const)
+        measurable_norm.inv measurable_const).mul u.continuous.norm.measurable))
+    (Filter.Eventually.of_forall fun x => ?_)
+  rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _), mul_pow, hrec,
+    mul_comm (((SchwartzMap.seminorm ℂ 0 0) u) ^ 2) _]
+  refine mul_le_mul_of_nonneg_left ?_ (by positivity)
+  nlinarith [SchwartzMap.norm_le_seminorm ℂ u x, norm_nonneg (u x), apply_nonneg (SchwartzMap.seminorm ℂ 0 0) u]
+
 /-- **The near-Coulomb L² norm is strictly positive:** `0 < ∫ ‖x‖⁻²·1_{‖x‖≤1}` (= `‖V₁‖₂²`). The integrand
 is positive on the punctured unit ball (positive volume) and integrable (W3-9). Lets the single-electron
 Coulomb relative bound divide by `‖V₁‖₂` when calibrating the ε-trick. -/
