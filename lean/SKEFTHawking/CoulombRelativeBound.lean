@@ -1,6 +1,7 @@
 import SKEFTHawking.MolecularHamiltonian
 import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
+import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 
 /-!
 # W3 (Phase 6BB Wave 3) — discharge of `hrel`: the Coulomb relative bound, via Fourier–Kato–Rellich
@@ -23,6 +24,7 @@ Invariants: kernel-pure `{propext, Classical.choice, Quot.sound}`; zero `sorry`;
 namespace SKEFTHawking.DFT
 
 open MeasureTheory
+open scoped FourierTransform SchwartzMap
 
 /-- **The L² integrability crux of the Fourier sup-norm bound:** `(1 + ‖ξ‖²)⁻¹ ∈ L²(ℝ³)`, equivalently
 `(1 + ‖ξ‖²)⁻² ∈ L¹(ℝ³)`. Holds because the exponent `4` exceeds the dimension `3`
@@ -192,5 +194,22 @@ lemma integrable_coulombNear_sq :
     intro y hy
     simp only [Set.mem_Ioi] at hy
     simp only [if_neg (by linarith : ¬ y ≤ 1), smul_zero]
+
+/-- **Fourier inversion ⟹ the L^∞≤L¹ sup-bound:** `‖u x‖ ≤ ∫ ‖𝓕 u‖` for Schwartz `u`. Since
+`u = 𝓕⁻(𝓕 u)` (`SchwartzMap.fourier_inversion`) and the inverse transform unfolds to a
+`VectorFourier.fourierIntegral`, the L^∞≤L¹ bound `norm_fourierIntegral_le_integral_norm` applies. This is
+the first step of the Fourier sup-norm bound: `‖u‖_∞ ≤ ‖û‖_{L¹}`, to be chained with
+`integral_norm_le_weighted_L2` (Hölder) and Plancherel. -/
+lemma norm_le_integral_norm_fourier (u : 𝓢(Space 3, ℂ)) (x : Space 3) :
+    ‖u x‖ ≤ ∫ ξ : Space 3, ‖(𝓕 u) ξ‖ := by
+  have h1 : (u : Space 3 → ℂ) = 𝓕⁻ ((𝓕 u : 𝓢(Space 3, ℂ)) : Space 3 → ℂ) := by
+    rw [← SchwartzMap.fourierInv_coe]
+    exact congrArg DFunLike.coe (SchwartzMap.fourier_inversion u).symm
+  rw [show ‖u x‖ = ‖𝓕⁻ ((𝓕 u : 𝓢(Space 3, ℂ)) : Space 3 → ℂ) x‖ from by rw [h1],
+    Real.fourierInv_eq]
+  have heq : ∫ v : Space 3, ‖𝐞 (inner ℝ v x) • (𝓕 u) v‖ = ∫ ξ : Space 3, ‖(𝓕 u) ξ‖ :=
+    integral_congr_ae (Filter.Eventually.of_forall fun v => by simp)
+  rw [← heq]
+  exact norm_integral_le_integral_norm _
 
 end SKEFTHawking.DFT
