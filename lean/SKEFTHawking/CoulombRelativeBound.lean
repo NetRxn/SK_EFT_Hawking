@@ -408,4 +408,48 @@ lemma integral_weightInv_sq_smul {t : ℝ} (ht : 0 < t) :
       (fun η : Space 3 => (((1 + ‖η‖ ^ 2)⁻¹ : ℝ)) ^ 2) (Real.sqrt t),
     h3, smul_eq_mul, abs_of_pos (by positivity)]
 
+/-- **t-parameterized operator-bridge split:** `‖(1+t‖ξ‖²)g‖₂ ≤ √2·‖g‖₂ + √2·t·‖‖ξ‖²g‖₂`. The t-version
+of `sqrt_weighted_le` via `(1+t‖ξ‖²)² ≤ 2 + 2t²‖ξ‖⁴` (= `(1−t‖ξ‖²)² ≥ 0`). The factor `t` on the second
+term is the kinetic shrink of the Kato ε-trick: paired with the `t^{-3/4}` constant growth (W3-21), the
+kinetic coefficient `∝ t^{1/4} → 0`. -/
+lemma sqrt_weighted_le_t {g : Space 3 → ℂ} {t : ℝ} (ht : 0 < t)
+    (h0 : Integrable (fun ξ : Space 3 => ‖g ξ‖ ^ 2))
+    (h4 : Integrable (fun ξ : Space 3 => ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2)) :
+    Real.sqrt (∫ ξ : Space 3, ((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖) ^ 2)
+      ≤ Real.sqrt 2 * Real.sqrt (∫ ξ : Space 3, ‖g ξ‖ ^ 2)
+        + Real.sqrt 2 * t * Real.sqrt (∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2) := by
+  have hsub : ∀ a b : ℝ, 0 ≤ a → 0 ≤ b → Real.sqrt (a + b) ≤ Real.sqrt a + Real.sqrt b := by
+    intro a b ha hb
+    have h := Real.sqrt_le_sqrt (show a + b ≤ (Real.sqrt a + Real.sqrt b) ^ 2 by
+      nlinarith [Real.sq_sqrt ha, Real.sq_sqrt hb,
+        mul_nonneg (Real.sqrt_nonneg a) (Real.sqrt_nonneg b)])
+    rwa [Real.sqrt_sq (by positivity)] at h
+  have hstep : ∫ ξ : Space 3, ((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖) ^ 2
+      ≤ ∫ ξ : Space 3, (2 * ‖g ξ‖ ^ 2 + 2 * t ^ 2 * (‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2)) :=
+    integral_mono_of_nonneg (Filter.Eventually.of_forall fun ξ => by positivity)
+      ((h0.const_mul 2).add (h4.const_mul (2 * t ^ 2)))
+      (Filter.Eventually.of_forall fun ξ => by
+        nlinarith [mul_nonneg (sq_nonneg (1 - t * ‖ξ‖ ^ 2)) (sq_nonneg ‖g ξ‖), sq_nonneg ‖g ξ‖,
+          mul_nonneg (sq_nonneg t) (sq_nonneg ‖g ξ‖)])
+  rw [integral_add (h0.const_mul 2) (h4.const_mul (2 * t ^ 2))] at hstep
+  simp only [integral_const_mul] at hstep
+  have hA : (0 : ℝ) ≤ 2 * ∫ ξ : Space 3, ‖g ξ‖ ^ 2 := by
+    have : (0 : ℝ) ≤ ∫ ξ : Space 3, ‖g ξ‖ ^ 2 := integral_nonneg fun ξ => by positivity
+    linarith
+  have hB : (0 : ℝ) ≤ 2 * t ^ 2 * ∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2 := by
+    have : (0 : ℝ) ≤ ∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2 := integral_nonneg fun ξ => by positivity
+    positivity
+  have e2 : Real.sqrt (2 * t ^ 2 * ∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2)
+      = Real.sqrt 2 * t * Real.sqrt (∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2) := by
+    rw [show (2 : ℝ) * t ^ 2 * (∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2)
+        = 2 * (t ^ 2 * (∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2)) from by ring,
+      Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 2), Real.sqrt_mul (sq_nonneg t), Real.sqrt_sq ht.le,
+      mul_assoc]
+  calc Real.sqrt (∫ ξ : Space 3, ((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖) ^ 2)
+      ≤ Real.sqrt (2 * (∫ ξ : Space 3, ‖g ξ‖ ^ 2)
+          + 2 * t ^ 2 * ∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2) := Real.sqrt_le_sqrt hstep
+    _ ≤ Real.sqrt (2 * ∫ ξ : Space 3, ‖g ξ‖ ^ 2)
+          + Real.sqrt (2 * t ^ 2 * ∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2) := hsub _ _ hA hB
+    _ = _ := by rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 2), e2]
+
 end SKEFTHawking.DFT
