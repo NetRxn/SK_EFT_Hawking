@@ -1,5 +1,5 @@
 import SKEFTHawking.LindbladSemigroup
-import Mathlib.Topology.Instances.Matrix
+import Mathlib.Analysis.Matrix.Normed
 
 /-!
 # GKSL CP-semigroup theorem (Phase 6BC Wave 5 / D10 Discharge W4) — discharge of `hreal`
@@ -23,7 +23,7 @@ no `maxHeartbeats`; no `native_decide`.
 
 namespace SKEFTHawking.OpenSystems
 
-open scoped Matrix ComplexOrder
+open scoped Matrix ComplexOrder Matrix.Norms.Operator
 open Matrix
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
@@ -75,6 +75,43 @@ lemma toLin_pow (b : Module.Basis (d × d) ℂ (Matrix d d ℂ)) (X : Matrix (d 
   induction k with
   | zero => rw [pow_zero, pow_zero, Matrix.toLin_one]; rfl
   | succ k ih => rw [pow_succ, Matrix.toLin_mul b b b, ih, pow_succ]; rfl
+
+/-- **The superoperator `e^{sℒ}` is completely positive when `ℒ` is completely positive and `s ≥ 0`**
+— the exponential `toLin(exp(s • toMatrix M))` is a limit of the completely-positive partial sums
+`∑_{n<N} (sⁿ/n!) Mⁿ` (each `Mⁿ` CP). The dissipator factor of the Lie–Trotter product. -/
+lemma isCompletelyPositive_toLin_exp {M : MatrixMap d d ℂ} (hM : M.IsCompletelyPositive) {s : ℝ}
+    (hs : 0 ≤ s) :
+    MatrixMap.IsCompletelyPositive (Matrix.toLin (Matrix.stdBasis ℂ d d) (Matrix.stdBasis ℂ d d)
+      (NormedSpace.exp ((s : ℂ) • LinearMap.toMatrix (Matrix.stdBasis ℂ d d)
+        (Matrix.stdBasis ℂ d d) M))) := by
+  set b := Matrix.stdBasis ℂ d d
+  set A : Matrix (d × d) (d × d) ℂ := (s : ℂ) • LinearMap.toMatrix b b M with hA_def
+  have hterm : ∀ n : ℕ, Matrix.toLin b b (NormedSpace.expSeries ℂ (Matrix (d × d) (d × d) ℂ) n
+      (fun _ => A)) = (((n.factorial : ℂ)⁻¹ * (s : ℂ) ^ n)) • M ^ n := by
+    intro n
+    rw [NormedSpace.expSeries_apply_eq, hA_def, smul_pow, map_smul, map_smul, toLin_pow,
+      Matrix.toLin_toMatrix, smul_smul]
+  refine isCompletelyPositive_of_tendsto_choi
+    (M := fun N => Matrix.toLin b b
+      (∑ n ∈ Finset.range N, NormedSpace.expSeries ℂ (Matrix (d × d) (d × d) ℂ) n (fun _ => A))) ?_ ?_
+  · have hlin : (fun Y : Matrix (d × d) (d × d) ℂ => MatrixMap.choi_matrix (Matrix.toLin b b Y))
+        = ⇑(MatrixMap.choi_equiv.toLinearMap ∘ₗ (Matrix.toLin b b).toLinearMap) := by
+      ext Y; rfl
+    have hcont : Continuous fun Y : Matrix (d × d) (d × d) ℂ =>
+        MatrixMap.choi_matrix (Matrix.toLin b b Y) := by
+      rw [hlin]; exact LinearMap.continuous_of_finiteDimensional _
+    exact (hcont.tendsto _).comp (NormedSpace.expSeries_hasSum_exp A).tendsto_sum_nat
+  · intro N
+    dsimp only
+    rw [map_sum]
+    refine Finset.sum_induction _ _ (fun _ _ => MatrixMap.IsCompletelyPositive.add)
+      (MatrixMap.IsCompletelyPositive.zero d d) (fun n _ => ?_)
+    rw [hterm n]
+    refine (isCompletelyPositive_pow hM n).smul ?_
+    have : ((n.factorial : ℂ)⁻¹ * (s : ℂ) ^ n) = (((n.factorial : ℝ)⁻¹ * s ^ n : ℝ) : ℂ) := by
+      push_cast; ring
+    rw [this]
+    exact_mod_cast (by positivity : (0 : ℝ) ≤ (n.factorial : ℝ)⁻¹ * s ^ n)
 
 end ExpCP
 
