@@ -229,6 +229,23 @@ lemma momentumSq_schwartz_eq_fourierMultiplier (f : 𝓢(Space d, ℂ)) :
   rw [← ContinuousLinearMap.sum_apply,
     ← fourierMultiplierCLM_sum ℂ (fun i _ => innerBasisCSq_hasTemperateGrowth i), ← hsum]
 
+/-! #### C2 — the resolvent symbol `(s - iμ)⁻¹` has temperate growth.
+
+No `HasTemperateGrowth.inv` exists in Mathlib, so we build it from temperate pieces. The inverse
+growth is supplied by Mathlib's `hasTemperateGrowth_one_add_norm_sq_rpow` at exponent `-1`, applied
+in **one real variable** `t` (so the denominator is quadratic in `t`), then composed with `‖·‖²`. -/
+
+/-- `(1 + (a·t)²)⁻¹` (one real variable) has temperate growth — the inverse-growth building block. -/
+lemma oneAdd_mulSq_inv_hasTemperateGrowth (a : ℝ) :
+    Function.HasTemperateGrowth (fun t : ℝ => (1 + (a * t) ^ 2)⁻¹) := by
+  have hbase := Function.hasTemperateGrowth_one_add_norm_sq_rpow ℝ (-1 : ℝ)
+  have hlin : Function.HasTemperateGrowth (fun t : ℝ => a * t) := by fun_prop
+  have hcomp := hbase.comp hlin
+  have heq : (fun t : ℝ => (1 + (a * t) ^ 2)⁻¹)
+      = (fun t : ℝ => (1 + ‖a * t‖ ^ 2) ^ (-1 : ℝ)) := by
+    funext t; rw [Real.norm_eq_abs, sq_abs, Real.rpow_neg_one]
+  rw [heq]; exact hcomp
+
 end Wave2
 
 end SKEFTHawking.DFT
