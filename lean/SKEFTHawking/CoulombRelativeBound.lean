@@ -240,4 +240,42 @@ lemma memLp_weighted_fourier (u : 𝓢(Space 3, ℂ)) :
   rw [SchwartzMap.smulLeftCLM_apply_apply hg, norm_smul, Complex.norm_real, Real.norm_eq_abs,
     abs_of_nonneg (by positivity : (0 : ℝ) ≤ 1 + ‖ξ‖ ^ 2)]
 
+/-- **Operator-bridge split:** `‖(1+‖ξ‖²)g‖₂ ≤ √2·‖g‖₂ + √2·‖‖ξ‖²g‖₂` (in `√(∫‖·‖²)` form). Uses the
+pointwise quadratic bound `(1+‖ξ‖²)² ≤ 2 + 2‖ξ‖⁴` (i.e. `(1−‖ξ‖²)² ≥ 0`) + sqrt subadditivity — avoiding
+full L² Minkowski. At `g = û`: `√(∫‖g‖²) = ‖u‖₂` (Plancherel) and `√(∫‖ξ‖⁴‖g‖²) = ‖‖ξ‖²û‖₂` connects to
+`‖momentumSq u‖₂` via the W2 multiplier, turning the sup-norm bound into a kinetic-operator bound. -/
+lemma sqrt_weighted_le {g : Space 3 → ℂ}
+    (h0 : Integrable (fun ξ : Space 3 => ‖g ξ‖ ^ 2))
+    (h4 : Integrable (fun ξ : Space 3 => ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2)) :
+    Real.sqrt (∫ ξ : Space 3, ((1 + ‖ξ‖ ^ 2) * ‖g ξ‖) ^ 2)
+      ≤ Real.sqrt 2 * Real.sqrt (∫ ξ : Space 3, ‖g ξ‖ ^ 2)
+        + Real.sqrt 2 * Real.sqrt (∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2) := by
+  have hsub : ∀ a b : ℝ, 0 ≤ a → 0 ≤ b → Real.sqrt (a + b) ≤ Real.sqrt a + Real.sqrt b := by
+    intro a b ha hb
+    have h := Real.sqrt_le_sqrt (show a + b ≤ (Real.sqrt a + Real.sqrt b) ^ 2 by
+      nlinarith [Real.sq_sqrt ha, Real.sq_sqrt hb,
+        mul_nonneg (Real.sqrt_nonneg a) (Real.sqrt_nonneg b)])
+    rwa [Real.sqrt_sq (by positivity)] at h
+  have hstep : ∫ ξ : Space 3, ((1 + ‖ξ‖ ^ 2) * ‖g ξ‖) ^ 2
+      ≤ ∫ ξ : Space 3, (2 * ‖g ξ‖ ^ 2 + 2 * (‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2)) :=
+    integral_mono_of_nonneg (Filter.Eventually.of_forall fun ξ => by positivity)
+      ((h0.const_mul 2).add (h4.const_mul 2))
+      (Filter.Eventually.of_forall fun ξ => by
+        nlinarith [mul_nonneg (sq_nonneg (1 - ‖ξ‖ ^ 2)) (sq_nonneg ‖g ξ‖), sq_nonneg ‖g ξ‖])
+  rw [integral_add (h0.const_mul 2) (h4.const_mul 2), integral_const_mul, integral_const_mul] at hstep
+  have hA : (0 : ℝ) ≤ 2 * ∫ ξ : Space 3, ‖g ξ‖ ^ 2 := by
+    have : (0 : ℝ) ≤ ∫ ξ : Space 3, ‖g ξ‖ ^ 2 := integral_nonneg fun ξ => by positivity
+    linarith
+  have hB : (0 : ℝ) ≤ 2 * ∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2 := by
+    have : (0 : ℝ) ≤ ∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2 := integral_nonneg fun ξ => by positivity
+    linarith
+  calc Real.sqrt (∫ ξ : Space 3, ((1 + ‖ξ‖ ^ 2) * ‖g ξ‖) ^ 2)
+      ≤ Real.sqrt (2 * (∫ ξ : Space 3, ‖g ξ‖ ^ 2) + 2 * ∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2) :=
+        Real.sqrt_le_sqrt hstep
+    _ ≤ Real.sqrt (2 * ∫ ξ : Space 3, ‖g ξ‖ ^ 2)
+          + Real.sqrt (2 * ∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2) := hsub _ _ hA hB
+    _ = Real.sqrt 2 * Real.sqrt (∫ ξ : Space 3, ‖g ξ‖ ^ 2)
+          + Real.sqrt 2 * Real.sqrt (∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖g ξ‖ ^ 2) := by
+        rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 2), Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 2)]
+
 end SKEFTHawking.DFT
