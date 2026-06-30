@@ -58,4 +58,11 @@ lemma isCompletelyPositive_of_tendsto_choi {M : ℕ → MatrixMap A B ℂ} {N : 
   (MatrixMap.choi_PSD_iff_CP_map N).mpr
     (posSemidef_of_tendsto hchoi fun k => (MatrixMap.choi_PSD_iff_CP_map (M k)).mp (hcp k))
 
+/-- **Powers of a completely positive endomorphism are completely positive** (the terms of the
+exponential series). -/
+lemma isCompletelyPositive_pow {M : MatrixMap A A ℂ} (hM : M.IsCompletelyPositive) :
+    ∀ k : ℕ, (M ^ k).IsCompletelyPositive
+  | 0 => by rw [pow_zero]; exact MatrixMap.IsCompletelyPositive.id
+  | k + 1 => by rw [pow_succ]; exact hM.comp (isCompletelyPositive_pow hM k)
+
 end SKEFTHawking.OpenSystems
