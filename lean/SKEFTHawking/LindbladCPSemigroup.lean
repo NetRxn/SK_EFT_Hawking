@@ -1,5 +1,7 @@
 import SKEFTHawking.LindbladSemigroup
 import Mathlib.Analysis.Matrix.Normed
+import Mathlib.Topology.Algebra.InfiniteSum.NatInt
+import Mathlib.Topology.Algebra.InfiniteSum.Order
 
 /-!
 # GKSL CP-semigroup theorem (Phase 6BC Wave 5 / D10 Discharge W4) — discharge of `hreal`
@@ -270,6 +272,61 @@ lemma norm_pow_sub_pow_le {R : Type*} [NormedRing R] [NormOneClass R] (a b : R) 
           _ = M ^ (n - 1) * ‖a - b‖ := by
               rw [mul_right_comm, ← pow_add, show i + (n - 1 - i) = n - 1 from by omega]
     _ = n * M ^ (n - 1) * ‖a - b‖ := by rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul]; ring
+
+/-- Per-term bound for the exp tail: `‖((n+2)!)⁻¹ • Z^(n+2)‖ ≤ ‖Z‖² · (n!⁻¹ ‖Z‖ⁿ)`. -/
+private lemma norm_expRemTerm_le {𝔸 : Type*} [NormedRing 𝔸] [NormOneClass 𝔸] [NormedAlgebra ℂ 𝔸]
+    (Z : 𝔸) (n : ℕ) :
+    ‖(((n + 2).factorial : ℂ)⁻¹) • Z ^ (n + 2)‖ ≤ ‖Z‖ ^ 2 * ((n.factorial : ℝ)⁻¹ * ‖Z‖ ^ n) := by
+  calc ‖(((n + 2).factorial : ℂ)⁻¹) • Z ^ (n + 2)‖
+      = ((n + 2).factorial : ℝ)⁻¹ * ‖Z ^ (n + 2)‖ := by
+        rw [norm_smul, norm_inv, Complex.norm_natCast]
+    _ ≤ ((n + 2).factorial : ℝ)⁻¹ * ‖Z‖ ^ (n + 2) := by gcongr; exact norm_pow_le _ _
+    _ ≤ (n.factorial : ℝ)⁻¹ * ‖Z‖ ^ (n + 2) := by
+        have hpos2 : (0:ℝ) < n.factorial := by exact_mod_cast n.factorial_pos
+        have hpos1 : (0:ℝ) < (n + 2).factorial := by exact_mod_cast (n + 2).factorial_pos
+        have hfle : (n.factorial : ℝ) ≤ (n + 2).factorial := by
+          exact_mod_cast Nat.factorial_le (show n ≤ n + 2 by omega)
+        have : ((n + 2).factorial : ℝ)⁻¹ ≤ (n.factorial : ℝ)⁻¹ :=
+          (inv_le_inv₀ hpos1 hpos2).mpr hfle
+        gcongr
+    _ = ‖Z‖ ^ 2 * ((n.factorial : ℝ)⁻¹ * ‖Z‖ ^ n) := by rw [pow_add]; ring
+
+/-- The exp tail as a tsum: `exp Z - 1 - Z = ∑'_n ((n+2)!)⁻¹ • Z^(n+2)` (split off the `n=0,1` terms). -/
+private lemma exp_sub_one_sub_self_eq_tsum {𝔸 : Type*} [NormedRing 𝔸] [NormedAlgebra ℂ 𝔸]
+    [CompleteSpace 𝔸] (Z : 𝔸) :
+    NormedSpace.exp Z - 1 - Z = ∑' n, (((n + 2).factorial : ℂ)⁻¹) • Z ^ (n + 2) := by
+  have hf : Summable (fun n => ((n.factorial : ℂ)⁻¹) • Z ^ n) := NormedSpace.expSeries_summable' Z
+  have h2 := hf.sum_add_tsum_nat_add 2
+  have hexp : NormedSpace.exp Z = ∑' n, ((n.factorial : ℂ)⁻¹) • Z ^ n :=
+    congrFun (NormedSpace.exp_eq_tsum ℂ) Z
+  have hsum2 : ∑ i ∈ Finset.range 2, ((i.factorial : ℂ)⁻¹) • Z ^ i = 1 + Z := by
+    simp [Finset.sum_range_succ]
+  rw [hexp, ← h2, hsum2]; abel
+
+/-- **Quadratic exp-Taylor remainder for a Banach algebra:** `‖exp Z - 1 - Z‖ ≤ ‖Z‖² · exp‖Z‖`.
+The matrix analogue of `Complex.norm_exp_sub_one_sub_id_le` (absent from Mathlib for general algebras);
+the O(‖·‖²) control behind the Lie–Trotter `O(1/n²)` step error. -/
+lemma norm_exp_sub_one_sub_self_le {𝔸 : Type*} [NormedRing 𝔸] [NormOneClass 𝔸]
+    [NormedAlgebra ℂ 𝔸] [CompleteSpace 𝔸] (Z : 𝔸) :
+    ‖NormedSpace.exp Z - 1 - Z‖ ≤ ‖Z‖ ^ 2 * Real.exp ‖Z‖ := by
+  rw [exp_sub_one_sub_self_eq_tsum Z]
+  have hsummN : Summable (fun n => ‖(((n + 2).factorial : ℂ)⁻¹) • Z ^ (n + 2)‖) :=
+    (summable_nat_add_iff 2).mpr (NormedSpace.norm_expSeries_summable' Z)
+  have hsummR : Summable (fun n => ‖Z‖ ^ 2 * ((n.factorial : ℝ)⁻¹ * ‖Z‖ ^ n)) := by
+    apply Summable.mul_left
+    simpa [smul_eq_mul] using (NormedSpace.expSeries_summable' (𝕂 := ℝ) ‖Z‖)
+  have step1 : ‖∑' n, (((n + 2).factorial : ℂ)⁻¹) • Z ^ (n + 2)‖
+      ≤ ∑' n, ‖(((n + 2).factorial : ℂ)⁻¹) • Z ^ (n + 2)‖ := norm_tsum_le_tsum_norm hsummN
+  have step2 : ∑' n, ‖(((n + 2).factorial : ℂ)⁻¹) • Z ^ (n + 2)‖
+      ≤ ∑' n, ‖Z‖ ^ 2 * ((n.factorial : ℝ)⁻¹ * ‖Z‖ ^ n) :=
+    Summable.tsum_le_tsum (norm_expRemTerm_le Z) hsummN hsummR
+  have step3 : ∑' n, ‖Z‖ ^ 2 * ((n.factorial : ℝ)⁻¹ * ‖Z‖ ^ n)
+      = ‖Z‖ ^ 2 * ∑' n, (n.factorial : ℝ)⁻¹ * ‖Z‖ ^ n := tsum_mul_left
+  have step4 : ∑' n, (n.factorial : ℝ)⁻¹ * ‖Z‖ ^ n = Real.exp ‖Z‖ := by
+    rw [show Real.exp ‖Z‖ = NormedSpace.exp ‖Z‖ from congrFun Real.exp_eq_exp_ℝ _,
+      NormedSpace.exp_eq_tsum ℝ]
+    simp only [smul_eq_mul]
+  exact le_of_le_of_eq (step1.trans step2) (step3.trans (by rw [step4]))
 
 end Trotter
 
