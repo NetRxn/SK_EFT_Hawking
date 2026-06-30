@@ -842,4 +842,30 @@ lemma space_pi_measurePreserving {d : ℕ} :
       (volume : MeasureTheory.Measure (Space d)) (volume : MeasureTheory.Measure (Fin d → ℝ)) :=
   (EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp (Fin d)).comp basis_repr_measurePreserving
 
+/-- **Electron `i` owns coordinate `k`** iff `k.val / 3 = i.val` — i.e. `k ∈ {3i, 3i+1, 3i+2}`, exactly the
+three coordinates `electronPos x i` reads (`x.val ⟨3*i+j, _⟩`, `j : Fin 3`). The decidable predicate that
+drives the measure-preserving coordinate split for the molecular L²-Fubini. -/
+def electronCoord {N : ℕ} (i : Fin N) (k : Fin (3 * N)) : Prop := k.val / 3 = i.val
+
+instance {N : ℕ} (i : Fin N) : DecidablePred (electronCoord i) := fun k => by
+  unfold electronCoord; infer_instance
+
+/-- **Measure-preserving split of `Space (3N)` isolating electron `i`'s coordinate block.** Composes the
+`Space (3N) ↔ (Fin (3N) → ℝ)` bridge (`space_pi_measurePreserving`) with Mathlib's
+`volume_preserving_piEquivPiSubtypeProd` over the predicate `electronCoord i`, landing in
+`(electron-i's 3 coords → ℝ) × (the other 3N−3 coords → ℝ)` — both with their own volume. This is the
+measure-theoretic foundation of the L²-Fubini that lifts the single-electron bound (`exists_coulomb_relbound`)
+to each molecular Coulomb term: integrate the spectator coordinates out, apply the 3D bound on electron `i`'s
+fiber. -/
+lemma electron_split_measurePreserving {N : ℕ} (i : Fin N) :
+    MeasureTheory.MeasurePreserving
+      (fun x : Space (3 * N) =>
+        (MeasurableEquiv.piEquivPiSubtypeProd (fun _ : Fin (3 * N) => ℝ) (electronCoord i))
+          ((EuclideanSpace.measurableEquiv (Fin (3 * N))) ((Space.basis (d := 3 * N)).repr x)))
+      (volume : MeasureTheory.Measure (Space (3 * N)))
+      (volume : MeasureTheory.Measure
+        ((∀ _ : {k // electronCoord i k}, ℝ) × (∀ _ : {k // ¬ electronCoord i k}, ℝ))) :=
+  (volume_preserving_piEquivPiSubtypeProd (fun _ : Fin (3 * N) => ℝ) (electronCoord i)).comp
+    space_pi_measurePreserving
+
 end SKEFTHawking.DFT
