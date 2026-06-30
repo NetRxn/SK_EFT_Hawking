@@ -1173,4 +1173,23 @@ lemma sqrt_integral_add_sq_le {α : Type*} [MeasurableSpace α] {μ : MeasureThe
     _ = Real.sqrt (∫ a, F a ^ 2 ∂μ) + Real.sqrt (∫ a, G a ^ 2 ∂μ) :=
         Real.sqrt_sq (by positivity)
 
+/-- **The coordinate-scatter linear map** placing `y : Space 3` into electron `i`'s three coordinates of
+`Space (3N)` (zero elsewhere). This is the linear part of the fiber injection
+`(molecularSplitEquiv i).symm (·, z) = gatherLM i · + (spectator scatter of z)`; the fiber
+`ũ_z = u ∘ (that affine map)` is then Schwartz by `SchwartzMap.compCLMOfAntilipschitz`. -/
+def gatherLM {N : ℕ} (i : Fin N) : Space 3 →ₗ[ℝ] Space (3 * N) where
+  toFun y := ⟨fun k => if k.val / 3 = i.val then y.val ⟨k.val % 3, Nat.mod_lt _ (by norm_num)⟩ else 0⟩
+  map_add' y₁ y₂ := by
+    ext k
+    simp only [Space.add_val, Pi.add_apply]
+    split_ifs with h
+    · rfl
+    · rw [add_zero]
+  map_smul' c y := by
+    ext k
+    simp only [Space.smul_val, RingHom.id_apply]
+    split_ifs with h
+    · rfl
+    · simp
+
 end SKEFTHawking.DFT
