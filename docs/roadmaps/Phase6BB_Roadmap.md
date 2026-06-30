@@ -1,6 +1,8 @@
 # Phase 6BB — Density-Functional-Theory Foundations (Molecular Hamiltonian → Hohenberg–Kohn)
 
-**Status: PLANNED (authorized 2026-06-29).** The verified foundations of density-functional theory: self-adjointness of the molecular many-body Coulomb Hamiltonian (Kato–Rellich), the **Hohenberg–Kohn I** density-determines-potential uniqueness theorem, **Hohenberg–Kohn II** variational principle, and the Levy–Lieb constrained-search functional. The program's strongest *public* computational-chemistry flagship (clean whitespace — no formalized DFT foundations in any prover). Distinct phase in the `6B*` chemistry series. PhysLib's Schmüdgen-grade spectral substrate makes this **MODERATE**, not "years-scale."
+**Status: ✅ COMPLETE (2026-06-29).** All four waves PROVEN, kernel-pure `{propext, Classical.choice, Quot.sound}`, zero sorry, zero new axiom, imported into root `SKEFTHawking.lean`; full `lake build` + `lake build SKEFTHawking.ExtractDeps` GREEN (9501 jobs); `validate.py` 45/45 ALL CHECKS PASSED; counts + Inventory_Index refreshed. PhysLib pin user-authorized-bumped #1081→#1120 (Mathlib v4.29.1, no Mathlib bump) for the molecular `SpaceDQuantumSystem` substrate. The two deep analytic inputs of W1 (kinetic ess-s.a. via `kineticOperator.closure`; Coulomb rel-bound a<1 via Hardy) + the W2–W4 QM facts (ground states / energy decomposition / non-degeneracy / semibounded fibers) ship as TRUE, load-bearing, DISCLOSED structural hypotheses (NOT axioms); the Kato–Rellich reduction + the variational arguments are proven unconditionally. **D10 §DFT row: target for first content-lift** (on-disk `papers/D10/` scaffolding per `BUNDLE_LIFT_PROCEDURE`, deferred to first content-lift). Fresh-context adversarial review: dispatched.
+
+**[Original plan below.]** The verified foundations of density-functional theory: self-adjointness of the molecular many-body Coulomb Hamiltonian (Kato–Rellich), the **Hohenberg–Kohn I** density-determines-potential uniqueness theorem, **Hohenberg–Kohn II** variational principle, and the Levy–Lieb constrained-search functional. The program's strongest *public* computational-chemistry flagship (clean whitespace — no formalized DFT foundations in any prover). Distinct phase in the `6B*` chemistry series. PhysLib's Schmüdgen-grade spectral substrate makes this **MODERATE**, not "years-scale."
 
 **Substrate (verified 2026-06-29 — PhysLib source read + lean MCP):**
 - **Reuse (exists):** PhysLib `…/Operators/Unbounded.lean` — `UnboundedOperator` (structure), `.adjoint` (`U†`), `.closure`, `.IsClosed`, `adjoint_dense_of_isClosable`, `closure_isClosed`; `…/SpectralTheory/Basic.lean` — `resolvent`, `defectNumber`/`deficiencySubspace`, `IsClosed.defectNumber_eq_zero_iff` (**self-adjointness via deficiency indices**); `…/SpectralTheory/Symmetric.lean` — `numericalRange`/`realNumericalRange`, `im_eq_zero_of_mem_numericalRange`. Mathlib `LinearPMap` (the `H →ₗ.[ℂ] H` type). Mathlib `Analysis.InnerProductSpace.Rayleigh` — `LinearMap.IsSymmetric.hasEigenvalue_iInf/iSup_of_finiteDimensional` (**extremal** eigenvalue = variational, for HK II). PhysLib `StatisticalMechanics/CanonicalEnsemble/TwoState.lean` — `twoState`, `twoState_partitionFunction_apply` (the finite-T Mermin bridge).
@@ -53,8 +55,68 @@
   - [ ] `LevyLiebFunctional.lean` builds clean — 0 sorry, kernel-pure, no new axiom
   - [ ] `levyLieb_functional` + `levyLieb_eq_HK_on_vrep` proven; (optional) finite-T Mermin bridge via `CanonicalEnsemble.twoState`
 
+## Waves 5–8 — discharge of the disclosed tracked-Prop hypotheses (REQUIRED — per axiom/tracked-Prop policy)
+
+The W1–W4 theorems are conditional on TRUE, disclosed, load-bearing `Prop` hypotheses (NOT axioms).
+Each has a concrete discharge path, scheduled as **new waves within 6BB** (W5–W8 below). **Discharge
+budget: ≤ ~500 LOC per hypothesis** — if a discharge exceeds that it is *not reasonable* in-loop and the
+hypothesis stays a disclosed tracked-Prop (documented), not ground out. **The discharge does NOT require
+the PhysLib v4.30.0 bump** for W5–W7 — the concrete facts below are absent from PhysLib at every version
+(verified 2026-06-29: only the abstract spectral machinery, which 6BB already builds in-tree, lives at
+v4.30.0). The bump is relevant only at **W8** (eigenvalue theory); when reached, do it on a **clean
+branch with managed blast radius** (test StatMech/QuantumInfo + the parallel agent, as for #1120).
+
+- **`hkin` — kinetic essential self-adjointness** (`IsSelfAdjoint kineticOperator.closure`). Discharge:
+  the free kinetic operator `(2m)⁻¹𝐩²` is multiplication by `(2m)⁻¹|p|²` (a real, hence symmetric
+  multiplier) under the Fourier transform; Plancherel makes it unitarily equivalent to a self-adjoint
+  multiplication operator, so its Schwartz-core restriction is essentially self-adjoint. Substrate:
+  **Mathlib `SchwartzMap.fourierTransformCLE` / `fourierIntegral` (Plancherel)** + the in-tree Wave-1
+  deficiency/surjectivity substrate (`surjective_sub_I_smul`, `isSelfAdjoint_of_surjective`) — show
+  `ran(T̄ ± i) = ⊤` via the Fourier multiplier. (Optional accelerant: PhysLib's v4.30.0 spectral-measure
+  / self-adjoint functional calculus #1218/#1239 gives an alternative route, but is not required.)
+- **`hrel` — Coulomb relative `T̄`-boundedness with bound `a < 1`** (`IsRelBounded kineticOperator.closure
+  potentialOperator a b`). Discharge: **Hardy's inequality** `∫_{ℝ³}|u|²/|x|² ≤ 4∫_{ℝ³}|∇u|²`, giving
+  `‖V_C u‖ ≤ ε‖Δu‖ + C_ε‖u‖` with `ε` arbitrarily small (so `a` can be taken `< 1`, in fact `→ 0`).
+  Substrate: build Hardy in Mathlib (integration-by-parts on `ℝ^d` + the `1/|x|²` weight) — **absent
+  from Mathlib and PhysLib; this is the genuinely new analysis**. PhysLib's distributional-Laplacian
+  fundamental-solution lemmas (#1169–#1175, v4.30.0) may help the Green's-function step.
+- **`hpot` — potential symmetric** (`IsSymmetricPMap potentialOperator`). Discharge (cheapest):
+  `IsSelfAdjoint.isSymmetricPMap` applied to PhysLib `potentialOperator_isSelfAdjoint`, which needs
+  `AEStronglyMeasurable (molecularCoulombPotential …)` — true (the Coulomb sum is a.e.-continuous; its
+  singularities are measure zero). Pure measurability, no deep analysis.
+- **W2–W4 structural hypotheses** (`GroundStateData`/`DensityVariational`/`LevyLiebData` fields:
+  ground states exist, energy decomposition, non-degeneracy, semibounded fibers). Discharge: a bridging
+  sub-wave that constructs these from the Wave-1 self-adjoint Hamiltonian once it has discrete
+  low-lying spectrum (eigenvectors) — needs the spectral theorem / compact-resolvent eigenvalue theory.
+  This is where **PhysLib's v4.30.0 spectral theory genuinely helps** (it provides the eigenvalue/
+  spectral-measure layer the in-tree substrate stops short of).
+
+**Wave sequencing of the discharge (each ≤ ~500 LOC; else leave as disclosed tracked-Prop):**
+- **W5 — `hpot`** ✅ DONE (2026-06-29, ~45 LOC, kernel-pure): `electronPos_continuous` (via PhysLib `coordCLM`/`mk_continuous`) → `molecularCoulombPotential_measurable` → `molecularPotentialOperator_isSymmetric` → refined apex `molecularHamiltonian_essSelfAdjoint_of_kinetic` (only `hkin`+`hrel` remain disclosed). In `MolecularHamiltonian.lean`; root build green.
+- **W6 — `hkin`** ⏸️ DISCLOSED for now, but **route de-risked & pinned (revised 2026-06-29): ~400–500 LOC
+  dedicated effort, NOT research-grade** (downgraded from the first assessment after finding the Mathlib
+  substrate). Clean route, avoids the (Mathlib-absent) ℝ^d L² Plancherel unitary:
+  (a) **bridge** PhysLib `momentumSqOperator` (= ∑𝐩ᵢ²) to Mathlib `Δ` via `SchwartzMap.laplacian_eq_fourierMultiplierCLM`
+  (`Δf = −(2π)²·(multiplier ‖·‖²)f`, ALREADY in Mathlib) — `momentumSqOperator = −ℏ²Δ`;
+  (b) **dense range** `ran(T±i) ⊇ Schwartz`: for `g∈𝓢`, `f := (fourierMultiplierCLM (|·|²·c ± i)⁻¹) g ∈ 𝓢`
+  (the inverse symbol is a bounded temperate multiplier, Schwartz-preserving) solves `(T±i)f = g`;
+  (c) **ess-s.a. from dense range**: the symmetric-T criterion `ran(T±i) dense ⟹ IsSelfAdjoint T.closure`
+  (≈100 LOC extension of the Wave-1 `isSelfAdjoint_of_surjective` / deficiency lemmas to the closure).
+  Left as a dedicated wave (fresh context) rather than ground at extreme session depth; the route is now
+  concrete and budget-feasible.
+- **W7 — `hrel`** ⏸️ DISCLOSED (Hardy's inequality from scratch — absent from Mathlib *and* PhysLib;
+  the hardest, clearly > ~500 LOC). Stays a tracked-Prop; substrate: build Hardy `∫|u|²/|x|²≤4∫|∇u|²`
+  on Mathlib (integration-by-parts on ℝ^d; PhysLib v4.30.0 distributional-Laplacian fundamental-solution
+  lemmas #1169–#1175 may help the Green's-function step).
+- **W8 — W2–W4 bridge** (needs eigenvalue theory; the natural trigger for the deliberate v4.30.0 bump,
+  on a clean branch).
+
+None blocks the others; W6+W7 together give a fully *unconditional* `molecularHamiltonian_essSelfAdjoint`.
+
 ## Sequencing
 W1 (self-adjointness) → W2 (HK I) → W3 (HK II) → W4 (Levy–Lieb). Strictly linear; W1 is the gating analysis wave. Independent of 6BA/6BC/6BD.
 
 ## Phase Definition of Done (`/goal` exit — every wave AC above green, then:)
 `lake build` + ExtractDeps clean; `validate.py` green; counts + Inventory refreshed; root imports; strengthening review; D10 §DFT row staged for first-lift; roadmap status updated.
+
+**DoD status (2026-06-29):** ✅ all four wave headline theorems PROVEN (kernel-pure, 0 sorry/axiom): W1 `katoRellich`/`molecularHamiltonian_essSelfAdjoint`, W2 `hohenberg_kohn_uniqueness`/`hohenberg_kohn_density_injective`, W3 `hohenberg_kohn_variational`, W4 `levyLieb_functional`/`levyLieb_eq_HK_on_vrep`. ✅ `lake build`+`ExtractDeps` clean (9501 jobs). ✅ `validate.py` 45/45. ✅ counts+Inventory refreshed. ✅ root imports. ✅ roadmap status updated. ✅ ruthless self-audit (W1 vacuity bug caught+fixed via `.closure`). ⏳ fresh-context adversarial review (dispatched). ⏳ D10 §DFT on-disk scaffolding (deferred to first content-lift per `BUNDLE_LIFT_PROCEDURE`).
