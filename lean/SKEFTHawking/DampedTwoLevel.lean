@@ -57,9 +57,24 @@ theorem dampedTwoLevel_generator_decay_rate (γ : ℝ) (hγ : 0 ≤ γ) (ρ : Ma
   rw [hsq]
   ring
 
-/-- **Certified decay envelope.** The excited-population decay factor `e^{−γt}` (rate `−γ` per
-`dampedTwoLevel_generator_decay_rate`) admits the rational enclosure `1 − γt ≤ e^{−γt} ≤ 1/(1+γt)`,
-with no floating-point `exp` — the project `expNeg_enclosure` Bernoulli bracket at `r = γt`. -/
+/-- **Population trajectory solves the rate equation.** The factor `p₀ · e^{−γt}` is the solution of
+the relaxation rate equation `ṗ_e = −γ p_e` that the generator induces (rate `−γ` proven in
+`dampedTwoLevel_generator_decay_rate`): its time-derivative is `−γ` times itself. This makes the
+identification of `e^{−γt}` as the excited-population factor a Lean-verified consequence of the
+generator's rate, not a by-hand step. (The remaining two-layer input — that the population literally
+evolves under `e^{tℒ}` — is the propagator action of Wave 3.) -/
+theorem dampedTwoLevel_population_solves_rate (γ p₀ t : ℝ) :
+    HasDerivAt (fun τ : ℝ => p₀ * Real.exp (-(γ * τ))) (-γ * (p₀ * Real.exp (-(γ * t)))) t := by
+  have h : HasDerivAt (fun τ : ℝ => -(γ * τ)) (-γ) t := by
+    simpa using ((hasDerivAt_id t).const_mul γ).neg
+  have h2 := (h.exp).const_mul p₀
+  convert h2 using 1
+  ring
+
+/-- **Certified decay envelope.** The excited-population decay factor `e^{−γt}` — the solution of the
+generator-induced rate equation `ṗ_e = −γ p_e` (`dampedTwoLevel_population_solves_rate`, with rate from
+`dampedTwoLevel_generator_decay_rate`) — admits the rational enclosure `1 − γt ≤ e^{−γt} ≤ 1/(1+γt)`,
+with no floating-point `exp`: the project `expNeg_enclosure` Bernoulli bracket at `r = γt`. -/
 theorem dampedTwoLevel_decay_envelope {γ t : ℝ} (hγ : 0 ≤ γ) (ht : 0 ≤ t) :
     1 - γ * t ≤ Real.exp (-(γ * t)) ∧ Real.exp (-(γ * t)) ≤ 1 / (1 + γ * t) :=
   SKEFTHawking.QuantumNetwork.expNeg_enclosure (mul_nonneg hγ ht)

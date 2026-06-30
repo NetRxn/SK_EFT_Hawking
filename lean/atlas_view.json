@@ -57808,6 +57808,15 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.OpenSystems.dampedTwoLevel_population_solves_rate",
+      "module": "SKEFTHawking.DampedTwoLevel",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.OpenSystems.gksl_canonical_form",
       "module": "SKEFTHawking.GKSLStructure",
       "atlas_kind": "TRUE",
@@ -129526,7 +129535,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 14290,
+    "theorem_nodes": 14291,
     "unknown_nodes": 33,
     "implies_edges": 35,
     "apex_nodes": 4,
@@ -129538,7 +129547,7 @@
     ],
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 210,
-      "TRUE:PROVED": 14080,
+      "TRUE:PROVED": 14081,
       "UNKNOWN:PLANNED": 9,
       "UNKNOWN:STATED": 24
     },
