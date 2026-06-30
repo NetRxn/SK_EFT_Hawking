@@ -341,6 +341,25 @@ lemma momentumSqOperator_apply_eq (F : 𝓢(Space d, ℂ))
   exact (momentumOperator_apply_coe i _).trans
     (by simp only [SchwartzSubmodule.schwartzEquiv_apply_coe]; congr 2; exact schwartzEquiv_symm_mk F _)
 
+/-! #### C3+C5 — dense range of `momentumSqOperator ± iμ`, hence essential self-adjointness. -/
+
+/-- The shifted symbol `s(ξ) - iμ` (with `s` real) is nonzero for `μ ≠ 0`: its imaginary part is
+`-μ`. -/
+lemma momSqSymbol_sub_ne_zero (μ : ℝ) (hμ : μ ≠ 0) (ξ : Space d) :
+    (((2 * Real.pi * Constants.ℏ) ^ 2 * ‖ξ‖ ^ 2 : ℝ) : ℂ) - Complex.I * (μ : ℂ) ≠ 0 := by
+  intro h
+  apply hμ
+  have him := congrArg Complex.im h
+  simp only [Complex.sub_im, Complex.ofReal_im, Complex.mul_im, Complex.I_im, Complex.I_re,
+    Complex.ofReal_re, Complex.zero_im, one_mul, mul_zero, zero_sub, neg_eq_zero] at him
+  linarith
+
+/-- The resolvent symbol inverts the shifted symbol pointwise. -/
+lemma momSqSymbol_mul_resolvent (μ : ℝ) (hμ : μ ≠ 0) (ξ : Space d) :
+    ((((2 * Real.pi * Constants.ℏ) ^ 2 * ‖ξ‖ ^ 2 : ℝ) : ℂ) - Complex.I * (μ : ℂ))
+      * ((((2 * Real.pi * Constants.ℏ) ^ 2 * ‖ξ‖ ^ 2 : ℝ) : ℂ) - Complex.I * (μ : ℂ))⁻¹ = 1 :=
+  mul_inv_cancel₀ (momSqSymbol_sub_ne_zero μ hμ ξ)
+
 end Wave2
 
 end SKEFTHawking.DFT
