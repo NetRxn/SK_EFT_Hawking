@@ -424,6 +424,32 @@ lemma resolvent_solves (μ : ℝ) (hμ : μ ≠ 0) (G : 𝓢(Space d, ℂ)) :
     resolvent_symbol_eq_one μ hμ, fourierMultiplierCLM_const]
   simp
 
+/-- **Dense range.** `momentumSqOperator ± iμ` has dense range (it contains the dense Schwartz
+submodule): for `w = schwartzIncl G`, the preimage `x = schwartzEquiv (M[r]G)` solves
+`momentumSqOperator x − iμ·x = w`. -/
+lemma dense_rangeSubISmul (μ : ℝ) (hμ : μ ≠ 0) :
+    Dense (rangeSubISmul (momentumSqOperator (d := d)) μ) := by
+  refine Dense.mono ?_ momentumSqOperator_hasDenseDomain
+  intro w hw
+  rw [SetLike.mem_coe, momentumSqOperator_domain_eq] at hw
+  obtain ⟨G, rfl⟩ := hw
+  have hmem : (schwartzEquiv (fourierMultiplierCLM ℂ (resSym μ) G) : SpaceDHilbertSpace d)
+      ∈ momentumSqOperator.domain := by
+    rw [momentumSqOperator_domain_eq]; exact (schwartzEquiv _).2
+  refine ⟨⟨_, hmem⟩, ?_⟩
+  rw [momentumSqOperator_apply_eq _ hmem, SchwartzSubmodule.schwartzEquiv_apply_coe,
+    ← _root_.map_smul, ← _root_.map_sub, momentumSq_schwartz_eq_fourierMultiplier,
+    resolvent_solves μ hμ G]
+  rfl
+
+/-- **The momentum-square operator `∑ᵢ 𝐩ᵢ²` is essentially self-adjoint** (its closure is
+self-adjoint): symmetric, dense Schwartz domain, and `± i` dense range (Wave-1 criterion). -/
+theorem momentumSqOperator_isSelfAdjoint_closure :
+    IsSelfAdjoint (momentumSqOperator (d := d)).closure :=
+  isSelfAdjoint_closure_of_dense_range momentumSqOperator_isSymmetric
+    momentumSqOperator_hasDenseDomain one_ne_zero
+    (dense_rangeSubISmul 1 one_ne_zero) (dense_rangeSubISmul (-1) (by norm_num))
+
 end Wave2
 
 end SKEFTHawking.DFT
