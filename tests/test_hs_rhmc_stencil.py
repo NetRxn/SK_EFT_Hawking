@@ -135,3 +135,32 @@ def test_multishift_cg_batched_over_configs():
         for k, s in enumerate(shifts):
             expected = np.linalg.solve(AtA + s * eye, b[bi].reshape(-1))
             assert np.allclose(x[bi, k].reshape(-1).numpy(), expected, atol=1e-6)
+
+
+def test_force_equals_negative_action_gradient():
+    # The property that makes HMC conserve H: F = −∂S/∂h. Finite-difference the
+    # action (reference-independent ground truth) and match the analytic force.
+    L, V, g = 2, 2 ** 4, 1.5
+    rng = np.random.default_rng(7)
+    h = rng.standard_normal((V, 4, 4))
+    phi = rng.standard_normal((V, 8))
+    alphas = np.array([0.5, 0.3, 0.2])
+    betas = np.array([0.3, 1.0, 3.0])
+    a0 = 0.4
+    fwd, back = st.neighbor_tables(L, CPU)
+    phit = torch.tensor(phi)
+    al, be = torch.tensor(alphas), torch.tensor(betas)
+
+    F = st.compute_force(torch.tensor(h), phit, g, al, be, fwd, back, L,
+                         tol=1e-12, max_iter=5000).numpy()
+
+    def action(hh):
+        return float(st.action(torch.tensor(hh), phit, g, a0, al, be, fwd, back, L,
+                               tol=1e-12, max_iter=5000))
+
+    eps = 1e-5
+    for (x, mu, a) in [(0, 0, 0), (3, 2, 1), (7, 1, 3), (12, 3, 2)]:
+        hp = h.copy(); hp[x, mu, a] += eps
+        hm = h.copy(); hm[x, mu, a] -= eps
+        fd = -(action(hp) - action(hm)) / (2 * eps)
+        assert abs(F[x, mu, a] - fd) <= 1e-4 * max(1.0, abs(fd)), (x, mu, a, F[x, mu, a], fd)

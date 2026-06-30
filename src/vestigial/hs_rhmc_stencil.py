@@ -135,3 +135,46 @@ def multishift_cg(b, blocks, fwd, back, shifts, tol=1e-8, max_iter=2000):
         converged = converged | (rs <= tol_sq)
 
     return x
+
+
+def action(h, phi, g, alpha_0, alphas, betas, fwd, back, L, tol=1e-10, max_iter=5000):
+    """RHMC h-action S = Σh²/(4g) + α₀ φ†φ + Σ_k α_k φ†ψ_k,  ψ_k=(A†A+β_k)⁻¹φ.
+
+    (Excludes the momentum kinetic term — added at the Hamiltonian level.)
+    h: (*batch, V, 4, 4),  phi: (*batch, V, 8).  Returns (*batch,) action."""
+    blocks = hopping_blocks(h, L, device=h.device, dtype=h.dtype)
+    alphas = torch.as_tensor(alphas, dtype=h.dtype, device=h.device)
+    betas = torch.as_tensor(betas, dtype=h.dtype, device=h.device)
+    psi = multishift_cg(phi, blocks, fwd, back, betas, tol=tol, max_iter=max_iter)  # (*B,K,V,8)
+
+    s_aux = (h * h).sum(dim=(-3, -2, -1)) / (4.0 * g)              # (*B,)
+    phi_phi = (phi * phi).sum(dim=(-2, -1))                        # (*B,)
+    phi_psi = (phi.unsqueeze(-3) * psi).sum(dim=(-2, -1))          # (*B, K)
+    s_pf = float(alpha_0) * phi_phi + (alphas * phi_psi).sum(dim=-1)
+    return s_aux + s_pf
+
+
+def compute_force(h, phi, g, alphas, betas, fwd, back, L, tol=1e-10, max_iter=5000):
+    """MD force F = −∂S/∂h = −h/(2g) + pseudofermion term, batched over configs.
+
+    Per μ: F^a_{x,μ} += Σ_k α_k (−2)[ψ_k(x)·CG[a]·Aψ_k(x+μ̂) − Aψ_k(x)·CG[a]·ψ_k(x+μ̂)].
+    h: (*batch, V, 4, 4),  phi: (*batch, V, 8).  Returns (*batch, V, 4, 4)."""
+    nb = h.dim() - 3
+    alphas = torch.as_tensor(alphas, dtype=h.dtype, device=h.device)
+    betas = torch.as_tensor(betas, dtype=h.dtype, device=h.device)
+    blocks = hopping_blocks(h, L, device=h.device, dtype=h.dtype)          # (*B,V,4,8,8)
+    psi = multishift_cg(phi, blocks, fwd, back, betas, tol=tol, max_iter=max_iter)  # (*B,K,V,8)
+    a_psi = apply_A(psi, blocks.unsqueeze(nb), fwd, back)                   # (*B,K,V,8)
+
+    CG = torch.tensor(_CG_np, dtype=h.dtype, device=h.device)              # (4,8,8)
+    F = -h / (2.0 * g)                                                     # (*B,V,4,4)
+    for mu in range(4):
+        psi_fwd = psi.index_select(-2, fwd[:, mu])                         # ψ_k(x+μ̂)
+        a_psi_fwd = a_psi.index_select(-2, fwd[:, mu])
+        cg_apsi = torch.einsum('aij,...kvj->...akvi', CG, a_psi_fwd)       # CG[a]·Aψ_k(x+μ̂)
+        term1 = torch.einsum('...kvi,...akvi->...akv', psi, cg_apsi)
+        cg_psi = torch.einsum('aij,...kvj->...akvi', CG, psi_fwd)          # CG[a]·ψ_k(x+μ̂)
+        term2 = torch.einsum('...kvi,...akvi->...akv', a_psi, cg_psi)
+        weighted = torch.einsum('k,...akv->...av', alphas, -2.0 * (term1 - term2))  # (*B,a,V)
+        F[..., :, mu, :] = F[..., :, mu, :] + weighted.transpose(-1, -2)   # (*B,V,a)
+    return F
