@@ -803,4 +803,16 @@ lemma molecularCoulombPotential_abs_le {N : ℕ} (nuclei : Finset (Space 3 × �
     refine (Finset.abs_sum_le_sum_abs _ _).trans (Finset.sum_le_sum fun j _ => ?_)
     rw [abs_of_nonneg (by positivity)]
 
+/-- A single electron-nucleus Coulomb term `x ↦ ‖electronPos x i - R‖⁻¹` is measurable (continuous away
+from the singularity; `electronPos_continuous` + `norm` + measurable `inv`). Foundational for the per-term
+`L²` integral in the molecular lift. -/
+lemma coulombTerm_measurable {N : ℕ} (i : Fin N) (R : Space 3) :
+    Measurable (fun x : Space (3 * N) => ‖electronPos x i - R‖⁻¹) :=
+  (((electronPos_continuous i).sub continuous_const).norm).measurable.inv
+
+/-- A single electron-electron Coulomb term `x ↦ ‖electronPos x i - electronPos x j‖⁻¹` is measurable. -/
+lemma coulombTermRel_measurable {N : ℕ} (i j : Fin N) :
+    Measurable (fun x : Space (3 * N) => ‖electronPos x i - electronPos x j‖⁻¹) :=
+  (((electronPos_continuous i).sub (electronPos_continuous j)).norm).measurable.inv
+
 end SKEFTHawking.DFT
