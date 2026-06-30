@@ -1432,4 +1432,17 @@ lemma exists_coulomb_relbound_center {ε : ℝ} (hε : 0 < ε) :
     integral_normSq_translateSchwartz] at h
   exact h
 
+/-- **The squared Coulomb·Schwartz integrand `(‖y‖⁻¹‖u y‖)²` is integrable** (origin). The disjoint-support
+split `‖y‖⁻¹ = V₁ + V₂` makes it the sum of the near part (W3-32, dominated by `‖y‖⁻²·1_{≤1}`) and the far
+part (W3-31, bounded). Needed to convert the fiber's `lintegral` to a Bochner integral so the
+single-electron bound applies. -/
+lemma integrable_coulombSq (u : 𝓢(Space 3, ℂ)) :
+    Integrable (fun y : Space 3 => (‖y‖⁻¹ * ‖u y‖) ^ 2) := by
+  refine ((integrable_coulombNear_mul_sq u).add (integrable_coulombFar_mul_sq u)).congr
+    (Filter.Eventually.of_forall fun x => ?_)
+  simp only [Pi.add_apply]
+  by_cases h : ‖x‖ ≤ 1
+  · rw [if_pos h, if_neg (not_lt.mpr h)]; ring
+  · rw [if_neg h, if_pos (not_le.mp h)]; ring
+
 end SKEFTHawking.DFT
