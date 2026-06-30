@@ -473,4 +473,44 @@ lemma memLp_two_oneAddTNormSq_inv {t : ℝ} (ht : 0 < t) :
     rw [norm_smul, Real.norm_eq_abs, abs_of_pos (Real.sqrt_pos.mpr ht), mul_pow, Real.sq_sqrt ht.le]
   simp only [hsm]
 
+/-- **t-parameterized L¹–weighted-L² Hölder:** `∫ ‖g‖ ≤ ‖(1+t‖ξ‖²)⁻¹‖₂ · ‖(1+t‖ξ‖²)·g‖₂`. The t-version
+of `integral_norm_le_weighted_L2` (W3-8), now with the t-weight L² factor `memLp_two_oneAddTNormSq_inv`
+(W3-23). Pairs the `(√t)^{-3/2}` constant (W3-21) against `(1+t‖ξ‖²)·g` (split by W3-22) — the t-Hölder
+of the Kato ε-trick. -/
+lemma integral_norm_le_weighted_L2_t {g : Space 3 → ℂ} {t : ℝ} (ht : 0 < t)
+    (hb : MemLp (fun ξ : Space 3 => ((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖ : ℝ)) 2 volume) :
+    ∫ ξ : Space 3, ‖g ξ‖
+      ≤ Real.sqrt (∫ ξ : Space 3, (((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2) *
+          Real.sqrt (∫ ξ : Space 3, ((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖) ^ 2) := by
+  have hpq : (2 : ℝ).HolderConjugate 2 := by rw [Real.holderConjugate_iff]; norm_num
+  have ha' : MemLp (fun ξ : Space 3 => ((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)) (ENNReal.ofReal 2) volume := by
+    rw [ENNReal.ofReal_ofNat]; exact memLp_two_oneAddTNormSq_inv ht
+  have hb' : MemLp (fun ξ : Space 3 => ((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖ : ℝ)) (ENNReal.ofReal 2) volume := by
+    rw [ENNReal.ofReal_ofNat]; exact hb
+  have hcs := MeasureTheory.integral_mul_norm_le_Lp_mul_Lq hpq ha' hb'
+  have hnat : (2 : ℝ) = ((2 : ℕ) : ℝ) := by norm_num
+  have hna : ∀ ξ : Space 3, ‖((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)‖ = (1 + t * ‖ξ‖ ^ 2)⁻¹ := fun ξ => by
+    rw [Real.norm_eq_abs, abs_of_nonneg (by positivity)]
+  have hnb : ∀ ξ : Space 3, ‖((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖ : ℝ)‖ = (1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖ := fun ξ => by
+    rw [Real.norm_eq_abs, abs_of_nonneg (by positivity)]
+  have e0 : ∀ ξ : Space 3,
+      ‖((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)‖ * ‖((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖ : ℝ)‖ = ‖g ξ‖ := fun ξ => by
+    rw [hna, hnb, ← mul_assoc, inv_mul_cancel₀ (by positivity), one_mul]
+  have ea : ∀ ξ : Space 3, ‖((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)‖ ^ (2 : ℝ) = ((1 + t * ‖ξ‖ ^ 2)⁻¹) ^ 2 :=
+    fun ξ => by rw [hna, hnat, Real.rpow_natCast]
+  have eb : ∀ ξ : Space 3,
+      ‖((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖ : ℝ)‖ ^ (2 : ℝ) = ((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖) ^ 2 :=
+    fun ξ => by rw [hnb, hnat, Real.rpow_natCast]
+  have i0 : ∫ ξ : Space 3, ‖g ξ‖
+      = ∫ ξ, ‖((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)‖ * ‖((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖ : ℝ)‖ :=
+    integral_congr_ae (Filter.Eventually.of_forall fun ξ => (e0 ξ).symm)
+  have ia : ∫ ξ : Space 3, (((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2
+      = ∫ ξ, ‖((1 + t * ‖ξ‖ ^ 2)⁻¹ : ℝ)‖ ^ (2 : ℝ) :=
+    integral_congr_ae (Filter.Eventually.of_forall fun ξ => (ea ξ).symm)
+  have ib : ∫ ξ : Space 3, ((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖) ^ 2
+      = ∫ ξ, ‖((1 + t * ‖ξ‖ ^ 2) * ‖g ξ‖ : ℝ)‖ ^ (2 : ℝ) :=
+    integral_congr_ae (Filter.Eventually.of_forall fun ξ => (eb ξ).symm)
+  rw [i0, ia, ib, Real.sqrt_eq_rpow, Real.sqrt_eq_rpow]
+  exact hcs
+
 end SKEFTHawking.DFT
