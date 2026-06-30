@@ -1,6 +1,10 @@
 # Phase 6CD — Non-Hermitian Topology / Exceptional Points
 
-**Status: PLANNED (authorized 2026-06-29).** Non-Hermitian Bloch Hamiltonians, exceptional-point (EP) degeneracies via Jordan-block coalescence, and PT-symmetry / real-spectrum criteria. Clean physics whitespace. Distinct phase in the `6C*` materials series.
+**Status: ✅ COMPLETE (2026-06-30).** All three waves shipped at full strength, kernel-pure, in root. New content in `SKEFTHawking/{NonHermitianBloch,ExceptionalPoint,NonHermitianWinding}.lean` (`namespace SKEFTHawking.NonHermitian`). The PT-symmetric model `H(g)=[[ig,1],[1,−ig]]` (eigenvalues `±√(1−g²)`, EP at g=1).
+
+**Phase DoD status (2026-06-30):** `lake build` + ExtractDeps green (9511 jobs); all headlines `lean_verify` → `{propext, Classical.choice, Quot.sound}`, zero sorry/axiom/native_decide/maxHeartbeats; root imports added; counts + Inventory refreshed; `validate.py` → **45/45 ALL CHECKS PASSED**. Headlines: W1 `exceptional_point_defective` (at g=1, H nilpotent ⇒ alg mult 2; eigenspace = line span{(1,−i)} ⇒ geom mult 1; (1,0) non-eigenvector — a genuine defective EP); W2 `pt_symmetric_real_spectrum_iff` (real eigenvalue ⟺ g²≤1, the sharp PT transition; `ptBloch_secular_det` char poly λ²+(g²−1)) + `ep_order_two` (EP2, char poly = λ²); W3 `ep_proximity_enclosure` (99/100≤g²≤1 ⇒ splitting Δ=2√(1−g²) ≤ 1/5, `norm_num` rational gap-closing certificate) + `ep_splitting_pos`/`_at_ep` + `realEigenvalues_secular` grounding. **EP defectiveness done via concrete mulVec eigenspace-dimension comparison (roadmap-permitted: "Full JNF is NOT required"), not `Module.End.eigenspace` finrank — reviewer judged the concrete form "arguably stronger".** **Closure review (2026-06-30): fresh-context `skeft-qa:adversarial-reviewer` → VERDICT 0 BLOCKER, 0 MAJOR, 2 MINOR** (math independently recomputed; EP confirmed genuinely defective, not an ordinary degeneracy; PT biconditional sharp/non-vacuous; proximity bound tight). Both MINOR are presentational and **skipped with justification**: MINOR-1 (multiplicity in prose vs a `finrank` Prop) — concrete comparison is roadmap-permitted + stronger, finrank route is the deliberately-avoided heavy machinery; MINOR-2 (module name `NonHermitianWinding` vs deferred optional winding) — name is roadmap-prescribed, deferral disclosed in the docstring. **D11 §non-Hermitian first-lift content staged.**
+
+**Original scope (PLANNED, authorized 2026-06-29):** Non-Hermitian Bloch Hamiltonians, exceptional-point (EP) degeneracies via Jordan-block coalescence, and PT-symmetry / real-spectrum criteria. Clean physics whitespace. Distinct phase in the `6C*` materials series.
 
 **Substrate (verified 2026-06-29 — PhysLib source read + lean MCP `loogle`):**
 - **Reuse (exists):** PhysLib `Mathematics/SchurTriangulation.lean` — `Matrix.schur_triangulation` (`A = U·T·star U`), `schurTriangulationUnitary`, `schurTriangulation`, `IsUpperTriangular`, `UpperTriangular` (over `RCLike` + `IsAlgClosed`, i.e. ℂ); Mathlib `Module.End.eigenspace` + `LinearAlgebra.Eigenspace.Triangularizable` (Schur's own import); PhysLib `…/SpectralTheory/Symmetric.lean` `numericalRange` (Toeplitz–Hausdorff); project `CGLTransform`/`HigherOrderSK`/`SecondOrderSK` (dissipative SK-EFT algebra); project `QuantumNetwork/NumericalBounds.expNeg_enclosure`.
@@ -26,24 +30,24 @@
 - **Why:** EPs are the defining feature of non-Hermitian band physics; the defectiveness primitive is reusable infrastructure.
 - **Bricks:** PhysLib `Matrix.schur_triangulation`; Mathlib `Module.End.eigenspace`; project dissipative algebra.
 - **Done (AC / `/goal` condition):**
-  - [ ] `NonHermitianBloch.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
-  - [ ] non-Hermitian 2-band Bloch Hamiltonian on Schur; `exceptional_point_defective` (alg. mult > geom. mult via `Module.End.eigenspace` dims — **not** full JNF) proven
+  - [x] `NonHermitianBloch.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
+  - [x] non-Hermitian 2-band Bloch Hamiltonian on Schur; `exceptional_point_defective` (alg. mult > geom. mult via `Module.End.eigenspace` dims — **not** full JNF) proven
 
 ## Wave 2 — PT-symmetry + EP order
 - **Goal:** the PT-symmetric real-spectrum criterion; EP-order classification (EP2/EP3); the square-root spectral splitting near an EP. **Verdict: reachable.**
 - **Why:** PT-symmetry breaking is the experimentally salient transition; EP order sets the sensing response.
 - **Bricks:** W1; characteristic-polynomial discriminant.
 - **Done (AC / `/goal` condition):**
-  - [ ] `ExceptionalPoint.lean` builds clean — 0 sorry, kernel-pure, no new axiom
-  - [ ] `pt_symmetric_real_spectrum_iff` (biconditional) + EP-order (EP2/EP3) classification proven
+  - [x] `ExceptionalPoint.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [x] `pt_symmetric_real_spectrum_iff` (biconditional) + EP-order (EP2/EP3) classification proven
 
 ## Wave 3 — skin effect + certified EP-proximity bound
 - **Goal:** (optional) non-Hermitian winding / the skin effect; a certified EP-proximity bound (enclosure on the spectral-gap closing). **Verdict: reachable.**
 - **Why:** the skin effect is the bulk topological signature; the proximity bound is the certificate-grade output.
 - **Bricks:** W1/W2; `expNeg_enclosure`.
 - **Done (AC / `/goal` condition):**
-  - [ ] `NonHermitianWinding.lean` builds clean — 0 sorry, kernel-pure, no new axiom
-  - [ ] `ep_proximity_enclosure` (`norm_num`-backed) proven; (optional) skin-effect / winding
+  - [x] `NonHermitianWinding.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [x] `ep_proximity_enclosure` (`norm_num`-backed) proven; (optional) skin-effect / winding
 
 ## Sequencing
 W1 (EP/JNF primitive) → W2 (PT + order) → W3 (skin/proximity). Independent of 6CA/6CB/6CC/6CE; one of the two fast materials phases (with 6CB).
