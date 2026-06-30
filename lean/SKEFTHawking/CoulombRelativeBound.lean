@@ -301,4 +301,26 @@ lemma fourier_momentumSq (f : 𝓢(Space 3, ℂ)) :
   rw [momentumSq_schwartz_eq_fourierMultiplier, FourierTransform.fourier_smul,
     fourier_fourierMultiplierCLM]
 
+open QuantumMechanics in
+/-- **The momentum-norm identity:** `(2πℏ)⁴·∫ ‖ξ‖⁴‖û‖² = ∫ ‖∑ pᵢ²f‖²`. Take the pointwise norm of
+`fourier_momentumSq` (`𝓕(∑pᵢ²f) ξ = (2πℏ)²‖ξ‖²·û ξ`) and integrate, then apply the free Plancherel
+isometry `SchwartzMap.integral_norm_sq_fourier`. This closes the operator bridge: the `‖‖ξ‖²û‖₂` term of
+the sup-norm bound (W3-13) equals `(2πℏ)⁻²·‖∑pᵢ²f‖₂`, i.e. a constant times the kinetic-operator L² norm. -/
+lemma integral_normSq_weight_eq_momentumSq (f : 𝓢(Space 3, ℂ)) :
+    ((2 * Real.pi * Constants.ℏ) ^ 2) ^ 2 * ∫ ξ : Space 3, ‖ξ‖ ^ 4 * ‖(𝓕 f) ξ‖ ^ 2
+      = ∫ x : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i f)) x‖ ^ 2 := by
+  have hg2 : Function.HasTemperateGrowth (fun ξ : Space 3 => ((‖ξ‖ ^ 2 : ℝ) : ℂ)) :=
+    Complex.ofRealCLM.hasTemperateGrowth.comp (Function.hasTemperateGrowth_norm_sq (H := Space 3))
+  have hpt : ∀ ξ : Space 3, ‖(𝓕 (∑ i, momentumCLM i (momentumCLM i f))) ξ‖ ^ 2
+      = ((2 * Real.pi * Constants.ℏ) ^ 2) ^ 2 * (‖ξ‖ ^ 4 * ‖(𝓕 f) ξ‖ ^ 2) := by
+    intro ξ
+    rw [fourier_momentumSq, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hg2, smul_smul,
+      show ((2 * Real.pi * Constants.ℏ) ^ 2 : ℂ) * ((‖ξ‖ ^ 2 : ℝ) : ℂ)
+        = (((2 * Real.pi * Constants.ℏ) ^ 2 * ‖ξ‖ ^ 2 : ℝ) : ℂ) by push_cast; ring,
+      norm_smul, Complex.norm_real, Real.norm_eq_abs,
+      abs_of_nonneg (by positivity : (0 : ℝ) ≤ (2 * Real.pi * Constants.ℏ) ^ 2 * ‖ξ‖ ^ 2), mul_pow]
+    ring
+  rw [← SchwartzMap.integral_norm_sq_fourier (∑ i, momentumCLM i (momentumCLM i f)),
+    integral_congr_ae (Filter.Eventually.of_forall hpt), integral_const_mul]
+
 end SKEFTHawking.DFT
