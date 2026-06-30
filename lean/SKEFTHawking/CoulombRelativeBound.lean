@@ -629,6 +629,20 @@ lemma integrable_coulombNear_mul_sq (u : 𝓢(Space 3, ℂ)) :
   refine mul_le_mul_of_nonneg_left ?_ (by positivity)
   nlinarith [SchwartzMap.norm_le_seminorm ℂ u x, norm_nonneg (u x), apply_nonneg (SchwartzMap.seminorm ℂ 0 0) u]
 
+/-- **Disjoint-support Coulomb split (L² level):** `∫(‖x‖⁻¹‖u‖)² = ∫(V₁‖u‖)² + ∫(V₂‖u‖)²`, where
+`V₁ = ‖x‖⁻¹·1_{‖x‖≤1}`, `V₂ = ‖x‖⁻¹·1_{‖x‖>1}`. The supports `{‖x‖≤1}` and `{‖x‖>1}` are disjoint, so the
+cross term vanishes and the additivity is exact (no factor of 2). Integrabilities from W3-31/32. -/
+lemma coulomb_integral_split (u : 𝓢(Space 3, ℂ)) :
+    ∫ x : Space 3, (‖x‖⁻¹ * ‖u x‖) ^ 2
+      = (∫ x : Space 3, ((if ‖x‖ ≤ 1 then ‖x‖⁻¹ else 0) * ‖u x‖) ^ 2)
+        + ∫ x : Space 3, ((if 1 < ‖x‖ then ‖x‖⁻¹ else 0) * ‖u x‖) ^ 2 := by
+  rw [← integral_add (integrable_coulombNear_mul_sq u) (integrable_coulombFar_mul_sq u)]
+  refine integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
+  dsimp only
+  by_cases h : ‖x‖ ≤ 1
+  · rw [if_pos h, if_neg (not_lt.mpr h)]; ring
+  · rw [if_neg h, if_pos (not_le.mp h)]; ring
+
 /-- **The near-Coulomb L² norm is strictly positive:** `0 < ∫ ‖x‖⁻²·1_{‖x‖≤1}` (= `‖V₁‖₂²`). The integrand
 is positive on the punctured unit ball (positive volume) and integrable (W3-9). Lets the single-electron
 Coulomb relative bound divide by `‖V₁‖₂` when calibrating the ε-trick. -/
