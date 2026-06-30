@@ -380,4 +380,14 @@ lemma norm_sup_le_kinetic (f : 𝓢(Space 3, ℂ)) (x : Space 3) :
         mul_le_mul_of_nonneg_left h13 (Real.sqrt_nonneg _)
     _ = _ := by rw [hpl, hmom]; ring
 
+/-- **Dilation L²-scaling:** `∫ ‖u(R·x)‖² = R⁻³·∫ ‖u‖²` for `R > 0` on `ℝ³`. The change-of-variables
+`x ↦ R·x` with Jacobian `R⁻³` (`Measure.integral_comp_smul`, `dim 3`). Foundation of the Kato scaling
+argument: applied to `u` and to `∑pᵢ²u`, it gives `‖u_R‖₂ = R^{-3/2}‖u‖₂` etc., shrinking the kinetic
+coefficient of the sup-estimate to an arbitrary `ε`. -/
+lemma integral_normSq_comp_smul (u : Space 3 → ℂ) {R : ℝ} (hR : 0 < R) :
+    ∫ x : Space 3, ‖u (R • x)‖ ^ 2 = (R ^ 3)⁻¹ * ∫ x : Space 3, ‖u x‖ ^ 2 := by
+  have h3 : Module.finrank ℝ (Space 3) = 3 := by simp
+  rw [MeasureTheory.Measure.integral_comp_smul volume (fun x => ‖u x‖ ^ 2) R, h3, smul_eq_mul,
+    abs_of_pos (by positivity)]
+
 end SKEFTHawking.DFT
