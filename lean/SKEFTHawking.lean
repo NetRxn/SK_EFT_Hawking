@@ -3642,6 +3642,8 @@ import SKEFTHawking.DampedTwoLevel
 import SKEFTHawking.KineticEssentialSelfAdjoint
 -- Phase 6CB (D11 materials series) — acoustic / phononic band theory
 import SKEFTHawking.AcousticBlochOperator
+import SKEFTHawking.PhononicBandGap
+import SKEFTHawking.BandGapEnclosure
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
