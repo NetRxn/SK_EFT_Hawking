@@ -764,4 +764,16 @@ lemma electronPos_smul {N : ℕ} (c : ℝ) (x : Space (3 * N)) (i : Fin N) :
   ext j
   simp [electronPos]
 
+/-- **`electronPos` as a continuous linear map** `Space(3N) →L[ℝ] Space 3` — bundling the linearity
+(`electronPos_add`/`electronPos_smul`) with the continuity (`electronPos_continuous`). The projection onto
+electron `i`'s coordinates; the coordinate-split equiv of the molecular lift is built from it. -/
+noncomputable def electronPosCLM {N : ℕ} (i : Fin N) : Space (3 * N) →L[ℝ] Space 3 :=
+  LinearMap.toContinuousLinearMap
+    { toFun := fun x => electronPos x i
+      map_add' := fun x y => electronPos_add x y i
+      map_smul' := fun c x => electronPos_smul c x i }
+
+@[simp] lemma electronPosCLM_apply {N : ℕ} (i : Fin N) (x : Space (3 * N)) :
+    electronPosCLM i x = electronPos x i := rfl
+
 end SKEFTHawking.DFT
