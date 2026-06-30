@@ -996,4 +996,29 @@ lemma molecularSplitMap_fst {N : ℕ} (i : Fin N) (x : Space (3 * N)) :
   ext j
   rfl
 
+/-- **Per-term molecular Coulomb L² identity (Tonelli form).** The molecular `L²` lower integral of a single
+nuclear Coulomb term `‖electronPos x i − R‖⁻¹ · ‖u x‖` equals the iterated integral whose inner `Space 3`
+integral is a genuine single-electron Coulomb integral `‖y − R‖⁻¹ · ‖ũ_z(y)‖` over the fiber
+`ũ_z(y) = u ((molecularSplitEquiv i).symm (y, z))`. Combines the Fubini-through-the-split
+(`molecularSplit_lintegral`), the block-factor identity (`molecularSplitMap_fst`), and the equiv round-trip. -/
+lemma molecular_coulombTerm_lintegral {N : ℕ} (i : Fin N) (R : Space 3)
+    {u : Space (3 * N) → ℂ} (hu : Measurable u) :
+    ∫⁻ x, (ENNReal.ofReal (‖electronPos x i - R‖⁻¹ * ‖u x‖)) ^ 2
+        ∂(volume : MeasureTheory.Measure (Space (3 * N)))
+      = ∫⁻ z, ∫⁻ y, (ENNReal.ofReal (‖y - R‖⁻¹ * ‖u ((molecularSplitEquiv i).symm (y, z))‖)) ^ 2
+          ∂(volume : MeasureTheory.Measure (Space 3))
+          ∂(volume : MeasureTheory.Measure ({k // ¬ electronCoord i k} → ℝ)) := by
+  have hG : Measurable (fun p : Space 3 × ({k // ¬ electronCoord i k} → ℝ) =>
+      (ENNReal.ofReal (‖p.1 - R‖⁻¹ * ‖u ((molecularSplitEquiv i).symm p)‖)) ^ 2) := by
+    refine (ENNReal.measurable_ofReal.comp (Measurable.mul ?_ ?_)).pow_const 2
+    · exact (measurable_fst.sub measurable_const).norm.inv
+    · exact (hu.comp (molecularSplitEquiv i).symm.measurable).norm
+  have hpt : (fun x => (ENNReal.ofReal (‖electronPos x i - R‖⁻¹ * ‖u x‖)) ^ 2)
+      = (fun x => (ENNReal.ofReal (‖(molecularSplitMap i x).1 - R‖⁻¹
+          * ‖u ((molecularSplitEquiv i).symm (molecularSplitMap i x))‖)) ^ 2) := by
+    funext x
+    rw [molecularSplitMap_fst, ← coe_molecularSplitEquiv, MeasurableEquiv.symm_apply_apply]
+  rw [hpt]
+  exact molecularSplit_lintegral i _ hG
+
 end SKEFTHawking.DFT
