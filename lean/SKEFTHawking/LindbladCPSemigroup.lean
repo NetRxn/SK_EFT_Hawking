@@ -45,4 +45,17 @@ lemma posSemidef_of_tendsto {A : ℕ → Matrix n n ℂ} {L : Matrix n n ℂ}
       exact continuous_finset_sum _ fun i _ => continuous_finset_sum _ fun j _ => by fun_prop
     exact ge_of_tendsto' ((hcont.tendsto L).comp hA) fun k => (hpsd k).2 x
 
+variable {A B : Type*} [Fintype A] [Fintype B] [DecidableEq A] [DecidableEq B]
+
+omit [DecidableEq B] in
+/-- **Complete positivity is closed under limits.** If the Choi matrices of a sequence of completely
+positive maps converge to the Choi matrix of `N`, then `N` is completely positive — via Choi's theorem
+(CP ⟺ Choi PSD) and the closed PSD cone (`posSemidef_of_tendsto`). -/
+lemma isCompletelyPositive_of_tendsto_choi {M : ℕ → MatrixMap A B ℂ} {N : MatrixMap A B ℂ}
+    (hchoi : Filter.Tendsto (fun k => (M k).choi_matrix) Filter.atTop (nhds N.choi_matrix))
+    (hcp : ∀ k, (M k).IsCompletelyPositive) :
+    N.IsCompletelyPositive :=
+  (MatrixMap.choi_PSD_iff_CP_map N).mpr
+    (posSemidef_of_tendsto hchoi fun k => (MatrixMap.choi_PSD_iff_CP_map (M k)).mp (hcp k))
+
 end SKEFTHawking.OpenSystems
