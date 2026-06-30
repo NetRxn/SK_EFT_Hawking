@@ -3646,6 +3646,7 @@ import SKEFTHawking.PhononicBandGap
 import SKEFTHawking.BandGapEnclosure
 -- Phase 6CD (D11 materials series) — non-Hermitian topology / exceptional points
 import SKEFTHawking.NonHermitianBloch
+import SKEFTHawking.ExceptionalPoint
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
