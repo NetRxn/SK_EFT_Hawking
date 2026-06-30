@@ -107983,6 +107983,87 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.Topological.blochPauli.eq_1",
+      "module": "SKEFTHawking.BlochBundle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Topological.blochPauli_band_secular",
+      "module": "SKEFTHawking.BlochBundle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Topological.blochPauli_gap_pos",
+      "module": "SKEFTHawking.BlochBundle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Topological.blochPauli_isHermitian",
+      "module": "SKEFTHawking.BlochBundle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Topological.blochPauli_secular_det",
+      "module": "SKEFTHawking.BlochBundle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Topological.blochPauli_secular_zero_of_sq",
+      "module": "SKEFTHawking.BlochBundle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Topological.blochPauli_sq",
+      "module": "SKEFTHawking.BlochBundle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.Topological.dNormSq.eq_1",
+      "module": "SKEFTHawking.BlochBundle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Topological.dNormSq_nonneg",
+      "module": "SKEFTHawking.BlochBundle",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
       "fqn": "SKEFTHawking.ToricAnyon.electric.sizeOf_spec",
       "module": "SKEFTHawking.ToricCodeCenter",
       "atlas_kind": "TRUE",
@@ -130273,7 +130354,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 14373,
+    "theorem_nodes": 14382,
     "unknown_nodes": 33,
     "implies_edges": 35,
     "apex_nodes": 4,
@@ -130285,7 +130366,7 @@
     ],
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 210,
-      "TRUE:PROVED": 14163,
+      "TRUE:PROVED": 14172,
       "UNKNOWN:PLANNED": 9,
       "UNKNOWN:STATED": 24
     },
