@@ -922,4 +922,35 @@ lemma block_pi_measurePreserving_space3 {N : ℕ} (i : Fin N) :
       (MeasurableEquiv.piCongrLeft (fun _ : {k // electronCoord i k} => ℝ) (electronCoordEquiv i).symm)
       (electronBlock_piCongr_measurePreserving i))
 
+/-- **The molecular coordinate-split map** `Space (3N) → Space 3 × (spectator coords)`: first split off
+electron `i`'s block (`electron_split_measurePreserving`), then identify the block with `Space 3`
+(`block_pi_measurePreserving_space3`), leaving the other `3N−3` coordinates as the spectator factor. -/
+noncomputable def molecularSplitMap {N : ℕ} (i : Fin N) :
+    Space (3 * N) → Space 3 × ({k // ¬ electronCoord i k} → ℝ) :=
+  Prod.map
+    (fun b : {k // electronCoord i k} → ℝ =>
+      (Space.basis (d := 3)).repr.symm
+        ((EuclideanSpace.measurableEquiv (Fin 3)).symm
+          ((MeasurableEquiv.piCongrLeft (fun _ : {k // electronCoord i k} => ℝ)
+              (electronCoordEquiv i).symm).symm b)))
+    id
+  ∘ (fun x : Space (3 * N) =>
+      (MeasurableEquiv.piEquivPiSubtypeProd (fun _ : Fin (3 * N) => ℝ) (electronCoord i))
+        ((EuclideanSpace.measurableEquiv (Fin (3 * N))) ((Space.basis (d := 3 * N)).repr x)))
+
+/-- **`molecularSplitMap` is measure-preserving** onto the product `volume (Space 3) ⊗ volume (spectator)`.
+Composes the electron-`i` split (W3-45) with the block↔`Space 3` transport (W3-48) on the first factor and
+the identity on the spectator factor (`MeasurePreserving.prod`), after rewriting the split's codomain
+`volume (BlockPi × SpecPi)` as the product measure (`volume_eq_prod`). This is the change-of-variables that
+turns the molecular L² integral of a Coulomb term into a `Space 3 × spectator` product integral, ready for
+Fubini (`integral_prod`) + the fiberwise single-electron bound `exists_coulomb_relbound`. -/
+lemma molecularSplit_measurePreserving {N : ℕ} (i : Fin N) :
+    MeasureTheory.MeasurePreserving (molecularSplitMap i)
+      (volume : MeasureTheory.Measure (Space (3 * N)))
+      ((volume : MeasureTheory.Measure (Space 3)).prod
+        (volume : MeasureTheory.Measure ({k // ¬ electronCoord i k} → ℝ))) := by
+  have hsplit := electron_split_measurePreserving i
+  rw [Measure.volume_eq_prod] at hsplit
+  exact ((block_pi_measurePreserving_space3 i).prod (MeasureTheory.MeasurePreserving.id _)).comp hsplit
+
 end SKEFTHawking.DFT
