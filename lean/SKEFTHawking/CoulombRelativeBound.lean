@@ -99,4 +99,18 @@ lemma coulomb_far_le_one (x : Space 3) :
   · exact (div_le_one (by exact lt_trans one_pos hx)).mpr (le_of_lt hx)
   · norm_num
 
+/-- **The L²·L^∞ Hölder step:** `∫ (V·u)² ≤ ‖u‖_∞² · ∫ V²`. With `V = V₁` (the Coulomb near part, in L²)
+and `‖u‖_∞` controlled by the Fourier sup-norm bound, this is `‖V₁ u‖₂ ≤ ‖V₁‖₂·‖u‖_∞` — the bound on
+the singular part of the Coulomb potential applied to `u`. -/
+lemma integral_mul_sq_le_sup_sq_mul {V u : Space 3 → ℝ} {M : ℝ}
+    (hM : ∀ x, |u x| ≤ M) (hV : Integrable (fun x => V x ^ 2)) :
+    ∫ x, (V x * u x) ^ 2 ≤ M ^ 2 * ∫ x, V x ^ 2 := by
+  rw [← integral_const_mul]
+  refine integral_mono_of_nonneg (Filter.Eventually.of_forall fun x => by positivity)
+    (hV.const_mul _) (Filter.Eventually.of_forall fun x => ?_)
+  have hux : u x ^ 2 ≤ M ^ 2 := sq_le_sq' (abs_le.mp (hM x)).1 (abs_le.mp (hM x)).2
+  calc (V x * u x) ^ 2 = V x ^ 2 * u x ^ 2 := by ring
+    _ ≤ V x ^ 2 * M ^ 2 := mul_le_mul_of_nonneg_left hux (sq_nonneg (V x))
+    _ = M ^ 2 * V x ^ 2 := by ring
+
 end SKEFTHawking.DFT
