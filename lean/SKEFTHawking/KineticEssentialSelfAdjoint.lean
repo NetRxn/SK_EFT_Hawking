@@ -450,6 +450,19 @@ theorem momentumSqOperator_isSelfAdjoint_closure :
     momentumSqOperator_hasDenseDomain one_ne_zero
     (dense_rangeSubISmul 1 one_ne_zero) (dense_rangeSubISmul (-1) (by norm_num))
 
+/-- **The molecular kinetic operator is essentially self-adjoint** — the discharge of `hkin`. The
+kinetic operator is a positive real multiple of `momentumSqOperator`, whose closure is self-adjoint
+(`momentumSqOperator_isSelfAdjoint_closure`); real-scalar invariance transfers self-adjointness. -/
+theorem kineticOperator_isSelfAdjoint_closure (N : ℕ) (m : ℝ) (hm : 0 < m)
+    (nuclei : Finset (Space 3 × ℝ)) :
+    IsSelfAdjoint (molecularSystem N m hm nuclei).kineticOperator.closure := by
+  have hm2 : (2 * (molecularSystem N m hm nuclei).m)⁻¹ ≠ 0 := by
+    show (2 * m)⁻¹ ≠ 0; positivity
+  rw [QuantumMechanics.SpaceDQuantumSystem.kineticOperator_eq,
+    LinearPMap.closure_smul _ (Complex.ofReal_ne_zero.mpr hm2)]
+  exact LinearPMap.IsSelfAdjoint.smul momentumSqOperator_isSelfAdjoint_closure
+    (Complex.ofReal_ne_zero.mpr hm2) (Complex.conj_ofReal _)
+
 end Wave2
 
 end SKEFTHawking.DFT
