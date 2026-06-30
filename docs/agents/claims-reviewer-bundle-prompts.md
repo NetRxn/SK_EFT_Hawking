@@ -569,6 +569,60 @@ against current Lean state at lift time, 2026-06-10).
 
 ---
 
+### D10. Kernel-Verified Foundations of Computational Quantum Chemistry & Open-System Dynamics
+
+(NEW BUNDLE — created 2026-06-30, first content-lift; authorized 2026-06-29
+per Pipeline Invariant #14. Sourceless synthesis from Phases 6BA + 6BB + 6BC.)
+
+**Sources:** Phase 6BA (NEGF transport), 6BB (DFT foundations), 6BC
+(Lindblad/GKSL open systems). All Lean-only; each phase adversarially
+reviewed 0 BLOCKER / 0 MAJOR. Novelty backing: `papers/D10/prior_art_novelty.md`.
+
+**Anchors (load-bearing, must verify):**
+- **§3 NEGF transport** (6BA): `spectralFn_eq_gR_broadening_gA` (A = G^R Γ G^A),
+  `spectralFn_posSemidef`, `transmission_isReal`/`transmission_nonneg`,
+  `landauer_conductance_def`, `fermiWindow_integral_eq_one`,
+  `landauerConductance_const_transmission'`, and the certificate
+  `channelConductance_le_quantum` / `conductance_quantization` /
+  `conductance_quantization_falsifier` / `two_channel_no_three_quanta` /
+  `channelConductance_eq_landauer`. Lean: `lean/SKEFTHawking/{NEGFGreenFunction,
+  LandauerConductance,NEGFTransportCertificate}.lean`.
+- **§4 DFT foundations** (6BB): `molecularHamiltonian_essSelfAdjoint`,
+  `molecularPotentialOperator_isSymmetric`, `hohenberg_kohn_uniqueness`,
+  `hohenberg_kohn_density_injective`, `hohenberg_kohn_variational`,
+  `levyLieb_functional`, `levyLieb_eq_HK_on_vrep`. Lean: `MolecularHamiltonian,
+  HohenbergKohnUniqueness, HohenbergKohnVariational, LevyLiebFunctional`.
+- **§5 open systems** (6BC, namespace `SKEFTHawking.OpenSystems`):
+  `lindblad_generator_CP` (CP asserted for the DISSIPATOR, not the full
+  generator — verify the prose makes this distinction), `gksl_trace_preserving`,
+  `gksl_canonical_form`, `lindblad_semigroup`, `lindblad_propagator_zero`,
+  `traceDist_lindblad_monotone`, `dampedTwoLevel_generator_decay_rate`,
+  `dampedTwoLevel_population_solves_rate`, `dampedTwoLevel_decay_envelope`.
+  Lean: `LindbladGenerator, GKSLStructure, LindbladSemigroup, DampedTwoLevel`.
+
+**Stage-13 anchors specific to D10:**
+- **Novelty-claim honesty (HIGH priority).** Three "first in a proof assistant"
+  claims. Verify each carries its mandated carve-out (per
+  `prior_art_novelty.md`): (a) the Lindblad claim MUST explicitly state that
+  CPTP/channels/Choi already exist in Lean PhysLib / Coq CoqQ / Isabelle, and
+  the novelty is the GKSL *generator + semigroup + dissipator-CP*; (b) the
+  self-adjointness claim must be scoped to the *molecular many-body Coulomb*
+  Hamiltonian, not "first Kato–Rellich". A blanket "first" without the carve-out
+  is a Stage-13 finding.
+- **Disclosed-Prop integrity.** The 6BC `traceDist_lindblad_monotone` carries a
+  disclosed CPTP-realization hypothesis (`hreal` + `IsKrausChannel`); the 6BB
+  self-adjointness apex carries disclosed analytic inputs (kinetic ess-s.a.,
+  Hardy). Verify these are presented as disclosed tracked Props with discharge
+  plans, NOT as proven-unconditional or as axioms.
+- **No project-local axioms (Pipeline Invariant #15).** All D10 theorems must be
+  kernel-pure `{propext, Classical.choice, Quot.sound}` with zero project-local
+  axioms; cross-check via `validate.py` axiom audit + `#print axioms`.
+- **Citation verifiability.** Every ITP-ecosystem reference (CoqQ, the survey,
+  Lean Stein's Lemma, Isabelle Complex Bounded Operators) must resolve to a
+  real arXiv ID — verify against `bibliography.bib` + `prior_art_novelty.md`.
+
+---
+
 ## Tier 2 — PRL splashes
 
 ### L1. GW170817 / vestigial-graviton
