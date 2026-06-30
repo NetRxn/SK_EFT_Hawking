@@ -1510,4 +1510,36 @@ lemma gatherLM_basis {N : ℕ} (iₑ : Fin N) (j : Fin 3) :
   simp only [gatherLM_apply, Space.basis_apply, Fin.ext_iff]
   split_ifs with h1 h2 h3 h3 <;> first | rfl | (exfalso; omega)
 
+open QuantumMechanics in
+/-- **Momentum commutes with the fiber restriction:** the fiber's `j`-th block momentum equals the fiber of
+`u`'s momentum in electron `iₑ`'s `j`-th coordinate, `𝐩ⱼ (fiberSchwartz iₑ z u) = fiberSchwartz iₑ z (𝐩_{3iₑ+j} u)`.
+Chain rule through the affine fiber injection (linear part `gatherCLM iₑ`, `molecularSplit_symm_eq`) + the
+basis identification `gatherLM_basis`. Mirrors `momentumCLM_translateSchwartz` (W3-79). -/
+lemma momentumCLM_fiberSchwartz {N : ℕ} (iₑ : Fin N) (j : Fin 3)
+    (z : {k // ¬ electronCoord iₑ k} → ℝ) (u : 𝓢(Space (3 * N), ℂ)) :
+    momentumCLM j (fiberSchwartz iₑ z u)
+      = fiberSchwartz iₑ z (momentumCLM ⟨3 * iₑ.val + j.val, by
+          have := iₑ.isLt; have := j.isLt; omega⟩ u) := by
+  have hfd : fderiv ℝ (⇑(fiberSchwartz iₑ z u))
+      = fun y => (fderiv ℝ (⇑u) ((molecularSplitEquiv iₑ).symm (y, z))).comp (gatherCLM iₑ) := by
+    funext y
+    have hc : ⇑(fiberSchwartz iₑ z u) = fun y => (⇑u) ((molecularSplitEquiv iₑ).symm (y, z)) := by
+      funext y'; exact fiberSchwartz_apply iₑ z u y'
+    rw [hc]
+    have hgeq : (fun y : Space 3 => (molecularSplitEquiv iₑ).symm (y, z))
+        = fun y => gatherCLM iₑ y + (molecularSplitEquiv iₑ).symm (0, z) := by
+      funext y; rw [gatherCLM_apply]; exact molecularSplit_symm_eq iₑ y z
+    have hg : HasFDerivAt (fun y : Space 3 => (molecularSplitEquiv iₑ).symm (y, z)) (gatherCLM iₑ) y := by
+      rw [hgeq]; exact ((gatherCLM iₑ).hasFDerivAt).add_const _
+    have hu : HasFDerivAt (⇑u) (fderiv ℝ (⇑u) ((molecularSplitEquiv iₑ).symm (y, z)))
+        ((molecularSplitEquiv iₑ).symm (y, z)) := u.differentiableAt.hasFDerivAt
+    exact (hu.comp y hg).fderiv
+  ext y
+  rw [momentumCLM_apply, fiberSchwartz_apply, momentumCLM_apply]
+  congr 1
+  show (fderiv ℝ (⇑(fiberSchwartz iₑ z u)) y) (Space.basis j)
+      = (fderiv ℝ (⇑u) ((molecularSplitEquiv iₑ).symm (y, z)))
+          (Space.basis ⟨3 * iₑ.val + j.val, by have := iₑ.isLt; have := j.isLt; omega⟩)
+  rw [hfd, ContinuousLinearMap.comp_apply, gatherCLM_apply, gatherLM_basis]
+
 end SKEFTHawking.DFT
