@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-30T07:35:06.500403",
+  "generated": "2026-06-30T07:53:54.004837",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 23275,
-    "theorems_total": 14349,
-    "theorems_substantive": 14323,
+    "total_declarations": 23284,
+    "theorems_total": 14357,
+    "theorems_substantive": 14331,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 1147,
+    "modules": 1149,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -141,6 +141,7 @@
       "SKEFTHawking.EquivalencePrinciple",
       "SKEFTHawking.EvenLatticeForm",
       "SKEFTHawking.ExactSolutions",
+      "SKEFTHawking.ExceptionalPoint",
       "SKEFTHawking.ExtBordismBridge",
       "SKEFTHawking.ExtractDeps",
       "SKEFTHawking.FKGappedInterface",
@@ -674,6 +675,7 @@
       "SKEFTHawking.NeutrinoMixing",
       "SKEFTHawking.NoHairTheorem",
       "SKEFTHawking.NonHermitianBloch",
+      "SKEFTHawking.NonHermitianWinding",
       "SKEFTHawking.NonlinearDiffInvariance",
       "SKEFTHawking.NonlinearEFE",
       "SKEFTHawking.NullGeodesic",
@@ -1160,7 +1162,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 7929,
+    "definitions": 7930,
     "structures": 315,
     "instances": 585,
     "inductives": 97,
@@ -1173,9 +1175,9 @@
     }
   },
   "python": {
-    "python_modules": 135,
+    "python_modules": 136,
     "test_files": 126,
-    "pytest_cases": 4817,
+    "pytest_cases": 4825,
     "notebooks": 89,
     "papers": 42,
     "figures": 163
