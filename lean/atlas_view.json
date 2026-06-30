@@ -55852,7 +55852,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.Metamaterial.reuss_denom_pos",
@@ -55861,7 +55861,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.Metamaterial.reuss_ge_host",
@@ -55882,6 +55882,15 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.Metamaterial.voigtModulus.eq_1",
+      "module": "SKEFTHawking.EffectiveModuli",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.Metamaterial.voigt_bounds",
       "module": "SKEFTHawking.EffectiveModuli",
       "atlas_kind": "TRUE",
@@ -55889,6 +55898,15 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.Metamaterial.voigt_sub_reuss_eq",
+      "module": "SKEFTHawking.EffectiveModuli",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.MicroscopicCoefficientMatch.dirac_H_MicroscopicCoefficientMatch_at_alpha_one",
@@ -130255,7 +130273,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 14371,
+    "theorem_nodes": 14373,
     "unknown_nodes": 33,
     "implies_edges": 35,
     "apex_nodes": 4,
@@ -130267,7 +130285,7 @@
     ],
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 210,
-      "TRUE:PROVED": 14161,
+      "TRUE:PROVED": 14163,
       "UNKNOWN:PLANNED": 9,
       "UNKNOWN:STATED": 24
     },

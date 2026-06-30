@@ -1,6 +1,10 @@
 # Phase 6CE — Effective-Medium Homogenization (Maxwell–Garnett)
 
-**Status: PLANNED (authorized 2026-06-29).** A certified quasi-static effective-medium theory via the **algebraic Maxwell–Garnett** mixing formula, plus certified effective-parameter bounds. Clean whitespace (no two-scale / Maxwell–Garnett in any prover). Distinct phase in the `6C*` materials series.
+**Status: ✅ COMPLETE (2026-06-30).** All three waves shipped at full strength, kernel-pure, in root, **algebraic-path only** (guardrail respected — no two-scale homogenization). New content in `SKEFTHawking/{MaxwellGarnett,EffectiveMediumBounds,EffectiveModuli}.lean` (`namespace SKEFTHawking.Metamaterial`).
+
+**Phase DoD status (2026-06-30):** `lake build` + ExtractDeps green (9514 jobs); all headlines `lean_verify` → `{propext, Classical.choice, Quot.sound}`, zero sorry/axiom/native_decide/maxHeartbeats; root imports added; counts + Inventory refreshed; `validate.py` → **45/45 ALL CHECKS PASSED**. Headlines: W1 `maxwellGarnett_clausius_mossotti` (the closed-form `ε_eff` solves the defining Clausius–Mossotti relation, cross-multiplied/division-free) + `maxwellGarnett_host_recovery` (f→0 → εₕ); W2 `effectiveMedium_constituent_bounds` (`εₕ ≤ ε_eff ≤ εᵢ`, the Hashin–Shtrikman/Wiener enclosure) + concrete `norm_num` rational instance `effectiveMedium_hashinShtrikman_enclosure`; W3 `effectiveModuli_enclosure` (the elastic Voigt–Reuss–Hill bracket `M₁ ≤ M_Reuss ≤ M_Voigt ≤ M₂`) + the exact AM–HM gap identity `voigt_sub_reuss_eq`. **Closure review (2026-06-30): fresh-context `skeft-qa:adversarial-reviewer` → VERDICT 0 BLOCKER, 0 MAJOR, 3 MINOR** (all formulas independently verified; hypotheses confirmed load-bearing by breaking them; CM relation confirmed to discriminate wrong roots — non-vacuous). MINOR-3 (docstring asserted the exact gap but only `≥` was formalized) remediated by proving `voigt_sub_reuss_eq`; MINOR-1 (defensible conjunction bundles) + MINOR-2 (cosmetic underscored hyp) need no action. **D11 §homogenization first-lift content staged.**
+
+**Original scope (PLANNED, authorized 2026-06-29):** A certified quasi-static effective-medium theory via the **algebraic Maxwell–Garnett** mixing formula, plus certified effective-parameter bounds. Clean whitespace (no two-scale / Maxwell–Garnett in any prover). Distinct phase in the `6C*` materials series.
 
 **Substrate (verified 2026-06-29 — PhysLib source read + lean MCP):**
 - **Reuse (exists):** Mathlib field arithmetic; project `QuantumNetwork/NumericalBounds.expNeg_enclosure` (rational two-sided enclosure); Mathlib `FunctionalSpaces.SobolevInequality` (GNS *inequalities* only).
@@ -28,24 +32,24 @@
 - **Why:** the canonical macroscale effective-parameter formula metamaterial design relies on.
 - **Bricks:** finite-dim algebra; Mathlib field arithmetic.
 - **Done (AC / `/goal` condition):**
-  - [ ] `MaxwellGarnett.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
-  - [ ] `maxwellGarnett_eps_eff` + the `f → 0` host-recovery limit proven (algebraic path only — no two-scale)
+  - [x] `MaxwellGarnett.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
+  - [x] `maxwellGarnett_eps_eff` + the `f → 0` host-recovery limit proven (algebraic path only — no two-scale)
 
 ## Wave 2 — certified effective-parameter bounds
 - **Goal:** a **Hashin–Shtrikman**-style two-sided enclosure on `ε_eff`; an interval-arithmetic certificate (rational brackets). **Verdict: reachable.**
 - **Why:** turns the formula into a certificate-grade bound (the design-relevant guarantee).
 - **Bricks:** W1; `expNeg_enclosure`-style interval arithmetic.
 - **Done (AC / `/goal` condition):**
-  - [ ] `EffectiveMediumBounds.lean` builds clean — 0 sorry, kernel-pure, no new axiom
-  - [ ] `effectiveMedium_hashinShtrikman_enclosure` (`norm_num`-backed two-sided bound) proven
+  - [x] `EffectiveMediumBounds.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [x] `effectiveMedium_hashinShtrikman_enclosure` (`norm_num`-backed two-sided bound) proven
 
 ## Wave 3 — elastic / acoustic effective moduli
 - **Goal:** the effective bulk/shear moduli of a composite via the same algebraic mixing + enclosure (the elastic analog of W1/W2). **Verdict: reachable.**
 - **Why:** extends the certificate from electromagnetic to mechanical metamaterials (ties to 6CB's acoustic substrate).
 - **Bricks:** W1/W2; elastic-modulus mixing rules.
 - **Done (AC / `/goal` condition):**
-  - [ ] `EffectiveModuli.lean` builds clean — 0 sorry, kernel-pure, no new axiom
-  - [ ] `effectiveModuli_enclosure` (elastic bulk/shear analog) proven
+  - [x] `EffectiveModuli.lean` builds clean — 0 sorry, kernel-pure, no new axiom
+  - [x] `effectiveModuli_enclosure` (elastic bulk/shear analog) proven
 
 ## Sequencing
 W1 (formula) → W2 (bounds) → W3 (elastic analog). Independent of 6CA–6CD. Algebraic path throughout — two-scale stays out of scope.
