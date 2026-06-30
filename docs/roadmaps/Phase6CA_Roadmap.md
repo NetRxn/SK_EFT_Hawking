@@ -1,6 +1,8 @@
 # Phase 6CA — Topological Band Theory (Chern Number / Bulk–Boundary Correspondence)
 
-**Status: PLANNED (authorized 2026-06-29).** Berry curvature and the Chern number on a Bloch band, plus the bulk–boundary correspondence. Likely whitespace (no Bloch-band Chern number in any prover). First of the public materials-substrate phases scoped 2026-06-29 (companion materials phases 6CB–6CE; chemistry phases 6BA–6BD). Distinct double-letter phase in the `6C*` (materials) series, independent of the unrelated `6A`/`6c`.
+**Status: 🔄 IN PROGRESS (2026-06-30) — W1 substrate shipped; differential-geometry remainder DR-gated.** The gapped 2-band `d·σ` Bloch substrate is done (`SKEFTHawking/BlochBundle.lean`, `namespace SKEFTHawking.Topological`, kernel-pure, commit `5356c18b`): `blochPauli` Hamiltonian, Hermiticity, the Pauli identity `H²=‖d‖²·I`, bands `±‖d‖` (genuine eigenvalues via the secular determinant), and gapped ⟺ `d≠0`. **Remaining (the hard part): Berry curvature definition + gauge-covariance (rest of W1), the Chern-number integral `C=(1/2π)∫F∈ℤ` (W2), and bulk–boundary (W3, deep→conditional).** These need differential-geometry/topology infrastructure absent from Mathlib/PhysLib. **Route decision pending a dispatched DR** (`Lit-Search/Tasks/submitted/20260630_phase6CA_chern_integrality_lean_route.md`): route B = FHS-lattice genuine-integer Chern (~2.5–4k LOC, self-contained) vs route C = full continuum (~15–40k+ LOC, foundational infra). Program-value ranking (2026-06-30): D10 discharges > 6CA route-C infra (DR-gated) > 6CA route-B. *(Original: PLANNED, authorized 2026-06-29.)*
+
+Berry curvature and the Chern number on a Bloch band, plus the bulk–boundary correspondence. Likely whitespace (no Bloch-band Chern number in any prover). First of the public materials-substrate phases scoped 2026-06-29 (companion materials phases 6CB–6CE; chemistry phases 6BA–6BD). Distinct double-letter phase in the `6C*` (materials) series, independent of the unrelated `6A`/`6c`.
 
 **Substrate (verified 2026-06-29 — PhysLib source read + lean MCP `loogle`):**
 - **Reuse (exists):** PhysLib `CondensedMatter/TightBindingChain/Basic.lean` — the fully-proven 1D *scalar* band model: `TightBindingChain.hamiltonian`, `hamiltonian_energyEigenstate` (TISE), `energyEigenvalue = E₀ − 2t·cos(ka)`, `energyEigenstate`/`energyEigenstate_orthogonal`, `BrillouinZone`, `QuantaWaveNumber` (finite-N, PBC). Project `ChernBridge.lean` — `categoricalChernExpansion`/`realSpaceChernAt` (an *abstract* Chebyshev marker, **not** a Bloch Chern number); `FermiPointTopology.lean` (`FermiPointData`, `n1_gives_u1`); `HeatKernelExpansion.lean` (`a0_dirac` — index-theory toehold for W3).
@@ -26,8 +28,8 @@
 - **Why:** the geometric substrate the Chern number integrates.
 - **Bricks:** PhysLib `TightBindingChain`; Mathlib differentiation on the torus/BZ.
 - **Done (AC / `/goal` condition):**
-  - [ ] `BlochBundle.lean` builds clean — 0 sorry, kernel-pure (`lean_verify`), no new project-local axiom
-  - [ ] 2-band Bloch Hamiltonian on the TB template; `berryCurvature_def` + gauge-covariance proven
+  - [x] `BlochBundle.lean` builds clean — 0 sorry, kernel-pure (`lean_verify` → `{propext, Classical.choice, Quot.sound}`), no new project-local axiom — DONE 2026-06-30 (`5356c18b`)
+  - [~] 2-band gapped Bloch Hamiltonian (`blochPauli` = `d·σ`; Hermitian, `H²=‖d‖²·I`, bands `±‖d‖`, gapped ⟺ `d≠0`) DONE; **`berryCurvature_def` + gauge-covariance still TODO** (the differential-geometric layer — route-C DR pending)
 
 ## Wave 2 — Chern-number integrality
 - **Goal:** `C = (1/2π) ∫_BZ F ∈ ℤ` (winding-number computation); a concrete `C = ±1` two-band model + falsifier (`C ∉ ℤ ⇒ ⊥`). **Verdict: reachable-moderate.**
