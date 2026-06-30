@@ -1307,4 +1307,16 @@ lemma antilipschitz_fiber {N : ℕ} (i : Fin N) (z : {k // ¬ electronCoord i k}
     AntilipschitzWith 1 (fun y : Space 3 => (molecularSplitEquiv i).symm (y, z)) :=
   (isometry_fiber i z).antilipschitz
 
+/-- **The fiber as a genuine Schwartz map.** For a molecular Schwartz function `u : 𝓢(Space (3N), ℂ)` and a
+fixed spectator `z`, the restriction `y ↦ u ((molecularSplitEquiv i).symm (y, z))` is `𝓢(Space 3, ℂ)` — by
+`SchwartzMap.compCLMOfAntilipschitz` (temperate growth + antilipschitz of the affine fiber injection). This is
+the object the fiberwise single-electron bound (`exists_coulomb_relbound_uniform`) applies to. -/
+noncomputable def fiberSchwartz {N : ℕ} (i : Fin N) (z : {k // ¬ electronCoord i k} → ℝ)
+    (u : 𝓢(Space (3 * N), ℂ)) : 𝓢(Space 3, ℂ) :=
+  SchwartzMap.compCLMOfAntilipschitz ℝ (hasTemperateGrowth_fiber i z) (antilipschitz_fiber i z) u
+
+@[simp] lemma fiberSchwartz_apply {N : ℕ} (i : Fin N) (z : {k // ¬ electronCoord i k} → ℝ)
+    (u : 𝓢(Space (3 * N), ℂ)) (y : Space 3) :
+    fiberSchwartz i z u y = u ((molecularSplitEquiv i).symm (y, z)) := rfl
+
 end SKEFTHawking.DFT
