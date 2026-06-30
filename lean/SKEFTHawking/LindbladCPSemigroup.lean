@@ -467,6 +467,7 @@ end Trotter
 section Propagator
 variable {d : Type*} [Fintype d] [DecidableEq d] [Nonempty d] {κ : Type*} [Fintype κ]
 
+omit [Fintype d] [DecidableEq d] [Nonempty d] in
 /-- Compose a real scaling with a complex scaling: `r • ((t:ℂ) • M) = ↑(r·t) • M`. -/
 private lemma real_smul_ofReal_smul (r t : ℝ) (M : Matrix (d × d) (d × d) ℂ) :
     r • ((t : ℂ) • M) = ((r * t : ℝ) : ℂ) • M := by
@@ -511,6 +512,22 @@ theorem isCompletelyPositive_lindbladPropagatorAction (H : Matrix d d ℂ) (hH :
   refine isCompletelyPositive_of_tendsto_choi (M := fun n =>
     Matrix.toLin b b ((NormedSpace.exp ((n:ℝ)⁻¹ • X) * NormedSpace.exp ((n:ℝ)⁻¹ • Y)) ^ n)) ?_ hfac
   exact (hcont.tendsto _).comp (tendsto_trotter X Y)
+
+omit [Nonempty d] in
+/-- **The GKSL generator is trace-annihilating:** `Tr(ℒρ) = 0`. The commutator part has zero trace,
+and the jump term `Tr(∑ LₖρLₖ†) = Tr((∑Lₖ†Lₖ)ρ)` exactly cancels the anticommutator's
+`−Tr((∑Lₖ†Lₖ)ρ)` (trace cyclicity). This is what makes `e^{tℒ}` trace-preserving (hence CPTP). -/
+theorem lindblad_generator_traceZero (H : Matrix d d ℂ) (L : κ → Matrix d d ℂ) (ρ : Matrix d d ℂ) :
+    (lindbladGenerator H L ρ).trace = 0 := by
+  rw [lindbladGenerator, LinearMap.add_apply, LinearMap.add_apply, lindbladHamPart_apply,
+    lindbladJump_apply, lindbladAnticommPart_apply, Matrix.trace_add, Matrix.trace_add,
+    Matrix.trace_smul, Matrix.trace_sub, Matrix.trace_smul, Matrix.trace_add,
+    Matrix.trace_mul_comm H ρ, sub_self, smul_zero, zero_add,
+    Matrix.trace_sum]
+  simp_rw [Matrix.trace_mul_comm (L _ * ρ) (L _)ᴴ, ← Matrix.mul_assoc]
+  rw [← Matrix.trace_sum, ← Finset.sum_mul, Matrix.trace_mul_comm ρ (∑ k, (L k)ᴴ * L k),
+    smul_eq_mul]
+  ring
 
 end Propagator
 
