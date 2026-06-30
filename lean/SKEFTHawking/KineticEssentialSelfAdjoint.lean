@@ -135,7 +135,7 @@ the Fourier representation it is multiplication by `s(ξ) = ℏ²(2π)²‖ξ‖
 `(s ± i)⁻¹` is a Schwartz-preserving (temperate) multiplier. -/
 
 section Wave2
-open QuantumMechanics SchwartzMap
+open QuantumMechanics SchwartzMap SpaceDHilbertSpace
 
 variable {d : ℕ}
 
@@ -300,6 +300,46 @@ lemma resolventSymbol_hasTemperateGrowth (k μ : ℝ) (hμ : μ ≠ 0) :
     Function.HasTemperateGrowth
       (fun ξ : Space d => (((k * ‖ξ‖ ^ 2 : ℝ) : ℂ) - Complex.I * (μ : ℂ))⁻¹) :=
   (phi1D_hasTemperateGrowth k μ hμ).comp (Function.hasTemperateGrowth_norm_sq (H := Space d))
+
+/-! #### C4 — transport of the Schwartz momentum-square action to the Hilbert space. -/
+
+/-- `𝓟ᵢ` carries `schwartzEquiv G` to the L²-inclusion of `𝐩ᵢ G` (intertwining of the unbounded
+operator with its Schwartz-space symbol). -/
+lemma momentumOperator_schwartzEquiv (i : Fin d) (G : 𝓢(Space d, ℂ)) :
+    (momentumOperator i (schwartzEquiv G) : SpaceDHilbertSpace d) = schwartzIncl (momentumCLM i G) := by
+  rw [momentumOperator_apply, schwartzEquiv.symm_apply_apply,
+    SchwartzSubmodule.schwartzEquiv_apply_coe]
+
+/-- `𝓟ᵢ` on any Schwartz-submodule element is the L²-inclusion of `𝐩ᵢ` applied to its Schwartz
+preimage. -/
+lemma momentumOperator_apply_coe (i : Fin d) (z : schwartzSubmodule d) :
+    (momentumOperator i z : SpaceDHilbertSpace d)
+      = schwartzIncl (momentumCLM i (schwartzEquiv.symm z)) := by
+  rw [momentumOperator_apply, SchwartzSubmodule.schwartzEquiv_apply_coe]
+
+/-- `schwartzEquiv.symm` of the canonical inclusion `⟨schwartzIncl G, _⟩` recovers `G`. -/
+lemma schwartzEquiv_symm_mk (G : 𝓢(Space d, ℂ)) (h : schwartzIncl G ∈ schwartzSubmodule d) :
+    schwartzEquiv.symm ⟨schwartzIncl G, h⟩ = G := by
+  rw [show (⟨schwartzIncl G, h⟩ : schwartzSubmodule d) = schwartzEquiv G from
+    Subtype.ext (SchwartzSubmodule.schwartzEquiv_apply_coe G).symm, schwartzEquiv.symm_apply_apply]
+
+/-- The Hilbert-space action of `momentumSqOperator` on a Schwartz element is the L²-inclusion of
+the Schwartz-space momentum-square `∑ᵢ 𝐩ᵢ²`. -/
+lemma momentumSqOperator_apply_eq (F : 𝓢(Space d, ℂ))
+    (hmem : (schwartzEquiv F : SpaceDHilbertSpace d) ∈ momentumSqOperator.domain) :
+    (momentumSqOperator ⟨_, hmem⟩ : SpaceDHilbertSpace d)
+      = schwartzIncl (∑ i, momentumCLM i (momentumCLM i F)) := by
+  unfold momentumSqOperator
+  rw [LinearPMap.sum_apply, map_sum]
+  apply Finset.sum_congr rfl
+  intro i _
+  simp [LinearPMap.comp, LinearPMap.codRestrict, LinearMap.compPMap_apply, momentumOperator_apply,
+    SchwartzSubmodule.schwartzEquiv_apply_coe]
+  congr 2
+  rw [schwartzEquiv.symm_apply_eq]
+  apply Subtype.ext
+  exact (momentumOperator_apply_coe i _).trans
+    (by simp only [SchwartzSubmodule.schwartzEquiv_apply_coe]; congr 2; exact schwartzEquiv_symm_mk F _)
 
 end Wave2
 
