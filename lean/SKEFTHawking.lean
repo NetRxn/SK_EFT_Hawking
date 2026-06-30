@@ -3637,6 +3637,8 @@ import SKEFTHawking.HohenbergKohnVariational
 import SKEFTHawking.LevyLiebFunctional
 import SKEFTHawking.LindbladGenerator
 import SKEFTHawking.GKSLStructure
+import SKEFTHawking.LindbladSemigroup
+import SKEFTHawking.DampedTwoLevel
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

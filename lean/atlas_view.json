@@ -12292,7 +12292,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 5
+      "frontier_impact": 6
     },
     {
       "fqn": "SKEFTHawking.DFT.IsSelfAdjoint.surjective_sub_I_smul",
@@ -12412,6 +12412,15 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DFT.electronPos_continuous",
+      "module": "SKEFTHawking.MolecularHamiltonian",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DFT.hohenberg_kohn_density_injective",
       "module": "SKEFTHawking.HohenbergKohnUniqueness",
       "atlas_kind": "TRUE",
@@ -12475,6 +12484,15 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.DFT.molecularCoulombPotential_measurable",
+      "module": "SKEFTHawking.MolecularHamiltonian",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DFT.molecularHamiltonian_essSelfAdjoint",
       "module": "SKEFTHawking.MolecularHamiltonian",
       "atlas_kind": "TRUE",
@@ -12482,6 +12500,24 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecularHamiltonian_essSelfAdjoint_of_kinetic",
+      "module": "SKEFTHawking.MolecularHamiltonian",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecularPotentialOperator_isSymmetric",
+      "module": "SKEFTHawking.MolecularHamiltonian",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DFT.resolventEquiv.eq_1",
@@ -12535,7 +12571,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DFT.surjective_one_add_of_contraction",
@@ -57736,6 +57772,177 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.OpenSystems.dampedTwoLevelGenerator.eq_1",
+      "module": "SKEFTHawking.DampedTwoLevel",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.dampedTwoLevel_decay_envelope",
+      "module": "SKEFTHawking.DampedTwoLevel",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.dampedTwoLevel_decay_envelope_half",
+      "module": "SKEFTHawking.DampedTwoLevel",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.dampedTwoLevel_generator_decay_rate",
+      "module": "SKEFTHawking.DampedTwoLevel",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.gksl_canonical_form",
+      "module": "SKEFTHawking.GKSLStructure",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.gksl_trace_preserving",
+      "module": "SKEFTHawking.GKSLStructure",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindbladAnticommPart.eq_1",
+      "module": "SKEFTHawking.LindbladGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindbladAnticommPart_apply",
+      "module": "SKEFTHawking.LindbladGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindbladGenerator.eq_1",
+      "module": "SKEFTHawking.GKSLStructure",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindbladHamPart.eq_1",
+      "module": "SKEFTHawking.LindbladGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindbladHamPart_apply",
+      "module": "SKEFTHawking.LindbladGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindbladJump.eq_1",
+      "module": "SKEFTHawking.LindbladGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindbladJump_apply",
+      "module": "SKEFTHawking.LindbladGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindbladPropagator.eq_1",
+      "module": "SKEFTHawking.LindbladSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindblad_generator_CP",
+      "module": "SKEFTHawking.LindbladGenerator",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindblad_propagator_zero",
+      "module": "SKEFTHawking.LindbladSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindblad_semigroup",
+      "module": "SKEFTHawking.LindbladSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.sigmaMinus.eq_1",
+      "module": "SKEFTHawking.DampedTwoLevel",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.traceDist_lindblad_monotone",
+      "module": "SKEFTHawking.LindbladSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "SKEFTHawking.PenroseSingularity.correctness_push_biconditional_under_applicable",
       "module": "SKEFTHawking.PenroseSingularity",
       "atlas_kind": "TRUE",
@@ -66265,7 +66472,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 4
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.exp_neg_div_le_one",
@@ -71539,7 +71746,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceDist_le_sqrt_one_sub_sqrtFidelity_sq",
@@ -129319,7 +129526,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 14267,
+    "theorem_nodes": 14290,
     "unknown_nodes": 33,
     "implies_edges": 35,
     "apex_nodes": 4,
@@ -129331,7 +129538,7 @@
     ],
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 210,
-      "TRUE:PROVED": 14057,
+      "TRUE:PROVED": 14080,
       "UNKNOWN:PLANNED": 9,
       "UNKNOWN:STATED": 24
     },
