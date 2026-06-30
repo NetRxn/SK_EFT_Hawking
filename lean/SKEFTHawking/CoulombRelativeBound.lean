@@ -513,4 +513,21 @@ lemma integral_norm_le_weighted_L2_t {g : Space 3 → ℂ} {t : ℝ} (ht : 0 < t
   rw [i0, ia, ib, Real.sqrt_eq_rpow, Real.sqrt_eq_rpow]
   exact hcs
 
+/-- **t-version of the sup-norm hypothesis `hb`:** `(1+t‖ξ‖²)·‖û‖ ∈ L²` for `t ≥ 0`, because
+`(1+t‖ξ‖²)·û` is Schwartz (`smulLeftCLM` by the temperate-growth weight `1+t‖ξ‖²`). Mirrors W3-12;
+discharges the hypothesis of `integral_norm_le_weighted_L2_t` (W3-24) for any Schwartz `u`. -/
+lemma memLp_weighted_fourier_t (u : 𝓢(Space 3, ℂ)) {t : ℝ} (ht : 0 ≤ t) :
+    MemLp (fun ξ : Space 3 => ((1 + t * ‖ξ‖ ^ 2) * ‖(𝓕 u) ξ‖ : ℝ)) 2 volume := by
+  have hgr : Function.HasTemperateGrowth (fun ξ : Space 3 => (1 + t * ‖ξ‖ ^ 2 : ℝ)) :=
+    (Function.HasTemperateGrowth.const (1 : ℝ)).add
+      ((Function.HasTemperateGrowth.const t).mul (Function.hasTemperateGrowth_norm_sq (H := Space 3)))
+  have hg : Function.HasTemperateGrowth (fun ξ : Space 3 => ((1 + t * ‖ξ‖ ^ 2 : ℝ) : ℂ)) :=
+    Complex.ofRealCLM.hasTemperateGrowth.comp hgr
+  have hmem : MemLp (fun ξ : Space 3 =>
+      ‖(SchwartzMap.smulLeftCLM ℂ (fun ξ : Space 3 => ((1 + t * ‖ξ‖ ^ 2 : ℝ) : ℂ)) (𝓕 u)) ξ‖) 2 volume :=
+    (SchwartzMap.memLp _ 2 volume).norm
+  refine hmem.ae_eq (Filter.Eventually.of_forall fun ξ => ?_)
+  rw [SchwartzMap.smulLeftCLM_apply_apply hg, norm_smul, Complex.norm_real, Real.norm_eq_abs,
+    abs_of_nonneg (by positivity : (0 : ℝ) ≤ 1 + t * ‖ξ‖ ^ 2)]
+
 end SKEFTHawking.DFT
