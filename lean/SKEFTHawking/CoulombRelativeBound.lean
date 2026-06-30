@@ -212,4 +212,15 @@ lemma norm_le_integral_norm_fourier (u : 𝓢(Space 3, ℂ)) (x : Space 3) :
   rw [← heq]
   exact norm_integral_le_integral_norm _
 
+/-- **The Fourier sup-norm bound (assembled):** `‖u x‖ ≤ ‖(1+‖ξ‖²)⁻¹‖₂ · ‖(1+‖ξ‖²)·û‖₂` for Schwartz `u`.
+Chains the L^∞≤L¹ inversion step (`norm_le_integral_norm_fourier`) with the weighted-L² Hölder
+(`integral_norm_le_weighted_L2`). The first factor `‖(1+‖ξ‖²)⁻¹‖₂` is a finite constant (`dim 3 < 4`,
+`memLp_two_oneAddNormSq_inv`); the second is `‖(1−Δ)u‖₂` by Plancherel + the W2 multiplier. The hypothesis
+`hb` (the weighted transform is in L²) holds because `(1+‖ξ‖²)·û` is Schwartz. -/
+lemma norm_le_weighted_L2_sup (u : 𝓢(Space 3, ℂ))
+    (hb : MemLp (fun ξ : Space 3 => ((1 + ‖ξ‖ ^ 2) * ‖(𝓕 u) ξ‖ : ℝ)) 2 volume) (x : Space 3) :
+    ‖u x‖ ≤ Real.sqrt (∫ ξ : Space 3, (((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2) *
+              Real.sqrt (∫ ξ : Space 3, ((1 + ‖ξ‖ ^ 2) * ‖(𝓕 u) ξ‖) ^ 2) :=
+  (norm_le_integral_norm_fourier u x).trans (integral_norm_le_weighted_L2 hb)
+
 end SKEFTHawking.DFT
