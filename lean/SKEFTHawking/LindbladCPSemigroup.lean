@@ -464,4 +464,54 @@ lemma tendsto_trotter {𝔸 : Type*} [NormedRing 𝔸] [NormOneClass 𝔸]
 
 end Trotter
 
+section Propagator
+variable {d : Type*} [Fintype d] [DecidableEq d] [Nonempty d] {κ : Type*} [Fintype κ]
+
+/-- Compose a real scaling with a complex scaling: `r • ((t:ℂ) • M) = ↑(r·t) • M`. -/
+private lemma real_smul_ofReal_smul (r t : ℝ) (M : Matrix (d × d) (d × d) ℂ) :
+    r • ((t : ℂ) • M) = ((r * t : ℝ) : ℂ) • M := by
+  rw [← smul_assoc, Complex.real_smul, ← Complex.ofReal_mul]
+
+/-- **The GKSL propagator's action `Λ_t` is completely positive for `t ≥ 0`** (Hermitian `H`).
+The Lie–Trotter product `(e^{(t/n)ℒ_drift} e^{(t/n)ℒ_jump})ⁿ` of completely-positive factors converges
+(`tendsto_trotter`) to `Λ_t`, and complete positivity is closed under limits. This discharges `hreal`. -/
+theorem isCompletelyPositive_lindbladPropagatorAction (H : Matrix d d ℂ) (hH : H.IsHermitian)
+    (L : κ → Matrix d d ℂ) {t : ℝ} (ht : 0 ≤ t) :
+    MatrixMap.IsCompletelyPositive (lindbladPropagatorAction H L t) := by
+  set b := Matrix.stdBasis ℂ d d with hb
+  set D := LinearMap.toMatrix b b (lindbladHamPart H + lindbladAnticommPart L) with hD
+  set J := LinearMap.toMatrix b b (lindbladJump L) with hJ
+  set X : Matrix (d × d) (d × d) ℂ := (t : ℂ) • D with hX
+  set Y : Matrix (d × d) (d × d) ℂ := (t : ℂ) • J with hY
+  -- the propagator's vectorized generator is X + Y
+  have hgen : (t : ℂ) • lindbladLiouvillian H L = X + Y := by
+    have hL : lindbladLiouvillian H L = LinearMap.toMatrix b b (lindbladGenerator H L) := rfl
+    rw [hL, lindbladGenerator, hX, hY, hD, hJ, ← smul_add, ← map_add]
+    congr 2
+    abel
+  -- each Trotter factor is CP, uniformly in n (n = 0 gives the identity)
+  have hfac : ∀ n : ℕ, MatrixMap.IsCompletelyPositive (Matrix.toLin b b
+      ((NormedSpace.exp ((n:ℝ)⁻¹ • X) * NormedSpace.exp ((n:ℝ)⁻¹ • Y)) ^ n)) := by
+    intro n
+    rw [toLin_pow, Matrix.toLin_mul b b b]
+    refine isCompletelyPositive_pow (MatrixMap.IsCompletelyPositive.comp ?_ ?_) n
+    · rw [hY, real_smul_ofReal_smul, hJ]
+      exact isCompletelyPositive_toLin_exp (lindblad_generator_CP L)
+        (mul_nonneg (by positivity) ht)
+    · rw [hX, real_smul_ofReal_smul, hD]
+      exact isCompletelyPositive_toLin_exp_drift H hH L ((n:ℝ)⁻¹ * t)
+  -- choi-continuity of toLin
+  have hcont : Continuous fun M : Matrix (d × d) (d × d) ℂ =>
+      MatrixMap.choi_matrix (Matrix.toLin b b M) := by
+    have hlin : (fun M : Matrix (d × d) (d × d) ℂ => MatrixMap.choi_matrix (Matrix.toLin b b M))
+        = ⇑(MatrixMap.choi_equiv.toLinearMap ∘ₗ (Matrix.toLin b b).toLinearMap) := by ext M; rfl
+    rw [hlin]; exact LinearMap.continuous_of_finiteDimensional _
+  -- assemble: Λ_t = toLin(exp(X+Y)) = lim of CP approximants
+  rw [lindbladPropagatorAction, lindbladPropagator, hgen]
+  refine isCompletelyPositive_of_tendsto_choi (M := fun n =>
+    Matrix.toLin b b ((NormedSpace.exp ((n:ℝ)⁻¹ • X) * NormedSpace.exp ((n:ℝ)⁻¹ • Y)) ^ n)) ?_ hfac
+  exact (hcont.tendsto _).comp (tendsto_trotter X Y)
+
+end Propagator
+
 end SKEFTHawking.OpenSystems
