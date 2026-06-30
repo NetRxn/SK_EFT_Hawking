@@ -776,4 +776,13 @@ noncomputable def electronPosCLM {N : ℕ} (i : Fin N) : Space (3 * N) →L[ℝ]
 @[simp] lemma electronPosCLM_apply {N : ℕ} (i : Fin N) (x : Space (3 * N)) :
     electronPosCLM i x = electronPos x i := rfl
 
+/-- The **relative position** `electronPos x i - electronPos x j` as a continuous linear map — the singular
+coordinate of the electron–electron repulsion term `1/‖eᵢ - eⱼ‖`. Difference of the two projection CLMs. -/
+noncomputable def electronRelCLM {N : ℕ} (i j : Fin N) : Space (3 * N) →L[ℝ] Space 3 :=
+  electronPosCLM i - electronPosCLM j
+
+@[simp] lemma electronRelCLM_apply {N : ℕ} (i j : Fin N) (x : Space (3 * N)) :
+    electronRelCLM i j x = electronPos x i - electronPos x j := by
+  simp [electronRelCLM]
+
 end SKEFTHawking.DFT
