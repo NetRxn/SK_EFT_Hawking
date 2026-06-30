@@ -91,6 +91,13 @@ branch with managed blast radius** (test StatMech/QuantumInfo + the parallel age
   This is where **PhysLib's v4.30.0 spectral theory genuinely helps** (it provides the eigenvalue/
   spectral-measure layer the in-tree substrate stops short of).
 
+> **⇒ The discharge of `hkin`/`hrel` (W6/W7 below) is now owned by the consolidated
+> [D10 Discharge Roadmap](D10_Discharge_Roadmap.md)** (opened 2026-06-30; tracks 6BB + 6BC discharges +
+> the transport synthesis under one `/goal` loop). The **ess-s.a. criterion** (W6 step (c)) is **✅ DONE**
+> there (`isSelfAdjoint_closure_of_dense_range`, commit `66e0a20c`); the Fourier dense-range (W6 step (a/b))
+> and Hardy (W7) are the loop's active waves. Status below kept for context; the discharge roadmap is the
+> live source-of-truth.
+
 **Wave sequencing of the discharge (each ≤ ~500 LOC; else leave as disclosed tracked-Prop):**
 - **W5 — `hpot`** ✅ DONE (2026-06-29, ~45 LOC, kernel-pure): `electronPos_continuous` (via PhysLib `coordCLM`/`mk_continuous`) → `molecularCoulombPotential_measurable` → `molecularPotentialOperator_isSymmetric` → refined apex `molecularHamiltonian_essSelfAdjoint_of_kinetic` (only `hkin`+`hrel` remain disclosed). In `MolecularHamiltonian.lean`; root build green.
 - **W6 — `hkin`** ⏸️ DISCLOSED for now, but **route de-risked & pinned (revised 2026-06-29): ~400–500 LOC
