@@ -35,4 +35,15 @@ lemma integrable_oneAddNormSq_rpow_neg_two :
       = fun x : Space 3 => (1 + ‖x‖ ^ 2) ^ (-4 / 2 : ℝ) := by funext x; norm_num
   rw [he]; exact h
 
+/-- **The Fourier weight `(1 + ‖ξ‖²)⁻¹ ∈ L²(ℝ³)`** — finite `L²` norm, the factor that Cauchy–Schwarz
+pairs against `(1+‖ξ‖²)·û` to bound `‖û‖_{L¹}` by `‖(1−Δ)u‖_{L²}`. -/
+lemma memLp_two_oneAddNormSq_inv :
+    MemLp (fun ξ : Space 3 => ((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) 2 volume := by
+  have hcont : Continuous (fun ξ : Space 3 => ((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) :=
+    Continuous.inv₀ (by fun_prop) (fun ξ => (by positivity : (0:ℝ) < 1 + ‖ξ‖ ^ 2).ne')
+  rw [memLp_two_iff_integrable_sq hcont.aestronglyMeasurable]
+  refine integrable_oneAddNormSq_rpow_neg_two.congr ?_
+  filter_upwards with ξ
+  rw [Real.rpow_neg (by positivity), Real.rpow_two, ← inv_pow]
+
 end SKEFTHawking.DFT
