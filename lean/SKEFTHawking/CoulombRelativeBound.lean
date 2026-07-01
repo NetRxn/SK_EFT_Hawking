@@ -2459,3 +2459,18 @@ lemma coulomb_isRelBounded {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finset (Sp
     funext x
     exact Complex.conj_ofReal _
   exact ⟨a, b, ha0, ha1, hb0, hcore.extend_to_closure hAcl hBcl ha0 hb0⟩
+
+open QuantumMechanics in
+/-- **The N-electron molecular Coulomb Hamiltonian is essentially self-adjoint — FULLY
+UNCONDITIONAL.** All three analytic hypotheses are now discharged as proven theorems: `hkin`
+(`kineticOperator_isSelfAdjoint_closure`), `hpot` (`molecularPotentialOperator_isSymmetric`), and
+`hrel` (`coulomb_isRelBounded`, the Coulomb relative bound `a < 1` w.r.t. the closed kinetic operator).
+This theorem takes **no disclosed-hypothesis argument** — molecular-Hamiltonian essential
+self-adjointness holds outright. (Supersedes the `hrel`-disclosing
+`molecularHamiltonian_essSelfAdjoint_of_hpot_hrel` / `_of_kinetic` in `KineticEssentialSelfAdjoint.lean`.) -/
+theorem molecularHamiltonian_essSelfAdjoint (N : ℕ) (m : ℝ) (hm : 0 < m)
+    (nuclei : Finset (Space 3 × ℝ)) :
+    IsSelfAdjoint ((molecularSystem N m hm nuclei).kineticOperator.closure
+      + (molecularSystem N m hm nuclei).potentialOperator) := by
+  obtain ⟨a, b, ha0, ha, hb, hrel⟩ := coulomb_isRelBounded m hm nuclei
+  exact molecularHamiltonian_essSelfAdjoint_of_kinetic N m hm nuclei ha0 ha hb hrel

@@ -463,12 +463,13 @@ theorem kineticOperator_isSelfAdjoint_closure (N : ℕ) (m : ℝ) (hm : 0 < m)
   exact LinearPMap.IsSelfAdjoint.smul momentumSqOperator_isSelfAdjoint_closure
     (Complex.ofReal_ne_zero.mpr hm2) (Complex.conj_ofReal _)
 
-/-- **The N-electron molecular Coulomb Hamiltonian is essentially self-adjoint**, via Kato–Rellich,
-with `hkin` **discharged** (`kineticOperator_isSelfAdjoint_closure`). The kinetic operator's essential
-self-adjointness — previously a disclosed hypothesis — is now a proven theorem, so this no longer
-takes an `hkin` argument. Only `hrel` (Coulomb relative-bound `a < 1`, Kato/Hardy — Phase 6BB Wave 3)
-remains disclosed [plus `hpot`, itself dischargeable via `molecularPotentialOperator_isSymmetric`]. -/
-theorem _root_.SKEFTHawking.DFT.molecularHamiltonian_essSelfAdjoint (N : ℕ) (m : ℝ) (hm : 0 < m)
+/-- **Molecular Coulomb Hamiltonian essential self-adjointness with `hkin` discharged**, still
+disclosing `hpot` and `hrel`. **Superseded** by the fully unconditional
+`SKEFTHawking.DFT.molecularHamiltonian_essSelfAdjoint` (relocated to `CoulombRelativeBound.lean` once
+`hrel` was discharged via `coulomb_isRelBounded`); kept here as the `hpot`+`hrel`-disclosing building
+block. See also `_of_kinetic` (discharges `hpot` too). -/
+theorem _root_.SKEFTHawking.DFT.molecularHamiltonian_essSelfAdjoint_of_hpot_hrel
+    (N : ℕ) (m : ℝ) (hm : 0 < m)
     (nuclei : Finset (Space 3 × ℝ))
     (hpot : IsSymmetricPMap (molecularSystem N m hm nuclei).potentialOperator)
     {a b : ℝ} (ha0 : 0 ≤ a) (ha : a < 1) (hb : 0 ≤ b)
