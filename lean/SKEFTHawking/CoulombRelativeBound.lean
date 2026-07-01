@@ -1799,4 +1799,21 @@ lemma coulombSq_fiber_le {N : ℕ} (iₑ : Fin N) (R : Space 3) {ε C : ℝ} (h�
     ENNReal.ofReal_mul hε, ENNReal.ofReal_mul hC,
     sqrt_integral_normSq_eq_rpow, sqrt_integral_normSq_eq_rpow]
 
+/-- **Constant-pull through the `(1/2)`-power lower integral:** `(∫⁻ (c·f^½)²)^½ = c·(∫⁻ f)^½` for a
+finite constant `c`. The reassembly step that turns each Minkowski summand `(∫⁻_z (A⁻ z)²)^½` (with
+`A⁻ z = ofReal ε · Kᶠ(z)^½`) into `ofReal ε · (∫⁻_z Kᶠ)^½`. Applied twice (ε·kinetic, C·L²). -/
+lemma rpow_half_lintegral_const_mul {α : Type*} [MeasurableSpace α] {μ : MeasureTheory.Measure α}
+    {c : ENNReal} (hc : c ≠ ⊤) (f : α → ENNReal) :
+    (∫⁻ z, (c * (f z) ^ (1 / 2 : ℝ)) ^ 2 ∂μ) ^ (1 / 2 : ℝ)
+      = c * (∫⁻ z, f z ∂μ) ^ (1 / 2 : ℝ) := by
+  have hpt : ∀ z, (c * (f z) ^ (1 / 2 : ℝ)) ^ 2 = c ^ 2 * f z := by
+    intro z
+    rw [mul_pow, ← ENNReal.rpow_natCast ((f z) ^ (1 / 2 : ℝ)) 2, ← ENNReal.rpow_mul]
+    norm_num
+  simp_rw [hpt]
+  rw [MeasureTheory.lintegral_const_mul' _ _ (ENNReal.pow_ne_top hc),
+    ENNReal.mul_rpow_of_nonneg _ _ (by norm_num : (0 : ℝ) ≤ 1 / 2),
+    ← ENNReal.rpow_natCast c 2, ← ENNReal.rpow_mul]
+  norm_num
+
 end SKEFTHawking.DFT
