@@ -2309,4 +2309,49 @@ lemma coulomb_relbound_schwartz_real {N : ℕ} (nuclei : Finset (Space 3 × ℝ)
   rw [ENNReal.toReal_mul, ENNReal.toReal_add hAfin hBfin, ENNReal.toReal_mul, ENNReal.toReal_mul,
     ENNReal.toReal_ofReal hε0, ENNReal.toReal_ofReal hC0]
 
-end SKEFTHawking.DFT
+open QuantumMechanics SpaceDHilbertSpace in
+/-- **Coulomb relative bound on the Schwartz core (`IsRelBounded`, `a < 1`).** The molecular potential is
+relatively bounded w.r.t. the (un-closed) molecular kinetic operator with relative bound `a < 1`. Choosing
+`ε = 1/(4m(Ctot+1))` in `exists_coulomb_relbound_center` gives `a = 2m·Ctot·ε = Ctot/(2(Ctot+1)) < ½`.
+Assembles `domain_le` (`schwartz_le_potOp_domain`) with the per-vector bound: the norm bridges
+(`norm_kineticOperator_schwartz`, `norm_potentialOperator_schwartz`, `norm_schwartzEquiv_eq`) reduce it to
+`coulomb_relbound_schwartz_real`, with `2m·(2m)⁻¹ = 1` closing the arithmetic. -/
+lemma coulomb_isRelBounded_core {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finset (Space 3 × ℝ)) :
+    ∃ a b : ℝ, 0 ≤ a ∧ a < 1 ∧ 0 ≤ b ∧
+      IsRelBounded (molecularSystem N m hm nuclei).kineticOperator
+        (molecularSystem N m hm nuclei).potentialOperator a b := by
+  have hkindom : (molecularSystem N m hm nuclei).kineticOperator.domain = schwartzSubmodule (3 * N) := by
+    rw [SpaceDQuantumSystem.kineticOperator_eq, LinearPMap.smul_domain]
+    exact momentumSqOperator_domain_eq
+  set Ctr : ℝ := ((∑ _i : Fin N, ∑ p ∈ nuclei, ENNReal.ofReal |p.2|)
+      + ∑ i : Fin N, ∑ _j ∈ Finset.univ.filter (i < ·), (1 : ENNReal)).toReal with hCtr
+  have hCtr0 : 0 ≤ Ctr := ENNReal.toReal_nonneg
+  have hεpos : 0 < 1 / (4 * m * (Ctr + 1)) := by positivity
+  obtain ⟨C, hC0, hbound⟩ := exists_coulomb_relbound_center hεpos
+  refine ⟨2 * m * Ctr * (1 / (4 * m * (Ctr + 1))), Ctr * C, by positivity, ?_, by positivity,
+    hkindom ▸ schwartz_le_potOp_domain m hm nuclei, ?_⟩
+  · rw [mul_one_div, div_lt_one (by positivity)]
+    nlinarith [hm, hCtr0]
+  · intro x
+    obtain ⟨u, hu⟩ : ∃ u : 𝓢(Space (3 * N), ℂ),
+        (schwartzEquiv u : SpaceDHilbertSpace (3 * N)) = x.1 :=
+      ⟨schwartzEquiv.symm ⟨x.1, by rw [← hkindom]; exact x.2⟩, by rw [schwartzEquiv.apply_symm_apply]⟩
+    have hmemK : (schwartzEquiv u : SpaceDHilbertSpace (3 * N)) ∈
+        (molecularSystem N m hm nuclei).kineticOperator.domain := by rw [hu]; exact x.2
+    have hAx : ‖(molecularSystem N m hm nuclei).kineticOperator x‖
+        = (2 * m)⁻¹ * (eLpNorm (fun y => (∑ i, momentumCLM i (momentumCLM i u)) y) 2 volume).toReal := by
+      rw [show x = ⟨(schwartzEquiv u : SpaceDHilbertSpace (3 * N)), hmemK⟩ from Subtype.ext hu.symm]
+      exact norm_kineticOperator_schwartz m hm nuclei u hmemK
+    have hxn : ‖(x : (molecularSystem N m hm nuclei).HS)‖ = (eLpNorm (fun y => u y) 2 volume).toReal := by
+      rw [← hu]; exact norm_schwartzEquiv_eq u
+    have hBx : ∀ h, ‖(molecularSystem N m hm nuclei).potentialOperator ⟨↑x, h⟩‖
+        = (eLpNorm (fun y => (↑(molecularCoulombPotential nuclei y) : ℂ) * u y) 2 volume).toReal := by
+      intro h
+      rw [show (⟨↑x, h⟩ : (molecularSystem N m hm nuclei).potentialOperator.domain)
+          = ⟨(schwartzEquiv u : SpaceDHilbertSpace (3 * N)), by rw [hu]; exact h⟩ from Subtype.ext hu.symm]
+      exact norm_potentialOperator_schwartz m hm nuclei u _
+    rw [hAx, hxn, hBx]
+    refine (coulomb_relbound_schwartz_real nuclei hεpos.le hC0 hbound u).trans (le_of_eq ?_)
+    have h2m : (2 * m) ≠ 0 := by positivity
+    field_simp
+    ring
