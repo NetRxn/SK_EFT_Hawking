@@ -2436,3 +2436,26 @@ lemma IsRelBounded.extend_to_closure {H : Type*} [NormedAddCommGroup H] [InnerPr
       (htend2.norm.const_mul a).add (htend1.norm.const_mul b)
     exact le_of_tendsto_of_tendsto' hz.norm hR_tend (fun n => hrel.bound (φ n))
   exact ⟨fun y hy => (key ⟨y, hy⟩).choose, fun x => (key x).choose_spec⟩
+
+open QuantumMechanics SpaceDHilbertSpace MeasureTheory in
+/-- **The molecular Coulomb potential is relatively bounded w.r.t. the CLOSED molecular kinetic
+operator, with `a < 1` (the `hrel` discharge).** Combines the Schwartz-core relative bound
+(`coulomb_isRelBounded_core`) with the closure-extension keystone (`IsRelBounded.extend_to_closure`):
+`kineticOperator` is closable (symmetric + dense-domain `momentumSqOperator`, scaled), and
+`potentialOperator = 𝓜(ofReal∘V)` is closed (self-adjoint, since `V` is real). This is exactly the
+`hrel` hypothesis of `molecularHamiltonian_essSelfAdjoint`, now a **proven theorem**. -/
+lemma coulomb_isRelBounded {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finset (Space 3 × ℝ)) :
+    ∃ a b : ℝ, 0 ≤ a ∧ a < 1 ∧ 0 ≤ b ∧
+      IsRelBounded (molecularSystem N m hm nuclei).kineticOperator.closure
+        (molecularSystem N m hm nuclei).potentialOperator a b := by
+  obtain ⟨a, b, ha0, ha1, hb0, hcore⟩ := coulomb_isRelBounded_core m hm nuclei
+  have hAcl : (molecularSystem N m hm nuclei).kineticOperator.IsClosable :=
+    (momentumSqOperator_isSymmetric.isClosable momentumSqOperator_hasDenseDomain).smul
+      (Complex.ofReal (2 * m)⁻¹)
+  have hBcl : (molecularSystem N m hm nuclei).potentialOperator.IsClosed := by
+    refine (mulOperator_isSelfAdjoint_ofReal
+      ((Complex.measurable_ofReal.comp (molecularCoulombPotential_measurable nuclei)).aestronglyMeasurable)
+      ?_).isClosed
+    funext x
+    exact Complex.conj_ofReal _
+  exact ⟨a, b, ha0, ha1, hb0, hcore.extend_to_closure hAcl hBcl ha0 hb0⟩
