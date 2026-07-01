@@ -1740,4 +1740,30 @@ lemma integral_block_kineticSq_le {N : ℕ} (iₑ : Fin N) (u : 𝓢(Space (3 * 
   have hle := integral_normSq_le_add _ _ hr hcross
   rwa [← fullKinetic_eq_block_add_rest iₑ u] at hle
 
+/-- **lintegral↔Bochner bridge for `‖g‖²`** (general Schwartz version of `lintegral_coulombSq_center_eq`):
+`∫⁻ (ofReal ‖g x‖)² = ENNReal.ofReal (∫ ‖g x‖²)`. Lets the Bochner-form kinetic partial≤full
+(`integral_block_kineticSq_le`) transfer into the lower-integral world where the params-Minkowski
+reassembly lives. -/
+lemma lintegral_ofReal_normSq_eq {d : ℕ} (g : 𝓢(Space d, ℂ)) :
+    ∫⁻ x : Space d, (ENNReal.ofReal ‖g x‖) ^ 2
+      = ENNReal.ofReal (∫ x : Space d, ‖g x‖ ^ 2) := by
+  rw [ofReal_integral_eq_lintegral_ofReal (integrable_normSq_schwartz_gen g)
+    (Filter.Eventually.of_forall fun x => by positivity)]
+  refine lintegral_congr fun x => ?_
+  rw [ENNReal.ofReal_pow (by positivity)]
+
+open QuantumMechanics in
+/-- **Kinetic partial ≤ full (lintegral form).** The lower-integral version of `integral_block_kineticSq_le`,
+obtained by transferring the Bochner bound through the `‖g‖²` lintegral↔Bochner bridge
+(`lintegral_ofReal_normSq_eq`) and `ENNReal.ofReal_le_ofReal`. This is the form consumed by the
+params-Minkowski reassembly (route B): it bounds `∫⁻_z Kᶠ⁻` (W3-91) by `∫⁻` of the full molecular kinetic. -/
+lemma lintegral_block_kineticSq_le {N : ℕ} (iₑ : Fin N) (u : 𝓢(Space (3 * N), ℂ)) :
+    ∫⁻ x : Space (3 * N), (ENNReal.ofReal ‖(∑ j : Fin 3, momentumCLM ⟨3 * iₑ.val + j.val, by
+          have := iₑ.isLt; have := j.isLt; omega⟩
+        (momentumCLM ⟨3 * iₑ.val + j.val, by have := iₑ.isLt; have := j.isLt; omega⟩ u)) x‖) ^ 2
+      ≤ ∫⁻ x : Space (3 * N), (ENNReal.ofReal ‖(∑ m : Fin (3 * N),
+          momentumCLM m (momentumCLM m u)) x‖) ^ 2 := by
+  rw [lintegral_ofReal_normSq_eq, lintegral_ofReal_normSq_eq]
+  exact ENNReal.ofReal_le_ofReal (integral_block_kineticSq_le iₑ u)
+
 end SKEFTHawking.DFT
