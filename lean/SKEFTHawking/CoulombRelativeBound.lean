@@ -2178,4 +2178,17 @@ lemma coulomb_relbound_schwartz {N : ℕ} (nuclei : Finset (Space 3 × ℝ)) {ε
     (add_le_add (coulomb_relbound_nuclear nuclei hε hC hbound u)
       (coulomb_relbound_ee hε hC hbound u))
 
+open QuantumMechanics SpaceDHilbertSpace in
+/-- **L² norm of a Schwartz inclusion = its `eLpNorm`.** For `G : 𝓢`, `‖schwartzIncl G‖ =
+(eLpNorm ⇑G 2 volume).toReal`. The bridge from the analysis-side `eLpNorm` bounds
+(`coulomb_relbound_schwartz`) to the operator-side Hilbert norms `‖potentialOperator ψ‖`,
+`‖kineticOperator ψ‖`, `‖ψ‖` on `SpaceDHilbertSpace = L²`. -/
+lemma norm_schwartzIncl_eq {d : ℕ} (G : 𝓢(Space d, ℂ)) :
+    ‖schwartzIncl G‖ = (eLpNorm (⇑G) 2 volume).toReal := by
+  rw [Lp.norm_def]
+  congr 1
+  refine eLpNorm_congr_ae ?_
+  rw [← SchwartzSubmodule.schwartzEquiv_apply_coe]
+  exact SchwartzSubmodule.schwartzEquiv_coe_ae G
+
 end SKEFTHawking.DFT
