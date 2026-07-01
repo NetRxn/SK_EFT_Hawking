@@ -1661,4 +1661,29 @@ lemma integral_normSq_le_add {d : ℕ} (a b : 𝓢(Space d, ℂ)) {r : ℝ} (hr 
   have hIb0 : 0 ≤ ∫ x : Space d, ‖b x‖ ^ 2 := integral_nonneg fun x => sq_nonneg _
   nlinarith [hIb0, hr]
 
+open QuantumMechanics in
+/-- **Full molecular kinetic = electron-`iₑ` block + the rest.** `∑_{m:Fin 3N} 𝐩ₘ²u = (∑_{j:Fin 3}
+𝐩_{3iₑ+j}²u) + (∑_{m∉block} 𝐩ₘ²u)`, splitting the full index set into electron `iₑ`'s three coordinates
+(reindexed to `Fin 3` via `electronCoordEquiv`) and the complement. -/
+lemma fullKinetic_eq_block_add_rest {N : ℕ} (iₑ : Fin N) (u : 𝓢(Space (3 * N), ℂ)) :
+    (∑ m : Fin (3 * N), momentumCLM m (momentumCLM m u))
+      = (∑ j : Fin 3, momentumCLM ⟨3 * iₑ.val + j.val, by
+            have := iₑ.isLt; have := j.isLt; omega⟩
+          (momentumCLM ⟨3 * iₑ.val + j.val, by have := iₑ.isLt; have := j.isLt; omega⟩ u))
+        + ∑ m : {m : Fin (3 * N) // ¬ electronCoord iₑ m},
+            momentumCLM m.1 (momentumCLM m.1 u) := by
+  rw [← Fintype.sum_subtype_add_sum_subtype (fun m => electronCoord iₑ m)
+    (fun m => momentumCLM m (momentumCLM m u))]
+  congr 1
+  refine Fintype.sum_equiv (electronCoordEquiv iₑ)
+    (fun m : {m // electronCoord iₑ m} => momentumCLM m.1 (momentumCLM m.1 u)) _ (fun m => ?_)
+  have hm : m.1 = (⟨3 * iₑ.val + (electronCoordEquiv iₑ m).val, by
+      have := iₑ.isLt; have := (electronCoordEquiv iₑ m).isLt; omega⟩ : Fin (3 * N)) := by
+    have h1 : m.1.val / 3 = iₑ.val := m.2
+    apply Fin.ext
+    show m.1.val = 3 * iₑ.val + (electronCoordEquiv iₑ m).val
+    have h2 : (electronCoordEquiv iₑ m).val = m.1.val % 3 := rfl
+    omega
+  simp only [hm]
+
 end SKEFTHawking.DFT
