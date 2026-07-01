@@ -1650,7 +1650,7 @@ lemma integral_normSq_le_add {d : ℕ} (a b : 𝓢(Space d, ℂ)) {r : ℝ} (hr 
     rw [SchwartzMap.add_apply, ← Complex.normSq_eq_norm_sq, ← Complex.normSq_eq_norm_sq,
       ← Complex.normSq_eq_norm_sq, Complex.normSq_add]
     simp only [Complex.mul_re, Complex.conj_re, Complex.conj_im, RCLike.re_to_complex,
-      Complex.mul_re, map_mul]
+      Complex.mul_re]
     ring
   rw [hexp, integral_add (show Integrable
       (fun x : Space d => ‖a x‖ ^ 2 + 2 * RCLike.re (starRingEnd ℂ (a x) * b x)) volume
@@ -1685,5 +1685,59 @@ lemma fullKinetic_eq_block_add_rest {N : ℕ} (iₑ : Fin N) (u : 𝓢(Space (3 
     have h2 : (electronCoordEquiv iₑ m).val = m.1.val % 3 := rfl
     omega
   simp only [hm]
+
+open QuantumMechanics in
+/-- **Bilinear cross-term expansion for two families of iterated momenta.** For any two finite families
+of directions `p : ι → Fin d`, `q : κ → Fin d`, the L² cross term of the two block kinetics
+`(∑ᵢ 𝐩_{pi}²u)` and `(∑ₖ 𝐩_{qk}²u)` equals the double sum of per-pair `∫‖𝐩_{qk}𝐩_{pi}u‖²` — a sum of
+**nonnegative reals**. Combines `SchwartzMap.sum_apply`, `map_sum` (conj), `Finset.sum_mul_sum`,
+`integral_finset_sum`, and the per-pair identity (W3-94). This makes the off-diagonal
+`⟪block-kinetic u, rest-kinetic u⟫` term `≥ 0`, forcing `‖block-kinetic u‖₂ ≤ ‖full-kinetic u‖₂`. -/
+lemma integral_cross_kinetic_eq {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype κ]
+    (p : ι → Fin d) (q : κ → Fin d) (u : 𝓢(Space d, ℂ)) :
+    ∫ x : Space d, starRingEnd ℂ ((∑ i, momentumCLM (p i) (momentumCLM (p i) u)) x)
+        * ((∑ k, momentumCLM (q k) (momentumCLM (q k) u)) x)
+      = ((∑ i, ∑ k, ∫ x : Space d,
+          ‖momentumCLM (q k) (momentumCLM (p i) u) x‖ ^ 2 : ℝ) : ℂ) := by
+  have hint : ∀ (i : ι) (k : κ), Integrable (fun x : Space d =>
+      starRingEnd ℂ (momentumCLM (p i) (momentumCLM (p i) u) x)
+        * momentumCLM (q k) (momentumCLM (q k) u) x) := by
+    intro i k
+    have h := (SchwartzMap.memLp (momentumCLM (p i) (momentumCLM (p i) u)) 2 volume).star.integrable_mul
+      (SchwartzMap.memLp (momentumCLM (q k) (momentumCLM (q k) u)) 2 volume)
+    simpa only [Pi.star_apply, ← starRingEnd_apply] using h
+  have hpt : (fun x : Space d =>
+        starRingEnd ℂ ((∑ i, momentumCLM (p i) (momentumCLM (p i) u)) x)
+          * ((∑ k, momentumCLM (q k) (momentumCLM (q k) u)) x))
+      = fun x => ∑ i, ∑ k, starRingEnd ℂ (momentumCLM (p i) (momentumCLM (p i) u) x)
+          * momentumCLM (q k) (momentumCLM (q k) u) x := by
+    funext x
+    rw [SchwartzMap.sum_apply, SchwartzMap.sum_apply, map_sum, Finset.sum_mul_sum]
+  rw [hpt, integral_finset_sum _ (fun i _ => integrable_finset_sum _ fun k _ => hint i k)]
+  push_cast
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [integral_finset_sum _ (fun k _ => hint i k)]
+  refine Finset.sum_congr rfl fun k _ => ?_
+  exact momentum_cross_term_eq (p i) (q k) u
+
+open QuantumMechanics in
+/-- **Kinetic partial ≤ full (Bochner L² form).** For electron `iₑ`, the L² norm of the block kinetic
+`∑ⱼ 𝐩_{3iₑ+j}²u` is bounded by that of the full molecular kinetic `∑ₘ 𝐩ₘ²u`. The off-diagonal cross
+term `⟪block u, rest u⟫` is a nonnegative real (`integral_cross_kinetic_eq`), so
+`‖block u‖₂² ≤ ‖block u + rest u‖₂² = ‖full u‖₂²` (`integral_normSq_le_add` + W3-97). -/
+lemma integral_block_kineticSq_le {N : ℕ} (iₑ : Fin N) (u : 𝓢(Space (3 * N), ℂ)) :
+    ∫ x : Space (3 * N), ‖(∑ j : Fin 3, momentumCLM ⟨3 * iₑ.val + j.val, by
+          have := iₑ.isLt; have := j.isLt; omega⟩
+        (momentumCLM ⟨3 * iₑ.val + j.val, by have := iₑ.isLt; have := j.isLt; omega⟩ u)) x‖ ^ 2
+      ≤ ∫ x : Space (3 * N), ‖(∑ m : Fin (3 * N), momentumCLM m (momentumCLM m u)) x‖ ^ 2 := by
+  have hcross := integral_cross_kinetic_eq
+    (fun j : Fin 3 => (⟨3 * iₑ.val + j.val, by have := iₑ.isLt; have := j.isLt; omega⟩ : Fin (3 * N)))
+    (fun m : {m : Fin (3 * N) // ¬ electronCoord iₑ m} => m.1) u
+  have hr : (0 : ℝ) ≤ ∑ j : Fin 3, ∑ m : {m : Fin (3 * N) // ¬ electronCoord iₑ m},
+      ∫ x : Space (3 * N), ‖momentumCLM m.1 (momentumCLM (⟨3 * iₑ.val + j.val, by
+          have := iₑ.isLt; have := j.isLt; omega⟩ : Fin (3 * N)) u) x‖ ^ 2 :=
+    Finset.sum_nonneg fun j _ => Finset.sum_nonneg fun m _ => integral_nonneg fun x => sq_nonneg _
+  have hle := integral_normSq_le_add _ _ hr hcross
+  rwa [← fullKinetic_eq_block_add_rest iₑ u] at hle
 
 end SKEFTHawking.DFT
