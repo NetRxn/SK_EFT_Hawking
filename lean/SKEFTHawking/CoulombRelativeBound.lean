@@ -2218,4 +2218,21 @@ lemma memLp_molecular_coulomb {N : ℕ} (nuclei : Finset (Space 3 × ℝ)) (u : 
       (SchwartzMap.memLp _ 2 volume).2, ENNReal.mul_lt_top ENNReal.ofReal_lt_top
       (SchwartzMap.memLp u 2 volume).2⟩
 
+open QuantumMechanics SpaceDHilbertSpace in
+/-- **Kinetic operator norm on a Schwartz vector.** `‖kineticOperator (schwartzEquiv u)‖ =
+(2m)⁻¹·(eLpNorm (∑ᵢ𝐩ᵢ²u) 2).toReal`, since `kineticOperator = ofReal(2m)⁻¹ • momentumSqOperator`
+(`smul_apply`), `momentumSqOperator (schwartzEquiv u) = schwartzIncl (∑ᵢ𝐩ᵢ²u)` (KESA
+`momentumSqOperator_apply_eq`), and `norm_schwartzIncl_eq`. The `‖A x‖` side of the Kato bound at the
+Schwartz core. -/
+lemma norm_kineticOperator_schwartz {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finset (Space 3 × ℝ))
+    (u : 𝓢(Space (3 * N), ℂ))
+    (hmem : (schwartzEquiv u : SpaceDHilbertSpace (3 * N)) ∈
+      (molecularSystem N m hm nuclei).kineticOperator.domain) :
+    ‖((molecularSystem N m hm nuclei).kineticOperator ⟨_, hmem⟩ : SpaceDHilbertSpace (3 * N))‖
+      = (2 * m)⁻¹ * (eLpNorm (fun x => (∑ i, momentumCLM i (momentumCLM i u)) x) 2 volume).toReal := by
+  show ‖(Complex.ofReal (2 * m)⁻¹ • momentumSqOperator) ⟨_, hmem⟩‖ = _
+  rw [LinearPMap.smul_apply, norm_smul, Complex.norm_real, Real.norm_of_nonneg (by positivity)]
+  congr 1
+  exact (congrArg norm (momentumSqOperator_apply_eq u hmem)).trans (norm_schwartzIncl_eq _)
+
 end SKEFTHawking.DFT
