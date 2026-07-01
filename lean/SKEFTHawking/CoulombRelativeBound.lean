@@ -1979,4 +1979,36 @@ lemma lintegral_ofReal_normSq_rpow_eq_eLpNorm {d : ℕ} (g : Space d → ℂ) :
   rw [ofReal_norm_eq_enorm, ← ENNReal.rpow_natCast (‖g x‖ₑ) 2]
   norm_num
 
+open QuantumMechanics in
+/-- **Per-term molecular Coulomb relative bound, `eLpNorm` form.** The `eLpNorm` (L² seminorm)
+version of `coulombTerm_relbound_enn`: multiplication by a single Coulomb factor
+`x ↦ ‖eᵢ − Rf(spectator)‖⁻¹` is `(ε, C)`-relatively bounded with respect to the full kinetic operator,
+`‖Vₜ·u‖₂ ≤ ε‖∑ₘ𝐩ₘ²u‖₂ + C‖u‖₂`. Obtained by rewriting all three `eLpNorm`s to `(1/2)`-power lower
+integrals (`lintegral_ofReal_normSq_rpow_eq_eLpNorm`), reducing the multiplied factor's norm
+`‖(r:ℝ)•u x‖ = r‖u x‖` (`norm_smul`, `r ≥ 0`), and applying `coulombTerm_relbound_enn`. This is the
+per-term summand of the finite-sum molecular potential bound. -/
+lemma coulombTerm_relbound_eLpNorm {N : ℕ} (iₑ : Fin N)
+    (Rf : ({k // ¬ electronCoord iₑ k} → ℝ) → Space 3) (hRf : Measurable Rf)
+    {ε C : ℝ} (hε : 0 ≤ ε) (hC : 0 ≤ C)
+    (hbound : ∀ (v : 𝓢(Space 3, ℂ)) (R : Space 3),
+      Real.sqrt (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2)
+        ≤ ε * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i v)) y‖ ^ 2)
+          + C * Real.sqrt (∫ y : Space 3, ‖v y‖ ^ 2))
+    (u : 𝓢(Space (3 * N), ℂ)) :
+    eLpNorm (fun x => (‖electronPos x iₑ - Rf (molecularSplitMap iₑ x).2‖⁻¹ : ℝ) • u x) 2 volume
+      ≤ ENNReal.ofReal ε * eLpNorm (fun x => (∑ m, momentumCLM m (momentumCLM m u)) x) 2 volume
+        + ENNReal.ofReal C * eLpNorm (fun x => u x) 2 volume := by
+  rw [← lintegral_ofReal_normSq_rpow_eq_eLpNorm
+        (fun x => (‖electronPos x iₑ - Rf (molecularSplitMap iₑ x).2‖⁻¹ : ℝ) • u x),
+      ← lintegral_ofReal_normSq_rpow_eq_eLpNorm (fun x => (∑ m, momentumCLM m (momentumCLM m u)) x),
+      ← lintegral_ofReal_normSq_rpow_eq_eLpNorm (fun x => u x)]
+  have hL : (fun x : Space (3 * N) => (ENNReal.ofReal
+        ‖(‖electronPos x iₑ - Rf (molecularSplitMap iₑ x).2‖⁻¹ : ℝ) • u x‖) ^ 2)
+      = fun x => (ENNReal.ofReal
+        (‖electronPos x iₑ - Rf (molecularSplitMap iₑ x).2‖⁻¹ * ‖u x‖)) ^ 2 := by
+    funext x
+    rw [Complex.real_smul, norm_mul, Complex.norm_real, Real.norm_of_nonneg (by positivity)]
+  rw [hL]
+  exact coulombTerm_relbound_enn iₑ Rf hRf hε hC hbound u
+
 end SKEFTHawking.DFT
