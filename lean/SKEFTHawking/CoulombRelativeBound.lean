@@ -2254,4 +2254,25 @@ lemma norm_potentialOperator_schwartz {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei :
   erw [h₁]
   rw [Pi.smul_apply', smul_eq_mul, Function.comp_apply, h₂]
 
+open QuantumMechanics SpaceDHilbertSpace in
+/-- **The Schwartz core lies in the potential operator's domain.** `schwartzSubmodule ≤
+potentialOperator.domain` — for `ψ = schwartzIncl u`, `V•ψ =ᵐ (↑V)·u ∈ L²` (`memLp_molecular_coulomb`,
+transported along `schwartzEquiv_coe_ae` via `memHS_of_ae`). This is the `domain_le` field of the
+Schwartz-core `IsRelBounded` (and, since `kineticOperator.domain = schwartzSubmodule`, exactly
+`kineticOperator.domain ≤ potentialOperator.domain`). -/
+lemma schwartz_le_potOp_domain {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finset (Space 3 × ℝ)) :
+    schwartzSubmodule (3 * N) ≤ (molecularSystem N m hm nuclei).potentialOperator.domain := by
+  intro ψ hψ
+  obtain ⟨u, rfl⟩ := hψ
+  rw [SpaceDQuantumSystem.potentialOperator_eq]
+  refine mem_mulOperator_domain_iff.mpr (memHS_of_ae
+    (fun x => (↑(molecularCoulombPotential nuclei x) : ℂ) * u x)
+    (memLp_molecular_coulomb nuclei u) ?_)
+  filter_upwards [SchwartzSubmodule.schwartzEquiv_coe_ae u] with x hx
+  simp only [SchwartzSubmodule.schwartzEquiv_apply_coe] at hx
+  show (↑(molecularCoulombPotential nuclei x) : ℂ) * u x
+      = (↑(molecularCoulombPotential nuclei x) : ℂ)
+        * ((schwartzIncl u : SpaceDHilbertSpace (3 * N)) : Space (3 * N) → ℂ) x
+  rw [hx]
+
 end SKEFTHawking.DFT
