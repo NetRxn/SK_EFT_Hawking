@@ -1592,4 +1592,15 @@ lemma momentumCLM_comm {d : ℕ} (i j : Fin d) (f : 𝓢(Space d, ℂ)) :
     momentumCLM i (momentumCLM j f) = momentumCLM j (momentumCLM i f) := by
   rw [← ContinuousLinearMap.comp_apply, momentum_comp_commute, ContinuousLinearMap.comp_apply]
 
+open QuantumMechanics SpaceDHilbertSpace SchwartzSubmodule in
+/-- **Momentum is self-adjoint at the Schwartz/L² level:** `∫ conj(𝐩ᵢf)·g = ∫ conj(f)·𝐩ᵢg`. Extracted from
+PhysLib's `momentumOperator_isSymmetric` (the Hilbert-space symmetry) via `schwartzEquiv_inner`
+(`⟪Sf,Sg⟫ = ∫ conj(f)·g`). The integration-by-parts fact at the heart of the kinetic-positivity cross-term. -/
+lemma momentumCLM_self_adjoint {d : ℕ} (i : Fin d) (f g : 𝓢(Space d, ℂ)) :
+    ∫ x : Space d, starRingEnd ℂ (momentumCLM i f x) * g x
+      = ∫ x : Space d, starRingEnd ℂ (f x) * momentumCLM i g x := by
+  rw [← schwartzEquiv_inner (momentumCLM i f) g, ← schwartzEquiv_inner f (momentumCLM i g)]
+  have key := momentumOperator_isSymmetric i (schwartzEquiv f) (schwartzEquiv g)
+  simpa only [momentumOperator_apply, schwartzEquiv.symm_apply_apply, Submodule.coe_inner] using key
+
 end SKEFTHawking.DFT
