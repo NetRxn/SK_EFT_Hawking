@@ -2037,4 +2037,84 @@ lemma coulombTerm_relbound_eLpNorm_smul {N : ℕ} (iₑ : Fin N)
   gcongr
   exact coulombTerm_relbound_eLpNorm iₑ Rf hRf hε hC hbound u
 
+open QuantumMechanics in
+/-- **Nuclear-attraction part of the molecular Coulomb relative bound (`eLpNorm`).** The sum of all
+electron–nucleus terms `∑ᵢₖ (−Zₖ)·‖eᵢ−Rₖ‖⁻¹·u` is `(∑ᵢₖ|Zₖ|)`-times-`(ε,C)` relatively bounded. Nested
+`eLpNorm_sum_le` over electrons `i` and nuclei `p`, each term bounded by the scaled per-term bound
+(`coulombTerm_relbound_eLpNorm_smul` with `Rf = const p.1`, `c = −p.2`), then the coefficient sum factors. -/
+lemma coulomb_relbound_nuclear {N : ℕ} (nuclei : Finset (Space 3 × ℝ)) {ε C : ℝ} (hε : 0 ≤ ε) (hC : 0 ≤ C)
+    (hbound : ∀ (v : 𝓢(Space 3, ℂ)) (R : Space 3),
+      Real.sqrt (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2)
+        ≤ ε * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i v)) y‖ ^ 2)
+          + C * Real.sqrt (∫ y : Space 3, ‖v y‖ ^ 2))
+    (u : 𝓢(Space (3 * N), ℂ)) :
+    eLpNorm (fun x => ∑ i : Fin N, ∑ p ∈ nuclei,
+        (-(p.2 : ℂ)) • ((‖electronPos x i - p.1‖⁻¹ : ℝ) • u x)) 2 volume
+      ≤ (∑ _i : Fin N, ∑ p ∈ nuclei, ENNReal.ofReal |p.2|)
+        * (ENNReal.ofReal ε * eLpNorm (fun x => (∑ m, momentumCLM m (momentumCLM m u)) x) 2 volume
+          + ENNReal.ofReal C * eLpNorm (fun x => u x) 2 volume) := by
+  have hmeas : ∀ (i : Fin N) (p : Space 3 × ℝ), AEStronglyMeasurable
+      (fun x : Space (3 * N) => (-(p.2 : ℂ)) • ((‖electronPos x i - p.1‖⁻¹ : ℝ) • u x)) volume := by
+    intro i p
+    have heq : (fun x : Space (3 * N) => (-(p.2 : ℂ)) • ((‖electronPos x i - p.1‖⁻¹ : ℝ) • u x))
+        = fun x => (-(p.2 : ℂ)) * ((↑(‖electronPos x i - p.1‖⁻¹) : ℂ) * u x) := by
+      funext x; rw [smul_eq_mul, Complex.real_smul]
+    rw [heq]
+    exact (((Complex.measurable_ofReal.comp (coulombTerm_measurable i p.1)).mul
+      (SchwartzMap.continuous u).measurable).const_mul _).aestronglyMeasurable
+  have key : (fun x : Space (3 * N) => ∑ i : Fin N, ∑ p ∈ nuclei,
+        (-(p.2 : ℂ)) • ((‖electronPos x i - p.1‖⁻¹ : ℝ) • u x))
+      = ∑ i : Fin N, ∑ p ∈ nuclei,
+        (fun x : Space (3 * N) => (-(p.2 : ℂ)) • ((‖electronPos x i - p.1‖⁻¹ : ℝ) • u x)) := by
+    funext x; simp only [Finset.sum_apply]
+  rw [key, Finset.sum_mul]
+  refine le_trans (eLpNorm_sum_le (fun i _ => Finset.aestronglyMeasurable_sum _
+    (fun p _ => hmeas i p)) one_le_two) (Finset.sum_le_sum fun i _ => ?_)
+  rw [Finset.sum_mul]
+  refine le_trans (eLpNorm_sum_le (fun p _ => hmeas i p) one_le_two) (Finset.sum_le_sum fun p _ => ?_)
+  have h := coulombTerm_relbound_eLpNorm_smul i (fun _ => p.1) measurable_const (-p.2) hε hC hbound u
+  rwa [abs_neg, Complex.ofReal_neg] at h
+
+open QuantumMechanics in
+/-- **Electron–repulsion part of the molecular Coulomb relative bound (`eLpNorm`).** The sum of all
+electron–electron terms `∑_{i<j} ‖eᵢ−eⱼ‖⁻¹·u` is `(#pairs)`-times-`(ε,C)` relatively bounded. Same nested
+`eLpNorm_sum_le` structure as the nuclear part, but each term uses the spectator center
+`Rf = otherElectronPos i j` (electron `j`'s position, fixed within electron `i`'s fiber), rewritten to the
+literal `‖eᵢ−eⱼ‖⁻¹` via `otherElectronPos_eq`; the coefficient is `1`. -/
+lemma coulomb_relbound_ee {N : ℕ} {ε C : ℝ} (hε : 0 ≤ ε) (hC : 0 ≤ C)
+    (hbound : ∀ (v : 𝓢(Space 3, ℂ)) (R : Space 3),
+      Real.sqrt (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2)
+        ≤ ε * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i v)) y‖ ^ 2)
+          + C * Real.sqrt (∫ y : Space 3, ‖v y‖ ^ 2))
+    (u : 𝓢(Space (3 * N), ℂ)) :
+    eLpNorm (fun x => ∑ i : Fin N, ∑ j ∈ Finset.univ.filter (i < ·),
+        (1 : ℂ) • ((‖electronPos x i - electronPos x j‖⁻¹ : ℝ) • u x)) 2 volume
+      ≤ (∑ i : Fin N, ∑ _j ∈ Finset.univ.filter (i < ·), (1 : ENNReal))
+        * (ENNReal.ofReal ε * eLpNorm (fun x => (∑ m, momentumCLM m (momentumCLM m u)) x) 2 volume
+          + ENNReal.ofReal C * eLpNorm (fun x => u x) 2 volume) := by
+  have hmeas : ∀ (i j : Fin N), AEStronglyMeasurable
+      (fun x : Space (3 * N) => (1 : ℂ) • ((‖electronPos x i - electronPos x j‖⁻¹ : ℝ) • u x)) volume := by
+    intro i j
+    have heq : (fun x : Space (3 * N) => (1 : ℂ) • ((‖electronPos x i - electronPos x j‖⁻¹ : ℝ) • u x))
+        = fun x => (1 : ℂ) * ((↑(‖electronPos x i - electronPos x j‖⁻¹) : ℂ) * u x) := by
+      funext x; rw [smul_eq_mul, Complex.real_smul]
+    rw [heq]
+    exact (((Complex.measurable_ofReal.comp (coulombTermRel_measurable i j)).mul
+      (SchwartzMap.continuous u).measurable).const_mul _).aestronglyMeasurable
+  have key : (fun x : Space (3 * N) => ∑ i : Fin N, ∑ j ∈ Finset.univ.filter (i < ·),
+        (1 : ℂ) • ((‖electronPos x i - electronPos x j‖⁻¹ : ℝ) • u x))
+      = ∑ i : Fin N, ∑ j ∈ Finset.univ.filter (i < ·),
+        (fun x : Space (3 * N) => (1 : ℂ) • ((‖electronPos x i - electronPos x j‖⁻¹ : ℝ) • u x)) := by
+    funext x; simp only [Finset.sum_apply]
+  rw [key, Finset.sum_mul]
+  refine le_trans (eLpNorm_sum_le (fun i _ => Finset.aestronglyMeasurable_sum _
+    (fun j _ => hmeas i j)) one_le_two) (Finset.sum_le_sum fun i _ => ?_)
+  rw [Finset.sum_mul]
+  refine le_trans (eLpNorm_sum_le (fun j _ => hmeas i j) one_le_two) (Finset.sum_le_sum fun j hj => ?_)
+  have hij : i ≠ j := ne_of_lt (Finset.mem_filter.mp hj).2
+  have h := coulombTerm_relbound_eLpNorm_smul i (otherElectronPos i j hij)
+    (measurable_otherElectronPos i j hij) 1 hε hC hbound u
+  simp_rw [otherElectronPos_eq i j hij] at h
+  simpa only [Complex.ofReal_one, abs_one, ENNReal.ofReal_one] using h
+
 end SKEFTHawking.DFT
