@@ -1117,6 +1117,33 @@ lemma molecular_coulombTerm_lintegral {N : ℕ} (i : Fin N) (R : Space 3)
   rw [hpt]
   exact molecularSplit_lintegral i _ hG
 
+/-- **Per-term molecular Coulomb L² identity with a spectator-dependent center** (generalizes
+`molecular_coulombTerm_lintegral` from a fixed `R : Space 3` to a center `Rf` that is a measurable
+function of the spectator coordinates). Needed for the electron–electron term `‖eᵢ − eⱼ‖⁻¹`, whose
+center `eⱼ` is fixed *within* electron-`i`'s fiber (it is part of the spectator `z`), unlike the nuclear
+term's constant center. The nuclear term is the special case `Rf = fun _ => R`. -/
+lemma molecular_coulombTerm_lintegral_var {N : ℕ} (i : Fin N)
+    (Rf : ({k // ¬ electronCoord i k} → ℝ) → Space 3) (hRf : Measurable Rf)
+    {u : Space (3 * N) → ℂ} (hu : Measurable u) :
+    ∫⁻ x, (ENNReal.ofReal (‖electronPos x i - Rf (molecularSplitMap i x).2‖⁻¹ * ‖u x‖)) ^ 2
+        ∂(volume : MeasureTheory.Measure (Space (3 * N)))
+      = ∫⁻ z, ∫⁻ y, (ENNReal.ofReal (‖y - Rf z‖⁻¹ * ‖u ((molecularSplitEquiv i).symm (y, z))‖)) ^ 2
+          ∂(volume : MeasureTheory.Measure (Space 3))
+          ∂(volume : MeasureTheory.Measure ({k // ¬ electronCoord i k} → ℝ)) := by
+  have hG : Measurable (fun p : Space 3 × ({k // ¬ electronCoord i k} → ℝ) =>
+      (ENNReal.ofReal (‖p.1 - Rf p.2‖⁻¹ * ‖u ((molecularSplitEquiv i).symm p)‖)) ^ 2) := by
+    refine (ENNReal.measurable_ofReal.comp (Measurable.mul ?_ ?_)).pow_const 2
+    · exact (measurable_fst.sub (hRf.comp measurable_snd)).norm.inv
+    · exact (hu.comp (molecularSplitEquiv i).symm.measurable).norm
+  have hpt : (fun x => (ENNReal.ofReal
+        (‖electronPos x i - Rf (molecularSplitMap i x).2‖⁻¹ * ‖u x‖)) ^ 2)
+      = (fun x => (ENNReal.ofReal (‖(molecularSplitMap i x).1 - Rf (molecularSplitMap i x).2‖⁻¹
+          * ‖u ((molecularSplitEquiv i).symm (molecularSplitMap i x))‖)) ^ 2) := by
+    funext x
+    rw [molecularSplitMap_fst, ← coe_molecularSplitEquiv, MeasurableEquiv.symm_apply_apply]
+  rw [hpt]
+  exact molecularSplit_lintegral i _ hG
+
 /-- **L² integral triangle inequality (params-Minkowski).** For nonnegative `F, G ∈ L²(μ)`,
 `√(∫(F+G)²) ≤ √(∫F²) + √(∫G²)`. Proven via the algebraic expansion plus the integral Cauchy–Schwarz
 (`integral_mul_le_Lp_mul_Lq_of_nonneg`, `p = q = 2`). This is the reassembly step of the molecular lift: the
@@ -1851,17 +1878,22 @@ lemma lintegral_z_fiberKineticSq_le {N : ℕ} (iₑ : Fin N) (u : 𝓢(Space (3 
 open QuantumMechanics in
 /-- **Per-term molecular Coulomb relative bound (ENNReal `(1/2)`-power form).** For every `ε > 0`'s
 uniform fiber constant `C` (via `hbound = exists_coulomb_relbound_center`), a single molecular Coulomb
-term centered at `R` (nuclear: `R` = nucleus; e-e: `R` = electron-`j` position) satisfies
+term whose center `Rf` is a measurable function of the spectator coordinates (nuclear: `Rf = const`
+nucleus; e-e: `Rf` = electron-`j` position, fixed within electron-`iₑ`'s fiber) satisfies
 `‖V·u‖₂ ≤ ε‖∑ₘ𝐩ₘ²u‖₂ + C‖u‖₂` in the lower-integral `(1/2)`-power form. Assembles the fiber Fubini
-(W3-53), the fiberwise `(A+B)²` bound (W3-103), lintegral Minkowski (`ENNReal.lintegral_Lp_add_le`),
-the constant-pull (W3-104), the kinetic partial≤full collapse (W3-106), and the `L²` Fubini (W3-87). -/
-lemma coulombTerm_relbound_enn {N : ℕ} (iₑ : Fin N) (R : Space 3) {ε C : ℝ} (hε : 0 ≤ ε) (hC : 0 ≤ C)
+(W3-108), the fiberwise `(A+B)²` bound (W3-103, at fixed center `Rf z`), lintegral Minkowski
+(`ENNReal.lintegral_Lp_add_le`), the constant-pull (W3-104), the kinetic partial≤full collapse (W3-106),
+and the `L²` Fubini (W3-87). -/
+lemma coulombTerm_relbound_enn {N : ℕ} (iₑ : Fin N)
+    (Rf : ({k // ¬ electronCoord iₑ k} → ℝ) → Space 3) (hRf : Measurable Rf)
+    {ε C : ℝ} (hε : 0 ≤ ε) (hC : 0 ≤ C)
     (hbound : ∀ (v : 𝓢(Space 3, ℂ)) (R : Space 3),
       Real.sqrt (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2)
         ≤ ε * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i v)) y‖ ^ 2)
           + C * Real.sqrt (∫ y : Space 3, ‖v y‖ ^ 2))
     (u : 𝓢(Space (3 * N), ℂ)) :
-    (∫⁻ x : Space (3 * N), (ENNReal.ofReal (‖electronPos x iₑ - R‖⁻¹ * ‖u x‖)) ^ 2) ^ (1 / 2 : ℝ)
+    (∫⁻ x : Space (3 * N),
+        (ENNReal.ofReal (‖electronPos x iₑ - Rf (molecularSplitMap iₑ x).2‖⁻¹ * ‖u x‖)) ^ 2) ^ (1 / 2 : ℝ)
       ≤ ENNReal.ofReal ε * (∫⁻ x : Space (3 * N),
             (ENNReal.ofReal ‖(∑ m, momentumCLM m (momentumCLM m u)) x‖) ^ 2) ^ (1 / 2 : ℝ)
         + ENNReal.ofReal C * (∫⁻ x : Space (3 * N), (ENNReal.ofReal ‖u x‖) ^ 2) ^ (1 / 2 : ℝ) := by
@@ -1877,15 +1909,16 @@ lemma coulombTerm_relbound_enn {N : ℕ} (iₑ : Fin N) (R : Space 3) {ε C : �
   have hMm : Measurable M := measurable_fiber_lintegral iₑ u
   have hAm : AEMeasurable (fun z => ENNReal.ofReal ε * (K z) ^ (1 / 2 : ℝ)) := by fun_prop
   have hBm : AEMeasurable (fun z => ENNReal.ofReal C * (M z) ^ (1 / 2 : ℝ)) := by fun_prop
-  calc (∫⁻ x : Space (3 * N), (ENNReal.ofReal (‖electronPos x iₑ - R‖⁻¹ * ‖u x‖)) ^ 2) ^ (1 / 2 : ℝ)
+  calc (∫⁻ x : Space (3 * N),
+          (ENNReal.ofReal (‖electronPos x iₑ - Rf (molecularSplitMap iₑ x).2‖⁻¹ * ‖u x‖)) ^ 2) ^ (1 / 2 : ℝ)
       = (∫⁻ z, ∫⁻ y : Space 3,
-          (ENNReal.ofReal (‖y - R‖⁻¹ * ‖fiberSchwartz iₑ z u y‖)) ^ 2) ^ (1 / 2 : ℝ) := by
-        rw [molecular_coulombTerm_lintegral iₑ R (SchwartzMap.continuous u).measurable]
+          (ENNReal.ofReal (‖y - Rf z‖⁻¹ * ‖fiberSchwartz iₑ z u y‖)) ^ 2) ^ (1 / 2 : ℝ) := by
+        rw [molecular_coulombTerm_lintegral_var iₑ Rf hRf (SchwartzMap.continuous u).measurable]
         simp_rw [← fiberSchwartz_apply]
     _ ≤ (∫⁻ z, (ENNReal.ofReal ε * (K z) ^ (1 / 2 : ℝ)
           + ENNReal.ofReal C * (M z) ^ (1 / 2 : ℝ)) ^ 2) ^ (1 / 2 : ℝ) := by
         refine ENNReal.rpow_le_rpow (lintegral_mono fun z => ?_) (by norm_num)
-        rw [hK, hM]; exact coulombSq_fiber_le iₑ R hε hC hbound z u
+        rw [hK, hM]; exact coulombSq_fiber_le iₑ (Rf z) hε hC hbound z u
     _ ≤ (∫⁻ z, (ENNReal.ofReal ε * (K z) ^ (1 / 2 : ℝ)) ^ 2) ^ (1 / 2 : ℝ)
           + (∫⁻ z, (ENNReal.ofReal C * (M z) ^ (1 / 2 : ℝ)) ^ 2) ^ (1 / 2 : ℝ) := by
         have h := ENNReal.lintegral_Lp_add_le (μ := volume)
@@ -1906,5 +1939,31 @@ lemma coulombTerm_relbound_enn {N : ℕ} (iₑ : Fin N) (R : Space 3) {ε C : �
         · simp only [hM]
           simp_rw [fiberSchwartz_apply]
           rw [← molecular_normSq_lintegral iₑ (SchwartzMap.continuous u).measurable]
+
+/-- The **other electron's position as a spectator-coordinate function.** For `j ≠ i`, electron `j`'s
+three coordinates all lie outside electron `i`'s block, so `electronPos x j` depends only on the
+spectator part `(molecularSplitMap i x).2`. This packages that dependence (`otherElectronPos_eq`), so the
+electron–electron Coulomb term `‖eᵢ − eⱼ‖⁻¹` fits the spectator-dependent-center form of
+`coulombTerm_relbound_enn` (its center is fixed *within* electron `i`'s fiber). -/
+def otherElectronPos {N : ℕ} (i j : Fin N) (hij : i ≠ j) :
+    ({k // ¬ electronCoord i k} → ℝ) → Space 3 :=
+  fun spec => ⟨fun a : Fin 3 => spec ⟨⟨3 * j.val + a.val, by have := j.isLt; have := a.isLt; omega⟩, by
+    show ¬ (3 * j.val + a.val) / 3 = i.val
+    have hji : (3 * j.val + a.val) / 3 = j.val := by have := a.isLt; omega
+    rw [hji]; exact fun h => hij (Fin.ext h.symm)⟩⟩
+
+/-- **`otherElectronPos` recovers electron `j`'s position:** `otherElectronPos i j hij (spectator of x) =
+electronPos x j` (for `j ≠ i`). The e-e term `‖electronPos x i − electronPos x j‖⁻¹` is therefore exactly
+`‖electronPos x i − Rf ((molecularSplitMap i x).2)‖⁻¹` with `Rf = otherElectronPos i j hij`. -/
+lemma otherElectronPos_eq {N : ℕ} (i j : Fin N) (hij : i ≠ j) (x : Space (3 * N)) :
+    otherElectronPos i j hij (molecularSplitMap i x).2 = electronPos x j := by
+  rw [molecularSplitMap_snd]; rfl
+
+/-- **`otherElectronPos` is measurable** (each output coordinate is a coordinate projection of the
+spectator input). Supplies the `hRf` hypothesis for the e-e instance of `coulombTerm_relbound_enn`. -/
+lemma measurable_otherElectronPos {N : ℕ} (i j : Fin N) (hij : i ≠ j) :
+    Measurable (otherElectronPos i j hij) :=
+  Space.mk_continuous.measurable.comp
+    (measurable_pi_lambda _ (fun _ => measurable_pi_apply _))
 
 end SKEFTHawking.DFT
