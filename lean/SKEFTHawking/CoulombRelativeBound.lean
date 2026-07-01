@@ -2191,4 +2191,11 @@ lemma norm_schwartzIncl_eq {d : ℕ} (G : 𝓢(Space d, ℂ)) :
   rw [← SchwartzSubmodule.schwartzEquiv_apply_coe]
   exact SchwartzSubmodule.schwartzEquiv_coe_ae G
 
+open QuantumMechanics SpaceDHilbertSpace in
+/-- **L² norm of a Schwartz vector = its `eLpNorm`.** `‖(schwartzEquiv u : L²)‖ = (eLpNorm ⇑u 2).toReal`
+— the `‖x‖` factor of the Kato bound at the Schwartz core, via `norm_schwartzIncl_eq`. -/
+lemma norm_schwartzEquiv_eq {d : ℕ} (u : 𝓢(Space d, ℂ)) :
+    ‖(schwartzEquiv u : SpaceDHilbertSpace d)‖ = (eLpNorm (⇑u) 2 volume).toReal := by
+  rw [SchwartzSubmodule.schwartzEquiv_apply_coe, norm_schwartzIncl_eq]
+
 end SKEFTHawking.DFT
