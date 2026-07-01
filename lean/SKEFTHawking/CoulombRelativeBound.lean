@@ -1603,4 +1603,25 @@ lemma momentumCLM_self_adjoint {d : ℕ} (i : Fin d) (f g : 𝓢(Space d, ℂ)) 
   have key := momentumOperator_isSymmetric i (schwartzEquiv f) (schwartzEquiv g)
   simpa only [momentumOperator_apply, schwartzEquiv.symm_apply_apply, Submodule.coe_inner] using key
 
+open QuantumMechanics in
+/-- **Kinetic cross-term is a nonnegative real:** `∫ conj(𝐩ⱼ²u)·𝐩ₘ²u = ↑(∫ ‖𝐩ₘ𝐩ⱼu‖²)`. Via momentum
+self-adjointness (W3-93, twice) + commutation (W3-92): move both momenta onto `u`. This makes the
+off-diagonal `⟨block-kinetic u, rest-kinetic u⟩` terms `≥ 0`, which is what forces
+`‖block-kinetic u‖₂ ≤ ‖full-kinetic u‖₂`. -/
+lemma momentum_cross_term_eq {d : ℕ} (j m : Fin d) (u : 𝓢(Space d, ℂ)) :
+    ∫ x : Space d, starRingEnd ℂ (momentumCLM j (momentumCLM j u) x)
+        * momentumCLM m (momentumCLM m u) x
+      = ((∫ x : Space d, ‖momentumCLM m (momentumCLM j u) x‖ ^ 2 : ℝ) : ℂ) := by
+  rw [momentumCLM_self_adjoint j (momentumCLM j u) (momentumCLM m (momentumCLM m u))]
+  have hc : momentumCLM j (momentumCLM m (momentumCLM m u))
+      = momentumCLM m (momentumCLM m (momentumCLM j u)) := by
+    rw [momentumCLM_comm j m (momentumCLM m u), momentumCLM_comm j m u]
+  simp_rw [fun x => congrFun (congrArg DFunLike.coe hc) x]
+  rw [← momentumCLM_self_adjoint m (momentumCLM j u) (momentumCLM m (momentumCLM j u)),
+    ← integral_complex_ofReal]
+  refine integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
+  simp only [mul_comm ((starRingEnd ℂ) _), Complex.mul_conj]
+  norm_cast
+  exact Complex.normSq_eq_norm_sq _
+
 end SKEFTHawking.DFT
