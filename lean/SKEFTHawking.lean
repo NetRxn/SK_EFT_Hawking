@@ -3638,6 +3638,7 @@ import SKEFTHawking.LevyLiebFunctional
 import SKEFTHawking.LindbladGenerator
 import SKEFTHawking.GKSLStructure
 import SKEFTHawking.LindbladSemigroup
+import SKEFTHawking.LindbladCPSemigroup
 import SKEFTHawking.DampedTwoLevel
 import SKEFTHawking.KineticEssentialSelfAdjoint
 import SKEFTHawking.CoulombRelativeBound

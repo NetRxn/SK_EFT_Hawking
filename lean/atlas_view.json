@@ -59554,6 +59554,15 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.OpenSystems.driftMatrix.eq_1",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.OpenSystems.gksl_canonical_form",
       "module": "SKEFTHawking.GKSLStructure",
       "atlas_kind": "TRUE",
@@ -59572,6 +59581,51 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.OpenSystems.isCompletelyPositive_lindbladPropagatorAction",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.isCompletelyPositive_of_tendsto_choi",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.isCompletelyPositive_pow",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.isCompletelyPositive_toLin_exp",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.isCompletelyPositive_toLin_exp_drift",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.OpenSystems.lindbladAnticommPart.eq_1",
       "module": "SKEFTHawking.LindbladGenerator",
       "atlas_kind": "TRUE",
@@ -59587,6 +59641,15 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindbladDrift_eq",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
       "frontier_impact": 1
     },
     {
@@ -59596,7 +59659,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.OpenSystems.lindbladHamPart.eq_1",
@@ -59614,7 +59677,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.OpenSystems.lindbladJump.eq_1",
@@ -59632,6 +59695,15 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindbladLiouvillian.eq_1",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
       "frontier_impact": 1
     },
     {
@@ -59641,7 +59713,16 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindbladPropagatorAction.eq_1",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.OpenSystems.lindblad_generator_CP",
@@ -59650,7 +59731,16 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.lindblad_generator_traceZero",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.OpenSystems.lindblad_propagator_zero",
@@ -59671,6 +59761,87 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.OpenSystems.mulRight_eq_transpose_conj",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.norm_exp_le",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.norm_exp_mul_exp_sub_exp_add_le",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.norm_exp_sub_one_le",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.norm_exp_sub_one_sub_self_le",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.norm_exp_sub_sum_le",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.norm_pow_sub_pow_le",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.posSemidef_of_tendsto",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.pow_sub_pow_eq_telescope",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.OpenSystems.sigmaMinus.eq_1",
       "module": "SKEFTHawking.DampedTwoLevel",
       "atlas_kind": "TRUE",
@@ -59678,6 +59849,60 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.tendsto_trotter",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.toLin_exp_toMatrix_mulLeft",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.toLin_exp_toMatrix_mulRight",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.toLin_pow",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.traceDist_lindblad_monotone",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.OpenSystems.trace_lindbladPropagatorAction",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.PenroseSingularity.correctness_push_biconditional_under_applicable",
@@ -65683,6 +65908,15 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.QuantumNetwork.IsKrausChannel.eq_1",
+      "module": "SKEFTHawking.LindbladCPSemigroup",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.QuantumNetwork.KroneckerOpNorm.col_action_norm_sq_le",
       "module": "SKEFTHawking.QuantumNetwork.KroneckerOpNorm",
       "atlas_kind": "TRUE",
@@ -69631,7 +69865,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.krausMap_add",
@@ -73915,7 +74149,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 2
+      "frontier_impact": 3
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceDist_le_sqrt_one_sub_sqrtFidelity_sq",
@@ -131776,7 +132010,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 14540,
+    "theorem_nodes": 14566,
     "unknown_nodes": 33,
     "implies_edges": 35,
     "apex_nodes": 4,
@@ -131788,7 +132022,7 @@
     ],
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 210,
-      "TRUE:PROVED": 14330,
+      "TRUE:PROVED": 14356,
       "UNKNOWN:PLANNED": 9,
       "UNKNOWN:STATED": 24
     },
