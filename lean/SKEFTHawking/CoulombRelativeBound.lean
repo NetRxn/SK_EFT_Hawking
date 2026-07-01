@@ -2355,3 +2355,84 @@ lemma coulomb_isRelBounded_core {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finse
     have h2m : (2 * m) ≠ 0 := by positivity
     field_simp
     ring
+
+open LinearPMap Filter Topology in
+/-- **Relative bound extends from a core to the closure.** If `A` is closable, `B` is closed, and `B`
+is `(a, b)`-relatively bounded w.r.t. `A` on `A.domain` (a core of `A.closure`), then `B` is
+`(a, b)`-relatively bounded w.r.t. `A.closure`. Graph-limit argument: for `x ∈ A.closure.domain` pick
+`φₙ ∈ A.domain` with `(φₙ, Aφₙ) → (x, A.closure x)`; the core bound makes `Bφₙ` Cauchy, so `Bφₙ → z`,
+and since `B` is closed `(x, z) ∈ B.graph`, giving `x ∈ B.domain`, `B x = z`, and
+`‖B x‖ = lim‖Bφₙ‖ ≤ lim(a‖Aφₙ‖ + b‖φₙ‖) = a‖A.closure x‖ + b‖x‖`. Mathlib lacks this lemma; in-tree
+closure-extension keystone for the Kato–Rellich `hrel` discharge. -/
+lemma IsRelBounded.extend_to_closure {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+    [CompleteSpace H] {A B : H →ₗ.[ℂ] H} (hAcl : A.IsClosable) (hBcl : B.IsClosed)
+    {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hrel : IsRelBounded A B a b) :
+    IsRelBounded A.closure B a b := by
+  have key : ∀ x : A.closure.domain, ∃ hxB : (↑x : H) ∈ B.domain,
+      ‖B ⟨↑x, hxB⟩‖ ≤ a * ‖A.closure x‖ + b * ‖(↑x : H)‖ := by
+    intro x
+    have hmem : ((↑x : H), (A.closure x : H)) ∈ closure (↑A.graph : Set (H × H)) := by
+      have hg := A.closure.mem_graph x
+      rw [← hAcl.graph_closure_eq_closure_graph, ← SetLike.mem_coe,
+        Submodule.topologicalClosure_coe] at hg
+      exact hg
+    obtain ⟨p, hp_mem, hp_tend⟩ := mem_closure_iff_seq_limit.mp hmem
+    choose φ hφ1 hφ2 using fun n => (mem_graph_iff A).mp (hp_mem n)
+    have htend1 : Tendsto (fun n => (↑(φ n) : H)) atTop (𝓝 (↑x : H)) := by
+      simp_rw [hφ1]; exact (continuous_fst.tendsto _).comp hp_tend
+    have htend2 : Tendsto (fun n => (A (φ n) : H)) atTop (𝓝 (A.closure x : H)) := by
+      simp_rw [hφ2]; exact (continuous_snd.tendsto _).comp hp_tend
+    set Bφ : ℕ → H := fun n => B ⟨↑(φ n), hrel.domain_le (φ n).2⟩ with hBφdef
+    have hbnd : ∀ n m, ‖Bφ n - Bφ m‖ ≤ a * ‖(A (φ n) : H) - A (φ m)‖ + b * ‖(↑(φ n) : H) - ↑(φ m)‖ := by
+      intro n m
+      have hb2 := hrel.bound (φ n - φ m)
+      have heq : (B ⟨(↑(φ n - φ m) : H), hrel.domain_le (φ n - φ m).2⟩ : H) = Bφ n - Bφ m := by
+        rw [hBφdef, ← LinearPMap.map_sub]; congr 1
+      rw [heq, LinearPMap.map_sub, Submodule.coe_sub] at hb2
+      exact hb2
+    have hBφ_cauchy : CauchySeq Bφ := by
+      rw [Metric.cauchySeq_iff]
+      intro ε hε
+      obtain ⟨N1, hN1⟩ := Metric.cauchySeq_iff.mp htend2.cauchySeq (ε / 2 / (a + 1)) (by positivity)
+      obtain ⟨N2, hN2⟩ := Metric.cauchySeq_iff.mp htend1.cauchySeq (ε / 2 / (b + 1)) (by positivity)
+      refine ⟨max N1 N2, fun n hn m hm => ?_⟩
+      rw [dist_eq_norm]
+      have h1 := hN1 n (le_trans (le_max_left _ _) hn) m (le_trans (le_max_left _ _) hm)
+      have h2 := hN2 n (le_trans (le_max_right _ _) hn) m (le_trans (le_max_right _ _) hm)
+      rw [dist_eq_norm] at h1 h2
+      have hab := hbnd n m
+      have hae : a * ‖(A (φ n) : H) - A (φ m)‖ < ε / 2 := by
+        have hlt : a / (a + 1) < 1 := by rw [div_lt_one (by positivity)]; linarith
+        calc a * ‖(A (φ n) : H) - A (φ m)‖ ≤ a * (ε / 2 / (a + 1)) :=
+              mul_le_mul_of_nonneg_left h1.le ha
+          _ = (a / (a + 1)) * (ε / 2) := by ring
+          _ < 1 * (ε / 2) := mul_lt_mul_of_pos_right hlt (by positivity)
+          _ = ε / 2 := one_mul _
+      have hbe : b * ‖(↑(φ n) : H) - ↑(φ m)‖ < ε / 2 := by
+        have hlt : b / (b + 1) < 1 := by rw [div_lt_one (by positivity)]; linarith
+        calc b * ‖(↑(φ n) : H) - ↑(φ m)‖ ≤ b * (ε / 2 / (b + 1)) :=
+              mul_le_mul_of_nonneg_left h2.le hb
+          _ = (b / (b + 1)) * (ε / 2) := by ring
+          _ < 1 * (ε / 2) := mul_lt_mul_of_pos_right hlt (by positivity)
+          _ = ε / 2 := one_mul _
+      linarith
+    obtain ⟨z, hz⟩ := cauchySeq_tendsto_of_complete hBφ_cauchy
+    have hxz : ((↑x : H), z) ∈ B.graph := by
+      rw [← SetLike.mem_coe, ← hBcl.closure_eq]
+      refine mem_closure_iff_seq_limit.mpr ⟨fun n => (↑(φ n), Bφ n), fun n => ?_, ?_⟩
+      · rw [SetLike.mem_coe, mem_graph_iff]
+        exact ⟨⟨↑(φ n), hrel.domain_le (φ n).2⟩, rfl, rfl⟩
+      · exact htend1.prodMk_nhds hz
+    rw [mem_graph_iff] at hxz
+    obtain ⟨ψ, hψ1, hψ2⟩ := hxz
+    have hψ1' : (↑ψ : H) = ↑x := hψ1
+    have hψ2' : (B ψ : H) = z := hψ2
+    refine ⟨hψ1' ▸ ψ.2, ?_⟩
+    have hBz : ‖B ⟨↑x, hψ1' ▸ ψ.2⟩‖ = ‖z‖ := by
+      rw [show (⟨↑x, hψ1' ▸ ψ.2⟩ : B.domain) = ψ from Subtype.ext hψ1'.symm, hψ2']
+    rw [hBz]
+    have hR_tend : Tendsto (fun n => a * ‖(A (φ n) : H)‖ + b * ‖(↑(φ n) : H)‖) atTop
+        (𝓝 (a * ‖(A.closure x : H)‖ + b * ‖(↑x : H)‖)) :=
+      (htend2.norm.const_mul a).add (htend1.norm.const_mul b)
+    exact le_of_tendsto_of_tendsto' hz.norm hR_tend (fun n => hrel.bound (φ n))
+  exact ⟨fun y hy => (key ⟨y, hy⟩).choose, fun x => (key x).choose_spec⟩
