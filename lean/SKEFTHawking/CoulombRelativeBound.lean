@@ -2117,4 +2117,65 @@ lemma coulomb_relbound_ee {N : ℕ} {ε C : ℝ} (hε : 0 ≤ ε) (hC : 0 ≤ C)
   simp_rw [otherElectronPos_eq i j hij] at h
   simpa only [Complex.ofReal_one, abs_one, ENNReal.ofReal_one] using h
 
+open QuantumMechanics in
+/-- **Full molecular Coulomb potential relative bound (`eLpNorm`, Schwartz level).** Multiplication by the
+whole molecular Coulomb potential `V = −∑ᵢₖ Zₖ/‖eᵢ−Rₖ‖ + ∑_{i<j} 1/‖eᵢ−eⱼ‖` is `Ctot`-times-`(ε,C)`
+relatively bounded with respect to `∑ₘ𝐩ₘ²`, where `Ctot = ∑ᵢₖ|Zₖ| + #pairs`. Decomposes `(↑V)·u` into the
+nuclear and electron–repulsion function sums, splits via `eLpNorm_add_le`, and applies
+`coulomb_relbound_nuclear` + `coulomb_relbound_ee`. **This is the finite-sum molecular bound — choosing `ε`
+small enough that `Ctot·ε·(2m) < 1` will give the Kato `a < 1` at the operator level.** -/
+lemma coulomb_relbound_schwartz {N : ℕ} (nuclei : Finset (Space 3 × ℝ)) {ε C : ℝ} (hε : 0 ≤ ε) (hC : 0 ≤ C)
+    (hbound : ∀ (v : 𝓢(Space 3, ℂ)) (R : Space 3),
+      Real.sqrt (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2)
+        ≤ ε * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i v)) y‖ ^ 2)
+          + C * Real.sqrt (∫ y : Space 3, ‖v y‖ ^ 2))
+    (u : 𝓢(Space (3 * N), ℂ)) :
+    eLpNorm (fun x => (↑(molecularCoulombPotential nuclei x) : ℂ) * u x) 2 volume
+      ≤ ((∑ _i : Fin N, ∑ p ∈ nuclei, ENNReal.ofReal |p.2|)
+          + ∑ i : Fin N, ∑ _j ∈ Finset.univ.filter (i < ·), (1 : ENNReal))
+        * (ENNReal.ofReal ε * eLpNorm (fun x => (∑ m, momentumCLM m (momentumCLM m u)) x) 2 volume
+          + ENNReal.ofReal C * eLpNorm (fun x => u x) 2 volume) := by
+  have hNmeas : AEStronglyMeasurable (fun x : Space (3 * N) => ∑ i : Fin N, ∑ p ∈ nuclei,
+      (-(p.2 : ℂ)) • ((‖electronPos x i - p.1‖⁻¹ : ℝ) • u x)) volume := by
+    rw [show (fun x : Space (3 * N) => ∑ i : Fin N, ∑ p ∈ nuclei,
+          (-(p.2 : ℂ)) • ((‖electronPos x i - p.1‖⁻¹ : ℝ) • u x))
+        = ∑ i : Fin N, ∑ p ∈ nuclei,
+          fun x : Space (3 * N) => (-(p.2 : ℂ)) • ((‖electronPos x i - p.1‖⁻¹ : ℝ) • u x)
+        from by funext x; simp only [Finset.sum_apply]]
+    refine Finset.aestronglyMeasurable_sum _ fun i _ => Finset.aestronglyMeasurable_sum _ fun p _ => ?_
+    have heq : (fun x : Space (3 * N) => (-(p.2 : ℂ)) • ((‖electronPos x i - p.1‖⁻¹ : ℝ) • u x))
+        = fun x => (-(p.2 : ℂ)) * ((↑(‖electronPos x i - p.1‖⁻¹) : ℂ) * u x) := by
+      funext x; rw [smul_eq_mul, Complex.real_smul]
+    rw [heq]
+    exact (((Complex.measurable_ofReal.comp (coulombTerm_measurable i p.1)).mul
+      (SchwartzMap.continuous u).measurable).const_mul _).aestronglyMeasurable
+  have hEmeas : AEStronglyMeasurable (fun x : Space (3 * N) => ∑ i : Fin N,
+      ∑ j ∈ Finset.univ.filter (i < ·),
+      (1 : ℂ) • ((‖electronPos x i - electronPos x j‖⁻¹ : ℝ) • u x)) volume := by
+    rw [show (fun x : Space (3 * N) => ∑ i : Fin N, ∑ j ∈ Finset.univ.filter (i < ·),
+          (1 : ℂ) • ((‖electronPos x i - electronPos x j‖⁻¹ : ℝ) • u x))
+        = ∑ i : Fin N, ∑ j ∈ Finset.univ.filter (i < ·),
+          fun x : Space (3 * N) => (1 : ℂ) • ((‖electronPos x i - electronPos x j‖⁻¹ : ℝ) • u x)
+        from by funext x; simp only [Finset.sum_apply]]
+    refine Finset.aestronglyMeasurable_sum _ fun i _ => Finset.aestronglyMeasurable_sum _ fun j _ => ?_
+    have heq : (fun x : Space (3 * N) => (1 : ℂ) • ((‖electronPos x i - electronPos x j‖⁻¹ : ℝ) • u x))
+        = fun x => (1 : ℂ) * ((↑(‖electronPos x i - electronPos x j‖⁻¹) : ℂ) * u x) := by
+      funext x; rw [smul_eq_mul, Complex.real_smul]
+    rw [heq]
+    exact (((Complex.measurable_ofReal.comp (coulombTermRel_measurable i j)).mul
+      (SchwartzMap.continuous u).measurable).const_mul _).aestronglyMeasurable
+  have hdecomp : (fun x : Space (3 * N) => (↑(molecularCoulombPotential nuclei x) : ℂ) * u x)
+      = (fun x => ∑ i : Fin N, ∑ p ∈ nuclei, (-(p.2 : ℂ)) • ((‖electronPos x i - p.1‖⁻¹ : ℝ) • u x))
+        + fun x => ∑ i : Fin N, ∑ j ∈ Finset.univ.filter (i < ·),
+            (1 : ℂ) • ((‖electronPos x i - electronPos x j‖⁻¹ : ℝ) • u x) := by
+    funext x
+    simp only [molecularCoulombPotential, Pi.add_apply, smul_eq_mul, Complex.real_smul,
+      Complex.ofReal_add, Complex.ofReal_neg, Complex.ofReal_sum, div_eq_mul_inv,
+      Complex.ofReal_mul, Complex.ofReal_inv, one_mul, neg_mul, add_mul,
+      Finset.sum_mul, Finset.sum_neg_distrib, mul_assoc]
+  rw [hdecomp, add_mul]
+  exact le_trans (eLpNorm_add_le hNmeas hEmeas one_le_two)
+    (add_le_add (coulomb_relbound_nuclear nuclei hε hC hbound u)
+      (coulomb_relbound_ee hε hC hbound u))
+
 end SKEFTHawking.DFT
