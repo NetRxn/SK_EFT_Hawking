@@ -2198,4 +2198,24 @@ lemma norm_schwartzEquiv_eq {d : ℕ} (u : 𝓢(Space d, ℂ)) :
     ‖(schwartzEquiv u : SpaceDHilbertSpace d)‖ = (eLpNorm (⇑u) 2 volume).toReal := by
   rw [SchwartzSubmodule.schwartzEquiv_apply_coe, norm_schwartzIncl_eq]
 
+open QuantumMechanics in
+/-- **The molecular Coulomb potential times a Schwartz function is L².** `(↑V)·u ∈ L²` — the finiteness
+that puts `schwartzEquiv u` in `potentialOperator.domain` (`potentialOperator = 𝓜(ofReal∘V)`, whose domain
+is `{ψ | V•ψ ∈ L²}`). Crucially this uses the finite-sum relative bound (`coulomb_relbound_schwartz` at
+`ε = 1`), NOT temperate growth — the Coulomb potential has `1/r` singularities and is not of temperate
+growth, so the generic `mulOperator_domain_ge_of_hasTemperateGrowth` does not apply. -/
+lemma memLp_molecular_coulomb {N : ℕ} (nuclei : Finset (Space 3 × ℝ)) (u : 𝓢(Space (3 * N), ℂ)) :
+    MemLp (fun x => (↑(molecularCoulombPotential nuclei x) : ℂ) * u x) 2 volume := by
+  refine ⟨((Complex.measurable_ofReal.comp (molecularCoulombPotential_measurable nuclei)).mul
+    (SchwartzMap.continuous u).measurable).aestronglyMeasurable, ?_⟩
+  obtain ⟨C, hC0, hbound⟩ := exists_coulomb_relbound_center (by norm_num : (0 : ℝ) < 1)
+  refine lt_of_le_of_lt (coulomb_relbound_schwartz nuclei (by norm_num) hC0 hbound u) ?_
+  refine ENNReal.mul_lt_top ?_ ?_
+  · refine ENNReal.add_lt_top.mpr ⟨ENNReal.sum_lt_top.mpr fun i _ => ENNReal.sum_lt_top.mpr
+      fun p _ => ENNReal.ofReal_lt_top, ENNReal.sum_lt_top.mpr fun i _ => ENNReal.sum_lt_top.mpr
+      fun j _ => ENNReal.one_lt_top⟩
+  · exact ENNReal.add_lt_top.mpr ⟨ENNReal.mul_lt_top ENNReal.ofReal_lt_top
+      (SchwartzMap.memLp _ 2 volume).2, ENNReal.mul_lt_top ENNReal.ofReal_lt_top
+      (SchwartzMap.memLp u 2 volume).2⟩
+
 end SKEFTHawking.DFT
