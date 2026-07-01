@@ -2011,4 +2011,30 @@ lemma coulombTerm_relbound_eLpNorm {N : ℕ} (iₑ : Fin N)
   rw [hL]
   exact coulombTerm_relbound_enn iₑ Rf hRf hε hC hbound u
 
+open QuantumMechanics in
+/-- **Scaled per-term Coulomb relative bound (`eLpNorm`, complex-scalar form).** A coefficient-`c`
+multiple of a single Coulomb term satisfies `‖c·Vₜ·u‖₂ ≤ |c|·(ε‖∑ₘ𝐩ₘ²u‖₂ + C‖u‖₂)`. The complex-scalar
+`(c:ℂ) • (Vₜ·u)` form (rather than `(cVₜ:ℝ) • u`) matches `potentialOperator = 𝓜(ofReal∘potential)` and
+sidesteps the missing `NormSMulClass ℝ ℂ` instance; `eLpNorm_const_smul` (𝕜 = ℂ) pulls the scalar out.
+This is the finite-sum summand: each nuclear term has `c = ±Zₖ`, each e-e term `c = ±1`. -/
+lemma coulombTerm_relbound_eLpNorm_smul {N : ℕ} (iₑ : Fin N)
+    (Rf : ({k // ¬ electronCoord iₑ k} → ℝ) → Space 3) (hRf : Measurable Rf) (c : ℝ)
+    {ε C : ℝ} (hε : 0 ≤ ε) (hC : 0 ≤ C)
+    (hbound : ∀ (v : 𝓢(Space 3, ℂ)) (R : Space 3),
+      Real.sqrt (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2)
+        ≤ ε * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i v)) y‖ ^ 2)
+          + C * Real.sqrt (∫ y : Space 3, ‖v y‖ ^ 2))
+    (u : 𝓢(Space (3 * N), ℂ)) :
+    eLpNorm (fun x => (c : ℂ) •
+        ((‖electronPos x iₑ - Rf (molecularSplitMap iₑ x).2‖⁻¹ : ℝ) • u x)) 2 volume
+      ≤ ENNReal.ofReal |c| * (ENNReal.ofReal ε *
+            eLpNorm (fun x => (∑ m, momentumCLM m (momentumCLM m u)) x) 2 volume
+          + ENNReal.ofReal C * eLpNorm (fun x => u x) 2 volume) := by
+  rw [show (fun x => (c : ℂ) •
+        ((‖electronPos x iₑ - Rf (molecularSplitMap iₑ x).2‖⁻¹ : ℝ) • u x))
+      = (c : ℂ) • fun x => (‖electronPos x iₑ - Rf (molecularSplitMap iₑ x).2‖⁻¹ : ℝ) • u x from rfl,
+    eLpNorm_const_smul, ← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_eq_abs]
+  gcongr
+  exact coulombTerm_relbound_eLpNorm iₑ Rf hRf hε hC hbound u
+
 end SKEFTHawking.DFT
