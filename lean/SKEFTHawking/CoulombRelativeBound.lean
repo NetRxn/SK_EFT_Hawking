@@ -2275,4 +2275,38 @@ lemma schwartz_le_potOp_domain {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finset
         * ((schwartzIncl u : SpaceDHilbertSpace (3 * N)) : Space (3 * N) → ℂ) x
   rw [hx]
 
+open QuantumMechanics in
+/-- **Real-valued (`.toReal`) molecular Coulomb relative bound.** The `ENNReal → ℝ` cast of
+`coulomb_relbound_schwartz`: `‖(↑V)·u‖₂ ≤ Ctot·(ε‖∑𝐩²u‖₂ + C‖u‖₂)` with all norms as `eLpNorm·.toReal`
+(the real L² norms). `Ctot` is the (finite) real coefficient sum `(∑ᵢₖ|Zₖ|) + #pairs`. This is the
+mathematical content of the Kato bound at the Schwartz core, ready for the operator-norm bridges. -/
+lemma coulomb_relbound_schwartz_real {N : ℕ} (nuclei : Finset (Space 3 × ℝ)) {ε C : ℝ}
+    (hε0 : 0 ≤ ε) (hC0 : 0 ≤ C)
+    (hbound : ∀ (v : 𝓢(Space 3, ℂ)) (R : Space 3),
+      Real.sqrt (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2)
+        ≤ ε * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i v)) y‖ ^ 2)
+          + C * Real.sqrt (∫ y : Space 3, ‖v y‖ ^ 2))
+    (u : 𝓢(Space (3 * N), ℂ)) :
+    (eLpNorm (fun x => (↑(molecularCoulombPotential nuclei x) : ℂ) * u x) 2 volume).toReal
+      ≤ ((∑ _i : Fin N, ∑ p ∈ nuclei, ENNReal.ofReal |p.2|)
+            + ∑ i : Fin N, ∑ _j ∈ Finset.univ.filter (i < ·), (1 : ENNReal)).toReal
+        * (ε * (eLpNorm (fun x => (∑ i, momentumCLM i (momentumCLM i u)) x) 2 volume).toReal
+          + C * (eLpNorm (fun x => u x) 2 volume).toReal) := by
+  have hKfin : eLpNorm (fun x => (∑ i, momentumCLM i (momentumCLM i u)) x) 2 volume ≠ ⊤ :=
+    (SchwartzMap.memLp _ 2 volume).2.ne
+  have hMfin : eLpNorm (fun x => u x) 2 volume ≠ ⊤ := (SchwartzMap.memLp u 2 volume).2.ne
+  have hCtotfin : ((∑ _i : Fin N, ∑ p ∈ nuclei, ENNReal.ofReal |p.2|)
+      + ∑ i : Fin N, ∑ _j ∈ Finset.univ.filter (i < ·), (1 : ENNReal)) ≠ ⊤ :=
+    (ENNReal.add_lt_top.mpr ⟨ENNReal.sum_lt_top.mpr fun i _ => ENNReal.sum_lt_top.mpr
+      fun p _ => ENNReal.ofReal_lt_top, ENNReal.sum_lt_top.mpr fun i _ => ENNReal.sum_lt_top.mpr
+      fun j _ => ENNReal.one_lt_top⟩).ne
+  have hAfin : ENNReal.ofReal ε * eLpNorm (fun x => (∑ i, momentumCLM i (momentumCLM i u)) x) 2 volume
+      ≠ ⊤ := ENNReal.mul_ne_top ENNReal.ofReal_ne_top hKfin
+  have hBfin : ENNReal.ofReal C * eLpNorm (fun x => u x) 2 volume ≠ ⊤ :=
+    ENNReal.mul_ne_top ENNReal.ofReal_ne_top hMfin
+  refine (ENNReal.toReal_mono (ENNReal.mul_ne_top hCtotfin (ENNReal.add_ne_top.mpr ⟨hAfin, hBfin⟩))
+    (coulomb_relbound_schwartz nuclei hε0 hC0 hbound u)).trans_eq ?_
+  rw [ENNReal.toReal_mul, ENNReal.toReal_add hAfin hBfin, ENNReal.toReal_mul, ENNReal.toReal_mul,
+    ENNReal.toReal_ofReal hε0, ENNReal.toReal_ofReal hC0]
+
 end SKEFTHawking.DFT
