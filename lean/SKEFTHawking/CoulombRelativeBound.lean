@@ -1624,4 +1624,41 @@ lemma momentum_cross_term_eq {d : ℕ} (j m : Fin d) (u : 𝓢(Space d, ℂ)) :
   norm_cast
   exact Complex.normSq_eq_norm_sq _
 
+/-- `‖g‖² ∈ L¹` for any Schwartz `g` on `Space d` (general-dimension version of `integrable_normSq_schwartz`). -/
+lemma integrable_normSq_schwartz_gen {d : ℕ} (g : 𝓢(Space d, ℂ)) :
+    Integrable (fun x : Space d => ‖g x‖ ^ 2) := by
+  have h := (SchwartzMap.memLp g 2 volume).norm
+  rw [memLp_two_iff_integrable_sq g.continuous.norm.aestronglyMeasurable] at h
+  simpa only [norm_norm] using h
+
+/-- **Positivity expansion:** if the cross term `∫ conj(a)·b` is a nonnegative real, then
+`∫ ‖a‖² ≤ ∫ ‖a + b‖²`. (`‖a+b‖² = ‖a‖² + 2Re(conj a·b) + ‖b‖²`; integrate, the middle `= 2r ≥ 0`, the last
+`≥ 0`.) This is what turns the kinetic cross-term nonnegativity into `‖block-kinetic u‖₂ ≤ ‖full-kinetic u‖₂`. -/
+lemma integral_normSq_le_add {d : ℕ} (a b : 𝓢(Space d, ℂ)) {r : ℝ} (hr : 0 ≤ r)
+    (hcross : ∫ x : Space d, starRingEnd ℂ (a x) * b x = (r : ℂ)) :
+    ∫ x : Space d, ‖a x‖ ^ 2 ≤ ∫ x : Space d, ‖(a + b) x‖ ^ 2 := by
+  have hint_cross : Integrable (fun x : Space d => starRingEnd ℂ (a x) * b x) := by
+    have h := (SchwartzMap.memLp a 2 volume).star.integrable_mul (SchwartzMap.memLp b 2 volume)
+    simpa only [Pi.star_apply, ← starRingEnd_apply] using h
+  have hIa := integrable_normSq_schwartz_gen a
+  have hIb := integrable_normSq_schwartz_gen b
+  have hmid : Integrable (fun x : Space d => 2 * RCLike.re (starRingEnd ℂ (a x) * b x)) :=
+    hint_cross.re.const_mul 2
+  have hexp : (fun x : Space d => ‖(a + b) x‖ ^ 2)
+      = fun x => ‖a x‖ ^ 2 + 2 * RCLike.re (starRingEnd ℂ (a x) * b x) + ‖b x‖ ^ 2 := by
+    funext x
+    rw [SchwartzMap.add_apply, ← Complex.normSq_eq_norm_sq, ← Complex.normSq_eq_norm_sq,
+      ← Complex.normSq_eq_norm_sq, Complex.normSq_add]
+    simp only [Complex.mul_re, Complex.conj_re, Complex.conj_im, RCLike.re_to_complex,
+      Complex.mul_re, map_mul]
+    ring
+  rw [hexp, integral_add (show Integrable
+      (fun x : Space d => ‖a x‖ ^ 2 + 2 * RCLike.re (starRingEnd ℂ (a x) * b x)) volume
+      from hIa.add hmid) hIb,
+    integral_add hIa hmid, integral_const_mul, integral_re hint_cross]
+  erw [hcross]
+  rw [show RCLike.re ((r : ℂ)) = r from Complex.ofReal_re r]
+  have hIb0 : 0 ≤ ∫ x : Space d, ‖b x‖ ^ 2 := integral_nonneg fun x => sq_nonneg _
+  nlinarith [hIb0, hr]
+
 end SKEFTHawking.DFT
