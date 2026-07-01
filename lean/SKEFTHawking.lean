@@ -3640,6 +3640,7 @@ import SKEFTHawking.GKSLStructure
 import SKEFTHawking.LindbladSemigroup
 import SKEFTHawking.DampedTwoLevel
 import SKEFTHawking.KineticEssentialSelfAdjoint
+import SKEFTHawking.CoulombRelativeBound
 -- Phase 6CB (D11 materials series) — acoustic / phononic band theory
 import SKEFTHawking.AcousticBlochOperator
 import SKEFTHawking.PhononicBandGap
