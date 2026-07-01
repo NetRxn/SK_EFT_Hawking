@@ -1835,4 +1835,76 @@ lemma measurable_fiber_lintegral {N : ℕ} (iₑ : Fin N) (w : 𝓢(Space (3 * N
   exact (SchwartzMap.continuous w).measurable.comp
     ((molecularSplitEquiv iₑ).symm.measurable.comp measurable_swap)
 
+open QuantumMechanics in
+/-- **Spectator-integrated fiber kinetic ≤ full molecular kinetic (`∫⁻` form).** `∫⁻_z Kᶠ(z) ≤
+∫⁻_{3N}(ofReal‖∑ₘ𝐩ₘ²u‖)²`: the `Kᶠ` Fubini-reverse (`molecular_kineticSq_lintegral`, W3-91) collapses
+the spectator integral to the molecular block-kinetic `∫⁻`, then the kinetic partial≤full
+(`lintegral_block_kineticSq_le`, W3-101) bounds it by the full kinetic. -/
+lemma lintegral_z_fiberKineticSq_le {N : ℕ} (iₑ : Fin N) (u : 𝓢(Space (3 * N), ℂ)) :
+    ∫⁻ z : {k // ¬ electronCoord iₑ k} → ℝ, (∫⁻ y : Space 3, (ENNReal.ofReal
+        ‖(∑ j, momentumCLM j (momentumCLM j (fiberSchwartz iₑ z u))) y‖) ^ 2)
+      ≤ ∫⁻ x : Space (3 * N), (ENNReal.ofReal
+        ‖(∑ m : Fin (3 * N), momentumCLM m (momentumCLM m u)) x‖) ^ 2 := by
+  rw [molecular_kineticSq_lintegral iₑ u]
+  exact lintegral_block_kineticSq_le iₑ u
+
+open QuantumMechanics in
+/-- **Per-term molecular Coulomb relative bound (ENNReal `(1/2)`-power form).** For every `ε > 0`'s
+uniform fiber constant `C` (via `hbound = exists_coulomb_relbound_center`), a single molecular Coulomb
+term centered at `R` (nuclear: `R` = nucleus; e-e: `R` = electron-`j` position) satisfies
+`‖V·u‖₂ ≤ ε‖∑ₘ𝐩ₘ²u‖₂ + C‖u‖₂` in the lower-integral `(1/2)`-power form. Assembles the fiber Fubini
+(W3-53), the fiberwise `(A+B)²` bound (W3-103), lintegral Minkowski (`ENNReal.lintegral_Lp_add_le`),
+the constant-pull (W3-104), the kinetic partial≤full collapse (W3-106), and the `L²` Fubini (W3-87). -/
+lemma coulombTerm_relbound_enn {N : ℕ} (iₑ : Fin N) (R : Space 3) {ε C : ℝ} (hε : 0 ≤ ε) (hC : 0 ≤ C)
+    (hbound : ∀ (v : 𝓢(Space 3, ℂ)) (R : Space 3),
+      Real.sqrt (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2)
+        ≤ ε * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i v)) y‖ ^ 2)
+          + C * Real.sqrt (∫ y : Space 3, ‖v y‖ ^ 2))
+    (u : 𝓢(Space (3 * N), ℂ)) :
+    (∫⁻ x : Space (3 * N), (ENNReal.ofReal (‖electronPos x iₑ - R‖⁻¹ * ‖u x‖)) ^ 2) ^ (1 / 2 : ℝ)
+      ≤ ENNReal.ofReal ε * (∫⁻ x : Space (3 * N),
+            (ENNReal.ofReal ‖(∑ m, momentumCLM m (momentumCLM m u)) x‖) ^ 2) ^ (1 / 2 : ℝ)
+        + ENNReal.ofReal C * (∫⁻ x : Space (3 * N), (ENNReal.ofReal ‖u x‖) ^ 2) ^ (1 / 2 : ℝ) := by
+  set K : ({k // ¬ electronCoord iₑ k} → ℝ) → ENNReal := fun z =>
+    ∫⁻ y : Space 3, (ENNReal.ofReal
+      ‖(∑ i, momentumCLM i (momentumCLM i (fiberSchwartz iₑ z u))) y‖) ^ 2 with hK
+  set M : ({k // ¬ electronCoord iₑ k} → ℝ) → ENNReal := fun z =>
+    ∫⁻ y : Space 3, (ENNReal.ofReal ‖fiberSchwartz iₑ z u y‖) ^ 2 with hM
+  have hpow : ∀ x : ENNReal, x ^ (2 : ℝ) = x ^ 2 := fun x => by
+    rw [← ENNReal.rpow_natCast x 2]; norm_num
+  have hKm : Measurable K := by
+    rw [hK]; simp_rw [kineticSq_fiberSchwartz]; exact measurable_fiber_lintegral iₑ _
+  have hMm : Measurable M := measurable_fiber_lintegral iₑ u
+  have hAm : AEMeasurable (fun z => ENNReal.ofReal ε * (K z) ^ (1 / 2 : ℝ)) := by fun_prop
+  have hBm : AEMeasurable (fun z => ENNReal.ofReal C * (M z) ^ (1 / 2 : ℝ)) := by fun_prop
+  calc (∫⁻ x : Space (3 * N), (ENNReal.ofReal (‖electronPos x iₑ - R‖⁻¹ * ‖u x‖)) ^ 2) ^ (1 / 2 : ℝ)
+      = (∫⁻ z, ∫⁻ y : Space 3,
+          (ENNReal.ofReal (‖y - R‖⁻¹ * ‖fiberSchwartz iₑ z u y‖)) ^ 2) ^ (1 / 2 : ℝ) := by
+        rw [molecular_coulombTerm_lintegral iₑ R (SchwartzMap.continuous u).measurable]
+        simp_rw [← fiberSchwartz_apply]
+    _ ≤ (∫⁻ z, (ENNReal.ofReal ε * (K z) ^ (1 / 2 : ℝ)
+          + ENNReal.ofReal C * (M z) ^ (1 / 2 : ℝ)) ^ 2) ^ (1 / 2 : ℝ) := by
+        refine ENNReal.rpow_le_rpow (lintegral_mono fun z => ?_) (by norm_num)
+        rw [hK, hM]; exact coulombSq_fiber_le iₑ R hε hC hbound z u
+    _ ≤ (∫⁻ z, (ENNReal.ofReal ε * (K z) ^ (1 / 2 : ℝ)) ^ 2) ^ (1 / 2 : ℝ)
+          + (∫⁻ z, (ENNReal.ofReal C * (M z) ^ (1 / 2 : ℝ)) ^ 2) ^ (1 / 2 : ℝ) := by
+        have h := ENNReal.lintegral_Lp_add_le (μ := volume)
+          (f := fun z => ENNReal.ofReal ε * (K z) ^ (1 / 2 : ℝ))
+          (g := fun z => ENNReal.ofReal C * (M z) ^ (1 / 2 : ℝ)) hAm hBm one_le_two
+        simpa only [Pi.add_apply, hpow] using h
+    _ = ENNReal.ofReal ε * (∫⁻ z, K z) ^ (1 / 2 : ℝ)
+          + ENNReal.ofReal C * (∫⁻ z, M z) ^ (1 / 2 : ℝ) := by
+        rw [rpow_half_lintegral_const_mul ENNReal.ofReal_ne_top K,
+          rpow_half_lintegral_const_mul ENNReal.ofReal_ne_top M]
+    _ ≤ ENNReal.ofReal ε * (∫⁻ x : Space (3 * N),
+            (ENNReal.ofReal ‖(∑ m, momentumCLM m (momentumCLM m u)) x‖) ^ 2) ^ (1 / 2 : ℝ)
+          + ENNReal.ofReal C * (∫⁻ x : Space (3 * N), (ENNReal.ofReal ‖u x‖) ^ 2) ^ (1 / 2 : ℝ) := by
+        refine add_le_add ?_ (le_of_eq ?_)
+        · gcongr
+          simp only [hK]
+          exact lintegral_z_fiberKineticSq_le iₑ u
+        · simp only [hM]
+          simp_rw [fiberSchwartz_apply]
+          rw [← molecular_normSq_lintegral iₑ (SchwartzMap.continuous u).measurable]
+
 end SKEFTHawking.DFT
