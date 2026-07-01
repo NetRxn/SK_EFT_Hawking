@@ -1816,4 +1816,23 @@ lemma rpow_half_lintegral_const_mul {α : Type*} [MeasurableSpace α] {μ : Meas
     ← ENNReal.rpow_natCast c 2, ← ENNReal.rpow_mul]
   norm_num
 
+/-- **The fiber `L²`-density lower integral is measurable in the spectator `z`.** `z ↦ ∫⁻_y (ofReal‖fiber
+w y‖)²` is measurable — the joint measurability of `(z, y) ↦ w ((molecularSplitEquiv iₑ).symm (y, z))`
+(Schwartz `w` continuous, split-equiv measurable) integrated out via `Measurable.lintegral_prod_right'`.
+Supplies the `AEMeasurable` hypotheses for the `z`-Minkowski step (used for both `Mᶠ`, `w = u`, and `Kᶠ`,
+`w = ∑𝐩²u` via W3-90). -/
+lemma measurable_fiber_lintegral {N : ℕ} (iₑ : Fin N) (w : 𝓢(Space (3 * N), ℂ)) :
+    Measurable (fun z : {k // ¬ electronCoord iₑ k} → ℝ =>
+      ∫⁻ y : Space 3, (ENNReal.ofReal ‖fiberSchwartz iₑ z w y‖) ^ 2) := by
+  apply Measurable.lintegral_prod_right'
+    (f := fun p : ({k // ¬ electronCoord iₑ k} → ℝ) × Space 3 =>
+      (ENNReal.ofReal ‖fiberSchwartz iₑ p.1 w p.2‖) ^ 2)
+  refine (ENNReal.measurable_ofReal.comp (Measurable.norm ?_)).pow_const 2
+  have hpt : (fun p : ({k // ¬ electronCoord iₑ k} → ℝ) × Space 3 => fiberSchwartz iₑ p.1 w p.2)
+      = fun p => w ((molecularSplitEquiv iₑ).symm (p.2, p.1)) := by
+    funext p; exact fiberSchwartz_apply iₑ p.1 w p.2
+  rw [hpt]
+  exact (SchwartzMap.continuous w).measurable.comp
+    ((molecularSplitEquiv iₑ).symm.measurable.comp measurable_swap)
+
 end SKEFTHawking.DFT
