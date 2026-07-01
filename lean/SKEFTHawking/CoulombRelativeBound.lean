@@ -1766,4 +1766,37 @@ lemma lintegral_block_kineticSq_le {N : ℕ} (iₑ : Fin N) (u : 𝓢(Space (3 *
   rw [lintegral_ofReal_normSq_eq, lintegral_ofReal_normSq_eq]
   exact ENNReal.ofReal_le_ofReal (integral_block_kineticSq_le iₑ u)
 
+/-- **√↔`(∫⁻)^½` glue for Schwartz L²:** `ofReal(√(∫‖g‖²)) = (∫⁻(ofReal‖g‖)²)^(1/2)`. Bridges the
+Bochner-side square-root norms produced by `exists_coulomb_relbound_center` with the lower-integral
+`(1/2)`-powers the lintegral-Minkowski reassembly (`ENNReal.lintegral_Lp_add_le`) works in. -/
+lemma sqrt_integral_normSq_eq_rpow {d : ℕ} (g : 𝓢(Space d, ℂ)) :
+    ENNReal.ofReal (Real.sqrt (∫ y : Space d, ‖g y‖ ^ 2))
+      = (∫⁻ y : Space d, (ENNReal.ofReal ‖g y‖) ^ 2) ^ (1 / 2 : ℝ) := by
+  rw [lintegral_ofReal_normSq_eq, Real.sqrt_eq_rpow,
+    ENNReal.ofReal_rpow_of_nonneg (integral_nonneg fun y => sq_nonneg _) (by norm_num)]
+
+open QuantumMechanics in
+/-- **Fiberwise Coulomb bound in the `(A⁻+B⁻)²` shape** the `z`-Minkowski consumes. For a fiber
+`v = fiberSchwartz iₑ z u`, the inner `Space 3` lower integral of the center-`R` Coulomb density is
+bounded by `(ofReal ε · (∫⁻‖kin v‖²)^½ + ofReal C · (∫⁻‖v‖²)^½)²`. Combines the per-fiber squared bound
+(`lintegral_coulombSq_center_le`, W3-86) applied to the Bochner center-`R` bound (`hbound`, from
+`exists_coulomb_relbound_center`) with the √↔`(∫⁻)^½` glue (W3-102). -/
+lemma coulombSq_fiber_le {N : ℕ} (iₑ : Fin N) (R : Space 3) {ε C : ℝ} (hε : 0 ≤ ε) (hC : 0 ≤ C)
+    (hbound : ∀ (v : 𝓢(Space 3, ℂ)) (R : Space 3),
+      Real.sqrt (∫ y : Space 3, (‖y - R‖⁻¹ * ‖v y‖) ^ 2)
+        ≤ ε * Real.sqrt (∫ y : Space 3, ‖(∑ i, momentumCLM i (momentumCLM i v)) y‖ ^ 2)
+          + C * Real.sqrt (∫ y : Space 3, ‖v y‖ ^ 2))
+    (z : {k // ¬ electronCoord iₑ k} → ℝ) (u : 𝓢(Space (3 * N), ℂ)) :
+    ∫⁻ y : Space 3, (ENNReal.ofReal (‖y - R‖⁻¹ * ‖fiberSchwartz iₑ z u y‖)) ^ 2
+      ≤ (ENNReal.ofReal ε * (∫⁻ y : Space 3, (ENNReal.ofReal
+            ‖(∑ i, momentumCLM i (momentumCLM i (fiberSchwartz iₑ z u))) y‖) ^ 2) ^ (1 / 2 : ℝ)
+          + ENNReal.ofReal C * (∫⁻ y : Space 3, (ENNReal.ofReal
+            ‖fiberSchwartz iₑ z u y‖) ^ 2) ^ (1 / 2 : ℝ)) ^ 2 := by
+  refine le_trans (lintegral_coulombSq_center_le (mul_nonneg hε (Real.sqrt_nonneg _))
+    (mul_nonneg hC (Real.sqrt_nonneg _)) (hbound (fiberSchwartz iₑ z u) R)) (le_of_eq ?_)
+  rw [ENNReal.ofReal_pow (by positivity),
+    ENNReal.ofReal_add (by positivity) (by positivity),
+    ENNReal.ofReal_mul hε, ENNReal.ofReal_mul hC,
+    sqrt_integral_normSq_eq_rpow, sqrt_integral_normSq_eq_rpow]
+
 end SKEFTHawking.DFT
