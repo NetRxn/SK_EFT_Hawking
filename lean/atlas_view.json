@@ -343,6 +343,24 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "LinearPMap.codRestrict.eq_1",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "LinearPMap.comp.eq_1",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
       "fqn": "Matrix.BCH.bchOrder2Cubic_Fin",
       "module": "SKEFTHawking.MatrixBCHCubicMathlibPR",
       "atlas_kind": "TRUE",
@@ -12256,7 +12274,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 1
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DFT.IsRelBounded.domain_le",
@@ -12265,7 +12283,16 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 4
+      "frontier_impact": 5
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.IsRelBounded.extend_to_closure",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DFT.IsSelfAdjoint.eq_zero_of_orthogonal_range_sub_I_smul",
@@ -12412,6 +12439,33 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.DFT.antilipschitz_fiber",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.antilipschitz_gatherLM",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.antilipschitz_translate",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
       "fqn": "SKEFTHawking.DFT.applyEq_of_pmap_eq",
       "module": "SKEFTHawking.MolecularHamiltonian",
       "atlas_kind": "TRUE",
@@ -12421,13 +12475,418 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DFT.basis_repr_measurePreserving",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.block_pi_measurePreserving_space3",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coe_molecularSplitEquiv",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulombSq_fiber_le",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulombTermRel_measurable",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulombTerm_measurable",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulombTerm_mul_sq_measurable",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulombTerm_relbound_eLpNorm",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulombTerm_relbound_eLpNorm_smul",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulombTerm_relbound_enn",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulomb_far_le_one",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulomb_integral_split",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulomb_isRelBounded",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulomb_isRelBounded_core",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulomb_relbound_ee",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulomb_relbound_nuclear",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulomb_relbound_schwartz",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.coulomb_relbound_schwartz_real",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.denomInv1D_hasTemperateGrowth",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.dense_rangeSubISmul",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.electronBlock_piCongr_measurePreserving",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.electronCoord.eq_1",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.electronPos.eq_1",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.electronPosCLM_apply",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.electronPos_add",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
       "fqn": "SKEFTHawking.DFT.electronPos_continuous",
       "module": "SKEFTHawking.MolecularHamiltonian",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.electronPos_gatherLM",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
       "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.electronPos_smul",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.electronRelCLM.eq_1",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.electronRelCLM_apply",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.electron_split_measurePreserving",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.exists_coulomb_relbound",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.exists_coulomb_relbound_center",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.exists_coulomb_relbound_uniform",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.exists_sup_relbound",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.exists_sup_relbound_uniform",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.fiberSchwartz_apply",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.fourierMultiplierCLM_sub_apply",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.fourier_fourierMultiplierCLM",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.fourier_momentumSq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.fullKinetic_eq_block_add_rest",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.gatherCLM_apply",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.gatherLM_apply",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.gatherLM_basis",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.hasTemperateGrowth_fiber",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.hasTemperateGrowth_translate",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DFT.hohenberg_kohn_density_injective",
@@ -12457,13 +12916,301 @@
       "frontier_impact": 0
     },
     {
+      "fqn": "SKEFTHawking.DFT.innerBasisCSq_hasTemperateGrowth",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.innerBasisC_hasTemperateGrowth",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.innerBasis_hasTemperateGrowth",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integrable_coulombFar_mul_sq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integrable_coulombNear_mul_sq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integrable_coulombNear_sq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 4
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integrable_coulombSq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integrable_coulombSq_center",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integrable_normSq_fourier",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integrable_normSq_schwartz",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integrable_normSq_schwartz_gen",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integrable_oneAddNormSq_rpow_neg_two",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integrable_weight4_normSq_fourier",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_bdd_mul_sq_le",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_block_kineticSq_le",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_coulombNear_sq_pos",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_coulombSq_translate",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_cross_kinetic_eq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_kineticSq_translateSchwartz",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_mul_sq_le_sup_sq_mul",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_normSq_comp_smul",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_normSq_le_add",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_normSq_translateSchwartz",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_normSq_weight_eq_momentumSq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_normSq_weight_le",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_norm_le_weighted_L2",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_norm_le_weighted_L2_t",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_weightInv_sq_pos",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.integral_weightInv_sq_smul",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
       "fqn": "SKEFTHawking.DFT.isSelfAdjoint_closure_of_dense_range",
       "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.isSymmetricPMap_comp_self",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.isometry_fiber",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.isometry_gatherLM",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.DFT.katoRellich",
@@ -12477,6 +13224,33 @@
     {
       "fqn": "SKEFTHawking.DFT.katoRellich_map_surjective",
       "module": "SKEFTHawking.MolecularHamiltonian",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.kineticOperator_isSelfAdjoint_closure",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.kineticSq_fiberSchwartz",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.kineticSq_translateSchwartz",
+      "module": "SKEFTHawking.CoulombRelativeBound",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -12502,8 +13276,8 @@
       "frontier_impact": 0
     },
     {
-      "fqn": "SKEFTHawking.DFT.molecularCoulombPotential_measurable",
-      "module": "SKEFTHawking.MolecularHamiltonian",
+      "fqn": "SKEFTHawking.DFT.lintegral_block_kineticSq_le",
+      "module": "SKEFTHawking.CoulombRelativeBound",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -12511,8 +13285,161 @@
       "frontier_impact": 1
     },
     {
-      "fqn": "SKEFTHawking.DFT.molecularHamiltonian_essSelfAdjoint",
+      "fqn": "SKEFTHawking.DFT.lintegral_coulombSq_center_eq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.lintegral_coulombSq_center_le",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.lintegral_ofReal_normSq_eq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.lintegral_ofReal_normSq_rpow_eq_eLpNorm",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.lintegral_z_fiberKineticSq_le",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.measurable_fiber_lintegral",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.measurable_otherElectronPos",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.measurePreserving_translate",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.memLp_molecular_coulomb",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.memLp_two_oneAddNormSq_inv",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.memLp_two_oneAddTNormSq_inv",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.memLp_weighted_fourier",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.memLp_weighted_fourier_t",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecularCoulombPotential.eq_1",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecularCoulombPotential_abs_le",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecularCoulombPotential_measurable",
       "module": "SKEFTHawking.MolecularHamiltonian",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecularHamiltonian_essSelfAdjoint",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecularHamiltonian_essSelfAdjoint_of_hpot_hrel",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -12521,12 +13448,12 @@
     },
     {
       "fqn": "SKEFTHawking.DFT.molecularHamiltonian_essSelfAdjoint_of_kinetic",
-      "module": "SKEFTHawking.MolecularHamiltonian",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 0
+      "frontier_impact": 1
     },
     {
       "fqn": "SKEFTHawking.DFT.molecularPotentialOperator_isSymmetric",
@@ -12538,7 +13465,385 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DFT.molecularSplitMap_fst",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecularSplitMap_snd",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecularSplit_lintegral",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecularSplit_measurePreserving",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecularSplit_symm_eq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecular_coulombTerm_lintegral",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecular_coulombTerm_lintegral_var",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecular_kineticSq_lintegral",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.molecular_normSq_lintegral",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momSqSymbol_mul_resolvent",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momSqSymbol_sub_ne_zero",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumCLM_comm",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumCLM_eq_fourierMultiplier",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumCLM_eq_smul_lineDeriv",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumCLM_fiberSchwartz",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumCLM_self_adjoint",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumCLM_sq_eq_fourierMultiplier",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumCLM_translateSchwartz",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumOperator_apply_coe",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumOperator_schwartzEquiv",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumSqOperator_apply_eq",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumSqOperator_hasDenseDomain",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 3
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumSqOperator_isSelfAdjoint_closure",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumSqOperator_isSymmetric",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentumSq_schwartz_eq_fourierMultiplier",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.momentum_cross_term_eq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.normSymC_hasTemperateGrowth",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.norm_gatherLM",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.norm_kineticOperator_schwartz",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.norm_le_integral_norm_fourier",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.norm_le_weighted_L2_sup",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.norm_potentialOperator_schwartz",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.norm_schwartzEquiv_eq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.norm_schwartzIncl_eq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.norm_sup_le_kinetic",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.norm_sup_le_kinetic_t",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 2
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.oneAdd_mulSq_inv_hasTemperateGrowth",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.otherElectronPos.congr_simp",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.otherElectronPos_eq",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.phi1D_hasTemperateGrowth",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DFT.rangeSubISmul_le_closure",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.resSym.eq_1",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.resSym_hasTemperateGrowth",
       "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
@@ -12583,8 +13888,71 @@
       "frontier_impact": 1
     },
     {
+      "fqn": "SKEFTHawking.DFT.resolventSymbol_hasTemperateGrowth",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DFT.resolvent_relBound",
       "module": "SKEFTHawking.MolecularHamiltonian",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.resolvent_solves",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.resolvent_symbol_eq_one",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.rpow_half_lintegral_const_mul",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.schwartzEquiv_symm_mk",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.schwartz_le_potOp_domain",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.smul_hasTemperateGrowth",
+      "module": "SKEFTHawking.KineticEssentialSelfAdjoint",
       "atlas_kind": "TRUE",
       "atlas_status": "PROVED",
       "kernel_pure": true,
@@ -12601,6 +13969,51 @@
       "frontier_impact": 2
     },
     {
+      "fqn": "SKEFTHawking.DFT.space_pi_measurePreserving",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.sqrt_integral_add_sq_le",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.sqrt_integral_normSq_eq_rpow",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.sqrt_weighted_le",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.sqrt_weighted_le_t",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
       "fqn": "SKEFTHawking.DFT.surjective_one_add_of_contraction",
       "module": "SKEFTHawking.MolecularHamiltonian",
       "atlas_kind": "TRUE",
@@ -12608,6 +14021,24 @@
       "kernel_pure": true,
       "native_decide": false,
       "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.translateSchwartz_apply",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 1
+    },
+    {
+      "fqn": "SKEFTHawking.DFT.two_sqrt_mul_le_smul_add",
+      "module": "SKEFTHawking.CoulombRelativeBound",
+      "atlas_kind": "TRUE",
+      "atlas_status": "PROVED",
+      "kernel_pure": true,
+      "native_decide": false,
+      "frontier_impact": 0
     },
     {
       "fqn": "SKEFTHawking.DG.basis_mul",
@@ -58249,15 +59680,6 @@
       "frontier_impact": 0
     },
     {
-      "fqn": "SKEFTHawking.OpenSystems.traceDist_lindblad_monotone",
-      "module": "SKEFTHawking.LindbladSemigroup",
-      "atlas_kind": "TRUE",
-      "atlas_status": "PROVED",
-      "kernel_pure": true,
-      "native_decide": false,
-      "frontier_impact": 0
-    },
-    {
       "fqn": "SKEFTHawking.PenroseSingularity.correctness_push_biconditional_under_applicable",
       "module": "SKEFTHawking.PenroseSingularity",
       "atlas_kind": "TRUE",
@@ -72493,7 +73915,7 @@
       "atlas_status": "PROVED",
       "kernel_pure": true,
       "native_decide": false,
-      "frontier_impact": 3
+      "frontier_impact": 2
     },
     {
       "fqn": "SKEFTHawking.QuantumNetwork.traceDist_le_sqrt_one_sub_sqrtFidelity_sq",
@@ -130354,7 +131776,7 @@
     }
   },
   "summary": {
-    "theorem_nodes": 14382,
+    "theorem_nodes": 14540,
     "unknown_nodes": 33,
     "implies_edges": 35,
     "apex_nodes": 4,
@@ -130366,7 +131788,7 @@
     ],
     "by_kind_status": {
       "OBSTRUCTION:OBSTRUCTION": 210,
-      "TRUE:PROVED": 14172,
+      "TRUE:PROVED": 14330,
       "UNKNOWN:PLANNED": 9,
       "UNKNOWN:STATED": 24
     },
