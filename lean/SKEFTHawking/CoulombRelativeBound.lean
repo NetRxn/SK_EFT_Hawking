@@ -1966,4 +1966,17 @@ lemma measurable_otherElectronPos {N : ℕ} (i j : Fin N) (hij : i ≠ j) :
   Space.mk_continuous.measurable.comp
     (measurable_pi_lambda _ (fun _ => measurable_pi_apply _))
 
+/-- **The `(1/2)`-power lower integral is exactly the `L²` seminorm `eLpNorm · 2`.** Bridges the raw
+`(∫⁻(ofReal‖g‖)²)^½` form of the per-term Coulomb bounds (`coulombTerm_relbound_enn`) into `eLpNorm`, where
+Mathlib's finite-sum Minkowski (`eLpNorm_sum_le`) and the `L²` Hilbert-norm identity live — the entry point
+for the finite-sum-over-terms and the operator-level relative bound. -/
+lemma lintegral_ofReal_normSq_rpow_eq_eLpNorm {d : ℕ} (g : Space d → ℂ) :
+    (∫⁻ x : Space d, (ENNReal.ofReal ‖g x‖) ^ 2) ^ (1 / 2 : ℝ) = eLpNorm g 2 volume := by
+  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+  simp only [ENNReal.toReal_ofNat]
+  congr 1
+  refine lintegral_congr fun x => ?_
+  rw [ofReal_norm_eq_enorm, ← ENNReal.rpow_natCast (‖g x‖ₑ) 2]
+  norm_num
+
 end SKEFTHawking.DFT
