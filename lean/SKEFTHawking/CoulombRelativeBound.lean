@@ -2235,4 +2235,23 @@ lemma norm_kineticOperator_schwartz {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : F
   congr 1
   exact (congrArg norm (momentumSqOperator_apply_eq u hmem)).trans (norm_schwartzIncl_eq _)
 
+open QuantumMechanics SpaceDHilbertSpace in
+/-- **Potential operator norm on a Schwartz vector.** `‖potentialOperator (schwartzEquiv u)‖ =
+(eLpNorm ((↑V)·u) 2).toReal`, since `potentialOperator = 𝓜(ofReal∘V)` acts a.e. as multiplication
+(`mulOperator_apply_ae`) and `schwartzEquiv u =ᵐ u`; then `Lp.norm_def` + `eLpNorm_congr_ae`. The `‖B x‖`
+side of the Kato bound at the Schwartz core. -/
+lemma norm_potentialOperator_schwartz {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finset (Space 3 × ℝ))
+    (u : 𝓢(Space (3 * N), ℂ))
+    (hmem : (schwartzEquiv u : SpaceDHilbertSpace (3 * N)) ∈
+      (molecularSystem N m hm nuclei).potentialOperator.domain) :
+    ‖((molecularSystem N m hm nuclei).potentialOperator ⟨_, hmem⟩ : SpaceDHilbertSpace (3 * N))‖
+      = (eLpNorm (fun x => (↑(molecularCoulombPotential nuclei x) : ℂ) * u x) 2 volume).toReal := by
+  rw [Lp.norm_def]
+  congr 1
+  refine eLpNorm_congr_ae ?_
+  filter_upwards [mulOperator_apply_ae (f := Complex.ofReal ∘ molecularCoulombPotential nuclei) ⟨_, hmem⟩,
+    SchwartzSubmodule.schwartzEquiv_coe_ae u] with x h₁ h₂
+  erw [h₁]
+  rw [Pi.smul_apply', smul_eq_mul, Function.comp_apply, h₂]
+
 end SKEFTHawking.DFT
