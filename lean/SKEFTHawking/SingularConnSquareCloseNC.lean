@@ -1726,6 +1726,105 @@ theorem rhs_realize_V_leg {A B S : Set ↑X} {n : ℕ}
   rw [ZModModule.sub_eq_add, kronecker_add_left, add_eq_zero_iff_eq_neg, CharTwo.neg_eq] at hψ
   exact hψ.symm
 
+omit [T2Space ↑X] in
+/-- **V-leg pairing well-definedness across cover-splits** (fact-(ii) brick β1 — the anti-`mem_sup`
+engine). Two cover-splits of the SAME ambient chain — legs over any subsets `A₁, A₂ ⊆ A`, `B₁, B₂ ⊆ B` —
+have EQUAL V-leg pairings against any cochain `g` vanishing on `C(A ∩ B)`: over ℤ/2 the two V-legs' sum
+equals the two U-legs' sum, so it is supported in both `B` and `A`, i.e. in `A ∩ B`
+(`subspaceChains_inf`), where `g` kills it. This makes ⟨g, V-leg⟩ an invariant of the CHAIN, not the
+split — dissolving the `Submodule.mem_sup` witness-ambiguity that walled the cross-realization. -/
+theorem kronecker_two_splits_V_leg_eq {A B A₁ B₁ A₂ B₂ : Set ↑X} {n : ℕ}
+    (hA₁ : A₁ ⊆ A) (hB₁ : B₁ ⊆ B) (hA₂ : A₂ ⊆ A) (hB₂ : B₂ ⊆ B)
+    (g : SingularCochain X n) (hg : g ∈ relCochains (A ∩ B) n)
+    (a₁ : SingularChain (sub A₁) n) (b₁ : SingularChain (sub B₁) n)
+    (a₂ : SingularChain (sub A₂) n) (b₂ : SingularChain (sub B₂) n)
+    (heq : chainIncl A₁ n a₁ + chainIncl B₁ n b₁ = chainIncl A₂ n a₂ + chainIncl B₂ n b₂) :
+    kronecker g (chainIncl B₁ n b₁) = kronecker g (chainIncl B₂ n b₂) := by
+  have hbsum : chainIncl B₁ n b₁ + chainIncl B₂ n b₂ = chainIncl A₁ n a₁ + chainIncl A₂ n a₂ := by
+    have h := congrArg (· + (chainIncl B₁ n b₁ + chainIncl A₂ n a₂)) heq
+    simp only at h
+    abel_nf at h
+    simp only [two_smul, ZModModule.add_self, add_zero, zero_add] at h
+    abel_nf
+    rw [h]
+  have hmem : chainIncl B₁ n b₁ + chainIncl B₂ n b₂ ∈ subspaceChains (A ∩ B) n := by
+    rw [← SingularExcision.subspaceChains_inf]
+    exact ⟨hbsum ▸ Submodule.add_mem _
+        (SingularMayerVietoris.subspaceChains_mono hA₁ n ⟨a₁, rfl⟩)
+        (SingularMayerVietoris.subspaceChains_mono hA₂ n ⟨a₂, rfl⟩),
+      Submodule.add_mem _
+        (SingularMayerVietoris.subspaceChains_mono hB₁ n ⟨b₁, rfl⟩)
+        (SingularMayerVietoris.subspaceChains_mono hB₂ n ⟨b₂, rfl⟩)⟩
+  have h0 := (mem_relCochains _ _ _).1 hg _ hmem
+  rw [kronecker_add_right, add_eq_zero_iff_eq_neg, CharTwo.neg_eq] at h0
+  exact h0
+
+omit [T2Space ↑X] in
+/-- **Boundary-split V-leg vanishing** (fact-(ii) brick β2 — the TERMINATING boundary transport). If a
+chain is `∂Ec` for an `(A ∪ B)`-supported `Ec`, the V-leg of ANY cover-split of it pairs to ZERO against
+an absolute cocycle `g` vanishing on `C(A ∩ B)`. Construction: cover-fine-subdivide `Ec`
+(`exists_cover_split`) — `∂(Sdᵐ Ec)` then splits with legs that are THEMSELVES boundaries of leg-chains,
+each `g`-killed by the `δ`-adjunction; and the homotopy correction `Dₘ(∂Ec)` is cover-fine because `∂Ec`'s
+OWN split makes it `{A,B}`-small and `D`/`Sd` PRESERVE smallness (`iterHomotopy_mem_smallChains`) — the
+step the recursive rcap-slack attempts lacked, which is what terminates the transport. Conclude by the
+split-invariance `kronecker_two_splits_V_leg_eq`. ℤ/2. -/
+theorem kronecker_boundary_split_V_leg_zero {A B A' B' : Set ↑X} {n : ℕ}
+    (hA : IsOpen A) (hB : IsOpen B) (hA' : A' ⊆ A) (hB' : B' ⊆ B)
+    (g : SingularCochain X (n + 1)) (hgc : coboundary X (n + 1) g = 0)
+    (hg : g ∈ relCochains (A ∩ B) (n + 1))
+    (Ec : SingularChain X (n + 1 + 1)) (hEc : Ec ∈ subspaceChains (A ∪ B) (n + 1 + 1))
+    (aZ : SingularChain (sub A') (n + 1)) (bZ : SingularChain (sub B') (n + 1))
+    (hZsplit : chainBoundary X (n + 1) Ec = chainIncl A' (n + 1) aZ + chainIncl B' (n + 1) bZ) :
+    kronecker g (chainIncl B' (n + 1) bZ) = 0 := by
+  classical
+  obtain ⟨m, EU, EV, hEsplit⟩ :=
+    SingularConnSquareRHSScaffold.exists_cover_split A B hA hB _ Ec hEc
+  have hZcyc : chainBoundary X n (chainBoundary X (n + 1) Ec) = 0 :=
+    chainBoundary_chainBoundary_apply X n Ec
+  -- The homotopy correction, cover-partitioned (∂Ec is {A,B}-small via its OWN split):
+  have hZsmall : chainBoundary X (n + 1) Ec ∈ SingularExcision.smallChains {A, B} (n + 1) := by
+    rw [SingularExcision.smallChains_two_eq, hZsplit]
+    exact Submodule.add_mem _
+      (Submodule.mem_sup_left (SingularMayerVietoris.subspaceChains_mono hA' _ ⟨aZ, rfl⟩))
+      (Submodule.mem_sup_right (SingularMayerVietoris.subspaceChains_mono hB' _ ⟨bZ, rfl⟩))
+  have hDsmall := SingularExcision.iterHomotopy_mem_smallChains hZsmall m
+  rw [SingularExcision.smallChains_two_eq] at hDsmall
+  obtain ⟨DU, DV, hDsplit⟩ :=
+    SingularConnSquareLHSExplicit.exists_chainIncl_partition_of_mem_mvUnionChains A B _ _ hDsmall
+  -- The constructed split of ∂Ec: Z = Sdᵐ Z + ∂(Dₘ Z), both summands leg-split.
+  have hhom := SingularExcision.add_singularSd_iterate_eq_boundary hZcyc m
+  have hSdZ : (⇑(SingularSubdivision.singularSd X (n + 1)))^[m] (chainBoundary X (n + 1) Ec)
+      = chainIncl A (n + 1) (chainBoundary (sub A) (n + 1) EU)
+        + chainIncl B (n + 1) (chainBoundary (sub B) (n + 1) EV) := by
+    rw [← SingularSubdivision.singularSd_iterate_chainBoundary, hEsplit, map_add,
+      chainIncl_chainBoundary, chainIncl_chainBoundary]
+  have hDbd : chainBoundary X (n + 1) (SingularSubdivision.iterHomotopy X (n + 1) m
+        (chainBoundary X (n + 1) Ec))
+      = chainIncl A (n + 1) (chainBoundary (sub A) (n + 1) DU)
+        + chainIncl B (n + 1) (chainBoundary (sub B) (n + 1) DV) := by
+    rw [hDsplit, map_add, chainIncl_chainBoundary, chainIncl_chainBoundary]
+  have hZ2 : chainBoundary X (n + 1) Ec
+      = chainIncl A (n + 1) (chainBoundary (sub A) (n + 1) EU + chainBoundary (sub A) (n + 1) DU)
+        + chainIncl B (n + 1)
+            (chainBoundary (sub B) (n + 1) EV + chainBoundary (sub B) (n + 1) DV) := by
+    have h := congrArg
+      (· + (⇑(SingularSubdivision.singularSd X (n + 1)))^[m] (chainBoundary X (n + 1) Ec)) hhom
+    simp only at h
+    abel_nf at h
+    simp only [two_smul, ZModModule.add_self, add_zero, zero_add] at h
+    rw [map_add, map_add, h, hSdZ, hDbd]
+    abel
+  have hkey := kronecker_two_splits_V_leg_eq hA' hB' (le_refl A) (le_refl B) g hg
+    aZ bZ _ _ (hZsplit.symm.trans hZ2)
+  have hfin : kronecker g ((chainIncl B (n + 1)) ((chainBoundary (sub B) (n + 1)) EV
+      + (chainBoundary (sub B) (n + 1)) DV)) = 0 := by
+    have hcomb : (chainBoundary (sub B) (n + 1)) EV + (chainBoundary (sub B) (n + 1)) DV
+        = (chainBoundary (sub B) (n + 1)) (EV + DV) := (map_add _ EV DV).symm
+    rw [hcomb, chainIncl_chainBoundary, ← kronecker_coboundary_chainBoundary, hgc]
+    simp
+  rw [hkey]
+  exact hfin
+
 /-- **`∂(Sdʲ(chainIncl T d))` is `T`-supported** (the σR-leg `hMem0` brick, abstract whnf-dodging GREEN).
 A `chainIncl T`-supported chain stays `T`-supported under iterated barycentric subdivision
 (`singularSd_iterate_mem_subspaceChains`) and under `∂` (`chainBoundary_mem_subspaceChains`). Stated over a
