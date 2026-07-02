@@ -1857,6 +1857,20 @@ theorem pullbackCochain_relCochains_preimage {W S : Set ↑X} {n : ℕ}
     ((SingularExcisionIso.chainIncl_mem_subspaceChains_iff S W d).mpr hd)
 
 omit [T2Space ↑X] in
+/-- **Right-cap locality through the subspace inclusion** (fact-(ii) brick β0''). If the ambient image of
+a `sub W`-chain `F` is `B'`-supported, so is the ambient image of any intrinsic right cap `rcap b F`:
+transport up (`chainIncl_mem_subspaceChains_iff`), apply the intrinsic `rcap_mem_subspaceChains` at the
+preimage, transport back down. Stated over FREE `W, B', b, F` — every set infers from the membership
+hypothesis, so no concrete coercion spelling ever meets the elaborator. ℤ/2. -/
+theorem chainIncl_rcap_subspaceChains {W B' : Set ↑X} {k l : ℕ}
+    (b : SingularCochain (sub W) l) (F : SingularChain (sub W) (k + l))
+    (hF : chainIncl W (k + l) F ∈ subspaceChains B' (k + l)) :
+    chainIncl W k (SingularCapChainIncl.rcap b F) ∈ subspaceChains B' k :=
+  (SingularExcisionIso.chainIncl_mem_subspaceChains_iff B' W _).mpr
+    (SingularRightCapBoundary.rcap_mem_subspaceChains _ b
+      ((SingularExcisionIso.chainIncl_mem_subspaceChains_iff B' W F).mp hF))
+
+omit [T2Space ↑X] in
 /-- **Joint cross-realization assembly** (the G1 close skeleton, whnf-dodging GREEN). Combines the two
 realized legs on the common space `M = sub T` (with `T = U ∩ V`) into the connecting-square match. The
 SEAM leg is supplied realized as `cap gM F + ∂e₁` (`hL`, PART-2 fund-compat output); the σR leg is supplied
@@ -2386,8 +2400,42 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
         --     add_singularSd_iterate_eq_boundary on the CYCLE rcap β (∂fund_sub) (∂∂ = 0), the jSd-side via
         --     rcap-linearity + rcap_cocycle_chainMap (β cocycle); fund₁↔fund₂ via castChain_cast_reconcile.
         --     E_M' := DⱼP(rcap β f) + rcap β (Dⱼˢᵈ f) is (val⁻¹infCompactᶜ)-supported (D/rcap preserve).
-        -- (3) β2 (`kronecker_boundary_split_V_leg_zero`, X := sub(U∩V), A/B := val⁻¹legSplitU/Vᶜ) on the
-        --     combined split of ∂E_M' kills the combined V-pairing; kronecker_add_right + ℤ/2 splits it
-        --     into fact (ii). β1 handles any split-representation slack en route.
+        -- (3) β2 on the combined split of the parents' sum kills the combined V-pairing; ℤ/2 splits it.
+        -- FRAME DODGE (recorded): the pullback layer is discharged by PURE TERM COMPOSITION (Eq.trans) —
+        -- never rewritten against the big goal; all further rewriting happens on the small ambient goal.
+        have e₁ := kronecker_chainIncl_eq_pullbackCochain (W := U ∩ V)
+          (RR (hKeq ▸ g_rep)).1.1
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1)).symm ⟨_, hbmem⟩)
+        have e₂ := kronecker_chainIncl_eq_pullbackCochain (W := U ∩ V)
+          (RR (hKeq ▸ g_rep)).1.1
+          (SingularCapChainIncl.rcap β.1
+            ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V)
+              (N + 1 + (p + 1))).symm ⟨_, hbFmem⟩))
+        -- The R_sub-side and F-side leg identities, ascribed to their CLEAN forms (the ↑⟨·,·⟩ coe is
+        -- defeq); consumed via congrArg — no goal-rewriting anywhere near the fundCycleW terms.
+        have e₃ : chainIncl (U ∩ V) (N + 1)
+              ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1)).symm ⟨_, hbmem⟩)
+            = chainIncl _ (N + 1) bR :=
+          SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (S := U ∩ V) (N + 1)
+            ⟨_, hbmem⟩
+        -- the F-side support: rcap locality through the inclusion (β0'' — every set INFERRED)
+        have e₅ : chainIncl (U ∩ V) (N + 1 + (p + 1))
+              ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V)
+                (N + 1 + (p + 1))).symm ⟨_, hbFmem⟩)
+            = chainIncl _ (N + 1 + (p + 1)) bF :=
+          SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (S := U ∩ V)
+            (N + 1 + (p + 1)) ⟨_, hbFmem⟩
+        have hmem3 := chainIncl_rcap_subspaceChains β.1 _
+          (e₅.symm ▸ (⟨bF, rfl⟩ : chainIncl _ (N + 1 + (p + 1)) bF
+            ∈ subspaceChains _ (N + 1 + (p + 1))))
+        have e₄ : chainIncl (U ∩ V) (N + 1) (SingularCapChainIncl.rcap β.1
+              ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V)
+                (N + 1 + (p + 1))).symm ⟨_, hbFmem⟩))
+            = chainIncl _ (N + 1)
+              ((SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (N + 1)).symm ⟨_, hmem3⟩) :=
+          (SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm _ (N + 1) ⟨_, hmem3⟩).symm
+        refine e₁.symm.trans ((((congrArg (kronecker (RR (hKeq ▸ g_rep)).1.1) e₃).trans
+          ?_).trans (congrArg (kronecker (RR (hKeq ▸ g_rep)).1.1) e₄.symm)).trans e₂)
+        -- CORE two-legs goal: ⟨gRk, chainIncl(Vᶜ∩∩) bR⟩ = ⟨gRk, chainIncl(Vᶜ∩∩) bRHS⟩.
         sorry
 end SKEFTHawking.SingularConnSquareCloseNC
