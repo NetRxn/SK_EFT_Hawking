@@ -1841,6 +1841,22 @@ theorem chainBoundary_singularSd_iterate_chainIncl_mem {T : Set ↑X} {n : ℕ} 
       (c := chainIncl T (n + 1) d) ⟨d, rfl⟩ j)
 
 omit [T2Space ↑X] in
+/-- **Pullback transports relative-vanishing to the preimage** (fact-(ii) brick β0'). A cochain vanishing
+on `C(S)` pulls back along `sub W ↪ X` to a cochain vanishing on `C(Subtype.val ⁻¹' S)`: a
+preimage-supported chain includes to an `S`-supported ambient chain
+(`chainIncl_mem_subspaceChains_iff`), where the adjunction
+`⟨pullbackCochain W g, d⟩ = ⟨g, chainIncl W d⟩` hands the vanishing back. Lets the ambient `g_rep↾`
+enter the sub(U∩V)-intrinsic β-brick machinery as `pullbackCochain (U∩V) g_rep↾`. ℤ/2. -/
+theorem pullbackCochain_relCochains_preimage {W S : Set ↑X} {n : ℕ}
+    (g : SingularCochain X n) (hg : g ∈ relCochains S n) :
+    SingularCapChainIncl.pullbackCochain W n g ∈ relCochains (Subtype.val ⁻¹' S) n := by
+  rw [mem_relCochains]
+  intro d hd
+  rw [SingularCapSubKDuality.kronecker_pullbackCochain]
+  exact (mem_relCochains _ _ _).1 hg _
+    ((SingularExcisionIso.chainIncl_mem_subspaceChains_iff S W d).mpr hd)
+
+omit [T2Space ↑X] in
 /-- **Joint cross-realization assembly** (the G1 close skeleton, whnf-dodging GREEN). Combines the two
 realized legs on the common space `M = sub T` (with `T = U ∩ V`) into the connecting-square match. The
 SEAM leg is supplied realized as `cap gM F + ∂e₁` (`hL`, PART-2 fund-compat output); the σR leg is supplied
