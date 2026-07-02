@@ -1712,11 +1712,12 @@ theorem rhs_realize_V_leg {A B S : Set ↑X} {n : ℕ}
     (gR : SingularCochain X n) (hgR : gR ∈ relCochains (A ∩ B) n)
     (u : SingularChain (sub A) n) (w : SingularChain (sub B) n)
     (hS : chainIncl A n u + chainIncl B n w ∈ subspaceChains S n) :
-    ∃ (b : SingularChain (sub (B ∩ S)) n),
-      kronecker (cochainSplit A n gR) (chainIncl A n u + chainIncl B n w)
+    ∃ (a : SingularChain (sub (A ∩ S)) n) (b : SingularChain (sub (B ∩ S)) n),
+      (chainIncl A n u + chainIncl B n w = chainIncl (A ∩ S) n a + chainIncl (B ∩ S) n b)
+      ∧ kronecker (cochainSplit A n gR) (chainIncl A n u + chainIncl B n w)
         = kronecker gR (chainIncl (B ∩ S) n b) := by
   obtain ⟨a, b, hab⟩ := repartition_subspaceChains u w hS
-  refine ⟨b, ?_⟩
+  refine ⟨a, b, hab, ?_⟩
   rw [hab, kronecker_add_right,
     (mem_relCochains _ _ _).1 (cochainSplit_mem_relCochains _ _ _) _
       (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left n ⟨a, rfl⟩), zero_add]
@@ -2299,7 +2300,7 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       have hMem0 : chainIncl _ (N + 1) uP + chainIncl _ (N + 1) wP
           ∈ subspaceChains (U ∩ V) (N + 1) :=
         hsplit2 ▸ chainBoundary_singularSd_iterate_chainIncl_mem (T := U ∩ V) jP _
-      obtain ⟨bR, hbR⟩ :=
+      obtain ⟨aR, bR, hbRchain, hbR⟩ :=
         rhs_realize_V_leg (RR (hKeq ▸ g_rep)).1.1 (RR (hKeq ▸ g_rep)).1.2 uP wP hMem0
       -- Swap the bare-gRk V-leg pairing back to the cochainSplit form, re-add the (killed) U-leg, then hbR.
       have hsum : kronecker (cochainSplit
@@ -2349,9 +2350,28 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       -- (cap(δ(cochainSplit)) engine); β-cocycle absorbs the boundary/Sdʲ slack.
       · sorry
       -- SUN FACT (ii) — the rcap fact: ⟨pullbackCochain (U∩V) g_rep↾, R_sub⟩ =
-      -- ⟨pullbackCochain g_rep↾, rcap β F⟩. bR (from Sdʲᴾ∂(rcap β fund₂), index jP) vs rcap β (V-part of
-      -- Sdʲˢᵈ∂fund₁, index jSd): the rcap↔Sd commutator across indices + the two repartition witnesses;
-      -- g_rep↾'s absolute-cocycle property (relCocycle_props) absorbs the slack. Tools: NC:158/184 rcap-Sd
-      -- bricks, castChain_cast_reconcile (fund₁↔fund₂), kronecker_relCochains_cover_partition_eq_zero.
-      · sorry
+      -- ⟨pullbackCochain g_rep↾, rcap β F⟩. Assembly (per the β-brick architecture): reduce both sides to
+      -- ambient ⟨gRk, (Vᶜ∩(U∩V))-leg⟩ pairings; the two legs are V-legs of splits of two parents P₁ (bR's,
+      -- via hbRchain+hsplit2) and P₂ (rcap β applied to hsplit+hFsplit's split) whose SUM is ∂(chainIncl E)
+      -- with E cover-supported (the Sd-homotopy on the CYCLE rcap β ∂fund — `add_singularSd_iterate_eq_
+      -- boundary` — plus the fund₁↔fund₂ cast bridge); then `kronecker_boundary_split_V_leg_zero` (β2)
+      -- kills the combined V-pairing and ℤ/2 splits it into the desired equality.
+      · -- ▶ NEXT (intrinsic-frame assembly — the ambient un-pullback rw's whnf-wall on this goal, both
+        -- spellings; STAY in sub(U∩V) and EXACT-apply the β-bricks, never goal-rewrite):
+        -- (0) β0' brick: `pullbackCochain_relCochains_preimage` — g ∈ relCochains S ⟹ pullbackCochain W g
+        --     ∈ relCochains (val⁻¹S) (via kronecker_pullbackCochain + chainIncl_mem_subspaceChains_iff.mpr);
+        --     gives hg-intrinsic for G; hgc-intrinsic via coboundary_pullbackCochain_eq + relCocycle_props.
+        -- (1) R_sub ∈ subspaceChains_{M'}(val⁻¹(Vᶜ∩∩)) via chainIncl_mem_subspaceChains_iff.mp on its
+        --     defining chainIncl identity; rcap β F ∈ same via rcap_mem_subspaceChains-in-M' + hF_mem
+        --     (hF_mem := iff.mp on F's defining identity). Realize both as val⁻¹Vᶜ-legs (M'-equiv).
+        -- (2) Parents: P₁ := ∂(Sdʲᴾ(rcap β fund₂_sub)) [intrinsic; bridges to hsplit2/hbRchain via
+        --     singularSd_iterate_chainIncl + chainIncl_injective], P₂ := rcap β (∂(Sdʲˢᵈ fund₁_sub))
+        --     [bridges to hsplit/hFsplit the same way]. P₁ + P₂ = ∂E_M' + cast-slack: the jP-side via
+        --     add_singularSd_iterate_eq_boundary on the CYCLE rcap β (∂fund_sub) (∂∂ = 0), the jSd-side via
+        --     rcap-linearity + rcap_cocycle_chainMap (β cocycle); fund₁↔fund₂ via castChain_cast_reconcile.
+        --     E_M' := DⱼP(rcap β f) + rcap β (Dⱼˢᵈ f) is (val⁻¹infCompactᶜ)-supported (D/rcap preserve).
+        -- (3) β2 (`kronecker_boundary_split_V_leg_zero`, X := sub(U∩V), A/B := val⁻¹legSplitU/Vᶜ) on the
+        --     combined split of ∂E_M' kills the combined V-pairing; kronecker_add_right + ℤ/2 splits it
+        --     into fact (ii). β1 handles any split-representation slack en route.
+        sorry
 end SKEFTHawking.SingularConnSquareCloseNC
