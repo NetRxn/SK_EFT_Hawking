@@ -1851,6 +1851,16 @@ theorem pullbackCochain_relCochains_preimage {W S : Set ↑X} {n : ℕ}
     ((SingularExcisionIso.chainIncl_mem_subspaceChains_iff S W d).mpr hd)
 
 omit [T2Space ↑X] in
+/-- **`chainIncl` commutes with degree casts** (fresh-variable form — `cases h` needs bare variables).
+With `castChain_cast_reconcile` and `chainIncl_injective` this yields the M'-level reconciliation of the
+two `castChain`-instance fundamentals (the σR-side `N+2+p+1` vs the match-side `N+1+(p+1)+1` realize):
+their sub(U∩V)-realizations agree up to the same numeric cast. ℤ/2. -/
+theorem chainIncl_cast_comm {W : Set ↑X} {a b : ℕ} (h : a = b)
+    (x : SingularChain (sub W) a) :
+    chainIncl W b (h ▸ x) = h ▸ chainIncl W a x := by
+  cases h; rfl
+
+omit [T2Space ↑X] in
 /-- **Right-cap locality through the subspace inclusion** (fact-(ii) brick β0''). If the ambient image of
 a `sub W`-chain `F` is `B'`-supported, so is the ambient image of any intrinsic right cap `rcap b F`:
 transport up (`chainIncl_mem_subspaceChains_iff`), apply the intrinsic `rcap_mem_subspaceChains` at the
