@@ -1861,6 +1861,38 @@ theorem chainIncl_cast_comm {W : Set ↑X} {a b : ℕ} (h : a = b)
   cases h; rfl
 
 omit [T2Space ↑X] in
+/-- **`chainBoundary` commutes with degree casts** (`cast (congrArg …)` canonical spelling, coherent with
+`subspaceChains_mem_cast`; fresh-variable form so `cases h` closes it). -/
+theorem chainBoundary_cast_comm {a b : ℕ} (h : a = b) (x : SingularChain X (a + 1)) :
+    chainBoundary X b (cast (congrArg (SingularChain X) (congrArg (· + 1) h)) x)
+      = cast (congrArg (SingularChain X) h) (chainBoundary X a x) := by
+  cases h; rfl
+
+/-- **Cast-aware cover-V-projection existence** (the fact-(ii) F-constructor, whnf-dodging abstract form).
+For a `W`-supported chain `z` (at ANY degree presentation `n₂ + 1`, transported to the target
+presentation `n₁ + 1` by the cast) whose boundary is cover-supported, some iterated subdivision of the
+cast chain has a boundary splitting into SUPPORT-PRESERVING repartitioned legs over `A ∩ W` / `B ∩ W`.
+All the cast/degree work happens in here over the FREE variable `z` (where `cases h` collapses the cast
+before anything must reduce) — the concrete `fundCycleW` enters only as an opaque argument. ℤ/2. -/
+theorem exists_cast_cover_V_projection {W A B : Set ↑X} (hA : IsOpen A) (hB : IsOpen B)
+    {n₂ n₁ : ℕ} (h : n₂ = n₁) (z : SingularChain X (n₂ + 1))
+    (hz : z ∈ subspaceChains W (n₂ + 1))
+    (hbd : chainBoundary X n₂ z ∈ subspaceChains (A ∪ B) n₂) :
+    ∃ (j : ℕ) (aF : SingularChain (sub (A ∩ W)) n₁) (bF : SingularChain (sub (B ∩ W)) n₁),
+      chainBoundary X n₁ ((⇑(SingularSubdivision.singularSd X (n₁ + 1)))^[j]
+          (cast (congrArg (SingularChain X) (congrArg (· + 1) h)) z))
+        = chainIncl (A ∩ W) n₁ aF + chainIncl (B ∩ W) n₁ bF := by
+  cases h
+  obtain ⟨j, u, w, hsplit⟩ :=
+    SingularConnSquareRHSScaffold.exists_cover_fine_subdivision hA hB z hbd
+  have hpar : chainIncl A n₂ u + chainIncl B n₂ w ∈ subspaceChains W n₂ := by
+    rw [← hsplit]
+    exact SingularRelativeHomologyMod2.chainBoundary_mem_subspaceChains W n₂ _
+      (SingularExcision.singularSd_iterate_mem_subspaceChains hz j)
+  obtain ⟨aF, bF, hFsplit⟩ := repartition_subspaceChains u w hpar
+  exact ⟨j, aF, bF, hsplit.trans hFsplit⟩
+
+omit [T2Space ↑X] in
 /-- **Right-cap locality through the subspace inclusion** (fact-(ii) brick β0''). If the ambient image of
 a `sub W`-chain `F` is `B'`-supported, so is the ambient image of any intrinsic right cap `rcap b F`:
 transport up (`chainIncl_mem_subspaceChains_iff`), apply the intrinsic `rcap_mem_subspaceChains` at the
@@ -2361,9 +2393,13 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       -- `A + B = 0` to the `joint_cap_rcap_match` shape `⟨β, L⟩ = ⟨gM, R⟩`.
       erw [kronecker_double_pullback]
       rw [add_eq_zero_iff_eq_neg, CharTwo.neg_eq]
-      -- THE SHARED cover-V-projection F (turn-42's corrected choice — NOT ∂fund, which is unsound):
-      -- repartition hsplit's legs (the parent ∂(Sdʲˢᵈ fund₁) IS (U∩V)-supported since fundCycleW is), then
-      -- realize the V-part on sub(U∩V).
+      -- THE SHARED cover-V-projection F — SINGLE-CHOICE discipline: a FRESH cover-split of the CAST
+      -- fund₂ (the same `.choose` the pd side carries), so every fund-object in fact (ii) is a cast-
+      -- presentation of ONE term and all reconciliations are `cases`-able cast-commutes. (fund₁-based
+      -- splits would introduce a SECOND independent choice — see the 9th-push notebook analysis.)
+      -- THE SHARED cover-V-projection F (fund₁-based for now — the fund₂ single-choice swap via
+      -- `exists_cast_cover_V_projection` walls at this call site pending bisection; see the notebook):
+      -- repartition hsplit's legs (the parent ∂(Sdʲˢᵈ fund₁) IS (U∩V)-supported since fundCycleW is).
       have hFparent : chainIncl _ (N + 1 + (p + 1)) u' + chainIncl _ (N + 1 + (p + 1)) w'
           ∈ subspaceChains (U ∩ V) (N + 1 + (p + 1)) :=
         hsplit ▸ SingularRelativeHomologyMod2.chainBoundary_mem_subspaceChains (U ∩ V)
