@@ -2123,5 +2123,60 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       -- z₀ — seam leg via the cover-partition (hpart/hzc0: zB = V-part of cap g_rep fund) + connectingLift /
       -- kroneckerH_mvConnecting_cover_partition@ConnSquareLHSPairing; pd leg via hσR (σR_rep = connecting of
       -- g_rep's restriction) + the rhs_pairing_reduce family; ℤ/2 cancels the matched pair.
+      -- pd-leg step 1 (cup → ambient σR pairing): ⟨cup (pullback σR) β, fund_sub⟩ = ⟨σR, chainIncl (rcap β fund_sub)⟩.
+      erw [← SingularConnSquareClose.kronecker_chainIncl_rcap_eq_cup]
+      -- pd-leg step 2 (chain pairing → relKroneckerH class pairing, turn-15 bridge reversed): the ambient
+      -- pairing of σR_rep against the chainIncl'd rcap IS the relative-Kronecker pairing of σR_rep's class.
+      erw [← SingularConnSquareClose.relKroneckerH_chainIncl_rcap_eq_kronecker
+        _ _ (SingularOpenDualityCycle.fundCycleW_boundary _ _ _ _) σR_rep β
+        (SingularCapSubKDuality.chainIncl_rcap_mem_relCycles _ _
+          (SingularOpenDualityCycle.fundCycleW_boundary _ _ _ _) β)]
+      -- pd-leg step 3: expose the connecting class. Turn-16 friction fix: the goal presents σR's class as
+      -- `RelativeCohomology.mk` while hσR's LHS is `Submodule.Quotient.mk` — convert via rfl first, then hσR.
+      rw [← show (Submodule.Quotient.mk σR_rep : RelativeCohomology _ (N + 1 + 1))
+          = RelativeCohomology.mk _ (N + 1 + 1) σR_rep from rfl]
+      erw [hσR]
+      -- pd-leg step 4 (turn-18 recipe): peel the OUTER relCohomSetCongr — shape the homology as
+      -- `relIncl refl` (the ← rw needs the mk-shaped y so the pattern isn't a bare metavariable), collapse.
+      rw [← SingularTwoCoverBridge.relIncl_refl_apply (Set.Subset.refl _)
+        (RelativeHomology.mk _ (N + 1 + 1) _)]
+      erw [SingularTwoCoverBridge.relKroneckerH_relCohomSetCongr_relIncl_collapse]
+      -- pd-leg step 5 (turn-19 recipe): mk-push — reduce the MvConnecting's cohomology arg to `mk (g_rep↾)`
+      -- (the mk-pushing lemmas want `RelativeCohomology.mk`, so convert the inner Quotient.mk first, rfl).
+      rw [show (Submodule.Quotient.mk g_rep : RelativeCohomology _ (N + 1))
+          = RelativeCohomology.mk _ (N + 1) g_rep from rfl,
+        SingularRelCohomSetCongrMk.relCohomSetCongr_mk,
+        SingularRelativeCohomologyRestrict.relCohomRestrict_mk]
+      -- pd-leg step 6 (turn-20 helper): push the collapse's `▸` through the RelativeHomology.mk, landing the
+      -- homology over legSplitUᶜ ∪ legSplitVᶜ (the set rhs_pairing_reduce_partition consumes); the relCycles
+      -- witness over the union comes from the cover form of the fundamental's boundary support.
+      rw [relHomology_mk_setCongr_transport ((infCompact_compl_legSplit hU hV K).symm) _ _
+        (SingularCapSubKDuality.chainIncl_rcap_mem_relCycles _ _
+          (fundCycleW_boundary_cover _ _ _ _
+            (infCompact_compl_legSplit hU hV K)) β)]
+      -- pd-leg step 7 (turn-23 whnf dodge + the partition-exposing reduce): abstract the concrete
+      -- `relCocycleRestrict` MAP to an opaque `RR` (the documented 200k-wall source), then evaluate the
+      -- connecting pairing via `rhs_pairing_reduce_partition` — the UNCONDITIONAL cover-fine engine.
+      generalize hRRdef :
+        SingularRelativeCohomologyRestrict.relCocycleRestrict (Set.Subset.refl _) (N + 1) = RR
+      obtain ⟨jP, uP, wP, hpair2, hsplit2⟩ :=
+        SingularConnSquareRHSPairing.rhs_pairing_reduce_partition _ _
+          (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+          (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+          (RR (hKeq ▸ g_rep))
+          (chainIncl (U ∩ V) (N + 1 + 1) (SingularCapChainIncl.rcap β.1
+            ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 2 + p + 1)).symm
+              ⟨SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+                (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 2 + p + 1) z₀)
+                (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+                (SingularCSCMayerVietorisConnecting.infCompact U V
+                  (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+                  (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)), hfundmem2⟩)))
+          (SingularCapSubKDuality.chainIncl_rcap_mem_relCycles _ _
+            (fundCycleW_boundary_cover _ _ _ _ (infCompact_compl_legSplit hU hV K)) β)
+      erw [hpair2]
+      -- pd-leg step 8 (banked turn-21b engine): δ↔∂ adjunction + U-leg drop + cochainSplit↦ω swap in one —
+      -- the pd leg is now the bare `⟨g_rep↾, chainIncl legSplitVᶜ wP⟩` V-leg pairing.
+      erw [kronecker_coboundary_cochainSplit_eq _ _ (RR (hKeq ▸ g_rep)) _ uP wP hsplit2]
       sorry
 end SKEFTHawking.SingularConnSquareCloseNC
