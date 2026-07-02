@@ -1608,6 +1608,22 @@ theorem joint_cap_rcap_match {M : TopCat} {N p : ℕ}
     SingularConnSquareMatchLHS.kronecker_cap_eq_kronecker_rcap gM ω F]
   simp
 
+/-- **Pairing-relaxed cup–cap joint match** (the slack-tolerant form of `joint_cap_rcap_match`). The
+chain-level `hL : L = cap gM F + ∂e₁` realization is provably TOO STRONG for the connecting square (with
+`F = ∂fund` it forces the seam — a genuinely non-nullhomologous cycle — to bound). What the ℤ/2 close
+actually needs is the two legs to agree with the cap/rcap of the SHARED `F` **as pairings** — each side's
+test cochain absorbs its own boundary/subdivision slack inside the fact's own proof, not here. The match
+then closes by the cup-cap duality core alone. No cocycle hypotheses are needed at this level. -/
+theorem joint_cap_rcap_match_pairing {M : TopCat} {N p : ℕ}
+    (ω : SingularCochain M (p + 1)) (gM : SingularCochain M (N + 1))
+    (F : SingularChain M (N + 1 + (p + 1)))
+    (L : SingularChain M (p + 1)) (R : SingularChain M (N + 1))
+    (hL : kronecker ω L = kronecker ω (cap gM F))
+    (hR : kronecker gM R = kronecker gM (SingularCapChainIncl.rcap ω F)) :
+    kronecker ω L = kronecker gM R := by
+  rw [hL, hR]
+  exact SingularConnSquareMatchLHS.kronecker_cap_eq_kronecker_rcap gM ω F
+
 /-- **LHS cap-realization on the common space `M = sub T`** (joint-match brick (1), whnf-dodging GREEN).
 A `sub T`-chain `L` whose `chainIncl T` equals the ambient cap `cap g_amb (chainIncl T F)` of a `sub T`-realized
 fundamental `F` *is itself* the cap of the **pulled-back** cochain `pullbackCochain T g_amb` against `F`:
@@ -2207,5 +2223,36 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
           ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1)).symm ⟨_, hbmem⟩) from
         (SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm _ _ ⟨_, hbmem⟩).symm,
         kronecker_chainIncl_eq_pullbackCochain]
-      sorry
+      -- FINAL MATCH SETUP: un-peel the seam back to the intrinsic ⟨β, seam²(bE zB)⟩ form and ℤ/2-convert
+      -- `A + B = 0` to the `joint_cap_rcap_match` shape `⟨β, L⟩ = ⟨gM, R⟩`.
+      erw [kronecker_double_pullback]
+      rw [add_eq_zero_iff_eq_neg, CharTwo.neg_eq]
+      -- THE SHARED cover-V-projection F (turn-42's corrected choice — NOT ∂fund, which is unsound):
+      -- repartition hsplit's legs (the parent ∂(Sdʲˢᵈ fund₁) IS (U∩V)-supported since fundCycleW is), then
+      -- realize the V-part on sub(U∩V).
+      have hFparent : chainIncl _ (N + 1 + (p + 1)) u' + chainIncl _ (N + 1 + (p + 1)) w'
+          ∈ subspaceChains (U ∩ V) (N + 1 + (p + 1)) :=
+        hsplit ▸ SingularRelativeHomologyMod2.chainBoundary_mem_subspaceChains (U ∩ V)
+          (N + 1 + (p + 1)) _
+          (SingularExcision.singularSd_iterate_mem_subspaceChains
+            (SingularOpenDualityCycle.fundCycleW_mem_W _ _ _ _) jSd)
+      obtain ⟨aF, bF, hFsplit⟩ := repartition_subspaceChains u' w' hFparent
+      have hbFmem : chainIncl _ (N + 1 + (p + 1)) bF
+          ∈ subspaceChains (U ∩ V) (N + 1 + (p + 1)) :=
+        SingularMayerVietoris.subspaceChains_mono Set.inter_subset_right (N + 1 + (p + 1)) ⟨bF, rfl⟩
+      -- The pairing-relaxed joint match: ω/gM/L/R unify from the goal; the TWO SUN FACTS remain.
+      refine joint_cap_rcap_match_pairing _ _
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1 + (p + 1))).symm
+          ⟨_, hbFmem⟩) _ _ ?_ ?_
+      -- SUN FACT (i) — the seam fact (fund-class compatibility over z₀, Hatcher's δ/∂ block LHS):
+      -- ⟨β, seam²(bE zB)⟩ = ⟨β, cap (pullbackCochain (U∩V) g_rep↾) F⟩. Feeds: hη (zB = V-part of
+      -- cap g_rep fund_K), hfundK (fund_K ↔ fund_∩ un-differentiated), heq3'/htest/hEbridge, heng
+      -- (cap(δ(cochainSplit)) engine); β-cocycle absorbs the boundary/Sdʲ slack.
+      · sorry
+      -- SUN FACT (ii) — the rcap fact: ⟨pullbackCochain (U∩V) g_rep↾, R_sub⟩ =
+      -- ⟨pullbackCochain g_rep↾, rcap β F⟩. bR (from Sdʲᴾ∂(rcap β fund₂), index jP) vs rcap β (V-part of
+      -- Sdʲˢᵈ∂fund₁, index jSd): the rcap↔Sd commutator across indices + the two repartition witnesses;
+      -- g_rep↾'s absolute-cocycle property (relCocycle_props) absorbs the slack. Tools: NC:158/184 rcap-Sd
+      -- bricks, castChain_cast_reconcile (fund₁↔fund₂), kronecker_relCochains_cover_partition_eq_zero.
+      · sorry
 end SKEFTHawking.SingularConnSquareCloseNC
