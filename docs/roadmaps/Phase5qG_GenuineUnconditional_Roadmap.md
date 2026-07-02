@@ -311,6 +311,30 @@ Each gate: target · consumes · DONE criteria · status. **G1 is the unlock; G2
   - Then re-home the χ + engines into an imported module and wire the cross-realization descent →
     `PoincareDual4Mid`/`Lo` become theorems. (Turns 1–10 = re-seed-correction + the architecture audit/resolution;
     turn 11 = first Lean brick.)
+  - **🟢 2026-07-01 — THE wt2 ARC (interactive solo-MCP line, worktree `worktree-wt2`, 12 commits, NOT
+    pushed; supersedes the route-ii/S1 oscillation above for THIS line): L2 = EXACTLY the two Sun facts.**
+    Between 2026-06-24 and 07-01 the close was restructured (user-authorized Aristotle rounds
+    `65df13df`: 5 runs) to the per-cocycle pairing shape `∀β, ⟨β, seam+pd⟩ = 0`, then (2026-07-01, after a
+    full-history re-grounding against this roadmap + all notebooks) driven to: seam peel (`erw` beats the
+    3-attempt rw wall, `1872be20`) → pd-leg connecting evaluation (8 green steps reusing turns-15–20
+    recipes, `e5c19f70`) → sub(U∩V) realization (`a64f31fb`) → **`joint_cap_rcap_match_pairing`** (NEW
+    kernel-pure slack-tolerant match core — the exact-chain hL/hR form is PROVABLY too strong, turn-44
+    class) with the shared cover-V-projection F (`84f722f6`) → the TWO SUN FACTS as the only sorries:
+    (i) `⟨β, seam²(bE zB)⟩ = ⟨β, cap (pullbackCochain g_rep↾) F⟩` (fund-compat over z₀, untouched);
+    (ii) `⟨G, R_sub⟩ = ⟨G, rcap β F⟩` — reduced to its bare two-legs core (`4574696a`). NEW kernel-pure
+    infrastructure: β1 `kronecker_two_splits_V_leg_eq` (V-leg pairing is a CHAIN invariant, via the
+    pre-existing `subspaceChains_inf`), β2 `kronecker_boundary_split_V_leg_zero` (**TERMINATES the
+    turns-25/26 recursion**: ∂Ec's own split makes it {A,B}-small so Dₘ(∂Ec) is cover-fine too), β0'/β0''
+    transports, cast-comm helpers, `exists_cast_cover_V_projection` (`6a4d7a59`…`60a57754`).
+    **KEY kernel-level finding (never re-attempt): fundCycleW is a `.choose` — the two degree-split
+    instances (N+1+(p+1)+1 vs N+2+p+1 casts) are INDEPENDENT Classical choices, never provably equal as
+    chains; their rel-slack cannot be realized intrinsically ⟹ SINGLE-CHOICE discipline** (fact (ii)
+    fully fund₂-based; cross-choice slack handled ambient in fact (i)).
+    **NEXT (bisection queued):** the fund₂ F-swap application whnf-walls (suspects ranked) → then the
+    single-choice γ-computation closes fact (ii) → fact (i) → zero-sorry → re-home + descent wiring (the
+    DONE criteria above unchanged). **Authoritative live anchor for THIS line:**
+    `Lit-Search/Phase-5qF/L2/LAB_NOTEBOOK_INDEX.md` (consolidated end-of-2026-07-01 FRONTIER head) +
+    `LAB_NOTEBOOK.md` dated sections (3rd–10th push, with exact tactic text + friction catalog).
 
 ### G2 — L3 instantiation: w₂ floor-collapse criterion on the genuine PD
 - **Target:** instantiate `wuW2_eq_zero_iff` (proven parametric, §3b) on the genuine PD instance from G1.
