@@ -2107,45 +2107,21 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
                   hfundmem2⟩) := by
         rw [hpd_cap, SingularCapChainIncl.kronecker_cup_cap]
       rw [kronecker_add_right, hpd_kronecker]
-      -- hR STATUS (2026-07-01 continuation, NOT closed): goal is now
-      --   kronecker β seam + kronecker(cup(pullback σR_rep) β)(fund_∩''_sub) = 0
-      -- i.e. the PD/σR leg (`pd`) is FULLY reduced to a clean cup-pairing against fund_∩'s sub(U∩V)
-      -- representative — no boundary slack (pd is genuinely a cap, `pullbackDualityₗ_eq_subcap` +
-      -- `kronecker_cup_cap`; NEW verified lemmas `hpd_cap`/`hpd_kronecker` above).
-      -- REMAINING: reduce `kronecker β seam` analogously. `seam = mapChain(subSeamHomeo)(mapChain(seamHomeo)
-      -- (boundaryExtract ⟨zB,hzBmem⟩))`, so `SingularKroneckerFunctoriality.kronecker_mapChain` (chain-level
-      -- Kronecker naturality under pushforward: `⟨f,φ_#z⟩=⟨φ^*f,z⟩`) should peel BOTH mapChains, giving
-      -- `kronecker β seam = kronecker (double-pullback β) (boundaryExtract ⟨zB,hzBmem⟩)`.
-      -- TRIED (3 attempts, all failed — do not blindly repeat):
-      --  1. Bare `rw [kronecker_mapChain, kronecker_mapChain]` (full auto-unification of φ,n,f,z) — "did not
-      --     find pattern", codomain inferred as a LAMBDA-form set (`sub (fun x => ?∩? ↑x)`) not `sub (U∩V)`.
-      --  2. Explicit `subSeamHomeo (fun x hx => Or.inl hx.1)(fun q => Iff.rfl)` (copying htest's own args
-      --     VERBATIM) as the φ argument — elaboration itself FAILED ("Invalid projection: Type of hx is not
-      --     known") because at THIS call site (bare, inside `SingularKroneckerFunctoriality.kronecker_
-      --     mapChain ⟨...⟩ (p+1)`, no surrounding `chainIncl_seam_boundaryExtract`-style multi-arg call) there
-      --     is no expected-type context yet when the lambda elaborates — unlike at `htest`'s ORIGINAL
-      --     construction site, where the theorem's OTHER explicit args (S:=U∪V, T:=U∩V, A:=val⁻¹U, B:=val⁻¹V)
-      --     pin hTS's expected type FIRST.
-      --  3. Same construction with hx's type ANNOTATED explicitly (`fun x (hx : x ∈ U∩V) => Or.inl hx.1`,
-      --     `subSeamHomeo (S:=U∪V)(T:=U∩V) ...`) — elaborates cleanly now (no type errors), but `rw` STILL
-      --     reports "did not find pattern": this constructed term is NOT syntactically present in the goal.
-      --     Since `T⊆S`/`hmem`-type proofs are Prop-irrelevant (defeq regardless of the SPECIFIC witness), the
-      --     remaining mismatch is likely NOT the proof terms but the underlying SET/TYPE representation of
-      --     `seam`'s domain (`R`/`A∩B`) itself — i.e. the theorem's own "chainL"/seam object (built earlier,
-      --     NOT via `chainIncl_seam_boundaryExtract`) uses a genuinely different (though set-theoretically
-      --     equal) `Set ↑(sub(U∪V))` description for the seam's overlap region than the `A:=val⁻¹U, B:=val⁻¹V`
-      --     pin `htest` uses — this is a NEW, not-yet-diagnosed instance of the mismatch-2 friction class, one
-      --     level deeper than previously documented (not just a proof-term choice, but a set-description
-      --     choice). NEXT: find how the theorem's OWN seam ("chainL") term was ORIGINALLY constructed
-      --     (upstream in `SingularConnSquareCloseChainMap`/`SingularConnSquareMatchLHS`'s `hmatch_close`/
-      --     `factB_transport` machinery — NOT `chainIncl_seam_boundaryExtract`, which was only ever used to
-      --     build `htest` as an AMBIENT chainIncl-wrapped comparison, not to construct seam itself) and copy
-      --     ITS EXACT A/B/hTS/hmem values, OR find/derive a `mapChain`-domain-reindexing lemma (analogous to
-      --     `castChain_cast_reconcile`/`subspaceChainsEquiv`'s congr lemmas) that bridges the two set
-      --     descriptions BEFORE invoking `kronecker_mapChain`.
-      -- Once peeled: connect `kronecker(double-pullback β)(∂zB)` to a cochainSplit/χ pairing matching the pd
-      -- side's `cup(pullback σR_rep)β` — likely via `kroneckerH_mvConnecting_cover_partition`@
-      -- ConnSquareLHSPairing (class-level analogue, chain-level content already close) + `hσR`'s
-      -- relCohomMvConnecting identification linking σR_rep to g_rep's restriction.
+      -- SEAM PEEL (2026-07-01, resolves the 3 documented failed `rw` attempts): the mismatch was NEVER the
+      -- set description — it was `rw`'s reducible-transparency matching. `erw` (default transparency) unifies
+      -- the goal's anonymous-struct seam homeos against `kronecker_double_pullback`'s explicit `C(·,·)`
+      -- variables directly (the same erw-for-defeq-set-reprs fix recorded in the friction catalog for
+      -- `chainIncl_seam_boundaryExtract` and `cap_leibniz` at this same `sub (U ∩ Membership.mem V)` seam).
+      erw [← kronecker_double_pullback]
+      -- Goal now: kronecker (pullbackCochainMap ⟨seamHomeo⟩ (pullbackCochainMap ⟨subSeamHomeo⟩ β))
+      --             (boundaryExtract (restr (val⁻¹U)(val⁻¹V)) ⟨zB,hzBmem⟩)
+      --           + kronecker (cup (pullbackCochain (U∩V) σR_rep) β) (fund_∩_sub) = 0
+      -- — the seam leg is the double-pulled-back β paired against the bare V-part boundary extract; the pd
+      -- leg is the cup pairing against fund_∩'s sub(U∩V) representative.
+      -- REMAINING (the genuine Hatcher-3.36 / Sun-Lemma-3 content, at the sanctioned pairing altitude where
+      -- β-cocycle slack death applies): evaluate BOTH legs to the connecting pairing of g_rep over the shared
+      -- z₀ — seam leg via the cover-partition (hpart/hzc0: zB = V-part of cap g_rep fund) + connectingLift /
+      -- kroneckerH_mvConnecting_cover_partition@ConnSquareLHSPairing; pd leg via hσR (σR_rep = connecting of
+      -- g_rep's restriction) + the rhs_pairing_reduce family; ℤ/2 cancels the matched pair.
       sorry
 end SKEFTHawking.SingularConnSquareCloseNC
