@@ -2048,5 +2048,85 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       -- σR/hR leg's data (σR_rep, hσR) is SUPPOSED to enter — δg_rep's failure-to-be-closed is exactly the
       -- connecting-map defect relCohomMvConnecting packages. Try deriving hR FIRST (task #14, fully fresh)
       -- and look for `cap(δg_rep)(Sdʲfund_∩)` (or a class-equivalent) appearing there naturally.
+      -- hR START (2026-07-01 continuation): `pd = pullbackDualityₗ (infCompactᶜ)(U∩V) fund_∩ ⋯ σR_rep` is
+      -- LITERALLY a sub(U∩V)-cap (`pullbackDualityₗ_eq_subcap`), so `kronecker β pd` reduces via the
+      -- cup-cap adjunction (`kronecker_cup_cap`) to a CUP pairing against `fund_∩`'s sub(U∩V) representative
+      -- — no boundary slack needed (fund_∩'s cap against any rel-cocycle is already an ambient cycle,
+      -- `pullbackDualityₗ_mem_cycles`).
+      have hfundmem2 : SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+          (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 2 + p + 1) z₀)
+          (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+          (SingularCSCMayerVietorisConnecting.infCompact U V
+            (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+            (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
+        ∈ subspaceChains (U ∩ V) (N + 2 + p + 1) :=
+        SingularOpenDualityCycle.fundCycleW_mem_W (hU.inter hV) _ _ _
+      have hpd_cap : SingularLocalDualityK.pullbackDualityₗ
+          ((↑(SingularCSCMayerVietorisConnecting.infCompact U V
+              (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+              (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)).1 : Set ↑X)ᶜ)
+          (U ∩ V)
+          (SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+            (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 2 + p + 1) z₀)
+            (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+            (SingularCSCMayerVietorisConnecting.infCompact U V
+              (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+              (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)))
+          hfundmem2 σR_rep
+        = cap (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 2) σR_rep.1.1)
+            ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 2 + p + 1)).symm
+              ⟨SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+                (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 2 + p + 1) z₀)
+                (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+                (SingularCSCMayerVietorisConnecting.infCompact U V
+                  (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+                  (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)),
+                hfundmem2⟩) :=
+        SingularCapSubKDuality.pullbackDualityₗ_eq_subcap _ hfundmem2 σR_rep
+      have hpd_kronecker : kronecker β.1
+          (SingularLocalDualityK.pullbackDualityₗ
+            ((↑(SingularCSCMayerVietorisConnecting.infCompact U V
+                (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+                (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)).1 : Set ↑X)ᶜ)
+            (U ∩ V)
+            (SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+              (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 2 + p + 1) z₀)
+              (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+              (SingularCSCMayerVietorisConnecting.infCompact U V
+                (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+                (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)))
+            hfundmem2 σR_rep)
+          = kronecker (cup (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 2) σR_rep.1.1) β.1)
+              ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 2 + p + 1)).symm
+                ⟨SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+                  (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 2 + p + 1) z₀)
+                  (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+                  (SingularCSCMayerVietorisConnecting.infCompact U V
+                    (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+                    (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)),
+                  hfundmem2⟩) := by
+        rw [hpd_cap, SingularCapChainIncl.kronecker_cup_cap]
+      rw [kronecker_add_right, hpd_kronecker]
+      -- hR STATUS (2026-07-01 continuation, NOT closed): goal is now
+      --   kronecker β seam + kronecker(cup(pullback σR_rep) β)(fund_∩''_sub) = 0
+      -- i.e. the PD/σR leg (`pd`) is FULLY reduced to a clean cup-pairing against fund_∩'s sub(U∩V)
+      -- representative — no boundary slack (pd is genuinely a cap, `pullbackDualityₗ_eq_subcap` +
+      -- `kronecker_cup_cap`; NEW verified lemmas `hpd_cap`/`hpd_kronecker` above).
+      -- REMAINING: reduce `kronecker β seam` analogously. `seam = mapChain(subSeamHomeo)(mapChain(seamHomeo)
+      -- (boundaryExtract ⟨zB,hzBmem⟩))`, so `SingularKroneckerFunctoriality.kronecker_mapChain` (chain-level
+      -- Kronecker naturality under pushforward: `⟨f,φ_#z⟩=⟨φ^*f,z⟩`) should peel BOTH mapChains, giving
+      -- `kronecker β seam = kronecker (double-pullback β) (boundaryExtract ⟨zB,hzBmem⟩)`. Tried `rw` with it
+      -- directly on the goal — FAILED to match: `mapChain`'s inferred codomain here is a LAMBDA-form set
+      -- description (`sub (fun x => ?∩? ↑x)`), NOT syntactically `sub (U∩V)`, even though defeq — the SAME
+      -- class of friction as `htest`'s "mismatch 2" (documented in the notebook): a homeomorphism's implicit
+      -- domain/codomain gets inferred via a DIFFERENT (logically-equivalent) set representation than the one
+      -- pinned elsewhere. FIX (per the notebook's own established pattern): re-derive with `A/B/T/S` pinned
+      -- EXPLICITLY at the `subSeamHomeo`/`seamHomeo` call sites (mirroring how `htest := chainIncl_seam_
+      -- boundaryExtract (A := Subtype.val ⁻¹' U)(B := Subtype.val ⁻¹' V) ...` already does this correctly for
+      -- the AMBIENT chainIncl(seam) form) — NOT yet attempted for the bare (non-chainIncl'd) `kronecker β seam`
+      -- pairing. Once peeled: connect `kronecker(double-pullback β)(∂zB)` to a cochainSplit/χ pairing matching
+      -- the pd side's `cup(pullback σR_rep)β` — likely via `kroneckerH_mvConnecting_cover_partition`@
+      -- ConnSquareLHSPairing (class-level analogue, chain-level content already close) + `hσR`'s
+      -- relCohomMvConnecting identification linking σR_rep to g_rep's restriction.
       sorry
 end SKEFTHawking.SingularConnSquareCloseNC
