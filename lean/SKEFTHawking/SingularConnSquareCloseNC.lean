@@ -2178,5 +2178,34 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       -- pd-leg step 8 (banked turn-21b engine): δ↔∂ adjunction + U-leg drop + cochainSplit↦ω swap in one —
       -- the pd leg is now the bare `⟨g_rep↾, chainIncl legSplitVᶜ wP⟩` V-leg pairing.
       erw [kronecker_coboundary_cochainSplit_eq _ _ (RR (hKeq ▸ g_rep)) _ uP wP hsplit2]
+      -- pd-leg step 9 (turn-39/41 kept machinery): realize the V-leg ON sub(U∩V). The mem_sup leg wP need
+      -- not be (U∩V)-supported, but the support-preserving REPARTITION (rhs_realize_V_leg) lands a new leg
+      -- bR over legSplitVᶜ∩(U∩V) ⊆ U∩V. Support feeder: the parent chain is (U∩V)-supported (turn-23 form).
+      have hMem0 : chainIncl _ (N + 1) uP + chainIncl _ (N + 1) wP
+          ∈ subspaceChains (U ∩ V) (N + 1) :=
+        hsplit2 ▸ chainBoundary_singularSd_iterate_chainIncl_mem (T := U ∩ V) jP _
+      obtain ⟨bR, hbR⟩ :=
+        rhs_realize_V_leg (RR (hKeq ▸ g_rep)).1.1 (RR (hKeq ▸ g_rep)).1.2 uP wP hMem0
+      -- Swap the bare-gRk V-leg pairing back to the cochainSplit form, re-add the (killed) U-leg, then hbR.
+      have hsum : kronecker (cochainSplit
+            (↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ (N + 1)
+            (RR (hKeq ▸ g_rep)).1.1)
+            (chainIncl _ (N + 1) uP + chainIncl _ (N + 1) wP)
+          = kronecker (cochainSplit
+            (↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ (N + 1)
+            (RR (hKeq ▸ g_rep)).1.1) (chainIncl _ (N + 1) wP) := by
+        rw [kronecker_add_right]
+        erw [(mem_relCochains _ _ _).1 (cochainSplit_mem_relCochains _ _ _) _ ⟨uP, rfl⟩, zero_add]
+      erw [← kronecker_cochainSplit_V_leg_eq
+        (↑(SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1 : Set ↑X)ᶜ _
+        (RR (hKeq ▸ g_rep)) wP, ← hsum, hbR]
+      -- Realize the repartitioned V-leg on sub(U∩V) (bR's support is inside U∩V) and pull the cochain back:
+      -- the pd leg lands as an INTRINSIC sub(U∩V) pairing ⟨pullbackCochain(U∩V) g_rep↾, R_sub⟩.
+      have hbmem : chainIncl _ (N + 1) bR ∈ subspaceChains (U ∩ V) (N + 1) :=
+        SingularMayerVietoris.subspaceChains_mono Set.inter_subset_right (N + 1) ⟨bR, rfl⟩
+      erw [show (chainIncl _ (N + 1) bR : SingularChain X (N + 1)) = chainIncl (U ∩ V) (N + 1)
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1)).symm ⟨_, hbmem⟩) from
+        (SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm _ _ ⟨_, hbmem⟩).symm,
+        kronecker_chainIncl_eq_pullbackCochain]
       sorry
 end SKEFTHawking.SingularConnSquareCloseNC
