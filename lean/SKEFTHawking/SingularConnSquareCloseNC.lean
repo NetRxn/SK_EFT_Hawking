@@ -2108,6 +2108,101 @@ theorem fundCycleW_pair_shared_z0_rel {W₁ W₂ : Set ↑X} {k m : ℕ}
   rw [hz, heq₁, heq₂, map_add]
   abel
 
+/-- **Ambient cover-fine chain split** (Brick E — the small-chains split pushed to the ambient level):
+a `(U∪V)`-supported chain becomes, after enough subdivisions, a SUM of a `U`-supported and a
+`V`-supported ambient chain. Realize in `sub (U∪V)` (`subspaceChainsEquiv`), split intrinsically
+(`exists_iterate_mvUnion_sub` + `exists_chainIncl_partition_of_mem_mvUnionChains`), push back
+(`singularSd_iterate_chainIncl` + `chainIncl_mem_subspaceChains_iff`). The ONE split choice the
+fact-(i) canonical partition rides. -/
+theorem exists_iterate_cover_split_amb {U V : Set ↑X} (hU : IsOpen U) (hV : IsOpen V) {n : ℕ}
+    (f : SingularChain X n) (hf : f ∈ subspaceChains (U ∪ V) n) :
+    ∃ (μ : ℕ) (fA fB : SingularChain X n),
+      fA ∈ subspaceChains U n ∧ fB ∈ subspaceChains V n
+      ∧ (⇑(SingularSubdivision.singularSd X n))^[μ] f = fA + fB := by
+  obtain ⟨μ, hμ⟩ := exists_iterate_mvUnion_sub hU hV n
+    ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∪ V) n).symm ⟨f, hf⟩)
+  obtain ⟨zA, zB, hzsplit⟩ :=
+    SingularConnSquareLHSExplicit.exists_chainIncl_partition_of_mem_mvUnionChains _ _ n _ hμ
+  refine ⟨μ, chainIncl (U ∪ V) n (chainIncl _ n zA), chainIncl (U ∪ V) n (chainIncl _ n zB),
+    (SingularExcisionIso.chainIncl_mem_subspaceChains_iff U (U ∪ V) _).mpr ⟨zA, rfl⟩,
+    (SingularExcisionIso.chainIncl_mem_subspaceChains_iff V (U ∪ V) _).mpr ⟨zB, rfl⟩, ?_⟩
+  have hfr : f = chainIncl (U ∪ V) n
+      ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∪ V) n).symm ⟨f, hf⟩) :=
+    (SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (U ∪ V) n ⟨f, hf⟩).symm
+  rw [hfr, singularSd_iterate_chainIncl, hzsplit, map_add]
+
+/-- **The cap-induced canonical partition** (Brick F — the fact-(i) partition constructor). For a
+cocycle `g` rel-`S` and a `(U∪V)`-supported chain `f` with `S`-supported boundary, the cap
+`cap g (Sdᵘ f)` is a CYCLE (cocycle-Leibniz + the `S`-kill on `Sdᵘ∂f`) carrying a canonical
+`sub (U∪V)`-cover-partition INDUCED by Brick E's ambient split of `Sdᵘ f`: the partition legs
+`zA†/zB†` realize `cap g fA / cap g fB` (cap preserves supports; two-level realization via
+`chainIncl_mem_subspaceChains_iff`). Exports the ambient identities + the partition cycle — exactly
+the `kronecker_boundaryExtract_class_invariant` (Brick A) + seam-computability feed: the seam of THIS
+partition is `∂(cap g fB)` with `fB` fund-side-explicit. -/
+theorem exists_cap_induced_partition {U V S : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
+    {k m : ℕ} (g : SingularCochain X k) (hgc : coboundary X k g = 0)
+    (hgrel : g ∈ relCochains S k)
+    (f : SingularChain X (k + m + 1)) (hf : f ∈ subspaceChains (U ∪ V) (k + m + 1))
+    (hbd : chainBoundary X (k + m) f ∈ subspaceChains S (k + m)) :
+    ∃ (μ : ℕ)
+      (zA : SingularChain (sub (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V)))) (m + 1))
+      (zB : SingularChain (sub (Subtype.val ⁻¹' V : Set ↑(sub (U ∪ V)))) (m + 1))
+      (fA fB : SingularChain X (k + m + 1)),
+      fA ∈ subspaceChains U (k + m + 1) ∧ fB ∈ subspaceChains V (k + m + 1)
+      ∧ (⇑(SingularSubdivision.singularSd X (k + m + 1)))^[μ] f = fA + fB
+      ∧ chainIncl (U ∪ V) (m + 1) (chainIncl _ (m + 1) zA) = cap (m := m + 1) g fA
+      ∧ chainIncl (U ∪ V) (m + 1) (chainIncl _ (m + 1) zB) = cap (m := m + 1) g fB
+      ∧ chainIncl _ (m + 1) zA + chainIncl _ (m + 1) zB ∈ cycles (sub (U ∪ V)) (m + 1) := by
+  obtain ⟨μ, fA, fB, hfA, hfB, hsplit⟩ := exists_iterate_cover_split_amb hU hV f hf
+  have hcA : cap (m := m + 1) g fA ∈ subspaceChains U (m + 1) :=
+    SingularCapSupport.cap_mem_subspaceChains (m := m + 1) U g hfA
+  have hcB : cap (m := m + 1) g fB ∈ subspaceChains V (m + 1) :=
+    SingularCapSupport.cap_mem_subspaceChains (m := m + 1) V g hfB
+  have hcA' : cap (m := m + 1) g fA ∈ subspaceChains (U ∪ V) (m + 1) :=
+    SingularMayerVietoris.subspaceChains_mono Set.subset_union_left (m + 1) hcA
+  have hcB' : cap (m := m + 1) g fB ∈ subspaceChains (U ∪ V) (m + 1) :=
+    SingularMayerVietoris.subspaceChains_mono Set.subset_union_right (m + 1) hcB
+  set yA := (SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∪ V) (m + 1)).symm ⟨_, hcA'⟩
+    with hyAdef
+  set yB := (SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∪ V) (m + 1)).symm ⟨_, hcB'⟩
+    with hyBdef
+  have hyA : chainIncl (U ∪ V) (m + 1) yA = cap (m := m + 1) g fA :=
+    SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm _ _ _
+  have hyB : chainIncl (U ∪ V) (m + 1) yB = cap (m := m + 1) g fB :=
+    SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm _ _ _
+  have hyAmem : yA ∈ subspaceChains (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (m + 1) :=
+    (SingularExcisionIso.chainIncl_mem_subspaceChains_iff U (U ∪ V) yA).mp (hyA.symm ▸ hcA)
+  have hyBmem : yB ∈ subspaceChains (Subtype.val ⁻¹' V : Set ↑(sub (U ∪ V))) (m + 1) :=
+    (SingularExcisionIso.chainIncl_mem_subspaceChains_iff V (U ∪ V) yB).mp (hyB.symm ▸ hcB)
+  refine ⟨μ, (SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (m + 1)).symm ⟨yA, hyAmem⟩,
+    (SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (m + 1)).symm ⟨yB, hyBmem⟩,
+    fA, fB, hfA, hfB, hsplit, ?_, ?_, ?_⟩
+  · rw [SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm, hyA]
+  · rw [SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm, hyB]
+  · -- the partition is a cycle: descend `∂(cap g (Sdᵘ f)) = 0` through `chainIncl`-injectivity
+    have hcycamb : chainBoundary X m
+        (cap (m := m + 1) g ((⇑(SingularSubdivision.singularSd X (k + m + 1)))^[μ] f)) = 0 := by
+      rw [chainBoundary_cap_cocycle_arg (m := m) g hgc _ (by omega),
+        SingularSubdivision.singularSd_iterate_chainBoundary]
+      exact cap_relCochains_subspaceChains_eq_zero (m := m) g hgrel _
+        (SingularExcision.singularSd_iterate_mem_subspaceChains hbd μ)
+    have e₁ : chainIncl (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (m + 1)
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (m + 1)).symm ⟨yA, hyAmem⟩) = yA :=
+      SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm _ _ ⟨yA, hyAmem⟩
+    have e₂ : chainIncl (Subtype.val ⁻¹' V : Set ↑(sub (U ∪ V))) (m + 1)
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (m + 1)).symm ⟨yB, hyBmem⟩) = yB :=
+      SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm _ _ ⟨yB, hyBmem⟩
+    have hsum : chainIncl (U ∪ V) (m + 1)
+        (chainIncl _ (m + 1) ((SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (m + 1)).symm
+            ⟨yA, hyAmem⟩)
+          + chainIncl _ (m + 1) ((SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (m + 1)).symm
+            ⟨yB, hyBmem⟩))
+        = cap (m := m + 1) g ((⇑(SingularSubdivision.singularSd X (k + m + 1)))^[μ] f) := by
+      rw [map_add, e₁, e₂, hyA, hyB, hsplit, map_add]
+    refine LinearMap.mem_ker.mpr ?_
+    apply chainIncl_injective (U ∪ V) m
+    rw [SingularRelativeHomologyMod2.chainIncl_chainBoundary, hsum, hcycamb, map_zero]
+
 /-- **The γ-computation** (the fact-(ii) two-legs closer, EXTRACTED — single-choice form). The two
 goal legs are V-legs of cover-splits of two parents sharing ONE fundamental presentation `zsub`:
 the pd-side parent `Camb` (whose un-subdivided boundary is EXACTLY `chainIncl (rcap β ∂zsub)` —
