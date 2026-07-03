@@ -119,4 +119,36 @@ theorem isOpenEmbedding_mk_hemi (x : S4) :
     exact Subtype.ext (mk_injOn_hemi x a.2 b.2 hab)
   · exact IsOpenMap.comp isOpenMap_mk ((hemi_isOpen x).isOpenMap_subtype_val)
 
+/-! ## §3. The charted structure — the sphere's charts descend to `RP4`
+
+Per class `[x]`: restrict the sphere's chart at `x` to the hemisphere (`subtypeRestr`), then
+lift along the open embedding `mk|_{hemi x}` (`lift_openEmbedding` — the `ChartedSpace.sum`
+pattern). The chart source is `mk '' (hemisphere ∩ chart-source)`, which contains `[x]`. -/
+
+/-- The hemisphere as an open set (for `subtypeRestr`). -/
+def hemiOpens (x : S4) : TopologicalSpace.Opens S4 := ⟨hemi x, hemi_isOpen x⟩
+
+instance (x : S4) : Nonempty (hemiOpens x) := ⟨⟨x, mem_hemi_self x⟩⟩
+
+/-- **The `RP4` chart at (the class of) `x`**: the sphere chart at `x`, hemisphere-restricted,
+lifted along the hemisphere open embedding. -/
+noncomputable def rp4Chart (x : S4) :
+    OpenPartialHomeomorph RP4 (EuclideanSpace ℝ (Fin 4)) :=
+  ((chartAt (EuclideanSpace ℝ (Fin 4)) x).subtypeRestr
+      (⟨⟨x, mem_hemi_self x⟩⟩ : Nonempty (hemiOpens x))).lift_openEmbedding
+    (isOpenEmbedding_mk_hemi x)
+
+/-- **`RP4` is a charted space over `ℝ⁴`** — the descended stereographic atlas. -/
+noncomputable instance : ChartedSpace (EuclideanSpace ℝ (Fin 4)) RP4 where
+  atlas := Set.range rp4Chart
+  chartAt p := rp4Chart p.out
+  mem_chart_source p := by
+    show p ∈ (rp4Chart p.out).source
+    rw [rp4Chart, OpenPartialHomeomorph.lift_openEmbedding_source]
+    refine ⟨⟨p.out, mem_hemi_self p.out⟩, ?_, ?_⟩
+    · rw [OpenPartialHomeomorph.subtypeRestr_source]
+      exact mem_chart_source (EuclideanSpace ℝ (Fin 4)) p.out
+    · exact p.out_eq
+  chart_mem_atlas p := Set.mem_range_self _
+
 end SKEFTHawking.RP4PointSet
