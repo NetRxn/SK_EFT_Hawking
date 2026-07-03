@@ -211,4 +211,71 @@ theorem glueCochain_zero (n : ℕ) :
   simp only [glueCochain]
   split_ifs <;> rfl
 
+/-! ## F7b — the `Hⁿ(M ⊕ N)` joint decomposition: `(inl*, inr*)` is jointly bijective -/
+
+/-- The glue of two cocycles is a cocycle ((C) + the pieces' cocycle conditions). -/
+theorem glueCochain_mem_ker (n : ℕ) (a : LinearMap.ker (coboundaryₗ (TopCat.of M) n))
+    (b : LinearMap.ker (coboundaryₗ (TopCat.of N) n)) :
+    glueCochain n a.1 b.1 ∈ LinearMap.ker (coboundaryₗ (TopCat.of (M ⊕ N)) n) := by
+  rw [LinearMap.mem_ker]
+  show coboundary (TopCat.of (M ⊕ N)) n (glueCochain n a.1 b.1) = 0
+  rw [coboundary_glueCochain,
+    show coboundary (TopCat.of M) n a.1 = coboundaryₗ (TopCat.of M) n a.1 from rfl,
+    show coboundary (TopCat.of N) n b.1 = coboundaryₗ (TopCat.of N) n b.1 from rfl,
+    LinearMap.mem_ker.mp a.2, LinearMap.mem_ker.mp b.2, glueCochain_zero]
+
+/-- **Joint surjectivity**: every pair of classes on the pieces is the pullback pair of a class
+on the sum (the glued-cocycle class). -/
+theorem exists_glue_class (n : ℕ) (u : Cohomology (TopCat.of M) n)
+    (v : Cohomology (TopCat.of N) n) :
+    ∃ w : Cohomology (TopCat.of (M ⊕ N)) n,
+      cohomologyPullback (inlC M N) n w = u ∧ cohomologyPullback (inrC M N) n w = v := by
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ u
+  obtain ⟨b, rfl⟩ := Submodule.Quotient.mk_surjective _ v
+  refine ⟨Cohomology.mk _ n ⟨glueCochain n a.1 b.1, glueCochain_mem_ker n a b⟩, ?_, ?_⟩
+  · rw [cohomologyPullback_mk]
+    show (Submodule.Quotient.mk
+        ⟨cochainPullback (inlC M N) n (glueCochain n a.1 b.1), _⟩ :
+      Cohomology (TopCat.of M) n) = Submodule.Quotient.mk a
+    exact congrArg _ (Subtype.ext (cochainPullback_inl_glueCochain n a.1 b.1))
+  · rw [cohomologyPullback_mk]
+    show (Submodule.Quotient.mk
+        ⟨cochainPullback (inrC M N) n (glueCochain n a.1 b.1), _⟩ :
+      Cohomology (TopCat.of N) n) = Submodule.Quotient.mk b
+    exact congrArg _ (Subtype.ext (cochainPullback_inr_glueCochain n a.1 b.1))
+
+/-- **Joint injectivity**: a class on the sum whose two pullbacks vanish is zero — glue the two
+coboundary witnesses ((C) backwards); degree `0` is the `⊥`-range base case. -/
+theorem eq_zero_of_pullbacks_zero (n : ℕ) (w : Cohomology (TopCat.of (M ⊕ N)) n)
+    (hl : cohomologyPullback (inlC M N) n w = 0)
+    (hr : cohomologyPullback (inrC M N) n w = 0) : w = 0 := by
+  obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective _ w
+  rw [show (Submodule.Quotient.mk c : Cohomology (TopCat.of (M ⊕ N)) n)
+      = Cohomology.mk _ n c from rfl, cohomologyPullback_mk] at hl hr
+  have hl' := (Submodule.Quotient.mk_eq_zero _).mp hl
+  have hr' := (Submodule.Quotient.mk_eq_zero _).mp hr
+  refine (Submodule.Quotient.mk_eq_zero _).mpr ?_
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] at hl' hr' ⊢
+  clear hl hr
+  rename' hl' => hl, hr' => hr
+  cases n with
+  | zero =>
+      have hl0 : cochainPullback (inlC M N) 0 c.1 = 0 := by
+        rwa [show coboundaryRange (TopCat.of M) 0 = (⊥ : Submodule (ZMod 2) _) from rfl,
+          Submodule.mem_bot] at hl
+      have hr0 : cochainPullback (inrC M N) 0 c.1 = 0 := by
+        rwa [show coboundaryRange (TopCat.of N) 0 = (⊥ : Submodule (ZMod 2) _) from rfl,
+          Submodule.mem_bot] at hr
+      rw [show coboundaryRange (TopCat.of (M ⊕ N)) 0 = (⊥ : Submodule (ZMod 2) _) from rfl,
+        Submodule.mem_bot, ← glueCochain_pullback 0 c.1, hl0, hr0, glueCochain_zero]
+  | succ m =>
+      obtain ⟨dM, hdM⟩ := hl
+      obtain ⟨dN, hdN⟩ := hr
+      refine ⟨glueCochain m dM dN, ?_⟩
+      show coboundary (TopCat.of (M ⊕ N)) m (glueCochain m dM dN) = c.1
+      rw [coboundary_glueCochain,
+        show coboundary (TopCat.of M) m dM = coboundaryₗ (TopCat.of M) m dM from rfl,
+        show coboundary (TopCat.of N) m dN = coboundaryₗ (TopCat.of N) m dN from rfl,
+        hdM, hdN, glueCochain_pullback]
+
 end SKEFTHawking.SingularCochainGlue
