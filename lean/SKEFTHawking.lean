@@ -975,6 +975,7 @@ import SKEFTHawking.SingularCohomologySnake
 import SKEFTHawking.SingularConnSquareLHSPairing
 import SKEFTHawking.SingularConnSquareCloseNC
 import SKEFTHawking.SingularOpenDualityConnSquareColimit
+import SKEFTHawking.SingularLocalDualityKBot
 import SKEFTHawking.SingularKroneckerFunctoriality
 import SKEFTHawking.SingularSeamDualPairing
 import SKEFTHawking.SingularConnSquareMatchLHS
