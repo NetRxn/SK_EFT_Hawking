@@ -193,4 +193,17 @@ theorem cohomologyPullback_cupH {X Y : TopCat} (φ : C(↑X, ↑Y))
   obtain ⟨fb, rfl⟩ := Submodule.Quotient.mk_surjective _ b
   exact congrArg Submodule.Quotient.mk (Subtype.ext (cochainPullback_cup φ fa.1 fb.1))
 
+/-! ## F3 — the homology-level Kronecker adjunction -/
+
+/-- **The descended Kronecker adjunction** `⟨φ*ω, β⟩ = ⟨ω, φ₊β⟩` on (co)homology classes. -/
+theorem kroneckerH_cohomologyPullback {X Y : TopCat} (φ : C(↑X, ↑Y)) {n : ℕ}
+    (ω : Cohomology Y n) (β : Homology X n) :
+    kroneckerH (X := X) n (cohomologyPullback φ n ω) β
+      = kroneckerH (X := Y) n ω (Homology.map φ n β) := by
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ ω
+  obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective _ β
+  show kronecker (cochainPullback φ n a.1) c.1 = kronecker a.1 (mapChain φ n c.1)
+  exact kronecker_cochainPullback φ a.1 c.1
+
+
 end SKEFTHawking.SingularCohomologyFunctoriality
