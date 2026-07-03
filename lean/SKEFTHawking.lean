@@ -988,6 +988,7 @@ import SKEFTHawking.SingularSubHomSumEnd
 import SKEFTHawking.SingularCSCVanishAboveGeom
 import SKEFTHawking.SingularSubdivisionBot
 import SKEFTHawking.SingularExcisionBot
+import SKEFTHawking.SingularMayerVietorisLESBot
 import SKEFTHawking.SingularKroneckerFunctoriality
 import SKEFTHawking.SingularSeamDualPairing
 import SKEFTHawking.SingularConnSquareMatchLHS
