@@ -119,4 +119,24 @@ theorem relKroneckerH_flip_bijective_of_equiv {S : Set ↑X} {N : ℕ}
     have h1 : relKroneckerH (X := X) S (N := N) ω₀ g = 1 := hΦ1
     rw [map_smul, LinearMap.flip_apply, h1, smul_eq_mul, mul_one]
 
+omit [T2Space ↑X] in
+/-- **The stage restriction of a cycle class, in chain-`mk` form** (the glue between the
+class-level `restrictHomologyToSet` and the B4a/B4b chain-level stage objects): for a cycle `z`,
+`ρ_K [z] = [z]_{M|K}`. -/
+theorem restrictHomologyToSet_mk {K : Set ↑X} {k : ℕ}
+    (z : SingularChain X (k + 1)) (hz : z ∈ cycles X (k + 1))
+    (hzb : chainBoundary X k z ∈ subspaceChains (Kᶜ) k) :
+    SKEFTHawking.SingularFundamentalClass.restrictHomologyToSet K (k + 1)
+        (Homology.mk X (k + 1) ⟨z, hz⟩)
+      = RelativeHomology.mk (Kᶜ) (k + 1)
+          ⟨RelativeChain.mk (Kᶜ) (k + 1) z, relMk_mem_relCycles (Kᶜ) z hzb⟩ := by
+  rw [SKEFTHawking.SingularFundamentalClass.restrictHomologyToSet, LinearMap.comp_apply]
+  erw [SingularRelativeMV.relIncl_mk]
+  congr 1
+  apply Subtype.ext
+  simp [SingularRelativeFunctoriality.relCyclesMap]
+  erw [show (↑((SingularRelativeEmpty.cyclesEmptyEquiv (k + 1)).symm ⟨z, hz⟩)
+        : RelativeChain (∅ : Set ↑X) (k + 1)) = RelativeChain.mk ∅ (k + 1) z from rfl,
+    SingularRelativeFunctoriality.relMapChain_mk, SingularFunctoriality.mapChain_id]
+
 end SKEFTHawking.SingularBaseCaseD0
