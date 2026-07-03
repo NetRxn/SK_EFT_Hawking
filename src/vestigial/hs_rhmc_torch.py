@@ -595,6 +595,14 @@ def pseudofermion_heatbath_torch(A, dim, rng, alpha_0_hb, alphas_hb, betas_hb,
                                 lam_max=None):
     """Generate pseudofermion from correct distribution using x^{-1/8}.
 
+    ⚠️ NOT PRODUCTION / SUPERSEDED (2026-07-01). This dense-scaffold heatbath draws a REAL
+    ξ~N(0,1) with NO 1/√2 complex-Gaussian normalization — the same real-PF factor-2 flaw
+    found in hs_rhmc_stencil (samples det(A†A)^{1/2}=Dirac, not the intended det(A†A)^{1/4}
+    =Majorana). No driver/paper imports this module; production is the Rust engine (correct
+    complex PF + 1/√2, Lean-backed) and the active GPU path is hs_rhmc_stencil (fixed via
+    INV_SQRT2). If ever revived, apply the 1/√2 (complex-PF, like Rust) and re-validate the
+    sampled power (⟨F_pf⟩=½∂logdet, not ∂logdet).
+
     φ = r_HB(A†A) · ξ where r_HB ≈ x^{-1/8} and ξ ~ N(0,1).
 
     Lean: hs_gaussian_identity_zero (HubbardStratonovichRHMC.lean)

@@ -81,6 +81,19 @@ def connected_susceptibility(x, therm, V):
     return chi, chi * np.sqrt(2.0 / max(neff, 1.0))
 
 
+def binder_cumulant(x, therm):
+    """Binder cumulant U = 1 − ⟨O²⟩/(3⟨O⟩²) for O the SQUARED order parameter
+    (tet_m2 or trQ2, which are already |m|²). The FSS discriminant: U(g) curves
+    for different L CROSS at a critical point; flat / non-crossing ⟹ no transition.
+    Caveat — O is a 16-component field, so even the fully-DISORDERED value is ≈0.6
+    (a 16-dof χ² gives ⟨O²⟩/⟨O⟩²≈1.125 ⟹ U≈0.625), NOT 0. So the single-L VALUE is
+    not a clean order/disorder flag; the L-DEPENDENCE (crossing) is the signal."""
+    x = np.asarray(x, float)[therm:]
+    if len(x) < 2 or x.mean() == 0:
+        return np.nan
+    return 1.0 - (x * x).mean() / (3.0 * x.mean() ** 2)
+
+
 def shuffle_noise_floor(h_flat, L, n_shuffle, rng):
     """Tr Q̃² of spatially-shuffled copies (per-component magnitude preserved,
     all spatial coherence destroyed) → the disordered noise floor."""
@@ -140,6 +153,8 @@ def analyze_dataset(d, therm, n_shuffle, rng):
             trq2_real=trq2_real, trq2_noise=trq2_noise, trq2_noise_sd=trq2_noise_sd,
             trq2_ratio=trq2_real / trq2_noise if trq2_noise else np.nan,
             chi_tet=chi_tet[0], chi_trq=chi_trq[0], creutz=creutz,
+            binder_tet=binder_cumulant(dd['tet_m2_history'], therm),
+            binder_trq=binder_cumulant(dd['tr_q2_history'], therm),
         ))
     return dict(L=L, mass=mass, V=V, recs=recs)
 
@@ -157,6 +172,15 @@ def print_dataset(ds):
               f"{r['tet_ratio']:6.2f} | {r['trq2_real']:9.4f} "
               f"{r['trq2_noise']:7.4f}±{r['trq2_noise_sd']:4.3f} {r['trq2_ratio']:6.2f}  {v_tet}/{v_trq}")
     print(f"  → {'SIGNAL present (see verdicts)' if any_signal else 'NO resolvable order: both channels consistent with noise floor at all g'}")
+    print(f"\n  FSS-gate observables — the go/no-go for L=10/12 (compare these ACROSS L):")
+    print(f"{'g':>6} {'χ_tet':>10} {'χ_trq':>10} {'U_tet':>7} {'U_trq':>7}")
+    for r in ds['recs']:
+        print(f"{r['g']:6.3f} {r['chi_tet']:10.3f} {r['chi_trq']:10.3f} "
+              f"{r['binder_tet']:7.3f} {r['binder_trq']:7.3f}")
+    print("  Read across volumes: χ growing/peaking as V↑, or Binder curves CROSSING across "
+          "L=8/10/12 ⟹ transition (run L=10/12).")
+    print("  Flat χ + no Binder crossing across L ⟹ no transition (ship the null; skip L=10/12). "
+          "Single-L Binder≈0.6 is the disordered baseline, not order.")
 
 
 def extrapolate_mzero(datasets):

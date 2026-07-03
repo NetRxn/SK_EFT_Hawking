@@ -54,17 +54,36 @@ def atomic_savez(path, **data):
 
 
 def run_coupling(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, device, seed,
-                 solver='refined'):
+                 solver='refined', engine='full', chrono=False):
     """Run/extend one coupling's batched-replica mixed chain; save npz. Returns summary.
 
-    solver='refined' offloads the FP64-exact accept/reject to FP32-inner refinement on
-    `device` (≈the dominant cost on a device that can't run FP64, e.g. MPS); 'mixed'
-    keeps the accept/reject as a pure-FP64 CPU solve. Both are FP64-exact Metropolis."""
+    engine='full': the rational (power −1/2) full-operator RHMC. solver='refined' offloads
+    the FP64-exact accept/reject to FP32-inner refinement on `device` (≈the dominant cost on
+    a device that can't run FP64, e.g. MPS); 'mixed' keeps it as a pure-FP64 CPU solve.
+    engine='eo': the even-odd-reduced RHMC — a SINGLE (M_e+m²)⁻¹ solve replaces the 12-pole
+    multishift in both the MD force and the accept/reject (same target density, proven
+    identical: det(A†A+m²)^{1/4}=det(M_e+m²)^{1/2}); ~1–2 orders of magnitude cheaper at L=8.
+    All paths are FP64-exact Metropolis."""
     V = L ** 4
     cpu = torch.device('cpu')
     fwd_c, back_c = st.neighbor_tables(L, cpu)
     fwd_d, back_d = st.neighbor_tables(L, device)
-    trajectory = st.rhmc_trajectory_refined if solver == 'refined' else st.rhmc_trajectory_mixed
+    if engine == 'eo':
+        eo_c, eo_d = st.eo_tables(L, cpu), st.eo_tables(L, device)
+        if device.type == 'cpu':
+            # CPU: pure-FP64 eo (FP32 gives NO CPU speedup + cast overhead). Loose MD tol,
+            # tight accept — exact Metropolis. This is the practical fast path (MPS/CUDA are
+            # launch-bound for this Python-loop CG until it's restructured).
+            def trajectory(h, g, msq, coeffs, fc, bc, fd, bd, L, eps, n_md, device, gen_dev, gen_cpu):
+                return st.eo_rhmc_trajectory(h, g, msq, coeffs, eo_c, fc, bc, L, eps, n_md,
+                                             gen_cpu, tol=1e-8, tol_md=1e-4, chrono=chrono)
+        else:
+            # GPU (MPS/CUDA): FP32 MD on device + FP64 accept/reject on CPU.
+            def trajectory(h, g, msq, coeffs, fc, bc, fd, bd, L, eps, n_md, device, gen_dev, gen_cpu):
+                return st.eo_rhmc_trajectory_mixed(h, g, msq, coeffs, eo_c, fc, bc, eo_d, fd, bd,
+                                                   L, eps, n_md, device, gen_dev, gen_cpu, chrono=chrono)
+    else:
+        trajectory = st.rhmc_trajectory_refined if solver == 'refined' else st.rhmc_trajectory_mixed
 
     # resume
     hist = {k: [] for k in ('h_sq', 'dH', 'tet', 'trq')}
@@ -143,19 +162,32 @@ def main():
     ap.add_argument('--seed', type=int, default=2026)
     ap.add_argument('--outdir', type=str, default=None)
     ap.add_argument('--device', type=str, default='mps', choices=['mps', 'cpu'])
+    ap.add_argument('--engine', type=str, default='full', choices=['full', 'eo'],
+                    help="'eo' = even-odd-reduced (single-solve; ~1-2 orders faster at L=8, "
+                         "proven identical target density); 'full' = 12-pole rational (default).")
     ap.add_argument('--solver', type=str, default='refined', choices=['refined', 'mixed'],
                     help='refined = FP32-inner/FP64-residual accept/reject on device (fast); '
                          'mixed = pure-FP64 CPU accept/reject (slower fallback). Both FP64-exact.')
     ap.add_argument('--couplings-only', type=float, nargs='*', help='run only these g values')
+    ap.add_argument('--no-compile', dest='compile', action='store_false',
+                    help='disable torch.compile of the stencil matvecs (default: enabled, EXACT '
+                         '~1.6x/traj on CPU, CUDA-graphs on CUDA).')
+    ap.add_argument('--chrono', action='store_true',
+                    help='chronological inversion (CG warm-start, ~1.8x MD; controlled O(tol) '
+                         'reversibility — certified unbiased by Creutz; default off = exactly reversible).')
+    ap.set_defaults(compile=True)
     args = ap.parse_args()
 
     L, msq = args.l, args.mass ** 2
     device = torch.device(args.device if (args.device != 'mps' or torch.backends.mps.is_available()) else 'cpu')
-    outdir = args.outdir or f"data/rhmc/L{L}gpu_m{args.mass:g}"
+    if args.compile:
+        st.enable_matvec_compile(mode='reduce-overhead' if device.type == 'cuda' else 'default')
+    tag = 'eo' if args.engine == 'eo' else 'gpu'
+    outdir = args.outdir or f"data/rhmc/L{L}{tag}_m{args.mass:g}"
     os.makedirs(outdir, exist_ok=True)
     gs = args.couplings_only if args.couplings_only else coupling_grid(args.n_couplings, args.g_lo, args.g_hi)
 
-    print(f"GPU production: L={L} m={args.mass} device={device.type} solver={args.solver} "
+    print(f"GPU production: L={L} m={args.mass} engine={args.engine} device={device.type} solver={args.solver} "
           f"R={args.replicas} n_md={args.n_md} eps={args.eps} n_poles={args.n_poles}  "
           f"{len(gs)} couplings × {args.n_meas} traj × {args.replicas} replicas → {outdir}", flush=True)
     for i, g in enumerate(gs):
@@ -164,7 +196,8 @@ def main():
         coeffs, lam = build_coeffs(L, g, msq, args.n_poles, args.seed + i)
         print(f"\n[{i+1}/{len(gs)}] g={g:.3f}  range[{msq:.4g},{lam+msq:.1f}] κ={(lam+msq)/msq:.0f}", flush=True)
         s = run_coupling(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
-                         args.n_meas, args.n_therm, device, args.seed + i, solver=args.solver)
+                         args.n_meas, args.n_therm, device, args.seed + i,
+                         solver=args.solver, engine=args.engine, chrono=args.chrono)
         print(f"  → done g={g:.3f}: acc={s['acc']:.2f} <tet>={s['tet']:.4f} "
               f"n={s['n']} {s['s_per_traj']*1000:.0f} ms/traj", flush=True)
     print(f"\nComplete → {outdir}  (monitor: rhmc_monitor.py {outdir} --watch 300)", flush=True)

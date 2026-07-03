@@ -90,11 +90,28 @@ def _archive_path(path):
     return p.with_name(p.stem + "_ARCHIVE" + p.suffix)
 
 
+def _normalize_finding(f):
+    """Heal a finding to the schema invariants so NO consumer can trip on a missing field, and the
+    register can never store a record that KeyErrors `record["class"]` or renders an empty Why.
+    Off-schema producers exist (e.g. a Stage-13 paper-honesty / claims pass emitted records with
+    `body` instead of `why` and no `class`); rather than trust every producer, the register heals at
+    its own read/write boundary. Idempotent — a conformant record is returned unchanged. The explicit
+    `id` is never touched, so dedup keying stays stable even when `class` is backfilled."""
+    if not isinstance(f, dict):
+        return f
+    if not f.get("why") and f.get("body"):   # legacy/alt producers used `body`
+        f["why"] = f["body"]
+    if not f.get("class"):                    # guarantee the class surface (id is independent)
+        f["class"] = "unclassified"
+    f.setdefault("title", "")
+    return f
+
+
 def _parse_findings(text):
     out = []
     for m in _JSON_FENCE.finditer(text):
         try:
-            out.append(json.loads(m.group(1)))
+            out.append(_normalize_finding(json.loads(m.group(1))))
         except Exception:
             continue
     return out
@@ -176,7 +193,7 @@ def upsert(path, finding, allow_human=False):
     a GENUINE human-reviewed finding is preserved below (clamped nt never lowers an existing et)."""
     if _should_drop(path, finding):
         return False
-    finding = dict(finding)
+    finding = _normalize_finding(dict(finding))
     fid = finding.get("id") or slug(finding)
     finding["id"] = fid
     finding.setdefault("status", "open")
@@ -228,7 +245,7 @@ def group(path, absorb_ids, into, allow_human=False):
     by = {f.get("id"): f for f in findings}
     skipped = [i for i in absorb_ids if i in by and by[i].get("tier") == "human-reviewed"]
     absorb = {i for i in absorb_ids if i in by and i not in skipped}
-    into = dict(into)
+    into = _normalize_finding(dict(into))
     into["id"] = into.get("id") or slug(into)
     into.setdefault("status", "closed")
     into["tier"] = _clamp_tier(into.get("tier", "automatic"), allow_human)

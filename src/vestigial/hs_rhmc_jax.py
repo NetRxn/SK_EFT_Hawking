@@ -364,6 +364,12 @@ def compute_hamiltonian_jax(h_flat, pi_h, g, A, phi, alpha_0, alphas, betas):
 def pseudofermion_heatbath_jax(A, dim, rng_key, alpha_0_hb, alphas_hb, betas_hb):
     """Generate pseudofermion from correct distribution using x^{-1/8}.
 
+    ⚠️ NOT PRODUCTION / SUPERSEDED (2026-07-01). Draws a REAL ξ with NO 1/√2 complex-Gaussian
+    normalization — the same real-PF factor-2 flaw found in hs_rhmc_stencil (samples
+    det(A†A)^{1/2}=Dirac, not the intended det(A†A)^{1/4}=Majorana). No driver/paper imports
+    this module; production is the Rust engine (correct complex PF + 1/√2) and the active GPU
+    path is the fixed hs_rhmc_stencil. If revived, apply the 1/√2 and re-validate.
+
     φ = r_HB(A†A) · ξ where r_HB ≈ x^{-1/8}.
 
     Lean: hs_gaussian_identity_zero (HubbardStratonovichRHMC.lean)
