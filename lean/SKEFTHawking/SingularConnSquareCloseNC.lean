@@ -2701,6 +2701,43 @@ theorem chainBoundary_cast {a b : ℕ} (e : a + 1 = b + 1) (e' : a = b)
     (c : SingularChain X (a + 1)) :
     chainBoundary X b (e ▸ c) = e' ▸ chainBoundary X a c := by subst e'; rfl
 
+omit [T2Space ↑X] in
+/-- **`cast` along a `congrArg`-lifted degree equality is the `▸`-recast** (generic bridge between
+the two cast spellings; `subst` + proof-irrelevance). -/
+theorem singularChain_cast_eq_rec {a b : ℕ} (e : a = b) (c : SingularChain X a) :
+    cast (congrArg (SingularChain X) e) c = e ▸ c := by subst e; rfl
+
+omit [T2Space ↑X] in
+/-- **Set-recast of a rel-cocycle preserves the raw cochain** (generic `subst`-helper — the `hgg`
+feed at the apex: `(hKeq ▸ g_rep).1.1 = g_rep.1.1`). -/
+theorem ker_relCoboundary_cast_coe {S T : Set ↑X} (e : S = T) {n : ℕ}
+    (x : LinearMap.ker (relCoboundaryₗ S n)) :
+    (((e ▸ x : LinearMap.ker (relCoboundaryₗ T n)) : relCochains T n) : SingularCochain X n)
+      = ((x : relCochains S n) : SingularCochain X n) := by subst e; rfl
+
+omit [T2Space ↑X] in
+/-- **The cast-fund feed** (whnf-free by genericity — `cases h` collapses every `cast` before any
+term must reduce, exactly the `exists_cast_cover_V_projection` discipline). Packages ALL the
+`F₂`-facts the fact-(i) discharge needs about the CAST presentation of an off-frame fund-object:
+support membership, boundary support, and the rel-witness `(η', a')` — transported across the
+degree recast in ONE `cases`. -/
+theorem cast_fund_feed {n₂ n₁ : ℕ} (h : n₂ = n₁) (z z₀c a : SingularChain X (n₂ + 1))
+    (η : SingularChain X (n₂ + 1 + 1)) {S T : Set ↑X}
+    (hzmem : z ∈ subspaceChains T (n₂ + 1))
+    (hzbd : chainBoundary X n₂ z ∈ subspaceChains S n₂)
+    (heq : z + z₀c = chainBoundary X (n₂ + 1) η + a)
+    (ha : a ∈ subspaceChains S (n₂ + 1)) :
+    (cast (congrArg (SingularChain X) (congrArg (· + 1) h)) z ∈ subspaceChains T (n₁ + 1))
+    ∧ (chainBoundary X n₁ (cast (congrArg (SingularChain X) (congrArg (· + 1) h)) z)
+        ∈ subspaceChains S n₁)
+    ∧ ∃ (η' : SingularChain X (n₁ + 1 + 1)) (a' : SingularChain X (n₁ + 1)),
+        cast (congrArg (SingularChain X) (congrArg (· + 1) h)) z
+            + cast (congrArg (SingularChain X) (congrArg (· + 1) h)) z₀c
+          = chainBoundary X (n₁ + 1) η' + a'
+        ∧ a' ∈ subspaceChains S (n₁ + 1) := by
+  cases h
+  exact ⟨hzmem, hzbd, η, a, heq, ha⟩
+
 /-- **The N2 δφ-kill** (Brick L — N2 steps I–IV assembled on the cast frame: Brick K → generic
 cast transports → Brick J). For `c := f₃ + Sd^jF fund_K₂` (the three-set third piece + the
 `jF`-subdivided `K₂`-fund), the `δφ`-cap (`φ := cochainSplit LUᶜ g`, the ∩-form cocycle's U-side
@@ -3776,11 +3813,51 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       refine joint_cap_rcap_match_pairing _ _
         ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1 + (p + 1))).symm
           ⟨_, hbFmem⟩) _ _ ?_ ?_
-      -- SUN FACT (i) — the seam fact (fund-class compatibility over z₀, Hatcher's δ/∂ block LHS):
-      -- ⟨β, seam²(bE zB)⟩ = ⟨β, cap (pullbackCochain (U∩V) g_rep↾) F⟩. Feeds: hη (zB = V-part of
-      -- cap g_rep fund_K), hfundK (fund_K ↔ fund_∩ un-differentiated), heq3'/htest/hEbridge, heng
-      -- (cap(δ(cochainSplit)) engine); β-cocycle absorbs the boundary/Sdʲ slack.
-      · sorry
+      -- SUN FACT (i) — the seam fact, discharged by the EXTRACTED single-choice `fact_i_discharge`
+      -- (Bricks A–M + K′; the F₂-slot receives the cast-presentation of THE pd-side fund choice,
+      -- its rel-witness cast-transported through `cast_fund_feed` in one `cases`).
+      · obtain ⟨η₂c, a₂c, heq₂c, ha₂c⟩ := fundCycleW_chain_rel (hU.inter hV)
+          (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 2 + p + 1) z₀)
+          (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+            z₀ hz₀)
+          (SingularCSCMayerVietorisConnecting.infCompact U V
+            (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+            (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
+        rw [infCompact_compl_legSplit hU hV K] at ha₂c
+        obtain ⟨hF₂mem', hF₂bd', η₂', a₂', heq₂', ha₂'⟩ :=
+          cast_fund_feed (show N + 2 + p = N + 1 + (p + 1) by omega) _ _ a₂c η₂c
+            hfundmem2 (fund2_boundary_cover U V hU hV K z₀ hz₀) heq₂c ha₂c
+        rw [singularChain_cast_eq_rec
+            (congrArg (· + 1) (show N + 2 + p = N + 1 + (p + 1) by omega))
+            (SingularOpenDualityMVConnSquare.castChain
+              (by omega : N + p + 3 = N + 2 + p + 1) z₀),
+          castChain_cast_reconcile (by omega : N + p + 3 = N + 2 + p + 1)
+            (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) _ z₀] at heq₂'
+        have hgg : (RR (hKeq ▸ g_rep)).1.1 = g_rep.1.1 := by
+          rw [← hRRdef]
+          exact ker_relCoboundary_cast_coe hKeq g_rep
+        exact fact_i_discharge hU hV
+          (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV
+            K).1.isCompact'.isClosed.isOpen_compl
+          (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV
+            K).1.isCompact'.isClosed.isOpen_compl
+          (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).2
+          (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).2
+          (RR (hKeq ▸ g_rep))
+          (SingularOpenDualityMVConnSquare.castChain
+            (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+          (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+            z₀ hz₀)
+          K
+          (SingularCSCMayerVietorisConnecting.infCompact U V
+            (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+            (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
+          g_rep hgg hKeq (infCompact_compl_legSplit hU hV K)
+          (SingularSubHomologyMV.cover_preimage U V hU hV)
+          zc0 hzc0 zA zB hcyc hpart hzBmem _ _
+          (chainIncl_seam_boundaryExtract (fun x hx => Or.inl hx.1) (fun q => Iff.rfl))
+          _ hF₂mem' η₂' a₂' heq₂' ha₂' hF₂bd'
+          jF aF bF hFsplit hbFmem β
       -- SUN FACT (ii) — the rcap fact: ⟨pullbackCochain (U∩V) g_rep↾, R_sub⟩ =
       -- ⟨pullbackCochain g_rep↾, rcap β F⟩. Assembly (per the β-brick architecture): reduce both sides to
       -- ambient ⟨gRk, (Vᶜ∩(U∩V))-leg⟩ pairings; the two legs are V-legs of splits of two parents P₁ (bR's,
