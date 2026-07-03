@@ -977,6 +977,13 @@ import SKEFTHawking.SingularWuSum
 import SKEFTHawking.PinPlusFaithfulData
 import SKEFTHawking.FaithfulSixteenCapstone
 import SKEFTHawking.SingularSWNumber
+import SKEFTHawking.PinPlusTiedData
+import SKEFTHawking.RP4PointSet
+import SKEFTHawking.RP4Witness
+import SKEFTHawking.SphereHomology
+import SKEFTHawking.RP4Covering
+import SKEFTHawking.StdSimplexLocPath
+import SKEFTHawking.RP4Transfer
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
