@@ -514,4 +514,40 @@ theorem pdWindowP_univ {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace
     (pdWindowP_finset_chartSources zM hzM hcyc hloc t hopt)
 
 
+/-! ## W-d1 (d1a): the ⊤-collapse of the P-side colimit (compact `M`) -/
+
+/-- For compact `M`, `CompactsIn univ` has a top: the whole space as a compact. -/
+noncomputable instance {M : TopCat} [CompactSpace ↑M] :
+    OrderTop (SKEFTHawking.SingularCompactsInOpen.CompactsIn (Set.univ : Set ↑M)) where
+  top := ⟨⊤, Set.subset_univ _⟩
+  le_top _K := Subtype.coe_le_coe.mp le_top
+
+/-- **The P-side colimit collapses onto its `⊤`-stage** (compact `M`): `of ⊤` is bijective. -/
+theorem of_top_univ_bijective {M : TopCat} [CompactSpace ↑M] (k : ℕ) :
+    Function.Bijective (Module.DirectLimit.of (ZMod 2)
+      (SKEFTHawking.SingularCompactsInOpen.CompactsIn (Set.univ : Set ↑M))
+      (cohomGW (Set.univ : Set ↑M) k) (cohomFW (Set.univ : Set ↑M) k) ⊤) :=
+  SKEFTHawking.SingularDirectLimitTop.of_top_bijective _ _
+
+/-- **The `⊤`-stage leg of an injective `D_univ` is injective** — the P-side half of the W-d1
+endpoint bridge. -/
+theorem legW_top_injective {M : TopCat} [T2Space ↑M] [CompactSpace ↑M] {k m : ℕ}
+    (hop : IsOpen (Set.univ : Set ↑M))
+    (z₀ : SingularChain M (k + m + 1)) (hz₀ : chainBoundary M (k + m) z₀ = 0)
+    (hD : Function.Injective ⇑(openDuality (k := k) (m := m) hop z₀ hz₀)) :
+    Function.Injective ⇑(SKEFTHawking.SingularOpenDuality.legW hop z₀ hz₀ ⊤) := by
+  intro a b hab
+  have h1 : openDuality (k := k) (m := m) hop z₀ hz₀
+        (Module.DirectLimit.of (ZMod 2)
+          (SKEFTHawking.SingularCompactsInOpen.CompactsIn (Set.univ : Set ↑M))
+          (cohomGW (Set.univ : Set ↑M) k) (cohomFW (Set.univ : Set ↑M) k) ⊤ a)
+      = openDuality (k := k) (m := m) hop z₀ hz₀
+        (Module.DirectLimit.of (ZMod 2)
+          (SKEFTHawking.SingularCompactsInOpen.CompactsIn (Set.univ : Set ↑M))
+          (cohomGW (Set.univ : Set ↑M) k) (cohomFW (Set.univ : Set ↑M) k) ⊤ b) := by
+    rw [openDuality_of, openDuality_of]
+    exact hab
+  exact (of_top_univ_bijective k).injective (hD h1)
+
+
 end SKEFTHawking.SingularPDWindow
