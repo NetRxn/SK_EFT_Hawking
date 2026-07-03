@@ -1906,6 +1906,46 @@ theorem chainIncl_rcap_subspaceChains {W B' : Set ↑X} {k l : ℕ}
     (SingularRightCapBoundary.rcap_mem_subspaceChains _ b
       ((SingularExcisionIso.chainIncl_mem_subspaceChains_iff B' W F).mp hF))
 
+/-- **Two-legs assembly for the pullback pairing** (the fact-(ii) frame, EXTRACTED for heartbeat
+relief). The apex proof is ONE Lean command whose 200k-heartbeat budget is cumulative across the
+whole proof body; this pullback-layer reduction — un-pullback both sides
+(`kronecker_chainIncl_eq_pullbackCochain`), collapse the realizes
+(`chainIncl_subspaceChainsEquiv_symm`), swap the intrinsic right cap for its `Bv`-leg realization —
+previously elaborated inside it and tipped the budget. Packaged over FREE `W/Bv/k/l/g/b/bR/bF`
+(fresh budget, no `fundCycleW` anywhere, every unification small and first-order). The remaining
+input `hcore` is the bare two-`Bv`-legs core `⟨g, bR-leg⟩ = ⟨g, (rcap b F)-realized-leg⟩`. ℤ/2. -/
+theorem pullback_pairing_legs_assemble {W Bv : Set ↑X} {k l : ℕ}
+    (g : SingularCochain X k) (b : SingularCochain (sub W) l)
+    (bR : SingularChain (sub Bv) k)
+    (hbmem : chainIncl Bv k bR ∈ subspaceChains W k)
+    (bF : SingularChain (sub Bv) (k + l))
+    (hbFmem : chainIncl Bv (k + l) bF ∈ subspaceChains W (k + l))
+    (hmem3 : chainIncl W k (SingularCapChainIncl.rcap b
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W (k + l)).symm ⟨_, hbFmem⟩))
+      ∈ subspaceChains Bv k)
+    (hcore : kronecker g (chainIncl Bv k bR)
+      = kronecker g (chainIncl Bv k
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv Bv k).symm ⟨_, hmem3⟩))) :
+    kronecker (SingularCapChainIncl.pullbackCochain W k g)
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W k).symm ⟨_, hbmem⟩)
+      = kronecker (SingularCapChainIncl.pullbackCochain W k g)
+        (SingularCapChainIncl.rcap b
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W (k + l)).symm ⟨_, hbFmem⟩)) := by
+  have e₁ := kronecker_chainIncl_eq_pullbackCochain (W := W) g
+    ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W k).symm ⟨_, hbmem⟩)
+  have e₂ := kronecker_chainIncl_eq_pullbackCochain (W := W) g
+    (SingularCapChainIncl.rcap b
+      ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W (k + l)).symm ⟨_, hbFmem⟩))
+  have e₃ : chainIncl W k ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W k).symm ⟨_, hbmem⟩)
+      = chainIncl Bv k bR :=
+    SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (S := W) k ⟨_, hbmem⟩
+  have e₄ : chainIncl W k (SingularCapChainIncl.rcap b
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W (k + l)).symm ⟨_, hbFmem⟩))
+      = chainIncl Bv k ((SingularSubspaceChainsEquiv.subspaceChainsEquiv Bv k).symm ⟨_, hmem3⟩) :=
+    (SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (S := Bv) k ⟨_, hmem3⟩).symm
+  exact e₁.symm.trans (((congrArg (kronecker g) e₃).trans hcore).trans
+    ((congrArg (kronecker g) e₄.symm).trans e₂))
+
 omit [T2Space ↑X] in
 /-- **Joint cross-realization assembly** (the G1 close skeleton, whnf-dodging GREEN). Combines the two
 realized legs on the common space `M = sub T` (with `T = U ∩ V`) into the connecting-square match. The
@@ -2397,16 +2437,30 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
       -- fund₂ (the same `.choose` the pd side carries), so every fund-object in fact (ii) is a cast-
       -- presentation of ONE term and all reconciliations are `cases`-able cast-commutes. (fund₁-based
       -- splits would introduce a SECOND independent choice — see the 9th-push notebook analysis.)
-      -- THE SHARED cover-V-projection F (fund₁-based for now — the fund₂ single-choice swap via
-      -- `exists_cast_cover_V_projection` walls at this call site pending bisection; see the notebook):
-      -- repartition hsplit's legs (the parent ∂(Sdʲˢᵈ fund₁) IS (U∩V)-supported since fundCycleW is).
-      have hFparent : chainIncl _ (N + 1 + (p + 1)) u' + chainIncl _ (N + 1 + (p + 1)) w'
-          ∈ subspaceChains (U ∩ V) (N + 1 + (p + 1)) :=
-        hsplit ▸ SingularRelativeHomologyMod2.chainBoundary_mem_subspaceChains (U ∩ V)
-          (N + 1 + (p + 1)) _
-          (SingularExcision.singularSd_iterate_mem_subspaceChains
-            (SingularOpenDualityCycle.fundCycleW_mem_W _ _ _ _) jSd)
-      obtain ⟨aF, bF, hFsplit⟩ := repartition_subspaceChains u' w' hFparent
+      -- Elaboration discipline (the 10th-push wall, bisected): `h` must be `show`-typed — a bare
+      -- `by omega` leaves n₁ UN-INFERABLE in an `obtain` (no expected type), and the elaborator's
+      -- search for it is the whnf-wall; `hbd` mirrors the STEP-A green tactic-block (raw
+      -- `fundCycleW_boundary` with explicit args + `rwa [infCompact_coe, compl_inter]`), never the
+      -- `_ _ _ _`-underscored cover wrapper (its metas unify against the huge concrete instance).
+      obtain ⟨jF, aF, bF, hFsplit⟩ := exists_cast_cover_V_projection
+        (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+        (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+        (show N + 2 + p = N + 1 + (p + 1) by omega)
+        (SingularOpenDualityCycle.fundCycleW (hU.inter hV)
+          (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 2 + p + 1) z₀)
+          (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+          (SingularCSCMayerVietorisConnecting.infCompact U V
+            (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+            (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K)))
+        hfundmem2
+        (by
+          have h := SingularOpenDualityCycle.fundCycleW_boundary (hU.inter hV)
+            (SingularOpenDualityMVConnSquare.castChain (by omega : N + p + 3 = N + 2 + p + 1) z₀)
+            (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega) z₀ hz₀)
+            (SingularCSCMayerVietorisConnecting.infCompact U V
+              (SingularCSCMayerVietorisConnecting.legSplitU U V hU hV K)
+              (SingularCSCMayerVietorisConnecting.legSplitV U V hU hV K))
+          rwa [SingularCSCMayerVietorisConnecting.infCompact_coe, Set.compl_inter] at h)
       have hbFmem : chainIncl _ (N + 1 + (p + 1)) bF
           ∈ subspaceChains (U ∩ V) (N + 1 + (p + 1)) :=
         SingularMayerVietoris.subspaceChains_mono Set.inter_subset_right (N + 1 + (p + 1)) ⟨bF, rfl⟩
@@ -2441,24 +2495,10 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
         --     rcap-linearity + rcap_cocycle_chainMap (β cocycle); fund₁↔fund₂ via castChain_cast_reconcile.
         --     E_M' := DⱼP(rcap β f) + rcap β (Dⱼˢᵈ f) is (val⁻¹infCompactᶜ)-supported (D/rcap preserve).
         -- (3) β2 on the combined split of the parents' sum kills the combined V-pairing; ℤ/2 splits it.
-        -- FRAME DODGE (recorded): the pullback layer is discharged by PURE TERM COMPOSITION (Eq.trans) —
-        -- never rewritten against the big goal; all further rewriting happens on the small ambient goal.
-        have e₁ := kronecker_chainIncl_eq_pullbackCochain (W := U ∩ V)
-          (RR (hKeq ▸ g_rep)).1.1
-          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1)).symm ⟨_, hbmem⟩)
-        have e₂ := kronecker_chainIncl_eq_pullbackCochain (W := U ∩ V)
-          (RR (hKeq ▸ g_rep)).1.1
-          (SingularCapChainIncl.rcap β.1
-            ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V)
-              (N + 1 + (p + 1))).symm ⟨_, hbFmem⟩))
-        -- The R_sub-side and F-side leg identities, ascribed to their CLEAN forms (the ↑⟨·,·⟩ coe is
-        -- defeq); consumed via congrArg — no goal-rewriting anywhere near the fundCycleW terms.
-        have e₃ : chainIncl (U ∩ V) (N + 1)
-              ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1)).symm ⟨_, hbmem⟩)
-            = chainIncl _ (N + 1) bR :=
-          SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (S := U ∩ V) (N + 1)
-            ⟨_, hbmem⟩
-        -- the F-side support: rcap locality through the inclusion (β0'' — every set INFERRED)
+        -- FRAME DODGE (recorded): the pullback layer is discharged by PURE TERM COMPOSITION —
+        -- now via the EXTRACTED `pullback_pairing_legs_assemble` (heartbeat relief: the apex proof
+        -- is one command with a cumulative 200k budget; the e-block composition moved out). hmem3
+        -- (the rcap Bv-support, β0'' + e₅-transport) stays constructed here, unascribed (sets infer).
         have e₅ : chainIncl (U ∩ V) (N + 1 + (p + 1))
               ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V)
                 (N + 1 + (p + 1))).symm ⟨_, hbFmem⟩)
@@ -2468,14 +2508,8 @@ theorem subHomConnecting_openDuality {N p : ℕ} {U V : Set ↑X} (hU : IsOpen U
         have hmem3 := chainIncl_rcap_subspaceChains β.1 _
           (e₅.symm ▸ (⟨bF, rfl⟩ : chainIncl _ (N + 1 + (p + 1)) bF
             ∈ subspaceChains _ (N + 1 + (p + 1))))
-        have e₄ : chainIncl (U ∩ V) (N + 1) (SingularCapChainIncl.rcap β.1
-              ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V)
-                (N + 1 + (p + 1))).symm ⟨_, hbFmem⟩))
-            = chainIncl _ (N + 1)
-              ((SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (N + 1)).symm ⟨_, hmem3⟩) :=
-          (SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm _ (N + 1) ⟨_, hmem3⟩).symm
-        refine e₁.symm.trans ((((congrArg (kronecker (RR (hKeq ▸ g_rep)).1.1) e₃).trans
-          ?_).trans (congrArg (kronecker (RR (hKeq ▸ g_rep)).1.1) e₄.symm)).trans e₂)
-        -- CORE two-legs goal: ⟨gRk, chainIncl(Vᶜ∩∩) bR⟩ = ⟨gRk, chainIncl(Vᶜ∩∩) bRHS⟩.
+        refine pullback_pairing_legs_assemble (RR (hKeq ▸ g_rep)).1.1 β.1 bR hbmem bF hbFmem
+          hmem3 ?_
+        -- CORE two-legs goal: ⟨gRk, chainIncl(Vᶜ∩∩) bR⟩ = ⟨gRk, chainIncl(Vᶜ∩∩)-realized rcap⟩.
         sorry
 end SKEFTHawking.SingularConnSquareCloseNC
