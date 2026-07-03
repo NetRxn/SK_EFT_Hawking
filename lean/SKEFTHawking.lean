@@ -986,6 +986,7 @@ import SKEFTHawking.SingularConnSquareCloseNCBotApex
 import SKEFTHawking.SingularRelCohomVanishAbove
 import SKEFTHawking.SingularSubHomSumEnd
 import SKEFTHawking.SingularCSCVanishAboveGeom
+import SKEFTHawking.SingularSubdivisionBot
 import SKEFTHawking.SingularKroneckerFunctoriality
 import SKEFTHawking.SingularSeamDualPairing
 import SKEFTHawking.SingularConnSquareMatchLHS
