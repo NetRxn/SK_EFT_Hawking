@@ -62,4 +62,61 @@ noncomputable instance : Nonempty RP4 :=
     rw [mem_sphere_zero_iff_norm]
     simp⟩⟩
 
+/-! ## §2. The hemisphere layer — where the quotient map is an open embedding
+
+For each `x : S⁴`, the open hemisphere `hemi x = {y | ⟪x,y⟫ > 0}` meets every antipodal pair at
+most once, so `Quotient.mk` restricted to it is injective; the orbit map is open
+(`isOpenMap_quotient_mk'_mul`), so the restriction is an **open embedding** — the engine that
+descends the sphere's charts to `RP4` (B4b-2). -/
+
+open scoped RealInnerProductSpace
+
+/-- The open hemisphere around `x`. -/
+def hemi (x : S4) : Set S4 :=
+  {y : S4 | 0 < ⟪(x : EuclideanSpace ℝ (Fin (4 + 1))), (y : EuclideanSpace ℝ (Fin (4 + 1)))⟫}
+
+theorem hemi_isOpen (x : S4) : IsOpen (hemi x) :=
+  isOpen_lt continuous_const (Continuous.inner continuous_const continuous_subtype_val)
+
+theorem mem_hemi_self (x : S4) : x ∈ hemi x := by
+  show 0 < ⟪(x : EuclideanSpace ℝ (Fin (4 + 1))), (x : EuclideanSpace ℝ (Fin (4 + 1)))⟫
+  rw [real_inner_self_eq_norm_sq, mem_sphere_zero_iff_norm.mp x.2]
+  norm_num
+
+/-- The quotient map is open (the group-orbit map). -/
+theorem isOpenMap_mk :
+    IsOpenMap (Quotient.mk (MulAction.orbitRel ℤˣ S4)) :=
+  isOpenMap_quotient_mk'_mul (Γ := ℤˣ) (T := S4)
+
+/-- **`Quotient.mk` is injective on a hemisphere** — an antipodal pair never lies in one. -/
+theorem mk_injOn_hemi (x : S4) :
+    Set.InjOn (Quotient.mk (MulAction.orbitRel ℤˣ S4)) (hemi x) := by
+  intro y hy y' hy' hmk
+  obtain ⟨u, hu⟩ : y ∈ MulAction.orbit ℤˣ y' := Quotient.eq''.mp hmk
+  have hu' : u • y' = y := hu
+  rcases Int.units_eq_one_or u with h1 | h1
+  · rw [h1, one_smul] at hu'
+    exact hu'.symm
+  · exfalso
+    rw [h1] at hu'
+    have hcoe : (y : EuclideanSpace ℝ (Fin (4 + 1)))
+        = -(y' : EuclideanSpace ℝ (Fin (4 + 1))) := by
+      rw [← hu', smul_coe]
+      norm_num
+    have h2 : (0 : ℝ) < ⟪(x : EuclideanSpace ℝ (Fin (4 + 1))),
+        -(y' : EuclideanSpace ℝ (Fin (4 + 1)))⟫ := hcoe ▸ hy
+    rw [inner_neg_right] at h2
+    exact absurd hy' (not_lt.mpr (le_of_lt (neg_pos.mp h2)))
+
+/-- **The hemisphere-restricted quotient map is an open embedding** — continuous + injective +
+open (composite of the orbit map with the open-subtype inclusion). -/
+theorem isOpenEmbedding_mk_hemi (x : S4) :
+    Topology.IsOpenEmbedding
+      (fun y : ↥(hemi x) => Quotient.mk (MulAction.orbitRel ℤˣ S4) y.1) := by
+  refine Topology.IsOpenEmbedding.of_continuous_injective_isOpenMap ?_ ?_ ?_
+  · exact Continuous.comp continuous_quotient_mk' continuous_subtype_val
+  · intro a b hab
+    exact Subtype.ext (mk_injOn_hemi x a.2 b.2 hab)
+  · exact IsOpenMap.comp isOpenMap_mk ((hemi_isOpen x).isOpenMap_subtype_val)
+
 end SKEFTHawking.RP4PointSet
