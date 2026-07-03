@@ -159,4 +159,46 @@ noncomputable def omega4PinPlusGMTied_equiv_zmod16_of_cap
     DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16 :=
   AddEquiv.ofBijective _ (abkGMTied16_bijective_of_cap hfin hcap)
 
+/-! ### H8 — routing the cap through the Smith-LES (reduce it to the Rokhlin node)
+
+Per §9.3 (ROUTE LOCK) the cap `{Finite + card ≤ 16}` is NOT the AHSS/height cap — it is supplied by the
+Smith-LES: a carrier iso `carrier ≃+ ZMod 16` (transported from the Pin⁻ neighbor `Ω₆^{Pin⁻} ≅ ZMod 16`
+through the geometric zero-locus Smith map, `PinPlusSmithLES.pinPlus_zmod16_of_smith_les`) gives `Finite`
++ `card ≤ 16` at once. So `ker abkGMTied16 = ⊥` + the COMPUTED-grade iso follow from **one** input:
+`Nonempty (carrier ≃+ ZMod 16)`, i.e. the neighbor `≅ ZMod 16` = the pre-existing tracked Rokhlin node
+`hyp:rokhlin_sigma_mod_16` (its irreducible `2 ∣ σ/8` factor). No new debt; the disclosed surface is the
+single existing node, its discharge the live 5q.B `16 ∣ σ` workstream (or Matsumoto). -/
+
+/-- **The cap is supplied by any carrier iso `carrier ≃+ ZMod 16`** — `Finite` (transport of `ZMod 16`'s
+finiteness) + `Nat.card ≤ 16` (card is iso-invariant). The Smith-LES provides such an iso from the Rokhlin
+neighbor. -/
+theorem cap_of_carrier_iso_zmod16
+    (h : Nonempty (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16)) :
+    Finite (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))) ∧
+      Nat.card (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))) ≤ 16 := by
+  obtain ⟨e⟩ := h
+  haveI : Finite (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))) :=
+    Finite.of_equiv _ e.toEquiv.symm
+  exact ⟨inferInstance, by rw [Nat.card_congr e.toEquiv, Nat.card_zmod]⟩
+
+/-- **`ker abkGMTied16 = ⊥` GIVEN a Smith-LES carrier iso** — the COMPUTED grade `abkGMTied16` is the
+isomorphism (surjective + the Smith-LES cardinality ⟹ bijective), so its kernel is `⊥`. The single input
+is `Nonempty (carrier ≃+ ZMod 16)` = the Rokhlin node (H8 / 5q.B). -/
+theorem abkGMTied16_ker_eq_bot_of_smith_les
+    (h : Nonempty (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16)) :
+    ((abkGMTied16 (k := 0) (I := 𝓡 4)) :
+      DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ ZMod 16).ker = ⊥ :=
+  let ⟨hfin, hcap⟩ := cap_of_carrier_iso_zmod16 h
+  abkGMTied16_ker_eq_bot_of_cap hfin hcap
+
+/-- **The full COMPUTED-grade iso GIVEN the Smith-LES carrier iso** — `DataBordismGrp (pinPlusGMTiedData)
+≃+ ZMod 16` **via `abkGMTied16`** (invariant computed, generator geometric, no quotient-by-kernel), with
+the sole input the Rokhlin-node carrier iso. When `hyp:rokhlin_sigma_mod_16` lands in-tree (5q.B / Matsumoto)
+this becomes binder-free. -/
+noncomputable def omega4PinPlusGMTied_equiv_zmod16_of_smith_les
+    (h : Nonempty (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16)) :
+    DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16 :=
+  let ⟨hfin, hcap⟩ := cap_of_carrier_iso_zmod16 h
+  omega4PinPlusGMTied_equiv_zmod16_of_cap hfin hcap
+
 end SKEFTHawking.PinPlusGMWitness
