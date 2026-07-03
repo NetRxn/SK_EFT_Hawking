@@ -2735,6 +2735,15 @@ theorem fact_i_discharge {U V LU LV : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
   -- (0–2) STAGE 1: three-set split + canonical partition + class equality (ONE obtain)
   obtain ⟨μ, f₁, f₂, f₃, hf₁, hf₂, hf₃, hIsplit, zAc, zBc, hzAc, hzBc, hcycc, hcls⟩ :=
     fact_i_stage1 (k := N + 1) (m := p + 1) hU hV hLUc hLVc hLUU hLVV z₀ hz₀ K₁ gW
+  -- STAGE 2: seam transport — swap the opaque legW-partition (zA, zB) for the canonical (zAc, zBc)
+  have hzBcmem : zBc ∈ SingularPairLES.relCycleLift
+      (SingularExcisionIso.restr (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V))
+      (p + 1) :=
+    SingularMvDeltaPartition.zB_mem_relCycleLift _ _ (p + 1) zAc zBc hcycc
+  have htrans := kronecker_mapChain_boundaryExtract_class_invariant
+    (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V) (p + 1) hcov φin φout β
+    zA zAc zB zBc hcyc hcycc (hpart.symm.trans (hzc0.trans hcls)) hzBmem hzBcmem
+  rw [htrans]
   sorry
 
 
