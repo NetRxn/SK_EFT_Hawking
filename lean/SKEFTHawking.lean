@@ -981,6 +981,7 @@ import SKEFTHawking.PinPlusTiedData
 import SKEFTHawking.RP4PointSet
 import SKEFTHawking.RP4Witness
 import SKEFTHawking.SphereHomology
+import SKEFTHawking.RP4Covering
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
