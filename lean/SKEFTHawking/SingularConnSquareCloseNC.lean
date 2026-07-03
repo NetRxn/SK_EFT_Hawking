@@ -1946,6 +1946,107 @@ theorem pullback_pairing_legs_assemble {W Bv : Set ↑X} {k l : ℕ}
   exact e₁.symm.trans (((congrArg (kronecker g) e₃).trans hcore).trans
     ((congrArg (kronecker g) e₄.symm).trans e₂))
 
+/-- Membership in `subspaceChains` transports along a degree `▸`-cast (fresh-variable form —
+`cases h` collapses the cast; the direct `▸` on a membership fails motive computation). -/
+theorem mem_subspaceChains_eq_rec {M : TopCat} {S : Set ↑M} {d₁ d₂ : ℕ} (h : d₁ = d₂)
+    {c : SingularChain M d₁}
+    (hc : c ∈ SingularRelativeHomologyMod2.subspaceChains S d₁) :
+    (h ▸ c : SingularChain M d₂) ∈ SingularRelativeHomologyMod2.subspaceChains S d₂ := by
+  cases h; exact hc
+
+/-- **The γ-computation** (the fact-(ii) two-legs closer, EXTRACTED — single-choice form). The two
+goal legs are V-legs of cover-splits of two parents sharing ONE fundamental presentation `zsub`:
+the pd-side parent `Camb` (whose un-subdivided boundary is EXACTLY `chainIncl (rcap β ∂zsub)` —
+`hCore`, the single-choice core cancellation) and the F-side subdivision split `hQ` of `∂(Sdʲᶠ zsub)`
+itself. The jP-slack telescopes through `add_singularSd_iterate_eq_boundary` on the cycle `∂Camb`;
+the jF-slack routes through `rcap_singularSd_iterate_chainBoundary_arg` (cast-free by design); the
+two `∂Camb` cores cancel over ℤ/2, leaving `∂E` cover-split with
+`E := Dⱼₚ(∂Camb) + chainIncl (rcap β (cast ▸ Dⱼꜰ(∂zsub)))` — `(A ∪ B)`-supported since `D`/`rcap`/
+`chainIncl` all preserve support (`hzbdcov` seeds it). β2 (`kronecker_boundary_split_V_leg_zero`)
+kills the combined V-pairing; ℤ/2 splits it into the equality. ℤ/2. -/
+theorem gamma_two_legs_close {A B W : Set ↑X} (hA : IsOpen A) (hB : IsOpen B) {n l : ℕ}
+    (g : SingularCochain X (n + 1)) (hgc : coboundary X (n + 1) g = 0)
+    (hg : g ∈ relCochains (A ∩ B) (n + 1))
+    (β : SingularCochain (sub W) (l + 1))
+    (hβ : coboundaryₗ (sub W) (l + 1) β = 0)
+    (zsub : SingularChain (sub W) (n + 1 + (l + 1) + 1))
+    (hzbdcov : chainIncl W (n + 1 + (l + 1))
+        (chainBoundary (sub W) (n + 1 + (l + 1)) zsub)
+      ∈ subspaceChains (A ∪ B) (n + 1 + (l + 1)))
+    (Camb : SingularChain X (n + 1 + 1)) (jP : ℕ)
+    (hCore : chainBoundary X (n + 1) Camb
+      = chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β
+          (chainBoundary (sub W) (n + 1 + (l + 1)) zsub)))
+    {a₁ b₁ : SingularChain X (n + 1)}
+    (ha₁ : a₁ ∈ subspaceChains A (n + 1)) (hb₁ : b₁ ∈ subspaceChains B (n + 1))
+    (hP₁ : chainBoundary X (n + 1)
+        ((⇑(SingularSubdivision.singularSd X (n + 1 + 1)))^[jP] Camb) = a₁ + b₁)
+    (jF : ℕ) {a₂ b₂ : SingularChain (sub W) (n + 1 + (l + 1))}
+    (ha₂ : chainIncl W (n + 1 + (l + 1)) a₂ ∈ subspaceChains A (n + 1 + (l + 1)))
+    (hb₂ : chainIncl W (n + 1 + (l + 1)) b₂ ∈ subspaceChains B (n + 1 + (l + 1)))
+    (hQ : chainBoundary (sub W) (n + 1 + (l + 1))
+        ((⇑(SingularSubdivision.singularSd (sub W) (n + 1 + (l + 1) + 1)))^[jF] zsub)
+      = a₂ + b₂) :
+    kronecker g b₁
+      = kronecker g (chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β b₂)) := by
+  classical
+  -- jP-side telescope on the cycle ∂Camb: ∂Camb + Sdʲᵖ(∂Camb) = ∂(Dⱼₚ(∂Camb)), Sdʲᵖ(∂Camb) = a₁+b₁.
+  have hcyc : chainBoundary X n (chainBoundary X (n + 1) Camb) = 0 :=
+    chainBoundary_chainBoundary_apply X n Camb
+  have hhomP := SingularExcision.add_singularSd_iterate_eq_boundary hcyc jP
+  have hSdP : (⇑(SingularSubdivision.singularSd X (n + 1)))^[jP] (chainBoundary X (n + 1) Camb)
+      = a₁ + b₁ := by
+    rw [← SingularSubdivision.singularSd_iterate_chainBoundary, hP₁]
+  -- jF-side rcap Sd-bridge (intrinsic, cast-free by design), split via hQ, pushed through chainIncl,
+  -- with the single-choice core cancellation folded in (hCore).
+  have hrc := rcap_singularSd_iterate_chainBoundary_arg β hβ zsub jF
+  rw [hQ, map_add] at hrc
+  have hIncl := congrArg (chainIncl W (n + 1)) hrc
+  rw [map_add, map_add, SingularRelativeHomologyMod2.chainIncl_chainBoundary, ← hCore] at hIncl
+  -- The two ∂Camb cores cancel over ℤ/2 in ∂E, E := Dⱼₚ(∂Camb) + chainIncl(rcap β (cast ▸ Dⱼꜰ(∂zsub))).
+  set DP := SingularSubdivision.iterHomotopy X (n + 1) jP (chainBoundary X (n + 1) Camb) with hDP
+  set DF := chainIncl W (n + 1 + 1) (SingularCapChainIncl.rcap (k := n + 1 + 1) β
+      ((show n + 1 + (l + 1) + 1 = n + 1 + 1 + (l + 1) from by omega) ▸
+        SingularSubdivision.iterHomotopy (sub W) (n + 1 + (l + 1)) jF
+          (chainBoundary (sub W) (n + 1 + (l + 1)) zsub))) with hDF
+  have hDPbd : chainBoundary X (n + 1) DP
+      = chainBoundary X (n + 1) Camb + (a₁ + b₁) := by
+    rw [← hhomP, hSdP]
+  have hDFbd : chainBoundary X (n + 1) DF
+      = chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β a₂)
+        + chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β b₂)
+        + chainBoundary X (n + 1) Camb := by
+    rw [hIncl]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, zero_add, add_zero]
+  have hsplitE : chainBoundary X (n + 1) (DP + DF)
+      = (a₁ + chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β a₂))
+        + (b₁ + chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β b₂)) := by
+    rw [map_add, hDPbd, hDFbd]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
+  -- E is (A ∪ B)-supported: hzbdcov seeds; D/rcap/chainIncl preserve.
+  have hbdmem : chainBoundary X (n + 1) Camb ∈ subspaceChains (A ∪ B) (n + 1) := by
+    rw [hCore]
+    exact chainIncl_rcap_subspaceChains β _ hzbdcov
+  have hDPmem : DP ∈ subspaceChains (A ∪ B) (n + 1 + 1) :=
+    SingularExcision.iterHomotopy_mem_subspaceChains hbdmem jP
+  have hDFmem : DF ∈ subspaceChains (A ∪ B) (n + 1 + 1) := by
+    rw [hDF]
+    refine (SingularExcisionIso.chainIncl_mem_subspaceChains_iff (A ∪ B) W _).mpr ?_
+    refine SingularRightCapBoundary.rcap_mem_subspaceChains _ β ?_
+    exact mem_subspaceChains_eq_rec _
+      (SingularExcision.iterHomotopy_mem_subspaceChains
+        ((SingularExcisionIso.chainIncl_mem_subspaceChains_iff (A ∪ B) W _).mp hzbdcov) jF)
+  -- β2 kills the combined V-pairing; ℤ/2 splits it.
+  have hzero := kronecker_boundary_split_V_leg_zero hA hB g hgc hg (DP + DF)
+    (Submodule.add_mem _ hDPmem hDFmem)
+    (Submodule.add_mem _ ha₁ (chainIncl_rcap_subspaceChains β a₂ ha₂))
+    (Submodule.add_mem _ hb₁ (chainIncl_rcap_subspaceChains β b₂ hb₂))
+    hsplitE
+  rw [kronecker_add_right, add_eq_zero_iff_eq_neg, CharTwo.neg_eq] at hzero
+  exact hzero
+
 omit [T2Space ↑X] in
 /-- **Joint cross-realization assembly** (the G1 close skeleton, whnf-dodging GREEN). Combines the two
 realized legs on the common space `M = sub T` (with `T = U ∩ V`) into the connecting-square match. The
