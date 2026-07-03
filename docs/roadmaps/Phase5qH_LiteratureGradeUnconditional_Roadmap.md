@@ -318,3 +318,63 @@ quarantine the genuinely hard geometry into named, pre-authorized tracked Props:
    `Lit-Search/Tasks/submitted/Phase5qH_KirbyTaylor_ABK_injectivity_blueprint.md` — **user
    completes asynchronously**; H2 proceeds meanwhile (it does not block).
 4. Open the H2 wave on wt2.
+
+---
+
+## 9. Deep-Research Log — 2026-07-03 Tier-1 returns (BINDING AMENDMENTS to §3/§4)
+
+H1-b was fulfilled at **Tier 1** same-day (two research-scout reports, filed):
+`Lit-Search/Phase-5qH/GM_structure_ABK_invariant_normalizations_20260703.md` (report A) and
+`Lit-Search/Phase-5qH/ABK_injectivity_routes_lemma_DAG_20260703.md` (report B). Four findings are
+**binding** on the gate plan; where they conflict with the §3/§4 first drafts, THIS section wins.
+
+**9.1 — The GM surface package computes only the MOD-8 part (amends H3/H4).** The
+characteristic-surface data (Σ ⊣ w₁², Pin⁻ on Σ, enhancement q, Brown β) determines the Pin⁺
+ℤ/16 invariant only mod 8 (the ∩w₁² Smith map is "two layers"; the {0,8}-kernel is invisible to
+(Σ,q) — fake-ℝP⁴: 9 vs 1). Any (β, Σ·Σ)-only closed formula is even-valued. ⇒ **H4's `abkGM`
+is re-scoped as the computed MOD-8 invariant** (`abkGM8 : … →+ ZMod 8`, honest and fully
+geometric), and the ℤ/16 lives at the **H6 architecture level** (9.3) — the odd bit is carried by
+the extension position in the Smith LES, not by a surface formula. The H4 gate line becomes:
+`abkGM8` computed + bordism-invariant + compatible with the tied grade mod 8.
+
+**9.2 — Category fork surfaced (amends H7 + Scope fences).** Topological (C⁰) Pin⁺ bordism in
+dim 4 is ℤ/2⊕ℤ/8 (KS + Arf; generators E8, ℝP⁴ — KT-LMS §9 via Torres). **ℤ/16 is a
+smooth-category statement.** The 5q.G tied result (data-carrier, k-generic, witness at k = 0) is
+untouched; but H6/H7's literature-grade injectivity theorem must be stated at smooth regularity:
+the capstone is targeted at the `k = ∞` instantiation of the carrier, with the smooth-instance
+upgrades of the witnesses (ℝP⁴'s quotient charts are smooth — an instance-work brick, added to
+H3) and smooth bordism constructions in H6-b. The k-generic statements remain wherever they hold;
+the C⁰ fork (ℤ/2⊕ℤ/8 + KS) is recorded as a non-goal corollary-target, not silently conflated.
+
+**9.3 — Injectivity route v2: the SMITH-LES architecture (amends H6; supersedes the §4-H6
+toolkit sketch).** The KT-LMS §5 surgery proof's internals are not reconstructible from
+whitelisted sources; the published route with the smallest constructive load is the Smith-LES
+route (HKT Thm 4.1 + Smith-paper App. A), whose geometric inputs are exactly three, each with an
+explicit manifold-level model: (i) zero-locus of a transverse section of a line bundle (the
+w₁-dual, iterated for w₁²); (ii) the sphere-bundle construction (surjectivity leg); (iii) the
+interval-bundle gluing over a null-bordism of the Smith image (injectivity leg). **The
+`BordismToolkit` of §4-H6 is re-specified as exactly these three constructions** (+ the descent
+two-out-of-three lemma). This converges with our substrate: we have just built a from-scratch
+Smith tower, and the LES-with-explicit-section discipline is the same muscle.
+**The irreducible external input:** every published route consumes ONE stable input — the
+neighboring-column ℤ/16 (Ω₆^{Pin⁻} [ABP 1969] or Ω₅^{Spin×±1ℤ/4}) or equivalently Stolz's
+η-completeness; the KT-GM route's base case is Rokhlin. **5q.H therefore carries exactly ONE
+pre-authorized tracked Prop for this input** — and it identifies with the PRE-EXISTING atlas
+node `hyp:rokhlin_sigma_mod_16` (external_boundary/very_hard) rather than minting a new
+hypothesis: the phase does not create a new debt, it makes the existing registered one precise
+and load-minimal. Discharge remains out-of-scope for 5q.H's DONE unless the 5q.B spectra-free
+Rokhlin workstream lands first (watch item).
+
+**9.4 — Conventions locked (amends H2/H3 statement shapes).** β-sign: adopt the KT convention
+(`2β(F) = F·F − σ(M) mod 16`); note GL/FK use the opposite sign. ℝP⁴'s two Pin⁺ structures = ±1
+∈ ℤ/16, exchanged by twisting with the orientation line (P′ = P ⊗ ε). ℝP²'s two enhancements
+send the generator to 1, 3 ∈ ℤ/4 (β = ±1 ∈ ℤ/8). Enhancement axiom: q(x+y) = q(x)+q(y)+2(x·y)
+with 2· : ℤ/2 ↪ ℤ/4. The mod-8/mod-16 interface: the defect map (a,b) ↦ −a+2b on ℤ⊕ℤ/8.
+Known documentation traps: the Smith-paper Fig. 3(g) pin±-label swap.
+
+**9.5 — Tier-2 residue (user action requested).** The scouts could not fetch (egress whitelist):
+KT-LMS 151 pp. 177–242 and KT-CMH 65 (1990) 434–447 — public mirrors exist (Kirby's Berkeley
+page; Ranicki's Edinburgh archive), plus Brown 1972 / GM 1977–86 / ABP 1969 / Stolz 1988. Please
+drop PDFs into `Lit-Search/Phase-5qH/primary-sources/`; the KT-LMS §5–§6 + §9 text is the one
+gap that blocks verifying the [KT-restated] locators and reading Thm 6.11/Rem 6.15
+(characteristic bordism) directly. H2 (Brown algebra) and H1-a proceed regardless.
