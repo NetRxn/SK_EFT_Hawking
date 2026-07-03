@@ -2,6 +2,11 @@ import Mathlib
 import SKEFTHawking.SingularConnSquareCloseNCBot
 import SKEFTHawking.SingularOpenDualityBot
 import SKEFTHawking.SingularConnSquareCloseChainMapBot
+import SKEFTHawking.SingularOpenDualityBotNat
+import SKEFTHawking.SingularOpenDualityMVSquare
+import SKEFTHawking.SingularCSCMayerVietorisMiddle
+import SKEFTHawking.SingularCSCMayerVietorisSumExact
+import SKEFTHawking.SingularCSCMayerVietorisConnExact
 
 /-!
 # Phase 5q.G (G1 PD-induction, brick B3a) — the bottom pairing-mirror pack
@@ -39,6 +44,10 @@ open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
   SKEFTHawking.SingularCSCMayerVietorisConnecting SKEFTHawking.SingularCohomologySnake
   SKEFTHawking.SingularFunctoriality SKEFTHawking.SingularKroneckerFunctoriality
   SKEFTHawking.SingularPairLES SKEFTHawking.SingularMayerVietorisLES
+  SKEFTHawking.SingularOpenDualityBotNat SKEFTHawking.SingularOpenDualityMVSquare
+  SKEFTHawking.SingularCSCMayerVietoris SKEFTHawking.SingularCSCMayerVietorisMiddle
+  SKEFTHawking.SingularCSCMayerVietorisSumExact SKEFTHawking.SingularCSCMayerVietorisConnExact
+  SKEFTHawking.SingularSubHomologyMV
 
 namespace SKEFTHawking.SingularConnSquareCloseNCBotApex
 
@@ -628,5 +637,82 @@ theorem subHomConnecting_openDuality₀_colimit {N : ℕ} {U V : Set ↑X}
   | ih K g =>
     rw [openDuality_of, cscMvConnecting_of]
     exact subHomConnecting_openDuality₀ hU hV z₀ hz₀ K g
+
+/-! ## The (3,0)-center Mayer–Vietoris five-lemma step -/
+
+/-- **The (3,0)-center MV five-lemma step**: bijectivity of the duality `D_{U∪V} :
+CSCᴺ⁺¹(U∪V) → H₁(sub (U∪V))` from bijectivity on the pieces, via the Mathlib five lemma on the
+MV ladder whose window is `cscMvDiag(N+1) → cscMvSum(N+1) → cscMvConnecting N → cscMvDiag(N+2)`
+over `subHomDiag 1 → subHomSum 1 → subHomConnecting 0 → subHomDiag 0`, with the four commuting
+squares `subHomDiag_openDuality` / `subHomSum_openDuality` (generic, at `m = 0`) /
+`subHomConnecting_openDuality₀_colimit` (the bottom square) / `subHomDiag_openDuality₀`. -/
+theorem openDuality_union_bijective_bot {N : ℕ} {U V : Set ↑X}
+    (hU : IsOpen U) (hV : IsOpen V)
+    (z₀ : SingularChain X (N + 1 + 0 + 1)) (hz₀ : chainBoundary X (N + 1 + 0) z₀ = 0)
+    (hDI : Function.Surjective (openDuality (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀))
+    (hDU : Function.Bijective (openDuality (k := N + 1) (m := 0) hU z₀ hz₀))
+    (hDV : Function.Bijective (openDuality (k := N + 1) (m := 0) hV z₀ hz₀))
+    (hD0I : Function.Bijective (openDuality₀ (k := N + 1) (hU.inter hV) z₀ hz₀))
+    (hD0U : Function.Injective (openDuality₀ (k := N + 1) hU z₀ hz₀))
+    (hD0V : Function.Injective (openDuality₀ (k := N + 1) hV z₀ hz₀)) :
+    Function.Bijective (openDuality (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀) := by
+  have hc₁ : (subHomDiag U V (0 + 1)).comp
+        (openDuality (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀)
+      = ((openDuality (k := N + 1) (m := 0) hU z₀ hz₀).prodMap
+          (openDuality (k := N + 1) (m := 0) hV z₀ hz₀)).comp (cscMvDiag U V (N + 1)) := by
+    refine LinearMap.ext fun α => ?_
+    simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiag, LinearMap.prod_apply,
+      Pi.prod]
+    exact subHomDiag_openDuality (k := N + 1) (m := 0) hU hV z₀ hz₀ α
+  have hc₂ : (subHomSum U V (0 + 1)).comp
+        ((openDuality (k := N + 1) (m := 0) hU z₀ hz₀).prodMap
+          (openDuality (k := N + 1) (m := 0) hV z₀ hz₀))
+      = (openDuality (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀).comp
+          (cscMvSum U V (N + 1)) := by
+    refine LinearMap.ext fun p => ?_
+    simp only [LinearMap.comp_apply, LinearMap.prodMap_apply]
+    exact (subHomSum_openDuality (k := N + 1) (m := 0) hU hV z₀ hz₀ p.1 p.2).symm
+  have hc₃ : (SKEFTHawking.SingularSubHomologyMV.subHomConnecting U V hU hV 0).comp
+        (openDuality (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀)
+      = (openDuality₀ (k := N + 1) (hU.inter hV) z₀ hz₀).comp
+          (cscMvConnecting U V hU hV N) := by
+    refine LinearMap.ext fun α => ?_
+    simp only [LinearMap.comp_apply]
+    exact subHomConnecting_openDuality₀_colimit hU hV z₀ hz₀ α
+  have hc₄ : (subHomDiag U V 0).comp (openDuality₀ (k := N + 1) (hU.inter hV) z₀ hz₀)
+      = ((openDuality₀ (k := N + 1) hU z₀ hz₀).prodMap
+          (openDuality₀ (k := N + 1) hV z₀ hz₀)).comp (cscMvDiag U V (N + 2)) := by
+    refine LinearMap.ext fun α => ?_
+    simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiag, LinearMap.prod_apply,
+      Pi.prod]
+    exact subHomDiag_openDuality₀ hU hV z₀ hz₀ α
+  have hi₂ : Function.Bijective
+      ⇑((openDuality (k := N + 1) (m := 0) hU z₀ hz₀).prodMap
+        (openDuality (k := N + 1) (m := 0) hV z₀ hz₀)) := by
+    rw [LinearMap.coe_prodMap]
+    exact hDU.prodMap hDV
+  have hi₅ : Function.Injective
+      ⇑((openDuality₀ (k := N + 1) hU z₀ hz₀).prodMap
+        (openDuality₀ (k := N + 1) hV z₀ hz₀)) := by
+    rw [LinearMap.coe_prodMap]
+    exact hD0U.prodMap hD0V
+  exact LinearMap.bijective_of_surjective_of_bijective_of_bijective_of_injective
+    (f₁ := cscMvDiag U V (N + 1)) (f₂ := cscMvSum U V (N + 1))
+    (f₃ := cscMvConnecting U V hU hV N) (f₄ := cscMvDiag U V (N + 2))
+    (g₁ := subHomDiag U V (0 + 1)) (g₂ := subHomSum U V (0 + 1))
+    (g₃ := SKEFTHawking.SingularSubHomologyMV.subHomConnecting U V hU hV 0)
+    (g₄ := subHomDiag U V 0)
+    (i₁ := openDuality (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀)
+    (i₂ := (openDuality (k := N + 1) (m := 0) hU z₀ hz₀).prodMap
+      (openDuality (k := N + 1) (m := 0) hV z₀ hz₀))
+    (i₃ := openDuality (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀)
+    (i₄ := openDuality₀ (k := N + 1) (hU.inter hV) z₀ hz₀)
+    (i₅ := (openDuality₀ (k := N + 1) hU z₀ hz₀).prodMap (openDuality₀ (k := N + 1) hV z₀ hz₀))
+    hc₁ hc₂ hc₃ hc₄
+    (cscMv_exact_middle U V hU hV) (cscMv_exact_sum U V hU hV)
+    (cscMv_exact_connecting U V hU hV)
+    (subHom_exact_middle U V hU hV) (subHom_exact_sum U V hU hV)
+    (subHom_exact_connecting U V hU hV)
+    hDI hi₂ hD0I hi₅
 
 end SKEFTHawking.SingularConnSquareCloseNCBotApex
