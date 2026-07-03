@@ -953,6 +953,7 @@ import SKEFTHawking.SingularOpenDualityCycle
 import SKEFTHawking.SingularOpenDuality
 import SKEFTHawking.SingularLocalDualityKMono
 import SKEFTHawking.SingularOpenDualityNat
+import SKEFTHawking.SingularOpenDualityMonotoneUnion
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
