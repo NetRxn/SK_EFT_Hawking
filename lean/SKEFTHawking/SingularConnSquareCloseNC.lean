@@ -3040,7 +3040,48 @@ theorem fact_i_discharge {U V LU LV : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
     (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V) (p + 1) hcov φin φout β
     zA zAc zB zBc hcyc hcycc (hpart.symm.trans (hzc0.trans hcls)) hzBmem hzBcmem
   rw [htrans]
-  sorry
+  -- STAGES 3–7: the ambient core (Brick M) + seam-evaluation + realization + β-kill
+  obtain ⟨EM, hEMmem, hEMeq⟩ :=
+    fact_i_ambient_core hU hV hLUc hLVc hLUU hLVV g z₀ hz₀ K₁ K₂ hK₁ hK₂
+      μ jF f₁ f₂ f₃ hf₁ hf₂ hf₃ hIsplit aF bF hFsplit
+  -- (3) seam-evaluation on the canonical partition → the ambient ∂(cap g fB)
+  have hzBcg : chainIncl (U ∪ V) (p + 1 + 1) (chainIncl _ (p + 1 + 1) zBc)
+      = cap (m := p + 1 + 1) g.1.1 (f₂ + f₃) := by rw [hgg]; exact hzBc
+  have hambL : chainIncl (U ∩ V) (p + 1)
+      (SingularFunctoriality.mapChain φout (p + 1) (SingularFunctoriality.mapChain φin (p + 1)
+        (SingularPairLES.boundaryExtract (SingularExcisionIso.restr
+          (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V)) (p + 1)
+          ⟨zBc, hzBcmem⟩)))
+      = chainBoundary X (p + 1) (cap (m := p + 1 + 1) g.1.1 (f₂ + f₃)) := by
+    rw [hseam ⟨zBc, hzBcmem⟩, SingularRelativeHomologyMod2.chainIncl_chainBoundary, hzBcg]
+  -- (3') the goal-RHS ambient realization
+  have hambR : chainIncl (U ∩ V) (p + 1)
+      (cap (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 1) g.1.1)
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1 + (p + 1))).symm
+          ⟨chainIncl _ (N + 1 + (p + 1)) bF, hbFmem⟩))
+      = cap (m := p + 1) g.1.1 (chainIncl (LVᶜ ∩ (U ∩ V)) (N + 1 + (p + 1)) bF) := by
+    rw [← SingularCapChainIncl.cap_chainIncl,
+      SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm]
+  -- (4) the sub-level sum is a boundary (chainIncl-injectivity + Brick M)
+  rw [subspaceChains, LinearMap.mem_range] at hEMmem
+  obtain ⟨E', hE'⟩ := hEMmem
+  have hsum_mem : SingularFunctoriality.mapChain φout (p + 1)
+        (SingularFunctoriality.mapChain φin (p + 1)
+          (SingularPairLES.boundaryExtract (SingularExcisionIso.restr
+            (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V)) (p + 1)
+            ⟨zBc, hzBcmem⟩))
+      + cap (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 1) g.1.1)
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1 + (p + 1))).symm
+            ⟨chainIncl _ (N + 1 + (p + 1)) bF, hbFmem⟩)
+      ∈ boundaries (sub (U ∩ V)) (p + 1) := by
+    refine ⟨E', ?_⟩
+    apply chainIncl_injective (U ∩ V) (p + 1)
+    rw [SingularRelativeHomologyMod2.chainIncl_chainBoundary, hE', map_add, hambL, hambR]
+    exact hEMeq.symm
+  -- (5) β kills the boundary; ℤ/2 splits the sum into the equality
+  have h0 := kronecker_cocycle_boundary_eq_zero β hsum_mem
+  rw [kronecker_add_right] at h0
+  exact eq_of_sub_eq_zero (by rw [ZModModule.sub_eq_add]; exact h0)
 
 
 /-- **The γ-computation** (the fact-(ii) two-legs closer, EXTRACTED — single-choice form). The two
