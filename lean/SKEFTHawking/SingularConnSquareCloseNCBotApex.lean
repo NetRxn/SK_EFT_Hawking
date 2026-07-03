@@ -611,4 +611,22 @@ theorem subHomConnecting_openDuality₀ {N : ℕ} {U V : Set ↑X}
       hfundmem2 hfund₀bdcov
       jP hP2 jF hQsplit₀ hbFmem₀ hmem3₀
 
+/-- **The colimit-level BOTTOM `δ` connecting square** (mirror of brick 2a
+`subHomConnecting_openDuality_colimit` at the bottom row): `subHomConnecting (D_{U∪V} α) =
+D⁰_{U∩V} (cscMvConnecting α)` for every compactly-supported class `α`. With the ₀-family's
+`subHomDiag_openDuality₀` / `subHomSum_openDuality₀` (part 3) this completes all the commuting
+squares of the `(3,0)`-row ladder at colimit level. Cast-free (the bottom shares the `z₀`-frame). -/
+theorem subHomConnecting_openDuality₀_colimit {N : ℕ} {U V : Set ↑X}
+    (hU : IsOpen U) (hV : IsOpen V)
+    (z₀ : SingularChain X (N + 1 + 0 + 1)) (hz₀ : chainBoundary X (N + 1 + 0) z₀ = 0)
+    (α : CompactlySupportedCohomologyOpen (U ∪ V) (N + 1)) :
+    SKEFTHawking.SingularSubHomologyMV.subHomConnecting U V hU hV 0
+        (openDuality (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀ α)
+      = openDuality₀ (k := N + 1) (hU.inter hV) z₀ hz₀
+          (cscMvConnecting U V hU hV N α) := by
+  induction α using Module.DirectLimit.induction_on with
+  | ih K g =>
+    rw [openDuality_of, cscMvConnecting_of]
+    exact subHomConnecting_openDuality₀ hU hV z₀ hz₀ K g
+
 end SKEFTHawking.SingularConnSquareCloseNCBotApex
