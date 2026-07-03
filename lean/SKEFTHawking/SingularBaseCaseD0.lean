@@ -3,6 +3,10 @@ import SKEFTHawking.SingularOpenDualityBot
 import SKEFTHawking.SingularConnSquareCloseChainMapBot
 import SKEFTHawking.SingularLocalDuality
 import SKEFTHawking.SingularReducedH0
+import SKEFTHawking.SingularChartBridge
+import SKEFTHawking.SingularH0PathConnected
+import SKEFTHawking.SingularConvexSubAcyclic
+import SKEFTHawking.SingularFundamentalClassExist
 
 /-!
 # Phase 5q.G (G1 PD-induction, base-case B4a/B4b) — the `D⁰` augmentation bridge
@@ -28,6 +32,7 @@ open SKEFTHawking.SingularRelativePairing SKEFTHawking.SingularCompactsInOpen
 open SKEFTHawking.SingularOpenDualityBot SKEFTHawking.SingularLocalDualityKBot
 open SKEFTHawking.SingularConnSquareCloseChainMapBot SKEFTHawking.SingularLocalDuality
 open SKEFTHawking.SingularOpenDualityCycle SKEFTHawking.SingularReducedH0
+open SKEFTHawking.SingularCompactlySupportedOpen
 open SKEFTHawking.SingularH0
 
 namespace SKEFTHawking.SingularBaseCaseD0
@@ -138,5 +143,113 @@ theorem restrictHomologyToSet_mk {K : Set ↑X} {k : ℕ}
   erw [show (↑((SingularRelativeEmpty.cyclesEmptyEquiv (k + 1)).symm ⟨z, hz⟩)
         : RelativeChain (∅ : Set ↑X) (k + 1)) = RelativeChain.mk ∅ (k + 1) z from rfl,
     SingularRelativeFunctoriality.relMapChain_mk, SingularFunctoriality.mapChain_id]
+
+omit [T2Space ↑X] in
+/-- Propositional set-congruence on relative homology (both `relIncl`s over a set equality;
+NO raw defeq across set spellings — the `{x}ᶜ ↔ {y|y≠x}` seam killer). -/
+private noncomputable def relHomologySetCongr {S T : Set ↑X} (hST : S ⊆ T) (hTS : T ⊆ S)
+    (n : ℕ) : RelativeHomology S n ≃ₗ[ZMod 2] RelativeHomology T n :=
+  LinearEquiv.ofLinear (SingularRelativeMV.relIncl hST n) (SingularRelativeMV.relIncl hTS n)
+    (LinearMap.ext fun p =>
+      SKEFTHawking.SingularFundamentalClass.relIncl_leftInverse hTS hST n p)
+    (LinearMap.ext fun p =>
+      SKEFTHawking.SingularFundamentalClass.relIncl_leftInverse hST hTS n p)
+
+open SKEFTHawking.SingularChartBridge in
+/-- The local iso at the `{x}ᶜ`-spelling (the seam paid ONCE, propositionally). -/
+private noncomputable def localIsoCompl {m : ℕ} {M : Type} [TopologicalSpace M]
+    [T2Space M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (x : M) :
+    RelativeHomology (X := TopCat.of M) (({x} : Set M)ᶜ) (m + 2) ≃ₗ[ZMod 2] ZMod 2 :=
+  (relHomologySetCongr (X := TopCat.of M)
+    (fun y hy => by simpa using hy) (fun y hy => by simpa using hy) (m + 2)).trans
+    (manifoldLocalIso x)
+
+open SKEFTHawking.SingularChartBridge in
+/-- Fresh-budget helper: a relative class equal to the local generator has
+`localIsoCompl`-value `1` (the nonvanishing juggle, paid on its own heartbeat budget). -/
+private theorem localIsoCompl_eq_one {m : ℕ} {M : Type} [TopologicalSpace M]
+    [T2Space M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (x₀ : M)
+    (g : RelativeHomology (X := TopCat.of M) (({x₀} : Set M)ᶜ) (m + 2))
+    (hg : g = (manifoldLocalIso x₀).symm 1) :
+    localIsoCompl x₀ g = 1 := by
+  have hne : localIsoCompl x₀ g ≠ 0 := by
+    intro h
+    have hg0 : g = 0 := (LinearEquiv.map_eq_zero_iff _).mp h
+    rw [hg] at hg0
+    exact one_ne_zero (((manifoldLocalIso x₀).symm.map_eq_zero_iff).mp hg0)
+  have hz2 : ∀ a : ZMod 2, a ≠ 0 → a = 1 := by decide
+  exact hz2 _ hne
+
+open SKEFTHawking.SingularChartBridge in
+/-- A point-stage class whose `D⁰`-image has augmentation `1` (fresh-budget; the seam crossed
+only at the nonvanishing `Eq`). -/
+private theorem exists_point_stage_hit {m : ℕ} {M : Type} [TopologicalSpace M]
+    [T2Space M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M]
+    {W : Set ↑(TopCat.of M)} (hWo : IsOpen W) (x₀ : M) (hx₀W : x₀ ∈ W)
+    (z₀ : SingularChain (TopCat.of M) (m + 1 + 0 + 1))
+    (hz₀ : chainBoundary (TopCat.of M) (m + 1 + 0) z₀ = 0)
+    (hcyc : z₀ ∈ cycles (TopCat.of M) (m + 2))
+    (hloc : SKEFTHawking.SingularFundamentalClass.restrictHomologyToPoint
+        (X := TopCat.of M) x₀ (m + 2) (Homology.mk (TopCat.of M) (m + 2) ⟨z₀, hcyc⟩)
+      = (manifoldLocalIso x₀).symm 1) :
+    ∃ β : CompactlySupportedCohomologyOpen (M := TopCat.of M) W (m + 1 + 1),
+      augH (sub (X := TopCat.of M) W) (openDuality₀ (k := m + 1) (X := TopCat.of M) hWo z₀ hz₀ β) = 1 := by
+  set Kx : SKEFTHawking.SingularCompactsInOpen.CompactsIn W :=
+    ⟨⟨{x₀}, isCompact_singleton⟩, Set.singleton_subset_iff.mpr hx₀W⟩ with hKxdef
+  have hzb : chainBoundary (TopCat.of M) (m + 1) z₀
+      ∈ subspaceChains (({x₀} : Set M)ᶜ) (m + 1) := by
+    rw [show chainBoundary (TopCat.of M) (m + 1) z₀ = 0 from hz₀]
+    exact Submodule.zero_mem _
+  -- The stage class is nonzero: it equals the local generator (hloc, seam crossed at Eq only).
+  have hgcls := restrictHomologyToSet_mk (X := TopCat.of M) (K := ({x₀} : Set M)) z₀ hcyc hzb
+  have hg_eq := hgcls.symm.trans hloc
+  have hflip := relKroneckerH_flip_bijective_of_equiv (X := TopCat.of M)
+    (S := (({x₀} : Set M)ᶜ)) (N := m + 1)
+    (localIsoCompl x₀)
+    _ (localIsoCompl_eq_one x₀ _ hg_eq)
+  obtain ⟨ω₀, hω₀⟩ := hflip.surjective 1
+  obtain ⟨a₀, rfl⟩ := Submodule.Quotient.mk_surjective _ ω₀
+  refine ⟨Module.DirectLimit.of (ZMod 2)
+    (SKEFTHawking.SingularCompactsInOpen.CompactsIn W)
+    (cohomGW (M := TopCat.of M) W (m + 1 + 1)) (cohomFW (M := TopCat.of M) W (m + 1 + 1))
+    Kx (Submodule.Quotient.mk a₀), ?_⟩
+  exact (congrArg (fun t => augH (sub (X := TopCat.of M) W) t)
+      (openDuality₀_of hWo z₀ hz₀ Kx (Submodule.Quotient.mk a₀))).trans
+    ((augH_legW₀_eq_relKroneckerH hWo z₀ hz₀ Kx a₀).trans
+      ((congrArg (fun t => relKroneckerH (X := TopCat.of M) ((↑Kx.1 : Set ↑(TopCat.of M))ᶜ)
+          (RelativeCohomology.mk ((↑Kx.1 : Set ↑(TopCat.of M))ᶜ) (m + 1 + 1) a₀) t)
+        (fundCycleW₀_class_eq hWo z₀ hz₀ Kx)).trans hω₀))
+
+open SKEFTHawking.SingularChartBridge SKEFTHawking.SingularH0PathConnected in
+/-- **B4c (surjectivity half)**: the `D⁰` duality of a chart-convex open is surjective. -/
+theorem openDuality₀_surjective_of_chartConvex {m : ℕ} {M : Type} [TopologicalSpace M]
+    [T2Space M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M]
+    {U : Set M} {V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))}
+    (e : ↥U ≃ₜ ↥V)
+    {C : Set (EuclideanSpace ℝ (Fin (m + 2)))} (hCconv : Convex ℝ C) (hCne : C.Nonempty)
+    (hCV : C ⊆ V)
+    {W : Set M} (hWo : IsOpen W) (hWU : W ⊆ U)
+    (hWe : ∀ u : ↥U, (u : M) ∈ W ↔ ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C))
+    (z₀ : SingularChain (TopCat.of M) (m + 1 + 0 + 1))
+    (hz₀ : chainBoundary (TopCat.of M) (m + 1 + 0) z₀ = 0)
+    (hcyc : z₀ ∈ cycles (TopCat.of M) (m + 2))
+    (hloc : ∀ x : M, SKEFTHawking.SingularFundamentalClass.restrictHomologyToPoint
+        (X := TopCat.of M) x (m + 2) (Homology.mk (TopCat.of M) (m + 2) ⟨z₀, hcyc⟩)
+      = (manifoldLocalIso x).symm 1) :
+    Function.Surjective (openDuality₀ (k := m + 1) (X := TopCat.of M) hWo z₀ hz₀) := by
+  obtain ⟨p₀, hp₀⟩ := hCne
+  have hx₀W : ((e.symm ⟨p₀, hCV hp₀⟩ : ↥U) : M) ∈ W :=
+    (hWe _).mpr (by rw [e.apply_symm_apply]; exact hp₀)
+  obtain ⟨β, hβ⟩ := exists_point_stage_hit hWo _ hx₀W z₀ hz₀ hcyc (hloc _)
+  haveI hpcsC : PathConnectedSpace
+      ↑(sub (X := SingularEuclideanAcyclic.Eucl (m + 2)) C) :=
+    isPathConnected_iff_pathConnectedSpace.mp (hCconv.isPathConnected ⟨p₀, hp₀⟩)
+  haveI hpcsW : PathConnectedSpace ↑(sub W) := by
+    have φ := SKEFTHawking.SingularConvexSubAcyclic.chartSubHomeo (M := TopCat.of M) e hCV hWU hWe
+    exact φ.symm.surjective.pathConnectedSpace φ.symm.continuous
+  have hauginj : Function.Injective (augH (sub (X := TopCat.of M) W)) := augH_injective
+  intro y
+  refine ⟨(augH (sub (X := TopCat.of M) W) y) • β, hauginj ?_⟩
+  rw [map_smul, map_smul, hβ, smul_eq_mul, mul_one]
 
 end SKEFTHawking.SingularBaseCaseD0
