@@ -356,14 +356,22 @@ interval-bundle gluing over a null-bordism of the Smith image (injectivity leg).
 `BordismToolkit` of §4-H6 is re-specified as exactly these three constructions** (+ the descent
 two-out-of-three lemma). This converges with our substrate: we have just built a from-scratch
 Smith tower, and the LES-with-explicit-section discipline is the same muscle.
-**The irreducible external input:** every published route consumes ONE stable input — the
-neighboring-column ℤ/16 (Ω₆^{Pin⁻} [ABP 1969] or Ω₅^{Spin×±1ℤ/4}) or equivalently Stolz's
-η-completeness; the KT-GM route's base case is Rokhlin. **5q.H therefore carries exactly ONE
-pre-authorized tracked Prop for this input** — and it identifies with the PRE-EXISTING atlas
-node `hyp:rokhlin_sigma_mod_16` (external_boundary/very_hard) rather than minting a new
-hypothesis: the phase does not create a new debt, it makes the existing registered one precise
-and load-minimal. Discharge remains out-of-scope for 5q.H's DONE unless the 5q.B spectra-free
-Rokhlin workstream lands first (watch item).
+**The one concentrated input — WITH ITS DISCHARGE GATE (H8):** every published route factors
+through ONE Rokhlin-class theorem — Rokhlin's 16∣σ (the KT-GM base case), equivalently the
+neighboring-column ℤ/16 (Ω₆^{Pin⁻} [ABP 1969] or Ω₅^{Spin×±1ℤ/4}), equivalently Stolz's
+η-completeness. This is a statement about WHERE the work lives, NOT about dischargeability:
+the input is itself a proven theorem with a published ELEMENTARY, spectra-free proof
+(Matsumoto, "An elementary proof of Rochlin's signature theorem and its extension by Guillou
+and Marin", in the same À la recherche volume as GM — quadratic-form + explicit-geometry
+arguments squarely in this substrate's demonstrated range). During H2–H7 it is carried as ONE
+tracked Prop, identified with the PRE-EXISTING atlas keystone `hyp:rokhlin_sigma_mod_16`
+(no new debt is minted; the existing registered node is made precise and load-minimal).
+**H8 (full-discharge gate, IN the phase's DONE):** discharge the Prop by whichever of two
+convergent routes is shorter at H8-open — (a) the live Phase 5q.B spectra-free Rokhlin → 16∣σ
+workstream (signature calculus already complete there; tracker `Phase5qB_*`), or (b) direct
+formalization of the Matsumoto elementary proof (fetch with the §9.5 batch; blueprint it via a
+Tier-1 scout at H8-open). The phase closes 100%-unconditional; the disclosed-Prop capstone is
+only the intermediate state between H7 and H8.
 
 **9.4 — Conventions locked (amends H2/H3 statement shapes).** β-sign: adopt the KT convention
 (`2β(F) = F·F − σ(M) mod 16`); note GL/FK use the opposite sign. ℝP⁴'s two Pin⁺ structures = ±1
