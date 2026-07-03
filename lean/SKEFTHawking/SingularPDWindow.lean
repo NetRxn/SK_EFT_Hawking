@@ -2,6 +2,8 @@ import Mathlib
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularBaseCaseD0
 import SKEFTHawking.SingularConnSquareCloseNCBotApex
+import SKEFTHawking.SingularCSCVanishAboveGeom
+import SKEFTHawking.SingularGoodCompactEuclidean
 
 /-!
 # Phase 5q.G (G1 PD-induction, B6) — the deg-4 induction predicate `P(W)` and its base case
@@ -121,6 +123,62 @@ theorem pdWindowP_monotone_union {M : TopCat} [T2Space ↑M]
       hmono hopen _ _ (fun n => (hP n).2.1),
     SKEFTHawking.SingularConnSquareCloseNCBotApex.openDuality₀_monotone_union_bijective
       hmono hopen _ _ (fun n => (hP n).2.2)⟩
+
+
+/-- `Hᵏ⁺¹_c(∅) = 0`: every stage of the empty open's directed system is the relative cohomology
+of the pair `(M, M∖∅) = (M, M)`, which vanishes (`relativeHomology_compl_empty_eq_zero` + relative
+universal coefficients). -/
+theorem cscOpen_empty_eq_zero {M : TopCat} {N : ℕ}
+    (α : CompactlySupportedCohomologyOpen (∅ : Set ↑M) (N + 1)) : α = 0 := by
+  refine SKEFTHawking.SingularCSCVanishAbove.cscOpen_eq_zero_of_stage_vanish
+    (fun K x => ?_) α
+  have hKempty : (↑K.1 : Set ↑M) = ∅ := Set.subset_empty_iff.mp K.2
+  refine SKEFTHawking.SingularRelCohomVanishAbove.relCohomology_eq_zero_of_relHomology_eq_zero
+    ((↑K.1 : Set ↑M)ᶜ) (fun β => ?_) x
+  revert β
+  rw [hKempty]
+  exact fun β =>
+    SKEFTHawking.SingularGoodCompactEuclidean.relativeHomology_compl_empty_eq_zero _ β
+
+/-- `Hₙ(sub ∅) = 0`: the empty subspace has subsingleton chain modules. -/
+theorem homology_sub_empty_eq_zero {M : TopCat} (n : ℕ)
+    (b : Homology (sub (∅ : Set ↑M)) n) : b = 0 := by
+  haveI := SKEFTHawking.SingularRelativeEmpty.singularChain_empty_subsingleton (X := M) n
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ b
+  rw [show z = 0 from Subsingleton.elim z 0]
+  exact Submodule.Quotient.mk_zero _
+
+/-- **`P(∅)`** — all three conjuncts are bijections between trivial modules (the empty-
+intersection branch of the finite-union induction). -/
+theorem pdWindowP_empty {M : TopCat} [T2Space ↑M]
+    (zM : SingularChain M (1 + 0 + 3))
+    (hzM : chainBoundary M (1 + 0 + 2) zM = 0) :
+    pdWindowP zM hzM (∅ : Set ↑M) isOpen_empty :=
+  ⟨SKEFTHawking.SingularBaseCaseUpper.bijective_of_forall_eq_zero _
+      (fun α => cscOpen_empty_eq_zero α) (fun b => homology_sub_empty_eq_zero _ b),
+    SKEFTHawking.SingularBaseCaseUpper.bijective_of_forall_eq_zero _
+      (fun α => cscOpen_empty_eq_zero α) (fun b => homology_sub_empty_eq_zero _ b),
+    SKEFTHawking.SingularBaseCaseUpper.bijective_of_forall_eq_zero _
+      (fun α => cscOpen_empty_eq_zero α) (fun b => homology_sub_empty_eq_zero _ b)⟩
+
+/-- **The charted-manifold MV-step** — `pdWindowP_union` with the `csc⁵`-vanishing hypotheses
+discharged by the track-A top-degree vanishing (`cscOpen_eq_zero_of_isOpen`, any open, `k > m+2`
+at `m = 2`). -/
+theorem pdWindowP_union_charted {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (zM : SingularChain (TopCat.of M) (1 + 0 + 3))
+    (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0)
+    {U V : Set ↑(TopCat.of M)} (hU : IsOpen U) (hV : IsOpen V)
+    (hPU : pdWindowP zM hzM U hU) (hPV : pdWindowP zM hzM V hV)
+    (hPI : pdWindowP zM hzM (U ∩ V) (hU.inter hV)) :
+    pdWindowP zM hzM (U ∪ V) (hU.union hV) := by
+  haveI : T2Space ↑(TopCat.of M) := inferInstanceAs (T2Space M)
+  exact pdWindowP_union zM hzM hU hV
+    (fun α => SKEFTHawking.SingularCSCVanishAboveGeom.cscOpen_eq_zero_of_isOpen (m := 2)
+      (hU.inter hV) (by omega) α)
+    (fun α => SKEFTHawking.SingularCSCVanishAboveGeom.cscOpen_eq_zero_of_isOpen (m := 2) hU (by omega) α)
+    (fun α => SKEFTHawking.SingularCSCVanishAboveGeom.cscOpen_eq_zero_of_isOpen (m := 2) hV (by omega) α)
+    hPU hPV hPI
 
 
 end SKEFTHawking.SingularPDWindow
