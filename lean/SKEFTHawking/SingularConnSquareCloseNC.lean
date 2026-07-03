@@ -2132,6 +2132,46 @@ theorem exists_iterate_cover_split_amb {U V : Set ↑X} (hU : IsOpen U) (hV : Is
     (SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (U ∪ V) n ⟨f, hf⟩).symm
   rw [hfr, singularSd_iterate_chainIncl, hzsplit, map_add]
 
+/-- **Ambient THREE-set cover-fine split** (Brick I — the Sun-Lemma-3 subordination; scout report
+`Lit-Search/Phase-5qG/research/sun_lemma3_chain_witness.md`). A `(U∪V)`-supported chain subdivides
+into pieces supported in `U∩LVᶜ` (= U−LV), `V∩LUᶜ` (= V−LU), and `U∩V` — the three-set cover that
+makes the connecting-block boundary computation land in `C(U∩V)`: the MV partition is
+`(fA, fB) := (f₁, f₂+f₃)`, `f₃` carries the only genuine bounding chain (`cap φ f₃ ∈ C(U∩V)`), and
+`∂f₂ ∈ C(LUᶜ)` activates the E8 termwise kill. Brick E applied twice; `Sd` preserves the first
+piece's support. -/
+theorem exists_iterate_three_set_split_amb {U V LU LV : Set ↑X}
+    (hU : IsOpen U) (hV : IsOpen V) (hLUc : IsOpen LUᶜ) (hLVc : IsOpen LVᶜ)
+    (hLU : LU ⊆ U) (hLV : LV ⊆ V) {n : ℕ}
+    (f : SingularChain X n) (hf : f ∈ subspaceChains (U ∪ V) n) :
+    ∃ (μ : ℕ) (f₁ f₂ f₃ : SingularChain X n),
+      f₁ ∈ subspaceChains (U ∩ LVᶜ) n ∧ f₂ ∈ subspaceChains (V ∩ LUᶜ) n
+      ∧ f₃ ∈ subspaceChains (U ∩ V) n
+      ∧ (⇑(SingularSubdivision.singularSd X n))^[μ] f = f₁ + f₂ + f₃ := by
+  have hcov : U ∪ V ⊆ (U ∩ LVᶜ) ∪ ((V ∩ LUᶜ) ∪ (U ∩ V)) := by
+    rintro x (hxU | hxV)
+    · by_cases hxV : x ∈ V
+      · exact Or.inr (Or.inr ⟨hxU, hxV⟩)
+      · exact Or.inl ⟨hxU, fun hLVx => hxV (hLV hLVx)⟩
+    · by_cases hxU : x ∈ U
+      · exact Or.inr (Or.inr ⟨hxU, hxV⟩)
+      · exact Or.inr (Or.inl ⟨hxV, fun hLUx => hxU (hLU hLUx)⟩)
+  obtain ⟨μ₁, f₁', rest, hf₁', hrest, hsplit₁⟩ :=
+    exists_iterate_cover_split_amb (hU.inter hLVc) ((hV.inter hLUc).union (hU.inter hV)) f
+      (SingularMayerVietoris.subspaceChains_mono hcov n hf)
+  obtain ⟨μ₂, f₂, f₃, hf₂, hf₃, hsplit₂⟩ :=
+    exists_iterate_cover_split_amb (hV.inter hLUc) (hU.inter hV) rest hrest
+  have hadd : ∀ (k : ℕ) (a b : SingularChain X n),
+      (⇑(SingularSubdivision.singularSd X n))^[k] (a + b)
+        = (⇑(SingularSubdivision.singularSd X n))^[k] a
+          + (⇑(SingularSubdivision.singularSd X n))^[k] b := by
+    intro k
+    induction k with
+    | zero => intro a b; rfl
+    | succ k ih => intro a b; simp only [Function.iterate_succ_apply, map_add, ih]
+  refine ⟨μ₂ + μ₁, (⇑(SingularSubdivision.singularSd X n))^[μ₂] f₁', f₂, f₃,
+    SingularExcision.singularSd_iterate_mem_subspaceChains hf₁' μ₂, hf₂, hf₃, ?_⟩
+  rw [Function.iterate_add_apply, hsplit₁, hadd, hsplit₂, add_assoc]
+
 /-- **The cap-induced canonical partition** (Brick F — the fact-(i) partition constructor). For a
 cocycle `g` rel-`S` and a `(U∪V)`-supported chain `f` with `S`-supported boundary, the cap
 `cap g (Sdᵘ f)` is a CYCLE (cocycle-Leibniz + the `S`-kill on `Sdᵘ∂f`) carrying a canonical
