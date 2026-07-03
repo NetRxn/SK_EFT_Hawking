@@ -103,4 +103,43 @@ def abkGMTied16 : DataBordismGrp (pinPlusGMTiedData (E := E) (k := k) I) →+ ZM
     induction x using Quot.ind with | _ p =>
     induction y using Quot.ind with | _ q => rfl
 
+universe u
+
+/-- **Every even ℤ/16 grade is realised** on the (vacuously certified) empty manifold, with the enhancement
+`q` chosen so `hcoh` holds (`brown` is surjective) and `htie` vacuous (parity 0 = `w₁⁴(∅)`). -/
+theorem abkGMTied16_hits_even (m : ZMod 16) :
+    ∃ g : DataBordismGrp (pinPlusGMTiedData (E := E) (k := k) I),
+      abkGMTied16 (E := E) (k := k) (I := I) g = 2 * m := by
+  obtain ⟨j, hj⟩ := brown_stdQuadratic_surjective (reduce16to8 (2 * m))
+  refine ⟨DataBordismGrp.mk _ ⟨emptySM,
+    { t2 := ⟨fun x => x.elim⟩, cert := pinPlusCertK_empty, rank := j, q := stdQuadratic j,
+      grade16 := 2 * m, hcoh := hj.symm, htie := ?_ }⟩, rfl⟩
+  rw [swTotalNe_of_isEmpty]
+  show reduce16to2 (2 * m) = 0
+  rw [map_mul, show (reduce16to2 2 : ZMod 2) = 0 from by decide, zero_mul]
+
+/-- The even subgroup is in the tied GM grade's range. -/
+theorem even_mem_abkGMTied16_range (m : ZMod 16) :
+    2 * m ∈ (abkGMTied16 (E := E) (k := k) (I := I)).range := abkGMTied16_hits_even m
+
+/-- **One odd witness closes the range**: if any class has an odd `grade16`, `abkGMTied16` is surjective
+onto `ZMod 16` (the odds are a single coset of the evens, which are realised on `∅`). -/
+theorem abkGMTied16_range_top_of_odd
+    (h : ∃ g : DataBordismGrp.{u} (pinPlusGMTiedData (E := E) (k := k) I),
+      reduce16to2 (abkGMTied16 g) = 1) :
+    ((abkGMTied16 (E := E) (k := k) (I := I)) :
+      DataBordismGrp.{u} (pinPlusGMTiedData (E := E) (k := k) I) →+ ZMod 16).range = ⊤ := by
+  obtain ⟨g₀, hodd⟩ := h
+  rw [AddSubgroup.eq_top_iff']
+  intro x
+  rcases (by decide : ∀ p : ZMod 2, p = 0 ∨ p = 1) (reduce16to2 x) with hx | hx
+  · obtain ⟨k', hk⟩ : ∃ k' : ZMod 16, x = 2 * k' := by revert hx; revert x; decide
+    exact hk ▸ even_mem_abkGMTied16_range k'
+  · obtain ⟨k', hk⟩ : ∃ k' : ZMod 16, x - abkGMTied16 g₀ = 2 * k' := by
+      have hdiff : reduce16to2 (x - abkGMTied16 g₀) = 0 := by rw [map_sub, hx, hodd, sub_self]
+      revert hdiff; generalize x - abkGMTied16 g₀ = y; revert y; decide
+    obtain ⟨gk, hgk⟩ := abkGMTied16_hits_even (E := E) (k := k) (I := I) k'
+    refine AddMonoidHom.mem_range.mpr ⟨g₀ + gk, ?_⟩
+    rw [map_add, hgk, ← hk, add_comm, sub_add_cancel]
+
 end SKEFTHawking.PinPlusGMTiedData

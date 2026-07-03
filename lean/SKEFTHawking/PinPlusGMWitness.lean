@@ -102,4 +102,19 @@ theorem abkGMTied16_rp4_odd :
     reduce16to2 (abkGMTied16 (k := 0) (I := 𝓡 4) rp4GMTiedClass) = 1 := by
   rw [abkGMTied16_rp4]; decide
 
+/-- **The tied GM ℤ/16 grade is SURJECTIVE onto `ZMod 16`** — the ℝP⁴ odd generator closes the range
+(the evens are realised on `∅`). This is the FULL `ZMod 16` fullness on the tied carrier (stronger than
+`abkGM8`'s mod-8 surjectivity): the H6 surjectivity + order-16 input. -/
+theorem abkGMTied16_surjective : Function.Surjective (abkGMTied16 (k := 0) (I := 𝓡 4)) :=
+  AddMonoidHom.range_eq_top.mp
+    (abkGMTied16_range_top_of_odd ⟨rp4GMTiedClass, abkGMTied16_rp4_odd⟩)
+
+/-- **Unconditional first isomorphism on the tied GM carrier**: `DataBordismGrp (pinPlusGMTiedData) ⧸
+ker(abkGMTied16) ≃+ ZMod 16` — the full `ZMod 16` quotient (mod-8 part computed, odd generator geometric).
+The residual `ker` (⟹ the full-carrier `≃+ ZMod 16`, H7) is the H6-b/H8 Smith-LES + Rokhlin summit. -/
+noncomputable def dataBordismGMTied_quotient_equiv_zmod16 :
+    DataBordismGrp (pinPlusGMTiedData (k := 0) (𝓡 4)) ⧸ (abkGMTied16 (k := 0) (I := 𝓡 4)).ker
+      ≃+ ZMod 16 :=
+  QuotientAddGroup.quotientKerEquivOfSurjective abkGMTied16 abkGMTied16_surjective
+
 end SKEFTHawking.PinPlusGMWitness
