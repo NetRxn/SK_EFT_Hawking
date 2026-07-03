@@ -1,5 +1,6 @@
 import Mathlib
 import SKEFTHawking.PinPlusGMData
+import SKEFTHawking.PinPlusGMTiedData
 import SKEFTHawking.RP4Unconditional
 
 /-!
@@ -17,8 +18,8 @@ the input the H6 Smith-LES lifts to the full `ZMod 16` order-16 generator. Kerne
 open scoped Manifold
 open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
 open SKEFTHawking.TangentialDataBordism SKEFTHawking.BordismTheory
-open SKEFTHawking.PinPlusGMData SKEFTHawking.PinPlusTiedData
-open SKEFTHawking.GuillouMarin
+open SKEFTHawking.PinPlusGMData SKEFTHawking.PinPlusTiedData SKEFTHawking.PinPlusGMTiedData
+open SKEFTHawking.GuillouMarin SKEFTHawking.SingularSWNumber
 open SKEFTHawking.RP4PointSet SKEFTHawking.RP4Witness SKEFTHawking.RP4Unconditional
 
 namespace SKEFTHawking.PinPlusGMWitness
@@ -66,5 +67,39 @@ theorem gm_tied_agree_rp4 :
     reduce16to8 (abkTiedGrade (I := 𝓡 4) (k := 0) rp4TiedClass)
       = abkGM8 (k := 0) (I := 𝓡 4) rp4GMClass := by
   rw [abkTiedGrade_rp4, abkGM8_rp4]; decide
+
+/-! ### H6-a — the ℝP⁴ witness on the TIED GM carrier (an odd order-16 generator)
+
+`rp4GMTiedStr` carries `grade16 = 1` with the mod-8 part computed (`hcoh`: `reduce16to8 1 = β(ℝP²) = 1`)
+and the parity tied to `w₁⁴[ℝP⁴] = 1` (`htie`, discharged from `rp4_htie` exactly as `rp4TiedStr`). Its
+grade is `1 ∈ ZMod 16` — ODD, so it is the order-16 generator the H6 injectivity / H7 capstone need. -/
+
+/-- **The ℝP⁴ tied Guillou–Marin structure** — `grade16 = 1`, enhancement `stdQuadratic 1`, cert `rp4_hcert`;
+the mod-8 part computed (`hcoh`) and the parity tied to `w₁⁴` (`htie`). -/
+noncomputable def rp4GMTiedStr : GMTiedStr (𝓡 4) rp4SM where
+  t2 := inferInstanceAs (T2Space RP4)
+  cert := rp4_hcert
+  rank := 1
+  q := stdQuadratic 1
+  grade16 := 1
+  hcoh := by rw [brown_stdQuadratic, Nat.cast_one]; decide
+  htie := by
+    rw [swTotalNe, dif_pos (inferInstanceAs (Nonempty RP4))]
+    show reduce16to2 (1 : ZMod 16) = swNumberW14 RP4
+    rw [rp4_htie]; decide
+
+/-- The ℝP⁴ class in the tied GM carrier. -/
+noncomputable def rp4GMTiedClass : DataBordismGrp (pinPlusGMTiedData (k := 0) (𝓡 4)) :=
+  DataBordismGrp.mk _ ⟨rp4SM, rp4GMTiedStr⟩
+
+/-- **The tied ℤ/16 GM grade of ℝP⁴ is `1`** — the odd order-16 generator (mod-8 part computed from the
+ℝP² Brown invariant; the odd bit `1` is the H6/H8-content value on the generator). -/
+theorem abkGMTied16_rp4 : abkGMTied16 (k := 0) (I := 𝓡 4) rp4GMTiedClass = 1 := rfl
+
+/-- **The ℝP⁴ tied grade is ODD** — `reduce16to2 (abkGMTied16 [ℝP⁴]) = 1`, so it has additive order 16
+(the surjectivity / order-16 input for H6–H7). -/
+theorem abkGMTied16_rp4_odd :
+    reduce16to2 (abkGMTied16 (k := 0) (I := 𝓡 4) rp4GMTiedClass) = 1 := by
+  rw [abkGMTied16_rp4]; decide
 
 end SKEFTHawking.PinPlusGMWitness
