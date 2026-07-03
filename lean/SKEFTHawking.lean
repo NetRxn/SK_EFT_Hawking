@@ -995,6 +995,7 @@ import SKEFTHawking.SingularBocksteinLeibniz
 import SKEFTHawking.RP4BocksteinAssembly
 import SKEFTHawking.RP4Unconditional
 import SKEFTHawking.PinPlusGMWitness
+import SKEFTHawking.PinPlusGMTiedData
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
