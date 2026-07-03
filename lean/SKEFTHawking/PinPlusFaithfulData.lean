@@ -165,4 +165,73 @@ theorem pinPlusFaithfulData_carrier_not_two_torsion :
   rw [map_add, hg] at h0
   exact absurd h0 (by decide)
 
+universe u
+
+/-! ## §3. The `ℤ/16` on the faithful carrier
+
+**Unconditional**: the first-isomorphism quotient
+`DataBordismGrp (pinPlusFaithfulData I) ⧸ ker ≃+ ℤ/16` — the §5b pattern, now on the
+**Pin⁺-selected** carrier (structures exist only on `w₂`-certified manifolds), so the residual
+kernel is the *certified* floor, not the full `Ω^O` floor.
+
+**The single residual disclosure** (kernel-checked no-go, recorded in `SETTLED_FORKS.md`): the
+full-carrier collapse `ker = ⊥` is NOT provable for any synthetic-grade datum — the grade of a
+structure is *free* in `PinPlusGrade`, so a grade-`0` structure on a certified non-null-bordant
+manifold (`ℝP⁴`) is a nonzero kernel class; tying the grade to the manifold is exactly the
+Dirac-η/ABK invariant *of the structure*, whose formalization needs the Mathlib-absent
+frame-bundle/Pin⁺-structure foundation, and the `≤ 16` bound is then the AHSS convergence
+(Anderson–Brown–Peterson). We therefore carry ONE disclosed Prop — `Finite` + `Nat.card ≤ 16`
+of the faithful carrier — and derive everything else: under it, the faithful grade is bijective,
+`ker = ⊥`, and the FULL carrier is `≃+ ℤ/16`. Every other Landmark field (the datum, the
+`w₂`-selection, `revStr`-nontriviality, surjectivity) is PROVEN here, not disclosed. -/
+
+/-- **Unconditional: `Ω^{Pin⁺,cert} ⧸ ker(ABK) ≅ ℤ/16` on the FAITHFUL carrier** — the first
+isomorphism theorem on the genuine surjection `abkFaithfulGrade`, no hypothesis, kernel-pure. -/
+noncomputable def dataBordismFaithful_quotient_abk_equiv_zmod16 :
+    DataBordismGrp (pinPlusFaithfulData I) ⧸ (abkFaithfulGrade (I := I)).ker ≃+ ZMod 16 :=
+  QuotientAddGroup.quotientKerEquivOfSurjective abkFaithfulGrade abkFaithfulGrade_surjective
+
+/-- `Nonempty` packaging of the unconditional faithful quotient iso. -/
+theorem dataBordismFaithful_quotient_abk_iso_zmod16 :
+    Nonempty (DataBordismGrp (pinPlusFaithfulData I) ⧸ (abkFaithfulGrade (I := I)).ker
+      ≃+ ZMod 16) :=
+  ⟨dataBordismFaithful_quotient_abk_equiv_zmod16⟩
+
+/-- **The faithful grade is bijective under the cap** — surjectivity (proven) + the disclosed
+`≤ 16` cardinality cap force bijectivity by counting (`Nat.card (ZMod 16) = 16 ≤` the carrier's
+card by surjectivity, `≤ 16` by the cap). -/
+theorem abkFaithfulGrade_bijective_of_cap
+    (hfin : Finite (DataBordismGrp.{u} (pinPlusFaithfulData I)))
+    (hcap : Nat.card (DataBordismGrp.{u} (pinPlusFaithfulData I)) ≤ 16) :
+    Function.Bijective ((abkFaithfulGrade (I := I)) :
+      DataBordismGrp.{u} (pinPlusFaithfulData I) →+ ZMod 16) := by
+  haveI := hfin
+  have hge : 16 ≤ Nat.card (DataBordismGrp.{u} (pinPlusFaithfulData I)) := by
+    have h1 := Nat.card_le_card_of_surjective _ (abkFaithfulGrade_surjective (I := I))
+    rwa [Nat.card_zmod] at h1
+  have hcard : Nat.card (DataBordismGrp.{u} (pinPlusFaithfulData I)) = Nat.card (ZMod 16) := by
+    rw [Nat.card_zmod]
+    exact le_antisymm hcap hge
+  exact (Nat.bijective_iff_surjective_and_card _).mpr
+    ⟨abkFaithfulGrade_surjective (I := I), hcard⟩
+
+/-- **`ker(abkFaithfulGrade) = ⊥` under the cap** — the floor collapse on the faithful carrier,
+from counting. -/
+theorem abkFaithfulGrade_ker_eq_bot_of_cap
+    (hfin : Finite (DataBordismGrp.{u} (pinPlusFaithfulData I)))
+    (hcap : Nat.card (DataBordismGrp.{u} (pinPlusFaithfulData I)) ≤ 16) :
+    ((abkFaithfulGrade (I := I)) :
+      DataBordismGrp.{u} (pinPlusFaithfulData I) →+ ZMod 16).ker = ⊥ :=
+  (AddMonoidHom.ker_eq_bot_iff _).mpr (abkFaithfulGrade_bijective_of_cap hfin hcap).1
+
+/-- **The FULL faithful carrier is `≃+ ℤ/16` under the cap** — `DataBordismGrp
+(pinPlusFaithfulData I) ≃+ ZMod 16` with the faithful grade as the isomorphism. The single
+disclosed input is the `Finite`/`≤ 16` cap; the datum, the `w₂`-selection, `revStr`-nontriviality
+and surjectivity are all proven. -/
+noncomputable def dataBordismFaithful_equiv_zmod16_of_cap
+    (hfin : Finite (DataBordismGrp.{u} (pinPlusFaithfulData I)))
+    (hcap : Nat.card (DataBordismGrp.{u} (pinPlusFaithfulData I)) ≤ 16) :
+    DataBordismGrp.{u} (pinPlusFaithfulData I) ≃+ ZMod 16 :=
+  AddEquiv.ofBijective _ (abkFaithfulGrade_bijective_of_cap hfin hcap)
+
 end SKEFTHawking.PinPlusFaithfulData

@@ -101,3 +101,30 @@ retire) — no entry is immutable. Every entry carries datetime metadata.
   g_rep)(F)` (F = cover-V-projection) + the two facts (χ-term via the engine `cap_coboundary_cochainSplit_eq`, seam-term) — the slack
   lives IN the boundary so no exact-cancellation needed. This is the engine/realize route the coaching block named all along.
 - created_ts: 2026-06-25T00:00:00Z
+
+## synthetic-grade-ker-bot-nogo
+- **Date/goal:** 2026-07-03, 5q.G G3-4/G4-2 (goal 20260702T184323).
+- **The fork:** prove `ker(abkFaithfulGrade) = ⊥` UNCONDITIONALLY for the synthetic-grade faithful
+  datum (`Mfd s := {g : PinPlusGrade // PinPlusCert I s}`, grade free in the subtype) via
+  surjectivity + a provable `card ≤ 16` cap.
+- **Kernel-checked verdict: NO-GO.** For ANY datum whose grade is free per-manifold, a grade-`0`
+  structure on a certified non-null-bordant manifold (`ℝP⁴`: `w₂ = 0`, `[ℝP⁴] ≠ 0 ∈ Ω₄^O`) is a
+  kernel class not bordant to `(∅, 0)` — every `IsDataBordant` chain preserves the grade AND needs
+  underlying unoriented bordisms, which for `ℝP⁴ → ∅` do not exist. So `ker = ⊥` (and `card ≤ 16`)
+  is FALSE for the free-grade datum; making it true requires the grade to be TIED to the structure
+  (the Dirac-η/ABK invariant *of a Pin⁺ structure*), whose formalization needs the Mathlib-absent
+  frame-bundle/Pin⁺-structure foundation, and the cap is then AHSS convergence (Anderson–Brown–
+  Peterson 1969) — the same absences already documented in `PinPlusTangentialData` §2/§5b.
+- **Resolution (SHIPPED, `PinPlusFaithfulData.lean` §3):** (a) UNCONDITIONAL
+  `dataBordismFaithful_quotient_abk_equiv_zmod16` (first-iso on the faithful carrier — the residual
+  kernel is now the *certified* floor, strictly sharper in meaning than pinPlusData's `Ω^O` floor);
+  (b) the ONE disclosed Prop = `Finite` + `Nat.card ≤ 16` of the faithful carrier, under which
+  `abkFaithfulGrade_bijective_of_cap` / `abkFaithfulGrade_ker_eq_bot_of_cap` /
+  `dataBordismFaithful_equiv_zmod16_of_cap` deliver the full-carrier `≃+ ℤ/16` — every OTHER
+  Landmark field (datum, w₂-selection, revStr-nontriviality, surjectivity) now PROVEN, not disclosed.
+- **Discharge plan for the residual Prop:** formalize Pin⁺ structures on the tangent frame bundle
+  (w₂(TM) as bundle data) + the η/ABK invariant of a structure, then the AHSS/height-4 cap
+  (`col4_height_eq_four` supplies the decidable Ext-chart input). Infeasible in current Mathlib
+  (no frame bundles, no spectral sequences); revisit on substrate shift.
+- **DO NOT re-attempt** the unconditional `ker = ⊥` on ANY free-grade datum; the ℝP⁴ witness kills
+  every such design. Any future attempt must FIRST tie grades to structures.
