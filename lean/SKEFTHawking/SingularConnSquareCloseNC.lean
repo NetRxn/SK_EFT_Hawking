@@ -2333,6 +2333,150 @@ theorem legW_iterate_cap_class_eq {k m : ℕ} {W : Set ↑X} (hW : IsOpen W)
     SingularLocalDualityK.chainIncl_pullbackDualityₗ, hamb, ← hBB]
   exact add_comm _ _
 
+/-- **The double-support δφ-kill** (Brick J — N2 steps II–IV; the crux's intrinsic-bound engine).
+For a cocycle `a` vanishing on both cover legs and a `P`-supported chain `c` that is rel-`(A∪B)`
+null-homologous via an AMBIENT bound (`c = ∂D + ρ`, `ρ ∈ C(A∪B)`, `D` unconstrained), the cap
+`cap a c` is the boundary of a **`P`-supported** chain — the ambient `D` dissolves: small `D` over
+the total cover `(P, A∪B)` (Brick E; `hcover`), collect the remainder
+`b := c + ∂(D₁ + Dᵥc)` which is `C(P)`-supported BY THE EQUATION and `C(A∪B)`-supported BY
+CONSTRUCTION, hence lives in the intersected legs (`subspaceChains_inf` + distributivity); its
+leg-split (Brick E over `(P∩A, P∩B)`) kills `cap a (Sdᵏb)`, the homotopy bound `Dₖb` stays in
+`C(P∩(A∪B)) ⊆ C(P)`, and the tail `Dₖ∂b = Dₖ∂c` dies leg-wise via `hbd` (T-additivity). Feeds the
+fact-(i) crux with `a := δφ`, `P := U∩V`, `(A,B) := (LUᶜ, LVᶜ)`, `c := f₃ + Sd^jF φ₂'`. ℤ/2. -/
+theorem cap_relCochains_pair_double_support_eq_boundary {A B P : Set ↑X}
+    (hA : IsOpen A) (hB : IsOpen B) (hP : IsOpen P)
+    (hcover : P ∪ (A ∪ B) = Set.univ) {k n : ℕ}
+    (a : SingularCochain X k) (hac : coboundary X k a = 0)
+    (haA : a ∈ relCochains A k) (haB : a ∈ relCochains B k)
+    (c : SingularChain X (k + n + 1)) (hcP : c ∈ subspaceChains P (k + n + 1))
+    (D : SingularChain X (k + n + 1 + 1)) (ρ : SingularChain X (k + n + 1))
+    (hρ : ρ ∈ subspaceChains (A ∪ B) (k + n + 1))
+    (heq : c = chainBoundary X (k + n + 1) D + ρ)
+    (u' : SingularChain (sub A) (k + n)) (w' : SingularChain (sub B) (k + n))
+    (hbd : chainBoundary X (k + n) c = chainIncl A (k + n) u' + chainIncl B (k + n) w') :
+    ∃ E : SingularChain X (n + 1 + 1), E ∈ subspaceChains P (n + 1 + 1)
+      ∧ cap (m := n + 1) a c = chainBoundary X (n + 1) E := by
+  have hadd : ∀ (d : ℕ) (j : ℕ) (x y : SingularChain X d),
+      SingularSubdivision.iterHomotopy X d j (x + y)
+        = SingularSubdivision.iterHomotopy X d j x + SingularSubdivision.iterHomotopy X d j y := by
+    intro d j x y
+    simp [SingularSubdivision.iterHomotopy, map_add, Finset.sum_add_distrib]
+  -- small D over the total cover (P, A∪B)
+  have hDmem : D ∈ subspaceChains (P ∪ (A ∪ B)) (k + n + 1 + 1) :=
+    SingularExcision.mem_subspaceChains_of_support (fun τ _ => by
+      rw [hcover]; exact Set.subset_univ _)
+  obtain ⟨ν, D₁, D₂, hD₁, hD₂, hDsplit⟩ :=
+    exists_iterate_cover_split_amb hP (hA.union hB) D hDmem
+  have hhD := SingularSubdivision.iterHomotopy_chainHomotopy X ν (k + n + 1) D
+  -- ∂D = ∂D₁ + ∂D₂ + ∂(Dᵥ(∂D)) with Dᵥ(∂D) = Dᵥc + Dᵥρ (T-additive over heq)
+  have hDbnd : chainBoundary X (k + n + 1) D
+      = chainBoundary X (k + n + 1) D₁ + chainBoundary X (k + n + 1) D₂
+        + chainBoundary X (k + n + 1)
+            (SingularSubdivision.iterHomotopy X (k + n + 1) ν
+              (chainBoundary X (k + n + 1) D)) := by
+    have h1 := congrArg (chainBoundary X (k + n + 1)) hhD
+    rw [map_add, map_add, chainBoundary_chainBoundary_apply, zero_add, hDsplit, map_add] at h1
+    rw [h1]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
+  have hTsplit : SingularSubdivision.iterHomotopy X (k + n + 1) ν
+      (chainBoundary X (k + n + 1) D)
+      = SingularSubdivision.iterHomotopy X (k + n + 1) ν c
+        + SingularSubdivision.iterHomotopy X (k + n + 1) ν ρ := by
+    rw [show chainBoundary X (k + n + 1) D = c + ρ from by
+        rw [heq]; abel_nf; simp only [two_smul, ZModModule.add_self, add_zero, zero_add],
+      hadd]
+  -- b defined by its C(A∪B)-formula (no c inside — rewrite-safe); C(P) comes from the equation
+  set b : SingularChain X (k + n + 1) := ρ + chainBoundary X (k + n + 1) D₂
+    + chainBoundary X (k + n + 1) (SingularSubdivision.iterHomotopy X (k + n + 1) ν ρ) with hbdef
+  have hbeq : c = chainBoundary X (k + n + 1)
+      (D₁ + SingularSubdivision.iterHomotopy X (k + n + 1) ν c) + b := by
+    conv_lhs => rw [heq]
+    rw [hDbnd, hTsplit, hbdef]
+    simp only [map_add]
+    abel
+  have hb2 : b = c + chainBoundary X (k + n + 1)
+      (D₁ + SingularSubdivision.iterHomotopy X (k + n + 1) ν c) := by
+    have h2 := congrArg (· + chainBoundary X (k + n + 1)
+      (D₁ + SingularSubdivision.iterHomotopy X (k + n + 1) ν c)) hbeq
+    simp only at h2
+    rw [h2]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
+  have hbP : b ∈ subspaceChains P (k + n + 1) := by
+    rw [hb2]
+    exact Submodule.add_mem _ hcP (chainBoundary_mem_subspaceChains _ (Submodule.add_mem _ hD₁
+      (SingularExcision.iterHomotopy_mem_subspaceChains hcP ν)))
+  have hbAB : b ∈ subspaceChains (A ∪ B) (k + n + 1) :=
+    Submodule.add_mem _ (Submodule.add_mem _ hρ (chainBoundary_mem_subspaceChains _ hD₂))
+      (chainBoundary_mem_subspaceChains _
+        (SingularExcision.iterHomotopy_mem_subspaceChains hρ ν))
+  have hbInter : b ∈ subspaceChains ((P ∩ A) ∪ (P ∩ B)) (k + n + 1) := by
+    have h := Submodule.mem_inf.mpr ⟨hbP, hbAB⟩
+    rw [SingularExcision.subspaceChains_inf, Set.inter_union_distrib_left] at h
+    exact h
+  -- leg-split b + Brick-C-style kill with the INTRINSIC bound
+  obtain ⟨κ, bA, bB, hbA, hbB, hbSplit⟩ :=
+    exists_iterate_cover_split_amb (hP.inter hA) (hP.inter hB) b hbInter
+  have hhb := SingularSubdivision.iterHomotopy_chainHomotopy X κ (k + n) b
+  have hkill1 : cap (m := n + 1) a ((⇑(SingularSubdivision.singularSd X (k + n + 1)))^[κ] b)
+      = 0 := by
+    rw [hbSplit, ← capₗ_apply, map_add, capₗ_apply, capₗ_apply,
+      cap_relCochains_subspaceChains_eq_zero (m := n + 1) a haA _
+        (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_right (k + n + 1) hbA),
+      cap_relCochains_subspaceChains_eq_zero (m := n + 1) a haB _
+        (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_right (k + n + 1) hbB),
+      add_zero]
+  have hkill2 : cap (m := n + 1) a (SingularSubdivision.iterHomotopy X (k + n) κ
+      (chainBoundary X (k + n) b)) = 0 := by
+    have hcbd : chainBoundary X (k + n) b = chainBoundary X (k + n) c := by
+      rw [hb2, map_add, chainBoundary_chainBoundary_apply, add_zero]
+    rw [hcbd, hbd, hadd, ← capₗ_apply, map_add, capₗ_apply, capₗ_apply,
+      cap_relCochains_subspaceChains_eq_zero (m := n + 1) a haA _
+        (SingularExcision.iterHomotopy_mem_subspaceChains ⟨u', rfl⟩ κ),
+      cap_relCochains_subspaceChains_eq_zero (m := n + 1) a haB _
+        (SingularExcision.iterHomotopy_mem_subspaceChains ⟨w', rfl⟩ κ),
+      add_zero]
+  -- assemble: cap a c = cap a (∂(D₁+Dᵥc)) + cap a b, both exact with C(P)-bounds
+  have hcb : cap (m := n + 1) a c
+      = cap (m := n + 1) a (chainBoundary X (k + n + 1)
+          (D₁ + SingularSubdivision.iterHomotopy X (k + n + 1) ν c))
+        + cap (m := n + 1) a b := by
+    conv_lhs => rw [hbeq]
+    rw [← capₗ_apply, map_add, capₗ_apply, capₗ_apply]
+  have hb3' : (chainBoundary X (k + n + 1) (SingularSubdivision.iterHomotopy X (k + n + 1) κ b)
+      + SingularSubdivision.iterHomotopy X (k + n) κ (chainBoundary X (k + n) b))
+      + (⇑(SingularSubdivision.singularSd X (k + n + 1)))^[κ] b = b := by
+    rw [hhb]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
+  have hcapb : cap (m := n + 1) a b = chainBoundary X (n + 1)
+      (cap (m := n + 1 + 1) a (SingularSubdivision.iterHomotopy X (k + n + 1) κ b)) := by
+    have hcc : cap (m := n + 1) a b
+        = cap (m := n + 1) a ((chainBoundary X (k + n + 1)
+            (SingularSubdivision.iterHomotopy X (k + n + 1) κ b)
+          + SingularSubdivision.iterHomotopy X (k + n) κ (chainBoundary X (k + n) b))
+          + (⇑(SingularSubdivision.singularSd X (k + n + 1)))^[κ] b) := by rw [hb3']
+    rw [hcc, ← capₗ_apply, map_add, map_add, capₗ_apply, capₗ_apply, capₗ_apply, hkill1,
+      hkill2, add_zero, add_zero]
+    exact (chainBoundary_cap_cocycle_arg (m := n + 1) a hac _ (by omega)).symm
+  have hE₁ : cap (m := n + 1) a (chainBoundary X (k + n + 1)
+      (D₁ + SingularSubdivision.iterHomotopy X (k + n + 1) ν c))
+      = chainBoundary X (n + 1) (cap (m := n + 1 + 1) a
+          (D₁ + SingularSubdivision.iterHomotopy X (k + n + 1) ν c)) :=
+    (chainBoundary_cap_cocycle_arg (m := n + 1) a hac _ (by omega)).symm
+  refine ⟨cap (m := n + 1 + 1) a (D₁ + SingularSubdivision.iterHomotopy X (k + n + 1) ν c)
+      + cap (m := n + 1 + 1) a (SingularSubdivision.iterHomotopy X (k + n + 1) κ b),
+    Submodule.add_mem _
+      (SingularCapSupport.cap_mem_subspaceChains (m := n + 1 + 1) P a (Submodule.add_mem _ hD₁
+        (SingularExcision.iterHomotopy_mem_subspaceChains hcP ν)))
+      (SingularCapSupport.cap_mem_subspaceChains (m := n + 1 + 1) P a
+        (SingularMayerVietoris.subspaceChains_mono
+          (Set.union_subset Set.inter_subset_left Set.inter_subset_left) (k + n + 1 + 1)
+          (SingularExcision.iterHomotopy_mem_subspaceChains hbInter κ))), ?_⟩
+  rw [hcb, hcapb, hE₁]
+  simp only [map_add]
+
 /-- **The γ-computation** (the fact-(ii) two-legs closer, EXTRACTED — single-choice form). The two
 goal legs are V-legs of cover-splits of two parents sharing ONE fundamental presentation `zsub`:
 the pd-side parent `Camb` (whose un-subdivided boundary is EXACTLY `chainIncl (rcap β ∂zsub)` —
