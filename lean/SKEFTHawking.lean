@@ -972,6 +972,7 @@ import SKEFTHawking.SingularCohomologyFunctoriality
 import SKEFTHawking.SingularFundamentalClassPushforward
 import SKEFTHawking.SingularWuTransport
 import SKEFTHawking.SingularCochainGlue
+import SKEFTHawking.SingularFundamentalClassSum
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
