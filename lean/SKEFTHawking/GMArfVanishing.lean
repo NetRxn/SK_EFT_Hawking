@@ -42,4 +42,18 @@ lemma gaussSum4_even_isReal (Q : Z4Quadratic ι) (hE : IsEven Q) :
   unfold chi2
   split <;> decide
 
+/-- The **ℤ/2-reduction** of a form: `toZ2 Q x = (q x).val / 2 ∈ ZMod 2`. On an *even* form it is the
+genuine `ZMod 2`-quadratic form underneath (`embed2 (toZ2 Q x) = q x`), the Arf datum of an oriented surface. -/
+def toZ2 (Q : Z4Quadratic ι) : (ι → ZMod 2) → ZMod 2 := fun x => (((Q.q x).val / 2 : ℕ) : ZMod 2)
+
+/-- On an even form, `embed2 ∘ toZ2 = q` — the reduction is a genuine section (`embed2` is injective). -/
+lemma embed2_toZ2_of_even (Q : Z4Quadratic ι) (hE : IsEven Q) (x : ι → ZMod 2) :
+    embed2 (toZ2 Q x) = Q.q x := by
+  obtain ⟨b, hb⟩ := hE x
+  unfold toZ2
+  rw [hb]
+  clear hb
+  revert b
+  decide
+
 end SKEFTHawking.Brown.Z4Quadratic
