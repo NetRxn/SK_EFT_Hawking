@@ -1,5 +1,6 @@
 import Mathlib
 import SKEFTHawking.BrownInvariant
+import SKEFTHawking.ArfInvariant
 
 /-!
 # Phase 5q.H (H8, the geometric Rokhlin discharge) — even `ZMod 4`-quadratic forms and the Arf reduction
@@ -53,6 +54,19 @@ lemma embed2_toZ2_of_even (Q : Z4Quadratic ι) (hE : IsEven Q) (x : ι → ZMod 
   unfold toZ2
   rw [hb]
   clear hb
+  revert b
+  decide
+
+/-- **The Gauss-sum bridge**: on an even form, the `ℤ[i]` Gauss sum `gaussSum4` is the integer cast of the
+`±1` Arf Gauss sum `SKEFTHawking.Arf.gaussSum` of the `ZMod 2`-reduction `toZ2 Q`. This ties `brown` to the
+`ArfInvariant` machinery (whence `brown = 4·Arf` on oriented surfaces). -/
+lemma gaussSum4_even_eq_gaussSum (Q : Z4Quadratic ι) (hE : IsEven Q) :
+    gaussSum4 Q.q = ((SKEFTHawking.Arf.gaussSum (toZ2 Q) : ℤ) : GaussianInt) := by
+  unfold gaussSum4 SKEFTHawking.Arf.gaussSum
+  push_cast
+  refine Finset.sum_congr rfl (fun x _ => ?_)
+  rw [← embed2_toZ2_of_even Q hE x, zeta4_embed2]
+  generalize toZ2 Q x = b
   revert b
   decide
 
