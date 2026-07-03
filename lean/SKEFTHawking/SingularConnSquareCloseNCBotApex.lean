@@ -7,6 +7,7 @@ import SKEFTHawking.SingularOpenDualityMVSquare
 import SKEFTHawking.SingularCSCMayerVietorisMiddle
 import SKEFTHawking.SingularCSCMayerVietorisSumExact
 import SKEFTHawking.SingularCSCMayerVietorisConnExact
+import SKEFTHawking.SingularOpenDualityConnSquareColimit
 
 /-!
 # Phase 5q.G (G1 PD-induction, brick B3a) — the bottom pairing-mirror pack
@@ -714,5 +715,185 @@ theorem openDuality_union_bijective_bot {N : ℕ} {U V : Set ↑X}
     (subHom_exact_middle U V hU hV) (subHom_exact_sum U V hU hV)
     (subHom_exact_connecting U V hU hV)
     hDI hi₂ hD0I hi₅
+
+/-! ## The upper (m ≥ 1) Mayer–Vietoris five-lemma step (covers the (2,1)-center at `p := 0`) -/
+
+/-- **The upper-window MV five-lemma step** (all-generic verticals): bijectivity of
+`D_{U∪V} : CSCᴺ⁺¹(U∪V) → H_{p+2}(sub (U∪V))` from the pieces. The verticals carry the
+castChain-presented `z₀` forms of the generic family, so the connecting square is brick 2a
+(`subHomConnecting_openDuality_colimit`) verbatim; the diag/sum squares are the generic
+`subHomDiag/Sum_openDuality` at `(N+1, p+1)` and `(N+2, p)`. The `(2,1)`-center of the deg-4
+ladder is the `p := 0` instance. -/
+theorem openDuality_union_bijective_upper {N p : ℕ} {U V : Set ↑X}
+    (hU : IsOpen U) (hV : IsOpen V)
+    (z₀ : SingularChain X (N + p + 3)) (hz₀ : chainBoundary X (N + p + 2) z₀ = 0)
+    (hDI : Function.Surjective (openDuality (k := N + 1) (m := p + 1) (hU.inter hV)
+      (SingularOpenDualityMVConnSquare.castChain
+        (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)))
+    (hDU : Function.Bijective (openDuality (k := N + 1) (m := p + 1) hU
+      (SingularOpenDualityMVConnSquare.castChain
+        (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)))
+    (hDV : Function.Bijective (openDuality (k := N + 1) (m := p + 1) hV
+      (SingularOpenDualityMVConnSquare.castChain
+        (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)))
+    (hDI' : Function.Bijective (openDuality (k := N + 2) (m := p) (hU.inter hV)
+      (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)))
+    (hDU' : Function.Injective (openDuality (k := N + 2) (m := p) hU
+      (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)))
+    (hDV' : Function.Injective (openDuality (k := N + 2) (m := p) hV
+      (SingularOpenDualityMVConnSquare.castChain (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀))) :
+    Function.Bijective (openDuality (k := N + 1) (m := p + 1) (hU.union hV)
+      (SingularOpenDualityMVConnSquare.castChain
+        (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)) := by
+  have hc₁ : (subHomDiag U V (p + 1 + 1)).comp
+        (openDuality (k := N + 1) (m := p + 1) (hU.inter hV) (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀))
+      = ((openDuality (k := N + 1) (m := p + 1) hU (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)).prodMap
+          (openDuality (k := N + 1) (m := p + 1) hV (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀))).comp (cscMvDiag U V (N + 1)) := by
+    refine LinearMap.ext fun α => ?_
+    simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiag, LinearMap.prod_apply,
+      Pi.prod]
+    exact subHomDiag_openDuality (k := N + 1) (m := p + 1) hU hV (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀) α
+  have hc₂ : (subHomSum U V (p + 1 + 1)).comp
+        ((openDuality (k := N + 1) (m := p + 1) hU (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)).prodMap
+          (openDuality (k := N + 1) (m := p + 1) hV (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)))
+      = (openDuality (k := N + 1) (m := p + 1) (hU.union hV) (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)).comp
+          (cscMvSum U V (N + 1)) := by
+    refine LinearMap.ext fun q => ?_
+    simp only [LinearMap.comp_apply, LinearMap.prodMap_apply]
+    exact (subHomSum_openDuality (k := N + 1) (m := p + 1) hU hV (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀) q.1 q.2).symm
+  have hc₃ : (SKEFTHawking.SingularSubHomologyMV.subHomConnecting U V hU hV (p + 1)).comp
+        (openDuality (k := N + 1) (m := p + 1) (hU.union hV) (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀))
+      = (openDuality (k := N + 2) (m := p) (hU.inter hV) (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)).comp
+          (cscMvConnecting U V hU hV N) := by
+    refine LinearMap.ext fun α => ?_
+    simp only [LinearMap.comp_apply]
+    exact SKEFTHawking.SingularOpenDualityConnSquareColimit.subHomConnecting_openDuality_colimit
+      hU hV z₀ hz₀ α
+  have hc₄ : (subHomDiag U V (p + 1)).comp
+        (openDuality (k := N + 2) (m := p) (hU.inter hV) (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀))
+      = ((openDuality (k := N + 2) (m := p) hU (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)).prodMap
+          (openDuality (k := N + 2) (m := p) hV (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀))).comp (cscMvDiag U V (N + 2)) := by
+    refine LinearMap.ext fun α => ?_
+    simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiag, LinearMap.prod_apply,
+      Pi.prod]
+    exact subHomDiag_openDuality (k := N + 2) (m := p) hU hV (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀) α
+  have hi₂ : Function.Bijective
+      ⇑((openDuality (k := N + 1) (m := p + 1) hU (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)).prodMap
+        (openDuality (k := N + 1) (m := p + 1) hV (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀))) := by
+    rw [LinearMap.coe_prodMap]
+    exact hDU.prodMap hDV
+  have hi₅ : Function.Injective
+      ⇑((openDuality (k := N + 2) (m := p) hU (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)).prodMap
+        (openDuality (k := N + 2) (m := p) hV (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀))) := by
+    rw [LinearMap.coe_prodMap]
+    exact hDU'.prodMap hDV'
+  exact LinearMap.bijective_of_surjective_of_bijective_of_bijective_of_injective
+    (f₁ := cscMvDiag U V (N + 1)) (f₂ := cscMvSum U V (N + 1))
+    (f₃ := cscMvConnecting U V hU hV N) (f₄ := cscMvDiag U V (N + 2))
+    (g₁ := subHomDiag U V (p + 1 + 1)) (g₂ := subHomSum U V (p + 1 + 1))
+    (g₃ := SKEFTHawking.SingularSubHomologyMV.subHomConnecting U V hU hV (p + 1))
+    (g₄ := subHomDiag U V (p + 1))
+    (i₁ := openDuality (k := N + 1) (m := p + 1) (hU.inter hV) (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀))
+    (i₂ := (openDuality (k := N + 1) (m := p + 1) hU (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)).prodMap
+      (openDuality (k := N + 1) (m := p + 1) hV (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)))
+    (i₃ := openDuality (k := N + 1) (m := p + 1) (hU.union hV) (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀))
+    (i₄ := openDuality (k := N + 2) (m := p) (hU.inter hV) (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀))
+    (i₅ := (openDuality (k := N + 2) (m := p) hU (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)).prodMap
+      (openDuality (k := N + 2) (m := p) hV (SingularOpenDualityMVConnSquare.castChain
+      (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
+      (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
+        z₀ hz₀)))
+    hc₁ hc₂ hc₃ hc₄
+    (cscMv_exact_middle U V hU hV) (cscMv_exact_sum U V hU hV)
+    (cscMv_exact_connecting U V hU hV)
+    (subHom_exact_middle U V hU hV) (subHom_exact_sum U V hU hV)
+    (subHom_exact_connecting U V hU hV)
+    hDI hi₂ hDI' hi₅
 
 end SKEFTHawking.SingularConnSquareCloseNCBotApex
