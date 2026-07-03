@@ -957,6 +957,7 @@ import SKEFTHawking.SingularOpenDualityMonotoneUnion
 import SKEFTHawking.SingularSphereMiddle
 import SKEFTHawking.SingularConvexRadialMiddle
 import SKEFTHawking.SingularCSCConvexChart
+import SKEFTHawking.SingularConvexSubAcyclic
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
