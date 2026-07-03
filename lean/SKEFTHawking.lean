@@ -976,6 +976,7 @@ import SKEFTHawking.SingularFundamentalClassSum
 import SKEFTHawking.SingularWuSum
 import SKEFTHawking.PinPlusFaithfulData
 import SKEFTHawking.FaithfulSixteenCapstone
+import SKEFTHawking.SingularSWNumber
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
