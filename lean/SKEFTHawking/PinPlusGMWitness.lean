@@ -117,4 +117,46 @@ noncomputable def dataBordismGMTied_quotient_equiv_zmod16 :
       ≃+ ZMod 16 :=
   QuotientAddGroup.quotientKerEquivOfSurjective abkGMTied16 abkGMTied16_surjective
 
+/-! ### H6-a — the injectivity reduction (unconditional GIVEN the ABK-completeness cap)
+
+`ker abkGMTied16 = ⊥` reduces to a `card ≤ 16` cap by counting: surjectivity (proven) + `card ≤ 16` force
+bijectivity. The `card ≤ 16` cap is the ONE disclosed input — the ABK-completeness `η(σ)=0 ⟹ bounds`
+(`synthetic-grade-ker-bot-nogo` discharge plan #2). Per §9.3 (ROUTE LOCK) it is discharged at **H8 via the
+SMITH-LES** (the Pin⁻ neighbor `Ω₆^{Pin⁻} ≅ ℤ/16` transported through the geometric Smith map), NOT the
+AHSS/height cap the faithful carrier used. This mirrors `PinPlusFaithfulData.abkFaithfulGrade_bijective_of_cap`
+but on the COMPUTED-grade tied GM carrier. -/
+
+universe u
+
+/-- **Bijective under the cap** — surjectivity (proven) + `Nat.card ≤ 16` force bijectivity by counting. -/
+theorem abkGMTied16_bijective_of_cap
+    (hfin : Finite (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))))
+    (hcap : Nat.card (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))) ≤ 16) :
+    Function.Bijective ((abkGMTied16 (k := 0) (I := 𝓡 4)) :
+      DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ ZMod 16) := by
+  haveI := hfin
+  have hge : 16 ≤ Nat.card (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))) := by
+    have h1 := Nat.card_le_card_of_surjective _ (abkGMTied16_surjective)
+    rwa [Nat.card_zmod] at h1
+  have hcard : Nat.card (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)))
+      = Nat.card (ZMod 16) := by rw [Nat.card_zmod]; exact le_antisymm hcap hge
+  exact (Nat.bijective_iff_surjective_and_card _).mpr ⟨abkGMTied16_surjective, hcard⟩
+
+/-- **`ker abkGMTied16 = ⊥` under the cap** — the injectivity, from counting (surjective + `card ≤ 16`). -/
+theorem abkGMTied16_ker_eq_bot_of_cap
+    (hfin : Finite (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))))
+    (hcap : Nat.card (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))) ≤ 16) :
+    ((abkGMTied16 (k := 0) (I := 𝓡 4)) :
+      DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ ZMod 16).ker = ⊥ :=
+  (AddMonoidHom.ker_eq_bot_iff _).mpr (abkGMTied16_bijective_of_cap hfin hcap).1
+
+/-- **The FULL tied GM carrier is `≃+ ZMod 16` under the cap** — `omega4PinPlusGMTied_equiv_zmod16_of_cap`,
+the literature-grade statement modulo the single disclosed ABK-completeness cap (→ H8 Smith-LES/Rokhlin).
+Invariant computed (mod-8 via `hcoh`), generator geometric (`rp4GMTiedStr`), NO quotient-by-kernel. -/
+noncomputable def omega4PinPlusGMTied_equiv_zmod16_of_cap
+    (hfin : Finite (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))))
+    (hcap : Nat.card (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))) ≤ 16) :
+    DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16 :=
+  AddEquiv.ofBijective _ (abkGMTied16_bijective_of_cap hfin hcap)
+
 end SKEFTHawking.PinPlusGMWitness
