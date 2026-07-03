@@ -954,6 +954,7 @@ import SKEFTHawking.SingularOpenDuality
 import SKEFTHawking.SingularLocalDualityKMono
 import SKEFTHawking.SingularOpenDualityNat
 import SKEFTHawking.SingularOpenDualityMonotoneUnion
+import SKEFTHawking.SingularSphereMiddle
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
