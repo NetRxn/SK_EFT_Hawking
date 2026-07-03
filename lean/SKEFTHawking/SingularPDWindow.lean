@@ -432,4 +432,86 @@ theorem pdWindowP_of_chartOpen {M : Type} [TopologicalSpace M] [T2Space M]
     exact chartPull_image e hWU
 
 
+/-! ## Layer-B: the finite-chart-cover induction on the closed manifold -/
+
+open SKEFTHawking.SingularChartBridge in
+/-- **Layer-B core**: `P(⋃ x ∈ t, chartSource x)` for any finite family of chart sources —
+plain `Finset` induction; each member is a full chart source (A4c at `W := U`), and each
+MV intersection is an open subset of ONE chart (A4c again). -/
+theorem pdWindowP_finset_chartSources {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (zM : SingularChain (TopCat.of M) (1 + 0 + 3))
+    (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0)
+    (hcyc : castChain (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM
+      ∈ cycles (TopCat.of M) (2 + 2))
+    (hloc : ∀ x : M, SKEFTHawking.SingularFundamentalClass.restrictHomologyToPoint
+        (X := TopCat.of M) x (2 + 2) (Homology.mk (TopCat.of M) (2 + 2)
+          ⟨castChain (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM, hcyc⟩)
+      = (manifoldLocalIso x).symm 1)
+    [DecidableEq M] (t : Finset M) :
+    ∀ hop : IsOpen (⋃ x ∈ t, (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x).source
+      : Set ↑(TopCat.of M)),
+    pdWindowP zM hzM
+      (⋃ x ∈ t, (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x).source) hop := by
+  induction t using Finset.induction_on with
+  | empty =>
+    intro hop
+    exact pdWindowP_congr zM hzM
+      (show (∅ : Set ↑(TopCat.of M)) = _ by simp) isOpen_empty hop (pdWindowP_empty zM hzM)
+  | insert x t hx ih =>
+    intro hop
+    set c := chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x with hcdef
+    have hopx : IsOpen (c.source : Set ↑(TopCat.of M)) := c.open_source
+    have hopS : IsOpen (⋃ y ∈ t, (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).source
+        : Set ↑(TopCat.of M)) :=
+      isOpen_biUnion (fun y _ => (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).open_source)
+    have hPx : pdWindowP zM hzM (c.source : Set ↑(TopCat.of M)) hopx :=
+      pdWindowP_of_chartOpen c.open_source c.open_target c.toHomeomorphSourceTarget
+        zM hzM hcyc hloc hopx (le_refl _)
+    have hPS : pdWindowP zM hzM
+        (⋃ y ∈ t, (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).source
+          : Set ↑(TopCat.of M)) hopS := ih hopS
+    have hPI : pdWindowP zM hzM
+        ((c.source : Set ↑(TopCat.of M))
+          ∩ ⋃ y ∈ t, (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).source)
+        (hopx.inter hopS) :=
+      pdWindowP_of_chartOpen c.open_source c.open_target c.toHomeomorphSourceTarget
+        zM hzM hcyc hloc (hopx.inter hopS) Set.inter_subset_left
+    exact pdWindowP_congr zM hzM
+      (Finset.set_biUnion_insert x t
+        (fun y => (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).source)).symm
+      (hopx.union hopS) hop
+      (pdWindowP_union_charted zM hzM hopx hopS hPx hPS hPI)
+
+open SKEFTHawking.SingularChartBridge in
+/-- **`P(univ)` — the full Layer-A/Layer-B conclusion**: on a CLOSED (compact, charted)
+4-manifold, the induction predicate holds on the whole space. -/
+theorem pdWindowP_univ {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (zM : SingularChain (TopCat.of M) (1 + 0 + 3))
+    (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0)
+    (hcyc : castChain (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM
+      ∈ cycles (TopCat.of M) (2 + 2))
+    (hloc : ∀ x : M, SKEFTHawking.SingularFundamentalClass.restrictHomologyToPoint
+        (X := TopCat.of M) x (2 + 2) (Homology.mk (TopCat.of M) (2 + 2)
+          ⟨castChain (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM, hcyc⟩)
+      = (manifoldLocalIso x).symm 1)
+    (hop : IsOpen (Set.univ : Set ↑(TopCat.of M))) :
+    pdWindowP zM hzM Set.univ hop := by
+  classical
+  haveI : CompactSpace ↑(TopCat.of M) := inferInstanceAs (CompactSpace M)
+  obtain ⟨t, ht⟩ := IsCompact.elim_finite_subcover (isCompact_univ (X := ↑(TopCat.of M)))
+    (fun x : M => ((chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x).source : Set ↑(TopCat.of M)))
+    (fun x => (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x).open_source)
+    (fun x _ => Set.mem_iUnion.mpr ⟨x, mem_chart_source _ x⟩)
+  have huniv : (⋃ x ∈ t, ((chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x).source
+      : Set ↑(TopCat.of M))) = Set.univ :=
+    Set.Subset.antisymm (Set.subset_univ _) ht
+  have hopt : IsOpen (⋃ x ∈ t, ((chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x).source
+      : Set ↑(TopCat.of M))) :=
+    isOpen_biUnion (fun y _ => (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).open_source)
+  exact pdWindowP_congr zM hzM huniv hopt hop
+    (pdWindowP_finset_chartSources zM hzM hcyc hloc t hopt)
+
+
 end SKEFTHawking.SingularPDWindow
