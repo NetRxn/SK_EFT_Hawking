@@ -9,8 +9,8 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 ## Summary
 
 - **411** ReviewFinding nodes currently in the graph
-- **22** QI items tracked (9 manually-curated open + 13 closed via `## Closed Items` section)
-- **9** open, **13** closed
+- **23** QI items tracked (10 manually-curated open + 13 closed via `## Closed Items` section)
+- **10** open, **13** closed
 
 > 9 currently-open items: 3 from Phase 7b sub-wave 7b.4 (E1+E2 reviewer triples, 2026-05-04), 3 from Phase 7c sub-waves 7c.1-7c.4 (D1+D2+D3+D4 reviewer triples, 2026-05-04; `qi-leantheoremdrift` closed 2026-06-10 via structural prevention), 2 from Phase 7c sub-wave 7c.6 (D3 Stage-10 r3 prep + D4 Stage-13 r1, 2026-05-04), and 1 from Phase 6w D7 Stage-13 (`qi-gate-5-self-audit-blind-spot-on-sibling-tautologies`, 2026-05-26). All are manually-curated additions; none auto-detected from `ReviewFinding` graph nodes. The pair (`qi-bundle_skeleton_inline_bibliography` + `qi-citation_authoryear_metadata_match`) supersedes the prior `qi-bibfilename` (which is now retained as a narrower precursor of the broader bundle-skeleton-template fix). See "Open Items" section.
 
@@ -110,6 +110,18 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 - **Owner:** unassigned. **Target:** before D3 Stage 10 reviewer pass (D3's 27 sections include numerous Lean-theorem-named bounds; this discipline is highest-leverage there).
 - **Evidence:** `papers/AutomatedReviews/2026-05-04-bundle-stage13/E2.md` finding F4; `lean/SKEFTHawking/QuasiOneDReduction.lean:226-233`; memory `project_phase7b_e1_e2_closed.md`.
 - **Severity:** advisory. Caught at Stage 13 r1 as RECOMMENDED (not BLOCKER); does not block E2 submission. But the same class of drift could escalate to BLOCKER if the prose quotes a number that disagrees with the docstring as well as not being a theorem literal — at which point both the Class IA (numerical-claim disagreement) and Class TN (theorem-name reference drift) checks would need to fire.
+
+### qi-headline-certainty-overclaim-vs-body — opened 2026-06-30 by Phase 6BC D10 Stage-13 adversarial-reviewer (ported from a System-2 harvest mis-file)
+
+- **First observed:** 2026-06-29/30 during Phase 6BC (D10 bundle) Stage-13 adversarial review (session `0e012e83`, goal `20260629T191903`). Originally mis-routed into the System-2 dev-process register by the harvest extractor (it carried the claims-reviewer's `body`-shaped record); ported here 2026-06-30 at `/debrief` as the correct System-1 home.
+- **Pattern summary:** Two co-occurring Stage-13 findings on the D10 draft share one mechanism — a headline/summary surface (abstract, §2 framework) makes a quantitative **certainty/scope** claim that the honest detailed body (§4.1, §6, conclusion) contradicts, and the gap survives drafting + LaTeX-compile + the Stage-10 claims review (which checks *presence*, not *certainty-calibration*) to be caught only at Stage-13.
+  - **(M3) Disclosure-count undercount:** §2 stated a single disclosed tracked hypothesis as the GLOBAL disclosure count, but the 6BB DFT modules carry ≥3 more disclosed load-bearing Props (kinetic essential self-adjointness `hkin`, Coulomb relative bound `hrel`, density-variational/Lévy-Lieb fiber bounds) — honestly enumerated in §4.1/§6 but quantitatively false in §2.
+  - **(M4) Conditionality drop:** the abstract listed essential self-adjointness of the molecular many-body Coulomb Hamiltonian (via an in-tree Kato-Rellich development) as UNCONDITIONAL alongside "every headline theorem kernel-pure / no project-local axioms," but the kernel proves only the Kato-Rellich REDUCTION (IF kinetic ess-s.a. AND Coulomb relative bound THEN self-adjoint) — both antecedents un-discharged disclosed Props. §4.1 body was honest; the abstract (the most-read surface) was not.
+- **Pipeline stage affected:** Stage 13 (adversarial review). Survived Stage 10 — the claims review verifies claim *presence*, not certainty-calibration.
+- **Proposed structural prevention:** Author abstract + framework/summary sections AFTER a complete disclosure inventory, calibrating every certainty/scope word against the body: (1) **Disclosure-count claims** ("a single / two / no axioms"): build the inventory FIRST (read all cited Lean module docstrings, gather every disclosed load-bearing Prop with location, count/scope precisely), then write the framework from the inventory and cross-check against §4.1/conclusion. (2) **Conditionality:** for EACH theorem named in the abstract, read its actual Lean statement; if it carries load-bearing Prop hypotheses beyond the device/material scope already disclaimed, phrase it conditional on those inputs ("a Kato-Rellich reduction establishing self-adjointness conditional on two disclosed analytic inputs," NOT "essential self-adjointness via an in-tree Kato-Rellich development"). Candidate gate: extend `claims-reviewer-v2` with a certainty-calibration / Class-HD (hypothesis-disclosure) check comparing abstract+framework certainty/count claims against the per-section disclosure tally and each named theorem's Lean statement.
+- **Owner:** unassigned. **Target:** before D10 bundle submission; generalize to any bundle whose abstract names a conditional Lean theorem.
+- **Evidence:** Stage-13 findings M3 (§2 L109-111 reworded) + M4 (abstract L28-30 + the two-layer disclaimer L39-41 reworded); both fixed in commit `5be1183f`; both survived Stage-10 (presence-only). Ported from System-2 record `paper-honesty-headline-surface-disclosure-conditionality-drifts-from-body-caught-at-stage13` (harvest mis-route), 2026-06-30 `/debrief`.
+- **Severity:** moderate-to-high. The abstract is the most-read surface; an honest body does not redeem an over-claiming headline.
 
 ## Closed Items
 

@@ -140,3 +140,28 @@ retire) — no entry is immutable. Every entry carries datetime metadata.
      Ext-chart input.
 - **DO NOT re-attempt** the unconditional `ker = ⊥` on ANY free-grade datum; the ℝP⁴ witness kills
   every such design. Any future attempt must FIRST tie grades to structures.
+
+## phase6BB-physlib-pin-bump-B-vs-C
+- verdict: superseded
+- tier: human-reviewed
+- authored_by: coach
+- **UPDATE 2026-06-29 (USER-AUTHORIZED, supersedes the `banned` verdict below):** user said "I'm open to bump". Investigation found PhysLib's QM tree splits across the v4.30.0 bump (#1130): the **molecular-Hamiltonian substrate** (`SpaceDQuantumSystem` + `kinetic`/`potential`/`hamiltonianOperator`, `momentumSqOperator`, `𝓜`) landed at **#1120 (`085dab8f`) on Mathlib v4.29.1 = OUR pin**, while the **spectral theory** (regularity/defect/surjectivity) landed at #1141+ on Mathlib **v4.30.0**. So: BUMP to **#1120** (085dab8f) — gains the molecular substrate, **NO Mathlib bump**, StatMech + QuantumInfo APIs unchanged #1081..#1120 (empty diffs → existing consumers unaffected); do NOT pull the spectral theory (v4.30.0 = forbidden project-wide bump). The earlier autonomous "banned" was correct ABSENT user sign-off; with sign-off + the v4.29.1-safe target, the bump is the right call. NOTE: required removing the contaminated `.lake/packages/Physlib` (untracked version-skew files) + fresh re-clone at #1120 (contamination = 0 after). **Phase-6BB still builds its OWN Kato–Rellich self-adjointness in-tree** (the 11 C-minimal lemmas) — #1120 gives the molecular OBJECT, not the spectral theory; the C-minimal work is NOT mooted, the bump complements it (molecular instantiation + W2–W4 foundation).
+- killed_by: coach ruling (goal `20260629T154332`, substrate-routing escalation) — Route B is a STANDING "no", not a user-only call
+- reason: 6BB W1's PhysLib QM/spectral substrate does not compile at our pin (SpectralTheory/Basic.lean `Or.casesOn` drift; DDimensions/Basic.lean mid-refactor missing identifiers). **Route B (bump the shared PhysLib pin) is pre-decided OFF autonomously** — forbidden by (a) the in-repo lakefile warning "Do NOT advance to a higher physlib commit", (b) the pin is shared with the parallel public-repo agent (`feedback_parallel_agent_git_hygiene`), (c) safe-by-default-on-shared-infra-doubt (`feedback_targeted_ambition_and_private_default`). It is NOT an external-value/risk-budget user call. **Route B2** (vendored `.lake` patch) is killed by the goal's "lake build green for everyone" AC (gitignored = non-reproducible). **Route = C**: build the minimal in-tree self-adjointness substrate on Mathlib `LinearPMap`, scoped to exactly what the chosen W1 architecture consumes (a defect/range self-adjointness criterion for the abstract Kato–Rellich), NOT a blanket ~1000-line spectral rebuild. If even that criterion is Mathlib-absent, it becomes ONE scoped disclosed tracked-Prop (PD-2; gates the W1 apex) — never a self-discharging/vacuous statement, never an axiom. Do NOT re-litigate B-vs-C across compactions.
+- created_ts: 2026-06-29T00:00:00Z
+
+## L2-crux-delta-phi-bounds-never-in-UcapV
+- verdict: dead-end (derivation-level, term-by-term exhaustion)
+- tier: automatic
+- authored_by: kernel-no-go (derivation verified against committed engine statements, 2026-07-03 17th push)
+- killed_by: the excision-gap constraint (L2 notebook 14th push) + the (χ)+Brick-D expansion audit (17th push)
+- reason: routing the fact-(i) CRUX (`∂(cap g fB) + cap g bF ∈ ∂C(U∩V)`) through cap-δφ expansions of
+  the fund-compat CANNOT close — every δφ-family bound lands in C(U∪V) (K-term), C(X) (η-term; the
+  fund-compat rel-homology is structurally ambient), or C(infCompactᶜ) (a₂-term via Brick C), and the
+  seam side has no matching partners, so nothing cancels into the required C(U∩V)-bound. The correct
+  direction is the coach-locked W-shape (exhibit the crux-sum as ∂ of explicitly-C(U∩V) chains:
+  W₀ = cap g (Sd^jF φ₂), W₁ = cap φ (Sd^jF φ₂), Brick-B T-bounds on aF/bF) and/or the DR's
+  "on-the-nose chain identity once both sides are cover-small" (compatible single-subdivision choices).
+  Do NOT re-attempt δφ-routing of the crux.
+- memory: (L2 notebook 17th push, Lit-Search/Phase-5qF/L2/LAB_NOTEBOOK.md)
+- created_ts: 2026-07-03T00:00:00Z

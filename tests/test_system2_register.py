@@ -199,3 +199,23 @@ def test_group_cli_reports_skipped_human_reviewed(reg, monkeypatch, capsys):
     R.main(["--register", reg, "--group"])
     out = capsys.readouterr().out
     assert "skipped 1 human-reviewed" in out and "w" in out
+
+
+def test_offschema_record_is_healed_on_load(tmp_path):
+    """A producer outside the System-2 schema (e.g. a Stage-13 paper-honesty pass) emitted a record
+    with NO `class` field and `body` instead of `why`. The register must heal it on read so no
+    consumer doing record['class'] KeyErrors and no `why` surface renders empty — without losing the
+    explicit id or the original body text."""
+    p = tmp_path / "REG.md"
+    bad = {"id": "offschema", "tier": "agent-reviewed", "status": "open",
+           "title": "off-schema record", "body": "the why text lived in body",
+           "how_to_apply": "h", "occurrences": [{"session_id": "s", "compact_event_id": None}],
+           "first_seen": "2026-06-30T00:00:00Z", "last_seen": "2026-06-30T00:00:00Z"}
+    p.write_text("## Open\n\n### offschema\n\n```json\n" + json.dumps(bad, indent=2) + "\n```\n")
+    f = next(x for x in R.load(str(p)) if x.get("id") == "offschema")
+    assert f.get("class")                              # never None -> record['class'] is safe
+    assert f.get("why") == "the why text lived in body"  # body aliased into why, text preserved
+    assert f["id"] == "offschema"                      # explicit id untouched (dedup key stable)
+    # idempotent: a well-formed record is unchanged
+    good = _f("a", "A")
+    assert R._normalize_finding(dict(good)) == good
