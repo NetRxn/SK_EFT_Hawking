@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.SingularConvexRadialMiddle
 import SKEFTHawking.SingularCSCVanishAbove
+import SKEFTHawking.SingularConvexComplementConnected
 
 /-!
 # Phase 5q.G (G1 PD-induction, base-case B3) — CSC vanishing on chart-convex opens (part 1)
@@ -199,5 +200,81 @@ theorem exists_chartConvex_stage_above {M : TopCat} [T2Space ↑M] {m : ℕ}
   · intro h; exact ⟨u, h, rfl⟩
   · rintro ⟨x, hx, hxu⟩
     rwa [Subtype.val_injective hxu] at hx
+
+/-- **X2: the degree-1 CSC cohomology of a chart-convex open vanishes** — the `k = 1` companion
+of `cscOpen_eq_zero_of_chartConvex` (whose window starts at `k = 2`): the same stage absorption
+and chart transport, ending in `relHomology_one_convexCompact` (X1) instead of `vanishMiddle`.
+The base-case input of the `(1,2)`-window `D@(1,2)` conjunct. -/
+theorem cscOpen_one_eq_zero_of_chartConvex {M : TopCat} [T2Space ↑M] {m : ℕ}
+    {U : Set ↑M} (hU : IsOpen U)
+    {V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))} (hV : IsOpen V)
+    (e : ↥U ≃ₜ ↥V)
+    {C : Set (EuclideanSpace ℝ (Fin (m + 2)))} (hCconv : Convex ℝ C) (hCopen : IsOpen C)
+    (hCne : C.Nonempty) (hCV : C ⊆ V)
+    {W : Set ↑M} (hWU : W ⊆ U)
+    (hWe : ∀ u : ↥U, (u : ↑M) ∈ W ↔ ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C))
+    (α : CompactlySupportedCohomologyOpen W 1) : α = 0 := by
+  obtain ⟨p₀, hp₀⟩ := hCne
+  refine SKEFTHawking.SingularCSCVanishAbove.cscOpen_eq_zero_of_cofinal_vanish (fun K => ?_) α
+  have hKU : (↑K.1 : Set ↑M) ⊆ U := K.2.trans hWU
+  have hKUc : IsCompact (Subtype.val ⁻¹' (↑K.1 : Set ↑M) : Set ↥U) := by
+    rw [Subtype.isCompact_iff, Subtype.image_preimage_coe,
+      Set.inter_eq_self_of_subset_right hKU]
+    exact K.1.isCompact'
+  set KE : Set (EuclideanSpace ℝ (Fin (m + 2))) :=
+    (fun x : ↥U => (e x : ↑(SingularEuclideanAcyclic.Eucl (m + 2))))
+      '' (Subtype.val ⁻¹' (↑K.1 : Set ↑M)) with hKEdef
+  have hKEc : IsCompact KE :=
+    hKUc.image (continuous_subtype_val.comp e.continuous)
+  have hKEC : KE ⊆ C := by
+    rintro _ ⟨x, hx, rfl⟩
+    exact (hWe x).mp (K.2 hx)
+  obtain ⟨C', hC'conv, hC'comp, hKEC', hC'C, hp₀C'⟩ :=
+    exists_convex_compact_between hKEc hCconv hCopen hKEC hp₀
+  set K'pre : Set ↥U := ⇑e ⁻¹' (Subtype.val ⁻¹' C') with hK'predef
+  set K'set : Set ↑M := Subtype.val '' K'pre with hK'setdef
+  have hK'pre_eq : K'pre = ⇑e.symm '' (Subtype.val ⁻¹' C' : Set ↥V) := by
+    ext x
+    constructor
+    · intro hx; exact ⟨e x, hx, e.symm_apply_apply x⟩
+    · rintro ⟨y, hy, rfl⟩
+      rw [hK'predef]
+      simp only [Set.mem_preimage, e.apply_symm_apply]
+      exact hy
+  have hC'V : C' ⊆ (V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))) := hC'C.trans hCV
+  have hK'c : IsCompact K'set := by
+    refine IsCompact.image ?_ continuous_subtype_val
+    rw [hK'pre_eq]
+    refine IsCompact.image ?_ e.symm.continuous
+    rw [Subtype.isCompact_iff, Subtype.image_preimage_coe]
+    rwa [Set.inter_eq_self_of_subset_right hC'V]
+  have hK'W : K'set ⊆ W := by
+    rintro _ ⟨x, hx, rfl⟩
+    exact (hWe x).mpr (hC'C hx)
+  have hKK' : (↑K.1 : Set ↑M) ⊆ K'set := by
+    intro z hz
+    exact ⟨⟨z, hKU hz⟩, hKEC' ⟨⟨z, hKU hz⟩, hz, rfl⟩, rfl⟩
+  have hcompat' : ∀ u : ↥U,
+      ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C') ↔ (u : ↑M) ∈ K'set := by
+    intro u
+    constructor
+    · intro h; exact ⟨u, h, rfl⟩
+    · rintro ⟨x, hx, hxu⟩
+      rwa [Subtype.val_injective hxu] at hx
+  refine ⟨⟨⟨K'set, hK'c⟩, hK'W⟩, hKK', ?_⟩
+  intro x
+  have hK'closed : IsClosed K'set := hK'c.isClosed
+  have hK'U : K'set ⊆ U := by rintro _ ⟨u, _, rfl⟩; exact u.2
+  have hHvan : ∀ β : RelativeHomology (X := M) K'setᶜ (0 + 1), β = 0 := by
+    intro β
+    set TK := (openSetExcisionEquiv hK'closed hU hK'U 0).symm.trans
+      ((chartPairEquiv_set e hcompat' (0 + 1)).trans
+        (openSetExcisionEquiv hC'comp.isClosed hV hC'V 0)) with hTKdef
+    have hβT : TK β = 0 :=
+      SKEFTHawking.SingularConvexComplementConnected.relHomology_one_convexCompact
+        hC'conv hC'comp (TK β)
+    exact (LinearEquiv.map_eq_zero_iff TK).mp hβT
+  exact relCohomology_eq_zero_of_relHomology_eq_zero K'setᶜ hHvan x
+
 
 end SKEFTHawking.SingularCSCConvexChart
