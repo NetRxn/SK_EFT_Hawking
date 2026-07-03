@@ -965,6 +965,7 @@ import SKEFTHawking.SingularPDWindow
 import SKEFTHawking.SingularConvexComplementConnected
 import SKEFTHawking.SingularPDWindow4
 import SKEFTHawking.SingularH0Finite
+import SKEFTHawking.SingularUCFinite
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
