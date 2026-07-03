@@ -122,9 +122,21 @@ retire) — no entry is immutable. Every entry carries datetime metadata.
   `abkFaithfulGrade_bijective_of_cap` / `abkFaithfulGrade_ker_eq_bot_of_cap` /
   `dataBordismFaithful_equiv_zmod16_of_cap` deliver the full-carrier `≃+ ℤ/16` — every OTHER
   Landmark field (datum, w₂-selection, revStr-nontriviality, surjectivity) now PROVEN, not disclosed.
-- **Discharge plan for the residual Prop:** formalize Pin⁺ structures on the tangent frame bundle
-  (w₂(TM) as bundle data) + the η/ABK invariant of a structure, then the AHSS/height-4 cap
-  (`col4_height_eq_four` supplies the decidable Ext-chart input). Infeasible in current Mathlib
-  (no frame bundles, no spectral sequences); revisit on substrate shift.
+- **Discharge plan for the residual Prop (two-part decomposition — corrected 2026-07-03 after
+  user review; the original "infeasible, revisit on substrate shift" framing was a
+  hypothesis-based descope and is retracted):**
+  1. **The structure-tied grade (BUILDABLE ARC — not blocked):** model a Pin⁺ structure as
+     Kirby–Taylor data the current tower already expresses — the `H¹(M;ℤ/2)`-torsor of structures
+     over the `w₂ = 0` certificate (both in-tree), with the grade DEFINED through the
+     characteristic-surface quadratic enhancement + the Brown machinery (`Z4Quadratic`, `brown`,
+     `reduce16to8`, the PD/Wu tower for characteristic-surface data). This kills the ℝP⁴ witness
+     (grade 0 becomes unpopulatable — the enhancement forces odd β) and upgrades `faithfulGenerator`
+     to a geometric class. A multi-wave arc of the same shape this project has repeatedly closed.
+  2. **The `card ≤ 16` completeness (the irreducible input):** even with tied grades, `ker = ⊥`
+     needs "η(σ)=0 ⟹ (M,σ) bounds" = ABK-completeness = the Anderson–Brown–Peterson spectral
+     fact; formalizing it means an AHSS fragment for this filtration (Mathlib has SS basics, no
+     bordism AHSS). A phase-scale program in its own right — SCOPE IT AS SUCH if attempted;
+     until then it is the single disclosed Prop, with `col4_height_eq_four` as its decidable
+     Ext-chart input.
 - **DO NOT re-attempt** the unconditional `ker = ⊥` on ANY free-grade datum; the ℝP⁴ witness kills
   every such design. Any future attempt must FIRST tie grades to structures.

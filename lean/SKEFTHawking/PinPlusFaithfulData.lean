@@ -244,7 +244,9 @@ posit and **no** `Omega4PinPlusBordism` carrier anywhere. Honest scope (mirrorin
 `[ℝP⁴]` is the Landmark-level content; what is derived posit-free here is the full order-16 of a
 genuine faithful-carrier class whose grade satisfies the GM relation against the genuine `β`. -/
 
-/-- The grade-`1` faithful generator (carried by the vacuously-certified `∅`). -/
+/-- The grade-`1` faithful generator (carried by the vacuously-certified `∅`) — a generator
+in the GROUP-THEORETIC sense (it generates `ZMod 16` under `abkFaithfulGrade`), not a canonical
+geometric Pin⁺ bordism generator; the `[ℝP⁴]`-identification is Landmark-level content. -/
 noncomputable def faithfulGenerator :
     DataBordismGrp (pinPlusFaithfulData I) :=
   DataBordismGrp.mk _ ⟨emptySM, ⟨((1 : ZMod 16), (0 : Cohomology (RPComplex 1) 1)),

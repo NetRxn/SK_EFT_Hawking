@@ -15,6 +15,11 @@ The common-origin bundle recast with **no `SmithInflow`, no `pin4_abutment`, no
 * the Guillou–Marin relation — supplied by the **genuine** `β(ℝP²) = 1` Gauss-sum;
 * the generator's full order 16 — derived from the odd-bit lemma, no posited `signature = 1`.
 
+**Scope caveat (self-contained hedging):** `faithfulGenerator` is carried by the vacuously
+certified EMPTY manifold — its order 16 is an algebraic fact about a grade-1 class pulled back
+through the ABK surjection, and the geometric identification with `[ℝP⁴]` is Landmark-level
+content, NOT proven here (see `PinPlusFaithfulData` §4).
+
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 -/
 
@@ -67,7 +72,8 @@ NO `SmithInflow` / `pin4_abutment` / `PinPlusBordismLandmark` binder and no posi
 2. the `Ω₅` `ℤ/16` — the unconditional genuine η-grade quotient;
 3. the SM anomaly facet — `16·N_f`-graded classes are grade-trivial;
 4. the Guillou–Marin relation for the generator — the genuine `β(ℝP²)`;
-5. the generator's exact order 16 — derived, not posited. -/
+5. the generator's exact order 16 — derived, not posited (the generator carried by ∅;
+   the `[ℝP⁴]`-identification is Landmark-level, not proven here). -/
 theorem sixteen_convergence_faithful_carrier (N_f : ℕ) :
     Nonempty ((DataBordismGrp.{u} (pinPlusFaithfulData I₄) ⧸ (abkFaithfulGrade (I := I₄)).ker)
         ≃+ ZMod 16) ∧
