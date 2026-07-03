@@ -339,4 +339,131 @@ noncomputable def smithCoConnecting (n : ℕ) :
             LinearMap.mem_ker.mpr (connectingCochain_mem_ker g.1 (LinearMap.mem_ker.mp g.2))⟩ :=
   Submodule.liftQ_apply _ _ _
 
+/-! ## §4. The exactness of the cohomological Smith triangle at the two `δS`-slots -/
+
+private theorem cmk_eq_zero_iff {X : TopCat} {n : ℕ} (z : LinearMap.ker (coboundaryₗ X n)) :
+    Cohomology.mk X n z = 0 ↔ (z : SingularCochain X n) ∈ coboundaryRange X n := by
+  refine (Submodule.Quotient.mk_eq_zero _).trans ?_
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply]
+
+private theorem sub_eq_add' {M : Type*} [AddCommGroup M] [Module (ZMod 2) M] (a b : M) :
+    a - b = a + b := by
+  rw [sub_eq_add_neg, neg_eq_of_add_eq_zero_left (by
+    rw [← two_smul (ZMod 2) b, show (2 : ZMod 2) = 0 by decide, zero_smul])]
+
+/-- **`δS ∘ τ^* = 0`**: the defect `u := s^#(τ^#y) + y` is `τ^#`-killed, so
+`conn(τ^#y) = plusValues(δu + δy) = δ(plusValues u)` — a coboundary. -/
+theorem smithCoConnecting_cohomologyTransfer {n : ℕ} (y : Cohomology (TopCat.of S4) n) :
+    smithCoConnecting n (cohomologyTransfer n y) = 0 := by
+  obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ y
+  show smithCoConnecting n (cohomologyTransfer n (Cohomology.mk (TopCat.of S4) n y)) = 0
+  rw [cohomologyTransfer_mk, smithCoConnecting_mk, cmk_eq_zero_iff]
+  set u := cochainSection n (cochainTransfer n y.1) + y.1 with hu
+  have hker : cochainTransfer n u = 0 := by
+    rw [hu, map_add, cochainTransfer_cochainSection, ← two_smul (ZMod 2),
+      show (2 : ZMod 2) = 0 by decide, zero_smul]
+  refine ⟨plusValues n u, ?_⟩
+  show coboundaryₗ (TopCat.of RP4) n (plusValues n u) = connectingCochain n (cochainTransfer n y.1)
+  apply cochainPullback_injective (n + 1)
+  rw [show cochainPullback mkC (n + 1) (coboundaryₗ (TopCat.of RP4) n (plusValues n u))
+      = coboundary (TopCat.of S4) n (cochainPullback mkC n (plusValues n u)) from
+      (coboundary_cochainPullback mkC n (plusValues n u)).symm,
+    cochainPullback_plusValues u hker,
+    cochainPullback_connectingCochain (cochainTransfer n y.1)
+      (cochainTransfer_mem_ker y |> LinearMap.mem_ker.mp), hu]
+  show coboundaryₗ (TopCat.of S4) n (cochainSection n (cochainTransfer n y.1) + y.1)
+    = coboundaryₗ (TopCat.of S4) n (cochainSection n (cochainTransfer n y.1))
+  rw [map_add, LinearMap.mem_ker.mp y.2, add_zero]
+
+/-- **Exactness at the `τ^*`-target `Hⁿ(ℝP⁴)`**: `ker δS = im τ^*`. Snake content: if
+`conn g = δc`, then `y' := s^#g + π^#c` is an `S⁴`-cocycle with `τ^#y' = g` on the nose. -/
+theorem exact_cohomologyTransfer_smithCoConnecting (n : ℕ) :
+    Function.Exact (cohomologyTransfer n) (smithCoConnecting n) := by
+  intro w₀
+  obtain ⟨g, rfl⟩ := Submodule.Quotient.mk_surjective _ w₀
+  constructor
+  · intro h
+    have hb : connectingCochain n g.1 ∈ coboundaryRange (TopCat.of RP4) (n + 1) := by
+      have h2 : smithCoConnecting n (Cohomology.mk (TopCat.of RP4) n g) = 0 := h
+      rw [smithCoConnecting_mk, cmk_eq_zero_iff] at h2
+      exact h2
+    obtain ⟨c, hc⟩ := hb
+    have hycyc : cochainSection n g.1 + cochainPullback mkC n c
+        ∈ LinearMap.ker (coboundaryₗ (TopCat.of S4) n) := by
+      rw [LinearMap.mem_ker, map_add,
+        show (coboundaryₗ (TopCat.of S4) n) (cochainPullback mkC n c)
+          = cochainPullback mkC (n + 1) (coboundaryₗ (TopCat.of RP4) n c) from
+          coboundary_cochainPullback mkC n c,
+        hc,
+        show (coboundaryₗ (TopCat.of S4) n) (cochainSection n g.1)
+          = cochainPullback mkC (n + 1) (connectingCochain n g.1) from
+          (cochainPullback_connectingCochain g.1 (LinearMap.mem_ker.mp g.2)).symm,
+        ← two_smul (ZMod 2), show (2 : ZMod 2) = 0 by decide, zero_smul]
+    refine ⟨Cohomology.mk (TopCat.of S4) n ⟨_, hycyc⟩, ?_⟩
+    rw [cohomologyTransfer_mk]
+    refine congrArg (Cohomology.mk (TopCat.of RP4) n) (Subtype.ext ?_)
+    show cochainTransfer n (cochainSection n g.1 + cochainPullback mkC n c) = g.1
+    rw [map_add, cochainTransfer_cochainSection, cochainTransfer_cochainPullback, add_zero]
+  · rintro ⟨y, hy⟩
+    rw [← hy]
+    exact smithCoConnecting_cohomologyTransfer y
+
+/-- **`π^* ∘ δS = 0`**: `π^#(conn g) = δ(s^#g)` is a coboundary on the nose. -/
+theorem cohomologyPullback_smithCoConnecting {n : ℕ} (w : Cohomology (TopCat.of RP4) n) :
+    cohomologyPullback mkC (n + 1) (smithCoConnecting n w) = 0 := by
+  obtain ⟨g, rfl⟩ := Submodule.Quotient.mk_surjective _ w
+  show cohomologyPullback mkC (n + 1)
+    (smithCoConnecting n (Cohomology.mk (TopCat.of RP4) n g)) = 0
+  rw [smithCoConnecting_mk, cohomologyPullback_mk, cmk_eq_zero_iff]
+  exact ⟨cochainSection n g.1,
+    (cochainPullback_connectingCochain g.1 (LinearMap.mem_ker.mp g.2)).symm⟩
+
+/-- **Exactness at the `δS`-target `Hⁿ⁺¹(ℝP⁴)`**: `ker π^* = im δS`. Snake content: if
+`π^#x = δw`, then `g := τ^#w` is a cocycle with `conn g = x + δ(plusValues(s^#(τ^#w) + w))`. -/
+theorem exact_smithCoConnecting_cohomologyPullback (n : ℕ) :
+    Function.Exact (smithCoConnecting n) (cohomologyPullback mkC (n + 1)) := by
+  intro x₀
+  obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ x₀
+  constructor
+  · intro h
+    have hb : cochainPullback mkC (n + 1) x.1 ∈ coboundaryRange (TopCat.of S4) (n + 1) := by
+      have h2 : cohomologyPullback mkC (n + 1)
+          (Cohomology.mk (TopCat.of RP4) (n + 1) x) = 0 := h
+      rw [cohomologyPullback_mk, cmk_eq_zero_iff] at h2
+      exact h2
+    obtain ⟨w, hw⟩ := hb
+    have hgcyc : cochainTransfer n w ∈ LinearMap.ker (coboundaryₗ (TopCat.of RP4) n) := by
+      rw [LinearMap.mem_ker,
+        show (coboundaryₗ (TopCat.of RP4) n) (cochainTransfer n w)
+          = coboundary (TopCat.of RP4) n (cochainTransfer n w) from rfl,
+        coboundary_cochainTransfer,
+        show coboundary (TopCat.of S4) n w = coboundaryₗ (TopCat.of S4) n w from rfl,
+        hw, cochainTransfer_cochainPullback]
+    refine ⟨Cohomology.mk (TopCat.of RP4) n ⟨_, hgcyc⟩, ?_⟩
+    rw [smithCoConnecting_mk]
+    refine (Submodule.Quotient.eq _).mpr ?_
+    simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply]
+    set u := cochainSection n (cochainTransfer n w) + w with hu
+    have hker : cochainTransfer n u = 0 := by
+      rw [hu, map_add, cochainTransfer_cochainSection, ← two_smul (ZMod 2),
+        show (2 : ZMod 2) = 0 by decide, zero_smul]
+    refine ⟨plusValues n u, ?_⟩
+    show coboundaryₗ (TopCat.of RP4) n (plusValues n u)
+      = connectingCochain n (cochainTransfer n w) - x.1
+    apply cochainPullback_injective (n + 1)
+    rw [map_sub,
+      show cochainPullback mkC (n + 1) (coboundaryₗ (TopCat.of RP4) n (plusValues n u))
+        = coboundary (TopCat.of S4) n (cochainPullback mkC n (plusValues n u)) from
+        (coboundary_cochainPullback mkC n (plusValues n u)).symm,
+      cochainPullback_plusValues u hker,
+      cochainPullback_connectingCochain (cochainTransfer n w)
+        (LinearMap.mem_ker.mp hgcyc), hu, ← hw]
+    show coboundaryₗ (TopCat.of S4) n (cochainSection n (cochainTransfer n w) + w)
+      = coboundaryₗ (TopCat.of S4) n (cochainSection n (cochainTransfer n w))
+        - coboundaryₗ (TopCat.of S4) n w
+    rw [map_add, sub_eq_add']
+  · rintro ⟨g, hg⟩
+    rw [← hg]
+    exact cohomologyPullback_smithCoConnecting g
+
 end SKEFTHawking.RP4SmithCochain
