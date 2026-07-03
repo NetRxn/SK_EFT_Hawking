@@ -17,6 +17,7 @@ import SKEFTHawking.SingularConnSquareHLHSBridge
 import SKEFTHawking.SingularConnSquarePartitionRelate
 import SKEFTHawking.SingularRcapCoverAgree
 import SKEFTHawking.SingularMvDeltaPartition
+import SKEFTHawking.SingularConnSquareLHSPairing
 import SKEFTHawking.SingularConnSquareCloseChainMap
 
 /-!
@@ -2202,6 +2203,40 @@ theorem exists_cap_induced_partition {U V S : Set ↑X} (hU : IsOpen U) (hV : Is
     refine LinearMap.mem_ker.mpr ?_
     apply chainIncl_injective (U ∪ V) m
     rw [SingularRelativeHomologyMod2.chainIncl_chainBoundary, hsum, hcycamb, map_zero]
+
+/-- **Seam-transport class invariance** (Brick A conjugated by the seam homeos — the fact-(i) LHS
+transport). The `β`-pairing of the double-pushed boundary-extract seam depends only on the HOMOLOGY
+CLASS of the partitioned cycle — for any two partitioned cycles in the same class and ANY
+relCycleLift witnesses (proof-irrelevant). `kronecker_double_pullback` moves `β` across the homeos
+(unification supplies the concrete anonymous-struct seam maps — the `hmatch_close` trick);
+`pullbackCochainMap_mem_ker` transports cocycle-ness; Brick A
+(`kronecker_boundaryExtract_class_invariant`) fires at the seam level. Lets the apex swap the opaque
+legW-partition `(zA, zB)` for the canonical cap-induced partition (Brick F) inside the goal's own
+seam term. -/
+theorem kronecker_mapChain_boundaryExtract_class_invariant {M Y' Z : TopCat}
+    (A B : Set ↑M) (n : ℕ)
+    (hcov : (⋃ W ∈ ({A, B} : Set (Set ↑M)), interior W) = Set.univ)
+    (φin : C(↑(sub (SingularExcisionIso.restr A B)), ↑Y')) (φout : C(↑Y', ↑Z))
+    (β : LinearMap.ker (coboundaryₗ Z n))
+    (zA zA' : SingularChain (sub A) (n + 1)) (zB zB' : SingularChain (sub B) (n + 1))
+    (hz_cyc : chainIncl A (n + 1) zA + chainIncl B (n + 1) zB ∈ cycles M (n + 1))
+    (hz_cyc' : chainIncl A (n + 1) zA' + chainIncl B (n + 1) zB' ∈ cycles M (n + 1))
+    (hcls : Homology.mk M (n + 1) ⟨chainIncl A (n + 1) zA + chainIncl B (n + 1) zB, hz_cyc⟩
+      = Homology.mk M (n + 1) ⟨chainIncl A (n + 1) zA' + chainIncl B (n + 1) zB', hz_cyc'⟩)
+    (w : zB ∈ SingularPairLES.relCycleLift (SingularExcisionIso.restr A B) n)
+    (w' : zB' ∈ SingularPairLES.relCycleLift (SingularExcisionIso.restr A B) n) :
+    kronecker β.1 (SingularFunctoriality.mapChain φout n (SingularFunctoriality.mapChain φin n
+        (SingularPairLES.boundaryExtract (SingularExcisionIso.restr A B) n ⟨zB, w⟩)))
+      = kronecker β.1 (SingularFunctoriality.mapChain φout n (SingularFunctoriality.mapChain φin n
+        (SingularPairLES.boundaryExtract (SingularExcisionIso.restr A B) n ⟨zB', w'⟩))) := by
+  rw [← kronecker_double_pullback φout φin n β.1, ← kronecker_double_pullback φout φin n β.1]
+  exact SingularConnSquareLHSPairing.kronecker_boundaryExtract_class_invariant A B n hcov
+    zA zA' zB zB' hz_cyc hz_cyc' hcls
+    ⟨SingularKroneckerFunctoriality.pullbackCochainMap φin n
+        (SingularKroneckerFunctoriality.pullbackCochainMap φout n β.1),
+      SingularKroneckerFunctoriality.pullbackCochainMap_mem_ker φin n
+        ⟨SingularKroneckerFunctoriality.pullbackCochainMap φout n β.1,
+          SingularKroneckerFunctoriality.pullbackCochainMap_mem_ker φout n β⟩⟩
 
 /-- **The γ-computation** (the fact-(ii) two-legs closer, EXTRACTED — single-choice form). The two
 goal legs are V-legs of cover-splits of two parents sharing ONE fundamental presentation `zsub`:
