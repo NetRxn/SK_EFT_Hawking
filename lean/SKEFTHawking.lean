@@ -983,6 +983,7 @@ import SKEFTHawking.RP4Witness
 import SKEFTHawking.SphereHomology
 import SKEFTHawking.RP4Covering
 import SKEFTHawking.StdSimplexLocPath
+import SKEFTHawking.RP4Transfer
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
