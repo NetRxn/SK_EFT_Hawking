@@ -2619,6 +2619,125 @@ theorem fund_pair_three_set_rel_comparison {W₁ W₂ S : Set ↑X} (hW₁ : IsO
     abel_nf
     simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
 
+/-- **Fact-(i) STAGE 1** (the canonical-partition package — Bricks I + F′ + H in ONE existential,
+free degrees `{k m}` so every unification is syntactic). For the `K₁`-fund of `W = U ∪ V`: a
+three-set split `Sd^μ fund = f₁ + f₂ + f₃` subordinate to `(U∩LVᶜ, V∩LUᶜ, U∩V)`, together with the
+cap-induced canonical partition `(zA, zB)` of `cap gW (Sd^μ fund)` whose legs realize
+`cap gW f₁ / cap gW (f₂+f₃)`, its cycle membership, and the class equality to `legW (mk gW)`.
+Extracted so `fact_i_discharge` consumes ONE `obtain` — the discharge's own statement elaboration
+leaves no budget for the Brick-I/F′ unifications in-body (the cumulative-heartbeat law at the
+discharge level). -/
+theorem fact_i_stage1 {U V LU LV : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
+    (hLUc : IsOpen LUᶜ) (hLVc : IsOpen LVᶜ) (hLUU : LU ⊆ U) (hLVV : LV ⊆ V)
+    {k m : ℕ}
+    (z₀ : SingularChain X (k + m + 1)) (hz₀ : chainBoundary X (k + m) z₀ = 0)
+    (K₁ : CompactsIn (U ∪ V))
+    (gW : LinearMap.ker (relCoboundaryₗ (((↑K₁.1 : Set ↑X))ᶜ) k)) :
+    ∃ (μ : ℕ) (f₁ f₂ f₃ : SingularChain X (k + m + 1)),
+      f₁ ∈ subspaceChains (U ∩ LVᶜ) (k + m + 1)
+      ∧ f₂ ∈ subspaceChains (V ∩ LUᶜ) (k + m + 1)
+      ∧ f₃ ∈ subspaceChains (U ∩ V) (k + m + 1)
+      ∧ (⇑(SingularSubdivision.singularSd X (k + m + 1)))^[μ]
+          (SingularOpenDualityCycle.fundCycleW (hU.union hV) z₀ hz₀ K₁) = f₁ + f₂ + f₃
+      ∧ ∃ (zA : SingularChain (sub (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V)))) (m + 1))
+          (zB : SingularChain (sub (Subtype.val ⁻¹' V : Set ↑(sub (U ∪ V)))) (m + 1)),
+          chainIncl (U ∪ V) (m + 1) (chainIncl _ (m + 1) zA) = cap (m := m + 1) gW.1.1 f₁
+          ∧ chainIncl (U ∪ V) (m + 1) (chainIncl _ (m + 1) zB)
+              = cap (m := m + 1) gW.1.1 (f₂ + f₃)
+          ∧ ∃ (hcyc : chainIncl _ (m + 1) zA + chainIncl _ (m + 1) zB
+                ∈ cycles (sub (U ∪ V)) (m + 1)),
+              legW (hU.union hV) z₀ hz₀ K₁ (Submodule.Quotient.mk gW)
+                = Homology.mk (sub (U ∪ V)) (m + 1) ⟨_, hcyc⟩ := by
+  have hgWc : coboundary X k gW.1.1 = 0 :=
+    (SingularConnSquareRHSPairing.relCocycle_props gW).1
+  obtain ⟨μ, f₁, f₂, f₃, hf₁, hf₂, hf₃, hIsplit⟩ :=
+    exists_iterate_three_set_split_amb hU hV hLUc hLVc hLUU hLVV
+      (SingularOpenDualityCycle.fundCycleW (hU.union hV) z₀ hz₀ K₁)
+      (SingularOpenDualityCycle.fundCycleW_mem_W (hU.union hV) z₀ hz₀ K₁)
+  have hsplit' : (⇑(SingularSubdivision.singularSd X (k + m + 1)))^[μ]
+      (SingularOpenDualityCycle.fundCycleW (hU.union hV) z₀ hz₀ K₁) = f₁ + (f₂ + f₃) :=
+    hIsplit.trans (add_assoc f₁ f₂ f₃)
+  obtain ⟨zA, zB, hzA, hzB, hcyc⟩ :=
+    cap_induced_partition_of_split (U := U) (V := V) (k := k) (m := m) gW.1.1 hgWc gW.1.2
+      (SingularOpenDualityCycle.fundCycleW (hU.union hV) z₀ hz₀ K₁) μ
+      (SingularOpenDualityCycle.fundCycleW_boundary (hU.union hV) z₀ hz₀ K₁)
+      f₁ (f₂ + f₃)
+      (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left _ hf₁)
+      (Submodule.add_mem _
+        (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left _ hf₂)
+        (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_right _ hf₃))
+      hsplit'
+  refine ⟨μ, f₁, f₂, f₃, hf₁, hf₂, hf₃, hIsplit, zA, zB, hzA, hzB, hcyc, ?_⟩
+  exact legW_iterate_cap_class_eq (hU.union hV) z₀ hz₀ K₁ gW μ _ hcyc
+    (by rw [map_add, hzA, hzB, hsplit']; simp only [map_add])
+
+/-- **SUN FACT (i), discharged** (the fact-(i) closer — 18th-push steps 0–7 assembled over the
+13-brick substrate; free variables throughout, applied at the apex with ONE `exact`). The seam
+pairing of the GIVEN legW-partition equals the pairing against the cap of the fine V-leg:
+(0) three-set split (Brick I) of the K₁-fund; (1–2) canonical cap-induced partition (Brick F′) +
+class-equality (Bricks B/H via `legW_iterate_cap_class_eq`) + seam transport (Brick-A-conjugated);
+(3) canonical-seam evaluation (`chainIncl_seam_boundaryExtract`); (4–5) the V-kills + Leibniz + the
+(χ)-W-form; (6) rel-comparison (Brick K) → double-support kill (Brick J); (7) boundaries-membership
++ β-kill. STATEMENT DRAFT — proof to be filled per the 21st-push checklist. -/
+theorem fact_i_discharge {U V LU LV : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
+    (hLUc : IsOpen LUᶜ) (hLVc : IsOpen LVᶜ) (hLUU : LU ⊆ U) (hLVV : LV ⊆ V)
+    {N p : ℕ}
+    (g : LinearMap.ker (relCoboundaryₗ (LUᶜ ∩ LVᶜ) (N + 1)))
+    (z₀ : SingularChain X (N + 1 + (p + 1) + 1))
+    (hz₀ : chainBoundary X (N + 1 + (p + 1)) z₀ = 0)
+    (K₁ : CompactsIn (U ∪ V)) (K₂ : CompactsIn (U ∩ V))
+    (gW : LinearMap.ker (relCoboundaryₗ ((↑K₁.1 : Set ↑X))ᶜ (N + 1)))
+    (hgg : g.1.1 = gW.1.1)
+    (hK₁ : ((↑K₁.1 : Set ↑X))ᶜ = LUᶜ ∩ LVᶜ)
+    (hK₂ : ((↑K₂.1 : Set ↑X))ᶜ = LUᶜ ∪ LVᶜ)
+    (hcov : (⋃ W ∈ ({(Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))), Subtype.val ⁻¹' V} :
+        Set (Set ↑(sub (U ∪ V)))), interior W) = Set.univ)
+    (zc0 : ↥(cycles (sub (U ∪ V)) (p + 1 + 1)))
+    (hzc0 : Homology.mk (sub (U ∪ V)) (p + 1 + 1) zc0
+      = legW (k := N + 1) (m := p + 1) (hU.union hV) z₀ hz₀ K₁ (Submodule.Quotient.mk gW))
+    (zA : SingularChain (sub (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V)))) (p + 1 + 1))
+    (zB : SingularChain (sub (Subtype.val ⁻¹' V : Set ↑(sub (U ∪ V)))) (p + 1 + 1))
+    (hcyc : chainIncl _ (p + 1 + 1) zA + chainIncl _ (p + 1 + 1) zB
+      ∈ cycles (sub (U ∪ V)) (p + 1 + 1))
+    (hpart : Homology.mk (sub (U ∪ V)) (p + 1 + 1) zc0
+      = Homology.mk (sub (U ∪ V)) (p + 1 + 1) ⟨_, hcyc⟩)
+    (hzBmem : zB ∈ SingularPairLES.relCycleLift
+      (SingularExcisionIso.restr (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V)) (p + 1))
+    {Y' : TopCat}
+    (φin : C(↑(sub (SingularExcisionIso.restr (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V)))
+      (Subtype.val ⁻¹' V))), ↑Y'))
+    (φout : C(↑Y', ↑(sub (U ∩ V))))
+    (hseam : ∀ (w : SingularPairLES.relCycleLift
+        (SingularExcisionIso.restr (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V)) (p + 1)),
+      chainIncl (U ∩ V) (p + 1) (SingularFunctoriality.mapChain φout (p + 1)
+          (SingularFunctoriality.mapChain φin (p + 1)
+            (SingularPairLES.boundaryExtract
+              (SingularExcisionIso.restr (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V)) (p + 1) w)))
+        = chainIncl (U ∪ V) (p + 1) (chainBoundary (sub (U ∪ V)) (p + 1)
+            (chainIncl (Subtype.val ⁻¹' V) (p + 1 + 1) (w : SingularChain _ (p + 1 + 1)))))
+    (jF : ℕ)
+    (aF : SingularChain (sub (LUᶜ ∩ (U ∩ V))) (N + 1 + (p + 1)))
+    (bF : SingularChain (sub (LVᶜ ∩ (U ∩ V))) (N + 1 + (p + 1)))
+    (hFsplit : chainBoundary X (N + 1 + (p + 1))
+        ((⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1) + 1)))^[jF]
+          (SingularOpenDualityCycle.fundCycleW (hU.inter hV) z₀ hz₀ K₂))
+      = chainIncl _ (N + 1 + (p + 1)) aF + chainIncl _ (N + 1 + (p + 1)) bF)
+    (hbFmem : chainIncl _ (N + 1 + (p + 1)) bF ∈ subspaceChains (U ∩ V) (N + 1 + (p + 1)))
+    (β : LinearMap.ker (coboundaryₗ (sub (U ∩ V)) (p + 1))) :
+    kronecker β.1 (SingularFunctoriality.mapChain φout (p + 1)
+        (SingularFunctoriality.mapChain φin (p + 1)
+          (SingularPairLES.boundaryExtract
+            (SingularExcisionIso.restr (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V)) (p + 1)
+            ⟨zB, hzBmem⟩)))
+      = kronecker β.1 (cap (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 1) g.1.1)
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1 + (p + 1))).symm
+            ⟨_, hbFmem⟩)) := by
+  -- (0–2) STAGE 1: three-set split + canonical partition + class equality (ONE obtain)
+  obtain ⟨μ, f₁, f₂, f₃, hf₁, hf₂, hf₃, hIsplit, zAc, zBc, hzAc, hzBc, hcycc, hcls⟩ :=
+    fact_i_stage1 (k := N + 1) (m := p + 1) hU hV hLUc hLVc hLUU hLVV z₀ hz₀ K₁ gW
+  sorry
+
+
 /-- **The γ-computation** (the fact-(ii) two-legs closer, EXTRACTED — single-choice form). The two
 goal legs are V-legs of cover-splits of two parents sharing ONE fundamental presentation `zsub`:
 the pd-side parent `Camb` (whose un-subdivided boundary is EXACTLY `chainIncl (rcap β ∂zsub)` —
