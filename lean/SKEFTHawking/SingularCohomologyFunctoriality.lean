@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.SingularCohomologyMod2
 import SKEFTHawking.SingularFunctoriality
+import SKEFTHawking.SingularCupH13
 
 /-!
 # Phase 5q.G (G3 F1) — contravariant functoriality of singular `ℤ/2` cohomology
@@ -136,5 +137,60 @@ noncomputable def cohomologyHomeoEquiv {X Y : TopCat} (e : ↑X ≃ₜ ↑Y) (n 
             (⟨e.symm, e.symm.continuous⟩ : C(↑Y, ↑X)) = ContinuousMap.id ↑Y
           from ContinuousMap.ext (fun y => e.apply_symm_apply y),
         cohomologyPullback_id])
+
+/-! ## F2 — cup-pullback multiplicativity (Alexander–Whitney naturality) -/
+
+/-- The front face commutes with the simplex pushforward. -/
+theorem frontFace_mapSimplex {X Y : TopCat} {p q : ℕ} (φ : C(↑X, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (p + q)))) :
+    frontFace (mapSimplex φ σ) = mapSimplex φ (frontFace (p := p) (q := q) σ) := by
+  apply (Y.toSSetObjEquiv (op (SimplexCategory.mk p))).injective
+  simp only [mapSimplex, Equiv.apply_symm_apply]
+  rfl
+
+/-- The back face commutes with the simplex pushforward. -/
+theorem backFace_mapSimplex {X Y : TopCat} {p q : ℕ} (φ : C(↑X, ↑Y))
+    (σ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (p + q)))) :
+    backFace (mapSimplex φ σ) = mapSimplex φ (backFace (p := p) (q := q) σ) := by
+  apply (Y.toSSetObjEquiv (op (SimplexCategory.mk q))).injective
+  simp only [mapSimplex, Equiv.apply_symm_apply]
+  rfl
+
+/-- **Cup-pullback multiplicativity** (cochain level): `φ*(f ⌣ g) = φ*f ⌣ φ*g`. -/
+theorem cochainPullback_cup {X Y : TopCat} (φ : C(↑X, ↑Y)) {p q : ℕ}
+    (f : SingularCochain Y p) (g : SingularCochain Y q) :
+    cochainPullback φ (p + q) (cup f g)
+      = cup (cochainPullback φ p f) (cochainPullback φ q g) := by
+  funext σ
+  show cup f g (mapSimplex φ σ)
+    = f (mapSimplex φ (frontFace σ)) * g (mapSimplex φ (backFace σ))
+  rw [cup_apply, frontFace_mapSimplex, backFace_mapSimplex]
+
+/-- **`cupH24`-pullback compatibility**: `φ*(a ∪ b) = φ*a ∪ φ*b` on `H² × H² → H⁴`. -/
+theorem cohomologyPullback_cupH24 {X Y : TopCat} (φ : C(↑X, ↑Y))
+    (a : Cohomology Y 2) (b : Cohomology Y 2) :
+    cohomologyPullback φ 4 (cupH24 a b)
+      = cupH24 (cohomologyPullback φ 2 a) (cohomologyPullback φ 2 b) := by
+  obtain ⟨fa, rfl⟩ := Submodule.Quotient.mk_surjective _ a
+  obtain ⟨fb, rfl⟩ := Submodule.Quotient.mk_surjective _ b
+  exact congrArg Submodule.Quotient.mk (Subtype.ext (cochainPullback_cup φ fa.1 fb.1))
+
+/-- **`cupH13`-pullback compatibility**: `φ*(a ∪ b) = φ*a ∪ φ*b` on `H¹ × H³ → H⁴`. -/
+theorem cohomologyPullback_cupH13 {X Y : TopCat} (φ : C(↑X, ↑Y))
+    (a : Cohomology Y 1) (b : Cohomology Y 3) :
+    cohomologyPullback φ 4 (cupH13 a b)
+      = cupH13 (cohomologyPullback φ 1 a) (cohomologyPullback φ 3 b) := by
+  obtain ⟨fa, rfl⟩ := Submodule.Quotient.mk_surjective _ a
+  obtain ⟨fb, rfl⟩ := Submodule.Quotient.mk_surjective _ b
+  exact congrArg Submodule.Quotient.mk (Subtype.ext (cochainPullback_cup φ fa.1 fb.1))
+
+/-- **`cupH`-pullback compatibility**: `φ*(a ∪ b) = φ*a ∪ φ*b` on `H¹ × H¹ → H²`. -/
+theorem cohomologyPullback_cupH {X Y : TopCat} (φ : C(↑X, ↑Y))
+    (a : Cohomology Y 1) (b : Cohomology Y 1) :
+    cohomologyPullback φ 2 (cupH a b)
+      = cupH (cohomologyPullback φ 1 a) (cohomologyPullback φ 1 b) := by
+  obtain ⟨fa, rfl⟩ := Submodule.Quotient.mk_surjective _ a
+  obtain ⟨fb, rfl⟩ := Submodule.Quotient.mk_surjective _ b
+  exact congrArg Submodule.Quotient.mk (Subtype.ext (cochainPullback_cup φ fa.1 fb.1))
 
 end SKEFTHawking.SingularCohomologyFunctoriality
