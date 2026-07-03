@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.SingularConnSquareCloseNCBot
 import SKEFTHawking.SingularOpenDualityBot
+import SKEFTHawking.SingularConnSquareCloseChainMapBot
 
 /-!
 # Phase 5q.G (G1 PD-induction, brick B3a) — the bottom pairing-mirror pack
@@ -31,7 +32,13 @@ open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
   SKEFTHawking.SingularRightCapBoundary SKEFTHawking.SingularRelativeCap
   SKEFTHawking.SingularExcisionIso SKEFTHawking.SingularLocalDualityKBot
   SKEFTHawking.SingularConnSquareMatchLHS SKEFTHawking.SingularConnSquareCloseNC
-  SKEFTHawking.SingularMayerVietoris
+  SKEFTHawking.SingularMayerVietoris SKEFTHawking.SingularOpenDualityBot
+  SKEFTHawking.SingularConnSquareCloseNCBot SKEFTHawking.SingularConnSquareCloseChainMapBot
+  SKEFTHawking.SingularOpenDuality SKEFTHawking.SingularOpenDualityCycle
+  SKEFTHawking.SingularCompactsInOpen SKEFTHawking.SingularCompactlySupportedOpen
+  SKEFTHawking.SingularCSCMayerVietorisConnecting SKEFTHawking.SingularCohomologySnake
+  SKEFTHawking.SingularFunctoriality SKEFTHawking.SingularKroneckerFunctoriality
+  SKEFTHawking.SingularPairLES SKEFTHawking.SingularMayerVietorisLES
 
 namespace SKEFTHawking.SingularConnSquareCloseNCBotApex
 
@@ -381,5 +388,227 @@ theorem fact_ii_two_legs_discharge₀ {A B W : Set ↑X} (hA : IsOpen A) (hB : I
     (congrArg (kronecker g.1.1)
       (SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (S := B ∩ W) (n + 1)
         ⟨_, hmem3⟩).symm)
+
+/-! ## B3c — the bottom apex assembly -/
+
+/-- **The per-`K` BOTTOM connecting square** (the apex₀): the MAIN-family `legW (m := 0)` H₁-leg
+and the ₀-family `openDuality₀ ∘ legδ` H₀-leg close the connecting square at homology degree `0`.
+Mirror of the L2 apex `subHomConnecting_openDuality` body over B1c's `of_chainMatch₀` reducer,
+with the B3a/B3b ₀-mirrors at the five `(deg+1)`-floored sites, `fact_i_discharge₀` (B2) and
+`fact_ii_two_legs_discharge₀` (B3b) discharging the two Sun facts. Cast-free at the bottom. -/
+theorem subHomConnecting_openDuality₀ {N : ℕ} {U V : Set ↑X}
+    (hU : IsOpen U) (hV : IsOpen V)
+    (z₀ : SingularChain X (N + 1 + 0 + 1)) (hz₀ : chainBoundary X (N + 1 + 0) z₀ = 0)
+    (K : SingularCompactsInOpen.CompactsIn (U ∪ V)) (g : cohomGW (U ∪ V) (N + 1) K) :
+    SKEFTHawking.SingularSubHomologyMV.subHomConnecting U V hU hV 0
+        (SKEFTHawking.SingularOpenDuality.legW (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀ K g)
+      = openDuality₀ (k := N + 1) (hU.inter hV) z₀ hz₀
+          (SKEFTHawking.SingularCSCMayerVietorisConnecting.legδ U V hU hV N K g) := by
+  apply subHomConnecting_openDuality₀_of_chainMatch hU hV z₀ hz₀ K g
+  intro g_rep zc0 hzc0 zA zB hcyc hpart a'rep hzBmem σR_rep hσR
+  -- ▶ the hmatch₀-close, mirroring the L2 apex body (NC:3554+) at the bottom degrees.
+  refine hmatch_close _ _ 0 a'rep _ _ ?_
+  refine factB_transport _ _ _ _ ?_
+  have hKeq : ((↑K.1 : Set ↑X))ᶜ
+      = (↑(legSplitU U V hU hV K).1 : Set ↑X)ᶜ ∩ (↑(legSplitV U V hU hV K).1 : Set ↑X)ᶜ := by
+    rw [legSplit_cover U V hU hV K, Set.compl_union]
+  -- Bottom simplification vs the apex: the mem_boundaries_of_mk_eq / mk_eq_of_mem_boundaries
+  -- round-trip is a no-op detour, and cycle-ness at degree 0 is free (`cycles _ 0 = ⊤`) — go
+  -- straight to Kronecker non-degeneracy in `sub (U∩V)`.
+  refine mem_boundaries_of_kroneckerH_zero_space _ Submodule.mem_top ?_
+  intro β
+  have hfundmem2 : fundCycleW₀ (hU.inter hV) z₀ hz₀
+      (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K))
+      ∈ subspaceChains (U ∩ V) (N + 1 + 1) :=
+    fundCycleW₀_mem_W (hU.inter hV) z₀ hz₀ _
+  have hpd_cap : SKEFTHawking.SingularLocalDualityKBot.pullbackDualityₗ₀
+      ((↑(infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)).1 : Set ↑X)ᶜ)
+      (U ∩ V)
+      (fundCycleW₀ (hU.inter hV) z₀ hz₀
+        (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)))
+      hfundmem2 σR_rep
+      = cap (k := N + 2) (m := 0)
+          (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 2) σR_rep.1.1)
+          ((subspaceChainsEquiv (U ∩ V) (N + 1 + 1)).symm
+            ⟨fundCycleW₀ (hU.inter hV) z₀ hz₀
+              (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)),
+              hfundmem2⟩) :=
+    pullbackDualityₗ₀_eq_subcap _ hfundmem2 σR_rep
+  have hpd_kronecker : kronecker β.1
+      (SKEFTHawking.SingularLocalDualityKBot.pullbackDualityₗ₀
+        ((↑(infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)).1 : Set ↑X)ᶜ)
+        (U ∩ V)
+        (fundCycleW₀ (hU.inter hV) z₀ hz₀
+          (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)))
+        hfundmem2 σR_rep)
+      = kronecker (cup (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 2) σR_rep.1.1) β.1)
+          ((subspaceChainsEquiv (U ∩ V) (N + 1 + 1)).symm
+            ⟨fundCycleW₀ (hU.inter hV) z₀ hz₀
+              (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)),
+              hfundmem2⟩) := by
+    rw [hpd_cap, SingularCapChainIncl.kronecker_cup_cap]
+    rfl
+  rw [kronecker_add_right, hpd_kronecker]
+  erw [← kronecker_double_pullback]
+  -- pd-leg step 1 (cup → ambient σR pairing) at (k := N+2, l := 0):
+  erw [← SingularConnSquareClose.kronecker_chainIncl_rcap_eq_cup]
+  -- pd-leg step 2 (chain pairing → relKroneckerH class pairing) — the ₀-bridge (B3a-⑤):
+  erw [← relKroneckerH_chainIncl_rcap_eq_kronecker₀ _ _ σR_rep β
+    (chainIncl_rcap_mem_relCycles₀ _ _ (fundCycleW₀_boundary (hU.inter hV) z₀ hz₀ _) β)]
+  -- pd-leg step 3: expose the connecting class (mk-convert, then hσR).
+  rw [← show (Submodule.Quotient.mk σR_rep : RelativeCohomology _ (N + 1 + 1))
+      = RelativeCohomology.mk _ (N + 1 + 1) σR_rep from rfl]
+  erw [hσR]
+  -- pd-leg step 4: peel the OUTER relCohomSetCongr (relIncl-refl shape + collapse).
+  rw [← SingularTwoCoverBridge.relIncl_refl_apply (Set.Subset.refl _)
+    (RelativeHomology.mk _ (N + 1 + 1) _)]
+  erw [SingularTwoCoverBridge.relKroneckerH_relCohomSetCongr_relIncl_collapse]
+  -- pd-leg step 5: mk-push through the MvConnecting's cohomology argument.
+  rw [show (Submodule.Quotient.mk g_rep : RelativeCohomology _ (N + 1))
+      = RelativeCohomology.mk _ (N + 1) g_rep from rfl,
+    SingularRelCohomSetCongrMk.relCohomSetCongr_mk,
+    SingularRelativeCohomologyRestrict.relCohomRestrict_mk]
+  -- pd-leg step 6: push the collapse's `▸` through the RelativeHomology.mk, landing over the
+  -- union set; the relCycles witness comes from the fund₀ boundary in cover form.
+  have hfund₀bdcov : chainBoundary X (N + 1)
+      (fundCycleW₀ (hU.inter hV) z₀ hz₀
+        (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)))
+      ∈ subspaceChains ((↑(legSplitU U V hU hV K).1 : Set ↑X)ᶜ
+          ∪ (↑(legSplitV U V hU hV K).1 : Set ↑X)ᶜ) (N + 1) := by
+    have h := fundCycleW₀_boundary (hU.inter hV) z₀ hz₀
+      (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K))
+    rwa [infCompact_compl_legSplit hU hV K] at h
+  rw [relHomology_mk_setCongr_transport ((infCompact_compl_legSplit hU hV K).symm) _ _
+    (chainIncl_rcap_mem_relCycles₀ _ _ hfund₀bdcov β)]
+  -- pd-leg step 7 (whnf dodge + the partition-exposing reduce):
+  generalize hRRdef :
+    SingularRelativeCohomologyRestrict.relCocycleRestrict (Set.Subset.refl _) (N + 1) = RR
+  obtain ⟨jP, uP, wP, hpair2, hsplit2⟩ :=
+    SingularConnSquareRHSPairing.rhs_pairing_reduce_partition _ _
+      (legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+      (legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+      (RR (hKeq ▸ g_rep))
+      (chainIncl (U ∩ V) (N + 1 + 1) (SingularCapChainIncl.rcap (k := N + 1 + 1) β.1
+        ((subspaceChainsEquiv (U ∩ V) (N + 1 + 1)).symm
+          ⟨fundCycleW₀ (hU.inter hV) z₀ hz₀
+            (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)),
+            hfundmem2⟩)))
+      (chainIncl_rcap_mem_relCycles₀ _ _ hfund₀bdcov β)
+  erw [hpair2]
+  -- pd-leg step 8: δ↔∂ adjunction + U-leg drop + cochainSplit↦ω swap.
+  erw [kronecker_coboundary_cochainSplit_eq _ _ (RR (hKeq ▸ g_rep)) _ uP wP hsplit2]
+  -- pd-leg step 9: realize the V-leg ON sub(U∩V) (support-preserving repartition).
+  have hMem0 : chainIncl _ (N + 1) uP + chainIncl _ (N + 1) wP
+      ∈ subspaceChains (U ∩ V) (N + 1) :=
+    hsplit2 ▸ chainBoundary_singularSd_iterate_chainIncl_mem (T := U ∩ V) jP _
+  obtain ⟨aR, bR, hbRchain, hbR⟩ :=
+    rhs_realize_V_leg (RR (hKeq ▸ g_rep)).1.1 (RR (hKeq ▸ g_rep)).1.2 uP wP hMem0
+  have hsum : kronecker (cochainSplit
+        (↑(legSplitU U V hU hV K).1 : Set ↑X)ᶜ (N + 1) (RR (hKeq ▸ g_rep)).1.1)
+        (chainIncl _ (N + 1) uP + chainIncl _ (N + 1) wP)
+      = kronecker (cochainSplit
+        (↑(legSplitU U V hU hV K).1 : Set ↑X)ᶜ (N + 1) (RR (hKeq ▸ g_rep)).1.1)
+        (chainIncl _ (N + 1) wP) := by
+    rw [kronecker_add_right]
+    erw [(mem_relCochains _ _ _).1 (cochainSplit_mem_relCochains _ _ _) _ ⟨uP, rfl⟩, zero_add]
+  erw [← kronecker_cochainSplit_V_leg_eq
+    (↑(legSplitU U V hU hV K).1 : Set ↑X)ᶜ _ (RR (hKeq ▸ g_rep)) wP, ← hsum, hbR]
+  have hbmem : chainIncl _ (N + 1) bR ∈ subspaceChains (U ∩ V) (N + 1) :=
+    subspaceChains_mono Set.inter_subset_right (N + 1) ⟨bR, rfl⟩
+  erw [show (chainIncl _ (N + 1) bR : SingularChain X (N + 1)) = chainIncl (U ∩ V) (N + 1)
+      ((subspaceChainsEquiv (U ∩ V) (N + 1)).symm ⟨_, hbmem⟩) from
+    (chainIncl_subspaceChainsEquiv_symm _ _ ⟨_, hbmem⟩).symm,
+    kronecker_chainIncl_eq_pullbackCochain]
+  -- FINAL MATCH SETUP: un-peel the seam, ℤ/2-convert to the pairing-match shape.
+  erw [kronecker_double_pullback]
+  rw [add_eq_zero_iff_eq_neg, CharTwo.neg_eq]
+  -- THE SHARED cover-V-projection of the ONE fund choice, split at the RAW (N+1,0)-spelling
+  -- (h := rfl — cast-free bottom); the fund₀-side spellings bridge by defeq ascription.
+  obtain ⟨jF, aF, bF, hFsplit⟩ := exists_cast_cover_V_projection
+    (legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+    (legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+    (rfl : N + 1 + 0 = N + 1 + 0)
+    (fundCycleW (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀
+      (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)))
+    (fundCycleW_mem_W (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀ _)
+    (by
+      have h := fundCycleW_boundary (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀
+        (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K))
+      rwa [infCompact_compl_legSplit hU hV K] at h)
+  rw [show (cast (congrArg (SingularChain X) (congrArg (· + 1)
+      (rfl : N + 1 + 0 = N + 1 + 0)))
+      (fundCycleW (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀
+        (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K))))
+      = fundCycleW (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀
+        (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)) from rfl] at hFsplit
+  have hbFmem : chainIncl _ (N + 1 + 0) bF ∈ subspaceChains (U ∩ V) (N + 1 + 0) :=
+    subspaceChains_mono Set.inter_subset_right (N + 1 + 0) ⟨bF, rfl⟩
+  -- The pairing-relaxed joint match at the bottom (B3a-③); the TWO SUN FACTS remain.
+  refine joint_cap_rcap_match_pairing₀ _ _
+    ((subspaceChainsEquiv (U ∩ V) (N + 1 + 0)).symm ⟨_, hbFmem⟩) _ _ ?_ ?_
+  -- SUN FACT (i) — fact_i_discharge₀ (B2), fed the RAW (N+1,0)-instance rel-witnesses (no casts).
+  · obtain ⟨η₂, a₂, heq₂, ha₂⟩ := fundCycleW_chain_rel (k := N + 1) (m := 0) (hU.inter hV)
+      z₀ hz₀ (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K))
+    rw [infCompact_compl_legSplit hU hV K] at ha₂
+    have hgg : (RR (hKeq ▸ g_rep)).1.1 = g_rep.1.1 := by
+      rw [← hRRdef]
+      exact ker_relCoboundary_cast_coe hKeq g_rep
+    have hF₂bd : chainBoundary X (N + 1 + 0)
+        (fundCycleW (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀
+          (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)))
+        ∈ subspaceChains ((↑(legSplitU U V hU hV K).1 : Set ↑X)ᶜ
+            ∪ (↑(legSplitV U V hU hV K).1 : Set ↑X)ᶜ) (N + 1 + 0) := by
+      have h := fundCycleW_boundary (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀
+        (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K))
+      rwa [infCompact_compl_legSplit hU hV K] at h
+    exact fact_i_discharge₀ hU hV
+      (legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+      (legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+      (legSplitU U V hU hV K).2
+      (legSplitV U V hU hV K).2
+      (RR (hKeq ▸ g_rep)) z₀ hz₀ K g_rep hgg hKeq
+      (SingularSubHomologyMV.cover_preimage U V hU hV)
+      zc0 hzc0 zA zB hcyc hpart hzBmem _ _
+      (chainIncl_seam_boundaryExtract (fun x hx => Or.inl hx.1) (fun q => Iff.rfl))
+      _ (fundCycleW_mem_W (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀ _)
+      η₂ a₂ heq₂ ha₂ hF₂bd
+      jF aF bF hFsplit hbFmem β
+  -- SUN FACT (ii) — fact_ii_two_legs_discharge₀ (B3b) via the pullback-legs assembly.
+  · have e₅ : chainIncl (U ∩ V) (N + 1 + 0)
+        ((subspaceChainsEquiv (U ∩ V) (N + 1 + 0)).symm ⟨_, hbFmem⟩)
+        = chainIncl _ (N + 1 + 0) bF :=
+      chainIncl_subspaceChainsEquiv_symm (S := U ∩ V) (N + 1 + 0) ⟨_, hbFmem⟩
+    have hmem3 := chainIncl_rcap_subspaceChains β.1 _
+      (e₅.symm ▸ (⟨bF, rfl⟩ : chainIncl _ (N + 1 + 0) bF
+        ∈ subspaceChains _ (N + 1 + 0)))
+    refine pullback_pairing_legs_assemble (RR (hKeq ▸ g_rep)).1.1 β.1 bR hbmem bF hbFmem
+      hmem3 ?_
+    have hA2 : IsOpen ((↑(legSplitU U V hU hV K).1 : Set ↑X)ᶜ) :=
+      (legSplitU U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+    have hB2 : IsOpen ((↑(legSplitV U V hU hV K).1 : Set ↑X)ᶜ) :=
+      (legSplitV U V hU hV K).1.isCompact'.isClosed.isOpen_compl
+    have hP2 := hsplit2.trans hbRchain
+    -- Bridge the raw (N+1,0)-spelled split objects to fact_ii₀'s fund₀/(N+1)-spellings by
+    -- defeq ascription (fundCycleW₀ = castChain rfl (fundCycleW (N+1,0)) is rfl-collapsible),
+    -- so the big application unifies syntactically (no castChain-delta inside the unifier).
+    have hfund₀eq : fundCycleW₀ (hU.inter hV) z₀ hz₀
+        (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K))
+        = fundCycleW (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀
+            (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K)) := by
+      rw [fundCycleW₀, SingularOpenDualityMVConnSquare.castChain_eq]
+    rw [← hfund₀eq] at hFsplit
+    have hQsplit₀ : chainBoundary X (N + 1)
+        ((⇑(SingularSubdivision.singularSd X (N + 1 + 1)))^[jF]
+          (fundCycleW₀ (hU.inter hV) z₀ hz₀
+            (infCompact U V (legSplitU U V hU hV K) (legSplitV U V hU hV K))))
+        = chainIncl _ (N + 1) aF + chainIncl _ (N + 1) bF := hFsplit
+    have hbFmem₀ : chainIncl _ (N + 1) bF ∈ subspaceChains (U ∩ V) (N + 1) := hbFmem
+    have hmem3₀ : chainIncl (U ∩ V) (N + 1) (SingularCapChainIncl.rcap (k := N + 1) β.1
+        ((subspaceChainsEquiv (U ∩ V) (N + 1)).symm ⟨_, hbFmem₀⟩))
+        ∈ subspaceChains ((↑(legSplitV U V hU hV K).1 : Set ↑X)ᶜ ∩ (U ∩ V)) (N + 1) := hmem3
+    exact fact_ii_two_legs_discharge₀ (W := U ∩ V) (n := N) hA2 hB2
+      (RR (hKeq ▸ g_rep)) β.1 (LinearMap.mem_ker.mp β.2)
+      hfundmem2 hfund₀bdcov
+      jP hP2 jF hQsplit₀ hbFmem₀ hmem3₀
 
 end SKEFTHawking.SingularConnSquareCloseNCBotApex
