@@ -181,4 +181,92 @@ theorem pdWindowP_union_charted {M : Type} [TopologicalSpace M] [T2Space M]
     hPU hPV hPI
 
 
+
+/-- `P`-transport across a set identity (the `IsOpen` proofs are irrelevant). -/
+theorem pdWindowP_congr {M : TopCat} [T2Space ↑M]
+    (zM : SingularChain M (1 + 0 + 3))
+    (hzM : chainBoundary M (1 + 0 + 2) zM = 0)
+    {W W' : Set ↑M} (h : W = W') (hW : IsOpen W) (hW' : IsOpen W')
+    (hP : pdWindowP zM hzM W hW) : pdWindowP zM hzM W' hW' := by
+  subst h
+  exact hP
+
+open SKEFTHawking.SingularChartBridge in
+/-- **(A4b) Within-chart finite unions**: `P(⋃ i ∈ s, Wf i)` for a finite family of opens in a
+COMMON chart, each carried to a convex (possibly empty) open image. Strong double induction:
+`Finset.induction_on` with the family ∀-generalized — the MV intersection
+`Wf j ∩ ⋃ᵢ Wf i = ⋃ᵢ (Wf j ∩ Wf i)` is again an `s`-indexed such family (convex ∩ convex);
+empty images collapse to `P(∅)`, nonempty ones are B6. -/
+theorem pdWindowP_finset_biUnion {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    {U : Set ↑(TopCat.of M)} {V : Set ↑(SingularEuclideanAcyclic.Eucl (2 + 2))}
+    (hU : IsOpen U) (hV : IsOpen V) (e : ↥U ≃ₜ ↥V)
+    (zM : SingularChain (TopCat.of M) (1 + 0 + 3))
+    (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0)
+    (hcyc : castChain (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM
+      ∈ cycles (TopCat.of M) (2 + 2))
+    (hloc : ∀ x : M, SKEFTHawking.SingularFundamentalClass.restrictHomologyToPoint
+        (X := TopCat.of M) x (2 + 2) (Homology.mk (TopCat.of M) (2 + 2)
+          ⟨castChain (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM, hcyc⟩)
+      = (manifoldLocalIso x).symm 1)
+    {ι : Type*} [DecidableEq ι] (s : Finset ι) :
+    ∀ (Wf : ι → Set ↑(TopCat.of M)) (Cf : ι → Set (EuclideanSpace ℝ (Fin (2 + 2)))),
+      (∀ i ∈ s, IsOpen (Wf i)) →
+      (∀ i ∈ s, Convex ℝ (Cf i)) →
+      (∀ i ∈ s, IsOpen (Cf i)) →
+      (∀ i ∈ s, Cf i ⊆ V) →
+      (∀ i ∈ s, Wf i ⊆ U) →
+      (∀ i ∈ s, ∀ u : ↥U, (u : M) ∈ Wf i ↔
+        ((e u : ↑(SingularEuclideanAcyclic.Eucl (2 + 2))) ∈ Cf i)) →
+      ∀ hop : IsOpen (⋃ i ∈ s, Wf i),
+      pdWindowP zM hzM (⋃ i ∈ s, Wf i) hop := by
+  induction s using Finset.induction_on with
+  | empty =>
+    intro Wf Cf _ _ _ _ _ _ hop
+    exact pdWindowP_congr zM hzM
+      (show (∅ : Set ↑(TopCat.of M)) = ⋃ i ∈ (∅ : Finset ι), Wf i by simp)
+      isOpen_empty hop (pdWindowP_empty zM hzM)
+  | insert j s hj ih =>
+    intro Wf Cf hopen hconv hCopen hCV hWU hWe hop
+    have hjmem : j ∈ insert j s := Finset.mem_insert_self j s
+    have hmem : ∀ i ∈ s, i ∈ insert j s := fun i hi => Finset.mem_insert_of_mem hi
+    have hopj : IsOpen (Wf j) := hopen j hjmem
+    have hopS : IsOpen (⋃ i ∈ s, Wf i) :=
+      isOpen_biUnion (fun i hi => hopen i (hmem i hi))
+    have hPj : pdWindowP zM hzM (Wf j) hopj := by
+      rcases (Cf j).eq_empty_or_nonempty with hCe | hCne
+      · refine pdWindowP_congr zM hzM ?_ isOpen_empty hopj (pdWindowP_empty zM hzM)
+        symm
+        ext x
+        simp only [Set.mem_empty_iff_false, iff_false]
+        intro hx
+        have h := (hWe j hjmem ⟨x, hWU j hjmem hx⟩).mp hx
+        rw [hCe] at h
+        exact h
+      · obtain ⟨p₀, hp₀⟩ := hCne
+        exact pdWindowP_of_chartConvex hU hV e (hconv j hjmem) (hCopen j hjmem) hp₀
+          (hCV j hjmem) hopj (hWU j hjmem) (hWe j hjmem) zM hzM hcyc hloc
+    have hPS : pdWindowP zM hzM (⋃ i ∈ s, Wf i) hopS :=
+      ih Wf Cf (fun i hi => hopen i (hmem i hi)) (fun i hi => hconv i (hmem i hi))
+        (fun i hi => hCopen i (hmem i hi)) (fun i hi => hCV i (hmem i hi))
+        (fun i hi => hWU i (hmem i hi)) (fun i hi => hWe i (hmem i hi)) hopS
+    have hPI : pdWindowP zM hzM (Wf j ∩ ⋃ i ∈ s, Wf i) (hopj.inter hopS) := by
+      have hidt : Wf j ∩ (⋃ i ∈ s, Wf i) = ⋃ i ∈ s, (Wf j ∩ Wf i) :=
+        Set.inter_iUnion₂ _ _
+      have hopI : IsOpen (⋃ i ∈ s, (Wf j ∩ Wf i)) :=
+        isOpen_biUnion (fun i hi => hopj.inter (hopen i (hmem i hi)))
+      refine pdWindowP_congr zM hzM hidt.symm hopI (hopj.inter hopS) ?_
+      exact ih (fun i => Wf j ∩ Wf i) (fun i => Cf j ∩ Cf i)
+        (fun i hi => hopj.inter (hopen i (hmem i hi)))
+        (fun i hi => (hconv j hjmem).inter (hconv i (hmem i hi)))
+        (fun i hi => (hCopen j hjmem).inter (hCopen i (hmem i hi)))
+        (fun i hi => Set.inter_subset_right.trans (hCV i (hmem i hi)))
+        (fun i hi => Set.inter_subset_left.trans (hWU j hjmem))
+        (fun i hi u => by
+          simp only [Set.mem_inter_iff]
+          exact and_congr (hWe j hjmem u) (hWe i (hmem i hi) u)) hopI
+    exact pdWindowP_congr zM hzM (Finset.set_biUnion_insert j s Wf).symm (hopj.union hopS) hop
+      (pdWindowP_union_charted zM hzM hopj hopS hPj hPS hPI)
+
+
 end SKEFTHawking.SingularPDWindow
