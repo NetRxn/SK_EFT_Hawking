@@ -144,16 +144,17 @@ open SKEFTHawking.PinPlusFaithfulData SKEFTHawking.PinPlusTiedData
 namespace SKEFTHawking.PinPlusGMData
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+variable {k : WithTop ℕ∞}
 
 /-- **A Guillou–Marin structure on `s`**: the Hausdorff witness, the `w₂`-admissibility certificate
-(reused from the faithful carrier), and a characteristic-surface enhancement `q` on `Fin rank` (the
-surface's `H₁(·;ℤ/2)` basis). The mod-8 invariant is the COMPUTED `q.brown`, not a free field. -/
+(the k-generic `PinPlusCertK`, reused from the tied carrier), and a characteristic-surface enhancement
+`q` on `Fin rank` (the surface's `H₁(·;ℤ/2)` basis). The mod-8 invariant is the COMPUTED `q.brown`. -/
 structure GMStr (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))) [I.Boundaryless]
-    (s : SingularManifold PUnit ⊤ I) : Type where
+    (s : SingularManifold PUnit k I) : Type where
   /-- The carrier is Hausdorff — witnessed, not assumed. -/
   t2 : T2Space s.M
-  /-- The `w₂ = 0` admissibility certificate (reused from the faithful carrier). -/
-  cert : PinPlusCert I s
+  /-- The `w₂ = 0` admissibility certificate (k-generic, reused from the tied carrier). -/
+  cert : PinPlusCertK I s
   /-- The rank of the characteristic surface's `H₁(·;ℤ/2)`. -/
   rank : ℕ
   /-- The `ZMod 4`-quadratic enhancement on the surface's `H₁`. -/
@@ -162,19 +163,20 @@ structure GMStr (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))) 
 variable {I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))} [I.Boundaryless]
 
 /-- **The Guillou–Marin tangential datum** — `Mfd s := GMStr I s`, with the invariant COMPUTED from the
-enhancement's Brown value. `Bor` records Brown-equality (the §4-H4 invariance-by-structure). -/
+enhancement's Brown value. `Bor` records Brown-equality (the §4-H4 invariance-by-structure). k-generic
+(like `pinPlusTiedData`), so the k = 0 ℝP⁴ witness instantiates it. -/
 noncomputable def pinPlusGMData (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2))))
-    [I.Boundaryless] : TangentialData PUnit ⊤ I where
+    [I.Boundaryless] : TangentialData PUnit k I where
   Mfd := fun s => GMStr I s
   Bor := fun _ σ τ => PLift (σ.q.brown = τ.q.brown)
   emptyStr :=
     { t2 := ⟨fun x => x.elim⟩
-      cert := pinPlusCert_empty
+      cert := pinPlusCertK_empty
       rank := 0
       q := stdQuadratic 0 }
   sumStr := fun {s t} σ τ =>
     { t2 := t2_sum σ.t2 τ.t2
-      cert := PinPlusCert.sum σ.cert τ.cert
+      cert := PinPlusCertK.sum σ.cert τ.cert
       rank := σ.rank + τ.rank
       q := (orthSum σ.q τ.q).reindex finSumFinEquiv }
   cylBor := fun _ => ⟨rfl⟩
@@ -193,7 +195,7 @@ noncomputable def pinPlusGMData (I : ModelWithCorners ℝ E (EuclideanSpace ℝ 
 /-- **The computed mod-8 Guillou–Marin grade** — the bordism-invariant additive `→+ ZMod 8`, COMPUTED
 from the enhancement's Brown value (not a carried tag). Well-defined since `Bor` records Brown-equality;
 additive since `sumStr` is `orthSum` (`brown_orthSum`, reindex-invariant). -/
-noncomputable def abkGM8 : DataBordismGrp (pinPlusGMData (E := E) I) →+ ZMod 8 where
+noncomputable def abkGM8 : DataBordismGrp (pinPlusGMData (E := E) (k := k) I) →+ ZMod 8 where
   toFun := Quot.lift (fun p => p.2.q.brown)
     (fun _p _q h => by obtain ⟨_, ⟨str⟩⟩ := h; exact str.down)
   map_zero' := by show (stdQuadratic 0).brown = 0; rw [brown_stdQuadratic, Nat.cast_zero]
@@ -207,16 +209,17 @@ noncomputable def abkGM8 : DataBordismGrp (pinPlusGMData (E := E) I) →+ ZMod 8
 /-- **The computed GM grade is surjective onto `ZMod 8`** — every mod-8 Brown value is realised on the
 (vacuously certified) empty manifold by a standard enhancement `stdQuadratic g` (`brown` is surjective).
 This is the mod-8 fullness (per §9.1 the surface computes only mod 8; the odd bit is H6). -/
-theorem abkGM8_surjective : Function.Surjective (abkGM8 (E := E) (I := I)) := by
+theorem abkGM8_surjective : Function.Surjective (abkGM8 (E := E) (k := k) (I := I)) := by
   intro b
   obtain ⟨g, hg⟩ := brown_stdQuadratic_surjective b
-  exact ⟨DataBordismGrp.mk _ ⟨emptySM, ⟨⟨fun x => x.elim⟩, pinPlusCert_empty, g, stdQuadratic g⟩⟩, hg⟩
+  exact ⟨DataBordismGrp.mk _ ⟨emptySM, ⟨⟨fun x => x.elim⟩, pinPlusCertK_empty, g, stdQuadratic g⟩⟩, hg⟩
 
 /-- **Unconditional first isomorphism on the GM carrier**: `DataBordismGrp (pinPlusGMData) ⧸ ker(abkGM8)
 ≃+ ZMod 8` — the mod-8 quotient, computed-not-carried, no hypothesis. (The full `ZMod 16` with the odd
 bit is the H6 Smith-LES target.) -/
 noncomputable def dataBordismGM_quotient_abk8_equiv_zmod8 :
-    DataBordismGrp (pinPlusGMData (E := E) I) ⧸ (abkGM8 (E := E) (I := I)).ker ≃+ ZMod 8 :=
+    DataBordismGrp (pinPlusGMData (E := E) (k := k) I) ⧸ (abkGM8 (E := E) (k := k) (I := I)).ker
+      ≃+ ZMod 8 :=
   QuotientAddGroup.quotientKerEquivOfSurjective abkGM8 abkGM8_surjective
 
 end SKEFTHawking.PinPlusGMData
