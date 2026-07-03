@@ -962,6 +962,7 @@ import SKEFTHawking.SingularConvexStageIso
 import SKEFTHawking.SingularBaseCaseD0
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularPDWindow
+import SKEFTHawking.SingularConvexComplementConnected
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
