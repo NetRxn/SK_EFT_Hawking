@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularBaseCaseD0
+import SKEFTHawking.SingularConnSquareCloseNCBotApex
 
 /-!
 # Phase 5q.G (G1 PD-induction, B6) — the deg-4 induction predicate `P(W)` and its base case
@@ -73,5 +74,53 @@ theorem pdWindowP_of_chartConvex {M : Type} [TopologicalSpace M] [T2Space M]
       (by omega) (by omega) _ _,
     SKEFTHawking.SingularBaseCaseD0.openDuality₀_bijective_of_chartConvex hU hV e hCconv
       hCopen hp₀ hCV hWo hWU hWe _ _ hcyc hloc⟩
+
+/-- **Layer-A: the Mayer–Vietoris step** — `P(U) ∧ P(V) ∧ P(U∩V) → P(U∪V)`, through the three
+five-lemma engines (upper at `(N,p) = (1,0)`, bot at `N = 2`, `D⁰`-step at `N = 2`). The
+`csc⁵`-vanishing hypotheses feed the `D⁰`-step's truncated right end (discharged once, manifold-
+level, by the track-A vanishing bricks at the induction assembly). -/
+theorem pdWindowP_union {M : TopCat} [T2Space ↑M]
+    (zM : SingularChain M (1 + 0 + 3))
+    (hzM : chainBoundary M (1 + 0 + 2) zM = 0)
+    {U V : Set ↑M} (hU : IsOpen U) (hV : IsOpen V)
+    (hvanI : ∀ α : CompactlySupportedCohomologyOpen (U ∩ V) (2 + 1 + 2), α = 0)
+    (hvanU : ∀ α : CompactlySupportedCohomologyOpen U (2 + 1 + 2), α = 0)
+    (hvanV : ∀ α : CompactlySupportedCohomologyOpen V (2 + 1 + 2), α = 0)
+    (hPU : pdWindowP zM hzM U hU) (hPV : pdWindowP zM hzM V hV)
+    (hPI : pdWindowP zM hzM (U ∩ V) (hU.inter hV)) :
+    pdWindowP zM hzM (U ∪ V) (hU.union hV) := by
+  obtain ⟨hU1, hU2, hU3⟩ := hPU
+  obtain ⟨hV1, hV2, hV3⟩ := hPV
+  obtain ⟨hI1, hI2, hI3⟩ := hPI
+  refine ⟨?_, ?_, ?_⟩
+  · exact SKEFTHawking.SingularConnSquareCloseNCBotApex.openDuality_union_bijective_upper
+      (N := 1) (p := 0) hU hV zM hzM hI1.surjective hU1 hV1 hI2 hU2.injective hV2.injective
+  · exact SKEFTHawking.SingularConnSquareCloseNCBotApex.openDuality_union_bijective_bot
+      (N := 2) hU hV
+      (castChain (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM)
+      (chainBoundary_castChain_eq_zero (by omega) (by omega) zM hzM)
+      hI2.surjective hU2 hV2 hI3 hU3.injective hV3.injective
+  · exact SKEFTHawking.SingularConnSquareCloseNCBotApex.openDuality₀_union_bijective
+      (N := 2) hU hV
+      (castChain (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM)
+      (chainBoundary_castChain_eq_zero (by omega) (by omega) zM hzM)
+      hvanI hvanU hvanV hI3.surjective hU3 hV3
+
+
+/-- **Layer-A: monotone-union stability** — `P` passes to increasing unions (`A3`; the three
+monotone-union engines, conjunct-wise). -/
+theorem pdWindowP_monotone_union {M : TopCat} [T2Space ↑M]
+    (zM : SingularChain M (1 + 0 + 3))
+    (hzM : chainBoundary M (1 + 0 + 2) zM = 0)
+    {W : ℕ → Set ↑M} (hmono : ∀ n, W n ⊆ W (n + 1)) (hopen : ∀ n, IsOpen (W n))
+    (hP : ∀ n, pdWindowP zM hzM (W n) (hopen n)) :
+    pdWindowP zM hzM (⋃ n, W n) (isOpen_iUnion hopen) :=
+  ⟨SKEFTHawking.SingularOpenDualityMonotoneUnion.openDuality_monotone_union_bijective
+      hmono hopen _ _ (fun n => (hP n).1),
+    SKEFTHawking.SingularOpenDualityMonotoneUnion.openDuality_monotone_union_bijective
+      hmono hopen _ _ (fun n => (hP n).2.1),
+    SKEFTHawking.SingularConnSquareCloseNCBotApex.openDuality₀_monotone_union_bijective
+      hmono hopen _ _ (fun n => (hP n).2.2)⟩
+
 
 end SKEFTHawking.SingularPDWindow
