@@ -7,6 +7,8 @@ import SKEFTHawking.SingularChartBridge
 import SKEFTHawking.SingularH0PathConnected
 import SKEFTHawking.SingularConvexSubAcyclic
 import SKEFTHawking.SingularFundamentalClassExist
+import SKEFTHawking.SingularConvexStageIso
+import SKEFTHawking.SingularCSCConvexChart
 
 /-!
 # Phase 5q.G (G1 PD-induction, base-case B4a/B4b) — the `D⁰` augmentation bridge
@@ -251,5 +253,118 @@ theorem openDuality₀_surjective_of_chartConvex {m : ℕ} {M : Type} [Topologic
   intro y
   refine ⟨(augH (sub (X := TopCat.of M) W) y) • β, hauginj ?_⟩
   rw [map_smul, map_smul, hβ, smul_eq_mul, mul_one]
+
+open SKEFTHawking.SingularChartBridge SKEFTHawking.SingularConvexStageIso in
+/-- **B4c (injectivity half)**: the `D⁰` duality of a chart-convex open is injective — a class
+killed by `D⁰` dies already at a chart-convex-absorbed stage, where the pairing against the stage
+fundamental class is the UC-flip of the radial stage iso. -/
+theorem openDuality₀_injective_of_chartConvex {m : ℕ} {M : Type} [TopologicalSpace M]
+    [T2Space M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M]
+    {U : Set ↑(TopCat.of M)} {V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))}
+    (hU : IsOpen U) (hV : IsOpen V) (e : ↥U ≃ₜ ↥V)
+    {C : Set (EuclideanSpace ℝ (Fin (m + 2)))} (hCconv : Convex ℝ C) (hCopen : IsOpen C)
+    {p₀ : EuclideanSpace ℝ (Fin (m + 2))} (hp₀ : p₀ ∈ C) (hCV : C ⊆ V)
+    {W : Set ↑(TopCat.of M)} (hWo : IsOpen W) (hWU : W ⊆ U)
+    (hWe : ∀ u : ↥U, (u : M) ∈ W ↔ ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C))
+    (z₀ : SingularChain (TopCat.of M) (m + 1 + 0 + 1))
+    (hz₀ : chainBoundary (TopCat.of M) (m + 1 + 0) z₀ = 0)
+    (hcyc : z₀ ∈ cycles (TopCat.of M) (m + 2))
+    (hloc : ∀ x : M, SKEFTHawking.SingularFundamentalClass.restrictHomologyToPoint
+        (X := TopCat.of M) x (m + 2) (Homology.mk (TopCat.of M) (m + 2) ⟨z₀, hcyc⟩)
+      = (manifoldLocalIso x).symm 1) :
+    Function.Injective (openDuality₀ (k := m + 1) (X := TopCat.of M) hWo z₀ hz₀) := by
+  haveI : T2Space ↑(TopCat.of M) := inferInstanceAs (T2Space M)
+  rw [injective_iff_map_eq_zero]
+  intro α
+  induction α using Module.DirectLimit.induction_on with
+  | ih K ω =>
+    intro hα0
+    obtain ⟨K', C', hKK', hC'conv, hC'comp, hC'C, hp₀C', hcompat'⟩ :=
+      SKEFTHawking.SingularCSCConvexChart.exists_chartConvex_stage_above
+        (M := TopCat.of M) e hCconv hCopen hp₀ hCV hWU hWe K
+    obtain ⟨a', ha'⟩ := Submodule.Quotient.mk_surjective _
+      (cohomFW (M := TopCat.of M) W (m + 1 + 1) K K' hKK' ω)
+    have hs1 : Module.DirectLimit.of (ZMod 2)
+          (SKEFTHawking.SingularCompactsInOpen.CompactsIn W)
+          (cohomGW (M := TopCat.of M) W (m + 1 + 1)) (cohomFW (M := TopCat.of M) W (m + 1 + 1))
+          K' (Submodule.Quotient.mk a')
+        = Module.DirectLimit.of (ZMod 2)
+          (SKEFTHawking.SingularCompactsInOpen.CompactsIn W)
+          (cohomGW (M := TopCat.of M) W (m + 1 + 1)) (cohomFW (M := TopCat.of M) W (m + 1 + 1))
+          K ω :=
+      (congrArg (fun t => Module.DirectLimit.of (ZMod 2)
+          (SKEFTHawking.SingularCompactsInOpen.CompactsIn W)
+          (cohomGW (M := TopCat.of M) W (m + 1 + 1)) (cohomFW (M := TopCat.of M) W (m + 1 + 1))
+          K' t) ha').trans (Module.DirectLimit.of_f (hij := hKK') (x := ω))
+    have hs3 := (congrArg (fun t => augH (sub (X := TopCat.of M) W)
+        (openDuality₀ (k := m + 1) (X := TopCat.of M) hWo z₀ hz₀ t)) hs1).trans
+      ((congrArg (fun t => augH (sub (X := TopCat.of M) W) t) hα0).trans (map_zero _))
+    have hs5 := (((congrArg (fun t => augH (sub (X := TopCat.of M) W) t)
+        (openDuality₀_of hWo z₀ hz₀ K' (Submodule.Quotient.mk a'))).trans
+      ((augH_legW₀_eq_relKroneckerH hWo z₀ hz₀ K' a').trans
+        (congrArg (fun t => relKroneckerH (X := TopCat.of M)
+            ((↑K'.1 : Set ↑(TopCat.of M))ᶜ)
+            (RelativeCohomology.mk ((↑K'.1 : Set ↑(TopCat.of M))ᶜ) (m + 1 + 1) a') t)
+          (fundCycleW₀_class_eq hWo z₀ hz₀ K')))).symm).trans hs3
+    have hzb' : chainBoundary (TopCat.of M) (m + 1) z₀
+        ∈ subspaceChains ((↑K'.1 : Set ↑(TopCat.of M))ᶜ) (m + 1) := by
+      rw [show chainBoundary (TopCat.of M) (m + 1) z₀ = 0 from hz₀]
+      exact Submodule.zero_mem _
+    have hx₀K' : ((e.symm ⟨p₀, hCV (hC'C hp₀C')⟩ : ↥U) : M)
+        ∈ (↑K'.1 : Set ↑(TopCat.of M)) :=
+      (hcompat' _).mp (by rw [e.apply_symm_apply]; exact hp₀C')
+    have hgcls' := restrictHomologyToSet_mk (X := TopCat.of M)
+      (K := (↑K'.1 : Set ↑(TopCat.of M))) z₀ hcyc hzb'
+    have hrtp := (congrArg (fun t =>
+        SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint hx₀K' (m + 2) t)
+      hgcls'.symm).trans
+      ((SKEFTHawking.SingularFundamentalClass.restrictToPoint_restrictHomologyToSet
+        hx₀K' (m + 2) _).trans (hloc _))
+    have hg'ne : (RelativeHomology.mk ((↑K'.1 : Set ↑(TopCat.of M))ᶜ) (m + 2)
+        ⟨RelativeChain.mk ((↑K'.1 : Set ↑(TopCat.of M))ᶜ) (m + 2) z₀,
+          relMk_mem_relCycles ((↑K'.1 : Set ↑(TopCat.of M))ᶜ) z₀ hzb'⟩) ≠ 0 := by
+      intro h0
+      exact one_ne_zero (((manifoldLocalIso _).symm.map_eq_zero_iff).mp
+        (hrtp.symm.trans ((congrArg (fun t =>
+          SKEFTHawking.SingularManifoldFundamentalClass.restrictToPoint hx₀K' (m + 2) t)
+          h0).trans (map_zero _))))
+    have E := convexStageLocalIso (M := TopCat.of M) hU hV e
+      (K'.1.isCompact'.isClosed) (K'.2.trans hWU) hC'conv hC'comp hp₀C' (hC'C.trans hCV) hcompat'
+    have hE := relKroneckerH_flip_bijective_of_equiv (X := TopCat.of M)
+      (S := ((↑K'.1 : Set ↑(TopCat.of M))ᶜ)) (N := m + 1) E _
+      (linearEquiv_zmod2_apply_eq_one E hg'ne)
+    have hmk0 : (Submodule.Quotient.mk a'
+        : RelativeCohomology ((↑K'.1 : Set ↑(TopCat.of M))ᶜ) (m + 1 + 1)) = 0 :=
+      hE.injective (hs5.trans (map_zero _).symm)
+    exact hs1.symm.trans ((congrArg (fun t => Module.DirectLimit.of (ZMod 2)
+        (SKEFTHawking.SingularCompactsInOpen.CompactsIn W)
+        (cohomGW (M := TopCat.of M) W (m + 1 + 1)) (cohomFW (M := TopCat.of M) W (m + 1 + 1))
+        K' t) hmk0).trans (map_zero _))
+
+
+open SKEFTHawking.SingularChartBridge SKEFTHawking.SingularH0PathConnected
+  SKEFTHawking.SingularConvexStageIso in
+/-- **B4c: the `D⁰` duality of a chart-convex open is BIJECTIVE** — the base case's
+`Bij D⁰(W)` conjunct, from the SURJ and INJ halves. -/
+theorem openDuality₀_bijective_of_chartConvex {m : ℕ} {M : Type} [TopologicalSpace M]
+    [T2Space M] [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M]
+    {U : Set ↑(TopCat.of M)} {V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))}
+    (hU : IsOpen U) (hV : IsOpen V) (e : ↥U ≃ₜ ↥V)
+    {C : Set (EuclideanSpace ℝ (Fin (m + 2)))} (hCconv : Convex ℝ C) (hCopen : IsOpen C)
+    {p₀ : EuclideanSpace ℝ (Fin (m + 2))} (hp₀ : p₀ ∈ C) (hCV : C ⊆ V)
+    {W : Set ↑(TopCat.of M)} (hWo : IsOpen W) (hWU : W ⊆ U)
+    (hWe : ∀ u : ↥U, (u : M) ∈ W ↔ ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C))
+    (z₀ : SingularChain (TopCat.of M) (m + 1 + 0 + 1))
+    (hz₀ : chainBoundary (TopCat.of M) (m + 1 + 0) z₀ = 0)
+    (hcyc : z₀ ∈ cycles (TopCat.of M) (m + 2))
+    (hloc : ∀ x : M, SKEFTHawking.SingularFundamentalClass.restrictHomologyToPoint
+        (X := TopCat.of M) x (m + 2) (Homology.mk (TopCat.of M) (m + 2) ⟨z₀, hcyc⟩)
+      = (manifoldLocalIso x).symm 1) :
+    Function.Bijective (openDuality₀ (k := m + 1) (X := TopCat.of M) hWo z₀ hz₀) :=
+  ⟨openDuality₀_injective_of_chartConvex hU hV e hCconv hCopen hp₀ hCV hWo hWU hWe
+      z₀ hz₀ hcyc hloc,
+    openDuality₀_surjective_of_chartConvex e hCconv ⟨p₀, hp₀⟩ hCV hWo hWU hWe
+      z₀ hz₀ hcyc hloc⟩
+
 
 end SKEFTHawking.SingularBaseCaseD0
