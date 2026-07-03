@@ -636,6 +636,7 @@ import SKEFTHawking.A1Resolution
 import SKEFTHawking.A1Ext
 import SKEFTHawking.A1ExtSubstantive
 import SKEFTHawking.ArfInvariant
+import SKEFTHawking.GMArfVanishing
 import SKEFTHawking.EvenLatticeForm
 import SKEFTHawking.LatticeSignature
 import SKEFTHawking.SignatureAdditivity
