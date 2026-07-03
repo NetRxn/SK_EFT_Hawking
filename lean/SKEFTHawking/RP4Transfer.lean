@@ -202,4 +202,74 @@ theorem mapChain_transferChain (n : ℕ) (c : SingularChain (TopCat.of RP4) n) :
       · rw [ha, transferChain_single, map_add, mapChain_single, mapChain_single,
           mapSimplex_liftPlus, mapSimplex_liftMinus, ZModModule.add_self]
 
+/-! ## §3. The transfer is a chain map — faces of the lift-pair are the lift-pair of the face -/
+
+/-- **Two lifts of the same simplex agreeing anywhere are equal** — covering uniqueness on the
+preconnected simplex (`IsCoveringMap.eq_of_comp_eq`). -/
+theorem liftSimplex_eq_of_agree {n : ℕ}
+    (τ τ' : (TopCat.toSSet.obj (TopCat.of S4)).obj (op (SimplexCategory.mk n)))
+    (hover : mapSimplex mkC τ = mapSimplex mkC τ')
+    (d : stdSimplex ℝ (Fin (n + 1)))
+    (hd : ((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τ) d
+      = ((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τ') d) : τ = τ' := by
+  have hcomp : Quotient.mk (MulAction.orbitRel ℤˣ S4) ∘
+      ((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τ)
+      = Quotient.mk (MulAction.orbitRel ℤˣ S4) ∘
+        ((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τ') := by
+    have h1 := congrArg ((TopCat.of RP4).toSSetObjEquiv (op (SimplexCategory.mk n))) hover
+    rw [mapSimplex, mapSimplex, Equiv.apply_symm_apply, Equiv.apply_symm_apply] at h1
+    exact congrArg DFunLike.coe h1
+  have := rp4_isCoveringMap.eq_of_comp_eq
+    (((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τ)).continuous
+    (((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τ')).continuous
+    hcomp d hd
+  exact ((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n))).injective
+    (ContinuousMap.coe_injective this)
+
+/-- A face of a lift sits over the corresponding face. -/
+theorem mapSimplex_face_liftPlus {n : ℕ}
+    (σ : (TopCat.toSSet.obj (TopCat.of RP4)).obj (op (SimplexCategory.mk (n + 1))))
+    (i : Fin (n + 2)) :
+    mapSimplex mkC (SKEFTHawking.SingularCohomologyMod2.face i (liftPlus σ))
+      = SKEFTHawking.SingularCohomologyMod2.face i σ := by
+  rw [← face_mapSimplex, mapSimplex_liftPlus]
+
+theorem mapSimplex_face_liftMinus {n : ℕ}
+    (σ : (TopCat.toSSet.obj (TopCat.of RP4)).obj (op (SimplexCategory.mk (n + 1))))
+    (i : Fin (n + 2)) :
+    mapSimplex mkC (SKEFTHawking.SingularCohomologyMod2.face i (liftMinus σ))
+      = SKEFTHawking.SingularCohomologyMod2.face i σ := by
+  rw [← face_mapSimplex, mapSimplex_liftMinus]
+
+/-- **A face of a lift is one of the two lifts of the face.** -/
+theorem face_lift_mem_pair {n : ℕ}
+    (σ : (TopCat.toSSet.obj (TopCat.of RP4)).obj (op (SimplexCategory.mk (n + 1))))
+    (i : Fin (n + 2))
+    (τ : (TopCat.toSSet.obj (TopCat.of S4)).obj (op (SimplexCategory.mk (n + 1))))
+    (hτ : mapSimplex mkC τ = σ) :
+    SKEFTHawking.SingularCohomologyMod2.face i τ
+        = liftPlus (SKEFTHawking.SingularCohomologyMod2.face i σ) ∨
+      SKEFTHawking.SingularCohomologyMod2.face i τ
+        = liftMinus (SKEFTHawking.SingularCohomologyMod2.face i σ) := by
+  set F := SKEFTHawking.SingularCohomologyMod2.face i σ with hF
+  set τF := SKEFTHawking.SingularCohomologyMod2.face i τ with hτF
+  have hover : mapSimplex mkC τF = F := by
+    rw [hτF, ← face_mapSimplex, hτ]
+  -- `rlP F = mk ∘ realize τF` (the over-property at the map level)
+  have h1 : rlP F = mkC.comp ((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τF) := by
+    rw [rlP, ← hover, mapSimplex, Equiv.apply_symm_apply]
+  set y := ((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τF) (bary n) with hy
+  have hmk : Quotient.mk (MulAction.orbitRel ℤˣ S4) y = rlP F (bary n) :=
+    (congrFun (congrArg DFunLike.coe h1) (bary n)).symm
+  have hcirc : Quotient.mk (MulAction.orbitRel ℤˣ S4) ∘
+      ((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τF) = rlP F :=
+    (congrArg DFunLike.coe h1).symm
+  have hpair := fiber_pair (hmk.trans (mk_outFiber F).symm)
+  rcases hpair with hcase | hcase
+  · left
+    exact liftSimplex_unique F (outFiber F) (mk_outFiber F) τF (hy ▸ hcase) hcirc
+  · right
+    exact liftSimplex_unique F ((-1 : ℤˣ) • outFiber F) (mk_neg_outFiber F) τF
+      (hy ▸ hcase) hcirc
+
 end SKEFTHawking.RP4Transfer
