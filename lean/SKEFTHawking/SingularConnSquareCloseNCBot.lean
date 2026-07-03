@@ -405,4 +405,113 @@ theorem fact_i_ambient_core₀ {U V LU LV : Set ↑X} (hU : IsOpen U) (hV : IsOp
       = cap (m := 0) g.1.1 w from by rw [hwdef, map_add]]
   exact hgw
 
+/-- **The BOTTOM SUN FACT (i), discharged** (`fact_i_discharge` re-instantiated at the degree-0
+hmatch₀-shape: seams/β at 0, partitions at 0+1, the fund frame at N+1+0+1 — cast-free). -/
+theorem fact_i_discharge₀ {U V LU LV : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
+    (hLUc : IsOpen LUᶜ) (hLVc : IsOpen LVᶜ) (hLUU : LU ⊆ U) (hLVV : LV ⊆ V)
+    {N : ℕ}
+    (g : LinearMap.ker (relCoboundaryₗ (LUᶜ ∩ LVᶜ) (N + 1)))
+    (z₀ : SingularChain X (N + 1 + 0 + 1))
+    (hz₀ : chainBoundary X (N + 1 + 0) z₀ = 0)
+    (K₁ : CompactsIn (U ∪ V))
+    (gW : LinearMap.ker (relCoboundaryₗ (((↑K₁.1 : Set ↑X))ᶜ) (N + 1)))
+    (hgg : g.1.1 = gW.1.1)
+    (hK₁ : ((↑K₁.1 : Set ↑X))ᶜ = LUᶜ ∩ LVᶜ)
+    (hcov : (⋃ W ∈ ({(Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))), Subtype.val ⁻¹' V} :
+        Set (Set ↑(sub (U ∪ V)))), interior W) = Set.univ)
+    (zc0 : ↥(cycles (sub (U ∪ V)) (0 + 1)))
+    (hzc0 : Homology.mk (sub (U ∪ V)) (0 + 1) zc0
+      = SKEFTHawking.SingularOpenDuality.legW (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀ K₁
+          (Submodule.Quotient.mk gW))
+    (zA : SingularChain (sub (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V)))) (0 + 1))
+    (zB : SingularChain (sub (Subtype.val ⁻¹' V : Set ↑(sub (U ∪ V)))) (0 + 1))
+    (hcyc : chainIncl _ (0 + 1) zA + chainIncl _ (0 + 1) zB
+      ∈ cycles (sub (U ∪ V)) (0 + 1))
+    (hpart : Homology.mk (sub (U ∪ V)) (0 + 1) zc0
+      = Homology.mk (sub (U ∪ V)) (0 + 1) ⟨_, hcyc⟩)
+    (hzBmem : zB ∈ SingularPairLES.relCycleLift
+      (SingularExcisionIso.restr (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V)) 0)
+    {Y' : TopCat}
+    (φin : C(↑(sub (SingularExcisionIso.restr (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V)))
+      (Subtype.val ⁻¹' V))), ↑Y'))
+    (φout : C(↑Y', ↑(sub (U ∩ V))))
+    (hseam : ∀ (w : SingularPairLES.relCycleLift
+        (SingularExcisionIso.restr (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V)) 0),
+      chainIncl (U ∩ V) 0 (SingularFunctoriality.mapChain φout 0
+          (SingularFunctoriality.mapChain φin 0
+            (SingularPairLES.boundaryExtract
+              (SingularExcisionIso.restr (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V)) 0 w)))
+        = chainIncl (U ∪ V) 0 (chainBoundary (sub (U ∪ V)) 0
+            (chainIncl (Subtype.val ⁻¹' V) (0 + 1) (w : SingularChain _ (0 + 1)))))
+    (F₂ : SingularChain X (N + 1 + 0 + 1))
+    (hF₂mem : F₂ ∈ subspaceChains (U ∩ V) (N + 1 + 0 + 1))
+    (η₂ : SingularChain X (N + 1 + 0 + 1 + 1)) (a₂ : SingularChain X (N + 1 + 0 + 1))
+    (heq₂ : F₂ + z₀ = chainBoundary X (N + 1 + 0 + 1) η₂ + a₂)
+    (ha₂ : a₂ ∈ subspaceChains (LUᶜ ∪ LVᶜ) (N + 1 + 0 + 1))
+    (hF₂bd : chainBoundary X (N + 1 + 0) F₂
+      ∈ subspaceChains (LUᶜ ∪ LVᶜ) (N + 1 + 0))
+    (jF : ℕ)
+    (aF : SingularChain (sub (LUᶜ ∩ (U ∩ V))) (N + 1 + 0))
+    (bF : SingularChain (sub (LVᶜ ∩ (U ∩ V))) (N + 1 + 0))
+    (hFsplit : chainBoundary X (N + 1 + 0)
+        ((⇑(SingularSubdivision.singularSd X (N + 1 + 0 + 1)))^[jF] F₂)
+      = chainIncl _ (N + 1 + 0) aF + chainIncl _ (N + 1 + 0) bF)
+    (hbFmem : chainIncl _ (N + 1 + 0) bF ∈ subspaceChains (U ∩ V) (N + 1 + 0))
+    (β : LinearMap.ker (coboundaryₗ (sub (U ∩ V)) 0)) :
+    kronecker β.1 (SingularFunctoriality.mapChain φout 0
+        (SingularFunctoriality.mapChain φin 0
+          (SingularPairLES.boundaryExtract
+            (SingularExcisionIso.restr (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V)) 0
+            ⟨zB, hzBmem⟩)))
+      = kronecker β.1 (cap (m := 0) (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 1) g.1.1)
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1 + 0)).symm
+            ⟨_, hbFmem⟩)) := by
+  obtain ⟨μ, f₁, f₂, f₃, hf₁, hf₂, hf₃, hIsplit, zAc, zBc, hzAc, hzBc, hcycc, hcls⟩ :=
+    fact_i_stage1 (k := N + 1) (m := 0) hU hV hLUc hLVc hLUU hLVV z₀ hz₀ K₁ gW
+  have hzBcmem : zBc ∈ SingularPairLES.relCycleLift
+      (SingularExcisionIso.restr (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V))
+      0 :=
+    SingularMvDeltaPartition.zB_mem_relCycleLift _ _ 0 zAc zBc hcycc
+  have htrans := kronecker_mapChain_boundaryExtract_class_invariant
+    (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V) 0 hcov φin φout β
+    zA zAc zB zBc hcyc hcycc (hpart.symm.trans (hzc0.trans hcls)) hzBmem hzBcmem
+  rw [htrans]
+  obtain ⟨EM, hEMmem, hEMeq⟩ :=
+    fact_i_ambient_core₀ hU hV hLUc hLVc hLUU hLVV g z₀ hz₀ K₁ hK₁
+      μ jF f₁ f₂ f₃ hf₁ hf₂ hf₃ hIsplit F₂ hF₂mem η₂ a₂ heq₂ ha₂ hF₂bd aF bF hFsplit
+  have hzBcg : chainIncl (U ∪ V) (0 + 1) (chainIncl _ (0 + 1) zBc)
+      = cap (m := 0 + 1) g.1.1 (f₂ + f₃) := by rw [hgg]; exact hzBc
+  have hambL : chainIncl (U ∩ V) 0
+      (SingularFunctoriality.mapChain φout 0 (SingularFunctoriality.mapChain φin 0
+        (SingularPairLES.boundaryExtract (SingularExcisionIso.restr
+          (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V)) 0
+          ⟨zBc, hzBcmem⟩)))
+      = chainBoundary X 0 (cap (m := 0 + 1) g.1.1 (f₂ + f₃)) := by
+    rw [hseam ⟨zBc, hzBcmem⟩, SingularRelativeHomologyMod2.chainIncl_chainBoundary, hzBcg]
+  have hambR : chainIncl (U ∩ V) 0
+      (cap (m := 0) (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 1) g.1.1)
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1 + 0)).symm
+          ⟨chainIncl _ (N + 1 + 0) bF, hbFmem⟩))
+      = cap (m := 0) g.1.1 (chainIncl (LVᶜ ∩ (U ∩ V)) (N + 1 + 0) bF) := by
+    rw [← SingularCapChainIncl.cap_chainIncl,
+      SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm]
+  rw [subspaceChains, LinearMap.mem_range] at hEMmem
+  obtain ⟨E', hE'⟩ := hEMmem
+  have hsum_mem : SingularFunctoriality.mapChain φout 0
+        (SingularFunctoriality.mapChain φin 0
+          (SingularPairLES.boundaryExtract (SingularExcisionIso.restr
+            (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (Subtype.val ⁻¹' V)) 0
+            ⟨zBc, hzBcmem⟩))
+      + cap (m := 0) (SingularCapChainIncl.pullbackCochain (U ∩ V) (N + 1) g.1.1)
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∩ V) (N + 1 + 0)).symm
+            ⟨chainIncl _ (N + 1 + 0) bF, hbFmem⟩)
+      ∈ boundaries (sub (U ∩ V)) 0 := by
+    refine ⟨E', ?_⟩
+    apply chainIncl_injective (U ∩ V) 0
+    rw [SingularRelativeHomologyMod2.chainIncl_chainBoundary, hE', map_add, hambL, hambR]
+    exact hEMeq.symm
+  have h0 := kronecker_cocycle_boundary_eq_zero β hsum_mem
+  rw [kronecker_add_right] at h0
+  exact eq_of_sub_eq_zero (by rw [ZModModule.sub_eq_add]; exact h0)
+
 end SKEFTHawking.SingularConnSquareCloseNCBot
