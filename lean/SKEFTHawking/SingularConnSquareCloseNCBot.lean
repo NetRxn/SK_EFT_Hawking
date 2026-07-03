@@ -22,6 +22,8 @@ open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
   SKEFTHawking.SingularRelativeHomologyMod2 SKEFTHawking.SingularRelativeCohomologyMod2
   SKEFTHawking.SingularExcision SKEFTHawking.SingularMayerVietoris
   SKEFTHawking.SingularCapSupport SKEFTHawking.SingularConnSquareCloseNC
+  SKEFTHawking.SingularCompactsInOpen SKEFTHawking.SingularCohomologySnake
+  SKEFTHawking.SingularOpenDualityCycle
 
 namespace SKEFTHawking.SingularConnSquareCloseNCBot
 
@@ -158,5 +160,123 @@ theorem cap_relCochains_pair_double_support_eq_boundary₀ {A B P : Set ↑X}
           (SingularExcision.iterHomotopy_mem_subspaceChains hbInter κ))), ?_⟩
   rw [hcb, hcapb, hE₁]
   simp only [map_add]
+
+/-- **The bottom N2 δφ-kill** (Brick L₀ — `fact_i_n2_kill` re-instantiated at the 0-spellings over
+J₀; the F₂-abstraction carries verbatim). -/
+theorem fact_i_n2_kill₀ {U V LU LV : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
+    (hLUc : IsOpen LUᶜ) (hLVc : IsOpen LVᶜ) (hLUU : LU ⊆ U) (hLVV : LV ⊆ V)
+    {N : ℕ}
+    (g : LinearMap.ker (relCoboundaryₗ (LUᶜ ∩ LVᶜ) (N + 1)))
+    (z₀ : SingularChain X (N + 1 + 0 + 1))
+    (hz₀ : chainBoundary X (N + 1 + 0) z₀ = 0)
+    (K₁ : CompactsIn (U ∪ V))
+    (hK₁ : ((↑K₁.1 : Set ↑X))ᶜ = LUᶜ ∩ LVᶜ)
+    (μ jF : ℕ) (f₁ f₂ f₃ : SingularChain X (N + 1 + 0 + 1))
+    (hf₁ : f₁ ∈ subspaceChains (U ∩ LVᶜ) (N + 1 + 0 + 1))
+    (hf₂ : f₂ ∈ subspaceChains (V ∩ LUᶜ) (N + 1 + 0 + 1))
+    (hf₃ : f₃ ∈ subspaceChains (U ∩ V) (N + 1 + 0 + 1))
+    (hIsplit : (⇑(SingularSubdivision.singularSd X (N + 1 + 0 + 1)))^[μ]
+        (SingularOpenDualityCycle.fundCycleW (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀ K₁) = f₁ + f₂ + f₃)
+    (F₂ : SingularChain X (N + 1 + 0 + 1))
+    (hF₂mem : F₂ ∈ subspaceChains (U ∩ V) (N + 1 + 0 + 1))
+    (η₂ : SingularChain X (N + 1 + 0 + 1 + 1)) (a₂ : SingularChain X (N + 1 + 0 + 1))
+    (heq₂ : F₂ + z₀ = chainBoundary X (N + 1 + 0 + 1) η₂ + a₂)
+    (ha₂ : a₂ ∈ subspaceChains (LUᶜ ∪ LVᶜ) (N + 1 + 0 + 1))
+    (hF₂bd : chainBoundary X (N + 1 + 0) F₂
+      ∈ subspaceChains (LUᶜ ∪ LVᶜ) (N + 1 + 0))
+    (aF : SingularChain (sub (LUᶜ ∩ (U ∩ V))) (N + 1 + 0))
+    (bF : SingularChain (sub (LVᶜ ∩ (U ∩ V))) (N + 1 + 0))
+    (hFsplit : chainBoundary X (N + 1 + 0)
+        ((⇑(SingularSubdivision.singularSd X (N + 1 + 0 + 1)))^[jF] F₂)
+      = chainIncl _ (N + 1 + 0) aF + chainIncl _ (N + 1 + 0) bF) :
+    ∃ E : SingularChain X (0 + 1), E ∈ subspaceChains (U ∩ V) (0 + 1)
+      ∧ cap (m := 0) (coboundary X (N + 1) (cochainSplit LUᶜ (N + 1) g.1.1))
+          (f₃ + (⇑(SingularSubdivision.singularSd X (N + 1 + 0 + 1)))^[jF] F₂)
+        = chainBoundary X 0 E := by
+  have hgc : coboundary X (N + 1) g.1.1 = 0 :=
+    (SingularConnSquareRHSPairing.relCocycle_props g).1
+  have hK₁S : ((↑K₁.1 : Set ↑X))ᶜ ⊆ LUᶜ ∪ LVᶜ := by
+    rw [hK₁]; exact fun x hx => Or.inl hx.1
+  obtain ⟨D, ρ, hρ, heq⟩ :=
+    fund_pair_three_set_rel_comparison_free (S := LUᶜ ∪ LVᶜ) (k := N + 1) (m := 0)
+      (hU.union hV) z₀ hz₀ K₁ hK₁S μ jF f₁ f₂ f₃
+      (SingularMayerVietoris.subspaceChains_mono (fun _ hx => Or.inr hx.2) _ hf₁)
+      (SingularMayerVietoris.subspaceChains_mono (fun _ hx => Or.inl hx.2) _ hf₂)
+      hIsplit F₂ η₂ a₂ heq₂ ha₂ hF₂bd
+  have hbdIsplit := congrArg (chainBoundary X (N + 1 + 0)) hIsplit
+  rw [SingularSubdivision.singularSd_iterate_chainBoundary, map_add, map_add] at hbdIsplit
+  have hf₃bd : chainBoundary X (N + 1 + 0) f₃
+      = (⇑(SingularSubdivision.singularSd X (N + 1 + 0)))^[μ]
+          (chainBoundary X (N + 1 + 0)
+            (SingularOpenDualityCycle.fundCycleW (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀ K₁))
+        + chainBoundary X (N + 1 + 0) f₁ + chainBoundary X (N + 1 + 0) f₂ := by
+    rw [hbdIsplit]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
+  have hSdmem : (⇑(SingularSubdivision.singularSd X (N + 1 + 0)))^[μ]
+      (chainBoundary X (N + 1 + 0)
+        (SingularOpenDualityCycle.fundCycleW (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀ K₁))
+      ∈ subspaceChains LUᶜ (N + 1 + 0) :=
+    SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left _
+      (SingularExcision.singularSd_iterate_mem_subspaceChains
+        (hK₁ ▸ SingularOpenDualityCycle.fundCycleW_boundary (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀ K₁) μ)
+  have hf2bdmem : chainBoundary X (N + 1 + 0) f₂
+      ∈ subspaceChains LUᶜ (N + 1 + 0) :=
+    SingularMayerVietoris.subspaceChains_mono Set.inter_subset_right _
+      (chainBoundary_mem_subspaceChains _ hf₂)
+  have haFmem : chainIncl (LUᶜ ∩ (U ∩ V)) (N + 1 + 0) aF
+      ∈ subspaceChains LUᶜ (N + 1 + 0) :=
+    SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left _ ⟨aF, rfl⟩
+  have hf1bdmem : chainBoundary X (N + 1 + 0) f₁
+      ∈ subspaceChains LVᶜ (N + 1 + 0) :=
+    SingularMayerVietoris.subspaceChains_mono Set.inter_subset_right _
+      (chainBoundary_mem_subspaceChains _ hf₁)
+  have hbFmem' : chainIncl (LVᶜ ∩ (U ∩ V)) (N + 1 + 0) bF
+      ∈ subspaceChains LVᶜ (N + 1 + 0) :=
+    SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left _ ⟨bF, rfl⟩
+  set u : SingularChain X (N + 1 + 0) :=
+    (⇑(SingularSubdivision.singularSd X (N + 1 + 0)))^[μ]
+      (chainBoundary X (N + 1 + 0)
+        (SingularOpenDualityCycle.fundCycleW (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀ K₁))
+    + chainBoundary X (N + 1 + 0) f₂
+    + chainIncl (LUᶜ ∩ (U ∩ V)) (N + 1 + 0) aF with hudef
+  set w : SingularChain X (N + 1 + 0) :=
+    chainBoundary X (N + 1 + 0) f₁
+    + chainIncl (LVᶜ ∩ (U ∩ V)) (N + 1 + 0) bF with hwdef
+  have humem : u ∈ subspaceChains LUᶜ (N + 1 + 0) :=
+    Submodule.add_mem _ (Submodule.add_mem _ hSdmem hf2bdmem) haFmem
+  have hwmem : w ∈ subspaceChains LVᶜ (N + 1 + 0) :=
+    Submodule.add_mem _ hf1bdmem hbFmem'
+  have hbd_uncast : chainBoundary X (N + 1 + 0)
+      (f₃ + (⇑(SingularSubdivision.singularSd X (N + 1 + 0 + 1)))^[jF] F₂) = u + w := by
+    rw [map_add, hFsplit, hf₃bd, hudef, hwdef]
+    abel
+  have hcP : (f₃ + (⇑(SingularSubdivision.singularSd X (N + 1 + 0 + 1)))^[jF] F₂)
+      ∈ subspaceChains (U ∩ V) (N + 1 + 0 + 1) :=
+    Submodule.add_mem _ hf₃
+      (SingularExcision.singularSd_iterate_mem_subspaceChains hF₂mem jF)
+  have humem' := humem
+  have hwmem' := hwmem
+  rw [subspaceChains, LinearMap.mem_range] at humem' hwmem'
+  obtain ⟨uS, huS⟩ := humem'
+  obtain ⟨wS, hwS⟩ := hwmem'
+  have hcover : (U ∩ V) ∪ (LUᶜ ∪ LVᶜ) = Set.univ := by
+    ext x
+    simp only [Set.mem_union, Set.mem_inter_iff, Set.mem_compl_iff, Set.mem_univ, iff_true]
+    by_cases hxU : x ∈ LU
+    · by_cases hxV : x ∈ LV
+      · exact Or.inl ⟨hLUU hxU, hLVV hxV⟩
+      · exact Or.inr (Or.inr hxV)
+    · exact Or.inr (Or.inl hxU)
+  obtain ⟨E, hE, hcap⟩ :=
+    cap_relCochains_pair_double_support_eq_boundary₀ hLUc hLVc (hU.inter hV) hcover
+      (q := N + 1)
+      (coboundary X (N + 1) (cochainSplit LUᶜ (N + 1) g.1.1))
+      (coboundary_comp_coboundary X (N + 1) _)
+      (cochainSplit_coboundary_mem_U LUᶜ (N + 1) g.1.1)
+      (cochainSplit_coboundary_mem_V LUᶜ LVᶜ (N + 1) g.1.1 g.1.2 hgc)
+      (f₃ + (⇑(SingularSubdivision.singularSd X (N + 1 + 0 + 1)))^[jF] F₂)
+      hcP D ρ hρ heq uS wS (by rw [hbd_uncast, ← huS, ← hwS])
+  exact ⟨E, hE, hcap⟩
 
 end SKEFTHawking.SingularConnSquareCloseNCBot
