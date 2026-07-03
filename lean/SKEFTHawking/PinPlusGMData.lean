@@ -204,4 +204,19 @@ noncomputable def abkGM8 : DataBordismGrp (pinPlusGMData (E := E) I) →+ ZMod 8
     show ((orthSum p.2.q q.2.q).reindex finSumFinEquiv).brown = p.2.q.brown + q.2.q.brown
     rw [reindex_brown, brown_orthSum]
 
+/-- **The computed GM grade is surjective onto `ZMod 8`** — every mod-8 Brown value is realised on the
+(vacuously certified) empty manifold by a standard enhancement `stdQuadratic g` (`brown` is surjective).
+This is the mod-8 fullness (per §9.1 the surface computes only mod 8; the odd bit is H6). -/
+theorem abkGM8_surjective : Function.Surjective (abkGM8 (E := E) (I := I)) := by
+  intro b
+  obtain ⟨g, hg⟩ := brown_stdQuadratic_surjective b
+  exact ⟨DataBordismGrp.mk _ ⟨emptySM, ⟨⟨fun x => x.elim⟩, pinPlusCert_empty, g, stdQuadratic g⟩⟩, hg⟩
+
+/-- **Unconditional first isomorphism on the GM carrier**: `DataBordismGrp (pinPlusGMData) ⧸ ker(abkGM8)
+≃+ ZMod 8` — the mod-8 quotient, computed-not-carried, no hypothesis. (The full `ZMod 16` with the odd
+bit is the H6 Smith-LES target.) -/
+noncomputable def dataBordismGM_quotient_abk8_equiv_zmod8 :
+    DataBordismGrp (pinPlusGMData (E := E) I) ⧸ (abkGM8 (E := E) (I := I)).ker ≃+ ZMod 8 :=
+  QuotientAddGroup.quotientKerEquivOfSurjective abkGM8 abkGM8_surjective
+
 end SKEFTHawking.PinPlusGMData
