@@ -67,4 +67,183 @@ theorem cup_coboundary_left_31 {X : TopCat} (w : SingularCochain X 2) (b : Singu
   rw [h1, mul_zero, add_zero]
   rfl
 
+/-! ## §2. The Bockstein on the ladder: `Sq¹(xpow 2) = 0` -/
+
+private theorem cmk_eq_iff' {X : TopCat} {n : ℕ} (z w : LinearMap.ker (coboundaryₗ X n)) :
+    (Submodule.Quotient.mk z : Cohomology X n) = Submodule.Quotient.mk w
+      ↔ (z : SingularCochain X n) - w ∈ coboundaryRange X n := by
+  refine (Submodule.Quotient.eq _).trans ?_
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply,
+    AddSubgroupClass.coe_sub]
+
+/-- The `x ⌣ x` cocycle (the cup-shaped representative of `xpow 2`). -/
+noncomputable def xxRep : LinearMap.ker (coboundaryₗ (TopCat.of RP4) 2) :=
+  ⟨cup xRep.1 xRep.1, LinearMap.mem_ker.mpr (cup_cocycle xRep.1 xRep.1
+    (LinearMap.mem_ker.mp xRep.2) (LinearMap.mem_ker.mp xRep.2))⟩
+
+/-- `xpow 2` carried by the cup-shaped representative. -/
+theorem xpow_two_eq_mk_xxRep : xpow 2 = Cohomology.mk (TopCat.of RP4) 2 xxRep := by
+  rw [xpow_two_eq_cupH, xpow_one_eq]
+  show cupH (Submodule.Quotient.mk xRep) (Submodule.Quotient.mk xRep) = _
+  rw [cupH_mk_mk]
+  rfl
+
+/-- **`[(x⌣x) ⌣ x] = xpow 3`** — the `(2,0)`-seeded Leibniz applied to the cup-shaped
+representative. -/
+theorem mk_cup_xxRep_xRep : Cohomology.mk (TopCat.of RP4) 3
+    ⟨cup (p := 2) (q := 1) xxRep.1 xRep.1, LinearMap.mem_ker.mpr (cup_cocycle xxRep.1 xRep.1
+      (LinearMap.mem_ker.mp xxRep.2) (LinearMap.mem_ker.mp xRep.2))⟩ = xpow 3 := by
+  have step := smithCoConnecting_cup xxRep ⟨oneC, oneC_mem_ker⟩
+  have h1 : xpow 3 = smithCoConnecting 2 (Cohomology.mk (TopCat.of RP4) (2 + 0)
+      ⟨cup (p := 2) (q := 0) xxRep.1 oneC, LinearMap.mem_ker.mpr (cup_cocycle xxRep.1 oneC
+        (LinearMap.mem_ker.mp xxRep.2) (LinearMap.mem_ker.mp oneC_mem_ker))⟩) := by
+    show smithCoConnecting 2 (xpow 2) = _
+    rw [xpow_two_eq_mk_xxRep, mk_eq_mk_cup_one xxRep]
+  rw [h1, step]
+  rfl
+
+/-- **`[x ⌣ x²] = xpow 3`** — the `(1,1)`-Leibniz form. -/
+theorem mk_cup_xRep_x2Rep : Cohomology.mk (TopCat.of RP4) 3
+    ⟨cup (p := 1) (q := 2) xRep.1 x2Rep.1, LinearMap.mem_ker.mpr (cup_cocycle xRep.1 x2Rep.1
+      (LinearMap.mem_ker.mp xRep.2) (LinearMap.mem_ker.mp x2Rep.2))⟩ = xpow 3 := by
+  have step := smithCoConnecting_cup xRep xRep
+  have h1 : xpow 3 = smithCoConnecting 2 (Cohomology.mk (TopCat.of RP4) (1 + 1)
+      ⟨cup (p := 1) (q := 1) xRep.1 xRep.1, LinearMap.mem_ker.mpr (cup_cocycle xRep.1 xRep.1
+        (LinearMap.mem_ker.mp xRep.2) (LinearMap.mem_ker.mp xRep.2))⟩) := by
+    show smithCoConnecting 2 (xpow 2) = _
+    rw [xpow_two_eq_mk_xxRep]
+    rfl
+  rw [h1, step]
+  rfl
+
+/-- **The second-slot swap**: `[x ⌣ (x⌣x)] = xpow 3` — the two `xpow 2`-representatives differ
+by a coboundary, which the cocycle-cup absorbs. -/
+theorem mk_cup_xRep_xxRep : Cohomology.mk (TopCat.of RP4) 3
+    ⟨cup (p := 1) (q := 2) xRep.1 xxRep.1, LinearMap.mem_ker.mpr (cup_cocycle xRep.1 xxRep.1
+      (LinearMap.mem_ker.mp xRep.2) (LinearMap.mem_ker.mp xxRep.2))⟩ = xpow 3 := by
+  rw [← mk_cup_xRep_x2Rep]
+  refine (cmk_eq_iff' _ _).mpr ?_
+  have hdiff : (xxRep : SingularCochain (TopCat.of RP4) 2)
+      - (x2Rep : SingularCochain (TopCat.of RP4) 2)
+      ∈ coboundaryRange (TopCat.of RP4) 2 := by
+    refine (cmk_eq_iff' xxRep x2Rep).mp ?_
+    show Cohomology.mk (TopCat.of RP4) 2 xxRep = Cohomology.mk (TopCat.of RP4) 2 x2Rep
+    rw [← xpow_two_eq_mk_xxRep, xpow_two_eq]
+  obtain ⟨w, hw⟩ := hdiff
+  refine ⟨cup xRep.1 w, ?_⟩
+  show coboundary (TopCat.of RP4) (1 + 1) (cup xRep.1 w)
+    = cup xRep.1 xxRep.1 - cup xRep.1 x2Rep.1
+  rw [← cup_coboundary_right_11 xRep.1 w (LinearMap.mem_ker.mp xRep.2),
+    show coboundary (TopCat.of RP4) 1 w = coboundaryₗ (TopCat.of RP4) 1 w from rfl, hw]
+  have h := map_sub (cupₗ (X := TopCat.of RP4) 1 2 xRep.1)
+    (xxRep : SingularCochain (TopCat.of RP4) 2) (x2Rep : SingularCochain (TopCat.of RP4) 2)
+  simpa only [cupₗ_apply] using h
+
+/-- **`Sq¹(xpow 2) = 0`** — Leibniz at `(1,1)` on the cup-shaped representative gives
+`[x⌣x⌣x] + [x⌣x⌣x] = xpow 3 + xpow 3 = 0` (both association orders are `xpow 3`). -/
+theorem Sq1_xpow_two : Sq1 (xpow 2) = 0 := by
+  rw [xpow_two_eq_mk_xxRep]
+  show Sq1 (Submodule.Quotient.mk xxRep) = 0
+  rw [Sq1_apply]
+  have hmem₁ : cup (p := 2) (q := 1) xxRep.1 xRep.1
+      ∈ LinearMap.ker (coboundaryₗ (TopCat.of RP4) 3) :=
+    LinearMap.mem_ker.mpr (cup_cocycle _ _ (LinearMap.mem_ker.mp xxRep.2)
+      (LinearMap.mem_ker.mp xRep.2))
+  have hmem₂ : cup (p := 1) (q := 2) xRep.1 xxRep.1
+      ∈ LinearMap.ker (coboundaryₗ (TopCat.of RP4) 3) :=
+    LinearMap.mem_ker.mpr (cup_cocycle _ _ (LinearMap.mem_ker.mp xRep.2)
+      (LinearMap.mem_ker.mp xxRep.2))
+  have hsplit : (⟨Sq1cochain (xxRep : SingularCochain (TopCat.of RP4) 2),
+      Sq1cochain_cocycle _ xxRep.2⟩ : LinearMap.ker (coboundaryₗ (TopCat.of RP4) 3))
+      = ⟨cup (p := 2) (q := 1) xxRep.1 xRep.1, hmem₁⟩
+        + ⟨cup (p := 1) (q := 2) xRep.1 xxRep.1, hmem₂⟩ := by
+    apply Subtype.ext
+    show Sq1cochain (cup xRep.1 xRep.1) = _
+    rw [Sq1cochain_cup_11 xRep.1 xRep.1 (LinearMap.mem_ker.mp xRep.2)
+      (LinearMap.mem_ker.mp xRep.2),
+      Sq1cochain_eq_cup_on_C1 xRep.1 xRep.2]
+    rfl
+  rw [hsplit]
+  erw [Submodule.Quotient.mk_add]
+  have h1 := mk_cup_xxRep_xRep
+  have h2 := mk_cup_xRep_xxRep
+  show Cohomology.mk (TopCat.of RP4) 3 ⟨cup (p := 2) (q := 1) xxRep.1 xRep.1, hmem₁⟩
+    + Cohomology.mk (TopCat.of RP4) 3 ⟨cup (p := 1) (q := 2) xRep.1 xxRep.1, hmem₂⟩ = 0
+  rw [h1, h2, ← two_smul (ZMod 2) (xpow 3), show (2 : ZMod 2) = 0 by decide, zero_smul]
+
+/-! ## §3. `Sq¹(xpow 3) = xpow 4` and `μ(Sq¹ x³) = 1` -/
+
+/-- **`[x² ⌣ (x⌣x)] = xpow 4`** — `cupH24` is class-level, so mixing the two `xpow 2`
+representatives is free. -/
+theorem mk_cup_x2Rep_xxRep : Cohomology.mk (TopCat.of RP4) 4
+    ⟨cup (p := 2) (q := 2) x2Rep.1 xxRep.1, LinearMap.mem_ker.mpr (cup_cocycle x2Rep.1 xxRep.1
+      (LinearMap.mem_ker.mp x2Rep.2) (LinearMap.mem_ker.mp xxRep.2))⟩ = xpow 4 := by
+  rw [xpow_four_eq_cupH24]
+  nth_rewrite 1 [xpow_two_eq]
+  nth_rewrite 1 [xpow_two_eq_mk_xxRep]
+  show _ = cupH24 (Submodule.Quotient.mk x2Rep) (Submodule.Quotient.mk xxRep)
+  rw [cupH24_mk_mk]
+  rfl
+
+/-- **`Sq¹(xpow 3) = xpow 4`** — Leibniz at `(2,1)` on `[x² ⌣ x]`: the `Sq¹x²`-term is the cup
+of a coboundary (`Sq¹(xpow 2) = 0`) and dies; the other term is `x² ⌣ x² = xpow 4`. -/
+theorem Sq1_xpow_three : Sq1 (xpow 3) = xpow 4 := by
+  rw [xpow_three_eq]
+  show Sq1 (Submodule.Quotient.mk
+    (⟨cup (p := 2) (q := 1) x2Rep.1 xRep.1, LinearMap.mem_ker.mpr
+      (cup_cocycle x2Rep.1 xRep.1 (LinearMap.mem_ker.mp x2Rep.2)
+        (LinearMap.mem_ker.mp xRep.2))⟩ : LinearMap.ker (coboundaryₗ (TopCat.of RP4) 3)))
+    = xpow 4
+  rw [Sq1_apply]
+  -- the Sq¹x²-term: Sq1cochain x2Rep is a coboundary
+  have hzero : Sq1cochain (x2Rep : SingularCochain (TopCat.of RP4) 2)
+      ∈ coboundaryRange (TopCat.of RP4) 3 := by
+    have h0 : Sq1 (xpow 2) = 0 := Sq1_xpow_two
+    rw [xpow_two_eq] at h0
+    have h1 : Sq1 (Submodule.Quotient.mk x2Rep) = 0 := h0
+    rw [Sq1_apply] at h1
+    have h2 := (Submodule.Quotient.mk_eq_zero _).mp h1
+    simpa only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] using h2
+  obtain ⟨w, hw⟩ := hzero
+  have hmem₁ : cup (p := 3) (q := 1) (Sq1cochain (x2Rep : SingularCochain (TopCat.of RP4) 2))
+      xRep.1 ∈ LinearMap.ker (coboundaryₗ (TopCat.of RP4) 4) :=
+    LinearMap.mem_ker.mpr (cup_cocycle _ _
+      (Sq1cochain_cocycle _ x2Rep.2) (LinearMap.mem_ker.mp xRep.2))
+  have hmem₂ : cup (p := 2) (q := 2) x2Rep.1 xxRep.1
+      ∈ LinearMap.ker (coboundaryₗ (TopCat.of RP4) 4) :=
+    LinearMap.mem_ker.mpr (cup_cocycle _ _ (LinearMap.mem_ker.mp x2Rep.2)
+      (LinearMap.mem_ker.mp xxRep.2))
+  have hsplit : (⟨Sq1cochain (cup (p := 2) (q := 1) x2Rep.1 xRep.1),
+      Sq1cochain_cocycle _ (LinearMap.mem_ker.mpr (cup_cocycle x2Rep.1 xRep.1
+        (LinearMap.mem_ker.mp x2Rep.2) (LinearMap.mem_ker.mp xRep.2)))⟩ :
+      LinearMap.ker (coboundaryₗ (TopCat.of RP4) 4))
+      = ⟨_, hmem₁⟩ + ⟨_, hmem₂⟩ := by
+    apply Subtype.ext
+    show Sq1cochain (cup x2Rep.1 xRep.1) = _
+    rw [Sq1cochain_cup_21 x2Rep.1 xRep.1 (LinearMap.mem_ker.mp x2Rep.2)
+      (LinearMap.mem_ker.mp xRep.2),
+      Sq1cochain_eq_cup_on_C1 xRep.1 xRep.2]
+    rfl
+  rw [hsplit]
+  erw [Submodule.Quotient.mk_add]
+  -- first term: cup (δw) x = δ(w ⌣ x), a coboundary → class 0
+  have hfirst : (Submodule.Quotient.mk (⟨_, hmem₁⟩ :
+      LinearMap.ker (coboundaryₗ (TopCat.of RP4) 4)) : Cohomology (TopCat.of RP4) 4) = 0 := by
+    refine (Submodule.Quotient.mk_eq_zero _).mpr ?_
+    simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply]
+    refine ⟨cup w xRep.1, ?_⟩
+    show coboundary (TopCat.of RP4) 3 (cup w xRep.1)
+      = cup (Sq1cochain (x2Rep : SingularCochain (TopCat.of RP4) 2)) xRep.1
+    rw [← cup_coboundary_left_31 w xRep.1 (LinearMap.mem_ker.mp xRep.2),
+      show coboundary (TopCat.of RP4) 2 w = coboundaryₗ (TopCat.of RP4) 2 w from rfl, hw]
+  rw [hfirst, zero_add]
+  exact mk_cup_x2Rep_xxRep
+
+/-- **`μ(Sq¹(xpow 3)) = 1`** — the Bockstein value that certifies `v₁ = x` (M4-c7). -/
+theorem mu_Sq1_xpow_three :
+    (SKEFTHawking.SingularPD4Instances.poincareDual4Mid_of_closed (M := RP4)).mu
+      (Sq1 (xpow 3)) = 1 := by
+  rw [Sq1_xpow_three]
+  exact SKEFTHawking.RP4WuAssembly.mu_xpow_four
+
 end SKEFTHawking.RP4BocksteinAssembly
