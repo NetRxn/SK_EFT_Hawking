@@ -1,6 +1,8 @@
 import Mathlib
 import SKEFTHawking.SingularUniversalCoeff
 import SKEFTHawking.SingularPDWindow
+import SKEFTHawking.SingularPDWindow4
+import SKEFTHawking.SingularCompactlySupportedTop
 
 /-!
 # Phase 5q.G (G1 (1,2)-window extension, X5 core) — the absolute UC-dual iso and the
@@ -120,5 +122,82 @@ theorem fundamentalDuality_bijective_of_openDuality_univ_bijective {M : TopCat}
               (cohomGW (Set.univ : Set ↑M) k) (cohomFW (Set.univ : Set ↑M) k) ⊤ x)
       from (openDuality_of hop z hz ⊤ x).symm]
     rw [hα, hy']
+
+/-- **Double-dual Erdős–Kaplansky forcing**: `V ≃ V**` forces finite dimension (rank strictly
+grows at each dualization of an infinite-dimensional space). -/
+theorem finiteDimensional_of_linearEquiv_double_dual {V : Type} [AddCommGroup V]
+    [Module (ZMod 2) V]
+    (e : V ≃ₗ[ZMod 2] Module.Dual (ZMod 2) (Module.Dual (ZMod 2) V)) :
+    FiniteDimensional (ZMod 2) V := by
+  by_contra h
+  have hrank : Cardinal.aleph0 ≤ Module.rank (ZMod 2) V := by
+    rw [← not_lt]
+    intro hlt
+    exact h (Module.rank_lt_aleph0_iff.mp hlt)
+  have hlt1 := lift_rank_lt_rank_dual (K := ZMod 2) (V := V) hrank
+  rw [Cardinal.lift_id] at hlt1
+  have hrank2 : Cardinal.aleph0 ≤ Module.rank (ZMod 2) (Module.Dual (ZMod 2) V) :=
+    le_of_lt (lt_of_le_of_lt hrank hlt1)
+  have hlt2 := lift_rank_lt_rank_dual (K := ZMod 2) (V := Module.Dual (ZMod 2) V) hrank2
+  rw [Cardinal.lift_id] at hlt2
+  rw [← e.rank_eq] at hlt2
+  exact absurd (lt_trans hlt1 hlt2) (lt_irrefl _)
+
+open SKEFTHawking.SingularOpenDualityMVConnSquare SKEFTHawking.SingularPDWindow4
+  SKEFTHawking.SingularCompactlySupportedTop SKEFTHawking.SingularChartBridge in
+/-- **X5b: the three window findims** — on a closed charted 4-manifold carrying the `P₄(univ)`
+data, `H¹`, `H²`, `H³` (and `H₁`, `H₂`, `H₃`) are finite-dimensional: each window's
+`fundamentalDuality` is bijective (the `⊤`-collapse bridge on the `P₄` conjuncts), the colimit
+collapses onto ordinary cohomology, and the UC-dual isos close the Erdős–Kaplansky self-duality
+chains (`H₂ ≅ (H₂)*` at the middle; `H₁ ≅ (H₁)**` through the `(1,2)/(3,0)` pair). -/
+theorem finiteDimensional_cohomology_windows {M : Type} [TopologicalSpace M] [T2Space M]
+    [CompactSpace M] [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (zM : SingularChain (TopCat.of M) (1 + 0 + 3))
+    (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0)
+    (hop : IsOpen (Set.univ : Set ↑(TopCat.of M)))
+    (hP4 : SKEFTHawking.SingularPDWindow4.pdWindowP4 zM hzM Set.univ hop) :
+    FiniteDimensional (ZMod 2) (Cohomology (TopCat.of M) 1)
+      ∧ FiniteDimensional (ZMod 2) (Cohomology (TopCat.of M) 2)
+      ∧ FiniteDimensional (ZMod 2) (Cohomology (TopCat.of M) 3) := by
+  haveI : T2Space ↑(TopCat.of M) := inferInstanceAs (T2Space M)
+  haveI : CompactSpace ↑(TopCat.of M) := inferInstanceAs (CompactSpace M)
+  obtain ⟨⟨h21, h30, _hD0⟩, h12⟩ := hP4
+  -- the three window equivalences H^k ≅ H_{m+1}
+  have e21 : Cohomology (TopCat.of M) (1 + 1) ≃ₗ[ZMod 2] Homology (TopCat.of M) (0 + 1 + 1) :=
+    (compactlySupportedTopEquiv (M := TopCat.of M) (1 + 1)).symm.trans
+      (LinearEquiv.ofBijective _
+        (fundamentalDuality_bijective_of_openDuality_univ_bijective hop _ _ h21))
+  have e30 : Cohomology (TopCat.of M) (2 + 1) ≃ₗ[ZMod 2] Homology (TopCat.of M) (0 + 1) :=
+    (compactlySupportedTopEquiv (M := TopCat.of M) (2 + 1)).symm.trans
+      (LinearEquiv.ofBijective _
+        (fundamentalDuality_bijective_of_openDuality_univ_bijective hop _ _ h30))
+  have e12 : Cohomology (TopCat.of M) (0 + 1) ≃ₗ[ZMod 2] Homology (TopCat.of M) (1 + 1 + 1) :=
+    (compactlySupportedTopEquiv (M := TopCat.of M) (0 + 1)).symm.trans
+      (LinearEquiv.ofBijective _
+        (fundamentalDuality_bijective_of_openDuality_univ_bijective hop _ _ h12))
+  -- the UC-dual isos
+  have u1 := ucDualEquiv (TopCat.of M) 0   -- H¹ ≅ (H₁)*
+  have u2 := ucDualEquiv (TopCat.of M) 1   -- H² ≅ (H₂)*
+  have u3 := ucDualEquiv (TopCat.of M) 2   -- H³ ≅ (H₃)*
+  -- H₂ self-duality: H₂ ≅ H² ≅ (H₂)*
+  haveI hH2fd : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) (0 + 1 + 1)) :=
+    finiteDimensional_of_linearEquiv_dual (e21.symm.trans u2)
+  -- H₁ double-duality: H₁ ≅ H³-side… A := H₁; A ≅ (A*)**-chain
+  haveI hH1fd : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) (0 + 1)) := by
+    -- H₁ ≅(e30.symm) H³ ≅(u3) (H₃)* ≅ dual of (H₃ ≅(e12.symm) H¹ ≅(u1) (H₁)*) = (H₁)**
+    have edd : Module.Dual (ZMod 2) (Homology (TopCat.of M) (1 + 1 + 1))
+        ≃ₗ[ZMod 2] Module.Dual (ZMod 2) (Module.Dual (ZMod 2)
+          (Homology (TopCat.of M) (0 + 1))) :=
+      (e12.symm.trans u1).dualMap.symm
+    exact finiteDimensional_of_linearEquiv_double_dual ((e30.symm.trans u3).trans edd)
+  -- H₃ from H₁: H₃ ≅ (via e12.symm ∘ u1) (H₁)* — f.d. dual of f.d.
+  haveI hH3fd : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) (1 + 1 + 1)) :=
+    LinearEquiv.finiteDimensional (e12.symm.trans u1).symm
+  -- the cohomology findims through the UC-duals
+  refine ⟨?_, ?_, ?_⟩
+  · exact LinearEquiv.finiteDimensional (ucDualEquiv (TopCat.of M) 0).symm
+  · exact LinearEquiv.finiteDimensional (ucDualEquiv (TopCat.of M) 1).symm
+  · exact LinearEquiv.finiteDimensional (ucDualEquiv (TopCat.of M) 2).symm
+
 
 end SKEFTHawking.SingularUCFinite
