@@ -127,10 +127,16 @@ end SKEFTHawking.Brown.Z4Quadratic
 
 /-! ## The Guillou–Marin carrier `pinPlusGMData` and the COMPUTED mod-8 grade `abkGM8`
 
-The 5q.H carrier that replaces the faithful carrier's **free** ℤ/16 grade with an invariant **computed**
-from a characteristic-surface enhancement. Per roadmap §9.1 the surface package computes the Pin⁺ invariant
+The 5q.H carrier whose grade is **computed from an enhancement** (a genuine Brown/Gauss-sum invariant),
+rather than assigned as a free ℤ/16 tag like the faithful carrier's grade. **Honest scope (mirroring the
+faithful carrier):** the enhancement `q : Z4Quadratic (Fin rank)` is *carried structure data* — for a
+general `s` it is NOT derived from `s.M`'s actual characteristic surface; it is geometrically grounded only
+at the ℝP⁴ witness (`PinPlusGMWitness.rp4GMStr`, `q := stdQuadratic 1`), exactly as the faithful carrier's
+grade is a free tag whose `[ℝP⁴]` identification is Landmark-level. What is genuine here is that `abkGM8`
+is computed **from `q`** through the real `brown` Gauss-sum algebra (with honest additive/reindex/negation
+laws), NOT that `q` is computed from `s`. Per roadmap §9.1 the surface package computes the Pin⁺ invariant
 only **mod 8** (`doubleBrown q` is even in `ZMod 16`); the odd bit / full `ZMod 16` is assembled at the
-Smith-LES level (H6), not carried here. So the carrier grade is `abkGM8 := q.brown : ZMod 8`, computed.
+Smith-LES level (H6), not carried here. So the carrier grade is `abkGM8 := q.brown : ZMod 8`.
 
 Mirrors `PinPlusTiedData`, but `revStr` negates the enhancement (`q ↦ neg q`, `β ↦ -β`) and `sumStr`
 composes by `orthSum` reindexed to `Fin (m+n)`. `Bor := PLift (Brown-equality)` (the §4-H4
@@ -148,7 +154,9 @@ variable {k : WithTop ℕ∞}
 
 /-- **A Guillou–Marin structure on `s`**: the Hausdorff witness, the `w₂`-admissibility certificate
 (the k-generic `PinPlusCertK`, reused from the tied carrier), and a characteristic-surface enhancement
-`q` on `Fin rank` (the surface's `H₁(·;ℤ/2)` basis). The mod-8 invariant is the COMPUTED `q.brown`. -/
+`q` — carried structure data on `Fin rank` (intended as the surface's `H₁(·;ℤ/2)` basis; geometrically
+grounded only at the ℝP⁴ witness, not derived from `s` in general). The mod-8 grade is `q.brown`,
+computed **from `q`** via the `brown` Gauss-sum algebra. -/
 structure GMStr (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))) [I.Boundaryless]
     (s : SingularManifold PUnit k I) : Type where
   /-- The carrier is Hausdorff — witnessed, not assumed. -/
@@ -162,9 +170,10 @@ structure GMStr (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))) 
 
 variable {I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))} [I.Boundaryless]
 
-/-- **The Guillou–Marin tangential datum** — `Mfd s := GMStr I s`, with the invariant COMPUTED from the
-enhancement's Brown value. `Bor` records Brown-equality (the §4-H4 invariance-by-structure). k-generic
-(like `pinPlusTiedData`), so the k = 0 ℝP⁴ witness instantiates it. -/
+/-- **The Guillou–Marin tangential datum** — `Mfd s := GMStr I s`, with the grade computed from the
+carried enhancement `q`'s Brown value (grounded geometrically at the ℝP⁴ witness; carried data for a
+general `s`). `Bor` records Brown-equality (the §4-H4 invariance-by-structure). k-generic (like
+`pinPlusTiedData`), so the k = 0 ℝP⁴ witness instantiates it. -/
 noncomputable def pinPlusGMData (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2))))
     [I.Boundaryless] : TangentialData PUnit k I where
   Mfd := fun s => GMStr I s
