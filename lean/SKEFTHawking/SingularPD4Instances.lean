@@ -202,4 +202,17 @@ noncomputable def poincareDual4Lo_of_closed :
   dimeq := dimeq_of_closed (M := M)
 
 
+open SKEFTHawking.PoincareDualityWu SKEFTHawking.PoincareDualityWuFormula in
+/-- **G2: the Pin⁺ Wu characterization, INSTANTIATED on the genuine PD** — for any closed
+charted 4-manifold, `w₂ = 0 ↔ v₂ = v₁²` holds with every ingredient constructed: the Wu classes
+come from the theorem-instances `poincareDual4Mid_of_closed` / `poincareDual4Lo_of_closed`
+(no hypothesis-structure anywhere in the chain). -/
+theorem wuW2_eq_zero_iff_closed :
+    wuW2 (poincareDual4Mid_of_closed (M := M)) (poincareDual4Lo_of_closed (M := M)) = 0
+      ↔ wuClass2 (poincareDual4Mid_of_closed (M := M))
+        = cupH (wuClass1 (poincareDual4Lo_of_closed (M := M)))
+            (wuClass1 (poincareDual4Lo_of_closed (M := M))) :=
+  wuW2_eq_zero_iff _ _
+
+
 end SKEFTHawking.SingularPD4Instances
