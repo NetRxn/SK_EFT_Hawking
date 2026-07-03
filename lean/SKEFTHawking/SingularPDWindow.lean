@@ -4,6 +4,7 @@ import SKEFTHawking.SingularBaseCaseD0
 import SKEFTHawking.SingularConnSquareCloseNCBotApex
 import SKEFTHawking.SingularCSCVanishAboveGeom
 import SKEFTHawking.SingularGoodCompactEuclidean
+import SKEFTHawking.SingularFundamentalDualityEndpoint
 
 /-!
 # Phase 5q.G (G1 PD-induction, B6) — the deg-4 induction predicate `P(W)` and its base case
@@ -548,6 +549,107 @@ theorem legW_top_injective {M : TopCat} [T2Space ↑M] [CompactSpace ↑M] {k m 
     rw [openDuality_of, openDuality_of]
     exact hab
   exact (of_top_univ_bijective k).injective (hD h1)
+
+
+/-! ## W-d1 (d1b/d1c): the ⊤-stage leg square and the fundamental-duality injectivity -/
+
+/-- Every chain is a `univ`-subspace chain. -/
+theorem mem_subspaceChains_univ {M : TopCat} {n : ℕ} (c : SingularChain M n) :
+    c ∈ subspaceChains (Set.univ : Set ↑M) n :=
+  SKEFTHawking.SingularExcision.mem_subspaceChains_of_support (fun _ _ => Set.subset_univ _)
+
+/-- `Homology.map` of the `univ`-subspace inclusion is bijective (it is a homeomorphism). -/
+theorem homology_map_ambIncl_univ_bijective {M : TopCat} (n : ℕ) :
+    Function.Bijective (SKEFTHawking.SingularFunctoriality.Homology.map
+      (SKEFTHawking.SingularMayerVietorisLES.ambIncl (Set.univ : Set ↑M)) n) :=
+  SKEFTHawking.SingularHomotopyInvariance.Homology.map_bijective_of_comp_id_all
+    (SKEFTHawking.SingularMayerVietorisLES.ambIncl (Set.univ : Set ↑M))
+    (⟨fun x => ⟨x, Set.mem_univ x⟩, Continuous.subtype_mk continuous_id _⟩ :
+      C(↑M, ↑(sub (Set.univ : Set ↑M))))
+    (ContinuousMap.ext fun _z => Subtype.ext rfl)
+    (ContinuousMap.ext fun _z => rfl) n
+
+open SKEFTHawking.SingularOpenDuality SKEFTHawking.SingularOpenDualityCycle
+  SKEFTHawking.SingularLocalDualityK SKEFTHawking.SingularRelativeDuality
+  SKEFTHawking.SingularFunctoriality SKEFTHawking.SingularMayerVietorisLES in
+/-- Fresh-budget helper: the `D_univ` `⊤`-leg with its per-stage cycle swapped for the ambient
+`z` (`fundCycleW_relHomologous` through `relativeDualityK_cycle_compat_relB`). -/
+private theorem legW_top_eq_relativeDualityK {M : TopCat} [T2Space ↑M] [CompactSpace ↑M]
+    {k m : ℕ} (hop : IsOpen (Set.univ : Set ↑M))
+    (z : SingularChain M (k + m + 1)) (hz : chainBoundary M (k + m) z = 0)
+    (x : cohomGW (Set.univ : Set ↑M) k (⊤ : SKEFTHawking.SingularCompactsInOpen.CompactsIn
+      (Set.univ : Set ↑M))) :
+    legW hop z hz (⊤ : SKEFTHawking.SingularCompactsInOpen.CompactsIn
+        (Set.univ : Set ↑M)) x
+      = relativeDualityK ((↑(⊤ : TopologicalSpace.Compacts ↑M) : Set ↑M)ᶜ)
+          (Set.univ : Set ↑M) k m z (mem_subspaceChains_univ z)
+          (by rw [hz]; exact Submodule.zero_mem _) x := by
+  refine relativeDualityK_cycle_compat_relB _ _ _ _ _ _ ?_ ?_ x
+  · rw [Set.biUnion_pair, interior_univ]
+    exact Set.eq_univ_of_univ_subset (Set.subset_union_left)
+  · have h := fundCycleW_relHomologous hop z hz
+      (⊤ : SKEFTHawking.SingularCompactsInOpen.CompactsIn (Set.univ : Set ↑M))
+    rwa [add_comm (RelativeChain.mk _ (k + m + 1) z)
+      (RelativeChain.mk _ (k + m + 1) (fundCycleW hop z hz ⊤))] at h
+
+open SKEFTHawking.SingularOpenDuality SKEFTHawking.SingularOpenDualityCycle
+  SKEFTHawking.SingularLocalDualityK SKEFTHawking.SingularRelativeDuality
+  SKEFTHawking.SingularFunctoriality SKEFTHawking.SingularMayerVietorisLES in
+/-- **(d1b) The `⊤`-stage leg square**: the fundamental-duality `⊤`-leg (`relativeDuality` at the
+ambient cycle `z`) is the `univ`-inclusion pushforward of the `D_univ` `⊤`-leg (`legW` at the
+per-stage `fundCycleW`) — the cycle mismatch is `fundCycleW_relHomologous`, absorbed by
+`relativeDualityK_cycle_compat_relB`. -/
+theorem relativeDuality_top_eq_map_legW {M : TopCat} [T2Space ↑M] [CompactSpace ↑M] {k m : ℕ}
+    (hop : IsOpen (Set.univ : Set ↑M))
+    (z : SingularChain M (k + m + 1)) (hz : chainBoundary M (k + m) z = 0)
+    (x : cohomGW (Set.univ : Set ↑M) k (⊤ : SKEFTHawking.SingularCompactsInOpen.CompactsIn
+      (Set.univ : Set ↑M))) :
+    SKEFTHawking.SingularRelativeDuality.relativeDuality
+        ((↑(⊤ : TopologicalSpace.Compacts ↑M) : Set ↑M)ᶜ) k m z
+        (by rw [hz]; exact Submodule.zero_mem _) x
+      = Homology.map (ambIncl (Set.univ : Set ↑M)) (m + 1)
+          (legW hop z hz (⊤ : SKEFTHawking.SingularCompactsInOpen.CompactsIn
+            (Set.univ : Set ↑M)) x) := by
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  have hchain : mapChain (ambIncl (Set.univ : Set ↑M)) (m + 1)
+        (pullbackDualityₗ ((↑(⊤ : TopologicalSpace.Compacts ↑M) : Set ↑M)ᶜ)
+          (Set.univ : Set ↑M) z (mem_subspaceChains_univ z) a)
+      = cap a.1.1 z :=
+    (congrFun (congrArg DFunLike.coe (mapChain_ambIncl (Set.univ : Set ↑M) (m + 1)))
+      _).trans (chainIncl_pullbackDualityₗ
+        ((↑(⊤ : TopologicalSpace.Compacts ↑M) : Set ↑M)ᶜ) (Set.univ : Set ↑M)
+        z (mem_subspaceChains_univ z) a)
+  exact (congrArg (fun t => Homology.mk M (m + 1) t) (Subtype.ext hchain.symm)).trans
+    (congrArg (fun t => Homology.map (ambIncl (Set.univ : Set ↑M)) (m + 1) t)
+      (legW_top_eq_relativeDualityK hop z hz (Submodule.Quotient.mk a)).symm)
+
+open SKEFTHawking.SingularOpenDuality SKEFTHawking.SingularFunctoriality
+  SKEFTHawking.SingularMayerVietorisLES in
+/-- **(d1c) W-d1: the fundamental duality is injective when `D_univ` is** — both colimits
+collapse onto their `⊤`-stages, whose legs agree by the (d1b) square. -/
+theorem fundamentalDuality_injective_of_openDuality_univ_injective {M : TopCat}
+    [T2Space ↑M] [CompactSpace ↑M] {k m : ℕ}
+    (hop : IsOpen (Set.univ : Set ↑M))
+    (z : SingularChain M (k + m + 1)) (hz : chainBoundary M (k + m) z = 0)
+    (hD : Function.Injective ⇑(openDuality (k := k) (m := m) hop z hz)) :
+    Function.Injective
+      ⇑(SKEFTHawking.SingularFundamentalDuality.fundamentalDuality k m z hz) := by
+  have hleg := legW_top_injective hop z hz hD
+  intro α β hαβ
+  obtain ⟨x, rfl⟩ := (SKEFTHawking.SingularDirectLimitTop.of_top_bijective
+    (SKEFTHawking.SingularCohomologyColimit.cohomG (M := M) k) (SKEFTHawking.SingularCohomologyColimit.cohomF k)).surjective α
+  obtain ⟨y, rfl⟩ := (SKEFTHawking.SingularDirectLimitTop.of_top_bijective
+    (SKEFTHawking.SingularCohomologyColimit.cohomG (M := M) k) (SKEFTHawking.SingularCohomologyColimit.cohomF k)).surjective β
+  have hfac : ∀ w, SKEFTHawking.SingularFundamentalDuality.fundamentalDuality k m z hz
+        (Module.DirectLimit.of (ZMod 2) (TopologicalSpace.Compacts ↑M)
+          (SKEFTHawking.SingularCohomologyColimit.cohomG k) (SKEFTHawking.SingularCohomologyColimit.cohomF k) ⊤ w)
+      = SKEFTHawking.SingularRelativeDuality.relativeDuality
+          ((↑(⊤ : TopologicalSpace.Compacts ↑M) : Set ↑M)ᶜ) k m z
+          (by rw [hz]; exact Submodule.zero_mem _) w := fun w =>
+    Module.DirectLimit.lift_of _ _ w
+  rw [hfac, hfac, relativeDuality_top_eq_map_legW hop z hz,
+    relativeDuality_top_eq_map_legW hop z hz] at hαβ
+  exact congrArg _ (hleg ((homology_map_ambIncl_univ_bijective (m + 1)).injective hαβ))
 
 
 end SKEFTHawking.SingularPDWindow
