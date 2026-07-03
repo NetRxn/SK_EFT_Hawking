@@ -980,6 +980,7 @@ import SKEFTHawking.SingularOpenDualityBot
 import SKEFTHawking.SingularOpenDualityBotNat
 import SKEFTHawking.SingularOpenDualityBotLegdeltaCollapse
 import SKEFTHawking.SingularConnSquareCloseM2Gen
+import SKEFTHawking.SingularConnSquareCloseChainMapBot
 import SKEFTHawking.SingularKroneckerFunctoriality
 import SKEFTHawking.SingularSeamDualPairing
 import SKEFTHawking.SingularConnSquareMatchLHS
