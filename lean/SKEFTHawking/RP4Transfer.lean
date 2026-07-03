@@ -329,4 +329,191 @@ theorem chainBoundary_transferChain (n : ℕ) (c : SingularChain (TopCat.of RP4)
         rw [transferChain_single]
         exact face_pair_sum σ i
 
+/-! ## §4. The apply-calculus of the 2-to-1 collapse — toward `ker π_# = im τ` -/
+
+/-- **Every `S⁴`-simplex is one of the two lifts of its pushforward.** -/
+theorem mem_pair_of_pushforward {n : ℕ}
+    (τ : (TopCat.toSSet.obj (TopCat.of S4)).obj (op (SimplexCategory.mk n))) :
+    τ = liftPlus (mapSimplex mkC τ) ∨ τ = liftMinus (mapSimplex mkC τ) := by
+  set F := mapSimplex mkC τ with hF
+  have h1 : rlP F = mkC.comp ((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τ) := by
+    rw [rlP, hF, mapSimplex, Equiv.apply_symm_apply]
+  set y := ((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τ) (bary n) with hy
+  have hmk : Quotient.mk (MulAction.orbitRel ℤˣ S4) y = rlP F (bary n) :=
+    (congrFun (congrArg DFunLike.coe h1) (bary n)).symm
+  have hcirc : Quotient.mk (MulAction.orbitRel ℤˣ S4) ∘
+      ((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τ) = rlP F :=
+    (congrArg DFunLike.coe h1).symm
+  rcases fiber_pair (hmk.trans (mk_outFiber F).symm) with hcase | hcase
+  · left
+    exact liftSimplex_unique F (outFiber F) (mk_outFiber F) τ (hy ▸ hcase) hcirc
+  · right
+    exact liftSimplex_unique F ((-1 : ℤˣ) • outFiber F) (mk_neg_outFiber F) τ
+      (hy ▸ hcase) hcirc
+
+/-- **The 2-to-1 coefficient formula**: the pushforward's coefficient at `β` is the sum of the
+coefficients at `β`'s two lifts. -/
+theorem mapChain_apply_pair {n : ℕ} (c : SingularChain (TopCat.of S4) n)
+    (β : (TopCat.toSSet.obj (TopCat.of RP4)).obj (op (SimplexCategory.mk n))) :
+    mapChain mkC n c β = c (liftPlus β) + c (liftMinus β) := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp
+  | add c d hc hd =>
+      rw [map_add, Finsupp.add_apply, hc, hd, Finsupp.add_apply, Finsupp.add_apply]
+      abel
+  | single σ a =>
+      classical
+      rw [mapChain_single, Finsupp.single_apply, Finsupp.single_apply, Finsupp.single_apply]
+      by_cases hβ : mapSimplex mkC σ = β
+      · rcases mem_pair_of_pushforward σ with hσ | hσ
+        · have hσ' : σ = liftPlus β := by rw [hβ] at hσ; exact hσ
+          rw [if_pos hβ, if_pos hσ',
+            if_neg (fun h => liftPlus_ne_liftMinus β (hσ'.symm.trans h)), add_zero]
+        · have hσ' : σ = liftMinus β := by rw [hβ] at hσ; exact hσ
+          rw [if_pos hβ, if_neg (fun h => liftPlus_ne_liftMinus β (h.symm.trans hσ')),
+            if_pos hσ', zero_add]
+      · rw [if_neg hβ, if_neg (fun h => hβ (by rw [h, mapSimplex_liftPlus])),
+          if_neg (fun h => hβ (by rw [h, mapSimplex_liftMinus])), add_zero]
+
+/-- **The transfer's coefficient at a `+`-lift is the source coefficient** (each `liftPlus β`
+arises from exactly one basis simplex). -/
+theorem transferChain_apply_liftPlus {n : ℕ} (c : SingularChain (TopCat.of RP4) n)
+    (β : (TopCat.toSSet.obj (TopCat.of RP4)).obj (op (SimplexCategory.mk n))) :
+    transferChain n c (liftPlus β) = c β := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp
+  | add c d hc hd => rw [map_add, Finsupp.add_apply, hc, hd, Finsupp.add_apply]
+  | single σ a =>
+      classical
+      have hML : liftMinus σ ≠ liftPlus β := by
+        intro h
+        have h2 := congrArg (mapSimplex mkC) h
+        rw [mapSimplex_liftMinus, mapSimplex_liftPlus] at h2
+        subst h2
+        exact liftPlus_ne_liftMinus σ h.symm
+      rw [transferChain, Finsupp.linearCombination_single, smul_add, Finsupp.smul_single,
+        Finsupp.smul_single, smul_eq_mul, mul_one, Finsupp.add_apply,
+        Finsupp.single_apply, Finsupp.single_apply, Finsupp.single_apply]
+      by_cases hσ : σ = β
+      · rw [if_pos (show liftPlus σ = liftPlus β by rw [hσ]), if_neg hML, add_zero, if_pos hσ]
+      · rw [if_neg (fun h => hσ (by
+            have h2 := congrArg (mapSimplex mkC) h
+            rwa [mapSimplex_liftPlus, mapSimplex_liftPlus] at h2)),
+          if_neg hML, if_neg hσ, add_zero]
+
+/-- **The transfer is injective** — read off the `+`-lift coefficients. -/
+theorem transferChain_injective (n : ℕ) : Function.Injective (transferChain n) := by
+  intro c d h
+  ext β
+  have h1 := congrArg (fun x => x (liftPlus β)) h
+  simpa only [transferChain_apply_liftPlus] using h1
+
+/-- **The kernel of the pushforward is the image of the transfer** — the exactness heart of the
+Smith sequence at the chain level: a mod-2 chain killed by `π_#` has its coefficients paired
+antipodally (`mapChain_apply_pair`), so adding transfer-images strips its support two lifts at a
+time; induction on a support-card bound finishes. -/
+theorem mem_range_transferChain_of_mapChain_eq_zero {n : ℕ}
+    (c : SingularChain (TopCat.of S4) n) (hc : mapChain mkC n c = 0) :
+    c ∈ LinearMap.range (transferChain n) := by
+  classical
+  suffices H : ∀ (N : ℕ) (c : SingularChain (TopCat.of S4) n), c.support.card ≤ N →
+      mapChain mkC n c = 0 → c ∈ LinearMap.range (transferChain n) from H _ c le_rfl hc
+  intro N
+  induction N with
+  | zero =>
+      intro c hcard _
+      have hc0 : c = 0 :=
+        Finsupp.support_eq_empty.mp (Finset.card_eq_zero.mp (Nat.le_zero.mp hcard))
+      exact ⟨0, by rw [map_zero, hc0]⟩
+  | succ N ih =>
+      intro c hcard hc
+      rcases Finset.eq_empty_or_nonempty c.support with hemp | ⟨σ₀, hσ₀⟩
+      · exact ⟨0, by rw [map_zero, Finsupp.support_eq_empty.mp hemp]⟩
+      · set β := mapSimplex mkC σ₀ with hβ
+        have hsum : c (liftPlus β) + c (liftMinus β) = 0 := by
+          rw [← mapChain_apply_pair, hc]
+          rfl
+        have heq : c (liftPlus β) = c (liftMinus β) := by
+          revert hsum
+          generalize c (liftPlus β) = x
+          generalize c (liftMinus β) = y
+          revert x y
+          decide
+        have hone : c σ₀ = 1 := by
+          have hne : c σ₀ ≠ 0 := Finsupp.mem_support_iff.mp hσ₀
+          revert hne
+          generalize c σ₀ = x
+          revert x
+          decide
+        have hpair := mem_pair_of_pushforward σ₀
+        rw [← hβ] at hpair
+        have hP : c (liftPlus β) = 1 := by
+          rcases hpair with h | h
+          · rw [← h]; exact hone
+          · rw [heq, ← h]; exact hone
+        have hM : c (liftMinus β) = 1 := by rw [← heq]; exact hP
+        set t := transferChain n (Finsupp.single β 1) with hts
+        have hc' : mapChain mkC n (c + t) = 0 := by
+          rw [map_add, hc, zero_add, hts]
+          exact mapChain_transferChain n _
+        have hsub : (c + t).support ⊆ c.support.erase (liftPlus β) := by
+          intro x hx
+          have hx0 : (c + t) x ≠ 0 := Finsupp.mem_support_iff.mp hx
+          rw [Finsupp.add_apply, hts, transferChain_single, Finsupp.add_apply,
+            Finsupp.single_apply, Finsupp.single_apply] at hx0
+          rw [Finset.mem_erase, Finsupp.mem_support_iff]
+          by_cases h1 : liftPlus β = x
+          · exfalso
+            apply hx0
+            rw [if_pos h1, if_neg (fun h => liftPlus_ne_liftMinus β (h.trans h1.symm).symm),
+              ← h1, hP]
+            decide
+          · by_cases h2 : liftMinus β = x
+            · exfalso
+              apply hx0
+              rw [if_neg h1, if_pos h2, ← h2, hM]
+              decide
+            · rw [if_neg h1, if_neg h2] at hx0
+              refine ⟨fun h => h1 h.symm, ?_⟩
+              intro hcx
+              apply hx0
+              rw [hcx]
+              decide
+        have hPmem : liftPlus β ∈ c.support :=
+          Finsupp.mem_support_iff.mpr (by rw [hP]; exact one_ne_zero)
+        have hcard' : (c + t).support.card ≤ N := by
+          have h1 := Finset.card_le_card hsub
+          have h2 : (c.support.erase (liftPlus β)).card = c.support.card - 1 :=
+            Finset.card_erase_of_mem hPmem
+          omega
+        obtain ⟨d, hd⟩ := ih (c + t) hcard' hc'
+        refine ⟨d + Finsupp.single β 1, ?_⟩
+        rw [map_add, hd, ← hts, add_assoc]
+        have htt : t + t = 0 := by
+          rw [← two_smul (ZMod 2) t, show (2 : ZMod 2) = 0 by decide, zero_smul]
+        rw [htt, add_zero]
+
+/-- **`ker π_# = range τ`** — the Smith short-exact-sequence identity, packaged. -/
+theorem ker_mapChain_eq_range_transferChain (n : ℕ) :
+    LinearMap.ker (mapChain mkC n) = LinearMap.range (transferChain n) := by
+  ext c
+  constructor
+  · exact fun hc => mem_range_transferChain_of_mapChain_eq_zero c (LinearMap.mem_ker.mp hc)
+  · rintro ⟨d, rfl⟩
+    exact LinearMap.mem_ker.mpr (mapChain_transferChain n d)
+
+/-- **The pushforward is surjective** — every base simplex lifts through `liftPlus`. With
+`transferChain_injective` and `ker_mapChain_eq_range_transferChain` this completes the Smith
+short exact sequence `0 → Cₙ(ℝP⁴) → Cₙ(S⁴) → Cₙ(ℝP⁴) → 0` of mod-2 chain groups. -/
+theorem mapChain_surjective (n : ℕ) : Function.Surjective (mapChain mkC n) := by
+  intro c
+  induction c using Finsupp.induction_linear with
+  | zero => exact ⟨0, map_zero _⟩
+  | add c d hc hd =>
+      obtain ⟨a, ha⟩ := hc
+      obtain ⟨b, hb⟩ := hd
+      exact ⟨a + b, by rw [map_add, ha, hb]⟩
+  | single σ a =>
+      exact ⟨Finsupp.single (liftPlus σ) a, by rw [mapChain_single, mapSimplex_liftPlus]⟩
+
 end SKEFTHawking.RP4Transfer
