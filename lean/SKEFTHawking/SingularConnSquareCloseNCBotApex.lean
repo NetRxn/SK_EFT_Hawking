@@ -30,7 +30,8 @@ open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
   SKEFTHawking.SingularSubspaceChainsEquiv SKEFTHawking.SingularRelativePairing
   SKEFTHawking.SingularRightCapBoundary SKEFTHawking.SingularRelativeCap
   SKEFTHawking.SingularExcisionIso SKEFTHawking.SingularLocalDualityKBot
-  SKEFTHawking.SingularConnSquareMatchLHS
+  SKEFTHawking.SingularConnSquareMatchLHS SKEFTHawking.SingularConnSquareCloseNC
+  SKEFTHawking.SingularMayerVietoris
 
 namespace SKEFTHawking.SingularConnSquareCloseNCBotApex
 
@@ -153,5 +154,232 @@ theorem pullbackDualityₗ₀_eq_subcap {k : ℕ} {S K : Set ↑X} (z : Singular
     ← SingularCapChainIncl.cap_chainIncl (k := k + 1) (m := 0)]
   exact congrArg (cap (k := k + 1) (m := 0) a.1.1)
     (chainIncl_subspaceChainsEquiv_symm K (k + 1) ⟨z, hzK⟩).symm
+
+variable [T2Space ↑X]
+
+/-! ## B3b — the bottom fact-(ii) mirror chain
+
+`fact_ii_two_legs_discharge` and its engines `gamma_two_legs_close` /
+`rcap_singularSd_iterate_chainBoundary_arg` / `rcap_singularSd_iterate` are all `(l+1)`-floored
+in the test-cochain degree. The four ₀-mirrors below run at `β`-degree `0`; every cast in the
+generic bodies (the `n+2+l+1 ↔ n+1+(l+1)+1` recasts, the T₀ double-cast collapse, the
+`chainBoundary_cast_comm` bridge) degenerates at the bottom — both spellings coincide at `n+1+1`
+— so the mirrors are shorter than their generics. -/
+
+/-- **`rcap` Sd-bridge on a cycle, bottom cochain** (mirror of `rcap_singularSd_iterate` at
+`l+1 → 0`): for a `0`-cocycle `ω` and a cycle `z`, `rcap ω z` equals `rcap ω (Sdʲz)` modulo a
+boundary. Cast-free (the generic's homotopy-term cast has definitionally equal endpoints). -/
+theorem rcap_singularSd_iterate₀ {M : TopCat} {k : ℕ} (ω : SingularCochain M 0)
+    (hω : coboundaryₗ M 0 ω = 0) {z : SingularChain M (k + 1)}
+    (hz : chainBoundary M k z = 0) (j : ℕ) :
+    SingularCapChainIncl.rcap (k := k + 1) ω z
+      = SingularCapChainIncl.rcap (k := k + 1) ω
+          ((⇑(SingularSubdivision.singularSd M (k + 1)))^[j] z)
+        + chainBoundary M (k + 1)
+            (SingularCapChainIncl.rcap (k := k + 1 + 1) ω
+              (SingularSubdivision.iterHomotopy M (k + 1) j z)) := by
+  have hb : z + (⇑(SingularSubdivision.singularSd M (k + 1)))^[j] z
+      = chainBoundary M (k + 1) (SingularSubdivision.iterHomotopy M (k + 1) j z) :=
+    SingularExcision.add_singularSd_iterate_eq_boundary hz j
+  have hcm : chainBoundary M (k + 1)
+        (SingularCapChainIncl.rcap (k := k + 1 + 1) ω
+          (SingularSubdivision.iterHomotopy M (k + 1) j z))
+      = SingularCapChainIncl.rcap (k := k + 1) ω
+          (chainBoundary M (k + 1) (SingularSubdivision.iterHomotopy M (k + 1) j z)) :=
+    SingularRightCapBoundary.rcap_cocycle_chainMap (k := k + 1) (l := 0) ω hω
+      (SingularSubdivision.iterHomotopy M (k + 1) j z)
+  rw [hcm, ← hb, map_add]
+  abel_nf
+  simp only [two_smul, ZModModule.add_self, zero_add]
+
+/-- **`rcap` Sd-bridge on a `∂`-argument, bottom cochain** (mirror of
+`rcap_singularSd_iterate_chainBoundary_arg` at `l+1 → 0`). -/
+theorem rcap_singularSd_iterate_chainBoundary_arg₀ {M : TopCat} {k : ℕ}
+    (ω : SingularCochain M 0) (hω : coboundaryₗ M 0 ω = 0)
+    (c : SingularChain M (k + 1 + 1)) (j : ℕ) :
+    SingularCapChainIncl.rcap (k := k + 1) ω
+        (chainBoundary M (k + 1) ((⇑(SingularSubdivision.singularSd M (k + 1 + 1)))^[j] c))
+      = SingularCapChainIncl.rcap (k := k + 1) ω (chainBoundary M (k + 1) c)
+        + chainBoundary M (k + 1)
+            (SingularCapChainIncl.rcap (k := k + 1 + 1) ω
+              (SingularSubdivision.iterHomotopy M (k + 1) j (chainBoundary M (k + 1) c))) := by
+  rw [SingularSubdivision.singularSd_iterate_chainBoundary]
+  have hz : chainBoundary M k (chainBoundary M (k + 1) c) = 0 :=
+    chainBoundary_chainBoundary_apply M k c
+  rw [rcap_singularSd_iterate₀ ω hω hz j]
+  abel_nf
+  simp only [two_smul, ZModModule.add_self, add_zero]
+
+omit [T2Space ↑X] in
+/-- **The γ two-legs close, bottom cochain** (mirror of `gamma_two_legs_close` at `l+1 → 0`):
+the two realized V-legs of the pd-side (`jP`) and F-side (`jF`) splits pair equally against the
+rel-`(A∩B)` cocycle `g`, via the β2 boundary-kill on the combined parent `DP + DF`. Cast-free. -/
+theorem gamma_two_legs_close₀ {A B W : Set ↑X} (hA : IsOpen A) (hB : IsOpen B) {n : ℕ}
+    (g : SingularCochain X (n + 1)) (hgc : coboundary X (n + 1) g = 0)
+    (hg : g ∈ relCochains (A ∩ B) (n + 1))
+    (β : SingularCochain (sub W) 0)
+    (hβ : coboundaryₗ (sub W) 0 β = 0)
+    (zsub : SingularChain (sub W) (n + 1 + 1))
+    (hzbdcov : chainIncl W (n + 1) (chainBoundary (sub W) (n + 1) zsub)
+      ∈ subspaceChains (A ∪ B) (n + 1))
+    (Camb : SingularChain X (n + 1 + 1)) (jP : ℕ)
+    (hCore : chainBoundary X (n + 1) Camb
+      = chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β
+          (chainBoundary (sub W) (n + 1) zsub)))
+    {a₁ b₁ : SingularChain X (n + 1)}
+    (ha₁ : a₁ ∈ subspaceChains A (n + 1)) (hb₁ : b₁ ∈ subspaceChains B (n + 1))
+    (hP₁ : chainBoundary X (n + 1)
+        ((⇑(SingularSubdivision.singularSd X (n + 1 + 1)))^[jP] Camb) = a₁ + b₁)
+    (jF : ℕ) {a₂ b₂ : SingularChain (sub W) (n + 1)}
+    (ha₂ : chainIncl W (n + 1) a₂ ∈ subspaceChains A (n + 1))
+    (hb₂ : chainIncl W (n + 1) b₂ ∈ subspaceChains B (n + 1))
+    (hQ : chainBoundary (sub W) (n + 1)
+        ((⇑(SingularSubdivision.singularSd (sub W) (n + 1 + 1)))^[jF] zsub)
+      = a₂ + b₂) :
+    kronecker g b₁
+      = kronecker g (chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β b₂)) := by
+  classical
+  have hcyc : chainBoundary X n (chainBoundary X (n + 1) Camb) = 0 :=
+    chainBoundary_chainBoundary_apply X n Camb
+  have hhomP := SingularExcision.add_singularSd_iterate_eq_boundary hcyc jP
+  have hSdP : (⇑(SingularSubdivision.singularSd X (n + 1)))^[jP] (chainBoundary X (n + 1) Camb)
+      = a₁ + b₁ := by
+    rw [← SingularSubdivision.singularSd_iterate_chainBoundary, hP₁]
+  have hrc := rcap_singularSd_iterate_chainBoundary_arg₀ (k := n) β hβ zsub jF
+  rw [hQ, map_add] at hrc
+  have hIncl := congrArg (chainIncl W (n + 1)) hrc
+  rw [map_add, map_add, SingularRelativeHomologyMod2.chainIncl_chainBoundary, ← hCore] at hIncl
+  set DP := SingularSubdivision.iterHomotopy X (n + 1) jP (chainBoundary X (n + 1) Camb) with hDP
+  set DF := chainIncl W (n + 1 + 1) (SingularCapChainIncl.rcap (k := n + 1 + 1) β
+      (SingularSubdivision.iterHomotopy (sub W) (n + 1) jF
+        (chainBoundary (sub W) (n + 1) zsub))) with hDF
+  have hDPbd : chainBoundary X (n + 1) DP
+      = chainBoundary X (n + 1) Camb + (a₁ + b₁) := by
+    rw [← hhomP, hSdP]
+  have hDFbd : chainBoundary X (n + 1) DF
+      = chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β a₂)
+        + chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β b₂)
+        + chainBoundary X (n + 1) Camb := by
+    rw [hIncl]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, zero_add]
+  have hsplitE : chainBoundary X (n + 1) (DP + DF)
+      = (a₁ + chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β a₂))
+        + (b₁ + chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β b₂)) := by
+    rw [map_add, hDPbd, hDFbd]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, zero_add]
+  have hbdmem : chainBoundary X (n + 1) Camb ∈ subspaceChains (A ∪ B) (n + 1) := by
+    rw [hCore]
+    exact chainIncl_rcap_subspaceChains β _ hzbdcov
+  have hDPmem : DP ∈ subspaceChains (A ∪ B) (n + 1 + 1) :=
+    SingularExcision.iterHomotopy_mem_subspaceChains hbdmem jP
+  have hDFmem : DF ∈ subspaceChains (A ∪ B) (n + 1 + 1) := by
+    rw [hDF]
+    refine (SingularExcisionIso.chainIncl_mem_subspaceChains_iff (A ∪ B) W _).mpr ?_
+    have hDmem : SingularSubdivision.iterHomotopy (sub W) (n + 1) jF
+          (chainBoundary (sub W) (n + 1) zsub)
+        ∈ subspaceChains (Subtype.val ⁻¹' (A ∪ B)) (n + 1 + 1) :=
+      SingularExcision.iterHomotopy_mem_subspaceChains
+        ((SingularExcisionIso.chainIncl_mem_subspaceChains_iff (A ∪ B) W _).mp hzbdcov) jF
+    exact SingularRightCapBoundary.rcap_mem_subspaceChains (X := sub W) (k := n + 1 + 1) (l := 0)
+      _ β hDmem
+  have hzero := kronecker_boundary_split_V_leg_zero hA hB g hgc hg (DP + DF)
+    (Submodule.add_mem _ hDPmem hDFmem)
+    (Submodule.add_mem _ ha₁ (chainIncl_rcap_subspaceChains β a₂ ha₂))
+    (Submodule.add_mem _ hb₁ (chainIncl_rcap_subspaceChains β b₂ hb₂))
+    hsplitE
+  rw [kronecker_add_right, add_eq_zero_iff_eq_neg, CharTwo.neg_eq] at hzero
+  exact hzero
+
+/-- **Fact-(ii) discharge at the bottom** (mirror of `fact_ii_two_legs_discharge` at `l+1 → 0`;
+the F₂-slot is the ONE fundamental presentation `f` — at the bottom BOTH the pd-spelling and the
+F-spelling coincide at `n+1+1`, so the generic's recast/`hswap`/T₀-collapse machinery vanishes
+and `hQsplit` takes the bare (cast-free) subdivision split. ℤ/2. -/
+theorem fact_ii_two_legs_discharge₀ {A B W : Set ↑X} (hA : IsOpen A) (hB : IsOpen B) {n : ℕ}
+    (g : ↥(relCoboundaryₗ (A ∩ B) (n + 1)).ker)
+    (β : SingularCochain (sub W) 0) (hβ : coboundaryₗ (sub W) 0 β = 0)
+    {f : SingularChain X (n + 1 + 1)}
+    (hfmem : f ∈ subspaceChains W (n + 1 + 1))
+    (hfbd : chainBoundary X (n + 1) f ∈ subspaceChains (A ∪ B) (n + 1))
+    (jP : ℕ) {aR : SingularChain (sub (A ∩ W)) (n + 1)} {bR : SingularChain (sub (B ∩ W)) (n + 1)}
+    (hP : chainBoundary X (n + 1) ((⇑(SingularSubdivision.singularSd X (n + 1 + 1)))^[jP]
+        (chainIncl W (n + 1 + 1) (SingularCapChainIncl.rcap (k := n + 1 + 1) β
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W (n + 1 + 1)).symm ⟨f, hfmem⟩))))
+      = chainIncl (A ∩ W) (n + 1) aR + chainIncl (B ∩ W) (n + 1) bR)
+    (jF : ℕ) {aF : SingularChain (sub (A ∩ W)) (n + 1)}
+    {bF : SingularChain (sub (B ∩ W)) (n + 1)}
+    (hQsplit : chainBoundary X (n + 1)
+        ((⇑(SingularSubdivision.singularSd X (n + 1 + 1)))^[jF] f)
+      = chainIncl (A ∩ W) (n + 1) aF + chainIncl (B ∩ W) (n + 1) bF)
+    (hbFmem : chainIncl (B ∩ W) (n + 1) bF ∈ subspaceChains W (n + 1))
+    (hmem3 : chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W (n + 1)).symm ⟨_, hbFmem⟩))
+      ∈ subspaceChains (B ∩ W) (n + 1)) :
+    kronecker g.1.1 (chainIncl (B ∩ W) (n + 1) bR)
+      = kronecker g.1.1 (chainIncl (B ∩ W) (n + 1)
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv (B ∩ W) (n + 1)).symm
+            ⟨_, hmem3⟩)) := by
+  classical
+  have hgprops := SingularConnSquareRHSPairing.relCocycle_props g
+  set zsub := (SingularSubspaceChainsEquiv.subspaceChainsEquiv W (n + 1 + 1)).symm
+    ⟨f, hfmem⟩ with hzsubdef
+  have hchz := SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm
+    (S := W) (n + 1 + 1) ⟨f, hfmem⟩
+  have hbdchain : chainIncl W (n + 1) (chainBoundary (sub W) (n + 1) zsub)
+      = chainBoundary X (n + 1) f :=
+    (SingularRelativeHomologyMod2.chainIncl_chainBoundary W (n + 1) zsub).trans
+      (congrArg (chainBoundary X (n + 1)) hchz)
+  have hzbdcov : chainIncl W (n + 1) (chainBoundary (sub W) (n + 1) zsub)
+      ∈ subspaceChains (A ∪ B) (n + 1) :=
+    hbdchain.symm ▸ hfbd
+  have hrcbd : chainBoundary (sub W) (n + 1)
+        (SingularCapChainIncl.rcap (k := n + 1 + 1) β zsub)
+      = SingularCapChainIncl.rcap (k := n + 1) β (chainBoundary (sub W) (n + 1) zsub) :=
+    SingularRightCapBoundary.rcap_cocycle_chainMap (k := n + 1) (l := 0) β hβ zsub
+  have hCore : chainBoundary X (n + 1)
+      (chainIncl W (n + 1 + 1) (SingularCapChainIncl.rcap (k := n + 1 + 1) β zsub))
+      = chainIncl W (n + 1) (SingularCapChainIncl.rcap (k := n + 1) β
+          (chainBoundary (sub W) (n + 1) zsub)) :=
+    (SingularRelativeHomologyMod2.chainIncl_chainBoundary W (n + 1) _).symm.trans
+      (congrArg (chainIncl W (n + 1)) hrcbd)
+  have ha₁ := SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left (n + 1)
+    (⟨aR, rfl⟩ : chainIncl _ (n + 1) aR ∈ subspaceChains _ (n + 1))
+  have hb₁ := SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left (n + 1)
+    (⟨bR, rfl⟩ : chainIncl _ (n + 1) bR ∈ subspaceChains _ (n + 1))
+  have haFmem : chainIncl (A ∩ W) (n + 1) aF ∈ subspaceChains W (n + 1) :=
+    SingularMayerVietoris.subspaceChains_mono Set.inter_subset_right (n + 1) ⟨aF, rfl⟩
+  have e₆ : chainIncl W (n + 1)
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W (n + 1)).symm ⟨_, haFmem⟩)
+      = chainIncl (A ∩ W) (n + 1) aF :=
+    SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (S := W) (n + 1) ⟨_, haFmem⟩
+  have e₇ : chainIncl W (n + 1)
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W (n + 1)).symm ⟨_, hbFmem⟩)
+      = chainIncl (B ∩ W) (n + 1) bF :=
+    SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (S := W) (n + 1) ⟨_, hbFmem⟩
+  have ha₂ := e₆.symm ▸ SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left
+    (n + 1) (⟨aF, rfl⟩ : chainIncl _ (n + 1) aF ∈ subspaceChains _ (n + 1))
+  have hb₂ := e₇.symm ▸ SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left
+    (n + 1) (⟨bF, rfl⟩ : chainIncl _ (n + 1) bF ∈ subspaceChains _ (n + 1))
+  have hQamb : chainIncl W (n + 1)
+        (chainBoundary (sub W) (n + 1)
+          ((⇑(SingularSubdivision.singularSd (sub W) (n + 1 + 1)))^[jF] zsub))
+      = chainIncl W (n + 1)
+          ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W (n + 1)).symm ⟨_, haFmem⟩
+            + (SingularSubspaceChainsEquiv.subspaceChainsEquiv W (n + 1)).symm ⟨_, hbFmem⟩) :=
+    (SingularRelativeHomologyMod2.chainIncl_chainBoundary W (n + 1) _).trans
+      (((congrArg (chainBoundary X (n + 1))
+          (singularSd_iterate_chainIncl jF zsub).symm).trans
+        ((congrArg (fun t => chainBoundary X (n + 1)
+            ((⇑(SingularSubdivision.singularSd X (n + 1 + 1)))^[jF] t)) hchz).trans
+          (hQsplit.trans
+            ((map_add (chainIncl W (n + 1)) _ _).trans
+              (congrArg₂ (· + ·) e₆ e₇)).symm))))
+  have hQ := SingularRelativeHomologyMod2.chainIncl_injective W (n + 1) hQamb
+  exact (gamma_two_legs_close₀ hA hB g.1.1 hgprops.1 g.1.2 β hβ zsub hzbdcov _ jP hCore
+    ha₁ hb₁ hP jF ha₂ hb₂ hQ).trans
+    (congrArg (kronecker g.1.1)
+      (SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (S := B ∩ W) (n + 1)
+        ⟨_, hmem3⟩).symm)
 
 end SKEFTHawking.SingularConnSquareCloseNCBotApex
