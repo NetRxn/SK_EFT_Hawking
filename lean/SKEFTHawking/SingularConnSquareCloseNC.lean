@@ -2238,6 +2238,61 @@ theorem kronecker_mapChain_boundaryExtract_class_invariant {M Y' Z : TopCat}
         ⟨SingularKroneckerFunctoriality.pullbackCochainMap φout n β.1,
           SingularKroneckerFunctoriality.pullbackCochainMap_mem_ker φout n β⟩⟩
 
+/-- **`legW` on a `Quotient.mk` is the `Homology.mk` of the pulled-back duality chain** (mini-brick G,
+legW-HEADED like `cover_partition_of_legW` so the apex's concrete `legW … (mk g_rep)` matches the head
+syntactically and is never whnf-reduced; over free carriers the `relativeDualityK`-on-`mk` defeq is
+cheap). Exposes the W-leg's canonical cycle representative for the class-equality chain. -/
+theorem legW_mk_eq {k m : ℕ} {W : Set ↑X} (hW : IsOpen W)
+    (z₀ : SingularChain X (k + m + 1)) (hz₀ : chainBoundary X (k + m) z₀ = 0)
+    (K : CompactsIn W) (a : LinearMap.ker (relCoboundaryₗ ((↑K.1 : Set ↑X)ᶜ) k)) :
+    legW hW z₀ hz₀ K (Submodule.Quotient.mk a)
+      = Homology.mk (sub W) (m + 1)
+          ⟨SingularLocalDualityK.pullbackDualityₗ ((↑K.1 : Set ↑X)ᶜ) W
+              (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K)
+              (SingularOpenDualityCycle.fundCycleW_mem_W hW z₀ hz₀ K) a,
+            SingularLocalDualityK.pullbackDualityₗ_mem_cycles _ _ _ _
+              (SingularOpenDualityCycle.fundCycleW_boundary hW z₀ hz₀ K) a⟩ := by
+  unfold legW
+  rfl
+
+/-- **`legW` evaluates on any subdivided-cap representative** (Brick H — the fact-(i) class-equality
+feed). Any `sub W`-cycle whose ambient image is `cap g (Sdᵘ fund_K)` represents `legW (mk g)`: the
+canonical W-leg rep `pullbackDualityₗ` and the subdivided cap differ by the REALIZED Brick-B bound
+`cap g (Dᵤ fund_K)` — `(U∪V)`-supported (`iterHomotopy_mem` + cap-support), so the boundary lives in
+`sub W` and `mk_eq_of_mem_boundaries` closes. Composed with `hzc0`/`hpart` at the apex this hands the
+Brick-F canonical partition's class equality to the seam transport
+(`kronecker_mapChain_boundaryExtract_class_invariant`). -/
+theorem legW_iterate_cap_class_eq {k m : ℕ} {W : Set ↑X} (hW : IsOpen W)
+    (z₀ : SingularChain X (k + m + 1)) (hz₀ : chainBoundary X (k + m) z₀ = 0)
+    (K : CompactsIn W) (a : LinearMap.ker (relCoboundaryₗ ((↑K.1 : Set ↑X)ᶜ) k))
+    (μ : ℕ) (zsum : SingularChain (sub W) (m + 1)) (hcyc : zsum ∈ cycles (sub W) (m + 1))
+    (hamb : chainIncl W (m + 1) zsum
+      = cap (m := m + 1) a.1.1 ((⇑(SingularSubdivision.singularSd X (k + m + 1)))^[μ]
+          (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K))) :
+    legW hW z₀ hz₀ K (Submodule.Quotient.mk a)
+      = Homology.mk (sub W) (m + 1) ⟨zsum, hcyc⟩ := by
+  rw [legW_mk_eq hW z₀ hz₀ K a]
+  have hgc : coboundary X k a.1.1 = 0 := (SingularConnSquareRHSPairing.relCocycle_props a).1
+  have hBB := cap_cocycle_singularSd_iterate_add_eq_boundary a.1.1 hgc a.1.2
+    (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K) μ
+    (SingularOpenDualityCycle.fundCycleW_boundary hW z₀ hz₀ K)
+  have hTmem : cap (m := m + 1 + 1) a.1.1 (SingularSubdivision.iterHomotopy X (k + m + 1) μ
+      (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K)) ∈ subspaceChains W (m + 1 + 1) :=
+    SingularCapSupport.cap_mem_subspaceChains (m := m + 1 + 1) W a.1.1
+      (SingularExcision.iterHomotopy_mem_subspaceChains
+        (SingularOpenDualityCycle.fundCycleW_mem_W hW z₀ hz₀ K) μ)
+  have hE : chainIncl W (m + 1 + 1)
+      ((SingularSubspaceChainsEquiv.subspaceChainsEquiv W (m + 1 + 1)).symm ⟨_, hTmem⟩)
+      = cap (m := m + 1 + 1) a.1.1 (SingularSubdivision.iterHomotopy X (k + m + 1) μ
+          (SingularOpenDualityCycle.fundCycleW hW z₀ hz₀ K)) :=
+    SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm W (m + 1 + 1) ⟨_, hTmem⟩
+  refine mk_eq_of_mem_boundaries W _ _ _ _
+    ⟨(SingularSubspaceChainsEquiv.subspaceChainsEquiv W (m + 1 + 1)).symm ⟨_, hTmem⟩, ?_⟩
+  apply chainIncl_injective W (m + 1)
+  rw [SingularRelativeHomologyMod2.chainIncl_chainBoundary, hE, map_add,
+    SingularLocalDualityK.chainIncl_pullbackDualityₗ, hamb, ← hBB]
+  exact add_comm _ _
+
 /-- **The γ-computation** (the fact-(ii) two-legs closer, EXTRACTED — single-choice form). The two
 goal legs are V-legs of cover-splits of two parents sharing ONE fundamental presentation `zsub`:
 the pd-side parent `Camb` (whose un-subdivided boundary is EXACTLY `chainIncl (rcap β ∂zsub)` —
