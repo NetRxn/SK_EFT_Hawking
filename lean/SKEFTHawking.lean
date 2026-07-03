@@ -985,6 +985,7 @@ import SKEFTHawking.RP4Covering
 import SKEFTHawking.StdSimplexLocPath
 import SKEFTHawking.RP4Transfer
 import SKEFTHawking.RP4SmithLES
+import SKEFTHawking.RP4SmithCochain
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
