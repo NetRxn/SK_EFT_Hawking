@@ -272,4 +272,61 @@ theorem face_lift_mem_pair {n : ℕ}
     exact liftSimplex_unique F ((-1 : ℤˣ) • outFiber F) (mk_neg_outFiber F) τF
       (hy ▸ hcase) hcirc
 
+/-- **Faces of the two lifts are distinct** — else the lifts agree at a face-embedded point,
+forcing them equal by covering uniqueness, contradicting the barycenter separation. -/
+theorem face_liftPlus_ne_face_liftMinus {n : ℕ}
+    (σ : (TopCat.toSSet.obj (TopCat.of RP4)).obj (op (SimplexCategory.mk (n + 1))))
+    (i : Fin (n + 2)) :
+    SKEFTHawking.SingularCohomologyMod2.face i (liftPlus σ)
+      ≠ SKEFTHawking.SingularCohomologyMod2.face i (liftMinus σ) := by
+  intro h
+  refine liftPlus_ne_liftMinus σ ?_
+  refine liftSimplex_eq_of_agree (liftPlus σ) (liftMinus σ)
+    ((mapSimplex_liftPlus σ).trans (mapSimplex_liftMinus σ).symm)
+    ((⟨_root_.stdSimplex.map (SimplexCategory.δ i),
+      _root_.stdSimplex.continuous_map (SimplexCategory.δ i)⟩ :
+        C(stdSimplex ℝ (Fin (n + 1)), stdSimplex ℝ (Fin (n + 2)))) (bary n)) ?_
+  have h1 := congrArg
+    (fun τ => ((TopCat.of S4).toSSetObjEquiv (op (SimplexCategory.mk n)) τ) (bary n)) h
+  simp only at h1
+  rwa [SKEFTHawking.SingularExcisionPushforward.toSSetObjEquiv_face,
+    SKEFTHawking.SingularExcisionPushforward.toSSetObjEquiv_face] at h1
+
+/-- **The face pair-sum identity**: the faces of the two lifts of `σ` are (as a mod-2 sum) the
+two lifts of the face. -/
+theorem face_pair_sum {n : ℕ}
+    (σ : (TopCat.toSSet.obj (TopCat.of RP4)).obj (op (SimplexCategory.mk (n + 1))))
+    (i : Fin (n + 2)) :
+    Finsupp.single (SKEFTHawking.SingularCohomologyMod2.face i (liftPlus σ)) (1 : ZMod 2)
+        + Finsupp.single (SKEFTHawking.SingularCohomologyMod2.face i (liftMinus σ)) 1
+      = Finsupp.single (liftPlus (SKEFTHawking.SingularCohomologyMod2.face i σ)) 1
+        + Finsupp.single (liftMinus (SKEFTHawking.SingularCohomologyMod2.face i σ)) 1 := by
+  rcases face_lift_mem_pair σ i (liftPlus σ) (mapSimplex_liftPlus σ) with hP | hP <;>
+    rcases face_lift_mem_pair σ i (liftMinus σ) (mapSimplex_liftMinus σ) with hM | hM
+  · exact absurd (hP.trans hM.symm) (face_liftPlus_ne_face_liftMinus σ i)
+  · rw [hP, hM]
+  · rw [hP, hM]
+    exact add_comm _ _
+  · exact absurd (hP.trans hM.symm) (face_liftPlus_ne_face_liftMinus σ i)
+
+/-- **The transfer is a chain map**: `∂ ∘ τ = τ ∘ ∂` — per-face via the pair-sum identity. -/
+theorem chainBoundary_transferChain (n : ℕ) (c : SingularChain (TopCat.of RP4) (n + 1)) :
+    chainBoundary (TopCat.of S4) n (transferChain (n + 1) c)
+      = transferChain n (chainBoundary (TopCat.of RP4) n c) := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp only [map_zero]
+  | add c d hc hd => simp only [map_add, hc, hd]
+  | single σ a =>
+      rcases (by decide : ∀ a : ZMod 2, a = 0 ∨ a = 1) a with ha | ha
+      · rw [ha, Finsupp.single_zero]
+        simp only [map_zero]
+      · rw [ha, transferChain_single, map_add, chainBoundary_single, chainBoundary_single,
+          chainBoundary_single, SKEFTHawking.SingularHomologyMod2.boundaryBasis,
+          SKEFTHawking.SingularHomologyMod2.boundaryBasis,
+          SKEFTHawking.SingularHomologyMod2.boundaryBasis, map_sum,
+          ← Finset.sum_add_distrib]
+        refine Finset.sum_congr rfl (fun i _ => ?_)
+        rw [transferChain_single]
+        exact face_pair_sum σ i
+
 end SKEFTHawking.RP4Transfer
