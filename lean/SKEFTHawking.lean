@@ -978,6 +978,7 @@ import SKEFTHawking.SingularOpenDualityConnSquareColimit
 import SKEFTHawking.SingularLocalDualityKBot
 import SKEFTHawking.SingularOpenDualityBot
 import SKEFTHawking.SingularOpenDualityBotNat
+import SKEFTHawking.SingularOpenDualityBotLegdeltaCollapse
 import SKEFTHawking.SingularKroneckerFunctoriality
 import SKEFTHawking.SingularSeamDualPairing
 import SKEFTHawking.SingularConnSquareMatchLHS
