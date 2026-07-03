@@ -177,7 +177,8 @@ theorem liftPlus_ne_liftMinus {n : ℕ}
   mapSimplex_liftSimplex σ _ _
 
 /-- **The transfer chain map** `τ : Cₙ(ℝP⁴) → Cₙ(S⁴)`: each simplex to the sum of its two
-lifts (the canonical fiber choice is swap-symmetric in the sum). -/
+lifts, at the fixed canonical fiber choice `Quotient.out`. (Choice-independence of the mod-2
+sum is true but neither proven nor needed here — everything downstream uses the fixed choice.) -/
 noncomputable def transferChain (n : ℕ) :
     SingularChain (TopCat.of RP4) n →ₗ[ZMod 2] SingularChain (TopCat.of S4) n :=
   Finsupp.linearCombination (ZMod 2)
