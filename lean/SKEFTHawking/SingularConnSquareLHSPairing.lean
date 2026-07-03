@@ -43,4 +43,25 @@ theorem kroneckerH_mvConnecting_cover_partition (A B : Set ↑X) (n : ℕ)
   rw [mvConnecting_cover_partition]
   rfl
 
+/-- **Pairing-level cover-partition independence** (the choice-freedom transport): the `a'`-pairing of the
+boundary-extract seam depends only on the HOMOLOGY CLASS of the partitioned cycle, not on the partition
+choice — both pairings compute `⟨[a'], mvConnecting [z]⟩` (`kroneckerH_mvConnecting_cover_partition`), and
+`mvConnecting` is a map on homology. Lets the connecting-square close swap an opaque `legW`-partition
+`(zA, zB)` for a CANONICAL fund-side partition `(zA', zB')` of any homologous cycle, killing the
+partition-choice residual at the pairing altitude where it is free. -/
+theorem kronecker_boundaryExtract_class_invariant (A B : Set ↑X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set ↑X)), interior U) = Set.univ)
+    (zA zA' : SingularChain (sub A) (n + 1)) (zB zB' : SingularChain (sub B) (n + 1))
+    (hz_cyc : chainIncl A (n + 1) zA + chainIncl B (n + 1) zB ∈ cycles X (n + 1))
+    (hz_cyc' : chainIncl A (n + 1) zA' + chainIncl B (n + 1) zB' ∈ cycles X (n + 1))
+    (hcls : Homology.mk X (n + 1) ⟨chainIncl A (n + 1) zA + chainIncl B (n + 1) zB, hz_cyc⟩
+      = Homology.mk X (n + 1) ⟨chainIncl A (n + 1) zA' + chainIncl B (n + 1) zB', hz_cyc'⟩)
+    (a' : LinearMap.ker (coboundaryₗ (sub (restr A B)) n)) :
+    kronecker a'.1
+        (boundaryExtract (restr A B) n ⟨zB, zB_mem_relCycleLift A B n zA zB hz_cyc⟩)
+      = kronecker a'.1
+        (boundaryExtract (restr A B) n ⟨zB', zB_mem_relCycleLift A B n zA' zB' hz_cyc'⟩) := by
+  rw [← kroneckerH_mvConnecting_cover_partition A B n hcov zA zB hz_cyc a',
+    ← kroneckerH_mvConnecting_cover_partition A B n hcov zA' zB' hz_cyc' a', hcls]
+
 end SKEFTHawking.SingularConnSquareLHSPairing

@@ -1996,6 +1996,118 @@ theorem subspaceChainsEquiv_symm_cast_cast {W : Set ↑X} {d₀ d₁ d₂ : ℕ}
           ⟨cast (congrArg (SingularChain X) (h₀.trans h₂)) c, hc₂⟩ := by
   cases h₀; cases h₂; rfl
 
+/-- **Cap of a cocycle against a subdivision-iterate, cycle-free** (the fact-(i) canonical-partition
+class input). For a cocycle `g` vanishing on `C(S)`-chains and a chain `f` whose boundary is
+`S`-supported: `cap g (Sdᵘ f) + cap g f = ∂(cap g (Dᵤ f))` — the homotopy slack `Dᵤ(∂f)` dies against
+`g`'s `S`-vanishing (`iterHomotopy_mem_subspaceChains`), the `∂(Dᵤ f)`-cap is exact by the cocycle
+Leibniz. Applied with `g := g_rep` (S := Kᶜ, RC-1 + RC-2), `f := fundCycleW_K`: the subdivided W-leg
+cycle `cap g (Sdᵘ fund_K)` is homologous to `cap g fund_K` with a `(U∪V)`-SUPPORTED bounding chain
+(`Dᵤ fund_K ∈ C(U∪V)`, support-preserving) — realizable in `sub (U∪V)`, the class-equality feed for
+`kronecker_boundaryExtract_class_invariant`. ℤ/2. -/
+theorem cap_cocycle_singularSd_iterate_add_eq_boundary {S : Set ↑X} {k m : ℕ}
+    (g : SingularCochain X k) (hgc : coboundary X k g = 0) (hgrel : g ∈ relCochains S k)
+    (f : SingularChain X (k + m + 1)) (μ : ℕ)
+    (hbd : chainBoundary X (k + m) f ∈ subspaceChains S (k + m)) :
+    cap (m := m + 1) g ((⇑(SingularSubdivision.singularSd X (k + m + 1)))^[μ] f)
+        + cap (m := m + 1) g f
+      = chainBoundary X (m + 1)
+          (cap (m := m + 1 + 1) g (SingularSubdivision.iterHomotopy X (k + m + 1) μ f)) := by
+  have hh := SingularSubdivision.iterHomotopy_chainHomotopy X μ (k + m) f
+  have hkill : cap (m := m + 1) g (SingularSubdivision.iterHomotopy X (k + m) μ
+      (chainBoundary X (k + m) f)) = 0 :=
+    cap_relCochains_subspaceChains_eq_zero (m := m + 1) g hgrel _
+      (SingularExcision.iterHomotopy_mem_subspaceChains hbd μ)
+  have hex : chainBoundary X (m + 1)
+        (cap (m := m + 1 + 1) g (SingularSubdivision.iterHomotopy X (k + m + 1) μ f))
+      = cap (m := m + 1) g (chainBoundary X (k + m + 1)
+          (SingularSubdivision.iterHomotopy X (k + m + 1) μ f)) :=
+    chainBoundary_cap_cocycle_arg (m := m + 1) g hgc _ (by omega)
+  have hsum : cap (m := m + 1) g (f + (⇑(SingularSubdivision.singularSd X (k + m + 1)))^[μ] f)
+      = cap (m := m + 1) g ((⇑(SingularSubdivision.singularSd X (k + m + 1)))^[μ] f)
+        + cap (m := m + 1) g f := by
+    rw [← capₗ_apply, map_add, capₗ_apply, capₗ_apply]
+    exact add_comm _ _
+  rw [← hsum, ← hh, ← capₗ_apply, map_add, capₗ_apply, capₗ_apply, hkill, add_zero, hex]
+
+/-- **δφ-cap of an eventually-split chain is exact** (the unsplit-`A∪B` δφ-cap TERMINATOR — closes the
+(P)-ledger recursion). For a cocycle `a` vanishing on BOTH cover legs (`a = δ(cochainSplit U ω)` via
+`cochainSplit_coboundary_mem_U/V`) and a chain `c` whose subdivision-iterate splits cover-subordinately
+(`hsplit`) AND whose boundary also splits (`hsplit'`): `cap a c = ∂(cap a (Dᵥ c))`. The three homotopy
+terms die: `Sdᵛ c` by the cover-partition kill, `Dᵥ(∂c)` leg-wise (`iterHomotopy_mem_subspaceChains` +
+the one-leg kill), and the `∂(Dᵥ c)`-cap is exact (cocycle Leibniz). The `ρ`/`T∂f₂` δφ-caps of the
+(P)-telescope close once their Sd-splits are supplied (`exists_iterate_mvUnion_sub` + partition). ℤ/2. -/
+theorem cap_relCochains_pair_split_eq_boundary {P Q : Set ↑X} {k n : ℕ}
+    (a : SingularCochain X k) (hac : coboundary X k a = 0)
+    (haP : a ∈ relCochains P k) (haQ : a ∈ relCochains Q k)
+    (c : SingularChain X (k + n + 1)) (ν : ℕ)
+    (u : SingularChain (sub P) (k + n + 1)) (w : SingularChain (sub Q) (k + n + 1))
+    (hsplit : (⇑(SingularSubdivision.singularSd X (k + n + 1)))^[ν] c
+      = chainIncl P (k + n + 1) u + chainIncl Q (k + n + 1) w)
+    (u' : SingularChain (sub P) (k + n)) (w' : SingularChain (sub Q) (k + n))
+    (hsplit' : chainBoundary X (k + n) c = chainIncl P (k + n) u' + chainIncl Q (k + n) w') :
+    cap (m := n + 1) a c = chainBoundary X (n + 1)
+        (cap (m := n + 1 + 1) a (SingularSubdivision.iterHomotopy X (k + n + 1) ν c)) := by
+  have hh := SingularSubdivision.iterHomotopy_chainHomotopy X ν (k + n) c
+  have h1 : cap (m := n + 1) a ((⇑(SingularSubdivision.singularSd X (k + n + 1)))^[ν] c) = 0 := by
+    rw [hsplit]
+    exact cap_relCochains_cover_partition_eq_zero (m := n + 1) a haP haQ u w
+  have h2 : cap (m := n + 1) a (SingularSubdivision.iterHomotopy X (k + n) ν
+      (chainBoundary X (k + n) c)) = 0 := by
+    rw [hsplit']
+    have hTadd : SingularSubdivision.iterHomotopy X (k + n) ν
+        (chainIncl P (k + n) u' + chainIncl Q (k + n) w')
+        = SingularSubdivision.iterHomotopy X (k + n) ν (chainIncl P (k + n) u')
+          + SingularSubdivision.iterHomotopy X (k + n) ν (chainIncl Q (k + n) w') := by
+      simp [SingularSubdivision.iterHomotopy, map_add, Finset.sum_add_distrib]
+    rw [hTadd, ← capₗ_apply, map_add, capₗ_apply, capₗ_apply,
+      cap_relCochains_subspaceChains_eq_zero (m := n + 1) a haP _
+        (SingularExcision.iterHomotopy_mem_subspaceChains ⟨u', rfl⟩ ν),
+      cap_relCochains_subspaceChains_eq_zero (m := n + 1) a haQ _
+        (SingularExcision.iterHomotopy_mem_subspaceChains ⟨w', rfl⟩ ν),
+      add_zero]
+  have h3 : (chainBoundary X (k + n + 1)
+        (SingularSubdivision.iterHomotopy X (k + n + 1) ν c)
+      + SingularSubdivision.iterHomotopy X (k + n) ν (chainBoundary X (k + n) c))
+      + (⇑(SingularSubdivision.singularSd X (k + n + 1)))^[ν] c = c := by
+    rw [hh]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
+  have hc : cap (m := n + 1) a c
+      = cap (m := n + 1) a ((chainBoundary X (k + n + 1)
+            (SingularSubdivision.iterHomotopy X (k + n + 1) ν c)
+          + SingularSubdivision.iterHomotopy X (k + n) ν (chainBoundary X (k + n) c))
+          + (⇑(SingularSubdivision.singularSd X (k + n + 1)))^[ν] c) := by rw [h3]
+  rw [hc, ← capₗ_apply, map_add, map_add, capₗ_apply, capₗ_apply, capₗ_apply, h1, h2, add_zero,
+    add_zero]
+  exact (chainBoundary_cap_cocycle_arg (m := n + 1) a hac _ (by omega)).symm
+
+/-- **Two `fundCycleW`s over the SAME `z₀` are jointly rel-homologous** (Sun Prop 1(iv), the shared-z₀
+fund-compat in chain form): composing the two `fundCycleW_chain_rel`s — the shared `z₀` cancels over
+ℤ/2 — gives `fund₁ + fund₂ = ∂η + a₁ + a₂` with `a₁ ∈ C(K₁ᶜ)`, `a₂ ∈ C(K₂ᶜ)`. The cross-realization
+coupling input: capping with `g_rep` kills `a₁` (RC-2, `K₁ := K`) and the `∂η`-cap is exact (RC-1),
+isolating the `a₂`-slack (`K₂ := infCompact`) that carries the connecting content. -/
+theorem fundCycleW_pair_shared_z0_rel {W₁ W₂ : Set ↑X} {k m : ℕ}
+    (hW₁ : IsOpen W₁) (hW₂ : IsOpen W₂)
+    (z₀ : SingularChain X (k + m + 1)) (hz₀ : chainBoundary X (k + m) z₀ = 0)
+    (K₁ : SingularCompactsInOpen.CompactsIn W₁) (K₂ : SingularCompactsInOpen.CompactsIn W₂) :
+    ∃ (η : SingularChain X (k + m + 1 + 1)) (a₁ a₂ : SingularChain X (k + m + 1)),
+      SingularOpenDualityCycle.fundCycleW hW₁ z₀ hz₀ K₁
+          + SingularOpenDualityCycle.fundCycleW hW₂ z₀ hz₀ K₂
+        = chainBoundary X (k + m + 1) η + a₁ + a₂
+      ∧ a₁ ∈ subspaceChains ((↑K₁.1 : Set ↑X)ᶜ) (k + m + 1)
+      ∧ a₂ ∈ subspaceChains ((↑K₂.1 : Set ↑X)ᶜ) (k + m + 1) := by
+  obtain ⟨η₁, a₁, heq₁, ha₁⟩ := fundCycleW_chain_rel hW₁ z₀ hz₀ K₁
+  obtain ⟨η₂, a₂, heq₂, ha₂⟩ := fundCycleW_chain_rel hW₂ z₀ hz₀ K₂
+  refine ⟨η₁ + η₂, a₁, a₂, ?_, ha₁, ha₂⟩
+  have hz : SingularOpenDualityCycle.fundCycleW hW₁ z₀ hz₀ K₁
+        + SingularOpenDualityCycle.fundCycleW hW₂ z₀ hz₀ K₂
+      = (SingularOpenDualityCycle.fundCycleW hW₁ z₀ hz₀ K₁ + z₀)
+        + (SingularOpenDualityCycle.fundCycleW hW₂ z₀ hz₀ K₂ + z₀) := by
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
+  rw [hz, heq₁, heq₂, map_add]
+  abel
+
 /-- **The γ-computation** (the fact-(ii) two-legs closer, EXTRACTED — single-choice form). The two
 goal legs are V-legs of cover-splits of two parents sharing ONE fundamental presentation `zsub`:
 the pd-side parent `Camb` (whose un-subdivided boundary is EXACTLY `chainIncl (rcap β ∂zsub)` —
