@@ -234,4 +234,46 @@ noncomputable def dataBordismFaithful_equiv_zmod16_of_cap
     DataBordismGrp.{u} (pinPlusFaithfulData I) ≃+ ZMod 16 :=
   AddEquiv.ofBijective _ (abkFaithfulGrade_bijective_of_cap hfin hcap)
 
+/-! ## §4. The order-16 generator on the faithful carrier — hGM discharged with NO signature posit
+
+The Guillou–Marin √-relation for the faithful generator is supplied by the **genuine** surface ABK
+`β(ℝP²) = (stdQuadratic 1).brown = 1` (`BrownInvariant`, a real Gauss-sum computation) matched
+against the generator's grade — a `decide`-level fact, with **no** `pinPlusRP4_class_to_zmod16`
+posit and **no** `Omega4PinPlusBordism` carrier anywhere. Honest scope (mirroring
+`pinPlusRP4_order16_backed_by_ABK`'s note): the *geometric identification* of this class with
+`[ℝP⁴]` is the Landmark-level content; what is derived posit-free here is the full order-16 of a
+genuine faithful-carrier class whose grade satisfies the GM relation against the genuine `β`. -/
+
+/-- The grade-`1` faithful generator (carried by the vacuously-certified `∅`). -/
+noncomputable def faithfulGenerator :
+    DataBordismGrp (pinPlusFaithfulData I) :=
+  DataBordismGrp.mk _ ⟨emptySM, ⟨((1 : ZMod 16), (0 : Cohomology (RPComplex 1) 1)),
+    pinPlusCert_empty⟩⟩
+
+/-- The faithful generator's grade is `1`. -/
+@[simp] theorem abkFaithfulGrade_faithfulGenerator :
+    abkFaithfulGrade (faithfulGenerator (I := I)) = 1 := rfl
+
+/-- **The hGM relation, discharged with the GENUINE `β`**: the faithful generator's grade reduces
+mod 8 to `β(ℝP²) = (stdQuadratic 1).brown` — the Guillou–Marin square-root relation, supplied by
+the real Brown/Gauss-sum invariant. NO posited `signature = 1` and no posited carrier. -/
+theorem faithfulGenerator_hGM :
+    SKEFTHawking.GuillouMarin.reduce16to8 (abkFaithfulGrade (faithfulGenerator (I := I)))
+      = (SKEFTHawking.Brown.Z4Quadratic.stdQuadratic 1).brown := by
+  rw [abkFaithfulGrade_faithfulGenerator, SKEFTHawking.Brown.Z4Quadratic.brown_stdQuadratic,
+    Nat.cast_one]
+  decide
+
+/-- **The faithful generator has full order 16 — derived, not posited**: any `0 < k < 16` multiple
+is nonzero, via the kernel-pure odd-bit lemma `pinPlus_RP4_order16_from_ABK` applied at the grade
+(whose hGM input is the genuine `β(ℝP²) = 1`), pulled back along `abkFaithfulGrade`. -/
+theorem faithfulGenerator_order16 :
+    ∀ k : ℕ, 0 < k → k < 16 → (k : ℕ) • (faithfulGenerator (I := I)) ≠ 0 := by
+  intro k hk0 hk16 hkg
+  have h := congrArg (abkFaithfulGrade (I := I)) hkg
+  rw [map_nsmul, map_zero, abkFaithfulGrade_faithfulGenerator] at h
+  exact SKEFTHawking.GuillouMarin.pinPlus_RP4_order16_from_ABK 1
+    (by rw [SKEFTHawking.Brown.Z4Quadratic.brown_stdQuadratic, Nat.cast_one]; decide)
+    k hk0 hk16 h
+
 end SKEFTHawking.PinPlusFaithfulData
