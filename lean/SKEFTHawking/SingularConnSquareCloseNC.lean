@@ -2782,6 +2782,139 @@ theorem fact_i_n2_kill {U V LU LV : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
       hcP (hD ▸ D) (h ▸ ρ) hρ' heq' uS wS (by rw [hbd', ← huS, ← hwS])
   exact ⟨E, hE, hcap⟩
 
+/-- **The fact-(i) ambient core** (Brick M — 18th-push steps 1–7 TOTAL, over the σR-cap-engine).
+The ambient boundary of the canonical `fB`-cap plus the ambient `bF`-cap is the boundary of a
+**`C(U∩V)`-supported** chain: (1–2) the subdivided-fund cap is a CYCLE (cocycle-Leibniz + the
+`K₁ᶜ`-kill via `hK₁`), so `∂(cap g fB) = ∂(cap g f₁) = cap g ∂f₁` (ℤ/2 flip + cocycle-Leibniz);
+(3–5) `cap g ∂f₁ + cap g bFamb = cap g w` with `w` the `LVᶜ`-leg of the `∂c`-split, and the
+σR-cap-engine (`cap_coboundary_cochainSplit_eq`) gives `cap δφ (h ▸ c) = cap g w + ∂(cap φ c)`;
+(6) Brick L kills `cap δφ (h ▸ c) = ∂E₂` with `E₂ ∈ C(U∩V)`; (7) total:
+`∂(cap g fB) + cap g bFamb = ∂(E₂ + cap φ c)`, both summands `C(U∩V)`-supported (cap-support).
+Statement CAST-FREE — the `h ▸` lives only inside. -/
+theorem fact_i_ambient_core {U V LU LV : Set ↑X} (hU : IsOpen U) (hV : IsOpen V)
+    (hLUc : IsOpen LUᶜ) (hLVc : IsOpen LVᶜ) (hLUU : LU ⊆ U) (hLVV : LV ⊆ V)
+    {N p : ℕ}
+    (g : LinearMap.ker (relCoboundaryₗ (LUᶜ ∩ LVᶜ) (N + 1)))
+    (z₀ : SingularChain X (N + 1 + (p + 1) + 1))
+    (hz₀ : chainBoundary X (N + 1 + (p + 1)) z₀ = 0)
+    (K₁ : CompactsIn (U ∪ V)) (K₂ : CompactsIn (U ∩ V))
+    (hK₁ : ((↑K₁.1 : Set ↑X))ᶜ = LUᶜ ∩ LVᶜ)
+    (hK₂ : ((↑K₂.1 : Set ↑X))ᶜ = LUᶜ ∪ LVᶜ)
+    (μ jF : ℕ) (f₁ f₂ f₃ : SingularChain X (N + 1 + (p + 1) + 1))
+    (hf₁ : f₁ ∈ subspaceChains (U ∩ LVᶜ) (N + 1 + (p + 1) + 1))
+    (hf₂ : f₂ ∈ subspaceChains (V ∩ LUᶜ) (N + 1 + (p + 1) + 1))
+    (hf₃ : f₃ ∈ subspaceChains (U ∩ V) (N + 1 + (p + 1) + 1))
+    (hIsplit : (⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1) + 1)))^[μ]
+        (SingularOpenDualityCycle.fundCycleW (hU.union hV) z₀ hz₀ K₁) = f₁ + f₂ + f₃)
+    (aF : SingularChain (sub (LUᶜ ∩ (U ∩ V))) (N + 1 + (p + 1)))
+    (bF : SingularChain (sub (LVᶜ ∩ (U ∩ V))) (N + 1 + (p + 1)))
+    (hFsplit : chainBoundary X (N + 1 + (p + 1))
+        ((⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1) + 1)))^[jF]
+          (SingularOpenDualityCycle.fundCycleW (hU.inter hV) z₀ hz₀ K₂))
+      = chainIncl _ (N + 1 + (p + 1)) aF + chainIncl _ (N + 1 + (p + 1)) bF) :
+    ∃ E : SingularChain X (p + 1 + 1), E ∈ subspaceChains (U ∩ V) (p + 1 + 1)
+      ∧ chainBoundary X (p + 1) (cap (m := p + 1 + 1) g.1.1 (f₂ + f₃))
+          + cap (m := p + 1) g.1.1 (chainIncl (LVᶜ ∩ (U ∩ V)) (N + 1 + (p + 1)) bF)
+        = chainBoundary X (p + 1) E := by
+  have hgc : coboundary X (N + 1) g.1.1 = 0 :=
+    (SingularConnSquareRHSPairing.relCocycle_props g).1
+  -- the ∂c-legs (as in Brick L, uncast)
+  have hbdIsplit := congrArg (chainBoundary X (N + 1 + (p + 1))) hIsplit
+  rw [SingularSubdivision.singularSd_iterate_chainBoundary, map_add, map_add] at hbdIsplit
+  have hf₃bd : chainBoundary X (N + 1 + (p + 1)) f₃
+      = (⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1))))^[μ]
+          (chainBoundary X (N + 1 + (p + 1))
+            (SingularOpenDualityCycle.fundCycleW (hU.union hV) z₀ hz₀ K₁))
+        + chainBoundary X (N + 1 + (p + 1)) f₁ + chainBoundary X (N + 1 + (p + 1)) f₂ := by
+    rw [hbdIsplit]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
+  have hSdKmem : (⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1))))^[μ]
+      (chainBoundary X (N + 1 + (p + 1))
+        (SingularOpenDualityCycle.fundCycleW (hU.union hV) z₀ hz₀ K₁))
+      ∈ subspaceChains (LUᶜ ∩ LVᶜ) (N + 1 + (p + 1)) :=
+    SingularExcision.singularSd_iterate_mem_subspaceChains
+      (hK₁ ▸ SingularOpenDualityCycle.fundCycleW_boundary (hU.union hV) z₀ hz₀ K₁) μ
+  set u : SingularChain X (N + 1 + (p + 1)) :=
+    (⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1))))^[μ]
+      (chainBoundary X (N + 1 + (p + 1))
+        (SingularOpenDualityCycle.fundCycleW (hU.union hV) z₀ hz₀ K₁))
+    + chainBoundary X (N + 1 + (p + 1)) f₂
+    + chainIncl (LUᶜ ∩ (U ∩ V)) (N + 1 + (p + 1)) aF with hudef
+  set w : SingularChain X (N + 1 + (p + 1)) :=
+    chainBoundary X (N + 1 + (p + 1)) f₁
+    + chainIncl (LVᶜ ∩ (U ∩ V)) (N + 1 + (p + 1)) bF with hwdef
+  have humem : u ∈ subspaceChains LUᶜ (N + 1 + (p + 1)) :=
+    Submodule.add_mem _ (Submodule.add_mem _
+      (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left _ hSdKmem)
+      (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_right _
+        (chainBoundary_mem_subspaceChains _ hf₂)))
+      (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left _ ⟨aF, rfl⟩)
+  have hwmem : w ∈ subspaceChains LVᶜ (N + 1 + (p + 1)) :=
+    Submodule.add_mem _
+      (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_right _
+        (chainBoundary_mem_subspaceChains _ hf₁))
+      (SingularMayerVietoris.subspaceChains_mono Set.inter_subset_left _ ⟨bF, rfl⟩)
+  have hbd_uncast : chainBoundary X (N + 1 + (p + 1))
+      (f₃ + (⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1) + 1)))^[jF]
+        (SingularOpenDualityCycle.fundCycleW (hU.inter hV) z₀ hz₀ K₂)) = u + w := by
+    rw [map_add, hFsplit, hf₃bd, hudef, hwdef]
+    abel
+  -- the σR-cap-engine + Brick L
+  have h : N + 1 + (p + 1) + 1 = N + 1 + 1 + (p + 1) := by omega
+  have hengine := cap_coboundary_cochainSplit_eq LUᶜ LVᶜ g
+    (f₃ + (⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1) + 1)))^[jF]
+      (SingularOpenDualityCycle.fundCycleW (hU.inter hV) z₀ hz₀ K₂)) u w humem hwmem hbd_uncast h
+  obtain ⟨E₂, hE₂mem, hE₂⟩ := fact_i_n2_kill hU hV hLUc hLVc hLUU hLVV g z₀ hz₀ K₁ K₂ hK₁ hK₂
+    μ jF f₁ f₂ f₃ hf₁ hf₂ hf₃ hIsplit aF bF hFsplit h
+  have hgw : cap (m := p + 1) g.1.1 w = chainBoundary X (p + 1) E₂
+      + chainBoundary X (p + 1) (cap (m := p + 1 + 1) (cochainSplit LUᶜ (N + 1) g.1.1)
+          (f₃ + (⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1) + 1)))^[jF]
+            (SingularOpenDualityCycle.fundCycleW (hU.inter hV) z₀ hz₀ K₂))) := by
+    have h0 := hE₂.symm.trans hengine
+    rw [h0]
+    abel_nf
+    simp only [two_smul, ZModModule.add_self, zero_add, add_zero]
+  -- the cycle-flip: ∂(cap g fB) = cap g ∂f₁
+  have hsplit' : (⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1) + 1)))^[μ]
+      (SingularOpenDualityCycle.fundCycleW (hU.union hV) z₀ hz₀ K₁) = f₁ + (f₂ + f₃) :=
+    hIsplit.trans (add_assoc f₁ f₂ f₃)
+  have hcyc0 : chainBoundary X (p + 1) (cap (m := p + 1 + 1) g.1.1
+      ((⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1) + 1)))^[μ]
+        (SingularOpenDualityCycle.fundCycleW (hU.union hV) z₀ hz₀ K₁))) = 0 := by
+    rw [chainBoundary_cap_cocycle_arg (m := p + 1) g.1.1 hgc _ (by omega),
+      SingularSubdivision.singularSd_iterate_chainBoundary]
+    exact cap_relCochains_subspaceChains_eq_zero (m := p + 1) g.1.1 g.1.2 _ hSdKmem
+  have hflip : chainBoundary X (p + 1) (cap (m := p + 1 + 1) g.1.1 (f₂ + f₃))
+      = cap (m := p + 1) g.1.1 (chainBoundary X (N + 1 + (p + 1)) f₁) := by
+    have h1 : cap (m := p + 1 + 1) g.1.1
+        ((⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1) + 1)))^[μ]
+          (SingularOpenDualityCycle.fundCycleW (hU.union hV) z₀ hz₀ K₁))
+        = cap (m := p + 1 + 1) g.1.1 f₁ + cap (m := p + 1 + 1) g.1.1 (f₂ + f₃) := by
+      rw [hsplit', map_add]
+    have h2 := congrArg (chainBoundary X (p + 1)) h1
+    rw [hcyc0, map_add] at h2
+    have h3 : chainBoundary X (p + 1) (cap (m := p + 1 + 1) g.1.1 (f₂ + f₃))
+        = chainBoundary X (p + 1) (cap (m := p + 1 + 1) g.1.1 f₁) := by
+      apply eq_of_sub_eq_zero
+      rw [ZModModule.sub_eq_add, h2]
+      abel
+    exact h3.trans (chainBoundary_cap_cocycle_arg (m := p + 1) g.1.1 hgc f₁ (by omega))
+  -- total assembly
+  refine ⟨E₂ + cap (m := p + 1 + 1) (cochainSplit LUᶜ (N + 1) g.1.1)
+      (f₃ + (⇑(SingularSubdivision.singularSd X (N + 1 + (p + 1) + 1)))^[jF]
+        (SingularOpenDualityCycle.fundCycleW (hU.inter hV) z₀ hz₀ K₂)),
+    Submodule.add_mem _ hE₂mem
+      (SingularCapSupport.cap_mem_subspaceChains (m := p + 1 + 1) (U ∩ V) _
+        (Submodule.add_mem _ hf₃
+          (SingularExcision.singularSd_iterate_mem_subspaceChains
+            (SingularOpenDualityCycle.fundCycleW_mem_W (hU.inter hV) z₀ hz₀ K₂) jF))), ?_⟩
+  rw [hflip, map_add,
+    show cap (m := p + 1) g.1.1 (chainBoundary X (N + 1 + (p + 1)) f₁)
+        + cap (m := p + 1) g.1.1 (chainIncl (LVᶜ ∩ (U ∩ V)) (N + 1 + (p + 1)) bF)
+      = cap (m := p + 1) g.1.1 w from by rw [hwdef, map_add]]
+  exact hgw
+
 /-- **Fact-(i) STAGE 1** (the canonical-partition package — Bricks I + F′ + H in ONE existential,
 free degrees `{k m}` so every unification is syntactic). For the `K₁`-fund of `W = U ∪ V`: a
 three-set split `Sd^μ fund = f₁ + f₂ + f₃` subordinate to `(U∩LVᶜ, V∩LUᶜ, U∩V)`, together with the
