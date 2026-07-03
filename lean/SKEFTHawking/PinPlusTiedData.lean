@@ -172,4 +172,64 @@ theorem abkTiedGrade_hits_even (k : ZMod 16) :
   show reduce16to2 (2 * k) = 0
   rw [map_mul, show (reduce16to2 2 : ZMod 2) = 0 from by decide, zero_mul]
 
+/-! ## §2. The tied quotient — `ℤ/16` up to the odd-realization question
+
+The first isomorphism theorem gives the tied carrier's ABK quotient as the grade's **range**;
+the range contains the even subgroup (realised on `∅`), and it is ALL of `ZMod 16` as soon as
+ONE odd class is realised (the odds are a single coset of the evens) — which is exactly the
+`w₁⁴ = 1` realization question (B4): the geometry, isolated to one witness. -/
+
+universe u
+
+/-- **The tied first isomorphism**: `DataBordismGrp (pinPlusTiedData I) ⧸ ker ≃+ range` —
+unconditional. -/
+noncomputable def dataBordismTied_quotient_equiv_range :
+    DataBordismGrp (pinPlusTiedData I) ⧸ (abkTiedGrade (I := I)).ker
+      ≃+ (abkTiedGrade (I := I)).range :=
+  QuotientAddGroup.quotientKerEquivRange (abkTiedGrade (I := I))
+
+/-- The even subgroup is in the tied grade's range. -/
+theorem even_mem_abkTiedGrade_range (k : ZMod 16) :
+    2 * k ∈ (abkTiedGrade (I := I)).range := by
+  obtain ⟨g, hg⟩ := abkTiedGrade_hits_even (I := I) k
+  exact ⟨g, hg⟩
+
+/-- **One odd witness closes the range**: if any class has an odd grade, the range is all of
+`ZMod 16` — the odds form a single coset of the evens, and the evens are realised on `∅`. -/
+theorem abkTiedGrade_range_top_of_odd
+    (h : ∃ g : DataBordismGrp.{u} (pinPlusTiedData I), reduce16to2 (abkTiedGrade g) = 1) :
+    ((abkTiedGrade (I := I)) :
+      DataBordismGrp.{u} (pinPlusTiedData I) →+ ZMod 16).range = ⊤ := by
+  obtain ⟨g₀, hodd⟩ := h
+  rw [AddSubgroup.eq_top_iff']
+  intro x
+  rcases (by decide : ∀ p : ZMod 2, p = 0 ∨ p = 1) (reduce16to2 x) with hx | hx
+  · -- x even: x = 2 * k for some k (kernel of reduce16to2 = the even subgroup)
+    obtain ⟨k, hk⟩ : ∃ k : ZMod 16, x = 2 * k := by
+      revert hx; revert x; decide
+    exact hk ▸ even_mem_abkTiedGrade_range k
+  · -- x odd: x - abk(g₀) is even, so x = abk(g₀) + even ∈ range
+    obtain ⟨k, hk⟩ : ∃ k : ZMod 16, x - abkTiedGrade g₀ = 2 * k := by
+      have hdiff : reduce16to2 (x - abkTiedGrade g₀) = 0 := by
+        rw [map_sub, hx, hodd, sub_self]
+      revert hdiff; generalize x - abkTiedGrade g₀ = y; revert y; decide
+    obtain ⟨gk, hgk⟩ := abkTiedGrade_hits_even (I := I) k
+    refine AddMonoidHom.mem_range.mpr ⟨g₀ + gk, ?_⟩
+    rw [map_add, hgk, ← hk, add_comm, sub_add_cancel]
+
+/-- **The tied quotient is `ℤ/16` given one odd realization** — the B-arc checkpoint form: the
+whole `ℤ/16` on the parity-tied carrier, with the geometry isolated to a single `w₁⁴ = 1`
+witness (the B4 arc; e.g. `ℝP⁴` in the singular tower). -/
+noncomputable def dataBordismTied_quotient_equiv_zmod16_of_odd
+    (h : ∃ g : DataBordismGrp.{u} (pinPlusTiedData I), reduce16to2 (abkTiedGrade g) = 1) :
+    (DataBordismGrp.{u} (pinPlusTiedData I) ⧸
+      ((abkTiedGrade (I := I)) :
+        DataBordismGrp.{u} (pinPlusTiedData I) →+ ZMod 16).ker) ≃+ ZMod 16 :=
+  QuotientAddGroup.quotientKerEquivOfSurjective (abkTiedGrade (I := I))
+    (by
+      intro x
+      have hrange := abkTiedGrade_range_top_of_odd h
+      have : x ∈ (abkTiedGrade (I := I)).range := hrange ▸ AddSubgroup.mem_top x
+      exact AddMonoidHom.mem_range.mp this)
+
 end SKEFTHawking.PinPlusTiedData
