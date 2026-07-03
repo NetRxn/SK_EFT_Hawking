@@ -973,6 +973,7 @@ import SKEFTHawking.SingularConnSquareCloseM2
 import SKEFTHawking.SingularCoverPartitionExist
 import SKEFTHawking.SingularCohomologySnake
 import SKEFTHawking.SingularConnSquareLHSPairing
+import SKEFTHawking.SingularConnSquareCloseNC
 import SKEFTHawking.SingularKroneckerFunctoriality
 import SKEFTHawking.SingularSeamDualPairing
 import SKEFTHawking.SingularConnSquareMatchLHS
