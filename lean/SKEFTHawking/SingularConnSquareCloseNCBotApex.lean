@@ -10,6 +10,7 @@ import SKEFTHawking.SingularCSCMayerVietorisConnExact
 import SKEFTHawking.SingularOpenDualityConnSquareColimit
 import SKEFTHawking.SingularMayerVietorisLESBot
 import SKEFTHawking.SingularSubHomSumEnd
+import SKEFTHawking.SingularOpenDualityMonotoneUnion
 
 /-!
 # Phase 5q.G (G1 PD-induction, brick B3a) — the bottom pairing-mirror pack
@@ -978,5 +979,17 @@ theorem openDuality₀_union_bijective {N : ℕ} {U V : Set ↑X}
     (cscMv_exact_connecting U V hU hV)
     (SKEFTHawking.SingularMayerVietorisLESBot.subHom_exact_middle₀ U V hU hV) hg₂ hg₃
     hD0I hi₂ hi₄ hi₅
+
+/-- **Monotone-union stability for the ₀-duality** (the arc-2 generic core
+`duality_monotone_union_bijective` instantiated at `D := openDuality₀`, `d := 0` — the payoff
+deferred from wt1, where the ₀-family modules were unavailable). -/
+theorem openDuality₀_monotone_union_bijective {k : ℕ} {W : ℕ → Set ↑X}
+    (hmono : ∀ n, W n ⊆ W (n + 1)) (hopen : ∀ n, IsOpen (W n))
+    (z₀ : SingularChain X (k + 0 + 1)) (hz₀ : chainBoundary X (k + 0) z₀ = 0)
+    (hbij : ∀ n, Function.Bijective (openDuality₀ (k := k) (hopen n) z₀ hz₀)) :
+    Function.Bijective (openDuality₀ (k := k) (isOpen_iUnion hopen) z₀ hz₀) :=
+  SingularOpenDualityMonotoneUnion.duality_monotone_union_bijective (k := k + 1) (d := 0)
+    hmono hopen (fun _V hV => openDuality₀ (k := k) hV z₀ hz₀)
+    (fun _V _V' hV hV' hVV' α => openDuality₀_cscOpenMonotone hV hV' hVV' z₀ hz₀ α) hbij
 
 end SKEFTHawking.SingularConnSquareCloseNCBotApex
