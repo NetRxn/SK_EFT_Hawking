@@ -2132,6 +2132,69 @@ theorem exists_iterate_cover_split_amb {U V : Set ↑X} (hU : IsOpen U) (hV : Is
     (SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm (U ∪ V) n ⟨f, hf⟩).symm
   rw [hfr, singularSd_iterate_chainIncl, hzsplit, map_add]
 
+/-- **Cap-induced partition over a GIVEN split** (Brick F′ — Brick F's realization core, parametrized:
+takes the `(fA, fB)`-decomposition as input instead of choosing one, so the THREE-set split's MV lift
+`(f₁, f₂+f₃)` feeds it). Same construction: cap the split legs (support-preserved), realize two-level
+via `chainIncl_mem_subspaceChains_iff`, descend the cycle through `chainIncl`-injectivity. -/
+theorem cap_induced_partition_of_split {U V S : Set ↑X} {k m : ℕ}
+    (g : SingularCochain X k) (hgc : coboundary X k g = 0) (hgrel : g ∈ relCochains S k)
+    (f : SingularChain X (k + m + 1)) (μ : ℕ)
+    (hbd : chainBoundary X (k + m) f ∈ subspaceChains S (k + m))
+    (fA fB : SingularChain X (k + m + 1))
+    (hfA : fA ∈ subspaceChains U (k + m + 1)) (hfB : fB ∈ subspaceChains V (k + m + 1))
+    (hsplit : (⇑(SingularSubdivision.singularSd X (k + m + 1)))^[μ] f = fA + fB) :
+    ∃ (zA : SingularChain (sub (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V)))) (m + 1))
+      (zB : SingularChain (sub (Subtype.val ⁻¹' V : Set ↑(sub (U ∪ V)))) (m + 1)),
+      chainIncl (U ∪ V) (m + 1) (chainIncl _ (m + 1) zA) = cap (m := m + 1) g fA
+      ∧ chainIncl (U ∪ V) (m + 1) (chainIncl _ (m + 1) zB) = cap (m := m + 1) g fB
+      ∧ chainIncl _ (m + 1) zA + chainIncl _ (m + 1) zB ∈ cycles (sub (U ∪ V)) (m + 1) := by
+  have hcA : cap (m := m + 1) g fA ∈ subspaceChains U (m + 1) :=
+    SingularCapSupport.cap_mem_subspaceChains (m := m + 1) U g hfA
+  have hcB : cap (m := m + 1) g fB ∈ subspaceChains V (m + 1) :=
+    SingularCapSupport.cap_mem_subspaceChains (m := m + 1) V g hfB
+  have hcA' : cap (m := m + 1) g fA ∈ subspaceChains (U ∪ V) (m + 1) :=
+    SingularMayerVietoris.subspaceChains_mono Set.subset_union_left (m + 1) hcA
+  have hcB' : cap (m := m + 1) g fB ∈ subspaceChains (U ∪ V) (m + 1) :=
+    SingularMayerVietoris.subspaceChains_mono Set.subset_union_right (m + 1) hcB
+  set yA := (SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∪ V) (m + 1)).symm ⟨_, hcA'⟩
+    with hyAdef
+  set yB := (SingularSubspaceChainsEquiv.subspaceChainsEquiv (U ∪ V) (m + 1)).symm ⟨_, hcB'⟩
+    with hyBdef
+  have hyA : chainIncl (U ∪ V) (m + 1) yA = cap (m := m + 1) g fA :=
+    SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm _ _ _
+  have hyB : chainIncl (U ∪ V) (m + 1) yB = cap (m := m + 1) g fB :=
+    SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm _ _ _
+  have hyAmem : yA ∈ subspaceChains (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (m + 1) :=
+    (SingularExcisionIso.chainIncl_mem_subspaceChains_iff U (U ∪ V) yA).mp (hyA.symm ▸ hcA)
+  have hyBmem : yB ∈ subspaceChains (Subtype.val ⁻¹' V : Set ↑(sub (U ∪ V))) (m + 1) :=
+    (SingularExcisionIso.chainIncl_mem_subspaceChains_iff V (U ∪ V) yB).mp (hyB.symm ▸ hcB)
+  refine ⟨(SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (m + 1)).symm ⟨yA, hyAmem⟩,
+    (SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (m + 1)).symm ⟨yB, hyBmem⟩, ?_, ?_, ?_⟩
+  · rw [SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm, hyA]
+  · rw [SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm, hyB]
+  · have hcycamb : chainBoundary X m
+        (cap (m := m + 1) g ((⇑(SingularSubdivision.singularSd X (k + m + 1)))^[μ] f)) = 0 := by
+      rw [chainBoundary_cap_cocycle_arg (m := m) g hgc _ (by omega),
+        SingularSubdivision.singularSd_iterate_chainBoundary]
+      exact cap_relCochains_subspaceChains_eq_zero (m := m) g hgrel _
+        (SingularExcision.singularSd_iterate_mem_subspaceChains hbd μ)
+    have e₁ : chainIncl (Subtype.val ⁻¹' U : Set ↑(sub (U ∪ V))) (m + 1)
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (m + 1)).symm ⟨yA, hyAmem⟩) = yA :=
+      SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm _ _ ⟨yA, hyAmem⟩
+    have e₂ : chainIncl (Subtype.val ⁻¹' V : Set ↑(sub (U ∪ V))) (m + 1)
+        ((SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (m + 1)).symm ⟨yB, hyBmem⟩) = yB :=
+      SingularSubspaceChainsEquiv.chainIncl_subspaceChainsEquiv_symm _ _ ⟨yB, hyBmem⟩
+    have hsum : chainIncl (U ∪ V) (m + 1)
+        (chainIncl _ (m + 1) ((SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (m + 1)).symm
+            ⟨yA, hyAmem⟩)
+          + chainIncl _ (m + 1) ((SingularSubspaceChainsEquiv.subspaceChainsEquiv _ (m + 1)).symm
+            ⟨yB, hyBmem⟩))
+        = cap (m := m + 1) g ((⇑(SingularSubdivision.singularSd X (k + m + 1)))^[μ] f) := by
+      rw [map_add, e₁, e₂, hyA, hyB, hsplit, map_add]
+    refine LinearMap.mem_ker.mpr ?_
+    apply chainIncl_injective (U ∪ V) m
+    rw [SingularRelativeHomologyMod2.chainIncl_chainBoundary, hsum, hcycamb, map_zero]
+
 /-- **Ambient THREE-set cover-fine split** (Brick I — the Sun-Lemma-3 subordination; scout report
 `Lit-Search/Phase-5qG/research/sun_lemma3_chain_witness.md`). A `(U∪V)`-supported chain subdivides
 into pieces supported in `U∩LVᶜ` (= U−LV), `V∩LUᶜ` (= V−LU), and `U∩V` — the three-set cover that
