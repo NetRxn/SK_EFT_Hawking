@@ -130,4 +130,39 @@ theorem pinPlusFaithfulData_not_revStr_trivial :
   obtain ⟨s, σ, hσ⟩ := pinPlusFaithfulData_revStr_nontrivial (I := I)
   exact hσ (htriv σ)
 
+/-! ## §2. The faithful ABK grade — surjective onto `ℤ/16`, non-2-torsion
+
+The mirror of `PinPlusTangentialData.abkGrade` on the **faithful** carrier. The decisive
+difference is in the *kernel*: on `pinPlusData` structures exist on every manifold, so
+`ker(abkGrade)` contains the whole unoriented floor and `ker = ⊥` is unreachable; on
+`pinPlusFaithfulData` a structure exists **only on `w₂`-certified manifolds**, which is exactly
+the Pin⁺-selection the floor collapse needs — `ker(abkFaithfulGrade) = ⊥` becomes the G3-4
+counting target (surjectivity below + the height-4 `≤ 16` cap). -/
+
+/-- **The faithful ABK grade** `[(s, ⟨g, cert⟩)] ↦ g.abk` — a bordism-invariant additive
+homomorphism `DataBordismGrp (pinPlusFaithfulData I) →+ ZMod 16`. Well-defined since `Bor`
+records `abk`-equality; additive since `sumStr` adds grades. -/
+def abkFaithfulGrade : DataBordismGrp (pinPlusFaithfulData I) →+ ZMod 16 where
+  toFun := Quot.lift (fun p => (p.2.1 : PinPlusGrade).abk)
+    (fun _p _q h => by obtain ⟨_, ⟨str⟩⟩ := h; exact str.down)
+  map_zero' := rfl
+  map_add' := by
+    intro x y
+    induction x using Quot.ind with | _ p =>
+    induction y using Quot.ind with | _ q => rfl
+
+/-- **The faithful ABK grade is surjective onto `ℤ/16`** — every grade is realised on the
+(vacuously certified) empty manifold: `n ↦ [(∅, ⟨(n, 0), cert⟩)]`. -/
+theorem abkFaithfulGrade_surjective : Function.Surjective (abkFaithfulGrade (I := I)) :=
+  fun n => ⟨DataBordismGrp.mk _ ⟨emptySM, ⟨(n, 0), pinPlusCert_empty⟩⟩, rfl⟩
+
+/-- **The faithful carrier is not 2-torsion** — a grade-1 class doubles to grade 2 ≠ 0. -/
+theorem pinPlusFaithfulData_carrier_not_two_torsion :
+    ∃ g : DataBordismGrp (pinPlusFaithfulData I), g + g ≠ 0 := by
+  obtain ⟨g, hg⟩ := abkFaithfulGrade_surjective (I := I) 1
+  refine ⟨g, fun hgg => ?_⟩
+  have h0 : abkFaithfulGrade (g + g) = (0 : ZMod 16) := by rw [hgg]; exact map_zero _
+  rw [map_add, hg] at h0
+  exact absurd h0 (by decide)
+
 end SKEFTHawking.PinPlusFaithfulData
