@@ -113,4 +113,73 @@ theorem coboundary4_cup4 (u : Cochain4 X p) (v : Cochain4 X q)
       rw [frontFace_face_of_gt τ _ hgt, backFace_face_of_gt τ _ hgt, hidx, hval]
   rw [hL, hR]
 
+/-! ## §2. The Bockstein is a derivation (on cocycles, at the cochain level) -/
+
+/-- **The `{0,1}`-lift is multiplicative**: `lift(a ⌣ b) = lift a ⌣₄ lift b` on the nose. -/
+theorem lift_cup {X : TopCat} (a : SingularCochain X p) (b : SingularCochain X q) :
+    lift (cup a b) = cup4 (lift a) (lift b) := by
+  funext σ
+  simp only [lift_apply, cup_apply, cup4_apply]
+  have h : ∀ x y : ZMod 2,
+      (((x * y).val : ℕ) : ZMod 4) = ((x.val : ℕ) : ZMod 4) * ((y.val : ℕ) : ZMod 4) := by
+    decide
+  exact h _ _
+
+/-- `half (e · t̂) = half e · t` for even `e` and a `{0,1}`-lift `t̂`. -/
+theorem half_mul_val : ∀ (e : ZMod 4) (t : ZMod 2),
+    (ZMod.castHom (by norm_num : (2 : ℕ) ∣ 4) (ZMod 2)) e = 0 →
+    half (e * ((t.val : ℕ) : ZMod 4)) = half e * t := by
+  decide
+
+/-- `half (t̂ · e) = t · half e` for even `e` and a `{0,1}`-lift `t̂`. -/
+theorem half_val_mul : ∀ (t : ZMod 2) (e : ZMod 4),
+    (ZMod.castHom (by norm_num : (2 : ℕ) ∣ 4) (ZMod 2)) e = 0 →
+    half (((t.val : ℕ) : ZMod 4) * e) = t * half e := by
+  decide
+
+/-- The sign is invisible to `half` on even elements: `half((-1)ᵖ · e) = half e`. -/
+theorem half_neg_one_pow_mul (p : ℕ) : ∀ (e : ZMod 4),
+    (ZMod.castHom (by norm_num : (2 : ℕ) ∣ 4) (ZMod 2)) e = 0 →
+    half ((-1 : ZMod 4) ^ p * e) = half e := by
+  have hp : (-1 : ZMod 4) ^ p = 1 ∨ (-1 : ZMod 4) ^ p = 3 := by
+    rcases Nat.even_or_odd p with h | h
+    · left
+      exact h.neg_one_pow
+    · right
+      rw [h.neg_one_pow]
+      decide
+  rcases hp with h | h <;> rw [h] <;> decide
+
+/-- **The Bockstein–Leibniz rule** (cochain level, value form, for cocycles):
+`Sq¹(a ⌣ b)(τ) = Sq¹a(front₊τ)·b(back₋τ) + a(front₋τ)·Sq¹b(back₊τ)`. The signed `ℤ/4`
+Leibniz (§1) + lift-multiplicativity + the half-arithmetic on even elements. -/
+theorem Sq1cochain_cup {X : TopCat}
+    (a : SingularCochain X p) (ha : coboundary X p a = 0)
+    (b : SingularCochain X q) (hb : coboundary X q b = 0)
+    (τ : (TopCat.toSSet.obj X).obj (op (SimplexCategory.mk (p + q + 1)))) :
+    Sq1cochain (cup a b) τ
+      = Sq1cochain a (frontBig τ) * b (backBig τ)
+        + a (frontSmall τ) * Sq1cochain b (backSmall τ) := by
+  rw [Sq1cochain_apply, lift_cup, coboundary4_cup4]
+  have hev_a : (ZMod.castHom (by norm_num : (2 : ℕ) ∣ 4) (ZMod 2))
+      (coboundary4 X p (lift a) (frontBig τ)) = 0 := by
+    rw [castHom_coboundary4_lift, ha]
+    rfl
+  have hev_b : (ZMod.castHom (by norm_num : (2 : ℕ) ∣ 4) (ZMod 2))
+      (coboundary4 X q (lift b) (backSmall τ)) = 0 := by
+    rw [castHom_coboundary4_lift, hb]
+    rfl
+  have hev₁ : (ZMod.castHom (by norm_num : (2 : ℕ) ∣ 4) (ZMod 2))
+      (coboundary4 X p (lift a) (frontBig τ) * lift b (backBig τ)) = 0 := by
+    rw [map_mul, hev_a, zero_mul]
+  have hev₂ : (ZMod.castHom (by norm_num : (2 : ℕ) ∣ 4) (ZMod 2))
+      ((-1 : ZMod 4) ^ p * (lift a (frontSmall τ)
+        * coboundary4 X q (lift b) (backSmall τ))) = 0 := by
+    rw [map_mul, map_mul, hev_b, mul_zero, mul_zero]
+  rw [half_add_of_even _ _ hev₁ hev₂,
+    half_neg_one_pow_mul p _ (by rw [map_mul, hev_b, mul_zero])]
+  simp only [lift_apply]
+  rw [half_mul_val _ _ hev_a, half_val_mul _ _ hev_b]
+  rfl
+
 end SKEFTHawking.SingularBocksteinLeibniz
