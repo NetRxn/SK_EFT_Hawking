@@ -246,4 +246,68 @@ theorem mu_Sq1_xpow_three :
   rw [Sq1_xpow_three]
   exact SKEFTHawking.RP4WuAssembly.mu_xpow_four
 
+/-! ## §4. `v₁ = x` (M4-c7) -/
+
+open SKEFTHawking.SingularPD4Instances
+open SKEFTHawking.PoincareDualityWuFormula
+
+/-- The canonical `δS`-representative of `xpow 3`. -/
+noncomputable def x3Rep : LinearMap.ker (coboundaryₗ (TopCat.of RP4) 3) :=
+  ⟨connectingCochain 2 x2Rep.1, LinearMap.mem_ker.mpr
+    (connectingCochain_mem_ker _ (LinearMap.mem_ker.mp x2Rep.2))⟩
+
+theorem xpow_three_eq_mk_x3Rep : xpow 3 = Cohomology.mk (TopCat.of RP4) 3 x3Rep := by
+  show smithCoConnecting 2 (xpow 2) = _
+  rw [xpow_two_eq, smithCoConnecting_mk]
+  rfl
+
+/-- **`[x ⌣ x³] = xpow 4`** — the `(1,3)`-cup against the canonical `xpow 3` representative. -/
+theorem mk_cup_xRep_x3Rep : Cohomology.mk (TopCat.of RP4) 4
+    ⟨cup (p := 1) (q := 3) xRep.1 x3Rep.1, LinearMap.mem_ker.mpr (cup_cocycle xRep.1 x3Rep.1
+      (LinearMap.mem_ker.mp xRep.2) (LinearMap.mem_ker.mp x3Rep.2))⟩ = xpow 4 := by
+  have step := smithCoConnecting_cup xRep x2Rep
+  have h1 : xpow 4 = smithCoConnecting 3 (Cohomology.mk (TopCat.of RP4) (1 + 2)
+      ⟨cup (p := 1) (q := 2) xRep.1 x2Rep.1, LinearMap.mem_ker.mpr (cup_cocycle xRep.1 x2Rep.1
+        (LinearMap.mem_ker.mp xRep.2) (LinearMap.mem_ker.mp x2Rep.2))⟩) := by
+    show smithCoConnecting 3 (xpow 3) = _
+    rw [mk_cup_xRep_x2Rep]
+  rw [h1, step]
+  rfl
+
+/-- **`μ(x ⌣₁₃ x³) = 1`** — the `(1,3)` pairing value of the generators. -/
+theorem mu_cupH13_xpow1_xpow3 :
+    (poincareDual4Mid_of_closed (M := RP4)).mu (cupH13 (xpow 1) (xpow 3)) = 1 := by
+  rw [xpow_one_eq, xpow_three_eq_mk_x3Rep]
+  show (poincareDual4Mid_of_closed (M := RP4)).mu
+    (cupH13 (Submodule.Quotient.mk xRep) (Submodule.Quotient.mk x3Rep)) = 1
+  rw [cupH13_mk_mk]
+  have h := mk_cup_xRep_x3Rep
+  show (poincareDual4Mid_of_closed (M := RP4)).mu (Cohomology.mk (TopCat.of RP4) 4 _) = 1
+  rw [show (Cohomology.mk (TopCat.of RP4) 4 ⟨cup xRep.1 x3Rep.1, cup_cocycle xRep.1 x3Rep.1
+      (LinearMap.mem_ker.mp xRep.2) (LinearMap.mem_ker.mp x3Rep.2) |> LinearMap.mem_ker.mpr⟩ :
+      Cohomology (TopCat.of RP4) 4) = xpow 4 from h]
+  exact SKEFTHawking.RP4WuAssembly.mu_xpow_four
+
+/-- **`v₁ = x`** — the first Wu class of `ℝP⁴` is the ladder generator: both classes induce
+the same `(1,3)`-pairing functional (tested on the one-dimensional `H³`: the cup value is `1`
+by `mu_cupH13_xpow1_xpow3` and the Bockstein value is `1` by `mu_Sq1_xpow_three`), and the
+pairing is injective. -/
+theorem wuClass1_eq_xpow1 :
+    wuClass1 (poincareDual4Lo_of_closed (M := RP4)) = xpow 1 := by
+  apply (poincareDual4Lo_of_closed (M := RP4)).nondeg₁₃
+  refine LinearMap.ext fun y => ?_
+  rw [LinearMap.compr₂_apply, LinearMap.compr₂_apply]
+  have hv := wu_relation_v1 (poincareDual4Lo_of_closed (M := RP4)) y
+  rw [show ((poincareDual4Lo_of_closed (M := RP4)).cup13
+      (wuClass1 (poincareDual4Lo_of_closed (M := RP4)))) y
+      = (poincareDual4Lo_of_closed (M := RP4)).cup13
+        (wuClass1 (poincareDual4Lo_of_closed (M := RP4))) y from rfl, hv]
+  obtain ⟨c, rfl⟩ := cohomology_eq_smul_xpow (by norm_num) y
+  rw [map_smul, map_smul, map_smul, map_smul, smul_eq_mul, smul_eq_mul]
+  congr 1
+  · show (poincareDual4Mid_of_closed (M := RP4)).mu (Sq1 (xpow 3)) = _
+    rw [mu_Sq1_xpow_three]
+    show _ = (poincareDual4Mid_of_closed (M := RP4)).mu (cupH13 (xpow 1) (xpow 3))
+    rw [mu_cupH13_xpow1_xpow3]
+
 end SKEFTHawking.RP4BocksteinAssembly
