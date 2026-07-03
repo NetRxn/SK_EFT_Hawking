@@ -137,4 +137,67 @@ theorem cscOpen_eq_zero_of_chartConvex {M : TopCat} [T2Space ↑M] {m : ℕ}
     exact (LinearEquiv.map_eq_zero_iff TK).mp hβT
   exact relCohomology_eq_zero_of_relHomology_eq_zero K'setᶜ hHvan x
 
+/-- **The chart-convex stage-absorption** (factored from `cscOpen_eq_zero_of_chartConvex`):
+every compact stage `K` of a chart-convex `W` absorbs into a stage `K'` whose Euclidean image is
+a convex compact `C' ∋ p₀` inside `C`, with the chart compatibility for `(K', C')` — the input
+shape of the chart-pair transport and the convex stage-isos. -/
+theorem exists_chartConvex_stage_above {M : TopCat} [T2Space ↑M] {m : ℕ}
+    {U : Set ↑M} {V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))}
+    (e : ↥U ≃ₜ ↥V)
+    {C : Set (EuclideanSpace ℝ (Fin (m + 2)))} (hCconv : Convex ℝ C) (hCopen : IsOpen C)
+    {p₀ : EuclideanSpace ℝ (Fin (m + 2))} (hp₀ : p₀ ∈ C) (hCV : C ⊆ V)
+    {W : Set ↑M} (hWU : W ⊆ U)
+    (hWe : ∀ u : ↥U, (u : ↑M) ∈ W ↔ ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C))
+    (K : SKEFTHawking.SingularCompactsInOpen.CompactsIn W) :
+    ∃ (K' : SKEFTHawking.SingularCompactsInOpen.CompactsIn W)
+      (C' : Set (EuclideanSpace ℝ (Fin (m + 2)))),
+      K ≤ K' ∧ Convex ℝ C' ∧ IsCompact C' ∧ C' ⊆ C ∧ p₀ ∈ C' ∧
+      (∀ u : ↥U, ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C')
+        ↔ (u : ↑M) ∈ (↑K'.1 : Set ↑M)) := by
+  have hKU : (↑K.1 : Set ↑M) ⊆ U := K.2.trans hWU
+  have hKUc : IsCompact (Subtype.val ⁻¹' (↑K.1 : Set ↑M) : Set ↥U) := by
+    rw [Subtype.isCompact_iff, Subtype.image_preimage_coe,
+      Set.inter_eq_self_of_subset_right hKU]
+    exact K.1.isCompact'
+  set KE : Set (EuclideanSpace ℝ (Fin (m + 2))) :=
+    (fun x : ↥U => (e x : ↑(SingularEuclideanAcyclic.Eucl (m + 2))))
+      '' (Subtype.val ⁻¹' (↑K.1 : Set ↑M)) with hKEdef
+  have hKEc : IsCompact KE :=
+    hKUc.image (continuous_subtype_val.comp e.continuous)
+  have hKEC : KE ⊆ C := by
+    rintro _ ⟨x, hx, rfl⟩
+    exact (hWe x).mp (K.2 hx)
+  obtain ⟨C', hC'conv, hC'comp, hKEC', hC'C, hp₀C'⟩ :=
+    exists_convex_compact_between hKEc hCconv hCopen hKEC hp₀
+  set K'pre : Set ↥U := ⇑e ⁻¹' (Subtype.val ⁻¹' C') with hK'predef
+  set K'set : Set ↑M := Subtype.val '' K'pre with hK'setdef
+  have hK'pre_eq : K'pre = ⇑e.symm '' (Subtype.val ⁻¹' C' : Set ↥V) := by
+    ext x
+    constructor
+    · intro hx; exact ⟨e x, hx, e.symm_apply_apply x⟩
+    · rintro ⟨y, hy, rfl⟩
+      rw [hK'predef]
+      simp only [Set.mem_preimage, e.apply_symm_apply]
+      exact hy
+  have hC'V : C' ⊆ (V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))) := hC'C.trans hCV
+  have hK'c : IsCompact K'set := by
+    refine IsCompact.image ?_ continuous_subtype_val
+    rw [hK'pre_eq]
+    refine IsCompact.image ?_ e.symm.continuous
+    rw [Subtype.isCompact_iff, Subtype.image_preimage_coe,
+      Set.inter_eq_self_of_subset_right hC'V]
+    exact hC'comp
+  have hK'W : K'set ⊆ W := by
+    rintro _ ⟨x, hx, rfl⟩
+    exact (hWe x).mpr (hC'C hx)
+  have hKK' : (↑K.1 : Set ↑M) ⊆ K'set := by
+    intro z hz
+    exact ⟨⟨z, hKU hz⟩, hKEC' ⟨⟨z, hKU hz⟩, hz, rfl⟩, rfl⟩
+  refine ⟨⟨⟨K'set, hK'c⟩, hK'W⟩, C', hKK', hC'conv, hC'comp, hC'C, hp₀C', ?_⟩
+  intro u
+  constructor
+  · intro h; exact ⟨u, h, rfl⟩
+  · rintro ⟨x, hx, hxu⟩
+    rwa [Subtype.val_injective hxu] at hx
+
 end SKEFTHawking.SingularCSCConvexChart
