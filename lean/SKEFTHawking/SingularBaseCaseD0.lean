@@ -79,4 +79,44 @@ theorem fundCycleW₀_class_eq {k : ℕ} {W : Set ↑X} (hW : IsOpen W)
   rw [← hfund₀eq] at hhom'
   exact mem_swap_sub _ _ hhom' 
 
+omit [T2Space ↑X] in
+/-- **The generic UC-flip**: if `H_{N+1}(M,S) ≅ ℤ/2` with `g` the generator, the Kronecker
+pairing `⟨·, g⟩ : Hᴺ⁺¹(M,S) → ℤ/2` is bijective (the `manifoldLocalCohomologyIso` body pattern,
+abstracted over the homology iso). Injectivity: `g` spans, so a class pairing to `0` with `g`
+pairs to `0` with everything — relative UC kills it. Surjectivity: were the pairing zero, `g`
+itself would die by the homology-side UC. -/
+theorem relKroneckerH_flip_bijective_of_equiv {S : Set ↑X} {N : ℕ}
+    (E : RelativeHomology S (N + 1) ≃ₗ[ZMod 2] ZMod 2)
+    (g : RelativeHomology S (N + 1)) (hg : E g = 1) :
+    Function.Bijective ⇑((relKroneckerH (X := X) S (N := N)).flip g) := by
+  have hspan : ∀ β : RelativeHomology S (N + 1), (E β) • g = β := by
+    intro β
+    refine E.injective ?_
+    rw [map_smul, hg, smul_eq_mul, mul_one]
+  constructor
+  · rw [injective_iff_map_eq_zero]
+    intro ω hω
+    rw [LinearMap.flip_apply] at hω
+    refine SKEFTHawking.SingularRelativeUC.relCohomology_eq_zero_of_relKroneckerH
+      (S := S) (N := N) ω (fun β => ?_)
+    rw [← hspan β, map_smul, hω, smul_zero]
+  · have hg_ne : g ≠ 0 := by
+      intro h
+      rw [h, map_zero] at hg
+      exact one_ne_zero hg.symm
+    have hΦne : ∃ ω, (relKroneckerH (X := X) S (N := N)).flip g ω ≠ 0 := by
+      by_contra hall
+      simp only [not_exists, not_not] at hall
+      refine hg_ne (SKEFTHawking.SingularRelativeUC.relHomology_eq_zero_of_relKroneckerH
+        (S := S) (N := N) g (fun ω => ?_))
+      have := hall ω
+      rwa [LinearMap.flip_apply] at this
+    obtain ⟨ω₀, hω₀⟩ := hΦne
+    have hz2 : ∀ a : ZMod 2, a ≠ 0 → a = 1 := by decide
+    have hΦ1 : (relKroneckerH (X := X) S (N := N)).flip g ω₀ = 1 := hz2 _ hω₀
+    intro y
+    refine ⟨y • ω₀, ?_⟩
+    have h1 : relKroneckerH (X := X) S (N := N) ω₀ g = 1 := hΦ1
+    rw [map_smul, LinearMap.flip_apply, h1, smul_eq_mul, mul_one]
+
 end SKEFTHawking.SingularBaseCaseD0
