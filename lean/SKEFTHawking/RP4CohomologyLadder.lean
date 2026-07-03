@@ -141,4 +141,70 @@ theorem cohomologyTransfer_zero_eq_zero (y : Cohomology (TopCat.of S4) 0) :
   rw [cochainTransfer_zero_of_cocycle y.1 (LinearMap.mem_ker.mp y.2)]
   exact Submodule.zero_mem _
 
+/-! ## §4. The ladder (M3-g): `δSᵏ(1) ≠ 0` and `Hᵏ(ℝP⁴) = span{δSᵏ(1)}` for `k ≤ 4` resp. `≤ 3` -/
+
+/-- `ℝP⁴` is path-connected — the continuous image of the path-connected `S⁴`. -/
+noncomputable instance : PathConnectedSpace RP4 := by
+  rw [pathConnectedSpace_iff_univ]
+  have h2 : ⇑mkC '' Set.univ = (Set.univ : Set RP4) := by
+    rw [Set.image_univ, Set.range_eq_univ]
+    intro q
+    obtain ⟨a, ha⟩ := Quotient.exists_rep q
+    exact ⟨a, ha⟩
+  rw [← h2]
+  exact (pathConnectedSpace_iff_univ.mp inferInstance).image mkC.continuous
+
+/-- **`δS` is injective in degrees `k ≤ 3`**: `ker δS = im τ^*`, and `τ^*` vanishes — at `k = 0`
+by constancy (M3-f), at `k = 1,2,3` because its domain `Hᵏ(S⁴)` is zero (M3-e). -/
+theorem smithCoConnecting_injective {k : ℕ} (hk : k ≤ 3) :
+    Function.Injective (smithCoConnecting k) := by
+  rw [injective_iff_map_eq_zero]
+  intro w hw
+  obtain ⟨y, hy⟩ := (exact_cohomologyTransfer_smithCoConnecting k w).mp hw
+  rcases Nat.eq_zero_or_pos k with h0 | hpos
+  · subst h0
+    rw [← hy, cohomologyTransfer_zero_eq_zero]
+  · rw [← hy, sphere_cohomology_eq_zero hpos hk y, map_zero]
+
+/-- **`δS` is surjective onto degrees `k + 1 ≤ 3`**: `im δS = ker π^*`, and `π^*` lands in the
+vanishing `Hᵏ⁺¹(S⁴)`. -/
+theorem smithCoConnecting_surjective {k : ℕ} (h1 : k + 1 ≤ 3) :
+    Function.Surjective (smithCoConnecting k) := by
+  intro x
+  exact (exact_smithCoConnecting_cohomologyPullback k x).mp
+    (sphere_cohomology_eq_zero (Nat.succ_le_succ (Nat.zero_le k)) h1 _)
+
+/-- **The ladder classes** `xpow k := δSᵏ(1) ∈ Hᵏ(ℝP⁴; ℤ/2)` — identified with the cup powers
+of the generator in M3-i. -/
+noncomputable def xpow : (k : ℕ) → Cohomology (TopCat.of RP4) k
+  | 0 => unitClass (TopCat.of RP4)
+  | k + 1 => smithCoConnecting k (xpow k)
+
+@[simp] theorem xpow_succ (k : ℕ) : xpow (k + 1) = smithCoConnecting k (xpow k) := rfl
+
+/-- **The ladder classes are nonzero through degree 4** — `δS`-injectivity walks the
+nonvanishing up from the unit. -/
+theorem xpow_ne_zero {k : ℕ} (hk : k ≤ 4) : xpow k ≠ 0 := by
+  induction k with
+  | zero => exact unitClass_ne_zero
+  | succ m ih =>
+      intro h
+      refine ih (by omega) (smithCoConnecting_injective (by omega) ?_)
+      rw [map_zero]
+      exact h
+
+/-- **`Hᵏ(ℝP⁴; ℤ/2) = span{δSᵏ(1)}` for `k ≤ 3`** — surjectivity transports the degree-0 span
+up the ladder. With `xpow_ne_zero`, every `Hᵏ` (`k ≤ 3`) is one-dimensional with basis the
+ladder class. -/
+theorem cohomology_eq_smul_xpow : ∀ {k : ℕ}, k ≤ 3 → ∀ (w : Cohomology (TopCat.of RP4) k),
+    ∃ c : ZMod 2, w = c • xpow k := by
+  intro k
+  induction k with
+  | zero => exact fun _ w => cohomologyZero_eq_smul_unit w
+  | succ m ih =>
+      intro hm w
+      obtain ⟨v, hv⟩ := smithCoConnecting_surjective hm w
+      obtain ⟨c, hc⟩ := ih (by omega) v
+      exact ⟨c, by rw [← hv, hc, map_smul, xpow_succ]⟩
+
 end SKEFTHawking.RP4CohomologyLadder
