@@ -991,6 +991,7 @@ import SKEFTHawking.RP4ProjectionFormula
 import SKEFTHawking.RP4CupLadder
 import SKEFTHawking.RP4WuAssembly
 import SKEFTHawking.SingularBocksteinLeibniz
+import SKEFTHawking.RP4BocksteinAssembly
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
