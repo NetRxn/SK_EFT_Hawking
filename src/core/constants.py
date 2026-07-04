@@ -3138,6 +3138,50 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'the concrete arithmetic object the DONE lattice σ÷16 theorem consumes (Phase 5q.H · E1 Substrate-G; the '
             'final structural link integral-cohomology → cup → form → matrix → σ÷16).',
     },
+    'spinWu_even_datum': {
+        'statement': 'For a closed ORIENTED Spin 4-manifold M, the mod-2 Wu / Spin input to the EVENNESS of the '
+            'integer intersection matrix is carried (Phase 5q.H · E1 Substrate-G) as a disclosed datum: the structure '
+            'SKEFTHawking.SingularCohomologyInt.SpinWuDatum fc (tied to the integral fundamental class '
+            'fc : IntFundamentalClass X), holding (i) mu2 : Cohomology X 4 (ℤ/2) →ₗ[ZMod 2] ZMod 2 = the mod-2 '
+            'fundamental-class functional ⟨·,[M]₂⟩; (ii) eval_compat: ((fc.eval ω : ℤ) : ZMod 2) = mu2 (redH X 4 ω), '
+            'the ℤ→ℤ/2 compatibility of the two evaluations through the reduction bridge redH; (iii) wu_vanish: '
+            '∀ y : Cohomology X 2 (ℤ/2), mu2 (cupH24 y y) = 0 — the SPIN condition in functional form (⟨Sq² y,[M]₂⟩ = 0 '
+            'for all y, which by the singular Wu relation is v₂ = 0; on an oriented 4-manifold v₁ = 0 so w₂ = v₂, hence '
+            'v₂ = 0 ⟺ w₂ = 0 ⟺ M is Spin). This is the ONLY unproved input to interMatrix EVENNESS.',
+        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'hard',
+        'module': 'IntersectionFormEvenInt',
+        'elimination_path': 'Discharge = build the ℤ/2 fundamental class + middle Poincaré-duality datum '
+            'PoincareDual4Mid of the closed manifold (mod-2 orientability is automatic), take mu2 := P.mu, prove '
+            'eval_compat from the fact that the integral and mod-2 fundamental classes agree under reduction, and derive '
+            'wu_vanish from w₂(TM) = 0 (Spin) together with v₁ = 0 (oriented ⟹ w₁ = 0 ⟹ v₁ = 0) and the singular Wu '
+            'relation ⟨v₂ ∪ y,[M]₂⟩ = ⟨Sq² y,[M]₂⟩ (PoincareDualityWu.wu_relation). The reduction bridge redH and its '
+            'cup/coboundary compatibility (redH_cupH24, redC_coboundary, redC_cup) are PROVED unconditionally — the '
+            'ℤ→ℤ/2 reduction of SingularCohomologyInt matches the on-main SingularCohomologyMod2 model definitionally '
+            '(same functions on singular simplices; alternating signs (-1)^i reduce to 1 in char 2), so the bridge '
+            'itself is NOT a hypothesis. Only the geometric Spin/PD datum is disclosed.',
+        'dependent_theorems': [
+            'SKEFTHawking.SingularCohomologyInt.interFormInt_diag_even',
+            'SKEFTHawking.SingularCohomologyInt.interMatrix_even_of_spinWu',
+            'SKEFTHawking.SingularCohomologyInt.isEvenUnimodular_of_unimodular',
+        ],
+        'source': 'Standard 4-manifold topology (Wu formula w = Sq(v); Milnor–Stasheff §11; Kirby–Taylor): the '
+            'intersection form of a Spin (equivalently w₂ = 0) 4-manifold is EVEN, because ⟨a∪a,[M]₂⟩ = ⟨Sq²(a),[M]₂⟩ '
+            '= ⟨v₂∪a,[M]₂⟩ = 0 when v₂ = 0. On-main singular Wu substrate: PoincareDualityWu / PoincareDualityWuFormula '
+            '(wuClass2, wu_relation, wuW2_eq_zero_iff).',
+        'risk': 'Low mathematically (textbook: Spin ⟹ even intersection form); cost is the from-scratch Lean '
+            'construction of the ℤ/2 fundamental class + PD datum + the w₂=0 ⟹ v₂=0 derivation, deferred to a later '
+            'E1 brick. Every result in IntersectionFormEvenInt holds for an ARBITRARY such datum.',
+        'circularity_note': 'None. The evenness lemmas are built for an ARBITRARY SpinWuDatum; no property of a '
+            'specific (future) geometric fundamental class is assumed. The reduction bridge redH — the connective '
+            'tissue to the mod-2 Wu side — is proved unconditionally (not part of this datum). The residual '
+            'unimodular/Poincaré-duality conjunct of IsEvenUnimodular is left explicitly as a SEPARATE hypothesis '
+            '(isEvenUnimodular_of_unimodular takes IsUnimodular as its remaining argument), NOT folded in here.',
+        'prose': 'The Spin/Wu evenness input for a closed oriented 4-manifold, carried as a disclosed datum (mod-2 '
+            'fundamental functional + ℤ→ℤ/2 compatibility + the Spin condition v₂=0 as a Wu-functional vanishing) so '
+            'the integer intersection matrix interMatrix is EVEN — discharging the last semi-mirror-able conjunct of '
+            'IsEvenUnimodular through the from-scratch ℤ→ℤ/2 reduction bridge redH (Phase 5q.H · E1 Substrate-G). '
+            'Symmetric ✓ (graded-commutativity) + even ✓ (this datum) leave unimodular/PD as the sole residual core.',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════

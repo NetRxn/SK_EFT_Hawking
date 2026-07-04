@@ -828,6 +828,12 @@ import SKEFTHawking.SingularIntersectionFormInt
 -- (IsEvenUnimodular = even/Wu + unimodular/PD; 2∣σ/8 = topological Guillou–Marin factor). Basis carried
 -- as the disclosed datum intH2_basis_datum.
 import SKEFTHawking.IntersectionMatrixInt
+-- Phase 5q.H (2026-07-04, Option-A, E1 Substrate-G): the EVENNESS conjunct of IsEvenUnimodular
+-- interMatrix via the ℤ→ℤ/2 reduction bridge redH + the on-main mod-2 Wu criterion. Builds redH (the
+-- genuine cohomology reduction, cup/coboundary-compatible), proves 2∣⟨a∪a,[M]⟩ from Spin (v₂=0 as the
+-- mod-2 Wu functional vanishing, disclosed datum SpinWuDatum / spinWu_even_datum), hence interMatrix is
+-- EVEN — discharging the last semi-mirror-able conjunct (unimodular/PD remains the separate core).
+import SKEFTHawking.IntersectionFormEvenInt
 -- Phase 5q.H (2026-07-04, Option-A foundation brick 5): singular INTEGRAL homology + the integral
 -- Kronecker pairing — the ℤ dual of SingularHomologyMod2. Chains Cₙ(X;ℤ) = simplices →₀ ℤ, the SIGNED
 -- boundary ∂c = ∑ᵢ(-1)ⁱ∂ᵢc with ∂²=0 (opposite-sign cancellation, dual to coboundary_comp_coboundary),
