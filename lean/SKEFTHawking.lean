@@ -828,6 +828,14 @@ import SKEFTHawking.SingularIntersectionFormInt
 -- (IsEvenUnimodular = even/Wu + unimodular/PD; 2∣σ/8 = topological Guillou–Marin factor). Basis carried
 -- as the disclosed datum intH2_basis_datum.
 import SKEFTHawking.IntersectionMatrixInt
+-- Phase 5q.H (2026-07-04, Option-A foundation brick 5): singular INTEGRAL homology + the integral
+-- Kronecker pairing — the ℤ dual of SingularHomologyMod2. Chains Cₙ(X;ℤ) = simplices →₀ ℤ, the SIGNED
+-- boundary ∂c = ∑ᵢ(-1)ⁱ∂ᵢc with ∂²=0 (opposite-sign cancellation, dual to coboundary_comp_coboundary),
+-- Homology Hₙ(X;ℤ) = ker∂/im∂, and the descended integral pairing kroneckerHInt : Hⁿ(X;ℤ)×Hₙ(X;ℤ)→ℤ.
+-- The eval-bridge intFundamentalClassOfHomology [M] := ⟨(kroneckerHInt 4).flip [M]⟩ DISCHARGES the
+-- homology+Kronecker portion of intFundamentalClass_eval_datum, reducing it to the sole geometric input
+-- [M] : Homology(M;ℤ) 4 (+ orientation) — the community-scale residual core (no mod-2 shortcut over ℤ).
+import SKEFTHawking.SingularHomologyInt
 -- Phase 5q.F (2026-06-15, w₂ foundation brick 3): singular ℤ/2 HOMOLOGY + the Kronecker pairing — the
 -- dual of SingularCohomologyMod2. Chains C_n = simplices →₀ ℤ/2, the boundary ∂ with ∂²=0, Homology
 -- Hₙ = ker∂/im∂, and the descended Kronecker pairing kroneckerH : Hⁿ × Hₙ → ℤ/2 (the evaluation
