@@ -246,4 +246,24 @@ theorem omega4PinPlusGMTied_equiv_zmod16_of_spin_image_card
     rw [map_nsmul, abkGMTied16_rp4, map_zero] at hc
     revert hc; decide
 
+/-- **The complete KT-route capstone — full strength modulo the two granular §5 geometric facts.**
+Threads `PinPlusExactSequence.spin_image_card_two` + the KT §5 exact-sequence exactness + the carrier
+instantiation into `DataBordismGrp(pinPlusGMTiedData) ≃+ ZMod 16`. The disclosed input is now exactly the two
+individually-standard Kirby–Taylor §5 geometric facts, each page-traced:
+* `s : ℤ →+ carrier` with `hs : ∀ n, s n = 0 ↔ 2 ∣ n` — the forgetful `Ω₄^{Spin}≅ℤ → Ω₄^{Pin⁺}` with kernel
+  the Pin⁺-bounding classes `2ℤ` (KT **Lemma 5.3**: `sig(Kummer)=16`, bounds iff `sig ÷ 32`);
+* `hexact` — the KT §5 exact-sequence exactness `ker [∩w₁²] = image(Spin→Pin⁺)`.
+Everything else (surjectivity, the ℝP⁴ generator, the ψ-witness, the order-16 / Lagrange algebra) is already
+discharged in-tree. -/
+theorem omega4PinPlusGMTied_equiv_zmod16_via_kt_lemma53
+    (s : ℤ →+ DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)))
+    (hs : ∀ n : ℤ, s n = 0 ↔ (2 : ℤ) ∣ n)
+    (hexact : (reduce16to8.toAddMonoidHom.comp
+        (abkGMTied16 (k := 0) (I := 𝓡 4) :
+          DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ ZMod 16)).ker = s.range) :
+    Nonempty (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16) := by
+  apply omega4PinPlusGMTied_equiv_zmod16_of_spin_image_card
+  rw [hexact]
+  exact SKEFTHawking.PinPlusExactSequence.spin_image_card_two s hs
+
 end SKEFTHawking.PinPlusGMWitness
