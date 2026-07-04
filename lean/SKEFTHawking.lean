@@ -814,6 +814,9 @@ import SKEFTHawking.SingularCohomologyMod2
 -- Phase 5q.H (2026-07-04, Option-A foundation brick 1): singular INTEGRAL cohomology (cochain complex +
 -- Hⁿ(X;ℤ) + δ²=0 with the genuine (-1)ⁱ sign) — the from-scratch base for the manifold intersection form.
 import SKEFTHawking.SingularCohomologyInt
+-- Phase 5q.H (2026-07-04, Option-A foundation brick 2): the integral Alexander–Whitney cup product
+-- (signed cup-Leibniz) → cupH24 : H²(X;ℤ)×H²(X;ℤ)→H⁴(X;ℤ), the integral intersection-form target.
+import SKEFTHawking.SingularCupInt
 -- Phase 5q.F (2026-06-15, w₂ foundation brick 3): singular ℤ/2 HOMOLOGY + the Kronecker pairing — the
 -- dual of SingularCohomologyMod2. Chains C_n = simplices →₀ ℤ/2, the boundary ∂ with ∂²=0, Homology
 -- Hₙ = ker∂/im∂, and the descended Kronecker pairing kroneckerH : Hⁿ × Hₙ → ℤ/2 (the evaluation
