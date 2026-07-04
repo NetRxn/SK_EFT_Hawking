@@ -1,5 +1,6 @@
 import SKEFTHawking.SpinRokhlinInterface
 import SKEFTHawking.GuillouMarinBridge
+import SKEFTHawking.GMArfVanishing
 
 /-!
 # Discharging the smooth-Rokhlin `2 ∣ σ/8` node via the Guillou–Marin / Freedman–Kirby congruence
@@ -219,5 +220,32 @@ def sphereS4Data : SpinCharSurfaceData where
 
 /-- The trivial datum's Rokhlin conclusion: `16 ∣ 0` — the framework fires end-to-end. -/
 example : (16 : ℤ) ∣ latticeSig sphereS4Data.form := sphereS4Data.rokhlin
+
+/-! ## Consistency: the FK refinement recovers van der Blij on oriented surfaces
+
+The FK congruence must be consistent with the *proven* mod-8 van der Blij bound. For an EVEN (oriented)
+characteristic surface — `β ∈ {0,4} ⊂ ZMod 8` (`brown_even_two_torsion`) — the mod-8 reduction of `2·β`
+vanishes, so the mod-16 identity descends exactly to `selfPairing ≡ σ (mod 8)`. This confirms
+`CharacteristicSquareModSixteen` is the correct one-level-up refinement of `CharacteristicSquareModEight`,
+not an inconsistent overreach. -/
+
+/-- The mod-8 reduction of the GM term `2·β(Q)` is `2·β(Q)` in `ZMod 8`. -/
+lemma reduce16to8_doubleBrown {ι : Type*} [Fintype ι] [DecidableEq ι] (Q : Z4Quadratic ι) :
+    reduce16to8 (doubleBrown Q) = 2 * Q.brown := by
+  unfold doubleBrown
+  rw [map_mul, map_ofNat, map_natCast, ZMod.natCast_val, ZMod.cast_id]
+
+/-- **The FK congruence refines van der Blij on oriented surfaces.** For an even (oriented) characteristic
+surface `Q`, the mod-16 identity `CharacteristicSquareModSixteen` reduces exactly to the mod-8 van der Blij
+identity `selfPairing M c ≡ σ (mod 8)` — the FK refinement is consistent with the proven algebraic bound. -/
+theorem charSq8_of_charSq16_even {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (σ : ℤ)
+    {ι : Type*} [Fintype ι] [DecidableEq ι] {Q : Z4Quadratic ι} {c : Fin n → ℤ}
+    (h : CharacteristicSquareModSixteen M σ Q c) (hE : Z4Quadratic.IsEven Q) :
+    (selfPairing M c : ZMod 8) = (σ : ZMod 8) := by
+  have h' : ((selfPairing M c : ℤ) : ZMod 16) = (σ : ZMod 16) - doubleBrown Q := h
+  have hred := congrArg reduce16to8 h'
+  rw [map_intCast, map_sub, map_intCast, reduce16to8_doubleBrown, brown_even_two_torsion Q hE,
+    sub_zero] at hred
+  exact hred
 
 end SKEFTHawking.GMRokhlin
