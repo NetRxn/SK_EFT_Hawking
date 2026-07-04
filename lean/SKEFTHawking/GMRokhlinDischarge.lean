@@ -24,7 +24,7 @@ kernel-pure.
 
 namespace SKEFTHawking.GMRokhlin
 
-open SKEFTHawking.Brown SKEFTHawking.GuillouMarin
+open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic SKEFTHawking.GuillouMarin
 
 /-- **The 8→16 arithmetic bit.** If `16 ∣ n` then `2 ∣ n / 8` (integer division is exact here since
 `8 ∣ 16 ∣ n`). This is the `σ/8`-evenness the topological factor asserts. -/
@@ -188,5 +188,36 @@ theorem sig_zmod16_of_charSq16 {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (σ : 
     (σ : ZMod 16) = (selfPairing M c : ZMod 16) + doubleBrown Q := by
   rw [CharacteristicSquareModSixteen] at h
   rw [h]; ring
+
+/-! ## A concrete witness — the trivial (S⁴) datum
+
+The reviewer noted the framework carried no concrete inhabitant. Here is one: the empty (rank-0)
+intersection form — the 4-sphere `S⁴` — with the empty characteristic surface. It validates that
+`SpinCharSurfaceData` is genuinely populatable and that `.toSmoothSpinManifold4`/`.rokhlin` fire on a real
+(if trivial, `σ = 0`) instance. -/
+
+/-- **A rank-0 intersection form has signature 0** (from `|σ| ≤ rank = 0`). -/
+theorem latticeSig_fin_zero (M : Matrix (Fin 0) (Fin 0) ℤ) : latticeSig M = 0 := by
+  have h : |latticeSig M| ≤ 0 := by simpa using abs_latticeSig_le M
+  exact abs_eq_zero.mp (le_antisymm h (abs_nonneg _))
+
+/-- **The 4-sphere as a `SpinCharSurfaceData`** — the empty even-unimodular form, empty characteristic
+surface (`stdQuadratic 0`, `β = 0`), `F·F = 0`; a genuine concrete inhabitant. -/
+def sphereS4Data : SpinCharSurfaceData where
+  rank := 0
+  form := 0
+  even_unimod := ⟨Matrix.transpose_zero, Or.inl Matrix.det_fin_zero, fun i => i.elim0⟩
+  ι := Fin 0
+  Q := stdQuadratic 0
+  FdotF := 0
+  gm := by
+    show ((latticeSig (0 : Matrix (Fin 0) (Fin 0) ℤ) - 0 : ℤ) : ZMod 16)
+      = doubleBrown (stdQuadratic 0)
+    rw [latticeSig_fin_zero, doubleBrown_stdQuadratic]; decide
+  spin_FdotF := rfl
+  spin_brown := by rw [brown_stdQuadratic]; decide
+
+/-- The trivial datum's Rokhlin conclusion: `16 ∣ 0` — the framework fires end-to-end. -/
+example : (16 : ℤ) ∣ latticeSig sphereS4Data.form := sphereS4Data.rokhlin
 
 end SKEFTHawking.GMRokhlin
