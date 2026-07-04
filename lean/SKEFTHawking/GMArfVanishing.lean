@@ -94,4 +94,19 @@ lemma brown_even_two_torsion (Q : Z4Quadratic ι) (hE : IsEven Q) : 2 * brown Q 
   nth_rewrite 1 [hneg]
   exact neg_add_cancel _
 
+/-- The **ℤ/2 Arf invariant** of a form (meaningful on even/oriented-surface forms): `arf Q = brown Q / 4`.
+On an even form `brown = 4·arf` (the Guillou–Marin `β = 4·Arf`), so the surface's mod-16 contribution is the
+single ℤ/2 bit `arf`. -/
+noncomputable def arf (Q : Z4Quadratic ι) : ZMod 2 := (((brown Q).val / 4 : ℕ) : ZMod 2)
+
+/-- **`brown = 4·arf` on even forms** — the mod-16 surface contribution is carried by the single ℤ/2 Arf bit. -/
+lemma brown_eq_four_mul_arf (Q : Z4Quadratic ι) (hE : IsEven Q) :
+    brown Q = 4 * ((arf Q).val : ZMod 8) := by
+  have h := brown_even_two_torsion Q hE
+  unfold arf
+  revert h
+  generalize brown Q = c
+  revert c
+  decide
+
 end SKEFTHawking.Brown.Z4Quadratic
