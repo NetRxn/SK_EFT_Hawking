@@ -2,6 +2,7 @@ import Mathlib
 import SKEFTHawking.PinPlusGMData
 import SKEFTHawking.PinPlusGMTiedData
 import SKEFTHawking.RP4Unconditional
+import SKEFTHawking.PinPlusSmithLES
 
 /-!
 # Phase 5q.H (H3 witness) — the ℝP⁴ Guillou–Marin structure and its COMPUTED mod-8 invariant
@@ -200,5 +201,22 @@ noncomputable def omega4PinPlusGMTied_equiv_zmod16_of_smith_les
     DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16 :=
   let ⟨hfin, hcap⟩ := cap_of_carrier_iso_zmod16 h
   omega4PinPlusGMTied_equiv_zmod16_of_cap hfin hcap
+
+/-- **§9.3 Smith-LES form of the tied GM capstone** — the locked injectivity architecture. Re-expresses the
+disclosed carrier-iso input in the Smith-LES form: given the geometric codim-2 Smith map `sm : A →+ carrier`
+from a Pin⁻ neighbor `A = Ω₆^{Pin⁻}`, its LES exactness at both ends (`0 → A →ˢᵐ carrier → 0`, the twisted-spin
+vanishings `Ω_{5,6}^{Spin}(ℝP¹,σ)=0` — the pre-authorized Smith-LES toolkit Props), and the neighbor iso
+`A ≃+ ZMod 16` (the ABP-1969 spectral input `hyp:smith_inflow_z16`, the atlas keystone), the full
+COMPUTED-grade tied GM carrier is `≃+ ZMod 16`. This is the roadmap §9.3 endpoint: the disclosed input is now
+carried solely by the neighbor iso + the geometric exactness, matching the locked architecture. -/
+noncomputable def omega4PinPlusGMTied_equiv_zmod16_via_smith_les_neighbor
+    {A : Type u} [AddCommGroup A]
+    (sm : A →+ DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)))
+    (hL : Function.Exact (0 : PUnit →+ A) sm)
+    (hR : Function.Exact sm (0 : DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ PUnit))
+    (hA : Nonempty (A ≃+ ZMod 16)) :
+    DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16 :=
+  omega4PinPlusGMTied_equiv_zmod16_of_smith_les
+    (PinPlusSmithLES.pinPlus_zmod16_of_smith_les sm hL hR hA)
 
 end SKEFTHawking.PinPlusGMWitness
