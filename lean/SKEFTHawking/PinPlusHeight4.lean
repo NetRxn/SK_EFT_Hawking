@@ -72,4 +72,36 @@ theorem heights_0_and_4 :
     ((List.range 8).filter (survives 0)).length = 1 ∧
       ((List.range 8).filter (survives 4)).length = 4 := by decide
 
+/-! ## §4. The finite no-differentials side-conditions for the column-4 `E₂ = E∞` collapse
+
+`col4_height_eq_four` gives the size of the `t−s = 4` `δ = ·h₀` cokernel; the abutment is `ℤ/16`
+**only if** the Adams SS collapses on that column (`E₂ = E∞`, no differentials in or out), which is the
+convergence half of the ℤ/16. Per `Lit-Search/Phase-5qF/adams_convergence_low_degree.md` §1.3 / §4.1
+this collapse is a **finite sparseness check**: an outgoing `dᵣ : (s, t−s=4) → (s+r, t−s=3)` and an
+incoming `dᵣ : (s−r, t−s=5) → (s, t−s=4)` both vanish because the target (`t−s=3`) and source
+(`t−s=5`) **`N`-tower cells are empty** in the controlled window. These were only asserted in prose;
+here they are the `decide`-backed cell counts of the same δ-model that fixes the height.
+
+**Scope (honest).** These are the emptiness of the δ-cokernel on the **`N`-tower** (`extN`, columns
+`{0,4,8}`) in cols 3 and 5 — exactly the cells a `dᵣ` in/out of the col-4 `N`-tower would have to hit
+or come from. The full-chart off-tower classes (the shifted `h₁`, `h₁²` giving `π₂,π₃ = ℤ/2`) are
+`h₀`-linearity-blocked from the col-4 tower (§1.3 backstop) and are not modeled by `extN`; this lemma
+covers the `N`-tower sparseness that the height count rests on, not the entire chart. -/
+theorem col3_survivors : (List.range 8).filter (survives 3) = [] := by decide
+
+/-- The `t−s = 5` δ-source column has **no `N`-tower survivor** in the window — the incoming-differential
+source cell for the col-4 tower is empty (`adams_convergence_low_degree.md` §1.3, incoming `dᵣ`). -/
+theorem col5_survivors : (List.range 8).filter (survives 5) = [] := by decide
+
+/-- **The finite `E₂ = E∞` side-condition for column 4**: both the differential-**target** column
+(`t−s = 3`) and the differential-**source** column (`t−s = 5`) have empty `N`-tower δ-cokernel, so every
+`dᵣ` in or out of the col-4 `N`-tower vanishes for degree reasons (`adams_convergence_low_degree.md`
+§4.1 (a)). Combined with `col4_height_eq_four` (the height) this is the finite, `decide`-checked
+statement that the col-4 tower assembles to `ℤ/16` with no differentials — the convergence content that
+the prose "too sparse … trivial" (BC18 Step 3) verdict factors into. -/
+theorem col4_collapse_side_conditions :
+    (List.range 8).filter (survives 3) = [] ∧
+      (List.range 8).filter (survives 5) = [] ∧
+        ((List.range 8).filter (survives 4)).length = 4 := by decide
+
 end SKEFTHawking.PinHeight4
