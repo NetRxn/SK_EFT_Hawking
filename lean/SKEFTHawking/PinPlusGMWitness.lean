@@ -344,4 +344,16 @@ theorem two_nsmul_mk (s : SingularManifold PUnit 0 (𝓡 4))
   show str.grade16 + str.grade16 = 2 * str.grade16
   ring
 
+/-- **The completeness capstone reduced to the single geometric node.** From the one geometric fact
+"every grade-`0` Pin⁺ class bounds" (`hbound` — the `w₂=0` cert + Wu `w₄=Sq²(w₁²)=w₁⁴` making a Pin⁺
+4-manifold's only SW number `w₁⁴=0`, so it is null-bordant; this is the pre-authorized Rokhlin/ABK node),
+`abkGMTied16` is injective, so with its surjectivity the tied GM carrier is `≃+ ZMod 16`. The whole
+algebra above (`hs` via `g8`, the cylinder `two_nsmul_mk`) plus this single node give the full result. -/
+theorem omega4PinPlusGMTied_equiv_zmod16_of_grade0_bounds
+    (hbound : ∀ x : DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)),
+        (abkGMTied16 (k := 0) (I := 𝓡 4)) x = 0 → x = 0) :
+    Nonempty (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16) :=
+  ⟨AddEquiv.ofBijective (abkGMTied16 (k := 0) (I := 𝓡 4))
+    ⟨(injective_iff_map_eq_zero _).mpr hbound, abkGMTied16_surjective⟩⟩
+
 end SKEFTHawking.PinPlusGMWitness
