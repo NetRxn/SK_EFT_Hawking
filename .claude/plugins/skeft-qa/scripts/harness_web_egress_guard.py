@@ -41,11 +41,12 @@ _WHITELIST = (
     # Project tooling/infrastructure (NOT scholarly primaries), user-authorized 2026-06-29:
     #  - Aristotle theorem prover's dashboard/API docs (we submit to it as part of the
     #    Stage-4 Lean pipeline; its docs are operational reference).
-    #  - anthropic.com + claude.com, all subdomains: Anthropic engineering blog
+    #  - anthropic.com + claude.com + claude.ai, all subdomains: Anthropic engineering blog
     #    (www.anthropic.com) + API docs (docs.anthropic.com) + the Claude Code product docs
-    #    (code.claude.com). This repo's autonomous-dev harness IS Claude Code, so these are
-    #    operational reference.
-    "aristotle.harmonic.fun", "harmonic.fun", "anthropic.com", "claude.com",
+    #    (code.claude.com) + the Claude web app / shared artifacts (claude.ai). This repo's
+    #    autonomous-dev harness IS Claude Code, so these are operational reference.
+    #    claude.ai added on operator request 2026-07-04 (fetch shared artifacts/conversations).
+    "aristotle.harmonic.fun", "harmonic.fun", "anthropic.com", "claude.com", "claude.ai",
     # KT-LMS §5 primary-text mirrors — Kirby–Taylor "Pin structures on low-dimensional
     # manifolds" (LMS-151, 1990) — academic paper archives, user-authorized 2026-07-04 for
     # the Phase 5q.H full-strength ABK-completeness fetch (the surgery proof is off-arXiv).
