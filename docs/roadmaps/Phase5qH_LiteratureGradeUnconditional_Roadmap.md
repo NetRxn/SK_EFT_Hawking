@@ -23,24 +23,22 @@ summary. Negative register: `docs/dev-loops/SETTLED_FORKS.md` + the machine-fed 
 
 ## Status checklist (present state — main @ `1e239b71`, 2026-07-04)
 
-**✅ DONE (the algebra + disclosed-form L3 + this phase's planning):**
-- [x] **H1** recon + classical-mechanism pinning (DR blueprints landed; H3/H4/H6 statement shapes frozen)
-- [x] **H2** Brown/ABK ℤ/16 algebra — kernel-pure, in vacuo
-- [x] **H5** surjectivity (ℝP⁴ odd generator) + tied-carrier comparison
-- [x] **H6-a** injectivity *reduction architecture* — all routes provably unified to ONE completeness Prop (`smith_inflow_z16`)
-- [x] **Disclosed-form L3** — `Ω₄^{Pin⁺}≅ℤ/16` on the synthetic **tied** carrier, kernel-pure, modulo one Prop packaging G+S (`omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`)
+> **Naming (canonical):** work is tracked by **E1–E5** — the execution map's efforts (its *Naming* section holds the one E ↔ H ↔ P ↔ L cross-walk). **L1–L4** = result-strength diagnostic (not a work unit); **H1–H8 / P1.1…** = historical. Use E-numbers.
+
+**✅ DONE — the disclosed-form L3 substrate + this phase's planning (the pre-E foundation):**
+- [x] **Disclosed-form L3** on the synthetic **tied** carrier: `Ω₄^{Pin⁺}≅ℤ/16`, kernel-pure, modulo one Prop packaging G+S (`omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`). Bundles the Brown/ABK ℤ/16 algebra, ℝP⁴ surjectivity, and the injectivity route-unification to ONE completeness Prop (`smith_inflow_z16`).
 - [x] **Reconciliation + Option-A GO + execution map + E1–E5 effort notebooks** (this phase's planning layer)
 - [x] **All external inputs direct-primary-read verified** (Taylor/Klug/DDK⁺/HKT/`2406.08237`/KT-LMS §5 — reconciliation §2)
-- [x] **ADR-007 kernel no-go ledger** implemented — the negative frontier is machine-fed (supports the build; not itself a 5qH gate)
+- [x] **ADR-007 kernel no-go ledger** — the negative frontier is machine-fed (supports the build; not a work effort)
 
-**⬜ REMAINING — the genuine L4 (= the execution map's E1–E5; NONE are Lean-written yet):**
-- [ ] **E1** Substrate-G topology (foundation; first brick = harvest wt1 PD substrate) — the from-scratch geometry H3/H4-genuine + H6-b need
-- [ ] **E2** Rokhlin `gm` (§10 P1.1) — `gm` congruence from geometry → discharge `SmoothSpinManifold4.topo` → genuine `16∣σ`
-- [ ] **E3** geometric Smith map + two-sided exactness (§10 P1.2 = H6-b/c) → `ker abkGMGrade=⊥` reduced to `smith_inflow_z16`
-- [ ] **E4** genuine carrier `pinPlusGMData` + computed `abkGM8` + capstone (§10 P1.3 + H7; the Δ2 upgrade — **H3/H4 are TIED-carrier-only today**, this makes them genuine)
-- [ ] **E5** Substrate-S spectral ℤ/16 (§10 P2.1 = H8) — discharge `smith_inflow_z16` → `omega4PinPlusGM_equiv_zmod16`, 100% unconditional
+**⬜ REMAINING — the genuine L4 (the execution map's E1–E5; NONE Lean-written yet):**
+- [ ] **E1 · Substrate-G topology** — foundation; first brick = harvest wt1 PD substrate
+- [ ] **E2 · Rokhlin `gm`** — `gm` from geometry → discharge `SmoothSpinManifold4.topo` → genuine `16∣σ`
+- [ ] **E3 · Smith map + exactness** — geometric Smith map + two-sided exactness → `ker abkGMGrade=⊥` reduced to `smith_inflow_z16`
+- [ ] **E4 · genuine carrier + assembly** — `pinPlusGMData` + computed `abkGM8` + capstone (upgrades the tied carrier to genuine)
+- [ ] **E5 · Substrate-S spectral** — ABP/Adams ℤ/16 → discharge `smith_inflow_z16` → `omega4PinPlusGM_equiv_zmod16`, unconditional
 
-> Granular per-effort status (venue / deps / next brick) lives in each `E<n>/LAB_NOTEBOOK_INDEX.md` and the execution map's DAG. §4's H3/H4 "**DONE:**" criteria describe the *genuine* carrier — achieved only in **tied** form today (E4 upgrades them); §0–§9 are otherwise superseded (banner above).
+> Per-effort status (venue / deps / next brick) lives in each `E<n>/LAB_NOTEBOOK_INDEX.md` + the execution map's DAG.
 
 ## 0. Why 5q.H exists (read first)
 
@@ -158,6 +156,8 @@ subsume its ℤ/16 into the new one.
 ---
 
 ## 4. The gate plan (H1 → H7)
+
+> **⚠ HISTORICAL vocabulary.** The H-gates are the *original* work breakdown, now **retired** — current work is tracked by **E1–E5** (see the execution map's *Naming* section for the H → E cross-walk + the Status checklist for present state). Read §4 for gate *rationale*; never state current status with H-numbers (`H3 ≠ E3`).
 
 > Brick-count reference-class only (the 5q.G M-ladder = ~30 bricks / 3 waves). NO calendar
 > estimates (`feedback_ignore_pm_estimates`). Each gate closes with the full wave mechanics of §7.
@@ -423,6 +423,8 @@ gap that blocks verifying the [KT-restated] locators and reading Thm 6.11/Rem 6.
 ---
 
 ## 10. Phase 1 & Phase 2 — wave breakdown to unconditional discharge (2026-07-04, main @ `df10209b`)
+
+> **⚠ HISTORICAL vocabulary.** The P-waves are **superseded by the E1–E5 efforts** (cross-walk: P1.1≡E2, P1.2≡E3, P1.3≡E4, P2.1≡E5; E1 = the shared Substrate-G foundation these waves assumed). Read §10 for the crux + substrate *rationale*; track work by **E-number** (execution map). "Phase 1/Phase 2" ≡ "Substrate G / Substrate S".
 
 **Current state (main `df10209b`, source-verified):** the tied GM carrier (`pinPlusGMTiedData`) is built; `abkGMTied16` is the computed grade; surjectivity (`abkGMTied16_surjective`) + the ℝP⁴ odd generator are proven; the quotient `carrier ⧸ ker ≃+ ZMod 16` (`dataBordismGMTied_quotient_equiv_zmod16`) is unconditional and kernel-pure. Injectivity is **route-unified** — Thom / KT §5 / Smith-LES / cardinality-cap all provably reduce to ONE node (`spin_range_ge_of_grade0_inj`'s `hbound` = grade-0 completeness), with the KT §5 ⊆-half (`spin_range_le_ker_reduce`), the Spin map `s := n·g8`, and `hs` (`g8_zmultiples_ker`) discharged in-tree. So **H1–H5 + H6-a are effectively on main**; what remains is the injectivity toolkit (H6-b/c), the genuine-carrier upgrade (Δ2), and the single-Prop discharge (H8).
 

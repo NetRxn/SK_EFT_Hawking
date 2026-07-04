@@ -5,6 +5,22 @@
 > Coherence source = `temporary/working-docs/16Convergence_Reconciliation_Audit_2026-07-04.md` (wins on any conflict).
 > This map orchestrates the 5 efforts; each effort has its OWN notebook (two-layer INDEX+shard) under `docs/dev-loops/Phase5qH/E<n>_*/`.
 
+## Naming — the canonical vocabulary (read once; then use E-numbers only)
+
+**E1–E5 are the ONE numbered work scheme**, always paired with their descriptive anchor (e.g. "E3 · Smith map"). Every other label is retired to a **non-work** role — do **NOT** use H/P numbers for current status; they *collide* (`E3 ≠ H3 ≠ L3`, and that mismatch is the decoherence hazard this section exists to kill).
+
+| Canonical effort | What it is | ⟵ old gate (hist.) | ⟵ old wave (hist.) | Substrate | Reaches |
+|---|---|---|---|---|---|
+| **E1 · Substrate-G topology** | char-surfaces, PD-with-boundary, surgery/Novikov (foundation) | feeds H3/H4/H6 | — | G | — |
+| **E2 · Rokhlin `gm`** | `gm` congruence → genuine `16∣σ` | H base case | P1.1 | G | — |
+| **E3 · Smith map + exactness** | geometric Smith map + two-sided exactness → `ker=⊥` | H6-b/c | P1.2 | G | L4 |
+| **E4 · genuine carrier + assembly** | `pinPlusGMData` + computed `abkGM8` + capstone | H3/H4/H7 | P1.3 | G→assembly | L4 |
+| **E5 · Substrate-S spectral** | ABP/Adams ℤ/16 → discharge `smith_inflow_z16` | H8 | P2.1 | S | L4 |
+
+- **L1–L4 = a result-STRENGTH diagnostic, NOT a work unit.** L1 = `8∣σ`; L2 = quotient iso (5q.G, on main); L3 = disclosed-form (on main); **L4 = the genuine target** that E1–E5 build. Say "targets L4," never "do L4."
+- **Substrate G / S = a 2-bucket grouping** over the efforts: **G** (elementary geometry) = E1+E2+E3; **S** (spectral) = E5; **E4** = the assembly that joins them.
+- **H1–H8** (roadmap §4) and **P1.1/…** (roadmap §10) are **HISTORICAL** — kept for gate/route rationale, cross-walked above. Never state current status with them.
+
 ## 0. Decision & posture (binding)
 
 - **OPTION A — GO (operator, 2026-07-04):** build the **genuine L4** `Ω₄^{Pin⁺}≅ℤ/16` — genuine carrier, computed invariant, injective+surjective, **ZERO posits**, kernel-pure. NOT the disclosed-form L3 (that is already done and is retained only as the stepping-stone/fallback).
