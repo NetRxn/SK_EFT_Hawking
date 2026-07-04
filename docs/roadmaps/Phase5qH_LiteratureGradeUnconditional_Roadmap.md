@@ -6,8 +6,13 @@ review PASS 0-BLOCKER/0-MAJOR). Every claim in §2–§3 was **ground-truth-vett
 main at `1c455781`** (the 5q.G discipline: source/git/counts are evidence; notebook self-claims are not).
 
 **Owner workstream:** public `SK_EFT_Hawking` Lean.
-**Tracker = this file.** Lab notebook: `Lit-Search/Phase-5qH/LAB_NOTEBOOK_INDEX.md` (fresh home —
-scaffold at goal-arm; the 5q.F/L2 index is consolidated-historical and stays closed). Negative
+**→ §10 (2026-07-04): the Phase 1 / Phase 2 wave breakdown to unconditional discharge, from current main state.** Read §10 (+ its correction banners + crux note) for the execution path.
+
+> **🟢 OPTION A — GO (operator, 2026-07-04): genuine unconditional discharge, full strength.** The A-vs-B decision is MADE: build the genuine L4 (`omega4PinPlusGM_equiv_zmod16`, genuine carrier, computed invariant, ZERO posits), NOT the disclosed-form L3 (retained only as stepping-stone/fallback). **The operational entry point is now `docs/dev-loops/Phase5qH/PHASE5QH_EXECUTION_MAP.md`** — it decomposes the build into **5 efforts (E1–E5), each with its own notebook**, indexes every personally-verified primary source, points the worktrees (wt1 holds usable relative-PD substrate; wt2/wt3 free), and gives the multi-agent parallelization plan. §10's P1.1/P1.2/P1.3/P2.1 waves map onto E2/E3/E4/E5 (E1 = the shared Substrate-G foundation §10 folds into Phase 1). **All external inputs are direct-primary-read verified** (Taylor `0802.0111`, Klug `2011.12418`, DDK⁺ `2405.04649`, HKT `1910.14039`, `2406.08237`, KT-LMS §5) — trace in `16Convergence_Reconciliation_Audit_2026-07-04.md §2`.
+> **⚠ §0–§9 ARE SUPERSEDED where they conflict with §10 + `16Convergence_Reconciliation_Audit_2026-07-04.md`.** They are the *original 2026-07-03 phase-open plan* (H1–H8 gates, the "route α", the "two disclosed Props" and "Phase 1 in-tree / disclosed-form" framings). Three of those framings are now CORRECTED: (1) the "concentrated input is elementarily dischargeable (Matsumoto)" — WRONG (§9.3 conflated the divisibility base case with the non-elementary ℤ/16 completeness; see §9.3 banner). (2) "Phase 1 in-tree" — WRONG (it is a from-scratch geometric substrate build; see §10 Phase-1 banner). (3) "Phase 2 contingency" — WRONG (REQUIRED; see §10 crux note). Read §0–§9 as historical rationale, not current status.
+**Tracker = this file.** Lab notebook: `docs/dev-loops/Phase5qH/LAB_NOTEBOOK_INDEX.md` (in-repo,
+scaffolded at goal-arm; the primary-source DR reports + the KT-LMS PDF live in `Lit-Search/Phase-5qH/`
+— read them directly, never via summary). Negative
 register: `docs/dev-loops/SETTLED_FORKS.md` (inherited in full — the ⛔ entries remain binding).
 Continuation of [Phase 5q.G](Phase5qG_GenuineUnconditional_Roadmap.md).
 
@@ -347,7 +352,10 @@ H3) and smooth bordism constructions in H6-b. The k-generic statements remain wh
 the C⁰ fork (ℤ/2⊕ℤ/8 + KS) is recorded as a non-goal corollary-target, not silently conflated.
 
 **9.3 — Injectivity route v2: the SMITH-LES architecture (amends H6; supersedes the §4-H6
-toolkit sketch).** The KT-LMS §5 surgery proof's internals are not reconstructible from
+toolkit sketch).**
+> **⚠ CORRECTION (2026-07-04, from `ABK_injectivity_routes_lemma_DAG_20260703.md` §4 read directly).** The paragraph below's claim that the concentrated input "is itself a proven theorem with a published ELEMENTARY, spectra-free proof (Matsumoto)" is an **ERROR — it conflates two distinct inputs.** (1) Rokhlin's `16∣σ` (the GM base case `2β=F·F−σ` at `F=∅`) IS elementary (Matsumoto/[FK]) = `hyp:rokhlin_sigma_mod_16` — but it is the mod-16 *detection* base case, NOT the completeness. (2) The Smith-LES *injectivity/completeness* consumes ONE external stable ℤ/16 input (`Ω₆^{Pin⁻}≅ℤ/16` [ABP 1969] / `Ω₄^{Spin}≅ℤ` / Stolz η) = `smith_inflow_z16`, of which the report states *"the ℤ/16 never comes from below … no published route eliminates this … none of the whitelisted sources offers an elementary substitute."* So the completeness is **required and non-elementary (the ABP tower)** — see §10 Phase 2. Read the paragraph below as identifying the *detection* base case only; the completeness input is `smith_inflow_z16`, not `hyp:rokhlin_sigma_mod_16`.
+
+The KT-LMS §5 surgery proof's internals are not reconstructible from
 whitelisted sources; the published route with the smallest constructive load is the Smith-LES
 route (HKT Thm 4.1 + Smith-paper App. A), whose geometric inputs are exactly three, each with an
 explicit manifold-level model: (i) zero-locus of a transverse section of a line bundle (the
@@ -386,3 +394,43 @@ page; Ranicki's Edinburgh archive), plus Brown 1972 / GM 1977–86 / ABP 1969 / 
 drop PDFs into `Lit-Search/Phase-5qH/primary-sources/`; the KT-LMS §5–§6 + §9 text is the one
 gap that blocks verifying the [KT-restated] locators and reading Thm 6.11/Rem 6.15
 (characteristic bordism) directly. H2 (Brown algebra) and H1-a proceed regardless.
+**UPDATE 2026-07-04:** the KT-LMS 151 PDF is now in-corpus (`Lit-Search/Phase-5qH/KirbyTaylor_PinStructures_LMS151.pdf`); §5 pp. 216–219 read directly — Lemma 5.3, the exact sequence `0→ℤ/2→Ω₄^{Pin⁺}→ℤ/8→0`, and `ψ(ℝP⁴,ℝP³)=+2` confirmed verbatim. Matsumoto (À la recherche vol.) still to fetch per §9.5.
+
+---
+
+## 10. Phase 1 & Phase 2 — wave breakdown to unconditional discharge (2026-07-04, main @ `df10209b`)
+
+**Current state (main `df10209b`, source-verified):** the tied GM carrier (`pinPlusGMTiedData`) is built; `abkGMTied16` is the computed grade; surjectivity (`abkGMTied16_surjective`) + the ℝP⁴ odd generator are proven; the quotient `carrier ⧸ ker ≃+ ZMod 16` (`dataBordismGMTied_quotient_equiv_zmod16`) is unconditional and kernel-pure. Injectivity is **route-unified** — Thom / KT §5 / Smith-LES / cardinality-cap all provably reduce to ONE node (`spin_range_ge_of_grade0_inj`'s `hbound` = grade-0 completeness), with the KT §5 ⊆-half (`spin_range_le_ker_reduce`), the Spin map `s := n·g8`, and `hs` (`g8_zmultiples_ker`) discharged in-tree. So **H1–H5 + H6-a are effectively on main**; what remains is the injectivity toolkit (H6-b/c), the genuine-carrier upgrade (Δ2), and the single-Prop discharge (H8).
+
+The unconditional close is two phases, and **BOTH are from-scratch, Mathlib-absent substrate builds** (only the assembling *algebra* is in-tree — see the §10 Phase-1 CORRECTION banner + `16Convergence_Reconciliation_Audit_2026-07-04.md`): **Phase 1 = Substrate G** (elementary char-surface/cobordism geometry — the `gm` congruence + the geometric Smith map/exactness), **Phase 2 = Substrate S** (the non-elementary external ℤ/16 input `Ω₆^{Pin⁻}≅ℤ/16`/`Ω₄^{Spin}≅ℤ`). **Phase 2 is REQUIRED, not a contingency** (crux note below). Neither is "the tractable in-tree part"; the disclosed-form L3 (synthetic carrier, modulo the one Prop packaging G+S) is what is already done.
+
+**Crux resolved (2026-07-04, from the primary planning source `ABK_injectivity_routes_lemma_DAG_20260703.md` §4, read directly).** The divisibility-vs-completeness question is **settled, not open**: ABK-injective on `Ω₄^{Pin⁺}` reduces to **(a)** Smith-LES exactness [in-tree buildable], **(b)** `Ω₄^{Spin}≅ℤ`, and **(c)** ONE external stable ℤ/16 input (`Ω₆^{Pin⁻}≅ℤ/16` [ABP 1969], or `Ω₅^{Spin×ℤ/4}≅ℤ/16`, or Stolz η-completeness). The report states verbatim: *"the ℤ/16 never comes from below,"* *"no published route in scope eliminates this input,"* *"none of the whitelisted sources offers an elementary substitute."* So **the completeness input (b)+(c) is REQUIRED and non-elementary — it is the ABP spectral computation (`smith_inflow_z16` / Leg-D), and Phase 2 is therefore REQUIRED, not a contingency.** Rokhlin's `16∣σ` (elementary, Matsumoto/[FK], `hyp:rokhlin_sigma_mod_16`) is the SEPARATE GM base case (`2β=F·F−σ mod 16` at `F=∅`) — necessary for the mod-16 *detection*, NOT the completeness. **§9.3's claim that the concentrated input has a "published ELEMENTARY, spectra-free proof (Matsumoto)" is an error — it conflated the elementary divisibility with the non-elementary ℤ/16 completeness; see §9.3 correction banner.**
+
+### Phase 1 — geometric derivation (reduce to the one required completeness input)
+
+> **⚠ CORRECTION (2026-07-04, from the goal-loop turn-1 audit + Taylor `0802.0111`/Klug `2011.12418`, read in full — see `temporary/working-docs/16Convergence_Reconciliation_Audit_2026-07-04.md`).** "Phase 1 = **in-tree**" (below) is WRONG. Only the *algebra* is in-tree (`GMrelation`, `SpinCharSurfaceData` carrying `gm`, the abstract `pinPlus_zmod16_of_smith_les` transport, `col4`). **Phase 1's actual remaining content is a from-scratch, Mathlib-absent GEOMETRIC substrate build** — the char-surface topology for the `gm` congruence (Rokhlin) and the geometric Smith map + two-sided exactness (`smithDataHom` in-tree is only the grade-transport *shortcut*; the genuine geometric map is unbuilt; `pinPlusGMData` does not exist). Needs tubular neighborhoods, normal framings, handle/surgery traces, Novikov additivity, even fillings — none in Mathlib. Spectra-free (elementary per Taylor/Klug/Matsumoto), but **not** in-tree algebra. So Phase 1 is a from-scratch substrate build too — NOT the tractable part; the "Phase 1 in-tree / Phase 2 tower" split is false.
+
+The algebra is in-tree; the geometry is a from-scratch build. Endpoint: the injective capstone in disclosed form, conditional on exactly the one required completeness input (Phase 2).
+
+- **Wave P1.1 — Rokhlin `16∣σ` / GM base case (elementary; independent, startable now).**
+  - *Build:* van der Blij `8∣σ` (have, `RokhlinHMDischarge`) + the FK congruence at `F=∅` (spin ⟹ `σ/8` even) — the geometric factor-of-2; reuses `GMArfVanishing` / Brown (algebra half in-tree). This is the GM formula base case (KT Thm 6.3, `F=∅`), NOT the completeness.
+  - *Deliver:* `hyp:rokhlin_sigma_mod_16` discharged in-tree → `SmoothSpinManifold4.topo` retired → genuine `16∣σ`, kernel-pure.
+
+- **Wave P1.2 — Smith-LES injectivity architecture (H6-b/c).**
+  - The three geometric constructions (report §3) as explicit `Bordism` witnesses on the carrier: (i) transverse line-bundle zero-locus (`w₁`-dual, iterated for `w₁²`); (ii) sphere-bundle (surjectivity leg); (iii) interval-bundle gluing over a Smith-image null-bordism (injectivity leg); + the descent two-out-of-three; + LES exactness (a).
+  - *Deliver:* `ker abkGMGrade = ⊥` reduced to **exactly the one required completeness input (b)+(c)** — i.e. `omega4PinPlusGM_equiv_zmod16_of_smith_inflow`, kernel-pure, with `smith_inflow_z16` the single named Prop in the signature.
+
+- **Wave P1.3 — genuine-carrier + smooth-instance upgrade (Δ2; §9.1/§9.2).**
+  - `abkGM8` computed on the fully geometric GM carrier; smooth-instance (`k=∞`) witnesses; the tied carrier → stepping-stone.
+
+**Phase 1 endpoint:** the injective capstone on the genuine GM carrier, kernel-pure, **conditional on the single required Prop `smith_inflow_z16`** (`Ω₆^{Pin⁻}≅ℤ/16` / `Ω₄^{Spin}≅ℤ`). Disclosed form — the honest intermediate; NOT yet unconditional.
+
+### Phase 2 — the required completeness input (ABP / Leg-D / Phase 5q.D)
+
+**Required, not conditional** (crux above). Discharge the external stable ℤ/16 input `smith_inflow_z16` (`Ω₆^{Pin⁻}≅ℤ/16`, ABP 1969, or the `Ω₄^{Spin}≅ℤ` / `Ω₅^{Spin×ℤ/4}≅ℤ/16` equivalent).
+
+- **Wave P2.1 — the ABP spectral computation.**
+  - The Phase 5q.D shelf-ready Adams/ABP plan on the built `Ext_{A(1)}` E₂ core (§2/§4 there): `Σ⁻¹MTPin⁺ ≃ MSpin∧MTO₁` (Freed–Hopkins), ABP splitting (7-connected in `t−s<8`), Adams collapse → the ℤ/16 abutment. No elementary substitute exists (report §2/§4).
+  - **This is the substrate-shift frontier** — the coupled Mathlib/PhysLib pin-set bump (ADR-003 Decision #7 watchlist + `feedback-mathlib-physlib-bump-coupled-authorization`) is the genuine lever: a coherent pin-set shipping spin-bordism + a low-degree computation collapses this node; else build in-tree per 5q.D.
+  - **Circularity guard:** ABP's low-degree input is Rokhlin-entangled (`spin_bordism_iso_Z.circularity_note`); the ABP computation must route through the Adams SS, never cite Rokhlin as its own proof.
+  - *Deliver:* `smith_inflow_z16` discharged → Phase 1's disclosed capstone becomes `omega4PinPlusGM_equiv_zmod16`, 100% unconditional.

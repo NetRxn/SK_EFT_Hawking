@@ -216,6 +216,63 @@ def module_inventory(atlas, modules):
     return inv, cond_modules
 
 
+def _slot_num(x):
+    """Coerce a slot entry (int 1, str '1', or 'wt1') to an int slot number, else None."""
+    try:
+        s = str(x).strip().lower()
+        if s.startswith("wt"):
+            s = s[2:]
+        return int(s)
+    except Exception:
+        return None
+
+
+def slot_states(repo, marker):
+    """Per-owned-slot live git state — the fix for the slot-blind probe (System-2 finding
+    `harness-gap-post-compaction-repo-state-probe-slot-blind-in-multi-worktree-goal`). Reads the
+    ISOLATION FILTER from `marker['slots']` (the slots THIS goal owns; never enumerates all
+    worktrees — a bare scan would leak another goal's slot into this goal's anchor) and computes
+    LIVENESS fresh from git per slot (never stored → never stale). Returns a list of dicts
+    {n, path, exists, branch, head, ahead, dirty_files, dirty, live} for each owned slot, or []
+    when the goal owns none (⇒ caller degrades to main-only, today's behavior). Fail-open per slot:
+    a missing/broken worktree yields exists=False and the rest proceed."""
+    raw = marker.get("slots") if isinstance(marker, dict) else None
+    if not raw:
+        return []
+    out = []
+    seen = set()
+    for entry in raw:
+        n = _slot_num(entry)
+        if n is None or n in seen:
+            continue
+        seen.add(n)
+        slot = repo / ".claude" / "worktrees" / f"wt{n}"
+        st = {"n": n, "path": slot, "exists": slot.exists(), "branch": None,
+              "head": None, "ahead": None, "dirty_files": [], "dirty": 0, "live": False}
+        if st["exists"]:
+            st["branch"] = _run(["git", "-C", str(slot), "symbolic-ref", "--short", "HEAD"], repo)
+            st["head"] = _run(["git", "-C", str(slot), "rev-parse", "--short=8", "HEAD"], repo)
+            cnt = _run(["git", "-C", str(slot), "rev-list", "--count", "main..HEAD"], repo)
+            try:
+                st["ahead"] = int(cnt) if cnt is not None else None
+            except Exception:
+                st["ahead"] = None
+            porc = _run(["git", "-C", str(slot), "status", "--porcelain"], repo)
+            st["dirty_files"] = [ln for ln in (porc or "").splitlines() if ln.strip()]
+            st["dirty"] = len(st["dirty_files"])
+            # LIVE = the slot carries work not on main (ahead) or uncommitted edits.
+            st["live"] = bool((st["ahead"] or 0) > 0 or st["dirty"] > 0)
+        out.append(st)
+    return out
+
+
+def slot_delta(repo, n):
+    """The owned slot's OWN commit delta vs main — `git -C <slot> log --oneline main..HEAD`. This is
+    the re-anchor tree's real recent work, which the main-rooted delta structurally cannot see."""
+    slot = repo / ".claude" / "worktrees" / f"wt{n}"
+    return _run(["git", "-C", str(slot), "log", "--oneline", "main..HEAD"], repo) or ""
+
+
 def load_snapshot(repo, goal_id):
     """The PreCompact pre-loss snapshot artifact (§A.6), if present."""
     if not goal_id:
@@ -248,9 +305,18 @@ def build_report(repo, session_id, goal_id, override, mode_override=None):
     head = _run(["git", "rev-parse", "--short=8", "HEAD"], repo) or "?"
     head_subj = _run(["git", "log", "-1", "--pretty=%s"], repo) or ""
 
+    # Owned worktree slots (isolation-filtered to THIS goal) — computed once, surfaced at the top as
+    # a warning and in full below. Empty ⇒ main-only (today's behavior); fail-open.
+    slots = slot_states(repo, marker)
+    live_slots = [s for s in slots if s.get("live")]
+
     p("=== LIVE REPO-STATE ANCHOR (recomputed now — supersedes any narrated frontier/summary) ===")
     p(f"resolved via: {msrc}" + (f"; goal_id={gid}" if gid else "") + f"; mode={domain}")
-    p(f"HEAD={head}  ({head_subj})")
+    p(f"HEAD={head}  ({head_subj})  [this is MAIN]")
+    if live_slots:
+        names = ", ".join(f"wt{s['n']}" for s in live_slots)
+        p(f"⚠ LIVE WORK IS ON {names.upper()}, NOT MAIN — re-anchor on the slot below, not this HEAD. "
+          "The main sections that follow are the MERGE TARGET, not your working tree.")
 
     # 1-2: anchor + delta (mode-scoped)
     anchor_mode, value, alabel = resolve_anchor(repo, marker)
@@ -271,7 +337,33 @@ def build_report(repo, session_id, goal_id, override, mode_override=None):
     dirty = [ln for ln in lines if ln.strip().endswith(".lean")] if lean else lines
     p("")
     p(f"--- working tree (uncommitted/untracked{' .lean' if lean else ''} — reconcile against the summary FIRST) ---")
-    p("\n".join(dirty) if dirty else "(clean)")
+    p("[MAIN tree] " + ("\n".join(dirty) if dirty else "(clean)"))
+
+    # OWNED WORKTREE SLOTS — the fix for slot-blindness. Only THIS goal's owned slots (isolation);
+    # the LIVE one (ahead-of-main or dirty) is the tree to re-anchor on. Fail-open per slot.
+    if slots:
+        p("")
+        p("--- OWNED WORKTREE SLOTS (this goal's own trees — the LIVE one is your RE-ANCHOR tree, "
+          "NOT main) ---")
+        for s in slots:
+            if not s["exists"]:
+                p(f"  wt{s['n']}: (worktree absent/unavailable)")
+                continue
+            br = s["branch"] or "?"
+            hd = s["head"] or "?"
+            ah = s["ahead"]
+            ahead_txt = (f"{ah} ahead of main" if ah else "at main") if ah is not None else "ahead=?"
+            flag = "   [LIVE ← RE-ANCHOR HERE]" if s["live"] else ""
+            dirty_txt = f", {s['dirty']} uncommitted" if s["dirty"] else ", clean"
+            p(f"  wt{s['n']}: branch {br} @ {hd} — {ahead_txt}{dirty_txt}{flag}")
+            if s["live"]:
+                d = slot_delta(repo, s["n"])
+                if d.strip():
+                    p(f"      slot commits since main (git -C wt{s['n']} log main..HEAD):")
+                    for ln in d.splitlines():
+                        p(f"        {ln}")
+                for ln in s["dirty_files"]:
+                    p(f"      uncommitted: {ln}")
 
     # 4-5: atlas inventory + open-sorry map — LEAN-ONLY (principle 8)
     if lean:

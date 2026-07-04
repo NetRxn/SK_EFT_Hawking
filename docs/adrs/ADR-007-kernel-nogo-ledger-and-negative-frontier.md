@@ -1,0 +1,100 @@
+# ADR-007 — Kernel No-Go Ledger: integrity-gated settled-dead forks as first-class substrate obstructions (the negative complement of the atlas frontier)
+
+- **Status:** **PROPOSED (draft, 2026-07-04).** Not implemented. Awaiting owner decision. Proposes a `KERNEL_NOGO_REGISTRY` (the settled-dead complement of `HYPOTHESIS_REGISTRY`), a `nogo_substrate_integrity` validate gate (the obstruction-node analogue of `tracked_hypothesis_ledger`), and a **negative frontier** surfaced to the swarm through the same channel that already feeds the positive frontier. **Scope: provably-false (kernel-checkable) no-gos only** — policy / route / preference bans are explicitly out of scope and remain governed solely by `SETTLED_FORKS.md` prose + the existing count-pointer, unchanged. Net effect: convert *provably-false* no-gos from *"hope the prose register is read"* into *self-enforcing, rot-proof, machine-fed blockers*.
+- **Deciders:** John Roehm (project owner) — **decision pending**; investigation + draft by Claude (Opus 4.8).
+- **Context source:** the 2026-07-04 16-convergence consolidation (`temporary/working-docs/16Convergence_Consolidated_Status_2026-07-04.md`) and a substrate audit of the no-go surface — direct reads + `lean_verify` of the encoded no-gos (`RokhlinArfNoGo.lattice_arf_bridge_refuted`, `PinPlusGenuineCarrierIso.dataBordism_two_torsion_of_revStr_trivial` — both confirmed `{propext, Classical.choice, Quot.sound}`, non-vacuous), and reads of `docs/dev-loops/SETTLED_FORKS.md` (schema + governance), `scripts/atlas_view.py` (the `OBSTRUCTION` classifier, regex L49, `_is_obstruction` L81), `scripts/validate.py` (`atlas_integrity`, `vacuous_statement_audit`, `proxy_body_audit`; L2836 — the tracked-hypothesis gate that *"never touches OBSTRUCTION nodes"*), `scripts/repo_state_probe.py` + `.claude/plugins/skeft-qa/scripts/harness_common.py` (the SETTLED_FORKS count-pointer surfacing + `frontier_from_atlas`), and `src/core/constants.py` (`HYPOTHESIS_REGISTRY`, `AXIOM_METADATA`, `PLACEHOLDER_THEOREMS`, `MODELING_ASSUMPTION_THEOREMS`, `VACUOUS_STATEMENT_BASELINE`).
+- **Related:** [ADR-004](ADR-004-substrate-integrity-gates.md) (Substrate Integrity Gates — this ADR is the **negative-front mirror**: ADR-004 ledgers & enforces *disclosed-open* assumptions via `HYPOTHESIS_REGISTRY` + `tracked_hypothesis_ledger`; ADR-007 ledgers & enforces *settled-dead* refutations. Reuses ADR-004's `vacuous_statement_audit` for non-vacuity and adds a symmetric Invariant); [ADR-005](ADR-005-derived-proof-atlas.md) (Derived Proof Atlas — the atlas already **classifies** `OBSTRUCTION` nodes (D-B) but only surfaces the *positive* `frontier` to the swarm (D-D/D-I); ADR-007 supplies the source-of-truth backing for those nodes and the **negative frontier** that completes ADR-005's own stated "both fronts — positive AND negative" mandate); [ADR-002](ADR-002-native-decide-policy.md) (kernel-trust predicate — the "backing theorem is kernel-pure" bar is exactly `axiom_closure_allowlist`'s clean-closure condition, reused, not a competing metric); [ADR-003](ADR-003-rokhlin-leg-discharge-and-deferred-topological-frontiers.md) (the `topo` disclosed-open node is the canonical *open* posture; a kernel no-go is its *settled-dead* counterpart — neither re-litigates the other).
+
+---
+
+## Context
+
+### The failure mode this closes
+
+Settled no-gos currently live in **two disconnected places** with **no enforced link between them**:
+
+1. **Prose** — `docs/dev-loops/SETTLED_FORKS.md`, a "MANDATED READ (FIRST_ACTION)" register. It is a **"hope it's read" safety system**: `repo_state_probe.py` surfaces only a *count + IDs pointer*, and the SessionStart re-inject carries that pointer, not the reasons. The 2026-06/07 5q.F "route-thrash spiral" (≈676 commits, the largest single track) is the documented consequence — the same settled obstacle re-derived across compaction boundaries, each time framed as a "breakthrough," because a fresh-context agent re-reasons from the goal rather than grepping the register.
+2. **Substrate** — kernel-checked refutation theorems (`RokhlinArfNoGo.lattice_arf_bridge_refuted`, `dataBordism_two_torsion_of_revStr_trivial`, `algebraic_bound_is_8_not_16`, `e8_sigma_not_div_16`, the chirality-wall `gs_nogo_*`, the dark-energy `*_not_viable`, …). These *are* the robust form: a refutation `¬X` makes the bad path **unprovable** (the goal cannot be closed), and the `0-axiom/0-sorry` + `axiom_closure_allowlist` gates stop anyone smuggling it in as an axiom. This is genuine kernel-level enforcement — **for mathematically false paths**.
+
+**The gap:** nothing binds (1) to (2). Concretely, three holes, each verified against current source:
+
+- **Hole A — obstruction integrity is unguarded.** `atlas_view.py` classifies a node `OBSTRUCTION` purely by the naming regex `(_no_go|_nogo|_refuted|_falsified|_obstruction|_forbidden|nogo|NoGo|Obstruction)` (L49). No check verifies an OBSTRUCTION node is (i) kernel-pure, (ii) **non-vacuous** (a `theorem foo_nogo : True := trivial` classifies as an obstruction by name yet blocks nothing), or (iii) actually a negation. `validate.py` L2836 states the tracked-hypothesis gate *"never touches OBSTRUCTION nodes."* They are integrity-unguarded by construction.
+- **Hole B — fork↔substrate linkage rots silently.** SETTLED_FORKS entries carry `authored_by: kernel-no-go` and `killed_by: kernel-checked <theorem>` (e.g. `mfd-equals-H1-dead-end → dataBordism_two_torsion_of_revStr_trivial`), but the named theorem is never verified to **exist / be kernel-pure / be non-vacuous**. Rename or delete it during a refactor and the fork prose points at nothing — the blocker is gone and no gate notices.
+- **Hole C — the swarm is only steered toward, never away.** The atlas feeds the **positive** open frontier to the parallel-dev harness (`atlas_view.frontier` → `harness_common.frontier_from_atlas` → `/skeft-qa:frontier` + SessionStart digest, ADR-005 D-I). The **negative** frontier — the ranked dead paths with their fork reasons — is *not* derived or fed the same way; the swarm gets only the SETTLED_FORKS count pointer. Parallel fresh-context `lean-worker`s in the wt1/wt2/wt3 slots are the **highest-risk re-derivers** (no shared conversation state), yet they are the least machine-guarded against dead paths.
+
+### What can and cannot be a kernel-level blocker (the typing that makes this precise)
+
+- **Kernel-encodable no-go** — the path is *provably false or impossible* (`σ/8 ≡ Arf(q̄)` is false; a trivial-involution carrier is *forced* 2-torsion, never ℤ/16). These **can and should** be substrate theorems; the theorem is self-enforcing (the bad goal is unclosable).
+- **Policy no-go** — the path is *valid but banned/wasteful* (`kronecker-altitude as the L2 spine`; `route-C snake/MV-SES`; `bump the shared PhysLib pin`). These **cannot** be kernel-encoded — they aren't false — and must remain prose + guard. A kernel cannot block a true statement.
+
+This ADR governs **only the first kind — provably-false no-gos.** The second — policy no-gos — is explicitly **out of scope**: the path is not false, so it cannot be kernel-encoded, and it remains entirely in the prose register + the existing count-pointer, unchanged. The current register does not mark which no-gos are provably-false and refutable, so today there is no gate that can even ask *"this fork is refutable — where is its theorem?"*
+
+### Why derived-and-enforced, not a new hand-maintained store
+
+Per ADR-005's rejected-alternative #1, a parallel hand-maintained no-go store would duplicate the graph and drift. This ADR follows the ADR-004/005 discipline exactly: a **thin FQN-keyed registry** (like `HYPOTHESIS_REGISTRY`) as the human-intent bridge, everything else **derived** from `lean_deps.json` + the atlas, enforced by a `validate.py` gate. No theorem-file pollution; upstream-clean by construction.
+
+---
+
+## Decision
+
+Adopt the **Kernel No-Go Ledger + Obstruction-Integrity Gate + Negative Frontier** — the settled-dead complement to ADR-004's disclosed-open ledger and ADR-005's positive frontier.
+
+| # | Decision | Derivation (what it reuses) |
+|---|---|---|
+| **N-A — `KERNEL_NOGO_REGISTRY` is the single source of truth** | A new `constants.py` registry, FQN-keyed, parallel to `HYPOTHESIS_REGISTRY`. Each entry: `fork_id` (→ the `SETTLED_FORKS.md` block), `backing_theorems` (list of refutation/forcing/counterexample FQNs), `nogo_kind` (`refutation` \| `structural_forcing` \| `counterexample`), `false_statement` (the path it kills, one line), `memory` (`[[slug]]`). This is the machine-readable bridge the prose register lacks. | mirrors `HYPOTHESIS_REGISTRY`/`ARISTOTLE_THEOREMS`/`AXIOM_METADATA` — external Python registry, zero Lean metadata |
+| **N-B — Scope boundary: provably-false only; policy bans out of scope** | The ledger (N-A) and gate (N-C) apply **only** to forks authored `kernel-no-go` (the *existing* `SETTLED_FORKS.md` field) and their backing theorems. Policy / route / preference bans (kronecker-altitude, route-C, physlib-pin) are **out of scope** — not false, not kernel-encodable — and remain governed solely by `SETTLED_FORKS.md` prose + the existing count-pointer, **unchanged**. No new schema field; no re-typing of existing forks. | keys off the existing `authored_by: kernel-no-go` marker — the provably-false subset is already labelled |
+| **N-C — `validate.py --check nogo_substrate_integrity` (the gate)** | For every `KERNEL_NOGO_REGISTRY` entry and every atlas `OBSTRUCTION` node: (1) each `backing_theorem` **exists** in `lean_deps.json`; (2) is **kernel-pure** (closure ⊆ `{propext, Classical.choice, Quot.sound}`, no `sorryAx` — the ADR-002/atlas `TRUE` predicate); (3) is **non-vacuous** (reuse ADR-004 `vacuous_statement_audit` — a no-go that self-discharges to `True`/`rfl` is a fake blocker, hard-fail); (4) every `kernel-encodable` fork resolves to a registry entry that passes (1)–(3). Any failure = **BLOCKER**. Runs Stage 7, and Stage 12 sync. | reuses `vacuous_statement_audit` + the kernel-purity predicate + `lean_deps.json`; **plugs the L2836 "never touches OBSTRUCTION" hole** |
+| **N-D — Negative frontier surfaced to the swarm (the swarming tie-in)** | `atlas_view.py` emits an `obstructions` array beside `frontier`: the ranked dead-path set (OBSTRUCTION nodes ∪ registry entries), each with `fork_id` + `false_statement` + `frontier_impact`. `harness_common` gains `antifrontier_from_atlas`/`format_atlas_antifrontier` (fail-soft, budget-guarded, **symmetric to the existing `frontier_from_atlas`**), surfaced via `/skeft-qa:frontier` (both fronts) and the SessionStart re-inject. Fan-out is then steered **away** from dead paths by machine data, not a prose count. | completes ADR-005's stated "both fronts" mandate using the exact D-I channel already built for the positive front |
+| **N-E — Encode-on-settle policy (structural prevention, ADR-004 pathway #2)** | When a *kernel-checkable* no-go is discovered, the settling turn MUST land the backing theorem + `N-A` entry — not SETTLED_FORKS prose alone. `authored_by: kernel-no-go` stays tier `automatic` (the kernel is the authority; the loop may record mid-run) per the SETTLED_FORKS 2026-06-24 governance ruling. Prose-only recording of a kernel-encodable fork is itself a `nogo_substrate_integrity` finding. | mirrors ADR-004's Stage-14 "pathway #2 only" rule for the substance/disclosure classes |
+
+**Plus one pipeline edit — new Invariant #17 (mirror of #16):** *every provably-false settled no-go (a fork authored `kernel-no-go`) has a live, kernel-pure, non-vacuous backing theorem registered in `KERNEL_NOGO_REGISTRY`.* Enforced by N-C. (ADR-004's Invariant #16 is the open-side mirror: every consumed assumption is in a ledger.)
+
+**Scope guard.** The gate requires *encoding*, never re-deriving anything, and it touches **only** provably-false no-gos. Policy bans are out of scope — no theorem is expected or checked for them, and this ADR does not modify how they are recorded. A provably-false fork whose backing theorem exists, is kernel-pure, and is non-vacuous is compliant. The gate's job is solely to ensure the *refutable* ones are *encoded and non-rotting* — exactly the ADR-004 posture for disclosed assumptions, applied to the negative front.
+
+---
+
+## Overlap reconciliation with prior ADRs (keep the ADR set one system)
+
+- **ADR-004 (Substrate Integrity Gates) — this ADR is its negative mirror; it reuses, does not fork, the machinery.** ADR-004 built `HYPOTHESIS_REGISTRY` + `tracked_hypothesis_ledger` for *disclosed-open* Props and `vacuous_statement_audit` for non-vacuity. ADR-007's `KERNEL_NOGO_REGISTRY` is the *settled-dead* counterpart; `nogo_substrate_integrity` **reuses `vacuous_statement_audit` verbatim** for hole-A/hole-B non-vacuity and the ADR-002 kernel-purity predicate for cleanliness. New: the registry, the gate's existence/linkage checks, and Invariant #17. No re-litigation of ADR-004 policy.
+- **ADR-005 (Derived Proof Atlas) — ADR-007 supplies the backing the atlas OBSTRUCTION kind currently lacks, and delivers the negative half of its own mandate.** ADR-005 D-B classifies `OBSTRUCTION` by naming/`¬`-head and notes the classifier's false-positive risk ("a no-go is kernel-identical to any theorem — mitigated by naming + the D-E one-bit hint + `atlas_integrity`"). ADR-007 makes that mitigation *real*: the registry is the curated source of truth, and `nogo_substrate_integrity` is the missing gate. The `obstructions`/negative-frontier surface (N-D) is the direct extension of D-D/D-I — ADR-005's Context explicitly states the mandate is "both fronts — positive AND negative," but only the positive frontier reached the swarm; N-D closes that. The optional D-E `@[atlas_node kind := OBSTRUCTION]` attribute and `KERNEL_NOGO_REGISTRY` are complementary (attribute = co-located one-bit hint for naming-resistant cases; registry = the fork-linkage + citation), same relationship as `@[atlas_node]` ↔ `HYPOTHESIS_REGISTRY`.
+- **ADR-002 (`native_decide` / kernel-trust) — the purity bar is reused, not competed.** A backing theorem's "kernel-pure" test is `axiom_closure_allowlist`'s clean-closure condition. A no-go proved *with* `native_decide` is flagged by the same ADR-002 accounting; ADR-007 adds no purity metric.
+- **ADR-003 (`topo` disclosed-open node) — the mirror image.** `topo : 2∣σ/8` is the canonical *open, principled, never-to-be-re-proved* node (`HYPOTHESIS_REGISTRY`). A kernel no-go (`lattice_arf_bridge_refuted`) is the *settled, kernel-checked, never-to-be-re-derived* node (`KERNEL_NOGO_REGISTRY`). ADR-003's own §Decision #2 (the Arf-bridge refutation) is the seed `N-A` entry.
+
+**Net:** N-A/N-D/N-E and Invariant #17 are new; N-B is a scope statement (keys off the existing `authored_by` field); N-C binds to existing gates (`vacuous_statement_audit`, `axiom_closure_allowlist`, `atlas_integrity`) and existing surfaces (`atlas_view`, `frontier_from_atlas`). ADR-004 and ADR-005 gain a forward `See also: ADR-007` pointer so the linkage is bidirectional.
+
+---
+
+## Why this matters specifically for swarming (the user's flagged connection)
+
+The swarm model (ADR-005 D-I; the `lean-worker` agents in the wt1/wt2/wt3 slots) dispatches fresh-context workers against the atlas frontier. Each worker has **no shared conversation state**, so it is the purest instance of the compaction-boundary re-derivation failure the SETTLED_FORKS register was built to stop — and it is currently guarded only by a prose pointer. Three concrete swarm payoffs:
+
+1. **Bidirectional atlas-awareness.** Today a worker is told "here is the ranked provable frontier." With N-D it is *also* told "here is the ranked dead frontier and why" — through the identical fail-soft, budget-guarded channel. Fan-out becomes steered on both signs.
+2. **Rot-proofing under many parallel hands.** The substrate is refactored concurrently across slots; N-C's linkage gate is the merge floor that stops a rename in one slot from silently voiding a blocker another slot relies on. This is why the enforcement (not just the registry) is load-bearing for swarming specifically.
+3. **Cheap dispatch-time avoidance.** A dispatcher can subtract the `obstructions` cone from candidate work before spawning a worker — a machine operation on the negative frontier, impossible while no-gos live only as prose.
+
+---
+
+## Consequences
+
+**Positive.** Provably-false no-gos become self-enforcing, rot-proof, machine-fed blockers instead of a "hope it's read" doc; the atlas OBSTRUCTION kind gains the integrity backing ADR-005 flagged as a risk; the swarm is finally steered on both fronts. Policy bans are left untouched (out of scope) and correctly remain prose. `0-axiom/0-sorry` is joined by a *measured, gated* no-go-integrity number.
+
+**Costs / risks.** (1) A one-time audit + seeding: enumerate the `kernel-no-go`-authored SETTLED_FORKS forks and file each (e.g. `mfd-equals-H1-dead-end`, `synthetic-grade-ker-bot-nogo`, the Arf bridge) into `KERNEL_NOGO_REGISTRY`; flag any provably-false no-go that *should* be a theorem but isn't yet. Small — the forks are already enumerated. (2) `nogo_substrate_integrity` false-positive risk on the OBSTRUCTION-by-naming set (a decl named `*_nogo` that is a helper, not a refutation) — mitigated by making the **registry** authoritative and treating naming-only OBSTRUCTION nodes as advisory until registered, symmetric to ADR-005's TRUE/OBSTRUCTION false-positive handling. (3) Negative-frontier digest adds to the SessionStart budget — same budget-guard/fail-soft discipline as the positive frontier (droppable under `PAYLOAD` pressure).
+
+**Explicitly out of scope.** Encoding *policy* no-gos (they aren't false — impossible by construction). Re-deriving any Mathlib-walled mathematics. Building a database dependency — the ledger is `constants.py`, the frontier is `atlas_view.json`, both DB-free per ADR-005 D-A.
+
+---
+
+## Alternatives considered
+
+1. **Keep prose-only + rely on the FIRST_ACTION mandated read (status quo).** Rejected — this *is* the "hope it's read" system whose failure (the 5q.F re-seed spiral, coach-resolved 4× on a single fork) motivates the ADR. Fresh-context swarm workers make it strictly worse.
+2. **A monolithic LLM "no-go auditor" each wave.** Rejected as primary — non-deterministic and unversioned; the encodable class is mechanically checkable (registry-membership ∧ theorem-exists ∧ kernel-pure ∧ non-vacuous), so a deterministic `validate.py` gate is the durable form. (An LLM pass may remain a backstop for *discovering* new candidate no-gos.)
+3. **Fold everything into ADR-005's atlas with no separate registry (naming-only).** Rejected as sole mechanism — naming can't express the fork-linkage or the false-statement gloss, and can't be integrity-gated without a curated truth source. The registry is the minimal escape hatch, exactly as `HYPOTHESIS_REGISTRY` is for the open front.
+4. **Extend the ADR to cover *policy* bans too.** Rejected / out of scope — a policy path is a *true* statement; no kernel or gate can refute it, so a policy ban is irreducibly prose + guard. This ADR is deliberately scoped to provably-false no-gos; policy bans remain governed by `SETTLED_FORKS.md` exactly as today, untouched.
+
+---
+
+## Proposed rollout (each phase independently shippable behind the wave gate)
+
+1. **Phase 1 — registry + gate, seeded.** Add `KERNEL_NOGO_REGISTRY` (N-A) seeded from the `kernel-no-go`-authored forks; scope the gate to those (N-B); ship `validate.py --check nogo_substrate_integrity` (N-C) + Invariant #17. Deliver the one-time audit report: which provably-false no-gos are refutable-but-unencoded.
+2. **Phase 2 — negative frontier.** `atlas_view.py` `obstructions` array + `harness_common.antifrontier_from_atlas` + `/skeft-qa:frontier` both-fronts output + SessionStart digest (N-D).
+3. **Phase 3 — encode-on-settle wired in.** Fold N-E into the goal-dev / harvest discipline so a newly-discovered kernel-checkable no-go lands its theorem + registry entry in the settling turn.
