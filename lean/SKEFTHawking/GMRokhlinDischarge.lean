@@ -56,4 +56,49 @@ theorem topo_of_gm_null (M : SmoothSpinManifold4) {ι : Type*} [Fintype ι] [Dec
     (2 : ℤ) ∣ latticeSig M.form / 8 :=
   two_dvd_div_eight_of_sixteen_dvd (sixteen_dvd_sig_of_gm_null hgm rfl hQ)
 
+/-- **A smooth spin 4-manifold presented by its Guillou–Marin characteristic-surface datum** — the
+literature-grounded form of `SmoothSpinManifold4` in which the topological factor is NOT an opaque posit but
+the named GM congruence for the manifold's (spin ⟹ null) characteristic surface. The remaining geometric
+content is entirely the field `gm` (the [FK] congruence, blueprint nodes [G1]/[G2]/[Q1]); every other field
+is the even-unimodular lattice data the algebra already consumes. -/
+structure SpinCharSurfaceData where
+  /-- rank of `H²(M; ℤ)`. -/
+  rank : ℕ
+  /-- the intersection form on `H²(M; ℤ)`. -/
+  form : Matrix (Fin rank) (Fin rank) ℤ
+  /-- spin ⟹ even unimodular. -/
+  even_unimod : IsEvenUnimodular form
+  /-- index type of `H₁` of the characteristic surface. -/
+  ι : Type
+  [fι : Fintype ι]
+  [dι : DecidableEq ι]
+  /-- the `ℤ/4`-quadratic enhancement `q̂_F` of the characteristic surface `F`. -/
+  Q : Z4Quadratic ι
+  /-- self-intersection `F·F`. -/
+  FdotF : ℤ
+  /-- the **Guillou–Marin / Freedman–Kirby congruence** `σ − F·F ≡ 2·β(F) (mod 16)` for the manifold's
+      characteristic surface (the single smooth input; witnessed on `RP⁴` by `GM_rp4`). -/
+  gm : GMrelation (latticeSig form) FdotF Q
+  /-- spin ⟹ the canonical characteristic surface is null: `F·F = 0`. -/
+  spin_FdotF : FdotF = 0
+  /-- spin ⟹ the characteristic-surface Brown invariant vanishes: `β(F) = 0`. -/
+  spin_brown : Q.brown = 0
+
+attribute [instance] SpinCharSurfaceData.fι SpinCharSurfaceData.dι
+
+/-- **The GM datum yields a genuine `SmoothSpinManifold4` with `topo` DERIVED, not posited.** So `16 ∣ σ`
+(`SmoothSpinManifold4.rokhlin`) on this manifold traces to the named GM congruence, closing the H8 foundation
+layer: the manifold now enters Rokhlin's theorem through the sanctioned §9.3 route-(b) input rather than an
+opaque divisibility. -/
+def SpinCharSurfaceData.toSmoothSpinManifold4 (D : SpinCharSurfaceData) : SmoothSpinManifold4 where
+  rank := D.rank
+  form := D.form
+  even_unimod := D.even_unimod
+  topo := two_dvd_div_eight_of_sixteen_dvd
+    (sixteen_dvd_sig_of_gm_null D.gm D.spin_FdotF D.spin_brown)
+
+/-- **Rokhlin `16 ∣ σ` for a GM-datum-presented spin 4-manifold**, grounded in the FK congruence. -/
+theorem SpinCharSurfaceData.rokhlin (D : SpinCharSurfaceData) : 16 ∣ latticeSig D.form :=
+  D.toSmoothSpinManifold4.rokhlin
+
 end SKEFTHawking.GMRokhlin
