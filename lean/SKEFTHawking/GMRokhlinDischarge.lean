@@ -134,4 +134,59 @@ theorem sixteen_dvd_of_charSq16_spin {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) 
     simpa using this
   exact (ZMod.intCast_zmod_eq_zero_iff_dvd σ 16).mp hz
 
+/-! ## Bordism-additivity of the GM invariant + the two-idiom bridge
+
+The Guillou–Marin invariant `2·β(Q)` is additive under disjoint union of characteristic surfaces
+(`Z4Quadratic.orthSum`), so the GM congruence `σ − F·F ≡ 2·β mod 16` is compatible with the additive
+structure of `DataBordismGrp` — the first algebraic step of the eventual bordism-invariance proof of the
+[FK] congruence (both sides additive; agree on generators via `GM_rp4`). And the two idioms
+(`GMrelation` / `CharacteristicSquareModSixteen`) coincide once `F·F = selfPairing M c`. -/
+
+/-- **`doubleBrown` is additive under `orthSum`** — `2·β` of a disjoint union splits, since `β` is additive
+(`brown_orthSum`) and the doubling `ZMod 8 → ZMod 16` (`x ↦ 2·x.val`) is a group hom. Kernel-pure (the
+doubling additivity is `decide` over the 64 `ZMod 8 × ZMod 8` cases). -/
+lemma doubleBrown_orthSum {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂]
+    (Q₁ : Z4Quadratic ι₁) (Q₂ : Z4Quadratic ι₂) :
+    doubleBrown (Z4Quadratic.orthSum Q₁ Q₂) = doubleBrown Q₁ + doubleBrown Q₂ := by
+  unfold doubleBrown
+  rw [Z4Quadratic.brown_orthSum]
+  have key : ∀ a b : ZMod 8,
+      (2 * ((a + b).val : ZMod 16)) = 2 * (a.val : ZMod 16) + 2 * (b.val : ZMod 16) := by decide
+  exact key Q₁.brown Q₂.brown
+
+/-- **The GM congruence is additive under disjoint union of characteristic surfaces.** If `(M₁, F₁)` and
+`(M₂, F₂)` satisfy Guillou–Marin, so does `(M₁ ⊔ M₂, F₁ ⊔ F₂)` with `σ`, `F·F` and `β` all adding. This is
+bordism-additivity of the FK invariant — the algebraic engine for proving `[FK]` by bordism-invariance. -/
+theorem gmrelation_orthSum {σ₁ F₁ σ₂ F₂ : ℤ} {ι₁ ι₂ : Type*}
+    [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂]
+    {Q₁ : Z4Quadratic ι₁} {Q₂ : Z4Quadratic ι₂}
+    (h₁ : GMrelation σ₁ F₁ Q₁) (h₂ : GMrelation σ₂ F₂ Q₂) :
+    GMrelation (σ₁ + σ₂) (F₁ + F₂) (Z4Quadratic.orthSum Q₁ Q₂) := by
+  have h : ((σ₁ + σ₂ - (F₁ + F₂) : ℤ) : ZMod 16) = doubleBrown Q₁ + doubleBrown Q₂ := by
+    have e₁ : ((σ₁ - F₁ : ℤ) : ZMod 16) = doubleBrown Q₁ := h₁
+    have e₂ : ((σ₂ - F₂ : ℤ) : ZMod 16) = doubleBrown Q₂ := h₂
+    push_cast at e₁ e₂ ⊢
+    rw [← e₁, ← e₂]; ring
+  show ((σ₁ + σ₂ - (F₁ + F₂) : ℤ) : ZMod 16) = doubleBrown (Z4Quadratic.orthSum Q₁ Q₂)
+  rw [doubleBrown_orthSum]; exact h
+
+/-- **The two idioms coincide.** `CharacteristicSquareModSixteen M σ Q c` is exactly the GM congruence
+`GMrelation σ (selfPairing M c) Q` (with `F·F = c² = selfPairing M c`) — the char-vector framing and the
+`GMrelation` framing are the same statement. -/
+theorem charSq16_iff_gmrelation {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (σ : ℤ)
+    {ι : Type*} [Fintype ι] [DecidableEq ι] (Q : Z4Quadratic ι) (c : Fin n → ℤ) :
+    CharacteristicSquareModSixteen M σ Q c ↔ GMrelation σ (selfPairing M c) Q := by
+  unfold CharacteristicSquareModSixteen GMrelation
+  rw [Int.cast_sub]
+  constructor <;> intro h <;> linear_combination -h
+
+/-- **The GM congruence computes `σ mod 16`** from the intersection data: `σ ≡ c² + 2·β(Q) (mod 16)`. The
+general (non-spin) content of Guillou–Marin — the Pin⁺ `ℤ/16` residue read off the characteristic surface. -/
+theorem sig_zmod16_of_charSq16 {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (σ : ℤ)
+    {ι : Type*} [Fintype ι] [DecidableEq ι] {Q : Z4Quadratic ι} {c : Fin n → ℤ}
+    (h : CharacteristicSquareModSixteen M σ Q c) :
+    (σ : ZMod 16) = (selfPairing M c : ZMod 16) + doubleBrown Q := by
+  rw [CharacteristicSquareModSixteen] at h
+  rw [h]; ring
+
 end SKEFTHawking.GMRokhlin
