@@ -167,4 +167,30 @@ theorem wuW2_eq_zero_iff (P : PoincareDual4Mid X) (P₁₃ : PoincareDual4Lo X) 
     rw [neg_eq_iff_add_eq_zero, ← two_smul (ZMod 2), show (2 : ZMod 2) = 0 from rfl, zero_smul]
   rw [wuW2, cupSquareₗ_apply, add_eq_zero_iff_eq_neg, hneg]
 
+/-! ### The Wu fourth class and the Pin⁺ SW-number collapse `w₄ = w₁⁴`
+
+On a closed 4-manifold the Wu formula `w = Sq(v)` gives `w₄ = Sq²(v₂)` (the higher terms `Sq^i v_j`
+vanish: `v_j = 0` for `j > 2` by dimension, and `Sq^i v_j = 0` for `i > j`). Combined with the Pin⁺
+condition `w₂ = 0` (⟹ `v₂ = v₁²` via `wuW2_eq_zero_iff`) this collapses to `w₄ = Sq²(v₁²) = (v₁²)² = w₁⁴`
+— **a Pin⁺ 4-manifold's only possibly-nonzero Stiefel–Whitney number is `w₁⁴`**. This is the Wu half of the
+carrier's injectivity: grade-`0` (`w₁⁴ = 0`, via `GMTiedStr.htie`) + Pin⁺ (`w₂ = 0`, via the cert) ⟹ every
+SW number vanishes ⟹ (unoriented Thom) the manifold bounds. Route-independent: needed by both the
+unoriented-`Ω₄^O` and the spin/signature routes. -/
+
+/-- The **singular Wu fourth class** `w₄ := Sq²(v₂) = cupSquare2ₗ(v₂)` on a closed 4-manifold. -/
+noncomputable def wuW4 (P : PoincareDual4Mid X) : Cohomology X 4 := cupSquare2ₗ (wuClass2 P)
+
+/-- **The Pin⁺ Wu collapse** `w₄ = Sq²(v₁²)`: for `w₂ = 0` (so `v₂ = v₁²`), the Wu fourth class equals the
+top square of `v₁²`, i.e. `w₄ = (v₁²)² = w₁⁴`. -/
+theorem wuW4_eq_v1_fourth (P : PoincareDual4Mid X) (P₁₃ : PoincareDual4Lo X) (hw2 : wuW2 P P₁₃ = 0) :
+    wuW4 P = cupSquare2ₗ (cupSquareₗ (wuClass1 P₁₃)) := by
+  rw [wuW4, (wuW2_eq_zero_iff P P₁₃).mp hw2, cupSquareₗ_apply]
+
+/-- **A grade-`0` Pin⁺ 4-manifold has `w₄ = 0`.** From `w₂ = 0` (Pin⁺) and `w₁⁴ = (v₁²)² = 0` (grade-`0`),
+the Wu collapse forces `w₄ = 0`. Together with `w₁²w₂ = w₂² = 0` (immediate from `w₂ = 0`), EVERY
+Stiefel–Whitney number of the manifold vanishes — the Wu half of "grade-`0` ⟹ unoriented-bounds". -/
+theorem wuW4_eq_zero_of_pinPlus_grade0 (P : PoincareDual4Mid X) (P₁₃ : PoincareDual4Lo X)
+    (hw2 : wuW2 P P₁₃ = 0) (hw1 : cupSquare2ₗ (cupSquareₗ (wuClass1 P₁₃)) = 0) : wuW4 P = 0 := by
+  rw [wuW4_eq_v1_fourth P P₁₃ hw2, hw1]
+
 end SKEFTHawking.PoincareDualityWuFormula
