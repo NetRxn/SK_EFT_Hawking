@@ -348,4 +348,41 @@ theorem abkGM8_forgetTie (x : DataBordismGrp (pinPlusGMTiedData (k := 0) (𝓡 4
   show p.2.q.brown = reduce16to8 p.2.grade16
   rw [p.2.hcoh]
 
+/-- **The mod-8 shadow of the tied grade is surjective through the bridge** — `abkGM8 ∘ forgetTie` is
+surjective onto `ZMod 8`. From `abkGMTied16` surjective (the tied ℤ/16 fullness) + `reduce16to8` surjective
+(ℤ/16 ↠ ℤ/8) + the intertwining `abkGM8_forgetTie`. Confirms the extension is non-degenerate: the tied ℤ/16
+carrier's mod-8 shadow realises all of the genuine `ZMod 8`. -/
+theorem abkGM8_comp_forgetTie_surjective :
+    Function.Surjective (fun x => abkGM8 (E := EuclideanSpace ℝ (Fin (2 + 2))) (k := 0) (I := 𝓡 4)
+      (forgetTie x)) := by
+  have h8 : Function.Surjective (reduce16to8 : ZMod 16 → ZMod 8) :=
+    ZMod.castHom_surjective (by norm_num)
+  have hcomp : Function.Surjective
+      (fun x => reduce16to8 (abkGMTied16 (k := 0) (I := 𝓡 4) x)) :=
+    h8.comp abkGMTied16_surjective
+  intro b
+  obtain ⟨x, hx⟩ := hcomp b
+  refine ⟨x, ?_⟩
+  show abkGM8 (E := EuclideanSpace ℝ (Fin (2 + 2))) (k := 0) (I := 𝓡 4) (forgetTie x) = b
+  rw [abkGM8_forgetTie]; exact hx
+
+/-! ### E3 · Summary — the genuine ℤ/16 grade is the Smith-LES extension, `ker=⊥` ⇒ `smith_inflow_z16`
+
+Assembling the E3 pieces on the genuine anchor:
+* `pinPlusGMData_eight_torsion` / `pinPlusGMData_not_equiv_zmod16` — the genuine mod-8 carrier is 8-torsion,
+  so the ℤ/16 odd bit is provably NOT a surface grade on it (§9.1, kernel-checked).
+* `forgetTie` + `abkGM8_forgetTie` + `abkGM8_comp_forgetTie_surjective` — the tied carrier
+  `pinPlusGMTiedData` IS the genuine mod-8 carrier's ℤ/16 extension: `reduce16to8 ∘ abkGMTied16 =
+  abkGM8 ∘ forgetTie`, non-degenerate (mod-8 shadow surjective).
+* `omega4PinPlusGMData_ext_equiv_zmod16_via_smith_les_neighbor` / `ext_grade_ker_eq_bot_of_smith_les` /
+  `omega4PinPlusGMData_ext_equiv_zmod16_via_grade` — the extension carrier `≃+ ZMod 16` and its genuine
+  ℤ/16 grade's `ker = ⊥`, reduced to the SINGLE disclosed neighbor iso `smith_inflow_z16` (E5) via the
+  geometric Smith map + two-sided exactness (E3 geometric constructions as the `sm`/`hL`/`hR` binders).
+
+The genuine ℤ/16 grade lives on the extension carrier (tied), its mod-8 shadow is the genuine `abkGM8`, and
+its `ker = ⊥` reduces to exactly `smith_inflow_z16` — the E3 objective, kernel-pure, no new axiom. The one
+carried disclosed input is `Nonempty (A ≃+ ZMod 16)` for the Pin⁻ neighbor `A` (E5's target); the geometric
+Smith map + exactness are the `sm`/`hL`/`hR` binders (E3's DDK⁺/HKT constructions, discharged when the
+substrate-G bundle layer lands). -/
+
 end SKEFTHawking.PinPlusGMDataZ16
