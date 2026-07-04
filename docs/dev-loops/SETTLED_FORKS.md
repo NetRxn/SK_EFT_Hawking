@@ -165,3 +165,19 @@ retire) — no entry is immutable. Every entry carries datetime metadata.
   Do NOT re-attempt δφ-routing of the crux.
 - memory: (L2 notebook 17th push, Lit-Search/Phase-5qF/L2/LAB_NOTEBOOK.md)
 - created_ts: 2026-07-03T00:00:00Z
+
+## synthetic-smith-map-to-tied-carrier
+- verdict: dead
+- tier: automatic
+- authored_by: kernel-no-go (construction-level, verified against smithDataHom + GMTiedStr.htie, 2026-07-03)
+- killed_by: the `htie` constraint of `GMTiedStr` (`reduce16to2 grade16 = swTotalNe s`) vs `swTotalNe emptySM = 0`
+- reason: the `smithDataHom` shortcut (map every neighbor class `[M,σ]` to `[emptySM, (σ,0)]`, transporting
+  the grade synthetically) CANNOT build the Smith map into the 5q.H TIED carrier `pinPlusGMTiedData`. The
+  odd generator (grade 1) would need `GMTiedStr emptySM` with `grade16=1`, but `htie` forces
+  `reduce16to2 1 = 1 = swTotalNe emptySM = 0` — contradiction. The geometric TIE that makes `ker=⊥`
+  possible (defeating `synthetic-grade-ker-bot-nogo`) SIMULTANEOUSLY blocks any synthetic emptySM Smith
+  map: an odd grade requires a real w₁⁴=1 manifold (ℝP⁴ / the Mathlib-absent `PD(a)` zero-locus), not
+  emptySM. The genuine geometric Smith map into the tied carrier IS the deep §9.3 geometric input; there is
+  no synthetic shortcut. Do NOT re-attempt an emptySM-based `smithGMTiedHom`.
+- memory: [[nogo_lattice_arf_not_sigma8]]
+- created_ts: 2026-07-03T00:00:00Z
