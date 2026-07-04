@@ -195,11 +195,59 @@ def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
         tr["node_ids"].sort()
     apex_ids = sorted(u["id"] for u in unknowns if u["is_apex"])
 
+    # NEGATIVE frontier (ADR-007 N-D): OBSTRUCTION result-nodes ∪ KERNEL_NOGO_REGISTRY, ranked by
+    # frontier_impact — the machine-fed "dead paths + why" the swarm is steered AWAY from (the mirror
+    # of `frontier`). Registered no-gos carry fork_id + false_statement; naming-only OBSTRUCTION nodes
+    # are advisory (registered=False) per ADR-007 N-B; `nogo_substrate_integrity` is the merge floor.
+    nogo_reg: dict = {}
+    try:
+        sys.path.insert(0, str(PROJECT_ROOT))
+        from src.core.constants import KERNEL_NOGO_REGISTRY as nogo_reg  # noqa: E402
+    except Exception:
+        nogo_reg = {}
+    node_by_fqn = {n["fqn"]: n for n in nodes}
+    obstructions: list[dict] = []
+    seen_thms: set = set()
+    # (a) CURATED registry entries — always surfaced regardless of naming (the authoritative dead-forks;
+    #     their backing theorem may be a `structural_forcing`/`counterexample` with a positive name/type).
+    for _fid, _e in (nogo_reg or {}).items():
+        bts = _e.get("backing_theorems", []) or []
+        impact = max((node_by_fqn.get(bt, {}).get("frontier_impact", 0) for bt in bts), default=0)
+        pure = all(node_by_fqn.get(bt, {}).get("kernel_pure", False) for bt in bts) if bts else False
+        seen_thms.update(bts)
+        obstructions.append({
+            "id": _e.get("fork_id", _fid),
+            "backing_theorems": bts,
+            "frontier_impact": impact,
+            "kernel_pure": pure,
+            "registered": True,
+            "fork_id": _e.get("fork_id", _fid),
+            "nogo_kind": _e.get("nogo_kind", ""),
+            "false_statement": _e.get("false_statement", ""),
+        })
+    # (b) naming-classified OBSTRUCTION result-nodes NOT already covered by a registry entry (advisory).
+    for n in nodes:
+        if n.get("atlas_kind") != "OBSTRUCTION" or n["fqn"] in seen_thms:
+            continue
+        obstructions.append({
+            "id": n["fqn"],
+            "module": n.get("module"),
+            "frontier_impact": n.get("frontier_impact", 0),
+            "kernel_pure": n.get("kernel_pure", False),
+            "registered": False,
+            "fork_id": None,
+            "nogo_kind": "",
+            "false_statement": "",
+        })
+    # registered dead-forks first (the curated blockers), then by downstream impact.
+    obstructions.sort(key=lambda x: (not x["registered"], -x["frontier_impact"], x["id"]))
+
     return {
         "nodes": nodes,
         "unknowns": unknowns,
         "edges": edges,
         "frontier": frontier,
+        "obstructions": obstructions,
         "tracks": {t: tracks[t] for t in sorted(tracks)},
         "summary": {
             "theorem_nodes": len(nodes),
@@ -207,6 +255,8 @@ def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
             "implies_edges": len(edges),
             "apex_nodes": len(apex_ids),
             "apex_ids": apex_ids,
+            "obstruction_nodes": len(obstructions),
+            "registered_obstructions": sum(1 for o in obstructions if o["registered"]),
             "by_kind_status": dict(sorted(counts.items())),
             "by_tier": {t: tracks[t]["open_count"] for t in sorted(tracks)},
         },
@@ -251,6 +301,12 @@ def main(argv: list[str] | None = None) -> int:
     for fr in atlas["frontier"][:5]:
         tag = " ★apex" if fr["is_apex"] else ""
         print(f"    {fr['frontier_impact']:4d}  {fr['id']}  [{fr['tier']}/{fr['eliminability']}]{tag}")
+    obs = atlas.get("obstructions", [])
+    print(f"  NEGATIVE frontier — settled-dead paths (ADR-007 N-D): "
+          f"{s.get('obstruction_nodes', 0)} obstruction(s), {s.get('registered_obstructions', 0)} registered:")
+    for o in obs[:8]:
+        reg = f"[{o['nogo_kind']}]" if o["registered"] else "[naming-only, unregistered]"
+        print(f"    {o['frontier_impact']:4d}  {o['id']}  {reg}")
 
     if a.write:
         ATLAS_VIEW_PATH.write_text(json.dumps(atlas, indent=2))

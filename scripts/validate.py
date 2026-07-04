@@ -971,6 +971,100 @@ def check_vacuous_statement_audit() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 1e′: kernel no-go substrate integrity (ADR-007 N-C, Invariant #17)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check(
+    "nogo_substrate_integrity",
+    "Every provably-false no-go has a live, kernel-pure, non-vacuous backing theorem (Invariant #17, ADR-007 N-C)")
+def check_nogo_substrate_integrity() -> CheckResult:
+    """The negative-front mirror of ``tracked_hypothesis_ledger`` (ADR-007 N-C).
+    For every ``KERNEL_NOGO_REGISTRY`` entry, each backing theorem must (1) EXIST
+    in ``lean_deps.json``, (2) be KERNEL-PURE (core-axiom closure ⊆
+    ``{propext, Classical.choice, Quot.sound}``, no ``sorryAx`` / genuine project
+    axiom), and (3) be NON-VACUOUS (its elaborated type is not ``True`` / reflexive
+    ``X=X`` — a self-discharging no-go blocks nothing; reuses
+    ``vacuous_statement_audit``'s ``_thin_type_label``). Any failure = **BLOCKER**
+    (this plugs the atlas ``"never touches OBSTRUCTION"`` hole — Hole A/B, ADR-007).
+    ADVISORY: every ``SETTLED_FORKS`` fork field-authored ``kernel-no-go`` that has
+    no registry entry — the *refutable-but-unencoded* one-time audit (ADR-007
+    Costs/risks #1; encode per N-E). SCOPE: provably-false no-gos only; policy /
+    route / preference bans are OUT of scope (N-B) and remain prose-only."""
+    from src.core import constants as _c
+    REG = getattr(_c, "KERNEL_NOGO_REGISTRY", {})
+    KERNEL = {"propext", "Classical.choice", "Quot.sound"}
+    _ND = re.compile(r"\._native\.native_decide")
+
+    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
+    if not deps_path.exists():
+        return CheckResult(passed=True, details=[Detail("inputs", True, "lean_deps.json absent")])
+    deps = json.loads(deps_path.read_text())
+    by_name = {d.get("name", ""): d for d in deps}
+
+    def _kernel_pure(rec: dict) -> bool:
+        core = set(rec.get("axiom_deps_core", []))
+        proj = [a for a in rec.get("axiom_deps_project", []) if not _ND.search(a)]
+        return (core.issubset(KERNEL) and not proj
+                and not any("sorryAx" in a for a in rec.get("axiom_deps_core", [])))
+
+    details: List[Detail] = []
+    hard = False
+    for fork_id, e in sorted(REG.items()):
+        bts = e.get("backing_theorems", []) or []
+        if not bts:
+            details.append(Detail(
+                fork_id, True,
+                "registry entry carries NO backing theorem (construction-level no-go?) — advisory",
+                warning=True))
+            continue
+        for bt in bts:
+            rec = by_name.get(bt)
+            if rec is None:
+                hard = True
+                details.append(Detail(
+                    fork_id, False,
+                    f"backing `{bt}` ABSENT from lean_deps.json (renamed/deleted — the blocker rotted; Hole B)"))
+                continue
+            if not _kernel_pure(rec):
+                hard = True
+                details.append(Detail(
+                    fork_id, False,
+                    f"backing `{bt}` NOT kernel-pure (core={sorted(set(rec.get('axiom_deps_core', [])))}, "
+                    f"proj={rec.get('axiom_deps_project', [])}) — a tainted refutation is not self-enforcing"))
+                continue
+            label = _thin_type_label(rec.get("type", ""))
+            if label in _THIN_HARD:
+                hard = True
+                details.append(Detail(
+                    fork_id, False,
+                    f"backing `{bt}` is VACUOUS [{label}] — a self-discharging no-go blocks nothing (Hole A)"))
+                continue
+            details.append(Detail(
+                fork_id, True,
+                f"backing `{bt}` [{e.get('nogo_kind', '?')}] exists, kernel-pure, non-vacuous"))
+
+    # Hole-B audit (advisory): field-authored `kernel-no-go` SETTLED_FORKS forks lacking a registry entry.
+    forks_path = PROJECT_ROOT / "docs" / "dev-loops" / "SETTLED_FORKS.md"
+    if forks_path.exists():
+        text = forks_path.read_text(errors="ignore")
+        knogo = []
+        for block in re.split(r"^## +", text, flags=re.M)[1:]:
+            fid = block.splitlines()[0].strip()
+            if re.search(r"authored_by:\s*kernel-no-go", block):
+                knogo.append(fid)
+        reg_forks = {e.get("fork_id") for e in REG.values()}
+        unencoded = [f for f in knogo if f not in reg_forks]
+        details.append(Detail(
+            "audit", True,
+            f"{len(REG)} registry entries; {len(knogo)} field-authored kernel-no-go forks; "
+            f"{len(unencoded)} refutable-but-unencoded (advisory — encode per N-E): "
+            f"{', '.join(unencoded) or 'none'}",
+            warning=bool(unencoded)))
+
+    return CheckResult(passed=not hard, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CHECK 1f: native_decide trust-surface regression (R4)
 # ═══════════════════════════════════════════════════════════════════════
 

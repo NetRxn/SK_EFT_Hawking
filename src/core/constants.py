@@ -3072,6 +3072,43 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
 }
 
 # ════════════════════════════════════════════════════════════════════
+# KERNEL NO-GO LEDGER (ADR-007) — the settled-dead complement of HYPOTHESIS_REGISTRY
+# ════════════════════════════════════════════════════════════════════
+# Machine-readable bridge between the prose SETTLED_FORKS.md register and the
+# kernel-checked refutation/forcing theorems that make a provably-false path
+# UNprovable. Enforced by `validate.py --check nogo_substrate_integrity` (N-C, Invariant #17)
+# and surfaced to the swarm as the atlas NEGATIVE frontier (N-D). SCOPE: provably-false
+# (kernel-checkable) no-gos ONLY — policy/route/preference bans stay prose-only in
+# SETTLED_FORKS.md (N-B). Each backing theorem must EXIST in lean_deps.json, be KERNEL-PURE
+# ({propext, Classical.choice, Quot.sound}), and be NON-vacuous (not True/reflexive).
+# Schema: fork_id (→ a SETTLED_FORKS `## ` block or a memory slug), backing_theorems (FQN list),
+# nogo_kind (refutation | structural_forcing | counterexample), false_statement (the path it
+# kills, one line), memory ([[slug]]).
+KERNEL_NOGO_REGISTRY: dict[str, dict] = {
+    'lattice_arf_bridge': {
+        'fork_id': 'nogo_lattice_arf_not_sigma8',  # memory slug (referenced by SETTLED_FORKS synthetic-smith-map-to-tied-carrier; no dedicated `## ` block)
+        'backing_theorems': ['SKEFTHawking.RokhlinArfNoGo.lattice_arf_bridge_refuted'],
+        'nogo_kind': 'refutation',
+        'false_statement': 'The lattice Arf bridge σ/8 ≡ Arf(q̄) mod 2 — deriving Rokhlin mod-16 from the intersection FORM alone. FALSE: E₈ has Arf(q̄)=0 but σ/8=1; Rokhlin mod-16 is irreducibly geometric (a characteristic-SURFACE Arf, not the lattice Arf). Kills Phase 5q.C and any form-only mod-16 shortcut.',
+        'memory': '[[nogo_lattice_arf_not_sigma8]]',
+    },
+    'mfd-equals-H1-dead-end': {
+        'fork_id': 'mfd-equals-H1-dead-end',
+        'backing_theorems': ['SKEFTHawking.PinPlusGenuineCarrierIso.dataBordism_two_torsion_of_revStr_trivial'],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'The `Mfd := H¹` tangential-data construction yields a genuine ℤ/16 / ker=⊥. FALSE: a datum whose structure-reversal (revStr) is trivial is FORCED 2-torsion, never order-16.',
+        'memory': '[[project-phase5qF-strict-retirement]]',
+    },
+    'synthetic-grade-ker-bot-nogo': {
+        'fork_id': 'synthetic-grade-ker-bot-nogo',
+        'backing_theorems': ['SKEFTHawking.PinPlusGenuineCarrierIso.dataBordism_two_torsion_of_revStr_trivial'],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'ker(abkGrade)=⊥ / card≤16 UNCONDITIONALLY for ANY free-per-manifold grade. FALSE: the ℝP⁴ grade-0 witness (w₂=0, [ℝP⁴]≠0∈Ω₄^O) has no unoriented null-bordism, so the free grade is never injective. ker=⊥ requires the grade TIED to the structure (the GM carrier), never a better proof on a free-grade datum.',
+        'memory': '[[nogo_lattice_arf_not_sigma8]]',
+    },
+}
+
+# ════════════════════════════════════════════════════════════════════
 # Phase 5a: Onsager Algebra Parameters (Wave 1)
 #
 # The Onsager algebra is defined by the Dolan-Grady (DG) relations:
