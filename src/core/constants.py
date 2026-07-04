@@ -3106,6 +3106,16 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': 'ker(abkGrade)=⊥ / card≤16 UNCONDITIONALLY for ANY free-per-manifold grade. FALSE: the ℝP⁴ grade-0 witness (w₂=0, [ℝP⁴]≠0∈Ω₄^O) has no unoriented null-bordism, so the free grade is never injective. ker=⊥ requires the grade TIED to the structure (the GM carrier), never a better proof on a free-grade datum.',
         'memory': '[[nogo_lattice_arf_not_sigma8]]',
     },
+    'genuine-gm-carrier-eight-torsion': {
+        'fork_id': 'genuine-gm-carrier-eight-torsion',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusGMDataZ16.pinPlusGMData_not_equiv_zmod16',
+            'SKEFTHawking.PinPlusGMDataZ16.pinPlusGMData_eight_torsion',
+        ],
+        'nogo_kind': 'refutation',
+        'false_statement': 'The genuine ℤ/16 lives directly on the thin GM carrier: DataBordismGrp(pinPlusGMData) ≃+ ZMod 16. FALSE: pinPlusGMData\'s bordism relation records ONLY the mod-8 Brown grade (q.brown ∈ ZMod 8), so cylinder-doubling makes every class 8-torsion (pinPlusGMData_eight_torsion: 8•x=0) ⟹ IsEmpty(DataBordismGrp(pinPlusGMData) ≃+ ZMod 16). The ℤ/16 odd bit is the Smith-LES EXTENSION onto a distinct carrier (the tied/extension carrier, whose mod-8 shadow is abkGM8 via forgetTie), NEVER a surface grade on pinPlusGMData itself. Do NOT target `omega4PinPlusGM_equiv_zmod16 : DataBordismGrp(pinPlusGMData) ≃+ ZMod 16` as literally stated — reframe to the Smith-LES extension carrier (E3) or an enriched (σ,F•F)-carrying GM carrier.',
+        'memory': '[[project_5qH_geometric_floor_terminal]]',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════

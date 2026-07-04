@@ -1,16 +1,16 @@
 {
-  "generated": "2026-07-04T02:32:35.495981",
+  "generated": "2026-07-04T16:13:33.256415",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 24431,
-    "theorems_total": 15288,
-    "theorems_substantive": 15262,
+    "total_declarations": 24457,
+    "theorems_total": 15308,
+    "theorems_substantive": 15282,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 1237,
+    "modules": 1238,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -709,6 +709,7 @@
       "SKEFTHawking.PinPlusFaithfulData",
       "SKEFTHawking.PinPlusFloorCollapse",
       "SKEFTHawking.PinPlusGMData",
+      "SKEFTHawking.PinPlusGMDataZ16",
       "SKEFTHawking.PinPlusGMTiedData",
       "SKEFTHawking.PinPlusGMWitness",
       "SKEFTHawking.PinPlusGenuineCarrierIso",
@@ -1250,7 +1251,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 8122,
+    "definitions": 8128,
     "structures": 320,
     "instances": 604,
     "inductives": 97,
