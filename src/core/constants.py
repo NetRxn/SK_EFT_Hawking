@@ -3182,6 +3182,57 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'IsEvenUnimodular through the from-scratch ℤ→ℤ/2 reduction bridge redH (Phase 5q.H · E1 Substrate-G). '
             'Symmetric ✓ (graded-commutativity) + even ✓ (this datum) leave unimodular/PD as the sole residual core.',
     },
+    'intPoincareDuality_perfectPairing_datum': {
+        'statement': 'For a closed ORIENTED 4-manifold M, the UNIMODULARITY (det = ±1) of the integer intersection '
+            'matrix is carried (Phase 5q.H · E1 Substrate-G) as a disclosed datum: the structure '
+            'SKEFTHawking.SingularCohomologyInt.IntPoincareDuality fc (tied to the integral fundamental class '
+            'fc : IntFundamentalClass X), holding (i) toDualEquiv : Cohomology X 2 ≃ₗ[ℤ] Module.Dual ℤ (Cohomology X 2) '
+            '= the INTEGRAL Poincaré-duality perfect-pairing isomorphism (the curried intersection form '
+            'a ↦ ⟨a∪·,[M]⟩ is a linear ISO onto the ℤ-dual; equivalently the integral cap map ·⌢[M] : H²(M;ℤ) → '
+            'H₂(M;ℤ) is an iso, H₂ being ℤ-dual to H²); (ii) toDualEquiv_apply: ∀ a b, toDualEquiv a b = '
+            'interFormInt fc a b — the compatibility fixing the equivalence to underlie the intersection form. This is '
+            'the ONLY unproved input to interMatrix UNIMODULARITY. It is STRICTLY STRONGER than the on-main mod-2 '
+            'injective non-degeneracy SingularPD4Instances.nondeg_of_closed (which gives only det ODD, not det = ±1).',
+        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'hard',
+        'module': 'IntersectionFormUnimodularInt',
+        'elimination_path': 'Discharge = build the INTEGRAL homology H₂(M;ℤ) + the integral cap product '
+            '·⌢[M] : H²(M;ℤ) → H₂(M;ℤ) + the integral Kronecker pairing kroneckerHInt (the ℤ tower dual to the on-main '
+            'SingularHomologyMod2 / kroneckerH), and prove the cap map an ISOMORPHISM (integral Poincaré duality). Then '
+            'instantiate toDualEquiv from the composite H²(M;ℤ) ≃ H₂(M;ℤ) ≃ Dual ℤ H²(M;ℤ) and toDualEquiv_apply from '
+            'the cap–cup adjunction ⟨a∪b,[M]⟩ = ⟨b, a⌢[M]⟩ (the integral mirror of the on-main '
+            'fundamentalFunctional_cupH24 / kronecker_cup_cap). The char-2 shadow of this iso — INJECTIVITY of the '
+            'mod-2 form — is ALREADY a theorem on main (nondeg_of_closed, via the capH-injectivity / P₄(univ) Bott–Tu '
+            'tower); the integral upgrade (iso, not just injective; det = ±1, not just odd) is the community-scale core.',
+        'dependent_theorems': [
+            'SKEFTHawking.SingularCohomologyInt.interMatrix_eq_toMatrix_intPD',
+            'SKEFTHawking.SingularCohomologyInt.interMatrix_isUnit_det_of_intPD',
+            'SKEFTHawking.SingularCohomologyInt.interMatrix_isUnimodular_of_intPD',
+            'SKEFTHawking.SingularCohomologyInt.isEvenUnimodular_of_intPD',
+            'SKEFTHawking.SingularCohomologyInt.sixteen_dvd_manifold_sig_of_intPD',
+        ],
+        'source': 'Standard 4-manifold topology (Poincaré duality; Milnor–Stasheff, Hatcher §3.3, Kirby–Taylor): the '
+            'intersection form of a closed oriented 4-manifold is a PERFECT pairing on the free part of H²(M;ℤ), i.e. '
+            'unimodular (det = ±1). The reduction perfect-pairing ⟹ det-unit uses the Mathlib bridges '
+            'LinearEquiv.isUnit_det (a linear equivalence has unit determinant in any basis) + Int.isUnit_iff '
+            '(IsUnit n ↔ n = 1 ∨ n = -1 over ℤ) + LinearMap.toMatrix_apply / Module.Basis.dualBasis_repr (the Gram '
+            'matrix IS the matrix of the toDual map in the basis/dual-basis pair), all PROVED unconditionally here.',
+        'risk': 'Low mathematically (textbook: PD makes the intersection form unimodular); cost is the from-scratch '
+            'Lean construction of integral homology H₂(M;ℤ) + the integral cap product + the iso proof, deferred to a '
+            'later E1 brick. Every result in IntersectionFormUnimodularInt holds for an ARBITRARY such datum.',
+        'circularity_note': 'None. The unimodularity lemmas are built for an ARBITRARY IntPoincareDuality datum; no '
+            'property of a specific (future) integral cap iso is assumed. The perfect-pairing ⟹ unit-det reduction '
+            '(LinearEquiv.isUnit_det + Int.isUnit_iff + the Gram-matrix identification) is proved unconditionally. The '
+            'evenness/Wu conjunct of IsEvenUnimodular is a SEPARATE disclosed datum (SpinWuDatum, spinWu_even_datum); '
+            'this datum supplies ONLY unimodular. It is NOT the lattice-Arf route (nogo_lattice_arf_not_sigma8): '
+            'unimodularity is a genuine PD fact, orthogonal to the banned σ/8 ≡ Arf congruence.',
+        'prose': 'The integral Poincaré-duality perfect-pairing input for a closed oriented 4-manifold, carried as a '
+            'disclosed datum (the curried intersection form H²(M;ℤ) → Dual ℤ H²(M;ℤ) is a ℤ-linear iso) so the integer '
+            'intersection matrix interMatrix is UNIMODULAR (det = ±1) — discharging the LAST conjunct of IsEvenUnimodular '
+            'through LinearEquiv.isUnit_det + Int.isUnit_iff (Phase 5q.H · E1 Substrate-G). This completes the '
+            'IsEvenUnimodular analysis: symmetric ✓ (graded-commutativity, proved) + even ✓ (SpinWuDatum) + unimodular ✓ '
+            '(this datum) reduce IsEvenUnimodular interMatrix to exactly two clean disclosed geometric data. The integral '
+            'iso is STRICTLY stronger than the on-main mod-2 injective nondeg_of_closed (det odd → det = ±1).',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════

@@ -834,6 +834,12 @@ import SKEFTHawking.IntersectionMatrixInt
 -- mod-2 Wu functional vanishing, disclosed datum SpinWuDatum / spinWu_even_datum), hence interMatrix is
 -- EVEN — discharging the last semi-mirror-able conjunct (unimodular/PD remains the separate core).
 import SKEFTHawking.IntersectionFormEvenInt
+-- Phase 5q.H (2026-07-04, Option-A foundation): the UNIMODULAR conjunct of IsEvenUnimodular interMatrix
+-- via integral Poincaré duality — reduces IsUnimodular (det=±1) to the SINGLE disclosed perfect-pairing
+-- datum IntPoincareDuality (the integral intersection form H²(M;ℤ)→Dual is an iso, the char-0 analogue
+-- of the mod-2 nondeg_of_closed), through LinearEquiv.isUnit_det + Int.isUnit_iff. Completes the
+-- IsEvenUnimodular analysis: symmetric ✓ (proved), even ✓ (SpinWuDatum), unimodular ✓ (IntPoincareDuality).
+import SKEFTHawking.IntersectionFormUnimodularInt
 -- Phase 5q.H (2026-07-04, Option-A foundation brick 5): singular INTEGRAL homology + the integral
 -- Kronecker pairing — the ℤ dual of SingularHomologyMod2. Chains Cₙ(X;ℤ) = simplices →₀ ℤ, the SIGNED
 -- boundary ∂c = ∑ᵢ(-1)ⁱ∂ᵢc with ∂²=0 (opposite-sign cancellation, dual to coboundary_comp_coboundary),
