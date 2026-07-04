@@ -46,6 +46,10 @@ _WHITELIST = (
     #    (code.claude.com). This repo's autonomous-dev harness IS Claude Code, so these are
     #    operational reference.
     "aristotle.harmonic.fun", "harmonic.fun", "anthropic.com", "claude.com",
+    # KT-LMS §5 primary-text mirrors — Kirby–Taylor "Pin structures on low-dimensional
+    # manifolds" (LMS-151, 1990) — academic paper archives, user-authorized 2026-07-04 for
+    # the Phase 5q.H full-strength ABK-completeness fetch (the surgery proof is off-arXiv).
+    "math.berkeley.edu", "webhomes.maths.ed.ac.uk",
 )
 
 _HEADER = re.compile(r"^#\s*-+\s*(.+?)\s*-+\s*$")
