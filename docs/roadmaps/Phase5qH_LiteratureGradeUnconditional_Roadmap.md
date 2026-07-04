@@ -1,5 +1,7 @@
 # Phase 5q.H — Literature-grade unconditional `Ω₄^{Pin⁺} ≅ ℤ/16` (closing the two residual deltas)
 
+> **▶ READ FIRST — the operational entry point is [`docs/dev-loops/Phase5qH/PHASE5QH_EXECUTION_MAP.md`](../dev-loops/Phase5qH/PHASE5QH_EXECUTION_MAP.md).** Start every session there: it carries the live 5-effort (E1–E5) build DAG, the verified-source index, the worktree pointers, the atlas both-fronts hook, and the parallelization plan. **This roadmap is the strategic tracker** (why the phase exists, route decisions, gate history); the execution map is *how* the build runs now. Present-state checkoffs ↓ (Status checklist).
+
 **Status:** 🆕 OPENED 2026-07-03, immediately after Phase 5q.G closed at full strength (wave-3 merge
 `036735e5`, trusted rebuild 9597 exit-0, validate 45/45 `validation_20260703T193710Z`, adversarial
 review PASS 0-BLOCKER/0-MAJOR). Every claim in §2–§3 was **ground-truth-vetted against Lean source on
@@ -10,13 +12,35 @@ main at `1c455781`** (the 5q.G discipline: source/git/counts are evidence; noteb
 
 > **🟢 OPTION A — GO (operator, 2026-07-04): genuine unconditional discharge, full strength.** The A-vs-B decision is MADE: build the genuine L4 (`omega4PinPlusGM_equiv_zmod16`, genuine carrier, computed invariant, ZERO posits), NOT the disclosed-form L3 (retained only as stepping-stone/fallback). **The operational entry point is now `docs/dev-loops/Phase5qH/PHASE5QH_EXECUTION_MAP.md`** — it decomposes the build into **5 efforts (E1–E5), each with its own notebook**, indexes every personally-verified primary source, points the worktrees (wt1 holds usable relative-PD substrate; wt2/wt3 free), and gives the multi-agent parallelization plan. §10's P1.1/P1.2/P1.3/P2.1 waves map onto E2/E3/E4/E5 (E1 = the shared Substrate-G foundation §10 folds into Phase 1). **All external inputs are direct-primary-read verified** (Taylor `0802.0111`, Klug `2011.12418`, DDK⁺ `2405.04649`, HKT `1910.14039`, `2406.08237`, KT-LMS §5) — trace in `16Convergence_Reconciliation_Audit_2026-07-04.md §2`.
 > **⚠ §0–§9 ARE SUPERSEDED where they conflict with §10 + `16Convergence_Reconciliation_Audit_2026-07-04.md`.** They are the *original 2026-07-03 phase-open plan* (H1–H8 gates, the "route α", the "two disclosed Props" and "Phase 1 in-tree / disclosed-form" framings). Three of those framings are now CORRECTED: (1) the "concentrated input is elementarily dischargeable (Matsumoto)" — WRONG (§9.3 conflated the divisibility base case with the non-elementary ℤ/16 completeness; see §9.3 banner). (2) "Phase 1 in-tree" — WRONG (it is a from-scratch geometric substrate build; see §10 Phase-1 banner). (3) "Phase 2 contingency" — WRONG (REQUIRED; see §10 crux note). Read §0–§9 as historical rationale, not current status.
-**Tracker = this file.** Lab notebook: `docs/dev-loops/Phase5qH/LAB_NOTEBOOK_INDEX.md` (in-repo,
-scaffolded at goal-arm; the primary-source DR reports + the KT-LMS PDF live in `Lit-Search/Phase-5qH/`
-— read them directly, never via summary). Negative
-register: `docs/dev-loops/SETTLED_FORKS.md` (inherited in full — the ⛔ entries remain binding).
-Continuation of [Phase 5q.G](Phase5qG_GenuineUnconditional_Roadmap.md).
+**Tracker = this file.** Lab notebooks: **per-effort** under `docs/dev-loops/Phase5qH/E1…E5/` (entry point =
+`PHASE5QH_EXECUTION_MAP.md`; the pre-Option-A disclosed-form notebook is archived at `Phase5qH/_archive/`).
+Primary-source DR reports + the KT-LMS PDF live in `Lit-Search/Phase-5qH/` — read them directly, never via
+summary. Negative register: `docs/dev-loops/SETTLED_FORKS.md` + the machine-fed atlas negative frontier
+(`KERNEL_NOGO_REGISTRY` / `/skeft-qa:frontier`; ADR-007). Continuation of
+[Phase 5q.G](Phase5qG_GenuineUnconditional_Roadmap.md).
 
 ---
+
+## Status checklist (present state — main @ `1e239b71`, 2026-07-04)
+
+**✅ DONE (the algebra + disclosed-form L3 + this phase's planning):**
+- [x] **H1** recon + classical-mechanism pinning (DR blueprints landed; H3/H4/H6 statement shapes frozen)
+- [x] **H2** Brown/ABK ℤ/16 algebra — kernel-pure, in vacuo
+- [x] **H5** surjectivity (ℝP⁴ odd generator) + tied-carrier comparison
+- [x] **H6-a** injectivity *reduction architecture* — all routes provably unified to ONE completeness Prop (`smith_inflow_z16`)
+- [x] **Disclosed-form L3** — `Ω₄^{Pin⁺}≅ℤ/16` on the synthetic **tied** carrier, kernel-pure, modulo one Prop packaging G+S (`omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`)
+- [x] **Reconciliation + Option-A GO + execution map + E1–E5 effort notebooks** (this phase's planning layer)
+- [x] **All external inputs direct-primary-read verified** (Taylor/Klug/DDK⁺/HKT/`2406.08237`/KT-LMS §5 — reconciliation §2)
+- [x] **ADR-007 kernel no-go ledger** implemented — the negative frontier is machine-fed (supports the build; not itself a 5qH gate)
+
+**⬜ REMAINING — the genuine L4 (= the execution map's E1–E5; NONE are Lean-written yet):**
+- [ ] **E1** Substrate-G topology (foundation; first brick = harvest wt1 PD substrate) — the from-scratch geometry H3/H4-genuine + H6-b need
+- [ ] **E2** Rokhlin `gm` (§10 P1.1) — `gm` congruence from geometry → discharge `SmoothSpinManifold4.topo` → genuine `16∣σ`
+- [ ] **E3** geometric Smith map + two-sided exactness (§10 P1.2 = H6-b/c) → `ker abkGMGrade=⊥` reduced to `smith_inflow_z16`
+- [ ] **E4** genuine carrier `pinPlusGMData` + computed `abkGM8` + capstone (§10 P1.3 + H7; the Δ2 upgrade — **H3/H4 are TIED-carrier-only today**, this makes them genuine)
+- [ ] **E5** Substrate-S spectral ℤ/16 (§10 P2.1 = H8) — discharge `smith_inflow_z16` → `omega4PinPlusGM_equiv_zmod16`, 100% unconditional
+
+> Granular per-effort status (venue / deps / next brick) lives in each `E<n>/LAB_NOTEBOOK_INDEX.md` and the execution map's DAG. §4's H3/H4 "**DONE:**" criteria describe the *genuine* carrier — achieved only in **tied** form today (E4 upgrades them); §0–§9 are otherwise superseded (banner above).
 
 ## 0. Why 5q.H exists (read first)
 

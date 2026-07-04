@@ -1,7 +1,7 @@
 # Phase 5q.H — EXECUTION MAP (genuine unconditional discharge, full strength)
 
 > **THE MULTI-EFFORT ENTRY POINT. Read this FIRST, every session/compaction, before any effort notebook.**
-> Strategic tracker = `docs/roadmaps/Phase5qH_LiteratureGradeUnconditional_Roadmap.md` (§10 = the wave path).
+> Strategic tracker = `docs/roadmaps/Phase5qH_LiteratureGradeUnconditional_Roadmap.md` (§10 = the wave path; its **Status checklist** = present-state gate checkoffs).
 > Coherence source = `temporary/working-docs/16Convergence_Reconciliation_Audit_2026-07-04.md` (wins on any conflict).
 > This map orchestrates the 5 efforts; each effort has its OWN notebook (two-layer INDEX+shard) under `docs/dev-loops/Phase5qH/E<n>_*/`.
 
@@ -72,7 +72,7 @@ Every load-bearing external input is verified; nothing rests on a scout's unveri
 
 ## 4. Worktree pointers (what to pull, where to build) — verified 2026-07-04
 
-Base: **main @ `df10209b`**. Slots: `SK_EFT_Hawking/.claude/worktrees/wt{1,2,3}/lean`, servers `mcp__lean-lsp-wt{1,2,3}__*`.
+Base: **main @ `1e239b71`**. Slots: `SK_EFT_Hawking/.claude/worktrees/wt{1,2,3}/lean`, servers `mcp__lean-lsp-wt{1,2,3}__*`.
 
 - **wt1 (`worktree-wt1` @ `b3956505`) — HOLDS USABLE SUBSTRATE FOR E1/E3. DO NOT RESET.** 4 unmerged commits (`b537bcea`, `bbb7fc0d`, `34648eb5`, `b3956505`) add **7 new Lean files (842 lines)** of relative-PD / PD-with-boundary machinery:
   - `SingularCSCVanishAbove.lean`, `SingularCSCVanishAboveGeom.lean` — compactly-supported cohomology top-degree vanishing `Hᵏ_c(W)`
@@ -101,7 +101,7 @@ Concurrency cap **≤2 concurrent `lean-worker` slots** (3+ ENFILE the file tabl
 3. Live repo state: `scripts/repo_state_probe.py` (sorry/commit); counts via `update_counts.py` (never `rm …hash`).
 4. Build MCP-first (lean_goal → lean_multi_attempt → write → repeat); commit GREEN kernel-pure increments every ~5–6 bricks; **never push**.
 
-**State as of 2026-07-04:** infrastructure just laid; no Option-A Lean written yet. main @ `df10209b`. The disclosed-form L3 predecessor is archived at `_archive/` (its verified-blueprint history distributed into E2/E3). E1 first brick = harvest the wt1 PD substrate; E5 startable immediately in parallel.
+**State as of 2026-07-04 (main @ `1e239b71`):** planning + infrastructure **committed** (ADR-007 kernel no-go ledger `9cbbe67d`; atlas both-fronts harness wiring `1e239b71`); **no Option-A Lean written yet.** The disclosed-form L3 predecessor is archived at `_archive/` (its verified-blueprint history distributed into E2/E3). E1 first brick = harvest the wt1 PD substrate; E5 startable immediately in parallel. Gate-level checkoffs = the roadmap's Status checklist.
 
 ## 7. Substrate-understanding hook — the Derived Proof Atlas (ADR-005, LIVE) — the compaction-survival layer
 
