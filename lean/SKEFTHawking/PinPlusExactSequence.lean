@@ -77,4 +77,18 @@ theorem zmod16_of_kt_exact_sequence (p : G →+ ZMod 8) (hp : Function.Surjectiv
   have hc : Nat.card G = Nat.card (ZMod 16) := by rw [hcard, Nat.card_zmod]
   exact ⟨addEquivOfAddCyclicCardEq hc⟩
 
+/-- **The algebraic half of KT Lemma 5.3: the Spin image has card 2.** The forgetful map
+`s : Ω₄^{Spin} ≅ ℤ →+ G` (`s n` = the class of `n` Kummer surfaces, `sig = 16n`) has kernel exactly the
+`Pin⁺`-bounding classes = `{n : 32 ∣ 16n} = {n : 2 ∣ n} = 2ℤ` (Lemma 5.3: bounds iff `sig ÷ 32`). Hence the
+Spin image `range s ≅ ℤ/2ℤ` has `Nat.card = 2`. This is the ℤ/2 that is `ker [∩w₁²]` in the KT §5 exact
+sequence — the sole remaining disclosed input `Nat.card (ker p) = 2` factors through this + exactness. -/
+theorem spin_image_card_two {G : Type*} [AddCommGroup G] (s : ℤ →+ G)
+    (hs : ∀ n : ℤ, s n = 0 ↔ (2 : ℤ) ∣ n) : Nat.card s.range = 2 := by
+  have hker : s.ker = AddSubgroup.zmultiples (2 : ℤ) := by
+    ext n
+    rw [AddMonoidHom.mem_ker, hs, Int.mem_zmultiples_iff]
+  rw [Nat.card_congr (QuotientAddGroup.quotientKerEquivRange s).symm.toEquiv, hker,
+    Nat.card_congr (Int.quotientZMultiplesEquivZMod 2).toEquiv]
+  simp
+
 end SKEFTHawking.PinPlusExactSequence
