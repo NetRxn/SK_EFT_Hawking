@@ -181,3 +181,21 @@ retire) — no entry is immutable. Every entry carries datetime metadata.
   no synthetic shortcut. Do NOT re-attempt an emptySM-based `smithGMTiedHom`.
 - memory: [[nogo_lattice_arf_not_sigma8]]
 - created_ts: 2026-07-03T00:00:00Z
+
+## 5qH-injectivity-routes-all-equal-one-completeness-prop
+- verdict: superseded (route-choice is MOOT — kernel-checked equivalence)
+- tier: automatic
+- authored_by: kernel-no-go (equivalence proven in-tree, `PinPlusGMWitness.spin_range_ge_of_grade0_inj` +
+  `omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`, 2026-07-04)
+- killed_by: the proven implication `hbound (grade-0 ⟹ 0) ⟹ hle (KT ⊇ inclusion)` + the existing
+  `grade0_bounds_of_thom` (`hthom ⟹ hbound`); both kernel-pure
+- reason: the three 5q.H injectivity routes — **Thom** (`hthom`: SW-trivial Pin⁺ 4-mfd bounds), **KT §5**
+  (`hle`: `ker(reduce16to8∘abkGMTied16) ⊆ (n↦n•g8).range`), **Smith-LES** (`smith_inflow_z16`: `Ω₆^{Pin⁻}≅ℤ/16`)
+  — are PROVABLY the SAME single node: all reduce to `hbound = grade-0-injectivity` on the tied carrier (KT ⊇
+  follows from `hbound` via grade∈{0,8}+`g8`-coset; Thom gives `hbound` via `grade0_bounds_of_thom`; the tied
+  carrier's `htie`+cert make grade-0 ⟺ SW-trivial). So DO NOT route-shop among them or re-derive "which route
+  is closer" — they are apex-equivalent, the reduction is CANONICAL. The terminal node `hbound`/`hthom` = Thom
+  generation / the relative fundamental class `[W,∂W]` + surgery = the genuine Mathlib-absent research-grade
+  wall (NOT `16∣σ` Rokhlin alone — that is necessary but strictly weaker than the completeness `hbound` needs).
+- memory: [[project_5qH_geometric_floor_terminal]]
+- created_ts: 2026-07-04T00:00:00Z
