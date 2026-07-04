@@ -909,6 +909,7 @@ import SKEFTHawking.PoincareDualityWu
 -- `Sq¹ : H³ → H⁴` (`Sq1` → `sq1₃`, the connecting hom of `0 → ℤ/2 →·2 ℤ/4 → ℤ/2 → 0`).
 import SKEFTHawking.SingularCupH13
 import SKEFTHawking.PoincareDualityWuFormula
+import SKEFTHawking.WuThirdClass
 import SKEFTHawking.SingularBockstein
 import SKEFTHawking.SingularCapHomology
 import SKEFTHawking.SingularCupCapHomology
