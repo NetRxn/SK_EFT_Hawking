@@ -3100,6 +3100,44 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'induced evaluation functional ⟨·,[M]⟩ so the H⁴-valued integral cup product cupH24 descends to the '
             'ℤ-valued symmetric intersection form (Phase 5q.H · E1 Substrate-G; pre-matrix, orientation deferred).',
     },
+    'intH2_basis_datum': {
+        'statement': 'For a closed 4-manifold M, a finite free ℤ-basis of H²(M;ℤ) = Cohomology (TopCat.of M) 2 '
+            'is carried (Phase 5q.H · E1 Substrate-G) as a disclosed datum: the structure '
+            'SKEFTHawking.SingularCohomologyInt.IntH2Basis, holding a rank `n : ℕ` (= the free rank b₂(M)) and a '
+            'field `basis : Module.Basis (Fin n) ℤ (Cohomology X 2)`. This is the finite-free-basis input that turns '
+            'the ℤ-bilinear intersection form interFormInt into its Gram MATRIX interMatrix : Matrix (Fin n) (Fin n) ℤ.',
+        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'very_hard',
+        'module': 'IntersectionMatrixInt',
+        'elimination_path': 'Discharge = build integral singular cohomology of a finite CW complex, prove H²(M;ℤ) is '
+            'finitely generated (finite CW ⟹ finitely-generated integral cohomology), and split off the free part: '
+            'over the PID ℤ, Module.Free + Module.Finite yield a finite basis (Module.finBasis), whose free rank is '
+            'b₂(M). (Poincaré duality forces the torsion to pair off and the intersection form to descend to the free '
+            'quotient as a unimodular pairing.) Community-scale — Mathlib and on-main have no manifold cohomology or '
+            'CW-finiteness of H²; tracked here so the intersection MATRIX + its symmetry + the conditional σ÷16 hold '
+            'for an ARBITRARY such basis, isolating the free-module input as this one datum.',
+        'dependent_theorems': [
+            'SKEFTHawking.SingularCohomologyInt.interMatrix',
+            'SKEFTHawking.SingularCohomologyInt.interMatrix_isSymm',
+            'SKEFTHawking.SingularCohomologyInt.interMatrix_transpose',
+            'SKEFTHawking.SingularCohomologyInt.interMatrix_isSymmetricInt',
+            'SKEFTHawking.SingularCohomologyInt.eight_dvd_manifold_sig',
+            'SKEFTHawking.SingularCohomologyInt.sixteen_dvd_manifold_sig',
+        ],
+        'source': 'Standard algebraic topology (Hatcher §2.2/§3.1; Milnor–Stasheff): the integral cohomology of a '
+            'closed manifold is finitely generated (finite CW structure), and over the PID ℤ a finitely-generated '
+            'module splits as free ⊕ torsion, so its free part has a finite basis.',
+        'risk': 'Very low mathematically (textbook finite-generation + PID structure theorem); the cost is purely the '
+            'from-scratch Lean construction of finite integral cohomology, deferred to a later E1 brick. The MATRIX, '
+            'its symmetry, and the σ÷16 composition assembled here are unconditional on the choice of basis.',
+        'circularity_note': 'None. interMatrix and all its downstream results are built for an ARBITRARY '
+            'IntH2Basis; no property of a specific (future) geometric basis is assumed. The genuinely-geometric '
+            'inputs to the σ÷16 headline (IsEvenUnimodular interMatrix = even/Wu + unimodular/PD, and the topological '
+            'factor 2∣σ/8 = Guillou–Marin) are left explicitly as hypotheses, NOT folded into this datum.',
+        'prose': 'A finite free ℤ-basis of H²(M;ℤ) for a closed 4-manifold, carried as a disclosed datum so the '
+            'symmetric ℤ-bilinear intersection form interFormInt descends to its integer Gram matrix interMatrix — '
+            'the concrete arithmetic object the DONE lattice σ÷16 theorem consumes (Phase 5q.H · E1 Substrate-G; the '
+            'final structural link integral-cohomology → cup → form → matrix → σ÷16).',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════

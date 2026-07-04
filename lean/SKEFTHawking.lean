@@ -821,6 +821,13 @@ import SKEFTHawking.SingularCupInt
 -- against the fundamental-class evaluation datum → symmetric interFormInt : H²(M;ℤ)×H²(M;ℤ)→ℤ (pre-matrix;
 -- [M]/orientation carried as the disclosed tracked datum intFundamentalClass_eval_datum).
 import SKEFTHawking.SingularIntersectionFormInt
+-- Phase 5q.H (2026-07-04, Option-A foundation brick 4 — FINAL structural link): the integer intersection
+-- MATRIX (Gram matrix of interFormInt on a disclosed finite free basis of H²(M;ℤ)), its symmetry, and the
+-- conditional manifold σ÷16 — a direct application of the DONE lattice theorem RokhlinHMRankFour.
+-- sixteen_dvd_latticeSig to interMatrix. Reduces manifold Rokhlin 16∣σ to its two geometric Props
+-- (IsEvenUnimodular = even/Wu + unimodular/PD; 2∣σ/8 = topological Guillou–Marin factor). Basis carried
+-- as the disclosed datum intH2_basis_datum.
+import SKEFTHawking.IntersectionMatrixInt
 -- Phase 5q.F (2026-06-15, w₂ foundation brick 3): singular ℤ/2 HOMOLOGY + the Kronecker pairing — the
 -- dual of SingularCohomologyMod2. Chains C_n = simplices →₀ ℤ/2, the boundary ∂ with ∂²=0, Homology
 -- Hₙ = ker∂/im∂, and the descended Kronecker pairing kroneckerH : Hⁿ × Hₙ → ℤ/2 (the evaluation
