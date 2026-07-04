@@ -670,6 +670,7 @@ import SKEFTHawking.SpinRokhlinInterface
 import SKEFTHawking.RokhlinArfNoGo
 import SKEFTHawking.BrownInvariant
 import SKEFTHawking.GuillouMarinBridge
+import SKEFTHawking.GMRokhlinDischarge
 import SKEFTHawking.JokerModule
 import SKEFTHawking.KspModule
 -- Phase 5q.F W4g (2026-06-14): the M = A(1)//A(0) prototype h0-tower module
