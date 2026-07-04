@@ -458,12 +458,72 @@ def write_coaching_block(root, goal_id, text, watermark=None, now=None):
         return False
 
 
-def live_head_anchor(root):
+def _live_slot_pointer(root, marker):
+    """Pointer-grade (~1 line) live-slot flag for the payload. Reads the ISOLATION FILTER from
+    `marker['slots']` (the slots THIS goal owns — never enumerates all worktrees, which would leak
+    another goal's slot) and, git-fresh, names the LIVE one (ahead-of-main or dirty) so a post-compact
+    turn re-anchors on the slot, not main. Fixes the slot-blind injected anchor (System-2 finding
+    `harness-gap-post-compaction-repo-state-probe-slot-blind-in-multi-worktree-goal`). Budget principle
+    1: NOT a per-slot dump — one line; the full per-slot state is the agent-run probe. Fail-soft->''"""
+    if (root is None or not isinstance(marker, dict)
+            or not isinstance(marker.get("slots"), list) or not marker.get("slots")):
+        return ""
+    try:
+        def _root_git(args):
+            try:
+                o = subprocess.run(["git", "-C", str(root)] + args,
+                                   capture_output=True, text=True, timeout=5)
+                return o.stdout.strip() if o.returncode == 0 else ""
+            except Exception:
+                return ""
+        # Base branch slots are cut from — resolved, not hardcoded `main` (adversarial review #1).
+        base = _root_git(["symbolic-ref", "--short", "HEAD"]) or "main"
+        live = []
+        for entry in marker.get("slots") or []:
+            try:
+                s = str(entry).strip().lower()
+                n = int(s[2:] if s.startswith("wt") else s)
+            except Exception:
+                continue
+            slot = root / ".claude" / "worktrees" / f"wt{n}"
+            if not slot.exists():
+                continue
+
+            def g(args):
+                try:
+                    o = subprocess.run(["git", "-C", str(slot)] + args,
+                                       capture_output=True, text=True, timeout=5)
+                    return o.stdout.strip() if o.returncode == 0 else ""
+                except Exception:
+                    return ""
+            ahead = g(["rev-list", "--count", f"{base}..HEAD"])
+            dirty = len([ln for ln in g(["status", "--porcelain"]).splitlines() if ln.strip()])
+            if (ahead.isdigit() and int(ahead) > 0) or dirty > 0:
+                head = g(["rev-parse", "--short=8", "HEAD"]) or "?"
+                branch = g(["symbolic-ref", "--short", "HEAD"]) or f"worktree-wt{n}"
+                bits = []
+                if ahead.isdigit() and int(ahead) > 0:
+                    bits.append("%s ahead" % ahead)
+                if dirty:
+                    bits.append("%d uncommitted" % dirty)
+                live.append("wt%d @ %s (%s, %s)" % (n, head, branch, ", ".join(bits)))
+        if not live:
+            return ""
+        return ("ACTIVE WORK IS ON A WORKTREE SLOT, NOT MAIN — re-anchor THERE: "
+                + "; ".join(live) + ". Main HEAD below is the merge target. "
+                "(`scripts/repo_state_probe.py` prints each slot's full state.)")
+    except Exception:
+        return ""
+
+
+def live_head_anchor(root, marker=None):
     """A minimal, git-cheap, DRIFT-FREE HEAD anchor for the re-orientation payload (spec 1.10).
     The prose FRONTIER is gone (the proven drift vector); this replaces it with a small ACCURATE,
     computed-now fact so a post-compact turn that SKIPS the FIRST_ACTION probe still has a true
     anchor. Pointer-grade (~1 line) — NOT the unbounded probe output (which the agent runs). No LSP
-    (a hook can't reach it); git only. Mode-agnostic (any goal). Fail-soft -> '' (payload omits it)."""
+    (a hook can't reach it); git only. Mode-agnostic (any goal). Fail-soft -> '' (payload omits it).
+    When `marker` owns worktree slots, PREPENDS a pointer-grade live-slot flag (slot-aware re-anchor)
+    so the injected anchor names the slot holding the work, not just main."""
     if root is None:
         return ""
     try:
@@ -484,9 +544,12 @@ def live_head_anchor(root):
                 last = ln.strip()
                 break
         a = ("LIVE ANCHOR (git, computed now — run `scripts/repo_state_probe.py` for the full state): "
-             "HEAD=%s \"%s\"" % (sha, subj))
+             "HEAD=%s \"%s\" [MAIN]" % (sha, subj))
         if last:
             a += "; last-touched %s" % last
+        slot_ptr = _live_slot_pointer(root, marker)
+        if slot_ptr:
+            a = slot_ptr + "\n" + a
         return a
     except Exception:
         return ""
@@ -523,7 +586,7 @@ def build_reorientation_payload(marker, repo_root):
     # FRONTIER — the proven drift vector — is removed; this replaces it with a small ACCURATE fact,
     # not a remembered narrative). Pointer-grade (~1 line), NOT the unbounded probe output; the full
     # state is the agent-run repo_state_probe.py (progressive disclosure). Fail-soft -> '' (omitted).
-    anchor = live_head_anchor(repo_root)
+    anchor = live_head_anchor(repo_root, marker)
     if anchor:
         parts.append(anchor)
     parts.append("Re-read CLAUDE.md (the giant-ref pointer that should be re-read).")

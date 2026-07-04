@@ -125,9 +125,46 @@ by hand with `slots: [<its live slot>]` — a one-time migration, exactly as `ar
 5. Pointer budget: `build_reorientation_payload` stays < `PAYLOAD_MAX_CHARS` with the slot line.
 6. `reset_slot` stamps `slots` idempotently; conflict warning fires when the slot is another goal's.
 
-## 7. Decisions needed before I implement
-1. **Binding home** — marker `slots` list (recommended 3, option A) vs sibling `slot_binding_*.json`?
-2. **Stamp owner** — `reset_slot.py` auto-stamps + arm-time optional declaration (recommended 3a/3b)?
-   And do you want the cross-goal-ownership **conflict warning** in `reset_slot` (I recommend yes)?
-3. **Scope of this build** — probe (A) + injected pointer (B) + reset_slot stamp (C) + backfill in one
-   pass, or probe-only first (A) and wire the stamp after?
+## 7. Decisions — RESOLVED (operator, 2026-07-04) + implementation
+1. **Binding home** → marker `slots` field. ✓
+2. **Stamp owner** → `reset_slot.py` auto-stamps the **active goal's** marker (exclusive transfer:
+   removes the slot from any other marker) + an **ownership guard** that refuses to reclaim a slot
+   another goal's marker owns unless `--force` (the escape hatch); the existing unmerged-commits guard
+   remains the hard work-loss protection (piggybacked, per operator). Stale goals need no liveness
+   detector — handled by existing `/goal-end` / session-end teardown + `gc`. ✓
+3. **Scope** → full pass. ✓
+
+**Implemented 2026-07-04** (140/140 harness tests green; 15 new in `tests/test_slot_aware.py`):
+- `scripts/repo_state_probe.py`: `slot_states()` / `slot_delta()` + a top-of-report LIVE-slot warning
+  + an "OWNED WORKTREE SLOTS" section (per-slot branch/HEAD/ahead/dirty + the live slot's own
+  `git log main..HEAD`); main sections relabeled `[MAIN]`. Self-resolves owned slots from the marker.
+- plugin `harness_common.py`: `_live_slot_pointer()` (pointer-grade, budget-safe) prepended by
+  `live_head_anchor(root, marker)`; call site updated.
+- plugin `reset_slot.py`: `--force`, pre-reset cross-goal ownership guard, post-reset
+  `_stamp_ownership()` with exclusive transfer.
+- `goal-prompt` SKILL + Live-Anchor spec §B: document the optional `slots` field.
+
+**Backfill:** N/A — the live 5q.H marker was torn down (goal ended) before backfill; the feature
+takes effect on the next goal's arm or first `/reset-slot`. **Remaining:** refresh the plugin cache
+(source→cache) so a running loop picks it up, and commit (operator's call).
+
+## 8. Adversarial review round (fresh-context Opus, 2026-07-04)
+Six findings; four fixed, two dispositioned-no-fix. All fixes tested (suite now 24 slot-aware /
+149 harness, green):
+- **#1 (BLOCKER as rated) hardcoded `main`** → FIXED. Added `base_ref()` (resolves the primary
+  worktree's branch, falls back to `main`) and threaded it through `slot_states`/`slot_delta`/
+  `_live_slot_pointer`/`reset_slot`. Rated BLOCKER by the reviewer but over-severe for this repo (the
+  whole slot harness is `main`-by-construction and pre-existing `reset_slot` already hardcoded it); the
+  fix removes a real silent-degrade for sibling deployments. New test on a `master`-default repo.
+- **#2 (MAJOR) unmerged-commits guard defeated on git error** → FIXED. `reset_slot` now refuses on
+  `rc != 0` (not just non-empty output), so a bad base ref can't silently pass the guard. New test.
+- **#3 (MAJOR) `slots` as a bare string mis-parses into per-char slots (isolation breach)** → FIXED.
+  `isinstance(list)` guard in `slot_states` / `_live_slot_pointer` / reset paths → fail-open to []. New test.
+- **#4 (MINOR) two `goal_id`-absent markers collide** → FIXED. `_other_owners` treats
+  `cur_goal is None` (and both-absent) as a conflict (safe default; `--force` escape). New test.
+- **#5 (MINOR) detached-HEAD cosmetic** → NO FIX (reviewer agreed; `ahead` still computes correctly).
+- **#6 (MINOR) out-of-session reset refuses** → NO FIX (defensible safe-default; message already
+  names `--force`).
+- Reviewer non-findings confirmed clean: field-preservation on transfer, same-goal non-conflict,
+  `marker=None`/`[]`/`[None]`/`["wtX"]` fail-open, broken-worktree fail-open + exit-0. Added explicit
+  regression tests for field-preservation, the `--force` end-to-end path, and broken-worktree exit-0.

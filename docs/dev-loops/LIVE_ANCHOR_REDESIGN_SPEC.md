@@ -283,6 +283,16 @@ hundreds of long-internalized commits.)
   `general`. Drives the Lean-vs-general branch in the probe (§A) / hooks (§C/§E).
 - `active_hint` *(optional)*: the primary file named in the goal text, if cheaply parseable, as
   a tie-breaker for §A.4. Never load-bearing.
+- `slots` *(optional; added 2026-07-04, slot-aware re-anchor)*: the worktree slots THIS goal owns,
+  e.g. `[1]` or `[1, 2]`. The **isolation filter** for the slot-aware anchor — the probe (§A) and the
+  injected pointer (§C) surface the owned slots' live git state (branch/HEAD/ahead-of-main/dirty) and
+  flag the LIVE slot (ahead or dirty) as the re-anchor tree, keeping it isolated to this goal (never
+  enumerates all worktrees, which would leak another goal's slot). LIVENESS is computed fresh from
+  `git -C <slot>` per read (never stored → never stale). Absent/empty ⇒ main-only (unchanged). Set at
+  arm (goal-prompt) when the venue is known, else auto-stamped by `/reset-slot N` (exclusive per goal;
+  `--force` to reclaim a slot another marker owns). Fixes the slot-blind probe (System-2
+  `harness-gap-post-compaction-repo-state-probe-slot-blind-in-multi-worktree-goal`); completes the §A
+  "current session's marker only" isolation principle for the worktree case. Fail-open per slot.
 
 Capture is best-effort: if `git rev-parse` fails at arm (git absent / corrupt `.git`), `arm_sha`
 is simply omitted and the probe degrades down the cascade (§A.2a) — arming never blocks on it.

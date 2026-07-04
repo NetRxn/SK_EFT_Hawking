@@ -107,7 +107,7 @@ composition discipline + acceptance criteria.
   8). This **tracked** file is the **durable, crash-recoverable source** of the `/goal` condition; the marker's
   `goal` field below is only the fast-read copy (spec A.5 — see step 3 crash recovery).
 - **Write the marker with the Write tool** (clean JSON — NOT a `cat >` heredoc) to
-  `<repo>/.claude/dev-harness/managed/${CLAUDE_SESSION_ID}.json` (the **11-field form**):
+  `<repo>/.claude/dev-harness/managed/${CLAUDE_SESSION_ID}.json` (the **11-field form**, plus optional `slots`):
   `{"role": "<solo|lead>", "goal": "...", "goal_id": "<from above>", "mode": "<lean|general>", "arm_sha": "<from below>", "armed_ts": <from below>, "roadmap_path": "...", "notebook_path": "...", "jsonl_path": "<from above>", "repo": "<basename of repo root>", "question_guard": true}`.
   (`role` is descriptive-only; `goal_id` is the minted goal identity; `notebook_path` is the **INDEX**
   `<home>/LAB_NOTEBOOK_INDEX.md` scaffolded above; `question_guard` defaults `true` — the
@@ -117,6 +117,12 @@ composition discipline + acceptance criteria.
     a Lean goal, set `"mode": "lean"`, else `"general"`.** (No criteria to evaluate — you are composing
     the goal, so you already know; this single switch gates whether `repo_state_probe.py` and the
     re-injection surface Lean-specific state. **Default `general`** if ever unsure.)
+  - **`slots`** *(optional, worktree-venue goals only)*: the worktree slots this goal will own, e.g.
+    `"slots": [2]` (solo on wt2) or `"slots": [1, 2]` (fan-out). Drives the **slot-aware re-anchor** —
+    the probe + injected anchor surface the LIVE slot's tree (branch/HEAD/ahead/dirty) instead of main,
+    and keep it isolated to this goal. **Omit it** if the goal declares no slot up front — `/reset-slot N`
+    auto-stamps ownership the first time you reset a slot to prep it (exclusive per goal; `--force` to
+    reclaim a slot another goal's marker still owns). Absent/empty ⇒ main-only anchor (unchanged behavior).
   - **`arm_sha`** = `` !`R=$(uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" repo-root 2>/dev/null); test -n "$R" || R=$(git rev-parse --show-toplevel 2>/dev/null); echo "$(git -C "${R:-.}" rev-parse HEAD 2>/dev/null)"` `` — the exact "since-arm" origin for the live
     repo-state probe (rebase-safe). Uses the harness `repo_root()` resolver (the SAME one the hooks/other
     probes use) so it works from the workspace root too, then `git -C "$R"`; the outer `echo` keeps exit 0 so

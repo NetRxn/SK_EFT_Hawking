@@ -227,6 +227,16 @@ def _slot_num(x):
         return None
 
 
+def base_ref(repo):
+    """The base branch worktree slots are cut from and compared against — the PRIMARY worktree's
+    branch (slots are created via `checkout -B worktree-wtN <base>`). Resolves it instead of
+    hardcoding `main` so the slot-aware anchor also works when a repo's default branch differs (this
+    repo is `main`; a sibling deployment may not be). Fallback `main` (the harness default). Adversarial
+    review 2026-07-04 #1."""
+    b = _run(["git", "-C", str(repo), "symbolic-ref", "--short", "HEAD"], repo)
+    return b if b else "main"
+
+
 def slot_states(repo, marker):
     """Per-owned-slot live git state — the fix for the slot-blind probe (System-2 finding
     `harness-gap-post-compaction-repo-state-probe-slot-blind-in-multi-worktree-goal`). Reads the
@@ -237,8 +247,11 @@ def slot_states(repo, marker):
     when the goal owns none (⇒ caller degrades to main-only, today's behavior). Fail-open per slot:
     a missing/broken worktree yields exists=False and the rest proceed."""
     raw = marker.get("slots") if isinstance(marker, dict) else None
-    if not raw:
+    # A bad marker must degrade to main-only (fail-open), NOT confidently mis-parse: a bare string
+    # like "wt13" would iterate CHARACTERS -> [1,3], an isolation breach (adversarial review #3).
+    if not raw or not isinstance(raw, list):
         return []
+    base = base_ref(repo)
     out = []
     seen = set()
     for entry in raw:
@@ -252,7 +265,7 @@ def slot_states(repo, marker):
         if st["exists"]:
             st["branch"] = _run(["git", "-C", str(slot), "symbolic-ref", "--short", "HEAD"], repo)
             st["head"] = _run(["git", "-C", str(slot), "rev-parse", "--short=8", "HEAD"], repo)
-            cnt = _run(["git", "-C", str(slot), "rev-list", "--count", "main..HEAD"], repo)
+            cnt = _run(["git", "-C", str(slot), "rev-list", "--count", f"{base}..HEAD"], repo)
             try:
                 st["ahead"] = int(cnt) if cnt is not None else None
             except Exception:
@@ -267,10 +280,12 @@ def slot_states(repo, marker):
 
 
 def slot_delta(repo, n):
-    """The owned slot's OWN commit delta vs main — `git -C <slot> log --oneline main..HEAD`. This is
-    the re-anchor tree's real recent work, which the main-rooted delta structurally cannot see."""
+    """The owned slot's OWN commit delta vs the base branch — `git -C <slot> log --oneline
+    <base>..HEAD`. This is the re-anchor tree's real recent work, which the main-rooted delta
+    structurally cannot see."""
     slot = repo / ".claude" / "worktrees" / f"wt{n}"
-    return _run(["git", "-C", str(slot), "log", "--oneline", "main..HEAD"], repo) or ""
+    base = base_ref(repo)
+    return _run(["git", "-C", str(slot), "log", "--oneline", f"{base}..HEAD"], repo) or ""
 
 
 def load_snapshot(repo, goal_id):

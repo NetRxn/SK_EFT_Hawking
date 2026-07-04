@@ -1,8 +1,14 @@
 # GAP-A proposal: dynamic, goal-isolated slot-aware post-compaction re-anchor
 
-**Status:** APPROVED (`/debrief` 2026-07-04) — tracked build task; operator green-lit the "A items."
-Acceptance criteria: dynamic per-goal slot binding + cross-goal isolation. No hook, no gate, no
-auto-action; a signal/correctness fix on the existing post-compaction probe + SessionStart re-inject.
+**Status:** IMPLEMENTED (`/debrief` 2026-07-04, pending cache-refresh + commit) — operator green-lit
+the "A items" with the ownership model refined below. Acceptance criteria met: dynamic per-goal slot
+binding (marker `slots`) + cross-goal isolation + fresh git liveness. 140/140 harness tests pass
+(15 new in `tests/test_slot_aware.py`). Implementation detail + blast radius:
+[worktree-slot-aware-reanchor-IMPACT.md](worktree-slot-aware-reanchor-IMPACT.md). Files touched:
+`scripts/repo_state_probe.py` (slot_states + report section), plugin `harness_common.py`
+(`_live_slot_pointer` + `live_head_anchor(marker)`), plugin `reset_slot.py` (stamp + exclusive
+transfer + `--force` ownership guard), `goal-prompt` SKILL (schema), Live-Anchor spec §B.
+No hook, no gate, no auto-action; a signal/correctness fix on the probe + SessionStart re-inject.
 
 **Mechanizes** `harness-gap-post-compaction-repo-state-probe-slot-blind-in-multi-worktree-goal`
 (self-flagged by the loop in-transcript; recurred across goals `20260702T184323` and
