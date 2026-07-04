@@ -88,7 +88,9 @@ Every load-bearing external input is verified; nothing rests on a scout's unveri
 
 ## 4. Worktree pointers (what to pull, where to build) — verified 2026-07-04
 
-Base: **main @ `1e239b71`**. Slots: `SK_EFT_Hawking/.claude/worktrees/wt{1,2,3}/lean`, servers `mcp__lean-lsp-wt{1,2,3}__*`.
+Base: **main @ `5885890e`** (current HEAD). Slots: `SK_EFT_Hawking/.claude/worktrees/wt{1,2,3}/lean`, servers `mcp__lean-lsp-wt{1,2,3}__*`.
+
+> **⚠ CORRECTED 2026-07-04 (lead, goal `20260704T145819`): the wt1 PD substrate is ALREADY ON MAIN — the harvest is a NO-OP.** `git cherry -v main worktree-wt1` marks all 4 wt1 commits (`b537bcea bbb7fc0d 34648eb5 b3956505`) with `-` (patch-present on main); all 6 substrate files exist on main, are imported at `SKEFTHawking.lean:974` (in the build closure), and are kernel-pure (the 3 "sorry" hits in `PinPlusFloorCollapse.lean` are docstring text). main is **583 commits AHEAD** of wt1, so wt1 holds nothing unique. **E1's harvest brick is DONE.** wt1 is now effectively free — its 4 commits are non-ancestor by SHA, so `reset_slot 1` may refuse; leave it or `--force` (nothing to lose). This session: **wt2 → E3, wt3 → E5** (both reset to main + assigned; wt2's stale plugin-file cruft — byte-identical to main's committed `claude.ai` whitelist edit — was discarded).
 
 - **wt1 (`worktree-wt1` @ `b3956505`) — HOLDS USABLE SUBSTRATE FOR E1/E3. DO NOT RESET.** 4 unmerged commits (`b537bcea`, `bbb7fc0d`, `34648eb5`, `b3956505`) add **7 new Lean files (842 lines)** of relative-PD / PD-with-boundary machinery:
   - `SingularCSCVanishAbove.lean`, `SingularCSCVanishAboveGeom.lean` — compactly-supported cohomology top-degree vanishing `Hᵏ_c(W)`
@@ -117,7 +119,12 @@ Concurrency cap **≤2 concurrent `lean-worker` slots** (3+ ENFILE the file tabl
 3. Live repo state: `scripts/repo_state_probe.py` (sorry/commit); counts via `update_counts.py` (never `rm …hash`).
 4. Build MCP-first (lean_goal → lean_multi_attempt → write → repeat); commit GREEN kernel-pure increments every ~5–6 bricks; **never push**.
 
-**State as of 2026-07-04 (main @ `1e239b71`):** planning + infrastructure **committed** (ADR-007 kernel no-go ledger `9cbbe67d`; atlas both-fronts harness wiring `1e239b71`); **no Option-A Lean written yet.** The disclosed-form L3 predecessor is archived at `_archive/` (its verified-blueprint history distributed into E2/E3). E1 first brick = harvest the wt1 PD substrate; E5 startable immediately in parallel. Gate-level checkoffs = the roadmap's Status checklist.
+**State as of 2026-07-04 (main @ `c2504c89`, goal `20260704T145819`):** planning + infrastructure committed. **CORRECTED — substantial genuine-carrier Lean is ALREADY on main** (the notebooks' "no Lean written yet" was stale):
+- **E1 PD substrate:** on main (wt1 harvest = no-op — see §4 banner).
+- **E4 mod-8 layer DONE:** `pinPlusGMData` (genuine GM carrier), `abkGM8 : … →+ ZMod 8` + `abkGM8_surjective` + `dataBordismGM_quotient_abk8_equiv_zmod8` (`PinPlusGMData.lean`); the ℝP⁴ GM witness `abkGM8_rp4 = 1` + the full tied-carrier ℤ/16 Smith-LES route (`PinPlusGMWitness.lean`).
+- **E5 FINITE side DONE, kernel-pure:** `col4_height_eq_four` (axioms `[]`) / `adamsAbutmentEquivZMod16` (hypothesis-free) give the ℤ/16 *order* from the decidable Ext-cokernel height; the col3/col5 differential-vanishing side-conditions (brick `c2504c89`, `axioms:[]`) are merged.
+- **THE ONE OPEN NODE = the genuine geometric-faithfulness identification** — that the finite Adams abutment IS the genuine smooth `DataBordismGrp` bordism group. It is carried honestly as the disclosed `pin4_abutment` (`PinPlusDischarge.lean:67`, adversarial-flagged: the Pontryagin–Thom bridge is still disclosed, inhabited only on the *posited* `Omega4PinPlusBordism`) ≙ `smith_inflow_z16` on the GM carrier, to be **DERIVED** via the E2/E3 Smith-LES geometry + E5 spectral, NOT assumed.
+- **The genuine target `omega4PinPlusGM_equiv_zmod16` on `pinPlusGMData` does NOT exist yet** (gated on that discharge). Disclosed-form L3 predecessor archived at `_archive/`. Gate-level checkoffs = the roadmap's Status checklist.
 
 ## 7. Substrate-understanding hook — the Derived Proof Atlas (ADR-005, LIVE) — the compaction-survival layer
 
