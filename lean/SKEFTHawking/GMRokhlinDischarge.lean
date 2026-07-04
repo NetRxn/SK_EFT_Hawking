@@ -101,4 +101,37 @@ def SpinCharSurfaceData.toSmoothSpinManifold4 (D : SpinCharSurfaceData) : Smooth
 theorem SpinCharSurfaceData.rokhlin (D : SpinCharSurfaceData) : 16 ∣ latticeSig D.form :=
   D.toSmoothSpinManifold4.rokhlin
 
+/-! ## The mod-16 characteristic-square refinement (integrating `AlgebraicRokhlin`)
+
+`AlgebraicRokhlin` carries the mod-8 van der Blij identity `CharacteristicSquareModEight M σ`
+(`selfPairing M c ≡ σ mod 8` for characteristic `c`) — the algebraic base [L1]. The Guillou–Marin /
+Freedman–Kirby congruence refines it one level: it pins `σ − c²` mod 16 to the GEOMETRIC Brown invariant of
+the surface representing `c`, with `c² = selfPairing M c = F·F`. This grounds the GM datum's `F·F` in the
+actual intersection lattice's characteristic-vector structure (not a free field). -/
+
+/-- **The mod-16 characteristic-square refinement** — the GM/Freedman–Kirby upgrade of
+`CharacteristicSquareModEight`. For a characteristic vector `c` (with `c² = selfPairing M c = F·F`)
+represented by a surface with `ℤ/4`-quadratic enhancement `Q`: `(c² : ZMod 16) = σ − 2·β(Q)`, i.e. the GM
+congruence `σ − F·F ≡ 2·β(Q) (mod 16)`. The content beyond the mod-8 identity is the geometric Brown
+invariant `β(Q)` (not lattice-computable — `RokhlinArfNoGo`). -/
+def CharacteristicSquareModSixteen {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (σ : ℤ)
+    {ι : Type*} [Fintype ι] [DecidableEq ι] (Q : Z4Quadratic ι) (c : Fin n → ℤ) : Prop :=
+  ((selfPairing M c : ℤ) : ZMod 16) = (σ : ZMod 16) - doubleBrown Q
+
+/-- **The mod-16 refinement ⟹ Rokhlin, spin case** — the `serre_even_unimodular_mod8` analog one level up.
+At the spin datum (the zero characteristic vector `0`, which `zero_is_characteristic_of_even` gives for an
+even form, and `β(Q) = 0`), the mod-16 characteristic-square identity forces `16 ∣ σ`. The algebraic
+skeleton of Rokhlin's theorem in the project's characteristic-vector idiom; the geometric input is isolated
+entirely in `h16`. -/
+theorem sixteen_dvd_of_charSq16_spin {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (σ : ℤ)
+    {ι : Type*} [Fintype ι] [DecidableEq ι] {Q : Z4Quadratic ι}
+    (h16 : CharacteristicSquareModSixteen M σ Q (fun _ => 0)) (hQ : Q.brown = 0) :
+    16 ∣ σ := by
+  have hsp : selfPairing M (fun _ => 0) = 0 := by simp [selfPairing]
+  rw [CharacteristicSquareModSixteen, hsp, doubleBrown, hQ] at h16
+  have hz : (σ : ZMod 16) = 0 := by
+    have := h16.symm
+    simpa using this
+  exact (ZMod.intCast_zmod_eq_zero_iff_dvd σ 16).mp hz
+
 end SKEFTHawking.GMRokhlin
