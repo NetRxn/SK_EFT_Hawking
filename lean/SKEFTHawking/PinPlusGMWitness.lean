@@ -314,4 +314,34 @@ theorem g8_zmultiples_ker (n : ℤ) :
   rw [zmultiplesHom_apply, ← addOrderOf_dvd_iff_zsmul_eq_zero, addOrderOf_g8]
   norm_num
 
+/-! ### The cylinder null-bordism: `2•(any class) = an empty class` (`s⊔s` bounds `s×[0,1]`) -/
+
+/-- An empty-manifold structure of any **even** grade `m` (`q` chosen so `hcoh` holds; `htie` needs `m` even). -/
+noncomputable def emptyGMTiedStr (m : ZMod 16) (h : reduce16to2 m = 0) :
+    (pinPlusGMTiedData (k := 0) (𝓡 4)).Mfd emptySM where
+  t2 := ⟨fun x => x.elim⟩
+  cert := pinPlusCertK_empty
+  rank := (brown_stdQuadratic_surjective (reduce16to8 m)).choose
+  q := stdQuadratic (brown_stdQuadratic_surjective (reduce16to8 m)).choose
+  grade16 := m
+  hcoh := (brown_stdQuadratic_surjective (reduce16to8 m)).choose_spec.symm
+  htie := by rw [swTotalNe_of_isEmpty]; exact h
+
+/-- **The cylinder null-bordism** (`s×[0,1]` has `∂ = s⊔s`, so `s⊔s ~ ∅`): since `Bor` checks only the grade,
+`2•[s,str] = [emptySM, 2·grade]` for EVERY structured manifold. So `2•(carrier)` lands in the empty subgroup. -/
+theorem two_nsmul_mk (s : SingularManifold PUnit 0 (𝓡 4))
+    (str : (pinPlusGMTiedData (k := 0) (𝓡 4)).Mfd s) :
+    2 • DataBordismGrp.mk (pinPlusGMTiedData (k := 0) (𝓡 4)) ⟨s, str⟩
+      = DataBordismGrp.mk _ ⟨emptySM, emptyGMTiedStr (2 * str.grade16)
+          (by rw [map_mul, show (reduce16to2 2 : ZMod 2) = 0 from by decide, zero_mul])⟩ := by
+  rw [two_nsmul]
+  rw [show DataBordismGrp.mk (pinPlusGMTiedData (k := 0) (𝓡 4)) ⟨s, str⟩
+        + DataBordismGrp.mk (pinPlusGMTiedData (k := 0) (𝓡 4)) ⟨s, str⟩
+      = DataBordismGrp.add _ (DataBordismGrp.mk _ ⟨s, str⟩) (DataBordismGrp.mk _ ⟨s, str⟩) from rfl,
+    DataBordismGrp.add_mk]
+  apply DataBordismGrp.mk_eq_of_bordant
+  refine ⟨doublingBordism s, ⟨PLift.up ?_⟩⟩
+  show str.grade16 + str.grade16 = 2 * str.grade16
+  ring
+
 end SKEFTHawking.PinPlusGMWitness
