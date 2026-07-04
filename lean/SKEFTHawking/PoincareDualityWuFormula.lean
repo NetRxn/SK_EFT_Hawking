@@ -193,4 +193,20 @@ theorem wuW4_eq_zero_of_pinPlus_grade0 (P : PoincareDual4Mid X) (P₁₃ : Poinc
     (hw2 : wuW2 P P₁₃ = 0) (hw1 : cupSquare2ₗ (cupSquareₗ (wuClass1 P₁₃)) = 0) : wuW4 P = 0 := by
   rw [wuW4_eq_v1_fourth P P₁₃ hw2, hw1]
 
+/-- **Every degree-4 Stiefel–Whitney number of a grade-`0` Pin⁺ 4-manifold vanishes** — the exact
+hypothesis the (unoriented) Thom detection theorem consumes. Evaluated on the fundamental class `μ`:
+the top number `⟨w₄,[M]⟩ = 0` by the Wu collapse (`wuW4_eq_zero_of_pinPlus_grade0`), and every
+`w₂`-involving number (`⟨w₂²,[M]⟩`, `⟨w₁²w₂,[M]⟩`) is `0` because `w₂ = 0`. Since on a Pin⁺ 4-manifold
+these three are the only SW numbers (`w₁⁴ = ⟨w₄,[M]⟩` by Wu, so it is not independent), this is the FULL
+SW-number vanishing. The one remaining node is now precisely the Thom converse: SW numbers `0 ⟹ [M]` bounds. -/
+theorem swNumbers_vanish_of_pinPlus_grade0 (P : PoincareDual4Mid X) (P₁₃ : PoincareDual4Lo X)
+    (hw2 : wuW2 P P₁₃ = 0) (hw1 : cupSquare2ₗ (cupSquareₗ (wuClass1 P₁₃)) = 0) :
+    P.mu (wuW4 P) = 0 ∧
+    P.mu (cupH24 (wuW2 P P₁₃) (wuW2 P P₁₃)) = 0 ∧
+    P.mu (cupH24 (cupSquareₗ (wuClass1 P₁₃)) (wuW2 P P₁₃)) = 0 := by
+  refine ⟨?_, ?_, ?_⟩
+  · rw [wuW4_eq_zero_of_pinPlus_grade0 P P₁₃ hw2 hw1, map_zero]
+  · rw [hw2, map_zero, map_zero]
+  · rw [hw2, map_zero, map_zero]
+
 end SKEFTHawking.PoincareDualityWuFormula
