@@ -109,4 +109,28 @@ lemma brown_eq_four_mul_arf (Q : Z4Quadratic ι) (hE : IsEven Q) :
   revert c
   decide
 
+/-- The orthogonal sum of even forms is even (the enhancement of `Σ₁ ⊔ Σ₂`). -/
+lemma IsEven.orthSum {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂]
+    {Q₁ : Z4Quadratic ι₁} {Q₂ : Z4Quadratic ι₂} (hE₁ : IsEven Q₁) (hE₂ : IsEven Q₂) :
+    IsEven (orthSum Q₁ Q₂) := by
+  intro x
+  obtain ⟨b₁, h₁⟩ := hE₁ (fun i => x (Sum.inl i))
+  obtain ⟨b₂, h₂⟩ := hE₂ (fun i => x (Sum.inr i))
+  exact ⟨b₁ + b₂, by show Q₁.q _ + Q₂.q _ = _; rw [h₁, h₂, embed2_add]⟩
+
+/-- **`arf` is additive under orthogonal sum** — the ℤ/2 Arf of `Σ₁ ⊔ Σ₂` is `arf Σ₁ + arf Σ₂` (the
+Guillou–Marin Arf's disjoint-union additivity, the shadow of `brown_orthSum` through `brown = 4·arf`). -/
+lemma arf_orthSum {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂]
+    {Q₁ : Z4Quadratic ι₁} {Q₂ : Z4Quadratic ι₂} (hE₁ : IsEven Q₁) (hE₂ : IsEven Q₂) :
+    arf (orthSum Q₁ Q₂) = arf Q₁ + arf Q₂ := by
+  unfold arf
+  rw [brown_orthSum]
+  have h₁ := brown_even_two_torsion Q₁ hE₁
+  have h₂ := brown_even_two_torsion Q₂ hE₂
+  revert h₁ h₂
+  generalize brown Q₁ = c₁
+  generalize brown Q₂ = c₂
+  revert c₁ c₂
+  decide
+
 end SKEFTHawking.Brown.Z4Quadratic
