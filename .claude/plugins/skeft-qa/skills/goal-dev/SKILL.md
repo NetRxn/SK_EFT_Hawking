@@ -39,14 +39,33 @@ decompose into `have` sub-lemmas (≤ 12-term targets).
 
 ## Incremental-commit discipline
 
-Commit a **GREEN kernel-pure increment** every ~5–6 bricks (each: zero sorry, `lean_verify` clean, `lake build`
-clean) — small batches of finished bricks, never one giant commit — updating the lab notebook each brick; the
+**Maximize per-turn throughput.** Land the maximum coherent GREEN progress each turn — as many bricks as you
+can finish cleanly, not one; don't artificially atomize (fewer, bigger turns amortize per-turn overhead and
+reach auto-compaction slower). The commit cadence below is an **orthogonal safety checkpoint** (rollback +
+notebook durability), **not a per-turn cap**.
+
+Commit a **GREEN kernel-pure increment** every ~5–10 bricks (each: zero sorry, `lean_verify` clean, `lake build`
+clean) — batches of finished bricks, never one giant commit — updating the lab notebook each brick; the
 notebook is the **compaction-durable source-of-truth**.
 **Never push** (user action). The notebook is a two-layer system (a bounded always-loaded INDEX +
 chronological shards); maintain it with the **`/skeft-qa:notebook`** command — `sync` each brick, `shard`
 at the checkpoint to keep the active shard under the ~25k-token Read guard automatically. Each brick is its
 own `### ` heading; settled forks / kernel-checked no-gos go in the INDEX's append-only DECISIONS block.
+**Encode-on-settle (ADR-007 N-E, Invariant #17):** a *kernel-CHECKABLE* no-go additionally lands a backing
+refutation/forcing theorem + a `KERNEL_NOGO_REGISTRY` entry (`src/core/constants.py`) in the settling turn —
+NOT a prose line alone (prose-only recording of a kernel-encodable fork is itself a `nogo_substrate_integrity`
+finding). Policy / route / preference bans stay prose in `SETTLED_FORKS.md` (not kernel-encodable).
 Full model + per-brick discipline: `references/lab-notebook.md` (the lead curates; workers report up).
+
+## Consult the atlas — BOTH fronts (`/skeft-qa:frontier`)
+
+The atlas (`lean/atlas_view.json`, derived — cannot drift) is the machine-truth of the substrate, both signs:
+- **Positive frontier** (ADR-005 D-I) — the ranked OPEN assumptions; consult it to **aim fan-out** at the
+  highest-impact provable work (the KEYSTONE) instead of roadmap-opaque selection.
+- **Negative frontier** (ADR-007 N-D) — the ranked **settled-dead forks** (kernel-checked, with their
+  `false_statement`); consult it to **steer AWAY** from provably-false paths. Both are re-injected in the
+  SessionStart digest and available on demand via `/skeft-qa:frontier`; the two binding project no-gos are
+  `lattice_arf_bridge_refuted` + `dataBordism_two_torsion_of_revStr_trivial`.
 
 ## Solo vs. fan-out
 
@@ -58,7 +77,11 @@ out **only when the DAG has genuinely branched** into independent sub-chains. To
    Claude Code heuristic, not a dev-harness hook). `/reset-slot` refuses if the slot holds unmerged commits,
    so nothing is lost.
 2. `Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=…, use mcp__lean-lsp-wtN__*, <one independent
-   brick + Lit-Search refs + acceptance>")` — up to 3 concurrent.
+   sub-chain/BLOCK — as large as is coherently independent — + Lit-Search refs + acceptance + any relevant
+   kernel no-go from the NEGATIVE frontier the worker must not re-derive>")` — up to 3 concurrent. Hand
+   workers **as-large-as-coherent blocks**, not atomic bricks (bigger blocks = fewer dispatch/merge/reread
+   cycles + higher per-worker throughput). A fresh worker is the highest-risk re-deriver — **name the
+   dead-forks in its brief.**
 3. Merge each `worktree-wtN` into `main`; re-run the full gate; `/reset-slot N` again for the next brick.
 
 Full flow, why the slots are persistent, and the maintainer caveat: `references/parallel-worktrees.md`.

@@ -38,6 +38,33 @@ one per slot; **only ever touch your own slot.**
   `RingQuot` types use `erw` when `rw` "did not find pattern".
 - Read the relevant `Lit-Search/Phase-*/` deep-research file **directly** before a proof that cites it.
 
+## Work your whole block — maximize GREEN progress per turn (the atlas is your map)
+Your assignment is often a **large sub-chain** (a sub-DAG), not one lemma. **Prove as much of it as you can
+cleanly** — GREEN, kernel-pure, `lean_verify`-clean — per turn, committing GREEN increments as you go:
+finishing a big coherent chunk beats stopping after one brick (fewer, bigger turns amortize per-turn overhead). Use the atlas as your block's map
+(`<repo>/lean/atlas_view.json` or `/skeft-qa:frontier`, read-only — the lead selects *which* block; you work
+it well):
+- **PROVED nodes** = existing assets — **reuse, never re-prove** (with `lean_local_search`; the "search
+  before build" lesson).
+- any of your sub-goals that are **open frontier** nodes → do the **highest-`frontier_impact`** ones first
+  (they unblock the most of the rest of your block).
+- the **negative frontier** (below) = the dead-forks to route around.
+
+## ⛔ Settled-dead paths — do NOT re-derive (the negative frontier, ADR-007)
+A fresh worker with no shared conversation state is the project's **highest-risk re-deriver** of a
+provably-false path (the compaction-boundary goldfish-reseed). Your brief from the lead names any
+**kernel-checked no-go** relevant to this brick (from the atlas *negative frontier* +
+`docs/dev-loops/SETTLED_FORKS.md` + `KERNEL_NOGO_REGISTRY` in `src/core/constants.py`). So:
+- If your approach starts to **reproduce a listed no-go** — or the goal turns out unprovable *because* it
+  IS one — **STOP and report to the lead.** Do NOT reframe it as a "breakthrough / whnf-dodge" and grind
+  (that framing is itself the re-seed tell).
+- If you **discover a NEW kernel-checkable no-go** (a refutation / structural-forcing theorem that kills a
+  path), report it to the lead **with the theorem** — it gets encoded in `KERNEL_NOGO_REGISTRY`
+  (encode-on-settle, Invariant #17), never left as prose. The lead files it; you keep proving your brick.
+- Two binding project no-gos — **never re-attempt**: `lattice_arf_bridge_refuted` (Rokhlin mod-16 is NOT a
+  lattice Arf — it is irreducibly geometric) and `dataBordism_two_torsion_of_revStr_trivial` (a *free*-grade
+  `ker = ⊥` / order-16 is impossible; only a structure-TIED grade works).
+
 ## ⛔ Safety — when something fails, STOP and report (never flail)
 You operate on a SHARED git object store and shared build caches. If a `git commit`, `git add`, or build
 step fails, **STOP immediately and report the verbatim error to the lead.** You are FORBIDDEN from:

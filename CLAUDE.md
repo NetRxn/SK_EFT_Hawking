@@ -245,6 +245,18 @@ PRE_DECISIONS.md + (when the harvest has authored one) a per-goal **coaching blo
 forward-framed re-orientation that replaced the old blind active-issues injection. Consult the register
 periodically; read tier-weighted (`human-reviewed > agent-reviewed > automatic`).
 
+**The derived proof atlas — the substrate map, BOTH fronts (ADR-005 + ADR-007).** Distinct from the
+process registers above: the atlas (`lean/atlas_view.json`, derived from `lean_deps.json` — **cannot
+drift**) is the machine-truth of the *proof landscape*, surfaced via **`/skeft-qa:frontier`** and the
+SessionStart digest. The **positive frontier** ranks the OPEN assumptions by how much each gates (aim
+fan-out at the KEYSTONE — ADR-005 D-I); the **negative frontier** ranks the kernel-checked **settled-dead
+forks** with their `false_statement` (steer away — the antidote to the goldfish-reseed; ADR-007 N-D). A
+*provably-false* no-go is **machine-enforced**: it lives in `KERNEL_NOGO_REGISTRY` (`src/core/constants.py`)
+backed by a kernel-pure refutation theorem (`validate.py --check nogo_substrate_integrity`, Invariant #17),
+so a fresh-context worker/session gets it as a self-enforcing blocker, not a prose hope. **Encode-on-settle:**
+a newly-discovered kernel-checkable no-go lands its theorem + registry entry in the settling turn. Policy /
+route / preference bans (not kernel-encodable) stay prose in `docs/dev-loops/SETTLED_FORKS.md`.
+
 This is a **separate store** from the **System-1** paper-correctness QI register
 [docs/QI_REGISTER.md](docs/QI_REGISTER.md) (the Stage-14 paper-production process tracker:
 open/closed process-level items + best-practices / anti-patterns). **System-1 = paper-production

@@ -41,6 +41,15 @@ tracked Prop actually unlock the load-bearing residual — the bank-or-grind che
 invoked mid-stall is exactly when that temptation is highest; it is the same trap as trusting a
 mid-stall discharge plan.
 
+## Settled-dead re-derivation check (run FIRST — the highest-value catch)
+A fresh-context loop's stall is most often the **goldfish-reseed**: grinding a **kernel-checked no-go**
+reframed as a "breakthrough / whnf-dodge." Before bank-or-grind, check the atlas **negative frontier**
+(`<repo>/lean/atlas_view.json` `obstructions`, or `/skeft-qa:frontier`) + `docs/dev-loops/SETTLED_FORKS.md`:
+if the stuck approach matches a registered dead-fork's `false_statement`, the resolution is **not**
+bank-or-grind — it is **STOP the path (it is provably FALSE) and pivot to the alternative the fork names**
+(e.g. a *free*-grade `ker=⊥` → the structure-TIED GM carrier; a lattice-Arf mod-16 → the geometric
+characteristic-surface route). Say so in one line and point the loop there.
+
 ## The bank-or-grind check (PD-2 — mechanical; the one place to be confident mid-stall)
 If the question is *"should I bank assumption `P` (track it as an open hypothesis) to get past this?"* —
 banking takes on a **liability** (a disclosed Prop leaned on *without* proof), so it earns its place

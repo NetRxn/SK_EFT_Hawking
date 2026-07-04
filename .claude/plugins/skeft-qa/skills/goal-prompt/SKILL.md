@@ -17,8 +17,10 @@ allowed-tools: Bash(git rev-parse *), Bash(ls *), Bash(test *), Bash(date *), Ba
 ## Always-on goal-mode posture (this core re-attaches after every compaction)
 You are running a **managed native `/goal` dev loop**. Native `/goal` IS the loop; this
 skill carries the posture and (at launch) arms it. Hold this posture every turn:
-- **Scope is SETTLED. Do the next increment of real work THIS turn.** A stop-hook firing
-  is a **GO signal**, never a cue to stop, hold, hand back, or re-scope.
+- **Scope is SETTLED. Land the MAXIMUM coherent increment of real work THIS turn** — as much as you
+  can finish cleanly; do NOT atomize into one tiny brick (fragmenting into many tiny turns multiplies
+  stop→evaluate→restart cycles and reaches the next auto-compaction sooner, and breaks the reasoning
+  train). A stop-hook firing is a **GO signal**, never a cue to stop, hold, hand back, or re-scope.
 - **You are managed; the source-of-truth = the tracked roadmap + lab notebook** (paths in
   the marker / the `/goal` condition). Do not re-pollute them with escape-bait
   ("person-year / precluded / no foothold / wall / multi-day, next session").
@@ -36,11 +38,13 @@ Native `/goal` is the loop; this skill (1) registers the session and (2) compose
 condition. Do BOTH, concretely. Read `references/goal-prompt-authoring.md` first for the
 composition discipline + acceptance criteria.
 
-> **The one rule that matters most when composing the condition:** it is re-stated to the model
-> **every turn** by native `/goal` — so it must hold **DURABLE content only** (success criteria,
-> settled locks/non-negotiables, source-of-truth paths). **NEVER** bake in mutable tactical state
-> (current sorry line, "close-path engines: X/Y/Z", the "live"/"breakthrough" lemma, commit SHAs,
-> "next brick") — it goes stale and re-seeds whatever route it names, every turn. Mutable state is
+> **The one rule that matters most when composing the condition:** it is re-injected in full to the model
+> on **every post-compaction re-anchor** (our SessionStart mechanism — native `/goal` itself only feeds the
+> *evaluator's* reason back each turn, not the full condition) AND read by the `/goal` **evaluator** every
+> turn for its DONE judgment — so it must hold **DURABLE content only** (success criteria, settled
+> locks/non-negotiables, source-of-truth paths). **NEVER** bake in mutable tactical state (current sorry
+> line, "close-path engines: X/Y/Z", the "live"/"breakthrough" lemma, commit SHAs, "next brick") — it goes
+> stale and re-seeds whatever route it names on the next re-anchor. Mutable state is
 > the **live probe**'s job (`scripts/repo_state_probe.py`, run as FIRST_ACTION) + `SETTLED_FORKS.md`
 > + the notebook FRONTIER. Per-line test: *"true in 30 turns?"*
 
@@ -132,8 +136,9 @@ composition discipline + acceptance criteria.
 
 ### 2. Compose the /goal condition (≤ 4,000 chars; transcript-evaluable only — goal.md)
 Per `references/goal-prompt-authoring.md`, produce a condition that: (a) is **self-describing** (names the
-roadmap + notebook paths); (b) states the **posture** — "scope settled; build the next brick; a stop-hook firing
-is a GO signal, never a cue to stop/hold/re-scope; legitimate stops = a kernel-checked no-go or a genuine user
+roadmap + notebook paths); (b) states the **posture** — "scope settled; land the maximum coherent GREEN increment
+each turn (don't atomize); a stop-hook firing is a GO signal, never a cue to stop/hold/re-scope; never re-derive a
+settled-dead fork (negative frontier / SETTLED_FORKS); legitimate stops = a kernel-checked no-go or a genuine user
 decision"; (c) has **one measurable end state with a transcript-visible check** ("validate.py prints N/N in the
 transcript"); (d) **requires the fresh-context review (GAP-B)** — "not complete until the
 `skeft-qa:adversarial-reviewer` (and `claims-reviewer` for paper work) ran in a fresh context with **zero BLOCKER
@@ -161,14 +166,21 @@ Facilitate the one-time System-2 harvest host (spec 6.3). After writing the mark
 - **Host-permission note:** the unattended host must run with the harvest skill's `allowed-tools` Bash patterns
   permitted, or `system2_register.py --upsert` auto-denies and the harvest writes nothing.
 
-**Emit the atlas critical-path map (so the user can re-scope BEFORE arming).** Print the derived-atlas
-critical-path map — the **KEYSTONE** (the single most-gating open node), the per-area track rollup, and
-the most-gating open assumptions — so the goal's structure (e.g. "one keystone open while N other areas
-sit available") is visible before `/goal` is run:
-`cd "<repo>" && uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" atlas-frontier 12`.
+**Emit the atlas critical-path map — BOTH fronts (so the user can re-scope BEFORE arming).** Print the
+derived-atlas critical-path map — the **KEYSTONE** (the single most-gating open node), the per-area track
+rollup, and the most-gating open assumptions — AND the **negative frontier** (the ranked kernel-checked
+settled-dead forks the goal must NOT re-derive), so the goal's structure (e.g. "one keystone open while N
+other areas sit available, and these dead-forks are fenced off") is visible before `/goal` is run:
+`cd "<repo>" && uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" atlas-frontier 12`
+`&& uv run --no-sync python "${CLAUDE_PLUGIN_ROOT}/scripts/harness_common_cli.py" atlas-antifrontier 8`.
+**Plan-currency check (past-run lesson).** Before arming, confirm the `roadmap_path` + notebook INDEX the
+condition points at are **current** — not a stale framing the plan has since outgrown. A goal armed on an
+unvalidated/stale plan **thrashes turn-1** (the loop's first turn discovers the plan is wrong — a real
+failure mode); the atlas KEYSTONE above is the fast cross-check that the plan's stated apex matches the
+graph's most-gating node. If they disagree, fix the plan before arming, not in the loop.
 **Node-count reference-class ONLY** — never a calendar / person-year estimate (honors the
-ignore-PM-estimates rule). Empty if the atlas is unbuilt → skip silently. This same CLI is the
-**on-demand `/orient`** view: re-run it any time mid-loop to re-anchor on the critical path.
+ignore-PM-estimates rule). Empty if the atlas is unbuilt → skip silently. This same pair is the
+**on-demand `/skeft-qa:frontier`** view: re-run it any time mid-loop to re-anchor on both fronts.
 
 Then print the composed condition in a fenced block + one line: "run `/goal <condition>`" (the assistant cannot set
 `/goal` itself). Confirm both the per-goal prompt file path and the marker path written.

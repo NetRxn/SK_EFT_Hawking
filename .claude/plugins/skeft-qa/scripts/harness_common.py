@@ -348,6 +348,53 @@ def format_atlas_frontier(root, max_items=8):
     return "\n".join(lines)
 
 
+def antifrontier_from_atlas(root, max_items=6):
+    """Read the DERIVED atlas NEGATIVE frontier (`<repo>/lean/atlas_view.json` ``obstructions``,
+    ADR-007 N-D) — the settled-dead paths the swarm must be steered AWAY from; the exact mirror of
+    :func:`frontier_from_atlas`. Returns ``{"obstructions": [top REGISTERED], "unregistered": N,
+    "total": M}`` or ``None`` if the atlas is absent/unreadable. FAIL-SOFT by design. Read-only.
+    Surfaces only the REGISTERED (``KERNEL_NOGO_REGISTRY``-linked: fork_id + false_statement) dead-forks
+    — the curated, integrity-gated no-gos — NOT the naming-only OBSTRUCTION nodes (proved no-go
+    *theorems* / helpers in ``*NoGo*`` modules — advisory, per ADR-007 N-B)."""
+    if root is None:
+        return None
+    try:
+        atlas = json.loads((root / "lean" / "atlas_view.json").read_text())
+    except Exception:
+        return None
+    obs = atlas.get("obstructions", []) or []
+    reg = [o for o in obs if o.get("registered")]
+    return {
+        "obstructions": reg[: max(0, int(max_items))],
+        "unregistered": sum(1 for o in obs if not o.get("registered")),
+        "total": len(obs),
+    }
+
+
+def format_atlas_antifrontier(root, max_items=6):
+    """Bounded plain-text digest of :func:`antifrontier_from_atlas` — the swarm's "dead paths + why"
+    compass, so fan-out is steered AWAY from settled-dead FORKS by machine data (ADR-007 N-D), not a
+    prose count. FAIL-SOFT -> ``''`` (callers ``if s: ...``). ASCII-only (it rides the SessionStart
+    payload). Antidote to the compaction-boundary goldfish-reseed (the 5q.F route-thrash spiral)."""
+    data = antifrontier_from_atlas(root, max_items)
+    if not data:
+        return ""
+    reg = data.get("obstructions", [])
+    if not reg and not data.get("unregistered"):
+        return ""
+    lines = ["NEGATIVE frontier (settled-dead, kernel-checked - do NOT re-derive; `/skeft-qa:frontier` "
+             "+ SETTLED_FORKS.md for the full register):"]
+    for o in reg:
+        fs = (o.get("false_statement") or "").strip().replace("\n", " ")
+        if len(fs) > 170:
+            fs = fs[:167] + "..."
+        lines.append("  x %s [%s] - %s" % (o.get("fork_id", "?"), o.get("nogo_kind", "?"), fs))
+    if data.get("unregistered"):
+        lines.append("  (+%d naming-only OBSTRUCTION theorems, advisory; %d total)" % (
+            data["unregistered"], data.get("total", 0)))
+    return "\n".join(lines)
+
+
 def _read_predecisions_core(root):
     """The pre-decisions CORE — the `## Core` section of the tracked docs/dev-loops/PRE_DECISIONS.md.
     NO LONGER injected into the payload (the Core is now a MANDATORY READ — see FIRST_ACTION — so it
@@ -391,8 +438,11 @@ FIRST_ACTION = (
     "goal also run `lean_diagnostic_messages` on the active file for the authoritative live sorry. "
     "(2) READ docs/dev-loops/PRE_DECISIONS.md (standing pre-decisions — not injected; this read loads "
     "them) and docs/dev-loops/SETTLED_FORKS.md BEFORE any 'impossible / needs-a-banned-route' reasoning "
-    "(grep the register FIRST; record any NEW dead-end/fork/crux-map/tactic to it, the notebook, or "
-    "project memory — the summary won't preserve what isn't written). "
+    "(grep the register FIRST; the ATLAS NEGATIVE FRONTIER digest above / `/skeft-qa:frontier` is the "
+    "MACHINE-fed kernel-no-go complement — consult BOTH: the atlas negative frontier for provably-false "
+    "forks, SETTLED_FORKS for the policy/route bans; record any NEW dead-end/fork/crux-map/tactic to the "
+    "register — and a kernel-CHECKABLE no-go additionally to KERNEL_NOGO_REGISTRY, Inv #17 — the notebook, "
+    "or project memory; the summary won't preserve what isn't written). "
     "(3) Invoke /skeft-qa:goal-dev (and lean4 for a Lean goal). Then resume the next increment."
 )
 
@@ -598,6 +648,15 @@ def build_reorientation_payload(marker, repo_root):
     if atlas_fr:
         block = ("ATLAS FRONTIER (derived; most-gating OPEN assumptions across the project — consult to "
                  "aim fan-out, `/skeft-qa:frontier` for the full ranked list):\n" + atlas_fr)
+        if len("\n\n".join(parts + [block])) < PAYLOAD_MAX_CHARS:
+            parts.append(block)
+    # ATLAS NEGATIVE FRONTIER (ADR-007 N-D) — the machine-fed settled-dead FORKS to steer AWAY from, the
+    # mirror of the positive frontier above. The antidote to the compaction-boundary goldfish-reseed (a
+    # fresh worker re-deriving a kernel-checked dead path). Small + droppable; fail-soft -> '' (never a dep).
+    atlas_afr = format_atlas_antifrontier(repo_root)
+    if atlas_afr:
+        block = ("ATLAS NEGATIVE FRONTIER (derived; kernel-checked dead-forks — do NOT re-derive):\n"
+                 + atlas_afr)
         if len("\n\n".join(parts + [block])) < PAYLOAD_MAX_CHARS:
             parts.append(block)
     # COACHING BLOCK — the OPTIONAL enhancement (see _read_coaching_block). Included whole only if the

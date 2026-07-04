@@ -17,12 +17,16 @@ Produce a tight **≤200-word** compass for the current dev loop. No preamble.
 2. Read the lab-notebook **INDEX** (the `*_INDEX.md` entry point = the marker's `notebook_path` —
    its FRONTIER block, deliverables checklist, and DECISIONS & DEAD-ENDS give the live state +
    settled forks in one read; open the active shard only if the FRONTIER is insufficient) and the
-   relevant section of `roadmap_path` (the settled scope + next planned brick).
+   relevant section of `roadmap_path` (the settled scope + next planned brick). Optionally glance the
+   machine-derived atlas **both fronts** (`/skeft-qa:frontier`): the KEYSTONE (positive) + the top
+   settled-dead fork (negative).
 
-3. Output exactly these four lines, each ≤ 1 sentence:
+3. Output exactly these five lines, each ≤ 1 sentence:
    - **Goal:** the marker's goal (the settled acceptance criteria).
    - **Done:** the last shipped brick (from the INDEX FRONTIER / last flipped CHECKLIST row).
    - **Next:** the single next brick to build now.
+   - **Avoid:** the nearest settled-dead fork if the next brick risks re-entering one (from the negative
+     frontier / DECISIONS); else `—`.
    - **Guardrails:** kernel-pure / invariants respected / scope is settled (no re-litigating).
 
 Keep it to a glance. This is a re-orientation aid, not a status report — do not

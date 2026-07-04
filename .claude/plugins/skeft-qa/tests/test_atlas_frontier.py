@@ -21,7 +21,14 @@ _ATLAS = {
         "external_boundary": {"open_count": 1, "total_impact": 5, "apex_count": 0, "node_ids": ["hyp:a"]},
         "headline": {"open_count": 1, "total_impact": 0, "apex_count": 1, "node_ids": ["hyp:b"]},
     },
-    "summary": {"apex_ids": ["hyp:b"]},
+    # NEGATIVE frontier (ADR-007 N-D): registered curated dead-forks first, then naming-only advisory.
+    "obstructions": [
+        {"id": "dead-fork-x", "frontier_impact": 3, "registered": True, "fork_id": "dead-fork-x",
+         "nogo_kind": "refutation", "false_statement": "Path X is false because Y."},
+        {"id": "SKEFTHawking.Foo.bar_nogo", "frontier_impact": 9, "registered": False, "fork_id": None,
+         "nogo_kind": "", "false_statement": ""},
+    ],
+    "summary": {"apex_ids": ["hyp:b"], "obstruction_nodes": 2, "registered_obstructions": 1},
 }
 
 
@@ -75,3 +82,33 @@ def test_payload_includes_atlas_frontier_when_present(tmp_path):
     # and degrades cleanly when the atlas is absent (no exception, section simply omitted)
     payload2 = hc.build_reorientation_payload(marker, tmp_path / "no_atlas")
     assert "ATLAS FRONTIER" not in payload2
+
+
+# ── NEGATIVE frontier (ADR-007 N-D) — the settled-dead complement ──────────────────────────────────
+
+def test_antifrontier_surfaces_registered_first(tmp_path):
+    d = hc.antifrontier_from_atlas(_repo_with_atlas(tmp_path), max_items=8)
+    assert d is not None
+    # only REGISTERED (curated) dead-forks are surfaced; naming-only OBSTRUCTION nodes are advisory
+    assert [o["id"] for o in d["obstructions"]] == ["dead-fork-x"]
+    assert d["unregistered"] == 1 and d["total"] == 2
+
+
+def test_format_antifrontier_digest(tmp_path):
+    s = hc.format_atlas_antifrontier(_repo_with_atlas(tmp_path))
+    assert "NEGATIVE frontier" in s
+    assert "dead-fork-x" in s and "[refutation]" in s and "Path X is false" in s
+    assert "naming-only" in s                          # the advisory unregistered count
+    assert s == s.encode("ascii", "strict").decode()   # ASCII-only (rides the payload)
+
+
+def test_antifrontier_failsoft(tmp_path):
+    assert hc.antifrontier_from_atlas(tmp_path) is None        # no atlas
+    assert hc.antifrontier_from_atlas(None) is None
+    assert hc.format_atlas_antifrontier(tmp_path) == ""        # digest degrades to ''
+
+
+def test_payload_includes_negative_frontier_when_present(tmp_path):
+    repo = _repo_with_atlas(tmp_path)
+    payload = hc.build_reorientation_payload({"goal": "prove X", "goal_id": "g1"}, repo)
+    assert "ATLAS NEGATIVE FRONTIER" in payload and "dead-fork-x" in payload
