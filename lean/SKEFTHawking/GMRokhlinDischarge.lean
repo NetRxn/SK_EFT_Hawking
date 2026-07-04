@@ -171,6 +171,25 @@ theorem gmrelation_orthSum {σ₁ F₁ σ₂ F₂ : ℤ} {ι₁ ι₂ : Type*}
   show ((σ₁ + σ₂ - (F₁ + F₂) : ℤ) : ZMod 16) = doubleBrown (Z4Quadratic.orthSum Q₁ Q₂)
   rw [doubleBrown_orthSum]; exact h
 
+/-- **Connect-sum with a spin summand preserves the full GM congruence class.** If `(M,F)` satisfies
+`GMrelation σ F Q` and `(M',F')` is spin (`GMrelation σ' 0 Q'` with `β(Q') = 0`), then the disjoint union
+`(M ⊔ M', F ⊔ F')` satisfies `GMrelation (σ + σ') F Q` — the SAME quadratic datum `Q` and self-intersection
+`F` as the original, only the signature shifted by the (Rokhlin, `sixteen_dvd_sig_of_gm_null`) amount
+`16 ∣ σ'`. So the GM `ℤ/16` residue `2·β(Q)` is invariant modulo spin summands: the Spin image
+`Ω₄^{Spin} → Ω₄^{Pin⁺}` lands in the kernel of the mod-16 GM grade (the ⊆ half of the KT §5 exactness
+`hexact`), and this is the bordism-invariance-under-spin step of proving `[FK]` by bordism-invariance. -/
+theorem gmrelation_add_spin {σ σ' F : ℤ} {ι ι' : Type*}
+    [Fintype ι] [Fintype ι'] [DecidableEq ι] [DecidableEq ι']
+    {Q : Z4Quadratic ι} {Q' : Z4Quadratic ι'}
+    (h : GMrelation σ F Q) (hspin : GMrelation σ' 0 Q') (hβ' : Q'.brown = 0) :
+    GMrelation (σ + σ') F Q := by
+  have hz : (σ' : ZMod 16) = 0 :=
+    (ZMod.intCast_zmod_eq_zero_iff_dvd σ' 16).mpr (sixteen_dvd_sig_of_gm_null hspin rfl hβ')
+  have e : ((σ - F : ℤ) : ZMod 16) = doubleBrown Q := h
+  show ((σ + σ' - F : ℤ) : ZMod 16) = doubleBrown Q
+  push_cast at e ⊢
+  rw [hz]; linear_combination e
+
 /-- **The two idioms coincide.** `CharacteristicSquareModSixteen M σ Q c` is exactly the GM congruence
 `GMrelation σ (selfPairing M c) Q` (with `F·F = c² = selfPairing M c`) — the char-vector framing and the
 `GMrelation` framing are the same statement. -/

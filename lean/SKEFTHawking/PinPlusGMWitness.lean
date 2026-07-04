@@ -314,6 +314,48 @@ theorem g8_zmultiples_ker (n : ℤ) :
   rw [zmultiplesHom_apply, ← addOrderOf_dvd_iff_zsmul_eq_zero, addOrderOf_g8]
   norm_num
 
+/-- **The ⊆ half of the KT §5 exactness `hexact`, proven in-tree.** The Spin image `s.range` (with
+`s := n ↦ n•g8`) sits inside `ker(reduce16to8 ∘ abkGMTied16)`: every `n•g8` has grade `8n`, and
+`reduce16to8 8 = 0` in `ZMod 8`, so its mod-8 GM grade vanishes. This is the algebraically-forced inclusion
+`image(Ω₄^{Spin}) ⊆ ker[∩w₁²]` — half of the sole remaining KT input `hexact` for
+`omega4PinPlusGMTied_equiv_zmod16_via_kt_lemma53`; only the reverse (⊇, the completeness/Rokhlin depth)
+remains disclosed. Cf. the congruence-level form `GMRokhlin.gmrelation_add_spin`. -/
+theorem spin_range_le_ker_reduce :
+    (zmultiplesHom (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))) g8).range ≤
+      (reduce16to8.toAddMonoidHom.comp (abkGMTied16 (k := 0) (I := 𝓡 4) :
+        DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ ZMod 16)).ker := by
+  rintro _ ⟨n, rfl⟩
+  simp only [AddMonoidHom.mem_ker, AddMonoidHom.comp_apply, RingHom.toAddMonoidHom_eq_coe,
+    AddMonoidHom.coe_coe, zmultiplesHom_apply, map_zsmul, abkGMTied16_g8]
+  rw [show (reduce16to8 (8 : ZMod 16) = 0) from by decide, zsmul_zero]
+
+/-- **The KT §5 exactness `hexact` reduced to its ⊇ half.** Combining the in-tree ⊆ inclusion
+(`spin_range_le_ker_reduce`) with the reverse `hle`, the full exact-sequence equality
+`ker[∩w₁²] = image(Spin)` holds. So the disclosed content of `hexact` is now the SINGLE inclusion
+`ker ⊆ s.range` (the completeness/Rokhlin depth), not a two-sided equality. -/
+theorem hexact_of_ker_le_spin_range
+    (hle : (reduce16to8.toAddMonoidHom.comp (abkGMTied16 (k := 0) (I := 𝓡 4) :
+              DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ ZMod 16)).ker ≤
+           (zmultiplesHom (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))) g8).range) :
+    (reduce16to8.toAddMonoidHom.comp (abkGMTied16 (k := 0) (I := 𝓡 4) :
+        DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ ZMod 16)).ker
+      = (zmultiplesHom (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))) g8).range :=
+  le_antisymm hle spin_range_le_ker_reduce
+
+/-- **`Ω₄^{Pin⁺} ≅ ℤ/16` reduced to the SINGLE inclusion `ker[∩w₁²] ⊆ image(Spin)`.** The sharpest KT-route
+form of the tied GM capstone: everything — surjectivity, the ℝP⁴ generator, the Spin map `s := n•g8` with its
+kernel `hs` (`g8_zmultiples_ker`), and the ⊆ half of exactness (`spin_range_le_ker_reduce`) — is discharged
+in-tree; the sole remaining geometric input is the one inclusion `hle : ker(reduce16to8 ∘ abkGMTied16) ⊆
+(n ↦ n•g8).range`, i.e. the completeness (Rokhlin/ABK) depth that a class of mod-8 GM grade `0` lies in the
+Spin image. -/
+theorem omega4PinPlusGMTied_equiv_zmod16_of_ker_le_spin_range
+    (hle : (reduce16to8.toAddMonoidHom.comp (abkGMTied16 (k := 0) (I := 𝓡 4) :
+              DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ ZMod 16)).ker ≤
+           (zmultiplesHom (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))) g8).range) :
+    Nonempty (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16) :=
+  omega4PinPlusGMTied_equiv_zmod16_via_kt_lemma53
+    (zmultiplesHom _ g8) g8_zmultiples_ker (hexact_of_ker_le_spin_range hle)
+
 /-! ### The cylinder null-bordism: `2•(any class) = an empty class` (`s⊔s` bounds `s×[0,1]`) -/
 
 /-- An empty-manifold structure of any **even** grade `m` (`q` chosen so `hcoh` holds; `htie` needs `m` even). -/
