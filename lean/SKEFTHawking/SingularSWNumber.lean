@@ -69,9 +69,11 @@ theorem swNumberW14_sum :
 
 /-- **The top Stiefel–Whitney number IS the `w₁⁴` number** on a Pin⁺ closed 4-manifold. For `wuW2 = 0`
 (Pin⁺), the Wu fourth-class number `⟨w₄,[M]⟩ = μ(wuW4)` equals the genuine `swNumberW14 M = ⟨w₁⁴,[M]⟩` (via
-the Wu collapse `w₄ = (v₁²)²`). This lands the abstract Wu fourth class on the CARRIER's genuine grade-tying
-invariant: the tied carrier's `htie` (grade-parity = `swTotalNe` = `w₁⁴`) IS `⟨w₄,[M]⟩`, so grade-`0` forces
-the top SW number of the genuine manifold to vanish — not merely on abstract PD data. -/
+the Wu collapse `w₄ = (v₁²)²`). This lands the abstract Wu fourth class on the genuine `w₁⁴` number of a
+manifold. Intended downstream consumption: the tied carrier's `htie` (grade-parity = `swTotalNe`) will be
+identified with this `swNumberW14 = ⟨w₄,[M]⟩`, so grade-`0` forces the top SW number of the genuine manifold
+to vanish — that carrier-side identification is a separate node, NOT discharged here; this theorem proves
+exactly `swNumberW14 M = μ(wuW4)`. -/
 theorem swNumberW14_eq_mu_wuW4
     (hw2 : wuW2 (poincareDual4Mid_of_closed (M := M)) (poincareDual4Lo_of_closed (M := M)) = 0) :
     swNumberW14 M

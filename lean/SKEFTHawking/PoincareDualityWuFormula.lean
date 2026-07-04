@@ -193,12 +193,15 @@ theorem wuW4_eq_zero_of_pinPlus_grade0 (P : PoincareDual4Mid X) (P₁₃ : Poinc
     (hw2 : wuW2 P P₁₃ = 0) (hw1 : cupSquare2ₗ (cupSquareₗ (wuClass1 P₁₃)) = 0) : wuW4 P = 0 := by
   rw [wuW4_eq_v1_fourth P P₁₃ hw2, hw1]
 
-/-- **Every degree-4 Stiefel–Whitney number of a grade-`0` Pin⁺ 4-manifold vanishes** — the exact
-hypothesis the (unoriented) Thom detection theorem consumes. Evaluated on the fundamental class `μ`:
-the top number `⟨w₄,[M]⟩ = 0` by the Wu collapse (`wuW4_eq_zero_of_pinPlus_grade0`), and every
-`w₂`-involving number (`⟨w₂²,[M]⟩`, `⟨w₁²w₂,[M]⟩`) is `0` because `w₂ = 0`. Since on a Pin⁺ 4-manifold
-these three are the only SW numbers (`w₁⁴ = ⟨w₄,[M]⟩` by Wu, so it is not independent), this is the FULL
-SW-number vanishing. The one remaining node is now precisely the Thom converse: SW numbers `0 ⟹ [M]` bounds. -/
+/-- **The `w₄` and `w₂`-involving degree-4 Stiefel–Whitney numbers of a grade-`0` Pin⁺ 4-manifold vanish.**
+Evaluated on the fundamental class `μ`: the top number `⟨w₄,[M]⟩ = 0` by the Wu collapse
+(`wuW4_eq_zero_of_pinPlus_grade0`), and every `w₂`-involving number (`⟨w₂²,[M]⟩`, `⟨w₁²w₂,[M]⟩`) is `0`
+because `w₂ = 0`. The five degree-4 SW monomials of a closed 4-manifold are `{w₄, w₁w₃, w₂², w₁²w₂, w₁⁴}`;
+this theorem returns the three shown, and the remaining two both vanish on Pin⁺: `w₁⁴ = ⟨w₄,[M]⟩` (Wu, not
+independent), and `⟨w₁w₃,[M]⟩ = 0` because `w₃ = Sq¹v₂ = Sq¹(v₁²) = 0` (Cartan, mod 2, using `v₂ = v₁²` for
+`w₂=0`) — the `w₃`-vanishing conjunct is a follow-up brick (needs `Sq¹` on `H²`), NOT yet in the returned
+tuple. So this is the SW-vanishing MODULO `w₁w₃` (which is nonetheless `0`). The remaining GEOMETRIC node is
+the Thom converse: all SW numbers `0 ⟹ [M]` bounds. -/
 theorem swNumbers_vanish_of_pinPlus_grade0 (P : PoincareDual4Mid X) (P₁₃ : PoincareDual4Lo X)
     (hw2 : wuW2 P P₁₃ = 0) (hw1 : cupSquare2ₗ (cupSquareₗ (wuClass1 P₁₃)) = 0) :
     P.mu (wuW4 P) = 0 ∧
