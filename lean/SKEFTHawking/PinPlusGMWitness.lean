@@ -266,4 +266,52 @@ theorem omega4PinPlusGMTied_equiv_zmod16_via_kt_lemma53
   rw [hexact]
   exact SKEFTHawking.PinPlusExactSequence.spin_image_card_two s hs
 
+/-! ### `hs` DISCHARGED in-tree — the emptySM Spin map (refutes "no in-tree `s` works") -/
+
+/-- The empty-manifold `GMTiedStr` of grade `8` (the Spin generator's grade; `q = stdQuadratic 0`, `w₁⁴=0`). -/
+noncomputable def str8 : (pinPlusGMTiedData (k := 0) (𝓡 4)).Mfd emptySM where
+  t2 := ⟨fun x => x.elim⟩
+  cert := pinPlusCertK_empty
+  rank := 0
+  q := stdQuadratic 0
+  grade16 := 8
+  hcoh := by rw [brown_stdQuadratic, Nat.cast_zero]; decide
+  htie := by rw [swTotalNe_of_isEmpty]; decide
+
+/-- The grade-`8` empty class — the image of the Spin generator (`[Kummer]=8`). -/
+noncomputable def g8 : DataBordismGrp (pinPlusGMTiedData (k := 0) (𝓡 4)) :=
+  DataBordismGrp.mk _ ⟨emptySM, str8⟩
+
+theorem abkGMTied16_g8 : abkGMTied16 (k := 0) (I := 𝓡 4) g8 = 8 := rfl
+
+/-- **`g8` is 2-torsion** — the neg=self trick (like `brown_even_two_torsion`): `-g8 = [emptySM, grade -8]`,
+and `-8 = 8` in `ZMod 16` on the same manifold, so `-g8 = g8` (`Bor` checks only `grade16`) ⟹ `2•g8 = 0`. -/
+theorem two_nsmul_g8 : (2 : ℕ) • g8 = 0 := by
+  have hneg : -g8 = g8 := by
+    apply DataBordismGrp.mk_eq_of_bordant
+    refine ⟨reflCylinder emptySM, ⟨PLift.up ?_⟩⟩
+    show (-(8 : ZMod 16)) = 8
+    decide
+  rw [two_nsmul]
+  nth_rewrite 1 [← hneg]
+  exact neg_add_cancel g8
+
+/-- `g8 ≠ 0` (its grade is `8 ≠ 0`) and hence has additive order exactly `2`. -/
+theorem addOrderOf_g8 : addOrderOf g8 = 2 := by
+  have hne : g8 ≠ 0 := fun h => by
+    have h8 := abkGMTied16_g8; rw [h, map_zero] at h8; exact absurd h8 (by decide)
+  rcases (Nat.dvd_prime Nat.prime_two).mp (addOrderOf_dvd_of_nsmul_eq_zero two_nsmul_g8) with h | h
+  · have hg : g8 = 0 := by
+      have := h ▸ addOrderOf_nsmul_eq_zero g8; rwa [one_nsmul] at this
+    exact absurd hg hne
+  · exact h
+
+/-- **`hs` DISCHARGED in-tree** (refutes "no in-tree `s` discharges `hs`"): the Spin map
+`s := n ↦ n•g8` (the image of `Ω₄^{Spin}≅ℤ`, `s 1 = [Kummer]` of grade 8) has kernel exactly `2ℤ`,
+purely from `g8` being 2-torsion (grade `8 = −8` on the empty manifold) — no completeness needed. -/
+theorem g8_zmultiples_ker (n : ℤ) :
+    (zmultiplesHom (DataBordismGrp (pinPlusGMTiedData (k := 0) (𝓡 4))) g8) n = 0 ↔ (2 : ℤ) ∣ n := by
+  rw [zmultiplesHom_apply, ← addOrderOf_dvd_iff_zsmul_eq_zero, addOrderOf_g8]
+  norm_num
+
 end SKEFTHawking.PinPlusGMWitness
