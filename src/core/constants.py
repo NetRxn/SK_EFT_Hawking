@@ -3069,6 +3069,37 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
         'risk': 'Local algebraic hexagon identity. RESOLVED — same as H_CFZ2_sq_e: gates only the deferred categorical functor (zero downstream); paper7 cites the unconditional `full_correspondence`, not this. W1 "Z/2 fully verified" framing sound.',
         'circularity_note': 'None.', 'prose': 'Local hexagon double-swap identity (aAdd summand) for the deferred Z/2 Drinfeld-center categorical functor (no downstream paper consumer).',
     },
+    'intFundamentalClass_eval_datum': {
+        'statement': 'For a closed oriented charted 4-manifold M, the integral fundamental class [M] ∈ H₄(M;ℤ) '
+            'is carried (Phase 5q.H · E1) as the ℤ-linear evaluation functional it induces on top-degree integral '
+            'cohomology: the single field `eval : Cohomology X 4 →ₗ[ℤ] ℤ` of the structure '
+            'SKEFTHawking.SingularCohomologyInt.IntFundamentalClass, i.e. the integral Kronecker pairing ⟨·,[M]⟩.',
+        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'very_hard',
+        'module': 'SingularIntersectionFormInt',
+        'elimination_path': 'Discharge = build integral singular homology H₄(M;ℤ) (the on-main homology + Kronecker '
+            'tower is entirely over ZMod 2 — SingularHomologyMod2/kroneckerH), the orientation-dependent fundamental '
+            'class [M] ∈ H₄(M;ℤ) (the new ℤ ingredient the mod-2 blueprint SingularFundamentalClass does NOT need — '
+            'every closed manifold is ℤ/2-orientable), and the integral cohomology↔homology Kronecker pairing '
+            'kroneckerHInt; then instantiate eval := (kroneckerHInt 4).flip [M], exactly mirroring the mod-2 '
+            'PoincareDualityConstruct.fundamentalFunctional = kroneckerH.flip fundamentalClass. Community-scale '
+            '(integral homology + orientation are absent from Mathlib and on-main); tracked here so the intersection '
+            'form itself (interFormInt + interFormInt_symm, kernel-pure) has exactly ONE unproved input.',
+        'dependent_theorems': [
+            'SKEFTHawking.SingularCohomologyInt.interFormInt',
+            'SKEFTHawking.SingularCohomologyInt.interFormInt_symm',
+        ],
+        'source': 'Standard algebraic topology (Milnor–Stasheff; Hatcher §3.3): the fundamental class of a closed '
+            'oriented n-manifold + the Kronecker (evaluation) pairing Hⁿ(M;ℤ) × Hₙ(M;ℤ) → ℤ.',
+        'risk': 'Very low mathematically (textbook); the cost is purely the from-scratch Lean construction of '
+            'integral homology + orientation, deferred to a later E1 brick. The FORM assembled here is unconditional '
+            'on `eval`.',
+        'circularity_note': 'None. The intersection form and its symmetry are proved for an ARBITRARY functional '
+            'eval : H⁴ →ₗ[ℤ] ℤ; no property of the (future) geometric [M] is assumed, so wiring the real [M] later '
+            'strictly discharges this datum without touching the form.',
+        'prose': 'The integral fundamental class [M] ∈ H₄(M;ℤ) of a closed oriented 4-manifold, carried as its '
+            'induced evaluation functional ⟨·,[M]⟩ so the H⁴-valued integral cup product cupH24 descends to the '
+            'ℤ-valued symmetric intersection form (Phase 5q.H · E1 Substrate-G; pre-matrix, orientation deferred).',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════
