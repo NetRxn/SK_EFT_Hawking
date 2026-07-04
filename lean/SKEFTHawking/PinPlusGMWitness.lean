@@ -3,6 +3,7 @@ import SKEFTHawking.PinPlusGMData
 import SKEFTHawking.PinPlusGMTiedData
 import SKEFTHawking.RP4Unconditional
 import SKEFTHawking.PinPlusSmithLES
+import SKEFTHawking.PinPlusExactSequence
 
 /-!
 # Phase 5q.H (H3 witness) — the ℝP⁴ Guillou–Marin structure and its COMPUTED mod-8 invariant
@@ -218,5 +219,31 @@ noncomputable def omega4PinPlusGMTied_equiv_zmod16_via_smith_les_neighbor
     DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16 :=
   omega4PinPlusGMTied_equiv_zmod16_of_smith_les
     (PinPlusSmithLES.pinPlus_zmod16_of_smith_les sm hL hR hA)
+
+/-- **KT §5 form of the tied capstone — the disclosed input reduced to a SINGLE cardinality fact.**
+Instantiates `PinPlusExactSequence.zmod16_of_kt_exact_sequence` (Kirby–Taylor LMS-151 Thm 5.2) at the
+tied GM carrier with `p = reduce16to8 ∘ abkGMTied16 : carrier →+ ZMod 8` (the mod-8 GM package the route
+lock says `[∩w₁²]` lives at). Three of the four KT §5 facts discharge FROM THE GRADE — (i) `p` surjective
+(composite of surjections), (iii) `p[ℝP⁴] = 1`, (iv) `8•[ℝP⁴] ≠ 0` (its grade is `8•1 = 8 ≠ 0` in ℤ/16).
+The **sole** remaining disclosed input is (ii) `Nat.card (ker p) = 2` = KT **Lemma 5.3** (the Spin image
+`Ω₄^{Spin} → Ω₄^{Pin⁺}` is `ℤ/2`), page-traced in `KT_LMS_Section5_completeness_proof_extracted.md`. -/
+theorem omega4PinPlusGMTied_equiv_zmod16_of_spin_image_card
+    (hker : Nat.card ((reduce16to8.toAddMonoidHom.comp
+        (abkGMTied16 (k := 0) (I := 𝓡 4) :
+          DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ ZMod 16)).ker) = 2) :
+    Nonempty (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16) := by
+  refine PinPlusExactSequence.zmod16_of_kt_exact_sequence
+    (reduce16to8.toAddMonoidHom.comp (abkGMTied16 (k := 0) (I := 𝓡 4) :
+      DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ ZMod 16)) ?_ hker
+    rp4GMTiedClass ?_ ?_
+  · have h8 : Function.Surjective (reduce16to8 : ZMod 16 → ZMod 8) :=
+      ZMod.castHom_surjective (by norm_num)
+    exact h8.comp abkGMTied16_surjective
+  · show reduce16to8 (abkGMTied16 (k := 0) (I := 𝓡 4) rp4GMTiedClass) = 1
+    rw [abkGMTied16_rp4]; rfl
+  · intro h
+    have hc := congrArg (abkGMTied16 (k := 0) (I := 𝓡 4)) h
+    rw [map_nsmul, abkGMTied16_rp4, map_zero] at hc
+    revert hc; decide
 
 end SKEFTHawking.PinPlusGMWitness

@@ -756,6 +756,7 @@ import SKEFTHawking.PinPlusBordismGroupDerived
 -- no-go (trivial revStr ⟹ 2-torsion ⟹ not ℤ/16, ruling out the H¹-as-group instantiation) + a concrete
 -- non-2-torsion carrier with a surjective ABK grade (the genuine ≥16 half). Iso from the disclosed
 -- ABK-completeness (≤16 cap) — the genuine-carrier endpoint, scoped precisely against DR §5.1.
+import SKEFTHawking.PinPlusExactSequence
 import SKEFTHawking.PinPlusGenuineCarrierIso
 -- Phase 5q.F (2026-06-15): the faithful Pin⁺ (and Spin-ℤ₄) `TangentialData` instance `pinPlusData` on the
 -- genuine `DataBordismGrp` carrier — non-trivial structure-conjugation `revStr` (escapes the no-go), a
