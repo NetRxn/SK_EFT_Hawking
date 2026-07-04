@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.BrownInvariant
 import SKEFTHawking.ArfInvariant
+import SKEFTHawking.PinPlusGMData
 
 /-!
 # Phase 5q.H (H8, the geometric Rokhlin discharge) — even `ZMod 4`-quadratic forms and the Arf reduction
@@ -69,5 +70,28 @@ lemma gaussSum4_even_eq_gaussSum (Q : Z4Quadratic ι) (hE : IsEven Q) :
   generalize toZ2 Q x = b
   revert b
   decide
+
+/-- On an even form `neg Q` has the same Gauss sum as `Q` (since `-q = q` pointwise: `-embed2 = embed2`),
+because the (real) Gauss sum is `star`-fixed. -/
+lemma gaussSum4_neg_even (Q : Z4Quadratic ι) (hE : IsEven Q) :
+    gaussSum4 (neg Q).q = gaussSum4 Q.q := by
+  rw [gaussSum4_neg]
+  have him := gaussSum4_even_isReal Q hE
+  apply Zsqrtd.ext <;> simp [him]
+
+/-- **`brown` is `2`-torsion on even forms** (`2·brown = 0`, i.e. `brown ∈ {0,4}`): `neg Q` has the same
+`brown` as `Q` (same Gauss sum, `gaussSum4_neg_even`), but `brown_neg` gives `brown(neg Q) = -brown Q`, so
+`brown Q = -brown Q`. This is the oriented-surface `β = 4·Arf` statement (the mod-16 story is 2-torsion). -/
+lemma brown_even_two_torsion (Q : Z4Quadratic ι) (hE : IsEven Q) : 2 * brown Q = 0 := by
+  have hbU : (neg Q).brownUnit = Q.brownUnit := by
+    have h1 := (neg Q).gaussSum4_eq_brownUnit
+    rw [gaussSum4_neg_even Q hE, Q.gaussSum4_eq_brownUnit] at h1
+    exact (zeta4_mul_pow_right_inj h1).symm
+  have hbrown : brown (neg Q) = brown Q := by unfold brown; rw [hbU]
+  have hneg := brown_neg Q
+  rw [hbrown] at hneg
+  rw [two_mul]
+  nth_rewrite 1 [hneg]
+  exact neg_add_cancel _
 
 end SKEFTHawking.Brown.Z4Quadratic
