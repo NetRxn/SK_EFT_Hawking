@@ -155,6 +155,31 @@ lemma doubleBrown_orthSum {ι₁ ι₂ : Type*} [Fintype ι₁] [Fintype ι₂] 
       (2 * ((a + b).val : ZMod 16)) = 2 * (a.val : ZMod 16) + 2 * (b.val : ZMod 16) := by decide
   exact key Q₁.brown Q₂.brown
 
+/-- **`doubleBrown` negates under form negation** — `2·β(-q) = -(2·β(q))`. The `ZMod 16` shadow of the ABK
+reflection `β(-q) = -β(q)` (`brown_neg`): reversing the Pin⁻ structure on the characteristic surface negates
+the GM residue. Kernel-pure (the doubling-negation is `decide` over the 8 `ZMod 8` classes). -/
+lemma doubleBrown_neg {ι : Type*} [Fintype ι] [DecidableEq ι] (Q : Z4Quadratic ι) :
+    doubleBrown (Z4Quadratic.neg Q) = - doubleBrown Q := by
+  unfold doubleBrown
+  rw [Z4Quadratic.brown_neg]
+  have key : ∀ a : ZMod 8, (2 * (((-a).val) : ZMod 16)) = -(2 * (a.val : ZMod 16)) := by decide
+  exact key Q.brown
+
+/-- **The GM congruence is invariant under orientation reversal.** If `(M, F)` satisfies Guillou–Marin,
+so does `(-M, -F)`: reversing the ambient orientation negates the signature `σ` and the self-intersection
+`F·F`, and reversing the induced Pin⁻ structure on the characteristic surface negates the Brown invariant
+`β` (`doubleBrown_neg`, the ABK reflection `β(-q) = -β(q)`). This is the reversal-invariance half of proving
+`[FK]` by bordism-invariance (the disjoint-union/additivity half is `gmrelation_orthSum`): the GM residue
+`2·β` is compatible with the group structure of `DataBordismGrp` under both `⊔` and orientation reversal. -/
+theorem gmrelation_neg {σ F_F : ℤ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {Q : Z4Quadratic ι} (h : GMrelation σ F_F Q) :
+    GMrelation (-σ) (-F_F) (Z4Quadratic.neg Q) := by
+  have e : ((σ - F_F : ℤ) : ZMod 16) = doubleBrown Q := h
+  show ((-σ - -F_F : ℤ) : ZMod 16) = doubleBrown (Z4Quadratic.neg Q)
+  rw [doubleBrown_neg]
+  push_cast at e ⊢
+  linear_combination -e
+
 /-- **The GM congruence is additive under disjoint union of characteristic surfaces.** If `(M₁, F₁)` and
 `(M₂, F₂)` satisfy Guillou–Marin, so does `(M₁ ⊔ M₂, F₁ ⊔ F₂)` with `σ`, `F·F` and `β` all adding. This is
 bordism-additivity of the FK invariant — the algebraic engine for proving `[FK]` by bordism-invariance. -/
@@ -170,6 +195,18 @@ theorem gmrelation_orthSum {σ₁ F₁ σ₂ F₂ : ℤ} {ι₁ ι₂ : Type*}
     rw [← e₁, ← e₂]; ring
   show ((σ₁ + σ₂ - (F₁ + F₂) : ℤ) : ZMod 16) = doubleBrown (Z4Quadratic.orthSum Q₁ Q₂)
   rw [doubleBrown_orthSum]; exact h
+
+/-- **A characteristic surface disjoint-union its own orientation reverse has vanishing GM residue** —
+`(M ⊔ -M, F ⊔ -F)` satisfies `GMrelation 0 0 (Q ⊕ -Q)`. This is the algebraic shadow of the geometric fact
+that `M ⊔ -M` bounds (the diagonal cylinder `M × I`), so its Guillou–Marin `ℤ/16` residue is `0`: combining
+additivity (`gmrelation_orthSum`) with reversal-invariance (`gmrelation_neg`) makes `σ`, `F·F`, and `2·β` all
+cancel. It is the well-definedness cornerstone of the eventual `[FK]`-by-bordism-invariance proof (the GM
+grade is `0` on any boundary of a product, the first null-bordant test case). -/
+theorem gmrelation_self_rev_trivial {σ F_F : ℤ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {Q : Z4Quadratic ι} (h : GMrelation σ F_F Q) :
+    GMrelation 0 0 (Z4Quadratic.orthSum Q (Z4Quadratic.neg Q)) := by
+  have := gmrelation_orthSum h (gmrelation_neg h)
+  simpa using this
 
 /-- **Connect-sum with a spin summand preserves the full GM congruence class.** If `(M,F)` satisfies
 `GMrelation σ F Q` and `(M',F')` is spin (`GMrelation σ' 0 Q'` with `β(Q') = 0`), then the disjoint union
