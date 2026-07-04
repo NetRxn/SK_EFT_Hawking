@@ -16,6 +16,12 @@ collapse (`wuW4 = w₁⁴`, merged) and `w₂ = 0`, ALL Stiefel–Whitney number
 Thom's `Ω_*^O ≅ π_*(MO)` detection gives that it is null-bordant. The reduction below is UNCONDITIONAL and
 kernel-pure; the sole remaining input is this one named geometric Prop (the `hyp:rokhlin_sigma_mod_16`
 Rokhlin-class node in its most elementary in-carrier form) — a from-scratch bordism-classification foundation.
+
+**Route note (⛔ `synthetic-grade-ker-bot-nogo` exemption).** This is the DIRECT unoriented route, not the
+Smith-LES architecture. It is legitimate here — NOT a route-shop — because the no-go bans only the FREE-grade
+datum (where grade-`0` ⇏ `w₁⁴ = 0`); the TIED carrier is EXEMPT precisely via `GMTiedStr.htie` (grade-parity
+`= swTotalNe = w₁⁴`), which is exactly the step `hg ⟹ hsw` below. Both routes bottom out at the SAME
+Mathlib-absent Thom-detection node (`hthom` here), so this dodges nothing.
 -/
 
 namespace SKEFTHawking.UnorientedThomCapstone
