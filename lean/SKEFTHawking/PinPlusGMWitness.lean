@@ -356,6 +356,43 @@ theorem omega4PinPlusGMTied_equiv_zmod16_of_ker_le_spin_range
   omega4PinPlusGMTied_equiv_zmod16_via_kt_lemma53
     (zmultiplesHom _ g8) g8_zmultiples_ker (hexact_of_ker_le_spin_range hle)
 
+/-- **The ⊇ half of KT §5 exactness follows from grade-`0` injectivity — UNIFYING the KT route with the
+Thom/grade-`0`-bounds route to a SINGLE disclosed Prop.** If `hbound` (every grade-`0` class is `0`; the
+Rokhlin/ABK completeness node — exactly `grade0_bounds_of_thom`'s conclusion, hence the Thom `hthom`
+content), then `ker(reduce16to8 ∘ abkGMTied16) ≤ s.range`: a class of mod-8 GM grade `0` has full grade `0`
+or `8`; grade `0` gives `x = 0 = s 0` by `hbound`; grade `8` gives `x − g8` grade `0`, so `x = g8 = s 1`. So
+the KT input `hle` and the Thom input `hbound` are the SAME node — all three injectivity routes bottom out at
+one completeness Prop. -/
+theorem spin_range_ge_of_grade0_inj
+    (hbound : ∀ x : DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)),
+        (abkGMTied16 (k := 0) (I := 𝓡 4)) x = 0 → x = 0) :
+    (reduce16to8.toAddMonoidHom.comp (abkGMTied16 (k := 0) (I := 𝓡 4) :
+        DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ ZMod 16)).ker ≤
+      (zmultiplesHom (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4))) g8).range := by
+  intro x hx
+  rw [AddMonoidHom.mem_ker, AddMonoidHom.comp_apply, RingHom.toAddMonoidHom_eq_coe,
+    AddMonoidHom.coe_coe] at hx
+  have hcase : ∀ y : ZMod 16, reduce16to8 y = 0 → y = 0 ∨ y = 8 := by decide
+  rcases hcase _ hx with h0 | h8
+  · exact ⟨0, by rw [map_zero]; exact (hbound x h0).symm⟩
+  · refine ⟨1, ?_⟩
+    rw [zmultiplesHom_apply, one_zsmul]
+    have hd : (abkGMTied16 (k := 0) (I := 𝓡 4)) (x - g8) = 0 := by
+      rw [map_sub, h8, abkGMTied16_g8, sub_self]
+    have hxg := hbound _ hd
+    rwa [sub_eq_zero, eq_comm] at hxg
+
+/-- **`Ω₄^{Pin⁺} ≅ ℤ/16` from grade-`0` injectivity, THROUGH the KT §5 route** — the apex reached via the KT
+exact sequence from the SAME single Prop `hbound` as the direct `omega4PinPlusGMTied_equiv_zmod16_of_grade0_bounds`.
+Confirms the two injectivity routes are apex-equivalent: both consume exactly the one completeness node
+(grade-`0` ⟹ `0`, ≡ the Thom/Rokhlin/ABK depth), so the reduction of `Ω₄^{Pin⁺}≅ℤ/16` is canonical, not
+route-dependent. -/
+theorem omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0
+    (hbound : ∀ x : DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)),
+        (abkGMTied16 (k := 0) (I := 𝓡 4)) x = 0 → x = 0) :
+    Nonempty (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16) :=
+  omega4PinPlusGMTied_equiv_zmod16_of_ker_le_spin_range (spin_range_ge_of_grade0_inj hbound)
+
 /-! ### The cylinder null-bordism: `2•(any class) = an empty class` (`s⊔s` bounds `s×[0,1]`) -/
 
 /-- An empty-manifold structure of any **even** grade `m` (`q` chosen so `hcoh` holds; `htie` needs `m` even). -/
