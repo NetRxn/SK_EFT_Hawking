@@ -1,5 +1,6 @@
 import Mathlib
 import SKEFTHawking.PinPlusGMData
+import SKEFTHawking.PinPlusGMTiedData
 import SKEFTHawking.PinPlusGMWitness
 import SKEFTHawking.PinPlusExactSequence
 import SKEFTHawking.PinPlusSmithLES
@@ -27,6 +28,7 @@ open scoped Manifold
 open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
 open SKEFTHawking.TangentialDataBordism SKEFTHawking.BordismTheory
 open SKEFTHawking.PinPlusGMData SKEFTHawking.PinPlusGMWitness SKEFTHawking.PinPlusTiedData
+open SKEFTHawking.PinPlusGMTiedData SKEFTHawking.GuillouMarin
 
 namespace SKEFTHawking.PinPlusGMDataZ16
 
@@ -221,5 +223,129 @@ theorem pinPlusGMData_not_equiv_zmod16 :
   have : e ((8 : ℕ) • e.symm (1 : ZMod 16)) = e 0 := by rw [h8]
   rw [map_nsmul, e.apply_symm_apply, map_zero] at this
   revert this; decide
+
+/-! ### E3 · The Smith-LES EXTENSION carrier — where the genuine ℤ/16 odd bit lives
+
+Since `pinPlusGMData` is 8-torsion (`pinPlusGMData_eight_torsion`), the ℤ/16 odd bit is NOT on it. Per
+§9.1/§9.3 the odd bit is carried by the **extension position of the Smith LES**: a carrier `B` (the genuine
+ℤ/16 object) sitting in the LES segment `0 → A →(sm) B → 0` with `A = Ω₆^{Pin⁻}` the Pin⁻ neighbor, whose
+mod-8 shadow reduces to the genuine `abkGM8`. This section mirrors the tied-carrier Smith-LES stack
+(`PinPlusGMWitness.omega4PinPlusGMTied_equiv_zmod16_via_smith_les_neighbor`) onto the genuine anchor.
+
+**The single disclosed input** is the Pin⁻-neighbor iso `A ≃+ ZMod 16` = `smith_inflow_z16` (E5's target,
+the atlas keystone) — carried as a `Nonempty (A ≃+ ZMod 16)` Prop binder, exactly as the abstract
+transport `PinPlusSmithLES.pinPlus_zmod16_of_smith_les` carries it; NEVER an axiom. The geometric Smith map
+`sm` + its two-sided exactness (`hL`/`hR`) are the E3 geometric constructions (DDK⁺ App-A zero-locus +
+HKT Thm 4.1 sphere/interval bundles); here they enter as the map + two `Function.Exact` binders, the
+literal Lean shape the geometric layer supplies. -/
+
+/-- **The genuine ℤ/16 extension carrier `≃+ ZMod 16`, reduced to the Smith-LES neighbor + exactness.**
+Given the geometric Smith map `sm : A →+ B` from the Pin⁻ neighbor `A` into the extension carrier `B`
+(the genuine ℤ/16 object), its two-sided LES exactness (`hL`: `Ω₆^{Spin}(ℝP¹,σ)=0` at the left ⟹ `sm`
+injective; `hR`: `Ω₅^{Spin}(ℝP¹,σ)=0` at the right ⟹ `sm` surjective — the pre-authorized twisted-spin
+vanishings), and the neighbor iso `A ≃+ ZMod 16` (`smith_inflow_z16`, E5), the extension carrier `B` is
+`≃+ ZMod 16`. This is the roadmap §9.3 endpoint on the GENUINE-anchor extension: the disclosed input is
+carried solely by the neighbor iso + the geometric exactness, matching the locked architecture. -/
+theorem omega4PinPlusGMData_ext_equiv_zmod16_via_smith_les_neighbor
+    {A B : Type u} [AddCommGroup A] [AddCommGroup B]
+    (sm : A →+ B)
+    (hL : Function.Exact (0 : PUnit →+ A) sm)
+    (hR : Function.Exact sm (0 : B →+ PUnit))
+    (hA : Nonempty (A ≃+ ZMod 16)) :
+    Nonempty (B ≃+ ZMod 16) :=
+  PinPlusSmithLES.pinPlus_zmod16_of_smith_les sm hL hR hA
+
+/-- **`ker(genuine ℤ/16 grade on the extension carrier) = ⊥`, reduced to `smith_inflow_z16`.** Once the
+extension carrier `B` is `≃+ ZMod 16` (via the Smith LES), ANY surjective grade `g : B →+ ZMod 16` is
+automatically injective (a surjection between two order-16 groups is bijective), so `ker g = ⊥`. This is
+the E3 injectivity reduction on the extension: the genuine ℤ/16 grade's kernel vanishes GIVEN the
+Smith-LES iso, whose sole input is the neighbor iso `smith_inflow_z16` (E5). Mirrors the tied
+`abkGMTied16_ker_eq_bot_of_smith_les` but on the genuine-anchor extension carrier. -/
+theorem ext_grade_ker_eq_bot_of_smith_les
+    {B : Type u} [AddCommGroup B]
+    (g : B →+ ZMod 16)
+    (hsurj : Function.Surjective g)
+    (hiso : Nonempty (B ≃+ ZMod 16)) :
+    g.ker = ⊥ := by
+  obtain ⟨e⟩ := hiso
+  have hfin : Finite B := Finite.of_equiv _ e.toEquiv.symm
+  have hcard : Nat.card B = Nat.card (ZMod 16) := by rw [Nat.card_congr e.toEquiv]
+  have hbij : Function.Bijective g := by
+    rw [Nat.bijective_iff_surjective_and_card]
+    exact ⟨hsurj, hcard⟩
+  exact (AddMonoidHom.ker_eq_bot_iff _).mpr hbij.1
+
+/-- **The full genuine ℤ/16 grade on the extension carrier, with `ker = ⊥`, from the Smith LES.** The E3
+capstone on the genuine-anchor extension: given the geometric Smith map `sm : A →+ B` + two-sided exactness
++ the neighbor iso `smith_inflow_z16`, and a surjective genuine ℤ/16 grade `g : B →+ ZMod 16` on the
+extension carrier, the extension carrier is `≃+ ZMod 16` via `g` (invariant carried by `g`, kernel `⊥`).
+Everything reduces to the ONE disclosed neighbor iso (E5); no axiom, no new posit. -/
+noncomputable def omega4PinPlusGMData_ext_equiv_zmod16_via_grade
+    {A B : Type u} [AddCommGroup A] [AddCommGroup B]
+    (sm : A →+ B)
+    (hL : Function.Exact (0 : PUnit →+ A) sm)
+    (hR : Function.Exact sm (0 : B →+ PUnit))
+    (hA : Nonempty (A ≃+ ZMod 16))
+    (g : B →+ ZMod 16) (hsurj : Function.Surjective g) :
+    B ≃+ ZMod 16 := by
+  have hiso := omega4PinPlusGMData_ext_equiv_zmod16_via_smith_les_neighbor sm hL hR hA
+  have hker := ext_grade_ker_eq_bot_of_smith_les g hsurj hiso
+  exact AddEquiv.ofBijective g
+    ⟨(AddMonoidHom.ker_eq_bot_iff g).mp hker, hsurj⟩
+
+/-! ### E3 · The forgetful bridge — the TIED carrier is the genuine mod-8 carrier's ℤ/16 extension
+
+The concrete, non-vacuous realization of the extension architecture: the forgetful map `GMTiedStr → GMStr`
+(drop `grade16`, keep the enhancement `q` + cert) induces `forgetTie : DataBordismGrp pinPlusGMTiedData →+
+DataBordismGrp pinPlusGMData` (well-defined because the tied `Bor` = `grade16`-equality forces the genuine
+`Bor` = `q.brown`-equality via `hcoh : reduce16to8 grade16 = q.brown` — the SAME underlying `Bordism`
+witness transports). It intertwines the grades: `abkGM8 ∘ forgetTie = reduce16to8 ∘ abkGMTied16`. So the
+tied ℤ/16 grade genuinely EXTENDS the genuine mod-8 grade — exhibiting `pinPlusGMTiedData` as the Smith-LES
+extension carrier `B` whose mod-8 shadow IS `abkGM8` on the genuine carrier. -/
+
+/-- The forgetful `GMTiedStr → GMStr`: keep the Hausdorff witness, cert, rank, enhancement `q`; drop the
+tied `grade16`. -/
+noncomputable def forgetTieStr {s : SingularManifold PUnit 0 (𝓡 4)}
+    (σ : (pinPlusGMTiedData (k := 0) (𝓡 4)).Mfd s) :
+    (pinPlusGMData (E := EuclideanSpace ℝ (Fin (2 + 2))) (k := 0) (𝓡 4)).Mfd s where
+  t2 := σ.t2
+  cert := σ.cert
+  rank := σ.rank
+  q := σ.q
+
+/-- **The forgetful bridge `forgetTie : DataBordismGrp pinPlusGMTiedData →+ DataBordismGrp pinPlusGMData`.**
+Drops the tie, keeps the surface enhancement. Well-defined: the tied `Bor` (`grade16`-equality) implies the
+genuine `Bor` (`q.brown`-equality) since a tied bordism additionally carries `hcoh`, and additive since
+`sumStr` keeps `q := orthSum` on both sides. -/
+noncomputable def forgetTie :
+    DataBordismGrp (pinPlusGMTiedData (k := 0) (𝓡 4)) →+
+      DataBordismGrp (pinPlusGMData (E := EuclideanSpace ℝ (Fin (2 + 2))) (k := 0) (𝓡 4)) where
+  toFun := Quot.lift (fun p => DataBordismGrp.mk _ ⟨p.1, forgetTieStr p.2⟩)
+    (fun p q h => by
+      obtain ⟨b, ⟨hb⟩⟩ := h
+      exact DataBordismGrp.mk_eq_of_bordant _ ⟨b, ⟨PLift.up (by
+        -- tied Bor: grade16 p = grade16 q ⟹ genuine Bor: q.brown p = q.brown q via hcoh
+        have hp := p.2.hcoh
+        have hq := q.2.hcoh
+        show (forgetTieStr p.2).q.brown = (forgetTieStr q.2).q.brown
+        show p.2.q.brown = q.2.q.brown
+        rw [← hp, ← hq, hb.down])⟩⟩)
+  map_zero' := rfl
+  map_add' := by
+    intro x y
+    induction x using Quot.ind with | _ p =>
+    induction y using Quot.ind with | _ q =>
+    rfl
+
+/-- **The forgetful bridge intertwines the grades** — `abkGM8 (forgetTie x) = reduce16to8 (abkGMTied16 x)`.
+The tied ℤ/16 grade genuinely EXTENDS the genuine mod-8 grade `abkGM8` (its mod-8 reduction is `abkGM8` on
+the forgetful image). This is the non-vacuous content: `pinPlusGMTiedData` is the Smith-LES extension carrier
+whose mod-8 shadow is `abkGM8` on `pinPlusGMData`. -/
+theorem abkGM8_forgetTie (x : DataBordismGrp (pinPlusGMTiedData (k := 0) (𝓡 4))) :
+    abkGM8 (E := EuclideanSpace ℝ (Fin (2 + 2))) (k := 0) (I := 𝓡 4) (forgetTie x)
+      = reduce16to8 (abkGMTied16 (k := 0) (I := 𝓡 4) x) := by
+  induction x using Quot.ind with | _ p =>
+  show p.2.q.brown = reduce16to8 p.2.grade16
+  rw [p.2.hcoh]
 
 end SKEFTHawking.PinPlusGMDataZ16
