@@ -232,4 +232,19 @@ theorem base_generator_reduces_ne_zero (hU : IsClopen U)
   · rw [h1] at hdet; simp at hdet
   · rw [hm1] at hdet; norm_num at hdet
 
+/-! ## §5. Non-vanishing transports through a reduction-natural injective map -/
+
+/-- **Non-vanishing lifts through a reduction-natural map with injective, zero-preserving mod-2 side.**
+If the mod-2 map `gmod` is injective with `gmod 0 = 0` and reduction is natural
+(`rB (gint a) = gmod (rA a)`), then `rA a ≠ 0` forces `rB (gint a) ≠ 0`. The single inductive step of
+the sphere-suspension tower chase (`gmod` is always a mod-2 additive equiv, so both hypotheses hold). -/
+theorem ne_zero_transport {A B A' B' : Type*}
+    {gint : A → B} {rA : A → A'} {rB : B → B'} {gmod : A' → B'} [Zero A'] [Zero B']
+    (hgmod : Function.Injective gmod) (hgmod0 : gmod 0 = 0)
+    (hnat : ∀ a, rB (gint a) = gmod (rA a))
+    {a : A} (ha : rA a ≠ 0) : rB (gint a) ≠ 0 := by
+  rw [hnat a]
+  intro h
+  exact ha (hgmod (h.trans hgmod0.symm))
+
 end SKEFTHawking.SingularSphereGenReducesInt
