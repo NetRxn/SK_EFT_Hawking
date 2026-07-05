@@ -130,4 +130,60 @@ theorem localAtPoint_generator_reduces_ne_zero (q : EuclideanSpace ℝ (Fin 4)) 
     (fun z => redRelHomology_map (transl q) (mapsTo_transl q) 4 z)
     eucl_generator_reduces_ne_zero
 
+/-! ## §3. Transporting through the chart-excision tower to `ReducedGeneratorNonzero` -/
+
+open SKEFTHawking.SingularExcisionIso (restr)
+open SKEFTHawking.SingularLocalHomologyIsoInt
+  (openPointExcisionEquivInt chartPairEquivInt chartLocalIsoInt mapsTo_chartInt mapsTo_chart_symmInt
+   manifoldLocalHomologyIsoInt)
+open SKEFTHawking.SingularChartBridge
+  (openPointExcisionEquiv chartPairEquiv chartLocalIso manifoldLocalIso mapsTo_chart mapsTo_chart_symm
+   cover_ne_point_open)
+open SKEFTHawking.SingularLocalHomologyRedCompatInt (redRelHomology_excisionMap)
+
+/-- **The chart-local generator reduces nonzero.** `redRelHomology (chartLocalIsoInt ...).symm 1 ≠ 0`,
+at `RelHomologyInt {≠x} M`. Transports `localAtPoint_generator_reduces_ne_zero` through the three
+chart-tower legs: inner excision `.symm`, chart-pair homeo `.symm`, and outer excision (forward). -/
+theorem chartLocalIso_generator_reduces_ne_zero {M : TopCat} [T1Space ↑M] {x : ↑M} {U : Set ↑M}
+    (hU : IsOpen U) (hx : x ∈ U) {q : ↑(Eucl 4)} {V : Set ↑(Eucl 4)} (hV : IsOpen V)
+    (hq : q ∈ V) (e : ↥U ≃ₜ ↥V) (hex : (e ⟨x, hx⟩ : ↑(Eucl 4)) = q) :
+    redRelHomology (X := M) {y | y ≠ x} 4 ((chartLocalIsoInt hU hx hV hq e hex).symm 1) ≠ 0 := by
+  -- unfold chartLocalIsoInt.symm 1 = A (B.symm (C.symm (D.symm 1)))
+  --   A = openPointExcisionEquivInt hU hx 3 (forward), B = chartPairEquivInt, C = openPointExcisionEquivInt hV hq 3, D = localHomologyAtPointIsoInt q
+  have hchain : (chartLocalIsoInt hU hx hV hq e hex).symm 1
+      = (openPointExcisionEquivInt hU hx 3)
+          ((chartPairEquivInt hx e hex 4).symm
+            ((openPointExcisionEquivInt hV hq 3).symm
+              ((localHomologyAtPointIsoInt q).symm 1))) := by
+    show ((openPointExcisionEquivInt hU hx 3).symm.trans
+        ((chartPairEquivInt hx e hex 4).trans
+          ((openPointExcisionEquivInt hV hq 3).trans (localHomologyAtPointIsoInt q)))).symm 1 = _
+    rw [LinearEquiv.symm_trans_apply, LinearEquiv.symm_trans_apply, LinearEquiv.symm_trans_apply,
+      LinearEquiv.symm_symm]
+  rw [hchain]
+  -- leg C.symm: inner excision symm
+  have hC : redRelHomology (restr {y | y ≠ q} V) 4
+      ((openPointExcisionEquivInt hV hq 3).symm ((localHomologyAtPointIsoInt q).symm 1)) ≠ 0 := by
+    have := redRelHomology_excisionEquivInt_symm {y | y ≠ q} V 3 (cover_ne_point_open hV hq)
+    exact ne_zero_transport_symm
+      (openPointExcisionEquivInt hV hq 3).toAddEquiv
+      (openPointExcisionEquiv hV hq 3).toAddEquiv
+      (redRelHomology (restr {y | y ≠ q} V) 4) (redRelHomology {y | y ≠ q} 4)
+      (fun z => redRelHomology_excisionMap {y | y ≠ q} V 4 z)
+      (localAtPoint_generator_reduces_ne_zero q)
+  -- leg B.symm: chart-pair homeo symm
+  have hB : redRelHomology (restr {y | y ≠ x} U) 4
+      ((chartPairEquivInt hx e hex 4).symm
+        ((openPointExcisionEquivInt hV hq 3).symm ((localHomologyAtPointIsoInt q).symm 1))) ≠ 0 :=
+    ne_zero_transport_symm
+      (chartPairEquivInt hx e hex 4).toAddEquiv (chartPairEquiv hx e hex 4).toAddEquiv
+      (redRelHomology (restr {y | y ≠ x} U) 4) (redRelHomology (restr {y | y ≠ q} V) 4)
+      (fun z => redRelHomology_map (⟨e, e.continuous⟩ : C(↑(sub U), ↑(sub V)))
+        (mapsTo_chartInt hx e hex) 4 z) hC
+  -- leg A: outer excision (forward)
+  exact ne_zero_transport
+    (gmod := (openPointExcisionEquiv hU hx 3))
+    (openPointExcisionEquiv hU hx 3).injective (map_zero _)
+    (fun z => redRelHomology_excisionMap {y | y ≠ x} U 4 z) hB
+
 end SKEFTHawking.SingularReducedGeneratorInt
