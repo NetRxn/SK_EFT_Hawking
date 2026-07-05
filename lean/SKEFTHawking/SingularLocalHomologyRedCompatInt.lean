@@ -364,4 +364,36 @@ theorem redRelHomology_localGenerator_ne_zero {M : Type} [TopologicalSpace M] (x
   rw [h, map_zero] at this
   exact one_ne_zero this.symm
 
+/-! ## §10. Pair-map naturality (completes the toolkit for the sphere-suspension chase) -/
+
+/-- **The reduction commutes with the pair map** `j_* : Hₙ(X;ℤ) → Hₙ(X,S;ℤ)`:
+`redRelHomology S n ∘ homProjInt S n = homProj S n ∘ redHomology X n`. Used by the sphere-suspension
+tower (`bottomSuspMapInt` = `connectingInt ∘ excision.symm ∘ homProjInt`). -/
+theorem redRelHomology_homProjInt {X : TopCat} {S : Set ↑X} (n : ℕ) (h : Homology X n) :
+    redRelHomology S n (SKEFTHawking.SingularRelHomologyInt.homProjInt S n h)
+      = SKEFTHawking.SingularPairLES.homProj S n (redHomology X n h) := by
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ h
+  rw [show (Submodule.Quotient.mk z : Homology X n) = Homology.mk X n z from rfl,
+    SKEFTHawking.SingularRelHomologyInt.homProjInt_mk, redRelHomology_mk, redHomology_mk,
+    SKEFTHawking.SingularPairLES.homProj_mk]
+  refine congrArg (SKEFTHawking.SingularRelativeHomologyMod2.RelativeHomology.mk S n) ?_
+  refine Subtype.ext ?_
+  show redRelChain S n (RelativeChainInt.mk S n (z : SingularChainInt X n))
+      = SKEFTHawking.SingularRelativeHomologyMod2.RelativeChain.mk S n (redChain X n z)
+  rw [redRelChain_mk]
+
+/-- **The reduction commutes with the subspace-inclusion map** `i_* : Hₙ(S;ℤ) → Hₙ(X;ℤ)`:
+`redHomology X n ∘ homIncl S n = homIncl S n ∘ redHomology (sub S) n`. The other pair-LES map. -/
+theorem redHomology_homIncl {X : TopCat} {S : Set ↑X} (n : ℕ) (h : Homology (sub S) n) :
+    redHomology X n (SKEFTHawking.SingularRelHomologyInt.homIncl S n h)
+      = SKEFTHawking.SingularPairLES.homIncl S n (redHomology (sub S) n h) := by
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ h
+  rw [show (Submodule.Quotient.mk z : Homology (sub S) n) = Homology.mk (sub S) n z from rfl,
+    SKEFTHawking.SingularRelHomologyInt.homIncl_mk, redHomology_mk, redHomology_mk,
+    SKEFTHawking.SingularPairLES.homIncl_mk]
+  refine congrArg (SKEFTHawking.SingularHomologyMod2.Homology.mk X n) ?_
+  refine Subtype.ext ?_
+  simp only [redCyclesHom]
+  exact redChain_chainIncl S n _
+
 end SKEFTHawking.SingularLocalHomologyRedCompatInt
