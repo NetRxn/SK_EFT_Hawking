@@ -247,4 +247,23 @@ theorem ne_zero_transport {A B A' B' : Type*}
   intro h
   exact ha (hgmod (h.trans hgmod0.symm))
 
+/-- **`.symm`-transport: non-vanishing lifts through the inverse of a reduction-natural equiv.**
+Given integral/mod-2 additive equivs `Fint : A ≃+ B`, `Fmod : A' ≃+ B'`, reductions `rA : A →+ A'`,
+`rB : B →+ B'`, and the FORWARD naturality `rB (Fint a) = Fmod (rA a)`, if `rB b ≠ 0` then
+`rA (Fint.symm b) ≠ 0`. (Apply `Fmod.symm` to the forward square: `rA (Fint.symm b) = Fmod.symm (rB b)`,
+and `Fmod.symm` injective + zero-preserving.) Lets the tower chase run on `.symm` legs from the base. -/
+theorem ne_zero_transport_symm {A B A' B' : Type*}
+    [AddCommGroup A] [AddCommGroup B] [AddCommGroup A'] [AddCommGroup B']
+    (Fint : A ≃+ B) (Fmod : A' ≃+ B') (rA : A →+ A') (rB : B →+ B')
+    (hnat : ∀ a, rB (Fint a) = Fmod (rA a))
+    {b : B} (hb : rB b ≠ 0) : rA (Fint.symm b) ≠ 0 := by
+  have hkey : rA (Fint.symm b) = Fmod.symm (rB b) := by
+    apply Fmod.injective
+    rw [Fmod.apply_symm_apply, ← hnat, Fint.apply_symm_apply]
+  rw [hkey]
+  intro h
+  apply hb
+  have := congrArg Fmod h
+  rwa [Fmod.apply_symm_apply, map_zero] at this
+
 end SKEFTHawking.SingularSphereGenReducesInt
