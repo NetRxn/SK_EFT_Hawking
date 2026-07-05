@@ -461,4 +461,93 @@ noncomputable def euclLocalHomologyIsoInt' :
     RelHomologyInt (X := Eucl 4) {x | x ≠ 0} 4 ≃ₗ[ℤ] ℤ :=
   euclLocalHomologyIsoInt
 
+/-! ## §F. The Euclidean local cap-iso packaging (the PD base case the MV five-lemma consumes)
+
+The base-case headline: the load-bearing Euclidean local cap-duality map
+`D_z : H⁴_c(ℝ⁴; ℤ) → H₀(ℝ⁴; ℤ)` (`relativeDualityInt0 {x|x≠0} 3 z hz`, `H⁴_c` computed directly as the
+relative cohomology `H⁴(ℝ⁴, ℝ⁴∖0; ℤ)`) is an **isomorphism**.
+
+The `H₀`-side end is already `≅ ℤ` (`euclH0IsoInt`) and off-degree pieces vanish (§E). The remaining
+input is the **source-side** `H⁴_c(ℝ⁴; ℤ) ≅ ℤ` together with the generator match `D_z(gen) = ±gen` — this
+is exactly the integral-relative-UCT fact `H⁴(ℝ⁴, ℝ⁴∖0; ℤ) ≅ Hom(H₄(ℝ⁴, ℝ⁴∖0; ℤ), ℤ) ≅ ℤ` (free, no Tor,
+since `H₃ = 0`) that over `ZMod 2` the mod-2 base case gets for free from field universal coefficients
+(`SingularRelativeUC`), but which over ℤ is a genuine free-UCT computation. It is disclosed here as the
+concrete datum `EuclLocalCapIsoData`; from it the base-case iso is REDUCED to a `LinearEquiv` /
+bijectivity — the exact form the MV five-lemma consumes. -/
+
+/-- **The Euclidean local cap-iso datum** — the sharpened, checkable input to the PD base case.
+
+Discloses only:
+* `z`, `hz` — a relative fundamental cycle for `[ℝ⁴]_loc` (an integral `4`-chain with `∂z` a subspace
+  chain of `ℝ⁴∖0`), the class the cap is taken against;
+* `sourceIso` — the source-side compactly-supported cohomology iso `H⁴_c(ℝ⁴; ℤ) ≅ ℤ` (the free
+  integral-relative-UCT fact `H⁴(ℝ⁴, ℝ⁴∖0) ≅ Hom(H₄, ℤ) ≅ ℤ`; the field-UC the mod-2 base case gets free);
+* `genMatch` — the generator match `ε̄(D_z(sourceIso.symm 1)) = ±1`, i.e. the cap sends the `H⁴_c`
+  generator to a generator of `H₀(ℝ⁴;ℤ) ≅ ℤ` (equivalently `D_z` is compatible with the two `≅ ℤ` ends).
+
+From this datum the base-case cap `D_z` is bijective (`EuclLocalCapIsoData.capBijective`), i.e. a
+`LinearEquiv` `H⁴_c(ℝ⁴;ℤ) ≃ₗ H₀(ℝ⁴;ℤ)` (`EuclLocalCapIsoData.capEquiv`). The `H₀ ≅ ℤ` end is BUILT
+(`euclH0IsoInt`, §E); only the source-side iso + generator match are disclosed — the exact residual
+integral-UCT input, isolated cleanly. -/
+structure EuclLocalCapIsoData where
+  /-- A relative fundamental cycle for `[ℝ⁴]_loc`: an integral `4`-chain whose boundary is a subspace
+  chain of `ℝ⁴∖0`. -/
+  z : SingularChainInt (Eucl 4) 4
+  /-- `∂z` lies in the subspace chains of `ℝ⁴∖0` (so `z` represents a relative class). -/
+  hz : chainBoundary (Eucl 4) 3 z ∈ subspaceChainsInt {x | x ≠ 0} 3
+  /-- The source-side compactly-supported cohomology iso `H⁴_c(ℝ⁴; ℤ) ≅ ℤ` (free integral-relative-UCT). -/
+  sourceIso : RelativeCohomologyInt (X := Eucl 4) {x | x ≠ 0} 4 ≃ₗ[ℤ] ℤ
+  /-- The generator match: the cap sends the `H⁴_c` generator to a generator of `H₀(ℝ⁴;ℤ) ≅ ℤ`
+  (`ε̄(D_z gen) = ±1`), i.e. `IsUnit` in ℤ. -/
+  genMatch : IsUnit (augHInt (Eucl 4)
+    (relativeDualityInt0 {x | x ≠ 0} 3 z hz (sourceIso.symm 1)))
+
+/-- **The Euclidean local cap map, as a plain ℤ-linear map** `H⁴_c(ℝ⁴; ℤ) →ₗ H₀(ℝ⁴; ℤ)`, from a datum's
+fundamental cycle. This is `relativeDualityInt0 {x|x≠0} 3 z hz` — the load-bearing degree-0 cap
+`H⁴(ℝ⁴, ℝ⁴∖0; ℤ) ⌢ [ℝ⁴]_loc → H₀(ℝ⁴; ℤ)`. -/
+noncomputable def EuclLocalCapIsoData.capMap (D : EuclLocalCapIsoData) :
+    RelativeCohomologyInt (X := Eucl 4) {x | x ≠ 0} 4 →ₗ[ℤ] Homology (Eucl 4) 0 :=
+  relativeDualityInt0 {x | x ≠ 0} 3 D.z D.hz
+
+/-- **The base-case cap is bijective** — from the datum. The composite
+`ℤ --sourceIso.symm--> H⁴_c --capMap--> H₀ --ε̄--> ℤ` sends `1 ↦ ±1` (a `ℤ`-unit, `genMatch`), so it is
+a bijective ℤ-linear endomorphism of `ℤ`; since `sourceIso` and `ε̄` (`euclH0IsoInt`) are already
+bijective, `capMap` is bijective. The exact base-case iso the MV five-lemma consumes, reduced to the
+disclosed source-iso + generator-match datum. -/
+theorem EuclLocalCapIsoData.capBijective (D : EuclLocalCapIsoData) :
+    Function.Bijective D.capMap := by
+  -- The endomorphism `φ = ε̄ ∘ capMap ∘ sourceIso.symm : ℤ →ₗ ℤ` sends `1 ↦ ε̄(D_z gen)`, a unit.
+  set φ : ℤ →ₗ[ℤ] ℤ :=
+    (euclH0IsoInt.toLinearMap.comp D.capMap).comp D.sourceIso.symm.toLinearMap with hφ
+  have hφ1 : φ 1 = augHInt (Eucl 4)
+      (relativeDualityInt0 {x | x ≠ 0} 3 D.z D.hz (D.sourceIso.symm 1)) := rfl
+  -- `φ` is `n ↦ n * u` for the unit `u = φ 1`; multiplication by a unit is bijective on ℤ.
+  obtain ⟨u, hu⟩ := hφ1 ▸ D.genMatch
+  have hφ1u : φ 1 = (u : ℤ) := by rw [hφ1, hu]
+  have hmulmap : ∀ n : ℤ, φ n = n * (u : ℤ) := by
+    intro n
+    have hn : φ n = n • φ 1 := by rw [← map_smul]; congr 1; rw [smul_eq_mul, mul_one]
+    rw [hn, hφ1u, smul_eq_mul]
+  have hφbij : Function.Bijective φ := by
+    constructor
+    · intro a b hab
+      rw [hmulmap a, hmulmap b] at hab
+      exact mul_right_cancel₀ u.ne_zero hab
+    · intro y
+      refine ⟨y * (u⁻¹ : ℤˣ), ?_⟩
+      rw [hmulmap, mul_assoc, ← Units.val_mul, inv_mul_cancel, Units.val_one, mul_one]
+  -- `φ = ε̄ ∘ capMap ∘ sourceIso.symm` bijective, with `ε̄` and `sourceIso.symm` bijective ⟹ capMap bijective.
+  have hcomp : (⇑euclH0IsoInt ∘ ⇑D.capMap) ∘ ⇑D.sourceIso.symm = ⇑φ := rfl
+  have h1 : Function.Bijective (⇑euclH0IsoInt ∘ ⇑D.capMap) := by
+    have := hφbij
+    rw [← hcomp] at this
+    exact (Function.Bijective.of_comp_iff _ D.sourceIso.symm.bijective).mp this
+  exact (Function.Bijective.of_comp_iff' euclH0IsoInt.bijective _).mp h1
+
+/-- **The base-case cap as a `LinearEquiv`** `H⁴_c(ℝ⁴; ℤ) ≃ₗ H₀(ℝ⁴; ℤ)` — the Euclidean local
+Poincaré-duality cap-iso the MV five-lemma consumes, built from the datum via `capBijective`. -/
+noncomputable def EuclLocalCapIsoData.capEquiv (D : EuclLocalCapIsoData) :
+    RelativeCohomologyInt (X := Eucl 4) {x | x ≠ 0} 4 ≃ₗ[ℤ] Homology (Eucl 4) 0 :=
+  LinearEquiv.ofBijective D.capMap D.capBijective
+
 end SKEFTHawking.SingularEuclideanCapIsoInt
