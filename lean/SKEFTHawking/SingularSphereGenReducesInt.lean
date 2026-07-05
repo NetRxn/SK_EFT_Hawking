@@ -377,4 +377,36 @@ theorem redHomology_topSphereReduceInt : (m : ℕ) → (h : Homology (Sph (m + 1
             (redHomology (Sph (m + 2)) (m + 2) h))
       rw [redHomology_topSphereReduceInt m, redHomology_dimReductionEquivInt]
 
+/-! ## §7. The `ker ε̄` reduction homomorphism and the equator/circle stages -/
+
+/-- **The reduction preserves reduced `H̃₀ = ker ε̄`**: `augH X (redHomology X 0 x) = ↑(augHInt X x)`
+(`augH_redHomology`), so `x ∈ ker(augHInt) ⟹ redHomology x ∈ ker(augH)`. As an additive hom. -/
+noncomputable def redHomologyKer (X : TopCat) :
+    ↥(LinearMap.ker (augHInt X)) →+ ↥(LinearMap.ker (augH X)) where
+  toFun x := ⟨redHomology X 0 (x : Homology X 0), by
+    rw [LinearMap.mem_ker, augH_redHomology, show augHInt X (x : Homology X 0) = 0 from x.2,
+      Int.cast_zero]⟩
+  map_zero' := by ext; simp
+  map_add' a b := by ext; simp
+
+@[simp] theorem redHomologyKer_coe (X : TopCat) (x : ↥(LinearMap.ker (augHInt X))) :
+    ((redHomologyKer X x : ↥(LinearMap.ker (augH X))) :
+        SKEFTHawking.SingularHomologyMod2.Homology X 0)
+      = redHomology X 0 (x : Homology X 0) := rfl
+
+/-- **The reduced-`H̃₀` generator reduces to a nonzero `ker ε̄` class** (base of the tower, ker level).
+The mod-2 class `redHomologyKer (e.symm 1)` is nonzero in `ker(augH X)` — its underlying `Homology`
+class is nonzero (`base_generator_reduces_ne_zero`), and the ker inclusion is injective. -/
+theorem redHomologyKer_base_ne_zero (hU : IsClopen U)
+    (hUbij : Function.Bijective (augHInt (sub U)))
+    (hUcbij : Function.Bijective (augHInt (sub Uᶜ)))
+    (e : ↥(LinearMap.ker (augHInt X)) ≃ₗ[ℤ] ℤ) :
+    redHomologyKer X (e.symm 1) ≠ 0 := by
+  intro h
+  apply base_generator_reduces_ne_zero hU hUbij hUcbij e
+  have hc := congrArg (fun w : ↥(LinearMap.ker (augH X)) =>
+    (w : SKEFTHawking.SingularHomologyMod2.Homology X 0)) h
+  simp only [redHomologyKer_coe, ZeroMemClass.coe_zero] at hc
+  exact hc
+
 end SKEFTHawking.SingularSphereGenReducesInt
