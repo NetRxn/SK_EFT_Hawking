@@ -1046,6 +1046,9 @@ import SKEFTHawking.SingularRelativeChainProjectiveInt
 -- Phase 5q.H · E1 (CSC-PD tower): GENERAL coordinate-quotient projectivity (quotient of free chains by a
 -- Finsupp.supported submodule is projective, via restrictDom) — covers RelativeChainInt + the MV third-term Q.
 import SKEFTHawking.SingularChainQuotientProjectiveInt
+-- Phase 5q.H · E1 (CSC-PD tower): the relative-homology MV chain SES SPLITS (QChainInt projective → section
+-- of Sum) — the field-UC-free enabler: a split SES stays exact under Hom(−,ℤ), dualizing to the rel-cohom MV.
+import SKEFTHawking.SingularRelativeMVSplitInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
