@@ -1064,6 +1064,9 @@ import SKEFTHawking.SingularConvexRadialRetractInt
 import SKEFTHawking.SingularSphereHighDegreeInt
 import SKEFTHawking.SingularConvexRadialBaseInt
 import SKEFTHawking.SingularChartBallBijectiveInt
+-- Phase 5q.H · E1 brick 18e: the oriented fundamental-class BASE CASE on a chart ball
+-- (hasOrientedFundClassInt_chartBall) — orient constant = the chart's local-generator sign, MV-free.
+import SKEFTHawking.SingularIntFundClassChartBall
 import SKEFTHawking.SingularBallCover
 import SKEFTHawking.SingularGoodCompactEuclidean
 import SKEFTHawking.SingularGoodCompactChart
