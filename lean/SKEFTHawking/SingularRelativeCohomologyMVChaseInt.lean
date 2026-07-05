@@ -97,4 +97,39 @@ theorem exists_coboundary_witness_of_sumInt (U V : Set M) (m : ℕ)
       - ((β : relCochainsInt V (m + 1)) : SingularCochainInt M (m + 1))
   rfl
 
+/-- **(A) The intersection-cocycle class assembly.** From `Σ_H([α],[β]) = 0` (degree `m+1`), the chase
+produces cocycles `ωU ∈ ker δ_U`, `ωV ∈ ker δ_V` with the SAME underlying cochain (`= α − δgU = β − δgV`),
+cohomologous to `α` in `H(U)` and to `β` in `H(V)` respectively. The common cochain is the `Hom(Q)`
+cocycle whose lift to `RelativeCohomologyInt(U∪V)` (the dual small-chains iso, remaining piece (B))
+`Δ_H`-maps to `([α],[β])` — the `ker Σ_H ⊆ range Δ_H` half of the middle exactness. -/
+theorem exists_intersection_cocycle_of_sumInt (U V : Set M) (m : ℕ)
+    (α : LinearMap.ker (relCoboundaryIntₗ U (m + 1)))
+    (β : LinearMap.ker (relCoboundaryIntₗ V (m + 1)))
+    (h0 : relCohomMvSumInt U V (m + 1)
+        (RelativeCohomologyInt.mk U (m + 1) α, RelativeCohomologyInt.mk V (m + 1) β) = 0) :
+    ∃ (ωU : LinearMap.ker (relCoboundaryIntₗ U (m + 1)))
+      (ωV : LinearMap.ker (relCoboundaryIntₗ V (m + 1))),
+      ((ωU : relCochainsInt U (m + 1)) : SingularCochainInt M (m + 1))
+          = ((ωV : relCochainsInt V (m + 1)) : SingularCochainInt M (m + 1))
+        ∧ RelativeCohomologyInt.mk U (m + 1) ωU = RelativeCohomologyInt.mk U (m + 1) α
+        ∧ RelativeCohomologyInt.mk V (m + 1) ωV = RelativeCohomologyInt.mk V (m + 1) β := by
+  obtain ⟨g, hg⟩ := exists_coboundary_witness_of_sumInt U V m α β h0
+  obtain ⟨gU, gV, hcommon⟩ := exists_common_cochain_of_coboundaryInt U V m α β g hg
+  have hmemU : relCoboundaryIntₗ U m gU ∈ LinearMap.ker (relCoboundaryIntₗ U (m + 1)) :=
+    relCoboundaryRangeInt_le_ker U (m + 1) (LinearMap.mem_range_self _ gU)
+  have hmemV : relCoboundaryIntₗ V m gV ∈ LinearMap.ker (relCoboundaryIntₗ V (m + 1)) :=
+    relCoboundaryRangeInt_le_ker V (m + 1) (LinearMap.mem_range_self _ gV)
+  refine ⟨α - ⟨relCoboundaryIntₗ U m gU, hmemU⟩, β - ⟨relCoboundaryIntₗ V m gV, hmemV⟩, ?_, ?_, ?_⟩
+  · -- same underlying cochain: α − δgU = β − δgV (hcommon)
+    exact hcommon
+  · -- [ωU] = [α]: differ by the coboundary δgU
+    show (Submodule.Quotient.mk (α - ⟨relCoboundaryIntₗ U m gU, hmemU⟩) :
+        RelativeCohomologyInt U (m + 1)) = Submodule.Quotient.mk α
+    rw [Submodule.Quotient.eq, sub_sub_cancel_left]
+    exact Submodule.neg_mem _ (Submodule.mem_comap.2 (LinearMap.mem_range_self _ gU))
+  · show (Submodule.Quotient.mk (β - ⟨relCoboundaryIntₗ V m gV, hmemV⟩) :
+        RelativeCohomologyInt V (m + 1)) = Submodule.Quotient.mk β
+    rw [Submodule.Quotient.eq, sub_sub_cancel_left]
+    exact Submodule.neg_mem _ (Submodule.mem_comap.2 (LinearMap.mem_range_self _ gV))
+
 end SKEFTHawking.SingularRelativeCohomologyMVChaseInt
