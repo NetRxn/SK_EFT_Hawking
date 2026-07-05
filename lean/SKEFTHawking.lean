@@ -1071,6 +1071,9 @@ import SKEFTHawking.SingularIntFundClassChartBall
 -- (hasOrientedFundClassInt_union / _biUnion) — glue oriented classes on A,B via relMvInt_exact_middle'
 -- + determinedByPointsInt; the honest ℤ `sub_self` replacing the mod-2 `x+x=0` collapse.
 import SKEFTHawking.SingularIntFundClassUnionInt
+-- Phase 5q.H · E1 brick 18g: the oriented fundamental class on all of M (hasOrientedFundClassInt_univ)
+-- — chart-ball cover + biUnion; assembles the full base→union→biUnion→univ oriented induction.
+import SKEFTHawking.SingularIntFundClassUnivInt
 import SKEFTHawking.SingularBallCover
 import SKEFTHawking.SingularGoodCompactEuclidean
 import SKEFTHawking.SingularGoodCompactChart
