@@ -184,4 +184,52 @@ theorem baseDetector_redHomology (hU : IsClopen U)
   rw [← hsplitInt, show splitH0Int U (aU, bUc) = (splitH0IntEquiv hU) (aU, bUc) from rfl,
     (splitH0IntEquiv hU).symm_apply_apply]
 
+/-! ## §4. The base generator reduces nonzero -/
+
+/-- **A ℤ-linear map bijective on `ker(ε̄_ℤ) ≅ ℤ` sends any `≅ℤ`-generator to `±1` (a unit).**
+`antiDiagProjInt` is a linear iso `ker ≅ ℤ`; composed with the inverse of `e : ker ≃ ℤ` it is a
+`ℤ`-linear automorphism of `ℤ`, so `antiDiagProjInt (e.symm 1)` is a unit. -/
+theorem antiDiagProjInt_generator_isUnit (hU : IsClopen U)
+    (hUbij : Function.Bijective (augHInt (sub U)))
+    (hUcbij : Function.Bijective (augHInt (sub Uᶜ)))
+    (e : ↥(LinearMap.ker (augHInt X)) ≃ₗ[ℤ] ℤ) :
+    IsUnit (antiDiagProjInt (X := X) hU hUbij (e.symm 1)) := by
+  set π := LinearEquiv.ofBijective (antiDiagProjInt (X := X) hU hUbij)
+    (antiDiagProjInt_bijective hU hUbij hUcbij) with hπ
+  -- φ := e.symm.trans π : ℤ ≃ₗ ℤ, and antiDiagProjInt (e.symm 1) = φ 1
+  set φ : ℤ ≃ₗ[ℤ] ℤ := e.symm.trans π with hφ
+  have hval : antiDiagProjInt (X := X) hU hUbij (e.symm 1) = φ 1 := rfl
+  rw [hval]
+  -- φ 1 * φ.symm 1 = φ (1 * φ.symm 1) ... use φ (φ.symm 1) = 1 and ℤ-linearity
+  refine IsUnit.of_mul_eq_one (φ.symm 1) ?_
+  have h2 : (φ.symm 1) * φ 1 = 1 := by
+    rw [← smul_eq_mul, ← map_smul, smul_eq_mul, mul_one, φ.apply_symm_apply]
+  rw [mul_comm]; exact h2
+
+/-- **The reduction of the integral `ker ε̄` generator is nonzero** (base of the sphere-suspension
+tower). For a clopen `U ⊔ Uᶜ` with both pieces `ε̄`-bijective, and any iso `e : ker(ε̄_ℤ) ≅ ℤ`, the
+class `e.symm 1 : Homology X 0` reduces to a nonzero mod-2 class: `baseDetector (redHomology _) = ±1 =
+1 ≠ 0`. The concrete input to `SphereGenReducesNonzero` (with `X = Punc 1`, `U = posSet`, `e` the base
+iso `augHInt_ker_punc1_iso_int.some`). -/
+theorem base_generator_reduces_ne_zero (hU : IsClopen U)
+    (hUbij : Function.Bijective (augHInt (sub U)))
+    (hUcbij : Function.Bijective (augHInt (sub Uᶜ)))
+    (e : ↥(LinearMap.ker (augHInt X)) ≃ₗ[ℤ] ℤ) :
+    redHomology X 0 (e.symm 1 : ↥(LinearMap.ker (augHInt X))) ≠ 0 := by
+  intro hzero
+  -- detector reads ↑(antiDiagProjInt (e.symm 1)) = ±1 = 1
+  have hdet := baseDetector_redHomology (X := X) hU hUbij
+    (e.symm 1 : ↥(LinearMap.ker (augHInt X))) (e.symm 1).2
+  rw [hzero, map_zero] at hdet
+  -- hdet : 0 = ↑(antiDiagProjInt ⟨(e.symm 1).1, _⟩)
+  have hval : antiDiagProjInt (X := X) hU hUbij ⟨(e.symm 1 : ↥(LinearMap.ker (augHInt X))).1,
+      (e.symm 1).2⟩ = antiDiagProjInt (X := X) hU hUbij (e.symm 1) := by
+    congr 1
+  rw [hval] at hdet
+  have hunit := antiDiagProjInt_generator_isUnit hU hUbij hUcbij e
+  rw [Int.isUnit_iff] at hunit
+  rcases hunit with h1 | hm1
+  · rw [h1] at hdet; simp at hdet
+  · rw [hm1] at hdet; norm_num at hdet
+
 end SKEFTHawking.SingularSphereGenReducesInt
