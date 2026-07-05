@@ -141,4 +141,25 @@ theorem connectingInt_eucl_bijective (n j : ℕ) :
   connectingInt_bijective_of_acyclic (X := Eucl n) {x | x ≠ 0} (j + 1)
     (eucl_homology_trivialInt n (j + 1)) (eucl_homology_trivialInt n j)
 
+/-! ## §4. The local homology reduces to sphere homology -/
+
+open SKEFTHawking.SingularPuncturedRetract (Punc Sph normalize)
+open SKEFTHawking.SingularPuncturedRetractInt
+open SKEFTHawking.SingularFunctorialityInt
+
+/-- **The integral local homology of `ℝⁿ` reduces to sphere homology**: the composite
+`Hₙ(ℝⁿ, ℝⁿ∖0; ℤ) → Hₙ₋₁(ℝⁿ∖0; ℤ) → Hₙ₋₁(Sⁿ⁻¹; ℤ)` (connecting iso ∘ retract iso) is a bijection.
+For `n = j + 2` this is `H_{j+2}(ℝⁿ, ℝⁿ∖0; ℤ) ≅ H_{j+1}(Sⁿ⁻¹; ℤ)`.
+
+This is the geometric tower `H₄(ℝ⁴,ℝ⁴∖0;ℤ) ≅ H₃(ℝ⁴∖0;ℤ) ≅ H₃(S³;ℤ)` from the `IntLocalHomologyIso`
+docstring, now GREEN except for the final `H₃(S³;ℤ) ≅ ℤ` (the integral sphere top class). The
+`Homology (sub {x|x≠0})` and `Homology (Punc n)` are defeq at the `TopCat` level, so
+`Homology.mapInt normalize` composes directly with `connectingInt`. -/
+theorem localHomologyInt_reduces_to_sphere (n j : ℕ) :
+    Function.Bijective
+      ((Homology.mapInt (normalize (n := n)) (j + 1)).toFun ∘
+        (connectingInt (X := SingularEuclideanAcyclic.Eucl n) {x | x ≠ 0} (j + 1))) :=
+  Function.Bijective.comp (homology_mapInt_normalize_bijective n j)
+    (connectingInt_eucl_bijective n j)
+
 end SKEFTHawking.SingularLocalHomologyInt
