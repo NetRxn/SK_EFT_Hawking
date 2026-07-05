@@ -956,6 +956,12 @@ import SKEFTHawking.SingularLocalHomologyInt
 -- verbatim; homology-level bijectivity re-proved over ℤ via connectingInt/excisionEquivInt/retract/
 -- functoriality. Delivers the sphere suspension dimReductionEquivInt + topSphereReduceInt. Kernel-pure.
 import SKEFTHawking.SingularSphereHomologyInt
+-- Phase 5q.H · E1 (Substrate-G topology, brick 14e part 2): integral base case toward H₁(S¹;ℤ)≅ℤ.
+-- Integral augmentation ε:C₀(X;ℤ)→ℤ + ε̄:H₀→ℤ; signed degree-0 prism ⟹ reduced H̃₀=0 from a contraction
+-- (augHInt_injective_of_contraction); the reduced-H̃₀ pair-LES isos (homProjInt_one_bijective /
+-- connectingInt_zero_* ) over ℤ. Base value is ℤ (not ℤ/2). Kernel-pure. (Disjoint-union ker≅ℤ + the
+-- H₁(S¹;ℤ)/H₃(S³;ℤ) assembly follow in the same file.)
+import SKEFTHawking.SingularLineMinusPointInt
 -- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
