@@ -920,6 +920,16 @@ import SKEFTHawking.SingularSubdivisionConvex
 -- preservation. Root foundation for integral singular excision + integral sphere homology (both
 -- Mathlib-absent, both ZMod 2-only on-main). Kernel-pure.
 import SKEFTHawking.SingularAffineChainInt
+-- Phase 5q.H · E1 (Substrate-G brick 14b, 2026-07-04): the SIGNED INTEGRAL singular barycentric
+-- subdivision Sd : Cₙ(X;ℤ)→Cₙ(X;ℤ) := σ_#(Sd_aff ιₙ). Bridges the signed affine engine 14a to singular
+-- integral chains via the COEFFICIENT-AGNOSTIC geometric pushforward maps (pushSimplexM/_face/_facetIncl,
+-- reused from SingularExcisionPushforward — they act on the simplex-valued function, not the coefficient),
+-- rebuilding only the ℤ-linear pushChainMInt + signed boundary bookkeeping. Delivers over ℤ:
+-- mapVertsInt naturality (∂/cone/Sd/D); pushChainMInt chain-map ∂σ_#=σ_#∂ + facet functoriality;
+-- singularSdInt with ∂Sd=Sd∂ (basis + LinearMap); singularDInt with ∂D+D∂=1−Sd (SIGNED — mod-2 drops to
+-- 1+Sd); the iterated Sdᵐ chain-map + iterHomotopyInt Dₘ with ∂Dₘ+Dₘ∂=1−Sdᵐ; singularSdInt_pushChainMInt
+-- naturality + singularSdInt_iterate_single (Sdᵐ[σ]=σ_#(Sd_affᵐ ιₙ)) — the excision workhorse. Kernel-pure.
+import SKEFTHawking.SingularSubdivisionInt
 -- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
