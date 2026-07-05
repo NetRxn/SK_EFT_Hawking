@@ -449,4 +449,177 @@ theorem augHInt_ker_iso_int {X : TopCat} {U : Set ↑X} (hU : IsClopen U)
   -- ker sumLM = {(a, −a)} ≅ ℤ via (a,−a) ↦ a
   exact ⟨ekerX.trans kerSumLM_equiv_int⟩
 
+/-! ## §E. `augHInt` bijectivity transport + convex bijectivity + the `ℝ¹∖0` base -/
+
+open SKEFTHawking.SingularSphereHomologyInt (Homology.mapInt_bijective_of_comp_id_all)
+
+/-- **Reduced-acyclic-with-nonzero-`H₀` (`ε̄` bijective) transports across a homeomorphism** (integral). -/
+theorem augHInt_bijective_of_homeo {X Y : TopCat} (f : C(↑X, ↑Y)) (g : C(↑Y, ↑X))
+    (hgf : g.comp f = ContinuousMap.id ↑X) (hfg : f.comp g = ContinuousMap.id ↑Y)
+    (hY : Function.Bijective (augHInt Y)) : Function.Bijective (augHInt X) := by
+  have hf : Function.Bijective (Homology.mapInt f 0) :=
+    Homology.mapInt_bijective_of_comp_id_all f g hgf hfg 0
+  refine ⟨augHInt_injective_of_map f hf.injective hY.injective, fun t => ?_⟩
+  obtain ⟨y, hy⟩ := hY.surjective t
+  obtain ⟨x, hx⟩ := hf.surjective y
+  exact ⟨x, by rw [← augHInt_naturality f, hx, hy]⟩
+
+/-- A homeomorphism carries `ker ε̄` onto `ker ε̄` (integral). -/
+theorem augHInt_ker_map_eq {X Y : TopCat} (f : C(↑X, ↑Y)) (g : C(↑Y, ↑X))
+    (hgf : g.comp f = ContinuousMap.id ↑X) (hfg : f.comp g = ContinuousMap.id ↑Y) :
+    Submodule.map (Homology.mapInt f 0) (LinearMap.ker (augHInt X)) = LinearMap.ker (augHInt Y) := by
+  have hf := Homology.mapInt_bijective_of_comp_id_all f g hgf hfg 0
+  ext y
+  simp only [Submodule.mem_map, LinearMap.mem_ker]
+  constructor
+  · rintro ⟨x, hx, rfl⟩; rw [augHInt_naturality]; exact hx
+  · intro hy
+    obtain ⟨x, hx⟩ := hf.surjective y
+    exact ⟨x, by rw [← augHInt_naturality f, hx]; exact hy, hx⟩
+
+/-- **`ker ε̄` (reduced `H̃₀`) transports across a homeomorphism** (integral). -/
+noncomputable def augHIntKerEquivOfHomeo {X Y : TopCat} (f : C(↑X, ↑Y)) (g : C(↑Y, ↑X))
+    (hgf : g.comp f = ContinuousMap.id ↑X) (hfg : f.comp g = ContinuousMap.id ↑Y) :
+    ↥(LinearMap.ker (augHInt X)) ≃ₗ[ℤ] ↥(LinearMap.ker (augHInt Y)) :=
+  ((LinearEquiv.ofBijective (Homology.mapInt f 0)
+        (Homology.mapInt_bijective_of_comp_id_all f g hgf hfg 0)).submoduleMap
+      (LinearMap.ker (augHInt X))).trans
+    (LinearEquiv.ofEq _ _ (augHInt_ker_map_eq f g hgf hfg))
+
+/-- **A nonempty convex subset of a normed space is reduced-acyclic with nonzero `H₀`** (integral):
+`ε̄` bijective (injective via the straight-line contraction; surjective since nonempty). -/
+theorem convex_augHInt_bijective {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {C : Set E} (hC : Convex ℝ C) {p : E} (hp : p ∈ C) :
+    Function.Bijective (augHInt (sub (X := TopCat.of E) C)) := by
+  let hcont : C(↑(sub (X := TopCat.of E) C) × unitInterval, ↑(sub (X := TopCat.of E) C)) :=
+    ⟨fun q => ⟨(1 - (q.2 : ℝ)) • (q.1 : E) + (q.2 : ℝ) • p,
+        hC q.1.2 hp (by linarith [q.2.2.2]) q.2.2.1 (by ring)⟩, by fun_prop⟩
+  refine ⟨augHInt_injective_of_contraction hcont ⟨p, hp⟩ ?_ ?_,
+    augHInt_surjective (sub (X := TopCat.of E) C)
+      (constSimplex (⟨p, hp⟩ : ↑(sub (X := TopCat.of E) C)) 0)⟩
+  · refine ContinuousMap.ext fun x => Subtype.ext ?_
+    show (1 - ((0 : unitInterval) : ℝ)) • (x : E) + ((0 : unitInterval) : ℝ) • p = (x : E)
+    simp
+  · refine ContinuousMap.ext fun x => Subtype.ext ?_
+    show (1 - ((1 : unitInterval) : ℝ)) • (x : E) + ((1 : unitInterval) : ℝ) • p = p
+    simp
+
+/-! ## §F. `H̃₀(ℝ¹∖0; ℤ) ≅ ℤ`, `H₁(S¹; ℤ) ≅ ℤ`, and `H₃(S³; ℤ) ≅ ℤ` -/
+
+open SKEFTHawking.SingularPuncturedRetract (Punc)
+open SKEFTHawking.SingularLineMinusPoint
+  (posSet posRay convex_posRay posFwd posBwd posBwd_comp_posFwd posFwd_comp_posBwd
+    negFwd negBwd negBwd_comp_negFwd negFwd_comp_negBwd isClopen_posSet)
+
+/-- **The positive arc of `ℝ¹∖0` is reduced-acyclic with nonzero `H₀`** (integral): homeomorphic to
+the convex half-line `posRay`. -/
+theorem augHInt_posSet_bijective : Function.Bijective (augHInt (sub posSet)) :=
+  augHInt_bijective_of_homeo posFwd posBwd posBwd_comp_posFwd posFwd_comp_posBwd
+    (convex_augHInt_bijective convex_posRay (p := EuclideanSpace.single 0 1)
+      (by show (0:ℝ) < EuclideanSpace.single 0 (1:ℝ) 0; simp))
+
+/-- **The negative arc is reduced-acyclic with nonzero `H₀`** (integral, antipodal). -/
+theorem augHInt_posSetCompl_bijective : Function.Bijective (augHInt (sub posSetᶜ)) :=
+  augHInt_bijective_of_homeo negFwd negBwd negBwd_comp_negFwd negFwd_comp_negBwd
+    augHInt_posSet_bijective
+
+/-- **`H̃₀(ℝ¹∖0; ℤ) ≅ ℤ`** — the concrete base value of the integral sphere/local-homology induction. -/
+theorem augHInt_ker_punc1_iso_int :
+    Nonempty (↥(LinearMap.ker (augHInt (Punc 1))) ≃ₗ[ℤ] ℤ) :=
+  augHInt_ker_iso_int isClopen_posSet augHInt_posSet_bijective augHInt_posSetCompl_bijective
+
+/-! ### The bottom sphere suspension `H₁(Sⁿ; ℤ) ≅ H̃₀(Sⁿ∖{v,-v}; ℤ)` -/
+
+open SKEFTHawking.SingularSphereHomologyInt
+open SKEFTHawking.SingularExcisionIsoInt (excisionEquivInt)
+open SKEFTHawking.SingularExcisionIso (restr)
+open SKEFTHawking.SingularSphereAcyclic (Sph antipode ne_antipode polar_cover)
+
+variable {n : ℕ} {v : Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1}
+
+/-- **`ℝⁿ` is reduced-acyclic** (integral): `ε̄ : H₀(ℝⁿ;ℤ) → ℤ` injective, via the straight-line
+contraction (reused verbatim from `SingularEuclideanAcyclic`). -/
+theorem eucl_augHInt_injective (m : ℕ) :
+    Function.Injective (augHInt (SingularEuclideanAcyclic.Eucl m)) :=
+  augHInt_injective_of_contraction (SingularEuclideanAcyclic.contraction m) 0
+    (SingularEuclideanAcyclic.slice_contraction_zero m)
+    (SingularEuclideanAcyclic.slice_contraction_one m)
+
+/-- **The punctured sphere `Sⁿ∖{v}` is reduced-acyclic** (integral): `ε̄` injective, transported from
+`ℝⁿ` reduced-acyclic across the stereographic homeo. -/
+theorem punctured_sphere_augHInt_injective :
+    Function.Injective (augHInt (SingularSphereAcyclic.Apunc n v)) :=
+  augHInt_injective_of_map (SingularSphereAcyclic.stereoMap n v)
+    (stereoMapInt_bijective_all (v := v) 0).injective (eucl_augHInt_injective n)
+
+/-- The bottom projection `j_* : H₁(Sⁿ;ℤ) → H₁(Sⁿ, Sⁿ∖{v};ℤ)` is bijective (`Sⁿ∖{v}` reduced-acyclic). -/
+theorem homProjInt_bottom_bijective :
+    Function.Bijective (homProjInt ({v}ᶜ : Set ↑(Sph n)) 1) :=
+  homProjInt_one_bijective_of_reduced_acyclic ({v}ᶜ : Set ↑(Sph n))
+    (punctured_sphere_homology_trivialInt (v := v) 0) punctured_sphere_augHInt_injective
+
+/-- **The bottom-degree sphere suspension map** `H₁(Sⁿ;ℤ) → H₀(Sⁿ∖{v,-v};ℤ)`. -/
+noncomputable def bottomSuspMapInt (n : ℕ) (v : Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) :
+    Homology (Sph n) 1 →ₗ[ℤ]
+      Homology (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))) 0 :=
+  (connectingInt (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)) 0).comp
+    (((excisionEquivInt ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ) 0
+          (polar_cover (ne_antipode v))).symm.toLinearMap).comp
+      (homProjInt ({v}ᶜ : Set ↑(Sph n)) 1))
+
+/-- **The bottom suspension is injective** (integral). -/
+theorem bottomSuspMapInt_injective : Function.Injective (bottomSuspMapInt n v) := by
+  rw [bottomSuspMapInt, LinearMap.coe_comp, LinearMap.coe_comp]
+  exact (connectingInt_zero_injective_of_acyclic (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))
+    (punctured_sphere_homology_trivialInt (v := antipode v) 0)).comp
+    (((excisionEquivInt ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ) 0
+        (polar_cover (ne_antipode v))).symm.injective).comp homProjInt_bottom_bijective.injective)
+
+/-- **The bottom suspension has range exactly `ker ε̄ = H̃₀(Sⁿ∖{v,-v};ℤ)`** (integral). -/
+theorem bottomSuspMapInt_range :
+    LinearMap.range (bottomSuspMapInt n v)
+      = LinearMap.ker (augHInt (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)))) := by
+  have hsurj : Function.Surjective ⇑(((excisionEquivInt ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ) 0
+      (polar_cover (ne_antipode v))).symm.toLinearMap).comp (homProjInt ({v}ᶜ : Set ↑(Sph n)) 1)) := by
+    rw [LinearMap.coe_comp]
+    exact (excisionEquivInt ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ) 0
+      (polar_cover (ne_antipode v))).symm.surjective.comp homProjInt_bottom_bijective.surjective
+  rw [bottomSuspMapInt, LinearMap.range_comp, LinearMap.range_eq_top.mpr hsurj, Submodule.map_top]
+  exact connectingInt_zero_range_of_augHInt_injective (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))
+    (punctured_sphere_augHInt_injective (v := antipode v))
+
+/-- **The bottom sphere suspension iso** `H₁(Sⁿ;ℤ) ≅ H̃₀(Sⁿ∖{v,-v};ℤ) = ker ε̄` (integral). -/
+noncomputable def bottomSuspEquivInt :
+    Homology (Sph n) 1 ≃ₗ[ℤ]
+      ↥(LinearMap.ker (augHInt (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))))) :=
+  (LinearEquiv.ofInjective (bottomSuspMapInt n v) bottomSuspMapInt_injective).trans
+    (LinearEquiv.ofEq _ _ bottomSuspMapInt_range)
+
+/-! ### The base case `H₁(S¹; ℤ) ≅ ℤ` and the top `Hₙ(Sⁿ; ℤ) ≅ ℤ` -/
+
+open SKEFTHawking.SingularSphereAcyclic
+  (equatorMap equatorMapInv equatorMapInv_comp_equatorMap equatorMap_comp_equatorMapInv)
+open SKEFTHawking.SingularSphereBottom (basePoint topSphereReduce)
+
+/-- **`H₁(S¹; ℤ) ≅ ℤ`** — the base case of the integral sphere-homology induction. The bottom
+suspension gives `H₁(S¹) ≅ H̃₀(equator)`; the equator `S¹∖{v,−v} ≃ ℝ¹∖0`, so
+`H̃₀(equator) ≅ H̃₀(ℝ¹∖0) ≅ ℤ`. -/
+noncomputable def circleH1EquivInt :
+    Homology (Sph 1) 1 ≃ₗ[ℤ] ℤ :=
+  (bottomSuspEquivInt (n := 1) (v := basePoint 1)).trans
+    ((augHIntKerEquivOfHomeo (equatorMap (basePoint 1)) (equatorMapInv (basePoint 1))
+          equatorMapInv_comp_equatorMap equatorMap_comp_equatorMapInv).trans
+      augHInt_ker_punc1_iso_int.some)
+
+/-- **`Hₘ₊₁(Sᵐ⁺¹; ℤ) ≅ ℤ`** — the top homology of every positive-dimensional sphere is `ℤ`
+(`topSphereReduceInt` down to the circle, then `circleH1EquivInt`). -/
+noncomputable def topSphereIsoInt (m : ℕ) :
+    Homology (Sph (m + 1)) (m + 1) ≃ₗ[ℤ] ℤ :=
+  (topSphereReduceInt m).trans circleH1EquivInt
+
+/-- **`H₃(S³; ℤ) ≅ ℤ`** — the deliverable of brick 14e: `Homology (Sph 4) 3 ≃ₗ ℤ`
+(`SingularPuncturedRetract.Sph 4` is the unit `S³ ⊂ ℝ⁴`). -/
+noncomputable def H3S3IsoInt : Homology (Sph 3) 3 ≃ₗ[ℤ] ℤ :=
+  topSphereIsoInt 2
+
 end SKEFTHawking.SingularLineMinusPointInt
