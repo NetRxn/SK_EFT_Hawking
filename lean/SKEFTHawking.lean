@@ -1051,6 +1051,8 @@ import SKEFTHawking.SingularChainSupport
 import SKEFTHawking.SingularLocalHomologyColimit
 import SKEFTHawking.SingularConvexRadialRetract
 import SKEFTHawking.SingularConvexRadialBase
+import SKEFTHawking.SingularConvexRadialRetractInt
+import SKEFTHawking.SingularSphereHighDegreeInt
 import SKEFTHawking.SingularBallCover
 import SKEFTHawking.SingularGoodCompactEuclidean
 import SKEFTHawking.SingularGoodCompactChart
