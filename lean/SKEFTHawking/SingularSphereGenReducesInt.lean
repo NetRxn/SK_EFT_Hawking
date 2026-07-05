@@ -409,4 +409,59 @@ theorem redHomologyKer_base_ne_zero (hU : IsClopen U)
   simp only [redHomologyKer_coe, ZeroMemClass.coe_zero] at hc
   exact hc
 
+open SKEFTHawking.SingularLineMinusPointInt (augHIntKerEquivOfHomeo)
+open SKEFTHawking.SingularDisjointUnion (augHKerEquivOfHomeo)
+
+/-- **The reduction commutes with the homeo `ker ε̄` transport** (ker level):
+`redHomologyKer Y ∘ augHIntKerEquivOfHomeo f g = augHKerEquivOfHomeo f g ∘ redHomologyKer X`. The
+underlying element is `Homology.mapInt f 0`, whose reduction naturality is `redHomology_homologyMapInt`. -/
+theorem redHomologyKer_augHIntKerEquivOfHomeo {X Y : TopCat} (f : C(↑X, ↑Y)) (g : C(↑Y, ↑X))
+    (hgf : g.comp f = ContinuousMap.id ↑X) (hfg : f.comp g = ContinuousMap.id ↑Y)
+    (x : ↥(LinearMap.ker (augHInt X))) :
+    redHomologyKer Y (augHIntKerEquivOfHomeo f g hgf hfg x)
+      = augHKerEquivOfHomeo f g hgf hfg (redHomologyKer X x) := by
+  apply Subtype.ext
+  show redHomology Y 0 ((augHIntKerEquivOfHomeo f g hgf hfg x : ↥(LinearMap.ker (augHInt Y))) : Homology Y 0)
+    = ((augHKerEquivOfHomeo f g hgf hfg (redHomologyKer X x) : ↥(LinearMap.ker (augH Y))) :
+        SKEFTHawking.SingularHomologyMod2.Homology Y 0)
+  rw [show ((augHIntKerEquivOfHomeo f g hgf hfg x : ↥(LinearMap.ker (augHInt Y))) : Homology Y 0)
+        = Homology.mapInt f 0 (x : Homology X 0) from rfl,
+    show ((augHKerEquivOfHomeo f g hgf hfg (redHomologyKer X x) : ↥(LinearMap.ker (augH Y))) :
+          SKEFTHawking.SingularHomologyMod2.Homology Y 0)
+        = SKEFTHawking.SingularFunctoriality.Homology.map f 0
+            ((redHomologyKer X x : ↥(LinearMap.ker (augH X))) :
+              SKEFTHawking.SingularHomologyMod2.Homology X 0) from rfl,
+    redHomologyKer_coe, redHomology_homologyMapInt]
+
+open SKEFTHawking.SingularLineMinusPointInt (bottomSuspEquivInt)
+open SKEFTHawking.SingularSphereBottom (bottomSuspEquiv)
+
+/-- **The reduction commutes with the bottom sphere suspension equiv** (ker codomain):
+`redHomologyKer (equator) ∘ bottomSuspEquivInt = bottomSuspEquiv ∘ redHomology (Sph n) 1`. Underlying
+element is `bottomSuspMapInt`, whose reduction naturality is `redHomology_bottomSuspMapInt`. -/
+theorem redHomologyKer_bottomSuspEquivInt {n : ℕ}
+    (v : Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) (h : Homology (Sph n) 1) :
+    redHomologyKer (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)))
+        (bottomSuspEquivInt (n := n) (v := v) h)
+      = bottomSuspEquiv (n := n) (v := v) (redHomology (Sph n) 1 h) := by
+  apply Subtype.ext
+  show redHomology (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))) 0
+      ((bottomSuspEquivInt (n := n) (v := v) h :
+        ↥(LinearMap.ker (augHInt (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)))))) :
+          Homology (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))) 0)
+    = ((bottomSuspEquiv (n := n) (v := v) (redHomology (Sph n) 1 h) :
+        ↥(LinearMap.ker (augH (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)))))) :
+          SKEFTHawking.SingularHomologyMod2.Homology
+            (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))) 0)
+  rw [show ((bottomSuspEquivInt (n := n) (v := v) h :
+          ↥(LinearMap.ker (augHInt (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)))))) :
+            Homology (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))) 0)
+        = bottomSuspMapInt n v h from rfl,
+    show ((bottomSuspEquiv (n := n) (v := v) (redHomology (Sph n) 1 h) :
+          ↥(LinearMap.ker (augH (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)))))) :
+            SKEFTHawking.SingularHomologyMod2.Homology
+              (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))) 0)
+        = bottomSuspMap n v (redHomology (Sph n) 1 h) from rfl,
+    redHomology_bottomSuspMapInt]
+
 end SKEFTHawking.SingularSphereGenReducesInt
