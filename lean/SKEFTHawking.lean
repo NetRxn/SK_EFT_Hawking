@@ -1013,6 +1013,12 @@ import SKEFTHawking.SingularLocalDualityKInt
 -- Phase 5q.H · E1 (CSC-PD tower): cohomology-restriction compatibility of D_K (the DirectLimit.lift
 -- compat for the open duality D_W). Integral mirror of SingularLocalDualityKRestrict.
 import SKEFTHawking.SingularLocalDualityKRestrictInt
+-- Phase 5q.H · E1 (CSC-PD tower): the integral homology directed system of subspaces
+-- (homOfSubsetInt + id/trans) — the bottom row of the PD ladder. Mirror of SingularSubsetHomology.
+import SKEFTHawking.SingularSubsetHomologyInt
+-- Phase 5q.H · E1 (CSC-PD tower): support-enlargement naturality of D_K (D_K commutes with the
+-- homology support-enlargement). Integral mirror of SingularLocalDualityKMono.
+import SKEFTHawking.SingularLocalDualityKMonoInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
