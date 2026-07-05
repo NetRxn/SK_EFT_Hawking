@@ -292,4 +292,43 @@ theorem redHomology_euclCore (z : RelHomologyInt (X := Eucl 4) {x | x ≠ 0} 4) 
   exact congrArg (SKEFTHawking.SingularFunctoriality.Homology.map (normalize (n := 4)) 3)
     (redHomology_connectingInt (S := {x | x ≠ 0}) 3 z)
 
+/-! ## §8. The local iso as a THEOREM, up to the single generator-reduction residual
+
+`IntLocalHomologyIso M x` has three fields; two are the built isos `manifoldLocalHomologyIsoInt x`
+(integral, kernel-pure) and `manifoldLocalIso x` (on-main mod-2). The third, `redCompat`, is reduced by
+`redCompat_of_generator` (§4) to the SINGLE check that the mod-2 iso sends the reduction of the integral
+generator to `1`; and by `generator_check_of_ne_zero` (§4) to the NON-VANISHING of that reduced
+generator. So the entire `IntLocalHomologyIso` structure is inhabited from exactly one residual fact:
+`ReducedGeneratorNonzero x` below — the manifold-level shadow of `SphereGenReducesNonzero`, tying the
+integral local generator to the (nonzero) mod-2 local class through the whole reduction tower. -/
+
+open SKEFTHawking.SingularLocalHomologyIsoInt (manifoldLocalHomologyIsoInt)
+open SKEFTHawking.SingularChartBridge (manifoldLocalIso)
+
+/-- **The manifold-level generator-reduction residual.** The ℤ→ℤ/2 reduction of the integral local
+generator `(manifoldLocalHomologyIsoInt x).symm 1 : H₄(M,M∖x;ℤ)` is nonzero in the on-main mod-2 local
+group `H₄(M,M∖x;ℤ/2)`. This is the whole-tower shadow of `SphereGenReducesNonzero` (which sits at the
+top of the sphere-suspension tower); the functorial naturality of §1–§7 propagates the sphere
+non-vanishing up to this manifold statement, but that propagation (the full `chartLocalIso` tower chase)
+is the remaining sphere-suspension work isolated here as one Prop. -/
+def ReducedGeneratorNonzero {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] (x : M) : Prop :=
+  redRelHomology (SKEFTHawking.SingularRelHomologyInt.localSub x) 4
+      ((manifoldLocalHomologyIsoInt x).toAddEquiv.symm 1) ≠ 0
+
+/-- **`IntLocalHomologyIso M x` is inhabited from the single generator-reduction residual.** Both iso
+fields are the built (kernel-pure integral / on-main mod-2) local isos; the third field `redCompat` is
+supplied by `redCompat_of_generator` ∘ `generator_check_of_ne_zero` from the one non-vanishing residual
+`ReducedGeneratorNonzero x`. This upgrades `IntLocalHomologyIso M x` from a fully-disclosed 3-field datum
+to a THEOREM with exactly one precisely-named residual — the sphere-suspension generator non-vanishing. -/
+noncomputable def intLocalHomologyIso_of_manifold {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] (x : M) (hgen : ReducedGeneratorNonzero x) :
+    SKEFTHawking.SingularRelHomologyInt.IntLocalHomologyIso M x where
+  iso := (manifoldLocalHomologyIsoInt x).toAddEquiv
+  isoMod2 := (manifoldLocalIso (m := 2) x).toAddEquiv
+  redCompat := redCompat_of_generator x (manifoldLocalHomologyIsoInt x).toAddEquiv
+    (manifoldLocalIso (m := 2) x).toAddEquiv
+    (generator_check_of_ne_zero x (manifoldLocalHomologyIsoInt x).toAddEquiv
+      (manifoldLocalIso (m := 2) x).toAddEquiv hgen)
+
 end SKEFTHawking.SingularLocalHomologyRedCompatInt
