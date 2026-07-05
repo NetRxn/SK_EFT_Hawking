@@ -186,4 +186,37 @@ theorem chartLocalIso_generator_reduces_ne_zero {M : TopCat} [T1Space ↑M] {x :
     (openPointExcisionEquiv hU hx 3).injective (map_zero _)
     (fun z => redRelHomology_excisionMap {y | y ≠ x} U 4 z) hB
 
+/-! ## §4. `ReducedGeneratorNonzero` discharged; `IntLocalHomologyIso` as a hypothesis-free theorem -/
+
+open SKEFTHawking.SingularLocalHomologyRedCompatInt (ReducedGeneratorNonzero intLocalHomologyIso_of_manifold)
+
+/-- **`ReducedGeneratorNonzero x` is a THEOREM** for every point of a `T1` charted 4-manifold. The
+manifold local iso `manifoldLocalHomologyIsoInt x` is `chartLocalIsoInt` instantiated at the chart
+`chartAt x`, so the manifold-level generator non-vanishing is exactly
+`chartLocalIso_generator_reduces_ne_zero` at that chart. This discharges the single residual isolated in
+brick 16. -/
+theorem reducedGeneratorNonzero {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] (x : M) :
+    ReducedGeneratorNonzero x := by
+  haveI : T1Space ↑(TopCat.of M) := inferInstanceAs (T1Space M)
+  show redRelHomology (SingularRelHomologyInt.localSub x) 4
+      ((manifoldLocalHomologyIsoInt x).toAddEquiv.symm 1) ≠ 0
+  exact chartLocalIso_generator_reduces_ne_zero (M := TopCat.of M) (x := x)
+    (U := (chartAt (EuclideanSpace ℝ (Fin 4)) x).source)
+    (V := (chartAt (EuclideanSpace ℝ (Fin 4)) x).target)
+    (q := chartAt (EuclideanSpace ℝ (Fin 4)) x x)
+    (chartAt (EuclideanSpace ℝ (Fin 4)) x).open_source (mem_chart_source _ x)
+    (chartAt (EuclideanSpace ℝ (Fin 4)) x).open_target (mem_chart_target _ x)
+    (chartAt (EuclideanSpace ℝ (Fin 4)) x).toHomeomorphSourceTarget rfl
+
+/-- **`IntLocalHomologyIso M x` is a hypothesis-free THEOREM.** Every point of a `T1` charted
+topological 4-manifold has an integral local-homology iso datum `H₄(M, M∖x; ℤ) ≅ ℤ` with the full mod-2
+`redCompat`. Combines brick 16's `intLocalHomologyIso_of_manifold` (which reduced the datum to the one
+residual `ReducedGeneratorNonzero`) with `reducedGeneratorNonzero` (this file). This is the clean local
+input the oriented intersection form / Poincaré-duality tower consumes. -/
+noncomputable def intLocalHomologyIso_of_manifold' {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] (x : M) :
+    SKEFTHawking.SingularRelHomologyInt.IntLocalHomologyIso M x :=
+  intLocalHomologyIso_of_manifold x (reducedGeneratorNonzero x)
+
 end SKEFTHawking.SingularReducedGeneratorInt
