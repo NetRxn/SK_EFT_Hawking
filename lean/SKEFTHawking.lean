@@ -1049,6 +1049,9 @@ import SKEFTHawking.SingularChainQuotientProjectiveInt
 -- Phase 5q.H · E1 (CSC-PD tower): the relative-homology MV chain SES SPLITS (QChainInt projective → section
 -- of Sum) — the field-UC-free enabler: a split SES stays exact under Hom(−,ℤ), dualizing to the rel-cohom MV.
 import SKEFTHawking.SingularRelativeMVSplitInt
+-- Phase 5q.H · E1 (CSC-PD tower): the relative Kronecker pairing is an ISO relCochainsInt ≅ Hom(RC,ℤ)
+-- (injective + wt1's surjective) — identifies the cochain complex with Hom of the chain complex for Hom-dualization.
+import SKEFTHawking.SingularRelativeKroneckerEquivInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
