@@ -912,6 +912,14 @@ import SKEFTHawking.SingularExcisionPushforward
 -- submodule chainsIn S n of in-S chains is preserved by cone/linBoundary/linSubdiv/linHomotopy (new
 -- vertices are barycenters = convex combinations), so the subdivision of Δᴺ has vertices in Δᴺ.
 import SKEFTHawking.SingularSubdivisionConvex
+-- Phase 5q.H · E1 (Substrate-G brick 14a, 2026-07-04): the SIGNED INTEGRAL affine chain engine
+-- LCᵢₙₜ_n(Y) = free ℤ-module on vertex-tuples, the ℤ-mirror of the mod-2 SingularExcisionMod2 affine
+-- engine. Carries the TRUE alternating signs the mod-2 engine drops: signed boundary ∂[v]=∑ᵢ(-1)ⁱ[∂ᵢv]
+-- + ∂²=0 (signed Fin.succAbove involution), signed cone ∂(b·c)=c−b·∂c, augmentation ε, signed
+-- subdivision Sd (chain-map ∂Sd=Sd∂) + signed homotopy D (∂D+D∂=1−Sd), and chainsInInt convex-support
+-- preservation. Root foundation for integral singular excision + integral sphere homology (both
+-- Mathlib-absent, both ZMod 2-only on-main). Kernel-pure.
+import SKEFTHawking.SingularAffineChainInt
 -- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
