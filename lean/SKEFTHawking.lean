@@ -704,6 +704,13 @@ import SKEFTHawking.PinPlusHeight4
 -- identification (adamsAbutment = smooth Omega_4^Pin+) is a documented modeling DEFINITION, to be
 -- DERIVED by the W4-W6 Smith-LES route, not assumed.
 import SKEFTHawking.PinPlusAdamsAbutment
+-- Phase 5q.H E5 (2026-07-05, adams_convergence_low_degree.md §4.1 + finite_height4_cap.md §4): an
+-- INDEPENDENT height-4 cross-check hardening the finite Z/16. Encodes the §4.1 sparseness hypothesis
+-- bundle (1)-(3) + conclusions (a)-(c) as decide-checked cell counts, and re-derives the height-4
+-- column via the BC18 modified-minimal-resolution A1//E0-summand count (Route B) -- a second,
+-- structurally-different witness that does NOT reuse PinPlusHeight4.col4_height_eq_four's delta-cokernel
+-- machinery. routeBAbutmentEquivZMod16 rebuilds Z/16 from the Route-B height, independently.
+import SKEFTHawking.PinPlusAdamsSparseness
 -- Phase 5q.F W5+W8 (2026-06-14): Omega_4^Pin+ ≅ Z/16 from the FINITE height-4 cap + the
 -- SmithInflow DISCHARGE. sixteen_convergence_finite_discharge carries NO SmithInflow binder --
 -- only the single disclosed pin4_abutment (Pontryagin-Thom + convergence); the Z/16 is from the
