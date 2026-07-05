@@ -1037,6 +1037,9 @@ import SKEFTHawking.SingularOpenDualityCycleInt
 -- Phase 5q.H · E1 (CSC-PD tower): the OPEN Poincaré-duality map D_W : Hᵏ_c(W;ℤ)→H_{n-k}(sub W;ℤ) — the
 -- colimit (DirectLimit.lift) of the per-compact duality legs. Integral mirror of SingularOpenDuality.
 import SKEFTHawking.SingularOpenDualityInt
+-- Phase 5q.H · E1 (CSC-PD tower): relative-cohomology Mayer–Vietoris MAPS (Δ/Σ, Σ∘Δ=0) — the top-row
+-- MV maps. Integral mirror of SingularRelativeCohomologyMV (maps only; exactness diverges — see notebook).
+import SKEFTHawking.SingularRelativeCohomologyMVInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
