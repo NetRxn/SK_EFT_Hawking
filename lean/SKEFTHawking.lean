@@ -1025,6 +1025,9 @@ import SKEFTHawking.SingularLocalDualityKCycleInt
 -- Phase 5q.H · E1 (CSC-PD tower): the H₀(sub K)-valued bottom duality map D_K⁰ (the ₀-family bottom
 -- vertical of the PD 5-lemma ladder). Integral mirror of SingularLocalDualityKBot.
 import SKEFTHawking.SingularLocalDualityKBotInt
+-- Phase 5q.H · E1 (CSC-PD tower): compactly-supported cohomology of an open Hᵏ_c(W;ℤ) (colimit over
+-- compacts-in-W) — the term of the PD open-cover induction. Integral mirror of SingularCompactlySupportedOpen.
+import SKEFTHawking.SingularCompactlySupportedOpenInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
