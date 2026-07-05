@@ -94,4 +94,40 @@ theorem eucl_generator_reduces_ne_zero :
     (redRelHomology (X := Eucl 4) {x | x ≠ 0} 4) (redHomology (Sph 3) 3)
     redHomology_euclCoreEquivInt sphereGenReducesNonzero
 
+/-! ## §2. Transporting through the translation leg -/
+
+open SKEFTHawking.SingularLocalModelChart
+  (transl transl_comp_transl_neg transl_neg_comp_transl mapsTo_transl mapsTo_transl_neg
+   localHomologyAtPointIso)
+open SKEFTHawking.SingularRelativeFunctorialityInt (RelHomologyInt.map RelHomologyInt.map_bijective_of_comp_id)
+open SKEFTHawking.SingularLocalHomologyIsoInt (localHomologyAtPointIsoInt)
+open SKEFTHawking.SingularLocalHomologyRedCompatInt (redRelHomology_map)
+
+/-- **The translated euclidean local generator reduces nonzero.** `redRelHomology (localHomologyAtPointIsoInt
+q).symm 1 ≠ 0`, at `RelHomologyInt {≠q} 4`. Transport of `eucl_generator_reduces_ne_zero` through the
+`.symm` of the translation `RelHomologyInt.map (transl q)` leg. -/
+theorem localAtPoint_generator_reduces_ne_zero (q : EuclideanSpace ℝ (Fin 4)) :
+    redRelHomology (X := Eucl 4) {y | y ≠ q} 4 ((localHomologyAtPointIsoInt q).symm 1) ≠ 0 := by
+  have hchain : (localHomologyAtPointIsoInt q).symm 1
+      = (LinearEquiv.ofBijective (RelHomologyInt.map (transl q) (mapsTo_transl q) 4)
+          (RelHomologyInt.map_bijective_of_comp_id (transl q) (transl (-q)) (mapsTo_transl q)
+            (mapsTo_transl_neg q) (transl_neg_comp_transl q) (transl_comp_transl_neg q) 4)).symm
+        (euclLocalHomologyIsoInt.symm 1) := by
+    show (LinearEquiv.trans _ euclLocalHomologyIsoInt).symm 1 = _
+    rw [LinearEquiv.symm_trans_apply]
+  rw [hchain]
+  exact ne_zero_transport_symm
+    (LinearEquiv.ofBijective (RelHomologyInt.map (transl q) (mapsTo_transl q) 4)
+      (RelHomologyInt.map_bijective_of_comp_id (transl q) (transl (-q)) (mapsTo_transl q)
+        (mapsTo_transl_neg q) (transl_neg_comp_transl q) (transl_comp_transl_neg q) 4)).toAddEquiv
+    (LinearEquiv.ofBijective
+      (SKEFTHawking.SingularRelativeFunctoriality.RelativeHomology.map (transl q) (mapsTo_transl q) 4)
+      (SKEFTHawking.SingularRelativeFunctoriality.RelativeHomology.map_bijective_of_comp_id
+        (transl q) (transl (-q)) (mapsTo_transl q) (mapsTo_transl_neg q)
+        (transl_neg_comp_transl q) (transl_comp_transl_neg q) 4)).toAddEquiv
+    (redRelHomology (X := Eucl 4) {y | y ≠ q} 4)
+    (redRelHomology (X := Eucl 4) {x | x ≠ 0} 4)
+    (fun z => redRelHomology_map (transl q) (mapsTo_transl q) 4 z)
+    eucl_generator_reduces_ne_zero
+
 end SKEFTHawking.SingularReducedGeneratorInt
