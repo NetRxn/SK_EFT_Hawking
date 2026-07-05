@@ -48,4 +48,15 @@ theorem exact_dualMap_of_split {f : M →ₗ[R] N} {g : N →ₗ[R] P} (hfg : Fu
     show ψ (g (f m)) = 0
     rw [hfg.apply_apply_eq_zero m, map_zero]
 
+/-- **A retraction-split injection's `dualMap` is surjective.** If `ret ∘ f = id`, then `f.dualMap` has
+the right inverse `ret.dualMap`, so it is surjective. (Applied to the split MV `Diag` to get the
+cochain-MV `Sum` surjective under the pairing.) -/
+theorem surjective_dualMap_of_retraction {f : M →ₗ[R] N} (ret : N →ₗ[R] M)
+    (hret : ret ∘ₗ f = LinearMap.id) :
+    Function.Surjective (f.dualMap : Module.Dual R N →ₗ[R] Module.Dual R M) := by
+  intro φ
+  refine ⟨ret.dualMap φ, ?_⟩
+  rw [← LinearMap.comp_apply, LinearMap.dualMap_comp_dualMap, hret, LinearMap.dualMap_id,
+    LinearMap.id_apply]
+
 end SKEFTHawking.LinearAlgebraDualExactInt
