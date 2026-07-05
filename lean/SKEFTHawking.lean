@@ -1022,6 +1022,9 @@ import SKEFTHawking.SingularLocalDualityKMonoInt
 -- Phase 5q.H · E1 (CSC-PD tower): cycle-difference compatibility of D_W (D_W independent of the
 -- W-supported relative-cycle representative). Integral mirror of SingularLocalDualityKCycle.
 import SKEFTHawking.SingularLocalDualityKCycleInt
+-- Phase 5q.H · E1 (CSC-PD tower): the H₀(sub K)-valued bottom duality map D_K⁰ (the ₀-family bottom
+-- vertical of the PD 5-lemma ladder). Integral mirror of SingularLocalDualityKBot.
+import SKEFTHawking.SingularLocalDualityKBotInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
