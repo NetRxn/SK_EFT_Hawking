@@ -464,4 +464,64 @@ theorem redHomologyKer_bottomSuspEquivInt {n : ℕ}
         = bottomSuspMap n v (redHomology (Sph n) 1 h) from rfl,
     redHomology_bottomSuspMapInt]
 
+/-! ## §8. Assembly: `SphereGenReducesNonzero` -/
+
+open SKEFTHawking.SingularLineMinusPointInt
+  (H3S3IsoInt circleH1EquivInt topSphereIsoInt augHInt_ker_punc1_iso_int
+   augHInt_posSet_bijective augHInt_posSetCompl_bijective)
+open SKEFTHawking.SingularLineMinusPoint (isClopen_posSet)
+open SKEFTHawking.SingularSphereAcyclic
+  (equatorMap equatorMapInv equatorMapInv_comp_equatorMap equatorMap_comp_equatorMapInv)
+open SKEFTHawking.SingularSphereHomologyInt (topSphereReduceInt)
+
+/-- **`SphereGenReducesNonzero`** — the ℤ→ℤ/2 reduction of the integral `H₃(S³;ℤ)` generator
+`H3S3IsoInt.symm 1` is nonzero in `H₃(S³;ℤ/2)`. This discharges the single non-functorial residual of
+the integral local-homology `redCompat` tower. Chases the base non-vanishing
+(`redHomologyKer_base_ne_zero` at `ℝ¹∖0`) up through the equator homeo, the bottom sphere suspension,
+and the iterated dimension reduction, using the `.symm`-transport of each stage's reduction-naturality
+square. -/
+theorem sphereGenReducesNonzero :
+    SKEFTHawking.SingularLocalHomologyRedCompatInt.SphereGenReducesNonzero := by
+  -- base: the ℝ¹∖0 reduced generator reduces nonzero (ker level)
+  have hbase : redHomologyKer (SingularPuncturedRetract.Punc 1)
+      (augHInt_ker_punc1_iso_int.some.symm 1) ≠ 0 :=
+    redHomologyKer_base_ne_zero isClopen_posSet augHInt_posSet_bijective
+      augHInt_posSetCompl_bijective augHInt_ker_punc1_iso_int.some
+  -- equator homeo (.symm): lift to ker(augHInt (equator))
+  set eqf := equatorMap (SingularSphereBottom.basePoint 1) with heqf
+  set eqg := equatorMapInv (SingularSphereBottom.basePoint 1) with heqg
+  have hgf : eqg.comp eqf = ContinuousMap.id _ := equatorMapInv_comp_equatorMap
+  have hfg : eqf.comp eqg = ContinuousMap.id _ := equatorMap_comp_equatorMapInv
+  have hequator : redHomologyKer _
+      ((augHIntKerEquivOfHomeo eqf eqg hgf hfg).symm
+        (augHInt_ker_punc1_iso_int.some.symm 1)) ≠ 0 :=
+    ne_zero_transport_symm
+      (augHIntKerEquivOfHomeo eqf eqg hgf hfg).toAddEquiv
+      (augHKerEquivOfHomeo eqf eqg hgf hfg).toAddEquiv
+      (redHomologyKer _) (redHomologyKer _)
+      (redHomologyKer_augHIntKerEquivOfHomeo eqf eqg hgf hfg) hbase
+  -- bottom suspension (.symm): lift to Homology (Sph 1) 1
+  have hcircle : redHomology (Sph 1) 1
+      ((bottomSuspEquivInt (n := 1) (v := SingularSphereBottom.basePoint 1)).symm
+        ((augHIntKerEquivOfHomeo eqf eqg hgf hfg).symm
+          (augHInt_ker_punc1_iso_int.some.symm 1))) ≠ 0 :=
+    ne_zero_transport_symm
+      (bottomSuspEquivInt (n := 1) (v := SingularSphereBottom.basePoint 1)).toAddEquiv
+      (bottomSuspEquiv (n := 1) (v := SingularSphereBottom.basePoint 1)).toAddEquiv
+      (redHomology (Sph 1) 1) (redHomologyKer _)
+      (redHomologyKer_bottomSuspEquivInt _) hequator
+  -- top-sphere reduction (.symm): lift to Homology (Sph 3) 3
+  have htop : redHomology (Sph 3) 3
+      ((topSphereReduceInt 2).symm
+        ((bottomSuspEquivInt (n := 1) (v := SingularSphereBottom.basePoint 1)).symm
+          ((augHIntKerEquivOfHomeo eqf eqg hgf hfg).symm
+            (augHInt_ker_punc1_iso_int.some.symm 1)))) ≠ 0 :=
+    ne_zero_transport_symm
+      (topSphereReduceInt 2).toAddEquiv (SingularSphereBottom.topSphereReduce 2).toAddEquiv
+      (redHomology (Sph 3) 3) (redHomology (Sph 1) 1)
+      (redHomology_topSphereReduceInt 2) hcircle
+  -- H3S3IsoInt.symm 1 unfolds to exactly the nested .symm chain above
+  show redHomology (Sph 3) 3 (H3S3IsoInt.symm 1) ≠ 0
+  convert htop using 3
+
 end SKEFTHawking.SingularSphereGenReducesInt
