@@ -3150,6 +3150,70 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'intersection form is discharged from this single geometric input — the genuine new content over the '
             'mod-2 blueprint (Phase 5q.H · E1 Substrate-G; the orientation coherence Mathlib/on-main lack).',
     },
+    'intLocalHomologyIso_datum': {
+        'statement': 'For a topological space M and a point x : M, the integral LOCAL homology iso '
+            'H₄(M, M∖x; ℤ) ≅ ℤ is carried (Phase 5q.H · E1 Substrate-G) as the disclosed structure '
+            'SKEFTHawking.SingularRelHomologyInt.IntLocalHomologyIso M x, holding (i) iso : '
+            'RelHomologyInt (localSub x) 4 ≃+ ℤ (the integral local group ≅ ℤ, two generators ±1), (ii) '
+            'isoMod2 : the ON-MAIN mod-2 local group SingularRelativeHomologyMod2.RelativeHomology (localSub x) 4 '
+            '≃+ ZMod 2 (the shadow), and (iii) redCompat : ∀ z, isoMod2 (redRelHomology (localSub x) 4 z) = '
+            '((iso z : ℤ) : ZMod 2) — the mod-2 compatibility tying the integral iso to the on-main mod-2 local '
+            'group via the (PROVED here, kernel-pure) ℤ→ℤ/2 relative-homology reduction bridge redRelHomology. This '
+            'is the SHARED prerequisite for BOTH remaining E1 geometric cores: (A) orientation coherence '
+            '(the two ±1 local generators force the coherent global sign-section that intOrientation_datum records '
+            'as [M]), and (B) the PD local-global cap-iso (the local Euclidean model). Around it this brick BUILDS '
+            'the full integral relative-homology / pair-LES substrate (RelHomologyInt = ker∂/im∂ over ℤ, the pair '
+            'map homProjInt : Hₙ(X;ℤ) → RelHomologyInt, the connecting δ = connectingInt, the complex property '
+            'δ∘j_* = 0, and redRelHomology) — the ℤ mirror of on-main SingularRelativeHomologyMod2 / SingularPairLES, '
+            'ALL kernel-pure and unconditional; only the ℤ-generator identification of the local group is disclosed.',
+        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'very_hard',
+        'module': 'SingularRelHomologyInt',
+        'elimination_path': 'Discharge = the ℤ local reduction tower H₄(ℝ⁴,ℝ⁴∖0;ℤ) ≅ H₃(ℝ⁴∖0;ℤ) ≅ H₃(S³;ℤ) ≅ ℤ. '
+            'The pair-LES connecting-iso step is provable from the integral pair LES built here (homProjInt / '
+            'connectingInt / the exactness lemmas, mirroring SingularLocalHomology.connecting_bijective_of_acyclic) '
+            'ONCE two from-scratch integral inputs land: (1) integral Euclidean acyclicity Hₖ(ℝⁿ;ℤ)=0 for k≥1 (the '
+            'ℤ upgrade of on-main SingularEuclideanAcyclic, ZMod 2 only), and (2) integral sphere homology '
+            'H₃(S³;ℤ) ≅ ℤ (the ℤ upgrade of on-main SphereHomology, ZMod 2 only) + the punctured retract ℝ⁴∖0 ≃ S³ '
+            '(SingularPuncturedRetract, coefficient-independent). redCompat then holds by naturality of redRelHomology '
+            '(PROVED unconditionally here) over the mod-2 tower (SingularLocalHomology.connecting_eucl_bijective). '
+            'Community-scale (integral Euclidean acyclicity + integral sphere homology absent from Mathlib AND on-main '
+            '— the on-main homology tower is entirely over ZMod 2); tracked so both E1 cores hold for an ARBITRARY '
+            'such datum, isolating the ℤ local-generator identification as this one shared geometric input.',
+        'dependent_theorems': [
+            'SKEFTHawking.SingularRelHomologyInt.intLocalHomologyIso_redCompat',
+            'SKEFTHawking.SingularRelHomologyInt.localGenerator',
+            'SKEFTHawking.SingularRelHomologyInt.iso_localGenerator',
+            'SKEFTHawking.SingularRelHomologyInt.homProjInt',
+            'SKEFTHawking.SingularRelHomologyInt.connectingInt',
+            'SKEFTHawking.SingularRelHomologyInt.connectingInt_homProjInt',
+            'SKEFTHawking.SingularRelHomologyInt.redRelHomology',
+        ],
+        'source': 'Standard algebraic topology (Hatcher §2.2/§3.3, Milnor–Stasheff §11): the local homology '
+            'Hₙ(M, M∖x; ℤ) ≅ ℤ of an n-manifold, computed via the LES of the pair (ℝⁿ, ℝⁿ∖0) with ℝⁿ acyclic + the '
+            'retract ℝⁿ∖0 ≃ Sⁿ⁻¹ + Hₙ₋₁(Sⁿ⁻¹;ℤ) ≅ ℤ; its two generators ±1 are the local orientations, whose mod-2 '
+            'reduction is the (always-existing) unique mod-2 local generator. The ℤ→ℤ/2 relative reduction bridge '
+            'redRelChain/redRelHomology is the relative dual of the absolute redChain/redHomology (brick 11).',
+        'risk': 'Very low mathematically (textbook local homology); the cost is purely the from-scratch Lean '
+            'construction of integral Euclidean acyclicity + integral sphere homology, deferred to a later E1 brick. '
+            'Everything else in the brick (the integral relative homology, the pair maps homProjInt/connectingInt, '
+            'the complex property, the reduction bridge redRelHomology) is UNCONDITIONAL and kernel-pure; only the '
+            'ℤ-generator identification of the local group is disclosed, and redCompat makes it non-vacuous '
+            '(falsifiable against the on-main mod-2 local generator).',
+        'circularity_note': 'None. The integral relative homology, the pair LES core, and the reduction bridge are '
+            'built UNCONDITIONALLY (kernel-pure); IntLocalHomologyIso and localGenerator/iso_localGenerator are stated '
+            'for an ARBITRARY supplied datum, no property of a specific (future) geometric local iso is used beyond '
+            'the disclosed redCompat. redRelHomology and its chain-map property redRelChain_relBoundary are proved '
+            'unconditionally, so wiring the real local iso later strictly discharges this datum. This is the shared '
+            'discharge-substrate for intOrientation_datum (A) and the PD local-global cap-iso (B) — it does not '
+            'duplicate them, it isolates the ONE geometric input both share.',
+        'prose': 'The integral local homology iso H₄(M, M∖x; ℤ) ≅ ℤ of a 4-manifold at a point, carried as a '
+            'disclosed datum (the local iso + its mod-2 compatibility with the on-main mod-2 local group via the '
+            'reduction bridge) so that BOTH remaining E1 cores — orientation coherence and the PD local-global '
+            'cap-iso — are discharged from this single shared geometric input. Around it the full integral '
+            'relative-homology / pair-LES substrate (RelHomologyInt, homProjInt, connectingInt, δ∘j_*=0, '
+            'redRelHomology) is built unconditionally and kernel-pure — the ℤ mirror of the on-main mod-2 blueprint '
+            '(Phase 5q.H · E1 Substrate-G; the integral local-homology tower Mathlib/on-main lack).',
+    },
     'intH2_basis_datum': {
         'statement': 'For a closed 4-manifold M, a finite free ℤ-basis of H²(M;ℤ) = Cohomology (TopCat.of M) 2 '
             'is carried (Phase 5q.H · E1 Substrate-G) as a disclosed datum: the structure '

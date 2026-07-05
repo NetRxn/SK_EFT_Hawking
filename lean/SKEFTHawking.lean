@@ -874,6 +874,15 @@ import SKEFTHawking.IntPoincareDualityCapIso
 -- (IntOrientation.redCompat: redHomology [M] = the on-main orientation-free mod-2 [M]₂) making the datum
 -- non-vacuous. intFundamentalClassOfIntOrientation discharges intFundamentalClassOfHomology's [M] input.
 import SKEFTHawking.IntFundamentalClassOrientation
+-- Phase 5q.H · E1 Substrate-G (2026-07-04): integral RELATIVE & LOCAL singular homology Hₙ(X,A;ℤ) — the
+-- ℤ mirror of the on-main mod-2 SingularRelativeHomologyMod2 / SingularPairLES (signed ∂). Builds
+-- RelHomologyInt = ker∂/im∂ over ℤ, the pair map homProjInt : Hₙ(X;ℤ)→RelHomologyInt, the connecting
+-- δ = connectingInt with δ∘j_*=0, and the ℤ→ℤ/2 relative reduction bridge redRelChain/redRelHomology
+-- (relative dual of brick-11 redChain/redHomology). Isolates the SHARED community-scale residual of BOTH
+-- remaining E1 cores — orientation coherence (A) + PD local-global cap-iso (B) — as the ONE disclosed
+-- datum IntLocalHomologyIso (H₄(M,M∖x;ℤ)≅ℤ, mod-2-compatible via redRelHomology). All UNCONDITIONAL,
+-- kernel-pure; registered as intLocalHomologyIso_datum in HYPOTHESIS_REGISTRY.
+import SKEFTHawking.SingularRelHomologyInt
 -- Phase 5q.F (2026-06-15, w₂ foundation brick 3): singular ℤ/2 HOMOLOGY + the Kronecker pairing — the
 -- dual of SingularCohomologyMod2. Chains C_n = simplices →₀ ℤ/2, the boundary ∂ with ∂²=0, Homology
 -- Hₙ = ker∂/im∂, and the descended Kronecker pairing kroneckerH : Hⁿ × Hₙ → ℤ/2 (the evaluation
