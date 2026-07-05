@@ -1067,6 +1067,9 @@ import SKEFTHawking.SingularRelativeCochainMVSurjInt
 -- Phase 5q.H · E1 (CSC-PD tower): the rel-cohom MV middle-exactness chase (algebraic core) — the concrete
 -- common-intersection-cochain construction consuming the cochain-MV split.
 import SKEFTHawking.SingularRelativeCohomologyMVChaseInt
+-- Phase 5q.H · E1 (CSC-PD tower): the integral CSC open-monotone (extension-by-zero) maps
+-- cscOpenMonotoneInt : Hᵏ_c(W;ℤ) → Hᵏ_c(W';ℤ) for W ⊆ W' — top row of the integral PD 5-lemma ladder.
+import SKEFTHawking.SingularCSCOpenMonotoneInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
