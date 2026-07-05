@@ -1004,6 +1004,9 @@ import SKEFTHawking.SingularCapSupportInt
 -- Phase 5q.H · E1 (CSC-PD tower): integral subspace-chains pullback — a bounded S-supported chain pulls
 -- back to a sub-S boundary (D_K well-definedness modulo coboundaries), over the on-main inclRangeEquiv.
 import SKEFTHawking.SingularSubspaceChainsEquivInt
+-- Phase 5q.H · E1 (CSC-PD tower): the integral H(sub K)-valued local duality map D_K (relativeDualityKInt)
+-- — the varying-target duality of the MV 5-lemma ladder. Integral mirror of SingularLocalDualityK.
+import SKEFTHawking.SingularLocalDualityKInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
