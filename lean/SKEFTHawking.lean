@@ -1000,6 +1000,9 @@ import SKEFTHawking.SingularChartTransportInt
 -- Phase 5q.H · E1 brick 18c: the oriented integral fundamental-class existence framework
 -- (restrictsToOrientedGeneratorInt / hasOrientedFundClassInt + sub-restriction monotonicity).
 import SKEFTHawking.SingularIntFundamentalClassExist
+-- Phase 5q.H · E1 brick 18d: integral relative homology rel the empty subspace
+-- (relHomologyEmptyEquivInt : Hₙ(M,∅;ℤ)≅Hₙ(M;ℤ)) — the univ-fundamental-class → Homology M transport.
+import SKEFTHawking.SingularRelativeEmptyInt
 -- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
