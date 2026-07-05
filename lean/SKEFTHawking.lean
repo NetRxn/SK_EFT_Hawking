@@ -1044,6 +1044,8 @@ import SKEFTHawking.SingularRelativeMV
 import SKEFTHawking.SingularRelMvDeltaChain
 import SKEFTHawking.SingularRelativeMVNaturality
 import SKEFTHawking.SingularRelativeMVInt
+import SKEFTHawking.SingularRelativeMVConnectingInt
+import SKEFTHawking.SingularGoodCompactUnionInt
 import SKEFTHawking.SingularConvexComplementRetract
 import SKEFTHawking.SingularSphereHighDegree
 import SKEFTHawking.SingularManifoldFundamentalClass
