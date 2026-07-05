@@ -242,4 +242,211 @@ theorem connectingInt_zero_range_of_augHInt_injective {X : TopCat} (S : Set ↑X
   · intro h; rw [← augHInt_homIncl, h, map_zero]
   · intro h; apply hXaug; rw [map_zero, augHInt_homIncl]; exact h
 
+/-! ## §D. Degree-0 disjoint-union additivity and `ker ε̄ ≅ ℤ` (integral) -/
+
+open SKEFTHawking.SingularExcisionIsoInt (single_mem_subspaceChainsInt_of_subordinate
+  mem_subspaceChainsInt_of_support range_of_mem_subspaceChainsInt range_simplexIncl_subsetInt)
+open SKEFTHawking.SingularRelativeHomologyMod2 (simplexIncl simplexIncl_injective)
+open SKEFTHawking.SingularDisjointUnion (simplex_range_subset_or_compl range_realize_simplexIncl)
+
+/-- **Every `k`-chain splits across a clopen partition** (integral): `Cₖ(X;ℤ) = Cₖ(U) ⊔ Cₖ(Uᶜ)`. -/
+theorem subspaceChainsInt_sup_compl_eq_top {X : TopCat} {U : Set ↑X} (hU : IsClopen U) (k : ℕ) :
+    subspaceChainsInt (S := U) k ⊔ subspaceChainsInt (S := Uᶜ) k = ⊤ := by
+  rw [eq_top_iff]
+  rintro c -
+  induction c using Finsupp.induction_linear with
+  | zero => exact Submodule.zero_mem _
+  | add c₁ c₂ h₁ h₂ => exact Submodule.add_mem _ h₁ h₂
+  | single σ a =>
+      have hsmul : Finsupp.single σ a = a • Finsupp.single σ (1 : ℤ) := by
+        rw [Finsupp.smul_single, smul_eq_mul, mul_one]
+      rcases simplex_range_subset_or_compl hU σ with h | h
+      · exact hsmul ▸ Submodule.mem_sup_left
+          (Submodule.smul_mem _ a (single_mem_subspaceChainsInt_of_subordinate h))
+      · exact hsmul ▸ Submodule.mem_sup_right
+          (Submodule.smul_mem _ a (single_mem_subspaceChainsInt_of_subordinate h))
+
+/-- **Disjoint supports** (integral): `Cₖ(U) ⊓ Cₖ(Uᶜ) = ⊥`. -/
+theorem subspaceChainsInt_inf_compl_eq_bot {X : TopCat} {U : Set ↑X} (k : ℕ) :
+    subspaceChainsInt (S := U) k ⊓ subspaceChainsInt (S := Uᶜ) k = ⊥ := by
+  rw [eq_bot_iff]
+  rintro c ⟨⟨a, rfl⟩, b, hb⟩
+  rw [Submodule.mem_bot]
+  ext τ
+  rw [Finsupp.coe_zero, Pi.zero_apply]
+  by_contra hne
+  have hτU : τ ∈ Set.range (simplexIncl U k) := by
+    by_contra hnr
+    exact hne (by rw [chainIncl, Finsupp.lmapDomain_apply]; exact Finsupp.mapDomain_notin_range a τ hnr)
+  have hτUc : τ ∈ Set.range (simplexIncl Uᶜ k) := by
+    by_contra hnr
+    refine hne ?_
+    rw [← hb, chainIncl, Finsupp.lmapDomain_apply]
+    exact Finsupp.mapDomain_notin_range b τ hnr
+  obtain ⟨σU, rfl⟩ := hτU
+  obtain ⟨σUc, hσUc⟩ := hτUc
+  obtain ⟨x, hx⟩ :=
+    Set.range_nonempty (X.toSSetObjEquiv (op (SimplexCategory.mk k)) (simplexIncl U k σU))
+  have hxU : x ∈ U := range_realize_simplexIncl U σU hx
+  have hxUc : x ∈ Uᶜ := range_realize_simplexIncl Uᶜ σUc (by rw [hσUc]; exact hx)
+  exact hxUc hxU
+
+/-- **The degree-0 additivity map** `H₀(U;ℤ) × H₀(Uᶜ;ℤ) → H₀(X;ℤ)`, `(a, b) ↦ i_*(a) + i_*(b)`. -/
+noncomputable def splitH0Int {X : TopCat} (U : Set ↑X) :
+    Homology (sub U) 0 × Homology (sub Uᶜ) 0 →ₗ[ℤ] Homology X 0 :=
+  (homIncl U 0).coprod (homIncl Uᶜ 0)
+
+/-- `splitH0Int` is **surjective**. -/
+theorem splitH0Int_surjective {X : TopCat} {U : Set ↑X} (hU : IsClopen U) :
+    Function.Surjective (splitH0Int U) := by
+  intro x
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  have hz : (z : SingularChainInt X 0) ∈ subspaceChainsInt (S := U) 0 ⊔ subspaceChainsInt (S := Uᶜ) 0 := by
+    rw [subspaceChainsInt_sup_compl_eq_top hU]; exact Submodule.mem_top
+  rw [Submodule.mem_sup] at hz
+  obtain ⟨_, ⟨zU, rfl⟩, _, ⟨zUc, rfl⟩, hsum⟩ := hz
+  refine ⟨(Homology.mk (sub U) 0 ⟨zU, Submodule.mem_top⟩,
+    Homology.mk (sub Uᶜ) 0 ⟨zUc, Submodule.mem_top⟩), ?_⟩
+  show homIncl U 0 (Homology.mk (sub U) 0 _) + homIncl Uᶜ 0 (Homology.mk (sub Uᶜ) 0 _)
+      = Homology.mk X 0 z
+  rw [homIncl_mk, homIncl_mk,
+    show z = (⟨_, Submodule.mem_top⟩ : cycles X 0) + ⟨_, Submodule.mem_top⟩ from Subtype.ext hsum.symm]
+  rfl
+
+/-- **The chain-level injectivity core** (integral): if `chainIncl U zU + chainIncl Uᶜ zUc` is a
+boundary in `X`, each piece is a boundary in its own subspace. -/
+theorem chainIncl_add_mem_boundaries_splitInt {X : TopCat} {U : Set ↑X} (hU : IsClopen U)
+    (zU : SingularChainInt (sub U) 0) (zUc : SingularChainInt (sub Uᶜ) 0)
+    (h : chainIncl U 0 zU + chainIncl Uᶜ 0 zUc ∈ boundaries X 0) :
+    zU ∈ boundaries (sub U) 0 ∧ zUc ∈ boundaries (sub Uᶜ) 0 := by
+  obtain ⟨w, hw⟩ := h
+  have hwsplit : w ∈ subspaceChainsInt (S := U) 1 ⊔ subspaceChainsInt (S := Uᶜ) 1 := by
+    rw [subspaceChainsInt_sup_compl_eq_top hU]; exact Submodule.mem_top
+  rw [Submodule.mem_sup] at hwsplit
+  obtain ⟨_, ⟨wU, rfl⟩, _, ⟨wUc, rfl⟩, hwsum⟩ := hwsplit
+  rw [← hwsum, map_add, ← chainIncl_chainBoundary, ← chainIncl_chainBoundary] at hw
+  set bU := chainBoundary (sub U) 0 wU
+  set bUc := chainBoundary (sub Uᶜ) 0 wUc
+  -- hw : chainIncl U bU + chainIncl Uᶜ bUc = chainIncl U zU + chainIncl Uᶜ zUc
+  -- ⟹ chainIncl U (bU − zU) = chainIncl Uᶜ (zUc − bUc), lands in C(U) ⊓ C(Uᶜ) = ⊥
+  have hkey : chainIncl U 0 (bU - zU) = chainIncl Uᶜ 0 (zUc - bUc) := by
+    rw [map_sub, map_sub]; linear_combination (norm := abel) hw
+  have hmemU : chainIncl U 0 (bU - zU) ∈ subspaceChainsInt (S := U) 0 ⊓ subspaceChainsInt (S := Uᶜ) 0 :=
+    ⟨⟨_, rfl⟩, hkey ▸ ⟨_, rfl⟩⟩
+  rw [subspaceChainsInt_inf_compl_eq_bot, Submodule.mem_bot] at hmemU
+  have hzU : zU = bU :=
+    (sub_eq_zero.mp (chainIncl_injective U 0 (hmemU.trans (map_zero _).symm))).symm
+  have hzUc : zUc = bUc :=
+    sub_eq_zero.mp ((hkey ▸ hmemU).trans (map_zero _).symm |> chainIncl_injective Uᶜ 0)
+  exact ⟨⟨wU, hzU.symm⟩, ⟨wUc, hzUc.symm⟩⟩
+
+/-- `splitH0Int` is **injective**. -/
+theorem splitH0Int_injective {X : TopCat} {U : Set ↑X} (hU : IsClopen U) :
+    Function.Injective (splitH0Int U) := by
+  rw [← LinearMap.ker_eq_bot, eq_bot_iff]
+  rintro ⟨a, b⟩ hab
+  rw [LinearMap.mem_ker] at hab
+  obtain ⟨zU, rfl⟩ := Submodule.Quotient.mk_surjective _ a
+  obtain ⟨zUc, rfl⟩ := Submodule.Quotient.mk_surjective _ b
+  rw [show splitH0Int U (Submodule.Quotient.mk zU, Submodule.Quotient.mk zUc)
+        = Homology.mk X 0 ⟨chainIncl U 0 (zU : SingularChainInt (sub U) 0)
+            + chainIncl Uᶜ 0 (zUc : SingularChainInt (sub Uᶜ) 0), Submodule.mem_top⟩ from rfl] at hab
+  have hab' : chainIncl U 0 (zU : SingularChainInt (sub U) 0)
+      + chainIncl Uᶜ 0 (zUc : SingularChainInt (sub Uᶜ) 0) ∈ boundaries X 0 :=
+    (Submodule.Quotient.mk_eq_zero ((boundaries X 0).submoduleOf (cycles X 0))).mp hab
+  obtain ⟨hzU, hzUc⟩ := chainIncl_add_mem_boundaries_splitInt hU _ _ hab'
+  rw [Submodule.mem_bot, Prod.ext_iff]
+  exact ⟨(Submodule.Quotient.mk_eq_zero _).mpr (Submodule.mem_comap.mpr hzU),
+    (Submodule.Quotient.mk_eq_zero _).mpr (Submodule.mem_comap.mpr hzUc)⟩
+
+/-- **Degree-0 disjoint-union additivity** (integral): `H₀(X;ℤ) ≅ H₀(U;ℤ) × H₀(Uᶜ;ℤ)`. -/
+noncomputable def splitH0IntEquiv {X : TopCat} {U : Set ↑X} (hU : IsClopen U) :
+    (Homology (sub U) 0 × Homology (sub Uᶜ) 0) ≃ₗ[ℤ] Homology X 0 :=
+  LinearEquiv.ofBijective (splitH0Int U) ⟨splitH0Int_injective hU, splitH0Int_surjective hU⟩
+
+/-- **Augmentation compatibility** (integral): under additivity, `ε̄_X (a, b) = ε̄_U a + ε̄_{Uᶜ} b`. -/
+theorem augHInt_splitH0Int {X : TopCat} (U : Set ↑X)
+    (p : Homology (sub U) 0 × Homology (sub Uᶜ) 0) :
+    augHInt X (splitH0Int U p) = augHInt (sub U) p.1 + augHInt (sub Uᶜ) p.2 := by
+  rw [splitH0Int, LinearMap.coprod_apply, map_add, augHInt_homIncl, augHInt_homIncl]
+
+/-- The explicit iso `ker(ℤ × ℤ → ℤ, (a,b) ↦ a + b) ≅ ℤ`, `(a, −a) ↦ a`. Built with cheap term-mode
+proofs (avoids the `Prod`-subtype `simp`/`ring` heartbeat wall). The anti-diagonal is the ℤ-analog of
+the mod-2 finrank-`1` reduced-`H̃₀`. -/
+noncomputable def kerSumLM_equiv_int :
+    ↥(LinearMap.ker ((LinearMap.fst ℤ ℤ ℤ) + (LinearMap.snd ℤ ℤ ℤ))) ≃ₗ[ℤ] ℤ := by
+  refine LinearEquiv.ofLinear
+    ((LinearMap.fst ℤ ℤ ℤ).comp
+      (LinearMap.ker ((LinearMap.fst ℤ ℤ ℤ) + (LinearMap.snd ℤ ℤ ℤ))).subtype)
+    ({ toFun := fun a => ⟨(a, -a), ?_⟩
+       map_add' := ?_
+       map_smul' := ?_ }) ?_ ?_
+  · show a + -a = 0; exact add_neg_cancel a
+  · intro a b
+    apply Subtype.ext
+    rw [Submodule.coe_add]
+    apply Prod.ext
+    · show a + b = a + b; rfl
+    · show -(a + b) = -a + -b; ring
+  · intro r a
+    apply Subtype.ext
+    rw [SetLike.val_smul]
+    apply Prod.ext
+    · show r * a = r • a; rfl
+    · show -(r * a) = r • (-a); rw [smul_neg, smul_eq_mul]
+  · apply LinearMap.ext; intro a; rfl
+  · apply LinearMap.ext
+    rintro ⟨⟨a, b⟩, hab⟩
+    apply Subtype.ext; apply Prod.ext
+    · rfl
+    · show -a = b
+      have : a + b = 0 := hab
+      omega
+
+/-- **Reduced `H̃₀` of a two-piece clopen space is `ℤ`** (integral): if `X` splits as clopen `U ⊔ Uᶜ`
+with each piece reduced-acyclic AND `H₀`-nonzero (`ε̄` bijective, e.g. contractible), then
+`H̃₀(X) = ker ε̄_X ≅ ℤ`. Unlike the mod-2 finrank count, we identify the anti-diagonal
+`{(a, −a) : ℤ × ℤ} ≅ ℤ` explicitly: transport `ker ε̄_X` across `H₀(X) ≅ H₀(U) × H₀(Uᶜ) ≅ ℤ × ℤ`
+(each `ε̄` an iso) to `ker(ℤ × ℤ → ℤ, (a,b) ↦ a + b) = {(a, −a)}`, then `(a, −a) ↦ a`. -/
+theorem augHInt_ker_iso_int {X : TopCat} {U : Set ↑X} (hU : IsClopen U)
+    (hUbij : Function.Bijective (augHInt (sub U))) (hUcbij : Function.Bijective (augHInt (sub Uᶜ))) :
+    Nonempty (↥(LinearMap.ker (augHInt X)) ≃ₗ[ℤ] ℤ) := by
+  classical
+  -- H₀(X) ≅ ℤ × ℤ via splitH0IntEquiv⁻¹ then (ε̄_U, ε̄_Uᶜ)
+  let eU := LinearEquiv.ofBijective (augHInt (sub U)) hUbij
+  let eUc := LinearEquiv.ofBijective (augHInt (sub Uᶜ)) hUcbij
+  let e : Homology X 0 ≃ₗ[ℤ] ℤ × ℤ :=
+    (splitH0IntEquiv hU).symm.trans (eU.prodCongr eUc)
+  -- ε̄_X = (fst + snd) ∘ e
+  have haug : ∀ x : Homology X 0, augHInt X x = (e x).1 + (e x).2 := by
+    intro x
+    obtain ⟨p, rfl⟩ := (splitH0IntEquiv hU).surjective x
+    show augHInt X (splitH0IntEquiv hU p) = _
+    rw [show (splitH0IntEquiv hU) p = splitH0Int U p from rfl, augHInt_splitH0Int]
+    show _ = ((e (splitH0IntEquiv hU p)).1 + (e (splitH0IntEquiv hU p)).2)
+    congr 1 <;>
+      · show _ = _
+        rw [show e (splitH0IntEquiv hU p) = (eU.prodCongr eUc) ((splitH0IntEquiv hU).symm (splitH0IntEquiv hU p))
+              from rfl, (splitH0IntEquiv hU).symm_apply_apply]
+        rfl
+  -- transport ker ε̄_X to {(a,b) | a + b = 0}
+  set sumLM : (ℤ × ℤ) →ₗ[ℤ] ℤ := (LinearMap.fst ℤ ℤ ℤ) + (LinearMap.snd ℤ ℤ ℤ) with hsumLM
+  have hkerEq : Submodule.map (e : Homology X 0 →ₗ[ℤ] ℤ × ℤ) (LinearMap.ker (augHInt X))
+      = LinearMap.ker sumLM := by
+    ext p
+    simp only [Submodule.mem_map, LinearMap.mem_ker]
+    constructor
+    · rintro ⟨x, hx, rfl⟩
+      show (e x).1 + (e x).2 = 0
+      rw [← haug]; exact hx
+    · intro hp
+      refine ⟨e.symm p, ?_, e.apply_symm_apply p⟩
+      rw [haug, e.apply_symm_apply]
+      show p.1 + p.2 = 0; exact hp
+  -- ker ε̄_X ≅ ker sumLM
+  let ekerX : ↥(LinearMap.ker (augHInt X)) ≃ₗ[ℤ] ↥(LinearMap.ker sumLM) :=
+    (e.submoduleMap (LinearMap.ker (augHInt X))).trans (LinearEquiv.ofEq _ _ hkerEq)
+  -- ker sumLM = {(a, −a)} ≅ ℤ via (a,−a) ↦ a
+  exact ⟨ekerX.trans kerSumLM_equiv_int⟩
+
 end SKEFTHawking.SingularLineMinusPointInt
