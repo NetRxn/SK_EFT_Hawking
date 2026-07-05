@@ -975,6 +975,9 @@ import SKEFTHawking.SingularLocalHomologyIsoInt
 -- Upgrades IntLocalHomologyIso to a THEOREM (intLocalHomologyIso_of_manifold) modulo ONE precisely-named
 -- non-vanishing residual (ReducedGeneratorNonzero); + orientation/PD consumer linkages.
 import SKEFTHawking.SingularLocalHomologyRedCompatInt
+-- Phase 5q.H · E1 brick 17: SphereGenReducesNonzero — base anti-diagonal reduction (ℤ→ℤ/2) is nonzero;
+-- feeds the sphere-suspension tower chase that discharges the IntLocalHomologyIso residual.
+import SKEFTHawking.SingularSphereGenReducesInt
 -- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).

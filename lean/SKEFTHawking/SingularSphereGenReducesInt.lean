@@ -1,0 +1,187 @@
+import Mathlib
+import SKEFTHawking.SingularLocalHomologyRedCompatInt
+
+/-!
+# `SphereGenReducesNonzero`: the ℤ→ℤ/2 reduction of the `H₃(S³;ℤ)` generator is nonzero (brick 17)
+
+Discharges the single non-functorial residual of the integral local-homology `redCompat` tower
+(`SingularLocalHomologyRedCompatInt.SphereGenReducesNonzero`): the ℤ→ℤ/2 reduction of the integral
+generator of `H₃(S³;ℤ)` (`H3S3IsoInt.symm 1`) is nonzero in the mod-2 group `H₃(S³;ℤ/2)`.
+
+Strategy. Both `H3S3IsoInt` and the mod-2 `topSphereIso 2` compose the SAME tower of primitive maps
+(`connectingInt`/`connecting`, `excisionEquivInt`/`excisionEquiv`, `homProjInt`/`homProj`,
+`Homology.mapInt`/`Homology.map`, plus the base `ker ε̄` iso). Each primitive commutes with the ℤ→ℤ/2
+reduction bridge (`SingularLocalHomologyRedCompatInt` §1–§10 + this file's base square). Composing the
+per-stage squares gives the sphere-level `redCompat`
+`topSphereIso 2 (redHomology z) = ((H3S3IsoInt z : ℤ) : ZMod 2)`; at `z = H3S3IsoInt.symm 1` the RHS
+is `1 ≠ 0`, so `redHomology (H3S3IsoInt.symm 1) ≠ 0`.
+
+Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
+-/
+
+open CategoryTheory Opposite
+open SKEFTHawking.SingularHomologyInt
+open SKEFTHawking.SingularRelHomologyInt
+open SKEFTHawking.SingularFunctorialityInt
+open SKEFTHawking.SingularRelativeHomologyMod2 (sub)
+
+namespace SKEFTHawking.SingularSphereGenReducesInt
+
+open SKEFTHawking.SingularLineMinusPointInt
+open SKEFTHawking.SingularLineMinusPoint
+
+/-! ## §1. Base square: the reduction intertwines `augHInt` and `augH` -/
+
+/-- **The reduction commutes with the integral/mod-2 augmentation (chain level).**
+`augmentation X (redChain X 0 c) = ((augmentationInt X c : ℤ) : ZMod 2)`. Both augmentations are the
+coefficient-sum; `redChain` is the pointwise cast, and casting commutes with the sum. -/
+theorem augmentation_redChain (X : TopCat) (c : SingularChainInt X 0) :
+    SKEFTHawking.SingularH0.augmentation X (redChain X 0 c)
+      = ((SKEFTHawking.SingularLineMinusPointInt.augmentationInt X c : ℤ) : ZMod 2) := by
+  induction c using Finsupp.induction_linear with
+  | zero => simp
+  | add c₁ c₂ h₁ h₂ => rw [map_add, map_add, h₁, h₂, ← Int.cast_add, map_add]
+  | single σ a =>
+      rw [redChain_single,
+        SKEFTHawking.SingularH0.augmentation_single,
+        SKEFTHawking.SingularLineMinusPointInt.augmentationInt_single]
+
+/-- **The reduction commutes with the augmentation on homology.**
+`augH X (redHomology X 0 h) = ((augHInt X h : ℤ) : ZMod 2)`. -/
+theorem augH_redHomology (X : TopCat) (h : Homology X 0) :
+    SKEFTHawking.SingularH0.augH X (redHomology X 0 h)
+      = ((SKEFTHawking.SingularLineMinusPointInt.augHInt X h : ℤ) : ZMod 2) := by
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ h
+  show SKEFTHawking.SingularH0.augH X (redHomology X 0 (Homology.mk X 0 z))
+    = ((SKEFTHawking.SingularLineMinusPointInt.augHInt X (Homology.mk X 0 z) : ℤ) : ZMod 2)
+  rw [redHomology_mk, SKEFTHawking.SingularH0.augH_mk,
+    SKEFTHawking.SingularLineMinusPointInt.augHInt_mk]
+  exact augmentation_redChain X (z : SingularChainInt X 0)
+
+/-! ## §2. `π : ker(ε̄_ℤ) ≃ ℤ` — the anti-diagonal projection, and generators are odd -/
+
+open SKEFTHawking.SingularH0 (augH)
+open SKEFTHawking.SingularDisjointUnion (splitH0 splitH0Equiv)
+
+variable {X : TopCat} {U : Set ↑X}
+
+/-- **The anti-diagonal projection** `π : ker(ε̄_ℤ) →ₗ[ℤ] ℤ`, `x ↦ ε̄_U (fst (splitH0IntEquiv⁻¹ x))`.
+The `U`-component of the integral additivity decomposition, then the `U`-augmentation. On `ker(ε̄_X)`
+this is a linear isomorphism onto `ℤ` (the anti-diagonal `{(a,-a)} ≅ ℤ` picking off `a`). -/
+noncomputable def antiDiagProjInt (hU : IsClopen U)
+    (hUbij : Function.Bijective (augHInt (sub U))) :
+    ↥(LinearMap.ker (augHInt X)) →ₗ[ℤ] ℤ :=
+  (augHInt (sub U)).comp
+    ((LinearMap.fst ℤ (Homology (sub U) 0) (Homology (sub Uᶜ) 0)).comp
+      ((splitH0IntEquiv hU).symm.toLinearMap.comp (LinearMap.ker (augHInt X)).subtype))
+
+/-- **`antiDiagProjInt` is bijective** — `ker(ε̄_X) ≃ ℤ`. Injective: `π x = 0 ⟹ ε̄_U a = 0 ⟹ a = 0`
+(iso), and on `ker`, `ε̄_Uᶜ b = -ε̄_U a = 0 ⟹ b = 0`, so `x.1 = split(0,0) = 0`. Surjective: given
+`n`, take `a = eU⁻¹ n`, `b = eUc⁻¹(-n)`; then `ε̄_U a + ε̄_Uᶜ b = 0` so `split(a,b) ∈ ker` and `π = n`. -/
+theorem antiDiagProjInt_bijective (hU : IsClopen U)
+    (hUbij : Function.Bijective (augHInt (sub U)))
+    (hUcbij : Function.Bijective (augHInt (sub Uᶜ))) :
+    Function.Bijective (antiDiagProjInt (X := X) hU hUbij) := by
+  let eU := LinearEquiv.ofBijective (augHInt (sub U)) hUbij
+  let eUc := LinearEquiv.ofBijective (augHInt (sub Uᶜ)) hUcbij
+  constructor
+  · -- injective
+    rw [← LinearMap.ker_eq_bot, eq_bot_iff]
+    rintro ⟨x, hx⟩ hxk
+    rw [Submodule.mem_bot]
+    rw [LinearMap.mem_ker] at hxk
+    -- decompose x = split (a, b)
+    obtain ⟨⟨a, b⟩, hab⟩ := (splitH0IntEquiv hU).surjective x
+    have haU0 : augHInt (sub U) a = 0 := by
+      have heq : antiDiagProjInt (X := X) hU hUbij ⟨x, hx⟩ = augHInt (sub U) a := by
+        show augHInt (sub U) ((splitH0IntEquiv hU).symm x).1 = augHInt (sub U) a
+        rw [← hab, (splitH0IntEquiv hU).symm_apply_apply]
+      rw [heq] at hxk; exact hxk
+    have ha0 : a = 0 := eU.injective (by rw [show eU a = augHInt (sub U) a from rfl, haU0]; simp)
+    -- on ker: ε̄_U a + ε̄_Uᶜ b = 0, with ε̄_U a = 0, so ε̄_Uᶜ b = 0, so b = 0
+    have hsum : augHInt (sub U) a + augHInt (sub Uᶜ) b = 0 := by
+      have hxker : augHInt X x = 0 := hx
+      rw [← hab] at hxker
+      rw [show (splitH0IntEquiv hU) (a, b) = splitH0Int U (a, b) from rfl,
+        augHInt_splitH0Int] at hxker
+      exact hxker
+    have hbUc0 : augHInt (sub Uᶜ) b = 0 := by rw [haU0, zero_add] at hsum; exact hsum
+    have hb0 : b = 0 := eUc.injective (by rw [show eUc b = augHInt (sub Uᶜ) b from rfl, hbUc0]; simp)
+    apply Subtype.ext
+    show x = (0 : Homology X 0)
+    rw [← hab, ha0, hb0]
+    show (splitH0IntEquiv hU) (0, 0) = (0 : Homology X 0)
+    rw [show ((0 : Homology (sub U) 0), (0 : Homology (sub Uᶜ) 0)) = (0 : Homology (sub U) 0 × Homology (sub Uᶜ) 0) from rfl,
+      map_zero]
+  · -- surjective
+    intro n
+    refine ⟨⟨(splitH0IntEquiv hU) (eU.symm n, eUc.symm (-n)), ?_⟩, ?_⟩
+    · show augHInt X ((splitH0IntEquiv hU) (eU.symm n, eUc.symm (-n))) = 0
+      rw [show (splitH0IntEquiv hU) (eU.symm n, eUc.symm (-n)) = splitH0Int U (eU.symm n, eUc.symm (-n))
+            from rfl, augHInt_splitH0Int]
+      show eU (eU.symm n) + eUc (eUc.symm (-n)) = 0
+      rw [eU.apply_symm_apply, eUc.apply_symm_apply, add_neg_cancel]
+    · show augHInt (sub U) ((splitH0IntEquiv hU).symm
+          ((splitH0IntEquiv hU) (eU.symm n, eUc.symm (-n)))).1 = n
+      rw [(splitH0IntEquiv hU).symm_apply_apply]
+      show eU (eU.symm n) = n
+      rw [eU.apply_symm_apply]
+
+/-! ## §3. Reduction commutes with the degree-0 split, and the base generator reduces nonzero -/
+
+open SKEFTHawking.SingularLocalHomologyRedCompatInt (redHomology_homIncl)
+
+/-- **The reduction commutes with the integral additivity map** `splitH0Int`:
+`redHomology X 0 (splitH0Int U p) = splitH0 U (redHomology p.1, redHomology p.2)`. Both are the
+coprod of the two `homIncl`s; `redHomology_homIncl` (brick 16 §10) commutes reduction with each. -/
+theorem redHomology_splitH0Int (U : Set ↑X)
+    (p : Homology (sub U) 0 × Homology (sub Uᶜ) 0) :
+    redHomology X 0 (splitH0Int U p)
+      = splitH0 U (redHomology (sub U) 0 p.1, redHomology (sub Uᶜ) 0 p.2) := by
+  show redHomology X 0 (homIncl U 0 p.1 + homIncl Uᶜ 0 p.2)
+    = SKEFTHawking.SingularPairLES.homIncl U 0 (redHomology (sub U) 0 p.1)
+      + SKEFTHawking.SingularPairLES.homIncl Uᶜ 0 (redHomology (sub Uᶜ) 0 p.2)
+  rw [map_add, redHomology_homIncl, redHomology_homIncl]
+
+/-- **The base-generator detector functional** `Λ : H₀(Punc 1;ℤ/2) →ₗ[ZMod 2] ZMod 2`, the mod-2
+`U`-augmentation of the mod-2 additivity `U`-component. Detects the reduction of the integral `ker ε̄`
+generator: `Λ (redHomology g) = ↑(antiDiagProjInt g)`. -/
+noncomputable def baseDetector (hU : IsClopen U) :
+    SKEFTHawking.SingularHomologyMod2.Homology X 0 →ₗ[ZMod 2] ZMod 2 :=
+  (augH (sub U)).comp
+    ((LinearMap.fst (ZMod 2) (SKEFTHawking.SingularHomologyMod2.Homology (sub U) 0)
+        (SKEFTHawking.SingularHomologyMod2.Homology (sub Uᶜ) 0)).comp
+      (splitH0Equiv hU).symm.toLinearMap)
+
+/-- **The detector reads off the anti-diagonal projection after reduction.** For a class `x` in
+`ker(augHInt X)`, `baseDetector (redHomology X 0 x) = ((antiDiagProjInt hU hUbij ⟨x,·⟩ : ℤ) : ZMod 2)`.
+Chases: `split.symm (redHomology x) = (red aU, red bUc)` (`redHomology_splitH0Int` applied to
+`x = splitH0Int (aU,bUc)`), then `augH_U (red aU) = ↑(augHInt_U aU) = ↑(antiDiagProjInt)`. -/
+theorem baseDetector_redHomology (hU : IsClopen U)
+    (hUbij : Function.Bijective (augHInt (sub U)))
+    (x : Homology X 0) (hx : x ∈ LinearMap.ker (augHInt X)) :
+    baseDetector (X := X) hU (redHomology X 0 x)
+      = ((antiDiagProjInt (X := X) hU hUbij ⟨x, hx⟩ : ℤ) : ZMod 2) := by
+  -- write `x = splitH0Int U (aU, bUc)`
+  obtain ⟨⟨aU, bUc⟩, hab⟩ := (splitH0IntEquiv hU).surjective x
+  have hsplitInt : splitH0Int U (aU, bUc) = x := by
+    rw [← hab]; rfl
+  -- LHS: baseDetector (redHomology x) = augH_U (fst (split.symm (redHomology x)))
+  have hxred : (splitH0Equiv hU).symm (redHomology X 0 x)
+      = (redHomology (sub U) 0 aU, redHomology (sub Uᶜ) 0 bUc) := by
+    apply (splitH0Equiv hU).injective
+    rw [LinearEquiv.apply_symm_apply]
+    rw [← hsplitInt, redHomology_splitH0Int]
+    rfl
+  have hLHS : baseDetector (X := X) hU (redHomology X 0 x)
+      = augH (sub U) (redHomology (sub U) 0 aU) := by
+    show augH (sub U) ((splitH0Equiv hU).symm (redHomology X 0 x)).1 = _
+    rw [hxred]
+  rw [hLHS, augH_redHomology]
+  -- RHS: antiDiagProjInt ⟨x,hx⟩ = augHInt_U aU
+  congr 1
+  show augHInt (sub U) aU = augHInt (sub U) ((splitH0IntEquiv hU).symm x).1
+  rw [← hsplitInt, show splitH0Int U (aU, bUc) = (splitH0IntEquiv hU) (aU, bUc) from rfl,
+    (splitH0IntEquiv hU).symm_apply_apply]
+
+end SKEFTHawking.SingularSphereGenReducesInt
