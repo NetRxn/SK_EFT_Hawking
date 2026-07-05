@@ -28,6 +28,33 @@ open SKEFTHawking.IntOrientationSection (relInclInt relInclInt_trans restrictToP
 
 namespace SKEFTHawking.SingularIntOrientationDataConstruct
 
+/-- **mod-2 `homProj = relIncl ∘ relHomologyEmptyEquiv.symm`** (the mod-2 mirror of
+`homProjInt_relHomologyEmptyEquivInt`), so mod-2 `restrictHomologyToPoint x = homProj {x}ᶜ`. -/
+theorem homProj_relHomologyEmptyEquiv {X : TopCat} (S : Set ↑X) (n : ℕ)
+    (w : SKEFTHawking.SingularRelativeHomologyMod2.RelativeHomology (∅ : Set ↑X) n) :
+    SKEFTHawking.SingularPairLES.homProj S n
+        (SKEFTHawking.SingularRelativeEmpty.relHomologyEmptyEquiv n w)
+      = SKEFTHawking.SingularRelativeMV.relIncl (Set.empty_subset S) n w := by
+  obtain ⟨u, rfl⟩ := Submodule.Quotient.mk_surjective _ w
+  rw [show (Submodule.Quotient.mk u :
+        SKEFTHawking.SingularRelativeHomologyMod2.RelativeHomology (∅ : Set ↑X) n)
+      = SKEFTHawking.SingularRelativeHomologyMod2.RelativeHomology.mk (∅ : Set ↑X) n u from rfl,
+    SKEFTHawking.SingularRelativeEmpty.relHomologyEmptyEquiv_mk,
+    SKEFTHawking.SingularPairLES.homProj_mk]
+  simp only [SKEFTHawking.SingularRelativeMV.relIncl]
+  congr 1
+  apply Subtype.ext
+  obtain ⟨c, hc⟩ := Submodule.Quotient.mk_surjective _
+    (u : SKEFTHawking.SingularRelativeHomologyMod2.RelativeChain (∅ : Set ↑X) n)
+  simp only [SKEFTHawking.SingularRelativeFunctoriality.relCyclesMap_coe,
+    SKEFTHawking.SingularRelativeEmpty.cyclesEmptyEquiv_coe, ← hc,
+    show (Submodule.Quotient.mk c :
+        SKEFTHawking.SingularRelativeHomologyMod2.RelativeChain (∅ : Set ↑X) n)
+      = SKEFTHawking.SingularRelativeHomologyMod2.RelativeChain.mk (∅ : Set ↑X) n c from rfl,
+    SKEFTHawking.SingularRelativeEmpty.chainEmptyEquiv_mk,
+    SKEFTHawking.SingularRelativeFunctoriality.relMapChain_mk,
+    SKEFTHawking.SingularFunctoriality.mapChain_id]
+
 variable {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M] [Nonempty M]
   [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M]
 
@@ -76,25 +103,87 @@ theorem intFundClass_restricts {orient : M → ℤ}
     homProjInt_relHomologyEmptyEquivInt, relInclInt_trans]
   rfl
 
-/-!
-## Remaining: `redCompat` + the `IntOrientationData` assembly
+omit [T2Space M] [CompactSpace M] [Nonempty M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] in
+/-- mod-2 `restrictHomologyToPoint x = homProj {x}ᶜ` (from `homProj_relHomologyEmptyEquiv` + the def
+`restrictHomologyToPoint = relIncl ∘ relHomologyEmptyEquiv.symm`). -/
+theorem restrictHomologyToPoint_eq_homProj (x : M)
+    (m : SKEFTHawking.SingularHomologyMod2.Homology (TopCat.of M) 4) :
+    SKEFTHawking.SingularFundamentalClass.restrictHomologyToPoint (X := TopCat.of M) x 4 m
+      = SKEFTHawking.SingularPairLES.homProj ({x}ᶜ : Set ↑(TopCat.of M)) 4 m := by
+  simp only [SKEFTHawking.SingularFundamentalClass.restrictHomologyToPoint, LinearMap.comp_apply,
+    LinearEquiv.coe_coe]
+  rw [← homProj_relHomologyEmptyEquiv, LinearEquiv.apply_symm_apply]
 
-Sub-lemmas (1) `homProjInt_relHomologyEmptyEquivInt` and (2) `intFundClass_restricts` are DONE above.
-The last field is **`redCompat`** (`redHomology [M] = mod-2 [M]₂`), then the structure assembles:
+omit [T2Space M] [CompactSpace M] [Nonempty M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] in
+/-- **The mod-2 point-restriction of a reduction is the reduction of the ℤ point-restriction** (Helper
+B): `restrictHomologyToPoint x (redHomology c) = redRelHomology (restrictHomologyToPointInt x c)`. Via
+`restrictHomologyToPoint = homProj` + `restrictHomologyToPointInt = homProjInt {y≠x}` + the reduction
+naturality `redRelHomology_homProjInt`. -/
+theorem restrictHomologyToPoint_redHomology (x : M) (c : Homology (TopCat.of M) 4) :
+    SKEFTHawking.SingularFundamentalClass.restrictHomologyToPoint (X := TopCat.of M) x 4
+        (redHomology (TopCat.of M) 4 c)
+      = SKEFTHawking.SingularRelHomologyInt.redRelHomology
+          ({y | y ≠ x} : Set ↑(TopCat.of M)) 4 (restrictHomologyToPointInt (X := TopCat.of M) x 4 c) := by
+  rw [restrictHomologyToPoint_eq_homProj]
+  simp only [restrictHomologyToPointInt]
+  rw [SKEFTHawking.SingularLocalHomologyRedCompatInt.redRelHomology_homProjInt]
+  rfl
 
-3. **`redCompat`** (needs `[PreconnectedSpace M]`): `redHomology 4 (intFundClass hUniv) =
-   SingularFundamentalClass.fundamentalClass (m:=2)`. Both restrict (mod-2 `restrictHomologyToPoint`) at
-   a basepoint `x₀` to the SAME generator, so their difference restricts to `0`, hence `= 0` by mod-2
-   uniqueness `SingularFundamentalClass.restrictHomologyToPoint_injective` (@:235). The `redHomology` side
-   uses the reduction naturality `SingularLocalHomologyRedCompatInt` (`redRelHomology∘homProjInt =
-   homProj∘redHomology`, @:370) + `intFundClass_restricts` + the generator identification
-   `redRelHomology (orientedLocalGenerator x s) = (manifoldLocalIso x).symm 1` (nonzero via
-   `redRelHomology_orientedLocalGenerator_ne_zero`, unique in `ℤ/2` via `manifoldLocalIso` injectivity);
-   the mod-2 side uses `fundamentalClass_restricts`.
+/-- **The `redCompat` field**: the ℤ→ℤ/2 reduction of the integral `[M]` is the on-main mod-2 `[M]₂`.
+Via the mod-2 local-degree isomorphism at a basepoint `x₀` (`localDegree_bijective`, needs
+`[PreconnectedSpace M]`): it suffices that `localDegree x₀ (redHomology [M]) = 1 = localDegree x₀ [M]₂`.
+The left value is `manifoldLocalIso x₀ (restrictHomologyToPoint x₀ (redHomology [M])) = manifoldLocalIso
+x₀ (redRelHomology (restrictHomologyToPointInt x₀ [M]))` (Helper B) `= manifoldLocalIso x₀ (redRelHomology
+(orientedLocalGenerator x₀ (orient x₀)))` (`intFundClass_restricts`), which is nonzero
+(`redRelHomology_orientedLocalGenerator_ne_zero` + `manifoldLocalIso` injective), hence `= 1` in `ℤ/2`. -/
+theorem redCompat_intFundClass [PreconnectedSpace M] {orient : M → ℤ}
+    (hUniv : hasOrientedFundClassInt orient (Set.univ : Set M))
+    (horient : ∀ x, orient x = 1 ∨ orient x = -1) :
+    redHomology (TopCat.of M) 4 (intFundClass hUniv)
+      = SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := M) := by
+  obtain ⟨x₀⟩ := (inferInstance : Nonempty M)
+  -- Generator identification: `redRelHomology (orientedLocalGenerator x₀ ·) = manifoldLocalIso.symm 1`
+  -- (stated over `{y ≠ x₀}` = `localSub x₀` to match Helper B syntactically).
+  have h1 : SKEFTHawking.SingularChartBridge.manifoldLocalIso x₀
+      (SKEFTHawking.SingularRelHomologyInt.redRelHomology
+        ({y | y ≠ x₀} : Set ↑(TopCat.of M)) 4 (orientedLocalGenerator x₀ (orient x₀))) = 1 := by
+    have hne := SKEFTHawking.IntOrientationSection.redRelHomology_orientedLocalGenerator_ne_zero
+      x₀ (horient x₀)
+    have hv : SKEFTHawking.SingularChartBridge.manifoldLocalIso x₀
+        (SKEFTHawking.SingularRelHomologyInt.redRelHomology
+          ({y | y ≠ x₀} : Set ↑(TopCat.of M)) 4 (orientedLocalGenerator x₀ (orient x₀))) ≠ 0 := by
+      simp only [ne_eq, EmbeddingLike.map_eq_zero_iff]
+      exact hne
+    exact (by decide : ∀ w : ZMod 2, w ≠ 0 → w = 1) _ hv
+  have hgenID : SKEFTHawking.SingularRelHomologyInt.redRelHomology
+        ({y | y ≠ x₀} : Set ↑(TopCat.of M)) 4 (orientedLocalGenerator x₀ (orient x₀))
+      = (SKEFTHawking.SingularChartBridge.manifoldLocalIso x₀).symm 1 := by
+    rw [← h1, LinearEquiv.symm_apply_apply]
+  -- Both `redHomology [M]` and `[M]₂` restrict at `x₀` to the same generator ⟹ their difference does
+  -- restrict to `0` ⟹ they are equal (mod-2 uniqueness at a basepoint, `[PreconnectedSpace M]`).
+  refine eq_of_sub_eq_zero
+    (SKEFTHawking.SingularFundamentalClass.restrictHomologyToPoint_injective (x₀ := x₀) ?_)
+  rw [map_sub, restrictHomologyToPoint_redHomology, intFundClass_restricts,
+    SKEFTHawking.SingularFundamentalClass.fundamentalClass_restricts, hgenID, sub_self]
 
-Then `IntOrientationData M := ⟨orient, horient_unit, intFundClass hUniv, intFundClass_restricts, redCompat⟩`
-and `intOrientationOfData` bridges to `IntOrientation M`, discharging `intOrientation_datum` given the
-orientability input (`hballs` → `hUniv` via `hasOrientedFundClassInt_univ`).
--/
+/-- **`IntOrientationData M` from an orientation** (`orient` a `±1` section realisable on every chart
+ball, `[PreconnectedSpace M]`) — the packaging that discharges `intOrientation_datum`: `intFundClass` +
+`intFundClass_restricts` + `redCompat_intFundClass`. Compose with `intOrientationOfData` for the disclosed
+`IntOrientation M`. The `hballs` input is orientability (`hasOrientedFundClassInt orient` on every ball). -/
+noncomputable def intOrientationDataOfOrientation [PreconnectedSpace M] (orient : M → ℤ)
+    (horient : ∀ x, orient x = 1 ∨ orient x = -1)
+    (hballs : ∀ (x : M) (ρ : ℝ), 0 ≤ ρ →
+        Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin 4)) x x) ρ
+          ⊆ (chartAt (EuclideanSpace ℝ (Fin 4)) x).target →
+        hasOrientedFundClassInt orient ((chartAt (EuclideanSpace ℝ (Fin 4)) x).symm ''
+          Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin 4)) x x) ρ)) :
+    SKEFTHawking.SingularHomologyInt.IntOrientation M :=
+  haveI hUniv := SKEFTHawking.SingularIntFundClassUnivInt.hasOrientedFundClassInt_univ orient hballs
+  SKEFTHawking.IntOrientationSection.intOrientationOfData
+    { orient := orient
+      orient_unit := horient
+      fundClass := intFundClass hUniv
+      restricts := intFundClass_restricts hUniv
+      redCompat := redCompat_intFundClass hUniv horient }
 
 end SKEFTHawking.SingularIntOrientationDataConstruct
