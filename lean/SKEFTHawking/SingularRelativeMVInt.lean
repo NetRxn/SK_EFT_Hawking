@@ -580,4 +580,294 @@ theorem relMv_exact_middleInt (U V : Set ↑M) (n : ℕ) :
     rw [relMvChainSumInt_mk, sub_self]
     exact Submodule.zero_mem _
 
+/-! ## §6. The small-chains projection `π : Q → C(M, U∪V)` and its iso `ι : Hₙ(Q) ≅ Hₙ(M, U∪V)`
+
+`C(U)+C(V) ⊆ C(U∪V)` gives a projection `π : Q → C(M, U∪V)`, inducing `ι := π_*`. By the integral
+small-chains theorem `ι` is an isomorphism (open `U, V`), so the Q-form middle exactness transports to
+the textbook `Hₙ(M, U∪V)` codomain. -/
+
+open SKEFTHawking.SingularRelativeHomologyMod2 (sub simplexIncl)
+open SKEFTHawking.SingularExcision (IsSubordinate)
+
+/-- Monotonicity of the integral subspace chains under set inclusion. -/
+theorem subspaceChainsInt_mono {A B : Set ↑M} (h : A ⊆ B) (n : ℕ) :
+    subspaceChainsInt A n ≤ subspaceChainsInt B n := fun _c hc =>
+  SingularExcisionIsoInt.mem_subspaceChainsInt_of_support
+    (fun _τ hτ => (SingularExcisionIsoInt.range_of_mem_subspaceChainsInt hc hτ).trans h)
+
+theorem mvUnionChainsInt_le_subspaceChainsInt_union (U V : Set ↑M) (n : ℕ) :
+    mvUnionChainsInt U V n ≤ subspaceChainsInt (U ∪ V) n :=
+  sup_le (subspaceChainsInt_mono Set.subset_union_left n)
+    (subspaceChainsInt_mono Set.subset_union_right n)
+
+/-- The projection `π : Q = C(M)/(C(U)+C(V)) → C(M, U∪V) = C(M)/C(U∪V)`. -/
+noncomputable def piMapInt (U V : Set ↑M) (n : ℕ) :
+    QChainInt U V n →ₗ[ℤ] RelativeChainInt (U ∪ V) n :=
+  Submodule.mapQ (mvUnionChainsInt U V n) (subspaceChainsInt (U ∪ V) n) LinearMap.id
+    (by rw [Submodule.comap_id]; exact mvUnionChainsInt_le_subspaceChainsInt_union U V n)
+
+theorem piMapInt_mk (U V : Set ↑M) (n : ℕ) (c : SingularChainInt M n) :
+    piMapInt U V n (QChainInt.mk U V n c) = RelativeChainInt.mk (U ∪ V) n c := rfl
+
+/-- `π` is a **chain map**: `π ∘ ∂_Q = ∂_{M,U∪V} ∘ π`. -/
+theorem piMapInt_chainMap (U V : Set ↑M) (n : ℕ) (x : QChainInt U V (n + 1)) :
+    piMapInt U V n (qBoundaryInt U V n x) = relBoundaryInt (U ∪ V) n (piMapInt U V (n + 1) x) := by
+  obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  show piMapInt U V n (qBoundaryInt U V n (QChainInt.mk U V (n + 1) c))
+      = relBoundaryInt (U ∪ V) n (piMapInt U V (n + 1) (QChainInt.mk U V (n + 1) c))
+  rw [qBoundaryInt_mk, piMapInt_mk, piMapInt_mk, relBoundaryInt_mk]
+
+theorem piMapInt_mem_relCyclesInt (U V : Set ↑M) (n : ℕ) (z : QChainInt U V n)
+    (hz : z ∈ qCyclesInt U V n) : piMapInt U V n z ∈ relCyclesInt (U ∪ V) n := by
+  cases n with
+  | zero => exact Submodule.mem_top
+  | succ m =>
+    have hz0 : qBoundaryInt U V m z = 0 := LinearMap.mem_ker.mp hz
+    have h0 : relBoundaryInt (U ∪ V) m (piMapInt U V (m + 1) z) = 0 := by
+      rw [← piMapInt_chainMap, hz0, map_zero]
+    exact LinearMap.mem_ker.mpr h0
+
+theorem piMapInt_mem_relBoundariesInt (U V : Set ↑M) (n : ℕ) (z : QChainInt U V n)
+    (hz : z ∈ qBoundariesInt U V n) : piMapInt U V n z ∈ relBoundariesInt (U ∪ V) n := by
+  obtain ⟨w, rfl⟩ := hz
+  exact ⟨piMapInt U V (n + 1) w, (piMapInt_chainMap U V n w).symm⟩
+
+/-- **The small-chains map** `ι : Hₙ(Q) → Hₙ(M, U∪V)`, induced by `π`. -/
+noncomputable def iotaInt (U V : Set ↑M) (n : ℕ) :
+    QHomologyInt U V n →ₗ[ℤ] RelHomologyInt (U ∪ V) n :=
+  Submodule.mapQ _ _ (LinearMap.restrict (piMapInt U V n)
+      (fun z hz => piMapInt_mem_relCyclesInt U V n z hz))
+    (fun z hz => by
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype,
+        LinearMap.restrict_coe_apply] at hz ⊢
+      exact piMapInt_mem_relBoundariesInt U V n _ hz)
+
+theorem iotaInt_mk (U V : Set ↑M) (n : ℕ) (z : qCyclesInt U V n) :
+    iotaInt U V n (QHomologyInt.mk U V n z)
+      = RelHomologyInt.mk (U ∪ V) n ⟨piMapInt U V n z, piMapInt_mem_relCyclesInt U V n z z.2⟩ := rfl
+
+/-! ### The small-chains transport (core of the `ι` isomorphism) -/
+
+/-- Pushing a `{U', V'}`-small chain of `sub(U∪V)` into `M` lands in `C(U)+C(V)`: a simplex of
+`sub(U∪V)` subordinate to `U' = val⁻¹ U` includes to a simplex of `M` with image in `U`. -/
+theorem chainIncl_mem_mvUnion_of_smallInt (U V : Set ↑M) (n : ℕ)
+    (e : SingularChainInt (sub (U ∪ V)) n)
+    (he : e ∈ smallChainsInt ({Subtype.val ⁻¹' U, Subtype.val ⁻¹' V} :
+      Set (Set ↥(U ∪ V))) n) :
+    chainIncl (U ∪ V) n e ∈ mvUnionChainsInt U V n := by
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ he
+  · rintro _ ⟨τ', ⟨W, hW, hsub⟩, rfl⟩
+    rw [chainIncl_single]
+    rcases hW with rfl | rfl
+    · refine Submodule.mem_sup_left (single_mem_subspaceChainsInt_of_subordinate ?_)
+      rw [SingularExcision.toSSetObjEquiv_simplexIncl]
+      rintro _ ⟨t, rfl⟩
+      exact hsub ⟨t, rfl⟩
+    · refine Submodule.mem_sup_right (single_mem_subspaceChainsInt_of_subordinate ?_)
+      rw [SingularExcision.toSSetObjEquiv_simplexIncl]
+      rintro _ ⟨t, rfl⟩
+      exact hsub ⟨t, rfl⟩
+  · rw [map_zero]; exact Submodule.zero_mem _
+  · intro a b _ _ ha hb; rw [map_add]; exact Submodule.add_mem _ ha hb
+  · intro r a _ ha; rw [map_smul]; exact Submodule.smul_mem _ r ha
+
+/-- **The small-chains transport core** (integral): a chain in `C(U∪V)` becomes `C(U)+C(V)`-small after
+enough subdivisions. The `{U,V}` cover of `U∪V` is global in `sub(U∪V)`, so `exists_iterate_smallChainsInt`
+applies there; push back along `chainIncl`. -/
+theorem exists_iterate_mvUnionInt (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (n : ℕ)
+    (c : SingularChainInt M n) (hc : c ∈ subspaceChainsInt (U ∪ V) n) :
+    ∃ m, (⇑(singularSdInt M n))^[m] c ∈ mvUnionChainsInt U V n := by
+  obtain ⟨d, rfl⟩ := hc
+  have hcov : (⋃ W ∈ ({Subtype.val ⁻¹' U, Subtype.val ⁻¹' V} : Set (Set ↥(U ∪ V))),
+      interior W) = Set.univ := by
+    rw [Set.eq_univ_iff_forall]
+    intro p
+    rcases p.2 with hpU | hpV
+    · refine Set.mem_biUnion (Set.mem_insert _ _) ?_
+      rw [((hU.preimage continuous_subtype_val).interior_eq)]
+      exact hpU
+    · refine Set.mem_biUnion (Set.mem_insert_of_mem _ rfl) ?_
+      rw [((hV.preimage continuous_subtype_val).interior_eq)]
+      exact hpV
+  obtain ⟨m, hm⟩ := exists_iterate_smallChainsInt hcov d
+  have hnat : ∀ (k : ℕ) (d' : SingularChainInt (sub (U ∪ V)) n),
+      (⇑(singularSdInt M n))^[k] (chainIncl (U ∪ V) n d')
+        = chainIncl (U ∪ V) n ((⇑(singularSdInt (sub (U ∪ V)) n))^[k] d') := by
+    intro k
+    induction k with
+    | zero => intro d'; rfl
+    | succ j ih =>
+      intro d'
+      rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih, singularSdInt_chainIncl]
+  refine ⟨m, ?_⟩
+  rw [hnat]
+  exact chainIncl_mem_mvUnion_of_smallInt U V n _ hm
+
+/-- **`ι` is surjective**: every relative `(U∪V)`-class has a small (`Q`-cycle) representative —
+subdivide its boundary into `C(U)+C(V)` (`exists_iterate_mvUnionInt`), then `[c] = [Sdᵐc]`. -/
+theorem iotaInt_surjective (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (n : ℕ) :
+    Function.Surjective (iotaInt U V n) := by
+  intro h
+  obtain ⟨zc, rfl⟩ := Submodule.Quotient.mk_surjective _ h
+  cases n with
+  | zero =>
+    obtain ⟨c', hc'⟩ := Submodule.Quotient.mk_surjective _ (zc : RelativeChainInt (U ∪ V) 0)
+    refine ⟨QHomologyInt.mk U V 0 ⟨QChainInt.mk U V 0 c', Submodule.mem_top⟩, ?_⟩
+    rw [iotaInt_mk]
+    refine congrArg (RelHomologyInt.mk (U ∪ V) 0) (Subtype.ext ?_)
+    show piMapInt U V 0 (QChainInt.mk U V 0 c') = (zc : RelativeChainInt (U ∪ V) 0)
+    rw [piMapInt_mk]; exact hc'
+  | succ k =>
+    obtain ⟨c', hc'⟩ := Submodule.Quotient.mk_surjective _ (zc : RelativeChainInt (U ∪ V) (k + 1))
+    have hbdry : chainBoundary M k c' ∈ subspaceChainsInt (U ∪ V) k := by
+      have hz := LinearMap.mem_ker.mp zc.2
+      rw [← hc', show (Submodule.Quotient.mk c' : RelativeChainInt (U ∪ V) (k + 1))
+          = RelativeChainInt.mk (U ∪ V) (k + 1) c' from rfl, relBoundaryInt_mk,
+        RelativeChainInt.mk_eq_zero_iff] at hz
+      exact hz
+    obtain ⟨m, hm⟩ := exists_iterate_mvUnionInt U V hU hV k (chainBoundary M k c') hbdry
+    have hqcyc : QChainInt.mk U V (k + 1) ((⇑(singularSdInt M (k + 1)))^[m] c') ∈ qCyclesInt U V (k + 1) := by
+      rw [show qCyclesInt U V (k + 1) = LinearMap.ker (qBoundaryInt U V k) from rfl, LinearMap.mem_ker,
+        qBoundaryInt_mk, QChainInt.mk_eq_zero_iff, singularSdInt_iterate_chainBoundary]
+      exact hm
+    refine ⟨QHomologyInt.mk U V (k + 1) ⟨_, hqcyc⟩, ?_⟩
+    rw [iotaInt_mk]
+    refine relHomologyInt_mk_eq_of (k + 1) _ zc ?_
+    show piMapInt U V (k + 1) (QChainInt.mk U V (k + 1) ((⇑(singularSdInt M (k + 1)))^[m] c'))
+        - (zc : RelativeChainInt (U ∪ V) (k + 1)) ∈ relBoundariesInt (U ∪ V) (k + 1)
+    rw [piMapInt_mk, ← hc',
+      show (Submodule.Quotient.mk c' : RelativeChainInt (U ∪ V) (k + 1))
+        = RelativeChainInt.mk (U ∪ V) (k + 1) c' from rfl]
+    have key := relative_sub_singularSdInt_iterate_mem_relBoundariesInt hbdry m
+    have hthis : RelativeChainInt.mk (U ∪ V) (k + 1) ((⇑(singularSdInt M (k + 1)))^[m] c')
+        - RelativeChainInt.mk (U ∪ V) (k + 1) c'
+        = -(RelativeChainInt.mk (U ∪ V) (k + 1) c'
+            - RelativeChainInt.mk (U ∪ V) (k + 1) ((⇑(singularSdInt M (k + 1)))^[m] c')) := by abel
+    rw [hthis]
+    exact Submodule.neg_mem _ key
+
+/-- **`ι` is injective** (positive degree): a `Q`-cycle whose `(U∪V)`-image is a relative boundary is a
+`Q`-boundary — push the boundary witness into `C(U)+C(V)` via the subdivision homotopy. -/
+theorem iotaInt_injective (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (k : ℕ) :
+    Function.Injective (iotaInt U V (k + 1)) := by
+  rw [injective_iff_map_eq_zero]
+  intro x hx
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  obtain ⟨zc, hzc⟩ := Submodule.Quotient.mk_surjective _ (z : QChainInt U V (k + 1))
+  rw [show (Submodule.Quotient.mk z : QHomologyInt U V (k + 1)) = QHomologyInt.mk U V (k + 1) z from rfl,
+    iotaInt_mk, RelHomologyInt.mk_eq_zero_iff] at hx
+  change piMapInt U V (k + 1) (z : QChainInt U V (k + 1)) ∈ relBoundariesInt (U ∪ V) (k + 1) at hx
+  rw [show piMapInt U V (k + 1) (z : QChainInt U V (k + 1)) = RelativeChainInt.mk (U ∪ V) (k + 1) zc by
+    rw [← hzc]; rfl] at hx
+  obtain ⟨W, hW⟩ := hx
+  obtain ⟨w, hw⟩ := Submodule.Quotient.mk_surjective _ W
+  -- `y := zc − ∂w ∈ C(U∪V)` (from `∂W = mk zc`); its boundary `∂y = ∂zc ∈ C(U)+C(V)` (`z` a Q-cycle).
+  set y := zc - chainBoundary M (k + 1) w with hy_def
+  have hy_union : y ∈ subspaceChainsInt (U ∪ V) (k + 1) := by
+    rw [← RelativeChainInt.mk_eq_zero_iff,
+      show RelativeChainInt.mk (U ∪ V) (k + 1) y
+        = RelativeChainInt.mk (U ∪ V) (k + 1) zc
+          - relBoundaryInt (U ∪ V) (k + 1) (RelativeChainInt.mk (U ∪ V) (k + 2) w) from rfl,
+      show RelativeChainInt.mk (U ∪ V) (k + 2) w = W from hw, hW, sub_self]
+  have hzc_cyc : chainBoundary M k zc ∈ mvUnionChainsInt U V k := by
+    have hq : qBoundaryInt U V k (z : QChainInt U V (k + 1)) = 0 := LinearMap.mem_ker.mp z.2
+    rw [← hzc, show (Submodule.Quotient.mk zc : QChainInt U V (k + 1)) = QChainInt.mk U V (k + 1) zc from rfl,
+      qBoundaryInt_mk, QChainInt.mk_eq_zero_iff] at hq
+    exact hq
+  have hdy : chainBoundary M k y ∈ mvUnionChainsInt U V k := by
+    rw [hy_def, map_sub,
+      show chainBoundary M k (chainBoundary M (k + 1) w) = 0 by
+        rw [← LinearMap.comp_apply, chainBoundary_comp_chainBoundary, LinearMap.zero_apply],
+      sub_zero]
+    exact hzc_cyc
+  -- `Sdᵐy ∈ C(U)+C(V)` and `Dₘ(∂y) ∈ C(U)+C(V)`.
+  obtain ⟨m, hm⟩ := exists_iterate_mvUnionInt U V hU hV (k + 1) y hy_union
+  have hDdy : iterHomotopyInt M k m (chainBoundary M k y) ∈ mvUnionChainsInt U V (k + 1) := by
+    rw [show mvUnionChainsInt U V (k + 1) = smallChainsInt ({U, V} : Set (Set ↑M)) (k + 1) from
+      (smallChainsInt_two_eq U V (k + 1)).symm]
+    refine iterHomotopyInt_mem_smallChainsInt ?_ m
+    rw [show smallChainsInt ({U, V} : Set (Set ↑M)) k = mvUnionChainsInt U V k from
+      smallChainsInt_two_eq U V k]
+    exact hdy
+  -- Homotopy `∂(Dₘy) + Dₘ(∂y) = y − Sdᵐy`, so `y − ∂(Dₘy) = Sdᵐy + Dₘ(∂y) ∈ C(U)+C(V)`.
+  have hh := iterHomotopyInt_chainHomotopy M m k y
+  have hkey : zc - chainBoundary M (k + 1) (iterHomotopyInt M (k + 1) m y + w)
+      ∈ mvUnionChainsInt U V (k + 1) := by
+    have h2 : y - chainBoundary M (k + 1) (iterHomotopyInt M (k + 1) m y)
+        = (⇑(singularSdInt M (k + 1)))^[m] y + iterHomotopyInt M k m (chainBoundary M k y) := by
+      -- abstract the three homotopy terms to fresh `A, B, S` so `hh : A + B = y - S` closes it by `abel`.
+      generalize hA : chainBoundary M (k + 1) (iterHomotopyInt M (k + 1) m y) = A at hh ⊢
+      generalize hB : iterHomotopyInt M k m (chainBoundary M k y) = B at hh ⊢
+      generalize hS : (⇑(singularSdInt M (k + 1)))^[m] y = S at hh ⊢
+      rw [eq_sub_iff_add_eq] at hh
+      rw [← hh]; abel
+    rw [map_add,
+      show zc - (chainBoundary M (k + 1) (iterHomotopyInt M (k + 1) m y) + chainBoundary M (k + 1) w)
+        = (zc - chainBoundary M (k + 1) w) - chainBoundary M (k + 1) (iterHomotopyInt M (k + 1) m y) by abel,
+      ← hy_def, h2]
+    exact Submodule.add_mem _ hm hDdy
+  -- Conclude `[z] = 0`: `zc ≡ ∂_Q(mk(Dₘy + w))`.
+  rw [show (Submodule.Quotient.mk z : QHomologyInt U V (k + 1)) = QHomologyInt.mk U V (k + 1) z from rfl,
+    QHomologyInt.mk_eq_zero_iff, ← hzc]
+  refine ⟨QChainInt.mk U V (k + 2) (iterHomotopyInt M (k + 1) m y + w), ?_⟩
+  rw [qBoundaryInt_mk]
+  show Submodule.Quotient.mk (chainBoundary M (k + 1) (iterHomotopyInt M (k + 1) m y + w))
+      = Submodule.Quotient.mk zc
+  rw [Submodule.Quotient.eq]
+  show chainBoundary M (k + 1) (iterHomotopyInt M (k + 1) m y + w) - zc ∈ mvUnionChainsInt U V (k + 1)
+  rw [show chainBoundary M (k + 1) (iterHomotopyInt M (k + 1) m y + w) - zc
+      = -(zc - chainBoundary M (k + 1) (iterHomotopyInt M (k + 1) m y + w)) by abel]
+  exact Submodule.neg_mem _ hkey
+
+/-- **The small-chains isomorphism** `ι : Hₙ₊₁(Q) ≅ Hₙ₊₁(M, U∪V)` (`U, V` open). Lets the relative MV
+middle exactness be stated in its textbook `Hₙ(M, U∪V)` form. -/
+noncomputable def iotaEquivInt (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (k : ℕ) :
+    QHomologyInt U V (k + 1) ≃ₗ[ℤ] RelHomologyInt (U ∪ V) (k + 1) :=
+  LinearEquiv.ofBijective (iotaInt U V (k + 1))
+    ⟨iotaInt_injective U V hU hV k, iotaInt_surjective U V hU hV (k + 1)⟩
+
+/-- **The `ι ∘ Σ_* = relMvHomSumInt` bridge**: the small-chains iso applied to the `Q`-form sum
+(difference) is the textbook sum (difference), landing in `Hₙ(M, U∪V)`. -/
+theorem iota_relMvHomSumQInt (U V : Set ↑M) (n : ℕ)
+    (p : RelHomologyInt U n × RelHomologyInt V n) :
+    iotaInt U V n (relMvHomSumQInt U V n p) = relMvHomSumInt U V n p := by
+  obtain ⟨pu, pv⟩ := p
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ pu
+  obtain ⟨b, rfl⟩ := Submodule.Quotient.mk_surjective _ pv
+  rw [show relMvHomSumQInt U V n (Submodule.Quotient.mk a, Submodule.Quotient.mk b)
+      = QHomologyInt.mk U V n ⟨relMvChainSumInt U V n ((a : _), (b : _)),
+          relMvChainSumInt_pair_mem_qCyclesInt U V n a b⟩ from relMvHomSumQInt_mk U V n a b, iotaInt_mk,
+    relMvHomSumInt, LinearMap.coprod_apply, LinearMap.neg_apply, relInclInt, relInclInt,
+    RelHomologyInt.map_mk, RelHomologyInt.map_mk]
+  refine congrArg (RelHomologyInt.mk (U ∪ V) n) (Subtype.ext ?_)
+  simp only [← sub_eq_add_neg]
+  rw [AddSubgroupClass.coe_sub, relCyclesMapInt_coe, relCyclesMapInt_coe]
+  obtain ⟨a', ha'⟩ := Submodule.Quotient.mk_surjective _ (a : RelativeChainInt U n)
+  obtain ⟨b', hb'⟩ := Submodule.Quotient.mk_surjective _ (b : RelativeChainInt V n)
+  rw [← ha', ← hb',
+    show (Submodule.Quotient.mk a' : RelativeChainInt U n) = RelativeChainInt.mk U n a' from rfl,
+    show (Submodule.Quotient.mk b' : RelativeChainInt V n) = RelativeChainInt.mk V n b' from rfl,
+    relMvChainSumInt_mk, relMapChainInt_id_mk, relMapChainInt_id_mk,
+    show (Submodule.Quotient.mk (a' - b') : QChainInt U V n) = QChainInt.mk U V n (a' - b') from rfl,
+    piMapInt_mk]
+  rfl
+
+/-- **Integral relative MV exactness at `Hₙ(M,U) ⊕ Hₙ(M,V)`** in textbook form: `range Δ_* = ker Σ_*`
+(positive degree). Transported from the `Q`-form middle exactness through the iso `ι`. This is the shared
+foundation for the oriented fundamental-class induction and the integral Poincaré-duality cap-iso:
+two relative classes restricting to the SAME class in `Hₙ(M, U∪V)` have difference `0`, hence lie in
+`im Δ_*`. -/
+theorem relMvInt_exact_middle' (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (k : ℕ) :
+    Function.Exact (relMvHomDiagInt U V (k + 1)) (relMvHomSumInt U V (k + 1)) := by
+  intro p
+  constructor
+  · intro hp
+    refine (relMv_exact_middleInt U V (k + 1) p).mp ?_
+    have h0 : iotaInt U V (k + 1) (relMvHomSumQInt U V (k + 1) p) = 0 := by
+      rw [iota_relMvHomSumQInt]; exact hp
+    exact (iotaEquivInt U V hU hV k).map_eq_zero_iff.mp h0
+  · intro hp
+    rw [← iota_relMvHomSumQInt,
+      show relMvHomSumQInt U V (k + 1) p = 0 from (relMv_exact_middleInt U V (k + 1) p).mpr hp, map_zero]
+
 end SKEFTHawking.SingularRelativeMVInt
