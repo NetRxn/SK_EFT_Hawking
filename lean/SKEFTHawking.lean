@@ -1019,6 +1019,9 @@ import SKEFTHawking.SingularSubsetHomologyInt
 -- Phase 5q.H · E1 (CSC-PD tower): support-enlargement naturality of D_K (D_K commutes with the
 -- homology support-enlargement). Integral mirror of SingularLocalDualityKMono.
 import SKEFTHawking.SingularLocalDualityKMonoInt
+-- Phase 5q.H · E1 (CSC-PD tower): cycle-difference compatibility of D_W (D_W independent of the
+-- W-supported relative-cycle representative). Integral mirror of SingularLocalDualityKCycle.
+import SKEFTHawking.SingularLocalDualityKCycleInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
