@@ -202,4 +202,65 @@ theorem restrictToPointInt_convexChart_bijective {M : TopCat} [T1Space ↑M] {m 
   rw [hrw]
   exact Ty.symm.bijective.comp hcomp_bij
 
+/-- **The `determinedByPointsInt` half, transported through a CONVEX chart** (ℤ): a class in
+`Hₘ₊₂(M|K;ℤ)` for a convex chart region `K` (matched to a convex compact `C ⊆ ℝⁿ` that is a
+neighbourhood of `0`) restricting to `0` at every point of `K` is `0`. Restriction at the single
+chart-centre point `x₀ = e⁻¹ 0 ∈ K` already detects `0` (`restrictToPointInt_convexChart_bijective` is
+injective). Mirror of `SingularDeterminedConvex.determinedByPoints_convexChart`. -/
+theorem determinedByPointsInt_convexChart {M : TopCat} [T1Space ↑M] {m : ℕ} {K : Set ↑M}
+    {U : Set ↑M} (hK : IsClosed K) (hU : IsOpen U) (hKU : K ⊆ U)
+    {C : Set (EuclideanSpace ℝ (Fin (m + 2)))} {V : Set ↑(SingularEuclideanAcyclic.Eucl (m + 2))}
+    (hCconv : Convex ℝ C) (hCcomp : IsCompact C)
+    (hC0 : C ∈ nhds (0 : EuclideanSpace ℝ (Fin (m + 2)))) (hV : IsOpen V) (hCV : C ⊆ V)
+    (e : ↥U ≃ₜ ↥V)
+    (hcompat : ∀ u : ↥U, ((e u : ↑(SingularEuclideanAcyclic.Eucl (m + 2))) ∈ C) ↔ (u : ↑M) ∈ K) :
+    SingularGoodCompactInt.determinedByPointsInt (X := M) (m + 2) K := by
+  have h0C : (0 : EuclideanSpace ℝ (Fin (m + 2))) ∈ C := mem_of_mem_nhds hC0
+  set q : ↥V := ⟨(0 : EuclideanSpace ℝ (Fin (m + 2))), hCV h0C⟩ with hq
+  set x₀ : ↥U := e.symm q with hx₀
+  have hex₀ : e x₀ = q := by rw [hx₀, e.apply_symm_apply]
+  have hxK : (x₀ : ↑M) ∈ K := by
+    refine (hcompat x₀).mp ?_
+    rw [hex₀]; exact h0C
+  intro α hα
+  exact (restrictToPointInt_convexChart_bijective hK hU hKU hCconv hCcomp hV hCV e hcompat
+    hxK).injective (by rw [hα (x₀ : ↑M) hxK, map_zero])
+
+/-! ## §3. The concrete chart-closed-ball form (M : Type) -/
+
+/-- **Restriction to a point of a closed-ball chart neighbourhood is bijective** (ℤ, M:Type, *concrete*
+chart form): for a closed ball `B̄(chartAt y₀ · y₀, r)` inside the chart target and a point `y` in its
+chart-pullback `K = (chartAt y₀).symm '' B̄`, the restriction `Hₘ₊₂(M|K;ℤ) → Hₘ₊₂(M|y;ℤ)` is bijective.
+Applies `restrictToPointInt_convexChart_bijective` with the **concrete** chart
+`(chartAt y₀).toHomeomorphSourceTarget` (whose type pins the topology instances) + `convex_closedBall`.
+The local-homology iso the oriented fundamental-class local-constancy argument rides on. Mirror of
+`SingularGoodCompactManifold.restrictToPoint_chartBall_bijective`. -/
+theorem restrictToPointInt_chartBall_bijective {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (y₀ : M) {r : ℝ}
+    (hrsub : Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀ y₀) r
+      ⊆ (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀).target)
+    {y : M} (hy : y ∈ (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀).symm ''
+      Metric.closedBall (chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀ y₀) r) :
+    Function.Bijective
+      (restrictToPointInt (X := TopCat.of M) hy (m + 2)) := by
+  haveI : T1Space ↑(TopCat.of M) := inferInstanceAs (T1Space M)
+  set c := chartAt (EuclideanSpace ℝ (Fin (m + 2))) y₀ with hc
+  have hCcomp : IsCompact (Metric.closedBall (c y₀) r) := isCompact_closedBall _ _
+  have hKsub : c.symm '' Metric.closedBall (c y₀) r ⊆ c.source := by
+    rintro p ⟨z, hz, rfl⟩; exact c.map_target (hrsub hz)
+  have hKcomp : IsCompact (c.symm '' Metric.closedBall (c y₀) r) :=
+    hCcomp.image_of_continuousOn (c.continuousOn_symm.mono hrsub)
+  have hcompat : ∀ u : ↥c.source,
+      ((c.toHomeomorphSourceTarget u : ↑(SingularEuclideanAcyclic.Eucl (m + 2)))
+          ∈ Metric.closedBall (c y₀) r)
+        ↔ ((u : M) ∈ c.symm '' Metric.closedBall (c y₀) r) := by
+    intro u
+    rw [c.toHomeomorphSourceTarget_apply_coe]
+    constructor
+    · intro h; exact ⟨c u, h, c.left_inv u.2⟩
+    · rintro ⟨z, hz, hzu⟩; rw [← hzu, c.right_inv (hrsub hz)]; exact hz
+  exact restrictToPointInt_convexChart_bijective hKcomp.isClosed
+    c.open_source hKsub (convex_closedBall _ _) hCcomp c.open_target hrsub
+    c.toHomeomorphSourceTarget hcompat hy
+
 end SKEFTHawking.SingularChartBallBijectiveInt
