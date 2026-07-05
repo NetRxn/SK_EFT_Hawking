@@ -1074,6 +1074,9 @@ import SKEFTHawking.SingularIntFundClassUnionInt
 -- Phase 5q.H · E1 brick 18g: the oriented fundamental class on all of M (hasOrientedFundClassInt_univ)
 -- — chart-ball cover + biUnion; assembles the full base→union→biUnion→univ oriented induction.
 import SKEFTHawking.SingularIntFundClassUnivInt
+-- Phase 5q.H · E1 brick 18h: the global integral [M] (intFundClass) from the oriented univ witness —
+-- start of the IntOrientationData packaging (fundClass done; restricts/redCompat plan in-module).
+import SKEFTHawking.SingularIntOrientationDataConstruct
 import SKEFTHawking.SingularBallCover
 import SKEFTHawking.SingularGoodCompactEuclidean
 import SKEFTHawking.SingularGoodCompactChart
