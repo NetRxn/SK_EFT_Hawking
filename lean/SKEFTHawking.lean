@@ -939,6 +939,13 @@ import SKEFTHawking.SingularSubdivisionInt
 -- (any chain → small); smallChainsInt a subcomplex (chainBoundary-closed); and the surjective half
 -- c−Sdᵐc=∂(Dₘc) (SIGNED — mod-2 has c+Sdᵐc) + exists_small_cycle_homologousInt. Kernel-pure.
 import SKEFTHawking.SingularExcisionInt
+-- Phase 5q.H · E1 (Substrate-G topology, brick 14d): the singular excision ISO over ℤ. Signed mirror of
+-- SingularExcisionIso — for A B with int A ∪ int B = X, (B,A∩B)↪(X,A) induces H_{n+1}(B,A∩B;ℤ)≅H_{n+1}(X,A;ℤ)
+-- (excisionMapInt/excisionEquivInt). Packages the integral relative small-chains theorem
+-- (relative_small_boundaryInt + relative_sub_singularSdInt_iterate_mem_relBoundariesInt, from 14c's
+-- exists_iterate_smallChainsInt/smallChainsInt) with smallChainsInt_two_eq + subspaceChainsInt_inf.
+-- Kernel-pure. Feeds the general-M ⟷ Euclidean-model chart identification behind IntLocalHomologyIso.
+import SKEFTHawking.SingularExcisionIsoInt
 -- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
