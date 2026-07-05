@@ -848,6 +848,16 @@ import SKEFTHawking.IntersectionFormUnimodularInt
 -- homology+Kronecker portion of intFundamentalClass_eval_datum, reducing it to the sole geometric input
 -- [M] : Homology(M;ℤ) 4 (+ orientation) — the community-scale residual core (no mod-2 shortcut over ℤ).
 import SKEFTHawking.SingularHomologyInt
+-- Phase 5q.H (2026-07-04, Option-A foundation brick 6): the singular INTEGRAL cap product ⌢ : Cᵏ×Cₖ₊ₘ→Cₘ,
+-- its descent to (co)homology capHInt : Hᵏ×H_{k+m+1}→H_{m+1} (char-0 upgrade of the mod-2 capH), the
+-- sign-free chain cap–cup adjunction ⟨a∪b,c⟩=⟨b,a⌢c⟩ (kroneckerInt_cup_capInt), and its descended form
+-- interFormInt (intFundamentalClassOfHomology [M]) a b = ⟨b, a⌢[M]⟩ (integral mirror of
+-- fundamentalFunctional_cupH24). REDUCES the disclosed IntPoincareDuality (H²≃Dual H² iso) to the cleaner
+-- geometric IntCapIso datum: the integral cap ·⌢[M]:H²→H₂ is an iso (char-0 upgrade of the mod-2 injective
+-- nondeg_of_closed) + the integral Kronecker H₂≃Dual H² perfect pairing (intPoincareDualityOfCapIso →
+-- interMatrix_isUnimodular_of_capIso). The load-bearing ℤ difference from mod-2 = the SIGNED cap-Leibniz
+-- ∂(a⌢c)=(-1)ᵏ⁺¹(δa⌢c)+(-1)ᵏ(a⌢∂c) (capInt_leibniz), whose signs the mod-2 file dropped (+1=-1).
+import SKEFTHawking.IntCapProductInt
 -- Phase 5q.F (2026-06-15, w₂ foundation brick 3): singular ℤ/2 HOMOLOGY + the Kronecker pairing — the
 -- dual of SingularCohomologyMod2. Chains C_n = simplices →₀ ℤ/2, the boundary ∂ with ∂²=0, Homology
 -- Hₙ = ker∂/im∂, and the descended Kronecker pairing kroneckerH : Hⁿ × Hₙ → ℤ/2 (the evaluation

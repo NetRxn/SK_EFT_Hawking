@@ -3233,6 +3233,60 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             '(this datum) reduce IsEvenUnimodular interMatrix to exactly two clean disclosed geometric data. The integral '
             'iso is STRICTLY stronger than the on-main mod-2 injective nondeg_of_closed (det odd → det = ±1).',
     },
+    'intCapIso_datum': {
+        'statement': 'For a closed ORIENTED 4-manifold M with integral fundamental class [M] : Homology X 4, the '
+            'integral Poincaré duality is carried (Phase 5q.H · E1 Substrate-G, brick 6) as the CLEANER GEOMETRIC datum '
+            'SKEFTHawking.SingularCohomologyInt.IntCapIso zM, holding two ISO facts: (i) capEquiv : Cohomology X 2 '
+            '≃ₗ[ℤ] Homology X 2 = the integral CAP MAP ·⌢[M] : H²(M;ℤ) → H₂(M;ℤ) is an isomorphism (with capEquiv_apply '
+            'fixing its underlying map to capHInt 2 1 · [M]); (ii) kronEquiv : Homology X 2 ≃ₗ[ℤ] Module.Dual ℤ '
+            '(Cohomology X 2) = the integral KRONECKER pairing H₂(M;ℤ) → Dual ℤ H²(M;ℤ) is a perfect pairing (with '
+            'kronEquiv_apply fixing it to h ↦ ⟨·,h⟩ = kroneckerHInt 2 · h). This SUPERSEDES/refines '
+            'intPoincareDuality_perfectPairing_datum: the integral cap product ·⌢[M], the descent to (co)homology '
+            'capHInt, the integral Kronecker kroneckerHInt, and the cap–cup adjunction ⟨a∪b,[M]⟩=⟨b,a⌢[M]⟩ are now ALL '
+            'BUILT (kernel-pure), so IntPoincareDuality is inhabited from IntCapIso by intPoincareDualityOfCapIso (its '
+            'toDualEquiv = capEquiv.trans kronEquiv, toDualEquiv_apply from interFormInt_eq_kroneckerHInt_capHInt). The '
+            'residual disclosed input is now PRECISELY the two isos (cap-iso + Kronecker perfect pairing) — the exact '
+            'char-0 upgrade of the on-main mod-2 INJECTIVE nondeg_of_closed (mod-2 injectivity of ·⌢[M] → integral iso).',
+        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'hard',
+        'module': 'IntCapProductInt',
+        'elimination_path': 'Discharge (i) the cap-iso: prove capHInt 2 1 · [M] : H²(M;ℤ) → H₂(M;ℤ) is bijective — the '
+            'integral upgrade of the on-main mod-2 injective SingularPD4Instances.nondeg_of_closed (the capH-injectivity '
+            '/ P₄(univ) Bott–Tu tower), which needs the integral local-global cap-iso theorem (Mayer–Vietoris + the '
+            'Euclidean/ball local model over ℤ). Discharge (ii) the Kronecker perfect pairing H₂(M;ℤ) ≃ Dual ℤ H²(M;ℤ): '
+            'universal coefficients over ℤ for a finitely-generated free-part (co)homology — the integral UCT '
+            '(Ext-term); over a field this is homology_eq_zero_of_kroneckerH (the mod-2 shadow). Both are the '
+            'community-scale integral-PD core; everything ELSE (cap, adjunction, descent, the reduction) is now proved.',
+        'dependent_theorems': [
+            'SKEFTHawking.SingularCohomologyInt.capHInt',
+            'SKEFTHawking.SingularCohomologyInt.kroneckerInt_cup_capInt',
+            'SKEFTHawking.SingularCohomologyInt.kroneckerHInt_cupH24',
+            'SKEFTHawking.SingularCohomologyInt.interFormInt_eq_kroneckerHInt_capHInt',
+            'SKEFTHawking.SingularCohomologyInt.intPoincareDualityOfCapIso',
+            'SKEFTHawking.SingularCohomologyInt.interMatrix_isUnimodular_of_capIso',
+        ],
+        'source': 'Standard 4-manifold topology (Poincaré duality via the cap product with the fundamental class; '
+            'Hatcher §3.3 Thm 3.30, Milnor–Stasheff): for a closed oriented M, ·⌢[M] : Hᵏ(M;ℤ) → H_{n-k}(M;ℤ) is an '
+            'isomorphism, and the Kronecker/UCT pairing identifies H₂ with the ℤ-dual of H² on the free part. The '
+            'signed cap-Leibniz ∂(a⌢c)=(-1)ᵏ⁺¹(δa⌢c)+(-1)ᵏ(a⌢∂c) (capInt_leibniz) is the genuine ℤ boundary identity '
+            '(the mod-2 file dropped the signs via +1=-1); the cap–cup adjunction ⟨a∪b,c⟩=⟨b,a⌢c⟩ is sign-free.',
+        'risk': 'Low mathematically (textbook Poincaré duality); cost is the from-scratch Lean proof of the two isos '
+            '(cap-iso + Kronecker perfect pairing), the integral upgrade of the on-main mod-2 injective tower. Every '
+            'result here holds for an ARBITRARY IntCapIso datum, so the datum is the ONLY unproved input to '
+            'unimodularity via this route.',
+        'circularity_note': 'None. intPoincareDualityOfCapIso builds IntPoincareDuality for an ARBITRARY IntCapIso; the '
+            'reduction (toDualEquiv = capEquiv.trans kronEquiv, compatibility from the PROVED adjunction '
+            'interFormInt_eq_kroneckerHInt_capHInt) assumes no property of a specific future cap-iso. NOT the '
+            'lattice-Arf route (nogo_lattice_arf_not_sigma8): the cap-iso is a genuine geometric PD fact, orthogonal to '
+            'the banned σ/8 ≡ Arf congruence. This datum REFINES intPoincareDuality_perfectPairing_datum (which remains '
+            'valid; this one exposes the cleaner cap-iso decomposition now that the cap tower is built).',
+        'prose': 'The integral Poincaré-duality input, sharpened (Phase 5q.H · E1 Substrate-G brick 6) to the CLEANER '
+            'geometric datum IntCapIso: the integral cap map ·⌢[M] : H²(M;ℤ) → H₂(M;ℤ) is an iso + the integral '
+            'Kronecker H₂ ≃ Dual H² is a perfect pairing. With the integral cap product, its descent to (co)homology '
+            '(capHInt), the integral Kronecker, and the cap–cup adjunction now ALL BUILT kernel-pure, '
+            'IntPoincareDuality is inhabited from IntCapIso (intPoincareDualityOfCapIso), so the residual reduces to '
+            'exactly the two isos — the char-0 upgrade of the on-main mod-2 injective nondeg_of_closed. Feeds the whole '
+            'IsEvenUnimodular → σ ÷ 16 leg via interMatrix_isUnimodular_of_capIso.',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════
