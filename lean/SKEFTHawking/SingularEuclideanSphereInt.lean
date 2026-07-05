@@ -1,6 +1,8 @@
 import Mathlib
 import SKEFTHawking.SingularHomotopyInvarianceInt
+import SKEFTHawking.SingularFunctorialityInt
 import SKEFTHawking.SingularEuclideanAcyclic
+import SKEFTHawking.SingularPuncturedRetract
 
 /-!
 # Integral acyclicity of Euclidean space
@@ -32,3 +34,28 @@ theorem cycle_mem_boundariesInt (n k : ℕ) (z : SingularChainInt (Eucl n) (k + 
     (slice_contraction_zero n) (slice_contraction_one n) z hz
 
 end SKEFTHawking.SingularEuclideanAcyclicInt
+
+/-!
+# Integral punctured-space deformation retract `ℝⁿ ∖ 0 ≃ Sⁿ⁻¹`
+
+The punctured space `ℝⁿ ∖ 0` deformation-retracts onto the unit sphere `Sⁿ⁻¹` via
+`normalize x = x/‖x‖`, a homotopy equivalence with inverse the inclusion `incl`. All the continuous
+maps and slice identities are reused verbatim from `SingularPuncturedRetract` (coefficient-free); the
+transport to integral homology now flows through
+`SingularFunctorialityInt.Homology.mapInt_bijective_of_homotopyEquiv`.
+-/
+
+namespace SKEFTHawking.SingularPuncturedRetractInt
+
+open SKEFTHawking.SingularPuncturedRetract
+open SKEFTHawking.SingularFunctorialityInt
+
+/-- **`normalize : ℝⁿ ∖ 0 → Sⁿ⁻¹` induces an isomorphism on `Hₖ₊₁(·; ℤ)`** — the punctured space
+deformation-retracts onto the sphere. Integral mirror of `homology_map_normalize_bijective`. -/
+theorem homology_mapInt_normalize_bijective (n k : ℕ) :
+    Function.Bijective (Homology.mapInt (normalize (n := n)) (k + 1)) :=
+  Homology.mapInt_bijective_of_homotopyEquiv normalize incl puncHomotopy slice_puncHomotopy_zero
+    slice_puncHomotopy_one constHomotopy
+    ((slice_constHomotopy 0).trans normalize_comp_incl.symm) (slice_constHomotopy 1) k
+
+end SKEFTHawking.SingularPuncturedRetractInt
