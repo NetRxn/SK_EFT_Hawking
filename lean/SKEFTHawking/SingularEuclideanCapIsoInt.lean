@@ -22,6 +22,20 @@ directly (it is `ℤ` at `k = 4` and `0` else).
   subspace chain to `0` (`capInt_subspaceChainInt_eq_zero`), so `a ⌢ (relative cycle)` is an absolute
   cycle (`capInt_relCycle_isCycleInt`). Integral mirror of `SingularRelativeCap`, reusing the built
   `capInt` primitives.
+* §B — **integral relative cohomology** `Hⁿ(X, S; ℤ)` (`RelativeCohomologyInt`), the annihilator of the
+  subspace subcomplex under the integral Kronecker pairing. Integral mirror of
+  `SingularRelativeCohomologyMod2`.
+* §C — the **integral relative Poincaré–Lefschetz duality map** `relativeDualityInt : Hᵏ(X,S;ℤ) →
+  Hₘ₊₁(X;ℤ)`, `[a] ↦ [a ⌢ z]`. Integral mirror of `SingularRelativeDuality.relativeDuality`.
+* §D — the **degree-0 output** duality map `relativeDualityInt0 : Hᵏ⁺¹(X,S;ℤ) → H₀(X;ℤ)` — the
+  top-degree / load-bearing shape `H⁴_c(ℝ⁴) ⌢ [ℝ⁴]_loc → H₀`.
+* §E — the concrete Euclidean-model target-side isos: `H₀(ℝ⁴;ℤ) ≅ ℤ` (`euclH0IsoInt`), off-degree
+  homology vanishing (`euclHomologyOffDegree_eq_zero`), and the source-side local homology
+  `H₄(ℝ⁴, ℝ⁴∖0; ℤ) ≅ ℤ` re-exported (`euclLocalHomologyIsoInt'`).
+* §F — the **local cap-iso packaging** `EuclLocalCapIsoData`: the base-case iso as a `LinearEquiv`
+  disclosed as datum (the source-side `H⁴_c(ℝ⁴;ℤ) ≅ ℤ` + generator match = the integral-relative-UCT
+  input the mod-2 base case gets from field-UC), with the reduction to `IsIso` / bijectivity that the
+  MV five-lemma consumes.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 -/
@@ -31,6 +45,10 @@ open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularCohomologyInt
 open SKEFTHawking.SingularRelHomologyInt
 open SKEFTHawking.SingularRelativeHomologyMod2 (sub simplexIncl)
+open SKEFTHawking.SingularLineMinusPointInt (augHInt eucl_augHInt_injective augHInt_surjective)
+open SKEFTHawking.SingularEuclideanAcyclic (Eucl)
+open SKEFTHawking.SingularLocalHomologyInt (eucl_homology_trivialInt)
+open SKEFTHawking.SingularLocalHomologyIsoInt (euclLocalHomologyIsoInt)
 
 namespace SKEFTHawking.SingularEuclideanCapIsoInt
 
@@ -406,5 +424,41 @@ noncomputable def relativeDualityInt0 (k : ℕ) (z : SingularChainInt X (k + 1))
     (a : LinearMap.ker (relCoboundaryIntₗ S (k + 1))) :
     relativeDualityInt0 S k z hz (RelativeCohomologyInt.mk S (k + 1) a) = relDualityInt0ₗ S z hz a :=
   rfl
+
+/-! ## §E. The concrete Euclidean-model target-side isomorphisms `H₀(ℝ⁴;ℤ) ≅ ℤ` + off-degree vanishing
+
+The two target-side facts the PD base case needs: `H₀(ℝ⁴;ℤ) ≅ ℤ` (the codomain of the load-bearing
+degree-0 cap `H⁴_c(ℝ⁴) ⌢ [ℝ⁴]_loc → H₀`), and the vanishing of the off-degree homology
+`Hᵢ(ℝ⁴;ℤ) = 0` for `i ≥ 1` (the off-degree pieces of the local duality — both sides `0`, so the cap is
+trivially iso off the top degree). `H₄(ℝ⁴, ℝ⁴∖0; ℤ) ≅ ℤ` is already `euclLocalHomologyIsoInt`. -/
+
+/-- **`H₀(ℝ⁴; ℤ) ≅ ℤ`** — the codomain of the load-bearing Euclidean local cap. The integral
+augmentation `ε̄ : H₀(ℝ⁴;ℤ) → ℤ` is bijective: injective because `ℝ⁴` is reduced-acyclic
+(`eucl_augHInt_injective`, the straight-line contraction), surjective on any `0`-simplex
+(`augHInt_surjective`). This is the target `≅ ℤ` matching `H₄(ℝ⁴, ℝ⁴∖0; ℤ) ≅ ℤ`
+(`euclLocalHomologyIsoInt`) under the local cap-duality. -/
+noncomputable def euclH0IsoInt : Homology (Eucl 4) 0 ≃ₗ[ℤ] ℤ :=
+  LinearEquiv.ofBijective (augHInt (Eucl 4))
+    ⟨eucl_augHInt_injective 4,
+      augHInt_surjective (Eucl 4)
+        (SKEFTHawking.SingularHomotopyInvariance.constSimplex
+          (0 : (Eucl 4 : TopCat)) 0)⟩
+
+@[simp] theorem euclH0IsoInt_apply (x : Homology (Eucl 4) 0) :
+    euclH0IsoInt x = augHInt (Eucl 4) x := rfl
+
+/-- **Off-degree homology vanishing `Hᵢ₊₁(ℝ⁴; ℤ) = 0`** — the off-degree pieces of the Euclidean local
+duality: `ℝ⁴` is contractible, so `Hᵢ(ℝ⁴;ℤ) = 0` for `i ≥ 1` (`eucl_homology_trivialInt`). Off the top
+degree both the compactly-supported cohomology and the homology vanish, so the local cap is trivially an
+iso there; the only non-trivial degree is the top one (`H⁴_c ⌢ [ℝ⁴]_loc → H₀`). -/
+theorem euclHomologyOffDegree_eq_zero (i : ℕ) (x : Homology (Eucl 4) (i + 1)) : x = 0 :=
+  eucl_homology_trivialInt 4 i x
+
+/-- **The Euclidean local homology `H₄(ℝ⁴, ℝ⁴∖0; ℤ) ≅ ℤ`** re-exported as the source-side generator model
+of the local cap-duality (`euclLocalHomologyIsoInt`, already built). Paired with `euclH0IsoInt`
+(`H₀ ≅ ℤ`), these are the two `≅ ℤ` ends the load-bearing cap `H⁴_c(ℝ⁴) ⌢ [ℝ⁴]_loc ≅ H₀(ℝ⁴)` connects. -/
+noncomputable def euclLocalHomologyIsoInt' :
+    RelHomologyInt (X := Eucl 4) {x | x ≠ 0} 4 ≃ₗ[ℤ] ℤ :=
+  euclLocalHomologyIsoInt
 
 end SKEFTHawking.SingularEuclideanCapIsoInt
