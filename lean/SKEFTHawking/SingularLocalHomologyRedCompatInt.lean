@@ -331,4 +331,37 @@ noncomputable def intLocalHomologyIso_of_manifold {M : Type} [TopologicalSpace M
     (generator_check_of_ne_zero x (manifoldLocalHomologyIsoInt x).toAddEquiv
       (manifoldLocalIso (m := 2) x).toAddEquiv hgen)
 
+/-! ## §9. Consumer linkages: the local iso feeds orientation and PD
+
+Two provable partials that show the local-iso theorem is the LOCAL input each remaining E1 core
+consumes, and name the residual precisely. -/
+
+open SKEFTHawking.SingularRelHomologyInt (IntLocalHomologyIso localGenerator)
+
+/-- **(A · orientation) The reduced local generator IS the mod-2 local generator.** For any
+`IntLocalHomologyIso M x`, the ℤ→ℤ/2 reduction of the integral local generator `localGenerator x d`
+lands on `d.isoMod2.symm 1` — the unique nonzero (mod-2) local class. This is exactly the per-point
+input the global orientation-coherence assembly (`hasFundClassInt` replay of chart-ball → union →
+biUnion → univ with sign-matching) glues into `fundClass : H₄(M;ℤ)`. **Residual for orientation:** the
+GLOBAL coherent section (the ℤ-sign choice made consistently across chart overlaps); the LOCAL `±1`
+generator input is now proved (this lemma). -/
+theorem redRelHomology_localGenerator {M : Type} [TopologicalSpace M] (x : M)
+    (d : IntLocalHomologyIso M x) :
+    d.isoMod2 (redRelHomology (SKEFTHawking.SingularRelHomologyInt.localSub x) 4
+        (localGenerator x d)) = 1 := by
+  rw [d.redCompat, SKEFTHawking.SingularRelHomologyInt.iso_localGenerator]
+  norm_num
+
+/-- **(A · orientation) The reduced local generator is nonzero.** Corollary: the mod-2 reduction of the
+integral local generator is a genuine nonzero class in the on-main mod-2 local group — so the integral
+local orientation datum lies over the (nonzero) mod-2 local generator, the falsifiability the orientation
+`redCompat` records. -/
+theorem redRelHomology_localGenerator_ne_zero {M : Type} [TopologicalSpace M] (x : M)
+    (d : IntLocalHomologyIso M x) :
+    redRelHomology (SKEFTHawking.SingularRelHomologyInt.localSub x) 4 (localGenerator x d) ≠ 0 := by
+  intro h
+  have := redRelHomology_localGenerator x d
+  rw [h, map_zero] at this
+  exact one_ne_zero this.symm
+
 end SKEFTHawking.SingularLocalHomologyRedCompatInt

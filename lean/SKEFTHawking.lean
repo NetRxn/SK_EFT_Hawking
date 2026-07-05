@@ -971,6 +971,10 @@ import SKEFTHawking.SingularRelativeFunctorialityInt
 -- Euclidean model); chart↔excision bridge (openPointExcisionEquivInt from 14d + chartPairEquivInt) ⟹
 -- manifoldLocalHomologyIsoInt : H₄(M,M∖x;ℤ)≅ℤ for a T1 4-manifold. The `iso` field of IntLocalHomologyIso.
 import SKEFTHawking.SingularLocalHomologyIsoInt
+-- brick 15: redCompat for the integral local iso — the ℤ→ℤ/2 reduction naturality of the whole tower.
+-- Upgrades IntLocalHomologyIso to a THEOREM (intLocalHomologyIso_of_manifold) modulo ONE precisely-named
+-- non-vanishing residual (ReducedGeneratorNonzero); + orientation/PD consumer linkages.
+import SKEFTHawking.SingularLocalHomologyRedCompatInt
 -- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
