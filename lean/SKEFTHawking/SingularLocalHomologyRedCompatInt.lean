@@ -171,4 +171,67 @@ theorem generator_check_of_ne_zero {M : Type} [TopologicalSpace M] (x : M)
   · exact absurd h h0
   · exact h
 
+/-! ## §5. Naturality of the reduction w.r.t. the connecting homomorphism
+
+The final `δ`/normalize/sphere stages leave the relative setting and land in absolute homology of the
+punctured space. Here we prove the connecting square:
+`redHomology (sub S) n ∘ connectingInt S n = connecting S n ∘ redRelHomology S (n+1)`. -/
+
+/-- **The reduction preserves the lift submodule** `Z_n = {c | ∂c ∈ Cₙ(S)}`. -/
+theorem redChain_mem_relCycleLift {X : TopCat} {S : Set ↑X} (n : ℕ)
+    {c : SingularChainInt X (n + 1)} (hc : c ∈ SKEFTHawking.SingularRelHomologyInt.relCycleLift S n) :
+    redChain X (n + 1) c ∈ SKEFTHawking.SingularPairLES.relCycleLift S n := by
+  show SKEFTHawking.SingularHomologyMod2.chainBoundary X n (redChain X (n + 1) c)
+      ∈ SKEFTHawking.SingularRelativeHomologyMod2.subspaceChains S n
+  rw [← redChain_chainBoundary]
+  exact redChain_mem_subspaceChains S n hc
+
+/-- **The reduction commutes with `boundaryExtract`** (the `δ`-extraction chain map). Proved by
+`chainIncl`-injectivity: re-including both sides recovers `redChain (∂c)`, using the existing
+`redChain_chainIncl` and `redChain_chainBoundary`. -/
+theorem redChain_boundaryExtract {X : TopCat} {S : Set ↑X} (n : ℕ)
+    (c : SKEFTHawking.SingularRelHomologyInt.relCycleLift S n) :
+    redChain (sub S) n (SKEFTHawking.SingularRelHomologyInt.boundaryExtract S n c)
+      = SKEFTHawking.SingularPairLES.boundaryExtract S n
+          ⟨redChain X (n + 1) (c : SingularChainInt X (n + 1)),
+            redChain_mem_relCycleLift n c.2⟩ := by
+  apply SKEFTHawking.SingularRelativeHomologyMod2.chainIncl_injective S n
+  rw [← redChain_chainIncl, SKEFTHawking.SingularRelHomologyInt.chainIncl_boundaryExtract,
+    SKEFTHawking.SingularPairLES.chainIncl_boundaryExtract, redChain_chainBoundary]
+
+/-- **The reduction commutes with `relCycleToHom`**: `redRelHomology S (n+1) (relCycleToHom c)
+= relCycleToHom (redChain c)` (both realise the lift-chain as a relative homology class). -/
+theorem redRelHomology_relCycleToHom {X : TopCat} {S : Set ↑X} (n : ℕ)
+    (c : SKEFTHawking.SingularRelHomologyInt.relCycleLift S n) :
+    redRelHomology S (n + 1) (SKEFTHawking.SingularRelHomologyInt.relCycleToHom S n c)
+      = SKEFTHawking.SingularPairLES.relCycleToHom S n
+          ⟨redChain X (n + 1) (c : SingularChainInt X (n + 1)),
+            redChain_mem_relCycleLift n c.2⟩ := by
+  rw [SKEFTHawking.SingularRelHomologyInt.relCycleToHom_apply, redRelHomology_mk,
+    SKEFTHawking.SingularPairLES.relCycleToHom_apply]
+  refine congrArg (SKEFTHawking.SingularRelativeHomologyMod2.RelativeHomology.mk S (n + 1)) ?_
+  refine Subtype.ext ?_
+  show redRelChain S (n + 1) (RelativeChainInt.mk S (n + 1) (c : SingularChainInt X (n + 1)))
+      = SKEFTHawking.SingularRelativeHomologyMod2.RelativeChain.mk S (n + 1) (redChain X (n + 1) c)
+  rw [redRelChain_mk]
+
+/-- **The reduction commutes with the connecting homomorphism** (the `δ`-square):
+`redHomology (sub S) n ∘ connectingInt S n = connecting S n ∘ redRelHomology S (n+1)`. -/
+theorem redHomology_connectingInt {X : TopCat} {S : Set ↑X} (n : ℕ)
+    (h : RelHomologyInt S (n + 1)) :
+    redHomology (sub S) n (SKEFTHawking.SingularRelHomologyInt.connectingInt S n h)
+      = SKEFTHawking.SingularPairLES.connecting S n (redRelHomology S (n + 1) h) := by
+  obtain ⟨c, rfl⟩ := SKEFTHawking.SingularRelHomologyInt.relCycleToHom_surjective S n h
+  rw [SKEFTHawking.SingularRelHomologyInt.connectingInt_relCycleToHom,
+    SKEFTHawking.SingularRelHomologyInt.connectingLift_apply, redHomology_mk,
+    redRelHomology_relCycleToHom, SKEFTHawking.SingularPairLES.connecting_relCycleToHom,
+    SKEFTHawking.SingularPairLES.connectingLift_apply]
+  refine congrArg (SKEFTHawking.SingularHomologyMod2.Homology.mk (sub S) n) ?_
+  refine Subtype.ext ?_
+  show redChain (sub S) n (SKEFTHawking.SingularRelHomologyInt.boundaryExtract S n c)
+      = SKEFTHawking.SingularPairLES.boundaryExtract S n
+          ⟨redChain X (n + 1) (c : SingularChainInt X (n + 1)),
+            redChain_mem_relCycleLift n c.2⟩
+  exact redChain_boundaryExtract n c
+
 end SKEFTHawking.SingularLocalHomologyRedCompatInt
