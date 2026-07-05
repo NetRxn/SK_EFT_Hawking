@@ -31,14 +31,14 @@ summary. Negative register: `docs/dev-loops/SETTLED_FORKS.md` + the machine-fed 
 - [x] **All external inputs direct-primary-read verified** (Taylor/Klug/DDK⁺/HKT/`2406.08237`/KT-LMS §5 — reconciliation §2)
 - [x] **ADR-007 kernel no-go ledger** — the negative frontier is machine-fed (supports the build; not a work effort)
 
-**⬜ REMAINING — the genuine L4 (the execution map's E1–E5; NONE Lean-written yet):**
-- [ ] **E1 · Substrate-G topology** — foundation; first brick = harvest wt1 PD substrate
-- [ ] **E2 · Rokhlin `gm`** — `gm` from geometry → discharge `SmoothSpinManifold4.topo` → genuine `16∣σ`
-- [ ] **E3 · Smith map + exactness** — geometric Smith map + two-sided exactness → `ker abkGMGrade=⊥` reduced to `smith_inflow_z16`
-- [ ] **E4 · genuine carrier + assembly** — `pinPlusGMData` + computed `abkGM8` + capstone (upgrades the tied carrier to genuine)
-- [ ] **E5 · Substrate-S spectral** — ABP/Adams ℤ/16 → discharge `smith_inflow_z16` → `omega4PinPlusGM_equiv_zmod16`, unconditional
+**⚠ REFRAMED + IN PROGRESS (SYNCED 2026-07-04 — see the master `LAB_NOTEBOOK_INDEX.md` FRONTIER for the live brick state):** the literal `DataBordismGrp(pinPlusGMData) ≃+ ZMod 16` target is **KERNEL-PROVEN IMPOSSIBLE** (`pinPlusGMData` is 8-torsion; no-go `genuine-gm-carrier-eight-torsion`); the genuine ℤ/16 lives on the **enriched (σ,F•F) / Smith-LES extension carrier**. The E2/E3/E5 algebra + finite ℤ/16 landed early-session; the dominant remaining effort is **E1 = a from-scratch INTEGRAL-topology foundation** (Mathlib + on-main are `ZMod 2` only):
+- [~] **E1 · integral-topology foundation** — **14+ kernel-pure bricks / 19 modules MERGED** (main clean, Axioms 0 / Sorry 0): integral `(co)homology → cup → cap → Kronecker → intersection form → σ÷16`, + functoriality, homotopy invariance, Euclidean acyclicity, pair-LES, local homology, signed subdivision/excision. Systematically mirrors the on-main mod-2 topology over ℤ. IN PROGRESS: the local iso `H₄(M|x;ℤ)≅ℤ` (→ discharges orientation + PD), then the unconditional σ÷16 assembly.
+- [x] **E2 (algebra) · E3 (extension-carrier ℤ/16) · E5 (finite Adams ℤ/16)** — landed early-session, all reduced to the shared geometric-completeness node `smith_inflow_z16` (+ the σ÷16 geometric data: PD, evenness/Wu ✓, orientation, basis, Rokhlin factor).
+- [ ] **Remaining cores → `smith_inflow_z16`:** PD parity (det odd→±1), σ÷16 assembly, the Rokhlin factor (`GMrelation`/`2∣σ/8`), the ÷32 criterion, `Ω₄^{Spin}≅ℤ` Spin-bordism, `hexact` ⟹ the genuine ZERO-posits ℤ/16 on the enriched carrier.
 
-> Per-effort status (venue / deps / next brick) lives in each `E<n>/LAB_NOTEBOOK_INDEX.md` + the execution map's DAG.
+**⛔ Option A is SETTLED (operator DIRECT ruling 2026-07-04) — full unconditional discharge is the ONLY path; B / disclosed-form is a RETIRED phantom, do NOT re-open or re-debate (the coach's build-ruling is authoritative; memory `feedback-coach-go-signal-authoritative`).**
+
+> Per-effort status + the live brick-by-brick FRONTIER lives in `docs/dev-loops/Phase5qH/LAB_NOTEBOOK_INDEX.md` (master) + `E1_SubstrateG_Topology/LAB_NOTEBOOK_INDEX.md`.
 
 ## 0. Why 5q.H exists (read first)
 
