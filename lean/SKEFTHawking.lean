@@ -962,6 +962,15 @@ import SKEFTHawking.SingularSphereHomologyInt
 -- connectingInt_zero_* ) over ℤ. Base value is ℤ (not ℤ/2). Kernel-pure. (Disjoint-union ker≅ℤ + the
 -- H₁(S¹;ℤ)/H₃(S³;ℤ) assembly follow in the same file.)
 import SKEFTHawking.SingularLineMinusPointInt
+-- Phase 5q.H · E1 (Substrate-G topology, brick 14f part A): functoriality of integral relative homology.
+-- RelHomologyInt.map (map-of-pairs pushforward) + map_bijective_of_comp_id (homeo-of-pairs ⟹ iso in
+-- every degree). Signed mirror of SingularRelativeFunctoriality. The chart-pair transport engine.
+import SKEFTHawking.SingularRelativeFunctorialityInt
+-- Phase 5q.H · E1 (Substrate-G topology, brick 14f): the integral local-homology iso H₄(M,M∖x;ℤ)≅ℤ.
+-- euclLocalHomologyIsoInt (brick-13 tower ∘ brick-14e H₃(S³;ℤ)≅ℤ); localHomologyAtPointIsoInt (translated
+-- Euclidean model); chart↔excision bridge (openPointExcisionEquivInt from 14d + chartPairEquivInt) ⟹
+-- manifoldLocalHomologyIsoInt : H₄(M,M∖x;ℤ)≅ℤ for a T1 4-manifold. The `iso` field of IntLocalHomologyIso.
+import SKEFTHawking.SingularLocalHomologyIsoInt
 -- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
