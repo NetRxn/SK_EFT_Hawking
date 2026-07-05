@@ -991,6 +991,9 @@ import SKEFTHawking.SingularReducedGeneratorInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
+-- Phase 5q.H · E1 brick 18a: the integral "good compact" foundation (Hatcher 3.27 over ℤ) —
+-- vanishAboveInt / determinedByPointsInt / goodCompactInt + the point-restriction factoring lemma.
+import SKEFTHawking.SingularGoodCompactInt
 -- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
