@@ -19,11 +19,14 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 import Mathlib
 import SKEFTHawking.SingularRelativeCochainMVSurjInt
 import SKEFTHawking.SingularRelativeCohomologyRestrictInt
+import SKEFTHawking.SingularRelativeCohomologyMVInt
 
 open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularCohomologyInt
 open SKEFTHawking.SingularEuclideanCapIsoInt
+open SKEFTHawking.SingularRelativeCohomologyRestrictInt
+open SKEFTHawking.SingularRelativeCohomologyMVInt
 open SKEFTHawking.SingularRelativeCochainMVSurjInt
 
 namespace SKEFTHawking.SingularRelativeCohomologyMVChaseInt
@@ -60,5 +63,38 @@ theorem exists_common_cochain_of_coboundaryInt (U V : Set M) (n : ℕ)
           - (coboundaryₗ M n (gU : SingularCochainInt M n)
             - coboundaryₗ M n (gV : SingularCochainInt M n)) by abel, key, sub_self]
   exact sub_eq_zero.mp h0
+
+/-- **The coboundary-witness extraction.** When `Σ_H([α],[β]) = 0` (the middle-exactness hypothesis at
+degree `m+1`), the restriction-difference `α|_{U∩V} − β|_{U∩V}` is an absolute coboundary `δg`
+(`g ∈ relCochainsInt (U∩V) m`) — exactly the hypothesis feeding `exists_common_cochain_of_coboundaryInt`.
+Via `relCohomMvSumInt_apply` + `relCohomRestrictInt_mk` + `RelativeCohomologyInt.mk_eq_zero_iff`. -/
+theorem exists_coboundary_witness_of_sumInt (U V : Set M) (m : ℕ)
+    (α : LinearMap.ker (relCoboundaryIntₗ U (m + 1)))
+    (β : LinearMap.ker (relCoboundaryIntₗ V (m + 1)))
+    (h0 : relCohomMvSumInt U V (m + 1)
+        (RelativeCohomologyInt.mk U (m + 1) α, RelativeCohomologyInt.mk V (m + 1) β) = 0) :
+    ∃ g : relCochainsInt (U ∩ V) m,
+      ((α : relCochainsInt U (m + 1)) : SingularCochainInt M (m + 1))
+          - ((β : relCochainsInt V (m + 1)) : SingularCochainInt M (m + 1))
+        = coboundaryₗ M m (g : SingularCochainInt M m) := by
+  set A : LinearMap.ker (relCoboundaryIntₗ (U ∩ V) (m + 1)) :=
+    relCocycleRestrictInt (Set.inter_subset_left : U ∩ V ⊆ U) (m + 1) α with hA
+  set B : LinearMap.ker (relCoboundaryIntₗ (U ∩ V) (m + 1)) :=
+    relCocycleRestrictInt (Set.inter_subset_right : U ∩ V ⊆ V) (m + 1) β with hB
+  have h0' : RelativeCohomologyInt.mk (U ∩ V) (m + 1) (A - B) = 0 := by
+    rw [relCohomMvSumInt_apply, relCohomRestrictInt_mk, relCohomRestrictInt_mk] at h0
+    rw [← h0, hA, hB]
+    exact (Submodule.Quotient.mk_sub _).symm
+  rw [RelativeCohomologyInt.mk_eq_zero_iff, relCoboundaryRangeInt, LinearMap.mem_range] at h0'
+  obtain ⟨g, hg⟩ := h0'
+  refine ⟨g, ?_⟩
+  have hgcoe : (relCoboundaryIntₗ (U ∩ V) m g : SingularCochainInt M (m + 1))
+      = coboundaryₗ M m (g : SingularCochainInt M m) := relCoboundaryIntₗ_coe _ _ _
+  rw [← hgcoe, hg]
+  show ((A : relCochainsInt (U ∩ V) (m + 1)) - (B : relCochainsInt (U ∩ V) (m + 1)) :
+      SingularCochainInt M (m + 1))
+    = ((α : relCochainsInt U (m + 1)) : SingularCochainInt M (m + 1))
+      - ((β : relCochainsInt V (m + 1)) : SingularCochainInt M (m + 1))
+  rfl
 
 end SKEFTHawking.SingularRelativeCohomologyMVChaseInt
