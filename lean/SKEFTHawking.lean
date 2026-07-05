@@ -946,6 +946,16 @@ import SKEFTHawking.SingularExcisionInt
 -- exists_iterate_smallChainsInt/smallChainsInt) with smallChainsInt_two_eq + subspaceChainsInt_inf.
 -- Kernel-pure. Feeds the general-M ⟷ Euclidean-model chart identification behind IntLocalHomologyIso.
 import SKEFTHawking.SingularExcisionIsoInt
+-- Phase 5q.H · E1 (Substrate-G topology, brick 13): integral local homology H_k(ℝⁿ,ℝⁿ∖0;ℤ) + pair-LES.
+-- Completes the integral pair long-exact-sequence: three exactness lemmas + connectingInt bijective when
+-- the ambient space is acyclic; with ℝⁿ integrally acyclic gives δ: H_{j+2}(ℝⁿ,ℝⁿ∖0;ℤ)≅H_{j+1}(ℝⁿ∖0;ℤ),
+-- composed with the punctured retract ℝⁿ∖0≃Sⁿ⁻¹ ⟹ localHomologyInt_reduces_to_sphere. Kernel-pure.
+import SKEFTHawking.SingularLocalHomologyInt
+-- Phase 5q.H · E1 (Substrate-G topology, brick 14e): integral sphere homology tower Hₙ(Sⁿ;ℤ)≅ℤ. Signed
+-- mirror of the mod-2 sphere tower — geometric maps (Sph/Apunc/stereoMap/antipode/equatorMap) reused
+-- verbatim; homology-level bijectivity re-proved over ℤ via connectingInt/excisionEquivInt/retract/
+-- functoriality. Delivers the sphere suspension dimReductionEquivInt + topSphereReduceInt. Kernel-pure.
+import SKEFTHawking.SingularSphereHomologyInt
 -- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
