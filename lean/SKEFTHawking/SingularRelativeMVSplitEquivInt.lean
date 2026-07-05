@@ -28,4 +28,21 @@ noncomputable def mvChainSplitEquiv (U V : Set ↑M) (n : ℕ) :
   ((relMvChain_exactInt U V n).splitSurjectiveEquiv (relMvChainDiagInt_injective U V n)
     ⟨(relMvChainSumInt_split U V n).choose, (relMvChainSumInt_split U V n).choose_spec⟩ : {_e // _}).1
 
+/-- The splitting equiv's spec: `relMvChainDiagInt = e.symm ∘ inl`. -/
+theorem mvChainSplitEquiv_diag (U V : Set ↑M) (n : ℕ) :
+    relMvChainDiagInt U V n
+      = (mvChainSplitEquiv U V n).symm.toLinearMap ∘ₗ
+        LinearMap.inl ℤ (RelativeChainInt (U ∩ V) n) (QChainInt U V n) :=
+  (((relMvChain_exactInt U V n).splitSurjectiveEquiv (relMvChainDiagInt_injective U V n)
+    ⟨(relMvChainSumInt_split U V n).choose, (relMvChainSumInt_split U V n).choose_spec⟩).2).1
+
+/-- **`relMvChainDiagInt` has a retraction** `fst ∘ e` (the split), so it is a split injection. -/
+theorem mvChainDiag_retraction (U V : Set ↑M) (n : ℕ) :
+    (LinearMap.fst ℤ (RelativeChainInt (U ∩ V) n) (QChainInt U V n)).comp
+        (mvChainSplitEquiv U V n).toLinearMap ∘ₗ relMvChainDiagInt U V n = LinearMap.id := by
+  rw [mvChainSplitEquiv_diag]
+  ext c
+  simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply,
+    LinearMap.inl_apply, LinearMap.fst_apply, LinearMap.id_apply]
+
 end SKEFTHawking.SingularRelativeMVSplitEquivInt

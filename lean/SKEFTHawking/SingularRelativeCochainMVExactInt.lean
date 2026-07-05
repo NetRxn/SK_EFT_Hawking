@@ -13,11 +13,12 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`).
 -/
 import Mathlib
 import SKEFTHawking.SingularRelativeMVSplitInt
+import SKEFTHawking.SingularRelativeMVSplitEquivInt
 import SKEFTHawking.LinearAlgebraDualExactInt
 
 open SKEFTHawking.SingularHomologyInt SKEFTHawking.SingularRelHomologyInt
 open SKEFTHawking.SingularRelativeMVInt SKEFTHawking.SingularRelativeMVSplitInt
-open SKEFTHawking.LinearAlgebraDualExactInt
+open SKEFTHawking.SingularRelativeMVSplitEquivInt SKEFTHawking.LinearAlgebraDualExactInt
 
 namespace SKEFTHawking.SingularRelativeCochainMVExactInt
 
@@ -29,5 +30,11 @@ theorem mvCochain_dual_exact (U V : Set ↑M) (n : ℕ) :
     Function.Exact (relMvChainSumInt U V n).dualMap (relMvChainDiagInt U V n).dualMap :=
   exact_dualMap_of_split (relMvChain_exactInt U V n)
     (relMvChainSumInt_split U V n).choose (relMvChainSumInt_split U V n).choose_spec
+
+/-- **The dual cochain MV `Diag*` is surjective** (from the `Diag` retraction / split). Under the
+pairing iso this is the surjectivity of the cochain-MV `Sum` — the lift step of the chase. -/
+theorem mvChainDiag_dualMap_surjective (U V : Set ↑M) (n : ℕ) :
+    Function.Surjective (relMvChainDiagInt U V n).dualMap :=
+  surjective_dualMap_of_retraction _ (mvChainDiag_retraction U V n)
 
 end SKEFTHawking.SingularRelativeCochainMVExactInt
