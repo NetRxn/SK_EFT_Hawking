@@ -3287,6 +3287,66 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'exactly the two isos — the char-0 upgrade of the on-main mod-2 injective nondeg_of_closed. Feeds the whole '
             'IsEvenUnimodular → σ ÷ 16 leg via interMatrix_isUnimodular_of_capIso.',
     },
+    'intCapIsoData_determinant_datum': {
+        'statement': 'For a closed ORIENTED 4-manifold M with integral fundamental class [M] : Homology X 4 and a '
+            'finite free H²-basis B : IntH2Basis X, the integral Poincaré duality is carried (Phase 5q.H · E1 '
+            'Substrate-G, brick 10) as the CONCRETE, CHECKABLE determinant datum '
+            'SKEFTHawking.SingularCohomologyInt.IntCapIsoData zM B — the sharpened replacement for IntCapIso\'s two '
+            'abstract ≃ₗ fields. It discloses ONLY: (a) h2Basis : Module.Basis (Fin B.rank) ℤ (Homology X 2) — a finite '
+            'free basis of H₂(M;ℤ) indexed by the SAME Fin B.rank as the H² basis (the equal-rank index IS the '
+            'Poincaré-duality fact b₂(H₂)=b₂(H²); the homology-side analogue of IntH2Basis); (b) capUnit : IsUnit '
+            '(det ((toMatrix B.basis h2Basis) (capMapLin zM))) — the integer cap matrix is unimodular; (c) kronUnit : '
+            'IsUnit (det ((toMatrix h2Basis B.basis.dualBasis) kronMapLin)) — the integer Kronecker matrix is '
+            'unimodular. The MAPS capMapLin := capHInt 2 1 · [M] and kronMapLin := (kroneckerHInt 2).flip are BUILT '
+            '(kernel-pure), not disclosed; only their invertibility (as ONE integer determinant unit each, det = ±1 by '
+            'Int.isUnit_iff) is disclosed. IntCapIsoData → IntCapIso → IntPoincareDuality via '
+            'IntCapIsoData.toIntCapIso (LinearEquiv.ofIsUnitDet on each map) + intPoincareDualityOfCapIso. This is the '
+            'exact integer analogue of the H²-side interMatrix datum, strictly sharper than IntCapIso\'s abstract isos.',
+        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'hard',
+        'module': 'IntPoincareDualityCapIso',
+        'elimination_path': 'Discharge (a) h2Basis: build integral singular H₂(M;ℤ), prove it finitely generated, split '
+            'off the free part (Module.Free/Module.Finite over the PID ℤ ⟹ a finite basis) — the exact homology-side '
+            'mirror of the H² intH2_basis_datum discharge. Discharge (b) capUnit + (c) kronUnit: prove the built maps '
+            'capMapLin / kronMapLin have unimodular matrices — the integral local-global cap-iso (Mayer–Vietoris + the '
+            'Euclidean/ball local model over ℤ) and the integral UCT perfect pairing (Ext-free free-part), each now a '
+            'SINGLE integer-determinant fact rather than an abstract iso. PARTIAL DONE (brick 10): '
+            'odd_capMatrix_det_of_mod2_unit derives Odd (det cap matrix) from a unit mod-2 reduction of the cap matrix '
+            '(the exact algebraic content of the on-main mod-2 injective nondeg_of_closed in matching rank), via '
+            'RingHom.map_det + ZMod 2 being a field — the HONEST floor the mod-2 shadow gives, one parity-step short of '
+            'IsUnit det (det odd, e.g. 3, is NOT unimodular). The residual is exactly the parity → unit strengthening.',
+        'dependent_theorems': [
+            'SKEFTHawking.SingularCohomologyInt.capMapLin',
+            'SKEFTHawking.SingularCohomologyInt.kronMapLin',
+            'SKEFTHawking.SingularCohomologyInt.IntCapIsoData.toIntCapIso',
+            'SKEFTHawking.SingularCohomologyInt.intPoincareDualityOfCapIsoData',
+            'SKEFTHawking.SingularCohomologyInt.interMatrix_isUnimodular_of_capIsoData',
+            'SKEFTHawking.SingularCohomologyInt.odd_det_of_isUnit_det_map_zmod2',
+            'SKEFTHawking.SingularCohomologyInt.odd_capMatrix_det_of_mod2_unit',
+        ],
+        'source': 'Standard 4-manifold topology (Poincaré duality; Hatcher §3.3 Thm 3.30, Milnor–Stasheff): ·⌢[M] is '
+            'an iso and the Kronecker/UCT pairing identifies H₂ with the ℤ-dual of H² on the free part — each an '
+            'invertible integer matrix in matched free bases. The reduction map-with-unit-det ⟹ ≃ₗ uses the Mathlib '
+            'bridge LinearEquiv.ofIsUnitDet (f with IsUnit ((toMatrix v v\') f).det is a ≃ₗ underlying f, '
+            'LinearEquiv.ofIsUnitDet_apply), proved unconditionally here. The mod-2 floor uses RingHom.map_det '
+            '(f (det M) = det (f.mapMatrix M)) + Int.two_dvd_ne_zero / ZMod.intCast_zmod_eq_zero_iff_dvd.',
+        'risk': 'Low mathematically (textbook PD; each disclosed fact is a single unimodular integer determinant); cost '
+            'is the from-scratch Lean construction of integral H₂ + the two iso proofs, now isolated as concrete '
+            'determinant units. Every result in IntPoincareDualityCapIso holds for an ARBITRARY IntCapIsoData datum.',
+        'circularity_note': 'None. IntCapIsoData.toIntCapIso builds IntCapIso for an ARBITRARY IntCapIsoData; the maps '
+            'capMapLin/kronMapLin are BUILT and the reduction (LinearEquiv.ofIsUnitDet + intPoincareDualityOfCapIso) '
+            'assumes no property of a specific future datum. The mod-2 partial odd_capMatrix_det_of_mod2_unit is a pure '
+            'algebraic implication (unit mod-2 reduction ⟹ odd det), taking its hypothesis as given — it does NOT '
+            'assume the conclusion. This datum REFINES intCapIso_datum (which remains valid) by exposing the concrete '
+            'determinant decomposition. NOT the lattice-Arf route (nogo_lattice_arf_not_sigma8): a genuine PD fact, '
+            'orthogonal to the banned σ/8 ≡ Arf congruence.',
+        'prose': 'The integral Poincaré-duality input, sharpened one further step (Phase 5q.H · E1 Substrate-G brick '
+            '10) from the abstract IntCapIso to the CONCRETE determinant datum IntCapIsoData: an H₂ free basis + two '
+            'unimodular integer determinants (cap matrix, Kronecker matrix) on the BUILT maps capMapLin/kronMapLin, '
+            'reduced to IntCapIso via LinearEquiv.ofIsUnitDet. The exact integer analogue of the H²-side interMatrix '
+            'datum. The on-main mod-2 injective nondeg_of_closed is captured algebraically by '
+            'odd_capMatrix_det_of_mod2_unit (unit mod-2 reduction ⟹ Odd det) — the honest floor, one parity-step short '
+            'of the full det = ±1. Feeds IsEvenUnimodular → σ ÷ 16 via interMatrix_isUnimodular_of_capIsoData.',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════

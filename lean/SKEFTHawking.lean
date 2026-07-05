@@ -858,6 +858,12 @@ import SKEFTHawking.SingularHomologyInt
 -- interMatrix_isUnimodular_of_capIso). The load-bearing ℤ difference from mod-2 = the SIGNED cap-Leibniz
 -- ∂(a⌢c)=(-1)ᵏ⁺¹(δa⌢c)+(-1)ᵏ(a⌢∂c) (capInt_leibniz), whose signs the mod-2 file dropped (+1=-1).
 import SKEFTHawking.IntCapProductInt
+-- Phase 5q.H · E1 (Substrate-G brick 10): the integral cap-iso IntCapIso reduced to a CONCRETE
+-- determinant datum IntCapIsoData (H₂ free basis + two unimodular integer determinants on the BUILT maps
+-- capMapLin/kronMapLin, via LinearEquiv.ofIsUnitDet) → IntCapIso → IntPoincareDuality → interMatrix
+-- unimodular; plus the mod-2-shadow partial odd_capMatrix_det_of_mod2_unit (unit mod-2 reduction ⟹ Odd det,
+-- the honest floor from the on-main injective nondeg_of_closed, one parity-step short of det = ±1).
+import SKEFTHawking.IntPoincareDualityCapIso
 -- Phase 5q.F (2026-06-15, w₂ foundation brick 3): singular ℤ/2 HOMOLOGY + the Kronecker pairing — the
 -- dual of SingularCohomologyMod2. Chains C_n = simplices →₀ ℤ/2, the boundary ∂ with ∂²=0, Homology
 -- Hₙ = ker∂/im∂, and the descended Kronecker pairing kroneckerH : Hⁿ × Hₙ → ℤ/2 (the evaluation
