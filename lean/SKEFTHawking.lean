@@ -998,6 +998,9 @@ import SKEFTHawking.SingularRelativeCohomologyRestrictInt
 -- Phase 5q.H · E1 (CSC-PD tower): the integral compactly-supported-cohomology directed system +
 -- DirectLimit — Hᵏ_c(M;ℤ) := colim_K Hᵏ(M, M∖K; ℤ), the top row of the integral PD ladder.
 import SKEFTHawking.SingularCohomologyColimitInt
+-- Phase 5q.H · E1 (CSC-PD tower): integral cap-product locality (cap of a K-supported chain is
+-- K-supported) + the K-supported-cycle pullback to sub K — the foundation for the local duality map D_K.
+import SKEFTHawking.SingularCapSupportInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
