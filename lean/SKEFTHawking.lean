@@ -1053,6 +1053,7 @@ import SKEFTHawking.SingularConvexRadialRetract
 import SKEFTHawking.SingularConvexRadialBase
 import SKEFTHawking.SingularConvexRadialRetractInt
 import SKEFTHawking.SingularSphereHighDegreeInt
+import SKEFTHawking.SingularConvexRadialBaseInt
 import SKEFTHawking.SingularBallCover
 import SKEFTHawking.SingularGoodCompactEuclidean
 import SKEFTHawking.SingularGoodCompactChart
