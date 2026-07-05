@@ -1188,6 +1188,12 @@ import SKEFTHawking.PinPlusGMWitness
 import SKEFTHawking.UnorientedThomCapstone
 import SKEFTHawking.PinPlusGMTiedData
 import SKEFTHawking.PinPlusGMDataZ16
+-- E5 · the geometric-faithfulness CARDINALITY bridge: ties the smooth tied W4 carrier
+-- (DataBordismGrp pinPlusGMTiedData, surjective computed grade abkGMTied16) to the FINITE E5 Adams
+-- abutment (adamsAbutment_card = 2^col4_height_eq_four = 16), reducing the residual geometric-
+-- faithfulness identification to the single cardinality inequality card(carrier) ≤ card(adamsAbutment)
+-- (⟺ the iso). Makes the smith_inflow_z16 wall precise + E5-chart-connected; kernel-pure, no new axiom.
+import SKEFTHawking.PinPlusFaithfulnessCardBridge
 import SKEFTHawking.SingularRelativeUCSurj
 import SKEFTHawking.SingularRelativeKroneckerEquiv
 import SKEFTHawking.SingularKroneckerEquiv
