@@ -1067,6 +1067,10 @@ import SKEFTHawking.SingularChartBallBijectiveInt
 -- Phase 5q.H · E1 brick 18e: the oriented fundamental-class BASE CASE on a chart ball
 -- (hasOrientedFundClassInt_chartBall) — orient constant = the chart's local-generator sign, MV-free.
 import SKEFTHawking.SingularIntFundClassChartBall
+-- Phase 5q.H · E1 brick 18f: the MV MIDDLE of the oriented ℤ fundamental-class induction
+-- (hasOrientedFundClassInt_union / _biUnion) — glue oriented classes on A,B via relMvInt_exact_middle'
+-- + determinedByPointsInt; the honest ℤ `sub_self` replacing the mod-2 `x+x=0` collapse.
+import SKEFTHawking.SingularIntFundClassUnionInt
 import SKEFTHawking.SingularBallCover
 import SKEFTHawking.SingularGoodCompactEuclidean
 import SKEFTHawking.SingularGoodCompactChart
