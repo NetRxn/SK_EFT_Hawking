@@ -1040,6 +1040,7 @@ import SKEFTHawking.SingularMvDeltaPartition
 import SKEFTHawking.SingularRelativeMV
 import SKEFTHawking.SingularRelMvDeltaChain
 import SKEFTHawking.SingularRelativeMVNaturality
+import SKEFTHawking.SingularRelativeMVInt
 import SKEFTHawking.SingularConvexComplementRetract
 import SKEFTHawking.SingularSphereHighDegree
 import SKEFTHawking.SingularManifoldFundamentalClass
