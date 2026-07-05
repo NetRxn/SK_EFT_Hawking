@@ -1058,6 +1058,9 @@ import SKEFTHawking.SingularRelativeMVSplitEquivInt
 -- Phase 5q.H · E1 (CSC-PD tower): general homological-algebra helper — Hom(−,R) of a right-split exact
 -- sequence is exact (exact_dualMap_of_split). The tool to dualize the split chain MV SES.
 import SKEFTHawking.LinearAlgebraDualExactInt
+-- Phase 5q.H · E1 (CSC-PD tower): the DUAL cochain MV sequence is exact (Sum* / Diag* on Module.Dual) —
+-- exact_dualMap_of_split applied to the split chain MV SES; the degreewise input to the rel-cohom MV.
+import SKEFTHawking.SingularRelativeCochainMVExactInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
