@@ -255,4 +255,41 @@ theorem redHomology_homologyMapInt {X Y : TopCat} (φ : C(↑X, ↑Y)) (n : ℕ)
   simp only [SKEFTHawking.SingularFunctoriality.cyclesMap_coe, redCyclesHom]
   exact redChain_mapChainInt φ n _
 
+/-! ## §7. The sphere-generator residual and the euclidean-model naturality
+
+The `connectingInt` and `Homology.mapInt normalize` stages are natural (§5, §6); the ONLY remaining
+input is the **sphere-generator correspondence**: the ℤ→ℤ/2 reduction of the integral `H₃(S³;ℤ)`
+generator is nonzero in `H₃(S³;ℤ/2)`. This is the one genuinely new (non-functorial) fact, isolated as
+`SphereGenReducesNonzero`. It is the top of the sphere-suspension tower; everything below it (connecting,
+retract, translation, chart, excision) is discharged by the functorial naturality of this file. -/
+
+open SKEFTHawking.SingularLineMinusPointInt (H3S3IsoInt)
+open SKEFTHawking.SingularPuncturedRetract (normalize)
+open SKEFTHawking.SingularEuclideanAcyclic (Eucl)
+
+/-- **The sphere-generator reduction residual.** The ℤ→ℤ/2 reduction of the integral generator of
+`H₃(S³;ℤ)` (i.e. `H3S3IsoInt.symm 1`) is nonzero in the mod-2 group `H₃(S³;ℤ/2)`. This is the single
+non-functorial input to the whole local-homology `redCompat`: it is the top of the sphere-suspension
+induction (Universal-Coefficient-style surjectivity of reduction onto the free part), the one datum not
+supplied by the functorial-stage naturality proved above. -/
+def SphereGenReducesNonzero : Prop :=
+  redHomology (SKEFTHawking.SingularSphereAcyclic.Sph 3) 3
+      (H3S3IsoInt.symm 1) ≠ 0
+
+/-- **The reduction commutes with the euclidean local iso, on homology, up to the sphere iso.**
+For any integral local class `z ∈ H₄(ℝ⁴,ℝ⁴∖0;ℤ)`, reducing then mapping via the mod-2 connecting +
+normalize-pushforward equals mapping via the integral connecting + normalize-pushforward then reducing.
+This is the composite of `redHomology_connectingInt` (§5) and `redHomology_homologyMapInt` (§6). The
+underlying map of `euclLocalHomologyIsoInt` is `Homology.mapInt normalize ∘ connectingInt`. -/
+theorem redHomology_euclCore (z : RelHomologyInt (X := Eucl 4) {x | x ≠ 0} 4) :
+    redHomology (SKEFTHawking.SingularSphereAcyclic.Sph 3) 3
+        ((Homology.mapInt (normalize (n := 4)) 3)
+          (SKEFTHawking.SingularRelHomologyInt.connectingInt (X := Eucl 4) {x | x ≠ 0} 3 z))
+      = SKEFTHawking.SingularFunctoriality.Homology.map (normalize (n := 4)) 3
+          (SKEFTHawking.SingularPairLES.connecting (X := Eucl 4) {x | x ≠ 0} 3
+            (redRelHomology (X := Eucl 4) {x | x ≠ 0} 4 z)) := by
+  rw [redHomology_homologyMapInt]
+  exact congrArg (SKEFTHawking.SingularFunctoriality.Homology.map (normalize (n := 4)) 3)
+    (redHomology_connectingInt (S := {x | x ≠ 0}) 3 z)
+
 end SKEFTHawking.SingularLocalHomologyRedCompatInt
