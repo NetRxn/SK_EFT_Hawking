@@ -930,6 +930,15 @@ import SKEFTHawking.SingularAffineChainInt
 -- 1+Sd); the iterated Sdᵐ chain-map + iterHomotopyInt Dₘ with ∂Dₘ+Dₘ∂=1−Sdᵐ; singularSdInt_pushChainMInt
 -- naturality + singularSdInt_iterate_single (Sdᵐ[σ]=σ_#(Sd_affᵐ ιₙ)) — the excision workhorse. Kernel-pure.
 import SKEFTHawking.SingularSubdivisionInt
+-- Phase 5q.H · E1 (Substrate-G brick 14c, 2026-07-04): the SIGNED INTEGRAL small-chains theorem toward
+-- integral singular excision. The GEOMETRIC inputs (diameter diamLeInt, subordination IsSubordinate,
+-- Lebesgue smallness, range/face lemmas) are coefficient-agnostic (about .support + realizations) — the
+-- bound lemmas reused verbatim from SingularSubdivisionDiameter; only the ℤ-linear smallChainsInt +
+-- SIGNED cycle-homologous fact are new. Delivers: the integral diameter shrinkage
+-- (linSubdivInt_iterate_diamLeInt); Lebesgue exists_iterate_subordinateInt + exists_iterate_smallChainsInt
+-- (any chain → small); smallChainsInt a subcomplex (chainBoundary-closed); and the surjective half
+-- c−Sdᵐc=∂(Dₘc) (SIGNED — mod-2 has c+Sdᵐc) + exists_small_cycle_homologousInt. Kernel-pure.
+import SKEFTHawking.SingularExcisionInt
 -- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
