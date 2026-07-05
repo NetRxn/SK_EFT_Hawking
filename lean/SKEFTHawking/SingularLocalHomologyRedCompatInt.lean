@@ -234,4 +234,25 @@ theorem redHomology_connectingInt {X : TopCat} {S : Set ↑X} (n : ℕ)
             redChain_mem_relCycleLift n c.2⟩
   exact redChain_boundaryExtract n c
 
+/-! ## §6. Naturality of the reduction w.r.t. the absolute homology pushforward -/
+
+/-- **The reduction commutes with the absolute homology pushforward**:
+`redHomology Y n ∘ Homology.mapInt φ = Homology.map φ ∘ redHomology X n`. Descends the §1 chain
+naturality `redChain_mapChainInt` through the homology quotient. -/
+theorem redHomology_homologyMapInt {X Y : TopCat} (φ : C(↑X, ↑Y)) (n : ℕ)
+    (h : Homology X n) :
+    redHomology Y n (Homology.mapInt φ n h)
+      = SKEFTHawking.SingularFunctoriality.Homology.map φ n (redHomology X n h) := by
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ h
+  rw [show (Submodule.Quotient.mk z : Homology X n) = Homology.mk X n z from rfl,
+    Homology.mapInt_mk, redHomology_mk, redHomology_mk]
+  show SKEFTHawking.SingularHomologyMod2.Homology.mk Y n _
+      = SKEFTHawking.SingularFunctoriality.Homology.map φ n
+          (SKEFTHawking.SingularHomologyMod2.Homology.mk X n (redCyclesHom X n z))
+  rw [SKEFTHawking.SingularFunctoriality.Homology.map_mk]
+  refine congrArg (SKEFTHawking.SingularHomologyMod2.Homology.mk Y n) ?_
+  refine Subtype.ext ?_
+  simp only [SKEFTHawking.SingularFunctoriality.cyclesMap_coe, redCyclesHom]
+  exact redChain_mapChainInt φ n _
+
 end SKEFTHawking.SingularLocalHomologyRedCompatInt
