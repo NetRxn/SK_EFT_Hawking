@@ -997,6 +997,9 @@ import SKEFTHawking.SingularGoodCompactInt
 -- Phase 5q.H · E1 brick 18b: integral chart-transport equivs (openSetExcisionEquivInt +
 -- chartPairEquiv_setInt) — set-level excision/chart transport of relative homology, MV-free.
 import SKEFTHawking.SingularChartTransportInt
+-- Phase 5q.H · E1 brick 18c: the oriented integral fundamental-class existence framework
+-- (restrictsToOrientedGeneratorInt / hasOrientedFundClassInt + sub-restriction monotonicity).
+import SKEFTHawking.SingularIntFundamentalClassExist
 -- Phase 5q.F (w₂-foundation, brick 6c-c7c.3): naturality of barycentric subdivision under linear maps
 -- (mapVerts L ∘ Sd = Sd ∘ mapVerts L for L : V →ₗ[ℝ] W) — the facet-inclusion naturality powering the
 -- singular chain-map ∂Sd=Sd∂ (the i-th facet Δⁿ⁻¹↪Δⁿ is the linear FunOnFinite.linearMap ℝ ℝ (δ i)).
