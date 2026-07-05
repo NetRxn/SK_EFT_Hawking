@@ -991,6 +991,9 @@ import SKEFTHawking.SingularReducedGeneratorInt
 -- Phase 5q.H · E1 (PD base case): the Euclidean local Poincaré-duality cap-iso — the base case the MV
 -- five-lemma consumes. The integral relative-cap chain-heart + the local duality iso for ℝ⁴.
 import SKEFTHawking.SingularEuclideanCapIsoInt
+-- Phase 5q.H · E1 (PD base case): the reusable free-case integral relative UCT (relKroneckerHInt_bijective_of_free)
+-- + euclSourceIso (H⁴(ℝ⁴,ℝ⁴∖0;ℤ)≅ℤ) discharging the base's sourceIso. (wt1-built.)
+import SKEFTHawking.SingularRelativeUCInt
 -- Phase 5q.H · E1 (CSC-PD tower): contravariant restriction functoriality for integral relative
 -- cohomology (relCohomRestrictInt + id/trans) — the transition-map prerequisite for the integral
 -- compactly-supported cohomology colimit (top row of the PD ladder).
