@@ -1001,6 +1001,9 @@ import SKEFTHawking.SingularCohomologyColimitInt
 -- Phase 5q.H · E1 (CSC-PD tower): integral cap-product locality (cap of a K-supported chain is
 -- K-supported) + the K-supported-cycle pullback to sub K — the foundation for the local duality map D_K.
 import SKEFTHawking.SingularCapSupportInt
+-- Phase 5q.H · E1 (CSC-PD tower): integral subspace-chains pullback — a bounded S-supported chain pulls
+-- back to a sub-S boundary (D_K well-definedness modulo coboundaries), over the on-main inclRangeEquiv.
+import SKEFTHawking.SingularSubspaceChainsEquivInt
 -- Phase 5q.H · E1 brick 17c: the integral orientation SECTION datum (IntOrientationData) + bridge to
 -- IntOrientation — orientation carried as legitimate ±1-section DATA over the now-proved local iso.
 import SKEFTHawking.IntOrientationSection
