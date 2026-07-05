@@ -3100,6 +3100,56 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'induced evaluation functional ⟨·,[M]⟩ so the H⁴-valued integral cup product cupH24 descends to the '
             'ℤ-valued symmetric intersection form (Phase 5q.H · E1 Substrate-G; pre-matrix, orientation deferred).',
     },
+    'intOrientation_datum': {
+        'statement': 'For a closed charted 4-manifold M ([T2Space][CompactSpace][Nonempty][ChartedSpace '
+            '(EuclideanSpace ℝ (Fin 4))]), the ORIENTATION-dependent input to the integral fundamental class is '
+            'carried (Phase 5q.H · E1 Substrate-G) as the disclosed structure '
+            'SKEFTHawking.SingularHomologyInt.IntOrientation M, holding (i) fundClass : Homology (TopCat.of M) 4 = '
+            'the integral fundamental class [M] ∈ H₄(M;ℤ) produced by a coherent orientation of M, and (ii) '
+            'redCompat : redHomology (TopCat.of M) 4 fundClass = SingularFundamentalClass.fundamentalClass (m:=2) — '
+            'the mod-2 compatibility tying [M] to the ON-MAIN orientation-free mod-2 fundamental class [M]₂ via the '
+            'ℤ→ℤ/2 reduction redHomology. This SHARPENS intFundamentalClass_eval_datum: the whole evaluation '
+            'functional is now discharged from this single geometric datum (intFundamentalClassOfIntOrientation), '
+            'and fundClass is not a free H₄ element — its mod-2 shadow must be the canonical [M]₂ (non-vacuous).',
+        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'very_hard',
+        'module': 'IntFundamentalClassOrientation',
+        'elimination_path': 'Discharge = build integral relative/local singular homology RelativeHomologyInt Kᶜ n '
+            'with the local iso H₄(M|x;ℤ) ≅ ℤ (the ℤ upgrade of the on-main mod-2 SingularRelativeHomologyMod2 / '
+            'manifoldLocalIso, absent from Mathlib AND on-main — the on-main tower is entirely over ZMod 2), define '
+            'restrictsToGeneratorInt/hasFundClassInt with a COHERENT choice of the ±1 local generators (= an '
+            'orientation: the orientation local system trivial + a global section), and replay the on-main existence '
+            'induction hasFundClass_chartBall/_union/_biUnion/_univ where the union step '
+            '(SingularFundamentalClassExist.hasFundClass_union) now matches the two local ±1 generators via the '
+            'orientation instead of the ℤ/2 collapse x+x=0 (ZModModule.add_self); extract fundClass. redCompat then '
+            'holds by naturality of the ℤ→ℤ/2 reduction (redChain/redChain_chainBoundary/redHomology, PROVED '
+            'unconditionally here) on the local-generator condition. Community-scale (integral homology + '
+            'orientation absent from Mathlib and on-main); tracked here so intFundamentalClassOfIntOrientation and '
+            'the whole intersection form hold for an ARBITRARY such datum, isolating orientation as this one input.',
+        'dependent_theorems': [
+            'SKEFTHawking.SingularHomologyInt.intFundamentalClassOfIntOrientation',
+            'SKEFTHawking.SingularHomologyInt.intFundamentalClassOfIntOrientation_eval',
+            'SKEFTHawking.SingularHomologyInt.intOrientation_redHomology_fundClass',
+        ],
+        'source': 'Standard algebraic topology (Milnor–Stasheff §11; Hatcher §3.3 Thm 3.26/3.27): a closed '
+            'connected n-manifold has H_n(M;ℤ) ≅ ℤ iff it is orientable, and an orientation is a coherent choice of '
+            'local generators of H_n(M, M∖x; ℤ) ≅ ℤ; its mod-2 reduction is the (always-existing) mod-2 fundamental '
+            'class. The ℤ→ℤ/2 reduction on chains/homology (redChain/redHomology) is the dual of the on-main '
+            'cochain reduction bridge IntersectionFormEvenInt.redC/redH.',
+        'risk': 'Very low mathematically (textbook orientation theory); the cost is purely the from-scratch Lean '
+            'construction of integral relative/local homology + the coherent-generator gluing, deferred to a later '
+            'E1 brick. Everything downstream of the datum (the intersection form, its symmetry) is unconditional on '
+            'fundClass; the redCompat field makes the datum non-vacuous (falsifiable against the mod-2 [M]₂).',
+        'circularity_note': 'None. intFundamentalClassOfIntOrientation and the intersection form are built for an '
+            'ARBITRARY IntOrientation; no property of a specific (future) geometric [M] is used beyond the disclosed '
+            'redCompat. The ℤ→ℤ/2 comparison map redHomology and its chain-map property redChain_chainBoundary are '
+            'proved UNCONDITIONALLY (kernel-pure), so wiring the real orientation later strictly discharges this '
+            'datum. Refines (does not duplicate) intFundamentalClass_eval_datum: that carried the whole eval '
+            'functional; this reduces it further to [M] : H₄(M;ℤ) + orientation coherence, the genuine residual.',
+        'prose': 'The orientation of a closed 4-manifold, carried as a disclosed datum (the integral fundamental '
+            'class [M] ∈ H₄(M;ℤ) + its mod-2 compatibility with the on-main orientation-free [M]₂) so the integral '
+            'intersection form is discharged from this single geometric input — the genuine new content over the '
+            'mod-2 blueprint (Phase 5q.H · E1 Substrate-G; the orientation coherence Mathlib/on-main lack).',
+    },
     'intH2_basis_datum': {
         'statement': 'For a closed 4-manifold M, a finite free ℤ-basis of H²(M;ℤ) = Cohomology (TopCat.of M) 2 '
             'is carried (Phase 5q.H · E1 Substrate-G) as a disclosed datum: the structure '

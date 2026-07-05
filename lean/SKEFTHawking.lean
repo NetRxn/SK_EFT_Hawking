@@ -864,6 +864,16 @@ import SKEFTHawking.IntCapProductInt
 -- unimodular; plus the mod-2-shadow partial odd_capMatrix_det_of_mod2_unit (unit mod-2 reduction ⟹ Odd det,
 -- the honest floor from the on-main injective nondeg_of_closed, one parity-step short of det = ±1).
 import SKEFTHawking.IntPoincareDualityCapIso
+-- Phase 5q.H · E1 (Substrate-G brick 11): the integral fundamental class [M] : Homology(M;ℤ) 4 as a
+-- disclosed ORIENTATION datum IntOrientation M — the sole orientation-dependent input the integral
+-- intersection form needs, isolated with its precise discharge path (mirror the on-main mod-2
+-- hasFundClass tower, adding ℤ-orientation coherence: over ℤ each local H₄(M|x;ℤ)≅ℤ has TWO generators ±1,
+-- so gluing needs a coherent sign choice, absent from Mathlib/on-main). PROVABLE PARTIALS landed
+-- kernel-pure: the ℤ→ℤ/2 chain reduction redChain (dual of the cochain redC) + its ∂-commutation
+-- redChain_chainBoundary + descent to homology redHomology : H(M;ℤ)→H(M;ℤ/2), and the mod-2 compatibility
+-- (IntOrientation.redCompat: redHomology [M] = the on-main orientation-free mod-2 [M]₂) making the datum
+-- non-vacuous. intFundamentalClassOfIntOrientation discharges intFundamentalClassOfHomology's [M] input.
+import SKEFTHawking.IntFundamentalClassOrientation
 -- Phase 5q.F (2026-06-15, w₂ foundation brick 3): singular ℤ/2 HOMOLOGY + the Kronecker pairing — the
 -- dual of SingularCohomologyMod2. Chains C_n = simplices →₀ ℤ/2, the boundary ∂ with ∂²=0, Homology
 -- Hₙ = ker∂/im∂, and the descended Kronecker pairing kroneckerH : Hⁿ × Hₙ → ℤ/2 (the evaluation
