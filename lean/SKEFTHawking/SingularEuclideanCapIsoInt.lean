@@ -327,4 +327,84 @@ noncomputable def relativeDualityInt (k m : ℕ) (z : SingularChainInt X (k + m 
     relativeDualityInt S k m z hz (RelativeCohomologyInt.mk S k a) = relDualityIntₗ S z hz a :=
   rfl
 
+/-! ## §D. The degree-0 output duality map `D_z : Hᵏ⁺¹(X, S; ℤ) → H₀(X; ℤ)`
+
+The load-bearing (top-degree) case caps `Hᵏ⁺¹(X, S; ℤ)` against a relative fundamental cycle
+`z ∈ C_{k+1}(X)` (`∂z ∈ subspace chains`) landing in `H₀(X; ℤ)` — the case `H⁴_c(ℝ⁴) ⌢ [ℝ⁴]_loc → H₀`.
+In degree `0` every chain is a cycle (`cycles X 0 = ⊤`), so cycle-membership is free; the well-definedness
+input is only that a relative coboundary caps to an absolute `0`-boundary
+(`capInt_relCoboundary_mem_boundariesInt` at `m = 0` gives the degree-1 case; degree-0 uses that
+`a ⌢ z ∈ C₀` and the relative-coboundary case reduces to `k = j + 1`). -/
+
+/-- **The degree-0 integral relative-cohomology descent fact**: for a `k`-cochain `g` vanishing on `S`
+and a relative cycle `z : C_{k+1}`, the coboundary `δg` caps `z` to an absolute `0`-**boundary**.
+`capInt_leibniz` (at output degree `0`) gives `∂(g ⌢ z) = (-1)ᵏ⁺¹ (δg) ⌢ z + (-1)ᵏ g ⌢ (∂z)`; the last
+term dies (`g` kills subspace chains, `∂z ∈ subspace chains`), so `(δg) ⌢ z` is `(-1)ᵏ⁺¹ · ∂(g ⌢ z)`,
+a `0`-boundary (unit sign). The degree-0 companion of `capInt_relCoboundary_mem_boundariesInt`. -/
+theorem capInt_relCoboundary_mem_boundaries0Int {k : ℕ} (g : SingularCochainInt X k)
+    (hg : ∀ (τ : (TopCat.toSSet.obj (sub S)).obj (op (SimplexCategory.mk k))),
+      g (simplexIncl S k τ) = 0)
+    (z : SingularChainInt X (k + 1))
+    (hz : chainBoundary X k z ∈ subspaceChainsInt S k) :
+    capInt (m := 0) (coboundary X k g) z ∈ boundaries X 0 := by
+  have h : k + 0 + 1 = k + 1 + 0 := by omega
+  have hleib := capInt_leibniz (a := g) (c := z) (m := 0) h
+  have hmid : capInt (m := 0) g (chainBoundary X (k + 0) z) = 0 :=
+    capInt_subspaceChainInt_eq_zero S g hg hz
+  rw [hmid, smul_zero, add_zero] at hleib
+  -- hleib : ∂(capInt g z) = (-1)^(k+1) • (δg ⌢ (h ▸ z));  h ▸ z = z defeq (k+0+1 = k+1+0 both = k+1).
+  have hcast : (h ▸ z : SingularChainInt X (k + 1 + 0)) = z := rfl
+  rw [hcast] at hleib
+  have hbdry : (-1 : ℤ) ^ (k + 1) • capInt (m := 0) (coboundary X k g) z ∈ boundaries X 0 := by
+    rw [← hleib]
+    exact LinearMap.mem_range_self _ _
+  have hunit : ((-1 : ℤ) ^ (k + 1)) * ((-1 : ℤ) ^ (k + 1)) = 1 := by
+    rw [← pow_add, show (k + 1) + (k + 1) = 2 * (k + 1) by ring, pow_mul, neg_one_sq, one_pow]
+  have := (boundaries X 0).smul_mem ((-1 : ℤ) ^ (k + 1)) hbdry
+  rwa [smul_smul, hunit, one_smul] at this
+
+/-- The degree-0 cycle-level duality: `a ↦ [a ⌢ z] ∈ H₀(X)` for a relative cocycle `a : Cᵏ⁺¹(X,S)` and
+a relative cycle `z : C_{k+1}` (`∂z ∈ subspace chains`); `a ⌢ z ∈ C₀` is automatically a cycle. -/
+noncomputable def relDualityInt0ₗ {k : ℕ} (z : SingularChainInt X (k + 1))
+    (_hz : chainBoundary X k z ∈ subspaceChainsInt S k) :
+    LinearMap.ker (relCoboundaryIntₗ S (k + 1)) →ₗ[ℤ] Homology X 0 :=
+  ((boundaries X 0).submoduleOf (cycles X 0)).mkQ.comp
+    (((capIntₗ (k + 1) 0).flip z).comp
+      ((relCochainsInt S (k + 1)).subtype.comp (LinearMap.ker (relCoboundaryIntₗ S (k + 1))).subtype)
+      |>.codRestrict (cycles X 0) (fun _ => Submodule.mem_top))
+
+@[simp] theorem relDualityInt0ₗ_apply {k : ℕ} (z : SingularChainInt X (k + 1))
+    (hz : chainBoundary X k z ∈ subspaceChainsInt S k)
+    (a : LinearMap.ker (relCoboundaryIntₗ S (k + 1))) :
+    relDualityInt0ₗ S z hz a
+      = Homology.mk X 0 ⟨capInt (m := 0) (a : relCochainsInt S (k + 1)) z, Submodule.mem_top⟩ :=
+  rfl
+
+/-- **The degree-0 integral relative Poincaré–Lefschetz duality map** `D_z : Hᵏ⁺¹(X, S; ℤ) → H₀(X; ℤ)`,
+`[a] ↦ [a ⌢ z]`. Well-defined: relative coboundaries cap `z` to absolute `0`-boundaries
+(`capInt_relCoboundary_mem_boundariesInt`, the `k = j + 1` branch; the `k = 0` case is empty here since
+the cochain degree is `k + 1 ≥ 1`). The top-degree companion of `relativeDualityInt`. -/
+noncomputable def relativeDualityInt0 (k : ℕ) (z : SingularChainInt X (k + 1))
+    (hz : chainBoundary X k z ∈ subspaceChainsInt S k) :
+    RelativeCohomologyInt S (k + 1) →ₗ[ℤ] Homology X 0 :=
+  Submodule.liftQ _ (relDualityInt0ₗ S z hz) (by
+    intro a ha
+    simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] at ha
+    rw [LinearMap.mem_ker, relDualityInt0ₗ_apply]
+    refine (Submodule.Quotient.mk_eq_zero _).mpr ?_
+    simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply]
+    rw [show relCoboundaryRangeInt S (k + 1) = LinearMap.range (relCoboundaryIntₗ S k) from rfl] at ha
+    obtain ⟨g, hg⟩ := ha
+    have hcob : ((a : relCochainsInt S (k + 1)) : SingularCochainInt X (k + 1)) = coboundary X k g.1 := by
+      rw [← hg, relCoboundaryIntₗ_coe]
+    rw [hcob]
+    exact capInt_relCoboundary_mem_boundaries0Int S g.1 (relCochainInt_vanish S g) z hz)
+
+/-- **Computation rule for the degree-0 `D_z`**: `D_z [a] = [a ⌢ z] ∈ H₀`. -/
+@[simp] theorem relativeDualityInt0_mk (k : ℕ) (z : SingularChainInt X (k + 1))
+    (hz : chainBoundary X k z ∈ subspaceChainsInt S k)
+    (a : LinearMap.ker (relCoboundaryIntₗ S (k + 1))) :
+    relativeDualityInt0 S k z hz (RelativeCohomologyInt.mk S (k + 1) a) = relDualityInt0ₗ S z hz a :=
+  rfl
+
 end SKEFTHawking.SingularEuclideanCapIsoInt
