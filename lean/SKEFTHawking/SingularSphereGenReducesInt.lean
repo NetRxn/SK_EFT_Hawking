@@ -326,4 +326,55 @@ theorem redHomology_bottomSuspMapInt {n : ℕ}
             (redHomology (Sph n) 1 h)))
   rw [redHomology_connectingInt, redRelHomology_excisionEquivInt_symm, redRelHomology_homProjInt]
 
+open SKEFTHawking.SingularSphereAcyclic (equatorMap dimReductionEquiv)
+open SKEFTHawking.SingularPuncturedRetract (normalize)
+
+/-- **The reduction commutes with the sphere dimension-reduction equiv** `Hₖ₊₂(Sⁿ) ≅ Hₖ₊₁(Sⁿ⁻¹)`.
+`redHomology ∘ dimReductionEquivInt = dimReductionEquiv ∘ redHomology`. Composes the suspension square
+(homProj + excision.symm + connecting, at degree `k+1`) with the equator-retract square
+(two `Homology.mapInt` naturalities, `redHomology_homologyMapInt`). -/
+theorem redHomology_dimReductionEquivInt {n : ℕ}
+    (v : Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) (k : ℕ)
+    (h : Homology (Sph n) (k + 2)) :
+    redHomology (SingularPuncturedRetract.Sph n) (k + 1) (dimReductionEquivInt v k h)
+      = dimReductionEquiv v k (redHomology (Sph n) (k + 2) h) := by
+  show redHomology (SingularPuncturedRetract.Sph n) (k + 1)
+      ((Homology.mapInt (normalize (n := n)) (k + 1))
+        ((Homology.mapInt (equatorMap v) (k + 1))
+          ((SingularRelHomologyInt.connectingInt
+                (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)) (k + 1))
+            ((excisionEquivInt ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ) (k + 1)
+                  (polar_cover (ne_antipode v))).symm
+              ((SingularRelHomologyInt.homProjInt ({v}ᶜ : Set ↑(Sph n)) (k + 2)) h)))))
+    = (SKEFTHawking.SingularFunctoriality.Homology.map (normalize (n := n)) (k + 1))
+        ((SKEFTHawking.SingularFunctoriality.Homology.map (equatorMap v) (k + 1))
+          ((SKEFTHawking.SingularPairLES.connecting
+                (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)) (k + 1))
+            ((excisionEquiv ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ) (k + 1)
+                  (polar_cover (ne_antipode v))).symm
+              ((SKEFTHawking.SingularPairLES.homProj ({v}ᶜ : Set ↑(Sph n)) (k + 2))
+                (redHomology (Sph n) (k + 2) h)))))
+  rw [redHomology_homologyMapInt, redHomology_homologyMapInt, redHomology_connectingInt,
+    redRelHomology_excisionEquivInt_symm, redRelHomology_homProjInt]
+
+open SKEFTHawking.SingularSphereBottom (basePoint topSphereReduce)
+
+/-- **The reduction commutes with the iterated top-sphere reduction** `Hₘ₊₁(Sᵐ⁺¹) ≅ H₁(S¹)`.
+`redHomology (Sph 1) 1 ∘ topSphereReduceInt m = topSphereReduce m ∘ redHomology (Sph (m+1)) (m+1)`.
+Induction on `m` mirroring the recursion; the step is `redHomology_dimReductionEquivInt`. -/
+theorem redHomology_topSphereReduceInt : (m : ℕ) → (h : Homology (Sph (m + 1)) (m + 1)) →
+    redHomology (Sph 1) 1 (topSphereReduceInt m h)
+      = topSphereReduce m (redHomology (Sph (m + 1)) (m + 1) h)
+  | 0, h => by
+      show redHomology (Sph 1) 1 ((LinearEquiv.refl ℤ (Homology (Sph 1) 1)) h)
+        = (LinearEquiv.refl (ZMod 2)
+            (SKEFTHawking.SingularHomologyMod2.Homology (Sph 1) 1)) (redHomology (Sph 1) 1 h)
+      rfl
+  | (m + 1), h => by
+      show redHomology (Sph 1) 1
+          (topSphereReduceInt m (dimReductionEquivInt (basePoint (m + 2)) m h))
+        = topSphereReduce m (dimReductionEquiv (basePoint (m + 2)) m
+            (redHomology (Sph (m + 2)) (m + 2) h))
+      rw [redHomology_topSphereReduceInt m, redHomology_dimReductionEquivInt]
+
 end SKEFTHawking.SingularSphereGenReducesInt
