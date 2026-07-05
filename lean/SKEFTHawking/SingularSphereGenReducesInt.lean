@@ -266,4 +266,64 @@ theorem ne_zero_transport_symm {A B A' B' : Type*}
   have := congrArg Fmod h
   rwa [Fmod.apply_symm_apply, map_zero] at this
 
+/-! ## §6. Tower-stage naturality squares (forward), toward the sphere generator -/
+
+open SKEFTHawking.SingularSphereHomologyInt
+open SKEFTHawking.SingularExcisionIsoInt (excisionEquivInt excisionMapInt)
+open SKEFTHawking.SingularExcisionIso (restr excisionEquiv)
+open SKEFTHawking.SingularSphereAcyclic (Sph antipode ne_antipode polar_cover)
+open SKEFTHawking.SingularLocalHomologyRedCompatInt
+  (redRelHomology_excisionMap redRelHomology_homProjInt redHomology_connectingInt
+   redHomology_homologyMapInt)
+
+/-- **The reduction commutes with the inverse excision equiv.** From the forward square
+`redRelHomology ∘ excisionMapInt = excisionMap ∘ redRelHomology` (`redRelHomology_excisionMap`), apply
+`(excisionEquiv).symm` on both sides: `redRelHomology (restr A B) ∘ (excisionEquivInt).symm =
+(excisionEquiv).symm ∘ redRelHomology A`. -/
+theorem redRelHomology_excisionEquivInt_symm {X : TopCat} (A B : Set ↑X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set ↑X)), interior U) = Set.univ)
+    (z : RelHomologyInt A (n + 1)) :
+    redRelHomology (restr A B) (n + 1) ((excisionEquivInt A B n hcov).symm z)
+      = (excisionEquiv A B n hcov).symm (redRelHomology A (n + 1) z) := by
+  apply (excisionEquiv A B n hcov).injective
+  rw [(excisionEquiv A B n hcov).apply_symm_apply]
+  have hfwd := redRelHomology_excisionMap A B (n + 1)
+    ((excisionEquivInt A B n hcov).symm z)
+  -- excisionEquiv (redRelHomology (restr) ((excisionEquivInt).symm z))
+  --   = redRelHomology A (excisionMapInt ((excisionEquivInt).symm z))
+  --   = redRelHomology A z    (since excisionMapInt = excisionEquivInt forward)
+  rw [show (excisionEquiv A B n hcov) (redRelHomology (restr A B) (n + 1)
+        ((excisionEquivInt A B n hcov).symm z))
+      = SKEFTHawking.SingularExcisionIso.excisionMap A B (n + 1)
+          (redRelHomology (restr A B) (n + 1) ((excisionEquivInt A B n hcov).symm z)) from rfl,
+    ← hfwd]
+  congr 1
+  show excisionMapInt A B (n + 1) ((excisionEquivInt A B n hcov).symm z) = z
+  exact (excisionEquivInt A B n hcov).apply_symm_apply z
+
+open SKEFTHawking.SingularLineMinusPointInt (bottomSuspMapInt)
+open SKEFTHawking.SingularSphereBottom (bottomSuspMap)
+
+/-- **The reduction commutes with the bottom-degree sphere suspension map.**
+`redHomology (equator) 0 ∘ bottomSuspMapInt = bottomSuspMap ∘ redHomology (Sph n) 1`. Composes the
+three primitive squares: pair-projection (`redRelHomology_homProjInt`), inverse-excision
+(`redRelHomology_excisionEquivInt_symm`), and connecting (`redHomology_connectingInt`). -/
+theorem redHomology_bottomSuspMapInt {n : ℕ}
+    (v : Metric.sphere (0 : EuclideanSpace ℝ (Fin (n + 1))) 1) (h : Homology (Sph n) 1) :
+    redHomology (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))) 0
+        (bottomSuspMapInt n v h)
+      = bottomSuspMap n v (redHomology (Sph n) 1 h) := by
+  -- unfold both composites and chase the three squares
+  show redHomology (sub (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ))) 0
+      ((SingularRelHomologyInt.connectingInt (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)) 0)
+        ((excisionEquivInt ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ) 0
+              (polar_cover (ne_antipode v))).symm
+          ((SingularRelHomologyInt.homProjInt ({v}ᶜ : Set ↑(Sph n)) 1) h)))
+    = (SKEFTHawking.SingularPairLES.connecting (restr ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ)) 0)
+        ((excisionEquiv ({v}ᶜ : Set ↑(Sph n)) ({antipode v}ᶜ) 0
+              (polar_cover (ne_antipode v))).symm
+          ((SKEFTHawking.SingularPairLES.homProj ({v}ᶜ : Set ↑(Sph n)) 1)
+            (redHomology (Sph n) 1 h)))
+  rw [redHomology_connectingInt, redRelHomology_excisionEquivInt_symm, redRelHomology_homProjInt]
+
 end SKEFTHawking.SingularSphereGenReducesInt
