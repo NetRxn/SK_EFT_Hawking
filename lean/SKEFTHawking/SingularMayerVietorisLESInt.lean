@@ -21,12 +21,19 @@ import Mathlib
 import SKEFTHawking.SingularFunctorialityInt
 import SKEFTHawking.SingularMayerVietorisLES
 import SKEFTHawking.SingularSubsetHomologyInt
+import SKEFTHawking.SingularExcisionIsoInt
+import SKEFTHawking.SingularSphereHomologyInt
+import SKEFTHawking.SingularLocalHomologyInt
 
 open SKEFTHawking.SingularHomologyInt
+open SKEFTHawking.SingularRelHomologyInt
 open SKEFTHawking.SingularRelativeHomologyMod2 (sub)
 open SKEFTHawking.SingularFunctorialityInt
+open SKEFTHawking.SingularExcisionIso (restr)
+open SKEFTHawking.SingularExcisionIsoInt
+open SKEFTHawking.SingularSphereHomologyInt (Homology.mapInt_bijective_of_comp_id_all)
 open SKEFTHawking.SingularMayerVietorisLES
-  (ambIncl subIncl ambIncl_comp_subIncl_left ambIncl_comp_subIncl_right)
+  (ambIncl subIncl ambIncl_comp_subIncl_left ambIncl_comp_subIncl_right seamHomeo)
 
 namespace SKEFTHawking.SingularMayerVietorisLESInt
 
@@ -69,5 +76,42 @@ theorem mvHomSumInt_mvHomDiagInt (A B : Set ↑X) (n : ℕ) (w : Homology (sub (
         = Homology.mapInt (ambIncl (A ∩ B)) n w by
         rw [← LinearMap.comp_apply, ← Homology.mapInt_comp, ambIncl_comp_subIncl_right]]
   exact sub_self _
+
+/-! ## The integral Mayer–Vietoris connecting homomorphism `δ : Hₙ₊₁(X;ℤ) → Hₙ(A ∩ B;ℤ)` -/
+
+/-- **The integral MV connecting homomorphism (pre-seam)** `Hₙ₊₁(X;ℤ) → Hₙ(sub (restr A B);ℤ)`, assembled
+Barratt–Whitehead-style from the integral pair LES (`homProjInt`/`connectingInt`) and integral excision
+(`excisionEquivInt`): project to the relative group, cross the excision iso backwards, then apply the pair
+connecting map. Integral mirror of `SingularMayerVietorisLES.mvConnecting`. -/
+noncomputable def mvConnectingInt (A B : Set ↑X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set ↑X)), interior U) = Set.univ) :
+    Homology X (n + 1) →ₗ[ℤ] Homology (sub (restr A B)) n :=
+  (connectingInt (restr A B) n).comp
+    (((excisionEquivInt A B n hcov).symm.toLinearMap).comp (homProjInt A (n + 1)))
+
+/-- The seam **homology isomorphism** `Hₙ(sub (restr A B);ℤ) ≅ Hₙ(sub (A ∩ B);ℤ)`, induced by the
+(coefficient-agnostic) reassociation homeomorphism `seamHomeo A B` (a homeomorphism, so integral
+functoriality + `mapInt_bijective_of_comp_id_all` give the iso in every degree). Bridges `mvConnectingInt`'s
+codomain (`sub (restr A B)`) to `mvHomDiagInt`'s domain (`sub (A ∩ B)`). -/
+noncomputable def seamHomologyEquivInt (A B : Set ↑X) (n : ℕ) :
+    Homology (sub (restr A B)) n ≃ₗ[ℤ] Homology (sub (A ∩ B)) n :=
+  LinearEquiv.ofBijective
+    (Homology.mapInt ⟨seamHomeo A B, (seamHomeo A B).continuous⟩ n)
+    (Homology.mapInt_bijective_of_comp_id_all ⟨seamHomeo A B, (seamHomeo A B).continuous⟩
+      ⟨(seamHomeo A B).symm, (seamHomeo A B).symm.continuous⟩
+      (ContinuousMap.ext fun _ => rfl) (ContinuousMap.ext fun _ => rfl) n)
+
+@[simp] theorem seamHomologyEquivInt_apply (A B : Set ↑X) (n : ℕ) (w : Homology (sub (restr A B)) n) :
+    seamHomologyEquivInt A B n w
+      = Homology.mapInt ⟨seamHomeo A B, (seamHomeo A B).continuous⟩ n w := rfl
+
+/-- **The integral Mayer–Vietoris connecting map** `δ : Hₙ₊₁(X;ℤ) → Hₙ(A ∩ B;ℤ)` in the `sub (A ∩ B)`
+representation — `mvConnectingInt` post-composed with the seam iso, so its codomain matches `mvHomDiagInt`'s
+domain. Closes the bottom-row integral MV LES
+`⋯ → Hₙ₊₁(X;ℤ) →[δ] Hₙ(A∩B;ℤ) →[mvHomDiagInt] Hₙ(A;ℤ)⊕Hₙ(B;ℤ) →[mvHomSumInt] Hₙ(X;ℤ) → ⋯`. -/
+noncomputable def mvDeltaInt (A B : Set ↑X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set ↑X)), interior U) = Set.univ) :
+    Homology X (n + 1) →ₗ[ℤ] Homology (sub (A ∩ B)) n :=
+  (seamHomologyEquivInt A B n).toLinearMap.comp (mvConnectingInt A B n hcov)
 
 end SKEFTHawking.SingularMayerVietorisLESInt
