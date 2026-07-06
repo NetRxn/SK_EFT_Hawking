@@ -197,5 +197,36 @@ retire) — no entry is immutable. Every entry carries datetime metadata.
   is closer" — they are apex-equivalent, the reduction is CANONICAL. The terminal node `hbound`/`hthom` = Thom
   generation / the relative fundamental class `[W,∂W]` + surgery = the genuine Mathlib-absent research-grade
   wall (NOT `16∣σ` Rokhlin alone — that is necessary but strictly weaker than the completeness `hbound` needs).
+- UPDATE 2026-07-06 (user-directed re-anchor; DIRECT read of KT-LMS §5 pp.216–218 + `Lit-Search/Phase-5qH/
+  KT_LMS_Section5_completeness_proof_extracted.md`): the surgery wall above is now NAMED concretely, and it is
+  GEOMETRIC — consistent with this fork's "`[W,∂W]` + surgery" line, and correcting the *separate* "spectral
+  ABP tower / no elementary substitute" framing that the atlas ranking + reconciliation §0-B carried. KT §5
+  proves `Ω₄^{Pin⁺}≅ℤ/16` via the exact sequence `0 → ℤ/2 → Ω₄^{Pin⁺} → ℤ/8 → 0`: the `ℤ/8` is `Ω₂^{Pin⁻}`
+  (Brown/Gauss, DONE in-tree); the kernel is the image of `Ω₄^{Spin}`, `≤ ℤ/2` by Lemma 5.3 (double-cover
+  `÷32` signature). So **`card ≤ 16 = 2×8` is assembled FROM BELOW** — the only deep input is **`Ω₄^{Spin}≅ℤ`
+  (gen. Kummer)** + the geometric Smith map `[∩w₁²]` (E3) + Lemma 5.3, with Rokhlin `16∣σ` supplied by E2's GM
+  formula at `F=∅`. **NO ABP `Ω₆^{Pin⁻}≅ℤ/16`, NO Adams tower.** The `α`/`ψ` index invariant is OFF the
+  critical path (the project's `surjective-onto-ℤ/16` is standalone from the Gauss-sum + δ-cap, so the
+  non-split extension is automatic; index theory drops out — verified in-tree, `PinPlusGMWitness` cap chain).
+  This does NOT re-open the settled route-equivalence above (the injectivity Props stay apex-equivalent to
+  `hbound`); it re-anchors the DISCHARGE TARGET onto the cheapest Substrate-S form — `Ω₄^{Spin}≅ℤ` (KT route,
+  reuses E1/E2/E3) rather than `smith_inflow_z16` (`Ω₆^{Pin⁻}`, the wired-but-harder spectral form that only
+  ranks atlas-keystone because the downstream Smith-LES transport is what's wired). `smith_inflow_z16` is
+  DEMOTED: an alternative route, not the required keystone. Formalizability of `Ω₄^{Spin}≅ℤ` = live
+  deep-research (scout dispatched 2026-07-06). The reconciliation §0-B "no elementary substitute" verdict was
+  scout-sourced about the SPECTRAL computations and never verified for the `Ω₄^{Spin}` surgery route (the
+  scout's own C5 flag) — do NOT treat "the completeness requires the ABP tower" as settled.
+- UPDATE 2026-07-06b (deep-research on `Ω₄^{Spin}≅ℤ` returned + lead-vetted → `Lit-Search/Phase-5qH/
+  Omega4Spin_Z_formalization_route_20260706.md`): the finest-grain wall is NAMED — `σ=0` spin ⟹ even form
+  `≅ n·H` (Milnor–Husemoller even-indefinite classification — *formalizable lattice algebra, reuses E1's
+  intersection form*) ⟹ `n(S²×S²)` ⟹ **bounds a spin 5-manifold by 3-handle attachment** (the one
+  Mathlib-absent manifold-topology step; matches this fork's memory `project_5qH_geometric_floor_terminal`).
+  Confirmed SURGERY, not Adams/AHSS (Kirby–Taylor survey arXiv:math/9803101; FKV arXiv:2012.02004). Mathlib
+  has definitional `SingularManifold` scaffolding (`Mathlib/Geometry/Manifold/Bordism.lean`, no group/relation
+  yet) to build on. **CAVEAT (lead-corrected a scout over-claim): there is NO Rokhlin-only shortcut around the
+  full `Ω₄^{Spin}≅ℤ`** — the "`|image| ≤ 2` from Rokhlin + first-iso-theorem" idea needs Lemma 5.3's `⟸`
+  direction (`32∣σ ⟹ Pin⁺-bounds`), which itself uses "K3 generates `Ω₄^{Spin}`" = the full iso. Do NOT
+  re-chase that shortcut. `Ω₄^{Spin}≅ℤ` stays the one deep input; its Lean-tractability (surgery step vs the
+  spectral tower it replaces) is the open judgment call.
 - memory: [[project_5qH_geometric_floor_terminal]]
 - created_ts: 2026-07-04T00:00:00Z
