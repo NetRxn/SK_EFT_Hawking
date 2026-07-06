@@ -684,4 +684,154 @@ theorem relCohomMv_exact_connectingInt (U V : Set ↑M) (hU : IsOpen U) (hV : Is
     rw [LinearMap.mem_ker]
     exact relCohomMvDiagInt_relCohomMvConnectingInt U V hU hV n y
 
+/-! ## §5. Naturality of the connecting map under enlarging compacts (torsion-safe, for the CSC colimit) -/
+
+/-- The `Q`-cochains are **antitone** in the cover: `mvUnion(A,B) ≤ mvUnion(A',B')` for `A' ⊆ A`,
+`B' ⊆ B` (vanishing on the bigger `C(A)+C(B) ⊇ C(A')+C(B')`). -/
+theorem mvUnionCochainsInt_antitone (A B A' B' : Set ↑M) (hAA' : A' ⊆ A) (hBB' : B' ⊆ B) (n : ℕ) :
+    mvUnionCochainsInt A B n ≤ mvUnionCochainsInt A' B' n := by
+  intro f hf
+  rw [mem_mvUnionCochainsInt]
+  intro c hc
+  rw [mvUnionChainsInt, Submodule.add_eq_sup, Submodule.mem_sup] at hc
+  obtain ⟨cA', hcA', cB', hcB', rfl⟩ := hc
+  rw [mem_mvUnionCochainsInt] at hf
+  refine hf _ ?_
+  rw [mvUnionChainsInt, Submodule.add_eq_sup, Submodule.mem_sup]
+  exact ⟨cA', subspaceChainsInt_mono hAA' n hcA', cB', subspaceChainsInt_mono hBB' n hcB', rfl⟩
+
+/-- **The key cover fact for connecting-map naturality**: for `A' ⊆ A`, `B' ⊆ B` and `ω` an
+`(A∩B)`-relative cochain, `indUf A ω − indUf A' ω ∈ mvUnion(A',B')`. It vanishes on `C(A')` (both indicator
+branches agree there) and on `C(B')` (a `B'`-simplex with range `⊆ A` lands in `A∩B`, where `ω` vanishes). -/
+theorem indUf_sub_mem_mvUnion (A B A' B' : Set ↑M) (hAA' : A' ⊆ A) (hBB' : B' ⊆ B) (n : ℕ)
+    (ω : SingularCochainInt M n) (hω : ω ∈ relCochainsInt (A ∩ B) n) :
+    indUf A n ω - indUf A' n ω ∈ mvUnionCochainsInt A' B' n := by
+  rw [mem_mvUnionCochainsInt]
+  intro c hc
+  rw [mvUnionChainsInt, Submodule.add_eq_sup, Submodule.mem_sup] at hc
+  obtain ⟨cA', hcA', cB', hcB', rfl⟩ := hc
+  rw [kronecker_add_right]
+  have hA'0 : kronecker (indUf A n ω - indUf A' n ω) cA' = 0 := by
+    refine kronecker_eq_zero_of_support _ _ (fun σ hσ => ?_)
+    have hrA' : Set.range (M.toSSetObjEquiv (op (SimplexCategory.mk n)) σ) ⊆ A' :=
+      range_of_mem_subspaceChainsInt hcA' hσ
+    show (indUf A n ω - indUf A' n ω) σ = 0
+    rw [Pi.sub_apply, indUf_apply, indUf_apply, if_pos (hrA'.trans hAA'), if_pos hrA', sub_zero]
+  have hB'0 : kronecker (indUf A n ω - indUf A' n ω) cB' = 0 := by
+    refine kronecker_eq_zero_of_support _ _ (fun σ hσ => ?_)
+    have hrB' : Set.range (M.toSSetObjEquiv (op (SimplexCategory.mk n)) σ) ⊆ B' :=
+      range_of_mem_subspaceChainsInt hcB' hσ
+    show (indUf A n ω - indUf A' n ω) σ = 0
+    rw [Pi.sub_apply, indUf_apply, indUf_apply]
+    by_cases hrA : Set.range (M.toSSetObjEquiv (op (SimplexCategory.mk n)) σ) ⊆ A
+    · have hrAB : Set.range (M.toSSetObjEquiv (op (SimplexCategory.mk n)) σ) ⊆ A ∩ B :=
+        Set.subset_inter hrA (hrB'.trans hBB')
+      have hω0 : ω σ = 0 := by
+        have hmem : Finsupp.single σ (1 : ℤ) ∈ subspaceChainsInt (A ∩ B) n :=
+          mem_subspaceChainsInt_of_support (fun τ hτ => by
+            rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hτ
+            subst hτ; exact hrAB)
+        have := (mem_relCochainsInt (A ∩ B) n ω).mp hω _ hmem
+        rwa [kronecker_single, one_mul] at this
+      by_cases hrA' : Set.range (M.toSSetObjEquiv (op (SimplexCategory.mk n)) σ) ⊆ A'
+      · rw [if_pos hrA, if_pos hrA', sub_zero]
+      · rw [if_pos hrA, if_neg hrA', hω0, sub_zero]
+    · have hrA' : ¬ Set.range (M.toSSetObjEquiv (op (SimplexCategory.mk n)) σ) ⊆ A' :=
+        fun h => hrA (h.trans hAA')
+      rw [if_neg hrA, if_neg hrA', sub_self]
+  rw [hA'0, hB'0, add_zero]
+
+/-- **Forward characterization of δ on classes**: if `(z:cochain) = coboundary(indUf U ω) + coboundary(k)`
+with `k ∈ mvUnion(U,V)`, then `δ[ω] = [z]`. (The `[incl z] = [coboundary(indUf U ω)]` `QCohom`-identity.) -/
+theorem relCohomMvConnectingInt_mk_eq (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (n : ℕ)
+    (ω : LinearMap.ker (relCoboundaryIntₗ (U ∩ V) (n + 1)))
+    (z : LinearMap.ker (relCoboundaryIntₗ (U ∪ V) (n + 2)))
+    (k : mvUnionCochainsInt U V (n + 1))
+    (hzk : (z : SingularCochainInt M (n + 2))
+        = coboundary M (n + 1) (indUf U (n + 1) (ω : SingularCochainInt M (n + 1)))
+          + coboundary M (n + 1) (k : SingularCochainInt M (n + 1))) :
+    relCohomMvConnectingInt U V hU hV n (RelativeCohomologyInt.mk (U ∩ V) (n + 1) ω)
+      = RelativeCohomologyInt.mk (U ∪ V) (n + 2) z := by
+  rw [relCohomMvConnectingInt_apply, LinearEquiv.symm_apply_eq, midCohomInt_mk,
+    dualExcisionEquivInt_apply, dualExcisionInt_mk]
+  refine (Submodule.Quotient.eq _).2 ?_
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype, qCoboundaryRangeInt,
+    LinearMap.mem_range]
+  refine ⟨-k, ?_⟩
+  apply Subtype.ext
+  simp only [qCoboundaryIntₗ_coe, NegMemClass.coe_neg, AddSubgroupClass.coe_sub, midCocycleInt_coe,
+    relToQCocycleInt_coe, relToQCochainInt_coe]
+  have hneg : coboundary M (n + 1) (-(k : SingularCochainInt M (n + 1)))
+      = -coboundary M (n + 1) (k : SingularCochainInt M (n + 1)) := map_neg (coboundaryₗ M (n + 1)) _
+  rw [hneg, hzk]; abel
+
+/-- **Converse extraction**: from `δ[ω] = [z]`, recover a `Q`-coboundary witness `k ∈ mvUnion(U,V)` with
+`(z:cochain) = coboundary(indUf U ω) + coboundary(k)`. -/
+theorem exists_mvUnion_of_connecting_mk_eq (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (n : ℕ)
+    (ω : LinearMap.ker (relCoboundaryIntₗ (U ∩ V) (n + 1)))
+    (z : LinearMap.ker (relCoboundaryIntₗ (U ∪ V) (n + 2)))
+    (hδ : relCohomMvConnectingInt U V hU hV n (RelativeCohomologyInt.mk (U ∩ V) (n + 1) ω)
+        = RelativeCohomologyInt.mk (U ∪ V) (n + 2) z) :
+    ∃ k : mvUnionCochainsInt U V (n + 1),
+      (z : SingularCochainInt M (n + 2))
+        = coboundary M (n + 1) (indUf U (n + 1) (ω : SingularCochainInt M (n + 1)))
+          + coboundary M (n + 1) (k : SingularCochainInt M (n + 1)) := by
+  rw [relCohomMvConnectingInt_apply, LinearEquiv.symm_apply_eq, midCohomInt_mk,
+    dualExcisionEquivInt_apply, dualExcisionInt_mk] at hδ
+  have hmem := (Submodule.Quotient.eq _).1 hδ
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype, qCoboundaryRangeInt,
+    LinearMap.mem_range] at hmem
+  obtain ⟨m, hm⟩ := hmem
+  have hmc : coboundary M (n + 1) (m : SingularCochainInt M (n + 1))
+      = coboundary M (n + 1) (indUf U (n + 1) (ω : SingularCochainInt M (n + 1)))
+        - (z : SingularCochainInt M (n + 2)) := by
+    have h := congrArg (fun x : mvUnionCochainsInt U V (n + 2) => (x : SingularCochainInt M (n + 2))) hm
+    simpa only [qCoboundaryIntₗ_coe, AddSubgroupClass.coe_sub, midCocycleInt_coe, relToQCocycleInt_coe,
+      relToQCochainInt_coe] using h
+  refine ⟨-m, ?_⟩
+  have hnegc : coboundary M (n + 1) ((-m : mvUnionCochainsInt U V (n + 1)) : SingularCochainInt M (n + 1))
+      = -coboundary M (n + 1) (m : SingularCochainInt M (n + 1)) := by
+    rw [NegMemClass.coe_neg]; exact map_neg (coboundaryₗ M (n + 1)) _
+  rw [hnegc, hmc]; abel
+
+/-- **Naturality of the relative-cohomology MV connecting map under enlarging compacts** (`A' ⊆ A`,
+`B' ⊆ B`), torsion-safe: `δ_{A',B'} ∘ restrict_∩ = restrict_∪ ∘ δ_{A,B}`. The integral analogue of the
+mod-2 `relCohomMvConnecting_naturality`, but proven CONCRETELY from `δ = dualExcision⁻¹ ∘ midCohom` (NOT the
+perfect Kronecker pairing, which is field-only): extract the `(A,B)` witness `k`, then
+`k' := (indUf A ω − indUf A' ω) + k ∈ mvUnion(A',B')` (via `indUf_sub_mem_mvUnion` +
+`mvUnionCochainsInt_antitone`) is the `(A',B')` witness for the same `z`. -/
+theorem relCohomMvConnecting_naturalityInt (A B A' B' : Set ↑M)
+    (hA : IsOpen A) (hB : IsOpen B) (hA' : IsOpen A') (hB' : IsOpen B')
+    (hAA' : A' ⊆ A) (hBB' : B' ⊆ B) (n : ℕ)
+    (ω : RelativeCohomologyInt (A ∩ B) (n + 1)) :
+    relCohomMvConnectingInt A' B' hA' hB' n
+        (relCohomRestrictInt (Set.inter_subset_inter hAA' hBB') (n + 1) ω)
+      = relCohomRestrictInt (Set.union_subset_union hAA' hBB') (n + 2)
+        (relCohomMvConnectingInt A B hA hB n ω) := by
+  obtain ⟨ω, rfl⟩ := RelativeCohomologyInt.mk_surjective (A ∩ B) (n + 1) ω
+  obtain ⟨z, hz⟩ := RelativeCohomologyInt.mk_surjective (A ∪ B) (n + 2)
+    (relCohomMvConnectingInt A B hA hB n (RelativeCohomologyInt.mk (A ∩ B) (n + 1) ω))
+  obtain ⟨k, hk⟩ := exists_mvUnion_of_connecting_mk_eq A B hA hB n ω z hz.symm
+  rw [relCohomRestrictInt_mk, ← hz, relCohomRestrictInt_mk]
+  -- the `(A',B')` witness: `(indUf A ω − indUf A' ω) + k`
+  have hk'mem : (indUf A (n + 1) (ω : SingularCochainInt M (n + 1))
+        - indUf A' (n + 1) (ω : SingularCochainInt M (n + 1)))
+      + (k : SingularCochainInt M (n + 1)) ∈ mvUnionCochainsInt A' B' (n + 1) :=
+    Submodule.add_mem _
+      (indUf_sub_mem_mvUnion A B A' B' hAA' hBB' (n + 1) _ ω.1.2)
+      (mvUnionCochainsInt_antitone A B A' B' hAA' hBB' (n + 1) k.2)
+  refine relCohomMvConnectingInt_mk_eq A' B' hA' hB' n
+    (relCocycleRestrictInt (Set.inter_subset_inter hAA' hBB') (n + 1) ω)
+    (relCocycleRestrictInt (Set.union_subset_union hAA' hBB') (n + 2) z)
+    ⟨_, hk'mem⟩ ?_
+  rw [relCocycleRestrictInt_coe, relCochainRestrictInt_coe, relCocycleRestrictInt_coe,
+    relCochainRestrictInt_coe, hk]
+  show coboundary M (n + 1) (indUf A (n + 1) (ω : SingularCochainInt M (n + 1)))
+      + coboundary M (n + 1) (k : SingularCochainInt M (n + 1))
+    = coboundaryₗ M (n + 1) (indUf A' (n + 1) (ω : SingularCochainInt M (n + 1)))
+      + coboundaryₗ M (n + 1) ((indUf A (n + 1) (ω : SingularCochainInt M (n + 1))
+          - indUf A' (n + 1) (ω : SingularCochainInt M (n + 1))) + (k : SingularCochainInt M (n + 1)))
+  rw [map_add, map_sub]
+  abel
+
 end SKEFTHawking.SingularRelativeCohomologyMVConnectingInt
