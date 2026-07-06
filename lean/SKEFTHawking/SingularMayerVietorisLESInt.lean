@@ -24,6 +24,7 @@ import SKEFTHawking.SingularSubsetHomologyInt
 import SKEFTHawking.SingularExcisionIsoInt
 import SKEFTHawking.SingularSphereHomologyInt
 import SKEFTHawking.SingularLocalHomologyInt
+import SKEFTHawking.SingularConvexRadialBaseInt
 
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularRelHomologyInt
@@ -113,5 +114,26 @@ noncomputable def mvDeltaInt (A B : Set ↑X) (n : ℕ)
     (hcov : (⋃ U ∈ ({A, B} : Set (Set ↑X)), interior U) = Set.univ) :
     Homology X (n + 1) →ₗ[ℤ] Homology (sub (A ∩ B)) n :=
   (seamHomologyEquivInt A B n).toLinearMap.comp (mvConnectingInt A B n hcov)
+
+/-! ## Naturality bridges for the connecting map (excision Barratt–Whitehead square) -/
+
+/-- The inclusion `A ∩ B ↪ A`, from the `restr A B` (inside `sub B`) representation, as a `ContinuousMap`
+`sub (restr A B) → sub A` (`p.1 ∈ restr A B = Subtype.val ⁻¹' A` gives `p.1.1 ∈ A`). Coefficient-agnostic
+mirror of `SingularMayerVietorisLES.inclRA`. -/
+def inclRAInt (A B : Set ↑X) : C(↥(sub (restr A B)), ↥(sub A)) :=
+  ⟨fun p => ⟨p.1.1, p.2⟩, by fun_prop⟩
+
+/-- **The `Homology.mapInt ↔ homIncl` bridge**: `Homology.mapInt (ambIncl S) = homIncl S` — the LES-side
+functorial pushforward and the pair-LES inclusion-induced map coincide (both descend from `chainIncl` via
+`mapChainInt_ambIncl`). Lets the integral MV exactness reuse the pair-LES `homIncl_connectingInt` etc.
+Integral mirror of `SingularMayerVietorisLES.Homology.map_ambIncl`. -/
+theorem Homology.mapInt_ambIncl (S : Set ↑X) (n : ℕ) :
+    Homology.mapInt (ambIncl S) n = homIncl S n := by
+  refine LinearMap.ext fun x => ?_
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  show Homology.mapInt (ambIncl S) n (Homology.mk (sub S) n z) = homIncl S n (Homology.mk (sub S) n z)
+  rw [Homology.mapInt_mk, homIncl_mk]
+  exact congrArg (Homology.mk X n)
+    (Subtype.ext (by rw [cyclesMapInt_coe, SingularConvexRadialBaseInt.mapChainInt_ambIncl]))
 
 end SKEFTHawking.SingularMayerVietorisLESInt
