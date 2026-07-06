@@ -17,6 +17,7 @@ import Mathlib
 import SKEFTHawking.SingularOpenDualityCycleInt
 import SKEFTHawking.SingularOpenDualityMVConnSquareInt
 import SKEFTHawking.SingularLocalDualityKBotInt
+import SKEFTHawking.SingularRelativeCohomologyRestrictInt
 
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularRelHomologyInt
@@ -25,6 +26,8 @@ open SKEFTHawking.SingularCompactsInOpen
 open SKEFTHawking.SingularOpenDualityInt
 open SKEFTHawking.SingularOpenDualityCycleInt
 open SKEFTHawking.SingularOpenDualityMVConnSquareInt
+open SKEFTHawking.SingularLocalDualityKBotInt
+open SKEFTHawking.SingularRelativeCohomologyRestrictInt
 open SKEFTHawking.SingularRelativeHomologyMod2 (sub)
 
 namespace SKEFTHawking.SingularOpenDualityBotInt
@@ -73,5 +76,27 @@ theorem fundCycleW₀Int_boundary [T2Space ↑X] {k : ℕ} {W : Set ↑X} (hW : 
   rw [fundCycleW₀Int, chainBoundary_castChainInt (a := k + 0) (b := k) rfl rfl]
   exact castChainInt_mem_subspaceChainsInt (a := k + 0) (b := k) rfl
     (fundCycleW_boundary (k := k) (m := 0) hW z₀ hz₀ K)
+
+/-! ## §3. Bottom restriction / cycle compatibility for `relativeDualityK₀Int` (torsion-safe) -/
+
+/-- **Bottom restriction compatibility** (`relativeDualityK₀Int` under `relCohomRestrictInt`). Both sides
+cap the same `z` against the same underlying cochain (`relCocycleRestrictInt` is retype-identity). -/
+theorem relativeDualityK₀Int_restrict_compat {k : ℕ} {K : Set ↑X}
+    (z : SingularChainInt X (k + 1)) {S T : Set ↑X} (h : S ⊆ T)
+    (hzK : z ∈ subspaceChainsInt K (k + 1))
+    (hzS : chainBoundary X k z ∈ subspaceChainsInt S k)
+    (hzT : chainBoundary X k z ∈ subspaceChainsInt T k)
+    (x : RelativeCohomologyInt T (k + 1)) :
+    relativeDualityK₀Int S K k z hzK hzS (relCohomRestrictInt h (k + 1) x)
+      = relativeDualityK₀Int T K k z hzK hzT x := by
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  have hx : (Submodule.Quotient.mk a : RelativeCohomologyInt T (k + 1))
+      = RelativeCohomologyInt.mk T (k + 1) a := rfl
+  rw [hx, relCohomRestrictInt_mk, relativeDualityK₀Int_mk, relativeDualityK₀Int_mk]
+  apply congrArg (Homology.mk (sub K) 0)
+  apply Subtype.ext
+  apply chainIncl_injective K 0
+  rw [chainIncl_pullbackDualityIntₗ₀, chainIncl_pullbackDualityIntₗ₀]
+  rfl
 
 end SKEFTHawking.SingularOpenDualityBotInt
