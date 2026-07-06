@@ -1133,6 +1133,7 @@ import SKEFTHawking.SingularRelativeMVNaturality
 import SKEFTHawking.SingularRelativeMVInt
 import SKEFTHawking.SingularSmallChainsSplitInt
 import SKEFTHawking.AcyclicProjectiveContractionInt
+import SKEFTHawking.SingularKComplexAcyclicInt
 import SKEFTHawking.SingularRelativeMVConnectingInt
 import SKEFTHawking.SingularGoodCompactUnionInt
 import SKEFTHawking.SingularGoodCompactEuclideanInt
