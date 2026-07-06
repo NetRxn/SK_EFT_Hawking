@@ -18,12 +18,16 @@ import Mathlib
 import SKEFTHawking.SingularQCohomologyInt
 import SKEFTHawking.SingularEuclideanCapIsoInt
 import SKEFTHawking.SingularCohomMvMiddleInt
+import SKEFTHawking.SingularKComplexAcyclicInt
+import SKEFTHawking.SingularSmallChainsSplitInt
 
 open SKEFTHawking.SingularHomologyInt SKEFTHawking.SingularCohomologyInt
 open SKEFTHawking.SingularRelHomologyInt
 open SKEFTHawking.SingularEuclideanCapIsoInt
 open SKEFTHawking.SingularRelativeMVInt
 open SKEFTHawking.SingularQCohomologyInt
+open SKEFTHawking.SingularKComplexAcyclicInt
+open SKEFTHawking.SingularSmallChainsSplitInt (free_relChainUnion)
 open SKEFTHawking.SingularCohomMvMiddleInt (exists_lift_cochain)
 
 namespace SKEFTHawking.SingularQCohomologyExcisionInt
@@ -146,5 +150,128 @@ theorem dualExcisionInt_surjective (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen
   rw [map_neg]
   show -coboundary M n H = (g - coboundary M n H) - g
   abel
+
+/-- **The dual excision map is injective** (degrees `≥ 2`): a `(U∪V)`-relative cocycle `z` that becomes a
+`Q`-coboundary (`z = δg` with `g` vanishing only on `mvUnion`) is already a genuine `relCochainsInt(U∪V)`
+coboundary. The class of `g` in `Hom(K)` is a `K`-cocycle (`δg = z` vanishes on `subspaceChains(U∪V) ⊇ K`);
+the K-complex acyclicity `hom_K_cocycle_eq_coboundary` gives `kg = h ∘ dK`; extending `h` to `H` through the
+split retract of `piMapInt`, `g − δH` vanishes on all of `C(U∪V)` and `δ(g − δH) = z`. -/
+theorem dualExcisionInt_injective (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (n : ℕ) :
+    Function.Injective (dualExcisionInt U V (n + 2)) := by
+  classical
+  rw [injective_iff_map_eq_zero]
+  intro zc hzc
+  obtain ⟨z, rfl⟩ := RelativeCohomologyInt.mk_surjective (U ∪ V) (n + 2) zc
+  rw [dualExcisionInt_mk, QCohomologyInt.mk_eq_zero_iff] at hzc
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype, qCoboundaryRangeInt,
+    LinearMap.mem_range] at hzc
+  -- `g : mvUnionCochains(n+1)` with `coboundary g = z` (as absolute cochains)
+  obtain ⟨g, hg⟩ := hzc
+  set gc : SingularCochainInt M (n + 1) := (g : SingularCochainInt M (n + 1)) with hgc
+  have hgz : coboundary M (n + 1) gc = (z : SingularCochainInt M (n + 2)) := by
+    have := congrArg (fun x : mvUnionCochainsInt U V (n + 2) => (x : SingularCochainInt M (n + 2))) hg
+    simpa only [qCoboundaryIntₗ_coe, relToQCocycleInt_coe, relToQCochainInt_coe] using this
+  -- `qg : Q(n+1) → ℤ` descends `⟨g, ·⟩`; `kg = qg ∘ subtype : K(n+1) → ℤ` is a K-cocycle.
+  have hgvan : ∀ c ∈ mvUnionChainsInt U V (n + 1), Finsupp.linearCombination ℤ gc c = 0 := by
+    intro c hc; rw [← kronecker_eq_linearCombination]; exact g.2 c hc
+  set qg : QChainInt U V (n + 1) →ₗ[ℤ] ℤ :=
+    Submodule.liftQ (mvUnionChainsInt U V (n + 1)) (Finsupp.linearCombination ℤ gc) hgvan with hqg
+  have hqg_mk : ∀ c, qg (QChainInt.mk U V (n + 1) c) = kronecker gc c := by
+    intro c; rw [hqg, kronecker_eq_linearCombination]; rfl
+  set kg : ↥(LinearMap.ker (piMapInt U V (n + 1))) →ₗ[ℤ] ℤ :=
+    qg.comp (LinearMap.ker (piMapInt U V (n + 1))).subtype with hkg
+  have hkgcocy : kg.comp (dK U V (n + 1)) = 0 := by
+    apply LinearMap.ext; intro k'
+    rw [LinearMap.comp_apply, LinearMap.zero_apply, hkg, LinearMap.comp_apply,
+      Submodule.subtype_apply, dK_coe]
+    obtain ⟨c', hc'⟩ := Submodule.Quotient.mk_surjective _ (k' : QChainInt U V (n + 2))
+    rw [show (k' : QChainInt U V (n + 2)) = QChainInt.mk U V (n + 2) c' from hc'.symm,
+      qBoundaryInt_mk, hqg_mk, ← kronecker_coboundary_chainBoundary, hgz]
+    -- `c'` is a subspace-`(U∪V)` chain (since `k' ∈ ker piMapInt`), and `z` vanishes there.
+    have hc'mem : (k' : QChainInt U V (n + 2)) ∈ LinearMap.ker (piMapInt U V (n + 2)) := k'.2
+    rw [show (k' : QChainInt U V (n + 2)) = QChainInt.mk U V (n + 2) c' from hc'.symm,
+      LinearMap.mem_ker, piMapInt_mk, RelativeChainInt.mk_eq_zero_iff] at hc'mem
+    exact z.1.2 c' hc'mem
+  obtain ⟨h, hh⟩ := hom_K_cocycle_eq_coboundary U V hU hV n kg hkgcocy
+  -- extend `h` to `H : Cⁿ` through the split retract of `piMapInt` (as in `exists_lift_cochain`).
+  haveI : Module.Free ℤ (RelativeChainInt (U ∪ V) n) := free_relChainUnion U V n
+  obtain ⟨sec, hsec⟩ := LinearMap.exists_rightInverse_of_surjective (piMapInt U V n)
+    (LinearMap.range_eq_top.mpr (piMapInt_surjective U V n))
+  have hretr_mem : ∀ x, (LinearMap.id - sec.comp (piMapInt U V n) :
+      QChainInt U V n →ₗ[ℤ] QChainInt U V n) x ∈ LinearMap.ker (piMapInt U V n) := by
+    intro x
+    rw [LinearMap.mem_ker]
+    simp only [LinearMap.sub_apply, LinearMap.id_coe, id_eq, LinearMap.comp_apply, map_sub]
+    have hgy : piMapInt U V n (sec (piMapInt U V n x)) = piMapInt U V n x := by
+      simpa using LinearMap.congr_fun hsec (piMapInt U V n x)
+    rw [hgy, sub_self]
+  set retr : QChainInt U V n →ₗ[ℤ] ↥(LinearMap.ker (piMapInt U V n)) :=
+    (LinearMap.id - sec.comp (piMapInt U V n)).codRestrict _ hretr_mem with hretr
+  have hretr_sub : ∀ k : ↥(LinearMap.ker (piMapInt U V n)), retr (k : QChainInt U V n) = k := by
+    intro k
+    apply Subtype.ext
+    have hk0 : piMapInt U V n (k : QChainInt U V n) = 0 := LinearMap.mem_ker.mp k.2
+    simp only [hretr, LinearMap.codRestrict_apply, LinearMap.sub_apply, LinearMap.id_coe, id_eq,
+      LinearMap.comp_apply, hk0, map_zero, sub_zero]
+  set H : SingularCochainInt M n := fun σ => h (retr (QChainInt.mk U V n (Finsupp.single σ 1))) with hH
+  have hHc : ∀ c : SingularChainInt M n, kronecker H c = h (retr (QChainInt.mk U V n c)) := by
+    have hlin : Finsupp.linearCombination ℤ H
+        = (h ∘ₗ retr ∘ₗ (mvUnionChainsInt U V n).mkQ) := by
+      apply Finsupp.lhom_ext'
+      intro σ
+      apply LinearMap.ext_ring
+      simp only [LinearMap.comp_apply, Finsupp.lsingle_apply, Finsupp.linearCombination_single,
+        one_smul, hH]
+      rfl
+    intro c
+    rw [kronecker_eq_linearCombination, hlin]
+    rfl
+  -- `g − δH` vanishes on `C(U∪V)` (degree `n+1`), so it is a genuine `(U∪V)`-relative cochain.
+  have hwmem : gc - coboundary M n H ∈ relCochainsInt (U ∪ V) (n + 1) := by
+    intro c hc
+    have hmem : QChainInt.mk U V (n + 1) c ∈ LinearMap.ker (piMapInt U V (n + 1)) := by
+      rw [LinearMap.mem_ker, piMapInt_mk, RelativeChainInt.mk_eq_zero_iff]; exact hc
+    set k_c : ↥(LinearMap.ker (piMapInt U V (n + 1))) := ⟨QChainInt.mk U V (n + 1) c, hmem⟩ with hkc
+    have hgcval : kronecker gc c = h (dK U V n k_c) := by
+      have hcf := LinearMap.congr_fun hh k_c
+      rw [hkg, LinearMap.comp_apply, Submodule.subtype_apply, LinearMap.comp_apply] at hcf
+      rw [show (k_c : QChainInt U V (n + 1)) = QChainInt.mk U V (n + 1) c from rfl, hqg_mk] at hcf
+      exact hcf
+    have hbdry : (dK U V n k_c : QChainInt U V n) = QChainInt.mk U V n (chainBoundary M n c) := by
+      rw [dK_coe]; rfl
+    have hdHval : kronecker (coboundary M n H) c = h (dK U V n k_c) := by
+      rw [kronecker_coboundary_chainBoundary, hHc]
+      congr 1
+      rw [← hbdry, hretr_sub]
+    have hsub : kronecker (gc - coboundary M n H) c
+        = kronecker gc c - kronecker (coboundary M n H) c := by
+      rw [sub_eq_add_neg, ← neg_one_zsmul (coboundary M n H), kronecker_add_left,
+        kronecker_smul_left, neg_one_zsmul, ← sub_eq_add_neg]
+    rw [hsub, hgcval, hdHval, sub_self]
+  -- `z = δ(g − δH)` with `g − δH ∈ relCochainsInt(U∪V)`, so `[z] = 0`.
+  refine (RelativeCohomologyInt.mk_eq_zero_iff (U ∪ V) (n + 2) z).2 ?_
+  simp only [relCoboundaryRangeInt, LinearMap.mem_range]
+  refine ⟨⟨gc - coboundary M n H, hwmem⟩, ?_⟩
+  apply Subtype.ext
+  show coboundary M (n + 1) (gc - coboundary M n H) = (z : SingularCochainInt M (n + 2))
+  rw [show coboundary M (n + 1) (gc - coboundary M n H)
+      = coboundaryₗ M (n + 1) (gc - coboundary M n H) from rfl, map_sub]
+  show coboundary M (n + 1) gc - coboundary M (n + 1) (coboundary M n H)
+      = (z : SingularCochainInt M (n + 2))
+  rw [hgz, coboundary_comp_coboundary, sub_zero]
+
+/-- **The dual excision isomorphism** `RelativeCohomologyInt(U∪V) (n+2) ≃ₗ QCohomologyInt U V (n+2)` — the
+cohomology dual of the small-chains excision `iotaEquivInt`, bijective by `dualExcisionInt_surjective`
+(degree `≥ 1`) + `dualExcisionInt_injective` (degree `≥ 2`). The connecting map of the relative-cohomology
+Mayer–Vietoris LES factors through `(dualExcisionEquivInt).symm`. -/
+noncomputable def dualExcisionEquivInt (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (n : ℕ) :
+    RelativeCohomologyInt (U ∪ V) (n + 2) ≃ₗ[ℤ] QCohomologyInt U V (n + 2) :=
+  LinearEquiv.ofBijective (dualExcisionInt U V (n + 2))
+    ⟨dualExcisionInt_injective U V hU hV n, dualExcisionInt_surjective U V hU hV (n + 1)⟩
+
+@[simp] theorem dualExcisionEquivInt_apply (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (n : ℕ)
+    (x : RelativeCohomologyInt (U ∪ V) (n + 2)) :
+    dualExcisionEquivInt U V hU hV n x = dualExcisionInt U V (n + 2) x :=
+  rfl
 
 end SKEFTHawking.SingularQCohomologyExcisionInt
