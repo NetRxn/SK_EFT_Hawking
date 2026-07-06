@@ -648,6 +648,7 @@ import SKEFTHawking.LatticeSigBlock
 import SKEFTHawking.LatticePrimitive
 import SKEFTHawking.SplitHyperbolic
 import SKEFTHawking.VanDerBlijReduction
+import SKEFTHawking.EvenUnimodularHyperbolic
 import SKEFTHawking.ThetaModularity
 import SKEFTHawking.HasseMinkowskiLocal
 import SKEFTHawking.LatticeContent
