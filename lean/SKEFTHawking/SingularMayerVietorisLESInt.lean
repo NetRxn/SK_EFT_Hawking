@@ -33,6 +33,7 @@ open SKEFTHawking.SingularFunctorialityInt
 open SKEFTHawking.SingularExcisionIso (restr)
 open SKEFTHawking.SingularExcisionIsoInt
 open SKEFTHawking.SingularSphereHomologyInt (Homology.mapInt_bijective_of_comp_id_all)
+open SKEFTHawking.SingularConvexRadialBaseInt (mapChainInt_ambIncl)
 open SKEFTHawking.SingularMayerVietorisLES
   (ambIncl subIncl ambIncl_comp_subIncl_left ambIncl_comp_subIncl_right seamHomeo)
 
@@ -134,6 +135,32 @@ theorem Homology.mapInt_ambIncl (S : Set ↑X) (n : ℕ) :
   show Homology.mapInt (ambIncl S) n (Homology.mk (sub S) n z) = homIncl S n (Homology.mk (sub S) n z)
   rw [Homology.mapInt_mk, homIncl_mk]
   exact congrArg (Homology.mk X n)
-    (Subtype.ext (by rw [cyclesMapInt_coe, SingularConvexRadialBaseInt.mapChainInt_ambIncl]))
+    (Subtype.ext (by rw [cyclesMapInt_coe, mapChainInt_ambIncl]))
+
+/-- **Naturality of the connecting map under excision** (the integral Barratt–Whitehead square): the
+inclusion `A ∩ B ↪ A` after the `(B, A∩B)` connecting map equals the `(X, A)` connecting map after excision.
+The crux of integral MV exactness at `Hₙ(A∩B)` and `Hₙ(X)`. Integral mirror of
+`SingularMayerVietorisLES.inclRA_connecting`. -/
+theorem inclRA_connectingInt (A B : Set ↑X) (n : ℕ) (y : RelHomologyInt (restr A B) (n + 1)) :
+    Homology.mapInt (inclRAInt A B) n (connectingInt (restr A B) n y)
+      = connectingInt A n (excisionMapInt A B (n + 1) y) := by
+  obtain ⟨c, rfl⟩ := relCycleToHom_surjective (restr A B) n y
+  rw [connectingInt_relCycleToHom]
+  have hc' : chainBoundary X n (chainIncl B (n + 1) (c : SingularChainInt (sub B) (n + 1)))
+      ∈ subspaceChainsInt A n := by
+    rw [← chainIncl_chainBoundary]
+    exact (chainIncl_mem_subspaceChainsInt_iff A B _).2 (Submodule.mem_comap.mp c.2)
+  have hexc : excisionMapInt A B (n + 1) (relCycleToHom (restr A B) n c)
+      = relCycleToHom A n ⟨chainIncl B (n + 1) c, hc'⟩ := by
+    rw [relCycleToHom_apply, excisionMapInt_mk, relCycleToHom_apply]
+    exact congrArg (RelHomologyInt.mk A (n + 1)) (Subtype.ext (relChainInclInt_mk A B (n + 1) c))
+  rw [hexc, connectingInt_relCycleToHom, connectingLift_apply, connectingLift_apply, Homology.mapInt_mk]
+  refine congrArg (Homology.mk (sub A) n) (Subtype.ext ?_)
+  rw [cyclesMapInt_coe]
+  apply chainIncl_injective A n
+  rw [chainIncl_boundaryExtract, ← chainIncl_chainBoundary,
+    ← chainIncl_boundaryExtract (restr A B) n c, ← mapChainInt_ambIncl A, ← mapChainInt_ambIncl B,
+    ← mapChainInt_ambIncl (restr A B), ← mapChainInt_comp, ← mapChainInt_comp]
+  congr 1
 
 end SKEFTHawking.SingularMayerVietorisLESInt
