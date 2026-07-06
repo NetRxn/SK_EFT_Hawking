@@ -1135,6 +1135,7 @@ import SKEFTHawking.SingularSmallChainsSplitInt
 import SKEFTHawking.AcyclicProjectiveContractionInt
 import SKEFTHawking.SingularKComplexAcyclicInt
 import SKEFTHawking.SingularCohomMvMiddleInt
+import SKEFTHawking.SingularCapChainInclInt
 import SKEFTHawking.SingularRelativeMVConnectingInt
 import SKEFTHawking.SingularGoodCompactUnionInt
 import SKEFTHawking.SingularGoodCompactEuclideanInt
