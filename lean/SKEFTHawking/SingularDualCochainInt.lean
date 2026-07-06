@@ -56,6 +56,23 @@ theorem dualCochainInt_chainBoundary {n : ℕ} (f : SingularCochainInt X n) :
   funext σ
   rw [dualCochainInt, ← kronecker_coboundary_chainBoundary, kronecker_single, one_mul]
 
+/-- **The transpose is additive in the cochain**: `dualCochainInt T (f + g) = dualCochainInt T f
++ dualCochainInt T g`. -/
+theorem dualCochainInt_add {n m : ℕ}
+    (T : SingularChainInt X n →ₗ[ℤ] SingularChainInt X m) (f g : SingularCochainInt X m) :
+    dualCochainInt T (f + g) = dualCochainInt T f + dualCochainInt T g := by
+  funext σ
+  simp only [dualCochainInt, Pi.add_apply, kronecker_add_left]
+
+/-- **The transpose is CONTRAVARIANT-functorial**: `dualCochainInt (T ∘ₗ S) = dualCochainInt S ∘
+dualCochainInt T` (dualising a composite reverses order). The tool that dualises a composite chain map
+(e.g. an iterated-subdivision / `ρ` chain map) one factor at a time. -/
+theorem dualCochainInt_comp {a b c : ℕ} (S : SingularChainInt X a →ₗ[ℤ] SingularChainInt X b)
+    (T : SingularChainInt X b →ₗ[ℤ] SingularChainInt X c) (f : SingularCochainInt X c) :
+    dualCochainInt (T ∘ₗ S) f = dualCochainInt S (dualCochainInt T f) := by
+  funext σ
+  rw [dualCochainInt, LinearMap.comp_apply, dualCochainInt, kronecker_dualCochainInt]
+
 /-- The **iterated subdivision homotopy `Dₘ` bundled as a `LinearMap`** — `∑_{i<m} Sdⁱ ∘ D`, a finite sum of
 composites of linear maps (`singularDInt` is linear, `singularSdInt` powers are `Module.End`). Agrees with
 the on-main function `iterHomotopyInt` (`iterHomotopyIntₗ_apply`), so `dualCochainInt` can transpose it. -/
