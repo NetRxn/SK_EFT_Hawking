@@ -20,6 +20,8 @@ import Mathlib
 import SKEFTHawking.SingularRelativeCohomologyRestrictInt
 import SKEFTHawking.SingularRelativeCochainMVSurjInt
 import SKEFTHawking.SingularExcisionIsoInt
+import SKEFTHawking.SingularQCohomologyInt
+import SKEFTHawking.SingularQCohomologyExcisionInt
 
 open CategoryTheory Opposite
 open scoped Classical
@@ -30,6 +32,9 @@ open SKEFTHawking.SingularEuclideanCapIsoInt
 open SKEFTHawking.SingularExcisionIsoInt
 open SKEFTHawking.SingularRelativeCohomologyRestrictInt
 open SKEFTHawking.SingularRelativeCochainMVSurjInt
+open SKEFTHawking.SingularRelativeMVInt
+open SKEFTHawking.SingularQCohomologyInt
+open SKEFTHawking.SingularQCohomologyExcisionInt
 
 namespace SKEFTHawking.SingularRelativeCohomologyMVConnectingInt
 
@@ -175,5 +180,86 @@ theorem relCochainMvSumInt_section (U V : Set ↑M) (n : ℕ) (g : relCochainsIn
     relCochainMvSumInt_apply, hfst, hsnd, AddSubgroupClass.coe_sub, relCochainRestrictInt_coe,
     relCochainRestrictInt_coe]
   exact sub_sub_cancel _ _
+
+/-! ## §3. The middle map `ω ↦ [coboundary(indUf ω)] ∈ QCohom` and the connecting map δ -/
+
+/-- `coboundary(indUf ω) ∈ relCochainsInt(U)` — `indUf ω` is a `U`-relative cochain, `δ` preserves. -/
+theorem coboundary_indUf_mem_U (U : Set ↑M) (n : ℕ) (ω : SingularCochainInt M n) :
+    coboundary M n (indUf U n ω) ∈ relCochainsInt U (n + 1) :=
+  coboundary_mem_relCochainsInt U n (indUf U n ω) (indUf_mem U n ω)
+
+/-- `coboundary(indUf ω) ∈ relCochainsInt(V)` for `ω` a cocycle: `= coboundary(indUf ω − ω)` (since `δω=0`)
+and `indUf ω − ω` is a `V`-relative cochain (`indVf_mem`). -/
+theorem coboundary_indUf_mem_V (U V : Set ↑M) (n : ℕ) (ω : relCochainsInt (U ∩ V) n)
+    (hω : coboundary M n (ω : SingularCochainInt M n) = 0) :
+    coboundary M n (indUf U n (ω : SingularCochainInt M n)) ∈ relCochainsInt V (n + 1) := by
+  have hval : coboundary M n (indUf U n (ω : SingularCochainInt M n))
+      = coboundary M n (indUf U n (ω : SingularCochainInt M n) - (ω : SingularCochainInt M n)) := by
+    show coboundaryₗ M n (indUf U n (ω : SingularCochainInt M n))
+        = coboundaryₗ M n (indUf U n (ω : SingularCochainInt M n) - (ω : SingularCochainInt M n))
+    rw [map_sub]
+    show coboundary M n (indUf U n (ω : SingularCochainInt M n))
+        = coboundary M n (indUf U n (ω : SingularCochainInt M n)) - coboundary M n (ω : SingularCochainInt M n)
+    rw [hω, sub_zero]
+  rw [hval]
+  exact coboundary_mem_relCochainsInt V n _ (indVf_mem U V n ω)
+
+/-- `coboundary(indUf ω) ∈ mvUnionCochains` for `ω` a cocycle (vanishes on `C(U)` and `C(V)`). -/
+theorem coboundary_indUf_mem_mvUnion (U V : Set ↑M) (n : ℕ) (ω : relCochainsInt (U ∩ V) n)
+    (hω : coboundary M n (ω : SingularCochainInt M n) = 0) :
+    coboundary M n (indUf U n (ω : SingularCochainInt M n)) ∈ mvUnionCochainsInt U V (n + 1) := by
+  rw [mem_mvUnionCochainsInt]
+  intro c hc
+  rw [mvUnionChainsInt, Submodule.add_eq_sup, Submodule.mem_sup] at hc
+  obtain ⟨cU, hcU, cV, hcV, rfl⟩ := hc
+  rw [kronecker_add_right, coboundary_indUf_mem_U U n (ω : SingularCochainInt M n) cU hcU,
+    coboundary_indUf_mem_V U V n ω hω cV hcV, add_zero]
+
+/-- The indicator `U`-part as a `LinearMap`. -/
+noncomputable def indUfₗ (U : Set ↑M) (n : ℕ) : SingularCochainInt M n →ₗ[ℤ] SingularCochainInt M n where
+  toFun := indUf U n
+  map_add' := indUf_add U n
+  map_smul' := indUf_smul U n
+
+/-- The raw middle cochain `ω ↦ coboundary(indUf ω)` on cocycles (a plain ℤ-linear map). -/
+noncomputable def midCochainRawInt (U V : Set ↑M) (n : ℕ) :
+    LinearMap.ker (relCoboundaryIntₗ (U ∩ V) (n + 1)) →ₗ[ℤ] SingularCochainInt M (n + 2) :=
+  (coboundaryₗ M (n + 1)).comp ((indUfₗ U (n + 1)).comp
+    ((relCochainsInt (U ∩ V) (n + 1)).subtype.comp
+      (LinearMap.ker (relCoboundaryIntₗ (U ∩ V) (n + 1))).subtype))
+
+theorem midCochainRawInt_apply (U V : Set ↑M) (n : ℕ)
+    (ω : LinearMap.ker (relCoboundaryIntₗ (U ∩ V) (n + 1))) :
+    midCochainRawInt U V n ω
+      = coboundary M (n + 1) (indUf U (n + 1) (ω : SingularCochainInt M (n + 1))) :=
+  rfl
+
+theorem midCochainRawInt_mem (U V : Set ↑M) (n : ℕ)
+    (ω : LinearMap.ker (relCoboundaryIntₗ (U ∩ V) (n + 1))) :
+    midCochainRawInt U V n ω ∈ mvUnionCochainsInt U V (n + 2) := by
+  rw [midCochainRawInt_apply]
+  refine coboundary_indUf_mem_mvUnion U V (n + 1) ω.1 ?_
+  have h := ω.2
+  rw [LinearMap.mem_ker] at h
+  have h2 := congrArg (fun x : relCochainsInt (U ∩ V) (n + 2) => (x : SingularCochainInt M (n + 2))) h
+  simp only [relCoboundaryIntₗ_coe, ZeroMemClass.coe_zero] at h2
+  exact h2
+
+/-- The middle map on cocycles `ω ↦ ⟨coboundary(indUf ω), Q-cocycle⟩ : ker δ_{U∩V} → ker δ_Q`. -/
+noncomputable def midCocycleInt (U V : Set ↑M) (n : ℕ) :
+    LinearMap.ker (relCoboundaryIntₗ (U ∩ V) (n + 1)) →ₗ[ℤ]
+      LinearMap.ker (qCoboundaryIntₗ U V (n + 2)) :=
+  ((midCochainRawInt U V n).codRestrict (mvUnionCochainsInt U V (n + 2))
+    (midCochainRawInt_mem U V n)).codRestrict (LinearMap.ker (qCoboundaryIntₗ U V (n + 2))) (fun ω => by
+      rw [LinearMap.mem_ker]
+      apply Subtype.ext
+      show coboundary M (n + 2) (midCochainRawInt U V n ω) = 0
+      rw [midCochainRawInt_apply, coboundary_comp_coboundary])
+
+@[simp] theorem midCocycleInt_coe (U V : Set ↑M) (n : ℕ)
+    (ω : LinearMap.ker (relCoboundaryIntₗ (U ∩ V) (n + 1))) :
+    ((midCocycleInt U V n ω : mvUnionCochainsInt U V (n + 2)) : SingularCochainInt M (n + 2))
+      = coboundary M (n + 1) (indUf U (n + 1) (ω : SingularCochainInt M (n + 1))) :=
+  rfl
 
 end SKEFTHawking.SingularRelativeCohomologyMVConnectingInt
