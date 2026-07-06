@@ -1138,6 +1138,7 @@ import SKEFTHawking.SingularCohomMvMiddleInt
 import SKEFTHawking.SingularCapChainInclInt
 import SKEFTHawking.SingularOpenDualityNatInt
 import SKEFTHawking.SingularOpenDualityMVSquareInt
+import SKEFTHawking.SingularMayerVietorisLESInt
 import SKEFTHawking.SingularRelativeMVConnectingInt
 import SKEFTHawking.SingularGoodCompactUnionInt
 import SKEFTHawking.SingularGoodCompactEuclideanInt
