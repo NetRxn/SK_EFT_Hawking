@@ -262,4 +262,75 @@ noncomputable def midCocycleInt (U V : Set ↑M) (n : ℕ) :
       = coboundary M (n + 1) (indUf U (n + 1) (ω : SingularCochainInt M (n + 1))) :=
   rfl
 
+/-- **The snake well-definedness** (`midCocycleInt` sends coboundaries to Q-coboundaries): if `ω.1 = δτ`
+then `coboundary(indUf(δτ)) = qCoboundary(w)` with `w := indUf(δτ) − δ(indUf τ) ∈ relC(U) ∩ relC(V) =
+mvUnion` (the `relC(V)` leg uses `w = (indUf(δτ)−δτ) − δ(indUf τ − τ)` + `δτ = coboundary τ`). -/
+theorem midCocycleInt_submoduleOf_le (U V : Set ↑M) (n : ℕ) :
+    (relCoboundaryRangeInt (U ∩ V) (n + 1)).submoduleOf
+        (LinearMap.ker (relCoboundaryIntₗ (U ∩ V) (n + 1))) ≤
+      Submodule.comap (midCocycleInt U V n)
+        ((qCoboundaryRangeInt U V (n + 2)).submoduleOf
+          (LinearMap.ker (qCoboundaryIntₗ U V (n + 2)))) := by
+  intro ω hω
+  rw [Submodule.mem_comap]
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype] at hω ⊢
+  rw [show relCoboundaryRangeInt (U ∩ V) (n + 1) = LinearMap.range (relCoboundaryIntₗ (U ∩ V) n) from rfl,
+    LinearMap.mem_range] at hω
+  obtain ⟨τ, hτ⟩ := hω
+  have hτcob : coboundary M n (τ : SingularCochainInt M n) = (ω : SingularCochainInt M (n + 1)) := by
+    have h := congrArg (fun x : relCochainsInt (U ∩ V) (n + 1) => (x : SingularCochainInt M (n + 1))) hτ
+    simpa only [relCoboundaryIntₗ_coe] using h
+  set w : SingularCochainInt M (n + 1) :=
+    indUf U (n + 1) (ω : SingularCochainInt M (n + 1))
+      - coboundary M n (indUf U n (τ : SingularCochainInt M n)) with hw
+  have hwU : w ∈ relCochainsInt U (n + 1) :=
+    Submodule.sub_mem _ (indUf_mem U (n + 1) _) (coboundary_indUf_mem_U U n _)
+  have hwV : w ∈ relCochainsInt V (n + 1) := by
+    have hid : w = (indUf U (n + 1) (ω : SingularCochainInt M (n + 1)) - (ω : SingularCochainInt M (n + 1)))
+        - coboundary M n (indUf U n (τ : SingularCochainInt M n) - (τ : SingularCochainInt M n)) := by
+      have hsub : coboundary M n (indUf U n (τ : SingularCochainInt M n) - (τ : SingularCochainInt M n))
+          = coboundary M n (indUf U n (τ : SingularCochainInt M n))
+            - coboundary M n (τ : SingularCochainInt M n) := by
+        show coboundaryₗ M n (indUf U n (τ : SingularCochainInt M n) - (τ : SingularCochainInt M n))
+            = coboundaryₗ M n (indUf U n (τ : SingularCochainInt M n)) - coboundaryₗ M n (τ : SingularCochainInt M n)
+        exact map_sub _ _ _
+      rw [hw, hsub, hτcob]; abel
+    rw [hid]
+    exact Submodule.sub_mem _ (indVf_mem U V (n + 1) ω)
+      (coboundary_mem_relCochainsInt V n _ (indVf_mem U V n τ))
+  have hwmv : w ∈ mvUnionCochainsInt U V (n + 1) := by
+    rw [mem_mvUnionCochainsInt]
+    intro c hc
+    rw [mvUnionChainsInt, Submodule.add_eq_sup, Submodule.mem_sup] at hc
+    obtain ⟨cU, hcU, cV, hcV, rfl⟩ := hc
+    rw [kronecker_add_right, hwU cU hcU, hwV cV hcV, add_zero]
+  rw [show qCoboundaryRangeInt U V (n + 2) = LinearMap.range (qCoboundaryIntₗ U V (n + 1)) from rfl,
+    LinearMap.mem_range]
+  refine ⟨⟨w, hwmv⟩, ?_⟩
+  apply Subtype.ext
+  rw [qCoboundaryIntₗ_coe, midCocycleInt_coe]
+  show coboundary M (n + 1) w = coboundary M (n + 1) (indUf U (n + 1) (ω : SingularCochainInt M (n + 1)))
+  rw [hw]
+  show coboundaryₗ M (n + 1) (indUf U (n + 1) (ω : SingularCochainInt M (n + 1))
+        - coboundary M n (indUf U n (τ : SingularCochainInt M n)))
+      = coboundary M (n + 1) (indUf U (n + 1) (ω : SingularCochainInt M (n + 1)))
+  rw [map_sub]
+  show coboundary M (n + 1) (indUf U (n + 1) (ω : SingularCochainInt M (n + 1)))
+        - coboundary M (n + 1) (coboundary M n (indUf U n (τ : SingularCochainInt M n)))
+      = coboundary M (n + 1) (indUf U (n + 1) (ω : SingularCochainInt M (n + 1)))
+  rw [coboundary_comp_coboundary, sub_zero]
+
+/-- The snake middle on cohomology `RelCohom(U∩V)(n+1) →ₗ QCohom(n+2)` (descends `midCocycleInt`). -/
+noncomputable def midCohomInt (U V : Set ↑M) (n : ℕ) :
+    RelativeCohomologyInt (U ∩ V) (n + 1) →ₗ[ℤ] QCohomologyInt U V (n + 2) :=
+  Submodule.mapQ _ _ (midCocycleInt U V n) (midCocycleInt_submoduleOf_le U V n)
+
+/-- **The relative cohomology Mayer–Vietoris connecting map** `δ : Hᵏ(M|U∩V;ℤ) →ₗ Hᵏ⁺¹(M|U∪V;ℤ)`
+(`k = n+1`), torsion-safe: the snake middle `midCohomInt` (into `QCohom`) followed by the **inverse of the
+dual excision iso** `dualExcisionEquivInt`. This closes the top row of the integral Poincaré-duality
+`5`-lemma without the field-only perfect Kronecker pairing. -/
+noncomputable def relCohomMvConnectingInt (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen V) (n : ℕ) :
+    RelativeCohomologyInt (U ∩ V) (n + 1) →ₗ[ℤ] RelativeCohomologyInt (U ∪ V) (n + 2) :=
+  (dualExcisionEquivInt U V hU hV n).symm.toLinearMap.comp (midCohomInt U V n)
+
 end SKEFTHawking.SingularRelativeCohomologyMVConnectingInt
