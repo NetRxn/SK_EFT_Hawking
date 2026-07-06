@@ -19,9 +19,15 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_deci
 import Mathlib
 import SKEFTHawking.SingularRelativeCohomologyRestrictInt
 import SKEFTHawking.SingularRelativeCochainMVSurjInt
+import SKEFTHawking.SingularExcisionIsoInt
 
+open CategoryTheory Opposite
+open scoped Classical
+open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularCohomologyInt
+open SKEFTHawking.SingularRelHomologyInt
 open SKEFTHawking.SingularEuclideanCapIsoInt
+open SKEFTHawking.SingularExcisionIsoInt
 open SKEFTHawking.SingularRelativeCohomologyRestrictInt
 open SKEFTHawking.SingularRelativeCochainMVSurjInt
 
@@ -85,5 +91,89 @@ theorem relCochainMvSumInt_relCochainMvDiagInt (U V : Set ↑M) (n : ℕ)
     AddSubgroupClass.coe_sub]
   simp only [relCochainRestrictInt_coe]
   rw [sub_self]
+
+/-! ## §2. The linear indicator section of `Σ` (the split feeding the connecting-map snake) -/
+
+/-- The **indicator `U`-part** of a cochain: `σ ↦ (if σ's image ⊆ U then 0 else g σ)`. Linear in `g`, always a
+`U`-relative cochain; the `U`-component of the linear section of `relCochainMvSumInt`. -/
+noncomputable def indUf (U : Set ↑M) (n : ℕ) (g : SingularCochainInt M n) : SingularCochainInt M n :=
+  fun σ => if Set.range (M.toSSetObjEquiv (op (SimplexCategory.mk n)) σ) ⊆ U then 0 else g σ
+
+theorem indUf_apply (U : Set ↑M) (n : ℕ) (g : SingularCochainInt M n)
+    (σ : (TopCat.toSSet.obj M).obj (op (SimplexCategory.mk n))) :
+    indUf U n g σ = if Set.range (M.toSSetObjEquiv (op (SimplexCategory.mk n)) σ) ⊆ U then 0 else g σ :=
+  rfl
+
+theorem indUf_add (U : Set ↑M) (n : ℕ) (f g : SingularCochainInt M n) :
+    indUf U n (f + g) = indUf U n f + indUf U n g := by
+  funext σ; simp only [indUf_apply, Pi.add_apply]; split_ifs <;> ring
+
+theorem indUf_smul (U : Set ↑M) (n : ℕ) (s : ℤ) (g : SingularCochainInt M n) :
+    indUf U n (s • g) = s • indUf U n g := by
+  funext σ; simp only [indUf_apply, Pi.smul_apply]; split_ifs <;> simp
+
+theorem indUf_mem (U : Set ↑M) (n : ℕ) (g : SingularCochainInt M n) :
+    indUf U n g ∈ relCochainsInt U n := by
+  rw [mem_relCochainsInt]
+  intro c hc
+  refine kronecker_eq_zero_of_support _ _ (fun σ hσ => ?_)
+  rw [indUf_apply, if_pos (range_of_mem_subspaceChainsInt hc hσ)]
+
+theorem indVf_mem (U V : Set ↑M) (n : ℕ) (g : relCochainsInt (U ∩ V) n) :
+    indUf U n (g : SingularCochainInt M n) - (g : SingularCochainInt M n) ∈ relCochainsInt V n := by
+  rw [mem_relCochainsInt]
+  intro c hc
+  refine kronecker_eq_zero_of_support _ _ (fun σ hσ => ?_)
+  have hVσ := range_of_mem_subspaceChainsInt hc hσ
+  simp only [Pi.sub_apply, indUf_apply]
+  by_cases hPσ : Set.range (M.toSSetObjEquiv (op (SimplexCategory.mk n)) σ) ⊆ U
+  · have hUV : Finsupp.single σ (1 : ℤ) ∈ subspaceChainsInt (U ∩ V) n :=
+      mem_subspaceChainsInt_of_support (fun τ hτ => by
+        rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hτ
+        subst hτ; exact Set.subset_inter hPσ hVσ)
+    have hg0 : (g : SingularCochainInt M n) σ = 0 := by
+      have := g.2 _ hUV; rwa [kronecker_single, one_mul] at this
+    rw [if_pos hPσ, hg0, sub_zero]
+  · rw [if_neg hPσ, sub_self]
+
+/-- **The linear indicator section** `relCochainsInt(U∩V) n →ₗ relCochainsInt(U) n × relCochainsInt(V) n` of
+`relCochainMvSumInt`: `g ↦ (indUf g, indUf g − g)`. Linear (the indicator `indUf` is linear in `g`) and a
+genuine section: `relCochainMvSumInt ∘ section = id`. -/
+noncomputable def relCochainMvSectionInt (U V : Set ↑M) (n : ℕ) :
+    relCochainsInt (U ∩ V) n →ₗ[ℤ] relCochainsInt U n × relCochainsInt V n where
+  toFun g := (⟨indUf U n g, indUf_mem U n g⟩,
+    ⟨indUf U n g - (g : SingularCochainInt M n), indVf_mem U V n g⟩)
+  map_add' g₁ g₂ := by
+    refine Prod.ext (Subtype.ext ?_) (Subtype.ext ?_)
+    · show indUf U n ((g₁ + g₂ : relCochainsInt (U ∩ V) n) : SingularCochainInt M n)
+          = indUf U n (g₁ : SingularCochainInt M n) + indUf U n (g₂ : SingularCochainInt M n)
+      rw [Submodule.coe_add, indUf_add]
+    · show indUf U n ((g₁ + g₂ : relCochainsInt (U ∩ V) n) : SingularCochainInt M n)
+            - ((g₁ + g₂ : relCochainsInt (U ∩ V) n) : SingularCochainInt M n)
+          = (indUf U n (g₁ : SingularCochainInt M n) - (g₁ : SingularCochainInt M n))
+            + (indUf U n (g₂ : SingularCochainInt M n) - (g₂ : SingularCochainInt M n))
+      rw [Submodule.coe_add, indUf_add]; abel
+  map_smul' s g := by
+    refine Prod.ext (Subtype.ext ?_) (Subtype.ext ?_)
+    · show indUf U n ((s • g : relCochainsInt (U ∩ V) n) : SingularCochainInt M n)
+          = s • indUf U n (g : SingularCochainInt M n)
+      rw [SetLike.val_smul, indUf_smul]
+    · show indUf U n ((s • g : relCochainsInt (U ∩ V) n) : SingularCochainInt M n)
+            - ((s • g : relCochainsInt (U ∩ V) n) : SingularCochainInt M n)
+          = s • (indUf U n (g : SingularCochainInt M n) - (g : SingularCochainInt M n))
+      rw [SetLike.val_smul, indUf_smul, smul_sub]
+
+/-- **The indicator section is a section** of `relCochainMvSumInt`: `Σ ∘ section = id`. -/
+theorem relCochainMvSumInt_section (U V : Set ↑M) (n : ℕ) (g : relCochainsInt (U ∩ V) n) :
+    relCochainMvSumInt U V n (relCochainMvSectionInt U V n g) = g := by
+  have hfst : (relCochainMvSectionInt U V n g).1 = ⟨indUf U n g, indUf_mem U n g⟩ := rfl
+  have hsnd : (relCochainMvSectionInt U V n g).2
+      = ⟨indUf U n g - (g : SingularCochainInt M n), indVf_mem U V n g⟩ := rfl
+  apply Subtype.ext
+  rw [show relCochainMvSectionInt U V n g
+      = ((relCochainMvSectionInt U V n g).1, (relCochainMvSectionInt U V n g).2) from rfl,
+    relCochainMvSumInt_apply, hfst, hsnd, AddSubgroupClass.coe_sub, relCochainRestrictInt_coe,
+    relCochainRestrictInt_coe]
+  exact sub_sub_cancel _ _
 
 end SKEFTHawking.SingularRelativeCohomologyMVConnectingInt
