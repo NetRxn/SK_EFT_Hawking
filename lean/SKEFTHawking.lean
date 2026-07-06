@@ -1068,6 +1068,8 @@ import SKEFTHawking.SingularRelativeCochainMVSurjInt
 -- Phase 5q.H · E1 (CSC-PD tower): the rel-cohom MV middle-exactness chase (algebraic core) — the concrete
 -- common-intersection-cochain construction consuming the cochain-MV split.
 import SKEFTHawking.SingularRelativeCohomologyMVChaseInt
+-- Phase 5q.H · E1 (CSC-PD tower): the dual cochain operator (transpose of a chain map) — foundation for (B)
+import SKEFTHawking.SingularDualCochainInt
 -- Phase 5q.H · E1 (CSC-PD tower): the integral CSC open-monotone (extension-by-zero) maps
 -- cscOpenMonotoneInt : Hᵏ_c(W;ℤ) → Hᵏ_c(W';ℤ) for W ⊆ W' — top row of the integral PD 5-lemma ladder.
 import SKEFTHawking.SingularCSCOpenMonotoneInt
