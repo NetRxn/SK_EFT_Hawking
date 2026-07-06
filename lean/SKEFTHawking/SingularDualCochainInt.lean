@@ -20,6 +20,7 @@ import SKEFTHawking.SingularExcisionInt
 open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularCohomologyInt
+open SKEFTHawking.SingularSubdivisionInt
 
 namespace SKEFTHawking.SingularDualCochainInt
 
@@ -54,5 +55,48 @@ theorem dualCochainInt_chainBoundary {n : ℕ} (f : SingularCochainInt X n) :
     dualCochainInt (chainBoundary X n) f = coboundary X n f := by
   funext σ
   rw [dualCochainInt, ← kronecker_coboundary_chainBoundary, kronecker_single, one_mul]
+
+/-- The **iterated subdivision homotopy `Dₘ` bundled as a `LinearMap`** — `∑_{i<m} Sdⁱ ∘ D`, a finite sum of
+composites of linear maps (`singularDInt` is linear, `singularSdInt` powers are `Module.End`). Agrees with
+the on-main function `iterHomotopyInt` (`iterHomotopyIntₗ_apply`), so `dualCochainInt` can transpose it. -/
+noncomputable def iterHomotopyIntₗ (X : TopCat) (n m : ℕ) :
+    SingularChainInt X n →ₗ[ℤ] SingularChainInt X (n + 1) :=
+  ∑ i ∈ Finset.range m, ((singularSdInt X (n + 1)) ^ i) ∘ₗ singularDInt X n
+
+@[simp] theorem iterHomotopyIntₗ_apply (X : TopCat) (n m : ℕ) (c : SingularChainInt X n) :
+    iterHomotopyIntₗ X n m c = iterHomotopyInt X n m c := by
+  rw [iterHomotopyIntₗ, iterHomotopyInt]
+  simp only [LinearMap.coe_sum, Finset.sum_apply, LinearMap.comp_apply, Module.End.coe_pow]
+
+/-- **The dual iterated-subdivision homotopy, on cocycles** — the mechanism of `(B)`. For a cocycle
+`f ∈ Cochain^{n+1}`, `f` and its dual subdivision `(Sdᵐ)*f = dualCochainInt (singularSdInt^m) f` differ by a
+coboundary: `f − (Sdᵐ)*f = δ((Dₘ)*f)`. Dualises `iterHomotopyInt_chainHomotopy` (`∂(D'ₘc) + Dₘ∂c = c − Sdᵐc`)
+via the transpose adjunction — the `∂D'ₘ` term is killed by the cocycle condition (`⟨f, ∂w⟩ = ⟨δf, w⟩ = 0`).
+Since `(Sdᵐ)*f` vanishes on any chain `Sdᵐ` makes small, this is the cohomologous small-representative that
+lifts a `Hom(Q)` cocycle to `relCochainsInt (U ∪ V)`. -/
+theorem sub_dualSdIterate_eq_coboundary {n : ℕ} (f : SingularCochainInt X (n + 1))
+    (hf : coboundary X (n + 1) f = 0) (m : ℕ) :
+    f - dualCochainInt ((singularSdInt X (n + 1)) ^ m) f
+      = coboundary X n (dualCochainInt (iterHomotopyIntₗ X n m) f) := by
+  funext σ
+  have hL : (f - dualCochainInt ((singularSdInt X (n + 1)) ^ m) f) σ
+      = kronecker f (Finsupp.single σ 1)
+        - kronecker f ((⇑(singularSdInt X (n + 1)))^[m] (Finsupp.single σ 1)) := by
+    rw [Pi.sub_apply, show f σ = kronecker f (Finsupp.single σ 1) from by rw [kronecker_single, one_mul],
+      dualCochainInt, Module.End.coe_pow]
+  have hR : coboundary X n (dualCochainInt (iterHomotopyIntₗ X n m) f) σ
+      = kronecker f (iterHomotopyInt X n m (chainBoundary X n (Finsupp.single σ 1))) := by
+    rw [← dualCochainInt_chainBoundary, dualCochainInt, kronecker_dualCochainInt, iterHomotopyIntₗ_apply]
+  rw [hL, hR]
+  have hcocy : kronecker f
+      (chainBoundary X (n + 1) (iterHomotopyInt X (n + 1) m (Finsupp.single σ 1))) = 0 := by
+    rw [← kronecker_coboundary_chainBoundary, hf]; simp [kronecker_apply]
+  have hhom := iterHomotopyInt_chainHomotopy X m n (Finsupp.single σ 1)
+  have hsub : kronecker f (Finsupp.single σ 1)
+        - kronecker f ((⇑(singularSdInt X (n + 1)))^[m] (Finsupp.single σ 1))
+      = kronecker f
+          (Finsupp.single σ 1 - (⇑(singularSdInt X (n + 1)))^[m] (Finsupp.single σ 1)) := by
+    simp only [kronecker_eq_linearCombination, map_sub]
+  rw [hsub, ← hhom, kronecker_add_right, hcocy, zero_add]
 
 end SKEFTHawking.SingularDualCochainInt
