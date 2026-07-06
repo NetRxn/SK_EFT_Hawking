@@ -1,0 +1,228 @@
+#!/usr/bin/env python3
+"""
+Export compact, web-weight JSON distillations of the proof atlas for
+external visualization surfaces (dashboards, static sites).
+
+Reads from:
+  - lean/atlas_view.json   (derived Proof Atlas — ADR-005 / ADR-007)
+  - docs/counts.json       (single source of truth for counts)
+  - git history of docs/counts.json (velocity time series)
+
+Writes to build/web_export/ (gitignored):
+  - site_atlas.json      compact atlas: summary, ranked frontier, registered
+                         and unregistered obstructions with false-statement
+                         glosses, per-module-family province aggregates
+  - velocity.json        daily time series of declaration/theorem/module
+                         counts reconstructed from counts.json git history
+  - counts_summary.json  the headline trust numbers
+  - manifest.json        schema_version, generated_at, sha256 per file
+
+Design constraints:
+  - site_atlas.json target size <= 300 KB (source atlas is ~4.3 MB)
+  - every number is derived, none hand-typed
+  - consumers treat these as a versioned snapshot (schema_version below)
+
+Usage:
+    uv run python scripts/export_web_atlas.py
+    uv run python scripts/export_web_atlas.py --out build/web_export
+"""
+
+import argparse
+import hashlib
+import json
+import subprocess
+import sys
+from collections import defaultdict
+from datetime import datetime, timezone
+from pathlib import Path
+
+SCHEMA_VERSION = "0.1.0"
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def load_atlas() -> dict:
+    with open(ROOT / "lean" / "atlas_view.json") as f:
+        return json.load(f)
+
+
+def load_counts() -> dict:
+    with open(ROOT / "docs" / "counts.json") as f:
+        return json.load(f)
+
+
+MIN_FAMILY_SIZE = 10  # smaller top-level modules roll into "(other)"
+
+
+def family_of(module: str) -> str:
+    """SKEFTHawking.Family.Rest -> Family; SKEFTHawking.TopLevel -> TopLevel."""
+    parts = (module or "").split(".")
+    if parts and parts[0] == "SKEFTHawking" and len(parts) >= 2:
+        return parts[1]
+    return parts[0] if parts and parts[0] else "(unknown)"
+
+
+def build_site_atlas(atlas: dict) -> dict:
+    provinces: dict[str, dict] = defaultdict(lambda: defaultdict(int))
+    for node in atlas.get("nodes", []):
+        fam = family_of(node.get("module", ""))
+        provinces[fam]["total"] += 1
+        provinces[fam][node.get("atlas_status", "UNKNOWN")] += 1
+
+    major, other = [], defaultdict(int)
+    for fam, counts in provinces.items():
+        if counts["total"] >= MIN_FAMILY_SIZE:
+            major.append({"family": fam, **counts})
+        else:
+            for k, v in counts.items():
+                other[k] += v
+            other["families"] += 1
+    major.sort(key=lambda p: -p["total"])
+    if other:
+        major.append({"family": "(other)", **other})
+    province_list = major
+
+    frontier = [
+        {
+            "id": e.get("id"),
+            "frontier_impact": e.get("frontier_impact"),
+            "status": e.get("status"),
+            "tier": e.get("tier"),
+            "eliminability": e.get("eliminability"),
+            "is_apex": e.get("is_apex", False),
+        }
+        for e in atlas.get("frontier", [])
+    ]
+
+    obstructions = [
+        {
+            "id": o.get("id"),
+            "fork_id": o.get("fork_id"),
+            "nogo_kind": o.get("nogo_kind"),
+            "false_statement": o.get("false_statement"),
+            "backing_theorems": o.get("backing_theorems", []),
+            "kernel_pure": o.get("kernel_pure"),
+            "registered": o.get("registered", False),
+        }
+        for o in atlas.get("obstructions", [])
+    ]
+
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "summary": atlas.get("summary", {}),
+        "provinces": province_list,
+        "frontier": frontier,
+        "obstructions": obstructions,
+    }
+
+
+def counts_at_revision(rev: str) -> dict | None:
+    """Parse docs/counts.json at a git revision, tolerating schema drift."""
+    try:
+        raw = subprocess.run(
+            ["git", "show", f"{rev}:docs/counts.json"],
+            capture_output=True, text=True, cwd=ROOT, check=True,
+        ).stdout
+        c = json.loads(raw)
+    except (subprocess.CalledProcessError, json.JSONDecodeError):
+        return None
+    lean = c.get("lean", c)  # older schemas were flat
+    out = {}
+    for key, aliases in {
+        "declarations": ("total_declarations",),
+        "theorems": ("theorems_total", "theorems"),
+        "modules": ("modules",),
+        "definitions": ("definitions",),
+    }.items():
+        for a in aliases:
+            if a in lean:
+                out[key] = lean[a]
+                break
+    return out or None
+
+
+def build_velocity() -> dict:
+    log = subprocess.run(
+        ["git", "log", "--format=%H %aI", "--follow", "--", "docs/counts.json"],
+        capture_output=True, text=True, cwd=ROOT, check=True,
+    ).stdout.strip().splitlines()
+    # oldest first; keep the last sample of each calendar day
+    entries = [line.split() for line in reversed(log) if line.strip()]
+    by_day: dict[str, dict] = {}
+    for rev, iso in entries:
+        day = iso[:10]
+        counts = counts_at_revision(rev)
+        if counts:
+            by_day[day] = {"date": day, **counts}
+    series = [by_day[d] for d in sorted(by_day)]
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "source": "git history of docs/counts.json (last sample per day)",
+        "series": series,
+    }
+
+
+def build_counts_summary(counts: dict) -> dict:
+    lean = counts.get("lean", {})
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "counts_generated": counts.get("generated"),
+        "declarations": lean.get("total_declarations"),
+        "theorems": lean.get("theorems_total"),
+        "theorems_substantive": lean.get("theorems_substantive"),
+        "modules": lean.get("modules"),
+        "axioms": lean.get("axioms"),
+        "sorries": lean.get("sorry_declarations"),
+        "aristotle_proved": counts.get("aristotle", {}).get("aristotle_proved"),
+        "aristotle_runs": counts.get("aristotle", {}).get("aristotle_runs"),
+        "pytest_cases": counts.get("python", {}).get("pytest_cases"),
+        "figures": counts.get("python", {}).get("figures"),
+        "notebooks": counts.get("python", {}).get("notebooks"),
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", default="build/web_export",
+                        help="output directory (default: build/web_export)")
+    args = parser.parse_args()
+
+    out = ROOT / args.out
+    out.mkdir(parents=True, exist_ok=True)
+
+    atlas = load_atlas()
+    counts = load_counts()
+    generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+    payloads = {
+        "site_atlas.json": build_site_atlas(atlas),
+        "velocity.json": build_velocity(),
+        "counts_summary.json": build_counts_summary(counts),
+    }
+
+    manifest = {
+        "schema_version": SCHEMA_VERSION,
+        "generated_at": generated_at,
+        "files": {},
+    }
+    for name, payload in payloads.items():
+        payload["generated_at"] = generated_at
+        blob = json.dumps(payload, separators=(",", ":"), sort_keys=True)
+        (out / name).write_text(blob)
+        manifest["files"][name] = {
+            "sha256": hashlib.sha256(blob.encode()).hexdigest(),
+            "bytes": len(blob),
+        }
+        print(f"  {name}: {len(blob)/1024:.0f} KB")
+    (out / "manifest.json").write_text(json.dumps(manifest, indent=2))
+    print(f"wrote {out}/manifest.json")
+
+    site_kb = manifest["files"]["site_atlas.json"]["bytes"] / 1024
+    if site_kb > 300:
+        print(f"WARNING: site_atlas.json {site_kb:.0f} KB exceeds 300 KB budget",
+              file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
