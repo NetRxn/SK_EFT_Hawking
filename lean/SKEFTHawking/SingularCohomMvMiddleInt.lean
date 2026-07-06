@@ -18,11 +18,14 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `native_decide`, no 
 -/
 import Mathlib
 import SKEFTHawking.SingularKComplexAcyclicInt
+import SKEFTHawking.SingularRelativeCohomologyMVChaseInt
 
 open SKEFTHawking.SingularCohomologyInt SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularRelHomologyInt
 open SKEFTHawking.SingularRelativeMVInt SKEFTHawking.SingularSmallChainsSplitInt
 open SKEFTHawking.SingularKComplexAcyclicInt
+open SKEFTHawking.SingularEuclideanCapIsoInt SKEFTHawking.SingularRelativeCohomologyRestrictInt
+open SKEFTHawking.SingularRelativeCohomologyMVInt SKEFTHawking.SingularRelativeCohomologyMVChaseInt
 
 namespace SKEFTHawking.SingularCohomMvMiddleInt
 
@@ -113,5 +116,103 @@ theorem exists_lift_cochain (U V : Set M) (hU : IsOpen U) (hV : IsOpen V) (m : �
       rw [sub_eq_add_neg, ← neg_one_zsmul (coboundary M m H), kronecker_add_left,
         kronecker_smul_left, neg_one_zsmul, ← sub_eq_add_neg]
     rw [hsub, hstep, sub_self]
+
+/-- Two relative cocycles whose underlying cochains differ by `δH` (with `H` a relative cochain) have the
+same relative cohomology class. -/
+theorem mk_eq_of_coboundary_diff {S : Set M} (n : ℕ)
+    (z w : LinearMap.ker (relCoboundaryIntₗ S (n + 1))) (Hc : relCochainsInt S n)
+    (hdiff : ((z : relCochainsInt S (n + 1)) : SingularCochainInt M (n + 1))
+        - ((w : relCochainsInt S (n + 1)) : SingularCochainInt M (n + 1))
+      = coboundary M n (Hc : SingularCochainInt M n)) :
+    RelativeCohomologyInt.mk S (n + 1) z = RelativeCohomologyInt.mk S (n + 1) w := by
+  rw [← sub_eq_zero]
+  have hms : RelativeCohomologyInt.mk S (n + 1) z - RelativeCohomologyInt.mk S (n + 1) w
+      = RelativeCohomologyInt.mk S (n + 1) (z - w) :=
+    (Submodule.Quotient.mk_sub _).symm
+  rw [hms, RelativeCohomologyInt.mk_eq_zero_iff]
+  refine ⟨Hc, ?_⟩
+  apply Subtype.ext
+  rw [relCoboundaryIntₗ_coe, AddSubgroupClass.coe_sub]
+  exact hdiff.symm
+
+/-- **`ker Σ_H ≤ range Δ_H`** — the substantive half of the integral cohomology MV middle exactness,
+assembled from the chase (`exists_intersection_cocycle_of_sumInt`) and the concrete lift
+(`exists_lift_cochain`). -/
+theorem ker_relCohomMvSumInt_le_range_relCohomMvDiagInt (U V : Set M) (hU : IsOpen U) (hV : IsOpen V)
+    (m : ℕ) (A : RelativeCohomologyInt U (m + 1)) (B : RelativeCohomologyInt V (m + 1))
+    (hAB : (A, B) ∈ LinearMap.ker (relCohomMvSumInt U V (m + 1))) :
+    (A, B) ∈ LinearMap.range (relCohomMvDiagInt U V (m + 1)) := by
+  obtain ⟨α, rfl⟩ := RelativeCohomologyInt.mk_surjective U (m + 1) A
+  obtain ⟨β, rfl⟩ := RelativeCohomologyInt.mk_surjective V (m + 1) B
+  have h0 : relCohomMvSumInt U V (m + 1)
+      (RelativeCohomologyInt.mk U (m + 1) α, RelativeCohomologyInt.mk V (m + 1) β) = 0 :=
+    LinearMap.mem_ker.mp hAB
+  obtain ⟨ωU, ωV, hcochain, hUeq, hVeq⟩ := exists_intersection_cocycle_of_sumInt U V m α β h0
+  set ω' : SingularCochainInt M (m + 1) := ((ωU : relCochainsInt U (m + 1)) : SingularCochainInt M (m + 1))
+    with hω'
+  -- `ω'` vanishes on the small chains and is a cocycle
+  have hcobadd : ∀ (a b : SingularCochainInt M (m + 1)),
+      coboundary M (m + 1) (a - b) = coboundary M (m + 1) a - coboundary M (m + 1) b := by
+    intro a b
+    show coboundaryₗ M (m + 1) (a - b) = coboundaryₗ M (m + 1) a - coboundaryₗ M (m + 1) b
+    rw [map_sub]
+  have hcobneg : ∀ (a : SingularCochainInt M m), coboundary M m (-a) = -coboundary M m a := by
+    intro a
+    show coboundaryₗ M m (-a) = -coboundaryₗ M m a
+    rw [map_neg]
+  have hmv : ∀ c ∈ mvUnionChainsInt U V (m + 1), kronecker ω' c = 0 := by
+    intro c hc
+    rw [mvUnionChainsInt, Submodule.add_eq_sup, Submodule.mem_sup] at hc
+    obtain ⟨a, ha, b, hb, rfl⟩ := hc
+    rw [kronecker_add_right]
+    have h1 : kronecker ω' a = 0 :=
+      (mem_relCochainsInt U (m + 1) ω').mp (ωU : relCochainsInt U (m + 1)).2 a ha
+    have h2 : kronecker ω' b = 0 := by
+      rw [hcochain]; exact (mem_relCochainsInt V (m + 1) _).mp (ωV : relCochainsInt V (m + 1)).2 b hb
+    rw [h1, h2, add_zero]
+  have hcocy : coboundary M (m + 1) ω' = 0 := by
+    have h0' : relCoboundaryIntₗ U (m + 1) (ωU : relCochainsInt U (m + 1)) = 0 := LinearMap.mem_ker.mp ωU.2
+    have h1 : ((relCoboundaryIntₗ U (m + 1) (ωU : relCochainsInt U (m + 1)) :
+        relCochainsInt U (m + 2)) : SingularCochainInt M (m + 2)) = 0 := by rw [h0']; rfl
+    rwa [relCoboundaryIntₗ_coe] at h1
+  obtain ⟨H, hHmv, hHf⟩ := exists_lift_cochain U V hU hV m ω' hmv hcocy
+  set f : SingularCochainInt M (m + 1) := ω' - coboundary M m H with hf
+  have hf_mem : f ∈ relCochainsInt (U ∪ V) (m + 1) := (mem_relCochainsInt (U ∪ V) (m + 1) f).mpr hHf
+  have hf_cocy : coboundary M (m + 1) f = 0 := by
+    rw [hf, hcobadd, hcocy, coboundary_comp_coboundary, sub_zero]
+  have hf_ker : (⟨f, hf_mem⟩ : relCochainsInt (U ∪ V) (m + 1))
+      ∈ LinearMap.ker (relCoboundaryIntₗ (U ∪ V) (m + 1)) := by
+    rw [LinearMap.mem_ker]; apply Subtype.ext; rw [relCoboundaryIntₗ_coe]; exact hf_cocy
+  have hHU_mem : H ∈ relCochainsInt U m := (mem_relCochainsInt U m H).mpr
+    (fun c hc => hHmv c (subspaceChainsInt_le_mvUnionChainsInt_left U V m hc))
+  have hHV_mem : H ∈ relCochainsInt V m := (mem_relCochainsInt V m H).mpr
+    (fun c hc => hHmv c (subspaceChainsInt_le_mvUnionChainsInt_right U V m hc))
+  refine ⟨RelativeCohomologyInt.mk (U ∪ V) (m + 1) ⟨⟨f, hf_mem⟩, hf_ker⟩, ?_⟩
+  rw [relCohomMvDiagInt_apply]
+  refine Prod.ext ?_ ?_
+  · rw [relCohomRestrictInt_mk, ← hUeq]
+    refine mk_eq_of_coboundary_diff m _ ωU (-(⟨H, hHU_mem⟩ : relCochainsInt U m)) ?_
+    rw [relCocycleRestrictInt_coe, relCochainRestrictInt_coe]
+    show f - ω' = coboundary M m (-H)
+    rw [hf, hcobneg]; abel
+  · rw [relCohomRestrictInt_mk, ← hVeq]
+    refine mk_eq_of_coboundary_diff m _ ωV (-(⟨H, hHV_mem⟩ : relCochainsInt V m)) ?_
+    rw [relCocycleRestrictInt_coe, relCochainRestrictInt_coe]
+    show f - ((ωV : relCochainsInt V (m + 1)) : SingularCochainInt M (m + 1)) = coboundary M m (-H)
+    rw [hf, ← hcochain, hcobneg]; abel
+
+/-- **Integral relative cohomology MV exactness at the middle** `Hᵏ(M|A) ⊕ Hᵏ(M|B)`:
+`Function.Exact (relCohomMvDiagInt) (relCohomMvSumInt)`, i.e. `range Δ = ker Σ` — the torsion-safe ℤ
+analogue of `SingularRelativeCohomologyMVMiddle.relCohomMv_exact_middle`, built by dualising the
+degreewise-split relative-homology MV chain SES (no UCT / finite-dimensionality). The middle term of the
+integral cohomology MV long exact sequence — the top row of the integral Poincaré-duality `5`-lemma ladder. -/
+theorem relCohomMv_exact_middleInt (U V : Set M) (hU : IsOpen U) (hV : IsOpen V) (m : ℕ) :
+    Function.Exact (relCohomMvDiagInt U V (m + 1)) (relCohomMvSumInt U V (m + 1)) := by
+  rw [LinearMap.exact_iff]
+  refine le_antisymm (fun p hp => ?_) (fun p hp => ?_)
+  · obtain ⟨A, B⟩ := p
+    exact ker_relCohomMvSumInt_le_range_relCohomMvDiagInt U V hU hV m A B hp
+  · obtain ⟨q, rfl⟩ := hp
+    rw [LinearMap.mem_ker, relCohomMvSumInt_relCohomMvDiagInt]
 
 end SKEFTHawking.SingularCohomMvMiddleInt
