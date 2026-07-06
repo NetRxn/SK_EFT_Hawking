@@ -163,4 +163,169 @@ theorem inclRA_connectingInt (A B : Set ↑X) (n : ℕ) (y : RelHomologyInt (res
     ← mapChainInt_ambIncl (restr A B), ← mapChainInt_comp, ← mapChainInt_comp]
   congr 1
 
+/-- The `A`-inclusion after the seam iso is `Homology.mapInt (inclRAInt)` (functoriality;
+`subIncl_{A∩B↪A} ∘ seamHomeo = inclRAInt`). -/
+theorem map_subInclL_seamInt (A B : Set ↑X) (n : ℕ) (y : Homology (sub (restr A B)) n) :
+    Homology.mapInt (subIncl (Set.inter_subset_left (s := A) (t := B))) n (seamHomologyEquivInt A B n y)
+      = Homology.mapInt (inclRAInt A B) n y := by
+  rw [seamHomologyEquivInt_apply, ← LinearMap.comp_apply, ← Homology.mapInt_comp]
+  rfl
+
+/-- The `B`-inclusion after the seam iso is `homIncl (restr A B)` (functoriality + the `mapInt ↔ homIncl`
+bridge; `subIncl_{A∩B↪B} ∘ seamHomeo = ambIncl (restr A B)`). -/
+theorem map_subInclR_seamInt (A B : Set ↑X) (n : ℕ) (y : Homology (sub (restr A B)) n) :
+    Homology.mapInt (subIncl (Set.inter_subset_right (s := A) (t := B))) n (seamHomologyEquivInt A B n y)
+      = homIncl (restr A B) n y := by
+  rw [seamHomologyEquivInt_apply, ← LinearMap.comp_apply, ← Homology.mapInt_comp,
+    show (subIncl (Set.inter_subset_right (s := A) (t := B))).comp
+          ⟨seamHomeo A B, (seamHomeo A B).continuous⟩ = ambIncl (restr A B) from rfl,
+    Homology.mapInt_ambIncl]
+
+/-- **Excision–projection naturality** (integral): `excisionMapInt ∘ j_*^{(B,A∩B)} = j_*^{(X,A)} ∘ i_*^{B}`.
+Both send a `(sub B)`-cycle to the class of its `chainIncl B` image in `(X,A)`. -/
+theorem excisionMap_homProjInt (A B : Set ↑X) (n : ℕ) (v : Homology (sub B) (n + 1)) :
+    excisionMapInt A B (n + 1) (homProjInt (restr A B) (n + 1) v)
+      = homProjInt A (n + 1) (homIncl B (n + 1) v) := by
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ v
+  show excisionMapInt A B (n + 1) (homProjInt (restr A B) (n + 1) (Homology.mk (sub B) (n + 1) z))
+      = homProjInt A (n + 1) (homIncl B (n + 1) (Homology.mk (sub B) (n + 1) z))
+  rw [homProjInt_mk, excisionMapInt_mk, homIncl_mk, homProjInt_mk]
+  exact congrArg (RelHomologyInt.mk A (n + 1)) (Subtype.ext (relChainInclInt_mk A B (n + 1) z))
+
+/-- The two routes `A∩B ↪ A ↪ X` and `A∩B ↪ B ↪ X` of a class agree (both are the single inclusion
+`A∩B ↪ X`). Used in the middle MV exactness. -/
+theorem homIncl_inclRAInt (A B : Set ↑X) (n : ℕ) (w : Homology (sub (restr A B)) n) :
+    homIncl A n (Homology.mapInt (inclRAInt A B) n w) = homIncl B n (homIncl (restr A B) n w) := by
+  rw [← Homology.mapInt_ambIncl A, ← Homology.mapInt_ambIncl B, ← Homology.mapInt_ambIncl (restr A B),
+    ← LinearMap.comp_apply, ← Homology.mapInt_comp, ← LinearMap.comp_apply, ← Homology.mapInt_comp]
+  rfl
+
+/-! ## The integral Mayer–Vietoris complex conditions and exactness -/
+
+/-- **Integral MV complex condition at `Hₙ(A∩B)`**: `mvHomDiagInt ∘ δ = 0`. -/
+theorem mvHomDiagInt_mvDeltaInt (A B : Set ↑X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set ↑X)), interior U) = Set.univ) (x : Homology X (n + 1)) :
+    mvHomDiagInt A B n (mvDeltaInt A B n hcov x) = 0 := by
+  refine Prod.ext ?_ ?_
+  · show Homology.mapInt (subIncl (Set.inter_subset_left (s := A) (t := B))) n
+        (seamHomologyEquivInt A B n (connectingInt (restr A B) n
+          ((excisionEquivInt A B n hcov).symm (homProjInt A (n + 1) x)))) = 0
+    rw [map_subInclL_seamInt, inclRA_connectingInt,
+      show excisionMapInt A B (n + 1) ((excisionEquivInt A B n hcov).symm (homProjInt A (n + 1) x))
+        = homProjInt A (n + 1) x from (excisionEquivInt A B n hcov).apply_symm_apply _,
+      connectingInt_homProjInt]
+  · show Homology.mapInt (subIncl (Set.inter_subset_right (s := A) (t := B))) n
+        (seamHomologyEquivInt A B n (connectingInt (restr A B) n
+          ((excisionEquivInt A B n hcov).symm (homProjInt A (n + 1) x)))) = 0
+    rw [map_subInclR_seamInt, SingularLocalHomologyInt.homIncl_connectingInt]
+
+/-- **Integral MV complex condition at `Hₙ(X)`**: `δ ∘ mvHomSumInt = 0`. The `A`-summand dies under
+`homProjInt A` (`homProjInt_homIncl`); the `B`-summand is excision of the `(B,A∩B)`-projection
+(`excisionMap_homProjInt`), so after `excisionEquivInt.symm` it is `∓ j_*^{(B,A∩B)} v`, killed by
+`connectingInt_homProjInt`. The mod-2 `zero_add` becomes `zero_sub`/`map_neg` (the ℤ-difference). -/
+theorem mvDeltaInt_mvHomSumInt (A B : Set ↑X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set ↑X)), interior U) = Set.univ)
+    (uv : Homology (sub A) (n + 1) × Homology (sub B) (n + 1)) :
+    mvDeltaInt A B n hcov (mvHomSumInt A B (n + 1) uv) = 0 := by
+  obtain ⟨u, v⟩ := uv
+  have hp : homProjInt A (n + 1) (mvHomSumInt A B (n + 1) (u, v))
+      = -excisionMapInt A B (n + 1) (homProjInt (restr A B) (n + 1) v) := by
+    rw [mvHomSumInt_apply, map_sub, Homology.mapInt_ambIncl, Homology.mapInt_ambIncl,
+      SingularSphereHomologyInt.homProjInt_homIncl, zero_sub, excisionMap_homProjInt]
+  show seamHomologyEquivInt A B n (connectingInt (restr A B) n
+      ((excisionEquivInt A B n hcov).symm (homProjInt A (n + 1) (mvHomSumInt A B (n + 1) (u, v))))) = 0
+  rw [hp, map_neg,
+    show (excisionEquivInt A B n hcov).symm (excisionMapInt A B (n + 1) (homProjInt (restr A B) (n + 1) v))
+        = homProjInt (restr A B) (n + 1) v from (excisionEquivInt A B n hcov).symm_apply_apply _,
+    map_neg, connectingInt_homProjInt, neg_zero, map_zero]
+
+/-- **Integral MV exactness at `Hₙ(X)`**: `Function.Exact mvHomSumInt mvDeltaInt`. The Barratt–Whitehead
+chase; the witness is `(u', -v')` (the ℤ-difference `mvHomSumInt` needs the negated `B`-component to
+reproduce the sum `homIncl A u' + homIncl B v' = w`). -/
+theorem mv_exact_ambientInt (A B : Set ↑X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set ↑X)), interior U) = Set.univ) :
+    Function.Exact (mvHomSumInt A B (n + 1)) (mvDeltaInt A B n hcov) := by
+  intro w
+  refine ⟨fun hw => ?_, fun hr => ?_⟩
+  · have h1 : connectingInt (restr A B) n
+        ((excisionEquivInt A B n hcov).symm (homProjInt A (n + 1) w)) = 0 :=
+      (seamHomologyEquivInt A B n).injective (by rw [map_zero]; exact hw)
+    obtain ⟨v', hv'⟩ := (SingularLocalHomologyInt.exact_homProjInt_connectingInt (restr A B) n _).mp h1
+    have h2 : homProjInt A (n + 1) (w - homIncl B (n + 1) v') = 0 := by
+      rw [map_sub, ← excisionMap_homProjInt, hv',
+        show excisionMapInt A B (n + 1) ((excisionEquivInt A B n hcov).symm (homProjInt A (n + 1) w))
+          = homProjInt A (n + 1) w from (excisionEquivInt A B n hcov).apply_symm_apply _, sub_self]
+    obtain ⟨u', hu'⟩ := (SingularSphereHomologyInt.exact_homIncl_homProjInt A (n + 1) _).mp h2
+    refine ⟨(u', -v'), ?_⟩
+    show Homology.mapInt (ambIncl A) (n + 1) u' - Homology.mapInt (ambIncl B) (n + 1) (-v') = w
+    rw [Homology.mapInt_ambIncl, Homology.mapInt_ambIncl, map_neg, sub_neg_eq_add, hu', sub_add_cancel]
+  · obtain ⟨uv, rfl⟩ := hr
+    exact mvDeltaInt_mvHomSumInt A B n hcov uv
+
+/-- **Integral MV exactness at `Hₙ(A∩B)`**: `Function.Exact mvDeltaInt mvHomDiagInt`. The `B`-component of
+`mvHomDiagInt w = 0` gives `homIncl_{(B,A∩B)}(seam⁻¹ w) = 0`, so `seam⁻¹ w = connectingInt y'`; the
+`A`-component + `inclRA_connectingInt` + `exact_homProjInt_connectingInt` produce `x` with
+`homProjInt_A x = excisionMapInt y'`, whence `δ x = w`. -/
+theorem mv_exact_interInt (A B : Set ↑X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set ↑X)), interior U) = Set.univ) :
+    Function.Exact (mvDeltaInt A B n hcov) (mvHomDiagInt A B n) := by
+  intro w
+  refine ⟨fun hw => ?_, fun hr => ?_⟩
+  · have hwA : Homology.mapInt (subIncl (Set.inter_subset_left (s := A) (t := B))) n w = 0 :=
+      congrArg Prod.fst hw
+    have hwB : Homology.mapInt (subIncl (Set.inter_subset_right (s := A) (t := B))) n w = 0 :=
+      congrArg Prod.snd hw
+    have hB : homIncl (restr A B) n ((seamHomologyEquivInt A B n).symm w) = 0 := by
+      rw [← map_subInclR_seamInt, (seamHomologyEquivInt A B n).apply_symm_apply]; exact hwB
+    obtain ⟨y', hy'⟩ := (SingularLocalHomologyInt.exact_connectingInt_homIncl (restr A B) n _).mp hB
+    have hA : connectingInt A n (excisionMapInt A B (n + 1) y') = 0 := by
+      rw [← inclRA_connectingInt, hy', ← map_subInclL_seamInt, (seamHomologyEquivInt A B n).apply_symm_apply]
+      exact hwA
+    obtain ⟨x, hx⟩ := (SingularLocalHomologyInt.exact_homProjInt_connectingInt A n _).mp hA
+    refine ⟨x, ?_⟩
+    show seamHomologyEquivInt A B n (connectingInt (restr A B) n
+        ((excisionEquivInt A B n hcov).symm (homProjInt A (n + 1) x))) = w
+    rw [hx, show (excisionEquivInt A B n hcov).symm (excisionMapInt A B (n + 1) y') = y' from
+        (excisionEquivInt A B n hcov).symm_apply_apply _, hy', (seamHomologyEquivInt A B n).apply_symm_apply]
+  · obtain ⟨x, rfl⟩ := hr
+    exact mvHomDiagInt_mvDeltaInt A B n hcov x
+
+/-- **Integral MV middle exactness** at `Hₙ₊₁(A) ⊕ Hₙ₊₁(B)`: `Function.Exact mvHomDiagInt mvHomSumInt`.
+The Barratt–Whitehead chase; the ℤ-difference `mvHomSumInt` turns the mod-2 sums into differences
+(`homIncl A u − homIncl B v = 0`, the combining witness `u − mapInt(inclRAInt) w''`, and `hu` closing by
+`abel`). Integral mirror of `SingularMayerVietorisLES.mv_exact_middle`. -/
+theorem mv_exact_middleInt (A B : Set ↑X) (n : ℕ)
+    (hcov : (⋃ U ∈ ({A, B} : Set (Set ↑X)), interior U) = Set.univ) :
+    Function.Exact (mvHomDiagInt A B (n + 1)) (mvHomSumInt A B (n + 1)) := by
+  intro uv
+  refine ⟨fun huv => ?_, fun hr => ?_⟩
+  · obtain ⟨u, v⟩ := uv
+    have hsum : homIncl A (n + 1) u - homIncl B (n + 1) v = 0 := by
+      simpa only [mvHomSumInt_apply, Homology.mapInt_ambIncl] using huv
+    have h1 : homProjInt A (n + 1) (homIncl B (n + 1) v) = 0 := by
+      have h := congrArg (homProjInt A (n + 1)) hsum
+      rw [map_sub, SingularSphereHomologyInt.homProjInt_homIncl, zero_sub, map_zero, neg_eq_zero] at h
+      exact h
+    have h2 : homProjInt (restr A B) (n + 1) v = 0 := by
+      apply excisionMapInt_injective A B n hcov
+      rw [excisionMap_homProjInt, map_zero]; exact h1
+    obtain ⟨w'', hw''⟩ := (SingularSphereHomologyInt.exact_homIncl_homProjInt (restr A B) (n + 1) _).mp h2
+    have h4 : homIncl A (n + 1) (u - Homology.mapInt (inclRAInt A B) (n + 1) w'') = 0 := by
+      rw [map_sub, homIncl_inclRAInt, hw'']; exact hsum
+    obtain ⟨c', hc'⟩ := (SingularLocalHomologyInt.exact_connectingInt_homIncl A (n + 1) _).mp h4
+    obtain ⟨c'', hc''⟩ := (excisionEquivInt A B (n + 1) hcov).surjective c'
+    have hu : Homology.mapInt (inclRAInt A B) (n + 1) (w'' + connectingInt (restr A B) (n + 1) c'') = u := by
+      rw [map_add, inclRA_connectingInt, show excisionMapInt A B (n + 2) c'' = c' from hc'', hc']
+      abel
+    refine ⟨seamHomologyEquivInt A B (n + 1) (w'' + connectingInt (restr A B) (n + 1) c''), ?_⟩
+    refine Prod.ext ?_ ?_
+    · show Homology.mapInt (subIncl (Set.inter_subset_left (s := A) (t := B))) (n + 1)
+          (seamHomologyEquivInt A B (n + 1) (w'' + connectingInt (restr A B) (n + 1) c'')) = u
+      rw [map_subInclL_seamInt]; exact hu
+    · show Homology.mapInt (subIncl (Set.inter_subset_right (s := A) (t := B))) (n + 1)
+          (seamHomologyEquivInt A B (n + 1) (w'' + connectingInt (restr A B) (n + 1) c'')) = v
+      rw [map_subInclR_seamInt, map_add, hw'', SingularLocalHomologyInt.homIncl_connectingInt, add_zero]
+  · obtain ⟨w, rfl⟩ := hr
+    exact mvHomSumInt_mvHomDiagInt A B (n + 1) w
+
 end SKEFTHawking.SingularMayerVietorisLESInt
