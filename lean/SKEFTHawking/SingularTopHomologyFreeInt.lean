@@ -12,9 +12,12 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_deci
 -/
 import Mathlib
 import SKEFTHawking.SingularLocalHomologyIsoInt
+import SKEFTHawking.SingularGoodCompactInt
 
 open SKEFTHawking.SingularRelHomologyInt
 open SKEFTHawking.SingularLocalHomologyIsoInt
+open SKEFTHawking.SingularGoodCompactInt (determinedByPointsInt)
+open SKEFTHawking.IntOrientationSection (restrictToPointInt)
 
 namespace SKEFTHawking.SingularTopHomologyFreeInt
 
@@ -24,5 +27,34 @@ theorem relHomology_point_top_free {M : Type} [TopologicalSpace M] [T1Space M]
     [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] (x : M) :
     Module.Free ℤ (RelHomologyInt (X := TopCat.of M) {y | y ≠ x} 4) :=
   Module.Free.of_equiv (manifoldLocalHomologyIsoInt x).symm
+
+/-- The local homology at a point is **torsion-free** (it is `≅ ℤ`). Stated on `{y | y ≠ x}` = `{x}ᶜ`
+(the `restrictToPointInt` codomain), matching `manifoldLocalHomologyIsoInt`'s domain. -/
+theorem localHomology_noZeroSMul {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] (x : M) :
+    NoZeroSMulDivisors ℤ (RelHomologyInt (X := TopCat.of M) {y | y ≠ x} 4) := by
+  refine ⟨fun {c a} h => ?_⟩
+  have hz : c • (manifoldLocalHomologyIsoInt x a) = 0 := by rw [← map_smul, h, map_zero]
+  rcases smul_eq_zero.mp hz with hc | ha
+  · exact Or.inl hc
+  · exact Or.inr ((LinearEquiv.map_eq_zero_iff _).mp ha)
+
+/-- **The top relative homology of a good-compact is TORSION-FREE.** `determinedByPointsInt 4 K` embeds
+`H₄(M|K;ℤ)` into the product of the pointwise locals `H₄(M|x;ℤ) ≅ ℤ`, each torsion-free; a `ℤ`-multiple
+of a class that dies is `0`. This is HALF of `hfree` (top-homology freeness): free = torsion-free +
+finitely-generated (the latter from the finite chart-cover MV — the remaining step). -/
+theorem relHomology_goodCompact_top_noZeroSMul {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] {K : Set ↑(TopCat.of M)}
+    (hdbp : determinedByPointsInt 4 K) :
+    NoZeroSMulDivisors ℤ (RelHomologyInt (X := TopCat.of M) Kᶜ 4) := by
+  refine ⟨fun {m α} hmα => ?_⟩
+  rcases eq_or_ne m 0 with hm | hm
+  · exact Or.inl hm
+  · refine Or.inr (hdbp α (fun x hx => ?_))
+    haveI : NoZeroSMulDivisors ℤ (RelHomologyInt (X := TopCat.of M) ({x}ᶜ) 4) :=
+      localHomology_noZeroSMul (M := M) x
+    have hres : m • restrictToPointInt hx 4 α = 0 := by
+      rw [← map_smul, hmα, map_zero]
+    exact (smul_eq_zero.mp hres).resolve_left hm
 
 end SKEFTHawking.SingularTopHomologyFreeInt
