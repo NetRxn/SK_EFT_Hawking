@@ -180,6 +180,30 @@ noncomputable def restrictHomologyToSetInt (K : Set ↑X) (n : ℕ) :
   homProjInt (Kᶜ : Set ↑X) n
 
 omit [T2Space ↑X] in
+omit [T2Space ↑X] in
+/-- **Restriction to a set then to a point equals restriction to the point** (integral): for `y ∈ K`,
+`ρ_y = restrictToPointInt hy ∘ ρ_K` (`homProjInt` naturality under `relInclInt`). Integral mirror of
+`SingularFundamentalClass.restrictToPoint_restrictHomologyToSet`. -/
+theorem restrictToPoint_restrictHomologyToSetInt {K : Set ↑X} {y : ↑X} (hy : y ∈ K) (n : ℕ)
+    (α : Homology X n) :
+    SKEFTHawking.IntOrientationSection.restrictToPointInt hy n (restrictHomologyToSetInt K n α)
+      = SKEFTHawking.IntOrientationSection.restrictHomologyToPointInt y n α := by
+  obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ α
+  rw [restrictHomologyToSetInt]
+  show SKEFTHawking.IntOrientationSection.restrictToPointInt hy n
+      (homProjInt (Kᶜ) n (Homology.mk X n z))
+    = SKEFTHawking.IntOrientationSection.restrictHomologyToPointInt y n (Homology.mk X n z)
+  rw [homProjInt_mk, SKEFTHawking.IntOrientationSection.restrictToPointInt,
+    SKEFTHawking.IntOrientationSection.relInclInt]
+  erw [SKEFTHawking.SingularRelativeFunctorialityInt.RelHomologyInt.map_mk]
+  rw [SKEFTHawking.IntOrientationSection.restrictHomologyToPointInt, homProjInt_mk]
+  refine congrArg (RelHomologyInt.mk _ n) (Subtype.ext ?_)
+  rw [SKEFTHawking.SingularRelativeFunctorialityInt.relCyclesMapInt_coe,
+    SKEFTHawking.SingularRelativeFunctorialityInt.relMapChainInt_mk,
+    SKEFTHawking.SingularFunctorialityInt.mapChainInt_id]
+  rfl
+
+omit [T2Space ↑X] in
 /-- **The stage restriction of a cycle class, in chain-`mk` form** (integral): `ρ_K [z] = [z]_{M|K}`.
 Integral mirror of `SingularBaseCaseD0.restrictHomologyToSet_mk`. -/
 theorem restrictHomologyToSet_mkInt {K : Set ↑X} {k : ℕ}
