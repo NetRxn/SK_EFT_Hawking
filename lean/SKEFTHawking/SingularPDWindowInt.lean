@@ -19,6 +19,8 @@ import SKEFTHawking.SingularOpenDualityUpperFiveLemmaInt
 import SKEFTHawking.SingularOpenDualityBotFiveLemmaInt
 import SKEFTHawking.SingularOpenDualityD0FiveLemmaInt
 import SKEFTHawking.SingularOpenDualityBotMonotoneUnionInt
+import SKEFTHawking.SingularCSCEmptyInt
+import SKEFTHawking.SingularBaseCaseUpper
 
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularRelHomologyInt
@@ -34,6 +36,8 @@ open SKEFTHawking.SingularOpenDualityBotFiveLemmaInt (openDuality_union_bijectiv
 open SKEFTHawking.SingularOpenDualityD0FiveLemmaInt (openDuality₀_union_bijectiveInt)
 open SKEFTHawking.SingularOpenDualityMonotoneUnionInt (openDuality_monotone_union_bijectiveInt)
 open SKEFTHawking.SingularOpenDualityBotMonotoneUnionInt (openDuality₀_monotone_union_bijectiveInt)
+open SKEFTHawking.SingularCSCEmptyInt (cscOpen_empty_eq_zeroInt homology_sub_empty_eq_zeroInt)
+open SKEFTHawking.SingularBaseCaseUpper (bijective_of_forall_eq_zero)
 
 namespace SKEFTHawking.SingularPDWindowInt
 
@@ -120,5 +124,18 @@ theorem pdWindowPInt_monotone_union {M : TopCat} [T2Space ↑M]
   ⟨openDuality_monotone_union_bijectiveInt hmono hopen _ _ (fun n => (hP n).1),
     openDuality_monotone_union_bijectiveInt hmono hopen _ _ (fun n => (hP n).2.1),
     openDuality₀_monotone_union_bijectiveInt hmono hopen _ _ (fun n => (hP n).2.2)⟩
+
+/-- **`P(∅)`** (integral) — all three conjuncts are bijections between trivial modules (the empty-
+intersection branch of the finite-union induction). -/
+theorem pdWindowPInt_empty {M : TopCat} [T2Space ↑M]
+    (zM : SingularChainInt M (1 + 0 + 3))
+    (hzM : chainBoundary M (1 + 0 + 2) zM = 0) :
+    pdWindowPInt zM hzM (∅ : Set ↑M) isOpen_empty :=
+  ⟨bijective_of_forall_eq_zero _
+      (fun α => cscOpen_empty_eq_zeroInt α) (fun b => homology_sub_empty_eq_zeroInt _ b),
+    bijective_of_forall_eq_zero _
+      (fun α => cscOpen_empty_eq_zeroInt α) (fun b => homology_sub_empty_eq_zeroInt _ b),
+    bijective_of_forall_eq_zero _
+      (fun α => cscOpen_empty_eq_zeroInt α) (fun b => homology_sub_empty_eq_zeroInt _ b)⟩
 
 end SKEFTHawking.SingularPDWindowInt

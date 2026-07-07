@@ -1172,6 +1172,7 @@ import SKEFTHawking.SingularCSCVanishAboveInt
 import SKEFTHawking.SingularCSCConvexChartInt
 import SKEFTHawking.SingularBaseCaseUpperInt
 import SKEFTHawking.SingularOpenDualityBotMonotoneUnionInt
+import SKEFTHawking.SingularCSCEmptyInt
 import SKEFTHawking.SingularPDWindowInt
 import SKEFTHawking.SingularRelativeMVConnectingInt
 import SKEFTHawking.SingularGoodCompactUnionInt
