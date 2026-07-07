@@ -95,4 +95,35 @@ theorem capEquivInt_apply {M : TopCat} [T2Space ↑M] [CompactSpace ↑M] {k m :
   rw [capEquivInt, LinearEquiv.trans_apply, LinearEquiv.ofBijective_apply,
     fundamentalDualityInt_eq_capHInt_top, LinearEquiv.apply_symm_apply]
 
+/-- **`IntCapIso` from the assembled `capEquivInt` plus a Kronecker perfect-pairing datum.** Verifies
+`capEquivInt` inhabits the `IntCapIso.capEquiv` slot (degree 2, cap-with-`[z]`) — so the integral cap-iso
+`IntCapIso [z]` reduces to exactly the `H₂`-free Kronecker pairing `kronEquiv` (given a bijective
+`D_univ` at the `(2,1)` window, i.e. the first conjunct of `pdWindowPInt_univ`). -/
+noncomputable def intCapIsoOfCapEquiv {M : TopCat} [T2Space ↑M] [CompactSpace ↑M]
+    (hop : IsOpen (Set.univ : Set ↑M))
+    (z : SingularChainInt M (2 + 1 + 1)) (hz : chainBoundary M (2 + 1) z = 0)
+    (hD : Function.Bijective ⇑(openDuality (k := 2) (m := 1) hop z hz))
+    (kron : Homology M 2 ≃ₗ[ℤ] Module.Dual ℤ (Cohomology M 2))
+    (hkron : ∀ (h : Homology M 2) (b : Cohomology M 2), kron h b = kroneckerHInt 2 b h) :
+    IntCapIso (Homology.mk M (2 + 1 + 1) ⟨z, hz⟩) where
+  capEquiv := capEquivInt hop z hz hD
+  capEquiv_apply a := capEquivInt_apply hop z hz hD a
+  kronEquiv := kron
+  kronEquiv_apply := hkron
+
+/-- **The integral intersection matrix is unimodular from the assembled cap-equiv** — the reduction
+reaches σ÷16's actual input (an even-unimodular intersection form). Composes `intCapIsoOfCapEquiv` with
+the DONE `interMatrix_isUnimodular_of_capIso`. The whole `Hᵏ_c`-PD → σ÷16 leg now rests on exactly:
+`hD` (the `(2,1)` window of `pdWindowPInt_univ`, from the cover-induction) + `kronEquiv` (the `H₂`-free
+Kronecker perfect pairing). -/
+theorem interMatrix_unimodular_of_capEquiv {M : TopCat} [T2Space ↑M] [CompactSpace ↑M]
+    (hop : IsOpen (Set.univ : Set ↑M))
+    (z : SingularChainInt M (2 + 1 + 1)) (hz : chainBoundary M (2 + 1) z = 0)
+    (hD : Function.Bijective ⇑(openDuality (k := 2) (m := 1) hop z hz))
+    (kron : Homology M 2 ≃ₗ[ℤ] Module.Dual ℤ (Cohomology M 2))
+    (hkron : ∀ (h : Homology M 2) (b : Cohomology M 2), kron h b = kroneckerHInt 2 b h)
+    (B : IntH2Basis M) :
+    IsUnimodular (interMatrix (intFundamentalClassOfHomology (Homology.mk M (2 + 1 + 1) ⟨z, hz⟩)) B) :=
+  interMatrix_isUnimodular_of_capIso B (intCapIsoOfCapEquiv hop z hz hD kron hkron)
+
 end SKEFTHawking.SingularIntCapEquivAssembly
