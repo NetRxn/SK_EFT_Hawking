@@ -1140,6 +1140,7 @@ import SKEFTHawking.SingularCapChainInclInt
 import SKEFTHawking.SingularOpenDualityNatInt
 import SKEFTHawking.SingularOpenDualityMVSquareInt
 import SKEFTHawking.SingularMayerVietorisLESInt
+import SKEFTHawking.SingularMvDeltaPartitionInt
 import SKEFTHawking.SingularSubHomologyMVInt
 import SKEFTHawking.SingularQCohomologyInt
 import SKEFTHawking.SingularQCohomologyExcisionInt
