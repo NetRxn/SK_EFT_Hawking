@@ -23,6 +23,7 @@ import SKEFTHawking.SingularCSCEmptyInt
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularBaseCaseUpperInt
 import SKEFTHawking.SingularCSCVanishAboveCohomInt
+import SKEFTHawking.SingularPDWindow
 
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularRelHomologyInt
@@ -42,6 +43,8 @@ open SKEFTHawking.SingularCSCEmptyInt (cscOpen_empty_eq_zeroInt homology_sub_emp
 open SKEFTHawking.SingularBaseCaseUpper (bijective_of_forall_eq_zero)
 open SKEFTHawking.SingularCSCVanishAboveCohomInt (cscOpen_eq_zero_of_isOpenInt)
 open SKEFTHawking.SingularBaseCaseUpperInt (openDuality_bijective_of_chartConvexInt)
+open SKEFTHawking.SingularPDWindow (chartPull chartPull_isOpen chartPull_subset mem_chartPull
+  chartPull_iUnion chartPull_image)
 
 namespace SKEFTHawking.SingularPDWindowInt
 
@@ -295,5 +298,126 @@ theorem pdWindowPInt_finset_biUnion {M : Type} [TopologicalSpace M] [T2Space M]
     exact pdWindowPInt_union_charted hproj hfree zM hzM hopj hopS
       (hcoreG (Wf j) (⋃ i ∈ s, Wf i) hopj hopS).1 (hcoreG (Wf j) (⋃ i ∈ s, Wf i) hopj hopS).2
       hPj hPS hPI
+
+/-- **(A4c) Chart-open exhaustion (integral)**: `P(W)` for any open `W ⊆ U` (`W` inside a chart source),
+by exhausting its Euclidean chart image `O` with countably many open balls (convex), taking the monotone
+finite-truncation exhaustion (each an A4b within-chart family), and gluing with `_monotone_union`. The
+chart machinery is coefficient-agnostic (reused from the mod-2 `SingularPDWindow`); threads
+`hproj`/`hfree`/`hcoreG`/`hbaseConv`. -/
+theorem pdWindowPInt_of_chartOpen {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (hproj : ∀ (S : Set ↑(TopCat.of M)) (j : ℕ), Module.Projective ℤ (relBoundariesInt S j))
+    (hfree : ∀ (S : Set ↑(TopCat.of M)), IsCompact S →
+      Module.Free ℤ (RelHomologyInt (Sᶜ) (2 + 2)))
+    {U : Set ↑(TopCat.of M)} {V : Set ↑(SingularEuclideanAcyclic.Eucl (2 + 2))}
+    (hU : IsOpen U) (hV : IsOpen V) (e : ↥U ≃ₜ ↥V)
+    (zM : SingularChainInt (TopCat.of M) (1 + 0 + 3))
+    (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0)
+    (hcoreG : ∀ (A B : Set ↑(TopCat.of M)) (hA : IsOpen A) (hB : IsOpen B),
+      (∀ (K : CompactsIn (A ∪ B)) (g : cohomGWInt (A ∪ B) (1 + 1) K),
+        subHomConnectingInt A B hA hB (0 + 1)
+            (legW (k := 1 + 1) (m := 0 + 1) (hA.union hB)
+              (castChainInt (show (1 : ℕ) + 0 + 3 = 1 + 1 + (0 + 1) + 1 by omega) zM)
+              (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM) K g)
+          = openDuality (k := 1 + 2) (m := 0) (hA.inter hB)
+              (castChainInt (show (1 : ℕ) + 0 + 3 = 1 + 2 + 0 + 1 by omega) zM)
+              (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM)
+              (legδInt A B hA hB 1 K g)) ∧
+      (∀ (K : CompactsIn (A ∪ B)) (g : cohomGWInt (A ∪ B) (2 + 1) K),
+        subHomConnectingInt A B hA hB 0
+            (legW (k := 2 + 1) (m := 0) (hA.union hB)
+              (castChainInt (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM)
+              (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM) K g)
+          = openDuality₀Int (hA.inter hB)
+              (castChainInt (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM)
+              (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM)
+              (legδInt A B hA hB 2 K g)))
+    (hbaseConv : ∀ {W : Set ↑(TopCat.of M)} (hWo : IsOpen W), W ⊆ U →
+      ∀ {Cw : Set (EuclideanSpace ℝ (Fin (2 + 2)))}, Convex ℝ Cw → IsOpen Cw →
+      ∀ {pw : EuclideanSpace ℝ (Fin (2 + 2))}, pw ∈ Cw → Cw ⊆ V →
+      (∀ u : ↥U, (u : M) ∈ W ↔ ((e u : ↑(SingularEuclideanAcyclic.Eucl (2 + 2))) ∈ Cw)) →
+      pdWindowPInt zM hzM W hWo)
+    {W : Set ↑(TopCat.of M)} (hWo : IsOpen W) (hWU : W ⊆ U) :
+    pdWindowPInt zM hzM W hWo := by
+  haveI : T2Space ↑(TopCat.of M) := inferInstanceAs (T2Space M)
+  set em : ↥U → EuclideanSpace ℝ (Fin (2 + 2)) :=
+    fun u => (e u : ↑(SingularEuclideanAcyclic.Eucl (2 + 2))) with hemdef
+  set O : Set (EuclideanSpace ℝ (Fin (2 + 2))) := em '' (Subtype.val ⁻¹' W) with hOdef
+  have hOV : O ⊆ V := by rintro q ⟨u, _, rfl⟩; exact (e u).2
+  have hOopen : IsOpen O := by
+    have hpre : IsOpen (Subtype.val ⁻¹' W : Set ↥U) := continuous_subtype_val.isOpen_preimage _ hWo
+    have himg : IsOpen ((fun u : ↥U => e u) '' (Subtype.val ⁻¹' W) : Set ↥V) := e.isOpenMap _ hpre
+    have := hV.isOpenMap_subtype_val _ himg
+    rwa [show Subtype.val '' ((fun u : ↥U => e u) '' (Subtype.val ⁻¹' W)) = O by
+      rw [hOdef, ← Set.image_comp]; rfl] at this
+  have hball : ∀ q : ↥O, ∃ ε > 0, Metric.ball (q : EuclideanSpace ℝ (Fin (2 + 2))) ε ⊆ O :=
+    fun q => Metric.isOpen_iff.mp hOopen q q.2
+  choose ε hε hballO using hball
+  have hcover : (⋃ q : ↥O, Metric.ball (q : EuclideanSpace ℝ (Fin (2 + 2))) (ε q)) = O := by
+    apply Set.Subset.antisymm
+    · exact Set.iUnion_subset (fun q => hballO q)
+    · exact fun q hq => Set.mem_iUnion.mpr ⟨⟨q, hq⟩, Metric.mem_ball_self (hε ⟨q, hq⟩)⟩
+  obtain ⟨T, hTc, hTeq⟩ := TopologicalSpace.isOpen_iUnion_countable
+    (fun q : ↥O => Metric.ball (q : EuclideanSpace ℝ (Fin (2 + 2))) (ε q))
+    (fun q => Metric.isOpen_ball)
+  rcases T.eq_empty_or_nonempty with hTe | hTne
+  · have hOempty : O = ∅ := by rw [← hcover, ← hTeq, hTe]; simp
+    have hWempty : W = ∅ := by
+      have := hOempty
+      rw [hOdef, Set.image_eq_empty] at this
+      ext x
+      simp only [Set.mem_empty_iff_false, iff_false]
+      intro hx
+      exact absurd (show (⟨x, hWU hx⟩ : ↥U) ∈ (Subtype.val ⁻¹' W : Set ↥U) from hx)
+        (by rw [this]; exact Set.notMem_empty _)
+    exact pdWindowPInt_congr zM hzM hWempty.symm isOpen_empty hWo (pdWindowPInt_empty zM hzM)
+  · obtain ⟨f, hf⟩ := hTc.exists_eq_range hTne
+    have hstage : ∀ n : ℕ, ∀ hop : IsOpen (⋃ k ∈ Finset.range (n + 1),
+        chartPull e (Metric.ball ((f k : ↥O) : EuclideanSpace ℝ (Fin (2 + 2))) (ε (f k)))),
+        pdWindowPInt zM hzM _ hop := by
+      intro n hop
+      exact pdWindowPInt_finset_biUnion hproj hfree hU hV e zM hzM hcoreG hbaseConv
+        (Finset.range (n + 1))
+        (fun k => chartPull e (Metric.ball ((f k : ↥O) : _) (ε (f k))))
+        (fun k => Metric.ball ((f k : ↥O) : _) (ε (f k)))
+        (fun k _ => chartPull_isOpen hU e Metric.isOpen_ball)
+        (fun k _ => convex_ball _ _)
+        (fun k _ => Metric.isOpen_ball)
+        (fun k _ => (hballO (f k)).trans hOV)
+        (fun k _ => chartPull_subset e _)
+        (fun k _ u => mem_chartPull e _ u) hop
+    have hopseq : ∀ n : ℕ, IsOpen (⋃ k ∈ Finset.range (n + 1),
+        chartPull e (Metric.ball ((f k : ↥O) : EuclideanSpace ℝ (Fin (2 + 2))) (ε (f k)))) :=
+      fun n => isOpen_biUnion (fun k _ => chartPull_isOpen hU e Metric.isOpen_ball)
+    have hmono : ∀ n, (⋃ k ∈ Finset.range (n + 1),
+          chartPull e (Metric.ball ((f k : ↥O) : EuclideanSpace ℝ (Fin (2 + 2))) (ε (f k))))
+        ⊆ ⋃ k ∈ Finset.range (n + 1 + 1),
+          chartPull e (Metric.ball ((f k : ↥O) : EuclideanSpace ℝ (Fin (2 + 2))) (ε (f k))) :=
+      fun n => Set.biUnion_subset_biUnion_left
+        (fun k hk => Finset.mem_range.mpr (Nat.lt_succ_of_lt (Finset.mem_range.mp hk)))
+    have hPmono := pdWindowPInt_monotone_union zM hzM hmono hopseq (fun n => hstage n (hopseq n))
+    refine pdWindowPInt_congr zM hzM ?_ _ hWo hPmono
+    have hcollapse : (⋃ n, ⋃ k ∈ Finset.range (n + 1),
+          chartPull e (Metric.ball ((f k : ↥O) : EuclideanSpace ℝ (Fin (2 + 2))) (ε (f k))))
+        = ⋃ k : ℕ, chartPull e
+            (Metric.ball ((f k : ↥O) : EuclideanSpace ℝ (Fin (2 + 2))) (ε (f k))) := by
+      ext x
+      simp only [Set.mem_iUnion, Finset.mem_range]
+      exact ⟨fun ⟨n, k, _, h⟩ => ⟨k, h⟩, fun ⟨k, h⟩ => ⟨k, k, Nat.lt_succ_self k, h⟩⟩
+    rw [hcollapse, ← chartPull_iUnion e]
+    have hOre : (⋃ k : ℕ, Metric.ball ((f k : ↥O) : EuclideanSpace ℝ (Fin (2 + 2))) (ε (f k)))
+        = O := by
+      apply Set.Subset.antisymm
+      · exact Set.iUnion_subset (fun k => hballO (f k))
+      · intro q hq
+        have h1 : q ∈ ⋃ i ∈ T, Metric.ball
+            ((i : ↥O) : EuclideanSpace ℝ (Fin (2 + 2))) (ε i) := by rw [hTeq, hcover]; exact hq
+        obtain ⟨i, hiT, hqi⟩ := Set.mem_iUnion₂.mp h1
+        obtain ⟨k, rfl⟩ : ∃ k, f k = i := by
+          have hir : i ∈ Set.range f := by rw [← hf]; exact hiT
+          exact hir
+        exact Set.mem_iUnion.mpr ⟨k, hqi⟩
+    rw [hOre, hOdef]
+    exact chartPull_image e hWU
 
 end SKEFTHawking.SingularPDWindowInt
