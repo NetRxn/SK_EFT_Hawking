@@ -1186,6 +1186,7 @@ import SKEFTHawking.SingularIntCapEquivAssembly
 import SKEFTHawking.FreeSubmoduleOfFreeInt
 import SKEFTHawking.SingularRelBoundariesProjectiveInt
 import SKEFTHawking.SingularTopHomologyFreeInt
+import SKEFTHawking.SingularTopHomologyFreeUnionInt
 import SKEFTHawking.SingularPDWindowInt
 import SKEFTHawking.SingularRelativeMVConnectingInt
 import SKEFTHawking.SingularGoodCompactUnionInt
