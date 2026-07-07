@@ -20,6 +20,8 @@ import SKEFTHawking.SingularOpenDualityBotInt
 import SKEFTHawking.SingularLocalDualityKBotInt
 import SKEFTHawking.SingularLineMinusPointInt
 import SKEFTHawking.SingularLocalDuality
+import SKEFTHawking.SingularLocalHomologyIsoInt
+import SKEFTHawking.SingularGoodCompactUnionInt
 
 open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyInt
@@ -184,5 +186,31 @@ theorem restrictHomologyToSet_mkInt {K : Set ↑X} {k : ℕ}
           ⟨RelativeChainInt.mk (Kᶜ : Set ↑X) (k + 1) z,
             relMk_mem_relCyclesInt_of_boundary (Kᶜ : Set ↑X) z hzb⟩ := by
   rw [restrictHomologyToSetInt, homProjInt_mk]
+
+/-! ## §6. The local iso at the `{x}ᶜ`-spelling -/
+
+open SKEFTHawking.IntOrientationSection (relInclInt)
+
+/-- **Propositional set-congruence on relative homology** (integral): both `relInclInt`s over a mutual
+set inclusion, left/right inverse by `relInclInt_roundtrip`. The `{x}ᶜ = {y | y ≠ x}` seam killer (integral
+mirror of `SingularConvexStageIso.relHomologySetCongr`). -/
+noncomputable def relHomologySetCongrInt {S T : Set ↑X} (hST : S ⊆ T) (hTS : T ⊆ S) (n : ℕ) :
+    RelHomologyInt S n ≃ₗ[ℤ] RelHomologyInt T n :=
+  LinearEquiv.ofLinear (relInclInt hST n) (relInclInt hTS n)
+    (LinearMap.ext fun p =>
+      SKEFTHawking.SingularGoodCompactUnionInt.relInclInt_roundtrip hTS hST n p)
+    (LinearMap.ext fun p =>
+      SKEFTHawking.SingularGoodCompactUnionInt.relInclInt_roundtrip hST hTS n p)
+
+/-- **The local homology iso at the `{x}ᶜ`-spelling** `H₄(M | x; ℤ) ≅ ℤ` — `manifoldLocalHomologyIsoInt`
+transported across the `{x}ᶜ = {y | y ≠ x}` seam (paid once, propositionally). The `E` of the chart-convex
+point stage. -/
+noncomputable def localIsoComplInt {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] (x : M) :
+    RelHomologyInt (X := TopCat.of M) (({x} : Set ↑(TopCat.of M))ᶜ) 4 ≃ₗ[ℤ] ℤ :=
+  (relHomologySetCongrInt (X := TopCat.of M)
+    (S := (({x} : Set ↑(TopCat.of M))ᶜ)) (T := {y | y ≠ x})
+    (fun y hy => by simpa using hy) (fun y hy => by simpa using hy) 4).trans
+    (SKEFTHawking.SingularLocalHomologyIsoInt.manifoldLocalHomologyIsoInt x)
 
 end SKEFTHawking.SingularBaseCaseD0Int
