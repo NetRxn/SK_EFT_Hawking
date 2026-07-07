@@ -1144,6 +1144,7 @@ import SKEFTHawking.SingularMvDeltaPartitionInt
 import SKEFTHawking.SingularLegWCapFormInt
 import SKEFTHawking.SingularConnSquareLHSExplicitInt
 import SKEFTHawking.SingularConnSquareLHSSubdivInt
+import SKEFTHawking.SingularConnSquareCloseM2Int
 import SKEFTHawking.SingularOpenDualityConnLegdeltaCollapseInt
 import SKEFTHawking.SingularSubHomologyMVInt
 import SKEFTHawking.SingularQCohomologyInt
