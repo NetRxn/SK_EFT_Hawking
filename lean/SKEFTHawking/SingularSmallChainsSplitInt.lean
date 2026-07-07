@@ -103,4 +103,14 @@ theorem free_relChainUnion (U V : Set X) (n : ℕ) :
   rw [subspaceChainsInt_eq_supported]
   exact free_quotient_supported _
 
+/-- **`RelativeChainInt S n = C(M)/C(S)` is a free ℤ-module for ANY `S`** — the arbitrary-set
+generalization of `free_relChainUnion` (both are the same coordinate-support quotient
+`subspaceChainsInt_eq_supported`). The foundation of the boundary/homology freeness story: relative
+chains on any subspace are free, so their submodules are submodules of a free ℤ-module. -/
+theorem free_relChainInt (S : Set X) (n : ℕ) :
+    Module.Free ℤ (RelativeChainInt S n) := by
+  show Module.Free ℤ (SingularChainInt X n ⧸ subspaceChainsInt S n)
+  rw [subspaceChainsInt_eq_supported]
+  exact free_quotient_supported _
+
 end SKEFTHawking.SingularSmallChainsSplitInt
