@@ -17,6 +17,7 @@ import Mathlib
 import SKEFTHawking.SingularCompactlySupportedTopInt
 import SKEFTHawking.SingularFundamentalDualityTopInt
 import SKEFTHawking.SingularDualityEmptyInt
+import SKEFTHawking.IntersectionFormUnimodularInt
 
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularCohomologyInt
@@ -125,5 +126,27 @@ theorem interMatrix_unimodular_of_capEquiv {M : TopCat} [T2Space ↑M] [CompactS
     (B : IntH2Basis M) :
     IsUnimodular (interMatrix (intFundamentalClassOfHomology (Homology.mk M (2 + 1 + 1) ⟨z, hz⟩)) B) :=
   interMatrix_isUnimodular_of_capIso B (intCapIsoOfCapEquiv hop z hz hD kron hkron)
+
+/-- **`16 ∣ σ` from the assembled cap-equiv — the FULL integral Poincaré-duality leg of the σ÷16
+theorem.** Wires `intCapIsoOfCapEquiv` through `intPoincareDualityOfCapIso` into
+`sixteen_dvd_manifold_sig_of_intPD`. This is the crispest statement of what remains: the entire
+`Hᵏ_c`-PD → `16 ∣ σ` leg is kernel-pure glue, resting on EXACTLY five named inputs —
+`hD` (the `(2,1)` window of `pdWindowPInt_univ`, from the cover-induction), the `H₂`-free Kronecker
+pairing (`kron`+`hkron`) and its basis `B`, the spin-Wu datum `D` (even-form structure), and the
+topological Rokhlin factor `htopo` (`2 ∣ σ/8`, = E2's Guillou–Marin content). -/
+theorem sixteen_dvd_latticeSig_of_capEquiv {M : TopCat} [T2Space ↑M] [CompactSpace ↑M]
+    (hop : IsOpen (Set.univ : Set ↑M))
+    (z : SingularChainInt M (2 + 1 + 1)) (hz : chainBoundary M (2 + 1) z = 0)
+    (hD : Function.Bijective ⇑(openDuality (k := 2) (m := 1) hop z hz))
+    (kron : Homology M 2 ≃ₗ[ℤ] Module.Dual ℤ (Cohomology M 2))
+    (hkron : ∀ (h : Homology M 2) (b : Cohomology M 2), kron h b = kroneckerHInt 2 b h)
+    (B : IntH2Basis M)
+    (D : SpinWuDatum (intFundamentalClassOfHomology (Homology.mk M (2 + 1 + 1) ⟨z, hz⟩)))
+    (htopo : (2 : ℤ) ∣
+      latticeSig (interMatrix (intFundamentalClassOfHomology (Homology.mk M (2 + 1 + 1) ⟨z, hz⟩)) B) / 8) :
+    (16 : ℤ) ∣
+      latticeSig (interMatrix (intFundamentalClassOfHomology (Homology.mk M (2 + 1 + 1) ⟨z, hz⟩)) B) :=
+  sixteen_dvd_manifold_sig_of_intPD _ B D
+    (intPoincareDualityOfCapIso (intCapIsoOfCapEquiv hop z hz hD kron hkron)) htopo
 
 end SKEFTHawking.SingularIntCapEquivAssembly
