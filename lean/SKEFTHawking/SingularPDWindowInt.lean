@@ -23,6 +23,7 @@ import SKEFTHawking.SingularCSCEmptyInt
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularBaseCaseUpperInt
 import SKEFTHawking.SingularCSCVanishAboveCohomInt
+import SKEFTHawking.SingularRelBoundariesProjectiveInt
 import SKEFTHawking.SingularPDWindow
 
 open SKEFTHawking.SingularHomologyInt
@@ -509,12 +510,12 @@ theorem pdWindowPInt_finset_chartSources {M : Type} [TopologicalSpace M] [T2Spac
         (hcoreG (c.source : Set ↑(TopCat.of M)) _ hopx hopS).2 hPx hPS hPI)
 
 /-- **`P(univ)` (integral)** — on a CLOSED (compact, charted) 4-manifold, the induction predicate holds on
-the whole space. Threads the chart-agnostic `hcoreG`/`hbaseConvG` + `hproj`; the top-degree Ext-freeness
-input is now DISCHARGED internally (`hballFreeInt_dim4` — every closed chart-ball has free `H₄(M|·)`), so
-`pdWindowPInt_univ` carries no freeness hypothesis. -/
+the whole space. Both DEEP algebraic inputs are now DISCHARGED internally: `hproj` (relative-boundaries
+projectivity) via Kaplansky `relBoundariesInt_projective`, and the top-degree Ext-freeness via
+`hballFreeInt_dim4` (every closed chart-ball has free `H₄(M|·)`). So `pdWindowPInt_univ` carries only the
+chart-agnostic connecting/base cores `hcoreG`/`hbaseConvG` — no `hproj`/freeness hypotheses. -/
 theorem pdWindowPInt_univ {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M]
     [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
-    (hproj : ∀ (S : Set ↑(TopCat.of M)) (j : ℕ), Module.Projective ℤ (relBoundariesInt S j))
     (zM : SingularChainInt (TopCat.of M) (1 + 0 + 3))
     (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0)
     (hcoreG : HcoreG M zM hzM) (hbaseConvG : HbaseConvG M zM hzM)
@@ -533,7 +534,8 @@ theorem pdWindowPInt_univ {M : Type} [TopologicalSpace M] [T2Space M] [CompactSp
       : Set ↑(TopCat.of M))) :=
     isOpen_biUnion (fun y _ => (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).open_source)
   exact pdWindowPInt_congr zM hzM huniv hopt hop
-    (pdWindowPInt_finset_chartSources hproj
+    (pdWindowPInt_finset_chartSources
+      (fun S j => SKEFTHawking.SingularRelBoundariesProjectiveInt.relBoundariesInt_projective S j)
       (SKEFTHawking.SingularTopHomologyFreeUnionInt.hballFreeInt_dim4) zM hzM hcoreG hbaseConvG t hopt)
 
 end SKEFTHawking.SingularPDWindowInt
