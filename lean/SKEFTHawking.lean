@@ -1164,6 +1164,7 @@ import SKEFTHawking.SingularConvexSubAcyclicInt
 import SKEFTHawking.SingularH0PathConnectedInt
 import SKEFTHawking.SingularSphereMiddleInt
 import SKEFTHawking.SingularConvexRadialMiddleInt
+import SKEFTHawking.SingularRelativeUCVanishInt
 import SKEFTHawking.SingularRelativeMVConnectingInt
 import SKEFTHawking.SingularGoodCompactUnionInt
 import SKEFTHawking.SingularGoodCompactEuclideanInt
