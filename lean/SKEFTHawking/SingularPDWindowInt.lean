@@ -420,4 +420,122 @@ theorem pdWindowPInt_of_chartOpen {M : Type} [TopologicalSpace M] [T2Space M]
     rw [hOre, hOdef]
     exact chartPull_image e hWU
 
+/-- The chart-agnostic connecting-core hypothesis: the two per-`K` connecting cores for **any** open pair
+`A, B` (the deep torsion-safe `hcoreInt` at the two window degrees, at every union). -/
+def HcoreG (M : Type) [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (zM : SingularChainInt (TopCat.of M) (1 + 0 + 3))
+    (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0) : Prop :=
+  ∀ (A B : Set ↑(TopCat.of M)) (hA : IsOpen A) (hB : IsOpen B),
+    (∀ (K : CompactsIn (A ∪ B)) (g : cohomGWInt (A ∪ B) (1 + 1) K),
+      subHomConnectingInt A B hA hB (0 + 1)
+          (legW (k := 1 + 1) (m := 0 + 1) (hA.union hB)
+            (castChainInt (show (1 : ℕ) + 0 + 3 = 1 + 1 + (0 + 1) + 1 by omega) zM)
+            (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM) K g)
+        = openDuality (k := 1 + 2) (m := 0) (hA.inter hB)
+            (castChainInt (show (1 : ℕ) + 0 + 3 = 1 + 2 + 0 + 1 by omega) zM)
+            (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM)
+            (legδInt A B hA hB 1 K g)) ∧
+    (∀ (K : CompactsIn (A ∪ B)) (g : cohomGWInt (A ∪ B) (2 + 1) K),
+      subHomConnectingInt A B hA hB 0
+          (legW (k := 2 + 1) (m := 0) (hA.union hB)
+            (castChainInt (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM)
+            (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM) K g)
+        = openDuality₀Int (hA.inter hB)
+            (castChainInt (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM)
+            (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM)
+            (legδInt A B hA hB 2 K g))
+
+/-- The chart-agnostic base case: `P(W)` for a chart-convex `W` under **any** chart `e' : U' ≃ₜ V'`. -/
+def HbaseConvG (M : Type) [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (zM : SingularChainInt (TopCat.of M) (1 + 0 + 3))
+    (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0) : Prop :=
+  ∀ {U' : Set ↑(TopCat.of M)} {V' : Set ↑(SingularEuclideanAcyclic.Eucl (2 + 2))}
+    (_hU' : IsOpen U') (_hV' : IsOpen V') (e' : ↥U' ≃ₜ ↥V')
+    {W : Set ↑(TopCat.of M)} (hWo : IsOpen W), W ⊆ U' →
+    ∀ {Cw : Set (EuclideanSpace ℝ (Fin (2 + 2)))}, Convex ℝ Cw → IsOpen Cw →
+    ∀ {pw : EuclideanSpace ℝ (Fin (2 + 2))}, pw ∈ Cw → Cw ⊆ V' →
+    (∀ u : ↥U', (u : M) ∈ W ↔ ((e' u : ↑(SingularEuclideanAcyclic.Eucl (2 + 2))) ∈ Cw)) →
+    pdWindowPInt zM hzM W hWo
+
+/-- **(A4c) Layer-B core (integral)**: `P(⋃ x ∈ t, chartSource x)` for a finite family of chart sources —
+plain `Finset` induction; each member is a full chart source (A4c at `W := U`) via
+`pdWindowPInt_of_chartOpen` under that chart, each MV intersection an open subset of ONE chart. Threads the
+chart-agnostic `hcoreG`/`hbaseConvG` + `hproj`/`hfree`. -/
+theorem pdWindowPInt_finset_chartSources {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (hproj : ∀ (S : Set ↑(TopCat.of M)) (j : ℕ), Module.Projective ℤ (relBoundariesInt S j))
+    (hfree : ∀ (S : Set ↑(TopCat.of M)), IsCompact S →
+      Module.Free ℤ (RelHomologyInt (Sᶜ) (2 + 2)))
+    (zM : SingularChainInt (TopCat.of M) (1 + 0 + 3))
+    (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0)
+    (hcoreG : HcoreG M zM hzM) (hbaseConvG : HbaseConvG M zM hzM)
+    [DecidableEq M] (t : Finset M) :
+    ∀ hop : IsOpen (⋃ x ∈ t, (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x).source
+      : Set ↑(TopCat.of M)),
+    pdWindowPInt zM hzM
+      (⋃ x ∈ t, (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x).source) hop := by
+  induction t using Finset.induction_on with
+  | empty =>
+    intro hop
+    exact pdWindowPInt_congr zM hzM
+      (show (∅ : Set ↑(TopCat.of M)) = _ by simp) isOpen_empty hop (pdWindowPInt_empty zM hzM)
+  | insert x t hx ih =>
+    intro hop
+    set c := chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x with hcdef
+    have hopx : IsOpen (c.source : Set ↑(TopCat.of M)) := c.open_source
+    have hopS : IsOpen (⋃ y ∈ t, (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).source
+        : Set ↑(TopCat.of M)) :=
+      isOpen_biUnion (fun y _ => (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).open_source)
+    have hPx : pdWindowPInt zM hzM (c.source : Set ↑(TopCat.of M)) hopx :=
+      pdWindowPInt_of_chartOpen hproj hfree c.open_source c.open_target
+        c.toHomeomorphSourceTarget zM hzM hcoreG
+        (hbaseConvG c.open_source c.open_target c.toHomeomorphSourceTarget) hopx (le_refl _)
+    have hPS : pdWindowPInt zM hzM
+        (⋃ y ∈ t, (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).source
+          : Set ↑(TopCat.of M)) hopS := ih hopS
+    have hPI : pdWindowPInt zM hzM
+        ((c.source : Set ↑(TopCat.of M))
+          ∩ ⋃ y ∈ t, (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).source)
+        (hopx.inter hopS) :=
+      pdWindowPInt_of_chartOpen hproj hfree c.open_source c.open_target
+        c.toHomeomorphSourceTarget zM hzM hcoreG
+        (hbaseConvG c.open_source c.open_target c.toHomeomorphSourceTarget)
+        (hopx.inter hopS) Set.inter_subset_left
+    exact pdWindowPInt_congr zM hzM
+      (Finset.set_biUnion_insert x t
+        (fun y => (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).source)).symm
+      (hopx.union hopS) hop
+      (pdWindowPInt_union_charted hproj hfree zM hzM hopx hopS
+        (hcoreG (c.source : Set ↑(TopCat.of M)) _ hopx hopS).1
+        (hcoreG (c.source : Set ↑(TopCat.of M)) _ hopx hopS).2 hPx hPS hPI)
+
+/-- **`P(univ)` (integral)** — on a CLOSED (compact, charted) 4-manifold, the induction predicate holds on
+the whole space. Threads the chart-agnostic `hcoreG`/`hbaseConvG` + `hproj`/`hfree`. -/
+theorem pdWindowPInt_univ {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (hproj : ∀ (S : Set ↑(TopCat.of M)) (j : ℕ), Module.Projective ℤ (relBoundariesInt S j))
+    (hfree : ∀ (S : Set ↑(TopCat.of M)), IsCompact S →
+      Module.Free ℤ (RelHomologyInt (Sᶜ) (2 + 2)))
+    (zM : SingularChainInt (TopCat.of M) (1 + 0 + 3))
+    (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0)
+    (hcoreG : HcoreG M zM hzM) (hbaseConvG : HbaseConvG M zM hzM)
+    (hop : IsOpen (Set.univ : Set ↑(TopCat.of M))) :
+    pdWindowPInt zM hzM Set.univ hop := by
+  classical
+  haveI : CompactSpace ↑(TopCat.of M) := inferInstanceAs (CompactSpace M)
+  obtain ⟨t, ht⟩ := IsCompact.elim_finite_subcover (isCompact_univ (X := ↑(TopCat.of M)))
+    (fun x : M => ((chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x).source : Set ↑(TopCat.of M)))
+    (fun x => (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x).open_source)
+    (fun x _ => Set.mem_iUnion.mpr ⟨x, mem_chart_source _ x⟩)
+  have huniv : (⋃ x ∈ t, ((chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x).source
+      : Set ↑(TopCat.of M))) = Set.univ :=
+    Set.Subset.antisymm (Set.subset_univ _) ht
+  have hopt : IsOpen (⋃ x ∈ t, ((chartAt (EuclideanSpace ℝ (Fin (2 + 2))) x).source
+      : Set ↑(TopCat.of M))) :=
+    isOpen_biUnion (fun y _ => (chartAt (EuclideanSpace ℝ (Fin (2 + 2))) y).open_source)
+  exact pdWindowPInt_congr zM hzM huniv hopt hop
+    (pdWindowPInt_finset_chartSources hproj hfree zM hzM hcoreG hbaseConvG t hopt)
+
 end SKEFTHawking.SingularPDWindowInt
