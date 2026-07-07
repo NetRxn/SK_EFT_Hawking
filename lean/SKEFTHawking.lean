@@ -1167,6 +1167,7 @@ import SKEFTHawking.SingularConvexRadialMiddleInt
 import SKEFTHawking.SingularRelativeUCVanishInt
 import SKEFTHawking.SingularRelativeUCBottomInt
 import SKEFTHawking.SingularConvexComplementConnectedInt
+import SKEFTHawking.SingularConvexComplementH0Int
 import SKEFTHawking.SingularCSCVanishAboveInt
 import SKEFTHawking.SingularCSCConvexChartInt
 import SKEFTHawking.SingularBaseCaseUpperInt
