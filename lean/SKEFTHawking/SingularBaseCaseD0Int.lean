@@ -28,6 +28,7 @@ open SKEFTHawking.SingularRelHomologyInt
 open SKEFTHawking.SingularEuclideanCapIsoInt
 open SKEFTHawking.SingularCompactsInOpen
 open SKEFTHawking.SingularOpenDualityBotInt
+open SKEFTHawking.SingularOpenDualityCycleInt (fundCycleW fundCycleW_relHomologous)
 open SKEFTHawking.SingularLocalDualityKBotInt
 open SKEFTHawking.SingularRelativeUCInt
 open SKEFTHawking.SingularLineMinusPointInt (augmentationInt augmentationInt_single augHInt augHInt_mk
@@ -106,5 +107,30 @@ theorem augH_legW₀_eq_relKroneckerHInt {k : ℕ} {W : Set ↑X} (hW : IsOpen W
   erw [relativeDualityK₀Int_mk]
   rw [augHInt_mk, ← augmentationInt_chainIncl, chainIncl_pullbackDualityIntₗ₀, relKroneckerHInt_mk_mk]
   exact augmentationInt_cap_eq_relKroneckerInt ((↑K.1 : Set ↑X)ᶜ) a (fundCycleW₀Int hW z₀ hz₀ K)
+
+/-- **B4b: the stage class is the ambient fundamental class** (integral) — `[fundCycleW₀Int] = [z₀]` in
+`H_{k+1}(M | K; ℤ)`. Over ℤ their difference is a relative boundary (`fundCycleW_relHomologous`, negated —
+`neg_sub`/`neg_mem`, cleaner than the mod-2 `a-b=a+b` juggle). Integral mirror of
+`SingularBaseCaseD0.fundCycleW₀_class_eq`. -/
+theorem fundCycleW₀_class_eqInt {k : ℕ} {W : Set ↑X} (hW : IsOpen W)
+    (z₀ : SingularChainInt X (k + 0 + 1)) (hz₀ : chainBoundary X (k + 0) z₀ = 0) (K : CompactsIn W) :
+    RelHomologyInt.mk ((↑K.1 : Set ↑X)ᶜ) (k + 1)
+        ⟨RelativeChainInt.mk ((↑K.1 : Set ↑X)ᶜ) (k + 1) (fundCycleW₀Int hW z₀ hz₀ K),
+          relMk_mem_relCyclesInt_of_boundary ((↑K.1 : Set ↑X)ᶜ) _
+            (fundCycleW₀Int_boundary hW z₀ hz₀ K)⟩
+      = RelHomologyInt.mk ((↑K.1 : Set ↑X)ᶜ) (k + 1)
+          ⟨RelativeChainInt.mk ((↑K.1 : Set ↑X)ᶜ) (k + 1) z₀,
+            relMk_mem_relCyclesInt_of_boundary ((↑K.1 : Set ↑X)ᶜ) _ (by
+              rw [show chainBoundary X k z₀ = 0 from hz₀]; exact Submodule.zero_mem _)⟩ := by
+  refine (Submodule.Quotient.eq _).mpr (Submodule.mem_comap.mpr ?_)
+  show RelativeChainInt.mk ((↑K.1 : Set ↑X)ᶜ) (k + 1) (fundCycleW₀Int hW z₀ hz₀ K)
+      - RelativeChainInt.mk ((↑K.1 : Set ↑X)ᶜ) (k + 1) z₀
+    ∈ relBoundariesInt ((↑K.1 : Set ↑X)ᶜ) (k + 1)
+  have hhom := fundCycleW_relHomologous (k := k) (m := 0) hW z₀ hz₀ K
+  -- `hhom : [z₀] - [fundCycleW] ∈ B`; negate (`neg_sub`) and collapse `fundCycleW₀Int = castChainInt rfl _`.
+  have hneg := neg_mem hhom
+  rw [neg_sub] at hneg
+  convert hneg using 3
+  rw [fundCycleW₀Int, SKEFTHawking.SingularOpenDualityMVConnSquareInt.castChainInt_eq]
 
 end SKEFTHawking.SingularBaseCaseD0Int
