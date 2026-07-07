@@ -649,6 +649,7 @@ import SKEFTHawking.LatticePrimitive
 import SKEFTHawking.SplitHyperbolic
 import SKEFTHawking.VanDerBlijReduction
 import SKEFTHawking.EvenUnimodularHyperbolic
+import SKEFTHawking.HyperbolicNormalForm
 import SKEFTHawking.ThetaModularity
 import SKEFTHawking.HasseMinkowskiLocal
 import SKEFTHawking.LatticeContent
