@@ -208,9 +208,14 @@ point stage. -/
 noncomputable def localIsoComplInt {M : Type} [TopologicalSpace M] [T1Space M]
     [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] (x : M) :
     RelHomologyInt (X := TopCat.of M) (({x} : Set ↑(TopCat.of M))ᶜ) 4 ≃ₗ[ℤ] ℤ :=
-  (relHomologySetCongrInt (X := TopCat.of M)
-    (S := (({x} : Set ↑(TopCat.of M))ᶜ)) (T := {y | y ≠ x})
-    (fun y hy => by simpa using hy) (fun y hy => by simpa using hy) 4).trans
-    (SKEFTHawking.SingularLocalHomologyIsoInt.manifoldLocalHomologyIsoInt x)
+  SKEFTHawking.SingularLocalHomologyIsoInt.manifoldLocalHomologyIsoInt x
+
+/-- **The local-iso value of the generator is `1`** (integral, EXACT — no mod-2 `≠0⟹=1` juggle): if `g`
+is the `localIsoComplInt`-generator (`g = E.symm 1`), then `E g = 1`. The flip's `hg` at the point stage. -/
+theorem localIsoCompl_eq_oneInt {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] (x₀ : M)
+    {g : RelHomologyInt (X := TopCat.of M) (({x₀} : Set ↑(TopCat.of M))ᶜ) 4}
+    (hg : g = (localIsoComplInt x₀).symm 1) : localIsoComplInt x₀ g = 1 := by
+  rw [hg, LinearEquiv.apply_symm_apply]
 
 end SKEFTHawking.SingularBaseCaseD0Int
