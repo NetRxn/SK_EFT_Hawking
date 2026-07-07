@@ -164,4 +164,25 @@ theorem relKroneckerHInt_flip_bijective_of_equiv {S : Set ↑X} {M : ℕ}
   rw [hcomp]
   exact (dualEquivOfIsoZ E).bijective.comp (relKroneckerHInt_bijective_of_free S)
 
+/-! ## §5. The stage-restriction glue -/
+
+/-- **Restriction of an absolute class to the local homology over a set** (integral)
+`ρ_K : Hₙ(M;ℤ) → Hₙ(M | K;ℤ)`, the projection `homProjInt (Kᶜ)`. Integral mirror of
+`SingularFundamentalClass.restrictHomologyToSet` (`restrictHomologyToPointInt`'s set analogue). -/
+noncomputable def restrictHomologyToSetInt (K : Set ↑X) (n : ℕ) :
+    Homology X n →ₗ[ℤ] RelHomologyInt (Kᶜ : Set ↑X) n :=
+  homProjInt (Kᶜ : Set ↑X) n
+
+omit [T2Space ↑X] in
+/-- **The stage restriction of a cycle class, in chain-`mk` form** (integral): `ρ_K [z] = [z]_{M|K}`.
+Integral mirror of `SingularBaseCaseD0.restrictHomologyToSet_mk`. -/
+theorem restrictHomologyToSet_mkInt {K : Set ↑X} {k : ℕ}
+    (z : SingularChainInt X (k + 1)) (hz : z ∈ cycles X (k + 1))
+    (hzb : chainBoundary X k z ∈ subspaceChainsInt (Kᶜ : Set ↑X) k) :
+    restrictHomologyToSetInt K (k + 1) (Homology.mk X (k + 1) ⟨z, hz⟩)
+      = RelHomologyInt.mk (Kᶜ : Set ↑X) (k + 1)
+          ⟨RelativeChainInt.mk (Kᶜ : Set ↑X) (k + 1) z,
+            relMk_mem_relCyclesInt_of_boundary (Kᶜ : Set ↑X) z hzb⟩ := by
+  rw [restrictHomologyToSetInt, homProjInt_mk]
+
 end SKEFTHawking.SingularBaseCaseD0Int
