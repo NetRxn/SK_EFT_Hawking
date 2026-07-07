@@ -57,4 +57,17 @@ theorem relHomology_goodCompact_top_noZeroSMul {M : Type} [TopologicalSpace M] [
       rw [← map_smul, hmα, map_zero]
     exact (smul_eq_zero.mp hres).resolve_left hm
 
+/-- **`hfree` reduced to finite-generation.** For a good-compact `K` (here only the determined-by-points
+half is used) whose top relative homology is finitely generated, `H₄(M|K;ℤ)` is **free** — combining the
+torsion-freeness (`relHomology_goodCompact_top_noZeroSMul`) with `Module.Finite` via the ℤ-PID structure
+theorem (`Module.free_of_finite_type_torsion_free'`). So the remaining content of `hfree` is exactly the
+finite-generation of `H₄(M|K;ℤ)` (from the finite chart-ball cover). -/
+theorem relHomology_goodCompact_top_free {M : Type} [TopologicalSpace M] [T1Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] {K : Set ↑(TopCat.of M)}
+    (hdbp : determinedByPointsInt 4 K)
+    (hfg : Module.Finite ℤ (RelHomologyInt (X := TopCat.of M) Kᶜ 4)) :
+    Module.Free ℤ (RelHomologyInt (X := TopCat.of M) Kᶜ 4) := by
+  haveI := relHomology_goodCompact_top_noZeroSMul hdbp
+  exact Module.free_of_finite_type_torsion_free'
+
 end SKEFTHawking.SingularTopHomologyFreeInt
