@@ -42,4 +42,14 @@ theorem relCyclesInt_free (S : Set ↑X) (j : ℕ) : Module.Free ℤ (relCyclesI
   haveI := free_relChainInt S j
   exact SKEFTHawking.FreeSubmoduleInt.free_submodule_of_free (relCyclesInt S j)
 
+/-- **Absolute cycles are FREE** (Kaplansky) — a submodule of the free `SingularChainInt X n` (a
+`Finsupp`). The free-part building block of the ABSOLUTE integral UCT (`H² ≅ Dual H₂ ⊕ Ext`), which the
+`kron` perfect pairing rests on. -/
+theorem cyclesInt_free (n : ℕ) : Module.Free ℤ (cycles X n) :=
+  SKEFTHawking.FreeSubmoduleInt.free_submodule_of_free (cycles X n)
+
+/-- **Absolute boundaries are FREE** (Kaplansky) — a submodule of the free `SingularChainInt X n`. -/
+theorem boundariesInt_free (n : ℕ) : Module.Free ℤ (boundaries X n) :=
+  SKEFTHawking.FreeSubmoduleInt.free_submodule_of_free (boundaries X n)
+
 end SKEFTHawking.SingularRelBoundariesProjectiveInt
