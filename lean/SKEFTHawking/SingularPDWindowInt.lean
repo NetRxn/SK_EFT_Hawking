@@ -21,6 +21,7 @@ import SKEFTHawking.SingularOpenDualityD0FiveLemmaInt
 import SKEFTHawking.SingularOpenDualityBotMonotoneUnionInt
 import SKEFTHawking.SingularCSCEmptyInt
 import SKEFTHawking.SingularBaseCaseUpper
+import SKEFTHawking.SingularCSCVanishAboveCohomInt
 
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularRelHomologyInt
@@ -38,6 +39,7 @@ open SKEFTHawking.SingularOpenDualityMonotoneUnionInt (openDuality_monotone_unio
 open SKEFTHawking.SingularOpenDualityBotMonotoneUnionInt (openDuality₀_monotone_union_bijectiveInt)
 open SKEFTHawking.SingularCSCEmptyInt (cscOpen_empty_eq_zeroInt homology_sub_empty_eq_zeroInt)
 open SKEFTHawking.SingularBaseCaseUpper (bijective_of_forall_eq_zero)
+open SKEFTHawking.SingularCSCVanishAboveCohomInt (cscOpen_eq_zero_of_isOpenInt)
 
 namespace SKEFTHawking.SingularPDWindowInt
 
@@ -112,6 +114,46 @@ theorem pdWindowPInt_union {M : TopCat} [T2Space ↑M]
       (castChainInt (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM)
       (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM)
       hvanI hvanU hvanV hI3.surjective hU3 hV3
+
+/-- **The charted-manifold MV-step (integral)** — `pdWindowPInt_union` with the `csc⁵`-vanishing
+hypotheses discharged by the integral top-degree vanishing (`cscOpen_eq_zero_of_isOpenInt`, `m = 2`,
+`k = 5 > 4`). Threads `hproj` (Kaplansky) + `hfree` (top-degree Ext-freeness) into the vanishing and the two
+per-`K` connecting cores (`hcoreU`/`hcore₀`) into the five-lemmas; NO project axiom. -/
+theorem pdWindowPInt_union_charted {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (hproj : ∀ (S : Set ↑(TopCat.of M)) (j : ℕ), Module.Projective ℤ (relBoundariesInt S j))
+    (hfree : ∀ (S : Set ↑(TopCat.of M)), IsCompact S →
+      Module.Free ℤ (RelHomologyInt (Sᶜ) (2 + 2)))
+    (zM : SingularChainInt (TopCat.of M) (1 + 0 + 3))
+    (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0)
+    {U V : Set ↑(TopCat.of M)} (hU : IsOpen U) (hV : IsOpen V)
+    (hcoreU : ∀ (K : CompactsIn (U ∪ V)) (g : cohomGWInt (U ∪ V) (1 + 1) K),
+      subHomConnectingInt U V hU hV (0 + 1)
+          (legW (k := 1 + 1) (m := 0 + 1) (hU.union hV)
+            (castChainInt (show (1 : ℕ) + 0 + 3 = 1 + 1 + (0 + 1) + 1 by omega) zM)
+            (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM) K g)
+        = openDuality (k := 1 + 2) (m := 0) (hU.inter hV)
+            (castChainInt (show (1 : ℕ) + 0 + 3 = 1 + 2 + 0 + 1 by omega) zM)
+            (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM)
+            (legδInt U V hU hV 1 K g))
+    (hcore₀ : ∀ (K : CompactsIn (U ∪ V)) (g : cohomGWInt (U ∪ V) (2 + 1) K),
+      subHomConnectingInt U V hU hV 0
+          (legW (k := 2 + 1) (m := 0) (hU.union hV)
+            (castChainInt (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM)
+            (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM) K g)
+        = openDuality₀Int (hU.inter hV)
+            (castChainInt (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM)
+            (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM)
+            (legδInt U V hU hV 2 K g))
+    (hPU : pdWindowPInt zM hzM U hU) (hPV : pdWindowPInt zM hzM V hV)
+    (hPI : pdWindowPInt zM hzM (U ∩ V) (hU.inter hV)) :
+    pdWindowPInt zM hzM (U ∪ V) (hU.union hV) := by
+  haveI : T2Space ↑(TopCat.of M) := inferInstanceAs (T2Space M)
+  exact pdWindowPInt_union zM hzM hU hV hcoreU hcore₀
+    (fun α => cscOpen_eq_zero_of_isOpenInt (m := 2) hproj hfree (hU.inter hV) (by omega) α)
+    (fun α => cscOpen_eq_zero_of_isOpenInt (m := 2) hproj hfree hU (by omega) α)
+    (fun α => cscOpen_eq_zero_of_isOpenInt (m := 2) hproj hfree hV (by omega) α)
+    hPU hPV hPI
 
 /-- **Layer-A: monotone-union stability (integral)** — `P` passes to increasing unions (`A3`; the three
 monotone-union engines, conjunct-wise). -/
