@@ -1143,6 +1143,7 @@ import SKEFTHawking.SingularMayerVietorisLESInt
 import SKEFTHawking.SingularMvDeltaPartitionInt
 import SKEFTHawking.SingularLegWCapFormInt
 import SKEFTHawking.SingularConnSquareLHSExplicitInt
+import SKEFTHawking.SingularConnSquareLHSSubdivInt
 import SKEFTHawking.SingularOpenDualityConnLegdeltaCollapseInt
 import SKEFTHawking.SingularSubHomologyMVInt
 import SKEFTHawking.SingularQCohomologyInt
