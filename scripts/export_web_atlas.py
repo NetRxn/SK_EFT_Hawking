@@ -32,11 +32,11 @@ import hashlib
 import json
 import subprocess
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-SCHEMA_VERSION = "0.1.0"
+SCHEMA_VERSION = "0.2.0"
 ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -81,6 +81,36 @@ def build_site_atlas(atlas: dict) -> dict:
         major.append({"family": "(other)", **other})
     province_list = major
 
+    # fqn -> family via the nodes list (unknowns[].module is FREE TEXT prose —
+    # never parse it; families come from the dependent theorems instead).
+    # Fallback for FQNs absent from the node list: the namespace itself
+    # (SKEFTHawking.Family.decl) still encodes real family structure;
+    # top-level declarations (2 parts) carry no family evidence.
+    fqn_family = {n["fqn"]: family_of(n.get("module", ""))
+                  for n in atlas.get("nodes", [])}
+
+    def family_of_fqn(fqn: str) -> str | None:
+        if fqn in fqn_family:
+            return fqn_family[fqn]
+        parts = (fqn or "").split(".")
+        if parts[0] == "SKEFTHawking" and len(parts) >= 3:
+            return parts[1]
+        return None
+
+    hyp_meta: dict[str, tuple[str | None, list[dict]]] = {}
+    for u in atlas.get("unknowns", []):
+        fams = sorted(f for f in (family_of_fqn(t)
+                                  for t in u.get("dependent_theorems", []))
+                      if f is not None)
+        if fams:
+            counts = Counter(fams)
+            best = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
+            links = [{"id": u["id"], "family": fam, "weight": n}
+                     for fam, n in sorted(counts.items())]
+        else:
+            best, links = None, []
+        hyp_meta[u["id"]] = (best, links)
+
     frontier = [
         {
             "id": e.get("id"),
@@ -89,9 +119,12 @@ def build_site_atlas(atlas: dict) -> dict:
             "tier": e.get("tier"),
             "eliminability": e.get("eliminability"),
             "is_apex": e.get("is_apex", False),
+            "family": hyp_meta.get(e.get("id"), (None, []))[0],
         }
         for e in atlas.get("frontier", [])
     ]
+    frontier_links = [l for e in atlas.get("frontier", [])
+                      for l in hyp_meta.get(e.get("id"), (None, []))[1]]
 
     obstructions = [
         {
@@ -102,6 +135,8 @@ def build_site_atlas(atlas: dict) -> dict:
             "backing_theorems": o.get("backing_theorems", []),
             "kernel_pure": o.get("kernel_pure"),
             "registered": o.get("registered", False),
+            "family": (family_of_fqn(o.get("backing_theorems", [None])[0])
+                       if o.get("backing_theorems") else None),
         }
         for o in atlas.get("obstructions", [])
     ]
@@ -111,6 +146,7 @@ def build_site_atlas(atlas: dict) -> dict:
         "summary": atlas.get("summary", {}),
         "provinces": province_list,
         "frontier": frontier,
+        "frontier_links": frontier_links,
         "obstructions": obstructions,
     }
 
