@@ -74,3 +74,35 @@ def test_obstruction_family_from_first_backing_theorem():
 
 def test_schema_version_bumped():
     assert ewa.SCHEMA_VERSION == "0.2.0"
+
+
+SYNTH_DEPS = [
+    {"name": "SKEFTHawking.Alpha.t1", "module": "SKEFTHawking.Alpha.Core",
+     "name_deps_project": ["SKEFTHawking.Beta.t3", "SKEFTHawking.Alpha.t2"]},
+    {"name": "SKEFTHawking.Alpha.t2", "module": "SKEFTHawking.Alpha.Core",
+     "name_deps_project": ["SKEFTHawking.Beta.t3", "SKEFTHawking.Unknown.x"]},
+    {"name": "SKEFTHawking.Beta.t3", "module": "SKEFTHawking.Beta.Main",
+     "name_deps_project": []},
+]
+
+
+def test_family_edges_cross_family_only():
+    edges = ewa.build_family_edges(SYNTH_DEPS)
+    # Alpha->Beta twice (t1->t3, t2->t3); intra-Alpha (t1->t2) excluded;
+    # dep on a name absent from the map (Unknown.x) ignored
+    assert edges == [{"a": "Alpha", "b": "Beta", "weight": 2}]
+
+
+def test_family_edges_undirected_sorted_keys_and_min_weight():
+    deps = [
+        {"name": "SKEFTHawking.Zeta.z", "module": "SKEFTHawking.Zeta.M",
+         "name_deps_project": ["SKEFTHawking.Alpha.a", "SKEFTHawking.Alpha.b"]},
+        {"name": "SKEFTHawking.Alpha.a", "module": "SKEFTHawking.Alpha.M",
+         "name_deps_project": []},
+        {"name": "SKEFTHawking.Alpha.b", "module": "SKEFTHawking.Alpha.M",
+         "name_deps_project": ["SKEFTHawking.Solo.s"]},   # weight-1: dropped
+        {"name": "SKEFTHawking.Solo.s", "module": "SKEFTHawking.Solo.M",
+         "name_deps_project": []},
+    ]
+    edges = ewa.build_family_edges(deps)
+    assert edges == [{"a": "Alpha", "b": "Zeta", "weight": 2}]

@@ -50,6 +50,18 @@ def load_counts() -> dict:
         return json.load(f)
 
 
+def load_deps() -> list:
+    """lean_deps.json is expensive to regenerate — tolerate its absence
+    (family_edges just ships empty) rather than failing the export."""
+    path = ROOT / "lean" / "lean_deps.json"
+    if not path.exists():
+        print("WARN: lean/lean_deps.json missing — family_edges will be empty",
+              file=sys.stderr)
+        return []
+    with open(path) as f:
+        return json.load(f)
+
+
 MIN_FAMILY_SIZE = 10  # smaller top-level modules roll into "(other)"
 
 
@@ -59,6 +71,31 @@ def family_of(module: str) -> str:
     if parts and parts[0] == "SKEFTHawking" and len(parts) >= 2:
         return parts[1]
     return parts[0] if parts and parts[0] else "(unknown)"
+
+
+MIN_EDGE_WEIGHT = 2  # single stray crossings are noise; keeps the export lean
+
+
+def build_family_edges(deps: list) -> list:
+    """Cross-family dependency edges from lean_deps.json — real proof-graph
+    structure aggregated to family level (no declaration names shipped).
+    Undirected: keys sorted lexicographically, weight = crossing dep count.
+    Edges below MIN_EDGE_WEIGHT are dropped (disclosed cap, not silent)."""
+    fam_of_name = {d["name"]: family_of(d.get("module", ""))
+                   for d in deps if d.get("name")}
+    counts: Counter = Counter()
+    for d in deps:
+        fa = fam_of_name.get(d.get("name"))
+        if not fa:
+            continue
+        for dep in d.get("name_deps_project", []):
+            fb = fam_of_name.get(dep)
+            if fb and fb != fa:
+                counts[(min(fa, fb), max(fa, fb))] += 1
+    return [{"a": a, "b": b, "weight": w}
+            for (a, b), w in sorted(counts.items(),
+                                    key=lambda kv: (-kv[1], kv[0]))
+            if w >= MIN_EDGE_WEIGHT]
 
 
 def build_site_atlas(atlas: dict) -> dict:
@@ -229,8 +266,11 @@ def main() -> int:
     counts = load_counts()
     generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
+    site_atlas = build_site_atlas(atlas)
+    site_atlas["family_edges"] = build_family_edges(load_deps())
+
     payloads = {
-        "site_atlas.json": build_site_atlas(atlas),
+        "site_atlas.json": site_atlas,
         "velocity.json": build_velocity(),
         "counts_summary.json": build_counts_summary(counts),
     }
