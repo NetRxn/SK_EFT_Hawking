@@ -1161,6 +1161,7 @@ import SKEFTHawking.SingularExcisionBotInt
 import SKEFTHawking.SingularMayerVietorisLESBotInt
 import SKEFTHawking.SingularOpenDualityD0FiveLemmaInt
 import SKEFTHawking.SingularConvexSubAcyclicInt
+import SKEFTHawking.SingularH0PathConnectedInt
 import SKEFTHawking.SingularRelativeMVConnectingInt
 import SKEFTHawking.SingularGoodCompactUnionInt
 import SKEFTHawking.SingularGoodCompactEuclideanInt
