@@ -139,4 +139,15 @@ theorem relCohomology_one_eq_zero_of_relHomology_bottom_vanishInt
   haveI : Module.Free ℤ (RelHomologyInt S 0) := Module.Free.of_subsingleton ℤ _
   exact relKroneckerHInt_injective_bottomInt S ω (fun β => by rw [hH1 β, map_zero])
 
+/-- **`H¹(X, S; ℤ) = 0` from `H₁ = 0` and `H₀` FREE** — the exact-strength bottom UCT vanishing: the `Ext`
+obstruction needs only `Ext(H₀) = 0`, i.e. `H₀` free (not necessarily `0`). The form the `k = 1`
+CSC-vanishing over a general (possibly disconnected) manifold needs, where `H₀(M|K')` is the free coker over
+components rather than `0`. `relCohomology_one_eq_zero_of_relHomology_bottom_vanishInt` is the `H₀ = 0`
+specialization. -/
+theorem relCohomology_one_eq_zero_of_free_H0_of_relHomology_one_vanishInt
+    [Module.Free ℤ (RelHomologyInt S 0)]
+    (hH1 : ∀ β : RelHomologyInt S 1, β = 0)
+    (ω : RelativeCohomologyInt S 1) : ω = 0 :=
+  relKroneckerHInt_injective_bottomInt S ω (fun β => by rw [hH1 β, map_zero])
+
 end SKEFTHawking.SingularRelativeUCBottomInt
