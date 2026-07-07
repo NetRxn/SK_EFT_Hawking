@@ -28,6 +28,7 @@ open SKEFTHawking.SingularCompactlySupportedOpenInt
 open SKEFTHawking.SingularGoodCompactInt (vanishAboveInt)
 open SKEFTHawking.SingularCSCVanishAboveInt (cscOpen_eq_zero_of_cofinal_vanishInt)
 open SKEFTHawking.SingularCSCVanishAboveGeomInt (vanishAbove_cofinalInt)
+open SKEFTHawking.SingularTopHomologyFreeUnionInt (HballFreeInt)
 open SKEFTHawking.SingularRelativeUCVanishInt (relCohomology_eq_zero_of_relHomology_two_vanishInt)
 
 namespace SKEFTHawking.SingularCSCVanishAboveCohomInt
@@ -38,17 +39,16 @@ relative-homology freeness of a compact set, the boundary Ext-freeness crux) as 
 theorem cscOpen_eq_zero_of_isOpenInt {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
     [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M]
     (hproj : ∀ (S : Set ↑(TopCat.of M)) (j : ℕ), Module.Projective ℤ (relBoundariesInt S j))
-    (hfree : ∀ (S : Set ↑(TopCat.of M)), IsCompact S →
-      Module.Free ℤ (RelHomologyInt (Sᶜ) (m + 2)))
+    (hballFree : HballFreeInt m M)
     {W : Set M} (hW : IsOpen W) {k : ℕ} (hk : m + 2 < k)
     (α : CompactlySupportedCohomologyOpenInt (M := TopCat.of M) W k) : α = 0 := by
   refine cscOpen_eq_zero_of_cofinal_vanishInt (fun K => ?_) α
-  obtain ⟨K', hKK', hvanish⟩ := vanishAbove_cofinalInt (m := m) (M := M) hW K
+  obtain ⟨K', hKK', hvanish, hfreeK'⟩ := vanishAbove_cofinalInt (m := m) (M := M) hballFree hW K
   refine ⟨K', hKK', fun x => ?_⟩
   rcases Nat.lt_or_ge k (m + 3 + 1) with hk2 | hk2
-  · -- Boundary degree `k = m+3`: Ext-term needs `[Free H_{m+2}]`.
+  · -- Boundary degree `k = m+3`: Ext-term needs `[Free H_{m+2}(M|K')]` — from the cofinal freeness.
     obtain rfl : k = m + 3 := by omega
-    haveI := hfree (↑K'.1 : Set ↑(TopCat.of M)) K'.1.isCompact'
+    haveI := hfreeK'
     haveI := hproj ((↑K'.1 : Set ↑(TopCat.of M))ᶜ) (m + 1)
     exact SingularRelativeUCInt.relKroneckerHInt_injective_of_free
       ((↑K'.1 : Set ↑(TopCat.of M))ᶜ) x

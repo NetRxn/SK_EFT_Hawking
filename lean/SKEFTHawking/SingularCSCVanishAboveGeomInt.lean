@@ -20,9 +20,12 @@ import SKEFTHawking.SingularCSCVanishAboveGeom
 import SKEFTHawking.SingularGoodCompactManifoldInt
 import SKEFTHawking.SingularGoodCompactUnionInt
 import SKEFTHawking.SingularGoodCompactEuclideanInt
+import SKEFTHawking.SingularTopHomologyFreeUnionInt
 
 open SKEFTHawking.SingularCompactsInOpen SKEFTHawking.SingularCompactlySupportedOpenInt
 open SKEFTHawking.SingularGoodCompactInt (vanishAboveInt goodCompactInt)
+open SKEFTHawking.SingularRelHomologyInt
+open SKEFTHawking.SingularTopHomologyFreeUnionInt (HballFreeInt free_relHom_biUnion)
 open SKEFTHawking.SingularCSCVanishAboveGeom (exists_chartBall_subset_open)
 
 namespace SKEFTHawking.SingularCSCVanishAboveGeomInt
@@ -31,16 +34,23 @@ namespace SKEFTHawking.SingularCSCVanishAboveGeomInt
 (`W` open) is contained in a compact `K' ⊆ W` with `vanishAboveInt (m+2) ↑K'` — `K'` = a finite union of
 closed chart-ball pieces inside `W` covering `K`. -/
 theorem vanishAbove_cofinalInt {m : ℕ} {M : Type} [TopologicalSpace M] [T2Space M]
-    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] {W : Set M} (hW : IsOpen W)
-    (K : CompactsIn W) :
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m + 2))) M] (hballFree : HballFreeInt m M)
+    {W : Set M} (hW : IsOpen W) (K : CompactsIn W) :
     ∃ K' : CompactsIn W, K ≤ K' ∧
-      vanishAboveInt (X := TopCat.of M) (m + 2) (↑K'.1 : Set M) := by
+      vanishAboveInt (X := TopCat.of M) (m + 2) (↑K'.1 : Set M) ∧
+      Module.Free ℤ (RelHomologyInt (X := TopCat.of M) (↑K'.1 : Set M)ᶜ (m + 2)) := by
   classical
   rcases Set.eq_empty_or_nonempty (↑K.1 : Set M) with hKe | hKne
-  · refine ⟨K, le_refl K, ?_⟩
-    rw [hKe]
-    exact (SKEFTHawking.SingularGoodCompactEuclideanInt.goodCompactInt_empty
-      (X := TopCat.of M) (m + 2)).1
+  · refine ⟨K, le_refl K, ?_, ?_⟩
+    · rw [hKe]
+      exact (SKEFTHawking.SingularGoodCompactEuclideanInt.goodCompactInt_empty
+        (X := TopCat.of M) (m + 2)).1
+    · rw [hKe]
+      haveI : Subsingleton (RelHomologyInt (X := TopCat.of M) (∅ᶜ : Set ↑(TopCat.of M)) (m + 2)) :=
+        ⟨fun a b => by
+          rw [SKEFTHawking.SingularGoodCompactEuclideanInt.relHomologyInt_compl_empty_eq_zero _ a,
+            SKEFTHawking.SingularGoodCompactEuclideanInt.relHomologyInt_compl_empty_eq_zero _ b]⟩
+      exact Module.Free.of_subsingleton ℤ _
   · have hKW : (↑K.1 : Set M) ⊆ W := K.2
     set c : M → OpenPartialHomeomorph M (EuclideanSpace ℝ (Fin (m + 2))) :=
       fun x => chartAt (EuclideanSpace ℝ (Fin (m + 2))) x with hc
@@ -77,16 +87,26 @@ theorem vanishAbove_cofinalInt {m : ℕ} {M : Type} [TopologicalSpace M] [T2Spac
     have hK'_compact : IsCompact (⋃ i ∈ t, B i) :=
       t.finite_toSet.isCompact_biUnion (fun i _ => hB_compact i)
     have hK'_W : (⋃ i ∈ t, B i) ⊆ W := Set.iUnion₂_subset (fun i _ => hrW i)
-    refine ⟨⟨⟨⋃ i ∈ t, B i, hK'_compact⟩, hK'_W⟩, hKK', ?_⟩
-    refine (SKEFTHawking.SingularGoodCompactUnionInt.goodCompactInt_biUnion (X := TopCat.of M)
-      ht_ne B (fun t' _ht' ht'ne => ?_)).1
-    obtain ⟨j, hj⟩ := ht'ne
-    have hsubBj : (⋂ i ∈ t', B i) ⊆ B j := Set.biInter_subset_of_mem hj
-    have hclosed : IsClosed (⋂ i ∈ t', B i) :=
-      isClosed_biInter (fun i _ => (hB_compact i).isClosed)
-    have hcompInter : IsCompact (⋂ i ∈ t', B i) :=
-      (hB_compact j).of_isClosed_subset hclosed hsubBj
-    exact ⟨hclosed, SKEFTHawking.SingularGoodCompactManifoldInt.goodCompactInt_compact_in_chart_source
-      hcompInter (hsubBj.trans (hB_source j))⟩
+    -- Each nonempty sub-intersection of the chart-ball cover is closed and good-compact.
+    have hgood : ∀ t' : Finset (↑K.1 : Set M), t' ⊆ t → t'.Nonempty →
+        IsClosed (⋂ i ∈ t', B i) ∧ goodCompactInt (X := TopCat.of M) (m + 2) (⋂ i ∈ t', B i) := by
+      intro t' _ht' ht'ne
+      obtain ⟨j, hj⟩ := ht'ne
+      have hsubBj : (⋂ i ∈ t', B i) ⊆ B j := Set.biInter_subset_of_mem hj
+      have hclosed : IsClosed (⋂ i ∈ t', B i) :=
+        isClosed_biInter (fun i _ => (hB_compact i).isClosed)
+      have hcompInter : IsCompact (⋂ i ∈ t', B i) :=
+        (hB_compact j).of_isClosed_subset hclosed hsubBj
+      exact ⟨hclosed, SKEFTHawking.SingularGoodCompactManifoldInt.goodCompactInt_compact_in_chart_source
+        hcompInter (hsubBj.trans (hB_source j))⟩
+    -- Freeness of `H_{m+2}(M | ⋃ i∈t, B i)`: the biUnion of chart-balls, each free by `hballFree`.
+    -- Stated on the plain union (not the `CompactsIn` coercion) so `free_relHom_biUnion` matches directly.
+    have hfreeK' : Module.Free ℤ
+        (RelHomologyInt (X := TopCat.of M) (⋃ i ∈ t, B i)ᶜ (m + 2)) := by
+      refine free_relHom_biUnion (X := TopCat.of M) (n := m + 2) ht_ne B hgood (fun i _ => ?_)
+      exact hballFree (i : M) (r i) (hrpos i).le (hrsub i)
+    exact ⟨⟨⟨⋃ i ∈ t, B i, hK'_compact⟩, hK'_W⟩, hKK',
+      (SKEFTHawking.SingularGoodCompactUnionInt.goodCompactInt_biUnion (X := TopCat.of M)
+        ht_ne B hgood).1, hfreeK'⟩
 
 end SKEFTHawking.SingularCSCVanishAboveGeomInt
