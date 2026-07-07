@@ -18,6 +18,7 @@ import SKEFTHawking.SingularOpenDualityMVConnSquareInt
 import SKEFTHawking.SingularOpenDualityUpperFiveLemmaInt
 import SKEFTHawking.SingularOpenDualityBotFiveLemmaInt
 import SKEFTHawking.SingularOpenDualityD0FiveLemmaInt
+import SKEFTHawking.SingularOpenDualityBotMonotoneUnionInt
 
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularRelHomologyInt
@@ -31,6 +32,8 @@ open SKEFTHawking.SingularCSCMayerVietorisConnectingInt (legδInt)
 open SKEFTHawking.SingularOpenDualityUpperFiveLemmaInt (openDuality_union_bijective_upperInt)
 open SKEFTHawking.SingularOpenDualityBotFiveLemmaInt (openDuality_union_bijective_botInt)
 open SKEFTHawking.SingularOpenDualityD0FiveLemmaInt (openDuality₀_union_bijectiveInt)
+open SKEFTHawking.SingularOpenDualityMonotoneUnionInt (openDuality_monotone_union_bijectiveInt)
+open SKEFTHawking.SingularOpenDualityBotMonotoneUnionInt (openDuality₀_monotone_union_bijectiveInt)
 
 namespace SKEFTHawking.SingularPDWindowInt
 
@@ -105,5 +108,17 @@ theorem pdWindowPInt_union {M : TopCat} [T2Space ↑M]
       (castChainInt (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM)
       (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM)
       hvanI hvanU hvanV hI3.surjective hU3 hV3
+
+/-- **Layer-A: monotone-union stability (integral)** — `P` passes to increasing unions (`A3`; the three
+monotone-union engines, conjunct-wise). -/
+theorem pdWindowPInt_monotone_union {M : TopCat} [T2Space ↑M]
+    (zM : SingularChainInt M (1 + 0 + 3))
+    (hzM : chainBoundary M (1 + 0 + 2) zM = 0)
+    {W : ℕ → Set ↑M} (hmono : ∀ n, W n ⊆ W (n + 1)) (hopen : ∀ n, IsOpen (W n))
+    (hP : ∀ n, pdWindowPInt zM hzM (W n) (hopen n)) :
+    pdWindowPInt zM hzM (⋃ n, W n) (isOpen_iUnion hopen) :=
+  ⟨openDuality_monotone_union_bijectiveInt hmono hopen _ _ (fun n => (hP n).1),
+    openDuality_monotone_union_bijectiveInt hmono hopen _ _ (fun n => (hP n).2.1),
+    openDuality₀_monotone_union_bijectiveInt hmono hopen _ _ (fun n => (hP n).2.2)⟩
 
 end SKEFTHawking.SingularPDWindowInt
