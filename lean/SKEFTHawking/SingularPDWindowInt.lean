@@ -21,6 +21,7 @@ import SKEFTHawking.SingularOpenDualityD0FiveLemmaInt
 import SKEFTHawking.SingularOpenDualityBotMonotoneUnionInt
 import SKEFTHawking.SingularCSCEmptyInt
 import SKEFTHawking.SingularBaseCaseUpper
+import SKEFTHawking.SingularBaseCaseUpperInt
 import SKEFTHawking.SingularCSCVanishAboveCohomInt
 
 open SKEFTHawking.SingularHomologyInt
@@ -40,6 +41,7 @@ open SKEFTHawking.SingularOpenDualityBotMonotoneUnionInt (openDuality₀_monoton
 open SKEFTHawking.SingularCSCEmptyInt (cscOpen_empty_eq_zeroInt homology_sub_empty_eq_zeroInt)
 open SKEFTHawking.SingularBaseCaseUpper (bijective_of_forall_eq_zero)
 open SKEFTHawking.SingularCSCVanishAboveCohomInt (cscOpen_eq_zero_of_isOpenInt)
+open SKEFTHawking.SingularBaseCaseUpperInt (openDuality_bijective_of_chartConvexInt)
 
 namespace SKEFTHawking.SingularPDWindowInt
 
@@ -114,6 +116,32 @@ theorem pdWindowPInt_union {M : TopCat} [T2Space ↑M]
       (castChainInt (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM)
       (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM)
       hvanI hvanU hvanV hI3.surjective hU3 hV3
+
+/-- **The `P` base case (integral)** — chart-convex opens: the two upper conjuncts are B6
+(`openDuality_bijective_of_chartConvexInt`, threading `hproj`), the `D⁰` conjunct is the threaded D0 base
+case `hD0` (the reduced-H₀ pairing bijectivity, discharged separately via its ChartBridge/ConvexStageIso/
+ReducedH0 Int dep-tree). -/
+theorem pdWindowPInt_of_chartConvex {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (hproj : ∀ (S : Set ↑(TopCat.of M)) (j : ℕ), Module.Projective ℤ (relBoundariesInt S j))
+    {U : Set ↑(TopCat.of M)} {V : Set ↑(SingularEuclideanAcyclic.Eucl (2 + 2))}
+    (hU : IsOpen U) (hV : IsOpen V) (e : ↥U ≃ₜ ↥V)
+    {C : Set (EuclideanSpace ℝ (Fin (2 + 2)))} (hCconv : Convex ℝ C) (hCopen : IsOpen C)
+    {p₀ : EuclideanSpace ℝ (Fin (2 + 2))} (hp₀ : p₀ ∈ C) (hCV : C ⊆ V)
+    {W : Set ↑(TopCat.of M)} (hWo : IsOpen W) (hWU : W ⊆ U)
+    (hWe : ∀ u : ↥U, (u : M) ∈ W ↔ ((e u : ↑(SingularEuclideanAcyclic.Eucl (2 + 2))) ∈ C))
+    (zM : SingularChainInt (TopCat.of M) (1 + 0 + 3))
+    (hzM : chainBoundary (TopCat.of M) (1 + 0 + 2) zM = 0)
+    (hD0 : Function.Bijective (openDuality₀Int (k := 2 + 1) hWo
+      (castChainInt (show (1 : ℕ) + 0 + 3 = 2 + 1 + 0 + 1 by omega) zM)
+      (chainBoundary_castChainInt_eq_zero (by omega) (by omega) zM hzM))) :
+    pdWindowPInt zM hzM W hWo := by
+  haveI : T2Space ↑(TopCat.of M) := inferInstanceAs (T2Space M)
+  exact ⟨openDuality_bijective_of_chartConvexInt hproj hU hV e hCconv hCopen hp₀ hCV hWo hWU hWe
+      (by omega) (by omega) _ _,
+    openDuality_bijective_of_chartConvexInt hproj hU hV e hCconv hCopen hp₀ hCV hWo hWU hWe
+      (by omega) (by omega) _ _,
+    hD0⟩
 
 /-- **The charted-manifold MV-step (integral)** — `pdWindowPInt_union` with the `csc⁵`-vanishing
 hypotheses discharged by the integral top-degree vanishing (`cscOpen_eq_zero_of_isOpenInt`, `m = 2`,
