@@ -1294,6 +1294,7 @@ import SKEFTHawking.SingularCSCConvexChart
 import SKEFTHawking.SingularConvexSubAcyclic
 import SKEFTHawking.SingularConvexStageIso
 import SKEFTHawking.SingularBaseCaseD0
+import SKEFTHawking.SingularBaseCaseD0Int
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularPDWindow
 import SKEFTHawking.SingularConvexComplementConnected
