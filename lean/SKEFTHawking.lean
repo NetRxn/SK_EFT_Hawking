@@ -1183,6 +1183,7 @@ import SKEFTHawking.SingularCompactlySupportedTopInt
 import SKEFTHawking.SingularDualityEmptyInt
 import SKEFTHawking.SingularIntCapEquivAssembly
 import SKEFTHawking.FreeSubmoduleOfFreeInt
+import SKEFTHawking.SingularRelBoundariesProjectiveInt
 import SKEFTHawking.SingularPDWindowInt
 import SKEFTHawking.SingularRelativeMVConnectingInt
 import SKEFTHawking.SingularGoodCompactUnionInt
