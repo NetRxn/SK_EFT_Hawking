@@ -29,6 +29,7 @@ open SKEFTHawking.SingularCohomologyInt
 open SKEFTHawking.SingularRelHomologyInt
 open SKEFTHawking.SingularEuclideanCapIsoInt
 open SKEFTHawking.SingularCompactsInOpen
+open SKEFTHawking.SingularCompactlySupportedOpenInt
 open SKEFTHawking.SingularOpenDualityBotInt
 open SKEFTHawking.SingularOpenDualityCycleInt (fundCycleW fundCycleW_relHomologous)
 open SKEFTHawking.SingularLocalDualityKBotInt
@@ -217,5 +218,52 @@ theorem localIsoCompl_eq_oneInt {M : Type} [TopologicalSpace M] [T1Space M]
     {g : RelHomologyInt (X := TopCat.of M) (({x₀} : Set ↑(TopCat.of M))ᶜ) 4}
     (hg : g = (localIsoComplInt x₀).symm 1) : localIsoComplInt x₀ g = 1 := by
   rw [hg, LinearEquiv.apply_symm_apply]
+
+/-! ## §7. The point-stage hit (B4c surjectivity ingredient) -/
+
+/-- **A point-stage class whose `D⁰`-image has augmentation `1`** (integral, `m = 2`): for a fundamental
+cycle `z₀` restricting to the local generator at `x₀ ∈ W`, some compactly-supported cohomology class `β`
+has `ε̄(D⁰_W β) = 1`. The `D⁰`-surjectivity witness. The flip's freeness prereqs `[Free H₃(M|x₀)]` +
+`[Proj B₂/B₃]` are carried as instance hypotheses (`euclSourceIso` convention; dischargeable via
+`H₃(ℝ⁴|0)=0` + Kaplansky). Integral mirror of `SingularBaseCaseD0.exists_point_stage_hit`. -/
+theorem exists_point_stage_hitInt {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M] (x₀ : M)
+    [Module.Free ℤ (RelHomologyInt (X := TopCat.of M) (({x₀} : Set ↑(TopCat.of M))ᶜ) 3)]
+    [Module.Projective ℤ (relBoundariesInt (X := TopCat.of M) (({x₀} : Set ↑(TopCat.of M))ᶜ) 2)]
+    [Module.Projective ℤ (relBoundariesInt (X := TopCat.of M) (({x₀} : Set ↑(TopCat.of M))ᶜ) 3)]
+    {W : Set ↑(TopCat.of M)} (hWo : IsOpen W) (hx₀W : (x₀ : ↑(TopCat.of M)) ∈ W)
+    (z₀ : SingularChainInt (TopCat.of M) (2 + 1 + 0 + 1))
+    (hz₀ : chainBoundary (TopCat.of M) (2 + 1 + 0) z₀ = 0)
+    (hcyc : z₀ ∈ cycles (TopCat.of M) (2 + 2))
+    (hloc : SKEFTHawking.IntOrientationSection.restrictHomologyToPointInt (X := TopCat.of M) x₀ (2 + 2)
+        (Homology.mk (TopCat.of M) (2 + 2) ⟨z₀, hcyc⟩)
+      = (localIsoComplInt x₀).symm 1) :
+    ∃ β : CompactlySupportedCohomologyOpenInt W (2 + 1 + 1),
+      augHInt (sub W) (openDuality₀Int (k := 2 + 1) hWo z₀ hz₀ β) = 1 := by
+  set Kx : CompactsIn W :=
+    ⟨⟨{x₀}, isCompact_singleton⟩, Set.singleton_subset_iff.mpr hx₀W⟩ with hKxdef
+  have hzb : chainBoundary (TopCat.of M) (2 + 1) z₀
+      ∈ subspaceChainsInt (({x₀} : Set ↑(TopCat.of M))ᶜ) (2 + 1) := by
+    rw [show chainBoundary (TopCat.of M) (2 + 1) z₀ = 0 from hz₀]
+    exact Submodule.zero_mem _
+  have hgcls := restrictHomologyToSet_mkInt (K := ({x₀} : Set ↑(TopCat.of M))) z₀ hcyc hzb
+  have hg_eq : RelHomologyInt.mk (X := TopCat.of M) (({x₀} : Set ↑(TopCat.of M))ᶜ) (2 + 2)
+        ⟨RelativeChainInt.mk (({x₀} : Set ↑(TopCat.of M))ᶜ) (2 + 2) z₀,
+          relMk_mem_relCyclesInt_of_boundary (({x₀} : Set ↑(TopCat.of M))ᶜ) z₀ hzb⟩
+      = (localIsoComplInt x₀).symm 1 := hgcls.symm.trans hloc
+  have hflip := relKroneckerHInt_flip_bijective_of_equiv
+    (S := (({x₀} : Set ↑(TopCat.of M))ᶜ)) (M := 2)
+    (localIsoComplInt x₀) (localIsoCompl_eq_oneInt x₀ hg_eq)
+  obtain ⟨ω₀, hω₀⟩ := hflip.surjective 1
+  obtain ⟨a₀, rfl⟩ := Submodule.Quotient.mk_surjective _ ω₀
+  refine ⟨Module.DirectLimit.of ℤ (CompactsIn W) (cohomGWInt W (2 + 1 + 1))
+    (cohomFWInt W (2 + 1 + 1)) Kx (Submodule.Quotient.mk a₀), ?_⟩
+  rw [LinearMap.flip_apply] at hω₀
+  exact (congrArg (fun t => augHInt (sub W) t)
+      (openDuality₀Int_of hWo z₀ hz₀ Kx (Submodule.Quotient.mk a₀))).trans
+    ((augH_legW₀_eq_relKroneckerHInt hWo z₀ hz₀ Kx a₀).trans
+      ((congrArg (fun t => relKroneckerHInt (({x₀} : Set ↑(TopCat.of M))ᶜ)
+          (RelativeCohomologyInt.mk (({x₀} : Set ↑(TopCat.of M))ᶜ) (2 + 1 + 1) a₀) t)
+        (fundCycleW₀_class_eqInt hWo z₀ hz₀ Kx)).trans hω₀))
 
 end SKEFTHawking.SingularBaseCaseD0Int
