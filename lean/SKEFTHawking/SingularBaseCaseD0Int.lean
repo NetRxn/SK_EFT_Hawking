@@ -22,6 +22,9 @@ import SKEFTHawking.SingularLineMinusPointInt
 import SKEFTHawking.SingularLocalDuality
 import SKEFTHawking.SingularLocalHomologyIsoInt
 import SKEFTHawking.SingularGoodCompactUnionInt
+import SKEFTHawking.SingularRelBoundariesProjectiveInt
+import SKEFTHawking.SingularConvexSubAcyclic
+import SKEFTHawking.SingularH0PathConnectedInt
 
 open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyInt
@@ -265,5 +268,51 @@ theorem exists_point_stage_hitInt {M : Type} [TopologicalSpace M] [T2Space M]
       ((congrArg (fun t => relKroneckerHInt (({x₀} : Set ↑(TopCat.of M))ᶜ)
           (RelativeCohomologyInt.mk (({x₀} : Set ↑(TopCat.of M))ᶜ) (2 + 1 + 1) a₀) t)
         (fundCycleW₀_class_eqInt hWo z₀ hz₀ Kx)).trans hω₀))
+
+/-! ## §8. B4c surjectivity — the `D⁰` duality of a chart-convex open is surjective -/
+
+/-- **B4c (surjectivity half)** (integral): the `D⁰` duality of a chart-convex open is surjective. Pick the
+convex point `p₀`; `exists_point_stage_hitInt` gives a `β` with `ε̄(D⁰β) = 1`; since `sub W` is
+path-connected (chart-homeomorphic to the convex `C`), `ε̄` is injective, so `y = ε̄(y)•β` maps under `D⁰`
+to `y`. Carries the `∀ x, [Free H₃(M|x)]` freeness (`euclSourceIso` convention); the boundary
+projectivities are discharged inline via Kaplansky. Integral mirror of
+`SingularBaseCaseD0.openDuality₀_surjective_of_chartConvex`. -/
+theorem openDuality₀_surjective_of_chartConvexInt {M : Type} [TopologicalSpace M] [T2Space M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin 4)) M]
+    (hfree3 : ∀ x : M,
+      Module.Free ℤ (RelHomologyInt (X := TopCat.of M) (({x} : Set ↑(TopCat.of M))ᶜ) 3))
+    {U : Set ↑(TopCat.of M)} {V : Set ↑(SKEFTHawking.SingularEuclideanAcyclic.Eucl 4)} (e : ↥U ≃ₜ ↥V)
+    {C : Set (EuclideanSpace ℝ (Fin 4))} (hCconv : Convex ℝ C) (hCne : C.Nonempty) (hCV : C ⊆ V)
+    {W : Set ↑(TopCat.of M)} (hWo : IsOpen W) (hWU : W ⊆ U)
+    (hWe : ∀ u : ↥U, (u : ↑(TopCat.of M)) ∈ W ↔
+      ((e u : ↑(SKEFTHawking.SingularEuclideanAcyclic.Eucl 4)) ∈ C))
+    (z₀ : SingularChainInt (TopCat.of M) (2 + 1 + 0 + 1))
+    (hz₀ : chainBoundary (TopCat.of M) (2 + 1 + 0) z₀ = 0)
+    (hcyc : z₀ ∈ cycles (TopCat.of M) (2 + 2))
+    (hloc : ∀ x : M, SKEFTHawking.IntOrientationSection.restrictHomologyToPointInt
+        (X := TopCat.of M) x (2 + 2) (Homology.mk (TopCat.of M) (2 + 2) ⟨z₀, hcyc⟩)
+      = (localIsoComplInt x).symm 1) :
+    Function.Surjective (openDuality₀Int (k := 2 + 1) hWo z₀ hz₀) := by
+  obtain ⟨p₀, hp₀⟩ := hCne
+  set x₀ : M := ((e.symm ⟨p₀, hCV hp₀⟩ : ↥U) : ↑(TopCat.of M)) with hx₀def
+  have hx₀W : (x₀ : ↑(TopCat.of M)) ∈ W :=
+    (hWe _).mpr (by rw [e.apply_symm_apply]; exact hp₀)
+  haveI := hfree3 x₀
+  haveI := SKEFTHawking.SingularRelBoundariesProjectiveInt.relBoundariesInt_projective
+    (({x₀} : Set ↑(TopCat.of M))ᶜ) 2
+  haveI := SKEFTHawking.SingularRelBoundariesProjectiveInt.relBoundariesInt_projective
+    (({x₀} : Set ↑(TopCat.of M))ᶜ) 3
+  obtain ⟨β, hβ⟩ := exists_point_stage_hitInt x₀ hWo hx₀W z₀ hz₀ hcyc (hloc x₀)
+  haveI hpcsC : PathConnectedSpace
+      ↑(sub (X := SKEFTHawking.SingularEuclideanAcyclic.Eucl 4) C) :=
+    isPathConnected_iff_pathConnectedSpace.mp (hCconv.isPathConnected ⟨p₀, hp₀⟩)
+  haveI hpcsW : PathConnectedSpace ↑(sub W) := by
+    have φ := SKEFTHawking.SingularConvexSubAcyclic.chartSubHomeo (M := TopCat.of M) e hCV hWU hWe
+    exact φ.symm.surjective.pathConnectedSpace φ.symm.continuous
+  have hauginj : Function.Injective (augHInt (sub (X := TopCat.of M) W)) :=
+    SKEFTHawking.SingularH0PathConnectedInt.augHInt_injective_pathConnected
+  intro y
+  refine ⟨(augHInt (sub (X := TopCat.of M) W) y) • β, hauginj ?_⟩
+  rw [map_smul, map_smul, hβ, smul_eq_mul, mul_one]
 
 end SKEFTHawking.SingularBaseCaseD0Int
