@@ -1158,6 +1158,7 @@ import SKEFTHawking.SingularOpenDualityUpperFiveLemmaInt
 import SKEFTHawking.SingularSubHomSumEndInt
 import SKEFTHawking.SingularSubdivisionBotInt
 import SKEFTHawking.SingularExcisionBotInt
+import SKEFTHawking.SingularMayerVietorisLESBotInt
 import SKEFTHawking.SingularRelativeMVConnectingInt
 import SKEFTHawking.SingularGoodCompactUnionInt
 import SKEFTHawking.SingularGoodCompactEuclideanInt
