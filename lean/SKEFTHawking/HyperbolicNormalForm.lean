@@ -91,4 +91,21 @@ theorem even_unimodular_sig_zero_split_congr {n : ℕ} (M : Matrix (Fin n) (Fin 
     rw [latticeSigOf_fin] at hsplit
     omega
 
+/-- **Congruence extends through the hyperbolic block**: if `M' ≅ N'` then `H ⊕ M' ≅ H ⊕ N'` (reindexed),
+via the block change of basis `1 ⊕ Q`. The inductive step of the `σ=0 ⟹ n·H` normal form. -/
+theorem IntCongr.hyp_block {p q : ℕ} (e : Fin 2 ⊕ Fin q ≃ Fin p)
+    {M' N' : Matrix (Fin q) (Fin q) ℤ} (h : IntCongr M' N') :
+    IntCongr (Matrix.reindex e e (Matrix.fromBlocks Hyp 0 0 M'))
+        (Matrix.reindex e e (Matrix.fromBlocks Hyp 0 0 N')) := by
+  obtain ⟨Q, hQ, hQeq⟩ := h
+  refine ⟨Matrix.reindex e e (Matrix.fromBlocks 1 0 0 Q), ?_, ?_⟩
+  · rw [Matrix.det_reindex_self, Matrix.det_fromBlocks_zero₂₁, Matrix.det_one, one_mul]
+    exact hQ
+  · simp only [Matrix.reindex_apply, Matrix.transpose_submatrix, Matrix.submatrix_mul_equiv]
+    congr 1
+    rw [Matrix.fromBlocks_transpose, Matrix.transpose_one, Matrix.transpose_zero,
+      Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply]
+    simp only [Matrix.one_mul, Matrix.mul_one, Matrix.mul_zero, Matrix.zero_mul,
+      Matrix.transpose_zero, add_zero, zero_add, hQeq]
+
 end SKEFTHawking
