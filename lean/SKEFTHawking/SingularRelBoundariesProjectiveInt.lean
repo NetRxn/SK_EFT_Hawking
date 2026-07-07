@@ -29,4 +29,17 @@ theorem relBoundariesInt_projective (S : Set ↑X) (j : ℕ) :
   haveI := free_relChainInt S j
   exact SKEFTHawking.FreeSubmoduleInt.projective_submodule_of_free (relBoundariesInt S j)
 
+/-- **Relative boundaries are FREE** (Kaplansky, the stronger form) — a submodule of the free
+`RelativeChainInt S j`. -/
+theorem relBoundariesInt_free (S : Set ↑X) (j : ℕ) : Module.Free ℤ (relBoundariesInt S j) := by
+  haveI := free_relChainInt S j
+  exact SKEFTHawking.FreeSubmoduleInt.free_submodule_of_free (relBoundariesInt S j)
+
+/-- **Relative cycles are FREE** (Kaplansky) — a submodule of the free `RelativeChainInt S j`. The
+free-part building block of the integral UCT (the `Hom(−,ℤ)`-dual of a free complex) and of the
+`H₂`-free Kronecker pairing (`kron`). -/
+theorem relCyclesInt_free (S : Set ↑X) (j : ℕ) : Module.Free ℤ (relCyclesInt S j) := by
+  haveI := free_relChainInt S j
+  exact SKEFTHawking.FreeSubmoduleInt.free_submodule_of_free (relCyclesInt S j)
+
 end SKEFTHawking.SingularRelBoundariesProjectiveInt
