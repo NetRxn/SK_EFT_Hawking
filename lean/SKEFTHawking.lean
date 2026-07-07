@@ -1171,6 +1171,7 @@ import SKEFTHawking.SingularConvexComplementH0Int
 import SKEFTHawking.SingularCSCVanishAboveInt
 import SKEFTHawking.SingularCSCConvexChartInt
 import SKEFTHawking.SingularBaseCaseUpperInt
+import SKEFTHawking.SingularPDWindowInt
 import SKEFTHawking.SingularRelativeMVConnectingInt
 import SKEFTHawking.SingularGoodCompactUnionInt
 import SKEFTHawking.SingularGoodCompactEuclideanInt
