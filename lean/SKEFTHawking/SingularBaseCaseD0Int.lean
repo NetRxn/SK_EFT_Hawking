@@ -133,4 +133,35 @@ theorem fundCycleW₀_class_eqInt {k : ℕ} {W : Set ↑X} (hW : IsOpen W)
   convert hneg using 3
   rw [fundCycleW₀Int, SKEFTHawking.SingularOpenDualityMVConnSquareInt.castChainInt_eq]
 
+/-! ## §4. The integral UC-flip: evaluation against a rank-1 generator is bijective -/
+
+/-- **`dualEquivOfIsoZ E φ = φ g`** when `E g = 1` — the rank-1 dual iso is evaluation at the
+`E`-generator `g = E.symm 1`. -/
+theorem dualEquivOfIsoZ_apply {H : Type*} [AddCommGroup H] [Module ℤ H] (E : H ≃ₗ[ℤ] ℤ)
+    {g : H} (hg : E g = 1) (φ : Module.Dual ℤ H) : dualEquivOfIsoZ E φ = φ g := by
+  have hg' : g = E.symm 1 := by rw [← hg, E.symm_apply_apply]
+  rw [dualEquivOfIsoZ, LinearEquiv.trans_apply, hg']
+  rfl
+
+omit [T2Space ↑X] in
+/-- **The integral UC-flip is bijective** (the ℤ analogue of `relKroneckerH_flip_bijective_of_equiv`):
+given a rank-1 iso `E : Hₘ₊₂(M,S;ℤ) ≃ ℤ` with generator `g` (`E g = 1`), and with `Hₘ₊₁(M,S;ℤ)` free
+(so `Ext = 0`) and the relevant boundaries projective, the pairing `⟨·, g⟩ : Hᵐ⁺²(M,S;ℤ) → ℤ` is
+bijective. It factors as `dualEquivOfIsoZ E ∘ relKronMapInt`, both bijective (the latter is the integral
+relative UCT free case `relKroneckerHInt_bijective_of_free`). Over ℤ the freeness of `Hₘ₊₁` replaces the
+ℤ/2 UC vanishing the mod-2 proof used — supplied by `SingularTopHomologyFreeUnionInt` at the stages. -/
+theorem relKroneckerHInt_flip_bijective_of_equiv {S : Set ↑X} {M : ℕ}
+    [Module.Free ℤ (RelHomologyInt S (M + 1))]
+    [Module.Projective ℤ (relBoundariesInt S M)]
+    [Module.Projective ℤ (relBoundariesInt S (M + 1))]
+    (E : RelHomologyInt S (M + 2) ≃ₗ[ℤ] ℤ) {g : RelHomologyInt S (M + 2)} (hg : E g = 1) :
+    Function.Bijective ⇑((relKroneckerHInt S (N := M + 1)).flip g) := by
+  have hcomp : ⇑((relKroneckerHInt S (N := M + 1)).flip g)
+      = (dualEquivOfIsoZ E) ∘ (relKronMapInt S (N := M + 1)) := by
+    funext ω
+    rw [LinearMap.flip_apply]
+    exact (dualEquivOfIsoZ_apply E hg (relKronMapInt S ω)).symm
+  rw [hcomp]
+  exact (dualEquivOfIsoZ E).bijective.comp (relKroneckerHInt_bijective_of_free S)
+
 end SKEFTHawking.SingularBaseCaseD0Int
