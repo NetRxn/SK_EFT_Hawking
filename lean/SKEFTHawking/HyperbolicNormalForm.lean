@@ -108,4 +108,38 @@ theorem IntCongr.hyp_block {p q : ℕ} (e : Fin 2 ⊕ Fin q ≃ Fin p)
     simp only [Matrix.one_mul, Matrix.mul_one, Matrix.mul_zero, Matrix.zero_mul,
       Matrix.transpose_zero, add_zero, zero_add, hQeq]
 
+/-- **A hyperbolic-standard form**: a reindexed iterated block-sum of hyperbolic planes `H` (the
+integral shape of `n·H`). The `cons` step allows any target cardinality `p` (the equiv itself pins
+`p = m + 2`), which sidesteps the `Nat`-subtraction casts of the rank induction. -/
+inductive IsHyperbolicForm : {n : ℕ} → Matrix (Fin n) (Fin n) ℤ → Prop
+  | empty : IsHyperbolicForm (0 : Matrix (Fin 0) (Fin 0) ℤ)
+  | cons {m p : ℕ} (e : Fin 2 ⊕ Fin m ≃ Fin p) {N : Matrix (Fin m) (Fin m) ℤ}
+      (h : IsHyperbolicForm N) :
+      IsHyperbolicForm (Matrix.reindex e e (Matrix.fromBlocks Hyp 0 0 N))
+
+/-- **The `σ=0 ⟹ n·H` hyperbolic normal form (unconditional).** Every `σ=0` even unimodular integer
+form is `IntCongr` to a hyperbolic-standard form (a reindexed block-sum of `H`'s). Strong induction on
+rank: peel one `H` by the congruence-split, recurse on the residual, and re-block via `IntCongr.hyp_block`.
+This is the **lattice half of the injective direction of `Ω₄^{Spin}≅ℤ`** — a `σ=0` spin 4-manifold's
+intersection form is `n·H`. (Rank `1` is impossible: `M 0 0` is even yet `±1`.) -/
+theorem exists_hyperbolic_congr : ∀ {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ),
+    IsEvenUnimodular M → latticeSig M = 0 →
+    ∃ N : Matrix (Fin n) (Fin n) ℤ, IsHyperbolicForm N ∧ IntCongr M N := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n IH =>
+    intro M heu hsig
+    rcases Nat.lt_or_ge n 2 with hlt | hge
+    · interval_cases n
+      · exact ⟨0, Subsingleton.elim (0 : Matrix (Fin 0) (Fin 0) ℤ) 0 ▸ IsHyperbolicForm.empty,
+          Subsingleton.elim M 0 ▸ IntCongr.rfl _⟩
+      · exfalso
+        have hdet : M.det = M 0 0 := by simp
+        have heven : (2 : ℤ) ∣ M 0 0 := heu.2.2 0
+        rcases heu.2.1 with h | h <;> rw [hdet] at h <;> omega
+    · obtain ⟨M', e, hcong, heu', hsig'⟩ := even_unimodular_sig_zero_split_congr M heu hsig hge
+      obtain ⟨N', hN'form, hN'cong⟩ := IH (n - 2) (by omega) M' heu' hsig'
+      exact ⟨Matrix.reindex e e (Matrix.fromBlocks Hyp 0 0 N'),
+        IsHyperbolicForm.cons e hN'form, hcong.trans (IntCongr.hyp_block e hN'cong)⟩
+
 end SKEFTHawking
