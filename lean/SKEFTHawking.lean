@@ -1168,6 +1168,7 @@ import SKEFTHawking.SingularRelativeUCVanishInt
 import SKEFTHawking.SingularConvexComplementConnectedInt
 import SKEFTHawking.SingularCSCVanishAboveInt
 import SKEFTHawking.SingularCSCConvexChartInt
+import SKEFTHawking.SingularBaseCaseUpperInt
 import SKEFTHawking.SingularRelativeMVConnectingInt
 import SKEFTHawking.SingularGoodCompactUnionInt
 import SKEFTHawking.SingularGoodCompactEuclideanInt
