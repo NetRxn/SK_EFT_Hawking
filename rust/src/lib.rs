@@ -2607,7 +2607,7 @@ fn run_rhmc_rust<'py>(
     cg_val: PyReadonlyArray1<'py, f64>,
     // Optional: resume from a saved h-field (skips random initialization)
     h_init: Option<PyReadonlyArray1<'py, f64>>,
-) -> PyResult<PyObject> {
+) -> PyResult<Py<PyAny>> {
     let n_threads = 1;  // single-threaded; production parallelism is across workers
     let alphas = alphas.as_slice()?;
     let betas = betas.as_slice()?;
@@ -2674,7 +2674,7 @@ fn run_rhmc_rust<'py>(
     // Return final h-field for checkpointing/resume
     dict.set_item("h_final", h)?;
 
-    Ok(dict.into())
+    Ok(dict.into_any().unbind())
 }
 
 /// Apply the fermion matrix A[h] @ v (for testing/validation).
@@ -2878,7 +2878,7 @@ fn run_rhmc_rust_eo<'py>(
     cg_j: PyReadonlyArray1<'py, i64>,
     cg_val: PyReadonlyArray1<'py, f64>,
     h_init: Option<PyReadonlyArray1<'py, f64>>,
-) -> PyResult<PyObject> {
+) -> PyResult<Py<PyAny>> {
     let alphas = alphas.as_slice()?;
     let betas = betas.as_slice()?;
     let alphas_hb = alphas_hb.as_slice()?;
@@ -2943,7 +2943,7 @@ fn run_rhmc_rust_eo<'py>(
     dict.set_item("L", l)?;
     dict.set_item("h_final", h)?;
 
-    Ok(dict.into())
+    Ok(dict.into_any().unbind())
 }
 
 /// Clark-Kennedy 2-pseudofermion even-odd RHMC.
@@ -2981,7 +2981,7 @@ fn run_rhmc_rust_eo_2pf<'py>(
     cg_j: PyReadonlyArray1<'py, i64>,
     cg_val: PyReadonlyArray1<'py, f64>,
     h_init: Option<PyReadonlyArray1<'py, f64>>,
-) -> PyResult<PyObject> {
+) -> PyResult<Py<PyAny>> {
     let alphas = alphas.as_slice()?;
     let betas = betas.as_slice()?;
     let alphas_hb = alphas_hb.as_slice()?;
@@ -3047,7 +3047,7 @@ fn run_rhmc_rust_eo_2pf<'py>(
     dict.set_item("L", l)?;
     dict.set_item("h_final", h)?;
 
-    Ok(dict.into())
+    Ok(dict.into_any().unbind())
 }
 
 /// Deflated Clark-Kennedy 2-PF even-odd RHMC.
@@ -3086,7 +3086,7 @@ fn run_rhmc_rust_eo_2pf_defl<'py>(
     n_deflation_vectors: usize,
     defl_evecs_flat: Option<PyReadonlyArray1<'py, f64>>,
     defl_evals: Option<PyReadonlyArray1<'py, f64>>,
-) -> PyResult<PyObject> {
+) -> PyResult<Py<PyAny>> {
     let alphas = alphas.as_slice()?;
     let betas = betas.as_slice()?;
     let alphas_hb = alphas_hb.as_slice()?;
@@ -3192,7 +3192,7 @@ fn run_rhmc_rust_eo_2pf_defl<'py>(
     dict.set_item("L", l)?;
     dict.set_item("h_final", h)?;
 
-    Ok(dict.into())
+    Ok(dict.into_any().unbind())
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -3552,7 +3552,7 @@ fn run_rhmc_rust_eo_2pf_hasenbusch<'py>(
     cg_j: PyReadonlyArray1<'py, i64>,
     cg_val: PyReadonlyArray1<'py, f64>,
     h_init: Option<PyReadonlyArray1<'py, f64>>,
-) -> PyResult<PyObject> {
+) -> PyResult<Py<PyAny>> {
     let act_a0s = action_alpha0s.as_slice()?;
     let act_als = action_alphas.as_slice()?;
     let act_bes = action_betas.as_slice()?;
@@ -3624,7 +3624,7 @@ fn run_rhmc_rust_eo_2pf_hasenbusch<'py>(
     dict.set_item("L", l)?;
     dict.set_item("h_final", h)?;
 
-    Ok(dict.into())
+    Ok(dict.into_any().unbind())
 }
 
 /// Validation: compare plain vs deflated single-shift CG solving (M_e+β)x=φ,
