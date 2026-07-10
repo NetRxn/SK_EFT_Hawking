@@ -51,6 +51,10 @@ _WHITELIST = (
     # manifolds" (LMS-151, 1990) — academic paper archives, user-authorized 2026-07-04 for
     # the Phase 5q.H full-strength ABK-completeness fetch (the surgery proof is off-arXiv).
     "math.berkeley.edu", "webhomes.maths.ed.ac.uk",
+    # Patent & trademark public records (prior-art, FTO, clearance verification) +
+    # nature.com scholarly primary + Semantic Scholar meta, user-authorized 2026-07-10:
+    "patents.google.com", "patentscope.wipo.int", "uspto.gov",
+    "worldwide.espacenet.com", "nature.com", "semanticscholar.org",
 )
 
 _HEADER = re.compile(r"^#\s*-+\s*(.+?)\s*-+\s*$")
