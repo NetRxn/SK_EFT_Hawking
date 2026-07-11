@@ -21,11 +21,15 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_deci
 import Mathlib
 import SKEFTHawking.SingularOpenDualityCycleInt
 import SKEFTHawking.SingularConnSquareCloseNCInt
+import SKEFTHawking.SingularChainCastHelpersInt
 
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularRelHomologyInt
 open SKEFTHawking.SingularCompactsInOpen
-open SKEFTHawking.SingularOpenDualityCycleInt (fundCycleW fundCycleW_relHomologous)
+open SKEFTHawking.SingularOpenDualityCycleInt (fundCycleW fundCycleW_relHomologous fundCycleW_boundary)
+open SKEFTHawking.SingularSubdivisionInt (singularSdInt iterHomotopyInt iterHomotopyInt_chainHomotopy)
+open SKEFTHawking.SingularExcisionIsoInt (iterHomotopyInt_mem_subspaceChainsInt)
+open SKEFTHawking.SingularRelativeMVInt (subspaceChainsInt_mono)
 
 namespace SKEFTHawking.SingularConnSquareCloseNCInt
 
@@ -50,6 +54,68 @@ theorem fundCycleW_chain_relInt {W : Set ↑X} {k m : ℕ} (hW : IsOpen W)
   · rw [← RelativeChainInt.mk_eq_zero_iff]
     simp only [RelativeChainInt.mk] at hw ⊢
     rw [Submodule.Quotient.mk_add, Submodule.Quotient.mk_sub, hw]
+    abel
+
+/-- **The FREE two-fund three-set rel-comparison** (Brick K′, integral). ℤ port of the mod-2
+`SingularConnSquareCloseNC.fund_pair_three_set_rel_comparison_free`. **Sign:** over ℤ both funds are
+rel-homologous to the *same* `+z₀`, so the mod-2 target `f₃ + Sd^jF F₂ ~ 2z₀` does NOT cancel; the
+honest ℤ target is `f₃ − Sd^jF F₂ = ∂D + ρ` (`z₀` cancels), with
+`D := η₁ − T_μ fund₁ − η₂ + T_jF F₂`, `ρ := a₁ − T_μ(∂fund₁) − f₁ − f₂ − a₂ + T_jF(∂F₂) ∈ C(S)`.
+The chain-homotopy `∂Dₘ + Dₘ∂ = 1 − Sdᵐ` and `fundCycleW_chain_relInt` both carry the documented
+`+`→`−` adaptation. -/
+theorem fund_pair_three_set_rel_comparison_freeInt {W₁ S : Set ↑X} (hW₁ : IsOpen W₁)
+    {k m : ℕ} (z₀ : SingularChainInt X (k + m + 1)) (hz₀ : chainBoundary X (k + m) z₀ = 0)
+    (K₁ : CompactsIn W₁) (hK₁S : ((↑K₁.1 : Set ↑X))ᶜ ⊆ S)
+    (μ jF : ℕ) (f₁ f₂ f₃ : SingularChainInt X (k + m + 1))
+    (hf₁ : f₁ ∈ subspaceChainsInt S (k + m + 1)) (hf₂ : f₂ ∈ subspaceChainsInt S (k + m + 1))
+    (hsplit : (⇑(singularSdInt X (k + m + 1)))^[μ] (fundCycleW hW₁ z₀ hz₀ K₁) = f₁ + f₂ + f₃)
+    (F₂ : SingularChainInt X (k + m + 1)) (η₂ : SingularChainInt X (k + m + 1 + 1))
+    (a₂ : SingularChainInt X (k + m + 1))
+    (heq₂ : F₂ - z₀ = chainBoundary X (k + m + 1) η₂ + a₂)
+    (ha₂ : a₂ ∈ subspaceChainsInt S (k + m + 1))
+    (hF₂bd : chainBoundary X (k + m) F₂ ∈ subspaceChainsInt S (k + m)) :
+    ∃ (D : SingularChainInt X (k + m + 1 + 1)) (ρ : SingularChainInt X (k + m + 1)),
+      ρ ∈ subspaceChainsInt S (k + m + 1)
+      ∧ f₃ - (⇑(singularSdInt X (k + m + 1)))^[jF] F₂
+        = chainBoundary X (k + m + 1) D + ρ := by
+  obtain ⟨η₁, a₁, heq₁, ha₁⟩ := fundCycleW_chain_relInt hW₁ z₀ hz₀ K₁
+  have hh₁ := iterHomotopyInt_chainHomotopy X μ (k + m) (fundCycleW hW₁ z₀ hz₀ K₁)
+  have hh₂ := iterHomotopyInt_chainHomotopy X jF (k + m) F₂
+  refine ⟨η₁ - iterHomotopyInt X (k + m + 1) μ (fundCycleW hW₁ z₀ hz₀ K₁) - η₂
+      + iterHomotopyInt X (k + m + 1) jF F₂,
+    a₁ - iterHomotopyInt X (k + m) μ (chainBoundary X (k + m) (fundCycleW hW₁ z₀ hz₀ K₁))
+      - f₁ - f₂ - a₂ + iterHomotopyInt X (k + m) jF (chainBoundary X (k + m) F₂), ?_, ?_⟩
+  · -- ρ ∈ C(S)
+    refine Submodule.add_mem _
+      (Submodule.sub_mem _ (Submodule.sub_mem _ (Submodule.sub_mem _ (Submodule.sub_mem _
+        (subspaceChainsInt_mono hK₁S _ ha₁)
+        (subspaceChainsInt_mono hK₁S _ (iterHomotopyInt_mem_subspaceChainsInt
+          (fundCycleW_boundary hW₁ z₀ hz₀ K₁) μ)))
+        hf₁) hf₂) ha₂)
+      (iterHomotopyInt_mem_subspaceChainsInt hF₂bd jF)
+  · -- the equation (honest ℤ signs; z₀/fund₁/F₂ and each rel-witness atom cancel)
+    have e1 : chainBoundary X (k + m + 1) η₁
+        = fundCycleW hW₁ z₀ hz₀ K₁ - z₀ - a₁ := by
+      rw [eq_sub_iff_add_eq]; exact heq₁.symm
+    have e2 : chainBoundary X (k + m + 1) η₂ = F₂ - z₀ - a₂ := by
+      rw [eq_sub_iff_add_eq]; exact heq₂.symm
+    have e3 : chainBoundary X (k + m + 1) (iterHomotopyInt X (k + m + 1) μ (fundCycleW hW₁ z₀ hz₀ K₁))
+        = fundCycleW hW₁ z₀ hz₀ K₁ - (⇑(singularSdInt X (k + m + 1)))^[μ] (fundCycleW hW₁ z₀ hz₀ K₁)
+          - iterHomotopyInt X (k + m) μ (chainBoundary X (k + m) (fundCycleW hW₁ z₀ hz₀ K₁)) := by
+      rw [eq_sub_iff_add_eq]; exact hh₁
+    have e4 : chainBoundary X (k + m + 1) (iterHomotopyInt X (k + m + 1) jF F₂)
+        = F₂ - (⇑(singularSdInt X (k + m + 1)))^[jF] F₂
+          - iterHomotopyInt X (k + m) jF (chainBoundary X (k + m) F₂) := by
+      rw [eq_sub_iff_add_eq]; exact hh₂
+    have hD : chainBoundary X (k + m + 1)
+          (η₁ - iterHomotopyInt X (k + m + 1) μ (fundCycleW hW₁ z₀ hz₀ K₁) - η₂
+            + iterHomotopyInt X (k + m + 1) jF F₂)
+        = chainBoundary X (k + m + 1) η₁
+          - chainBoundary X (k + m + 1) (iterHomotopyInt X (k + m + 1) μ (fundCycleW hW₁ z₀ hz₀ K₁))
+          - chainBoundary X (k + m + 1) η₂
+          + chainBoundary X (k + m + 1) (iterHomotopyInt X (k + m + 1) jF F₂) := by
+      simp only [map_add, map_sub]
+    rw [hD, e1, e2, e3, e4, hsplit]
     abel
 
 end SKEFTHawking.SingularConnSquareCloseNCInt
