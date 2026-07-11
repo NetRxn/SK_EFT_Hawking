@@ -178,4 +178,30 @@ theorem relCohomMvConnectingInt_eq_mk_coboundary_cochainSplitInt (U V : Set ↑X
     show coboundary X (N + 1) (0 : SingularCochainInt X (N + 1)) = 0 from
       map_zero (coboundaryₗ X (N + 1)), add_zero]
 
+/-- **`δφ ∈ relCochains U`** (integral, unconditional): the coboundary of the `U`-part is a relative
+`U`-cochain. The `A`-leg membership Route B's Brick J consumes (NOT `(U∪V)`-membership). Port of
+`SingularCohomologySnake.cochainSplit_coboundary_mem_U`. -/
+theorem cochainSplitInt_coboundary_mem_UInt (U : Set ↑X) (n : ℕ) (ω : SingularCochainInt X n) :
+    coboundary X n (cochainSplitInt U n ω) ∈ relCochainsInt U (n + 1) :=
+  coboundary_mem_relCochainsInt U n _ (cochainSplitInt_mem_relCochainsInt U n ω)
+
+/-- **`δφ ∈ relCochains V`** (integral) when `ω` is a `(U∩V)`-relative cocycle: from
+`δ(φ + (ω − φ)) = δω = 0`, `δφ = −δ(ω − φ)`, and `ω − φ ∈ relCochains V`. The `B`-leg membership for
+Brick J. Port of `SingularCohomologySnake.cochainSplit_coboundary_mem_V` with the honest ℤ subtraction
+(no char-2 `ω − φ = ω + φ`). -/
+theorem cochainSplitInt_coboundary_mem_VInt (U V : Set ↑X) (n : ℕ) (ω : SingularCochainInt X n)
+    (hω : ω ∈ relCochainsInt (U ∩ V) n) (hcoc : coboundary X n ω = 0) :
+    coboundary X n (cochainSplitInt U n ω) ∈ relCochainsInt V (n + 1) := by
+  have hδψ : coboundary X n (ω - cochainSplitInt U n ω) ∈ relCochainsInt V (n + 1) :=
+    coboundary_mem_relCochainsInt V n _ (cochainSplitInt_compl_mem_relCochainsInt U V n ω hω)
+  have hsum : coboundary X n (cochainSplitInt U n ω) + coboundary X n (ω - cochainSplitInt U n ω) = 0 := by
+    have h := congrArg (coboundaryₗ X n) (show cochainSplitInt U n ω + (ω - cochainSplitInt U n ω) = ω by
+      abel)
+    rw [map_add] at h
+    have h2 : coboundary X n (cochainSplitInt U n ω) + coboundary X n (ω - cochainSplitInt U n ω)
+        = coboundary X n ω := h
+    rw [h2, hcoc]
+  rw [eq_neg_of_add_eq_zero_left hsum]
+  exact (relCochainsInt V (n + 1)).neg_mem hδψ
+
 end SKEFTHawking.SingularCochainSplitInt
