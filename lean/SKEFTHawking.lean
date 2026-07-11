@@ -867,6 +867,7 @@ import SKEFTHawking.SingularHomologyInt
 -- interMatrix_isUnimodular_of_capIso). The load-bearing ℤ difference from mod-2 = the SIGNED cap-Leibniz
 -- ∂(a⌢c)=(-1)ᵏ⁺¹(δa⌢c)+(-1)ᵏ(a⌢∂c) (capInt_leibniz), whose signs the mod-2 file dropped (+1=-1).
 import SKEFTHawking.IntCapProductInt
+import SKEFTHawking.SingularCapMapChainInt
 -- Phase 5q.H · E1 (Substrate-G brick 10): the integral cap-iso IntCapIso reduced to a CONCRETE
 -- determinant datum IntCapIsoData (H₂ free basis + two unimodular integer determinants on the BUILT maps
 -- capMapLin/kronMapLin, via LinearEquiv.ofIsUnitDet) → IntCapIso → IntPoincareDuality → interMatrix
