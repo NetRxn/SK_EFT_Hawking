@@ -878,6 +878,7 @@ import SKEFTHawking.SingularCoverPartitionCapBoundaryInt
 import SKEFTHawking.SingularCoverFineSplitInt
 import SKEFTHawking.SingularCochainSplitInt
 import SKEFTHawking.SingularConnSquareCloseNCInt
+import SKEFTHawking.SingularConnSquareFactIInt
 -- Phase 5q.H · E1 (Substrate-G brick 10): the integral cap-iso IntCapIso reduced to a CONCRETE
 -- determinant datum IntCapIsoData (H₂ free basis + two unimodular integer determinants on the BUILT maps
 -- capMapLin/kronMapLin, via LinearEquiv.ofIsUnitDet) → IntCapIso → IntPoincareDuality → interMatrix
