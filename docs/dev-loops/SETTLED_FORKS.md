@@ -230,3 +230,11 @@ retire) — no entry is immutable. Every entry carries datetime metadata.
   spectral tower it replaces) is the open judgment call.
 - memory: [[project_5qH_geometric_floor_terminal]]
 - created_ts: 2026-07-04T00:00:00Z
+
+## 5qH-fg-ek-over-Z-blocked (2026-07-12, arm-2 — route ban, prose; scout-verified vs primaries)
+**BANNED route:** deriving `intH2_basis` FG at general M via a ℤ-analog of the mod-2 Erdős–Kaplansky
+self-duality forcing (`SingularUCFinite` pattern). PROVABLY BLOCKED: `A = (⊕ℤ) ⊕ ℤ^ℕ` is self-dual
+(Specker) and not f.g. — PD (H²≅H₂) + UCT-duality over ℤ cannot force finite generation. The countable
+rescue (ℵ₁-freeness of ℤ^ℕ) is circular (countability of H₂ needs ANR tech). Minimal published FG route =
+Borsuk-ENR (FNOP 1910.07372 Cor 3.18) — community-scale. **Project path: witness-level `kron`/`B` data.**
+Verdict file: `Lit-Search/Phase-5qH/FG_via_PD_duality_forcing_verdict_20260712.md`.
