@@ -1343,6 +1343,7 @@ import SKEFTHawking.CharSurfaceBounding
 import SKEFTHawking.SingularOpenDualityUnivBij
 import SKEFTHawking.KroneckerRedCompat
 import SKEFTHawking.SpinWuDatumClosed
+import SKEFTHawking.SixteenDvdOfOrientation
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularPDWindow
 import SKEFTHawking.SingularConvexComplementConnected
