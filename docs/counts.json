@@ -1,16 +1,16 @@
 {
-  "generated": "2026-07-12T11:43:18.094257",
+  "generated": "2026-07-12T12:00:43.699967",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 26257,
-    "theorems_total": 16586,
-    "theorems_substantive": 16560,
+    "total_declarations": 26305,
+    "theorems_total": 16602,
+    "theorems_substantive": 16576,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 1417,
+    "modules": 1418,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -74,6 +74,7 @@
       "SKEFTHawking.CenterFunctorZ2Equiv",
       "SKEFTHawking.CenterSymmetryConfinement",
       "SKEFTHawking.ChangeOfRings",
+      "SKEFTHawking.CharSurfaceBounding",
       "SKEFTHawking.ChebyshevTN",
       "SKEFTHawking.ChernBridge",
       "SKEFTHawking.ChiralSSB_QCD",
@@ -1430,9 +1431,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 8604,
-    "structures": 332,
-    "instances": 635,
+    "definitions": 8629,
+    "structures": 334,
+    "instances": 640,
     "inductives": 100,
     "native_decide_decl_closure": 546,
     "native_decide_clusters": {
