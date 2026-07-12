@@ -378,6 +378,171 @@ def test_eo_integrator_is_reversible():
     assert np.allclose(_np(pi2), -pi0, atol=1e-9)
 
 
+# --- sampling: heatbath, trajectories, measurement ------------------------------------------
+
+def test_heatbath_consistency_S_PF_equals_half_xi_norm():
+    # Convention gate (real-PF): heatbath includes the 1/√2 real-Gaussian normalization
+    # (INV_SQRT2) so S_PF(heatbath(ξ)) = ½‖ξ‖² — the ONE-Majorana weight det(A†A+m²)^{1/4}.
+    # ‖ξ‖² (no ½) was the factor-2 Dirac bug. To Zolotarev accuracy.
+    L, V = 2, 2 ** 4
+    msq = 0.04
+    rng = np.random.default_rng(10)
+    h = _mx64(rng.standard_normal((V, 4, 4)))
+    fwd, back = me.neighbor_tables(L)
+    blocks = me.hopping_blocks(h, L)
+    lam_max = float(me.estimate_lambda_max(blocks, fwd, back, V, n_iter=400, seed=0))
+    coeffs = me.make_rhmc_coeffs(lam_max, msq, n_poles=18)
+
+    xi = _mx64(rng.standard_normal((V, 8)))
+    phi = me.heatbath(xi, blocks, fwd, back, coeffs, msq)
+
+    # S_PF = a0 φ·φ + Σ_k α_k φ·(A†A+m²+β_k)⁻¹φ  (action operator r_{-1/2})
+    betas = _mx64(coeffs['betas'] + msq)
+    psi = me.multishift_cg(phi, blocks, fwd, back, betas, tol=1e-12, max_iter=8000)
+    alphas = _mx64(coeffs['alphas'])
+    phi_psi = mx.sum(mx.expand_dims(phi, -3) * psi, axis=(-2, -1))
+    s_pf = float(coeffs['a0'] * mx.sum(phi * phi) + mx.sum(alphas * phi_psi))
+    half_xi_norm = 0.5 * float(mx.sum(xi * xi))
+
+    assert abs(s_pf - half_xi_norm) / half_xi_norm < 0.03
+
+
+def test_eo_heatbath_consistency_S_PF_equals_half_xi_norm():
+    # Power-pairing certification: eo heatbath (+1/2, /√2) ↔ eo action (−1) ⟹
+    # S_PF(heatbath(ξ)) = ½‖ξ‖² ⟹ weight det(M_e+m²)^{1/2} (ONE Majorana).
+    L, V = 4, 4 ** 4
+    msq = 0.04
+    rng = np.random.default_rng(33)
+    h = _mx64(rng.standard_normal((V, 4, 4)))
+    eo = me.eo_tables(L)
+    Ve = V // 2
+    fwd, back = me.neighbor_tables(L)
+    blocks = me.hopping_blocks(h, L)
+    lam = float(me.estimate_lambda_max(blocks, fwd, back, V, n_iter=300, seed=0))
+    coeffs = me.make_rhmc_coeffs(1.3 * lam, msq, n_poles=18)
+
+    xi = _mx64(rng.standard_normal((Ve, 8)))
+    phi = me.eo_heatbath(xi, h, coeffs, msq, eo, fwd, back, L)
+    psi = me.eo_multishift_cg(phi, blocks, eo, [msq], tol=1e-12, max_iter=8000)[..., 0, :, :]
+    s_pf = float(mx.sum(phi * psi))
+    half_xi_norm = 0.5 * float(mx.sum(xi * xi))
+    assert abs(s_pf - half_xi_norm) / half_xi_norm < 0.03
+
+
+def test_measure_observables_matches_numpy():
+    from src.vestigial.hs_rhmc import hs_auxiliary_field_metric
+    L, V, B = 2, 2 ** 4, 3
+    rng = np.random.default_rng(11)
+    h = rng.standard_normal((B, V, 4, 4))
+
+    tet, trq, m_h, Q = me.measure_observables(_mx64(h), L)
+
+    for b in range(B):
+        Qn, trq2n = hs_auxiliary_field_metric(h[b].reshape(L, L, L, L, 4, 4), L)
+        mhn = h[b].reshape(V, 4, 4).mean(0)
+        tetn = float((mhn ** 2).sum())
+        assert np.isclose(float(tet[b]), tetn, atol=1e-10)
+        assert np.isclose(float(trq[b]), trq2n, atol=1e-10)
+        assert np.allclose(_np(m_h[b]), mhn, atol=1e-10)
+        assert np.allclose(_np(Q[b]), Qn, atol=1e-10)
+
+
+def test_eo_mixed_trajectory_mechanics():
+    # Mechanics of the eo mixed scheme (FP32 MD + FP64 accept/reject): runs, returns
+    # FP64 configs, finite ΔH, boolean accept, exact Metropolis (rejected replicas
+    # retain the previous config bit-for-bit). Noise from a numpy Generator —
+    # framework-independent and deterministic.
+    L, V, B = 2, 2 ** 4, 4
+    rng_np = np.random.default_rng(21)
+    h = _mx64(rng_np.standard_normal((B, V, 4, 4)))
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+    blocks0 = me.hopping_blocks(h[0], L)
+    lam_max = float(me.estimate_lambda_max(blocks0, fwd, back, V, n_iter=200, seed=0))
+    coeffs = me.make_rhmc_coeffs(1.3 * lam_max, 0.04, n_poles=12)
+    rng = np.random.default_rng(0)
+
+    for _ in range(3):
+        h_prev = _np(h)
+        h, dH, acc = me.eo_rhmc_trajectory_mixed(h, 1.5, 0.04, coeffs, eo, fwd, back,
+                                                 L, 0.05, 8, rng)
+        assert h.dtype == mx.float64 and h.shape == (B, V, 4, 4)
+        assert dH.shape == (B,) and bool(mx.all(mx.isfinite(dH)))
+        assert acc.dtype == mx.bool_ and acc.shape == (B,)
+        h_np = _np(h)
+        for b in range(B):
+            if not bool(acc[b]):
+                assert np.array_equal(h_np[b], h_prev[b])
+
+
+def test_fp32_metal_matvec_and_cg_match_fp64_cpu():
+    # The Metal-path numerical gate: FP32 stencil matvec + CG on the GPU agree with
+    # the FP64 CPU reference to FP32 accuracy. (Chain-level Metal certification =
+    # the slow Creutz test + benchmark script.)
+    if not mx.metal.is_available():
+        pytest.skip("no Metal device")
+    prev = mx.default_device()
+    mx.set_default_device(mx.gpu)
+    try:
+        L, V, B = 4, 4 ** 4, 3
+        rng = np.random.default_rng(50)
+        h = rng.standard_normal((B, V, 4, 4))
+        psi = rng.standard_normal((B, V, 8))
+        fwd, back = me.neighbor_tables(L)
+
+        ref = _np(me.apply_AtA(_mx64(psi), me.hopping_blocks(_mx64(h), L), fwd, back))
+
+        h32 = mx.array(h, dtype=mx.float32)
+        psi32 = mx.array(psi, dtype=mx.float32)
+        got = _np(me.apply_AtA(psi32, me.hopping_blocks(h32, L), fwd, back))
+        scale = np.abs(ref).max()
+        assert np.allclose(got, ref, atol=5e-5 * scale)
+
+        # FP32 CG on Metal: solve then verify the FP64 residual is at FP32 level
+        shifts = np.array([0.5, 2.0], dtype=np.float32)
+        b32 = mx.array(rng.standard_normal((B, V, 8)), dtype=mx.float32)
+        x32 = me.multishift_cg(b32, me.hopping_blocks(h32, L), fwd, back,
+                               mx.array(shifts), tol=1e-5, max_iter=4000)
+        x64 = _mx64(_np(x32))
+        blocks64 = me.hopping_blocks(_mx64(h), L)
+        b64 = _mx64(_np(b32))
+        for k, s in enumerate(shifts):
+            with mx.stream(mx.cpu):                # raw f64 slicing must stay off the GPU
+                xk = x64[:, k]
+            r = _np(me.apply_AtA(xk, blocks64, fwd, back, shift=float(s))) - _np(b64)
+            rel = np.linalg.norm(r) / np.linalg.norm(_np(b64))
+            assert rel < 5e-4, (k, rel)
+    finally:
+        mx.set_default_device(prev)
+
+
+@pytest.mark.slow
+def test_creutz_identity_eo_mixed_chain_unbiased():
+    # Chain-level certification: FP32 MD + FP64 accept/reject leaves the chain
+    # UNBIASED ⟹ Creutz ⟨e^-ΔH⟩ = 1 within error. Runs the FP32 stage on Metal
+    # when available (the production configuration), else FP32-CPU.
+    if mx.metal.is_available():
+        mx.set_default_device(mx.gpu)   # fixture restores after the test
+    L, V = 2, 2 ** 4
+    g, msq = 1.5, 0.01
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+    rng0 = np.random.default_rng(3)
+    h0 = _mx64(1.7 * rng0.standard_normal((V, 4, 4)))
+    lam = float(me.estimate_lambda_max(me.hopping_blocks(h0, L), fwd, back, V))
+    coeffs = me.make_rhmc_coeffs(1.3 * lam, msq, n_poles=12)
+    rng = np.random.default_rng(5)
+    h = _mx64(1.7 * rng.standard_normal((V, 4, 4)))
+    dHs, nacc, n = [], 0, 240
+    for t in range(n):
+        h, dH, acc = me.eo_rhmc_trajectory_mixed(h, g, msq, coeffs, eo, fwd, back,
+                                                 L, 0.05, 8, rng, tol_md=1e-4, tol_acc=1e-10)
+        if t >= n // 4:
+            dHs.append(float(dH)); nacc += int(bool(acc))
+    creutz = float(np.mean(np.exp(-np.array(dHs))))
+    assert nacc / (n - n // 4) > 0.5 and abs(creutz - 1.0) < 0.08, (creutz, nacc / (n - n // 4))
+
+
 def test_eo_multishift_cg_matches_full_on_even():
     L, V = 4, 4 ** 4
     rng = np.random.default_rng(32)

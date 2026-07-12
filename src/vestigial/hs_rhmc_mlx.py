@@ -24,6 +24,13 @@ from src.core.constants import MAJORANA_GAMMA_8x8, MAJORANA_J1
 # CG[a] = J₁Γ^a — same convention as hs_rhmc_torch._CG_np / the dense oracle.
 _CG_NP = np.array([MAJORANA_J1 @ MAJORANA_GAMMA_8x8[a] for a in range(4)])
 
+# Real-pseudofermion Gaussian normalization — see hs_rhmc_stencil.INV_SQRT2 for the
+# full derivation. The intended weight is det(A†A+m²)^{1/4} (ONE Majorana;
+# Lit-Search/Phase-5/HS+RHMC...Spin(4).md §60,64); omitting the 1/√2 samples
+# det^{1/2} (Dirac) — the 2026-07-01 factor-2 flavor bug. Every heatbath here
+# scales its output by INV_SQRT2.
+INV_SQRT2 = 2.0 ** -0.5
+
 _cg_cache = {}
 _nbr_cache = {}
 _eo_cache = {}
@@ -382,6 +389,51 @@ def integrate(h, pi, phi, g, alphas, betas, fwd, back, L, eps, n_steps,
     return h, pi
 
 
+# --- sampling: coefficients + heatbath ------------------------------------------------------
+
+def make_rhmc_coeffs(lam_max, msq, n_poles, action_power=-0.5, hb_power=-0.75):
+    """Zolotarev partial-fraction coeffs for the FULL real operator A†A+m².
+
+    Identical to hs_rhmc_stencil.make_rhmc_coeffs (numpy-only): action ≈
+    (A†A+m²)^{-1/2} (real φ ⟹ weight det(A†A)^{1/4}); heatbath builds
+    (A†A+m²)^{+1/4} = (A†A+m²)·(A†A+m²)^{-3/4}. Spectral range [m², λmax+m²];
+    raw `betas` are added to m² at CG-call sites."""
+    from src.vestigial.hs_rhmc import compute_zolotarev_coefficients
+    lo = msq if msq > 0 else max(float(lam_max) * 1e-7, 1e-12)
+    hi = float(lam_max) + msq
+    a0, alphas, betas = compute_zolotarev_coefficients(n_poles, lo, hi, action_power)
+    a0_hb, alphas_hb, betas_hb = compute_zolotarev_coefficients(n_poles, lo, hi, hb_power)
+    return dict(a0=float(a0), alphas=np.asarray(alphas), betas=np.asarray(betas),
+                a0_hb=float(a0_hb), alphas_hb=np.asarray(alphas_hb), betas_hb=np.asarray(betas_hb))
+
+
+def heatbath(xi, blocks, fwd, back, coeffs, msq, tol=1e-10, max_iter=8000):
+    """φ = (A†A+m²)^{1/4} ξ / √2 = (A†A+m²)·r_{-3/4}(A†A+m²)·ξ / √2, so S_PF(φ)=½‖ξ‖².
+
+    The 1/√2 (INV_SQRT2) makes the heatbath sample the action's conditional
+    e^{−φ†(A†A+m²)^{-1/2}φ} ⟹ h-marginal det(A†A+m²)^{1/4} (ONE Majorana).
+    ξ: (*batch, V, 8)."""
+    with mx.stream(_stream(xi.dtype)):
+        betas_hb = _to_mx(coeffs['betas_hb'], xi.dtype) + msq
+        alphas_hb = _to_mx(coeffs['alphas_hb'], xi.dtype)
+        psi = multishift_cg(xi, blocks, fwd, back, betas_hb, tol=tol, max_iter=max_iter)
+        v = float(coeffs['a0_hb']) * xi + mx.sum(alphas_hb[..., None, None] * psi, axis=-3)
+        return INV_SQRT2 * (apply_AtA(v, blocks, fwd, back) + msq * v)
+
+
+def eo_heatbath(xi_e, h, coeffs, msq, eo, fwd, back, L, tol=1e-10, max_iter=8000):
+    """φ_e = (M_e+m²)^{1/2} ξ_e / √2 = (M_e+m²)·r_{-1/2}(M_e+m²)·ξ_e / √2, so
+    S_PF(φ_e)=½‖ξ_e‖² ⟹ h-marginal det(M_e+m²)^{1/2}=det(A†A+m²)^{1/4} (ONE Majorana).
+    Reuses the coeffs' power −1/2 set (a0/alphas/betas) as r_{-1/2}. xi_e: (*B, V/2, 8)."""
+    blocks = hopping_blocks(h, L, dtype=h.dtype)
+    with mx.stream(_stream(xi_e.dtype)):
+        betas = _to_mx(coeffs['betas'], xi_e.dtype) + msq
+        alphas = _to_mx(coeffs['alphas'], xi_e.dtype)
+        psi = eo_multishift_cg(xi_e, blocks, eo, betas, tol=tol, max_iter=max_iter)
+        v = float(coeffs['a0']) * xi_e + mx.sum(alphas[..., None, None] * psi, axis=-3)
+        return INV_SQRT2 * apply_Me(v, blocks, eo, shift=msq)
+
+
 # --- even-odd dynamics ----------------------------------------------------------------------
 
 def eo_action(h, phi_e, g, msq, eo, fwd, back, L, tol=1e-10, max_iter=5000):
@@ -435,9 +487,11 @@ def eo_compute_force(h, phi_e, g, msq, eo, fwd, back, L, tol=1e-10, max_iter=500
     if return_psi:
         Ff, psi_e = eo_fermion_force(h, phi_e, msq, eo, fwd, back, L, tol=tol, max_iter=max_iter,
                                      x0=x0, return_psi=True)
-        return -h / (2.0 * g) + Ff, psi_e
-    return -h / (2.0 * g) + eo_fermion_force(h, phi_e, msq, eo, fwd, back, L, tol=tol,
-                                             max_iter=max_iter, x0=x0)
+        with mx.stream(_stream(h.dtype)):
+            return -h / (2.0 * g) + Ff, psi_e
+    Ff = eo_fermion_force(h, phi_e, msq, eo, fwd, back, L, tol=tol, max_iter=max_iter, x0=x0)
+    with mx.stream(_stream(h.dtype)):
+        return -h / (2.0 * g) + Ff
 
 
 def eo_integrate(h, pi, phi_e, g, msq, eo, fwd, back, L, eps, n_steps,
@@ -468,3 +522,86 @@ def eo_integrate(h, pi, phi_e, g, msq, eo, fwd, back, L, eps, n_steps,
             pi = pi + (lam * eps) * force(h)
             mx.eval(h, pi)
     return h, pi
+
+
+# --- trajectories + measurement -------------------------------------------------------------
+
+def _cast(x, dtype):
+    """dtype cast that never touches the GPU stream — MLX rejects any op with a
+    float64 operand on Metal, INCLUDING the cast itself (the analogue of torch-MPS's
+    'move off device before the f64 cast' quirk)."""
+    with mx.stream(mx.cpu):
+        return x.astype(dtype)
+
+
+def eo_rhmc_trajectory_mixed(h64, g, msq, coeffs, eo, fwd, back, L, eps, n_md, rng,
+                             tol_md=1e-4, tol_acc=1e-10, max_iter=8000, chrono=False):
+    """Mixed-precision EVEN-ODD trajectory: FP32 MD proposal on the default device
+    (Metal / CUDA) + FP64 accept/reject on the CPU stream. The production path.
+
+    Unlike the torch engine, ONE set of tables serves both stages (MLX unified
+    memory — no device-resident copies), and the compute device is picked per-op
+    by dtype. The MD force and accept/reject are each a SINGLE (M_e+m²)⁻¹ solve;
+    FP32 MD only affects acceptance efficiency — the FP64 Metropolis test is
+    EXACT (same fermion weight det(M_e+m²)^{1/2}=det(A†A+m²)^{1/4} as the full
+    engine). Noise from a numpy Generator `rng` (framework-independent), draw
+    order (ξ, π, u) as in the torch engine. h64: FP64 (*batch, V, 4, 4).
+    Returns (h_out, ΔH, accept), per-config."""
+    Bshape = tuple(h64.shape[:-3])
+    V = L ** 4
+    Ve = V // 2
+    F64 = mx.float64
+
+    # --- FP64 (CPU stream): heatbath + momenta + H_old (exact) ---
+    xi = mx.array(rng.standard_normal(Bshape + (Ve, 8)), dtype=F64)
+    phi_e64 = eo_heatbath(xi, h64, coeffs, msq, eo, fwd, back, L, tol=tol_acc, max_iter=max_iter)
+    pi64 = mx.array(rng.standard_normal(Bshape + (V, 4, 4)), dtype=F64)
+
+    def H(hh, pp, phi_e):
+        S = eo_action(hh, phi_e, g, msq, eo, fwd, back, L, tol=tol_acc, max_iter=max_iter)
+        with mx.stream(mx.cpu):        # seam arithmetic on f64 must stay off the GPU stream
+            return 0.5 * mx.sum(pp * pp, axis=(-3, -2, -1)) + S
+
+    H_old = H(h64, pi64, phi_e64)
+
+    # --- FP32 (default device): MD proposal (single-pole eo force) ---
+    h32 = _cast(h64, mx.float32)
+    pi32 = _cast(pi64, mx.float32)
+    phi_e32 = _cast(phi_e64, mx.float32)
+    h_new32, pi_new32 = eo_integrate(h32, pi32, phi_e32, g, msq, eo, fwd, back, L,
+                                     eps, n_md, tol=tol_md, max_iter=max_iter, chrono=chrono)
+
+    # --- FP64 (CPU stream): H_new + exact Metropolis ---
+    h_new64 = _cast(h_new32, F64)
+    pi_new64 = _cast(pi_new32, F64)
+    H_new = H(h_new64, pi_new64, phi_e64)
+
+    u = mx.array(rng.random(Bshape), dtype=F64)
+    with mx.stream(mx.cpu):
+        dH = H_new - H_old
+        accept = u < mx.exp(mx.minimum(-dH, 0.0))
+        h_out = mx.where(accept[..., None, None, None], h_new64, h64)
+        mx.eval(h_out, dH, accept)
+    return h_out, dH, accept
+
+
+def measure_observables(h, L):
+    """h-field order parameters, batched. h: (*batch, V, 4, 4) [site, μ, a].
+
+    Returns (tet_m2, trQ2, m_h, Q):
+      m_h   = (1/V) Σ_x h            (*batch, 4, 4)   — tetrad proxy ⟨h⟩_vol
+      tet_m2 = |m_h|²                (*batch,)
+      M_μν  = (1/V) Σ_{x,a} h_μ h_ν;  Q = M − (TrM/4)I  (*batch, 4, 4) — traceless metric
+      trQ2  = Tr Q²                  (*batch,)
+    m_h and Q are the per-trajectory instrumentation for the noise-immune
+    detectors (Binder cumulant, ensemble shuffle floor)."""
+    V = L ** 4
+    with mx.stream(_stream(h.dtype)):
+        m_h = mx.mean(h, axis=-3)                                       # (*B, 4, 4)
+        tet_m2 = mx.sum(m_h * m_h, axis=(-2, -1))
+        M = mx.sum(h @ mx.swapaxes(h, -1, -2), axis=-3) / V             # Σ_v h_v h_vᵀ / V
+        tr = mx.sum(mx.diagonal(M, axis1=-2, axis2=-1), axis=-1)        # (*B,)
+        eye = mx.eye(4, dtype=h.dtype)
+        Q = M - (tr / 4.0)[..., None, None] * eye
+        trQ2 = mx.sum(Q * Q, axis=(-2, -1))
+        return tet_m2, trQ2, m_h, Q
