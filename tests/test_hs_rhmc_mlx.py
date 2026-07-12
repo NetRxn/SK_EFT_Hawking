@@ -247,6 +247,137 @@ def test_apply_Me_batched_over_configs():
         assert np.allclose(got[b], ref, atol=1e-10)
 
 
+def test_lambda_max_matches_dense():
+    L, V = 2, 2 ** 4
+    rng = np.random.default_rng(9)
+    h = rng.standard_normal((V, 4, 4))
+    A = _dense(h, L)
+    lam_true = np.linalg.eigvalsh(-A @ A).max()
+
+    fwd, back = me.neighbor_tables(L)
+    blocks = me.hopping_blocks(_mx64(h), L)
+    lam = float(me.estimate_lambda_max(blocks, fwd, back, V, n_iter=400, seed=0))
+
+    assert abs(lam - lam_true) / lam_true < 1e-2
+
+
+# --- dynamics: action, force, integrator ----------------------------------------------------
+
+def test_action_matches_torch_stencil():
+    # Cross-engine value agreement on identical inputs (deterministic oracle).
+    L, V, g = 2, 2 ** 4, 1.5
+    rng = np.random.default_rng(40)
+    h = rng.standard_normal((V, 4, 4))
+    phi = rng.standard_normal((V, 8))
+    alphas = np.array([0.5, 0.3, 0.2])
+    betas = np.array([0.3, 1.0, 3.0])
+    a0 = 0.4
+
+    fwd_t, back_t = st.neighbor_tables(L, CPU)
+    ref = float(st.action(torch.tensor(h), torch.tensor(phi), g, a0,
+                          torch.tensor(alphas), torch.tensor(betas),
+                          fwd_t, back_t, L, tol=1e-12, max_iter=5000))
+
+    fwd, back = me.neighbor_tables(L)
+    got = float(me.action(_mx64(h), _mx64(phi), g, a0, _mx64(alphas), _mx64(betas),
+                          fwd, back, L, tol=1e-12, max_iter=5000))
+    assert abs(got - ref) < 1e-8 * max(1.0, abs(ref))
+
+
+def test_force_equals_negative_action_gradient():
+    # The property that makes HMC conserve H: F = −∂S/∂h (reference-independent FD).
+    L, V, g = 2, 2 ** 4, 1.5
+    rng = np.random.default_rng(7)
+    h = rng.standard_normal((V, 4, 4))
+    phi = rng.standard_normal((V, 8))
+    alphas = np.array([0.5, 0.3, 0.2])
+    betas = np.array([0.3, 1.0, 3.0])
+    a0 = 0.4
+    fwd, back = me.neighbor_tables(L)
+    phim = _mx64(phi)
+    al, be = _mx64(alphas), _mx64(betas)
+
+    F = _np(me.compute_force(_mx64(h), phim, g, al, be, fwd, back, L,
+                             tol=1e-12, max_iter=5000))
+
+    def action(hh):
+        return float(me.action(_mx64(hh), phim, g, a0, al, be, fwd, back, L,
+                               tol=1e-12, max_iter=5000))
+
+    eps = 1e-5
+    for (x, mu, a) in [(0, 0, 0), (3, 2, 1), (7, 1, 3), (12, 3, 2)]:
+        hp = h.copy(); hp[x, mu, a] += eps
+        hm = h.copy(); hm[x, mu, a] -= eps
+        fd = -(action(hp) - action(hm)) / (2 * eps)
+        assert abs(F[x, mu, a] - fd) <= 1e-4 * max(1.0, abs(fd)), (x, mu, a, F[x, mu, a], fd)
+
+
+def test_omelyan_integrator_is_reversible():
+    # Reversibility (⟹ detailed balance): forward, flip momenta, forward → start.
+    L, V, g = 2, 2 ** 4, 1.5
+    rng = np.random.default_rng(8)
+    h0 = rng.standard_normal((V, 4, 4))
+    pi0 = rng.standard_normal((V, 4, 4))
+    phi = _mx64(rng.standard_normal((V, 8)))
+    al = _mx64([0.5, 0.3, 0.2])
+    be = _mx64([0.3, 1.0, 3.0])
+    fwd, back = me.neighbor_tables(L)
+    kw = dict(fwd=fwd, back=back, L=L, eps=0.1, n_steps=5, tol=1e-12, max_iter=5000)
+
+    h1, pi1 = me.integrate(_mx64(h0), _mx64(pi0), phi, g, al, be, **kw)
+    assert not np.allclose(_np(h1), h0)                     # it actually moved
+    h2, pi2 = me.integrate(h1, -pi1, phi, g, al, be, **kw)
+
+    assert np.allclose(_np(h2), h0, atol=1e-9)
+    assert np.allclose(_np(pi2), -pi0, atol=1e-9)
+
+
+def test_eo_force_equals_negative_action_gradient():
+    # F = −∂S_eo/∂h, finite-differenced against the reference-independent eo_action.
+    L, V, g = 4, 4 ** 4, 1.5
+    msq = 0.04
+    rng = np.random.default_rng(34)
+    h = rng.standard_normal((V, 4, 4))
+    eo = me.eo_tables(L)
+    Ve = V // 2
+    phi_e = _mx64(rng.standard_normal((Ve, 8)))
+    fwd, back = me.neighbor_tables(L)
+
+    F = _np(me.eo_compute_force(_mx64(h), phi_e, g, msq, eo, fwd, back, L,
+                                tol=1e-12, max_iter=8000))
+
+    def action(hh):
+        return float(me.eo_action(_mx64(hh), phi_e, g, msq, eo, fwd, back, L,
+                                  tol=1e-12, max_iter=8000))
+
+    eps = 1e-5
+    for (x, mu, a) in [(0, 0, 0), (5, 2, 1), (17, 1, 3), (40, 3, 2)]:
+        hp = h.copy(); hp[x, mu, a] += eps
+        hm = h.copy(); hm[x, mu, a] -= eps
+        fd = -(action(hp) - action(hm)) / (2 * eps)
+        assert abs(F[x, mu, a] - fd) <= 1e-4 * max(1.0, abs(fd)), (x, mu, a, F[x, mu, a], fd)
+
+
+def test_eo_integrator_is_reversible():
+    L, V, g = 4, 4 ** 4, 1.5
+    msq = 0.04
+    rng = np.random.default_rng(35)
+    eo = me.eo_tables(L)
+    Ve = V // 2
+    h0 = rng.standard_normal((V, 4, 4))
+    pi0 = rng.standard_normal((V, 4, 4))
+    phi_e = _mx64(rng.standard_normal((Ve, 8)))
+    fwd, back = me.neighbor_tables(L)
+    kw = dict(phi_e=phi_e, g=g, msq=msq, eo=eo, fwd=fwd, back=back, L=L,
+              eps=0.08, n_steps=5, tol=1e-12, max_iter=8000)
+
+    h1, pi1 = me.eo_integrate(_mx64(h0), _mx64(pi0), **kw)
+    assert not np.allclose(_np(h1), h0)
+    h2, pi2 = me.eo_integrate(h1, -pi1, **kw)
+    assert np.allclose(_np(h2), h0, atol=1e-9)
+    assert np.allclose(_np(pi2), -pi0, atol=1e-9)
+
+
 def test_eo_multishift_cg_matches_full_on_even():
     L, V = 4, 4 ** 4
     rng = np.random.default_rng(32)

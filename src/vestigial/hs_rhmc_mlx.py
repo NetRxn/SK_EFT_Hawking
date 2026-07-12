@@ -177,6 +177,12 @@ def apply_Me(psi_e, blocks, eo, shift=0.0):
         return out
 
 
+def _to_mx(a, dtype):
+    if not isinstance(a, mx.array):
+        return mx.array(np.asarray(a), dtype=dtype)
+    return a.astype(dtype) if a.dtype != dtype else a
+
+
 def _as_shift_tensor(shifts, nb, Bshape, dtype):
     """shifts (K,) or (*B, K) → σ broadcast tensor (*B, K, 1, 1) + K."""
     if not isinstance(shifts, mx.array):
@@ -273,3 +279,192 @@ def eo_multishift_cg(b, blocks, eo, shifts, tol=1e-8, max_iter=4000, x0=None):
             return apply_Me(p, blocks_k, eo)
 
         return _cg_loop(bk, matvec, sigma, tol, max_iter, x0=x0k, rel_to_b=True)
+
+
+# --- dynamics: action, force, integrator ----------------------------------------------------
+
+def estimate_lambda_max(blocks, fwd, back, V, n_iter=200, seed=0, v0=None):
+    """Largest eigenvalue of A†A per config, via power iteration. Returns (*batch,)."""
+    Bshape = blocks.shape[:-4]
+    dtype = blocks.dtype
+    with mx.stream(_stream(dtype)):
+        if v0 is None:
+            rng = np.random.default_rng(seed)
+            v = mx.array(rng.standard_normal(tuple(Bshape) + (V, 8)), dtype=dtype)
+        else:
+            v = v0
+        for _ in range(n_iter):
+            w = apply_AtA(v, blocks, fwd, back)
+            v = w / mx.sqrt(mx.maximum(mx.sum(w * w, axis=(-2, -1), keepdims=True), 1e-300))
+            mx.eval(v)
+        w = apply_AtA(v, blocks, fwd, back)
+        return mx.sum(v * w, axis=(-2, -1)) / mx.sum(v * v, axis=(-2, -1))
+
+
+def action(h, phi, g, alpha_0, alphas, betas, fwd, back, L, tol=1e-10, max_iter=5000):
+    """RHMC h-action S = Σh²/(4g) + α₀ φ†φ + Σ_k α_k φ†ψ_k,  ψ_k=(A†A+β_k)⁻¹φ.
+
+    (Excludes the momentum kinetic term — added at the Hamiltonian level.)
+    h: (*batch, V, 4, 4),  phi: (*batch, V, 8).  Returns (*batch,) action."""
+    blocks = hopping_blocks(h, L, dtype=h.dtype)
+    with mx.stream(_stream(h.dtype)):
+        alphas = _to_mx(alphas, h.dtype)
+        betas = _to_mx(betas, h.dtype)
+        psi = multishift_cg(phi, blocks, fwd, back, betas, tol=tol, max_iter=max_iter)  # (*B,K,V,8)
+
+        s_aux = mx.sum(h * h, axis=(-3, -2, -1)) / (4.0 * g)           # (*B,)
+        phi_phi = mx.sum(phi * phi, axis=(-2, -1))                     # (*B,)
+        phi_psi = mx.sum(mx.expand_dims(phi, -3) * psi, axis=(-2, -1))  # (*B, K)
+        return s_aux + float(alpha_0) * phi_phi + mx.sum(alphas * phi_psi, axis=-1)
+
+
+def _pf_force_contraction(psi, a_psi, fwd, CG, nb):
+    """Per-μ pseudofermion force pieces: term1/term2 of
+    F^a_{x,μ} ∝ ψ(x)·CG[a]·Aψ(x+μ̂) − Aψ(x)·CG[a]·ψ(x+μ̂), batched over any leading
+    dims of psi/a_psi. Yields (mu, -2·(term1−term2)) with shape (*lead, 4, V)."""
+    for mu in range(4):
+        psi_fwd = mx.take(psi, fwd[:, mu], axis=-2)
+        a_psi_fwd = mx.take(a_psi, fwd[:, mu], axis=-2)
+        cg_apsi = mx.einsum('aij,...vj->...avi', CG, a_psi_fwd)         # (*lead, 4, V, 8)
+        term1 = mx.sum(mx.expand_dims(psi, -3) * cg_apsi, axis=-1)      # (*lead, 4, V)
+        cg_psi = mx.einsum('aij,...vj->...avi', CG, psi_fwd)
+        term2 = mx.sum(mx.expand_dims(a_psi, -3) * cg_psi, axis=-1)
+        yield mu, -2.0 * (term1 - term2)
+
+
+def compute_force(h, phi, g, alphas, betas, fwd, back, L, tol=1e-10, max_iter=5000):
+    """MD force F = −∂S/∂h = −h/(2g) + pseudofermion term, batched over configs.
+
+    Per μ: F^a_{x,μ} += Σ_k α_k (−2)[ψ_k(x)·CG[a]·Aψ_k(x+μ̂) − Aψ_k(x)·CG[a]·ψ_k(x+μ̂)].
+    h: (*batch, V, 4, 4),  phi: (*batch, V, 8).  Returns (*batch, V, 4, 4)."""
+    nb = h.ndim - 3
+    blocks = hopping_blocks(h, L, dtype=h.dtype)
+    with mx.stream(_stream(h.dtype)):
+        alphas = _to_mx(alphas, h.dtype)
+        betas = _to_mx(betas, h.dtype)
+        psi = multishift_cg(phi, blocks, fwd, back, betas, tol=tol, max_iter=max_iter)  # (*B,K,V,8)
+        a_psi = apply_A(psi, mx.expand_dims(blocks, nb), fwd, back)                     # (*B,K,V,8)
+
+        CG = _cg_const(h.dtype)
+        F = -h / (2.0 * g)                                              # (*B,V,4,4)
+        K = alphas.shape[-1]
+        al = alphas.reshape((K, 1, 1))                                  # align K with axis −3
+        for mu, weighted_k in _pf_force_contraction(psi, a_psi, fwd, CG, nb):
+            # psi carries lead dims (*B, K) ⟹ weighted_k: (*B, K, 4, V);
+            # weight by α_k along the K axis (−3) and sum it out.
+            wk = mx.sum(al * weighted_k, axis=-3)                       # (*B, 4, V)
+            F[..., :, mu, :] = F[..., :, mu, :] + mx.swapaxes(wk, -1, -2)
+        return F
+
+
+OMELYAN_LAMBDA = 0.1931833275037836   # 2MN minimal-norm coefficient
+
+
+def integrate(h, pi, phi, g, alphas, betas, fwd, back, L, eps, n_steps,
+              lam=OMELYAN_LAMBDA, tol=1e-10, max_iter=5000):
+    """Omelyan 2MN (2nd-order minimal-norm) molecular-dynamics evolution.
+
+    One step: π+=λεF; h+=ε/2·π; π+=(1−2λ)εF; h+=ε/2·π; π+=λεF.
+    Reversible + symplectic ⟹ the Metropolis accept/reject on ΔH is exact.
+    Returns (h, π) after n_steps."""
+    def force(hh):
+        return compute_force(hh, phi, g, alphas, betas, fwd, back, L, tol=tol, max_iter=max_iter)
+
+    half = 0.5 * eps
+    with mx.stream(_stream(h.dtype)):
+        for _ in range(n_steps):
+            pi = pi + (lam * eps) * force(h)
+            h = h + half * pi
+            pi = pi + ((1.0 - 2.0 * lam) * eps) * force(h)
+            h = h + half * pi
+            pi = pi + (lam * eps) * force(h)
+            mx.eval(h, pi)
+    return h, pi
+
+
+# --- even-odd dynamics ----------------------------------------------------------------------
+
+def eo_action(h, phi_e, g, msq, eo, fwd, back, L, tol=1e-10, max_iter=5000):
+    """Even-odd reduced action S = Σh²/(4g) + φ_e†(M_e+m²)⁻¹φ_e.
+
+    Same fermion weight det(A†A+m²)^{1/4}=det(M_e+m²)^{1/2} as the full engine,
+    represented by ONE even pseudofermion with action power −1 (single exact
+    solve, no rational sum). φ_e: (*B, V/2, 8)."""
+    blocks = hopping_blocks(h, L, dtype=h.dtype)
+    with mx.stream(_stream(h.dtype)):
+        psi = eo_multishift_cg(phi_e, blocks, eo, [msq], tol=tol, max_iter=max_iter)[..., 0, :, :]
+        s_aux = mx.sum(h * h, axis=(-3, -2, -1)) / (4.0 * g)
+        s_pf = mx.sum(phi_e * psi, axis=(-2, -1))
+        return s_aux + s_pf
+
+
+def _scatter_even(psi_e, eo, V):
+    """Embed a half-size even vector into a full-lattice vector (zero on odd)."""
+    Bshape = psi_e.shape[:-2]
+    full = mx.zeros(tuple(Bshape) + (V, psi_e.shape[-1]), dtype=psi_e.dtype)
+    full[..., eo['even_idx'], :] = psi_e
+    return full
+
+
+def eo_fermion_force(h, phi_e, msq, eo, fwd, back, L, tol=1e-10, max_iter=5000,
+                     x0=None, return_psi=False):
+    """Fermion part ONLY of the eo MD force: −∂/∂h[φ_e†(M_e+m²)⁻¹φ_e] (NO aux −h/2g term).
+    ψ_e=(M_e+m²)⁻¹φ_e (ONE solve); contraction with the single vector ψ=scatter(ψ_e).
+
+    `x0` warm-starts the solve (chronological inversion); `return_psi=True` also returns
+    ψ_e so the integrator can feed it as the next step's x0."""
+    V = L ** 4
+    blocks = hopping_blocks(h, L, dtype=h.dtype)
+    with mx.stream(_stream(h.dtype)):
+        psi_e = eo_multishift_cg(phi_e, blocks, eo, [msq], tol=tol, max_iter=max_iter,
+                                 x0=x0)[..., 0, :, :]
+        psi = _scatter_even(psi_e, eo, V)                               # (*B, V, 8) on even
+        a_psi = apply_A(psi, blocks, fwd, back)                         # (*B, V, 8) on odd
+
+        CG = _cg_const(h.dtype)
+        F = mx.zeros(h.shape, dtype=h.dtype)
+        for mu, weighted in _pf_force_contraction(psi, a_psi, fwd, CG, h.ndim - 3):
+            F[..., :, mu, :] = F[..., :, mu, :] + mx.swapaxes(weighted, -1, -2)
+        return (F, psi_e) if return_psi else F
+
+
+def eo_compute_force(h, phi_e, g, msq, eo, fwd, back, L, tol=1e-10, max_iter=5000,
+                     x0=None, return_psi=False):
+    """MD force for the even-odd action = −h/(2g) (aux) + eo_fermion_force. h: (*B, V, 4, 4).
+    `x0`/`return_psi` thread chronological-inversion warm-start through the fermion solve."""
+    if return_psi:
+        Ff, psi_e = eo_fermion_force(h, phi_e, msq, eo, fwd, back, L, tol=tol, max_iter=max_iter,
+                                     x0=x0, return_psi=True)
+        return -h / (2.0 * g) + Ff, psi_e
+    return -h / (2.0 * g) + eo_fermion_force(h, phi_e, msq, eo, fwd, back, L, tol=tol,
+                                             max_iter=max_iter, x0=x0)
+
+
+def eo_integrate(h, pi, phi_e, g, msq, eo, fwd, back, L, eps, n_steps,
+                 lam=OMELYAN_LAMBDA, tol=1e-10, max_iter=5000, chrono=False):
+    """Omelyan 2MN MD for the even-odd action (force via `eo_compute_force`).
+
+    chrono=False (default): cold-start every solve ⟹ deterministic in (h,π) ⟹ EXACTLY
+    reversible. chrono=True: chronological inversion — each fermion solve warm-starts
+    from the previous eval's ψ_e (~3-5× fewer CG iters); softens reversibility to O(tol),
+    certified unbiased at chain level via Creutz — use only through trajectory drivers."""
+    psi_cache = None
+
+    def force(hh):
+        nonlocal psi_cache
+        if not chrono:
+            return eo_compute_force(hh, phi_e, g, msq, eo, fwd, back, L, tol=tol, max_iter=max_iter)
+        F, psi_cache = eo_compute_force(hh, phi_e, g, msq, eo, fwd, back, L, tol=tol,
+                                        max_iter=max_iter, x0=psi_cache, return_psi=True)
+        return F
+
+    half = 0.5 * eps
+    with mx.stream(_stream(h.dtype)):
+        for _ in range(n_steps):
+            pi = pi + (lam * eps) * force(h)
+            h = h + half * pi
+            pi = pi + ((1.0 - 2.0 * lam) * eps) * force(h)
+            h = h + half * pi
+            pi = pi + (lam * eps) * force(h)
+            mx.eval(h, pi)
+    return h, pi
