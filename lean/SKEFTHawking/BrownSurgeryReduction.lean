@@ -370,6 +370,89 @@ theorem brown_surgeryReduction {x : ι → ZMod 2} (S : Q.SurgeryReduction x) (h
   generalize ((Fintype.card S.κ : ℕ) : ZMod 8) = d
   revert bU d; decide
 
+/-! ## Isotropic reductions always exist (the algebra half of Lemma 1.2's descent) -/
+
+/-- **A transverse partner exists for every nonzero class** (nondegeneracy of the polar form):
+`x ≠ 0 ⟹ ∃ z, B x z = 1`. -/
+lemma exists_pairing_partner {x : ι → ZMod 2} (hx0 : x ≠ 0) : ∃ z, Q.B x z = 1 := by
+  by_contra h
+  push Not at h
+  refine hx0 (Q.nondeg x (fun y => ?_))
+  have hy := h y
+  revert hy; generalize Q.B x y = b; revert b; decide
+
+/-- `B` respects `ZMod 2` scalars on the right (case split on the scalar). -/
+lemma B_smul_right (x y : ι → ZMod 2) (a : ZMod 2) : Q.B x (a • y) = a * Q.B x y := by
+  have ha : a = 0 ∨ a = 1 := by revert a; decide
+  rcases ha with rfl | rfl
+  · rw [zero_smul, Q.B_zero_right, zero_mul]
+  · rw [one_smul, one_mul]
+
+/-- **The explicit projection onto the pair complement**: for an isotropic transverse pair
+(`q x = 0`, `B x z = 1`), every `v` lands in `W` after subtracting its `span{x,z}`-coordinates
+`α = B z v + (B x v)·(B z z)`, `β = B x v` (char 2: subtraction = addition). -/
+lemma decompose_mem_pairComplement {x z : ι → ZMod 2} (hx : Q.q x = 0) (hxz : Q.B x z = 1)
+    (v : ι → ZMod 2) :
+    v + (Q.B z v + Q.B x v * Q.B z z) • x + Q.B x v • z ∈ Q.pairComplement x z := by
+  have hBxx : Q.B x x = 0 := Q.B_self_eq_zero_of_q_eq_zero hx
+  rw [Q.mem_pairComplement]
+  constructor
+  · rw [Q.B_add_right, Q.B_add_right, Q.B_smul_right, Q.B_smul_right, hBxx, hxz]
+    generalize Q.B x v = b1; generalize Q.B z v = b2; generalize Q.B z z = b3
+    revert b1 b2 b3; decide
+  · rw [Q.B_add_right, Q.B_add_right, Q.B_smul_right, Q.B_smul_right, Q.B_symm z x, hxz]
+    generalize Q.B x v = b1; generalize Q.B z v = b2; generalize Q.B z z = b3
+    revert b1 b2 b3; decide
+
+/-- **Isotropic reductions always exist** (pure algebra): every isotropic (`q x = 0`) nonzero
+class admits a `SurgeryReduction` — the partner from nondegeneracy, a basis of the pair complement
+from finite linear algebra over the field `ZMod 2`, and nondegeneracy of the reduced form from the
+explicit projection. This discharges the ALGEBRA half of Taylor Lemma 1.2's descent direction:
+what remains geometric in the surface-level freeze (`TaylorSurgeryDescends`) is only that some
+reduction is realized by an actual surgered SURFACE datum. -/
+theorem exists_surgeryReduction {x : ι → ZMod 2} (hx : Q.q x = 0) (hx0 : x ≠ 0) :
+    Nonempty (Q.SurgeryReduction x) := by
+  classical
+  obtain ⟨z, hz⟩ := Q.exists_pairing_partner hx0
+  set W := Q.pairComplement x z with hW
+  let b := Module.finBasis (ZMod 2) W
+  let e : (Fin (Module.finrank (ZMod 2) W) → ZMod 2) ≃ₗ[ZMod 2] W := b.equivFun.symm
+  -- B(e u, ·) kills W, x, z ⟹ kills everything (explicit projection) ⟹ nondegeneracy descends
+  have hkill : ∀ u : Fin (Module.finrank (ZMod 2) W) → ZMod 2,
+      (∀ u', Q.B (e u) (e u') = 0) → ∀ v, Q.B (e u) v = 0 := by
+    intro u hu v
+    have hWkill : ∀ w : W, Q.B (e u) w = 0 := by
+      intro w
+      obtain ⟨u', rfl⟩ := e.surjective w
+      exact hu u'
+    have hmem : Q.B x (e u) = 0 ∧ Q.B z (e u) = 0 := Q.mem_pairComplement.mp (e u).2
+    have hx' : Q.B (e u) x = 0 := by rw [Q.B_symm]; exact hmem.1
+    have hz' : Q.B (e u) z = 0 := by rw [Q.B_symm]; exact hmem.2
+    have hdec := Q.decompose_mem_pairComplement hx hz v
+    have hsum := hWkill ⟨_, hdec⟩
+    rw [Q.B_add_right, Q.B_add_right, Q.B_smul_right, Q.B_smul_right, hx', hz', mul_zero,
+      mul_zero, add_zero, add_zero] at hsum
+    exact hsum
+  refine ⟨⟨z, hz, Fin (Module.finrank (ZMod 2) W),
+    { q := fun u => Q.q (e u)
+      B := fun u u' => Q.B (e u) (e u')
+      refine' := fun u u' => by
+        rw [map_add]
+        push_cast
+        exact Q.refine' (e u) (e u')
+      B_add_left := fun u u' u'' => by
+        rw [map_add]
+        push_cast
+        exact Q.B_add_left (e u) (e u') (e u'')
+      B_symm := fun u u' => Q.B_symm (e u) (e u')
+      nondeg := fun u hu => by
+        have h0 : (e u : ι → ZMod 2) = 0 := Q.nondeg _ (hkill u hu)
+        have : e u = 0 := by
+          apply Subtype.ext
+          simpa using h0
+        simpa using e.injective (by rw [this, map_zero]) },
+    e, fun u => rfl⟩⟩
+
 /-! ## The concrete 2-dimensional surgery piece -/
 
 /-- **The 2-dimensional surgery piece** `H = span{x, z}`: the enhanced form on the surgery pair —
