@@ -4156,6 +4156,11 @@ import SKEFTHawking.SphereProdHOneInt
 -- Hₙ(X;ℤ) ≅ Hₙ(U;ℤ) × Hₙ(Uᶜ;ℤ) for clopen U — the product-homology arc's S⁰-type
 -- disjoint-union primitive (positive degrees new; degree 0 delegates to splitH0IntEquiv). (wt3-built.)
 import SKEFTHawking.SingularClopenSplitInt
+-- Phase 5q.H · N5 — star-convex straight-line contraction (StarConvex generalization of
+-- convexContraction, coefficient-agnostic) + the slit-plane polar cover data of ℝ²∖{0}
+-- (open star-shaped slit planes; two-convex-component intersection) — the H₂-slice
+-- input layer for the S²×S¹-grade MV over the doubly-punctured sphere. (wt3-built.)
+import SKEFTHawking.SingularStarConvexSlit
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
