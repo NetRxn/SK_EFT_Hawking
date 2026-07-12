@@ -4165,6 +4165,12 @@ import SKEFTHawking.SingularStarConvexSlit
 -- (seam reassociation → stereographic restriction → recentering translation) — the H₂-slice
 -- geometric bridge carrying the S²×S² polar-intersection factor onto the slit-plane cover. (wt3-built.)
 import SKEFTHawking.SphereDoublyPuncturedPlane
+-- Phase 5q.H · N5 — arc slice 1: H₁(S²×(ℝ²∖{0});ℤ) ≅ ℤ and H₂(S²×(ℝ²∖{0});ℤ) ≅ ℤ via the
+-- slit-plane MV (legs collapse onto H(S²); clopen-split intersection ≅ H(S²)²; anti-diagonal
+-- ker Δ₀ through augmentations; diagonal im Δ₂ bookkeeping). H₂ realized by the first-factor
+-- projection (prodFst_homology_two_bijective) + slice-2 transports to sub(coverA v ∩ coverB v)
+-- (interProdHomeo, coverInterH{One,Two}EquivInt) — the S²×S² H₂ assembly's MV input data. (wt3-built.)
+import SKEFTHawking.SphereProdPuncturedPlaneInt
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
