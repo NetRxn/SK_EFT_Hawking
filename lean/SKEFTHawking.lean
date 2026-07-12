@@ -4111,6 +4111,7 @@ import SKEFTHawking.EffectiveMediumBounds
 import SKEFTHawking.EffectiveModuli
 -- Phase 5q.H (E2) — enhanced-circle surgery layer (Taylor Lemma 1.2/1.3 statement freeze)
 import SKEFTHawking.BrownSurgeryReduction
+import SKEFTHawking.CharSurfaceCircle
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
