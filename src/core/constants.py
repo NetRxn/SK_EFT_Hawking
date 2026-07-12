@@ -3499,6 +3499,44 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': 'ker(abkGrade)=⊥ / card≤16 UNCONDITIONALLY for ANY free-per-manifold grade. FALSE: the ℝP⁴ grade-0 witness (w₂=0, [ℝP⁴]≠0∈Ω₄^O) has no unoriented null-bordism, so the free grade is never injective. ker=⊥ requires the grade TIED to the structure (the GM carrier), never a better proof on a free-grade datum.',
         'memory': '[[nogo_lattice_arf_not_sigma8]]',
     },
+    'synthetic-smith-map-to-tied-carrier': {
+        'fork_id': 'synthetic-smith-map-to-tied-carrier',
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'The Smith map into the 5q.H TIED carrier pinPlusGMTiedData can be built '
+            'SYNTHETICALLY — map every neighbor class [M,σ] to [emptySM, (σ,0)] and transport the grade '
+            '(the smithDataHom shortcut). FALSE (kernel-forced): the tie htie (reduce16to2 grade16 = '
+            'swTotalNe) forces every tied structure on an EMPTY carrier to even grade '
+            '(gmTiedStr_grade_even_of_isEmpty), so the odd generator grade16 = 1 is uninhabitable on '
+            'emptySM (gmTiedStr_empty_grade16_ne_one) — an odd grade requires a real w₁⁴ = 1 manifold. '
+            'The tie that defeats synthetic-grade-ker-bot-nogo simultaneously blocks every synthetic '
+            'Smith map; the geometric Smith map into the tied carrier is irreducibly geometric (N1b).',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusGMTiedData.gmTiedStr_grade_even_of_isEmpty',
+            'SKEFTHawking.PinPlusGMTiedData.gmTiedStr_empty_grade16_ne_one',
+        ],
+        'memory': 'SETTLED_FORKS § synthetic-smith-map-to-tied-carrier (2026-07-03); encoded 2026-07-12 '
+            'arm-2 per N-E (audit-flagged), module SyntheticSmithNoGo.',
+    },
+    '5qH-injectivity-routes-apex-equivalent': {
+        'fork_id': '5qH-injectivity-routes-all-equal-one-completeness-prop',
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'The three 5q.H injectivity routes — Thom (hthom: SW-trivial Pin⁺ 4-manifold '
+            'bounds), KT §5 (hle: ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), Smith-LES '
+            '(smith_inflow_z16) — are DISTINCT open nodes worth route-shopping between. FALSE (kernel-'
+            'checked equivalence): all three reduce canonically to the ONE completeness prop hbound = '
+            'grade-0-injectivity on the tied carrier — hbound ⟹ hle (spin_range_ge_of_grade0_inj), '
+            'hthom ⟹ hbound (grade0_bounds_of_thom), and the capstone follows from grade-0 alone '
+            '(omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0). Route-shopping or re-deriving "which '
+            'route is closer" is settled-moot; the terminal node is the single geometric completeness '
+            'input (KT §5 from-below: N1a+N1b+N1c+N2 per ASSEMBLY_GAP_MAP_20260712).',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusGMWitness.spin_range_ge_of_grade0_inj',
+            'SKEFTHawking.PinPlusGMWitness.omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0',
+            'SKEFTHawking.UnorientedThomCapstone.grade0_bounds_of_thom',
+        ],
+        'memory': 'SETTLED_FORKS § 5qH-injectivity-routes-all-equal-one-completeness-prop (2026-07-04 + '
+            '2026-07-06 KT-LMS re-anchor UPDATE); encoded 2026-07-12 arm-2 per N-E (audit-flagged).',
+    },
     '5qH-fg-ek-over-Z-blocked': {
         'fork_id': '5qH-fg-ek-over-Z-blocked',
         'nogo_kind': 'refutation',

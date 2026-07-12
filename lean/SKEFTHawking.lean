@@ -1345,6 +1345,7 @@ import SKEFTHawking.KroneckerRedCompat
 import SKEFTHawking.SpinWuDatumClosed
 import SKEFTHawking.SixteenDvdOfOrientation
 import SKEFTHawking.FGDualityNoGo
+import SKEFTHawking.SyntheticSmithNoGo
 import SKEFTHawking.SixteenDvdOfOrientationSpin
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularPDWindow
