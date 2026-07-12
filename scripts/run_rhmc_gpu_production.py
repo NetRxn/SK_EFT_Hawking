@@ -72,16 +72,22 @@ def build_coeffs_mlx(L, g, msq, n_poles, seed):
     return me.make_rhmc_coeffs(1.25 * lam, msq, n_poles), 1.25 * lam
 
 
-def run_coupling_mlx(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, seed, chrono=False):
-    """MLX twin of `run_coupling`, eo mixed-precision path only (FP32 MD on the MLX
-    default device — Metal or CUDA — + FP64 accept/reject on the CPU stream; the
-    Creutz-certified engine). Identical npz schema → rhmc_monitor.py /
-    analyze_rhmc_vestigial.py compatible. Same target density as the torch engines."""
+def run_coupling_mlx(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, seed,
+                     chrono=False, mlx_solver='refined'):
+    """MLX twin of `run_coupling`, eo path (FP32 MD on the MLX default device — Metal or
+    CUDA). Identical npz schema → rhmc_monitor.py / analyze_rhmc_vestigial.py compatible.
+    Same target density as the torch engines; FP64-exact Metropolis.
+
+    mlx_solver='refined' (default): heatbath + accept/reject FP64 solves offloaded to the
+    device via FP32-inner refinement — the fast path (the FP64-CPU stages are ~97% of the
+    trajectory on the MLX CPU backend; see brick 5). 'mixed': FP64 accept/reject on the
+    CPU stream (portable fallback; slow where the MLX CPU backend is weak)."""
     import mlx.core as mx
     import src.vestigial.hs_rhmc_mlx as me
     V = L ** 4
     fwd, back = me.neighbor_tables(L)
     eo = me.eo_tables(L)
+    device = mx.default_device()
 
     hist = {k: [] for k in ('h_sq', 'dH', 'tet', 'trq')}
     mh_hist, Q_hist = [], []
@@ -119,9 +125,14 @@ def run_coupling_mlx(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, see
     target = n_meas - n_done
     t0 = time.time()
     for t in range(therm_left + max(target, 0)):
-        h, dH, acc = me.eo_rhmc_trajectory_mixed(h, g, msq, coeffs, eo, fwd, back, L,
-                                                 eps, n_md, rng, tol_md=1e-4, tol_acc=1e-10,
-                                                 chrono=chrono)
+        if mlx_solver == 'refined':
+            h, dH, acc = me.eo_rhmc_trajectory_refined(h, g, msq, coeffs, eo, fwd, back, L,
+                                                       eps, n_md, rng, device, tol_md=1e-4,
+                                                       inner_tol=3e-4, max_outer=20, chrono=chrono)
+        else:
+            h, dH, acc = me.eo_rhmc_trajectory_mixed(h, g, msq, coeffs, eo, fwd, back, L,
+                                                     eps, n_md, rng, tol_md=1e-4, tol_acc=1e-10,
+                                                     chrono=chrono)
         acc_np = np.array(acc)
         nacc += int(acc_np.sum()); ntot += acc_np.size
         if t >= therm_left:
@@ -251,10 +262,14 @@ def main():
     ap.add_argument('--outdir', type=str, default=None)
     ap.add_argument('--device', type=str, default='mps', choices=['mps', 'cpu'])
     ap.add_argument('--backend', type=str, default='torch', choices=['torch', 'mlx'],
-                    help="mlx = the torch-free MLX engine (hs_rhmc_mlx): eo mixed path, FP32 MD "
-                         "on the MLX default device (Metal on macOS, CUDA via mlx[cuda] on Linux) "
-                         "+ FP64 accept/reject. --device/--engine/--solver/--no-compile are "
-                         "torch-only and ignored with mlx.")
+                    help="mlx = the torch-free MLX engine (hs_rhmc_mlx): eo path, FP32 MD on the "
+                         "MLX default device (Metal on macOS, CUDA via mlx[cuda] on Linux). "
+                         "--device/--engine/--no-compile are torch-only and ignored with mlx.")
+    ap.add_argument('--mlx-solver', type=str, default='refined', choices=['refined', 'mixed'],
+                    help="mlx backend only. refined (default) = FP64 heatbath + accept/reject "
+                         "offloaded to the device via FP32-inner refinement (fast; the FP64-CPU "
+                         "stages are ~97%% of the trajectory on the MLX CPU backend). mixed = "
+                         "FP64 accept/reject on the CPU stream (portable fallback).")
     ap.add_argument('--engine', type=str, default='full', choices=['full', 'eo'],
                     help="'eo' = even-odd-reduced (single-solve; ~1-2 orders faster at L=8, "
                          "proven identical target density); 'full' = 12-pole rational (default).")
@@ -300,7 +315,8 @@ def main():
         print(f"\n[{i+1}/{len(gs)}] g={g:.3f}  range[{msq:.4g},{lam+msq:.1f}] κ={(lam+msq)/msq:.0f}", flush=True)
         if args.backend == 'mlx':
             s = run_coupling_mlx(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
-                                 args.n_meas, args.n_therm, args.seed + i, chrono=args.chrono)
+                                 args.n_meas, args.n_therm, args.seed + i, chrono=args.chrono,
+                                 mlx_solver=args.mlx_solver)
         else:
             s = run_coupling(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
                              args.n_meas, args.n_therm, device, args.seed + i,
