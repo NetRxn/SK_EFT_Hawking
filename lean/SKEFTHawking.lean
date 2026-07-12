@@ -4161,6 +4161,10 @@ import SKEFTHawking.SingularClopenSplitInt
 -- (open star-shaped slit planes; two-convex-component intersection) — the H₂-slice
 -- input layer for the S²×S¹-grade MV over the doubly-punctured sphere. (wt3-built.)
 import SKEFTHawking.SingularStarConvexSlit
+-- Phase 5q.H · N5 — the doubly-punctured sphere IS the punctured plane: Sⁿ∖{v,−v} ≃ₜ ℝⁿ∖{0}
+-- (seam reassociation → stereographic restriction → recentering translation) — the H₂-slice
+-- geometric bridge carrying the S²×S² polar-intersection factor onto the slit-plane cover. (wt3-built.)
+import SKEFTHawking.SphereDoublyPuncturedPlane
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
