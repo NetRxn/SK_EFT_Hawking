@@ -102,9 +102,20 @@ def classify_theorem(rec: dict) -> tuple[str, str]:
 def _hyp_status(h: dict) -> str:
     tier = (h.get("tier") or "").lower()
     status = (h.get("status") or "").lower()
+    # Closed ledger states first: a discharged/superseded hypothesis stays in the registry (provenance)
+    # but is NOT an open assumption — it must leave the frontier/track-rollup "open" views.
+    if status.startswith(("proven", "discharged")):
+        return "DISCHARGED"
+    if status.startswith("superseded"):
+        return "SUPERSEDED"
     if "discharge_future" in tier or status.startswith("proposed"):
         return "PLANNED"
     return "STATED"
+
+
+#: Hypothesis ledger states that are CLOSED (kept in `unknowns` for provenance, excluded from the
+#: open-frontier ranking, per-track open rollup, and apex list).
+_CLOSED_HYP_STATUSES = ("DISCHARGED", "SUPERSEDED")
 
 
 def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
@@ -174,17 +185,18 @@ def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
     # "which open node, if discharged, unlocks the most." Each entry carries its TRACK (`tier`) +
     # `eliminability` + `is_apex` so the frontier is navigable by workstream, not just a flat list
     # (ADR-005 D-H: the atlas serves "many open phases/waves working separate areas").
+    open_unknowns = [u for u in unknowns if u["atlas_status"] not in _CLOSED_HYP_STATUSES]
     frontier = sorted(
         ({"id": u["id"], "frontier_impact": u["frontier_impact"], "status": u["atlas_status"],
           "tier": u["tier"], "eliminability": u["eliminability"], "is_apex": u["is_apex"]}
-         for u in unknowns),
+         for u in open_unknowns),
         key=lambda x: (-x["frontier_impact"], x["id"]),
     )
 
     # Per-TRACK rollup (the "separate areas" view): one bucket per `tier`, soft "unclassified" for any
     # node lacking one (ADR-005 D-H — unclassified degrades softly, never a hard failure).
     tracks: dict[str, dict] = {}
-    for u in unknowns:
+    for u in open_unknowns:
         t = u["tier"] or "unclassified"
         tr = tracks.setdefault(t, {"open_count": 0, "total_impact": 0, "apex_count": 0, "node_ids": []})
         tr["open_count"] += 1
@@ -193,7 +205,7 @@ def build_atlas(lean_deps: list[dict], hyp_registry: dict | None = None,
         tr["node_ids"].append(u["id"])
     for tr in tracks.values():
         tr["node_ids"].sort()
-    apex_ids = sorted(u["id"] for u in unknowns if u["is_apex"])
+    apex_ids = sorted(u["id"] for u in open_unknowns if u["is_apex"])
 
     # NEGATIVE frontier (ADR-007 N-D): OBSTRUCTION result-nodes ∪ KERNEL_NOGO_REGISTRY, ranked by
     # frontier_impact — the machine-fed "dead paths + why" the swarm is steered AWAY from (the mirror

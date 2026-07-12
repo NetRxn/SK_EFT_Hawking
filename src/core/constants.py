@@ -3166,7 +3166,7 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'map homProjInt : Hₙ(X;ℤ) → RelHomologyInt, the connecting δ = connectingInt, the complex property '
             'δ∘j_* = 0, and redRelHomology) — the ℤ mirror of on-main SingularRelativeHomologyMod2 / SingularPairLES, '
             'ALL kernel-pure and unconditional; only the ℤ-generator identification of the local group is disclosed.',
-        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'very_hard',
+        'status': 'proven (5q.H E1 brick 17b — hypothesis-free at charted 4-manifolds: SingularReducedGeneratorInt.intLocalHomologyIso_of_manifold\' constructs the full 3-field datum (iso/isoMod2/redCompat), kernel-pure; the one residual ReducedGeneratorNonzero is discharged by reducedGeneratorNonzero via chartLocalIso_generator_reduces_ne_zero. Re-marked 2026-07-12 arm-2 after the atlas kept ranking it open)', 'tier': 'discharge_future', 'eliminability': 'very_hard',
         'module': 'SingularRelHomologyInt',
         'elimination_path': 'Discharge = the ℤ local reduction tower H₄(ℝ⁴,ℝ⁴∖0;ℤ) ≅ H₃(ℝ⁴∖0;ℤ) ≅ H₃(S³;ℤ) ≅ ℤ. '
             'The pair-LES connecting-iso step is provable from the integral pair LES built here (homProjInt / '
@@ -3307,7 +3307,7 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'interFormInt fc a b — the compatibility fixing the equivalence to underlie the intersection form. This is '
             'the ONLY unproved input to interMatrix UNIMODULARITY. It is STRICTLY STRONGER than the on-main mod-2 '
             'injective non-degeneracy SingularPD4Instances.nondeg_of_closed (which gives only det ODD, not det = ±1).',
-        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'hard',
+        'status': 'superseded_on_wiring_path (2026-07-12 arm-2: the live σ÷16 wiring is hcoreG_intrinsicInt → openDuality_univ_bij_of_hcoreGInt → capEquivInt → sixteen_dvd_latticeSig_of_capEquiv, and SingularSixteenDvdUnconditionalInt.sixteen_dvd_latticeSigInt consumes NO capIso/intPD datum; this datum remains a valid ALTERNATIVE interface for datum-supplied PD, off the critical path)', 'tier': 'discharge_future', 'eliminability': 'hard',
         'module': 'IntersectionFormUnimodularInt',
         'elimination_path': 'Discharge = build the INTEGRAL homology H₂(M;ℤ) + the integral cap product '
             '·⌢[M] : H²(M;ℤ) → H₂(M;ℤ) + the integral Kronecker pairing kroneckerHInt (the ℤ tower dual to the on-main '
@@ -3361,7 +3361,7 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'toDualEquiv = capEquiv.trans kronEquiv, toDualEquiv_apply from interFormInt_eq_kroneckerHInt_capHInt). The '
             'residual disclosed input is now PRECISELY the two isos (cap-iso + Kronecker perfect pairing) — the exact '
             'char-0 upgrade of the on-main mod-2 INJECTIVE nondeg_of_closed (mod-2 injectivity of ·⌢[M] → integral iso).',
-        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'hard',
+        'status': 'superseded_on_wiring_path (2026-07-12 arm-2: the live σ÷16 wiring is hcoreG_intrinsicInt → openDuality_univ_bij_of_hcoreGInt → capEquivInt → sixteen_dvd_latticeSig_of_capEquiv, and SingularSixteenDvdUnconditionalInt.sixteen_dvd_latticeSigInt consumes NO capIso/intPD datum; this datum remains a valid ALTERNATIVE interface for datum-supplied PD, off the critical path)', 'tier': 'discharge_future', 'eliminability': 'hard',
         'module': 'IntCapProductInt',
         'elimination_path': 'Discharge (i) the cap-iso: prove capHInt 2 1 · [M] : H²(M;ℤ) → H₂(M;ℤ) is bijective — the '
             'integral upgrade of the on-main mod-2 injective SingularPD4Instances.nondeg_of_closed (the capH-injectivity '
@@ -3416,7 +3416,7 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'Int.isUnit_iff) is disclosed. IntCapIsoData → IntCapIso → IntPoincareDuality via '
             'IntCapIsoData.toIntCapIso (LinearEquiv.ofIsUnitDet on each map) + intPoincareDualityOfCapIso. This is the '
             'exact integer analogue of the H²-side interMatrix datum, strictly sharper than IntCapIso\'s abstract isos.',
-        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'hard',
+        'status': 'superseded_on_wiring_path (2026-07-12 arm-2: the live σ÷16 wiring is hcoreG_intrinsicInt → openDuality_univ_bij_of_hcoreGInt → capEquivInt → sixteen_dvd_latticeSig_of_capEquiv, and SingularSixteenDvdUnconditionalInt.sixteen_dvd_latticeSigInt consumes NO capIso/intPD datum; this datum remains a valid ALTERNATIVE interface for datum-supplied PD, off the critical path)', 'tier': 'discharge_future', 'eliminability': 'hard',
         'module': 'IntPoincareDualityCapIso',
         'elimination_path': 'Discharge (a) h2Basis: build integral singular H₂(M;ℤ), prove it finitely generated, split '
             'off the free part (Module.Free/Module.Finite over the PID ℤ ⟹ a finite basis) — the exact homology-side '

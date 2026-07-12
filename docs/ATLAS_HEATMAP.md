@@ -2,13 +2,13 @@
 
 > **Auto-generated** by `scripts/atlas_heatmap.py` from `atlas_view.build_atlas()` — a VIEW over `lean_deps.json` ∪ `HYPOTHESIS_REGISTRY`. Do not hand-edit; regenerate with `uv run python scripts/atlas_heatmap.py --write`.
 
-_Source: 16577 theorem nodes, 41 tracked open assumptions, 74 IMPLIES edges._
+_Source: 16578 theorem nodes, 41 tracked open assumptions, 74 IMPLIES edges._
 
 ## Landscape
 
 | | count |
 |---|---:|
-| ✅ TRUE (proved) | 16367 |
+| ✅ TRUE (proved) | 16368 |
 | ⛔ OBSTRUCTION (no-go) | 210 |
 | ❓ open (tracked assumptions) | 41 |
 | ★ apex (headline open targets) | 4 |
@@ -19,8 +19,8 @@ Each open assumption belongs to a TRACK (`tier`); `gating` is the Σ of how many
 
 | track | open | gating (Σ impact) | apex |
 |---|---:|---:|---:|
-| `discharge_future` | 16 | 53 |  |
-| `external_boundary` | 15 | 21 |  |
+| `discharge_future` | 12 | 28 |  |
+| `external_boundary` | 14 | 20 |  |
 | `headline` | 4 | 0 | 4 |
 | `local` | 6 | 0 |  |
 
@@ -41,11 +41,7 @@ Each open assumption belongs to a TRACK (`tier`); `gating` is the Σ of how many
 |---:|---|---|---|---|
 | 12 | `hyp:smith_inflow_z16` | discharge_future | very_hard | PLANNED |
 | 11 | `hyp:rokhlin_sigma_mod_16` | external_boundary | very_hard | STATED |
-| 7 | `hyp:intCapIsoData_determinant_datum` | discharge_future | hard | PLANNED |
-| 7 | `hyp:intLocalHomologyIso_datum` | discharge_future | very_hard | PLANNED |
-| 6 | `hyp:intCapIso_datum` | discharge_future | hard | PLANNED |
 | 6 | `hyp:intH2_basis_datum` | discharge_future | very_hard | PLANNED |
-| 5 | `hyp:intPoincareDuality_perfectPairing_datum` | discharge_future | hard | PLANNED |
 | 4 | `hyp:H_RT_Formula_Valid` | external_boundary | open | STATED |
 | 3 | `hyp:intOrientation_datum` | discharge_future | very_hard | PLANNED |
 | 3 | `hyp:spinWu_even_datum` | discharge_future | hard | PLANNED |
@@ -54,4 +50,8 @@ Each open assumption belongs to a TRACK (`tier`); `gating` is the Σ of how many
 | 2 | `hyp:intFundamentalClass_eval_datum` | discharge_future | very_hard | PLANNED |
 | 2 | `hyp:modular_invariance_framing` | external_boundary | hard | STATED |
 | 1 | `hyp:c_minus_equals_8Nf` | external_boundary | algebraic | STATED |
+| 0 | `hyp:H_BilocalPointlikeLimit` | local | hard | STATED |
+| 0 | `hyp:H_CFZ2_sq_a` | local | hard | STATED |
+| 0 | `hyp:H_CFZ2_sq_e` | local | hard | STATED |
+| 0 | `hyp:H_CasiniHuerta_Bound_Valid` | external_boundary | hard | STATED |
 
