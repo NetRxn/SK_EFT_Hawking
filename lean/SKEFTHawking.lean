@@ -4131,6 +4131,13 @@ import SKEFTHawking.CharSurfaceCircle
 -- Phase 5q.H (N2) — pin⁻-on-low-dim vocabulary: framed circle Ω₁^Spin bit + surgery trace (Lemma 1.2 full ⟺)
 import SKEFTHawking.CharSurfaceTrace
 
+-- Phase 5q.H · N5 — the WITNESS TOWER: the sphere witnesses' integral instance packages.
+-- S⁴: H₁=H₂=H₃=0 / H₄≅ℤ instances + H²=H³=0 + rank-0 IntH2Basis + H⁴(S⁴;ℤ)≅ℤ; universal
+-- boundaries free/projective instances; the kron-free σ÷16 leg INSTANTIATED end-to-end at S⁴
+-- (only d + hv2 remain open; htopo discharged). S²×S²: honest frozen H-data package + Gram-pin
+-- bridges (even-unimodularity, σ=0, htopo) to the SphereProductBounding datum. (wt2-built.)
+import SKEFTHawking.SphereWitnessTowerInt
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 
