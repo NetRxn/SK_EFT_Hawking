@@ -11,9 +11,10 @@ The mod-2 `mvHomSum` was a `coprod` (a difference over `ℤ/2`, where `+ = −`)
 **difference** `(ι_A)_* u − (ι_B)_* v`, so the complex condition `Σ ∘ Δ = 0` closes by `sub_self` (both
 inclusion routes `A∩B ↪ A ↪ X` and `A∩B ↪ B ↪ X` equal the single `A∩B ↪ X`) rather than `c + c = 0`.
 
-The connecting map `δ : Hₙ₊₁(X;ℤ) → Hₙ(A∩B;ℤ)` + the three exactness statements are the next bricks (built
-on the integral pair LES `homProjInt`/`connectingInt` + the integral excision `excisionEquivInt`), completing
-the integral MV LES — the bottom row of the integral Poincaré-duality 5-lemma ladder.
+The connecting map `δ : Hₙ₊₁(X;ℤ) → Hₙ(A∩B;ℤ)` (`mvConnectingInt`/`mvDeltaInt`) AND all three exactness
+statements (`mv_exact_ambientInt`/`mv_exact_interInt`/`mv_exact_middleInt`) are IN THIS FILE — the integral
+MV LES is COMPLETE (stale-header fix 2026-07-12 arm-2: the round-5 product-homology worker consumed the full
+LES and flagged this paragraph, which still described them as future bricks).
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom.
 -/
