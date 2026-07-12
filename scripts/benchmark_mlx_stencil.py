@@ -27,6 +27,16 @@ MSQ = 0.01                # estimated from an equilibrium-scale config (per the
 N_POLES = 12              # 2026-06-30 reject-all lesson), not an inflated one.
 
 
+class _Rows(list):
+    """Row sink that prints each result as it lands — a late crash can't lose
+    minutes of earlier timings."""
+
+    def append(self, row):
+        name, bench, batch, t = row
+        print(f"  [{name}] {bench} batch={batch}: {t:.4f}s", flush=True)
+        super().append(row)
+
+
 def _timeit(fn, sync, n_warm=2, n_rep=5):
     for _ in range(n_warm):
         sync(fn())
@@ -121,7 +131,9 @@ def bench_mlx(device, L, batch, replicas, n_md, do_traj, rows):
 
     if do_traj:
         h64 = mx.array(amp * rng.standard_normal((replicas, V, 4, 4)), dtype=mx.float64)
-        lam = float(me.estimate_lambda_max(me.hopping_blocks(h64[0], L), fwd, back, V,
+        with mx.stream(mx.cpu):                    # raw f64 slice must stay off the GPU stream
+            h0 = h64[0]
+        lam = float(me.estimate_lambda_max(me.hopping_blocks(h0, L), fwd, back, V,
                                            n_iter=100, seed=1))
         coeffs = me.make_rhmc_coeffs(1.3 * lam, MSQ, n_poles=N_POLES)
         rng_t = np.random.default_rng(0)
@@ -143,7 +155,7 @@ def main():
     args = ap.parse_args()
 
     engines = args.engines.split(",") if args.engines else None
-    rows = []
+    rows = _Rows()
 
     def want(e):
         return engines is None or e in engines
