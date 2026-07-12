@@ -4158,6 +4158,11 @@ import SKEFTHawking.SixteenDvdOrientSectionInt
 -- fully-hypothesis-free Rokhlin-leg instance (unconditional datum + ±-section leg + N6 spin
 -- theorem + N2 htopo + computed N5 package). (wt2-built.)
 import SKEFTHawking.SphereWitnessFiringUncondInt
+-- 5q.H round 6 — relative (PAIR) homotopy invariance of integral homology: homotopies of pair
+-- maps (H(A×I) ⊆ B) induce equal maps Hₙ₊₁(X,A;ℤ) → Hₙ₊₁(Y,B;ℤ) — NO new prism (the in-tree
+-- signed prism restricts to A-chains); + the Euclidean MOVING-PUNCTURE instance: translations to
+-- two punctures inside a convex C ⊆ ℝ⁴ agree as pair maps (ℝ⁴,Cᶜ) → (ℝ⁴,ℝ⁴∖0). (wt2-built.)
+import SKEFTHawking.SingularRelativeHomotopyInvarianceInt
 
 -- Phase 5q.H · N5 — the S²×S² PRODUCT-HOMOLOGY arc OPENER: the contractible-factor collapse
 -- Hₙ₊₁(Y×C;ℤ) ≅ Hₙ₊₁(Y;ℤ) (projection/section homotopy equivalence via the integral prism),
