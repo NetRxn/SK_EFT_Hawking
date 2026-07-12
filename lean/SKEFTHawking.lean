@@ -1340,6 +1340,7 @@ import SKEFTHawking.SingularSixteenDvdUnconditionalInt
 import SKEFTHawking.SpinWuFromPD
 import SKEFTHawking.BrownMetabolic
 import SKEFTHawking.CharSurfaceBounding
+import SKEFTHawking.SingularOpenDualityUnivBij
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularPDWindow
 import SKEFTHawking.SingularConvexComplementConnected
