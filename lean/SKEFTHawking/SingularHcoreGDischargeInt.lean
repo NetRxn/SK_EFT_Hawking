@@ -3,11 +3,9 @@
 
 `HcoreG M zM hzM` (the per-`(A,B,K,g)` connecting-square naturality — takes NO orientation input, pure
 topological naturality) discharged by applying `SingularSeamMatchInt.seamMatch_upperInt` (upper conjunct)
-and `seamMatch_botInt` (bot conjunct) for each `(A,B,K,g)`. This VERIFIES the reduction is correctly shaped
-end-to-end; it is kernel-pure ONCE the two seam-match `hmatch` residuals are discharged.
-
-(WIP: transitively depends on the two `hmatch` sorries in `SingularSeamMatchInt` — becomes kernel-pure the
-moment those close. NOT imported into the library root until then.)
+and `seamMatch_botInt` (bot conjunct) for each `(A,B,K,g)`. Both seam-matches are fully proven
+(`SingularSeamMatchInt`, zero sorry), so this is kernel-pure (`{propext, Classical.choice, Quot.sound}`)
+and imported into the library root. Consumed by `SingularSixteenDvdUnconditionalInt`.
 -/
 import Mathlib
 import SKEFTHawking.SingularPDWindowInt
