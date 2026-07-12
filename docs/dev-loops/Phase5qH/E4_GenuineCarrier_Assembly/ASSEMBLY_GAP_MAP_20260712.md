@@ -148,3 +148,24 @@ demoted PinPlusDischarge §1–§5 forms and the CommonOrigin flagship tower
 (`CommonOrigin.lean:77–254`), which live on the OLD thin `Omega4PinPlusBordism` substrate — not
 the genuine tied carrier. Post-2026-07-06 re-anchor E5 is an **alternative** route to N1, not
 the keystone; no E5 assembly work is on the critical path.
+
+---
+## Post-round-2 refresh (lead, same day — rounds 2/3 landings)
+
+- **N6 RETIRED** (`71f1b9f4`): the hv2 seam is CLOSED — `PinPlusCertK → wuClass2 = 0 → spinWuDatum_of_certK →
+  sixteen_dvd_latticeSig_of_orientation_certK`, with `v₁ = 0` DERIVED from orientation (new
+  `BocksteinIntegralLift` engine; nothing frozen). Requires N3's `IntOrientation` (mathematically necessary).
+- **N1a REFINED** (`a529f6c2`..`5e894244`): the σ-route layer is in-tree — `isHyperbolicForm_congr_iff`
+  (M–H σ=0 characterization), `SpinSigmaPresentation`/`dataBordismGrp_equiv_int` (the
+  `spin_bordism_iso_Z` consumer shape), KT Lemma 5.3's ⟸ DERIVED. Open inside N1a: **Freeze A
+  `RealizesSphereProducts`** (Benedetti handle-trading) + **Freeze B `SphereProductBounds`** (round-3
+  wt3 instantiating) + `hfwd`/`h2g` (5.3 forward; 2·K3 bounds) + the K3 witness.
+- **N4 (round-3 wt2 porting)**: the absolute kron/hkron under freeness hypotheses — folds N4 into
+  N5-adjacent data on landing.
+- **N5 scoping verdict (lead)**: the leg's witness set = SPIN manifolds only (ℝP⁴ has no `IntOrientation`
+  — its H²-torsion concern is MOOT for the leg; it enters via the mod-2/GM side instead). Concrete needs:
+  S⁴ (H²=0, rank-0 `IntH2Basis` — trivial once H²(S⁴;ℤ)=0 is in-tree, which it is NOT yet), `n(S²×S²)`
+  (H² free rank 2n — needs in-tree computation; pairs with Freeze-B work), K3 (rank 22 — the deep witness,
+  needed for N1c's ÷32 and generation). NO general-M FG required anywhere on this path
+  (`5qH-fg-ek-over-Z-blocked` respected).
+- **No-go substrate**: registry at 7 (`FGDualityNoGo`, `SyntheticSmithNoGo`, `5qH-injectivity-routes-apex-equivalent` added this arm), `nogo_substrate_integrity` PASS.
