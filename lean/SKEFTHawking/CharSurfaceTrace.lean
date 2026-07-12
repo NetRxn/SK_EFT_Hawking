@@ -310,4 +310,17 @@ theorem PinCharSurface.taylorSurgeryDescends_of_taylorSurgeryTrace {C : PinCharS
   obtain ⟨T, hext⟩ := (h γ' hdet hne).mpr hq
   exact ⟨T.toSurgeredSurface hext⟩
 
+/-! ## Cross-layer tie: the disk supplies the bounding framing (Lemma 1.3 in the new vocabulary) -/
+
+/-- **A disk-bounding framed circle has bounding induced spin structure** — the sentence in the
+round-1 Lemma 1.3 freeze's docstring (*"The disk supplies the framing that makes the induced spin
+structure on the circle bound"*, `CharSurfaceCircle.TaylorDiskVanishing`), now theorem-shaped:
+under the disk-vanishing freeze and detection-coherence, a framed circle that bounds a disk in
+the bounding 3-manifold has `spinClass = 0` — its `Ω₁^{Spin} ≅ ℤ/2` class dies. -/
+theorem FramedCircle.spinClass_eq_zero_of_boundsDiskIn {C : PinCharSurface X k}
+    {J : ModelWithCorners ℝ E' H'} {γ : FramedCircle C} (b : C.Bounding J)
+    (hdet : γ.SpinClassDetectsQ) (hdv : b.TaylorDiskVanishing)
+    (hd : γ.toEmbeddedCircle.BoundsDiskIn b) : γ.spinClass = 0 :=
+  (γ.spinClass_eq_zero_iff_of_detects hdet).mpr (hdv γ.toEmbeddedCircle hd)
+
 end SKEFTHawking.CharSurface
