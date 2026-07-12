@@ -2,7 +2,7 @@
 
 > **Auto-generated** by `scripts/atlas_heatmap.py` from `atlas_view.build_atlas()` — a VIEW over `lean_deps.json` ∪ `HYPOTHESIS_REGISTRY`. Do not hand-edit; regenerate with `uv run python scripts/atlas_heatmap.py --write`.
 
-_Source: 16672 theorem nodes, 41 tracked open assumptions, 74 IMPLIES edges._
+_Source: 16672 theorem nodes, 41 tracked open assumptions, 77 IMPLIES edges._
 
 ## Landscape
 
@@ -20,7 +20,7 @@ Each open assumption belongs to a TRACK (`tier`); `gating` is the Σ of how many
 | track | open | gating (Σ impact) | apex |
 |---|---:|---:|---:|
 | `discharge_future` | 10 | 23 |  |
-| `external_boundary` | 14 | 20 |  |
+| `external_boundary` | 14 | 23 |  |
 | `headline` | 4 | 0 | 4 |
 | `local` | 6 | 0 |  |
 
@@ -44,6 +44,7 @@ Each open assumption belongs to a TRACK (`tier`); `gating` is the Σ of how many
 | 6 | `hyp:intH2_basis_datum` | discharge_future | very_hard | PLANNED |
 | 4 | `hyp:H_RT_Formula_Valid` | external_boundary | open | STATED |
 | 3 | `hyp:intOrientation_datum` | discharge_future | very_hard | PLANNED |
+| 3 | `hyp:spin_bordism_iso_Z` | external_boundary | very_hard | PLANNED |
 | 2 | `hyp:H_KLRS_SM_Crossover` | external_boundary | hard | STATED |
 | 2 | `hyp:H_ScalarChannelIsTetradBifurcationOutput` | discharge_future | hard | PLANNED |
 | 2 | `hyp:modular_invariance_framing` | external_boundary | hard | STATED |
@@ -53,5 +54,4 @@ Each open assumption belongs to a TRACK (`tier`); `gating` is the Σ of how many
 | 0 | `hyp:H_CFZ2_sq_e` | local | hard | STATED |
 | 0 | `hyp:H_CasiniHuerta_Bound_Valid` | external_boundary | hard | STATED |
 | 0 | `hyp:H_DESICompatibility` | discharge_future | hard | PLANNED |
-| 0 | `hyp:H_DecouplingBoundDim6` | local | hard | STATED |
 

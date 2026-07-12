@@ -2817,7 +2817,11 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
         'status': 'proposed',  # Not yet used — proposed for Wave 7C
         'eliminability': 'very_hard',
         'elimination_path': 'Requires Adams spectral sequence computation (Anderson-Brown-Peterson 1966-67). Probably 10+ years from formalization in any proof assistant.',
-        'dependent_theorems': [],  # Would be used in bordism-derived Rokhlin
+        'dependent_theorems': [
+            'SKEFTHawking.SpinSigmaRoute.SpinSigmaPresentation.dataBordismGrp_equiv_int',
+            'SKEFTHawking.SpinSigmaRoute.SpinSigmaPresentation.sig_injective',
+            'SKEFTHawking.SpinSigmaRouteDoor.omega4PinPlusGMTied_equiv_zmod16_via_sigma_route_full',
+        ],  # Would be used in bordism-derived Rokhlin
         'module': 'proposed: SpinBordism.lean',
         'source': 'Anderson-Brown-Peterson, Bull. AMS 72, 256 (1966)',
         'risk': 'Extremely low — standard result in algebraic topology.',
