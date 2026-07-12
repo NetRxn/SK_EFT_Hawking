@@ -4143,6 +4143,21 @@ import SKEFTHawking.SphereWitnessTowerInt
 -- (18e-18h chain); freeze SHRUNK to per-ball locally-constant sign sections (preconnected
 -- chart balls normalise +-1 signs). (wt2-built.)
 import SKEFTHawking.SphereWitnessFiringInt
+-- 5q.H round 6 — the UNCONDITIONAL S⁴ orientation datum: the constant-+1 freeze is CHOICE-SENSITIVE
+-- (chartAt-pinned generator signs carry per-point stdOrthonormalBasis choices — not provable, not
+-- refutable), so the datum is built instead from the choice-ABSORBING global section: S⁴∖z ≅ ℝ⁴ ⟹
+-- ρ_z : H₄(S⁴;ℤ) → H₄(S⁴|z;ℤ) bijective everywhere ⟹ orient z := iso_z(ρ_z g) realises every ball
+-- definitionally ⟹ IntOrientationData SphereFour with NO hypothesis. (wt2-built.)
+import SKEFTHawking.SphereFourOrientationDataInt
+-- 5q.H round 6 — the σ÷16 leg over an ARBITRARY ±1 orientation section: the orient ≡ 1 binder
+-- eliminated end-to-end (the PD tower consumes the normalisation only through E g = 1 for the
+-- generic UC-flip; a ±1 sign conjugates into E via LinearEquiv.neg). D⁰ point-stage hit / B4c
+-- halves / hbaseConvG / univ-bijectivity / the assembled leg / the datum-fed leg, all primed. (wt2-built.)
+import SKEFTHawking.SixteenDvdOrientSectionInt
+-- 5q.H round 6 — THE ZERO-BINDER FIRING: 16 ∣ σ(S⁴) UNCONDITIONAL — the project's first
+-- fully-hypothesis-free Rokhlin-leg instance (unconditional datum + ±-section leg + N6 spin
+-- theorem + N2 htopo + computed N5 package). (wt2-built.)
+import SKEFTHawking.SphereWitnessFiringUncondInt
 
 -- Phase 5q.H · N5 — the S²×S² PRODUCT-HOMOLOGY arc OPENER: the contractible-factor collapse
 -- Hₙ₊₁(Y×C;ℤ) ≅ Hₙ₊₁(Y;ℤ) (projection/section homotopy equivalence via the integral prism),
