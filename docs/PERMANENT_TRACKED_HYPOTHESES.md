@@ -202,6 +202,7 @@
 - **Source.** Anderson-Brown-Peterson, Bull. AMS 72, 256 (1966)
 - **Risk.** Extremely low — standard result in algebraic topology.
 - **Circularity.** CAUTION: The ABP computation historically used facts equivalent to Rokhlin theorem. Using this to DERIVE Rokhlin creates a logical dependency chain where A proves B but A was originally proved using B. The mathematical content is not circular (ABP can be proved independently of Rokhlin via Adams spectral sequence), but the historical provenance is tangled. If used, should be clearly documented as an independent route, not as "proving" Rokhlin from more basic facts.
+- **Consumers.** `SKEFTHawking.SpinSigmaRoute.SpinSigmaPresentation.dataBordismGrp_equiv_int`, `SKEFTHawking.SpinSigmaRoute.SpinSigmaPresentation.sig_injective`, `SKEFTHawking.SpinSigmaRouteDoor.omega4PinPlusGMTied_equiv_zmod16_via_sigma_route_full`
 
 ---
 
