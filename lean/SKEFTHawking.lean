@@ -1018,6 +1018,11 @@ import SKEFTHawking.SingularEuclideanCapIsoInt
 -- Phase 5q.H · E1 (PD base case): the reusable free-case integral relative UCT (relKroneckerHInt_bijective_of_free)
 -- + euclSourceIso (H⁴(ℝ⁴,ℝ⁴∖0;ℤ)≅ℤ) discharging the base's sourceIso. (wt1-built.)
 import SKEFTHawking.SingularRelativeUCInt
+-- Phase 5q.H · E1/N4 (absolute UCT): the ABSOLUTE integral universal-coefficient engine — κ =
+-- kroneckerHInt bijective at free H_{n-1} + projective boundaries (port of the relative engine), and
+-- the σ÷16 leg's Kronecker FLIP kronH2OfFree (H₂ ≃ₗ Dual H², honest hypotheses: H₁ free + H₂ finite
+-- free + boundary projectivity) with the leg's exact hkron computation rule. (wt2-built.)
+import SKEFTHawking.SingularAbsoluteUCInt
 -- Phase 5q.H · E1 (CSC-PD tower): contravariant restriction functoriality for integral relative
 -- cohomology (relCohomRestrictInt + id/trans) — the transition-map prerequisite for the integral
 -- compactly-supported cohomology colimit (top row of the PD ladder).
@@ -1352,6 +1357,10 @@ import SKEFTHawking.SixteenDvdOfOrientationSpin
 import SKEFTHawking.BocksteinIntegralLift
 import SKEFTHawking.WuClass1Orientation
 import SKEFTHawking.PinPlusCertSpinSeam
+-- Phase 5q.H · N4 CLOSED: the σ÷16 legs (orientation+spin / carrier-certK) with the kron/hkron
+-- Kronecker binders ELIMINATED — discharged by the absolute integral UCT flip over the honest
+-- instance set (H₁ free, boundaries 0/1 projective, H₂ finite free — N5-adjacent). (wt2-built.)
+import SKEFTHawking.SixteenDvdKronFree
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularPDWindow
 import SKEFTHawking.SingularConvexComplementConnected
