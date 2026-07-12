@@ -231,7 +231,11 @@ retire) — no entry is immutable. Every entry carries datetime metadata.
 - memory: [[project_5qH_geometric_floor_terminal]]
 - created_ts: 2026-07-04T00:00:00Z
 
-## 5qH-fg-ek-over-Z-blocked (2026-07-12, arm-2 — route ban, prose; scout-verified vs primaries)
+## 5qH-fg-ek-over-Z-blocked (2026-07-12, arm-2 — KERNEL-REGISTERED same-day; scout-verified vs primaries)
+**Encode-on-settle upgrade (same turn-chain):** now a `KERNEL_NOGO_REGISTRY` entry backed by
+`SKEFTHawking.FGDualityNoGo.dual_blowup_not_finite` + `not_finite_baerSpecker` (the ℤ-dual blow-up:
+Dual ℤ (ℕ →₀ ℤ) ≅ the Baer–Specker group, uncountable/non-f.g. — kernel-pure). The FULL Specker
+self-dual counterexample ((⊕ℤ)⊕ℤ^ℕ; needs slenderness of ℤ) is literature-verified, formalization queued.
 **BANNED route:** deriving `intH2_basis` FG at general M via a ℤ-analog of the mod-2 Erdős–Kaplansky
 self-duality forcing (`SingularUCFinite` pattern). PROVABLY BLOCKED: `A = (⊕ℤ) ⊕ ℤ^ℕ` is self-dual
 (Specker) and not f.g. — PD (H²≅H₂) + UCT-duality over ℤ cannot force finite generation. The countable

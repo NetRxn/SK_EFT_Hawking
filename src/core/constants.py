@@ -3499,6 +3499,25 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': 'ker(abkGrade)=⊥ / card≤16 UNCONDITIONALLY for ANY free-per-manifold grade. FALSE: the ℝP⁴ grade-0 witness (w₂=0, [ℝP⁴]≠0∈Ω₄^O) has no unoriented null-bordism, so the free grade is never injective. ker=⊥ requires the grade TIED to the structure (the GM carrier), never a better proof on a free-grade datum.',
         'memory': '[[nogo_lattice_arf_not_sigma8]]',
     },
+    '5qH-fg-ek-over-Z-blocked': {
+        'fork_id': '5qH-fg-ek-over-Z-blocked',
+        'nogo_kind': 'refutation',
+        'false_statement': 'The mod-2 Erdős–Kaplansky finiteness forcing (SingularUCFinite: self-duality '
+            'forces finite dimension) transports to ℤ — in particular dualization over ℤ stays in the '
+            'f.g./countable size class, so PD + UCT self-duality would force H²(M;ℤ) finitely generated. '
+            'FALSE: the ℤ-dual of the COUNTABLE free module ℕ →₀ ℤ is the UNCOUNTABLE, non-f.g. '
+            'Baer–Specker group ℕ → ℤ (kernel: dual_blowup_not_finite); and the ℤ-EK statement itself is '
+            'refuted in the literature by Specker 1950 — (⊕ℤ) ⊕ ℤ^ℕ is self-dual and not f.g. (slenderness '
+            'of ℤ; Mathlib-absent, formalization queued). Scout-verified vs FNOP arXiv:1910.07372 + '
+            'Blass–Göbel math/9405206; verdict file '
+            'Lit-Search/Phase-5qH/FG_via_PD_duality_forcing_verdict_20260712.md.',
+        'backing_theorems': [
+            'SKEFTHawking.FGDualityNoGo.dual_blowup_not_finite',
+            'SKEFTHawking.FGDualityNoGo.not_finite_baerSpecker',
+        ],
+        'memory': 'SETTLED_FORKS § 5qH-fg-ek-over-Z-blocked (2026-07-12 arm-2); project path for '
+            'intH2_basis = witness-level bases.',
+    },
     'genuine-gm-carrier-eight-torsion': {
         'fork_id': 'genuine-gm-carrier-eight-torsion',
         'backing_theorems': [
