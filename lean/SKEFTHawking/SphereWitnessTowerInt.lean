@@ -22,14 +22,15 @@ already exists and is only *packaged* here.
   (`kronH2Sphere4`) — the σ÷16 leg's full instance set is closed at S⁴ — and the witness value
   `latticeSig (interMatrix fc sphere4IntH2Basis) = 0` (`b₂(S⁴) = 0`, so σ(S⁴) = 0 through the SAME
   `latticeSig ∘ interMatrix` pipeline the leg divides by 16).
-* §4 — the S²×S² witness: `H₁(S²×S²;ℤ) = 0` is COMPUTED in-tree (`SphereProdHOneInt`: polar
-  product-cover MV + the contractible-factor collapse — the product-homology arc's first slice);
-  the H₂ data is NOT yet computed (no Künneth / degree-2 product-MV chase; honest freeze,
-  mirroring `SphereProductBounding`'s datum design). `SphereProdHData` carries the remaining
-  frozen H-data (H₂ finite free, a rank-2 basis of H²); given it, the leg's instance set closes
-  (`kronH2SphereProd`), and the Gram pin `interMatrix fc B = sphereProdFormDatum` (= `Hyp`,
-  the `II(S²×S²) = H` datum of `SphereProductBounding`) discharges the leg's geometric
-  `IsEvenUnimodular` AND `htopo` hypotheses and pins σ = 0 at the witness.
+* §4 — the S²×S² witness: `H₁(S²×S²;ℤ) = 0` AND `H₂(S²×S²;ℤ) ≅ ℤ²` are COMPUTED in-tree
+  (`SphereProdHOneInt` + `SphereProdHTwoInt`: the polar product-cover MV at degrees 1 and 2), so
+  the leg's instance set closes UNCONDITIONALLY (`kronH2SphereProd`, no datum), the UCT flips the
+  computation into `H²(S²×S²;ℤ) ≅ ℤ²` with a COMPUTED rank-2 basis (`sphereProdIntH2Basis` — the
+  second concrete `intH2_basis_datum` discharge after S⁴). The freeze residue (`SphereProdHData`)
+  is now exactly the GEOMETRIC basis: the rank-2 basis of `H²` by the two factors' Poincaré duals,
+  the basis the Gram pin `interMatrix fc B = sphereProdFormDatum` (= `Hyp`, the `II(S²×S²) = H`
+  datum of `SphereProductBounding`) refers to; under the pin the leg's geometric
+  `IsEvenUnimodular` AND `htopo` hypotheses discharge and σ = 0 is pinned at the witness.
 * §5 — the END-TO-END N4∘N5 integration: the kron-free σ÷16 leg INSTANTIATED at `M = S⁴`
   (`sixteen_dvd_latticeSig_sphere4`) — Mathlib's sphere smooth-manifold instances supply the
   charted structure, this module's package supplies every instance binder; the remaining open
@@ -51,6 +52,7 @@ import SKEFTHawking.SphereProductBounding
 import SKEFTHawking.SingularLineMinusPointInt
 import SKEFTHawking.SixteenDvdKronFree
 import SKEFTHawking.SphereProdHOneInt
+import SKEFTHawking.SphereProdHTwoInt
 
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularCohomologyInt
@@ -194,7 +196,7 @@ theorem sphere4_interMatrix_htopo (fc : IntFundamentalClass (Sph 4)) :
   rw [sphere4_interMatrix_latticeSig fc]
   norm_num
 
-/-! ## §4. The S²×S² witness: H₁ COMPUTED (`SphereProdHOneInt`); frozen H₂-data package -/
+/-! ## §4. The S²×S² witness: H₁ AND H₂ COMPUTED; the geometric-basis residue -/
 
 section SphereProdWitness
 
@@ -210,38 +212,74 @@ abbrev SphereProdT : TopCat := TopCat.of SphereProd
 (`SphereProdHOneInt.sphereProd_homology_one_eq_zero`), through the instances registered there. -/
 example : Module.Free ℤ (Homology SphereProdT 1) := inferInstance
 
-/-- **The frozen S²×S² H₂-data package.** The degree-2 integral (co)homology of the product is NOT
-computed in-tree (no Künneth / degree-2 product Mayer–Vietoris; the standard values are `H₂ ≅ ℤ²`
-with hyperbolic intersection form — Benedetti arXiv:1907.10297 Ch. 20, the same source as
-`SphereProductBounding`'s pin). Mirroring that module's datum design, the H₂-data is carried FROZEN:
-* `free2`/`finite2` — `H₂(S²×S²;ℤ)` finite free (true value: `ℤ²`);
-* `basis2` — a rank-2 basis of `H²(S²×S²;ℤ)` (the two sphere factors' duals).
-The FORMER first slice — `H₁(S²×S²;ℤ)` free (true value `0`) — is now COMPUTED
-(`SphereProdHOneInt`, the product-homology arc opener: contractible-factor collapse + polar MV)
-and registered as an instance, so it is no longer a field. Discharge of the residue = the degree-2
-product computation (the `H_{≤2}(S²×S¹)`-grade MV input or Künneth), the arc's next slice. The two
-boundary projectivities need NO freeze — §0 covers every space. -/
+/-- The leg's `[Module.Free ℤ H₂]` obligation at S²×S² — **COMPUTED, not frozen** (formerly the
+`SphereProdHData.free2` field): `H₂(S²×S²;ℤ) ≅ ℤ²` by the degree-2 polar product-cover MV chase
+(`SphereProdHTwoInt.sphereProdHTwoEquivInt`), through the instances registered there. -/
+example : Module.Free ℤ (Homology SphereProdT 2) := inferInstance
+
+/-- The leg's `[Module.Finite ℤ H₂]` obligation at S²×S² — **COMPUTED, not frozen** (formerly the
+`SphereProdHData.finite2` field). -/
+example : Module.Finite ℤ (Homology SphereProdT 2) := inferInstance
+
+/-- **The frozen S²×S² GEOMETRIC-basis residue.** The degree-2 integral homology is now COMPUTED
+in-tree (`SphereProdHTwoInt`: `H₂(S²×S²;ℤ) ≅ ℤ²` — the former `free2`/`finite2` fields are
+instances there), and the UCT flip below computes a rank-2 basis of `H²(S²×S²;ℤ)`
+(`sphereProdBasis2Computed`). What stays frozen is only the GEOMETRY: the Gram pin
+`interMatrix fc B = sphereProdFormDatum` (`II(S²×S²) = H` — Benedetti arXiv:1907.10297 Ch. 20,
+`SphereProductBounding`'s pin) refers to the basis of the two sphere factors' Poincaré duals,
+and identifying such a basis (equivalently, computing the intersection form on ANY computed
+basis) is a separate geometric statement — the arc's remaining slice. -/
 structure SphereProdHData where
-  /-- Frozen: `H₂(S²×S²;ℤ)` is free (the true value is `ℤ²`). -/
-  free2 : Module.Free ℤ (Homology SphereProdT 2)
-  /-- Frozen: `H₂(S²×S²;ℤ)` is finite. -/
-  finite2 : Module.Finite ℤ (Homology SphereProdT 2)
-  /-- Frozen: the rank-2 basis of `H²(S²×S²;ℤ)` (the two factors' Poincaré duals). -/
+  /-- Frozen: the rank-2 basis of `H²(S²×S²;ℤ)` by the two factors' Poincaré duals — the basis
+  the Gram pin refers to. (A rank-2 basis EXISTS computationally: `sphereProdBasis2Computed`;
+  frozen here is its geometric identification.) -/
   basis2 : Module.Basis (Fin 2) ℤ (Cohomology SphereProdT 2)
 
 /-- The S²×S² basis datum in the leg's `IntH2Basis` shape: rank 2 (`b₂(S²×S²) = 2`). -/
 def SphereProdHData.intH2Basis (d : SphereProdHData) : IntH2Basis SphereProdT :=
   ⟨2, d.basis2⟩
 
-/-- **The σ÷16 leg's Kronecker duality at S²×S², given the frozen H₂ package** — the instance set
-closes: `H₁` free COMPUTED (`SphereProdHOneInt`), `H₂` finite free from the package, boundaries
-projective from §0. The S²×S² analogue of `kronH2Sphere4`, conditional on exactly the frozen
-degree-2 Künneth data. -/
-noncomputable def kronH2SphereProd (d : SphereProdHData) :
+/-- **The σ÷16 leg's Kronecker duality at S²×S² — every hypothesis DISCHARGED** (formerly
+conditional on the frozen H₂ package): `H₁` free COMPUTED (`SphereProdHOneInt`), `H₂` finite free
+COMPUTED (`SphereProdHTwoInt`), boundaries projective from §0. The exact S²×S² analogue of
+`kronH2Sphere4` — the N5 closure certificate for the second witness. -/
+noncomputable def kronH2SphereProd :
     Homology SphereProdT 2 ≃ₗ[ℤ] Module.Dual ℤ (Cohomology SphereProdT 2) :=
-  haveI := d.free2
-  haveI := d.finite2
   kronH2OfFree SphereProdT
+
+/-- **`H²(S²×S²;ℤ) ≅ ℤ²`** — the absolute-UCT flip of the computed `H₂(S²×S²;ℤ) ≅ ℤ²`
+(`ucIntEquivOfFree` over `H₁ = 0` free, dualized through the computed homology equivalence and
+`(ℤ×ℤ)* ≅ ℤ×ℤ`). The S²×S² mirror of `sphere4Cohomology4Iso`'s UCT step. -/
+noncomputable def sphereProdCohomTwoEquivInt : Cohomology SphereProdT 2 ≃ₗ[ℤ] ℤ × ℤ :=
+  haveI : Module.Free ℤ (Homology SphereProdT (0 + 1)) :=
+    inferInstanceAs (Module.Free ℤ (Homology SphereProdT 1))
+  (ucIntEquivOfFree SphereProdT 0).trans
+    ((SphereProdHTwoInt.sphereProdHTwoEquivInt.symm.dualMap).trans
+      (((Module.dualProdDualEquivDual ℤ ℤ ℤ).symm).trans
+        (LinearEquiv.prodCongr (LinearMap.ringLmapEquivSelf ℤ ℤ ℤ)
+          (LinearMap.ringLmapEquivSelf ℤ ℤ ℤ))))
+
+/-- **A COMPUTED rank-2 basis of `H²(S²×S²;ℤ)`** — the standard basis of `ℤ²` pulled back across
+the UCT flip. Discharges the *existence* content of the `basis2` datum (the rank-2 free H² the
+σ÷16 leg consumes); NOT the geometric factor-dual basis the Gram pin refers to (its Gram matrix
+is not computed — that is the arc's remaining geometric slice). -/
+noncomputable def sphereProdBasis2Computed :
+    Module.Basis (Fin 2) ℤ (Cohomology SphereProdT 2) :=
+  ((Pi.basisFun ℤ (Fin 2)).map (LinearEquiv.finTwoArrow ℤ ℤ)).map
+    sphereProdCohomTwoEquivInt.symm
+
+/-- **`intH2_basis_datum` DISCHARGED at the second witness**: the computed rank-2 `IntH2Basis`
+at S²×S² (`b₂(S²×S²) = 2`) — the product analogue of `sphere4IntH2Basis`. With
+`kronH2SphereProd`, the σ÷16 leg's full instance set + basis datum are now produced by
+computation at BOTH witnesses; at S²×S² only the geometric Gram pin stays hypothetical. -/
+noncomputable def sphereProdIntH2Basis : IntH2Basis SphereProdT :=
+  ⟨2, sphereProdBasis2Computed⟩
+
+/-- The freeze structure is INSTANTIABLE by the computed basis (the datum-existence discharge):
+`SphereProdHData` no longer carries unprovable content — its residual role is naming the
+geometric basis the Gram-pin hypotheses below refer to. -/
+noncomputable def sphereProdHDataComputed : SphereProdHData :=
+  ⟨sphereProdBasis2Computed⟩
 
 /-- **The Gram pin discharges the leg's `IsEvenUnimodular` hypothesis at S²×S²**: if the witness's
 intersection matrix on the frozen basis equals the pinned datum `sphereProdFormDatum = Hyp`

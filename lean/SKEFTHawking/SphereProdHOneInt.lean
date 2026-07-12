@@ -21,10 +21,11 @@ the straight-line contraction of ℝ², §1), so `H₁(A) = H₁(B) = H₁(S²;�
   legs `H₁(A) = H₁(B) = 0`, so `x = 0`.
 
 `sphereProd_homology_one_eq_zero` + the `Subsingleton`/`Module.Free`/`Module.Finite` instances at
-`TopCat.of SphereProd` are the freeze-slice replacements `SphereWitnessTowerInt` consumes. The
-remaining frozen residue of `SphereProdHData` is exactly the H₂ data (`H₂ ≅ ℤ²` + the rank-2 `H²`
-basis) — that slice needs `H_{≤2}(S²×S¹)`-grade input through the same MV engine (see the §4
-docstring there for the arc map).
+`TopCat.of SphereProd` are the freeze-slice replacements `SphereWitnessTowerInt` consumes. The H₂
+slice (`H₂(S²×S²;ℤ) ≅ ℤ²`) is now ALSO computed — the same polar cover one degree up
+(`SphereProdHTwoInt`, consuming the slice-1+2 intersection data of `SphereProdPuncturedPlaneInt`);
+the freeze residue is only the geometric factor-dual basis carrying the Gram pin (see the §4
+docstring there).
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom.
 -/
