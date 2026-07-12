@@ -4152,6 +4152,10 @@ import SKEFTHawking.SingularProdContractibleInt
 -- collapse + augmentation-injective Δ₀): the SphereProdHData freeze's first slice replaced by
 -- computation; Subsingleton/Module.Free instances at TopCat.of SphereProd. (wt3-built.)
 import SKEFTHawking.SphereProdHOneInt
+-- Phase 5q.H · N5 — the clopen homology splitting in EVERY degree (integral):
+-- Hₙ(X;ℤ) ≅ Hₙ(U;ℤ) × Hₙ(Uᶜ;ℤ) for clopen U — the product-homology arc's S⁰-type
+-- disjoint-union primitive (positive degrees new; degree 0 delegates to splitH0IntEquiv). (wt3-built.)
+import SKEFTHawking.SingularClopenSplitInt
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
