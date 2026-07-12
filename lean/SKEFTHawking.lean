@@ -4128,6 +4128,8 @@ import SKEFTHawking.EffectiveModuli
 -- Phase 5q.H (E2) — enhanced-circle surgery layer (Taylor Lemma 1.2/1.3 statement freeze)
 import SKEFTHawking.BrownSurgeryReduction
 import SKEFTHawking.CharSurfaceCircle
+-- Phase 5q.H (N2) — pin⁻-on-low-dim vocabulary: framed circle Ω₁^Spin bit + surgery trace (Lemma 1.2 full ⟺)
+import SKEFTHawking.CharSurfaceTrace
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
