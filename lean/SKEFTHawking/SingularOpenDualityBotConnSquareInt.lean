@@ -40,11 +40,11 @@ theorem subHomConnecting_openDuality₀_of_coreInt {N : ℕ} {U V : Set ↑X}
     (hcore₀ : ∀ (K : CompactsIn (U ∪ V)) (g : cohomGWInt (U ∪ V) (N + 1) K),
       SKEFTHawking.SingularSubHomologyMVInt.subHomConnectingInt U V hU hV 0
           (legW (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀ K g)
-        = openDuality₀Int (hU.inter hV) z₀ hz₀ (legδInt U V hU hV N K g))
+        = -openDuality₀Int (hU.inter hV) z₀ hz₀ (legδInt U V hU hV N K g))
     (α : CompactlySupportedCohomologyOpenInt (U ∪ V) (N + 1)) :
     SKEFTHawking.SingularSubHomologyMVInt.subHomConnectingInt U V hU hV 0
         (openDuality (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀ α)
-      = openDuality₀Int (hU.inter hV) z₀ hz₀ (cscMvConnectingInt U V hU hV N α) := by
+      = -openDuality₀Int (hU.inter hV) z₀ hz₀ (cscMvConnectingInt U V hU hV N α) := by
   induction α using Module.DirectLimit.induction_on with
   | ih K g =>
     rw [openDuality_of, cscMvConnectingInt_of]

@@ -1332,6 +1332,10 @@ import SKEFTHawking.SingularBaseCaseD0Int
 import SKEFTHawking.SingularPDWindowBaseConvGInt
 import SKEFTHawking.SingularOpenDualityUnivBijInt
 import SKEFTHawking.SingularSixteenDvdLegInt
+import SKEFTHawking.SingularSharedSplitInt
+import SKEFTHawking.SingularConnSquareFactIBotInt
+import SKEFTHawking.SingularSeamMatchInt
+import SKEFTHawking.SingularHcoreGDischargeInt
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularPDWindow
 import SKEFTHawking.SingularConvexComplementConnected

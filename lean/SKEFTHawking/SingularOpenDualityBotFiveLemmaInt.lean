@@ -50,7 +50,7 @@ theorem openDuality_union_bijective_botInt {N : ℕ} {U V : Set ↑X}
     (z₀ : SingularChainInt X (N + 1 + 0 + 1)) (hz₀ : chainBoundary X (N + 1 + 0) z₀ = 0)
     (hcore₀ : ∀ (K : CompactsIn (U ∪ V)) (g : cohomGWInt (U ∪ V) (N + 1) K),
       subHomConnectingInt U V hU hV 0 (legW (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀ K g)
-        = openDuality₀Int (hU.inter hV) z₀ hz₀ (legδInt U V hU hV N K g))
+        = -openDuality₀Int (hU.inter hV) z₀ hz₀ (legδInt U V hU hV N K g))
     (hDI : Function.Surjective (openDuality (k := N + 1) (m := 0) (hU.inter hV) z₀ hz₀))
     (hDU : Function.Bijective (openDuality (k := N + 1) (m := 0) hU z₀ hz₀))
     (hDV : Function.Bijective (openDuality (k := N + 1) (m := 0) hV z₀ hz₀))
@@ -74,11 +74,13 @@ theorem openDuality_union_bijective_botInt {N : ℕ} {U V : Set ↑X}
     refine LinearMap.ext fun p => ?_
     simp only [LinearMap.comp_apply, LinearMap.prodMap_apply]
     exact (subHomSumInt_openDuality (k := N + 1) (m := 0) hU hV z₀ hz₀ p.1 p.2).symm
+  -- the ANTI-commuting square (the ℤ bot sign): absorb the −1 into the CSC-row connecting
+  -- (`ker`/`range` are negation-invariant, so the row exactness transports)
   have hc₃ : (subHomConnectingInt U V hU hV 0).comp
         (openDuality (k := N + 1) (m := 0) (hU.union hV) z₀ hz₀)
-      = (openDuality₀Int (hU.inter hV) z₀ hz₀).comp (cscMvConnectingInt U V hU hV N) := by
+      = (openDuality₀Int (hU.inter hV) z₀ hz₀).comp (-cscMvConnectingInt U V hU hV N) := by
     refine LinearMap.ext fun α => ?_
-    simp only [LinearMap.comp_apply]
+    simp only [LinearMap.comp_apply, LinearMap.neg_apply, map_neg]
     exact subHomConnecting_openDuality₀_of_coreInt hU hV z₀ hz₀ hcore₀ α
   have hc₄ : (subHomDiagInt U V 0).comp (openDuality₀Int (hU.inter hV) z₀ hz₀)
       = ((openDuality₀Int hU z₀ hz₀).prodMap
@@ -97,9 +99,19 @@ theorem openDuality_union_bijective_botInt {N : ℕ} {U V : Set ↑X}
         (openDuality₀Int hV z₀ hz₀)) := by
     rw [LinearMap.coe_prodMap]
     exact hD0U.prodMap hD0V
+  -- row exactness transports across the negated connecting (ker/range are neg-invariant)
+  have hex_sum_neg : Function.Exact ⇑(cscMvSumInt U V (N + 1))
+      ⇑(-cscMvConnectingInt U V hU hV N) := fun y => by
+    rw [LinearMap.neg_apply, neg_eq_zero]
+    exact cscMv_exact_sumInt U V hU hV y
+  have hex_conn_neg : Function.Exact ⇑(-cscMvConnectingInt U V hU hV N)
+      ⇑(cscMvDiagInt U V (N + 2)) := fun y =>
+    (cscMv_exact_connectingInt U V hU hV y).trans
+      ⟨fun ⟨x, hx⟩ => ⟨-x, by rw [LinearMap.neg_apply, map_neg, neg_neg]; exact hx⟩,
+        fun ⟨x, hx⟩ => ⟨-x, by rw [map_neg, ← LinearMap.neg_apply]; exact hx⟩⟩
   exact LinearMap.bijective_of_surjective_of_bijective_of_bijective_of_injective
     (f₁ := cscMvDiagInt U V (N + 1)) (f₂ := cscMvSumInt U V (N + 1))
-    (f₃ := cscMvConnectingInt U V hU hV N) (f₄ := cscMvDiagInt U V (N + 2))
+    (f₃ := -cscMvConnectingInt U V hU hV N) (f₄ := cscMvDiagInt U V (N + 2))
     (g₁ := subHomDiagInt U V (0 + 1)) (g₂ := subHomSumInt U V (0 + 1))
     (g₃ := subHomConnectingInt U V hU hV 0)
     (g₄ := subHomDiagInt U V 0)
@@ -110,8 +122,8 @@ theorem openDuality_union_bijective_botInt {N : ℕ} {U V : Set ↑X}
     (i₄ := openDuality₀Int (hU.inter hV) z₀ hz₀)
     (i₅ := (openDuality₀Int hU z₀ hz₀).prodMap (openDuality₀Int hV z₀ hz₀))
     hc₁ hc₂ hc₃ hc₄
-    (cscMv_exact_middleInt U V hU hV) (cscMv_exact_sumInt U V hU hV)
-    (cscMv_exact_connectingInt U V hU hV)
+    (cscMv_exact_middleInt U V hU hV) hex_sum_neg
+    hex_conn_neg
     (subHom_exact_middleInt U V hU hV) (subHom_exact_sumInt U V hU hV)
     (subHom_exact_connectingInt U V hU hV)
     hDI hi₂ hD0I hi₅
