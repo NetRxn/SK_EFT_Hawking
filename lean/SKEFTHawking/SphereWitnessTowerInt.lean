@@ -281,6 +281,65 @@ geometric basis the Gram-pin hypotheses below refer to. -/
 noncomputable def sphereProdHDataComputed : SphereProdHData :=
   ⟨sphereProdBasis2Computed⟩
 
+/-! ### Generator ↔ basis Kronecker bookkeeping (slice-4 exports)
+
+The UCT flip is BY CONSTRUCTION the Kronecker pairing against the two computed H₂ generators
+(`sumInto 1` and `deltaGen` of `SphereProdHTwoInt`, i.e. `sphereProdHTwoEquivInt.symm (1,0)` and
+`(0,1)`), and `sphereProdBasis2Computed` is their dual basis. These computation rules are the
+coordinate bridge any future Gram-matrix work reduces through — the identification data, NOT the
+intersection form (a separate geometric statement). -/
+
+/-- First-coordinate readout of the UCT flip: the Kronecker pairing against generator 1
+(`sumInto 1`, the `[S²×pt]`-projection class). Definitional. -/
+theorem sphereProdCohomTwoEquivInt_fst (ω : Cohomology SphereProdT 2) :
+    (sphereProdCohomTwoEquivInt ω).1
+      = kroneckerHInt 2 ω (SphereProdHTwoInt.sphereProdHTwoEquivInt.symm (1, 0)) := rfl
+
+/-- Second-coordinate readout: the Kronecker pairing against generator 2 (`deltaGen`, the
+δ-normalized class). Definitional. -/
+theorem sphereProdCohomTwoEquivInt_snd (ω : Cohomology SphereProdT 2) :
+    (sphereProdCohomTwoEquivInt ω).2
+      = kroneckerHInt 2 ω (SphereProdHTwoInt.sphereProdHTwoEquivInt.symm (0, 1)) := rfl
+
+/-- **The full Kronecker pairing rule in generator coordinates**: every pairing
+`⟨ω, h⟩` expands as `ω`-coordinates · `h`-coordinates over the computed `H₂ ≅ ℤ²`. The slice-4
+bridge: any `interMatrix` entry reduces through this to cup-product data on the two generators. -/
+theorem kroneckerHInt_sphereProd_expand (ω : Cohomology SphereProdT 2)
+    (h : Homology SphereProdT 2) :
+    kroneckerHInt 2 ω h
+      = (sphereProdCohomTwoEquivInt ω).1
+          * (SphereProdHTwoInt.sphereProdHTwoEquivInt h).1
+        + (sphereProdCohomTwoEquivInt ω).2
+          * (SphereProdHTwoInt.sphereProdHTwoEquivInt h).2 := by
+  set e := SphereProdHTwoInt.sphereProdHTwoEquivInt with he
+  have hh : h = (e h).1 • e.symm (1, 0) + (e h).2 • e.symm (0, 1) := by
+    apply e.injective
+    rw [map_add, map_smul, map_smul, e.apply_symm_apply, e.apply_symm_apply]
+    refine Prod.ext ?_ ?_ <;> simp
+  calc kroneckerHInt 2 ω h
+      = kroneckerHInt 2 ω ((e h).1 • e.symm (1, 0) + (e h).2 • e.symm (0, 1)) := by rw [← hh]
+    _ = (e h).1 • kroneckerHInt 2 ω (e.symm (1, 0))
+        + (e h).2 • kroneckerHInt 2 ω (e.symm (0, 1)) := by
+        rw [map_add, map_smul, map_smul]
+    _ = _ := by
+        rw [← sphereProdCohomTwoEquivInt_fst, ← sphereProdCohomTwoEquivInt_snd,
+          smul_eq_mul, smul_eq_mul, mul_comm, mul_comm ((e h).2)]
+
+/-- **The computed basis IS the generators' dual basis** — the Kronecker matrix of
+`sphereProdBasis2Computed` against the generator basis of `H₂(S²×S²;ℤ) ≅ ℤ²` is the identity. -/
+theorem sphereProdBasis2Computed_kronecker (i j : Fin 2) :
+    kroneckerHInt 2 (sphereProdBasis2Computed i)
+        (SphereProdHTwoInt.sphereProdHTwoEquivInt.symm (if j = 0 then (1, 0) else (0, 1)))
+      = if i = j then 1 else 0 := by
+  have hb : ∀ k : Fin 2, sphereProdCohomTwoEquivInt (sphereProdBasis2Computed k)
+      = if k = 0 then ((1 : ℤ), (0 : ℤ)) else ((0 : ℤ), (1 : ℤ)) := by
+    intro k
+    rw [sphereProdBasis2Computed, Module.Basis.map_apply, LinearEquiv.apply_symm_apply,
+      Module.Basis.map_apply]
+    fin_cases k <;> simp [Pi.basisFun_apply]
+  rw [kroneckerHInt_sphereProd_expand, hb i, LinearEquiv.apply_symm_apply]
+  fin_cases i <;> fin_cases j <;> simp
+
 /-- **The Gram pin discharges the leg's `IsEvenUnimodular` hypothesis at S²×S²**: if the witness's
 intersection matrix on the frozen basis equals the pinned datum `sphereProdFormDatum = Hyp`
 (`II(S²×S²) = H`), then it is even unimodular — the first of the two geometric Props the σ÷16 leg
