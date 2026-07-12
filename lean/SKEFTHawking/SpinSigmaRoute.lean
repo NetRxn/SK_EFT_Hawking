@@ -265,4 +265,50 @@ theorem hker_of_forward_and_two_gen {ξ : TangentialData X k I} (R : SpinSigmaPr
   obtain ⟨m, rfl⟩ := (R.thirtytwo_dvd_sig_iff hA hB g hg hdvd x).mp h32
   rw [mul_comm, mul_smul, map_zsmul, h2g, smul_zero]
 
+/-! ### Non-vacuity: the σ-presentation is jointly inhabitable
+
+A toy instantiation on the trivial tangential datum (every manifold carries the unique structure,
+every bordism transports it): `sig = 0` and every presentation the hyperbolic plane `H`. This is
+an INHABITATION WITNESS ONLY — it guards the structure's fields against joint-unsatisfiability
+(review criterion), and claims nothing about the freezes (which are geometric statements about the
+GENUINE spin instantiation, not the toy). -/
+
+/-- The trivial tangential datum: `Mfd s = PUnit`, `Bor b σ τ = PUnit`. -/
+def trivialData : TangentialData X k I where
+  Mfd _ := PUnit
+  Bor _ _ _ := PUnit
+  emptyStr := ⟨⟩
+  sumStr _ _ := ⟨⟩
+  cylBor _ := ⟨⟩
+  addBor _ _ := ⟨⟩
+  symmBor _ := ⟨⟩
+  commBor _ _ := ⟨⟩
+  assocBor _ _ _ := ⟨⟩
+  unitBor _ := ⟨⟩
+  revStr _ := ⟨⟩
+  revBor _ := ⟨⟩
+  negBor _ := ⟨⟩
+
+/-- The reindexed one-plane block-sum is literally `Hyp` (the `s2s2_hyp` witness computation). -/
+theorem reindex_one_block_eq_hyp :
+    Matrix.reindex (Equiv.sumEmpty (Fin 2) (Fin 0)) (Equiv.sumEmpty (Fin 2) (Fin 0))
+      (Matrix.fromBlocks Hyp 0 0 (0 : Matrix (Fin 0) (Fin 0) ℤ)) = Hyp := by
+  ext i j
+  rw [Matrix.reindex_apply, Matrix.submatrix_apply]
+  rfl
+
+/-- **The σ-presentation is jointly inhabitable** (non-vacuity witness; see section docstring). -/
+noncomputable def trivialPresentation :
+    SpinSigmaPresentation (trivialData (X := X) (k := k) (I := I)) where
+  sig := 0
+  rank _ := 2
+  form _ := Hyp
+  even_unimod _ := ⟨hyp_symm, hyp_unimodular, hyp_even⟩
+  sig_eq _ := by simp [hyp_latticeSig]
+  s2s2 := ⟨emptySM, ⟨⟩⟩
+  s2s2_rank := rfl
+  s2s2_hyp :=
+    ⟨_, IsHyperbolicForm.cons (Equiv.sumEmpty (Fin 2) (Fin 0)) IsHyperbolicForm.empty,
+      reindex_one_block_eq_hyp ▸ IntCongr.rfl Hyp⟩
+
 end SKEFTHawking.SpinSigmaRoute
