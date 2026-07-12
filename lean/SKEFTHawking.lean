@@ -4136,6 +4136,13 @@ import SKEFTHawking.CharSurfaceTrace
 -- (ClassesEmbedded / KernelCirclesBound → MembraneRealizes; MembraneTrivializesNormal;
 -- MembraneSpinKill), with taylorKernelVanishing_of_membranes the composed reduction. (wt3-built.)
 import SKEFTHawking.CharSurfaceMembrane
+-- Phase 5q.H (E2 · normal-shadow layer) — pins the normal-shadow node (MembraneTrivializesNormal)
+-- to the pin-FREE metabolizer isotropy (KernelIsotropic), absorbs it + half-lives-half-dies into
+-- one classical Lagrangian package (KernelLagrangianForB), and gives the purely-ALGEBRAIC
+-- geometry-free split TaylorKernelVanishing ↔ KernelIsotropic ∧ KernelSpinVanishing (pin-free
+-- intersection form + irreducible pin⁻ spin bit), with gmrelation_null_of_kernel_split the cleanest
+-- composed end (no membrane/realization). (wt3-built.)
+import SKEFTHawking.CharSurfaceNormalShadow
 
 -- Phase 5q.H · N5 — the WITNESS TOWER: the sphere witnesses' integral instance packages.
 -- S⁴: H₁=H₂=H₃=0 / H₄≅ℤ instances + H²=H³=0 + rank-0 IntH2Basis + H⁴(S⁴;ℤ)≅ℤ; universal
