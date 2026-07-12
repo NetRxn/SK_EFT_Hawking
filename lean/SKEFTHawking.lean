@@ -4130,6 +4130,12 @@ import SKEFTHawking.BrownSurgeryReduction
 import SKEFTHawking.CharSurfaceCircle
 -- Phase 5q.H (N2) — pin⁻-on-low-dim vocabulary: framed circle Ω₁^Spin bit + surgery trace (Lemma 1.2 full ⟺)
 import SKEFTHawking.CharSurfaceTrace
+-- Phase 5q.H (E2 · membrane layer) — the [G2]/[Q1] normal-framing/membrane primitives: Membrane
+-- datum, framed-circle spin-detection, and the Taylor-Thm-1.1 debt DECOMPOSITION shrinking the
+-- frozen TaylorKernelVanishing into three strictly-smaller pin-free geometric Props
+-- (ClassesEmbedded / KernelCirclesBound → MembraneRealizes; MembraneTrivializesNormal;
+-- MembraneSpinKill), with taylorKernelVanishing_of_membranes the composed reduction. (wt3-built.)
+import SKEFTHawking.CharSurfaceMembrane
 
 -- Phase 5q.H · N5 — the WITNESS TOWER: the sphere witnesses' integral instance packages.
 -- S⁴: H₁=H₂=H₃=0 / H₄≅ℤ instances + H²=H³=0 + rank-0 IntH2Basis + H⁴(S⁴;ℤ)≅ℤ; universal
