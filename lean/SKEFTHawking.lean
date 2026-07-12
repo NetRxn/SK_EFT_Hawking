@@ -1347,6 +1347,9 @@ import SKEFTHawking.SixteenDvdOfOrientation
 import SKEFTHawking.FGDualityNoGo
 import SKEFTHawking.SyntheticSmithNoGo
 import SKEFTHawking.SixteenDvdOfOrientationSpin
+import SKEFTHawking.BocksteinIntegralLift
+import SKEFTHawking.WuClass1Orientation
+import SKEFTHawking.PinPlusCertSpinSeam
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularPDWindow
 import SKEFTHawking.SingularConvexComplementConnected
