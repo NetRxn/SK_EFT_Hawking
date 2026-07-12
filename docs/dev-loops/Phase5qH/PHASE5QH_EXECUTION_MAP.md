@@ -125,6 +125,23 @@ Concurrency cap **≤2 concurrent `lean-worker` slots** (3+ ENFILE the file tabl
 3. Live repo state: `scripts/repo_state_probe.py` (sorry/commit); counts via `update_counts.py` (never `rm …hash`).
 4. Build MCP-first (lean_goal → lean_multi_attempt → write → repeat); commit GREEN kernel-pure increments every ~5–6 bricks; **never push**.
 
+> **⛔ SUPERSEDED STATE BLOCK — the 2026-07-04 snapshot below is HISTORICAL.** Current map-of-record =
+> `E4_GenuineCarrier_Assembly/ASSEMBLY_GAP_MAP_20260712.md` (+ its post-round-2 refresh section) and the
+> master `LAB_NOTEBOOK_INDEX.md` FRONTIER.
+>
+> **State as of 2026-07-12 EOD (arm-2, goal `20260712T150610`, main @ `48a28e6e`+):** the σ÷16 leg is
+> input-FREE except the witness instances + htopo — `hcoreG` ✅ (seam-matches; bot square anti-commutes
+> over ℤ), orientation ✅ (`IntOrientationData`, class-level legs), spin-Wu `D` ✅ (`spinWuDatum_of_closed`
+> / `_of_certK`; v₁=0 DERIVED via `BocksteinIntegralLift`), kron ✅ (`SingularAbsoluteUCInt`
+> `kronFlipOfFree`; `SixteenDvdKronFree` legs on honest freeness instances). **E2's ALGEBRA is complete**
+> (BrownMetabolic; KT Lem 3.7 PROVEN; surgery-invariance; null-bordant GM; statement freezes
+> `TaylorKernelVanishing`/`KernelHalfLivesHalfDies`/`TaylorSurgeryDescends`). **N1a σ-route at finest
+> grain** (`SpinSigmaRoute(Door)`: M–H σ=0 characterization; KT 5.3 ⟸ DERIVED; capstone door open inputs
+> = {Freeze A handle-trading, Freeze B (instantiated modulo 2 named Mathlib gaps — closed-ball manifold
+> instance + collar-model transport, `SphereProductBounding`), hdvd(N2), K3, F(N1b), hfwd/h2g, hexact(N1)}).
+> N4 ✅ CLOSED · N6 ✅ CLOSED · no-go registry at 7 (`nogo_substrate_integrity` PASS). Round-4 lanes:
+> N5 witness tower (sphere integral H) + N2 pin⁻ vocabulary.
+
 **State as of 2026-07-04 (main @ `c2504c89`, goal `20260704T145819`):** planning + infrastructure committed. **CORRECTED — substantial genuine-carrier Lean is ALREADY on main** (the notebooks' "no Lean written yet" was stale):
 - **E1 PD substrate:** on main (wt1 harvest = no-op — see §4 banner).
 - **E4 mod-8 layer DONE:** `pinPlusGMData` (genuine GM carrier), `abkGM8 : … →+ ZMod 8` + `abkGM8_surjective` + `dataBordismGM_quotient_abk8_equiv_zmod8` (`PinPlusGMData.lean`); the ℝP⁴ GM witness `abkGM8_rp4 = 1` + the full tied-carrier ℤ/16 Smith-LES route (`PinPlusGMWitness.lean`).
