@@ -537,6 +537,19 @@ def _cast(x, dtype):
         return x.astype(dtype)
 
 
+def _cast_to(x, dtype, device):
+    """Cast to `dtype` and evaluate on `device`'s stream. A float64→float32 cast is
+    done on the CPU stream first (Metal rejects any f64 operand), then materialized on
+    `device` so the refined solver's inner FP32 work runs on the GPU."""
+    if x.dtype == mx.float64:
+        with mx.stream(mx.cpu):
+            x = x.astype(dtype)
+    with mx.stream(device):
+        out = x.astype(dtype)
+        mx.eval(out)
+        return out
+
+
 def eo_rhmc_trajectory_mixed(h64, g, msq, coeffs, eo, fwd, back, L, eps, n_md, rng,
                              tol_md=1e-4, tol_acc=1e-10, max_iter=8000, chrono=False):
     """Mixed-precision EVEN-ODD trajectory: FP32 MD proposal on the default device
@@ -578,6 +591,164 @@ def eo_rhmc_trajectory_mixed(h64, g, msq, coeffs, eo, fwd, back, L, eps, n_md, r
     h_new64 = _cast(h_new32, F64)
     pi_new64 = _cast(pi_new32, F64)
     H_new = H(h_new64, pi_new64, phi_e64)
+
+    u = mx.array(rng.random(Bshape), dtype=F64)
+    with mx.stream(mx.cpu):
+        dH = H_new - H_old
+        accept = u < mx.exp(mx.minimum(-dH, 0.0))
+        h_out = mx.where(accept[..., None, None, None], h_new64, h64)
+        mx.eval(h_out, dH, accept)
+    return h_out, dH, accept
+
+
+def _cg_shifted(rhs, matvec, sigma, tol, max_iter, check_every=8):
+    """Batched CG for (Op + σ_k) x_k = rhs with a PER-SHIFT rhs (the refinement
+    correction step) — generalizes _cg_loop to a distinct source per shift. rhs and
+    sigma carry the K axis; `matvec(p)` applies the shift-free operator over K."""
+    x = mx.zeros(rhs.shape, dtype=rhs.dtype)
+    r = rhs
+    p = r
+    rs = mx.sum(r * r, axis=(-2, -1))
+    tol_sq = tol * tol * mx.maximum(rs, 1e-300)
+    converged = rs <= tol_sq
+    zeros = mx.zeros(rs.shape, dtype=rhs.dtype)
+    for i in range(max_iter):
+        if i % check_every == 0 and bool(mx.all(converged)):
+            break
+        Ap = matvec(p) + sigma * p
+        pAp = mx.sum(p * Ap, axis=(-2, -1))
+        alpha = mx.where(converged, zeros, rs / pAp)
+        x = x + alpha[..., None, None] * p
+        r = r - alpha[..., None, None] * Ap
+        rs_new = mx.sum(r * r, axis=(-2, -1))
+        beta = mx.where(converged, zeros, rs_new / rs)
+        p = r + beta[..., None, None] * p
+        rs = rs_new
+        converged = mx.logical_or(converged, rs <= tol_sq)
+        mx.async_eval(x, r, p, rs, converged)
+    return x
+
+
+def eo_multishift_cg_refined(b64, h64, eo, shifts, L, device, tol=1e-10, inner_tol=3e-4,
+                             max_outer=12, max_inner=4000):
+    """FP64-accurate even-odd multishift solve via FP32-inner / FP64-residual ITERATIVE
+    REFINEMENT — the trajectory-level speed brick.
+
+    Solves (M_e + σ_k) x_k = b64 for all k to FP64 relative residual `tol`, doing the
+    heavy CG in FP32 on `device` (Metal / CUDA) and the residual + accumulation in FP64
+    on the CPU stream. Each outer pass shrinks the TRUE (FP64) residual by ~`inner_tol`,
+    so ~3–4 passes reach FP64 accuracy while every CG iteration runs at FP32 speed. This
+    moves the eo heatbath + accept/reject solves off the (slow) MLX CPU backend onto the
+    GPU — the fix for the FP64-CPU trajectory bottleneck (Metal is FP32-only).
+
+    b64: (*batch, V/2, 8) FP64;  h64: (*batch, V, 4, 4) FP64.
+    Returns x: FP64 (*batch, K, V/2, 8)."""
+    nb = b64.ndim - 2
+    Bshape = tuple(b64.shape[:nb])
+    Ve, S = b64.shape[-2], b64.shape[-1]
+
+    with mx.stream(mx.cpu):
+        shifts64 = _to_mx(shifts, mx.float64)
+        K = shifts64.shape[-1]
+        if shifts64.ndim == 1:
+            shifts64 = shifts64.reshape((1,) * nb + (K,))
+        sigma64 = mx.broadcast_to(shifts64, Bshape + (K,)).reshape(Bshape + (K, 1, 1))
+        blocks64 = mx.expand_dims(hopping_blocks(h64, L, dtype=mx.float64), nb)   # (*B,1,V,...)
+        x = mx.zeros(Bshape + (K, Ve, S), dtype=mx.float64)
+        bk64 = mx.broadcast_to(mx.expand_dims(b64, nb), Bshape + (K, Ve, S))
+        bnorm = mx.maximum(mx.sqrt(mx.sum(bk64 * bk64, axis=(-2, -1))), 1e-300)
+
+    # FP32 operator on `device`
+    sigma32 = _cast_to(sigma64, mx.float32, device)
+    blocks32 = mx.expand_dims(hopping_blocks(_cast_to(h64, mx.float32, device), L,
+                                             dtype=mx.float32), nb)
+
+    def matvec32(p):
+        return apply_Me(p, blocks32, eo)
+
+    for _ in range(max_outer):
+        with mx.stream(mx.cpu):
+            Ax = apply_Me(x, blocks64, eo) + sigma64 * x
+            r64 = bk64 - Ax
+            rnorm = mx.sqrt(mx.sum(r64 * r64, axis=(-2, -1)))
+            done = bool(mx.all(rnorm <= tol * bnorm))     # f64 compare on the CPU stream
+        if done:
+            break
+        r32 = _cast_to(r64, mx.float32, device)
+        d32 = _cg_shifted(r32, matvec32, sigma32, inner_tol, max_inner)
+        with mx.stream(mx.cpu):
+            x = x + _cast_to(d32, mx.float64, mx.cpu)
+            mx.eval(x)
+    return x
+
+
+def eo_action_refined(h, phi_e, g, msq, eo, L, device, tol=1e-10, inner_tol=3e-4,
+                      max_outer=12, max_inner=4000):
+    """`eo_action` with the (M_e+m²)⁻¹ solve done by the mixed-precision refined solver.
+    Identical value to `eo_action` (to FP64 `tol`); the heavy CG runs FP32 on `device`."""
+    psi_k = eo_multishift_cg_refined(phi_e, h, eo, [msq], L, device, tol=tol, inner_tol=inner_tol,
+                                     max_outer=max_outer, max_inner=max_inner)
+    with mx.stream(mx.cpu):
+        psi = psi_k[..., 0, :, :]              # f64 slice must stay on the CPU stream
+        s_aux = mx.sum(h * h, axis=(-3, -2, -1)) / (4.0 * g)
+        s_pf = mx.sum(phi_e * psi, axis=(-2, -1))
+        return s_aux + s_pf
+
+
+def eo_heatbath_refined(xi_e, h, coeffs, msq, eo, L, device, tol=1e-10, inner_tol=3e-4,
+                        max_outer=12, max_inner=4000):
+    """`eo_heatbath` with the r_{-1/2} K-pole multishift done by the refined solver.
+    Same φ_e (to FP64 `tol`) as `eo_heatbath`; the heavy CG runs FP32 on `device`. The
+    final (M_e+m²)·v matvec stays FP64 on the CPU stream (one matvec, not a solve)."""
+    with mx.stream(mx.cpu):
+        betas = _to_mx(coeffs['betas'], mx.float64) + msq
+        alphas = _to_mx(coeffs['alphas'], mx.float64)
+    psi = eo_multishift_cg_refined(xi_e, h, eo, betas, L, device, tol=tol, inner_tol=inner_tol,
+                                   max_outer=max_outer, max_inner=max_inner)
+    with mx.stream(mx.cpu):
+        blocks64 = hopping_blocks(h, L, dtype=mx.float64)
+        v = float(coeffs['a0']) * xi_e + mx.sum(alphas[..., None, None] * psi, axis=-3)
+        return INV_SQRT2 * apply_Me(v, blocks64, eo, shift=msq)
+
+
+def eo_rhmc_trajectory_refined(h64, g, msq, coeffs, eo, fwd, back, L, eps, n_md, rng, device,
+                               tol_md=1e-4, tol_acc=1e-10, inner_tol=3e-4, max_outer=12,
+                               max_inner=4000, chrono=False):
+    """Mixed-precision eo trajectory with the accept/reject solves ALSO offloaded to
+    `device` (FP32 inner + FP64 residual refinement) — FP64-EXACT Metropolis at GPU speed.
+
+    Unlike `eo_rhmc_trajectory_mixed` (which runs the FP64 heatbath + Hamiltonians on the
+    CPU stream — fine for torch-CPU but slow on the MLX CPU backend), this routes those
+    FP64 solves through the refined solver so the heavy CG lands on Metal/CUDA. RNG draw
+    order (ξ, π, u) matches the mixed trajectory exactly, so the two are interchangeable.
+    h64: FP64 (*batch, V, 4, 4). Returns (h_out, ΔH, accept)."""
+    Bshape = tuple(h64.shape[:-3])
+    V = L ** 4
+    Ve = V // 2
+    F64 = mx.float64
+
+    xi = mx.array(rng.standard_normal(Bshape + (Ve, 8)), dtype=F64)
+    phi_e64 = eo_heatbath_refined(xi, h64, coeffs, msq, eo, L, device, tol=tol_acc,
+                                  inner_tol=inner_tol, max_outer=max_outer, max_inner=max_inner)
+    pi64 = mx.array(rng.standard_normal(Bshape + (V, 4, 4)), dtype=F64)
+
+    def H(hh, pp):
+        S = eo_action_refined(hh, phi_e64, g, msq, eo, L, device, tol=tol_acc,
+                              inner_tol=inner_tol, max_outer=max_outer, max_inner=max_inner)
+        with mx.stream(mx.cpu):
+            return 0.5 * mx.sum(pp * pp, axis=(-3, -2, -1)) + S
+
+    H_old = H(h64, pi64)
+
+    # FP32 MD proposal on device (single-pole eo force)
+    h32 = _cast(h64, mx.float32)
+    pi32 = _cast(pi64, mx.float32)
+    phi_e32 = _cast(phi_e64, mx.float32)
+    h_new32, pi_new32 = eo_integrate(h32, pi32, phi_e32, g, msq, eo, fwd, back, L,
+                                     eps, n_md, tol=tol_md, max_iter=max_inner, chrono=chrono)
+
+    H_new = H(_cast(h_new32, F64), _cast(pi_new32, F64))
+    h_new64 = _cast(h_new32, F64)
 
     u = mx.array(rng.random(Bshape), dtype=F64)
     with mx.stream(mx.cpu):

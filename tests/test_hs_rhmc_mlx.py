@@ -378,6 +378,129 @@ def test_eo_integrator_is_reversible():
     assert np.allclose(_np(pi2), -pi0, atol=1e-9)
 
 
+# --- refined (FP32-inner / FP64-residual) solver — the trajectory-level speed brick ---------
+
+def test_eo_multishift_cg_refined_matches_fp64_with_fp32_inner():
+    # Core certification: FP32 inner solves + FP64 residual refinement reproduce the
+    # pure-FP64 eo multishift solution to ~1e-8, including the ill-conditioned small
+    # shift (the one that drives the cost). device='cpu' exercises the precision mix
+    # without needing Metal; the Metal path is the same code on the gpu default device.
+    L, V = 4, 4 ** 4
+    rng = np.random.default_rng(21)
+    h = rng.standard_normal((V, 4, 4))
+    b_e = rng.standard_normal((V // 2, 8))
+    shifts = np.array([0.01, 0.05, 0.3, 1.0, 4.0, 20.0])     # small shift = ill-conditioned
+    eo = me.eo_tables(L)
+    fwd, back = me.neighbor_tables(L)
+    blocks = me.hopping_blocks(_mx64(h), L)
+
+    x_fp64 = me.eo_multishift_cg(_mx64(b_e), blocks, eo, _mx64(shifts), tol=1e-12, max_iter=8000)
+    x_ref = me.eo_multishift_cg_refined(_mx64(b_e), _mx64(h), eo, _mx64(shifts), L, mx.cpu,
+                                        tol=1e-10, inner_tol=3e-4, max_outer=20, max_inner=8000)
+    assert x_ref.dtype == mx.float64 and x_ref.shape == x_fp64.shape
+    assert np.allclose(_np(x_ref), _np(x_fp64), atol=1e-8, rtol=1e-6), \
+        float(np.abs(_np(x_ref) - _np(x_fp64)).max())
+
+
+def test_eo_action_refined_matches_fp64_action():
+    # Integration: eo action via the refined solver matches pure-FP64 to ~1e-7 ⟹ the
+    # accept/reject ΔH is FP64-exact ⟹ no bias.
+    L, V, g = 4, 4 ** 4, 1.5
+    msq = 0.01
+    rng = np.random.default_rng(22)
+    h = _mx64(rng.standard_normal((V, 4, 4)))
+    phi_e = _mx64(rng.standard_normal((V // 2, 8)))
+    eo = me.eo_tables(L)
+    fwd, back = me.neighbor_tables(L)
+
+    S_fp64 = float(me.eo_action(h, phi_e, g, msq, eo, fwd, back, L, tol=1e-12, max_iter=8000))
+    S_ref = float(me.eo_action_refined(h, phi_e, g, msq, eo, L, mx.cpu,
+                                       tol=1e-10, inner_tol=3e-4, max_outer=20, max_inner=8000))
+    assert abs(S_ref - S_fp64) < 1e-6 * max(1.0, abs(S_fp64)), (S_ref, S_fp64)
+
+
+def test_eo_heatbath_refined_consistency():
+    # The refined heatbath must still sample S_PF(heatbath(ξ)) = ½‖ξ‖² (one-Majorana),
+    # with the heavy r_{-1/2} multishift done FP32-inner on device.
+    L, V = 4, 4 ** 4
+    msq = 0.04
+    rng = np.random.default_rng(33)
+    h = _mx64(rng.standard_normal((V, 4, 4)))
+    eo = me.eo_tables(L)
+    fwd, back = me.neighbor_tables(L)
+    blocks = me.hopping_blocks(h, L)
+    lam = float(me.estimate_lambda_max(blocks, fwd, back, V, n_iter=300, seed=0))
+    coeffs = me.make_rhmc_coeffs(1.3 * lam, msq, n_poles=18)
+
+    xi = _mx64(rng.standard_normal((V // 2, 8)))
+    phi = me.eo_heatbath_refined(xi, h, coeffs, msq, eo, L, mx.cpu, inner_tol=3e-4, max_outer=20)
+    psi = me.eo_multishift_cg(phi, blocks, eo, [msq], tol=1e-12, max_iter=8000)[..., 0, :, :]
+    s_pf = float(mx.sum(phi * psi))
+    half_xi_norm = 0.5 * float(mx.sum(xi * xi))
+    assert abs(s_pf - half_xi_norm) / half_xi_norm < 0.03
+
+
+def test_eo_refined_trajectory_mechanics():
+    # Mechanics of the refined trajectory (FP32-inner accept/reject on device + FP32 MD):
+    # runs, returns FP64 configs, finite ΔH, boolean accept, exact Metropolis (rejected
+    # replicas retain the previous config bit-for-bit). Unbiasedness = the slow Creutz test.
+    L, V, B = 4, 4 ** 4, 2
+    g, msq = 1.5, 0.04
+    rng0 = np.random.default_rng(23)
+    h = _mx64(rng0.standard_normal((B, V, 4, 4)))
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+    with mx.stream(mx.cpu):
+        h00 = h[0]
+    lam = float(me.estimate_lambda_max(me.hopping_blocks(h00, L), fwd, back, V, n_iter=150, seed=0))
+    coeffs = me.make_rhmc_coeffs(1.3 * lam, msq, n_poles=12)
+    rng = np.random.default_rng(7)
+
+    for _ in range(3):
+        h_prev = _np(h)
+        h, dH, acc = me.eo_rhmc_trajectory_refined(h, g, msq, coeffs, eo, fwd, back, L,
+                                                   0.03, 4, rng, mx.cpu, inner_tol=3e-4, max_outer=20)
+        assert h.dtype == mx.float64 and h.shape == (B, V, 4, 4)
+        assert dH.shape == (B,) and bool(mx.all(mx.isfinite(dH)))
+        assert acc.dtype == mx.bool_ and acc.shape == (B,)
+        h_np = _np(h)
+        for b in range(B):
+            if not bool(acc[b]):
+                assert np.array_equal(h_np[b], h_prev[b])
+
+
+@pytest.mark.slow
+def test_creutz_identity_eo_refined_chain_unbiased():
+    # The trajectory-level correctness gate for the refined (GPU-offloaded FP64) path:
+    # FP32-inner accept/reject must leave the chain UNBIASED ⟹ Creutz ⟨e^-ΔH⟩ = 1.
+    # Runs the FP32 inner solves on Metal when available (the production config).
+    if mx.metal.is_available():
+        mx.set_default_device(mx.gpu)   # fixture restores after the test
+        device = mx.gpu
+    else:
+        device = mx.cpu
+    L, V = 2, 2 ** 4
+    g, msq = 1.5, 0.01
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+    rng0 = np.random.default_rng(3)
+    h0 = _mx64(1.7 * rng0.standard_normal((V, 4, 4)))
+    lam = float(me.estimate_lambda_max(me.hopping_blocks(h0, L), fwd, back, V))
+    coeffs = me.make_rhmc_coeffs(1.3 * lam, msq, n_poles=12)
+    rng = np.random.default_rng(5)
+    h = _mx64(1.7 * rng.standard_normal((V, 4, 4)))
+    dHs, nacc, n = [], 0, 240
+    for t in range(n):
+        h, dH, acc = me.eo_rhmc_trajectory_refined(h, g, msq, coeffs, eo, fwd, back, L,
+                                                   0.05, 8, rng, device, tol_md=1e-4,
+                                                   inner_tol=3e-4, max_outer=20)
+        mx.eval(h, dH, acc)
+        if t >= n // 4:
+            dHs.append(float(dH)); nacc += int(bool(acc))
+    creutz = float(np.mean(np.exp(-np.array(dHs))))
+    assert nacc / (n - n // 4) > 0.5 and abs(creutz - 1.0) < 0.08, (creutz, nacc / (n - n // 4))
+
+
 # --- sampling: heatbath, trajectories, measurement ------------------------------------------
 
 def test_heatbath_consistency_S_PF_equals_half_xi_norm():

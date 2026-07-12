@@ -138,9 +138,20 @@ def bench_mlx(device, L, batch, replicas, n_md, do_traj, rows):
         coeffs = me.make_rhmc_coeffs(1.3 * lam, MSQ, n_poles=N_POLES)
         rng_t = np.random.default_rng(0)
         t0 = time.perf_counter()
-        me.eo_rhmc_trajectory_mixed(h64, G_COUPLING, MSQ, coeffs, eo, fwd, back, L,
-                                    0.03, n_md, rng_t, tol_md=1e-4, tol_acc=1e-10, chrono=True)
-        rows.append((name, f"eo-traj(nmd={n_md})", replicas, time.perf_counter() - t0))
+        h, dH, acc = me.eo_rhmc_trajectory_mixed(h64, G_COUPLING, MSQ, coeffs, eo, fwd, back, L,
+                                                 0.03, n_md, rng_t, tol_md=1e-4, tol_acc=1e-10, chrono=True)
+        mx.eval(h, dH, acc)
+        rows.append((name, f"eo-traj-mixed(nmd={n_md})", replicas, time.perf_counter() - t0))
+
+        # refined = FP64 heatbath + accept/reject offloaded to the device (FP32-inner)
+        dev = mx.default_device()
+        rng_r = np.random.default_rng(0)
+        t0 = time.perf_counter()
+        h, dH, acc = me.eo_rhmc_trajectory_refined(h64, G_COUPLING, MSQ, coeffs, eo, fwd, back, L,
+                                                   0.03, n_md, rng_r, dev, tol_md=1e-4,
+                                                   inner_tol=3e-4, max_outer=20, chrono=True)
+        mx.eval(h, dH, acc)
+        rows.append((name, f"eo-traj-refined(nmd={n_md})", replicas, time.perf_counter() - t0))
 
 
 def main():
