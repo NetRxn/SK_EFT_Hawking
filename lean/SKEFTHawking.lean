@@ -4204,6 +4204,13 @@ import SKEFTHawking.SphereProdHTwoInt
 -- pair-LES punctured-acyclicity sandwich (H₄ = H₃ = 0 on M∖z). S⁴ §2–§4 made class-level;
 -- every future witness's orientation input reduces to E + two puncture vanishings. (lead-built.)
 import SKEFTHawking.IntOrientationGlobalSection
+-- Phase 5q.H · N5 — arc slice 5: the TOP of the S²×S² integral arc — H₃(S²×S²;ℤ) = 0 and
+-- H₄(S²×S²;ℤ) ≅ ℤ COMPUTED (polar MV at degrees 3/4 over the new H₃(S²×(ℝ²∖{0});ℤ) ≅ ℤ
+-- anti-diagonal slit computation), the HONEST fundamental class [S²×S²] + IntFundamentalClass
+-- datum (intFundamentalClassOfHomology — no chartAt-pinned generator ever compared), H⁴ ≅ ℤ by
+-- UCT with BIJECTIVE honest eval, and the Gram-entry reduction: every interMatrix entry against
+-- the honest fc = the H⁴-coordinate of a cup product (the pin's remaining wall, isolated). (wt2-built.)
+import SKEFTHawking.SphereProdHFourInt
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
