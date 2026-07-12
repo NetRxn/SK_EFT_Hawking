@@ -4137,6 +4137,12 @@ import SKEFTHawking.CharSurfaceTrace
 -- (only d + hv2 remain open; htopo discharged). S²×S²: honest frozen H-data package + Gram-pin
 -- bridges (even-unimodularity, σ=0, htopo) to the SphereProductBounding datum. (wt2-built.)
 import SKEFTHawking.SphereWitnessTowerInt
+-- 5q.H N6+orientation: the sigma/16 leg FIRED at S4 modulo ONE named Prop -- spin binder
+-- DISCHARGED (v2(S4)=0 via mod-2 middle vanishing + field-UCT Kronecker nondegeneracy);
+-- IntOrientationData S4 assembled from the single chart-ball freeze Sphere4ChartBallsOriented
+-- (18e-18h chain); freeze SHRUNK to per-ball locally-constant sign sections (preconnected
+-- chart balls normalise +-1 signs). (wt2-built.)
+import SKEFTHawking.SphereWitnessFiringInt
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
