@@ -1,6 +1,7 @@
 import SKEFTHawking.SpinRokhlinInterface
 import SKEFTHawking.GuillouMarinBridge
 import SKEFTHawking.GMArfVanishing
+import SKEFTHawking.BrownMetabolic
 
 /-!
 # Discharging the smooth-Rokhlin `2 ∣ σ/8` node via the Guillou–Marin / Freedman–Kirby congruence
@@ -303,5 +304,40 @@ theorem charSq8_of_charSq16_even {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (σ 
   rw [map_intCast, map_sub, map_intCast, reduce16to8_doubleBrown, brown_even_two_torsion Q hE,
     sub_zero] at hred
   exact hred
+
+/-! ## The null-bordant case via the metabolic theorem
+
+The geometric null-bordism step of the `[FK]`-by-bordism-invariance proof, in algebraic form: a
+null-bordant characteristic pair `(M, F)` has `σ = 0` (Novikov on the bounding `W⁵`), `F·F = 0`, and —
+the Taylor/Klug content — a **metabolizer** `L = ker(H₁(F;ℤ/2) → H₁(V³;ℤ/2))` on which the enhancement
+vanishes (`q|_L = 0`, Taylor `0802.0111` Lem 1.3: circles bounding disks in `V` have `q = 0`). The
+metabolic theorem (`BrownMetabolic`) then forces `β(F) = 0`, so the GM congruence holds at the null
+values outright. Together with `gmrelation_orthSum`/`gmrelation_neg`/`gmrelation_add_spin` above this
+completes the ALGEBRAIC skeleton of `[FK]`-by-bordism-invariance; the remaining geometric inputs are
+exactly the bounding data (Novikov `σ = 0`, the membrane framing, and the Lem-1.3 disk criterion). -/
+
+/-- **A metabolic characteristic datum satisfies the null GM congruence.** If the enhancement `Q`
+vanishes on a maximal self-orthogonal (Lagrangian) submodule `L` — the algebraic shadow of the surface
+bounding in a 3-manifold — then `GMrelation 0 0 Q`: the Guillou–Marin residue of a null-bordant pair is
+zero. The `β(F) = 0` input comes from `brown_eq_zero_of_metabolic`, not from a hypothesis. -/
+theorem gmrelation_null_of_metabolic {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (Q : Z4Quadratic ι) (L : Submodule (ZMod 2) (ι → ZMod 2)) [Fintype L]
+    (hq : ∀ l ∈ L, Q.q l = 0)
+    (hmax : ∀ v, (∀ l ∈ L, Q.B v l = 0) → v ∈ L) :
+    GMrelation 0 0 Q := by
+  show ((0 - 0 : ℤ) : ZMod 16) = doubleBrown Q
+  rw [doubleBrown, Q.brown_eq_zero_of_metabolic L hq hmax]
+  simp
+
+/-- **`16 ∣ σ` from a GM congruence with null surface and a metabolizer** — the one-step composition of
+`sixteen_dvd_sig_of_gm_null` with the metabolic `β(F) = 0`: the spin fields (`spin_FdotF = 0` given,
+`spin_brown` DERIVED) need no Brown hypothesis once the bounding Lagrangian is supplied. -/
+theorem sixteen_dvd_sig_of_gm_metabolic {σ : ℤ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {Q : Z4Quadratic ι} (hgm : GMrelation σ 0 Q)
+    (L : Submodule (ZMod 2) (ι → ZMod 2)) [Fintype L]
+    (hq : ∀ l ∈ L, Q.q l = 0)
+    (hmax : ∀ v, (∀ l ∈ L, Q.B v l = 0) → v ∈ L) :
+    (16 : ℤ) ∣ σ :=
+  sixteen_dvd_sig_of_gm_null hgm rfl (Q.brown_eq_zero_of_metabolic L hq hmax)
 
 end SKEFTHawking.GMRokhlin
