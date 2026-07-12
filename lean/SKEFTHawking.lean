@@ -1337,6 +1337,7 @@ import SKEFTHawking.SingularConnSquareFactIBotInt
 import SKEFTHawking.SingularSeamMatchInt
 import SKEFTHawking.SingularHcoreGDischargeInt
 import SKEFTHawking.SingularSixteenDvdUnconditionalInt
+import SKEFTHawking.SpinWuFromPD
 import SKEFTHawking.SingularBaseCaseUpper
 import SKEFTHawking.SingularPDWindow
 import SKEFTHawking.SingularConvexComplementConnected
