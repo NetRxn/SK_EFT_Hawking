@@ -4231,6 +4231,13 @@ import SKEFTHawking.SphereProdHFourInt
 -- (v ↦ (chart_{S²}(v/‖v‖), 1−‖v‖)) consume; the chart-homeomorphism data + ChartedSpace assembly is
 -- slice B. Directly attacks Mathlib gap 1 of the S²×D³ bounding freeze. (lead-built.)
 import SKEFTHawking.DiskManifold
+-- Phase 5q.H · E1 — contravariant functoriality of singular INTEGRAL cohomology (the ℤ mirror of
+-- SingularCohomologyFunctoriality). cochainPullbackInt / cohomologyPullbackInt + cup-pullback
+-- multiplicativity cohomologyPullbackInt_cupH24 (H²×H²→H⁴) + the descended integral Kronecker
+-- adjunction kroneckerHInt_cohomologyPullbackInt. The factor-projection cup primitives the S²×S²
+-- Gram computation consumes (diagonal-vanishing: a factor-pullback square is a pullback from
+-- H⁴(S²)=0). (wt2-built.)
+import SKEFTHawking.SingularCohomologyFunctorialityInt
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
