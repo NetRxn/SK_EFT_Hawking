@@ -651,6 +651,7 @@ import SKEFTHawking.VanDerBlijReduction
 import SKEFTHawking.EvenUnimodularHyperbolic
 import SKEFTHawking.HyperbolicNormalForm
 import SKEFTHawking.SpinSigmaRoute
+import SKEFTHawking.SphereProductBounding
 import SKEFTHawking.SpinSigmaRouteDoor
 import SKEFTHawking.ThetaModularity
 import SKEFTHawking.HasseMinkowskiLocal
