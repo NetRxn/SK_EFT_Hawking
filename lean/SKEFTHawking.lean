@@ -4217,6 +4217,13 @@ import SKEFTHawking.IntOrientationGlobalSection
 -- UCT with BIJECTIVE honest eval, and the Gram-entry reduction: every interMatrix entry against
 -- the honest fc = the H⁴-coordinate of a cup product (the pin's remaining wall, isolated). (wt2-built.)
 import SKEFTHawking.SphereProdHFourInt
+-- Phase 5q.H — closed 3-ball radial-geometry primitives (SphereDiskSmoothData freeze, slice A):
+-- ballClamp (closed-form retraction ℝ³ → D³), diskDir (D³∖{0} → S² direction with diskDir_smul_unit),
+-- and the E²×ℝ ≅ E³ coordinate iso (assemble/splitLo via WithLp.toLp + reads + continuity) — the
+-- reusable substrate an interior chart (v ↦ ((v₀,v₁),v₂+2)) and a polar collar chart
+-- (v ↦ (chart_{S²}(v/‖v‖), 1−‖v‖)) consume; the chart-homeomorphism data + ChartedSpace assembly is
+-- slice B. Directly attacks Mathlib gap 1 of the S²×D³ bounding freeze. (lead-built.)
+import SKEFTHawking.DiskManifold
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
