@@ -4197,6 +4197,13 @@ import SKEFTHawking.SphereProdPuncturedPlaneInt
 -- Module.Free/Finite instances at TopCat.of SphereProd replace the SphereProdHData
 -- free2/finite2 freeze; §5 = generator projection-coordinate bookkeeping for the Gram pin. (wt3-built.)
 import SKEFTHawking.SphereProdHTwoInt
+-- Phase 5q.H · N3 — the choice-absorbing global orientation section at GENERAL M:
+-- IntGlobalGenerator (global H₄ class with per-point unit restriction) → recorded ±1 section
+-- (restriction law DEFINITIONAL) → per-ball realisability → the full IntOrientationData M;
+-- constructors from any E : H₄(M;ℤ) ≃+ ℤ + point-restriction bijectivity, and from the
+-- pair-LES punctured-acyclicity sandwich (H₄ = H₃ = 0 on M∖z). S⁴ §2–§4 made class-level;
+-- every future witness's orientation input reduces to E + two puncture vanishings. (lead-built.)
+import SKEFTHawking.IntOrientationGlobalSection
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
