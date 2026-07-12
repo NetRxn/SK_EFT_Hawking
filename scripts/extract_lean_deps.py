@@ -155,3 +155,36 @@ def load_lean_deps() -> list[dict]:
 
     with open(JSON_PATH) as f:
         return json.load(f)
+
+
+def main() -> int:
+    """CLI entry point: refresh `lean_deps.json` if stale (hash-guarded, regen-locked).
+
+    Historically this module was library-only — running it as a script was a SILENT
+    no-op (arm-2 friction, 2026-07-12). This entry point makes the script form honest:
+    it configures logging (the library's `logger.info` lines are invisible without a
+    handler), runs the same guarded `load_lean_deps()` every consumer uses, and reports
+    what happened. `--check` reports staleness without extracting (exit 1 if stale).
+    """
+    import argparse
+
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--check", action="store_true",
+                        help="report staleness only; do not extract (exit 1 if stale)")
+    args = parser.parse_args()
+
+    if args.check:
+        stale = _needs_refresh()
+        print(f"lean_deps.json: {'STALE (extraction needed)' if stale else 'fresh'}")
+        return 1 if stale else 0
+
+    stale_before = _needs_refresh()
+    decls = load_lean_deps()
+    print(f"lean_deps.json: {len(decls)} declarations "
+          f"({'refreshed' if stale_before else 'already fresh — no extraction run'})")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
