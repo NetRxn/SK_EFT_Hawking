@@ -4171,6 +4171,12 @@ import SKEFTHawking.SphereDoublyPuncturedPlane
 -- projection (prodFst_homology_two_bijective) + slice-2 transports to sub(coverA v ∩ coverB v)
 -- (interProdHomeo, coverInterH{One,Two}EquivInt) — the S²×S² H₂ assembly's MV input data. (wt3-built.)
 import SKEFTHawking.SphereProdPuncturedPlaneInt
+-- Phase 5q.H · N5 — arc slice 3: H₂(S²×S²;ℤ) ≅ ℤ² COMPUTED (sphereProdHTwoEquivInt) via the
+-- polar product cover at degree 2: legs collapse onto H₂(S²) ≅ ℤ, im Δ₂ = the diagonal
+-- (first-coordinate master lemma), δ onto H₁(A∩B) ≅ ℤ, split extension by ℤ-freeness.
+-- Module.Free/Finite instances at TopCat.of SphereProd replace the SphereProdHData
+-- free2/finite2 freeze; §5 = generator projection-coordinate bookkeeping for the Gram pin. (wt3-built.)
+import SKEFTHawking.SphereProdHTwoInt
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
