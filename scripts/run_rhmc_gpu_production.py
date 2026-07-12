@@ -23,9 +23,13 @@ import os
 import time
 
 import numpy as np
-import torch
 
-import src.vestigial.hs_rhmc_stencil as st
+try:                                    # absent on an MLX-only box (Linux + mlx[cuda])
+    import torch
+    import src.vestigial.hs_rhmc_stencil as st
+except ImportError:
+    torch = None
+    st = None
 
 
 def coupling_grid(n, g_lo, g_hi):
@@ -51,6 +55,90 @@ def atomic_savez(path, **data):
     tmp = base + '.tmp'                      # np.savez appends '.npz' → base+'.tmp.npz'
     np.savez(tmp, **data)
     os.replace(tmp + '.npz', path)
+
+
+def build_coeffs_mlx(L, g, msq, n_poles, seed):
+    """`build_coeffs` on the MLX engine (torch-free): spectral range from g's
+    equilibrium amplitude (√2g)."""
+    import mlx.core as mx
+    import src.vestigial.hs_rhmc_mlx as me
+    V = L ** 4
+    rng = np.random.default_rng(seed)
+    fwd, back = me.neighbor_tables(L)
+    amp = 1.3 * np.sqrt(2.0 * g)
+    lam = max(float(me.estimate_lambda_max(
+        me.hopping_blocks(mx.array(amp * rng.standard_normal((V, 4, 4)), dtype=mx.float64), L),
+        fwd, back, V, n_iter=250, seed=s)) for s in range(3))
+    return me.make_rhmc_coeffs(1.25 * lam, msq, n_poles), 1.25 * lam
+
+
+def run_coupling_mlx(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, seed, chrono=False):
+    """MLX twin of `run_coupling`, eo mixed-precision path only (FP32 MD on the MLX
+    default device — Metal or CUDA — + FP64 accept/reject on the CPU stream; the
+    Creutz-certified engine). Identical npz schema → rhmc_monitor.py /
+    analyze_rhmc_vestigial.py compatible. Same target density as the torch engines."""
+    import mlx.core as mx
+    import src.vestigial.hs_rhmc_mlx as me
+    V = L ** 4
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+
+    hist = {k: [] for k in ('h_sq', 'dH', 'tet', 'trq')}
+    mh_hist, Q_hist = [], []
+    n_done = 0
+    if os.path.exists(path):
+        d = np.load(path)
+        for k, kk in (('h_sq_history', 'h_sq'), ('delta_h_history', 'dH'),
+                      ('tet_m2_history', 'tet'), ('tr_q2_history', 'trq')):
+            hist[kk] = list(np.asarray(d[k]))
+        mh_hist = list(np.asarray(d['m_h_history'])) if 'm_h_history' in d else []
+        Q_hist = list(np.asarray(d['Q_history'])) if 'Q_history' in d else []
+        n_done = len(hist['tet'])
+        h_np = np.asarray(d['h_state']) if 'h_state' in d \
+            else np.sqrt(2 * g) * np.random.default_rng(seed).standard_normal((R, V, 4, 4))
+        therm_left = 0
+    else:
+        h_np = np.sqrt(2 * g) * np.random.default_rng(seed).standard_normal((R, V, 4, 4))
+        therm_left = n_therm
+
+    h = mx.array(h_np, dtype=mx.float64)
+    rng = np.random.default_rng(seed + n_done)      # reseeded resume — valid continuation
+
+    def save():
+        h_state = np.array(h)                       # eval only — no new f64 op on the GPU stream
+        atomic_savez(path,
+                     h_sq_history=np.array(hist['h_sq']), delta_h_history=np.array(hist['dH']),
+                     tet_m2_history=np.array(hist['tet']), tr_q2_history=np.array(hist['trq']),
+                     m_h_history=np.array(mh_hist), Q_history=np.array(Q_hist),
+                     h_final=h_state[0], h_state=h_state,
+                     acceptance_rate=np.float64(nacc / max(ntot, 1)),
+                     g=np.float64(g), L=np.int64(L), mass=np.float64(np.sqrt(msq)),
+                     replicas=np.int64(R))
+
+    nacc, ntot = 0, 0
+    target = n_meas - n_done
+    t0 = time.time()
+    for t in range(therm_left + max(target, 0)):
+        h, dH, acc = me.eo_rhmc_trajectory_mixed(h, g, msq, coeffs, eo, fwd, back, L,
+                                                 eps, n_md, rng, tol_md=1e-4, tol_acc=1e-10,
+                                                 chrono=chrono)
+        acc_np = np.array(acc)
+        nacc += int(acc_np.sum()); ntot += acc_np.size
+        if t >= therm_left:
+            with mx.stream(mx.cpu):                  # f64 arithmetic stays off the GPU stream
+                h_sq = float(mx.mean(h * h))
+            tet, trq, m_h, Q = me.measure_observables(h, L)
+            hist['h_sq'].append(h_sq); hist['dH'].append(float(np.array(dH).mean()))
+            hist['tet'].append(float(np.array(tet).mean())); hist['trq'].append(float(np.array(trq).mean()))
+            mh_hist.append(np.array(m_h)); Q_hist.append(np.array(Q))
+            if len(hist['tet']) % 20 == 0:
+                save()
+                print(f"    g={g:.3f}: {len(hist['tet'])}/{n_meas}  acc={nacc/ntot:.2f}  "
+                      f"<tet>={np.mean(hist['tet'][-20:]):.4f}  {(time.time()-t0)/(t+1)*1000:.0f} ms/traj",
+                      flush=True)
+    save()
+    return dict(g=g, acc=nacc / max(ntot, 1), tet=np.mean(hist['tet']) if hist['tet'] else float('nan'),
+                n=len(hist['tet']), s_per_traj=(time.time() - t0) / max(therm_left + max(target, 0), 1))
 
 
 def run_coupling(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, device, seed,
@@ -162,6 +250,11 @@ def main():
     ap.add_argument('--seed', type=int, default=2026)
     ap.add_argument('--outdir', type=str, default=None)
     ap.add_argument('--device', type=str, default='mps', choices=['mps', 'cpu'])
+    ap.add_argument('--backend', type=str, default='torch', choices=['torch', 'mlx'],
+                    help="mlx = the torch-free MLX engine (hs_rhmc_mlx): eo mixed path, FP32 MD "
+                         "on the MLX default device (Metal on macOS, CUDA via mlx[cuda] on Linux) "
+                         "+ FP64 accept/reject. --device/--engine/--solver/--no-compile are "
+                         "torch-only and ignored with mlx.")
     ap.add_argument('--engine', type=str, default='full', choices=['full', 'eo'],
                     help="'eo' = even-odd-reduced (single-solve; ~1-2 orders faster at L=8, "
                          "proven identical target density); 'full' = 12-pole rational (default).")
@@ -179,25 +272,39 @@ def main():
     args = ap.parse_args()
 
     L, msq = args.l, args.mass ** 2
-    device = torch.device(args.device if (args.device != 'mps' or torch.backends.mps.is_available()) else 'cpu')
-    if args.compile:
-        st.enable_matvec_compile(mode='reduce-overhead' if device.type == 'cuda' else 'default')
-    tag = 'eo' if args.engine == 'eo' else 'gpu'
+    if args.backend == 'mlx':
+        import mlx.core as mx
+        tag, dev_desc = 'mlx', str(mx.default_device())
+    else:
+        if torch is None:
+            raise SystemExit("torch not installed — use --backend mlx or install the gpu extra")
+        device = torch.device(args.device if (args.device != 'mps' or torch.backends.mps.is_available()) else 'cpu')
+        if args.compile:
+            st.enable_matvec_compile(mode='reduce-overhead' if device.type == 'cuda' else 'default')
+        tag, dev_desc = ('eo' if args.engine == 'eo' else 'gpu'), device.type
     outdir = args.outdir or f"data/rhmc/L{L}{tag}_m{args.mass:g}"
     os.makedirs(outdir, exist_ok=True)
     gs = args.couplings_only if args.couplings_only else coupling_grid(args.n_couplings, args.g_lo, args.g_hi)
 
-    print(f"GPU production: L={L} m={args.mass} engine={args.engine} device={device.type} solver={args.solver} "
+    print(f"GPU production: L={L} m={args.mass} backend={args.backend} engine={args.engine} "
+          f"device={dev_desc} solver={args.solver} "
           f"R={args.replicas} n_md={args.n_md} eps={args.eps} n_poles={args.n_poles}  "
           f"{len(gs)} couplings × {args.n_meas} traj × {args.replicas} replicas → {outdir}", flush=True)
     for i, g in enumerate(gs):
         g = float(g)
         path = os.path.join(outdir, f"g{g:.4f}.npz")
-        coeffs, lam = build_coeffs(L, g, msq, args.n_poles, args.seed + i)
+        if args.backend == 'mlx':
+            coeffs, lam = build_coeffs_mlx(L, g, msq, args.n_poles, args.seed + i)
+        else:
+            coeffs, lam = build_coeffs(L, g, msq, args.n_poles, args.seed + i)
         print(f"\n[{i+1}/{len(gs)}] g={g:.3f}  range[{msq:.4g},{lam+msq:.1f}] κ={(lam+msq)/msq:.0f}", flush=True)
-        s = run_coupling(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
-                         args.n_meas, args.n_therm, device, args.seed + i,
-                         solver=args.solver, engine=args.engine, chrono=args.chrono)
+        if args.backend == 'mlx':
+            s = run_coupling_mlx(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
+                                 args.n_meas, args.n_therm, args.seed + i, chrono=args.chrono)
+        else:
+            s = run_coupling(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
+                             args.n_meas, args.n_therm, device, args.seed + i,
+                             solver=args.solver, engine=args.engine, chrono=args.chrono)
         print(f"  → done g={g:.3f}: acc={s['acc']:.2f} <tet>={s['tet']:.4f} "
               f"n={s['n']} {s['s_per_traj']*1000:.0f} ms/traj", flush=True)
     print(f"\nComplete → {outdir}  (monitor: rhmc_monitor.py {outdir} --watch 300)", flush=True)

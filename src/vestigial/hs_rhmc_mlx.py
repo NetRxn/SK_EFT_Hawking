@@ -203,13 +203,16 @@ def _as_shift_tensor(shifts, nb, Bshape, dtype):
     return sigma, K
 
 
-def _cg_loop(bk, matvec, sigma, tol, max_iter, x0=None, rel_to_b=False):
+def _cg_loop(bk, matvec, sigma, tol, max_iter, x0=None, rel_to_b=False, check_every=8):
     """Shared K-parallel CG core: solve (Op + σ_k) x_k = bk[..., k, :, :] per (config, shift).
 
     bk: (*B, K, V', 8); matvec(p) applies the shift-free operator batched over K.
-    Converged systems are masked out of further updates (same semantics as the
-    torch engine). One mx.eval per iteration syncs the carries — the lazy-graph
-    analogue of torch's per-iteration `bool(converged.all())`."""
+    Converged systems are masked out of further updates each iteration (in-graph,
+    same semantics as the torch engine) — so the host break-check only needs to
+    run every `check_every` iterations: converged systems just coast through ≤7
+    masked no-op updates, mathematically identical. Between checks, async_eval
+    keeps the GPU pipeline fed without a host sync — the per-iteration
+    `bool(converged.all())` sync is what throttles a lazy-graph CG."""
     if x0 is None:
         x = mx.zeros(bk.shape, dtype=bk.dtype)
         r = bk
@@ -223,8 +226,8 @@ def _cg_loop(bk, matvec, sigma, tol, max_iter, x0=None, rel_to_b=False):
     converged = rs <= tol_sq
     zeros = mx.zeros(rs.shape, dtype=bk.dtype)
 
-    for _ in range(max_iter):
-        if bool(mx.all(converged)):
+    for i in range(max_iter):
+        if i % check_every == 0 and bool(mx.all(converged)):
             break
         Ap = matvec(p) + sigma * p
         pAp = mx.sum(p * Ap, axis=(-2, -1))
@@ -236,7 +239,7 @@ def _cg_loop(bk, matvec, sigma, tol, max_iter, x0=None, rel_to_b=False):
         p = r + beta[..., None, None] * p
         rs = rs_new
         converged = mx.logical_or(converged, rs <= tol_sq)
-        mx.eval(x, r, p, rs, converged)
+        mx.async_eval(x, r, p, rs, converged)
     return x
 
 
