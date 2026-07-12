@@ -3222,13 +3222,14 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'the ℤ-bilinear intersection form interFormInt into its Gram MATRIX interMatrix : Matrix (Fin n) (Fin n) ℤ.',
         'status': 'active', 'tier': 'discharge_future', 'eliminability': 'very_hard',
         'module': 'IntersectionMatrixInt',
-        'elimination_path': 'Discharge = build integral singular cohomology of a finite CW complex, prove H²(M;ℤ) is '
-            'finitely generated (finite CW ⟹ finitely-generated integral cohomology), and split off the free part: '
-            'over the PID ℤ, Module.Free + Module.Finite yield a finite basis (Module.finBasis), whose free rank is '
-            'b₂(M). (Poincaré duality forces the torsion to pair off and the intersection form to descend to the free '
-            'quotient as a unimodular pairing.) Community-scale — Mathlib and on-main have no manifold cohomology or '
-            'CW-finiteness of H²; tracked here so the intersection MATRIX + its symmetry + the conditional σ÷16 hold '
-            'for an ARBITRARY such basis, isolating the free-module input as this one datum.',
+        'elimination_path': 'SHARPENED 2026-07-12 (arm-2, scout-verified vs FNOP arXiv:1910.07372 + Blass–Göbel '
+            'math/9405206): the ℤ-analog of the mod-2 Erdős–Kaplansky self-duality forcing is PROVABLY BLOCKED '
+            '(Specker: (⊕ℤ)⊕ℤ^ℕ is self-dual, not f.g.) — SETTLED_FORKS § 5qH-fg-ek-over-Z-blocked. Minimal '
+            'published general-M route = Borsuk-ENR retract-of-finite-CW (FNOP Cor 3.18; community-scale; CW '
+            'existence for compact TOP 4-manifolds is OPEN, FNOP Q3.15; smooth case = Morse, Mathlib-absent). '
+            'PROJECT PATH: witness-level data — explicit finite free bases for the concrete carrier manifolds '
+            '(ℝP⁴ chain etc.), + free-quotient descent where torsion appears. All results here hold for an '
+            'ARBITRARY basis, isolating the free-module input as this one datum.',
         'dependent_theorems': [
             'SKEFTHawking.SingularCohomologyInt.interMatrix',
             'SKEFTHawking.SingularCohomologyInt.interMatrix_isSymm',
