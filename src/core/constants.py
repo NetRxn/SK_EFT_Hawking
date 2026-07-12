@@ -3074,7 +3074,7 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'is carried (Phase 5q.H · E1) as the ℤ-linear evaluation functional it induces on top-degree integral '
             'cohomology: the single field `eval : Cohomology X 4 →ₗ[ℤ] ℤ` of the structure '
             'SKEFTHawking.SingularCohomologyInt.IntFundamentalClass, i.e. the integral Kronecker pairing ⟨·,[M]⟩.',
-        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'very_hard',
+        'status': 'proven (5q.H arm-2, 2026-07-12: DISCHARGED at every consumed instance by SingularHomologyInt.intFundamentalClassOfHomology — eval := (kroneckerHInt 4).flip [M], kernel-pure — and its orientation form intFundamentalClassOfIntOrientation; the abstract IntFundamentalClass structure remains as the interface, its eval field no longer a free posit)', 'tier': 'discharge_future', 'eliminability': 'very_hard',
         'module': 'SingularIntersectionFormInt',
         'elimination_path': 'Discharge = build integral singular homology H₄(M;ℤ) (the on-main homology + Kronecker '
             'tower is entirely over ZMod 2 — SingularHomologyMod2/kroneckerH), the orientation-dependent fundamental '
@@ -3111,7 +3111,7 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'ℤ→ℤ/2 reduction redHomology. This SHARPENS intFundamentalClass_eval_datum: the whole evaluation '
             'functional is now discharged from this single geometric datum (intFundamentalClassOfIntOrientation), '
             'and fundClass is not a free H₄ element — its mod-2 shadow must be the canonical [M]₂ (non-vacuous).',
-        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'very_hard',
+        'status': 'active (HONEST geometric input — orientability. Constructor chain in-tree, kernel-pure: intOrientationDataOfOrientation (brick 18h; from a ±1 section + per-ball hasOrientedFundClassInt orientability input hballs, [PreconnectedSpace M]) → IntOrientationData → intOrientationOfData → IntOrientation; consumed at class level by SixteenDvdOfOrientation.sixteen_dvd_latticeSig_of_orientationData, arm-2 brick 10)', 'tier': 'discharge_future', 'eliminability': 'very_hard',
         'module': 'IntFundamentalClassOrientation',
         'elimination_path': 'Discharge = build integral relative/local singular homology RelativeHomologyInt Kᶜ n '
             'with the local iso H₄(M|x;ℤ) ≅ ℤ (the ℤ upgrade of the on-main mod-2 SingularRelativeHomologyMod2 / '

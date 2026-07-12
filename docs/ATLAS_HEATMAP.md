@@ -19,7 +19,7 @@ Each open assumption belongs to a TRACK (`tier`); `gating` is the Σ of how many
 
 | track | open | gating (Σ impact) | apex |
 |---|---:|---:|---:|
-| `discharge_future` | 11 | 25 |  |
+| `discharge_future` | 10 | 23 |  |
 | `external_boundary` | 14 | 20 |  |
 | `headline` | 4 | 0 | 4 |
 | `local` | 6 | 0 |  |
@@ -46,7 +46,6 @@ Each open assumption belongs to a TRACK (`tier`); `gating` is the Σ of how many
 | 3 | `hyp:intOrientation_datum` | discharge_future | very_hard | PLANNED |
 | 2 | `hyp:H_KLRS_SM_Crossover` | external_boundary | hard | STATED |
 | 2 | `hyp:H_ScalarChannelIsTetradBifurcationOutput` | discharge_future | hard | PLANNED |
-| 2 | `hyp:intFundamentalClass_eval_datum` | discharge_future | very_hard | PLANNED |
 | 2 | `hyp:modular_invariance_framing` | external_boundary | hard | STATED |
 | 1 | `hyp:c_minus_equals_8Nf` | external_boundary | algebraic | STATED |
 | 0 | `hyp:H_BilocalPointlikeLimit` | local | hard | STATED |
@@ -54,4 +53,5 @@ Each open assumption belongs to a TRACK (`tier`); `gating` is the Σ of how many
 | 0 | `hyp:H_CFZ2_sq_e` | local | hard | STATED |
 | 0 | `hyp:H_CasiniHuerta_Bound_Valid` | external_boundary | hard | STATED |
 | 0 | `hyp:H_DESICompatibility` | discharge_future | hard | PLANNED |
+| 0 | `hyp:H_DecouplingBoundDim6` | local | hard | STATED |
 
