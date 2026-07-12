@@ -36,6 +36,13 @@ that gap to a SINGLE named geometric Prop:
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/
 `maxHeartbeats`/axiom.
+
+⚠ SUPERSEDED ROUTE (2026-07-12, same arm, round 6): the freeze `Sphere4ChartBallsOriented` below is
+CHOICE-SENSITIVE — independent over Lean's axioms (SETTLED_FORKS §
+5qH-orient-normalized-vs-chartAt-pinned-generators) — and can never be discharged. The theorems here
+remain valid conditionals, but the LIVE route is the choice-absorbing section
+(`SphereFourOrientationDataInt`) + the primed normalisation-free chain (`SixteenDvdOrientSectionInt`),
+culminating in the zero-binder `SphereWitnessFiringUncondInt.sixteen_dvd_latticeSig_sphere4_unconditional`.
 -/
 import Mathlib
 import SKEFTHawking.SphereWitnessTowerInt

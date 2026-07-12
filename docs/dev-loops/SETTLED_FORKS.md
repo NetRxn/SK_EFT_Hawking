@@ -242,3 +242,18 @@ self-duality forcing (`SingularUCFinite` pattern). PROVABLY BLOCKED: `A = (⊕�
 rescue (ℵ₁-freeness of ℤ^ℕ) is circular (countability of H₂ needs ANR tech). Minimal published FG route =
 Borsuk-ENR (FNOP 1910.07372 Cor 3.18) — community-scale. **Project path: witness-level `kron`/`B` data.**
 Verdict file: `Lit-Search/Phase-5qH/FG_via_PD_duality_forcing_verdict_20260712.md`.
+
+## 5qH-orient-normalized-vs-chartAt-pinned-generators (2026-07-12 arm-2 round 6 — route ban, prose; INDEPENDENCE, not falsity — NOT kernel-encodable)
+**BANNED route:** any `orient ≡ 1`-normalised statement against `chartAt`-pinned integral local
+generators on Mathlib's sphere instance (e.g. the round-5 freeze `Sphere4ChartBallsOriented`, or any
+`IntOrientationData` demanding the constant `+1` pinned section). **CHOICE-SENSITIVE:** the pinned
+generator at `y` routes through `stereographic' n (-y)` → `OrthonormalBasis.fromOrthogonalSpanSingleton`
+→ `stdOrthonormalBasis` = an `irreducible_def` over `Classical.choose` — a per-point arbitrary basis with
+NO cross-point interface (verified at pin 4.29.1: PiL2.lean:1063,1148; Instances/Sphere.lean:336-356).
+Both coherent and incoherent global sign patterns model Lean's axioms ⟹ the statement is INDEPENDENT —
+no discharge can ever land (and no refutation either — hence prose, not registry). The mod-2 tower was
+immune (unique generator); this is ℤ-only. **The fix that works (shipped same round):** the
+choice-ABSORBING section — define `orient z := iso_z(ρ_z g)` recording the choice pattern, and eliminate
+the normalisation binder from the consuming chain (it enters only via `E g = 1`, absorbed by sign
+conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
+`SphereFourOrientationDataInt.lean` + the zero-binder firing `SphereWitnessFiringUncondInt`.
