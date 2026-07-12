@@ -212,4 +212,39 @@ theorem thirtytwo_dvd_sig_iff (R : SpinSigmaPresentation ξ) (hA : R.RealizesSph
 
 end SpinSigmaPresentation
 
+/-! ### The KT §5 `s`-map packaging — the D5 door's `(s, hs)` inputs from the σ-route
+
+KT §5's exact sequence consumes the forgetful `Ω₄^{Spin} → Ω₄^{Pin⁺}` as a map `s : ℤ →+ G` with
+`s n = 0 ↔ 2 ∣ n` (the D5 door `omega4PinPlusGMTied_equiv_zmod16_via_kt_lemma53`, through
+`PinPlusExactSequence.spin_image_card_two`). Here `Ω₄^{Spin} ≅ ℤ` enters as "multiples of the
+generator", and Lemma 5.3 as the frozen kernel identity `F x = 0 ↔ 32 ∣ σ(x)`. -/
+
+variable {G : Type*} [AddCommGroup G]
+
+/-- **The generator-multiples hom pushed through a forgetful map**: `n ↦ F (n • [g])` — the KT §5
+map `s : ℤ ≅ Ω₄^{Spin} →+ Ω₄^{Pin⁺}` in the shape the D5 door consumes. -/
+noncomputable def forgetGen {ξ : TangentialData X k I} (F : DataBordismGrp ξ →+ G)
+    (g : StrMfd ξ) : ℤ →+ G :=
+  F.comp (AddMonoidHom.mk' (fun n => n • DataBordismGrp.mk ξ g) (fun a b => add_zsmul _ a b))
+
+@[simp] theorem forgetGen_apply {ξ : TangentialData X k I} (F : DataBordismGrp ξ →+ G)
+    (g : StrMfd ξ) (n : ℤ) : forgetGen F g n = F (n • DataBordismGrp.mk ξ g) := rfl
+
+/-- **KT Lemma 5.3 ⟹ the D5 door's `hs`**: if the forgetful map's kernel is exactly the `32 ∣ σ`
+classes (Lemma 5.3, frozen as `hker` — its `⟸` direction is where the full `Ω₄^{Spin} ≅ ℤ` is
+consumed, per the no-Rokhlin-only-shortcut caveat), then `s := forgetGen F g` kills exactly the
+even multiples: `s n = 0 ↔ 2 ∣ n`. Pure `÷32` arithmetic given the freeze: `σ(n·g) = −16n` and
+`32 ∣ 16n ⟺ 2 ∣ n`. -/
+theorem forgetGen_eq_zero_iff {ξ : TangentialData X k I} (R : SpinSigmaPresentation ξ)
+    (F : DataBordismGrp ξ →+ G) (g : StrMfd ξ)
+    (hg : R.sig (DataBordismGrp.mk ξ g) = -16)
+    (hker : ∀ x, F x = 0 ↔ (32 : ℤ) ∣ R.sig x) (n : ℤ) :
+    forgetGen F g n = 0 ↔ (2 : ℤ) ∣ n := by
+  rw [forgetGen_apply, hker, map_zsmul, hg, smul_eq_mul]
+  constructor
+  · rintro ⟨c, hc⟩
+    exact ⟨-c, by omega⟩
+  · rintro ⟨m, rfl⟩
+    exact ⟨-m, by ring⟩
+
 end SKEFTHawking.SpinSigmaRoute
