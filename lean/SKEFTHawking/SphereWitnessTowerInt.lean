@@ -156,9 +156,6 @@ not a disclosed hypothesis. -/
 noncomputable def sphere4IntH2Basis : IntH2Basis (Sph 4) :=
   ⟨0, Module.Basis.empty _⟩
 
-/-- `b₂(S⁴) = 0` — the rank of the S⁴ basis datum. -/
-theorem sphere4IntH2Basis_rank : sphere4IntH2Basis.rank = 0 := rfl
-
 /-- **`H⁴(S⁴;ℤ) ≅ ℤ`** — the degree-4 UCT (`H⁴ ≅ Dual H₄`, over `H₃ = 0` free) composed with the
 dual of the sphere tower's top iso `H₄(S⁴;ℤ) ≅ ℤ` and `Dual ℤ ℤ ≅ ℤ`. The cohomological
 fundamental-class side of the S⁴ witness. -/
