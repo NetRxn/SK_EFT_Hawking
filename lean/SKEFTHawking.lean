@@ -4238,6 +4238,12 @@ import SKEFTHawking.DiskManifold
 -- Gram computation consumes (diagonal-vanishing: a factor-pullback square is a pullback from
 -- H⁴(S²)=0). (wt2-built.)
 import SKEFTHawking.SingularCohomologyFunctorialityInt
+-- Phase 5q.H · slice-5→6 — the S²×S² Gram DIAGONAL vanishing. H⁴(S²;ℤ)=0 (UCT flip of
+-- H₄=H₃=0), the ABSTRACT factor-pullback-square-vanishing lemma (f*x ∪ f*y = 0 when H⁴(Z)=0),
+-- and the honest intersection form vanishing on same-factor pullbacks — the geometric α∪α=0,
+-- β∪β=0 at the two factor projections prodFst / sndCM. The two diagonal Gram entries' mechanism;
+-- the basis-ID (deltaGen projection lemmas) + the cross entries (Künneth) remain. (wt2-built.)
+import SKEFTHawking.SphereProdGramInt
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
