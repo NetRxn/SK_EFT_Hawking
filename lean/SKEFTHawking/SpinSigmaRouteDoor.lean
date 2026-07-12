@@ -57,4 +57,34 @@ theorem omega4PinPlusGMTied_equiv_zmod16_via_sigma_route {ξ : TangentialData X 
   SKEFTHawking.PinPlusGMWitness.omega4PinPlusGMTied_equiv_zmod16_via_kt_lemma53
     (forgetGen F g) (forgetGen_eq_zero_iff R F g hg hker) hexact
 
+/-- **The σ-route door, FULLY decomposed — the "assembled from below" conditional at finest
+grain.** Every open input is a single named, page-traced statement of the KT §5 route (gap map:
+N1 = N1a + N1b + N1c + N2):
+
+* `hA`/`hB` — the two N1a freezes (Benedetti Prop 20.16/Lem 20.17 realization; `S²×S² = ∂(S²×D³)`);
+* `hdvd` — Rokhlin `16 ∣ σ` (N2, E2's program);
+* `g`/`hg` — the K3 generator witness (`σ = −16`);
+* `F` — the forgetful/Smith transport into the tied carrier (N1b's shape, E3);
+* `hfwd` — Lemma 5.3's forward direction (Pin⁺-bounds ⟹ `32 ∣ σ`, the double-cover `÷32`);
+* `h2g` — `2·K3` bounds Pin⁺ (the fact Lemma 5.3's `⟸` rides on; its other half is DERIVED here
+  via `hker_of_forward_and_two_gen`);
+* `hexact` — the KT §5 exactness (the N1 completeness key, apex-equivalent to `hbound`/`hthom`).
+
+Everything else — the `σ=0 ⟹ n·H` lattice half, the `÷32 ⟺` even-multiple arithmetic, the `(s, hs)`
+packaging, surjectivity, the ℝP⁴ generator, the order-16 algebra — is discharged in-tree. -/
+theorem omega4PinPlusGMTied_equiv_zmod16_via_sigma_route_full {ξ : TangentialData X k I}
+    (R : SpinSigmaPresentation ξ) (hA : R.RealizesSphereProducts) (hB : R.SphereProductBounds)
+    (g : StrMfd ξ) (hg : R.sig (DataBordismGrp.mk ξ g) = -16)
+    (hdvd : ∀ x, (16 : ℤ) ∣ R.sig x)
+    (F : DataBordismGrp ξ →+ DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)))
+    (hfwd : ∀ x, F x = 0 → (32 : ℤ) ∣ R.sig x)
+    (h2g : F ((2 : ℤ) • DataBordismGrp.mk ξ g) = 0)
+    (hexact : (reduce16to8.toAddMonoidHom.comp
+        (abkGMTied16 (k := 0) (I := 𝓡 4) :
+          DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) →+ ZMod 16)).ker
+        = (forgetGen F g).range) :
+    Nonempty (DataBordismGrp.{u} (pinPlusGMTiedData (k := 0) (𝓡 4)) ≃+ ZMod 16) :=
+  omega4PinPlusGMTied_equiv_zmod16_via_sigma_route R g hg F
+    (hker_of_forward_and_two_gen R hA hB g hg hdvd F hfwd h2g) hexact
+
 end SKEFTHawking.SpinSigmaRouteDoor

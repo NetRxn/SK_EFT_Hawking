@@ -247,4 +247,22 @@ theorem forgetGen_eq_zero_iff {ξ : TangentialData X k I} (R : SpinSigmaPresenta
   · rintro ⟨m, rfl⟩
     exact ⟨-m, by ring⟩
 
+/-- **KT Lemma 5.3's `⟸` direction DERIVED** — the frozen kernel identity `hker` decomposes: given
+the σ-route (freezes + Rokhlin + generator) and the single geometric fact **`2·K3` bounds Pin⁺**
+(`h2g` — exactly the fact KT's Lemma 5.3 proof uses), the `⟸` follows: `32 ∣ σ(x)` ⟹
+`x = m • (2·[g])` (`thirtytwo_dvd_sig_iff`) ⟹ `F x = m • F(2·[g]) = 0`. This is the honest
+decomposition — the `⟸` is precisely where the full `Ω₄^{Spin} ≅ ℤ` enters (the
+no-Rokhlin-only-shortcut caveat), and here it enters through the freezes, leaving only the
+forward double-cover direction (`hfwd`: Pin⁺-bounds ⟹ `32 ∣ σ`) and `h2g` geometric. -/
+theorem hker_of_forward_and_two_gen {ξ : TangentialData X k I} (R : SpinSigmaPresentation ξ)
+    (hA : R.RealizesSphereProducts) (hB : R.SphereProductBounds) (g : StrMfd ξ)
+    (hg : R.sig (DataBordismGrp.mk ξ g) = -16) (hdvd : ∀ x, (16 : ℤ) ∣ R.sig x)
+    (F : DataBordismGrp ξ →+ G)
+    (hfwd : ∀ x, F x = 0 → (32 : ℤ) ∣ R.sig x)
+    (h2g : F ((2 : ℤ) • DataBordismGrp.mk ξ g) = 0) (x : DataBordismGrp ξ) :
+    F x = 0 ↔ (32 : ℤ) ∣ R.sig x := by
+  refine ⟨hfwd x, fun h32 => ?_⟩
+  obtain ⟨m, rfl⟩ := (R.thirtytwo_dvd_sig_iff hA hB g hg hdvd x).mp h32
+  rw [mul_comm, mul_smul, map_zsmul, h2g, smul_zero]
+
 end SKEFTHawking.SpinSigmaRoute
