@@ -65,6 +65,14 @@ jax-cpu = ["jax>=0.9.2"]
 # Required for: hs_rhmc_torch.py (to be implemented)
 gpu = ["torch>=2.12.1"]
 
+# MLX backend (Apple Metal on macOS; CUDA on Linux for the same codebase).
+# Required for: hs_rhmc_mlx.py. On a CUDA-13 box (driver >= 580) switch the
+# linux marker's extra to mlx[cuda13].
+mlx = [
+    "mlx>=0.30; sys_platform == 'darwin'",
+    "mlx[cuda]>=0.30; sys_platform == 'linux'",
+]
+
 # Rust backend build tool — now in main dependencies.
 # Usage: PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 uv run maturin develop --release --manifest-path rust/Cargo.toml
 rust = []
