@@ -3262,7 +3262,7 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             '∀ y : Cohomology X 2 (ℤ/2), mu2 (cupH24 y y) = 0 — the SPIN condition in functional form (⟨Sq² y,[M]₂⟩ = 0 '
             'for all y, which by the singular Wu relation is v₂ = 0; on an oriented 4-manifold v₁ = 0 so w₂ = v₂, hence '
             'v₂ = 0 ⟺ w₂ = 0 ⟺ M is Spin). This is the ONLY unproved input to interMatrix EVENNESS.',
-        'status': 'active', 'tier': 'discharge_future', 'eliminability': 'hard',
+        'status': 'proven (5q.H arm-2 brick 9, 2026-07-12: DISCHARGED at general closed oriented spin 4-manifolds — SpinWuDatumClosed.spinWuDatum_of_closed constructs the full datum from the two HONEST inputs (o : IntOrientation M, spin as wuClass2 poincareDual4Mid_of_closed = 0); mu2/PD frame = SingularPD4Instances (5q.G X6), eval_compat = KroneckerRedCompat + o.redCompat, wu_vanish DERIVED via the Wu relation (SpinWuFromPD). interMatrix evenness at general M: SpinWuDatumClosed.interMatrix_even_of_closed)', 'tier': 'discharge_future', 'eliminability': 'hard',
         'module': 'IntersectionFormEvenInt',
         'elimination_path': 'Discharge = build the ℤ/2 fundamental class + middle Poincaré-duality datum '
             'PoincareDual4Mid of the closed manifold (mod-2 orientability is automatic), take mu2 := P.mu, prove '
