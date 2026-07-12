@@ -4144,6 +4144,15 @@ import SKEFTHawking.SphereWitnessTowerInt
 -- chart balls normalise +-1 signs). (wt2-built.)
 import SKEFTHawking.SphereWitnessFiringInt
 
+-- Phase 5q.H · N5 — the S²×S² PRODUCT-HOMOLOGY arc OPENER: the contractible-factor collapse
+-- Hₙ₊₁(Y×C;ℤ) ≅ Hₙ₊₁(Y;ℤ) (projection/section homotopy equivalence via the integral prism),
+-- homeo/contraction transports, and the product-set seam sub(univ ×ˢ U) ≃ₜ Y × sub U. (wt3-built.)
+import SKEFTHawking.SingularProdContractibleInt
+-- Phase 5q.H · N5 — H₁(S²×S²;ℤ) = 0 COMPUTED (polar product cover MV chase + contractible-factor
+-- collapse + augmentation-injective Δ₀): the SphereProdHData freeze's first slice replaced by
+-- computation; Subsingleton/Module.Free instances at TopCat.of SphereProd. (wt3-built.)
+import SKEFTHawking.SphereProdHOneInt
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 

@@ -22,10 +22,12 @@ already exists and is only *packaged* here.
   (`kronH2Sphere4`) — the σ÷16 leg's full instance set is closed at S⁴ — and the witness value
   `latticeSig (interMatrix fc sphere4IntH2Basis) = 0` (`b₂(S⁴) = 0`, so σ(S⁴) = 0 through the SAME
   `latticeSig ∘ interMatrix` pipeline the leg divides by 16).
-* §4 — the S²×S² witness: the product (co)homology is NOT computed in-tree (no Künneth / product-MV;
-  honest freeze, mirroring `SphereProductBounding`'s datum design). `SphereProdHData` carries the
-  frozen H-data (H₁ free, H₂ finite free, a rank-2 basis of H²); given it, the leg's instance set
-  closes (`kronH2SphereProd`), and the Gram pin `interMatrix fc B = sphereProdFormDatum` (= `Hyp`,
+* §4 — the S²×S² witness: `H₁(S²×S²;ℤ) = 0` is COMPUTED in-tree (`SphereProdHOneInt`: polar
+  product-cover MV + the contractible-factor collapse — the product-homology arc's first slice);
+  the H₂ data is NOT yet computed (no Künneth / degree-2 product-MV chase; honest freeze,
+  mirroring `SphereProductBounding`'s datum design). `SphereProdHData` carries the remaining
+  frozen H-data (H₂ finite free, a rank-2 basis of H²); given it, the leg's instance set closes
+  (`kronH2SphereProd`), and the Gram pin `interMatrix fc B = sphereProdFormDatum` (= `Hyp`,
   the `II(S²×S²) = H` datum of `SphereProductBounding`) discharges the leg's geometric
   `IsEvenUnimodular` AND `htopo` hypotheses and pins σ = 0 at the witness.
 * §5 — the END-TO-END N4∘N5 integration: the kron-free σ÷16 leg INSTANTIATED at `M = S⁴`
@@ -48,6 +50,7 @@ import SKEFTHawking.GMRokhlinDischarge
 import SKEFTHawking.SphereProductBounding
 import SKEFTHawking.SingularLineMinusPointInt
 import SKEFTHawking.SixteenDvdKronFree
+import SKEFTHawking.SphereProdHOneInt
 
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularCohomologyInt
@@ -191,7 +194,7 @@ theorem sphere4_interMatrix_htopo (fc : IntFundamentalClass (Sph 4)) :
   rw [sphere4_interMatrix_latticeSig fc]
   norm_num
 
-/-! ## §4. The S²×S² witness: frozen H-data package (no Künneth in-tree — honest freeze) -/
+/-! ## §4. The S²×S² witness: H₁ COMPUTED (`SphereProdHOneInt`); frozen H₂-data package -/
 
 section SphereProdWitness
 
@@ -202,18 +205,23 @@ open SKEFTHawking.SpinSigmaRoute (SphereProd sphereProdFormDatum
 (`sphere (0 : ℝ³) 1 × sphere (0 : ℝ³) 1`, matching `SphereProductBounding`'s convention). -/
 abbrev SphereProdT : TopCat := TopCat.of SphereProd
 
-/-- **The frozen S²×S² H-data package.** The integral (co)homology of the product is NOT computed
-in-tree (no Künneth / product Mayer–Vietoris; the standard values are `H₁ = 0`, `H₂ ≅ ℤ²` with
-hyperbolic intersection form — Benedetti arXiv:1907.10297 Ch. 20, the same source as
-`SphereProductBounding`'s pin). Mirroring that module's datum design, the H-data is carried FROZEN:
-* `free1` — `H₁(S²×S²;ℤ)` free (true value: `0`);
+/-- The leg's `[Module.Free ℤ H₁]` obligation at S²×S² — **COMPUTED, not frozen**:
+`H₁(S²×S²;ℤ) = 0` by the polar product-cover Mayer–Vietoris chase
+(`SphereProdHOneInt.sphereProd_homology_one_eq_zero`), through the instances registered there. -/
+example : Module.Free ℤ (Homology SphereProdT 1) := inferInstance
+
+/-- **The frozen S²×S² H₂-data package.** The degree-2 integral (co)homology of the product is NOT
+computed in-tree (no Künneth / degree-2 product Mayer–Vietoris; the standard values are `H₂ ≅ ℤ²`
+with hyperbolic intersection form — Benedetti arXiv:1907.10297 Ch. 20, the same source as
+`SphereProductBounding`'s pin). Mirroring that module's datum design, the H₂-data is carried FROZEN:
 * `free2`/`finite2` — `H₂(S²×S²;ℤ)` finite free (true value: `ℤ²`);
 * `basis2` — a rank-2 basis of `H²(S²×S²;ℤ)` (the two sphere factors' duals).
-Discharge = the product computation (Künneth or a two-chart product MV), a future arc. The two
+The FORMER first slice — `H₁(S²×S²;ℤ)` free (true value `0`) — is now COMPUTED
+(`SphereProdHOneInt`, the product-homology arc opener: contractible-factor collapse + polar MV)
+and registered as an instance, so it is no longer a field. Discharge of the residue = the degree-2
+product computation (the `H_{≤2}(S²×S¹)`-grade MV input or Künneth), the arc's next slice. The two
 boundary projectivities need NO freeze — §0 covers every space. -/
 structure SphereProdHData where
-  /-- Frozen: `H₁(S²×S²;ℤ)` is free (the true value is `0`). -/
-  free1 : Module.Free ℤ (Homology SphereProdT 1)
   /-- Frozen: `H₂(S²×S²;ℤ)` is free (the true value is `ℤ²`). -/
   free2 : Module.Free ℤ (Homology SphereProdT 2)
   /-- Frozen: `H₂(S²×S²;ℤ)` is finite. -/
@@ -225,12 +233,12 @@ structure SphereProdHData where
 def SphereProdHData.intH2Basis (d : SphereProdHData) : IntH2Basis SphereProdT :=
   ⟨2, d.basis2⟩
 
-/-- **The σ÷16 leg's Kronecker duality at S²×S², given the frozen package** — the instance set
-closes: `H₁` free / `H₂` finite free from the package, boundaries projective from §0. The S²×S²
-analogue of `kronH2Sphere4`, conditional on exactly the frozen Künneth data. -/
+/-- **The σ÷16 leg's Kronecker duality at S²×S², given the frozen H₂ package** — the instance set
+closes: `H₁` free COMPUTED (`SphereProdHOneInt`), `H₂` finite free from the package, boundaries
+projective from §0. The S²×S² analogue of `kronH2Sphere4`, conditional on exactly the frozen
+degree-2 Künneth data. -/
 noncomputable def kronH2SphereProd (d : SphereProdHData) :
     Homology SphereProdT 2 ≃ₗ[ℤ] Module.Dual ℤ (Cohomology SphereProdT 2) :=
-  haveI := d.free1
   haveI := d.free2
   haveI := d.finite2
   kronH2OfFree SphereProdT
