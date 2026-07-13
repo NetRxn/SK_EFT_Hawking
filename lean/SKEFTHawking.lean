@@ -4153,6 +4153,12 @@ import SKEFTHawking.CharSurfaceNormalShadow
 -- MembraneRealizes with a strictly weaker surface hypothesis). (wt2-built.)
 import SKEFTHawking.CharSurfaceRealization
 
+-- Phase 5q.H · E2 — the GENERAL-M ASSEMBLY WIRE: connects the CharSurface tower's minimal geometric
+-- leaves to SmoothSpinManifold4.topo (2∣σ/8, the impact-11 Rokhlin node hyp:rokhlin_sigma_mod_16).
+-- topo_of_bounded_charSurface / rokhlin_of_bounded_charSurface discharge topo off the [FK] congruence
+-- + the tower's finest leaves; gmrelation_stdQuadratic generalizes GM_rp4 to the whole ℤ/16 tower. (wt2-built.)
+import SKEFTHawking.CharSurfaceRokhlinAssembly
+
 -- Phase 5q.H · N5 — the WITNESS TOWER: the sphere witnesses' integral instance packages.
 -- S⁴: H₁=H₂=H₃=0 / H₄≅ℤ instances + H²=H³=0 + rank-0 IntH2Basis + H⁴(S⁴;ℤ)≅ℤ; universal
 -- boundaries free/projective instances; the kron-free σ÷16 leg INSTANTIATED end-to-end at S⁴
