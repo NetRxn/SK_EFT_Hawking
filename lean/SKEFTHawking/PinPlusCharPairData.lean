@@ -1084,4 +1084,27 @@ its group law inherited from `T2TangentialBordism`'s §2 replay. -/
 noncomputable example (prov : CharPairWProvider I k) :
     AddCommGroup (T2DataBordismGrp (pinPlusCharPairData prov)) := inferInstance
 
+/-! ## §12. The computed mod-8 grade `charPairBrown` (W-C's abk8 opening) -/
+
+/-- **THE COMPUTED mod-8 GRADE** `charPairBrown : Ω^{char-pair} →+ ZMod 8` — `abk8 := Brown ∘ q`,
+computed from the carried enhancement's Brown/Gauss-sum invariant. Well-defined along `Bor` because the
+frozen `CharPairBor` FORCES `brown σ.q = brown τ.q` (the anti-collapse engine
+`brown_eq_of_taylorLeg_lagrangian` via `CharPairBor.brown_eq`), so no reading-(ii) torsor collapse can
+disturb it. Additive via `sumStr = orthSum`-reindex (`reindex_brown` + `brown_orthSum`). This is W-C's
+abk8 door opened directly on the honest faithful carrier. -/
+noncomputable def charPairBrown (prov : CharPairWProvider I k) :
+    T2DataBordismGrp (pinPlusCharPairData prov) →+ ZMod 8 where
+  toFun := Quot.lift (fun p => p.2.q.brown)
+    (fun _p _q h => by
+      obtain ⟨_, _, ⟨str⟩⟩ := h
+      exact CharPairBor.brown_eq str.down)
+  map_zero' := by show (stdQuadratic 0).brown = 0; rw [brown_stdQuadratic, Nat.cast_zero]
+  map_add' := by
+    intro x y
+    induction x using Quot.ind with | _ p =>
+    induction y using Quot.ind with | _ q =>
+    show ((Z4Quadratic.orthSum p.2.q q.2.q).reindex finSumFinEquiv).brown
+        = p.2.q.brown + q.2.q.brown
+    rw [reindex_brown, brown_orthSum]
+
 end SKEFTHawking.PinPlusCharPairData
