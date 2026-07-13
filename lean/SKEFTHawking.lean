@@ -4284,6 +4284,12 @@ import SKEFTHawking.DiskChart
 -- IsManifold via contDiffOn_ext_coord_change + IsManifold.of_le) — the substrate the four
 -- isManifold_of_contDiffOn transition classes consume. (wt3-built.)
 import SKEFTHawking.DiskManifoldSmooth
+-- Phase 5q.H · N1c — the σ-route door's algebra/construction inputs discharged: hfwd (KT Lemma 5.3
+-- forward) and h2g (2·K3 bounds Pin⁺) BOTH reduced to the single geometric atom addOrderOf(F[g])=2
+-- (KT Lemma 5.3 image = ℤ/2), specialized to the concrete Kummer image F[g]=g8 (addOrderOf_g8=2);
+-- forgetGen_eq_zmultiples_g8 UNIFIES the σ-route s-map with the in-tree KT s-map zmultiplesHom g8.
+-- Honest residual: hg (σ=−16 K3 generator, disclosed) + hexact (deep KT §5 exactness). (wt2-built.)
+import SKEFTHawking.SpinSigmaRouteWitness
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
