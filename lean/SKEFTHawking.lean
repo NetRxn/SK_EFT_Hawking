@@ -4337,6 +4337,22 @@ import SKEFTHawking.SpinSigmaRouteWitness
 -- via latticeSig_eq_neg16_of_congr_k3), with door_via_k3_generator / door_via_k3_realization
 -- re-expressing the door on the lattice / K3-realization residual. (wt2-built.)
 import SKEFTHawking.SpinSigmaGenerator
+import SKEFTHawking.RP4Manifold
+import SKEFTHawking.RP2PointSet
+import SKEFTHawking.RP2Manifold
+import SKEFTHawking.SingularSurfaceIntersectionForm
+import SKEFTHawking.RP2Covering
+import SKEFTHawking.RP2Transfer
+import SKEFTHawking.RP2SmithCochain
+import SKEFTHawking.RP2SphereHomology
+import SKEFTHawking.RP2CohomologyLadder
+import SKEFTHawking.RP2ProjectionFormula
+import SKEFTHawking.RP2CupLadder
+import SKEFTHawking.RP2IntersectionForm
+import SKEFTHawking.RP2EquatorialInclusion
+import SKEFTHawking.PinPlusCharPairData
+import SKEFTHawking.PinPlusCompTorsorNoGo
+import SKEFTHawking.PinPlusTaylorConventionNoGo
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
