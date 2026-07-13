@@ -172,17 +172,37 @@ def _hop(psi_in, blocks_out, blocks_in, fwd_h, back_h):
     """One bipartite hop D: (in-parity) → (out-parity), mirroring `apply_A` split by parity.
 
     out_y = Σ_μ [ blocks_out[y,μ]·ψ_{y+μ} − blocks_in[y−μ,μ]ᵀ·ψ_{y−μ} ], with y±μ on the
-    in-parity sublattice. Returns (*B, Vout, 8)."""
+    in-parity sublattice. psi_in (*B, K, Vin, 8); blocks_* (*B, 1, V*, 4, 8, 8) (the K
+    axis broadcast). Returns (*B, K, Vout, 8).
+
+    K-batched contraction via EXPLICIT-INDEX einsum, not broadcast matmul: the matmul
+    form `bo(B,1,V,8,8) @ psi(B,K,V,8,1)` re-materializes the blocks per shift — the
+    measured per-iteration cost scaled ~linearly in K (3.11 ms at K=44 vs 0.52 ms for
+    einsum, 6×; 2.5× even at K=1; perf audit 2026-07-13). Also accepts the plain
+    (no-K) contract psi (*B, Vin, 8) with blocks (*B, V*, 4, 8, 8) — used by the
+    full-wrapper `apply_Me` (e.g. the heatbath's final FP64 matvec); both ranks are
+    normalized to a flat batch + K so one subscript string serves every caller."""
+    S = psi_in.shape[-1]
+    kbatched = (blocks_out.ndim == psi_in.ndim + 2 and blocks_out.ndim >= 5
+                and blocks_out.shape[-5] == 1)              # blocks carry a K-broadcast axis
+    if kbatched:
+        K, Vin = psi_in.shape[-3], psi_in.shape[-2]
+        Bshape = psi_in.shape[:-3]
+    else:
+        K, Vin = 1, psi_in.shape[-2]
+        Bshape = psi_in.shape[:-2]
+    Vout = blocks_out.shape[-4]
+    p = psi_in.reshape((-1, K, Vin, S))
+    bo = blocks_out.reshape((-1,) + tuple(blocks_out.shape[-4:]))       # (Bf, Vout, 4, 8, 8)
+    bi = blocks_in.reshape((-1,) + tuple(blocks_in.shape[-4:]))         # (Bf, Vin, 4, 8, 8)
     out = None
     for mu in range(4):
-        bo = blocks_out[..., mu, :, :]                                  # (*B, Vout, 8, 8)
-        bi = blocks_in[..., mu, :, :]                                   # (*B, Vin, 8, 8)
-        psi_fwd = mx.take(psi_in, fwd_h[:, mu], axis=-2)
-        fwd_term = mx.squeeze(bo @ psi_fwd[..., None], -1)              # broadcast-safe matmul
-        t_in = mx.squeeze(psi_in[..., None, :] @ bi, -2)                # bᵀψ at each in-site
+        psi_fwd = mx.take(p, fwd_h[:, mu], axis=-2)                     # (Bf, K, Vout, 8)
+        fwd_term = mx.einsum('bvij,bkvj->bkvi', bo[..., mu, :, :], psi_fwd)
+        t_in = mx.einsum('bvji,bkvj->bkvi', bi[..., mu, :, :], p)       # (bᵀψ)_i at in-sites
         back_term = mx.take(t_in, back_h[:, mu], axis=-2)
         out = (fwd_term - back_term) if out is None else out + (fwd_term - back_term)
-    return out
+    return out.reshape(Bshape + ((K, Vout, S) if kbatched else (Vout, S)))
 
 
 def _split_eo(blocks, eo):
@@ -249,11 +269,19 @@ def _cg_loop(bk, matvec, sigma, tol, max_iter, x0=None, rel_to_b=False, check_ev
 
     bk: (*B, K, V', 8); matvec(p) applies the shift-free operator batched over K.
     Converged systems are masked out of further updates each iteration (in-graph,
-    same semantics as the torch engine) — so the host break-check only needs to
-    run every `check_every` iterations: converged systems just coast through ≤7
-    masked no-op updates, mathematically identical. Between checks, async_eval
-    keeps the GPU pipeline fed without a host sync — the per-iteration
-    `bool(converged.all())` sync is what throttles a lazy-graph CG."""
+    same semantics as the torch engine); between checks, async_eval keeps the GPU
+    pipeline fed without a host sync — the per-iteration `bool(converged.all())`
+    sync is what throttles a lazy-graph CG.
+
+    ACTIVE-SHIFT NARROWING (perf audit 2026-07-13): the per-iteration cost scales
+    ~linearly with the working K (measured 1.6 ms K=1 → 81 ms K=44 at L=8 R=16),
+    so masked coasting made the 44-pole heatbath pay full width for thousands of
+    iterations after the large, log-spaced shifts converged. At each host
+    checkpoint, shifts converged across ALL batch configs are sliced OUT of the
+    working set (their frozen solutions parked and re-assembled at exit). This is
+    value-preserving: each (config, shift) system's CG arithmetic is elementwise
+    independent, and the in-graph mask already froze the parked solution at its
+    convergence iteration."""
     if x0 is None:
         x = mx.zeros(bk.shape, dtype=bk.dtype)
         r = bk
@@ -267,9 +295,31 @@ def _cg_loop(bk, matvec, sigma, tol, max_iter, x0=None, rel_to_b=False, check_ev
     converged = rs <= tol_sq
     zeros = mx.zeros(rs.shape, dtype=bk.dtype)
 
+    K = bk.shape[-3]
+    active = np.arange(K)          # original-K indices of the current working set
+    parked = {}                    # original k → frozen solution slice (*B, V', 8)
+
     for i in range(max_iter):
-        if i % check_every == 0 and bool(mx.all(converged)):
-            break
+        if i % check_every == 0:
+            conv_np = np.array(converged)                 # host sync (was bool(mx.all(...)))
+            if conv_np.all():
+                break
+            if active.size > 1:
+                conv_k = conv_np.reshape(-1, active.size).all(axis=0)   # per-shift, all configs
+                if conv_k.any():
+                    done, keep = np.nonzero(conv_k)[0], np.nonzero(~conv_k)[0]
+                    for j in done:
+                        parked[int(active[j])] = x[..., j, :, :]
+                    keep_idx = mx.array(keep)
+                    x = mx.take(x, keep_idx, axis=-3)
+                    r = mx.take(r, keep_idx, axis=-3)
+                    p = mx.take(p, keep_idx, axis=-3)
+                    sigma = mx.take(sigma, keep_idx, axis=-3)
+                    rs = mx.take(rs, keep_idx, axis=-1)
+                    tol_sq = mx.take(tol_sq, keep_idx, axis=-1)
+                    converged = mx.take(converged, keep_idx, axis=-1)
+                    zeros = mx.zeros(rs.shape, dtype=bk.dtype)
+                    active = active[keep]
         Ap = matvec(p) + sigma * p
         pAp = mx.sum(p * Ap, axis=(-2, -1))
         alpha = mx.where(converged, zeros, rs / pAp)
@@ -281,6 +331,11 @@ def _cg_loop(bk, matvec, sigma, tol, max_iter, x0=None, rel_to_b=False, check_ev
         rs = rs_new
         converged = mx.logical_or(converged, rs <= tol_sq)
         mx.async_eval(x, r, p, rs, converged)
+
+    if parked:                     # re-assemble full-K output in original shift order
+        slices = {int(k): x[..., j, :, :] for j, k in enumerate(active)}
+        slices.update(parked)
+        x = mx.stack([slices[k] for k in range(K)], axis=-3)
     return x
 
 
@@ -452,6 +507,51 @@ def make_rhmc_coeffs(lam_max, msq, n_poles, action_power=-0.5, hb_power=-0.75):
     a0_hb, alphas_hb, betas_hb = compute_zolotarev_coefficients(n_poles, lo, hi, hb_power)
     return dict(a0=float(a0), alphas=np.asarray(alphas), betas=np.asarray(betas),
                 a0_hb=float(a0_hb), alphas_hb=np.asarray(alphas_hb), betas_hb=np.asarray(betas_hb))
+
+
+def make_eo_ratio_sqrt_coeffs(a, b, lam_max, n_poles):
+    """Partial fractions for the Hasenbusch RATIO heatbath g(x) = ((x+a)/(x+b))^{1/2},
+    a = m² < b = μ² (the split mass). Used to draw φ = INV_SQRT2·g(M_e)ξ for the ratio
+    pseudofermion whose action S = φ†(M_e+b)(M_e+a)⁻¹φ contributes the exact factor
+    det[(M_e+a)/(M_e+b)]^{1/2} (power-1 action ⟹ single exact solve, no rational).
+
+    Construction (Phase-5s DR §4-5 variable transform): with t = (x+a)/(x+b) the target
+    is t^{1/2} = t·r_{-1/2}(t) (the A-trick), where r_{-1/2} is standard Zolotarev over
+    t ∈ [a/b, (λmax+a)/(λmax+b)] — conditioning κ_t = b/a, NOT λmax/a, so ~12 poles
+    suffice where the direct heatbath needs 44 at m=0.05. Möbius back-substitution
+    yields the standard form
+
+        g(x) ≈ A + B/(x+b) + Σ_k w_k/(x+e_k),   e_k = (a + d_k b)/(1+d_k) ∈ (a, b),
+
+    applied with ONE multishift solve over shifts {b} ∪ {e_k}. Pass `lam_max` already
+    safety-margined (callers use 1.25×the power-iteration estimate, as make_rhmc_coeffs).
+    """
+    from src.vestigial.hs_rhmc import compute_zolotarev_coefficients
+    t_lo = a / b
+    t_hi = (lam_max + a) / (lam_max + b)
+    c0, cks, dks = compute_zolotarev_coefficients(n_poles, t_lo, t_hi, -0.5)
+    cks, dks = np.asarray(cks), np.asarray(dks)
+    ek = (a + dks * b) / (1.0 + dks)
+    wk = cks * (a - ek) / (1.0 + dks)
+    A = float(c0 + np.sum(cks / (1.0 + dks)))
+    B = float(c0 * (a - b))
+    return dict(A=A, B=B, w=wk, e=ek, a=float(a), b=float(b))
+
+
+def eo_ratio_sqrt_max_relerr(ratio_coeffs, lam_max, n_grid=4000):
+    """Unsigned max relative error of `make_eo_ratio_sqrt_coeffs` partial fractions vs
+    the exact g(x) = ((x+a)/(x+b))^{1/2} over x ∈ [0, lam_max] (dense log grid + the
+    x=0 endpoint). The ratio-heatbath analogue of `zolotarev_max_relerr` — gate on
+    THIS, not on a consistency ratio (signed averages equioscillation-cancel)."""
+    rc = ratio_coeffs
+    a, b = rc['a'], rc['b']
+    x = np.concatenate([[0.0], np.exp(np.linspace(np.log(max(a * 1e-3, 1e-12)),
+                                                  np.log(lam_max), n_grid))])
+    g = np.sqrt((x + a) / (x + b))
+    r = (rc['A'] + rc['B'] / (x + b)
+         + np.sum(np.asarray(rc['w'])[:, None] / (x[None, :] + np.asarray(rc['e'])[:, None]),
+                  axis=0))
+    return float(np.max(np.abs(r / g - 1.0)))
 
 
 def zolotarev_max_relerr(a0, alphas, betas, lo, hi, power=-0.5, n_grid=4000):
@@ -735,17 +835,31 @@ def eo_multishift_cg_refined(b64, h64, eo, shifts, L, device, tol=1e-10, inner_t
     converged = False
     for _ in range(max_outer):
         with mx.stream(mx.cpu):
-            r64, rnorm = fp64_residual(x)          # one apply_Me per pass (was two)
-            done = bool(mx.all(rnorm <= tol * bnorm))
-        if done:
-            converged = True
-            break
-        r32 = _cast_to(r64, mx.float32, device)
+            r64, rnorm = fp64_residual(x)          # FULL residual — re-verifies parked shifts
+            done_np = np.array(rnorm <= tol * bnorm)                       # (*B, K) host-side
+            if done_np.all():
+                converged = True
+                break
+            # OUTER NARROWING (perf audit 2026-07-13): shifts already at the FP64 tol for
+            # every config skip the correction solve — each skipped solve saves a full
+            # inner CG run to inner_tol-relative on a negligible source (the large
+            # Zolotarev shifts retire after 1-2 passes; only the ~m² tail keeps refining).
+            act = np.nonzero(~done_np.reshape(-1, K).all(axis=0))[0]
+            r64a = mx.take(r64, mx.array(act), axis=-3) if act.size < K else r64
+        r32 = _cast_to(r64a, mx.float32, device)
+        sigma32a = mx.take(sigma32, mx.array(act), axis=-3) if act.size < K else sigma32
         # the refinement correction is a plain CG with a per-shift source r32 — the
         # x0=None / rel_to_b=False case of _cg_loop (residual relative to r32 itself).
-        d32 = _cg_loop(r32, matvec32, sigma32, inner_tol, max_inner)
+        d32 = _cg_loop(r32, matvec32, sigma32a, inner_tol, max_inner)
         with mx.stream(mx.cpu):
-            x = x + _cast_to(d32, mx.float64, mx.cpu)
+            d64 = _cast_to(d32, mx.float64, mx.cpu)
+            if act.size < K:       # scatter-add corrections into the active slots only
+                slices = [x[..., k, :, :] for k in range(K)]
+                for j, k in enumerate(act):
+                    slices[k] = slices[k] + d64[..., j, :, :]
+                x = mx.stack(slices, axis=-3)
+            else:
+                x = x + d64
             mx.eval(x)
 
     if not converged:                             # verify the FINAL x (post last correction)
@@ -785,6 +899,191 @@ def eo_heatbath_refined(xi_e, h, coeffs, msq, eo, L, device, tol=1e-10, inner_to
         blocks64 = hopping_blocks(h, L, dtype=mx.float64)
         v = float(coeffs['a0']) * xi_e + mx.sum(alphas[..., None, None] * psi, axis=-3)
         return INV_SQRT2 * apply_Me(v, blocks64, eo, shift=msq)
+
+
+# --- Hasenbusch (K=1) mass-preconditioned trajectory (Phase-5s DR) -------------------------
+#
+# det(M_e+m²)^{1/2} = det(M_e+μ²)^{1/2} · det[(M_e+m²)/(M_e+μ²)]^{1/2}, exact for any μ².
+# Two REAL pseudofermions, both with power-1 (single-exact-solve) actions:
+#   HEAVY:  S_H = φ_H†(M_e+μ²)⁻¹φ_H            (existing machinery, m²→μ²; κ=λmax/μ² small)
+#   RATIO:  S_R = φ_R†(M_e+μ²)(M_e+m²)⁻¹φ_R = φ_R†φ_R + (μ²−m²)·φ_R†(M_e+m²)⁻¹φ_R
+# The hard (M_e+m²)⁻¹ solve survives only in the RATIO force/action, whose force is small
+# (∝ μ²−m²-suppressed spectrum) — so it sits on the COARSE timescale of a 2-level nested
+# Omelyan and is evaluated ~n_outer times per trajectory instead of ~3·n_md. Rationals
+# survive only in the heatbaths (as in the single-PF scheme).
+#
+# NOTE: this deliberately DIFFERS from the Rust engine's Hasenbusch structure
+# (rhmc_trajectory_eo_2pf_hasenbusch: Clark-Kennedy 2 complex PFs per factor, α=1/4
+# rational actions). The single-REAL-PF power-1 form is the Phase-5s DR's "no-CK α=1/2"
+# variant — it keeps this engine's action/force = single-exact-solve property at every
+# factor and reuses eo_fermion_force/eo_compute_force/eo_heatbath unchanged. Both sample
+# the identical target density (the det split is exact); certification is dense-oracle
+# (weight identities, FD forces) + Creutz, not cross-engine trajectory matching.
+
+
+def eo_heatbath_ratio(xi_e, h, ratio_coeffs, eo, fwd, back, L, tol=1e-10, max_iter=8000):
+    """Draw the RATIO pseudofermion φ_R = INV_SQRT2·g(M_e)ξ with g = ((x+a)/(x+b))^{1/2}
+    applied via `make_eo_ratio_sqrt_coeffs` partial fractions — ONE multishift solve over
+    shifts {b} ∪ {e_k} ⊂ (a, b]. Gives S_R = ½‖ξ‖² exactly (to the rational's relerr)."""
+    rc = ratio_coeffs
+    blocks = hopping_blocks(h, L, dtype=h.dtype)
+    with mx.stream(_stream(h.dtype)):
+        shifts = np.concatenate([[rc['b']], np.asarray(rc['e'])])
+        w = _to_mx(np.concatenate([[rc['B']], np.asarray(rc['w'])]), h.dtype)
+        psi = eo_multishift_cg(xi_e, blocks, eo, shifts, tol=tol, max_iter=max_iter)
+        return INV_SQRT2 * (rc['A'] * xi_e + mx.sum(w[..., None, None] * psi, axis=-3))
+
+
+def eo_heatbath_ratio_refined(xi_e, h, ratio_coeffs, eo, L, device, tol=1e-10,
+                              inner_tol=3e-4, max_outer=12, max_inner=4000):
+    """`eo_heatbath_ratio` with the multishift done by the FP32-inner/FP64-residual
+    refined solver (heavy CG on `device`, combination on the CPU stream)."""
+    rc = ratio_coeffs
+    shifts = np.concatenate([[rc['b']], np.asarray(rc['e'])])
+    psi = eo_multishift_cg_refined(xi_e, h, eo, shifts, L, device, tol=tol,
+                                   inner_tol=inner_tol, max_outer=max_outer,
+                                   max_inner=max_inner)
+    with mx.stream(mx.cpu):
+        w = _to_mx(np.concatenate([[rc['B']], np.asarray(rc['w'])]), mx.float64)
+        return INV_SQRT2 * (rc['A'] * xi_e + mx.sum(w[..., None, None] * psi, axis=-3))
+
+
+def eo_action_hasenbusch(h, phi_h, phi_r, g, msq, musq, eo, fwd, back, L,
+                         tol=1e-10, max_iter=5000):
+    """Hasenbusch(K=1) action — every solve exact (power-1), no rational:
+    S = Σh²/4g + φ_H†(M_e+μ²)⁻¹φ_H + φ_R†φ_R + (μ²−m²)·φ_R†(M_e+m²)⁻¹φ_R."""
+    blocks = hopping_blocks(h, L, dtype=h.dtype)
+    with mx.stream(_stream(h.dtype)):
+        psi_h = eo_multishift_cg(phi_h, blocks, eo, [musq], tol=tol,
+                                 max_iter=max_iter)[..., 0, :, :]
+        psi_r = eo_multishift_cg(phi_r, blocks, eo, [msq], tol=tol,
+                                 max_iter=max_iter)[..., 0, :, :]
+        s_aux = mx.sum(h * h, axis=(-3, -2, -1)) / (4.0 * g)
+        s_h = mx.sum(phi_h * psi_h, axis=(-2, -1))
+        s_r = mx.sum(phi_r * phi_r, axis=(-2, -1)) + (musq - msq) * mx.sum(
+            phi_r * psi_r, axis=(-2, -1))
+        return s_aux + s_h + s_r
+
+
+def eo_action_hasenbusch_refined(h, phi_h, phi_r, g, msq, musq, eo, L, device,
+                                 tol=1e-10, inner_tol=3e-4, max_outer=12, max_inner=4000):
+    """`eo_action_hasenbusch` with both exact solves routed through the refined solver."""
+    kw = dict(tol=tol, inner_tol=inner_tol, max_outer=max_outer, max_inner=max_inner)
+    psi_h = eo_multishift_cg_refined(phi_h, h, eo, [musq], L, device, **kw)
+    psi_r = eo_multishift_cg_refined(phi_r, h, eo, [msq], L, device, **kw)
+    with mx.stream(mx.cpu):
+        s_aux = mx.sum(h * h, axis=(-3, -2, -1)) / (4.0 * g)
+        s_h = mx.sum(phi_h * psi_h[..., 0, :, :], axis=(-2, -1))
+        s_r = mx.sum(phi_r * phi_r, axis=(-2, -1)) + (musq - msq) * mx.sum(
+            phi_r * psi_r[..., 0, :, :], axis=(-2, -1))
+        return s_aux + s_h + s_r
+
+
+def eo_integrate_hasenbusch(h, pi, phi_h, phi_r, g, msq, musq, eo, fwd, back, L,
+                            eps, n_outer, n_inner, lam=OMELYAN_LAMBDA, tol=1e-10,
+                            max_iter=5000, chrono=False):
+    """Two-level nested Omelyan 2MN (Phase-5s DR §3): COARSE kicks from the ratio force
+    F_R = (μ²−m²)·eo_fermion_force(φ_R at m²) — the hard solve, small magnitude — and
+    FINE position-blocks integrating F_fine = −h/2g + eo_fermion_force(φ_H at μ²) —
+    cheap solves. `eps` is the coarse step (τ = eps·n_outer); each coarse position
+    block runs `n_inner` fine 2MN steps. chrono warm-starts each force's solve from
+    its own previous ψ (per-trajectory caches, same softening contract as
+    `eo_integrate`)."""
+    psi_r_cache = psi_h_cache = None
+
+    def f_coarse(hh):
+        nonlocal psi_r_cache
+        F, psi_r_cache = eo_fermion_force(hh, phi_r, msq, eo, fwd, back, L, tol=tol,
+                                          max_iter=max_iter,
+                                          x0=psi_r_cache if chrono else None,
+                                          return_psi=True)
+        return (musq - msq) * F
+
+    def f_fine(hh):
+        nonlocal psi_h_cache
+        F, psi_h_cache = eo_compute_force(hh, phi_h, g, musq, eo, fwd, back, L, tol=tol,
+                                          max_iter=max_iter,
+                                          x0=psi_h_cache if chrono else None,
+                                          return_psi=True)
+        return F
+
+    def inner(hh, pp, T):
+        dt = T / n_inner
+        half = 0.5 * dt
+        for _ in range(n_inner):
+            pp = pp + (lam * dt) * f_fine(hh)
+            hh = hh + half * pp
+            pp = pp + ((1.0 - 2.0 * lam) * dt) * f_fine(hh)
+            hh = hh + half * pp
+            pp = pp + (lam * dt) * f_fine(hh)
+        return hh, pp
+
+    with mx.stream(_stream(h.dtype)):
+        half_eps = 0.5 * eps
+        for _ in range(n_outer):
+            h, pi = inner(h, pi, lam * eps)
+            pi = pi + half_eps * f_coarse(h)
+            h, pi = inner(h, pi, (1.0 - 2.0 * lam) * eps)
+            pi = pi + half_eps * f_coarse(h)
+            h, pi = inner(h, pi, lam * eps)
+            mx.eval(h, pi)
+    return h, pi
+
+
+def eo_rhmc_trajectory_hasenbusch_refined(h64, g, msq, musq, hb_coeffs, ratio_coeffs,
+                                          eo, fwd, back, L, eps, n_outer, n_inner, rng,
+                                          device, tol_md=1e-4, tol_acc=1e-10,
+                                          inner_tol=3e-4, max_outer=12, max_inner=4000,
+                                          chrono=False):
+    """Hasenbusch(K=1) refined trajectory: heavy PF at μ² via the EXISTING heatbath
+    machinery (`hb_coeffs` = make_rhmc_coeffs(λ, μ², ·)), ratio PF via the Möbius
+    partial fractions (`ratio_coeffs` = make_eo_ratio_sqrt_coeffs(m², μ², λ, ·)),
+    2-level nested MD, FP64-exact Metropolis. RNG draw order: ξ_H, ξ_R, π, u.
+    Samples the IDENTICAL target density as `eo_rhmc_trajectory_refined` (exact
+    determinant split). h64: FP64 (*batch, V, 4, 4). Returns (h_out, ΔH, accept)."""
+    Bshape = tuple(h64.shape[:-3])
+    V = L ** 4
+    Ve = V // 2
+    F64 = mx.float64
+
+    xi_h = mx.array(rng.standard_normal(Bshape + (Ve, 8)), dtype=F64)
+    phi_h64 = eo_heatbath_refined(xi_h, h64, hb_coeffs, musq, eo, L, device, tol=tol_acc,
+                                  inner_tol=inner_tol, max_outer=max_outer,
+                                  max_inner=max_inner)
+    xi_r = mx.array(rng.standard_normal(Bshape + (Ve, 8)), dtype=F64)
+    phi_r64 = eo_heatbath_ratio_refined(xi_r, h64, ratio_coeffs, eo, L, device,
+                                        tol=tol_acc, inner_tol=inner_tol,
+                                        max_outer=max_outer, max_inner=max_inner)
+    pi64 = mx.array(rng.standard_normal(Bshape + (V, 4, 4)), dtype=F64)
+
+    def H(hh, pp, ph, pr):
+        S = eo_action_hasenbusch_refined(hh, ph, pr, g, msq, musq, eo, L, device,
+                                         tol=tol_acc, inner_tol=inner_tol,
+                                         max_outer=max_outer, max_inner=max_inner)
+        with mx.stream(mx.cpu):
+            return 0.5 * mx.sum(pp * pp, axis=(-3, -2, -1)) + S
+
+    H_old = H(h64, pi64, phi_h64, phi_r64)
+
+    h32 = _cast(h64, mx.float32)
+    pi32 = _cast(pi64, mx.float32)
+    phi_h32 = _cast(phi_h64, mx.float32)
+    phi_r32 = _cast(phi_r64, mx.float32)
+    h_new32, pi_new32 = eo_integrate_hasenbusch(h32, pi32, phi_h32, phi_r32, g, msq,
+                                                musq, eo, fwd, back, L, eps, n_outer,
+                                                n_inner, tol=tol_md, max_iter=max_inner,
+                                                chrono=chrono)
+
+    H_new = H(_cast(h_new32, F64), _cast(pi_new32, F64), phi_h64, phi_r64)
+    h_new64 = _cast(h_new32, F64)
+
+    u = mx.array(rng.random(Bshape), dtype=F64)
+    with mx.stream(mx.cpu):
+        dH = H_new - H_old
+        accept = u < mx.exp(mx.minimum(-dH, 0.0))
+        h_out = mx.where(accept[..., None, None, None], h_new64, h64)
+        mx.eval(h_out, dH, accept)
+    return h_out, dH, accept
 
 
 def eo_rhmc_trajectory_refined(h64, g, msq, coeffs, eo, fwd, back, L, eps, n_md, rng, device,

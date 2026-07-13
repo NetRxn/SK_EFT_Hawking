@@ -446,6 +446,94 @@ def test_eo_multishift_cg_refined_raises_on_nonconvergence():
     assert x.dtype == mx.float64 and x.shape == (1, V // 2, 8)
 
 
+def test_cg_loop_narrows_active_shift_set_as_shifts_converge():
+    # Perf-audit 2026-07-13: the K=44 heatbath iteration cost 44x the K=1 iteration —
+    # converged (large, log-spaced) shifts kept full-bandwidth masked no-op updates until
+    # the m² shift finished thousands of iterations later. _cg_loop must NARROW: drop
+    # converged shifts from the working set at host checkpoints, so the matvec batch
+    # width shrinks toward the slowest shift. Narrowing is value-preserving (each
+    # (config, shift) system's arithmetic is independent; the in-graph mask already
+    # freezes converged systems), so per-shift solutions must still meet tol exactly.
+    L, V = 2, 2 ** 4
+    rng = np.random.default_rng(31)
+    h = rng.standard_normal((V, 4, 4)) * 4.0
+    b_e = _mx64(rng.standard_normal((V // 2, 8)))
+    shifts = np.array([1e-3, 1e-1, 10.0, 1e3])    # spread: big shifts converge 100x sooner
+    eo = me.eo_tables(L)
+    blocks_k = mx.expand_dims(me.hopping_blocks(_mx64(h), L), 0)
+    blocks_eo = me._split_eo(blocks_k, eo)
+
+    widths = []
+    def recording_matvec(p):
+        widths.append(p.shape[-3])
+        return me.apply_Me_split(p, blocks_eo, eo)
+
+    K = len(shifts)
+    sigma, _ = me._as_shift_tensor(_mx64(shifts), 0, (), mx.float64)
+    bk = mx.broadcast_to(mx.expand_dims(b_e, 0), (K, V // 2, 8))
+    x = me._cg_loop(bk, recording_matvec, sigma, 1e-8, 20000)
+    mx.eval(x)
+
+    # behavior: the working set actually narrowed, monotonically, down to the slow tail
+    assert widths[0] == K
+    assert widths[-1] < K, "converged shifts were never dropped from the working set"
+    assert all(a >= b for a, b in zip(widths, widths[1:])), "active set must only shrink"
+    assert min(widths) <= 2, f"tail should run with the slowest shift(s) only, saw {min(widths)}"
+
+    # correctness: full-size output, every shift solved to tol (relative to ||b||)
+    assert x.shape == (K, V // 2, 8)
+    bnorm = float(mx.sqrt(mx.sum(b_e * b_e)))
+    for k in range(K):
+        xk = x[k]
+        r = b_e - (me.apply_Me_split(mx.expand_dims(xk, 0), blocks_eo, eo)[0]
+                   + shifts[k] * xk)
+        assert float(mx.sqrt(mx.sum(r * r))) <= 1e-7 * bnorm
+
+
+def test_eo_multishift_cg_refined_narrows_outer_passes():
+    # Outer-level narrowing: once a shift's FP64 residual is ≤ tol, later refinement
+    # passes must NOT re-solve its correction (each such solve costs O(inner-CG) on a
+    # negligible source — measured as part of the 74%-of-trajectory heatbath). The
+    # production mechanism: the ~m² shift's inner solve is max_inner-capped, so its
+    # per-pass reduction is worse than the easy shifts' (which achieve the full
+    # inner_tol every pass and retire early) — later passes must carry ONLY the hard
+    # shift, and the final result must still satisfy the FP64 tol for EVERY shift.
+    L, V = 4, 4 ** 4
+    rng = np.random.default_rng(33)
+    h = rng.standard_normal((V, 4, 4))
+    b_e = _mx64(rng.standard_normal((V // 2, 8)))
+    shifts = np.array([3e-4, 50.0])       # κ contrast ~2e5 : 1; 50.0 retires passes early
+    eo = me.eo_tables(L)
+
+    inner_widths = []
+    orig_cg_loop = me._cg_loop
+    def recording_cg_loop(bk, matvec, sigma, tol, max_iter, **kw):
+        inner_widths.append(bk.shape[-3])
+        return orig_cg_loop(bk, matvec, sigma, tol, max_iter, **kw)
+
+    me._cg_loop = recording_cg_loop
+    try:
+        # max_inner=150 caps the hard shift far below its ~2000-iteration need, forcing
+        # multiple partial-reduction passes for it — exactly the production asymmetry.
+        x = me.eo_multishift_cg_refined(b_e, _mx64(h), eo, _mx64(shifts), L, mx.cpu,
+                                        tol=1e-6, inner_tol=3e-4, max_outer=60,
+                                        max_inner=150)
+    finally:
+        me._cg_loop = orig_cg_loop
+    mx.eval(x)
+
+    assert inner_widths[0] == 2
+    assert inner_widths[-1] == 1, f"retired shift still in late passes: {inner_widths}"
+
+    # every shift meets the FP64 tol (the easy one must not have been corrupted)
+    blocks_eo = me._split_eo(mx.expand_dims(me.hopping_blocks(_mx64(h), L), 0), eo)
+    bnorm = float(mx.sqrt(mx.sum(b_e * b_e)))
+    for k, s in enumerate(shifts):
+        xk = x[k]
+        r = b_e - (me.apply_Me_split(mx.expand_dims(xk, 0), blocks_eo, eo)[0] + s * xk)
+        assert float(mx.sqrt(mx.sum(r * r))) <= 1e-6 * bnorm
+
+
 def test_refined_path_gpu_default_seam_and_gross_bias():
     # Two review gaps in one FAST (non-slow) test:
     #  (1) structural — the autouse fixture pins the default device to CPU, masking any
@@ -612,6 +700,331 @@ def test_eo_refined_trajectory_mechanics():
         for b in range(B):
             if not bool(acc[b]):
                 assert np.array_equal(h_np[b], h_prev[b])
+
+
+def test_eo_ratio_sqrt_coeffs_approximate_ratio_sqrt():
+    # Hasenbusch (Wave C) brick 1: partial fractions for the RATIO heatbath function
+    # g(x) = ((x+a)/(x+b))^{1/2} (a=m², b=μ²), via t·r_{-1/2}(t) with t=(x+a)/(x+b)
+    # Möbius-substituted back to x — the Phase-5s DR §4-5 variable transform. The
+    # conditioning is κ_t = b/a (NOT λmax/m²), so 24 poles reach the production
+    # 1e-3 gate where the direct r_{-1/2} needs 44 at a 1300× worse κ. (The
+    # in-house Zolotarev generator converges ~3× slower than optimal-Zolotarev
+    # theory — measured 12→3.4e-2, 24→3.3e-4, monotone ×0.22/4-poles — which the
+    # auto-bump gate absorbs, as it does for the direct heatbath.) Shifts must
+    # land in (a, b) (positive, CG-safe).
+    a, b, lam = 0.05 ** 2, 3.3, 1.25 * 4300.0          # the m=0.05 production corner
+    C = me.make_eo_ratio_sqrt_coeffs(a, b, lam, n_poles=24)
+    assert np.all((C['e'] > a) & (C['e'] < b))
+    x = np.concatenate([[0.0], np.exp(np.linspace(np.log(1e-6), np.log(lam), 4000))])
+    g = np.sqrt((x + a) / (x + b))
+    r = (C['A'] + C['B'] / (x + b)
+         + np.sum(C['w'][:, None] / (x[None, :] + C['e'][:, None]), axis=0))
+    relerr = np.max(np.abs(r / g - 1.0))
+    assert relerr < 1e-3, relerr
+    # and the quality improves with poles (monotone convergence, same gate logic as
+    # the direct heatbath's zolotarev_max_relerr)
+    C12 = me.make_eo_ratio_sqrt_coeffs(a, b, lam, n_poles=12)
+    r12 = (C12['A'] + C12['B'] / (x + b)
+           + np.sum(C12['w'][:, None] / (x[None, :] + C12['e'][:, None]), axis=0))
+    assert np.max(np.abs(r12 / g - 1.0)) > relerr
+
+
+def test_eo_ratio_sqrt_max_relerr_gate_util():
+    # The unsigned max-relerr gate for the RATIO heatbath rational — same role as
+    # zolotarev_max_relerr for the direct heatbath (the S_PF consistency ratio is a
+    # signed average and under-reports; the gate must use the unsigned max).
+    a, b, lam = 0.05 ** 2, 3.3, 1.25 * 4300.0
+    e24 = me.eo_ratio_sqrt_max_relerr(me.make_eo_ratio_sqrt_coeffs(a, b, lam, 24), lam)
+    e12 = me.eo_ratio_sqrt_max_relerr(me.make_eo_ratio_sqrt_coeffs(a, b, lam, 12), lam)
+    assert e24 < 1e-3 < e12                      # monotone, and 24 poles meet the gate
+
+
+def test_eo_hasenbusch_ratio_heatbath_weight_dense_oracle():
+    # Operator-level certification at L=2 against the dense eo operator: with
+    # φ = INV_SQRT2·g(M_e)ξ applied via the partial fractions (dense solves), the
+    # ratio action S₂ = φ†(M_e+b)(M_e+a)⁻¹φ must equal ½‖ξ‖² — the exact-weight
+    # sampling identity (the analogue of the S_PF=½‖ξ‖² heatbath consistency gate).
+    L, V = 2, 2 ** 4
+    rng = np.random.default_rng(51)
+    h = rng.standard_normal((V, 4, 4))
+    eo = me.eo_tables(L)
+    A = _dense(h, L)
+    AtA = -A @ A
+    ev = _np(eo['even_idx'])
+    idx = (8 * ev[:, None] + np.arange(8)[None, :]).reshape(-1)
+    Me = AtA[np.ix_(idx, idx)]                       # dense even-block operator
+    lam = float(np.linalg.eigvalsh(Me).max())
+    a, b = 0.0025, 1.0
+    C = me.make_eo_ratio_sqrt_coeffs(a, b, 1.25 * lam, n_poles=24)
+
+    xi = rng.standard_normal(8 * (V // 2))
+    eye = np.eye(Me.shape[0])
+    phi = C['A'] * xi + C['B'] * np.linalg.solve(Me + b * eye, xi)
+    for wk, ek in zip(C['w'], C['e']):
+        phi = phi + wk * np.linalg.solve(Me + ek * eye, xi)
+    phi *= me.INV_SQRT2
+
+    S2 = phi @ (Me + b * eye) @ np.linalg.solve(Me + a * eye, phi)
+    assert abs(S2 / (0.5 * xi @ xi) - 1.0) < 1e-4, S2 / (0.5 * xi @ xi)
+
+
+def test_eo_heatbath_ratio_dense_parity_and_weight():
+    # Engine-path certification of the ratio heatbath: eo_heatbath_ratio must equal the
+    # dense partial-fraction application of the same coefficients, and its action
+    # S_R = φ†φ + (b−a)·φ†(M_e+a)⁻¹φ must equal ½‖ξ‖² (exact-weight sampling).
+    L, V = 2, 2 ** 4
+    rng = np.random.default_rng(53)
+    h = rng.standard_normal((V, 4, 4))
+    eo = me.eo_tables(L)
+    fwd, back = me.neighbor_tables(L)
+    A = _dense(h, L)
+    ev = _np(eo['even_idx'])
+    idx = (8 * ev[:, None] + np.arange(8)[None, :]).reshape(-1)
+    Me = (-A @ A)[np.ix_(idx, idx)]
+    lam = float(np.linalg.eigvalsh(Me).max())
+    a, b = 0.0025, 1.0
+    C = me.make_eo_ratio_sqrt_coeffs(a, b, 1.25 * lam, n_poles=24)
+
+    xi_np = rng.standard_normal((V // 2, 8))
+    phi = me.eo_heatbath_ratio(_mx64(xi_np), _mx64(h), C, eo, fwd, back, L,
+                               tol=1e-12, max_iter=8000)
+
+    xi_fl = xi_np.reshape(-1)
+    eye = np.eye(Me.shape[0])
+    phi_dense = C['A'] * xi_fl + C['B'] * np.linalg.solve(Me + b * eye, xi_fl)
+    for wk, ek in zip(C['w'], C['e']):
+        phi_dense = phi_dense + wk * np.linalg.solve(Me + ek * eye, xi_fl)
+    phi_dense *= me.INV_SQRT2
+    assert np.allclose(_np(phi).reshape(-1), phi_dense, atol=1e-8)
+
+    S_r = (phi_dense @ phi_dense
+           + (b - a) * phi_dense @ np.linalg.solve(Me + a * eye, phi_dense))
+    assert abs(S_r / (0.5 * xi_fl @ xi_fl) - 1.0) < 1e-4
+
+
+def test_eo_action_hasenbusch_matches_dense():
+    # S = Σh²/4g + φ_H†(M+μ²)⁻¹φ_H + φ_R†φ_R + (μ²−m²)·φ_R†(M+m²)⁻¹φ_R — every solve
+    # exact (power-1 actions, no rational), checked against dense linear algebra.
+    L, V = 2, 2 ** 4
+    g, msq, musq = 1.5, 0.0025, 1.0
+    rng = np.random.default_rng(55)
+    h = rng.standard_normal((V, 4, 4))
+    eo = me.eo_tables(L)
+    fwd, back = me.neighbor_tables(L)
+    phi_h = rng.standard_normal((V // 2, 8))
+    phi_r = rng.standard_normal((V // 2, 8))
+
+    S = float(me.eo_action_hasenbusch(_mx64(h), _mx64(phi_h), _mx64(phi_r), g, msq, musq,
+                                      eo, fwd, back, L, tol=1e-12, max_iter=8000))
+
+    A = _dense(h, L)
+    ev = _np(eo['even_idx'])
+    idx = (8 * ev[:, None] + np.arange(8)[None, :]).reshape(-1)
+    Me = (-A @ A)[np.ix_(idx, idx)]
+    eye = np.eye(Me.shape[0])
+    ph, pr = phi_h.reshape(-1), phi_r.reshape(-1)
+    S_dense = (np.sum(h * h) / (4 * g)
+               + ph @ np.linalg.solve(Me + musq * eye, ph)
+               + pr @ pr + (musq - msq) * pr @ np.linalg.solve(Me + msq * eye, pr))
+    assert abs(S - S_dense) < 1e-7 * max(1.0, abs(S_dense)), (S, S_dense)
+
+
+def test_hasenbusch_forces_equal_negative_total_action_gradient():
+    # The two-level forces from EXISTING primitives — coarse = (μ²−m²)·eo_fermion_force
+    # (φ_R at m²), fine = eo_compute_force(φ_H at μ²) — must sum to −∂S_hasenbusch/∂h.
+    L, V, g = 4, 4 ** 4, 1.5
+    msq, musq = 0.04, 2.0
+    rng = np.random.default_rng(57)
+    h = rng.standard_normal((V, 4, 4))
+    eo = me.eo_tables(L)
+    fwd, back = me.neighbor_tables(L)
+    phi_h = _mx64(rng.standard_normal((V // 2, 8)))
+    phi_r = _mx64(rng.standard_normal((V // 2, 8)))
+
+    F = _np((musq - msq) * me.eo_fermion_force(_mx64(h), phi_r, msq, eo, fwd, back, L,
+                                               tol=1e-12, max_iter=8000)
+            + me.eo_compute_force(_mx64(h), phi_h, g, musq, eo, fwd, back, L,
+                                  tol=1e-12, max_iter=8000))
+
+    def action(hh):
+        return float(me.eo_action_hasenbusch(_mx64(hh), phi_h, phi_r, g, msq, musq,
+                                             eo, fwd, back, L, tol=1e-12, max_iter=8000))
+
+    eps = 1e-5
+    for (x, mu, a) in [(0, 0, 0), (5, 2, 1), (17, 1, 3), (40, 3, 2)]:
+        hp = h.copy(); hp[x, mu, a] += eps
+        hm = h.copy(); hm[x, mu, a] -= eps
+        fd = -(action(hp) - action(hm)) / (2 * eps)
+        assert abs(F[x, mu, a] - fd) <= 1e-4 * max(1.0, abs(fd)), (x, mu, a, F[x, mu, a], fd)
+
+
+def test_eo_integrate_hasenbusch_is_reversible():
+    # The 2-level nested Omelyan must retrace under momentum flip (cold starts, tight
+    # tol) — same gate as the single-level integrator.
+    L, V, g = 4, 4 ** 4, 1.5
+    msq, musq = 0.04, 2.0
+    rng = np.random.default_rng(59)
+    eo = me.eo_tables(L)
+    h0 = rng.standard_normal((V, 4, 4))
+    pi0 = rng.standard_normal((V, 4, 4))
+    phi_h = _mx64(rng.standard_normal((V // 2, 8)))
+    phi_r = _mx64(rng.standard_normal((V // 2, 8)))
+    fwd, back = me.neighbor_tables(L)
+    kw = dict(g=g, msq=msq, musq=musq, eo=eo, fwd=fwd, back=back, L=L,
+              eps=0.1, n_outer=3, n_inner=3, tol=1e-12, max_iter=8000)
+
+    h1, pi1 = me.eo_integrate_hasenbusch(_mx64(h0), _mx64(pi0), phi_h, phi_r, **kw)
+    assert not np.allclose(_np(h1), h0)
+    h2, pi2 = me.eo_integrate_hasenbusch(h1, -pi1, phi_h, phi_r, **kw)
+    assert np.allclose(_np(h2), h0, atol=1e-9)
+    assert np.allclose(_np(pi2), -pi0, atol=1e-9)
+
+
+def test_hasenbusch_trajectory_mechanics():
+    # Mechanics of the Hasenbusch refined trajectory: runs, FP64 configs out, finite ΔH,
+    # boolean accept, exact Metropolis (rejected replicas keep the previous config
+    # bit-for-bit). Chain-level unbiasedness = the slow Creutz gate.
+    L, V, B = 4, 4 ** 4, 2
+    g, msq, musq = 1.5, 0.04, 2.0
+    rng0 = np.random.default_rng(61)
+    h = _mx64(rng0.standard_normal((B, V, 4, 4)))
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+    with mx.stream(mx.cpu):
+        h00 = h[0]
+    lam = 1.3 * float(me.estimate_lambda_max(me.hopping_blocks(h00, L), fwd, back, V,
+                                             n_iter=150, seed=0))
+    hb = me.make_rhmc_coeffs(lam, musq, n_poles=10)          # heavy PF at μ² (existing)
+    rc = me.make_eo_ratio_sqrt_coeffs(msq, musq, lam, n_poles=20)
+    rng = np.random.default_rng(9)
+
+    for _ in range(3):
+        h_prev = _np(h)
+        h, dH, acc = me.eo_rhmc_trajectory_hasenbusch_refined(
+            h, g, msq, musq, hb, rc, eo, fwd, back, L, 0.1, 3, 3, rng, mx.cpu,
+            inner_tol=3e-4, max_outer=20)
+        assert h.dtype == mx.float64 and h.shape == (B, V, 4, 4)
+        assert dH.shape == (B,) and bool(mx.all(mx.isfinite(dH)))
+        assert acc.dtype == mx.bool_ and acc.shape == (B,)
+        h_np = _np(h)
+        for b in range(B):
+            if not bool(acc[b]):
+                assert np.array_equal(h_np[b], h_prev[b])
+
+
+@pytest.mark.slow
+def test_creutz_identity_hasenbusch_chain_unbiased():
+    # Chain-level correctness gate for the Hasenbusch split: the 2-PF sampled ensemble
+    # must satisfy ⟨e^-ΔH⟩ = 1 — certifying the det-split + both heatbaths + the nested
+    # integrator end to end (runs the FP32 inner solves on Metal when available).
+    if _accelerator_available():
+        mx.set_default_device(mx.gpu)
+        device = mx.gpu
+    else:
+        device = mx.cpu
+    L, V = 2, 2 ** 4
+    g, msq, musq = 1.5, 0.01, 1.0
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+    rng0 = np.random.default_rng(3)
+    h0 = _mx64(1.7 * rng0.standard_normal((V, 4, 4)))
+    lam = 1.3 * float(me.estimate_lambda_max(me.hopping_blocks(h0, L), fwd, back, V))
+    hb = me.make_rhmc_coeffs(lam, musq, n_poles=10)
+    rc = me.make_eo_ratio_sqrt_coeffs(msq, musq, lam, n_poles=20)
+    rng = np.random.default_rng(5)
+    h = _mx64(1.7 * rng.standard_normal((V, 4, 4)))
+    dHs, nacc, n = [], 0, 240
+    for t in range(n):
+        h, dH, acc = me.eo_rhmc_trajectory_hasenbusch_refined(
+            h, g, msq, musq, hb, rc, eo, fwd, back, L, 0.1, 4, 4, rng, device,
+            tol_md=1e-4, inner_tol=3e-4, max_outer=20)
+        mx.eval(h, dH, acc)
+        if t >= n // 4:
+            dHs.append(float(dH)); nacc += int(bool(acc))
+    creutz = float(np.mean(np.exp(-np.array(dHs))))
+    assert nacc / (n - n // 4) > 0.5 and abs(creutz - 1.0) < 0.08, (creutz, nacc / (n - n // 4))
+
+
+def test_chrono_integrate_reaches_same_solution_at_tight_tol():
+    # Chrono warm-starting changes only the CG starting guess; at tight tol the solve
+    # converges to the SAME ψ_e, so the MD trajectory must match the cold-start one.
+    # This is the fast correctness gate for defaulting chrono on in the driver.
+    L, V = 4, 4 ** 4
+    g, msq = 1.5, 0.04
+    rng = np.random.default_rng(41)
+    h0 = _mx64(rng.standard_normal((V, 4, 4)))
+    pi0 = _mx64(rng.standard_normal((V, 4, 4)))
+    phi_e = _mx64(rng.standard_normal((V // 2, 8)))
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+
+    h_c, pi_c = me.eo_integrate(h0, pi0, phi_e, g, msq, eo, fwd, back, L, 0.03, 3,
+                                tol=1e-10, chrono=False)
+    h_w, pi_w = me.eo_integrate(h0, pi0, phi_e, g, msq, eo, fwd, back, L, 0.03, 3,
+                                tol=1e-10, chrono=True)
+    assert np.allclose(_np(h_w), _np(h_c), atol=1e-6), \
+        float(np.abs(_np(h_w) - _np(h_c)).max())
+    assert np.allclose(_np(pi_w), _np(pi_c), atol=1e-6)
+
+
+def test_chrono_reversibility_softening_is_bounded():
+    # Cold starts make the force a pure function of h, so the only reversibility
+    # violation is the CG stopping rule crossing an iteration-count boundary between
+    # legs — O(tol), measured ~2e-7 here. Chrono adds solver-history dependence on top
+    # (a larger O(tol) softening). Both must stay far below field scale at production
+    # tol (else Metropolis exactness is compromised); Creutz (slow) is the chain gate.
+    L, V = 4, 4 ** 4
+    g, msq = 1.5, 0.04
+    rng = np.random.default_rng(43)
+    h0 = _mx64(rng.standard_normal((V, 4, 4)))
+    pi0 = _mx64(rng.standard_normal((V, 4, 4)))
+    phi_e = _mx64(rng.standard_normal((V // 2, 8)))
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+    href = float(mx.sqrt(mx.mean(h0 * h0)))
+
+    def roundtrip(chrono):
+        h1, pi1 = me.eo_integrate(h0, pi0, phi_e, g, msq, eo, fwd, back, L, 0.03, 4,
+                                  tol=1e-4, chrono=chrono)
+        h2, pi2 = me.eo_integrate(h1, -pi1, phi_e, g, msq, eo, fwd, back, L, 0.03, 4,
+                                  tol=1e-4, chrono=chrono)
+        return float(mx.sqrt(mx.mean((h2 - h0) ** 2))) / href
+
+    assert roundtrip(False) < 1e-5      # cold: stopping-boundary crossings only, O(tol)
+    assert roundtrip(True) < 5e-3       # chrono: controlled O(tol) history softening
+
+
+@pytest.mark.slow
+def test_creutz_identity_eo_refined_chain_unbiased_chrono():
+    # Chain-level unbiasedness gate for chrono=True (the driver default): the O(tol_md)
+    # reversibility softening must leave ⟨e^-ΔH⟩ = 1 intact. Mirrors the cold-start
+    # Creutz test below with warm-started MD solves.
+    if _accelerator_available():
+        mx.set_default_device(mx.gpu)   # fixture restores after the test
+        device = mx.gpu
+    else:
+        device = mx.cpu
+    L, V = 2, 2 ** 4
+    g, msq = 1.5, 0.01
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+    rng0 = np.random.default_rng(3)
+    h0 = _mx64(1.7 * rng0.standard_normal((V, 4, 4)))
+    lam = float(me.estimate_lambda_max(me.hopping_blocks(h0, L), fwd, back, V))
+    coeffs = me.make_rhmc_coeffs(1.3 * lam, msq, n_poles=12)
+    rng = np.random.default_rng(5)
+    h = _mx64(1.7 * rng.standard_normal((V, 4, 4)))
+    dHs, nacc, n = [], 0, 240
+    for t in range(n):
+        h, dH, acc = me.eo_rhmc_trajectory_refined(h, g, msq, coeffs, eo, fwd, back, L,
+                                                   0.05, 8, rng, device, tol_md=1e-4,
+                                                   inner_tol=3e-4, max_outer=20,
+                                                   chrono=True)
+        mx.eval(h, dH, acc)
+        if t >= n // 4:
+            dHs.append(float(dH)); nacc += int(bool(acc))
+    creutz = float(np.mean(np.exp(-np.array(dHs))))
+    assert nacc / (n - n // 4) > 0.5 and abs(creutz - 1.0) < 0.08, (creutz, nacc / (n - n // 4))
 
 
 @pytest.mark.slow

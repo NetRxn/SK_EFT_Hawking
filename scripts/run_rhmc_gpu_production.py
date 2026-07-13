@@ -144,6 +144,62 @@ def build_coeffs_mlx(L, g, msq, n_poles, seed, hb_relerr_tol=1e-3, n_poles_cap=8
         npu = min(npu + 4, n_poles_cap)
 
 
+def build_hasenbusch_coeffs_mlx(L, g, msq, n_poles, seed, musq=None,
+                                hb_relerr_tol=1e-3, n_poles_cap=80):
+    """Coefficient bundle for the Hasenbusch(K=1) trajectory (mlx backend).
+
+    HEAVY PF at μ² reuses the existing r_{-1/2} machinery (make_rhmc_coeffs with
+    μ² in place of m² — κ=λmax/μ² is small, few poles); the RATIO PF uses the
+    Möbius-transformed Zolotarev of ((x+m²)/(x+μ²))^{1/2} (make_eo_ratio_sqrt_coeffs).
+    BOTH rationals are quality-gated on their UNSIGNED max relerr with the same
+    auto-bump / fail-closed contract as build_coeffs_mlx (heatbath bias is
+    uncorrectable by Metropolis regardless of which PF mis-samples).
+
+    musq=None picks the balanced split μ² = √(m²·λmax) — both factors then carry
+    κ ≈ √(λmax/m²). Returns (hb_coeffs, ratio_coeffs, musq, lam)."""
+    import mlx.core as mx
+    import src.vestigial.hs_rhmc_mlx as me
+    V = L ** 4
+    rng = np.random.default_rng(seed)
+    fwd, back = me.neighbor_tables(L)
+    amp = 1.3 * np.sqrt(2.0 * g)
+    lam = 1.25 * max(float(me.estimate_lambda_max(
+        me.hopping_blocks(mx.array(amp * rng.standard_normal((V, 4, 4)), dtype=mx.float32), L),
+        fwd, back, V, n_iter=150, seed=s)) for s in range(3))
+    if musq is None:
+        musq = float(np.sqrt(max(msq, 1e-12) * lam))
+
+    npu = n_poles                                  # heavy PF gate (existing machinery @ μ²)
+    while True:
+        with np.errstate(over='ignore', invalid='ignore'):
+            hb = me.make_rhmc_coeffs(lam, musq, npu)
+        relerr = me.zolotarev_max_relerr(hb['a0'], hb['alphas'], hb['betas'],
+                                         musq, lam + musq, power=-0.5)
+        if relerr <= hb_relerr_tol:
+            break
+        if npu >= n_poles_cap:
+            raise ValueError(f"heavy-PF Zolotarev relerr={relerr:.2e} > {hb_relerr_tol:.0e} "
+                             f"at n_poles={npu} (cap) — biased heatbath, fail-closed.")
+        npu = min(npu + 4, n_poles_cap)
+
+    npr = n_poles                                  # ratio PF gate (κ_t = μ²/m²)
+    while True:
+        with np.errstate(over='ignore', invalid='ignore'):
+            rc = me.make_eo_ratio_sqrt_coeffs(msq, musq, lam, npr)
+        relerr_r = me.eo_ratio_sqrt_max_relerr(rc, lam)
+        if relerr_r <= hb_relerr_tol:
+            break
+        if npr >= n_poles_cap:
+            raise ValueError(f"ratio-PF rational relerr={relerr_r:.2e} > {hb_relerr_tol:.0e} "
+                             f"at n_poles={npr} (cap) — biased heatbath, fail-closed.")
+        npr = min(npr + 4, n_poles_cap)
+
+    print(f"    build_hasenbusch: μ²={musq:.3g} (κ_H={lam/musq + 1:.0f}, κ_R={musq/msq:.0f})  "
+          f"heavy poles {npu} (relerr {relerr:.1e})  ratio poles {npr} (relerr {relerr_r:.1e})",
+          flush=True)
+    return hb, rc, musq, lam
+
+
 def _load_checkpoint(path, seed, g, shape, n_therm):
     """Resume state from an existing npz, or a fresh-run state.
 
@@ -173,7 +229,8 @@ def _load_checkpoint(path, seed, g, shape, n_therm):
 
 
 def run_coupling_mlx(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, seed,
-                     chrono=False, mlx_solver='refined', checkpoint_every=10):
+                     chrono=False, mlx_solver='refined', checkpoint_every=10,
+                     hasenbusch=None):
     """MLX twin of `run_coupling`, eo path (FP32 MD on the MLX default device — Metal or
     CUDA). Identical npz schema (+ n_therm_done/nacc/ntot for resume) → rhmc_monitor.py /
     analyze_rhmc_vestigial.py compatible. Same target density as the torch engines;
@@ -200,6 +257,11 @@ def run_coupling_mlx(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, see
     h = mx.array(st['h_np'], dtype=mx.float64)
     rng = _trajectory_rng(seed, n_done + n_therm_done)   # decorrelated; independent per resume point
 
+    # provenance: record the sampler variant (identical target density either way, but
+    # the npz should say how it was produced)
+    extra = {} if hasenbusch is None else dict(hb_mu_sq=np.float64(hasenbusch['musq']),
+                                               hb_n_inner=np.int64(hasenbusch['n_inner']))
+
     def save():
         h_state = np.array(h)                       # eval only — no new f64 op on the GPU stream
         atomic_savez(path,
@@ -210,9 +272,16 @@ def run_coupling_mlx(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, see
                      acceptance_rate=np.float64(nacc / max(ntot, 1)),
                      nacc=np.int64(nacc), ntot=np.int64(ntot), n_therm_done=np.int64(n_therm_done),
                      g=np.float64(g), L=np.int64(L), mass=np.float64(np.sqrt(msq)),
-                     replicas=np.int64(R))
+                     replicas=np.int64(R), **extra)
 
     def trajectory():
+        if hasenbusch is not None:
+            # Hasenbusch(K=1): coeffs is the heavy-PF bundle; `hasenbusch` carries the
+            # ratio coeffs + split mass + fine-step count. n_md = coarse (outer) steps.
+            return me.eo_rhmc_trajectory_hasenbusch_refined(
+                h, g, msq, hasenbusch['musq'], coeffs, hasenbusch['ratio_coeffs'],
+                eo, fwd, back, L, eps, n_md, hasenbusch['n_inner'], rng, device,
+                tol_md=1e-4, inner_tol=3e-4, max_outer=20, chrono=chrono)
         if mlx_solver == 'refined':
             return me.eo_rhmc_trajectory_refined(h, g, msq, coeffs, eo, fwd, back, L,
                                                  eps, n_md, rng, device, tol_md=1e-4,
@@ -348,7 +417,7 @@ def run_coupling(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, device,
                 n=len(hist['tet']), s_per_traj=(time.time() - t0) / max(therm_left + max(target, 0), 1))
 
 
-def main():
+def build_parser():
     ap = argparse.ArgumentParser()
     ap.add_argument('--l', type=int, default=8)
     ap.add_argument('--mass', type=float, required=True)
@@ -410,11 +479,31 @@ def main():
     ap.add_argument('--no-compile', dest='compile', action='store_false',
                     help='disable torch.compile of the stencil matvecs (default: enabled, EXACT '
                          '~1.6x/traj on CPU, CUDA-graphs on CUDA).')
-    ap.add_argument('--chrono', action='store_true',
-                    help='chronological inversion (CG warm-start, ~1.8x MD; controlled O(tol) '
-                         'reversibility — certified unbiased by Creutz; default off = exactly reversible).')
+    ap.add_argument('--hasenbusch', action=argparse.BooleanOptionalAction, default=False,
+                    help='mlx backend: Hasenbusch(K=1) mass-preconditioned trajectory — exact '
+                         'det split det(M+m²)^½ = det(M+μ²)^½·det[(M+m²)/(M+μ²)]^½ with a '
+                         '2-level nested Omelyan (hard (M+m²)⁻¹ force on the coarse level, '
+                         '~2·n_md evals/traj instead of ~3·n_md·n_inner). With it, --eps is '
+                         'the COARSE step and --n-md the coarse step count (τ=eps·n_md); pair '
+                         'with --hb-n-inner. Both PF rationals are quality-gated (auto-bump).')
+    ap.add_argument('--mu-sq', type=float, default=None,
+                    help='Hasenbusch split mass μ² (default: balanced √(m²·λmax) per coupling).')
+    ap.add_argument('--hb-n-inner', type=int, default=4,
+                    help='Hasenbusch: fine (heavy-PF + aux) 2MN steps per coarse position '
+                         'block (DR Phase-5s §3 starting point: 4).')
+    ap.add_argument('--chrono', action=argparse.BooleanOptionalAction, default=True,
+                    help='chronological inversion (CG warm-start of the MD force solves; measured '
+                         '1.43x on MD at m=0.05). Reversibility softens from the cold O(tol) '
+                         'stopping-boundary level to a larger-but-controlled O(tol) history '
+                         'dependence — certified unbiased at chain level by Creutz (fast + slow '
+                         'gates in test_hs_rhmc_mlx). --no-chrono restores cold starts for '
+                         'strict-reversibility studies.')
     ap.set_defaults(compile=True)
-    args = ap.parse_args()
+    return ap
+
+
+def main():
+    args = build_parser().parse_args()
 
     L, msq = args.l, args.mass ** 2
     if args.backend == 'mlx':
@@ -444,7 +533,13 @@ def main():
     for i, g in enumerate(gs):
         g = float(g)
         path = os.path.join(outdir, f"g{g:.4f}.npz")
-        if args.backend == 'mlx':
+        hasenbusch = None
+        if args.backend == 'mlx' and args.hasenbusch:
+            coeffs, rc, musq_g, lam = build_hasenbusch_coeffs_mlx(
+                L, g, msq, args.n_poles, args.seed + i, musq=args.mu_sq,
+                hb_relerr_tol=args.hb_relerr_tol, n_poles_cap=args.n_poles_cap)
+            hasenbusch = dict(ratio_coeffs=rc, musq=musq_g, n_inner=args.hb_n_inner)
+        elif args.backend == 'mlx':
             coeffs, lam = build_coeffs_mlx(L, g, msq, args.n_poles, args.seed + i,
                                            hb_relerr_tol=args.hb_relerr_tol, n_poles_cap=args.n_poles_cap)
         else:
@@ -453,7 +548,8 @@ def main():
         if args.backend == 'mlx':
             s = run_coupling_mlx(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
                                  args.n_meas, args.n_therm, args.seed + i, chrono=args.chrono,
-                                 mlx_solver=args.mlx_solver, checkpoint_every=args.checkpoint_every)
+                                 mlx_solver=args.mlx_solver, checkpoint_every=args.checkpoint_every,
+                                 hasenbusch=hasenbusch)
         else:
             s = run_coupling(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
                              args.n_meas, args.n_therm, device, args.seed + i,

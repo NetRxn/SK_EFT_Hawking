@@ -173,3 +173,35 @@ def test_build_coeffs_mlx_fails_closed_when_cap_cannot_meet_tol():
     L, g, msq = 2, 8.0, 0.05 ** 2
     with pytest.raises(ValueError, match="Zolotarev|heatbath"):
         drv.build_coeffs_mlx(L, g, msq, 14, seed=5, hb_relerr_tol=1e-14, n_poles_cap=22)
+
+
+def test_chrono_is_the_default_with_an_opt_out():
+    # Perf audit 2026-07-13: chrono warm-starting is Creutz-certified (fast reversibility
+    # + solution-equivalence + slow chain gates in test_hs_rhmc_mlx) and measured 1.43x
+    # on MD at m=0.05 — it must be ON by default, with --no-chrono as the exactly-
+    # reversible escape hatch for strict-reversibility studies.
+    ap = drv.build_parser()
+    assert ap.parse_args(['--mass', '0.05']).chrono is True
+    assert ap.parse_args(['--mass', '0.05', '--no-chrono']).chrono is False
+    assert ap.parse_args(['--mass', '0.05', '--chrono']).chrono is True   # explicit on
+
+
+def test_build_hasenbusch_coeffs_gates_both_rationals():
+    # Both PF rationals (heavy @ mu^2, ratio Mobius) must meet the unsigned-relerr gate,
+    # with the balanced default split mu^2 = sqrt(m^2*lam) and shifts CG-safe in (a,b).
+    import mlx.core as mx
+    import src.vestigial.hs_rhmc_mlx as me
+    L, g, msq = 2, 8.0, 0.05 ** 2
+    hb, rc, musq, lam = drv.build_hasenbusch_coeffs_mlx(L, g, msq, 14, seed=5)
+    assert msq < musq < lam                                     # balanced split in range
+    assert me.zolotarev_max_relerr(hb['a0'], hb['alphas'], hb['betas'],
+                                   musq, lam + musq, power=-0.5) <= 1e-3
+    assert me.eo_ratio_sqrt_max_relerr(rc, lam) <= 1e-3
+    assert np.all((np.asarray(rc['e']) > msq) & (np.asarray(rc['e']) < musq))
+
+
+def test_hasenbusch_is_opt_in_with_working_defaults():
+    ap = drv.build_parser()
+    a = ap.parse_args(['--mass', '0.05'])
+    assert a.hasenbusch is False and a.hb_n_inner == 4 and a.mu_sq is None
+    assert ap.parse_args(['--mass', '0.05', '--hasenbusch']).hasenbusch is True

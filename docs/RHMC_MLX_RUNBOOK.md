@@ -60,15 +60,19 @@ auto-bumped value).
 
 ### Measured throughput & campaign wall-clock (production working point)
 
-Pinned by direct timing at the **real** m=0.05 production working point (R=16,
-eps=0.015, n_md=33, gate-selected 44 poles), not extrapolated:
+Direct timing at the **real** m=0.05 production working point (R=16, eps=0.015,
+n_md=33, gate-selected 44 poles), M3 Max Metal — through the 2026-07-13
+performance stack (see the subsection below):
 
-**Measured (M3 Max, Metal): L=8, R=16, m=0.05 → 1392 s/traj (23.2 min), acc=0.88.**
-Per-replica that is 87 s vs the R=2 anchor's 93 s — batching to R=16 is
-near-ideal (7.5× cost for 8× the replicas, mild economy of scale), so `--replicas`
-buys statistics at almost no per-config premium. acc=0.88 at R=16 (vs 1.0 at R=2)
-is *healthy* — 16 replicas sample stiffer tail configs; it sits in the efficient
-HMC band, so the working point needs no re-tuning at production batch size.
+| Stack | L=8 R=16 s/traj | note |
+|---|---|---|
+| pre-optimization baseline | 1392 (23.2 min), acc=0.88 | heatbath was 74% of this |
+| + active-shift narrowing | 835 | heatbath 1033→436 s, same 12,184 iters |
+| + einsum matvec | 614 | heatbath →176 s (5.9× total on it) |
+| **+ chrono (production default)** | **424 (7.1 min), acc=0.94** | MD 398→208 s |
+
+Per-replica the baseline was 87 s (R=16) vs 93 s (R=2) — batching to R=16 is
+near-ideal, so `--replicas` buys statistics at almost no per-config premium.
 
 Per-trajectory cost scales ∝ **L⁴** at fixed mass (n_md is L-independent — κ is
 volume-flat, verified to 1%). The 3090 column assumes a **~3.5× Metal→CUDA FP32
@@ -77,14 +81,60 @@ the dominant remaining uncertainty in these projections.
 
 | L | MacBook /traj | 3090 /traj | Campaign* MacBook | Campaign* 3090 |
 |---|---|---|---|---|
-| 8 | 23.2 min *(measured)* | ~6.6 min | ~12 days | ~3.5 days |
-| 10 | ~57 min | ~16 min | ~29 days | ~8.5 days |
-| 12 | ~2.0 hr | ~34 min | ~61 days | ~17.5 days |
+| 8 | 7.1 min *(measured)* | ~2.0 min | ~3.7 days | ~1.1 days |
+| 10 | ~17 min | ~5 min | ~9 days | ~2.6 days |
+| 12 | ~36 min | ~10 min | ~19 days | ~5.4 days |
 
 \* Campaign = one mass point = 5 couplings × ~150 traj = 750 traj (thermalization
 included; R=16 gives 16× statistics per traj). Scale linearly for a different
 coupling/traj budget. The L=10/12 MacBook columns are why §4 routes those volumes
 to the 3090.
+
+### The 2026-07-13 performance stack (what changed and why)
+
+A decomposition profile of the 23.2-min baseline found the **44-pole refined
+heatbath was 74% of the trajectory** (1033 of 1392 s) and diagnosed four
+inefficiencies. Three fixes shipped (all value-preserving, certified by the
+existing dense-oracle + Creutz gates):
+
+1. **Active-shift narrowing** (`_cg_loop` + `eo_multishift_cg_refined`): converged
+   shifts used to keep full-bandwidth masked no-op updates until the ~m² shift
+   finished thousands of iterations later; they are now sliced out of the working
+   set at host checkpoints (inner CG) and skipped in later refinement passes
+   (outer). Exactly the "deflate converged shifts" the Phase-5 DR prescribed.
+2. **Explicit-index einsum matvec** (`_hop`): the broadcast matmul re-materialized
+   the hopping blocks per shift (per-iteration cost scaled ~linearly in K — 6× at
+   K=44). One einsum with blocks carrying no shift axis kills it.
+3. **Chrono default-on**: warm-starting the MD force solves is certified
+   (solution-equivalence + bounded reversibility softening + slow Creutz, both
+   engines) and measured 1.9× on MD at m=0.05 over a full trajectory. Cold starts
+   remain available via `--no-chrono`.
+
+Post-stack, the remaining cost is **iteration-count × K≈1 per-iteration cost**,
+and the K=1 iteration is ~90% kernel-dispatch overhead (measured 1.83 ms vs a
+~0.11 ms traffic floor; ~35 kernels/iter, no `mx.compile`). The next silicon
+lever is therefore kernel-count reduction (`mx.compile` of the CG body and/or an
+`mx.fast.metal_kernel` fused hop — the CG matrices are signed permutations, so a
+fused kernel needs only ψ, h, and indices through DRAM). The next *algorithmic*
+lever is `--hasenbusch` (below).
+
+### Hasenbusch mass preconditioning (`--hasenbusch`, opt-in)
+
+Exact K=1 determinant split `det(M+m²)^½ = det(M+μ²)^½·det[(M+m²)/(M+μ²)]^½`
+with two real pseudofermions, both with power-1 (single-exact-solve) actions, and
+a 2-level nested Omelyan: the hard (M+m²)⁻¹ force sits on the COARSE level
+(~2·n_md evals/traj instead of ~3·n_md·n_inner). Rationals survive only in the
+heatbaths, both quality-gated with the same auto-bump/fail-closed contract
+(`build_hasenbusch_coeffs_mlx`; the ratio rational's conditioning is κ_t = μ²/m²,
+not λmax/m²). With it, `--eps` is the coarse step and `--n-md` the coarse step
+count (τ = eps·n_md); pair with `--hb-n-inner` (default 4). μ² defaults to the
+balanced split √(m²·λmax) per coupling; `--mu-sq` overrides.
+
+Certified: dense-oracle weight identities (S = ½‖ξ‖² per PF), FD force gradients,
+nested-integrator reversibility, exact-Metropolis mechanics, and the slow Creutz
+chain gate. Identical target density to the single-PF sampler (the split is
+exact); npz records `hb_mu_sq`/`hb_n_inner` for provenance. Working-point tuning
+at L=8 m=0.05 pending — treat as opt-in until the measured recipe lands here.
 
 ---
 
