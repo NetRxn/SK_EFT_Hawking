@@ -131,9 +131,9 @@ theorem transfer_section_defect_eq_zero {n : ℕ} (g : SingularCochain (TopCat.o
 
 /-- **Connecting-cochain naturality, mod coboundary**: for a cocycle `g`,
 `emb^#(conn₄ g) − conn₂(emb^# g) = δF` for some `F` — the section defect `E` is `τ^#₂`-killed
-(`transfer_section_defect_eq_zero`), hence `E = π^#₂ F` (`ker τ^# = im π^#`); applying `π^#₂` (which
-is injective) to both sides reduces the claim to `δ_{S²}E = δ_{S²}E`. This is the snake naturality of
-the covering Smith SES, with the only geometric input the transfer brick. -/
+(`transfer_section_defect_eq_zero`), hence `E = π^#₂ F` (`ker τ^# = im π^#`); applying the injective
+`π^#₂` to both sides reduces the claim to `δ_{S²}E = δ_{S²}E`. This is the snake naturality of the
+covering Smith SES, with the only geometric input the transfer brick. -/
 theorem connectingCochain_natural {n : ℕ}
     (g : SingularCochain (TopCat.of RP4) n) (hg : coboundaryₗ (TopCat.of RP4) n g = 0) :
     ∃ F : SingularCochain (TopCat.of RP2) n,
@@ -166,7 +166,8 @@ theorem connectingCochain_natural {n : ℕ}
       ← coboundary_cochainPullback embS2C n (RP4SmithCochain.cochainSection n g),
       RP2SmithCochain.cochainPullback_connectingCochain (cochainPullback embRP2C n g)
         (cochainPullback_embRP2C_cocycle g hg),
-      show coboundaryₗ (TopCat.of S2) n (RP2SmithCochain.cochainSection n (cochainPullback embRP2C n g))
+      show coboundaryₗ (TopCat.of S2) n
+            (RP2SmithCochain.cochainSection n (cochainPullback embRP2C n g))
           = coboundary (TopCat.of S2) n
               (RP2SmithCochain.cochainSection n (cochainPullback embRP2C n g)) from rfl]
   rw [hLHS, hRHS]

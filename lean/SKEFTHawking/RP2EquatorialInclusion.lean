@@ -66,7 +66,7 @@ theorem continuous_euclIncl : Continuous euclIncl :=
 
 /-! ## §2. The sphere-level map and its descent -/
 
-/-- **The equatorial inclusion `S² → S⁴`** — norm-preservation lands the image on the unit sphere. -/
+/-- **The equatorial inclusion `S² → S⁴`** — norm-preservation lands the image on the sphere. -/
 noncomputable def embS2 (x : S2) : S4 :=
   ⟨euclIncl x.1, by
     rw [mem_sphere_zero_iff_norm, euclIncl_norm, ← mem_sphere_zero_iff_norm]; exact x.2⟩
@@ -183,8 +183,8 @@ theorem isOpen_embVB (s : S2) (w : S4) :
   exact (rp2Chart s).open_target.inter h1
 
 /-- **Transition class A (deck element `1`)**: on the piece where `embS2 ((Φ_s).symm t) ∈ hemi w`,
-`rp4Chart w ∘ embRP2 ∘ (rp2Chart s).symm` reads as `repr₄ ∘ stereoToFun(-w) ∘ euclIncl ∘ (Φ_s).symm`,
-which is `C^k`. -/
+`rp4Chart w ∘ embRP2 ∘ (rp2Chart s).symm` reads as `repr₄ ∘ stereoToFun(-w) ∘ euclIncl ∘ (Φ_s).symm`
+— which is `C^k`. -/
 theorem contDiffOn_embTransition_A {k : WithTop ℕ∞} (s : S2) (w : S4) :
     ContDiffOn ℝ k (fun t : EuclideanSpace ℝ (Fin 2) => rp4Chart w (embRP2 ((rp2Chart s).symm t)))
       ((rp2Chart s).target ∩ ↑(RP2Manifold.Φ s).symm ⁻¹' (embS2 ⁻¹' hemi w)) := by
@@ -215,7 +215,7 @@ theorem contDiffOn_embTransition_A {k : WithTop ℕ∞} (s : S2) (w : S4) :
     rw [hmk, embRP2_mk', RP4Manifold.rp4Chart_apply_mk w hhemi', RP4Manifold.chartAt_S4_apply,
       embS2_coe]
 
-/-- **Transition class B (deck element `-1`)**: on the piece where `embS2 ((Φ_s).symm t) ∈ hemi (-w)`
+/-- **Transition class B (deck element `-1`)**: on the piece `embS2 ((Φ_s).symm t) ∈ hemi (-w)`
 (its antipode is in `hemi w`), the transition reads as
 `repr₄ ∘ stereoToFun(-w) ∘ (·)⁻ ∘ euclIncl ∘ (Φ_s).symm` — with the ambient negation — which is
 `C^k`. -/
