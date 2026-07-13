@@ -2437,6 +2437,17 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
     # Populated by the 2026-06-13 W2 triage of the proxy_body_audit flagged set.
 
     # ---- definitional records (legitimate trivial-by-design) ----
+    'cyl_brown_eq': {
+        'lean_name': 'cyl_brown_eq', 'module': 'PinPlusCharPairData',
+        'category': 'definitional',
+        'reason': 'The cylBor end-convention DISCRIMINATOR self-test (W-A definition gate round 2): '
+                  'deliberately reflexive — it witnesses that the kernel-forced τ-end-negated Taylor '
+                  'reading (iii) does NOT force 2q = 0 on the diagonal cylinder kernel (readings (i)/(ii) '
+                  'are kernel-refuted, no-go taylor-leg-end-convention-trap). The trivial shape IS the test.',
+        'discloses': 'no-go `taylor-leg-end-convention-trap` (KERNEL_NOGO_REGISTRY) + the module §self-test '
+                     'docstring; substantive content in `brown_eq_of_taylorLeg_lagrangian` (the anti-collapse '
+                     'engine) and `not_cylinder_plain_pairing_of_odd_value` (the refutation of reading (i)).',
+    },
     'sVec_fermion_dim_DEFINITIONAL': {
         'lean_name': 'sVec_fermion_dim_DEFINITIONAL', 'module': 'Z16Classification',
         'category': 'definitional',
