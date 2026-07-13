@@ -106,6 +106,21 @@ def _atlas_heatmap_stale() -> bool:
         return True
 
 
+def _kernel_nogos_module_stale() -> bool:
+    """True if lean/SKEFTHawking/KernelNoGos.lean differs from a fresh render of KERNEL_NOGO_REGISTRY
+    (the GENERATED Lean-side no-go fence). Same content-compare contract as the atlas edges — catches
+    any registry change (new no-go, edited false_statement, renamed backing theorem)."""
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        import gen_kernel_nogos_module as gkn
+        p = ROOT / "lean" / "SKEFTHawking" / "KernelNoGos.lean"
+        if not p.exists():
+            return True
+        return gkn.render() != p.read_text(encoding="utf-8")
+    except Exception:
+        return True  # fail-stale (safe)
+
+
 UV = ["uv", "run", "python"]
 
 EDGES: list[Edge] = [
@@ -122,6 +137,9 @@ EDGES: list[Edge] = [
          UV + ["scripts/atlas_view.py", "--write"], _atlas_view_stale, "cheap"),
     Edge("docs/ATLAS_HEATMAP.md", "lean/lean_deps.json, src/core/constants.py (HYPOTHESIS_REGISTRY)",
          UV + ["scripts/atlas_heatmap.py", "--write"], _atlas_heatmap_stale, "cheap"),
+    # The GENERATED Lean-side no-go fence — derived from KERNEL_NOGO_REGISTRY; cheap (no extraction).
+    Edge("lean/SKEFTHawking/KernelNoGos.lean", "src/core/constants.py (KERNEL_NOGO_REGISTRY)",
+         UV + ["scripts/gen_kernel_nogos_module.py"], _kernel_nogos_module_stale, "cheap"),
 ]
 
 

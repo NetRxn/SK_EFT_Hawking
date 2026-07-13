@@ -1436,6 +1436,11 @@ import SKEFTHawking.PinPlusGMDataZ16
 import SKEFTHawking.NonHausdorffInterval
 import SKEFTHawking.NonHausdorffBordismCollapse
 import SKEFTHawking.T2TangentialBordism
+-- The GENERATED consolidated kernel-no-go fence (do NOT hand-edit; regen via
+-- scripts/gen_kernel_nogos_module.py, wired into sync). Re-exports every KERNEL_NOGO_REGISTRY
+-- backing refutation under a nogo_* alias — a single browsable "clearly avoid" register whose
+-- build FAILS if any backing theorem is renamed/removed (the compile-time fence).
+import SKEFTHawking.KernelNoGos
 -- E5 · the geometric-faithfulness CARDINALITY bridge: ties the smooth tied W4 carrier
 -- (DataBordismGrp pinPlusGMTiedData, surjective computed grade abkGMTied16) to the FINITE E5 Adams
 -- abutment (adamsAbutment_card = 2^col4_height_eq_four = 16), reducing the residual geometric-

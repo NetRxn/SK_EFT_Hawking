@@ -3482,6 +3482,17 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
 # nogo_kind (refutation | structural_forcing | counterexample), false_statement (the path it
 # kills, one line), memory ([[slug]]).
 KERNEL_NOGO_REGISTRY: dict[str, dict] = {
+    'nonhausdorff_bordism_collapse': {
+        'fork_id': 'nonhausdorff-bordism-collapse',
+        'backing_theorems': [
+            'SKEFTHawking.NonHausdorffBordismCollapse.bordismGrp_subsingleton',
+            'SKEFTHawking.NonHausdorffBordismCollapse.bordismGrp_rp4_eq_zero',
+            'SKEFTHawking.NonHausdorffBordismCollapse.dataBordismGMTied_mk_eq_iff_grade16_eq',
+        ],
+        'nogo_kind': 'refutation',
+        'false_statement': "The in-tree `Bordism` relation (BordismGroup.lean:37-42) is a faithful bordism theory usable for a completeness/injectivity/bounding Prop. FALSE: `Bordism.W` is required compact/charted/IsManifold but NOT Hausdorff, so the non-Hausdorff bug-eyed interval B ([0,1] w/ doubled origin, compact + real-analytic + 3 boundary points) makes W = s.M × B an admissible bordism (s⊔s)⊔s → ∅ for EVERY closed s; with the in-tree 2-torsion (3x=0 ∧ 2x=0 ⟹ x=0) BordismGrp X 0 I is the TRIVIAL group ([ℝP⁴]=0, a falsifier — false for genuine unoriented bordism), and DataBordismGrp mk p = mk q ↔ grade16 equal (no geometric content). ⇒ hbound and every DataBordismGrp-quantified Prop (incl. Freeze B `SphereProductBounds := mk = 0`) is VACUOUS. FIX: require `[t2W : T2Space W]` — the honest relation is `T2TangentialBordism.IsT2DataBordant`; real keystone re-anchors to `hboundT2`. NOTE: even T2 at k=0 is TOPOLOGICAL bordism (KS breaks ℤ/16); literature-grade needs the SMOOTH (k=∞) + T2 carrier.",
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'lattice_arf_bridge': {
         'fork_id': 'nogo_lattice_arf_not_sigma8',  # memory slug (referenced by SETTLED_FORKS synthetic-smith-map-to-tied-carrier; no dedicated `## ` block)
         'backing_theorems': ['SKEFTHawking.RokhlinArfNoGo.lattice_arf_bridge_refuted'],
