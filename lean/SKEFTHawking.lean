@@ -4369,6 +4369,7 @@ import SKEFTHawking.RP2EquatorialInclusion
 import SKEFTHawking.RP4CharSurfacePushforward
 import SKEFTHawking.RP4CharSurfaceSmithNat
 import SKEFTHawking.PinPlusCharPairData
+import SKEFTHawking.RP4CharPairWitness
 import SKEFTHawking.PinPlusCompTorsorNoGo
 import SKEFTHawking.PinPlusTaylorConventionNoGo
 
