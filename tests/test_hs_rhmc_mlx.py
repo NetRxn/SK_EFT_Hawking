@@ -24,6 +24,16 @@ CPU = torch.device("cpu")
 F64 = torch.float64
 
 
+def _accelerator_available():
+    """True if a non-CPU MLX accelerator is present — Metal (macOS) OR CUDA (Linux/3090).
+    GPU-path tests must gate on this, not on `mx.metal.is_available()` alone, or the CUDA
+    production target (mlx[cuda]) gets zero GPU coverage (review finding 3)."""
+    if mx.metal.is_available():
+        return True
+    cuda = getattr(mx, "cuda", None)
+    return bool(cuda and cuda.is_available())
+
+
 @pytest.fixture(autouse=True)
 def _cpu_default_device():
     # All oracle tests here are FP64, which Metal cannot run. The engine's own
@@ -424,6 +434,50 @@ def test_eo_multishift_cg_refined_raises_on_nonconvergence():
     assert x.dtype == mx.float64 and x.shape == (1, V // 2, 8)
 
 
+def test_refined_path_gpu_default_seam_and_gross_bias():
+    # Two review gaps in one FAST (non-slow) test:
+    #  (1) structural — the autouse fixture pins the default device to CPU, masking any
+    #      f64-on-GPU-stream seam in the refined path; here we run the refined heatbath /
+    #      action / trajectory under the GPU (Metal/CUDA) DEFAULT device, so a missed
+    #      `with mx.stream(mx.cpu)` guard crashes IN CI, not only in production.
+    #  (2) finding 4 — the fast mechanics tests pass even with a biased ΔH; a short Creutz
+    #      chain here catches a gross ΔH / normalization regression (e.g. a factor-2 bug)
+    #      without the cost of the full @slow gate.
+    if not _accelerator_available():
+        pytest.skip("no GPU accelerator")
+    mx.set_default_device(mx.gpu)                 # fixture restores afterward
+    L, V = 2, 2 ** 4
+    g, msq = 1.5, 0.04
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+    rng0 = np.random.default_rng(0)
+    h = _mx64(1.3 * rng0.standard_normal((V, 4, 4)))
+    lam = float(me.estimate_lambda_max(me.hopping_blocks(h, L), fwd, back, V))
+    coeffs = me.make_rhmc_coeffs(1.3 * lam, msq, n_poles=12)
+
+    # exercise each refined-path f64 seam once under the GPU default device
+    xi = _mx64(rng0.standard_normal((V // 2, 8)))
+    phi = me.eo_heatbath_refined(xi, h, coeffs, msq, eo, L, mx.gpu)
+    S = me.eo_action_refined(h, phi, g, msq, eo, L, mx.gpu)
+    mx.eval(phi, S)
+    assert np.isfinite(float(S))                  # read the eval'd f64 scalar (no new GPU op)
+
+    # short Creutz chain (gross-bias catcher; loose tol, few trajectories). The rigorous
+    # unbiasedness gate is the @slow test_creutz_identity_eo_refined_chain_unbiased.
+    rng = np.random.default_rng(5)
+    dHs, nacc, n = [], 0, 30
+    for t in range(n):
+        h, dH, acc = me.eo_rhmc_trajectory_refined(h, g, msq, coeffs, eo, fwd, back, L,
+                                                   0.05, 6, rng, mx.gpu, tol_md=1e-4,
+                                                   inner_tol=3e-4, max_outer=20)
+        mx.eval(h, dH, acc)
+        assert h.dtype == mx.float64 and np.isfinite(float(dH))
+        if t >= n // 4:
+            dHs.append(float(dH)); nacc += int(bool(acc))
+    creutz = float(np.mean(np.exp(-np.array(dHs))))
+    assert nacc / (n - n // 4) > 0.4 and abs(creutz - 1.0) < 0.2, (creutz, nacc / (n - n // 4))
+
+
 def test_eo_action_refined_matches_fp64_action():
     # Integration: eo action via the refined solver matches pure-FP64 to ~1e-7 ⟹ the
     # accept/reject ΔH is FP64-exact ⟹ no bias.
@@ -496,7 +550,7 @@ def test_creutz_identity_eo_refined_chain_unbiased():
     # The trajectory-level correctness gate for the refined (GPU-offloaded FP64) path:
     # FP32-inner accept/reject must leave the chain UNBIASED ⟹ Creutz ⟨e^-ΔH⟩ = 1.
     # Runs the FP32 inner solves on Metal when available (the production config).
-    if mx.metal.is_available():
+    if _accelerator_available():
         mx.set_default_device(mx.gpu)   # fixture restores after the test
         device = mx.gpu
     else:
@@ -624,8 +678,8 @@ def test_fp32_metal_matvec_and_cg_match_fp64_cpu():
     # The Metal-path numerical gate: FP32 stencil matvec + CG on the GPU agree with
     # the FP64 CPU reference to FP32 accuracy. (Chain-level Metal certification =
     # the slow Creutz test + benchmark script.)
-    if not mx.metal.is_available():
-        pytest.skip("no Metal device")
+    if not _accelerator_available():
+        pytest.skip("no GPU accelerator")
     prev = mx.default_device()
     mx.set_default_device(mx.gpu)
     try:
@@ -666,7 +720,7 @@ def test_creutz_identity_eo_mixed_chain_unbiased():
     # Chain-level certification: FP32 MD + FP64 accept/reject leaves the chain
     # UNBIASED ⟹ Creutz ⟨e^-ΔH⟩ = 1 within error. Runs the FP32 stage on Metal
     # when available (the production configuration), else FP32-CPU.
-    if mx.metal.is_available():
+    if _accelerator_available():
         mx.set_default_device(mx.gpu)   # fixture restores after the test
     L, V = 2, 2 ** 4
     g, msq = 1.5, 0.01
