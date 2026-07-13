@@ -335,10 +335,12 @@ def estimate_lambda_max(blocks, fwd, back, V, n_iter=200, seed=0, v0=None):
             v = mx.array(rng.standard_normal(tuple(Bshape) + (V, 8)), dtype=dtype)
         else:
             v = v0
-        for _ in range(n_iter):
+        for i in range(n_iter):
             w = apply_AtA(v, blocks, fwd, back)
             v = w / mx.sqrt(mx.maximum(mx.sum(w * w, axis=(-2, -1), keepdims=True), 1e-300))
-            mx.eval(v)
+            mx.async_eval(v)                    # keep the pipeline fed without a host barrier
+            if i % 16 == 15:
+                mx.eval(v)                      # bound graph depth periodically
         w = apply_AtA(v, blocks, fwd, back)
         return mx.sum(v * w, axis=(-2, -1)) / mx.sum(v * v, axis=(-2, -1))
 

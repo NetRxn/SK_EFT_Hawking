@@ -34,6 +34,33 @@ def test_trajectory_rng_advances_with_n_done():
     assert not np.allclose(a, b)
 
 
+def test_build_coeffs_lambda_bounds_true_spectrum():
+    # Guards the reject-all failure mode: build_coeffs_mlx estimates λmax in FP32 for
+    # speed (re-run every resume), then pads 1.25×. The returned (padded) lam MUST exceed
+    # the true λmax of a matched-amplitude configuration, or the Zolotarev range is too
+    # small and the rational approximation degrades → acceptance collapses. Checked at L=2
+    # where a dense eigen-solve is the ground truth.
+    import numpy as _np
+    import mlx.core as mx
+    import src.vestigial.hs_rhmc_mlx as me
+    L, V, g, msq = 2, 2 ** 4, 2.0, 0.04
+    _, lam_padded = drv.build_coeffs_mlx(L, g, msq, 12, seed=5)
+
+    fwd, back = me.neighbor_tables(L)
+    amp = _np.sqrt(2.0 * g)
+    worst = 0.0
+    for s in range(8):                                    # several matched-amplitude configs
+        cfg = amp * _np.random.default_rng(1000 + s).standard_normal((V, 4, 4))
+        blk = me.hopping_blocks(mx.array(cfg, dtype=mx.float64), L)
+        # dense A†A via apply_AtA on the identity, then eigvalsh
+        nF = V * 8
+        cols = [_np.array(me.apply_AtA(mx.array(_np.eye(nF)[i].reshape(V, 8), dtype=mx.float64),
+                                       blk, fwd, back)).reshape(nF) for i in range(nF)]
+        lam_true = float(_np.linalg.eigvalsh(_np.stack(cols, 1)).max())
+        worst = max(worst, lam_true)
+    assert lam_padded > worst, (lam_padded, worst)
+
+
 def test_fresh_config_matches_documented_formula():
     # _fresh_config is sqrt(2g)*N(0,1) from default_rng(seed) — pin it so a refactor
     # can't silently change the starting distribution.

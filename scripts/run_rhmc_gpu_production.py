@@ -92,7 +92,13 @@ def _trajectory_rng(seed, n_done):
 
 def build_coeffs_mlx(L, g, msq, n_poles, seed):
     """`build_coeffs` on the MLX engine (torch-free): spectral range from g's
-    equilibrium amplitude (√2g)."""
+    equilibrium amplitude (√2g).
+
+    λmax is estimated by power iteration in FP32 on the default device (Metal/CUDA) —
+    ~20× the f64-CPU path, and re-run every resume, so it must be cheap. FP32 is safe:
+    the estimate is only an under-approximation from below that the 1.25× padding
+    absorbs; the 3-seed max guards against a start vector missing the top eigenvalue
+    (an under-estimate would shrink the Zolotarev range → reject-all)."""
     import mlx.core as mx
     import src.vestigial.hs_rhmc_mlx as me
     V = L ** 4
@@ -100,8 +106,8 @@ def build_coeffs_mlx(L, g, msq, n_poles, seed):
     fwd, back = me.neighbor_tables(L)
     amp = 1.3 * np.sqrt(2.0 * g)
     lam = max(float(me.estimate_lambda_max(
-        me.hopping_blocks(mx.array(amp * rng.standard_normal((V, 4, 4)), dtype=mx.float64), L),
-        fwd, back, V, n_iter=250, seed=s)) for s in range(3))
+        me.hopping_blocks(mx.array(amp * rng.standard_normal((V, 4, 4)), dtype=mx.float32), L),
+        fwd, back, V, n_iter=150, seed=s)) for s in range(3))
     return me.make_rhmc_coeffs(1.25 * lam, msq, n_poles), 1.25 * lam
 
 
