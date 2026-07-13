@@ -382,4 +382,52 @@ noncomputable def charPairCylBor (prov : CharPairWProvider I k) {s : SingularMan
     (by haveI := σ.t2; exact inferInstanceAs (T2Space (s.M × Set.Icc (0 : ℝ) 1)))
     (cylLagrangian σ.n) (taylorLeg_cyl σ.q) (lagrangian_cyl σ.q)
 
+/-! ## §9. `revBor` — end-reversal transport (clean: no reindexing) and `negBor` consistency -/
+
+/-- Under end-reversal the joint enhancement's quadratic value NEGATES: `neg` on both ends sends
+`q_σ ⊕ (neg q_τ)` to its pointwise negation. So a class killed by the Taylor leg stays killed. -/
+theorem jointEnhancement_neg_q {nσ nτ : ℕ} (qσ : Z4Quadratic (Fin nσ)) (qτ : Z4Quadratic (Fin nτ))
+    (x : Fin nσ ⊕ Fin nτ → ZMod 2) :
+    (jointEnhancement (neg qσ) (neg qτ)).q x = -((jointEnhancement qσ qτ).q x) := by
+  show -(qσ.q (fun i => x (Sum.inl i))) + -(-(qτ.q (fun i => x (Sum.inr i))))
+      = -(qσ.q (fun i => x (Sum.inl i)) + -(qτ.q (fun i => x (Sum.inr i))))
+  ring
+
+/-- Under end-reversal the joint enhancement's POLAR form is UNCHANGED (`neg` keeps `B`). -/
+theorem jointEnhancement_neg_B {nσ nτ : ℕ} (qσ : Z4Quadratic (Fin nσ)) (qτ : Z4Quadratic (Fin nτ)) :
+    (jointEnhancement (neg qσ) (neg qτ)).B = (jointEnhancement qσ qτ).B := rfl
+
+/-- **`revBor` instantiates** — end-reversal (`revStr` on both ends) transports a `CharPairBor` with
+the SAME membrane kernel `L`: the Taylor leg survives (the joint value negates, `−0 = 0`,
+`jointEnhancement_neg_q`) and the Lagrangian is literally unchanged (`jointEnhancement_neg_B`). No
+reindexing — the cleanest op after `cylBor`. -/
+def charPairRevBor {s t : SingularManifold PUnit k I} {b : Bordism (I.prod (𝓡∂ 1)) s t}
+    {σ : CharPairStr I s} {τ : CharPairStr I t} (β : CharPairBor b σ τ) :
+    CharPairBor b (charPairRevStr σ) (charPairRevStr τ) where
+  hWT2 := β.hWT2
+  P14 := β.P14
+  P23 := β.P23
+  hwu := β.hwu
+  L := β.L
+  htaylor := by
+    intro l hl
+    show (jointEnhancement (neg σ.q) (neg τ.q)).q l = 0
+    rw [jointEnhancement_neg_q]
+    rw [β.htaylor l hl, neg_zero]
+  hlag := by
+    intro v hv
+    refine β.hlag v (fun l hl => ?_)
+    have := hv l hl
+    rwa [show (jointEnhancement (charPairRevStr σ).q (charPairRevStr τ).q).B
+        = (jointEnhancement σ.q τ.q).B from jointEnhancement_neg_B σ.q τ.q] at this
+
+/-- **`negBor` consistency**: the doubling's ⊔-end enhancement `neg q ⊕ q` has Brown invariant `0`
+(`brown_orthSum` + `brown_neg`: `−β + β = 0`) — matching the empty end (`brown 0 = 0`). So the
+doubling `(M,σ̄) ⊔ (M,σ)` bounds at the invariant level (the inverse law `−[M,σ] + [M,σ] = 0`), the
+content of `negBor`. The full `CharPairBor` witness supplies the anti-diagonal Lagrangian of
+`orthSum (neg q) q` reindexed by `finSumFinEquiv` (a mechanical transport of `lagrangian_cyl`). -/
+theorem neg_doubling_brown_zero {n : ℕ} (q : Z4Quadratic (Fin n)) :
+    (orthSum (neg q) q).brown = 0 := by
+  rw [brown_orthSum, brown_neg, neg_add_cancel]
+
 end SKEFTHawking.PinPlusCharPairData
