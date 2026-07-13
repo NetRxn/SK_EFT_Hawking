@@ -1356,6 +1356,7 @@ import SKEFTHawking.SingularRelativeCap
 import SKEFTHawking.SingularRelativeCup
 import SKEFTHawking.SingularRelativeBockstein
 import SKEFTHawking.SingularRelativeAbsCompat
+import SKEFTHawking.SingularCohomologyPairRestrict
 -- Phase 5q.F (the (2,3)-Wu leg, part 2 — relativization): relSq² : H³(X,S) →ₗ H⁵(X,S) over the
 -- annihilator subcomplex (the (2,3) LefschetzWuDatum sqOp for a compact 5-manifold-with-boundary),
 -- plus the pair-restriction naturality j*(relSq² x) = Sq²(j* x) (relToAbs_relSq2).
