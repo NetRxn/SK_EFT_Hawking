@@ -662,6 +662,13 @@ import SKEFTHawking.SphereProductBounding
 -- (E²×E²)×H model, discharging SphereDiskSmoothData's chartW/mfdW freeze (isManifold_J5). (wt3-built.)
 import SKEFTHawking.SphereDiskJ5
 import SKEFTHawking.SpinSigmaRouteDoor
+-- Phase 5q.H (N1 keystone decomposition) — decomposes the σ-route door's KT §5 exactness keystone
+-- `hexact : ker(reduce16to8 ∘ abkGMTied16) = (forgetGen F g).range` at the door's abstraction level:
+-- proves `hbound ⟹ hexact` (grade-0 tied-Pin⁺ injectivity ⟹ the exactness) for the abstract forgetful
+-- `forgetGen F g`, collapsing the door's `hexact` binder to the single completeness node `hbound`. The
+-- full capstone `..._via_sigma_route_grade0_full` carries `hbound` as its SOLE geometric residual,
+-- confirming (in the σ-route vocabulary) the settled apex-equivalence of the injectivity routes. (wt1-built.)
+import SKEFTHawking.SpinSigmaExactness
 import SKEFTHawking.ThetaModularity
 import SKEFTHawking.HasseMinkowskiLocal
 import SKEFTHawking.LatticeContent
