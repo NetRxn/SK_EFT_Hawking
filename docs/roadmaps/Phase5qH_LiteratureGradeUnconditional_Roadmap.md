@@ -143,7 +143,10 @@ KT-lean read**. Do not re-pin a route in this file.
 
 ## 7. Conventions locked (durable statement shapes — 2026-07-03 DR, unchanged)
 
-β-sign: KT convention (`2β(F) = F·F − σ(M) mod 16`; GL/FK use the opposite sign). ℝP⁴'s two Pin⁺
+β-sign: **the project's operative convention is GL/FK** (`σ − F·F = +2β mod 16` — what the shipped
+kernel-pure `GuillouMarinBridge.GMrelation`/`doubleBrown` encode; W-A gate reconciliation 2026-07-13,
+review finding M-4). KT's convention is the opposite (`2β = F·F − σ`, i.e. `β ↔ −β`); statements
+consuming the congruence carry the KT-translation note in their docstrings. ℝP⁴'s two Pin⁺
 structures = ±1 ∈ ℤ/16 (exchanged by twisting with the orientation line). ℝP²'s two enhancements:
 generator ↦ 1, 3 ∈ ℤ/4 (β = ±1 ∈ ℤ/8). Enhancement axiom: `q(x+y) = q(x) + q(y) + 2(x·y)`,
 `2· : ℤ/2 ↪ ℤ/4`. The GM surface package computes the invariant **mod 8 only** (the {0,8} kernel
