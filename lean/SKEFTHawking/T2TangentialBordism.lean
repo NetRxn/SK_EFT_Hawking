@@ -46,10 +46,10 @@ open SKEFTHawking.TangentialDataBordism SKEFTHawking.BordismTheory
 
 /-- A tangential-structure datum whose structures certify that their carrier manifold is
 Hausdorff. (The tied Pin⁺/GM structures already carry this: `GMTiedStr.t2`.) -/
-structure T2TangentialData.{u} (X : Type*) [TopologicalSpace X] (k : WithTop ℕ∞)
+structure T2TangentialData.{u, v} (X : Type*) [TopologicalSpace X] (k : WithTop ℕ∞)
     {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [TopologicalSpace H] (I : ModelWithCorners ℝ E H) [I.Boundaryless]
-    extends TangentialData.{u} X k I where
+    extends TangentialData.{u, v} X k I where
   /-- Every structured carrier is Hausdorff. -/
   t2Str : ∀ {s : SingularManifold.{u} X k I}, Mfd s → T2Space s.M
 
@@ -60,20 +60,20 @@ variable {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
 /-- **The Hausdorff-refined structured cobordism relation**: as `IsDataBordant`, but the bordism
 manifold `W` must be Hausdorff. Compact + T2 + charted ⟹ `W` is a genuine bordism manifold; the
 non-Hausdorff collapse (`NonHausdorffBordismCollapse`) is excluded. -/
-def IsT2DataBordant.{u} (ξ : T2TangentialData.{u} X k I)
+def IsT2DataBordant.{u, v} (ξ : T2TangentialData.{u, v} X k I)
     (p q : StrMfd ξ.toTangentialData) : Prop :=
   ∃ b : Bordism.{u} (I.prod (𝓡∂ 1)) p.1 q.1, T2Space b.W ∧ Nonempty (ξ.Bor b p.2 q.2)
 
 /-- The Hausdorff-refined structured bordism group. -/
-def T2DataBordismGrp.{u} (ξ : T2TangentialData.{u} X k I) : Type _ :=
+def T2DataBordismGrp.{u, v} (ξ : T2TangentialData.{u, v} X k I) : Type _ :=
   Quot (IsT2DataBordant ξ)
 
 /-- The class of a structured manifold in the refined group. -/
-def T2DataBordismGrp.mk.{u} (ξ : T2TangentialData.{u} X k I) (p : StrMfd ξ.toTangentialData) :
+def T2DataBordismGrp.mk.{u, v} (ξ : T2TangentialData.{u, v} X k I) (p : StrMfd ξ.toTangentialData) :
     T2DataBordismGrp ξ :=
   Quot.mk _ p
 
-theorem T2DataBordismGrp.mk_eq_of_bordant.{u} (ξ : T2TangentialData.{u} X k I)
+theorem T2DataBordismGrp.mk_eq_of_bordant.{u, v} (ξ : T2TangentialData.{u, v} X k I)
     {p q : StrMfd ξ.toTangentialData} (h : IsT2DataBordant ξ p q) :
     T2DataBordismGrp.mk ξ p = T2DataBordismGrp.mk ξ q :=
   Quot.sound h
@@ -82,7 +82,7 @@ theorem T2DataBordismGrp.mk_eq_of_bordant.{u} (ξ : T2TangentialData.{u} X k I)
 
 /-- Disjoint union on refined classes (the congruence bordisms are cylinders and sums of T2
 spaces, hence T2). -/
-noncomputable def T2DataBordismGrp.add.{u} (ξ : T2TangentialData.{u} X k I)
+noncomputable def T2DataBordismGrp.add.{u, v} (ξ : T2TangentialData.{u, v} X k I)
     (x y : T2DataBordismGrp ξ) : T2DataBordismGrp ξ :=
   Quot.lift₂ (fun p q => T2DataBordismGrp.mk ξ ⟨p.1.sum q.1, ξ.sumStr p.2 q.2⟩)
     (fun p _q _q' h => by
@@ -101,13 +101,13 @@ noncomputable def T2DataBordismGrp.add.{u} (ξ : T2TangentialData.{u} X k I)
       exact inferInstanceAs (T2Space (b.W ⊕ (q.1.M × Set.Icc (0 : ℝ) 1))))
     x y
 
-@[simp] theorem T2DataBordismGrp.add_mk.{u} (ξ : T2TangentialData.{u} X k I)
+@[simp] theorem T2DataBordismGrp.add_mk.{u, v} (ξ : T2TangentialData.{u, v} X k I)
     (p q : StrMfd ξ.toTangentialData) :
     T2DataBordismGrp.add ξ (T2DataBordismGrp.mk ξ p) (T2DataBordismGrp.mk ξ q) =
       T2DataBordismGrp.mk ξ ⟨p.1.sum q.1, ξ.sumStr p.2 q.2⟩ :=
   rfl
 
-theorem T2DataBordismGrp.add_comm.{u} (ξ : T2TangentialData.{u} X k I)
+theorem T2DataBordismGrp.add_comm.{u, v} (ξ : T2TangentialData.{u, v} X k I)
     (x y : T2DataBordismGrp ξ) : add ξ x y = add ξ y x := by
   induction x using Quot.ind with | _ p =>
   induction y using Quot.ind with | _ q =>
@@ -118,7 +118,7 @@ theorem T2DataBordismGrp.add_comm.{u} (ξ : T2TangentialData.{u} X k I)
   haveI := ξ.t2Str q.2
   exact inferInstanceAs (T2Space ((p.1.M ⊕ q.1.M) × Set.Icc (0 : ℝ) 1))
 
-theorem T2DataBordismGrp.add_assoc.{u} (ξ : T2TangentialData.{u} X k I)
+theorem T2DataBordismGrp.add_assoc.{u, v} (ξ : T2TangentialData.{u, v} X k I)
     (x y z : T2DataBordismGrp ξ) : add ξ (add ξ x y) z = add ξ x (add ξ y z) := by
   induction x using Quot.ind with | _ p =>
   induction y using Quot.ind with | _ q =>
@@ -132,11 +132,11 @@ theorem T2DataBordismGrp.add_assoc.{u} (ξ : T2TangentialData.{u} X k I)
   exact inferInstanceAs (T2Space (((p.1.M ⊕ q.1.M) ⊕ r.1.M) × Set.Icc (0 : ℝ) 1))
 
 /-- The zero class: the empty manifold (vacuously Hausdorff). -/
-noncomputable def T2DataBordismGrp.zero.{u} (ξ : T2TangentialData.{u} X k I) :
+noncomputable def T2DataBordismGrp.zero.{u, v} (ξ : T2TangentialData.{u, v} X k I) :
     T2DataBordismGrp ξ :=
   T2DataBordismGrp.mk ξ ⟨emptySM, ξ.emptyStr⟩
 
-theorem T2DataBordismGrp.add_zero.{u} (ξ : T2TangentialData.{u} X k I)
+theorem T2DataBordismGrp.add_zero.{u, v} (ξ : T2TangentialData.{u, v} X k I)
     (x : T2DataBordismGrp ξ) : add ξ x (zero ξ) = x := by
   induction x using Quot.ind with | _ p =>
   refine mk_eq_of_bordant ξ
@@ -147,19 +147,19 @@ theorem T2DataBordismGrp.add_zero.{u} (ξ : T2TangentialData.{u} X k I)
   haveI : T2Space (emptySM (X := X) (k := k) (I := I)).M := ⟨fun x => isEmptyElim x⟩
   exact inferInstanceAs (T2Space ((p.1.M ⊕ emptySM.M) × Set.Icc (0 : ℝ) 1))
 
-theorem T2DataBordismGrp.zero_add.{u} (ξ : T2TangentialData.{u} X k I)
+theorem T2DataBordismGrp.zero_add.{u, v} (ξ : T2TangentialData.{u, v} X k I)
     (x : T2DataBordismGrp ξ) : add ξ (zero ξ) x = x := by
   rw [T2DataBordismGrp.add_comm ξ]; exact add_zero ξ x
 
 /-- Negation = structure reversal (the same `W`, which is T2 when the witness's was). -/
-noncomputable def T2DataBordismGrp.neg.{u} (ξ : T2TangentialData.{u} X k I)
+noncomputable def T2DataBordismGrp.neg.{u, v} (ξ : T2TangentialData.{u, v} X k I)
     (x : T2DataBordismGrp ξ) : T2DataBordismGrp ξ :=
   Quot.lift (fun p => T2DataBordismGrp.mk ξ ⟨p.1, ξ.revStr p.2⟩)
     (fun _p _q h => by
       obtain ⟨b, hT2, ⟨str⟩⟩ := h
       exact mk_eq_of_bordant ξ ⟨b, hT2, ⟨ξ.revBor str⟩⟩) x
 
-@[simp] theorem T2DataBordismGrp.neg_mk.{u} (ξ : T2TangentialData.{u} X k I)
+@[simp] theorem T2DataBordismGrp.neg_mk.{u, v} (ξ : T2TangentialData.{u, v} X k I)
     (p : StrMfd ξ.toTangentialData) :
     T2DataBordismGrp.neg ξ (T2DataBordismGrp.mk ξ p)
       = T2DataBordismGrp.mk ξ ⟨p.1, ξ.revStr p.2⟩ :=
