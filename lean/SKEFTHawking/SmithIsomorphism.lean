@@ -402,8 +402,8 @@ genuine carriers (the floor-quotient form of W6's `dataBordism_pinPlus_iso_via_s
 4-dim target model `I₄`. -/
 noncomputable def pinPlus_quotient_iso_zmod16_via_smith.{u} :
     (DataBordismGrp.{u} (pinPlusData I₄) ⧸ (abkGrade (I := I₄)).ker) ≃+ ZMod 16 :=
-  (smithQuotientEquiv.{u} (I := I₅) I₄).symm.trans
-    (spinZ4Omega5_quotient_grade_equiv_zmod16.{u} (I := I₅))
+  (smithQuotientEquiv.{u, 0} (I := I₅) I₄).symm.trans
+    (spinZ4Omega5_quotient_grade_equiv_zmod16.{u, 0} (I := I₅))
 
 /-- `Nonempty` packaging of the Smith-route Pin⁺ ABK-quotient `ℤ/16`, the W5 deliverable for W6: given
 any 5-dim Spin-ℤ₄ domain model `I₅`, the Smith iso transports the domain's η-grade `ℤ/16` onto the Pin⁺

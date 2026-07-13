@@ -22,14 +22,16 @@ closed manifold `s` (Pin⁺: the `H¹(s;ℤ/2)`-torsor of Pin⁺ structures); `B
 structures on the bordism `b` restricting to `σ`, `τ` on its two boundary ends. Closed under the
 operations (empty / disjoint union / cylinder / symmetry) so the structured cobordism relation is
 reflexive/symmetric and `⊕`-congruent. -/
-structure TangentialData.{u} (X : Type*) [TopologicalSpace X] (k : WithTop ℕ∞)
+structure TangentialData.{u, v} (X : Type*) [TopologicalSpace X] (k : WithTop ℕ∞)
     {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
     [TopologicalSpace H] (I : ModelWithCorners ℝ E H) [I.Boundaryless] where
-  /-- The type of tangential structures on a closed manifold `s`. -/
-  Mfd : SingularManifold.{u} X k I → Type u
+  /-- The type of tangential structures on a closed manifold `s`. Lands in an **independent**
+  universe `v`, decoupled from the carrier universe `u` — so a structure may bundle both a
+  universe-`u`-monomorphic certificate and a bundled `SingularManifold` (one universe up). -/
+  Mfd : SingularManifold.{u} X k I → Type v
   /-- The type of structures on a bordism `b` restricting to `σ`, `τ` on the boundary. -/
   Bor : {s t : SingularManifold.{u} X k I} →
-    Bordism.{u} (I.prod (𝓡∂ 1)) s t → Mfd s → Mfd t → Type u
+    Bordism.{u} (I.prod (𝓡∂ 1)) s t → Mfd s → Mfd t → Type v
   /-- A structure on the empty manifold. -/
   emptyStr : Mfd emptySM
   /-- Disjoint union of structures. -/
@@ -72,32 +74,32 @@ variable {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
   [TopologicalSpace H] {I : ModelWithCorners ℝ E H} [I.Boundaryless]
 
 /-- A **structured manifold**: a closed manifold with a chosen tangential structure. -/
-def StrMfd.{u} (ξ : TangentialData.{u} X k I) : Type _ :=
+def StrMfd.{u, v} (ξ : TangentialData.{u, v} X k I) : Type _ :=
   Σ s : SingularManifold.{u} X k I, ξ.Mfd s
 
 /-- The **structured cobordism relation**: a bordism between the underlying manifolds carrying a
 structure that restricts to the chosen boundary structures. -/
-def IsDataBordant.{u} (ξ : TangentialData.{u} X k I) (p q : StrMfd ξ) : Prop :=
+def IsDataBordant.{u, v} (ξ : TangentialData.{u, v} X k I) (p q : StrMfd ξ) : Prop :=
   ∃ b : Bordism.{u} (I.prod (𝓡∂ 1)) p.1 q.1, Nonempty (ξ.Bor b p.2 q.2)
 
 /-- The **faithful tangential bordism group** `Ω^ξ` of CHOSEN structures (for ξ = Pin⁺, the genuine
 `Ω_•^{Pin⁺}` that is `ℤ/16` in degree 4). `Quot` handles transitivity/gluing. -/
-def DataBordismGrp.{u} (ξ : TangentialData.{u} X k I) : Type _ :=
+def DataBordismGrp.{u, v} (ξ : TangentialData.{u, v} X k I) : Type _ :=
   Quot (IsDataBordant ξ)
 
 /-- The class of a structured manifold. -/
-def DataBordismGrp.mk.{u} (ξ : TangentialData.{u} X k I) (p : StrMfd ξ) : DataBordismGrp ξ :=
+def DataBordismGrp.mk.{u, v} (ξ : TangentialData.{u, v} X k I) (p : StrMfd ξ) : DataBordismGrp ξ :=
   Quot.mk _ p
 
 /-- Structured-bordant manifolds have the same class. -/
-theorem DataBordismGrp.mk_eq_of_bordant.{u} (ξ : TangentialData.{u} X k I) {p q : StrMfd ξ}
+theorem DataBordismGrp.mk_eq_of_bordant.{u, v} (ξ : TangentialData.{u, v} X k I) {p q : StrMfd ξ}
     (h : IsDataBordant ξ p q) : DataBordismGrp.mk ξ p = DataBordismGrp.mk ξ q :=
   Quot.sound h
 
 /-- **Disjoint union `⊕` on faithful (structured) bordism classes.** Well-defined: `sumStr` combines the
 structures; the congruence is `Bordism.add` of the structured bordism with the cylinder (`addBor` +
 `cylBor`), reusing the genuine machinery with no gluing. -/
-noncomputable def DataBordismGrp.add.{u} (ξ : TangentialData.{u} X k I)
+noncomputable def DataBordismGrp.add.{u, v} (ξ : TangentialData.{u, v} X k I)
     (x y : DataBordismGrp ξ) : DataBordismGrp ξ :=
   Quot.lift₂ (fun p q => DataBordismGrp.mk ξ ⟨p.1.sum q.1, ξ.sumStr p.2 q.2⟩)
     (fun p _q _q' h => h.elim fun b hb => hb.elim fun str =>
@@ -106,13 +108,13 @@ noncomputable def DataBordismGrp.add.{u} (ξ : TangentialData.{u} X k I)
       mk_eq_of_bordant ξ ⟨Bordism.add b (reflCylinder q.1), ⟨ξ.addBor str (ξ.cylBor q.2)⟩⟩)
     x y
 
-@[simp] theorem DataBordismGrp.add_mk.{u} (ξ : TangentialData.{u} X k I) (p q : StrMfd ξ) :
+@[simp] theorem DataBordismGrp.add_mk.{u, v} (ξ : TangentialData.{u, v} X k I) (p q : StrMfd ξ) :
     DataBordismGrp.add ξ (DataBordismGrp.mk ξ p) (DataBordismGrp.mk ξ q) =
       DataBordismGrp.mk ξ ⟨p.1.sum q.1, ξ.sumStr p.2 q.2⟩ :=
   rfl
 
 /-- `⊕` on faithful (structured) bordism classes is **commutative**. -/
-theorem DataBordismGrp.add_comm.{u} (ξ : TangentialData.{u} X k I) (x y : DataBordismGrp ξ) :
+theorem DataBordismGrp.add_comm.{u, v} (ξ : TangentialData.{u, v} X k I) (x y : DataBordismGrp ξ) :
     add ξ x y = add ξ y x := by
   induction x using Quot.ind with | _ p =>
   induction y using Quot.ind with | _ q =>
@@ -121,7 +123,7 @@ theorem DataBordismGrp.add_comm.{u} (ξ : TangentialData.{u} X k I) (x y : DataB
      ⟨ξ.commBor p.2 q.2⟩⟩
 
 /-- `⊕` on faithful bordism classes is **associative**. -/
-theorem DataBordismGrp.add_assoc.{u} (ξ : TangentialData.{u} X k I) (x y z : DataBordismGrp ξ) :
+theorem DataBordismGrp.add_assoc.{u, v} (ξ : TangentialData.{u, v} X k I) (x y z : DataBordismGrp ξ) :
     add ξ (add ξ x y) z = add ξ x (add ξ y z) := by
   induction x using Quot.ind with | _ p =>
   induction y using Quot.ind with | _ q =>
@@ -131,11 +133,11 @@ theorem DataBordismGrp.add_assoc.{u} (ξ : TangentialData.{u} X k I) (x y z : Da
       (by funext w; rcases w with (w | w) | w <;> rfl), ⟨ξ.assocBor p.2 q.2 r.2⟩⟩
 
 /-- The **zero** faithful bordism class: the empty manifold with its structure. -/
-noncomputable def DataBordismGrp.zero.{u} (ξ : TangentialData.{u} X k I) : DataBordismGrp ξ :=
+noncomputable def DataBordismGrp.zero.{u, v} (ξ : TangentialData.{u, v} X k I) : DataBordismGrp ξ :=
   DataBordismGrp.mk ξ ⟨emptySM, ξ.emptyStr⟩
 
 /-- `x ⊕ 0 = x`. -/
-theorem DataBordismGrp.add_zero.{u} (ξ : TangentialData.{u} X k I) (x : DataBordismGrp ξ) :
+theorem DataBordismGrp.add_zero.{u, v} (ξ : TangentialData.{u, v} X k I) (x : DataBordismGrp ξ) :
     add ξ x (zero ξ) = x := by
   induction x using Quot.ind with | _ p =>
   exact mk_eq_of_bordant ξ
@@ -144,18 +146,18 @@ theorem DataBordismGrp.add_zero.{u} (ξ : TangentialData.{u} X k I) (x : DataBor
      ⟨ξ.unitBor p.2⟩⟩
 
 /-- `0 ⊕ x = x`. -/
-theorem DataBordismGrp.zero_add.{u} (ξ : TangentialData.{u} X k I) (x : DataBordismGrp ξ) :
+theorem DataBordismGrp.zero_add.{u, v} (ξ : TangentialData.{u, v} X k I) (x : DataBordismGrp ξ) :
     add ξ (zero ξ) x = x := by
   rw [add_comm ξ]; exact add_zero ξ x
 
 /-- **Negation** = structure reversal (the genuine Pin⁺ inverse, NOT the unoriented identity). -/
-noncomputable def DataBordismGrp.neg.{u} (ξ : TangentialData.{u} X k I) (x : DataBordismGrp ξ) :
+noncomputable def DataBordismGrp.neg.{u, v} (ξ : TangentialData.{u, v} X k I) (x : DataBordismGrp ξ) :
     DataBordismGrp ξ :=
   Quot.lift (fun p => DataBordismGrp.mk ξ ⟨p.1, ξ.revStr p.2⟩)
     (fun _p _q h => h.elim fun b hb => hb.elim fun str =>
       mk_eq_of_bordant ξ ⟨b, ⟨ξ.revBor str⟩⟩) x
 
-@[simp] theorem DataBordismGrp.neg_mk.{u} (ξ : TangentialData.{u} X k I) (p : StrMfd ξ) :
+@[simp] theorem DataBordismGrp.neg_mk.{u, v} (ξ : TangentialData.{u, v} X k I) (p : StrMfd ξ) :
     DataBordismGrp.neg ξ (DataBordismGrp.mk ξ p) = DataBordismGrp.mk ξ ⟨p.1, ξ.revStr p.2⟩ :=
   rfl
 

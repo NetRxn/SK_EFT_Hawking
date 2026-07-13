@@ -127,8 +127,8 @@ theorem abkGrade_injective_on_pinplus.{u} (h : PoincareDualityFoundation.{u} I)
 /-- The ABK grade on the carrier is `Function.Injective`, given the tracked foundation: a group hom
 is injective iff its kernel is trivial, and `floorCollapse` says exactly that the kernel is trivial. -/
 theorem abkGrade_injective.{u} (h : PoincareDualityFoundation.{u} I) :
-    Function.Injective (abkGrade.{u} (I := I)) :=
-  (injective_iff_map_eq_zero abkGrade.{u}).mpr h.floorCollapse
+    Function.Injective (abkGrade (I := I) : DataBordismGrp.{u} (pinPlusData.{u} I) →+ ZMod 16) :=
+  (injective_iff_map_eq_zero _).mpr (abkGrade_injective_on_pinplus h)
 
 /-! ## §4. L4-5 — the floor-collapse `ker(abkGrade) = ⊥` -/
 
@@ -138,8 +138,8 @@ the unoriented-bordism floor of the genuine Pin⁺ carrier collapses: `ker(abkGr
 foundation's `floorCollapse` bridge supplies. This is the L4 endpoint that promotes the unconditional
 ABK *quotient* iso to a full iso (§5). -/
 theorem pinPlusFloorCollapse.{u} (h : PoincareDualityFoundation.{u} I) :
-    (abkGrade.{u} (I := I)).ker = ⊥ :=
-  (AddMonoidHom.ker_eq_bot_iff abkGrade.{u}).mpr (abkGrade_injective.{u} h)
+    (abkGrade (I := I) : DataBordismGrp.{u} (pinPlusData.{u} I) →+ ZMod 16).ker = ⊥ :=
+  (AddMonoidHom.ker_eq_bot_iff _).mpr (abkGrade_injective.{u} h)
 
 /-! ## §5. L4-7/L4-8 — assemble to the full `DataBordismGrp ≃+ ℤ/16` -/
 
@@ -152,7 +152,8 @@ bijection, hence an isomorphism. This is the conditional strengthening the L2/L3
 discharging the tracked `PoincareDualityFoundation` makes it unconditional. -/
 noncomputable def pinPlusBordismEquivZmod16.{u} (h : PoincareDualityFoundation.{u} I) :
     DataBordismGrp.{u} (pinPlusData.{u} I) ≃+ ZMod 16 :=
-  AddEquiv.ofBijective abkGrade.{u} ⟨abkGrade_injective.{u} h, abkGrade_surjective⟩
+  AddEquiv.ofBijective (abkGrade (I := I) : DataBordismGrp.{u} (pinPlusData.{u} I) →+ ZMod 16)
+    ⟨abkGrade_injective.{u} h, abkGrade_surjective⟩
 
 /-- `Nonempty` packaging of the conditional full-carrier iso `Ω₄^{Pin⁺} ≅ ℤ/16`, the L4 endpoint. -/
 theorem pinPlusBordismIsoZmod16.{u} (h : PoincareDualityFoundation.{u} I) :
