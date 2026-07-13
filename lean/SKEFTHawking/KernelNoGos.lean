@@ -28,24 +28,47 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    literature-grade needs the SMOOTH (k=∞) + T2 carrier.
    backing: `bordismGrp_subsingleton`, `bordismGrp_rp4_eq_zero`, `dataBordismGMTied_mk_eq_iff_grade16_eq`
 
-2. `nogo_lattice_arf_not_sigma8` [refutation]
+2. `comp-twist-doubling-incompatible` [structural_forcing]
+   A tangential datum can carry an H¹-coordinate field `comp` with reversal twist `comp ↦ comp + w₁` (the P
+   ↦ P⊗ε coordinate), anchored by a restriction-compatibility Bor condition. FALSE (W-A gate, Fable vacuity
+   attack 2026-07-13): the mandatory `negBor` inhabits Bor on the DOUBLING bordism — a product cylinder
+   whose two boundary inclusions are homotopic — so any '∃x : H¹(W) restricting to the end-comps' condition
+   forces comp(revStr σ) = comp σ, contradicting the twist on any non-orientable s (w₁ ≠ 0); the
+   uniformly-twisted variant dies on `cylBor` (shift 0). The datum is JOINTLY UNINSTANTIABLE with the
+   TangentialData op interface. FIX space: a per-boundary-component collar/co-orientation datum with a
+   w₁(W)-corrected compat (any v2 must evade these theorems' hypotheses), or drop the comp field (KT §5 puts
+   the odd-bit content in the w₁-dual 3-manifold V / ψ, not in an H¹ coordinate).
+   backing: `no_comp_twist_of_doubling_rigid`, `not_doubling_rigid_of_comp_twist`, `no_uniform_comp_twist_of_cylinder_rigid`
+
+3. `membrane-level-nonhausdorff-collapse` [refutation]
+   A manifold-typed WITNESS datum inside a carrier or relation (the membrane/3-manifold Q, the surface Σ,
+   any auxiliary manifold field) inherits honesty from the T2 fence on the ambient bordism W. FALSE (W-A
+   gate, Fable vacuity attack 2026-07-13): the bug-eyed collapse is dimension-generic —
+   `qLevelTripleMembrane` is a compact non-Hausdorff membrane with THREE boundary copies of Σ
+   (kernel-checked non-T2), so a T2-less Q-encoding lets ker(H₁(∂Q)→H₁(Q)) be adversarially chosen,
+   Taylor-Thm-1.1 extension conditions lose their teeth, and the computed Brown/abk8 invariant fails
+   bordism-invariance. RULE: every manifold-typed datum needs its OWN T2 (+ compactness/charted)
+   certificate; the W-level fence does not propagate.
+   backing: `qLevelTripleMembrane_not_t2`
+
+4. `nogo_lattice_arf_not_sigma8` [refutation]
    The lattice Arf bridge σ/8 ≡ Arf(q̄) mod 2 — deriving Rokhlin mod-16 from the intersection FORM alone.
    FALSE: E₈ has Arf(q̄)=0 but σ/8=1; Rokhlin mod-16 is irreducibly geometric (a characteristic-SURFACE Arf,
    not the lattice Arf). Kills Phase 5q.C and any form-only mod-16 shortcut.
    backing: `lattice_arf_bridge_refuted`
 
-3. `mfd-equals-H1-dead-end` [structural_forcing]
+5. `mfd-equals-H1-dead-end` [structural_forcing]
    The `Mfd := H¹` tangential-data construction yields a genuine ℤ/16 / ker=⊥. FALSE: a datum whose
    structure-reversal (revStr) is trivial is FORCED 2-torsion, never order-16.
    backing: `dataBordism_two_torsion_of_revStr_trivial`
 
-4. `synthetic-grade-ker-bot-nogo` [structural_forcing]
+6. `synthetic-grade-ker-bot-nogo` [structural_forcing]
    ker(abkGrade)=⊥ / card≤16 UNCONDITIONALLY for ANY free-per-manifold grade. FALSE: the ℝP⁴ grade-0 witness
    (w₂=0, [ℝP⁴]≠0∈Ω₄^O) has no unoriented null-bordism, so the free grade is never injective. ker=⊥ requires
    the grade TIED to the structure (the GM carrier), never a better proof on a free-grade datum.
    backing: `dataBordism_two_torsion_of_revStr_trivial`
 
-5. `synthetic-smith-map-to-tied-carrier` [structural_forcing]
+7. `synthetic-smith-map-to-tied-carrier` [structural_forcing]
    The Smith map into the 5q.H TIED carrier pinPlusGMTiedData can be built SYNTHETICALLY — map every
    neighbor class [M,σ] to [emptySM, (σ,0)] and transport the grade (the smithDataHom shortcut). FALSE
    (kernel-forced): the tie htie (reduce16to2 grade16 = swTotalNe) forces every tied structure on an EMPTY
@@ -55,7 +78,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    map; the geometric Smith map into the tied carrier is irreducibly geometric (N1b).
    backing: `gmTiedStr_grade_even_of_isEmpty`, `gmTiedStr_empty_grade16_ne_one`
 
-6. `5qH-injectivity-routes-all-equal-one-completeness-prop` [structural_forcing]
+8. `5qH-injectivity-routes-all-equal-one-completeness-prop` [structural_forcing]
    The three 5q.H injectivity routes — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle:
    ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), Smith-LES (smith_inflow_z16) — are DISTINCT open nodes
    worth route-shopping between. FALSE (kernel-checked equivalence): all three reduce canonically to the ONE
@@ -66,7 +89,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    from-below: N1a+N1b+N1c+N2 per ASSEMBLY_GAP_MAP_20260712).
    backing: `spin_range_ge_of_grade0_inj`, `omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`, `grade0_bounds_of_thom`
 
-7. `5qH-fg-ek-over-Z-blocked` [refutation]
+9. `5qH-fg-ek-over-Z-blocked` [refutation]
    The mod-2 Erdős–Kaplansky finiteness forcing (SingularUCFinite: self-duality forces finite dimension)
    transports to ℤ — in particular dualization over ℤ stays in the f.g./countable size class, so PD + UCT
    self-duality would force H²(M;ℤ) finitely generated. FALSE: the ℤ-dual of the COUNTABLE free module ℕ →₀
@@ -77,7 +100,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    Lit-Search/Phase-5qH/FG_via_PD_duality_forcing_verdict_20260712.md.
    backing: `dual_blowup_not_finite`, `not_finite_baerSpecker`
 
-8. `genuine-gm-carrier-eight-torsion` [refutation]
+10. `genuine-gm-carrier-eight-torsion` [refutation]
    The genuine ℤ/16 lives directly on the thin GM carrier: DataBordismGrp(pinPlusGMData) ≃+ ZMod 16. FALSE:
    pinPlusGMData's bordism relation records ONLY the mod-8 Brown grade (q.brown ∈ ZMod 8), so
    cylinder-doubling makes every class 8-torsion (pinPlusGMData_eight_torsion: 8•x=0) ⟹
@@ -91,6 +114,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
 -/
 import SKEFTHawking.FGDualityNoGo
 import SKEFTHawking.NonHausdorffBordismCollapse
+import SKEFTHawking.PinPlusCompTorsorNoGo
 import SKEFTHawking.PinPlusGMDataZ16
 import SKEFTHawking.PinPlusGMWitness
 import SKEFTHawking.PinPlusGenuineCarrierIso
@@ -108,6 +132,18 @@ alias nogo_bordismGrp_rp4_eq_zero := SKEFTHawking.NonHausdorffBordismCollapse.bo
 
 /-- NO-GO [`nonhausdorff-bordism-collapse`] — do NOT re-derive. FALSE: The in-tree `Bordism` relation (BordismGroup.lean:37-42) is a faithful bordism theory usable for a completeness/injectivity/bounding Prop. Backing refutation: `SKEFTHawking.NonHausdorffBordismCollapse.dataBordismGMTied_mk_eq_iff_grade16_eq`. -/
 alias nogo_dataBordismGMTied_mk_eq_iff_grade16_eq := SKEFTHawking.NonHausdorffBordismCollapse.dataBordismGMTied_mk_eq_iff_grade16_eq
+
+/-- NO-GO [`comp-twist-doubling-incompatible`] — do NOT re-derive. FALSE: A tangential datum can carry an H¹-coordinate field `comp` with reversal twist `comp ↦ comp + w₁` (the P ↦ P⊗ε coordinate), anchored by a restriction-compatibility Bor condition. Backing refutation: `SKEFTHawking.PinPlusCompTorsorNoGo.no_comp_twist_of_doubling_rigid`. -/
+alias nogo_no_comp_twist_of_doubling_rigid := SKEFTHawking.PinPlusCompTorsorNoGo.no_comp_twist_of_doubling_rigid
+
+/-- NO-GO [`comp-twist-doubling-incompatible`] — do NOT re-derive. FALSE: A tangential datum can carry an H¹-coordinate field `comp` with reversal twist `comp ↦ comp + w₁` (the P ↦ P⊗ε coordinate), anchored by a restriction-compatibility Bor condition. Backing refutation: `SKEFTHawking.PinPlusCompTorsorNoGo.not_doubling_rigid_of_comp_twist`. -/
+alias nogo_not_doubling_rigid_of_comp_twist := SKEFTHawking.PinPlusCompTorsorNoGo.not_doubling_rigid_of_comp_twist
+
+/-- NO-GO [`comp-twist-doubling-incompatible`] — do NOT re-derive. FALSE: A tangential datum can carry an H¹-coordinate field `comp` with reversal twist `comp ↦ comp + w₁` (the P ↦ P⊗ε coordinate), anchored by a restriction-compatibility Bor condition. Backing refutation: `SKEFTHawking.PinPlusCompTorsorNoGo.no_uniform_comp_twist_of_cylinder_rigid`. -/
+alias nogo_no_uniform_comp_twist_of_cylinder_rigid := SKEFTHawking.PinPlusCompTorsorNoGo.no_uniform_comp_twist_of_cylinder_rigid
+
+/-- NO-GO [`membrane-level-nonhausdorff-collapse`] — do NOT re-derive. FALSE: A manifold-typed WITNESS datum inside a carrier or relation (the membrane/3-manifold Q, the surface Σ, any auxiliary manifold field) inherits honesty from the T2 fence on the ambient bordism W. Backing refutation: `SKEFTHawking.PinPlusCompTorsorNoGo.qLevelTripleMembrane_not_t2`. -/
+alias nogo_qLevelTripleMembrane_not_t2 := SKEFTHawking.PinPlusCompTorsorNoGo.qLevelTripleMembrane_not_t2
 
 /-- NO-GO [`nogo_lattice_arf_not_sigma8`] — do NOT re-derive. FALSE: The lattice Arf bridge σ/8 ≡ Arf(q̄) mod 2 — deriving Rokhlin mod-16 from the intersection FORM alone. Backing refutation: `SKEFTHawking.RokhlinArfNoGo.lattice_arf_bridge_refuted`. -/
 alias nogo_lattice_arf_bridge_refuted := SKEFTHawking.RokhlinArfNoGo.lattice_arf_bridge_refuted

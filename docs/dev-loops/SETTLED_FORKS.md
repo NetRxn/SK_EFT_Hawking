@@ -268,3 +268,23 @@ conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
 - **⚠ DEEPER (prose, not kernel-encodable):** even T2 at `k=0` is TOPOLOGICAL bordism (KS classes break ℤ/16 — the E₈-manifold has a grade-0 tied structure but doesn't bound TOP). Literature-grade `Ω₄^{Pin⁺}≅ℤ/16` is the **SMOOTH** group ⟹ the genuine target needs the SMOOTH (`k=∞`) + T2 carrier. Endorsed route = the from-below `Ω₄^{Spin}≅ℤ` surgery (fork `5qH-injectivity-routes-...` UPDATE 2026-07-06b) on Mathlib's `SingularManifold` scaffolding.
 - **DO NOT** state any completeness/injectivity/bounding Prop over the T2-less `Bordism`/`DataBordismGrp` relation — it is vacuous. Use the T2 (and ultimately smooth) carrier.
 - **memory:** `[[project_5qH_nonhausdorff_substrate_bug]]` · **created_ts:** 2026-07-13
+
+## comp-twist-doubling-incompatible
+- verdict: dead
+- tier: agent-reviewed
+- authored_by: kernel-no-go (Fable vacuity attack, W-A definition gate)
+- killed_by: kernel-checked `PinPlusCompTorsorNoGo.no_comp_twist_of_doubling_rigid` (+ `not_doubling_rigid_of_comp_twist`, `no_uniform_comp_twist_of_cylinder_rigid`)
+- reason: an H¹-coordinate `comp` field with reversal twist `comp ↦ comp + w₁`, anchored by a restriction-compatibility Bor, is JOINTLY UNINSTANTIABLE with the TangentialData ops — `negBor` on the doubling cylinder forces the end-comps equal (both inclusions homotopic), and the uniformly-twisted variant dies on `cylBor`. Any v2 twist datum must evade these theorems' hypotheses (per-boundary-component collar/co-orientation + w₁(W)-corrected compat), or the comp field must be dropped (KT §5 carries the odd bit in the w₁-dual 3-manifold V / ψ, not an H¹ coordinate).
+- memory: [[project_5qH_nonhausdorff_substrate_bug]]
+- created_ts: 2026-07-13T00:00:00Z
+- reviewed_ts: 2026-07-13T00:00:00Z
+
+## membrane-level-nonhausdorff-collapse
+- verdict: dead
+- tier: agent-reviewed
+- authored_by: kernel-no-go (Fable vacuity attack, W-A definition gate)
+- killed_by: kernel-checked `PinPlusCompTorsorNoGo.qLevelTripleMembrane_not_t2`
+- reason: the bug-eyed collapse is DIMENSION-GENERIC — a T2-less manifold-typed witness datum inside a carrier/relation (membrane Q, surface Σ, any auxiliary manifold field) admits compact non-Hausdorff instances (`qLevelTripleMembrane`: three boundary copies of Σ), making Taylor-Thm-1.1-style extension conditions toothless and breaking bordism-invariance of computed invariants. RULE: every manifold-typed datum carries its OWN T2 + compactness + charted certificate; the ambient W-level T2 fence does not propagate.
+- memory: [[project_5qH_nonhausdorff_substrate_bug]]
+- created_ts: 2026-07-13T00:00:00Z
+- reviewed_ts: 2026-07-13T00:00:00Z

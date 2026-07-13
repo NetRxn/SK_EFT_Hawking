@@ -3493,6 +3493,26 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': "The in-tree `Bordism` relation (BordismGroup.lean:37-42) is a faithful bordism theory usable for a completeness/injectivity/bounding Prop. FALSE: `Bordism.W` is required compact/charted/IsManifold but NOT Hausdorff, so the non-Hausdorff bug-eyed interval B ([0,1] w/ doubled origin, compact + real-analytic + 3 boundary points) makes W = s.M × B an admissible bordism (s⊔s)⊔s → ∅ for EVERY closed s; with the in-tree 2-torsion (3x=0 ∧ 2x=0 ⟹ x=0) BordismGrp X 0 I is the TRIVIAL group ([ℝP⁴]=0, a falsifier — false for genuine unoriented bordism), and DataBordismGrp mk p = mk q ↔ grade16 equal (no geometric content). ⇒ hbound and every DataBordismGrp-quantified Prop (incl. Freeze B `SphereProductBounds := mk = 0`) is VACUOUS. FIX: require `[t2W : T2Space W]` — the honest relation is `T2TangentialBordism.IsT2DataBordant`; real keystone re-anchors to `hboundT2`. NOTE: even T2 at k=0 is TOPOLOGICAL bordism (KS breaks ℤ/16); literature-grade needs the SMOOTH (k=∞) + T2 carrier.",
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'comp_twist_doubling_incompatible': {
+        'fork_id': 'comp-twist-doubling-incompatible',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusCompTorsorNoGo.no_comp_twist_of_doubling_rigid',
+            'SKEFTHawking.PinPlusCompTorsorNoGo.not_doubling_rigid_of_comp_twist',
+            'SKEFTHawking.PinPlusCompTorsorNoGo.no_uniform_comp_twist_of_cylinder_rigid',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': "A tangential datum can carry an H¹-coordinate field `comp` with reversal twist `comp ↦ comp + w₁` (the P ↦ P⊗ε coordinate), anchored by a restriction-compatibility Bor condition. FALSE (W-A gate, Fable vacuity attack 2026-07-13): the mandatory `negBor` inhabits Bor on the DOUBLING bordism — a product cylinder whose two boundary inclusions are homotopic — so any '∃x : H¹(W) restricting to the end-comps' condition forces comp(revStr σ) = comp σ, contradicting the twist on any non-orientable s (w₁ ≠ 0); the uniformly-twisted variant dies on `cylBor` (shift 0). The datum is JOINTLY UNINSTANTIABLE with the TangentialData op interface. FIX space: a per-boundary-component collar/co-orientation datum with a w₁(W)-corrected compat (any v2 must evade these theorems' hypotheses), or drop the comp field (KT §5 puts the odd-bit content in the w₁-dual 3-manifold V / ψ, not in an H¹ coordinate).",
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
+    'membrane_level_nonhausdorff': {
+        'fork_id': 'membrane-level-nonhausdorff-collapse',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusCompTorsorNoGo.qLevelTripleMembrane_not_t2',
+        ],
+        'nogo_kind': 'refutation',
+        'false_statement': "A manifold-typed WITNESS datum inside a carrier or relation (the membrane/3-manifold Q, the surface Σ, any auxiliary manifold field) inherits honesty from the T2 fence on the ambient bordism W. FALSE (W-A gate, Fable vacuity attack 2026-07-13): the bug-eyed collapse is dimension-generic — `qLevelTripleMembrane` is a compact non-Hausdorff membrane with THREE boundary copies of Σ (kernel-checked non-T2), so a T2-less Q-encoding lets ker(H₁(∂Q)→H₁(Q)) be adversarially chosen, Taylor-Thm-1.1 extension conditions lose their teeth, and the computed Brown/abk8 invariant fails bordism-invariance. RULE: every manifold-typed datum needs its OWN T2 (+ compactness/charted) certificate; the W-level fence does not propagate.",
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'lattice_arf_bridge': {
         'fork_id': 'nogo_lattice_arf_not_sigma8',  # memory slug (referenced by SETTLED_FORKS synthetic-smith-map-to-tied-carrier; no dedicated `## ` block)
         'backing_theorems': ['SKEFTHawking.RokhlinArfNoGo.lattice_arf_bridge_refuted'],
