@@ -1,0 +1,233 @@
+/-
+# Phase 5q.H W-D VACUITY GATE (round 3) — KERNEL-CHECKED EXPLOIT: `KTNonSplit` is FALSE
+# on the as-built CharPair carrier, for EVERY W-admissibility provider.
+
+**Gate finding (vector b / c of the W-D adversarial gate).** The W-D statement layer
+(`PinPlusKTExtension.lean`) treats `KTNonSplit prov : 8 • [ℝP⁴] ≠ 0` as the open non-split bit
+(dossier §5: "the one KT terminal Prop with a genuinely open attack surface"). This module proves
+the attack LANDS: `8 • [ℝP⁴] = 0` is derivable with ZERO geometric input, so `KTNonSplit prov` is
+REFUTED for every `prov`, and the headline assembly `kt_equiv_zmod16`'s hypothesis pair
+`{KTKernelCard, KTNonSplit}` is UNSATISFIABLE on this carrier.
+
+**The mechanism (why the carrier admits this).** `CharPairBor.L` is a FREE field — the membrane
+tie (design item 2/3: `L = ker(H₁(∂Q) → H₁(Q))` of an actual characteristic membrane `Q ⊆ W`,
+plus the relative characteristic condition) is deferred to wt3. So ANY metabolic Lagrangian of the
+joint enhancement furnishes a `CharPairBor`, whether or not any membrane realizes it. The
+anti-collapse engine (`brown_eq_of_taylorLeg_lagrangian`) only obstructs bordisms whose joint
+enhancement has `brown ≠ 0` — i.e. the relation enforces exactly Witt-class equality (mod-8), not
+Pin⁺ bordism. Consequently the UN-reversed double `σ ⊔ σ` bounds the plain cylinder
+(`doublingBordism`) as soon as `brown(q_σ) ∈ {0, 4}`:
+
+* take `σ₄ := [ℝP⁴]⁴` (the 4-fold `sumStr` of the honest witness, `brown(q₄) = 4`);
+* the joint form of the doubling is `(q₄ ⊕ q₄) ⊕ (−0) ` with `brown = 8 = 0 ∈ ZMod 8`;
+* an explicit metabolic Lagrangian exists: the GRAPH of the linear isometry
+  `φ : x ↦ x + (∑ x)·𝟙` on `Fin 4 → ZMod 2` (matrix `J + I`), which satisfies
+  `q₄(φ x) = −q₄(x)` — its graph is (a reindex of) the extended Hamming code `e₈`, the
+  self-dual doubly-even `[8,4,4]` code. The in-tree engine `graphSub_metabolic` certifies it;
+* `w₂(W) = 0`-admissibility (`P14`/`P23`/`hwu`) comes from the provider itself — the provider
+  quantifies over ALL bordisms, and `W = (ℝP⁴)⁴ × I` here is honestly `w₂ = 0`, so even the
+  intended honest provider supplies it. The exploit does NOT need a degenerate provider.
+
+**What this kills.** `negBor` (the honest inverse law) kills `σ̄ ⊔ σ`; the L-freedom ALSO kills
+`σ ⊔ σ` whenever `2·brown(q_σ) = 0`. Hence on this carrier `⟨[ℝP⁴]⟩ ≅ ℤ/8`, NOT ℤ/16:
+`addOrderOf [ℝP⁴] ∣ 8` (corollary below), directly contradicting the conditional
+`kt_rp4_addOrderOf = 16`. The `{0,8}` kernel distinction the KT §5 extension needs is not merely
+invisible to `(Σ, q)` — on the as-built relation it is provably COLLAPSED. The fix is statement/
+carrier-shape work, not proof work: the kernel Props must be stated over a carrier whose `Bor`
+carries the membrane tie (item 2/3) — L pinned to an actual `ker(H₁(∂Q) → H₁(Q))` — otherwise any
+future "discharge" of `KTNonSplit` is impossible (it is false), and `kt_equiv_zmod16` is vacuous.
+
+Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new project axiom, no
+`native_decide`, no `maxHeartbeats`.
+-/
+import Mathlib
+import SKEFTHawking.PinPlusKTExtension
+
+open scoped Manifold
+open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
+open SKEFTHawking.PinPlusCharPairData SKEFTHawking.RP4CharPairWitness
+open SKEFTHawking.RP4Witness
+open SKEFTHawking.T2TangentialBordism SKEFTHawking.TangentialDataBordism
+open SKEFTHawking.BordismTheory
+open SKEFTHawking.PinPlusKTExtension
+
+namespace SKEFTHawking.PinPlusKTVacuityGateWD
+
+/-! ## §1. The `J + I` isometry `φ(x) = x + (∑ x)·𝟙` — `q₄ ∘ φ = −q₄` with the same polar form
+
+On `Fin 4 → ZMod 2`, `φ` adds the total parity to every coordinate: weight-1 vectors map to
+weight-3 (`3 ≡ 3·1 mod 4`), weight-2 to weight-2 (`2 ≡ 3·2 mod 4`), weight-3 to weight-1
+(`1 ≡ 3·3 mod 4`), weight-4 to weight-4 (`0 ≡ 3·4 mod 4`) — exactly `q ↦ 3q = −q` on the rank-4
+standard form. It is a `B`-isometry (`(J+I)ᵀ(J+I) = I` over `F₂` in rank 4) and an involution. -/
+
+/-- `φ(x) i = x i + ∑ⱼ x j` — the `J + I` matrix on `Fin 4 → ZMod 2`. -/
+def phiFun : (Fin 4 → ZMod 2) → (Fin 4 → ZMod 2) := fun x i => x i + ∑ j, x j
+
+lemma phiFun_invol : ∀ x, phiFun (phiFun x) = x := by decide
+
+lemma phiFun_add : ∀ x y, phiFun (x + y) = phiFun x + phiFun y := by decide
+
+/-- `φ` as a `ZMod 2`-linear equivalence (an involution). -/
+def phiLin : (Fin 4 → ZMod 2) ≃ₗ[ZMod 2] (Fin 4 → ZMod 2) where
+  toFun := phiFun
+  invFun := phiFun
+  left_inv := phiFun_invol
+  right_inv := phiFun_invol
+  map_add' := phiFun_add
+  map_smul' := by decide
+
+/-! ## §2. The concrete 4-fold `ℝP⁴` structure (balanced tree) and its rank-4 enhancement -/
+
+/-- The balanced 4-fold disjoint union `(ℝP⁴ ⊔ ℝP⁴) ⊔ (ℝP⁴ ⊔ ℝP⁴)`. -/
+noncomputable def s4M : SingularManifold.{0} PUnit.{1} 0 (𝓡 4) :=
+  (rp4SM.sum rp4SM).sum (rp4SM.sum rp4SM)
+
+/-- The balanced 4-fold `sumStr` of the honest `ℝP⁴` char-pair witness — the representative of
+`(2 • [ℝP⁴]) + (2 • [ℝP⁴]) = 4 • [ℝP⁴]`. Its enhancement has `brown = 4`. -/
+noncomputable def sig4 : CharPairStrBundled (𝓡 4) s4M :=
+  charPairBundledSumStr (charPairBundledSumStr rp4CharPair rp4CharPair)
+    (charPairBundledSumStr rp4CharPair rp4CharPair)
+
+/-- The rank-4 enhancement carried by `sig4` (defeq to nested `orthSum`/`reindex` of
+`stdQuadratic 1`; the `Fin 4` ascription pins `(1+1)+(1+1) ≡ 4`). -/
+noncomputable def q4 : Z4Quadratic (Fin 4) := sig4.toCharPairStr.q
+
+/-- **`φ` negates `q₄`**: `(−q₄)(φ a) = q₄(a)` — the isometry `q₄ ≅ −q₄` (finite check). -/
+lemma hq_phi : ∀ a, (Z4Quadratic.neg q4).q (phiFun a) = q4.q a := by decide
+
+/-- **`φ` preserves the polar form** (`neg` keeps `B`; `J+I` is `B`-orthogonal in rank 4). -/
+lemma hB_phi : ∀ a a', (Z4Quadratic.neg q4).B (phiFun a) (phiFun a') = q4.B a a' := by decide
+
+/-- `Z4Quadratic` double negation is the identity (`−(−q) = q`, same polar form). -/
+lemma z4_neg_neg {ι : Type*} [Fintype ι] [DecidableEq ι] (Q : Z4Quadratic ι) :
+    Z4Quadratic.neg (Z4Quadratic.neg Q) = Q :=
+  z4_ext (funext fun _ => neg_neg _) rfl
+
+/-! ## §3. The fake membrane kernel — the graph of `φ` is metabolic for the UN-negated `q₄ ⊞ q₄`
+
+This is the exploit's heart: `orthSum q₄ q₄ = orthSum q₄ (neg (neg q₄))`, and the graph of the
+`q₄ ≅ neg q₄` isometry `φ` is a metabolic Lagrangian by the in-tree engine `graphSub_metabolic`.
+(Concretely the graph `{(a, φ a)}` is a copy of the extended Hamming code `e₈` — self-dual,
+doubly-even — inside `F₂⁸`.) NO membrane in `(ℝP⁴)⁴ × I` realizes this Lagrangian; the carrier
+accepts it because `CharPairBor.L` is untethered (item 2/3 deferral). -/
+
+/-- The graph Lagrangian is metabolic for the un-negated doubled form `q₄ ⊞ q₄`. -/
+lemma L44_metabolic :
+    IsMetabolic (Z4Quadratic.orthSum q4 q4) (graphSub phiLin) := by
+  have h := graphSub_metabolic (qσ := q4) (qτ := Z4Quadratic.neg q4) phiLin hq_phi hB_phi
+  rwa [z4_neg_neg] at h
+
+/-! ## §4. The killer `CharPairBor`: the UN-reversed double `σ₄ ⊔ σ₄` bounds the plain cylinder -/
+
+/-- **The exploit witness**: a full `CharPairBor` on `doublingBordism s4M` between
+`sumStr σ₄ σ₄` (NOT `sumStr (revStr σ₄) σ₄`!) and the empty structure. Assembled from
+`graphSub_metabolic` (§3) transported by the in-tree `IsMetabolic.reindex`/`.orthSum` engines,
+with item-1 admissibility drawn from the provider (as every op witness draws it). -/
+noncomputable def doubleKillerBor (prov : CharPairWProvider (𝓡 4) 0) :
+    CharPairBor (doublingBordism s4M)
+      (charPairSumStr sig4.toCharPairStr sig4.toCharPairStr) charPairEmptyStr :=
+  have hSe : IsMetabolic (Z4Quadratic.neg (stdQuadratic 0))
+      (⊤ : Submodule (ZMod 2) (Fin 0 → ZMod 2)) :=
+    ⟨fun l _ => by rw [Subsingleton.elim l 0]; exact (Z4Quadratic.neg (stdQuadratic 0)).q_zero,
+     fun _ _ => Submodule.mem_top⟩
+  have hSs : IsMetabolic (charPairSumStr sig4.toCharPairStr sig4.toCharPairStr).q
+      ((graphSub phiLin).comap (LinearMap.funLeft (ZMod 2) (ZMod 2) finSumFinEquiv)) :=
+    L44_metabolic.reindex finSumFinEquiv
+  have hmeta := hSs.orthSum hSe
+  mkCharPairBor prov (doublingBordism s4M)
+    (by
+      haveI : T2Space rp4SM.M := rp4CharPair.toCharPairStr.t2
+      exact inferInstanceAs
+        (T2Space (((rp4SM.M ⊕ rp4SM.M) ⊕ (rp4SM.M ⊕ rp4SM.M)) × Set.Icc (0 : ℝ) 1)))
+    (blockSub ((graphSub phiLin).comap (LinearMap.funLeft (ZMod 2) (ZMod 2) finSumFinEquiv))
+      (⊤ : Submodule (ZMod 2) (Fin 0 → ZMod 2)))
+    hmeta.1 hmeta.2
+
+/-! ## §5. THE REFUTATION — `8 • [ℝP⁴] = 0` for every provider -/
+
+/-- **`k₀ = 8 • [ℝP⁴] = 0` on the as-built carrier, for EVERY W-admissibility provider** — the
+W-D non-split bit is FALSE, with zero geometric input beyond the in-tree witnesses. -/
+theorem ktKernelRep_eq_zero (prov : CharPairWProvider (𝓡 4) 0) :
+    ktKernelRep prov = 0 := by
+  have hT2W : T2Space (doublingBordism s4M).W := by
+    haveI : T2Space rp4SM.M := rp4CharPair.toCharPairStr.t2
+    exact inferInstanceAs
+      (T2Space (((rp4SM.M ⊕ rp4SM.M) ⊕ (rp4SM.M ⊕ rp4SM.M)) × Set.Icc (0 : ℝ) 1))
+  have key : T2DataBordismGrp.mk (pinPlusCharPairData prov)
+        ⟨s4M.sum s4M, charPairBundledSumStr sig4 sig4⟩
+      = (0 : T2DataBordismGrp (pinPlusCharPairData prov)) :=
+    T2DataBordismGrp.mk_eq_of_bordant _
+      ⟨doublingBordism s4M, hT2W, ⟨⟨doubleKillerBor prov⟩⟩⟩
+  show (8 : ℕ) • ktRP4Class prov = 0
+  have h84 : (8 : ℕ) • ktRP4Class prov
+      = (4 : ℕ) • ktRP4Class prov + (4 : ℕ) • ktRP4Class prov := by
+    rw [← add_nsmul]
+  have h42 : (4 : ℕ) • ktRP4Class prov
+      = (2 : ℕ) • ktRP4Class prov + (2 : ℕ) • ktRP4Class prov := by
+    rw [← add_nsmul]
+  have h2 : (2 : ℕ) • ktRP4Class prov = ktRP4Class prov + ktRP4Class prov :=
+    two_nsmul _
+  rw [h84, h42, h2]
+  exact key
+
+/-- **`KTNonSplit` is REFUTED for every provider** — the "genuinely open" bit is not open. -/
+theorem ktNonSplit_false (prov : CharPairWProvider (𝓡 4) 0) : ¬ KTNonSplit prov :=
+  fun h => h (ktKernelRep_eq_zero prov)
+
+/-- **The headline assembly's hypothesis pair is UNSATISFIABLE**: no discharge of
+`{KTKernelCard, KTNonSplit}` can ever exist on this carrier, so `kt_equiv_zmod16` is vacuous. -/
+theorem kt_binders_unsatisfiable (prov : CharPairWProvider (𝓡 4) 0) :
+    ¬ (KTKernelCard prov ∧ KTNonSplit prov) :=
+  fun h => ktNonSplit_false prov h.2
+
+/-- **The Kummer-target shape (option 1) is unsatisfiable for every candidate `κ`**: any
+`KTNonSplitKummerTarget` witness would make `κ = k₀ = 0` yet `κ ≠ 0`. -/
+theorem ktKummerTarget_unsatisfiable (prov : CharPairWProvider (𝓡 4) 0)
+    (κ : T2DataBordismGrp (pinPlusCharPairData prov)) :
+    ¬ KTNonSplitKummerTarget prov κ := by
+  rintro ⟨_, hκ, hrep⟩
+  exact hκ (by rw [← hrep, ktKernelRep_eq_zero])
+
+/-- **`addOrderOf [ℝP⁴] ∣ 8` on the as-built carrier** — the odd generator has order dividing 8
+(and exactly 8, by `charPairBrown [ℝP⁴] = 1`): the carrier's cyclic part is ℤ/8, NOT ℤ/16.
+Directly contradicts the conditional `kt_rp4_addOrderOf = 16` — confirming its hypotheses can
+never be discharged. -/
+theorem ktRP4Class_addOrderOf_dvd_eight (prov : CharPairWProvider (𝓡 4) 0) :
+    addOrderOf (ktRP4Class prov) ∣ 8 :=
+  addOrderOf_dvd_of_nsmul_eq_zero (ktKernelRep_eq_zero prov)
+
+/-! ## §6. SECONDARY EXHIBIT (vector b, honest-semantics finding — not kernel-refutable yet):
+the free `(n, q)` fields admit FAKE structures whose kernel membership breaks `KTKernelCard`
+
+`CharPairStr.n`/`q` are untethered from the geometry (`hchar`/`hpolar` deferred to wt2), so the
+rank-0 enhancement is placeable on ℝP⁴ itself — a geometrically impossible char pair
+(`w₂ + w₁² = a² ≠ 0` on ℝP⁴ forces a NON-empty characteristic surface). The class below lies in
+`ker(charPairBrown)`; in honest semantics it is `∉ {0, k₀}` (its underlying manifold has
+`w₁⁴[ℝP⁴] = 1 ≠ 0`, while `0` and `k₀` have unoriented-bordism-trivial representatives — SW
+numbers are bordism invariants), so `KTKernelCard` as stated is honestly FALSE independently of
+§5. No in-tree invariant can yet separate it (that needs a manifold-side SW-number homomorphism);
+recorded as the second statement-shape defect: the kernel Props quantify over fake classes. -/
+
+open SKEFTHawking.RP4Unconditional in
+/-- The FAKE rank-0 char-pair bundle on `ℝP⁴` — honest cert, empty "characteristic surface",
+`n = 0`: type-checks because nothing ties `(n, q)` (or `surf`) to the carrier's topology. -/
+noncomputable def fakeRP4RankZero : CharPairStrBundled (𝓡 4) rp4SM where
+  toCharPairStr :=
+    { t2 := rp4CharPair.toCharPairStr.t2
+      cert := rp4_hcert
+      n := 0
+      q := stdQuadratic 0 }
+  surf := emptySM
+  surfT2 := ⟨fun x => x.elim⟩
+  emb := fun x => x.elim
+  embSmooth := fun x => isEmptyElim x
+  embInj := fun x => x.elim
+
+/-- The fake class is a `charPairBrown`-kernel element (rank 0 ⟹ grade 0), so `KTKernelCard`
+asserts it equals `0` or `k₀` — both honestly false (see section docstring). -/
+theorem fakeRP4RankZero_in_kernel (prov : CharPairWProvider (𝓡 4) 0) :
+    charPairBrown prov
+      (T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM, fakeRP4RankZero⟩) = 0 :=
+  charPairBrown_of_rank_zero prov ⟨rp4SM, fakeRP4RankZero⟩ rfl
+
+end SKEFTHawking.PinPlusKTVacuityGateWD
