@@ -4399,6 +4399,8 @@ import SKEFTHawking.PinPlusCharPairData
 import SKEFTHawking.RP4CharPairWitness
 import SKEFTHawking.PinPlusCompTorsorNoGo
 import SKEFTHawking.PinPlusTaylorConventionNoGo
+import SKEFTHawking.SingularRelativeHomotopyInvariance
+import SKEFTHawking.SingularRelativeCrossProduct
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
