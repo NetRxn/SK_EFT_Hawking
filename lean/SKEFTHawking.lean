@@ -1314,6 +1314,10 @@ import SKEFTHawking.PoincareDualityWuFormula
 -- W-A item 1: the Poincaré–Lefschetz Wu tower for compact manifolds-with-boundary — the generic
 -- `LefschetzWuDatum` (relative-cohomology second cup argument) + the n=5 Wu classes `w₁(W)`, `w₂(W)`.
 import SKEFTHawking.PoincareLefschetzWu5
+-- W-A.1c: the relative mod-2 fundamental class [W,∂W] substrate — interior-point restriction
+-- machinery, the characterisation/uniqueness of the class, the μ = ⟨·,[W,∂W]⟩ functional, the
+-- interior-ℤ/2 vs boundary-vanishing local-homology dichotomy, and the wiring into LefschetzWuDatum.
+import SKEFTHawking.PoincareLefschetzRelFundClass
 import SKEFTHawking.WuThirdClass
 import SKEFTHawking.SingularBockstein
 import SKEFTHawking.SingularCapHomology
