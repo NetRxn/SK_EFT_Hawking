@@ -340,4 +340,66 @@ theorem sixteen_dvd_sig_of_gm_metabolic {σ : ℤ} {ι : Type*} [Fintype ι] [De
     (16 : ℤ) ∣ σ :=
   sixteen_dvd_sig_of_gm_null hgm rfl (Q.brown_eq_zero_of_metabolic L hq hmax)
 
+/-! ## The Freedman–Kirby congruence in Arf language: `2·β = 8·Arf`
+
+The blueprint's **Route A** (Freedman–Kirby / Matsumoto, `Lit-Search/Phase-5qH/`
+`Rokhlin_16_sigma_elementary_blueprint_20260703.md`, node `[FK]`) states the mod-16 congruence in Arf
+form: `Arf(q_F) = (σ − F·F)/8 (mod 2)`. In-tree the GM residue is packaged as `doubleBrown = 2·β`
+(`GuillouMarinBridge`) and the Arf invariant of an even enhancement as `arf = β/4` with
+`β = 4·Arf` (`GMArfVanishing.brown_eq_four_mul_arf`). The two idioms were never bridged. This section is
+that bridge: for an even (oriented) enhancement the doubled Brown residue `2·β` equals `8·Arf (mod 16)`,
+so the GM congruence reads `σ − F·F ≡ 8·Arf (mod 16)` — exactly the Route-A `[FK]` node. Everything here
+is pure `Z4Quadratic`/`ZMod` algebra (relation-free, carrier-independent) and kernel-pure. -/
+
+/-- **The GM residue of an EVEN enhancement is `8·Arf` (mod 16).** For an even (oriented) `ℤ/4`-quadratic
+enhancement `Q` — the case where `β ∈ {0,4} ⊂ ZMod 8` — the doubled Brown residue `2·β(Q) = doubleBrown Q`
+equals `8·Arf(Q) (mod 16)`. This is the doubled shadow of `β = 4·Arf` (`brown_eq_four_mul_arf`): the
+Freedman–Kirby / Matsumoto Route-A identity in Arf language. Kernel-pure — the `ZMod 2 → ZMod 16` doubling
+is `decide` over the two Arf classes. -/
+lemma doubleBrown_even_eq_eight_mul_arf {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (Q : Z4Quadratic ι) (hE : Z4Quadratic.IsEven Q) :
+    doubleBrown Q = 8 * ((Q.arf).val : ZMod 16) := by
+  unfold doubleBrown
+  rw [Q.brown_eq_four_mul_arf hE]
+  have key : ∀ a : ZMod 2,
+      2 * (((4 * (a.val : ZMod 8)).val : ℕ) : ZMod 16) = 8 * ((a.val : ℕ) : ZMod 16) := by decide
+  exact key Q.arf
+
+/-- **The Freedman–Kirby congruence in Arf language.** Given the Guillou–Marin congruence
+`GMrelation σ F Q` for an even (oriented) characteristic surface, `σ − F·F ≡ 8·Arf(Q) (mod 16)` —
+equivalently `(σ − F·F)/8 ≡ Arf(Q) (mod 2)`, the blueprint Route-A `[FK]` node. The mod-8 half
+(`8 ∣ σ − F·F`, van der Blij) is `charSq8_of_charSq16_even`; this pins the remaining factor-of-two bit
+to the Arf invariant of the surface enhancement. Kernel-pure. -/
+theorem gmrelation_even_arf {σ F : ℤ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {Q : Z4Quadratic ι} (h : GMrelation σ F Q) (hE : Z4Quadratic.IsEven Q) :
+    ((σ - F : ℤ) : ZMod 16) = 8 * ((Q.arf).val : ZMod 16) := by
+  have hh : ((σ - F : ℤ) : ZMod 16) = doubleBrown Q := h
+  rw [hh, doubleBrown_even_eq_eight_mul_arf Q hE]
+
+/-- **`16 ∣ σ` from the Arf-form `[FK]` node (the `[SPIN]` collapse).** For an even characteristic surface
+with null self-intersection (`F·F = 0`) whose Arf invariant vanishes, the GM congruence collapses to
+`σ ≡ 8·Arf = 0 (mod 16)`. Blueprint node `[SPIN]` in Arf language: at `Arf(Q) = 0` the residual
+factor-of-two bit dies, giving `σ/8` even. The Arf-invariant sibling of `sixteen_dvd_sig_of_gm_null`
+(Brown form), through `arf = β/4`. Kernel-pure. -/
+theorem sixteen_dvd_sig_of_gm_even_arf_zero {σ : ℤ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {Q : Z4Quadratic ι} (hgm : GMrelation σ 0 Q) (hE : Z4Quadratic.IsEven Q)
+    (harf : Q.arf = 0) : (16 : ℤ) ∣ σ := by
+  have e := gmrelation_even_arf hgm hE
+  rw [harf] at e
+  simp only [sub_zero, ZMod.val_zero, Nat.cast_zero, mul_zero] at e
+  exact (ZMod.intCast_zmod_eq_zero_iff_dvd σ 16).mp e
+
+/-- **`16 ∣ σ` from a GM congruence with a metabolizer, in Arf language (even case).** The Arf-explicit
+sibling of `sixteen_dvd_sig_of_gm_metabolic`: the bounding Lagrangian `L` kills the Arf invariant
+(`arf_eq_zero_of_metabolic`), and the even GM congruence then reads `σ ≡ 8·Arf = 0 (mod 16)`. Exposes the
+Route-A `[FK]`/Arf structure while consuming the SAME metabolizer datum
+(`L = ker(H₁(F;ℤ/2) → H₁(V;ℤ/2))`) the CharSurface tower supplies. Kernel-pure. -/
+theorem sixteen_dvd_sig_of_gm_metabolic_arf {σ : ℤ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {Q : Z4Quadratic ι} (hgm : GMrelation σ 0 Q) (hE : Z4Quadratic.IsEven Q)
+    (L : Submodule (ZMod 2) (ι → ZMod 2)) [Fintype L]
+    (hq : ∀ l ∈ L, Q.q l = 0)
+    (hmax : ∀ v, (∀ l ∈ L, Q.B v l = 0) → v ∈ L) :
+    (16 : ℤ) ∣ σ :=
+  sixteen_dvd_sig_of_gm_even_arf_zero hgm hE (Q.arf_eq_zero_of_metabolic L hq hmax)
+
 end SKEFTHawking.GMRokhlin
