@@ -345,25 +345,28 @@ theorem diag_metabolic {n : ℕ} (Q₁ Q₂ : Z4Quadratic (Fin n))
 /-- The **graph submodule** of a `ZMod 2`-linear isometry `φ` between the two ends' `H₁`: classes whose
 `τ`-part is `φ` of their `σ`-part. This is the boundary-to-interior kernel of a reparametrized-cylinder
 membrane (`cylBor`/`commBor`/`assocBor`/`unitBor`). -/
-def graphSub {nσ nτ : ℕ} (φ : (Fin nσ → ZMod 2) ≃ₗ[ZMod 2] (Fin nτ → ZMod 2)) :
-    Submodule (ZMod 2) (Fin nσ ⊕ Fin nτ → ZMod 2) :=
+def graphSub {ι₁ ι₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂] [DecidableEq ι₂]
+    (φ : (ι₁ → ZMod 2) ≃ₗ[ZMod 2] (ι₂ → ZMod 2)) :
+    Submodule (ZMod 2) (ι₁ ⊕ ι₂ → ZMod 2) :=
   LinearMap.ker (φ.toLinearMap ∘ₗ
-      LinearMap.funLeft (ZMod 2) (ZMod 2) (Sum.inl : Fin nσ → Fin nσ ⊕ Fin nτ)
-    - LinearMap.funLeft (ZMod 2) (ZMod 2) (Sum.inr : Fin nτ → Fin nσ ⊕ Fin nτ))
+      LinearMap.funLeft (ZMod 2) (ZMod 2) (Sum.inl : ι₁ → ι₁ ⊕ ι₂)
+    - LinearMap.funLeft (ZMod 2) (ZMod 2) (Sum.inr : ι₂ → ι₁ ⊕ ι₂))
 
-theorem mem_graphSub {nσ nτ : ℕ} (φ : (Fin nσ → ZMod 2) ≃ₗ[ZMod 2] (Fin nτ → ZMod 2))
-    (x : Fin nσ ⊕ Fin nτ → ZMod 2) :
+theorem mem_graphSub {ι₁ ι₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂] [DecidableEq ι₂]
+    (φ : (ι₁ → ZMod 2) ≃ₗ[ZMod 2] (ι₂ → ZMod 2)) (x : ι₁ ⊕ ι₂ → ZMod 2) :
     x ∈ graphSub φ ↔ (fun i => x (Sum.inr i)) = φ (fun i => x (Sum.inl i)) := by
   rw [graphSub, LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.comp_apply, sub_eq_zero]
   exact eq_comm
 
-/-- **The graph of a `q`-isometry is metabolic** for the τ-end-negated joint enhancement: the Taylor leg
-holds (`qσ − qτ∘φ = 0`) and the graph is its own polar (nondegeneracy of `qσ` + the `B`-isometry). This
-is the reusable engine for the reparametrized-cylinder op witnesses. -/
-theorem graphSub_metabolic {nσ nτ : ℕ} {qσ : Z4Quadratic (Fin nσ)} {qτ : Z4Quadratic (Fin nτ)}
-    (φ : (Fin nσ → ZMod 2) ≃ₗ[ZMod 2] (Fin nτ → ZMod 2))
+/-- **The graph of a `q`-isometry is metabolic** for the τ-end-negated joint form `orthSum qσ (neg qτ)`:
+the Taylor leg holds (`qσ − qτ∘φ = 0`) and the graph is its own polar (nondegeneracy of `qσ` + the
+`B`-isometry). Stated over arbitrary indices (the `sumStr` blocks are `Sum` types); on `Fin` indices
+`orthSum qσ (neg qτ)` is `jointEnhancement qσ qτ`. Reusable engine for the reparametrized-cylinder ops. -/
+theorem graphSub_metabolic {ι₁ ι₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂] [DecidableEq ι₂]
+    {qσ : Z4Quadratic ι₁} {qτ : Z4Quadratic ι₂}
+    (φ : (ι₁ → ZMod 2) ≃ₗ[ZMod 2] (ι₂ → ZMod 2))
     (hq : ∀ a, qτ.q (φ a) = qσ.q a) (hB : ∀ a a', qτ.B (φ a) (φ a') = qσ.B a a') :
-    IsMetabolic (jointEnhancement qσ qτ) (graphSub φ) := by
+    IsMetabolic (Z4Quadratic.orthSum qσ (Z4Quadratic.neg qτ)) (graphSub φ) := by
   refine ⟨fun l hl => ?_, fun v hv => ?_⟩
   · rw [mem_graphSub] at hl
     show qσ.q (fun i => l (Sum.inl i)) + -(qτ.q (fun i => l (Sum.inr i))) = 0
@@ -375,7 +378,8 @@ theorem graphSub_metabolic {nσ nτ : ℕ} {qσ : Z4Quadratic (Fin nσ)} {qτ : 
       intro a
       have hla : (Sum.elim a (φ a)) ∈ graphSub φ := by rw [mem_graphSub]; rfl
       have hb := hv (Sum.elim a (φ a)) hla
-      have hexp : (jointEnhancement qσ qτ).B v (Sum.elim a (φ a)) = qσ.B u a + qτ.B w (φ a) := rfl
+      have hexp : (Z4Quadratic.orthSum qσ (Z4Quadratic.neg qτ)).B v (Sum.elim a (φ a))
+          = qσ.B u a + qτ.B w (φ a) := rfl
       rw [hexp, show qτ.B w (φ a) = qσ.B (φ.symm w) a from by
         rw [← hB]; congr 1; exact (φ.apply_symm_apply w).symm] at hb
       exact hb
@@ -387,6 +391,133 @@ theorem graphSub_metabolic {nσ nτ : ℕ} {qσ : Z4Quadratic (Fin nσ)} {qτ : 
       have h2 : u i = -((φ.symm w) i) := by rw [eq_neg_iff_add_eq_zero]; exact hi
       rwa [CharTwo.neg_eq] at h2
     rw [hu_eq, φ.apply_symm_apply]
+
+/-! ### Reindex algebra — the `sumStr` enhancement identities the graph op witnesses consume.
+`sumStr` composes by `orthSum` then `reindex`es to `Fin (m+n)`; these lemmas let `commBor`/`assocBor`/
+`unitBor` rewrite one end's enhancement as a `reindex` of the other's, keeping every `finSumFinEquiv`
+ABSTRACT (only `sumCongr`/`sumComm`/`sumAssoc`/`sumEmpty` are reduced). -/
+
+/-- Reindexing along the identity is a no-op. -/
+theorem reindex_refl {ι : Type*} [Fintype ι] [DecidableEq ι] (Q : Z4Quadratic ι) :
+    Q.reindex (Equiv.refl ι) = Q := by
+  apply z4_ext <;> rfl
+
+/-- Reindexing composes: `(Q.reindex e₁).reindex e₂ = Q.reindex (e₁.trans e₂)`. -/
+theorem reindex_trans {ι κ ρ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
+    [Fintype ρ] [DecidableEq ρ] (Q : Z4Quadratic ι) (e₁ : ι ≃ κ) (e₂ : κ ≃ ρ) :
+    (Q.reindex e₁).reindex e₂ = Q.reindex (e₁.trans e₂) := by
+  apply z4_ext <;> rfl
+
+/-- Negation commutes with reindexing (both keep `B`, both negate `q`). -/
+theorem neg_reindex {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
+    (Q : Z4Quadratic ι) (e : ι ≃ κ) :
+    Z4Quadratic.neg (Q.reindex e) = (Z4Quadratic.neg Q).reindex e := by
+  apply z4_ext <;> rfl
+
+/-- Reindexing distributes over `orthSum` via `Equiv.sumCongr`. -/
+theorem orthSum_reindex {ι₁ ι₂ κ₁ κ₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂]
+    [DecidableEq ι₂] [Fintype κ₁] [DecidableEq κ₁] [Fintype κ₂] [DecidableEq κ₂]
+    (Q₁ : Z4Quadratic ι₁) (Q₂ : Z4Quadratic ι₂) (e₁ : ι₁ ≃ κ₁) (e₂ : ι₂ ≃ κ₂) :
+    Z4Quadratic.orthSum (Q₁.reindex e₁) (Q₂.reindex e₂)
+      = (Z4Quadratic.orthSum Q₁ Q₂).reindex (Equiv.sumCongr e₁ e₂) := by
+  apply z4_ext
+  · funext x
+    simp only [Z4Quadratic.orthSum, Z4Quadratic.reindex, Equiv.sumCongr_apply, Sum.map_inl,
+      Sum.map_inr]
+  · funext x y
+    simp only [Z4Quadratic.orthSum, Z4Quadratic.reindex, Equiv.sumCongr_apply, Sum.map_inl,
+      Sum.map_inr]
+
+/-- `orthSum` commutes up to the `Sum`-swap reindex. -/
+theorem orthSum_comm_eq {ι₁ ι₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂] [DecidableEq ι₂]
+    (Q₁ : Z4Quadratic ι₁) (Q₂ : Z4Quadratic ι₂) :
+    Z4Quadratic.orthSum Q₂ Q₁ = (Z4Quadratic.orthSum Q₁ Q₂).reindex (Equiv.sumComm ι₁ ι₂) := by
+  apply z4_ext
+  · funext x
+    simp only [Z4Quadratic.orthSum, Z4Quadratic.reindex, Equiv.sumComm_apply, Sum.swap_inl,
+      Sum.swap_inr, add_comm]
+  · funext x y
+    simp only [Z4Quadratic.orthSum, Z4Quadratic.reindex, Equiv.sumComm_apply, Sum.swap_inl,
+      Sum.swap_inr, add_comm]
+
+/-- `orthSum` associates up to the `Sum`-assoc reindex. -/
+theorem orthSum_assoc_eq {ι₁ ι₂ ι₃ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂]
+    [DecidableEq ι₂] [Fintype ι₃] [DecidableEq ι₃]
+    (Q₁ : Z4Quadratic ι₁) (Q₂ : Z4Quadratic ι₂) (Q₃ : Z4Quadratic ι₃) :
+    Z4Quadratic.orthSum Q₁ (Z4Quadratic.orthSum Q₂ Q₃)
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum Q₁ Q₂) Q₃).reindex
+          (Equiv.sumAssoc ι₁ ι₂ ι₃) := by
+  apply z4_ext
+  · funext x
+    simp only [Z4Quadratic.orthSum, Z4Quadratic.reindex, Equiv.sumAssoc_apply_inl_inl,
+      Equiv.sumAssoc_apply_inl_inr, Equiv.sumAssoc_apply_inr, add_assoc]
+  · funext x y
+    simp only [Z4Quadratic.orthSum, Z4Quadratic.reindex, Equiv.sumAssoc_apply_inl_inl,
+      Equiv.sumAssoc_apply_inl_inr, Equiv.sumAssoc_apply_inr, add_assoc]
+
+/-- `orthSum` with a rank-0 right summand is the left summand, reindexed away the empty block. -/
+theorem orthSum_stdZero_eq {n : ℕ} (Q : Z4Quadratic (Fin n)) :
+    Z4Quadratic.orthSum Q (stdQuadratic 0)
+      = Q.reindex (Equiv.sumEmpty (Fin n) (Fin 0)).symm := by
+  apply z4_ext
+  · funext x
+    show Q.q (fun i => x (Sum.inl i)) + (stdQuadratic 0).q (fun i => x (Sum.inr i))
+        = Q.q (fun i => x ((Equiv.sumEmpty (Fin n) (Fin 0)).symm i))
+    rw [show (stdQuadratic 0).q (fun i => x (Sum.inr i)) = 0 from
+      (stdQuadratic 0).q_zero ▸ congrArg _ (Subsingleton.elim _ _), add_zero]
+    rfl
+  · funext x y
+    show Q.B (fun i => x (Sum.inl i)) (fun i => y (Sum.inl i))
+          + (stdQuadratic 0).B (fun i => x (Sum.inr i)) (fun i => y (Sum.inr i))
+        = Q.B (fun i => x ((Equiv.sumEmpty (Fin n) (Fin 0)).symm i))
+            (fun i => y ((Equiv.sumEmpty (Fin n) (Fin 0)).symm i))
+    rw [show (stdQuadratic 0).B (fun i => x (Sum.inr i)) (fun i => y (Sum.inr i)) = 0 from by
+      rw [Subsingleton.elim (fun i => x (Sum.inr i)) 0]; exact (stdQuadratic 0).B_zero_left _,
+      add_zero]
+    rfl
+
+/-- The τ-end-negated joint enhancement distributes over `reindex` via `Equiv.sumCongr`. -/
+theorem jointEnhancement_reindex {ι₁ ι₂ κ₁ κ₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂]
+    [DecidableEq ι₂] [Fintype κ₁] [DecidableEq κ₁] [Fintype κ₂] [DecidableEq κ₂]
+    (Q₁ : Z4Quadratic ι₁) (Q₂ : Z4Quadratic ι₂) (e₁ : ι₁ ≃ κ₁) (e₂ : ι₂ ≃ κ₂) :
+    Z4Quadratic.orthSum (Q₁.reindex e₁) (Z4Quadratic.neg (Q₂.reindex e₂))
+      = (Z4Quadratic.orthSum Q₁ (Z4Quadratic.neg Q₂)).reindex (Equiv.sumCongr e₁ e₂) := by
+  rw [neg_reindex, orthSum_reindex]
+
+/-- **The graph of a reindex-isometry is metabolic** for `orthSum Q (neg (Q.reindex g))`: the two ends
+are the SAME form indexed differently, so the graph of the reparametrization `funCongrLeft g.symm` is a
+metabolic Lagrangian (the reparametrized-cylinder membrane kernel of `commBor`/`assocBor`/`unitBor`). -/
+theorem reindexGraph_metabolic {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
+    (Q : Z4Quadratic ι) (g : ι ≃ κ) :
+    IsMetabolic (Z4Quadratic.orthSum Q (Z4Quadratic.neg (Q.reindex g)))
+      (graphSub (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2) g.symm)) := by
+  have key : ∀ b : ι → ZMod 2,
+      (fun i => (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2) g.symm b) (g i)) = b := by
+    intro b; funext i
+    simp only [LinearEquiv.funCongrLeft_apply, LinearMap.funLeft_apply, Equiv.symm_apply_apply]
+  apply graphSub_metabolic
+  · intro a
+    show Q.q (fun i => (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2) g.symm a) (g i)) = Q.q a
+    rw [key a]
+  · intro a a'
+    show Q.B (fun i => (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2) g.symm a) (g i))
+          (fun i => (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2) g.symm a') (g i)) = Q.B a a'
+    rw [key a, key a']
+
+/-- **Two reindexes of a common form are joint-metabolic** — `orthSum (A.reindex e₁) (neg (A.reindex e₂))`
+has the graph of `funCongrLeft (e₁.symm.trans e₂).symm` as a metabolic Lagrangian. This is the uniform
+engine for `commBor`/`assocBor`/`unitBor`: each end's `sumStr` enhancement is a reindex of one flattened
+`orthSum` form, and the membrane is the reparametrizing cylinder between them. -/
+theorem commonReindex_metabolic {ι κ₁ κ₂ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ₁]
+    [DecidableEq κ₁] [Fintype κ₂] [DecidableEq κ₂]
+    (A : Z4Quadratic ι) (e₁ : ι ≃ κ₁) (e₂ : ι ≃ κ₂) :
+    IsMetabolic (Z4Quadratic.orthSum (A.reindex e₁) (Z4Quadratic.neg (A.reindex e₂)))
+      (graphSub (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2) (e₁.symm.trans e₂).symm)) := by
+  have h : A.reindex e₂ = (A.reindex e₁).reindex (e₁.symm.trans e₂) := by
+    rw [reindex_trans]; congr 1; ext x
+    simp [Equiv.trans_apply, Equiv.symm_apply_apply]
+  rw [h]
+  exact reindexGraph_metabolic (A.reindex e₁) (e₁.symm.trans e₂)
 
 /-! ## §5. The frozen structure shapes `CharPairStr` (Mfd) and `CharPairBor` (Bor)
 
@@ -670,6 +801,95 @@ noncomputable def charPairNegBor (prov : CharPairWProvider I k) {s : SingularMan
     (blockSub ((cylLagrangian σ.n).comap (LinearMap.funLeft (ZMod 2) (ZMod 2) finSumFinEquiv))
       (⊤ : Submodule (ZMod 2) (Fin 0 → ZMod 2)))
     hmeta.1 hmeta.2
+
+/-- **`commBor` instantiates** — disjoint-union commutativity. The two ends carry `orthSum σ.q τ.q`
+and `orthSum τ.q σ.q`, isometric via the block swap; the membrane is the swap-reparametrized cylinder,
+whose kernel is the reindex-isometry graph (`reindexGraph_metabolic` on `orthSum_comm_eq`, transported
+through the `finSumFinEquiv` reindex by `jointEnhancement_reindex`). Item 1 from the provider. -/
+noncomputable def charPairCommBor (prov : CharPairWProvider I k)
+    {s t : SingularManifold PUnit k I} (σ : CharPairStr I s) (τ : CharPairStr I t) :
+    CharPairBor (mapCylinder (Diffeomorph.sumComm I s.M k t.M)
+      (by funext z; rcases z with z | z <;> rfl)) (charPairSumStr σ τ) (charPairSumStr τ σ) :=
+  have hbase : IsMetabolic
+      (Z4Quadratic.orthSum (orthSum σ.q τ.q) (Z4Quadratic.neg (orthSum τ.q σ.q)))
+      (graphSub (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2)
+        (Equiv.sumComm (Fin σ.n) (Fin τ.n)).symm)) := by
+    rw [orthSum_comm_eq σ.q τ.q]
+    exact reindexGraph_metabolic (orthSum σ.q τ.q) (Equiv.sumComm (Fin σ.n) (Fin τ.n))
+  have hform : jointEnhancement (charPairSumStr σ τ).q (charPairSumStr τ σ).q
+      = (Z4Quadratic.orthSum (orthSum σ.q τ.q) (Z4Quadratic.neg (orthSum τ.q σ.q))).reindex
+          (Equiv.sumCongr finSumFinEquiv finSumFinEquiv) :=
+    jointEnhancement_reindex (orthSum σ.q τ.q) (orthSum τ.q σ.q) finSumFinEquiv finSumFinEquiv
+  have hmeta : IsMetabolic (jointEnhancement (charPairSumStr σ τ).q (charPairSumStr τ σ).q)
+      ((graphSub (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2)
+        (Equiv.sumComm (Fin σ.n) (Fin τ.n)).symm)).comap
+        (LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumCongr finSumFinEquiv finSumFinEquiv))) := by
+    rw [hform]; exact hbase.reindex (Equiv.sumCongr finSumFinEquiv finSumFinEquiv)
+  mkCharPairBor prov _
+    (by haveI := σ.t2; haveI := τ.t2
+        exact inferInstanceAs (T2Space ((s.M ⊕ t.M) × Set.Icc (0 : ℝ) 1)))
+    _ hmeta.1 hmeta.2
+
+/-- **`unitBor` instantiates** — the disjoint-union unit law `σ ⊔ ∅ ~ σ`. The source enhancement
+`orthSum σ.q (stdQuadratic 0)` is `σ.q` reindexed away the empty block (`orthSum_stdZero_eq`); the
+membrane is the padding-cylinder, whose kernel is the reindex-isometry graph (`commonReindex_metabolic`
+with the identity on the target end). Item 1 from the provider. -/
+noncomputable def charPairUnitBor (prov : CharPairWProvider I k) {s : SingularManifold PUnit k I}
+    (σ : CharPairStr I s) :
+    CharPairBor (mapCylinder (Diffeomorph.sumEmpty I s.M k (M' := emptySM.M))
+      (by funext z; cases z with | inl m => rfl | inr e => exact (IsEmpty.false e).elim))
+      (charPairSumStr σ charPairEmptyStr) σ :=
+  have hqS : (charPairSumStr σ charPairEmptyStr).q
+      = σ.q.reindex ((Equiv.sumEmpty (Fin σ.n) (Fin 0)).symm.trans finSumFinEquiv) := by
+    show (Z4Quadratic.orthSum σ.q (stdQuadratic 0)).reindex finSumFinEquiv = _
+    rw [orthSum_stdZero_eq, reindex_trans]
+  have hmeta : IsMetabolic (jointEnhancement (charPairSumStr σ charPairEmptyStr).q σ.q)
+      (graphSub (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2)
+        ((((Equiv.sumEmpty (Fin σ.n) (Fin 0)).symm.trans finSumFinEquiv).symm.trans
+          (Equiv.refl (Fin σ.n))).symm))) := by
+    rw [hqS]
+    exact commonReindex_metabolic σ.q ((Equiv.sumEmpty (Fin σ.n) (Fin 0)).symm.trans finSumFinEquiv)
+      (Equiv.refl (Fin σ.n))
+  mkCharPairBor prov _
+    (by haveI := σ.t2
+        haveI : T2Space (emptySM (X := PUnit) (k := k) (I := I)).M := ⟨fun x => isEmptyElim x⟩
+        exact inferInstanceAs (T2Space ((s.M ⊕ emptySM.M) × Set.Icc (0 : ℝ) 1)))
+    _ hmeta.1 hmeta.2
+
+/-- **`assocBor` instantiates** — disjoint-union associativity. Both ends' enhancements are reindexes of
+the common flattened form `A = orthSum (orthSum σ.q τ.q) ρ.q` (via `orthSum_reindex` for the inner
+`sumStr` reindex and `orthSum_assoc_eq` for the reassociation); the membrane is the sumAssoc-cylinder,
+whose kernel is the reindex-isometry graph (`commonReindex_metabolic`). Item 1 from the provider. -/
+noncomputable def charPairAssocBor (prov : CharPairWProvider I k)
+    {s t u : SingularManifold PUnit k I} (σ : CharPairStr I s) (τ : CharPairStr I t)
+    (ρ : CharPairStr I u) :
+    CharPairBor (mapCylinder (Diffeomorph.sumAssoc I s.M k t.M u.M)
+      (by funext w; rcases w with (w | w) | w <;> rfl))
+      (charPairSumStr (charPairSumStr σ τ) ρ) (charPairSumStr σ (charPairSumStr τ ρ)) := by
+  have hqS : (charPairSumStr (charPairSumStr σ τ) ρ).q
+      = (Z4Quadratic.orthSum (orthSum σ.q τ.q) ρ.q).reindex
+          ((Equiv.sumCongr finSumFinEquiv (Equiv.refl (Fin ρ.n))).trans finSumFinEquiv) := by
+    show (Z4Quadratic.orthSum ((orthSum σ.q τ.q).reindex finSumFinEquiv) ρ.q).reindex
+        finSumFinEquiv = _
+    conv_lhs => rw [← reindex_refl ρ.q]
+    rw [orthSum_reindex, reindex_trans]
+  have hqT : (charPairSumStr σ (charPairSumStr τ ρ)).q
+      = (Z4Quadratic.orthSum (orthSum σ.q τ.q) ρ.q).reindex
+          ((Equiv.sumAssoc (Fin σ.n) (Fin τ.n) (Fin ρ.n)).trans
+            ((Equiv.sumCongr (Equiv.refl (Fin σ.n)) finSumFinEquiv).trans finSumFinEquiv)) := by
+    show (Z4Quadratic.orthSum σ.q ((orthSum τ.q ρ.q).reindex finSumFinEquiv)).reindex
+        finSumFinEquiv = _
+    conv_lhs => rw [← reindex_refl σ.q]
+    rw [orthSum_reindex, reindex_trans, orthSum_assoc_eq, reindex_trans]
+  have hmeta := commonReindex_metabolic (Z4Quadratic.orthSum (orthSum σ.q τ.q) ρ.q)
+    ((Equiv.sumCongr finSumFinEquiv (Equiv.refl (Fin ρ.n))).trans finSumFinEquiv)
+    ((Equiv.sumAssoc (Fin σ.n) (Fin τ.n) (Fin ρ.n)).trans
+      ((Equiv.sumCongr (Equiv.refl (Fin σ.n)) finSumFinEquiv).trans finSumFinEquiv))
+  rw [← hqS, ← hqT] at hmeta
+  exact mkCharPairBor prov _
+    (by haveI := σ.t2; haveI := τ.t2; haveI := ρ.t2
+        exact inferInstanceAs (T2Space (((s.M ⊕ t.M) ⊕ u.M) × Set.Icc (0 : ℝ) 1)))
+    _ hmeta.1 hmeta.2
 
 /-! ## §10. THE UNIVERSE-UNBLOCK PROOF-OF-CONCEPT (the payoff of the `TangentialData.{u,v}` generalization)
 
