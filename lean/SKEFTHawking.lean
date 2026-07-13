@@ -4250,6 +4250,13 @@ import SKEFTHawking.SphereProdGramInt
 -- removing the atlas half of Mathlib gap 1 of the S²×D³ bounding freeze (closed-ball ChartedSpace;
 -- IsManifold transition-smoothness is slice C). (wt3-built.)
 import SKEFTHawking.DiskChart
+-- Phase 5q.H — closed 3-ball smooth atlas (SphereDiskSmoothData freeze, slice C): the reusable
+-- smoothness substrate for the D³ transition maps — contDiffOn_normalize (‖·‖⁻¹•v on {v≠0}, the
+-- diskDir-vector smoothness), contDiff_assemble/contDiff_splitLo (the E²×ℝ≅E³ coordinate iso), and
+-- contDiffOn_sphereTransition (the S² stereographic transition, extracted from the sphere's own
+-- IsManifold via contDiffOn_ext_coord_change + IsManifold.of_le) — the substrate the four
+-- isManifold_of_contDiffOn transition classes consume. (wt3-built.)
+import SKEFTHawking.DiskManifoldSmooth
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
