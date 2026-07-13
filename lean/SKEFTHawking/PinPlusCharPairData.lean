@@ -484,6 +484,39 @@ theorem jointEnhancement_reindex {ι₁ ι₂ κ₁ κ₂ : Type*} [Fintype ι�
       = (Z4Quadratic.orthSum Q₁ (Z4Quadratic.neg Q₂)).reindex (Equiv.sumCongr e₁ e₂) := by
   rw [neg_reindex, orthSum_reindex]
 
+/-- Negation distributes over `orthSum`. -/
+theorem neg_orthSum {ι₁ ι₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂] [DecidableEq ι₂]
+    (Q₁ : Z4Quadratic ι₁) (Q₂ : Z4Quadratic ι₂) :
+    Z4Quadratic.neg (Z4Quadratic.orthSum Q₁ Q₂)
+      = Z4Quadratic.orthSum (Z4Quadratic.neg Q₁) (Z4Quadratic.neg Q₂) := by
+  apply z4_ext
+  · funext x; simp only [Z4Quadratic.neg, Z4Quadratic.orthSum]; ring
+  · rfl
+
+/-- **Regrouping a four-fold `orthSum`** (the `addBor` block-swap): the middle two summands commute,
+witnessed by `Equiv.sumSumSumComm`. -/
+theorem orthSum_regroup {ι₁ ι₂ ι₃ ι₄ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂]
+    [DecidableEq ι₂] [Fintype ι₃] [DecidableEq ι₃] [Fintype ι₄] [DecidableEq ι₄]
+    (a : Z4Quadratic ι₁) (b : Z4Quadratic ι₂) (c : Z4Quadratic ι₃) (d : Z4Quadratic ι₄) :
+    Z4Quadratic.orthSum (Z4Quadratic.orthSum a c) (Z4Quadratic.orthSum b d)
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum a b) (Z4Quadratic.orthSum c d)).reindex
+          (Equiv.sumSumSumComm ι₁ ι₂ ι₃ ι₄) := by
+  have h1 : ∀ i : ι₁, (Equiv.sumSumSumComm ι₁ ι₂ ι₃ ι₄) (Sum.inl (Sum.inl i))
+      = Sum.inl (Sum.inl i) := fun _ => rfl
+  have h2 : ∀ i : ι₂, (Equiv.sumSumSumComm ι₁ ι₂ ι₃ ι₄) (Sum.inl (Sum.inr i))
+      = Sum.inr (Sum.inl i) := fun _ => rfl
+  have h3 : ∀ i : ι₃, (Equiv.sumSumSumComm ι₁ ι₂ ι₃ ι₄) (Sum.inr (Sum.inl i))
+      = Sum.inl (Sum.inr i) := fun _ => rfl
+  have h4 : ∀ i : ι₄, (Equiv.sumSumSumComm ι₁ ι₂ ι₃ ι₄) (Sum.inr (Sum.inr i))
+      = Sum.inr (Sum.inr i) := fun _ => rfl
+  apply z4_ext
+  · funext x
+    simp only [Z4Quadratic.orthSum, Z4Quadratic.reindex, h1, h2, h3, h4]
+    ring
+  · funext x y
+    simp only [Z4Quadratic.orthSum, Z4Quadratic.reindex, h1, h2, h3, h4]
+    ring
+
 /-- **The graph of a reindex-isometry is metabolic** for `orthSum Q (neg (Q.reindex g))`: the two ends
 are the SAME form indexed differently, so the graph of the reparametrization `funCongrLeft g.symm` is a
 metabolic Lagrangian (the reparametrized-cylinder membrane kernel of `commBor`/`assocBor`/`unitBor`). -/
@@ -889,6 +922,40 @@ noncomputable def charPairAssocBor (prov : CharPairWProvider I k)
   exact mkCharPairBor prov _
     (by haveI := σ.t2; haveI := τ.t2; haveI := ρ.t2
         exact inferInstanceAs (T2Space (((s.M ⊕ t.M) ⊕ u.M) × Set.Icc (0 : ℝ) 1)))
+    _ hmeta.1 hmeta.2
+
+/-- **`addBor` instantiates** — the `⊕`-congruence. Each block's kernel is the abstract Lagrangian
+`β₁.L`/`β₂.L`; the disjoint-union membrane kernel is their block sum, regrouped so the two σ-ends and two
+τ-ends sit together (`neg_orthSum` + `orthSum_regroup` = `Equiv.sumSumSumComm`) and reindexed to the
+`Fin (m+n)` domain (`jointEnhancement_reindex`). Item 1 from `b₁.W ⊕ b₂.W` (both ends' `hWT2`). -/
+noncomputable def charPairAddBor (prov : CharPairWProvider I k)
+    {s₁ t₁ s₂ t₂ : SingularManifold PUnit k I}
+    {b₁ : Bordism (I.prod (𝓡∂ 1)) s₁ t₁} {b₂ : Bordism (I.prod (𝓡∂ 1)) s₂ t₂}
+    {σ₁ : CharPairStr I s₁} {τ₁ : CharPairStr I t₁} {σ₂ : CharPairStr I s₂} {τ₂ : CharPairStr I t₂}
+    (β₁ : CharPairBor b₁ σ₁ τ₁) (β₂ : CharPairBor b₂ σ₂ τ₂) :
+    CharPairBor (b₁.add b₂) (charPairSumStr σ₁ σ₂) (charPairSumStr τ₁ τ₂) := by
+  have hblock : IsMetabolic
+      (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q (Z4Quadratic.neg τ₁.q))
+        (Z4Quadratic.orthSum σ₂.q (Z4Quadratic.neg τ₂.q))) (blockSub β₁.L β₂.L) :=
+    IsMetabolic.orthSum ⟨β₁.htaylor, β₁.hlag⟩ ⟨β₂.htaylor, β₂.hlag⟩
+  have hregroup : Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q σ₂.q)
+        (Z4Quadratic.neg (Z4Quadratic.orthSum τ₁.q τ₂.q))
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q (Z4Quadratic.neg τ₁.q))
+          (Z4Quadratic.orthSum σ₂.q (Z4Quadratic.neg τ₂.q))).reindex
+          (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n)) := by
+    rw [neg_orthSum, orthSum_regroup]
+  have hbase := hblock.reindex (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n))
+  rw [← hregroup] at hbase
+  have hform : jointEnhancement (charPairSumStr σ₁ σ₂).q (charPairSumStr τ₁ τ₂).q
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q σ₂.q)
+          (Z4Quadratic.neg (Z4Quadratic.orthSum τ₁.q τ₂.q))).reindex
+          (Equiv.sumCongr finSumFinEquiv finSumFinEquiv) :=
+    jointEnhancement_reindex (orthSum σ₁.q σ₂.q) (orthSum τ₁.q τ₂.q) finSumFinEquiv finSumFinEquiv
+  have hmeta := hbase.reindex (Equiv.sumCongr finSumFinEquiv finSumFinEquiv)
+  rw [← hform] at hmeta
+  exact mkCharPairBor prov _
+    (by haveI : T2Space b₁.W := β₁.hWT2; haveI : T2Space b₂.W := β₂.hWT2
+        exact inferInstanceAs (T2Space (b₁.W ⊕ b₂.W)))
     _ hmeta.1 hmeta.2
 
 /-! ## §10. THE UNIVERSE-UNBLOCK PROOF-OF-CONCEPT (the payoff of the `TangentialData.{u,v}` generalization)
