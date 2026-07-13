@@ -853,6 +853,10 @@ import SKEFTHawking.SingularCohomologyMod2
 -- δ(a⌣₁b) = a⌣b + b⌣a (mod 2, cocycles) — the (3,3) analogue of cupOne22. Diagonal x⌣₁x is a 5-cocycle,
 -- so [x⌣₁x] = Sq²[x] : H³→H⁵, the sub-top square feeding the 5-manifold (2,3) Wu datum.
 import SKEFTHawking.SingularCupOne33
+-- Phase 5q.F (the (2,3)-Wu leg, part 2): the Steenrod cup-`2` ⌣₂ : C³×C³→C⁴ with δ(x⌣₂y)=x⌣₁y+y⌣₁x
+-- (the ⌣₁-commutator killer) and the cup-`1` (2,3) Hirsch leg δ(c⌣₁d)=(δc)⌣₁d+c⌣d+d⌣c, assembling the
+-- sub-top Steenrod square Sq² : H³(X;ℤ/2) →ₗ H⁵(X;ℤ/2) — the (2,3) LefschetzWuDatum sqOp for a 5-manifold.
+import SKEFTHawking.SingularSteenrodSq2
 -- Phase 5q.H (2026-07-04, Option-A foundation brick 1): singular INTEGRAL cohomology (cochain complex +
 -- Hⁿ(X;ℤ) + δ²=0 with the genuine (-1)ⁱ sign) — the from-scratch base for the manifold intersection form.
 import SKEFTHawking.SingularCohomologyInt
