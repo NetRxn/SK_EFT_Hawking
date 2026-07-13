@@ -1322,6 +1322,15 @@ import SKEFTHawking.PoincareLefschetzWu5
 -- machinery, the characterisation/uniqueness of the class, the μ = ⟨·,[W,∂W]⟩ functional, the
 -- interior-ℤ/2 vs boundary-vanishing local-homology dichotomy, and the wiring into LefschetzWuDatum.
 import SKEFTHawking.PoincareLefschetzRelFundClass
+-- W-A.1e: the GENERIC datum-level layer — the dual-class extraction (`dualFunctional`,
+-- `RepresentedBy`, the bundled UCT-flavored `RelKroneckerSurjective` perfectness hypothesis) and the
+-- datum-assembly seam `LefschetzWuDatum.ofRelFund14`/`.ofRelFund23` wiring the concrete `relCupH14`/
+-- `relCupH23`/`relSq1`/`relSq2` into full `n=5` Lefschetz–Wu data.
+import SKEFTHawking.PoincareLefschetzWuAssembly
+-- W-A.1e item 3: the `CharPairWProvider` connection note — `mkWAdm`/`mkWAdmOfRelFund` show the
+-- assembled `(1,4)`/`(2,3)` data + `wuW2 = 0` inhabit exactly `PinPlusCharPairData.WAdm`'s shape.
+-- Standalone; never modifies `PinPlusCharPairData.lean`.
+import SKEFTHawking.PoincareLefschetzWuAssemblyProvider
 import SKEFTHawking.WuThirdClass
 import SKEFTHawking.SingularBockstein
 import SKEFTHawking.SingularCapHomology
