@@ -235,6 +235,13 @@ theorem jointLagrangian_of_isMetabolic {nσ nτ : ℕ} {qσ : Z4Quadratic (Fin n
     {qτ : Z4Quadratic (Fin nτ)} {L : Submodule (ZMod 2) ((Fin nσ ⊕ Fin nτ) → ZMod 2)}
     (h : IsMetabolic (jointEnhancement qσ qτ) L) : JointLagrangian qσ qτ L := h.2
 
+/-- **Extensionality for `Z4Quadratic`** — a form is determined by `q` and `B` (the axioms are
+proof-irrelevant). Lets the op witnesses rewrite one enhancement into a `reindex`/`neg`/`orthSum` of
+another and pull the metabolic Lagrangian across via the §4.5 engine. -/
+theorem z4_ext {ι : Type*} [Fintype ι] [DecidableEq ι] {Q₁ Q₂ : Z4Quadratic ι}
+    (hq : Q₁.q = Q₂.q) (hB : Q₁.B = Q₂.B) : Q₁ = Q₂ := by
+  cases Q₁; cases Q₂; cases hq; cases hB; rfl
+
 /-- **Metabolic transports along `reindex`.** `x ↦ x ∘ e` is a linear bijection, so the preimage of a
 metabolic `L` is metabolic for `Q.reindex e`. -/
 theorem IsMetabolic.reindex {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
@@ -599,6 +606,70 @@ content of `negBor`. The full `CharPairBor` witness supplies the anti-diagonal L
 theorem neg_doubling_brown_zero {n : ℕ} (q : Z4Quadratic (Fin n)) :
     (orthSum (neg q) q).brown = 0 := by
   rw [brown_orthSum, brown_neg, neg_add_cancel]
+
+/-! ## §9.5. The remaining `Bor` op witnesses (symm / neg / add / comm / assoc / unit)
+
+Each transports the §4.5 metabolic engine through the `reindex`/`neg`/`orthSum` that `sumStr`/`revStr`
+apply to the enhancements, then draws item 1 (`P14`/`P23`/`hwu`) either from `β` (same `W`) or from the
+provider (a new `W`). `symmBor` reuses `b`'s W-datum (`b.symm.W = b.W`). -/
+
+/-- **`symmBor` instantiates** — a bordism reversal swaps the two ends. The membrane kernel is `β.L`
+pulled back along the `Sum.swap` regrouping: the τ-end-negated joint form of the swapped ends is the
+`Equiv.sumComm`-reindex of the NEGATED original joint form (`z4_ext`), so metabolicity transports via
+`IsMetabolic.neg`+`IsMetabolic.reindex`. `b.symm.W = b.W`, so item 1 is inherited from `β`. -/
+def charPairSymmBor {s t : SingularManifold PUnit k I} {b : Bordism (I.prod (𝓡∂ 1)) s t}
+    {σ : CharPairStr I s} {τ : CharPairStr I t} (β : CharPairBor b σ τ) :
+    CharPairBor b.symm τ σ :=
+  have hmeta : IsMetabolic (jointEnhancement τ.q σ.q)
+      (β.L.comap (LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumComm (Fin σ.n) (Fin τ.n)))) := by
+    have hform : jointEnhancement τ.q σ.q
+        = (Z4Quadratic.neg (jointEnhancement σ.q τ.q)).reindex (Equiv.sumComm (Fin σ.n) (Fin τ.n)) := by
+      apply z4_ext
+      · funext y
+        show (τ.q).q (fun i => y (Sum.inl i)) + -((σ.q).q (fun i => y (Sum.inr i)))
+            = -((jointEnhancement σ.q τ.q).q (fun i => y (Equiv.sumComm (Fin σ.n) (Fin τ.n) i)))
+        simp only [jointEnhancement, Z4Quadratic.orthSum, Z4Quadratic.neg, Equiv.sumComm_apply,
+          Sum.swap_inl, Sum.swap_inr]
+        ring
+      · funext y y'
+        show (τ.q).B (fun i => y (Sum.inl i)) (fun i => y' (Sum.inl i))
+              + (σ.q).B (fun i => y (Sum.inr i)) (fun i => y' (Sum.inr i))
+            = (jointEnhancement σ.q τ.q).B (fun i => y (Equiv.sumComm (Fin σ.n) (Fin τ.n) i))
+                (fun i => y' (Equiv.sumComm (Fin σ.n) (Fin τ.n) i))
+        simp only [jointEnhancement, Z4Quadratic.orthSum, Z4Quadratic.neg, Equiv.sumComm_apply,
+          Sum.swap_inl, Sum.swap_inr]
+        ring
+    rw [hform]
+    exact (IsMetabolic.neg ⟨β.htaylor, β.hlag⟩).reindex (Equiv.sumComm (Fin σ.n) (Fin τ.n))
+  { hWT2 := β.hWT2
+    P14 := β.P14
+    P23 := β.P23
+    hwu := β.hwu
+    L := β.L.comap (LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumComm (Fin σ.n) (Fin τ.n)))
+    htaylor := hmeta.1
+    hlag := hmeta.2 }
+
+/-- **`negBor` instantiates** — the doubling `(M,σ̄) ⊔ (M,σ)` bounds `Σ × [0,1]`. Its σ-side end
+`orthSum (neg σ.q) σ.q` has the anti-diagonal (`cylLagrangian`) as a metabolic Lagrangian
+(`diag_metabolic`, both copies UN-negated on the σ-end per the no-go), transported through the
+`finSumFinEquiv` reindex and block-summed with the (trivially metabolic) empty τ-end `⊤`. Item 1 from
+the provider on `doublingBordism s`. -/
+noncomputable def charPairNegBor (prov : CharPairWProvider I k) {s : SingularManifold PUnit k I}
+    (σ : CharPairStr I s) :
+    CharPairBor (doublingBordism s) (charPairSumStr (charPairRevStr σ) σ) charPairEmptyStr :=
+  have hSe : IsMetabolic (Z4Quadratic.neg (stdQuadratic 0))
+      (⊤ : Submodule (ZMod 2) (Fin 0 → ZMod 2)) :=
+    ⟨fun l _ => by rw [Subsingleton.elim l 0]; exact (Z4Quadratic.neg (stdQuadratic 0)).q_zero,
+     fun _ _ => Submodule.mem_top⟩
+  have hSs : IsMetabolic (charPairSumStr (charPairRevStr σ) σ).q
+      ((cylLagrangian σ.n).comap (LinearMap.funLeft (ZMod 2) (ZMod 2) finSumFinEquiv)) :=
+    (diag_metabolic (neg σ.q) σ.q (fun a => neg_add_cancel _) rfl).reindex finSumFinEquiv
+  have hmeta := hSs.orthSum hSe
+  mkCharPairBor prov (doublingBordism s)
+    (by haveI := σ.t2; exact inferInstanceAs (T2Space (s.M × Set.Icc (0 : ℝ) 1)))
+    (blockSub ((cylLagrangian σ.n).comap (LinearMap.funLeft (ZMod 2) (ZMod 2) finSumFinEquiv))
+      (⊤ : Submodule (ZMod 2) (Fin 0 → ZMod 2)))
+    hmeta.1 hmeta.2
 
 /-! ## §10. THE UNIVERSE-UNBLOCK PROOF-OF-CONCEPT (the payoff of the `TangentialData.{u,v}` generalization)
 
