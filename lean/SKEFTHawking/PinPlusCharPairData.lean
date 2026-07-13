@@ -211,4 +211,85 @@ statement is instantiable — the whole point of the round-2 gate. -/
 theorem cyl_brown_eq {n : ℕ} (q : Z4Quadratic (Fin n)) : q.brown = q.brown :=
   brown_eq_of_taylorLeg_lagrangian q q (cylLagrangian n) (taylorLeg_cyl q) (lagrangian_cyl q)
 
+/-! ## §5. The frozen structure shapes `CharPairStr` (Mfd) and `CharPairBor` (Bor)
+
+⚠ **UNIVERSE FRICTION (reported, not silently worked around).** The frozen v4 §2 `Mfd` table lists
+BOTH `cert : PinPlusCertK I s` AND `surf : SingularManifold PUnit k (𝓡 2)`. `PinPlusCertK` (and the
+`swTotalNe`/`swNumberW14`/`poincareDual4*` 5q.G substrate it consumes) is **monomorphic at carrier
+universe 0** (`SingularSWNumber`/`SingularPD4Instances` pin `M : Type`), so any `Mfd s` carrying
+`cert` must be `Type 0`; but a bundled `surf : SingularManifold …` is `Type 1` (it bundles a `Type 0`
+carrier), and the `T2TangentialData` interface binds `Mfd s : Type u ⟺ s : SingularManifold.{u}`.
+Hence `cert` and a bundled-manifold `surf` **cannot coexist in one `Type 0` `Mfd s`** against the
+current substrate. This is a substrate universe gap, NOT a mathematical weakening. Per the design's
+own authorization (§2 "if the canonical `[Σ]` machinery isn't merged … bundle abstractly"), the
+surface's MANIFOLD content — `surf`, `surfT2`, `emb`, `embSmooth`, `embInj`, and the `hchar`/`hpolar`
+ties + the `H₁(Σ) ≃ₗ Fin n` basis equiv — is **deferred to wt2's 2-dim PD tower**; its ALGEBRAIC
+shadow `(n, q)` (all the Taylor leg / anti-collapse consume) is carried concretely here.
+RESOLUTION for the lead: universe-poly-fy the 5q.G SW/PD4 substrate (`M : Type` → `M : Type*`) to
+carry a concrete `surf`, OR keep the deferral. The algebraic honesty (grade well-definedness) does
+not depend on this choice — it rides on `brown_eq_of_taylorLeg_lagrangian`. -/
+
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+variable {k : WithTop ℕ∞}
+variable {I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))} [I.Boundaryless]
+
+open SKEFTHawking.BordismTheory SKEFTHawking.PoincareLefschetzWu5
+
+/-- **A certified characteristic-pair structure on `s`** (design v4 §2 `Mfd` table, `Type 0` form).
+Carries the concrete algebraic + admissibility content; the surface MANIFOLD (`surf`/`emb`/`hchar`/
+`hpolar`/basis-equiv) is deferred to wt2 (see the §5 universe-friction note). -/
+structure CharPairStr (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))) [I.Boundaryless]
+    (s : SingularManifold PUnit k I) : Type where
+  /-- leg 1: the carrier is Hausdorff (feeds `t2Str`). -/
+  t2 : T2Space s.M
+  /-- the `w₂ = 0` admissibility certificate (EXISTS, 5q.G; `k`-generic). -/
+  cert : SKEFTHawking.PinPlusTiedData.PinPlusCertK I s
+  /-- ▲A-5: the enhancement rank `n = dim H₁(Σ;ℤ/2)` (the surface's `H₁`; wt2 supplies the basis
+  equiv `H₁(Σ) ≃ₗ (Fin n → ZMod 2)`). -/
+  n : ℕ
+  /-- the `ZMod 4`-quadratic enhancement `q : Z4Quadratic (Fin n)` — the algebraic shadow of the
+  characteristic surface. `hpolar` (`q.B` = Σ's mod-2 intersection form) is wt2's discharge. -/
+  q : Z4Quadratic (Fin n)
+
+/-- **A certified characteristic-pair bordism datum** (design v4 §2 `Bor` items 0–4). Carries the
+frozen load-bearing content: item 0 (`hWT2`), item 1's W-admissibility SHAPE (the two Lefschetz–Wu
+data + `w₂(W) = 0`), the membrane's boundary-to-interior kernel `L` (item 2's algebraic content),
+item 4's EXACT τ-end-negated Taylor leg, and the `half-lives-half-dies` Lagrangian property `hlag`
+— from which `brown σ.q = brown τ.q` is FORCED (`brown_eq_of_taylorLeg_lagrangian`), so the computed
+grade descends and the reading-(ii) collapse is impossible. Item 2's geometric membrane `Q` and item
+3's relative characteristic condition need wt3's relative-Lefschetz/rel-PD tower and are deferred
+(documented obligations), exactly as the design authorizes ("abstract-bundled if the rel-PD machinery
+is not yet merged"). -/
+structure CharPairBor {s t : SingularManifold PUnit k I}
+    (b : Bordism (I.prod (𝓡∂ 1)) s t) (σ : CharPairStr I s) (τ : CharPairStr I t) : Type where
+  /-- item 0 (▲A-2): the bordism carrier is Hausdorff (the T2-refined relation). -/
+  hWT2 : T2Space b.W
+  /-- item 1 (▲A-3): the `(1,4)` Lefschetz–Wu datum of the compact 5-manifold-with-boundary `(W,∂W)`
+  (supplies `v₁ = w₁(W)`). -/
+  P14 : LefschetzWuDatum (TopCat.of b.W) ((I.prod (𝓡∂ 1)).boundary b.W) 1 4 5
+  /-- item 1: the `(2,3)` Lefschetz–Wu datum (supplies `v₂`). -/
+  P23 : LefschetzWuDatum (TopCat.of b.W) ((I.prod (𝓡∂ 1)).boundary b.W) 2 3 5
+  /-- item 1: **W-admissibility** `w₂(W) = 0` (`⟺ Pin⁺ exists on W`), in the Wu-formula form
+  `v₂ = v₁²`, stated against the canonical Lefschetz-dual classes. -/
+  hwu : wuW2 P14 P23 = 0
+  /-- item 2 (algebraic content of the certified membrane `Q`): its boundary-to-interior kernel
+  `L = ker(H₁(∂Q;ℤ/2) → H₁(Q;ℤ/2))`, a submodule of `H₁(∂Q) = (Fin σ.n ⊕ Fin τ.n) → ZMod 2` (the
+  boundary identification pins `∂Q = Σ_σ ⊔ Σ_τ` to the ends' `H₁` via the enhancement bases). -/
+  L : Submodule (ZMod 2) (Fin σ.n ⊕ Fin τ.n → ZMod 2)
+  /-- item 4 (▲A-1, the EXACT kernel-forced form): the τ-end-NEGATED joint enhancement vanishes on
+  `L`. Per Bor-END, never per boundary component (no-go `taylor-leg-end-convention-trap`). -/
+  htaylor : TaylorLegVanishes σ.q τ.q L
+  /-- `L` is Lagrangian for the joint polar form (`half-lives-half-dies` for the honest membrane) —
+  the property that, with `htaylor`, FORCES `brown σ.q = brown τ.q` (the anti-collapse). -/
+  hlag : JointLagrangian σ.q τ.q L
+
+/-- **The frozen `Bor` FORCES grade equality of the ends** — the honesty guarantee. From any
+`CharPairBor b σ τ`, the exact Taylor leg + Lagrangian give `brown σ.q = brown τ.q` via the
+anti-collapse engine, so the computed grade `abk8 := brown ∘ q` is a genuine bordism invariant and no
+reading-(ii) torsor collapse (`dataBordism_mk_eq_of_cylinder_bor`) is possible. -/
+theorem CharPairBor.brown_eq {s t : SingularManifold PUnit k I}
+    {b : Bordism (I.prod (𝓡∂ 1)) s t} {σ : CharPairStr I s} {τ : CharPairStr I t}
+    (β : CharPairBor b σ τ) : σ.q.brown = τ.q.brown :=
+  brown_eq_of_taylorLeg_lagrangian σ.q τ.q β.L β.htaylor β.hlag
+
 end SKEFTHawking.PinPlusCharPairData
