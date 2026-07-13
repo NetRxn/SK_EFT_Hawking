@@ -4244,6 +4244,12 @@ import SKEFTHawking.SingularCohomologyFunctorialityInt
 -- β∪β=0 at the two factor projections prodFst / sndCM. The two diagonal Gram entries' mechanism;
 -- the basis-ID (deltaGen projection lemmas) + the cross entries (Künneth) remain. (wt2-built.)
 import SKEFTHawking.SphereProdGramInt
+-- Phase 5q.H — closed 3-ball smooth atlas (SphereDiskSmoothData freeze, slice B): the interior chart
+-- (v ↦ (splitLo v, v₂+2)) and polar collar chart family (v ↦ (chart_{S²}(v/‖v‖), 1−‖v‖)) as genuine
+-- OpenPartialHomeomorphs, plus the ChartedSpace (ModelProd E² (EuclideanHalfSpace 1)) D³ assembly —
+-- removing the atlas half of Mathlib gap 1 of the S²×D³ bounding freeze (closed-ball ChartedSpace;
+-- IsManifold transition-smoothness is slice C). (wt3-built.)
+import SKEFTHawking.DiskChart
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
