@@ -29,6 +29,8 @@ open SKEFTHawking.SingularCohomologyFunctoriality
 open SKEFTHawking.RP2PointSet SKEFTHawking.RP4PointSet
 open SKEFTHawking.RP2EquatorialInclusion
 open SKEFTHawking.RP4CharSurfacePushforward
+open SKEFTHawking.SingularSurfaceIntersectionForm
+open SKEFTHawking.SingularPD4Instances SKEFTHawking.PoincareDualityWu
 
 namespace SKEFTHawking.RP4CharSurfaceSmithNat
 
@@ -95,5 +97,115 @@ theorem cochainTransfer_natural (n : ℕ) (y : SingularCochain (TopCat.of S4) n)
   · rw [← hP, ← hM]
   · rw [← hP, ← hM]; exact add_comm _ _
   · exact absurd (hP.trans hM.symm) hne
+
+/-! ## The covering-pullback naturality and the connecting-map naturality -/
+
+/-- **Covering-pullback naturality**: `embS2^# ∘ π^#_{S⁴} = π^#_{S²} ∘ emb^#` (both are the pullback
+along `mkC_{S⁴} ∘ embS2 = emb ∘ mkC_{S²}`, `covering_square`). -/
+theorem cochainPullback_covering_nat (n : ℕ) (a : SingularCochain (TopCat.of RP4) n) :
+    cochainPullback embS2C n (cochainPullback RP4Transfer.mkC n a)
+      = cochainPullback RP2Transfer.mkC n (cochainPullback embRP2C n a) := by
+  funext σ
+  show a (mapSimplex RP4Transfer.mkC (mapSimplex embS2C σ))
+    = a (mapSimplex embRP2C (mapSimplex RP2Transfer.mkC σ))
+  rw [← mapSimplex_comp, ← mapSimplex_comp, covering_square]
+
+/-- The pullback of a cocycle is a cocycle (`δ(emb^# g) = emb^#(δg) = 0`). -/
+theorem cochainPullback_embRP2C_cocycle {n : ℕ} (g : SingularCochain (TopCat.of RP4) n)
+    (hg : coboundaryₗ (TopCat.of RP4) n g = 0) :
+    coboundaryₗ (TopCat.of RP2) n (cochainPullback embRP2C n g) = 0 := by
+  show coboundary (TopCat.of RP2) n (cochainPullback embRP2C n g) = 0
+  rw [coboundary_cochainPullback,
+    show coboundary (TopCat.of RP4) n g = coboundaryₗ (TopCat.of RP4) n g from rfl, hg, map_zero]
+
+/-- **The section-defect is `τ^#_{ℝP²}`-killed**: the `S²`-cochain
+`E = embS2^#(s^#_{ℝP⁴} g) − s^#_{ℝP²}(emb^# g)` transfers to `emb^# g − emb^# g = 0`, using the
+transfer naturality (`cochainTransfer_natural`) and `τ^# ∘ s^# = id` on both spaces. -/
+theorem transfer_section_defect_eq_zero {n : ℕ} (g : SingularCochain (TopCat.of RP4) n) :
+    RP2SmithCochain.cochainTransfer n
+      (cochainPullback embS2C n (RP4SmithCochain.cochainSection n g)
+        - RP2SmithCochain.cochainSection n (cochainPullback embRP2C n g)) = 0 := by
+  rw [map_sub, ← cochainTransfer_natural n (RP4SmithCochain.cochainSection n g),
+    RP4SmithCochain.cochainTransfer_cochainSection,
+    RP2SmithCochain.cochainTransfer_cochainSection, sub_self]
+
+/-- **Connecting-cochain naturality, mod coboundary**: for a cocycle `g`,
+`emb^#(conn₄ g) − conn₂(emb^# g) = δF` for some `F` — the section defect `E` is `τ^#₂`-killed
+(`transfer_section_defect_eq_zero`), hence `E = π^#₂ F` (`ker τ^# = im π^#`); applying `π^#₂` (which
+is injective) to both sides reduces the claim to `δ_{S²}E = δ_{S²}E`. This is the snake naturality of
+the covering Smith SES, with the only geometric input the transfer brick. -/
+theorem connectingCochain_natural {n : ℕ}
+    (g : SingularCochain (TopCat.of RP4) n) (hg : coboundaryₗ (TopCat.of RP4) n g = 0) :
+    ∃ F : SingularCochain (TopCat.of RP2) n,
+      coboundaryₗ (TopCat.of RP2) n F
+        = cochainPullback embRP2C (n + 1) (RP4SmithCochain.connectingCochain n g)
+          - RP2SmithCochain.connectingCochain n (cochainPullback embRP2C n g) := by
+  obtain ⟨F, hF⟩ := RP2SmithCochain.mem_range_cochainPullback_of_cochainTransfer_eq_zero
+    (cochainPullback embS2C n (RP4SmithCochain.cochainSection n g)
+      - RP2SmithCochain.cochainSection n (cochainPullback embRP2C n g))
+    (transfer_section_defect_eq_zero g)
+  refine ⟨F, ?_⟩
+  apply RP2SmithCochain.cochainPullback_injective (n + 1)
+  have hLHS : cochainPullback RP2Transfer.mkC (n + 1) (coboundaryₗ (TopCat.of RP2) n F)
+      = coboundary (TopCat.of S2) n
+          (cochainPullback embS2C n (RP4SmithCochain.cochainSection n g)
+            - RP2SmithCochain.cochainSection n (cochainPullback embRP2C n g)) := by
+    rw [show cochainPullback RP2Transfer.mkC (n + 1) (coboundaryₗ (TopCat.of RP2) n F)
+          = coboundary (TopCat.of S2) n (cochainPullback RP2Transfer.mkC n F) from
+        (coboundary_cochainPullback RP2Transfer.mkC n F).symm, hF]
+  have hRHS : cochainPullback RP2Transfer.mkC (n + 1)
+        (cochainPullback embRP2C (n + 1) (RP4SmithCochain.connectingCochain n g)
+          - RP2SmithCochain.connectingCochain n (cochainPullback embRP2C n g))
+      = coboundary (TopCat.of S2) n (cochainPullback embS2C n (RP4SmithCochain.cochainSection n g))
+        - coboundary (TopCat.of S2) n
+            (RP2SmithCochain.cochainSection n (cochainPullback embRP2C n g)) := by
+    rw [map_sub, ← cochainPullback_covering_nat (n + 1) (RP4SmithCochain.connectingCochain n g),
+      RP4SmithCochain.cochainPullback_connectingCochain g hg,
+      show coboundaryₗ (TopCat.of S4) n (RP4SmithCochain.cochainSection n g)
+          = coboundary (TopCat.of S4) n (RP4SmithCochain.cochainSection n g) from rfl,
+      ← coboundary_cochainPullback embS2C n (RP4SmithCochain.cochainSection n g),
+      RP2SmithCochain.cochainPullback_connectingCochain (cochainPullback embRP2C n g)
+        (cochainPullback_embRP2C_cocycle g hg),
+      show coboundaryₗ (TopCat.of S2) n (RP2SmithCochain.cochainSection n (cochainPullback embRP2C n g))
+          = coboundary (TopCat.of S2) n
+              (RP2SmithCochain.cochainSection n (cochainPullback embRP2C n g)) from rfl]
+  rw [hLHS, hRHS]
+  exact (coboundaryₗ (TopCat.of S2) n).map_sub _ _
+
+/-- **Naturality of the Smith connecting map under `emb`** (cohomology level):
+`emb* (δS_{ℝP⁴} w) = δS_{ℝP²} (emb* w)`. Descends `connectingCochain_natural` through the
+cohomology quotient — the difference of representatives is a coboundary. This is exactly the
+hypothesis `hnat` of `RP4CharSurfacePushforward.crux_of_smithConnecting_natural`. -/
+theorem smithCoConnecting_natural (n : ℕ) (w : Cohomology (TopCat.of RP4) n) :
+    cohomologyPullback embRP2C (n + 1) (RP4SmithCochain.smithCoConnecting n w)
+      = RP2SmithCochain.smithCoConnecting n (cohomologyPullback embRP2C n w) := by
+  obtain ⟨g, rfl⟩ := Submodule.Quotient.mk_surjective _ w
+  show cohomologyPullback embRP2C (n + 1)
+      (RP4SmithCochain.smithCoConnecting n (Cohomology.mk (TopCat.of RP4) n g))
+    = RP2SmithCochain.smithCoConnecting n
+        (cohomologyPullback embRP2C n (Cohomology.mk (TopCat.of RP4) n g))
+  rw [RP4SmithCochain.smithCoConnecting_mk, cohomologyPullback_mk, cohomologyPullback_mk,
+    RP2SmithCochain.smithCoConnecting_mk]
+  refine (Submodule.Quotient.eq _).mpr ?_
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply,
+    AddSubgroupClass.coe_sub]
+  obtain ⟨F, hF⟩ := connectingCochain_natural g.1 (LinearMap.mem_ker.mp g.2)
+  exact ⟨F, hF⟩
+
+/-- **The degree-1 crux, discharged**: `emb* x = xRP2` — the cohomology pullback of the RP4 degree-1
+generator is the RP2 generator, via Smith-connecting naturality + `emb* 1 = 1`. The residual
+geometry is closed; nothing is assumed. -/
+theorem cruxPullbackGen : RP4CharSurfacePushforward.CruxPullbackGen :=
+  RP4CharSurfacePushforward.crux_of_smithConnecting_natural (fun w => smithCoConnecting_natural 0 w)
+
+/-- **THE `hchar` PUSHFORWARD IDENTITY — UNCONDITIONAL.** For every `a ∈ H²(ℝP⁴;ℤ/2)`,
+`⟨a, emb₊[ℝP²]⟩ = μ(a ⌣ x²)`: the equatorial surface `ℝP²` is the characteristic surface dual to
+`w₁²(ℝP⁴) = x²`. The full `hchar` obligation of the `ℝP⁴` witness — its residual geometry now
+discharged (the degree-1 crux `cruxPullbackGen`), so the ∀-pairing identity holds outright. -/
+theorem hchar_pairing (a : Cohomology (TopCat.of RP4) 2) :
+    kroneckerH 2 a (Homology.map embRP2C 2 (surfaceFundamentalClass (M := RP2)))
+      = (poincareDual4Mid_of_closed (M := RP4)).mu
+          (cupH24 a (RP4CohomologyLadder.xpow 2)) :=
+  RP4CharSurfacePushforward.hchar_pairing cruxPullbackGen a
 
 end SKEFTHawking.RP4CharSurfaceSmithNat
