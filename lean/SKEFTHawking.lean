@@ -849,6 +849,10 @@ import SKEFTHawking.SmithIsomorphism
 -- complex but no cohomology). First brick: singular cochains + the coboundary δ. Toward δ²=0 → Hⁿ → cup →
 -- the genuine β discharging dataBordism_iso_zmod16's hypotheses.
 import SKEFTHawking.SingularCohomologyMod2
+-- Phase 5q.F (the (2,3)-Wu leg): the Steenrod cup-`1` product ⌣₁ : C³×C³→C⁵ and its coboundary identity
+-- δ(a⌣₁b) = a⌣b + b⌣a (mod 2, cocycles) — the (3,3) analogue of cupOne22. Diagonal x⌣₁x is a 5-cocycle,
+-- so [x⌣₁x] = Sq²[x] : H³→H⁵, the sub-top square feeding the 5-manifold (2,3) Wu datum.
+import SKEFTHawking.SingularCupOne33
 -- Phase 5q.H (2026-07-04, Option-A foundation brick 1): singular INTEGRAL cohomology (cochain complex +
 -- Hⁿ(X;ℤ) + δ²=0 with the genuine (-1)ⁱ sign) — the from-scratch base for the manifold intersection form.
 import SKEFTHawking.SingularCohomologyInt
