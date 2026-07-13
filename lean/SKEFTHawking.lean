@@ -1322,6 +1322,14 @@ import SKEFTHawking.PoincareLefschetzWu5
 -- machinery, the characterisation/uniqueness of the class, the μ = ⟨·,[W,∂W]⟩ functional, the
 -- interior-ℤ/2 vs boundary-vanishing local-homology dichotomy, and the wiring into LefschetzWuDatum.
 import SKEFTHawking.PoincareLefschetzRelFundClass
+-- W-A.1d: the [W,∂W] geometric discharges — interior chart extraction (`interiorChartLocalIso`,
+-- `interiorGenFamily`, `relFundClassDatumOf`) + boundary local-homology vanishing
+-- (`boundaryPoint_localHomology_zero`, star-convex acyclicity).
+import SKEFTHawking.PoincareLefschetzRelFundClassGeom
+-- W-A.1d/1f: the good-BOUNDARY-chart star-convexity data (Wall 1 sub-obligation (a)) —
+-- `starConvex_diff_of_interior` (a convex set minus a boundary point is star-convex) and the
+-- convex-chart boundary-vanishing reduction `boundaryPoint_localHomology_zero_of_convex`.
+import SKEFTHawking.PoincareLefschetzRelFundClassBoundary
 -- W-A.1e: the GENERIC datum-level layer — the dual-class extraction (`dualFunctional`,
 -- `RepresentedBy`, the bundled UCT-flavored `RelKroneckerSurjective` perfectness hypothesis) and the
 -- datum-assembly seam `LefschetzWuDatum.ofRelFund14`/`.ofRelFund23` wiring the concrete `relCupH14`/
