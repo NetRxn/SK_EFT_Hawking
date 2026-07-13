@@ -121,4 +121,80 @@ theorem boundaryPoint_localHomology_zero {W : TopCat} [T1Space ↑W] {m : ℕ}
   have hΦα : Φ α = 0 := hvanish (Φ α)
   exact (LinearEquiv.map_eq_zero_iff Φ).mp hΦα
 
+/-! ## §3. Interior-point Euclidean chart extraction (`interiorPoint_hasEuclChart`)
+
+At an **interior** point `x` of a charted manifold-with-boundary `(W, I : ModelWithCorners ℝ E H)`,
+the extended chart `extChartAt I x` sends `x` into `interior (extChartAt I x).target` (open in `E`),
+and restricts there to a homeomorphism `intChartHomeo` onto that open set. Composing with the model's
+`toEuclidean : E ≃L EuclideanSpace ℝ (Fin (finrank E))` produces the open Euclidean chart
+`SingularChartBridge.chartLocalIso` / `PoincareLefschetzRelFundClass.interiorLocalIso` consume — the
+`gen` ingredient (interior local homology `≅ ℤ/2`) at every interior point of a concrete `W`. -/
+
+section InteriorChart
+
+variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+  {H : Type} [TopologicalSpace H] {W : Type} [TopologicalSpace W] [ChartedSpace H W]
+  (I : ModelWithCorners ℝ E H)
+
+/-- The **open interior-chart source** at `x`: the chart source cut down to the preimage of the
+interior of the chart target. Open, and it contains `x` when `x` is an interior point. -/
+noncomputable def intChartU (x : W) : Set W :=
+  (extChartAt I x).source ∩ (extChartAt I x) ⁻¹' interior (extChartAt I x).target
+
+/-- The **open interior-chart image** at `x`: the interior of the chart target, open in `E`. -/
+def intChartV (x : W) : Set E := interior (extChartAt I x).target
+
+theorem isOpen_intChartV (x : W) : IsOpen (intChartV I x) := isOpen_interior
+
+theorem isOpen_intChartU (x : W) : IsOpen (intChartU I x) :=
+  (continuousOn_extChartAt x).isOpen_inter_preimage (isOpen_extChartAt_source x) isOpen_interior
+
+theorem mem_intChartU (x : W) (hx : I.IsInteriorPoint x) : x ∈ intChartU I x :=
+  ⟨mem_extChartAt_source x, I.isInteriorPoint_iff.mp hx⟩
+
+theorem extChartAt_mem_intChartV (x : W) (hx : I.IsInteriorPoint x) :
+    extChartAt I x x ∈ intChartV I x := I.isInteriorPoint_iff.mp hx
+
+/-- **The interior chart homeomorphism** `intChartU ≃ₜ intChartV` at an interior point: the restriction
+of `extChartAt I x` to the (open) interior-chart source, a homeomorphism onto the (open) interior of the
+chart target. (Works at any point; interior-ness is only needed for `x ∈ intChartU`, `mem_intChartU`.) -/
+noncomputable def intChartHomeo (x : W) :
+    ↥(intChartU I x) ≃ₜ ↥(intChartV I x) where
+  toFun u := ⟨extChartAt I x u, u.2.2⟩
+  invFun v := ⟨(extChartAt I x).symm v,
+    ⟨(extChartAt I x).map_target (interior_subset v.2), by
+      rw [Set.mem_preimage, (extChartAt I x).right_inv (interior_subset v.2)]; exact v.2⟩⟩
+  left_inv u := Subtype.ext ((extChartAt I x).left_inv u.2.1)
+  right_inv v := Subtype.ext ((extChartAt I x).right_inv (interior_subset v.2))
+  continuous_toFun :=
+    Continuous.subtype_mk
+      ((continuousOn_extChartAt x).comp_continuous continuous_subtype_val (fun u => u.2.1)) _
+  continuous_invFun :=
+    Continuous.subtype_mk
+      ((continuousOn_extChartAt_symm x).comp_continuous continuous_subtype_val
+        (fun v => interior_subset v.2)) _
+
+@[simp] theorem intChartHomeo_apply (x : W) (u : ↥(intChartU I x)) :
+    (intChartHomeo I x u : E) = extChartAt I x u := rfl
+
+/-- **The interior local-homology iso `Hₙ(W, W∖x) ≅ ℤ/2` at an interior point** (the
+`interiorPoint_hasEuclChart` obligation, delivering the local iso it feeds). Given a linear
+homeomorphism `ε : E ≃L EuclideanSpace ℝ (Fin (m+2))` of the model vector space (e.g.
+`ContinuousLinearEquiv.toEuclidean` composed with a `finrank = m+2` reindexing), the interior chart
+`intChartHomeo` composed with `ε` is the open Euclidean chart around `x`, and
+`PoincareLefschetzRelFundClass.interiorLocalIso` turns it into `Hₙ(W, W∖x) ≅ ℤ/2`. This is exactly the
+`gen` ingredient of a `RelFundClassDatum` at the interior points of a concrete charted `W`. -/
+noncomputable def interiorChartLocalIso [T1Space W] {m : ℕ}
+    (ε : E ≃L[ℝ] EuclideanSpace ℝ (Fin (m + 2))) (x : W) (hx : I.IsInteriorPoint x) :
+    RelativeHomology (X := TopCat.of W) ({x}ᶜ) (m + 2) ≃ₗ[ZMod 2] ZMod 2 :=
+  PoincareLefschetzRelFundClass.interiorLocalIso (X := TopCat.of W)
+    (isOpen_intChartU I x) (mem_intChartU I x hx)
+    ((ε.toHomeomorph.isOpen_image).mpr (isOpen_intChartV I x))
+    (⟨extChartAt I x x, extChartAt_mem_intChartV I x hx, rfl⟩ :
+      ε (extChartAt I x x) ∈ ε.toHomeomorph '' intChartV I x)
+    ((intChartHomeo I x).trans (ε.toHomeomorph.image (intChartV I x)))
+    rfl
+
+end InteriorChart
+
 end SKEFTHawking.PoincareLefschetzRelFundClassGeom
