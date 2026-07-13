@@ -556,4 +556,121 @@ noncomputable def sq2Cocycle (x : LinearMap.ker (coboundaryₗ X 3)) :
     LinearMap.ker (coboundaryₗ X 5) :=
   ⟨cupOne33 x.1 x.1, cupOne33_diag_cocycle x.1 (LinearMap.mem_ker.mp x.2)⟩
 
+/-! ### The cup product on cohomology `H³ × H³ → H⁶` and its graded commutativity
+
+The degree-`(3,3)` analogue of `cupH24`. `cupH33` is the cup pairing `H³(X) × H³(X) → H⁶(X)`; its
+symmetry `cupH33_symm` (graded commutativity in degree `3`) is the direct `H`-level payoff of the
+cup-`1` coboundary identity `cupOne33_coboundary`: `δ(a ⌣₁ b) = a ⌣ b + b ⌣ a` makes `a ⌣ b` and
+`b ⌣ a` cohomologous. Mirrors the `(2,2)→4` construction with degrees bumped `2→3`, `4→6`. -/
+
+/-- **Coboundary ⌣ cocycle is a coboundary** (left argument, degrees `2,3`): if `g : C³` is a cocycle
+then `δa ⌣ g = δ(a ⌣ g)` for `a : C²`. The degree-`(2,3)` mirror of `cup_coboundary_left_1_2`, the
+left-descent that kills `H³`-coboundaries in the left argument of `cupH33`. -/
+theorem cup_coboundary_left_2_3 (a : SingularCochain X 2) (g : SingularCochain X 3)
+    (hg : coboundaryₗ X 3 g = 0) :
+    coboundaryₗ X (2 + 3) (cup a g) = cup (coboundaryₗ X 2 a) g := by
+  funext τ
+  show coboundary X (2 + 3) (cup a g) τ = cup (coboundaryₗ X 2 a) g τ
+  rw [coboundary_cup, cup_apply]
+  have hg' : coboundary X 3 g (backSmall τ) = 0 := congrFun hg (backSmall τ)
+  rw [hg', mul_zero, add_zero]
+  rfl
+
+/-- For a fixed degree-`3` cocycle `fc`, cup-with-`fc` descends to a linear map `H³ → H⁶`. -/
+noncomputable def cupRightH33 (fc : LinearMap.ker (coboundaryₗ X 3)) :
+    Cohomology X 3 →ₗ[ZMod 2] Cohomology X 6 :=
+  Submodule.liftQ _
+    ((Submodule.mkQ _).comp
+      (((cupₗ 3 3 fc.1).domRestrict (LinearMap.ker (coboundaryₗ X 3))).codRestrict
+        (LinearMap.ker (coboundaryₗ X 6)) fun gc => by
+          rw [LinearMap.mem_ker]
+          exact cup_cocycle fc.1 gc.1 (LinearMap.mem_ker.mp fc.2) (LinearMap.mem_ker.mp gc.2)))
+    (by
+      intro gc hgc
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] at hgc
+      rw [LinearMap.mem_ker]
+      change Submodule.Quotient.mk _ = 0
+      rw [Submodule.Quotient.mk_eq_zero]
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply,
+        LinearMap.codRestrict_apply, LinearMap.domRestrict_apply, cupₗ_apply]
+      show cup fc.1 gc.1 ∈ LinearMap.range (coboundaryₗ X 5)
+      obtain ⟨b, hb⟩ := hgc
+      refine ⟨cup fc.1 b, ?_⟩
+      rw [← hb]
+      exact cup_coboundary_right fc.1 b (LinearMap.mem_ker.mp fc.2))
+
+/-- The computation rule for `cupRightH33` on a representative cocycle `gc`. -/
+theorem cupRightH33_apply_mk (fc gc : LinearMap.ker (coboundaryₗ X 3)) :
+    cupRightH33 fc (Submodule.Quotient.mk gc)
+      = Submodule.Quotient.mk (⟨cup fc.1 gc.1, cup_cocycle fc.1 gc.1
+          (LinearMap.mem_ker.mp fc.2) (LinearMap.mem_ker.mp gc.2)⟩ :
+          LinearMap.ker (coboundaryₗ X 6)) := by
+  rfl
+
+/-- **The cup product on `H³ × H³ → H⁶`** — a genuine `ℤ/2`-bilinear map. Well-defined:
+`cup_cocycle` lands it in cocycles; `cup_coboundary_right`/`cup_coboundary_left_2_3` kill coboundaries
+in each argument. The degree-`(3,3)` analogue of `cupH24`. -/
+noncomputable def cupH33 : Cohomology X 3 →ₗ[ZMod 2] Cohomology X 3 →ₗ[ZMod 2] Cohomology X 6 :=
+  Submodule.liftQ _
+    { toFun := cupRightH33
+      map_add' := fun fc fc' => by
+        ext x
+        obtain ⟨gc, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+        simp only [LinearMap.add_apply, cupRightH33_apply_mk]
+        congr 1
+        apply Subtype.ext
+        simp only [Submodule.coe_add, cup_add_left]
+      map_smul' := fun c fc => by
+        ext x
+        obtain ⟨gc, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+        simp only [LinearMap.smul_apply, RingHom.id_apply, cupRightH33_apply_mk]
+        congr 1
+        apply Subtype.ext
+        simp only [SetLike.val_smul, cup_smul_left] }
+    (by
+      intro fc hfc
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] at hfc
+      rw [LinearMap.mem_ker]
+      ext x
+      obtain ⟨gc, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+      rw [LinearMap.zero_apply]
+      change cupRightH33 fc (Submodule.Quotient.mk gc) = 0
+      rw [cupRightH33_apply_mk]
+      change Submodule.Quotient.mk _ = 0
+      rw [Submodule.Quotient.mk_eq_zero]
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply]
+      show cup fc.1 gc.1 ∈ LinearMap.range (coboundaryₗ X 5)
+      obtain ⟨a, ha⟩ := hfc
+      refine ⟨cup a gc.1, ?_⟩
+      rw [← ha]
+      exact cup_coboundary_left_2_3 a gc.1 (LinearMap.mem_ker.mp gc.2))
+
+@[simp] theorem cupH33_mk_mk (fc gc : LinearMap.ker (coboundaryₗ X 3)) :
+    cupH33 (Submodule.Quotient.mk fc) (Submodule.Quotient.mk gc)
+      = Submodule.Quotient.mk (⟨cup fc.1 gc.1, cup_cocycle fc.1 gc.1
+          (LinearMap.mem_ker.mp fc.2) (LinearMap.mem_ker.mp gc.2)⟩ :
+          LinearMap.ker (coboundaryₗ X 6)) := by
+  show cupRightH33 fc (Submodule.Quotient.mk gc) = _
+  exact cupRightH33_apply_mk fc gc
+
+/-- **`cupH33` is graded-commutative** — `[a ⌣ b] = [b ⌣ a]` in `H⁶(X;ℤ/2)`. The witness is the
+Steenrod cup-`1` product `cupOne33`, whose coboundary is `a ⌣ b + b ⌣ a` for cocycle representatives
+(`cupOne33_coboundary`). The degree-`3` analogue of `cupH24_symm` — the direct `H`-level payoff of the
+`(3,3)` cup-`1` construction. -/
+theorem cupH33_symm (x y : Cohomology X 3) : cupH33 x y = cupH33 y x := by
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ x
+  obtain ⟨b, rfl⟩ := Submodule.Quotient.mk_surjective _ y
+  rw [cupH33_mk_mk, cupH33_mk_mk]
+  change (Submodule.Quotient.mk _ : _ ⧸ _) = Submodule.Quotient.mk _
+  rw [Submodule.Quotient.eq]
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply,
+    AddSubgroupClass.coe_sub]
+  show cup a.1 b.1 - cup b.1 a.1 ∈ LinearMap.range (coboundaryₗ X 5)
+  refine ⟨cupOne33 a.1 b.1, ?_⟩
+  show coboundary X 5 (cupOne33 a.1 b.1) = cup a.1 b.1 - cup b.1 a.1
+  rw [cupOne33_coboundary a.1 b.1 (LinearMap.mem_ker.mp a.2) (LinearMap.mem_ker.mp b.2)]
+  funext σ
+  simp only [Pi.add_apply, Pi.sub_apply]
+  rw [CharTwo.sub_eq_add]
+
 end SKEFTHawking.SingularCohomologyMod2
