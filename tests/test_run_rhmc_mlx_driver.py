@@ -69,3 +69,77 @@ def test_fresh_config_matches_documented_formula():
     got = drv._fresh_config(seed, g, shape)
     expected = np.sqrt(2 * g) * np.random.default_rng(seed).standard_normal(shape)
     assert np.allclose(got, expected)
+
+
+# --- checkpoint / resume (stop-start without losing work) ------------------------------------
+
+def _write_ckpt(path, **extra):
+    base = dict(h_sq_history=np.zeros(0), delta_h_history=np.zeros(0),
+                tet_m2_history=np.zeros(0), tr_q2_history=np.zeros(0),
+                m_h_history=np.zeros((0, 2, 4, 4)), Q_history=np.zeros((0, 2, 4, 4)),
+                h_state=np.zeros((2, 16, 4, 4)), g=np.float64(2.0), L=np.int64(2))
+    base.update(extra)
+    np.savez(path, **base)
+
+
+def test_resume_fresh_run(tmp_path):
+    st = drv._load_checkpoint(str(tmp_path / "none.npz"), seed=5, g=2.0, shape=(2, 16, 4, 4), n_therm=100)
+    assert st['n_done'] == 0 and st['n_therm_done'] == 0 and st['therm_left'] == 100
+    assert st['nacc'] == 0 and st['ntot'] == 0
+
+
+def test_resume_mid_thermalization_continues_not_restart(tmp_path):
+    # Stopping mid-thermalization must resume the REMAINING thermalization, not redo all
+    # of it (the biggest "lost work" case: ~n_therm trajectories at L=8 = ~45 min).
+    p = str(tmp_path / "g2.npz")
+    _write_ckpt(p, n_therm_done=np.int64(30), nacc=np.int64(0), ntot=np.int64(0))
+    st = drv._load_checkpoint(p, seed=5, g=2.0, shape=(2, 16, 4, 4), n_therm=100)
+    assert st['n_therm_done'] == 30 and st['therm_left'] == 70 and st['n_done'] == 0
+
+
+def test_resume_post_therm_with_measurements(tmp_path):
+    p = str(tmp_path / "g2.npz")
+    _write_ckpt(p, tet_m2_history=np.zeros(5), n_therm_done=np.int64(100),
+                nacc=np.int64(480), ntot=np.int64(500))
+    st = drv._load_checkpoint(p, seed=5, g=2.0, shape=(2, 16, 4, 4), n_therm=100)
+    assert st['n_done'] == 5 and st['therm_left'] == 0
+    assert st['nacc'] == 480 and st['ntot'] == 500        # cumulative accept restored
+
+
+def test_resume_old_npz_without_therm_field_assumes_thermalized(tmp_path):
+    # Backward compat: an old checkpoint (pre-n_therm_done) is a post-thermalization
+    # measurement run, so resume must NOT re-thermalize it.
+    p = str(tmp_path / "g2.npz")
+    _write_ckpt(p, tet_m2_history=np.zeros(3))            # no n_therm_done / nacc / ntot
+    st = drv._load_checkpoint(p, seed=5, g=2.0, shape=(2, 16, 4, 4), n_therm=100)
+    assert st['therm_left'] == 0 and st['n_done'] == 3
+
+
+def test_stop_start_continues_and_preserves_acceptance(tmp_path):
+    # End-to-end stop/start on Metal (L=2): run to completion, then (a) re-invoking with
+    # the same n_meas is a NO-OP that must NOT clobber acceptance_rate to 0 (review C2),
+    # and (b) extending n_meas must CONTINUE the chain (n_done grows), not restart.
+    L, msq = 2, 0.04
+    coeffs, _ = drv.build_coeffs_mlx(L, 2.0, msq, 12, seed=5)
+    path = str(tmp_path / "g2.0000.npz")
+    kw = dict(g=2.0, L=L, msq=msq, coeffs=coeffs, R=2, eps=0.05, n_md=4, n_therm=3,
+              seed=5, mlx_solver='refined', checkpoint_every=2)
+
+    s1 = drv.run_coupling_mlx(path=path, n_meas=4, **kw)
+    d1 = np.load(path)
+    assert int(len(np.asarray(d1['tet_m2_history']))) == 4
+    acc1 = float(d1['acceptance_rate'])
+    assert 0.0 < acc1 <= 1.0                              # a real rate, not the 0.0 clobber
+    assert int(d1['n_therm_done']) == 3                   # thermalization progress persisted
+
+    # (a) no-op resume: same n_meas → nothing runs → acceptance_rate must be unchanged
+    drv.run_coupling_mlx(path=path, n_meas=4, **kw)
+    d2 = np.load(path)
+    assert float(d2['acceptance_rate']) == acc1
+    assert int(len(np.asarray(d2['tet_m2_history']))) == 4
+
+    # (b) extend: n_meas=7 → chain continues to 7 measured (no re-thermalization)
+    s3 = drv.run_coupling_mlx(path=path, n_meas=7, **kw)
+    d3 = np.load(path)
+    assert int(len(np.asarray(d3['tet_m2_history']))) == 7
+    assert s3['n'] == 7

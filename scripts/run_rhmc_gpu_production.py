@@ -111,16 +111,48 @@ def build_coeffs_mlx(L, g, msq, n_poles, seed):
     return me.make_rhmc_coeffs(1.25 * lam, msq, n_poles), 1.25 * lam
 
 
+def _load_checkpoint(path, seed, g, shape, n_therm):
+    """Resume state from an existing npz, or a fresh-run state.
+
+    Returns a dict with: h_np (config), hist (per-observable history lists), mh/Q lists,
+    n_done (measured trajectories), n_therm_done (thermalization trajectories completed),
+    therm_left, and cumulative accept counters nacc/ntot. Backward compatible: an old
+    checkpoint without `n_therm_done` is treated as fully thermalized (it was a
+    measurement run, so we must NOT re-thermalize it); without nacc/ntot the cumulative
+    counters start at 0."""
+    hist = {k: [] for k in ('h_sq', 'dH', 'tet', 'trq')}
+    if not os.path.exists(path):
+        return dict(h_np=_fresh_config(seed, g, shape), hist=hist, mh=[], Q=[],
+                    n_done=0, n_therm_done=0, therm_left=n_therm, nacc=0, ntot=0)
+    d = np.load(path)
+    for k, kk in (('h_sq_history', 'h_sq'), ('delta_h_history', 'dH'),
+                  ('tet_m2_history', 'tet'), ('tr_q2_history', 'trq')):
+        hist[kk] = list(np.asarray(d[k]))
+    mh = list(np.asarray(d['m_h_history'])) if 'm_h_history' in d else []
+    Q = list(np.asarray(d['Q_history'])) if 'Q_history' in d else []
+    n_done = len(hist['tet'])
+    n_therm_done = int(d['n_therm_done']) if 'n_therm_done' in d else n_therm   # old npz: assume done
+    nacc = int(d['nacc']) if 'nacc' in d else 0
+    ntot = int(d['ntot']) if 'ntot' in d else 0
+    h_np = np.asarray(d['h_state']) if 'h_state' in d else _fresh_config(seed, g, shape)
+    return dict(h_np=h_np, hist=hist, mh=mh, Q=Q, n_done=n_done, n_therm_done=n_therm_done,
+                therm_left=max(n_therm - n_therm_done, 0), nacc=nacc, ntot=ntot)
+
+
 def run_coupling_mlx(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, seed,
-                     chrono=False, mlx_solver='refined'):
+                     chrono=False, mlx_solver='refined', checkpoint_every=10):
     """MLX twin of `run_coupling`, eo path (FP32 MD on the MLX default device — Metal or
-    CUDA). Identical npz schema → rhmc_monitor.py / analyze_rhmc_vestigial.py compatible.
-    Same target density as the torch engines; FP64-exact Metropolis.
+    CUDA). Identical npz schema (+ n_therm_done/nacc/ntot for resume) → rhmc_monitor.py /
+    analyze_rhmc_vestigial.py compatible. Same target density as the torch engines;
+    FP64-exact Metropolis.
 
     mlx_solver='refined' (default): heatbath + accept/reject FP64 solves offloaded to the
-    device via FP32-inner refinement — the fast path (the FP64-CPU stages are ~97% of the
-    trajectory on the MLX CPU backend; see brick 5). 'mixed': FP64 accept/reject on the
-    CPU stream (portable fallback; slow where the MLX CPU backend is weak)."""
+    device via FP32-inner refinement — the fast path. 'mixed': FP64 accept/reject on the
+    CPU stream (portable fallback; slow where the MLX CPU backend is weak).
+
+    Checkpoints every `checkpoint_every` trajectories through BOTH thermalization and
+    measurement, so a stop/restart resumes the remaining thermalization (not restart it)
+    and loses at most `checkpoint_every` trajectories of work."""
     import mlx.core as mx
     import src.vestigial.hs_rhmc_mlx as me
     V = L ** 4
@@ -128,25 +160,12 @@ def run_coupling_mlx(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, see
     eo = me.eo_tables(L)
     device = mx.default_device()
 
-    hist = {k: [] for k in ('h_sq', 'dH', 'tet', 'trq')}
-    mh_hist, Q_hist = [], []
-    n_done = 0
-    if os.path.exists(path):
-        d = np.load(path)
-        for k, kk in (('h_sq_history', 'h_sq'), ('delta_h_history', 'dH'),
-                      ('tet_m2_history', 'tet'), ('tr_q2_history', 'trq')):
-            hist[kk] = list(np.asarray(d[k]))
-        mh_hist = list(np.asarray(d['m_h_history'])) if 'm_h_history' in d else []
-        Q_hist = list(np.asarray(d['Q_history'])) if 'Q_history' in d else []
-        n_done = len(hist['tet'])
-        h_np = np.asarray(d['h_state']) if 'h_state' in d else _fresh_config(seed, g, (R, V, 4, 4))
-        therm_left = 0
-    else:
-        h_np = _fresh_config(seed, g, (R, V, 4, 4))
-        therm_left = n_therm
-
-    h = mx.array(h_np, dtype=mx.float64)
-    rng = _trajectory_rng(seed, n_done)             # decorrelated from the init config; valid resume
+    st = _load_checkpoint(path, seed, g, (R, V, 4, 4), n_therm)
+    hist, mh_hist, Q_hist = st['hist'], st['mh'], st['Q']
+    n_done, n_therm_done, therm_left = st['n_done'], st['n_therm_done'], st['therm_left']
+    nacc, ntot = st['nacc'], st['ntot']
+    h = mx.array(st['h_np'], dtype=mx.float64)
+    rng = _trajectory_rng(seed, n_done + n_therm_done)   # decorrelated; independent per resume point
 
     def save():
         h_state = np.array(h)                       # eval only — no new f64 op on the GPU stream
@@ -156,38 +175,51 @@ def run_coupling_mlx(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, see
                      m_h_history=np.array(mh_hist), Q_history=np.array(Q_hist),
                      h_final=h_state[0], h_state=h_state,
                      acceptance_rate=np.float64(nacc / max(ntot, 1)),
+                     nacc=np.int64(nacc), ntot=np.int64(ntot), n_therm_done=np.int64(n_therm_done),
                      g=np.float64(g), L=np.int64(L), mass=np.float64(np.sqrt(msq)),
                      replicas=np.int64(R))
 
-    nacc, ntot = 0, 0
-    target = n_meas - n_done
-    t0 = time.time()
-    for t in range(therm_left + max(target, 0)):
+    def trajectory():
         if mlx_solver == 'refined':
-            h, dH, acc = me.eo_rhmc_trajectory_refined(h, g, msq, coeffs, eo, fwd, back, L,
-                                                       eps, n_md, rng, device, tol_md=1e-4,
-                                                       inner_tol=3e-4, max_outer=20, chrono=chrono)
-        else:
-            h, dH, acc = me.eo_rhmc_trajectory_mixed(h, g, msq, coeffs, eo, fwd, back, L,
-                                                     eps, n_md, rng, tol_md=1e-4, tol_acc=1e-10,
-                                                     chrono=chrono)
-        acc_np = np.array(acc)
-        nacc += int(acc_np.sum()); ntot += acc_np.size
-        if t >= therm_left:
-            with mx.stream(mx.cpu):                  # f64 arithmetic stays off the GPU stream
-                h_sq = float(mx.mean(h * h))
-            tet, trq, m_h, Q = me.measure_observables(h, L)
-            hist['h_sq'].append(h_sq); hist['dH'].append(float(np.array(dH).mean()))
-            hist['tet'].append(float(np.array(tet).mean())); hist['trq'].append(float(np.array(trq).mean()))
-            mh_hist.append(np.array(m_h)); Q_hist.append(np.array(Q))
-            if len(hist['tet']) % 20 == 0:
-                save()
-                print(f"    g={g:.3f}: {len(hist['tet'])}/{n_meas}  acc={nacc/ntot:.2f}  "
-                      f"<tet>={np.mean(hist['tet'][-20:]):.4f}  {(time.time()-t0)/(t+1)*1000:.0f} ms/traj",
-                      flush=True)
-    save()
+            return me.eo_rhmc_trajectory_refined(h, g, msq, coeffs, eo, fwd, back, L,
+                                                 eps, n_md, rng, device, tol_md=1e-4,
+                                                 inner_tol=3e-4, max_outer=20, chrono=chrono)
+        return me.eo_rhmc_trajectory_mixed(h, g, msq, coeffs, eo, fwd, back, L,
+                                           eps, n_md, rng, tol_md=1e-4, tol_acc=1e-10, chrono=chrono)
+
+    ran = 0
+    t0 = time.time()
+    # --- thermalization (checkpointed so a stop mid-therm resumes, not restarts) ---
+    for _ in range(therm_left):
+        h, dH, acc = trajectory()
+        acc_np = np.array(acc); nacc += int(acc_np.sum()); ntot += acc_np.size
+        n_therm_done += 1; ran += 1
+        if n_therm_done % checkpoint_every == 0:
+            save()
+            print(f"    g={g:.3f}: therm {n_therm_done}/{n_therm}  acc={nacc/max(ntot,1):.2f}  "
+                  f"{(time.time()-t0)/ran*1000:.0f} ms/traj", flush=True)
+
+    # --- measurement ---
+    target = max(n_meas - n_done, 0)
+    for _ in range(target):
+        h, dH, acc = trajectory()
+        acc_np = np.array(acc); nacc += int(acc_np.sum()); ntot += acc_np.size; ran += 1
+        with mx.stream(mx.cpu):                      # f64 arithmetic stays off the GPU stream
+            h_sq = float(mx.mean(h * h))
+        tet, trq, m_h, Q = me.measure_observables(h, L)
+        hist['h_sq'].append(h_sq); hist['dH'].append(float(np.array(dH).mean()))
+        hist['tet'].append(float(np.array(tet).mean())); hist['trq'].append(float(np.array(trq).mean()))
+        mh_hist.append(np.array(m_h)); Q_hist.append(np.array(Q))
+        if len(hist['tet']) % checkpoint_every == 0:
+            save()
+            print(f"    g={g:.3f}: {len(hist['tet'])}/{n_meas}  acc={nacc/max(ntot,1):.2f}  "
+                  f"<tet>={np.mean(hist['tet'][-checkpoint_every:]):.4f}  "
+                  f"{(time.time()-t0)/ran*1000:.0f} ms/traj", flush=True)
+
+    if ran > 0:                                      # no-op resume must NOT clobber acceptance_rate
+        save()
     return dict(g=g, acc=nacc / max(ntot, 1), tet=np.mean(hist['tet']) if hist['tet'] else float('nan'),
-                n=len(hist['tet']), s_per_traj=(time.time() - t0) / max(therm_left + max(target, 0), 1))
+                n=len(hist['tet']), s_per_traj=(time.time() - t0) / ran if ran else float('nan'))
 
 
 def run_coupling(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, device, seed,
@@ -296,6 +328,10 @@ def main():
     ap.add_argument('--n-md', type=int, default=16)
     ap.add_argument('--eps', type=float, default=0.03)
     ap.add_argument('--n-poles', type=int, default=14)
+    ap.add_argument('--checkpoint-every', type=int, default=10,
+                    help='save an atomic checkpoint every N trajectories (through both '
+                         'thermalization and measurement) — mlx backend. A stop/restart '
+                         'loses at most this many trajectories; smaller = safer, more I/O.')
     ap.add_argument('--seed', type=int, default=2026)
     ap.add_argument('--outdir', type=str, default=None)
     ap.add_argument('--device', type=str, default='mps', choices=['mps', 'cpu'])
@@ -354,7 +390,7 @@ def main():
         if args.backend == 'mlx':
             s = run_coupling_mlx(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
                                  args.n_meas, args.n_therm, args.seed + i, chrono=args.chrono,
-                                 mlx_solver=args.mlx_solver)
+                                 mlx_solver=args.mlx_solver, checkpoint_every=args.checkpoint_every)
         else:
             s = run_coupling(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
                              args.n_meas, args.n_therm, device, args.seed + i,
