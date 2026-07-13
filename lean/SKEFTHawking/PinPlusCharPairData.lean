@@ -292,4 +292,94 @@ theorem CharPairBor.brown_eq {s t : SingularManifold PUnit k I}
     (β : CharPairBor b σ τ) : σ.q.brown = τ.q.brown :=
   brown_eq_of_taylorLeg_lagrangian σ.q τ.q β.L β.htaylor β.hlag
 
+/-! ## §6. The Mfd-level op witnesses (`emptyStr`, `sumStr`, `revStr` — no W-tower needed) -/
+
+open SKEFTHawking.PinPlusTiedData in
+/-- `emptyStr`: the char-pair structure on the empty manifold (rank-0 enhancement). -/
+noncomputable def charPairEmptyStr : CharPairStr I (emptySM : SingularManifold PUnit k I) where
+  t2 := ⟨fun x => x.elim⟩
+  cert := pinPlusCertK_empty
+  n := 0
+  q := stdQuadratic 0
+
+open SKEFTHawking.PinPlusTiedData in
+/-- `sumStr`: disjoint union of char-pair structures — ranks add, enhancements `orthSum`+reindex (the
+GM pattern), cert via `PinPlusCertK.sum`, T2 via `t2_sum`. -/
+noncomputable def charPairSumStr {s t : SingularManifold PUnit k I}
+    (σ : CharPairStr I s) (τ : CharPairStr I t) : CharPairStr I (s.sum t) where
+  t2 := t2_sum σ.t2 τ.t2
+  cert := PinPlusCertK.sum σ.cert τ.cert
+  n := σ.n + τ.n
+  q := (orthSum σ.q τ.q).reindex finSumFinEquiv
+
+/-- `revStr`: structure reversal = enhancement negation ALONE (design A4 `revStr`; `β ↦ −β`), same
+carrier / cert / rank. -/
+noncomputable def charPairRevStr {s : SingularManifold PUnit k I} (σ : CharPairStr I s) :
+    CharPairStr I s where
+  t2 := σ.t2
+  cert := σ.cert
+  n := σ.n
+  q := neg σ.q
+
+@[simp] theorem charPairRevStr_q {s : SingularManifold PUnit k I} (σ : CharPairStr I s) :
+    (charPairRevStr σ).q = neg σ.q := rfl
+
+@[simp] theorem charPairSumStr_q {s t : SingularManifold PUnit k I}
+    (σ : CharPairStr I s) (τ : CharPairStr I t) :
+    (charPairSumStr σ τ).q = (orthSum σ.q τ.q).reindex finSumFinEquiv := rfl
+
+/-! ## §7. The W-admissibility provider (the un-merged wt3 relative-Lefschetz/Wu tower, bundled)
+
+Item 1's W-admissibility datum (`LefschetzWuDatum` for each op's bordism `W` + `w₂(W) = 0`) needs
+wt3's **relative Poincaré–Lefschetz/Wu tower on compact 5-manifolds-with-boundary** — the
+route-independent critical-path tower the design's New-build list item 1 names, NOT yet merged. Per
+the 5q.G discharge-later pattern it is consumed as an explicit PARAMETER: a single universally-
+quantified admissibility function. This is a HYPOTHESIS (no axiom); wt3's tower discharges it by
+producing `WAdm b` for every bordism `b`. The op witnesses draw item 1 from it and construct
+everything else (T2 of `W`, the Lagrangian, the exact Taylor leg) concretely. -/
+
+/-- The W-admissibility datum of a single bordism: the two Lefschetz–Wu data + `w₂(W) = 0`. -/
+structure WAdm {s t : SingularManifold PUnit k I} (b : Bordism (I.prod (𝓡∂ 1)) s t) : Type where
+  /-- the `(1,4)` Lefschetz–Wu datum. -/
+  P14 : LefschetzWuDatum (TopCat.of b.W) ((I.prod (𝓡∂ 1)).boundary b.W) 1 4 5
+  /-- the `(2,3)` Lefschetz–Wu datum. -/
+  P23 : LefschetzWuDatum (TopCat.of b.W) ((I.prod (𝓡∂ 1)).boundary b.W) 2 3 5
+  /-- W-admissibility: `w₂(W) = 0` (Wu form `v₂ = v₁²`). -/
+  hwu : wuW2 P14 P23 = 0
+
+/-- **The W-admissibility provider** (wt3's relative-Lefschetz/Wu tower, bundled as a hypothesis):
+supplies `WAdm b` for every bordism `b`. Discharge obligation: wt3's rel-PD/Wu tower on compact
+5-manifolds-with-boundary. (Manifold universe pinned to `0`, the datum's universe.) -/
+structure CharPairWProvider (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2))))
+    [I.Boundaryless] (k : WithTop ℕ∞) : Type (u_1 + 1) where
+  /-- admissibility for every bordism between closed 4-manifolds. -/
+  wadm : ∀ {s t : SingularManifold.{0} PUnit.{1} k I} (b : Bordism.{0} (I.prod (𝓡∂ 1)) s t), WAdm b
+
+/-- Assemble a `CharPairBor` from the concretely-buildable data (T2 of `W`, the membrane kernel `L`,
+the exact Taylor leg, the Lagrangian) + item 1 drawn from the provider. -/
+def mkCharPairBor (prov : CharPairWProvider I k) {s t : SingularManifold PUnit k I}
+    (b : Bordism (I.prod (𝓡∂ 1)) s t) {σ : CharPairStr I s} {τ : CharPairStr I t}
+    (hWT2 : T2Space b.W) (L : Submodule (ZMod 2) (Fin σ.n ⊕ Fin τ.n → ZMod 2))
+    (htaylor : TaylorLegVanishes σ.q τ.q L) (hlag : JointLagrangian σ.q τ.q L) :
+    CharPairBor b σ τ where
+  hWT2 := hWT2
+  P14 := (prov.wadm b).P14
+  P23 := (prov.wadm b).P23
+  hwu := (prov.wadm b).hwu
+  L := L
+  htaylor := htaylor
+  hlag := hlag
+
+/-! ## §8. `cylBor` — the discriminating op, instantiated end-to-end through the provider -/
+
+/-- **`cylBor` instantiates** (design §2 item 4 ⚠, the discriminator): the reflexive cylinder over `s`
+carries the char-pair structure `σ` to itself, with the diagonal membrane kernel (Lagrangian, Taylor
+leg holds via `q − q = 0`) and W-admissibility from the provider. This is the op whose totality the
+round-2 gate turns on — and it goes through under the τ-end-negated reading (iii). -/
+noncomputable def charPairCylBor (prov : CharPairWProvider I k) {s : SingularManifold PUnit k I}
+    (σ : CharPairStr I s) : CharPairBor (reflCylinder s) σ σ :=
+  mkCharPairBor prov (reflCylinder s)
+    (by haveI := σ.t2; exact inferInstanceAs (T2Space (s.M × Set.Icc (0 : ℝ) 1)))
+    (cylLagrangian σ.n) (taylorLeg_cyl σ.q) (lagrangian_cyl σ.q)
+
 end SKEFTHawking.PinPlusCharPairData
