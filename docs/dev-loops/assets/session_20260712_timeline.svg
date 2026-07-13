@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 320" font-family="ui-sans-serif,system-ui,Arial" font-size="11">
+<rect x="0" y="0" width="1240" height="320" fill="#ffffff"/>
+<text x="20" y="30" font-size="17" font-weight="700" fill="#0f172a">Phase 5q.H — 2026-07-12 gold-standard session · every branch</text>
+<text x="20" y="48" font-size="11.5" fill="#475569">Orchestrator on Fable 5 · 15 worker branches (14 Fable, 1 Sonnet) · 13:10–22:35 · one compaction · ~28 kernel-pure commits</text>
+<line x1="176" y1="78" x2="176" y2="272" stroke="#eef2f7"/>
+<text x="176" y="72" text-anchor="middle" fill="#64748b" font-size="10">13:10</text>
+<line x1="230" y1="78" x2="230" y2="272" stroke="#eef2f7"/>
+<line x1="283" y1="78" x2="283" y2="272" stroke="#eef2f7"/>
+<text x="283" y="72" text-anchor="middle" fill="#64748b" font-size="10">14:10</text>
+<line x1="337" y1="78" x2="337" y2="272" stroke="#eef2f7"/>
+<line x1="391" y1="78" x2="391" y2="272" stroke="#eef2f7"/>
+<text x="391" y="72" text-anchor="middle" fill="#64748b" font-size="10">15:10</text>
+<line x1="445" y1="78" x2="445" y2="272" stroke="#eef2f7"/>
+<line x1="498" y1="78" x2="498" y2="272" stroke="#eef2f7"/>
+<text x="498" y="72" text-anchor="middle" fill="#64748b" font-size="10">16:10</text>
+<line x1="552" y1="78" x2="552" y2="272" stroke="#eef2f7"/>
+<line x1="606" y1="78" x2="606" y2="272" stroke="#eef2f7"/>
+<text x="606" y="72" text-anchor="middle" fill="#64748b" font-size="10">17:10</text>
+<line x1="660" y1="78" x2="660" y2="272" stroke="#eef2f7"/>
+<line x1="713" y1="78" x2="713" y2="272" stroke="#eef2f7"/>
+<text x="713" y="72" text-anchor="middle" fill="#64748b" font-size="10">18:10</text>
+<line x1="767" y1="78" x2="767" y2="272" stroke="#eef2f7"/>
+<line x1="821" y1="78" x2="821" y2="272" stroke="#eef2f7"/>
+<text x="821" y="72" text-anchor="middle" fill="#64748b" font-size="10">19:10</text>
+<line x1="875" y1="78" x2="875" y2="272" stroke="#eef2f7"/>
+<line x1="928" y1="78" x2="928" y2="272" stroke="#eef2f7"/>
+<text x="928" y="72" text-anchor="middle" fill="#64748b" font-size="10">20:10</text>
+<line x1="982" y1="78" x2="982" y2="272" stroke="#eef2f7"/>
+<line x1="1036" y1="78" x2="1036" y2="272" stroke="#eef2f7"/>
+<text x="1036" y="72" text-anchor="middle" fill="#64748b" font-size="10">21:10</text>
+<line x1="1090" y1="78" x2="1090" y2="272" stroke="#eef2f7"/>
+<line x1="1143" y1="78" x2="1143" y2="272" stroke="#eef2f7"/>
+<text x="1143" y="72" text-anchor="middle" fill="#64748b" font-size="10">22:10</text>
+<line x1="1197" y1="78" x2="1197" y2="272" stroke="#eef2f7"/>
+<text x="18" y="117" fill="#0f172a" font-weight="600">Orchestrator</text>
+<line x1="176" y1="136" x2="1206" y2="136" stroke="#f1f5f9"/>
+<text x="18" y="171" fill="#0f172a" font-weight="600">wt2</text>
+<line x1="176" y1="190" x2="1206" y2="190" stroke="#f1f5f9"/>
+<text x="18" y="217" fill="#0f172a" font-weight="600">wt3</text>
+<line x1="176" y1="236" x2="1206" y2="236" stroke="#f1f5f9"/>
+<text x="18" y="263" fill="#0f172a" font-weight="600">scout</text>
+<line x1="176" y1="282" x2="1206" y2="282" stroke="#f1f5f9"/>
+<rect x="176" y="96" width="1030" height="34" rx="5" fill="#e2e8f0" stroke="#94a3b8"/>
+<rect x="176" y="96" width="448" height="34" rx="5" fill="#cbd5e1" stroke="#94a3b8"/>
+<text x="400" y="117" text-anchor="middle" fill="#1e293b" font-size="10">bootstrap + SOLO blocker-dissolution (hcoreG)</text>
+<text x="915" y="117" text-anchor="middle" fill="#1e293b" font-size="10">6 fan-out rounds · harvest→gate→reset cadence (Fable lead builds between rounds)</text>
+<line x1="450" y1="80" x2="450" y2="272" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="4 3"/>
+<text x="450" y="288" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">⟪compaction 15:43 — clean re-orient⟫</text>
+<rect x="199" y="153" width="6" height="28" rx="4" fill="#d97706" opacity="0.92"/>
+<circle cx="199" cy="167" r="4" fill="#e5e7eb" stroke="#0f172a" stroke-width="0.6"/>
+<text x="202" y="149" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B00</text>
+<rect x="624" y="245" width="21" height="28" rx="4" fill="#7c3aed" opacity="0.92"/>
+<circle cx="639" cy="259" r="4" fill="#e5e7eb" stroke="#0f172a" stroke-width="0.6"/>
+<text x="635" y="241" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B01</text>
+<rect x="652" y="153" width="41" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="688" cy="167" r="4" fill="#eab308" stroke="#0f172a" stroke-width="0.6"/>
+<text x="673" y="149" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B02</text>
+<rect x="652" y="199" width="73" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="720" cy="213" r="4" fill="#22c55e" stroke="#0f172a" stroke-width="0.6"/>
+<text x="689" y="195" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B03</text>
+<rect x="749" y="153" width="70" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="813" cy="167" r="4" fill="#eab308" stroke="#0f172a" stroke-width="0.6"/>
+<text x="784" y="149" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B04</text>
+<rect x="749" y="199" width="39" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="783" cy="213" r="4" fill="#22c55e" stroke="#0f172a" stroke-width="0.6"/>
+<text x="769" y="195" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B05</text>
+<rect x="846" y="153" width="34" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="874" cy="167" r="4" fill="#22c55e" stroke="#0f172a" stroke-width="0.6"/>
+<text x="863" y="149" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B06</text>
+<rect x="846" y="199" width="48" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="888" cy="213" r="4" fill="#22c55e" stroke="#0f172a" stroke-width="0.6"/>
+<text x="870" y="195" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B07</text>
+<rect x="912" y="153" width="50" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="956" cy="167" r="4" fill="#22c55e" stroke="#0f172a" stroke-width="0.6"/>
+<text x="937" y="149" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B08</text>
+<rect x="914" y="199" width="36" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="944" cy="213" r="4" fill="#22c55e" stroke="#0f172a" stroke-width="0.6"/>
+<text x="932" y="195" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B09</text>
+<rect x="979" y="153" width="41" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="1014" cy="167" r="4" fill="#eab308" stroke="#0f172a" stroke-width="0.6"/>
+<text x="999" y="149" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B10</text>
+<rect x="979" y="199" width="79" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="1051" cy="213" r="4" fill="#eab308" stroke="#0f172a" stroke-width="0.6"/>
+<text x="1018" y="195" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B11</text>
+<rect x="1077" y="153" width="118" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="1189" cy="167" r="4" fill="#22c55e" stroke="#0f172a" stroke-width="0.6"/>
+<text x="1136" y="149" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B12</text>
+<text x="1083" y="170" fill="#ffffff" font-size="8.5" font-weight="600">moving-punct S4</text>
+<rect x="1077" y="199" width="59" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="1130" cy="213" r="4" fill="#22c55e" stroke="#0f172a" stroke-width="0.6"/>
+<text x="1107" y="195" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B13</text>
+<rect x="1140" y="199" width="45" height="28" rx="4" fill="#2563eb" opacity="0.92"/>
+<circle cx="1179" cy="213" r="4" fill="#22c55e" stroke="#0f172a" stroke-width="0.6"/>
+<text x="1162" y="195" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="700">B14</text>
+<rect x="176" y="295" width="12" height="12" rx="2" fill="#2563eb"/>
+<text x="192" y="304" fill="#334155" font-size="10">Fable 5 worker</text>
+<rect x="301" y="295" width="12" height="12" rx="2" fill="#d97706"/>
+<text x="317" y="304" fill="#334155" font-size="10">Sonnet 5 worker</text>
+<rect x="426" y="295" width="12" height="12" rx="2" fill="#7c3aed"/>
+<text x="442" y="304" fill="#334155" font-size="10">research-scout</text>
+<rect x="551" y="295" width="12" height="12" rx="2" fill="#334155"/>
+<text x="567" y="304" fill="#334155" font-size="10">orchestrator</text>
+<circle cx="680" cy="300" r="4" fill="#22c55e" stroke="#0f172a" stroke-width="0.6"/>
+<text x="688" y="304" fill="#334155" font-size="10">closed</text>
+<circle cx="775" cy="300" r="4" fill="#eab308" stroke="#0f172a" stroke-width="0.6"/>
+<text x="783" y="304" fill="#334155" font-size="10">partial</text>
+<circle cx="870" cy="300" r="4" fill="#e5e7eb" stroke="#0f172a" stroke-width="0.6"/>
+<text x="878" y="304" fill="#334155" font-size="10">verdict-only</text>
+</svg>
