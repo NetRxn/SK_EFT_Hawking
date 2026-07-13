@@ -12,11 +12,26 @@ early-stop) and scripts/analyze_rhmc_vestigial.py, plus per-trajectory m_h/Q
 instrumentation for the noise-immune Binder/shuffle detectors. Atomic save +
 resume (reseeds RNG — a statistically valid continuation).
 
+Backends: --backend torch (default; Rust/torch stencil engine) or --backend mlx
+(the MLX engine, Metal on macOS / CUDA via mlx[cuda] on Linux). The mlx backend
+defaults to --mlx-solver refined (FP32 GPU inner + FP64 CPU residual → FP64-exact
+Metropolis at GPU speed; ~20x the naive MLX path at L=8). It is a SINGLE
+GPU-bound process (~0.3 CPU cores) — tolerant of CPU-heavy work alongside, but
+keep the GPU free of other heavy Metal/CUDA jobs. Long runs: launch under
+`caffeinate -is`, lid open, on AC (macOS sleep silently suspends them).
+
+  >>> Operator guide (resource profile, the m->0 targeting plan tying back to the
+  >>> prior L=8 m=0.1 null, and copy-paste recipes): docs/RHMC_MLX_RUNBOOK.md
+
 Usage:
+  # torch (default):
   PYTHONPATH=. uv run python scripts/run_rhmc_gpu_production.py \
       --l 8 --mass 0.1 --replicas 16 --n-therm 100 --n-meas 400 --n-md 16 --eps 0.03
+  # mlx (Metal/CUDA), refined solver is the default:
+  caffeinate -is env PYTHONPATH=. uv run python scripts/run_rhmc_gpu_production.py \
+      --backend mlx --l 8 --mass 0.05 --replicas 16 --couplings-only 3.0 4.0 5.0 6.0 8.0
   # monitor in another terminal:
-  PYTHONPATH=. uv run python scripts/rhmc_monitor.py data/rhmc/L8gpu_m0.1 --watch 300
+  PYTHONPATH=. uv run python scripts/rhmc_monitor.py data/rhmc/L8mlx_m0.05 --watch 300
 """
 import argparse
 import os

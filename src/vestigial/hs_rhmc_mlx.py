@@ -15,6 +15,18 @@ CG operator for the multishift solver: A†A = −A² (A real antisymmetric ⟹ 
 torch-free by design: Clifford constants come from src.core.constants; Zolotarev
 coefficients from src.vestigial.hs_rhmc (numpy). The torch engine appears only
 in the test suite, as the cross-engine oracle.
+
+Production driver + operator guide (resource profile, m→0 targeting, recipes):
+`scripts/run_rhmc_gpu_production.py --backend mlx` and `docs/RHMC_MLX_RUNBOOK.md`.
+The `refined` trajectory (FP32 GPU inner + FP64 CPU residual → FP64-exact
+Metropolis) is the production path; `mixed` (FP64 accept/reject on the CPU
+stream) is a portable fallback only.
+
+⚠️ Metal is FP32-only: every op with a float64 operand — including casts and
+array slices `x[0]` — must run on the CPU stream (`with mx.stream(mx.cpu)`),
+else MLX raises "float64 is not supported on the GPU". The test suite pins the
+default device to CPU (autouse fixture), which masks such seams; verify any new
+FP64 path under the GPU default device separately.
 """
 import numpy as np
 import mlx.core as mx
