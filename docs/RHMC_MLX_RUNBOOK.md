@@ -58,6 +58,34 @@ max error was 15%). Extra poles cost only the once-per-trajectory heatbath, so
 the small-m runs carry more poles automatically (per-coupling log prints the
 auto-bumped value).
 
+### Measured throughput & campaign wall-clock (production working point)
+
+Pinned by direct timing at the **real** m=0.05 production working point (R=16,
+eps=0.015, n_md=33, gate-selected 44 poles), not extrapolated:
+
+**Measured (M3 Max, Metal): L=8, R=16, m=0.05 → 1392 s/traj (23.2 min), acc=0.88.**
+Per-replica that is 87 s vs the R=2 anchor's 93 s — batching to R=16 is
+near-ideal (7.5× cost for 8× the replicas, mild economy of scale), so `--replicas`
+buys statistics at almost no per-config premium. acc=0.88 at R=16 (vs 1.0 at R=2)
+is *healthy* — 16 replicas sample stiffer tail configs; it sits in the efficient
+HMC band, so the working point needs no re-tuning at production batch size.
+
+Per-trajectory cost scales ∝ **L⁴** at fixed mass (n_md is L-independent — κ is
+volume-flat, verified to 1%). The 3090 column assumes a **~3.5× Metal→CUDA FP32
+ratio that is *not yet pinned*** (needs one L=8 R=16 run on the 3090); treat it as
+the dominant remaining uncertainty in these projections.
+
+| L | MacBook /traj | 3090 /traj | Campaign* MacBook | Campaign* 3090 |
+|---|---|---|---|---|
+| 8 | 23.2 min *(measured)* | ~6.6 min | ~12 days | ~3.5 days |
+| 10 | ~57 min | ~16 min | ~29 days | ~8.5 days |
+| 12 | ~2.0 hr | ~34 min | ~61 days | ~17.5 days |
+
+\* Campaign = one mass point = 5 couplings × ~150 traj = 750 traj (thermalization
+included; R=16 gives 16× statistics per traj). Scale linearly for a different
+coupling/traj budget. The L=10/12 MacBook columns are why §4 routes those volumes
+to the 3090.
+
 ---
 
 ## 2. Does the Mac need to be clear of other processes?
