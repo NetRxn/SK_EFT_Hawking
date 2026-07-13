@@ -652,6 +652,10 @@ import SKEFTHawking.EvenUnimodularHyperbolic
 import SKEFTHawking.HyperbolicNormalForm
 import SKEFTHawking.SpinSigmaRoute
 import SKEFTHawking.SphereProductBounding
+-- Phase 5q.H (N1a, Freeze-B gap 2) — the collar-model re-association transport for S²×D³: transports
+-- the natural E²×(E²×H) ChartedSpace/IsManifold of S²×D³ along the model prod-associator to J5's
+-- (E²×E²)×H model, discharging SphereDiskSmoothData's chartW/mfdW freeze (isManifold_J5). (wt3-built.)
+import SKEFTHawking.SphereDiskJ5
 import SKEFTHawking.SpinSigmaRouteDoor
 import SKEFTHawking.ThetaModularity
 import SKEFTHawking.HasseMinkowskiLocal
@@ -4143,6 +4147,11 @@ import SKEFTHawking.CharSurfaceMembrane
 -- intersection form + irreducible pin⁻ spin bit), with gmrelation_null_of_kernel_split the cleanest
 -- composed end (no membrane/realization). (wt3-built.)
 import SKEFTHawking.CharSurfaceNormalShadow
+-- Phase 5q.H (E2 · realization layer) — the EXACT split of Taylor Thm 1.1's surface-realization
+-- debt: ClassesEmbedded ↔ BasisEmbedded ∧ EmbeddedSumClosed (generator leg + band-sum leg), plus the
+-- kernel-restricted realization the composed GM end actually consumes (KernelClassesEmbedded →
+-- MembraneRealizes with a strictly weaker surface hypothesis). (wt2-built.)
+import SKEFTHawking.CharSurfaceRealization
 
 -- Phase 5q.H · N5 — the WITNESS TOWER: the sphere witnesses' integral instance packages.
 -- S⁴: H₁=H₂=H₃=0 / H₄≅ℤ instances + H²=H³=0 + rank-0 IntH2Basis + H⁴(S⁴;ℤ)≅ℤ; universal
