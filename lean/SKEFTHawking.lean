@@ -651,6 +651,11 @@ import SKEFTHawking.VanDerBlijReduction
 import SKEFTHawking.EvenUnimodularHyperbolic
 import SKEFTHawking.HyperbolicNormalForm
 import SKEFTHawking.SpinSigmaRoute
+-- Phase 5q.H (N1a, Freeze-A decomposition) — refactors `RealizesSphereProducts` (Benedetti
+-- Prop 20.16/Lem 20.17 handle-trading) into its atomic geometric constituents (`HyperbolicPeel`
+-- the single S²×S² handle-trade + `HyperbolicBase` the rank-0 nullbordism) plus a kernel-pure
+-- block-iteration; the disclosed geometric residual shrinks to Benedetti's atomic lemmas. (wt1-built.)
+import SKEFTHawking.SphereProductRealization
 import SKEFTHawking.SphereProductBounding
 -- Phase 5q.H (N1a, Freeze-B gap 2) — the collar-model re-association transport for S²×D³: transports
 -- the natural E²×(E²×H) ChartedSpace/IsManifold of S²×D³ along the model prod-associator to J5's
