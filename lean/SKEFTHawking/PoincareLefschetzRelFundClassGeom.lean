@@ -195,6 +195,40 @@ noncomputable def interiorChartLocalIso [T1Space W] {m : ℕ}
     ((intChartHomeo I x).trans (ε.toHomeomorph.image (intChartV I x)))
     rfl
 
+/-! ### §3b. The concrete-`W` interior generator family + datum assembly
+
+For a concrete charted manifold-with-boundary `W`, the relative fundamental-class datum's `gen`
+family is supplied at **every interior point** `x ∉ ∂W` by `interiorChartLocalIso` (slice 1); boundary
+points impose nothing (slice 2). Assembling a full `RelFundClassDatum` then needs only the two
+remaining pair-obligations — the *existence* of a class restricting to `gen` (`HasRelFundClass`, the
+relative Hatcher-3.27(b) MV-cover induction) and *determined-by-interior-points* (the relative
+Hatcher-3.27 injective half). This section provides the `gen` family and the datum-from-existence
+assembly, reducing the concrete datum to exactly those two obligations. -/
+
+/-- **The interior generator family for a concrete `W`** — the `gen` field of a
+`RelFundClassDatum (I.boundary W)`: at every non-boundary point `x ∉ ∂W` (i.e. an interior point),
+`interiorChartLocalIso` gives `Hₙ(W, W∖x) ≅ ℤ/2`. Boundary points `x ∈ ∂W` are excluded (they impose
+no condition — slice 2's vanishing). Directly consumes slice 1. -/
+noncomputable def interiorGenFamily [T1Space W] {m : ℕ}
+    (ε : E ≃L[ℝ] EuclideanSpace ℝ (Fin (m + 2))) :
+    ∀ x : ↑(TopCat.of W), x ∉ (I.boundary W : Set ↑(TopCat.of W)) →
+      (RelativeHomology ({x}ᶜ) (m + 2) ≃ₗ[ZMod 2] ZMod 2) :=
+  fun x hx => interiorChartLocalIso I ε x ((I.isInteriorPoint_iff_not_isBoundaryPoint x).mpr hx)
+
+/-- **The relative fundamental-class datum from an existence witness** for a concrete `W`: given a
+class restricting to the interior generator family everywhere (`HasRelFundClass`, the relative
+Hatcher-3.27(b) existence obligation), package it — together with the slice-1 `gen` family — into the
+canonical `RelFundClassDatum (I.boundary W)`. Its `μ` functional then feeds the Poincaré–Lefschetz Wu
+tower (`RelFundClassDatum.toLefschetzWuDatum`). -/
+noncomputable def relFundClassDatumOf [T1Space W] {m : ℕ}
+    (ε : E ≃L[ℝ] EuclideanSpace ℝ (Fin (m + 2)))
+    (hcls : PoincareLefschetzRelFundClass.HasRelFundClass
+      (X := TopCat.of W) (I.boundary W) (interiorGenFamily I ε)) :
+    PoincareLefschetzRelFundClass.RelFundClassDatum (X := TopCat.of W) (m := m) (I.boundary W) where
+  cls := hcls.choose
+  gen := interiorGenFamily I ε
+  restricts := hcls.choose_spec
+
 end InteriorChart
 
 end SKEFTHawking.PoincareLefschetzRelFundClassGeom
