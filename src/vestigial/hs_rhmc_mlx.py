@@ -179,21 +179,40 @@ def _hop(psi_in, blocks_out, blocks_in, fwd_h, back_h):
     return out
 
 
-def apply_Me(psi_e, blocks, eo, shift=0.0):
-    """Apply the even-block operator (M_e + shift) ψ_e on the half-size even sublattice.
+def _split_eo(blocks, eo):
+    """Gather the even/odd parity partitions of the hopping table ONCE.
 
-    M_e = −D_eo D_oe (= the even block of A†A = −A²). blocks is the FULL
-    (*B, V, 4, 8, 8) hopping table; `eo` from `eo_tables`. Returns (*B, V/2, 8).
-    """
+    blocks: (*B, V, 4, 8, 8) → (blocks_e, blocks_o), each (*B, V/2, 4, 8, 8). Hoist this
+    out of a CG loop (blocks are constant for a whole solve) and feed the result to
+    apply_Me_split, so the full-table index-select is not redone every matvec."""
+    with mx.stream(_stream(blocks.dtype)):
+        return (mx.take(blocks, eo['even_idx'], axis=-4),
+                mx.take(blocks, eo['odd_idx'], axis=-4))
+
+
+def apply_Me_split(psi_e, blocks_eo, eo, shift=0.0):
+    """(M_e + shift) ψ_e from PRE-GATHERED even/odd blocks `blocks_eo = (blocks_e, blocks_o)`.
+
+    M_e = −D_eo D_oe (the even block of A†A = −A²). This is the per-iteration matvec of the
+    even-odd CG; the gather is done once by `_split_eo` and reused across all iterations."""
+    blocks_e, blocks_o = blocks_eo
     with mx.stream(_stream(psi_e.dtype)):
-        blocks_e = mx.take(blocks, eo['even_idx'], axis=-4)             # (*B, V/2, 4, 8, 8)
-        blocks_o = mx.take(blocks, eo['odd_idx'], axis=-4)
         w_o = _hop(psi_e, blocks_o, blocks_e, eo['o2e_fwd'], eo['o2e_back'])   # D_oe ψ_e  (odd)
         v_e = _hop(w_o, blocks_e, blocks_o, eo['e2o_fwd'], eo['e2o_back'])     # D_eo w_o  (even)
         out = -v_e                                                      # M_e = −D_eo D_oe
         if shift:
             out = out + shift * psi_e
         return out
+
+
+def apply_Me(psi_e, blocks, eo, shift=0.0):
+    """Apply the even-block operator (M_e + shift) ψ_e on the half-size even sublattice.
+
+    blocks is the FULL (*B, V, 4, 8, 8) hopping table; `eo` from `eo_tables`. Returns
+    (*B, V/2, 8). Thin wrapper that gathers the parity partitions then calls
+    `apply_Me_split`; inside a CG loop gather once via `_split_eo` and call
+    `apply_Me_split` directly to avoid re-gathering the full table every iteration."""
+    return apply_Me_split(psi_e, _split_eo(blocks, eo), eo, shift=shift)
 
 
 def _to_mx(a, dtype):
@@ -292,13 +311,14 @@ def eo_multishift_cg(b, blocks, eo, shifts, tol=1e-8, max_iter=4000, x0=None):
     with mx.stream(_stream(b.dtype)):
         sigma, K = _as_shift_tensor(shifts, nb, Bshape, b.dtype)
         blocks_k = mx.expand_dims(blocks, nb)
+        blocks_k_eo = _split_eo(blocks_k, eo)     # gather even/odd ONCE, reuse every iteration
         bk = mx.broadcast_to(mx.expand_dims(b, nb), Bshape + (K, Ve, S))
         x0k = None
         if x0 is not None:
             x0k = mx.broadcast_to(mx.expand_dims(x0, nb), Bshape + (K, Ve, S))
 
         def matvec(p):
-            return apply_Me(p, blocks_k, eo)
+            return apply_Me_split(p, blocks_k_eo, eo)
 
         return _cg_loop(bk, matvec, sigma, tol, max_iter, x0=x0k, rel_to_b=True)
 
@@ -641,8 +661,24 @@ def _cg_shifted(rhs, matvec, sigma, tol, max_iter, check_every=8):
     return x
 
 
+class RefinementNotConverged(RuntimeError):
+    """The refined solve exhausted max_outer without reaching the FP64 tolerance.
+
+    Silent under-convergence would bias the exact-Metropolis test (and, for the
+    heatbath, the sampled ensemble — which Metropolis cannot correct). Carries the
+    worst relative residual so the caller can raise max_outer / inner_tol or the mass."""
+
+    def __init__(self, worst_rel_resid, tol, max_outer):
+        self.worst_rel_resid = worst_rel_resid
+        super().__init__(
+            f"eo_multishift_cg_refined did not reach tol={tol:.1e} in max_outer={max_outer} "
+            f"(worst relative residual {worst_rel_resid:.2e}). A non-converged solve biases "
+            f"the FP64-exact Metropolis test / heatbath. Increase max_outer or inner_tol, or "
+            f"raise the mass; pass strict=False to accept the best-effort result.")
+
+
 def eo_multishift_cg_refined(b64, h64, eo, shifts, L, device, tol=1e-10, inner_tol=3e-4,
-                             max_outer=12, max_inner=4000):
+                             max_outer=12, max_inner=4000, strict=True):
     """FP64-accurate even-odd multishift solve via FP32-inner / FP64-residual ITERATIVE
     REFINEMENT — the trajectory-level speed brick.
 
@@ -653,6 +689,11 @@ def eo_multishift_cg_refined(b64, h64, eo, shifts, L, device, tol=1e-10, inner_t
     moves the eo heatbath + accept/reject solves off the (slow) MLX CPU backend onto the
     GPU — the fix for the FP64-CPU trajectory bottleneck (Metal is FP32-only).
 
+    `strict=True` (default) raises `RefinementNotConverged` if `max_outer` passes do not
+    reach `tol` — a non-converged solve silently biases the exact-Metropolis test, so it
+    must be loud (matters as m→0, where M_e+σ conditioning worsens). `strict=False`
+    returns the best-effort result.
+
     b64: (*batch, V/2, 8) FP64;  h64: (*batch, V, 4, 4) FP64.
     Returns x: FP64 (*batch, K, V/2, 8)."""
     nb = b64.ndim - 2
@@ -660,37 +701,48 @@ def eo_multishift_cg_refined(b64, h64, eo, shifts, L, device, tol=1e-10, inner_t
     Ve, S = b64.shape[-2], b64.shape[-1]
 
     with mx.stream(mx.cpu):
-        shifts64 = _to_mx(shifts, mx.float64)
-        K = shifts64.shape[-1]
-        if shifts64.ndim == 1:
-            shifts64 = shifts64.reshape((1,) * nb + (K,))
-        sigma64 = mx.broadcast_to(shifts64, Bshape + (K,)).reshape(Bshape + (K, 1, 1))
+        sigma64, K = _as_shift_tensor(shifts, nb, Bshape, mx.float64)
         blocks64 = mx.expand_dims(hopping_blocks(h64, L, dtype=mx.float64), nb)   # (*B,1,V,...)
         x = mx.zeros(Bshape + (K, Ve, S), dtype=mx.float64)
         bk64 = mx.broadcast_to(mx.expand_dims(b64, nb), Bshape + (K, Ve, S))
         bnorm = mx.maximum(mx.sqrt(mx.sum(bk64 * bk64, axis=(-2, -1))), 1e-300)
 
+    blocks64_eo = _split_eo(blocks64, eo)         # gather even/odd ONCE (hoisted out of the loop)
+
     # FP32 operator on `device`
     sigma32 = _cast_to(sigma64, mx.float32, device)
     blocks32 = mx.expand_dims(hopping_blocks(_cast_to(h64, mx.float32, device), L,
                                              dtype=mx.float32), nb)
+    blocks32_eo = _split_eo(blocks32, eo)
 
     def matvec32(p):
-        return apply_Me(p, blocks32, eo)
+        return apply_Me_split(p, blocks32_eo, eo)
 
+    def fp64_residual(xx):                         # r = b − (M_e+σ)x, ‖r‖ per (config,shift)
+        r = bk64 - (apply_Me_split(xx, blocks64_eo, eo) + sigma64 * xx)
+        return r, mx.sqrt(mx.sum(r * r, axis=(-2, -1)))
+
+    converged = False
     for _ in range(max_outer):
         with mx.stream(mx.cpu):
-            Ax = apply_Me(x, blocks64, eo) + sigma64 * x
-            r64 = bk64 - Ax
-            rnorm = mx.sqrt(mx.sum(r64 * r64, axis=(-2, -1)))
-            done = bool(mx.all(rnorm <= tol * bnorm))     # f64 compare on the CPU stream
+            r64, rnorm = fp64_residual(x)          # one apply_Me per pass (was two)
+            done = bool(mx.all(rnorm <= tol * bnorm))
         if done:
+            converged = True
             break
         r32 = _cast_to(r64, mx.float32, device)
         d32 = _cg_shifted(r32, matvec32, sigma32, inner_tol, max_inner)
         with mx.stream(mx.cpu):
             x = x + _cast_to(d32, mx.float64, mx.cpu)
             mx.eval(x)
+
+    if not converged:                             # verify the FINAL x (post last correction)
+        with mx.stream(mx.cpu):
+            _, rnorm = fp64_residual(x)
+            converged = bool(mx.all(rnorm <= tol * bnorm))
+            worst = float(mx.max(rnorm / bnorm))
+        if not converged and strict:
+            raise RefinementNotConverged(worst, tol, max_outer)
     return x
 
 

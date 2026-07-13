@@ -402,6 +402,28 @@ def test_eo_multishift_cg_refined_matches_fp64_with_fp32_inner():
         float(np.abs(_np(x_ref) - _np(x_fp64)).max())
 
 
+def test_eo_multishift_cg_refined_raises_on_nonconvergence():
+    # Robustness (review finding 1): an exhausted max_outer must NOT silently return an
+    # under-converged x that then feeds the FP64-exact Metropolis / heatbath. With too few
+    # outer passes to reach a tight tol, the refined solve must raise (strict=True default).
+    L, V = 4, 4 ** 4
+    rng = np.random.default_rng(21)
+    h = rng.standard_normal((V, 4, 4))
+    b_e = rng.standard_normal((V // 2, 8))
+    shifts = np.array([0.001])                    # small shift = ill-conditioned
+    eo = me.eo_tables(L)
+
+    with pytest.raises(RuntimeError, match="did not reach tol"):
+        me.eo_multishift_cg_refined(_mx64(b_e), _mx64(h), eo, _mx64(shifts), L, mx.cpu,
+                                    tol=1e-12, inner_tol=3e-4, max_outer=1, max_inner=4000)
+
+    # strict=False returns best-effort without raising (documented escape hatch)
+    x = me.eo_multishift_cg_refined(_mx64(b_e), _mx64(h), eo, _mx64(shifts), L, mx.cpu,
+                                    tol=1e-12, inner_tol=3e-4, max_outer=1, max_inner=4000,
+                                    strict=False)
+    assert x.dtype == mx.float64 and x.shape == (1, V // 2, 8)
+
+
 def test_eo_action_refined_matches_fp64_action():
     # Integration: eo action via the refined solver matches pure-FP64 to ~1e-7 ⟹ the
     # accept/reject ΔH is FP64-exact ⟹ no bias.

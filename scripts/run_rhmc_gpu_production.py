@@ -72,6 +72,24 @@ def atomic_savez(path, **data):
     os.replace(tmp + '.npz', path)
 
 
+def _fresh_config(seed, g, shape):
+    """Initial h configuration: √(2g)·N(0,1) from a per-coupling seed."""
+    return np.sqrt(2 * g) * np.random.default_rng(seed).standard_normal(shape)
+
+
+def _trajectory_rng(seed, n_done):
+    """RNG for a chain's trajectory noise (heatbath ξ, momenta π, Metropolis u).
+
+    Uses a distinct SeedSequence child (spawn_key=(1, n_done)) so the stream is
+    DECORRELATED from the initial-config RNG (`default_rng(seed)` in `_fresh_config`,
+    spawn_key=()) — otherwise a fresh run (n_done=0) would reuse the exact normals that
+    built the starting config, correlating the first trajectory's noise with it (review
+    finding 2). n_done parameterizes the stream so a resumed chunk is an independent,
+    valid continuation. (A plain `[seed, n_done]` seed does NOT work: numpy folds a
+    trailing zero, so [seed, 0] collides with `seed`.)"""
+    return np.random.default_rng(np.random.SeedSequence(seed, spawn_key=(1, n_done)))
+
+
 def build_coeffs_mlx(L, g, msq, n_poles, seed):
     """`build_coeffs` on the MLX engine (torch-free): spectral range from g's
     equilibrium amplitude (√2g)."""
@@ -115,15 +133,14 @@ def run_coupling_mlx(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, see
         mh_hist = list(np.asarray(d['m_h_history'])) if 'm_h_history' in d else []
         Q_hist = list(np.asarray(d['Q_history'])) if 'Q_history' in d else []
         n_done = len(hist['tet'])
-        h_np = np.asarray(d['h_state']) if 'h_state' in d \
-            else np.sqrt(2 * g) * np.random.default_rng(seed).standard_normal((R, V, 4, 4))
+        h_np = np.asarray(d['h_state']) if 'h_state' in d else _fresh_config(seed, g, (R, V, 4, 4))
         therm_left = 0
     else:
-        h_np = np.sqrt(2 * g) * np.random.default_rng(seed).standard_normal((R, V, 4, 4))
+        h_np = _fresh_config(seed, g, (R, V, 4, 4))
         therm_left = n_therm
 
     h = mx.array(h_np, dtype=mx.float64)
-    rng = np.random.default_rng(seed + n_done)      # reseeded resume — valid continuation
+    rng = _trajectory_rng(seed, n_done)             # decorrelated from the init config; valid resume
 
     def save():
         h_state = np.array(h)                       # eval only — no new f64 op on the GPU stream
