@@ -1426,6 +1426,16 @@ import SKEFTHawking.PinPlusGMWitness
 import SKEFTHawking.UnorientedThomCapstone
 import SKEFTHawking.PinPlusGMTiedData
 import SKEFTHawking.PinPlusGMDataZ16
+-- N1 SUBSTRATE AUDIT (structural no-go + repair): the T2-less `Bordism` relation COLLAPSES --
+-- the bug-eyed interval (compact non-Hausdorff 1-manifold, THREE boundary points) makes
+-- s+s+s bound for EVERY s, so the plain BordismGrp is trivial and the tied GM carrier is
+-- exactly its grade (mk p = mk q iff grade16 eq). The phase keystone `hbound` is therefore vacuous
+-- AS STATED (it discharges with zero geometric input); the honest completeness node is restated on
+-- the Hausdorff-refined relation (T2TangentialBordism: T2DataBordismGrp + abkGMTied16T2 surjective
+-- + the repaired door omega4PinPlusGMTiedT2_equiv_zmod16_of_grade0_bounds). Kernel-pure throughout.
+import SKEFTHawking.NonHausdorffInterval
+import SKEFTHawking.NonHausdorffBordismCollapse
+import SKEFTHawking.T2TangentialBordism
 -- E5 · the geometric-faithfulness CARDINALITY bridge: ties the smooth tied W4 carrier
 -- (DataBordismGrp pinPlusGMTiedData, surjective computed grade abkGMTied16) to the FINITE E5 Adams
 -- abutment (adamsAbutment_card = 2^col4_height_eq_four = 16), reducing the residual geometric-
