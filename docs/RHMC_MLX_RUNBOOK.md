@@ -170,7 +170,7 @@ trajectories):
 
 | Resource | Usage | Implication |
 |---|---|---|
-| CPU | **~0.3 cores average** (27 s user + 4 s sys over 100 s wall) | Runs happily alongside CPU-heavy work |
+| CPU | **≲1 core** (~0.3 measured pre-Metal-kernel; the fused kernel raises iteration throughput so Python graph-building uses more of one core) | Runs happily alongside CPU-heavy work |
 | GPU (Metal) | Heavy — the trajectory's real workload | **The one shared resource to protect** |
 | RAM (RSS) | ~0.8 GB at L=8 (sparse stencil, no dense build) | Negligible on 128 GB |
 | File descriptors | one process | No ENFILE risk (unlike the 16-worker Rust path) |
@@ -249,6 +249,19 @@ At m=0.05, eps=0.02 gives acc≈0.75 (usable, near HMC-optimal) and eps=0.01 is
 overkill (acc=1.0, +20% cost). The driver **default is 0.015/33** — the robust
 stiffest-mass value. Always watch `rhmc_monitor.py` for a `RED_BIAS`/reject-all
 verdict early.
+
+**Start / stop / resume (designed for interruptible overnight runs):** the driver
+checkpoints atomically every `--checkpoint-every` (default 10) trajectories through
+BOTH thermalization and measurement. Stop any time with Ctrl-C (or `kill` the
+process; `caffeinate` exits with it and normal sleep behavior returns) — at most
+`checkpoint-every` trajectories are lost (~12 min at L=8 with the default 10;
+pass `--checkpoint-every 5` for a ~6-min loss window). **Resume = re-run the
+IDENTICAL command**: the default `--outdir` is deterministic
+(`data/rhmc/L{L}mlx_m{mass}`), so the driver reloads each coupling's npz, skips
+completed couplings, continues a partially-thermalized chain (it does NOT
+restart thermalization), and preserves cumulative acceptance counters. Per-resume
+RNG streams are decorrelated by construction. All of this is covered by the
+driver test suite (resume/mid-therm/stop-start tests).
 
 **Mac — m→0 set, high-g focus (the recommended next physics):**
 
