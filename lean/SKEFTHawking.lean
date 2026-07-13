@@ -661,6 +661,10 @@ import SKEFTHawking.SphereProductBounding
 -- the natural E²×(E²×H) ChartedSpace/IsManifold of S²×D³ along the model prod-associator to J5's
 -- (E²×E²)×H model, discharging SphereDiskSmoothData's chartW/mfdW freeze (isManifold_J5). (wt3-built.)
 import SKEFTHawking.SphereDiskJ5
+-- Phase 5q.H (N1a): Freeze-B concrete discharge — completes SphereDiskSmoothData (smooth_incl +
+-- boundary_eq of the re-associated J5 collar atlas) and fires trivialSpherePresentation_freezeB,
+-- discharging SphereProductBounds ([S²×S²]=0) for the concrete presentation, kernel-pure. (wt3-built.)
+import SKEFTHawking.SphereDiskFreezeB
 import SKEFTHawking.SpinSigmaRouteDoor
 -- Phase 5q.H (N1 keystone decomposition) — decomposes the σ-route door's KT §5 exactness keystone
 -- `hexact : ker(reduce16to8 ∘ abkGMTied16) = (forgetGen F g).range` at the door's abstraction level:
