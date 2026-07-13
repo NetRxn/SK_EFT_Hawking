@@ -119,10 +119,23 @@ def test_no_active_sorry():
     expected to contain sorry stubs. Remove from this set as proofs are filled.
     """
     # All previous sorry stubs were closed during 2026-04-14 Tranche E wrap-up
-    # (Uqsl2AffineHopf 12→0, Uqsl3Hopf 3→0, CenterFunctor 2→0). Project is
-    # 0-sorry as of 2026-04-15. Keep this set empty — any future sorry should
-    # either be added here (with tracking rationale) or immediately closed.
-    SORRY_ALLOWED: set[str] = set()
+    # (Uqsl2AffineHopf 12→0, Uqsl3Hopf 3→0, CenterFunctor 2→0). Project was
+    # 0-sorry as of 2026-04-15. Any future sorry must either be added here
+    # (with tracking rationale) or immediately closed.
+    #
+    # 2026-07-13 audit (first fast-suite run on main in a while — the June arcs
+    # introduced two unregistered stubs; a third, the orphaned never-imported
+    # SingularOpenDualityMVConnSquareCore.lean WIP scratch, was deleted):
+    SORRY_ALLOWED: set[str] = {
+        # Live L2 (Phase-5qF) partial work, parked at a documented resume point
+        # (cap-Leibniz Route B; remaining V-link + χ-correction @CrossReal).
+        # NOT consumed by any 5q.H module.
+        "SingularConnSquareCrossReal.lean",
+        # Documented blueprint+sorry (see the module/aggregator docstring):
+        # algebraic identities formalized; PDE well-posedness/asymptotics left
+        # as flagged stubs queued for Aristotle proof-filling.
+        "TetradGapEquation.lean",
+    }
 
     lean_dir = LEAN_DIR / "SKEFTHawking"
     for lean_file in lean_dir.glob("*.lean"):
