@@ -90,25 +90,58 @@ def _trajectory_rng(seed, n_done):
     return np.random.default_rng(np.random.SeedSequence(seed, spawn_key=(1, n_done)))
 
 
-def build_coeffs_mlx(L, g, msq, n_poles, seed):
+def build_coeffs_mlx(L, g, msq, n_poles, seed, hb_relerr_tol=1e-3, n_poles_cap=80):
     """`build_coeffs` on the MLX engine (torch-free): spectral range from g's
-    equilibrium amplitude (√2g).
+    equilibrium amplitude (√2g), WITH a heatbath-quality pre-flight gate.
 
     λmax is estimated by power iteration in FP32 on the default device (Metal/CUDA) —
     ~20× the f64-CPU path, and re-run every resume, so it must be cheap. FP32 is safe:
     the estimate is only an under-approximation from below that the 1.25× padding
     absorbs; the 3-seed max guards against a start vector missing the top eigenvalue
-    (an under-estimate would shrink the Zolotarev range → reject-all)."""
+    (an under-estimate would shrink the Zolotarev range → reject-all).
+
+    GATE (m→0 correctness): the eo heatbath's Zolotarev r_{-1/2} fit degrades as m→0
+    (κ=λmax/m²), and a poor fit makes the heatbath sample a biased fermion weight the
+    Metropolis test CANNOT correct (uncorrectable heatbath bias). So `n_poles` is a FLOOR:
+    it is auto-bumped (step 4) until the UNSIGNED max relative error of r_{-1/2} over
+    [m², λmax+m²] is ≤ `hb_relerr_tol`, and raises (fail-closed) if `n_poles_cap` cannot
+    meet it. Gate on the unsigned max relerr, NOT the S_PF=½‖ξ‖² consistency ratio — the
+    latter is a signed spectral average that hides the error via equioscillation
+    cancellation (measured 0.955 where the true max error is 15% at m=0.05, np=14). Extra
+    poles cost only the once-per-trajectory heatbath: the action + MD force are single-pole
+    exact and do not use the rational set."""
     import mlx.core as mx
     import src.vestigial.hs_rhmc_mlx as me
     V = L ** 4
     rng = np.random.default_rng(seed)
     fwd, back = me.neighbor_tables(L)
     amp = 1.3 * np.sqrt(2.0 * g)
-    lam = max(float(me.estimate_lambda_max(
+    lam = 1.25 * max(float(me.estimate_lambda_max(
         me.hopping_blocks(mx.array(amp * rng.standard_normal((V, 4, 4)), dtype=mx.float32), L),
         fwd, back, V, n_iter=150, seed=s)) for s in range(3))
-    return me.make_rhmc_coeffs(1.25 * lam, msq, n_poles), 1.25 * lam
+    lo, hi = (msq if msq > 0 else max(lam * 1e-7, 1e-12)), lam + msq
+    npu = n_poles
+    while True:
+        # np.errstate: the Remez solve in compute_zolotarev_coefficients can transiently
+        # overflow exp() at wide spectral ranges (κ~1e6); the returned coeffs are finite
+        # (verified) and a genuinely non-finite coeff fails the relerr gate below anyway.
+        with np.errstate(over='ignore', invalid='ignore'):
+            coeffs = me.make_rhmc_coeffs(lam, msq, npu)
+        relerr = me.zolotarev_max_relerr(coeffs['a0'], coeffs['alphas'], coeffs['betas'],
+                                         lo, hi, power=-0.5)
+        if relerr <= hb_relerr_tol:
+            if npu > n_poles:
+                print(f"    build_coeffs: heatbath n_poles {n_poles}→{npu} "
+                      f"(Zolotarev relerr {relerr:.1e} ≤ {hb_relerr_tol:.0e}; κ={hi/lo:.1e})",
+                      flush=True)
+            return coeffs, lam
+        if npu >= n_poles_cap:
+            raise ValueError(
+                f"heatbath Zolotarev relerr={relerr:.2e} > tol={hb_relerr_tol:.0e} even at "
+                f"n_poles={npu} (cap; κ={hi/lo:.1e}, m={msq ** 0.5:.3g}) — the heatbath would "
+                f"sample a biased fermion weight (uncorrectable by Metropolis). Raise the mass "
+                f"or n_poles_cap.")
+        npu = min(npu + 4, n_poles_cap)
 
 
 def _load_checkpoint(path, seed, g, shape, n_therm):
@@ -325,9 +358,32 @@ def main():
     ap.add_argument('--replicas', type=int, default=16)
     ap.add_argument('--n-therm', type=int, default=100)
     ap.add_argument('--n-meas', type=int, default=400)
-    ap.add_argument('--n-md', type=int, default=16)
-    ap.add_argument('--eps', type=float, default=0.03)
-    ap.add_argument('--n-poles', type=int, default=14)
+    ap.add_argument('--n-md', type=int, default=33,
+                    help='MD steps per trajectory (τ=eps·n_md≈0.5). Paired with --eps; the '
+                         'default 0.015×33 is the robust m=0.05 (stiffest planned mass) working '
+                         'point (acc≈1.0). Larger masses are less stiff and tolerate larger eps / '
+                         'fewer steps — see the runbook working-point table.')
+    ap.add_argument('--eps', type=float, default=0.015,
+                    help='MD step size. The eo single-pole fermion force is STIFF and stiffness '
+                         'grows as m→0, so eps must SHRINK with the mass: eps=0.03 reject-alls at '
+                         'm=0.05 (measured). Default 0.015 gives acc≈1.0 at the stiffest planned '
+                         'corner (m=0.05, g=8); m=0.1≈0.02, m=0.2≈0.025. Watch rhmc_monitor.py.')
+    ap.add_argument('--n-poles', type=int, default=24,
+                    help='Zolotarev pole count FLOOR for the heatbath rational (mlx backend). '
+                         'Auto-bumped by build_coeffs_mlx until the heatbath fit meets '
+                         '--hb-relerr-tol (κ=λmax/m² grows as m→0, so the fit needs more poles '
+                         'there). The action + MD force are single-pole exact, so poles cost only '
+                         'the once-per-trajectory heatbath.')
+    ap.add_argument('--hb-relerr-tol', type=float, default=1e-3,
+                    help='mlx backend: max relative error the heatbath Zolotarev r_{-1/2} fit must '
+                         'reach over [m²,λmax+m²] (auto-bumping n_poles). Below the signal/floor '
+                         'scale so the uncorrectable heatbath sampling bias stays negligible. '
+                         'Gated on the UNSIGNED max error, not the S_PF=½‖ξ‖² consistency ratio '
+                         '(a signed average that hides the error via equioscillation cancellation).')
+    ap.add_argument('--n-poles-cap', type=int, default=80,
+                    help='mlx backend: hard cap for the heatbath n_poles auto-bump; build_coeffs '
+                         'RAISES (fail-closed) if the cap cannot meet --hb-relerr-tol rather than '
+                         'run an under-resolved (biased) heatbath.')
     ap.add_argument('--checkpoint-every', type=int, default=10,
                     help='save an atomic checkpoint every N trajectories (through both '
                          'thermalization and measurement) — mlx backend. A stop/restart '
@@ -389,7 +445,8 @@ def main():
         g = float(g)
         path = os.path.join(outdir, f"g{g:.4f}.npz")
         if args.backend == 'mlx':
-            coeffs, lam = build_coeffs_mlx(L, g, msq, args.n_poles, args.seed + i)
+            coeffs, lam = build_coeffs_mlx(L, g, msq, args.n_poles, args.seed + i,
+                                           hb_relerr_tol=args.hb_relerr_tol, n_poles_cap=args.n_poles_cap)
         else:
             coeffs, lam = build_coeffs(L, g, msq, args.n_poles, args.seed + i)
         print(f"\n[{i+1}/{len(gs)}] g={g:.3f}  range[{msq:.4g},{lam+msq:.1f}] κ={(lam+msq)/msq:.0f}", flush=True)

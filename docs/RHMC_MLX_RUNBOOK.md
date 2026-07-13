@@ -37,6 +37,27 @@ FP64 to 1e-8; refined action == FP64 to 1e-7; heatbath `S_PF = ½‖ξ‖²`
 **Measured (M3 Max, L=8, R=4, n_md=4):** refined trajectory **~27 s** vs the
 naive MLX-CPU-FP64 path 550 s (20×) and vs torch-MPS 399 s (~15×).
 
+### Heatbath pole count auto-scales as m→0 (quality gate)
+
+The eo scheme's **only** Zolotarev rational-approximation locus is the heatbath
+(`(M_e+m²)^{1/2}` via the power −1/2 partial-fraction set); the action and MD
+force are single-pole **exact**. That fit degrades as m→0 (κ = λmax/m² grows —
+≈1.7e6 at m=0.05, g=8), and an under-resolved heatbath samples a biased fermion
+weight the Metropolis test **cannot** correct — an uncorrectable ensemble bias,
+worst in exactly the m→0 limit the campaign targets. At the old `n_poles=14` the
+fit is only ~15% accurate at m=0.05.
+
+So `--n-poles` is now a **floor**: `build_coeffs_mlx` auto-bumps it (in steps of
+4) until the heatbath rational's **unsigned max relative error** over
+[m², λmax+m²] is ≤ `--hb-relerr-tol` (default 1e-3), and **raises fail-closed**
+if `--n-poles-cap` (default 80) cannot meet it — never silently running an
+under-resolved heatbath. The gate uses the *unsigned max error*, not the
+`S_PF=½‖ξ‖²` consistency ratio: the latter is a signed spectral average that
+hides the true error via equioscillation cancellation (it read 0.955 where the
+max error was 15%). Extra poles cost only the once-per-trajectory heatbath, so
+the small-m runs carry more poles automatically (per-coupling log prints the
+auto-bumped value).
+
 ---
 
 ## 2. Does the Mac need to be clear of other processes?
@@ -115,16 +136,33 @@ scan — it does not encode this targeting. Narrow it explicitly with
 
 ## 4. Recipes
 
+**Step size is mass-dependent — the eo fermion force stiffens as m→0.** `eps=0.03`
+**reject-alls at m=0.05** (acc=0.00, measured). Use the per-mass working points
+(τ=eps·n_md≈0.5; measured at the worst-case g=8, so milder couplings are safer):
+
+| mass | `--eps` | `--n-md` | acc (g=8) | source |
+|---|---|---|---|---|
+| 0.2 | 0.02 | 25 | ~1.0 | safe (≤ m=0.1 stiffness) |
+| 0.1 | 0.02 | 25 | ~1.0 | prior campaign |
+| **0.05** | **0.015** | **33** | **1.00** | measured (this port) |
+
+At m=0.05, eps=0.02 gives acc≈0.75 (usable, near HMC-optimal) and eps=0.01 is
+overkill (acc=1.0, +20% cost). The driver **default is 0.015/33** — the robust
+stiffest-mass value. Always watch `rhmc_monitor.py` for a `RED_BIAS`/reject-all
+verdict early.
+
 **Mac — m→0 set, high-g focus (the recommended next physics):**
 
 ```bash
 # m = 0.05 and m = 0.2 (m = 0.1 already done, null). High-g window, more replicas
-# where the signal would appear. Refined solver is the default.
+# where the signal would appear. Refined solver + heatbath-pole gate are the default.
+declare -A EPS=( [0.05]=0.015 [0.2]=0.02 )      # per-mass step size (see table above)
+declare -A NMD=( [0.05]=33     [0.2]=25 )
 for M in 0.05 0.2; do
   caffeinate -is env PYTHONPATH=. uv run python scripts/run_rhmc_gpu_production.py \
       --backend mlx --l 8 --mass $M --replicas 16 \
       --couplings-only 3.0 4.0 5.0 6.0 8.0 \
-      --n-therm 100 --n-meas 400 --n-md 16 --eps 0.03 \
+      --n-therm 100 --n-meas 400 --eps ${EPS[$M]} --n-md ${NMD[$M]} \
       > logs/rhmc_mlx_l8_m$M.log 2>&1
 done
 
@@ -160,6 +198,15 @@ PYTHONPATH=. uv run python scripts/rhmc_monitor.py data/rhmc/L4mlx_smoke
   or MLX raises `float64 is not supported on the GPU`. The test suite pins the
   default device to CPU (autouse fixture), which *masks* these seams, so verify
   any new FP64 path under the GPU default device separately.
+  `test_all_public_entry_points_no_f64_seam_under_gpu_default` exercises every
+  public entry point under the GPU default device to catch this class in CI; add
+  new public entry points to its list.
+- **Heatbath rational quality is gated, not assumed.** As m→0 the Zolotarev
+  `r_{-1/2}` fit needs more poles (§1). If you change the coefficient scheme,
+  keep the `build_coeffs_mlx` `--hb-relerr-tol` gate and its regression tests
+  (`test_gate_selected_heatbath_samples_correct_weight_at_m005`,
+  `test_zolotarev_max_relerr_*`) — the S_PF consistency ratio alone is not a
+  sufficient quality check (signed-average cancellation).
 - `mx.einsum` does not broadcast mismatched ellipsis batch dims (blocks
   `(B,1,…)` vs psi `(B,K,…)`) — use `@`/matmul.
 - Call trajectory functions with an `mx.eval` barrier between independent runs;

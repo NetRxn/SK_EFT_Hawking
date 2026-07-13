@@ -143,3 +143,33 @@ def test_stop_start_continues_and_preserves_acceptance(tmp_path):
     d3 = np.load(path)
     assert int(len(np.asarray(d3['tet_m2_history']))) == 7
     assert s3['n'] == 7
+
+
+# --- heatbath-quality pre-flight gate (m->0 rational-approx adequacy) -------------------------
+# The eo heatbath's Zolotarev r_{-1/2} fit degrades as m->0 (kappa=lam/m^2); n_poles=14 gives
+# ~15% error at m=0.05 -> an UNCORRECTABLE sampled-weight bias. build_coeffs_mlx auto-bumps
+# n_poles until the UNSIGNED max relerr <= tol, fail-closed at a cap. kappa is volume-flat, so
+# L=2 exercises the same stiffness as L=8 instantly.
+
+def test_build_coeffs_mlx_meets_heatbath_quality_gate():
+    import src.vestigial.hs_rhmc_mlx as me
+    L, g, msq = 2, 8.0, 0.05 ** 2
+    coeffs, lam = drv.build_coeffs_mlx(L, g, msq, n_poles=14, seed=5, hb_relerr_tol=1e-3)
+    relerr = me.zolotarev_max_relerr(coeffs['a0'], coeffs['alphas'], coeffs['betas'],
+                                     msq, lam + msq, power=-0.5)
+    assert relerr <= 1e-3                                  # returned coeffs MEET the gate
+
+
+def test_build_coeffs_mlx_autobumps_more_poles_for_tighter_tol():
+    # Tighter quality tol -> more poles (auto-bump), independent of absolute kappa.
+    L, g, msq = 2, 8.0, 0.05 ** 2
+    c_loose, _ = drv.build_coeffs_mlx(L, g, msq, 14, seed=5, hb_relerr_tol=5e-1)
+    c_tight, _ = drv.build_coeffs_mlx(L, g, msq, 14, seed=5, hb_relerr_tol=1e-4)
+    assert len(np.asarray(c_tight['betas'])) > len(np.asarray(c_loose['betas']))
+
+
+def test_build_coeffs_mlx_fails_closed_when_cap_cannot_meet_tol():
+    # An unreachable tol must RAISE (fail-closed), never silently return a biased heatbath.
+    L, g, msq = 2, 8.0, 0.05 ** 2
+    with pytest.raises(ValueError, match="Zolotarev|heatbath"):
+        drv.build_coeffs_mlx(L, g, msq, 14, seed=5, hb_relerr_tol=1e-14, n_poles_cap=22)

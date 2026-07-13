@@ -490,6 +490,63 @@ def test_refined_path_gpu_default_seam_and_gross_bias():
     assert nacc / (n - n // 4) > 0.4 and abs(creutz - 1.0) < 0.2, (creutz, nacc / (n - n // 4))
 
 
+def test_all_public_entry_points_no_f64_seam_under_gpu_default():
+    """Every public f64 entry point runs under the GPU DEFAULT device without raising
+    'float64 is not supported on the GPU'. The autouse fixture pins CPU (masking f64 seams);
+    this flips the default to the accelerator — the real production placement — so an
+    unguarded f64 op (function body OR result read) is caught in CI, not only in a multi-day
+    run. Generalizes test_refined_path_gpu_default_seam_and_gross_bias (refined path only) to
+    the full pure-f64 surface: matvecs, CG, action/force/integrator, heatbath, the mixed
+    trajectory, and measurement."""
+    if not _accelerator_available():
+        pytest.skip("no GPU accelerator")
+    mx.set_default_device(mx.gpu)                     # fixture restores afterward
+    L, V, Ve = 2, 2 ** 4, (2 ** 4) // 2
+    g, msq = 1.5, 0.04
+    rng = np.random.default_rng(0)
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+    h = _mx64(1.3 * rng.standard_normal((V, 4, 4)))
+    blocks = me.hopping_blocks(h, L)
+    phi, xi = _mx64(rng.standard_normal((V, 8))), _mx64(rng.standard_normal((V, 8)))
+    phi_e, xi_e = _mx64(rng.standard_normal((Ve, 8))), _mx64(rng.standard_normal((Ve, 8)))
+    pi = _mx64(rng.standard_normal((V, 4, 4)))
+    lam = float(me.estimate_lambda_max(blocks, fwd, back, V))
+    coeffs = me.make_rhmc_coeffs(1.3 * lam, msq, 12)
+    a0, alphas, betas = coeffs['a0'], coeffs['alphas'], coeffs['betas'] + msq
+
+    entry_points = {
+        'hopping_blocks': lambda: me.hopping_blocks(h, L),
+        'apply_A': lambda: me.apply_A(phi, blocks, fwd, back),
+        'apply_AtA': lambda: me.apply_AtA(phi, blocks, fwd, back),
+        'apply_Me': lambda: me.apply_Me(phi_e, blocks, eo),
+        'estimate_lambda_max': lambda: me.estimate_lambda_max(blocks, fwd, back, V),
+        'multishift_cg': lambda: me.multishift_cg(phi, blocks, fwd, back, betas),
+        'eo_multishift_cg': lambda: me.eo_multishift_cg(phi_e, blocks, eo, betas),
+        'action': lambda: me.action(h, phi, g, a0, alphas, betas, fwd, back, L),
+        'compute_force': lambda: me.compute_force(h, phi, g, alphas, betas, fwd, back, L),
+        'integrate': lambda: me.integrate(h, pi, phi, g, alphas, betas, fwd, back, L, 0.02, 2),
+        'heatbath': lambda: me.heatbath(xi, blocks, fwd, back, coeffs, msq),
+        'eo_action': lambda: me.eo_action(h, phi_e, g, msq, eo, fwd, back, L),
+        'eo_compute_force': lambda: me.eo_compute_force(h, phi_e, g, msq, eo, fwd, back, L),
+        'eo_integrate': lambda: me.eo_integrate(h, pi, phi_e, g, msq, eo, fwd, back, L, 0.02, 2),
+        'eo_heatbath': lambda: me.eo_heatbath(xi_e, h, coeffs, msq, eo, fwd, back, L),
+        'eo_rhmc_trajectory_mixed': lambda: me.eo_rhmc_trajectory_mixed(
+            h, g, msq, coeffs, eo, fwd, back, L, 0.03, 2, np.random.default_rng(1)),
+        'measure_observables': lambda: me.measure_observables(h, L),
+    }
+    for name, fn in entry_points.items():
+        try:
+            out = fn()
+            mx.eval(*out) if isinstance(out, tuple) else mx.eval(out)
+        except ValueError as e:                       # the f64-on-GPU seam signature
+            if "float64" in str(e):
+                pytest.fail(f"f64-on-GPU seam in {name}(): {e}")
+            raise
+        arr = out[0] if isinstance(out, tuple) else out
+        assert np.all(np.isfinite(_np(arr))), name    # result read under GPU default too
+
+
 def test_eo_action_refined_matches_fp64_action():
     # Integration: eo action via the refined solver matches pure-FP64 to ~1e-7 ⟹ the
     # accept/reject ΔH is FP64-exact ⟹ no bias.
@@ -774,3 +831,54 @@ def test_eo_multishift_cg_matches_full_on_even():
     even_np = _np(eo['even_idx'])
     for k in range(len(shifts)):
         assert np.allclose(_np(x_eo[k]), _np(x_full[k])[even_np], atol=1e-7)
+
+
+# --- Zolotarev heatbath-coefficient quality: the m->0 rational-approx gate -----------------
+
+def test_zolotarev_max_relerr_exact_single_pole_is_zero():
+    # r(x) = 1/x is EXACTLY x^{-1}; the unsigned max relerr must be ~0 (eval sanity).
+    err = me.zolotarev_max_relerr(0.0, [1.0], [0.0], 0.1, 100.0, power=-1.0)
+    assert err < 1e-12
+
+
+def test_zolotarev_max_relerr_exposes_undersized_poles_at_stiff_mass():
+    # Ground-truth quality of the heatbath r_{-1/2} set: unsigned max relerr over the
+    # spectral range. Must (a) fall sharply with pole count and (b) show n_poles=14 is
+    # inadequate at the stiff m=0.05 range where the heatbath-CONSISTENCY ratio (a signed
+    # spectral average) hides the true error via equioscillation cancellation.
+    from src.vestigial.hs_rhmc import compute_zolotarev_coefficients
+    lo, hi = 0.05 ** 2, 4220.0                       # m=0.05, g=8 padded spectral range
+
+    def relerr(n):
+        a0, al, be = compute_zolotarev_coefficients(n, lo, hi, -0.5)
+        return me.zolotarev_max_relerr(a0, al, be, lo, hi, power=-0.5)
+
+    e14, e50 = relerr(14), relerr(50)
+    assert e14 > 0.05          # default 14 poles: >5% max error at m=0.05 (measured ~15%)
+    assert e50 < 5e-3          # 50 poles: sub-0.5% (measured ~2e-4)
+    assert e50 < e14
+
+
+def test_gate_selected_heatbath_samples_correct_weight_at_m005():
+    """End-to-end m→0 regression: build_coeffs_mlx's GATE-selected n_poles must make the
+    heatbath sample the correct one-Majorana weight at the stiffest campaign mass — i.e.
+    S_PF(φ(ξ)) = ½‖ξ‖² to ~1%. Ties the numerical max-error gate to correct PHYSICS
+    sampling (which the S_PF ratio measures). κ is volume-flat so L=2 reproduces the m=0.05
+    stiffness cheaply. Guards against a future coeff/default change silently regressing the
+    heatbath weight — the uncorrectable-bias case that motivated the gate."""
+    import scripts.run_rhmc_gpu_production as drv
+    L, V, Ve = 2, 2 ** 4, (2 ** 4) // 2
+    g, m = 8.0, 0.05
+    msq = m * m
+    coeffs, lam = drv.build_coeffs_mlx(L, g, msq, n_poles=14, seed=5, hb_relerr_tol=1e-3)
+    fwd, back = me.neighbor_tables(L)
+    eo = me.eo_tables(L)
+    h = _mx64(np.sqrt(2 * g) * np.random.default_rng(7).standard_normal((V, 4, 4)))
+    blocks = me.hopping_blocks(h, L)
+    ratios = []
+    for s in range(4):
+        xi = _mx64(np.random.default_rng(100 + s).standard_normal((Ve, 8)))
+        phi_e = me.eo_heatbath(xi, h, coeffs, msq, eo, fwd, back, L, tol=1e-10)
+        psi = me.eo_multishift_cg(phi_e, blocks, eo, _mx64([msq]), tol=1e-10)[0]
+        ratios.append(float(mx.sum(phi_e * psi)) / (0.5 * float(mx.sum(xi * xi))))
+    assert abs(float(np.mean(ratios)) - 1.0) < 0.02, float(np.mean(ratios))   # gate → correct sampling

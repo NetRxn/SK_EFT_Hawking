@@ -454,6 +454,24 @@ def make_rhmc_coeffs(lam_max, msq, n_poles, action_power=-0.5, hb_power=-0.75):
                 a0_hb=float(a0_hb), alphas_hb=np.asarray(alphas_hb), betas_hb=np.asarray(betas_hb))
 
 
+def zolotarev_max_relerr(a0, alphas, betas, lo, hi, power=-0.5, n_grid=4000):
+    """Max relative error of the partial-fraction rational r(x)=a0+Σ_k alphas_k/(x+betas_k)
+    vs the target x^power, over [lo, hi] on a dense log grid.
+
+    The UNSIGNED quality gate for a Zolotarev fractional-power approximation. The
+    heatbath-consistency ratio S_PF/(½‖ξ‖²) is a SIGNED spectral average of this same error,
+    so equioscillation cancellation can drive it near 1 even when the true (max) error is
+    large — size n_poles against THIS, not the ratio. The eo heatbath's only rational-approx
+    locus is the power −1/2 set (a0/alphas/betas); the action + MD force are single-pole
+    exact. Pure numpy (no MLX/Metal)."""
+    a0 = float(a0)
+    alphas = np.asarray(alphas, dtype=float)
+    betas = np.asarray(betas, dtype=float)
+    x = np.exp(np.linspace(np.log(lo), np.log(hi), n_grid))
+    r = a0 + np.sum(alphas[:, None] / (x[None, :] + betas[:, None]), axis=0)
+    return float(np.max(np.abs(r * x ** (-power) - 1.0)))
+
+
 def heatbath(xi, blocks, fwd, back, coeffs, msq, tol=1e-10, max_iter=8000):
     """φ = (A†A+m²)^{1/4} ξ / √2 = (A†A+m²)·r_{-3/4}(A†A+m²)·ξ / √2, so S_PF(φ)=½‖ξ‖².
 
