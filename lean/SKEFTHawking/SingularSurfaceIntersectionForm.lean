@@ -122,4 +122,53 @@ theorem surfaceFundamentalFunctional_ne_zero :
   have := LinearMap.congr_fun hμ ω
   rwa [surfaceFundamentalFunctional_apply, LinearMap.zero_apply] at this
 
+/-- **The middle-dimension (H¹↔H₁) Poincaré-duality non-degeneracy of the surface intersection form
+reduces to PD-injectivity of the duality map** `a ↦ a ⌢ [Σ] : H¹ → H₁`: if that cap map is
+injective, the intersection form is non-degenerate (injective as `H¹ → (H¹)^*`). A class `a` with
+`⟨a,b⟩ = 0` for all `b` has `⟨b, a⌢[Σ]⟩ = 0` for all `b` (adjunction
+`intersectionForm_eq_kronecker_cap`), so `a⌢[Σ] = 0` (universal coefficients
+`homology_eq_zero_of_kroneckerH`), so `a = 0`. The `m = 0` mirror of `nondeg_of_duality_injective`;
+this isolates the remaining PD obligation to exactly the surface middle-cap injectivity (which the
+dim-2 openDuality-`(1,0)` window would discharge — see the module footnote). -/
+theorem intersectionForm_nondeg_of_cap_injective
+    (hPD : Function.Injective fun a : Cohomology (TopCat.of M) 1 =>
+      capH 1 0 a (surfaceFundamentalClass (M := M))) :
+    Function.Injective ⇑(intersectionForm (M := M)) := by
+  rw [injective_iff_map_eq_zero]
+  intro a ha
+  refine hPD ?_
+  show capH 1 0 a (surfaceFundamentalClass (M := M))
+    = capH 1 0 0 (surfaceFundamentalClass (M := M))
+  rw [map_zero, LinearMap.zero_apply]
+  refine homology_eq_zero_of_kroneckerH 1 _ (fun ω => ?_)
+  rw [← intersectionForm_eq_kronecker_cap]
+  exact LinearMap.congr_fun ha ω
+
+/-- **The self-intersection is the fundamental functional of the cup square** — `⟨a,a⟩ = μ(a ⌣ a)`.
+The diagonal of the intersection form is `surfaceFundamentalFunctional ∘ cupSquare`, the mod-2
+shadow of the Guillou–Marin `ℤ/4`-quadratic refinement (`cupSquareHom : H¹ →+ H²`); the object the
+faithful carrier's `hchar` anchor pairs against a `Brown.Z4Quadratic`. -/
+theorem intersectionForm_self_eq_cupSquare (a : Cohomology (TopCat.of M) 1) :
+    intersectionForm (M := M) a a = surfaceFundamentalFunctional (M := M) (cupSquare a) :=
+  rfl
+
+/-! ## Footnote — the remaining (window-dependent) middle-dimension non-degeneracy
+
+The unconditional discharge of `intersectionForm_nondeg_of_cap_injective`'s hypothesis
+(`a ↦ a ⌢ [Σ]` injective) reduces — via the generic bridges
+`capH_injective_of_fundamentalDuality_injective (k := 1) (m := 0)` and
+`fundamentalDuality_injective_of_openDuality_univ_injective (k := 1) (m := 0)` — to
+`openDuality (k := 1) (m := 0)` being injective on `univ` for a compact charted-on-`E²` surface.
+That is supplied for the closed 4-manifold by the deg-4 window tower `pdWindowP`/`pdWindowP4`
+(hardcoded to `SingularChain _ (1 + 0 + 3)`, degree `2 + 1 + 2`, `Fin (2 + 2)`). The dim-2 analog
+(a "P₂ window") is NOT built here: the base-case ingredients are already dimension-generic
+(`SingularBaseCaseD0.openDuality₀_bijective_of_chartConvex` and
+`SingularCSCConvexChart.cscOpen_one_eq_zero_of_chartConvex` — the `k = 1` companion to the
+`2 ≤ k` upper base case — together with `homology_chartConvexSub_eq_zero`), and the union/colimit
+engines are `N`-generic (`openDuality_union_bijective_bot` at `N = 0`,
+`openDuality₀_union_bijective` at `N = 0`), so no NEW mathematics is required — only the mechanical
+mirror of the `pdWindowP`/`pdWindowP4` finite-chart-cover assembly at `m = 0`. Everything above the
+footnote (the form, its symmetry, the cap–cup adjunction, and this conditional non-degeneracy) is
+window-independent and complete. -/
+
 end SKEFTHawking.SingularSurfaceIntersectionForm
