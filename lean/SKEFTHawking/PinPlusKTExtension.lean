@@ -1,6 +1,16 @@
 /-
-# Phase 5q.H W-D (completeness OPENER — STATEMENT LAYER, gate-ready) — the KT §5 extension on
+# Phase 5q.H W-D (completeness OPENER — STATEMENT LAYER) — the KT §5 extension on
 # the honest CharPair carrier
+
+⛔ GATE VERDICT (W-D vacuity gate round 3, 2026-07-13, kernel-checked — `PinPlusKTVacuityGateWD` +
+no-go `free-membrane-kernel-kills-nonsplit`): on the AS-BUILT carrier (membrane kernel `L` a free
+field), `KTNonSplit` is FALSE for every provider (`ktNonSplit_false`: the e₈-graph Lagrangian kills
+`8•[ℝP⁴]`) and the binder pair `{KTKernelCard, KTNonSplit}` is jointly UNSATISFIABLE
+(`kt_binders_unsatisfiable`). The assembly algebra below (`kt_equiv_zmod16` etc.) is sound and
+SURVIVES the carrier fix; do NOT attempt to discharge the binders until `CharPairBor` carries the
+certified membrane `Q` with `L` COMPUTED as `ker(H₁(∂Q)→H₁(Q))` + the relative characteristic tie
+(the frozen v4 item-2/3 spec), after which the layer must be RE-GATED. `KTKernelCard` additionally
+quantifies over hchar-untethered classes (`fakeRP4RankZero`) — restate after the (n,q,surf) tie.
 
 Route: KT-LMS 151 §5 (`Lit-Search/Phase-5qH/KT_LMS_Section5_completeness_proof_extracted.md`,
 Thm 5.2 / Lemma 5.3 / §6) on the FAITHFUL carrier `G := T2DataBordismGrp (pinPlusCharPairData prov)`.

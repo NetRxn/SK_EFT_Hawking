@@ -3524,6 +3524,17 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': "A manifold-typed WITNESS datum inside a carrier or relation (the membrane/3-manifold Q, the surface Σ, any auxiliary manifold field) inherits honesty from the T2 fence on the ambient bordism W. FALSE (W-A gate, Fable vacuity attack 2026-07-13): the bug-eyed collapse is dimension-generic — `qLevelTripleMembrane` is a compact non-Hausdorff membrane with THREE boundary copies of Σ (kernel-checked non-T2), so a T2-less Q-encoding lets ker(H₁(∂Q)→H₁(Q)) be adversarially chosen, Taylor-Thm-1.1 extension conditions lose their teeth, and the computed Brown/abk8 invariant fails bordism-invariance. RULE: every manifold-typed datum needs its OWN T2 (+ compactness/charted) certificate; the W-level fence does not propagate.",
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'free_membrane_kernel_kills_nonsplit': {
+        'fork_id': 'free-membrane-kernel-kills-nonsplit',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusKTVacuityGateWD.ktKernelRep_eq_zero',
+            'SKEFTHawking.PinPlusKTVacuityGateWD.ktNonSplit_false',
+            'SKEFTHawking.PinPlusKTVacuityGateWD.kt_binders_unsatisfiable',
+        ],
+        'nogo_kind': 'refutation',
+        'false_statement': "The as-built CharPair carrier (Bor with the membrane kernel L carried as a FREE Submodule field, the geometric membrane Q deferred) supports the KT §5 non-split content — KTNonSplit (8•[ℝP⁴] ≠ 0) is open/dischargeable on it. FALSE (W-D vacuity gate round 3, Fable, 2026-07-13, kernel-checked FOR EVERY PROVIDER): with L free, the UN-reversed double σ⊔σ bounds the plain doubling cylinder whenever q⊕q admits ANY metabolic Lagrangian (brown ∈ {0,4}); the e₈/extended-Hamming graph of x ↦ x + (Σx)·𝟙 (q∘φ = −q, 16-point decide) certifies one for [ℝP⁴]⁴ that NO membrane in (ℝP⁴)⁴×I realizes ⟹ 8•[ℝP⁴] = 0, the binder pair {KTKernelCard, KTNonSplit} is jointly unsatisfiable, and ⟨[ℝP⁴]⟩ is ≤ ℤ/8. The anti-collapse engine protects only Witt-class (brown) equality — exactly the part KT p.217 says cannot see [Kummer]. ROUND-3 OF THE PATTERN: every deferred geometric tie converts completeness content into falsehood (rounds 1-2: comp-twist, membrane-T2, taylor-leg). FIX: CharPairBor must carry the certified membrane Q with L COMPUTED as ker(H₁(∂Q)→H₁(Q)) + the item-3 relative characteristic tie (the frozen v4 spec, under-implemented by the interim build); acceptance test = the honest cylinder membrane's ANTI-DIAGONAL kernel excludes the e₈ graph (doubleKillerBor must break). Also: KTKernelCard quantifies over hchar-untethered fake classes (fakeRP4RankZero) — tie (n,q,surf) or restrict the quantifier before restating.",
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'taylor_leg_end_convention_trap': {
         'fork_id': 'taylor-leg-end-convention-trap',
         'backing_theorems': [

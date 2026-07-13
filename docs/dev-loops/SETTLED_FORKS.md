@@ -298,3 +298,13 @@ conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
 - memory: [[project_5qH_nonhausdorff_substrate_bug]]
 - created_ts: 2026-07-13T00:00:00Z
 - reviewed_ts: 2026-07-13T00:00:00Z
+
+## free-membrane-kernel-kills-nonsplit
+- verdict: dead
+- tier: agent-reviewed
+- authored_by: kernel-no-go (Fable vacuity gate round 3, W-D)
+- killed_by: kernel-checked `PinPlusKTVacuityGateWD.ktKernelRep_eq_zero` (+ `ktNonSplit_false`, `kt_binders_unsatisfiable`)
+- reason: with the membrane kernel L a FREE field (geometric Q deferred), the un-reversed double σ⊔σ bounds the plain doubling cylinder for any metabolic Lagrangian of q⊕q (brown ∈ {0,4}); the e₈-graph Lagrangian kills 8•[ℝP⁴] for every provider — the KT non-split bit is FALSE on the as-built carrier and the W-D binder pair is jointly unsatisfiable. Round-3 of the deferred-tie pattern. FIX: Bor carries the certified membrane with L computed (the frozen v4 item-2/3 spec); acceptance = the honest anti-diagonal cylinder kernel excludes the e₈ graph. Never open discharge waves against binders whose carrier ties are deferred.
+- memory: [[project_5qH_nonhausdorff_substrate_bug]]
+- created_ts: 2026-07-13T00:00:00Z
+- reviewed_ts: 2026-07-13T00:00:00Z
