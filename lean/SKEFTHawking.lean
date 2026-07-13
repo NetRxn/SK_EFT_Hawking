@@ -656,6 +656,12 @@ import SKEFTHawking.SpinSigmaRoute
 -- the single S²×S² handle-trade + `HyperbolicBase` the rank-0 nullbordism) plus a kernel-pure
 -- block-iteration; the disclosed geometric residual shrinks to Benedetti's atomic lemmas. (wt1-built.)
 import SKEFTHawking.SphereProductRealization
+-- Phase 5q.H (N1a, Freeze-A atoms at finest grain) — shrinks the handle-trade residual: the smaller
+-- form-free geometric atom `HandleTradeSplit` (residual manifold + bordism + its b₂, no
+-- intersection-form obligation) discharges the full `HyperbolicPeel` kernel-pure, the residual form
+-- being forced by signature bordism-invariance + σ=0 congruence-class uniqueness
+-- (`intCongr_of_evenUnimodular_sig_zero`). (wt3-built.)
+import SKEFTHawking.SphereProductRealizationAtoms
 import SKEFTHawking.SphereProductBounding
 -- Phase 5q.H (N1a, Freeze-B gap 2) — the collar-model re-association transport for S²×D³: transports
 -- the natural E²×(E²×H) ChartedSpace/IsManifold of S²×D³ along the model prod-associator to J5's
