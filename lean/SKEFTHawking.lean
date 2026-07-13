@@ -4310,6 +4310,12 @@ import SKEFTHawking.DiskManifoldSmooth
 -- forgetGen_eq_zmultiples_g8 UNIFIES the σ-route s-map with the in-tree KT s-map zmultiplesHom g8.
 -- Honest residual: hg (σ=−16 K3 generator, disclosed) + hexact (deep KT §5 exactness). (wt2-built.)
 import SKEFTHawking.SpinSigmaRouteWitness
+-- Phase 5q.H (N1a/N5): the K3 lattice II(K3)=2·(−E₈)⊕3·H (k3Form) — blockDiag engine + certified
+-- latticeSig k3Form=−16 and k3Form_isEvenUnimodular (kernel-pure, no native_decide); reduces the
+-- σ-route generator hg to its geometric residual (hg ⟺ latticeSig(R.form g)=−16, grounded on k3Form
+-- via latticeSig_eq_neg16_of_congr_k3), with door_via_k3_generator / door_via_k3_realization
+-- re-expressing the door on the lattice / K3-realization residual. (wt2-built.)
+import SKEFTHawking.SpinSigmaGenerator
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
