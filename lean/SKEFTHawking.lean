@@ -1324,6 +1324,9 @@ import SKEFTHawking.SingularDualityMVAdjoint
 import SKEFTHawking.SingularDualityFinrank
 import SKEFTHawking.SingularRelativeCohomologyMVMiddle
 import SKEFTHawking.SingularRelativeCap
+import SKEFTHawking.SingularRelativeCup
+import SKEFTHawking.SingularRelativeBockstein
+import SKEFTHawking.SingularRelativeAbsCompat
 import SKEFTHawking.SingularCapSupport
 import SKEFTHawking.SingularCapChainIncl
 import SKEFTHawking.SingularRightCapBoundary
