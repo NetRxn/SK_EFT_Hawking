@@ -1330,6 +1330,13 @@ import SKEFTHawking.PoincareLefschetzRelFundClassGeom
 -- `starConvex_diff_of_interior` (a convex set minus a boundary point is star-convex) and the
 -- convex-chart boundary-vanishing reduction `boundaryPoint_localHomology_zero_of_convex`.
 import SKEFTHawking.PoincareLefschetzRelFundClassBoundary
+-- W-A.1g: the CONCRETE cylinder `[W,∂W]` datum via the explicit product collar. For `W = M × [0,1]`
+-- (`M` a closed manifold charted on `Eᵐ'⁺²`; op-bordism `M⁴` at `m'=2`), `cyl_boundary_eq`
+-- (`∂W = M × {⊥,⊤}`), the interior slab `K = M × [¼,¾]` (`interiorSlab_subset_compl_boundary`,
+-- `isCompact_interiorSlab`), the datum reduced to a SINGLE existence obligation via the explicit
+-- interior-chart equiv `εcyl` (`cylinderRelFundClassDatum`), and Wall 2 for the cylinder
+-- (`cylinder_determinedByInteriorPoints`) + uniqueness (`cylinderRelFundClass_unique`).
+import SKEFTHawking.PoincareLefschetzRelFundClassCylinder
 -- W-A.1e: the GENERIC datum-level layer — the dual-class extraction (`dualFunctional`,
 -- `RepresentedBy`, the bundled UCT-flavored `RelKroneckerSurjective` perfectness hypothesis) and the
 -- datum-assembly seam `LefschetzWuDatum.ofRelFund14`/`.ofRelFund23` wiring the concrete `relCupH14`/
