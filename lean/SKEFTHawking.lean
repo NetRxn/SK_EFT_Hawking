@@ -4354,6 +4354,8 @@ import SKEFTHawking.RP2ProjectionFormula
 import SKEFTHawking.RP2CupLadder
 import SKEFTHawking.RP2IntersectionForm
 import SKEFTHawking.RP2EquatorialInclusion
+import SKEFTHawking.RP4CharSurfacePushforward
+import SKEFTHawking.RP4CharSurfaceSmithNat
 import SKEFTHawking.PinPlusCharPairData
 import SKEFTHawking.PinPlusCompTorsorNoGo
 import SKEFTHawking.PinPlusTaylorConventionNoGo
