@@ -211,6 +211,176 @@ statement is instantiable — the whole point of the round-2 gate. -/
 theorem cyl_brown_eq {n : ℕ} (q : Z4Quadratic (Fin n)) : q.brown = q.brown :=
   brown_eq_of_taylorLeg_lagrangian q q (cylLagrangian n) (taylorLeg_cyl q) (lagrangian_cyl q)
 
+/-! ## §4.5. The general metabolic-Lagrangian transport engine (reusable for every op witness)
+
+Each op's boundary-to-interior kernel `L` is the diagonal/graph Lagrangian transported through the
+`reindex`/`orthSum`/`neg` operations that `sumStr`/`revStr` apply to the enhancements. These purely
+algebraic lemmas do the `half-lives-half-dies` maximality lifting ONCE, generically, so the twelve op
+witnesses reduce to naming the right transport. `IsMetabolic (jointEnhancement qσ qτ) L` unfolds
+definitionally to `TaylorLegVanishes qσ qτ L ∧ JointLagrangian qσ qτ L`. -/
+
+/-- **`L` is metabolic for a `ZMod 4`-quadratic form `Q`**: `Q` vanishes on `L` (isotropic Taylor leg)
+and `L` is maximal isotropic for its polar form (`half-lives-half-dies`). The two anti-collapse-engine
+conditions, stated for a general form so the `reindex`/`orthSum`/`neg` transports apply. -/
+def IsMetabolic {ι : Type*} [Fintype ι] [DecidableEq ι] (Q : Z4Quadratic ι)
+    (L : Submodule (ZMod 2) (ι → ZMod 2)) : Prop :=
+  (∀ l ∈ L, Q.q l = 0) ∧ (∀ v, (∀ l ∈ L, Q.B v l = 0) → v ∈ L)
+
+/-- The jointEnhancement metabolic condition IS the pair the `CharPairBor` fields need. -/
+theorem taylorLeg_of_isMetabolic {nσ nτ : ℕ} {qσ : Z4Quadratic (Fin nσ)} {qτ : Z4Quadratic (Fin nτ)}
+    {L : Submodule (ZMod 2) ((Fin nσ ⊕ Fin nτ) → ZMod 2)}
+    (h : IsMetabolic (jointEnhancement qσ qτ) L) : TaylorLegVanishes qσ qτ L := h.1
+
+theorem jointLagrangian_of_isMetabolic {nσ nτ : ℕ} {qσ : Z4Quadratic (Fin nσ)}
+    {qτ : Z4Quadratic (Fin nτ)} {L : Submodule (ZMod 2) ((Fin nσ ⊕ Fin nτ) → ZMod 2)}
+    (h : IsMetabolic (jointEnhancement qσ qτ) L) : JointLagrangian qσ qτ L := h.2
+
+/-- **Metabolic transports along `reindex`.** `x ↦ x ∘ e` is a linear bijection, so the preimage of a
+metabolic `L` is metabolic for `Q.reindex e`. -/
+theorem IsMetabolic.reindex {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ] [DecidableEq κ]
+    {Q : Z4Quadratic ι} {L : Submodule (ZMod 2) (ι → ZMod 2)} (h : IsMetabolic Q L) (e : ι ≃ κ) :
+    IsMetabolic (Q.reindex e) (L.comap (LinearMap.funLeft (ZMod 2) (ZMod 2) e)) := by
+  obtain ⟨htaylor, hlag⟩ := h
+  refine ⟨fun l hl => ?_, fun v hv => ?_⟩
+  · rw [Submodule.mem_comap] at hl
+    exact htaylor _ hl
+  · rw [Submodule.mem_comap]
+    refine hlag _ (fun l' hl' => ?_)
+    show Q.B (fun i => v (e i)) l' = 0
+    have hx : (LinearMap.funLeft (ZMod 2) (ZMod 2) e) (fun k => l' (e.symm k)) = l' := by
+      funext i; simp [LinearMap.funLeft_apply, Equiv.symm_apply_apply]
+    have hb := hv (fun k => l' (e.symm k)) (by rw [Submodule.mem_comap, hx]; exact hl')
+    simpa [Z4Quadratic.reindex, Equiv.symm_apply_apply] using hb
+
+/-- **Metabolic transports along `neg`.** `neg Q` has the same polar form `B` and negates `q`, so the
+same `L` stays metabolic (`-(0) = 0`). -/
+theorem IsMetabolic.neg {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {Q : Z4Quadratic ι} {L : Submodule (ZMod 2) (ι → ZMod 2)} (h : IsMetabolic Q L) :
+    IsMetabolic (Z4Quadratic.neg Q) L := by
+  obtain ⟨htaylor, hlag⟩ := h
+  refine ⟨fun l hl => ?_, hlag⟩
+  show -(Q.q l) = 0
+  rw [htaylor l hl, neg_zero]
+
+/-- The block submodule `L₁ ⊞ L₂` inside `ι₁ ⊕ ι₂ → ZMod 2`: the `inl`-restriction lies in `L₁` and the
+`inr`-restriction lies in `L₂`. -/
+def blockSub {ι₁ ι₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂] [DecidableEq ι₂]
+    (L₁ : Submodule (ZMod 2) (ι₁ → ZMod 2)) (L₂ : Submodule (ZMod 2) (ι₂ → ZMod 2)) :
+    Submodule (ZMod 2) (ι₁ ⊕ ι₂ → ZMod 2) :=
+  L₁.comap (LinearMap.funLeft (ZMod 2) (ZMod 2) (Sum.inl : ι₁ → ι₁ ⊕ ι₂)) ⊓
+    L₂.comap (LinearMap.funLeft (ZMod 2) (ZMod 2) (Sum.inr : ι₂ → ι₁ ⊕ ι₂))
+
+theorem mem_blockSub {ι₁ ι₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂] [DecidableEq ι₂]
+    {L₁ : Submodule (ZMod 2) (ι₁ → ZMod 2)} {L₂ : Submodule (ZMod 2) (ι₂ → ZMod 2)}
+    (x : ι₁ ⊕ ι₂ → ZMod 2) :
+    x ∈ blockSub L₁ L₂ ↔ (fun i => x (Sum.inl i)) ∈ L₁ ∧ (fun i => x (Sum.inr i)) ∈ L₂ := by
+  rw [blockSub, Submodule.mem_inf, Submodule.mem_comap, Submodule.mem_comap]
+  constructor <;> (intro ⟨h1, h2⟩; exact ⟨h1, h2⟩)
+
+/-- **Metabolic transports along `orthSum`** (block-diagonal): a metabolic `L₁` for `Q₁` and `L₂` for
+`Q₂` give the block Lagrangian `L₁ ⊞ L₂` for `orthSum Q₁ Q₂`. -/
+theorem IsMetabolic.orthSum {ι₁ ι₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂] [DecidableEq ι₂]
+    {Q₁ : Z4Quadratic ι₁} {Q₂ : Z4Quadratic ι₂}
+    {L₁ : Submodule (ZMod 2) (ι₁ → ZMod 2)} {L₂ : Submodule (ZMod 2) (ι₂ → ZMod 2)}
+    (h₁ : IsMetabolic Q₁ L₁) (h₂ : IsMetabolic Q₂ L₂) :
+    IsMetabolic (Z4Quadratic.orthSum Q₁ Q₂) (blockSub L₁ L₂) := by
+  obtain ⟨ht1, hl1⟩ := h₁
+  obtain ⟨ht2, hl2⟩ := h₂
+  refine ⟨fun l hl => ?_, fun v hv => ?_⟩
+  · rw [mem_blockSub] at hl
+    show Q₁.q _ + Q₂.q _ = 0
+    rw [ht1 _ hl.1, ht2 _ hl.2, add_zero]
+  · rw [mem_blockSub]
+    refine ⟨hl1 _ (fun a ha => ?_), hl2 _ (fun a ha => ?_)⟩
+    · have hmem : Sum.elim a (0 : ι₂ → ZMod 2) ∈ blockSub L₁ L₂ := by
+        rw [mem_blockSub]; exact ⟨ha, L₂.zero_mem⟩
+      have hb := hv _ hmem
+      have hexp : (Z4Quadratic.orthSum Q₁ Q₂).B v (Sum.elim a (0 : ι₂ → ZMod 2))
+          = Q₁.B (fun i => v (Sum.inl i)) a + Q₂.B (fun i => v (Sum.inr i)) 0 := rfl
+      rw [hexp, show Q₂.B (fun i => v (Sum.inr i)) 0 = 0 from by
+        rw [Q₂.B_symm]; exact Q₂.B_zero_left _, add_zero] at hb
+      exact hb
+    · have hmem : Sum.elim (0 : ι₁ → ZMod 2) a ∈ blockSub L₁ L₂ := by
+        rw [mem_blockSub]; exact ⟨L₁.zero_mem, ha⟩
+      have hb := hv _ hmem
+      have hexp : (Z4Quadratic.orthSum Q₁ Q₂).B v (Sum.elim (0 : ι₁ → ZMod 2) a)
+          = Q₁.B (fun i => v (Sum.inl i)) 0 + Q₂.B (fun i => v (Sum.inr i)) a := rfl
+      rw [hexp, show Q₁.B (fun i => v (Sum.inl i)) 0 = 0 from by
+        rw [Q₁.B_symm]; exact Q₁.B_zero_left _, zero_add] at hb
+      exact hb
+
+/-- **The diagonal is metabolic for a `±`-doubling `orthSum Q₁ Q₂`** — when `Q₁.q a + Q₂.q a = 0` and
+`Q₁.B = Q₂.B` (`Q₂ = ± Q₁` on the same polar form). The `half-lives-half-dies` core generalizing
+`taylorLeg_cyl`/`lagrangian_cyl`: cylinder (`Q₂ = neg Q₁`) and doubling (`Q₁ = neg Q₂`) both fit. -/
+theorem diag_metabolic {n : ℕ} (Q₁ Q₂ : Z4Quadratic (Fin n))
+    (hq : ∀ a, Q₁.q a + Q₂.q a = 0) (hB : Q₁.B = Q₂.B) :
+    IsMetabolic (Z4Quadratic.orthSum Q₁ Q₂) (cylLagrangian n) := by
+  refine ⟨fun l hl => ?_, fun v hv => ?_⟩
+  · have hdiag := (mem_cylLagrangian_iff l).mp hl
+    show Q₁.q (fun i => l (Sum.inl i)) + Q₂.q (fun i => l (Sum.inr i)) = 0
+    rw [← hdiag]; exact hq _
+  · rw [mem_cylLagrangian_iff]
+    set u := fun i => v (Sum.inl i) with hu
+    set w := fun i => v (Sum.inr i) with hw
+    have hkey : ∀ a : Fin n → ZMod 2, Q₁.B u a + Q₁.B w a = 0 := by
+      intro a
+      have hla : (Sum.elim a a) ∈ cylLagrangian n := by rw [mem_cylLagrangian_iff]; rfl
+      have hb := hv (Sum.elim a a) hla
+      have hexp : (Z4Quadratic.orthSum Q₁ Q₂).B v (Sum.elim a a) = Q₁.B u a + Q₂.B w a := rfl
+      rw [hexp, ← hB] at hb
+      exact hb
+    have hsum : ∀ a, Q₁.B (u + w) a = 0 := fun a => by rw [Q₁.B_add_left]; exact hkey a
+    have huw : u + w = 0 := Q₁.nondeg _ hsum
+    funext i
+    have h2 : u i = - w i := by rw [eq_neg_iff_add_eq_zero]; exact congrFun huw i
+    rwa [CharTwo.neg_eq] at h2
+
+/-- The **graph submodule** of a `ZMod 2`-linear isometry `φ` between the two ends' `H₁`: classes whose
+`τ`-part is `φ` of their `σ`-part. This is the boundary-to-interior kernel of a reparametrized-cylinder
+membrane (`cylBor`/`commBor`/`assocBor`/`unitBor`). -/
+def graphSub {nσ nτ : ℕ} (φ : (Fin nσ → ZMod 2) ≃ₗ[ZMod 2] (Fin nτ → ZMod 2)) :
+    Submodule (ZMod 2) (Fin nσ ⊕ Fin nτ → ZMod 2) :=
+  LinearMap.ker (φ.toLinearMap ∘ₗ
+      LinearMap.funLeft (ZMod 2) (ZMod 2) (Sum.inl : Fin nσ → Fin nσ ⊕ Fin nτ)
+    - LinearMap.funLeft (ZMod 2) (ZMod 2) (Sum.inr : Fin nτ → Fin nσ ⊕ Fin nτ))
+
+theorem mem_graphSub {nσ nτ : ℕ} (φ : (Fin nσ → ZMod 2) ≃ₗ[ZMod 2] (Fin nτ → ZMod 2))
+    (x : Fin nσ ⊕ Fin nτ → ZMod 2) :
+    x ∈ graphSub φ ↔ (fun i => x (Sum.inr i)) = φ (fun i => x (Sum.inl i)) := by
+  rw [graphSub, LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.comp_apply, sub_eq_zero]
+  exact eq_comm
+
+/-- **The graph of a `q`-isometry is metabolic** for the τ-end-negated joint enhancement: the Taylor leg
+holds (`qσ − qτ∘φ = 0`) and the graph is its own polar (nondegeneracy of `qσ` + the `B`-isometry). This
+is the reusable engine for the reparametrized-cylinder op witnesses. -/
+theorem graphSub_metabolic {nσ nτ : ℕ} {qσ : Z4Quadratic (Fin nσ)} {qτ : Z4Quadratic (Fin nτ)}
+    (φ : (Fin nσ → ZMod 2) ≃ₗ[ZMod 2] (Fin nτ → ZMod 2))
+    (hq : ∀ a, qτ.q (φ a) = qσ.q a) (hB : ∀ a a', qτ.B (φ a) (φ a') = qσ.B a a') :
+    IsMetabolic (jointEnhancement qσ qτ) (graphSub φ) := by
+  refine ⟨fun l hl => ?_, fun v hv => ?_⟩
+  · rw [mem_graphSub] at hl
+    show qσ.q (fun i => l (Sum.inl i)) + -(qτ.q (fun i => l (Sum.inr i))) = 0
+    rw [hl, hq, add_neg_cancel]
+  · rw [mem_graphSub]
+    set u := fun i => v (Sum.inl i) with hu
+    set w := fun i => v (Sum.inr i) with hw
+    have hkey : ∀ a, qσ.B u a + qσ.B (φ.symm w) a = 0 := by
+      intro a
+      have hla : (Sum.elim a (φ a)) ∈ graphSub φ := by rw [mem_graphSub]; rfl
+      have hb := hv (Sum.elim a (φ a)) hla
+      have hexp : (jointEnhancement qσ qτ).B v (Sum.elim a (φ a)) = qσ.B u a + qτ.B w (φ a) := rfl
+      rw [hexp, show qτ.B w (φ a) = qσ.B (φ.symm w) a from by
+        rw [← hB]; congr 1; exact (φ.apply_symm_apply w).symm] at hb
+      exact hb
+    have hsum : ∀ a, qσ.B (u + φ.symm w) a = 0 := fun a => by rw [qσ.B_add_left]; exact hkey a
+    have huw : u + φ.symm w = 0 := qσ.nondeg _ hsum
+    have hu_eq : u = φ.symm w := by
+      funext i
+      have hi : u i + (φ.symm w) i = 0 := congrFun huw i
+      have h2 : u i = -((φ.symm w) i) := by rw [eq_neg_iff_add_eq_zero]; exact hi
+      rwa [CharTwo.neg_eq] at h2
+    rw [hu_eq, φ.apply_symm_apply]
+
 /-! ## §5. The frozen structure shapes `CharPairStr` (Mfd) and `CharPairBor` (Bor)
 
 ⚠ **UNIVERSE FRICTION (reported, not silently worked around).** The frozen v4 §2 `Mfd` table lists
