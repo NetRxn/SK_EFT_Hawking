@@ -84,10 +84,16 @@ def hopping_blocks(h, L, dtype=None):
     h: (*batch, V, 4, 4) [site, μ, a].  Returns (*batch, V, 4, 8, 8)
     (μ at axis −3, so block^μ = blocks[..., μ, :, :])."""
     if not isinstance(h, mx.array):
-        h = mx.array(np.asarray(h), dtype=dtype or mx.float32)
-    elif dtype is not None and h.dtype != dtype:
-        h = h.astype(dtype)
-    with mx.stream(_stream(h.dtype)):
+        # default the dtype from the input array (float64 numpy → float64), not to
+        # float32 — `dtype or mx.float32` would silently downcast an f64 numpy config.
+        if dtype is None:
+            arr = np.asarray(h)
+            dtype = mx.float64 if arr.dtype == np.float64 else mx.float32
+        h = mx.array(np.asarray(h), dtype=dtype)
+    target = dtype if dtype is not None else h.dtype
+    with mx.stream(_stream(target)):              # open the (dtype-correct) stream FIRST,
+        if h.dtype != target:                     # then cast inside it — an f64 cast must
+            h = h.astype(target)                  # not run on the GPU default stream
         return mx.einsum('...vma,aij->...vmij', h, _cg_const(h.dtype))
 
 
@@ -236,6 +242,10 @@ def _as_shift_tensor(shifts, nb, Bshape, dtype):
 
 def _cg_loop(bk, matvec, sigma, tol, max_iter, x0=None, rel_to_b=False, check_every=8):
     """Shared K-parallel CG core: solve (Op + σ_k) x_k = bk[..., k, :, :] per (config, shift).
+
+    Handles both a source broadcast across shifts (multishift solve) and a distinct
+    per-shift source (the iterative-refinement correction step) — it only reads
+    bk[..., k, :, :] per system either way.
 
     bk: (*B, K, V', 8); matvec(p) applies the shift-free operator batched over K.
     Converged systems are masked out of further updates each iteration (in-graph,
@@ -572,13 +582,21 @@ def _cast(x, dtype):
 
 
 def _cast_to(x, dtype, device):
-    """Cast to `dtype` and evaluate on `device`'s stream. A float64→float32 cast is
-    done on the CPU stream first (Metal rejects any f64 operand), then materialized on
-    `device` so the refined solver's inner FP32 work runs on the GPU."""
-    if x.dtype == mx.float64:
-        with mx.stream(mx.cpu):
-            x = x.astype(dtype)
-    with mx.stream(device):
+    """Cast `x` to `dtype`, doing any float64-involving cast on the CPU stream (Metal is
+    FP32-only), and materialize the result on `device`'s stream.
+
+    A float64 target is CPU-only regardless of `device` (Metal rejects f64) — the guard
+    below prevents an f64-on-GPU crash for a float64 target reached with a GPU `device`.
+    NOTE: this only pins the dtype and pre-materializes; where the RESULT's downstream ops
+    actually run is governed by `_stream(dtype)` at their call sites (f64→CPU,
+    f32→default device), so the FP32 inner CG lands on the GPU when it is the default
+    device — `device` here does not by itself pin subsequent placement."""
+    if dtype == mx.float64 or x.dtype == mx.float64:
+        with mx.stream(mx.cpu):                    # any f64 operand → CPU stream
+            out = x.astype(dtype)
+            mx.eval(out)
+            return out
+    with mx.stream(device):                        # GPU-legal target, GPU-legal source
         out = x.astype(dtype)
         mx.eval(out)
         return out
@@ -633,34 +651,6 @@ def eo_rhmc_trajectory_mixed(h64, g, msq, coeffs, eo, fwd, back, L, eps, n_md, r
         h_out = mx.where(accept[..., None, None, None], h_new64, h64)
         mx.eval(h_out, dH, accept)
     return h_out, dH, accept
-
-
-def _cg_shifted(rhs, matvec, sigma, tol, max_iter, check_every=8):
-    """Batched CG for (Op + σ_k) x_k = rhs with a PER-SHIFT rhs (the refinement
-    correction step) — generalizes _cg_loop to a distinct source per shift. rhs and
-    sigma carry the K axis; `matvec(p)` applies the shift-free operator over K."""
-    x = mx.zeros(rhs.shape, dtype=rhs.dtype)
-    r = rhs
-    p = r
-    rs = mx.sum(r * r, axis=(-2, -1))
-    tol_sq = tol * tol * mx.maximum(rs, 1e-300)
-    converged = rs <= tol_sq
-    zeros = mx.zeros(rs.shape, dtype=rhs.dtype)
-    for i in range(max_iter):
-        if i % check_every == 0 and bool(mx.all(converged)):
-            break
-        Ap = matvec(p) + sigma * p
-        pAp = mx.sum(p * Ap, axis=(-2, -1))
-        alpha = mx.where(converged, zeros, rs / pAp)
-        x = x + alpha[..., None, None] * p
-        r = r - alpha[..., None, None] * Ap
-        rs_new = mx.sum(r * r, axis=(-2, -1))
-        beta = mx.where(converged, zeros, rs_new / rs)
-        p = r + beta[..., None, None] * p
-        rs = rs_new
-        converged = mx.logical_or(converged, rs <= tol_sq)
-        mx.async_eval(x, r, p, rs, converged)
-    return x
 
 
 class RefinementNotConverged(RuntimeError):
@@ -733,7 +723,9 @@ def eo_multishift_cg_refined(b64, h64, eo, shifts, L, device, tol=1e-10, inner_t
             converged = True
             break
         r32 = _cast_to(r64, mx.float32, device)
-        d32 = _cg_shifted(r32, matvec32, sigma32, inner_tol, max_inner)
+        # the refinement correction is a plain CG with a per-shift source r32 — the
+        # x0=None / rel_to_b=False case of _cg_loop (residual relative to r32 itself).
+        d32 = _cg_loop(r32, matvec32, sigma32, inner_tol, max_inner)
         with mx.stream(mx.cpu):
             x = x + _cast_to(d32, mx.float64, mx.cpu)
             mx.eval(x)

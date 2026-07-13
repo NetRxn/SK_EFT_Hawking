@@ -375,8 +375,14 @@ def main():
     os.makedirs(outdir, exist_ok=True)
     gs = args.couplings_only if args.couplings_only else coupling_grid(args.n_couplings, args.g_lo, args.g_hi)
 
-    print(f"GPU production: L={L} m={args.mass} backend={args.backend} engine={args.engine} "
-          f"device={dev_desc} solver={args.solver} "
+    # backend-correct engine/solver labels (mlx always runs eo + reads --mlx-solver;
+    # the torch --engine/--solver are ignored under mlx, so don't advertise them)
+    if args.backend == 'mlx':
+        engine_desc, solver_desc = 'eo', args.mlx_solver
+    else:
+        engine_desc, solver_desc = args.engine, args.solver
+    print(f"GPU production: L={L} m={args.mass} backend={args.backend} engine={engine_desc} "
+          f"device={dev_desc} solver={solver_desc} "
           f"R={args.replicas} n_md={args.n_md} eps={args.eps} n_poles={args.n_poles}  "
           f"{len(gs)} couplings × {args.n_meas} traj × {args.replicas} replicas → {outdir}", flush=True)
     for i, g in enumerate(gs):

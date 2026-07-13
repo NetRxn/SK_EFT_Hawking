@@ -62,6 +62,18 @@ def _np(a):
 
 # --- core stencil matvecs -------------------------------------------------------------------
 
+def test_hopping_blocks_preserves_numpy_float64_dtype():
+    # Review A-cluster: hopping_blocks(numpy_f64, L) with dtype=None must produce FP64
+    # blocks, not silently downcast to FP32 (the old `dtype or mx.float32` precision
+    # footgun that would break the exact-FP64 contract for numpy-fed configs).
+    L, V = 2, 2 ** 4
+    h = np.random.default_rng(0).standard_normal((V, 4, 4))    # numpy float64, no dtype arg
+    blk = me.hopping_blocks(h, L)
+    assert blk.dtype == mx.float64
+    # and an explicit f32 request still downcasts
+    assert me.hopping_blocks(h, L, dtype=mx.float32).dtype == mx.float32
+
+
 def test_apply_A_matches_dense_single_config():
     L, V = 2, 2 ** 4
     rng = np.random.default_rng(0)
