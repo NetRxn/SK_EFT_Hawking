@@ -31,6 +31,7 @@ import Mathlib
 import SKEFTHawking.SingularCohomologyFunctoriality
 import SKEFTHawking.SingularHomotopyInvariance
 import SKEFTHawking.SingularUniversalCoeff
+import SKEFTHawking.SingularProdContractibleInt
 
 namespace SKEFTHawking.SingularCohomologyHomotopy
 
@@ -38,6 +39,7 @@ open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
 open SKEFTHawking.SingularCohomologyFunctoriality
 open SKEFTHawking.SingularHomotopyInvariance
 open SKEFTHawking.SingularUniversalCoeff
+open SKEFTHawking.SingularProdContractibleInt
 
 /-- **The two slices of a homotopy induce equal cohomology pullbacks** (degree `≥ 1`). The
 cohomology-side mirror of `Homology.map_slice_eq`, proved by pairing the difference against every
@@ -117,5 +119,47 @@ theorem finiteDimensional_cohomology_of_homotopyEquiv {X Y : TopCat} (f : C(↑X
     FiniteDimensional (ZMod 2) (Cohomology X (n + 1)) :=
   haveI := h
   (cohomologyHomotopyEquiv f g Hgf hgf0 hgf1 Hfg hfg0 hfg1 n).finiteDimensional
+
+/-! ## §2. The contractible-factor collapse (the cylinder absolute cohomology)
+
+The mod-2 cohomology mirror of the integral primitives
+`SingularProdContractibleInt.prodFst_bijectiveInt` / `prodContractibleEquivInt`, reusing their
+coefficient-agnostic projection/section/homotopy topology (`prodFst`, `prodSect`, `prodHomotopy`,
+`constHomotopy` and their slice lemmas) and this module's homotopy invariance. For a cylinder
+`W = M × [0,1]` (factor `C = TopCat.of unitInterval`, `unitInterval := Set.Icc (0:ℝ) 1` — the in-tree
+bordism cylinder base), these give `H^{k}(M) ≅ H^{k}(M × I)` and its `findim` transfer — the concrete
+absolute-side content of the cylinder trio's `findimAbs`, dimension-agnostic in `M`. -/
+
+/-- **The first-factor projection is a cohomology isomorphism (bijective)** in every positive degree
+when the factor `C` carries a contraction. Contravariant mirror of `prodFst_bijectiveInt` — it is
+`prodFst*` (the pullback) that is bijective. -/
+theorem prodFst_cohomology_bijective (Y C : TopCat) (c₀ : ↑C) (H : C(↑C × unitInterval, ↑C))
+    (h0 : slice H 0 = ContinuousMap.id ↑C) (h1 : slice H 1 = ContinuousMap.const ↑C c₀) (n : ℕ) :
+    Function.Bijective (cohomologyPullback (prodFst Y C) (n + 1)) :=
+  cohomologyPullback_bijective_of_homotopyEquiv (prodFst Y C) (prodSect Y C c₀)
+    (prodHomotopy Y C H) (slice_prodHomotopy_zero Y C c₀ H h1) (slice_prodHomotopy_one Y C H h0)
+    (constHomotopy Y) ((slice_constHomotopy Y 0).trans (prodFst_comp_prodSect Y C c₀).symm)
+    (slice_constHomotopy Y 1) n
+
+/-- **The contractible-factor cohomology collapse** `Hⁿ⁺¹(Y) ≃ₗ[ZMod 2] Hⁿ⁺¹(Y × C)` (contravariant
+mirror of `prodContractibleEquivInt`). For a cylinder `W = M × [0,1]` this is `Hⁿ⁺¹(M) ≅ Hⁿ⁺¹(W)` —
+the concrete absolute-side identification of mission step 1, dimension-agnostic in `M`. -/
+noncomputable def prodContractibleCohomologyEquiv (Y C : TopCat) (c₀ : ↑C)
+    (H : C(↑C × unitInterval, ↑C)) (h0 : slice H 0 = ContinuousMap.id ↑C)
+    (h1 : slice H 1 = ContinuousMap.const ↑C c₀) (n : ℕ) :
+    Cohomology Y (n + 1) ≃ₗ[ZMod 2] Cohomology (ProdSp Y C) (n + 1) :=
+  LinearEquiv.ofBijective (cohomologyPullback (prodFst Y C) (n + 1))
+    (prodFst_cohomology_bijective Y C c₀ H h0 h1 n)
+
+/-- **Finite-dimensionality of the cylinder's absolute cohomology from the base**: if `Hⁿ⁺¹(Y)` is
+finite-dimensional and the factor `C` is contractible, then `Hⁿ⁺¹(Y × C)` is finite-dimensional —
+the `findimAbs` enabler for `W = M × [0,1]` (`findim H^{k}(M) ⟹ findim H^{k}(M × I)`). -/
+theorem finiteDimensional_cohomology_prodContractible (Y C : TopCat) (c₀ : ↑C)
+    (H : C(↑C × unitInterval, ↑C)) (h0 : slice H 0 = ContinuousMap.id ↑C)
+    (h1 : slice H 1 = ContinuousMap.const ↑C c₀) (n : ℕ)
+    (h : FiniteDimensional (ZMod 2) (Cohomology Y (n + 1))) :
+    FiniteDimensional (ZMod 2) (Cohomology (ProdSp Y C) (n + 1)) :=
+  haveI := h
+  (prodContractibleCohomologyEquiv Y C c₀ H h0 h1 n).finiteDimensional
 
 end SKEFTHawking.SingularCohomologyHomotopy
