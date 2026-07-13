@@ -430,4 +430,70 @@ theorem neg_doubling_brown_zero {n : ℕ} (q : Z4Quadratic (Fin n)) :
     (orthSum (neg q) q).brown = 0 := by
   rw [brown_orthSum, brown_neg, neg_add_cancel]
 
+/-! ## §10. THE UNIVERSE-UNBLOCK PROOF-OF-CONCEPT (the payoff of the `TangentialData.{u,v}` generalization)
+
+The §5 friction, resolved. The frozen v4 `Mfd` table lists BOTH `cert : PinPlusCertK I s`
+(carrier-universe-0-monomorphic — the 5q.G SW/PD4 substrate pins `s.M : Type`) AND a bundled
+`surf : SingularManifold …` (which is `Type 1`, bundling a `Type 0` carrier). Under the OLD
+`TangentialData.{u}` interface (`Mfd : SingularManifold.{u} X k I → Type u`) these could NOT coexist in
+one `Mfd s`: `cert` forces `s` — hence `Mfd s` — to universe 0, but a bundled `surf` needs `Type 1`. The
+generalized `TangentialData.{u, v}` interface (`Mfd : SingularManifold.{u} X k I → Type v`) decouples the
+structure universe `v` from the carrier universe `u`, so an `Mfd s` may sit at `Type 1` (carrying the
+concrete surface) while its carrier `s` stays at universe 0 (still certified). This section demonstrates
+the unblock CONCRETELY — the surface MANIFOLD content is now carriable in-substrate; only the `hchar`/
+`hpolar` anchors (wt2's 2-dim PD tower) remain abstract. -/
+
+/-- **The bundled characteristic-pair structure** — `CharPairStr` (the `Type 0` algebraic + certificate
+core) PLUS the concrete characteristic surface `surf` (a closed, universe-0 2-manifold), its Hausdorff
+certificate `surfT2`, and its smooth injective embedding `emb`/`embSmooth`/`embInj` into the 4-manifold
+carrier `s.M`. Because `surf : SingularManifold.{0} …` is `Type 1`, so is `CharPairStrBundled` — while the
+carrier `s` and the retained `cert : PinPlusCertK I s` keep `s` at universe 0. This is exactly the
+`Type 1` `Mfd`-value / universe-0 certified carrier pairing the OLD interface forbade. -/
+structure CharPairStrBundled (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))) [I.Boundaryless]
+    (s : SingularManifold PUnit k I) extends CharPairStr I s where
+  /-- the concrete characteristic surface — a closed, **universe-0** 2-manifold (`Type 1` when bundled). -/
+  surf : SingularManifold.{0} (PUnit.{1}) k (𝓡 2)
+  /-- the surface carrier is Hausdorff. -/
+  surfT2 : T2Space surf.M
+  /-- the surface embeds into the 4-manifold carrier `s.M`. -/
+  emb : surf.M → s.M
+  /-- the embedding is smooth. -/
+  embSmooth : ContMDiff (𝓡 2) I k emb
+  /-- the embedding is injective. -/
+  embInj : Function.Injective emb
+
+/-- **The unblock, as a type.** `charPairBundledMfd` is a legitimate `Mfd`-family for a carrier at
+universe 0 landing in `Type 1` — precisely the `SingularManifold.{0} X k I → Type 1` shape the generalized
+`TangentialData.{0, 1}.Mfd` field now admits (`v = 1 ≠ u = 0`). Under the pre-generalization
+`Mfd : SingularManifold.{u} → Type u` this very definition was a universe error (`Type 1 ≠ Type 0`); it now
+type-checks, which IS the resolution of the §5 friction. -/
+def charPairBundledMfd : SingularManifold.{0} PUnit k I → Type 1 :=
+  fun s => CharPairStrBundled (k := k) I s
+
+/-- **The anti-collapse engine still applies to the bundled variant.** Any `CharPairBor` between the
+underlying char-pair structures of two BUNDLED data forces their Brown invariants equal
+(`brown_eq_of_taylorLeg_lagrangian` via `CharPairBor.brown_eq`) — the computed grade `abk8 := brown ∘ q`
+descends exactly as for the un-bundled `CharPairStr`, so carrying the concrete surface costs nothing in
+honesty and the reading-(ii) torsor collapse remains provably impossible. -/
+theorem charPairBundled_brown_eq {s t : SingularManifold PUnit k I}
+    {b : Bordism (I.prod (𝓡∂ 1)) s t}
+    {σ : CharPairStrBundled I s} {τ : CharPairStrBundled I t}
+    (β : CharPairBor b σ.toCharPairStr τ.toCharPairStr) :
+    σ.q.brown = τ.q.brown :=
+  β.brown_eq
+
+open SKEFTHawking.PinPlusTiedData in
+/-- **A concrete inhabitant** (non-vacuity of the `Type 1` bundle): the empty carrier with the empty
+characteristic surface, RETAINING the `w₂ = 0` certificate `pinPlusCertK_empty`. Witnesses that the
+`Type 1` bundle is genuinely inhabitable with the certificate present and the carrier at universe 0 — the
+concrete realization of the §5 resolution. -/
+noncomputable def charPairBundledEmpty :
+    CharPairStrBundled I (emptySM : SingularManifold PUnit k I) where
+  toCharPairStr := charPairEmptyStr
+  surf := emptySM
+  surfT2 := ⟨fun x => x.elim⟩
+  emb := fun x => x.elim
+  embSmooth := contMDiff_of_subsingleton
+  embInj := fun x => x.elim
+
 end SKEFTHawking.PinPlusCharPairData
