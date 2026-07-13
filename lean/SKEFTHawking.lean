@@ -1436,6 +1436,7 @@ import SKEFTHawking.SingularUCFinite
 import SKEFTHawking.SingularPD4Instances
 import SKEFTHawking.PinPlusFloorCollapse
 import SKEFTHawking.SingularCohomologyFunctoriality
+import SKEFTHawking.SingularCohomologyHomotopy
 import SKEFTHawking.SingularFundamentalClassPushforward
 import SKEFTHawking.SingularWuTransport
 import SKEFTHawking.SingularCochainGlue
