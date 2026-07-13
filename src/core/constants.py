@@ -3513,6 +3513,17 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': "A manifold-typed WITNESS datum inside a carrier or relation (the membrane/3-manifold Q, the surface Σ, any auxiliary manifold field) inherits honesty from the T2 fence on the ambient bordism W. FALSE (W-A gate, Fable vacuity attack 2026-07-13): the bug-eyed collapse is dimension-generic — `qLevelTripleMembrane` is a compact non-Hausdorff membrane with THREE boundary copies of Σ (kernel-checked non-T2), so a T2-less Q-encoding lets ker(H₁(∂Q)→H₁(Q)) be adversarially chosen, Taylor-Thm-1.1 extension conditions lose their teeth, and the computed Brown/abk8 invariant fails bordism-invariance. RULE: every manifold-typed datum needs its OWN T2 (+ compactness/charted) certificate; the W-level fence does not propagate.",
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'taylor_leg_end_convention_trap': {
+        'fork_id': 'taylor-leg-end-convention-trap',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusTaylorConventionNoGo.no_plain_end_pairing_of_cylinder',
+            'SKEFTHawking.PinPlusTaylorConventionNoGo.not_cylinder_plain_pairing_of_odd_value',
+            'SKEFTHawking.PinPlusTaylorConventionNoGo.not_cylinder_bor_of_invariant_ne',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': "The structured-bordism Taylor extension leg ('boundary classes bounding in the membrane Q have vanishing enhancement') can be stated as a PLAIN joint sum q_σ ⊕ q_τ, or σ-side-only, vanishing on ker(H₁(∂Q)→H₁(Q)). FALSE (W-A re-gate, Fable round 2, 2026-07-13 — both failures fire through the HONEST T2 cylinder, no certificate blocks them): plain-joint forces 2q = 0 on cylinder-kernel classes (the anti-diagonal), killing every odd enhancement value — the ℝP²/ℝP⁴ witness (q(gen)=1, 1+1=2≠0 in ℤ/4) becomes uninstantiable (cylBor totality fails); σ-side-only is vacuous on cylinders, making Bor(reflCylinder) relate ARBITRARY structures — the torsor collapses and the Brown/abk8 map is ill-defined (1 ≠ −1 in ℤ/8 erased). The ONLY correct form negates the τ-END (per Bor-end, not per boundary component): q_σ ⊕ (Z4Quadratic.neg q_τ) vanishes on ker(H₁(∂Q;ℤ/2)→H₁(Q;ℤ/2)). Under that form all 12 TangentialData ops instantiate and Brown-invariance is forced (Lagrangian + Gauss factorization).",
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'lattice_arf_bridge': {
         'fork_id': 'nogo_lattice_arf_not_sigma8',  # memory slug (referenced by SETTLED_FORKS synthetic-smith-map-to-tied-carrier; no dedicated `## ` block)
         'backing_theorems': ['SKEFTHawking.RokhlinArfNoGo.lattice_arf_bridge_refuted'],

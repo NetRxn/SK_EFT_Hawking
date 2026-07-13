@@ -51,24 +51,37 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    certificate; the W-level fence does not propagate.
    backing: `qLevelTripleMembrane_not_t2`
 
-4. `nogo_lattice_arf_not_sigma8` [refutation]
+4. `taylor-leg-end-convention-trap` [structural_forcing]
+   The structured-bordism Taylor extension leg ('boundary classes bounding in the membrane Q have vanishing
+   enhancement') can be stated as a PLAIN joint sum q_σ ⊕ q_τ, or σ-side-only, vanishing on
+   ker(H₁(∂Q)→H₁(Q)). FALSE (W-A re-gate, Fable round 2, 2026-07-13 — both failures fire through the HONEST
+   T2 cylinder, no certificate blocks them): plain-joint forces 2q = 0 on cylinder-kernel classes (the
+   anti-diagonal), killing every odd enhancement value — the ℝP²/ℝP⁴ witness (q(gen)=1, 1+1=2≠0 in ℤ/4)
+   becomes uninstantiable (cylBor totality fails); σ-side-only is vacuous on cylinders, making
+   Bor(reflCylinder) relate ARBITRARY structures — the torsor collapses and the Brown/abk8 map is
+   ill-defined (1 ≠ −1 in ℤ/8 erased). The ONLY correct form negates the τ-END (per Bor-end, not per
+   boundary component): q_σ ⊕ (Z4Quadratic.neg q_τ) vanishes on ker(H₁(∂Q;ℤ/2)→H₁(Q;ℤ/2)). Under that form
+   all 12 TangentialData ops instantiate and Brown-invariance is forced (Lagrangian + Gauss factorization).
+   backing: `no_plain_end_pairing_of_cylinder`, `not_cylinder_plain_pairing_of_odd_value`, `not_cylinder_bor_of_invariant_ne`
+
+5. `nogo_lattice_arf_not_sigma8` [refutation]
    The lattice Arf bridge σ/8 ≡ Arf(q̄) mod 2 — deriving Rokhlin mod-16 from the intersection FORM alone.
    FALSE: E₈ has Arf(q̄)=0 but σ/8=1; Rokhlin mod-16 is irreducibly geometric (a characteristic-SURFACE Arf,
    not the lattice Arf). Kills Phase 5q.C and any form-only mod-16 shortcut.
    backing: `lattice_arf_bridge_refuted`
 
-5. `mfd-equals-H1-dead-end` [structural_forcing]
+6. `mfd-equals-H1-dead-end` [structural_forcing]
    The `Mfd := H¹` tangential-data construction yields a genuine ℤ/16 / ker=⊥. FALSE: a datum whose
    structure-reversal (revStr) is trivial is FORCED 2-torsion, never order-16.
    backing: `dataBordism_two_torsion_of_revStr_trivial`
 
-6. `synthetic-grade-ker-bot-nogo` [structural_forcing]
+7. `synthetic-grade-ker-bot-nogo` [structural_forcing]
    ker(abkGrade)=⊥ / card≤16 UNCONDITIONALLY for ANY free-per-manifold grade. FALSE: the ℝP⁴ grade-0 witness
    (w₂=0, [ℝP⁴]≠0∈Ω₄^O) has no unoriented null-bordism, so the free grade is never injective. ker=⊥ requires
    the grade TIED to the structure (the GM carrier), never a better proof on a free-grade datum.
    backing: `dataBordism_two_torsion_of_revStr_trivial`
 
-7. `synthetic-smith-map-to-tied-carrier` [structural_forcing]
+8. `synthetic-smith-map-to-tied-carrier` [structural_forcing]
    The Smith map into the 5q.H TIED carrier pinPlusGMTiedData can be built SYNTHETICALLY — map every
    neighbor class [M,σ] to [emptySM, (σ,0)] and transport the grade (the smithDataHom shortcut). FALSE
    (kernel-forced): the tie htie (reduce16to2 grade16 = swTotalNe) forces every tied structure on an EMPTY
@@ -78,7 +91,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    map; the geometric Smith map into the tied carrier is irreducibly geometric (N1b).
    backing: `gmTiedStr_grade_even_of_isEmpty`, `gmTiedStr_empty_grade16_ne_one`
 
-8. `5qH-injectivity-routes-all-equal-one-completeness-prop` [structural_forcing]
+9. `5qH-injectivity-routes-all-equal-one-completeness-prop` [structural_forcing]
    The three 5q.H injectivity routes — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle:
    ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), Smith-LES (smith_inflow_z16) — are DISTINCT open nodes
    worth route-shopping between. FALSE (kernel-checked equivalence): all three reduce canonically to the ONE
@@ -89,7 +102,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    from-below: N1a+N1b+N1c+N2 per ASSEMBLY_GAP_MAP_20260712).
    backing: `spin_range_ge_of_grade0_inj`, `omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`, `grade0_bounds_of_thom`
 
-9. `5qH-fg-ek-over-Z-blocked` [refutation]
+10. `5qH-fg-ek-over-Z-blocked` [refutation]
    The mod-2 Erdős–Kaplansky finiteness forcing (SingularUCFinite: self-duality forces finite dimension)
    transports to ℤ — in particular dualization over ℤ stays in the f.g./countable size class, so PD + UCT
    self-duality would force H²(M;ℤ) finitely generated. FALSE: the ℤ-dual of the COUNTABLE free module ℕ →₀
@@ -100,7 +113,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    Lit-Search/Phase-5qH/FG_via_PD_duality_forcing_verdict_20260712.md.
    backing: `dual_blowup_not_finite`, `not_finite_baerSpecker`
 
-10. `genuine-gm-carrier-eight-torsion` [refutation]
+11. `genuine-gm-carrier-eight-torsion` [refutation]
    The genuine ℤ/16 lives directly on the thin GM carrier: DataBordismGrp(pinPlusGMData) ≃+ ZMod 16. FALSE:
    pinPlusGMData's bordism relation records ONLY the mod-8 Brown grade (q.brown ∈ ZMod 8), so
    cylinder-doubling makes every class 8-torsion (pinPlusGMData_eight_torsion: 8•x=0) ⟹
@@ -118,6 +131,7 @@ import SKEFTHawking.PinPlusCompTorsorNoGo
 import SKEFTHawking.PinPlusGMDataZ16
 import SKEFTHawking.PinPlusGMWitness
 import SKEFTHawking.PinPlusGenuineCarrierIso
+import SKEFTHawking.PinPlusTaylorConventionNoGo
 import SKEFTHawking.RokhlinArfNoGo
 import SKEFTHawking.SyntheticSmithNoGo
 import SKEFTHawking.UnorientedThomCapstone
@@ -144,6 +158,15 @@ alias nogo_no_uniform_comp_twist_of_cylinder_rigid := SKEFTHawking.PinPlusCompTo
 
 /-- NO-GO [`membrane-level-nonhausdorff-collapse`] — do NOT re-derive. FALSE: A manifold-typed WITNESS datum inside a carrier or relation (the membrane/3-manifold Q, the surface Σ, any auxiliary manifold field) inherits honesty from the T2 fence on the ambient bordism W. Backing refutation: `SKEFTHawking.PinPlusCompTorsorNoGo.qLevelTripleMembrane_not_t2`. -/
 alias nogo_qLevelTripleMembrane_not_t2 := SKEFTHawking.PinPlusCompTorsorNoGo.qLevelTripleMembrane_not_t2
+
+/-- NO-GO [`taylor-leg-end-convention-trap`] — do NOT re-derive. FALSE: The structured-bordism Taylor extension leg ('boundary classes bounding in the membrane Q have vanishing enhancement') can be stated as a PLAIN joint sum q_σ ⊕ q_τ, or σ-side-only, vanishing on ker(H₁(∂Q)→H₁(Q)). Backing refutation: `SKEFTHawking.PinPlusTaylorConventionNoGo.no_plain_end_pairing_of_cylinder`. -/
+alias nogo_no_plain_end_pairing_of_cylinder := SKEFTHawking.PinPlusTaylorConventionNoGo.no_plain_end_pairing_of_cylinder
+
+/-- NO-GO [`taylor-leg-end-convention-trap`] — do NOT re-derive. FALSE: The structured-bordism Taylor extension leg ('boundary classes bounding in the membrane Q have vanishing enhancement') can be stated as a PLAIN joint sum q_σ ⊕ q_τ, or σ-side-only, vanishing on ker(H₁(∂Q)→H₁(Q)). Backing refutation: `SKEFTHawking.PinPlusTaylorConventionNoGo.not_cylinder_plain_pairing_of_odd_value`. -/
+alias nogo_not_cylinder_plain_pairing_of_odd_value := SKEFTHawking.PinPlusTaylorConventionNoGo.not_cylinder_plain_pairing_of_odd_value
+
+/-- NO-GO [`taylor-leg-end-convention-trap`] — do NOT re-derive. FALSE: The structured-bordism Taylor extension leg ('boundary classes bounding in the membrane Q have vanishing enhancement') can be stated as a PLAIN joint sum q_σ ⊕ q_τ, or σ-side-only, vanishing on ker(H₁(∂Q)→H₁(Q)). Backing refutation: `SKEFTHawking.PinPlusTaylorConventionNoGo.not_cylinder_bor_of_invariant_ne`. -/
+alias nogo_not_cylinder_bor_of_invariant_ne := SKEFTHawking.PinPlusTaylorConventionNoGo.not_cylinder_bor_of_invariant_ne
 
 /-- NO-GO [`nogo_lattice_arf_not_sigma8`] — do NOT re-derive. FALSE: The lattice Arf bridge σ/8 ≡ Arf(q̄) mod 2 — deriving Rokhlin mod-16 from the intersection FORM alone. Backing refutation: `SKEFTHawking.RokhlinArfNoGo.lattice_arf_bridge_refuted`. -/
 alias nogo_lattice_arf_bridge_refuted := SKEFTHawking.RokhlinArfNoGo.lattice_arf_bridge_refuted

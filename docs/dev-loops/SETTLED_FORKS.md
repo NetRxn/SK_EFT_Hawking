@@ -288,3 +288,13 @@ conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
 - memory: [[project_5qH_nonhausdorff_substrate_bug]]
 - created_ts: 2026-07-13T00:00:00Z
 - reviewed_ts: 2026-07-13T00:00:00Z
+
+## taylor-leg-end-convention-trap
+- verdict: dead
+- tier: agent-reviewed
+- authored_by: kernel-no-go (Fable re-gate round 2, W-A definition gate)
+- killed_by: kernel-checked `PinPlusTaylorConventionNoGo.no_plain_end_pairing_of_cylinder` (+ `not_cylinder_plain_pairing_of_odd_value`, `not_cylinder_bor_of_invariant_ne`)
+- reason: two of the three readings of the Taylor extension leg die through the HONEST T2 cylinder — plain-joint-sum forces 2q=0 on the anti-diagonal (kills odd enhancements; cylBor totality fails on the ℝP² witness), σ-side-only is vacuous on cylinders (Bor relates arbitrary structures; Brown/abk8 ill-defined). The correct form negates the τ-END: q_σ ⊕ (neg q_τ) vanishes on ker(H₁(∂Q)→H₁(Q)). Self-tests on negBor alone CANNOT discriminate the readings (both doubling copies sit on one end) — cylBor is the discriminating op; test extension conditions against cylBor first.
+- memory: [[project_5qH_nonhausdorff_substrate_bug]]
+- created_ts: 2026-07-13T00:00:00Z
+- reviewed_ts: 2026-07-13T00:00:00Z
