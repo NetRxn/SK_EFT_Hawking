@@ -142,4 +142,71 @@ theorem cochainPullback_extendCochain {n : ℕ} (g : SingularCochain (sub S) n) 
   rw [toSSetObjEquiv_simplexIncl]
   rfl
 
+/-! ## §5. Middle exactness of the pair sequence: `im relToAbs = ker i*` -/
+
+private theorem mkSub_eq_zero_iff {n : ℕ} (a : LinearMap.ker (coboundaryₗ (sub S) n)) :
+    Cohomology.mk (sub S) n a = 0 ↔ (a : SingularCochain (sub S) n) ∈ coboundaryRange (sub S) n := by
+  show Submodule.Quotient.mk a = 0 ↔ _
+  rw [Submodule.Quotient.mk_eq_zero]
+  simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply]
+
+/-- A relative cocycle built from an absolute cocycle `f` that already annihilates the subspace
+(`hrel : f.1 ∈ relCochains`). -/
+private theorem relToAbs_mk_of_relCochain {n : ℕ} (f : LinearMap.ker (coboundaryₗ X n))
+    (hrel : (f : SingularCochain X n) ∈ relCochains S n) :
+    Cohomology.mk X n f ∈ Set.range (relToAbs (S := S) (m := n)) := by
+  have hker : (⟨(f : SingularCochain X n), hrel⟩ : relCochains S n)
+      ∈ LinearMap.ker (relCoboundaryₗ S n) := by
+    rw [LinearMap.mem_ker]; apply Subtype.ext
+    rw [relCoboundaryₗ_coe]; exact LinearMap.mem_ker.mp f.2
+  refine ⟨RelativeCohomology.mk S n ⟨⟨(f : SingularCochain X n), hrel⟩, hker⟩, ?_⟩
+  rw [relToAbs_mk]
+  rfl
+
+/-- **Middle exactness of the cohomology pair sequence**: `im relToAbs = ker i*`. The forward
+inclusion is the complex property `restrictToSub_relToAbs`; the reverse inclusion modifies a cocycle
+`f` with `i*[f] = 0` by `δ(extend g)` (where `i*f = δg`) to make it annihilate the subspace, using
+the extension surjectivity `cochainPullback_extendCochain`. -/
+theorem exact_relToAbs_restrictToSub (n : ℕ) :
+    Function.Exact (relToAbs (S := S) (m := n)) (restrictToSub S n) := by
+  intro y
+  constructor
+  · intro hy
+    obtain ⟨f, rfl⟩ := Submodule.Quotient.mk_surjective _ y
+    rw [show (Submodule.Quotient.mk f : Cohomology X n) = Cohomology.mk X n f from rfl,
+      restrictToSub_mk, mkSub_eq_zero_iff] at hy
+    have hmem : cochainPullback (subInclCM S) n (f : SingularCochain X n) ∈ coboundaryRange (sub S) n :=
+      hy
+    cases n with
+    | zero =>
+        rw [show coboundaryRange (sub S) 0 = (⊥ : Submodule (ZMod 2) _) from rfl,
+          Submodule.mem_bot] at hmem
+        exact relToAbs_mk_of_relCochain S f ((cochainPullback_subInclCM_eq_zero_iff S 0 _).1 hmem)
+    | succ m =>
+        obtain ⟨g, hg⟩ := hmem
+        have hcpb : cochainPullback (subInclCM S) (m + 1) (coboundary X m (extendCochain S g))
+            = cochainPullback (subInclCM S) (m + 1) (f : SingularCochain X (m + 1)) := by
+          rw [← coboundary_cochainPullback, cochainPullback_extendCochain]
+          exact hg
+        have harel : ((f : SingularCochain X (m + 1)) - coboundary X m (extendCochain S g))
+            ∈ relCochains S (m + 1) := by
+          rw [← cochainPullback_subInclCM_eq_zero_iff, map_sub, hcpb, sub_self]
+        have hacoc : coboundaryₗ X (m + 1)
+            ((f : SingularCochain X (m + 1)) - coboundary X m (extendCochain S g)) = 0 := by
+          rw [map_sub, LinearMap.mem_ker.mp f.2, zero_sub, neg_eq_zero]
+          exact coboundary_comp_coboundary X m (extendCochain S g)
+        have hpre := relToAbs_mk_of_relCochain S ⟨_, hacoc⟩ harel
+        refine Set.mem_of_eq_of_mem ?_ hpre
+        refine (Submodule.Quotient.eq _).2 ?_
+        rw [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype]
+        show (f : SingularCochain X (m + 1))
+            - ((f : SingularCochain X (m + 1)) - coboundary X m (extendCochain S g))
+            ∈ coboundaryRange X (m + 1)
+        rw [show (f : SingularCochain X (m + 1))
+              - ((f : SingularCochain X (m + 1)) - coboundary X m (extendCochain S g))
+              = coboundary X m (extendCochain S g) by abel]
+        exact ⟨extendCochain S g, rfl⟩
+  · rintro ⟨z, rfl⟩
+    exact restrictToSub_relToAbs S n z
+
 end SKEFTHawking.SingularCohomologyPairRestrict
