@@ -1307,6 +1307,9 @@ import SKEFTHawking.PoincareDualityWu
 -- `Sq¹ : H³ → H⁴` (`Sq1` → `sq1₃`, the connecting hom of `0 → ℤ/2 →·2 ℤ/4 → ℤ/2 → 0`).
 import SKEFTHawking.SingularCupH13
 import SKEFTHawking.PoincareDualityWuFormula
+-- W-A item 1: the Poincaré–Lefschetz Wu tower for compact manifolds-with-boundary — the generic
+-- `LefschetzWuDatum` (relative-cohomology second cup argument) + the n=5 Wu classes `w₁(W)`, `w₂(W)`.
+import SKEFTHawking.PoincareLefschetzWu5
 import SKEFTHawking.WuThirdClass
 import SKEFTHawking.SingularBockstein
 import SKEFTHawking.SingularCapHomology
