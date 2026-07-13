@@ -44,6 +44,11 @@ import SKEFTHawking.PinPlusGMData
 import SKEFTHawking.BrownMetabolic
 import SKEFTHawking.PoincareLefschetzWu5
 import SKEFTHawking.BordismGroup
+import SKEFTHawking.RP4Manifold
+import SKEFTHawking.RP2Manifold
+import SKEFTHawking.RP4Witness
+import SKEFTHawking.RP4Unconditional
+import SKEFTHawking.RP2EquatorialInclusion
 
 namespace SKEFTHawking.PinPlusCharPairData
 
@@ -1106,5 +1111,32 @@ noncomputable def charPairBrown (prov : CharPairWProvider I k) :
     show ((Z4Quadratic.orthSum p.2.q q.2.q).reindex finSumFinEquiv).brown
         = p.2.q.brown + q.2.q.brown
     rw [reindex_brown, brown_orthSum]
+
+/-! ## §13. STRETCH — the ℝP⁴ characteristic-pair witness (non-vacuity, the odd generator) -/
+
+open SKEFTHawking.RP2Manifold SKEFTHawking.RP4Unconditional SKEFTHawking.RP2EquatorialInclusion
+  SKEFTHawking.RP4PointSet SKEFTHawking.RP2PointSet SKEFTHawking.RP4Witness in
+/-- **The ℝP⁴ characteristic-pair bundle** (the headline witness) — the bundled char-pair structure on
+`ℝP⁴` (`rp4SM = rp4SM_k 0`) with characteristic surface `ℝP²` (`rp2SM_k 0`), the retained `w₂ = 0`
+certificate `rp4_hcert`, and the **rank-1 odd enhancement** `stdQuadratic 1` (`q(gen) = 1 ∈ ZMod 4` —
+the odd order-16 generator, `rp2_generator_value_not_two_torsion`; geometrically the `rp2H1EquivFun`
+basis of `H₁(ℝP²;ℤ/2) ≅ ℤ/2`). The equatorial inclusion `embRP2 : ℝP² → ℝP⁴` (`continuous_embRP2`
+shipped) supplies `emb`; its SMOOTHNESS (`ContMDiff (𝓡 2) (𝓡 4) 0`) and INJECTIVITY are taken as
+HYPOTHESES here (`contMDiff_embRP2`/`embRP2_injective`, being proven in parallel on wt2/main — not yet
+in this slot) — a hypothesis-parameterized def, NOT axioms. grade16-free; no completeness Prop is
+stated (that is W-D/W-E). -/
+noncomputable def rp4CharPairBundled
+    (embSmooth : ContMDiff (𝓡 2) (𝓡 4) 0 embRP2) (embInj : Function.Injective embRP2) :
+    CharPairStrBundled (𝓡 4) rp4SM where
+  toCharPairStr :=
+    { t2 := inferInstanceAs (T2Space RP4)
+      cert := rp4_hcert
+      n := 1
+      q := stdQuadratic 1 }
+  surf := rp2SM_k 0
+  surfT2 := inferInstanceAs (T2Space RP2)
+  emb := embRP2
+  embSmooth := embSmooth
+  embInj := embInj
 
 end SKEFTHawking.PinPlusCharPairData
