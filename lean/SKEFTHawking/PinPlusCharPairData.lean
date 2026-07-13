@@ -1024,4 +1024,64 @@ noncomputable def charPairBundledEmpty :
   embSmooth := contMDiff_of_subsingleton
   embInj := fun x => x.elim
 
+/-! ## §11. The bundled Mfd-op witnesses and the full `T2TangentialData` instance -/
+
+open SKEFTHawking.T2TangentialBordism
+
+open SKEFTHawking.PinPlusTiedData in
+/-- **Bundled `sumStr`** — disjoint union of char-pair BUNDLES: the algebraic core is
+`charPairSumStr` (so `.toCharPairStr` reduces to it, keeping the Bor ops' end shapes exact); the concrete
+surface is `σ.surf ⊔ τ.surf` embedded by `Sum.map`. -/
+noncomputable def charPairBundledSumStr {s t : SingularManifold PUnit k I}
+    (σ : CharPairStrBundled I s) (τ : CharPairStrBundled I t) :
+    CharPairStrBundled I (s.sum t) where
+  toCharPairStr := charPairSumStr σ.toCharPairStr τ.toCharPairStr
+  surf := σ.surf.sum τ.surf
+  surfT2 := by
+    haveI := σ.surfT2; haveI := τ.surfT2
+    exact inferInstanceAs (T2Space (σ.surf.M ⊕ τ.surf.M))
+  emb := Sum.map σ.emb τ.emb
+  embSmooth := σ.embSmooth.sumMap τ.embSmooth
+  embInj := σ.embInj.sumMap τ.embInj
+
+/-- **Bundled `revStr`** — structure reversal on a bundle: `charPairRevStr` on the algebraic core
+(enhancement negation), keeping the same surface/embedding. -/
+noncomputable def charPairBundledRevStr {s : SingularManifold PUnit k I}
+    (σ : CharPairStrBundled I s) : CharPairStrBundled I s where
+  toCharPairStr := charPairRevStr σ.toCharPairStr
+  surf := σ.surf
+  surfT2 := σ.surfT2
+  emb := σ.emb
+  embSmooth := σ.embSmooth
+  embInj := σ.embInj
+
+/-- **THE GATE-FROZEN FAITHFUL Pin⁺ INSTANCE** — the certified characteristic-pair carrier as a
+`T2TangentialData.{0,1}` (bundled `Type 1` `Mfd`, carrier at universe 0). `Bor` is the certified
+`CharPairBor` on the underlying algebraic cores (`ULift`ed to `Type 1`); the twelve op witnesses are
+the §6/§8/§9/§9.5/§11 constructions. Parameterized by the W-admissibility provider `prov` (wt3's
+rel-Lefschetz/Wu tower, a hypothesis — no axiom). The group `T2DataBordismGrp (pinPlusCharPairData prov)`
+is an `AddCommGroup` by the §2 replay. -/
+noncomputable def pinPlusCharPairData (prov : CharPairWProvider I k) :
+    T2TangentialData.{0, 1} PUnit k I where
+  Mfd := charPairBundledMfd (k := k) (I := I)
+  Bor := fun b σ τ => ULift.{1} (CharPairBor b σ.toCharPairStr τ.toCharPairStr)
+  emptyStr := charPairBundledEmpty
+  sumStr := fun σ τ => charPairBundledSumStr σ τ
+  cylBor := fun σ => ⟨charPairCylBor prov σ.toCharPairStr⟩
+  addBor := fun β₁ β₂ => ⟨charPairAddBor prov β₁.down β₂.down⟩
+  symmBor := fun β => ⟨charPairSymmBor β.down⟩
+  commBor := fun σ τ => ⟨charPairCommBor prov σ.toCharPairStr τ.toCharPairStr⟩
+  assocBor := fun σ τ ρ => ⟨charPairAssocBor prov σ.toCharPairStr τ.toCharPairStr ρ.toCharPairStr⟩
+  unitBor := fun σ => ⟨charPairUnitBor prov σ.toCharPairStr⟩
+  revStr := fun σ => charPairBundledRevStr σ
+  revBor := fun β => ⟨charPairRevBor β.down⟩
+  negBor := fun σ => ⟨charPairNegBor prov σ.toCharPairStr⟩
+  t2Str := fun m => m.toCharPairStr.t2
+
+/-- **The certified characteristic-pair bordism GROUP fires as an `AddCommGroup`** — the whole point of
+the faithful carrier: a genuine (T2-refined, Hausdorff) structured bordism group on the frozen instance,
+its group law inherited from `T2TangentialBordism`'s §2 replay. -/
+noncomputable example (prov : CharPairWProvider I k) :
+    AddCommGroup (T2DataBordismGrp (pinPlusCharPairData prov)) := inferInstance
+
 end SKEFTHawking.PinPlusCharPairData
