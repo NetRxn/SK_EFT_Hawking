@@ -4275,6 +4275,16 @@ import SKEFTHawking.SingularCohomologyFunctorialityInt
 -- β∪β=0 at the two factor projections prodFst / sndCM. The two diagonal Gram entries' mechanism;
 -- the basis-ID (deltaGen projection lemmas) + the cross entries (Künneth) remain. (wt2-built.)
 import SKEFTHawking.SphereProdGramInt
+-- Phase 5q.H · slice-6 — the S²×S² Gram OFF-diagonal assembly, modulo the disclosed Eilenberg–Zilber
+-- cross-product value. Recon confirms the cross term (α∪β=±1) genuinely needs new infrastructure not
+-- in Mathlib (no Künneth/EZ map at the pin) and not yet in this from-scratch cochain substrate (a
+-- multi-hundred-line EZ shuffle map, or a cap-product projection-formula argument, either comparable
+-- in depth to a from-scratch Poincaré-duality build); matches the project's own recorded "OFF critical
+-- path (deferred)" status (PHASE5QH_EXECUTION_MAP.md) — the σ÷16 leg is independently unconditional via
+-- S⁴. crossFamily_gram_eq_hyp: given the ONE remaining cross value as an explicit hypothesis (the
+-- project's established disclosed-fact pattern), the diagonal-zero (DONE) + symmetry (DONE) + cross
+-- assemble to the EXACT hyperbolic pin `sphereProdFormDatum`. (wt2-built.)
+import SKEFTHawking.SphereProdCrossInt
 -- Phase 5q.H — closed 3-ball smooth atlas (SphereDiskSmoothData freeze, slice B): the interior chart
 -- (v ↦ (splitLo v, v₂+2)) and polar collar chart family (v ↦ (chart_{S²}(v/‖v‖), 1−‖v‖)) as genuine
 -- OpenPartialHomeomorphs, plus the ChartedSpace (ModelProd E² (EuclideanHalfSpace 1)) D³ assembly —
