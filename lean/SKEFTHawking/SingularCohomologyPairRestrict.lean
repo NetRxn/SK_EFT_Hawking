@@ -105,4 +105,41 @@ theorem restrictToSub_relToAbs (n : ℕ) (y : RelativeCohomology S n) :
           (LinearMap.mem_ker).mpr (by simp)⟩ from congrArg (Cohomology.mk (sub S) n) (Subtype.ext hz)]
   rfl
 
+/-! ## §4. The cochain extension: `i*` is surjective on cochains -/
+
+open Classical in
+/-- Extend a cochain `g` on `sub S` to `X`: on a simplex `τ` of `X` whose realization lands in `S`,
+evaluate `g` on the corestricted simplex; elsewhere `0`. -/
+noncomputable def extendCochain {n : ℕ} (g : SingularCochain (sub S) n) : SingularCochain X n :=
+  fun τ =>
+    if h : Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk n)) τ) ⊆ S then
+      g ((sub S).toSSetObjEquiv (op (SimplexCategory.mk n))|>.symm
+        ⟨Set.codRestrict (X.toSSetObjEquiv (op (SimplexCategory.mk n)) τ) S (fun t => h ⟨t, rfl⟩),
+          (X.toSSetObjEquiv (op (SimplexCategory.mk n)) τ).continuous.codRestrict _⟩)
+    else 0
+
+/-- **The S-restriction is surjective on cochains**: `i*(extend g) = g`. On a simplex `σ` of `sub S`,
+`i*(extend g) σ = extend g (simplexIncl σ)`, whose realization lands in `S`, so the extension picks the
+`g`-branch and the corestriction of `simplexIncl σ` is `σ` again. -/
+theorem cochainPullback_extendCochain {n : ℕ} (g : SingularCochain (sub S) n) :
+    cochainPullback (subInclCM S) n (extendCochain S g) = g := by
+  funext σ
+  rw [cochainPullback_apply, mapSimplex_subInclCM]
+  have hsub : Set.range (X.toSSetObjEquiv (op (SimplexCategory.mk n)) (simplexIncl S n σ)) ⊆ S := by
+    rw [toSSetObjEquiv_simplexIncl]
+    rintro x ⟨t, rfl⟩
+    exact (((sub S).toSSetObjEquiv (op (SimplexCategory.mk n)) σ) t).2
+  show extendCochain S g (simplexIncl S n σ) = g σ
+  rw [extendCochain, dif_pos hsub]
+  refine congrArg g ?_
+  apply (sub S).toSSetObjEquiv (op (SimplexCategory.mk n)) |>.injective
+  rw [Equiv.apply_symm_apply]
+  apply ContinuousMap.ext
+  intro t
+  apply Subtype.ext
+  show (X.toSSetObjEquiv (op (SimplexCategory.mk n)) (simplexIncl S n σ)) t
+      = ((sub S).toSSetObjEquiv (op (SimplexCategory.mk n)) σ t : ↑X)
+  rw [toSSetObjEquiv_simplexIncl]
+  rfl
+
 end SKEFTHawking.SingularCohomologyPairRestrict
