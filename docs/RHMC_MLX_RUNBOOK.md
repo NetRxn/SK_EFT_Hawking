@@ -69,26 +69,29 @@ performance stack (see the subsection below):
 | pre-optimization baseline | 1392 (23.2 min), acc=0.88 | heatbath was 74% of this |
 | + active-shift narrowing | 835 | heatbath 1033→436 s, same 12,184 iters |
 | + einsum matvec | 614 | heatbath →176 s (5.9× total on it) |
-| **+ chrono (production default)** | **424 (7.1 min), acc=0.94** | MD 398→208 s |
+| + chrono (production default) | 424 (7.1 min), acc=0.94 | MD 398→208 s |
+| **+ fused Metal hop kernel** | **71 (1.2 min), acc=0.94** | heatbath →39.6 s; K=1 iter 1.83→0.27 ms |
 
-Per-replica the baseline was 87 s (R=16) vs 93 s (R=2) — batching to R=16 is
-near-ideal, so `--replicas` buys statistics at almost no per-config premium.
+**Net: 19.6×.** Per-replica the baseline was 87 s (R=16) vs 93 s (R=2) — batching
+to R=16 is near-ideal, so `--replicas` buys statistics at almost no per-config
+premium.
 
 Per-trajectory cost scales ∝ **L⁴** at fixed mass (n_md is L-independent — κ is
-volume-flat, verified to 1%). The 3090 column assumes a **~3.5× Metal→CUDA FP32
-ratio that is *not yet pinned*** (needs one L=8 R=16 run on the 3090); treat it as
-the dominant remaining uncertainty in these projections.
+volume-flat, verified to 1%). ⚠️ The fused hop kernel is **Metal-only**; on CUDA
+(the 3090) the engine falls back to the einsum path automatically, so until an
+equivalent CUDA kernel lands, scale the 3090 from the 424 s einsum-stack row (with
+the still-unpinned ~3.5× Metal→CUDA FP32 ratio), not from the 71 s Metal row.
 
-| L | MacBook /traj | 3090 /traj | Campaign* MacBook | Campaign* 3090 |
+| L | MacBook /traj | Campaign* MacBook | 3090 /traj (einsum path) | Campaign* 3090 |
 |---|---|---|---|---|
-| 8 | 7.1 min *(measured)* | ~2.0 min | ~3.7 days | ~1.1 days |
-| 10 | ~17 min | ~5 min | ~9 days | ~2.6 days |
-| 12 | ~36 min | ~10 min | ~19 days | ~5.4 days |
+| 8 | 1.2 min *(measured)* | **~15 h** | ~2.0 min | ~1.1 days |
+| 10 | ~2.9 min | ~1.5 days | ~5 min | ~2.6 days |
+| 12 | ~6.0 min | ~3.1 days | ~10 min | ~5.4 days |
 
 \* Campaign = one mass point = 5 couplings × ~150 traj = 750 traj (thermalization
 included; R=16 gives 16× statistics per traj). Scale linearly for a different
-coupling/traj budget. The L=10/12 MacBook columns are why §4 routes those volumes
-to the 3090.
+coupling/traj budget. With the Metal kernel the MacBook is now the FASTER box for
+every volume until a CUDA-side fused kernel exists.
 
 ### The 2026-07-13 performance stack (what changed and why)
 
@@ -110,13 +113,22 @@ existing dense-oracle + Creutz gates):
    engines) and measured 1.9× on MD at m=0.05 over a full trajectory. Cold starts
    remain available via `--no-chrono`.
 
-Post-stack, the remaining cost is **iteration-count × K≈1 per-iteration cost**,
-and the K=1 iteration is ~90% kernel-dispatch overhead (measured 1.83 ms vs a
-~0.11 ms traffic floor; ~35 kernels/iter, no `mx.compile`). The next silicon
-lever is therefore kernel-count reduction (`mx.compile` of the CG body and/or an
-`mx.fast.metal_kernel` fused hop — the CG matrices are signed permutations, so a
-fused kernel needs only ψ, h, and indices through DRAM). The next *algorithmic*
-lever is `--hasenbusch` (below).
+4. **Fused Metal hop kernel** (`_hop_metal` / `mx.fast.metal_kernel`): the K=1
+   iteration was ~90% kernel-dispatch overhead (measured 1.83 ms vs a ~0.11 ms
+   traffic floor; ~35 kernels/iter). `mx.compile` was measured a 4% no-op (the
+   launches are gather/einsum kernels it cannot fuse), so the hop's ~16 launches
+   were collapsed into ONE custom kernel exploiting CG[a] = J₁Γᵃ being SIGNED
+   PERMUTATIONS: per site, 4 shuffle-and-FMA terms per direction reading ψ
+   neighbors + 4 h coefficients — no 8×8 matmul and no expanded blocks tensor at
+   all. K=1 iteration 1.83 → 0.27 ms; heatbath 176 → 39.6 s; trajectory 424 → 71 s.
+   fp32-on-Metal only — CPU/f64/CUDA use the einsum path automatically (same
+   dispatch seam, `apply_Me_split(h_eo=...)`), and the parity test + both slow
+   Creutz gates certify the kernel against the einsum oracle.
+
+The remaining L=8 cost splits ~40 s heatbath grind (irreducible ~12k iterations of
+the ~m² Zolotarev tail — deflation territory at larger volumes) + ~25 s MD + ~6 s
+H-evals. The next *algorithmic* lever is `--hasenbusch` (below), whose value is
+now modest at L=8 (see its status note).
 
 ### Hasenbusch mass preconditioning (`--hasenbusch`, opt-in)
 
@@ -133,8 +145,17 @@ balanced split √(m²·λmax) per coupling; `--mu-sq` overrides.
 Certified: dense-oracle weight identities (S = ½‖ξ‖² per PF), FD force gradients,
 nested-integrator reversibility, exact-Metropolis mechanics, and the slow Creutz
 chain gate. Identical target density to the single-PF sampler (the split is
-exact); npz records `hb_mu_sq`/`hb_n_inner` for provenance. Working-point tuning
-at L=8 m=0.05 pending — treat as opt-in until the measured recipe lands here.
+exact); npz records `hb_mu_sq`/`hb_n_inner` for provenance.
+
+**Status (measured 2026-07-13): no recommended recipe at L=8 m=0.05.** The DR's
+K=3-table step counts (eps=0.1, n₀=5) reject-all here (|ΔH|~150): the ratio
+action retains the FULL 1/m² low-mode stiffness for any K=1 split (its curvature
+(μ²−m²)/((λ+m²)(λ+μ²)) → 1/m² as λ→0), so the coarse step is stability-bound
+near the single-PF eps — the smaller ratio-force *variance* (measured rms 0.65
+vs 2.36 at μ²=3.25) buys ~1.5-2× at best. Post-Metal-kernel, MD is only ~25 s of
+the 71 s trajectory, so that possible win is ≤~15% of wall-clock and not worth
+the tuning risk at this volume. The machinery stays certified for larger-volume /
+lighter-mass campaigns where a deflated or K≥2 setup changes the calculus.
 
 ---
 

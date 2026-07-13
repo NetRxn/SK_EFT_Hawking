@@ -702,6 +702,46 @@ def test_eo_refined_trajectory_mechanics():
                 assert np.array_equal(h_np[b], h_prev[b])
 
 
+@pytest.mark.skipif(not pytest.importorskip("mlx.core").metal.is_available(),
+                    reason="fused hop kernel is Metal-only (CUDA uses the einsum path)")
+def test_metal_hop_matches_einsum_hop():
+    # Wave B: the fused mx.fast.metal_kernel eo-hop must reproduce the einsum _hop
+    # bit-for-bit-ish (fp32 reassociation tolerance). The K=1 CG iteration is ~90%
+    # kernel-dispatch overhead (~35 launches; mx.compile measured a 4% no-op), so the
+    # hop's ~16 launches collapse to 1. Exploits CG[a] = J₁Γᵃ being SIGNED
+    # PERMUTATIONS: per site the block action is 4 shuffle-and-FMA terms, no matmul.
+    L = 4
+    V, Ve = L ** 4, L ** 4 // 2
+    rng = np.random.default_rng(63)
+    eo = me.eo_tables(L)
+    prev = mx.default_device()
+    mx.set_default_device(mx.gpu)
+    try:
+        for (B, K) in ((2, 3), (1, 1), (4, 1)):
+            h32 = mx.array(rng.standard_normal((B, V, 4, 4)), dtype=mx.float32)
+            psi = mx.array(rng.standard_normal((B, K, Ve, 8)), dtype=mx.float32)
+            blocks_k = mx.expand_dims(me.hopping_blocks(h32, L), 1)
+            be, bo = me._split_eo(blocks_k, eo)
+            h_e = mx.take(h32, eo['even_idx'], axis=-3)
+            h_o = mx.take(h32, eo['odd_idx'], axis=-3)
+
+            # even→odd hop (D_oe ψ_e): out-parity = odd, in-parity = even
+            ref = me._hop(psi, bo, be, eo['o2e_fwd'], eo['o2e_back'])
+            got = me._hop_metal(psi, h_o, h_e, eo['o2e_fwd'], eo['o2e_back'])
+            mx.eval(ref, got)
+            scale = float(mx.max(mx.abs(ref))) or 1.0
+            assert got.shape == ref.shape
+            assert float(mx.max(mx.abs(got - ref))) < 1e-4 * scale, (B, K)
+
+            # odd→even hop as well (the second half of M_e)
+            ref2 = me._hop(psi, be, bo, eo['e2o_fwd'], eo['e2o_back'])
+            got2 = me._hop_metal(psi, h_e, h_o, eo['e2o_fwd'], eo['e2o_back'])
+            mx.eval(ref2, got2)
+            assert float(mx.max(mx.abs(got2 - ref2))) < 1e-4 * scale, (B, K)
+    finally:
+        mx.set_default_device(prev)
+
+
 def test_eo_ratio_sqrt_coeffs_approximate_ratio_sqrt():
     # Hasenbusch (Wave C) brick 1: partial fractions for the RATIO heatbath function
     # g(x) = ((x+a)/(x+b))^{1/2} (a=m², b=μ²), via t·r_{-1/2}(t) with t=(x+a)/(x+b)

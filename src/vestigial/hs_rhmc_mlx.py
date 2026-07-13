@@ -205,6 +205,93 @@ def _hop(psi_in, blocks_out, blocks_in, fwd_h, back_h):
     return out.reshape(Bshape + ((K, Vout, S) if kbatched else (Vout, S)))
 
 
+_metal_hop_cache = {}
+
+
+def _metal_hop_kernel():
+    """Build (once) the fused Metal eo-hop kernel — Wave B of the 2026-07-13 perf audit.
+
+    The K=1 CG iteration is ~90% kernel-dispatch overhead (~35 launches/iter; mx.compile
+    measured a 4% no-op because the launches are gather/einsum kernels it cannot fuse).
+    This collapses the hop's ~16 launches into ONE. It exploits CG[a] = J₁Γᵃ being
+    SIGNED PERMUTATIONS (8 nonzeros of 64, values ±1): per output site the block action
+    is 4 shuffle-and-FMA terms per direction — no 8×8 matmul, and no expanded blocks
+    tensor at all (reads ψ neighbors + 4 h coefficients per direction per side)."""
+    if 'k' in _metal_hop_cache:
+        return _metal_hop_cache['k']
+    P = np.argmax(np.abs(_CG_NP), axis=2)                       # fwd perm: row i → col
+    S = np.take_along_axis(_CG_NP, P[..., None], axis=2)[..., 0]
+    Q = np.argmax(np.abs(_CG_NP), axis=1)                       # transpose perm: col i → row
+    T = np.take_along_axis(_CG_NP, Q[:, None, :], axis=1)[:, 0, :]
+
+    def fi(A):
+        return "{" + ",".join("{" + ",".join(str(int(v)) for v in row) + "}" for row in A) + "}"
+
+    def ff(A):
+        return "{" + ",".join("{" + ",".join(f"{float(v):.1f}f" for v in row) + "}" for row in A) + "}"
+
+    src = f"""
+    uint tid = thread_position_in_grid.x;
+    uint Bf = dims[0], K = dims[1], Vout = dims[2], Vin = dims[3];
+    uint total = Bf * K * Vout;
+    if (tid >= total) return;
+    uint y  = tid % Vout;
+    uint bk = tid / Vout;
+    uint b  = bk / K;
+    const int   Pm[4][8] = {fi(P)};
+    const float Sm[4][8] = {ff(S)};
+    const int   Qm[4][8] = {fi(Q)};
+    const float Tm[4][8] = {ff(T)};
+    float acc[8] = {{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}};
+    for (uint mu = 0; mu < 4; ++mu) {{
+        uint xf = (uint)fwd_h[y * 4 + mu];
+        uint xb = (uint)back_h[y * 4 + mu];
+        float pf[8];
+        float pb[8];
+        for (int j = 0; j < 8; ++j) {{
+            pf[j] = psi[(bk * Vin + xf) * 8 + j];
+            pb[j] = psi[(bk * Vin + xb) * 8 + j];
+        }}
+        for (int a = 0; a < 4; ++a) {{
+            float ho = h_out[(b * Vout + y) * 16 + mu * 4 + a];
+            float hi = h_in[(b * Vin + xb) * 16 + mu * 4 + a];
+            for (int i = 0; i < 8; ++i) {{
+                acc[i] = fma(ho * Sm[a][i], pf[Pm[a][i]], acc[i]);
+                acc[i] = fma(-hi * Tm[a][i], pb[Qm[a][i]], acc[i]);
+            }}
+        }}
+    }}
+    for (int i = 0; i < 8; ++i) {{
+        out[(bk * Vout + y) * 8 + i] = acc[i];
+    }}
+    """
+    k = mx.fast.metal_kernel(name="eo_hop_fused",
+                             input_names=["psi", "h_out", "h_in", "fwd_h", "back_h", "dims"],
+                             output_names=["out"], source=src)
+    _metal_hop_cache['k'] = k
+    return k
+
+
+def _hop_metal(psi_in, h_out_par, h_in_par, fwd_h, back_h):
+    """Fused-Metal twin of `_hop`: same bipartite hop, but driven by the PARITY-SPLIT h
+    field directly (h_out_par (*B, Vout, 4, 4), h_in_par (*B, Vin, 4, 4)) instead of the
+    16×-expanded blocks. fp32 + Metal only; psi (*B, K, Vin, 8) → (*B, K, Vout, 8)."""
+    K, Vin, Ssz = psi_in.shape[-3], psi_in.shape[-2], psi_in.shape[-1]
+    Bshape = psi_in.shape[:-3]
+    Vout = h_out_par.shape[-3]
+    p = psi_in.reshape((-1, K, Vin, Ssz))
+    ho = h_out_par.reshape((-1, Vout, 4, 4))
+    hi = h_in_par.reshape((-1, Vin, 4, 4))
+    Bf = p.shape[0]
+    dims = mx.array([Bf, K, Vout, Vin], dtype=mx.uint32)
+    total = Bf * K * Vout
+    out = _metal_hop_kernel()(
+        inputs=[p, ho, hi, fwd_h, back_h, dims],
+        grid=(total, 1, 1), threadgroup=(min(256, total), 1, 1),
+        output_shapes=[(Bf, K, Vout, Ssz)], output_dtypes=[mx.float32])[0]
+    return out.reshape(Bshape + (K, Vout, Ssz))
+
+
 def _split_eo(blocks, eo):
     """Gather the even/odd parity partitions of the hopping table ONCE.
 
@@ -216,11 +303,32 @@ def _split_eo(blocks, eo):
                 mx.take(blocks, eo['odd_idx'], axis=-4))
 
 
-def apply_Me_split(psi_e, blocks_eo, eo, shift=0.0):
+def _metal_hop_ok():
+    """The fused hop kernel needs Metal AND the fp32 default device to be the GPU
+    (the CPU-pinned test fixture must fall back to the einsum path)."""
+    return mx.metal.is_available() and mx.default_device() == mx.Device(mx.gpu)
+
+
+def apply_Me_split(psi_e, blocks_eo, eo, shift=0.0, h_eo=None):
     """(M_e + shift) ψ_e from PRE-GATHERED even/odd blocks `blocks_eo = (blocks_e, blocks_o)`.
 
     M_e = −D_eo D_oe (the even block of A†A = −A²). This is the per-iteration matvec of the
-    even-odd CG; the gather is done once by `_split_eo` and reused across all iterations."""
+    even-odd CG; the gather is done once by `_split_eo` and reused across all iterations.
+
+    `h_eo = (h_e, h_o)` (parity-split h, (*B, V*, 4, 4)) routes fp32-on-Metal calls
+    through the FUSED hop kernel (`_hop_metal`) — 2 launches per matvec instead of ~16,
+    and no expanded blocks tensor at all (`blocks_eo` may then be None). All other
+    dtype/device combinations use the einsum path."""
+    if h_eo is not None and psi_e.dtype == mx.float32 and _metal_hop_ok():
+        h_e, h_o = h_eo
+        kless = psi_e.ndim == h_e.ndim - 1
+        p = mx.expand_dims(psi_e, -3) if kless else psi_e
+        w_o = _hop_metal(p, h_o, h_e, eo['o2e_fwd'], eo['o2e_back'])           # D_oe ψ_e
+        v_e = _hop_metal(w_o, h_e, h_o, eo['e2o_fwd'], eo['e2o_back'])         # D_eo w_o
+        out = -v_e
+        if shift:
+            out = out + shift * p
+        return out[..., 0, :, :] if kless else out
     blocks_e, blocks_o = blocks_eo
     with mx.stream(_stream(psi_e.dtype)):
         w_o = _hop(psi_e, blocks_o, blocks_e, eo['o2e_fwd'], eo['o2e_back'])   # D_oe ψ_e  (odd)
@@ -364,26 +472,36 @@ def multishift_cg(b, blocks, fwd, back, shifts, tol=1e-8, max_iter=2000):
         return _cg_loop(bk, matvec, sigma, tol, max_iter)
 
 
-def eo_multishift_cg(b, blocks, eo, shifts, tol=1e-8, max_iter=4000, x0=None):
+def eo_multishift_cg(b, blocks, eo, shifts, tol=1e-8, max_iter=4000, x0=None, h=None):
     """Multishift CG on the even-block operator M_e (half size). Mirrors `multishift_cg`
     but with `apply_Me` — ~2× cheaper for the same spectrum. b: (*B, V/2, 8).
 
     `x0` (optional, (*B, V/2, 8)) warm-starts the solve (chronological inversion);
-    convergence is relative to ‖b‖ so the result matches a cold start to the same tol."""
+    convergence is relative to ‖b‖ so the result matches a cold start to the same tol.
+    `h` (optional, (*B, V, 4, 4)) enables the fused-Metal hop for fp32-on-GPU solves
+    (2 launches/matvec instead of ~16; see `_metal_hop_kernel`) — the einsum/blocks
+    path is used otherwise."""
     nb = b.ndim - 2
     Bshape = b.shape[:nb]
     Ve, S = b.shape[-2], b.shape[-1]
     with mx.stream(_stream(b.dtype)):
         sigma, K = _as_shift_tensor(shifts, nb, Bshape, b.dtype)
-        blocks_k = mx.expand_dims(blocks, nb)
-        blocks_k_eo = _split_eo(blocks_k, eo)     # gather even/odd ONCE, reuse every iteration
+        h_eo = None
+        blocks_k_eo = None
+        if h is not None and b.dtype == mx.float32 and _metal_hop_ok():
+            h32 = h if h.dtype == mx.float32 else h.astype(mx.float32)
+            h_eo = (mx.take(h32, eo['even_idx'], axis=-3),
+                    mx.take(h32, eo['odd_idx'], axis=-3))
+        else:
+            blocks_k = mx.expand_dims(blocks, nb)
+            blocks_k_eo = _split_eo(blocks_k, eo)  # gather even/odd ONCE, reuse every iteration
         bk = mx.broadcast_to(mx.expand_dims(b, nb), Bshape + (K, Ve, S))
         x0k = None
         if x0 is not None:
             x0k = mx.broadcast_to(mx.expand_dims(x0, nb), Bshape + (K, Ve, S))
 
         def matvec(p):
-            return apply_Me_split(p, blocks_k_eo, eo)
+            return apply_Me_split(p, blocks_k_eo, eo, h_eo=h_eo)
 
         return _cg_loop(bk, matvec, sigma, tol, max_iter, x0=x0k, rel_to_b=True)
 
@@ -594,7 +712,7 @@ def eo_heatbath(xi_e, h, coeffs, msq, eo, fwd, back, L, tol=1e-10, max_iter=8000
     with mx.stream(_stream(xi_e.dtype)):
         betas = _to_mx(coeffs['betas'], xi_e.dtype) + msq
         alphas = _to_mx(coeffs['alphas'], xi_e.dtype)
-        psi = eo_multishift_cg(xi_e, blocks, eo, betas, tol=tol, max_iter=max_iter)
+        psi = eo_multishift_cg(xi_e, blocks, eo, betas, tol=tol, max_iter=max_iter, h=h)
         v = float(coeffs['a0']) * xi_e + mx.sum(alphas[..., None, None] * psi, axis=-3)
         return INV_SQRT2 * apply_Me(v, blocks, eo, shift=msq)
 
@@ -609,7 +727,8 @@ def eo_action(h, phi_e, g, msq, eo, fwd, back, L, tol=1e-10, max_iter=5000):
     solve, no rational sum). φ_e: (*B, V/2, 8)."""
     blocks = hopping_blocks(h, L, dtype=h.dtype)
     with mx.stream(_stream(h.dtype)):
-        psi = eo_multishift_cg(phi_e, blocks, eo, [msq], tol=tol, max_iter=max_iter)[..., 0, :, :]
+        psi = eo_multishift_cg(phi_e, blocks, eo, [msq], tol=tol, max_iter=max_iter,
+                               h=h)[..., 0, :, :]
         s_aux = mx.sum(h * h, axis=(-3, -2, -1)) / (4.0 * g)
         s_pf = mx.sum(phi_e * psi, axis=(-2, -1))
         return s_aux + s_pf
@@ -634,7 +753,7 @@ def eo_fermion_force(h, phi_e, msq, eo, fwd, back, L, tol=1e-10, max_iter=5000,
     blocks = hopping_blocks(h, L, dtype=h.dtype)
     with mx.stream(_stream(h.dtype)):
         psi_e = eo_multishift_cg(phi_e, blocks, eo, [msq], tol=tol, max_iter=max_iter,
-                                 x0=x0)[..., 0, :, :]
+                                 x0=x0, h=h)[..., 0, :, :]
         psi = _scatter_even(psi_e, eo, V)                               # (*B, V, 8) on even
         a_psi = apply_A(psi, blocks, fwd, back)                         # (*B, V, 8) on odd
 
@@ -819,14 +938,21 @@ def eo_multishift_cg_refined(b64, h64, eo, shifts, L, device, tol=1e-10, inner_t
 
     blocks64_eo = _split_eo(blocks64, eo)         # gather even/odd ONCE (hoisted out of the loop)
 
-    # FP32 operator on `device`
+    # FP32 operator on `device` — fused-Metal hop when available (skips building the
+    # 16×-expanded fp32 blocks tensor entirely); einsum/blocks path otherwise.
     sigma32 = _cast_to(sigma64, mx.float32, device)
-    blocks32 = mx.expand_dims(hopping_blocks(_cast_to(h64, mx.float32, device), L,
-                                             dtype=mx.float32), nb)
-    blocks32_eo = _split_eo(blocks32, eo)
+    h32 = _cast_to(h64, mx.float32, device)
+    if _metal_hop_ok():
+        with mx.stream(device):
+            h32_eo = (mx.take(h32, eo['even_idx'], axis=-3),
+                      mx.take(h32, eo['odd_idx'], axis=-3))
+        blocks32_eo = None
+    else:
+        h32_eo = None
+        blocks32_eo = _split_eo(mx.expand_dims(hopping_blocks(h32, L, dtype=mx.float32), nb), eo)
 
     def matvec32(p):
-        return apply_Me_split(p, blocks32_eo, eo)
+        return apply_Me_split(p, blocks32_eo, eo, h_eo=h32_eo)
 
     def fp64_residual(xx):                         # r = b − (M_e+σ)x, ‖r‖ per (config,shift)
         r = bk64 - (apply_Me_split(xx, blocks64_eo, eo) + sigma64 * xx)
@@ -930,7 +1056,7 @@ def eo_heatbath_ratio(xi_e, h, ratio_coeffs, eo, fwd, back, L, tol=1e-10, max_it
     with mx.stream(_stream(h.dtype)):
         shifts = np.concatenate([[rc['b']], np.asarray(rc['e'])])
         w = _to_mx(np.concatenate([[rc['B']], np.asarray(rc['w'])]), h.dtype)
-        psi = eo_multishift_cg(xi_e, blocks, eo, shifts, tol=tol, max_iter=max_iter)
+        psi = eo_multishift_cg(xi_e, blocks, eo, shifts, tol=tol, max_iter=max_iter, h=h)
         return INV_SQRT2 * (rc['A'] * xi_e + mx.sum(w[..., None, None] * psi, axis=-3))
 
 
@@ -955,9 +1081,9 @@ def eo_action_hasenbusch(h, phi_h, phi_r, g, msq, musq, eo, fwd, back, L,
     blocks = hopping_blocks(h, L, dtype=h.dtype)
     with mx.stream(_stream(h.dtype)):
         psi_h = eo_multishift_cg(phi_h, blocks, eo, [musq], tol=tol,
-                                 max_iter=max_iter)[..., 0, :, :]
+                                 max_iter=max_iter, h=h)[..., 0, :, :]
         psi_r = eo_multishift_cg(phi_r, blocks, eo, [msq], tol=tol,
-                                 max_iter=max_iter)[..., 0, :, :]
+                                 max_iter=max_iter, h=h)[..., 0, :, :]
         s_aux = mx.sum(h * h, axis=(-3, -2, -1)) / (4.0 * g)
         s_h = mx.sum(phi_h * psi_h, axis=(-2, -1))
         s_r = mx.sum(phi_r * phi_r, axis=(-2, -1)) + (musq - msq) * mx.sum(
