@@ -315,6 +315,12 @@ Historical (2026-05-25 snapshot): Current scale: **7339 theorems** (7314 substan
 #### `src/vestigial/hs_rhmc_torch.py` (Phase 5 Wave 7C)
 **Purpose:** PyTorch CPU backend for RHMC. Production default. Batched LU (L=4) and batched CG (L≥6), FSAL Omelyan integrator.
 
+#### `src/vestigial/hs_rhmc_stencil.py` (2026-07 RHMC GPU arc)
+**Purpose:** Matrix-free stencil RHMC engine (torch, CPU/MPS/CUDA). Even-odd reduction (single-pole exact action/force), refined FP32-inner/FP64-residual solver, chronological inversion. Certified vs the dense oracle + Creutz; serves as the cross-engine oracle for the MLX port.
+
+#### `src/vestigial/hs_rhmc_mlx.py` (2026-07 RHMC GPU arc)
+**Purpose:** Torch-free MLX twin of the stencil engine — one source for Apple-Silicon Metal and CUDA (`mlx[cuda]`); the production GPU path (`run_rhmc_gpu_production.py --backend mlx`). Refined eo trajectory + the 2026-07-13 performance stack: active-shift narrowing, explicit-index einsum matvec, chrono default-on, fused Metal hop kernel (signed-permutation CG; Metal-only, einsum fallback elsewhere) — L=8 R=16 m=0.05: 1392→71 s/traj (19.6×). Opt-in Hasenbusch(K=1) split (power-1 exact actions, Möbius-Zolotarev ratio heatbath; Creutz-certified; stability-bound at L=8, no recipe). Operator guide: `docs/RHMC_MLX_RUNBOOK.md`.
+
 #### `src/core/sm_anomaly.py` (Phase 5a-5b)
 **Purpose:** SM anomaly computation in ℤ₁₆: fermion data, anomaly index, generation constraint, hidden sector check.
 
