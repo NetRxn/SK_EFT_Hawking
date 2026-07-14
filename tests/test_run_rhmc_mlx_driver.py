@@ -1,10 +1,13 @@
 """Driver-level unit tests for the MLX backend of run_rhmc_gpu_production.
 
-These cover the non-engine concerns: RNG decorrelation (review finding 2) and
-resume/checkpoint correctness (review findings on stop/start). They import the
-driver module directly; it guards its torch import so this works with or without
-torch installed.
+These cover the non-engine concerns: RNG decorrelation (review finding 2),
+resume/checkpoint correctness (review findings on stop/start), and the run.log
+tee (2026-07-13 incident: a detached restart with stdout at /dev/null lost all
+console logging). They import the driver module directly; it guards its torch
+import so this works with or without torch installed.
 """
+import sys
+
 import numpy as np
 import pytest
 
@@ -184,6 +187,50 @@ def test_chrono_is_the_default_with_an_opt_out():
     assert ap.parse_args(['--mass', '0.05']).chrono is True
     assert ap.parse_args(['--mass', '0.05', '--no-chrono']).chrono is False
     assert ap.parse_args(['--mass', '0.05', '--chrono']).chrono is True   # explicit on
+
+
+# --- run.log tee (detached runs must keep an on-disk record) ----------------------------------
+# 2026-07-13 L=8 m=0.05 restart: launched detached with stdout at /dev/null, so every console
+# line was lost and the npz checkpoints were the only record. setup_run_log tees stdout/stderr
+# into <outdir>/run.log (append mode) while leaving the console output itself unchanged.
+
+def _restore_streams():
+    return sys.stdout, sys.stderr
+
+
+def test_setup_run_log_tees_stdout_and_stderr_to_file(tmp_path, capsys):
+    out, err = _restore_streams()
+    try:
+        drv.setup_run_log(str(tmp_path))
+        print("g=2.000: 10/400 acc=0.98", flush=True)
+        print("traceback goes here too", file=sys.stderr, flush=True)
+    finally:
+        sys.stdout, sys.stderr = out, err
+    text = (tmp_path / "run.log").read_text()
+    assert "g=2.000: 10/400 acc=0.98" in text
+    assert "traceback goes here too" in text
+    # stdout logging unchanged: the console still received the line
+    captured = capsys.readouterr()
+    assert "g=2.000: 10/400 acc=0.98" in captured.out
+    assert "traceback goes here too" in captured.err
+
+
+def test_run_log_appends_across_restarts(tmp_path):
+    # A checkpoint-resumed run must keep ONE continuous log: append, never truncate.
+    out, err = _restore_streams()
+    try:
+        drv.setup_run_log(str(tmp_path))
+        print("first run line", flush=True)
+    finally:
+        sys.stdout, sys.stderr = out, err
+    try:
+        drv.setup_run_log(str(tmp_path))
+        print("resumed run line", flush=True)
+    finally:
+        sys.stdout, sys.stderr = out, err
+    text = (tmp_path / "run.log").read_text()
+    assert "first run line" in text and "resumed run line" in text
+    assert text.index("first run line") < text.index("resumed run line")
 
 
 def test_build_hasenbusch_coeffs_gates_both_rationals():

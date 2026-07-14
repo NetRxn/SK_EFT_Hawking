@@ -35,6 +35,7 @@ Usage:
 """
 import argparse
 import os
+import sys
 import time
 
 import numpy as np
@@ -63,6 +64,35 @@ def build_coeffs(L, g, msq, n_poles, seed):
                           device=cpu, dtype=torch.float64), fwd, back, V, n_iter=250, seed=s))
         for s in range(3))
     return st.make_rhmc_coeffs(1.25 * lam, msq, n_poles), 1.25 * lam
+
+
+class _Tee:
+    """Duplicate a stream's writes into a log file; everything else delegates."""
+    def __init__(self, stream, log):
+        self._stream, self._log = stream, log
+
+    def write(self, s):
+        self._stream.write(s)
+        self._log.write(s)
+
+    def flush(self):
+        self._stream.flush()
+        self._log.flush()
+
+    def __getattr__(self, name):
+        return getattr(self._stream, name)
+
+
+def setup_run_log(outdir):
+    """Tee stdout+stderr into <outdir>/run.log so a detached run (stdout at /dev/null)
+    keeps an on-disk record. Append mode: a checkpoint-resumed run continues the same
+    log. Console output is unchanged; stderr is included so a crash traceback survives."""
+    log = open(os.path.join(outdir, 'run.log'), 'a', buffering=1, encoding='utf-8')
+    log.write(f"--- run.log opened {time.strftime('%Y-%m-%d %H:%M:%S %z')}  "
+              f"argv: {' '.join(sys.argv)} ---\n")
+    sys.stdout = _Tee(sys.stdout, log)
+    sys.stderr = _Tee(sys.stderr, log)
+    return log
 
 
 def atomic_savez(path, **data):
@@ -518,6 +548,7 @@ def main():
         tag, dev_desc = ('eo' if args.engine == 'eo' else 'gpu'), device.type
     outdir = args.outdir or f"data/rhmc/L{L}{tag}_m{args.mass:g}"
     os.makedirs(outdir, exist_ok=True)
+    setup_run_log(outdir)
     gs = args.couplings_only if args.couplings_only else coupling_grid(args.n_couplings, args.g_lo, args.g_hi)
 
     # backend-correct engine/solver labels (mlx always runs eo + reads --mlx-solver;
