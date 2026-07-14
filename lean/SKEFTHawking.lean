@@ -4410,6 +4410,7 @@ import SKEFTHawking.PoincareLefschetzRelFundClassCylinderCollar
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderWu
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderNumerics
 import SKEFTHawking.PinPlusCylinderWAdmPinned
+import SKEFTHawking.SingularKroneckerBasisBridge
 import SKEFTHawking.PinPlusCharPairGeoRealizationGate
 import SKEFTHawking.PinPlusWAdmPinned
 
