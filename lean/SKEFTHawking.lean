@@ -4416,6 +4416,7 @@ import SKEFTHawking.SingularKroneckerBasisBridge
 import SKEFTHawking.PoincareLefschetzWuPairingCriterion
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderNondeg
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderCross
+import SKEFTHawking.SingularIntervalPairClass
 import SKEFTHawking.PinPlusCharPairGeoRealizationGate
 import SKEFTHawking.PinPlusWAdmPinned
 
