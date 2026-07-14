@@ -74,7 +74,12 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    exactly the e₈ graph) — i.e. the tie NARROWS the hole to precisely the geometric-realization obligation
    without closing it; binders stay FROZEN. Remaining discharge: require realization data on the membrane
    datum (GeoRealizationData/GeoMembrane.ofGeometric, PinPlusCharPairMembraneGeoRealization) + the
-   (n,q,surf) tie, then the fresh Fable re-gate.
+   (n,q,surf) tie, then the fresh Fable re-gate. UPDATE 2 (arm-4 R1 hchar, 2026-07-14): the fake-class
+   half is CLOSED — the hchar characteristic-surface tie (⟨a, emb₊[Σ]⟩ = μ(a⌣a), Nonempty-guarded) landed
+   on CharPairStrBundled with all four witnesses; fakeRP4RankZero is UNINHABITABLE, kernel-checked as
+   RP4CharPairWitness.rp4_bundle_surfClass_pushforward_ne_zero (⟨x², emb₊[Σ]⟩ = μ(x²⌣x²) = 1 ≠ 0) +
+   no_empty_surface_bundle_on_rp4 (empty Σ ⟹ False). The bInc geometric-realization obligation remains
+   the sole open discharge item; binders stay FROZEN on it alone.
    backing: `ktKernelRep_eq_zero`, `ktNonSplit_false`, `kt_binders_unsatisfiable`
 
 5. `tied-carrier-inhabitation-equiv-free` [structural_forcing]

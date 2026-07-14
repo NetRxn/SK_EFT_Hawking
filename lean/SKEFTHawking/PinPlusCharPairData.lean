@@ -51,6 +51,8 @@ import SKEFTHawking.RP4Unconditional
 import SKEFTHawking.RP2EquatorialInclusion
 import SKEFTHawking.RP2IntersectionForm
 import SKEFTHawking.PinPlusCharPairSurfaceTie
+import SKEFTHawking.SingularPD4Instances
+import SKEFTHawking.RP4CharSurfaceSmithNat
 
 namespace SKEFTHawking.PinPlusCharPairData
 
@@ -1400,12 +1402,13 @@ the unblock CONCRETELY — the surface MANIFOLD content is now carriable in-subs
 `hpolar` anchors (wt2's 2-dim PD tower) remain abstract. -/
 
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
-  SKEFTHawking.SingularFunctoriality SKEFTHawking.PinPlusCharPairSurfaceTie in
+  SKEFTHawking.SingularFunctoriality SKEFTHawking.PinPlusCharPairSurfaceTie
+  SKEFTHawking.SingularPD4Instances SKEFTHawking.PoincareDualityWu in
 /-- **The bundled characteristic-pair structure — MEMBRANE-TIED AND SURFACE-TIED** (arm-4 re-gate
-round-5 fix `realization-seam-basis-gauge-launders-e8`). Extends the `Type 0` algebraic core
-(`CharPairStr`) with the concrete characteristic surface `surf` and — the round-5 strengthening — the
-**(n, q, surf) BASIS TIE** that pins the enhancement `(n, q)` to the surface's topology instead of
-leaving it a free field:
+round-5 fix `realization-seam-basis-gauge-launders-e8`; arm-4 R1 `hchar` strengthening). Extends
+the `Type 0` algebraic core (`CharPairStr`) with the concrete characteristic surface `surf` and —
+the round-5 strengthening — the **(n, q, surf) BASIS TIE** that pins the enhancement `(n, q)` to
+the surface's topology instead of leaving it a free field:
 
 * `surfClass : H₂(Σ;ℤ/2)` — the characteristic surface's mod-2 fundamental class (`0` for the empty
   surface, so the tie is honest even at rank 0);
@@ -1416,7 +1419,14 @@ leaving it a free field:
   the carried `surfClass`, expressed as `kroneckerH 2 (cupH a b) surfClass` so it needs no
   `Nonempty`/compactness on `Σ` and composes over disjoint unions). Because `q.B` is now DETERMINED by
   `(basis, [Σ])`, gauging `basis` forces `q` to move covariantly — the `killerGauge` laundering can no
-  longer keep `q` fixed while moving the kernel.
+  longer keep `q` fixed while moving the kernel;
+* `hchar : ⟨a, emb₊[Σ]⟩ = μ(a ⌣ a)` (arm-4 R1) — the **CHARACTERISTIC-SURFACE tie**: the pushed-
+  forward surface class is Poincaré-dual to the carrier's cup-square functional (the v4 §2 `hchar`
+  anchor, `[Σ]` dual to `v₂ = w₂ + w₁²` in the Wu form). `Nonempty`-guarded on the carrier (the
+  empty carrier's tie is vacuous; `μ` needs the fundamental class), so it survives `emptyStr` and
+  composes over disjoint unions via `SingularWuSum.mu_sum` + `SingularWuSumEmpty`. This is what
+  kills the rank-0 fake-class exhibit: on `ℝP⁴`, `μ(x² ⌣ x²) = 1` forces `emb₊[Σ] ≠ 0`,
+  impossible for an empty surface (`RP4CharPairWitness.no_empty_surface_bundle_on_rp4`).
 
 The universe pairing (`Type 1` `Mfd`-value / universe-0 certified carrier) is unchanged (§10 note). -/
 structure CharPairStrBundled (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))) [I.Boundaryless]
@@ -1442,6 +1452,16 @@ structure CharPairStrBundled (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fi
   round-5 basis-gauge laundering. -/
   hpolar : ∀ a b : Cohomology (TopCat.of surf.M) 1,
     q.B (basis a) (basis b) = kroneckerH 2 (cupH a b) surfClass
+  /-- **(char tie, arm-4 R1)** the pushed-forward surface class is Poincaré-dual to the carrier's
+  cup-square functional: `⟨a, emb₊[Σ]⟩ = μ(a ⌣ a)` for every `a ∈ H²(s.M;ℤ/2)` — the v4 §2
+  `hchar` anchor (`[Σ]` dual to `v₂ = w₂ + w₁²`, the characteristic-surface condition).
+  `Nonempty`-guarded on the carrier: the empty carrier has no fundamental class and its tie is
+  vacuous, so `emptyStr` stays honest while every NONEMPTY carrier's surface is pinned to the
+  actual cup-square topology (kills the rank-0 fake-class exhibit on `ℝP⁴`). -/
+  hchar : ∀ [T2Space s.M] [Nonempty s.M] (a : Cohomology (TopCat.of s.M) 2),
+    kroneckerH 2 a (Homology.map
+        (⟨emb, embSmooth.continuous⟩ : C(↑(TopCat.of surf.M), ↑(TopCat.of s.M))) 2 surfClass)
+      = (poincareDual4Mid_of_closed (M := s.M)).mu (cupH24 a a)
 
 /-- **The unblock, as a type.** `charPairBundledMfd` is a legitimate `Mfd`-family for a carrier at
 universe 0 landing in `Type 1` — precisely the `SingularManifold.{0} X k I → Type 1` shape the generalized
@@ -1465,6 +1485,8 @@ theorem charPairBundled_brown_eq {s t : SingularManifold PUnit k I}
 
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
 open SKEFTHawking.SingularFunctoriality SKEFTHawking.PinPlusCharPairSurfaceTie
+open SKEFTHawking.SingularPD4Instances SKEFTHawking.PoincareDualityWu
+open SKEFTHawking.SingularCohomologyDisjointSum
 
 open SKEFTHawking.PinPlusTiedData in
 /-- **A concrete inhabitant** (non-vacuity of the `Type 1` bundle): the empty carrier with the empty
@@ -1490,6 +1512,10 @@ noncomputable def charPairBundledEmpty :
       fun x y => by rw [Subsingleton.elim x 0]; exact (stdQuadratic 0).B_zero_left y
     show (stdQuadratic 0).B _ _ = _
     rw [hz, map_zero]
+  hchar := by
+    intro _ hne a
+    rcases hne with ⟨x⟩
+    exact x.elim
 
 /-! ## §11. The bundled Mfd-op witnesses and the full `T2TangentialData` instance -/
 
@@ -1516,6 +1542,22 @@ noncomputable def charPairBundledSumStr {s t : SingularManifold PUnit k I}
   surfClass := sumSurfClassW _ rfl σ.surfClass τ.surfClass
   basis := sumBasisW _ rfl σ.basis τ.basis
   hpolar := sumHpolarW _ rfl σ.basis τ.basis σ.surfClass τ.surfClass σ.q τ.q σ.hpolar τ.hpolar
+  hchar := by
+    haveI := σ.t2
+    haveI := τ.t2
+    intro _ hne a
+    haveI : Nonempty (s.M ⊕ t.M) := hne
+    -- Fully W-anchored (see `sumHcharW`'s docstring): every anchor is passed EXPLICITLY at the
+    -- goal's own indices, so each cross-index defeq is an isolated same-head `rfl` (TopCat /
+    -- PoincareDual4Mid argument level) — never the expensive `Cohomology`-constructor `isDefEq`
+    -- that a direct `sumHchar` application triggers (whnf heartbeat wall).
+    exact sumHcharW (A := TopCat.of σ.surf.M) (B := TopCat.of τ.surf.M)
+      ⟨σ.emb, σ.embSmooth.continuous⟩ ⟨τ.emb, τ.embSmooth.continuous⟩ σ.surfClass τ.surfClass
+      (fun b => σ.hchar b) (fun b => τ.hchar b)
+      (TopCat.of (σ.surf.sum τ.surf).M) rfl
+      (TopCat.of (s.sum t).M) rfl
+      (poincareDual4Mid_of_closed (M := (s.sum t).M)) rfl
+      ⟨Sum.map σ.emb τ.emb, (σ.embSmooth.sumMap τ.embSmooth).continuous⟩ rfl a
 
 /-- **Bundled `revStr`** — structure reversal on a bundle: `charPairRevStr` on the algebraic core
 (enhancement negation), keeping the same surface/embedding. The tie SURVIVES the reversal: `neg`
@@ -1532,6 +1574,7 @@ noncomputable def charPairBundledRevStr {s : SingularManifold PUnit k I}
   surfClass := σ.surfClass
   basis := σ.basis
   hpolar := σ.hpolar
+  hchar := σ.hchar
 
 /-- **THE FAITHFUL Pin⁺ INSTANCE, MEMBRANE-TIED** (the arm-4 re-gate migration) — the certified
 characteristic-pair carrier as a `T2TangentialData.{0,1}` (bundled `Type 1` `Mfd`, carrier at
@@ -1635,3 +1678,8 @@ noncomputable def rp4CharPairBundled
     rw [map_smul, map_smul, hxeq, hLHS]
     simp only [map_smul, LinearMap.smul_apply, intersectionForm_xRP2_self]
     rw [smul_comm]
+  hchar := fun a =>
+    -- `⟨a, emb₊[ℝP²]⟩ = μ(a ⌣ x²)` (the discharged-crux pairing identity) then the cup-square
+    -- bridge `μ(a ⌣ a) = μ(a ⌣ x²)` (rank-1 `H²`, `c² = c`).
+    (SKEFTHawking.RP4CharSurfaceSmithNat.hchar_pairing a).trans
+      (SKEFTHawking.RP4WuAssembly.mu_cupH24_self_eq_cupH24_xpow2 a).symm
