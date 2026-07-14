@@ -74,12 +74,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    exactly the e₈ graph) — i.e. the tie NARROWS the hole to precisely the geometric-realization obligation
    without closing it; binders stay FROZEN. Remaining discharge: require realization data on the membrane
    datum (GeoRealizationData/GeoMembrane.ofGeometric, PinPlusCharPairMembraneGeoRealization) + the
-   (n,q,surf) tie, then the fresh Fable re-gate. UPDATE 2 (arm-4 R1 hchar, 2026-07-14): the fake-class
-   half is CLOSED — the hchar characteristic-surface tie (⟨a, emb₊[Σ]⟩ = μ(a⌣a), Nonempty-guarded) landed
-   on CharPairStrBundled with all four witnesses; fakeRP4RankZero is UNINHABITABLE, kernel-checked as
-   RP4CharPairWitness.rp4_bundle_surfClass_pushforward_ne_zero (⟨x², emb₊[Σ]⟩ = μ(x²⌣x²) = 1 ≠ 0) +
-   no_empty_surface_bundle_on_rp4 (empty Σ ⟹ False). The bInc geometric-realization obligation remains
-   the sole open discharge item; binders stay FROZEN on it alone.
+   (n,q,surf) tie, then the fresh Fable re-gate.
    backing: `ktKernelRep_eq_zero`, `ktNonSplit_false`, `kt_binders_unsatisfiable`
 
 5. `tied-carrier-inhabitation-equiv-free` [structural_forcing]
@@ -135,6 +130,15 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    0), cylinderP14_pinned/cylinderP23_pinned (honest non-vacuity witnesses),
    CharPairBorTiedPinned.wuFunctional23_honest (a pinned Bor's hwu is the genuine w2-condition). Remaining:
    fold the pinned refinement into the live carrier's Bor consumption (post basis-tie merge), then re-gate.
+   UPDATE 2 (arm-4 R1, 2026-07-14): the FAKE-CLASS half is CLOSED — the hchar characteristic-surface tie
+   landed on CharPairStrBundled (Guillou-Marin: kroneckerH a (emb-pushforward of surfClass) = mu(a cup a),
+   Nonempty-guarded; all four bundle witnesses supply it; RP4 via the DISCHARGED cruxPullbackGen + the mu(a
+   cup a) = mu(a cup x^2) bridge), and the fake exhibit is UNINHABITABLE: fakeRP4RankZero no longer
+   type-checks and is removed; kernel-checked kill theorems
+   RP4CharPairWitness.rp4_bundle_surfClass_pushforward_ne_zero (every RP4 char-pair bundle has nonvanishing
+   pushed-forward surface class) + no_empty_surface_bundle_on_rp4. KTKernelCard is no longer honestly-false
+   via fake classes. The SOLE remaining discharge item on this fork = the GeoMembrane bInc geometric
+   realization (the synthetic-bInc refutations persist; binders stay frozen) + the fresh Fable re-gate.
    backing: `wuW2_zeroSq`, `wuClass_zeroSq`
 
 8. `taylor-leg-end-convention-trap` [structural_forcing]
