@@ -23,7 +23,10 @@ The structure's FIELDS are exactly the arc's honestly-open residuals; everything
   `H_3(W,∂W) < ∞`; the `findimRel` *cohomology* numeric is DERIVED from these via the field-UC
   reduction `cylinder_findimRel14/23` (the mod-2 relative Kronecker pairing is perfect,
   finite-dim-free). The residual is moved to the more tractable homology side (mod-2 homology
-  pair-LES is fully exact in-tree). A second residual-shrinking win folded in.
+  pair-LES is fully exact in-tree). A second residual-shrinking win folded in. The `ofBase`
+  constructor (§4) discharges BOTH fields from `M`'s own homology Betti data
+  (`cylinder_findimRelHom14/23_of_base`, the `…CylinderNumerics` §8 full reduction) — a third
+  residual-shrinking win: take the general fields, or the fully-`M`-side entry point.
 * `nondeg14`/`nondeg23`, `dimeq14`/`dimeq23` — the two PL-duality numerics NOT yet in-tree-reducible
   (`M`'s own Poincaré-duality pairing / the pair-suspension iso walls; see `…CylinderNumerics`).
   Named as explicit parameters.
@@ -44,6 +47,8 @@ The structure's FIELDS are exactly the arc's honestly-open residuals; everything
 * `wuFunctional23_honest` — the `(2,3)` Wu functional is the honest `⟨relSq² ·, [W,∂W]⟩`.
 * `determinedByInteriorPoints` / the uniqueness of `[W,∂W]` — Wall 2 collapsed from `hdet` alone
   (the collar-injectivity residual is already discharged by the explicit product collar).
+* `ofBase` — the base-Betti constructor: the whole residual-set from `M`-side data alone (plus the
+  named deep residuals), with `findimRelHom14/23` internally discharged.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new project axiom, no
 `native_decide`, no `maxHeartbeats`.
@@ -58,7 +63,7 @@ open SKEFTHawking.PoincareLefschetzRelFundClass
 open SKEFTHawking.SingularRelativeCup SKEFTHawking.SingularRelativeBockstein
 open SKEFTHawking.SingularRelativeSteenrodSq2
 open SKEFTHawking.SingularCohomologyMod2 SKEFTHawking.SingularRelativeCohomologyMod2
-open SKEFTHawking.SingularRelativeHomologyMod2
+open SKEFTHawking.SingularRelativeHomologyMod2 SKEFTHawking.SingularHomologyMod2
 open SKEFTHawking.SingularManifoldFundamentalClass
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinder
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderCollar
@@ -91,7 +96,8 @@ structure CylinderWAdmPinned (M : Type) [TopologicalSpace M] [T2Space M] [Compac
   findimM2 : FiniteDimensional (ZMod 2) (Cohomology (TopCat.of M) 2)
   /-- `(1,4)` relative-HOMOLOGY finite-dimensionality `H_4(W,∂W) < ∞`; the `findimRel` *cohomology*
   numeric is DERIVED from this via the field-UC reduction `cylinder_findimRel14`. Homology-side (the
-  more tractable residual: mod-2 homology pair-LES is fully exact in-tree). -/
+  more tractable residual: mod-2 homology pair-LES is fully exact in-tree). Dischargeable from
+  `b_4(M), b_3(M) < ∞` via `CylinderWAdmPinned.ofBase`. -/
   findimRelHom14 : FiniteDimensional (ZMod 2)
     (RelativeHomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 4)
   /-- `(1,4)` Lefschetz non-degeneracy (`M`'s PD-pairing wall). -/
@@ -103,7 +109,8 @@ structure CylinderWAdmPinned (M : Type) [TopologicalSpace M] [T2Space M] [Compac
           = Module.finrank (ZMod 2)
             (RelativeCohomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 4)
   /-- `(2,3)` relative-HOMOLOGY finite-dimensionality `H_3(W,∂W) < ∞`; the `findimRel` *cohomology*
-  numeric is DERIVED via `cylinder_findimRel23`. -/
+  numeric is DERIVED via `cylinder_findimRel23`. Dischargeable from `b_3(M), b_2(M) < ∞` via
+  `CylinderWAdmPinned.ofBase`. -/
   findimRelHom23 : FiniteDimensional (ZMod 2)
     (RelativeHomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 3)
   /-- `(2,3)` Lefschetz non-degeneracy (`M`'s PD-pairing wall). -/
@@ -190,6 +197,52 @@ theorem CylinderWAdmPinned.relFundClass_unique
     (hβ : RestrictsToRelGen (X := TopCat.of (cylW M)) (m := 2 + 1)
       ((cylModel 2).boundary (cylW M)) gen β) : α = β :=
   cylinderRelFundClass_unique_of_slab gen W.hdet hα hβ
+
+/-! ## §4. The base-Betti constructor — `findimRelHom14/23` discharged from `M`'s own homology -/
+
+/-- **The base-Betti constructor**: assembles the residual-set with the two relative-homology
+numerics DISCHARGED from `M`'s own homology Betti data (`b_2(M), b_3(M), b_4(M) < ∞`) via the
+`…CylinderNumerics` §8 reduction `cylinder_findimRelHom14/23_of_base` (pair-LES sandwich ∘ homology
+collapse ∘ boundary split). The W-side relative-homology residuals leave the residual-set entirely
+— every finite-dimensionality input is now `M`-side. -/
+def CylinderWAdmPinned.ofBase
+    (hcls : HasRelFundClass (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M))
+      (cylGen (M := M) (m' := 2)))
+    (findimM1 : FiniteDimensional (ZMod 2) (Cohomology (TopCat.of M) 1))
+    (findimM2 : FiniteDimensional (ZMod 2) (Cohomology (TopCat.of M) 2))
+    (hM2 : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 2))
+    (hM3 : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 3))
+    (hM4 : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 4))
+    (nondeg14 : Function.Injective
+      ⇑((relCupH14 (X := TopCat.of (cylW M)) (S := (cylModel 2).boundary (cylW M))).compr₂
+        (cylinderDatum hcls).mu))
+    (dimeq14 : Module.finrank (ZMod 2) (Cohomology (TopCat.of (cylW M)) 1)
+             = Module.finrank (ZMod 2)
+               (RelativeCohomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 4))
+    (nondeg23 : Function.Injective
+      ⇑((relCupH23 (X := TopCat.of (cylW M)) (S := (cylModel 2).boundary (cylW M))).compr₂
+        (cylinderDatum hcls).mu))
+    (dimeq23 : Module.finrank (ZMod 2) (Cohomology (TopCat.of (cylW M)) 2)
+             = Module.finrank (ZMod 2)
+               (RelativeCohomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 3))
+    (hdet : determinedByPoints (X := TopCat.of (cylW M)) (2 + 1 + 2) (interiorSlab M))
+    (hwu : wuW2
+      (cylinderP14 hcls (cylinder_findimAbs14 findimM1)
+        (cylinder_findimRel14 (cylinder_findimRelHom14_of_base hM4 hM3)) nondeg14 dimeq14)
+      (cylinderP23 hcls (cylinder_findimAbs23 findimM2)
+        (cylinder_findimRel23 (cylinder_findimRelHom23_of_base hM3 hM2)) nondeg23 dimeq23) = 0) :
+    CylinderWAdmPinned M where
+  hcls := hcls
+  findimM1 := findimM1
+  findimM2 := findimM2
+  findimRelHom14 := cylinder_findimRelHom14_of_base hM4 hM3
+  nondeg14 := nondeg14
+  dimeq14 := dimeq14
+  findimRelHom23 := cylinder_findimRelHom23_of_base hM3 hM2
+  nondeg23 := nondeg23
+  dimeq23 := dimeq23
+  hdet := hdet
+  hwu := hwu
 
 end
 
