@@ -3535,6 +3535,39 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': "The as-built CharPair carrier (Bor with the membrane kernel L carried as a FREE Submodule field, the geometric membrane Q deferred) supports the KT §5 non-split content — KTNonSplit (8•[ℝP⁴] ≠ 0) is open/dischargeable on it. FALSE (W-D vacuity gate round 3, Fable, 2026-07-13, kernel-checked FOR EVERY PROVIDER): with L free, the UN-reversed double σ⊔σ bounds the plain doubling cylinder whenever q⊕q admits ANY metabolic Lagrangian (brown ∈ {0,4}); the e₈/extended-Hamming graph of x ↦ x + (Σx)·𝟙 (q∘φ = −q, 16-point decide) certifies one for [ℝP⁴]⁴ that NO membrane in (ℝP⁴)⁴×I realizes ⟹ 8•[ℝP⁴] = 0, the binder pair {KTKernelCard, KTNonSplit} is jointly unsatisfiable, and ⟨[ℝP⁴]⟩ is ≤ ℤ/8. The anti-collapse engine protects only Witt-class (brown) equality — exactly the part KT p.217 says cannot see [Kummer]. ROUND-3 OF THE PATTERN: every deferred geometric tie converts completeness content into falsehood (rounds 1-2: comp-twist, membrane-T2, taylor-leg). FIX: CharPairBor must carry the certified membrane Q with L COMPUTED as ker(H₁(∂Q)→H₁(Q)) + the item-3 relative characteristic tie (the frozen v4 spec, under-implemented by the interim build); acceptance test = the honest cylinder membrane's ANTI-DIAGONAL kernel excludes the e₈ graph (doubleKillerBor must break). Also: KTKernelCard quantifies over hchar-untethered fake classes (fakeRP4RankZero) — tie (n,q,surf) or restrict the quantifier before restating. UPDATE (arm-4 re-gate migration + round-4.5 self-attack, 2026-07-14): the FIX's first half LANDED — pinPlusCharPairData's Bor is the membrane-TIED CharPairBorTied in-place (L = ker mem.bInc, all 8 op witnesses tied, PinPlusCharPairData §9.6; acceptance tests green in PinPlusCharPairMembraneTie). The backing refutations PERSIST on the migrated carrier via the SYNTHETIC-bInc replay (doubleKillerBorTied, PinPlusKTVacuityGateWD §4.5: GeoMembrane.bInc is still un-tethered, and graphBInc phiLin has kernel exactly the e₈ graph) — i.e. the tie NARROWS the hole to precisely the geometric-realization obligation without closing it; binders stay FROZEN. Remaining discharge: require realization data on the membrane datum (GeoRealizationData/GeoMembrane.ofGeometric, PinPlusCharPairMembraneGeoRealization) + the (n,q,surf) tie, then the fresh Fable re-gate.",
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'tied_carrier_inhabitation_equiv_free': {
+        'fork_id': 'tied-carrier-inhabitation-equiv-free',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusCharPairGeoRealizationGate.charPairBorTied_nonempty_iff_free',
+            'SKEFTHawking.PinPlusCharPairGeoRealizationGate.GeoMembrane.ofSubmodule_L',
+            'SKEFTHawking.PinPlusCharPairGeoRealizationGate.jointLagrangian_top',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': "The membrane-tied CharPairBorTied (L = ker mem.bInc) is a strictly finer bordism-witness class than the refuted free-L CharPairBor — the tie alone filters geometrically-unrealizable Lagrangians. FALSE (W-A re-gate round 5, Fable, 2026-07-14, kernel-checked): EVERY submodule of the joint boundary space is the computed kernel of a synthetic membrane (GeoMembrane.ofSubmodule via a quotient basis; ofSubmodule_L exact), so Nonempty (CharPairBorTied b σ τ) ↔ Nonempty (CharPairBor b σ τ) (charPairBorTied_nonempty_iff_free) — the tied carrier is inhabitation-EQUIVALENT to the free one, and every round-3/free-form exploit transfers wholesale (round-4.5's doubleKillerBorTied is one instance of this general fact). Also: GeoMembrane.top (mid = 0, kernel ⊤) inhabits for ALL end forms and JointLagrangian is VACUOUS at ⊤ (jointLagrangian_top) — only the Taylor leg ever blocks a degenerate membrane. RULE: the tie is a SHAPE, not a filter, until mem is forced through geometric-realization data carrying the (n,q,surf) basis tie.",
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
+    'realization_seam_basis_gauge_launders_e8': {
+        'fork_id': 'realization-seam-basis-gauge-launders-e8',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusCharPairGeoRealizationGate.map_killerGauge_ker_negBorBInc',
+            'SKEFTHawking.PinPlusCharPairGeoRealizationGate.ker_transportedBInc_gaugeσ',
+            'SKEFTHawking.PinPlusCharPairGeoRealizationGate.doubleKillerGeoMem_L',
+            'SKEFTHawking.PinPlusCharPairGeoRealizationGate.map_blockCongr_cylLagrangian',
+        ],
+        'nogo_kind': 'refutation',
+        'false_statement': "Topological certificates on GeoRealizationData (T2, compactness, closed-embedding ι, dimension, membrane-in-W) suffice to make GeoMembrane.ofGeometric honest — a fully-certified realization cannot carry the e₈ kernel. FALSE (W-A re-gate round 5, Fable, 2026-07-14, kernel-checked): the free basis fields eσ/eτ admit a gauge action (GeoRealizationData.gaugeσ) that FIXES every topological field (gaugeσ_bdry/Q/U/ι all rfl — every space/map certificate is gauge-blind) while moving the computed kernel by a block gauge (ker_transportedBInc_gaugeσ); the killerGauge (id ⊞ phiLin through finSumFinEquiv) maps the honest doubling anti-diagonal EXACTLY onto the e₈ kernel (map_killerGauge_ker_negBorBInc), so ANY realization of negBor's own design-mandatory membrane yields a certified ofGeometric image hosting the un-reversed double (doubleKillerBorGeoRealized, conditional on the cylinder realization the roadmap itself requires). General engine: the graph of ANY isometry is a block-gauged anti-diagonal (map_blockCongr_cylLagrangian) — the half-lives-half-dies geometric signature is NOT gauge-invariant. Also kernel-irrelevant: the eQ freedom (ker_transportedBInc_gaugeQ). RULE: the H₁ bases must be DERIVED from the carrier's (n,q,surf) tie (hpolar/hchar-anchored identification of the realization's ends with the carried surfaces), never free fields; topological certificates are necessary but collectively blind.",
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
+    'wadm_sqop_gauge_w2_filter_vacuous': {
+        'fork_id': 'wadm-sqop-gauge-w2-filter-vacuous',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusCharPairGeoRealizationGate.wuW2_zeroSq',
+            'SKEFTHawking.PinPlusCharPairGeoRealizationGate.wuClass_zeroSq',
+        ],
+        'nogo_kind': 'refutation',
+        'false_statement': "WAdm/hwu (wuW2 P14 P23 = 0) is a w₂(W) = 0 filter — discharging a CharPairWProvider certifies genuine Pin⁺-admissibility of the bordisms it covers. FALSE (W-A re-gate round 5, Fable, 2026-07-14, kernel-checked): LefschetzWuDatum.sqOp is a FREE field constrained by neither nondeg nor dimeq; zeroing it makes both Wu classes vanish (wuClass_zeroSq) and hwu hold for EVERY W whatever its honest w₂ (wuW2_zeroSq), so a full CharPairWProvider is dischargeable from bare Lefschetz-duality data with ZERO Steenrod input (charPairWProviderOfDuality) — bordisms with genuine w₂(W) ≠ 0 pass. Same free-field-plus-self-referential-condition shape as round-3's free L; infects CharPairBorTied.P14/P23/hwu directly (the Bor carries copies). RULE: sqOp (and mu/cup) must be PINNED to the substrate's actual relative Steenrod tower (relSq1/relSq2) / fundamental-class evaluation / cup product — definitionally or via certificate fields — in both WAdm and the Bor's own data; no provider instantiation is acceptable without the pin (cylinderP14/P23's sqOp := relSq1/relSq2 is the precedent).",
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'taylor_leg_end_convention_trap': {
         'fork_id': 'taylor-leg-end-convention-trap',
         'backing_theorems': [

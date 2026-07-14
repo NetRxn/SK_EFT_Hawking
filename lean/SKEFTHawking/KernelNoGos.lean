@@ -77,7 +77,53 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    (n,q,surf) tie, then the fresh Fable re-gate.
    backing: `ktKernelRep_eq_zero`, `ktNonSplit_false`, `kt_binders_unsatisfiable`
 
-5. `taylor-leg-end-convention-trap` [structural_forcing]
+5. `tied-carrier-inhabitation-equiv-free` [structural_forcing]
+   The membrane-tied CharPairBorTied (L = ker mem.bInc) is a strictly finer bordism-witness class than the
+   refuted free-L CharPairBor — the tie alone filters geometrically-unrealizable Lagrangians. FALSE (W-A
+   re-gate round 5, Fable, 2026-07-14, kernel-checked): EVERY submodule of the joint boundary space is the
+   computed kernel of a synthetic membrane (GeoMembrane.ofSubmodule via a quotient basis; ofSubmodule_L
+   exact), so Nonempty (CharPairBorTied b σ τ) ↔ Nonempty (CharPairBor b σ τ)
+   (charPairBorTied_nonempty_iff_free) — the tied carrier is inhabitation-EQUIVALENT to the free one, and
+   every round-3/free-form exploit transfers wholesale (round-4.5's doubleKillerBorTied is one instance of
+   this general fact). Also: GeoMembrane.top (mid = 0, kernel ⊤) inhabits for ALL end forms and
+   JointLagrangian is VACUOUS at ⊤ (jointLagrangian_top) — only the Taylor leg ever blocks a degenerate
+   membrane. RULE: the tie is a SHAPE, not a filter, until mem is forced through geometric-realization data
+   carrying the (n,q,surf) basis tie.
+   backing: `charPairBorTied_nonempty_iff_free`, `jointLagrangian_top`
+   ⚠ UNRESOLVED backing (not found in-tree — check the registry): `SKEFTHawking.PinPlusCharPairGeoRealizationGate.GeoMembrane.ofSubmodule_L`
+
+6. `realization-seam-basis-gauge-launders-e8` [refutation]
+   Topological certificates on GeoRealizationData (T2, compactness, closed-embedding ι, dimension,
+   membrane-in-W) suffice to make GeoMembrane.ofGeometric honest — a fully-certified realization cannot
+   carry the e₈ kernel. FALSE (W-A re-gate round 5, Fable, 2026-07-14, kernel-checked): the free basis
+   fields eσ/eτ admit a gauge action (GeoRealizationData.gaugeσ) that FIXES every topological field
+   (gaugeσ_bdry/Q/U/ι all rfl — every space/map certificate is gauge-blind) while moving the computed kernel
+   by a block gauge (ker_transportedBInc_gaugeσ); the killerGauge (id ⊞ phiLin through finSumFinEquiv) maps
+   the honest doubling anti-diagonal EXACTLY onto the e₈ kernel (map_killerGauge_ker_negBorBInc), so ANY
+   realization of negBor's own design-mandatory membrane yields a certified ofGeometric image hosting the
+   un-reversed double (doubleKillerBorGeoRealized, conditional on the cylinder realization the roadmap
+   itself requires). General engine: the graph of ANY isometry is a block-gauged anti-diagonal
+   (map_blockCongr_cylLagrangian) — the half-lives-half-dies geometric signature is NOT gauge-invariant.
+   Also kernel-irrelevant: the eQ freedom (ker_transportedBInc_gaugeQ). RULE: the H₁ bases must be DERIVED
+   from the carrier's (n,q,surf) tie (hpolar/hchar-anchored identification of the realization's ends with
+   the carried surfaces), never free fields; topological certificates are necessary but collectively blind.
+   backing: `map_killerGauge_ker_negBorBInc`, `ker_transportedBInc_gaugeσ`, `doubleKillerGeoMem_L`, `map_blockCongr_cylLagrangian`
+
+7. `wadm-sqop-gauge-w2-filter-vacuous` [refutation]
+   WAdm/hwu (wuW2 P14 P23 = 0) is a w₂(W) = 0 filter — discharging a CharPairWProvider certifies genuine
+   Pin⁺-admissibility of the bordisms it covers. FALSE (W-A re-gate round 5, Fable, 2026-07-14,
+   kernel-checked): LefschetzWuDatum.sqOp is a FREE field constrained by neither nondeg nor dimeq; zeroing
+   it makes both Wu classes vanish (wuClass_zeroSq) and hwu hold for EVERY W whatever its honest w₂
+   (wuW2_zeroSq), so a full CharPairWProvider is dischargeable from bare Lefschetz-duality data with ZERO
+   Steenrod input (charPairWProviderOfDuality) — bordisms with genuine w₂(W) ≠ 0 pass. Same
+   free-field-plus-self-referential-condition shape as round-3's free L; infects CharPairBorTied.P14/P23/hwu
+   directly (the Bor carries copies). RULE: sqOp (and mu/cup) must be PINNED to the substrate's actual
+   relative Steenrod tower (relSq1/relSq2) / fundamental-class evaluation / cup product — definitionally or
+   via certificate fields — in both WAdm and the Bor's own data; no provider instantiation is acceptable
+   without the pin (cylinderP14/P23's sqOp := relSq1/relSq2 is the precedent).
+   backing: `wuW2_zeroSq`, `wuClass_zeroSq`
+
+8. `taylor-leg-end-convention-trap` [structural_forcing]
    The structured-bordism Taylor extension leg ('boundary classes bounding in the membrane Q have vanishing
    enhancement') can be stated as a PLAIN joint sum q_σ ⊕ q_τ, or σ-side-only, vanishing on
    ker(H₁(∂Q)→H₁(Q)). FALSE (W-A re-gate, Fable round 2, 2026-07-13 — both failures fire through the HONEST
@@ -90,24 +136,24 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    all 12 TangentialData ops instantiate and Brown-invariance is forced (Lagrangian + Gauss factorization).
    backing: `no_plain_end_pairing_of_cylinder`, `not_cylinder_plain_pairing_of_odd_value`, `not_cylinder_bor_of_invariant_ne`
 
-6. `nogo_lattice_arf_not_sigma8` [refutation]
+9. `nogo_lattice_arf_not_sigma8` [refutation]
    The lattice Arf bridge σ/8 ≡ Arf(q̄) mod 2 — deriving Rokhlin mod-16 from the intersection FORM alone.
    FALSE: E₈ has Arf(q̄)=0 but σ/8=1; Rokhlin mod-16 is irreducibly geometric (a characteristic-SURFACE Arf,
    not the lattice Arf). Kills Phase 5q.C and any form-only mod-16 shortcut.
    backing: `lattice_arf_bridge_refuted`
 
-7. `mfd-equals-H1-dead-end` [structural_forcing]
+10. `mfd-equals-H1-dead-end` [structural_forcing]
    The `Mfd := H¹` tangential-data construction yields a genuine ℤ/16 / ker=⊥. FALSE: a datum whose
    structure-reversal (revStr) is trivial is FORCED 2-torsion, never order-16.
    backing: `dataBordism_two_torsion_of_revStr_trivial`
 
-8. `synthetic-grade-ker-bot-nogo` [structural_forcing]
+11. `synthetic-grade-ker-bot-nogo` [structural_forcing]
    ker(abkGrade)=⊥ / card≤16 UNCONDITIONALLY for ANY free-per-manifold grade. FALSE: the ℝP⁴ grade-0 witness
    (w₂=0, [ℝP⁴]≠0∈Ω₄^O) has no unoriented null-bordism, so the free grade is never injective. ker=⊥ requires
    the grade TIED to the structure (the GM carrier), never a better proof on a free-grade datum.
    backing: `dataBordism_two_torsion_of_revStr_trivial`
 
-9. `synthetic-smith-map-to-tied-carrier` [structural_forcing]
+12. `synthetic-smith-map-to-tied-carrier` [structural_forcing]
    The Smith map into the 5q.H TIED carrier pinPlusGMTiedData can be built SYNTHETICALLY — map every
    neighbor class [M,σ] to [emptySM, (σ,0)] and transport the grade (the smithDataHom shortcut). FALSE
    (kernel-forced): the tie htie (reduce16to2 grade16 = swTotalNe) forces every tied structure on an EMPTY
@@ -117,7 +163,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    map; the geometric Smith map into the tied carrier is irreducibly geometric (N1b).
    backing: `gmTiedStr_grade_even_of_isEmpty`, `gmTiedStr_empty_grade16_ne_one`
 
-10. `5qH-injectivity-routes-all-equal-one-completeness-prop` [structural_forcing]
+13. `5qH-injectivity-routes-all-equal-one-completeness-prop` [structural_forcing]
    The three 5q.H injectivity routes — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle:
    ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), Smith-LES (smith_inflow_z16) — are DISTINCT open nodes
    worth route-shopping between. FALSE (kernel-checked equivalence): all three reduce canonically to the ONE
@@ -128,7 +174,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    from-below: N1a+N1b+N1c+N2 per ASSEMBLY_GAP_MAP_20260712).
    backing: `spin_range_ge_of_grade0_inj`, `omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`, `grade0_bounds_of_thom`
 
-11. `5qH-fg-ek-over-Z-blocked` [refutation]
+14. `5qH-fg-ek-over-Z-blocked` [refutation]
    The mod-2 Erdős–Kaplansky finiteness forcing (SingularUCFinite: self-duality forces finite dimension)
    transports to ℤ — in particular dualization over ℤ stays in the f.g./countable size class, so PD + UCT
    self-duality would force H²(M;ℤ) finitely generated. FALSE: the ℤ-dual of the COUNTABLE free module ℕ →₀
@@ -139,7 +185,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    Lit-Search/Phase-5qH/FG_via_PD_duality_forcing_verdict_20260712.md.
    backing: `dual_blowup_not_finite`, `not_finite_baerSpecker`
 
-12. `genuine-gm-carrier-eight-torsion` [refutation]
+15. `genuine-gm-carrier-eight-torsion` [refutation]
    The genuine ℤ/16 lives directly on the thin GM carrier: DataBordismGrp(pinPlusGMData) ≃+ ZMod 16. FALSE:
    pinPlusGMData's bordism relation records ONLY the mod-8 Brown grade (q.brown ∈ ZMod 8), so
    cylinder-doubling makes every class 8-torsion (pinPlusGMData_eight_torsion: 8•x=0) ⟹
@@ -153,6 +199,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
 -/
 import SKEFTHawking.FGDualityNoGo
 import SKEFTHawking.NonHausdorffBordismCollapse
+import SKEFTHawking.PinPlusCharPairGeoRealizationGate
 import SKEFTHawking.PinPlusCompTorsorNoGo
 import SKEFTHawking.PinPlusGMDataZ16
 import SKEFTHawking.PinPlusGMWitness
@@ -194,6 +241,30 @@ alias nogo_ktNonSplit_false := SKEFTHawking.PinPlusKTVacuityGateWD.ktNonSplit_fa
 
 /-- NO-GO [`free-membrane-kernel-kills-nonsplit`] — do NOT re-derive. FALSE: The as-built CharPair carrier (Bor with the membrane kernel L carried as a FREE Submodule field, the geometric membrane Q deferred) supports the KT §5 non-split content — KTNonSplit (8•[ℝP⁴] ≠ 0) is open/dischargeable on it. Backing refutation: `SKEFTHawking.PinPlusKTVacuityGateWD.kt_binders_unsatisfiable`. -/
 alias nogo_kt_binders_unsatisfiable := SKEFTHawking.PinPlusKTVacuityGateWD.kt_binders_unsatisfiable
+
+/-- NO-GO [`tied-carrier-inhabitation-equiv-free`] — do NOT re-derive. FALSE: The membrane-tied CharPairBorTied (L = ker mem.bInc) is a strictly finer bordism-witness class than the refuted free-L CharPairBor — the tie alone filters geometrically-unrealizable Lagrangians. Backing refutation: `SKEFTHawking.PinPlusCharPairGeoRealizationGate.charPairBorTied_nonempty_iff_free`. -/
+alias nogo_charPairBorTied_nonempty_iff_free := SKEFTHawking.PinPlusCharPairGeoRealizationGate.charPairBorTied_nonempty_iff_free
+
+/-- NO-GO [`tied-carrier-inhabitation-equiv-free`] — do NOT re-derive. FALSE: The membrane-tied CharPairBorTied (L = ker mem.bInc) is a strictly finer bordism-witness class than the refuted free-L CharPairBor — the tie alone filters geometrically-unrealizable Lagrangians. Backing refutation: `SKEFTHawking.PinPlusCharPairGeoRealizationGate.jointLagrangian_top`. -/
+alias nogo_jointLagrangian_top := SKEFTHawking.PinPlusCharPairGeoRealizationGate.jointLagrangian_top
+
+/-- NO-GO [`realization-seam-basis-gauge-launders-e8`] — do NOT re-derive. FALSE: Topological certificates on GeoRealizationData (T2, compactness, closed-embedding ι, dimension, membrane-in-W) suffice to make GeoMembrane.ofGeometric honest — a fully-certified realization cannot carry the e₈ kernel. Backing refutation: `SKEFTHawking.PinPlusCharPairGeoRealizationGate.map_killerGauge_ker_negBorBInc`. -/
+alias nogo_map_killerGauge_ker_negBorBInc := SKEFTHawking.PinPlusCharPairGeoRealizationGate.map_killerGauge_ker_negBorBInc
+
+/-- NO-GO [`realization-seam-basis-gauge-launders-e8`] — do NOT re-derive. FALSE: Topological certificates on GeoRealizationData (T2, compactness, closed-embedding ι, dimension, membrane-in-W) suffice to make GeoMembrane.ofGeometric honest — a fully-certified realization cannot carry the e₈ kernel. Backing refutation: `SKEFTHawking.PinPlusCharPairGeoRealizationGate.ker_transportedBInc_gaugeσ`. -/
+alias nogo_ker_transportedBInc_gaugeσ := SKEFTHawking.PinPlusCharPairGeoRealizationGate.ker_transportedBInc_gaugeσ
+
+/-- NO-GO [`realization-seam-basis-gauge-launders-e8`] — do NOT re-derive. FALSE: Topological certificates on GeoRealizationData (T2, compactness, closed-embedding ι, dimension, membrane-in-W) suffice to make GeoMembrane.ofGeometric honest — a fully-certified realization cannot carry the e₈ kernel. Backing refutation: `SKEFTHawking.PinPlusCharPairGeoRealizationGate.doubleKillerGeoMem_L`. -/
+alias nogo_doubleKillerGeoMem_L := SKEFTHawking.PinPlusCharPairGeoRealizationGate.doubleKillerGeoMem_L
+
+/-- NO-GO [`realization-seam-basis-gauge-launders-e8`] — do NOT re-derive. FALSE: Topological certificates on GeoRealizationData (T2, compactness, closed-embedding ι, dimension, membrane-in-W) suffice to make GeoMembrane.ofGeometric honest — a fully-certified realization cannot carry the e₈ kernel. Backing refutation: `SKEFTHawking.PinPlusCharPairGeoRealizationGate.map_blockCongr_cylLagrangian`. -/
+alias nogo_map_blockCongr_cylLagrangian := SKEFTHawking.PinPlusCharPairGeoRealizationGate.map_blockCongr_cylLagrangian
+
+/-- NO-GO [`wadm-sqop-gauge-w2-filter-vacuous`] — do NOT re-derive. FALSE: WAdm/hwu (wuW2 P14 P23 = 0) is a w₂(W) = 0 filter — discharging a CharPairWProvider certifies genuine Pin⁺-admissibility of the bordisms it covers. Backing refutation: `SKEFTHawking.PinPlusCharPairGeoRealizationGate.wuW2_zeroSq`. -/
+alias nogo_wuW2_zeroSq := SKEFTHawking.PinPlusCharPairGeoRealizationGate.wuW2_zeroSq
+
+/-- NO-GO [`wadm-sqop-gauge-w2-filter-vacuous`] — do NOT re-derive. FALSE: WAdm/hwu (wuW2 P14 P23 = 0) is a w₂(W) = 0 filter — discharging a CharPairWProvider certifies genuine Pin⁺-admissibility of the bordisms it covers. Backing refutation: `SKEFTHawking.PinPlusCharPairGeoRealizationGate.wuClass_zeroSq`. -/
+alias nogo_wuClass_zeroSq := SKEFTHawking.PinPlusCharPairGeoRealizationGate.wuClass_zeroSq
 
 /-- NO-GO [`taylor-leg-end-convention-trap`] — do NOT re-derive. FALSE: The structured-bordism Taylor extension leg ('boundary classes bounding in the membrane Q have vanishing enhancement') can be stated as a PLAIN joint sum q_σ ⊕ q_τ, or σ-side-only, vanishing on ker(H₁(∂Q)→H₁(Q)). Backing refutation: `SKEFTHawking.PinPlusTaylorConventionNoGo.no_plain_end_pairing_of_cylinder`. -/
 alias nogo_no_plain_end_pairing_of_cylinder := SKEFTHawking.PinPlusTaylorConventionNoGo.no_plain_end_pairing_of_cylinder
