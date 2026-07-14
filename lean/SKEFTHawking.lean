@@ -4408,6 +4408,7 @@ import SKEFTHawking.SingularPairLESNaturality
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderCollar
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderWu
 import SKEFTHawking.PinPlusCharPairGeoRealizationGate
+import SKEFTHawking.PinPlusWAdmPinned
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
