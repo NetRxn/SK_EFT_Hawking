@@ -99,8 +99,12 @@ def _run_extraction_locked() -> None:
             timeout=1800,
         )
         if result.returncode != 0:
-            logger.error("ExtractDeps.lean failed:\n%s", result.stderr[:500])
-            raise RuntimeError(f"ExtractDeps failed: {result.stderr[:500]}")
+            # Lean reports import/elaboration errors on STDOUT (stderr is often
+            # empty) — surface both, or failures look blank (2026-07-13 lesson:
+            # a missing-olean error hid on stdout through repeated sync failures).
+            err = (result.stderr or "").strip() or (result.stdout or "").strip()
+            logger.error("ExtractDeps.lean failed:\n%s", err[:500])
+            raise RuntimeError(f"ExtractDeps failed: {err[:500]}")
 
         # Phase 5v Wave 9e: Lean sometimes prints compile warnings
         # (e.g. "String.trim has been deprecated") to stdout before the
