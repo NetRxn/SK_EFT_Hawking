@@ -120,7 +120,16 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    directly (the Bor carries copies). RULE: sqOp (and mu/cup) must be PINNED to the substrate's actual
    relative Steenrod tower (relSq1/relSq2) / fundamental-class evaluation / cup product — definitionally or
    via certificate fields — in both WAdm and the Bor's own data; no provider instantiation is acceptable
-   without the pin (cylinderP14/P23's sqOp := relSq1/relSq2 is the precedent).
+   without the pin (cylinderP14/P23's sqOp := relSq1/relSq2 is the precedent). UPDATE (arm-4 round 2,
+   2026-07-14): the PIN LAYER LANDED (PinPlusWAdmPinned) — certificate pins on ALL THREE fields (the audit
+   found cup/mu are a FAITHFULNESS hole even though nondeg blocks zeroing them: a perfect-but-wrong pairing
+   decouples wuClass from the manifold's actual w2): LefschetzWuPinned14/23 + WAdmPinned +
+   CharPairWProviderPinned + CharPairBorTiedPinned. Discrimination kernel-checked both ways:
+   sqOpPinned23_zeroSq_iff (the zeroSq shortcut satisfies the pin IFF the honest relSq = 0),
+   not_sqOpPinned23_ofLefschetzNoWu (the F3 provider engine hands out UN-pinnable data wherever relSq2 !=
+   0), cylinderP14_pinned/cylinderP23_pinned (honest non-vacuity witnesses),
+   CharPairBorTiedPinned.wuFunctional23_honest (a pinned Bor's hwu is the genuine w2-condition). Remaining:
+   fold the pinned refinement into the live carrier's Bor consumption (post basis-tie merge), then re-gate.
    backing: `wuW2_zeroSq`, `wuClass_zeroSq`
 
 8. `taylor-leg-end-convention-trap` [structural_forcing]
