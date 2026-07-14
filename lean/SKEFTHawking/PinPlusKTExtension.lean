@@ -12,6 +12,17 @@ certified membrane `Q` with `L` COMPUTED as `ker(H₁(∂Q)→H₁(Q))` + the re
 (the frozen v4 item-2/3 spec), after which the layer must be RE-GATED. `KTKernelCard` additionally
 quantifies over hchar-untethered classes (`fakeRP4RankZero`) — restate after the (n,q,surf) tie.
 
+✅ CARRIER FIX LANDED (W-A Round 4, `PinPlusCharPairMembraneTie.lean`, 2026-07-13): the tied
+`CharPairBorTied` COMPUTES `L = ker mem.bInc` from a certified membrane's boundary-inclusion — no free
+submodule. The acceptance test PASSES: the honest cylinder/doubling membrane's fold-kernel is the
+anti-diagonal (`cylGeoMembrane`, `diagonal_mem_cylGeoMembrane`), which KILLS the un-reversed double
+(`untwisted_double_fails_taylor_on_cyl`: `2·q₄ ≠ 0` on the diagonal) while the e₈-graph Lagrangian is
+excluded (`cylKernel_ne_e8`/`e8_omits_diagonal`: it omits the diagonal, so it is not a geometric
+kernel). The honest `negBor` inverse law SURVIVES (`charPairNegBorTied`) and the anti-collapse engine
+descends (`CharPairBorTied.brown_eq`). ⚠ The binders below are STILL NOT discharged: the RE-GATE
+(migrating `pinPlusCharPairData`'s `Bor` onto the tied form + the geometric realization of `bInc` by
+`Q ⊆ W` via the rel-Lefschetz/PD tower + the `(n,q,surf)` tie) comes FIRST.
+
 Route: KT-LMS 151 §5 (`Lit-Search/Phase-5qH/KT_LMS_Section5_completeness_proof_extracted.md`,
 Thm 5.2 / Lemma 5.3 / §6) on the FAITHFUL carrier `G := T2DataBordismGrp (pinPlusCharPairData prov)`.
 The DONE surjection `charPairBrown : G →+ ZMod 8` (`RP4CharPairWitness.charPairBrown_surjective`) is
