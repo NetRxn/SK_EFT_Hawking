@@ -44,10 +44,12 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_deci
 import Mathlib
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderWu
 import SKEFTHawking.SingularCohomologyHomotopy
+import SKEFTHawking.SingularRelativeKroneckerEquiv
 
 open scoped Manifold
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinder
 open SKEFTHawking.SingularCohomologyMod2
+open SKEFTHawking.SingularRelativeCohomologyMod2 SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularCohomologyHomotopy
 open SKEFTHawking.SingularProdContractibleInt
 open SKEFTHawking.SingularHomotopyInvariance
@@ -113,5 +115,47 @@ theorem cylinder_findimAbs23
   cylinder_findimAbs_of_base 1 hM
 
 end
+
+/-! ## §3. `findimRel` reduced from relative cohomology to relative HOMOLOGY (field UC)
+
+The relative Kronecker pairing over `ℤ/2` is a *perfect* pairing with no finite-dimensionality
+hypothesis (`SingularRelativeKroneckerEquiv.relKroneckerHEquiv` — the field universal-coefficient
+equivalence `H^{n}(W,∂W) ≃ₗ (H_n(W,∂W))^*`). So relative-cohomology finite-dimensionality (the
+`findimRel` numeric) reduces cleanly to relative-**homology** finite-dimensionality — the more
+tractable side (the mod-2 homology pair-LES is fully exact in-tree, `SingularPairLES`, and the
+homology ⊔-additivity `SingularDisjointUnionHn` gives `H_*(∂W)`). This reduction is dimension- and
+pair-agnostic. -/
+
+/-- **Relative-cohomology finite-dimensionality from relative-homology finite-dimensionality**
+(mod-2 field universal coefficients): `H^{N+1}(X,S)` is finite-dimensional as soon as `H_{N+1}(X,S)`
+is, because `relKroneckerHEquiv` identifies `H^{N+1}(X,S)` with the (finite-dimensional) dual of
+`H_{N+1}(X,S)`. The general `findimRel`-shrinking lemma: relative cohomology → relative homology. -/
+theorem finiteDimensional_relativeCohomology_of_relativeHomology {X : TopCat} {S : Set ↑X} (N : ℕ)
+    (h : FiniteDimensional (ZMod 2) (RelativeHomology (X := X) S (N + 1))) :
+    FiniteDimensional (ZMod 2) (RelativeCohomology (X := X) S (N + 1)) := by
+  haveI := h
+  exact (SingularRelativeKroneckerEquiv.relKroneckerHEquiv S N).symm.finiteDimensional
+
+section CylinderRel
+
+variable {M : Type} [TopologicalSpace M] [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+
+/-- **`findimRel` for the cylinder `(1,4)` leg**, reduced to `H_4(W,∂W) < ∞` (relative homology). -/
+theorem cylinder_findimRel14
+    (h : FiniteDimensional (ZMod 2)
+      (RelativeHomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 4)) :
+    FiniteDimensional (ZMod 2)
+      (RelativeCohomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 4) :=
+  finiteDimensional_relativeCohomology_of_relativeHomology 3 h
+
+/-- **`findimRel` for the cylinder `(2,3)` leg**, reduced to `H_3(W,∂W) < ∞` (relative homology). -/
+theorem cylinder_findimRel23
+    (h : FiniteDimensional (ZMod 2)
+      (RelativeHomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 3)) :
+    FiniteDimensional (ZMod 2)
+      (RelativeCohomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 3) :=
+  finiteDimensional_relativeCohomology_of_relativeHomology 2 h
+
+end CylinderRel
 
 end SKEFTHawking.PoincareLefschetzRelFundClassCylinderNumerics
