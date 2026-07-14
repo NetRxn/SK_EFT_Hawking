@@ -143,7 +143,70 @@ noncomputable def doubleKillerBor (prov : CharPairWProvider (𝓡 4) 0) :
       (⊤ : Submodule (ZMod 2) (Fin 0 → ZMod 2)))
     hmeta.1 hmeta.2
 
-/-! ## §5. THE REFUTATION — `8 • [ℝP⁴] = 0` for every provider -/
+/-! ## §4.5. THE ROUND-4.5 SELF-ATTACK — the exploit REPLAYS on the membrane-TIED carrier through
+a SYNTHETIC `bInc` (the honest-intermediate residual, named and kernel-encoded by the lead)
+
+The arm-4 re-gate migration moved the live carrier onto `CharPairBorTied` (`L = ker mem.bInc`,
+never a free submodule). That kills the round-3 "write any submodule into `L`" exploit shape — but
+`GeoMembrane.bInc` is itself still an un-tethered linear-map field (the geometric realization by an
+actual compact-T2 membrane `Q ⊆ W` is the named in-flight obligation), and the `graphSub`-defining
+map has kernel EXACTLY the e₈ graph. So the exploit replays through a synthetic membrane datum:
+the tie NARROWS the hole to precisely the realization obligation — it does not close it. The §5
+refutations below therefore PERSIST on the migrated carrier (riding `doubleKillerBorTied`), the
+W-D binders stay FROZEN, and the discharge path is the realization strengthening
+(`GeoRealizationData`/`GeoMembrane.ofGeometric` — the wt2 seam) followed by the fresh re-gate. -/
+
+/-- **The SYNTHETIC doubling `bInc`**: `graphBInc phiLin` (whose kernel is the e₈ graph,
+definitionally) transported to the `sumStr`-reindexed doubling domain — `negBorBInc`'s shape with
+the honest fold `cylBd` replaced by the e₈ graph map. Type-checks because `bInc` is (still)
+un-tethered to an actual membrane. -/
+noncomputable def doubleKillerBInc :
+    (Fin (4 + 4) ⊕ Fin 0 → ZMod 2) →ₗ[ZMod 2] (Fin 4 → ZMod 2) :=
+  (graphBInc phiLin).comp
+    ((LinearMap.funLeft (ZMod 2) (ZMod 2) (finSumFinEquiv (m := 4) (n := 4))).comp
+      (LinearMap.funLeft (ZMod 2) (ZMod 2) (Sum.inl : Fin (4 + 4) → Fin (4 + 4) ⊕ Fin 0)))
+
+/-- The synthetic `bInc`'s computed kernel is exactly the free exploit's Lagrangian — the
+reindexed e₈ graph, block-summed with the empty τ-end. -/
+theorem doubleKillerBInc_ker :
+    LinearMap.ker doubleKillerBInc
+      = blockSub ((graphSub phiLin).comap (LinearMap.funLeft (ZMod 2) (ZMod 2) finSumFinEquiv))
+          (⊤ : Submodule (ZMod 2) (Fin 0 → ZMod 2)) := by
+  ext x
+  rw [LinearMap.mem_ker, mem_blockSub, Submodule.mem_comap, graphSub, LinearMap.mem_ker]
+  constructor
+  · intro h; exact ⟨h, Submodule.mem_top⟩
+  · intro h; exact h.1
+
+/-- **The exploit witness, REPLAYED on the tied carrier**: a full `CharPairBorTied` on
+`doublingBordism s4M` between `sumStr σ₄ σ₄` (UN-reversed!) and the empty structure, via the
+synthetic e₈ membrane datum. The metabolic content is verbatim `doubleKillerBor`'s. -/
+noncomputable def doubleKillerBorTied (prov : CharPairWProvider (𝓡 4) 0) :
+    CharPairBorTied (doublingBordism s4M)
+      (charPairSumStr sig4.toCharPairStr sig4.toCharPairStr) charPairEmptyStr :=
+  have hSe : IsMetabolic (Z4Quadratic.neg (stdQuadratic 0))
+      (⊤ : Submodule (ZMod 2) (Fin 0 → ZMod 2)) :=
+    ⟨fun l _ => by rw [Subsingleton.elim l 0]; exact (Z4Quadratic.neg (stdQuadratic 0)).q_zero,
+     fun _ _ => Submodule.mem_top⟩
+  have hSs : IsMetabolic (charPairSumStr sig4.toCharPairStr sig4.toCharPairStr).q
+      ((graphSub phiLin).comap (LinearMap.funLeft (ZMod 2) (ZMod 2) finSumFinEquiv)) :=
+    L44_metabolic.reindex finSumFinEquiv
+  have hmeta := hSs.orthSum hSe
+  mkCharPairBorTied prov (doublingBordism s4M)
+    (by
+      haveI : T2Space rp4SM.M := rp4CharPair.toCharPairStr.t2
+      exact inferInstanceAs
+        (T2Space (((rp4SM.M ⊕ rp4SM.M) ⊕ (rp4SM.M ⊕ rp4SM.M)) × Set.Icc (0 : ℝ) 1)))
+    ⟨_, doubleKillerBInc⟩
+    (by show TaylorLegVanishes _ _ (LinearMap.ker doubleKillerBInc)
+        rw [doubleKillerBInc_ker]; exact hmeta.1)
+    (by show JointLagrangian _ _ (LinearMap.ker doubleKillerBInc)
+        rw [doubleKillerBInc_ker]; exact hmeta.2)
+
+/-! ## §5. THE REFUTATION — `8 • [ℝP⁴] = 0` for every provider (PERSISTS post-migration: the
+statements are over the LIVE carrier — tied since the arm-4 re-gate migration — and ride the
+§4.5 synthetic replay; the free-shape exploit `doubleKillerBor` (§4) is retained as the round-3
+registry record) -/
 
 /-- **`k₀ = 8 • [ℝP⁴] = 0` on the as-built carrier, for EVERY W-admissibility provider** — the
 W-D non-split bit is FALSE, with zero geometric input beyond the in-tree witnesses. -/
@@ -157,7 +220,7 @@ theorem ktKernelRep_eq_zero (prov : CharPairWProvider (𝓡 4) 0) :
         ⟨s4M.sum s4M, charPairBundledSumStr sig4 sig4⟩
       = (0 : T2DataBordismGrp (pinPlusCharPairData prov)) :=
     T2DataBordismGrp.mk_eq_of_bordant _
-      ⟨doublingBordism s4M, hT2W, ⟨⟨doubleKillerBor prov⟩⟩⟩
+      ⟨doublingBordism s4M, hT2W, ⟨⟨doubleKillerBorTied prov⟩⟩⟩
   show (8 : ℕ) • ktRP4Class prov = 0
   have h84 : (8 : ℕ) • ktRP4Class prov
       = (4 : ℕ) • ktRP4Class prov + (4 : ℕ) • ktRP4Class prov := by

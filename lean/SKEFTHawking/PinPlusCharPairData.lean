@@ -963,6 +963,427 @@ noncomputable def charPairAddBor (prov : CharPairWProvider I k)
         exact inferInstanceAs (T2Space (b₁.W ⊕ b₂.W)))
     _ hmeta.1 hmeta.2
 
+/-! ## §9.6. THE MEMBRANE TIE — `L` COMPUTED from a certified membrane datum (W-A round 4;
+in-carrier since the arm-4 re-gate migration)
+
+The W-D vacuity gate round 3 (`free-membrane-kernel-kills-nonsplit`, kernel-checked) proved that a
+FREE `L : Submodule` field converts the KT §5 non-split content into falsehood: the e₈-graph
+Lagrangian inhabits a `CharPairBor` on the UN-reversed double. The frozen v4 design (§2 items 2–4)
+always required `L = ker(H₁(∂Q;ℤ/2) → H₁(Q;ℤ/2))` of a certified membrane `Q ⊆ W` (Q is a compact
+3-manifold-with-boundary inside the 5-dim bordism W; ∂Q = Σ_σ ⊔ Σ_τ). `CharPairBorTied` replaces
+the free field with a `GeoMembrane` datum whose kernel COMPUTES `L`. The free `CharPairBor` (§5)
+is RETAINED as the registry-backing shape — the live carrier (§11) consumes only the tied form.
+
+⚠ HONEST-INTERMEDIATE (documented residual, self-attacked in `PinPlusKTVacuityGateWD`): `bInc` is
+carried as the membrane's TRANSPORTED boundary-inclusion; until the geometric realization (an
+actual compact-T2 `Q`, via the H₁ ⊔-additivity + `H₁(Σ) ≃ Fin n` basis transport — in flight) is a
+required field, a SYNTHETIC `bInc` can still realize any submodule as its kernel
+(`doubleKillerBorTied`). The tie narrows the exploit surface to exactly that named obligation — it
+does NOT yet close it. The W-D binders remain FROZEN pending the realization strengthening. -/
+
+/-- **A certified membrane's transported `H₁` boundary-inclusion datum** (design §2 item 2). `bInc`
+is the `H₁(∂Q;ℤ/2) → H₁(Q;ℤ/2)` map of a genuine characteristic membrane `Q`, transported through
+the boundary identification `∂Q = Σ_σ ⊔ Σ_τ` and the enhancement bases to
+`(Fin nσ ⊕ Fin nτ → ZMod 2) → (Fin mid → ZMod 2)` (`mid = dim H₁(Q;ℤ/2)`). The Taylor-leg submodule
+`L` is COMPUTED as its kernel — NOT a free field. (Geometric realization of `bInc` by an actual
+`Q ⊆ W` is the named in-flight obligation; see the §9.6 header.) -/
+structure GeoMembrane {nσ nτ : ℕ} (qσ : Z4Quadratic (Fin nσ)) (qτ : Z4Quadratic (Fin nτ)) where
+  /-- `mid = dim H₁(Q;ℤ/2)`. -/
+  mid : ℕ
+  /-- the transported boundary-inclusion `H₁(∂Q) → H₁(Q)`. -/
+  bInc : (Fin nσ ⊕ Fin nτ → ZMod 2) →ₗ[ZMod 2] (Fin mid → ZMod 2)
+
+/-- **The COMPUTED Taylor-leg submodule** `L = ker(H₁(∂Q) → H₁(Q))`. -/
+def GeoMembrane.L {nσ nτ : ℕ} {qσ : Z4Quadratic (Fin nσ)} {qτ : Z4Quadratic (Fin nτ)}
+    (m : GeoMembrane qσ qτ) : Submodule (ZMod 2) (Fin nσ ⊕ Fin nτ → ZMod 2) :=
+  LinearMap.ker m.bInc
+
+/-- **The honest cylinder/doubling membrane** `Q = Σ × [0,1]`: its transported boundary-inclusion is
+the fold map `cylBd` (both cylinder ends include homotopically as `id`), kernel = the anti-diagonal
+`cylLagrangian`. -/
+def cylGeoMembrane {n : ℕ} (q : Z4Quadratic (Fin n)) : GeoMembrane q q :=
+  ⟨n, cylBd n⟩
+
+@[simp] theorem cylGeoMembrane_L {n : ℕ} (q : Z4Quadratic (Fin n)) :
+    (cylGeoMembrane q).L = cylLagrangian n := rfl
+
+/-- **The honest cylinder membrane's kernel CONTAINS the diagonal** (the half-lives–half-dies
+boundary classes) — the geometric signature the e₈ graph lacks. -/
+theorem diagonal_mem_cylGeoMembrane {n : ℕ} (q : Z4Quadratic (Fin n)) (a : Fin n → ZMod 2) :
+    Sum.elim a a ∈ (cylGeoMembrane q).L := by
+  rw [cylGeoMembrane_L, mem_cylLagrangian_iff]; rfl
+
+/-! ### The kernel-transport toolkit — every op membrane is a `ker_comp` chain of the base folds -/
+
+/-- Post-composing with a linear equivalence does not change the kernel. -/
+theorem ker_equivComp {R M N P : Type*} [Ring R] [AddCommGroup M] [AddCommGroup N] [AddCommGroup P]
+    [Module R M] [Module R N] [Module R P] (e : N ≃ₗ[R] P) (f : M →ₗ[R] N) :
+    LinearMap.ker (e.toLinearMap ∘ₗ f) = LinearMap.ker f := by
+  ext x
+  simp [LinearMap.mem_ker]
+
+/-- **The block-diagonal map** `f₁ ⊞ f₂` on `Sum`-indexed function spaces — the transported
+`H₁`-boundary-inclusion of a disjoint union of membranes `Q₁ ⊔ Q₂`. -/
+def blockMap {ι₁ ι₂ κ₁ κ₂ : Type*}
+    (f₁ : (ι₁ → ZMod 2) →ₗ[ZMod 2] (κ₁ → ZMod 2))
+    (f₂ : (ι₂ → ZMod 2) →ₗ[ZMod 2] (κ₂ → ZMod 2)) :
+    (ι₁ ⊕ ι₂ → ZMod 2) →ₗ[ZMod 2] (κ₁ ⊕ κ₂ → ZMod 2) where
+  toFun x := Sum.elim (f₁ fun i => x (Sum.inl i)) (f₂ fun i => x (Sum.inr i))
+  map_add' a b := by
+    funext j
+    cases j with
+    | inl j =>
+        show f₁ (fun i => (a + b) (Sum.inl i)) j = f₁ (fun i => a (Sum.inl i)) j
+          + f₁ (fun i => b (Sum.inl i)) j
+        rw [show (fun i => (a + b) (Sum.inl i))
+          = (fun i => a (Sum.inl i)) + (fun i => b (Sum.inl i)) from rfl, map_add]
+        rfl
+    | inr j =>
+        show f₂ (fun i => (a + b) (Sum.inr i)) j = f₂ (fun i => a (Sum.inr i)) j
+          + f₂ (fun i => b (Sum.inr i)) j
+        rw [show (fun i => (a + b) (Sum.inr i))
+          = (fun i => a (Sum.inr i)) + (fun i => b (Sum.inr i)) from rfl, map_add]
+        rfl
+  map_smul' c a := by
+    funext j
+    cases j with
+    | inl j =>
+        show f₁ (fun i => (c • a) (Sum.inl i)) j = (c • f₁ (fun i => a (Sum.inl i))) j
+        rw [show (fun i => (c • a) (Sum.inl i)) = c • (fun i => a (Sum.inl i)) from rfl, map_smul]
+    | inr j =>
+        show f₂ (fun i => (c • a) (Sum.inr i)) j = (c • f₂ (fun i => a (Sum.inr i))) j
+        rw [show (fun i => (c • a) (Sum.inr i)) = c • (fun i => a (Sum.inr i)) from rfl, map_smul]
+
+/-- **The block map's kernel is the block submodule of the kernels** — `H₁` of a disjoint union of
+membranes kills a boundary class iff each membrane kills its block. -/
+theorem ker_blockMap {ι₁ ι₂ κ₁ κ₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂]
+    [DecidableEq ι₂]
+    (f₁ : (ι₁ → ZMod 2) →ₗ[ZMod 2] (κ₁ → ZMod 2))
+    (f₂ : (ι₂ → ZMod 2) →ₗ[ZMod 2] (κ₂ → ZMod 2)) :
+    LinearMap.ker (blockMap f₁ f₂) = blockSub (LinearMap.ker f₁) (LinearMap.ker f₂) := by
+  ext x
+  rw [LinearMap.mem_ker, mem_blockSub, LinearMap.mem_ker, LinearMap.mem_ker]
+  constructor
+  · intro h
+    exact ⟨funext fun j => congrFun h (Sum.inl j), funext fun j => congrFun h (Sum.inr j)⟩
+  · rintro ⟨h₁, h₂⟩
+    funext j
+    cases j with
+    | inl j => exact congrFun h₁ j
+    | inr j => exact congrFun h₂ j
+
+/-! ### The tied `Bor` structure — anti-collapse descends unchanged -/
+
+/-- **The MEMBRANE-TIED characteristic-pair bordism datum** (design v4 §2 `Bor` items 0–4, with the
+item-2/3 membrane TIE). Identical to `CharPairBor` EXCEPT the free `L` field is replaced by a
+`GeoMembrane` datum `mem`; the Taylor leg / Lagrangian are stated over the COMPUTED kernel
+`mem.L = ker(H₁∂ → H₁Q)`. No free submodule can be supplied — the e₈-graph exploit is forced into
+a synthetic `bInc` (the named, self-attacked residual; see the §9.6 header). -/
+structure CharPairBorTied {s t : SingularManifold PUnit k I}
+    (b : Bordism (I.prod (𝓡∂ 1)) s t) (σ : CharPairStr I s) (τ : CharPairStr I t) : Type where
+  /-- item 0 (▲A-2): the bordism carrier is Hausdorff (the T2-refined relation). -/
+  hWT2 : T2Space b.W
+  /-- item 1: the `(1,4)` Lefschetz–Wu datum. -/
+  P14 : LefschetzWuDatum (TopCat.of b.W) ((I.prod (𝓡∂ 1)).boundary b.W) 1 4 5
+  /-- item 1: the `(2,3)` Lefschetz–Wu datum. -/
+  P23 : LefschetzWuDatum (TopCat.of b.W) ((I.prod (𝓡∂ 1)).boundary b.W) 2 3 5
+  /-- item 1: W-admissibility `w₂(W) = 0`. -/
+  hwu : wuW2 P14 P23 = 0
+  /-- item 2/3 (THE TIE): the certified membrane whose boundary-inclusion COMPUTES `L`. -/
+  mem : GeoMembrane σ.q τ.q
+  /-- item 4 (▲A-1): the τ-end-negated joint enhancement vanishes on the COMPUTED kernel `mem.L`. -/
+  htaylor : TaylorLegVanishes σ.q τ.q mem.L
+  /-- `mem.L` is Lagrangian for the joint polar form (`half-lives-half-dies`). -/
+  hlag : JointLagrangian σ.q τ.q mem.L
+
+/-- **The tied `Bor` STILL forces grade equality of the ends** — the anti-collapse engine descends
+UNCHANGED onto the computed kernel `mem.L`, so the computed grade `abk8 := brown ∘ q` remains a
+bordism invariant. -/
+theorem CharPairBorTied.brown_eq {s t : SingularManifold PUnit k I}
+    {b : Bordism (I.prod (𝓡∂ 1)) s t} {σ : CharPairStr I s} {τ : CharPairStr I t}
+    (β : CharPairBorTied b σ τ) : σ.q.brown = τ.q.brown :=
+  brown_eq_of_taylorLeg_lagrangian σ.q τ.q β.mem.L β.htaylor β.hlag
+
+/-- Forget the tie: a tied datum yields the free-`L` shape (registry-backing direction only —
+the carrier never consumes this). -/
+def CharPairBorTied.toFree {s t : SingularManifold PUnit k I}
+    {b : Bordism (I.prod (𝓡∂ 1)) s t} {σ : CharPairStr I s} {τ : CharPairStr I t}
+    (β : CharPairBorTied b σ τ) : CharPairBor b σ τ :=
+  ⟨β.hWT2, β.P14, β.P23, β.hwu, β.mem.L, β.htaylor, β.hlag⟩
+
+/-- Assemble a tied `CharPairBor` from the concretely-buildable data + item 1 from the provider. -/
+def mkCharPairBorTied (prov : CharPairWProvider I k) {s t : SingularManifold PUnit k I}
+    (b : Bordism (I.prod (𝓡∂ 1)) s t) {σ : CharPairStr I s} {τ : CharPairStr I t}
+    (hWT2 : T2Space b.W) (mem : GeoMembrane σ.q τ.q)
+    (htaylor : TaylorLegVanishes σ.q τ.q mem.L) (hlag : JointLagrangian σ.q τ.q mem.L) :
+    CharPairBorTied b σ τ where
+  hWT2 := hWT2
+  P14 := (prov.wadm b).P14
+  P23 := (prov.wadm b).P23
+  hwu := (prov.wadm b).hwu
+  mem := mem
+  htaylor := htaylor
+  hlag := hlag
+
+/-! ### The eight tied op witnesses — each membrane is the honest geometric one, its kernel a
+`ker_comp` chain (symm/rev inherit the input's membrane; cyl/neg/comm/unit/assoc are cylinders
+with reparametrized folds; add is the disjoint union `Q₁ ⊔ Q₂`). -/
+
+/-- **`cylBor` instantiates on the tied form** (the discriminator): membrane `Σ × [0,1]`,
+`bInc = cylBd` (fold), computed kernel = the anti-diagonal. -/
+noncomputable def charPairCylBorTied (prov : CharPairWProvider I k) {s : SingularManifold PUnit k I}
+    (σ : CharPairStr I s) : CharPairBorTied (reflCylinder s) σ σ :=
+  mkCharPairBorTied prov (reflCylinder s)
+    (by haveI := σ.t2; exact inferInstanceAs (T2Space (s.M × Set.Icc (0 : ℝ) 1)))
+    (cylGeoMembrane σ.q) (taylorLeg_cyl σ.q) (lagrangian_cyl σ.q)
+
+/-- **The doubling membrane's boundary-inclusion** on the `sumStr`-reindexed doubling domain:
+fold the two ends after de-reindexing (`finSumFinEquiv`), ignore the empty τ-block. -/
+def negBorBInc (n : ℕ) : (Fin (n + n) ⊕ Fin 0 → ZMod 2) →ₗ[ZMod 2] (Fin n → ZMod 2) :=
+  (cylBd n).comp ((LinearMap.funLeft (ZMod 2) (ZMod 2) (finSumFinEquiv (m := n) (n := n))).comp
+    (LinearMap.funLeft (ZMod 2) (ZMod 2) (Sum.inl : Fin (n + n) → Fin (n + n) ⊕ Fin 0)))
+
+/-- **The doubling membrane's COMPUTED kernel is the reindexed anti-diagonal** — genuinely the
+fold-kernel of a cylinder membrane. -/
+theorem negBorBInc_ker (n : ℕ) :
+    LinearMap.ker (negBorBInc n)
+      = blockSub ((cylLagrangian n).comap (LinearMap.funLeft (ZMod 2) (ZMod 2) finSumFinEquiv))
+          (⊤ : Submodule (ZMod 2) (Fin 0 → ZMod 2)) := by
+  ext x
+  rw [LinearMap.mem_ker, mem_blockSub, Submodule.mem_comap, cylLagrangian, LinearMap.mem_ker]
+  constructor
+  · intro h; exact ⟨h, Submodule.mem_top⟩
+  · intro h; exact h.1
+
+/-- **`negBor` instantiates on the tied form** — the honest inverse law `(M,σ̄) ⊔ (M,σ) → ∅`
+survives: the membrane is `Σ × [0,1]`, its computed fold-kernel the anti-diagonal, on which the
+τ-end-NEGATED joint form vanishes. The end-negation is exactly what the un-reversed double lacks. -/
+noncomputable def charPairNegBorTied (prov : CharPairWProvider I k) {s : SingularManifold PUnit k I}
+    (σ : CharPairStr I s) :
+    CharPairBorTied (doublingBordism s) (charPairSumStr (charPairRevStr σ) σ) charPairEmptyStr :=
+  have hSe : IsMetabolic (Z4Quadratic.neg (stdQuadratic 0))
+      (⊤ : Submodule (ZMod 2) (Fin 0 → ZMod 2)) :=
+    ⟨fun l _ => by rw [Subsingleton.elim l 0]; exact (Z4Quadratic.neg (stdQuadratic 0)).q_zero,
+     fun _ _ => Submodule.mem_top⟩
+  have hSs : IsMetabolic (charPairSumStr (charPairRevStr σ) σ).q
+      ((cylLagrangian σ.n).comap (LinearMap.funLeft (ZMod 2) (ZMod 2) finSumFinEquiv)) :=
+    (diag_metabolic (neg σ.q) σ.q (fun a => neg_add_cancel _) rfl).reindex finSumFinEquiv
+  have hmeta := hSs.orthSum hSe
+  mkCharPairBorTied prov (doublingBordism s)
+    (by haveI := σ.t2; exact inferInstanceAs (T2Space (s.M × Set.Icc (0 : ℝ) 1)))
+    ⟨_, negBorBInc σ.n⟩
+    (by show TaylorLegVanishes _ _ (LinearMap.ker (negBorBInc σ.n)); rw [negBorBInc_ker]
+        exact hmeta.1)
+    (by show JointLagrangian _ _ (LinearMap.ker (negBorBInc σ.n)); rw [negBorBInc_ker]
+        exact hmeta.2)
+
+/-- **`revBor` instantiates on the tied form** — end-reversal transports with the SAME membrane
+(`bInc` is rank-indexed, independent of the enhancement). -/
+def charPairRevBorTied {s t : SingularManifold PUnit k I} {b : Bordism (I.prod (𝓡∂ 1)) s t}
+    {σ : CharPairStr I s} {τ : CharPairStr I t} (β : CharPairBorTied b σ τ) :
+    CharPairBorTied b (charPairRevStr σ) (charPairRevStr τ) where
+  hWT2 := β.hWT2
+  P14 := β.P14
+  P23 := β.P23
+  hwu := β.hwu
+  mem := ⟨β.mem.mid, β.mem.bInc⟩
+  htaylor := by
+    intro l hl
+    show (jointEnhancement (neg σ.q) (neg τ.q)).q l = 0
+    rw [jointEnhancement_neg_q, β.htaylor l hl, neg_zero]
+  hlag := by
+    intro v hv
+    refine β.hlag v (fun l hl => ?_)
+    have hvl := hv l hl
+    rwa [show (jointEnhancement (charPairRevStr σ).q (charPairRevStr τ).q).B
+        = (jointEnhancement σ.q τ.q).B from jointEnhancement_neg_B σ.q τ.q] at hvl
+
+/-- **`symmBor` instantiates on the tied form** — bordism reversal swaps the ends; the membrane is
+the SAME `Q`, its boundary identification precomposed with the `Sum.swap` regrouping
+(`bInc ∘ funLeft sumComm`; kernel = the comap, by `ker_comp`). -/
+def charPairSymmBorTied {s t : SingularManifold PUnit k I} {b : Bordism (I.prod (𝓡∂ 1)) s t}
+    {σ : CharPairStr I s} {τ : CharPairStr I t} (β : CharPairBorTied b σ τ) :
+    CharPairBorTied b.symm τ σ :=
+  let fr := charPairSymmBor β.toFree
+  { hWT2 := fr.hWT2
+    P14 := fr.P14
+    P23 := fr.P23
+    hwu := fr.hwu
+    mem := ⟨β.mem.mid, β.mem.bInc ∘ₗ
+      LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumComm (Fin σ.n) (Fin τ.n))⟩
+    htaylor := by
+      show TaylorLegVanishes _ _ (LinearMap.ker (β.mem.bInc ∘ₗ
+        LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumComm (Fin σ.n) (Fin τ.n))))
+      rw [LinearMap.ker_comp]
+      exact fr.htaylor
+    hlag := by
+      show JointLagrangian _ _ (LinearMap.ker (β.mem.bInc ∘ₗ
+        LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumComm (Fin σ.n) (Fin τ.n))))
+      rw [LinearMap.ker_comp]
+      exact fr.hlag }
+
+/-- The reparametrized-cylinder membrane's transported fold: the `graphSub`-defining map itself
+(`graphSub φ` IS `ker` of this map, definitionally). -/
+def graphBInc {ι₁ ι₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂] [DecidableEq ι₂]
+    (φ : (ι₁ → ZMod 2) ≃ₗ[ZMod 2] (ι₂ → ZMod 2)) :
+    (ι₁ ⊕ ι₂ → ZMod 2) →ₗ[ZMod 2] (ι₂ → ZMod 2) :=
+  φ.toLinearMap ∘ₗ LinearMap.funLeft (ZMod 2) (ZMod 2) (Sum.inl : ι₁ → ι₁ ⊕ ι₂)
+    - LinearMap.funLeft (ZMod 2) (ZMod 2) (Sum.inr : ι₂ → ι₁ ⊕ ι₂)
+
+@[simp] theorem ker_graphBInc {ι₁ ι₂ : Type*} [Fintype ι₁] [DecidableEq ι₁] [Fintype ι₂]
+    [DecidableEq ι₂] (φ : (ι₁ → ZMod 2) ≃ₗ[ZMod 2] (ι₂ → ZMod 2)) :
+    LinearMap.ker (graphBInc φ) = graphSub φ := rfl
+
+/-- **`unitBor` instantiates on the tied form** — the padding-cylinder membrane; its fold is the
+`graphBInc` of the empty-block reindex isometry, kernel = the reindex graph (definitionally). -/
+noncomputable def charPairUnitBorTied (prov : CharPairWProvider I k)
+    {s : SingularManifold PUnit k I} (σ : CharPairStr I s) :
+    CharPairBorTied (mapCylinder (Diffeomorph.sumEmpty I s.M k (M' := emptySM.M))
+      (by funext z; cases z with | inl m => rfl | inr e => exact (IsEmpty.false e).elim))
+      (charPairSumStr σ charPairEmptyStr) σ :=
+  have hqS : (charPairSumStr σ charPairEmptyStr).q
+      = σ.q.reindex ((Equiv.sumEmpty (Fin σ.n) (Fin 0)).symm.trans finSumFinEquiv) := by
+    show (Z4Quadratic.orthSum σ.q (stdQuadratic 0)).reindex finSumFinEquiv = _
+    rw [orthSum_stdZero_eq, reindex_trans]
+  have hmeta : IsMetabolic (jointEnhancement (charPairSumStr σ charPairEmptyStr).q σ.q)
+      (graphSub (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2)
+        ((((Equiv.sumEmpty (Fin σ.n) (Fin 0)).symm.trans finSumFinEquiv).symm.trans
+          (Equiv.refl (Fin σ.n))).symm))) := by
+    rw [hqS]
+    exact commonReindex_metabolic σ.q ((Equiv.sumEmpty (Fin σ.n) (Fin 0)).symm.trans finSumFinEquiv)
+      (Equiv.refl (Fin σ.n))
+  mkCharPairBorTied prov _
+    (by haveI := σ.t2
+        haveI : T2Space (emptySM (X := PUnit) (k := k) (I := I)).M := ⟨fun x => isEmptyElim x⟩
+        exact inferInstanceAs (T2Space ((s.M ⊕ emptySM.M) × Set.Icc (0 : ℝ) 1)))
+    ⟨_, graphBInc (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2)
+      ((((Equiv.sumEmpty (Fin σ.n) (Fin 0)).symm.trans finSumFinEquiv).symm.trans
+        (Equiv.refl (Fin σ.n))).symm))⟩
+    hmeta.1 hmeta.2
+
+/-- **`assocBor` instantiates on the tied form** — the sumAssoc-cylinder membrane; fold =
+`graphBInc` of the common-reindex isometry, kernel = its graph (definitionally). -/
+noncomputable def charPairAssocBorTied (prov : CharPairWProvider I k)
+    {s t u : SingularManifold PUnit k I} (σ : CharPairStr I s) (τ : CharPairStr I t)
+    (ρ : CharPairStr I u) :
+    CharPairBorTied (mapCylinder (Diffeomorph.sumAssoc I s.M k t.M u.M)
+      (by funext w; rcases w with (w | w) | w <;> rfl))
+      (charPairSumStr (charPairSumStr σ τ) ρ) (charPairSumStr σ (charPairSumStr τ ρ)) := by
+  have hqS : (charPairSumStr (charPairSumStr σ τ) ρ).q
+      = (Z4Quadratic.orthSum (orthSum σ.q τ.q) ρ.q).reindex
+          ((Equiv.sumCongr finSumFinEquiv (Equiv.refl (Fin ρ.n))).trans finSumFinEquiv) := by
+    show (Z4Quadratic.orthSum ((orthSum σ.q τ.q).reindex finSumFinEquiv) ρ.q).reindex
+        finSumFinEquiv = _
+    conv_lhs => rw [← reindex_refl ρ.q]
+    rw [orthSum_reindex, reindex_trans]
+  have hqT : (charPairSumStr σ (charPairSumStr τ ρ)).q
+      = (Z4Quadratic.orthSum (orthSum σ.q τ.q) ρ.q).reindex
+          ((Equiv.sumAssoc (Fin σ.n) (Fin τ.n) (Fin ρ.n)).trans
+            ((Equiv.sumCongr (Equiv.refl (Fin σ.n)) finSumFinEquiv).trans finSumFinEquiv)) := by
+    show (Z4Quadratic.orthSum σ.q ((orthSum τ.q ρ.q).reindex finSumFinEquiv)).reindex
+        finSumFinEquiv = _
+    conv_lhs => rw [← reindex_refl σ.q]
+    rw [orthSum_reindex, reindex_trans, orthSum_assoc_eq, reindex_trans]
+  have hmeta := commonReindex_metabolic (Z4Quadratic.orthSum (orthSum σ.q τ.q) ρ.q)
+    ((Equiv.sumCongr finSumFinEquiv (Equiv.refl (Fin ρ.n))).trans finSumFinEquiv)
+    ((Equiv.sumAssoc (Fin σ.n) (Fin τ.n) (Fin ρ.n)).trans
+      ((Equiv.sumCongr (Equiv.refl (Fin σ.n)) finSumFinEquiv).trans finSumFinEquiv))
+  rw [← hqS, ← hqT] at hmeta
+  exact mkCharPairBorTied prov _
+    (by haveI := σ.t2; haveI := τ.t2; haveI := ρ.t2
+        exact inferInstanceAs (T2Space (((s.M ⊕ t.M) ⊕ u.M) × Set.Icc (0 : ℝ) 1)))
+    ⟨_, graphBInc _⟩
+    hmeta.1 hmeta.2
+
+/-- **`commBor` instantiates on the tied form** — the swap-cylinder membrane; fold = the swap
+graph's map precomposed with the block de-reindex, post-composed into `Fin`-indexed `H₁(Q)`
+(`ker_equivComp` + `ker_comp`). -/
+noncomputable def charPairCommBorTied (prov : CharPairWProvider I k)
+    {s t : SingularManifold PUnit k I} (σ : CharPairStr I s) (τ : CharPairStr I t) :
+    CharPairBorTied (mapCylinder (Diffeomorph.sumComm I s.M k t.M)
+      (by funext z; rcases z with z | z <;> rfl)) (charPairSumStr σ τ) (charPairSumStr τ σ) :=
+  have hbase : IsMetabolic
+      (Z4Quadratic.orthSum (orthSum σ.q τ.q) (Z4Quadratic.neg (orthSum τ.q σ.q)))
+      (graphSub (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2)
+        (Equiv.sumComm (Fin σ.n) (Fin τ.n)).symm)) := by
+    rw [orthSum_comm_eq σ.q τ.q]
+    exact reindexGraph_metabolic (orthSum σ.q τ.q) (Equiv.sumComm (Fin σ.n) (Fin τ.n))
+  have hform : jointEnhancement (charPairSumStr σ τ).q (charPairSumStr τ σ).q
+      = (Z4Quadratic.orthSum (orthSum σ.q τ.q) (Z4Quadratic.neg (orthSum τ.q σ.q))).reindex
+          (Equiv.sumCongr finSumFinEquiv finSumFinEquiv) :=
+    jointEnhancement_reindex (orthSum σ.q τ.q) (orthSum τ.q σ.q) finSumFinEquiv finSumFinEquiv
+  have hmeta : IsMetabolic (jointEnhancement (charPairSumStr σ τ).q (charPairSumStr τ σ).q)
+      ((graphSub (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2)
+        (Equiv.sumComm (Fin σ.n) (Fin τ.n)).symm)).comap
+        (LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumCongr finSumFinEquiv finSumFinEquiv))) := by
+    rw [hform]; exact hbase.reindex (Equiv.sumCongr finSumFinEquiv finSumFinEquiv)
+  mkCharPairBorTied prov _
+    (by haveI := σ.t2; haveI := τ.t2
+        exact inferInstanceAs (T2Space ((s.M ⊕ t.M) × Set.Icc (0 : ℝ) 1)))
+    ⟨τ.n + σ.n, (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2)
+        (finSumFinEquiv (m := τ.n) (n := σ.n)).symm).toLinearMap ∘ₗ
+      (graphBInc (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2)
+        (Equiv.sumComm (Fin σ.n) (Fin τ.n)).symm) ∘ₗ
+        LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumCongr finSumFinEquiv finSumFinEquiv))⟩
+    (by show TaylorLegVanishes _ _ (LinearMap.ker _)
+        rw [ker_equivComp, LinearMap.ker_comp, ker_graphBInc]
+        exact hmeta.1)
+    (by show JointLagrangian _ _ (LinearMap.ker _)
+        rw [ker_equivComp, LinearMap.ker_comp, ker_graphBInc]
+        exact hmeta.2)
+
+/-- **`addBor` instantiates on the tied form** — the disjoint-union membrane `Q₁ ⊔ Q₂`: fold =
+the block map of the two inputs' `bInc`s, regrouped (`sumSumSumComm`), de-reindexed, and
+post-composed into `Fin`-indexed `H₁(Q₁ ⊔ Q₂)` (`ker_blockMap` + two `ker_comp`s +
+`ker_equivComp`). -/
+noncomputable def charPairAddBorTied (prov : CharPairWProvider I k)
+    {s₁ t₁ s₂ t₂ : SingularManifold PUnit k I}
+    {b₁ : Bordism (I.prod (𝓡∂ 1)) s₁ t₁} {b₂ : Bordism (I.prod (𝓡∂ 1)) s₂ t₂}
+    {σ₁ : CharPairStr I s₁} {τ₁ : CharPairStr I t₁} {σ₂ : CharPairStr I s₂} {τ₂ : CharPairStr I t₂}
+    (β₁ : CharPairBorTied b₁ σ₁ τ₁) (β₂ : CharPairBorTied b₂ σ₂ τ₂) :
+    CharPairBorTied (b₁.add b₂) (charPairSumStr σ₁ σ₂) (charPairSumStr τ₁ τ₂) :=
+  have hblock : IsMetabolic
+      (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q (Z4Quadratic.neg τ₁.q))
+        (Z4Quadratic.orthSum σ₂.q (Z4Quadratic.neg τ₂.q))) (blockSub β₁.mem.L β₂.mem.L) :=
+    IsMetabolic.orthSum ⟨β₁.htaylor, β₁.hlag⟩ ⟨β₂.htaylor, β₂.hlag⟩
+  have hregroup : Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q σ₂.q)
+        (Z4Quadratic.neg (Z4Quadratic.orthSum τ₁.q τ₂.q))
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q (Z4Quadratic.neg τ₁.q))
+          (Z4Quadratic.orthSum σ₂.q (Z4Quadratic.neg τ₂.q))).reindex
+          (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n)) := by
+    rw [neg_orthSum, orthSum_regroup]
+  have hbase' := hblock.reindex (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n))
+  have hbase : IsMetabolic (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q σ₂.q)
+        (Z4Quadratic.neg (Z4Quadratic.orthSum τ₁.q τ₂.q)))
+      ((blockSub β₁.mem.L β₂.mem.L).comap (LinearMap.funLeft (ZMod 2) (ZMod 2)
+        (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n)))) := by
+    rw [hregroup]; exact hbase'
+  have hform : jointEnhancement (charPairSumStr σ₁ σ₂).q (charPairSumStr τ₁ τ₂).q
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q σ₂.q)
+          (Z4Quadratic.neg (Z4Quadratic.orthSum τ₁.q τ₂.q))).reindex
+          (Equiv.sumCongr finSumFinEquiv finSumFinEquiv) :=
+    jointEnhancement_reindex (orthSum σ₁.q σ₂.q) (orthSum τ₁.q τ₂.q) finSumFinEquiv finSumFinEquiv
+  have hmeta : IsMetabolic (jointEnhancement (charPairSumStr σ₁ σ₂).q (charPairSumStr τ₁ τ₂).q)
+      (((blockSub β₁.mem.L β₂.mem.L).comap (LinearMap.funLeft (ZMod 2) (ZMod 2)
+          (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n)))).comap
+        (LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumCongr finSumFinEquiv finSumFinEquiv))) := by
+    rw [hform]; exact hbase.reindex (Equiv.sumCongr finSumFinEquiv finSumFinEquiv)
+  mkCharPairBorTied prov _
+    (by haveI : T2Space b₁.W := β₁.hWT2; haveI : T2Space b₂.W := β₂.hWT2
+        exact inferInstanceAs (T2Space (b₁.W ⊕ b₂.W)))
+    ⟨β₁.mem.mid + β₂.mem.mid, (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2)
+        (finSumFinEquiv (m := β₁.mem.mid) (n := β₂.mem.mid)).symm).toLinearMap ∘ₗ
+      (blockMap β₁.mem.bInc β₂.mem.bInc ∘ₗ
+        (LinearMap.funLeft (ZMod 2) (ZMod 2)
+          (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n)) ∘ₗ
+          LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumCongr finSumFinEquiv finSumFinEquiv)))⟩
+    (by show TaylorLegVanishes _ _ (LinearMap.ker _)
+        rw [ker_equivComp, LinearMap.ker_comp, ker_blockMap]
+        exact hmeta.1)
+    (by show JointLagrangian _ _ (LinearMap.ker _)
+        rw [ker_equivComp, LinearMap.ker_comp, ker_blockMap]
+        exact hmeta.2)
+
 /-! ## §10. THE UNIVERSE-UNBLOCK PROOF-OF-CONCEPT (the payoff of the `TangentialData.{u,v}` generalization)
 
 The §5 friction, resolved. The frozen v4 `Mfd` table lists BOTH `cert : PinPlusCertK I s`
@@ -1060,27 +1481,31 @@ noncomputable def charPairBundledRevStr {s : SingularManifold PUnit k I}
   embSmooth := σ.embSmooth
   embInj := σ.embInj
 
-/-- **THE GATE-FROZEN FAITHFUL Pin⁺ INSTANCE** — the certified characteristic-pair carrier as a
-`T2TangentialData.{0,1}` (bundled `Type 1` `Mfd`, carrier at universe 0). `Bor` is the certified
-`CharPairBor` on the underlying algebraic cores (`ULift`ed to `Type 1`); the twelve op witnesses are
-the §6/§8/§9/§9.5/§11 constructions. Parameterized by the W-admissibility provider `prov` (wt3's
-rel-Lefschetz/Wu tower, a hypothesis — no axiom). The group `T2DataBordismGrp (pinPlusCharPairData prov)`
-is an `AddCommGroup` by the §2 replay. -/
+/-- **THE FAITHFUL Pin⁺ INSTANCE, MEMBRANE-TIED** (the arm-4 re-gate migration) — the certified
+characteristic-pair carrier as a `T2TangentialData.{0,1}` (bundled `Type 1` `Mfd`, carrier at
+universe 0). `Bor` is the **membrane-TIED** `CharPairBorTied` on the underlying algebraic cores
+(`ULift`ed to `Type 1`): the Taylor-leg kernel `L` is COMPUTED from each op's membrane datum,
+never carried free (no-go `free-membrane-kernel-kills-nonsplit`). The twelve op witnesses are the
+§6/§9.6/§11 constructions. Parameterized by the W-admissibility provider `prov` (a hypothesis —
+no axiom). The group `T2DataBordismGrp (pinPlusCharPairData prov)` is an `AddCommGroup` by the §2
+replay. ⚠ The `bInc` geometric-realization residual (§9.6 header) is self-attacked in
+`PinPlusKTVacuityGateWD`; the W-D binders remain FROZEN until the realization strengthening. -/
 noncomputable def pinPlusCharPairData (prov : CharPairWProvider I k) :
     T2TangentialData.{0, 1} PUnit k I where
   Mfd := charPairBundledMfd (k := k) (I := I)
-  Bor := fun b σ τ => ULift.{1} (CharPairBor b σ.toCharPairStr τ.toCharPairStr)
+  Bor := fun b σ τ => ULift.{1} (CharPairBorTied b σ.toCharPairStr τ.toCharPairStr)
   emptyStr := charPairBundledEmpty
   sumStr := fun σ τ => charPairBundledSumStr σ τ
-  cylBor := fun σ => ⟨charPairCylBor prov σ.toCharPairStr⟩
-  addBor := fun β₁ β₂ => ⟨charPairAddBor prov β₁.down β₂.down⟩
-  symmBor := fun β => ⟨charPairSymmBor β.down⟩
-  commBor := fun σ τ => ⟨charPairCommBor prov σ.toCharPairStr τ.toCharPairStr⟩
-  assocBor := fun σ τ ρ => ⟨charPairAssocBor prov σ.toCharPairStr τ.toCharPairStr ρ.toCharPairStr⟩
-  unitBor := fun σ => ⟨charPairUnitBor prov σ.toCharPairStr⟩
+  cylBor := fun σ => ⟨charPairCylBorTied prov σ.toCharPairStr⟩
+  addBor := fun β₁ β₂ => ⟨charPairAddBorTied prov β₁.down β₂.down⟩
+  symmBor := fun β => ⟨charPairSymmBorTied β.down⟩
+  commBor := fun σ τ => ⟨charPairCommBorTied prov σ.toCharPairStr τ.toCharPairStr⟩
+  assocBor := fun σ τ ρ =>
+    ⟨charPairAssocBorTied prov σ.toCharPairStr τ.toCharPairStr ρ.toCharPairStr⟩
+  unitBor := fun σ => ⟨charPairUnitBorTied prov σ.toCharPairStr⟩
   revStr := fun σ => charPairBundledRevStr σ
-  revBor := fun β => ⟨charPairRevBor β.down⟩
-  negBor := fun σ => ⟨charPairNegBor prov σ.toCharPairStr⟩
+  revBor := fun β => ⟨charPairRevBorTied β.down⟩
+  negBor := fun σ => ⟨charPairNegBorTied prov σ.toCharPairStr⟩
   t2Str := fun m => m.toCharPairStr.t2
 
 /-- **The certified characteristic-pair bordism GROUP fires as an `AddCommGroup`** — the whole point of
@@ -1092,17 +1517,17 @@ noncomputable example (prov : CharPairWProvider I k) :
 /-! ## §12. The computed mod-8 grade `charPairBrown` (W-C's abk8 opening) -/
 
 /-- **THE COMPUTED mod-8 GRADE** `charPairBrown : Ω^{char-pair} →+ ZMod 8` — `abk8 := Brown ∘ q`,
-computed from the carried enhancement's Brown/Gauss-sum invariant. Well-defined along `Bor` because the
-frozen `CharPairBor` FORCES `brown σ.q = brown τ.q` (the anti-collapse engine
-`brown_eq_of_taylorLeg_lagrangian` via `CharPairBor.brown_eq`), so no reading-(ii) torsor collapse can
-disturb it. Additive via `sumStr = orthSum`-reindex (`reindex_brown` + `brown_orthSum`). This is W-C's
-abk8 door opened directly on the honest faithful carrier. -/
+computed from the carried enhancement's Brown/Gauss-sum invariant. Well-defined along the TIED `Bor`
+because `CharPairBorTied` FORCES `brown σ.q = brown τ.q` (the anti-collapse engine
+`brown_eq_of_taylorLeg_lagrangian` via `CharPairBorTied.brown_eq`), so no reading-(ii) torsor collapse
+can disturb it. Additive via `sumStr = orthSum`-reindex (`reindex_brown` + `brown_orthSum`). This is
+W-C's abk8 door opened directly on the honest faithful carrier. -/
 noncomputable def charPairBrown (prov : CharPairWProvider I k) :
     T2DataBordismGrp (pinPlusCharPairData prov) →+ ZMod 8 where
   toFun := Quot.lift (fun p => p.2.q.brown)
     (fun _p _q h => by
       obtain ⟨_, _, ⟨str⟩⟩ := h
-      exact CharPairBor.brown_eq str.down)
+      exact CharPairBorTied.brown_eq str.down)
   map_zero' := by show (stdQuadratic 0).brown = 0; rw [brown_stdQuadratic, Nat.cast_zero]
   map_add' := by
     intro x y

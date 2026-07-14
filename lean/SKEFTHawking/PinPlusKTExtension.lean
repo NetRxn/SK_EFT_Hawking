@@ -19,9 +19,17 @@ anti-diagonal (`cylGeoMembrane`, `diagonal_mem_cylGeoMembrane`), which KILLS the
 (`untwisted_double_fails_taylor_on_cyl`: `2·q₄ ≠ 0` on the diagonal) while the e₈-graph Lagrangian is
 excluded (`cylKernel_ne_e8`/`e8_omits_diagonal`: it omits the diagonal, so it is not a geometric
 kernel). The honest `negBor` inverse law SURVIVES (`charPairNegBorTied`) and the anti-collapse engine
-descends (`CharPairBorTied.brown_eq`). ⚠ The binders below are STILL NOT discharged: the RE-GATE
-(migrating `pinPlusCharPairData`'s `Bor` onto the tied form + the geometric realization of `bInc` by
-`Q ⊆ W` via the rel-Lefschetz/PD tower + the `(n,q,surf)` tie) comes FIRST.
+descends (`CharPairBorTied.brown_eq`).
+
+✅ RE-GATE MIGRATION LANDED (arm 4, 2026-07-14): `pinPlusCharPairData`'s `Bor` is now the TIED
+`CharPairBorTied` in-place (all eight op witnesses tied, `PinPlusCharPairData` §9.6); the free
+`CharPairBor` is retained upstream as the registry-backing shape only. ⚠ The binders below are
+STILL NOT discharged — the round-4.5 SELF-ATTACK (`PinPlusKTVacuityGateWD` §4.5,
+`doubleKillerBorTied`) replays the exploit through a SYNTHETIC `bInc` (kernel = the e₈ graph), so
+`ktNonSplit_false`/`kt_binders_unsatisfiable` PERSIST on the migrated carrier. Discharge path:
+the geometric-realization strengthening (`GeoRealizationData`/`GeoMembrane.ofGeometric` — the
+`PinPlusCharPairMembraneGeoRealization` seam) + the `(n,q,surf)` tie, then the fresh Fable
+re-gate.
 
 Route: KT-LMS 151 §5 (`Lit-Search/Phase-5qH/KT_LMS_Section5_completeness_proof_extracted.md`,
 Thm 5.2 / Lemma 5.3 / §6) on the FAITHFUL carrier `G := T2DataBordismGrp (pinPlusCharPairData prov)`.
