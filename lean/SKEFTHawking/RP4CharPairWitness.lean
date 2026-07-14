@@ -24,6 +24,11 @@ witness — collapsing the two hypothesis fields against the merged proofs (the 
 * **§4 FIRST NON-DEGENERACY.** The `ℝP⁴` class is `≠ 0` in the honest group (its grade `1 ≠ 0`) — the
   first kernel-checked non-triviality statement of the rebuilt substrate. No completeness/injectivity
   Prop is stated (those are W-D/W-E, with their own vacuity gates).
+* **§5 THE hchar KILL (arm-4 R1).** With the characteristic-surface tie `hchar` on
+  `CharPairStrBundled`, EVERY ℝP⁴ char-pair bundle's pushed-forward surface class is nonzero
+  (`rp4_bundle_surfClass_pushforward_ne_zero`: `⟨x², emb₊[Σ]⟩ = μ(x²⌣x²) = 1`), so no bundle with
+  an EMPTY characteristic surface exists on ℝP⁴ (`no_empty_surface_bundle_on_rp4`) — the closure of
+  the W-D gate's §6 rank-0 fake-class exhibit (`fakeRP4RankZero`, now uninhabitable).
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new project axiom, no
 `native_decide`, no `maxHeartbeats`.
@@ -142,5 +147,34 @@ theorem charPairBrown_rp4_ne_zero (prov : CharPairWProvider (𝓡 4) 0) :
     rw [h, map_zero]
   rw [charPairBrown_rp4_eq_one prov] at h0
   exact absurd h0 (by decide)
+
+/-! ## §5. THE hchar KILL — no empty-surface char-pair bundle exists on ℝP⁴ (arm-4 R1) -/
+
+/-- **The pushed-forward surface class of EVERY ℝP⁴ char-pair bundle is NONZERO.** Instantiate
+the bundle's `hchar` tie at `a = x²`: `⟨x², emb₊[Σ]⟩ = μ(x² ⌣ x²) = 1 ≠ 0`
+(`RP4WuAssembly.mu_cupH24_xpow2_xpow2`), so `emb₊[Σ] ≠ 0`. The characteristic-surface tie makes
+the ℝP⁴ cup-square topology bind every inhabitant — a fake class can no longer carry a surface
+whose class dies. -/
+theorem rp4_bundle_surfClass_pushforward_ne_zero (σ : CharPairStrBundled (𝓡 4) rp4SM) :
+    Homology.map (⟨σ.emb, σ.embSmooth.continuous⟩ :
+        C(↑(TopCat.of σ.surf.M), ↑(TopCat.of rp4SM.M))) 2 σ.surfClass ≠ 0 := by
+  intro h0
+  haveI : T2Space rp4SM.M := inferInstanceAs (T2Space RP4)
+  haveI : Nonempty rp4SM.M := inferInstanceAs (Nonempty RP4)
+  have h := (σ.hchar (RP4CohomologyLadder.xpow 2)).trans
+    SKEFTHawking.RP4WuAssembly.mu_cupH24_xpow2_xpow2
+  rw [h0, map_zero] at h
+  exact zero_ne_one h
+
+/-- **No ℝP⁴ char-pair bundle has an EMPTY characteristic surface** — with `Σ = ∅` the surface
+class vanishes (empty-space homology is subsingleton), so its pushforward is `0`, contradicting
+`rp4_bundle_surfClass_pushforward_ne_zero`. This is the `hchar` KILL of the W-D vacuity gate's §6
+rank-0 fake-class exhibit (`fakeRP4RankZero`): the exhibit is now UNINHABITABLE, so
+`KTKernelCard`'s quantifier no longer ranges over geometrically impossible ℝP⁴ classes. -/
+theorem no_empty_surface_bundle_on_rp4 (σ : CharPairStrBundled (𝓡 4) rp4SM)
+    (h : IsEmpty σ.surf.M) : False := by
+  haveI := h
+  exact rp4_bundle_surfClass_pushforward_ne_zero σ
+    (by rw [Subsingleton.elim σ.surfClass 0, map_zero])
 
 end SKEFTHawking.RP4CharPairWitness

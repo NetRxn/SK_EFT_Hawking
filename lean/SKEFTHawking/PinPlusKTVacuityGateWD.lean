@@ -259,52 +259,25 @@ theorem ktRP4Class_addOrderOf_dvd_eight (prov : CharPairWProvider (𝓡 4) 0) :
     addOrderOf (ktRP4Class prov) ∣ 8 :=
   addOrderOf_dvd_of_nsmul_eq_zero (ktKernelRep_eq_zero prov)
 
-/-! ## §6. SECONDARY EXHIBIT (vector b, honest-semantics finding — not kernel-refutable yet):
-the free `(n, q)` fields admit FAKE structures whose kernel membership breaks `KTKernelCard`
+/-! ## §6. SECONDARY EXHIBIT — ✅ CLOSED BY `hchar` (arm-4 R1, 2026-07-14)
 
-`CharPairStr.n`/`q` are untethered from the geometry (`hchar`/`hpolar` deferred to wt2), so the
-rank-0 enhancement is placeable on ℝP⁴ itself — a geometrically impossible char pair
-(`w₂ + w₁² = a² ≠ 0` on ℝP⁴ forces a NON-empty characteristic surface). The class below lies in
-`ker(charPairBrown)`; in honest semantics it is `∉ {0, k₀}` (its underlying manifold has
-`w₁⁴[ℝP⁴] = 1 ≠ 0`, while `0` and `k₀` have unoriented-bordism-trivial representatives — SW
-numbers are bordism invariants), so `KTKernelCard` as stated is honestly FALSE independently of
-§5. No in-tree invariant can yet separate it (that needs a manifold-side SW-number homomorphism);
-recorded as the second statement-shape defect: the kernel Props quantify over fake classes. -/
+**Historical finding (vector b, honest-semantics):** the free `(n, q)` fields admitted a FAKE
+rank-0 structure `fakeRP4RankZero` on ℝP⁴ itself — honest cert, EMPTY "characteristic surface",
+`n = 0` — a geometrically impossible char pair (`w₂ + w₁² = x² ≠ 0` on ℝP⁴ forces a NON-empty
+characteristic surface). It lay in `ker(charPairBrown)` while honestly `∉ {0, k₀}` (its underlying
+manifold has `w₁⁴[ℝP⁴] = 1 ≠ 0`), so `KTKernelCard` as stated quantified over fake classes. The
+round-5 (n, q, surf) BASIS tie did NOT exclude it (the empty surface's tie is degenerate-but-
+honest: `surfClass = 0`, `q.B = 0 = ⟨·,0⟩`).
 
-open SKEFTHawking.RP4Unconditional in
-/-- The FAKE rank-0 char-pair bundle on `ℝP⁴` — honest cert, empty "characteristic surface",
-`n = 0`. **STILL type-checks after the arm-4 round-5 (n, q, surf) BASIS TIE** (`basis`/`hpolar`/
-`surfClass`): with `n = 0` and the empty surface, the polar-form tie is degenerate-but-honest
-(`surfClass = 0`, `q.B = 0 = ⟨·,0⟩`), so the basis tie alone does NOT exclude this rank-0 fake class.
-It is excluded only by the *characteristic-surface* tie `hchar` (the ℝP⁴ pairing `μ(x² ⌣ x²) = 1`
-forces `emb₊[Σ] ≠ 0`, impossible for `surf = ∅`), which is the remaining strengthening. Until then the
-§6 finding stands at the basis-tie level. -/
-noncomputable def fakeRP4RankZero : CharPairStrBundled (𝓡 4) rp4SM where
-  toCharPairStr :=
-    { t2 := rp4CharPair.toCharPairStr.t2
-      cert := rp4_hcert
-      n := 0
-      q := stdQuadratic 0 }
-  surf := emptySM
-  surfT2 := ⟨fun x => x.elim⟩
-  emb := fun x => x.elim
-  embSmooth := fun x => isEmptyElim x
-  embInj := fun x => x.elim
-  surfClass := 0
-  basis := by
-    show _ ≃ₗ[ZMod 2] (Fin 0 → ZMod 2)
-    exact LinearEquiv.ofSubsingleton _ _
-  hpolar := fun a b => by
-    have hz : ∀ x y : Fin 0 → ZMod 2, (stdQuadratic 0).B x y = 0 :=
-      fun x y => by rw [Subsingleton.elim x 0]; exact (stdQuadratic 0).B_zero_left y
-    show (stdQuadratic 0).B _ _ = _
-    rw [hz, map_zero]
-
-/-- The fake class is a `charPairBrown`-kernel element (rank 0 ⟹ grade 0), so `KTKernelCard`
-asserts it equals `0` or `k₀` — both honestly false (see section docstring). -/
-theorem fakeRP4RankZero_in_kernel (prov : CharPairWProvider (𝓡 4) 0) :
-    charPairBrown prov
-      (T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM, fakeRP4RankZero⟩) = 0 :=
-  charPairBrown_of_rank_zero prov ⟨rp4SM, fakeRP4RankZero⟩ rfl
+**The closure:** the arm-4 R1 **characteristic-surface tie `hchar`**
+(`⟨a, emb₊[Σ]⟩ = μ(a ⌣ a)`, `Nonempty`-guarded, on `CharPairStrBundled`) makes the exhibit
+UNINHABITABLE — `fakeRP4RankZero` no longer type-checks (it cannot supply `hchar`), and this is a
+THEOREM, not just a failed elaboration: `RP4CharPairWitness.rp4_bundle_surfClass_pushforward_ne_zero`
+(`⟨x², emb₊[Σ]⟩ = μ(x²⌣x²) = 1` forces `emb₊[Σ] ≠ 0` for EVERY ℝP⁴ bundle) and its corollary
+`RP4CharPairWitness.no_empty_surface_bundle_on_rp4` (`Σ = ∅ ⟹ False`). The kernel Props no longer
+quantify over empty-surface fakes on ℝP⁴; the fake def and its kernel-membership record are removed
+with this closure. (The §5 SYNTHETIC-`bInc` refutations are UNAFFECTED — `doubleKillerBorTied`
+rides honest sum-witnesses, which now carry `hchar` compositionally; the W-D binders stay FROZEN on
+the `bInc` geometric-realization obligation, §4.5.) -/
 
 end SKEFTHawking.PinPlusKTVacuityGateWD

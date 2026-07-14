@@ -71,4 +71,18 @@ theorem wuClass2_eq_xpow2 :
   revert m c
   decide
 
+/-- **The cup-square functional collapses onto `x²`** — for every `a ∈ H²(ℝP⁴;ℤ/2)`,
+`μ(a ⌣ a) = μ(a ⌣ x²)`: on the rank-1 `H²` (`a = c • x²`), `c² = c` over `ℤ/2` absorbs the
+quadratic/linear mismatch (the `wuClass2_eq_xpow2` pattern — this is the Wu relation at
+`v₂ = x²`, restated pointwise). The bridge from the abstract `hchar` cup-square form to the
+`hchar_pairing` `⌣ x²` form on `ℝP⁴`. -/
+theorem mu_cupH24_self_eq_cupH24_xpow2 (a : Cohomology (TopCat.of RP4) 2) :
+    (poincareDual4Mid_of_closed (M := RP4)).mu (cupH24 a a)
+      = (poincareDual4Mid_of_closed (M := RP4)).mu (cupH24 a (xpow 2)) := by
+  obtain ⟨c, rfl⟩ := cohomology_eq_smul_xpow (by norm_num) a
+  simp only [map_smul, LinearMap.smul_apply, smul_eq_mul]
+  generalize (poincareDual4Mid_of_closed (M := RP4)).mu (cupH24 (xpow 2) (xpow 2)) = m
+  revert m c
+  decide
+
 end SKEFTHawking.RP4WuAssembly

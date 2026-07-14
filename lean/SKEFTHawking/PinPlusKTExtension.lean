@@ -10,7 +10,10 @@ field), `KTNonSplit` is FALSE for every provider (`ktNonSplit_false`: the e₈-g
 SURVIVES the carrier fix; do NOT attempt to discharge the binders until `CharPairBor` carries the
 certified membrane `Q` with `L` COMPUTED as `ker(H₁(∂Q)→H₁(Q))` + the relative characteristic tie
 (the frozen v4 item-2/3 spec), after which the layer must be RE-GATED. `KTKernelCard` additionally
-quantifies over hchar-untethered classes (`fakeRP4RankZero`) — restate after the (n,q,surf) tie.
+quantified over hchar-untethered classes (`fakeRP4RankZero`) — ✅ CLOSED (arm-4 R1, 2026-07-14): the
+`hchar` characteristic-surface tie landed on `CharPairStrBundled`; the fake exhibit is uninhabitable
+(`RP4CharPairWitness.no_empty_surface_bundle_on_rp4`, backed by
+`rp4_bundle_surfClass_pushforward_ne_zero`).
 
 ✅ CARRIER FIX LANDED (W-A Round 4, `PinPlusCharPairMembraneTie.lean`, 2026-07-13): the tied
 `CharPairBorTied` COMPUTES `L = ker mem.bInc` from a certified membrane's boundary-inclusion — no free
