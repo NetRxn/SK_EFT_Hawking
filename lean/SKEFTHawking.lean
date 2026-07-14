@@ -4415,6 +4415,7 @@ import SKEFTHawking.PinPlusCylinderWAdmPinned
 import SKEFTHawking.SingularKroneckerBasisBridge
 import SKEFTHawking.PinPlusCharPairGeoRealizationGate
 import SKEFTHawking.PinPlusWAdmPinned
+import SKEFTHawking.PinPlusCharPairRealizationTied
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
