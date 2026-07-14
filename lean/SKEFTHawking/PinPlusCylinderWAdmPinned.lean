@@ -19,9 +19,14 @@ The structure's FIELDS are exactly the arc's honestly-open residuals; everything
   `findimAbs` numerics are DERIVED from these via
   `PoincareLefschetzRelFundClassCylinderNumerics.cylinder_findimAbs14/23` (the contractible-factor
   collapse) — the residual-shrinking win folded in: `findimAbs` is an `M`-side input here.
-* `findimRel14`/`findimRel23`, `nondeg14`/`nondeg23`, `dimeq14`/`dimeq23` — the three PL-duality
-  numerics NOT yet in-tree-reducible (cohomology pair-LES exactness / pair-suspension iso / `M`'s
-  own Poincaré-duality pairing walls; see `…CylinderNumerics`). Named as explicit parameters.
+* `findimRelHom14`/`findimRelHom23` — relative-**homology** finite-dimensionality `H_4(W,∂W)`,
+  `H_3(W,∂W) < ∞`; the `findimRel` *cohomology* numeric is DERIVED from these via the field-UC
+  reduction `cylinder_findimRel14/23` (the mod-2 relative Kronecker pairing is perfect,
+  finite-dim-free). The residual is moved to the more tractable homology side (mod-2 homology
+  pair-LES is fully exact in-tree). A second residual-shrinking win folded in.
+* `nondeg14`/`nondeg23`, `dimeq14`/`dimeq23` — the two PL-duality numerics NOT yet in-tree-reducible
+  (`M`'s own Poincaré-duality pairing / the pair-suspension iso walls; see `…CylinderNumerics`).
+  Named as explicit parameters.
 * `hwu` — the **Wu obstruction** vanishing `wuW2 P14 P23 = 0` (the `v₂(W) = v₁(W)²` computation, a
   separate deep arc). Named, not forced.
 * `hdet` — the **Wall-2 slab determinedness** `determinedByPoints 5 (interiorSlab M)` (the
@@ -84,9 +89,11 @@ structure CylinderWAdmPinned (M : Type) [TopologicalSpace M] [T2Space M] [Compac
   findimM1 : FiniteDimensional (ZMod 2) (Cohomology (TopCat.of M) 1)
   /-- `b_2(M) < ∞` — feeds the `(2,3)` `findimAbs` via the contractible-factor collapse. -/
   findimM2 : FiniteDimensional (ZMod 2) (Cohomology (TopCat.of M) 2)
-  /-- `(1,4)` relative finite-dimensionality `H^4(W,∂W) < ∞` (pair-LES wall). -/
-  findimRel14 : FiniteDimensional (ZMod 2)
-    (RelativeCohomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 4)
+  /-- `(1,4)` relative-HOMOLOGY finite-dimensionality `H_4(W,∂W) < ∞`; the `findimRel` *cohomology*
+  numeric is DERIVED from this via the field-UC reduction `cylinder_findimRel14`. Homology-side (the
+  more tractable residual: mod-2 homology pair-LES is fully exact in-tree). -/
+  findimRelHom14 : FiniteDimensional (ZMod 2)
+    (RelativeHomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 4)
   /-- `(1,4)` Lefschetz non-degeneracy (`M`'s PD-pairing wall). -/
   nondeg14 : Function.Injective
     ⇑((relCupH14 (X := TopCat.of (cylW M)) (S := (cylModel 2).boundary (cylW M))).compr₂
@@ -95,9 +102,10 @@ structure CylinderWAdmPinned (M : Type) [TopologicalSpace M] [T2Space M] [Compac
   dimeq14 : Module.finrank (ZMod 2) (Cohomology (TopCat.of (cylW M)) 1)
           = Module.finrank (ZMod 2)
             (RelativeCohomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 4)
-  /-- `(2,3)` relative finite-dimensionality `H^3(W,∂W) < ∞` (pair-LES wall). -/
-  findimRel23 : FiniteDimensional (ZMod 2)
-    (RelativeCohomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 3)
+  /-- `(2,3)` relative-HOMOLOGY finite-dimensionality `H_3(W,∂W) < ∞`; the `findimRel` *cohomology*
+  numeric is DERIVED via `cylinder_findimRel23`. -/
+  findimRelHom23 : FiniteDimensional (ZMod 2)
+    (RelativeHomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 3)
   /-- `(2,3)` Lefschetz non-degeneracy (`M`'s PD-pairing wall). -/
   nondeg23 : Function.Injective
     ⇑((relCupH23 (X := TopCat.of (cylW M)) (S := (cylModel 2).boundary (cylW M))).compr₂
@@ -111,8 +119,10 @@ structure CylinderWAdmPinned (M : Type) [TopologicalSpace M] [T2Space M] [Compac
   hdet : determinedByPoints (X := TopCat.of (cylW M)) (2 + 1 + 2) (interiorSlab M)
   /-- **The Wu obstruction vanishes** `wuW2 P14 P23 = 0` (`v₂(W) = v₁(W)²` computation). -/
   hwu : wuW2
-      (cylinderP14 hcls (cylinder_findimAbs14 findimM1) findimRel14 nondeg14 dimeq14)
-      (cylinderP23 hcls (cylinder_findimAbs23 findimM2) findimRel23 nondeg23 dimeq23) = 0
+      (cylinderP14 hcls (cylinder_findimAbs14 findimM1) (cylinder_findimRel14 findimRelHom14)
+        nondeg14 dimeq14)
+      (cylinderP23 hcls (cylinder_findimAbs23 findimM2) (cylinder_findimRel23 findimRelHom23)
+        nondeg23 dimeq23) = 0
 
 /-! ## §2. The derived Lefschetz–Wu data, their substrate pins, and the honest-`w₂` seam -/
 
@@ -121,22 +131,26 @@ variable (W : CylinderWAdmPinned M)
 /-- The derived `(1,4)` Lefschetz–Wu datum (with `findimAbs` fed from `M`). -/
 def CylinderWAdmPinned.P14 : LefschetzWuDatum (TopCat.of (cylW M))
     ((cylModel 2).boundary (cylW M)) 1 4 5 :=
-  cylinderP14 W.hcls (cylinder_findimAbs14 W.findimM1) W.findimRel14 W.nondeg14 W.dimeq14
+  cylinderP14 W.hcls (cylinder_findimAbs14 W.findimM1) (cylinder_findimRel14 W.findimRelHom14)
+    W.nondeg14 W.dimeq14
 
 /-- The derived `(2,3)` Lefschetz–Wu datum (with `findimAbs` fed from `M`). -/
 def CylinderWAdmPinned.P23 : LefschetzWuDatum (TopCat.of (cylW M))
     ((cylModel 2).boundary (cylW M)) 2 3 5 :=
-  cylinderP23 W.hcls (cylinder_findimAbs23 W.findimM2) W.findimRel23 W.nondeg23 W.dimeq23
+  cylinderP23 W.hcls (cylinder_findimAbs23 W.findimM2) (cylinder_findimRel23 W.findimRelHom23)
+    W.nondeg23 W.dimeq23
 
 /-- **The `(1,4)` datum is substrate-pinned** (`μ`, `cup := relCupH14`, `sqOp := relSq1` are all the
 substrate operations) — so this consolidation is a genuine `w₂` filter, not the F3 free-`sqOp`
 artefact. -/
 theorem CylinderWAdmPinned.pin14 : LefschetzWuPinned14 W.P14 :=
-  cylinderP14_pinned W.hcls (cylinder_findimAbs14 W.findimM1) W.findimRel14 W.nondeg14 W.dimeq14
+  cylinderP14_pinned W.hcls (cylinder_findimAbs14 W.findimM1) (cylinder_findimRel14 W.findimRelHom14)
+    W.nondeg14 W.dimeq14
 
 /-- **The `(2,3)` datum is substrate-pinned.** -/
 theorem CylinderWAdmPinned.pin23 : LefschetzWuPinned23 W.P23 :=
-  cylinderP23_pinned W.hcls (cylinder_findimAbs23 W.findimM2) W.findimRel23 W.nondeg23 W.dimeq23
+  cylinderP23_pinned W.hcls (cylinder_findimAbs23 W.findimM2) (cylinder_findimRel23 W.findimRelHom23)
+    W.nondeg23 W.dimeq23
 
 /-- **The consolidated admissibility** `wuW2 P14 P23 = 0`, restated over the derived data. -/
 theorem CylinderWAdmPinned.hwu' : wuW2 W.P14 W.P23 = 0 := W.hwu
