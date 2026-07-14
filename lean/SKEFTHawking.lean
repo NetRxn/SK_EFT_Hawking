@@ -4404,6 +4404,7 @@ import SKEFTHawking.SingularRelativeCrossProduct
 import SKEFTHawking.PinPlusCharPairMembraneTie
 import SKEFTHawking.SingularDisjointUnionHn
 import SKEFTHawking.PinPlusCharPairMembraneGeoRealization
+import SKEFTHawking.PinPlusCharPairGeoRealizationGate
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
