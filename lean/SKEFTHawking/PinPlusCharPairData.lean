@@ -49,6 +49,8 @@ import SKEFTHawking.RP2Manifold
 import SKEFTHawking.RP4Witness
 import SKEFTHawking.RP4Unconditional
 import SKEFTHawking.RP2EquatorialInclusion
+import SKEFTHawking.RP2IntersectionForm
+import SKEFTHawking.PinPlusCharPairSurfaceTie
 
 namespace SKEFTHawking.PinPlusCharPairData
 
@@ -1397,12 +1399,26 @@ concrete surface) while its carrier `s` stays at universe 0 (still certified). T
 the unblock CONCRETELY — the surface MANIFOLD content is now carriable in-substrate; only the `hchar`/
 `hpolar` anchors (wt2's 2-dim PD tower) remain abstract. -/
 
-/-- **The bundled characteristic-pair structure** — `CharPairStr` (the `Type 0` algebraic + certificate
-core) PLUS the concrete characteristic surface `surf` (a closed, universe-0 2-manifold), its Hausdorff
-certificate `surfT2`, and its smooth injective embedding `emb`/`embSmooth`/`embInj` into the 4-manifold
-carrier `s.M`. Because `surf : SingularManifold.{0} …` is `Type 1`, so is `CharPairStrBundled` — while the
-carrier `s` and the retained `cert : PinPlusCertK I s` keep `s` at universe 0. This is exactly the
-`Type 1` `Mfd`-value / universe-0 certified carrier pairing the OLD interface forbade. -/
+open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
+  SKEFTHawking.SingularFunctoriality SKEFTHawking.PinPlusCharPairSurfaceTie in
+/-- **The bundled characteristic-pair structure — MEMBRANE-TIED AND SURFACE-TIED** (arm-4 re-gate
+round-5 fix `realization-seam-basis-gauge-launders-e8`). Extends the `Type 0` algebraic core
+(`CharPairStr`) with the concrete characteristic surface `surf` and — the round-5 strengthening — the
+**(n, q, surf) BASIS TIE** that pins the enhancement `(n, q)` to the surface's topology instead of
+leaving it a free field:
+
+* `surfClass : H₂(Σ;ℤ/2)` — the characteristic surface's mod-2 fundamental class (`0` for the empty
+  surface, so the tie is honest even at rank 0);
+* `basis : H¹(Σ;ℤ/2) ≃ₗ (Fin n → ℤ/2)` — the enhancement basis (▲A-5), the target the realization
+  seam's `eσ`/`eτ` must be DERIVED from (not gauged freely);
+* `hpolar : q.B(basis a)(basis b) = ⟨a ∪ b, [Σ]⟩` — the polar-form tie: the enhancement's polar form is
+  the surface's mod-2 intersection pairing (`SingularSurfaceIntersectionForm.intersectionForm` against
+  the carried `surfClass`, expressed as `kroneckerH 2 (cupH a b) surfClass` so it needs no
+  `Nonempty`/compactness on `Σ` and composes over disjoint unions). Because `q.B` is now DETERMINED by
+  `(basis, [Σ])`, gauging `basis` forces `q` to move covariantly — the `killerGauge` laundering can no
+  longer keep `q` fixed while moving the kernel.
+
+The universe pairing (`Type 1` `Mfd`-value / universe-0 certified carrier) is unchanged (§10 note). -/
 structure CharPairStrBundled (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))) [I.Boundaryless]
     (s : SingularManifold PUnit k I) extends CharPairStr I s where
   /-- the concrete characteristic surface — a closed, **universe-0** 2-manifold (`Type 1` when bundled). -/
@@ -1415,6 +1431,17 @@ structure CharPairStrBundled (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fi
   embSmooth : ContMDiff (𝓡 2) I k emb
   /-- the embedding is injective. -/
   embInj : Function.Injective emb
+  /-- **(surf tie)** the characteristic surface's mod-2 fundamental class `[Σ] ∈ H₂(Σ;ℤ/2)` (`0` for
+  the empty surface). -/
+  surfClass : Homology (TopCat.of surf.M) 2
+  /-- **(basis tie, ▲A-5)** the `H¹(Σ;ℤ/2) ≃ₗ (Fin n → ℤ/2)` enhancement basis — the target the
+  realization seam's `eσ`/`eτ` are DERIVED from, no longer a free gauge. -/
+  basis : Cohomology (TopCat.of surf.M) 1 ≃ₗ[ZMod 2] (Fin n → ZMod 2)
+  /-- **(polar tie)** the enhancement's polar form IS the surface's mod-2 intersection pairing against
+  `[Σ]`: `q.B(basis a)(basis b) = ⟨a ∪ b, [Σ]⟩`. Ties `q` covariantly to `basis`, defeating the
+  round-5 basis-gauge laundering. -/
+  hpolar : ∀ a b : Cohomology (TopCat.of surf.M) 1,
+    q.B (basis a) (basis b) = kroneckerH 2 (cupH a b) surfClass
 
 /-- **The unblock, as a type.** `charPairBundledMfd` is a legitimate `Mfd`-family for a carrier at
 universe 0 landing in `Type 1` — precisely the `SingularManifold.{0} X k I → Type 1` shape the generalized
@@ -1436,11 +1463,16 @@ theorem charPairBundled_brown_eq {s t : SingularManifold PUnit k I}
     σ.q.brown = τ.q.brown :=
   β.brown_eq
 
+open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
+open SKEFTHawking.SingularFunctoriality SKEFTHawking.PinPlusCharPairSurfaceTie
+
 open SKEFTHawking.PinPlusTiedData in
 /-- **A concrete inhabitant** (non-vacuity of the `Type 1` bundle): the empty carrier with the empty
 characteristic surface, RETAINING the `w₂ = 0` certificate `pinPlusCertK_empty`. Witnesses that the
 `Type 1` bundle is genuinely inhabitable with the certificate present and the carrier at universe 0 — the
-concrete realization of the §5 resolution. -/
+concrete realization of the §5 resolution. The (n, q, surf) tie is degenerate-but-honest: the empty
+surface has vanishing `H₁`/`H₂` (`subsingleton_cohomology`/`subsingleton_homology`), so `surfClass = 0`,
+`basis` is the trivial rank-0 equiv, and `hpolar` holds vacuously (`q = stdQuadratic 0`, `B = 0`). -/
 noncomputable def charPairBundledEmpty :
     CharPairStrBundled I (emptySM : SingularManifold PUnit k I) where
   toCharPairStr := charPairEmptyStr
@@ -1449,6 +1481,15 @@ noncomputable def charPairBundledEmpty :
   emb := fun x => x.elim
   embSmooth := contMDiff_of_subsingleton
   embInj := fun x => x.elim
+  surfClass := 0
+  basis := by
+    show _ ≃ₗ[ZMod 2] (Fin 0 → ZMod 2)
+    exact LinearEquiv.ofSubsingleton _ _
+  hpolar := fun a b => by
+    have hz : ∀ x y : Fin 0 → ZMod 2, (stdQuadratic 0).B x y = 0 :=
+      fun x y => by rw [Subsingleton.elim x 0]; exact (stdQuadratic 0).B_zero_left y
+    show (stdQuadratic 0).B _ _ = _
+    rw [hz, map_zero]
 
 /-! ## §11. The bundled Mfd-op witnesses and the full `T2TangentialData` instance -/
 
@@ -1469,9 +1510,17 @@ noncomputable def charPairBundledSumStr {s t : SingularManifold PUnit k I}
   emb := Sum.map σ.emb τ.emb
   embSmooth := σ.embSmooth.sumMap τ.embSmooth
   embInj := σ.embInj.sumMap τ.embInj
+  -- `surf.M`'s TopCat is `TopCat.of (σ.surf.M ⊕ τ.surf.M)`, DEFEQ (cheap `rfl`) to the `sumSpace`
+  -- the disjoint-union tie helpers land in. The W-anchored helpers route that `rfl` through `▸`
+  -- internally, so these fields typecheck at `TopCat.of (σ.surf.sum τ.surf).M` SYNTACTICALLY.
+  surfClass := sumSurfClassW _ rfl σ.surfClass τ.surfClass
+  basis := sumBasisW _ rfl σ.basis τ.basis
+  hpolar := sumHpolarW _ rfl σ.basis τ.basis σ.surfClass τ.surfClass σ.q τ.q σ.hpolar τ.hpolar
 
 /-- **Bundled `revStr`** — structure reversal on a bundle: `charPairRevStr` on the algebraic core
-(enhancement negation), keeping the same surface/embedding. -/
+(enhancement negation), keeping the same surface/embedding. The tie SURVIVES the reversal: `neg`
+keeps the polar form (`(neg q).B = q.B` definitionally), so `basis`/`surfClass`/`hpolar` transport
+unchanged. -/
 noncomputable def charPairBundledRevStr {s : SingularManifold PUnit k I}
     (σ : CharPairStrBundled I s) : CharPairStrBundled I s where
   toCharPairStr := charPairRevStr σ.toCharPairStr
@@ -1480,6 +1529,9 @@ noncomputable def charPairBundledRevStr {s : SingularManifold PUnit k I}
   emb := σ.emb
   embSmooth := σ.embSmooth
   embInj := σ.embInj
+  surfClass := σ.surfClass
+  basis := σ.basis
+  hpolar := σ.hpolar
 
 /-- **THE FAITHFUL Pin⁺ INSTANCE, MEMBRANE-TIED** (the arm-4 re-gate migration) — the certified
 characteristic-pair carrier as a `T2TangentialData.{0,1}` (bundled `Type 1` `Mfd`, carrier at
@@ -1540,7 +1592,8 @@ noncomputable def charPairBrown (prov : CharPairWProvider I k) :
 /-! ## §13. STRETCH — the ℝP⁴ characteristic-pair witness (non-vacuity, the odd generator) -/
 
 open SKEFTHawking.RP2Manifold SKEFTHawking.RP4Unconditional SKEFTHawking.RP2EquatorialInclusion
-  SKEFTHawking.RP4PointSet SKEFTHawking.RP2PointSet SKEFTHawking.RP4Witness in
+  SKEFTHawking.RP4PointSet SKEFTHawking.RP2PointSet SKEFTHawking.RP4Witness
+  SKEFTHawking.RP2IntersectionForm SKEFTHawking.SingularSurfaceIntersectionForm in
 /-- **The ℝP⁴ characteristic-pair bundle** (the headline witness) — the bundled char-pair structure on
 `ℝP⁴` (`rp4SM = rp4SM_k 0`) with characteristic surface `ℝP²` (`rp2SM_k 0`), the retained `w₂ = 0`
 certificate `rp4_hcert`, and the **rank-1 odd enhancement** `stdQuadratic 1` (`q(gen) = 1 ∈ ZMod 4` —
@@ -1563,5 +1616,22 @@ noncomputable def rp4CharPairBundled
   emb := embRP2
   embSmooth := embSmooth
   embInj := embInj
-
-end SKEFTHawking.PinPlusCharPairData
+  surfClass := surfaceFundamentalClass (M := RP2)
+  basis := rp2H1EquivFun
+  hpolar := fun a b => by
+    -- RHS is the ℝP² intersection form (definitional: `intersectionForm = μ ∘ cupH`, `μ = ⟨·,[ℝP²]⟩`)
+    show (stdQuadratic 1).B (rp2H1EquivFun a) (rp2H1EquivFun b)
+        = kroneckerH 2 (cupH a b) (surfaceFundamentalClass (M := RP2))
+    rw [show kroneckerH 2 (cupH a b) (surfaceFundamentalClass (M := RP2))
+          = intersectionForm (M := RP2) a b from rfl]
+    -- both sides are ℤ/2-bilinear on the rank-1 `H¹(ℝP²)`; agree on the generator `xRP2`
+    obtain ⟨c, rfl⟩ := h1_eq_smul_xRP2 a
+    obtain ⟨d, rfl⟩ := h1_eq_smul_xRP2 b
+    have hxeq : rp2H1EquivFun xRP2 = (fun _ => 1) := by
+      funext i; fin_cases i
+      rw [rp2H1EquivFun, ← rp2H1Basis_apply 0, Module.Basis.equivFun_self]; rfl
+    have hLHS : ∀ c d : ZMod 2, (stdQuadratic 1).B (c • (fun _ => 1 : Fin 1 → ZMod 2))
+        (d • (fun _ => 1 : Fin 1 → ZMod 2)) = c • d • (1 : ZMod 2) := by decide
+    rw [map_smul, map_smul, hxeq, hLHS]
+    simp only [map_smul, LinearMap.smul_apply, intersectionForm_xRP2_self]
+    rw [smul_comm]
