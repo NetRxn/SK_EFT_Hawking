@@ -273,7 +273,12 @@ recorded as the second statement-shape defect: the kernel Props quantify over fa
 
 open SKEFTHawking.RP4Unconditional in
 /-- The FAKE rank-0 char-pair bundle on `ℝP⁴` — honest cert, empty "characteristic surface",
-`n = 0`: type-checks because nothing ties `(n, q)` (or `surf`) to the carrier's topology. -/
+`n = 0`. **STILL type-checks after the arm-4 round-5 (n, q, surf) BASIS TIE** (`basis`/`hpolar`/
+`surfClass`): with `n = 0` and the empty surface, the polar-form tie is degenerate-but-honest
+(`surfClass = 0`, `q.B = 0 = ⟨·,0⟩`), so the basis tie alone does NOT exclude this rank-0 fake class.
+It is excluded only by the *characteristic-surface* tie `hchar` (the ℝP⁴ pairing `μ(x² ⌣ x²) = 1`
+forces `emb₊[Σ] ≠ 0`, impossible for `surf = ∅`), which is the remaining strengthening. Until then the
+§6 finding stands at the basis-tie level. -/
 noncomputable def fakeRP4RankZero : CharPairStrBundled (𝓡 4) rp4SM where
   toCharPairStr :=
     { t2 := rp4CharPair.toCharPairStr.t2
@@ -285,6 +290,15 @@ noncomputable def fakeRP4RankZero : CharPairStrBundled (𝓡 4) rp4SM where
   emb := fun x => x.elim
   embSmooth := fun x => isEmptyElim x
   embInj := fun x => x.elim
+  surfClass := 0
+  basis := by
+    show _ ≃ₗ[ZMod 2] (Fin 0 → ZMod 2)
+    exact LinearEquiv.ofSubsingleton _ _
+  hpolar := fun a b => by
+    have hz : ∀ x y : Fin 0 → ZMod 2, (stdQuadratic 0).B x y = 0 :=
+      fun x y => by rw [Subsingleton.elim x 0]; exact (stdQuadratic 0).B_zero_left y
+    show (stdQuadratic 0).B _ _ = _
+    rw [hz, map_zero]
 
 /-- The fake class is a `charPairBrown`-kernel element (rank 0 ⟹ grade 0), so `KTKernelCard`
 asserts it equals `0` or `k₀` — both honestly false (see section docstring). -/

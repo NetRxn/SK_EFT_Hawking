@@ -4395,6 +4395,7 @@ import SKEFTHawking.RP2IntersectionForm
 import SKEFTHawking.RP2EquatorialInclusion
 import SKEFTHawking.RP4CharSurfacePushforward
 import SKEFTHawking.RP4CharSurfaceSmithNat
+import SKEFTHawking.PinPlusCharPairSurfaceTie
 import SKEFTHawking.PinPlusCharPairData
 import SKEFTHawking.RP4CharPairWitness
 import SKEFTHawking.PinPlusCompTorsorNoGo
