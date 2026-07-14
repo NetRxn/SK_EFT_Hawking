@@ -66,7 +66,15 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    under-implemented by the interim build); acceptance test = the honest cylinder membrane's ANTI-DIAGONAL
    kernel excludes the e₈ graph (doubleKillerBor must break). Also: KTKernelCard quantifies over
    hchar-untethered fake classes (fakeRP4RankZero) — tie (n,q,surf) or restrict the quantifier before
-   restating.
+   restating. UPDATE (arm-4 re-gate migration + round-4.5 self-attack, 2026-07-14): the FIX's first half
+   LANDED — pinPlusCharPairData's Bor is the membrane-TIED CharPairBorTied in-place (L = ker mem.bInc, all 8
+   op witnesses tied, PinPlusCharPairData §9.6; acceptance tests green in PinPlusCharPairMembraneTie). The
+   backing refutations PERSIST on the migrated carrier via the SYNTHETIC-bInc replay (doubleKillerBorTied,
+   PinPlusKTVacuityGateWD §4.5: GeoMembrane.bInc is still un-tethered, and graphBInc phiLin has kernel
+   exactly the e₈ graph) — i.e. the tie NARROWS the hole to precisely the geometric-realization obligation
+   without closing it; binders stay FROZEN. Remaining discharge: require realization data on the membrane
+   datum (GeoRealizationData/GeoMembrane.ofGeometric, PinPlusCharPairMembraneGeoRealization) + the
+   (n,q,surf) tie, then the fresh Fable re-gate.
    backing: `ktKernelRep_eq_zero`, `ktNonSplit_false`, `kt_binders_unsatisfiable`
 
 5. `taylor-leg-end-convention-trap` [structural_forcing]

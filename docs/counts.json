@@ -1,16 +1,16 @@
 {
-  "generated": "2026-07-13T19:36:27.942664",
+  "generated": "2026-07-14T14:09:26.251684",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 28265,
-    "theorems_total": 17807,
-    "theorems_substantive": 17781,
+    "total_declarations": 28309,
+    "theorems_total": 17822,
+    "theorems_substantive": 17796,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 1512,
+    "modules": 1514,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -736,6 +736,7 @@
       "SKEFTHawking.PinPlusBordismGroupDerived",
       "SKEFTHawking.PinPlusCertSpinSeam",
       "SKEFTHawking.PinPlusCharPairData",
+      "SKEFTHawking.PinPlusCharPairMembraneGeoRealization",
       "SKEFTHawking.PinPlusCharPairMembraneTie",
       "SKEFTHawking.PinPlusCohomologyABK",
       "SKEFTHawking.PinPlusCompTorsorNoGo",
@@ -1127,6 +1128,7 @@
       "SKEFTHawking.SingularDeterminedConvex",
       "SKEFTHawking.SingularDirectLimitTop",
       "SKEFTHawking.SingularDisjointUnion",
+      "SKEFTHawking.SingularDisjointUnionHn",
       "SKEFTHawking.SingularDiskAcyclic",
       "SKEFTHawking.SingularDualCochainInt",
       "SKEFTHawking.SingularDualityAdjoint",
@@ -1525,8 +1527,8 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 9292,
-    "structures": 356,
+    "definitions": 9320,
+    "structures": 357,
     "instances": 710,
     "inductives": 100,
     "native_decide_decl_closure": 546,
@@ -1540,7 +1542,7 @@
   "python": {
     "python_modules": 137,
     "test_files": 129,
-    "pytest_cases": 4788,
+    "pytest_cases": 4790,
     "notebooks": 89,
     "papers": 42,
     "figures": 163
