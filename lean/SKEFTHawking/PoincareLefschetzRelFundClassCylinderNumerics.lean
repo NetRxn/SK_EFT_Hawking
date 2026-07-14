@@ -22,17 +22,20 @@ data, and names precisely the residual for the two genuinely-deep ones.
   finite-dim when both ends are (`Module.Finite.of_submodule_quotient`). Reusable project-wide.
 * **§5 — the mod-2 HOMOLOGY contractible-factor collapse.** `cylinder_findimHomW_of_base`:
   `H_{k}(W) < ∞ ⟸ H_{k}(M) < ∞` (the homology mirror of §2's collapse).
-* **§6 — `findimRelHom` via the homology pair-LES sandwich.** `cylinder_findimRelHom14/23_of_base`:
-  `H_{n+1}(W,∂W) < ∞` from `b_{n+1}(M) < ∞` (via §5) and the boundary homology `H_n(∂W) < ∞`
+* **§6 — `findimRelHom` via the homology pair-LES sandwich.** `cylinder_findimRelHom14/23`:
+  `H_{n+1}(W,∂W) < ∞` from `H_{n+1}(W) < ∞` (→ `M` via §5) and the boundary homology `H_n(∂W) < ∞`
   (exactness at the middle of `H_{n+1}(W) → H_{n+1}(W,∂W) → H_n(∂W)`,
-  `SingularPairLES.exact_homProj_connecting` + §4). **Net: `findimRel` ⟹ `M`'s homology Betti data +
-  the boundary homology `H_*(∂W)`.**
+  `SingularPairLES.exact_homProj_connecting` + §4).
+* **§7 — the boundary homology split `H_n(∂W) ≅ H_n(M)²`.** `∂W = M × {⊥,⊤}` splits into two clopen
+  slices (`isClopen_ptPiece_bot`), each homeomorphic to `M` (`ptPieceToM`/`mToPtPiece`);
+  `SingularDisjointUnionHn.splitHnEquiv` + functoriality give `boundaryHomologyEquiv` and
+  `boundary_homology_findim` — the former ⊔-additivity residual, DISCHARGED.
+* **§8 — `findimRelHom` FULLY reduced to `M`.** `cylinder_findimRelHom14/23_of_base`:
+  `H_4(W,∂W) < ∞` from `b_4(M), b_3(M) < ∞`; `H_3(W,∂W) < ∞` from `b_3(M), b_2(M) < ∞` (§6
+  composed with §5 + §7). **Net: `findimRel` ⟹ `M`'s homology Betti data alone.**
 
 ## Named residuals (precisely staged, none faked)
 
-* `H_*(∂W) < ∞` (the last input to §6): `∂W ≅ M ⊔ M`, so `H_*(∂W) ≅ H_*(M)²` via
-  `SingularDisjointUnionHn` (all-degree ⊔-additivity, homology side) + a slice homeomorphism
-  `M × {pt} ≅ M` — the remaining ⊔-additivity brick, named not forced.
 * `dimeq` (`dim H^k(W) = dim H^{nk}(W,∂W)`) reduces, GIVEN the pair-suspension iso
   `H^{nk}(W,∂W) ≅ H^{nk-1}(M)`, to `M`'s Poincaré-duality Betti equality `b_k(M) = b_{nk-1}(M)`
   (`b_1 = b_3` on a closed 4-manifold) — the **pair-suspension iso** wall on the relative side.
@@ -49,6 +52,7 @@ import Mathlib
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderWu
 import SKEFTHawking.SingularCohomologyHomotopy
 import SKEFTHawking.SingularRelativeKroneckerEquiv
+import SKEFTHawking.SingularDisjointUnionHn
 
 open scoped Manifold
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinder
@@ -59,6 +63,7 @@ open SKEFTHawking.SingularProdContractibleInt
 open SKEFTHawking.SingularHomotopyInvariance
 open SKEFTHawking.SingularFunctoriality
 open SKEFTHawking.SingularRelativeMV SKEFTHawking.SingularPairLES
+open SKEFTHawking.SingularDisjointUnionHn
 
 namespace SKEFTHawking.PoincareLefschetzRelFundClassCylinderNumerics
 
@@ -242,8 +247,8 @@ The mod-2 homology pair-LES `H_{n+1}(W) →(j_*) H_{n+1}(W,∂W) →(∂) H_n(�
 (`SingularPairLES.exact_homProj_connecting`), so `finiteDimensional_of_exact` gives `H_{n+1}(W,∂W)`
 finite-dimensional from `H_{n+1}(W)` (→ `M` via the homology collapse) and `H_n(∂W)`. This reduces
 the cylinder's `findimRelHom` residual to `M`'s absolute homology `b_*(M) < ∞` plus the boundary
-homology `H_*(∂W) < ∞` (itself `≅ H_*(M)²` via `∂W ≅ M ⊔ M`, `SingularDisjointUnionHn` — the
-remaining ⊔-additivity brick, named). -/
+homology `H_*(∂W) < ∞` (itself `≅ H_*(M)²` — discharged in §7; the fully-reduced `_of_base` forms
+land in §8). -/
 
 section CylinderRelHom
 
@@ -275,26 +280,173 @@ theorem cylinder_findimRelHom23
     (exact_homProj_connecting (X := TopCat.of (cylW M))
       (S := (cylModel 2).boundary (cylW M)) 2)
 
-/-- **`findimRelHom` `(1,4)` leg fully reduced to `M`'s absolute homology + the boundary homology**:
-`H_4(W,∂W) < ∞` from `b_4(M) < ∞` (via the homology collapse `H_4(W) ≅ H_4(M)`) and `H_3(∂W) < ∞`. -/
+end CylinderRelHom
+
+/-! ## §7. The boundary homology `H_*(∂W)` reduced to `M`'s own homology (the ⊔-additivity brick)
+
+The last named residual of this file's docstring: `H_*(∂W) < ∞` from `M`'s own homology finiteness.
+`∂W = M × {⊥,⊤}` (`cyl_boundary_eq`) splits as the union of its two slices `M × {⊥}`, `M × {⊤}`; as
+subsets of the SUBSPACE `sub ∂W` (the nested-subtype presentation, `ptPiece`) they form a clopen
+partition (`isClopen_ptPiece_bot`), so the all-degree ⊔-additivity `SingularDisjointUnionHn.
+splitHnEquiv` gives `H_n(∂W) ≅ H_n(ptPiece ⊥) × H_n(ptPiece ⊤)`. Each slice is homeomorphic to `M`
+itself (`(m,pt) ↦ m`), so functoriality (`Homology.map_bijective_of_comp_id_all`, the pipeline's
+homeomorphism-transport idiom) identifies each summand with `H_n(M)`. Net: `H_n(∂W) ≅ H_n(M) ×
+H_n(M)`, discharging the boundary input to `cylinder_findimRelHom14/23_of_base` purely from `M`'s
+own Betti data. -/
+
+section BoundaryHomology
+
+variable {M : Type} [TopologicalSpace M] [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+
+/-- **The `pt`-slice** `M × {pt} ⊆ W` for `pt : unitInterval`. -/
+def ptSlice (M : Type) [TopologicalSpace M] (pt : unitInterval) : Set (cylW M) :=
+  Set.univ ×ˢ ({pt} : Set unitInterval)
+
+/-- **The cylinder boundary splits as the union of its two slices.** -/
+theorem boundary_eq_union_ptSlice :
+    (cylModel 2).boundary (cylW M) = ptSlice M ⊥ ∪ ptSlice M ⊤ := by
+  rw [cyl_boundary_eq, ptSlice, ptSlice, ← Set.prod_union, Set.insert_eq]
+
+/-- **The `pt`-piece of `∂W`**, as a subset of the nested subtype `↥∂W` (`sub ∂W`'s own points). -/
+def ptPiece (M : Type) [TopologicalSpace M] [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+    (pt : unitInterval) :
+    Set ↑(sub (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M))) :=
+  {x | x.1 ∈ ptSlice M pt}
+
+/-- **The forward slice map** `↥(ptPiece pt) → M`, `(m,pt) ↦ m`. -/
+def ptPieceToM (pt : unitInterval) : C(↑(sub (ptPiece M pt)), ↑(TopCat.of M)) where
+  toFun x := x.1.1.1
+  continuous_toFun := continuous_fst.comp (continuous_subtype_val.comp continuous_subtype_val)
+
+/-- The point `(m,pt) ∈ ∂W`, as an element of `↥∂W` (given `pt ∈ {⊥,⊤}`). -/
+def mToBdryPt (pt : unitInterval) (hpt : pt ∈ ({⊥, ⊤} : Set unitInterval)) (m : M) :
+    ↑(sub (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M))) :=
+  ⟨(m, pt), by rw [cyl_boundary_eq]; exact ⟨Set.mem_univ _, hpt⟩⟩
+
+theorem mToBdryPt_mem_ptPiece (pt : unitInterval) (hpt : pt ∈ ({⊥, ⊤} : Set unitInterval)) (m : M) :
+    mToBdryPt pt hpt m ∈ ptPiece M pt :=
+  ⟨Set.mem_univ _, rfl⟩
+
+theorem continuous_mToBdryPt (pt : unitInterval) (hpt : pt ∈ ({⊥, ⊤} : Set unitInterval)) :
+    Continuous (mToBdryPt (M := M) pt hpt) :=
+  Continuous.subtype_mk (continuous_id.prodMk continuous_const) _
+
+/-- **The backward slice map** `M → ↥(ptPiece pt)`, `m ↦ (m,pt)`, given `pt ∈ {⊥,⊤}` (so `(m,pt) ∈
+∂W`). -/
+def mToPtPiece (pt : unitInterval) (hpt : pt ∈ ({⊥, ⊤} : Set unitInterval)) :
+    C(↑(TopCat.of M), ↑(sub (ptPiece M pt))) where
+  toFun m := ⟨mToBdryPt pt hpt m, mToBdryPt_mem_ptPiece pt hpt m⟩
+  continuous_toFun := Continuous.subtype_mk (continuous_mToBdryPt pt hpt) _
+
+theorem mToPtPiece_comp_ptPieceToM (pt : unitInterval) (hpt : pt ∈ ({⊥, ⊤} : Set unitInterval)) :
+    (mToPtPiece (M := M) pt hpt).comp (ptPieceToM pt) = ContinuousMap.id ↑(sub (ptPiece M pt)) := by
+  apply ContinuousMap.ext
+  intro x
+  apply Subtype.ext
+  apply Subtype.ext
+  have hx : x.1.1.2 = pt := x.2.2
+  show (x.1.1.1, pt) = x.1.1
+  exact Prod.ext rfl hx.symm
+
+theorem ptPieceToM_comp_mToPtPiece (pt : unitInterval) (hpt : pt ∈ ({⊥, ⊤} : Set unitInterval)) :
+    (ptPieceToM (M := M) pt).comp (mToPtPiece pt hpt) = ContinuousMap.id ↑(TopCat.of M) := rfl
+
+/-- **The slice homology bijection** `H_n(ptPiece pt) → H_n(M)` (a homeomorphism transported through
+functoriality, the pipeline's `map_bijective_of_comp_id_all` idiom). -/
+theorem ptPieceToM_homology_bijective (pt : unitInterval) (hpt : pt ∈ ({⊥, ⊤} : Set unitInterval))
+    (n : ℕ) : Function.Bijective (Homology.map (ptPieceToM (M := M) pt) n) :=
+  Homology.map_bijective_of_comp_id_all (ptPieceToM pt) (mToPtPiece pt hpt)
+    (mToPtPiece_comp_ptPieceToM pt hpt) (ptPieceToM_comp_mToPtPiece pt hpt) n
+
+/-- **The slice homology equiv** `H_n(ptPiece pt) ≃ₗ H_n(M)`. -/
+noncomputable def ptPieceHomologyEquiv (pt : unitInterval) (hpt : pt ∈ ({⊥, ⊤} : Set unitInterval))
+    (n : ℕ) : Homology (sub (ptPiece M pt)) n ≃ₗ[ZMod 2] Homology (TopCat.of M) n :=
+  LinearEquiv.ofBijective (Homology.map (ptPieceToM pt) n) (ptPieceToM_homology_bijective pt hpt n)
+
+/-- Both slices are closed subsets of `↥∂W` (preimages of the closed `M × {pt}` under the continuous
+subspace inclusion `↥∂W ↪ W`). -/
+theorem isClosed_ptPiece (pt : unitInterval) : IsClosed (ptPiece M pt) := by
+  have hSlice : IsClosed (ptSlice M pt) := by
+    have heq : ptSlice M pt = (Prod.snd : cylW M → unitInterval) ⁻¹' {pt} := by
+      ext p; simp [ptSlice, Set.mem_prod]
+    rw [heq]
+    exact isClosed_singleton.preimage continuous_snd
+  exact hSlice.preimage continuous_subtype_val
+
+/-- **Membership in `∂W`, split across the two slices.** A fresh-variable restatement of
+`boundary_eq_union_ptSlice` (avoids rewriting inside a subtype-dependent hypothesis). -/
+theorem mem_boundary_iff (p : cylW M) :
+    p ∈ (cylModel 2).boundary (cylW M) ↔ p ∈ ptSlice M ⊥ ∨ p ∈ ptSlice M ⊤ := by
+  rw [boundary_eq_union_ptSlice, Set.mem_union]
+
+/-- **The two pieces are complementary**: `(ptPiece ⊥)ᶜ = ptPiece ⊤`. -/
+theorem ptPiece_bot_compl : (ptPiece M ⊥)ᶜ = ptPiece M ⊤ := by
+  ext x
+  simp only [ptPiece, Set.mem_compl_iff, Set.mem_setOf_eq, ptSlice, Set.mem_prod,
+    Set.mem_singleton_iff, Set.mem_univ, true_and]
+  have hx := (mem_boundary_iff (x.1 : cylW M)).mp x.2
+  simp only [ptSlice, Set.mem_prod, Set.mem_singleton_iff, Set.mem_univ, true_and] at hx
+  rcases hx with h | h
+  · simp [h, bot_ne_top]
+  · simp [h]
+
+/-- **`ptPiece ⊥` is clopen** in `sub ∂W`: its complement is `ptPiece ⊤` (`ptPiece_bot_compl`), and
+both pieces are closed (`isClosed_ptPiece`) — so `ptPiece ⊥` is also open. -/
+theorem isClopen_ptPiece_bot : IsClopen (ptPiece (M := M) ⊥) := by
+  refine ⟨isClosed_ptPiece ⊥, ?_⟩
+  rw [← compl_compl (ptPiece M ⊥)]
+  refine isOpen_compl_iff.mpr ?_
+  rw [ptPiece_bot_compl]
+  exact isClosed_ptPiece ⊤
+
+/-- **The boundary's homology, split**: `H_n(∂W) ≅ H_n(M) × H_n(M)` (the ⊔-additivity brick). -/
+noncomputable def boundaryHomologyEquiv (n : ℕ) :
+    Homology (sub (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M))) n ≃ₗ[ZMod 2]
+      Homology (TopCat.of M) n × Homology (TopCat.of M) n :=
+  (splitHnEquiv (isClopen_ptPiece_bot (M := M)) n).symm.trans
+    (LinearEquiv.prodCongr (ptPieceHomologyEquiv ⊥ (by simp) n)
+      (ptPiece_bot_compl (M := M) ▸ ptPieceHomologyEquiv ⊤ (by simp) n))
+
+/-- **`H_*(∂W) < ∞` from `M`'s own homology finiteness** — discharges the last named residual of
+this file's docstring purely from `M`'s side. -/
+theorem boundary_homology_findim (n : ℕ)
+    (hM : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) n)) :
+    FiniteDimensional (ZMod 2)
+      (Homology (sub (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M))) n) :=
+  haveI := hM
+  (boundaryHomologyEquiv n).symm.finiteDimensional
+
+end BoundaryHomology
+
+/-! ## §8. `findimRelHom` FULLY reduced to `M`'s own Betti data
+
+§6's pair-LES sandwich composed with §5's homology collapse (the `H_{n+1}(W)` end) and §7's
+boundary split (the `H_n(∂W)` end): the cylinder's relative-homology finite-dimensionality
+numerics from `M`'s own homology Betti data alone — no `W`-side or boundary-side input remains. -/
+
+section CylinderRelHomOfBase
+
+variable {M : Type} [TopologicalSpace M] [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M]
+
+/-- **`findimRelHom` `(1,4)` leg FULLY reduced to `M`**: `H_4(W,∂W) < ∞` from `b_4(M), b_3(M) < ∞`
+(homology collapse `H_4(W) ≅ H_4(M)` for the left end, boundary split `H_3(∂W) ≅ H_3(M)²` for the
+right end of the pair-LES sandwich). -/
 theorem cylinder_findimRelHom14_of_base
-    (hM : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 4))
-    (hBd : FiniteDimensional (ZMod 2)
-      (Homology (sub (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M))) 3)) :
+    (hM4 : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 4))
+    (hM3 : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 3)) :
     FiniteDimensional (ZMod 2)
       (RelativeHomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 4) :=
-  cylinder_findimRelHom14 (cylinder_findimHomW_of_base 3 hM) hBd
+  cylinder_findimRelHom14 (cylinder_findimHomW_of_base 3 hM4) (boundary_homology_findim 3 hM3)
 
-/-- **`findimRelHom` `(2,3)` leg fully reduced to `M`'s absolute homology + the boundary homology**:
-`H_3(W,∂W) < ∞` from `b_3(M) < ∞` and `H_2(∂W) < ∞`. -/
+/-- **`findimRelHom` `(2,3)` leg FULLY reduced to `M`**: `H_3(W,∂W) < ∞` from
+`b_3(M), b_2(M) < ∞`. -/
 theorem cylinder_findimRelHom23_of_base
-    (hM : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 3))
-    (hBd : FiniteDimensional (ZMod 2)
-      (Homology (sub (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M))) 2)) :
+    (hM3 : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 3))
+    (hM2 : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 2)) :
     FiniteDimensional (ZMod 2)
       (RelativeHomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 3) :=
-  cylinder_findimRelHom23 (cylinder_findimHomW_of_base 2 hM) hBd
+  cylinder_findimRelHom23 (cylinder_findimHomW_of_base 2 hM3) (boundary_homology_findim 2 hM2)
 
-end CylinderRelHom
+end CylinderRelHomOfBase
 
 end SKEFTHawking.PoincareLefschetzRelFundClassCylinderNumerics
