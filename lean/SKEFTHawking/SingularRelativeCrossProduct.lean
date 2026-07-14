@@ -101,4 +101,96 @@ noncomputable def crossRelCycle {S : Set ↑(cyl M)}
   ⟨RelativeChain.mk S (p + 1 + 1) (crossChain (p + 1) (z : SingularChain M (p + 1))),
     crossChain_mem_relCycles h1 h0 p z (LinearMap.mem_ker.mp z.2)⟩
 
+/-! ## §3. The homology-level cross product `Hₚ₊₁(M) → Hₚ₊₂(M×I, S)`
+
+The cycle-level engine descends to homology: the cross of a *boundary* `∂w` is the relative
+boundary of `prismOp w` — from the prism chain homotopy `∂(Pw) + P(∂w) = end₁ w + end₀ w`, with both
+endpoint pushes killed in the `C(M×I, S)` quotient. This is the map `× [I, ∂I]` the cylinder route
+`[W, ∂W] = [M] × [I, ∂I]` uses. -/
+
+/-- Both endpoint pushes of any chain are `S`-subspace chains, when `S` contains the endpoint slice
+(`hr`). The relative-quotient input: endpoint boundary terms die in `C(M × I, S)`. -/
+theorem endMap_mem_subspaceChains {S : Set ↑(cyl M)} {r : unitInterval}
+    (hr : Set.MapsTo (slice (graphHom M) r) (Set.univ : Set ↑M) S) (n : ℕ)
+    (w : SingularChain M n) :
+    endMap (graphHom M) r n w ∈ subspaceChains S n := by
+  rw [endMap_eq_mapChain]
+  exact mapChain_mem_subspaceChains (slice (graphHom M) r) hr n w (mem_subspaceChains_univ n w)
+
+/-- **The cross-product relative chain map** `C_{p+1}(M) → C_{p+2}(M × I, S)`, the prism chain
+post-composed with the relative quotient. -/
+noncomputable def crossChainLM {S : Set ↑(cyl M)} (p : ℕ) :
+    SingularChain M (p + 1) →ₗ[ZMod 2] RelativeChain S (p + 1 + 1) :=
+  (Submodule.mkQ (subspaceChains S (p + 1 + 1))).comp (prismOp (graphHom M) (p + 1))
+
+theorem crossChainLM_apply {S : Set ↑(cyl M)} (p : ℕ) (z : SingularChain M (p + 1)) :
+    crossChainLM (S := S) p z = RelativeChain.mk S (p + 1 + 1) (crossChain (p + 1) z) := rfl
+
+/-- The cross-product chain map lands in relative cycles on a cycle. -/
+theorem crossChainLM_mem_relCycles {S : Set ↑(cyl M)}
+    (h1 : Set.MapsTo (slice (graphHom M) 1) (Set.univ : Set ↑M) S)
+    (h0 : Set.MapsTo (slice (graphHom M) 0) (Set.univ : Set ↑M) S)
+    (p : ℕ) (z : SingularChain M (p + 1)) (hz : z ∈ cycles M (p + 1)) :
+    crossChainLM (S := S) p z ∈ relCycles S (p + 1 + 1) := by
+  rw [crossChainLM_apply]
+  exact crossChain_mem_relCycles h1 h0 p z (LinearMap.mem_ker.mp hz)
+
+/-- The cross-product chain map lands in relative boundaries on a boundary (well-definedness on
+homology): `∂w × [I, ∂I]` is the relative boundary of `prismOp w`. -/
+theorem crossChainLM_mem_relBoundaries {S : Set ↑(cyl M)}
+    (h1 : Set.MapsTo (slice (graphHom M) 1) (Set.univ : Set ↑M) S)
+    (h0 : Set.MapsTo (slice (graphHom M) 0) (Set.univ : Set ↑M) S)
+    (p : ℕ) (z : SingularChain M (p + 1)) (hz : z ∈ boundaries M (p + 1)) :
+    crossChainLM (S := S) p z ∈ relBoundaries S (p + 1 + 1) := by
+  obtain ⟨w, rfl⟩ := hz
+  rw [crossChainLM_apply]
+  change RelativeChain.mk S (p + 1 + 1)
+      (prismOp (graphHom M) (p + 1) (chainBoundary M (p + 1) w)) ∈ _
+  have hkey := prism_chainHomotopy (graphHom M) (n := p + 1) w
+  have hmkadd : ∀ a b : SingularChain (cyl M) (p + 1 + 1),
+      RelativeChain.mk S (p + 1 + 1) (a + b)
+        = RelativeChain.mk S (p + 1 + 1) a + RelativeChain.mk S (p + 1 + 1) b :=
+    fun a b => map_add (Submodule.mkQ (subspaceChains S (p + 1 + 1))) a b
+  have hA : RelativeChain.mk S (p + 1 + 1)
+      (chainBoundary (cyl M) (p + 1 + 1) (prismOp (graphHom M) (p + 1 + 1) w))
+      ∈ relBoundaries S (p + 1 + 1) :=
+    ⟨RelativeChain.mk S (p + 1 + 1 + 1) (prismOp (graphHom M) (p + 1 + 1) w),
+      relBoundary_mk S (p + 1 + 1) (prismOp (graphHom M) (p + 1 + 1) w)⟩
+  have hD : RelativeChain.mk S (p + 1 + 1)
+      (endMap (graphHom M) 1 (p + 1 + 1) w + endMap (graphHom M) 0 (p + 1 + 1) w) = 0 := by
+    rw [RelativeChain.mk_eq_zero_iff]
+    exact Submodule.add_mem _ (endMap_mem_subspaceChains h1 _ w) (endMap_mem_subspaceChains h0 _ w)
+  have hsum : RelativeChain.mk S (p + 1 + 1)
+        (chainBoundary (cyl M) (p + 1 + 1) (prismOp (graphHom M) (p + 1 + 1) w))
+      + RelativeChain.mk S (p + 1 + 1) (prismOp (graphHom M) (p + 1) (chainBoundary M (p + 1) w))
+      = 0 := by
+    rw [← hmkadd, hkey]; exact hD
+  rw [eq_neg_of_add_eq_zero_right hsum]
+  exact Submodule.neg_mem _ hA
+
+/-- **The homology-level cross product** `× [I, ∂I] : Hₚ₊₁(M) → Hₚ₊₂(M × I, S)`, `[z] ↦ [z × [I,∂I]]`
+(`[prismOp graphHom z]` in `Hₚ₊₂(M × I, S)`). Well-defined on homology by `crossChainLM_mem_relCycles`
+(cycles ↦ relative cycles) and `crossChainLM_mem_relBoundaries` (boundaries ↦ relative boundaries).
+This is the honest `[W, ∂W] = [M] × [I, ∂I]` engine at the homology level, mod-2. -/
+noncomputable def crossH {S : Set ↑(cyl M)}
+    (h1 : Set.MapsTo (slice (graphHom M) 1) (Set.univ : Set ↑M) S)
+    (h0 : Set.MapsTo (slice (graphHom M) 0) (Set.univ : Set ↑M) S)
+    (p : ℕ) : Homology M (p + 1) →ₗ[ZMod 2] RelativeHomology S (p + 1 + 1) :=
+  Submodule.mapQ _ _
+    (LinearMap.restrict (crossChainLM (S := S) p)
+      (fun z hz => crossChainLM_mem_relCycles h1 h0 p z hz))
+    (fun z hz => by
+      rw [Submodule.mem_comap, Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype]
+      exact crossChainLM_mem_relBoundaries h1 h0 p (z : SingularChain M (p + 1))
+        (by rwa [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype] at hz))
+
+/-- **`crossH` on a cycle class**: `× [I, ∂I]` sends the class of a cycle `z` to the relative class of
+`crossRelCycle z` — the concrete `[z] × [I, ∂I]` representative. -/
+theorem crossH_mk {S : Set ↑(cyl M)}
+    (h1 : Set.MapsTo (slice (graphHom M) 1) (Set.univ : Set ↑M) S)
+    (h0 : Set.MapsTo (slice (graphHom M) 0) (Set.univ : Set ↑M) S)
+    (p : ℕ) (z : cycles M (p + 1)) :
+    crossH h1 h0 p (Homology.mk M (p + 1) z)
+      = RelativeHomology.mk S (p + 1 + 1) (crossRelCycle h1 h0 p z) := rfl
+
 end SKEFTHawking.SingularRelativeCrossProduct
