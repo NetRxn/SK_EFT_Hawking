@@ -4404,6 +4404,9 @@ import SKEFTHawking.SingularRelativeCrossProduct
 import SKEFTHawking.PinPlusCharPairMembraneTie
 import SKEFTHawking.SingularDisjointUnionHn
 import SKEFTHawking.PinPlusCharPairMembraneGeoRealization
+import SKEFTHawking.SingularPairLESNaturality
+import SKEFTHawking.PoincareLefschetzRelFundClassCylinderCollar
+import SKEFTHawking.PoincareLefschetzRelFundClassCylinderWu
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
