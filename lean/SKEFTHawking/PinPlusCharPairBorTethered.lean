@@ -556,4 +556,140 @@ noncomputable def commBorTethered (prov : CharPairWProviderPerOp I k)
         (↑(TopCat.of (charPairBundledSumStr σ τ).surf.M) × ↑(TopCat.of unitInterval))
       infer_instance }
 
+/-- **`assocBor` TETHERED** — the `(σ ⊔ τ) ⊔ ρ → σ ⊔ (τ ⊔ ρ)` associativity, twisted cylinder over
+`Σ_{(σ⊔τ)⊔ρ}` embedded into `W = ((s.M ⊕ t.M) ⊕ u.M) × [0,1]` by `((σ⊔τ)⊔ρ).emb × id`; the τ-end is
+retargeted through the surface reassociation, matching the mapping cylinder's `(sumAssoc).symm` slice. -/
+noncomputable def assocBorTethered (prov : CharPairWProviderPerOp I k)
+    (σ : CharPairStrBundled I s) (τ : CharPairStrBundled I t) (ρ : CharPairStrBundled I u) :
+    CharPairBorRealizedTethered (mapCylinder (Diffeomorph.sumAssoc I s.M k t.M u.M)
+      (by funext w; rcases w with (w | w) | w <;> rfl))
+      (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ)
+      (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)) :=
+  haveI := (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surfT2
+  haveI := (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).surfT2
+  have hqS : (charPairSumStr (charPairSumStr σ.toCharPairStr τ.toCharPairStr) ρ.toCharPairStr).q
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ.q τ.q) ρ.q).reindex
+          ((Equiv.sumCongr finSumFinEquiv (Equiv.refl (Fin ρ.n))).trans finSumFinEquiv) := by
+    show (Z4Quadratic.orthSum ((Z4Quadratic.orthSum σ.q τ.q).reindex finSumFinEquiv) ρ.q).reindex
+        finSumFinEquiv = _
+    conv_lhs => rw [← reindex_refl ρ.q]
+    rw [orthSum_reindex, reindex_trans]
+  have hqT : (charPairSumStr σ.toCharPairStr (charPairSumStr τ.toCharPairStr ρ.toCharPairStr)).q
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ.q τ.q) ρ.q).reindex
+          ((Equiv.sumAssoc (Fin σ.n) (Fin τ.n) (Fin ρ.n)).trans
+            ((Equiv.sumCongr (Equiv.refl (Fin σ.n)) finSumFinEquiv).trans finSumFinEquiv)) := by
+    show (Z4Quadratic.orthSum σ.q ((Z4Quadratic.orthSum τ.q ρ.q).reindex finSumFinEquiv)).reindex
+        finSumFinEquiv = _
+    conv_lhs => rw [← reindex_refl σ.q]
+    rw [orthSum_reindex, reindex_trans, orthSum_assoc_eq, reindex_trans]
+  have hmeta : IsMetabolic
+      (jointEnhancement (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).q
+        (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).q)
+      (graphSub (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2) (assocReindex σ τ ρ).symm)) := by
+    show IsMetabolic (Z4Quadratic.orthSum
+      (charPairSumStr (charPairSumStr σ.toCharPairStr τ.toCharPairStr) ρ.toCharPairStr).q
+      (Z4Quadratic.neg
+        (charPairSumStr σ.toCharPairStr (charPairSumStr τ.toCharPairStr ρ.toCharPairStr)).q)) _
+    rw [hqS, hqT]
+    exact commonReindex_metabolic (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ.q τ.q) ρ.q)
+      ((Equiv.sumCongr finSumFinEquiv (Equiv.refl (Fin ρ.n))).trans finSumFinEquiv)
+      ((Equiv.sumAssoc (Fin σ.n) (Fin τ.n) (Fin ρ.n)).trans
+        ((Equiv.sumCongr (Equiv.refl (Fin σ.n)) finSumFinEquiv).trans finSumFinEquiv))
+  have hnat : transportBasisChange
+      (TopCat.of (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surf.M)
+      (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).basis
+      (TopCat.of (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).surf.M)
+      (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).basis (assocEndHomeo σ τ ρ)
+        = LinearMap.funLeft (ZMod 2) (ZMod 2)
+            ((assocReindex σ τ ρ) : Fin (σ.n + τ.n + ρ.n) → Fin (σ.n + (τ.n + ρ.n))) := by
+    refine transportBasisChange_eq_funLeft _ _ _ _ _
+      ((assocReindex σ τ ρ) : Fin (σ.n + τ.n + ρ.n) → Fin (σ.n + (τ.n + ρ.n))) ?_
+    intro i
+    show cohomologyPullback (⟨(Homeomorph.sumAssoc σ.surf.M τ.surf.M ρ.surf.M).symm,
+        (Homeomorph.sumAssoc σ.surf.M τ.surf.M ρ.surf.M).symm.continuous⟩ :
+        C(↑(sumSpace (TopCat.of σ.surf.M) (sumSpace (TopCat.of τ.surf.M) (TopCat.of ρ.surf.M))),
+          ↑(sumSpace (sumSpace (TopCat.of σ.surf.M) (TopCat.of τ.surf.M)) (TopCat.of ρ.surf.M)))) 1
+        ((sumBasis (sumBasis σ.basis τ.basis) ρ.basis).symm (Pi.single i 1))
+      = (sumBasis σ.basis (sumBasis τ.basis ρ.basis)).symm
+          (Pi.single ((assocReindex σ τ ρ) i) 1)
+    erw [pullback_sumAssoc_sumBasis_symm]
+    rfl
+  have wadmP := prov.mapCyl (s := (s.sum t).sum u) (t := s.sum (t.sum u))
+    (Diffeomorph.sumAssoc I s.M k t.M u.M) (by funext w; rcases w with (w | w) | w <;> rfl)
+  { hWT2 := by
+      haveI := σ.t2; haveI := τ.t2; haveI := ρ.t2
+      exact inferInstanceAs (T2Space (((s.M ⊕ t.M) ⊕ u.M) × Set.Icc (0 : ℝ) 1))
+    P14 := wadmP.wadm.P14
+    P23 := wadmP.wadm.P23
+    hwu := wadmP.wadm.hwu
+    pin14 := wadmP.pin14
+    pin23 := wadmP.pin23
+    real := mapCylRealizationTied (TopCat.of (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surf.M)
+      (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).basis
+      (TopCat.of (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).surf.M)
+      (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).basis (assocEndHomeo σ τ ρ)
+    htaylor := by
+      show TaylorLegVanishes _ _ (LinearMap.ker (transportedBInc
+        (mapCylRealizationTied
+          (TopCat.of (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surf.M)
+          (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).basis
+          (TopCat.of (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).surf.M)
+          (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).basis (assocEndHomeo σ τ ρ)).toData))
+      rw [mapCylRealizationTied_transportedBInc, hnat]
+      erw [ker_mapCylBd_funLeft (assocReindex σ τ ρ)]
+      exact hmeta.1
+    hlag := by
+      show JointLagrangian _ _ (LinearMap.ker (transportedBInc
+        (mapCylRealizationTied
+          (TopCat.of (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surf.M)
+          (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).basis
+          (TopCat.of (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).surf.M)
+          (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).basis (assocEndHomeo σ τ ρ)).toData))
+      rw [mapCylRealizationTied_transportedBInc, hnat]
+      erw [ker_mapCylBd_funLeft (assocReindex σ τ ρ)]
+      exact hmeta.2
+    ιW := ⟨Prod.map (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).emb id,
+      (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).embSmooth.continuous.prodMap
+        continuous_id⟩
+    hιWce := by
+      haveI := σ.t2; haveI := τ.t2; haveI := ρ.t2
+      haveI : T2Space ((s.sum t).sum u).M := inferInstanceAs (T2Space ((s.M ⊕ t.M) ⊕ u.M))
+      exact ((charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).embSmooth.continuous.prodMap
+        continuous_id).isClosedEmbedding
+        ((charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).embInj.prodMap
+          Function.injective_id)
+    glueσ := by
+      rintro ⟨_, w, rfl⟩
+      show Prod.map (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).emb id
+          (cylBdryIncl (TopCat.of (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surf.M)
+            (Sum.inl w))
+          = (mapCylinder (s := (s.sum t).sum u) (t := s.sum (t.sum u))
+              (Diffeomorph.sumAssoc I s.M k t.M u.M)
+              (by funext w; rcases w with (w | w) | w <;> rfl)).e
+              (Sum.inl ((charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).emb
+                (IsClosedEmbedding.inl.isEmbedding.toHomeomorph.symm ⟨Sum.inl w, w, rfl⟩)))
+      rw [IsEmbedding.toHomeomorph_symm_apply]
+      rfl
+    glueτ := by
+      rintro ⟨(a | w), hp⟩
+      · exact absurd ⟨a, rfl⟩ hp
+      · show Prod.map (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).emb id
+            (cylBdryIncl (TopCat.of (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surf.M)
+              (Sum.inr w))
+            = (mapCylinder (s := (s.sum t).sum u) (t := s.sum (t.sum u))
+                (Diffeomorph.sumAssoc I s.M k t.M u.M)
+                (by funext w; rcases w with (w | w) | w <;> rfl)).e
+                (Sum.inr ((charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).emb
+                  ((((Homeomorph.setCongr Set.compl_range_inl).trans
+                      IsClosedEmbedding.inr.isEmbedding.toHomeomorph.symm).trans
+                      (assocEndHomeo σ τ ρ).symm) ⟨Sum.inr w, hp⟩)))
+        rw [Homeomorph.trans_apply, Homeomorph.trans_apply]
+        erw [IsEmbedding.toHomeomorph_symm_apply]
+        rcases w with (a | b) | c <;> rfl
+    chartQ := by
+      show ChartedSpace MembraneModel
+        (↑(TopCat.of (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surf.M)
+          × ↑(TopCat.of unitInterval))
+      infer_instance }
+
 end SKEFTHawking.PinPlusCharPairBorTethered
