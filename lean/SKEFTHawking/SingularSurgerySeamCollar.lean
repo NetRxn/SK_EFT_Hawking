@@ -129,6 +129,31 @@ This is the constructed replacement for the raw `chartSeam` typeclass input. -/
 
 end SeamCollarDatum
 
+/-! ## §4b. The boundary verdict — the welded interval is boundaryless (the weld heals the boundary).
+
+The geometric content of the welded collar: over the interior of the attaching region the surgery weld
+HEALS the boundary — the attaching face becomes an interior slice. Concretely, the welded interval
+`(-1,1)` is boundaryless as a `(𝓡∂ 1)`-manifold: its only would-be boundary points are the two `Icc`
+endpoints `⊥, ⊤`, which the open interior excludes. This is the "the weld heals the boundary" verdict. -/
+
+/-- **The welded interval is boundaryless — the weld heals the boundary.** Every point of the welded
+interval `(-1,1)` is an INTERIOR point of the half-space model: the only boundary points of `Icc(-1,1)`
+are its endpoints `⊥, ⊤` (`boundary_Icc`), which the open interior excludes. So
+`(𝓡∂ 1).boundary ↥weldedInterval = ∅`: the seam slice is interior — the geometric statement that the
+surgery weld heals the attaching-face boundary. -/
+theorem boundary_weldedInterval [Fact ((-1 : ℝ) < 1)] :
+    (𝓡∂ 1).boundary ↥weldedInterval = ∅ := by
+  haveI : Fact ((-1 : ℝ) ≤ 1) := ⟨by norm_num⟩
+  rw [← ModelWithCorners.compl_interior, Set.compl_empty_iff, ModelWithCorners.interior_open,
+    ← ModelWithCorners.compl_boundary, boundary_Icc]
+  ext w
+  simp only [Set.mem_preimage, Set.mem_compl_iff, Set.mem_insert_iff, Set.mem_singleton_iff,
+    Set.mem_univ, iff_true, not_or]
+  obtain ⟨h1, h2⟩ := w.2
+  refine ⟨fun h => ?_, fun h => ?_⟩
+  · rw [h] at h1; simp at h1
+  · rw [h] at h2; simp at h2
+
 /-! ## §4. The b-row restated — the seam collar discharged by the collar datum.
 
 The Wave-6 `ktSurgeryChartDatum` and Wave-6 `ambientTraceBordism_concrete` took the seam collar as a
