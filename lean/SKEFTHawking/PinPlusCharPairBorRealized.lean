@@ -34,14 +34,17 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new proj
 -/
 import Mathlib
 import SKEFTHawking.PinPlusCharPairCylRealization
+import SKEFTHawking.PinPlusCharPairNegRealization
 import SKEFTHawking.PinPlusWAdmPinnedCore
 
 open scoped Manifold
 open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
 open SKEFTHawking.BordismTheory SKEFTHawking.PoincareLefschetzWu5
 open SKEFTHawking.PinPlusCharPairData
+open SKEFTHawking.PinPlusCharPairMembraneGeoRealization
 open SKEFTHawking.PinPlusCharPairRealizationTied
 open SKEFTHawking.PinPlusCharPairCylRealization
+open SKEFTHawking.PinPlusCharPairNegRealization
 open SKEFTHawking.PinPlusWAdmPinned
 
 namespace SKEFTHawking.PinPlusCharPairBorRealized
@@ -176,5 +179,55 @@ noncomputable def revBorRealized {s t : SingularManifold.{0} PUnit.{1} k I}
     have hvl := hv l hl
     rwa [show (jointEnhancement (neg σ.q) (neg τ.q)).B
         = (jointEnhancement σ.q τ.q).B from jointEnhancement_neg_B σ.q τ.q] at hvl
+
+/-! ## §5. `negBor` — the doubling op on the realized+pinned form -/
+
+/-- **`negBor` instantiates on the realized+pinned form** — the honest inverse law
+`(M,σ̄) ⊔ (M,σ) → ∅` with the membrane REALIZED: the doubling realization
+(`doublingRealizationTied`, Stage 3b) is the SAME cylinder `Σ_σ × [0,1]` with both ends grouped onto
+the σ-side (`U = univ`) and the EMPTY τ-end, whose computed kernel is EXACTLY
+`ker (negBorBInc σ.n)` — the reindexed anti-diagonal (`doublingRealizationTied_transportedBInc`) —
+on which the τ-end-negated joint form is metabolic (the same `diag_metabolic … .reindex … .orthSum`
+chain as the tied `charPairNegBorTied`). The synthetic-`bInc` e₈ exploit cannot inhabit this: it has
+no `GeoRealizationTied` source. -/
+noncomputable def negBorRealized (prov : CharPairWProviderPinned I k)
+    {s : SingularManifold.{0} PUnit.{1} k I} (σ : CharPairStrBundled I s) :
+    CharPairBorRealized (doublingBordism s)
+      (charPairBundledSumStr (charPairBundledRevStr σ) σ) charPairBundledEmpty :=
+  haveI := σ.surfT2
+  haveI : IsEmpty ((charPairBundledEmpty
+      : CharPairStrBundled I (emptySM : SingularManifold.{0} PUnit.{1} k I)).surf.M) :=
+    inferInstanceAs (IsEmpty PEmpty)
+  have hSe : IsMetabolic (Z4Quadratic.neg (stdQuadratic 0))
+      (⊤ : Submodule (ZMod 2) (Fin 0 → ZMod 2)) :=
+    ⟨fun l _ => by rw [Subsingleton.elim l 0]; exact (Z4Quadratic.neg (stdQuadratic 0)).q_zero,
+     fun _ _ => Submodule.mem_top⟩
+  have hSs : IsMetabolic (charPairSumStr (charPairRevStr σ.toCharPairStr) σ.toCharPairStr).q
+      ((cylLagrangian σ.n).comap (LinearMap.funLeft (ZMod 2) (ZMod 2) finSumFinEquiv)) :=
+    (diag_metabolic (neg σ.q) σ.q (fun a => neg_add_cancel _) rfl).reindex finSumFinEquiv
+  have hmeta := hSs.orthSum hSe
+  mkCharPairBorRealized prov (doublingBordism s)
+    (by haveI := σ.t2; exact inferInstanceAs (T2Space (s.M × Set.Icc (0 : ℝ) 1)))
+    (doublingRealizationTied (TopCat.of σ.surf.M) σ.basis
+      (TopCat.of (charPairBundledEmpty (I := I) (k := k)).surf.M)
+      (charPairBundledEmpty (I := I) (k := k)).basis)
+    (by
+      show TaylorLegVanishes _ _ (LinearMap.ker (transportedBInc
+        (doublingRealizationTied (TopCat.of σ.surf.M) σ.basis
+          (TopCat.of (charPairBundledEmpty (I := I) (k := k)).surf.M)
+          (charPairBundledEmpty (I := I) (k := k)).basis).toData))
+      rw [doublingRealizationTied_transportedBInc]
+      show TaylorLegVanishes _ _ (LinearMap.ker (negBorBInc σ.n))
+      rw [negBorBInc_ker]
+      exact hmeta.1)
+    (by
+      show JointLagrangian _ _ (LinearMap.ker (transportedBInc
+        (doublingRealizationTied (TopCat.of σ.surf.M) σ.basis
+          (TopCat.of (charPairBundledEmpty (I := I) (k := k)).surf.M)
+          (charPairBundledEmpty (I := I) (k := k)).basis).toData))
+      rw [doublingRealizationTied_transportedBInc]
+      show JointLagrangian _ _ (LinearMap.ker (negBorBInc σ.n))
+      rw [negBorBInc_ker]
+      exact hmeta.2)
 
 end SKEFTHawking.PinPlusCharPairBorRealized

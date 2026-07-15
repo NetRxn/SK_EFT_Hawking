@@ -184,4 +184,84 @@ theorem pullback_inrMap_sumBasis_symm {nσ nτ : ℕ} {A B : TopCat}
   have hi := congrFun h (Sum.inr i)
   simpa using hi.symm
 
+/-- The `j`-th sum-basis homology coordinate of a class pushed forward from the σ-summand: a `finSumFinEquiv∘inl`-weighted sum of the summand coordinates. -/
+theorem homologyCoords_sumBasis_map_inlMap {nσ nτ : ℕ} {A B : TopCat}
+    (bσ : Cohomology A 1 ≃ₗ[ZMod 2] (Fin nσ → ZMod 2))
+    (bτ : Cohomology B 1 ≃ₗ[ZMod 2] (Fin nτ → ZMod 2)) (α : Homology A 1) (j : Fin (nσ + nτ)) :
+    homologyCoords (sumBasis bσ bτ) (Homology.map (inlMap A B) 1 α) j
+      = ∑ i, (Pi.single j (1 : ZMod 2) : Fin (nσ + nτ) → ZMod 2) (finSumFinEquiv (Sum.inl i))
+          * homologyCoords bσ α i := by
+  rw [homologyCoords_apply, ← kroneckerH_cohomologyPullback, pullback_inlMap_sumBasis_symm,
+    kroneckerH_symm_eq_sum]
+
+/-- The `j`-th sum-basis homology coordinate of a class pushed forward from the τ-summand. -/
+theorem homologyCoords_sumBasis_map_inrMap {nσ nτ : ℕ} {A B : TopCat}
+    (bσ : Cohomology A 1 ≃ₗ[ZMod 2] (Fin nσ → ZMod 2))
+    (bτ : Cohomology B 1 ≃ₗ[ZMod 2] (Fin nτ → ZMod 2)) (β : Homology B 1) (j : Fin (nσ + nτ)) :
+    homologyCoords (sumBasis bσ bτ) (Homology.map (inrMap A B) 1 β) j
+      = ∑ i, (Pi.single j (1 : ZMod 2) : Fin (nσ + nτ) → ZMod 2) (finSumFinEquiv (Sum.inr i))
+          * homologyCoords bτ β i := by
+  rw [homologyCoords_apply, ← kroneckerH_cohomologyPullback, pullback_inrMap_sumBasis_symm,
+    kroneckerH_symm_eq_sum]
+
+/-- **THE SOURCE-COORDINATE IDENTITY** — the doubling source-inverse coincides with the cylinder
+source-inverse after the `Sum.inl`/`finSumFinEquiv` reindex. The UCT-dual of the sum-cohomology basis,
+split through the two summand inclusions, IS the reindexed pair of individual UCT-duals. -/
+theorem doublingRealizationTied_srcEquiv_symm_eq_cyl (x : Fin (n + n) ⊕ Fin 0 → ZMod 2) :
+    (srcEquiv (doublingRealizationTied Y basis Sτ bτ).toData).symm x
+      = (srcEquiv (cylRealizationTied Y basis).toData).symm
+          (LinearMap.funLeft (ZMod 2) (ZMod 2) finSumFinEquiv
+            (LinearMap.funLeft (ZMod 2) (ZMod 2)
+              (Sum.inl : Fin (n + n) → Fin (n + n) ⊕ Fin 0) x)) := by
+  rw [doublingRealizationTied_srcEquiv_symm, cylRealizationTied_srcEquiv_symm]
+  have hcoords : ∀ v : Fin n → ZMod 2,
+      homologyCoords basis ((homologyBasisOfCohomologyBasis basis).symm v) = v := fun v => by
+    rw [← homologyBasisOfCohomologyBasis_apply]
+    exact (homologyBasisOfCohomologyBasis basis).apply_symm_apply v
+  refine (homologyBasisOfCohomologyBasis (sumBasis basis basis)).injective ?_
+  rw [LinearEquiv.apply_symm_apply, map_add]
+  funext j
+  rw [Pi.add_apply, homologyBasisOfCohomologyBasis_apply, homologyBasisOfCohomologyBasis_apply,
+    homologyCoords_sumBasis_map_inlMap, homologyCoords_sumBasis_map_inrMap, hcoords, hcoords]
+  simp only [LinearMap.funLeft_apply]
+  have hsum : ∀ (F : Fin (n + n) → ZMod 2),
+      (∑ i, F (finSumFinEquiv (Sum.inl i))) + (∑ i, F (finSumFinEquiv (Sum.inr i))) = ∑ m, F m := by
+    intro F
+    rw [← Equiv.sum_comp finSumFinEquiv F, Fintype.sum_sum_type]
+  have hdelta : (∑ m, (Pi.single j (1 : ZMod 2) : Fin (n + n) → ZMod 2) m * x (Sum.inl m))
+      = x (Sum.inl j) := by simp [Pi.single_apply]
+  show x (Sum.inl j)
+    = (∑ i, (fun m => (Pi.single j (1 : ZMod 2) : Fin (n + n) → ZMod 2) m * x (Sum.inl m))
+          (finSumFinEquiv (Sum.inl i)))
+      + ∑ i, (fun m => (Pi.single j (1 : ZMod 2) : Fin (n + n) → ZMod 2) m * x (Sum.inl m))
+          (finSumFinEquiv (Sum.inr i))
+  rw [hsum (fun m => (Pi.single j (1 : ZMod 2) : Fin (n + n) → ZMod 2) m * x (Sum.inl m))]
+  exact hdelta.symm
+
+/-! ## §4. THE KERNEL IDENTITY — `transportedBInc = negBorBInc`. -/
+
+/-- **THE DOUBLING GEOMETRIC KERNEL IDENTITY.** The transported boundary-inclusion of the doubling
+realization is EXACTLY `negBorBInc n` — the fold after de-reindexing, ignoring the empty τ-block.
+Combining the geometric reduction (`…_eq_reindex`) with the source-coordinate identity (`…_eq_cyl`)
+and the cylinder fold `cylBd`. So the doubling membrane's computed Taylor-leg submodule is the honest
+reindexed anti-diagonal `ker (negBorBInc n)`, never a free/synthetic `bInc`. -/
+theorem doublingRealizationTied_transportedBInc :
+    transportedBInc (doublingRealizationTied Y basis Sτ bτ).toData = negBorBInc n := by
+  rw [doublingRealizationTied_transportedBInc_eq_reindex]
+  refine LinearMap.ext fun x => ?_
+  show cylBd n ((srcEquiv (cylRealizationTied Y basis).toData)
+      ((srcEquiv (doublingRealizationTied Y basis Sτ bτ).toData).symm x)) = negBorBInc n x
+  rw [doublingRealizationTied_srcEquiv_symm_eq_cyl, LinearEquiv.apply_symm_apply]
+  rfl
+
+/-- **The doubling membrane's kernel is the reindexed anti-diagonal** `ker (negBorBInc n)` — the honest
+geometric fold-kernel of the `(M,σ̄) ⊔ (M,σ) → ∅` doubling op, read through the DERIVED sum-basis. Never
+a free submodule; the synthetic-`bInc` e₈ exploit has no `GeoRealizationTied` source. -/
+theorem doublingRealizationTied_toMembrane_L (qσ : Z4Quadratic (Fin (n + n)))
+    (qτ : Z4Quadratic (Fin 0)) :
+    ((doublingRealizationTied Y basis Sτ bτ).toMembrane qσ qτ).L = LinearMap.ker (negBorBInc n) := by
+  show LinearMap.ker (transportedBInc (doublingRealizationTied Y basis Sτ bτ).toData) = _
+  rw [doublingRealizationTied_transportedBInc]
+  rfl
+
 end SKEFTHawking.PinPlusCharPairNegRealization
