@@ -4,14 +4,50 @@ import SKEFTHawking.PinPlusCylDataDischargeDisconnected
 /-!
 # Phase 5q.H — THE COMPONENT DECOMPOSITION (Route 2, staged)
 
-Building the five-field `DisconnectedCylCore M` (`D, hM4, nd14, nd23, hwu`) for a NONEMPTY
+Discharging the five-field `DisconnectedCylCore M` (`D, hM4, nd14, nd23, hwu`) for a NONEMPTY
 DISCONNECTED closed charted 4-manifold from the finite component decomposition.
 
-The connectedness dependence of the connected engine is genuinely irreducible: it localises to the
-punctured-top-vanishing `H₄(M∖σ) = 0` (`…CylinderOpenTopVanish.openManifold_top_homology_eq_zero`),
-which is FALSE for disconnected `M` (the other closed components survive with nonzero top homology).
-Route 2 routes around this via the finite clopen component decomposition + the binary clopen-split
-engine `SingularDisjointUnionHn.splitHnEquiv`, peeling one component at a time.
+## Where connectedness genuinely enters (sharpened from the predecessor's analysis)
+
+The predecessor located the disconnected obstruction at `SingularFundamentalClass.fundamentalClass`.
+That is imprecise: `fundamentalClass` / `fundamentalClass_restricts` / `fundamentalClass_ne_zero` are
+ALL connectedness-free (the mod-2 `[M]` exists and restricts to the local generator at every point for
+disconnected `M` too — only the *uniqueness* half `restrictHomologyToPoint_injective` needs
+connectedness). The genuine connectedness dependence of the `hasRelFundClass_cylGen` chain localises to
+the **punctured-top-vanishing** `H₄(M∖σ) = 0`
+(`…CylinderPuncturedFlankInjective` ∘ `…CylinderOpenTopVanish.openManifold_top_homology_eq_zero`),
+which is FALSE for disconnected `M`: removing a point from one component leaves the *other* closed
+components, each with `H₄ ≅ ℤ/2 ≠ 0`. This wall is irreducible — the flank injectivity that detects the
+cross class genuinely fails for disconnected `M`.
+
+## What this module discharges (GREEN, kernel-pure, connectedness-free)
+
+* **§1 Component finiteness** — `finite_connectedComponents` (compact charted ⟹ `Finite
+  (ConnectedComponents M)`, via locally-connected + compact).
+* **§2 `hM4`** — `topHomology_finite`: `H₄(M)` finite-dimensional for DISCONNECTED `M`, with NO
+  per-component submanifold. The multi-point restriction `H₄(M) → ∏_{c} H₄(M|x_c)` (one representative
+  per component) is injective — a `ker` class restricts to `0` at each `x_c`, its clopen vanishing set
+  (`isClopen_restrictZero`) then meets every component and (clopen ⟹ union of components) is `univ`, so
+  it is `0` (`topHomology_eq_zero_of_forall_restrict_zero`, the `determinedByPoints`-on-`univ` tail
+  lifted out of the connectedness-dependent `S = univ` step) — into a finite product of `ℤ/2`'s.
+* **§3–§4 residual sharpening 5 → 4** — with `hM4` discharged, `DisconnectedCylCore` reduces to the
+  four-field `DisconnectedCylCoreND {D, nd14, nd23, hwu}` (`.toCore` supplies `hM4`), and
+  `nonempty_provider_of_wuLeaf_and_disconnectedCoreND` re-states the provider on it.
+
+## The remaining `hM4`-free residual `{D, nd14, nd23, hwu}` — named, not faked
+
+`D` (the disconnected cylinder relative fundamental-class datum) is the bottleneck (`nd14`/`nd23`/`hwu`
+all reference `D.mu`). Its construction for disconnected `M` needs the local cross-class detection
+`crossHloc([M]|σ) ≠ 0` at every interior point WITHOUT the global flank injectivity (which fails).
+Two honest routes, each a separate arc: (a) a RELATIVE clopen-split homology engine (the relative
+analogue of `SingularDisjointUnionHn.splitHnEquiv` — not in-tree), summing the per-component connected
+`hasRelFundClass_cylGen` over the clopen peeling `cylW M = ⊔_c (C_c × I)`; (b) component-local
+detection — restrict the cross-class argument to the clopen piece `C(σ) × I` (`C(σ)` connected, so its
+flank injectivity holds). `cylW M` is not a literal `⊔`, so the abstract `blockSumCls` does NOT apply
+(the predecessor's homeo-transport wall). `nd14`/`nd23`/`hwu` are downstream of `D`.
+
+Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/
+axiom.
 -/
 
 open scoped Manifold
