@@ -173,4 +173,69 @@ noncomputable def ambientSurgeryDatum_of_weld
   ambientSurgeryDatum_of_traceWitness x hx0 hxq p' hrank b hT2
     ⟨borTetheredOfWeld wadmP hT2 real htaylor hlag weld hQ hW glueσ glueτ chartQ⟩
 
+/-! ## §3. Consumer 2 — `HandleTradeCobordism`: the raw trace cobordism supplies the existential
+`IsDataBordant`, residual = the `ξ.Bor` tangential structure. -/
+
+section HandleTrade
+
+open SKEFTHawking.SpinSigmaRoute
+open Matrix
+
+variable {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
+  {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+  [TopologicalSpace H] {I : ModelWithCorners ℝ E H} [I.Boundaryless]
+variable {ξ : TangentialData X k I}
+
+/-- **The instantiation shape — a trace bordism supplies `IsDataBordant`.** The raw single cobordism
+`b : Bordism (I.prod (𝓡∂ 1)) p.1 q.1` (a `surgeryTraceBordism` at the handle shape) carrying a
+tangential `ξ.Bor` structure IS a structured bordism, so it discharges `IsDataBordant ξ p q`
+directly. The only residual beyond the wave-3 trace bordism is the `ξ.Bor` structure on it — for a
+generic `ξ` this is the abstract tangential enrichment; for the Pin⁺ carrier it is the
+`CharPairBorRealizedTethered` (consumer 1). -/
+theorem dataBordant_of_traceBor {p q : StrMfd ξ}
+    (b : Bordism (I.prod (𝓡∂ 1)) p.1 q.1) (hBor : Nonempty (ξ.Bor b p.2 q.2)) :
+    IsDataBordant ξ p q :=
+  ⟨b, hBor⟩
+
+/-- **The ambient trace bordism (generic base) — the `b`-source for `HandleTradeCobordism`.**
+Re-exports `surgeryTraceBordism` at a generic base `X`/`I`. Fixing `Ha` the `S²×S²`-handle and the
+attaching-circle standardization gives the single handle-trace cobordism `p ↝ (S²×S²) ⊔ p'` whose
+class shadow is Benedetti's `[p] = [S²×S²] + [p']`. The output `Bordism D.J s t` fills the
+`IsDataBordant` existential once `D.J = I.prod (𝓡∂ 1)`, `D.k = k`, `s`/`t` the two ends. -/
+noncomputable def spinTraceBordism
+    (D : SmoothSurgeryChartDatum) [FiniteDimensional ℝ D.E']
+    (s t : SingularManifold.{0} X D.k I)
+    (e : s.M ⊕ t.M → D.toSurgeryChartDatum.toHandleAttachment.carrier)
+    (he_smooth : letI := D.toSurgeryChartDatum.carrierChartedSpace
+      ContMDiff I D.J D.k e)
+    (he_inj : Function.Injective e)
+    (he_boundary : letI := D.toSurgeryChartDatum.carrierChartedSpace
+      Set.range e = D.J.boundary D.toSurgeryChartDatum.toHandleAttachment.carrier)
+    (g : D.toSurgeryChartDatum.toHandleAttachment.carrier → X) (hg : Continuous g)
+    (hg_restrict : g ∘ e = Sum.elim s.f t.f) :
+    letI := D.toSurgeryChartDatum.carrierChartedSpace
+    Bordism D.J s t :=
+  letI := D.toSurgeryChartDatum.carrierChartedSpace
+  surgeryTraceBordism D s t e he_smooth he_inj he_boundary g hg hg_restrict
+
+/-- **The instantiation shape, documented against `HandleTradeCobordism`.** The terminal surgery
+primitive `HandleTradeCobordism` demands, per form-splitting input, a residual `p'` (rank `m`) with
+`IsDataBordant ξ p ((S²×S²) ⊔ p')`. `dataBordant_of_traceBor` shows each such `IsDataBordant` is
+supplied by a raw handle-trace bordism `b` (a `spinTraceBordism` existential, `Ha` the `S²×S²`-handle)
+carrying a `ξ.Bor` structure — so the residual of the whole primitive, per input, is exactly the
+`(b, ξ.Bor)` pair: the wave-3 trace bordism and its tangential enrichment. The `HandleTradeSurgery`
+chain (`realizesSphereProducts_of_cobordism_and_base`) already lands `HandleTradeCobordism` at the
+Freeze-A `RealizesSphereProducts` freeze; this module pins its geometric residual to the surgery
+trace. -/
+theorem handleTradeCobordism_residual_is_traceBor (R : SpinSigmaPresentation ξ) :
+    R.HandleTradeCobordism =
+      (∀ (p : StrMfd ξ) (m : ℕ) (eqv : Fin 2 ⊕ Fin m ≃ Fin (R.rank p))
+        (N' : Matrix (Fin m) (Fin m) ℤ), IsHyperbolicForm N' →
+        IntCongr (R.form p) (Matrix.reindex eqv eqv (Matrix.fromBlocks Hyp 0 0 N')) →
+        ∃ p' : StrMfd ξ, R.rank p' = m ∧
+          IsDataBordant ξ p ⟨R.s2s2.fst.sum p'.fst, ξ.sumStr R.s2s2.snd p'.snd⟩) :=
+  rfl
+
+end HandleTrade
+
 end SKEFTHawking.PinPlusKTSurgeryTraceConsumers
