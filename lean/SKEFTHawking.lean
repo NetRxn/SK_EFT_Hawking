@@ -4484,6 +4484,7 @@ import SKEFTHawking.SingularSurgeryFoundation
 import SKEFTHawking.SingularSurgeryCharts
 import SKEFTHawking.SingularSurgeryManifold
 import SKEFTHawking.SingularSurgeryWeld
+import SKEFTHawking.PinPlusKTSurgeryTraceConsumers
 import SKEFTHawking.PinPlusCylDataDischarge
 
 /-!
