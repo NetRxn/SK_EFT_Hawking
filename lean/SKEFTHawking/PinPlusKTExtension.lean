@@ -58,7 +58,7 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new proj
 `native_decide`, no `maxHeartbeats`.
 -/
 import Mathlib
-import SKEFTHawking.PinPlusCharPairData
+import SKEFTHawking.PinPlusCharPairCarrier
 import SKEFTHawking.RP4CharPairWitness
 import SKEFTHawking.PinPlusExactSequence
 

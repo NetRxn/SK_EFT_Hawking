@@ -4424,6 +4424,7 @@ import SKEFTHawking.PinPlusWAdmPinned
 import SKEFTHawking.PinPlusCharPairRealizationTied
 import SKEFTHawking.PinPlusCharPairCylRealization
 import SKEFTHawking.PinPlusCharPairBorRealized
+import SKEFTHawking.PinPlusCharPairCarrier
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
