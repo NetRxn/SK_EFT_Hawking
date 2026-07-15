@@ -229,14 +229,16 @@ class is `0` or the kernel representative `k₀ = 8 • [ℝP⁴]`. Lemma 5.3's 
 (gen [Kummer]) maps into `G` with image `ℤ/(÷32-classes) = ℤ/2`, so the spin sector image has ≤ 2
 elements. STATED as a HYPOTHESIS; NOT discharged.
 
-**Vacuity-attack line + DESIGN FINDING**: on its own this Prop is an UPPER bound and is VACUOUSLY
-satisfiable by a COLLAPSED sector — if the only empty-Σ class is `0` (which holds if the sector has
-no nonzero representative, e.g. before the Kummer witness is built), then `∀ x (empty-Σ), x = 0` and
-the left disjunct discharges it trivially. But that same collapse makes `k₀ = 0`, i.e. FALSIFIES
-`KTNonSplit`. Hence `SpinImageIsTwo` is non-vacuous ONLY when consumed TOGETHER with `KTNonSplit`
-(the non-split LOWER bound `k₀ ≠ 0`): the pair pins the image to EXACTLY `ℤ/2`. The round-8 gate
-must attack the pair, not this Prop alone. (This mirrors `PinPlusKTExtension` §6(b): `KTKernelCard`
-and `KTNonSplit` are BOTH load-bearing.) -/
+**Vacuity-attack line — ⚠ AMENDED BY GATE ROUND 8 (`PinPlusKTSectorGate`, the authoritative
+record):** on its own this Prop is an UPPER bound, vacuously satisfiable by a COLLAPSED sector
+(`spinImageIsTwo_of_sectorCollapsed`). The original claim here — that collapse falsifies
+`KTNonSplit`, so `{SpinImageIsTwo, KTNonSplit}` is the safe pair — was REFUTED by the gate:
+collapse does NOT force `k₀ = 0` (`k₀` need not be sector-representable), and the pair holds
+jointly under collapse with trivial image (`pair_holds_under_sectorCollapsed`). What collapse
+actually kills is `KummerWitness` (outright) and `KernelReducesToSpin`-given-`KTNonSplit`. The
+exactly-ℤ/2 pin is `{SpinImageIsTwo, KummerWitness}` (`sector_image_eq_pair`), and the BINDING
+round-8 consumption spec makes the TRIPLE `{KernelReducesToSpin, SpinImageIsTwo, KTNonSplit}`
+the minimal consumption unit — every 2-subset admits a degenerate model (G8-2/G8-3). -/
 def SpinImageIsTwo (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
   ∀ x : T2DataBordismGrp (pinPlusCharPairData prov),
     EmptySigmaRepresentable prov x → x = 0 ∨ x = ktKernelRep prov
