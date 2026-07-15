@@ -170,4 +170,140 @@ theorem hasGroupoid_comp_of_homeo {X Y : Type*} [TopologicalSpace X] [Topologica
         rw [OpenPartialHomeomorph.ofSet_trans, Homeomorph.toOpenPartialHomeomorph_target,
           OpenPartialHomeomorph.restr_univ]
 
+/-! ## §2. The surgery-trace three-region cover, named. -/
+
+namespace SurgeryChartDatum
+
+variable (D : SurgeryChartDatum)
+
+/-- **The surgery-trace three-region open cover** `{cylinder-interior, handle-interior, seam-collar}`,
+named (the inline cover of `carrierChartedSpace`). -/
+@[reducible] def surgeryCover : Fin 3 → Opens D.toHandleAttachment.carrier := fun i =>
+  ![⟨D.toHandleAttachment.cylInteriorRegion, D.toHandleAttachment.isOpen_cylInteriorRegion⟩,
+    ⟨D.toHandleAttachment.handleInteriorRegion, D.toHandleAttachment.isOpen_handleInteriorRegion⟩,
+    D.seamNbhd] i
+
+/-- **The per-region charted structures** (the inline `cs` of `carrierChartedSpace`): the two interiors
+inherit the ends' charts (§3, wave 2); the seam collar carries the datum's weld charts. -/
+@[reducible] noncomputable def surgeryRegionCS :
+    ∀ i, ChartedSpace D.H' ↥(D.surgeryCover i) := fun i =>
+  match i with
+  | 0 => D.toHandleAttachment.cylInteriorChartedSpace
+  | 1 => D.toHandleAttachment.handleInteriorChartedSpace
+  | 2 => D.chartSeam
+
+/-- The named cover indeed covers the carrier (region topology, wave 2). -/
+theorem surgeryCover_covers (w : D.toHandleAttachment.carrier) : ∃ i, w ∈ D.surgeryCover i := by
+  have hcov := D.toHandleAttachment.cylInteriorRegion_union_handleInteriorRegion_union_seamRegion
+  rw [Set.eq_univ_iff_forall] at hcov
+  rcases hcov w with (hcyl | hhandle) | hs
+  · exact ⟨0, hcyl⟩
+  · exact ⟨1, hhandle⟩
+  · exact ⟨2, D.hseam hs⟩
+
+/-- **The named cover reproduces `carrierChartedSpace`** (definitionally — proof-irrelevant `hcover`). -/
+theorem carrierChartedSpace_eq :
+    D.carrierChartedSpace
+      = chartedSpaceOfOpensCover D.surgeryCover D.surgeryCover_covers D.surgeryRegionCS :=
+  rfl
+
+end SurgeryChartDatum
+
+/-! ## §3. The smoothness-enriched surgery datum, and `IsManifold` (Target 2).
+
+`SmoothSurgeryChartDatum` enriches the wave-2 `SurgeryChartDatum` with the smoothness data the
+`IsManifold` layer needs: a `ModelWithCorners J`, a smoothness order `k`, the two ends and the seam
+collar as genuine `J`-manifolds, and — **the SmoothWeld field, the sole genuinely-geometric input** —
+the collar-weld's compatibility with the two interior regions (the seam↔interior chart transitions lie
+in the smooth groupoid). Wave 2 proved same-region transitions inherit and the two interiors are
+disjoint (empty-source transitions); the SmoothWeld is exactly the remaining groupoid content. -/
+
+/-- **A smoothness-enriched surgery-chart datum.** `SurgeryChartDatum` (wave 2) plus: the smooth model
+`J` and order `k`; the two ends `B`, `Ha` and the seam collar as `J`-manifolds; and the SmoothWeld —
+the seam-collar chart transitions with the two interior regions lie in `contDiffGroupoid k J`. From it
+`IsManifold J k W` is assembled (`carrierIsManifold`). -/
+structure SmoothSurgeryChartDatum extends SurgeryChartDatum where
+  /-- the model tangent space of the smooth structure. -/
+  E' : Type*
+  [normedE' : NormedAddCommGroup E']
+  [normedSpaceE' : NormedSpace ℝ E']
+  /-- the smooth model-with-corners (`= (𝓡 4).prod (𝓡∂ 1)` for the KT surgery trace). -/
+  J : ModelWithCorners ℝ E' toSurgeryChartDatum.H'
+  /-- the smoothness order. -/
+  k : WithTop ℕ∞
+  /-- the cylinder end `B = M × I` is a genuine `J`-manifold. -/
+  [mfdB : IsManifold J k toSurgeryChartDatum.toHandleAttachment.B]
+  /-- the handle end `Ha` is a genuine `J`-manifold. -/
+  [mfdHa : IsManifold J k toSurgeryChartDatum.toHandleAttachment.Ha]
+  /-- the seam collar is a genuine `J`-manifold. -/
+  [mfdSeam : IsManifold J k ↥toSurgeryChartDatum.seamNbhd]
+  /-- **THE SMOOTH WELD** — the seam-collar chart transitions with the two interior regions lie in the
+  smooth groupoid. The single genuinely-geometric input: the collar-neighborhood-theorem content
+  applied once at the attaching sphere. (Interior↔interior transitions are empty-source, hence smooth
+  automatically; same-region transitions inherit — so only these seam↔interior welds carry content.) -/
+  smoothWeld : ∀ (i j : Fin 3), (i = 2 ∨ j = 2) → i ≠ j →
+    ∀ (p : ↥(toSurgeryChartDatum.surgeryCover i)) (p' : ↥(toSurgeryChartDatum.surgeryCover j)),
+      bridgeTransition toSurgeryChartDatum.surgeryCover toSurgeryChartDatum.surgeryRegionCS i j p p'
+        ∈ contDiffGroupoid k J
+
+attribute [instance] SmoothSurgeryChartDatum.normedE' SmoothSurgeryChartDatum.normedSpaceE'
+  SmoothSurgeryChartDatum.mfdB SmoothSurgeryChartDatum.mfdHa SmoothSurgeryChartDatum.mfdSeam
+
+namespace SmoothSurgeryChartDatum
+
+variable (D : SmoothSurgeryChartDatum)
+
+/-- **Region 0 (cylinder interior) is a `J`-manifold** — transported from the end `B` through the
+interior homeo (`hasGroupoid_comp_of_homeo`), `B` being a manifold and `B ∖ range φ` an open subset. -/
+theorem hasGroupoid_region0 :
+    @HasGroupoid D.H' _ ↥(D.toHandleAttachment.cylInteriorRegion) _
+      D.toHandleAttachment.cylInteriorChartedSpace (contDiffGroupoid D.k D.J) := by
+  letI : ChartedSpace D.H' ↥((Set.range D.toHandleAttachment.φ)ᶜ) :=
+    TopologicalSpace.Opens.instChartedSpace
+      ⟨(Set.range D.toHandleAttachment.φ)ᶜ, D.toHandleAttachment.isClosed_range_φ.isOpen_compl⟩
+  haveI : HasGroupoid ↥((Set.range D.toHandleAttachment.φ)ᶜ) (contDiffGroupoid D.k D.J) :=
+    TopologicalSpace.Opens.instHasGroupoid (contDiffGroupoid D.k D.J)
+      ⟨(Set.range D.toHandleAttachment.φ)ᶜ, D.toHandleAttachment.isClosed_range_φ.isOpen_compl⟩
+  exact hasGroupoid_comp_of_homeo D.toHandleAttachment.cylInteriorHomeo (contDiffGroupoid D.k D.J)
+
+/-- **Region 1 (handle interior) is a `J`-manifold** — transported from the end `Ha` through the
+interior homeo, `Ha` being a manifold and `Ha ∖ S` an open subset. -/
+theorem hasGroupoid_region1 :
+    @HasGroupoid D.H' _ ↥(D.toHandleAttachment.handleInteriorRegion) _
+      D.toHandleAttachment.handleInteriorChartedSpace (contDiffGroupoid D.k D.J) := by
+  letI : ChartedSpace D.H' ↥(D.toHandleAttachment.Sᶜ) :=
+    TopologicalSpace.Opens.instChartedSpace
+      ⟨D.toHandleAttachment.Sᶜ, D.toHandleAttachment.hS.isOpen_compl⟩
+  haveI : HasGroupoid ↥(D.toHandleAttachment.Sᶜ) (contDiffGroupoid D.k D.J) :=
+    TopologicalSpace.Opens.instHasGroupoid (contDiffGroupoid D.k D.J)
+      ⟨D.toHandleAttachment.Sᶜ, D.toHandleAttachment.hS.isOpen_compl⟩
+  exact hasGroupoid_comp_of_homeo D.toHandleAttachment.handleInteriorHomeo (contDiffGroupoid D.k D.J)
+
+/-- **TARGET 2 — the surgery-trace carrier is a `C^k` manifold-with-boundary** `IsManifold J k W`.
+Assembled by the §1 keystone over the three-region cover: the two interiors are `J`-manifolds
+transported from the ends (`hasGroupoid_region0/1`), the seam collar is one (`mfdSeam`), the two
+interiors' cross-transitions are empty-source (disjoint, wave 2), and the seam↔interior welds are the
+datum's `smoothWeld`. `HasGroupoid.mk` (through the keystone) assembles `IsManifold`. -/
+theorem carrierIsManifold :
+    letI := D.toSurgeryChartDatum.carrierChartedSpace
+    IsManifold D.J D.k D.toSurgeryChartDatum.toHandleAttachment.carrier := by
+  letI := D.toSurgeryChartDatum.carrierChartedSpace
+  refine @IsManifold.mk' ℝ _ D.E' _ _ D.H' _ D.J D.k _ _ _ ?_
+  refine hasGroupoid_of_opensCover D.toSurgeryChartDatum.surgeryCover
+    D.toSurgeryChartDatum.surgeryCover_covers D.toSurgeryChartDatum.surgeryRegionCS
+    (contDiffGroupoid D.k D.J) ?_
+  intro i j p p'
+  fin_cases i <;> fin_cases j <;>
+    first
+      | exact bridgeTransition_diag_mem _ _ _ _ p p' D.hasGroupoid_region0
+      | exact bridgeTransition_diag_mem _ _ _ _ p p' D.hasGroupoid_region1
+      | exact bridgeTransition_diag_mem _ _ _ _ p p' D.mfdSeam.toHasGroupoid
+      | exact bridgeTransition_empty_mem _ _ _ _ _ p p'
+          D.toHandleAttachment.cylInteriorRegion_disjoint_handleInteriorRegion
+      | exact bridgeTransition_empty_mem _ _ _ _ _ p p'
+          D.toHandleAttachment.cylInteriorRegion_disjoint_handleInteriorRegion.symm
+      | exact D.smoothWeld _ _ (by decide) (by decide) p p'
+
+end SmoothSurgeryChartDatum
+
 end SKEFTHawking.SurgeryFoundation
