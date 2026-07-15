@@ -207,22 +207,25 @@ variable {I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))} [I.Boun
 /-- **THE PROVIDER-INHABITATION ASSEMBLY** — a `CharPairWProviderPerOp I k` from the concrete
 Track-2 residual set. The HONEST hypothesis row:
 
-* `cylData : ∀ s, CylWAdmData s` — the concrete-cylinder residual bundle for every structured `s`
-  (pinned Lefschetz–Wu data on `cylW s.M = s.M × [0,1]`). Discharged for a nice — `T2`, `Nonempty`,
-  connected, finite-Betti — `s.M` by Track-2's `CylinderWAdmPinned.toCylWAdmData`. This single family
-  feeds `cyl`, `doubling`, AND `mapCyl` (all three op bordisms share `W = cylW s.M`).
+* `cylData : ∀ {s} (σ : CharPairStrBundled I s), CylWAdmData s` — the concrete-cylinder residual
+  bundle for every CERT-CARRYING structured `s` (F7-A, round 7: the bare-`s` family was
+  mathematically uninhabitable — `w₂(s.M) ≠ 0` manifolds empty it; the bundled end's certificate
+  controls `w₂`, so the σ-threaded family is honest-inhabitable). Discharged for a nice — `T2`,
+  `Nonempty`, connected, finite-Betti — `s.M` by Track-2's `CylinderWAdmPinned.toCylWAdmData`.
+  This single family feeds `cyl`, `doubling`, AND `mapCyl` (all three share `W = cylW s.M`).
 * `addClosure` — the `⊔`-block-diagonal admissibility `WAdmPinned b₁ → WAdmPinned b₂ →
-  WAdmPinned (b₁.add b₂)` on `b₁.W ⊕ b₂.W` (NOT a cylinder; the disjoint-union Lefschetz–Wu assembly,
-  a named Track-2 residual). -/
+  WAdmPinned (b₁.add b₂)` on `b₁.W ⊕ b₂.W` (NOT a cylinder; the disjoint-union Lefschetz–Wu
+  assembly — `exists_wuAdmPinned_sum` closes it modulo `SumRelFundClass`). -/
 def CharPairWProviderPerOp.ofCylinderEngine
-    (cylData : ∀ {s : SingularManifold.{0} PUnit.{1} k I}, CylWAdmData s)
+    (cylData : ∀ {s : SingularManifold.{0} PUnit.{1} k I},
+      CharPairStrBundled I s → CylWAdmData s)
     (addClosure : ∀ {s₁ t₁ s₂ t₂ : SingularManifold.{0} PUnit.{1} k I}
       {b₁ : Bordism (I.prod (𝓡∂ 1)) s₁ t₁} {b₂ : Bordism (I.prod (𝓡∂ 1)) s₂ t₂},
       WAdmPinned b₁ → WAdmPinned b₂ → WAdmPinned (b₁.add b₂)) :
     CharPairWProviderPerOp I k where
-  cyl := fun {s} => (cylData (s := s)).toReflCylinder
-  doubling := fun {s} => (cylData (s := s)).toDoublingBordism
-  mapCyl := fun {_s _t} φ hf => (cylData).toMapCylinder φ hf
+  cyl := fun {s} σ => (cylData σ).toReflCylinder
+  doubling := fun {s} σ => (cylData σ).toDoublingBordism
+  mapCyl := fun {_s _t} φ hf σ _τ => (cylData σ).toMapCylinder φ hf
   addClosure := addClosure
 
 end

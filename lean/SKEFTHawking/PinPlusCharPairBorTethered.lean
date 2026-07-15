@@ -141,13 +141,20 @@ product-cylinder admissibility (`W = M × [0,1]` up to the defining diffeos / di
 Track-2 `CylinderWAdmPinned`-family deliverable discharges the whole family (§6 plug-in seam). -/
 structure CharPairWProviderPerOp (I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2))))
     [I.Boundaryless] (k : WithTop ℕ∞) : Type (u_1 + 1) where
-  /-- reflexive-cylinder admissibility (`cylBor`, `revBor` end-reversals reuse the input's). -/
-  cyl : ∀ {s : SingularManifold.{0} PUnit.{1} k I}, WAdmPinned (reflCylinder s)
-  /-- doubling-bordism admissibility (`negBor`). -/
-  doubling : ∀ {s : SingularManifold.{0} PUnit.{1} k I}, WAdmPinned (doublingBordism s)
-  /-- mapping-cylinder admissibility (`unitBor`/`commBor`/`assocBor`, each a `mapCylinder` of a diffeo). -/
+  /-- reflexive-cylinder admissibility (`cylBor`, `revBor` end-reversals reuse the input's).
+  **F7-A (round 7): quantified over the BUNDLED end** — the provider need only serve
+  cert-carrying structured manifolds (`w₂`-controlled), making the family honest-inhabitable;
+  the bare-`s` form was mathematically uninhabitable (any `w₂(s.M) ≠ 0` emptied it). -/
+  cyl : ∀ {s : SingularManifold.{0} PUnit.{1} k I},
+    CharPairStrBundled I s → WAdmPinned (reflCylinder s)
+  /-- doubling-bordism admissibility (`negBor`) — bundled-end quantified (F7-A). -/
+  doubling : ∀ {s : SingularManifold.{0} PUnit.{1} k I},
+    CharPairStrBundled I s → WAdmPinned (doublingBordism s)
+  /-- mapping-cylinder admissibility (`unitBor`/`commBor`/`assocBor`, each a `mapCylinder` of a
+  diffeo) — bundled-ends quantified (F7-A). -/
   mapCyl : ∀ {s t : SingularManifold.{0} PUnit.{1} k I} (φ : Diffeomorph I I s.M t.M k)
-    (hf : t.f ∘ φ = s.f), WAdmPinned (mapCylinder φ hf)
+    (hf : t.f ∘ φ = s.f), CharPairStrBundled I s → CharPairStrBundled I t →
+    WAdmPinned (mapCylinder φ hf)
   /-- **the `add`-closure**: disjoint union of two admissibilities (`addBor`). -/
   addClosure : ∀ {s₁ t₁ s₂ t₂ : SingularManifold.{0} PUnit.{1} k I}
     {b₁ : Bordism (I.prod (𝓡∂ 1)) s₁ t₁} {b₂ : Bordism (I.prod (𝓡∂ 1)) s₂ t₂},
@@ -171,11 +178,11 @@ noncomputable def cylBorTethered (prov : CharPairWProviderPerOp I k) (σ : CharP
   haveI := σ.surfT2
   haveI := σ.t2
   { hWT2 := inferInstanceAs (T2Space (s.M × Set.Icc (0 : ℝ) 1))
-    P14 := (prov.cyl (s := s)).wadm.P14
-    P23 := (prov.cyl (s := s)).wadm.P23
-    hwu := (prov.cyl (s := s)).wadm.hwu
-    pin14 := (prov.cyl (s := s)).pin14
-    pin23 := (prov.cyl (s := s)).pin23
+    P14 := (prov.cyl σ).wadm.P14
+    P23 := (prov.cyl σ).wadm.P23
+    hwu := (prov.cyl σ).wadm.hwu
+    pin14 := (prov.cyl σ).pin14
+    pin23 := (prov.cyl σ).pin23
     real := cylRealizationTied (TopCat.of σ.surf.M) σ.basis
     htaylor := by rw [cylRealizationTied_toMembrane_L]; exact taylorLeg_cyl σ.q
     hlag := by rw [cylRealizationTied_toMembrane_L]; exact lagrangian_cyl σ.q
@@ -255,11 +262,11 @@ noncomputable def negBorTethered (prov : CharPairWProviderPerOp I k) (σ : CharP
   { hWT2 := by
       haveI := σ.t2
       exact inferInstanceAs (T2Space (s.M × Set.Icc (0 : ℝ) 1))
-    P14 := (prov.doubling (s := s)).wadm.P14
-    P23 := (prov.doubling (s := s)).wadm.P23
-    hwu := (prov.doubling (s := s)).wadm.hwu
-    pin14 := (prov.doubling (s := s)).pin14
-    pin23 := (prov.doubling (s := s)).pin23
+    P14 := (prov.doubling σ).wadm.P14
+    P23 := (prov.doubling σ).wadm.P23
+    hwu := (prov.doubling σ).wadm.hwu
+    pin14 := (prov.doubling σ).pin14
+    pin23 := (prov.doubling σ).pin23
     real := doublingRealizationTied (TopCat.of σ.surf.M) σ.basis
       (TopCat.of (charPairBundledEmpty (I := I) (k := k)).surf.M)
       (charPairBundledEmpty (I := I) (k := k)).basis
@@ -357,7 +364,7 @@ noncomputable def unitBorTethered (prov : CharPairWProviderPerOp I k) (σ : Char
       (show (s : SingularManifold PUnit k I).f ∘ ⇑(Diffeomorph.sumEmpty I s.M k (M' := emptySM.M))
           = (s.sum (emptySM : SingularManifold.{0} PUnit.{1} k I)).f by
         funext z; cases z with | inl m => rfl | inr e => exact (IsEmpty.false e).elim)) :=
-    prov.mapCyl _ _
+    prov.mapCyl _ _ (charPairBundledSumStr σ charPairBundledEmpty) σ
   { hWT2 := by
       haveI := σ.t2
       haveI : T2Space (emptySM (X := PUnit) (k := k) (I := I)).M := ⟨fun x => isEmptyElim x⟩
@@ -480,6 +487,7 @@ noncomputable def commBorTethered (prov : CharPairWProviderPerOp I k)
     rfl
   have wadmP := prov.mapCyl (s := s.sum t) (t := t.sum s) (Diffeomorph.sumComm I s.M k t.M)
     (by funext z; rcases z with z | z <;> rfl)
+    (charPairBundledSumStr σ τ) (charPairBundledSumStr τ σ)
   { hWT2 := by
       haveI := σ.t2; haveI := τ.t2
       exact inferInstanceAs (T2Space ((s.M ⊕ t.M) × Set.Icc (0 : ℝ) 1))
@@ -616,6 +624,8 @@ noncomputable def assocBorTethered (prov : CharPairWProviderPerOp I k)
     rfl
   have wadmP := prov.mapCyl (s := (s.sum t).sum u) (t := s.sum (t.sum u))
     (Diffeomorph.sumAssoc I s.M k t.M u.M) (by funext w; rcases w with (w | w) | w <;> rfl)
+    (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ)
+    (charPairBundledSumStr σ (charPairBundledSumStr τ ρ))
   { hWT2 := by
       haveI := σ.t2; haveI := τ.t2; haveI := ρ.t2
       exact inferInstanceAs (T2Space (((s.M ⊕ t.M) ⊕ u.M) × Set.Icc (0 : ℝ) 1))

@@ -348,29 +348,34 @@ theorem ktNonSplit_requires_no_tethered_double (prov : CharPairWProviderPerOp (�
   rw [not_isEmpty_iff] at h
   exact hns (ktKernelRep_eq_zero_of_tethered_double prov b hT2 h)
 
-/-! ## §4. F7-A — the provider-width demonstrators (the kernel-checked record that NO certificate
-is consumed by the per-op quantifiers; the finding itself is prose+spec in the header, per the
-round-6 F6 precedent — the in-tree emptiness proof needs a `w₂ ≠ 0` 4-manifold's Wu tower). -/
+/-! ## §4. F7-A — ✅ FIXED (the σ-threading, 2026-07-15): the demonstrators now RECORD that the
+certificate IS consumed. The round-7 finding: the original fields quantified over BARE `s`, so
+any `w₂(s.M) ≠ 0` closed 4-manifold (ℂP², ℝP²×ℝP²) emptied its instance and the provider type
+was mathematically uninhabitable (the pins force the honest `w₂(s.M × I) = 0`). The frozen fix
+threaded `CharPairStrBundled` through every cylinder-family field: instantiating now REQUIRES a
+characteristic-pair certificate on the end, so the provider only serves the cert-carrying
+(`w₂`-controlled) family — honest-inhabitable, with Track-2's `CylinderWAdmPinned` as the
+discharge seam. The demonstrators below kernel-record the new consumption shape (each demands
+the bundle; the bare-`s` versions no longer type-check — checked at the fix). -/
 
-/-- **F7-A demonstrator (cyl)**: the per-op provider hands PINNED cylinder admissibility for EVERY
-closed 4-manifold `s` — instantiating at `s` consumes NO characteristic-pair certificate. For any
-`s` with `w₂(s.M) ≠ 0` (e.g. `ℂP²`), the target type is mathematically empty (the pins force the
-honest `w₂(s.M × I) = 0`), so the provider type itself is uninhabitable. -/
-def providerCylUnfiltered (prov : CharPairWProviderPerOp I k)
-    (s : SingularManifold.{0} PUnit.{1} k I) : WAdmPinned (reflCylinder s) :=
-  prov.cyl
+/-- **F7-A post-fix demonstrator (cyl)**: cylinder admissibility is available ONLY against a
+characteristic-pair certificate on the end — the bundle is consumed. -/
+def providerCylFiltered (prov : CharPairWProviderPerOp I k)
+    {s : SingularManifold.{0} PUnit.{1} k I} (σ : CharPairStrBundled I s) :
+    WAdmPinned (reflCylinder s) :=
+  prov.cyl σ
 
-/-- **F7-A demonstrator (mapCyl)**: likewise for EVERY diffeomorphism's mapping cylinder — the
-quantifier ranges over all closed 4-manifold pairs, cert-free. -/
-def providerMapCylUnfiltered (prov : CharPairWProviderPerOp I k)
+/-- **F7-A post-fix demonstrator (mapCyl)**: both ends' bundles are consumed. -/
+def providerMapCylFiltered (prov : CharPairWProviderPerOp I k)
     {s t : SingularManifold.{0} PUnit.{1} k I} (φ : Diffeomorph I I s.M t.M k)
-    (hf : t.f ∘ φ = s.f) : WAdmPinned (mapCylinder φ hf) :=
-  prov.mapCyl φ hf
+    (hf : t.f ∘ φ = s.f) (σ : CharPairStrBundled I s) (τ : CharPairStrBundled I t) :
+    WAdmPinned (mapCylinder φ hf) :=
+  prov.mapCyl φ hf σ τ
 
-/-- **F7-A demonstrator (doubling)**: likewise for the doubling bordism over EVERY closed
-4-manifold. -/
-def providerDoublingUnfiltered (prov : CharPairWProviderPerOp I k)
-    (s : SingularManifold.{0} PUnit.{1} k I) : WAdmPinned (doublingBordism s) :=
-  prov.doubling
+/-- **F7-A post-fix demonstrator (doubling)**: the bundle is consumed. -/
+def providerDoublingFiltered (prov : CharPairWProviderPerOp I k)
+    {s : SingularManifold.{0} PUnit.{1} k I} (σ : CharPairStrBundled I s) :
+    WAdmPinned (doublingBordism s) :=
+  prov.doubling σ
 
 end SKEFTHawking.PinPlusCharPairTetherGate
