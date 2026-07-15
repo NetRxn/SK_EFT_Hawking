@@ -1302,6 +1302,7 @@ import SKEFTHawking.SingularGoodCompactEuclidean
 import SKEFTHawking.SingularGoodCompactChart
 import SKEFTHawking.SingularCompactChartCover
 import SKEFTHawking.SingularGoodCompactManifold
+import SKEFTHawking.SingularGoodCompactCompactExcision
 import SKEFTHawking.SingularFundamentalClass
 import SKEFTHawking.SingularFundamentalClassExist
 -- Phase 5q.F (fully-unconditional strengthening, w₂-foundation brick 5, 2026-06-15): the Wu class v₂ from
@@ -4412,6 +4413,7 @@ import SKEFTHawking.PoincareLefschetzRelFundClassCylinderWu
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderNumerics
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderSuspension
 import SKEFTHawking.PinPlusCylinderWAdmPinned
+import SKEFTHawking.PinPlusCylinderWAdmPinnedTriage
 import SKEFTHawking.SingularKroneckerBasisBridge
 import SKEFTHawking.PoincareLefschetzWuPairingCriterion
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderNondeg
