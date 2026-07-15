@@ -4487,6 +4487,7 @@ import SKEFTHawking.SingularSurgeryWeld
 import SKEFTHawking.PinPlusKTSurgeryTraceConsumers
 import SKEFTHawking.SingularSurgeryDatumC0
 import SKEFTHawking.SingularSurgeryChartsConcrete
+import SKEFTHawking.DiskChartGeneric
 import SKEFTHawking.PinPlusCylDataDischarge
 import SKEFTHawking.PinPlusCylDataDischargeDisconnected
 import SKEFTHawking.PinPlusCylDataDischargeDisconnectedComponents
