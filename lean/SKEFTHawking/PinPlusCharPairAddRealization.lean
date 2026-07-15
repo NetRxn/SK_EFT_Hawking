@@ -28,6 +28,7 @@ import SKEFTHawking.PinPlusCharPairBorRealizedOps
 
 open scoped Manifold
 open Topology
+open SKEFTHawking.BordismTheory
 open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
 open SKEFTHawking.SingularFunctoriality SKEFTHawking.SingularCohomologyFunctoriality
@@ -64,6 +65,7 @@ clopen set `inl '' U₁ ∪ inr '' U₂`. -/
 def blockSubIncl (U₁ : Set A) (U₂ : Set B) : (↥U₁ ⊕ ↥U₂) → A ⊕ B :=
   Sum.map Subtype.val Subtype.val
 
+omit [TopologicalSpace A] [TopologicalSpace B] in
 theorem range_blockSubIncl (U₁ : Set A) (U₂ : Set B) :
     Set.range (blockSubIncl U₁ U₂) = Sum.inl '' U₁ ∪ Sum.inr '' U₂ := by
   ext x
@@ -75,6 +77,7 @@ theorem blockSubIncl_continuous (U₁ : Set A) (U₂ : Set B) :
     Continuous (blockSubIncl U₁ U₂) :=
   continuous_subtype_val.sumMap continuous_subtype_val
 
+omit [TopologicalSpace A] [TopologicalSpace B] in
 theorem blockSubIncl_injective (U₁ : Set A) (U₂ : Set B) :
     Function.Injective (blockSubIncl U₁ U₂) :=
   Function.Injective.sumMap Subtype.val_injective Subtype.val_injective
@@ -512,6 +515,101 @@ theorem sum_transportedBInc (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ�
     rw [Pi.zero_apply, zero_add]
     congr 1
 
+/-- **THE KERNEL IDENTITY** — the sum membrane's computed Taylor-leg submodule lands EXACTLY on the
+tied `charPairAddBorTied`'s `hmeta` submodule: the block Lagrangian of the two components' kernels,
+regrouped (`sumSumSumComm`) and de-reindexed (`sumCongr finSumFinEquiv`). Never a free submodule. -/
+theorem sum_ker_transportedBInc (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁)
+    (d₂ : GeoRealizationTied Sσ₂ Sτ₂ bσ₂ bτ₂) :
+    LinearMap.ker (transportedBInc (GeoRealizationTied.sum d₁ d₂).toData)
+      = ((blockSub (LinearMap.ker (transportedBInc d₁.toData))
+            (LinearMap.ker (transportedBInc d₂.toData))).comap
+          (LinearMap.funLeft (ZMod 2) (ZMod 2)
+            (Equiv.sumSumSumComm (Fin nσ₁) (Fin nτ₁) (Fin nσ₂) (Fin nτ₂)))).comap
+        (LinearMap.funLeft (ZMod 2) (ZMod 2) (finSumFinEquiv.sumCongr finSumFinEquiv)) := by
+  rw [sum_transportedBInc]
+  ext v
+  rw [LinearMap.mem_ker, Submodule.mem_comap, Submodule.mem_comap]
+  show LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2) (finSumFinEquiv (m := d₁.mid) (n := d₂.mid)).symm
+        (blockMap (transportedBInc d₁.toData) (transportedBInc d₂.toData)
+          (LinearMap.funLeft (ZMod 2) (ZMod 2)
+              (Equiv.sumSumSumComm (Fin nσ₁) (Fin nτ₁) (Fin nσ₂) (Fin nτ₂))
+            (LinearMap.funLeft (ZMod 2) (ZMod 2) (finSumFinEquiv.sumCongr finSumFinEquiv) v))) = 0
+      ↔ LinearMap.funLeft (ZMod 2) (ZMod 2)
+            (Equiv.sumSumSumComm (Fin nσ₁) (Fin nτ₁) (Fin nσ₂) (Fin nτ₂))
+          (LinearMap.funLeft (ZMod 2) (ZMod 2) (finSumFinEquiv.sumCongr finSumFinEquiv) v)
+        ∈ blockSub (LinearMap.ker (transportedBInc d₁.toData))
+            (LinearMap.ker (transportedBInc d₂.toData))
+  rw [EmbeddingLike.map_eq_zero_iff, ← LinearMap.mem_ker, ker_blockMap]
+
 end Sum
+
+/-! ## §7. `addBorRealized` — the realized+pinned `⊔` op, matching the tied `charPairAddBorTied`. -/
+
+section AddBor
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+variable {k : WithTop ℕ∞}
+variable {I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))} [I.Boundaryless]
+
+/-- **`addBor` REALIZED** — the genuine disjoint union of two realized+pinned bordism data. The
+membrane is `GeoRealizationTied.sum β₁.real β₂.real` (the honest `Q₁ ⊔ Q₂`), whose computed Taylor-leg
+submodule is the block Lagrangian of the two components' realized kernels regrouped exactly onto
+`charPairAddBorTied`'s metabolic submodule (`IsMetabolic.orthSum` + `sumSumSumComm`/`sumCongr`
+reindexes). Pins/P14/P23/hwu descend from the pinned provider. The synthetic-`bInc` e₈ exploit has no
+`GeoRealizationTied.sum` source. -/
+noncomputable def addBorRealized (prov : CharPairWProviderPinned I k)
+    {s₁ t₁ s₂ t₂ : SingularManifold.{0} PUnit.{1} k I}
+    {b₁ : Bordism (I.prod (𝓡∂ 1)) s₁ t₁} {b₂ : Bordism (I.prod (𝓡∂ 1)) s₂ t₂}
+    {σ₁ : CharPairStrBundled I s₁} {τ₁ : CharPairStrBundled I t₁}
+    {σ₂ : CharPairStrBundled I s₂} {τ₂ : CharPairStrBundled I t₂}
+    (β₁ : CharPairBorRealized b₁ σ₁ τ₁) (β₂ : CharPairBorRealized b₂ σ₂ τ₂) :
+    CharPairBorRealized (b₁.add b₂) (charPairBundledSumStr σ₁ σ₂) (charPairBundledSumStr τ₁ τ₂) :=
+  haveI := (charPairBundledSumStr σ₁ σ₂).surfT2
+  haveI := (charPairBundledSumStr τ₁ τ₂).surfT2
+  have hblock : IsMetabolic
+      (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q (Z4Quadratic.neg τ₁.q))
+        (Z4Quadratic.orthSum σ₂.q (Z4Quadratic.neg τ₂.q)))
+      (blockSub (β₁.real.toMembrane σ₁.q τ₁.q).L (β₂.real.toMembrane σ₂.q τ₂.q).L) :=
+    IsMetabolic.orthSum ⟨β₁.htaylor, β₁.hlag⟩ ⟨β₂.htaylor, β₂.hlag⟩
+  have hregroup : Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q σ₂.q)
+        (Z4Quadratic.neg (Z4Quadratic.orthSum τ₁.q τ₂.q))
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q (Z4Quadratic.neg τ₁.q))
+          (Z4Quadratic.orthSum σ₂.q (Z4Quadratic.neg τ₂.q))).reindex
+          (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n)) := by
+    rw [neg_orthSum, orthSum_regroup]
+  have hbase' := hblock.reindex (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n))
+  have hbase : IsMetabolic (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q σ₂.q)
+        (Z4Quadratic.neg (Z4Quadratic.orthSum τ₁.q τ₂.q)))
+      ((blockSub (β₁.real.toMembrane σ₁.q τ₁.q).L (β₂.real.toMembrane σ₂.q τ₂.q).L).comap
+        (LinearMap.funLeft (ZMod 2) (ZMod 2)
+          (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n)))) := by
+    rw [hregroup]; exact hbase'
+  have hform : jointEnhancement (charPairBundledSumStr σ₁ σ₂).q (charPairBundledSumStr τ₁ τ₂).q
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q σ₂.q)
+          (Z4Quadratic.neg (Z4Quadratic.orthSum τ₁.q τ₂.q))).reindex
+          (Equiv.sumCongr finSumFinEquiv finSumFinEquiv) :=
+    jointEnhancement_reindex (orthSum σ₁.q σ₂.q) (orthSum τ₁.q τ₂.q) finSumFinEquiv finSumFinEquiv
+  have hmeta : IsMetabolic
+      (jointEnhancement (charPairBundledSumStr σ₁ σ₂).q (charPairBundledSumStr τ₁ τ₂).q)
+      (((blockSub (β₁.real.toMembrane σ₁.q τ₁.q).L (β₂.real.toMembrane σ₂.q τ₂.q).L).comap
+          (LinearMap.funLeft (ZMod 2) (ZMod 2)
+            (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n)))).comap
+        (LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumCongr finSumFinEquiv finSumFinEquiv))) := by
+    rw [hform]; exact hbase.reindex (Equiv.sumCongr finSumFinEquiv finSumFinEquiv)
+  mkCharPairBorRealized prov (b₁.add b₂)
+    (by haveI : T2Space b₁.W := β₁.hWT2; haveI : T2Space b₂.W := β₂.hWT2
+        exact inferInstanceAs (T2Space (b₁.W ⊕ b₂.W)))
+    (GeoRealizationTied.sum β₁.real β₂.real)
+    (by
+      show TaylorLegVanishes _ _ (LinearMap.ker (transportedBInc
+        (GeoRealizationTied.sum β₁.real β₂.real).toData))
+      rw [sum_ker_transportedBInc]
+      exact hmeta.1)
+    (by
+      show JointLagrangian _ _ (LinearMap.ker (transportedBInc
+        (GeoRealizationTied.sum β₁.real β₂.real).toData))
+      rw [sum_ker_transportedBInc]
+      exact hmeta.2)
+
+end AddBor
 
 end SKEFTHawking.PinPlusCharPairAddRealization
