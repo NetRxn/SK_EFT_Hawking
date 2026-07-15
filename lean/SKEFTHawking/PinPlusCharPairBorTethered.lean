@@ -692,4 +692,168 @@ noncomputable def assocBorTethered (prov : CharPairWProviderPerOp I k)
           × ↑(TopCat.of unitInterval))
       infer_instance }
 
+/-! ### Pointwise block-homeomorphism reductions for the disjoint-union realization's boundary
+identifications (`homσ`/`homτ` on each `Sum.inl`/`Sum.inr` block) — the `add` glue's workhorse. -/
+
+section SumGlue
+variable {nσ₁ nτ₁ nσ₂ nτ₂ : ℕ} {Sσ₁ Sτ₁ Sσ₂ Sτ₂ : TopCat}
+  {bσ₁ : Cohomology Sσ₁ 1 ≃ₗ[ZMod 2] (Fin nσ₁ → ZMod 2)}
+  {bτ₁ : Cohomology Sτ₁ 1 ≃ₗ[ZMod 2] (Fin nτ₁ → ZMod 2)}
+  {bσ₂ : Cohomology Sσ₂ 1 ≃ₗ[ZMod 2] (Fin nσ₂ → ZMod 2)}
+  {bτ₂ : Cohomology Sτ₂ 1 ≃ₗ[ZMod 2] (Fin nτ₂ → ZMod 2)}
+  (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁) (d₂ : GeoRealizationTied Sσ₂ Sτ₂ bσ₂ bτ₂)
+
+theorem sum_homσ_inl_pt (v : ↑d₁.bdry) (hv₁ : v ∈ d₁.U)
+    (hv : Sum.inl v ∈ (GeoRealizationTied.sum d₁ d₂).U) :
+    (GeoRealizationTied.sum d₁ d₂).homσ ⟨Sum.inl v, hv⟩ = Sum.inl (d₁.homσ ⟨v, hv₁⟩) := by
+  haveI := d₁.bdryCompact; haveI := d₂.bdryCompact; haveI := d₁.bdryT2; haveI := d₂.bdryT2
+  show (d₁.homσ.sumCongr d₂.homσ)
+      ((blockSubHomeo d₁.U d₂.U d₁.hU.1 d₂.hU.1).symm ⟨Sum.inl v, hv⟩) = _
+  rw [show (blockSubHomeo d₁.U d₂.U d₁.hU.1 d₂.hU.1).symm ⟨Sum.inl v, hv⟩ = Sum.inl ⟨v, hv₁⟩ from
+    (Homeomorph.symm_apply_eq _).mpr (Subtype.ext (blockSubHomeo_inl _ _ _ _ ⟨v, hv₁⟩).symm)]
+  rfl
+
+theorem sum_homσ_inr_pt (v : ↑d₂.bdry) (hv₂ : v ∈ d₂.U)
+    (hv : Sum.inr v ∈ (GeoRealizationTied.sum d₁ d₂).U) :
+    (GeoRealizationTied.sum d₁ d₂).homσ ⟨Sum.inr v, hv⟩ = Sum.inr (d₂.homσ ⟨v, hv₂⟩) := by
+  haveI := d₁.bdryCompact; haveI := d₂.bdryCompact; haveI := d₁.bdryT2; haveI := d₂.bdryT2
+  show (d₁.homσ.sumCongr d₂.homσ)
+      ((blockSubHomeo d₁.U d₂.U d₁.hU.1 d₂.hU.1).symm ⟨Sum.inr v, hv⟩) = _
+  rw [show (blockSubHomeo d₁.U d₂.U d₁.hU.1 d₂.hU.1).symm ⟨Sum.inr v, hv⟩ = Sum.inr ⟨v, hv₂⟩ from
+    (Homeomorph.symm_apply_eq _).mpr (Subtype.ext (blockSubHomeo_inr _ _ _ _ ⟨v, hv₂⟩).symm)]
+  rfl
+
+theorem sum_homτ_inl_pt (v : ↑d₁.bdry) (hv₁ : v ∈ d₁.Uᶜ)
+    (hv : Sum.inl v ∈ (GeoRealizationTied.sum d₁ d₂).Uᶜ) :
+    (GeoRealizationTied.sum d₁ d₂).homτ ⟨Sum.inl v, hv⟩ = Sum.inl (d₁.homτ ⟨v, hv₁⟩) := by
+  haveI := d₁.bdryCompact; haveI := d₂.bdryCompact; haveI := d₁.bdryT2; haveI := d₂.bdryT2
+  show (d₁.homτ.sumCongr d₂.homτ)
+      ((blockSubHomeo d₁.Uᶜ d₂.Uᶜ d₁.hU.compl.1 d₂.hU.compl.1).symm
+        ((Homeomorph.setCongr (compl_block d₁.U d₂.U)) ⟨Sum.inl v, hv⟩)) = _
+  rw [show (blockSubHomeo d₁.Uᶜ d₂.Uᶜ d₁.hU.compl.1 d₂.hU.compl.1).symm
+        ((Homeomorph.setCongr (compl_block d₁.U d₂.U)) ⟨Sum.inl v, hv⟩) = Sum.inl ⟨v, hv₁⟩ from
+    (Homeomorph.symm_apply_eq _).mpr (Subtype.ext (blockSubHomeo_inl _ _ _ _ ⟨v, hv₁⟩).symm)]
+  rfl
+
+theorem sum_homτ_inr_pt (v : ↑d₂.bdry) (hv₂ : v ∈ d₂.Uᶜ)
+    (hv : Sum.inr v ∈ (GeoRealizationTied.sum d₁ d₂).Uᶜ) :
+    (GeoRealizationTied.sum d₁ d₂).homτ ⟨Sum.inr v, hv⟩ = Sum.inr (d₂.homτ ⟨v, hv₂⟩) := by
+  haveI := d₁.bdryCompact; haveI := d₂.bdryCompact; haveI := d₁.bdryT2; haveI := d₂.bdryT2
+  show (d₁.homτ.sumCongr d₂.homτ)
+      ((blockSubHomeo d₁.Uᶜ d₂.Uᶜ d₁.hU.compl.1 d₂.hU.compl.1).symm
+        ((Homeomorph.setCongr (compl_block d₁.U d₂.U)) ⟨Sum.inr v, hv⟩)) = _
+  rw [show (blockSubHomeo d₁.Uᶜ d₂.Uᶜ d₁.hU.compl.1 d₂.hU.compl.1).symm
+        ((Homeomorph.setCongr (compl_block d₁.U d₂.U)) ⟨Sum.inr v, hv⟩) = Sum.inr ⟨v, hv₂⟩ from
+    (Homeomorph.symm_apply_eq _).mpr (Subtype.ext (blockSubHomeo_inr _ _ _ _ ⟨v, hv₂⟩).symm)]
+  rfl
+
+end SumGlue
+
+/-- **`addBor` TETHERED** — the genuine `⊔` of two tethered witnesses. The membrane is the honest
+`Q₁ ⊔ Q₂` embedded into `W₁ ⊔ W₂ = (b₁.add b₂).W` by `Sum.map β₁.ιW β₂.ιW` (a sum of closed
+embeddings); the block clopen split routes each block's glue through the corresponding component's
+glue and `(b₁.add b₂).e`'s block structure. The admissibility is the per-op `addClosure` of the two
+inputs' pins (F6-inhabitable, NOT the `∀ b`-provider). -/
+noncomputable def addBorTethered (prov : CharPairWProviderPerOp I k)
+    {s₁ t₁ s₂ t₂ : SingularManifold.{0} PUnit.{1} k I}
+    {b₁ : Bordism (I.prod (𝓡∂ 1)) s₁ t₁} {b₂ : Bordism (I.prod (𝓡∂ 1)) s₂ t₂}
+    {σ₁ : CharPairStrBundled I s₁} {τ₁ : CharPairStrBundled I t₁}
+    {σ₂ : CharPairStrBundled I s₂} {τ₂ : CharPairStrBundled I t₂}
+    (β₁ : CharPairBorRealizedTethered b₁ σ₁ τ₁) (β₂ : CharPairBorRealizedTethered b₂ σ₂ τ₂) :
+    CharPairBorRealizedTethered (b₁.add b₂)
+      (charPairBundledSumStr σ₁ σ₂) (charPairBundledSumStr τ₁ τ₂) :=
+  haveI := (charPairBundledSumStr σ₁ σ₂).surfT2
+  haveI := (charPairBundledSumStr τ₁ τ₂).surfT2
+  have hblock : IsMetabolic
+      (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q (Z4Quadratic.neg τ₁.q))
+        (Z4Quadratic.orthSum σ₂.q (Z4Quadratic.neg τ₂.q)))
+      (blockSub (β₁.real.toMembrane σ₁.q τ₁.q).L (β₂.real.toMembrane σ₂.q τ₂.q).L) :=
+    IsMetabolic.orthSum ⟨β₁.htaylor, β₁.hlag⟩ ⟨β₂.htaylor, β₂.hlag⟩
+  have hregroup : Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q σ₂.q)
+        (Z4Quadratic.neg (Z4Quadratic.orthSum τ₁.q τ₂.q))
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q (Z4Quadratic.neg τ₁.q))
+          (Z4Quadratic.orthSum σ₂.q (Z4Quadratic.neg τ₂.q))).reindex
+          (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n)) := by
+    rw [neg_orthSum, orthSum_regroup]
+  have hbase' := hblock.reindex (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n))
+  have hbase : IsMetabolic (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q σ₂.q)
+        (Z4Quadratic.neg (Z4Quadratic.orthSum τ₁.q τ₂.q)))
+      ((blockSub (β₁.real.toMembrane σ₁.q τ₁.q).L (β₂.real.toMembrane σ₂.q τ₂.q).L).comap
+        (LinearMap.funLeft (ZMod 2) (ZMod 2)
+          (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n)))) := by
+    rw [hregroup]; exact hbase'
+  have hform : jointEnhancement (charPairBundledSumStr σ₁ σ₂).q (charPairBundledSumStr τ₁ τ₂).q
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ₁.q σ₂.q)
+          (Z4Quadratic.neg (Z4Quadratic.orthSum τ₁.q τ₂.q))).reindex
+          (Equiv.sumCongr finSumFinEquiv finSumFinEquiv) :=
+    jointEnhancement_reindex (orthSum σ₁.q σ₂.q) (orthSum τ₁.q τ₂.q) finSumFinEquiv finSumFinEquiv
+  have hmeta : IsMetabolic
+      (jointEnhancement (charPairBundledSumStr σ₁ σ₂).q (charPairBundledSumStr τ₁ τ₂).q)
+      (((blockSub (β₁.real.toMembrane σ₁.q τ₁.q).L (β₂.real.toMembrane σ₂.q τ₂.q).L).comap
+          (LinearMap.funLeft (ZMod 2) (ZMod 2)
+            (Equiv.sumSumSumComm (Fin σ₁.n) (Fin τ₁.n) (Fin σ₂.n) (Fin τ₂.n)))).comap
+        (LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumCongr finSumFinEquiv finSumFinEquiv))) := by
+    rw [hform]; exact hbase.reindex (Equiv.sumCongr finSumFinEquiv finSumFinEquiv)
+  have wadmP := prov.addClosure (CharPairBorRealized.toWAdmPinned β₁.toCharPairBorRealized)
+    (CharPairBorRealized.toWAdmPinned β₂.toCharPairBorRealized)
+  { hWT2 := by
+      haveI : T2Space b₁.W := β₁.hWT2; haveI : T2Space b₂.W := β₂.hWT2
+      exact inferInstanceAs (T2Space (b₁.W ⊕ b₂.W))
+    P14 := wadmP.wadm.P14
+    P23 := wadmP.wadm.P23
+    hwu := wadmP.wadm.hwu
+    pin14 := wadmP.pin14
+    pin23 := wadmP.pin23
+    real := GeoRealizationTied.sum β₁.real β₂.real
+    htaylor := by
+      show TaylorLegVanishes _ _ (LinearMap.ker (transportedBInc
+        (GeoRealizationTied.sum β₁.real β₂.real).toData))
+      rw [sum_ker_transportedBInc]
+      exact hmeta.1
+    hlag := by
+      show JointLagrangian _ _ (LinearMap.ker (transportedBInc
+        (GeoRealizationTied.sum β₁.real β₂.real).toData))
+      rw [sum_ker_transportedBInc]
+      exact hmeta.2
+    ιW := ⟨Sum.map β₁.ιW β₂.ιW, β₁.ιW.continuous.sumMap β₂.ιW.continuous⟩
+    hιWce := by
+      haveI := β₁.real.QCompact; haveI := β₂.real.QCompact
+      haveI : T2Space b₁.W := β₁.hWT2; haveI : T2Space b₂.W := β₂.hWT2
+      exact (β₁.ιW.continuous.sumMap β₂.ιW.continuous).isClosedEmbedding
+        (β₁.hιWce.injective.sumMap β₂.hιWce.injective)
+    glueσ := by
+      rintro ⟨(v | v), hv⟩
+      · have hv₁ : v ∈ β₁.real.U := by
+          rcases hv with ⟨w, hw, hwv⟩ | ⟨w, _, hwv⟩
+          · exact (Sum.inl_injective hwv) ▸ hw
+          · exact absurd hwv (by simp)
+        erw [sum_homσ_inl_pt β₁.real β₂.real v hv₁ hv]
+        show Sum.inl (β₁.ιW (β₁.real.ι v))
+            = Sum.inl (b₁.e (Sum.inl (σ₁.emb (β₁.real.homσ ⟨v, hv₁⟩))))
+        exact congrArg Sum.inl (β₁.glueσ ⟨v, hv₁⟩)
+      · have hv₂ : v ∈ β₂.real.U := by
+          rcases hv with ⟨w, _, hwv⟩ | ⟨w, hw, hwv⟩
+          · exact absurd hwv (by simp)
+          · exact (Sum.inr_injective hwv) ▸ hw
+        erw [sum_homσ_inr_pt β₁.real β₂.real v hv₂ hv]
+        show Sum.inr (β₂.ιW (β₂.real.ι v))
+            = Sum.inr (b₂.e (Sum.inl (σ₂.emb (β₂.real.homσ ⟨v, hv₂⟩))))
+        exact congrArg Sum.inr (β₂.glueσ ⟨v, hv₂⟩)
+    glueτ := by
+      rintro ⟨(v | v), hv⟩
+      · have hv₁ : v ∈ β₁.real.Uᶜ := fun hv1 => hv (Or.inl ⟨v, hv1, rfl⟩)
+        erw [sum_homτ_inl_pt β₁.real β₂.real v hv₁ hv]
+        show Sum.inl (β₁.ιW (β₁.real.ι v))
+            = Sum.inl (b₁.e (Sum.inr (τ₁.emb (β₁.real.homτ ⟨v, hv₁⟩))))
+        exact congrArg Sum.inl (β₁.glueτ ⟨v, hv₁⟩)
+      · have hv₂ : v ∈ β₂.real.Uᶜ := fun hv2 => hv (Or.inr ⟨v, hv2, rfl⟩)
+        erw [sum_homτ_inr_pt β₁.real β₂.real v hv₂ hv]
+        show Sum.inr (β₂.ιW (β₂.real.ι v))
+            = Sum.inr (b₂.e (Sum.inr (τ₂.emb (β₂.real.homτ ⟨v, hv₂⟩))))
+        exact congrArg Sum.inr (β₂.glueτ ⟨v, hv₂⟩)
+    chartQ := by
+      haveI := β₁.chartQ; haveI := β₂.chartQ
+      show ChartedSpace MembraneModel (↑β₁.real.Q ⊕ ↑β₂.real.Q)
+      infer_instance }
+
 end SKEFTHawking.PinPlusCharPairBorTethered
