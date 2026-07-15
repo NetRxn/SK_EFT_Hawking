@@ -366,6 +366,71 @@ theorem sum_homτ_inr (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁)
     ← Homology_map_comp_apply]
   exact congrArg (fun f => Homology.map f 1 w) (ContinuousMap.ext fun _ => rfl)
 
+/-- `toData.eσ.symm` expands as `homeoHomologyEquiv homσ⁻¹ ∘ (UCT-dual of bσ)⁻¹`. -/
+theorem toData_eσ_symm {n₁ n₂ : ℕ} {S₁ S₂ : TopCat}
+    {b₁ : Cohomology S₁ 1 ≃ₗ[ZMod 2] (Fin n₁ → ZMod 2)}
+    {b₂ : Cohomology S₂ 1 ≃ₗ[ZMod 2] (Fin n₂ → ZMod 2)}
+    (d : GeoRealizationTied S₁ S₂ b₁ b₂) (w : Fin n₁ → ZMod 2) :
+    d.toData.eσ.symm w
+      = (homeoHomologyEquiv d.homσ 1).symm ((homologyBasisOfCohomologyBasis b₁).symm w) := by
+  rw [GeoRealizationTied.toData_eσ]
+  rfl
+
+/-- `toData.eτ.symm` expands as `homeoHomologyEquiv homτ⁻¹ ∘ (UCT-dual of bτ)⁻¹`. -/
+theorem toData_eτ_symm {n₁ n₂ : ℕ} {S₁ S₂ : TopCat}
+    {b₁ : Cohomology S₁ 1 ≃ₗ[ZMod 2] (Fin n₁ → ZMod 2)}
+    {b₂ : Cohomology S₂ 1 ≃ₗ[ZMod 2] (Fin n₂ → ZMod 2)}
+    (d : GeoRealizationTied S₁ S₂ b₁ b₂) (w : Fin n₂ → ZMod 2) :
+    d.toData.eτ.symm w
+      = (homeoHomologyEquiv d.homτ 1).symm ((homologyBasisOfCohomologyBasis b₂).symm w) := by
+  rw [GeoRealizationTied.toData_eτ]
+  rfl
+
+/-- **σ-side source-coordinate identity** — the σ-boundary block of `srcEquiv (sum).symm` splits into
+the two components' σ-blocks pushed through the summand boundary inclusions. -/
+theorem sum_srcEquiv_σ (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁)
+    (d₂ : GeoRealizationTied Sσ₂ Sτ₂ bσ₂ bτ₂) (v : Fin (nσ₁ + nσ₂) → ZMod 2) :
+    homIncl (GeoRealizationTied.sum d₁ d₂).U 1 ((GeoRealizationTied.sum d₁ d₂).toData.eσ.symm v)
+      = Homology.map (inlMap d₁.bdry d₂.bdry) 1
+          (homIncl d₁.U 1 (d₁.toData.eσ.symm (fun i => v (finSumFinEquiv (Sum.inl i)))))
+        + Homology.map (inrMap d₁.bdry d₂.bdry) 1
+          (homIncl d₂.U 1 (d₂.toData.eσ.symm (fun i => v (finSumFinEquiv (Sum.inr i))))) := by
+  rw [toData_eσ_symm, hbob_sumBasis_symm, map_add, map_add, sum_homσ_inl, sum_homσ_inr,
+    toData_eσ_symm, toData_eσ_symm]
+  rfl
+
+/-- **τ-side source-coordinate identity**. -/
+theorem sum_srcEquiv_τ (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁)
+    (d₂ : GeoRealizationTied Sσ₂ Sτ₂ bσ₂ bτ₂) (v : Fin (nτ₁ + nτ₂) → ZMod 2) :
+    homIncl (GeoRealizationTied.sum d₁ d₂).Uᶜ 1 ((GeoRealizationTied.sum d₁ d₂).toData.eτ.symm v)
+      = Homology.map (inlMap d₁.bdry d₂.bdry) 1
+          (homIncl d₁.Uᶜ 1 (d₁.toData.eτ.symm (fun i => v (finSumFinEquiv (Sum.inl i)))))
+        + Homology.map (inrMap d₁.bdry d₂.bdry) 1
+          (homIncl d₂.Uᶜ 1 (d₂.toData.eτ.symm (fun i => v (finSumFinEquiv (Sum.inr i))))) := by
+  rw [toData_eτ_symm, hbob_sumBasis_symm, map_add, map_add, sum_homτ_inl, sum_homτ_inr,
+    toData_eτ_symm, toData_eτ_symm]
+  rfl
+
+/-! ## §5. The `ι`-naturality — `ι = ι₁ ⊔ ι₂` commutes with the summand inclusions. -/
+
+theorem sum_ι_inl (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁)
+    (d₂ : GeoRealizationTied Sσ₂ Sτ₂ bσ₂ bτ₂) (z : Homology d₁.bdry 1) :
+    Homology.map (GeoRealizationTied.sum d₁ d₂).toData.ι 1
+        (Homology.map (inlMap d₁.bdry d₂.bdry) 1 z)
+      = Homology.map (inlMap d₁.Q d₂.Q) 1 (Homology.map d₁.toData.ι 1 z) := by
+  have hCM : (GeoRealizationTied.sum d₁ d₂).toData.ι.comp (inlMap d₁.bdry d₂.bdry)
+      = (inlMap d₁.Q d₂.Q).comp d₁.toData.ι := ContinuousMap.ext fun _ => rfl
+  exact (Homology_map_comp_apply _ _ 1 z).symm.trans (by rw [hCM]; exact Homology_map_comp_apply _ _ 1 z)
+
+theorem sum_ι_inr (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁)
+    (d₂ : GeoRealizationTied Sσ₂ Sτ₂ bσ₂ bτ₂) (z : Homology d₂.bdry 1) :
+    Homology.map (GeoRealizationTied.sum d₁ d₂).toData.ι 1
+        (Homology.map (inrMap d₁.bdry d₂.bdry) 1 z)
+      = Homology.map (inrMap d₁.Q d₂.Q) 1 (Homology.map d₂.toData.ι 1 z) := by
+  have hCM : (GeoRealizationTied.sum d₁ d₂).toData.ι.comp (inrMap d₁.bdry d₂.bdry)
+      = (inrMap d₁.Q d₂.Q).comp d₂.toData.ι := ContinuousMap.ext fun _ => rfl
+  exact (Homology_map_comp_apply _ _ 1 z).symm.trans (by rw [hCM]; exact Homology_map_comp_apply _ _ 1 z)
+
 end Sum
 
 end SKEFTHawking.PinPlusCharPairAddRealization
