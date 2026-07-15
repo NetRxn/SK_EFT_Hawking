@@ -4451,6 +4451,7 @@ import SKEFTHawking.PinPlusCharPairBorRealized
 import SKEFTHawking.PinPlusCharPairBorRealizedOps
 import SKEFTHawking.PinPlusCharPairAddRealization
 import SKEFTHawking.PinPlusCharPairCarrier
+import SKEFTHawking.PinPlusCharPairFlipGate
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
