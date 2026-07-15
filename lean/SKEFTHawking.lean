@@ -4473,6 +4473,7 @@ import SKEFTHawking.PinPlusKTKernelSector
 import SKEFTHawking.PinPlusKTSectorGate
 import SKEFTHawking.PinPlusKTKernelSpinRoute
 import SKEFTHawking.PinPlusKTStepGate
+import SKEFTHawking.PinPlusKTSurgeryTrace
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
