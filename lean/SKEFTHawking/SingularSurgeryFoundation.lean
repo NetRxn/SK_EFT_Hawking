@@ -323,6 +323,27 @@ theorem range_fromCyl_inter_range_fromHandle :
   · rintro ⟨a, rfl⟩
     exact ⟨⟨HA.φ a, HA.glue a⟩, ⟨(a : HA.Ha), rfl⟩⟩
 
+/-- **The un-attached cylinder points are disjoint from the handle end.** A cylinder point outside the
+attaching image `range φ` is never a handle point. The source-manifold boundary component `M × {0}`
+lives among these un-attached points, so it is cleanly separated in `W` from the surgered end carved
+from the handle. -/
+theorem fromCyl_image_compl_disjoint_range_fromHandle :
+    Disjoint (HA.fromCyl '' (Set.range HA.φ)ᶜ) (Set.range HA.fromHandle) := by
+  rw [Set.disjoint_left]
+  rintro w ⟨b, hb, rfl⟩ ⟨a, ha⟩
+  obtain ⟨h, hφb⟩ := Quotient.eq.mp ha
+  exact hb ⟨⟨a, h⟩, hφb⟩
+
+/-- **The interior handle points are disjoint from the cylinder end.** A handle point outside the
+attaching region `S` is never a cylinder point — the surgered manifold's new `Dʳ⁺¹ × Sⁿ⁻ʳ⁻¹` cap is
+carved from exactly these interior handle points. -/
+theorem fromHandle_image_compl_disjoint_range_fromCyl :
+    Disjoint (HA.fromHandle '' HA.Sᶜ) (Set.range HA.fromCyl) := by
+  rw [Set.disjoint_left]
+  rintro w ⟨a, ha, rfl⟩ ⟨b, hb⟩
+  obtain ⟨h, _⟩ := Quotient.eq.mp hb
+  exact ha h
+
 end HandleAttachment
 
 /-! ## §5. The packaging targets — what the next (chart) wave needs.
