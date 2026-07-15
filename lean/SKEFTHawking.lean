@@ -1447,6 +1447,7 @@ import SKEFTHawking.PinPlusFloorCollapse
 import SKEFTHawking.SingularCohomologyFunctoriality
 import SKEFTHawking.SingularCohomologyHomotopy
 import SKEFTHawking.SingularCohomologyDisjointSum
+import SKEFTHawking.SingularRelativeCohomologyDisjointSum
 import SKEFTHawking.SingularFundamentalClassPushforward
 import SKEFTHawking.SingularWuTransport
 import SKEFTHawking.SingularCochainGlue
