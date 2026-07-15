@@ -1452,6 +1452,7 @@ import SKEFTHawking.SingularRelativeCohomologyDisjointSum
 import SKEFTHawking.SingularRelativeCupSqNaturality
 import SKEFTHawking.PoincareLefschetzWuBlock
 import SKEFTHawking.PoincareLefschetzWuBlockAssembly
+import SKEFTHawking.PoincareLefschetzRelFundClassSum
 import SKEFTHawking.SingularFundamentalClassPushforward
 import SKEFTHawking.SingularWuTransport
 import SKEFTHawking.SingularCochainGlue
