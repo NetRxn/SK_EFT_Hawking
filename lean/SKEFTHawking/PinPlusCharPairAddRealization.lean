@@ -280,7 +280,7 @@ corresponding `mid`-block, coordinatized by the component's own `eQ`. -/
 /-- `eQ ∘ inl₊ = <inl-block of finSumFinEquiv-de-reindexed component eQ>`. -/
 theorem sum_eQ_inlMap (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁)
     (d₂ : GeoRealizationTied Sσ₂ Sτ₂ bσ₂ bτ₂) (w : Homology d₁.Q 1) :
-    (GeoRealizationTied.sum d₁ d₂).eQ (Homology.map (inlMap d₁.Q d₂.Q) 1 w)
+    (GeoRealizationTied.sum d₁ d₂).toData.eQ (Homology.map (inlMap d₁.Q d₂.Q) 1 w)
       = LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2) finSumFinEquiv.symm
           (Sum.elim (d₁.eQ w) 0) := by
   have hkey : (disjointSumHnEquiv (Q₁ := d₁.Q) (Q₂ := d₂.Q)).symm
@@ -296,7 +296,7 @@ theorem sum_eQ_inlMap (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁)
 /-- `eQ ∘ inr₊ = <inr-block of finSumFinEquiv-de-reindexed component eQ>`. -/
 theorem sum_eQ_inrMap (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁)
     (d₂ : GeoRealizationTied Sσ₂ Sτ₂ bσ₂ bτ₂) (w : Homology d₂.Q 1) :
-    (GeoRealizationTied.sum d₁ d₂).eQ (Homology.map (inrMap d₁.Q d₂.Q) 1 w)
+    (GeoRealizationTied.sum d₁ d₂).toData.eQ (Homology.map (inrMap d₁.Q d₂.Q) 1 w)
       = LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2) finSumFinEquiv.symm
           (Sum.elim 0 (d₂.eQ w)) := by
   have hkey : (disjointSumHnEquiv (Q₁ := d₁.Q) (Q₂ := d₂.Q)).symm
@@ -451,6 +451,66 @@ theorem sum_srcEquiv_symm (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁
         ((GeoRealizationTied.sum d₁ d₂).toData.eτ.symm (fun i => x (Sum.inr i))) = _
   rw [sum_srcEquiv_σ, sum_srcEquiv_τ, map_add, map_add]
   abel
+
+/-! ## §6. THE TRANSPORTED-BOUNDARY-INCLUSION IDENTITY — `transportedBInc (sum)` is the block map of
+the two components' `transportedBInc`s, regrouped and de-reindexed (the exact shape of the tied
+`charPairAddBorTied`'s `bInc`). -/
+
+theorem sum_transportedBInc (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁)
+    (d₂ : GeoRealizationTied Sσ₂ Sτ₂ bσ₂ bτ₂) :
+    transportedBInc (GeoRealizationTied.sum d₁ d₂).toData
+      = (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2)
+            (finSumFinEquiv (m := d₁.mid) (n := d₂.mid)).symm).toLinearMap ∘ₗ
+        (blockMap (transportedBInc d₁.toData) (transportedBInc d₂.toData) ∘ₗ
+          (LinearMap.funLeft (ZMod 2) (ZMod 2)
+              (Equiv.sumSumSumComm (Fin nσ₁) (Fin nτ₁) (Fin nσ₂) (Fin nτ₂)) ∘ₗ
+            LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumCongr finSumFinEquiv finSumFinEquiv))) := by
+  refine LinearMap.ext fun x => ?_
+  show (GeoRealizationTied.sum d₁ d₂).toData.eQ
+      (Homology.map (GeoRealizationTied.sum d₁ d₂).toData.ι 1
+        ((srcEquiv (GeoRealizationTied.sum d₁ d₂).toData).symm x)) = _
+  rw [sum_srcEquiv_symm]
+  erw [map_add (Homology.map (GeoRealizationTied.sum d₁ d₂).toData.ι 1)]
+  rw [sum_ι_inl, sum_ι_inr]
+  erw [map_add (GeoRealizationTied.sum d₁ d₂).toData.eQ]
+  rw [sum_eQ_inlMap, sum_eQ_inrMap]
+  -- fold each `d_i.eQ (H₁(ι_i) (srcEquiv-decomposition))` back into `transportedBInc d_i.toData x_i`
+  have hfold₁ : d₁.eQ ((Homology.map d₁.toData.ι 1)
+        (homIncl d₁.U 1 (d₁.toData.eσ.symm fun i => x (Sum.inl (finSumFinEquiv (Sum.inl i))))
+          + homIncl d₁.Uᶜ 1 (d₁.toData.eτ.symm fun j => x (Sum.inr (finSumFinEquiv (Sum.inl j))))))
+      = transportedBInc d₁.toData
+          (Sum.elim (fun i => x (Sum.inl (finSumFinEquiv (Sum.inl i))))
+                    (fun j => x (Sum.inr (finSumFinEquiv (Sum.inl j))))) := by
+    rw [transportedBInc, LinearMap.comp_apply, LinearMap.comp_apply, LinearEquiv.coe_coe,
+      LinearEquiv.coe_coe, srcEquiv_symm_apply]
+    rfl
+  have hfold₂ : d₂.eQ ((Homology.map d₂.toData.ι 1)
+        (homIncl d₂.U 1 (d₂.toData.eσ.symm fun i => x (Sum.inl (finSumFinEquiv (Sum.inr i))))
+          + homIncl d₂.Uᶜ 1 (d₂.toData.eτ.symm fun j => x (Sum.inr (finSumFinEquiv (Sum.inr j))))))
+      = transportedBInc d₂.toData
+          (Sum.elim (fun i => x (Sum.inl (finSumFinEquiv (Sum.inr i))))
+                    (fun j => x (Sum.inr (finSumFinEquiv (Sum.inr j))))) := by
+    rw [transportedBInc, LinearMap.comp_apply, LinearMap.comp_apply, LinearEquiv.coe_coe,
+      LinearEquiv.coe_coe, srcEquiv_symm_apply]
+    rfl
+  rw [hfold₁, hfold₂]
+  funext m
+  show (Sum.elim (transportedBInc d₁.toData _) (0 : Fin d₂.mid → ZMod 2)) (finSumFinEquiv.symm m)
+      + (Sum.elim (0 : Fin d₁.mid → ZMod 2) (transportedBInc d₂.toData _)) (finSumFinEquiv.symm m)
+    = blockMap (transportedBInc d₁.toData) (transportedBInc d₂.toData)
+        (LinearMap.funLeft (ZMod 2) (ZMod 2)
+            (Equiv.sumSumSumComm (Fin nσ₁) (Fin nτ₁) (Fin nσ₂) (Fin nτ₂))
+          (LinearMap.funLeft (ZMod 2) (ZMod 2) (finSumFinEquiv.sumCongr finSumFinEquiv) x))
+        (finSumFinEquiv.symm m)
+  rcases finSumFinEquiv.symm m with a | a
+  · show transportedBInc d₁.toData _ a + (0 : Fin d₁.mid → ZMod 2) a
+        = transportedBInc d₁.toData _ a
+    rw [Pi.zero_apply, add_zero]
+    congr 1
+  · show (0 : Fin d₂.mid → ZMod 2) a + transportedBInc d₂.toData _ a
+        = transportedBInc d₂.toData _ a
+    rw [Pi.zero_apply, zero_add]
+    congr 1
 
 end Sum
 
