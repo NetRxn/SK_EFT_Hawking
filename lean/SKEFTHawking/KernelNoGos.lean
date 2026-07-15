@@ -175,24 +175,51 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    all 12 TangentialData ops instantiate and Brown-invariance is forced (Lagrangian + Gauss factorization).
    backing: `no_plain_end_pairing_of_cylinder`, `not_cylinder_plain_pairing_of_odd_value`, `not_cylinder_bor_of_invariant_ne`
 
-9. `nogo_lattice_arf_not_sigma8` [refutation]
+9. `untethered-membrane-factors-relation` [structural_forcing]
+   The flipped carrier (Bor = CharPairBorRealized: GeoRealizationTied with derived bases + computed kernels
+   + pinned provider) supports the KT non-split content — the abstract compact-T2 membrane suffices; no
+   explicit tether of the realization's Q to the bordism's W is needed. FALSE (W-A gate ROUND 6, Fable,
+   2026-07-15, kernel-encoded — ROUND 6 OF THE DEFERRED-TIE PATTERN): GeoRealizationTied has NO tether to
+   b.W (Q is an arbitrary compact-T2 TopCat — not a manifold, not in W). Consequences, kernel-checked: (1)
+   CharPairBorRealized.transport — any realized witness transports VERBATIM to ANY bordism between the same
+   ends; (2) isT2DataBordant_pinPlusCharPair_factors — the structured relation FACTORS as (∃ unstructured T2
+   bordism) ∧ ends-only HasEndsRealization, so given a provider, hwu filters NOTHING at the relation level;
+   (3) ktNonSplit_false_of_e8 — ONE mathematically-TRUE abstract hypothesis (E8MembraneRealization: a
+   compact-T2 pair with the e₈-graph H₁-kernel — constructible as 8 RP²'s + an arc tree + four 2-cells, only
+   missing CW/MV machinery in-tree) reproduces the ENTIRE pre-flip refutation chain (8•[RP⁴] = 0, binders
+   jointly unsatisfiable, addOrderOf ∣ 8). KTNonSplit is mathematically FALSE on the untethered shape; W-D
+   binder discharge must NOT open on it (an apparent discharge = an error elsewhere). Positive gate evidence
+   retained: idRealizationTied blocked ONLY by hlag (not_jointLagrangian_bot); the un-reversed in-tree
+   doubling blocked by htaylor (unreversed_double_diag_not_taylorLeg); in-tree engines reach only
+   homeo-graph/block-diagonal kernels (e₈ unreachable at the in-tree horizon) — the exploit needs the
+   abstract-Q freedom, which is exactly what the tether removes. FROZEN ROUND-6 SPEC: (1) THE W-TETHER —
+   CharPairBorRealized gains ιW : C(Q, b.W) (honest form a closed embedding) with commuting glue (real.ι,
+   homσ/homτ, the ends' emb, b's boundary structure); (2) manifold discipline on Q (charted/dimension
+   certificates — abstract compact-T2 admits CW pathologies); (3) provider-quantification fix
+   (CharPairWProviderPinned's ∀-all-bordisms wadm is likely UNINHABITABLE — pinned hwu is impossible on
+   w₂(W) ≠ 0 bordisms — risking vacuity in BOTH directions; restrict to the op-bordism family actually
+   consumed or per-op admissibility data). Then round-7 re-gate.
+   backing: `isT2DataBordant_pinPlusCharPair_factors`, `ktNonSplit_false_of_e8`
+   ⚠ UNRESOLVED backing (not found in-tree — check the registry): `SKEFTHawking.PinPlusCharPairFlipGate.CharPairBorRealized.transport`
+
+10. `nogo_lattice_arf_not_sigma8` [refutation]
    The lattice Arf bridge σ/8 ≡ Arf(q̄) mod 2 — deriving Rokhlin mod-16 from the intersection FORM alone.
    FALSE: E₈ has Arf(q̄)=0 but σ/8=1; Rokhlin mod-16 is irreducibly geometric (a characteristic-SURFACE Arf,
    not the lattice Arf). Kills Phase 5q.C and any form-only mod-16 shortcut.
    backing: `lattice_arf_bridge_refuted`
 
-10. `mfd-equals-H1-dead-end` [structural_forcing]
+11. `mfd-equals-H1-dead-end` [structural_forcing]
    The `Mfd := H¹` tangential-data construction yields a genuine ℤ/16 / ker=⊥. FALSE: a datum whose
    structure-reversal (revStr) is trivial is FORCED 2-torsion, never order-16.
    backing: `dataBordism_two_torsion_of_revStr_trivial`
 
-11. `synthetic-grade-ker-bot-nogo` [structural_forcing]
+12. `synthetic-grade-ker-bot-nogo` [structural_forcing]
    ker(abkGrade)=⊥ / card≤16 UNCONDITIONALLY for ANY free-per-manifold grade. FALSE: the ℝP⁴ grade-0 witness
    (w₂=0, [ℝP⁴]≠0∈Ω₄^O) has no unoriented null-bordism, so the free grade is never injective. ker=⊥ requires
    the grade TIED to the structure (the GM carrier), never a better proof on a free-grade datum.
    backing: `dataBordism_two_torsion_of_revStr_trivial`
 
-12. `synthetic-smith-map-to-tied-carrier` [structural_forcing]
+13. `synthetic-smith-map-to-tied-carrier` [structural_forcing]
    The Smith map into the 5q.H TIED carrier pinPlusGMTiedData can be built SYNTHETICALLY — map every
    neighbor class [M,σ] to [emptySM, (σ,0)] and transport the grade (the smithDataHom shortcut). FALSE
    (kernel-forced): the tie htie (reduce16to2 grade16 = swTotalNe) forces every tied structure on an EMPTY
@@ -202,7 +229,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    map; the geometric Smith map into the tied carrier is irreducibly geometric (N1b).
    backing: `gmTiedStr_grade_even_of_isEmpty`, `gmTiedStr_empty_grade16_ne_one`
 
-13. `5qH-injectivity-routes-all-equal-one-completeness-prop` [structural_forcing]
+14. `5qH-injectivity-routes-all-equal-one-completeness-prop` [structural_forcing]
    The three 5q.H injectivity routes — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle:
    ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), Smith-LES (smith_inflow_z16) — are DISTINCT open nodes
    worth route-shopping between. FALSE (kernel-checked equivalence): all three reduce canonically to the ONE
@@ -213,7 +240,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    from-below: N1a+N1b+N1c+N2 per ASSEMBLY_GAP_MAP_20260712).
    backing: `spin_range_ge_of_grade0_inj`, `omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`, `grade0_bounds_of_thom`
 
-14. `5qH-fg-ek-over-Z-blocked` [refutation]
+15. `5qH-fg-ek-over-Z-blocked` [refutation]
    The mod-2 Erdős–Kaplansky finiteness forcing (SingularUCFinite: self-duality forces finite dimension)
    transports to ℤ — in particular dualization over ℤ stays in the f.g./countable size class, so PD + UCT
    self-duality would force H²(M;ℤ) finitely generated. FALSE: the ℤ-dual of the COUNTABLE free module ℕ →₀
@@ -224,7 +251,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    Lit-Search/Phase-5qH/FG_via_PD_duality_forcing_verdict_20260712.md.
    backing: `dual_blowup_not_finite`, `not_finite_baerSpecker`
 
-15. `genuine-gm-carrier-eight-torsion` [refutation]
+16. `genuine-gm-carrier-eight-torsion` [refutation]
    The genuine ℤ/16 lives directly on the thin GM carrier: DataBordismGrp(pinPlusGMData) ≃+ ZMod 16. FALSE:
    pinPlusGMData's bordism relation records ONLY the mod-8 Brown grade (q.brown ∈ ZMod 8), so
    cylinder-doubling makes every class 8-torsion (pinPlusGMData_eight_torsion: 8•x=0) ⟹
@@ -238,6 +265,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
 -/
 import SKEFTHawking.FGDualityNoGo
 import SKEFTHawking.NonHausdorffBordismCollapse
+import SKEFTHawking.PinPlusCharPairFlipGate
 import SKEFTHawking.PinPlusCharPairGeoRealizationGate
 import SKEFTHawking.PinPlusCompTorsorNoGo
 import SKEFTHawking.PinPlusGMDataZ16
@@ -310,6 +338,12 @@ alias nogo_not_cylinder_plain_pairing_of_odd_value := SKEFTHawking.PinPlusTaylor
 
 /-- NO-GO [`taylor-leg-end-convention-trap`] — do NOT re-derive. FALSE: The structured-bordism Taylor extension leg ('boundary classes bounding in the membrane Q have vanishing enhancement') can be stated as a PLAIN joint sum q_σ ⊕ q_τ, or σ-side-only, vanishing on ker(H₁(∂Q)→H₁(Q)). Backing refutation: `SKEFTHawking.PinPlusTaylorConventionNoGo.not_cylinder_bor_of_invariant_ne`. -/
 alias nogo_not_cylinder_bor_of_invariant_ne := SKEFTHawking.PinPlusTaylorConventionNoGo.not_cylinder_bor_of_invariant_ne
+
+/-- NO-GO [`untethered-membrane-factors-relation`] — do NOT re-derive. FALSE: The flipped carrier (Bor = CharPairBorRealized: GeoRealizationTied with derived bases + computed kernels + pinned provider) supports the KT non-split content — the abstract compact-T2 membrane suffices; no explicit tether of the realization's Q to the bordism's W is needed. Backing refutation: `SKEFTHawking.PinPlusCharPairFlipGate.isT2DataBordant_pinPlusCharPair_factors`. -/
+alias nogo_isT2DataBordant_pinPlusCharPair_factors := SKEFTHawking.PinPlusCharPairFlipGate.isT2DataBordant_pinPlusCharPair_factors
+
+/-- NO-GO [`untethered-membrane-factors-relation`] — do NOT re-derive. FALSE: The flipped carrier (Bor = CharPairBorRealized: GeoRealizationTied with derived bases + computed kernels + pinned provider) supports the KT non-split content — the abstract compact-T2 membrane suffices; no explicit tether of the realization's Q to the bordism's W is needed. Backing refutation: `SKEFTHawking.PinPlusCharPairFlipGate.ktNonSplit_false_of_e8`. -/
+alias nogo_ktNonSplit_false_of_e8 := SKEFTHawking.PinPlusCharPairFlipGate.ktNonSplit_false_of_e8
 
 /-- NO-GO [`nogo_lattice_arf_not_sigma8`] — do NOT re-derive. FALSE: The lattice Arf bridge σ/8 ≡ Arf(q̄) mod 2 — deriving Rokhlin mod-16 from the intersection FORM alone. Backing refutation: `SKEFTHawking.RokhlinArfNoGo.lattice_arf_bridge_refuted`. -/
 alias nogo_lattice_arf_bridge_refuted := SKEFTHawking.RokhlinArfNoGo.lattice_arf_bridge_refuted
