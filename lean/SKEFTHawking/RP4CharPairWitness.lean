@@ -1,5 +1,5 @@
 import Mathlib
-import SKEFTHawking.PinPlusCharPairData
+import SKEFTHawking.PinPlusCharPairCarrier
 import SKEFTHawking.RP2IntersectionForm
 import SKEFTHawking.RP4CharSurfacePushforward
 
