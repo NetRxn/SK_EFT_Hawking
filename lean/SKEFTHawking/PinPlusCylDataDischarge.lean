@@ -51,6 +51,7 @@ open SKEFTHawking.PinPlusWAdmPinned
 open SKEFTHawking.PinPlusCylinderWAdmPinned
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderCapNorm
 open SKEFTHawking.PinPlusCharPairData
+open SKEFTHawking.PinPlusCharPairBorTethered
 open SKEFTHawking.PinPlusCharPairWProviderTransport
 open SKEFTHawking.SingularClosedHomologyFinite
 open SKEFTHawking.SingularPD4Instances
@@ -58,6 +59,10 @@ open SKEFTHawking.SingularPD4Instances
 namespace SKEFTHawking.PinPlusCylDataDischarge
 
 noncomputable section
+
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+variable {k : WithTop ℕ∞}
+variable {I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))} [I.Boundaryless]
 
 /-! ## §1. The sharp per-M cylinder-Wu residual. -/
 
@@ -109,6 +114,51 @@ def cylinderWAdmPinned_of_wuResidual (hRes : CylinderWuResidual M) : CylinderWAd
     (finiteDimensional_topHomology_of_closed_connected (M := M))
     (finiteDimensional_homology_of_closed (M := M)).2.2.2
     (hRes _ _)
+
+/-! ## §3. The bundled `CylWAdmData` for a nonempty-connected carrier. -/
+
+/-- **`CylWAdmData s` for a nonempty CONNECTED bundled carrier, from the sharp Wu leaf.** The `T2Space`
+instance is supplied by the bundle's `σ.t2` at the call site; the ambient `CompactSpace`/`ChartedSpace`
+are `SingularManifold` instances. Everything except the Wu leaf is discharged from stock
+(`cylinderWAdmPinned_of_wuResidual`), then bridged to the concrete residual bundle by
+`CylinderWAdmPinned.toCylWAdmData`. -/
+def cylWAdmData_of_wuResidual {s : SingularManifold.{0} PUnit.{1} k I}
+    [T2Space s.M] [Nonempty s.M] [PreconnectedSpace s.M] [T1Space (cylW s.M)]
+    (hRes : CylinderWuResidual s.M) : CylWAdmData s :=
+  CylinderWAdmPinned.toCylWAdmData (cylinderWAdmPinned_of_wuResidual s.M hRes)
+
+/-! ## §4. THE FIRE — the provider inhabits, the G8-1 / G10-1 rider dies (honest conditional).
+
+The full `cylData : ∀ {s}, CharPairStrBundled I s → CylWAdmData s` splits by the carrier's topology:
+
+* **nonempty CONNECTED** `s.M` — discharged from stock modulo the ONE sharp per-M residual
+  `CylinderWuResidual s.M` (the Steenrod-suspension Wu leaf), via `cylWAdmData_of_wuResidual`;
+* **empty / disconnected** `s.M` — the residual NOT covered by the connected fundamental-class route:
+  the empty cylinder's degenerate datum (all cohomology `Subsingleton`) and the disjoint-union `⊔`-tower
+  (`PoincareLefschetzWuBlock`). Carried as the explicit honest residual `hbdry`.
+
+Given both, `nonempty_provider_of_cylData` fires: the sole inhabitation dependency `cylData` is met, so
+`Nonempty (CharPairWProviderPerOp (𝓡 4) 0)` — the G8-1/G10-1 provider rider dies, and every per-`prov`
+W-D statement (`ktSurgeryReduces_of_tetherSupply`, `dualSpinForwardDatum_iff_ktNonSplit`,
+`kt_equiv_zmod16_of_two_leaves`, …) acquires a live instance. -/
+theorem nonempty_provider_of_wuLeaf_and_boundary
+    (hwu : ∀ {s : SingularManifold.{0} PUnit.{1} k I} (_σ : CharPairStrBundled I s)
+      [T2Space s.M] [Nonempty s.M] [PreconnectedSpace s.M] [T1Space (cylW s.M)],
+      CylinderWuResidual s.M)
+    (hbdry : ∀ {s : SingularManifold.{0} PUnit.{1} k I}, CharPairStrBundled I s →
+      IsEmpty s.M ∨ (Nonempty s.M ∧ ¬ PreconnectedSpace s.M) → CylWAdmData s) :
+    Nonempty (CharPairWProviderPerOp I k) := by
+  refine SKEFTHawking.PinPlusKTLeafGate.nonempty_provider_of_cylData (fun {s} σ => ?_)
+  by_cases hne : Nonempty s.M
+  · by_cases hpc : PreconnectedSpace s.M
+    · haveI := hne
+      haveI := hpc
+      haveI : T2Space s.M := σ.t2
+      haveI : T2Space (cylW s.M) := inferInstance
+      haveI : T1Space (cylW s.M) := inferInstance
+      exact cylWAdmData_of_wuResidual (hwu σ)
+    · exact hbdry σ (Or.inr ⟨hne, hpc⟩)
+  · exact hbdry σ (Or.inl (not_nonempty_iff.mp hne))
 
 end
 
