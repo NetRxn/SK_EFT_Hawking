@@ -32,6 +32,16 @@ namespace SKEFTHawking.SurgeryFoundation
 
 open Topology TopologicalSpace
 
+/-- **A homeomorphism transports a `ChartedSpace` structure** (single global chart). Mirrors
+`PinPlusCylinderWAdmPinned.chartedSpaceOfHomeomorph` / `SphereDiskJ5.chartedSpaceHB_HA`; inlined here
+to avoid a heavy cross-module import. No `IsManifold`/groupoid compatibility for plain `ChartedSpace`. -/
+@[reducible] def chartedSpaceOfHomeo {X H : Type*} [TopologicalSpace X] [TopologicalSpace H]
+    (e : X ≃ₜ H) : ChartedSpace H X where
+  atlas := {e.toOpenPartialHomeomorph}
+  chartAt _ := e.toOpenPartialHomeomorph
+  mem_chart_source _ := by simp [Homeomorph.toOpenPartialHomeomorph]
+  chart_mem_atlas _ := rfl
+
 /-! ## §1. The reusable keystone — assemble a `ChartedSpace` from an open cover.
 
 A `ChartedSpace H' W` requires, for each `w : W`, a single chart: an `OpenPartialHomeomorph W H'`
@@ -192,5 +202,124 @@ theorem cylInteriorRegion_union_handleInteriorRegion_union_seamRegion :
     · exact Or.inl (Or.inr ⟨a, ha, rfl⟩)
 
 end HandleAttachment
+
+/-! ## §3. The interior regions are charted from the ends' charts.
+
+Regions (a) and (b) of §5's atlas plan, discharged: once the ends `B` (cylinder) and `Ha` (handle)
+carry `ChartedSpace H'` structures (their manifold-with-boundary/corners charts), the two interior
+regions of `W` inherit them — each interior is homeomorphic (via the closed-embedding `fromCyl` /
+`fromHandle` restricted to the open interior) to an OPEN subset of the corresponding end, self-charted
+by `Opens.instChartedSpace`, transported through the homeomorphism. This is the exact meaning of
+"transport `B`'s charts through the OPEN inclusion off the seam". -/
+
+namespace HandleAttachment
+
+variable {H' : Type*} [TopologicalSpace H'] (HA : HandleAttachment)
+
+/-- **The cylinder interior region is homeomorphic to `B ∖ range φ`** — the closed embedding `fromCyl`
+restricts to a homeomorphism of the open interior onto its image. -/
+noncomputable def cylInteriorHomeo :
+    ↥HA.cylInteriorRegion ≃ₜ ↥((Set.range HA.φ)ᶜ) :=
+  (HA.isClosedEmbedding_fromCyl.isEmbedding.homeomorphImage (Set.range HA.φ)ᶜ).symm
+
+/-- **The handle interior region is homeomorphic to `Ha ∖ S`** — the closed embedding `fromHandle`
+restricts to a homeomorphism of the open interior onto its image. -/
+noncomputable def handleInteriorHomeo :
+    ↥HA.handleInteriorRegion ≃ₜ ↥(HA.Sᶜ) :=
+  (HA.isClosedEmbedding_fromHandle.isEmbedding.homeomorphImage HA.Sᶜ).symm
+
+/-- **The cylinder interior region is `H'`-charted** from the cylinder `B`'s charts: the open subset
+`B ∖ range φ` is self-charted (`Opens.instChartedSpace`), transported through `cylInteriorHomeo`. -/
+@[reducible] noncomputable def cylInteriorChartedSpace [ChartedSpace H' HA.B] :
+    ChartedSpace H' ↥HA.cylInteriorRegion :=
+  letI : ChartedSpace H' ↥((Set.range HA.φ)ᶜ) :=
+    TopologicalSpace.Opens.instChartedSpace ⟨(Set.range HA.φ)ᶜ, HA.isClosed_range_φ.isOpen_compl⟩
+  letI := chartedSpaceOfHomeo (H := ↥((Set.range HA.φ)ᶜ)) HA.cylInteriorHomeo
+  ChartedSpace.comp H' ↥((Set.range HA.φ)ᶜ) ↥HA.cylInteriorRegion
+
+/-- **The handle interior region is `H'`-charted** from the handle `Ha`'s charts: the open subset
+`Ha ∖ S` is self-charted, transported through `handleInteriorHomeo`. -/
+@[reducible] noncomputable def handleInteriorChartedSpace [ChartedSpace H' HA.Ha] :
+    ChartedSpace H' ↥HA.handleInteriorRegion :=
+  letI : ChartedSpace H' ↥(HA.Sᶜ) :=
+    TopologicalSpace.Opens.instChartedSpace ⟨HA.Sᶜ, HA.hS.isOpen_compl⟩
+  letI := chartedSpaceOfHomeo (H := ↥(HA.Sᶜ)) HA.handleInteriorHomeo
+  ChartedSpace.comp H' ↥(HA.Sᶜ) ↥HA.handleInteriorRegion
+
+end HandleAttachment
+
+/-! ## §4. The manifold-carrying surgery-chart datum, and the carrier's chart atlas.
+
+The honest interface + assembly for **Target 1** (`ChartedSpace H' W`), staged per §5. A
+`SurgeryChartDatum` enriches a `HandleAttachment` with the chart data the atlas needs: a model `H'`,
+`ChartedSpace H'` on the two ends `B`/`Ha` (their own manifold-with-boundary/corners charts, region
+(a)+(b)'s source), and — the wave's genuinely-geometric input — an OPEN **collar neighborhood** of the
+seam together with its `ChartedSpace H'` (region (c), the weld). Because the seam `q(S)` is CLOSED
+(image of the compact attaching region), a valid chart atlas cannot use the seam *set* as a cover
+member; the honest input is an open neighborhood of it — the welded collar, the union of the two
+half-collars glued across the boundary face (the seam-chart design of record; see the module report).
+
+From this datum the carrier's chart atlas is assembled by the §1 keystone over the three-region OPEN
+cover {cylinder-interior, handle-interior, seam-collar}: the interiors are charted from the ends (§3),
+the collar is the datum's input, and the three cover `W` (§2 + the collar containing the seam). -/
+
+/-- **A manifold-carrying surgery-chart datum.** A `HandleAttachment` plus: a model `H'`; charts on the
+cylinder end `B` and handle end `Ha`; and an OPEN collar neighborhood `seamNbhd` of the seam carrying
+its own charts (the geometric weld input). The carrier's chart atlas is assembled from these
+(`carrierChartedSpace`). -/
+structure SurgeryChartDatum where
+  /-- the underlying topological adjunction-space datum (opener). -/
+  toHandleAttachment : HandleAttachment
+  /-- the chart model (`= ModelProd E⁴ (half-space 1)` in the surgery-trace use). -/
+  H' : Type*
+  [topH' : TopologicalSpace H']
+  /-- the cylinder end `B = M × I` is `H'`-charted (its manifold-with-boundary charts). -/
+  [chartB : ChartedSpace H' toHandleAttachment.B]
+  /-- the handle end `Ha = Dʳ⁺¹ × D^{n−r}` is `H'`-charted (its corner charts). -/
+  [chartHa : ChartedSpace H' toHandleAttachment.Ha]
+  /-- **the seam collar neighborhood** — an OPEN region of `W` containing the seam, the welded collar
+  (union of the two half-collars glued across the boundary face). The genuinely-geometric input. -/
+  seamNbhd : TopologicalSpace.Opens toHandleAttachment.carrier
+  /-- the collar contains the seam (so the three regions form an OPEN cover). -/
+  hseam : toHandleAttachment.seamRegion ⊆ seamNbhd
+  /-- **the collar-weld charts** — `H'`-charts on the seam collar (region (c)). -/
+  [chartSeam : ChartedSpace H' ↥seamNbhd]
+
+attribute [instance] SurgeryChartDatum.topH' SurgeryChartDatum.chartB
+  SurgeryChartDatum.chartHa SurgeryChartDatum.chartSeam
+
+namespace SurgeryChartDatum
+
+variable (D : SurgeryChartDatum)
+
+/-- **The carrier `W = B ⊔_φ Ha` is `H'`-charted** — Target 1, assembled honestly. The §1 keystone
+`chartedSpaceOfOpensCover` over the three-region OPEN cover {cylinder-interior, handle-interior,
+seam-collar}: the interiors inherit `B`/`Ha`'s charts through the interior open embeddings (§3), the
+collar carries the datum's weld charts, and the three cover `W` (§2 union + the collar ⊇ seam). The
+per-region *smoothness/compatibility* — the `IsManifold` layer — is the next target (§5), not part of
+this `ChartedSpace`. -/
+@[reducible] noncomputable def carrierChartedSpace :
+    ChartedSpace D.H' D.toHandleAttachment.carrier :=
+  chartedSpaceOfOpensCover
+    (fun i : Fin 3 =>
+      ![⟨D.toHandleAttachment.cylInteriorRegion, D.toHandleAttachment.isOpen_cylInteriorRegion⟩,
+        ⟨D.toHandleAttachment.handleInteriorRegion, D.toHandleAttachment.isOpen_handleInteriorRegion⟩,
+        D.seamNbhd] i)
+    (by
+      intro w
+      have hcov :=
+        D.toHandleAttachment.cylInteriorRegion_union_handleInteriorRegion_union_seamRegion
+      rw [Set.eq_univ_iff_forall] at hcov
+      rcases hcov w with (hcyl | hhandle) | hs
+      · exact ⟨0, hcyl⟩
+      · exact ⟨1, hhandle⟩
+      · exact ⟨2, D.hseam hs⟩)
+    (fun i =>
+      match i with
+      | 0 => D.toHandleAttachment.cylInteriorChartedSpace
+      | 1 => D.toHandleAttachment.handleInteriorChartedSpace
+      | 2 => D.chartSeam)
+
+end SurgeryChartDatum
 
 end SKEFTHawking.SurgeryFoundation
