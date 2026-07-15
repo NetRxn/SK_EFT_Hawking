@@ -4481,6 +4481,7 @@ import SKEFTHawking.PinPlusKTLeafGate
 import SKEFTHawking.PinPlusKTFreezeAssembly
 import SKEFTHawking.SingularSurgeryFoundation
 import SKEFTHawking.SingularSurgeryCharts
+import SKEFTHawking.SingularSurgeryManifold
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
