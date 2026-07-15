@@ -112,8 +112,9 @@ Composes `metabolic_isotropic_of_pos` (the isotropic class to surger) with
 (`brown` unchanged) and `card_surgeryReduction` (rank drops by exactly 2). This is the algebraic
 induction STEP of "a Witt-trivial (metabolic-after-stabilization) enhancement surgers to rank 0": it
 produces a strictly-smaller form with the SAME Brown invariant. The termination/iteration (that every
-`brown = 0` form reaches rank 0) is the gated Witt-triviality content — see `EnhancementReducesToSpin`
-(§2). BANKED positive algebraic fact (no carrier, no `prov`, no vacuity concern). -/
+`brown = 0` form reaches rank 0) is the gated Witt-triviality content — carried geometrically by
+`KTSurgeryReduces` (§2; round-9: proven EQUIVALENT to `KernelReducesToSpin`). BANKED positive
+algebraic fact (no carrier, no `prov`, no vacuity concern). -/
 theorem exists_brownPreserving_reduction (Q : Z4Quadratic ι)
     (L : Submodule (ZMod 2) (ι → ZMod 2))
     (hq : ∀ l ∈ L, Q.q l = 0)
