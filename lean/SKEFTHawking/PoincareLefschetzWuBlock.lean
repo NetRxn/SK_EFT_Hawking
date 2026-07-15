@@ -128,6 +128,75 @@ theorem pairing_injective_block (H : WuBlockHyp Pu P₁ P₂)
   rw [restrictPairCohomology_apply, map_zero]
   exact Prod.ext hl hr
 
+/-- **Unbundled block non-degeneracy** — the `nondeg` field of the `ofRelFund`-assembled union datum,
+stated on the raw cup/μ maps (so it can be supplied to `ofRelFund14`/`ofRelFund23` *before* the datum
+is formed, breaking the circularity of `pairing_injective_block`). Same block-diagonal argument. -/
+theorem blockCup_injective {k' nk' : ℕ}
+    {Cu : Cohomology (sumSpace A B) k' →ₗ[ZMod 2]
+      RelativeCohomology (sumSet A B S₁ S₂) nk' →ₗ[ZMod 2] RelativeCohomology (sumSet A B S₁ S₂) 5}
+    {C₁ : Cohomology A k' →ₗ[ZMod 2] RelativeCohomology S₁ nk' →ₗ[ZMod 2] RelativeCohomology S₁ 5}
+    {C₂ : Cohomology B k' →ₗ[ZMod 2] RelativeCohomology S₂ nk' →ₗ[ZMod 2] RelativeCohomology S₂ 5}
+    {Mu : RelativeCohomology (sumSet A B S₁ S₂) 5 →ₗ[ZMod 2] ZMod 2}
+    {M₁ : RelativeCohomology S₁ 5 →ₗ[ZMod 2] ZMod 2}
+    {M₂ : RelativeCohomology S₂ 5 →ₗ[ZMod 2] ZMod 2}
+    (hcup_inl : ∀ v y, relCohomPullback (inlMap A B) (mapsTo_inl A B S₁ S₂) 5 (Cu v y)
+      = C₁ (cohomologyPullback (inlMap A B) k' v)
+          (relCohomPullback (inlMap A B) (mapsTo_inl A B S₁ S₂) nk' y))
+    (hcup_inr : ∀ v y, relCohomPullback (inrMap A B) (mapsTo_inr A B S₁ S₂) 5 (Cu v y)
+      = C₂ (cohomologyPullback (inrMap A B) k' v)
+          (relCohomPullback (inrMap A B) (mapsTo_inr A B S₁ S₂) nk' y))
+    (hmu : ∀ z, Mu z = M₁ (relCohomPullback (inlMap A B) (mapsTo_inl A B S₁ S₂) 5 z)
+                     + M₂ (relCohomPullback (inrMap A B) (mapsTo_inr A B S₁ S₂) 5 z))
+    (h₁ : Function.Injective ⇑(C₁.compr₂ M₁)) (h₂ : Function.Injective ⇑(C₂.compr₂ M₂)) :
+    Function.Injective ⇑(Cu.compr₂ Mu) := by
+  have block : ∀ v y, (Cu.compr₂ Mu) v y
+      = (C₁.compr₂ M₁) (cohomologyPullback (inlMap A B) k' v)
+          (relCohomPullback (inlMap A B) (mapsTo_inl A B S₁ S₂) nk' y)
+        + (C₂.compr₂ M₂) (cohomologyPullback (inrMap A B) k' v)
+          (relCohomPullback (inrMap A B) (mapsTo_inr A B S₁ S₂) nk' y) := fun v y => by
+    show Mu (Cu v y) = _
+    rw [hmu (Cu v y), hcup_inl v y, hcup_inr v y]; rfl
+  rw [← LinearMap.ker_eq_bot, eq_bot_iff]
+  intro v hv
+  rw [LinearMap.mem_ker] at hv
+  rw [Submodule.mem_bot]
+  have hzero : ∀ y, (Cu.compr₂ Mu) v y = 0 := fun y => by rw [show (Cu.compr₂ Mu) v = 0 from hv]; rfl
+  have hl : cohomologyPullback (inlMap A B) k' v = 0 := by
+    apply h₁
+    rw [map_zero]
+    apply LinearMap.ext
+    intro y₁
+    have hb := block v (relSectionInl A B S₁ S₂ nk' y₁)
+    rw [relCohomPullback_inl_relSectionInl, relCohomPullback_inr_relSectionInl,
+      map_zero, add_zero] at hb
+    rw [LinearMap.zero_apply, ← hb, hzero]
+  have hr : cohomologyPullback (inrMap A B) k' v = 0 := by
+    apply h₂
+    rw [map_zero]
+    apply LinearMap.ext
+    intro y₂
+    have hb := block v (relSectionInr A B S₁ S₂ nk' y₂)
+    rw [relCohomPullback_inl_relSectionInr, relCohomPullback_inr_relSectionInr,
+      map_zero, zero_add] at hb
+    rw [LinearMap.zero_apply, ← hb, hzero]
+  apply restrictPairCohomology_injective A B k'
+  rw [restrictPairCohomology_apply, map_zero]
+  exact Prod.ext hl hr
+
+/-- **Block Betti additivity** — the `dimeq` field of the union datum: the Lefschetz Betti equality
+adds over the disjoint union (`finrank` additivity on both the absolute and relative sides). -/
+theorem dimeq_block {k' nk' : ℕ}
+    [FiniteDimensional (ZMod 2) (Cohomology A k')] [FiniteDimensional (ZMod 2) (Cohomology B k')]
+    [FiniteDimensional (ZMod 2) (RelativeCohomology S₁ nk')]
+    [FiniteDimensional (ZMod 2) (RelativeCohomology S₂ nk')]
+    (d₁ : Module.finrank (ZMod 2) (Cohomology A k')
+        = Module.finrank (ZMod 2) (RelativeCohomology S₁ nk'))
+    (d₂ : Module.finrank (ZMod 2) (Cohomology B k')
+        = Module.finrank (ZMod 2) (RelativeCohomology S₂ nk')) :
+    Module.finrank (ZMod 2) (Cohomology (sumSpace A B) k')
+      = Module.finrank (ZMod 2) (RelativeCohomology (sumSet A B S₁ S₂) nk') := by
+  rw [finrank_cohomology_disjointSum, finrank_relCohomology_disjointSum, d₁, d₂]
+
 /-! ## §4. Wu-class naturality -/
 
 /-- **Wu-class naturality, left**: `inl*(v_k(Pu)) = v_k(P₁)`. The union Wu class restricts to the
