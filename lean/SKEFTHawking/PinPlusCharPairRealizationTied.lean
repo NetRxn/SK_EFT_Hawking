@@ -188,4 +188,36 @@ theorem GeoRealizationTied.toMembrane_L (qσ : Z4Quadratic (Fin nσ)) (qτ : Z4Q
       = Submodule.map (srcEquiv d.toData).toLinearMap (LinearMap.ker (Homology.map d.ι 1)) :=
   GeoMembrane.ofGeometric_L qσ qτ d.toData
 
+/-! ## §5. Seam-transport support lemmas (reused by the cylinder realization). -/
+
+open SKEFTHawking.SingularPairLES SKEFTHawking.SingularRelativeHomologyMod2
+open SKEFTHawking.SingularDisjointUnion SKEFTHawking.SingularDisjointUnionHn
+
+/-- The degree-`n` additivity equivalence in coordinates: `splitHnEquiv (a, b) = i_*(a) + i_*(b)`. -/
+theorem splitHnEquiv_apply {X : TopCat} {U : Set ↑X} (hU : IsClopen U) (m : ℕ)
+    (p : Homology (sub U) m × Homology (sub Uᶜ) m) :
+    splitHnEquiv hU m p = homIncl U m p.1 + homIncl Uᶜ m p.2 := by
+  show splitHn U m p = _
+  rw [splitHn, LinearMap.coprod_apply]
+
+/-- **The realization datum's source equivalence, inverse in coordinates.** `srcEquiv d` splits
+`H₁(∂Q)` through the clopen partition and the boundary bases; its inverse reassembles a sum-indexed
+vector as `i_*(eσ⁻¹(x∘inl)) + i_*(eτ⁻¹(x∘inr))`. This is the concrete decomposition the transported
+boundary-inclusion kernel computation rides. -/
+theorem srcEquiv_symm_apply {mid : ℕ} (d : GeoRealizationData nσ nτ mid)
+    (x : Fin nσ ⊕ Fin nτ → ZMod 2) :
+    (srcEquiv d).symm x
+      = homIncl d.U 1 (d.eσ.symm (fun i => x (Sum.inl i)))
+        + homIncl d.Uᶜ 1 (d.eτ.symm (fun i => x (Sum.inr i))) := by
+  rw [LinearEquiv.symm_apply_eq, srcEquiv]
+  simp only [LinearEquiv.trans_apply]
+  rw [← splitHnEquiv_apply d.hU 1
+      (d.eσ.symm (fun i => x (Sum.inl i)), d.eτ.symm (fun i => x (Sum.inr i))),
+    LinearEquiv.symm_apply_apply, LinearEquiv.prodCongr_apply,
+    LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply]
+  ext j
+  cases j with
+  | inl j => rfl
+  | inr j => rfl
+
 end SKEFTHawking.PinPlusCharPairRealizationTied

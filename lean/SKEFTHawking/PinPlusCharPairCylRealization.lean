@@ -21,14 +21,16 @@ Every piece is honest and per-object:
 The construction supplies EVERY field of the strengthened structure with real topology, so the
 F2-fix shape is not vacuous.
 
-**Named remaining route (Stage 2→4).** The geometric kernel identity — `toMembrane.L = cylLagrangian`,
-i.e. that the two slice inclusions `Σ ↪ Σ×[0,1]` induce the SAME `H₁(Σ)` iso (both are sections of the
-contractible collapse `prodFst`), so the transported boundary-inclusion is the fold with anti-diagonal
-kernel — is the homological content needed to feed this realization into the tied op witnesses. It
-reduces to `Homology.map (slice ⊥) 1 = Homology.map (slice ⊤) 1 = (prodContractibleHomologyEquiv …).symm`
-via `prodFst ∘ slice = id`, `Homology.map_comp`/`map_id`, and `splitHnEquiv` — mirroring the
-`ptPieceToM`/`prodFst_homology_bijective` pattern of the (5-manifold) cylinder numerics, transported to
-the abstract surface product.
+**§2 — THE GEOMETRIC KERNEL IDENTITY (proved).** `cylRealizationTied_transportedBInc`:
+`transportedBInc (cylRealizationTied Y basis).toData = cylBd n` (the fold `x ↦ (i ↦ x(inl i) + x(inr i))`),
+whence `cylRealizationTied_toMembrane_L : (…toMembrane q q).L = cylLagrangian n` — the geometric
+anti-diagonal, never a free field (F1 discharged on the cylinder). The homological core:
+`homology_map_prodSect_eq_cylCollapse_symm` proves BOTH slice inclusions `prodSect ⊥`/`prodSect ⊤`
+induce the SAME `H₁(Σ)` iso (`= (cylCollapse).symm`, since `prodFst ∘ prodSect c₀ = id` makes each a
+right inverse of the bijection `H₁(prodFst)`); the boundary inclusion restricted to each end is that
+slice (`cylBdryIncl_comp_subInclCM_left/right`), and `srcEquiv_symm_apply` +
+`homIncl_eq_map`/`Homology.map_comp` assemble the two ends into the fold. This is exactly the homological
+content that feeds the realization into the tied op witnesses (Stage 3/4).
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new project axiom, no
 `native_decide`, no `maxHeartbeats`.
@@ -36,12 +38,20 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new proj
 import Mathlib
 import SKEFTHawking.PinPlusCharPairRealizationTied
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderNumerics
+import SKEFTHawking.PoincareLefschetzRelFundClassCylinderSuspension
 
 open Topology unitInterval
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
+open SKEFTHawking.SingularFunctoriality
 open SKEFTHawking.SingularKroneckerBasisBridge
+open SKEFTHawking.SingularPairLES SKEFTHawking.SingularRelativeHomologyMod2
+open SKEFTHawking.SingularCohomologyPairRestrict
 open SKEFTHawking.SingularProdContractibleInt
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderNumerics
+open SKEFTHawking.PoincareLefschetzRelFundClassCylinderSuspension
+open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
+open SKEFTHawking.PinPlusCharPairData (cylBd cylLagrangian)
+open SKEFTHawking.PinPlusCharPairMembraneGeoRealization
 open SKEFTHawking.PinPlusCharPairRealizationTied
 
 namespace SKEFTHawking.PinPlusCharPairCylRealization
@@ -92,6 +102,128 @@ theorem cylRealizationTied_derivedEσ :
     (cylRealizationTied Y basis).derivedEσ
       = (homeoHomologyEquiv IsClosedEmbedding.inl.isEmbedding.toHomeomorph.symm 1).trans
           (homologyBasisOfCohomologyBasis basis) :=
+  rfl
+
+/-! ## §2. THE GEOMETRIC KERNEL IDENTITY — the transported boundary-inclusion is the fold `cylBd`,
+so `L = cylLagrangian` (the anti-diagonal). This is what lets the honest cylinder realization feed the
+tied op witnesses. -/
+
+omit [T2Space (Y : Type)] [CompactSpace (Y : Type)] in
+/-- **The contractible-factor collapse** `H₁(Σ × [0,1]) ≃ H₁(Σ)` — the forward map is `H₁(prodFst)`. -/
+noncomputable def cylCollapse :
+    Homology (ProdSp Y (TopCat.of unitInterval)) 1 ≃ₗ[ZMod 2] Homology Y 1 :=
+  prodContractibleHomologyEquiv Y (TopCat.of unitInterval) ⊥ iccContraction
+    slice_iccContraction_zero slice_iccContraction_one 0
+
+omit [T2Space (Y : Type)] [CompactSpace (Y : Type)] in
+/-- **Both slice inclusions collapse to the same iso.** For EITHER endpoint `c₀`, the slice inclusion
+`Σ ↪ Σ×[0,1]` (`prodSect c₀`) induces the inverse of the contractible collapse — because
+`prodFst ∘ prodSect c₀ = id` makes `H₁(prodSect c₀)` a right inverse of the bijection `H₁(prodFst)`.
+This is the geometric core: the two ends of the cylinder are homologically identified. -/
+theorem homology_map_prodSect_eq_cylCollapse_symm (c₀ : ↑(TopCat.of unitInterval)) :
+    Homology.map (prodSect Y (TopCat.of unitInterval) c₀) 1 = (cylCollapse Y).symm.toLinearMap := by
+  ext z
+  rw [LinearEquiv.coe_toLinearMap]
+  symm
+  rw [LinearEquiv.symm_apply_eq]
+  show z = (Homology.map (prodFst Y (TopCat.of unitInterval)) 1)
+      (Homology.map (prodSect Y (TopCat.of unitInterval) c₀) 1 z)
+  rw [← LinearMap.comp_apply, ← Homology.map_comp, prodFst_comp_prodSect, Homology.map_id,
+    LinearMap.id_apply]
+
+/-- The boundary inclusion restricted to the σ-end `Σ_σ = sub U` IS the bottom slice inclusion
+`prodSect ⊥` read through the identification homeomorphism `homσ`. -/
+theorem cylBdryIncl_comp_subInclCM_left :
+    (cylRealizationTied Y basis).toData.ι.comp
+        (subInclCM (cylRealizationTied Y basis).toData.U)
+      = (prodSect Y (TopCat.of unitInterval) ⊥).comp
+          ⟨IsClosedEmbedding.inl.isEmbedding.toHomeomorph.symm,
+           (IsClosedEmbedding.inl (Y := ↑Y)).isEmbedding.toHomeomorph.symm.continuous⟩ := by
+  apply ContinuousMap.ext; rintro ⟨p, y, rfl⟩
+  show cylBdryIncl Y (Sum.inl y)
+      = prodSect Y (TopCat.of unitInterval) ⊥
+          (IsClosedEmbedding.inl.isEmbedding.toHomeomorph.symm ⟨Sum.inl y, y, rfl⟩)
+  rw [IsEmbedding.toHomeomorph_symm_apply]
+  rfl
+
+/-- The boundary inclusion restricted to the τ-end `Σ_τ = sub Uᶜ` IS the top slice inclusion
+`prodSect ⊤` read through the identification homeomorphism `homτ`. -/
+theorem cylBdryIncl_comp_subInclCM_right :
+    (cylRealizationTied Y basis).toData.ι.comp
+        (subInclCM ((cylRealizationTied Y basis).toData.U)ᶜ)
+      = (prodSect Y (TopCat.of unitInterval) ⊤).comp
+          ⟨(Homeomorph.setCongr Set.compl_range_inl).trans
+              IsClosedEmbedding.inr.isEmbedding.toHomeomorph.symm,
+           ((Homeomorph.setCongr (Set.compl_range_inl (β := ↑Y))).trans
+              (IsClosedEmbedding.inr (X := ↑Y)).isEmbedding.toHomeomorph.symm).continuous⟩ := by
+  apply ContinuousMap.ext; rintro ⟨(a | y), hp⟩
+  · exact absurd ⟨a, rfl⟩ hp
+  · show cylBdryIncl Y (Sum.inr y)
+        = prodSect Y (TopCat.of unitInterval) ⊤
+            (((Homeomorph.setCongr Set.compl_range_inl).trans
+              IsClosedEmbedding.inr.isEmbedding.toHomeomorph.symm) ⟨Sum.inr y, hp⟩)
+    rw [Homeomorph.trans_apply,
+      show (Homeomorph.setCongr (Set.compl_range_inl (β := ↑Y))) ⟨Sum.inr y, hp⟩
+          = ⟨Sum.inr y, ⟨y, rfl⟩⟩ from rfl, IsEmbedding.toHomeomorph_symm_apply]
+    rfl
+
+/-- **THE GEOMETRIC KERNEL IDENTITY.** The transported boundary-inclusion of the honest cylinder
+realization is EXACTLY the fold `cylBd n`, `x ↦ (i ↦ x(inl i) + x(inr i))`. Both slice inclusions
+induce the same `H₁(Σ)` iso (`homology_map_prodSect_eq_cylCollapse_symm`), so on the coordinatized
+boundary homology the inclusion-into-`Q` map adds the two ends. Hence the computed Taylor-leg submodule
+is the geometric anti-diagonal, never a free field — the F1/F2 obligation discharged on the cylinder. -/
+theorem cylRealizationTied_transportedBInc :
+    transportedBInc (cylRealizationTied Y basis).toData = cylBd n := by
+  have hσ : ∀ a : Homology (sub (cylRealizationTied Y basis).toData.U) 1,
+      Homology.map (cylRealizationTied Y basis).toData.ι 1
+          (homIncl (cylRealizationTied Y basis).toData.U 1 a)
+        = (cylCollapse Y).symm
+            (homeoHomologyEquiv IsClosedEmbedding.inl.isEmbedding.toHomeomorph.symm 1 a) := by
+    intro a
+    rw [homIncl_eq_map, ← LinearMap.comp_apply, ← Homology.map_comp,
+      cylBdryIncl_comp_subInclCM_left]
+    erw [Homology.map_comp, LinearMap.comp_apply, homology_map_prodSect_eq_cylCollapse_symm]
+    rfl
+  have hτ : ∀ b : Homology (sub ((cylRealizationTied Y basis).toData.U)ᶜ) 1,
+      Homology.map (cylRealizationTied Y basis).toData.ι 1
+          (homIncl ((cylRealizationTied Y basis).toData.U)ᶜ 1 b)
+        = (cylCollapse Y).symm
+            (homeoHomologyEquiv ((Homeomorph.setCongr Set.compl_range_inl).trans
+              IsClosedEmbedding.inr.isEmbedding.toHomeomorph.symm) 1 b) := by
+    intro b
+    rw [homIncl_eq_map, ← LinearMap.comp_apply, ← Homology.map_comp,
+      cylBdryIncl_comp_subInclCM_right]
+    erw [Homology.map_comp, LinearMap.comp_apply, homology_map_prodSect_eq_cylCollapse_symm]
+    rfl
+  -- the three carried bases of the cylinder realization, unfolded to their derived/collapse forms
+  have heσ : (cylRealizationTied Y basis).toData.eσ
+      = (homeoHomologyEquiv IsClosedEmbedding.inl.isEmbedding.toHomeomorph.symm 1).trans
+          (homologyBasisOfCohomologyBasis basis) := rfl
+  have heτ : (cylRealizationTied Y basis).toData.eτ
+      = (homeoHomologyEquiv ((Homeomorph.setCongr Set.compl_range_inl).trans
+            IsClosedEmbedding.inr.isEmbedding.toHomeomorph.symm) 1).trans
+          (homologyBasisOfCohomologyBasis basis) := rfl
+  have heQ : (cylRealizationTied Y basis).toData.eQ
+      = (cylCollapse Y).trans (homologyBasisOfCohomologyBasis basis) := rfl
+  refine LinearMap.ext fun x => ?_
+  show (cylRealizationTied Y basis).toData.eQ
+      (Homology.map (cylRealizationTied Y basis).toData.ι 1
+        ((srcEquiv (cylRealizationTied Y basis).toData).symm x)) = cylBd n x
+  rw [srcEquiv_symm_apply, map_add, hσ, hτ, heQ, heσ, heτ]
+  simp only [LinearEquiv.symm_trans_apply, LinearEquiv.apply_symm_apply]
+  erw [LinearEquiv.trans_apply, LinearEquiv.map_add, LinearEquiv.apply_symm_apply,
+    LinearEquiv.apply_symm_apply, LinearEquiv.map_add, LinearEquiv.apply_symm_apply,
+    LinearEquiv.apply_symm_apply]
+  funext i
+  rfl
+
+/-- **The cylinder realization's membrane kernel is the honest anti-diagonal** `cylLagrangian n` —
+the geometric `half-lives–half-dies` submodule the e₈ exploit omits. Discharges the F1 obligation
+(`L` a genuine geometric fold-kernel) on the cylinder membrane. -/
+theorem cylRealizationTied_toMembrane_L (q : Z4Quadratic (Fin n)) :
+    ((cylRealizationTied Y basis).toMembrane q q).L = cylLagrangian n := by
+  show LinearMap.ker (transportedBInc (cylRealizationTied Y basis).toData) = _
+  rw [cylRealizationTied_transportedBInc]
   rfl
 
 end SKEFTHawking.PinPlusCharPairCylRealization
