@@ -1444,6 +1444,7 @@ import SKEFTHawking.SingularPDWindow4
 import SKEFTHawking.SingularH0Finite
 import SKEFTHawking.SingularUCFinite
 import SKEFTHawking.SingularPD4Instances
+import SKEFTHawking.SingularClosedHomologyFinite
 import SKEFTHawking.PinPlusFloorCollapse
 import SKEFTHawking.SingularCohomologyFunctoriality
 import SKEFTHawking.SingularCohomologyHomotopy
@@ -4480,6 +4481,7 @@ import SKEFTHawking.PinPlusKTLemma53Wave
 import SKEFTHawking.PinPlusKTLeafGate
 import SKEFTHawking.PinPlusKTFreezeAssembly
 import SKEFTHawking.SingularSurgeryFoundation
+import SKEFTHawking.PinPlusCylDataDischarge
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
