@@ -4417,6 +4417,9 @@ import SKEFTHawking.PoincareLefschetzRelFundClassCylinderSuspDual
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderSuspBij
 import SKEFTHawking.PinPlusCharPairMembraneTie
 import SKEFTHawking.SingularDisjointUnionHn
+import SKEFTHawking.SingularRelativeDisjointUnionHn
+import SKEFTHawking.SingularRelativeDisjointUnionLocal
+import SKEFTHawking.SingularRelativeDisjointUnionFundClass
 import SKEFTHawking.PinPlusCharPairMembraneGeoRealization
 import SKEFTHawking.SingularPairLESNaturality
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderCollar
@@ -4492,6 +4495,7 @@ import SKEFTHawking.SingularSurgeryHandleD5
 import SKEFTHawking.PinPlusCylDataDischarge
 import SKEFTHawking.PinPlusCylDataDischargeDisconnected
 import SKEFTHawking.PinPlusCylDataDischargeDisconnectedComponents
+import SKEFTHawking.PinPlusCylDataDischargeDisconnectedD
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
