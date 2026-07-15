@@ -4476,6 +4476,7 @@ import SKEFTHawking.PinPlusKTStepGate
 import SKEFTHawking.PinPlusKTSurgeryTrace
 import SKEFTHawking.PinPlusKTLemma53Wave
 import SKEFTHawking.PinPlusKTLeafGate
+import SKEFTHawking.PinPlusKTFreezeAssembly
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
