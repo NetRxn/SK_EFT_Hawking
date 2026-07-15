@@ -45,10 +45,13 @@ open SKEFTHawking.PoincareLefschetzRelFundClassSum
 /-- **The point pair-map along an open embedding is bijective** — the bijective upgrade of
 `SingularFundamentalClassSum.relPointMap_injective_of_isOpenEmbedding`: the excision triangle
 `φ = ambIncl (range φ) ∘ (embedding-to-range homeo)` composes a homeomorphism-induced iso with the
-excision iso, both bijective. -/
-theorem relPointMap_bijective_of_isOpenEmbedding {X Y : TopCat} [T1Space ↑Y] (φ : C(↑X, ↑Y))
+excision iso, both bijective. Takes the excision cover `int {φ x}ᶜ ∪ int (range φ) = univ` as a
+hypothesis (rather than deriving it from `T1Space`), so it applies to non-`T1` ambient spaces (e.g.
+bordism carriers) when the cover holds structurally — as it does for a disjoint-union inclusion. -/
+theorem relPointMap_bijective_of_isOpenEmbedding {X Y : TopCat} (φ : C(↑X, ↑Y))
     (hφ : Topology.IsOpenEmbedding (⇑φ)) (x : ↑X) (m : ℕ)
-    (hmt : Set.MapsTo (⇑φ) ({x}ᶜ : Set ↑X) ({φ x}ᶜ : Set ↑Y)) :
+    (hmt : Set.MapsTo (⇑φ) ({x}ᶜ : Set ↑X) ({φ x}ᶜ : Set ↑Y))
+    (hcov : (⋃ U ∈ ({({φ x}ᶜ : Set ↑Y), Set.range (⇑φ)} : Set (Set ↑Y)), interior U) = Set.univ) :
     Function.Bijective (RelativeHomology.map φ hmt (m + 2)) := by
   set V : Set ↑Y := Set.range (⇑φ) with hV
   set e := hφ.isEmbedding.toHomeomorph with he
@@ -70,13 +73,6 @@ theorem relPointMap_bijective_of_isOpenEmbedding {X Y : TopCat} [T1Space ↑Y] (
     RelativeHomology.map_bijective_of_comp_id eC eC' h1 h1'
       (by ext z; exact e.symm_apply_apply z)
       (by ext w; exact congrArg Subtype.val (e.apply_symm_apply w)) (m + 2)
-  have hcov : (⋃ U ∈ ({({φ x}ᶜ : Set ↑Y), V} : Set (Set ↑Y)), interior U) = Set.univ := by
-    rw [Set.biUnion_pair, (isClosed_singleton (x := φ x)).isOpen_compl.interior_eq,
-      hφ.isOpen_range.interior_eq, Set.eq_univ_iff_forall]
-    intro z
-    by_cases h : z = φ x
-    · exact Or.inr (h ▸ ⟨x, rfl⟩)
-    · exact Or.inl h
   have hbijB : Function.Bijective
       (RelativeHomology.map (ambIncl V) (A := restr ({φ x}ᶜ : Set ↑Y) V)
         (B := ({φ x}ᶜ : Set ↑Y)) (fun _ hp => hp) (m + 1 + 1)) := by
@@ -151,24 +147,8 @@ theorem map_relIncl {X Y : TopCat} (φ : C(↑X, ↑Y)) {S T : Set ↑X} {SY : S
 
 section Sum
 
-variable {A B : TopCat} {S₁ : Set ↑A} {S₂ : Set ↑B} [T1Space ↑A] [T1Space ↑B]
+variable {A B : TopCat} {S₁ : Set ↑A} {S₂ : Set ↑B}
 
-/-- The disjoint-union carrier `A ⊔ B` is `T1` when both summands are. -/
-instance instT1SpaceSumSpace : T1Space ↑(sumSpace A B) := by
-  refine ⟨fun x => isClosed_sum_iff.mpr ?_⟩
-  rcases x with a | b
-  · refine ⟨?_, ?_⟩
-    · convert isClosed_singleton (x := a) using 2
-      ext z; simp [Set.mem_preimage, Sum.inl.injEq]
-    · convert isClosed_empty using 2
-      ext z; simp
-  · refine ⟨?_, ?_⟩
-    · convert isClosed_empty using 2
-      ext z; simp
-    · convert isClosed_singleton (x := b) using 2
-      ext z; simp [Set.mem_preimage, Sum.inr.injEq]
-
-omit [T1Space ↑A] [T1Space ↑B] in
 /-- `inl a ∉ S₁ ⊔ S₂ ↔ a ∉ S₁`. -/
 theorem inl_notMem_sumSet {a : ↑A} :
     (Sum.inl a : ↑(sumSpace A B)) ∉ sumSet A B S₁ S₂ ↔ a ∉ S₁ := by
@@ -178,7 +158,6 @@ theorem inl_notMem_sumSet {a : ↑A} :
   · refine fun ha => ⟨fun c hc hce => ha (Sum.inl_injective hce ▸ hc), fun c _ hce => ?_⟩
     exact Sum.inl_ne_inr hce.symm
 
-omit [T1Space ↑A] [T1Space ↑B] in
 /-- `inr b ∉ S₁ ⊔ S₂ ↔ b ∉ S₂`. -/
 theorem inr_notMem_sumSet {b : ↑B} :
     (Sum.inr b : ↑(sumSpace A B)) ∉ sumSet A B S₁ S₂ ↔ b ∉ S₂ := by
@@ -188,19 +167,47 @@ theorem inr_notMem_sumSet {b : ↑B} :
   · exact fun hb => ⟨fun c _ hce => Sum.inr_ne_inl hce.symm,
       fun c hc hce => hb (Sum.inr_injective hce ▸ hc)⟩
 
-omit [T1Space ↑A] [T1Space ↑B] in
 /-- The complement-of-point pair map hypothesis for `inl` at `a`. -/
 theorem mapsTo_inl_compl (a : ↑A) :
     Set.MapsTo (inlMap A B) ({a}ᶜ : Set ↑A)
       ({(Sum.inl a : ↑(sumSpace A B))}ᶜ : Set ↑(sumSpace A B)) :=
   fun _ hz hcon => hz (Set.mem_singleton_iff.mpr (Sum.inl_injective (Set.mem_singleton_iff.mp hcon)))
 
-omit [T1Space ↑A] [T1Space ↑B] in
 /-- The complement-of-point pair map hypothesis for `inr` at `b`. -/
 theorem mapsTo_inr_compl (b : ↑B) :
     Set.MapsTo (inrMap A B) ({b}ᶜ : Set ↑B)
       ({(Sum.inr b : ↑(sumSpace A B))}ᶜ : Set ↑(sumSpace A B)) :=
   fun _ hz hcon => hz (Set.mem_singleton_iff.mpr (Sum.inr_injective (Set.mem_singleton_iff.mp hcon)))
+
+/-- **The excision cover at `inl a`** — `int {inl a}ᶜ ∪ int (range inl) = univ`, holding structurally
+(no `T1` needed): every `inl _` lands in the open `range inl`, every `inr _` in the open
+`range inr ⊆ {inl a}ᶜ`. -/
+theorem sumCover_inl (a : ↑A) :
+    (⋃ U ∈ ({({(Sum.inl a : ↑(sumSpace A B))}ᶜ : Set ↑(sumSpace A B)),
+        Set.range (⇑(inlMap A B))} : Set (Set ↑(sumSpace A B))), interior U) = Set.univ := by
+  rw [Set.biUnion_pair, Set.eq_univ_iff_forall]
+  have hoInl : IsOpen (Set.range (⇑(inlMap A B))) :=
+    (Topology.IsOpenEmbedding.inl (X := ↑A) (Y := ↑B)).isOpen_range
+  have hoInr : IsOpen (Set.range (⇑(inrMap A B))) :=
+    (Topology.IsOpenEmbedding.inr (X := ↑A) (Y := ↑B)).isOpen_range
+  rintro (a' | b')
+  · exact Or.inr (by rw [hoInl.interior_eq]; exact ⟨a', rfl⟩)
+  · refine Or.inl (interior_maximal (fun _ ⟨w, hw⟩ hcon => ?_) hoInr ⟨b', rfl⟩)
+    exact Sum.inr_ne_inl (hw.trans (Set.mem_singleton_iff.mp hcon))
+
+/-- **The excision cover at `inr b`**. -/
+theorem sumCover_inr (b : ↑B) :
+    (⋃ U ∈ ({({(Sum.inr b : ↑(sumSpace A B))}ᶜ : Set ↑(sumSpace A B)),
+        Set.range (⇑(inrMap A B))} : Set (Set ↑(sumSpace A B))), interior U) = Set.univ := by
+  rw [Set.biUnion_pair, Set.eq_univ_iff_forall]
+  have hoInl : IsOpen (Set.range (⇑(inlMap A B))) :=
+    (Topology.IsOpenEmbedding.inl (X := ↑A) (Y := ↑B)).isOpen_range
+  have hoInr : IsOpen (Set.range (⇑(inrMap A B))) :=
+    (Topology.IsOpenEmbedding.inr (X := ↑A) (Y := ↑B)).isOpen_range
+  rintro (a' | b')
+  · refine Or.inl (interior_maximal (fun _ ⟨w, hw⟩ hcon => ?_) hoInl ⟨a', rfl⟩)
+    exact Sum.inl_ne_inr (hw.trans (Set.mem_singleton_iff.mp hcon))
+  · exact Or.inr (by rw [hoInr.interior_eq]; exact ⟨b', rfl⟩)
 
 /-- **Interior excision at `inl a`**: `Hₙ(A, {a}ᶜ) ≅ Hₙ(A ⊔ B, {inl a}ᶜ)` via the (bijective)
 pushforward along the open embedding `inl`. -/
@@ -209,7 +216,7 @@ noncomputable def sumExcInl (a : ↑A) :
       RelativeHomology ({(Sum.inl a : ↑(sumSpace A B))}ᶜ : Set ↑(sumSpace A B)) 5 :=
   LinearEquiv.ofBijective (RelativeHomology.map (inlMap A B) (mapsTo_inl_compl a) 5)
     (relPointMap_bijective_of_isOpenEmbedding (inlMap A B) Topology.IsOpenEmbedding.inl a 3
-      (mapsTo_inl_compl a))
+      (mapsTo_inl_compl a) (sumCover_inl a))
 
 /-- **Interior excision at `inr b`**: `Hₙ(B, {b}ᶜ) ≅ Hₙ(A ⊔ B, {inr b}ᶜ)`. -/
 noncomputable def sumExcInr (b : ↑B) :
@@ -217,7 +224,7 @@ noncomputable def sumExcInr (b : ↑B) :
       RelativeHomology ({(Sum.inr b : ↑(sumSpace A B))}ᶜ : Set ↑(sumSpace A B)) 5 :=
   LinearEquiv.ofBijective (RelativeHomology.map (inrMap A B) (mapsTo_inr_compl b) 5)
     (relPointMap_bijective_of_isOpenEmbedding (inrMap A B) Topology.IsOpenEmbedding.inr b 3
-      (mapsTo_inr_compl b))
+      (mapsTo_inr_compl b) (sumCover_inr b))
 
 @[simp] theorem sumExcInl_apply (a : ↑A) (α : RelativeHomology ({a}ᶜ : Set ↑A) 5) :
     sumExcInl (A := A) (B := B) a α = RelativeHomology.map (inlMap A B) (mapsTo_inl_compl a) 5 α :=
