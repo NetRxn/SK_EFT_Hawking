@@ -4485,6 +4485,7 @@ import SKEFTHawking.SingularSurgeryCharts
 import SKEFTHawking.SingularSurgeryManifold
 import SKEFTHawking.PinPlusCylDataDischarge
 import SKEFTHawking.PinPlusCylDataDischargeDisconnected
+import SKEFTHawking.PinPlusCylDataDischargeDisconnectedComponents
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
