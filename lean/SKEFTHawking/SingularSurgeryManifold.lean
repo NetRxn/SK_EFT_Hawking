@@ -12,6 +12,7 @@ Additive module. Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no
 -/
 import Mathlib
 import SKEFTHawking.SingularSurgeryCharts
+import SKEFTHawking.BordismGroup
 
 namespace SKEFTHawking.SurgeryFoundation
 
@@ -305,5 +306,68 @@ theorem carrierIsManifold :
       | exact D.smoothWeld _ _ (by decide) (by decide) p p'
 
 end SmoothSurgeryChartDatum
+
+/-! ## §4. THE PACKAGING (Target 4) — the surgery trace as a project `Bordism`.
+
+With the manifold structure PROVEN (`carrierIsManifold`, Target 2), the surgery-trace carrier assembles
+into a `BordismTheory.Bordism` given only the **boundary identification** `e : s.M ⊕ t.M → W` (the
+source end `M × {0}` via `fromCyl`, the surgered end `M'` carved from the handle) and its properties.
+This is exactly the design of `BordismGroup.lean`'s §-note: a bordism is a manifold-with-boundary `W`
+plus a smooth injection onto its boundary. Previously no surgery-trace `Bordism` existed because the
+`IsManifold` field was missing; that obstruction is now discharged, so the trace packages honestly with
+the boundary map as the sole remaining geometric input. -/
+
+open SKEFTHawking.BordismTheory
+open scoped Manifold in
+/-- **TARGET 4 — the surgery-trace `Bordism`.** Given a `SmoothSurgeryChartDatum` (so the carrier `W`
+is a compact `C^k` manifold-with-boundary, Targets 1–2), a base model `I`, two closed singular
+`I`-manifolds `s`, `t`, and the boundary identification `e` (a smooth injection onto `J.boundary W`
+with the restriction data), the surgery trace is a genuine `Bordism J s t`. The topological +
+manifold fields are the PROVEN carrier structure; `e`/`he_boundary` are the geometric boundary input. -/
+noncomputable def surgeryTraceBordism
+    {X : Type*} [TopologicalSpace X]
+    {E H : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [TopologicalSpace H] {I : ModelWithCorners ℝ E H}
+    (D : SmoothSurgeryChartDatum) [FiniteDimensional ℝ D.E']
+    (s t : SingularManifold X D.k I)
+    (e : s.M ⊕ t.M → D.toSurgeryChartDatum.toHandleAttachment.carrier)
+    (he_smooth : letI := D.toSurgeryChartDatum.carrierChartedSpace
+      ContMDiff I D.J D.k e)
+    (he_inj : Function.Injective e)
+    (he_boundary : letI := D.toSurgeryChartDatum.carrierChartedSpace
+      Set.range e = D.J.boundary D.toSurgeryChartDatum.toHandleAttachment.carrier)
+    (g : D.toSurgeryChartDatum.toHandleAttachment.carrier → X) (hg : Continuous g)
+    (hg_restrict : g ∘ e = Sum.elim s.f t.f) :
+    letI := D.toSurgeryChartDatum.carrierChartedSpace
+    Bordism D.J s t :=
+  letI := D.toSurgeryChartDatum.carrierChartedSpace
+  letI := D.carrierIsManifold
+  { W := D.toSurgeryChartDatum.toHandleAttachment.carrier
+    e := e
+    he_smooth := he_smooth
+    he_inj := he_inj
+    he_boundary := he_boundary
+    g := g
+    hg := hg
+    hg_restrict := hg_restrict }
+
+/-! ### The two convergence consumers — the hooks and their named residuals.
+
+`surgeryTraceBordism` is the `Bordism J s t` object both consumers bottom out in; each adds a
+tangential/tether enrichment on top of it (the named residual, a further geometric datum this wave does
+NOT supply):
+
+* **`PinPlusKTSurgeryTrace.AmbientSurgeryDatum`** (`b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p'.1 p.1`): take
+  `I := 𝓡 4`, `D.J := (𝓡 4).prod (𝓡∂ 1)`, `Ha` the `D² × D³` 2-handle, `s := p'.1`, `t := p.1`; then
+  `surgeryTraceBordism` **is** the datum's `b` field, and its carrier's `T2Space` (opener) is the `hT2`
+  field. RESIDUAL: `hBor : Nonempty (CharPairBorRealizedTethered b p'.2 p.2)` — the pin-membrane tether,
+  a tangential enrichment on `b`.
+* **`SpinSigmaPresentation.HandleTradeCobordism`** (`IsDataBordant ξ p ((S²×S²) ⊔ p')`): `IsDataBordant
+  ξ p q = ∃ b : Bordism (I.prod (𝓡∂ 1)) p.1 q.1, Nonempty (ξ.Bor b p.2 q.2)`, so `surgeryTraceBordism`
+  (with `Ha` the `S²×S²`-handle, `t := (S²×S²) ⊔ p'`) supplies the existential witness `b`. RESIDUAL:
+  the `ξ.Bor` tangential structure on `b`.
+
+Both residuals are tangential-data enrichments of the SAME topological `Bordism` this wave now
+delivers; the manifold-structure obstruction that previously blocked BOTH is discharged (Target 2). -/
 
 end SKEFTHawking.SurgeryFoundation
