@@ -4465,6 +4465,7 @@ import SKEFTHawking.PinPlusCharPairBorRealizedOps
 import SKEFTHawking.PinPlusCharPairAddRealization
 import SKEFTHawking.PinPlusCharPairBorTethered
 import SKEFTHawking.PinPlusCharPairWProviderTransport
+import SKEFTHawking.PinPlusCharPairWProviderClosed
 import SKEFTHawking.PinPlusCharPairCarrier
 import SKEFTHawking.PinPlusCharPairFlipGate
 import SKEFTHawking.PinPlusCharPairTetherGate
