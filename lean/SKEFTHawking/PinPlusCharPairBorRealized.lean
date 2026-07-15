@@ -34,7 +34,7 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new proj
 -/
 import Mathlib
 import SKEFTHawking.PinPlusCharPairCylRealization
-import SKEFTHawking.PinPlusWAdmPinned
+import SKEFTHawking.PinPlusWAdmPinnedCore
 
 open scoped Manifold
 open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic

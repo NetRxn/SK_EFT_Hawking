@@ -33,14 +33,14 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new proj
 -/
 import Mathlib
 import SKEFTHawking.SingularDisjointUnionHn
-import SKEFTHawking.PinPlusCharPairMembraneTie
+import SKEFTHawking.PinPlusCharPairData
 
 open CategoryTheory Opposite
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularFunctoriality
 open SKEFTHawking.SingularRelativeHomologyMod2 SKEFTHawking.SingularDisjointUnion
 open SKEFTHawking.SingularDisjointUnionHn
 open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
-open SKEFTHawking.PinPlusCharPairMembraneTie
+open SKEFTHawking.PinPlusCharPairData
 
 namespace SKEFTHawking.PinPlusCharPairMembraneGeoRealization
 
@@ -109,7 +109,7 @@ theorem transportedBInc_ker (d : GeoRealizationData nσ nτ mid) :
 enhancement-agnostic (index-rank data only), matching `GeoMembrane`'s design. -/
 noncomputable def GeoMembrane.ofGeometric (qσ : Z4Quadratic (Fin nσ)) (qτ : Z4Quadratic (Fin nτ))
     (d : GeoRealizationData nσ nτ mid) :
-    SKEFTHawking.PinPlusCharPairMembraneTie.GeoMembrane qσ qτ :=
+    SKEFTHawking.PinPlusCharPairData.GeoMembrane qσ qτ :=
   ⟨mid, transportedBInc d⟩
 
 /-- The constructed membrane's `L` is the basis image of the geometric boundary-inclusion kernel —

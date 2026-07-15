@@ -53,6 +53,7 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new proj
 -/
 import Mathlib
 import SKEFTHawking.PinPlusCharPairMembraneGeoRealization
+import SKEFTHawking.PinPlusKTVacuityGateWD
 
 open scoped Manifold
 open CategoryTheory Opposite

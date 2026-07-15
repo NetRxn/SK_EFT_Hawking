@@ -45,7 +45,7 @@ open SKEFTHawking.SingularFunctoriality
 open SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularKroneckerBasisBridge
 open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
-open SKEFTHawking.PinPlusCharPairMembraneTie
+open SKEFTHawking.PinPlusCharPairData
 open SKEFTHawking.PinPlusCharPairMembraneGeoRealization
 
 namespace SKEFTHawking.PinPlusCharPairRealizationTied
