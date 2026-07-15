@@ -57,6 +57,7 @@ import Mathlib
 import SKEFTHawking.PinPlusWAdmPinned
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderNumerics
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderSuspension
+import SKEFTHawking.PoincareLefschetzRelFundClassCylinderCrossLocalAlphaU
 
 open scoped Manifold
 open SKEFTHawking.PoincareLefschetzWu5
@@ -71,6 +72,7 @@ open SKEFTHawking.PoincareLefschetzRelFundClassCylinderCollar
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderWu
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderNumerics
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderSuspension
+open SKEFTHawking.PoincareLefschetzRelFundClassCylinderCrossLocalAlphaU
 open SKEFTHawking.PinPlusWAdmPinned
 
 namespace SKEFTHawking.PinPlusCylinderWAdmPinned
@@ -282,6 +284,42 @@ def CylinderWAdmPinned.ofBasePD
     CylinderWAdmPinned M :=
   CylinderWAdmPinned.ofBase hcls findimM1 findimM2 hM2 hM3 hM4 nondeg14
     (cylinder_dimeq14_of_basePD hM3 basePD) nondeg23 (cylinder_dimeq23_holds hM2) hdet hwu
+
+/-! ## §6. The closed-manifold constructor — `hcls` DISCHARGED (the residual-set drops existence) -/
+
+/-- **The closed-manifold constructor**: assembles the ENTIRE residual-set with the **existence hole
+`hcls` DISCHARGED** — supplied internally by the now-unconditional `hasRelFundClass_cylGen` (the
+terminal `[W,∂W] = [M] × [I,∂I]` product cross-product route, closed via `αU ≠ 0`). Layered on
+§5's `ofBasePD`, so it ALSO discharges `findimRelHom14/23` and the two `dimeq` numerics. For a closed
+connected charted 4-manifold `M`, the residual-set VISIBLY drops `hcls`: the only remaining fields are
+`M`-side Betti data, the two Lefschetz non-degeneracies, `M`'s own Poincaré duality `basePD`, and the
+two named deep residuals `hdet` (Wall-2 slab) and `hwu` (Wu vanishing). Mirrors how `ofBasePD` absorbed
+`dimeq`/`basePD` — the existence residual leaves the residual-set entirely. -/
+def CylinderWAdmPinned.ofClosedPD [PreconnectedSpace M]
+    (findimM1 : FiniteDimensional (ZMod 2) (Cohomology (TopCat.of M) 1))
+    (findimM2 : FiniteDimensional (ZMod 2) (Cohomology (TopCat.of M) 2))
+    (hM2 : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 2))
+    (hM3 : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 3))
+    (hM4 : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 4))
+    (nondeg14 : Function.Injective
+      ⇑((relCupH14 (X := TopCat.of (cylW M)) (S := (cylModel 2).boundary (cylW M))).compr₂
+        (cylinderDatum (hasRelFundClass_cylGen (m' := 2) (M := M))).mu))
+    (nondeg23 : Function.Injective
+      ⇑((relCupH23 (X := TopCat.of (cylW M)) (S := (cylModel 2).boundary (cylW M))).compr₂
+        (cylinderDatum (hasRelFundClass_cylGen (m' := 2) (M := M))).mu))
+    (basePD : Module.finrank (ZMod 2) (Homology (TopCat.of M) 1)
+      = Module.finrank (ZMod 2) (Homology (TopCat.of M) 3))
+    (hdet : determinedByPoints (X := TopCat.of (cylW M)) (2 + 1 + 2) (interiorSlab M))
+    (hwu : wuW2
+      (cylinderP14 (hasRelFundClass_cylGen (m' := 2) (M := M)) (cylinder_findimAbs14 findimM1)
+        (cylinder_findimRel14 (cylinder_findimRelHom14_of_base hM4 hM3)) nondeg14
+        (cylinder_dimeq14_of_basePD hM3 basePD))
+      (cylinderP23 (hasRelFundClass_cylGen (m' := 2) (M := M)) (cylinder_findimAbs23 findimM2)
+        (cylinder_findimRel23 (cylinder_findimRelHom23_of_base hM3 hM2)) nondeg23
+        (cylinder_dimeq23_holds hM2)) = 0) :
+    CylinderWAdmPinned M :=
+  CylinderWAdmPinned.ofBasePD (hasRelFundClass_cylGen (m' := 2) (M := M))
+    findimM1 findimM2 hM2 hM3 hM4 nondeg14 nondeg23 basePD hdet hwu
 
 end
 
