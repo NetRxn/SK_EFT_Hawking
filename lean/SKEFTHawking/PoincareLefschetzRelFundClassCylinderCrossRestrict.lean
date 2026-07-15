@@ -27,6 +27,8 @@ import SKEFTHawking.SingularIntervalPairClass
 open scoped Manifold
 open SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularHomologyMod2
+open SKEFTHawking.SingularRelativeMV
+open SKEFTHawking.SingularRelativeFunctoriality
 open SKEFTHawking.SingularRelativeCrossProduct
 open SKEFTHawking.PoincareLefschetzRelFundClass
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinder
@@ -85,6 +87,40 @@ def cylinderRelFundClassDatum_of_candidate_ne_zero [T1Space (cylW M)]
         (cylFundClassCandidate (M := M) (m' := m')) ≠ 0) :
     RelFundClassDatum (X := TopCat.of (cylW M)) (m := m' + 1) ((cylModel m').boundary (cylW M)) :=
   cylinderRelFundClassDatum (hasRelFundClass_of_candidate_ne_zero hne)
+
+/-! ## §2. The chain-level restriction identity — the candidate restricts to the concrete prism chain
+
+Exposing the crux geometrically: the restriction of `[M] × [I, ∂I]` at an interior point `x` is the
+class of the SAME prism chain `crossChain (m'+2) z` (`= prismOp graphHom z` for a cycle
+representative `z` of `[M]`), now viewed relative to the puncture `W ∖ x`. This is the product
+analogue of the interval factor's `SingularIntervalPairClass.restrictBd_zGen` (which exposed
+`bdPathChain`). Restriction is the identity on chains (`relIncl_mk`), so the identity is essentially
+definitional at the cycle level: `restrictBd` reinterprets the same relative cycle under the larger
+subspace `{x}ᶜ ⊇ ∂W`. -/
+
+/-- **The candidate's restriction is the class of the prism chain rel the puncture.** For any cycle
+representative `z` of `[M]` (`hz`), the restriction of the cross-product candidate at an interior
+point `x` is `[crossRelCycle z]` reinterpreted rel `{x}ᶜ` (via `relCyclesMap` of the identity — the
+same underlying prism chain `crossChain (m'+2) z`). The crux `restrictBd … candidate ≠ 0` is thus
+exactly "the prism of a fundamental cycle is nonzero rel the puncture" — the honest interior
+local-Künneth nonvanishing. -/
+theorem restrictBd_cylFundClassCandidate
+    (x : ↑(TopCat.of (cylW M))) (hx : x ∉ (cylModel m').boundary (cylW M))
+    (z : cycles (TopCat.of M) (m' + 2))
+    (hz : SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := m') (M := M)
+      = Homology.mk (TopCat.of M) (m' + 2) z) :
+    restrictBd (X := TopCat.of (cylW M)) ((cylModel m').boundary (cylW M)) hx (m' + 1 + 2)
+        (cylFundClassCandidate (M := M) (m' := m'))
+      = RelativeHomology.mk (X := TopCat.of (cylW M)) ({x}ᶜ) (m' + 1 + 2)
+          (relCyclesMap (ContinuousMap.id ↑(TopCat.of (cylW M)))
+            (fun _ hmem => Set.subset_compl_singleton_iff.mpr hx hmem) (m' + 1 + 2)
+            (crossRelCycle (slice_one_mapsTo (M := M) (m' := m'))
+              (slice_zero_mapsTo (M := M) (m' := m')) (m' + 1) z)) := by
+  show restrictBd (X := TopCat.of (cylW M)) ((cylModel m').boundary (cylW M)) hx (m' + 1 + 2)
+      (crossH (M := TopCat.of M) (slice_one_mapsTo (M := M) (m' := m'))
+        (slice_zero_mapsTo (M := M) (m' := m')) (m' + 1)
+        (SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := m') (M := M))) = _
+  rw [hz, crossH_mk, restrictBd, relIncl_mk]
 
 end
 
