@@ -20,6 +20,12 @@ connected fundamental class of each clopen piece, which the connected in-tree ma
 each component.
 
 * `hasRelFundClass_of_clopen_split` — the binary assembly (either interior point lands in one piece).
+* `RestrictsToRelGenOn` / `hasRelFundClass_of_clopen_split_folded` — the same assembly with the
+  per-piece detection packaged in a **folded** predicate. This is the whnf-guarded form the cylinder
+  needs: writing the detection equation `restrictBd ((cylModel m').boundary (cylW M)) hx α = …`
+  explicitly whnf-loops on the manifold-boundary reduction (`ModelWithCorners.boundary`, the same wall
+  `cylGen` is sealed against), but a folded def application does not, so the disconnected cylinder `D`
+  can be built through it (`PinPlusCylDataDischargeDisconnectedD`).
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new axiom, no
 `native_decide`, no `maxHeartbeats`.
@@ -58,5 +64,28 @@ theorem hasRelFundClass_of_clopen_split {m : ℕ} {U : Set ↑X} (_hU : IsClopen
     exact hdetU x hx hxU
   · rw [map_add, restrictBd_excisionMap_eq_zero hx hxU (m + 2) αU, zero_add]
     exact hdetUc x hx hxU
+
+/-- **Folded restricted-detection predicate**: `α` detects the interior generator (`(gen x hx).symm 1`)
+at every point of `P`. A `def`, so its body — the detection equation `restrictBd S hx α = (gen x hx).symm
+1` — stays under a definitional wrapper when used as a hypothesis. This is what lets the disconnected
+cylinder `D` be stated: the same equation written explicitly over the concrete manifold boundary
+`(cylModel m').boundary (cylW M)` whnf-loops (the `ModelWithCorners.boundary` reduction wall), but a
+folded `RestrictsToRelGenOn` application does not. -/
+def RestrictsToRelGenOn {m : ℕ} (S : Set ↑X)
+    (gen : ∀ x : ↑X, x ∉ S → (RelativeHomology ({x}ᶜ) (m + 2) ≃ₗ[ZMod 2] ZMod 2))
+    (P : ↑X → Prop) (α : RelativeHomology S (m + 2)) : Prop :=
+  ∀ (x : ↑X) (hx : x ∉ S), P x → restrictBd S hx (m + 2) α = (gen x hx).symm 1
+
+/-- **The engine assembly, folded form.** Identical to `hasRelFundClass_of_clopen_split` but with the
+two per-piece detection hypotheses packaged as folded `RestrictsToRelGenOn` predicates — the
+whnf-guarded statement the concrete cylinder boundary requires. -/
+theorem hasRelFundClass_of_clopen_split_folded {m : ℕ} {U : Set ↑X} (hU : IsClopen U) (S : Set ↑X)
+    (gen : ∀ x : ↑X, x ∉ S → (RelativeHomology ({x}ᶜ) (m + 2) ≃ₗ[ZMod 2] ZMod 2))
+    (αU : RelativeHomology (restr S U) (m + 2))
+    (αUc : RelativeHomology (restr S Uᶜ) (m + 2))
+    (hdetU : RestrictsToRelGenOn S gen (· ∈ U) (excisionMap S U (m + 2) αU))
+    (hdetUc : RestrictsToRelGenOn S gen (· ∈ Uᶜ) (excisionMap S Uᶜ (m + 2) αUc)) :
+    HasRelFundClass S gen :=
+  hasRelFundClass_of_clopen_split hU S gen αU αUc hdetU hdetUc
 
 end SKEFTHawking.SingularRelativeDisjointUnionFundClass

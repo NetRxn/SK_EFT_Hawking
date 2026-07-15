@@ -4492,6 +4492,7 @@ import SKEFTHawking.SingularSurgeryDatumC0
 import SKEFTHawking.PinPlusCylDataDischarge
 import SKEFTHawking.PinPlusCylDataDischargeDisconnected
 import SKEFTHawking.PinPlusCylDataDischargeDisconnectedComponents
+import SKEFTHawking.PinPlusCylDataDischargeDisconnectedD
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
