@@ -12,7 +12,7 @@ discharging nothing — exactly like `kernelReducesToSpin_of_ambientDatumSupply`
 
 ## G8-1 provider-inhabitation rider (unchanged, applies to EVERY per-`prov` result here)
 `CharPairWProviderPerOp (𝓡 4) 0` has no unconditional in-tree inhabitant (only `ofCylinderEngine`,
-consuming the two OPEN Track-2 residuals). Every per-`prov` theorem below is CONDITIONAL, not
+consuming the SINGLE remaining Track-2 residual `cylData` — addClosure was discharged by PinPlusCharPairWProviderClosed; round-10 kernel-encoded the dependency as nonempty_provider_of_cylData). Every per-`prov` theorem below is CONDITIONAL, not
 vacuous, with ZERO live instances until Track-2's `cylData`/`addClosure` land an in-tree `prov`.
 
 ## The two directions (KT-LMS-151 §5, Lemma 5.3, p.216; `ScoutReport_KT_Lemma53_div32_Habegger_Enriques.md`)
