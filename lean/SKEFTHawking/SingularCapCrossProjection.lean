@@ -189,4 +189,56 @@ theorem mapChain_prismOp_cap {k m : ℕ} (g : SingularCochain M k)
       = prismOp (projHom M) (m + 1) (cap (m := m + 1) g z) :=
   mapChain_prismOp (fstCyl M) (graphHom M) (m + 1) (cap (m := m + 1) g z)
 
+/-! ## §5. The punchline: normalization residual + `fst_*` injectivity ⟹ `P + Q` is an absolute
+boundary of `M × I` (hence `[P] = [Q]` in `H(W, ∂W)`). -/
+
+open SKEFTHawking.SingularRelativeCrossProduct in
+/-- **The normalization-residual predicate `PrismDegNull`**: the base-level difference
+`(g ⌢ prism projHom z) + prism projHom (g ⌢ z)` is an absolute boundary of `M`. `prism projHom` is the
+prism of the `t`-independent projection homotopy — a sum of degenerate simplices — so over the
+*normalized* singular complex this holds automatically; it is the single classical residual (singular
+normalization) of the entire cap-cross projection. -/
+def PrismDegNull {k m : ℕ} (g : SingularCochain M k) (z : SingularChain M (k + m + 1)) : Prop :=
+  cap (m := m + 2) g (prismOp (projHom M) (k + m + 1) z)
+      + prismOp (projHom M) (m + 1) (cap (m := m + 1) g z) ∈ boundaries M (m + 2)
+
+/-- **`P + Q` is an absolute boundary of `M × I`** from `PrismDegNull` and `fst_*` injectivity.
+`P := (fst^* g) ⌢ (prism graphHom z)`, `Q := prism graphHom (g ⌢ z)`. Both are relative cycles with
+equal boundary (§3), so `P + Q` is an absolute cycle; `fst_#(P + Q)` is the `PrismDegNull` chain (§4),
+a boundary of `M`, so `fst_*[P+Q] = 0`; injectivity of `fst_*` forces `[P+Q] = 0`, i.e. `P + Q ∈ ∂`. -/
+theorem cap_pullback_prismOp_add_mem_boundaries {k m : ℕ}
+    (g : LinearMap.ker (coboundaryₗ M k)) (z : cycles M (k + m + 1))
+    (hfstinj : Function.Injective (Homology.map (fstCyl M) (m + 2)))
+    (hnull : PrismDegNull g.1 z.1) :
+    cap (m := m + 2) (pullbackCochainMap (fstCyl M) k g.1) (prismOp (graphHom M) (k + m + 1) z.1)
+        + prismOp (graphHom M) (m + 1) (cap (m := m + 1) g.1 z.1)
+      ∈ boundaries (cyl M) (m + 2) := by
+  have hgc : coboundaryₗ M k g.1 = 0 := g.2
+  have hz : chainBoundary M (k + m) z.1 = 0 := z.2
+  -- `P + Q` is an absolute cycle: ∂P = ∂Q (§3), so ∂(P+Q) = 0.
+  have hcyc : chainBoundary (cyl M) (m + 1)
+      (cap (m := m + 2) (pullbackCochainMap (fstCyl M) k g.1) (prismOp (graphHom M) (k + m + 1) z.1)
+        + prismOp (graphHom M) (m + 1) (cap (m := m + 1) g.1 z.1)) = 0 := by
+    rw [map_add, boundary_cap_pullback_prismOp g.1 hgc z.1 hz, boundary_prismOp_cap g.1 hgc z.1 hz]
+    exact ZModModule.add_self _
+  set d : SingularChain (cyl M) (m + 2) :=
+    cap (m := m + 2) (pullbackCochainMap (fstCyl M) k g.1) (prismOp (graphHom M) (k + m + 1) z.1)
+      + prismOp (graphHom M) (m + 1) (cap (m := m + 1) g.1 z.1) with hd
+  -- `fst_# d` is the `PrismDegNull` chain, a boundary of `M`.
+  have hpush : mapChain (fstCyl M) (m + 2) d
+      = cap (m := m + 2) g.1 (prismOp (projHom M) (k + m + 1) z.1)
+        + prismOp (projHom M) (m + 1) (cap (m := m + 1) g.1 z.1) := by
+    rw [hd, map_add, mapChain_cap_pullback_prismOp, mapChain_prismOp_cap]
+  -- `fst_*[d] = 0`.
+  have hmap0 : Homology.map (fstCyl M) (m + 2) (Homology.mk (cyl M) (m + 2) ⟨d, hcyc⟩) = 0 := by
+    rw [Homology.map_mk, Homology.mk_eq_zero, Submodule.submoduleOf, Submodule.mem_comap,
+      Submodule.coe_subtype, cyclesMap_coe, hpush]
+    exact hnull
+  -- injectivity ⟹ `[d] = 0` ⟹ `d ∈ ∂`.
+  have hd0 : Homology.mk (cyl M) (m + 2) ⟨d, hcyc⟩ = 0 :=
+    hfstinj (by rw [hmap0, map_zero])
+  rw [Homology.mk_eq_zero] at hd0
+  rw [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype] at hd0
+  exact hd0
+
 end SKEFTHawking.SingularCapCrossProjection
