@@ -141,4 +141,48 @@ theorem pinf_kills_prism {n : ℕ} (w : SingularChain M (n + 1)) :
       simp only [map_smul, map_sum]
       rw [Finset.sum_eq_zero fun i _ => pinf_single_prismSimplex σ i, smul_zero]
 
+/-! ## §3. THE NORMALIZATION DISCHARGE -/
+
+variable (M) in
+/-- `K.d` at level `m`, as a plain linear map `SingularChain M (m+1) → SingularChain M m`. -/
+noncomputable def kdL (m : ℕ) : SingularChain M (m + 1) →ₗ[ZMod 2] SingularChain M m :=
+  ModuleCat.Hom.hom ((AlternatingFaceMapComplex.obj (singularSMod M)).d (m + 1) m)
+
+/-- `kdL` is `chainBoundary` (the differential match, packaged for the clean linear maps). -/
+theorem kdL_eq {m : ℕ} (c : SingularChain M (m + 1)) : kdL M m c = chainBoundary M m c := dMatch c
+
+variable (M) in
+/-- The `homotopyPInftyToId` homotopy component `hom i j`, as a plain linear map. -/
+noncomputable def htpHom (i j : ℕ) : SingularChain M i →ₗ[ZMod 2] SingularChain M j :=
+  ModuleCat.Hom.hom ((homotopyPInftyToId (X := singularSMod M)).hom i j)
+
+/-- **`PrismProjKillsHomology` holds for every space.** For a cycle `w`, `prismOp projHom w` is a
+cycle (banked) made of degeneracies (killed by `PInfty`), so by Mathlib's `homotopyPInftyToId`
+(`PInfty ≃ 𝟙`) it is a boundary: `w' = PInfty w' + ∂(hom w') + hom(∂w')`, and here `PInfty w' = 0`,
+`∂w' = 0`, leaving `w' = ∂(hom w')`. -/
+theorem prismProjKillsHomology_holds (M : TopCat) : PrismProjKillsHomology M := by
+  intro n w hw
+  have hcyc : chainBoundary M (n + 1) (prismOp (projHom M) (n + 1) w) = 0 :=
+    chainBoundary_prismOp_projHom w hw
+  -- The `PInfty ≃ 𝟙` homotopy relation at level `n+2`, packaged as clean linear maps.
+  have hcomm := (homotopyPInftyToId (X := singularSMod M)).comm (n + 2)
+  rw [dNext_eq _ (show (ComplexShape.down ℕ).Rel (n + 2) (n + 1) from rfl),
+      prevD_eq _ (show (ComplexShape.down ℕ).Rel (n + 3) (n + 2) from rfl)] at hcomm
+  have hcomm_hom :
+      pinftyChain (n + 2) = htpHom M (n + 1) (n + 2) ∘ₗ kdL M (n + 1)
+        + kdL M (n + 2) ∘ₗ htpHom M (n + 2) (n + 3) + LinearMap.id := by
+    rw [pinftyChain, hcomm]
+    simp only [ModuleCat.hom_add, ModuleCat.hom_comp, HomologicalComplex.id_f, ModuleCat.hom_id]
+    rfl
+  refine ⟨htpHom M (n + 2) (n + 3) (prismOp (projHom M) (n + 1) w), ?_⟩
+  -- Evaluate the clean relation at the prism.
+  have hkey := DFunLike.congr_fun hcomm_hom (prismOp (projHom M) (n + 1) w)
+  rw [pinf_kills_prism w] at hkey
+  simp only [LinearMap.add_apply, LinearMap.comp_apply, LinearMap.id_coe, id_eq,
+    kdL_eq, hcyc, map_zero, zero_add] at hkey
+  -- `hkey : 0 = chainBoundary M (n+2) (htpHom … Pw) + Pw`, so the two are equal over `ℤ/2`.
+  have hneg : -(prismOp (projHom M) (n + 1) w) = prismOp (projHom M) (n + 1) w :=
+    neg_eq_of_add_eq_zero_left (ZModModule.add_self _)
+  exact (eq_neg_of_add_eq_zero_left hkey.symm).trans hneg
+
 end SKEFTHawking.SingularNormalizationPInfty
