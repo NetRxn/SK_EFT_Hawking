@@ -61,7 +61,7 @@ BUNDLES `σ τ : CharPairStrBundled` (the realization needs `surf`/`basis`). Ref
   (`GeoRealizationTied` at the two ends' `surf`/`basis`), so the Taylor-leg submodule
   `L = ker (transportedBInc real.toData)` is a REALIZED geometric fold-kernel — never a free or
   synthetic `bInc` (F1/F2 fix). -/
-structure CharPairBorRealized {s t : SingularManifold PUnit k I}
+structure CharPairBorRealized {s t : SingularManifold.{0} PUnit.{1} k I}
     (b : Bordism (I.prod (𝓡∂ 1)) s t) (σ : CharPairStrBundled I s) (τ : CharPairStrBundled I t) where
   /-- item 0: the bordism carrier is Hausdorff. -/
   hWT2 : T2Space b.W
@@ -85,7 +85,7 @@ structure CharPairBorRealized {s t : SingularManifold PUnit k I}
 /-- **The realized `Bor` STILL forces grade equality of the ends** — the anti-collapse engine descends
 UNCHANGED onto the realized computed kernel `(real.toMembrane).L`. The realized/pinned refinement costs
 nothing in honesty: the computed grade `abk8 := brown ∘ q` remains a bordism invariant. -/
-theorem CharPairBorRealized.brown_eq {s t : SingularManifold PUnit k I}
+theorem CharPairBorRealized.brown_eq {s t : SingularManifold.{0} PUnit.{1} k I}
     {b : Bordism (I.prod (𝓡∂ 1)) s t} {σ : CharPairStrBundled I s} {τ : CharPairStrBundled I t}
     (β : CharPairBorRealized b σ τ) : σ.q.brown = τ.q.brown :=
   brown_eq_of_taylorLeg_lagrangian σ.q τ.q (β.real.toMembrane σ.q τ.q).L β.htaylor β.hlag
@@ -93,7 +93,7 @@ theorem CharPairBorRealized.brown_eq {s t : SingularManifold PUnit k I}
 /-- **Forget the realization and pins**: a realized+pinned datum IS a tied datum (its membrane is the
 concrete `real.toMembrane`). The registry-backing direction — the realized carrier is a genuine
 sub-shape of the current tied one. -/
-noncomputable def CharPairBorRealized.toTied {s t : SingularManifold PUnit k I}
+noncomputable def CharPairBorRealized.toTied {s t : SingularManifold.{0} PUnit.{1} k I}
     {b : Bordism (I.prod (𝓡∂ 1)) s t} {σ : CharPairStrBundled I s} {τ : CharPairStrBundled I t}
     (β : CharPairBorRealized b σ τ) : CharPairBorTied b σ.toCharPairStr τ.toCharPairStr :=
   ⟨β.hWT2, β.P14, β.P23, β.hwu, β.real.toMembrane σ.q τ.q, β.htaylor, β.hlag⟩
@@ -104,7 +104,7 @@ noncomputable def CharPairBorRealized.toTied {s t : SingularManifold PUnit k I}
 the exact Taylor leg, the Lagrangian) + item 1 (P14/P23/hwu AND the substrate pins) drawn from a
 PINNED provider. -/
 noncomputable def mkCharPairBorRealized (prov : CharPairWProviderPinned I k)
-    {s t : SingularManifold PUnit k I} (b : Bordism (I.prod (𝓡∂ 1)) s t)
+    {s t : SingularManifold.{0} PUnit.{1} k I} (b : Bordism (I.prod (𝓡∂ 1)) s t)
     {σ : CharPairStrBundled I s} {τ : CharPairStrBundled I t}
     (hWT2 : T2Space b.W)
     (real : GeoRealizationTied (TopCat.of σ.surf.M) (TopCat.of τ.surf.M) σ.basis τ.basis)
@@ -129,7 +129,7 @@ surface `Σ_σ = σ.surf` at `σ.basis`, whose COMPUTED kernel is the geometric 
 `cylLagrangian σ.n` (`cylRealizationTied_toMembrane_L`). The synthetic-`bInc` e₈ exploit cannot
 inhabit this: it has no `GeoRealizationTied` source. -/
 noncomputable def cylBorRealized (prov : CharPairWProviderPinned I k)
-    {s : SingularManifold PUnit k I} (σ : CharPairStrBundled I s) :
+    {s : SingularManifold.{0} PUnit.{1} k I} (σ : CharPairStrBundled I s) :
     CharPairBorRealized (reflCylinder s) σ σ :=
   haveI := σ.surfT2
   mkCharPairBorRealized prov (reflCylinder s)
@@ -137,5 +137,44 @@ noncomputable def cylBorRealized (prov : CharPairWProviderPinned I k)
     (cylRealizationTied (TopCat.of σ.surf.M) σ.basis)
     (by rw [cylRealizationTied_toMembrane_L]; exact taylorLeg_cyl σ.q)
     (by rw [cylRealizationTied_toMembrane_L]; exact lagrangian_cyl σ.q)
+
+/-! ## §4. `revBor` — end-reversal transports with the SAME realization -/
+
+/-- **`revBor` instantiates on the realized+pinned form** — end-reversal (`charPairBundledRevStr` on
+both ends) keeps the SAME surface/basis (`revStr` negates only the enhancement `q`), so the realization
+`β.real` transports UNCHANGED; the Taylor leg survives (`jointEnhancement_neg_q`, `−0 = 0`) and the
+Lagrangian is literally unchanged (`jointEnhancement_neg_B`). The pins are the same `W`'s, unchanged. -/
+noncomputable def revBorRealized {s t : SingularManifold.{0} PUnit.{1} k I}
+    {b : Bordism (I.prod (𝓡∂ 1)) s t} {σ : CharPairStrBundled I s} {τ : CharPairStrBundled I t}
+    (β : CharPairBorRealized b σ τ) :
+    CharPairBorRealized b (charPairBundledRevStr σ) (charPairBundledRevStr τ) where
+  hWT2 := β.hWT2
+  P14 := β.P14
+  P23 := β.P23
+  hwu := β.hwu
+  pin14 := β.pin14
+  pin23 := β.pin23
+  real := β.real
+  htaylor := by
+    -- convert both the goal's realized kernel and β.htaylor's to the PROVEN `toMembrane_L` map
+    -- form (q-independent), sidestepping the whnf/keyed-match wall on the bundle-reindexed ends.
+    have h := β.htaylor
+    rw [β.real.toMembrane_L σ.q τ.q] at h
+    show TaylorLegVanishes (neg σ.q) (neg τ.q)
+      ((β.real.toMembrane (neg σ.q) (neg τ.q)).L)
+    rw [β.real.toMembrane_L (neg σ.q) (neg τ.q)]
+    intro l hl
+    show (jointEnhancement (neg σ.q) (neg τ.q)).q l = 0
+    rw [jointEnhancement_neg_q, h l hl, neg_zero]
+  hlag := by
+    have h := β.hlag
+    rw [β.real.toMembrane_L σ.q τ.q] at h
+    show JointLagrangian (neg σ.q) (neg τ.q) ((β.real.toMembrane (neg σ.q) (neg τ.q)).L)
+    rw [β.real.toMembrane_L (neg σ.q) (neg τ.q)]
+    intro v hv
+    refine h v (fun l hl => ?_)
+    have hvl := hv l hl
+    rwa [show (jointEnhancement (neg σ.q) (neg τ.q)).B
+        = (jointEnhancement σ.q τ.q).B from jointEnhancement_neg_B σ.q τ.q] at hvl
 
 end SKEFTHawking.PinPlusCharPairBorRealized
