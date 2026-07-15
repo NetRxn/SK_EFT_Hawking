@@ -271,4 +271,218 @@ noncomputable def commBorRealized (prov : CharPairWProviderPinned I k)
       erw [ker_mapCylBd_funLeft (commReindex σ τ)]
       exact hmeta.2)
 
+/-! ## §3. `assocBor` — the `(σ ⊔ τ) ⊔ ρ → σ ⊔ (τ ⊔ ρ)` associativity, realized. -/
+
+/-- The surface reassociation homeomorphism `Σ_σ ⊔ (Σ_τ ⊔ Σ_ρ) ≃ₜ (Σ_σ ⊔ Σ_τ) ⊔ Σ_ρ`. -/
+noncomputable def assocEndHomeo (σ : CharPairStrBundled I s) (τ : CharPairStrBundled I t)
+    (ρ : CharPairStrBundled I u) :
+    (TopCat.of (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).surf.M : Type)
+      ≃ₜ (TopCat.of (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surf.M) :=
+  (Homeomorph.sumAssoc σ.surf.M τ.surf.M ρ.surf.M).symm
+
+/-- The associativity reindex `Fin ((σ.n + τ.n) + ρ.n) ≃ Fin (σ.n + (τ.n + ρ.n))` (`e₁.symm.trans e₂`
+of the tied `assocBor`'s common-reindex pair). -/
+def assocReindex (σ : CharPairStrBundled I s) (τ : CharPairStrBundled I t)
+    (ρ : CharPairStrBundled I u) : Fin (σ.n + τ.n + ρ.n) ≃ Fin (σ.n + (τ.n + ρ.n)) :=
+  ((Equiv.sumCongr finSumFinEquiv (Equiv.refl (Fin ρ.n))).trans finSumFinEquiv).symm.trans
+    ((Equiv.sumAssoc (Fin σ.n) (Fin τ.n) (Fin ρ.n)).trans
+      ((Equiv.sumCongr (Equiv.refl (Fin σ.n)) finSumFinEquiv).trans finSumFinEquiv))
+
+/-- **The reassociation-pullback of the nested sum basis** — pulling back the `(A ⊔ B) ⊔ C` nested
+sum-basis covector along the surface reassociation `A ⊔ (B ⊔ C) → (A ⊔ B) ⊔ C` gives the
+`A ⊔ (B ⊔ C)` nested sum-basis covector reindexed by the flat associativity permutation. -/
+theorem pullback_sumAssoc_sumBasis_symm
+    {A B C : TopCat} {nA nB nC : ℕ}
+    (bA : Cohomology A 1 ≃ₗ[ZMod 2] (Fin nA → ZMod 2))
+    (bB : Cohomology B 1 ≃ₗ[ZMod 2] (Fin nB → ZMod 2))
+    (bC : Cohomology C 1 ≃ₗ[ZMod 2] (Fin nC → ZMod 2)) (i : Fin (nA + nB + nC)) :
+    cohomologyPullback (⟨(Homeomorph.sumAssoc (A : Type) (B : Type) (C : Type)).symm,
+        (Homeomorph.sumAssoc (A : Type) (B : Type) (C : Type)).symm.continuous⟩ :
+        C(↑(sumSpace A (sumSpace B C)), ↑(sumSpace (sumSpace A B) C))) 1
+        ((sumBasis (sumBasis bA bB) bC).symm (Pi.single i 1))
+      = (sumBasis bA (sumBasis bB bC)).symm
+          (Pi.single (finSumFinEquiv ((Equiv.sumCongr (Equiv.refl (Fin nA)) finSumFinEquiv)
+            ((Equiv.sumAssoc (Fin nA) (Fin nB) (Fin nC))
+              ((Equiv.sumCongr finSumFinEquiv (Equiv.refl (Fin nC))).symm
+                (finSumFinEquiv.symm i))))) 1) := by
+  set sw : C(↑(sumSpace A (sumSpace B C)), ↑(sumSpace (sumSpace A B) C)) :=
+    ⟨(Homeomorph.sumAssoc (A : Type) (B : Type) (C : Type)).symm,
+      (Homeomorph.sumAssoc (A : Type) (B : Type) (C : Type)).symm.continuous⟩ with hsw
+  have hAl : sw.comp (inlMap A (sumSpace B C))
+      = (inlMap (sumSpace A B) C).comp (inlMap A B) := by ext a; rfl
+  have hBl : sw.comp ((inrMap A (sumSpace B C)).comp (inlMap B C))
+      = (inlMap (sumSpace A B) C).comp (inrMap A B) := by ext b; rfl
+  have hCr : sw.comp ((inrMap A (sumSpace B C)).comp (inrMap B C))
+      = inrMap (sumSpace A B) C := by ext c; rfl
+  set X := (sumBasis (sumBasis bA bB) bC).symm (Pi.single i 1) with hX
+  refine (LinearEquiv.eq_symm_apply _).mpr ?_
+  refine (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2) finSumFinEquiv).injective ?_
+  simp only [LinearEquiv.funCongrLeft_apply]
+  rw [sumBasis_funLeft]
+  have hA : cohomologyPullback (inlMap A (sumSpace B C)) 1 (cohomologyPullback sw 1 X)
+      = bA.symm (fun j => (Pi.single i 1 : Fin (nA + nB + nC) → ZMod 2)
+          (finSumFinEquiv (Sum.inl (finSumFinEquiv (Sum.inl j))))) := by
+    rw [← LinearMap.comp_apply, ← cohomologyPullback_comp, hAl, cohomologyPullback_comp,
+      LinearMap.comp_apply, hX, pullback_inlMap_sumBasis_symm, pullback_inlMap_sumBasis_symm]
+  have hB : cohomologyPullback (inlMap B C) 1
+        (cohomologyPullback (inrMap A (sumSpace B C)) 1 (cohomologyPullback sw 1 X))
+      = bB.symm (fun j => (Pi.single i 1 : Fin (nA + nB + nC) → ZMod 2)
+          (finSumFinEquiv (Sum.inl (finSumFinEquiv (Sum.inr j))))) := by
+    rw [← LinearMap.comp_apply, ← LinearMap.comp_apply, ← cohomologyPullback_comp,
+      ← cohomologyPullback_comp, hBl, cohomologyPullback_comp, LinearMap.comp_apply, hX,
+      pullback_inlMap_sumBasis_symm, pullback_inrMap_sumBasis_symm]
+  have hC : cohomologyPullback (inrMap B C) 1
+        (cohomologyPullback (inrMap A (sumSpace B C)) 1 (cohomologyPullback sw 1 X))
+      = bC.symm (fun j => (Pi.single i 1 : Fin (nA + nB + nC) → ZMod 2)
+          (finSumFinEquiv (Sum.inr j))) := by
+    rw [← LinearMap.comp_apply, ← LinearMap.comp_apply, ← cohomologyPullback_comp,
+      ← cohomologyPullback_comp, hCr, hX, pullback_inrMap_sumBasis_symm]
+  set assocFlatE : Fin (nA + nB + nC) ≃ Fin nA ⊕ Fin (nB + nC) :=
+    finSumFinEquiv.symm.trans ((finSumFinEquiv.sumCongr (Equiv.refl (Fin nC))).symm.trans
+      ((Equiv.sumAssoc (Fin nA) (Fin nB) (Fin nC)).trans
+        ((Equiv.refl (Fin nA)).sumCongr finSumFinEquiv))) with hAE
+  set Y : Fin nA ⊕ Fin (nB + nC) :=
+    ((Equiv.refl (Fin nA)).sumCongr finSumFinEquiv)
+      ((Equiv.sumAssoc (Fin nA) (Fin nB) (Fin nC))
+        ((finSumFinEquiv.sumCongr (Equiv.refl (Fin nC))).symm (finSumFinEquiv.symm i))) with hY
+  have hYE : Y = assocFlatE i := rfl
+  have hRHS : (LinearMap.funLeft (ZMod 2) (ZMod 2) (finSumFinEquiv (m := nA) (n := nB + nC)))
+      (Pi.single (finSumFinEquiv Y) 1) = Pi.single Y 1 := by
+    funext m
+    rw [LinearMap.funLeft_apply, Pi.single_apply, Pi.single_apply]
+    by_cases hm : m = Y
+    · rw [if_pos hm, hm, if_pos rfl]
+    · rw [if_neg hm, if_neg (fun hc => hm (finSumFinEquiv.injective hc))]
+  rw [hRHS, hA, LinearEquiv.apply_symm_apply]
+  -- reduce the B⊕C block to explicit leaf deltas
+  have hBCfun : (LinearMap.funLeft (ZMod 2) (ZMod 2) (finSumFinEquiv (m := nB) (n := nC)))
+      ((sumBasis bB bC) (cohomologyPullback (inrMap A (sumSpace B C)) 1 (cohomologyPullback sw 1 X)))
+      = Sum.elim (fun j => (Pi.single i 1 : Fin (nA + nB + nC) → ZMod 2)
+          (finSumFinEquiv (Sum.inl (finSumFinEquiv (Sum.inr j)))))
+          (fun j => (Pi.single i 1 : Fin (nA + nB + nC) → ZMod 2) (finSumFinEquiv (Sum.inr j))) := by
+    rw [sumBasis_funLeft, hB, hC, LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply]
+  funext m
+  rcases m with a | bc
+  · rw [Sum.elim_inl, Pi.single_apply, Pi.single_apply]
+    have hc : (finSumFinEquiv (Sum.inl (finSumFinEquiv (Sum.inl a))) = i) ↔ (Sum.inl a = Y) := by
+      rw [hYE, show finSumFinEquiv (Sum.inl (finSumFinEquiv (Sum.inl a)))
+        = assocFlatE.symm (Sum.inl a) from rfl]
+      exact Equiv.symm_apply_eq assocFlatE
+    exact if_congr hc rfl rfl
+  · rw [Sum.elim_inr,
+      show (sumBasis bB bC) (cohomologyPullback (inrMap A (sumSpace B C)) 1
+          (cohomologyPullback sw 1 X)) bc
+        = (LinearMap.funLeft (ZMod 2) (ZMod 2) (finSumFinEquiv (m := nB) (n := nC)))
+            ((sumBasis bB bC) (cohomologyPullback (inrMap A (sumSpace B C)) 1
+              (cohomologyPullback sw 1 X))) (finSumFinEquiv.symm bc) from by
+        rw [LinearMap.funLeft_apply, Equiv.apply_symm_apply], hBCfun, Pi.single_apply]
+    rcases hbc : finSumFinEquiv.symm bc with jB | jC
+    · rw [Sum.elim_inl, Pi.single_apply]
+      have hc : (finSumFinEquiv (Sum.inl (finSumFinEquiv (Sum.inr jB))) = i)
+          ↔ (Sum.inr bc = Y) := by
+        rw [hYE, show finSumFinEquiv (Sum.inl (finSumFinEquiv (Sum.inr jB)))
+          = assocFlatE.symm (Sum.inr bc) from by
+            simp only [hAE, Equiv.symm_trans_apply, Equiv.symm_symm, Equiv.sumCongr_symm,
+              Equiv.refl_symm, Equiv.sumCongr_apply, Sum.map_inl, Sum.map_inr,
+              hbc, Equiv.sumAssoc_symm_apply_inr_inl]]
+        exact Equiv.symm_apply_eq assocFlatE
+      exact if_congr hc rfl rfl
+    · rw [Sum.elim_inr, Pi.single_apply]
+      have hc : (finSumFinEquiv (Sum.inr jC) = i) ↔ (Sum.inr bc = Y) := by
+        rw [hYE, show finSumFinEquiv (Sum.inr jC)
+          = assocFlatE.symm (Sum.inr bc) from by
+            simp only [hAE, Equiv.symm_trans_apply, Equiv.symm_symm, Equiv.sumCongr_symm,
+              Equiv.refl_symm, Equiv.sumCongr_apply, Equiv.refl_apply, Sum.map_inr,
+              hbc, Equiv.sumAssoc_symm_apply_inr_inr]]
+        exact Equiv.symm_apply_eq assocFlatE
+      exact if_congr hc rfl rfl
+
+/-- **`assocBor` REALIZED** — the `(σ ⊔ τ) ⊔ ρ → σ ⊔ (τ ⊔ ρ)` associativity on the realized+pinned form.
+The membrane is the twisted cylinder over `(Σ_σ ⊔ Σ_τ) ⊔ Σ_ρ` whose τ-end is retargeted to
+`Σ_σ ⊔ (Σ_τ ⊔ Σ_ρ)` through the surface reassociation; its computed kernel is EXACTLY the tied
+`charPairAssocBorTied` metabolic graph `graphSub (funCongrLeft (assocReindex σ τ ρ).symm)`. -/
+noncomputable def assocBorRealized (prov : CharPairWProviderPinned I k)
+    (σ : CharPairStrBundled I s) (τ : CharPairStrBundled I t) (ρ : CharPairStrBundled I u) :
+    CharPairBorRealized (mapCylinder (Diffeomorph.sumAssoc I s.M k t.M u.M)
+      (by funext w; rcases w with (w | w) | w <;> rfl))
+      (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ)
+      (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)) :=
+  haveI := (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surfT2
+  haveI := (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).surfT2
+  have hqS : (charPairSumStr (charPairSumStr σ.toCharPairStr τ.toCharPairStr) ρ.toCharPairStr).q
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ.q τ.q) ρ.q).reindex
+          ((Equiv.sumCongr finSumFinEquiv (Equiv.refl (Fin ρ.n))).trans finSumFinEquiv) := by
+    show (Z4Quadratic.orthSum ((Z4Quadratic.orthSum σ.q τ.q).reindex finSumFinEquiv) ρ.q).reindex
+        finSumFinEquiv = _
+    conv_lhs => rw [← reindex_refl ρ.q]
+    rw [orthSum_reindex, reindex_trans]
+  have hqT : (charPairSumStr σ.toCharPairStr (charPairSumStr τ.toCharPairStr ρ.toCharPairStr)).q
+      = (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ.q τ.q) ρ.q).reindex
+          ((Equiv.sumAssoc (Fin σ.n) (Fin τ.n) (Fin ρ.n)).trans
+            ((Equiv.sumCongr (Equiv.refl (Fin σ.n)) finSumFinEquiv).trans finSumFinEquiv)) := by
+    show (Z4Quadratic.orthSum σ.q ((Z4Quadratic.orthSum τ.q ρ.q).reindex finSumFinEquiv)).reindex
+        finSumFinEquiv = _
+    conv_lhs => rw [← reindex_refl σ.q]
+    rw [orthSum_reindex, reindex_trans, orthSum_assoc_eq, reindex_trans]
+  have hmeta : IsMetabolic
+      (jointEnhancement (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).q
+        (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).q)
+      (graphSub (LinearEquiv.funCongrLeft (ZMod 2) (ZMod 2) (assocReindex σ τ ρ).symm)) := by
+    show IsMetabolic (Z4Quadratic.orthSum
+      (charPairSumStr (charPairSumStr σ.toCharPairStr τ.toCharPairStr) ρ.toCharPairStr).q
+      (Z4Quadratic.neg
+        (charPairSumStr σ.toCharPairStr (charPairSumStr τ.toCharPairStr ρ.toCharPairStr)).q)) _
+    rw [hqS, hqT]
+    exact commonReindex_metabolic (Z4Quadratic.orthSum (Z4Quadratic.orthSum σ.q τ.q) ρ.q)
+      ((Equiv.sumCongr finSumFinEquiv (Equiv.refl (Fin ρ.n))).trans finSumFinEquiv)
+      ((Equiv.sumAssoc (Fin σ.n) (Fin τ.n) (Fin ρ.n)).trans
+        ((Equiv.sumCongr (Equiv.refl (Fin σ.n)) finSumFinEquiv).trans finSumFinEquiv))
+  have hnat : transportBasisChange
+      (TopCat.of (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surf.M)
+      (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).basis
+      (TopCat.of (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).surf.M)
+      (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).basis (assocEndHomeo σ τ ρ)
+        = LinearMap.funLeft (ZMod 2) (ZMod 2)
+            ((assocReindex σ τ ρ) : Fin (σ.n + τ.n + ρ.n) → Fin (σ.n + (τ.n + ρ.n))) := by
+    refine transportBasisChange_eq_funLeft _ _ _ _ _
+      ((assocReindex σ τ ρ) : Fin (σ.n + τ.n + ρ.n) → Fin (σ.n + (τ.n + ρ.n))) ?_
+    intro i
+    show cohomologyPullback (⟨(Homeomorph.sumAssoc σ.surf.M τ.surf.M ρ.surf.M).symm,
+        (Homeomorph.sumAssoc σ.surf.M τ.surf.M ρ.surf.M).symm.continuous⟩ :
+        C(↑(sumSpace (TopCat.of σ.surf.M) (sumSpace (TopCat.of τ.surf.M) (TopCat.of ρ.surf.M))),
+          ↑(sumSpace (sumSpace (TopCat.of σ.surf.M) (TopCat.of τ.surf.M)) (TopCat.of ρ.surf.M)))) 1
+        ((sumBasis (sumBasis σ.basis τ.basis) ρ.basis).symm (Pi.single i 1))
+      = (sumBasis σ.basis (sumBasis τ.basis ρ.basis)).symm
+          (Pi.single ((assocReindex σ τ ρ) i) 1)
+    erw [pullback_sumAssoc_sumBasis_symm]
+    rfl
+  mkCharPairBorRealized prov (mapCylinder (Diffeomorph.sumAssoc I s.M k t.M u.M)
+      (by funext w; rcases w with (w | w) | w <;> rfl))
+    (by haveI := σ.t2; haveI := τ.t2; haveI := ρ.t2
+        exact inferInstanceAs (T2Space (((s.M ⊕ t.M) ⊕ u.M) × Set.Icc (0 : ℝ) 1)))
+    (mapCylRealizationTied (TopCat.of (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surf.M)
+      (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).basis
+      (TopCat.of (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).surf.M)
+      (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).basis (assocEndHomeo σ τ ρ))
+    (by
+      show TaylorLegVanishes _ _ (LinearMap.ker (transportedBInc
+        (mapCylRealizationTied
+          (TopCat.of (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surf.M)
+          (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).basis
+          (TopCat.of (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).surf.M)
+          (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).basis (assocEndHomeo σ τ ρ)).toData))
+      rw [mapCylRealizationTied_transportedBInc, hnat]
+      erw [ker_mapCylBd_funLeft (assocReindex σ τ ρ)]
+      exact hmeta.1)
+    (by
+      show JointLagrangian _ _ (LinearMap.ker (transportedBInc
+        (mapCylRealizationTied
+          (TopCat.of (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).surf.M)
+          (charPairBundledSumStr (charPairBundledSumStr σ τ) ρ).basis
+          (TopCat.of (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).surf.M)
+          (charPairBundledSumStr σ (charPairBundledSumStr τ ρ)).basis (assocEndHomeo σ τ ρ)).toData))
+      rw [mapCylRealizationTied_transportedBInc, hnat]
+      erw [ker_mapCylBd_funLeft (assocReindex σ τ ρ)]
+      exact hmeta.2)
+
 end SKEFTHawking.PinPlusCharPairBorRealizedOps
