@@ -230,4 +230,31 @@ noncomputable def negBorRealized (prov : CharPairWProviderPinned I k)
       rw [negBorBInc_ker]
       exact hmeta.2)
 
+/-! ## §6. `symmBor` — bordism reversal on the realized+pinned form -/
+
+/-- **`symmBor` instantiates on the realized+pinned form** — bordism reversal swaps the ends; the
+realization transports by the END-SWAP `GeoRealizationTied.swap` (same geometry, complemented clopen
+split), whose transported boundary-inclusion is the original precomposed with the `Sum.swap`
+regrouping (`transportedBInc_swap`), so the swapped membrane's computed kernel is the honest comap —
+exactly the tied `charPairSymmBorTied` membrane shape, from which the Taylor leg + Lagrangian
+descend. `b.symm.W = b.W`, so item 1 AND the substrate pins are inherited unchanged. -/
+noncomputable def symmBorRealized {s t : SingularManifold.{0} PUnit.{1} k I}
+    {b : Bordism (I.prod (𝓡∂ 1)) s t} {σ : CharPairStrBundled I s} {τ : CharPairStrBundled I t}
+    (β : CharPairBorRealized b σ τ) : CharPairBorRealized b.symm τ σ where
+  hWT2 := β.hWT2
+  P14 := β.P14
+  P23 := β.P23
+  hwu := β.hwu
+  pin14 := β.pin14
+  pin23 := β.pin23
+  real := β.real.swap
+  htaylor := by
+    show TaylorLegVanishes _ _ (LinearMap.ker (transportedBInc β.real.swap.toData))
+    rw [GeoRealizationTied.transportedBInc_swap]
+    exact (charPairSymmBorTied β.toTied).htaylor
+  hlag := by
+    show JointLagrangian _ _ (LinearMap.ker (transportedBInc β.real.swap.toData))
+    rw [GeoRealizationTied.transportedBInc_swap]
+    exact (charPairSymmBorTied β.toTied).hlag
+
 end SKEFTHawking.PinPlusCharPairBorRealized

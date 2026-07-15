@@ -77,12 +77,6 @@ noncomputable def doublingRealizationTied :
       slice_iccContraction_zero slice_iccContraction_one 0).trans
     (homologyBasisOfCohomologyBasis basis)
 
-/-- `homeoHomologyEquiv`'s inverse is the induced map of the reverse homeomorphism. -/
-theorem homeoHomologyEquiv_symm_apply {X Z : TopCat} (h : (X : Type) ≃ₜ (Z : Type)) (m : ℕ)
-    (z : Homology Z m) :
-    (homeoHomologyEquiv h m).symm z = Homology.map ⟨h.symm, h.symm.continuous⟩ m z :=
-  rfl
-
 /-! ## §2. THE GEOMETRIC REDUCTION — the doubling realization shares `Q`, `ι`, `eQ` with the cylinder
 realization, so its transported boundary-inclusion is the cylinder fold `cylBd n` precomposed with the
 change-of-source-coordinates `srcEquiv_cyl ∘ srcEquiv_dbl.symm`. This routes ALL the geometry

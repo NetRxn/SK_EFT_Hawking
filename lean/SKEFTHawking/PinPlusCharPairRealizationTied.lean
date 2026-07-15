@@ -38,6 +38,7 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new proj
 import Mathlib
 import SKEFTHawking.PinPlusCharPairMembraneGeoRealization
 import SKEFTHawking.SingularKroneckerBasisBridge
+import SKEFTHawking.PoincareLefschetzRelFundClassCylinderSuspension
 
 open CategoryTheory Opposite Topology
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
@@ -73,6 +74,12 @@ noncomputable def homeoHomologyEquiv {X Y : TopCat} (h : (X : Type) ≃ₜ (Y : 
 @[simp] theorem homeoHomologyEquiv_apply {X Y : TopCat} (h : (X : Type) ≃ₜ (Y : Type)) (n : ℕ)
     (x : Homology X n) :
     homeoHomologyEquiv h n x = Homology.map ⟨h, h.continuous⟩ n x :=
+  rfl
+
+/-- `homeoHomologyEquiv`'s inverse is the induced map of the reverse homeomorphism. -/
+theorem homeoHomologyEquiv_symm_apply {X Y : TopCat} (h : (X : Type) ≃ₜ (Y : Type)) (n : ℕ)
+    (y : Homology Y n) :
+    (homeoHomologyEquiv h n).symm y = Homology.map ⟨h.symm, h.symm.continuous⟩ n y :=
   rfl
 
 /-! ## §2. The derived-basis realization datum. -/
@@ -219,5 +226,68 @@ theorem srcEquiv_symm_apply {mid : ℕ} (d : GeoRealizationData nσ nτ mid)
   cases j with
   | inl j => rfl
   | inr j => rfl
+
+/-! ## §6. The end-swap of a realization — bordism-reversal support (`symmBor`).
+
+The SAME geometry (`∂Q`/`Q`/`ι`/`eQ`) with the clopen split COMPLEMENTED (`U ↦ Uᶜ`): the σ/τ ends
+exchange. The transported boundary-inclusion is the original one precomposed with the `Sum.swap`
+regrouping (`transportedBInc_swap`), so the swapped membrane's computed kernel is the honest comap
+of the original kernel — exactly the tied `charPairSymmBorTied` membrane shape, now realized. -/
+
+open SKEFTHawking.PoincareLefschetzRelFundClassCylinderSuspension in
+/-- **The swapped realization** — same `∂Q`/`Q`/`ι`/`eQ`, complemented clopen split. The new σ-end IS
+the old τ-end (`homτ`); the new τ-end is the old σ-end read through `compl_compl`. All per-object
+certificates transport unchanged. -/
+noncomputable def GeoRealizationTied.swap (d : GeoRealizationTied Sσ Sτ bσ bτ) :
+    GeoRealizationTied Sτ Sσ bτ bσ where
+  bdry := d.bdry
+  Q := d.Q
+  U := d.Uᶜ
+  hU := d.hU.compl
+  bdryT2 := d.bdryT2
+  bdryCompact := d.bdryCompact
+  QT2 := d.QT2
+  QCompact := d.QCompact
+  ι := d.ι
+  hιce := d.hιce
+  homσ := d.homτ
+  homτ := (Homeomorph.setCongr (compl_compl d.U)).trans d.homσ
+  mid := d.mid
+  eQ := d.eQ
+
+open SKEFTHawking.PoincareLefschetzRelFundClassCylinderSuspension in
+/-- **The swap transport identity** — the swapped realization's transported boundary-inclusion is
+the original one precomposed with the `Sum.swap` regrouping (the tied `symmBor` membrane's exact
+`bInc ∘ funLeft sumComm` shape). -/
+theorem GeoRealizationTied.transportedBInc_swap (d : GeoRealizationTied Sσ Sτ bσ bτ) :
+    transportedBInc d.swap.toData
+      = (transportedBInc d.toData).comp
+          (LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumComm (Fin nσ) (Fin nτ))) := by
+  refine LinearMap.ext fun x => ?_
+  show d.eQ (Homology.map d.ι 1 ((srcEquiv d.swap.toData).symm x))
+    = d.eQ (Homology.map d.ι 1 ((srcEquiv d.toData).symm
+        (LinearMap.funLeft (ZMod 2) (ZMod 2) (Equiv.sumComm (Fin nσ) (Fin nτ)) x)))
+  refine congrArg d.eQ (congrArg (Homology.map d.ι 1) ?_)
+  rw [srcEquiv_symm_apply, srcEquiv_symm_apply]
+  have hcross : homIncl (d.swap.toData.U)ᶜ 1 (d.swap.toData.eτ.symm (fun i => x (Sum.inr i)))
+      = homIncl d.toData.U 1 (d.toData.eσ.symm
+          (fun i => LinearMap.funLeft (ZMod 2) (ZMod 2)
+            (Equiv.sumComm (Fin nσ) (Fin nτ)) x (Sum.inl i))) := by
+    show homIncl (d.Uᶜ)ᶜ 1
+        ((homeoHomologyEquiv ((Homeomorph.setCongr (compl_compl d.U)).trans d.homσ) 1).symm
+          ((homologyBasisOfCohomologyBasis bσ).symm (fun i => x (Sum.inr i))))
+      = homIncl d.U 1 ((homeoHomologyEquiv d.homσ 1).symm
+          ((homologyBasisOfCohomologyBasis bσ).symm (fun i => x (Sum.inr i))))
+    rw [homIncl_eq_map, homIncl_eq_map, homeoHomologyEquiv_symm_apply,
+      homeoHomologyEquiv_symm_apply, ← LinearMap.comp_apply, ← LinearMap.comp_apply,
+      ← Homology.map_comp, ← Homology.map_comp]
+    rfl
+  rw [hcross]
+  have hsame : homIncl d.swap.toData.U 1 (d.swap.toData.eσ.symm (fun i => x (Sum.inl i)))
+      = homIncl (d.toData.U)ᶜ 1 (d.toData.eτ.symm
+          (fun i => LinearMap.funLeft (ZMod 2) (ZMod 2)
+            (Equiv.sumComm (Fin nσ) (Fin nτ)) x (Sum.inr i))) := rfl
+  rw [hsame, add_comm]
+  rfl
 
 end SKEFTHawking.PinPlusCharPairRealizationTied
