@@ -24,6 +24,9 @@ open SKEFTHawking.PoincareLefschetzRelFundClassCylinder
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderWu
 open SKEFTHawking.PinPlusCylDataDischarge
 open SKEFTHawking.PinPlusCylDataDischargeDisconnected
+open SKEFTHawking.PinPlusCharPairData
+open SKEFTHawking.PinPlusCharPairWProviderTransport
+open SKEFTHawking.PinPlusCharPairBorTethered
 open SKEFTHawking.SingularFundamentalClass
 open SKEFTHawking.SingularChartBridge
 open SKEFTHawking.SingularRelativeHomologyMod2
@@ -143,6 +146,59 @@ theorem topHomology_finite : FiniteDimensional (ZMod 2) (Homology (TopCat.of M) 
     rw [hcc]; exact mem_connectedComponent
   exact hcomp_sub hx_comp
 
+/-! ## §3. The `hM4`-discharged disconnected core (residual 5 → 4) and the sharpened provider row.
+
+`topHomology_finite` (§2) discharges the `hM4` field of `DisconnectedCylCore` connectedness-free, so
+the disconnected residual sharpens from the five-field
+`DisconnectedCylCore = {D, hM4, nd14, nd23, hwu}` to the FOUR-field
+`DisconnectedCylCoreND = {D, nd14, nd23, hwu}` (top-homology finiteness supplied automatically). This
+is the `hM4`-free residual: the only remaining disconnected inputs are the relative fundamental-class
+datum `D`, the two Lefschetz non-degeneracies, and the Wu obstruction. -/
+
+/-- **The `hM4`-discharged disconnected cylinder core** — the FOUR-field residual to which the
+disconnected `CylWAdmData` reduces after `hM4` (top-homology finiteness) is discharged by
+`topHomology_finite`. Identical to `DisconnectedCylCore` minus the `hM4` field (supplied
+automatically), so `hwu` is stated against `discP14 M D (topHomology_finite M) nd14`. -/
+structure DisconnectedCylCoreND where
+  /-- the cylinder relative fundamental-class datum. -/
+  D : RelFundClassDatum (X := TopCat.of (cylW M)) (m := 3) ((cylModel 2).boundary (cylW M))
+  /-- the `(1,4)` Lefschetz pairing is non-degenerate. -/
+  nd14 : Function.Injective
+    ⇑((relCupH14 (X := TopCat.of (cylW M)) (S := (cylModel 2).boundary (cylW M))).compr₂ D.mu)
+  /-- the `(2,3)` Lefschetz pairing is non-degenerate. -/
+  nd23 : Function.Injective
+    ⇑((relCupH23 (X := TopCat.of (cylW M)) (S := (cylModel 2).boundary (cylW M))).compr₂ D.mu)
+  /-- the Wu obstruction vanishes (`hM4` supplied by `topHomology_finite`). -/
+  hwu : wuW2 (discP14 M D (topHomology_finite M) nd14) (discP23 M D nd23) = 0
+
+/-- **The four-field core builds the five-field core**, supplying `hM4 := topHomology_finite M`. -/
+def DisconnectedCylCoreND.toCore (c : DisconnectedCylCoreND M) : DisconnectedCylCore M where
+  D := c.D
+  hM4 := topHomology_finite M
+  nd14 := c.nd14
+  nd23 := c.nd23
+  hwu := c.hwu
+
 end
+
+/-! ## §4. The provider on the `hM4`-discharged disconnected residual. -/
+
+/-- **The provider on the sharpened `hM4`-free disconnected residual.** Identical to
+`PinPlusCylDataDischargeDisconnected.nonempty_provider_of_wuLeaf_and_disconnectedCore` except the
+disconnected hypothesis supplies the FOUR-field `DisconnectedCylCoreND s.M` (top-homology finiteness
+`hM4` discharged connectedness-free by `topHomology_finite`, via `DisconnectedCylCoreND.toCore`). The
+connected branch remains the sharp per-`M` Wu leaf `CylinderWuResidual`; the empty branch is
+`cylWAdmData_empty`. -/
+theorem nonempty_provider_of_wuLeaf_and_disconnectedCoreND
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    {k : WithTop ℕ∞} {I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))} [I.Boundaryless]
+    (hwu : ∀ {s : SingularManifold.{0} PUnit.{1} k I} (_σ : CharPairStrBundled I s)
+      [T2Space s.M] [Nonempty s.M] [PreconnectedSpace s.M] [T1Space (cylW s.M)],
+      SKEFTHawking.PinPlusCylDataDischarge.CylinderWuResidual s.M)
+    (hdiscCoreND : ∀ {s : SingularManifold.{0} PUnit.{1} k I} (_σ : CharPairStrBundled I s)
+      [T2Space s.M] [Nonempty s.M], ¬ PreconnectedSpace s.M → DisconnectedCylCoreND s.M) :
+    Nonempty (CharPairWProviderPerOp I k) :=
+  SKEFTHawking.PinPlusCylDataDischargeDisconnected.nonempty_provider_of_wuLeaf_and_disconnectedCore
+    hwu (fun {_s} σ _ _ hpc => (hdiscCoreND σ hpc).toCore)
 
 end SKEFTHawking.PinPlusCylDataDischargeDisconnectedComponents
