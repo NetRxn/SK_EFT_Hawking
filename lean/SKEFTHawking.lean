@@ -4404,6 +4404,7 @@ import SKEFTHawking.PinPlusCompTorsorNoGo
 import SKEFTHawking.PinPlusTaylorConventionNoGo
 import SKEFTHawking.SingularRelativeHomotopyInvariance
 import SKEFTHawking.SingularRelativeCrossProduct
+import SKEFTHawking.SingularRelativeCrossProductDual
 import SKEFTHawking.PinPlusCharPairMembraneTie
 import SKEFTHawking.SingularDisjointUnionHn
 import SKEFTHawking.PinPlusCharPairMembraneGeoRealization
