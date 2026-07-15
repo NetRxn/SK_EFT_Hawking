@@ -241,4 +241,56 @@ theorem cap_pullback_prismOp_add_mem_boundaries {k m : ℕ}
   rw [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype] at hd0
   exact hd0
 
+/-! ## §6. The class-level cap-cross projection identity from `PrismDegNull` -/
+
+/-- **Absolute boundaries become relative boundaries.** `∂F ↦ ∂[F]` under `RelativeChain.mk`. -/
+theorem relBoundaries_mk_of_boundaries {n : ℕ} {S : Set ↑(cyl M)}
+    (c : SingularChain (cyl M) n) (h : c ∈ boundaries (cyl M) n) :
+    RelativeChain.mk S n c ∈ relBoundaries S n := by
+  obtain ⟨F, rfl⟩ := h
+  exact ⟨RelativeChain.mk S (n + 1) F, relBoundary_mk S n F⟩
+
+/-- **The class-level cap-cross projection identity, from `PrismDegNull`.** For a cocycle `g` and cycle
+`z` on `M`, the pulled-back cap of the prism cross equals the prism cross of the base cap — the
+Eilenberg–Zilber cap-cross projection `(fst^* [g]) ⌢ ([z] × [I,∂I]) = ([g] ⌢ [z]) × [I,∂I]` — gated on
+`PrismDegNull` (singular normalization) and `fst_*` injectivity. The two representatives `P`, `Q` are
+absolutely homologous (§5), so their relative classes agree. -/
+theorem capRelH_crossH_of_prismDegNull {k m : ℕ} {S : Set ↑(cyl M)}
+    (h1 : Set.MapsTo (slice (graphHom M) 1) (Set.univ : Set ↑M) S)
+    (h0 : Set.MapsTo (slice (graphHom M) 0) (Set.univ : Set ↑M) S)
+    (hfstinj : Function.Injective (Homology.map (fstCyl M) (m + 2)))
+    (g : LinearMap.ker (coboundaryₗ M k)) (z : cycles M (k + m + 1))
+    (hnull : PrismDegNull g.1 z.1) :
+    capRelH (S := S) k (m + 1)
+        (Cohomology.mk (cyl M) k
+          ⟨pullbackCochainMap (fstCyl M) k g.1, coboundary_pullback_fstCyl_eq_zero g.1 g.2⟩)
+        (crossH h1 h0 (k + m) (Homology.mk M (k + m + 1) z))
+      = crossH h1 h0 m (capH k m (Cohomology.mk M k g) (Homology.mk M (k + m + 1) z)) := by
+  rw [crossH_mk]
+  erw [capRelH_mk_mk]
+  rw [capH_mk_mk, crossH_mk]
+  refine (Submodule.Quotient.eq _).mpr ?_
+  rw [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype, AddSubgroupClass.coe_sub]
+  have hval1 : (capRelCyclesₗ (m := m + 1)
+        ⟨pullbackCochainMap (fstCyl M) k g.1, coboundary_pullback_fstCyl_eq_zero g.1 g.2⟩
+        (crossRelCycle h1 h0 (k + m) z) : RelativeChain S (m + 2))
+      = RelativeChain.mk S (m + 2)
+        (cap (m := m + 2) (pullbackCochainMap (fstCyl M) k g.1)
+          (prismOp (graphHom M) (k + m + 1) z.1)) := by
+    rw [capRelCyclesₗ_coe]; rfl
+  have hval2 : (crossRelCycle h1 h0 m (capCyclesₗ (m := m) g z) : RelativeChain S (m + 2))
+      = RelativeChain.mk S (m + 2)
+        (prismOp (graphHom M) (m + 1) (cap (m := m + 1) g.1 z.1)) := rfl
+  rw [hval1, hval2]
+  have hchar : ∀ (a b : RelativeChain S (m + 2)), a - b = a + b := fun a b => by
+    rw [sub_eq_add_neg, neg_eq_of_add_eq_zero_left (ZModModule.add_self b)]
+  have hcomb : RelativeChain.mk S (m + 2)
+        (cap (m := m + 2) (pullbackCochainMap (fstCyl M) k g.1) (prismOp (graphHom M) (k + m + 1) z.1))
+      + RelativeChain.mk S (m + 2) (prismOp (graphHom M) (m + 1) (cap (m := m + 1) g.1 z.1))
+      = RelativeChain.mk S (m + 2)
+        (cap (m := m + 2) (pullbackCochainMap (fstCyl M) k g.1) (prismOp (graphHom M) (k + m + 1) z.1)
+          + prismOp (graphHom M) (m + 1) (cap (m := m + 1) g.1 z.1)) := rfl
+  rw [hchar, hcomb]
+  exact relBoundaries_mk_of_boundaries _ (cap_pullback_prismOp_add_mem_boundaries g z hfstinj hnull)
+
 end SKEFTHawking.SingularCapCrossProjection
