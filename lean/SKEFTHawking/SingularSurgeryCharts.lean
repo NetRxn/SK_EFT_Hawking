@@ -201,6 +201,15 @@ theorem cylInteriorRegion_union_handleInteriorRegion_union_seamRegion :
     · exact Or.inr ⟨a, ha, rfl⟩
     · exact Or.inl (Or.inr ⟨a, ha, rfl⟩)
 
+/-- **The two interior regions are disjoint.** The un-attached cylinder points and the interior handle
+points never coincide (opener §4). Consequence for the atlas: any transition between a cylinder-interior
+chart and a handle-interior chart has EMPTY source, so it lies in every structure groupoid trivially —
+the `IsManifold` obligation's only nontrivial transitions are those involving the seam collar (§5). -/
+theorem cylInteriorRegion_disjoint_handleInteriorRegion :
+    Disjoint HA.cylInteriorRegion HA.handleInteriorRegion :=
+  (HA.fromCyl_image_compl_disjoint_range_fromHandle).mono_right
+    (Set.image_subset_range _ _)
+
 end HandleAttachment
 
 /-! ## §3. The interior regions are charted from the ends' charts.
@@ -321,5 +330,62 @@ this `ChartedSpace`. -/
       | 2 => D.chartSeam)
 
 end SurgeryChartDatum
+
+/-! ## §5. The seam-chart design of record, and what wave 3 needs.
+
+This wave delivered the **honestly-achievable floor of the chart stack** and named the irreducible
+geometric residual precisely. What landed, GREEN and kernel-pure:
+
+* **§1 keystone** `chartedSpaceOfOpensCover` — a `ChartedSpace` assembles from an open cover of charted
+  open subsets (the gluing direction Mathlib lacks). Reusable well beyond surgery.
+* **§2 interior topology** — the two un-glued ends are genuine OPEN subspaces of `W`
+  (`isOpen_cylInteriorRegion`, `isOpen_handleInteriorRegion`), they are disjoint
+  (`cylInteriorRegion_disjoint_handleInteriorRegion`), and with the seam they cover `W`.
+* **§3 interior charts** — regions (a)+(b) are charted from the ends `B`/`Ha`
+  (`cylInteriorChartedSpace`, `handleInteriorChartedSpace`), via the closed-embedding-restricted
+  interior homeomorphisms — "transport `B`'s charts through the OPEN inclusion off the seam."
+* **§4 Target 1** — `SurgeryChartDatum` + `carrierChartedSpace` : `ChartedSpace H' W`, assembled from
+  the ends' charts (§3) and the seam-collar's charts (the datum's geometric input) over the §1 cover.
+
+### The seam-chart design (region (c)) — the DOCUMENT OF RECORD
+
+The seam `q(S)` (`seamRegion`) is **closed** (the image of the compact attaching region `S`), so a
+chart atlas cannot use it as a cover member: a chart's source must be OPEN and contain its point. The
+honest geometric input is therefore an OPEN **collar neighborhood** of the seam — `SurgeryChartDatum.
+seamNbhd`, with `hseam : seamRegion ⊆ seamNbhd` — carrying its own `ChartedSpace H'` (`chartSeam`).
+
+Geometrically `seamNbhd` is the **welded collar**: the gluing is along `φ : S = Sʳ × D^{n−r} ↪ M × {1}`,
+a boundary collar of `B`, matched to the handle's radial boundary collar of `Ha`. A seam chart is
+therefore `(attaching-region chart of M) × (interval collar of B glued to the handle's radial collar)`
+— a **half-space-to-half-space weld along the boundary faces**: two half-space charts that agree on the
+boundary face `Sʳ × D^{n−r} × {0}` glue to a single full chart on the union. `seamNbhd` is the union of
+the two half-collars; `chartSeam` is that welded coordinate. (No Mathlib gluing-of-charts machinery
+exists for this weld — it is bespoke but self-contained; it is the collar-neighborhood-theorem content
+one applies once at the attaching sphere.)
+
+### What wave 3 needs — the residual `Bordism` fields (`BordismTheory.Bordism`)
+
+With `J = (𝓡 4).prod (𝓡∂ 1)` and `H' = ModelProd E⁴ (half-space 1)` for the KT surgery trace:
+
+1. **`chartW` — DONE (this wave).** Use `carrierChartedSpace` as the `ChartedSpace H' W` instance.
+2. **`mfdW : IsManifold J k W` (Target 2, the geometric residual).** `IsManifold` is `HasGroupoid W
+   (contDiffGroupoid k J)` — every pairwise chart transition lies in the smooth groupoid. On the
+   assembled atlas this splits: *same-region* transitions are the ends'/collar's own (inherited);
+   *cylinder-interior ↔ handle-interior* transitions have EMPTY source
+   (`cylInteriorRegion_disjoint_handleInteriorRegion`), so lie in every groupoid trivially; only the
+   **seam-collar ↔ interior** (and seam ↔ seam) transitions carry content — the collar-weld smoothness.
+   That smoothness is the genuinely-geometric input a wave-3 datum supplies (a `SmoothWeld` field on
+   `SurgeryChartDatum`, tied to `carrierChartedSpace`); with it, `HasGroupoid.mk` assembles `mfdW`.
+3. **`e`/`he_inj`/`he_boundary` — the surgered boundary (Target 3).** `∂W = M ⊔ M'` where `M' = (M ∖
+   φ(Sʳ × D̊^{n−r})) ∪ (Dʳ⁺¹ × Sⁿ⁻ʳ⁻¹)` is the surgered manifold — itself an adjunction space ONE
+   DIMENSION DOWN (a second `HandleAttachment`: ends `M ∖ tube` and the cap `Dʳ⁺¹ × Sⁿ⁻ʳ⁻¹`, glued along
+   `Sʳ × Sⁿ⁻ʳ⁻¹`), so its `CompactSpace`/`T2Space` come free from the opener's engine, one dim down.
+   The source end `M × {0}` is `isClosedEmbedding_fromCyl` (opener); the surgered end is carved from
+   the handle end (`fromHandle_image_compl_disjoint_range_fromCyl`, opener §4). `he_boundary` matches
+   these to `J.boundary W`, which is downstream of `mfdW` (Target 2).
+
+So the wave-3 spec is minimal and precise: one `SmoothWeld` field (seam-collar transition smoothness)
+plus the surgered-end `SingularManifold` (built by the opener's engine one dim down). The whole
+topological + `ChartedSpace` floor beneath both is delivered here and in the opener. -/
 
 end SKEFTHawking.SurgeryFoundation
