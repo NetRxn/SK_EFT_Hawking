@@ -4452,6 +4452,7 @@ import SKEFTHawking.PinPlusCharPairMapCylRealization
 import SKEFTHawking.PinPlusCharPairBorRealized
 import SKEFTHawking.PinPlusCharPairBorRealizedOps
 import SKEFTHawking.PinPlusCharPairAddRealization
+import SKEFTHawking.PinPlusCharPairBorTethered
 import SKEFTHawking.PinPlusCharPairCarrier
 import SKEFTHawking.PinPlusCharPairFlipGate
 

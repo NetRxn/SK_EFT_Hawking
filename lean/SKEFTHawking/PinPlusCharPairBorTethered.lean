@@ -856,4 +856,112 @@ noncomputable def addBorTethered (prov : CharPairWProviderPerOp I k)
       show ChartedSpace MembraneModel (↑β₁.real.Q ⊕ ↑β₂.real.Q)
       infer_instance }
 
+/-! ## §5. The assembly helper `mkCharPairBorRealizedTethered` — the tether IS a required input.
+
+This constructor makes the F4 fix mechanical: a tethered witness is assembled from a single
+`WAdmPinned b` (per-op admissibility), the realization + its Taylor/Lagrangian data, AND the W-tether
+`ιW`/glue + the chart. The tether cannot be omitted or synthesized from `real` — it is a formal
+argument of THIS constructor, tied to THIS `b`. This is the type-level statement that the round-6
+gate's F4 exploits (`transport`, `factors`) can no longer re-derive (§7). -/
+noncomputable def mkCharPairBorRealizedTethered {s t : SingularManifold.{0} PUnit.{1} k I}
+    {b : Bordism (I.prod (𝓡∂ 1)) s t} {σ : CharPairStrBundled I s} {τ : CharPairStrBundled I t}
+    (wadmP : WAdmPinned b) (hWT2 : T2Space b.W)
+    (real : GeoRealizationTied (TopCat.of σ.surf.M) (TopCat.of τ.surf.M) σ.basis τ.basis)
+    (htaylor : TaylorLegVanishes σ.q τ.q (real.toMembrane σ.q τ.q).L)
+    (hlag : JointLagrangian σ.q τ.q (real.toMembrane σ.q τ.q).L)
+    (ιW : C(↑real.Q, b.W)) (hιWce : IsClosedEmbedding ιW)
+    (glueσ : ∀ x : ↑(sub real.U),
+      ιW (real.ι (subInclCM real.U x)) = b.e (Sum.inl (σ.emb (real.homσ x))))
+    (glueτ : ∀ x : ↑(sub real.Uᶜ),
+      ιW (real.ι (subInclCM real.Uᶜ x)) = b.e (Sum.inr (τ.emb (real.homτ x))))
+    (chartQ : ChartedSpace MembraneModel ↑real.Q) :
+    CharPairBorRealizedTethered b σ τ where
+  hWT2 := hWT2
+  P14 := wadmP.wadm.P14
+  P23 := wadmP.wadm.P23
+  hwu := wadmP.wadm.hwu
+  pin14 := wadmP.pin14
+  pin23 := wadmP.pin23
+  real := real
+  htaylor := htaylor
+  hlag := hlag
+  ιW := ιW
+  hιWce := hιWce
+  glueσ := glueσ
+  glueτ := glueτ
+  chartQ := chartQ
+
+/-! ## §6. The Track-2 plug-in seam for the per-op provider.
+
+The per-op provider's `cyl`/`doubling`/`mapCyl` fields are ALL `WAdmPinned` of **product cylinders**
+`W = M × [0,1]` over a closed 4-manifold `M` (`reflCylinder s`, `doublingBordism s`, and every
+`mapCylinder φ hf` share `W = s.M × Set.Icc 0 1`). Track 2's `CylinderWAdmPinned M`
+(`PinPlusCylinderWAdmPinned`, engines `ofClosedPD`/`ofBasePD`) is EXACTLY the `WAdmPinned`-shaped
+consolidation for that `W` — it derives `P14`/`P23`/`pin14`/`pin23` and the honest `hwu`. So a single
+`CylinderWAdmPinned s.M` deliverable discharges `cyl`, `doubling`, AND `mapCyl` for that `s`.
+
+**The one missing wire (a named Track-2 residual, NOT built here):** `CylinderWAdmPinned M` produces a
+`LefschetzWuDatum (TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) …`, whereas the per-op
+provider's fields need `LefschetzWuDatum (TopCat.of (reflCylinder s).W) ((I.prod (𝓡∂ 1)).boundary
+(reflCylinder s).W) …`. These agree only through the **abstract-`I` ↔ concrete-`𝓡 4` bridge**
+(`cylW M ≃ (reflCylinder s).W`, `cylModel 2 = I.prod (𝓡∂ 1)`) that `PinPlusCylinderWAdmPinned`'s
+header explicitly declines to force ("does NOT depend on the abstract-`I` ↔ concrete-`𝓡 4` bridge").
+The missing transport lemma is therefore a `WAdmPinned`-transport across that model/carrier
+identification — `CylinderWAdmPinned M → WAdmPinned (reflCylinder s)` (and the `mapCylinder`/`doubling`
+variants), plus a `sum`-closure `WAdmPinned b₁ → WAdmPinned b₂ → WAdmPinned (b₁.add b₂)` for
+`addClosure`. The `add`-closure is the only field NOT a bare cylinder; it is a genuine disjoint-union
+admissibility (`b₁.W ⊕ b₂.W`), for which the Lefschetz–Wu data assemble block-diagonally.
+
+Once those transports land, `CharPairWProviderPerOp` is inhabited from Track-2 data alone — the F6
+vacuity of the old `∀ b, WAdmPinned b` provider is gone (this finite family IS inhabitable). -/
+
+/-! ## §7. F4-DEAD self-tests — why `transport` and the factorization cannot re-derive. -/
+
+variable {b : Bordism (I.prod (𝓡∂ 1)) s t}
+  {σ : CharPairStrBundled I s} {τ : CharPairStrBundled I t}
+
+/-- **Forgetful**: a tethered witness IS a realized+pinned witness (the tether is a genuine
+refinement, not a re-shape). -/
+def CharPairBorRealizedTethered.toRealized (β : CharPairBorRealizedTethered b σ τ) :
+    CharPairBorRealized b σ τ := β.toCharPairBorRealized
+
+/-- **The geometric content the round-6 §5 banner claimed, now TRUE**: the realized membrane `Q`
+closed-embeds into the bordism carrier `b.W`. So an e₈-kernel membrane on the doubling ends would have
+to sit INSIDE the doubling bordism's `W = (ℝP⁴)⁴ × I` specifically — no longer a free abstract
+compact-T2 space (`GeoRealizationTied.Q` bordism-blindness, F4). -/
+theorem CharPairBorRealizedTethered.membrane_closedEmbeds_in_W
+    (β : CharPairBorRealizedTethered b σ τ) : IsClosedEmbedding β.ιW := β.hιWce
+
+/-- **The commuting glue is real, not vacuous**: on the σ-boundary component `Σ_σ`, the membrane's
+image in `b.W` (through `ιW ∘ real.ι`) IS the σ-end's image through `b`'s boundary map `b.e ∘ Sum.inl`
+composed with `σ.emb` and the identification `homσ`. This is the tie that makes `ιW`'s target
+`b`-specific — the mechanism that kills `transport` (below). -/
+theorem CharPairBorRealizedTethered.glue_σ (β : CharPairBorRealizedTethered b σ τ)
+    (x : ↑(sub β.real.U)) :
+    β.ιW (β.real.ι (subInclCM β.real.U x)) = b.e (Sum.inl (σ.emb (β.real.homσ x))) := β.glueσ x
+
+/-
+**Why `CharPairBorRealized.transport` (round-6 F4) CANNOT re-derive against this shape.**
+The pre-tether `transport` moved a witness on `b` to ANY other bordism `b'` between the same ends via
+`mkCharPairBorRealized prov b' hT2' β.real β.htaylor β.hlag` — every non-provider field was
+`b`-independent. Against `CharPairBorRealizedTethered` this is a TYPE ERROR: the tether field
+`ιW : C(↑real.Q, b.W)` has target `b.W`, and `mkCharPairBorRealizedTethered` (§5) REQUIRES it (together
+with `glueσ`/`glueτ`, which mention `b.e`). To land a `CharPairBorRealizedTethered b' σ τ` one would
+need `ιW' : C(↑real.Q, b'.W)` — but `β.ιW : C(↑real.Q, b.W)` gives NO map into `b'.W` (there is no
+continuous `b.W → b'.W`), and `β.real`/`β.htaylor`/`β.hlag` (all `HasEndsRealization` supplies) carry
+no `b'`-membrane. So there is no `b`-uniform `transport` — the membrane genuinely sits inside `b.W`.
+
+**Why `isT2DataBordant_…_factors` (round-6 F4) CANNOT re-derive.**
+The factorization's backward direction rebuilt a witness from `(∃ b, T2Space b.W) ∧ HasEndsRealization`
+via `mkCharPairBorRealized prov b hT2 real ht hl`. Against the tethered shape,
+`mkCharPairBorRealizedTethered` additionally consumes `ιW`/`glueσ`/`glueτ` — data NOT contained in
+`HasEndsRealization σ τ` (which is only `∃ real, TaylorLegVanishes ∧ JointLagrangian`). An arbitrary
+`b` with `T2Space b.W` plus an ends-realization does NOT supply a closed embedding of that particular
+`real.Q` into that particular `b.W` compatible with `b.e`. So the structured relation no longer factors
+as "some-T2-bordism ∧ ends-algebra" — the bordism and the tangential-membrane data are now coupled
+through `ιW`/glue. (If either mechanism DID reproduce, the eight op realizations above would be the
+witnesses — they are NOT `transport`s of a single ends-realization; each supplies its OWN geometric
+`ιW` sitting inside its OWN `b.W`: `σ.emb × id ⊆ s.M × I`, `Sum.map β₁.ιW β₂.ιW ⊆ b₁.W ⊕ b₂.W`, etc.)
+-/
+
 end SKEFTHawking.PinPlusCharPairBorTethered
