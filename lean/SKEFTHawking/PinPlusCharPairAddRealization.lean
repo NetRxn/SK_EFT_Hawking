@@ -431,6 +431,27 @@ theorem sum_ι_inr (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁)
       = (inrMap d₁.Q d₂.Q).comp d₂.toData.ι := ContinuousMap.ext fun _ => rfl
   exact (Homology_map_comp_apply _ _ 1 z).symm.trans (by rw [hCM]; exact Homology_map_comp_apply _ _ 1 z)
 
+/-- **THE FULL SOURCE-COORDINATE IDENTITY** — `srcEquiv (sum).symm` splits as the two components'
+boundary-class decompositions pushed through the summand boundary inclusions (σ- and τ-halves
+assembled), in the direct `homIncl d.U`/`d.Uᶜ` form (each summand-block lands in `H₁(∂Q_i)`). -/
+theorem sum_srcEquiv_symm (d₁ : GeoRealizationTied Sσ₁ Sτ₁ bσ₁ bτ₁)
+    (d₂ : GeoRealizationTied Sσ₂ Sτ₂ bσ₂ bτ₂)
+    (x : (Fin (nσ₁ + nσ₂) ⊕ Fin (nτ₁ + nτ₂)) → ZMod 2) :
+    (srcEquiv (GeoRealizationTied.sum d₁ d₂).toData).symm x
+      = Homology.map (inlMap d₁.bdry d₂.bdry) 1
+          (homIncl d₁.U 1 (d₁.toData.eσ.symm (fun i => x (Sum.inl (finSumFinEquiv (Sum.inl i)))))
+            + homIncl d₁.Uᶜ 1 (d₁.toData.eτ.symm (fun j => x (Sum.inr (finSumFinEquiv (Sum.inl j))))))
+        + Homology.map (inrMap d₁.bdry d₂.bdry) 1
+          (homIncl d₂.U 1 (d₂.toData.eσ.symm (fun i => x (Sum.inl (finSumFinEquiv (Sum.inr i)))))
+            + homIncl d₂.Uᶜ 1 (d₂.toData.eτ.symm (fun j => x (Sum.inr (finSumFinEquiv (Sum.inr j)))))) := by
+  rw [srcEquiv_symm_apply]
+  show homIncl (GeoRealizationTied.sum d₁ d₂).U 1
+        ((GeoRealizationTied.sum d₁ d₂).toData.eσ.symm (fun i => x (Sum.inl i)))
+      + homIncl (GeoRealizationTied.sum d₁ d₂).Uᶜ 1
+        ((GeoRealizationTied.sum d₁ d₂).toData.eτ.symm (fun i => x (Sum.inr i))) = _
+  rw [sum_srcEquiv_σ, sum_srcEquiv_τ, map_add, map_add]
+  abel
+
 end Sum
 
 end SKEFTHawking.PinPlusCharPairAddRealization
