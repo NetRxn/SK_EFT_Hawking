@@ -4433,6 +4433,7 @@ import SKEFTHawking.PinPlusWAdmPinned
 import SKEFTHawking.PinPlusCharPairRealizationTied
 import SKEFTHawking.PinPlusCharPairCylRealization
 import SKEFTHawking.PinPlusCharPairNegRealization
+import SKEFTHawking.PinPlusCharPairMapCylRealization
 import SKEFTHawking.PinPlusCharPairBorRealized
 import SKEFTHawking.PinPlusCharPairCarrier
 
