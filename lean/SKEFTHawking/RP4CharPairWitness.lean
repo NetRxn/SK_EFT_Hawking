@@ -39,6 +39,7 @@ open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
 open SKEFTHawking.PinPlusCharPairData SKEFTHawking.RP2EquatorialInclusion
 open SKEFTHawking.RP4Witness SKEFTHawking.RP2IntersectionForm
 open SKEFTHawking.PinPlusWAdmPinned
+open SKEFTHawking.PinPlusCharPairBorTethered
 open SKEFTHawking.SingularSurfaceIntersectionForm SKEFTHawking.RP4CharSurfacePushforward
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
 open SKEFTHawking.SingularFunctoriality SKEFTHawking.SingularCohomologyFunctoriality
@@ -112,12 +113,12 @@ computes by `Quot.lift`). -/
 theorem charPairBrown_mk {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {k : WithTop ℕ∞}
     {I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))} [I.Boundaryless]
-    (prov : CharPairWProviderPinned I k) (p : StrMfd (pinPlusCharPairData prov).toTangentialData) :
+    (prov : CharPairWProviderPerOp I k) (p : StrMfd (pinPlusCharPairData prov).toTangentialData) :
     charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = p.2.q.brown :=
   rfl
 
 /-- **The `ℝP⁴` witness class carries computed grade `1`.** -/
-theorem charPairBrown_rp4_eq_one (prov : CharPairWProviderPinned (𝓡 4) 0) :
+theorem charPairBrown_rp4_eq_one (prov : CharPairWProviderPerOp (𝓡 4) 0) :
     charPairBrown prov
         (T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM, rp4CharPair⟩) = 1 := by
   rw [charPairBrown_mk]
@@ -127,7 +128,7 @@ theorem charPairBrown_rp4_eq_one (prov : CharPairWProviderPinned (𝓡 4) 0) :
 /-- **W-C: the computed mod-8 grade is SURJECTIVE.** `charPairBrown` is additive and the `ℝP⁴` witness
 realizes the generator `1`; since `1` generates `ZMod 8`, its `n`-fold sums realize every value —
 `n • [ℝP⁴]` maps to `n • 1 = n`. The honest faithful carrier's grade hits all of `ZMod 8`. -/
-theorem charPairBrown_surjective (prov : CharPairWProviderPinned (𝓡 4) 0) :
+theorem charPairBrown_surjective (prov : CharPairWProviderPerOp (𝓡 4) 0) :
     Function.Surjective (charPairBrown prov) := by
   intro y
   refine ⟨y.val • T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM, rp4CharPair⟩, ?_⟩
@@ -140,7 +141,7 @@ theorem charPairBrown_surjective (prov : CharPairWProviderPinned (𝓡 4) 0) :
 in the certified bordism group `T2DataBordismGrp (pinPlusCharPairData prov)`: its computed grade is
 `1 ≠ 0 ∈ ZMod 8`, and `charPairBrown` (a group hom) sends `0 ↦ 0`. The rebuilt substrate is NOT
 collapsed — the class survives. (No completeness/injectivity Prop is asserted; those are W-D/W-E.) -/
-theorem charPairBrown_rp4_ne_zero (prov : CharPairWProviderPinned (𝓡 4) 0) :
+theorem charPairBrown_rp4_ne_zero (prov : CharPairWProviderPerOp (𝓡 4) 0) :
     T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM, rp4CharPair⟩ ≠ 0 := by
   intro h
   have h0 : charPairBrown prov

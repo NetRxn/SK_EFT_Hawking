@@ -110,6 +110,72 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimension
 variable {k : WithTop ℕ∞}
 variable {I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))} [I.Boundaryless]
 
+/-! ## §0. THE FROZEN UNTETHERED INSTANCE (the round-6 exhibit, preserved AT THE RE-FLIP)
+
+At the round-7 re-flip (2026-07-15) the LIVE carrier `pinPlusCharPairData` moved onto the
+W-TETHERED `CharPairBorRealizedTethered` with the per-op provider — precisely to kill the F4/F5
+findings below. This module's findings are statements about the UNTETHERED shape; to preserve
+them as the permanent kernel-checked record (the registry fork
+`untethered-membrane-factors-relation` backs onto them), the untethered instance and the KT
+Props it consumed are FROZEN here verbatim (`…Untethered` / `…U` names). They are historical
+exhibits — nothing downstream consumes them. -/
+
+/-- The round-6 exhibit: the untethered realized instance, verbatim as flipped 2026-07-15. -/
+noncomputable def pinPlusCharPairDataUntethered (prov : CharPairWProviderPinned I k) :
+    T2TangentialData.{0, 1} PUnit k I where
+  Mfd := charPairBundledMfd (k := k) (I := I)
+  Bor := fun b σ τ => CharPairBorRealized b σ τ
+  emptyStr := charPairBundledEmpty
+  sumStr := fun σ τ => charPairBundledSumStr σ τ
+  cylBor := fun σ => SKEFTHawking.PinPlusCharPairBorRealized.cylBorRealized prov σ
+  addBor := fun β₁ β₂ =>
+    SKEFTHawking.PinPlusCharPairAddRealization.addBorRealized prov β₁ β₂
+  symmBor := fun β => SKEFTHawking.PinPlusCharPairBorRealized.symmBorRealized β
+  commBor := fun σ τ =>
+    SKEFTHawking.PinPlusCharPairBorRealizedOps.commBorRealized prov σ τ
+  assocBor := fun σ τ ρ =>
+    SKEFTHawking.PinPlusCharPairBorRealizedOps.assocBorRealized prov σ τ ρ
+  unitBor := fun σ => SKEFTHawking.PinPlusCharPairBorRealizedOps.unitBorRealized prov σ
+  revStr := fun σ => charPairBundledRevStr σ
+  revBor := fun β => SKEFTHawking.PinPlusCharPairBorRealized.revBorRealized β
+  negBor := fun σ => SKEFTHawking.PinPlusCharPairBorRealized.negBorRealized prov σ
+  t2Str := fun m => m.toCharPairStr.t2
+
+/-- The frozen mod-8 grade on the untethered exhibit (verbatim `charPairBrown`). -/
+noncomputable def charPairBrownU (prov : CharPairWProviderPinned I k) :
+    T2DataBordismGrp (pinPlusCharPairDataUntethered prov) →+ ZMod 8 where
+  toFun := Quot.lift (fun p => p.2.q.brown)
+    (fun _p _q h => by
+      obtain ⟨_, _, ⟨str⟩⟩ := h
+      exact CharPairBorRealized.brown_eq str)
+  map_zero' := by show (stdQuadratic 0).brown = 0; rw [brown_stdQuadratic, Nat.cast_zero]
+  map_add' := by
+    intro x y
+    induction x using Quot.ind with | _ p =>
+    induction y using Quot.ind with | _ q =>
+    show ((Z4Quadratic.orthSum p.2.q q.2.q).reindex finSumFinEquiv).brown
+        = p.2.q.brown + q.2.q.brown
+    rw [reindex_brown, brown_orthSum]
+
+/-- The frozen `[ℝP⁴]` class on the untethered exhibit. -/
+noncomputable def ktRP4ClassU (prov : CharPairWProviderPinned (𝓡 4) 0) :
+    T2DataBordismGrp (pinPlusCharPairDataUntethered prov) :=
+  T2DataBordismGrp.mk (pinPlusCharPairDataUntethered prov) ⟨rp4SM, rp4CharPair⟩
+
+/-- The frozen kernel representative `8 • [ℝP⁴]`. -/
+noncomputable def ktKernelRepU (prov : CharPairWProviderPinned (𝓡 4) 0) :
+    T2DataBordismGrp (pinPlusCharPairDataUntethered prov) :=
+  (8 : ℕ) • ktRP4ClassU prov
+
+/-- The frozen non-split Prop. -/
+def KTNonSplitU (prov : CharPairWProviderPinned (𝓡 4) 0) : Prop :=
+  ktKernelRepU prov ≠ 0
+
+/-- The frozen kernel-card Prop. -/
+def KTKernelCardU (prov : CharPairWProviderPinned (𝓡 4) 0) : Prop :=
+  ∀ x : T2DataBordismGrp (pinPlusCharPairDataUntethered prov),
+    charPairBrownU prov x = 0 → x = 0 ∨ x = ktKernelRepU prov
+
 /-! ## §1. F4 — the membrane is untethered to the bordism (kernel-encoded) -/
 
 /-- **F4 (transport): a realized witness is BORDISM-BLIND.** Every field of
@@ -136,7 +202,7 @@ def HasEndsRealization {s t : SingularManifold.{0} PUnit.{1} k I}
       ∧ JointLagrangian σ.q τ.q ((real.toMembrane σ.q τ.q).L)
 
 /-- **F4 (factorization): the flipped structured relation FACTORS through the unstructured one.**
-`IsT2DataBordant (pinPlusCharPairData prov) p q` holds iff (i) SOME Hausdorff bordism exists
+`IsT2DataBordant (pinPlusCharPairDataUntethered prov) p q` holds iff (i) SOME Hausdorff bordism exists
 between the underlying manifolds — with NO structure on it whatsoever — and (ii) the ends satisfy
 the bordism-free condition `HasEndsRealization`. The right-hand side contains no `w₂`/Wu content
 (given `prov`, the `hwu` filter is definitionally trivial) and no interaction between the
@@ -145,7 +211,7 @@ unstructured-T2-bordism ∧ ends-algebra-with-abstract-topology. -/
 theorem isT2DataBordant_pinPlusCharPair_factors (prov : CharPairWProviderPinned I k)
     {s t : SingularManifold.{0} PUnit.{1} k I}
     (σ : CharPairStrBundled I s) (τ : CharPairStrBundled I t) :
-    IsT2DataBordant (pinPlusCharPairData prov) ⟨s, σ⟩ ⟨t, τ⟩
+    IsT2DataBordant (pinPlusCharPairDataUntethered prov) ⟨s, σ⟩ ⟨t, τ⟩
       ↔ (∃ b : Bordism.{0} (I.prod (𝓡∂ 1)) s t, T2Space b.W) ∧ HasEndsRealization σ τ := by
   constructor
   · rintro ⟨b, hT2, ⟨β⟩⟩
@@ -233,7 +299,7 @@ theorem unreversed_double_diag_not_taylorLeg :
   revert hq
   decide
 
-/-! ## §4. F5 — the conditional refutation: `KTNonSplit` is one abstract compact-T2 pair away
+/-! ## §4. F5 — the conditional refutation: `KTNonSplitU` is one abstract compact-T2 pair away
 from FALSE (all algebra discharged in-tree; no `W`, no manifold, no bordism content remains) -/
 
 /-- The concrete empty end at `I = 𝓡 4`, `k = 0` (universe-pinned). -/
@@ -304,52 +370,52 @@ theorem doubleKillerBorRealized_nonempty (prov : CharPairWProviderPinned (𝓡 4
 residual hypothesis.** The pre-flip §5 refutation replayed verbatim, with `doubleKillerBorTied`
 replaced by the conditional realized witness. -/
 theorem ktKernelRep_eq_zero_of_realization (h : UnreversedDoublingRealization)
-    (prov : CharPairWProviderPinned (𝓡 4) 0) : ktKernelRep prov = 0 := by
+    (prov : CharPairWProviderPinned (𝓡 4) 0) : ktKernelRepU prov = 0 := by
   have hT2W : T2Space (doublingBordism s4M).W := by
     haveI : T2Space rp4SM.M := rp4CharPair.toCharPairStr.t2
     exact inferInstanceAs
       (T2Space (((rp4SM.M ⊕ rp4SM.M) ⊕ (rp4SM.M ⊕ rp4SM.M)) × Set.Icc (0 : ℝ) 1))
-  have key : T2DataBordismGrp.mk (pinPlusCharPairData prov)
+  have key : T2DataBordismGrp.mk (pinPlusCharPairDataUntethered prov)
         ⟨s4M.sum s4M, charPairBundledSumStr sig4 sig4⟩
-      = (0 : T2DataBordismGrp (pinPlusCharPairData prov)) :=
+      = (0 : T2DataBordismGrp (pinPlusCharPairDataUntethered prov)) :=
     T2DataBordismGrp.mk_eq_of_bordant _
       ⟨doublingBordism s4M, hT2W, doubleKillerBorRealized_nonempty prov h⟩
-  show (8 : ℕ) • ktRP4Class prov = 0
-  have h84 : (8 : ℕ) • ktRP4Class prov
-      = (4 : ℕ) • ktRP4Class prov + (4 : ℕ) • ktRP4Class prov := by
+  show (8 : ℕ) • ktRP4ClassU prov = 0
+  have h84 : (8 : ℕ) • ktRP4ClassU prov
+      = (4 : ℕ) • ktRP4ClassU prov + (4 : ℕ) • ktRP4ClassU prov := by
     rw [← add_nsmul]
-  have h42 : (4 : ℕ) • ktRP4Class prov
-      = (2 : ℕ) • ktRP4Class prov + (2 : ℕ) • ktRP4Class prov := by
+  have h42 : (4 : ℕ) • ktRP4ClassU prov
+      = (2 : ℕ) • ktRP4ClassU prov + (2 : ℕ) • ktRP4ClassU prov := by
     rw [← add_nsmul]
-  have h2 : (2 : ℕ) • ktRP4Class prov = ktRP4Class prov + ktRP4Class prov :=
+  have h2 : (2 : ℕ) • ktRP4ClassU prov = ktRP4ClassU prov + ktRP4ClassU prov :=
     two_nsmul _
   rw [h84, h42, h2]
   exact key
 
-/-- **`KTNonSplit` is refuted for every pinned provider, conditional on the residual hypothesis.**
+/-- **`KTNonSplitU` is refuted for every pinned provider, conditional on the residual hypothesis.**
 Since the hypothesis is mathematically true (CW realization of the e₈ kernel), the W-D non-split
 bit is mathematically FALSE on the flipped carrier — the binder must not open here. -/
 theorem ktNonSplit_false_of_realization (h : UnreversedDoublingRealization)
-    (prov : CharPairWProviderPinned (𝓡 4) 0) : ¬ KTNonSplit prov :=
+    (prov : CharPairWProviderPinned (𝓡 4) 0) : ¬ KTNonSplitU prov :=
   fun hns => hns (ktKernelRep_eq_zero_of_realization h prov)
 
 /-- The W-D binder pair is jointly unsatisfiable, conditional on the residual hypothesis. -/
 theorem kt_binders_unsatisfiable_of_realization (h : UnreversedDoublingRealization)
     (prov : CharPairWProviderPinned (𝓡 4) 0) :
-    ¬ (KTKernelCard prov ∧ KTNonSplit prov) :=
+    ¬ (KTKernelCardU prov ∧ KTNonSplitU prov) :=
   fun hc => ktNonSplit_false_of_realization h prov hc.2
 
 /-- `addOrderOf [ℝP⁴] ∣ 8` on the flipped carrier, conditional on the residual hypothesis —
 the carrier's cyclic part is (at most) ℤ/8, not ℤ/16. -/
 theorem ktRP4Class_addOrderOf_dvd_eight_of_realization (h : UnreversedDoublingRealization)
     (prov : CharPairWProviderPinned (𝓡 4) 0) :
-    addOrderOf (ktRP4Class prov) ∣ 8 :=
+    addOrderOf (ktRP4ClassU prov) ∣ 8 :=
   addOrderOf_dvd_of_nsmul_eq_zero (ktKernelRep_eq_zero_of_realization h prov)
 
 /-- **The composed headline**: an e₈-kernel realization — one abstract compact-T2 pair, no `W`,
 no manifold, no bordism — refutes the W-D non-split bit for every pinned provider. -/
 theorem ktNonSplit_false_of_e8 (h : E8MembraneRealization)
-    (prov : CharPairWProviderPinned (𝓡 4) 0) : ¬ KTNonSplit prov :=
+    (prov : CharPairWProviderPinned (𝓡 4) 0) : ¬ KTNonSplitU prov :=
   ktNonSplit_false_of_realization (unreversedDoublingRealization_of_e8 h) prov
 
 end SKEFTHawking.PinPlusCharPairFlipGate
