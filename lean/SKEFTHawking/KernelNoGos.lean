@@ -74,8 +74,18 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    exactly the e₈ graph) — i.e. the tie NARROWS the hole to precisely the geometric-realization obligation
    without closing it; binders stay FROZEN. Remaining discharge: require realization data on the membrane
    datum (GeoRealizationData/GeoMembrane.ofGeometric, PinPlusCharPairMembraneGeoRealization) + the
-   (n,q,surf) tie, then the fresh Fable re-gate.
-   backing: `ktKernelRep_eq_zero`, `ktNonSplit_false`, `kt_binders_unsatisfiable`
+   (n,q,surf) tie, then the fresh Fable re-gate. UPDATE 2 (THE FLIP, 2026-07-15): the FIX is COMPLETE —
+   pinPlusCharPairData's Bor is CharPairBorRealized (all 8 op witnesses realized via GeoRealizationTied:
+   derived bases from the carried (n,q,surf) tie + per-object certs + kernels computed from real membrane
+   topology; provider = CharPairWProviderPinned). The instance-level refutations (ktKernelRep_eq_zero,
+   ktNonSplit_false, kt_binders_unsatisfiable, ktKummerTarget_unsatisfiable,
+   ktRP4Class_addOrderOf_dvd_eight) no longer type-check against the flipped carrier and are REMOVED
+   (PinPlusKTVacuityGateWD §5 conversion banner); backing re-pointed to the retained structure-level engines
+   (L44_metabolic + doubleKillerBInc_ker — the kernel-checked e₈ record over the algebraic-core structures,
+   which persist as the historical exploit shapes). The W-D binders {KTKernelCard, KTNonSplit} are GENUINELY
+   OPEN (not refuted, not discharged) — their discharge is W-D's gated work and must pass the round-6
+   vacuity gate before consumption.
+   backing: `L44_metabolic`, `doubleKillerBInc_ker`
 
 5. `tied-carrier-inhabitation-equiv-free` [structural_forcing]
    The membrane-tied CharPairBorTied (L = ker mem.bInc) is a strictly finer bordism-witness class than the
@@ -88,7 +98,10 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    this general fact). Also: GeoMembrane.top (mid = 0, kernel ⊤) inhabits for ALL end forms and
    JointLagrangian is VACUOUS at ⊤ (jointLagrangian_top) — only the Taylor leg ever blocks a degenerate
    membrane. RULE: the tie is a SHAPE, not a filter, until mem is forced through geometric-realization data
-   carrying the (n,q,surf) basis tie.
+   carrying the (n,q,surf) basis tie. NOTE (THE FLIP, 2026-07-15): the live carrier's Bor is now
+   CharPairBorRealized — the strict refinement this fork says the tie alone is not; the fork stays TRUE at
+   the tied level (the backing theorems are structure-level and persist) and is the permanent record of WHY
+   the realized refinement is load-bearing.
    backing: `charPairBorTied_nonempty_iff_free`, `jointLagrangian_top`
    ⚠ UNRESOLVED backing (not found in-tree — check the registry): `SKEFTHawking.PinPlusCharPairGeoRealizationGate.GeoMembrane.ofSubmodule_L`
 
@@ -107,6 +120,10 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    Also kernel-irrelevant: the eQ freedom (ker_transportedBInc_gaugeQ). RULE: the H₁ bases must be DERIVED
    from the carrier's (n,q,surf) tie (hpolar/hchar-anchored identification of the realization's ends with
    the carried surfaces), never free fields; topological certificates are necessary but collectively blind.
+   NOTE (THE FLIP, 2026-07-15): the closing mechanism this fork mandates is LIVE — GeoRealizationTied's
+   derivedEσ/τ (toData_eσ = rfl, nothing to post-compose) is the Bor consumed by the flipped
+   pinPlusCharPairData; the fork stays TRUE over the free GeoRealizationData (backing persists) as the
+   record of the gauge exploit the derived bases kill.
    backing: `map_killerGauge_ker_negBorBInc`, `ker_transportedBInc_gaugeσ`, `doubleKillerGeoMem_L`, `map_blockCongr_cylLagrangian`
 
 7. `wadm-sqop-gauge-w2-filter-vacuous` [refutation]
@@ -139,6 +156,10 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    pushed-forward surface class) + no_empty_surface_bundle_on_rp4. KTKernelCard is no longer honestly-false
    via fake classes. The SOLE remaining discharge item on this fork = the GeoMembrane bInc geometric
    realization (the synthetic-bInc refutations persist; binders stay frozen) + the fresh Fable re-gate.
+   UPDATE 3 (THE FLIP, 2026-07-15): the pinned provider is LIVE — pinPlusCharPairData now takes
+   CharPairWProviderPinned and its Bor is CharPairBorRealized (P14/P23 carry pin14/pin23 by construction),
+   so hwu on every live bordism witness is the HONEST w₂-condition; the bInc realization discharge item is
+   COMPLETE. Residual on this fork = the round-6 re-gate.
    backing: `wuW2_zeroSq`, `wuClass_zeroSq`
 
 8. `taylor-leg-end-convention-trap` [structural_forcing]
@@ -251,14 +272,11 @@ alias nogo_no_uniform_comp_twist_of_cylinder_rigid := SKEFTHawking.PinPlusCompTo
 /-- NO-GO [`membrane-level-nonhausdorff-collapse`] — do NOT re-derive. FALSE: A manifold-typed WITNESS datum inside a carrier or relation (the membrane/3-manifold Q, the surface Σ, any auxiliary manifold field) inherits honesty from the T2 fence on the ambient bordism W. Backing refutation: `SKEFTHawking.PinPlusCompTorsorNoGo.qLevelTripleMembrane_not_t2`. -/
 alias nogo_qLevelTripleMembrane_not_t2 := SKEFTHawking.PinPlusCompTorsorNoGo.qLevelTripleMembrane_not_t2
 
-/-- NO-GO [`free-membrane-kernel-kills-nonsplit`] — do NOT re-derive. FALSE: The as-built CharPair carrier (Bor with the membrane kernel L carried as a FREE Submodule field, the geometric membrane Q deferred) supports the KT §5 non-split content — KTNonSplit (8•[ℝP⁴] ≠ 0) is open/dischargeable on it. Backing refutation: `SKEFTHawking.PinPlusKTVacuityGateWD.ktKernelRep_eq_zero`. -/
-alias nogo_ktKernelRep_eq_zero := SKEFTHawking.PinPlusKTVacuityGateWD.ktKernelRep_eq_zero
+/-- NO-GO [`free-membrane-kernel-kills-nonsplit`] — do NOT re-derive. FALSE: The as-built CharPair carrier (Bor with the membrane kernel L carried as a FREE Submodule field, the geometric membrane Q deferred) supports the KT §5 non-split content — KTNonSplit (8•[ℝP⁴] ≠ 0) is open/dischargeable on it. Backing refutation: `SKEFTHawking.PinPlusKTVacuityGateWD.L44_metabolic`. -/
+alias nogo_L44_metabolic := SKEFTHawking.PinPlusKTVacuityGateWD.L44_metabolic
 
-/-- NO-GO [`free-membrane-kernel-kills-nonsplit`] — do NOT re-derive. FALSE: The as-built CharPair carrier (Bor with the membrane kernel L carried as a FREE Submodule field, the geometric membrane Q deferred) supports the KT §5 non-split content — KTNonSplit (8•[ℝP⁴] ≠ 0) is open/dischargeable on it. Backing refutation: `SKEFTHawking.PinPlusKTVacuityGateWD.ktNonSplit_false`. -/
-alias nogo_ktNonSplit_false := SKEFTHawking.PinPlusKTVacuityGateWD.ktNonSplit_false
-
-/-- NO-GO [`free-membrane-kernel-kills-nonsplit`] — do NOT re-derive. FALSE: The as-built CharPair carrier (Bor with the membrane kernel L carried as a FREE Submodule field, the geometric membrane Q deferred) supports the KT §5 non-split content — KTNonSplit (8•[ℝP⁴] ≠ 0) is open/dischargeable on it. Backing refutation: `SKEFTHawking.PinPlusKTVacuityGateWD.kt_binders_unsatisfiable`. -/
-alias nogo_kt_binders_unsatisfiable := SKEFTHawking.PinPlusKTVacuityGateWD.kt_binders_unsatisfiable
+/-- NO-GO [`free-membrane-kernel-kills-nonsplit`] — do NOT re-derive. FALSE: The as-built CharPair carrier (Bor with the membrane kernel L carried as a FREE Submodule field, the geometric membrane Q deferred) supports the KT §5 non-split content — KTNonSplit (8•[ℝP⁴] ≠ 0) is open/dischargeable on it. Backing refutation: `SKEFTHawking.PinPlusKTVacuityGateWD.doubleKillerBInc_ker`. -/
+alias nogo_doubleKillerBInc_ker := SKEFTHawking.PinPlusKTVacuityGateWD.doubleKillerBInc_ker
 
 /-- NO-GO [`tied-carrier-inhabitation-equiv-free`] — do NOT re-derive. FALSE: The membrane-tied CharPairBorTied (L = ker mem.bInc) is a strictly finer bordism-witness class than the refuted free-L CharPairBor — the tie alone filters geometrically-unrealizable Lagrangians. Backing refutation: `SKEFTHawking.PinPlusCharPairGeoRealizationGate.charPairBorTied_nonempty_iff_free`. -/
 alias nogo_charPairBorTied_nonempty_iff_free := SKEFTHawking.PinPlusCharPairGeoRealizationGate.charPairBorTied_nonempty_iff_free

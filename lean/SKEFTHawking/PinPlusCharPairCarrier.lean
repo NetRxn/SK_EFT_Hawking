@@ -1,20 +1,20 @@
 /-
-# Phase 5q.H (W-A arm 4, THE SPLIT) — the live characteristic-pair CARRIER
+# Phase 5q.H (W-A arm 4, THE FLIP) — the live characteristic-pair CARRIER on the REALIZED `Bor`
 
-`pinPlusCharPairData` (the faithful, membrane-TIED Pin⁺ instance) + its computed mod-8 grade
-`charPairBrown` + the ℝP⁴ non-vacuity witness `rp4CharPairBundled`, plus the type-former
-`charPairBundledMfd`.
+`pinPlusCharPairData` (the faithful Pin⁺ instance, now on the membrane-REALIZED `Bor`) + its
+computed mod-8 grade `charPairBrown` + the ℝP⁴ non-vacuity witness `rp4CharPairBundled`, plus the
+type-former `charPairBundledMfd`.
 
-These §11–§13 "live carrier" declarations were SPLIT OUT of `PinPlusCharPairData` — a PURE
-REFACTOR, no semantic change — to sever the arm-4 import cycle. The KT-chain consumers
-(`RP4CharPairWitness` / `PinPlusKTExtension` / `PinPlusKTVacuityGateWD`) need the instance, while the
-membrane-realized chain that COMPUTES the tied `Bor` (`…BorRealized` / `…CylRealization` /
-`…RealizationTied` / `…MembraneGeoRealization`) sits upstream of them. Placing the carrier in its
-own module downstream of the realized chain (imports `PinPlusCharPairBorRealized` +
-`PinPlusWAdmPinnedCore`) and re-pointing the consumers here breaks the cycle. Everything else stays in
-`PinPlusCharPairData`; the frozen algebraic core, the bundled op witnesses (`CharPairStrBundled`,
-`charPairBundledEmpty`/`SumStr`/`RevStr`), and the tied `Bor` (`CharPairBorTied`, §9.6) are consumed
-transitively. `Bor` is UNCHANGED: `ULift (CharPairBorTied …)`.
+**THE FLIP (2026-07-15):** `Bor` is `CharPairBorRealized` — every bordism witness carries a
+GENUINE derived-basis geometric realization (`GeoRealizationTied`: real membrane topology `Q`,
+per-object T2/Compact/closed-embedding certificates, bases DERIVED from the carried `basis`
+through the UCT bridge), the substrate PINS (`pin14`/`pin23` — honest Steenrod, F3 fix), and the
+Taylor-leg kernel `L = ker (transportedBInc real.toData)` COMPUTED from that topology (F1/F2 fix).
+The provider is `CharPairWProviderPinned`. All eight op witnesses are the realized constructions
+(`cyl/rev/neg/symmBorRealized` + `unit/comm/assocBorRealized` + `addBorRealized`). The synthetic-
+`bInc` exploit family (`doubleKillerBorTied`, the §4.5 GateWD replay) is NOT constructible against
+this `Bor` — the round-3/4.5 instance-level refutations are CONVERTED (see `PinPlusKTVacuityGateWD`
+§5): the W-D binders `{KTKernelCard, KTNonSplit}` are now GENUINELY OPEN, not refuted.
 
 Declarations live in `namespace SKEFTHawking.PinPlusCharPairData` (unchanged), so every downstream
 fully-qualified name (`PinPlusCharPairData.pinPlusCharPairData`, `.charPairBrown`,
@@ -25,6 +25,8 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new proj
 -/
 import Mathlib
 import SKEFTHawking.PinPlusCharPairBorRealized
+import SKEFTHawking.PinPlusCharPairBorRealizedOps
+import SKEFTHawking.PinPlusCharPairAddRealization
 import SKEFTHawking.PinPlusWAdmPinnedCore
 
 namespace SKEFTHawking.PinPlusCharPairData
@@ -37,6 +39,10 @@ open SKEFTHawking.SingularFunctoriality SKEFTHawking.PinPlusCharPairSurfaceTie
 open SKEFTHawking.SingularPD4Instances SKEFTHawking.PoincareDualityWu
 open SKEFTHawking.SingularCohomologyDisjointSum
 open SKEFTHawking.T2TangentialBordism
+open SKEFTHawking.PinPlusWAdmPinned
+open SKEFTHawking.PinPlusCharPairBorRealized
+open SKEFTHawking.PinPlusCharPairBorRealizedOps
+open SKEFTHawking.PinPlusCharPairAddRealization
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 variable {k : WithTop ℕ∞}
@@ -54,53 +60,56 @@ type-checks, which IS the resolution of the §5 friction. -/
 def charPairBundledMfd : SingularManifold.{0} PUnit k I → Type 1 :=
   fun s => CharPairStrBundled (k := k) I s
 
-/-- **THE FAITHFUL Pin⁺ INSTANCE, MEMBRANE-TIED** (the arm-4 re-gate migration) — the certified
+/-- **THE FAITHFUL Pin⁺ INSTANCE ON THE REALIZED `Bor`** (THE FLIP, 2026-07-15) — the certified
 characteristic-pair carrier as a `T2TangentialData.{0,1}` (bundled `Type 1` `Mfd`, carrier at
-universe 0). `Bor` is the **membrane-TIED** `CharPairBorTied` on the underlying algebraic cores
-(`ULift`ed to `Type 1`): the Taylor-leg kernel `L` is COMPUTED from each op's membrane datum,
-never carried free (no-go `free-membrane-kernel-kills-nonsplit`). The twelve op witnesses are the
-§6/§9.6/§11 constructions. Parameterized by the W-admissibility provider `prov` (a hypothesis —
-no axiom). The group `T2DataBordismGrp (pinPlusCharPairData prov)` is an `AddCommGroup` by the §2
-replay. ⚠ The `bInc` geometric-realization residual (§9.6 header) is self-attacked in
-`PinPlusKTVacuityGateWD`; the W-D binders remain FROZEN until the realization strengthening. -/
-noncomputable def pinPlusCharPairData (prov : CharPairWProvider I k) :
+universe 0). `Bor` is the **membrane-REALIZED** `CharPairBorRealized`, indexed by the end
+BUNDLES: every bordism witness carries a genuine `GeoRealizationTied` (real membrane topology,
+per-object T2/Compact/closed-embedding certificates, boundary bases DERIVED from the carried
+`basis` through the UCT bridge — no basis gauge, F2) with the substrate PINS (honest Steenrod,
+F3) and the Taylor-leg kernel `L = ker (transportedBInc real.toData)` COMPUTED from that
+topology (F1; no-go `free-membrane-kernel-kills-nonsplit`). The eight op witnesses are the
+realized constructions (Stage 3a/3b/3c). Parameterized by the PINNED W-admissibility provider
+`prov` (a hypothesis — no axiom). The group `T2DataBordismGrp (pinPlusCharPairData prov)` is an
+`AddCommGroup` by the §2 replay. The §4.5 synthetic-`bInc` replay does NOT construct against
+this `Bor`; the W-D binders are GENUINELY OPEN (see `PinPlusKTVacuityGateWD` §5). -/
+noncomputable def pinPlusCharPairData (prov : CharPairWProviderPinned I k) :
     T2TangentialData.{0, 1} PUnit k I where
   Mfd := charPairBundledMfd (k := k) (I := I)
-  Bor := fun b σ τ => ULift.{1} (CharPairBorTied b σ.toCharPairStr τ.toCharPairStr)
+  Bor := fun b σ τ => CharPairBorRealized b σ τ
   emptyStr := charPairBundledEmpty
   sumStr := fun σ τ => charPairBundledSumStr σ τ
-  cylBor := fun σ => ⟨charPairCylBorTied prov σ.toCharPairStr⟩
-  addBor := fun β₁ β₂ => ⟨charPairAddBorTied prov β₁.down β₂.down⟩
-  symmBor := fun β => ⟨charPairSymmBorTied β.down⟩
-  commBor := fun σ τ => ⟨charPairCommBorTied prov σ.toCharPairStr τ.toCharPairStr⟩
-  assocBor := fun σ τ ρ =>
-    ⟨charPairAssocBorTied prov σ.toCharPairStr τ.toCharPairStr ρ.toCharPairStr⟩
-  unitBor := fun σ => ⟨charPairUnitBorTied prov σ.toCharPairStr⟩
+  cylBor := fun σ => cylBorRealized prov σ
+  addBor := fun β₁ β₂ => addBorRealized prov β₁ β₂
+  symmBor := fun β => symmBorRealized β
+  commBor := fun σ τ => commBorRealized prov σ τ
+  assocBor := fun σ τ ρ => assocBorRealized prov σ τ ρ
+  unitBor := fun σ => unitBorRealized prov σ
   revStr := fun σ => charPairBundledRevStr σ
-  revBor := fun β => ⟨charPairRevBorTied β.down⟩
-  negBor := fun σ => ⟨charPairNegBorTied prov σ.toCharPairStr⟩
+  revBor := fun β => revBorRealized β
+  negBor := fun σ => negBorRealized prov σ
   t2Str := fun m => m.toCharPairStr.t2
 
 /-- **The certified characteristic-pair bordism GROUP fires as an `AddCommGroup`** — the whole point of
 the faithful carrier: a genuine (T2-refined, Hausdorff) structured bordism group on the frozen instance,
 its group law inherited from `T2TangentialBordism`'s §2 replay. -/
-noncomputable example (prov : CharPairWProvider I k) :
+noncomputable example (prov : CharPairWProviderPinned I k) :
     AddCommGroup (T2DataBordismGrp (pinPlusCharPairData prov)) := inferInstance
 
 /-! ## §12. The computed mod-8 grade `charPairBrown` (W-C's abk8 opening) -/
 
 /-- **THE COMPUTED mod-8 GRADE** `charPairBrown : Ω^{char-pair} →+ ZMod 8` — `abk8 := Brown ∘ q`,
-computed from the carried enhancement's Brown/Gauss-sum invariant. Well-defined along the TIED `Bor`
-because `CharPairBorTied` FORCES `brown σ.q = brown τ.q` (the anti-collapse engine
-`brown_eq_of_taylorLeg_lagrangian` via `CharPairBorTied.brown_eq`), so no reading-(ii) torsor collapse
+computed from the carried enhancement's Brown/Gauss-sum invariant. Well-defined along the REALIZED
+`Bor` because `CharPairBorRealized` FORCES `brown σ.q = brown τ.q` (the anti-collapse engine
+`brown_eq_of_taylorLeg_lagrangian` via `CharPairBorRealized.brown_eq` — the realized membrane's
+computed kernel is Taylor-vanishing and jointly Lagrangian), so no reading-(ii) torsor collapse
 can disturb it. Additive via `sumStr = orthSum`-reindex (`reindex_brown` + `brown_orthSum`). This is
 W-C's abk8 door opened directly on the honest faithful carrier. -/
-noncomputable def charPairBrown (prov : CharPairWProvider I k) :
+noncomputable def charPairBrown (prov : CharPairWProviderPinned I k) :
     T2DataBordismGrp (pinPlusCharPairData prov) →+ ZMod 8 where
   toFun := Quot.lift (fun p => p.2.q.brown)
     (fun _p _q h => by
       obtain ⟨_, _, ⟨str⟩⟩ := h
-      exact CharPairBorTied.brown_eq str.down)
+      exact CharPairBorRealized.brown_eq str)
   map_zero' := by show (stdQuadratic 0).brown = 0; rw [brown_stdQuadratic, Nat.cast_zero]
   map_add' := by
     intro x y

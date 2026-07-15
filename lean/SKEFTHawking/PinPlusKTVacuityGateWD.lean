@@ -1,13 +1,17 @@
 /-
-# Phase 5q.H W-D VACUITY GATE (round 3) — KERNEL-CHECKED EXPLOIT: `KTNonSplit` is FALSE
-# on the as-built CharPair carrier, for EVERY W-admissibility provider.
+# Phase 5q.H W-D VACUITY GATE (rounds 3 + 4.5, ✅ CONVERTED AT THE FLIP 2026-07-15) —
+# the kernel-checked exploit RECORD; the instance-level refutations are GONE on the
+# REALIZED carrier and the W-D binders are GENUINELY OPEN.
 
-**Gate finding (vector b / c of the W-D adversarial gate).** The W-D statement layer
-(`PinPlusKTExtension.lean`) treats `KTNonSplit prov : 8 • [ℝP⁴] ≠ 0` as the open non-split bit
-(dossier §5: "the one KT terminal Prop with a genuinely open attack surface"). This module proves
-the attack LANDS: `8 • [ℝP⁴] = 0` is derivable with ZERO geometric input, so `KTNonSplit prov` is
-REFUTED for every `prov`, and the headline assembly `kt_equiv_zmod16`'s hypothesis pair
-`{KTKernelCard, KTNonSplit}` is UNSATISFIABLE on this carrier.
+**Gate finding (vector b / c of the W-D adversarial gate — historical, rounds 3/4.5).** The W-D
+statement layer (`PinPlusKTExtension.lean`) treats `KTNonSplit prov : 8 • [ℝP⁴] ≠ 0` as the open
+non-split bit (dossier §5: "the one KT terminal Prop with a genuinely open attack surface"). On
+the free-`L` carrier (round 3) and the merely-TIED carrier (round 4.5, via the synthetic-`bInc`
+replay), the attack LANDED: `8 • [ℝP⁴] = 0` was derivable with ZERO geometric input. This module
+retains the structure-level exploit record (§1–§4.5, kernel-checked) and the CONVERSION banner
+(§5): on the FLIPPED carrier (`Bor := CharPairBorRealized`, derived bases + computed kernels)
+the replay does not construct, and the binder pair `{KTKernelCard, KTNonSplit}` is genuinely
+open — awaiting W-D's gated discharge, not refuted.
 
 **The mechanism (why the carrier admits this).** `CharPairBor.L` is a FREE field — the membrane
 tie (design item 2/3: `L = ker(H₁(∂Q) → H₁(Q))` of an actual characteristic membrane `Q ⊆ W`,
@@ -28,14 +32,13 @@ Pin⁺ bordism. Consequently the UN-reversed double `σ ⊔ σ` bounds the plain
   quantifies over ALL bordisms, and `W = (ℝP⁴)⁴ × I` here is honestly `w₂ = 0`, so even the
   intended honest provider supplies it. The exploit does NOT need a degenerate provider.
 
-**What this kills.** `negBor` (the honest inverse law) kills `σ̄ ⊔ σ`; the L-freedom ALSO kills
-`σ ⊔ σ` whenever `2·brown(q_σ) = 0`. Hence on this carrier `⟨[ℝP⁴]⟩ ≅ ℤ/8`, NOT ℤ/16:
-`addOrderOf [ℝP⁴] ∣ 8` (corollary below), directly contradicting the conditional
-`kt_rp4_addOrderOf = 16`. The `{0,8}` kernel distinction the KT §5 extension needs is not merely
-invisible to `(Σ, q)` — on the as-built relation it is provably COLLAPSED. The fix is statement/
-carrier-shape work, not proof work: the kernel Props must be stated over a carrier whose `Bor`
-carries the membrane tie (item 2/3) — L pinned to an actual `ker(H₁(∂Q) → H₁(Q))` — otherwise any
-future "discharge" of `KTNonSplit` is impossible (it is false), and `kt_equiv_zmod16` is vacuous.
+**What this killed (pre-flip).** `negBor` (the honest inverse law) kills `σ̄ ⊔ σ`; the L-freedom
+ALSO killed `σ ⊔ σ` whenever `2·brown(q_σ) = 0`. Hence on the pre-flip carriers `⟨[ℝP⁴]⟩ ≅ ℤ/8`,
+NOT ℤ/16 (`addOrderOf [ℝP⁴] ∣ 8` — the removed §5 corollary), directly contradicting the
+conditional `kt_rp4_addOrderOf = 16`. The fix demanded was carrier-shape work: `Bor` must carry
+the membrane with `L` COMPUTED from realized topology and the bases DERIVED from the carried
+`(n, q, surf)` tie. THE FLIP (2026-07-15) delivered exactly that (`CharPairBorRealized`); the §5
+banner records the conversion.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new project axiom, no
 `native_decide`, no `maxHeartbeats`.
@@ -203,61 +206,32 @@ noncomputable def doubleKillerBorTied (prov : CharPairWProvider (𝓡 4) 0) :
     (by show JointLagrangian _ _ (LinearMap.ker doubleKillerBInc)
         rw [doubleKillerBInc_ker]; exact hmeta.2)
 
-/-! ## §5. THE REFUTATION — `8 • [ℝP⁴] = 0` for every provider (PERSISTS post-migration: the
-statements are over the LIVE carrier — tied since the arm-4 re-gate migration — and ride the
-§4.5 synthetic replay; the free-shape exploit `doubleKillerBor` (§4) is retained as the round-3
-registry record) -/
+/-! ## §5. ✅ CONVERTED AT THE FLIP (2026-07-15) — the instance-level refutations are GONE;
+the W-D binders `{KTKernelCard, KTNonSplit}` are GENUINELY OPEN
 
-/-- **`k₀ = 8 • [ℝP⁴] = 0` on the as-built carrier, for EVERY W-admissibility provider** — the
-W-D non-split bit is FALSE, with zero geometric input beyond the in-tree witnesses. -/
-theorem ktKernelRep_eq_zero (prov : CharPairWProvider (𝓡 4) 0) :
-    ktKernelRep prov = 0 := by
-  have hT2W : T2Space (doublingBordism s4M).W := by
-    haveI : T2Space rp4SM.M := rp4CharPair.toCharPairStr.t2
-    exact inferInstanceAs
-      (T2Space (((rp4SM.M ⊕ rp4SM.M) ⊕ (rp4SM.M ⊕ rp4SM.M)) × Set.Icc (0 : ℝ) 1))
-  have key : T2DataBordismGrp.mk (pinPlusCharPairData prov)
-        ⟨s4M.sum s4M, charPairBundledSumStr sig4 sig4⟩
-      = (0 : T2DataBordismGrp (pinPlusCharPairData prov)) :=
-    T2DataBordismGrp.mk_eq_of_bordant _
-      ⟨doublingBordism s4M, hT2W, ⟨⟨doubleKillerBorTied prov⟩⟩⟩
-  show (8 : ℕ) • ktRP4Class prov = 0
-  have h84 : (8 : ℕ) • ktRP4Class prov
-      = (4 : ℕ) • ktRP4Class prov + (4 : ℕ) • ktRP4Class prov := by
-    rw [← add_nsmul]
-  have h42 : (4 : ℕ) • ktRP4Class prov
-      = (2 : ℕ) • ktRP4Class prov + (2 : ℕ) • ktRP4Class prov := by
-    rw [← add_nsmul]
-  have h2 : (2 : ℕ) • ktRP4Class prov = ktRP4Class prov + ktRP4Class prov :=
-    two_nsmul _
-  rw [h84, h42, h2]
-  exact key
+**Pre-flip history (rounds 3 + 4.5):** on the free-`L` carrier and then on the membrane-TIED
+carrier (through the §4.5 synthetic-`bInc` replay), the five instance-level refutations
+(`ktKernelRep_eq_zero`, `ktNonSplit_false`, `kt_binders_unsatisfiable`,
+`ktKummerTarget_unsatisfiable`, `ktRP4Class_addOrderOf_dvd_eight`) proved `8•[ℝP⁴] = 0` for
+EVERY provider — the non-split bit was FALSE and the KT binder pair jointly unsatisfiable.
 
-/-- **`KTNonSplit` is REFUTED for every provider** — the "genuinely open" bit is not open. -/
-theorem ktNonSplit_false (prov : CharPairWProvider (𝓡 4) 0) : ¬ KTNonSplit prov :=
-  fun h => h (ktKernelRep_eq_zero prov)
+**The flip (2026-07-15):** `pinPlusCharPairData`'s `Bor` is now `CharPairBorRealized` — every
+bordism witness carries a genuine `GeoRealizationTied` whose boundary bases are DERIVED from the
+carried `(n, q, surf)` tie and whose Taylor-leg kernel is COMPUTED from real membrane topology.
+The synthetic replay `doubleKillerBorTied prov` (§4.5) constructs a `CharPairBorTied` — it does
+NOT construct a `CharPairBorRealized`: a realized witness needs an actual compact-T2 membrane
+`Q ⊆ (ℝP⁴)⁴ × I` whose derived-basis fold-kernel is the e₈ graph, which is exactly the
+geometrically-unrealizable content of the exploit (the gate's F2 finding — the killerGauge only
+moved a FREE basis; the derived basis leaves nothing to gauge). The five refutation theorems no
+longer type-check against the flipped instance and are REMOVED — their structure-level engines
+(`L44_metabolic`, `doubleKillerBInc_ker`, `doubleKillerBor`, `doubleKillerBorTied`, §3–§4.5)
+are RETAINED verbatim as the kernel-checked registry record of rounds 3/4.5
+(`free-membrane-kernel-kills-nonsplit`).
 
-/-- **The headline assembly's hypothesis pair is UNSATISFIABLE**: no discharge of
-`{KTKernelCard, KTNonSplit}` can ever exist on this carrier, so `kt_equiv_zmod16` is vacuous. -/
-theorem kt_binders_unsatisfiable (prov : CharPairWProvider (𝓡 4) 0) :
-    ¬ (KTKernelCard prov ∧ KTNonSplit prov) :=
-  fun h => ktNonSplit_false prov h.2
-
-/-- **The Kummer-target shape (option 1) is unsatisfiable for every candidate `κ`**: any
-`KTNonSplitKummerTarget` witness would make `κ = k₀ = 0` yet `κ ≠ 0`. -/
-theorem ktKummerTarget_unsatisfiable (prov : CharPairWProvider (𝓡 4) 0)
-    (κ : T2DataBordismGrp (pinPlusCharPairData prov)) :
-    ¬ KTNonSplitKummerTarget prov κ := by
-  rintro ⟨_, hκ, hrep⟩
-  exact hκ (by rw [← hrep, ktKernelRep_eq_zero])
-
-/-- **`addOrderOf [ℝP⁴] ∣ 8` on the as-built carrier** — the odd generator has order dividing 8
-(and exactly 8, by `charPairBrown [ℝP⁴] = 1`): the carrier's cyclic part is ℤ/8, NOT ℤ/16.
-Directly contradicts the conditional `kt_rp4_addOrderOf = 16` — confirming its hypotheses can
-never be discharged. -/
-theorem ktRP4Class_addOrderOf_dvd_eight (prov : CharPairWProvider (𝓡 4) 0) :
-    addOrderOf (ktRP4Class prov) ∣ 8 :=
-  addOrderOf_dvd_of_nsmul_eq_zero (ktKernelRep_eq_zero prov)
+**⚠ The binders are OPEN, not proved:** nothing here (or anywhere) discharges `KTKernelCard` or
+`KTNonSplit` — that is W-D's gated work (the empty-Σ spin kernel + the Kummer witness), which
+must pass its own vacuity gate before consumption. What changed is that the trivial replay is
+gone: the carrier no longer admits a zero-geometric-input proof of `8•[ℝP⁴] = 0`. -/
 
 /-! ## §6. SECONDARY EXHIBIT — ✅ CLOSED BY `hchar` (arm-4 R1, 2026-07-14)
 
@@ -276,8 +250,8 @@ THEOREM, not just a failed elaboration: `RP4CharPairWitness.rp4_bundle_surfClass
 (`⟨x², emb₊[Σ]⟩ = μ(x²⌣x²) = 1` forces `emb₊[Σ] ≠ 0` for EVERY ℝP⁴ bundle) and its corollary
 `RP4CharPairWitness.no_empty_surface_bundle_on_rp4` (`Σ = ∅ ⟹ False`). The kernel Props no longer
 quantify over empty-surface fakes on ℝP⁴; the fake def and its kernel-membership record are removed
-with this closure. (The §5 SYNTHETIC-`bInc` refutations are UNAFFECTED — `doubleKillerBorTied`
-rides honest sum-witnesses, which now carry `hchar` compositionally; the W-D binders stay FROZEN on
-the `bInc` geometric-realization obligation, §4.5.) -/
+with this closure. (Post-flip status: the §5 instance-level refutations are CONVERTED — see the
+§5 banner; the structure-level exploit record §3–§4.5 is retained; the W-D binders are GENUINELY
+OPEN on the realized carrier.) -/
 
 end SKEFTHawking.PinPlusKTVacuityGateWD
