@@ -1454,6 +1454,7 @@ import SKEFTHawking.PoincareLefschetzWuBlock
 import SKEFTHawking.PoincareLefschetzWuBlockAssembly
 import SKEFTHawking.PoincareLefschetzRelFundClassSum
 import SKEFTHawking.SingularFundamentalClassPushforward
+import SKEFTHawking.PoincareLefschetzRelFundClassSumGen
 import SKEFTHawking.SingularWuTransport
 import SKEFTHawking.SingularCochainGlue
 import SKEFTHawking.SingularFundamentalClassSum
