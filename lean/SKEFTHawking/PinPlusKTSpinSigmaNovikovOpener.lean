@@ -199,6 +199,47 @@ theorem novikovLagrangian_of_novikovHalfDim {a : SpinSigmaAtoms prov}
   obtain ⟨d⟩ := h p q hb
   exact d.lagrangian
 
+/-- **Faithfulness of the reduction** — `NovikovLagrangianAtom → NovikovHalfDimAtom`. Given a genuine
+half-dimensional isotropic Lagrangian `L` per pair, a boundary-restriction substrate exists: take
+`H²(W) := L` with `rest2 := L.subtype` (`im ι* = L`, so `half` is the disclosed half-dim `hdim`), the
+boundary cup `cupBd := polarBilin Q` (`evalBd := ½·id` corrects the polarization factor so `gram` returns
+`Q`), and the isotropy of `L` makes the polar form vanish on `L×L` (`func`, with `cupW`/`rest4 := 0`). So
+`NovikovHalfDimAtom` is EQUIVALENT to `NovikovLagrangianAtom` (with `novikovLagrangian_of_novikovHalfDim`):
+the restriction substrate is a faithful re-expression — not a vacuous or strictly-stronger atom — with the
+isotropy content exactly the standard `func`/`bvanish`/`gram` split. -/
+theorem novikovHalfDim_of_novikovLagrangian {a : SpinSigmaAtoms prov}
+    (h : NovikovLagrangianAtom prov a) : NovikovHalfDimAtom prov a := by
+  intro p q hb
+  obtain ⟨L, hdim, hiso⟩ := h p q hb
+  set Q := ((blockDiag (interMatrix (a.fc p) (a.B p))
+    (-interMatrix (a.fc q) (a.B q))).map (Int.cast : ℤ → ℝ)).toQuadraticMap' with hQ
+  refine ⟨{
+    H2W := L
+    H4W := ℝ
+    H4bd := ℝ
+    cupW := 0
+    cupBd := QuadraticMap.polarBilin Q
+    rest2 := L.subtype
+    rest4 := 0
+    evalBd := (2⁻¹ : ℝ) • LinearMap.id
+    func := ?_
+    bvanish := ?_
+    gram := ?_
+    half := ?_ }⟩
+  · intro x y
+    have hxy : ((x : Fin _ → ℝ) + (y : Fin _ → ℝ)) ∈ L := L.add_mem x.2 y.2
+    simp only [LinearMap.zero_apply, QuadraticMap.polarBilin_apply_apply, QuadraticMap.polar,
+      Submodule.coe_subtype]
+    rw [hiso _ hxy, hiso _ x.2, hiso _ y.2]
+    ring
+  · intro w; simp
+  · intro x
+    rw [← hQ]
+    simp only [LinearMap.smul_apply, LinearMap.id_coe, id_eq,
+      QuadraticMap.polarBilin_apply_apply, QuadraticMap.polar_self, nsmul_eq_mul, smul_eq_mul]
+    ring
+  · rw [Submodule.range_subtype]; exact hdim
+
 /-- **`hbord` discharged from the half-dim atom** — the σ-descent's bordism-invariance of the lattice
 signature, now needing only the boundary-restriction substrate (isotropy free). Chains
 `novikovLagrangian_of_novikovHalfDim` into `hbord_of_novikovLagrangian`: for data-bordant `p, q`,
