@@ -170,6 +170,74 @@ theorem relKroneckerHInt_deltaRelHInt {n : ℕ} (z : SingularCochainInt X n)
   rw [deltaRelHInt, relKroneckerHInt_mk_mk, relKroneckerInt_mk, deltaRelCocycleInt_coe]
   exact kronecker_coboundary_chainBoundary z c
 
+/-! ## §5. The pair-restriction map `j*` and the `im δ = ker j*` exactness -/
+
+/-- A relative cocycle, forgotten to an absolute cocycle over `ℤ` (`relCochainsInt ↪ SingularCochainInt`
+on cocycles): `a ↦ a` as a cochain, still a cocycle since `δ_rel a = 0 ⟺ δ a = 0`. Integral mirror of
+`SingularRelativeAbsCompat.relToAbsCocycleₗ`. -/
+noncomputable def relToAbsCocycleIntₗ {m : ℕ} :
+    LinearMap.ker (relCoboundaryIntₗ S m) →ₗ[ℤ] LinearMap.ker (coboundaryₗ X m) :=
+  (((relCochainsInt S m).subtype.comp (LinearMap.ker (relCoboundaryIntₗ S m)).subtype)).codRestrict
+    (LinearMap.ker (coboundaryₗ X m))
+    (fun a => LinearMap.mem_ker.mpr (relCocycleInt_coboundary_zero S a))
+
+@[simp] theorem relToAbsCocycleIntₗ_coe {m : ℕ} (a : LinearMap.ker (relCoboundaryIntₗ S m)) :
+    ((relToAbsCocycleIntₗ a : LinearMap.ker (coboundaryₗ X m)) : SingularCochainInt X m) = a.1.1 := rfl
+
+/-- **The integral absolutification / pair-restriction map** `j* : Hᵐ(X, S; ℤ) → Hᵐ(X; ℤ)`,
+`[a] ↦ [a]`. Well-defined: `relToAbsCocycleIntₗ` carries relative cocycles to absolute cocycles, and
+relative coboundaries (`δ_rel β`) to absolute coboundaries (`δ β`). The forgetful `j*` leg of the pair
+long exact sequence, over `ℤ`. Integral mirror of `SingularRelativeAbsCompat.relToAbs`. -/
+noncomputable def relToAbsInt {m : ℕ} : RelativeCohomologyInt S m →ₗ[ℤ] Cohomology X m :=
+  Submodule.liftQ _ ((Submodule.mkQ _).comp relToAbsCocycleIntₗ)
+    (by
+      intro a ha
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] at ha
+      rw [LinearMap.mem_ker]
+      change Submodule.Quotient.mk _ = 0
+      rw [Submodule.Quotient.mk_eq_zero]
+      simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply]
+      cases m with
+      | zero =>
+          rw [show relCoboundaryRangeInt S 0 = (⊥ : Submodule ℤ (relCochainsInt S 0)) from rfl,
+            Submodule.mem_bot] at ha
+          rw [show coboundaryRange X 0 = (⊥ : Submodule ℤ (SingularCochainInt X 0)) from rfl,
+            Submodule.mem_bot]
+          rw [show ((relToAbsCocycleIntₗ a : LinearMap.ker (coboundaryₗ X 0)) : SingularCochainInt X 0)
+              = a.1.1 from rfl, show a.1 = 0 from ha]
+          rfl
+      | succ j =>
+          rw [show relCoboundaryRangeInt S (j + 1) = LinearMap.range (relCoboundaryIntₗ S j) from rfl]
+            at ha
+          rw [show coboundaryRange X (j + 1) = LinearMap.range (coboundaryₗ X j) from rfl]
+          obtain ⟨β, hβ⟩ := ha
+          refine ⟨β.1, ?_⟩
+          rw [relToAbsCocycleIntₗ_coe]
+          have := congrArg Subtype.val hβ
+          rwa [relCoboundaryIntₗ_coe] at this)
+
+@[simp] theorem relToAbsInt_mk {m : ℕ} (a : LinearMap.ker (relCoboundaryIntₗ S m)) :
+    relToAbsInt (RelativeCohomologyInt.mk S m a) = Cohomology.mk X m (relToAbsCocycleIntₗ a) := rfl
+
+/-- **Exactness at `Hⁿ⁺¹(X,S;ℤ)` — `ker j* ⊆ im δ`.** A relative class killed by the pair restriction
+`j* = relToAbsInt` is a δ-image. On the cylinder / suspension degrees `j*` vanishes, so every class is a
+δ-image — the `ker j* ⊆ im δ` half the suspension atoms consume, now over `ℤ`. Integral mirror of
+`SingularRelativeCohomDelta.exists_deltaRelH_of_relToAbs_eq_zero`. -/
+theorem exists_deltaRelHInt_of_relToAbsInt_eq_zero {n : ℕ} (b : RelativeCohomologyInt S (n + 1))
+    (hb : relToAbsInt b = 0) :
+    ∃ (z : SingularCochainInt X n) (h : coboundaryₗ X n z ∈ relCochainsInt S (n + 1)),
+      b = deltaRelHInt z h := by
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ b
+  rw [show (Submodule.Quotient.mk a : RelativeCohomologyInt S (n + 1))
+      = RelativeCohomologyInt.mk S (n + 1) a from rfl, relToAbsInt_mk] at hb
+  have h2 := (Submodule.Quotient.mk_eq_zero _).mp hb
+  rw [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype,
+    show coboundaryRange X (n + 1) = LinearMap.range (coboundaryₗ X n) from rfl] at h2
+  obtain ⟨z, hz⟩ := h2
+  have hz' : coboundaryₗ X n z = a.1.1 := hz.trans (relToAbsCocycleIntₗ_coe a)
+  refine ⟨z, by rw [hz']; exact a.1.2, ?_⟩
+  exact congrArg (RelativeCohomologyInt.mk S (n + 1)) (Subtype.ext (Subtype.ext hz'.symm))
+
 end
 
 end SKEFTHawking.SingularRelativeCohomDeltaInt
