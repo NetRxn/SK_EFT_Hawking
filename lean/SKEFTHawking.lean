@@ -4514,6 +4514,7 @@ import SKEFTHawking.PinPlusKTKerPhiDoubles
 import SKEFTHawking.PinPlusKTSpinSigmaAtom
 import SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
 import SKEFTHawking.PinPlusKTSpinSigmaStock
+import SKEFTHawking.PinPlusKTDualSpinSubmanifold
 import SKEFTHawking.PinPlusKTFreezeAssembly
 import SKEFTHawking.SingularSurgeryFoundation
 import SKEFTHawking.SingularSurgeryCharts
