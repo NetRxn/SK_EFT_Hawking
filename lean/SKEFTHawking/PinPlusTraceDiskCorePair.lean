@@ -283,6 +283,115 @@ theorem hasRelFundClass_D5 :
   PinPlusTraceDiskRelFundReduce.hasRelFundClass_D5_of_boundaryIncl betaClass betaClass_ne_zero
     boundaryIncl_injective
 
+/-! ## §4. The narrowed cover-glue disk row — `hasClass = {hbd, hdetAB}` only.
+
+`CapstoneCoverGlueResidualDisk` still carries the disk detecting triple `cHa`/`hcHa`/`hdetHa` as
+open fields. With `hasRelFundClass_D5` PROVEN, that triple is now supplied by
+`exists_detecting_chain_of_hasRelFundClass` — leaving only the two collar-chain items
+`hbd`/`hdetAB`. `diskDetectChain` is the canonical detecting chain; the two-field
+`CapstoneCoverGlueResidualDiskCore` states `hbd`/`hdetAB` over it; `toDisk` fills the disk row. -/
+
+open SKEFTHawking.SurgeryFoundation
+open SKEFTHawking.SurgeryFoundation.HandleAttachment
+open SKEFTHawking.SingularMayerVietoris
+open SKEFTHawking.SingularRelativeCoverMV
+open SKEFTHawking.SingularRelativeCoverMVTransport
+open SKEFTHawking.PinPlusTraceCapstoneInhabit
+open SKEFTHawking.PinPlusTraceCapstoneCoverGlueCyl
+open SKEFTHawking.PinPlusTraceCapstoneCoverGlueDisk
+
+section DiskCore
+
+variable (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+  [CompactSpace s.M] [Nonempty s.M] [PreconnectedSpace s.M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M]
+  (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+  (hφ : Continuous φ) (hφinj : Function.Injective φ)
+  (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+  (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+  (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+
+/-- **The canonical `D⁵` detecting chain** — the `exists_detecting_chain_of_hasRelFundClass` witness
+of the now-proven `hasRelFundClass_D5`. -/
+noncomputable def diskDetectChain : SingularChain (TopCat.of D5) (3 + 2) :=
+  (exists_detecting_chain_of_hasRelFundClass (P := D5) (m := 3) hasRelFundClass_D5).choose
+
+/-- The canonical chain's boundary is supported in the disk boundary sphere `{v | ‖v‖ = 1} = ∂D⁵`
+(via `boundary_D5`). -/
+theorem diskDetectChain_hc :
+    chainBoundary (TopCat.of D5) (3 + 1) diskDetectChain
+      ∈ subspaceChains (X := TopCat.of D5) {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} (3 + 1) := by
+  rw [← PinPlusTraceCapstoneCoverGlueDisk.boundary_D5]
+  exact (exists_detecting_chain_of_hasRelFundClass (P := D5) (m := 3)
+    hasRelFundClass_D5).choose_spec.choose
+
+/-- The canonical chain detects the local generator at every disk-interior point (`‖v‖ < 1`, i.e.
+off the boundary sphere). -/
+theorem diskDetectChain_hdet (y : D5) (hy : y ∉ {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1}) :
+    relClassOf (X := TopCat.of D5) ({y}ᶜ) 3 diskDetectChain
+      (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (3 + 1) diskDetectChain_hc) ≠ 0 := by
+  have hy' : y ∉ ((𝓡 4).prod (𝓡∂ 1)).boundary D5 := by
+    rw [PinPlusTraceCapstoneCoverGlueDisk.boundary_D5]; exact hy
+  exact (exists_detecting_chain_of_hasRelFundClass (P := D5) (m := 3)
+    hasRelFundClass_D5).choose_spec.choose_spec y hy'
+
+/-- **The narrowed cover-glue disk row — `{hbd, hdetAB}` ONLY.** With `hasRelFundClass_D5` proven,
+the disk detecting triple `cHa`/`hcHa`/`hdetHa` of `CapstoneCoverGlueResidualDisk` is supplied by the
+canonical chain `diskDetectChain` (`diskDetectChain_hc`/`diskDetectChain_hdet`). The only two fields
+left are the collar-chain seam-cancellation `hbd` and the overlap straddle `hdetAB`, both stated over
+`diskDetectChain`. -/
+structure CapstoneCoverGlueResidualDiskCore where
+  /-- the mod-2 seam-cancellation of the pushed sum (over the canonical `diskDetectChain`). -/
+  hbd : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+      (closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+          (3 + 2) (capstoneCylChain s S hS φ hφ hφinj)
+        + closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+          (3 + 2) diskDetectChain)
+    ∈ subspaceChains
+        (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1)
+  /-- the overlap-zone straddle detection: the glued chain detects on the seam collar. -/
+  hdetAB : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      (hx : x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)),
+    x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+    x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+    relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+      (closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+          (3 + 2) (capstoneCylChain s S hS φ hφ hφinj)
+        + closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+          (3 + 2) diskDetectChain)
+      (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1) hbd) ≠ 0
+
+/-- **The narrowed row fills the disk cover-glue residual** — supplying `cHa`/`hcHa`/`hdetHa` from
+the canonical detecting chain (the proven `hasRelFundClass_D5`), passing `hbd`/`hdetAB` through. So
+`CapstoneCoverGlueResidualDisk` narrows to `CapstoneCoverGlueResidualDiskCore` (two fields). -/
+def CapstoneCoverGlueResidualDiskCore.toDisk
+    (R : CapstoneCoverGlueResidualDiskCore s t S hS φ hφ hφinj cd hseam d) :
+    CapstoneCoverGlueResidualDisk s t S hS φ hφ hφinj cd hseam d where
+  cHa := diskDetectChain
+  hcHa := diskDetectChain_hc
+  hdetHa := fun y hy => diskDetectChain_hdet y hy
+  hbd := R.hbd
+  hdetAB := R.hdetAB
+
+/-- **The narrowed row supplies the capstone `hasClass` field** — chaining `toDisk` into
+`CapstoneCoverGlueResidualDisk.toHasClass`. So the deepest capstone atom reduces, for connected
+`s.M`, to inhabiting `CapstoneCoverGlueResidualDiskCore` — `{hbd, hdetAB}` ONLY. -/
+def CapstoneCoverGlueResidualDiskCore.toHasClass
+    (R : CapstoneCoverGlueResidualDiskCore s t S hS φ hφ hφinj cd hseam d) :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
+  (R.toDisk).toHasClass
+
+end DiskCore
+
 end
 
 end SKEFTHawking.PinPlusTraceDiskCorePair
