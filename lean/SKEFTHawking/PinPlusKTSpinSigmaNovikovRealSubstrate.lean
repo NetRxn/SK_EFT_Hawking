@@ -396,4 +396,34 @@ theorem novikovRealPairLESAtom_iff_novikovLagrangian {a : SpinSigmaAtoms prov} :
   ⟨fun h => novikovLagrangian_of_novikovHalfDim (novikovHalfDim_of_novikovRealPairLESAtom h),
    novikovRealPairLESAtom_of_novikovLagrangian⟩
 
+/-! ## §7. The σ-descent payload — `hbord` and the canonical Thom hom from the real pair-LES atom -/
+
+/-- **`hbord` (lattice-signature bordism invariance) from the real pair-LES atom.** With
+`novikovRealPairLESAtom_iff_novikovLagrangian` feeding `hbord_of_novikovLagrangian`: for data-bordant
+`p, q`, `σ(II M_p) = σ(II M_q)`. So supplying the real pair-LES substrate per pair (equivalently, the
+classical Lagrangian) discharges the σ-descent's single geometric atom. -/
+theorem hbord_of_novikovRealPairLESAtom (a : SpinSigmaAtoms prov)
+    (h : NovikovRealPairLESAtom prov a) :
+    ∀ p q, IsDataBordant (spinEmptyData prov) p q →
+      latticeSig (interMatrix (a.fc p) (a.B p)) = latticeSig (interMatrix (a.fc q) (a.B q)) :=
+  hbord_of_novikovLagrangian a (novikovRealPairLESAtom_iff_novikovLagrangian.mp h)
+
+/-- **The canonical bundle's Thom signature hom from the real pair-LES atom.** With `hbord` discharged from
+`NovikovRealPairLESAtom`, the bordism-invariant signature `Ω → ℤ` is built with the deep bordism-invariance
+supplied by the substrate atom. -/
+noncomputable def sigThomNovikovRealPairLESCanonical (c : CanonicalSpinSigmaAtoms prov)
+    (h : NovikovRealPairLESAtom prov c.toSpinSigmaAtoms) :
+    DataBordismGrp (spinEmptyData prov) →+ ℤ :=
+  c.sigThom (hbord_of_novikovRealPairLESAtom c.toSpinSigmaAtoms h)
+
+/-- **The disclosed `sig` field collapses onto the real pair-LES atom on the canonical bundle.** Both
+`c.sig` and `sigThomNovikovRealPairLESCanonical c h` are `AddMonoidHom`s on `DataBordismGrp` agreeing on
+every generator, hence equal. So on the canonical construction the whole σ-presentation reduces to the real
+pair-LES substrate atom — which, by §6, is exactly the classical Novikov Lagrangian: the σ-descent completes
+modulo the (architecturally still-open) geometric relative-cohomology tower, phrased in substrate terms. -/
+theorem sig_eq_sigThomNovikovRealPairLESCanonical (c : CanonicalSpinSigmaAtoms prov)
+    (h : NovikovRealPairLESAtom prov c.toSpinSigmaAtoms) :
+    c.toSpinSigmaAtoms.sig = sigThomNovikovRealPairLESCanonical c h :=
+  c.sig_eq_sigThom (hbord_of_novikovRealPairLESAtom c.toSpinSigmaAtoms h)
+
 end SKEFTHawking.PinPlusKTSpinSigmaNovikovRealSubstrate
