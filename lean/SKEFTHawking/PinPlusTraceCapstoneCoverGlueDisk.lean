@@ -97,6 +97,28 @@ theorem capstone_habsorbB :
       refine Set.mem_union_right _ (d.topFaceCovered ?_)
       exact Set.mem_image_of_mem _ ⟨Set.mem_prod.mpr ⟨Set.mem_univ _, htop⟩, hyφ⟩
 
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **The handle-side boundary-absorb fact (`habsorbHa`), discharged.** The disk handle's model
+boundary `∂D⁵ = S⁴ = {v | ‖v‖ = 1}` (`boundary_D5`), pushed by `fromHandle`, lands in
+`∂W ∪ range fromCyl`. Attached part `y ∈ S`: `fromHandle y = fromCyl (φ ⟨y,·⟩)` glues to the cylinder
+core (`glue`). Free boundary-sphere part `y ∈ S⁴ ∖ S`: the surgered end `range eM' ⊆ ∂W` (via the new
+`d.sphereFaceCovered` field). The handle-side mirror of `capstone_habsorbB`; discharges the residual's
+`habsorbHa` with `BdHa = S⁴ = {v | ‖v‖ = 1}`. -/
+theorem capstone_habsorbHa :
+    ∀ y ∈ {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1},
+      (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle y
+        ∈ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+          ∪ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl := by
+  intro y hy
+  by_cases hyS : y ∈ S
+  · -- attached part `y ∈ S`: `fromHandle y = fromCyl (φ ⟨y,·⟩)` glues to the cylinder core
+    refine Set.mem_union_right _ ⟨φ ⟨y, hyS⟩, ?_⟩
+    exact (ktHandleAttachment s.M D5 S hS φ hφ hφinj).glue ⟨y, hyS⟩
+  · -- free boundary-sphere part `y ∈ S⁴ ∖ S`: covered by the surgered end `range eM' ⊆ ∂W`
+    refine Set.mem_union_left _ ?_
+    rw [capstone_boundary_eq]
+    exact Set.mem_union_right _ (d.sphereFaceCovered (Set.mem_image_of_mem _ ⟨hy, hyS⟩))
+
 /-! ## §2. The disk's model boundary is the bounding sphere — the residual's `BdHa`, pinned.
 
 The handle-side residual `CapstoneCoverGlueResidual.BdHa` is the disk's boundary-support set. The
