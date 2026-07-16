@@ -20,17 +20,21 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_deci
 import Mathlib
 import SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
 import SKEFTHawking.SpinSigmaGenerator
+import SKEFTHawking.SphereWitnessFiringUncondInt
 
 namespace SKEFTHawking.PinPlusKTSpinSigmaStock
 
 open scoped Manifold
 open SKEFTHawking SKEFTHawking.SpinSigmaRoute
 open SKEFTHawking.SingularCohomologyInt
+open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.TangentialDataBordism
 open SKEFTHawking.PinPlusCharPairBorTethered
 open SKEFTHawking.PinPlusKTSpinForgetPhi
 open SKEFTHawking.PinPlusKTSpinSigmaAtom
 open SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
+open SKEFTHawking.SphereWitnessTowerInt (SphereFour sphere4IntH2Basis)
+open SKEFTHawking.SphereFourOrientationDataInt (sphere4IntOrientationDataUncond)
 
 /-! ## §1. The lattice half of Thom additivity — `latticeSig` is additive under a block-congruent sum -/
 
@@ -115,5 +119,41 @@ obligation of `SpinSigmaPresentation`, so the `sigThomOfAtoms` hom is a drop-in 
     sigThomOfAtoms a hbord hblock (DataBordismGrp.mk (spinEmptyData prov) p)
       = latticeSig (interMatrix (a.fc p) (a.B p)) :=
   rfl
+
+/-! ## §3. The S⁴ stock element's integral-topology residual (the natural spin sphere) -/
+
+/-- **The integral orientation of `S⁴`.** The unconditional S⁴ orientation datum
+(`sphere4IntOrientationDataUncond`, the choice-absorbing global section from `H₄(S⁴;ℤ) ≅ ℤ`) already
+carries exactly the two `IntOrientation` fields — the integral fundamental class `[S⁴] ∈ H₄(S⁴;ℤ)` and
+the mod-2 reduction compatibility — so it repackages directly to `IntOrientation S⁴`. This is the
+`orient` atom of the S⁴ spin-sphere package, discharged from theorem-backed geometry (no freeze). -/
+noncomputable def sphere4IntOrientation : IntOrientation SphereFour :=
+  ⟨sphere4IntOrientationDataUncond.fundClass, sphere4IntOrientationDataUncond.redCompat⟩
+
+/-- **`H²(S⁴;ℤ)` is trivial** — the second integral cohomology of `S⁴` is a subsingleton (`b₂(S⁴) = 0`),
+the fact behind the rank-0 basis `sphere4IntH2Basis`. Extracted here for the S⁴ Poincaré-duality
+construction. -/
+instance sphere4_cohomology2_subsingleton :
+    Subsingleton (Cohomology (TopCat.of SphereFour) 2) :=
+  ⟨fun _ _ => sphere4IntH2Basis.basis.ext_elem (fun i => i.elim0)⟩
+
+/-- **The integral Poincaré duality of `S⁴`.** Since `H²(S⁴;ℤ) = 0`, the perfect-pairing isomorphism
+`H²(S⁴;ℤ) ≃ₗ[ℤ] Dual ℤ (H²(S⁴;ℤ))` is the (unique) equivalence of trivial modules, and its pairing
+condition `PD a b = ⟨a ∪ b, [S⁴]⟩` holds because every `a` is `0`. This is the degenerate-but-honest
+`pd` atom of the S⁴ package — the UNIMODULAR input, realized at rank 0. -/
+noncomputable def sphere4IntPoincareDuality :
+    IntPoincareDuality (intFundamentalClassOfIntOrientation sphere4IntOrientation) where
+  toDualEquiv :=
+    { toFun := fun _ => 0
+      map_add' := fun _ _ => Subsingleton.elim _ _
+      map_smul' := fun _ _ => Subsingleton.elim _ _
+      invFun := fun _ => 0
+      left_inv := fun _ => Subsingleton.elim _ _
+      right_inv := fun _ => Subsingleton.elim _ _ }
+  toDualEquiv_apply := fun a b => by
+    have ha : a = 0 := Subsingleton.elim _ _
+    subst ha
+    show (0 : Module.Dual ℤ _) b = interFormInt _ 0 b
+    rw [map_zero, LinearMap.zero_apply]
 
 end SKEFTHawking.PinPlusKTSpinSigmaStock
