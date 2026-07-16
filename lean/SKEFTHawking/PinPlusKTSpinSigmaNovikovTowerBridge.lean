@@ -116,6 +116,17 @@ theorem boundaryForm_isEvenUnimodular (a : SpinSigmaAtoms prov)
   have heuQ := isEvenUnimodular_of_intPD (a.fc q) (a.B q) (a.wu q) (a.pd q)
   exact isEvenUnimodular_blockDiag _ _ heuP (isEvenUnimodular_neg _ heuQ)
 
+/-- **The boundary form is nondegenerate over `ℝ` — the substrate's `hbdnd`, grounded geometrically.**
+The `ℝ`-tensored boundary quadratic form `(Bd.map ℤ↪ℝ).toQuadraticMap'` has trivial radical, directly from
+even-unimodularity (`boundaryForm_isEvenUnimodular`). This is *exactly* the `NovikovRealPairLES.hbdnd` field
+the substrate requires — so a per-pair substrate built for the geometric boundary form gets its
+boundary-nondegeneracy for free from the ends' Wu/PD data, no separate hypothesis. -/
+theorem boundaryForm_radical_eq_bot (a : SpinSigmaAtoms prov)
+    (p q : StrMfd (spinEmptyData prov)) :
+    ((blockDiag (interMatrix (a.fc p) (a.B p)) (-interMatrix (a.fc q) (a.B q))).map
+        (Int.cast : ℤ → ℝ)).toQuadraticMap'.radical = ⊥ :=
+  (boundaryForm_isEvenUnimodular a p q).radical_eq_bot
+
 end
 
 end SKEFTHawking.PinPlusKTSpinSigmaNovikovTowerBridge
