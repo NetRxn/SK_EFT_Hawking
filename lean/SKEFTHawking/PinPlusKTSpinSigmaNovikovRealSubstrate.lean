@@ -229,4 +229,30 @@ theorem novikovHalfDim_of_realPairLES {a : SpinSigmaAtoms prov}
     NovikovHalfDimAtom prov a :=
   fun p q hb => ⟨(h p q hb).toBoundaryRestriction⟩
 
+/-! ## §4. The hcob sibling — signature invariance over an orientable cobordism -/
+
+/-- **The hcob-sibling shape: σ is a cobordism invariant, via the SAME engine.** For even-unimodular
+boundary forms `A`, `B` and a `NovikovRealPairLES` on the block form `blockDiag A (−B)` — the ℝ
+relative-cohomology data of an orientable cobordism `W` with `∂W = ∂₁ ⊔ (−∂₂)` — the lattice signatures
+agree: `σ(A) = σ(B)`. Proof: `lagrangian` produces the half-dim isotropic `L`, which makes the (even-
+unimodular, hence nondegenerate) block form metabolic (`latticeSig_eq_zero_of_lagrangian`), so `σ = 0`;
+block additivity + orientation reversal (`latticeSig_blockDiag` + `latticeSig_neg`) give `σ(A) − σ(B) = 0`.
+
+This is the shared floor #180's `hcob`/`DualSpinFromW.hdouble` bottoms out in — `σ(M) = σ(∂E(V))` over the
+cobordism `W∖E(V)` is this lemma with `A = II(M)`, `B = II(∂E(V))` — the exact twin of the σ-lane's
+`hbord_of_novikovLagrangian`. The two consumers (σ-lane floor + dA leaf) are genuinely ONE engine: the real
+pair-LES substrate on an orientable cobordism's boundary. (The factor-of-2 double-cover step of `hdouble`
+is a DISTINCT geometric input — the orientation double cover `∂E(V) → V` — not this restriction substrate.) -/
+theorem latticeSig_eq_of_realPairLES {r s : ℕ} (A : Matrix (Fin r) (Fin r) ℤ)
+    (B : Matrix (Fin s) (Fin s) ℤ) (hA : IsEvenUnimodular A) (hB : IsEvenUnimodular B)
+    (d : NovikovRealPairLES (blockDiag A (-B))) :
+    latticeSig A = latticeSig B := by
+  obtain ⟨L, hdim, hiso⟩ := d.lagrangian
+  have hnegB := isEvenUnimodular_neg _ hB
+  have hbd_eu := isEvenUnimodular_blockDiag A (-B) hA hnegB
+  have hzero := latticeSig_eq_zero_of_lagrangian hdim (blockDiag A (-B)) hbd_eu.radical_eq_bot L rfl hiso
+  have hadd := latticeSig_blockDiag A (-B) hA hnegB
+  rw [latticeSig_neg] at hadd
+  omega
+
 end SKEFTHawking.PinPlusKTSpinSigmaNovikovRealSubstrate
