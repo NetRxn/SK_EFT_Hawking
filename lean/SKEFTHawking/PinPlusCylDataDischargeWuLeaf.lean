@@ -54,6 +54,12 @@ open SKEFTHawking.PoincareLefschetzRelFundClassCylinderWu
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderNumerics
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderIntertwine
 open SKEFTHawking.SingularPD4Instances
+open SKEFTHawking.SingularClosedHomologyFinite
+open SKEFTHawking.PoincareLefschetzRelFundClassCylinderSuspension
+open SKEFTHawking.PoincareLefschetzRelFundClassCylinderCrossLocalAlphaU
+open SKEFTHawking.SingularRelativeCup
+open SKEFTHawking.PinPlusCharPairData
+open SKEFTHawking.PinPlusCylDataDischarge
 
 namespace SKEFTHawking.PinPlusCylDataDischargeWuLeaf
 
@@ -96,6 +102,75 @@ theorem cylinderWu_of_desuspend
   apply cylCollapse2.injective
   rw [map_zero, PoincareLefschetzWu5.wuW2_eq, map_add, hA, cylCollapse2_cupH, hB,
     ← PoincareDualityWuFormula.wuW2_eq, hcert]
+
+/-! ## §3. The two sharp named atoms (the Steenrod suspension-naturality leaves) and the σ.cert wiring. -/
+
+section Leaf
+
+variable [PreconnectedSpace M] [T1Space (cylW M)]
+
+/-- **The `(2,3)` desuspension atom** — `v₂(W)` desuspends (along the α-collapse) to `v₂(M)`. The sharp
+Steenrod-`Sq²` suspension content of the cylinder Wu leaf: the cylinder's `(2,3)` Lefschetz–Wu class,
+collapsed to `H²(M)`, is `M`'s own middle Wu class `wuClass2 (pd4Mid M)`. Honestly the pair-suspension
+naturality `Sq² ∘ β = β' ∘ relSq²` in the `⟨·,[W,∂W]⟩ = ⟨·,[M]⟩` Fubini form (the `#99` residual). -/
+def CylV2Desuspend : Prop :=
+  ∀ (nd23 : Function.Injective
+      ⇑((relCupH23 (X := TopCat.of (cylW M)) (S := (cylModel 2).boundary (cylW M))).compr₂
+        (cylinderDatum (hasRelFundClass_cylGen (m' := 2) (M := M))).mu)),
+    cylCollapse2 (wuClassW2 (cylinderP23 (hasRelFundClass_cylGen (m' := 2) (M := M))
+      (cylinder_findimAbs23 (finiteDimensional_cohomology_of_closed (M := M)).2.1)
+      (cylinder_findimRel23 (cylinder_findimRelHom23_of_base
+        (finiteDimensional_homology_of_closed (M := M)).2.2.1
+        (finiteDimensional_homology_of_closed (M := M)).2.1))
+      nd23
+      (cylinder_dimeq23_holds (finiteDimensional_homology_of_closed (M := M)).2.1)))
+      = wuClass2 (poincareDual4Mid_of_closed (M := M))
+
+/-- **The `(1,4)` desuspension atom** — `v₁(W)` desuspends (along the α-collapse) to `v₁(M)`. The sharp
+Steenrod-`Sq¹` suspension content: the cylinder's `(1,4)` Lefschetz–Wu class, collapsed to `H¹(M)`, is
+`M`'s own first Wu class `wuClass1 (pd4Lo M)`. -/
+def CylV1Desuspend : Prop :=
+  ∀ (nd14 : Function.Injective
+      ⇑((relCupH14 (X := TopCat.of (cylW M)) (S := (cylModel 2).boundary (cylW M))).compr₂
+        (cylinderDatum (hasRelFundClass_cylGen (m' := 2) (M := M))).mu)),
+    cylCollapse1 (wuClassW1 (cylinderP14 (hasRelFundClass_cylGen (m' := 2) (M := M))
+      (cylinder_findimAbs14 (finiteDimensional_cohomology_of_closed (M := M)).1)
+      (cylinder_findimRel14 (cylinder_findimRelHom14_of_base
+        (finiteDimensional_topHomology_of_closed_connected (M := M))
+        (finiteDimensional_homology_of_closed (M := M)).2.2.1))
+      nd14
+      (cylinder_dimeq14_of_basePD (finiteDimensional_homology_of_closed (M := M)).2.2.1
+        (finiteDimensional_homology_of_closed (M := M)).2.2.2)))
+      = wuClass1 (poincareDual4Lo_of_closed (M := M))
+
+/-- **The Wu leaf reduced to the two sharp desuspension atoms + `σ.cert`.** `CylinderWuResidual M`
+(honestly `wuW2(cylinderP14, cylinderP23) = 0`) follows from the two class-desuspension atoms
+`CylV2Desuspend`/`CylV1Desuspend` and the base `w₂ = 0` certificate. All the finiteness/duality
+scaffolding of the residual is dissolved; the sole remaining content is the Steenrod suspension
+naturality packaged in the two atoms. -/
+theorem cylinderWuResidual_of_desuspendLeaves
+    (hcert : PoincareDualityWuFormula.wuW2 (poincareDual4Mid_of_closed (M := M))
+      (poincareDual4Lo_of_closed (M := M)) = 0)
+    (hA : CylV2Desuspend (M := M)) (hB : CylV1Desuspend (M := M)) :
+    CylinderWuResidual M := by
+  intro nd14 nd23
+  exact cylinderWu_of_desuspend _ _ hcert (hA nd23) (hB nd14)
+
+/-- **The bundled σ.cert wiring.** For a bundled characteristic-pair carrier `σ : CharPairStrBundled I s`
+the base `w₂ = 0` certificate is `σ.cert` (`PinPlusCertK`), so the Wu leaf reduces to exactly the two
+desuspension atoms on `s.M`. This is the honest provider-row shape: the `hwu` hypothesis of
+`nonempty_provider_of_wuLeaf_and_disconnectedCoreND` is supplied, per `σ`, by
+`{CylV2Desuspend s.M, CylV1Desuspend s.M}` (the pure Steenrod-suspension leaves) via `σ.cert`. -/
+theorem cylinderWuResidual_of_bundled_desuspend
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {k : WithTop ℕ∞}
+    {I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))} [I.Boundaryless]
+    {s : SingularManifold.{0} PUnit.{1} k I} (σ : CharPairStrBundled I s)
+    [T2Space s.M] [Nonempty s.M] [PreconnectedSpace s.M] [T1Space (cylW s.M)]
+    (hA : CylV2Desuspend (M := s.M)) (hB : CylV1Desuspend (M := s.M)) :
+    CylinderWuResidual s.M :=
+  cylinderWuResidual_of_desuspendLeaves σ.cert hA hB
+
+end Leaf
 
 end
 
