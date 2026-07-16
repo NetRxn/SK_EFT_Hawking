@@ -328,3 +328,11 @@ conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
 - memory: [[project_5qH_nonhausdorff_substrate_bug]]
 - created_ts: 2026-07-16T00:00:00Z
 - reviewed_ts: 2026-07-16T00:00:00Z
+
+## capstone-choose-representative-corrector-uninhabitable (2026-07-16, arm: close-out — #178 architecture verdict)
+- kind: architecture verdict (prose — unprovable-not-refutable, hence NOT kernel-encodable)
+- banned: inhabiting the corrector against the OPAQUE .choose-based capstoneCylChain (the fixed-representative hasClass_ofCorrector entry): its top face is an uncontrolled artifact — no constructible disk chain can cancel it simplex-wise; corrector facts (1)+(2) jointly force the literal mod-2 seam-face cancellation, unreachable for opaque representatives.
+- fix (REALIZED): route (iii) — the CONTROLLED cylinder representative (the named crossChain z prism chain; PinPlusTraceCapstoneSeamTransfer.lean) + the transfer datum (the top-face/disk-boundary splits + the literal shared-face transfer) ⟹ hbd CONSTRUCTED (hbd_ofTransfer); hasClass = {z, the disk triple, the transfer datum, hdetAB} (hasClass_ofTransfer(Corrector)).
+- memory: [[project_5qH_nonhausdorff_substrate_bug]]
+- created_ts: 2026-07-16T00:00:00Z
+- reviewed_ts: 2026-07-16T00:00:00Z
