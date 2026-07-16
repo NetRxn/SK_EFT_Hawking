@@ -256,4 +256,91 @@ theorem jointLagrangian_emptySource [IsEmpty (Fin nσ)]
   rw [qσ.B_symm (fun i => v (Sum.inl i)) 0, qσ.B_zero_left, zero_add] at key
   exact key
 
+/-! ## §5. The capstone cascade — the welded membrane row with an empty-Σ source.
+
+The terminal KRS surgery step realised on the CONSTRUCTED capstone: the σ-end (the surgered spin
+source's characteristic surface) is EMPTY, so the whole σ-side of the welded membrane row dissolves.
+`TraceMembraneLeaves.ofCapstoneWeldedEmptySource` is the empty-source specialisation of
+`TraceMembraneLeaves.ofCapstoneWelded`: `real` is the empty-source realization, `htaylor`/`hlag` are
+the §4 single-surface dissolves, and `glueσ` is discharged VACUOUSLY (`sub real.U = ∅`). The honest
+open residual is purely SINGLE-SURFACE: the membrane space `QC` (the trace's own dim-3 3-manifold),
+the closed embedding `ιY : Σ ↪ QC`, its interior basis `eQ`, the two single-surface kernel conditions
+`hq`/`hlagK` on the classical bounding kernel `ker (boundingBInc …)`, and the presentation atoms
+`HAQ`/`weld`/`hQ`/`glueτ`/`chartQ` — the σ-side atoms (`glueσ`, the σ-half of `real`) are GONE.
+
+Homed here (not in `PinPlusTraceCapstoneMembraneWeld.lean`) because this module already imports it:
+`ofCapstoneWeldedEmptySource` consumes `ofCapstoneWelded` UNCHANGED (the untethered-membrane fence —
+the weld still supplies the presentation).
+
+**τ-side adjudication (the KRS consumption site).** In `kernelReducesToSpin_of_capstoneWeldedSupply`
+the target end is `p` with the binder guard `0 < p.2.n`; per §2, `0 < p.2.n` plus the carried basis
+`H¹(Σ) ≃ (Fin p.2.n → ℤ/2)` forces `Σ = p.2.surf ≠ ∅` (the empty surface has trivial `H¹`). So the
+τ-end is ALWAYS genuinely non-empty in the KRS lane: the doubly-empty degenerate world never occurs
+there, and this SINGLE-surface residual is the correct membrane shape for the terminal step. -/
+
+open SKEFTHawking.SurgeryFoundation
+open SKEFTHawking.SurgeryFoundation.HandleAttachment
+open SKEFTHawking.DiskChartGeneric (D5)
+open SKEFTHawking.PinPlusTraceMembranePresented
+open SKEFTHawking.PinPlusCharPairBorTethered
+open SKEFTHawking.PinPlusTraceCapstoneInhabit
+open SKEFTHawking.PinPlusTraceCapstoneMembraneWeld
+
+/-- **The empty-source membrane realization on a capstone's ends** (σ empty). Encapsulates the
+`τ.surfT2` `letI` so the wrapper's `glueτ` residual type and its body share ONE realization term. -/
+noncomputable def capstoneEmptySourceReal
+    {s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)}
+    (σ : CharPairStrBundled (𝓡 4) s) (τ : CharPairStrBundled (𝓡 4) t)
+    [IsEmpty σ.surf.M]
+    (QC : TopCat) [T2Space (QC : Type)] [CompactSpace (QC : Type)]
+    (ιY : C((τ.surf.M : Type), (QC : Type))) (hιY : IsClosedEmbedding ιY)
+    (mid : ℕ) (eQ : Homology QC 1 ≃ₗ[ZMod 2] (Fin mid → ZMod 2)) :
+    GeoRealizationTied (TopCat.of σ.surf.M) (TopCat.of τ.surf.M) σ.basis τ.basis :=
+  letI := τ.surfT2
+  emptySourceRealizationTied (TopCat.of σ.surf.M) (TopCat.of τ.surf.M) σ.basis τ.basis QC ιY hιY mid eQ
+
+/-- **THE EMPTY-SOURCE WELDED MEMBRANE ROW on the constructed capstone** (`#165` §5, the terminal KRS
+step). The empty-source specialisation of `TraceMembraneLeaves.ofCapstoneWelded`: with the σ-end
+characteristic surface EMPTY (`[IsEmpty σ.surf.M]`, `[IsEmpty (Fin σ.n)]`), the membrane realization
+is `capstoneEmptySourceReal` (its σ-block dead), `htaylor`/`hlag` are the §4 single-surface dissolves
+from the bounding-kernel conditions `hq`/`hlagK`, and `glueσ` is VACUOUS (`sub real.U` is empty). The
+honest residual is single-surface: `QC`/`ιY`/`hιY`/`mid`/`eQ` + `hq`/`hlagK` + `HAQ`/`weld`/`hQ`/
+`glueτ`/`chartQ`. Consumes `ofCapstoneWelded` unchanged (untethered-membrane fence). -/
+noncomputable def TraceMembraneLeaves.ofCapstoneWeldedEmptySource
+    (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+    (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+    (hφ : Continuous φ) (hφinj : Function.Injective φ)
+    (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+    (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+    (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+    (σ : CharPairStrBundled (𝓡 4) s) (τ : CharPairStrBundled (𝓡 4) t)
+    [IsEmpty σ.surf.M] [IsEmpty (Fin σ.n)]
+    (QC : TopCat) [T2Space (QC : Type)] [CompactSpace (QC : Type)]
+    (ιY : C((τ.surf.M : Type), (QC : Type))) (hιY : IsClosedEmbedding ιY)
+    (mid : ℕ) (eQ : Homology QC 1 ≃ₗ[ZMod 2] (Fin mid → ZMod 2))
+    (hq : ∀ v ∈ LinearMap.ker (boundingBInc (TopCat.of τ.surf.M) τ.basis QC ιY mid eQ), τ.q.q v = 0)
+    (hlagK : ∀ v,
+      (∀ l ∈ LinearMap.ker (boundingBInc (TopCat.of τ.surf.M) τ.basis QC ιY mid eQ), τ.q.B v l = 0)
+        → v ∈ LinearMap.ker (boundingBInc (TopCat.of τ.surf.M) τ.basis QC ιY mid eQ))
+    (HAQ : HandleAttachment.{0, 0})
+    (weld : HandleAttachment.Weld HAQ (ktHandleAttachment s.M D5 S hS φ hφ hφinj))
+    (hQ : ((capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Q : Type) ≃ₜ HAQ.carrier)
+    (glueτ : ∀ x : ↑(sub (capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Uᶜ),
+        weld.carrierMap (hQ ((capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).ι
+            (subInclCM (capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Uᶜ x)))
+          = (capstoneB s t S hS φ hφ hφinj cd hseam d).e
+              (Sum.inr (τ.emb ((capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).homτ x))))
+    (chartQ : ChartedSpace MembraneModel ↑(capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Q) :
+    TraceMembraneLeaves (capstoneB s t S hS φ hφ hφinj cd hseam d) σ τ :=
+  letI := τ.surfT2
+  TraceMembraneLeaves.ofCapstoneWelded s t S hS φ hφ hφinj cd hseam d σ τ
+    (capstoneEmptySourceReal σ τ QC ιY hιY mid eQ)
+    (taylorLegVanishes_emptySource (TopCat.of σ.surf.M) (TopCat.of τ.surf.M) σ.basis τ.basis QC ιY hιY
+      mid eQ σ.q τ.q hq)
+    (jointLagrangian_emptySource (TopCat.of σ.surf.M) (TopCat.of τ.surf.M) σ.basis τ.basis QC ιY hιY
+      mid eQ σ.q τ.q hlagK)
+    HAQ weld hQ
+    (fun x => (isEmpty_sub_range_inl.false x).elim)
+    glueτ chartQ
+
 end SKEFTHawking.PinPlusCharPairEmptySourceRealization
