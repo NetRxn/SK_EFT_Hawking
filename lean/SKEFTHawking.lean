@@ -4501,6 +4501,7 @@ import SKEFTHawking.PinPlusKTLeafGate
 import SKEFTHawking.PinPlusKTSpinForgetPhi
 import SKEFTHawking.PinPlusTraceLeafGate
 import SKEFTHawking.PinPlusKTSpinPresentationRow
+import SKEFTHawking.PinPlusKTKerPhiDoubles
 import SKEFTHawking.PinPlusKTFreezeAssembly
 import SKEFTHawking.SingularSurgeryFoundation
 import SKEFTHawking.SingularSurgeryCharts
