@@ -97,6 +97,61 @@ theorem capstone_habsorbB :
       refine Set.mem_union_right _ (d.topFaceCovered ?_)
       exact Set.mem_image_of_mem _ ⟨Set.mem_prod.mpr ⟨Set.mem_univ _, htop⟩, hyφ⟩
 
+/-! ## §2. The disk's model boundary is the bounding sphere — the residual's `BdHa`, pinned.
+
+The handle-side residual `CapstoneCoverGlueResidual.BdHa` is the disk's boundary-support set. The
+canonical choice is the disk's own `ModelWithCorners` boundary `((𝓡 4).prod (𝓡∂ 1)).boundary D5`,
+which this section computes to be exactly the bounding unit sphere `‖v‖ = 1` (`S⁴`). This is the
+`n = 4` analogue of `SphereDiskFreezeB.boundary_threeDisk` and pins the residual's `BdHa`: interior
+points (`‖v‖ < 1`, where the interior local-generator lives) are exactly the non-boundary points, so
+the disk detecting chain of residual 1 has `BdHa = S⁴` as its boundary-support. -/
+
+open SKEFTHawking.DiskChartGeneric
+
+/-- Frontier of the disk collar model range at `n = 4`: `univ ×ˢ {half-space wall}`. The `n = 4`
+analogue of `SphereDiskFreezeB.frontier_range_diskModel`. -/
+theorem frontier_range_D5Model :
+    frontier (Set.range ((𝓡 4).prod (𝓡∂ 1)))
+      = (Set.univ : Set (EuclideanSpace ℝ (Fin 4))) ×ˢ
+        {y : EuclideanSpace ℝ (Fin 1) | (0 : ℝ) = y 0} := by
+  rw [ModelWithCorners.range_prod, frontier_prod_eq,
+    ModelWithCorners.range_eq_univ (I := 𝓡 4), frontier_univ, closure_univ,
+    frontier_range_modelWithCornersEuclideanHalfSpace, Set.empty_prod, Set.union_empty]
+
+/-- **The boundary of `D⁵`** (collar model): the bounding unit sphere `‖v‖ = 1` (`= S⁴`). The `n = 4`
+analogue of `SphereDiskFreezeB.boundary_threeDisk`; pins the residual's handle-side boundary-support
+set `BdHa`. -/
+theorem boundary_D5 :
+    ((𝓡 4).prod (𝓡∂ 1)).boundary D5
+      = {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} := by
+  ext v
+  simp only [ModelWithCorners.boundary, ModelWithCorners.IsBoundaryPoint, Set.mem_setOf_eq,
+    frontier_range_D5Model, Set.mem_prod, Set.mem_univ, true_and]
+  rw [extChartAt_coe]
+  simp only [Function.comp_apply, ModelWithCorners.prod_apply]
+  by_cases h : ‖(v : EuclideanSpace ℝ (Fin 5))‖ < 1
+  · rw [show chartAt (ModelProd (EuclideanSpace ℝ (Fin 4)) (EuclideanHalfSpace 1)) v
+        = diskInteriorChart 4 from if_pos h]
+    show (0 : ℝ) = (WithLp.toLp 2
+        (fun _ : Fin 1 => (v : EuclideanSpace ℝ (Fin 5)).ofLp (Fin.last 4) + 2)).ofLp 0
+        ↔ ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1
+    rw [WithLp.ofLp_toLp]
+    apply iff_of_false
+    · intro heq
+      have h2 : ‖(v : EuclideanSpace ℝ (Fin 5)).ofLp (Fin.last 4)‖
+          ≤ ‖(v : EuclideanSpace ℝ (Fin 5))‖ := PiLp.norm_apply_le _ _
+      rw [Real.norm_eq_abs] at h2
+      have h3 := (abs_le.mp (h2.trans (le_of_lt h))).1
+      linarith
+    · exact ne_of_lt h
+  · rw [show chartAt (ModelProd (EuclideanSpace ℝ (Fin 4)) (EuclideanHalfSpace 1)) v
+        = diskCollarChart 4 (diskDir 4 v) from if_neg h]
+    show (0 : ℝ) = (WithLp.toLp 2
+        (fun _ : Fin 1 => 1 - ‖(v : EuclideanSpace ℝ (Fin 5))‖)).ofLp 0
+        ↔ ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1
+    rw [WithLp.ofLp_toLp]
+    constructor <;> intro heq <;> linarith
+
 end
 
 end SKEFTHawking.PinPlusTraceCapstoneCoverGlueDisk
