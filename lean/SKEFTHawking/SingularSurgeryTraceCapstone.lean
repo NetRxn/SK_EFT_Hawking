@@ -123,6 +123,18 @@ structure SurgeredEndDatum
       (ktSurgeryChartDatum s.M D5 S hS φ hφ hφinj cd.seamNbhd hseam).carrierChartedSpace
     ((𝓡 4).prod (𝓡∂ 1)).boundary (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier =
       Set.range (ktSourceEnd s.M D5 S hS φ hφ hφinj) ∪ Set.range eM'
+  /-- **the un-attached top face is covered by the surgered end** — the constructed capstone's genuine
+  coverage fact: the top face `M × {1}` (`= M × {⊤}`) minus the attaching region `range φ`, pushed into
+  the carrier by `fromCyl`, lands in the surgered end `range eM'`. This is data the CONSTRUCTED capstone
+  genuinely has (the surgered end `M′` IS the carved un-attached top face), mirroring how `bdry` carries
+  the chart-dependent `∂`-identification as constructed data. NOT a Prop-level completeness claim — a
+  concrete image-containment relating the two constructed ends. It closes the top half of the
+  cover-glue's cylinder-side boundary-absorb (`habsorbB`): the attached part `range φ` is absorbed by the
+  handle core (`glue`); this field absorbs the un-attached remainder into the `M′` end. -/
+  topFaceCovered :
+    (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl ''
+        ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ)
+      ⊆ Set.range eM'
 
 /-- **The trace capstone with the surgered end supplied by a `SurgeredEndDatum`.** The Wave-8 capstone
 `ambientTraceBordism_capstone` with its five surgered-end hypotheses (`eM'`, `cont`, `inj`, `disj`,
