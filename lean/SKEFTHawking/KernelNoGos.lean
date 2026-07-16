@@ -262,6 +262,18 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    carrier (E3) or an enriched (σ,F•F)-carrying GM carrier.
    backing: `pinPlusGMData_not_equiv_zmod16`, `pinPlusGMData_eight_torsion`
 
+17. `enriques-datum-refuted-as-shaped` [structural_forcing]
+   EnriquesDatum as shipped carries independent Enriques-geometry content (w₂ ≠ 0, π₁ = ℤ/2, the line
+   bundle) usable as the W-D B-leaf. FALSE-AS-SHAPED (gate round 10, G10-6): its [Ha] fields collapse —
+   Nonempty (EnriquesDatum prov) ↔ EmptySigmaRepresentable prov (ktKernelRep prov)
+   (enriquesDatum_iff_kummerRep), i.e. it is bare KummerWitness.1 in decorative dressing; the "Enriques"
+   content has no formal footprint. Do NOT construct or consume EnriquesDatum as an independent B-leaf. The
+   frozen replacement B-target is GeometricSpinRepresentable, absorbed by the C-leaf:
+   KTSpinPresentationDatum ⟹ EnriquesDatum (enriquesDatum_of_ktSpinPresentationDatum, via
+   emptySigmaRepresentable_of_geometric) — discharge the C-leaf and B follows; a standalone "Enriques wave"
+   duplicates work into a vacuous shape.
+   backing: `enriquesDatum_iff_kummerRep`, `enriquesDatum_of_ktSpinPresentationDatum`, `emptySigmaRepresentable_of_geometric`
+
 -/
 import SKEFTHawking.FGDualityNoGo
 import SKEFTHawking.NonHausdorffBordismCollapse
@@ -271,6 +283,8 @@ import SKEFTHawking.PinPlusCompTorsorNoGo
 import SKEFTHawking.PinPlusGMDataZ16
 import SKEFTHawking.PinPlusGMWitness
 import SKEFTHawking.PinPlusGenuineCarrierIso
+import SKEFTHawking.PinPlusKTLeafGate
+import SKEFTHawking.PinPlusKTStepGate
 import SKEFTHawking.PinPlusKTVacuityGateWD
 import SKEFTHawking.PinPlusTaylorConventionNoGo
 import SKEFTHawking.RokhlinArfNoGo
@@ -380,5 +394,14 @@ alias nogo_pinPlusGMData_not_equiv_zmod16 := SKEFTHawking.PinPlusGMDataZ16.pinPl
 
 /-- NO-GO [`genuine-gm-carrier-eight-torsion`] — do NOT re-derive. FALSE: The genuine ℤ/16 lives directly on the thin GM carrier: DataBordismGrp(pinPlusGMData) ≃+ ZMod 16. Backing refutation: `SKEFTHawking.PinPlusGMDataZ16.pinPlusGMData_eight_torsion`. -/
 alias nogo_pinPlusGMData_eight_torsion := SKEFTHawking.PinPlusGMDataZ16.pinPlusGMData_eight_torsion
+
+/-- NO-GO [`enriques-datum-refuted-as-shaped`] — do NOT re-derive. FALSE: EnriquesDatum as shipped carries independent Enriques-geometry content (w₂ ≠ 0, π₁ = ℤ/2, the line bundle) usable as the W-D B-leaf. Backing refutation: `SKEFTHawking.PinPlusKTLeafGate.enriquesDatum_iff_kummerRep`. -/
+alias nogo_enriquesDatum_iff_kummerRep := SKEFTHawking.PinPlusKTLeafGate.enriquesDatum_iff_kummerRep
+
+/-- NO-GO [`enriques-datum-refuted-as-shaped`] — do NOT re-derive. FALSE: EnriquesDatum as shipped carries independent Enriques-geometry content (w₂ ≠ 0, π₁ = ℤ/2, the line bundle) usable as the W-D B-leaf. Backing refutation: `SKEFTHawking.PinPlusKTLeafGate.enriquesDatum_of_ktSpinPresentationDatum`. -/
+alias nogo_enriquesDatum_of_ktSpinPresentationDatum := SKEFTHawking.PinPlusKTLeafGate.enriquesDatum_of_ktSpinPresentationDatum
+
+/-- NO-GO [`enriques-datum-refuted-as-shaped`] — do NOT re-derive. FALSE: EnriquesDatum as shipped carries independent Enriques-geometry content (w₂ ≠ 0, π₁ = ℤ/2, the line bundle) usable as the W-D B-leaf. Backing refutation: `SKEFTHawking.PinPlusKTStepGate.emptySigmaRepresentable_of_geometric`. -/
+alias nogo_emptySigmaRepresentable_of_geometric := SKEFTHawking.PinPlusKTStepGate.emptySigmaRepresentable_of_geometric
 
 end SKEFTHawking.KernelNoGos

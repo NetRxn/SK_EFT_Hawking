@@ -3677,6 +3677,17 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': 'The genuine ℤ/16 lives directly on the thin GM carrier: DataBordismGrp(pinPlusGMData) ≃+ ZMod 16. FALSE: pinPlusGMData\'s bordism relation records ONLY the mod-8 Brown grade (q.brown ∈ ZMod 8), so cylinder-doubling makes every class 8-torsion (pinPlusGMData_eight_torsion: 8•x=0) ⟹ IsEmpty(DataBordismGrp(pinPlusGMData) ≃+ ZMod 16). The ℤ/16 odd bit is the Smith-LES EXTENSION onto a distinct carrier (the tied/extension carrier, whose mod-8 shadow is abkGM8 via forgetTie), NEVER a surface grade on pinPlusGMData itself. Do NOT target `omega4PinPlusGM_equiv_zmod16 : DataBordismGrp(pinPlusGMData) ≃+ ZMod 16` as literally stated — reframe to the Smith-LES extension carrier (E3) or an enriched (σ,F•F)-carrying GM carrier.',
         'memory': '[[project_5qH_geometric_floor_terminal]]',
     },
+    'enriques-datum-refuted-as-shaped': {
+        'fork_id': 'enriques-datum-refuted-as-shaped',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusKTLeafGate.enriquesDatum_iff_kummerRep',
+            'SKEFTHawking.PinPlusKTLeafGate.enriquesDatum_of_ktSpinPresentationDatum',
+            'SKEFTHawking.PinPlusKTStepGate.emptySigmaRepresentable_of_geometric',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'EnriquesDatum as shipped carries independent Enriques-geometry content (w₂ ≠ 0, π₁ = ℤ/2, the line bundle) usable as the W-D B-leaf. FALSE-AS-SHAPED (gate round 10, G10-6): its [Ha] fields collapse — Nonempty (EnriquesDatum prov) ↔ EmptySigmaRepresentable prov (ktKernelRep prov) (enriquesDatum_iff_kummerRep), i.e. it is bare KummerWitness.1 in decorative dressing; the "Enriques" content has no formal footprint. Do NOT construct or consume EnriquesDatum as an independent B-leaf. The frozen replacement B-target is GeometricSpinRepresentable, absorbed by the C-leaf: KTSpinPresentationDatum ⟹ EnriquesDatum (enriquesDatum_of_ktSpinPresentationDatum, via emptySigmaRepresentable_of_geometric) — discharge the C-leaf and B follows; a standalone "Enriques wave" duplicates work into a vacuous shape.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════
