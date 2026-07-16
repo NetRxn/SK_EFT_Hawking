@@ -110,9 +110,11 @@ degenerate model on the σ-descent lane (§2, with the Witt ceiling FLAGGED) and
    statement shape is conclusion-strength (G12-1) and can never enforce this.
 2. **σ lane (the Novikov atoms)**: a discharge claim for ANY of the four formulations must exhibit
    the ℝ-images of a genuine bounding `W`'s restriction/pair-LES tower; a route producing per-pair
-   Lagrangians from σ-agreement by linear algebra (the diagonal grade is kernel-encoded here; the
-   general Witt grade is classical) is ZERO progress. Follow-up brick: kernel-encode the Witt step
-   (σ = 0 + nondegenerate ⟹ Lagrangian, over ℝ) to upgrade the flag to a locating iff.
+   Lagrangians from σ-agreement by linear algebra is ZERO progress — kernel-located at BOTH grades
+   (diagonal: `nonempty_novikovBoundaryRestriction_diag`; general Witt:
+   `nonempty_novikovBoundaryRestriction_iff_sig_eq` / `novikovLagrangian_iff_hbord`, §5). Since the
+   atom ⟺ `hbord`, "discharging the Novikov atom" and "proving Thom bordism-invariance of σ" are
+   THE SAME open problem; the audit is data inspection, permanently.
 3. **KRS lane**: the consumption unit stays the ∀-`p` `KRSResidualRow` supply; per-`p` instances
    are non-vacuity demonstrators; rank-<2 instances are void by type.
 4. **dC lane**: the collapse atom's target needs NO extra sector certificate (forced, §3); a
@@ -126,8 +128,9 @@ degenerate model on the σ-descent lane (§2, with the Witt ceiling FLAGGED) and
   `spinOfSigMul16_sig`.
 * `novikov-substrate-synthetic-inhabitation` — false_statement: "inhabiting
   `NovikovBoundaryRestriction`/`NovikovRealPairLES` at a boundary block pair certifies
-  bordism-geometric content" — backings (diagonal grade): `nonempty_novikovBoundaryRestriction_diag`,
-  `nonempty_novikovRealPairLES_diag`; Witt grade flagged, follow-up brick named in spec 2.
+  bordism-geometric content" — backings: `nonempty_novikovBoundaryRestriction_diag`,
+  `nonempty_novikovRealPairLES_diag` (diagonal grade), and the full Witt-grade locating iffs
+  `nonempty_novikovBoundaryRestriction_iff_sig_eq` + `novikovLagrangian_iff_hbord` (§5).
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new project axiom, no
 `native_decide`, no `maxHeartbeats`.
@@ -140,6 +143,7 @@ import SKEFTHawking.PinPlusKTSectorGate
 import SKEFTHawking.PinPlusTraceCapstoneResidualRow
 
 open scoped Manifold
+open SKEFTHawking.SingularCohomologyInt
 open SKEFTHawking.PinPlusCharPairData
 open SKEFTHawking.PinPlusCharPairBorTethered
 open SKEFTHawking.T2TangentialBordism SKEFTHawking.TangentialDataBordism
@@ -317,7 +321,7 @@ theorem nonempty_ktSharpnessSupplyConstr_iff_hfwd (row : SpinPresentationRow pro
 
 /-! ## §2. G12-2 — the Novikov σ-descent lane: pointwise soundness KERNEL-ENCODED; the diagonal
 degenerate model KERNEL-ENCODED (zero-geometry inhabitation at matrix-equal pairs); the full
-σ-agreement fake FLAGGED (Witt step — see the record).
+σ-agreement fake KERNEL-ENCODED in §5 (the Witt step).
 
 The dispatch asked (i) whether the equivalence quartet hides a disguised tautology, and (ii) to
 attack the substrate's "inhabitable only when σ agrees" soundness claim. Answers: (ii) the
@@ -327,8 +331,7 @@ round-trip is a tautology, BUT the lane has a σ-strength CEILING: at any pair w
 intersection matrices are EQUAL the substrate is inhabitable with zero bordism geometry
 (`nonempty_novikovBoundaryRestriction_diag` — the diagonal Lagrangian), and classically (Witt) the
 same holds whenever the σs merely AGREE, so the whole four-formulation atom family sits at exactly
-`hbord` strength. The Witt step is not yet kernel-encoded (flagged in the record as the follow-up
-brick); the diagonal grade suffices to bind the consumption spec below. -/
+`hbord` strength — and §5 kernel-encodes exactly that (the Witt step + the locating iffs). -/
 
 /-- **Pointwise σ-soundness of the opener substrate** — a `NovikovBoundaryRestriction` on the
 boundary block form FORCES the signatures to agree. The substrate cannot be inhabited for
@@ -484,5 +487,232 @@ theorem isEmpty_krsResidualRow_of_rank_lt_two
     {p : StrMfd (pinPlusCharPairData prov).toTangentialData} (h : p.2.n < 2) :
     IsEmpty (KRSResidualRow prov p) :=
   ⟨fun R => absurd R.hrank (by omega)⟩
+
+/-! ## §5. G12-2b — THE σ-DESCENT TIE, kernel-encoded: the Witt step.
+
+The item-1 flag, DISCHARGED: over ℝ, EQUAL INERTIA ALONE produces an isotropic subspace of
+half-dimension (`exists_isotropic_of_sigPos_eq_sigNeg` — diagonalize by
+`equivalent_weightedSumSquares`, pair the positive and negative weights, and span the mixed
+square-root vectors). Consequences: the Opener substrate is inhabited at a boundary block pair
+EXACTLY when the signatures agree (`nonempty_novikovBoundaryRestriction_iff_sig_eq`), and the
+σ-descent's last geometric atom — in ALL FOUR formulations — is EQUIVALENT to its own conclusion
+`hbord` (`novikovLagrangian_iff_hbord`). This is the σ-lane's exact mirror of the round-11 `hfwd`
+tie: the statement shape of the Novikov atoms can never certify bordism-geometric progress; the
+audit (spec 2) is permanent. -/
+
+open QuadraticMap in
+/-- **The real Witt step** — a real quadratic form with equal inertia indices carries an isotropic
+subspace of dimension `sigPos Q`. No nondegeneracy needed: zero-weight coordinates simply never
+enter the pairing. -/
+theorem exists_isotropic_of_sigPos_eq_sigNeg {V : Type*} [AddCommGroup V] [Module ℝ V]
+    [FiniteDimensional ℝ V] (Q : QuadraticForm ℝ V) (hsig : sigPos Q = sigNeg Q) :
+    ∃ L : Submodule ℝ V, Module.finrank ℝ L = sigPos Q ∧ ∀ x ∈ L, Q x = 0 := by
+  haveI : Invertible (2 : ℝ) := invertibleOfNonzero (by norm_num)
+  obtain ⟨w, hw⟩ := QuadraticForm.equivalent_weightedSumSquares Q
+  obtain ⟨e⟩ := id hw
+  set P : Finset (Fin (Module.finrank ℝ V)) := Finset.univ.filter (fun i => 0 < w i) with hP
+  set N : Finset (Fin (Module.finrank ℝ V)) := Finset.univ.filter (fun i => w i < 0) with hN
+  have hmemP : ∀ i, i ∈ P ↔ 0 < w i := by intro i; simp [hP]
+  have hmemN : ∀ i, i ∈ N ↔ w i < 0 := by intro i; simp [hN]
+  -- the inertia counts read off the weights
+  have hpos : sigPos Q = P.card := by
+    rw [hw.sigPos_eq, QuadraticForm.sigPos_weightedSumSquares,
+      show {i | 0 < w i} = (P : Set (Fin (Module.finrank ℝ V))) by ext i; simp [hmemP],
+      Set.ncard_coe_finset]
+  have hneg : sigNeg Q = N.card := by
+    have hnegQ : -(weightedSumSquares ℝ w) = weightedSumSquares ℝ (-w) := by
+      ext v; simp [weightedSumSquares_apply]
+    rw [hw.sigNeg_eq, sigNeg, hnegQ, QuadraticForm.sigPos_weightedSumSquares,
+      show {i | 0 < (-w) i} = (N : Set (Fin (Module.finrank ℝ V))) by
+        ext i; simp [hmemN],
+      Set.ncard_coe_finset]
+  have hcard : P.card = N.card := by omega
+  -- the weight pairing
+  have hψ : Nonempty ((↥P : Type) ≃ (↥N : Type)) := by
+    refine ⟨Fintype.equivOfCardEq ?_⟩
+    simpa [Fintype.card_coe] using hcard
+  obtain ⟨ψ⟩ := hψ
+  have hwP : ∀ p : ↥P, 0 < w ↑p := fun p => (hmemP _).mp p.2
+  have hwN : ∀ q : ↥N, w ↑q < 0 := fun q => (hmemN _).mp q.2
+  have hPN : ∀ (p : ↥P) (q : ↥N), (↑p : Fin (Module.finrank ℝ V)) ≠ ↑q := by
+    intro p q h
+    exact absurd (h ▸ hwP p) (asymm (hwN q))
+  -- the mixed square-root vectors
+  set u : ↥P → (Fin (Module.finrank ℝ V) → ℝ) := fun p =>
+    Real.sqrt (-(w ↑(ψ p))) • (Pi.single (↑p) (1 : ℝ) : Fin (Module.finrank ℝ V) → ℝ)
+      + Real.sqrt (w ↑p) • (Pi.single (↑(ψ p)) (1 : ℝ) : Fin (Module.finrank ℝ V) → ℝ) with hu
+  set T : ((↥P : Type) → ℝ) →ₗ[ℝ] (Fin (Module.finrank ℝ V) → ℝ) :=
+    ∑ p : ↥P, (LinearMap.proj p).smulRight (u p) with hT
+  have hTapp : ∀ (t : (↥P : Type) → ℝ) (i : Fin (Module.finrank ℝ V)), T t i = ∑ p : ↥P, t p * u p i := by
+    intro t i
+    rw [hT]
+    simp [LinearMap.sum_apply, Finset.sum_apply]
+  -- coordinate evaluations
+  have huP : ∀ (p p₀ : ↥P), u p ↑p₀ = if p = p₀ then Real.sqrt (-(w ↑(ψ p))) else 0 := by
+    intro p p₀
+    rw [hu]
+    simp only [Pi.add_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul]
+    rw [if_neg (hPN p₀ (ψ p))]
+    by_cases h : p = p₀
+    · subst h; simp
+    · rw [if_neg (fun hc => h ((Subtype.ext hc.symm) : p = p₀))]
+      simp [h]
+  have huN : ∀ (p : ↥P) (q₀ : ↥N), u p ↑q₀ = if p = ψ.symm q₀ then Real.sqrt (w ↑p) else 0 := by
+    intro p q₀
+    rw [hu]
+    simp only [Pi.add_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul]
+    rw [if_neg (Ne.symm (hPN p q₀))]
+    by_cases h : p = ψ.symm q₀
+    · subst h
+      simp
+    · have hne : (↑q₀ : Fin (Module.finrank ℝ V)) ≠ ↑(ψ p) := by
+        intro hc
+        exact h (by rw [Subtype.ext hc, Equiv.symm_apply_apply])
+      rw [if_neg hne]
+      simp [h]
+  have huZ : ∀ (p : ↥P) (i : Fin (Module.finrank ℝ V)), i ∉ P → i ∉ N → u p i = 0 := by
+    intro p i hiP hiN
+    rw [hu]
+    simp only [Pi.add_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul]
+    rw [if_neg (fun hc => hiP (by rw [hc]; exact p.2)),
+      if_neg (fun hc => hiN (by rw [hc]; exact (ψ p).2))]
+    simp
+  have hTP : ∀ (t : (↥P : Type) → ℝ) (p₀ : ↥P),
+      T t ↑p₀ = t p₀ * Real.sqrt (-(w ↑(ψ p₀))) := by
+    intro t p₀
+    rw [hTapp]
+    rw [Finset.sum_eq_single p₀ (fun p _ hp => by rw [huP p p₀, if_neg hp, mul_zero])
+      (fun h => absurd (Finset.mem_univ p₀) h)]
+    rw [huP p₀ p₀, if_pos rfl]
+  have hTN : ∀ (t : (↥P : Type) → ℝ) (q₀ : ↥N),
+      T t ↑q₀ = t (ψ.symm q₀) * Real.sqrt (w ↑(ψ.symm q₀)) := by
+    intro t q₀
+    rw [hTapp]
+    rw [Finset.sum_eq_single (ψ.symm q₀) (fun p _ hp => by rw [huN p q₀, if_neg hp, mul_zero])
+      (fun h => absurd (Finset.mem_univ _) h)]
+    rw [huN _ q₀, if_pos rfl]
+  have hTZ : ∀ (t : (↥P : Type) → ℝ) (i : Fin (Module.finrank ℝ V)), i ∉ P → i ∉ N → T t i = 0 := by
+    intro t i hiP hiN
+    rw [hTapp]
+    exact Finset.sum_eq_zero fun p _ => by rw [huZ p i hiP hiN, mul_zero]
+  -- injectivity
+  have hinj : Function.Injective T := by
+    rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
+    intro t ht
+    funext p₀
+    have h0 := congrFun ht (↑p₀ : Fin (Module.finrank ℝ V))
+    rw [hTP t p₀] at h0
+    have hs : (0 : ℝ) < Real.sqrt (-(w ↑(ψ p₀))) :=
+      Real.sqrt_pos.mpr (neg_pos.mpr (hwN (ψ p₀)))
+    have := mul_eq_zero.mp h0
+    simp only [Pi.zero_apply]
+    rcases this with h | h
+    · exact h
+    · exact absurd h (ne_of_gt hs)
+  -- isotropy in the weighted model
+  have hiso : ∀ y ∈ LinearMap.range T, weightedSumSquares ℝ w y = 0 := by
+    rintro _ ⟨t, rfl⟩
+    rw [weightedSumSquares_apply]
+    have hdisj : Disjoint P N := by
+      rw [Finset.disjoint_left]
+      intro i hiP hiN
+      exact absurd ((hmemP i).mp hiP) (asymm ((hmemN i).mp hiN))
+    have hzero : ∀ i ∈ Finset.univ, i ∉ P ∪ N → w i • (T t i * T t i) = 0 := by
+      intro i _ hi
+      have hi1 : i ∉ P := fun h => hi (Finset.mem_union_left _ h)
+      have hi2 : i ∉ N := fun h => hi (Finset.mem_union_right _ h)
+      rw [hTZ t i hi1 hi2]
+      simp
+    rw [← Finset.sum_subset (Finset.subset_univ (P ∪ N)) hzero, Finset.sum_union hdisj,
+      ← Finset.sum_coe_sort P, ← Finset.sum_coe_sort N, ← Equiv.sum_comp ψ
+        (fun q : ↥N => w ↑q • (T t ↑q * T t ↑q)), ← Finset.sum_add_distrib]
+    refine Finset.sum_eq_zero fun p _ => ?_
+    rw [hTP t p, hTN t (ψ p), Equiv.symm_apply_apply]
+    have h1 : Real.sqrt (-(w ↑(ψ p))) * Real.sqrt (-(w ↑(ψ p))) = -(w ↑(ψ p)) :=
+      Real.mul_self_sqrt (le_of_lt (neg_pos.mpr (hwN (ψ p))))
+    have h2 : Real.sqrt (w ↑p) * Real.sqrt (w ↑p) = w ↑p :=
+      Real.mul_self_sqrt (le_of_lt (hwP p))
+    simp only [smul_eq_mul]
+    nlinarith [h1, h2]
+  -- transport back through the isometry
+  refine ⟨(LinearMap.range T).map (e.symm.toLinearEquiv : (Fin (Module.finrank ℝ V) → ℝ) →ₗ[ℝ] V), ?_, ?_⟩
+  · rw [LinearEquiv.finrank_map_eq, LinearMap.finrank_range_of_inj hinj, hpos]
+    simp [Fintype.card_coe]
+  · rintro _ ⟨y, hy, rfl⟩
+    have := e.symm.map_app y
+    rw [show ((e.symm.toLinearEquiv : (Fin (Module.finrank ℝ V) → ℝ) →ₗ[ℝ] V) y : V) = e.symm y from rfl]
+    rw [this]
+    exact hiso y hy
+
+/-- **The Witt step at the matrix level** — an integer form with nondegenerate real form and
+`latticeSig = 0` carries a half-dimensional isotropic subspace (a Lagrangian). The converse of the
+banked `latticeSig_eq_zero_of_lagrangian`. -/
+theorem exists_lagrangian_of_latticeSig_eq_zero {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ)
+    (hrad : (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap'.radical = ⊥)
+    (hsig : latticeSig M = 0) :
+    ∃ L : Submodule ℝ (Fin n → ℝ), n = 2 * Module.finrank ℝ L ∧
+      ∀ x ∈ L, (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' x = 0 := by
+  have hsig' : sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap'
+      = sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' := by
+    unfold latticeSig at hsig
+    omega
+  have hsum : sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap'
+      + sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap'
+      + Module.finrank ℝ (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap'.radical = n := by
+    rw [QuadraticForm.sigPos_add_sigNeg_add_radical]
+    simp
+  rw [hrad, finrank_bot] at hsum
+  obtain ⟨L, hL, hiso⟩ :=
+    exists_isotropic_of_sigPos_eq_sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' hsig'
+  exact ⟨L, by omega, hiso⟩
+
+/-- **THE σ-LANE LOCATING IFF (the round-12 σ-tie, headline)** — the Opener substrate on a
+boundary block pair is inhabited EXACTLY when the two signatures agree. Forward is the pointwise
+soundness (§2); backward is the Witt step + the synthetic `ofLagrangian` — ZERO bordism geometry.
+The σ-descent's substrate shape sits at exactly conclusion strength, pair by pair. -/
+theorem nonempty_novikovBoundaryRestriction_iff_sig_eq {r s : ℕ} (A : Matrix (Fin r) (Fin r) ℤ)
+    (B : Matrix (Fin s) (Fin s) ℤ) (hA : IsEvenUnimodular A) (hB : IsEvenUnimodular B) :
+    Nonempty (NovikovBoundaryRestriction (blockDiag A (-B))) ↔ latticeSig A = latticeSig B := by
+  constructor
+  · rintro ⟨d⟩
+    exact novikovBoundaryRestriction_sig_eq A B hA hB d
+  · intro hsig
+    have hnegB := isEvenUnimodular_neg _ hB
+    have hbd_eu := isEvenUnimodular_blockDiag A (-B) hA hnegB
+    have hsig0 : latticeSig (blockDiag A (-B)) = 0 := by
+      rw [latticeSig_blockDiag A (-B) hA hnegB, latticeSig_neg]
+      omega
+    obtain ⟨L, hdim, hiso⟩ :=
+      exists_lagrangian_of_latticeSig_eq_zero _ hbd_eu.radical_eq_bot hsig0
+    exact ⟨(NovikovRealPairLES.ofLagrangian _ hbd_eu.radical_eq_bot L hdim hiso).toBoundaryRestriction⟩
+
+/-- **THE σ-DESCENT ATOM IS ITS OWN CONCLUSION** — `NovikovLagrangianAtom a ↔ hbord a`, for every
+disclosed bundle. Forward is the banked `hbord_of_novikovLagrangian`; backward is the Witt step:
+σ-agreement at a bordant pair produces the half-dimensional isotropic `L` in the (even-unimodular,
+hence nondegenerate) block form by pure linear algebra. With the banked equivalence quartet, all
+FOUR formulations (`NovikovLagrangianAtom`, `NovikovHalfDimAtom`, `NovikovCoIsoAtom`,
+`NovikovRealPairLESAtom`) are therefore kernel-provably equivalent to `hbord` — the σ-lane's exact
+mirror of the round-11 `hfwd` tie. A "Novikov atom discharged" claim is progress ONLY if its
+substrate data are the ℝ-images of a genuine bounding manifold's restriction tower (spec 2). -/
+theorem novikovLagrangian_iff_hbord (a : SpinSigmaAtoms prov) :
+    PinPlusKTSpinSigmaHbord.NovikovLagrangianAtom prov a ↔
+      (∀ p q, IsDataBordant (spinEmptyData prov) p q →
+        latticeSig (interMatrix (a.fc p) (a.B p)) = latticeSig (interMatrix (a.fc q) (a.B q))) := by
+  constructor
+  · exact PinPlusKTSpinSigmaHbord.hbord_of_novikovLagrangian a
+  · intro hb p q hpq
+    have heuP := isEvenUnimodular_of_intPD (a.fc p) (a.B p) (a.wu p) (a.pd p)
+    have heuQ := isEvenUnimodular_of_intPD (a.fc q) (a.B q) (a.wu q) (a.pd q)
+    have hnegQ := isEvenUnimodular_neg _ heuQ
+    have hbd_eu := isEvenUnimodular_blockDiag (interMatrix (a.fc p) (a.B p))
+      (-interMatrix (a.fc q) (a.B q)) heuP hnegQ
+    have hsig0 : latticeSig (blockDiag (interMatrix (a.fc p) (a.B p))
+        (-interMatrix (a.fc q) (a.B q))) = 0 := by
+      rw [latticeSig_blockDiag _ _ heuP hnegQ, latticeSig_neg]
+      have := hb p q hpq
+      omega
+    obtain ⟨L, hdim, hiso⟩ :=
+      exists_lagrangian_of_latticeSig_eq_zero _ hbd_eu.radical_eq_bot hsig0
+    exact ⟨L, hdim, hiso⟩
 
 end SKEFTHawking.PinPlusResidualGate
