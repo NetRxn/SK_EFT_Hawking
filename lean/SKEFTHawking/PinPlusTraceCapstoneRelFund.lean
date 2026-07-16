@@ -160,6 +160,53 @@ def capstone_hasClass_of_partition
   letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
   hasRelFundClass_of_partition_folded U _ _ αU αUc hdetU hdetUc
 
+/-- **The two-piece partition-detection row for the capstone `hasClass`** — the honest named
+sub-reduction of the deepest `CapstoneAmbientSupply` atom, bundled as one geometric object (the arm's
+datum discipline). Carries the base set `U ⊆ W`, the two per-piece relative classes `αU`/`αUc`, and the
+two folded per-piece detection facts `hdetU`/`hdetUc`. Each field is a genuine geometric residual (the
+cyl-side cylinder-like class + its detection on `U`, the handle-side `D⁵`-model local class + its
+detection on `Uᶜ`); none is a completeness Prop. `toHasClass` fires the clopen-free partition assembly to
+supply the exact `CapstoneAmbientSupply.hasClass` field — so the deepest atom is replaced by this
+transparent row. -/
+structure CapstoneRelFundPartitionDatum where
+  /-- the base set `U ⊆ W` (intended: the closed `fromCyl`-image cyl-range). -/
+  U : Set ↑(TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+  /-- the cyl-side relative class on the pair `(U, ∂W ∩ U)`. -/
+  αU : RelativeHomology
+    (restr (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) U) (3 + 2)
+  /-- the handle-side relative class on the pair `(Uᶜ, ∂W ∩ Uᶜ)`. -/
+  αUc : RelativeHomology
+    (restr (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) Uᶜ) (3 + 2)
+  /-- `αU` detects the interior generator on `U` (the cyl-side cylinder-like fundamental class). -/
+  hdetU : letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    RestrictsToRelGenOn (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (m := 3)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) (· ∈ U)
+      (excisionMap
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) U (3 + 2) αU)
+  /-- `αUc` detects the interior generator on `Uᶜ` (the handle-side `D⁵`-model local class). -/
+  hdetUc : letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    RestrictsToRelGenOn (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (m := 3)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) (· ∈ Uᶜ)
+      (excisionMap
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) Uᶜ (3 + 2) αUc)
+
+/-- **The partition datum supplies the capstone `hasClass` field.** Projects the row and fires
+`capstone_hasClass_of_partition` — producing the exact type of `CapstoneAmbientSupply.hasClass` (and of
+the `hasClass` argument of `TraceRelFundLeaves.ofCapstone`), so the datum drops in directly as the
+`hasClass` atom. -/
+def CapstoneRelFundPartitionDatum.toHasClass
+    (D : CapstoneRelFundPartitionDatum s t S hS φ hφ hφinj cd hseam d) :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
+  capstone_hasClass_of_partition s t S hS φ hφ hφinj cd hseam d D.U D.αU D.αUc D.hdetU D.hdetUc
+
 end
 
 end SKEFTHawking.PinPlusTraceCapstoneRelFund
