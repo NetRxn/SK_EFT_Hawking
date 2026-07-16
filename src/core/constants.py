@@ -3688,6 +3688,16 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': 'EnriquesDatum as shipped carries independent Enriques-geometry content (w₂ ≠ 0, π₁ = ℤ/2, the line bundle) usable as the W-D B-leaf. FALSE-AS-SHAPED (gate round 10, G10-6): its [Ha] fields collapse — Nonempty (EnriquesDatum prov) ↔ EmptySigmaRepresentable prov (ktKernelRep prov) (enriquesDatum_iff_kummerRep), i.e. it is bare KummerWitness.1 in decorative dressing; the "Enriques" content has no formal footprint. Do NOT construct or consume EnriquesDatum as an independent B-leaf. The frozen replacement B-target is GeometricSpinRepresentable, absorbed by the C-leaf: KTSpinPresentationDatum ⟹ EnriquesDatum (enriquesDatum_of_ktSpinPresentationDatum, via emptySigmaRepresentable_of_geometric) — discharge the C-leaf and B follows; a standalone "Enriques wave" duplicates work into a vacuous shape.',
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'geometric-phi-does-not-close-hfwd-fakeability': {
+        'fork_id': 'geometric-phi-does-not-close-hfwd-fakeability',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusTraceLeafGate.spinForgetPhi_hfwd_of_ktNonSplit',
+            'SKEFTHawking.PinPlusTraceLeafGate.spinForgetPhi_hfwd_iff_ktNonSplit',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'Fixing Φ := spinForgetPhi (the geometric forgetful map) in the dA leaf makes hfwd a genuine geometric obligation not derivable from the conclusion. FALSE (gate round 11): given the presentation row {hA, hB, hg, hdvd, hΦg, h2}, hfwd on the geometric Φ is DERIVABLE from KTNonSplit with zero geometry (R.generates writes x = n•[g]; Φx = n•k₀; nonsplit + 2-torsion force n even ⟹ 32 ∣ σ(x)) — the locating iff spinForgetPhi_hfwd_iff_ktNonSplit pins hfwd at exactly KTNonSplit strength. Consequence (binding round-11 spec): NO statement shape closes the dA/hfwd circularity risk — every hfwd/dA discharge claim requires a non-circularity audit BY PROOF INSPECTION (the per-instance Div32BoundingDatum supply is equally shape-fakeable, round 10 §3). The audit-friendly honest construction target is the kernel characterization ker Φ ⊆ doubles (spinForgetPhi_hfwd_of_ker_sub_doubles — hfwd free from Rokhlin on doubles, consuming zero k₀ facts).',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════

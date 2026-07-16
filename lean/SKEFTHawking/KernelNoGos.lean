@@ -274,6 +274,19 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    duplicates work into a vacuous shape.
    backing: `enriquesDatum_iff_kummerRep`, `enriquesDatum_of_ktSpinPresentationDatum`, `emptySigmaRepresentable_of_geometric`
 
+18. `geometric-phi-does-not-close-hfwd-fakeability` [structural_forcing]
+   Fixing Φ := spinForgetPhi (the geometric forgetful map) in the dA leaf makes hfwd a genuine geometric
+   obligation not derivable from the conclusion. FALSE (gate round 11): given the presentation row {hA, hB,
+   hg, hdvd, hΦg, h2}, hfwd on the geometric Φ is DERIVABLE from KTNonSplit with zero geometry (R.generates
+   writes x = n•[g]; Φx = n•k₀; nonsplit + 2-torsion force n even ⟹ 32 ∣ σ(x)) — the locating iff
+   spinForgetPhi_hfwd_iff_ktNonSplit pins hfwd at exactly KTNonSplit strength. Consequence (binding round-11
+   spec): NO statement shape closes the dA/hfwd circularity risk — every hfwd/dA discharge claim requires a
+   non-circularity audit BY PROOF INSPECTION (the per-instance Div32BoundingDatum supply is equally
+   shape-fakeable, round 10 §3). The audit-friendly honest construction target is the kernel
+   characterization ker Φ ⊆ doubles (spinForgetPhi_hfwd_of_ker_sub_doubles — hfwd free from Rokhlin on
+   doubles, consuming zero k₀ facts).
+   backing: `spinForgetPhi_hfwd_of_ktNonSplit`, `spinForgetPhi_hfwd_iff_ktNonSplit`
+
 -/
 import SKEFTHawking.FGDualityNoGo
 import SKEFTHawking.NonHausdorffBordismCollapse
@@ -287,6 +300,7 @@ import SKEFTHawking.PinPlusKTLeafGate
 import SKEFTHawking.PinPlusKTStepGate
 import SKEFTHawking.PinPlusKTVacuityGateWD
 import SKEFTHawking.PinPlusTaylorConventionNoGo
+import SKEFTHawking.PinPlusTraceLeafGate
 import SKEFTHawking.RokhlinArfNoGo
 import SKEFTHawking.SyntheticSmithNoGo
 import SKEFTHawking.UnorientedThomCapstone
@@ -403,5 +417,11 @@ alias nogo_enriquesDatum_of_ktSpinPresentationDatum := SKEFTHawking.PinPlusKTLea
 
 /-- NO-GO [`enriques-datum-refuted-as-shaped`] — do NOT re-derive. FALSE: EnriquesDatum as shipped carries independent Enriques-geometry content (w₂ ≠ 0, π₁ = ℤ/2, the line bundle) usable as the W-D B-leaf. Backing refutation: `SKEFTHawking.PinPlusKTStepGate.emptySigmaRepresentable_of_geometric`. -/
 alias nogo_emptySigmaRepresentable_of_geometric := SKEFTHawking.PinPlusKTStepGate.emptySigmaRepresentable_of_geometric
+
+/-- NO-GO [`geometric-phi-does-not-close-hfwd-fakeability`] — do NOT re-derive. FALSE: Fixing Φ := spinForgetPhi (the geometric forgetful map) in the dA leaf makes hfwd a genuine geometric obligation not derivable from the conclusion. Backing refutation: `SKEFTHawking.PinPlusTraceLeafGate.spinForgetPhi_hfwd_of_ktNonSplit`. -/
+alias nogo_spinForgetPhi_hfwd_of_ktNonSplit := SKEFTHawking.PinPlusTraceLeafGate.spinForgetPhi_hfwd_of_ktNonSplit
+
+/-- NO-GO [`geometric-phi-does-not-close-hfwd-fakeability`] — do NOT re-derive. FALSE: Fixing Φ := spinForgetPhi (the geometric forgetful map) in the dA leaf makes hfwd a genuine geometric obligation not derivable from the conclusion. Backing refutation: `SKEFTHawking.PinPlusTraceLeafGate.spinForgetPhi_hfwd_iff_ktNonSplit`. -/
+alias nogo_spinForgetPhi_hfwd_iff_ktNonSplit := SKEFTHawking.PinPlusTraceLeafGate.spinForgetPhi_hfwd_iff_ktNonSplit
 
 end SKEFTHawking.KernelNoGos
