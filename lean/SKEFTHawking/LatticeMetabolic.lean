@@ -68,3 +68,16 @@ theorem latticeSig_eq_zero_of_lagrangian {n m : ℕ} (hn : n = 2 * m)
   unfold latticeSig
   rw [← hQ, hpe, hne]
   simp
+
+/-- **The metabolic lemma keyed on even-unimodularity** — the directly-consumable form. An even-unimodular
+integer form (`IsEvenUnimodular`, hence nondegenerate over `ℝ` by `radical_eq_bot`) of rank `n = 2m` with a
+half-dimensional isotropic subspace has `latticeSig = 0`. This is the shape the σ-descent's disclosed
+intersection matrices consume: their even-unimodularity is free from the bundle's `wu`/`pd`, so the only
+geometric input is the half-dimensional isotropic Lagrangian. -/
+theorem latticeSig_eq_zero_of_lagrangian_of_evenUnimodular {n m : ℕ} (hn : n = 2 * m)
+    (M : Matrix (Fin n) (Fin n) ℤ) (heu : IsEvenUnimodular M)
+    (L : Submodule ℝ (Fin n → ℝ))
+    (hLdim : Module.finrank ℝ L = m)
+    (hLiso : ∀ x ∈ L, (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' x = 0) :
+    latticeSig M = 0 :=
+  latticeSig_eq_zero_of_lagrangian hn M heu.radical_eq_bot L hLdim hLiso
