@@ -4532,6 +4532,7 @@ import SKEFTHawking.SphereProdGramPinReduce
 import SKEFTHawking.PinPlusKTDualSpinSubmanifold
 import SKEFTHawking.LatticeMetabolic
 import SKEFTHawking.PinPlusKTSpinSigmaHbord
+import SKEFTHawking.PinPlusKTSpinSigmaNovikovOpener
 import SKEFTHawking.PinPlusCharPairEmptySourceRealization
 import SKEFTHawking.PinPlusKTFreezeAssembly
 import SKEFTHawking.SingularSurgeryFoundation
