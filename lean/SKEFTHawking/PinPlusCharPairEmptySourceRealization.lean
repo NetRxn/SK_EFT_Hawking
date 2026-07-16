@@ -343,4 +343,167 @@ noncomputable def TraceMembraneLeaves.ofCapstoneWeldedEmptySource
     (fun x => (isEmpty_sub_range_inl.false x).elim)
     glueτ chartQ
 
+/-! ## §6. The single-surface bounding-kernel metabolic bridge and the packaged τ-side membrane row
+(`#183`, the τ-side single-surface membrane front — the KRS supply's last non-Fable-gated row).
+
+The wrapper `TraceMembraneLeaves.ofCapstoneWeldedEmptySource` (§5) exposes the honest τ-side residual
+AS its parameter list: the membrane space `QC`, the closed embedding `ιY : Σ ↪ QC`, the interior
+basis `mid`/`eQ`, the two single-surface bounding-kernel conditions `hq`/`hlagK`, and the welded
+plumbing `HAQ`/`weld`/`hQ`/`glueτ`/`chartQ`. For an ARBITRARY nonempty target surface `Σ = τ.surf.M`
+(the terminal KRS step's target carries `0 < τ.n`, so `Σ` has nontrivial `H¹` and is NEVER a sphere:
+the concrete bounding 3-manifold `Q` is the twice-deferred `real`-membrane's territory — no Mathlib
+smooth bordism theory), so the honest form is the per-`p` PACKAGED membrane datum (§6.2), constructed
+data the capstone's builder supplies, mirroring the `SurgeredEndDatum`/`SeamCollarDatum` pattern.
+
+Dimension discipline: `QC` is 3-dim (`MembraneModel`-charted, `Σ×[0,½]∪handle∪∅` degenerating to a
+single-surface bounding membrane); `τ.surf.M = Σ` is 2-dim; the capstone `W` is 5-dim; `HAQ` is the
+dim-3 attachment `Q = B ⊔_φ Ha` one dimension down from the dim-5 `W`. -/
+
+/-- **THE SINGLE-SURFACE BOUNDING-KERNEL METABOLIC BRIDGE** (`#183` §6.1). The two single-surface
+conditions the empty-source wrapper consumes — `qτ` vanishes on the bounding kernel
+`ker (boundingBInc …)` (`hq`), and that kernel is `B`-maximal (`hlagK`) — say exactly that the
+classical bounding kernel is a metabolic Lagrangian for the SINGLE form `qτ`, hence `qτ.brown = 0`.
+The honest "the characteristic surface bounds in `Q` ⟹ its Brown invariant vanishes" content (Taylor
+`0802.0111` Lem 1.3, the algebra half), read off the terminal KRS step's membrane. This is what makes
+the `hq`/`hlagK` fields of the packaged datum GENUINE (anti-vacuity): they cost the builder a
+falsifiable grade-zero certificate — the `ℝP²` form (`brown = ±1`) admits no such bounding kernel. -/
+theorem boundingBInc_metabolic_brown_zero {nτ mid : ℕ} (Sτ : TopCat)
+    (bτ : Cohomology Sτ 1 ≃ₗ[ZMod 2] (Fin nτ → ZMod 2))
+    (QC : TopCat) (ιY : C((Sτ : Type), (QC : Type)))
+    (eQ : Homology QC 1 ≃ₗ[ZMod 2] (Fin mid → ZMod 2))
+    (qτ : Z4Quadratic (Fin nτ))
+    (hq : ∀ v ∈ LinearMap.ker (boundingBInc Sτ bτ QC ιY mid eQ), qτ.q v = 0)
+    (hlagK : ∀ v, (∀ l ∈ LinearMap.ker (boundingBInc Sτ bτ QC ιY mid eQ), qτ.B v l = 0)
+      → v ∈ LinearMap.ker (boundingBInc Sτ bτ QC ιY mid eQ)) :
+    qτ.brown = 0 := by
+  haveI : Fintype (LinearMap.ker (boundingBInc Sτ bτ QC ιY mid eQ)) := Fintype.ofFinite _
+  exact qτ.brown_eq_zero_of_metabolic _ hq hlagK
+
+/-- **The empty-index enhancement has vanishing Brown invariant** (`#183` §6.1b). When the σ-index
+`Fin σ.n` is empty (the terminal KRS step: the surgered spin source has no characteristic classes),
+the whole space `Fin n → ℤ/2` is a subsingleton, hence a metabolic Lagrangian (`⊤`), so
+`q.brown = 0`. The algebraic shadow of "the empty source is null-bordant". -/
+theorem brown_zero_of_isEmpty {n : ℕ} [IsEmpty (Fin n)] (q : Z4Quadratic (Fin n)) :
+    q.brown = 0 := by
+  haveI : Fintype (⊤ : Submodule (ZMod 2) (Fin n → ZMod 2)) := Fintype.ofFinite _
+  refine q.brown_eq_zero_of_metabolic ⊤ (fun l _ => ?_) (fun v _ => Submodule.mem_top)
+  rw [Subsingleton.elim l 0, q.q_zero]
+
+/-- **THE PACKAGED τ-SIDE SINGLE-SURFACE MEMBRANE DATUM** (`#183` §6.2). The per-`p` constructed-data
+package the terminal-step capstone's builder supplies for the τ-end of the empty-source membrane row —
+mirroring the `SurgeredEndDatum`/`SeamCollarDatum` packaging pattern (constructed data, not a proof
+obligation). It bundles EXACTLY the honest τ-side residual the wrapper `ofCapstoneWeldedEmptySource`
+consumes: the membrane space `QC` (with its own T2/compact certificates), the closed embedding
+`ιY : Σ ↪ QC`, the interior basis `mid`/`eQ`, the two single-surface bounding-kernel conditions
+`hq`/`hlagK` (the geometric heart — §6.1 shows they cost a genuine grade-zero certificate), and the
+welded dim-3 plumbing `HAQ`/`weld`/`hQ`/`glueτ`/`chartQ`. Every field is a genuine geometric atom;
+none self-discharges. The σ-side atoms are GONE (the source Σ is empty). -/
+structure TauMembraneWeldDatum
+    (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+    (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+    (hφ : Continuous φ) (hφinj : Function.Injective φ)
+    (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+    (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+    (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+    (σ : CharPairStrBundled (𝓡 4) s) (τ : CharPairStrBundled (𝓡 4) t)
+    [IsEmpty σ.surf.M] [IsEmpty (Fin σ.n)] where
+  /-- **the concrete membrane space** `Q` (dim-3, `MembraneModel`-charted): the 3-manifold the target
+  characteristic surface `Σ = τ.surf.M` bounds through the trace. -/
+  QC : TopCat
+  /-- **per-object certificate**: `Q` is Hausdorff. -/
+  QT2 : T2Space QC
+  /-- **per-object certificate**: `Q` is compact. -/
+  QCompact : CompactSpace QC
+  /-- **the closed embedding** `Σ ↪ Q` of the target surface into the membrane. -/
+  ιY : C((τ.surf.M : Type), (QC : Type))
+  /-- `ιY` is a closed embedding (`open Topology`). -/
+  hιY : IsClosedEmbedding ιY
+  /-- `mid = dim H₁(Q;ℤ/2)`. -/
+  mid : ℕ
+  /-- `H₁(Q)` interior basis (the free interior gauge — kernel-invariant). -/
+  eQ : Homology QC 1 ≃ₗ[ZMod 2] (Fin mid → ZMod 2)
+  /-- **(bounding kernel — the geometric heart)** `qτ` vanishes on the classical bounding kernel
+  `ker (boundingBInc …)` — "Σ bounds a Lagrangian in Q". Costs a genuine grade-zero certificate
+  (§6.1 `boundingBInc_metabolic_brown_zero`). -/
+  hq : ∀ v ∈ LinearMap.ker (boundingBInc (TopCat.of τ.surf.M) τ.basis QC ιY mid eQ), τ.q.q v = 0
+  /-- **(bounding kernel — the geometric heart)** the bounding kernel is `B`-maximal (`K^⊥ ⊆ K`). -/
+  hlagK : ∀ v,
+    (∀ l ∈ LinearMap.ker (boundingBInc (TopCat.of τ.surf.M) τ.basis QC ιY mid eQ), τ.q.B v l = 0)
+      → v ∈ LinearMap.ker (boundingBInc (TopCat.of τ.surf.M) τ.basis QC ιY mid eQ)
+  /-- **the membrane's dim-3 handle attachment** `Q = B ⊔_φ Ha` (one dimension down from the dim-5
+  capstone carrier `W`). -/
+  HAQ : HandleAttachment.{0, 0}
+  /-- **the membrane weld** `Q ↪ W` into the FIXED capstone carrier `ktHandleAttachment …`. -/
+  weld : HandleAttachment.Weld HAQ (ktHandleAttachment s.M D5 S hS φ hφ hφinj)
+  /-- `Q` presented as `HAQ.carrier`. -/
+  hQ : letI := QT2; letI := QCompact
+    ((capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Q : Type) ≃ₜ HAQ.carrier
+  /-- **glue (τ-end)**: the welded membrane boundary factors through `(capstoneB …).e ∘ Sum.inr ∘
+  τ.emb` (in the `hW`-collapsed welded form). -/
+  glueτ : letI := QT2; letI := QCompact
+    ∀ x : ↑(sub (capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Uᶜ),
+      weld.carrierMap (hQ ((capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).ι
+          (subInclCM (capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Uᶜ x)))
+        = (capstoneB s t S hS φ hφ hφinj cd hseam d).e
+            (Sum.inr (τ.emb ((capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).homτ x)))
+  /-- **manifold discipline**: `Q` charts over the dim-3 membrane model. -/
+  chartQ : letI := QT2; letI := QCompact
+    ChartedSpace MembraneModel ↑(capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Q
+
+/-- **THE PACKAGED-DATUM BUILDER** (`#183` §6.3). The τ-side membrane datum discharges the empty-source
+welded membrane row: its bundled fields feed `TraceMembraneLeaves.ofCapstoneWeldedEmptySource` verbatim.
+With this, the membrane atoms of the KRS supply are COMPLETE modulo the per-`p` datum `D` — every
+wrapper parameter is read off `D`, and the σ-side atoms are already gone (empty source). -/
+noncomputable def TraceMembraneLeaves.ofTauMembraneWeldDatum
+    (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+    (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+    (hφ : Continuous φ) (hφinj : Function.Injective φ)
+    (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+    (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+    (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+    (σ : CharPairStrBundled (𝓡 4) s) (τ : CharPairStrBundled (𝓡 4) t)
+    [IsEmpty σ.surf.M] [IsEmpty (Fin σ.n)]
+    (D : TauMembraneWeldDatum s t S hS φ hφ hφinj cd hseam d σ τ) :
+    TraceMembraneLeaves (capstoneB s t S hS φ hφ hφinj cd hseam d) σ τ :=
+  letI := D.QT2
+  letI := D.QCompact
+  TraceMembraneLeaves.ofCapstoneWeldedEmptySource s t S hS φ hφ hφinj cd hseam d σ τ
+    D.QC D.ιY D.hιY D.mid D.eQ D.hq D.hlagK D.HAQ D.weld D.hQ D.glueτ D.chartQ
+
+/-- **The packaged datum forces the terminal-step target grade to vanish** (`#183` §6.4). The datum's
+bounding-kernel fields `hq`/`hlagK` force `τ.q.brown = 0` (§6.1) — the falsifiable physics payload of
+the terminal KRS step: the empty (null) source forces the target's Brown/ABK grade to zero. Confirms
+the datum's geometric-heart fields are genuinely load-bearing (anti-vacuity discipline). -/
+theorem TauMembraneWeldDatum.brown_zero
+    (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+    (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+    (hφ : Continuous φ) (hφinj : Function.Injective φ)
+    (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+    (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+    (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+    (σ : CharPairStrBundled (𝓡 4) s) (τ : CharPairStrBundled (𝓡 4) t)
+    [IsEmpty σ.surf.M] [IsEmpty (Fin σ.n)]
+    (D : TauMembraneWeldDatum s t S hS φ hφ hφinj cd hseam d σ τ) :
+    τ.q.brown = 0 :=
+  boundingBInc_metabolic_brown_zero (TopCat.of τ.surf.M) τ.basis D.QC D.ιY D.eQ τ.q D.hq D.hlagK
+
+/-- **The packaged datum witnesses Brown-preservation across the terminal KRS step** (`#183` §6.5).
+Both ends have vanishing Brown grade: the empty source `σ` by §6.1b (empty index), the target `τ` by
+§6.4 (the bounding-kernel fields). So `σ.q.brown = τ.q.brown` — the KT surgery's mod-8 Brown/ABK
+invariance, delivered by the SINGLE-surface membrane datum directly, independent of the full tethered
+assembly and of the `Quot.sound` class-equality route. -/
+theorem TauMembraneWeldDatum.brown_preserved
+    (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+    (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+    (hφ : Continuous φ) (hφinj : Function.Injective φ)
+    (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+    (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+    (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+    (σ : CharPairStrBundled (𝓡 4) s) (τ : CharPairStrBundled (𝓡 4) t)
+    [IsEmpty σ.surf.M] [IsEmpty (Fin σ.n)]
+    (D : TauMembraneWeldDatum s t S hS φ hφ hφinj cd hseam d σ τ) :
+    σ.q.brown = τ.q.brown :=
+  (brown_zero_of_isEmpty σ.q).trans
+    (TauMembraneWeldDatum.brown_zero s t S hS φ hφ hφinj cd hseam d σ τ D).symm
+
 end SKEFTHawking.PinPlusCharPairEmptySourceRealization
