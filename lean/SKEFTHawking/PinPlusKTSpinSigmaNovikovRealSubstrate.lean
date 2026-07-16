@@ -68,7 +68,16 @@ import SKEFTHawking.PinPlusKTSpinSigmaNovikovHalfDim
 
 namespace SKEFTHawking.PinPlusKTSpinSigmaNovikovRealSubstrate
 
-open SKEFTHawking SKEFTHawking.PinPlusKTSpinSigmaNovikovOpener
+open scoped Manifold
+open QuadraticMap Module
+open SKEFTHawking SKEFTHawking.SingularCohomologyInt SKEFTHawking.SpinSigmaRoute
+open SKEFTHawking.TangentialDataBordism
+open SKEFTHawking.PinPlusCharPairData SKEFTHawking.PinPlusCharPairBorTethered
+open SKEFTHawking.PinPlusKTSpinForgetPhi
+open SKEFTHawking.PinPlusKTSpinSigmaAtom
+open SKEFTHawking.PinPlusKTSpinSigmaCanonicalBundle
+open SKEFTHawking.PinPlusKTSpinSigmaHbord
+open SKEFTHawking.PinPlusKTSpinSigmaNovikovOpener
 open SKEFTHawking.PinPlusKTSpinSigmaNovikovHalfDim
 
 /-! ## §1. The ℝ pair-LES / PD substrate — the three pieces bundled -/
@@ -176,5 +185,48 @@ theorem NovikovRealPairLES.lagrangian :
       n = 2 * Module.finrank ℝ L ∧
       ∀ x ∈ L, (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap' x = 0 :=
   ⟨LinearMap.range d.rest2, d.half, fun _ hx => d.isotropic hx⟩
+
+/-! ## §2. Consumer wiring — the `NovikovBoundaryRestriction` provider -/
+
+include d in
+/-- **The substrate provides a genuine `NovikovBoundaryRestriction`.** From `NovikovRealPairLES Bd` build the
+Opener's boundary-restriction engine directly: `H²(W) := d.H2W`, `rest2 := d.rest2`, the boundary cup
+`cupBd := polarBilin Q` (`evalBd := ½·id` correcting the polarization factor so `gram` returns `Q`), the
+`func` isotropy from `isotropic_bilin` (with `cupW`/`rest4 := 0`), and — the point — `half := d.half`, the
+PD residual now DERIVED from the pair-LES/Kronecker triple. So a constructed `W` with `[W,∂W]` relative data
+feeds `NovikovHalfDimAtom` with `half` no longer disclosed but factored. -/
+noncomputable def NovikovRealPairLES.toBoundaryRestriction : NovikovBoundaryRestriction Bd where
+  H2W := d.H2W
+  H4W := ℝ
+  H4bd := ℝ
+  cupW := 0
+  cupBd := QuadraticMap.polarBilin (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap'
+  rest2 := d.rest2
+  rest4 := 0
+  evalBd := (2⁻¹ : ℝ) • LinearMap.id
+  func := by intro a b; rw [d.isotropic_bilin a b]; simp
+  bvanish := by intro w; simp
+  gram := by
+    intro x
+    simp only [LinearMap.smul_apply, LinearMap.id_coe, id_eq, QuadraticMap.polarBilin_apply_apply,
+      QuadraticMap.polar_self, nsmul_eq_mul, smul_eq_mul]
+    ring
+  half := d.half
+
+/-! ## §3. The σ-descent consumer — `NovikovHalfDimAtom` from per-pair real substrates -/
+
+variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+
+/-- **`NovikovHalfDimAtom` from per-pair real pair-LES substrates.** If, for every data-bordant pair
+`p, q`, the boundary block form `blockDiag (II M_p) (−(II M_q))` carries a `NovikovRealPairLES` (the ℝ
+relative-cohomology data of the tethered bordism `W`), then the σ-descent's residual half-dim atom holds:
+each substrate produces its `NovikovBoundaryRestriction` via `toBoundaryRestriction`. So the σ-descent
+completes modulo exactly the three pair-LES/Kronecker pieces — the `half` residual fully factored. -/
+theorem novikovHalfDim_of_realPairLES {a : SpinSigmaAtoms prov}
+    (h : ∀ p q : StrMfd (spinEmptyData prov), IsDataBordant (spinEmptyData prov) p q →
+      NovikovRealPairLES
+        (blockDiag (interMatrix (a.fc p) (a.B p)) (-interMatrix (a.fc q) (a.B q)))) :
+    NovikovHalfDimAtom prov a :=
+  fun p q hb => ⟨(h p q hb).toBoundaryRestriction⟩
 
 end SKEFTHawking.PinPlusKTSpinSigmaNovikovRealSubstrate
