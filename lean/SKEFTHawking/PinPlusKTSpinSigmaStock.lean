@@ -34,6 +34,7 @@ open SKEFTHawking.PinPlusCharPairBorTethered
 open SKEFTHawking.PinPlusKTSpinForgetPhi
 open SKEFTHawking.PinPlusKTSpinSigmaAtom
 open SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
+open SKEFTHawking.PinPlusKTSpinPresentationRow
 open SKEFTHawking.SphereWitnessTowerInt (SphereFour sphere4IntH2Basis)
 open SKEFTHawking.SphereFourOrientationDataInt (sphere4IntOrientationDataUncond)
 
@@ -209,5 +210,82 @@ theorem sphereProd_s2s2_evenUnimodular_of_gram (hgram : SphereProdGramPin) :
 /-- **`b₂(S²×S²) = 2`** — the `s2s2_rank` obligation at the distinguished witness (`rfl`, the computed
 rank-2 basis). -/
 theorem sphereProd_s2s2_rank : sphereProdIntH2Basis.rank = 2 := rfl
+
+/-! ## §5. The per-element package realizes the presentation, and the K3 row fires
+
+The row builder `spinPresentationRow_of_atoms` consumes the TOTAL-function `SpinSigmaAtoms` bundle (the
+disclosed E1 object, which stays non-vacuous precisely because its fields are functional-level —
+`IntFundamentalClass`, not `IntOrientation`). The per-element `SpinSigmaAtomPkg` (which carries the
+`Nonempty`-requiring `IntOrientation`) cannot assemble the total bundle (the empty element obstructs
+`orient` — the vacuity boundary). What the package DOES do is REALIZE, by genuine per-manifold disclosed
+geometry, the bundle's even-unimodular obligation at its element — the honest per-element↔total bridge. -/
+
+variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+
+/-- **The per-element package realizes the presentation's even-unimodular obligation at its element.**
+If the disclosed total bundle `a`'s fundamental class at `p` is the package's (from its orientation),
+then the presentation's `even_unimod p` — an `IsEvenUnimodular` on the `interMatrix` — is discharged by
+the package's own `orient` + `pd` via the reduce module's dissolve
+(`isEvenUnimodular_of_orientation_pd_emptySigma`: the EVEN conjunct from the orientation + the empty
+membrane's Wu certificate, the UNIMODULAR conjunct from `pd`, which works for the bundle's basis `a.B p`
+directly). This is the honest content of "the package inhabits the presentation at its sector": the
+abstract bundle's obligation at `p` is discharged by concrete disclosed geometry, not assumed. -/
+theorem pkg_realizes_even_unimod (a : SpinSigmaAtoms prov)
+    {p : StrMfd (spinEmptyData prov)} [T2Space p.1.M] [Nonempty p.1.M]
+    (pkg : SpinSigmaAtomPkg prov p)
+    (hfc : a.fc p = intFundamentalClassOfIntOrientation pkg.orient) :
+    IsEvenUnimodular ((spinSigmaPresentation_of_atoms a).form p) := by
+  rw [spinSigmaPresentation_of_atoms_form, hfc]
+  exact isEvenUnimodular_of_orientation_pd_emptySigma prov p pkg.orient (a.B p) pkg.pd
+
+/-- **A K3-realizing spin element — a HYPOTHESIS, conditional-on-existence (NOT fabricated).** There is
+no in-tree K3 manifold (Mathlib has no algebraic-surface / complex-geometry machinery), so the σ = −16
+generator of `Ω₄^{Spin}` is carried as disclosed data, exactly as `SpinPresentationRow` already carries
+its `g`. This bundles, relative to the disclosed total bundle `a`, a generator element `g` together with
+its per-element E1 package `pkg` (the concrete `orient`/`B`/`pd`), the agreement of `a` with `pkg` at `g`,
+and the two K3-generator data: `b₂(g) = 22` and its intersection form integer-congruent to `k3Form`
+(`II(K3) = 2(−E₈) ⊕ 3H`, σ = −16). ANY future K3-realizing element (supplying its orientation/basis/PD)
+instantiates this and plugs into the row. -/
+structure K3RealizingElement (a : SpinSigmaAtoms prov) where
+  /-- The K3-class generator element (disclosed — no in-tree K3 manifold). -/
+  g : StrMfd (spinEmptyData prov)
+  /-- The generator manifold is Hausdorff. -/
+  [t2 : T2Space g.1.M]
+  /-- The generator manifold is nonempty (a genuine closed spin 4-manifold). -/
+  [ne : Nonempty g.1.M]
+  /-- The generator's per-element E1 package (concrete orientation/basis/PD). -/
+  pkg : SpinSigmaAtomPkg prov g
+  /-- The total bundle's fundamental class at `g` is the package's (from its orientation). -/
+  hfc : a.fc g = intFundamentalClassOfIntOrientation pkg.orient
+  /-- The total bundle's `H²` basis at `g` is the package's. -/
+  hB : a.B g = pkg.B
+  /-- `b₂(K3) = 22`. -/
+  hrank : (a.B g).rank = 22
+  /-- The intersection form is integer-congruent to `k3Form` (σ(K3) = −16). -/
+  hk3 : IntCongr (Matrix.reindex (finCongr hrank) (finCongr hrank)
+    (interMatrix (a.fc g) (a.B g))) k3Form
+
+/-- **The presentation row FIRES from a K3-realizing element** (given the disclosed bundle + Rokhlin
+`16 ∣ σ`). The K3 element's rank/congruence data are stated directly against the bundle's `g`-slot
+(`a.fc g`/`a.B g`), so they ARE the `spinPresentationRow_of_atoms` inputs — no transport needed. Its
+`pkg`/`hfc`/`hB` fields witness that this generator slot is realized by concrete disclosed geometry
+(orientation/basis/PD), NOT merely assumed. -/
+noncomputable def K3RealizingElement.presentationRow (a : SpinSigmaAtoms prov)
+    (hdvd : ∀ x, (16 : ℤ) ∣ a.sig x) (k : K3RealizingElement a) :
+    SpinPresentationRow prov :=
+  spinPresentationRow_of_atoms a hdvd k.g k.hrank k.hk3
+
+/-- **`Ω₄^{Spin} ≅ ℤ` from a K3-realizing element** (the N1a headline, modulo the two terminal Freeze-A
+manifold-topology atoms + Freeze B). The disclosed bundle + Rokhlin + the K3-realizing element deliver
+the normalized-signature iso `σ = −16·e`, `e[g] = 1`, with the generator slot realized by the element's
+concrete package. This is the row-fires corollary on the inhabited (K3) sector. -/
+theorem K3RealizingElement.dataBordismGrp_equiv_int (a : SpinSigmaAtoms prov)
+    (hdvd : ∀ x, (16 : ℤ) ∣ a.sig x) (k : K3RealizingElement a)
+    (hCob : (spinSigmaPresentation_of_atoms a).HandleTradeCobordism)
+    (hBase : (spinSigmaPresentation_of_atoms a).HyperbolicBase)
+    (hSB : (spinSigmaPresentation_of_atoms a).SphereProductBounds) :
+    ∃ e : DataBordismGrp (spinEmptyData prov) ≃+ ℤ,
+      (∀ x, a.sig x = -16 * e x) ∧ e (DataBordismGrp.mk (spinEmptyData prov) k.g) = 1 :=
+  dataBordismGrp_equiv_int_of_atoms a hdvd k.g k.hrank k.hk3 hCob hBase hSB
 
 end SKEFTHawking.PinPlusKTSpinSigmaStock
