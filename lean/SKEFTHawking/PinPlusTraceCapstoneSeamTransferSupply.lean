@@ -54,11 +54,14 @@ open SKEFTHawking.DiskChartGeneric (D5)
 open SKEFTHawking.SingularHomologyMod2
 open SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularFunctoriality
+open SKEFTHawking.SingularMayerVietoris
 open SKEFTHawking.SingularMayerVietorisLES
 open SKEFTHawking.SingularHomotopyInvariance
 open SKEFTHawking.SingularRelativeCrossProduct
+open SKEFTHawking.SingularRelativeCoverMV
 open SKEFTHawking.SingularRelativeCoverMVTransport
 open SKEFTHawking.PoincareLefschetzRelFundClass
+open SKEFTHawking.PoincareLefschetzRelFundClassGeom
 open SKEFTHawking.PinPlusTraceRelFundReduce
 open SKEFTHawking.PinPlusTraceCapstoneInhabit
 open SKEFTHawking.PinPlusTraceCapstoneCoverGlue
@@ -187,6 +190,59 @@ def CapstoneSeamTransferSeam.toTransfer
       (seamLegCyl s S φ hφ) (seamLegHa s S hS φ hφ hφinj)
       (ContinuousMap.ext (fun a => (ktHandleAttachment s.M D5 S hS φ hφ hφinj).glue a))
       (3 + 1) R.cSeam
+
+/-! ## §3. The capstone `hasClass` field supplier + the narrowed residual. -/
+
+/-- **The narrowed capstone residual — the exact remaining inputs of `hasClass_ofTransfer`.** For
+connected `s.M`, bundles the honest atoms left after the literal transfer is discharged (§2): the
+banked fundamental cycle `{z, hz}` of the closed source 4-manifold `M`, the seam-transfer core
+`seam` (the common seam chain + the two co-adapted splits + supports; `htransfer`-free), over the
+banked disk detecting chain `diskDetectChain`, and the straddle detection `hdetAB` at the seam. No
+completeness Prop; the literal transfer is no longer among the residuals. -/
+structure CapstoneSeamTransferResidual where
+  /-- a fundamental cycle of the closed source 4-manifold `M` (banked from the connected engine). -/
+  z : cycles (TopCat.of s.M) (2 + 2)
+  /-- `z` represents the fundamental class. -/
+  hz : SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := s.M)
+      = Homology.mk (TopCat.of s.M) (2 + 2) z
+  /-- the `htransfer`-free seam-transfer core over the banked disk detecting chain. -/
+  seam : CapstoneSeamTransferSeam s S hS φ hφ hφinj z diskDetectChain
+  /-- the overlap-zone straddle detection: the glued (controlled cylinder ⊕ banked disk) chain
+  detects the local generator at every seam-collar point off `∂W` (the honest irreducible seam atom;
+  `hbd` supplied by the constructed `hbd_ofTransfer` of `seam.toTransfer`). -/
+  hdetAB : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      (hx : x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)),
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+    relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+      (closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+          (3 + 2) (capstoneCylChainT s S hS φ hφ hφinj z)
+        + closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+          (3 + 2) diskDetectChain)
+      (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1)
+        (hbd_ofTransfer s t S hS φ hφ hφinj cd hseam d
+          (CapstoneSeamTransferSeam.toTransfer s S hS φ hφ hφinj seam))) ≠ 0
+
+/-- **The narrowed residual supplies the capstone `hasClass` field.** Fires `hasClass_ofTransfer`
+with the banked disk detecting triple (`diskDetectChain`/`_hc`/`_hdet`), the transfer datum
+`seam.toTransfer` (its `htransfer` discharged in §2), and the straddle detection. Its output is
+exactly the type of `CapstoneAmbientSupplyWeldedMV.hasClass` (with `s := p'.1`, `t := p.1`). So the
+deepest capstone atom reduces, for connected `s.M`, to inhabiting `CapstoneSeamTransferResidual` —
+`{a fundamental cycle of M, the two co-adapted seam splits, the straddle detection}`, the literal
+transfer eliminated. -/
+def CapstoneSeamTransferResidual.toHasClass
+    (R : CapstoneSeamTransferResidual s t S hS φ hφ hφinj cd hseam d) :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
+  hasClass_ofTransfer s t S hS φ hφ hφinj cd hseam d R.z R.hz
+    diskDetectChain diskDetectChain_hc diskDetectChain_hdet
+    (CapstoneSeamTransferSeam.toTransfer s S hS φ hφ hφinj R.seam)
+    R.hdetAB
 
 end
 
