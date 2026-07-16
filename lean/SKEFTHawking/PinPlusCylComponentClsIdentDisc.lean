@@ -142,6 +142,91 @@ theorem crossHloc_map_naturality {N M : TopCat} (ι : C(↑N, ↑M))
   exact crossRelChainLM_relMapChain_nat ι hpuncM hpuncN hbase hcyl p
     (w0 : RelativeChain ({yN.1}ᶜ : Set ↑N) (p + 1))
 
+/-! ## §2. Per-point detection for disconnected `M` — the crossHloc obligation transported
+per component. -/
+
+/-- **The per-point local-cross detection, disconnected.** At every interior point `x = (σ, t)` of the
+cylinder over a possibly-disconnected closed charted `M`, the local cross of `M`'s local fundamental
+class is nonzero — the connectedness-free version of the connected
+`crossHloc_ne_zero_of_alphaU_ne_zero`. Detected on the clopen connected component `C = connectedComponent σ`
+(where the connected engine fires), transported back to `M` through the open embedding `↥C ↪ M` and its
+cylinder lift (`crossHloc_map_naturality`, `mLocalClass` naturality, open-embedding injectivity). -/
+theorem crossHloc_mLocalClass_ne_zero {m' : ℕ}
+    {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M] [Nonempty M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m' + 2))) M]
+    (x : ↑(TopCat.of (cylW M))) (hx : x ∉ (cylModel m').boundary (cylW M))
+    (z : cycles (TopCat.of M) (m' + 2))
+    (hz : SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := m') (M := M)
+      = Homology.mk (TopCat.of M) (m' + 2) z) :
+    crossHloc (M := TopCat.of M) (interior_slice_one x hx) (interior_slice_zero x hx)
+        (interior_punc x) (m' + 1) (mLocalClass x z) ≠ 0 := by
+  -- the clopen connected component of the base point
+  haveI : LocallyConnectedSpace M :=
+    ChartedSpace.locallyConnectedSpace (EuclideanSpace ℝ (Fin (m' + 2))) M
+  haveI : T1Space (↑(cyl (TopCat.of M))) := inferInstance
+  set σ : M := x.1 with hσ
+  set C : Set M := connectedComponent σ with hCdef
+  have hCclopen : IsClopen C := ⟨isClosed_connectedComponent, isOpen_connectedComponent⟩
+  haveI : Nonempty ↥C := ⟨⟨σ, mem_connectedComponent⟩⟩
+  haveI : PreconnectedSpace ↥C :=
+    isPreconnected_iff_preconnectedSpace.mp isPreconnected_connectedComponent
+  letI : ChartedSpace (EuclideanSpace ℝ (Fin (m' + 2))) ↥C :=
+    TopologicalSpace.Opens.instChartedSpace ⟨C, hCclopen.isOpen⟩
+  haveI : CompactSpace ↥C := isCompact_iff_compactSpace.mp hCclopen.isClosed.isCompact
+  haveI : T2Space ↥C := inferInstance
+  haveI : T1Space (cylW ↥C) := inferInstance
+  -- the inclusion `↥C ↪ M` and its cylinder lift, as open embeddings
+  set ιC : C(↑(TopCat.of ↥C), ↑(TopCat.of M)) := ⟨Subtype.val, continuous_subtype_val⟩ with hιC
+  have hιC_open : Topology.IsOpenEmbedding (⇑ιC) := hCclopen.isOpen.isOpenEmbedding_subtypeVal
+  have hcylMap_open :
+      Topology.IsOpenEmbedding (⇑(ιC.prodMap (ContinuousMap.id unitInterval))) :=
+    hιC_open.prodMap Topology.IsOpenEmbedding.id
+  -- the corresponding interior point of `cylW ↥C`
+  set σC : ↥C := ⟨σ, mem_connectedComponent⟩ with hσC
+  set yN : ↑(cyl (TopCat.of ↥C)) := (σC, x.2) with hyN
+  have hy : yN ∉ (cylModel m').boundary (cylW ↥C) := by
+    rw [SKEFTHawking.PinPlusCylComponentExcisionBridge.mem_cylBoundary_iff]
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff, not_or]
+    exact interior_snd_ne x hx
+  have hxyN : (ιC.prodMap (ContinuousMap.id unitInterval)) yN = x := rfl
+  -- base and cylinder pushforward domains
+  have hbase : Set.MapsTo (⇑ιC) ({yN.1}ᶜ : Set ↑(TopCat.of ↥C)) ({x.1}ᶜ : Set ↑(TopCat.of M)) := by
+    intro a ha hcon
+    exact ha (Set.mem_singleton_iff.mpr (Subtype.ext (Set.mem_singleton_iff.mp hcon)))
+  have hcyl : Set.MapsTo (⇑(ιC.prodMap (ContinuousMap.id unitInterval)))
+      ({yN}ᶜ : Set ↑(cyl (TopCat.of ↥C))) ({x}ᶜ : Set ↑(cyl (TopCat.of M))) := by
+    intro a ha hcon
+    refine ha (Set.mem_singleton_iff.mpr (hcylMap_open.injective ?_))
+    rw [hxyN]; exact Set.mem_singleton_iff.mp hcon
+  -- the component's fundamental cycle rep
+  obtain ⟨zC, hzC0⟩ := Submodule.Quotient.mk_surjective _
+    (SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := m') (M := ↥C))
+  have hzC : SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := m') (M := ↥C)
+      = Homology.mk (TopCat.of ↥C) (m' + 2) zC := hzC0.symm
+  -- Step 2 — mLocalClass naturality: `[M]|_σ = ιC_*([C]|_σ)`
+  have hStep2 : mLocalClass x z
+      = RelativeHomology.map ιC hbase (m' + 2) (mLocalClass yN zC) := by
+    rw [mLocalClass_eq x z hz, mLocalClass_eq yN zC hzC,
+      ← restrictHomologyToPoint_naturality ιC yN.1 hbase (m' + 2)
+        (SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := m') (M := ↥C)),
+      restrict_map_fundClass_openEmbedding ιC hιC_open yN.1,
+      SKEFTHawking.SingularFundamentalClass.fundamentalClass_restricts (m := m') (M := M) σ]
+    rfl
+  -- Step 1 + injectivity + connected nonvanishing
+  rw [hStep2, crossHloc_map_naturality ιC (interior_slice_one x hx) (interior_slice_zero x hx)
+    (interior_punc x) (interior_slice_one yN hy) (interior_slice_zero yN hy) (interior_punc yN)
+    hbase hcyl (m' + 1) (mLocalClass yN zC)]
+  have hcyl' : Set.MapsTo (⇑(ιC.prodMap (ContinuousMap.id unitInterval)))
+      ({yN}ᶜ : Set ↑(cyl (TopCat.of ↥C)))
+      ({(ιC.prodMap (ContinuousMap.id unitInterval)) yN}ᶜ : Set ↑(cyl (TopCat.of M))) := hcyl
+  have hinj := relPointMap_injective_of_isOpenEmbedding
+    (X := cyl (TopCat.of ↥C)) (Y := cyl (TopCat.of M))
+    (ιC.prodMap (ContinuousMap.id unitInterval)) hcylMap_open yN (m' + 1) hcyl'
+  have hcross_ne : crossHloc (M := TopCat.of ↥C) (interior_slice_one yN hy)
+      (interior_slice_zero yN hy) (interior_punc yN) (m' + 1) (mLocalClass yN zC) ≠ 0 :=
+    crossHloc_ne_zero_of_alphaU_ne_zero yN hy zC hzC (alphaU_ne_zero yN hy zC hzC)
+  exact fun hcontra => hcross_ne (hinj (hcontra.trans (map_zero _).symm))
+
 end
 
 end SKEFTHawking.PinPlusCylComponentClsIdentDisc
