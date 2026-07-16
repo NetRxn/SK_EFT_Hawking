@@ -214,6 +214,21 @@ theorem finiteDimensional_h0_prodContractible {ι : Type*} [DecidableEq ι] (Y C
   exact ⟨i, hit, (joined_prod (Joined.refl y) (joined_of_contraction H c₀ h0 h1 c)).trans
     (joined_prod hj (Joined.refl c₀))⟩
 
+/-- **All-degree finiteness of a product with a contractible factor** — the combined supplier:
+degree `0` from the finite joined cover, degrees `≥ 1` from the homotopy transfer. The exact
+shape of the seam-overlap (`S_att × collar`) comparison finiteness: the collar contracts, the
+attaching-region factor carries the joined cover + all-degree finiteness. -/
+theorem finiteDimensional_homology_prodContractible_all {ι : Type*} [DecidableEq ι]
+    (Y C : TopCat) (c₀ : ↑C) (H : C(↑C × unitInterval, ↑C))
+    (h0 : slice H 0 = ContinuousMap.id ↑C) (h1 : slice H 1 = ContinuousMap.const ↑C c₀)
+    (t : Finset ι) (p : ι → ↑Y) (hcov : ∀ y : ↑Y, ∃ i ∈ t, Joined y (p i))
+    (hY : ∀ n, FiniteDimensional (ZMod 2) (Homology Y n)) (n : ℕ) :
+    FiniteDimensional (ZMod 2) (Homology (ProdSp Y C) n) := by
+  cases n with
+  | zero => exact finiteDimensional_h0_prodContractible Y C c₀ H h0 h1 t p hcov
+  | succ n =>
+    exact finiteDimensional_homology_prodContractible_succ Y C c₀ H h0 h1 n (hY (n + 1))
+
 /-! ## §7. The finite joined-cover export for compact charted manifolds. -/
 
 open SKEFTHawking.SingularConvexSubAcyclic in
