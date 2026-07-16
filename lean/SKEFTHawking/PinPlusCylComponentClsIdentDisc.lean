@@ -227,6 +227,56 @@ theorem crossHloc_mLocalClass_ne_zero {m' : ℕ}
     crossHloc_ne_zero_of_alphaU_ne_zero yN hy zC hzC (alphaU_ne_zero yN hy zC hzC)
   exact fun hcontra => hcross_ne (hinj (hcontra.trans (map_zero _).symm))
 
+/-! ## §3. The disconnected candidate-restriction and the per-carrier class identity `hcls`. -/
+
+/-- **The explicit cross candidate restricts to the interior generator, DISCONNECTED.** The
+connectedness-free twin of `…CylinderClsIdent.cylFundClassCandidate_restricts`: at every interior point
+the candidate's boundary restriction is the local cross of `M`'s local fundamental class
+(`restrictBd_candidate_eq_crossHloc`), nonzero by the per-component transport `crossHloc_mLocalClass_ne_zero`
+(NOT the connected `crossHloc_ne_zero_of_alphaU_ne_zero`, whose flank-injectivity route is false for
+disconnected `M`). -/
+theorem cylFundClassCandidate_restricts_disc {m' : ℕ}
+    {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M] [Nonempty M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m' + 2))) M] [T1Space (cylW M)] :
+    RestrictsToRelGen (X := TopCat.of (cylW M)) (m := m' + 1)
+      ((cylModel m').boundary (cylW M)) (cylGen (M := M) (m' := m'))
+      (cylFundClassCandidate (M := M) (m' := m')) := by
+  obtain ⟨z, hz⟩ := Submodule.Quotient.mk_surjective _
+    (SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := m') (M := M))
+  refine restrictsToRelGen_candidate_of_ne_zero (fun x hx => ?_)
+  rw [restrictBd_candidate_eq_crossHloc x hx z hz.symm]
+  exact crossHloc_mLocalClass_ne_zero x hx z hz.symm
+
+/-- **THE hcls IDENTITY (disconnected).** The `Classical.choose`-hidden k-component disconnected datum
+class `discD.cls` EQUALS the explicit product candidate `cylFundClassCandidate = crossH [M] = [M] × [I,∂I]`,
+for a possibly-disconnected closed charted 4-manifold. Both restrict to the cylinder interior generator
+`cylGen` everywhere (the datum by its `.restricts` field — the k-component excision assembly; the candidate
+by `cylFundClassCandidate_restricts_disc`); the relative fundamental class is unique given the closed
+interior determinedness `cylinder_hdet` (`cylinderRelFundClass_unique_of_slab`, connectedness-free). This
+is the disconnected twin of `cylinderDatum_cls_eq_crossH`, holding for ALL closed charted `M`. -/
+theorem disc_cls_eq_crossH {M : Type} [TopologicalSpace M] [T2Space M] [CompactSpace M] [Nonempty M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) M] [T1Space (cylW M)] :
+    (SKEFTHawking.PinPlusCylComponentDisconnectedCoreND.discD (M := M)).cls
+      = cylFundClassCandidate (M := M) (m' := 2) :=
+  cylinderRelFundClass_unique_of_slab (cylGen (M := M) (m' := 2))
+    SKEFTHawking.PinPlusCylinderWAdmPinned.cylinder_hdet
+    (SKEFTHawking.PinPlusCylComponentDisconnectedCoreND.discD (M := M)).restricts
+    cylFundClassCandidate_restricts_disc
+
 end
+
+/-! ## §4. THE ZERO-HYPOTHESIS PROVIDER. -/
+
+/-- **THE ZERO-HYPOTHESIS CHAR-PAIR `W`-PROVIDER.** The entire char-pair `W`-provider inhabitation, with
+NO hypotheses beyond the carrier's standing instances: the last provider hypothesis — the per-carrier
+disconnected class identity `hcls : discD.cls = crossH [M]` — is discharged unconditionally by
+`disc_cls_eq_crossH` (per-component crossHloc transport). Specializes
+`PinPlusCylComponentDisconnectedCoreNDDelta.nonempty_provider_of_disconnectedClsIdent`. -/
+theorem nonempty_charPairWProviderPerOp
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    {k : WithTop ℕ∞} {I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))} [I.Boundaryless] :
+    Nonempty (SKEFTHawking.PinPlusCharPairBorTethered.CharPairWProviderPerOp I k) :=
+  SKEFTHawking.PinPlusCylComponentDisconnectedCoreNDDelta.nonempty_provider_of_disconnectedClsIdent
+    (fun {_s} _σ _ _ _ _hpc => disc_cls_eq_crossH)
 
 end SKEFTHawking.PinPlusCylComponentClsIdentDisc
