@@ -1,8 +1,33 @@
 /-
-# Phase 5q.H close-out — THE CYLINDER-SIDE FEED OF THE CAPSTONE COVER-GLUE (residual discharge)
+# Phase 5q.H close-out — THE CYLINDER-SIDE FEED OF THE CAPSTONE COVER-GLUE (residual narrowing)
 
-Probe module: discharge the cylinder-side triple of `capstone_hasClass_ofCoreChains` from the engine
-`exists_cylinder_detecting_chain`, and package the remaining residuals.
+The capstone `hasClass` atom was reduced (`PinPlusTraceCapstoneCoverGlue.capstone_hasClass_ofCoreChains`)
+to FOUR named residuals on the two core chains: the cylinder-side triple (`cCyl`/`hcCyl`/`hdetCyl`,
+`BdB`), the `D⁵`-side triple (`cHa`/`hcHa`/`hdetHa`, `BdHa`), the two boundary-absorb facts, the mod-2
+seam-cancellation `hbd`, and the overlap straddle `hdetAB`. This module **discharges the cylinder-side
+triple** from the cylinder engine and **narrows** the remaining residuals to one geometric row.
+
+**§1 — the cylinder side, SUPPLIED (not assumed).** For connected `s.M` (a compact Hausdorff
+`ChartedSpace (EuclideanSpace ℝ (Fin 4))` — the cylinder engine's hypotheses), the cylinder end
+`.B = s.M × I` is definitionally `cylW s.M`, so the unconditional cylinder detecting chain
+(`PoincareLefschetzRelFundClassCylinderChainRep.exists_cylinder_detecting_chain`, at `m' = 2`) delivers
+`capstoneCylChain` with boundary supported in `BdB = M × {⊥,⊤}` (`capstoneCyl_hc`) and nonzero local
+class at every interior cylinder point (`capstoneCyl_hdet`) — the cover-glue's cylinder-side chain,
+produced by the engine rather than assumed. The `2 + 1 + 2 = 3 + 2` degree and `cylW s.M = .B`
+identifications hold at exact-level (the defeq bridge).
+
+**§2 — the narrowed residual row.** `CapstoneCoverGlueResidual` bundles what remains after the cylinder
+side is removed: the `D⁵` detecting chain `cHa`/`hcHa`/`hdetHa` (`BdHa` the disk boundary-support — the
+disk analogue of `exists_cylinder_detecting_chain`, an open geometric residual), the two boundary-absorb
+facts, the seam-cancellation `hbd`, and the overlap straddle `hdetAB`. `.toHasClass` fires
+`capstone_hasClass_ofCoreChains` with the cylinder side discharged — producing the EXACT type of
+`CapstoneAmbientSupply.hasClass` (equivalently the `hasClass` argument of `TraceRelFundLeaves.ofCapstone`).
+So the deepest capstone atom reduces, for connected `s.M`, to inhabiting this one row — the cylinder
+half of the four residuals now supplied. No field is a completeness Prop; none demands detection at a
+closed piece's frontier (the banned partition route).
+
+Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new project axiom, no
+`native_decide`, no `maxHeartbeats`.
 -/
 import Mathlib
 import SKEFTHawking.PinPlusTraceCapstoneCoverGlue
@@ -69,6 +94,29 @@ theorem capstoneCyl_hdet (y : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
         (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (3 + 1)
           (capstoneCyl_hc s S hS φ hφ hφinj)) ≠ 0 :=
   (exists_cylinder_detecting_chain (M := s.M) (m' := 2)).choose_spec.choose_spec y hy
+
+/-- **A relative fundamental class yields a detecting chain** — the general form of
+`exists_cylinder_detecting_chain`. Given a `HasRelFundClass` on a `T1` piece `P` at a boundary-support
+set `Bd` for the interior generators, the class is realized as a concrete `(m+2)`-chain whose boundary
+is supported in `Bd` and whose local class is nonzero at every point off `Bd` (via `exists_relClassOf_rep`
++ `relClassOf_rep_ne_zero_of_restrictsToRelGen`). This is the piece-intrinsic input the core-detection
+suppliers consume; instantiating it at `P = D⁵` reduces the `D⁵`-side detecting-chain residual
+(`CapstoneCoverGlueResidual.cHa`/`hcHa`/`hdetHa`) to the single object *the disk's relative fundamental
+class* — the sharp shape of that residual (the disk analogue of `hasRelFundClass_cylGen`). -/
+theorem exists_detecting_chain_of_hasRelFundClass {P : Type} [TopologicalSpace P] [T1Space P]
+    {m : ℕ} {Bd : Set (↑(TopCat.of P))}
+    {gen : ∀ y : ↑(TopCat.of P), y ∉ Bd →
+      (RelativeHomology (X := TopCat.of P) ({y}ᶜ) (m + 2) ≃ₗ[ZMod 2] ZMod 2)}
+    (h : HasRelFundClass (X := TopCat.of P) Bd gen) :
+    ∃ (c : SingularChain (TopCat.of P) (m + 2))
+      (hc : chainBoundary (TopCat.of P) (m + 1) c
+        ∈ subspaceChains (X := TopCat.of P) Bd (m + 1)),
+      ∀ (y : ↑(TopCat.of P)) (hy : y ∉ Bd),
+        relClassOf (X := TopCat.of P) ({y}ᶜ) m c
+          (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (m + 1) hc) ≠ 0 := by
+  obtain ⟨α, hα⟩ := h
+  obtain ⟨c, hc, rfl⟩ := exists_relClassOf_rep (X := TopCat.of P) Bd m α
+  exact ⟨c, hc, fun y hy => relClassOf_rep_ne_zero_of_restrictsToRelGen c hc hα y hy⟩
 
 /-! ## §2. The narrowed cover-glue residual — the cylinder side discharged. -/
 
