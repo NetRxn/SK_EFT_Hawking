@@ -21,6 +21,7 @@ import Mathlib
 import SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
 import SKEFTHawking.SpinSigmaGenerator
 import SKEFTHawking.SphereWitnessFiringUncondInt
+import SKEFTHawking.SphereProdCrossInt
 
 namespace SKEFTHawking.PinPlusKTSpinSigmaStock
 
@@ -155,5 +156,58 @@ noncomputable def sphere4IntPoincareDuality :
     subst ha
     show (0 : Module.Dual ℤ _) b = interFormInt _ 0 b
     rw [map_zero, LinearMap.zero_apply]
+
+/-! ## §4. The S²×S² stock element's s2s2 witness (functional level) + the orientation gap
+
+The distinguished `S²×S²` is the presentation's `s2s2` normalization witness (rank-2 hyperbolic form
+`II(S²×S²) = H`). Its integral-homology arc is COMPUTED in-tree: `H₁ = 0`, `H₂ ≅ ℤ²` with a computed
+rank-2 basis (`sphereProdIntH2Basis`), the honest fundamental class `sphereProdIntFundClassHonest`
+(`H₄ ≅ ℤ`). The ONE geometric residual is the **Gram pin** `interMatrix fc B = H` (Künneth /
+Benedetti Ch. 20). Given it, the `s2s2_hyp` field shape is discharged (below).
+
+**The orientation gap (an honest per-element-vs-total-function boundary instance).** Unlike `S⁴` (which
+carries the unconditional orientation datum `sphere4IntOrientationDataUncond` — §3), the S²×S² arc
+supplies its `[M]` at the *functional* level (`IntFundamentalClass SphereProdT`, from the MV homology
+computation) but NOT as an `IntOrientation SphereProdT` (its `redCompat` mod-2 comparison is not
+in-tree). So the S²×S² data populates the TOTAL bundle `SpinSigmaAtoms`' `fc`/`s2s2` slots (functional,
+no `Nonempty`/orientation needed) — NOT the per-element `SpinSigmaAtomPkg` (whose `orient` field would
+require an `IntOrientation`). This is exactly the vacuity-boundary asymmetry the reduce module's dissolve
+identifies: the s2s2 witness lives at the `SpinSigmaAtoms` functional level, not the `IntOrientation`-
+carrying package level. -/
+
+open SKEFTHawking.SphereWitnessTowerInt
+  (SphereProdT SphereProdHData sphereProdHDataComputed sphereProdIntH2Basis
+   sphereProd_interMatrix_evenUnimodular_of_gram sphereProd_interMatrix_latticeSig_of_gram)
+open SKEFTHawking.SphereProdHFourInt (sphereProdIntFundClassHonest)
+
+/-- **The S²×S² Gram-pin atom.** The single geometric residual of the product intersection form:
+`II(S²×S²) = H` (`= sphereProdFormDatum`) on the computed rank-2 basis. This is the Künneth/Benedetti
+statement the S²×S² witness bottoms out at; named here as the explicit input the s2s2 discharge below
+consumes (not in-tree — no manifold cup product on the product basis in Mathlib). -/
+abbrev SphereProdGramPin : Prop :=
+  interMatrix sphereProdIntFundClassHonest sphereProdHDataComputed.intH2Basis = sphereProdFormDatum
+
+/-- **The S²×S² `s2s2_hyp` witness, assembled from the Gram pin.** Given the Gram-pin atom, the honest
+fundamental class + computed rank-2 basis deliver the `∃ N, IsHyperbolicForm N ∧ IntCongr (II) N` shape
+— exactly the `s2s2_hyp` field of `SpinSigmaAtoms` / `SpinSigmaPresentation`, now stated for the CONCRETE
+product intersection matrix (`interMatrix (honest fc) (computed B)`), not the abstract
+`sphereProdFormDatum`. -/
+theorem sphereProd_s2s2_hyp_of_gram (hgram : SphereProdGramPin) :
+    ∃ N, IsHyperbolicForm N ∧
+      IntCongr (interMatrix sphereProdIntFundClassHonest sphereProdHDataComputed.intH2Basis) N := by
+  obtain ⟨N, hN, hcong⟩ := sphereProdFormDatum_hyp_pin
+  exact ⟨N, hN, by rw [hgram]; exact hcong⟩
+
+/-- **The S²×S² intersection matrix is even unimodular under the Gram pin** — the concrete
+`even_unimod` obligation at the distinguished `s2s2`, from `sphereProd_interMatrix_evenUnimodular_of_gram`.
+Confirms the s2s2 sector's even-unimodularity is realized by the computed product data (modulo the pin),
+consistent with the S⁴ pipeline. -/
+theorem sphereProd_s2s2_evenUnimodular_of_gram (hgram : SphereProdGramPin) :
+    IsEvenUnimodular (interMatrix sphereProdIntFundClassHonest sphereProdHDataComputed.intH2Basis) :=
+  sphereProd_interMatrix_evenUnimodular_of_gram sphereProdHDataComputed sphereProdIntFundClassHonest hgram
+
+/-- **`b₂(S²×S²) = 2`** — the `s2s2_rank` obligation at the distinguished witness (`rfl`, the computed
+rank-2 basis). -/
+theorem sphereProd_s2s2_rank : sphereProdIntH2Basis.rank = 2 := rfl
 
 end SKEFTHawking.PinPlusKTSpinSigmaStock
