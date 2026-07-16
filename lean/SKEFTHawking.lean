@@ -4500,6 +4500,7 @@ import SKEFTHawking.PinPlusKTLemma53Wave
 import SKEFTHawking.PinPlusKTLeafGate
 import SKEFTHawking.PinPlusKTSpinForgetPhi
 import SKEFTHawking.PinPlusTraceLeafGate
+import SKEFTHawking.PinPlusKTSpinPresentationRow
 import SKEFTHawking.PinPlusKTFreezeAssembly
 import SKEFTHawking.SingularSurgeryFoundation
 import SKEFTHawking.SingularSurgeryCharts
