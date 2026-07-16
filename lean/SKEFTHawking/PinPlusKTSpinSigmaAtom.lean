@@ -132,6 +132,24 @@ noncomputable def spinPresentationRow_of_atoms (a : SpinSigmaAtoms prov)
   hrank := hrank
   hk3 := hk3
 
+/-- **`Ω₄^{Spin} ≅ ℤ` from the atom bundle (the N1a headline).** The atom bundle + Rokhlin + K3
+generator, together with the two terminal Freeze-A atoms (`HandleTradeCobordism`, `HyperbolicBase`)
+and Freeze B (`SphereProductBounds`), deliver the normalized-signature iso `σ = −16·e`, `e[g] = 1`.
+The R-atom's E1 data reaches all the way to the spin-bordism iso, modulo exactly the frozen
+manifold-topology statements (carried, not discharged). -/
+theorem dataBordismGrp_equiv_int_of_atoms (a : SpinSigmaAtoms prov)
+    (hdvd : ∀ x, (16 : ℤ) ∣ a.sig x)
+    (g : StrMfd (spinEmptyData prov))
+    (hrank : (a.B g).rank = 22)
+    (hk3 : IntCongr (Matrix.reindex (finCongr hrank) (finCongr hrank)
+        (interMatrix (a.fc g) (a.B g))) k3Form)
+    (hCob : (spinSigmaPresentation_of_atoms a).HandleTradeCobordism)
+    (hBase : (spinSigmaPresentation_of_atoms a).HyperbolicBase)
+    (hB : (spinSigmaPresentation_of_atoms a).SphereProductBounds) :
+    ∃ e : DataBordismGrp (spinEmptyData prov) ≃+ ℤ,
+      (∀ x, a.sig x = -16 * e x) ∧ e (DataBordismGrp.mk (spinEmptyData prov) g) = 1 :=
+  dataBordismGrp_equiv_int_of_row (spinPresentationRow_of_atoms a hdvd g hrank hk3) hCob hBase hB
+
 /-! ## §4. End-to-end — the atom bundle drives the KT §5 consumers -/
 
 /-- **dC from atoms, overhang-free (G9-4 `KTKernelCard` route).** The E1 atom bundle plus the row's
