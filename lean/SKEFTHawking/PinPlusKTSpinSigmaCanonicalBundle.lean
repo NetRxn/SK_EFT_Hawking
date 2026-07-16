@@ -142,4 +142,19 @@ disclosed `sig`, with the disjoint-union additivity plumbing fully discharged an
       = latticeSig (interMatrix (c.toSpinSigmaAtoms.fc p) (c.toSpinSigmaAtoms.B p)) :=
   rfl
 
+/-- **The disclosed `sig` field is REDUNDANT on the canonical bundle** — it is *forced* by `hbord`.
+Both `c.sig` (the disclosed Thom hom, satisfying `sig_eq`) and `c.sigThom hbord` (built from `hbord` +
+the discharged block atom) are `AddMonoidHom`s on `DataBordismGrp = Quot _` that agree on every
+generator `[p] = latticeSig (interMatrix (fc p) (B p))`, hence are equal. So on the canonical
+construction the σ-presentation's `sig` is not an independent disclosure: it collapses onto the single
+deep atom `hbord` (with the elementary additivity fully discharged). -/
+theorem CanonicalSpinSigmaAtoms.sig_eq_sigThom (c : CanonicalSpinSigmaAtoms prov)
+    (hbord : ∀ p q, IsDataBordant (spinEmptyData prov) p q
+      → latticeSig (interMatrix (c.toSpinSigmaAtoms.fc p) (c.toSpinSigmaAtoms.B p))
+        = latticeSig (interMatrix (c.toSpinSigmaAtoms.fc q) (c.toSpinSigmaAtoms.B q))) :
+    c.toSpinSigmaAtoms.sig = c.sigThom hbord := by
+  ext x
+  induction x using Quot.ind with | _ p =>
+  exact (c.toSpinSigmaAtoms.sig_eq p).trans (c.sigThom_mk hbord p).symm
+
 end SKEFTHawking.PinPlusKTSpinSigmaCanonicalBundle
