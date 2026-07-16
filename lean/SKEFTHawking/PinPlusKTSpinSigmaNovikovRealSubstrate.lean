@@ -255,4 +255,145 @@ theorem latticeSig_eq_of_realPairLES {r s : ℕ} (A : Matrix (Fin r) (Fin r) ℤ
   rw [latticeSig_neg] at hadd
   omega
 
+/-! ## §5. The faithfulness converse — a Lagrangian BUILDS the substrate (`ofLagrangian`)
+
+The substrate is **faithful**: it is inhabited for a boundary form `Bd` *exactly when* `Bd` carries a
+half-dimensional isotropic subspace (a Lagrangian). §1's `lagrangian` gives the forward direction
+(`NovikovRealPairLES Bd → ∃ Lagrangian`); this section gives the converse — from a Lagrangian `L` we
+CONSTRUCT a `NovikovRealPairLES Bd` synthetically, with `H³(W,∂W) := (Fin n → ℝ) ⧸ L`, `delta := L.mkQ`,
+`rest2 := L.subtype`, and `pairing` the boundary form descended through the quotient. The pair-LES
+exactness `im rest2 = ker delta` is then `range L.subtype = ker L.mkQ = L` (definitional), and the
+Kronecker nondegeneracy is the co-isotropy `L^⊥ ⊆ L` (from half-dimensionality + nondegeneracy, banked as
+`coisotropic_of_isotropic_half_matrix`). This confirms the merge-note's "sound by design — inhabitable only
+when the signature agrees" as a THEOREM: the substrate route is *equivalent* to the classical Lagrangian
+route, neither weaker nor stronger. -/
+
+/-- **Bilinear isotropy on a Lagrangian.** If the boundary quadratic form vanishes on `L` (a subspace),
+its polar form vanishes on `L × L`: `polar Q a w = Q(a+w) − Q a − Q w = 0` for `a, w ∈ L`. -/
+theorem polarBilin_vanish_of_mem {n : ℕ} {Bd : Matrix (Fin n) (Fin n) ℤ}
+    {L : Submodule ℝ (Fin n → ℝ)}
+    (hiso : ∀ x ∈ L, (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap' x = 0)
+    {a w : Fin n → ℝ} (ha : a ∈ L) (hw : w ∈ L) :
+    (QuadraticMap.polarBilin (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap') a w = 0 := by
+  simp only [QuadraticMap.polarBilin_apply_apply, QuadraticMap.polar]
+  rw [hiso _ (L.add_mem ha hw), hiso _ ha, hiso _ hw]; ring
+
+/-- **The descended boundary pairing.** For a Lagrangian `L` the boundary polar form `B := polarBilin Q`
+descends to a genuine bilinear pairing `L × ((Fin n → ℝ) ⧸ L) → ℝ`, `⟨a, mkQ v⟩ := B a v`. Well-defined:
+for `a ∈ L`, `B a` vanishes on `L` (`polarBilin_vanish_of_mem`), so it factors through the quotient. This is
+the `pairing` field the substrate consumes; linearity in the `L`-slot is proven representative-wise (no
+`liftQ_add`; the descent is assembled by hand). -/
+noncomputable def lagrangianPairing {n : ℕ} (Bd : Matrix (Fin n) (Fin n) ℤ)
+    (L : Submodule ℝ (Fin n → ℝ))
+    (hiso : ∀ x ∈ L, (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap' x = 0) :
+    L →ₗ[ℝ] ((Fin n → ℝ) ⧸ L) →ₗ[ℝ] ℝ where
+  toFun a := Submodule.liftQ L
+    (QuadraticMap.polarBilin (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap' (a : Fin n → ℝ))
+    (by intro w hw; simp only [LinearMap.mem_ker]
+        exact polarBilin_vanish_of_mem hiso a.2 hw)
+  map_add' a b := by
+    apply LinearMap.ext; intro v
+    induction v using Submodule.Quotient.induction_on with
+    | H w => simp [Submodule.liftQ_apply, Submodule.coe_add, map_add]
+  map_smul' c a := by
+    apply LinearMap.ext; intro v
+    induction v using Submodule.Quotient.induction_on with
+    | H w => simp [Submodule.liftQ_apply, map_smul]
+
+/-- **The faithfulness converse: a Lagrangian builds the substrate.** From a half-dimensional isotropic
+subspace `L` of a nondegenerate boundary form `Bd`, construct `NovikovRealPairLES Bd`:
+`H²(W) := L`, `H³(W,∂W) := (Fin n → ℝ) ⧸ L`, `rest2 := L.subtype`, `delta := L.mkQ`, `pairing` the descended
+polar form. Pair-LES exactness is `range subtype = ker mkQ = L`; Kronecker nondegeneracy is the co-isotropy
+`L^⊥ ⊆ L` (from half-dimensionality via `coisotropic_of_isotropic_half_matrix`); the PD-intertwining is the
+defining equation of `pairing`. -/
+noncomputable def NovikovRealPairLES.ofLagrangian {n : ℕ} (Bd : Matrix (Fin n) (Fin n) ℤ)
+    (hbdnd : (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap'.radical = ⊥)
+    (L : Submodule ℝ (Fin n → ℝ))
+    (hhalf : n = 2 * Module.finrank ℝ L)
+    (hiso : ∀ x ∈ L, (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap' x = 0) :
+    NovikovRealPairLES Bd where
+  H2W := L
+  H3rel := (Fin n → ℝ) ⧸ L
+  rest2 := L.subtype
+  delta := L.mkQ
+  pairing := lagrangianPairing Bd L hiso
+  hexact := by
+    rw [LinearMap.exact_iff, Submodule.ker_mkQ, Submodule.range_subtype]
+  hadj := by
+    intro a v
+    simp only [lagrangianPairing, LinearMap.coe_mk, AddHom.coe_mk, Submodule.subtype_apply,
+      Submodule.mkQ_apply, Submodule.liftQ_apply]
+  hnondeg := by
+    intro x hx
+    induction x using Submodule.Quotient.induction_on with
+    | H v =>
+      have hco := PinPlusKTSpinSigmaNovikovHalfDim.coisotropic_of_isotropic_half_matrix Bd hbdnd L hiso hhalf
+      have hvperp : v ∈ LinearMap.BilinForm.orthogonal
+          (QuadraticMap.polarBilin (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap') L := by
+        rw [LinearMap.BilinForm.mem_orthogonal_iff]
+        intro a ha
+        rw [LinearMap.BilinForm.isOrtho_def]
+        have := hx ⟨a, ha⟩
+        simpa [lagrangianPairing, Submodule.liftQ_apply] using this
+      rw [Submodule.Quotient.mk_eq_zero]
+      exact hco hvperp
+  hbdnd := hbdnd
+
+/-- **Faithfulness (form level): the substrate is inhabited iff a Lagrangian exists.** For a nondegenerate
+boundary form `Bd` (`radical = ⊥`, banked from even-unimodularity), `NovikovRealPairLES Bd` is inhabited
+*exactly when* `Bd` carries a half-dimensional isotropic subspace. Forward: `d.lagrangian`; backward:
+`ofLagrangian`. So the pair-LES/Kronecker/adjunction substrate encodes neither more nor less than the
+classical Lagrangian — the merge-note's "sound by design, inhabitable only when the signature agrees" made a
+theorem. -/
+theorem NovikovRealPairLES.nonempty_iff_exists_lagrangian {n : ℕ} (Bd : Matrix (Fin n) (Fin n) ℤ)
+    (hbdnd : (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap'.radical = ⊥) :
+    Nonempty (NovikovRealPairLES Bd) ↔
+      ∃ L : Submodule ℝ (Fin n → ℝ),
+        n = 2 * Module.finrank ℝ L ∧
+        ∀ x ∈ L, (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap' x = 0 :=
+  ⟨fun ⟨d⟩ => d.lagrangian,
+   fun ⟨L, hhalf, hiso⟩ => ⟨NovikovRealPairLES.ofLagrangian Bd hbdnd L hhalf hiso⟩⟩
+
+/-! ## §6. The σ-descent atom (Prop form) — EQUIVALENT to the classical Lagrangian atom -/
+
+/-- **The per-pair real pair-LES atom (Prop form).** For every data-bordant pair `p, q`, the boundary block
+form `blockDiag (II M_p) (−II M_q)` carries a `NovikovRealPairLES`. This is the `Nonempty`-valued twin of the
+data hypothesis of `novikovHalfDim_of_realPairLES`, a genuine `Prop` fit for the atom equivalence. -/
+def NovikovRealPairLESAtom (prov : CharPairWProviderPerOp (𝓡 4) 0) (a : SpinSigmaAtoms prov) : Prop :=
+  ∀ p q : StrMfd (spinEmptyData prov), IsDataBordant (spinEmptyData prov) p q →
+    Nonempty (NovikovRealPairLES
+      (blockDiag (interMatrix (a.fc p) (a.B p)) (-interMatrix (a.fc q) (a.B q))))
+
+/-- **`NovikovHalfDimAtom` from the real pair-LES atom.** Each per-pair substrate yields a
+`NovikovBoundaryRestriction` via `toBoundaryRestriction`; so the substrate atom discharges the σ-descent's
+residual half-dim atom (the `Nonempty`-driven form of `novikovHalfDim_of_realPairLES`). -/
+theorem novikovHalfDim_of_novikovRealPairLESAtom {a : SpinSigmaAtoms prov}
+    (h : NovikovRealPairLESAtom prov a) : NovikovHalfDimAtom prov a :=
+  fun p q hb => ⟨(h p q hb).some.toBoundaryRestriction⟩
+
+/-- **The real pair-LES atom from the classical Lagrangian atom.** Given, per data-bordant pair, a
+half-dimensional isotropic Lagrangian `L`, the boundary block form is even-unimodular (from `wu`/`pd`), hence
+nondegenerate, so `ofLagrangian` builds the substrate. This is the converse that makes the substrate atom
+EQUIVALENT to `NovikovLagrangianAtom`, not a strictly stronger demand. -/
+theorem novikovRealPairLESAtom_of_novikovLagrangian {a : SpinSigmaAtoms prov}
+    (h : NovikovLagrangianAtom prov a) : NovikovRealPairLESAtom prov a := by
+  intro p q hb
+  obtain ⟨L, hdim, hiso⟩ := h p q hb
+  have heuP := isEvenUnimodular_of_intPD (a.fc p) (a.B p) (a.wu p) (a.pd p)
+  have heuQ := isEvenUnimodular_of_intPD (a.fc q) (a.B q) (a.wu q) (a.pd q)
+  have hbd_eu := isEvenUnimodular_blockDiag (interMatrix (a.fc p) (a.B p))
+    (-interMatrix (a.fc q) (a.B q)) heuP (isEvenUnimodular_neg _ heuQ)
+  exact ⟨NovikovRealPairLES.ofLagrangian _ hbd_eu.radical_eq_bot L hdim hiso⟩
+
+/-- **`NovikovRealPairLESAtom ↔ NovikovLagrangianAtom`** — the substrate atom is a faithful re-expression of
+the classical Novikov Lagrangian atom. Forward: through `novikovHalfDim_of_novikovRealPairLESAtom` +
+`novikovLagrangian_of_novikovHalfDim`; backward: `novikovRealPairLESAtom_of_novikovLagrangian`. With the
+half-dim/co-isotropy equivalences already banked, all four formulations of the σ-descent's last geometric
+atom (Lagrangian, half-dim boundary restriction, Lefschetz co-isotropy, real pair-LES substrate) are
+kernel-provably interchangeable: discharging ANY one makes the σ-descent unconditional. -/
+theorem novikovRealPairLESAtom_iff_novikovLagrangian {a : SpinSigmaAtoms prov} :
+    NovikovRealPairLESAtom prov a ↔ NovikovLagrangianAtom prov a :=
+  ⟨fun h => novikovLagrangian_of_novikovHalfDim (novikovHalfDim_of_novikovRealPairLESAtom h),
+   novikovRealPairLESAtom_of_novikovLagrangian⟩
+
 end SKEFTHawking.PinPlusKTSpinSigmaNovikovRealSubstrate
