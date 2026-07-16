@@ -52,6 +52,8 @@ open SKEFTHawking.PoincareLefschetzRelFundClassGeom
 open SKEFTHawking.PoincareLefschetzWu5
 open SKEFTHawking.PoincareLefschetzWuAssembly
 open SKEFTHawking.SingularRelativeCup
+open SKEFTHawking.SingularRelativeBockstein
+open SKEFTHawking.SingularRelativeSteenrodSq2
 open SKEFTHawking.SingularCohomologyMod2 SKEFTHawking.SingularRelativeCohomologyMod2
 open SKEFTHawking.PinPlusTraceCapstoneInhabit
 open SKEFTHawking.PinPlusTraceCapstoneCohomologyMV
@@ -121,6 +123,59 @@ theorem wuW2_eq_zero_of_wuClasses (P14 : LefschetzWuDatum X S 1 4 5)
     (h2 : wuClassW2 P23 = 0) : wuW2 P14 P23 = 0 := by
   rw [wuW2_eq_zero_iff, h1, h2]
   simp
+
+/-! ## §3b. The Wu vanishings from the honest Steenrod–Kronecker functional vanishings.
+
+The Wu-class vanishings of §3 are themselves the Lefschetz-dual shadows of the two
+**Steenrod–Kronecker functional vanishings** `⟨relSq¹ ·, [W,∂W]⟩ = 0` and `⟨relSq² ·, [W,∂W]⟩ = 0` —
+the honest spin content the σ-cert transport (the ends' `PinPlusCertK` across the cover glue) must
+deliver. This block routes `hwu` all the way down to those two functional vanishings: no Betti
+computation, no `sqOp` gaming (the pins are `relSq¹`/`relSq²` wired concrete by `ofRelFund14`/`23`),
+just the honest degree-`(1,4)`/`(2,3)` Wu functionals of the trace pair. Same spin collapse the
+cylinder narrowed to (`PinPlusCylinderWAdmPinned.…ofClosedPDInteriorSpin`), now on the 5-dim trace. -/
+
+/-- **A vanishing Wu functional forces a vanishing Wu class** — the Lefschetz-dual of `0` is `0`
+(the perfect pairing `pairing P` is bijective and linear, so `wuClass P = pairing P⁻¹(wuFunctional P)`
+lands on `0` exactly when the functional does). Generic over the datum. -/
+theorem wuClass_eq_zero_of_wuFunctional {k nk n : ℕ} (P : LefschetzWuDatum X S k nk n)
+    (h : wuFunctional P = 0) : wuClass P = 0 := by
+  have hkey : pairing P (wuClass P) = wuFunctional P :=
+    (Equiv.ofBijective _ (pairing_bijective P)).apply_symm_apply (wuFunctional P)
+  apply (pairing_bijective P).injective
+  rw [hkey, h, map_zero]
+
+/-- **The spin collapse of the trace's `w₂(W)`** — if BOTH Lefschetz–Wu functionals of the trace
+pair vanish (`⟨relSq¹ ·, [W,∂W]⟩ = 0` on `H⁴(W,∂W)` and `⟨relSq² ·, [W,∂W]⟩ = 0` on `H³(W,∂W)`) then
+`wuW2 P₁₄ P₂₃ = 0`: both Wu classes vanish (`wuClass_eq_zero_of_wuFunctional`), so
+`w₂(W) = v₂ + v₁² = 0 + 0² = 0`. Does NOT need the value of `v₁²` — the two vanishings close it. -/
+theorem wuW2_eq_zero_of_wuFunctionals (P14 : LefschetzWuDatum X S 1 4 5)
+    (P23 : LefschetzWuDatum X S 2 3 5) (h14 : wuFunctional P14 = 0) (h23 : wuFunctional P23 = 0) :
+    wuW2 P14 P23 = 0 :=
+  wuW2_eq_zero_of_wuClasses P14 P23 (wuClass_eq_zero_of_wuFunctional P14 h14)
+    (wuClass_eq_zero_of_wuFunctional P23 h23)
+
+/-- **Verification — no `sqOp` gaming (`(1,4)` leg).** The `(1,4)` Wu functional of the datum
+assembled by `ofRelFund14` IS the honest Steenrod–Kronecker functional `μ ∘ relSq¹ = ⟨relSq¹ ·,
+[W,∂W]⟩` (the `sqOp` pin is `relSq1` wired concrete, `mu` is the relative fundamental-class
+functional). So `h14`'s hypothesis is the genuine `v₁(W)`-vanishing spin input, not a free pin. -/
+theorem wuFunctional_ofRelFund14 (D : RelFundClassDatum (m := 3) S)
+    (fa : FiniteDimensional (ZMod 2) (Cohomology X 1))
+    (fr : FiniteDimensional (ZMod 2) (RelativeCohomology S 4))
+    (nd : Function.Injective ⇑((relCupH14 (X := X) (S := S)).compr₂ D.mu))
+    (de : Module.finrank (ZMod 2) (Cohomology X 1)
+        = Module.finrank (ZMod 2) (RelativeCohomology S 4)) :
+    wuFunctional (LefschetzWuDatum.ofRelFund14 D fa fr nd de) = D.mu.comp (relSq1 (n := 3)) := rfl
+
+/-- **Verification — no `sqOp` gaming (`(2,3)` leg).** The `(2,3)` Wu functional of the `ofRelFund23`
+datum IS `μ ∘ relSq² = ⟨relSq² ·, [W,∂W]⟩` (the `sqOp` pin is `relSq2` concrete). So `h23`'s
+hypothesis is the genuine `v₂(W)`-vanishing spin input. -/
+theorem wuFunctional_ofRelFund23 (D : RelFundClassDatum (m := 3) S)
+    (fa : FiniteDimensional (ZMod 2) (Cohomology X 2))
+    (fr : FiniteDimensional (ZMod 2) (RelativeCohomology S 3))
+    (nd : Function.Injective ⇑((relCupH23 (X := X) (S := S)).compr₂ D.mu))
+    (de : Module.finrank (ZMod 2) (Cohomology X 2)
+        = Module.finrank (ZMod 2) (RelativeCohomology S 3)) :
+    wuFunctional (LefschetzWuDatum.ofRelFund23 D fa fr nd de) = D.mu.comp relSq2 := rfl
 
 /-! ## §4. The capstone-shaped plug-in suppliers for the supply row's `dimeq` fields. -/
 
@@ -196,6 +251,69 @@ theorem capstone_dimeq23_of_flip
     (CapstoneCohomologyMVDatum.toFindimAbs23 s t S hS φ hφ hφinj cd hseam d mv)
     (CapstoneCohomologyMVDatum.toFindimRel23 s t S hS φ hφ hφinj cd hseam d mv)
     hl hr
+
+/-- **The capstone `hwu` supplier from the two Steenrod–Kronecker functional vanishings** — the
+σ-cert-transport-shaped plug-in for `CapstoneAmbientSupplyWeldedMV.hwu`. On the constructed capstone
+the Wu obstruction `w₂(W) = 0` falls to the honest spin content: the vanishing of the two
+Lefschetz–Wu functionals `⟨relSq¹ ·, [W,∂W]⟩` and `⟨relSq² ·, [W,∂W]⟩` of the 5-dim trace pair
+`(W, ∂W)` (`hwf14`/`hwf23` — the shape the ends' `PinPlusCertK` transport across the cover glue must
+deliver), the finite-dimensionalities read off the MV cover row. No Betti computation and no `sqOp`
+gaming: the pins are the CONCRETE `relSq¹`/`relSq²` wired by `ofRelFund14`/`23` (`hwf14`/`hwf23` are
+literally `μ ∘ relSq¹ = 0`/`μ ∘ relSq² = 0`, see `wuFunctional_ofRelFund14`/`23`), so these are the
+genuine `v₁(W) = 0` / `v₂(W) = 0` spin inputs. This is the 5-dim trace analogue of the cylinder's
+`PinPlusCylinderWAdmPinned.CylinderWAdmPinned.ofClosedPDInteriorSpin`. -/
+theorem capstone_hwu_of_steenrodKronecker
+    (hasClass :
+      letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+      HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+          ((𝓡 4).prod (𝓡∂ 1)) εtrace))
+    (mv : CapstoneCohomologyMVDatum s t S hS φ hφ hφinj cd hseam d)
+    (nondeg14 : Function.Injective
+      ⇑((relCupH14 (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        (S := ((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)).compr₂
+        (TraceRelFundLeaves.ofCapstone s t S hS φ hφ hφinj cd hseam d
+          hasClass).toRelFundClassDatum.mu))
+    (dimeq14 : Module.finrank (ZMod 2)
+        (Cohomology (TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W) 1)
+      = Module.finrank (ZMod 2)
+        (RelativeCohomology (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) 4))
+    (nondeg23 : Function.Injective
+      ⇑((relCupH23 (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        (S := ((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)).compr₂
+        (TraceRelFundLeaves.ofCapstone s t S hS φ hφ hφinj cd hseam d
+          hasClass).toRelFundClassDatum.mu))
+    (dimeq23 : Module.finrank (ZMod 2)
+        (Cohomology (TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W) 2)
+      = Module.finrank (ZMod 2)
+        (RelativeCohomology (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) 3))
+    (hwf14 : wuFunctional
+      (LefschetzWuDatum.ofRelFund14
+        (TraceRelFundLeaves.ofCapstone s t S hS φ hφ hφinj cd hseam d hasClass).toRelFundClassDatum
+        (CapstoneCohomologyMVDatum.toFindimAbs14 s t S hS φ hφ hφinj cd hseam d mv)
+        (CapstoneCohomologyMVDatum.toFindimRel14 s t S hS φ hφ hφinj cd hseam d mv)
+        nondeg14 dimeq14) = 0)
+    (hwf23 : wuFunctional
+      (LefschetzWuDatum.ofRelFund23
+        (TraceRelFundLeaves.ofCapstone s t S hS φ hφ hφinj cd hseam d hasClass).toRelFundClassDatum
+        (CapstoneCohomologyMVDatum.toFindimAbs23 s t S hS φ hφ hφinj cd hseam d mv)
+        (CapstoneCohomologyMVDatum.toFindimRel23 s t S hS φ hφ hφinj cd hseam d mv)
+        nondeg23 dimeq23) = 0) :
+    wuW2
+      (LefschetzWuDatum.ofRelFund14
+        (TraceRelFundLeaves.ofCapstone s t S hS φ hφ hφinj cd hseam d hasClass).toRelFundClassDatum
+        (CapstoneCohomologyMVDatum.toFindimAbs14 s t S hS φ hφ hφinj cd hseam d mv)
+        (CapstoneCohomologyMVDatum.toFindimRel14 s t S hS φ hφ hφinj cd hseam d mv)
+        nondeg14 dimeq14)
+      (LefschetzWuDatum.ofRelFund23
+        (TraceRelFundLeaves.ofCapstone s t S hS φ hφ hφinj cd hseam d hasClass).toRelFundClassDatum
+        (CapstoneCohomologyMVDatum.toFindimAbs23 s t S hS φ hφ hφinj cd hseam d mv)
+        (CapstoneCohomologyMVDatum.toFindimRel23 s t S hS φ hφ hφinj cd hseam d mv)
+        nondeg23 dimeq23) = 0 :=
+  wuW2_eq_zero_of_wuFunctionals _ _ hwf14 hwf23
 
 end
 
