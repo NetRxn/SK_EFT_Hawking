@@ -369,6 +369,46 @@ theorem kernelReducesToSpin_of_capstoneWeldedSupply
   kernelReducesToSpin_of_ambientDatumSupply
     (fun p hbrown hpos => (H p hbrown hpos).toAmbientSurgeryDatum)
 
+/-! ## §4. The Brown fence at the narrowed-row level (spec 4) — same-grade by construction. -/
+
+/-- **The narrowed welded supply's membrane row.** The `TraceMembraneLeaves` on the constructed capstone
+extracted from a `CapstoneAmbientSupplyWelded` via the free `HAW`/`hW` reduction. -/
+def CapstoneAmbientSupplyWelded.toTraceMembraneLeaves
+    {p : StrMfd (pinPlusCharPairData prov).toTangentialData}
+    (D : CapstoneAmbientSupplyWelded prov p) :
+    letI := D.hsT2
+    TraceMembraneLeaves (capstoneB D.p'.1 p.1 D.S D.hS D.φ D.hφ D.hφinj D.cd D.hseam D.d) D.p'.2 p.2 :=
+  letI := D.hsT2
+  TraceMembraneLeaves.ofCapstoneWelded D.p'.1 p.1 D.S D.hS D.φ D.hφ D.hφinj D.cd D.hseam D.d
+    D.p'.2 p.2 D.real D.htaylor D.hlag D.HAQ D.weld D.hQ D.glueσ D.glueτ D.chartQ
+
+/-- **The narrowed welded supply's W-admissibility row.** Rebuilt from the relFund existence witness +
+Lefschetz numerics carried by the supply. -/
+def CapstoneAmbientSupplyWelded.toTraceWAdmLeaves
+    {p : StrMfd (pinPlusCharPairData prov).toTangentialData}
+    (D : CapstoneAmbientSupplyWelded prov p) :
+    letI := D.hsT2
+    TraceWAdmLeaves (capstoneB D.p'.1 p.1 D.S D.hS D.φ D.hφ D.hφinj D.cd D.hseam D.d) :=
+  letI := D.hsT2
+  TraceWAdmLeaves.ofRelFundLeaves
+    (TraceRelFundLeaves.ofCapstone D.p'.1 p.1 D.S D.hS D.φ D.hφ D.hφinj D.cd D.hseam D.d D.hasClass)
+    D.findimAbs14 D.findimRel14 D.nondeg14 D.dimeq14 D.findimAbs23 D.findimRel23 D.nondeg23 D.dimeq23
+    D.hwu
+
+/-- **The narrowed supply is Brown-graded — same-grade by construction (spec 4).** From a
+`CapstoneAmbientSupplyWelded prov p` the membrane's Taylor-leg-vanishing + jointly-Lagrangian kernel
+(`htaylor`/`hlag`, bundled in the row) forces `brown(q_{p'}) = brown(q_p)` through the anti-collapse
+engine (`traceLeaves_brown_eq`). So no instantiation of the narrowed welded supply can launder a
+Brown-violating surgery step: the KT surgery preserves the mod-8 Brown/ABK grade, the falsifiable
+physics payload of the membrane presentation, delivered on the CONSTRUCTED carrier with the carrier
+presentation discharged free. -/
+theorem CapstoneAmbientSupplyWelded.brown_eq
+    {p : StrMfd (pinPlusCharPairData prov).toTangentialData}
+    (D : CapstoneAmbientSupplyWelded prov p) :
+    D.p'.2.q.brown = p.2.q.brown :=
+  letI := D.hsT2
+  traceLeaves_brown_eq D.toTraceWAdmLeaves D.toTraceMembraneLeaves
+
 end
 
 end SKEFTHawking.PinPlusTraceCapstoneMembraneWeld
