@@ -58,6 +58,9 @@ open SKEFTHawking.SingularClosedHomologyFinite
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderSuspension
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderCrossLocalAlphaU
 open SKEFTHawking.SingularRelativeCup
+open SKEFTHawking.SingularRelativeCohomologyMod2
+open SKEFTHawking.SingularRelativeSteenrodSq2
+open SKEFTHawking.SingularRelativeBockstein
 open SKEFTHawking.PinPlusCharPairData
 open SKEFTHawking.PinPlusCylDataDischarge
 
@@ -103,6 +106,17 @@ theorem cylinderWu_of_desuspend
   rw [map_zero, PoincareLefschetzWu5.wuW2_eq, map_add, hA, cylCollapse2_cupH, hB,
     ← PoincareDualityWuFormula.wuW2_eq, hcert]
 
+/-! ## §2b. Generic pairing-uniqueness of the Wu class. -/
+
+/-- **A candidate class equals the Wu class once it satisfies the Wu relation.** For a Lefschetz–Wu
+datum `P`, if `⟨c ∪ b, [W,∂W]⟩ = ⟨Sq c b⟩`… i.e. `pairing P c = wuFunctional P`, then `wuClass P = c`
+(perfect-pairing uniqueness). The pairing-form dual of `wuClass`'s defining property. -/
+theorem wuClass_eq_of_pairing {X : TopCat} {S : Set X} {j nj nn : ℕ}
+    (P : LefschetzWuDatum X S j nj nn) (c : Cohomology X j)
+    (h : pairing P c = wuFunctional P) : wuClass P = c := by
+  rw [wuClass, Equiv.symm_apply_eq]
+  exact h.symm
+
 /-! ## §3. The two sharp named atoms (the Steenrod suspension-naturality leaves) and the σ.cert wiring. -/
 
 section Leaf
@@ -142,6 +156,36 @@ def CylV1Desuspend : Prop :=
       (cylinder_dimeq14_of_basePD (finiteDimensional_homology_of_closed (M := M)).2.2.1
         (finiteDimensional_homology_of_closed (M := M)).2.2.2)))
       = wuClass1 (poincareDual4Lo_of_closed (M := M))
+
+/-- **The `(2,3)` atom in explicit Steenrod–Kronecker pairing form.** `CylV2Desuspend` follows from the
+suspension-Fubini identity `⟨(π* v₂(M)) ∪ b, [W,∂W]⟩ = ⟨relSq² b, [W,∂W]⟩` on `H³(W,∂W)` (`π* = α`-collapse
+inverse) — the pairing-uniqueness (`wuClass_eq_of_pairing`) then pins `v₂(W) = π* v₂(M)`. This is the
+sharpest honest form of the leaf: the cup-cross Fubini (LHS) against the `Sq²`-suspension (RHS). -/
+theorem CylV2Desuspend_of_pairing
+    (h : ∀ (b : RelativeCohomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 3),
+        (cylinderDatum (hasRelFundClass_cylGen (m' := 2) (M := M))).mu
+            (relCupH23 (cylCollapse2.symm (wuClass2 (poincareDual4Mid_of_closed (M := M)))) b)
+          = (cylinderDatum (hasRelFundClass_cylGen (m' := 2) (M := M))).mu (relSq2 b)) :
+    CylV2Desuspend (M := M) := by
+  intro nd23
+  rw [← LinearEquiv.eq_symm_apply]
+  refine wuClass_eq_of_pairing _ _ ?_
+  ext b
+  exact h b
+
+/-- **The `(1,4)` atom in explicit Steenrod–Kronecker pairing form.** `CylV1Desuspend` follows from the
+`(1,3)` suspension-Fubini identity `⟨(π* v₁(M)) ∪ b, [W,∂W]⟩ = ⟨relSq¹ b, [W,∂W]⟩` on `H⁴(W,∂W)`. -/
+theorem CylV1Desuspend_of_pairing
+    (h : ∀ (b : RelativeCohomology (X := TopCat.of (cylW M)) ((cylModel 2).boundary (cylW M)) 4),
+        (cylinderDatum (hasRelFundClass_cylGen (m' := 2) (M := M))).mu
+            (relCupH14 (cylCollapse1.symm (wuClass1 (poincareDual4Lo_of_closed (M := M)))) b)
+          = (cylinderDatum (hasRelFundClass_cylGen (m' := 2) (M := M))).mu (relSq1 (n := 3) b)) :
+    CylV1Desuspend (M := M) := by
+  intro nd14
+  rw [← LinearEquiv.eq_symm_apply]
+  refine wuClass_eq_of_pairing _ _ ?_
+  ext b
+  exact h b
 
 /-- **The Wu leaf reduced to the two sharp desuspension atoms + `σ.cert`.** `CylinderWuResidual M`
 (honestly `wuW2(cylinderP14, cylinderP23) = 0`) follows from the two class-desuspension atoms
