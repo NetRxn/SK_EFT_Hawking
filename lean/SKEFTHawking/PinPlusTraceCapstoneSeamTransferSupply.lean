@@ -244,6 +244,64 @@ def CapstoneSeamTransferResidual.toHasClass
     (CapstoneSeamTransferSeam.toTransfer s S hS φ hφ hφinj R.seam)
     R.hdetAB
 
+/-! ## §4. The corrector-shaped residual — `hdetAB` in its minimal collar-chain form. -/
+
+/-- **The narrowed capstone residual, corrector form.** As `CapstoneSeamTransferResidual` but with the
+straddle detection `hdetAB` traded for its minimal collar-chain interface (`hasClass_ofTransferCorrector`):
+a corrector chain `p` with `hpS` (fact 1: `∂p ∈ C(∂W)`), `hagree` (fact 4: the mismatch
+`push cCyl + push cHa − p` is supported off the overlap), and `hp_det` (fact 3: `p` detects the local
+generator at every overlap point off `∂W`). Fact 2 (`heS`/`hbd`) is DERIVED from the constructed
+`hbd_ofTransfer` of `seam.toTransfer`. So the fully-minimal supply shape is `{z, hz, the seam-transfer
+core, a seam-collar corrector chain}`. -/
+structure CapstoneSeamTransferResidualCorrector where
+  /-- a fundamental cycle of the closed source 4-manifold `M`. -/
+  z : cycles (TopCat.of s.M) (2 + 2)
+  /-- `z` represents the fundamental class. -/
+  hz : SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := s.M)
+      = Homology.mk (TopCat.of s.M) (2 + 2) z
+  /-- the `htransfer`-free seam-transfer core over the banked disk detecting chain. -/
+  seam : CapstoneSeamTransferSeam s S hS φ hφ hφinj z diskDetectChain
+  /-- the seam-collar corrector chain (the collar product chain, degree `3+2`). -/
+  p : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 2)
+  /-- fact 1: the corrector's boundary is a boundary-chain (`∂p ∈ C(∂W)`). -/
+  hpS : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1) p
+    ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1)
+  /-- fact 4: the mismatch `push cCyl + push cHa − p` is supported off the seam overlap. -/
+  hagree : closedEmbeddingChain
+        (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+        (3 + 2) (capstoneCylChainT s S hS φ hφ hφinj z)
+      + closedEmbeddingChain
+        (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+        (3 + 2) diskDetectChain - p
+    ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl
+          ∩ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle)ᶜ (3 + 2)
+  /-- fact 3: the corrector detects the local generator at every seam-overlap point off `∂W`. -/
+  hp_det : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      (hx : x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)),
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+    relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3 p
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1) hpS) ≠ 0
+
+/-- **The corrector-form residual supplies the capstone `hasClass` field.** Fires
+`hasClass_ofTransferCorrector` with the banked disk triple, `seam.toTransfer` (`htransfer` discharged),
+and the seam-collar corrector `p` with its three facts (fact 2 derived from the constructed `hbd`). So
+the deepest capstone atom, for connected `s.M`, reduces to `{a fundamental cycle of M, the two
+co-adapted seam splits, one seam-collar corrector chain}`. -/
+def CapstoneSeamTransferResidualCorrector.toHasClass
+    (R : CapstoneSeamTransferResidualCorrector s t S hS φ hφ hφinj cd hseam d) :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
+  hasClass_ofTransferCorrector s t S hS φ hφ hφinj cd hseam d R.z R.hz
+    diskDetectChain diskDetectChain_hc diskDetectChain_hdet
+    (CapstoneSeamTransferSeam.toTransfer s S hS φ hφ hφinj R.seam)
+    R.p R.hpS R.hagree R.hp_det
+
 end
 
 end SKEFTHawking.PinPlusTraceCapstoneSeamTransferSupply
