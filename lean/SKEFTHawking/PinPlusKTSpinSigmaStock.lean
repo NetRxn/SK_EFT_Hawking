@@ -1,0 +1,119 @@
+/-
+# Phase 5q.H close-out — the σ-descent's Thom atoms sharpened, and the stock-element residuals
+
+This module continues `PinPlusKTSpinSigmaAtomReduce`. Two honest jobs:
+
+## §1–§2. The σ-descent additivity input REDUCED to a single geometric atom
+
+`sigDescend` (reduce §5) descends a per-manifold local signature to a bordism-invariant hom given the
+two classical Thom inputs `hbord` (bordism-invariance — the deep half) and `hadd` (additivity under
+`⊔`). This module DISCHARGES the additivity plumbing of `hadd` down to exactly ONE geometric atom:
+the disjoint-union intersection form is integer-CONGRUENT to the block sum of the summand forms
+(`interMatrix (p ⊔ q) ≅ interMatrix p ⊕ interMatrix q`). The lattice half — `latticeSig` is additive
+under a block-congruent sum of even-unimodular blocks — is PROVEN here from
+`latticeSig_blockDiag` + `IntCongr.latticeSig` + reindex-invariance. So after this module the σ-descent's
+`sig`/`sig_eq` pair reduces to just `hbord` (deep Thom) + `hblock` (elementary block geometry), with all
+the `latticeSig` bookkeeping discharged.
+
+Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom.
+-/
+import Mathlib
+import SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
+import SKEFTHawking.SpinSigmaGenerator
+
+namespace SKEFTHawking.PinPlusKTSpinSigmaStock
+
+open scoped Manifold
+open SKEFTHawking SKEFTHawking.SpinSigmaRoute
+open SKEFTHawking.SingularCohomologyInt
+open SKEFTHawking.TangentialDataBordism
+open SKEFTHawking.PinPlusCharPairBorTethered
+open SKEFTHawking.PinPlusKTSpinForgetPhi
+open SKEFTHawking.PinPlusKTSpinSigmaAtom
+open SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
+
+/-! ## §1. The lattice half of Thom additivity — `latticeSig` is additive under a block-congruent sum -/
+
+/-- **`latticeSig` is additive across a block-congruent decomposition.** If a rank-`n` integer form
+`Mpq` is integer-congruent (after the rank relabelling `n = np + nq`) to the block-diagonal sum of two
+even-unimodular forms `Mp`, `Mq`, then `σ(Mpq) = σ(Mp) + σ(Mq)`. Pure lattice content: reindex-invariance
+of `latticeSig` (`latticeSigOf_reindex`), Sylvester congruence-invariance (`IntCongr.latticeSig`), and
+block additivity (`latticeSig_blockDiag`). This is the lattice half of the Thom signature's disjoint-union
+additivity — the geometric half (that the intersection form of `M ⊔ N` IS the block sum up to congruence)
+stays a disclosed atom. -/
+theorem latticeSig_of_blockCongr {n np nq : ℕ} (hn : n = np + nq)
+    (Mpq : Matrix (Fin n) (Fin n) ℤ) (Mp : Matrix (Fin np) (Fin np) ℤ)
+    (Mq : Matrix (Fin nq) (Fin nq) ℤ)
+    (heuP : IsEvenUnimodular Mp) (heuQ : IsEvenUnimodular Mq)
+    (hcong : IntCongr (Matrix.reindex (finCongr hn) (finCongr hn) Mpq) (blockDiag Mp Mq)) :
+    latticeSig Mpq = latticeSig Mp + latticeSig Mq := by
+  have hre : latticeSig (Matrix.reindex (finCongr hn) (finCongr hn) Mpq) = latticeSig Mpq := by
+    rw [← latticeSigOf_fin, ← latticeSigOf_fin Mpq, latticeSigOf_reindex]
+  have hcg : latticeSig (blockDiag Mp Mq)
+      = latticeSig (Matrix.reindex (finCongr hn) (finCongr hn) Mpq) := IntCongr.latticeSig hcong
+  rw [← hre, ← hcg, latticeSig_blockDiag Mp Mq heuP heuQ]
+
+/-! ## §2. The σ-descent additivity input, discharged for the atom bundle -/
+
+variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+
+/-- **The geometric block-sum atom of the atom bundle** — the ONLY residual of Thom additivity after the
+lattice bookkeeping (§1) is discharged. For the disclosed atom bundle `a`, the intersection matrix of a
+disjoint union `p ⊔ q` is integer-CONGRUENT (after the rank relabelling
+`b₂(p ⊔ q) = b₂(p) + b₂(q)`) to the block sum of the summands' intersection matrices. This is elementary
+manifold geometry (`II(M ⊔ N) = II(M) ⊕ II(N)`), the counterpart of the deep bordism-invariance half;
+it is NOT discharged in-tree (no manifold cohomology in Mathlib) but is named here explicitly as the
+single geometric input `hadd` reduces to. -/
+def InterMatrixBlockAtom (a : SpinSigmaAtoms prov) : Prop :=
+  ∀ p q : StrMfd (spinEmptyData prov),
+    ∃ hn : (a.B ⟨p.1.sum q.1, (spinEmptyData prov).sumStr p.2 q.2⟩).rank
+        = (a.B p).rank + (a.B q).rank,
+      IntCongr (Matrix.reindex (finCongr hn) (finCongr hn)
+          (interMatrix (a.fc ⟨p.1.sum q.1, (spinEmptyData prov).sumStr p.2 q.2⟩)
+            (a.B ⟨p.1.sum q.1, (spinEmptyData prov).sumStr p.2 q.2⟩)))
+        (blockDiag (interMatrix (a.fc p) (a.B p)) (interMatrix (a.fc q) (a.B q)))
+
+variable {prov}
+
+/-- **Thom additivity for the atom bundle, discharged from the block atom.** For the atom bundle `a`, the
+per-manifold lattice signature `p ↦ σ(II p)` is additive under `⊔` — the `hadd` input of `sigDescend` —
+given ONLY the geometric block-sum atom `hblock`. The even-unimodularity of each summand form (needed by
+the lattice half §1) is FREE from the bundle's own `wu`/`pd` fields
+(`isEvenUnimodular_of_intPD`). So the σ-descent's additivity plumbing is completely discharged; only the
+block atom survives as an input. -/
+theorem sigAdditivity_atoms_of_blockCongr (a : SpinSigmaAtoms prov)
+    (hblock : InterMatrixBlockAtom prov a) (p q : StrMfd (spinEmptyData prov)) :
+    latticeSig (interMatrix (a.fc ⟨p.1.sum q.1, (spinEmptyData prov).sumStr p.2 q.2⟩)
+        (a.B ⟨p.1.sum q.1, (spinEmptyData prov).sumStr p.2 q.2⟩))
+      = latticeSig (interMatrix (a.fc p) (a.B p)) + latticeSig (interMatrix (a.fc q) (a.B q)) := by
+  obtain ⟨hn, hcong⟩ := hblock p q
+  exact latticeSig_of_blockCongr hn _ _ _
+    (isEvenUnimodular_of_intPD (a.fc p) (a.B p) (a.wu p) (a.pd p))
+    (isEvenUnimodular_of_intPD (a.fc q) (a.B q) (a.wu q) (a.pd q)) hcong
+
+/-- **The σ-presentation's `sig`/`sig_eq` pair, rebuilt from its two irreducible Thom atoms.** Given the
+atom bundle `a`, the deep bordism-invariance atom `hbord` (Novikov additivity / signature-vanishes-on-
+boundaries — the genuinely hard half of Thom), and the elementary geometric block atom `hblock`, the
+bordism-invariant signature homomorphism `Ω → ℤ` is BUILT (via `sigDescend`), with all `latticeSig`
+plumbing discharged. This is the sharpest honest reduction of the σ-descent: its `sig` field is exactly
+`hbord + hblock`, nothing else. -/
+noncomputable def sigThomOfAtoms (a : SpinSigmaAtoms prov)
+    (hbord : ∀ p q, IsDataBordant (spinEmptyData prov) p q
+      → latticeSig (interMatrix (a.fc p) (a.B p)) = latticeSig (interMatrix (a.fc q) (a.B q)))
+    (hblock : InterMatrixBlockAtom prov a) :
+    DataBordismGrp (spinEmptyData prov) →+ ℤ :=
+  sigDescend prov (fun p => latticeSig (interMatrix (a.fc p) (a.B p))) hbord
+    (sigAdditivity_atoms_of_blockCongr a hblock)
+
+/-- **The rebuilt Thom hom computes the lattice signature on classes** (`rfl`) — this IS the `sig_eq`
+obligation of `SpinSigmaPresentation`, so the `sigThomOfAtoms` hom is a drop-in for the disclosed
+`a.sig`, exhibiting the σ-descent's `sig`/`sig_eq` reduced to `hbord + hblock`. -/
+@[simp] theorem sigThomOfAtoms_mk (a : SpinSigmaAtoms prov)
+    (hbord : ∀ p q, IsDataBordant (spinEmptyData prov) p q
+      → latticeSig (interMatrix (a.fc p) (a.B p)) = latticeSig (interMatrix (a.fc q) (a.B q)))
+    (hblock : InterMatrixBlockAtom prov a) (p : StrMfd (spinEmptyData prov)) :
+    sigThomOfAtoms a hbord hblock (DataBordismGrp.mk (spinEmptyData prov) p)
+      = latticeSig (interMatrix (a.fc p) (a.B p)) :=
+  rfl
+
+end SKEFTHawking.PinPlusKTSpinSigmaStock
