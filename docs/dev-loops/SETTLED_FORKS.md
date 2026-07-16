@@ -308,3 +308,15 @@ conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
 - memory: [[project_5qH_nonhausdorff_substrate_bug]]
 - created_ts: 2026-07-13T00:00:00Z
 - reviewed_ts: 2026-07-13T00:00:00Z
+
+## capstone-binary-partition-detection-uninhabitable (2026-07-16, arm: close-out)
+- kind: route ban (kernel-encodable core deferred — needs the boundary-face local-homology lemma formalized first; see NOTE)
+- banned: inhabiting `CapstoneRelFundPartitionDatum` / driving the connected capstone's `hasClass` through ANY binary complementary set partition {U, Uᶜ} (`capstone_hasClass_of_partition` consumption on the CONNECTED trace).
+- killed_by: the #156 wall analysis (structural, not proof-difficulty): at a seam point x (healed W-interior, `boundary_weldedInterval`), the closed piece's summand restricts through H₅(sub U, sub U∖{x'}) at a BOUNDARY-FACE point of the manifold-with-boundary sub U ≅ M×I — which vanishes in every degree — so `restrictBd β x = 0 ≠ (gen x hx).symm 1` for EVERY αU. Symmetric under swapping which piece is closed. General: any binary complementary partition of a CONNECTED W has a closed piece whose frontier contains W-interior points; detection fails there.
+- scope: the partition/clopen-split engines (`hasRelFundClass_of_partition`, `_clopen_split`, `_finite_clopen_partition`) remain VALID for their disconnected-cylinder uses (clopen pieces, no interior frontier) — the ban is ONLY their application to the connected capstone.
+- fix (the live route): genuine RELATIVE COVER-MV GLUING — W = A ∪ B open (A = cyl∪collar, B = handle∪collar, A∩B ≃ the collar; the seam interior to BOTH), per-piece classes agreeing on the overlap, glued via the relative cover-MV sum-exactness H₅(A,S∩A) ⊕ H₅(B,S∩B) → H₅(W,S) → H₄(A∩B,…) — which is NOT yet in-tree (SingularRelativeMV has only the deleted-variable triad). Fable-scale construction; dispatched as the follow-up.
+- banked: `SingularRelativeDisjointUnionDetectInterior.lean` (interior-point detection for closed pieces — pins the failure to exactly the frontier).
+- NOTE (encode-on-settle): the kernel-encodable core = "boundary-face local homology vanishes ⟹ hdetU(seam) false"; formalizing the boundary-local-homology lemma is itself a task — when it lands, promote this ban to KERNEL_NOGO_REGISTRY.
+- memory: [[project_5qH_nonhausdorff_substrate_bug]]
+- created_ts: 2026-07-16T00:00:00Z
+- reviewed_ts: 2026-07-16T00:00:00Z
