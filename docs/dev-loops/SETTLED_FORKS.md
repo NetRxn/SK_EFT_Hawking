@@ -320,3 +320,11 @@ conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
 - memory: [[project_5qH_nonhausdorff_substrate_bug]]
 - created_ts: 2026-07-16T00:00:00Z
 - reviewed_ts: 2026-07-16T00:00:00Z
+
+## capstone-pair-class-sum-routes-uninhabitable (2026-07-16, arm: close-out — the #159 refinement of the binary-partition ban)
+- kind: route ban refinement (same genus as capstone-binary-partition-detection-uninhabitable)
+- banned: ANY route of the shape "sum of excisionMap-pushforwards of per-piece PAIR classes" for the connected capstone's [W,∂W] — closed pieces (H₅ rel a PROPER part of the piece boundary vanishes — the seam face is missing) AND open pieces (compact chain support ⟹ no class detects everywhere on a noncompact piece), with any multiplicity bookkeeping. Also explains the 3-open-set double-count probe's failure (dead for a second, independent reason).
+- fix (REALIZED, in-tree): the CHAIN-LEVEL gluing — RelCoverGlueData (SingularRelativeCoverMV.lean): core-supported chains whose seam boundary terms cancel mod 2 IN THE SUM; hasRelFundClass_of_glueData + the core detections (SingularSurgeryCoreDetect.lean). Categorically distinct from the banned shapes: detection is never demanded at a closed piece's frontier.
+- memory: [[project_5qH_nonhausdorff_substrate_bug]]
+- created_ts: 2026-07-16T00:00:00Z
+- reviewed_ts: 2026-07-16T00:00:00Z
