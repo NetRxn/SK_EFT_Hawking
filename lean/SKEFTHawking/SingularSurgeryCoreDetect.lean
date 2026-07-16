@@ -30,6 +30,7 @@ the `SurgeredEndDatum`'s boundary decomposition. Kernel-pure
 open SKEFTHawking.SingularHomologyMod2
 open SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularMayerVietoris
+open SKEFTHawking.PoincareLefschetzRelFundClass
 open SKEFTHawking.SingularRelativeCoverMV
 open SKEFTHawking.SingularRelativeCoverMVTransport
 open SKEFTHawking.SurgeryFoundation
@@ -109,5 +110,114 @@ theorem handleCore_relClassOf_ne_zero {Bd : Set HA.Ha} {T : Set HA.carrier}
   closedEmbeddingChain_relClassOf_ne_zero HA.isClosedEmbedding_fromHandle
     HA.isClosedEmbedding_fromCyl.isClosed_range
     (fun w => (mem_range_fromCyl_or_fromHandle HA w).symm) habsorb m c hc hdet hxT hxO hbd
+
+/-! ## §2. The two-core glue datum on the handle-attachment carrier -/
+
+/-- **The two-core glue datum** — the relative cover-MV glue datum on the surgery-trace carrier
+with the CANONICAL cores (`range fromCyl`/`range fromHandle`: closed, covering — the constructed
+carrier's own decomposition, THE COLLAR FORK respected) and the two piece chains pushed along the
+core embeddings. The only genuinely-geometric input at this level is the mod-2 seam-cancellation
+`hbd` of the pushed sum — the chain-level "agreement on the overlap". -/
+noncomputable def coreGlueData (T : Set HA.carrier) (m : ℕ)
+    (cCyl : SingularChain (TopCat.of HA.B) (m + 2))
+    (cHa : SingularChain (TopCat.of HA.Ha) (m + 2))
+    (hbd : chainBoundary (TopCat.of HA.carrier) (m + 1)
+        (closedEmbeddingChain HA.isClosedEmbedding_fromCyl.isEmbedding (m + 2) cCyl
+          + closedEmbeddingChain HA.isClosedEmbedding_fromHandle.isEmbedding (m + 2) cHa)
+      ∈ subspaceChains (X := TopCat.of HA.carrier) T (m + 1)) :
+    RelCoverGlueData (X := TopCat.of HA.carrier) T m where
+  CA := Set.range HA.fromCyl
+  CB := Set.range HA.fromHandle
+  hcover := mem_range_fromCyl_or_fromHandle HA
+  cA := closedEmbeddingChain HA.isClosedEmbedding_fromCyl.isEmbedding (m + 2) cCyl
+  cB := closedEmbeddingChain HA.isClosedEmbedding_fromHandle.isEmbedding (m + 2) cHa
+  hcA := closedEmbeddingChain_mem_subspaceChains HA.isClosedEmbedding_fromCyl.isEmbedding
+    (m + 2) cCyl
+  hcB := closedEmbeddingChain_mem_subspaceChains HA.isClosedEmbedding_fromHandle.isEmbedding
+    (m + 2) cHa
+  hbd := hbd
+
+/-- **The two-core datum's cylinder-side detection is DISCHARGED** from the piece-intrinsic data:
+the cylinder chain's boundary support `BdB` (absorbed by `T ∪` the handle core) and its intrinsic
+detection off `BdB`. Produces the exact `hdetA` shape the glue theorem consumes. -/
+theorem coreGlueData_hdetA {T : Set HA.carrier} {m : ℕ}
+    {cCyl : SingularChain (TopCat.of HA.B) (m + 2)}
+    {cHa : SingularChain (TopCat.of HA.Ha) (m + 2)}
+    (hbd : chainBoundary (TopCat.of HA.carrier) (m + 1)
+        (closedEmbeddingChain HA.isClosedEmbedding_fromCyl.isEmbedding (m + 2) cCyl
+          + closedEmbeddingChain HA.isClosedEmbedding_fromHandle.isEmbedding (m + 2) cHa)
+      ∈ subspaceChains (X := TopCat.of HA.carrier) T (m + 1))
+    {BdB : Set HA.B} (habsorb : ∀ y ∈ BdB, HA.fromCyl y ∈ T ∪ Set.range HA.fromHandle)
+    (hcCyl : chainBoundary (TopCat.of HA.B) (m + 1) cCyl
+      ∈ subspaceChains (X := TopCat.of HA.B) BdB (m + 1))
+    (hdet : ∀ (y : HA.B) (hy : y ∉ BdB),
+      relClassOf (X := TopCat.of HA.B) ({y}ᶜ) m cCyl
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (m + 1) hcCyl) ≠ 0)
+    (x : HA.carrier) (hx : x ∉ T) (hxB : x ∉ (coreGlueData HA T m cCyl cHa hbd).CB) :
+    relClassOf (X := TopCat.of HA.carrier) ({x}ᶜ) m (coreGlueData HA T m cCyl cHa hbd).cA
+      ((coreGlueData HA T m cCyl cHa hbd).hbdA_local hx hxB) ≠ 0 :=
+  cylCore_relClassOf_ne_zero HA habsorb m cCyl hcCyl hdet hx hxB
+    ((coreGlueData HA T m cCyl cHa hbd).hbdA_local hx hxB)
+
+/-- **The two-core datum's handle-side detection is DISCHARGED** — symmetric to the cylinder
+side. -/
+theorem coreGlueData_hdetB {T : Set HA.carrier} {m : ℕ}
+    {cCyl : SingularChain (TopCat.of HA.B) (m + 2)}
+    {cHa : SingularChain (TopCat.of HA.Ha) (m + 2)}
+    (hbd : chainBoundary (TopCat.of HA.carrier) (m + 1)
+        (closedEmbeddingChain HA.isClosedEmbedding_fromCyl.isEmbedding (m + 2) cCyl
+          + closedEmbeddingChain HA.isClosedEmbedding_fromHandle.isEmbedding (m + 2) cHa)
+      ∈ subspaceChains (X := TopCat.of HA.carrier) T (m + 1))
+    {BdHa : Set HA.Ha} (habsorb : ∀ y ∈ BdHa, HA.fromHandle y ∈ T ∪ Set.range HA.fromCyl)
+    (hcHa : chainBoundary (TopCat.of HA.Ha) (m + 1) cHa
+      ∈ subspaceChains (X := TopCat.of HA.Ha) BdHa (m + 1))
+    (hdet : ∀ (y : HA.Ha) (hy : y ∉ BdHa),
+      relClassOf (X := TopCat.of HA.Ha) ({y}ᶜ) m cHa
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (m + 1) hcHa) ≠ 0)
+    (x : HA.carrier) (hx : x ∉ T) (hxA : x ∉ (coreGlueData HA T m cCyl cHa hbd).CA) :
+    relClassOf (X := TopCat.of HA.carrier) ({x}ᶜ) m (coreGlueData HA T m cCyl cHa hbd).cB
+      ((coreGlueData HA T m cCyl cHa hbd).hbdB_local hx hxA) ≠ 0 :=
+  handleCore_relClassOf_ne_zero HA habsorb m cHa hcHa hdet hx hxA
+    ((coreGlueData HA T m cCyl cHa hbd).hbdB_local hx hxA)
+
+/-- **The two-core glued `HasRelFundClass`** — the full assembly on the surgery-trace carrier: the
+two piece chains (each with boundary support absorbed by `T ∪` the other core, each intrinsically
+detecting off its support set), the mod-2 seam-cancellation of the pushed sum, and the overlap-zone
+straddle detection produce a class of `H_{m+2}(W, T)` restricting to ANY interior generator family
+at every point off `T`. The one-sided detections are DISCHARGED (§1); the residual geometric atoms
+are exactly {the two piece chains + supports, the two absorb facts, the seam-cancellation, the
+overlap detection}. -/
+theorem hasRelFundClass_of_coreChains (T : Set HA.carrier) (m : ℕ)
+    (gen : ∀ x : HA.carrier, x ∉ T → (RelativeHomology (X := TopCat.of HA.carrier) ({x}ᶜ) (m + 2)
+      ≃ₗ[ZMod 2] ZMod 2))
+    (cCyl : SingularChain (TopCat.of HA.B) (m + 2))
+    (cHa : SingularChain (TopCat.of HA.Ha) (m + 2))
+    (hbd : chainBoundary (TopCat.of HA.carrier) (m + 1)
+        (closedEmbeddingChain HA.isClosedEmbedding_fromCyl.isEmbedding (m + 2) cCyl
+          + closedEmbeddingChain HA.isClosedEmbedding_fromHandle.isEmbedding (m + 2) cHa)
+      ∈ subspaceChains (X := TopCat.of HA.carrier) T (m + 1))
+    {BdB : Set HA.B} (habsorbB : ∀ y ∈ BdB, HA.fromCyl y ∈ T ∪ Set.range HA.fromHandle)
+    (hcCyl : chainBoundary (TopCat.of HA.B) (m + 1) cCyl
+      ∈ subspaceChains (X := TopCat.of HA.B) BdB (m + 1))
+    (hdetCyl : ∀ (y : HA.B) (hy : y ∉ BdB),
+      relClassOf (X := TopCat.of HA.B) ({y}ᶜ) m cCyl
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (m + 1) hcCyl) ≠ 0)
+    {BdHa : Set HA.Ha} (habsorbHa : ∀ y ∈ BdHa, HA.fromHandle y ∈ T ∪ Set.range HA.fromCyl)
+    (hcHa : chainBoundary (TopCat.of HA.Ha) (m + 1) cHa
+      ∈ subspaceChains (X := TopCat.of HA.Ha) BdHa (m + 1))
+    (hdetHa : ∀ (y : HA.Ha) (hy : y ∉ BdHa),
+      relClassOf (X := TopCat.of HA.Ha) ({y}ᶜ) m cHa
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (m + 1) hcHa) ≠ 0)
+    (hdetAB : ∀ (x : HA.carrier) (hx : x ∉ T),
+      x ∈ Set.range HA.fromCyl → x ∈ Set.range HA.fromHandle →
+      relClassOf (X := TopCat.of HA.carrier) ({x}ᶜ) m
+        (closedEmbeddingChain HA.isClosedEmbedding_fromCyl.isEmbedding (m + 2) cCyl
+          + closedEmbeddingChain HA.isClosedEmbedding_fromHandle.isEmbedding (m + 2) cHa)
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (m + 1) hbd) ≠ 0) :
+    HasRelFundClass (X := TopCat.of HA.carrier) T gen :=
+  (coreGlueData HA T m cCyl cHa hbd).hasRelFundClass_of_glueData gen
+    (fun x hx hxB => coreGlueData_hdetA HA hbd habsorbB hcCyl hdetCyl x hx hxB)
+    (fun x hx hxA => coreGlueData_hdetB HA hbd habsorbHa hcHa hdetHa x hx hxA)
+    (fun x hx hxA hxB => hdetAB x hx hxA hxB)
 
 end SKEFTHawking.SingularSurgeryCoreDetect
