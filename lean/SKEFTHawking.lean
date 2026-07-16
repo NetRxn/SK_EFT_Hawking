@@ -4547,6 +4547,7 @@ import SKEFTHawking.LatticeMetabolic
 import SKEFTHawking.PinPlusKTSpinSigmaHbord
 import SKEFTHawking.PinPlusKTSpinSigmaNovikovOpener
 import SKEFTHawking.PinPlusKTSpinSigmaNovikovHalfDim
+import SKEFTHawking.PinPlusKTSpinSigmaNovikovRealSubstrate
 import SKEFTHawking.PinPlusCharPairEmptySourceRealization
 import SKEFTHawking.PinPlusKTFreezeAssembly
 import SKEFTHawking.SingularSurgeryFoundation
