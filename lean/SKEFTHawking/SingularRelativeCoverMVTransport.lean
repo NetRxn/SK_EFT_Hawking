@@ -136,6 +136,18 @@ theorem mem_interior_left_of_cover {CA CB : Set ↑X} (hcover : ∀ y : ↑X, y 
     (hCB : IsClosed CB) {x : ↑X} (hxB : x ∉ CB) : x ∈ interior CA :=
   interior_maximal (fun y hy => (hcover y).resolve_right hy) hCB.isOpen_compl hxB
 
+/-- **Nonvanishing transfers along the overlap congruence**: if `c = p + e` with `e` supported in
+`E ⊆ T` and the collar chain `p` has nonzero `(X, T)`-class, so does `c`. With `T = {x}ᶜ` at an
+overlap point `x ∉ E`, this is the dischargeable shape of the glue's straddle detection: the glued
+chain detects at the overlap because the collar product chain does. -/
+theorem relClassOf_ne_zero_of_congr {T E : Set ↑X} (hET : E ⊆ T) (m : ℕ)
+    {c p e : SingularChain X (m + 2)} (hcongr : c = p + e) (he : e ∈ subspaceChains E (m + 2))
+    (hc : chainBoundary X (m + 1) c ∈ subspaceChains T (m + 1))
+    (hp : chainBoundary X (m + 1) p ∈ subspaceChains T (m + 1))
+    (hne : relClassOf T m p hp ≠ 0) : relClassOf T m c hc ≠ 0 := by
+  rw [relClassOf_eq_of_congr hET m hcongr he hc hp]
+  exact hne
+
 /-! ## §5. The closed-embedding piece-detection keystone
 
 The full discharge chain in one theorem: a piece `P` closed-embedded in the carrier by `j`, whose
