@@ -4464,6 +4464,7 @@ import SKEFTHawking.PinPlusCharPairGeoRealizationGate
 import SKEFTHawking.PinPlusWAdmPinnedCore
 import SKEFTHawking.PinPlusWAdmPinned
 import SKEFTHawking.PinPlusTraceWAdmPinned
+import SKEFTHawking.PinPlusTraceMembranePresented
 import SKEFTHawking.PinPlusCharPairRealizationTied
 import SKEFTHawking.PinPlusCharPairCylRealization
 import SKEFTHawking.PinPlusCharPairNegRealization
