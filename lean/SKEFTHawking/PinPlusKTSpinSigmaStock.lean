@@ -158,6 +158,18 @@ noncomputable def sphere4IntPoincareDuality :
     show (0 : Module.Dual ℤ _) b = interFormInt _ 0 b
     rw [map_zero, LinearMap.zero_apply]
 
+/-- **The S⁴ package data feeds the PROVEN unconditional Rokhlin leg `16 ∣ σ(S⁴)`.** The integral
+intersection form of `S⁴` on the package's orientation (`sphere4IntOrientation`) and basis
+(`sphere4IntH2Basis`) is `16`-divisible — the zero-binder firing
+`sixteen_dvd_latticeSig_sphere4_unconditional`, applied verbatim (the package's fundamental class is
+definitionally the unconditional witness's). Ties the S⁴ spin-sphere package's `orient`/`B` atoms to the
+`Ω₄^{Spin}` Rokhlin `hdvd` input at the S⁴ class — the value is `16 ∣ 0` (`b₂(S⁴) = 0`), but the WHOLE
+orientation → intersection form → even-unimodular → σ÷16 pipeline fires on the package's own data. -/
+theorem sphere4_pkg_sixteen_dvd_latticeSig :
+    (16 : ℤ) ∣ latticeSig
+      (interMatrix (intFundamentalClassOfIntOrientation sphere4IntOrientation) sphere4IntH2Basis) :=
+  SKEFTHawking.SphereWitnessFiringUncondInt.sixteen_dvd_latticeSig_sphere4_unconditional
+
 /-! ## §4. The S²×S² stock element's s2s2 witness (functional level) + the orientation gap
 
 The distinguished `S²×S²` is the presentation's `s2s2` normalization witness (rank-2 hyperbolic form
