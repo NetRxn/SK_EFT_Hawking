@@ -85,7 +85,9 @@ variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
 /-- **The residual co-isotropy atom.** For each data-bordant pair `p, q`, a subspace `L` of the boundary
 block form `blockDiag (II M_p) (−(II M_q))` that is **isotropic** (`Q_∂ x = 0` on `L` — banked, classes
 extending over `W`) AND **co-isotropic** (`L^⊥ ⊆ L` for the polar form — the deep Poincaré–Lefschetz "half
-lives, half dies" input, `im ι* ⊇ (im ι*)^⊥`). This SHARPENS `NovikovLagrangianAtom`: its half-dimensional
+lives, half dies" input, `im ι* ⊇ (im ι*)^⊥`). This is EQUIVALENT to `NovikovLagrangianAtom` (§6
+round-trip, given the banked even-unimodular nondegeneracy — a faithful lateral re-expression,
+not a strict strengthening): its half-dimensional
 conjunct `rank + rank = 2·dim L` is replaced by the co-isotropy input, from which the half-dimensionality
 becomes a THEOREM (`novikovLagrangian_of_novikovCoIso`) once nondegeneracy is banked from the boundary
 form's even-unimodularity. So the σ-descent's last geometric atom is reduced from "an isotropic
