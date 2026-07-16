@@ -39,6 +39,7 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_deci
 import Mathlib
 import SKEFTHawking.PinPlusCylDataDischarge
 import SKEFTHawking.PoincareLefschetzRelFundClassCylinderIntertwine
+import SKEFTHawking.PinPlusCylDataDischargeDisconnectedComponents
 
 open scoped Manifold
 open SKEFTHawking.SingularCohomologyMod2
@@ -62,7 +63,9 @@ open SKEFTHawking.SingularRelativeCohomologyMod2
 open SKEFTHawking.SingularRelativeSteenrodSq2
 open SKEFTHawking.SingularRelativeBockstein
 open SKEFTHawking.PinPlusCharPairData
+open SKEFTHawking.PinPlusCharPairBorTethered
 open SKEFTHawking.PinPlusCylDataDischarge
+open SKEFTHawking.PinPlusCylDataDischargeDisconnectedComponents
 
 namespace SKEFTHawking.PinPlusCylDataDischargeWuLeaf
 
@@ -215,6 +218,30 @@ theorem cylinderWuResidual_of_bundled_desuspend
   cylinderWuResidual_of_desuspendLeaves σ.cert hA hB
 
 end Leaf
+
+/-! ## §4. The provider-row impact — `hwu` supplied by the two desuspension atoms. -/
+
+/-- **The provider on the two desuspension leaves + the disconnected core.** The `hwu` hypothesis of
+`nonempty_provider_of_wuLeaf_and_disconnectedCoreND` is supplied, per bundled carrier `σ`, by the two
+sharp Steenrod-suspension atoms `CylV2Desuspend s.M` / `CylV1Desuspend s.M` (via `σ.cert`). This is the
+sharpened provider row: the single monolithic per-`M` Wu residual `CylinderWuResidual` is replaced by the
+two explicit desuspension leaves (all finiteness/duality/pairing scaffolding dissolved). The remaining
+provider inputs are exactly `{CylV2Desuspend, CylV1Desuspend, DisconnectedCylCoreND}`. -/
+theorem nonempty_provider_of_desuspendLeaves_and_disconnectedCoreND
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    {k : WithTop ℕ∞} {I : ModelWithCorners ℝ E (EuclideanSpace ℝ (Fin (2 + 2)))} [I.Boundaryless]
+    (hA : ∀ {s : SingularManifold.{0} PUnit.{1} k I} (_σ : CharPairStrBundled I s)
+      [T2Space s.M] [Nonempty s.M] [PreconnectedSpace s.M] [T1Space (cylW s.M)],
+      CylV2Desuspend (M := s.M))
+    (hB : ∀ {s : SingularManifold.{0} PUnit.{1} k I} (_σ : CharPairStrBundled I s)
+      [T2Space s.M] [Nonempty s.M] [PreconnectedSpace s.M] [T1Space (cylW s.M)],
+      CylV1Desuspend (M := s.M))
+    (hdiscCoreND : ∀ {s : SingularManifold.{0} PUnit.{1} k I} (_σ : CharPairStrBundled I s)
+      [T2Space s.M] [Nonempty s.M], ¬ PreconnectedSpace s.M → DisconnectedCylCoreND s.M) :
+    Nonempty (CharPairWProviderPerOp I k) := by
+  refine nonempty_provider_of_wuLeaf_and_disconnectedCoreND ?_ hdiscCoreND
+  intro s σ _ _ _ _
+  exact cylinderWuResidual_of_bundled_desuspend σ (hA σ) (hB σ)
 
 end
 
