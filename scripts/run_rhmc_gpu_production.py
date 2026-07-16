@@ -447,6 +447,23 @@ def run_coupling(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, device,
                 n=len(hist['tet']), s_per_traj=(time.time() - t0) / max(therm_left + max(target, 0), 1))
 
 
+def chrono_for_kappa(user_chrono, kappa, kappa_max):
+    """Resolve whether to use chronological inversion for a coupling of condition number
+    κ=(λmax+m²)/m². Chrono warm-starting speeds the MD force solves (~1.4× on MD) but SOFTENS
+    reversibility. Measured (L=8, 2026-07-16): across the whole stiff m=0.05 range the roundtrip
+    |Δh| is ~2.6–4.0e-4 chrono-on vs ~3–5e-5 chrono-off — chrono-on is above the ~1e-4 clean-HMC
+    reversibility bar at EVERY m=0.05 coupling. The tax is set by the stiffness regime (small m ⇒
+    large κ), roughly flat across couplings within a mass, so κ acts as a stiffness proxy: above
+    `kappa_max` chrono is auto-disabled to run at the clean fp32-reversibility floor; below (milder
+    masses) the ~1.4× MD win is kept. An explicit --no-chrono always wins; `kappa_max<=0` disables
+    the gate (honor user_chrono as-is)."""
+    if not user_chrono:
+        return False
+    if kappa_max and kappa_max > 0 and kappa > kappa_max:
+        return False
+    return True
+
+
 def build_parser():
     ap = argparse.ArgumentParser()
     ap.add_argument('--l', type=int, default=8)
@@ -528,6 +545,16 @@ def build_parser():
                          'dependence — certified unbiased at chain level by Creutz (fast + slow '
                          'gates in test_hs_rhmc_mlx). --no-chrono restores cold starts for '
                          'strict-reversibility studies.')
+    ap.add_argument('--chrono-kappa-max', type=float, default=5.0e5,
+                    help='mlx backend: auto-disable chrono for any coupling whose fermion-matrix '
+                         'condition number κ=(λmax+m²)/m² exceeds this. Chrono softens MD '
+                         'reversibility to |Δh|≈3–4e-4 across the whole stiff m=0.05 range '
+                         '(vs ≈3–5e-5 chrono-off), above the ~1e-4 clean-HMC bar; the tax tracks '
+                         'the stiffness (mass) regime, so κ is the proxy. Default 5e5 disables '
+                         'chrono for m=0.05 (κ≥6.5e5) and keeps the ~1.4× MD win for milder masses '
+                         '(m≥0.1, κ≲4e5). NOTE: m≥0.1 chrono reversibility not yet measured — '
+                         'verify (or --no-chrono) before those production runs. Set 0 to disable '
+                         'the gate (honor --chrono/--no-chrono verbatim).')
     ap.set_defaults(compile=True)
     return ap
 
@@ -575,10 +602,15 @@ def main():
                                            hb_relerr_tol=args.hb_relerr_tol, n_poles_cap=args.n_poles_cap)
         else:
             coeffs, lam = build_coeffs(L, g, msq, args.n_poles, args.seed + i)
-        print(f"\n[{i+1}/{len(gs)}] g={g:.3f}  range[{msq:.4g},{lam+msq:.1f}] κ={(lam+msq)/msq:.0f}", flush=True)
+        kappa = (lam + msq) / msq
+        print(f"\n[{i+1}/{len(gs)}] g={g:.3f}  range[{msq:.4g},{lam+msq:.1f}] κ={kappa:.0f}", flush=True)
         if args.backend == 'mlx':
+            chrono_g = chrono_for_kappa(args.chrono, kappa, args.chrono_kappa_max)
+            if args.chrono and not chrono_g:
+                print(f"    chrono auto-OFF: κ={kappa:.3g} > {args.chrono_kappa_max:.3g} "
+                      f"(reversibility floor > chrono speed at this stiffness)", flush=True)
             s = run_coupling_mlx(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
-                                 args.n_meas, args.n_therm, args.seed + i, chrono=args.chrono,
+                                 args.n_meas, args.n_therm, args.seed + i, chrono=chrono_g,
                                  mlx_solver=args.mlx_solver, checkpoint_every=args.checkpoint_every,
                                  hasenbusch=hasenbusch)
         else:

@@ -189,6 +189,24 @@ def test_chrono_is_the_default_with_an_opt_out():
     assert ap.parse_args(['--mass', '0.05', '--chrono']).chrono is True   # explicit on
 
 
+def test_chrono_for_kappa_auto_disables_above_threshold():
+    # 2026-07-16 g=8 diagnosis: chrono's reversibility softening GROWS with the fermion-matrix
+    # condition number κ=(λmax+m²)/m² (measured roundtrip |Δh| 5e-5 chrono-off → 2.6e-4
+    # chrono-on at κ≈1e6). Above `kappa_max` chrono is auto-disabled — even when requested —
+    # so stiff couplings run at the clean fp32-reversibility floor; below, the ~1.4× MD win is
+    # kept. An explicit --no-chrono always wins; kappa_max<=0 disables the gate entirely.
+    assert drv.chrono_for_kappa(True, 1.0e5, 7.0e5) is True     # benign κ → keep chrono
+    assert drv.chrono_for_kappa(True, 2.0e6, 7.0e5) is False    # stiff κ → auto-off
+    assert drv.chrono_for_kappa(False, 1.0e5, 7.0e5) is False   # user opt-out always wins
+    assert drv.chrono_for_kappa(True, 2.0e6, 0.0) is True       # kappa_max<=0 → gate disabled
+
+
+def test_chrono_kappa_max_arg_has_positive_default():
+    ap = drv.build_parser()
+    assert ap.parse_args(['--mass', '0.05']).chrono_kappa_max > 0            # gate on by default
+    assert ap.parse_args(['--mass', '0.05', '--chrono-kappa-max', '0']).chrono_kappa_max == 0
+
+
 # --- run.log tee (detached runs must keep an on-disk record) ----------------------------------
 # 2026-07-13 L=8 m=0.05 restart: launched detached with stdout at /dev/null, so every console
 # line was lost and the npz checkpoints were the only record. setup_run_log tees stdout/stderr
