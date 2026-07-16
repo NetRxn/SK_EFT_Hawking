@@ -238,6 +238,19 @@ theorem exists_deltaRelHInt_of_relToAbsInt_eq_zero {n : ℕ} (b : RelativeCohomo
   refine ⟨z, by rw [hz']; exact a.1.2, ?_⟩
   exact congrArg (RelativeCohomologyInt.mk S (n + 1)) (Subtype.ext (Subtype.ext hz'.symm))
 
+/-- **`im δ ⊆ ker j*`** — the δ-image class is `j*`-killed. `j*[δz] = [δz]` in `Hⁿ⁺¹(X;ℤ)` is zero
+because `δz` is an absolute coboundary. Together with `exists_deltaRelHInt_of_relToAbsInt_eq_zero` this
+is the full exactness `im δ = ker j*` at `Hⁿ⁺¹(X,S;ℤ)`. -/
+theorem relToAbsInt_deltaRelHInt_eq_zero {n : ℕ} (z : SingularCochainInt X n)
+    (h : coboundaryₗ X n z ∈ relCochainsInt S (n + 1)) :
+    relToAbsInt (deltaRelHInt z h) = 0 := by
+  rw [deltaRelHInt, relToAbsInt_mk, Cohomology.mk]
+  refine (Submodule.Quotient.mk_eq_zero _).2 ?_
+  rw [Submodule.submoduleOf, Submodule.mem_comap, Submodule.coe_subtype,
+    show coboundaryRange X (n + 1) = LinearMap.range (coboundaryₗ X n) from rfl,
+    relToAbsCocycleIntₗ_coe, deltaRelCocycleInt_coe]
+  exact ⟨z, rfl⟩
+
 end
 
 end SKEFTHawking.SingularRelativeCohomDeltaInt
