@@ -43,6 +43,7 @@ import SKEFTHawking.SingularSurgeryTraceCapstone
 import SKEFTHawking.PinPlusTraceRelFundReduce
 import SKEFTHawking.PinPlusTraceCapstoneInhabit
 import SKEFTHawking.SingularRelativeCoverMV
+import SKEFTHawking.SingularSurgeryCoreDetect
 
 open scoped Manifold
 open SKEFTHawking.BordismTheory
@@ -56,6 +57,7 @@ open SKEFTHawking.SingularMayerVietoris
 open SKEFTHawking.PoincareLefschetzRelFundClass
 open SKEFTHawking.PoincareLefschetzRelFundClassGeom
 open SKEFTHawking.SingularRelativeCoverMV
+open SKEFTHawking.SingularRelativeCoverMVTransport
 open SKEFTHawking.PinPlusTraceRelFundReduce
 open SKEFTHawking.PinPlusTraceCapstoneInhabit
 
@@ -154,6 +156,79 @@ def CapstoneRelFundCoverDatum.toHasClass
       (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
         ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
   capstone_hasClass_of_glueData s t S hS φ hφ hφinj cd hseam d R.D R.hdetA R.hdetB R.hdetAB
+
+/-! ## §3. The capstone `hasClass` from the two core chains — the one-sided detections discharged.
+
+The final narrowing of this arm: firing the handle-attachment-level two-core assembly
+(`SingularSurgeryCoreDetect.hasRelFundClass_of_coreChains`) at the capstone's boundary set and
+canonical interior generator family. The capstone's `hasClass` atom is thereby reduced to exactly
+FOUR named geometric residuals on the two piece chains: the two boundary-absorb facts (`∂W ∪` the
+other core absorbs each piece's boundary support — boundary bookkeeping from the `SurgeredEndDatum`
+decomposition), the two piece supports/intrinsic detections (the cylinder side SUPPLIED by
+`exists_cylinder_detecting_chain` for connected `s.M`; the `D⁵` side the open disk-chain atom), the
+mod-2 seam-cancellation `hbd` (the degree-4 overlap agreement, chain level), and the overlap-zone
+straddle detection `hdetAB` (dischargeable from a collar product chain via
+`relClassOf_eq_of_congr`). The one-sided detection fields of the datum row are DISCHARGED. -/
+
+/-- **The capstone `hasClass` from the two core chains.** The exact
+`CapstoneAmbientSupply.hasClass` field type, produced from the two piece chains and the four named
+residual atoms — the cover-glue route with both one-sided detections discharged by the core
+suppliers. -/
+def capstone_hasClass_ofCoreChains
+    (cCyl : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2))
+    (cHa : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 2))
+    (hbd : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+        (closedEmbeddingChain
+            (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+            (3 + 2) cCyl
+          + closedEmbeddingChain
+            (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+            (3 + 2) cHa)
+      ∈ subspaceChains
+          (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1))
+    {BdB : Set (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B}
+    (habsorbB : ∀ y ∈ BdB, (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl y
+      ∈ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ∪ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle)
+    (hcCyl : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) cCyl
+      ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) BdB (3 + 1))
+    (hdetCyl : ∀ (y : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (hy : y ∉ BdB),
+      relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) ({y}ᶜ) 3 cCyl
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (3 + 1) hcCyl) ≠ 0)
+    {BdHa : Set (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha}
+    (habsorbHa : ∀ y ∈ BdHa, (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle y
+      ∈ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ∪ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl)
+    (hcHa : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1) cHa
+      ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) BdHa (3 + 1))
+    (hdetHa : ∀ (y : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (hy : y ∉ BdHa),
+      relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) ({y}ᶜ) 3 cHa
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (3 + 1) hcHa) ≠ 0)
+    (hdetAB : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      (hx : x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)),
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+      relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+        (closedEmbeddingChain
+            (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+            (3 + 2) cCyl
+          + closedEmbeddingChain
+            (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+            (3 + 2) cHa)
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1) hbd) ≠ 0) :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
+  letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+  SKEFTHawking.SingularSurgeryCoreDetect.hasRelFundClass_of_coreChains
+    (ktHandleAttachment s.M D5 S hS φ hφ hφinj)
+    (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) 3
+    (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      ((𝓡 4).prod (𝓡∂ 1)) εtrace)
+    cCyl cHa hbd habsorbB hcCyl hdetCyl habsorbHa hcHa hdetHa hdetAB
 
 end
 
