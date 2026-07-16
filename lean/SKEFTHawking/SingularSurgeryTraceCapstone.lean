@@ -135,6 +135,21 @@ structure SurgeredEndDatum
     (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl ''
         ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ)
       ⊆ Set.range eM'
+  /-- **the free boundary-sphere face is covered by the surgered end** — the handle-side mirror of
+  `topFaceCovered`. The disk handle's bounding sphere `S⁴ = ∂D⁵ = {v : D⁵ | ‖v‖ = 1}` minus the
+  attaching region `S` (the free boundary of the handle), pushed into the carrier by `fromHandle`,
+  lands in the surgered end `range eM'`. This is data the CONSTRUCTED capstone genuinely has: after
+  the surgery, the un-glued part of the handle's boundary sphere IS carved into the `M′` (surgered)
+  end `eM'`, exactly the way `topFaceCovered` records that the un-attached top face of the cylinder is.
+  NOT a Prop-level completeness claim — a concrete image-containment relating the two constructed
+  ends. It closes the handle half of the cover-glue's boundary-absorb (`habsorbHa`): the attached part
+  `y ∈ S` is absorbed by the cylinder core (`glue`); this field absorbs the free boundary-sphere
+  remainder into the `M′` end. Dimension discipline: `∂D⁵ = S⁴` is the disk's model boundary
+  (`PinPlusTraceCapstoneCoverGlueDisk.boundary_D5`); `S ⊆ ∂D⁵` is the attaching region on it. -/
+  sphereFaceCovered :
+    (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle ''
+        ({v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S)
+      ⊆ Set.range eM'
 
 /-- **The trace capstone with the surgered end supplied by a `SurgeredEndDatum`.** The Wave-8 capstone
 `ambientTraceBordism_capstone` with its five surgered-end hypotheses (`eM'`, `cont`, `inj`, `disj`,

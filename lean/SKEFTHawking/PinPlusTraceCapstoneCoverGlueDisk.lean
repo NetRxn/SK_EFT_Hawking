@@ -34,6 +34,9 @@ open SKEFTHawking.SurgeryFoundation.HandleAttachment
 open SKEFTHawking.DiskChartGeneric (D5)
 open SKEFTHawking.SingularHomologyMod2
 open SKEFTHawking.SingularRelativeHomologyMod2
+open SKEFTHawking.SingularMayerVietoris
+open SKEFTHawking.SingularRelativeCoverMV
+open SKEFTHawking.SingularRelativeCoverMVTransport
 open SKEFTHawking.PoincareLefschetzRelFundClass
 open SKEFTHawking.PoincareLefschetzRelFundClassGeom
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinder
@@ -97,6 +100,28 @@ theorem capstone_habsorbB :
       refine Set.mem_union_right _ (d.topFaceCovered ?_)
       exact Set.mem_image_of_mem _ ⟨Set.mem_prod.mpr ⟨Set.mem_univ _, htop⟩, hyφ⟩
 
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **The handle-side boundary-absorb fact (`habsorbHa`), discharged.** The disk handle's model
+boundary `∂D⁵ = S⁴ = {v | ‖v‖ = 1}` (`boundary_D5`), pushed by `fromHandle`, lands in
+`∂W ∪ range fromCyl`. Attached part `y ∈ S`: `fromHandle y = fromCyl (φ ⟨y,·⟩)` glues to the cylinder
+core (`glue`). Free boundary-sphere part `y ∈ S⁴ ∖ S`: the surgered end `range eM' ⊆ ∂W` (via the new
+`d.sphereFaceCovered` field). The handle-side mirror of `capstone_habsorbB`; discharges the residual's
+`habsorbHa` with `BdHa = S⁴ = {v | ‖v‖ = 1}`. -/
+theorem capstone_habsorbHa :
+    ∀ y ∈ {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1},
+      (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle y
+        ∈ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+          ∪ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl := by
+  intro y hy
+  by_cases hyS : y ∈ S
+  · -- attached part `y ∈ S`: `fromHandle y = fromCyl (φ ⟨y,·⟩)` glues to the cylinder core
+    refine Set.mem_union_right _ ⟨φ ⟨y, hyS⟩, ?_⟩
+    exact (ktHandleAttachment s.M D5 S hS φ hφ hφinj).glue ⟨y, hyS⟩
+  · -- free boundary-sphere part `y ∈ S⁴ ∖ S`: covered by the surgered end `range eM' ⊆ ∂W`
+    refine Set.mem_union_left _ ?_
+    rw [capstone_boundary_eq]
+    exact Set.mem_union_right _ (d.sphereFaceCovered (Set.mem_image_of_mem _ ⟨hy, hyS⟩))
+
 /-! ## §2. The disk's model boundary is the bounding sphere — the residual's `BdHa`, pinned.
 
 The handle-side residual `CapstoneCoverGlueResidual.BdHa` is the disk's boundary-support set. The
@@ -151,6 +176,91 @@ theorem boundary_D5 :
         ↔ ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1
     rw [WithLp.ofLp_toLp]
     constructor <;> intro heq <;> linarith
+
+/-! ## §3. The narrowed cover-glue residual — both boundary-absorbs and `BdHa` discharged.
+
+With the two boundary-absorb facts (`capstone_habsorbB` §1, `capstone_habsorbHa` §1) and the disk
+boundary-support set `BdHa = ∂D⁵ = S⁴ = {v | ‖v‖ = 1}` (`boundary_D5`) all pinned from this module,
+the eight-field `CapstoneCoverGlueResidual` narrows to FIVE fields: the disk detecting triple
+`cHa`/`hcHa`/`hdetHa` (with `BdHa` fixed to `S⁴`), the mod-2 seam-cancellation `hbd`, and the
+overlap-zone straddle detection `hdetAB`. `toResidual` fills `BdHa`, `habsorbB`, `habsorbHa` from this
+module and passes the five through; `toHasClass` then lands the exact `CapstoneAmbientSupply.hasClass`
+field. The disk detecting triple `cHa`/`hcHa`/`hdetHa` further collapses to the SINGLE object *the
+disk's relative fundamental class* `HasRelFundClass (TopCat.of D⁵) S⁴ (interiorGenFamily …)` via the
+in-tree `exists_detecting_chain_of_hasRelFundClass` — so the deepest capstone atom, for connected
+`s.M`, is exactly `{the D⁵ relative fundamental class, hbd, hdetAB}`. -/
+
+/-- **The narrowed cover-glue residual row — the two boundary-absorbs + `BdHa` discharged.** The
+five fields left of `CapstoneCoverGlueResidual` after this module's §1 boundary-absorbs and the
+`boundary_D5` pin fix `BdHa = S⁴`: the disk detecting triple `cHa`/`hcHa`/`hdetHa` (boundary support
+and detection at the `S⁴ = {v | ‖v‖ = 1}` sphere), the mod-2 seam-cancellation `hbd`, and the
+overlap straddle `hdetAB`. `toResidual` fills the three discharged fields. -/
+structure CapstoneCoverGlueResidualDisk where
+  /-- the `D⁵` handle-side detecting chain (the disk detecting triple: chain). -/
+  cHa : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 2)
+  /-- the `D⁵` chain's boundary is supported in `S⁴ = {v | ‖v‖ = 1}`. -/
+  hcHa : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1) cHa
+    ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha)
+        {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} (3 + 1)
+  /-- the `D⁵` chain detects the local generator at every disk-interior point (`‖v‖ < 1`). -/
+  hdetHa : ∀ (y : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha)
+      (hy : y ∉ {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1}),
+    relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) ({y}ᶜ) 3 cHa
+      (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (3 + 1) hcHa) ≠ 0
+  /-- the mod-2 seam-cancellation of the pushed sum. -/
+  hbd : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+      (closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+          (3 + 2) (capstoneCylChain s S hS φ hφ hφinj)
+        + closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+          (3 + 2) cHa)
+    ∈ subspaceChains
+        (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1)
+  /-- the overlap-zone straddle detection: the glued chain detects on the seam collar. -/
+  hdetAB : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      (hx : x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)),
+    x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+    x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+    relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+      (closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+          (3 + 2) (capstoneCylChain s S hS φ hφ hφinj)
+        + closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+          (3 + 2) cHa)
+      (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1) hbd) ≠ 0
+
+/-- **The narrowed row fills the full cover-glue residual.** Fills `BdHa := S⁴ = {v | ‖v‖ = 1}`,
+`habsorbB := capstone_habsorbB`, `habsorbHa := capstone_habsorbHa` from this module, and passes the
+five narrowed fields through. So `CapstoneCoverGlueResidualDisk` IS `CapstoneCoverGlueResidual` with
+the two boundary-absorbs and the boundary-support set discharged. -/
+def CapstoneCoverGlueResidualDisk.toResidual
+    (R : CapstoneCoverGlueResidualDisk s t S hS φ hφ hφinj cd hseam d) :
+    CapstoneCoverGlueResidual s t S hS φ hφ hφinj cd hseam d where
+  cHa := R.cHa
+  hbd := R.hbd
+  habsorbB := capstone_habsorbB s t S hS φ hφ hφinj cd hseam d
+  BdHa := {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1}
+  habsorbHa := capstone_habsorbHa s t S hS φ hφ hφinj cd hseam d
+  hcHa := R.hcHa
+  hdetHa := R.hdetHa
+  hdetAB := R.hdetAB
+
+/-- **The narrowed row supplies the capstone `hasClass` field.** Chains `toResidual` into
+`CapstoneCoverGlueResidual.toHasClass`, landing the exact type of `CapstoneAmbientSupply.hasClass`
+(equivalently the `hasClass` argument of `TraceRelFundLeaves.ofCapstone`). So the deepest capstone
+atom reduces, for connected `s.M`, to inhabiting `CapstoneCoverGlueResidualDisk` — the disk detecting
+triple plus the two collar-chain items `hbd`/`hdetAB`. -/
+def CapstoneCoverGlueResidualDisk.toHasClass
+    (R : CapstoneCoverGlueResidualDisk s t S hS φ hφ hφinj cd hseam d) :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
+  (R.toResidual).toHasClass
 
 end
 
