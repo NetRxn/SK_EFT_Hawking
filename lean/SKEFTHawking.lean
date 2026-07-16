@@ -4536,6 +4536,7 @@ import SKEFTHawking.PinPlusKTLemma53Wave
 import SKEFTHawking.PinPlusKTLeafGate
 import SKEFTHawking.PinPlusKTSpinForgetPhi
 import SKEFTHawking.PinPlusTraceLeafGate
+import SKEFTHawking.PinPlusResidualGate
 import SKEFTHawking.PinPlusKTSpinPresentationRow
 import SKEFTHawking.PinPlusKTKerPhiDoubles
 import SKEFTHawking.PinPlusKTSpinSigmaAtom

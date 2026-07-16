@@ -287,6 +287,29 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    doubles, consuming zero k₀ facts).
    backing: `spinForgetPhi_hfwd_of_ktNonSplit`, `spinForgetPhi_hfwd_iff_ktNonSplit`
 
+19. `dual-spin-opened-construction-conclusion-fakeable` [structural_forcing]
+   Opening DualSpinFromW into DualSpinConstruction (Vspace/ιV/Vspin/hcob/hcover fields) makes the dual-spin
+   supply a genuine geometric obligation not derivable from the conclusion. FALSE (gate round 12): on an
+   unpinned ambient, Nonempty (DualSpinConstruction PUnit sigM) ↔ 32 ∣ sigM — every field including hcob
+   inhabits from bare arithmetic (the σ-onto realization engine spinOfSigMul16 supplies genuine
+   SmoothSpinManifold4 witnesses for every multiple of 16), and modulo the presentation row the whole opened
+   supply ⟺ the hfwd conclusion. The mechanism: amb is a FREE TopCat field. Consequence (binding round-12
+   spec 1): dA supply claims pass by DATA INSPECTION only — amb must be TopCat.of b.W of the actual tethered
+   witness and edge the geometric ∂E(V); statement-shape audits are insufficient at every opening depth.
+   backing: `nonempty_dualSpinConstruction_iff_thirtytwo_dvd`, `nonempty_ktSharpnessSupplyConstr_iff_hfwd`, `spinOfSigMul16_sig`
+
+20. `novikov-substrate-synthetic-inhabitation` [structural_forcing]
+   The NovikovRealPairLES substrate (or any of the four equivalent σ-descent atom formulations) constitutes
+   progress toward the Thom bordism-invariance of σ beyond the bare hbord statement. FALSE (gate round 12):
+   the diagonal Lagrangian + synthetic quotient inhabit the substrate with zero geometry whenever σ agrees
+   (nonempty_novikovBoundaryRestriction_iff_sig_eq — the Witt step kernel-encoded via
+   exists_lagrangian_of_latticeSig_eq_zero), and novikovLagrangian_iff_hbord proves ALL FOUR formulations
+   (classical Lagrangian / boundary-restriction half-dim / Lefschetz co-isotropy / the pair-LES substrate)
+   are kernel-equivalent to hbord itself. Consequence (binding round-12 spec 2): a Novikov-atom discharge
+   must exhibit a GENUINE bounding-W tower (the relative cap + the geometric restriction data of an actual
+   bordism witness) — linear-algebra Lagrangian constructions are zero progress at both grades.
+   backing: `nonempty_novikovRealPairLES_diag`, `nonempty_novikovBoundaryRestriction_iff_sig_eq`, `novikovLagrangian_iff_hbord`
+
 -/
 import SKEFTHawking.FGDualityNoGo
 import SKEFTHawking.NonHausdorffBordismCollapse
@@ -299,6 +322,7 @@ import SKEFTHawking.PinPlusGenuineCarrierIso
 import SKEFTHawking.PinPlusKTLeafGate
 import SKEFTHawking.PinPlusKTStepGate
 import SKEFTHawking.PinPlusKTVacuityGateWD
+import SKEFTHawking.PinPlusResidualGate
 import SKEFTHawking.PinPlusTaylorConventionNoGo
 import SKEFTHawking.PinPlusTraceLeafGate
 import SKEFTHawking.RokhlinArfNoGo
@@ -423,5 +447,23 @@ alias nogo_spinForgetPhi_hfwd_of_ktNonSplit := SKEFTHawking.PinPlusTraceLeafGate
 
 /-- NO-GO [`geometric-phi-does-not-close-hfwd-fakeability`] — do NOT re-derive. FALSE: Fixing Φ := spinForgetPhi (the geometric forgetful map) in the dA leaf makes hfwd a genuine geometric obligation not derivable from the conclusion. Backing refutation: `SKEFTHawking.PinPlusTraceLeafGate.spinForgetPhi_hfwd_iff_ktNonSplit`. -/
 alias nogo_spinForgetPhi_hfwd_iff_ktNonSplit := SKEFTHawking.PinPlusTraceLeafGate.spinForgetPhi_hfwd_iff_ktNonSplit
+
+/-- NO-GO [`dual-spin-opened-construction-conclusion-fakeable`] — do NOT re-derive. FALSE: Opening DualSpinFromW into DualSpinConstruction (Vspace/ιV/Vspin/hcob/hcover fields) makes the dual-spin supply a genuine geometric obligation not derivable from the conclusion. Backing refutation: `SKEFTHawking.PinPlusResidualGate.nonempty_dualSpinConstruction_iff_thirtytwo_dvd`. -/
+alias nogo_nonempty_dualSpinConstruction_iff_thirtytwo_dvd := SKEFTHawking.PinPlusResidualGate.nonempty_dualSpinConstruction_iff_thirtytwo_dvd
+
+/-- NO-GO [`dual-spin-opened-construction-conclusion-fakeable`] — do NOT re-derive. FALSE: Opening DualSpinFromW into DualSpinConstruction (Vspace/ιV/Vspin/hcob/hcover fields) makes the dual-spin supply a genuine geometric obligation not derivable from the conclusion. Backing refutation: `SKEFTHawking.PinPlusResidualGate.nonempty_ktSharpnessSupplyConstr_iff_hfwd`. -/
+alias nogo_nonempty_ktSharpnessSupplyConstr_iff_hfwd := SKEFTHawking.PinPlusResidualGate.nonempty_ktSharpnessSupplyConstr_iff_hfwd
+
+/-- NO-GO [`dual-spin-opened-construction-conclusion-fakeable`] — do NOT re-derive. FALSE: Opening DualSpinFromW into DualSpinConstruction (Vspace/ιV/Vspin/hcob/hcover fields) makes the dual-spin supply a genuine geometric obligation not derivable from the conclusion. Backing refutation: `SKEFTHawking.PinPlusResidualGate.spinOfSigMul16_sig`. -/
+alias nogo_spinOfSigMul16_sig := SKEFTHawking.PinPlusResidualGate.spinOfSigMul16_sig
+
+/-- NO-GO [`novikov-substrate-synthetic-inhabitation`] — do NOT re-derive. FALSE: The NovikovRealPairLES substrate (or any of the four equivalent σ-descent atom formulations) constitutes progress toward the Thom bordism-invariance of σ beyond the bare hbord statement. Backing refutation: `SKEFTHawking.PinPlusResidualGate.nonempty_novikovRealPairLES_diag`. -/
+alias nogo_nonempty_novikovRealPairLES_diag := SKEFTHawking.PinPlusResidualGate.nonempty_novikovRealPairLES_diag
+
+/-- NO-GO [`novikov-substrate-synthetic-inhabitation`] — do NOT re-derive. FALSE: The NovikovRealPairLES substrate (or any of the four equivalent σ-descent atom formulations) constitutes progress toward the Thom bordism-invariance of σ beyond the bare hbord statement. Backing refutation: `SKEFTHawking.PinPlusResidualGate.nonempty_novikovBoundaryRestriction_iff_sig_eq`. -/
+alias nogo_nonempty_novikovBoundaryRestriction_iff_sig_eq := SKEFTHawking.PinPlusResidualGate.nonempty_novikovBoundaryRestriction_iff_sig_eq
+
+/-- NO-GO [`novikov-substrate-synthetic-inhabitation`] — do NOT re-derive. FALSE: The NovikovRealPairLES substrate (or any of the four equivalent σ-descent atom formulations) constitutes progress toward the Thom bordism-invariance of σ beyond the bare hbord statement. Backing refutation: `SKEFTHawking.PinPlusResidualGate.novikovLagrangian_iff_hbord`. -/
+alias nogo_novikovLagrangian_iff_hbord := SKEFTHawking.PinPlusResidualGate.novikovLagrangian_iff_hbord
 
 end SKEFTHawking.KernelNoGos

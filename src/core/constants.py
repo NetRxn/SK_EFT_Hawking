@@ -3698,6 +3698,28 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': 'Fixing Φ := spinForgetPhi (the geometric forgetful map) in the dA leaf makes hfwd a genuine geometric obligation not derivable from the conclusion. FALSE (gate round 11): given the presentation row {hA, hB, hg, hdvd, hΦg, h2}, hfwd on the geometric Φ is DERIVABLE from KTNonSplit with zero geometry (R.generates writes x = n•[g]; Φx = n•k₀; nonsplit + 2-torsion force n even ⟹ 32 ∣ σ(x)) — the locating iff spinForgetPhi_hfwd_iff_ktNonSplit pins hfwd at exactly KTNonSplit strength. Consequence (binding round-11 spec): NO statement shape closes the dA/hfwd circularity risk — every hfwd/dA discharge claim requires a non-circularity audit BY PROOF INSPECTION (the per-instance Div32BoundingDatum supply is equally shape-fakeable, round 10 §3). The audit-friendly honest construction target is the kernel characterization ker Φ ⊆ doubles (spinForgetPhi_hfwd_of_ker_sub_doubles — hfwd free from Rokhlin on doubles, consuming zero k₀ facts).',
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'dual-spin-opened-construction-conclusion-fakeable': {
+        'fork_id': 'dual-spin-opened-construction-conclusion-fakeable',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusResidualGate.nonempty_dualSpinConstruction_iff_thirtytwo_dvd',
+            'SKEFTHawking.PinPlusResidualGate.nonempty_ktSharpnessSupplyConstr_iff_hfwd',
+            'SKEFTHawking.PinPlusResidualGate.spinOfSigMul16_sig',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'Opening DualSpinFromW into DualSpinConstruction (Vspace/ιV/Vspin/hcob/hcover fields) makes the dual-spin supply a genuine geometric obligation not derivable from the conclusion. FALSE (gate round 12): on an unpinned ambient, Nonempty (DualSpinConstruction PUnit sigM) ↔ 32 ∣ sigM — every field including hcob inhabits from bare arithmetic (the σ-onto realization engine spinOfSigMul16 supplies genuine SmoothSpinManifold4 witnesses for every multiple of 16), and modulo the presentation row the whole opened supply ⟺ the hfwd conclusion. The mechanism: amb is a FREE TopCat field. Consequence (binding round-12 spec 1): dA supply claims pass by DATA INSPECTION only — amb must be TopCat.of b.W of the actual tethered witness and edge the geometric ∂E(V); statement-shape audits are insufficient at every opening depth.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
+    'novikov-substrate-synthetic-inhabitation': {
+        'fork_id': 'novikov-substrate-synthetic-inhabitation',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusResidualGate.nonempty_novikovRealPairLES_diag',
+            'SKEFTHawking.PinPlusResidualGate.nonempty_novikovBoundaryRestriction_iff_sig_eq',
+            'SKEFTHawking.PinPlusResidualGate.novikovLagrangian_iff_hbord',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'The NovikovRealPairLES substrate (or any of the four equivalent σ-descent atom formulations) constitutes progress toward the Thom bordism-invariance of σ beyond the bare hbord statement. FALSE (gate round 12): the diagonal Lagrangian + synthetic quotient inhabit the substrate with zero geometry whenever σ agrees (nonempty_novikovBoundaryRestriction_iff_sig_eq — the Witt step kernel-encoded via exists_lagrangian_of_latticeSig_eq_zero), and novikovLagrangian_iff_hbord proves ALL FOUR formulations (classical Lagrangian / boundary-restriction half-dim / Lefschetz co-isotropy / the pair-LES substrate) are kernel-equivalent to hbord itself. Consequence (binding round-12 spec 2): a Novikov-atom discharge must exhibit a GENUINE bounding-W tower (the relative cap + the geometric restriction data of an actual bordism witness) — linear-algebra Lagrangian constructions are zero progress at both grades.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════
