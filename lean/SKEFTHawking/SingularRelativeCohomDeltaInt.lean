@@ -35,9 +35,13 @@ new `axiom`.
 -/
 import Mathlib
 import SKEFTHawking.SingularEuclideanCapIsoInt
+import SKEFTHawking.SingularRelativeUCInt
 
+open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularCohomologyInt
+open SKEFTHawking.SingularRelHomologyInt
 open SKEFTHawking.SingularEuclideanCapIsoInt
+open SKEFTHawking.SingularRelativeUCInt
 
 namespace SKEFTHawking.SingularRelativeCohomDeltaInt
 
@@ -117,6 +121,54 @@ theorem deltaRelHInt_relCochain_eq_zero {n : ℕ} (z : SingularCochainInt X n)
     (h : coboundaryₗ X n z ∈ relCochainsInt S (n + 1)) :
     deltaRelHInt z h = 0 :=
   (deltaRelHInt_eq_zero_iff z h).mpr ⟨0, map_zero _, by rwa [sub_zero]⟩
+
+/-! ## §3. `ℤ`-linearity of the δ-image class in the lift -/
+
+/-- **Additivity of `δ` in the lift.** `[δ(z₁+z₂)] = [δz₁] + [δz₂]` — the δ-image class is additive.
+This is what makes the pair connecting map `δ` a genuine `ℤ`-linear map on `Hⁿ(∂W;ℤ)` (the lift class
+`[z|∂W]` depends `ℤ`-linearly on `z`, `deltaRelHInt_relCochain_eq_zero` handling well-definedness). -/
+theorem deltaRelHInt_add {n : ℕ} (z₁ z₂ : SingularCochainInt X n)
+    (h₁ : coboundaryₗ X n z₁ ∈ relCochainsInt S (n + 1))
+    (h₂ : coboundaryₗ X n z₂ ∈ relCochainsInt S (n + 1)) :
+    deltaRelHInt (z₁ + z₂) (by rw [map_add]; exact Submodule.add_mem _ h₁ h₂)
+      = deltaRelHInt z₁ h₁ + deltaRelHInt z₂ h₂ := by
+  have hsum : deltaRelCocycleInt (z₁ + z₂) (by rw [map_add]; exact Submodule.add_mem _ h₁ h₂)
+      = deltaRelCocycleInt z₁ h₁ + deltaRelCocycleInt z₂ h₂ :=
+    Subtype.ext (Subtype.ext (by rw [deltaRelCocycleInt_coe]; exact map_add _ _ _))
+  rw [deltaRelHInt, deltaRelHInt, deltaRelHInt, hsum, RelativeCohomologyInt.mk,
+    RelativeCohomologyInt.mk, RelativeCohomologyInt.mk]
+  exact Submodule.Quotient.mk_add _
+
+/-- **`ℤ`-homogeneity of `δ` in the lift.** `[δ(s • z)] = s • [δz]`. -/
+theorem deltaRelHInt_smul {n : ℕ} (s : ℤ) (z : SingularCochainInt X n)
+    (h : coboundaryₗ X n z ∈ relCochainsInt S (n + 1)) :
+    deltaRelHInt (s • z) (by rw [map_smul]; exact Submodule.smul_mem _ s h)
+      = s • deltaRelHInt z h := by
+  have hsm : deltaRelCocycleInt (s • z) (by rw [map_smul]; exact Submodule.smul_mem _ s h)
+      = s • deltaRelCocycleInt z h :=
+    Subtype.ext (Subtype.ext (by rw [deltaRelCocycleInt_coe]; exact map_smul _ _ _))
+  rw [deltaRelHInt, deltaRelHInt, hsm, RelativeCohomologyInt.mk, RelativeCohomologyInt.mk]
+  exact Submodule.Quotient.mk_smul _ _ _
+
+/-! ## §4. The `δ ⊣ ∂` adjunction against the relative Kronecker pairing -/
+
+/-- **The connecting-map / boundary adjunction** `⟨δ[z|∂W], [c]⟩ = ⟨z, ∂c⟩`. The relative Kronecker
+pairing (`SingularRelativeUCInt.relKroneckerHInt`, piece 3 — the mixed cohomology×homology pairing
+whose free-part nondegeneracy is the integral relative UCT) of the δ-image class `deltaRelHInt z h`
+against a relative `(n+1)`-cycle `[c]` equals the absolute Kronecker of the lift `z` against the
+boundary `∂c` (which lives in the subspace, `c` being a relative cycle). This is the algebraic core
+of the substrate's PD-intertwining `hadj` — the `rest2 ⊣ delta` compatibility — in the pairing's
+native language: `δ` is adjoint to `∂` under Kronecker. Reuses `relKroneckerInt_relBoundary`'s engine
+via `kronecker_coboundary_chainBoundary`. -/
+theorem relKroneckerHInt_deltaRelHInt {n : ℕ} (z : SingularCochainInt X n)
+    (h : coboundaryₗ X n z ∈ relCochainsInt S (n + 1))
+    (c : SingularChainInt X (n + 1))
+    (hc : RelativeChainInt.mk S (n + 1) c ∈ relCyclesInt S (n + 1)) :
+    relKroneckerHInt S (deltaRelHInt z h)
+        (RelHomologyInt.mk S (n + 1) ⟨RelativeChainInt.mk S (n + 1) c, hc⟩)
+      = kronecker z (chainBoundary X n c) := by
+  rw [deltaRelHInt, relKroneckerHInt_mk_mk, relKroneckerInt_mk, deltaRelCocycleInt_coe]
+  exact kronecker_coboundary_chainBoundary z c
 
 end
 
