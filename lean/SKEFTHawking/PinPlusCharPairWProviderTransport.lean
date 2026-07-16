@@ -215,7 +215,9 @@ Track-2 residual set. The HONEST hypothesis row:
   This single family feeds `cyl`, `doubling`, AND `mapCyl` (all three share `W = cylW s.M`).
 * `addClosure` — the `⊔`-block-diagonal admissibility `WAdmPinned b₁ → WAdmPinned b₂ →
   WAdmPinned (b₁.add b₂)` on `b₁.W ⊕ b₂.W` (NOT a cylinder; the disjoint-union Lefschetz–Wu
-  assembly — `exists_wuAdmPinned_sum` closes it modulo `SumRelFundClass`). -/
+  assembly). **DISCHARGED unconditionally** by `WAdmPinned.add`
+  (PinPlusCharPairWProviderClosed), which feeds the concrete `sumRelFundClass` inhabitant to
+  `exists_wuAdmPinned_sum` — `SumRelFundClass` is NOT an empty interface. -/
 def CharPairWProviderPerOp.ofCylinderEngine
     (cylData : ∀ {s : SingularManifold.{0} PUnit.{1} k I},
       CharPairStrBundled I s → CylWAdmData s)

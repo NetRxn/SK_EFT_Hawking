@@ -25,8 +25,10 @@ instances. The precise inhabitation dependency is kernel-encoded (§1,
   (a) `cylData : ∀ {s} (σ : CharPairStrBundled I s), CylWAdmData s` — the σ-threaded concrete-
       cylinder Lefschetz–Wu residual (Track-2 seam: `CylinderWAdmPinned.toCylWAdmData` + the
       `ofClosedPD*` engine family, each still consuming per-`M` closed-PD tower inputs), and
-  (b) `addClosure` — the ⊔-block-diagonal admissibility (`exists_wuAdmPinned_sum` closes it
-      **modulo `SumRelFundClass`**, an interface with zero in-tree inhabitants).
+  (b) `addClosure` — the ⊔-block-diagonal admissibility. **CLOSED (arm 4):** `SumRelFundClass`
+      is concretely inhabited (`sumRelFundClass`, PoincareLefschetzRelFundClassSumGen) and
+      `WAdmPinned.add` (PinPlusCharPairWProviderClosed) consumes it directly — residual (b)
+      is discharged unconditionally; only residual (a)'s per-`M` leaves remain.
 DISCIPLINE: a W-D discharge wave's headline MUST carry the "conditional on provider inhabitation
 (Track-2 residuals (a)+(b))" rider until an in-tree `prov` lands. A "discharged" sector Prop with
 no `prov` instance is a theorem about a possibly-empty parameter space — real, but not yet about
