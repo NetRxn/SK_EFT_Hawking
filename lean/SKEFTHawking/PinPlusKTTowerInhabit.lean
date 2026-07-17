@@ -41,6 +41,7 @@ open SKEFTHawking
 open SKEFTHawking.SingularCohomologyInt
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularRelHomologyInt
+open SKEFTHawking.SingularEuclideanCapIsoInt
 open SKEFTHawking.SingularRelativeHomologyMod2 (sub)
 open SKEFTHawking.SpinSigmaRoute
 open SKEFTHawking.PinPlusKTNovikovTowerInstantiate
@@ -59,5 +60,78 @@ theorem hbdnd_of_evenUnimodular (B : IntH2Basis (sub S)) (Z : relCycleLift S (2 
     (h : IsEvenUnimodular (bdryMat B Z)) :
     ((bdryMat B Z).map (Int.cast : ℤ → ℝ)).toQuadraticMap'.radical = ⊥ :=
   h.radical_eq_bot
+
+/-! ## §2. The narrowed tower constructor — `hbdnd` auto-supplied from even-unimodularity
+
+`GenuineBoundingWTower` has three `Prop` obligations (`hexactRev`, `hnondeg`, `hbdnd`). This constructor
+removes `hbdnd` from the required inputs: given the finite-free bases, `Z`, the two homological
+`Prop`s (`hexactRev`, `hnondeg`), and even-unimodularity of the integral boundary matrix, it builds the
+tower — `hbdnd` is `IsEvenUnimodular.radical_eq_bot`. So the residual atom set the caller must supply is
+exactly `{Bw, B, Br, Z (the intH2_basis_datum frontier + the tethered cycle), hexactRev, hnondeg}` plus a
+`IsEvenUnimodular (bdryMat B Z)` witness — which, for the σ-consuming block boundary, is itself
+unconditional (`#190` `boundaryForm_isEvenUnimodular`). -/
+noncomputable def GenuineBoundingWTower.ofEvenUnimodularBoundary
+    (Bw : IntH2Basis X) (B : IntH2Basis (sub S)) {qr : ℕ}
+    (Br : Module.Basis (Fin qr) ℤ (RelativeCohomologyInt S (2 + 1)))
+    (Z : relCycleLift S (2 + 1 + 1))
+    (hEU : IsEvenUnimodular (bdryMat B Z))
+    (hexactRev : LinearMap.ker (deltaCoord B Br) ≤ LinearMap.range (rest2Coord Bw B))
+    (hnondeg : ∀ x : Fin qr → ℝ,
+      (∀ a : Fin Bw.rank → ℝ, pairingCoord Bw Br Z a x = 0) → x = 0) :
+    GenuineBoundingWTower S where
+  Bw := Bw
+  B := B
+  qr := qr
+  Br := Br
+  Z := Z
+  hexactRev := hexactRev
+  hnondeg := hnondeg
+  hbdnd := hEU.radical_eq_bot
+
+/-! ## §3. The σ-lane `latticeSig` bridge — the block-splitting datum completes the floor
+
+The σ-lane cobordism-invariance floor (`hbord`/`latticeSig`) needs, for each data-bordant pair, a genuine
+tower whose boundary form is the block split `blockDiag A (−B)` of two even-unimodular ends. This bridge
+takes a `GenuineBoundingWTower` `T` PLUS the block-splitting datum — the boundary-index identification
+`e : Fin (r+s) ≃ Fin T.B.rank` and the reindexed-matrix equality `hBd` witnessing
+`bdryMat T.B T.Z ≅ blockDiag A (−B)` — and fires `latticeSig A = latticeSig B` through the glued genuine
+carrier and the banked `NovikovGeometricPairLESData.latticeSig_eq`. The datum `(e, hBd)` IS the `#190`
+`boundaryInterMatrix_eq_blockDiag` content (`∂W = M_p ⊔ (−M_q)`), so the full σ-lane floor reduces to: a
+genuine tower `+` this splitting datum. -/
+theorem latticeSig_eq_of_genuineTower {r s : ℕ}
+    (A : Matrix (Fin r) (Fin r) ℤ) (B : Matrix (Fin s) (Fin s) ℤ)
+    (hA : IsEvenUnimodular A) (hB : IsEvenUnimodular B)
+    (T : GenuineBoundingWTower S)
+    (e : Fin (r + s) ≃ Fin T.B.rank)
+    (hBd : (bdryMat T.B T.Z).submatrix e e = blockDiag A (-B)) :
+    latticeSig A = latticeSig B := by
+  set D := novikovGeometricPairLESData_of_genuineTower T with hD
+  set ρ : (Fin T.B.rank → ℝ) ≃ₗ[ℝ] (Fin (r + s) → ℝ) := LinearEquiv.funCongrLeft ℝ ℝ e with hρ
+  refine NovikovGeometricPairLESData.latticeSig_eq A B hA hB
+    { H2W := D.H2W
+      H3rel := D.H3rel
+      rest2 := ρ.toLinearMap ∘ₗ D.rest2
+      delta := D.delta ∘ₗ ρ.symm.toLinearMap
+      pairing := D.pairing
+      hexact := ?_
+      hnondeg := D.hnondeg
+      hbdnd := ?_
+      hsymm := ?_
+      hadjDot := ?_ }
+  · exact (LinearEquiv.conj_exact_iff_exact D.rest2 D.delta ρ).mpr D.hexact
+  · exact (isEvenUnimodular_blockDiag A (-B) hA (isEvenUnimodular_neg B hB)).radical_eq_bot
+  · rw [← hBd]; exact (bdryMat_isSymm T.B T.Z).submatrix ⇑e
+  · intro a v
+    have hsub : (blockDiag A (-B)).map (Int.cast : ℤ → ℝ)
+        = ((bdryMat T.B T.Z).map (Int.cast : ℤ → ℝ)).submatrix ⇑e ⇑e := by
+      rw [← hBd, Matrix.submatrix_map]
+    have hρ_app : (ρ.toLinearMap ∘ₗ D.rest2) a = D.rest2 a ∘ ⇑e := rfl
+    have hρsymm_app : (D.delta ∘ₗ ρ.symm.toLinearMap) v = D.delta (v ∘ ⇑e.symm) := rfl
+    have hdot : ∀ u w : Fin T.B.rank → ℝ, (u ∘ ⇑e) ⬝ᵥ (w ∘ ⇑e) = u ⬝ᵥ w := by
+      intro u w
+      simp only [dotProduct, Function.comp_apply]
+      exact e.sum_comp (fun i => u i * w i)
+    rw [hρ_app, hρsymm_app, hsub, Matrix.submatrix_mulVec_equiv, hdot]
+    exact D.hadjDot a (v ∘ ⇑e.symm)
 
 end SKEFTHawking.PinPlusKTTowerInhabit
