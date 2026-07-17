@@ -223,4 +223,54 @@ theorem deltaCoord_comp_rest2Coord (Bw : IntH2Basis X) (B : IntH2Basis (sub S))
   funext k
   simp [coordR]
 
+/-! ## §4. The geometric PD-square `hadjDot`, DERIVED (the crux) -/
+
+/-- `restrictHInt` on a cocycle class agrees with the `#196` cochain restriction class (both have coe
+`pullbackCochainInt`). -/
+theorem restrictHInt_mk_eq (a : LinearMap.ker (coboundaryₗ X 2)) :
+    restrictHInt (Cohomology.mk X 2 a) = Cohomology.mk (sub S) 2 (restrictCocycleInt a) := by
+  rw [restrictHInt_mk]
+  exact congrArg (Cohomology.mk (sub S) 2)
+    (Subtype.ext (by rw [restrictCocycleIntLin_coe, restrictCocycleInt_coe]))
+
+/-- Every boundary class `[w]` is the restriction class of its own `bdryLift` (which has coe `w`). -/
+theorem mk_restrictLift_bdryLift (w : LinearMap.ker (coboundaryₗ (sub S) 2)) :
+    Cohomology.mk (sub S) 2 (restrictLiftCocycleInt (bdryLift w) (bdryLift_delta_mem w))
+      = Cohomology.mk (sub S) 2 w :=
+  congrArg (Cohomology.mk (sub S) 2)
+    (Subtype.ext (by rw [restrictLiftCocycleInt_coe, bdryLift_pullback]))
+
+/-- **The geometric PD-square `hadjDot`, DERIVED.** For a genuine bounding-`W` tower, the boundary Gram
+form of the restriction coordinates of `a` against a GENERAL boundary vector `v` equals the coordinate
+pairing of `a` against `δv`:
+`(rest2 a) ⬝ᵥ (Bd_ℝ *ᵥ v) = pairing a (delta v)`.
+Proof: both sides are `ℝ`-bilinear in `(a, v)`; on the product standard basis they reduce (via the
+`realizeZR`/`realizeBilinZR` semantics + `restrictHInt_mk_eq`/`mk_restrictLift_bdryLift`) to the
+GENUINE `#201` object-level PD-square `coord_hadj_deltaRelHIntLin`; `Module.Basis.ext` extends to all
+`(a, v)`. This is the crux honest derivation — NOT a synthetic-quotient definition. -/
+theorem hadjDot_of_tower (Bw : IntH2Basis X) (B : IntH2Basis (sub S)) {q : ℕ}
+    (Br : Module.Basis (Fin q) ℤ (RelativeCohomologyInt S (2 + 1))) (Z : relCycleLift S (2 + 1 + 1))
+    (a : Fin Bw.rank → ℝ) (v : Fin B.rank → ℝ) :
+    rest2Coord Bw B a ⬝ᵥ ((bdryMat B Z).map (Int.cast : ℤ → ℝ) *ᵥ v)
+      = pairingCoord Bw Br Z a (deltaCoord B Br v) := by
+  have hFG : (Matrix.toLinearMap₂' ℝ ((bdryMat B Z).map (Int.cast : ℤ → ℝ))).comp (rest2Coord Bw B)
+      = (pairingCoord Bw Br Z).compl₂ (deltaCoord B Br) := by
+    refine (Pi.basisFun ℝ (Fin Bw.rank)).ext (fun i => ?_)
+    refine (Pi.basisFun ℝ (Fin B.rank)).ext (fun j => ?_)
+    simp only [LinearMap.comp_apply, LinearMap.compl₂_apply, Pi.basisFun_apply,
+      Matrix.toLinearMap₂'_apply', rest2Coord, deltaCoord, pairingCoord]
+    rw [show (Pi.single i 1 : Fin Bw.rank → ℝ) = coordR Bw.basis (Bw.basis i) from
+        (coordR_basis_self _ _).symm,
+      show (Pi.single j 1 : Fin B.rank → ℝ) = coordR B.basis (B.basis j) from
+        (coordR_basis_self _ _).symm,
+      realizeZR_coordR, realizeZR_coordR, realizeBilinZR_coordR, pairingInt_apply]
+    obtain ⟨a0, ha0⟩ := Submodule.Quotient.mk_surjective _ (Bw.basis i)
+    obtain ⟨w0, hw0⟩ := Submodule.Quotient.mk_surjective _ (B.basis j)
+    have ha0' : Bw.basis i = Cohomology.mk X 2 a0 := ha0.symm
+    have hw0' : B.basis j = Cohomology.mk (sub S) 2 w0 := hw0.symm
+    rw [ha0', hw0', restrictHInt_mk_eq, ← mk_restrictLift_bdryLift w0]
+    exact coord_hadj_deltaRelHIntLin a0 (bdryLift w0) (bdryLift_delta_mem w0) Z B
+  have := LinearMap.congr_fun (LinearMap.congr_fun hFG a) v
+  simpa [Matrix.toLinearMap₂'_apply', LinearMap.compl₂_apply] using this
+
 end SKEFTHawking.PinPlusKTGenuineTowerGlue
