@@ -170,6 +170,15 @@ smoothness of the circle transfers through the binary-product `IsManifold` insta
 theorem torusFour_isManifold :
     IsManifold ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) ω TorusFour := inferInstance
 
+/-- `T⁴` is a **Lie group** (`(S¹)⁴`, the compact abelian Lie group `𝕋⁴`) — the group multiplication
+and inversion are smooth for `torusFourModel`, from the circle's Lie-group structure through the
+binary-product `Prod.instLieGroup`. This is the seed of the K9 spin brick: a Lie group is
+parallelizable (its tangent bundle is trivialized by left-invariant frames), hence has `w₂ = 0`, hence
+is spin — so `T⁴`, and after resolution the Kummer K3, carry the spin tangential structure the
+generator needs. (The parallelizable ⟹ spin chain is not yet in Mathlib; this fact is its foothold.) -/
+theorem torusFour_lieGroup :
+    LieGroup ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) ω TorusFour := inferInstance
+
 /-- The product model is **boundaryless** — the no-boundary half of "closed 4-manifold" (`𝓡 1` is
 boundaryless; products of boundaryless models are boundaryless). -/
 theorem torusFourModel_boundaryless :
