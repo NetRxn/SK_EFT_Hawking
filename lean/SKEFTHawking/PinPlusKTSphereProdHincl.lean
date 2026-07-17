@@ -89,7 +89,7 @@ theorem zero_lt_rayT (x v : E) (hx : ‖x‖ < 1) (hv : v ≠ x) :
   · positivity
 
 /-- **The straight-line homotopy point stays off `y₀`.** `t•b + (1−t)•rayExit(y₀,b)` lies on the ray
-`y₀ + c•(b−y₀)` with `c = t + (1−t)·rayT > 0` (for `b ≠ y₀`, `‖y₀‖ < 1`, `t ∈ [0,1]`), hence `≠ y₀`. -/
+`y₀ + c•(b−y₀)`, `c = t + (1−t)·rayT > 0` (for `b ≠ y₀`, `‖y₀‖ < 1`, `t ∈ [0,1]`), hence `≠ y₀`. -/
 theorem diskHomotopy_ne (y0 b : E) (hy0 : ‖y0‖ < 1) (hbne : b ≠ y0) {t : ℝ}
     (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
     t • b + (1 - t) • PinPlusTraceDiskCorePair.rayExit y0 b ≠ y0 := by
@@ -293,8 +293,8 @@ theorem map_flatIncl_bijective {X : TopCat} {s t : Set ↑X} (h : s ⊆ t) (n : 
   SingularHomotopyInvariance.Homology.map_bijective_of_comp_id_all (flatIncl h) (flatInclInv h)
     (ContinuousMap.ext fun _ => rfl) (ContinuousMap.ext fun _ => Subtype.ext (Subtype.ext rfl)) n
 
-/-- **`subIncl h` factors as `ambIncl (restr s t) ∘ flatIncl h`** (both send a point of `s` to itself
-inside `t`). -/
+/-- **`subIncl h` factors as `ambIncl (restr s t) ∘ flatIncl h`** (both send a point of `s` to
+itself inside `t`). -/
 theorem subIncl_eq_ambIncl_comp_flatIncl {X : TopCat} {s t : Set ↑X} (h : s ⊆ t) :
     subIncl h = (ambIncl (restr s t)).comp (flatIncl h) :=
   ContinuousMap.ext fun _ => rfl
