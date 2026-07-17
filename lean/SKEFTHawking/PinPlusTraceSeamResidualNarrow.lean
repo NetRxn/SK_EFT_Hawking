@@ -168,9 +168,70 @@ theorem diskDetectChain_iterate_hdet (μ : ℕ) (y : D5)
   rw [relClassOf_singularSd_iterate_eq 3 diskDetectChain diskDetectChain_hc μ y hy]
   exact diskDetectChain_hdet y hy
 
+/-! ## §3. The closed-S attached side (item d) — the collar bridge, honest-reduced.
+
+The exact free-sphere remainder is discharged (item b). The complementary ATTACHED part of item b's
+split is `mapChain (ambIncl (U ∩ sphere)) cU` — a pushforward from the OPEN nbhd `U ∩ sphere` of the
+CLOSED attaching region `S`, not from `↥S` itself. The `hsplitHa`/`hvOut` fields of
+`CapstoneSeamTransferSeam` demand the attached part be a pushforward from `↥S` (via `seamLegHa`,
+defeq `ambIncl S` since `sub S = TopCat.of ↥S`). Bridging the open-nbhd attached part down to the
+closed `S` is the **collar deformation-retraction** of the sphere-collar of `S` onto `S`, carrying
+chain support to an EQUAL chain modulo a free-sphere correction.
+
+This is NOT reachable by the open-cover subdivision engine: open covers cannot reach exact closed
+supports directly (the #194 isolation — prose-level, NOT kernel-false; `{S, sphere ∖ S}` is not an
+open cover, `S` being closed). The banked retraction machinery (`SingularConvexRadialRetract`,
+`SingularPuncturedRetract`) delivers homology/homotopy equivalences — `relClassOf`-invariance — not
+the chain-level EQUALITY `hsplitHa` needs; `SeamCollarChainDatum.ofCorrector` builds the straddle
+`hdetAB`, not the boundary's `S`-exact decomposition. So the collar bridge WALLS, and is honest-reduced
+to the named atom `ClosedSeamAttachedCollarBridge` below.
+
+**Gate-pending, UNCONSUMED.** `ClosedSeamAttachedCollarBridge` is a completeness-adjacent Prop: it is
+NOT proven here, and nothing unconditional is built from it — only the conditional wiring
+`exact_seam_split_of_attachedBridge`, which takes it as a hypothesis. -/
+
+/-- **The closed-seam attached-collar bridge (item d, the named atom — gate-pending, unconsumed).**
+For the closed attaching region `S ⊆ D⁵` and an attached chain `a` (item b's attached part, supported
+in an open nbhd `U ∩ sphere` of `S`), the bridge asserts `a` decomposes as a pushforward from `↥S`
+plus a free-sphere correction: `a = mapChain (ambIncl S) cSeam + corr` with `corr` supported in
+`sphere ∖ S`. This is exactly the collar deformation-retraction content — retract the open-nbhd
+attached simplices onto `S`, the retraction homotopy's mismatch landing in the free sphere. Its
+provision is the sole remaining geometric atom of the disk-side seam decomposition; it is NOT provable
+by open-cover subdivision (the closed-`S` support barrier). Left UNCONSUMED: no proof, no unconditional
+inhabitant. -/
+def ClosedSeamAttachedCollarBridge (S : Set D5) (a : SingularChain (TopCat.of D5) (3 + 1)) : Prop :=
+  ∃ (cSeam : SingularChain (sub (X := TopCat.of D5) S) (3 + 1))
+      (corr : SingularChain (TopCat.of D5) (3 + 1)),
+    a = mapChain (ambIncl (X := TopCat.of D5) S) (3 + 1) cSeam + corr
+      ∧ corr ∈ subspaceChains (X := TopCat.of D5)
+          ({v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S) (3 + 1)
+
+/-- **The exact closed-S seam split, CONDITIONAL on the collar bridge (item d wiring).** Given item b's
+open-nbhd split `w = a + vOut` (`vOut` free-sphere-supported) and the collar bridge on the attached
+part `a`, the boundary `w` splits EXACTLY as a pushforward from `↥S` plus a free-sphere remainder:
+`w = mapChain (ambIncl S) cSeam + vOut'` with `vOut' = corr + vOut ∈ subspaceChains (sphere ∖ S)`. This
+is the exact `hsplitHa`/`hvOut` shape of `CapstoneSeamTransferSeam` (via `seamLegHa` defeq `ambIncl S`).
+The whole disk-side seam decomposition thus reduces to the single atom `ClosedSeamAttachedCollarBridge`,
+which is left unproven (gate-pending). Substantive char-2 rearrangement + submodule closure; consumes
+the bridge only as a hypothesis. -/
+theorem exact_seam_split_of_attachedBridge {S : Set D5}
+    {w a vOut : SingularChain (TopCat.of D5) (3 + 1)}
+    (hsplit : w = a + vOut)
+    (hvOut : vOut ∈ subspaceChains (X := TopCat.of D5)
+        ({v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S) (3 + 1))
+    (hbridge : ClosedSeamAttachedCollarBridge S a) :
+    ∃ (cSeam : SingularChain (sub (X := TopCat.of D5) S) (3 + 1))
+        (vOut' : SingularChain (TopCat.of D5) (3 + 1)),
+      w = mapChain (ambIncl (X := TopCat.of D5) S) (3 + 1) cSeam + vOut'
+        ∧ vOut' ∈ subspaceChains (X := TopCat.of D5)
+            ({v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S) (3 + 1) := by
+  obtain ⟨cSeam, corr, ha, hcorr⟩ := hbridge
+  refine ⟨cSeam, corr + vOut, ?_, Submodule.add_mem _ hcorr hvOut⟩
+  rw [hsplit, ha, add_assoc]
+
 end
 
-/-! ## §3. The controlled-rep Supply wiring (item c) — `hasClass_ofTransfer` consumes `Sdᵘ`. -/
+/-! ## §4. The controlled-rep Supply wiring (item c) — `hasClass_ofTransfer` consumes `Sdᵘ`. -/
 
 section CtrlSupply
 
