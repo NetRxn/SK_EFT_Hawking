@@ -103,8 +103,11 @@ end Atom3
 /-! ## §4. The narrowing wiring — `SphereProdCoboundaryWAdm` (hence `hBbord`) from the reduced atoms. -/
 
 open SKEFTHawking.PoincareLefschetzWu5
+open SKEFTHawking.PoincareLefschetzWuAssembly
+open SKEFTHawking.SingularRelativeCup
 open SKEFTHawking.PinPlusWAdmPinned
 open SKEFTHawking.PinPlusCharPairBorTethered
+open SKEFTHawking.PinPlusCharPairRealizationTied
 open SKEFTHawking.PinPlusKTSpinForgetPhi
 open SKEFTHawking.PinPlusCharPairEmptySourceRealization
 open SKEFTHawking.PinPlusKTSphereProdBordism
@@ -112,6 +115,17 @@ open SKEFTHawking.PinPlusKTSphereProdWAdm
 open SKEFTHawking.PinPlusKTAssemblyResiduals
 open SKEFTHawking.PinPlusKTSpinPresentationRow
 open SKEFTHawking.PinPlusCharPairData
+open SKEFTHawking.SpinSigmaRoute
+open SKEFTHawking.PinPlusKTExtension
+open SKEFTHawking.PinPlusKTKernelSector
+open SKEFTHawking.PinPlusKTKernelSpinRoute
+open SKEFTHawking.PinPlusCharPairSurfaceTie
+open SKEFTHawking.PinPlusKTKerPhiDoubles
+open SKEFTHawking.PinPlusKTSectorGeometricReduce
+open SKEFTHawking.PinPlusTraceCapstoneResidualRow
+open SKEFTHawking.PinPlusKTBinderDischarge
+open SKEFTHawking.PinPlusKTCollapseDischarge
+open SKEFTHawking.PinPlusKTFreezeDischarge
 open SKEFTHawking.T2TangentialBordism SKEFTHawking.TangentialDataBordism
 
 section Wiring
@@ -149,6 +163,87 @@ theorem sphereProdCoboundaryWAdm_of_reducedAtoms
       (X := TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W) 3
   exact sphereProdCoboundaryWAdm_of_degenerate14 prov p b hWT2
     (relFundDatum_ofHasClass b hWT2 hasClass) P23 pin23 hv2
+
+/-- **`hBbord` from the reduced atoms** — the empty-membrane collapse (`hBbord_of_coboundary`, #203)
+composed with the reduced coboundary atom. Discharges the `hBbord` obligation from the class-existence
+witness + the two homology subsingletons + the `(2,3)` half + `v₂ = 0`. -/
+theorem isDataBordant_empty_of_reducedAtoms
+    (prov : CharPairWProviderPerOp (𝓡 4) 0) (p : StrMfd (spinEmptyData prov))
+    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := 0) (I := 𝓡 4)))
+    (hWT2 : T2Space b.W)
+    (hasClass : letI := hWT2.t1Space
+      HasRelFundClass (X := TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W)
+        (interiorGenFamily (W := b.W) ((𝓡 4).prod (𝓡∂ 1)) εtrace))
+    [Subsingleton (Homology (TopCat.of b.W) 1)]
+    [Subsingleton (RelativeHomology (X := TopCat.of b.W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary b.W) 4)]
+    (P23 : LefschetzWuDatum (TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W) 2 3 5)
+    (pin23 : LefschetzWuPinned23 P23) (hv2 : wuClass P23 = 0) :
+    IsDataBordant (spinEmptyData prov) p ⟨emptySM, (spinEmptyData prov).emptyStr⟩ :=
+  hBbord_of_coboundary prov p
+    (sphereProdCoboundaryWAdm_of_reducedAtoms prov p b hWT2 hasClass P23 pin23 hv2)
+
+/-- **THE REDUCED-ATOMS WIRING** — the finest-grain KT ≅ ℤ/16 assembly with the Freeze-B geometric
+hypothesis at `row.R.s2s2` given by the SHARPENED-AND-REDUCED residual: a T2 coboundary `b` with the
+class-existence witness `hasClass` (atom 3 → `HasRelFundClass`), the two HOMOLOGY subsingletons (atoms
+1,2 → their homological twins via universal coefficients), a pinned `(2,3)` Poincaré–Lefschetz datum
+`P23`, and `v₂ = 0`. Every OTHER consumer shape (`H`, `row`, `hCob`/`hBase`, `hcolD`, `hker`, `hΦg`) is
+fixed. This is the honest headline: the whole `S²×S² = ∂(S²×D³)` bordism content is discharged EXCEPT
+the `(2,3)` half + `v₂ = 0` + the three sub-atoms `{HasRelFundClass, H₁(W;ℤ/2)=0, H₄(W,∂W;ℤ/2)=0}` —
+the cohomological atoms are no longer atoms, only their homological/existence roots remain. -/
+theorem kt_equiv_zmod16_of_residuals_freezeAtoms_ofReducedAtoms
+    (H : ∀ p : StrMfd (pinPlusCharPairData residualProv).toTangentialData,
+        charPairBrown residualProv (T2DataBordismGrp.mk (pinPlusCharPairData residualProv) p) = 0 →
+        0 < p.2.n → KRSResidualRow residualProv p)
+    (row : SpinPresentationRow residualProv)
+    (hCob : row.R.HandleTradeCobordism) (hBase : row.R.HyperbolicBase)
+    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) row.R.s2s2.1 (emptySM (X := PUnit) (k := 0) (I := 𝓡 4)))
+    (hWT2 : T2Space b.W)
+    (hasClass : letI := hWT2.t1Space
+      HasRelFundClass (X := TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W)
+        (interiorGenFamily (W := b.W) ((𝓡 4).prod (𝓡∂ 1)) εtrace))
+    [Subsingleton (Homology (TopCat.of b.W) 1)]
+    [Subsingleton (RelativeHomology (X := TopCat.of b.W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary b.W) 4)]
+    (P23 : LefschetzWuDatum (TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W) 2 3 5)
+    (pin23 : LefschetzWuPinned23 P23) (hv2 : wuClass P23 = 0)
+    (hcolD : ∀ p : StrMfd (pinPlusCharPairData residualProv).toTangentialData,
+        IsSpinSectorStr residualProv p → RankZeroCollapseDatum residualProv p)
+    (hker : KerPhiSubDoubles residualProv)
+    (hΦg : spinForgetPhi residualProv
+        (DataBordismGrp.mk (spinEmptyData residualProv) row.g) = ktKernelRep residualProv) :
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData residualProv) ≃+ ZMod 16) :=
+  kt_equiv_zmod16_of_residuals_freezeAtoms_ofCoboundary H row hCob hBase
+    (sphereProdCoboundaryWAdm_of_reducedAtoms residualProv row.R.s2s2 b hWT2 hasClass P23 pin23 hv2)
+    hcolD hker hΦg
+
+/-- **The Rokhlin-16 twin of the reduced-atoms wiring** — `Nat.card Ω₄^{Pin⁺} = 16` from the row with
+Freeze B at the reduced residual. Pure transport; introduces no new residual atom. -/
+theorem rokhlin_sixteen_of_residuals_freezeAtoms_ofReducedAtoms
+    (H : ∀ p : StrMfd (pinPlusCharPairData residualProv).toTangentialData,
+        charPairBrown residualProv (T2DataBordismGrp.mk (pinPlusCharPairData residualProv) p) = 0 →
+        0 < p.2.n → KRSResidualRow residualProv p)
+    (row : SpinPresentationRow residualProv)
+    (hCob : row.R.HandleTradeCobordism) (hBase : row.R.HyperbolicBase)
+    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) row.R.s2s2.1 (emptySM (X := PUnit) (k := 0) (I := 𝓡 4)))
+    (hWT2 : T2Space b.W)
+    (hasClass : letI := hWT2.t1Space
+      HasRelFundClass (X := TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W)
+        (interiorGenFamily (W := b.W) ((𝓡 4).prod (𝓡∂ 1)) εtrace))
+    [Subsingleton (Homology (TopCat.of b.W) 1)]
+    [Subsingleton (RelativeHomology (X := TopCat.of b.W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary b.W) 4)]
+    (P23 : LefschetzWuDatum (TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W) 2 3 5)
+    (pin23 : LefschetzWuPinned23 P23) (hv2 : wuClass P23 = 0)
+    (hcolD : ∀ p : StrMfd (pinPlusCharPairData residualProv).toTangentialData,
+        IsSpinSectorStr residualProv p → RankZeroCollapseDatum residualProv p)
+    (hker : KerPhiSubDoubles residualProv)
+    (hΦg : spinForgetPhi residualProv
+        (DataBordismGrp.mk (spinEmptyData residualProv) row.g) = ktKernelRep residualProv) :
+    Nat.card (T2DataBordismGrp (pinPlusCharPairData residualProv)) = 16 :=
+  rokhlin_sixteen_of_residuals_freezeAtoms_ofCoboundary H row hCob hBase
+    (sphereProdCoboundaryWAdm_of_reducedAtoms residualProv row.R.s2s2 b hWT2 hasClass P23 pin23 hv2)
+    hcolD hker hΦg
 
 end Wiring
 
