@@ -480,6 +480,9 @@ import SKEFTHawking.SecondOrderSK
 import SKEFTHawking.HawkingUniversality
 import SKEFTHawking.WKBAnalysis
 import SKEFTHawking.CGLTransform
+-- Cube ≅ Euclidean ball pair-homeomorphism (point-set topology brick for the hBbord
+-- relative-fundamental-class keystone; transfers a rel fundamental class S²×I³ → disk model).
+import SKEFTHawking.CubeBallHomeo
 import SKEFTHawking.ThirdOrderSK
 import SKEFTHawking.GaugeErasure
 import SKEFTHawking.WKBConnection
