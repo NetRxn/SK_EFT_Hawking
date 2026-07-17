@@ -2,9 +2,15 @@
 
 **Written:** 2026-07-15; **fully refreshed 2026-07-17** (post the close-out arm's
 teardown — the operator ended the arm after an API-instability window; see §0).
-**Ground state:** main `0ee11ba1`, library **10,079 jobs green**, kernel-pure throughout,
-fence **21 kernel forks / 49 aliases** + 8 SETTLED_FORKS prose entries,
-`nogo_substrate_integrity` green, extraction fresh (last full sync at wave 16).
+**Header re-synced 2026-07-17** to the post-#210 HEAD, then advanced again by the #211
+partials-harvest (the teardown-refresh header was written at `6a8c298d`/`0ee11ba1`; the #210
+seam-transfer no-go block advanced main to `9f81a5ad`; the #211 hBbord-partials harvest then
+advanced it to `936de9ca` — now reconciled).
+**Ground state:** main `936de9ca`, library green + kernel-pure throughout (the #211 harvest
+registered the S²×D³ partial modules; 10,080+ jobs), fence **22 kernel forks / 53 aliases**
+(fork 22 = `seam-transfer-open-support-uninhabitable`) + 9 SETTLED_FORKS prose entries,
+`nogo_substrate_integrity` green. **Extraction/counts are one harvest behind — run
+`/skeft-qa:sync` to refresh them for the #211 modules (last full sync at `9f81a5ad`).**
 **Budget posture (2026-07-17):** ~93% of the weekly **Fable** budget was consumed in the
 close-out arm's 24h (a large share burned by worktree/subagent API stalls, not work).
 Until the budget resets: **Fable-grade problems are worked DIRECTLY by the lead session

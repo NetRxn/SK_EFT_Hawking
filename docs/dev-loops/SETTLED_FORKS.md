@@ -366,3 +366,34 @@ conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
 - memory: [[project_5qH_nonhausdorff_substrate_bug]]
 - created_ts: 2026-07-17T00:00:00Z
 - reviewed_ts: 2026-07-17T00:00:00Z
+
+## sigma-tower-inhabitation-adds-no-strength (round-13 gate proved the carrier FAKEABLE) — don't invest #209 for row closure (2026-07-17, lead — CORRECTED after operator skepticism)
+- verdict: effort-caution (genuine σ-tower inhabitation adds ZERO statement strength for the row; NOT falsity, NOT "orphaned/dead code")
+- tier: agent-reviewed
+- authored_by: lead (post-compact code trace at `9f81a5ad`; CORRECTS my own earlier over-claim)
+- killed_by: **round-13 gate G13-1** — `PinPlusRoundThirteenGate.novikovGeometricPairLESDataOfRealPairLES` + `nonempty_novikovGeometricPairLESData_iff_realPairLES` (kernel-pure): the tower carrier `NovikovGeometricPairLESData Bd` is populated from a SYNTHETIC `NovikovRealPairLES` (`ofLagrangian`'s quotient fabrication) with ZERO bordism geometry; the σ-tie gives `Nonempty (…) ↔ σ(A)=σ(B)`.
+- ⚠ PROVENANCE + CORRECTION (this is a post-compact lead judgment, NOT a kernel no-go, NOT pre-recorded): my FIRST framing of this entry ("ORPHANED — nothing references it — validated") was WRONG on two counts: (a) the tower carrier IS referenced — by the round-12/13 GATES (`PinPlusRoundThirteenGate` imports the tower stack; `PinPlusResidualGate`/`RoundThirteenGate` reference `NovikovRealPairLES`); my reverse-dep grep checked only the ASSEMBLY chain and over-generalized to "nothing" (the same grep-scope error that produced the false `hBbord` "research wall" earlier the same day). (b) The rigorous reason to not invest is NOT "orphaned by grep" — it is the round-13 FAKEABILITY finding.
+- reason (corrected):
+  Genuine inhabitation of `GenuineBoundingWTower` (via `Bw`/`Br` for the 5-dim W, or the ℝ-Prop reductions) adds NO strength because **round 13 already gate-proved the carrier it feeds is conclusion-fakeable** (a synthetic Lagrangian populates `NovikovGeometricPairLESData` with zero geometry). Separately, the row's actual σ-content does NOT route through the tower: `SpinPresentationRow.hdvd` (Rokhlin `16∣σ`) is a POSITED FIELD (per-carrier residual, the E2 stack), `hker` routes via `KTSharpnessSupply` (`kerPhiSubDoubles_of_row_of_supply`), `hg` via the K3 form. So inhabiting the tower discharges no row atom AND doesn't discharge the posited `hdvd` (that's Rokhlin, not signature-cobordism-invariance). NET: don't spend effort inhabiting the σ-tower for the 16-convergence goal.
+  NOT claimed: the tower is "dead code" (it is gate-referenced, round-13-audited infra) or kernel-false. The σ-descent is a TRUE conditional result; it is simply a fakeable carrier that the row closure doesn't need.
+- memory: [[project_5qH_nonhausdorff_substrate_bug]]
+- created_ts: 2026-07-17T00:00:00Z
+- reviewed_ts: 2026-07-17T00:00:00Z
+
+## hBbord-relFund — the cross-of-fundamental-classes KEYSTONE IS BUILT (cylinder); hBbord = a disk-factor ADAPTATION (2026-07-17, lead — CORRECTED, supersedes wt3's "research wall")
+- verdict: route-map (hBbord's relFund is a TEMPLATED ADAPTATION of proven machinery, NOT open research; wt3's wall was a scope miss)
+- tier: agent-reviewed
+- authored_by: lead (deep scope of the cylinder tower at `9f81a5ad`, correcting the earlier over-pessimistic entry + wt3's wall)
+- killed_by: `cylFundClassCandidate_restricts_disc` + `hasRelFundClass_cylGen_components` + `cylinderRelFundClassDatum_of_components` (all BUILT, unconditional)
+- ⚠ CORRECTION: the earlier read ("hBbord bottoms at an OPEN relative cross-product; research-level") was WRONG — it trusted a STALE cylinder docstring (`PoincareLefschetzRelFundClassCylinder.lean:31` "the exact missing tool is a relative cross-product") and wt3's S²×D³-only scope. The relative-cross-product keystone IS BUILT:
+  * `SingularRelativeCrossProduct.crossH : Hₚ(M) → Hₚ₊₁(M×I, ∂)` — the cross MAP (exists).
+  * `PoincareLefschetzRelFundClassCylinderCross.cylFundClassCandidate := [M] × [I,∂I]` — the honest product witness.
+  * `PinPlusCylComponentClsIdentDisc.cylFundClassCandidate_restricts_disc : RestrictsToRelGen … cylFundClassCandidate` — **the cross of fundamental classes RESTRICTS to the interior local generators** (via `crossHloc_mLocalClass_ne_zero` local-Künneth + `crossHloc_map_naturality`). THE KEYSTONE, PROVEN.
+  * `hasRelFundClass_cylGen_components` = the assembled `HasRelFundClass` for the cylinder; `cylinderRelFundClassDatum_of_components` builds the datum UNCONDITIONALLY. **Track 2's cylinder relFund is DONE, not open.**
+  * `SingularRelativeHomotopyInvariance` = the mod-2 pair homotopy invariance (piece 2), also BUILT (docstring "only integral in-tree" is stale too).
+- THE REAL hBbord GAP: `S²×D³` is NOT a closed-`M`×`I` cylinder (D³≠I; `S²×D³ ≅ cyl(S²×D²)` has a with-BOUNDARY base, so the closed-M cylinder keystone doesn't apply verbatim). hBbord needs the analogous witness `[S²] × [D³, ∂D³]` and its `RestrictsToRelGen` — an ADAPTATION of the proven cylinder template to a DISK factor (cross with D³ not I). The local-Künneth core (`crossHloc_mLocalClass_ne_zero`) is dimension-generic and should transfer; the global cross (`crossH` via `graphHom`/`prismOp` over I) is interval-specific and is the piece to re-build for the disk factor (or a general absolute⊗relative cross `H(M)⊗H(N,∂N)→H(M×N,M×∂N)`). The banked D³/D⁵ relFund (`PinPlusTraceDiskCorePair`) supplies `[D³,∂D³]`.
+- BANKED GREEN (reusable): wt1 `sphereProdCoboundaryBordism`; wt2 `Subsingleton (Homology SphereDisk 1/4)` + `SingularProdContractible`; wt3 `sphereDisk_homology_four/five_eq_zero`, `betaClass_ne_zero`, `injective_boundary_to_diskFactorSet`.
+- STATUS: task #213 — implementing the disk-factor adaptation (lead, main-line).
+- memory: [[project_5qH_nonhausdorff_substrate_bug]]
+- created_ts: 2026-07-17T00:00:00Z
+- reviewed_ts: 2026-07-17T00:00:00Z
