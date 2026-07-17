@@ -47,6 +47,11 @@ open SKEFTHawking.SingularFunctoriality (Homology.map)
 open SKEFTHawking.SingularHomotopyInvariance (slice)
 open SKEFTHawking.SingularSphereHighDegree (sphere_homology_high)
 open SKEFTHawking.SingularMayerVietorisLES (subIncl)
+open SKEFTHawking.SingularProdContractibleInt (ProdSp)
+open SKEFTHawking.SingularEuclideanAcyclic (Eucl)
+open SKEFTHawking.PoincareLefschetzRelFundClassCylinderNumerics (prodContractibleHomologyEquiv)
+open SKEFTHawking.PinPlusCharPairRealizationTied (homeoHomologyEquiv)
+open SKEFTHawking.SingularSphereAcyclic (puncturedHomeo)
 open SKEFTHawking.SpinSigmaRoute
 open SKEFTHawking.PinPlusKTSphereProdRelFundWuRoots
 
@@ -225,6 +230,44 @@ theorem diskPunc_homology_four_eq_zero (y0 : ThreeDisk) (hy0 : ‖(y0 : E3)‖ <
       (ContinuousMap.ext fun _ => rfl) 3
   exact SingularLocalHomology.homology_trivial_of_bijective (diskPuncRetract y0 hy0) hbij
     (fun w => sphere_homology_high 2 4 (by norm_num) w) z
+
+/-! ## §2. `H₄(A₀ ∩ B₀) = 0`, `A₀ ∩ B₀ = (S²∖p₀) × (D³∖y₀)`. -/
+
+/-- **The sphere-factor-punctured set** `B₀ = {p ∈ S²×D³ | p.1 ≠ p₀}`. -/
+def sphereFactorSet (p₀ : TwoSphere) : Set SphereDisk := {p : SphereDisk | p.1 ≠ p₀}
+
+/-- The intersection `A₀ ∩ B₀` is the rectangle `(S²∖p₀) ×ˢ (D³∖y₀)`. -/
+theorem inter_factor_eq (p₀ : TwoSphere) (y0 : ThreeDisk) :
+    diskFactorSet y0 ∩ sphereFactorSet p₀ = (({p₀}ᶜ : Set TwoSphere) ×ˢ diskPuncSet y0) := by
+  ext p
+  simp only [diskFactorSet, sphereFactorSet, diskPuncSet, Set.mem_inter_iff, Set.mem_setOf_eq,
+    Set.mem_prod, Set.mem_compl_iff, Set.mem_singleton_iff]
+  exact ⟨fun h => ⟨h.2, h.1⟩, fun h => ⟨h.2, h.1⟩⟩
+
+/-- **`sub (A₀ ∩ B₀) ≃ₜ (D³∖y₀) × ℝ²`** — the rectangle homeomorphism (`Homeomorph.Set.prod`) plus
+the stereographic `S²∖p₀ ≃ₜ ℝ²` (`puncturedHomeo`), reordered so the contractible `ℝ²` is second. -/
+def interHomeo (p₀ : TwoSphere) (y0 : ThreeDisk) :
+    (sub (X := TopCat.of SphereDisk) (diskFactorSet y0 ∩ sphereFactorSet p₀) : Type)
+      ≃ₜ (ProdSp (DiskPunc y0) (Eucl 2) : Type) :=
+  (Homeomorph.setCongr (inter_factor_eq p₀ y0)).trans
+    ((Homeomorph.Set.prod _ _).trans
+      ((Homeomorph.prodCongr (puncturedHomeo 2 p₀) (Homeomorph.refl _)).trans
+        (Homeomorph.prodComm _ _)))
+
+/-- **`H₄(A₀ ∩ B₀; ℤ/2) = 0`** — transport across `interHomeo`, collapse the contractible `ℝ²`
+factor (`prodContractibleHomologyEquiv`, Euclidean straight-line contraction), and land on
+`H₄(D³∖y₀) = 0` (§1). -/
+theorem interFactor_homology_four_eq_zero (p₀ : TwoSphere) (y0 : ThreeDisk)
+    (hy0 : ‖(y0 : E3)‖ < 1)
+    (z : Homology (sub (X := TopCat.of SphereDisk) (diskFactorSet y0 ∩ sphereFactorSet p₀)) 4) :
+    z = 0 := by
+  have e := (homeoHomologyEquiv (interHomeo p₀ y0) 4).trans
+    (prodContractibleHomologyEquiv (DiskPunc y0) (Eucl 2) (0 : Eucl 2)
+      (SingularEuclideanAcyclic.contraction 2) (SingularEuclideanAcyclic.slice_contraction_zero 2)
+      (SingularEuclideanAcyclic.slice_contraction_one 2) 3)
+  apply e.injective
+  rw [map_zero]
+  exact diskPunc_homology_four_eq_zero y0 hy0 (e z)
 
 end
 
