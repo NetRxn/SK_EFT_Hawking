@@ -310,6 +310,21 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    bordism witness) — linear-algebra Lagrangian constructions are zero progress at both grades.
    backing: `nonempty_novikovRealPairLES_diag`, `nonempty_novikovBoundaryRestriction_iff_sig_eq`, `novikovLagrangian_iff_hbord`
 
+21. `novikov-geometric-tower-carrier-conclusion-fakeable` [structural_forcing]
+   The NovikovGeometricPairLESData field row (the #196 genuine-tower carrier:
+   rest2/delta/pairing/hexact/hnondeg/hadjDot) is a stronger-than-conclusion carrier whose inhabitation
+   certifies genuine bounding-W tower progress. FALSE (gate round 13): the substrate rebuilds the carrier
+   (novikovGeometricPairLESDataOfRealPairLES — pairing := half the substrate pairing, hadjDot DERIVED from
+   hadj via the polar-form symmetry), so carrier ⟺ substrate
+   (nonempty_novikovGeometricPairLESData_iff_realPairLES), and at block pairs Nonempty (Data (blockDiag A
+   (-B))) ↔ σ(A) = σ(B) — the round-12 Witt step + ofLagrangian + the reverse map populate EVERY field from
+   a bare Lagrangian with zero bordism geometry. hadjDot moved the fork-20 perimeter; it did not close it.
+   Consequence (binding round-13 spec 1): Novikov-lane carrier populations are progress ONLY if
+   rest2/delta/pairing are the tensor-R base-changes of the genuine integral tower maps of an actual
+   relative cycle — audited by DATA INSPECTION; a quotient-of-coordinate-space H3rel is zero progress by
+   construction.
+   backing: `novikovGeometricPairLESDataOfRealPairLES`, `nonempty_novikovGeometricPairLESData_iff_realPairLES`, `nonempty_novikovGeometricPairLESData_iff_sig_eq`, `nonempty_novikovGeometricPairLESData_diag`
+
 -/
 import SKEFTHawking.FGDualityNoGo
 import SKEFTHawking.NonHausdorffBordismCollapse
@@ -323,6 +338,7 @@ import SKEFTHawking.PinPlusKTLeafGate
 import SKEFTHawking.PinPlusKTStepGate
 import SKEFTHawking.PinPlusKTVacuityGateWD
 import SKEFTHawking.PinPlusResidualGate
+import SKEFTHawking.PinPlusRoundThirteenGate
 import SKEFTHawking.PinPlusTaylorConventionNoGo
 import SKEFTHawking.PinPlusTraceLeafGate
 import SKEFTHawking.RokhlinArfNoGo
@@ -465,5 +481,17 @@ alias nogo_nonempty_novikovBoundaryRestriction_iff_sig_eq := SKEFTHawking.PinPlu
 
 /-- NO-GO [`novikov-substrate-synthetic-inhabitation`] — do NOT re-derive. FALSE: The NovikovRealPairLES substrate (or any of the four equivalent σ-descent atom formulations) constitutes progress toward the Thom bordism-invariance of σ beyond the bare hbord statement. Backing refutation: `SKEFTHawking.PinPlusResidualGate.novikovLagrangian_iff_hbord`. -/
 alias nogo_novikovLagrangian_iff_hbord := SKEFTHawking.PinPlusResidualGate.novikovLagrangian_iff_hbord
+
+/-- NO-GO [`novikov-geometric-tower-carrier-conclusion-fakeable`] — do NOT re-derive. FALSE: The NovikovGeometricPairLESData field row (the #196 genuine-tower carrier: rest2/delta/pairing/hexact/hnondeg/hadjDot) is a stronger-than-conclusion carrier whose inhabitation certifies genuine bounding-W tower progress. Backing refutation: `SKEFTHawking.PinPlusRoundThirteenGate.novikovGeometricPairLESDataOfRealPairLES`. -/
+alias nogo_novikovGeometricPairLESDataOfRealPairLES := SKEFTHawking.PinPlusRoundThirteenGate.novikovGeometricPairLESDataOfRealPairLES
+
+/-- NO-GO [`novikov-geometric-tower-carrier-conclusion-fakeable`] — do NOT re-derive. FALSE: The NovikovGeometricPairLESData field row (the #196 genuine-tower carrier: rest2/delta/pairing/hexact/hnondeg/hadjDot) is a stronger-than-conclusion carrier whose inhabitation certifies genuine bounding-W tower progress. Backing refutation: `SKEFTHawking.PinPlusRoundThirteenGate.nonempty_novikovGeometricPairLESData_iff_realPairLES`. -/
+alias nogo_nonempty_novikovGeometricPairLESData_iff_realPairLES := SKEFTHawking.PinPlusRoundThirteenGate.nonempty_novikovGeometricPairLESData_iff_realPairLES
+
+/-- NO-GO [`novikov-geometric-tower-carrier-conclusion-fakeable`] — do NOT re-derive. FALSE: The NovikovGeometricPairLESData field row (the #196 genuine-tower carrier: rest2/delta/pairing/hexact/hnondeg/hadjDot) is a stronger-than-conclusion carrier whose inhabitation certifies genuine bounding-W tower progress. Backing refutation: `SKEFTHawking.PinPlusRoundThirteenGate.nonempty_novikovGeometricPairLESData_iff_sig_eq`. -/
+alias nogo_nonempty_novikovGeometricPairLESData_iff_sig_eq := SKEFTHawking.PinPlusRoundThirteenGate.nonempty_novikovGeometricPairLESData_iff_sig_eq
+
+/-- NO-GO [`novikov-geometric-tower-carrier-conclusion-fakeable`] — do NOT re-derive. FALSE: The NovikovGeometricPairLESData field row (the #196 genuine-tower carrier: rest2/delta/pairing/hexact/hnondeg/hadjDot) is a stronger-than-conclusion carrier whose inhabitation certifies genuine bounding-W tower progress. Backing refutation: `SKEFTHawking.PinPlusRoundThirteenGate.nonempty_novikovGeometricPairLESData_diag`. -/
+alias nogo_nonempty_novikovGeometricPairLESData_diag := SKEFTHawking.PinPlusRoundThirteenGate.nonempty_novikovGeometricPairLESData_diag
 
 end SKEFTHawking.KernelNoGos

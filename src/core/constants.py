@@ -3720,6 +3720,18 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': 'The NovikovRealPairLES substrate (or any of the four equivalent σ-descent atom formulations) constitutes progress toward the Thom bordism-invariance of σ beyond the bare hbord statement. FALSE (gate round 12): the diagonal Lagrangian + synthetic quotient inhabit the substrate with zero geometry whenever σ agrees (nonempty_novikovBoundaryRestriction_iff_sig_eq — the Witt step kernel-encoded via exists_lagrangian_of_latticeSig_eq_zero), and novikovLagrangian_iff_hbord proves ALL FOUR formulations (classical Lagrangian / boundary-restriction half-dim / Lefschetz co-isotropy / the pair-LES substrate) are kernel-equivalent to hbord itself. Consequence (binding round-12 spec 2): a Novikov-atom discharge must exhibit a GENUINE bounding-W tower (the relative cap + the geometric restriction data of an actual bordism witness) — linear-algebra Lagrangian constructions are zero progress at both grades.',
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'novikov-geometric-tower-carrier-conclusion-fakeable': {
+        'fork_id': 'novikov-geometric-tower-carrier-conclusion-fakeable',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusRoundThirteenGate.novikovGeometricPairLESDataOfRealPairLES',
+            'SKEFTHawking.PinPlusRoundThirteenGate.nonempty_novikovGeometricPairLESData_iff_realPairLES',
+            'SKEFTHawking.PinPlusRoundThirteenGate.nonempty_novikovGeometricPairLESData_iff_sig_eq',
+            'SKEFTHawking.PinPlusRoundThirteenGate.nonempty_novikovGeometricPairLESData_diag',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'The NovikovGeometricPairLESData field row (the #196 genuine-tower carrier: rest2/delta/pairing/hexact/hnondeg/hadjDot) is a stronger-than-conclusion carrier whose inhabitation certifies genuine bounding-W tower progress. FALSE (gate round 13): the substrate rebuilds the carrier (novikovGeometricPairLESDataOfRealPairLES — pairing := half the substrate pairing, hadjDot DERIVED from hadj via the polar-form symmetry), so carrier ⟺ substrate (nonempty_novikovGeometricPairLESData_iff_realPairLES), and at block pairs Nonempty (Data (blockDiag A (-B))) ↔ σ(A) = σ(B) — the round-12 Witt step + ofLagrangian + the reverse map populate EVERY field from a bare Lagrangian with zero bordism geometry. hadjDot moved the fork-20 perimeter; it did not close it. Consequence (binding round-13 spec 1): Novikov-lane carrier populations are progress ONLY if rest2/delta/pairing are the tensor-R base-changes of the genuine integral tower maps of an actual relative cycle — audited by DATA INSPECTION; a quotient-of-coordinate-space H3rel is zero progress by construction.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════

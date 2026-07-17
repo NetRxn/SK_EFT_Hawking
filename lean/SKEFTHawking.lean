@@ -4546,6 +4546,7 @@ import SKEFTHawking.PinPlusKTLeafGate
 import SKEFTHawking.PinPlusKTSpinForgetPhi
 import SKEFTHawking.PinPlusTraceLeafGate
 import SKEFTHawking.PinPlusResidualGate
+import SKEFTHawking.PinPlusRoundThirteenGate
 import SKEFTHawking.PinPlusKTSpinPresentationRow
 import SKEFTHawking.PinPlusKTKerPhiDoubles
 import SKEFTHawking.PinPlusKTAssemblyResiduals
