@@ -7,12 +7,21 @@ import SKEFTHawking.LDP.CramerIID
 
 ## Overview
 
-Headline biconditional `bp_convergence_iff_ldp_rate_zero`
-characterizing when belief-propagation on a finite factor graph admits
-a classically-simulable dynamics regime: the loop-correction rate
-function vanishes iff the factor graph admits the
-structural-simulability property `IsBPConvergenceFavorable`
-(tree topology + non-negative factor weights).
+Headline biconditional `fourCycleFree_nonneg_iff_ldp_rate_zero`
+relating a purely combinatorial structural property of a finite factor
+graph to the vanishing of a loop-density rate function: the
+loop-correction rate function vanishes iff the factor graph is
+four-cycle-free and all factor weights are non-negative
+(`IsFourCycleFreeNonnegWeighted`).
+
+**Honesty scope (remediation B-04, 2026-07-17).** Four-cycle-freeness
+is the structural condition actually characterized here — NOT genuine
+acyclicity/tree-ness, and NOT belief-propagation dynamical convergence.
+A bipartite 6-cycle is four-cycle-free yet loopy, so the zero-rate
+boundary is strictly weaker than being a tree; this substrate ships no
+BP-convergence theorem. Four-cycle-freeness (+ non-negative weights) is
+a *necessary combinatorial screen* for BP/Bethe exactness — which
+genuinely requires a true tree — not a proof of it.
 
 The Tindall-Sels result (Science 392, 868 (2026), DOI
 10.1126/science.adx2728; arXiv:2503.05693) shows empirically that
@@ -24,14 +33,14 @@ rate-function characterization of that regime at the substrate level.
 ## The loop-correction rate function (review-2026-06-05 D7-EV3 upgrade)
 
 The original Wave 6w.3 `loopCorrectionRate` was a `{0,1}`-valued
-indicator (`if IsTreeFactorGraph G then 0 else 1`) — honestly
+indicator (`if IsFourCycleFreeFactorGraph G then 0 else 1`) — honestly
 disclosed in the D7 draft as *not* a continuous Cramér-type rate
 function. This revision replaces it with a genuine Legendre-transform
 construction:
 
 * `fourCycles G` — the `Finset` of ordered 4-cycles `(u, v, a, b)`
   of a finite factor graph; non-emptiness is exactly failure of
-  `IsTreeFactorGraph` (proven, `fourCycles_eq_empty_iff_tree`).
+  `IsFourCycleFreeFactorGraph` (proven, `fourCycles_eq_empty_iff_fourCycleFree`).
 * `loopDensity G ∈ [0, 1)` — the fraction of tuples in the tuple
   space `ν × ν × α × α` that form a 4-cycle: the Bernoulli parameter
   of the **loop-presence observable** (the indicator that a uniformly
@@ -48,10 +57,12 @@ construction:
   (the supremum is approached as `θ → −∞` and not attained for
   `p > 0`; the proof constructs explicit witnesses).
 
-The rate is `0` exactly on trees (`loopCorrectionRate_eq_zero_iff_tree`
+The rate is `0` exactly on four-cycle-free graphs
+(`loopCorrectionRate_eq_zero_iff_fourCycleFree`
 — proven through the Legendre evaluation, the density/log analysis,
 and the Finset↔predicate bridge; NOT definitional), strictly positive
-on loopy graphs (`loopCorrectionRate_pos_of_not_tree`), and **strictly
+on loopy (non-four-cycle-free) graphs
+(`loopCorrectionRate_pos_of_not_fourCycleFree`), and **strictly
 monotone in loop density** (`loopCorrectionRate_lt_of_loopDensity_lt`)
 — it separates loopy graphs by their loop content, which no indicator
 can (worked value: `log (4/3)` for the complete bipartite 2×2 graph,
@@ -76,23 +87,25 @@ can (worked value: `log (4/3)` for the complete bipartite 2×2 graph,
 
 The rate function is attached to the *combinatorial* loop-presence
 observable (4-cycle density of the factor graph), matching the
-granularity of the `IsTreeFactorGraph` predicate. The further
+granularity of the `IsFourCycleFreeFactorGraph` predicate. The further
 attachment to the *dynamical* loop-correction terms of the Bethe/BP
 loop-series expansion (Chertkov-Chernyak loop calculus on the message
 space, with the MGF taken over the BP messages themselves) is NOT in
 the present substrate; the Bernoulli loop-presence observable is the
-combinatorial shadow of that series. The zero-rate ⟺ tree boundary is
-exactly where the loop series collapses (Bethe exactness on trees,
-Yedidia-Freeman-Weiss 2003).
+combinatorial shadow of that series. The zero-rate ⟺ four-cycle-free
+boundary is the 4-cycle-level combinatorial shadow of where the loop
+series would collapse; genuine collapse (Bethe exactness) requires a
+true tree, which four-cycle-freeness does NOT guarantee (a 6-cycle is
+four-cycle-free yet not Bethe-exact; Yedidia-Freeman-Weiss 2003).
 
 ## HEADLINE
 
-`bp_convergence_iff_ldp_rate_zero`: the substantive biconditional
-`IsBPConvergenceFavorable G factorWeight ↔ loopCorrectionRate G = 0
-∧ (∀ a y, 0 ≤ factorWeight a y)`. Forward: trees have empty 4-cycle
-sets, hence zero loop density, hence zero rate. Reverse: zero rate
-forces (through the Legendre evaluation and `−log(1−p) = 0 ⇒ p = 0`)
-an empty 4-cycle set, hence a tree.
+`fourCycleFree_nonneg_iff_ldp_rate_zero`: the substantive biconditional
+`IsFourCycleFreeNonnegWeighted G factorWeight ↔ loopCorrectionRate G = 0
+∧ (∀ a y, 0 ≤ factorWeight a y)`. Forward: four-cycle-free graphs have
+empty 4-cycle sets, hence zero loop density, hence zero rate. Reverse:
+zero rate forces (through the Legendre evaluation and
+`−log(1−p) = 0 ⇒ p = 0`) an empty 4-cycle set, hence four-cycle-freeness.
 
 ## References
 
@@ -124,9 +137,9 @@ variable {ν α : Type*}
 /-- The `Finset` of ordered **4-cycles** of a finite factor graph:
     tuples `(u, v, a, b)` with `u ≠ v`, `a ≠ b`, and all four
     incidences `a–u`, `b–u`, `a–v`, `b–v` present. This is the loop
-    structure detected by the `IsTreeFactorGraph` predicate:
-    non-emptiness of this Finset is exactly failure of the tree
-    property (`fourCycles_eq_empty_iff_tree`). -/
+    structure detected by the `IsFourCycleFreeFactorGraph` predicate:
+    non-emptiness of this Finset is exactly failure of the
+    four-cycle-free property (`fourCycles_eq_empty_iff_fourCycleFree`). -/
 def fourCycles [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
     (G : FactorGraph ν α) : Finset (ν × ν × α × α) :=
   Finset.univ.filter (fun t =>
@@ -144,14 +157,15 @@ theorem mem_fourCycles [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq �
   simp [fourCycles]
 
 /-- **Finset ↔ predicate bridge.** The 4-cycle Finset is empty iff the
-    factor graph is a tree. This is the substantive bridge between the
-    combinatorial loop structure (a counted `Finset`) and the
-    `IsTreeFactorGraph` universal predicate of Wave 6w.2; every
-    rate-function theorem below routes through it. -/
-theorem fourCycles_eq_empty_iff_tree
+    factor graph is four-cycle-free. This reformulates the combinatorial
+    loop structure (a counted `Finset`) as the `IsFourCycleFreeFactorGraph`
+    universal predicate of Wave 6w.2 (a near-definitional restatement,
+    since the predicate *is* the ∀-quantified absence of a 4-cycle);
+    every rate-function theorem below routes through it. -/
+theorem fourCycles_eq_empty_iff_fourCycleFree
     [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
     (G : FactorGraph ν α) :
-    fourCycles G = ∅ ↔ IsTreeFactorGraph G := by
+    fourCycles G = ∅ ↔ IsFourCycleFreeFactorGraph G := by
   rw [Finset.eq_empty_iff_forall_notMem]
   constructor
   · intro h u v a b huv hab hcyc
@@ -167,7 +181,7 @@ theorem fourCycles_eq_empty_iff_tree
     This is the Bernoulli success parameter of the **loop-presence
     observable** — the indicator that a uniformly drawn tuple is a
     loop-correction opportunity. The natural loop-excess measure at
-    the granularity of the `IsTreeFactorGraph` predicate. -/
+    the granularity of the `IsFourCycleFreeFactorGraph` predicate. -/
 noncomputable def loopDensity
     [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
     (G : FactorGraph ν α) : ℝ :=
@@ -204,18 +218,18 @@ theorem loopDensity_lt_one
     rw [div_lt_one (by exact_mod_cast hN)]
     exact_mod_cast hcard
 
-/-- **Zero loop density characterizes trees.** Routes through the
+/-- **Zero loop density characterizes four-cycle-free graphs.** Routes through the
     Finset ↔ predicate bridge and the cast/division analysis
     (including the empty-tuple-space boundary, where the 4-cycle
     Finset is forced empty by the empty ambient type). -/
-theorem loopDensity_eq_zero_iff_tree
+theorem loopDensity_eq_zero_iff_fourCycleFree
     [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
     (G : FactorGraph ν α) :
-    loopDensity G = 0 ↔ IsTreeFactorGraph G := by
+    loopDensity G = 0 ↔ IsFourCycleFreeFactorGraph G := by
   unfold loopDensity
   constructor
   · intro h
-    rw [← fourCycles_eq_empty_iff_tree, ← Finset.card_eq_zero]
+    rw [← fourCycles_eq_empty_iff_fourCycleFree, ← Finset.card_eq_zero]
     rcases div_eq_zero_iff.mp h with h' | h'
     · exact_mod_cast h'
     · have hN : Fintype.card (ν × ν × α × α) = 0 := by exact_mod_cast h'
@@ -223,7 +237,7 @@ theorem loopDensity_eq_zero_iff_tree
         (Finset.card_filter_le _ _).trans_eq Finset.card_univ
       omega
   · intro htree
-    rw [(fourCycles_eq_empty_iff_tree G).mpr htree]
+    rw [(fourCycles_eq_empty_iff_fourCycleFree G).mpr htree]
     simp
 
 /-! ## The Bernoulli loop-presence observable: MGF and Legendre rate -/
@@ -273,15 +287,17 @@ theorem bernoulliLoopMgf_zero
     The closed form `−log (1 − loopDensity G)` is a THEOREM
     (`loopCorrectionRate_eq_neg_log`), proven by an explicit `IsLUB`
     argument — the supremum is approached as `θ → −∞` and is not
-    attained when the graph has loops. The zero-rate ⟺ tree
-    equivalence (`loopCorrectionRate_eq_zero_iff_tree`) is likewise
+    attained when the graph has 4-cycles. The zero-rate ⟺
+    four-cycle-free equivalence
+    (`loopCorrectionRate_eq_zero_iff_fourCycleFree`) is likewise
     NOT definitional: it routes through the Legendre evaluation, the
-    log/density analysis, and the 4-cycle Finset ↔ tree-predicate
+    log/density analysis, and the 4-cycle Finset ↔ four-cycle-free-predicate
     bridge. Physically, `I(0)` is the exact exponential decay rate of
     loop-correction-free behavior
-    (`no_loop_event_prob_eq_exp_neg_rate`): trees pay nothing (BP is
-    exact, Bethe exactness); loopy graphs pay a strictly positive
-    rate that grows with loop density. -/
+    (`no_loop_event_prob_eq_exp_neg_rate`): four-cycle-free graphs pay
+    nothing at the 4-cycle level (a *true* tree is additionally
+    Bethe-exact); graphs with 4-cycles pay a strictly positive rate
+    that grows with loop density. -/
 noncomputable def loopCorrectionRate
     [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
     (G : FactorGraph ν α) : ℝ :=
@@ -351,7 +367,7 @@ theorem loopCorrectionRate_eq_neg_log
       exact absurd (hb ⟨θ₀, rfl⟩) (not_le.mpr hgt)
   exact hlub.ciSup_eq
 
-/-! ## The tree/loopy contract (zero-rate ⟺ tree, positivity, monotonicity) -/
+/-! ## The four-cycle-free/loopy contract (zero-rate ⟺ four-cycle-free, positivity, monotonicity) -/
 
 /-- The loop-correction rate function is non-negative (rate functions
     are non-negative; here via `0 ≤ p < 1 ⇒ log (1 − p) ≤ 0`). -/
@@ -365,18 +381,19 @@ theorem loopCorrectionRate_nonneg
     Real.log_nonpos (by linarith) (by linarith)
   linarith
 
-/-- **Substantive Theorem (zero-rate ⟺ tree).** The loop-correction
-    rate function vanishes exactly on tree factor graphs. NOT
+/-- **Substantive Theorem (zero-rate ⟺ four-cycle-free).** The
+    loop-correction rate function vanishes exactly on four-cycle-free
+    factor graphs (strictly weaker than acyclic/tree). NOT
     definitional: the proof routes through (i) the Legendre evaluation
     `loopCorrectionRate_eq_neg_log`, (ii) the log analysis
     `−log(1 − p) = 0 ⇒ p = 0` (using `0 < 1 − p` from strict
-    sub-unitality), and (iii) the density ⟺ tree bridge
-    `loopDensity_eq_zero_iff_tree`. -/
-theorem loopCorrectionRate_eq_zero_iff_tree
+    sub-unitality), and (iii) the density ⟺ four-cycle-free bridge
+    `loopDensity_eq_zero_iff_fourCycleFree`. -/
+theorem loopCorrectionRate_eq_zero_iff_fourCycleFree
     [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
     (G : FactorGraph ν α) :
-    loopCorrectionRate G = 0 ↔ IsTreeFactorGraph G := by
-  rw [loopCorrectionRate_eq_neg_log, ← loopDensity_eq_zero_iff_tree]
+    loopCorrectionRate G = 0 ↔ IsFourCycleFreeFactorGraph G := by
+  rw [loopCorrectionRate_eq_neg_log, ← loopDensity_eq_zero_iff_fourCycleFree]
   have h0 := loopDensity_nonneg G
   have h1 := loopDensity_lt_one G
   constructor
@@ -390,19 +407,19 @@ theorem loopCorrectionRate_eq_zero_iff_tree
     simp
 
 /-- **Substantive Theorem (loopy ⇒ strictly positive rate).** On
-    non-tree (loopy) factor graphs the loop-correction rate function
-    is strictly positive: a loopy graph has a 4-cycle, hence strictly
-    positive loop density, hence `1 − p < 1` and
+    non-four-cycle-free (loopy) factor graphs the loop-correction rate
+    function is strictly positive: such a graph has a 4-cycle, hence
+    strictly positive loop density, hence `1 − p < 1` and
     `−log(1 − p) > 0`. -/
-theorem loopCorrectionRate_pos_of_not_tree
+theorem loopCorrectionRate_pos_of_not_fourCycleFree
     [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
-    (G : FactorGraph ν α) (h : ¬ IsTreeFactorGraph G) :
+    (G : FactorGraph ν α) (h : ¬ IsFourCycleFreeFactorGraph G) :
     0 < loopCorrectionRate G := by
   rw [loopCorrectionRate_eq_neg_log]
   have hp0 : 0 < loopDensity G := by
     rcases lt_or_eq_of_le (loopDensity_nonneg G) with h' | h'
     · exact h'
-    · exact absurd ((loopDensity_eq_zero_iff_tree G).mp h'.symm) h
+    · exact absurd ((loopDensity_eq_zero_iff_fourCycleFree G).mp h'.symm) h
   have hp1 := loopDensity_lt_one G
   have : Real.log (1 - loopDensity G) < 0 :=
     Real.log_neg (by linarith) (by linarith)
@@ -432,10 +449,10 @@ theorem loopCorrectionRate_lt_of_loopDensity_lt
 /-- **Threshold ⟺ density characterization.** For any threshold
     `t`, the rate is at most `t` iff the loop density is at most
     `1 − exp(−t)`. This is the honest continuous replacement of the
-    former fixed-threshold tree characterization: a sub-threshold
-    rate now corresponds to an explicit loop-density bound, with the
-    tree case recovered at `t = 0`
-    (`loopCorrectionRate_eq_zero_iff_tree`). -/
+    former fixed-threshold four-cycle-free characterization: a
+    sub-threshold rate now corresponds to an explicit loop-density
+    bound, with the four-cycle-free case recovered at `t = 0`
+    (`loopCorrectionRate_eq_zero_iff_fourCycleFree`). -/
 theorem loopCorrectionRate_le_iff_loopDensity_le
     [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
     (G : FactorGraph ν α) (t : ℝ) :
@@ -577,72 +594,79 @@ theorem loopCorrectionRate_completeBipartite22 :
   rw [hdensity, show (1 : ℝ) - 1 / 4 = 3 / 4 by norm_num, ← Real.log_inv]
   norm_num
 
-/-! ## BP convergence-favorable structural property -/
+/-! ## Four-cycle-free + non-negative-weight structural property -/
 
-/-- A factor graph + factor weight admits **BP convergence-favorable
-    dynamics** iff (a) the factor graph is a tree (no 4-cycle
-    loops) and (b) all factor weights are non-negative. Substantive
-    structural simulability property; the headline biconditional ties
-    this to the vanishing of the loop-correction rate function. -/
-def IsBPConvergenceFavorable {ν α X : Type*}
+/-- A factor graph + factor weight is **four-cycle-free and
+    non-negatively weighted** iff (a) the factor graph is four-cycle-free
+    (no 4-cycle; strictly weaker than being a tree — a bipartite 6-cycle
+    qualifies) and (b) all factor weights are non-negative. This is a
+    *necessary combinatorial screen* for BP/Bethe exactness, NOT a proof
+    of BP convergence (which requires a genuine tree); the headline
+    biconditional ties it to the vanishing of the loop-correction rate
+    function. -/
+def IsFourCycleFreeNonnegWeighted {ν α X : Type*}
     (G : FactorGraph ν α) (factorWeight : α → (ν → X) → ℝ) : Prop :=
-  IsTreeFactorGraph G ∧ ∀ a y, 0 ≤ factorWeight a y
+  IsFourCycleFreeFactorGraph G ∧ ∀ a y, 0 ≤ factorWeight a y
 
-/-! ## HEADLINE: bp_convergence_iff_ldp_rate_zero -/
+/-! ## HEADLINE: fourCycleFree_nonneg_iff_ldp_rate_zero -/
 
-/-- **HEADLINE.** Belief-propagation classical-simulability biconditional:
+/-- **HEADLINE.** Four-cycle-free / zero-loop-rate biconditional:
 
-      `IsBPConvergenceFavorable G factorWeight  ↔
+      `IsFourCycleFreeNonnegWeighted G factorWeight  ↔
          loopCorrectionRate G = 0  ∧  (∀ a y, 0 ≤ factorWeight a y)`.
 
-    Forward direction: structural simulability (tree + non-negative
-    factor weights) forces an empty 4-cycle Finset, hence zero loop
-    density, hence — through the Legendre evaluation — zero rate.
+    Forward direction: four-cycle-freeness (+ non-negative factor
+    weights) forces an empty 4-cycle Finset, hence zero loop density,
+    hence — through the Legendre evaluation — zero rate.
 
     Reverse direction: zero rate forces (through
-    `−log(1 − p) = 0 ⇒ p = 0` and the density ⟺ tree bridge) a tree
-    factor graph; combined with the non-negativity hypothesis on
-    factor weights this gives the structural simulability property.
+    `−log(1 − p) = 0 ⇒ p = 0` and the density ⟺ four-cycle-free bridge)
+    a four-cycle-free factor graph; combined with the non-negativity
+    hypothesis on factor weights this gives the structural property.
 
     The biconditional ties the structural property
-    `IsBPConvergenceFavorable` (Wave 6w.2 BP substrate consumer) to
+    `IsFourCycleFreeNonnegWeighted` (Wave 6w.2 BP substrate consumer) to
     the vanishing of a genuine Cramér/Legendre rate function
     (review-2026-06-05 D7-EV3 upgrade of the former `{0,1}` indicator).
-    Substantively load-bearing for the Wave 6w.6 demarcation theorem
-    combining BP-LDP simulability with the Wave 6w.5 Chern bridge. -/
-theorem bp_convergence_iff_ldp_rate_zero {ν α X : Type*}
+    **Honesty scope (B-04):** the structural side is four-cycle-freeness,
+    a necessary combinatorial screen for BP/Bethe exactness — NOT genuine
+    acyclicity and NOT a BP-convergence proof. Load-bearing for the Wave
+    6w.6 demarcation theorem combining this screen with the Wave 6w.5
+    Chern bridge. -/
+theorem fourCycleFree_nonneg_iff_ldp_rate_zero {ν α X : Type*}
     [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
     (G : FactorGraph ν α) (factorWeight : α → (ν → X) → ℝ) :
-    IsBPConvergenceFavorable G factorWeight ↔
+    IsFourCycleFreeNonnegWeighted G factorWeight ↔
       (loopCorrectionRate G = 0 ∧ ∀ a y, 0 ≤ factorWeight a y) := by
-  unfold IsBPConvergenceFavorable
-  rw [loopCorrectionRate_eq_zero_iff_tree]
+  unfold IsFourCycleFreeNonnegWeighted
+  rw [loopCorrectionRate_eq_zero_iff_fourCycleFree]
 
-/-- **Companion lemma.** On tree factor graphs the BP convergence-
-    favorable property is equivalent to factor-weight non-negativity.
-    Substantive simplification of the headline at the tree-graph
-    boundary. -/
-theorem isBPConvergenceFavorable_on_tree_iff_factor_weights_nonneg
+/-- **Companion lemma.** On four-cycle-free factor graphs the
+    four-cycle-free-and-non-negatively-weighted property is equivalent
+    to factor-weight non-negativity. Substantive simplification of the
+    headline at the four-cycle-free boundary. -/
+theorem isFourCycleFreeNonnegWeighted_on_fourCycleFree_iff_factor_weights_nonneg
     {ν α X : Type*}
     (G : FactorGraph ν α) (factorWeight : α → (ν → X) → ℝ)
-    (h_tree : IsTreeFactorGraph G) :
-    IsBPConvergenceFavorable G factorWeight ↔
+    (h_c4Free : IsFourCycleFreeFactorGraph G) :
+    IsFourCycleFreeNonnegWeighted G factorWeight ↔
       ∀ a y, 0 ≤ factorWeight a y := by
-  unfold IsBPConvergenceFavorable
-  exact ⟨fun h => h.2, fun h => ⟨h_tree, h⟩⟩
+  unfold IsFourCycleFreeNonnegWeighted
+  exact ⟨fun h => h.2, fun h => ⟨h_c4Free, h⟩⟩
 
-/-- **Companion lemma.** On non-tree (loopy) factor graphs the BP
-    convergence-favorable property fails identically, regardless of
-    the factor weights. Substantive negative result tying the
-    structural classification to the strictly-positive-rate regime
-    (`loopCorrectionRate_pos_of_not_tree`). -/
-theorem not_isBPConvergenceFavorable_on_non_tree
+/-- **Companion lemma.** On non-four-cycle-free (loopy) factor graphs
+    the four-cycle-free-and-non-negatively-weighted property fails
+    identically, regardless of the factor weights. Substantive negative
+    result tying the structural classification to the
+    strictly-positive-rate regime
+    (`loopCorrectionRate_pos_of_not_fourCycleFree`). -/
+theorem not_isFourCycleFreeNonnegWeighted_on_non_fourCycleFree
     {ν α X : Type*}
     (G : FactorGraph ν α) (factorWeight : α → (ν → X) → ℝ)
-    (h : ¬ IsTreeFactorGraph G) :
-    ¬ IsBPConvergenceFavorable G factorWeight := by
-  unfold IsBPConvergenceFavorable
-  intro ⟨h_tree, _⟩
-  exact h h_tree
+    (h : ¬ IsFourCycleFreeFactorGraph G) :
+    ¬ IsFourCycleFreeNonnegWeighted G factorWeight := by
+  unfold IsFourCycleFreeNonnegWeighted
+  intro ⟨h_c4Free, _⟩
+  exact h h_c4Free
 
 end SKEFTHawking.BPLDPSimulability

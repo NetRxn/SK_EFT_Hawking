@@ -8,9 +8,12 @@ import Mathlib
 This module formalizes **belief propagation (BP)** on factor graphs, the
 canonical message-passing algorithm for computing approximate marginals
 on graphical models. It provides the Mathlib-PR-quality substrate
-consumed by Wave 6w.3 (LDP-controlled classical-simulability headline
-`bp_convergence_iff_ldp_rate_zero`) and by Wave 6w.5
-(categorical-Chern ↔ real-space-Chern bridge on PEPS tensor networks).
+consumed by Wave 6w.3 (the four-cycle-free / zero-loop-rate headline
+`fourCycleFree_nonneg_iff_ldp_rate_zero`, whose structural side is a
+four-cycle-free combinatorial screen — NOT genuine tree-ness or a
+BP-convergence proof; see the four-cycle-free predicate below) and by
+Wave 6w.5 (categorical-Chern ↔ real-space-Chern bridge on PEPS tensor
+networks).
 
 The substantive cross-bridge anchor is the Tindall, Mello, Fishman,
 Stoudenmire, Sels classical-simulation result (Science 392, 868 (2026),
@@ -57,8 +60,11 @@ variable-to-factor update map `bpVariableUpdate`.
   — substantive product-of-sums-style identity over finite alphabets.
 
 The downstream substrate (factor-to-variable update, combined BP
-iteration, Bethe free energy, tree-convergence theorem) lands in
-sub-sessions 2b/2c/2d per the Wave 6w.2 roadmap.
+iteration, Bethe free energy, and the four-cycle-free structural
+predicate feeding the loop-density Cramér rate function) lands in
+sub-sessions 2b/2c/2d per the Wave 6w.2 roadmap. (No BP dynamical-
+convergence theorem is shipped: the substrate characterizes the
+four-cycle-free / zero-loop-density boundary, not iteration dynamics.)
 
 ## References
 
@@ -710,37 +716,57 @@ theorem betheFreeEnergy_factor_belief_congr
   have h_funext : b_a = b_a' := funext h_eq
   rw [h_funext]
 
-/-! ## Tree-graph predicate (sub-session 2d substrate) -/
+/-! ## Four-cycle-free predicate (sub-session 2d substrate)
 
-/-- A factor graph is a **tree** if every (variable, factor)-incidence
-    triangle is impossible — there is no pair of variables `u ≠ v` and
-    pair of factors `a ≠ b` such that both `a, b` are incident to both
-    `u, v` (the absence of 4-cycles is the structural tree condition
-    for bipartite factor graphs).
+**Honesty note (remediation B-04, 2026-07-17).** The predicate below was
+previously named `IsTreeFactorGraph` and its docstring claimed that the
+absence of 4-cycles "is the structural tree condition for bipartite
+factor graphs." That claim is FALSE: forbidding 4-cycles is strictly
+weaker than acyclicity. A bipartite 6-cycle
+`v₁–a₁–v₂–a₂–v₃–a₃–v₁` has no 4-cycle yet is cyclic, and the predicate
+imposes no connectivity requirement either. There is no BP-convergence
+theorem in this substrate (the `bp_converges_on_trees_in_diameter_rounds`
+once named here was never proved); every downstream result is proved
+about the 4-cycle-free condition only. The predicate and every
+downstream name/docstring have therefore been renamed to the honest
+narrower condition `IsFourCycleFreeFactorGraph`. -/
 
-    This predicate-substrate is consumed by the tree-convergence
-    theorem `bp_converges_on_trees_in_diameter_rounds` (sub-session
-    2d follow-up). -/
-def IsTreeFactorGraph {ν α : Type*}
+/-- A factor graph is **four-cycle-free** if no pair of distinct
+    variables `u ≠ v` shares a pair of distinct incident factors
+    `a ≠ b` — i.e. there is no 4-cycle `u–a–v–b–u` in the bipartite
+    incidence graph.
+
+    **This is strictly weaker than being a tree / forest.** It forbids
+    4-cycles ONLY: it does *not* rule out longer cycles (a bipartite
+    6-cycle `v₁–a₁–v₂–a₂–v₃–a₃–v₁` is four-cycle-free yet cyclic), and
+    it imposes *no* connectivity requirement. It is a combinatorial
+    loop-screen at the 4-cycle granularity, not an acyclicity witness.
+
+    This predicate-substrate is consumed by the loop-density / Cramér
+    rate-function machinery in `BPLDPSimulability` (whose zero-rate
+    boundary is exactly four-cycle-freeness, not genuine acyclicity). -/
+def IsFourCycleFreeFactorGraph {ν α : Type*}
     (G : FactorGraph ν α) : Prop :=
   ∀ (u v : ν) (a b : α),
     u ≠ v → a ≠ b →
     ¬ (G.incidence a u = true ∧ G.incidence b u = true ∧
        G.incidence a v = true ∧ G.incidence b v = true)
 
-/-- **Substantive Theorem 24.** The single-factor-per-variable factor
-    graph (where the incidence is `funext`-uniquely determined by a
-    pair of choice functions `α → ν` and `ν → α` agreeing on the
-    bipartite endpoints) is automatically a tree-factor-graph at the
-    4-cycle-free level. Substantive boundary case. -/
-theorem IsTreeFactorGraph_of_no_two_factors_share_two_vars
+/-- **Substantive Theorem 24.** A factor graph in which no two distinct
+    factors are simultaneously incident to two distinct variables is
+    four-cycle-free. Substantive boundary case: it exhibits an explicit
+    sufficient condition under which the 4-cycle-free predicate holds.
+    (Note: four-cycle-freeness is weaker than being a tree — see the
+    `IsFourCycleFreeFactorGraph` docstring — so this does NOT establish
+    that such a graph is acyclic.) -/
+theorem IsFourCycleFreeFactorGraph_of_no_two_factors_share_two_vars
     {ν α : Type*}
     (G : FactorGraph ν α)
     (h : ∀ (u v : ν) (a b : α),
       u ≠ v → a ≠ b →
       G.incidence a u = true → G.incidence b u = true →
       G.incidence a v = true → G.incidence b v = true → False) :
-    IsTreeFactorGraph G := by
+    IsFourCycleFreeFactorGraph G := by
   intro u v a b huv hab ⟨h1, h2, h3, h4⟩
   exact h u v a b huv hab h1 h2 h3 h4
 
