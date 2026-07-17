@@ -353,3 +353,16 @@ conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
 - memory: [[project_5qH_nonhausdorff_substrate_bug]]
 - created_ts: 2026-07-16T00:00:00Z
 - reviewed_ts: 2026-07-16T00:00:00Z
+
+## seam-transfer-open-support-uninhabitable — THE #210 ADJUDICATION (2026-07-17, lead-direct; SUPERSEDES the three "machinery gap" verdicts)
+- kind: kernel refutation (fork 22, KERNEL_NOGO_REGISTRY; backings in PinPlusTraceSeamTransferNoGo.lean)
+- SUPERSEDES: the #198/#204/#207 prose verdicts "the closed-S support barrier is NOT kernel-false — a machinery gap; it holds for a genuine surgery collar." That intuition was WRONG for the as-shipped shape: htransfer + open-complement hwOut force BOTH top-face split pieces to be CYCLES (seam-supported + off-seam-supported), and a fundamental class cannot so decompose when the regions are H₄-null. The CapstoneSeamTransfer/Seam route to hasClass is dead AS SHIPPED — do NOT re-attempt cSeam construction against the open-support shape at any depth.
+- THE REPAIR ANALYSIS (the #210 design record — read before building the replacement):
+  1. The naive interior-repair (hwOut over `topface ∖ interior(range φ)`) escapes the refutation BUT is NOT engine-compatible: the #189 subdivision engine's attached piece lands in an OPEN U₁ ⊇ A (spills outside A), while htransfer still forces wAtt ⊆ A exactly.
+  2. THE ENGINE-COMPATIBLE SHAPE = the COLLAR-PAIR split: a shrunk closed core K ⊂ int(A); wAtt supported in the CLOSED A (delivered by U₁ := int A — int A ⊆ A, no spill), wOut supported in topface ∖ K (delivered by U₂ := topface ∖ K). The forcing then only pins ∂wAtt = ∂wOut into the collar annulus A ∖ K — no contradiction. #198's exact-hvOut machinery serves the sphere side unchanged (sphere∖S ⊆ sphere∖K').
+  3. BUT the collar-pair split alone does NOT restore hbd: ∂(glued) ∈ C(∂W) needs the literal seam cancellation which fails for independent chains — the honest entry is the CORRECTOR (`hasClass_ofTransferCorrector`, #178's crossChain/MV-partition machinery): the corrector p absorbs the seam mismatch; the collar-pair splits feed hagree/hpS.
+  4. Any replacement structure is a NEW consumption shape — GATE-PENDING before consumption (rounds 11–13 discipline; the #204 anti-fakes must transfer: a genuine attachment must force nonzero seam content).
+- consumed by: nothing (the dead shape's consumers hasClass_ofTransfer/hbd_ofTransfer remain TRUE but vacuous on genuine inputs; no soundness issue — the T-input is simply unsuppliable).
+- memory: [[project_5qH_nonhausdorff_substrate_bug]]
+- created_ts: 2026-07-17T00:00:00Z
+- reviewed_ts: 2026-07-17T00:00:00Z
