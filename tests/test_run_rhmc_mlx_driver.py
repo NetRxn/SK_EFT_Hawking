@@ -270,3 +270,30 @@ def test_hasenbusch_is_opt_in_with_working_defaults():
     a = ap.parse_args(['--mass', '0.05'])
     assert a.hasenbusch is False and a.hb_n_inner == 4 and a.mu_sq is None
     assert ap.parse_args(['--mass', '0.05', '--hasenbusch']).hasenbusch is True
+
+
+def test_hasenbusch_forces_chrono_off():
+    # 2026-07-17: fix the unsafe default in code, don't warn around it. Hasenbusch-chrono-on
+    # is UNVALIDATED, so --hasenbusch must never resolve into chrono — regardless of the κ gate.
+    assert drv.chrono_for_kappa(True, 1.0e5, 7.0e5, hasenbusch=True) is False   # benign κ, still off
+    assert drv.chrono_for_kappa(True, 1.0e5, 0.0, hasenbusch=True) is False     # gate disabled, still off
+    assert drv.chrono_for_kappa(False, 1.0e5, 7.0e5, hasenbusch=True) is False  # opt-out still off
+    assert drv.chrono_for_kappa(True, 1.0e5, 7.0e5, hasenbusch=False) is True   # single-PF unchanged
+
+
+def test_hasenbusch_defaults_to_tuned_working_point():
+    # --hasenbusch defaults n_md/eps to the tuned Hasenbusch point (16, 0.031; τ_traj≈0.5),
+    # measured at the stiffest planned mass (m=0.05, acc 0.97) so it is safe for milder masses.
+    # Single-PF keeps (33, 0.015). Explicit user values always win.
+    assert drv.resolve_working_point(True, None, None) == (16, 0.031)
+    assert drv.resolve_working_point(False, None, None) == (33, 0.015)
+    assert drv.resolve_working_point(True, 20, None) == (20, 0.031)      # user n_md wins
+    assert drv.resolve_working_point(True, None, 0.025) == (16, 0.025)   # user eps wins
+
+
+def test_working_point_args_default_none_for_engine_resolution():
+    # n_md/eps default None so the engine (single-PF vs Hasenbusch) selects the working point.
+    a = drv.build_parser().parse_args(['--mass', '0.05'])
+    assert a.n_md is None and a.eps is None
+    b = drv.build_parser().parse_args(['--mass', '0.05', '--n-md', '20', '--eps', '0.02'])
+    assert b.n_md == 20 and b.eps == 0.02

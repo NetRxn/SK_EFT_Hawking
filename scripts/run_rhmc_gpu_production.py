@@ -447,7 +447,7 @@ def run_coupling(path, g, L, msq, coeffs, R, eps, n_md, n_meas, n_therm, device,
                 n=len(hist['tet']), s_per_traj=(time.time() - t0) / max(therm_left + max(target, 0), 1))
 
 
-def chrono_for_kappa(user_chrono, kappa, kappa_max):
+def chrono_for_kappa(user_chrono, kappa, kappa_max, hasenbusch=False):
     """Resolve whether to use chronological inversion for a coupling of condition number
     κ=(λmax+m²)/m². Chrono warm-starting speeds the MD force solves (~1.4× on MD) but SOFTENS
     reversibility. Measured (L=8, 2026-07-16): across the whole stiff m=0.05 range the roundtrip
@@ -456,12 +456,34 @@ def chrono_for_kappa(user_chrono, kappa, kappa_max):
     large κ), roughly flat across couplings within a mass, so κ acts as a stiffness proxy: above
     `kappa_max` chrono is auto-disabled to run at the clean fp32-reversibility floor; below (milder
     masses) the ~1.4× MD win is kept. An explicit --no-chrono always wins; `kappa_max<=0` disables
-    the gate (honor user_chrono as-is)."""
+    the gate (honor user_chrono as-is).
+
+    `hasenbusch=True` forces chrono OFF unconditionally: the Hasenbusch trajectory with chrono
+    warm-starting is UNVALIDATED (⟨e^-ΔH⟩ certified only chrono-off), so we never default into it.
+    Its 2-level force is already exact + well-mixing chrono-off, so there is nothing to reclaim."""
     if not user_chrono:
+        return False
+    if hasenbusch:
         return False
     if kappa_max and kappa_max > 0 and kappa > kappa_max:
         return False
     return True
+
+
+def resolve_working_point(hasenbusch, n_md, eps):
+    """Pick the MD working point (n_md, eps) for the selected engine when the user did not
+    override it. Hasenbusch's mass-preconditioned 2-level force tolerates FEWER, BIGGER coarse
+    steps than single-PF: measured at the stiffest planned mass (L=8 m=0.05 g=8) the tuned
+    point is (n_outer=16, eps=0.031, τ_traj≈0.5) at acc 0.97 / ⟨e^-ΔH⟩ 0.997 — 1.6× faster
+    than the single-PF (33, 0.015) and safe for milder masses (less stiff ⇒ higher acc). Any
+    explicit --n-md / --eps wins; for m<0.05 or new corners still scan (eps shrinks as m→0)."""
+    if hasenbusch:
+        n_md = 16 if n_md is None else n_md
+        eps = 0.031 if eps is None else eps
+    else:
+        n_md = 33 if n_md is None else n_md
+        eps = 0.015 if eps is None else eps
+    return n_md, eps
 
 
 def build_parser():
@@ -474,16 +496,17 @@ def build_parser():
     ap.add_argument('--replicas', type=int, default=16)
     ap.add_argument('--n-therm', type=int, default=100)
     ap.add_argument('--n-meas', type=int, default=400)
-    ap.add_argument('--n-md', type=int, default=33,
-                    help='MD steps per trajectory (τ=eps·n_md≈0.5). Paired with --eps; the '
-                         'default 0.015×33 is the robust m=0.05 (stiffest planned mass) working '
-                         'point (acc≈1.0). Larger masses are less stiff and tolerate larger eps / '
-                         'fewer steps — see the runbook working-point table.')
-    ap.add_argument('--eps', type=float, default=0.015,
+    ap.add_argument('--n-md', type=int, default=None,
+                    help='MD steps per trajectory (τ=eps·n_md≈0.5). Default is ENGINE-resolved '
+                         '(resolve_working_point): single-PF → 33, Hasenbusch → 16 (its 2-level '
+                         'force tolerates fewer/bigger coarse steps). Both are the stiffest-mass '
+                         '(m=0.05) working point; milder masses tolerate them. Override to tune.')
+    ap.add_argument('--eps', type=float, default=None,
                     help='MD step size. The eo single-pole fermion force is STIFF and stiffness '
                          'grows as m→0, so eps must SHRINK with the mass: eps=0.03 reject-alls at '
-                         'm=0.05 (measured). Default 0.015 gives acc≈1.0 at the stiffest planned '
-                         'corner (m=0.05, g=8); m=0.1≈0.02, m=0.2≈0.025. Watch rhmc_monitor.py.')
+                         'm=0.05 single-PF (measured). Default is ENGINE-resolved: single-PF → '
+                         '0.015, Hasenbusch → 0.031 (both acc≈1.0/0.97 at the stiffest corner '
+                         'm=0.05, g=8). For m<0.05 or new corners, scan first. Watch rhmc_monitor.py.')
     ap.add_argument('--n-poles', type=int, default=24,
                     help='Zolotarev pole count FLOOR for the heatbath rational (mlx backend). '
                          'Auto-bumped by build_coeffs_mlx until the heatbath fit meets '
@@ -563,6 +586,8 @@ def main():
     args = build_parser().parse_args()
 
     L, msq = args.l, args.mass ** 2
+    use_hasenbusch = args.backend == 'mlx' and args.hasenbusch
+    n_md, eps = resolve_working_point(use_hasenbusch, args.n_md, args.eps)
     if args.backend == 'mlx':
         import mlx.core as mx
         tag, dev_desc = 'mlx', str(mx.default_device())
@@ -586,13 +611,13 @@ def main():
         engine_desc, solver_desc = args.engine, args.solver
     print(f"GPU production: L={L} m={args.mass} backend={args.backend} engine={engine_desc} "
           f"device={dev_desc} solver={solver_desc} "
-          f"R={args.replicas} n_md={args.n_md} eps={args.eps} n_poles={args.n_poles}  "
+          f"R={args.replicas} n_md={n_md} eps={eps} n_poles={args.n_poles}  "
           f"{len(gs)} couplings × {args.n_meas} traj × {args.replicas} replicas → {outdir}", flush=True)
     for i, g in enumerate(gs):
         g = float(g)
         path = os.path.join(outdir, f"g{g:.4f}.npz")
         hasenbusch = None
-        if args.backend == 'mlx' and args.hasenbusch:
+        if use_hasenbusch:
             coeffs, rc, musq_g, lam = build_hasenbusch_coeffs_mlx(
                 L, g, msq, args.n_poles, args.seed + i, musq=args.mu_sq,
                 hb_relerr_tol=args.hb_relerr_tol, n_poles_cap=args.n_poles_cap)
@@ -605,16 +630,19 @@ def main():
         kappa = (lam + msq) / msq
         print(f"\n[{i+1}/{len(gs)}] g={g:.3f}  range[{msq:.4g},{lam+msq:.1f}] κ={kappa:.0f}", flush=True)
         if args.backend == 'mlx':
-            chrono_g = chrono_for_kappa(args.chrono, kappa, args.chrono_kappa_max)
+            chrono_g = chrono_for_kappa(args.chrono, kappa, args.chrono_kappa_max,
+                                        hasenbusch=use_hasenbusch)
             if args.chrono and not chrono_g:
-                print(f"    chrono auto-OFF: κ={kappa:.3g} > {args.chrono_kappa_max:.3g} "
-                      f"(reversibility floor > chrono speed at this stiffness)", flush=True)
-            s = run_coupling_mlx(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
+                reason = ("Hasenbusch trajectory (chrono-on unvalidated)" if use_hasenbusch
+                          else f"κ={kappa:.3g} > {args.chrono_kappa_max:.3g} "
+                               f"(reversibility floor > chrono speed at this stiffness)")
+                print(f"    chrono auto-OFF: {reason}", flush=True)
+            s = run_coupling_mlx(path, g, L, msq, coeffs, args.replicas, eps, n_md,
                                  args.n_meas, args.n_therm, args.seed + i, chrono=chrono_g,
                                  mlx_solver=args.mlx_solver, checkpoint_every=args.checkpoint_every,
                                  hasenbusch=hasenbusch)
         else:
-            s = run_coupling(path, g, L, msq, coeffs, args.replicas, args.eps, args.n_md,
+            s = run_coupling(path, g, L, msq, coeffs, args.replicas, eps, n_md,
                              args.n_meas, args.n_therm, device, args.seed + i,
                              solver=args.solver, engine=args.engine, chrono=args.chrono)
         print(f"  → done g={g:.3f}: acc={s['acc']:.2f} <tet>={s['tet']:.4f} "

@@ -118,8 +118,22 @@ def mass_of_dir(d):
     return float(m.group(1)) if m else 0.0
 
 
-def analyze_dataset(d, therm, n_shuffle, rng):
-    """Return per-coupling records for one L*_m* directory."""
+def effective_therm(user_therm, data_is_post_thermalized):
+    """Resolve the analysis thermalization cut, avoiding a DOUBLE cut. The run driver
+    (run_rhmc_gpu_production.py, both mlx and torch paths) already discards its --n-therm
+    trajectories and saves MEASUREMENT-ONLY history, marking that with `n_therm_done` in the
+    npz. For such data the analysis must NOT re-thermalize by default — that silently drops
+    measurement samples (n_therm=150 driver + old 150 analysis default analyzed a 400-sample
+    run on 250). So: post-thermalized data → cut 0; legacy full-chain data (no n_therm_done)
+    → the historical 150. An explicit user --therm always wins."""
+    if user_therm is not None:
+        return user_therm
+    return 0 if data_is_post_thermalized else 150
+
+
+def analyze_dataset(d, user_therm, n_shuffle, rng):
+    """Return per-coupling records for one L*_m* directory. `user_therm` may be None →
+    per-file auto-resolution of the thermalization cut (see effective_therm)."""
     files = sorted(glob.glob(os.path.join(d, 'g*.npz')), key=coupling_of)
     if not files:
         return None
@@ -130,6 +144,7 @@ def analyze_dataset(d, therm, n_shuffle, rng):
     recs = []
     for f in files:
         dd = np.load(f)
+        therm = effective_therm(user_therm, 'n_therm_done' in dd.files)
         g = float(dd['g'])
         hsq = autocorr_mean_err(dd['h_sq_history'], therm)[0]
         tet, tet_e, tet_tau = autocorr_mean_err(dd['tet_m2_history'], therm)
@@ -214,7 +229,10 @@ def extrapolate_mzero(datasets):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--glob', default='data/rhmc/L*_m*', help='dataset dir glob')
-    ap.add_argument('--therm', type=int, default=150, help='thermalization cut (trajectories)')
+    ap.add_argument('--therm', type=int, default=None,
+                    help='thermalization cut (trajectories). Default AUTO: 0 for data the run '
+                         'driver already thermalized (n_therm_done in the npz — avoids a double '
+                         'cut), 150 for legacy full-chain data. Pass an int to override.')
     ap.add_argument('--n-shuffle', type=int, default=8, help='shuffle replicas for the noise floor')
     ap.add_argument('--seed', type=int, default=0)
     args = ap.parse_args()
@@ -224,7 +242,8 @@ def main():
     if not dirs:
         print(f"No dataset dirs matched {args.glob!r}")
         return 1
-    print(f"Analyzing {len(dirs)} dataset(s); therm-cut={args.therm}, shuffle×{args.n_shuffle}")
+    therm_desc = 'auto (0 for driver data, 150 legacy)' if args.therm is None else str(args.therm)
+    print(f"Analyzing {len(dirs)} dataset(s); therm-cut={therm_desc}, shuffle×{args.n_shuffle}")
     datasets = []
     for d in dirs:
         ds = analyze_dataset(d, args.therm, args.n_shuffle, rng)
