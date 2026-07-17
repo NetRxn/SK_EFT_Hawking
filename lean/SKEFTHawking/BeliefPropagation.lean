@@ -1124,7 +1124,8 @@ theorem isFourCycleFree_of_bpRankCert {ν α : Type*}
 
 /-- `flattenMsg` is injective (it has `unflattenMsg G` as a left inverse). -/
 theorem flattenMsg_injective {ν α X : Type*} {G : FactorGraph ν α} :
-    Function.Injective (flattenMsg : BPMessages ν α G X → MsgEndpoint ν α → (X → ℝ)) := by
+    Function.Injective
+      (flattenMsg : BPMessages ν α G X → MsgEndpoint ν α → (X → ℝ)) := by
   intro m₁ m₂ h
   have := congrArg (unflattenMsg G) h
   rwa [unflattenMsg_flattenMsg, unflattenMsg_flattenMsg] at this

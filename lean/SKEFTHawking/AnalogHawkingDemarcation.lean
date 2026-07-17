@@ -202,4 +202,85 @@ theorem not_fourCycleFreeNonneg_or_nonzero_c1_implies_not_simulable
 -- Downstream consumers project on the predicate directly via `.1` /
 -- `.2` without needing the named extraction/constructor wrappers.
 
+/-! ## Genuine tree / BP-convergence layer (remediation B-04, 2026-07-17)
+
+The four-cycle-free demarcation above is the honest *weaker* screen. This
+section adds the genuine **tree** layer that the "tree / BP-convergence"
+claim actually requires, and wires it end-to-end. The tree predicate is
+`SKEFTHawking.BeliefPropagation.IsTreeFactorGraph` — real acyclicity of
+the bipartite incidence graph, strictly stronger than four-cycle-freeness.
+
+`analog_hawking_tree_simulable_demarcation` backs the claim end-to-end: a
+tree-simulable analog-Hawking system (i) passes the four-cycle-free screen,
+(ii) has zero loop-correction rate, and (iii) — equipped with its
+topological rank certificate — runs BP to a genuine fixed point in
+bounded (diameter) rounds (`bp_converges_on_ranked_acyclic`). The
+implication is one-directional (tree ⟹ screen), NOT a biconditional: the
+screen is genuinely weaker (a 6-cycle passes it but is not a tree), so no
+false equivalence is asserted. The only piece not proved in-tree is the
+existence of the rank certificate from `IsTreeFactorGraph` (a finite
+subtree-depth construction), documented at `bp_converges_on_ranked_acyclic`. -/
+
+/-- **Genuine tree-simulability predicate.** An analog-Hawking system on a
+    factor graph `G` is *tree-simulable* iff (i) `G` is a genuine tree
+    (acyclic + connected bipartite incidence graph), (ii) factor weights
+    are non-negative, and (iii) the categorical Chern coefficient `c₁`
+    vanishes. Strictly stronger than `IsAnalogHawkingFourCycleFreeSimulable`
+    — the structural conjunct is real tree-ness, on which BP genuinely
+    converges (`bp_converges_on_ranked_acyclic`). -/
+def IsAnalogHawkingTreeSimulable
+    {ν α X : Type*} (G : FactorGraph ν α)
+    (factorWeight : α → (ν → X) → ℝ) (c1 : ℝ) : Prop :=
+  IsTreeFactorGraph G ∧ (∀ a y, 0 ≤ factorWeight a y) ∧ c1 = 0
+
+/-- Tree-simulability implies the four-cycle-free simulability screen:
+    genuine tree-ness passes the weaker structural screen. (Via
+    `IsTreeFactorGraph.isAcyclic` then `isAcyclicFactorGraph_imp_fourCycleFree`.) -/
+theorem analog_hawking_tree_simulable_imp_fourCycleFree_simulable
+    {ν α X : Type*} (G : FactorGraph ν α)
+    (factorWeight : α → (ν → X) → ℝ) (c1 : ℝ)
+    (h : IsAnalogHawkingTreeSimulable G factorWeight c1) :
+    IsAnalogHawkingFourCycleFreeSimulable G factorWeight c1 := by
+  obtain ⟨htree, hnonneg, hc1⟩ := h
+  exact ⟨⟨isAcyclicFactorGraph_imp_fourCycleFree G htree.isAcyclic, hnonneg⟩, hc1⟩
+
+/-- Tree-simulability implies zero loop-correction rate: on a genuine tree
+    the Cramér loop-correction rate vanishes (through the four-cycle-free
+    screen and `fourCycleFree_nonneg_iff_ldp_rate_zero`). -/
+theorem analog_hawking_tree_simulable_imp_loopRate_zero
+    {ν α X : Type*} [Fintype ν] [Fintype α] [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (factorWeight : α → (ν → X) → ℝ) (c1 : ℝ)
+    (h : IsAnalogHawkingTreeSimulable G factorWeight c1) :
+    loopCorrectionRate G = 0 :=
+  ((fourCycleFree_nonneg_iff_ldp_rate_zero G factorWeight).mp
+    (analog_hawking_tree_simulable_imp_fourCycleFree_simulable G factorWeight c1 h).1).1
+
+/-- **End-to-end tree / BP-convergence demarcation.** A tree-simulable
+    analog-Hawking system, equipped with the topological rank certificate
+    of its tree, simultaneously: (i) passes the four-cycle-free
+    simulability screen, (ii) has zero loop-correction rate, and (iii)
+    runs synchronous belief propagation from ANY initial message bundle
+    `m` to a genuine `IsBPFixedPoint` after `convergenceHorizon cert.rank`
+    (= diameter) sweeps. This is the genuine end-to-end backing of the
+    "tree / BP-convergence" claim — the structural conjunct is real
+    tree-ness (not four-cycle-freeness) and the convergence is about the
+    actual `bpUpdate` dynamics. The rank certificate is the only piece
+    supplied as a hypothesis rather than derived from tree-ness (the
+    documented `bp_converges_on_ranked_acyclic` gap). -/
+theorem analog_hawking_tree_simulable_demarcation
+    {ν α X : Type*} [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    (G : FactorGraph ν α) (factorWeight : α → (ν → X) → ℝ) (c1 : ℝ)
+    (cert : BPRankCert G)
+    (h : IsAnalogHawkingTreeSimulable G factorWeight c1)
+    (m : BPMessages ν α G X) :
+    IsAnalogHawkingFourCycleFreeSimulable G factorWeight c1
+      ∧ loopCorrectionRate G = 0
+      ∧ IsBPFixedPoint
+          ((fun m' => bpUpdate m' factorWeight)^[convergenceHorizon cert.rank] m)
+          factorWeight :=
+  ⟨analog_hawking_tree_simulable_imp_fourCycleFree_simulable G factorWeight c1 h,
+   analog_hawking_tree_simulable_imp_loopRate_zero G factorWeight c1 h,
+   (bp_converges_on_ranked_acyclic cert factorWeight m).2⟩
+
 end SKEFTHawking.AnalogHawkingDemarcation
