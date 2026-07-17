@@ -26,9 +26,10 @@ Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom; nothing posited
   `Fintype.card {s : Finset (Fin 4) // s.card = 2} = 6`, and `hTwoIndex_card_eq_form_rank` ties it to
   the arithmetic form's `Fin 6` index — the geometry-side `C(4,2) = 6` falsifiable pin matching
   `torusFourForm`'s rank.
-* §4 — **`H₀(T⁴;ℤ) ≅ ℤ`** is the one genuine `TorusFour` homology group computable without Künneth:
-  `T⁴` is path-connected (a product of path-connected circles), so its degree-0 homology is `ℤ`.
-  (Reported as an honest boundary below when the integral connected-`H₀` port is not yet in-tree.)
+* §4 — **the explicit index bijection `{2-subsets of Fin 4} ≃ Fin 6`** (`hTwoIndexEquivFin6`): the
+  concrete indexing that realizes the rank-6 pin as a genuine identification, `torusFourForm`'s `Fin 6`
+  form-index labelled by *which pair of circle factors* each hyperbolic generator comes from. This is
+  the shape the deferred Künneth iso `H₂((S¹)⁴;ℤ) ≅ ⊕_{|s|=2} ℤ` must land in.
 
 **Honest boundary — the remaining brick (NOT shipped; a genuine multi-file sub-arc).** The identity
 `H₂(T⁴;ℤ) ≅ ℤ⁶` itself, and the cup-form Gram identity `II(T⁴) ≅ torusFourForm`, need a **4-fold
@@ -43,6 +44,10 @@ on the *diagonal* (`α² = 0`, `β² = 0`) while disclosing the *cross* terms (`
 So the exact remaining bricks are: **(K1-a)** the 4-fold Künneth iso `H₂((S¹)⁴;ℤ) ≅ ⊕_{|s|=2} ℤ` (the
 T⁴ analogue of `SphereProdHTwoInt`, built from §1's per-factor inputs) and **(K1-b)** the cross-product
 Gram `II(T⁴) ≅ 3H` (the T⁴ analogue of the S²×S² cross-term Gram, needing Eilenberg–Zilber).
+
+(A small separable item: `H₀(T⁴;ℤ) ≅ ℤ` — the one non-Künneth `TorusFour` group — needs the integral
+analogue of the mod-2 `SingularH0PathConnected` port, `T⁴` being path-connected; it is a self-contained
+degree-0 brick, orthogonal to the K1-a/K1-b headline, and is not shipped here.)
 -/
 import Mathlib
 import SKEFTHawking.SingularLineMinusPointInt
@@ -129,5 +134,16 @@ is the falsifiable bridge between the geometry side (the exterior square `Λ²(�
 and the landed arithmetic form `torusFourForm : Matrix (Fin 6) (Fin 6) ℤ`. -/
 theorem hTwoIndex_card_eq_form_rank :
     Fintype.card {s : Finset (Fin 4) // s.card = 2} = Fintype.card (Fin 6) := by decide
+
+/-! ## §4. The explicit index bijection `{2-subsets of Fin 4} ≃ Fin 6` -/
+
+/-- **The degree-2 Künneth-summand index set is `Fin 6`** — an explicit bijection between the
+`2`-element subsets of `{1,2,3,4}` (which pair of circle factors each `H₂((S¹)⁴)` summand comes from)
+and `torusFourForm`'s index type `Fin 6`. Realizes the rank-6 pin (`hTwoIndex_card`) as a genuine
+identification: each hyperbolic generator of `3H = torusFourForm` is labelled by a pair `{i,j}` of
+circle factors (the class `dxᵢ∧dxⱼ`). This is the concrete shape the deferred 4-fold Künneth iso
+`H₂((S¹)⁴;ℤ) ≅ ⊕_{|s|=2} ℤ` must land in. -/
+noncomputable def hTwoIndexEquivFin6 : {s : Finset (Fin 4) // s.card = 2} ≃ Fin 6 :=
+  Fintype.equivFinOfCardEq hTwoIndex_card
 
 end SKEFTHawking.KummerHomologyT4
