@@ -1,11 +1,18 @@
 # Phase 5q.H — The 16-Convergence: Overview & Handoff
 
-**Written:** 2026-07-15 (the operator's usage-limit pause; work resumes ~next week).
-**Ground state:** main `404a2bfe`, library **9,981 jobs green**, kernel-pure throughout,
-`validate.py` 46/46, `nogo_substrate_integrity` green, extraction fresh.
+**Written:** 2026-07-15; **fully refreshed 2026-07-17** (post the close-out arm's
+teardown — the operator ended the arm after an API-instability window; see §0).
+**Ground state:** main `0ee11ba1`, library **10,079 jobs green**, kernel-pure throughout,
+fence **21 kernel forks / 49 aliases** + 8 SETTLED_FORKS prose entries,
+`nogo_substrate_integrity` green, extraction fresh (last full sync at wave 16).
+**Budget posture (2026-07-17):** ~93% of the weekly **Fable** budget was consumed in the
+close-out arm's 24h (a large share burned by worktree/subagent API stalls, not work).
+Until the budget resets: **Fable-grade problems are worked DIRECTLY by the lead session
+(which is Fable) — no Fable subagents**; worker dispatches are Opus/Sonnet only, and
+every remaining item below is specced so an Opus worker can push it.
 **This document:** part 1 is the big picture for anyone catching up cold; part 2 is the
 detailed plan for the remaining work, in dependency order. The always-authoritative live
-resume map is the **"2026-07-16 SAVE-STATE" block** in
+resume map is the **frontier block** in
 [LAB_NOTEBOOK_INDEX.md](LAB_NOTEBOOK_INDEX.md) — if this document and the INDEX ever
 disagree, the INDEX wins.
 
@@ -86,18 +93,22 @@ not re-derive (see `KERNEL_NOGO_REGISTRY` in `src/core/constants.py`).
 
 ### Status in one paragraph
 
-*(Updated 2026-07-16, post gate round 12 — the original handoff paragraph is superseded;
-the §1 work queue below is rewritten to the current truth.)* The close-out arm has
-executed ~55 blocks (#137–#193): **the provider is unconditional**
-(`nonempty_charPairWProviderPerOp` — Lanes A+B of the original plan are done), the KRS
-leaf is consolidated to ONE ∀-p residual row (`KRSResidualRow` →
-`kernelReducesToSpin_of_residualRow`), dC is reduced to the collapse atom's bounding
-datum, dA to the honest kernel characterization `ker Φ ⊆ doubles` on the geometric
-`spinForgetPhi`, and **gate rounds 11 AND 12 both ran (Fable, CONDITIONAL PASS)** with
-their ties kernel-encoded (fence: 20 forks / 45 aliases) and four binding round-12 specs
-frozen in `PinPlusResidualGate.lean`. What remains is the **genuine geometric floor**
-(§1 below) feeding those residual rows, plus the assembly wiring, W-E, W-F, and the
-closure gates. No unknown walls are open.
+*(Updated 2026-07-17, post the close-out arm #137–#211.)* **THE ASSEMBLY IS PROVEN as a
+conditional and the phase is now pure row-emptying.**
+`kt_equiv_zmod16_of_residuals` (`PinPlusKTAssemblyResiduals.lean` — the provider
+INSTANTIATED, never hypothesized) was refined through seven audited variants to the
+sharpest current form **`kt_equiv_zmod16_of_residuals_freezeAtoms_ofReducedAtoms`**
+(`PinPlusKTSphereProdCohomology.lean`): its hypothesis row IS the phase's complete
+remaining geometry, and each variant has a `rokhlin_sixteen_…` twin, so **W-E fires
+automatically when the row empties**. Gate rounds 11, 12 AND 13 all ran (Fable,
+CONDITIONAL PASS; every fakeability tie kernel-encoded — fence 21 forks / 49 aliases;
+**gate 13's seam trace: NO consumption seam needs a fix before the assembly fires**).
+The provider is unconditional; the KRS leaf is one ∀-p row; hcyc+h2 collapsed into the
+single atom hΦg; hcol is the per-object collapse-datum supply; hBbord is maximally
+reduced (the (1,4) Wu leg proven FREE, hwu ⟺ v₂ = 0, the cohomology atoms reduced to
+homological roots); the σ/Novikov tower road is one inhabitation from firing end-to-end.
+What remains is the **terminal geometric floor** (§1), then W-F and the closure gates.
+No unknown walls; every remaining atom is named, located, and gate-specced.
 
 ---
 
@@ -113,64 +124,109 @@ closure gates. No unknown walls are open.
   with guardrails — no lead full-library `lake build` while all 3 lanes are hot; on any
   ENFILE symptom drop back to 2. `ulimit -n 65536`, `LEAN_NUM_THREADS=4`, serialize cold
   header imports and builds. Lake 5.0.0 has no `-j` flag.
-- Model tiering: Sonnet = mechanical bricks, Opus = deep geometry, **Fable = gate rounds
-  only** (wide latitude, not a brick).
+- Model tiering **(2026-07-17 budget revision)**: Sonnet = mechanical bricks, Opus =
+  deep geometry AND (until the weekly budget resets) everything below; **Fable = the
+  LEAD SESSION works Fable-grade problems directly — do NOT spawn Fable subagents**
+  (~93% of the weekly Fable budget went in 24h, much of it burned by subagent API
+  stalls, not work).
+- **API-instability lesson (2026-07-16→17, ~9 worker deaths/stalls):** workers COMMIT
+  after their FIRST green brick and every ~3 after (committed work survived every
+  death; uncommitted triage did not). Resume-kick a stalled agent while its transcript
+  holds triage; fresh-hand after 2–3 deaths; during an active instability window,
+  prefer the lead working directly over re-spawning.
 - The wt3 stash `stash@{0}` is old pre-5qG 5qf-leads material, deliberately preserved —
   do not pop or drop it.
 
-### 1. The work queue, in dependency order
+### 1. The work queue — the terminal floor, atom by atom
 
-*(Rewritten 2026-07-16 post gate round 12. The original Lanes A/B/C are DONE — the
-provider is unconditional, the KRS leaf is consolidated to `KRSResidualRow`, gate rounds
-11+12 ran. The queue below is the remaining GENUINE GEOMETRIC FLOOR + convergence. The
-per-block detail lives in the lab notebook; task IDs refer to the session task list.)*
+*(Rewritten 2026-07-17 at teardown. F1 is DONE — the assembly chain landed and gate 13
+cleared every consumption seam. The queue below is the assembly row's remaining atoms,
+grouped by lane, each with its sharpest current form, the consuming variant, and the
+recommended model tier. Task IDs #209/#210/#211 in the session task list hold ready
+worker briefs for the first three items.)*
 
-**Lane 1 — the hasClass cascade (feeds the KRS ∀-p row):**
+**THE ROW** (`kt_equiv_zmod16_of_residuals_freezeAtoms` grain, refined by
+`_ofCoboundary`/`_ofDegenerate14`/`_ofReducedAtoms` on slot 5):
+`{H (KRS ∀-p row) · row (σ-presentation) · hCob · hBase · hBbord · hcolD · hker · hΦg}`.
+Empty it ⟹ `kt_equiv_zmod16` + Rokhlin-16 unconditional.
 
-- **R1 🔄 #191 (wt3): the concrete sphere-4 cycle zS** with [zS] = betaClass — route (b)
-  first (H₄(S⁴;ℤ/2) has one nonzero class; the #168 connecting iso may make ∂(relative
-  fundamental disk chain) BE it) → then the cascade: the cone rep → the co-adapted seam
-  splits → hdetAB → `hasClass_ofTransfer`. Detection is a rel-homology invariant
-  (`relClassOf_eq_of_homologous`), so controlled reps inherit it.
-- **R2 ⏸ the mv piece homeos / hcov residuals** (the collar-conflict-free ones landed
-  with #181; the rest ride the seam machinery).
+**Lane 1 — the σ/Novikov tower (closest payoff; task #209, Opus-ready):**
+The full chain is built (#192→#196→#201→#205 + the #209 salvage: hbdnd discharged, the
+narrowed constructor + latticeSig bridge in `PinPlusKTTowerInhabit.lean`). ONE
+inhabitation remains: **`GenuineBoundingWTower`** = the finite-free ℤ-bases {Bw, Br, B}
+of the genuine H²(W)/H³(W,∂W)/H²(∂W) (the `intH2_basis_datum` atom class — the atlas's
+#3 open assumption, gates 6; the cylinder findim machinery #64/#78/#164/#9 is the
+route) + hexactRev/hnondeg (ℝ Props — dimension-count arguments) + the blockDiag
+splitting datum (likely pure re-indexing of the banked #190 identification). **If it
+lands, the σ-lane floor fires END-TO-END** (`lagrangian_of_genuineTower`,
+`novikovRealPairLES_of_genuineTower`), feeding the hbord-grade content hker and the sig
+descent consume. Round-13 spec 1 binds: genuine objects only, data inspection.
 
-**Lane 2 — the σ-descent + hcob tower (feeds dA's honest route + the Novikov atom):**
+**Lane 2 — the KRS supply / hypothesis H (the single deepest barrier; task #210,
+FABLE-GRADE → the lead works it directly under the budget posture):**
+Everything but one atom is built: zS pinned to the fundamental generator (#191); the
+split engine + subdivision-detection-transfer + EXACT free-sphere hvOut at V = Sᶜ
+(#194/#198); the Ctrl supplier + `ofSharedSeam` constructor (#198/#204); the disk half
+inverted — `hasClass_ofTransfer` accepts ANY cHa in the right relative class (#207).
+**The barrier (3× independently confirmed): the shared cSeam** — one chain on the
+closed attaching region S serving BOTH co-adapted splits; chain-level splitting along
+a closed set is unreachable by the open-cover engine, and the collar homeo gives only
+class-level invariance. NOT kernel-false (holds for a genuine surgery collar) — a
+machinery gap. Roads: (A) a chain-level collar projection engine (equality-form prism
+bookkeeping); (B) the shared-source explicit construction (both sides from the same
+data; the cone operator over convex D⁵ is flagged reusable infra); (C) a class-level
+consumption reframe (gate-pending); (D) a kernel no-go if the shape is provably
+unreachable. Round-13 spec 2 binds: cSeam by data, SINGLE shared field. After it:
+hdetAB (corrector form banked) + the row tail (τ-datum terminal, hsNe/hsConn, mv
+homeos — #186's findings).
 
-- **R3 🔄 #192 (wt2): the Int relative cap port** H²(W;ℤ) × H₄(W,∂W) → H₂(W) (the mod-2
-  `capRelH` layer is the template) + the hadj mediation. **Round-12 spec 2 binds:** the
-  Novikov/hbord discharge must exhibit a GENUINE bounding-W tower — Lagrangian linear
-  algebra is kernel-proven zero progress (`novikovLagrangian_iff_hbord`).
-- **R4 ⏸ hbord as tower data**: the concrete bounding-W instantiation consuming R3 + the
-  #190 form identification (`boundaryInterMatrix_eq_blockDiag`) + the nondeg pair.
-- **R5 ⏸ the transversal V representative** (smooth transversality — the deepest leaf;
-  dA's `ker Φ ⊆ doubles` geometric feed). **Round-12 spec 1 binds:** any dual-spin supply
-  passes by DATA inspection only (amb pinned to the tethered witness).
+**Lane 3 — hBbord / hypothesis 5 (near-tractable; task #211, Opus-ready):**
+Maximally reduced (#203: membrane/atlas layers DONE; #206: the (1,4) Wu leg PROVEN
+FREE, hwu ⟺ v₂ = 0; #208: the cohomology atoms reduced to homological roots via ℤ/2
+Kronecker UC). Remaining: **the concrete S²×D³ provider** — the Bordism object over
+the banked SphereDiskFreezeB/J5 atlas + the three roots on the concrete W
+(Subsingleton H₁ via retraction to S² + `sphere_homology_one`; Subsingleton H₄rel;
+`HasRelFundClass` via cross/product-collar templates; the dead agents' triage
+confirmed the homotopy-invariance stack handles Root 1) + the slot-matching
+interface — then **the pinned (2,3) datum P23** (H²(W) ≅ H³(W,∂W) perfect cup pairing
+— the genuine irreducible content) and the v₂ = 0 computation it enables.
 
-**Lane 3 — dC + the σ-presentation residuals:**
+**Lane 4 — the deep floor (design-first; do NOT spend workers before a route decision):**
 
-- **R6 ⏸ the collapse atom's bounding datum** (the round-12 spec-4 debt on
-  `SectorIsGeometric`'s discharge).
-- **R7 ⏸ the Gram-pin atoms** {the E-Z cross value, the basis-ID} + **the K3
-  conditional** (the σ-presentation stock row's last live sector).
-- **R8 ⏸ hsNe/hsConn** (the connected engine's certs — flagged by #186's wiring findings).
-- **R9 ⏸ the concrete bounding 3-manifold** (the τ-datum builder; terminal-only per #186).
+- **hCob + hBase (hypotheses 3–4):** the two Benedetti E1 surgery primitives.
+  SETTLED (kernel-adjacent, `freeze-atoms-not-composable-from-sigma-trace`): they do
+  NOT compose from the landed Σ-trace — orthogonal axes (enhancement-rank vs b₂). A
+  future E1 surgery foundation builds them directly; HandleTradeSplit/HyperbolicPeel
+  statement layers exist.
+- **hcolD (hypothesis 6):** the rank-0 → empty-surface **membrane-kill** — proven a
+  different construction from the rank-lowering trace (which stops AT rank 0,
+  `ambientSurgeryDatum_pos_rank`). The per-object `RankZeroCollapseDatum` shape is
+  gate-13-audited (honest Skolemized renaming); the bounding construction is the
+  content. Round-13 spec 3: the datum's `b` audited by data inspection.
+- **hker (hypothesis 7):** the **transversal V representative** (the w₁-dual spin
+  submanifold, smooth transversality) — opened at #160 (the single-witness wall:
+  bordism gluing absent by design), untouched since. Round-12 spec 1 binds.
+- **The E1 atom bundle + K3RealizingElement + hΦg (hypotheses 2, 8):** the
+  σ-presentation's terminal atoms. `K3RealizingElement` is DEFINED but inhabited
+  NOWHERE (Mathlib has no complex geometry); hΦg = Φ[g] = k₀ rides on it (g = the
+  K3-class generator). **DECISION NEEDED before spending workers:** a from-scratch K3
+  lattice-realization arc vs re-routing the generator witness — a design pass, not a
+  brick.
 
-**Convergence:**
+**Convergence (after the row):**
 
-- **F1 🔄 #193 (wt1): THE ASSEMBLY WIRING** — `kt_equiv_zmod16_of_residuals`: the
-  end-to-end conditional whose hypothesis list IS the remaining geometry above
-  (provenance-annotated), + the W-E conditional shape (+ W-F if pure wiring). Then each
-  R-item's landing shrinks the hypothesis row until it is empty → `kt_equiv_zmod16`
-  unconditional.
-- **F2 ⏸ W-E:** the Rokhlin corollary fires unconditionally once F1's row empties.
-- **F3 ⏸ W-F capstone:** the k = ∞ statement + the Ω₅ recast.
-- **F4 ⏸ Closure gates:** full `validate.py` N/N; a fresh adversarial reviewer pass;
-  the trusted clean rebuild `rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps`;
+- **F2 W-E:** fires automatically — every assembly variant carries its
+  `rokhlin_sixteen_…` twin.
+- **F3 W-F:** the k = ∞ statement + Ω₅ recast = **a genuinely new re-basing arc**
+  (verified at #193: the 5q.G capstones live on separate carriers; this is not wiring).
+- **F4 closure gates:** `rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps`
+  clean; `validate.py` N/N; a fresh `skeft-qa:adversarial-reviewer` 0-BLOCKER run;
   sync + counts; notebook + memory close-out.
-- **Gate discipline stands:** any NEW completeness Prop shaped between here and closure
-  gets a Fable gate round before consumption; the four binding round-12 specs
-  (`PinPlusResidualGate.lean` header) govern all consumption.
+- **Gate discipline stands:** any NEW completeness Prop gets a vacuity gate round
+  before consumption (under the budget posture, the lead runs gate rounds directly);
+  the binding specs live in `PinPlusResidualGate.lean` (round 12) +
+  `PinPlusRoundThirteenGate.lean` (round 13) headers; consume the assembly ONLY
+  through the audited variant chain.
 
 ### 2. Binding architectural laws (do not relearn these)
 
@@ -198,9 +254,27 @@ Settled this arm; violating any of them reproduces a known multi-hour wall:
   workers stop-and-report on ENFILE; past ~250–300k transcript tokens hand off to a
   fresh agent with a compact state brief (confirm the old agent is dead by sampling slot
   file mtimes over ~60 s first).
-- **Never re-enter a registry fork:** 16 forks / 34 aliases in `KERNEL_NOGO_REGISTRY`,
-  surfaced via `/skeft-qa:frontier` (negative frontier). Name the relevant forks in every
-  worker brief.
+- **Never re-enter a registry fork:** **21 forks / 49 aliases** in `KERNEL_NOGO_REGISTRY`
+  (+ 8 SETTLED_FORKS prose entries), surfaced via `/skeft-qa:frontier` (negative
+  frontier). Name the relevant forks in every worker brief.
+- **The waves-13–16 proof-mechanics laws** (bought expensively; violating any
+  reproduces a wall): predicate sets (`{‖v‖=1}`) never `ModelWithCorners.boundary`;
+  `.choose`-hide concrete points; abstract-X package acyclicity/connecting arguments,
+  instantiate late; pin `(X := TopCat.of …)`/`(m := …)` binders (metavar Nat
+  unification blows isDefEq; `RelFundClassDatum`/`RelativeCohomology` take X
+  IMPLICITLY); extract heavy structure data to NAMED defs (iota-projection never
+  whnf's a tactic-proof field — inline literals blow 200k heartbeats); explicit
+  literal sets to `chainBoundary_mem_subspaceChains` blow the budget — infer via `_`;
+  an unresolved identifier / missing `open` masquerades as a whnf timeout — check name
+  resolution FIRST; `lean_multi_attempt` is NOT a reliable heartbeat signal — trust
+  `lake build`; char-2 rearrangement via `hhom.symm` defeq then the
+  add_assoc/ZModModule.add_self chain; raw `Submodule.Quotient.mk` statements are rfl
+  — bridge with show/rfl never rw; `+`-heterogeneous checks don't defeq eagerly —
+  state fields in the native (`seamLegHa`) shape; `cyl`/`slice`/`ambIncl`/`graphHom`
+  live in CrossProduct/HomotopyInvariance/MayerVietorisLES (explicit opens);
+  `hWT2.t1Space` = the T2→T1 conversion; `Module.Finite.of_finite` = the v4.29.1
+  Subsingleton route; lean_verify rejects non-ASCII decl names and lexically flags
+  the word "opaque" even in prose.
 
 ### 3. Where the ground truth lives
 
