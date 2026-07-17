@@ -113,6 +113,251 @@ theorem nonempty_novikovGeometricPairLESData_diag {r : ℕ} (A : Matrix (Fin r) 
     Nonempty (NovikovGeometricPairLESData (blockDiag A (-A))) :=
   (nonempty_novikovGeometricPairLESData_iff_sig_eq A A heu heu).mpr rfl
 
+/-! ## §2. G13-2 — the collar bridge is a PURE SUPPORT Prop: located as a submodule-sum
+membership; zero-collar inhabitation exhibits; and the hypothesis of the conditional wiring is
+kernel-provably load-bearing. -/
+
+section CollarBridge
+
+open SKEFTHawking.SingularHomologyMod2
+open SKEFTHawking.SingularRelativeHomologyMod2
+open SKEFTHawking.SingularFunctoriality
+open SKEFTHawking.SingularMayerVietoris
+open SKEFTHawking.SingularMayerVietorisLES
+open SKEFTHawking.SingularExcision
+open SKEFTHawking.SingularHomotopyInvariance
+open SKEFTHawking.PinPlusTraceCapstoneSeamSplit
+open SKEFTHawking.PinPlusTraceSeamResidualNarrow
+open SKEFTHawking.DiskChartGeneric (D5)
+open Opposite
+
+/-- **The generic support-sum locating lemma** — "pushforward-from-`↥S` plus a `T`-supported
+remainder" is EXACTLY membership in the submodule sum `subspaceChains S ⊔ subspaceChains T`. The
+shape of `ClosedSeamAttachedCollarBridge` (and of `exact_seam_split_of_attachedBridge`'s conclusion)
+is a pure SUPPORT statement — no class content, no detection, nothing pinning `cSeam`. -/
+theorem exists_mapChain_add_iff_mem_sup {X : TopCat} (S T : Set ↑X) (n : ℕ)
+    (a : SingularChain X n) :
+    (∃ (cS : SingularChain (sub S) n) (corr : SingularChain X n),
+        a = mapChain (ambIncl S) n cS + corr ∧ corr ∈ subspaceChains T n)
+      ↔ a ∈ subspaceChains S n ⊔ subspaceChains T n := by
+  constructor
+  · rintro ⟨cS, corr, rfl, hcorr⟩
+    exact Submodule.add_mem_sup
+      ((mem_subspaceChains_iff_exists_mapChain_ambIncl S n _).mpr ⟨cS, rfl⟩) hcorr
+  · intro h
+    obtain ⟨y, hy, z, hz, hsum⟩ := Submodule.mem_sup.mp h
+    obtain ⟨cS, hcS⟩ := (mem_subspaceChains_iff_exists_mapChain_ambIncl S n y).mp hy
+    exact ⟨cS, z, by rw [hcS, hsum], hz⟩
+
+/-- **THE BRIDGE, LOCATED** (G13-2a): `ClosedSeamAttachedCollarBridge S a` is EXACTLY the
+submodule-sum membership `a ∈ subspaceChains S ⊔ subspaceChains (sphere ∖ S)`. The Prop carries
+support information ONLY — nothing in its shape demands the collar retraction, a nonzero `cSeam`,
+or any class/detection content. Its anti-fake guard therefore lives entirely at the CONSUMPTION
+site (the shared-`cSeam` tie of `CapstoneSeamTransferSeam`, §3). -/
+theorem closedSeamAttachedCollarBridge_iff_mem_sup (S : Set D5)
+    (a : SingularChain (TopCat.of D5) (3 + 1)) :
+    ClosedSeamAttachedCollarBridge S a ↔
+      a ∈ subspaceChains (X := TopCat.of D5) S (3 + 1)
+          ⊔ subspaceChains (X := TopCat.of D5)
+              ({v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S) (3 + 1) := by
+  unfold ClosedSeamAttachedCollarBridge
+  exact exists_mapChain_add_iff_mem_sup S _ (3 + 1) a
+
+/-- **The zero-collar degenerate inhabitation** (G13-2b): any free-sphere-supported chain inhabits
+the bridge with `cSeam := 0` — zero collar geometry, zero seam content. The bridge Prop per se
+cannot certify collar-retraction progress. -/
+theorem closedSeamAttachedCollarBridge_of_freeSphere {S : Set D5}
+    {a : SingularChain (TopCat.of D5) (3 + 1)}
+    (ha : a ∈ subspaceChains (X := TopCat.of D5)
+        ({v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S) (3 + 1)) :
+    ClosedSeamAttachedCollarBridge S a :=
+  ⟨0, a, by rw [map_zero, zero_add], ha⟩
+
+/-- The bridge is inhabited at the zero chain, for every `S` — the degenerate floor. -/
+theorem closedSeamAttachedCollarBridge_zero (S : Set D5) :
+    ClosedSeamAttachedCollarBridge S 0 :=
+  closedSeamAttachedCollarBridge_of_freeSphere (Submodule.zero_mem _)
+
+/-- **The constant-simplex non-membership crux** — a constant simplex at a point OUTSIDE `A` is not
+an `A`-supported chain. The engine of the load-bearing exhibit: evaluate the realization (the
+`toSSetObjEquiv` naturality of `simplexIncl`) at any point of the (nonempty) standard simplex. -/
+theorem single_constSimplex_notMem_subspaceChains {X : TopCat} {A : Set ↑X} {x : ↑X}
+    (hx : x ∉ A) (n : ℕ) :
+    Finsupp.single (constSimplex x n) (1 : ZMod 2) ∉ subspaceChains A n := by
+  rintro ⟨d, hd⟩
+  have hrange : constSimplex x n ∈ Set.range (simplexIncl A n) := by
+    by_contra hr
+    have h0 : chainIncl A n d (constSimplex x n) = 0 := by
+      rw [chainIncl, Finsupp.lmapDomain_apply]
+      exact Finsupp.mapDomain_notin_range d _ hr
+    rw [hd, Finsupp.single_eq_same] at h0
+    exact one_ne_zero h0
+  obtain ⟨τ, hτ⟩ := hrange
+  have heval := congrArg (X.toSSetObjEquiv (op (SimplexCategory.mk n))) hτ
+  rw [toSSetObjEquiv_simplexIncl,
+    show X.toSSetObjEquiv (op (SimplexCategory.mk n)) (constSimplex x n)
+      = ContinuousMap.const _ x from Equiv.apply_symm_apply _ _] at heval
+  obtain ⟨pt⟩ : Nonempty ↑(stdSimplex ℝ (Fin (n + 1))) := inferInstance
+  have hval := ContinuousMap.congr_fun heval pt
+  rw [ContinuousMap.comp_apply, ContinuousMap.const_apply] at hval
+  exact hx (hval ▸ ((sub A).toSSetObjEquiv (op (SimplexCategory.mk n)) τ pt).2)
+
+/-- The center of the disk `D⁵`. -/
+noncomputable def diskCenter : D5 :=
+  ⟨0, Metric.mem_closedBall_self (by norm_num)⟩
+
+theorem diskCenter_notMem_sphere :
+    diskCenter ∉ {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} := by
+  simp [diskCenter]
+
+/-- **The bridge is NOT universally inhabited** (G13-2c): at `S = ∅` the bridge demands full
+sphere-support, and the interior constant simplex at the disk center refutes it. -/
+theorem not_closedSeamAttachedCollarBridge_center :
+    ¬ ClosedSeamAttachedCollarBridge ∅
+        (Finsupp.single (constSimplex diskCenter (3 + 1)) (1 : ZMod 2)) := by
+  intro h
+  rw [closedSeamAttachedCollarBridge_iff_mem_sup] at h
+  have hle : subspaceChains (X := TopCat.of D5) (∅ : Set D5) (3 + 1)
+        ⊔ subspaceChains (X := TopCat.of D5)
+            ({v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} \ ∅) (3 + 1)
+      ≤ subspaceChains (X := TopCat.of D5)
+          {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} (3 + 1) :=
+    sup_le (subspaceChains_mono (Set.empty_subset _) (3 + 1))
+      (subspaceChains_mono Set.diff_subset (3 + 1))
+  exact single_constSimplex_notMem_subspaceChains diskCenter_notMem_sphere (3 + 1) (hle h)
+
+/-- **The conditional wiring's conclusion IS the bridge at `w`** — definitionally. The theorem
+`exact_seam_split_of_attachedBridge` is thus, in locating form, "the bridge Prop is closed under
+adding free-sphere chains": `bridge(a) → bridge(a + vOut)`. Honest wiring; nothing extra. -/
+theorem exact_seam_split_conclusion_iff_bridge (S : Set D5)
+    (w : SingularChain (TopCat.of D5) (3 + 1)) :
+    (∃ (cSeam : SingularChain (sub (X := TopCat.of D5) S) (3 + 1))
+        (vOut' : SingularChain (TopCat.of D5) (3 + 1)),
+      w = mapChain (ambIncl (X := TopCat.of D5) S) (3 + 1) cSeam + vOut'
+        ∧ vOut' ∈ subspaceChains (X := TopCat.of D5)
+            ({v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S) (3 + 1))
+      ↔ ClosedSeamAttachedCollarBridge S w :=
+  Iff.rfl
+
+/-- **THE HYPOTHESIS IS LOAD-BEARING** (item 6, kernel-encoded): there is an instance of
+`exact_seam_split_of_attachedBridge`'s OTHER hypotheses (`hsplit` + `hvOut`) at which its conclusion
+(= the bridge at `w`, by `exact_seam_split_conclusion_iff_bridge`) FAILS — so the conclusion is NOT
+derivable from the split (b) alone, and the collar-bridge hypothesis is genuinely consumed, never
+decorative. (Witness: `S = ∅`, `w = a =` the interior constant simplex, `vOut = 0`.) -/
+theorem exact_seam_split_hypothesis_load_bearing :
+    ∃ (S : Set D5) (w a vOut : SingularChain (TopCat.of D5) (3 + 1)),
+      w = a + vOut
+      ∧ vOut ∈ subspaceChains (X := TopCat.of D5)
+          ({v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S) (3 + 1)
+      ∧ ¬ ClosedSeamAttachedCollarBridge S w := by
+  refine ⟨∅, Finsupp.single (constSimplex diskCenter (3 + 1)) (1 : ZMod 2),
+    Finsupp.single (constSimplex diskCenter (3 + 1)) (1 : ZMod 2), 0, ?_,
+    Submodule.zero_mem _, not_closedSeamAttachedCollarBridge_center⟩
+  exact (add_zero _).symm
+
+end CollarBridge
+
+/-! ## §3. G13-2d/G13-4 — the consumption-site guard (the shared-`cSeam` tie, kernel-precise) and
+the controlled-rep supplier interchange at the `μ = 0` fibre. -/
+
+section SeamStructure
+
+open SKEFTHawking.SingularHomologyMod2
+open SKEFTHawking.SingularRelativeHomologyMod2
+open SKEFTHawking.SingularFunctoriality
+open SKEFTHawking.SurgeryFoundation
+open SKEFTHawking.SurgeryFoundation.HandleAttachment
+open SKEFTHawking.SingularHomotopyInvariance
+open SKEFTHawking.SingularRelativeCrossProduct
+open SKEFTHawking.SingularRelativeCoverMVTransport
+open SKEFTHawking.PoincareLefschetzRelFundClass
+open SKEFTHawking.PoincareLefschetzRelFundClassGeom
+open SKEFTHawking.PinPlusTraceRelFundReduce
+open SKEFTHawking.PinPlusTraceCapstoneInhabit
+open SKEFTHawking.PinPlusTraceCapstoneCoverGlue
+open SKEFTHawking.PinPlusTraceCapstoneCoverGlueDisk
+open SKEFTHawking.PinPlusTraceCapstoneSeamTransfer
+open SKEFTHawking.PinPlusTraceCapstoneSeamTransferSupply
+open SKEFTHawking.PinPlusTraceSeamResidualNarrow
+open SKEFTHawking.DiskChartGeneric (D5)
+open SKEFTHawking.PinPlusTraceDiskCorePair
+
+noncomputable section
+
+variable (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+  [CompactSpace s.M] [Nonempty s.M] [PreconnectedSpace s.M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M]
+  (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+  (hφ : Continuous φ) (hφinj : Function.Injective φ)
+
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **THE SHARED-`cSeam` TIE, kernel-precise (cylinder side)**: a `CapstoneSeamTransferSeam`
+inhabitant with the DEGENERATE seam `cSeam = 0` forces the fundamental top face `z@⊤` to be
+supported entirely OFF the attaching region (`M × {⊤} ∖ range φ`). A zero-collar fake laundered
+through the bridge into `hsplitHa` cannot inhabit the full seam structure unless the fundamental
+class's top face avoids the attachment altogether — the anti-laundering demand the bridge Prop
+itself lacks lives HERE, in the single `cSeam` field shared by `hsplit` and `hsplitHa`. -/
+theorem capstoneSeamTransferSeam_topFace_unattached_of_cSeam_zero
+    {z : cycles (TopCat.of s.M) (2 + 2)}
+    {cHa : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 2)}
+    (R : CapstoneSeamTransferSeam s S hS φ hφ hφinj z cHa) (h0 : R.cSeam = 0) :
+    mapChain (slice (graphHom (TopCat.of s.M)) 1) (3 + 1)
+        (z : SingularChain (TopCat.of s.M) (3 + 1))
+      ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+          ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1) := by
+  have h := R.hsplit
+  rw [h0, map_zero, zero_add] at h
+  rw [h]
+  exact R.hwOut
+
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **THE SHARED-`cSeam` TIE, kernel-precise (disk side)**: with `cSeam = 0` the disk boundary
+`∂cHa` is forced entirely into the free sphere `S⁴ ∖ S` — the attached region receives NOTHING.
+Together with the cylinder side: a zero-seam inhabitant of the structure carries no seam transfer
+at all, and both split equations collapse to pure support statements. -/
+theorem capstoneSeamTransferSeam_boundary_freeSphere_of_cSeam_zero
+    {z : cycles (TopCat.of s.M) (2 + 2)}
+    {cHa : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 2)}
+    (R : CapstoneSeamTransferSeam s S hS φ hφ hφinj z cHa) (h0 : R.cSeam = 0) :
+    chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1) cHa
+      ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha)
+          ({q : D5 | ‖(q : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S) (3 + 1) := by
+  have h := R.hsplitHa
+  rw [h0, map_zero, zero_add] at h
+  rw [h]
+  exact R.hvOut
+
+variable (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+  (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+  (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+
+/-- **The controlled-rep supplier recovers the banked residual at `μ = 0`** (item 4): a
+`CapstoneSeamTransferResidual` transports DEFINITIONALLY to `CapstoneSeamTransferResidualCtrl _ 0`
+(`Sd⁰ = id`). No field is weakened, strengthened, or dropped. -/
+def ctrlZeroOfResidual
+    (R : CapstoneSeamTransferResidual s t S hS φ hφ hφinj cd hseam d) :
+    CapstoneSeamTransferResidualCtrl s t S hS φ hφ hφinj cd hseam d 0 where
+  z := R.z
+  hz := R.hz
+  seam := R.seam
+  hdetAB := R.hdetAB
+
+/-- **…and conversely** — the `μ = 0` fibre of the controlled-rep supplier IS the banked residual.
+With `ctrlZeroOfResidual`, the two variants are definitionally interchangeable at `μ = 0` and their
+`toHasClass` outputs share one type, so the controlled-rep row is a genuine variant constructor —
+a PASS certificate for the item-4 audit. -/
+def residualOfCtrlZero
+    (R : CapstoneSeamTransferResidualCtrl s t S hS φ hφ hφinj cd hseam d 0) :
+    CapstoneSeamTransferResidual s t S hS φ hφ hφinj cd hseam d where
+  z := R.z
+  hz := R.hz
+  seam := R.seam
+  hdetAB := R.hdetAB
+
+end
+
+end SeamStructure
+
 /-! ## §4. G13-3 — the rank-0 collapse datum sits at EXACTLY per-object conclusion strength. -/
 
 section CollapseDatum
