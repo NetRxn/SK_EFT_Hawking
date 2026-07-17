@@ -344,3 +344,11 @@ conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
 - memory: [[project_5qH_nonhausdorff_substrate_bug]]
 - created_ts: 2026-07-16T00:00:00Z
 - reviewed_ts: 2026-07-16T00:00:00Z
+
+## hBbord-reduced-to-coboundary-wadm (2026-07-16, arm: close-out — #203 maximal reduction)
+- kind: missing-construction isolation (prose — a gap, not a refutation; NOT kernel-encodable)
+- record: hBbord (the S²×S² bounding bordism on the spin carrier) is NOT dischargeable outright in current in-tree machinery — but the #200 framing ("gated behind the Mathlib-absent closed-ball atlas") is SUPERSEDED: the closed-ball Dⁿ IsManifold + J5 change-of-model transport are BANKED (SphereDiskFreezeB/J5), and the entire membrane/Taylor-leg/Lagrangian/tether apparatus COLLAPSES on spinEmptyData by construction (Σ=∅; the #171 empty-source machinery). The kernel-pure reduction isDataBordant_empty_of_wadm strips hBbord to THE SOLE NAMED ATOM `SphereProdCoboundaryWAdm prov p` = ∃ a T2 S²×D³-type coboundary b with Nonempty (WAdmPinned b) — the substrate-pinned Lefschetz–Wu w₂=0 tower on the 5-manifold-with-boundary (rel-PD + Steenrod; the op-provider supplies WAdmPinned only for the cylinder/doubling/mapCylinder/add family). Do NOT re-attempt hBbord through the membrane/atlas layers — they are done; the ONLY remaining content is the coboundary WAdmPinned.
+- consumed by: kt_equiv_zmod16_of_residuals_freezeAtoms_ofCoboundary (PinPlusKTSphereProdBordism.lean).
+- memory: [[project_5qH_nonhausdorff_substrate_bug]]
+- created_ts: 2026-07-16T00:00:00Z
+- reviewed_ts: 2026-07-16T00:00:00Z
