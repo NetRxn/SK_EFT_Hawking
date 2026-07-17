@@ -1,7 +1,132 @@
 /-
 # Phase 5q.H close-out GATE ROUND 13 (fresh-context attack on the post-round-12 shape frontier)
 
-[HEADER TO BE FINALIZED ON COMPLETION — verdicts, specs, fork proposals]
+Adversarial gate findings against the post-#196/#198/#199 frontier: the collar-bridge Prop
+(`ClosedSeamAttachedCollarBridge`, #198 item d), the rank-0 collapse datum (`RankZeroCollapseDatum`,
+#199), the Novikov "genuine-tower" carrier (`NovikovGeometricPairLESData`, #196 §4 — the fork-20
+perimeter), the controlled-rep supplier (`CapstoneSeamTransferResidualCtrl`, #198 item c), and the
+assembly-row chain (#193 → #197 → #199 → #195). Inherits and re-affirms ALL round-11/round-12
+binding specs (see `PinPlusResidualGate` header).
+
+Verdict: **CONDITIONAL PASS across the board, with THREE new kernel-encoded ties (§1, §2, §4) and
+one PASS certificate (§3); no consumption seam requires a FIX before the assembly fires.**
+
+## Per-item verdict table
+
+* **Item 1 — `ClosedSeamAttachedCollarBridge` (#198 item d)** — **CONDITIONAL PASS with the
+  round-13 support tie (§2).** The bridge Prop is kernel-LOCATED as a pure SUPPORT statement:
+  `bridge S a ↔ a ∈ subspaceChains S ⊔ subspaceChains (sphere ∖ S)`
+  (`closedSeamAttachedCollarBridge_iff_mem_sup`) — no class content, no detection, nothing pinning
+  `cSeam`. Zero-collar inhabitation is exhibited (`closedSeamAttachedCollarBridge_of_freeSphere`:
+  any free-sphere-supported `a` inhabits with `cSeam := 0`; `closedSeamAttachedCollarBridge_zero`).
+  BUT the consumption site is guarded — NOT by the bridge's shape, by the SHARED-`cSeam` tie of
+  `CapstoneSeamTransferSeam`, now kernel-precise: a `cSeam = 0` inhabitant forces the fundamental
+  top face entirely OFF the attaching region (`capstoneSeamTransferSeam_topFace_unattached_of_
+  cSeam_zero`) and `∂cHa` entirely into the free sphere (`…_boundary_freeSphere_of_cSeam_zero`).
+  So a fake bridge cannot launder INTO the full seam structure at a genuine attachment. Spec 2
+  below binds discharges.
+
+* **Item 2 — `RankZeroCollapseDatum` + `rankZeroCollapsesToEmptySurf_of_datumSupply` (#199)** —
+  **CONDITIONAL PASS with the locating iffs (§4).** Per-field audit: `hemp` is the collapse's
+  defining demand; `hBor` is exactly the `IsT2DataBordant` packaging; `target_spinSector` is
+  DERIVED from `hemp` (good — not a fakeable separate conjunct). The datum is the SKOLEMIZED
+  per-object conclusion — `Nonempty (RankZeroCollapseDatum prov p) ↔` the collapse body at `p`
+  (`nonempty_rankZeroCollapseDatum_iff`), and the ∀-supply is EXACTLY the collapse atom
+  (`rankZeroCollapsesToEmptySurf_iff_datumSupply`). So #199's reduction is an honest RENAMING
+  (naming + per-field inspectability, zero statement strength) — same standard as the round-9/10
+  `AmbientSurgeryDatum` gating, whose forcing theorems (`pos_rank`, `rank_ne`) have their analogue
+  here in `target_spinSector`. The #199 header's own "NOT a discharge" framing is CORRECT. The
+  round-12 spec-4 debt ("the collapse atom owes the bounding datum") is ANSWERED BY NAMING, not by
+  discharge — the genuine membrane is still owed, and the audit is data inspection (spec 3).
+
+* **Item 3 — `NovikovGeometricPairLESData` + `ofGeometricPairLESData` (#196, the fork-20
+  perimeter)** — **CONDITIONAL PASS with THE ROUND-13 TIE (§1, headline).** The carrier's field
+  row does NOT force genuine tower data: the substrate rebuilds the carrier
+  (`novikovGeometricPairLESDataOfRealPairLES` — `pairing := ½·pairing`, `hadjDot` DERIVED from
+  `hadj` via the polarization factor), so carrier and substrate are inhabitation-equivalent
+  (`nonempty_novikovGeometricPairLESData_iff_realPairLES`), and at a boundary block pair the
+  carrier sits at EXACTLY σ-agreement strength: `Nonempty (Data (blockDiag A (−B))) ↔ σ(A) = σ(B)`
+  (`nonempty_novikovGeometricPairLESData_iff_sig_eq`; diagonal exhibit `…_diag`; soundness half
+  `isEmpty_…_of_sig_ne` — the carrier still genuinely FORCES σ-agreement). Composing the round-12
+  Witt step with `ofLagrangian` and the reverse map populates every field — `hexact`, `hnondeg`,
+  `hadjDot` included — from a bare Lagrangian, ZERO bordism geometry. `hadjDot` did not close the
+  fork-20 perimeter; it moved it. Consumption of #201 (in flight) binds to spec 1 below.
+
+* **Item 4 — `CapstoneSeamTransferResidualCtrl` + `.toHasClass` (#198 item c)** — **PASS (§3).**
+  Field-by-field: `z`/`hz`/`hdetAB` identical shapes; `seam` over `Sdᵘ diskDetectChain`; the
+  `hdetHa` supply for `toHasClass` is the PROVEN transported detection
+  (`diskDetectChain_iterate_hdet`), not a weakened hypothesis. The `μ = 0` fibre is definitionally
+  interchangeable with the banked residual in BOTH directions (`ctrlZeroOfResidual` /
+  `residualOfCtrlZero`), and both `toHasClass` outputs share one type — a genuine variant
+  constructor, no weakened field, no new residual.
+
+* **Item 5 — the assembly-row chain** — **PASS (by proof inspection; trace recorded here).**
+  `kt_equiv_zmod16_of_residuals` consumes {`H`→`hKRS` via `kernelReducesToSpin_of_residualRow`;
+  `row.hdvd`+`hker`→`hfwd` via `spinForgetPhi_hfwd_of_ker_sub_doubles`; `hfwd`+`hcyc`+`h2`→`hΦg`
+  via `spinForgetPhi_g_eq_ktKernelRep_of_cyclic` (consumes the banked `zsmul_of_two_torsion` +
+  `not_thirtytwo_dvd_neg_sixteen`; NO `KTNonSplit`, NO ÷32 conclusion); dC ←
+  `nonempty_ktSpinPresentationDatum_of_row_of_collapse` (SectorIsGeometric derived from `hcol` in
+  place); dA ← `nonempty_dualSpinForwardDatum_of_row` (Φ := the genuine `spinForgetPhi`, ambient
+  pinned — NOT the free-`amb` `DualSpinConstruction`, fork-19 respected); closes via the
+  round-12-certified `kt_equiv_zmod16_of_two_leaves`}. `_phig` (#197) replaces `{hcyc, h2}` by
+  `hΦg` — verified UPSTREAM: `ktKernelRep := 8 • [ℝP⁴]` is pure definition, `hΦg` is an equation
+  between two constructions carrying no `k₀ ≠ 0` bit; `h2_of_generatorImage` routes through
+  `spinForgetPhi_add_self` = the structure-TIED `emptySigmaRepresentable_two_torsion`
+  (rank-0-sector `revStr`-fixity), NOT universal `revStr`-triviality — the no-go
+  `dataBordism_two_torsion_of_revStr_trivial` is NOT reproduced. `_collapseDatum` (#199) consumes
+  exactly `_phig` + `rankZeroCollapsesToEmptySurf_of_datumSupply`. `_terminal_atoms`/`_k3_element`
+  (#195) consume exactly `spinPresentationRow_of_atoms`/`realizesSphereProducts_of_cobordism_and_
+  base`/the banked `K3RealizingElement.presentationRow`. No ungated Prop enters at any seam; the
+  round-12 item-8 pattern holds through all four variants.
+
+* **Item 6 — `exact_seam_split_of_attachedBridge`'s hypothesis** — **PASS, load-bearing
+  kernel-PROVED (§2).** The wiring's conclusion IS the bridge at `w`
+  (`exact_seam_split_conclusion_iff_bridge`, definitional) — so the theorem is precisely "the
+  bridge is closed under adding free-sphere chains". The hypothesis is NOT decorative: an instance
+  of `hsplit`+`hvOut` with the conclusion FALSE is exhibited
+  (`exact_seam_split_hypothesis_load_bearing`, via the constant-simplex non-membership crux
+  `single_constSimplex_notMem_subspaceChains` at the disk center).
+
+## FROZEN ROUND-13 SPEC (binding on the discharge/consumption waves; adds to rounds 11–12)
+1. **Novikov tower lane (the fork-20 perimeter)**: a `NovikovGeometricPairLESData` population is
+   fork-compliant progress ONLY if `rest2`/`delta`/`pairing` are the ⊗ℝ base-changes of the
+   genuine integral tower maps (`pullbackCochainInt`-restriction / `deltaRelHInt` /
+   `relKroneckerHInt`) of an ACTUAL relative cycle `Z` on an actual bordism carrier — checked by
+   DATA INSPECTION; the field row (`hadjDot` included) sits at σ-agreement strength
+   (`nonempty_novikovGeometricPairLESData_iff_sig_eq`) and can never enforce it. A population
+   whose `H3rel` is a quotient of the boundary coordinate space (the `ofLagrangian` shape) is
+   ZERO progress by construction.
+2. **Collar-bridge lane**: a discharge of `ClosedSeamAttachedCollarBridge` must exhibit `cSeam`
+   by DATA (the collar retraction's actual chain on `↥S`); the Prop is pure support
+   (`closedSeamAttachedCollarBridge_iff_mem_sup`) and zero-collar inhabitants exist
+   (`…_of_freeSphere`). CONSUMPTION must keep the single shared `cSeam` field of
+   `CapstoneSeamTransferSeam` — never restructure into independent cylinder-side and disk-side
+   bridges (the shared-`cSeam` tie is the ONLY shape-level anti-laundering guard:
+   `capstoneSeamTransferSeam_topFace_unattached_of_cSeam_zero`).
+3. **dC collapse lane**: the ∀-datum supply IS the collapse atom
+   (`rankZeroCollapsesToEmptySurf_iff_datumSupply`); a datum-supply discharge is audited by DATA
+   inspection of `b` (the genuine membrane-kill trace, `emptySourceRealizationTied`-realized) —
+   the round-9 freeze / round-12 spec 4 obligation transfers verbatim to the datum.
+4. **Assembly lane**: consume the chain only through the four audited variants (`_of_residuals` /
+   `_phig` / `_collapseDatum` / `_terminal_atoms`+`_k3_element`); `hΦg` stays a bare-equation atom
+   (upstream of `KTNonSplit`) and `h2` must only ever be derived via the structure-TIED
+   `emptySigmaRepresentable_two_torsion`, never a universal `revStr`-triviality argument.
+
+## Registry-worthy fork candidate (for the lead; encode-on-settle)
+* `novikov-geometric-tower-carrier-conclusion-fakeable` — false_statement: "the
+  `NovikovGeometricPairLESData` field row (`hexact`+`hnondeg`+`hadjDot`+`hbdnd`) is a
+  stronger-than-conclusion carrier whose inhabitation certifies genuine bounding-`W` tower
+  progress" — backings: `novikovGeometricPairLESDataOfRealPairLES`,
+  `nonempty_novikovGeometricPairLESData_iff_realPairLES`,
+  `nonempty_novikovGeometricPairLESData_iff_sig_eq`, `nonempty_novikovGeometricPairLESData_diag`.
+  (Extends fork 20 from the substrate to the #196 carrier — the exact perimeter #201 consumes.)
+
+No fork proposal for the bridge or the collapse datum: their fakeability is at the SHAPE level
+(support-only / conclusion-strength) and their consumption sites carry the guard; specs 2–3
+suffice. The Ctrl variant and the assembly chain are clean passes.
+
+Kernel-pure (`{propext, Classical.choice, Quot.sound}`, `lean_verify`-confirmed per declaration);
+no `sorry`, no new project axiom, no `native_decide`, no `maxHeartbeats`.
 -/
 import Mathlib
 import SKEFTHawking.PinPlusResidualGate
