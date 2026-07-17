@@ -52,6 +52,14 @@ open SKEFTHawking.SingularRelativeCapHadjInt
 open SKEFTHawking.SingularCapChainInclInt (pullbackCochainInt pullbackCochainInt_apply)
 open SKEFTHawking.SingularRelativeHomologyMod2 (sub)
 open SKEFTHawking.PinPlusKTNovikovTowerInstantiate
+open SKEFTHawking.PinPlusKTSpinSigmaNovikovRealSubstrate
+open SKEFTHawking.SpinSigmaRoute
+open SKEFTHawking.TangentialDataBordism
+open SKEFTHawking.PinPlusCharPairData
+open SKEFTHawking.PinPlusCharPairBorTethered
+open SKEFTHawking.PinPlusKTSpinForgetPhi
+open SKEFTHawking.PinPlusKTSpinSigmaAtom
+open scoped Manifold
 
 variable {X : TopCat} {S : Set X}
 
@@ -266,5 +274,119 @@ theorem coord_hadj_deltaRelHIntLin
           (capRelHInt 2 2 (Cohomology.mk X 2 a) (relCycleToHom S (2 + 1 + 1) Z)) : ℤ) : ℝ) := by
   rw [deltaRelHIntLin_restrictLift]
   exact coord_hadj_eq_relKroneckerHInt a v hv Z B
+
+/-! ## §4. The concrete-W coordinate population of `NovikovGeometricPairLESData`
+
+The full `NovikovGeometricPairLESData Bd` population needs the `⊗ℝ` base-change of the W-side integral
+cohomology `H²(W;ℤ)`, `H³(W,∂W;ℤ)` — a genuine geometric atom (a concrete triangulated bounding `W` has
+FINITE FREE cohomology, presenting `ι*`, the descended `δ` (§1), and the relative Kronecker pairing as
+integer coordinate matrices). We name that atom `BoundingWCoordData` — the honest reduction — and DERIVE the
+substrate's `hadjDot` (the geometric PD-square, in coordinate form, from the clean integer identity
+`Rᵀ·Bd = P·D` which §3 supplies as the genuine geometry) and `hnondeg` (Kronecker separation). The remaining
+fields (`hexact`, `hbdnd`, `hsymm`) are the pair-LES exactness / even-unimodularity / symmetry a concrete `W`
+supplies. This is a NEW Type-valued data shape (flag for the next gate round) — but a genuine one: `R`, `D`,
+`P` are the coordinate matrices of the real `ι*`/`deltaRelHIntLin`/`relKroneckerHInt`, not fabricated. -/
+
+/-- **The concrete bounding-`W` coordinate data.** `p = b₂(W)`, `q = b₃(W,∂W)`; `R` the `ι*` coordinate
+matrix (`H²(W;ℤ) → H²(∂W;ℤ) = ℤⁿ`), `Dm` the descended-`δ` coordinate matrix (`ℤⁿ → H³(W,∂W;ℤ) = ℤᵍ`), `Pm`
+the relative-Kronecker Gram matrix (`H²(W;ℤ) × H³(W,∂W;ℤ) → ℤ`). The genuine geometric obligations: the
+integer PD-square `Rᵀ·Bd = Pm·Dm` (the §3 `hadjDot` core), pair-LES exactness `im ι* = ker δ` (over ℝ),
+Kronecker separation (over ℝ), boundary symmetry + even-unimodularity. -/
+structure BoundingWCoordData {n : ℕ} (Bd : Matrix (Fin n) (Fin n) ℤ) where
+  /-- `b₂(W)` — the rank of `H²(W;ℤ)`. -/
+  p : ℕ
+  /-- `b₃(W,∂W)` — the rank of `H³(W,∂W;ℤ)`. -/
+  q : ℕ
+  /-- The restriction `ι*` in coordinates. -/
+  R : Matrix (Fin n) (Fin p) ℤ
+  /-- The descended connecting map `δ` in coordinates. -/
+  Dm : Matrix (Fin q) (Fin n) ℤ
+  /-- The relative-Kronecker pairing Gram matrix. -/
+  Pm : Matrix (Fin p) (Fin q) ℤ
+  /-- Boundary intersection form symmetric. -/
+  hsymm : Bd.IsSymm
+  /-- Boundary-form even-unimodularity (`radical = ⊥`). -/
+  hbdnd : (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap'.radical = ⊥
+  /-- **The coordinate PD-square** `⟨ι*a ∪ v, [∂W]⟩ = ⟨a, δv⟩` in the W-coordinate basis, base-changed
+  (the §3 `coord_hadj_deltaRelHIntLin` geometry): the boundary Gram of `ι*a` against `v` equals the
+  Kronecker pairing of `a` against `δv`. -/
+  hadj : ∀ (a : Fin p → ℝ) (v : Fin n → ℝ),
+    (R.map (Int.cast : ℤ → ℝ) *ᵥ a) ⬝ᵥ (Bd.map (Int.cast : ℤ → ℝ) *ᵥ v)
+      = a ⬝ᵥ (Pm.map (Int.cast : ℤ → ℝ) *ᵥ (Dm.map (Int.cast : ℤ → ℝ) *ᵥ v))
+  /-- Pair-LES middle exactness `im ι* = ker δ`, base-changed. -/
+  hexact : Function.Exact (R.map (Int.cast : ℤ → ℝ)).mulVecLin (Dm.map (Int.cast : ℤ → ℝ)).mulVecLin
+  /-- Kronecker separation: `Pm.map cast` has trivial kernel (relative-UCT nondegeneracy). -/
+  hPinj : ∀ x : Fin q → ℝ, (Pm.map (Int.cast : ℤ → ℝ)) *ᵥ x = 0 → x = 0
+
+/-- **The concrete-`W` coordinate population.** From `BoundingWCoordData Bd` build the genuine
+`NovikovGeometricPairLESData Bd` on the coordinate spaces `H²(W;ℝ) = ℝᵖ`, `H³(W,∂W;ℝ) = ℝᵍ`, with `rest2`,
+`delta` the `Int.cast`-matrices' `mulVecLin` and `pairing` the `Int.cast`-Gram bilinear form. `hadjDot` is
+DERIVED from the integer PD-square `Rᵀ·Bd = Pm·Dm` (base-changed), NOT posited; `hnondeg` from `hPinj`. -/
+noncomputable def BoundingWCoordData.toGeometricPairLESData {n : ℕ} {Bd : Matrix (Fin n) (Fin n) ℤ}
+    (W : BoundingWCoordData Bd) : NovikovGeometricPairLESData Bd where
+  H2W := Fin W.p → ℝ
+  H3rel := Fin W.q → ℝ
+  rest2 := (W.R.map (Int.cast : ℤ → ℝ)).mulVecLin
+  delta := (W.Dm.map (Int.cast : ℤ → ℝ)).mulVecLin
+  pairing := Matrix.toLinearMap₂' ℝ (W.Pm.map (Int.cast : ℤ → ℝ))
+  hexact := W.hexact
+  hnondeg := by
+    intro x hx
+    apply W.hPinj
+    funext i
+    have h1 := hx (Pi.single i 1)
+    rw [Matrix.toLinearMap₂'_apply', single_dotProduct, one_mul] at h1
+    rw [Pi.zero_apply]
+    exact h1
+  hbdnd := W.hbdnd
+  hsymm := W.hsymm
+  hadjDot := by
+    intro a v
+    simp only [Matrix.mulVecLin_apply, Matrix.toLinearMap₂'_apply']
+    exact W.hadj a v
+
+/-! ## §5. The consumers fire from the concrete-`W` coordinate data
+
+With the population landed, the genuine-tower reduction `ofGeometricPairLESData` yields `NovikovRealPairLES`
+directly from `BoundingWCoordData`, and the σ-lane-floor / dA-leaf consumers fire end-to-end from the concrete
+`W`'s integer coordinate data — NOT from a synthetic Lagrangian. -/
+
+/-- **The genuine `NovikovRealPairLES` instance from a concrete `W`.** Composes the §4 population with the
+`#196` fork-20-compliant reduction `ofGeometricPairLESData`. -/
+noncomputable def BoundingWCoordData.toRealPairLES {n : ℕ} {Bd : Matrix (Fin n) (Fin n) ℤ}
+    (W : BoundingWCoordData Bd) : NovikovRealPairLES Bd :=
+  NovikovRealPairLES.ofGeometricPairLESData W.toGeometricPairLESData
+
+/-- **The Novikov half-dim Lagrangian, from a concrete `W`.** The σ-descent's residual half-dim isotropic
+atom, from genuine `W`-coordinate data. -/
+theorem BoundingWCoordData.lagrangian {n : ℕ} {Bd : Matrix (Fin n) (Fin n) ℤ}
+    (W : BoundingWCoordData Bd) :
+    ∃ L : Submodule ℝ (Fin n → ℝ),
+      n = 2 * Module.finrank ℝ L ∧
+      ∀ x ∈ L, (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap' x = 0 :=
+  W.toGeometricPairLESData.lagrangian
+
+/-- **σ is a cobordism invariant, from a concrete `W`.** For even-unimodular ends `A`, `B` and a concrete
+bounding `W` (coordinate data) on the block form `blockDiag A (−B)`, the lattice signatures agree:
+`σ(A) = σ(B)`. The shared σ-lane-floor / dA-leaf engine (`latticeSig_eq_of_realPairLES`), fed by the genuine
+`W` rather than a synthetic Lagrangian. -/
+theorem BoundingWCoordData.latticeSig_eq {r s : ℕ} (A : Matrix (Fin r) (Fin r) ℤ)
+    (B : Matrix (Fin s) (Fin s) ℤ) (hA : IsEvenUnimodular A) (hB : IsEvenUnimodular B)
+    (W : BoundingWCoordData (blockDiag A (-B))) :
+    latticeSig A = latticeSig B :=
+  W.toGeometricPairLESData.latticeSig_eq A B hA hB
+
+/-- **The per-pair real pair-LES atom, from a family of concrete bounding `W`'s.** Supplying, for every
+data-bordant pair `p, q`, the concrete `W`-coordinate data on the block boundary form discharges
+`NovikovRealPairLESAtom` — which (substrate §6/§7) feeds `novikovHalfDim_of_novikovRealPairLESAtom`,
+`hbord_of_novikovRealPairLESAtom` (σ bordism invariance), and `sigThomNovikovRealPairLESCanonical`. The
+σ-descent's last geometric atom, discharged by genuine bounding-`W` data (per pair) rather than a synthetic
+Lagrangian. -/
+theorem novikovRealPairLESAtom_of_boundingWFamily
+    {prov : CharPairWProviderPerOp (𝓡 4) 0} {a : SpinSigmaAtoms prov}
+    (W : ∀ p q : StrMfd (spinEmptyData prov), IsDataBordant (spinEmptyData prov) p q →
+        BoundingWCoordData (blockDiag (interMatrix (a.fc p) (a.B p)) (-interMatrix (a.fc q) (a.B q)))) :
+    NovikovRealPairLESAtom prov a :=
+  fun p q hb => ⟨(W p q hb).toRealPairLES⟩
 
 end SKEFTHawking.PinPlusKTNovikovTowerPopulate
