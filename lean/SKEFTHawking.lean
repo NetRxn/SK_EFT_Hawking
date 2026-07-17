@@ -4292,6 +4292,9 @@ import SKEFTHawking.SingularRelativeHomotopyInvarianceInt
 -- Hₙ₊₁(Y×C;ℤ) ≅ Hₙ₊₁(Y;ℤ) (projection/section homotopy equivalence via the integral prism),
 -- homeo/contraction transports, and the product-set seam sub(univ ×ˢ U) ≃ₜ Y × sub U. (wt3-built.)
 import SKEFTHawking.SingularProdContractibleInt
+-- Phase 5q.H · #211 (wt2) — the mod-2 mirror of SingularProdContractibleInt §1-§2: Homology(Y×C)(n+1) ≃
+-- Homology(Y)(n+1) for a contractible factor C (feeds the SphereDisk ≃ S² collapse of the homology roots).
+import SKEFTHawking.SingularProdContractible
 -- Phase 5q.H · N5 — H₁(S²×S²;ℤ) = 0 COMPUTED (polar product cover MV chase + contractible-factor
 -- collapse + augmentation-injective Δ₀): the SphereProdHData freeze's first slice replaced by
 -- computation; Subsingleton/Module.Free instances at TopCat.of SphereProd. (wt3-built.)
@@ -4563,6 +4566,12 @@ import SKEFTHawking.PinPlusKTFreezeDischarge
 import SKEFTHawking.PinPlusKTSphereProdBordism
 import SKEFTHawking.PinPlusKTSphereProdWAdm
 import SKEFTHawking.PinPlusKTSphereProdCohomology
+-- Phase 5q.H · #211 harvest (wt1/wt2/wt3): the S²×D³ hBbord partials — the re-association Bordism over
+-- (𝓡4)×(𝓡∂1), the H₁/H₄ homology roots, and the H₄/H₅ + betaClass + half-hincl relFund partials. The
+-- relFund/P23 root + Root 2 (H₃(S²×S²;ℤ/2)) remain open (→ #213 keystone / the disk-factor EZ cross).
+import SKEFTHawking.PinPlusKTSphereProdReassoc
+import SKEFTHawking.PinPlusKTSphereProdHomologyRoots
+import SKEFTHawking.PinPlusKTSphereProdRelFundWuRoots
 import SKEFTHawking.PinPlusKTSpinSigmaAtom
 import SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
 import SKEFTHawking.PinPlusKTSpinSigmaStock
