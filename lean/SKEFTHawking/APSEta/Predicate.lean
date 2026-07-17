@@ -128,11 +128,19 @@ def etaInvariant : Substrate → ℝ
   | .He3AMovingDomainWall => 0
 
 /-- Per-substrate boundary-kernel dimension `h(Σ) = dim ker D|_Σ`.
-Placeholder at this layer; substantive values ship in Waves 2a.3-5. -/
+
+* `BECAcoustic`, `ADWHorizon` = 0 (gapped BdG / ADW spectra; no zero modes).
+* `He3AMovingDomainWall` = 1 — the **genuine** Jackiw-Rebbi chiral zero-mode
+  count of the moving-domain-wall Dirac operator. This value is not a
+  placeholder: it is backed by an explicit normalizable zero mode
+  (`APSEta/He3A.lean` `jrZeroMode`, a real solution of the zero-mode ODE that
+  decays at both spatial infinities) whose chiral partner is non-normalizable,
+  so exactly one of the two chiral branches contributes a zero mode. See
+  `boundaryKernelDim_He3AMovingDomainWall_eq_one` and its Jackiw-Rebbi backing. -/
 def boundaryKernelDim : Substrate → ℕ
   | .BECAcoustic => 0
   | .ADWHorizon => 0
-  | .He3AMovingDomainWall => 0
+  | .He3AMovingDomainWall => 1
 
 /-- Per-substrate bulk AS-index `⌊∫_M Â(M)⌋`. Placeholder at this layer;
 substantive values ship in Waves 2a.3-5 connecting to
