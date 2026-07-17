@@ -31,6 +31,8 @@ import Mathlib
 import SKEFTHawking.SingularUniversalCoeff
 import SKEFTHawking.SingularKroneckerEquiv
 import SKEFTHawking.SingularRelativeKroneckerEquiv
+import SKEFTHawking.PinPlusKTSphereProdWAdm
+import SKEFTHawking.PinPlusTraceRelFundReduce
 
 open SKEFTHawking.SingularCohomologyMod2 SKEFTHawking.SingularHomologyMod2
 open SKEFTHawking.SingularRelativeCohomologyMod2 SKEFTHawking.SingularRelativeHomologyMod2
@@ -68,5 +70,86 @@ theorem subsingleton_relativeCohomology_of_relativeHomology (S : Set ↑X) (N : 
   haveI : Subsingleton (RelativeHomology S (N + 1) →ₗ[ZMod 2] ZMod 2) :=
     ⟨fun f g => LinearMap.ext fun x => by rw [Subsingleton.elim x 0, map_zero, map_zero]⟩
   exact (relKroneckerHEquiv S N).toEquiv.subsingleton
+
+/-! ## §3. Atom 3 — the `[W,∂W]` datum reduced to the class-existence witness `HasRelFundClass`. -/
+
+open SKEFTHawking.PoincareLefschetzRelFundClass SKEFTHawking.PoincareLefschetzRelFundClassGeom
+open SKEFTHawking.PinPlusTraceRelFundReduce (εtrace)
+open SKEFTHawking.BordismTheory
+open scoped Manifold
+
+section Atom3
+
+variable {s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)}
+
+/-- **Atom 3, reduced to the single class-existence witness.** For a `W = S²×D³`-type coboundary
+`b : Bordism ((𝓡 4).prod (𝓡∂ 1)) s t`, the carrier-agnostic provider `relFundClassDatumOf` (canonical
+`εtrace : E⁴×E¹ ≃L E⁵`, interior generators constructed from the trace model) reduces the
+`RelFundClassDatum` atom to exactly the class-existence witness `HasRelFundClass` (the relative
+Hatcher-3.27(b) MV-cover existence of `[W,∂W]` restricting to the interior generator family). The `T1`
+separation certificate is FREE from the T2 the coboundary already carries. This strips atom 3 from a
+bundled datum to a single existence proposition. -/
+noncomputable def relFundDatum_ofHasClass (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) s t)
+    (hWT2 : T2Space b.W)
+    (hasClass : letI := hWT2.t1Space
+      HasRelFundClass (X := TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W)
+        (interiorGenFamily (W := b.W) ((𝓡 4).prod (𝓡∂ 1)) εtrace)) :
+    RelFundClassDatum (X := TopCat.of b.W) (m := 3) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W) :=
+  letI := hWT2.t1Space
+  relFundClassDatumOf (W := b.W) ((𝓡 4).prod (𝓡∂ 1)) εtrace hasClass
+
+end Atom3
+
+/-! ## §4. The narrowing wiring — `SphereProdCoboundaryWAdm` (hence `hBbord`) from the reduced atoms. -/
+
+open SKEFTHawking.PoincareLefschetzWu5
+open SKEFTHawking.PinPlusWAdmPinned
+open SKEFTHawking.PinPlusCharPairBorTethered
+open SKEFTHawking.PinPlusKTSpinForgetPhi
+open SKEFTHawking.PinPlusCharPairEmptySourceRealization
+open SKEFTHawking.PinPlusKTSphereProdBordism
+open SKEFTHawking.PinPlusKTSphereProdWAdm
+open SKEFTHawking.PinPlusKTAssemblyResiduals
+open SKEFTHawking.PinPlusKTSpinPresentationRow
+open SKEFTHawking.PinPlusCharPairData
+open SKEFTHawking.T2TangentialBordism SKEFTHawking.TangentialDataBordism
+
+section Wiring
+
+/-- **`SphereProdCoboundaryWAdm` from the REDUCED cohomology atoms.** The #206 residual
+`sphereProdCoboundaryWAdm_of_degenerate14` consumed three cohomology atoms — `RelFundClassDatum D`,
+`Subsingleton (Cohomology W 1)`, `Subsingleton (RelativeCohomology ∂W 4)`. This narrows them to their
+sharpest sub-atoms:
+* atom 3 `RelFundClassDatum` → `hasClass : HasRelFundClass …` (the single class-existence witness;
+  interior generators + `T1` free, via `relFundDatum_ofHasClass`),
+* atom 1 `Subsingleton (Cohomology W 1)` → `Subsingleton (Homology W 1)` (universal coefficients),
+* atom 2 `Subsingleton (RelativeCohomology ∂W 4)` → `Subsingleton (RelativeHomology ∂W 4)` (relative
+  universal coefficients).
+
+The `(2,3)` Poincaré–Lefschetz half (`P23`/`pin23`) and the spin condition `v₂ = 0` (`hv2`) are the
+untouched residual (not this block's lane). -/
+theorem sphereProdCoboundaryWAdm_of_reducedAtoms
+    (prov : CharPairWProviderPerOp (𝓡 4) 0) (p : StrMfd (spinEmptyData prov))
+    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := 0) (I := 𝓡 4)))
+    (hWT2 : T2Space b.W)
+    (hasClass : letI := hWT2.t1Space
+      HasRelFundClass (X := TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W)
+        (interiorGenFamily (W := b.W) ((𝓡 4).prod (𝓡∂ 1)) εtrace))
+    [Subsingleton (Homology (TopCat.of b.W) 1)]
+    [Subsingleton (RelativeHomology (X := TopCat.of b.W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary b.W) 4)]
+    (P23 : LefschetzWuDatum (TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W) 2 3 5)
+    (pin23 : LefschetzWuPinned23 P23) (hv2 : wuClass P23 = 0) :
+    SphereProdCoboundaryWAdm prov p := by
+  haveI : Subsingleton (Cohomology (TopCat.of b.W) 1) :=
+    subsingleton_cohomology_of_homology (X := TopCat.of b.W) 0
+  haveI : Subsingleton (RelativeCohomology (X := TopCat.of b.W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary b.W) 4) :=
+    subsingleton_relativeCohomology_of_relativeHomology
+      (X := TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W) 3
+  exact sphereProdCoboundaryWAdm_of_degenerate14 prov p b hWT2
+    (relFundDatum_ofHasClass b hWT2 hasClass) P23 pin23 hv2
+
+end Wiring
 
 end SKEFTHawking.PinPlusKTSphereProdCohomology
