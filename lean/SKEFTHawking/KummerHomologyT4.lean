@@ -72,6 +72,49 @@ at `n = 1`). Together with `circleHOneEquiv` this pins the per-factor input as "
 theorem circleH_high (k : ℕ) (x : Homology (Sph 1) (k + 2)) : x = 0 :=
   sphere_homology_high 1 (k + 2) (by omega) x
 
+/-! ## §2. The `Circle ≃ₜ Sph 1` bridge -/
+
+/-- The standard ℝ-linear isometry `ℂ ≃ₗᵢ[ℝ] 𝔼²` (from the canonical orthonormal basis of `𝔼²`).
+Norm-preserving, so it carries the unit circle in `ℂ` onto the unit circle in `𝔼²`. -/
+noncomputable def complexEuclidLI : ℂ ≃ₗᵢ[ℝ] EuclideanSpace ℝ (Fin 2) :=
+  Complex.isometryOfOrthonormal (EuclideanSpace.basisFun (Fin 2) ℝ)
+
+/-- **The homeomorphism `Circle ≃ₜ S¹`** identifying `T⁴`'s literal factor `Circle` (the unit circle
+in `ℂ`) with the sphere-homology stack's `Sph 1` (the unit circle in `𝔼²`). Built from the ℝ-linear
+isometry `complexEuclidLI`, which preserves norm and hence maps the unit circle onto the unit circle.
+This is the load-bearing identification transporting every banked `Sph 1` homology fact onto the
+`Circle` that `TorusFour = Circle⁴` is actually built from. -/
+noncomputable def circleHomeoSph1 : Circle ≃ₜ ↥(Sph 1) where
+  toFun z := ⟨complexEuclidLI (z : ℂ), by
+    rw [mem_sphere_zero_iff_norm, complexEuclidLI.norm_map]; exact Circle.norm_coe z⟩
+  invFun w := ⟨complexEuclidLI.symm (w : EuclideanSpace ℝ (Fin 2)), by
+    show complexEuclidLI.symm (w : EuclideanSpace ℝ (Fin 2)) ∈ Metric.sphere (0 : ℂ) 1
+    rw [mem_sphere_zero_iff_norm, complexEuclidLI.symm.norm_map]
+    exact mem_sphere_zero_iff_norm.mp w.2⟩
+  left_inv z := Subtype.ext (by simp)
+  right_inv w := Subtype.ext (by simp)
+  continuous_toFun := by
+    apply Continuous.subtype_mk
+    exact complexEuclidLI.continuous.comp continuous_subtype_val
+  continuous_invFun := by
+    apply Continuous.subtype_mk
+    exact complexEuclidLI.symm.continuous.comp continuous_subtype_val
+
+/-- **`H₁(Circle;ℤ) ≅ ℤ`** — the per-factor degree-1 input transported onto the *actual* `Circle`
+factor of `TorusFour` (through the `circleHomeoSph1` bridge). This is the input a `TorusFour`-Künneth
+brick consumes; without the bridge the banked `Sph 1` result does not apply to `Circle⁴`. -/
+noncomputable def circleFactorHOneEquiv : Homology (TopCat.of Circle) 1 ≃ₗ[ℤ] ℤ :=
+  (homeoHomologyEquivInt (X := TopCat.of Circle) (Y := Sph 1) circleHomeoSph1 1).trans
+    circleHOneEquiv
+
+/-- **`H_{k+2}(Circle;ℤ) = 0`** — the per-factor vanishing above degree 1, transported onto the actual
+`Circle` factor. Pins the `Circle` input as "`ℤ` in degrees 0, 1; `0` above". -/
+theorem circleFactorH_high (k : ℕ) (x : Homology (TopCat.of Circle) (k + 2)) : x = 0 := by
+  have := circleH_high k
+    (homeoHomologyEquivInt (X := TopCat.of Circle) (Y := Sph 1) circleHomeoSph1 (k + 2) x)
+  exact (homeoHomologyEquivInt (X := TopCat.of Circle) (Y := Sph 1)
+    circleHomeoSph1 (k + 2)).map_eq_zero_iff.mp this
+
 /-! ## §3. The rank-6 degree-2 Künneth-index pin -/
 
 /-- **The degree-2 Künneth index count `C(4,2) = 6`** — the summands of `H₂((S¹)⁴)` are indexed by the
