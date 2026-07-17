@@ -4341,6 +4341,12 @@ import SKEFTHawking.IntOrientationGlobalSection
 -- UCT with BIJECTIVE honest eval, and the Gram-entry reduction: every interMatrix entry against
 -- the honest fc = the H⁴-coordinate of a cup product (the pin's remaining wall, isolated). (wt2-built.)
 import SKEFTHawking.SphereProdHFourInt
+-- Phase 5q.H — Root 2 close-out: the general chain-level UCT lemma `homologyMod2_top_eq_zero_of_int`
+-- (H_{n+1}(X;ℤ)=0 + H_n(X;ℤ) 2-torsion-free ⟹ H_{n+1}(X;ℤ/2)=0, via the redChain lift/halve/bound
+-- argument), applied at n=2/S²×S² to get `H₃(S²×S²;ℤ/2)=0`, transported along sphereDiskInclHomeo and
+-- squeezed with the Bonus H₄(S²×D³;ℤ/2)=0 to close `Subsingleton (RelativeHomology
+-- sphereDiskBoundarySet 4)` — the last atom of the S²×D³ coboundary. (wt1-built.)
+import SKEFTHawking.SphereProdHThreeMod2
 -- Phase 5q.H — closed 3-ball radial-geometry primitives (SphereDiskSmoothData freeze, slice A):
 -- ballClamp (closed-form retraction ℝ³ → D³), diskDir (D³∖{0} → S² direction with diskDir_smul_unit),
 -- and the E²×ℝ ≅ E³ coordinate iso (assemble/splitLo via WithLp.toLp + reads + continuity) — the
