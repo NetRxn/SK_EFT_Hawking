@@ -3732,6 +3732,18 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': 'The NovikovGeometricPairLESData field row (the #196 genuine-tower carrier: rest2/delta/pairing/hexact/hnondeg/hadjDot) is a stronger-than-conclusion carrier whose inhabitation certifies genuine bounding-W tower progress. FALSE (gate round 13): the substrate rebuilds the carrier (novikovGeometricPairLESDataOfRealPairLES — pairing := half the substrate pairing, hadjDot DERIVED from hadj via the polar-form symmetry), so carrier ⟺ substrate (nonempty_novikovGeometricPairLESData_iff_realPairLES), and at block pairs Nonempty (Data (blockDiag A (-B))) ↔ σ(A) = σ(B) — the round-12 Witt step + ofLagrangian + the reverse map populate EVERY field from a bare Lagrangian with zero bordism geometry. hadjDot moved the fork-20 perimeter; it did not close it. Consequence (binding round-13 spec 1): Novikov-lane carrier populations are progress ONLY if rest2/delta/pairing are the tensor-R base-changes of the genuine integral tower maps of an actual relative cycle — audited by DATA INSPECTION; a quotient-of-coordinate-space H3rel is zero progress by construction.',
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'seam-transfer-open-support-uninhabitable': {
+        'fork_id': 'seam-transfer-open-support-uninhabitable',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusTraceSeamTransferNoGo.wAtt_mem_subspaceChains_range_phi',
+            'SKEFTHawking.PinPlusTraceSeamTransferNoGo.boundary_wAtt_eq_zero',
+            'SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransfer_of_null',
+            'SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransferSeam_of_null',
+        ],
+        'nogo_kind': 'refutation',
+        'false_statement': 'The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207 hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching region, and the 3x-circled closed-S co-adaptation barrier (#198/#204/#207) is a machinery gap. FALSE (the #210 lead adjudication): htransfer FORCES wAtt into the CLOSED attach image (injective-mapDomain support transport + fromCyl_image_compl disjointness — wAtt_mem_subspaceChains_range_phi), char-2 boundary algebra then forces BOTH split pieces to be CYCLES (boundary_wAtt_eq_zero via subspaceChains_inf_compl_eq_bot), so z@top decomposes as a seam-supported cycle + an off-seam cycle; whenever the two regions have null 4-cycle classes (H4(S1xD3;Z/2)=0, H4 of an open 4-region = 0 — the genuine consumption) and z@top does not bound (z fundamental), the shape is EMPTY (isEmpty_capstoneSeamTransfer_of_null + the Seam corollary). Consequence: the transfer route to hasClass is dead AS SHIPPED; the honest repair = CLOSED-complement supports (wOut/vOut in the complement of the INTERIOR of the attach region — the classical two-rel-pieces-sharing-the-interface picture), a NEW gate-pending consumption shape whose interface terms cancel mod 2.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════

@@ -325,6 +325,23 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    construction.
    backing: `novikovGeometricPairLESDataOfRealPairLES`, `nonempty_novikovGeometricPairLESData_iff_realPairLES`, `nonempty_novikovGeometricPairLESData_iff_sig_eq`, `nonempty_novikovGeometricPairLESData_diag`
 
+22. `seam-transfer-open-support-uninhabitable` [refutation]
+   The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207
+   hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the
+   literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching
+   region, and the 3x-circled closed-S co-adaptation barrier (#198/#204/#207) is a machinery gap. FALSE (the
+   #210 lead adjudication): htransfer FORCES wAtt into the CLOSED attach image (injective-mapDomain support
+   transport + fromCyl_image_compl disjointness — wAtt_mem_subspaceChains_range_phi), char-2 boundary
+   algebra then forces BOTH split pieces to be CYCLES (boundary_wAtt_eq_zero via
+   subspaceChains_inf_compl_eq_bot), so z@top decomposes as a seam-supported cycle + an off-seam cycle;
+   whenever the two regions have null 4-cycle classes (H4(S1xD3;Z/2)=0, H4 of an open 4-region = 0 — the
+   genuine consumption) and z@top does not bound (z fundamental), the shape is EMPTY
+   (isEmpty_capstoneSeamTransfer_of_null + the Seam corollary). Consequence: the transfer route to hasClass
+   is dead AS SHIPPED; the honest repair = CLOSED-complement supports (wOut/vOut in the complement of the
+   INTERIOR of the attach region — the classical two-rel-pieces-sharing-the-interface picture), a NEW
+   gate-pending consumption shape whose interface terms cancel mod 2.
+   backing: `wAtt_mem_subspaceChains_range_phi`, `boundary_wAtt_eq_zero`, `isEmpty_capstoneSeamTransfer_of_null`, `isEmpty_capstoneSeamTransferSeam_of_null`
+
 -/
 import SKEFTHawking.FGDualityNoGo
 import SKEFTHawking.NonHausdorffBordismCollapse
@@ -341,6 +358,7 @@ import SKEFTHawking.PinPlusResidualGate
 import SKEFTHawking.PinPlusRoundThirteenGate
 import SKEFTHawking.PinPlusTaylorConventionNoGo
 import SKEFTHawking.PinPlusTraceLeafGate
+import SKEFTHawking.PinPlusTraceSeamTransferNoGo
 import SKEFTHawking.RokhlinArfNoGo
 import SKEFTHawking.SyntheticSmithNoGo
 import SKEFTHawking.UnorientedThomCapstone
@@ -493,5 +511,17 @@ alias nogo_nonempty_novikovGeometricPairLESData_iff_sig_eq := SKEFTHawking.PinPl
 
 /-- NO-GO [`novikov-geometric-tower-carrier-conclusion-fakeable`] — do NOT re-derive. FALSE: The NovikovGeometricPairLESData field row (the #196 genuine-tower carrier: rest2/delta/pairing/hexact/hnondeg/hadjDot) is a stronger-than-conclusion carrier whose inhabitation certifies genuine bounding-W tower progress. Backing refutation: `SKEFTHawking.PinPlusRoundThirteenGate.nonempty_novikovGeometricPairLESData_diag`. -/
 alias nogo_nonempty_novikovGeometricPairLESData_diag := SKEFTHawking.PinPlusRoundThirteenGate.nonempty_novikovGeometricPairLESData_diag
+
+/-- NO-GO [`seam-transfer-open-support-uninhabitable`] — do NOT re-derive. FALSE: The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207 hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching region, and the 3x-circled closed-S co-adaptation barrier (#198/#204/#207) is a machinery gap. Backing refutation: `SKEFTHawking.PinPlusTraceSeamTransferNoGo.wAtt_mem_subspaceChains_range_phi`. -/
+alias nogo_wAtt_mem_subspaceChains_range_phi := SKEFTHawking.PinPlusTraceSeamTransferNoGo.wAtt_mem_subspaceChains_range_phi
+
+/-- NO-GO [`seam-transfer-open-support-uninhabitable`] — do NOT re-derive. FALSE: The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207 hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching region, and the 3x-circled closed-S co-adaptation barrier (#198/#204/#207) is a machinery gap. Backing refutation: `SKEFTHawking.PinPlusTraceSeamTransferNoGo.boundary_wAtt_eq_zero`. -/
+alias nogo_boundary_wAtt_eq_zero := SKEFTHawking.PinPlusTraceSeamTransferNoGo.boundary_wAtt_eq_zero
+
+/-- NO-GO [`seam-transfer-open-support-uninhabitable`] — do NOT re-derive. FALSE: The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207 hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching region, and the 3x-circled closed-S co-adaptation barrier (#198/#204/#207) is a machinery gap. Backing refutation: `SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransfer_of_null`. -/
+alias nogo_isEmpty_capstoneSeamTransfer_of_null := SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransfer_of_null
+
+/-- NO-GO [`seam-transfer-open-support-uninhabitable`] — do NOT re-derive. FALSE: The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207 hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching region, and the 3x-circled closed-S co-adaptation barrier (#198/#204/#207) is a machinery gap. Backing refutation: `SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransferSeam_of_null`. -/
+alias nogo_isEmpty_capstoneSeamTransferSeam_of_null := SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransferSeam_of_null
 
 end SKEFTHawking.KernelNoGos
