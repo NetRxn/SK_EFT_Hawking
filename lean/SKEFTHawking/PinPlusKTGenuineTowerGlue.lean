@@ -38,6 +38,7 @@ namespace SKEFTHawking.PinPlusKTGenuineTowerGlue
 open scoped Matrix
 open SKEFTHawking
 open SKEFTHawking.SingularCohomologyInt
+open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularRelHomologyInt
 open SKEFTHawking.SingularEuclideanCapIsoInt
 open SKEFTHawking.SingularRelativeUCInt
@@ -153,5 +154,73 @@ noncomputable def pairingCoord {q : ℕ} (Bw : IntH2Basis X)
     (Z : relCycleLift S (2 + 1 + 1)) :
     (Fin Bw.rank → ℝ) →ₗ[ℝ] (Fin q → ℝ) →ₗ[ℝ] ℝ :=
   realizeBilinZR Bw.basis Br (pairingInt Z)
+
+/-- The real coordinate vector of a basis element is the standard basis vector. -/
+theorem coordR_basis_self {M : Type*} [AddCommGroup M] [Module ℤ M] {m : ℕ}
+    (b : Module.Basis (Fin m) ℤ M) (i : Fin m) : coordR b (b i) = Pi.single i 1 := by
+  funext j
+  simp only [coordR, Module.Basis.repr_self, Finsupp.single_apply, Pi.single_apply]
+  by_cases h : i = j <;> simp [h, eq_comm]
+
+/-! ## §3. The genuine bounding-`W` tower carrier and the boundary form -/
+
+/-- The boundary fundamental class `[∂W] = ∂[W,∂W]` of the tethered relative cycle `Z`. -/
+noncomputable def bdryFC (Z : relCycleLift S (2 + 1 + 1)) : IntFundamentalClass (sub S) :=
+  intFundamentalClassOfHomology (connectingInt S (2 + 1 + 1) (relCycleToHom S (2 + 1 + 1) Z))
+
+/-- The boundary intersection matrix `Bd = interMatrix [∂W] B` (the substrate's `Bd`). -/
+noncomputable def bdryMat (B : IntH2Basis (sub S)) (Z : relCycleLift S (2 + 1 + 1)) :
+    Matrix (Fin B.rank) (Fin B.rank) ℤ :=
+  interMatrix (bdryFC Z) B
+
+/-- **The genuine bounding-`W` pair-LES tower carrier (`#201`'s named residual atom).** Bundles the
+GENUINE geometric data of a bounding `W`: the finite-free `ℤ`-bases `Bw` of `H²(W;ℤ)`, `Br` of
+`H³(W,∂W;ℤ)`, the disclosed boundary basis `B` of `H²(∂W;ℤ)`, and the tethered relative fundamental
+cycle `Z`. From these, `rest2Coord`/`deltaCoord`/`pairingCoord` are the ⊗ℝ coordinatizations of the
+GENUINE `#201` integral maps — pinned by DEFINITION, never posited. The remaining `Prop` fields are the
+honest residual geometric obligations, each the ℤ→ℝ base-change of a pair-LES / Poincaré–Lefschetz fact
+of the genuine maps (NOT synthetic): `hexactRev` — the reverse middle-exactness inclusion
+`ker δ ⊆ im ι*` (the forward `im ι* ⊆ ker δ` is DERIVED from `deltaRelHIntLin_restrictHInt`); `hnondeg`
+— the Kronecker/PD nondegeneracy of the relative cap pairing; `hbdnd` — the even-unimodular boundary
+form nondegeneracy `radical = ⊥`. Inhabiting this is a genuine-geometry obligation, NOT fork-fakeable
+(it requires the real bases + `Z` + the base-changed facts of the real maps). -/
+structure GenuineBoundingWTower {X : TopCat} (S : Set ↑X) where
+  /-- Finite-free `ℤ`-basis of `H²(W;ℤ)`. -/
+  Bw : IntH2Basis X
+  /-- The disclosed finite-free `ℤ`-basis of `H²(∂W;ℤ)`. -/
+  B : IntH2Basis (sub S)
+  /-- The rank `q = b₃(W,∂W)`. -/
+  qr : ℕ
+  /-- Finite-free `ℤ`-basis of `H³(W,∂W;ℤ)`. -/
+  Br : Module.Basis (Fin qr) ℤ (RelativeCohomologyInt S (2 + 1))
+  /-- The tethered relative fundamental cycle. -/
+  Z : relCycleLift S (2 + 1 + 1)
+  /-- **Reverse pair-LES middle exactness** `ker δ ⊆ im ι*` (⊗ℝ base-change; forward is derived). -/
+  hexactRev : LinearMap.ker (deltaCoord B Br) ≤ LinearMap.range (rest2Coord Bw B)
+  /-- **Kronecker/PD nondegeneracy** of the relative cap pairing (⊗ℝ base-change). -/
+  hnondeg : ∀ x : Fin qr → ℝ, (∀ a : Fin Bw.rank → ℝ, pairingCoord Bw Br Z a x = 0) → x = 0
+  /-- **Even-unimodular boundary-form nondegeneracy** `radical = ⊥`. -/
+  hbdnd : ((bdryMat B Z).map (Int.cast : ℤ → ℝ)).toQuadraticMap'.radical = ⊥
+
+/-- **The boundary matrix is symmetric** — DERIVED from `interMatrix_isSymm` (graded-commutativity of
+the integral cup product at bidegree `(2,2)`). -/
+theorem bdryMat_isSymm (B : IntH2Basis (sub S)) (Z : relCycleLift S (2 + 1 + 1)) :
+    (bdryMat B Z).IsSymm :=
+  interMatrix_isSymm (bdryFC Z) B
+
+/-- **The `δ ∘ ι* = 0` composite, coordinatized** — DERIVED: on each standard basis vector
+`Pi.single i 1 = coordR (Bw.basis i)`, the `realizeZR` semantics reduce it to
+`deltaRelHIntLin (restrictHInt (Bw.basis i)) = 0` (`deltaRelHIntLin_restrictHInt`); extends by
+`ℝ`-linearity. This is the forward `im ι* ⊆ ker δ` half of the pair-LES middle exactness. -/
+theorem deltaCoord_comp_rest2Coord (Bw : IntH2Basis X) (B : IntH2Basis (sub S))
+    {q : ℕ} (Br : Module.Basis (Fin q) ℤ (RelativeCohomologyInt S (2 + 1))) :
+    (deltaCoord B Br).comp (rest2Coord Bw B) = 0 := by
+  refine (Pi.basisFun ℝ (Fin Bw.rank)).ext (fun i => ?_)
+  simp only [LinearMap.comp_apply, Pi.basisFun_apply, LinearMap.zero_apply]
+  rw [show (Pi.single i 1 : Fin Bw.rank → ℝ) = coordR Bw.basis (Bw.basis i) from
+      (coordR_basis_self Bw.basis i).symm]
+  rw [rest2Coord, realizeZR_coordR, deltaCoord, realizeZR_coordR, deltaRelHIntLin_restrictHInt]
+  funext k
+  simp [coordR]
 
 end SKEFTHawking.PinPlusKTGenuineTowerGlue
