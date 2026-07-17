@@ -86,14 +86,18 @@ not re-derive (see `KERNEL_NOGO_REGISTRY` in `src/core/constants.py`).
 
 ### Status in one paragraph
 
-The theorem-shaped work is done: the carrier is final and gate-certified, the assembly
-`G ≃+ ZMod 16` is proven from three named leaves, and the provider that makes all ∀-prov
-statements meaningful is inhabited modulo two named residuals. What remains is
-**discharging leaves**: finishing the surgery trace's geometric core (KRS-supply),
-constructing the two KT-§5 data leaves (dC, dA), closing the two provider residuals, then
-one more Fable gate round and the final assembly + capstone + closure gates. No unknown
-walls are open — every remaining item is named, located, and has banked machinery
-pointing at it.
+*(Updated 2026-07-16, post gate round 12 — the original handoff paragraph is superseded;
+the §1 work queue below is rewritten to the current truth.)* The close-out arm has
+executed ~55 blocks (#137–#193): **the provider is unconditional**
+(`nonempty_charPairWProviderPerOp` — Lanes A+B of the original plan are done), the KRS
+leaf is consolidated to ONE ∀-p residual row (`KRSResidualRow` →
+`kernelReducesToSpin_of_residualRow`), dC is reduced to the collapse atom's bounding
+datum, dA to the honest kernel characterization `ker Φ ⊆ doubles` on the geometric
+`spinForgetPhi`, and **gate rounds 11 AND 12 both ran (Fable, CONDITIONAL PASS)** with
+their ties kernel-encoded (fence: 20 forks / 45 aliases) and four binding round-12 specs
+frozen in `PinPlusResidualGate.lean`. What remains is the **genuine geometric floor**
+(§1 below) feeding those residual rows, plus the assembly wiring, W-E, W-F, and the
+closure gates. No unknown walls are open.
 
 ---
 
@@ -105,9 +109,10 @@ pointing at it.
   `sudo sysctl -w kern.maxvnodes=786432` (it reverts on reboot; the default 263k ceiling
   causes machine-wide ENFILE under parallel Lean).
 - Run the CLAUDE.md session-start lean-lsp trim (kill off-repo lean-lsp-mcp servers).
-- Posture: **≤ 2 heavy workers** (a lead full-library `lake build` counts as one),
-  `ulimit -n 65536`, `LEAN_NUM_THREADS=4`, serialize cold header imports and builds.
-  Lake 5.0.0 has no `-j` flag.
+- Posture: **3 workers authorized** (operator, 2026-07-16, after the maxvnodes bump)
+  with guardrails — no lead full-library `lake build` while all 3 lanes are hot; on any
+  ENFILE symptom drop back to 2. `ulimit -n 65536`, `LEAN_NUM_THREADS=4`, serialize cold
+  header imports and builds. Lake 5.0.0 has no `-j` flag.
 - Model tiering: Sonnet = mechanical bricks, Opus = deep geometry, **Fable = gate rounds
   only** (wide latitude, not a brick).
 - The wt3 stash `stash@{0}` is old pre-5qG 5qf-leads material, deliberately preserved —
@@ -115,69 +120,57 @@ pointing at it.
 
 ### 1. The work queue, in dependency order
 
-Three independent lanes can run in parallel (respecting the 2-worker cap). Items marked
-⏸ were never started; nothing below is half-done on disk — every listed item starts
-clean from main.
+*(Rewritten 2026-07-16 post gate round 12. The original Lanes A/B/C are DONE — the
+provider is unconditional, the KRS leaf is consolidated to `KRSResidualRow`, gate rounds
+11+12 ran. The queue below is the remaining GENUINE GEOMETRIC FLOOR + convergence. The
+per-block detail lives in the lab notebook; task IDs refer to the session task list.)*
 
-**Lane A — the provider residuals** (makes the provider unconditional):
+**Lane 1 — the hasClass cascade (feeds the KRS ∀-p row):**
 
-- **A1 ⏸ Task #137 (re-dispatch; Opus, wt3): the disconnected closer.** The first
-  dispatch was accidentally killed ~30 min in by the usage-limit interrupt, before its
-  first file write — zero output, nothing to salvage. Brief (unchanged, in the task):
-  per-clopen-piece connected detection (the C-piece's `RestrictsToRelGenOn` from the
-  in-tree connected `hasRelFundClass_cylGen` machinery) + the nd14/nd23 block-diagonal
-  (cup across clopen pieces vanishes; per-component nondeg from
-  `ofClosedPDSuspIntertwineNorm`) + per-component hwu aggregation — **all with D
-  abstract** (the concrete-unfolding whnf wall class is settled; the folded-def/abstract-D
-  architecture binds). Acceptance: `DisconnectedCylCoreND` discharged.
-- **A2 ⏸ The Wu leaf (Opus): the per-M `CylinderWuResidual`.** The Sq-suspension
-  foundation — prove the cylinder Wu formula v₂(W) = v₁(W)² content per-M.
-  `crossHDual_pairing` exists as its base; the M-intrinsic reduction was walled on Sq
-  suspension naturality (a genuine foundation arc — the one remaining deep-ish piece).
-  Acceptance: the Wu-leaf hypothesis of `nonempty_provider_of_wuLeaf_and_disconnectedCoreND`
-  discharged → **the provider is unconditional**.
+- **R1 🔄 #191 (wt3): the concrete sphere-4 cycle zS** with [zS] = betaClass — route (b)
+  first (H₄(S⁴;ℤ/2) has one nonzero class; the #168 connecting iso may make ∂(relative
+  fundamental disk chain) BE it) → then the cascade: the cone rep → the co-adapted seam
+  splits → hdetAB → `hasClass_ofTransfer`. Detection is a rel-homology invariant
+  (`relClassOf_eq_of_homologous`), so controlled reps inherit it.
+- **R2 ⏸ the mv piece homeos / hcov residuals** (the collar-conflict-free ones landed
+  with #181; the rest ride the seam machinery).
 
-**Lane B — the KRS-supply (the surgery trace's geometric core):**
+**Lane 2 — the σ-descent + hcob tower (feeds dA's honest route + the Novikov atom):**
 
-- **B1 ⏸ Task #138 (Opus, wt1): the trace-W admissibility opener.** `WAdmPinned` on the
-  trace pair (surgery-foundation wave-4 residual 2). The cylinder engine's machinery
-  (SumRelFundClass, the ⊔-tower, the clopen-split engine) is the toolkit.
-- **B2 ⏸ The membrane presentation** (wave-4 residual 3): `GeoRealizationTied` for the
-  Σ-trace + the Weld presentation + glue — connects the surgery trace to the tethered
-  carrier's membrane discipline.
-- **B3 ⏸ The he_boundary resolution.** The named structural wall:
-  `ModelWithCorners.boundary` is chart-choice-dependent at C⁰, so the boundary
-  identification needs the **surgered-end packaging** (or a smooth weld) rather than a
-  raw boundary computation. This is a packaging/architecture item, not a new theorem arc.
-- With B1–B3 + the already-built capstone (`ambientTraceBordism_capstone`), the
-  rank-lowering tethered trace exists off the [p] = 0 fibre → **the KRS-supply leaf
-  fires** (`kernelReducesToSpin_of_ambientDatumSupply` is banked).
+- **R3 🔄 #192 (wt2): the Int relative cap port** H²(W;ℤ) × H₄(W,∂W) → H₂(W) (the mod-2
+  `capRelH` layer is the template) + the hadj mediation. **Round-12 spec 2 binds:** the
+  Novikov/hbord discharge must exhibit a GENUINE bounding-W tower — Lagrangian linear
+  algebra is kernel-proven zero progress (`novikovLagrangian_iff_hbord`).
+- **R4 ⏸ hbord as tower data**: the concrete bounding-W instantiation consuming R3 + the
+  #190 form identification (`boundaryInterMatrix_eq_blockDiag`) + the nondeg pair.
+- **R5 ⏸ the transversal V representative** (smooth transversality — the deepest leaf;
+  dA's `ker Φ ⊆ doubles` geometric feed). **Round-12 spec 1 binds:** any dual-spin supply
+  passes by DATA inspection only (amb pinned to the tethered witness).
 
-**Lane C — the KT §5 data leaves:**
+**Lane 3 — dC + the σ-presentation residuals:**
 
-- **C1 ⏸ The geometric Φ** (Ω₄^Spin → the carrier): the C-leaf /
-  `KTSpinPresentationDatum` content. Its hA input = two terminal atoms:
-  `HandleTradeCobordism` (⟸ the trace bordism + ξ.Bor — lands with Lane B) and
-  `HyperbolicBase`; hB is already discharged. `dataBordismGrp_equiv_int_of_cobordism_and_base`
-  (Ω₄^Spin ≅ ℤ) is banked in `PinPlusKTFreezeAssembly.lean`.
-- **C2 ⏸ The dA non-circular construction** (`DualSpinForwardDatum`): dA ⟺ `KTNonSplit`
-  exactly, so the construction must come from the geometric Φ forward direction + the
-  banked ÷32 arithmetic — **the round-10 non-circularity audits are owed** and must be
-  run when dA lands (the gate spec is in `PinPlusKTLeafGate.lean`).
+- **R6 ⏸ the collapse atom's bounding datum** (the round-12 spec-4 debt on
+  `SectorIsGeometric`'s discharge).
+- **R7 ⏸ the Gram-pin atoms** {the E-Z cross value, the basis-ID} + **the K3
+  conditional** (the σ-presentation stock row's last live sector).
+- **R8 ⏸ hsNe/hsConn** (the connected engine's certs — flagged by #186's wiring findings).
+- **R9 ⏸ the concrete bounding 3-manifold** (the τ-datum builder; terminal-only per #186).
 
-**Convergence — strictly after A, B, C:**
+**Convergence:**
 
-- **G ⏸ GATE ROUND 11 (Fable, wide latitude):** vacuity attack on the newest leaf shapes
-  (the Wu leaf, the disconnected core discharge, dC, dA, the KRS-supply) **before** their
-  discharges are consumed. This is the standing discipline: no completeness Prop is
-  consumed ungated.
-- **F1 ⏸ The final assembly:** `kt_equiv_zmod16_of_two_leaves` fires with real inputs →
-  `kt_equiv_zmod16` on the tethered carrier, unconditional.
-- **F2 ⏸ W-E:** the Rokhlin corollary (largely banked from the 5q.B/5q.G era).
+- **F1 🔄 #193 (wt1): THE ASSEMBLY WIRING** — `kt_equiv_zmod16_of_residuals`: the
+  end-to-end conditional whose hypothesis list IS the remaining geometry above
+  (provenance-annotated), + the W-E conditional shape (+ W-F if pure wiring). Then each
+  R-item's landing shrinks the hypothesis row until it is empty → `kt_equiv_zmod16`
+  unconditional.
+- **F2 ⏸ W-E:** the Rokhlin corollary fires unconditionally once F1's row empties.
 - **F3 ⏸ W-F capstone:** the k = ∞ statement + the Ω₅ recast.
 - **F4 ⏸ Closure gates:** full `validate.py` N/N; a fresh adversarial reviewer pass;
   the trusted clean rebuild `rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps`;
   sync + counts; notebook + memory close-out.
+- **Gate discipline stands:** any NEW completeness Prop shaped between here and closure
+  gets a Fable gate round before consumption; the four binding round-12 specs
+  (`PinPlusResidualGate.lean` header) govern all consumption.
 
 ### 2. Binding architectural laws (do not relearn these)
 
