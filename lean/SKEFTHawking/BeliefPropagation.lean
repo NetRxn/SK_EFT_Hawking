@@ -770,4 +770,104 @@ theorem IsFourCycleFreeFactorGraph_of_no_two_factors_share_two_vars
   intro u v a b huv hab ⟨h1, h2, h3, h4⟩
   exact h u v a b huv hab h1 h2 h3 h4
 
+/-! ## Genuine acyclicity / tree predicate (remediation B-04, 2026-07-17)
+
+The four-cycle-free predicate above is a weak combinatorial screen. This
+section provides the *genuine* structural condition BP theory actually
+requires: **acyclicity of the bipartite incidence graph**. The incidence
+graph of a factor graph `G` has vertex set `ν ⊕ α` (variables `inl v`,
+factors `inr a`), with an edge between `inl v` and `inr a` exactly when
+factor `a` is incident to variable `v`. A factor graph is a **tree**
+(resp. **forest / acyclic**) iff this bipartite incidence graph is a tree
+(resp. acyclic) in the sense of Mathlib's `SimpleGraph.IsTree` /
+`SimpleGraph.IsAcyclic`.
+
+This is *strictly stronger* than four-cycle-freeness: acyclicity forbids
+cycles of every length (not just 4-cycles) and — for the tree version —
+additionally imposes connectivity. `isAcyclicFactorGraph_imp_fourCycleFree`
+below proves acyclic ⟹ four-cycle-free; the converse fails — a bipartite
+6-cycle `v₀–a₀–v₁–a₁–v₂–a₂–v₀` is four-cycle-free yet not acyclic (no two
+distinct factors share two distinct variables, so the 4-cycle screen
+passes, but the length-6 cycle is a genuine cycle). It is on this genuine
+acyclicity predicate that the BP-convergence engine (below) operates. -/
+
+/-- The **bipartite incidence graph** of a factor graph: vertices are
+    variables (`Sum.inl v`) and factors (`Sum.inr a`); `inl v` and
+    `inr a` are adjacent exactly when factor `a` is incident to variable
+    `v`. Built with `SimpleGraph.fromRel`, so symmetry and looplessness
+    are automatic. -/
+def incidenceGraph {ν α : Type*} (G : FactorGraph ν α) : SimpleGraph (ν ⊕ α) :=
+  SimpleGraph.fromRel
+    (fun x y => ∃ v a, x = Sum.inl v ∧ y = Sum.inr a ∧ G.incidence a v = true)
+
+/-- Adjacency in the incidence graph between a variable and a factor:
+    `inl v` and `inr a` are adjacent iff `a` is incident to `v`. -/
+theorem incidenceGraph_inl_inr_adj {ν α : Type*} (G : FactorGraph ν α)
+    (v : ν) (a : α) :
+    (incidenceGraph G).Adj (Sum.inl v) (Sum.inr a) ↔ G.incidence a v = true := by
+  unfold incidenceGraph
+  rw [SimpleGraph.fromRel_adj]
+  constructor
+  · rintro ⟨-, (⟨v', a', hx, hy, hinc⟩ | ⟨v', a', hx, hy, hinc⟩)⟩
+    · rw [Sum.inl.injEq] at hx; rw [Sum.inr.injEq] at hy; subst hx; subst hy; exact hinc
+    · exact absurd hx (by simp)
+  · intro hinc
+    exact ⟨by simp, Or.inl ⟨v, a, rfl, rfl, hinc⟩⟩
+
+/-- A factor graph is **acyclic** (a forest) iff its bipartite incidence
+    graph has no cycles. Genuine acyclicity — strictly stronger than
+    four-cycle-freeness. -/
+def IsAcyclicFactorGraph {ν α : Type*} (G : FactorGraph ν α) : Prop :=
+  (incidenceGraph G).IsAcyclic
+
+/-- A factor graph is a **tree** iff its bipartite incidence graph is a
+    tree (connected and acyclic). -/
+def IsTreeFactorGraph {ν α : Type*} (G : FactorGraph ν α) : Prop :=
+  (incidenceGraph G).IsTree
+
+/-- A tree factor graph is acyclic. -/
+theorem IsTreeFactorGraph.isAcyclic {ν α : Type*} {G : FactorGraph ν α}
+    (h : IsTreeFactorGraph G) : IsAcyclicFactorGraph G :=
+  SimpleGraph.IsTree.isAcyclic h
+
+/-- **Strength theorem.** Genuine acyclicity is *strictly stronger* than
+    four-cycle-freeness: an acyclic factor graph is four-cycle-free.
+
+    Proof: a 4-cycle `u–a–v–b–u` in the incidence graph would give two
+    distinct length-2 paths `inl u – inr a – inl v` and
+    `inl u – inr b – inl v` between the same endpoints (distinct because
+    `a ≠ b`), contradicting the path-uniqueness characterization of
+    acyclicity (`SimpleGraph.isAcyclic_iff_path_unique`). This exhibits
+    the genuine implication that the honest four-cycle-free predicate
+    could not: acyclicity really does exclude the 4-cycle obstruction
+    (and, being cycle-free at every length, much more). -/
+theorem isAcyclicFactorGraph_imp_fourCycleFree {ν α : Type*}
+    (G : FactorGraph ν α) (h : IsAcyclicFactorGraph G) :
+    IsFourCycleFreeFactorGraph G := by
+  rw [IsAcyclicFactorGraph, SimpleGraph.isAcyclic_iff_path_unique] at h
+  intro u v a b huv hab ⟨hau, hbu, hav, hbv⟩
+  have h1a : (incidenceGraph G).Adj (Sum.inl u) (Sum.inr a) :=
+    (incidenceGraph_inl_inr_adj G u a).mpr hau
+  have h2a : (incidenceGraph G).Adj (Sum.inr a) (Sum.inl v) :=
+    ((incidenceGraph_inl_inr_adj G v a).mpr hav).symm
+  have h1b : (incidenceGraph G).Adj (Sum.inl u) (Sum.inr b) :=
+    (incidenceGraph_inl_inr_adj G u b).mpr hbu
+  have h2b : (incidenceGraph G).Adj (Sum.inr b) (Sum.inl v) :=
+    ((incidenceGraph_inl_inr_adj G v b).mpr hbv).symm
+  have hpa : (SimpleGraph.Walk.cons h1a
+      (SimpleGraph.Walk.cons h2a SimpleGraph.Walk.nil)).IsPath := by
+    rw [SimpleGraph.Walk.isPath_def]
+    simp [SimpleGraph.Walk.support_cons, huv]
+  have hpb : (SimpleGraph.Walk.cons h1b
+      (SimpleGraph.Walk.cons h2b SimpleGraph.Walk.nil)).IsPath := by
+    rw [SimpleGraph.Walk.isPath_def]
+    simp [SimpleGraph.Walk.support_cons, huv]
+  have hw : (SimpleGraph.Walk.cons h1a
+        (SimpleGraph.Walk.cons h2a SimpleGraph.Walk.nil))
+      = (SimpleGraph.Walk.cons h1b
+        (SimpleGraph.Walk.cons h2b SimpleGraph.Walk.nil)) :=
+    Subtype.ext_iff.mp (h ⟨_, hpa⟩ ⟨_, hpb⟩)
+  have hsupp := congrArg SimpleGraph.Walk.support hw
+  simp [SimpleGraph.Walk.support_cons, Sum.inr.injEq, hab] at hsupp
+
 end SKEFTHawking.BeliefPropagation
