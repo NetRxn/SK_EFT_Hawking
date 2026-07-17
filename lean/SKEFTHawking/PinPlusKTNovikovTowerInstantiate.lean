@@ -52,6 +52,8 @@ open scoped Matrix
 open SKEFTHawking
 open SKEFTHawking.SpinSigmaRoute
 open SKEFTHawking.PinPlusKTSpinSigmaNovikovRealSubstrate
+open SKEFTHawking.SingularCapChainInclInt (pullbackCochainInt pullbackCochainInt_apply)
+open SKEFTHawking.SingularRelativeHomologyMod2 (simplexIncl simplexIncl_injective)
 open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularCohomologyInt
 open SKEFTHawking.SingularRelHomologyInt
@@ -242,5 +244,54 @@ theorem NovikovGeometricPairLESData.latticeSig_eq {r s : ℕ} (A : Matrix (Fin r
     (D : NovikovGeometricPairLESData (blockDiag A (-B))) :
     latticeSig A = latticeSig B :=
   latticeSig_eq_of_realPairLES A B hA hB (NovikovRealPairLES.ofGeometricPairLESData D)
+
+/-! ## §6. The δ-packaging crux (3b) — restriction-surjectivity and the boundary-cocycle lift
+
+The genuine `δ : H²(∂W;ℤ) → H³(W,∂W;ℤ)` LinearMap (whence the substrate's `delta` after `⊗ℝ`) is built by
+lifting a `∂W`-cocycle to an absolute cochain and taking `deltaRelHInt`. The load-bearing input is that the
+cochain restriction `ι* = pullbackCochainInt` is **surjective** (extension-by-zero along the injective
+`simplexIncl`), so every `∂W`-cocycle has an absolute lift whose coboundary is relative — exactly the
+`(z, hz)` pair `deltaRelHInt` consumes. -/
+
+/-- **The integral cochain restriction is surjective.** `pullbackCochainInt : Cⁿ(W;ℤ) ↠ Cⁿ(∂W;ℤ)` — every
+`∂W`-cochain extends to an absolute one (extension by zero along the injective `simplexIncl`, the
+annihilator-model dual of the subcomplex injection). The `#187` docstring's "the lift exists because the
+restriction `Cⁿ(W) ↠ Cⁿ(∂W)` is surjective". -/
+theorem pullbackCochainInt_surjective (k : ℕ) :
+    Function.Surjective (pullbackCochainInt S k) := by
+  intro w
+  refine ⟨Function.extend (simplexIncl S k) w 0, ?_⟩
+  funext τ
+  rw [pullbackCochainInt_apply]
+  exact (simplexIncl_injective S k).extend_apply w 0 τ
+
+/-- **A cochain whose restriction vanishes is relative.** `ι*f = 0 → f ∈ relCochainsInt S n`: `f` annihilates
+every subspace chain `chainIncl d` because `⟨f, chainIncl d⟩ = ⟨ι*f, d⟩ = 0`
+(`kronecker_chainIncl_eq_pullbackCochainInt`). The annihilator-model characterization of `im ι*` ⊆ ker. -/
+theorem mem_relCochainsInt_of_pullbackCochainInt_eq_zero {n : ℕ} (f : SingularCochainInt X n)
+    (hf : pullbackCochainInt S n f = 0) : f ∈ relCochainsInt S n := by
+  rw [mem_relCochainsInt]
+  intro c hc
+  rw [subspaceChainsInt, LinearMap.mem_range] at hc
+  obtain ⟨d, rfl⟩ := hc
+  rw [kronecker_chainIncl_eq_pullbackCochainInt, hf]
+  simp
+
+/-- **Every `∂W`-cocycle has an absolute lift with relative coboundary** (the `deltaRelHInt` input). For a
+`∂W`-cocycle `w` (`δ_∂W w = 0`) there is an absolute cochain `z` with `ι*z = w` and `δz` relative — the
+pair `(z, h)` the connecting map `deltaRelHInt` consumes. Proof: `pullbackCochainInt_surjective` supplies
+`z`; `ι*(δz) = δ(ι*z) = δw = 0` (`coboundary_pullbackCochainInt` + `w` cocycle), so `δz` is relative by
+`mem_relCochainsInt_of_pullbackCochainInt_eq_zero`. -/
+theorem exists_lift_of_boundaryCocycle (w : LinearMap.ker (coboundaryₗ (sub S) 2)) :
+    ∃ z : SingularCochainInt X 2, coboundaryₗ X 2 z ∈ relCochainsInt S (2 + 1) ∧
+      pullbackCochainInt S 2 z = (w : SingularCochainInt (sub S) 2) := by
+  obtain ⟨z, hz⟩ := pullbackCochainInt_surjective 2 (w : SingularCochainInt (sub S) 2)
+  have hrel : pullbackCochainInt S (2 + 1) (coboundaryₗ X 2 z) = 0 := by
+    show pullbackCochainInt S (2 + 1) (coboundary X 2 z) = 0
+    rw [← SKEFTHawking.SingularPullbackDualityCapSubInt.coboundary_pullbackCochainInt, hz]
+    show coboundary (sub S) 2 (w : SingularCochainInt (sub S) 2) = 0
+    exact LinearMap.mem_ker.mp w.2
+  exact ⟨z, mem_relCochainsInt_of_pullbackCochainInt_eq_zero _ hrel, hz⟩
+
 
 end SKEFTHawking.PinPlusKTNovikovTowerInstantiate
