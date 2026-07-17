@@ -4540,6 +4540,7 @@ import SKEFTHawking.PinPlusTraceLeafGate
 import SKEFTHawking.PinPlusResidualGate
 import SKEFTHawking.PinPlusKTSpinPresentationRow
 import SKEFTHawking.PinPlusKTKerPhiDoubles
+import SKEFTHawking.PinPlusKTAssemblyResiduals
 import SKEFTHawking.PinPlusKTSpinSigmaAtom
 import SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
 import SKEFTHawking.PinPlusKTSpinSigmaStock
