@@ -23,6 +23,7 @@ axiom, no `native_decide`, no `maxHeartbeats`.
 -/
 import Mathlib
 import SKEFTHawking.PinPlusTraceDiskSeamSplit
+import SKEFTHawking.PinPlusTraceCapstoneSeamTransferSupply
 
 namespace SKEFTHawking.PinPlusTraceSeamResidualNarrow
 
@@ -151,6 +152,110 @@ theorem diskDetectChain_subtype_boundary_split_freeSphere {U : Set D5} (S : Set 
     rw [Set.inter_comm, Set.diff_eq]
   exact ⟨μ, cU, vOut, hset ▸ hvOut, hsplit, hmem⟩
 
+/-- **The controlled rep's transported detection (item c helper).** The subdivided disk rep
+`Sdᵘ diskDetectChain` detects the local generator at every disk-interior point, in the EXACT shape
+`hasClass_ofTransfer`'s `hdetHa` argument demands with `cHa := Sdᵘ diskDetectChain` and
+`hcHa := chainBoundary_singularSd_iterate_mem 3 diskDetectChain diskDetectChain_hc μ`. This is the
+detection of `diskDetectChain` (`diskDetectChain_hdet`) transported across subdivision by
+`relClassOf_singularSd_iterate_eq` (#194) — the free-standing supply of `hdetHa` for the controlled
+rep. -/
+theorem diskDetectChain_iterate_hdet (μ : ℕ) (y : D5)
+    (hy : y ∉ {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1}) :
+    relClassOf (X := TopCat.of D5) ({y}ᶜ) 3
+        ((⇑(singularSd (TopCat.of D5) (3 + 2)))^[μ] diskDetectChain)
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (3 + 1)
+          (chainBoundary_singularSd_iterate_mem 3 diskDetectChain diskDetectChain_hc μ)) ≠ 0 := by
+  rw [relClassOf_singularSd_iterate_eq 3 diskDetectChain diskDetectChain_hc μ y hy]
+  exact diskDetectChain_hdet y hy
+
 end
+
+/-! ## §3. The controlled-rep Supply wiring (item c) — `hasClass_ofTransfer` consumes `Sdᵘ`. -/
+
+section CtrlSupply
+
+open scoped Manifold
+open SKEFTHawking.BordismTheory
+open SKEFTHawking.SurgeryFoundation
+open SKEFTHawking.SurgeryFoundation.HandleAttachment
+open SKEFTHawking.SingularHomotopyInvariance
+open SKEFTHawking.SingularRelativeCrossProduct
+open SKEFTHawking.SingularRelativeCoverMVTransport
+open SKEFTHawking.PoincareLefschetzRelFundClass
+open SKEFTHawking.PoincareLefschetzRelFundClassGeom
+open SKEFTHawking.PinPlusTraceRelFundReduce
+open SKEFTHawking.PinPlusTraceCapstoneInhabit
+open SKEFTHawking.PinPlusTraceCapstoneCoverGlue
+open SKEFTHawking.PinPlusTraceCapstoneCoverGlueDisk
+open SKEFTHawking.PinPlusTraceCapstoneSeamTransfer
+open SKEFTHawking.PinPlusTraceCapstoneSeamTransferSupply
+
+noncomputable section
+
+variable (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+  [CompactSpace s.M] [Nonempty s.M] [PreconnectedSpace s.M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M]
+  (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+  (hφ : Continuous φ) (hφinj : Function.Injective φ)
+  (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+  (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+  (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+
+/-- **The controlled-rep narrowed capstone residual (item c).** The variant of
+`CapstoneSeamTransferResidual` whose seam-transfer core and straddle detection ride on the CONTROLLED
+representative `Sdᵘ diskDetectChain` (`μ` the subdivision count), not the unsubdivided `diskDetectChain`.
+This is the shape the exact seam split (`diskDetectChain_subtype_boundary_split_inf`, item b) actually
+lands on: the free-sphere remainder splits off `∂(Sdᵘ diskDetectChain)`, so the residual's `seam` field
+is over `Sdᵘ diskDetectChain`. The row consumers see an equivalent supply (the seam core + straddle
+detection over the controlled rep), NOT a restructured row — a pure variant constructor. -/
+structure CapstoneSeamTransferResidualCtrl (μ : ℕ) where
+  /-- a fundamental cycle of the closed source 4-manifold `M`. -/
+  z : cycles (TopCat.of s.M) (2 + 2)
+  /-- `z` represents the fundamental class. -/
+  hz : SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := s.M)
+      = Homology.mk (TopCat.of s.M) (2 + 2) z
+  /-- the `htransfer`-free seam-transfer core over the CONTROLLED rep `Sdᵘ diskDetectChain`. -/
+  seam : CapstoneSeamTransferSeam s S hS φ hφ hφinj z
+      ((⇑(singularSd (TopCat.of D5) (3 + 2)))^[μ] diskDetectChain)
+  /-- the overlap-zone straddle detection, over the controlled rep. -/
+  hdetAB : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      (hx : x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)),
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+    relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+      (closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+          (3 + 2) (capstoneCylChainT s S hS φ hφ hφinj z)
+        + closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+          (3 + 2) ((⇑(singularSd (TopCat.of D5) (3 + 2)))^[μ] diskDetectChain))
+      (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1)
+        (hbd_ofTransfer s t S hS φ hφ hφinj cd hseam d
+          (CapstoneSeamTransferSeam.toTransfer s S hS φ hφ hφinj seam))) ≠ 0
+
+/-- **The controlled-rep residual supplies the capstone `hasClass` field (item c).** Fires
+`hasClass_ofTransfer` with `cHa := Sdᵘ diskDetectChain`, its transported boundary-support
+(`chainBoundary_singularSd_iterate_mem`) and detection (`diskDetectChain_iterate_hdet`), the transfer
+datum `seam.toTransfer` (its `htransfer` discharged in the Supply module), and the straddle detection.
+Same output type as `CapstoneSeamTransferResidual.toHasClass`, so the two residual variants are
+interchangeable suppliers of the capstone `hasClass` — the controlled-rep one matching the exact seam
+split's landing chain. -/
+def CapstoneSeamTransferResidualCtrl.toHasClass {μ : ℕ}
+    (R : CapstoneSeamTransferResidualCtrl s t S hS φ hφ hφinj cd hseam d μ) :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
+  hasClass_ofTransfer s t S hS φ hφ hφinj cd hseam d R.z R.hz
+    ((⇑(singularSd (TopCat.of D5) (3 + 2)))^[μ] diskDetectChain)
+    (chainBoundary_singularSd_iterate_mem 3 diskDetectChain diskDetectChain_hc μ)
+    (fun y hy => diskDetectChain_iterate_hdet μ y hy)
+    (CapstoneSeamTransferSeam.toTransfer s S hS φ hφ hφinj R.seam)
+    R.hdetAB
+
+end
+
+end CtrlSupply
 
 end SKEFTHawking.PinPlusTraceSeamResidualNarrow
