@@ -39,7 +39,10 @@ namespace SKEFTHawking.PinPlusTraceCapstoneSeamSplit
 open SKEFTHawking.SingularHomologyMod2
 open SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularFunctoriality
+open SKEFTHawking.SingularMayerVietoris
 open SKEFTHawking.SingularMayerVietorisLES
+open SKEFTHawking.SingularRelativeCoverMV
+open SKEFTHawking.SingularRelClassHomologous
 open SKEFTHawking.SingularSubdivision
 open SKEFTHawking.SingularSubdivisionToCover
 
@@ -98,6 +101,78 @@ theorem exists_subtype_cover_split_homologous_cycle [T2Space ↑X] {U V : Set �
   refine ⟨μ, cU, fV, hfV, ?_, ?_⟩
   · rw [hsplit, hmap]
   · rw [hmap]; exact hhom
+
+/-! ## §2. Detection transfer across barycentric subdivision (the controlled rep inherits detection).
+
+The subdivided rep `Sdᵘ c` of a relative-cycle chain `c` (`∂c ∈ subspaceChains W`) satisfies
+`∂(Sdᵘ c) = Sdᵘ(∂c)` — so its boundary splits exactly whenever `∂c`'s cover-split does — and it is
+homologous to `c` with the homotopy correction `Dᵤ(∂c)` supported in `W ⊆ {y}ᶜ`. Hence the interior
+detection `relClassOf {y}ᶜ` transfers verbatim from `c` to `Sdᵘ c` (`relClassOf_eq_of_homologous`,
+#189). This is the exact tool step 2 uses: the controlled (subdivided) disk rep inherits
+`diskDetectChain_hdet`. -/
+
+/-- **`∂(Sdᵘ c)` lands in the same subspace as `∂c`.** `Sd` is a chain map (`∂Sdᵘ = Sdᵘ∂`) and
+iterated `Sd` preserves supports (`singularSd_iterate_mem_subspaceChains`). -/
+theorem chainBoundary_singularSd_iterate_mem {W : Set ↑X} (m : ℕ) (c : SingularChain X (m + 2))
+    (hc : chainBoundary X (m + 1) c ∈ subspaceChains W (m + 1)) (μ : ℕ) :
+    chainBoundary X (m + 1) ((⇑(singularSd X (m + 2)))^[μ] c) ∈ subspaceChains W (m + 1) := by
+  rw [singularSd_iterate_chainBoundary]
+  exact SingularExcision.singularSd_iterate_mem_subspaceChains hc μ
+
+/-- **Detection transfers across subdivision.** For a relative-cycle chain `c` (`∂c` supported in `W`)
+and an interior point `y ∉ W`, the subdivided rep `Sdᵘ c` has the same `({y}ᶜ)`-relative class as `c`:
+`relClassOf {y}ᶜ (Sdᵘ c) = relClassOf {y}ᶜ c`. So `Sdᵘ c` detects the local generator at `y` exactly
+when `c` does. Via `relClassOf_eq_of_homologous` on the char-2 homotopy identity
+`Sdᵘ c = c + ∂(Dᵤ c) + Dᵤ(∂c)`, with the correction `Dᵤ(∂c)` supported in `W ⊆ {y}ᶜ`. -/
+theorem relClassOf_singularSd_iterate_eq {W : Set ↑X} (m : ℕ) (c : SingularChain X (m + 2))
+    (hc : chainBoundary X (m + 1) c ∈ subspaceChains W (m + 1)) (μ : ℕ) (y : ↑X) (hy : y ∉ W) :
+    relClassOf ({y}ᶜ) m ((⇑(singularSd X (m + 2)))^[μ] c)
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (m + 1)
+          (chainBoundary_singularSd_iterate_mem m c hc μ))
+      = relClassOf ({y}ᶜ) m c
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (m + 1) hc) := by
+  have hhom := iterHomotopy_chainHomotopy X μ (m + 1) c
+  have hcongr : (⇑(singularSd X (m + 2)))^[μ] c
+      = c + chainBoundary X (m + 2) (iterHomotopy X (m + 2) μ c)
+        + iterHomotopy X (m + 1) μ (chainBoundary X (m + 1) c) := by
+    have h : c + (⇑(singularSd X (m + 2)))^[μ] c
+        = chainBoundary X (m + 2) (iterHomotopy X (m + 2) μ c)
+          + iterHomotopy X (m + 1) μ (chainBoundary X (m + 1) c) := hhom.symm
+    rw [add_assoc, ← h, ← add_assoc, ZModModule.add_self, zero_add]
+  have he : iterHomotopy X (m + 1) μ (chainBoundary X (m + 1) c) ∈ subspaceChains W (m + 2) :=
+    SingularExcision.iterHomotopy_mem_subspaceChains hc μ
+  exact relClassOf_eq_of_homologous (Set.subset_compl_singleton_iff.mpr hy) m hcongr he
+    (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (m + 1)
+      (chainBoundary_singularSd_iterate_mem m c hc μ))
+    (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (m + 1) hc)
+
+/-! ## §3. The disk-side split producer — the controlled rep's boundary splits exactly. -/
+
+/-- **The controlled rep's boundary splits into a subtype-pushforward + complementary remainder,
+staying boundary-supported.** For a relative-cycle chain `c` (`∂c` supported in `W`, `W ⊆ U ∪ V` an
+open cover), there is a subdivision count `μ` such that the controlled rep `Sdᵘ c` has
+`∂(Sdᵘ c) = mapChain (ambIncl U) cU + vOut` — the attached part `mapChain (ambIncl U) cU` a
+pushforward from `↥U`, the remainder `vOut ∈ subspaceChains V` — while `∂(Sdᵘ c)` remains supported in
+`W`. Because `∂(Sdᵘ c) = Sdᵘ(∂c)` (chain map) and `∂c` is a cycle, the split is the exact
+`hsplitHa`/`hsplit` shape for the controlled rep; combined with `relClassOf_singularSd_iterate_eq`
+(§2), `Sdᵘ c` also inherits `c`'s interior detection. The disk-side seam split, reduced to the open
+cover `{U, V}` of the boundary-support set `W`. -/
+theorem exists_subtype_boundary_split_of_relCycle [T2Space ↑X] {U V W : Set ↑X}
+    (hU : IsOpen U) (hV : IsOpen V) (hWUV : W ⊆ U ∪ V) {m : ℕ} (c : SingularChain X (m + 2))
+    (hbd : chainBoundary X (m + 1) c ∈ subspaceChains W (m + 1)) :
+    ∃ (μ : ℕ) (cU : SingularChain (sub U) (m + 1)) (vOut : SingularChain X (m + 1)),
+      vOut ∈ subspaceChains V (m + 1)
+      ∧ chainBoundary X (m + 1) ((⇑(singularSd X (m + 2)))^[μ] c)
+          = mapChain (ambIncl U) (m + 1) cU + vOut
+      ∧ chainBoundary X (m + 1) ((⇑(singularSd X (m + 2)))^[μ] c) ∈ subspaceChains W (m + 1) := by
+  have hcyc : chainBoundary X m (chainBoundary X (m + 1) c) = 0 :=
+    chainBoundary_chainBoundary_apply X m c
+  obtain ⟨μ, cU, vOut, hvOut, hsplit, _⟩ :=
+    exists_subtype_cover_split_homologous_cycle hU hV (chainBoundary X (m + 1) c)
+      (subspaceChains_mono hWUV (m + 1) hbd) hcyc
+  refine ⟨μ, cU, vOut, hvOut, ?_, chainBoundary_singularSd_iterate_mem m c hbd μ⟩
+  rw [singularSd_iterate_chainBoundary]
+  exact hsplit
 
 end
 
