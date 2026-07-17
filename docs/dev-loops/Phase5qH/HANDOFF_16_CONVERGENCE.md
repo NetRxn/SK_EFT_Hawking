@@ -162,23 +162,25 @@ lands, the σ-lane floor fires END-TO-END** (`lagrangian_of_genuineTower`,
 `novikovRealPairLES_of_genuineTower`), feeding the hbord-grade content hker and the sig
 descent consume. Round-13 spec 1 binds: genuine objects only, data inspection.
 
-**Lane 2 — the KRS supply / hypothesis H (the single deepest barrier; task #210,
-FABLE-GRADE → the lead works it directly under the budget posture):**
+**Lane 2 — the KRS supply / hypothesis H (★ ADJUDICATED 2026-07-17, lead-direct):**
 Everything but one atom is built: zS pinned to the fundamental generator (#191); the
 split engine + subdivision-detection-transfer + EXACT free-sphere hvOut at V = Sᶜ
 (#194/#198); the Ctrl supplier + `ofSharedSeam` constructor (#198/#204); the disk half
-inverted — `hasClass_ofTransfer` accepts ANY cHa in the right relative class (#207).
-**The barrier (3× independently confirmed): the shared cSeam** — one chain on the
-closed attaching region S serving BOTH co-adapted splits; chain-level splitting along
-a closed set is unreachable by the open-cover engine, and the collar homeo gives only
-class-level invariance. NOT kernel-false (holds for a genuine surgery collar) — a
-machinery gap. Roads: (A) a chain-level collar projection engine (equality-form prism
-bookkeeping); (B) the shared-source explicit construction (both sides from the same
-data; the cone operator over convex D⁵ is flagged reusable infra); (C) a class-level
-consumption reframe (gate-pending); (D) a kernel no-go if the shape is provably
-unreachable. Round-13 spec 2 binds: cSeam by data, SINGLE shared field. After it:
-hdetAB (corrector form banked) + the row tail (τ-datum terminal, hsNe/hsConn, mv
-homeos — #186's findings).
+inverted (#207). **THE #210 VERDICT (road D): the 3×-circled shared-cSeam barrier was
+NOT a machinery gap — the as-shipped open-support transfer shape is PROVABLY
+UNINHABITABLE** (`PinPlusTraceSeamTransferNoGo.lean`; fork 22
+`seam-transfer-open-support-uninhabitable`: htransfer forces closed-seam support,
+char-2 forces both split pieces to be cycles, and a fundamental class cannot decompose
+as seam-cycle + off-cycle over H₄-null regions). Do NOT re-attempt cSeam construction
+against that shape at any depth. **THE REPAIR (designed; task #212, Opus-ready,
+GATE-PENDING):** the COLLAR-PAIR split — a shrunk closed core K ⊂ int(range φ); wAtt
+supported in the CLOSED attach image (the #189 engine's U₁ := int A output has no
+spill), wOut in topface ∖ K; do NOT route through hbd_ofTransfer (the literal seam
+cancellation is unreachable) — wire into `hasClass_ofTransferCorrector` (the #178
+crossChain/MV-partition machinery absorbs the seam mismatch; the collar-pair splits
+feed hagree/hpS). The full analysis: SETTLED_FORKS
+`seam-transfer-open-support-uninhabitable` REPAIR ANALYSIS. After it: hdetAB (corrector
+form banked) + the row tail (τ-datum terminal, hsNe/hsConn, mv homeos — #186).
 
 **Lane 3 — hBbord / hypothesis 5 (near-tractable; task #211, Opus-ready):**
 Maximally reduced (#203: membrane/atlas layers DONE; #206: the (1,4) Wu leg PROVEN
