@@ -58,7 +58,14 @@ open SKEFTHawking.SingularMayerVietorisLES
 open SKEFTHawking.SingularRelativeCrossProduct
 open SKEFTHawking.SingularHomotopyInvariance
 open SKEFTHawking.SingularRelativeCoverMV
+open SKEFTHawking.SingularRelativeCoverMVTransport
 open SKEFTHawking.SingularRelClassHomologous
+open SKEFTHawking.PoincareLefschetzRelFundClass
+open SKEFTHawking.PoincareLefschetzRelFundClassGeom
+open SKEFTHawking.PinPlusTraceRelFundReduce
+open SKEFTHawking.PinPlusTraceCapstoneInhabit
+open SKEFTHawking.PinPlusTraceCapstoneCoverGlue
+open SKEFTHawking.PinPlusTraceCapstoneCoverGlueDisk
 open SKEFTHawking.PinPlusTraceCapstoneSeamTransfer
 open SKEFTHawking.PinPlusTraceCapstoneSeamTransferSupply
 open SKEFTHawking.PinPlusTraceDiskCorePair
@@ -121,6 +128,85 @@ theorem explicitDiskChain_hdet
         (explicitDiskChain_hc cHa w e he hcongr))
       (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (3 + 1) diskDetectChain_hc)]
   exact diskDetectChain_hdet y hy
+
+/-! ## §3. The explicit-`cHa` capstone residual — the disk chain is now EXPLICIT with a visible face. -/
+
+section Residual
+
+variable (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+  [CompactSpace s.M] [Nonempty s.M] [PreconnectedSpace s.M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M]
+  (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+  (hφ : Continuous φ) (hφinj : Function.Injective φ)
+  (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+  (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+  (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+
+/-- **The narrowed capstone residual, EXPLICIT-`cHa` form.** As `CapstoneSeamTransferResidual` (#184)
+but with the disk chain freed from the anonymous `diskDetectChain`: an EXPLICIT `cHa` together with a
+homology witness `cHa = diskDetectChain + ∂w + e` (`e` on the boundary sphere), so its detecting
+triple `{hc, hdet}` is supplied by `explicitDiskChain_hc`/`explicitDiskChain_hdet` (§1/§2). The shared
+seam core `seam` now runs over the EXPLICIT `cHa`, so the disk-boundary split `∂cHa = incl_# cSeam +
+vOut` (its `hsplitHa`) is a split of an EXPLICIT, computable boundary — a *nameable* `S`-face, which
+the anonymous `.choose` could not expose (#204 route (a) wall). This is the disk-side twin of the
+cylinder controlled representative `crossChain` (#178). -/
+structure CapstoneSeamTransferResidualExplicit where
+  /-- a fundamental cycle of the closed source 4-manifold `M`. -/
+  z : cycles (TopCat.of s.M) (2 + 2)
+  /-- `z` represents the fundamental class. -/
+  hz : SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := s.M)
+      = Homology.mk (TopCat.of s.M) (2 + 2) z
+  /-- the EXPLICIT disk chain (typed at `D⁵ ≡ .Ha`). -/
+  cHa : SingularChain (TopCat.of D5) (3 + 2)
+  /-- the homology-witness chain (degree `3+3`). -/
+  w : SingularChain (TopCat.of D5) (3 + 3)
+  /-- the sphere-supported perturbation. -/
+  e : SingularChain (TopCat.of D5) (3 + 2)
+  /-- the perturbation is supported on the boundary sphere `∂D⁵`. -/
+  he : e ∈ subspaceChains (X := TopCat.of D5)
+    {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} (3 + 2)
+  /-- the homology witness: `cHa` is homologous rel-sphere to `diskDetectChain`. -/
+  hcongr : cHa = diskDetectChain + chainBoundary (TopCat.of D5) (3 + 2) w + e
+  /-- the `htransfer`-free shared seam core over the EXPLICIT `cHa` (its `hsplitHa` is the visible
+  `S`-face split `∂cHa = incl_# cSeam + vOut`). -/
+  seam : CapstoneSeamTransferSeam s S hS φ hφ hφinj z cHa
+  /-- the overlap-zone straddle detection over the glued (controlled cylinder ⊕ EXPLICIT disk) chain. -/
+  hdetAB : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      (hx : x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)),
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+    relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+      (closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+          (3 + 2) (capstoneCylChainT s S hS φ hφ hφinj z)
+        + closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+          (3 + 2) cHa)
+      (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1)
+        (hbd_ofTransfer s t S hS φ hφ hφinj cd hseam d
+          (CapstoneSeamTransferSeam.toTransfer s S hS φ hφ hφinj seam))) ≠ 0
+
+/-- **The explicit-`cHa` residual fires the capstone `hasClass`.** Feeds `hasClass_ofTransfer` the
+EXPLICIT disk chain `R.cHa` with its transported detecting triple (`explicitDiskChain_hc`/`_hdet`),
+the transfer datum `R.seam.toTransfer` (its `htransfer` discharged, #184 §2), and the straddle
+detection. So the deepest capstone atom reduces, for connected `s.M`, to inhabiting
+`CapstoneSeamTransferResidualExplicit` — `{a fundamental cycle of M, an EXPLICIT disk chain homologous
+rel-sphere to diskDetectChain with a VISIBLE `S`-face split, the shared seam, the straddle
+detection}` — with the disk chain no longer an anonymous `.choose`. -/
+def CapstoneSeamTransferResidualExplicit.toHasClass
+    (R : CapstoneSeamTransferResidualExplicit s t S hS φ hφ hφinj cd hseam d) :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
+  hasClass_ofTransfer s t S hS φ hφ hφinj cd hseam d R.z R.hz
+    R.cHa (explicitDiskChain_hc R.cHa R.w R.e R.he R.hcongr)
+    (fun y hy => explicitDiskChain_hdet R.cHa R.w R.e R.he R.hcongr y hy)
+    (CapstoneSeamTransferSeam.toTransfer s S hS φ hφ hφinj R.seam)
+    R.hdetAB
+
+end Residual
 
 end
 
