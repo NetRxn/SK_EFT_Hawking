@@ -143,6 +143,32 @@ theorem zSclass_ne_zero : zSclass ≠ 0 :=
     (PinPlusTraceDiskRelFundReduce.disk_homology_zero 3)
     dcLift relClassOf_diskDetectChain_ne_zero
 
+/-! ## §2. `[zS]` is the fundamental sphere generator (the `betaClass` identification). -/
+
+/-- **The sphere `{‖v‖ = 1} ≃ₜ Sph 4`** — the `subSubtypeHomeo` instance for `{‖v‖=1} ⊆ D⁵ ⊆ E⁵`, the
+`Ssph`-native twin of `PinPlusTraceDiskCorePair.boundaryHomeoSph` (which uses `∂D⁵`). The membership
+bridge is `mem_sphere_zero_iff_norm` directly (no `boundary_D5`). -/
+def sphHomeoSph :
+    (sub (X := TopCat.of D5) Ssph : Type) ≃ₜ (SingularSphereAcyclic.Sph 4 : Type) :=
+  PinPlusTraceDiskCorePair.subSubtypeHomeo
+    (p := fun a => a ∈ Metric.closedBall (0 : EuclideanSpace ℝ (Fin 5)) 1)
+    Ssph (Metric.sphere (0 : EuclideanSpace ℝ (Fin 5)) 1)
+    (fun _ => mem_sphere_zero_iff_norm.symm)
+    (fun _ ha => Metric.sphere_subset_closedBall ha)
+
+/-- **The `ℤ/2` iso `H₄({‖v‖ = 1}) ≃ ℤ/2`** — transport the top sphere iso across `sphHomeoSph`. Its
+`.symm 1` is the fundamental generator (the `Ssph`-native twin of the construction of `betaClass`). -/
+def sphGenIso : Homology (sub (X := TopCat.of D5) Ssph) 4 ≃ₗ[ZMod 2] ZMod 2 :=
+  (PinPlusCharPairRealizationTied.homeoHomologyEquiv sphHomeoSph 4).trans
+    (SingularLineMinusPoint.topSphereIso 3)
+
+/-- **`[zS] = sphGenIso.symm 1` — `zS` IS the fundamental sphere generator.** Over `ℤ/2`, the unique
+nonzero element of `H₄({‖v‖=1}) ≅ ℤ/2` is the generator; `[zS] ≠ 0` (`zSclass_ne_zero`) pins it to it.
+This is the `Ssph`-native form of `[zS] = betaClass` (`betaClass = (boundaryHomeoSph-iso).symm 1` over
+the set-equal `∂D⁵`); the two generators agree under `boundary_D5`. -/
+theorem zSclass_eq_sphGen : zSclass = sphGenIso.symm 1 :=
+  eq_linearEquiv_symm_one_of_ne_zero sphGenIso zSclass_ne_zero
+
 end
 
 end SKEFTHawking.PinPlusTraceDiskSphereCycle
