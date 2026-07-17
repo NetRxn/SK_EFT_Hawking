@@ -321,4 +321,104 @@ theorem isManifold_J6 {k : WithTop ℕ∞} : IsManifold (J6) k SphereDisk := by
     exact conj_mem_J6 ((contDiffGroupoid k J6L).compatible hf₁ hf₂)
   exact IsManifold.mk' (J6) k SphereDisk
 
+/-! ### §5. Transporting `sphereDiskIncl`'s smoothness to `(𝓡 4, J6)` (deliverable 4 support) -/
+
+/-- The extended chart of the merged `R4` atlas is the natural `I4` extended chart post-composed
+with `Lmerge` (pointwise, mirrors `extChartAt_J5_apply`). -/
+theorem extChartAt_R4_apply (q z : SphereProd) :
+    (extChartAt (R4) q) z = Lmerge ((extChartAt I4 q) z) := by
+  rw [extChartAt_coe, Function.comp_apply, extChartAt_coe, Function.comp_apply]
+  exact R4_comp_γhomeo _
+
+/-- The merged and natural extended charts of `SphereProd` share the same source. -/
+theorem extChartAt_R4_source (q : SphereProd) :
+    (extChartAt (R4) q).source = (extChartAt I4 q).source := by
+  rw [extChartAt_source, extChartAt_source]
+  show ((chartAt (ModelProd E2 E2) q).trans γOPH).source = (chartAt (ModelProd E2 E2) q).source
+  rw [OpenPartialHomeomorph.trans_source, γOPH_source, Set.preimage_univ, Set.inter_univ]
+
+/-- The extended chart of the merged `J6` atlas is the banked `J5` extended chart post-composed
+with `Lcle2` (pointwise, mirrors `extChartAt_J5_apply`). -/
+theorem extChartAt_J6_apply (q z : SphereDisk) :
+    (extChartAt (J6) q) z = Lcle2 ((extChartAt J5 q) z) := by
+  rw [extChartAt_coe, Function.comp_apply, extChartAt_coe, Function.comp_apply]
+  exact J6_comp_βhomeo _
+
+/-- The merged and `J5` extended charts of `SphereDisk` share the same source. -/
+theorem extChartAt_J6_source (q : SphereDisk) :
+    (extChartAt (J6) q).source = (extChartAt J5 q).source := by
+  rw [extChartAt_source, extChartAt_source]
+  show ((chartAt HB q).trans βOPH).source = (chartAt HB q).source
+  rw [OpenPartialHomeomorph.trans_source, βOPH_source, Set.preimage_univ, Set.inter_univ]
+
+/-- **Step A — target-only re-association**: `sphereDiskIncl` is `C^k` for `(I4, J6)` (the banked
+`(I4, J5)` smoothness, post-composed with the `J5 → J6` merge `Lcle2`). -/
+theorem smooth_incl_I4_J6 {k : WithTop ℕ∞} : ContMDiff I4 (J6) k sphereDiskIncl := by
+  haveI : IsManifold J5 k SphereDisk := isManifold_J5
+  haveI : IsManifold (J6) k SphereDisk := isManifold_J6
+  have hnat := smooth_incl_J5 (k := k)
+  rw [contMDiff_iff] at hnat ⊢
+  obtain ⟨hcont, hnat2⟩ := hnat
+  refine ⟨hcont, fun p q => ?_⟩
+  rw [show (extChartAt (J6) q).source = (extChartAt J5 q).source from extChartAt_J6_source q]
+  refine ((Lcle2.contDiff.of_le le_top).comp_contDiffOn (hnat2 p q)).congr ?_
+  intro z _
+  simp only [Function.comp_apply]
+  exact (extChartAt_J6_apply q _).symm
+
+/-- The merged extended chart's target is the `Lmerge`-image of the natural target (via
+`PartialEquiv.image_source_eq_target` + the shared source `extChartAt_R4_source`). -/
+theorem extChartAt_R4_target (p : SphereProd) :
+    (extChartAt (R4) p).target = Lmerge '' (extChartAt I4 p).target := by
+  have hfun : (⇑(extChartAt (R4) p) : SphereProd → E4) = ⇑Lmerge ∘ ⇑(extChartAt I4 p) := by
+    funext z; exact extChartAt_R4_apply p z
+  rw [← PartialEquiv.image_source_eq_target, ← PartialEquiv.image_source_eq_target,
+    extChartAt_R4_source, hfun, Set.image_comp]
+
+/-- The merged extended chart's inverse reads as the natural inverse pre-composed with
+`Lmerge.symm` (on the merged target). -/
+theorem extChartAt_R4_symm_apply {p : SphereProd} {w : E4} (hw : w ∈ (extChartAt (R4) p).target) :
+    (extChartAt (R4) p).symm w = (extChartAt I4 p).symm (Lmerge.symm w) := by
+  have hmem : Lmerge.symm w ∈ (extChartAt I4 p).target := by
+    rw [extChartAt_R4_target] at hw
+    obtain ⟨v, hv, rfl⟩ := hw
+    rwa [Lmerge.symm_apply_apply]
+  have hsrc : (extChartAt I4 p).symm (Lmerge.symm w) ∈ (extChartAt (R4) p).source := by
+    rw [extChartAt_R4_source]
+    exact (extChartAt I4 p).map_target hmem
+  have heq : (extChartAt (R4) p) ((extChartAt I4 p).symm (Lmerge.symm w)) = w := by
+    rw [extChartAt_R4_apply, (extChartAt I4 p).right_inv hmem, Lmerge.apply_symm_apply]
+  have hleft := (extChartAt (R4) p).left_inv hsrc
+  rwa [heq] at hleft
+
+/-- **Step B — source-only re-association**: `sphereDiskIncl` is `C^k` for `(𝓡4, J6)` (Step A's
+`(I4, J6)` smoothness, pre-composed with the `I4 → 𝓡4` merge `Lmerge`). -/
+theorem smooth_incl_R4_J6 {k : WithTop ℕ∞} : ContMDiff (R4) (J6) k sphereDiskIncl := by
+  haveI : IsManifold (R4) k SphereProd := isManifold_R4
+  haveI : IsManifold (J6) k SphereDisk := isManifold_J6
+  have hnat := smooth_incl_I4_J6 (k := k)
+  rw [contMDiff_iff] at hnat ⊢
+  obtain ⟨hcont, hnat2⟩ := hnat
+  refine ⟨hcont, fun p q => ?_⟩
+  have hmapsto : Set.MapsTo (⇑Lmerge.symm)
+      ((extChartAt (R4) p).target ∩
+        ↑(extChartAt (R4) p).symm ⁻¹' (sphereDiskIncl ⁻¹' (extChartAt (J6) q).source))
+      ((extChartAt I4 p).target ∩
+        ↑(extChartAt I4 p).symm ⁻¹' (sphereDiskIncl ⁻¹' (extChartAt (J6) q).source)) := by
+    rintro z ⟨hz1, hz2⟩
+    refine ⟨?_, ?_⟩
+    · rw [extChartAt_R4_target] at hz1
+      obtain ⟨v, hv, rfl⟩ := hz1
+      rwa [Lmerge.symm_apply_apply]
+    · simp only [Set.mem_preimage] at hz2 ⊢
+      rwa [← extChartAt_R4_symm_apply hz1]
+  have hcongr : ∀ z ∈ (extChartAt (R4) p).target ∩
+      ↑(extChartAt (R4) p).symm ⁻¹' (sphereDiskIncl ⁻¹' (extChartAt (J6) q).source),
+      (↑(extChartAt (J6) q) ∘ sphereDiskIncl ∘ ↑(extChartAt I4 p).symm) (Lmerge.symm z)
+        = (↑(extChartAt (J6) q) ∘ sphereDiskIncl ∘ ↑(extChartAt (R4) p).symm) z := by
+    rintro z ⟨hz1, -⟩
+    simp only [Function.comp_apply]
+    rw [extChartAt_R4_symm_apply hz1]
+  exact ((hnat2 p q).comp (Lmerge.symm.contDiff.of_le le_top).contDiffOn hmapsto).congr hcongr
+
 end SKEFTHawking.SpinSigmaRoute
