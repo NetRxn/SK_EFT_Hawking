@@ -1177,4 +1177,46 @@ theorem bp_converges_on_ranked_acyclic {ν α X : Type*}
     rw [flattenMsg_bpUpdate, flattenMsg_iterate]
     exact hfix
 
+/-! ## Non-vacuity witness: a genuine 3-node tree with a rank certificate
+
+To show `bp_converges_on_ranked_acyclic` is not vacuous — that
+`BPRankCert` is genuinely inhabited on a real tree, not only on the
+edgeless graph — we exhibit the "star" factor graph with a single factor
+incident to two variables. Its bipartite incidence graph is the path
+`inl v₀ – inr a₀ – inl v₁`, a genuine 3-node tree, and it carries an
+explicit rank certificate (factor→variable messages outrank
+variable→factor messages). `bp_converges_on_star` then instantiates the
+headline convergence theorem on it. -/
+
+/-- The **star** factor graph: one factor incident to both of two
+    variables. Its incidence graph is the 3-node path (a genuine tree). -/
+def starFactorGraph : FactorGraph (Fin 2) (Fin 1) := ⟨fun _ _ => true⟩
+
+/-- An explicit BP rank certificate for `starFactorGraph`: rank every
+    factor→variable endpoint above every variable→factor endpoint. The
+    `var_gt` obligation is vacuous (there is only one factor, so no `b ≠ a`
+    incident to a variable); the `fac_gt` obligation is `0 < 1`. -/
+def bpRankCertStar : BPRankCert starFactorGraph where
+  rank e := Sum.elim (fun _ => 0) (fun _ => 1) e
+  var_gt := by
+    intro _ a b hba _
+    exact absurd (Subsingleton.elim b a) hba
+  fac_gt := by
+    intro _ _ _ _ _
+    simp only [Sum.elim_inl, Sum.elim_inr]
+    omega
+
+/-- **Non-vacuity of BP convergence.** On the genuine 3-node tree
+    `starFactorGraph`, for ANY factor weights and ANY initial message
+    bundle, synchronous BP reaches a genuine `IsBPFixedPoint` in bounded
+    rounds. Witnesses that `bp_converges_on_ranked_acyclic` fires on a real
+    tree — the convergence claim is not vacuous. -/
+theorem bp_converges_on_star {X : Type*} [Fintype X] [DecidableEq X]
+    (factorWeight : Fin 1 → (Fin 2 → X) → ℝ)
+    (m : BPMessages (Fin 2) (Fin 1) starFactorGraph X) :
+    IsBPFixedPoint
+      ((fun m' => bpUpdate m' factorWeight)^[convergenceHorizon bpRankCertStar.rank] m)
+      factorWeight :=
+  (bp_converges_on_ranked_acyclic bpRankCertStar factorWeight m).2
+
 end SKEFTHawking.BeliefPropagation
