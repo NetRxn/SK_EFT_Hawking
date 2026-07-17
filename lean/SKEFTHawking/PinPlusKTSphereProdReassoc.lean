@@ -25,7 +25,7 @@ import SKEFTHawking.SphereDiskFreezeB
 namespace SKEFTHawking.SpinSigmaRoute
 
 open scoped Manifold
-open Metric Set
+open Metric Set SKEFTHawking.BordismTheory
 
 set_option maxRecDepth 4000
 
@@ -420,5 +420,62 @@ theorem smooth_incl_R4_J6 {k : WithTop ℕ∞} : ContMDiff (R4) (J6) k sphereDis
     simp only [Function.comp_apply]
     rw [extChartAt_R4_symm_apply hz1]
   exact ((hnat2 p q).comp (Lmerge.symm.contDiff.of_le le_top).contDiffOn hmapsto).congr hcongr
+
+/-! ### §6. Boundary transport (deliverable 5) -/
+
+/-- The `J6` euclidean range is the `Lcle2`-image of the `J5` range (mirrors
+`range_J5_eq_Lcle_image`). -/
+theorem range_J6_eq_Lcle2_image : range ⇑(J6) = ⇑Lcle2 '' range ⇑J5 := by
+  rw [range_J6_eq_J6L, J6L_coe, Set.range_comp]
+
+/-- **Associator invariance of the boundary** (`J6` vs `J5`, mirrors
+`boundary_J5_eq_boundary_J5'`): the re-associated `J6` atlas has the same manifold boundary as
+the banked `J5` atlas — the boundary set is a homeomorphism invariant. -/
+theorem boundary_J6_eq_boundary_J5 :
+    (J6).boundary SphereDisk = J5.boundary SphereDisk := by
+  ext x
+  simp only [ModelWithCorners.boundary, ModelWithCorners.IsBoundaryPoint, Set.mem_setOf_eq]
+  rw [extChartAt_J6_apply, range_J6_eq_Lcle2_image]
+  simp only [← ContinuousLinearEquiv.coe_toHomeomorph]
+  rw [← Homeomorph.image_frontier]
+  exact Lcle2.toHomeomorph.injective.mem_set_image
+
+/-- **Deliverable 5** — the consumer's `J6` manifold boundary of `SphereDisk` equals
+`sphereDiskBoundarySet` (the genuine topological frontier slice `S² × ∂D³`,
+`sphereDiskBoundarySet_eq_frontier`): transports the banked `boundary_J5_eq`
+(`SphereDiskFreezeB.lean`) across the `J5 → J6` merge. -/
+theorem sphereDisk_boundary_eq : (J6).boundary SphereDisk = sphereDiskBoundarySet := by
+  rw [boundary_J6_eq_boundary_J5, boundary_J5_eq]
+
+/-! ### §7. The assembled `Bordism` in the consumer's model (deliverable 4) -/
+
+/-- **`sphereProdCoboundaryBordism`** — the banked `S²×D³` coboundary `Bordism`, re-associated
+into the 16-convergence assembly consumer's model `J6 = (𝓡 4).prod (𝓡∂ 1)`: `W = SphereDisk`
+(definitionally), the boundary inclusion `e := sphereDiskIncl ⊔ isEmptyElim` is `C^k` for
+`(𝓡4, J6)` (`smooth_incl_R4_J6`) with range the `J6`-boundary (`sphereDisk_boundary_eq`). -/
+noncomputable def sphereProdCoboundaryBordism (k : WithTop ℕ∞) :
+    Bordism (J6) (sphereProdSM4 k) (emptySM (X := PUnit) (k := k) (I := R4)) :=
+  haveI : IsManifold (R4) k SphereProd := isManifold_R4
+  haveI : IsManifold (J6) k SphereDisk := isManifold_J6
+  { W := SphereDisk
+    e := Sum.elim sphereDiskIncl (fun z => isEmptyElim z)
+    he_smooth := ContMDiff.sumElim smooth_incl_R4_J6 (fun z => isEmptyElim z)
+    he_inj := by
+      rintro (a | a) (b | b) hab
+      · exact congrArg Sum.inl (sphereDiskIncl_injective hab)
+      · exact isEmptyElim b
+      · exact isEmptyElim a
+      · exact isEmptyElim a
+    he_boundary := by
+      rw [Set.Sum.elim_range]
+      simp only [Set.range_eq_empty, Set.union_empty]
+      exact range_sphereDiskIncl.trans sphereDisk_boundary_eq.symm
+    g := fun _ => PUnit.unit
+    hg := continuous_const
+    hg_restrict := by
+      funext x
+      rcases x with a | z
+      · rfl
+      · exact isEmptyElim z }
 
 end SKEFTHawking.SpinSigmaRoute
