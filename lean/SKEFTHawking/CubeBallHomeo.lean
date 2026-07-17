@@ -108,4 +108,77 @@ lemma cubeBallHomeo_image_frontier :
   rw [frontier, image_diff (cubeBallHomeo n).injective, cubeBallHomeo_image_closure,
     cubeBallHomeo_image_interior, closedBall_diff_ball]
 
+/-- The inverse homeomorphism carries the Euclidean sphere back onto the cube frontier. -/
+lemma cubeBallHomeo_symm_image_sphere :
+    (cubeBallHomeo n).symm '' sphere 0 1 = frontier (cube n) := by
+  rw [← cubeBallHomeo_image_frontier n, ← Set.image_comp]
+  simp
+
+/-! ### `MapsTo` facts on the ambient space -/
+
+/-- Boundary correspondence, forward: cube frontier ↦ Euclidean sphere. -/
+lemma mapsTo_cubeBallHomeo_frontier :
+    MapsTo (cubeBallHomeo n) (frontier (cube n)) (sphere 0 1) :=
+  mapsTo_iff_image_subset.mpr (cubeBallHomeo_image_frontier n).subset
+
+/-- Boundary correspondence, backward: Euclidean sphere ↦ cube frontier. -/
+lemma mapsTo_cubeBallHomeo_symm_sphere :
+    MapsTo (cubeBallHomeo n).symm (sphere 0 1) (frontier (cube n)) :=
+  mapsTo_iff_image_subset.mpr (cubeBallHomeo_symm_image_sphere n).subset
+
+/-- Interior correspondence, forward: open cube ↦ open Euclidean ball. -/
+lemma mapsTo_cubeBallHomeo_interior :
+    MapsTo (cubeBallHomeo n) (interior (cube n)) (ball 0 1) :=
+  mapsTo_iff_image_subset.mpr (cubeBallHomeo_image_interior n).subset
+
+/-- Whole-set correspondence, forward: closed cube ↦ closed Euclidean ball. -/
+lemma mapsTo_cubeBallHomeo_cube :
+    MapsTo (cubeBallHomeo n) (cube n) (closedBall 0 1) :=
+  mapsTo_iff_image_subset.mpr (cubeBallHomeo_image_cube n).subset
+
+/-! ### Subtype homeomorphism and boundary sets (packaged for the pair consumer)
+
+`RelativeHomology.map_bijective_of_homotopyEquiv_pair` consumes `X Y : TopCat`, `A : Set ↑X`,
+`B : Set ↑Y`, an `f : C(↑X, ↑Y)`, `g : C(↑Y, ↑X)`, `Set.MapsTo` facts, and pair homotopies. Take
+`X = ↥(cube n)`, `Y = ↥(closedBall 0 1)`, `A = cubeBoundary n`, `B = ballBoundary n`,
+`f = (cubeBallSubtypeHomeo n).toContinuousMap`, `g = (cubeBallSubtypeHomeo n).symm.toContinuousMap`.
+Since `f` and `g` are two-sided inverses on the nose, the required homotopies are constant. -/
+
+/-- The cube-to-ball homeomorphism as a homeomorphism of subtypes. -/
+noncomputable def cubeBallSubtypeHomeo :
+    ↥(cube n) ≃ₜ ↥(closedBall (0 : EuclideanSpace ℝ (Fin n)) 1) :=
+  ((cubeBallHomeo n).image (cube n)).trans (Homeomorph.setCongr (cubeBallHomeo_image_cube n))
+
+@[simp] lemma cubeBallSubtypeHomeo_coe (p : ↥(cube n)) :
+    (↑(cubeBallSubtypeHomeo n p) : EuclideanSpace ℝ (Fin n)) = cubeBallHomeo n ↑p := by
+  simp [cubeBallSubtypeHomeo, Homeomorph.setCongr]
+
+@[simp] lemma cubeBallSubtypeHomeo_symm_coe
+    (q : ↥(closedBall (0 : EuclideanSpace ℝ (Fin n)) 1)) :
+    (↑((cubeBallSubtypeHomeo n).symm q) : EuclideanSpace ℝ (Fin n)) = (cubeBallHomeo n).symm ↑q := by
+  have h := cubeBallSubtypeHomeo_coe n ((cubeBallSubtypeHomeo n).symm q)
+  rw [Homeomorph.apply_symm_apply] at h
+  rw [h, Homeomorph.symm_apply_apply]
+
+/-- The cube boundary (its faces) as a subset of the cube subtype. -/
+def cubeBoundary : Set ↥(cube n) := {p | (↑p : EuclideanSpace ℝ (Fin n)) ∈ frontier (cube n)}
+
+/-- The Euclidean unit sphere as a subset of the closed-ball subtype. -/
+def ballBoundary : Set ↥(closedBall (0 : EuclideanSpace ℝ (Fin n)) 1) :=
+  {q | (↑q : EuclideanSpace ℝ (Fin n)) ∈ sphere 0 1}
+
+/-- Subtype-level boundary correspondence, forward — the `hf` argument for the pair consumer. -/
+lemma mapsTo_cubeBallSubtypeHomeo_boundary :
+    MapsTo (cubeBallSubtypeHomeo n) (cubeBoundary n) (ballBoundary n) := by
+  intro p hp
+  simp only [ballBoundary, mem_setOf_eq, cubeBallSubtypeHomeo_coe]
+  exact mapsTo_cubeBallHomeo_frontier n hp
+
+/-- Subtype-level boundary correspondence, backward — the `hg` argument for the pair consumer. -/
+lemma mapsTo_cubeBallSubtypeHomeo_symm_boundary :
+    MapsTo (cubeBallSubtypeHomeo n).symm (ballBoundary n) (cubeBoundary n) := by
+  intro q hq
+  simp only [cubeBoundary, mem_setOf_eq, cubeBallSubtypeHomeo_symm_coe]
+  exact mapsTo_cubeBallHomeo_symm_sphere n hq
+
 end SKEFTHawking.CubeBallHomeo
