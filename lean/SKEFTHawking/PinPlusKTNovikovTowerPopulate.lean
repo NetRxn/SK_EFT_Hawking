@@ -47,6 +47,7 @@ open SKEFTHawking.SingularEuclideanCapIsoInt
 open SKEFTHawking.SingularRelativeUCInt
 open SKEFTHawking.SingularRelativeCohomDeltaInt
 open SKEFTHawking.SingularRelativeCapConnectingInt
+open SKEFTHawking.SingularRelativeCapHomologyInt
 open SKEFTHawking.SingularRelativeCapHadjInt
 open SKEFTHawking.SingularCapChainInclInt (pullbackCochainInt pullbackCochainInt_apply)
 open SKEFTHawking.SingularRelativeHomologyMod2 (sub)
@@ -237,5 +238,33 @@ theorem deltaRelHIntLin_restrictHInt (c : Cohomology X 2) :
       congrArg (Cohomology.mk (sub S) 2) (Subtype.ext (by rw [restrictCocycleIntLin_coe,
         restrictLiftCocycleInt_coe])), deltaRelHIntLin_restrictLift]
   exact deltaRelHInt_of_cocycle_eq_zero _ hz (LinearMap.mem_ker.mp a.2)
+
+/-! ## §3. The coordinate PD-square with the DESCENDED δ (the `hadjDot` geometric core)
+
+`#196`'s `coord_hadj_eq_relKroneckerHInt` phrased the PD-square with the lift-model `deltaRelHInt v hv`.
+Here it is re-expressed with the §1 genuine descended `δ`-`LinearMap` `deltaRelHIntLin` — the connecting map of
+the boundary cohomology CLASS `[ι*v]` — via `deltaRelHIntLin_restrictLift`. This is the geometric content of
+the substrate's `hadjDot` field on restriction vectors: the boundary Gram form of `ι*a` against `ι*v` equals
+the relative Kronecker pairing of the genuine `δ[ι*v]` against `a ⌢ [W,∂W]`. -/
+
+/-- **The coordinate PD-square, with the genuine descended `δ`.** For the disclosed boundary basis `B` and
+the tethered relative fundamental cycle `Z`, the boundary Gram value of the restriction coordinates equals
+the relative Kronecker pairing of the DESCENDED connecting map `deltaRelHIntLin [ι*v]` against the relative
+cap `a ⌢ [W,∂W]`. Upgrades `#196`'s lift-model `coord_hadj_eq_relKroneckerHInt` to the object-level δ. -/
+theorem coord_hadj_deltaRelHIntLin
+    (a : LinearMap.ker (coboundaryₗ X 2)) (v : SingularCochainInt X 2)
+    (hv : coboundaryₗ X 2 v ∈ relCochainsInt S (2 + 1)) (Z : relCycleLift S (2 + 1 + 1))
+    (B : IntH2Basis (sub S)) :
+    SingularRelativeRealBaseChange.coord B (Cohomology.mk (sub S) 2 (restrictCocycleInt a)) ⬝ᵥ
+        (((interMatrix
+            (intFundamentalClassOfHomology
+              (connectingInt S (2 + 1 + 1) (relCycleToHom S (2 + 1 + 1) Z))) B).map
+              (Int.cast : ℤ → ℝ)) *ᵥ SingularRelativeRealBaseChange.coord B
+              (Cohomology.mk (sub S) 2 (restrictLiftCocycleInt v hv)))
+      = ((relKroneckerHInt S
+          (deltaRelHIntLin (Cohomology.mk (sub S) 2 (restrictLiftCocycleInt v hv)))
+          (capRelHInt 2 2 (Cohomology.mk X 2 a) (relCycleToHom S (2 + 1 + 1) Z)) : ℤ) : ℝ) := by
+  rw [deltaRelHIntLin_restrictLift]
+  exact coord_hadj_eq_relKroneckerHInt a v hv Z B
 
 end SKEFTHawking.PinPlusKTNovikovTowerPopulate
