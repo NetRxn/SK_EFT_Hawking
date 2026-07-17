@@ -18,7 +18,7 @@ frontier match follows from `closure \ interior`.
 ## Headlines
 
 * `cubeBallHomeo n : EuclideanSpace ℝ (Fin n) ≃ₜ EuclideanSpace ℝ (Fin n)` — the self-homeomorphism.
-* `cubeBallHomeo_image_frontier` / `_interior` / `_cube` — the boundary/interior/whole-set image facts.
+* `cubeBallHomeo_image_frontier` / `_interior` / `_cube` — the boundary/interior/whole-set images.
 * `cubeBallSubtypeHomeo n : ↥(cube n) ≃ₜ ↥(Metric.closedBall 0 1)` — the subtype homeomorphism,
   packaged for `RelativeHomology.map_bijective_of_homotopyEquiv_pair`.
 
@@ -114,6 +114,57 @@ lemma cubeBallHomeo_symm_image_sphere :
   rw [← cubeBallHomeo_image_frontier n, ← Set.image_comp]
   simp
 
+/-! ### Explicit descriptions of the cube's interior and frontier -/
+
+/-- The open cube `{x | ∀ i, |x i| < 1}` is open. -/
+lemma isOpen_openCube :
+    IsOpen {x : EuclideanSpace ℝ (Fin n) | ∀ i, |x i| < 1} := by
+  have hEq : {x : EuclideanSpace ℝ (Fin n) | ∀ i, |x i| < 1}
+      = ⋂ i, {x : EuclideanSpace ℝ (Fin n) | |x i| < 1} := by
+    ext x; simp only [mem_iInter, mem_setOf_eq]
+  rw [hEq]
+  refine isOpen_iInter_of_finite fun i => ?_
+  exact isOpen_lt (continuous_abs.comp (by fun_prop)) continuous_const
+
+/-- The interior of the cube is the open cube `{x | ∀ i, |x i| < 1}`. -/
+lemma interior_cube :
+    interior (cube n) = {x : EuclideanSpace ℝ (Fin n) | ∀ i, |x i| < 1} := by
+  apply Subset.antisymm
+  · intro x hx i
+    rw [mem_interior_iff_mem_nhds, Metric.mem_nhds_iff] at hx
+    obtain ⟨ε, hε, hball⟩ := hx
+    have hnorm : ∀ c : ℝ, ‖c • (EuclideanSpace.single i (1:ℝ))‖ = |c| := fun c => by
+      rw [norm_smul, Real.norm_eq_abs]; simp [PiLp.norm_single]
+    have hcoord : ∀ c : ℝ, (x + c • (EuclideanSpace.single i (1:ℝ))) i = x i + c := fun c => by
+      simp [PiLp.add_apply, PiLp.smul_apply]
+    have hup : x i + ε / 2 ≤ 1 := by
+      have hmem : x + (ε / 2) • (EuclideanSpace.single i (1:ℝ)) ∈ ball x ε := by
+        rw [mem_ball_iff_norm, add_sub_cancel_left, hnorm, abs_of_pos (by linarith)]; linarith
+      have h2 := (hball hmem) i
+      rw [hcoord] at h2
+      exact (abs_le.mp h2).2
+    have hlow : (-1 : ℝ) ≤ x i - ε / 2 := by
+      have hmem : x + (-(ε / 2)) • (EuclideanSpace.single i (1:ℝ)) ∈ ball x ε := by
+        rw [mem_ball_iff_norm, add_sub_cancel_left, hnorm, abs_of_neg (by linarith)]; linarith
+      have h2 := (hball hmem) i
+      rw [hcoord] at h2
+      linarith [(abs_le.mp h2).1]
+    rw [abs_lt]
+    exact ⟨by linarith, by linarith⟩
+  · exact interior_maximal (fun x hx i => (hx i).le) (isOpen_openCube n)
+
+/-- The frontier of the cube is its union of faces: the cube points with some coordinate `= ±1`. -/
+lemma frontier_cube :
+    frontier (cube n) = {x : EuclideanSpace ℝ (Fin n) | x ∈ cube n ∧ ∃ i, |x i| = 1} := by
+  rw [frontier, (isClosed_cube n).closure_eq, interior_cube]
+  ext x
+  simp only [mem_diff, mem_setOf_eq, not_forall, not_lt]
+  constructor
+  · rintro ⟨hx, i, hi⟩
+    exact ⟨hx, i, le_antisymm (hx i) hi⟩
+  · rintro ⟨hx, i, hi⟩
+    exact ⟨hx, i, hi.ge⟩
+
 /-! ### `MapsTo` facts on the ambient space -/
 
 /-- Boundary correspondence, forward: cube frontier ↦ Euclidean sphere. -/
@@ -155,7 +206,8 @@ noncomputable def cubeBallSubtypeHomeo :
 
 @[simp] lemma cubeBallSubtypeHomeo_symm_coe
     (q : ↥(closedBall (0 : EuclideanSpace ℝ (Fin n)) 1)) :
-    (↑((cubeBallSubtypeHomeo n).symm q) : EuclideanSpace ℝ (Fin n)) = (cubeBallHomeo n).symm ↑q := by
+    (↑((cubeBallSubtypeHomeo n).symm q) : EuclideanSpace ℝ (Fin n))
+      = (cubeBallHomeo n).symm ↑q := by
   have h := cubeBallSubtypeHomeo_coe n ((cubeBallSubtypeHomeo n).symm q)
   rw [Homeomorph.apply_symm_apply] at h
   rw [h, Homeomorph.symm_apply_apply]
