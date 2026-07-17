@@ -147,6 +147,85 @@ def sphereInclDiskPunc (y0 : ThreeDisk) (hy0 : ‖(y0 : E3)‖ < 1) :
     apply Continuous.subtype_mk
     fun_prop
 
+/-- **The ray-exit deformation homotopy** `H(b, t) = t•b + (1−t)•rayExit(y₀,b)` on `D³∖{y₀}`
+(a straight line inside `D³` off `y₀`), from `i ∘ r` (`t = 0`, full ray-exit) to `id` (`t = 1`). -/
+def diskPuncHomotopy (y0 : ThreeDisk) (hy0 : ‖(y0 : E3)‖ < 1) :
+    C(↑(DiskPunc y0) × unitInterval, ↑(DiskPunc y0)) where
+  toFun p := ⟨⟨(p.2 : ℝ) • ((p.1 : ThreeDisk) : E3)
+      + (1 - (p.2 : ℝ)) • PinPlusTraceDiskCorePair.rayExit (y0 : E3) ((p.1 : ThreeDisk) : E3), by
+      refine convex_closedBall (0 : E3) 1 (p.1 : ThreeDisk).2 ?_ (unitInterval.nonneg p.2)
+        (by linarith [unitInterval.le_one p.2]) (by ring)
+      rw [mem_closedBall_zero_iff]
+      exact le_of_eq (PinPlusTraceDiskCorePair.rayExit_norm _ _ hy0
+        (fun h => (p.1).2 (Subtype.ext h)))⟩, by
+      intro h
+      exact diskHomotopy_ne (y0 : E3) ((p.1 : ThreeDisk) : E3) hy0
+        (fun h' => (p.1).2 (Subtype.ext h')) (unitInterval.nonneg p.2)
+        (unitInterval.le_one p.2) (congrArg Subtype.val h)⟩
+  continuous_toFun := by
+    apply Continuous.subtype_mk
+    apply Continuous.subtype_mk
+    have hb : Continuous (fun p : ↑(DiskPunc y0) × unitInterval => ((p.1 : ThreeDisk) : E3)) := by
+      fun_prop
+    have hbx : ∀ p : ↑(DiskPunc y0) × unitInterval, ((p.1 : ThreeDisk) : E3) ≠ (y0 : E3) :=
+      fun p h => (p.1).2 (Subtype.ext h)
+    have ht : Continuous (fun p : ↑(DiskPunc y0) × unitInterval => (p.2 : ℝ)) := by fun_prop
+    exact (ht.smul hb).add ((continuous_const.sub ht).smul
+      (PinPlusTraceDiskCorePair.continuous_rayExit_comp (y0 : E3) _ hb hbx))
+
+/-- The retraction is a genuine left inverse of the boundary inclusion: `r ∘ i = id` on `S²`
+(boundary points are their own ray-exits, `rayExit_of_norm_one`). -/
+theorem diskPuncRetract_comp_incl (y0 : ThreeDisk) (hy0 : ‖(y0 : E3)‖ < 1) :
+    (diskPuncRetract y0 hy0).comp (sphereInclDiskPunc y0 hy0)
+      = ContinuousMap.id (SingularSphereAcyclic.Sph 2 : Type) := by
+  apply ContinuousMap.ext
+  intro a
+  apply Subtype.ext
+  show PinPlusTraceDiskCorePair.rayExit (y0 : E3) (a : E3) = (a : E3)
+  have h1 : ‖(a : E3)‖ = 1 := mem_sphere_zero_iff_norm.mp a.2
+  refine PinPlusTraceDiskCorePair.rayExit_of_norm_one _ _ hy0 (fun h => ?_) h1
+  rw [h] at h1
+  exact absurd h1 (ne_of_lt hy0)
+
+/-- **`slice (diskPuncHomotopy) 0 = i ∘ r`** — the `t = 0` slice is the full ray-exit. -/
+theorem slice_diskPuncHomotopy_zero (y0 : ThreeDisk) (hy0 : ‖(y0 : E3)‖ < 1) :
+    slice (diskPuncHomotopy y0 hy0) 0
+      = (sphereInclDiskPunc y0 hy0).comp (diskPuncRetract y0 hy0) := by
+  apply ContinuousMap.ext
+  intro b
+  apply Subtype.ext
+  apply Subtype.ext
+  show (0 : ℝ) • ((b : ThreeDisk) : E3)
+      + (1 - (0 : ℝ)) • PinPlusTraceDiskCorePair.rayExit (y0 : E3) ((b : ThreeDisk) : E3)
+    = PinPlusTraceDiskCorePair.rayExit (y0 : E3) ((b : ThreeDisk) : E3)
+  simp
+
+/-- **`slice (diskPuncHomotopy) 1 = id`** — the `t = 1` slice is the identity. -/
+theorem slice_diskPuncHomotopy_one (y0 : ThreeDisk) (hy0 : ‖(y0 : E3)‖ < 1) :
+    slice (diskPuncHomotopy y0 hy0) 1 = ContinuousMap.id ↑(DiskPunc y0) := by
+  apply ContinuousMap.ext
+  intro b
+  apply Subtype.ext
+  apply Subtype.ext
+  show (1 : ℝ) • ((b : ThreeDisk) : E3) + (1 - (1 : ℝ)) • _ = ((b : ThreeDisk) : E3)
+  simp
+
+/-- **`H₄(D³∖{y₀}; ℤ/2) = 0`** — the ray-exit retraction is a homotopy equivalence
+`D³∖{y₀} ≃ S² = ∂D³`, so `H₄` transports to `H₄(S²) = 0` (`sphere_homology_high`, `4 > 2`). -/
+theorem diskPunc_homology_four_eq_zero (y0 : ThreeDisk) (hy0 : ‖(y0 : E3)‖ < 1)
+    (z : Homology (DiskPunc y0) 4) : z = 0 := by
+  have hbij : Function.Bijective (Homology.map (diskPuncRetract y0 hy0) 4) :=
+    SingularHomotopyInvariance.Homology.map_bijective_of_homotopyEquiv
+      (diskPuncRetract y0 hy0) (sphereInclDiskPunc y0 hy0) (diskPuncHomotopy y0 hy0)
+      (slice_diskPuncHomotopy_zero y0 hy0) (slice_diskPuncHomotopy_one y0 hy0)
+      ⟨fun p => p.1, continuous_fst⟩
+      (by
+        apply ContinuousMap.ext; intro a
+        exact congrFun (congrArg (fun f => f.toFun) (diskPuncRetract_comp_incl y0 hy0).symm) a)
+      (ContinuousMap.ext fun _ => rfl) 3
+  exact SingularLocalHomology.homology_trivial_of_bijective (diskPuncRetract y0 hy0) hbij
+    (fun w => sphere_homology_high 2 4 (by norm_num) w) z
+
 end
 
 end SKEFTHawking.PinPlusKTSphereProdHincl
