@@ -963,4 +963,217 @@ theorem rankLocalStep_converges {E β : Type*} [Fintype E]
       ← Function.iterate_succ_apply' step (D + 1) s]
   exact hstab (D + 2) (by omega)
 
+/-! ## BP convergence on acyclic factor graphs (B-04)
+
+This section instantiates the abstract engine on the *actual* `bpUpdate`
+dynamics, proving that on an acyclic factor graph BP reaches a genuine BP
+fixed point in a bounded number of rounds — the `bp_converges_on_trees_…`
+theorem the old phantom docstring reference promised but never delivered.
+
+The BP message state is flattened onto the coordinate type
+`MsgEndpoint ν α = (ν × α) ⊕ (α × ν)` of directed message endpoints
+(`inl (v,a)` = the `v→a` message, `inr (a,v)` = the `a→v` message), with
+value type `X → ℝ`. One synchronous BP sweep `bpUpdate` transports to a
+`bpStep` on the flattened state (`flattenMsg_bpUpdate`,
+`flattenMsg_iterate`).
+
+The acyclicity is supplied as a **topological rank certificate**
+(`BPRankCert`): a rank on directed endpoints such that the message OUT of
+a node strictly exceeds the ranks of the messages feeding INTO it. On an
+acyclic factor graph such a rank exists — it is the subtree depth behind
+each directed edge (deriving it from `IsAcyclicFactorGraph` is the one
+remaining gap, documented at `bp_converges_on_ranked_acyclic`). The
+certificate is exactly the hypothesis under which `bpStep` is rank-local
+(`bpStep_rankLocal`), so the engine gives convergence in
+`convergenceHorizon cert.rank` rounds — the graph diameter. -/
+
+/-- Directed message endpoints of a factor graph: `inl (v,a)` is the
+    variable→factor endpoint `v→a`; `inr (a,v)` is the factor→variable
+    endpoint `a→v`. The coordinate type of the flattened BP message state. -/
+abbrev MsgEndpoint (ν α : Type*) := (ν × α) ⊕ (α × ν)
+
+/-- Flatten a BP message bundle to a function on directed endpoints. -/
+def flattenMsg {ν α X : Type*} {G : FactorGraph ν α}
+    (m : BPMessages ν α G X) : MsgEndpoint ν α → (X → ℝ)
+  | Sum.inl (v, a) => m.varToFactor v a
+  | Sum.inr (a, v) => m.factorToVar a v
+
+/-- Unflatten a function on directed endpoints back to a BP message
+    bundle. Inverse to `flattenMsg`. -/
+def unflattenMsg {ν α X : Type*} (G : FactorGraph ν α)
+    (f : MsgEndpoint ν α → (X → ℝ)) : BPMessages ν α G X where
+  varToFactor v a := f (Sum.inl (v, a))
+  factorToVar a v := f (Sum.inr (a, v))
+
+@[simp] theorem unflattenMsg_flattenMsg {ν α X : Type*} {G : FactorGraph ν α}
+    (m : BPMessages ν α G X) : unflattenMsg G (flattenMsg m) = m := rfl
+
+@[simp] theorem flattenMsg_unflattenMsg {ν α X : Type*} (G : FactorGraph ν α)
+    (f : MsgEndpoint ν α → (X → ℝ)) : flattenMsg (unflattenMsg G f) = f := by
+  funext e
+  rcases e with ⟨v, a⟩ | ⟨a, v⟩ <;> rfl
+
+/-- One synchronous BP sweep, transported onto the flattened state. -/
+noncomputable def bpStep {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    (G : FactorGraph ν α) (factorWeight : α → (ν → X) → ℝ) :
+    (MsgEndpoint ν α → (X → ℝ)) → (MsgEndpoint ν α → (X → ℝ)) :=
+  fun f => flattenMsg (bpUpdate (unflattenMsg G f) factorWeight)
+
+/-- The flattened state commutes with one BP sweep. -/
+theorem flattenMsg_bpUpdate {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    {G : FactorGraph ν α} (m : BPMessages ν α G X)
+    (factorWeight : α → (ν → X) → ℝ) :
+    flattenMsg (bpUpdate m factorWeight)
+      = bpStep G factorWeight (flattenMsg m) := by
+  unfold bpStep
+  rw [unflattenMsg_flattenMsg]
+
+/-- The flattened state commutes with any number of BP sweeps. -/
+theorem flattenMsg_iterate {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    {G : FactorGraph ν α} (m : BPMessages ν α G X)
+    (factorWeight : α → (ν → X) → ℝ) (n : ℕ) :
+    flattenMsg ((fun m' => bpUpdate m' factorWeight)^[n] m)
+      = (bpStep G factorWeight)^[n] (flattenMsg m) := by
+  induction n with
+  | zero => rfl
+  | succ k ih =>
+    rw [Function.iterate_succ_apply', Function.iterate_succ_apply',
+        flattenMsg_bpUpdate, ih]
+
+/-- **Topological rank certificate** for an acyclic factor graph: a rank
+    on directed message endpoints such that the message OUT of a node
+    strictly exceeds the ranks of every message feeding INTO it. Concretely
+    `rank` is the subtree depth behind each directed edge; such a rank
+    exists exactly when the factor graph is acyclic (a cycle would force a
+    directed endpoint to outrank itself). The two fields are precisely the
+    hypotheses under which `bpStep` is rank-local:
+
+    * `var_gt`: the `v→a` message reads the `b→v` messages of other factors
+      `b ≠ a` at `v`, so `rank (b→v) < rank (v→a)`;
+    * `fac_gt`: the `a→v` message reads the `u→a` messages of other
+      variables `u ≠ v` at `a`, so `rank (u→a) < rank (a→v)`. -/
+structure BPRankCert {ν α : Type*} (G : FactorGraph ν α) where
+  /-- Rank of each directed message endpoint (subtree depth behind it). -/
+  rank : MsgEndpoint ν α → ℕ
+  /-- The `v→a` message outranks every incoming `b→v` message (`b ≠ a`). -/
+  var_gt : ∀ (v : ν) (a b : α), b ≠ a → G.incidence b v = true →
+    rank (Sum.inr (b, v)) < rank (Sum.inl (v, a))
+  /-- The `a→v` message outranks every incoming `u→a` message (`u ≠ v`). -/
+  fac_gt : ∀ (a : α) (v u : ν), u ≠ v → G.incidence a u = true →
+    rank (Sum.inl (u, a)) < rank (Sum.inr (a, v))
+
+/-- **BP sweep is rank-local under a rank certificate.** Given a
+    topological rank certificate, one synchronous BP sweep updates each
+    directed endpoint using only the messages of strictly smaller rank.
+    This is the genuine structural fact that makes BP converge on acyclic
+    graphs: it is exactly the `RankLocalStep` hypothesis of the abstract
+    engine, and its proof reads off the actual `bpVariableUpdate` /
+    `bpFactorUpdate` neighborhoods (the `otherFactors` / `otherVars`
+    cavity sets). -/
+theorem bpStep_rankLocal {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    {G : FactorGraph ν α} (cert : BPRankCert G)
+    (factorWeight : α → (ν → X) → ℝ) :
+    RankLocalStep cert.rank (bpStep G factorWeight) := by
+  intro s s' e hagree
+  rcases e with ⟨v, a⟩ | ⟨a, v⟩
+  · show bpVariableUpdate (unflattenMsg G s) v a
+       = bpVariableUpdate (unflattenMsg G s') v a
+    funext x
+    unfold bpVariableUpdate
+    apply Finset.prod_congr rfl
+    intro b hb
+    simp only [otherFactors, Finset.mem_filter, Finset.mem_univ, true_and] at hb
+    exact congrFun (hagree (Sum.inr (b, v)) (cert.var_gt v a b hb.1 hb.2)) x
+  · show bpFactorUpdate (unflattenMsg G s) factorWeight a v
+       = bpFactorUpdate (unflattenMsg G s') factorWeight a v
+    funext x
+    unfold bpFactorUpdate
+    apply Finset.sum_congr rfl
+    intro y _
+    congr 1
+    apply Finset.prod_congr rfl
+    intro u hu
+    simp only [otherVars, Finset.mem_filter, Finset.mem_univ, true_and] at hu
+    exact congrFun (hagree (Sum.inl (u, a)) (cert.fac_gt a v u hu.1 hu.2)) (y u)
+
+/-- **A rank certificate entails four-cycle-freeness.** If `G` admits a
+    BP rank certificate then it is four-cycle-free: a 4-cycle
+    `u–a–v–b–u` would force the strict rank cycle
+    `rank(a→v) < rank(v→b) < rank(b→u) < rank(u→a) < rank(a→v)`, an
+    impossibility over `ℕ`. This ties the convergence hypothesis back to
+    the existing structural screen (`BPRankCert G → IsFourCycleFreeFactorGraph G
+    → loopCorrectionRate G = 0`) and shows the certificate is a genuine
+    loop-freeness witness, not a vacuous carrier. -/
+theorem isFourCycleFree_of_bpRankCert {ν α : Type*}
+    (G : FactorGraph ν α) (cert : BPRankCert G) :
+    IsFourCycleFreeFactorGraph G := by
+  intro u v a b huv hab ⟨hau, hbu, hav, hbv⟩
+  have h1 := cert.fac_gt a v u huv hau
+  have h2 := cert.var_gt u a b (Ne.symm hab) hbu
+  have h3 := cert.fac_gt b u v (Ne.symm huv) hbv
+  have h4 := cert.var_gt v b a hab hav
+  omega
+
+/-- `flattenMsg` is injective (it has `unflattenMsg G` as a left inverse). -/
+theorem flattenMsg_injective {ν α X : Type*} {G : FactorGraph ν α} :
+    Function.Injective (flattenMsg : BPMessages ν α G X → MsgEndpoint ν α → (X → ℝ)) := by
+  intro m₁ m₂ h
+  have := congrArg (unflattenMsg G) h
+  rwa [unflattenMsg_flattenMsg, unflattenMsg_flattenMsg] at this
+
+/-- **BP converges on a ranked-acyclic factor graph in ≤ diameter rounds.**
+    Given a topological rank certificate `cert` for `G` (which exists
+    exactly when `G` is acyclic — its `rank` is the subtree depth behind
+    each directed edge), synchronous belief propagation from ANY initial
+    message bundle `m` reaches a genuine BP fixed point after
+    `convergenceHorizon cert.rank` sweeps — the graph diameter — and stays
+    there. Concretely: (i) all iterates past the horizon coincide with the
+    horizon iterate, and (ii) the horizon iterate is a `IsBPFixedPoint`.
+
+    This is the genuine `bp_converges_on_trees_…` result the old phantom
+    docstring reference promised: a non-vacuous fixed-point convergence
+    statement about the *actual* `bpUpdate` dynamics, obtained by
+    transporting the abstract `rankLocalStep_converges` engine through the
+    `flattenMsg`/`unflattenMsg` correspondence, with rank-locality supplied
+    by `bpStep_rankLocal`.
+
+    **Remaining gap (documented, B-04).** The one piece not proved here is
+    the *existence* of a `BPRankCert G` from `IsAcyclicFactorGraph G` — i.e.
+    that an acyclic bipartite incidence graph admits the subtree-depth rank
+    with the two strict-monotonicity properties. That is a finite
+    well-founded construction (leaf-stripping / component-size on the
+    forest); once discharged, this theorem specializes to
+    `IsAcyclicFactorGraph G → (BP converges …)` with no certificate
+    hypothesis. The convergence *dynamics* — the mathematically substantive
+    part — is fully proved. -/
+theorem bp_converges_on_ranked_acyclic {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α] [DecidableEq X]
+    {G : FactorGraph ν α} (cert : BPRankCert G)
+    (factorWeight : α → (ν → X) → ℝ) (m : BPMessages ν α G X) :
+    (∀ n, convergenceHorizon cert.rank ≤ n →
+        (fun m' => bpUpdate m' factorWeight)^[n] m
+          = (fun m' => bpUpdate m' factorWeight)^[convergenceHorizon cert.rank] m)
+      ∧ IsBPFixedPoint
+          ((fun m' => bpUpdate m' factorWeight)^[convergenceHorizon cert.rank] m)
+          factorWeight := by
+  obtain ⟨hstab, hfix⟩ :=
+    rankLocalStep_converges (bpStep_rankLocal cert factorWeight) (flattenMsg m)
+  refine ⟨fun n hn => ?_, ?_⟩
+  · apply flattenMsg_injective
+    rw [flattenMsg_iterate, flattenMsg_iterate]
+    exact hstab n hn
+  · rw [IsBPFixedPoint]
+    apply flattenMsg_injective
+    rw [flattenMsg_bpUpdate, flattenMsg_iterate]
+    exact hfix
+
 end SKEFTHawking.BeliefPropagation
