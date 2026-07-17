@@ -12,21 +12,15 @@ Metropolis test, so every downstream tool — `rhmc_monitor.py` (early-stop),
 `analyze_rhmc_vestigial.py` (m→0 extrapolation + noise-floor detectors) — works
 unchanged on its output.
 
-> **⚠️ 2026-07-16/17 UPDATE — two things below are superseded; the fixes are now in the code:**
-> - **Hasenbusch is the RECOMMENDED engine** — §1's "no recommended recipe at L=8 m=0.05" status
->   is stale (it judged per-trajectory cost only). At L=8 m=0.05 chrono-off it is exact AND cuts
->   τ(tet) ~5× (≈34→≈7), dominating single-PF per decorrelated sample. As of 2026-07-17
->   **`--hasenbusch` alone auto-selects chrono-off + the tuned working point (n_md=16, eps=0.031,
->   hb-n-inner=4)** — you no longer pass `--no-chrono` or the step-size flags.
-> - **chrono default:** `--chrono` (default ON) biases ⟨e^-ΔH⟩ to ~0.92 at m=0.05 (the g=8
->   RED_BIAS). `--hasenbusch` now forces it off in code. The §4 single-PF recipes still default
->   chrono-on and rely on the κ-gate (only in the unmerged `mlx-rhmc-hikappa-chrono` branch), so
->   for single-PF at m≤0.05 from `main`, still pass `--no-chrono` until that merges.
-> - Analysis: `analyze_rhmc_vestigial.py` now auto-detects driver-thermalized data and won't
->   double-cut — no `--therm` needed.
->
-> **What to run (the campaign sequence) lives in [`RHMC_CAMPAIGN_SEQUENCE.md`](RHMC_CAMPAIGN_SEQUENCE.md).**
-> Start there; this runbook is the engine/ops reference it points back to.
+> **To run the vestigial campaign, use the Hasenbusch engine — the run sequence is in
+> [`RHMC_CAMPAIGN_SEQUENCE.md`](RHMC_CAMPAIGN_SEQUENCE.md); this runbook is the engine reference it
+> points back to.** `--hasenbusch` runs the mass-preconditioned sampler with chronological inversion
+> off and its tuned working point (n_md=16, eps=0.031, hb-n-inner=4): exact at the stiff reference
+> point and ~5× shorter order-parameter autocorrelation than single-PF (§1, Hasenbusch subsection).
+> The §1/§4 material below covers the single-PF engine and the shared mechanics. The single-PF path
+> defaults chronological inversion **on** and relies on the κ-gate to disable it at small mass, so a
+> single-PF run at m ≤ 0.05 from a checkout without that gate needs an explicit `--no-chrono`. The
+> analysis (`analyze_rhmc_vestigial.py`) auto-detects driver-thermalized data and takes no `--therm`.
 
 ---
 
@@ -163,25 +157,19 @@ nested-integrator reversibility, exact-Metropolis mechanics, and the slow Creutz
 chain gate. Identical target density to the single-PF sampler (the split is
 exact); npz records `hb_mu_sq`/`hb_n_inner` for provenance.
 
-**Status (updated 2026-07-16): RECOMMENDED engine for the vestigial campaign.** The
-2026-07-13 note below judged Hasenbusch on *per-trajectory* cost only and called it marginal;
-that missed the decisive axis. At L=8 m=0.05 chrono-off, Hasenbusch cuts the **autocorrelation
-τ(tet) ~5× (≈34 → ≈6–8)** while staying exact (⟨e^-ΔH⟩=1.0000 over 140×16), and at the tuned
-working point (`--n-md 16 --eps 0.031 --hb-n-inner 4`, τ_traj≈0.5) it is *faster* per trajectory
-than single-PF chrono-off (73 vs 96 s/traj, acc 0.97). Per decorrelated sample it dominates —
-this is what lifts the g≥5 region from run #2's marginal neff~7 to ~28. Use it; sequence in
-[`RHMC_CAMPAIGN_SEQUENCE.md`](RHMC_CAMPAIGN_SEQUENCE.md). The per-trajectory analysis below is
-still accurate and explains why the raw wall-clock win looked small — the win is in statistics.
+**This is the campaign engine.** At L=8 m=0.05 chrono-off, Hasenbusch cuts the order-parameter
+**autocorrelation τ(tet) ~5× (≈34 → ≈6–8)** while staying exact (⟨e^-ΔH⟩=1.0000 over 140×16), and at
+its tuned working point (`--n-md 16 --eps 0.031 --hb-n-inner 4`, τ_traj≈0.5) it is also faster per
+trajectory than single-PF chrono-off (73 vs 96 s/traj, acc 0.97). That τ reduction is the point: it
+lifts the g≥5 region from ~7 effective samples to ~28, which is what makes the null trustworthy.
 
-_Historical (2026-07-13, per-trajectory-cost framing — superseded on the recommendation, kept for the mechanics):_ The DR's
-K=3-table step counts (eps=0.1, n₀=5) reject-all here (|ΔH|~150): the ratio
-action retains the FULL 1/m² low-mode stiffness for any K=1 split (its curvature
-(μ²−m²)/((λ+m²)(λ+μ²)) → 1/m² as λ→0), so the coarse step is stability-bound
-near the single-PF eps — the smaller ratio-force *variance* (measured rms 0.65
-vs 2.36 at μ²=3.25) buys ~1.5-2× at best. Post-Metal-kernel, MD is only ~25 s of
-the 71 s trajectory, so that possible win is ≤~15% of wall-clock and not worth
-the tuning risk at this volume. The machinery stays certified for larger-volume /
-lighter-mass campaigns where a deflated or K≥2 setup changes the calculus.
+The per-*trajectory* MD saving is modest at this volume, and it is worth understanding why so you
+know when the calculus changes. The ratio action retains the full 1/m² low-mode stiffness for any
+K=1 split (its curvature (μ²−m²)/((λ+m²)(λ+μ²)) → 1/m² as λ→0), so the coarse step is stability-bound
+near the single-PF eps — the smaller ratio-force variance (rms 0.65 vs 2.36 at μ²=3.25) buys only
+~1.5–2× on the MD, which is itself only ~25 s of the 71 s trajectory. The decisive win is therefore
+in statistics per hour, not wall-clock per trajectory — and the per-trajectory advantage grows at
+larger volume / lighter mass, where a deflated or K≥2 setup changes the balance further.
 
 ---
 
@@ -261,13 +249,10 @@ scan — it does not encode this targeting. Narrow it explicitly with
 
 ## 4. Recipes
 
-> **⚠️ These recipes are the SINGLE-PF, chrono-DEFAULT (ON) form — superseded for m ≤ 0.05.**
-> For the vestigial campaign use Hasenbusch chrono-off (see the top-of-file update box and
-> [`RHMC_CAMPAIGN_SEQUENCE.md`](RHMC_CAMPAIGN_SEQUENCE.md)): add `--hasenbusch --no-chrono`
-> and the Hasenbusch working point (`--n-md 16 --eps 0.031 --hb-n-inner 4` at m=0.05). The
-> single-PF step-size table below still applies to the single-PF engine and to per-mass
-> stiffness intuition. Also: the driver's saved `*_history` is measurement-only, so run
-> `analyze_rhmc_vestigial.py --therm 0` to avoid double-cutting your samples.
+> **These recipes are for the single-PF engine.** For the vestigial campaign, use the Hasenbusch
+> engine via [`RHMC_CAMPAIGN_SEQUENCE.md`](RHMC_CAMPAIGN_SEQUENCE.md) — `--hasenbusch` selects it with
+> chrono off and its own working point. The single-PF step-size table below still governs the
+> single-PF engine and is useful for per-mass stiffness intuition either way.
 
 **Step size is mass-dependent — the eo fermion force stiffens as m→0.** `eps=0.03`
 **reject-alls at m=0.05** (acc=0.00, measured). Use the per-mass working points
