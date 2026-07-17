@@ -46,7 +46,9 @@ open SKEFTHawking.SingularRelativeHomologyMod2 (sub)
 open SKEFTHawking.SingularFunctoriality (Homology.map)
 open SKEFTHawking.SingularHomotopyInvariance (slice)
 open SKEFTHawking.SingularSphereHighDegree (sphere_homology_high)
-open SKEFTHawking.SingularMayerVietorisLES (subIncl)
+open SKEFTHawking.SingularMayerVietorisLES
+open SKEFTHawking.SingularExcisionIso (restr)
+open SKEFTHawking.PoincareLefschetzRelFundClassGeom (homology_restrSub_eq_zero)
 open SKEFTHawking.SingularProdContractibleInt (ProdSp)
 open SKEFTHawking.SingularEuclideanAcyclic (Eucl)
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderNumerics (prodContractibleHomologyEquiv)
@@ -268,6 +270,34 @@ theorem interFactor_homology_four_eq_zero (p₀ : TwoSphere) (y0 : ThreeDisk)
   apply e.injective
   rw [map_zero]
   exact diskPunc_homology_four_eq_zero y0 hy0 (e z)
+
+/-! ## §3. The disk-factor inclusion `A₀ ↪ {x}ᶜ` is `H₄`-injective — Mayer–Vietoris. -/
+
+/-- **The subtype-of-subtype inclusion** `sub s → sub (restr s t)` for `s ⊆ t` (`restr s t = ↥s`
+inside `↥t`): the flat picture of `s` becomes the two-layer picture inside `t`. -/
+def flatIncl {X : TopCat} {s t : Set ↑X} (h : s ⊆ t) :
+    C(↑(sub s), ↑(sub (restr s t))) where
+  toFun a := ⟨⟨(a : ↑X), h a.2⟩, a.2⟩
+  continuous_toFun := by
+    apply Continuous.subtype_mk; apply Continuous.subtype_mk; fun_prop
+
+/-- Its inverse `sub (restr s t) → sub s`. -/
+def flatInclInv {X : TopCat} {s t : Set ↑X} (h : s ⊆ t) :
+    C(↑(sub (restr s t)), ↑(sub s)) where
+  toFun q := ⟨((q : ↑(sub t)) : ↑X), q.2⟩
+  continuous_toFun := by apply Continuous.subtype_mk; fun_prop
+
+/-- **`flatIncl` is a homology isomorphism** (a two-sided continuous inverse). -/
+theorem map_flatIncl_bijective {X : TopCat} {s t : Set ↑X} (h : s ⊆ t) (n : ℕ) :
+    Function.Bijective (Homology.map (flatIncl h) n) :=
+  SingularHomotopyInvariance.Homology.map_bijective_of_comp_id_all (flatIncl h) (flatInclInv h)
+    (ContinuousMap.ext fun _ => rfl) (ContinuousMap.ext fun _ => Subtype.ext (Subtype.ext rfl)) n
+
+/-- **`subIncl h` factors as `ambIncl (restr s t) ∘ flatIncl h`** (both send a point of `s` to itself
+inside `t`). -/
+theorem subIncl_eq_ambIncl_comp_flatIncl {X : TopCat} {s t : Set ↑X} (h : s ⊆ t) :
+    subIncl h = (ambIncl (restr s t)).comp (flatIncl h) :=
+  ContinuousMap.ext fun _ => rfl
 
 end
 
