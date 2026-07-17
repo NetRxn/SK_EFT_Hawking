@@ -336,3 +336,11 @@ conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
 - memory: [[project_5qH_nonhausdorff_substrate_bug]]
 - created_ts: 2026-07-16T00:00:00Z
 - reviewed_ts: 2026-07-16T00:00:00Z
+
+## freeze-atoms-not-composable-from-sigma-trace (2026-07-16, arm: close-out — #200 triage verdict)
+- kind: compositional gap (prose — a true non-implication established by proof inspection, NOT a false statement, hence NOT kernel-encodable)
+- banned: re-attempting "HandleTradeCobordism / HyperbolicBase / the S²×S² bounding bordism compose from the landed Lane-B surgery trace." They do NOT: Lane B (AmbientSurgeryDatum / PinPlusKTSurgeryTrace) performs ambient surgery on the characteristic surface Σ — the ENHANCEMENT-rank axis (p.2.n, drops by exactly 2, ambientSurgeryDatum_pos_rank forces 0 < n) — while the Freeze-A/B atoms are E1 INTERSECTION-FORM b₂-axis surgery (trading a hyperbolic pair H for [S²×S²] on the 4-manifold's 2-cycles). Orthogonal geometric axes; handleTradeCobordism_residual_is_traceBor is rfl-documentation (names the residual, constructs nothing). Also: RankZeroCollapseDatum (#199) shares NO bounding-datum core with HyperbolicBase (different carrier / different rank notion / different target) — do not wire one from the other's Prop-shape.
+- the honest floor (recorded #200): the phase's E1 geometric leaves terminate at exactly three manifold-surgery primitives a future E1 foundation must build — (1) one raw handle-trade cobordism, (2) one rank-0 nullbordism, (3) one S²×S² bounding bordism (S²×S² = ∂(S²×D³); the frozen SphereDiskSmoothData package needs the concrete slot + Dⁿ-instance/change-of-model transport) — all consumed at terminal grain by kt_equiv_zmod16_of_residuals_freezeAtoms.
+- memory: [[project_5qH_nonhausdorff_substrate_bug]]
+- created_ts: 2026-07-16T00:00:00Z
+- reviewed_ts: 2026-07-16T00:00:00Z
