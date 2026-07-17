@@ -173,4 +173,69 @@ theorem deltaRelHIntLin_restrictLift (z : SingularCochainInt X 2)
   exact deltaRelHInt_congr_of_pullback_eq _ _ _ _ (by
     rw [bdryLift_pullback, restrictLiftCocycleInt_coe])
 
+/-! ## §2. The integral restriction `ι*` on cohomology and the pair-LES composite `δ ∘ ι* = 0`
+
+The substrate's `rest2` is the base-change of the integral `ι* : H²(W;ℤ) → H²(∂W;ℤ)` on the cohomology
+OBJECTS. `#196` had the cocycle-level `restrictCocycleInt`; here it is descended to a genuine `ℤ`-`LinearMap`
+`restrictHInt` (integral mirror of the ZMod-2 `restrictToSub`), and coupled to the §1 descended `δ` to give
+the pair-LES composite `δ ∘ ι* = 0` (the `im ι* ⊆ ker δ` half of the middle exactness, on the objects). -/
+
+/-- The cochain pullback `ι*` as an integral `LinearMap` (pointwise; `#196` had it as a bare function). -/
+noncomputable def pullbackCochainIntLin (k : ℕ) :
+    SingularCochainInt X k →ₗ[ℤ] SingularCochainInt (sub S) k where
+  toFun := pullbackCochainInt S k
+  map_add' := pullbackCochainInt_add k
+  map_smul' := pullbackCochainInt_smul k
+
+/-- The restriction `ι*` on cocycle representatives, as an integral `LinearMap`
+`ker δ_W → ker δ_∂W` (codRestrict of the pullback; cocycles restrict to cocycles). -/
+noncomputable def restrictCocycleIntLin (k : ℕ) :
+    LinearMap.ker (coboundaryₗ X k) →ₗ[ℤ] LinearMap.ker (coboundaryₗ (sub S) k) :=
+  ((pullbackCochainIntLin k).comp (LinearMap.ker (coboundaryₗ X k)).subtype).codRestrict
+    (LinearMap.ker (coboundaryₗ (sub S) k)) (fun a => (restrictCocycleInt a).2)
+
+@[simp] theorem restrictCocycleIntLin_coe (k : ℕ) (a : LinearMap.ker (coboundaryₗ X k)) :
+    ((restrictCocycleIntLin k a : LinearMap.ker (coboundaryₗ (sub S) k)) :
+      SingularCochainInt (sub S) k) = pullbackCochainInt S k a.1 := rfl
+
+/-- **The integral restriction `ι* : H²(W;ℤ) → H²(∂W;ℤ)` on cohomology.** The descent of the cocycle map
+`restrictCocycleIntLin` through the cohomology quotient (it kills coboundaries: `ι*(δ_W β) = δ_∂W(ι*β)` is a
+`∂W`-coboundary, via `coboundary_pullbackCochainInt`). The integral mirror of the ZMod-2 `restrictToSub`;
+the substrate's `rest2` carrier at the integral level. -/
+noncomputable def restrictHInt : Cohomology X 2 →ₗ[ℤ] Cohomology (sub S) 2 :=
+  Submodule.liftQ _ ((Submodule.mkQ _).comp (restrictCocycleIntLin 2)) (by
+    intro a ha
+    simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] at ha
+    rw [LinearMap.mem_ker]
+    change Submodule.Quotient.mk _ = 0
+    rw [Submodule.Quotient.mk_eq_zero]
+    simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply]
+    rw [show coboundaryRange X 2 = LinearMap.range (coboundaryₗ X 1) from rfl] at ha
+    obtain ⟨β, hβ⟩ := ha
+    rw [show coboundaryRange (sub S) 2 = LinearMap.range (coboundaryₗ (sub S) 1) from rfl]
+    refine ⟨pullbackCochainInt S 1 β, ?_⟩
+    rw [restrictCocycleIntLin_coe, ← hβ,
+      show coboundaryₗ (sub S) 1 (pullbackCochainInt S 1 β) = coboundary (sub S) 1 (pullbackCochainInt S 1 β)
+        from rfl, SKEFTHawking.SingularPullbackDualityCapSubInt.coboundary_pullbackCochainInt]
+    rfl)
+
+@[simp] theorem restrictHInt_mk (a : LinearMap.ker (coboundaryₗ X 2)) :
+    restrictHInt (Cohomology.mk X 2 a) = Cohomology.mk (sub S) 2 (restrictCocycleIntLin 2 a) := rfl
+
+/-- **The pair-LES composite `δ ∘ ι* = 0` on cohomology.** The connecting map of a restricted absolute class
+vanishes — the `im ι* ⊆ ker δ` half of the pair-LES middle exactness, on the cohomology objects. Proof: an
+absolute cocycle `a` is its own boundary lift (`ι*a = pullbackCochainInt a`, `δa = 0` relative), so
+`deltaRelHIntLin [ι*a] = deltaRelHInt a = 0` (`deltaRelHIntLin_restrictLift` + `deltaRelHInt_of_cocycle_eq_zero`). -/
+theorem deltaRelHIntLin_restrictHInt (c : Cohomology X 2) :
+    deltaRelHIntLin (restrictHInt (S := S) c) = 0 := by
+  obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ c
+  have hz : coboundaryₗ X 2 (a : SingularCochainInt X 2) ∈ relCochainsInt S (2 + 1) := by
+    rw [LinearMap.mem_ker.mp a.2]; exact Submodule.zero_mem _
+  rw [show (Submodule.Quotient.mk a : Cohomology X 2) = Cohomology.mk X 2 a from rfl, restrictHInt_mk,
+    show Cohomology.mk (sub S) 2 (restrictCocycleIntLin 2 a)
+      = Cohomology.mk (sub S) 2 (restrictLiftCocycleInt (a : SingularCochainInt X 2) hz) from
+      congrArg (Cohomology.mk (sub S) 2) (Subtype.ext (by rw [restrictCocycleIntLin_coe,
+        restrictLiftCocycleInt_coe])), deltaRelHIntLin_restrictLift]
+  exact deltaRelHInt_of_cocycle_eq_zero _ hz (LinearMap.mem_ker.mp a.2)
+
 end SKEFTHawking.PinPlusKTNovikovTowerPopulate
