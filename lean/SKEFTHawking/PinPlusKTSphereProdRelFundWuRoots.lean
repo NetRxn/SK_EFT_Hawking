@@ -21,7 +21,7 @@ transfer verbatim to a product `S²×D³∖{x}` (removing one point from a produ
 retract onto the boundary the way removing a point from a plain disk does — the retraction is only
 literal on the `y ≠ y₀` piece of the fiber).
 
-This module builds the two REUSABLE, fully-closed pieces that any future closing of the wall will
+This module builds THREE REUSABLE, fully-closed pieces that any future closing of the wall will
 need, reducing the remaining obligation as far as it goes without inventing the missing
 cross-product/relative-MV tool:
 
@@ -38,19 +38,39 @@ cross-product/relative-MV tool:
   `ModelProd E² E²`-charted `SphereProd` needs one linear-equiv transport, mirroring the
   `SphereDiskJ5` associator pattern) and (b) along the compact→T2 homeomorphism
   `sphereDiskIncl : SphereProd ≃ₜ sub sphereDiskBoundarySet`.
+* §3 — **`H₄(∂W) → H₄(sub A₀)` is injective**, `A₀ = {p | p.2 ≠ y₀}` at an interior point `y₀`
+  (`injective_boundary_to_diskFactorSet`): the SAME ray-exit retraction machinery that closes
+  `PinPlusTraceDiskCorePair.hasRelFundClass_D5` (ambient-abstract over any real inner-product space),
+  reused verbatim at `E³` instead of `E⁵`. One half of the `hincl` Mayer–Vietoris route (below).
 
 ## The precise remaining wall (reported, not faked)
 
 `hasRelFundClass_of_acyclic_boundaryIncl` (`PinPlusTraceDiskRelFundReduce`) reduces `HasRelFundClass`
 to exactly `{ambient acyclicity (§1, DONE), β ≠ 0 (§2, DONE), hincl}`, where `hincl` is injectivity of
-`H₄(∂W) → H₄(W∖x)` at every interior `x`. A full Mayer–Vietoris proof sketch for `hincl` is recorded in
-the module docstring below (`§3`) — it is NOT vacuous or hand-waved, but it needs a second contractible-
-factor collapse in the OTHER factor slot (`S²∖{p}` contractible, keeping the `D³∖{y}` factor) plus the
-already-available `SingularMayerVietorisLES.mv_exact_middle` wiring for the open cover
-`A = S²×(D³∖y₀)`, `B = (S²∖p₀)×D³` of `SphereDisk∖{x}` — genuine new work beyond one turn's safe
-budget, so it is reported precisely rather than forced. Even after `hincl` closes, deliverable 1 (the
-`(2,3)` Wu datum) needs an ADDITIONAL, separate Lefschetz-nondegeneracy computation
-(`findimAbs`/`findimRel`/`nondeg`/`dimeq` at bidegree `(2,3)`) not attempted here.
+`H₄(∂W) → H₄(W∖x)` at every interior `x = (p₀, y₀)`. §3 lands ONE HALF of the Mayer–Vietoris route to
+`hincl`: `injective_boundary_to_diskFactorSet` — `H₄(∂W) → H₄(sub A₀)` is injective, `A₀ = S²×(D³∖y₀)`
+(via the SAME ray-exit retraction that closes `hasRelFundClass_D5`, reused verbatim at `E³`). The
+REMAINING gap to close `hincl` in full (precisely scoped, not vague):
+1. `H₄(B₀) = 0`, `B₀ = (S²∖p₀)×D³` — an easy reuse of the SAME §1 tool
+   (`prodContractibleHomologyEquiv`, `Y := S²∖p₀`, `C := D³`), since `S²∖p₀` is already known acyclic
+   in positive degrees (`SingularSphereAcyclic.punctured_sphere_homology_trivial`).
+2. `H₄(A₀ ∩ B₀) = 0`, `A₀∩B₀ = (S²∖p₀)×(D³∖y₀)` — collapse the CONTRACTIBLE `S²∖p₀` factor (a
+   `Prod.swap`-composed mirror of `prodContractibleHomologyEquiv`, keeping `D³∖y₀`), reducing to
+   `H₄(D³∖y₀) = 0` — which is NOT yet in-tree: it needs a fresh "local homology of a 3-manifold
+   vanishes outside its own dimension" lemma (a pair-LES argument: `D³` acyclic in degrees 4,5 +
+   `H₅(D³,D³∖y₀) = 0` via chart-excision to `ℝ³` + `SingularPuncturedRetract`/`sphere_homology_high`,
+   mirroring `boundaryPoint_localHomology_zero`'s excision pattern but for an INTERIOR point and a
+   degree ABOVE the manifold dimension rather than the boundary/top-degree cases already built).
+3. The `SingularMayerVietorisLES.mv_exact_middle` wiring itself, over the ambient `sub {x}ᶜ` (NOT
+   `SphereDisk` — `A₀ ∪ B₀ = {x}ᶜ ≠ univ`, so `A₀`, `B₀` must first be transported into
+   `Set ↥({x}ᶜ)` via `restr`/`PoincareLefschetzRelFundClassGeom.flatSubHomeo`, then the composite
+   `∂W ↪ A₀ ↪ sub{x}ᶜ` matched against the literal `subIncl (∂W ⊆ {x}ᶜ)` the theorem needs).
+
+None of these three is faked or vacuous; each is a concrete, stated, in-principle-closeable gap — but
+assembling all three plus §3's already-landed retraction into the full `hincl` is genuine new work
+beyond this turn's safe budget, so it is reported precisely rather than forced. Even after `hincl`
+closes, deliverable 1 (the `(2,3)` Wu datum) needs an ADDITIONAL, separate Lefschetz-nondegeneracy
+computation (`findimAbs`/`findimRel`/`nondeg`/`dimeq` at bidegree `(2,3)`) not attempted here.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new project axiom, no
 `native_decide`, no `maxHeartbeats`.
@@ -71,6 +91,8 @@ import SKEFTHawking.SingularSphereAcyclic
 import SKEFTHawking.SingularSphereHighDegree
 import SKEFTHawking.SingularFundamentalClassExist
 import SKEFTHawking.PinPlusCharPairRealizationTied
+import SKEFTHawking.PinPlusTraceDiskCorePair
+import SKEFTHawking.SingularMayerVietorisLES
 
 open scoped Manifold
 open SKEFTHawking.SpinSigmaRoute
@@ -194,6 +216,94 @@ theorem betaClass_ne_zero : betaClass ≠ 0 := by
   show (homeoHomologyEquiv sphereDiskInclHomeo 4) sphereProdFundClass ≠ 0
   rw [LinearEquiv.map_ne_zero_iff]
   exact sphereProdFundClass_ne_zero
+
+/-! ## §3. Partial `hincl` progress — the boundary injects into the disk-factor-punctured piece.
+
+One half of the Mayer–Vietoris sketch from the module docstring: for the interior point
+`x = (p₀, y₀)` (`‖y₀‖ < 1`), the SAME ray-exit retraction machinery that closes `hasRelFundClass_D5`
+(`PinPlusTraceDiskCorePair`, ambient-abstract over any real inner-product space) gives, verbatim at
+`E³` instead of `E⁵`, a retraction of `A₀ := {p | p.2 ≠ y₀} ⊇ sphereDiskBoundarySet` onto the boundary
+— hence `H₄(∂W) → H₄(sub A₀)` is injective. This is NOT yet the full `hincl` (that needs the second
+Mayer–Vietoris leg through `B₀ := {p | p.1 ≠ p₀}` and `A₀ ∩ B₀`, per the docstring), but it is a
+genuine, reusable, self-contained step toward it. -/
+
+open SKEFTHawking.SingularMayerVietorisLES (subIncl)
+open SKEFTHawking.SingularFunctoriality (Homology.map)
+
+/-- **The disk-factor-punctured set** `A₀ = {p ∈ S²×D³ | p.2 ≠ y₀}` at a fixed `y₀`. -/
+def diskFactorSet (y0 : ThreeDisk) : Set SphereDisk := {p : SphereDisk | p.2 ≠ y0}
+
+/-- `sphereDiskBoundarySet ⊆ diskFactorSet y0` whenever `y0` is an interior point of `D³`
+(`‖y0‖ < 1`): a boundary point has disk-coordinate norm `1 ≠ ‖y0‖`, hence is `≠ y0`. -/
+theorem sphereDiskBoundarySet_subset_diskFactorSet {y0 : ThreeDisk}
+    (hy0 : ‖(y0 : EuclideanSpace ℝ (Fin 3))‖ < 1) :
+    sphereDiskBoundarySet ⊆ diskFactorSet y0 := by
+  intro p hp hcontra
+  rw [sphereDiskBoundarySet, Set.mem_setOf_eq, mem_sphere_zero_iff_norm] at hp
+  rw [← hcontra, hp] at hy0
+  exact lt_irrefl _ hy0
+
+/-- **The disk-factor ray-exit retraction** `A₀ → ∂W` at a fixed interior `y0`: keep the sphere
+coordinate, ray-exit the disk coordinate from `y0`. Reuses `PinPlusTraceDiskCorePair.rayExit`
+verbatim, instantiated at `E³` (the `D⁵` construction is ambient-abstract over any real
+inner-product space). -/
+noncomputable def diskFactorRetract (y0 : ThreeDisk) (hy0 : ‖(y0 : EuclideanSpace ℝ (Fin 3))‖ < 1) :
+    C(↑(sub (X := TopCat.of SphereDisk) (diskFactorSet y0)),
+      ↑(sub (X := TopCat.of SphereDisk) sphereDiskBoundarySet)) where
+  toFun p :=
+    have hvne : ((p : SphereDisk).2 : EuclideanSpace ℝ (Fin 3)) ≠ (y0 : EuclideanSpace ℝ (Fin 3)) :=
+      fun h => p.2 (Subtype.ext h)
+    ⟨((p : SphereDisk).1,
+        ⟨PinPlusTraceDiskCorePair.rayExit (y0 : EuclideanSpace ℝ (Fin 3))
+            ((p : SphereDisk).2 : EuclideanSpace ℝ (Fin 3)),
+          by
+            rw [mem_closedBall_zero_iff, PinPlusTraceDiskCorePair.rayExit_norm _ _ hy0 hvne]⟩),
+      by
+        rw [sphereDiskBoundarySet, Set.mem_setOf_eq, mem_sphere_zero_iff_norm]
+        exact PinPlusTraceDiskCorePair.rayExit_norm _ _ hy0 hvne⟩
+  continuous_toFun := by
+    have hg : Continuous (fun p : ↑(sub (X := TopCat.of SphereDisk) (diskFactorSet y0)) =>
+        ((p : SphereDisk).2 : EuclideanSpace ℝ (Fin 3))) := by fun_prop
+    have hgx : ∀ p : ↑(sub (X := TopCat.of SphereDisk) (diskFactorSet y0)),
+        ((p : SphereDisk).2 : EuclideanSpace ℝ (Fin 3)) ≠ (y0 : EuclideanSpace ℝ (Fin 3)) :=
+      fun p h => p.2 (Subtype.ext h)
+    have hfst : Continuous (fun p : ↑(sub (X := TopCat.of SphereDisk) (diskFactorSet y0)) =>
+        (p : SphereDisk).1) := by fun_prop
+    exact Continuous.subtype_mk
+      (hfst.prodMk (Continuous.subtype_mk
+        (PinPlusTraceDiskCorePair.continuous_rayExit_comp (y0 : EuclideanSpace ℝ (Fin 3)) _ hg hgx) _)) _
+
+/-- **`H₄(∂W) → H₄(sub A₀)` is injective** at an interior point `y0`: `diskFactorRetract` is a
+continuous left inverse of the boundary inclusion (boundary points are their own ray-exits,
+`rayExit_of_norm_one`), so `injective_homologyMap_of_retract` fires — the disk-factor half of the
+`hincl` Mayer–Vietoris sketch. -/
+theorem injective_boundary_to_diskFactorSet (y0 : ThreeDisk)
+    (hy0 : ‖(y0 : EuclideanSpace ℝ (Fin 3))‖ < 1) :
+    Function.Injective
+      (Homology.map (subIncl (X := TopCat.of SphereDisk)
+        (sphereDiskBoundarySet_subset_diskFactorSet hy0)) 4) := by
+  refine PinPlusTraceDiskCorePair.injective_homologyMap_of_retract
+    (sphereDiskBoundarySet_subset_diskFactorSet hy0) 4 (diskFactorRetract y0 hy0) ?_
+  apply ContinuousMap.ext
+  intro b
+  apply Subtype.ext
+  apply Prod.ext
+  · rfl
+  · apply Subtype.ext
+    show PinPlusTraceDiskCorePair.rayExit (y0 : EuclideanSpace ℝ (Fin 3))
+        (((subIncl (X := TopCat.of SphereDisk)
+            (sphereDiskBoundarySet_subset_diskFactorSet hy0) b : SphereDisk)).2 :
+          EuclideanSpace ℝ (Fin 3))
+      = (((b : ↑(sub (X := TopCat.of SphereDisk) sphereDiskBoundarySet)) : SphereDisk).2 :
+          EuclideanSpace ℝ (Fin 3))
+    have hbnorm : ‖(((b : ↑(sub (X := TopCat.of SphereDisk) sphereDiskBoundarySet)) : SphereDisk).2 :
+        EuclideanSpace ℝ (Fin 3))‖ = 1 := by
+      rw [← mem_sphere_zero_iff_norm]
+      exact b.2
+    refine PinPlusTraceDiskCorePair.rayExit_of_norm_one _ _ hy0 (fun h => ?_) hbnorm
+    have h' : ((b : SphereDisk).2 : EuclideanSpace ℝ (Fin 3)) = (y0 : EuclideanSpace ℝ (Fin 3)) := h
+    rw [h'] at hbnorm
+    exact absurd hbnorm (ne_of_lt hy0)
 
 end
 
