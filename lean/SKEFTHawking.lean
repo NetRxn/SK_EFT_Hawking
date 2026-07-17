@@ -4577,6 +4577,7 @@ import SKEFTHawking.PinPlusKTSphereProdReassoc
 import SKEFTHawking.PinPlusKTSphereProdHincl
 import SKEFTHawking.PinPlusKTSphereProdHomologyRoots
 import SKEFTHawking.PinPlusKTSphereProdRelFundWuRoots
+import SKEFTHawking.PinPlusKTSphereProdRelFund
 import SKEFTHawking.PinPlusKTSpinSigmaAtom
 import SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
 import SKEFTHawking.PinPlusKTSpinSigmaStock
