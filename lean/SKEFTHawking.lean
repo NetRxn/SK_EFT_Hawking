@@ -4620,6 +4620,7 @@ import SKEFTHawking.PinPlusCylDataDischarge
 import SKEFTHawking.PinPlusCylDataDischargeDisconnected
 import SKEFTHawking.PinPlusCylDataDischargeDisconnectedComponents
 import SKEFTHawking.PinPlusCylDataDischargeDisconnectedD
+import SKEFTHawking.SphereProdP23
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
