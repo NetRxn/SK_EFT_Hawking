@@ -247,4 +247,17 @@ theorem rokhlin_sixteen_of_residuals_freezeAtoms_ofReducedAtoms
 
 end Wiring
 
+/-! ## §5. Non-vacuity — atom 1's reduction terminates at a TRUE fact on the concrete 2-sphere. -/
+
+/-- **The atom-1 reduction is non-vacuous**: on the concrete 2-sphere `Sph 2` it produces
+`Subsingleton (Cohomology (Sph 2) 1)` (`H¹(S²;ℤ/2) = 0`) from the banked mod-2 `H₁(S²;ℤ/2) = 0`
+(`SingularSphereMiddle.sphere_homology_one`), witnessing that the homological sub-atom the narrowing
+leaves for the geometric provider bottoms out at a genuine sphere computation, not a vacuous
+hypothesis. (`W = S²×D³ ≃ S²`, so `H¹(W;ℤ/2) = H¹(S²;ℤ/2)`; the retraction transport to the coboundary
+carrier is the provider's remaining step.) -/
+example : Subsingleton (Cohomology (SKEFTHawking.SingularSphereAcyclic.Sph 2) 1) := by
+  haveI : Subsingleton (Homology (SKEFTHawking.SingularSphereAcyclic.Sph 2) 1) :=
+    subsingleton_of_forall_eq 0 (SKEFTHawking.SingularSphereMiddle.sphere_homology_one 2 le_rfl)
+  exact subsingleton_cohomology_of_homology (X := SKEFTHawking.SingularSphereAcyclic.Sph 2) 0
+
 end SKEFTHawking.PinPlusKTSphereProdCohomology
