@@ -282,7 +282,7 @@ def flatIncl {X : TopCat} {s t : Set ↑X} (h : s ⊆ t) :
     apply Continuous.subtype_mk; apply Continuous.subtype_mk; fun_prop
 
 /-- Its inverse `sub (restr s t) → sub s`. -/
-def flatInclInv {X : TopCat} {s t : Set ↑X} (h : s ⊆ t) :
+def flatInclInv {X : TopCat} {s t : Set ↑X} (_h : s ⊆ t) :
     C(↑(sub (restr s t)), ↑(sub s)) where
   toFun q := ⟨((q : ↑(sub t)) : ↑X), q.2⟩
   continuous_toFun := by apply Continuous.subtype_mk; fun_prop
@@ -298,6 +298,60 @@ inside `t`). -/
 theorem subIncl_eq_ambIncl_comp_flatIncl {X : TopCat} {s t : Set ↑X} (h : s ⊆ t) :
     subIncl h = (ambIncl (restr s t)).comp (flatIncl h) :=
   ContinuousMap.ext fun _ => rfl
+
+/-- `A₀ = {p.2 ≠ y₀}` is open in `S²×D³`. -/
+theorem isOpen_diskFactorSet (y0 : ThreeDisk) : IsOpen (diskFactorSet y0) :=
+  isOpen_compl_singleton.preimage continuous_snd
+
+/-- `B₀ = {p.1 ≠ p₀}` is open in `S²×D³`. -/
+theorem isOpen_sphereFactorSet (p₀ : TwoSphere) : IsOpen (sphereFactorSet p₀) :=
+  isOpen_compl_singleton.preimage continuous_fst
+
+/-- **The disk-factor inclusion `A₀ ↪ {x}ᶜ` is `H₄`-injective** at an interior point `x`.
+Mayer–Vietoris over the ambient `sub {x}ᶜ` with the open cover `A₀ ∪ B₀ = {x}ᶜ`,
+`B₀ = {p.1 ≠ x.1}`: exactness at the middle (`mv_exact_middle`) plus `H₄(A₀∩B₀) = 0` (§2) force the
+kernel of `H₄(A₀) → H₄({x}ᶜ)` to vanish; the `flatIncl` factorization moves it to `subIncl`. -/
+theorem injective_diskFactorSet_to_compl (x : ↑(TopCat.of SphereDisk))
+    (hy0 : ‖((x.2 : ThreeDisk) : E3)‖ < 1)
+    (h2 : diskFactorSet x.2 ⊆ ({x}ᶜ : Set SphereDisk)) :
+    Function.Injective (Homology.map (subIncl (X := TopCat.of SphereDisk) h2) 4) := by
+  set A := restr (X := TopCat.of SphereDisk) (diskFactorSet x.2) {x}ᶜ with hA
+  set B := restr (X := TopCat.of SphereDisk) (sphereFactorSet x.1) {x}ᶜ with hB
+  have hAopen : IsOpen A := (isOpen_diskFactorSet x.2).preimage continuous_subtype_val
+  have hBopen : IsOpen B := (isOpen_sphereFactorSet x.1).preimage continuous_subtype_val
+  -- the open cover `A ∪ B = {x}ᶜ`
+  have hcov : (⋃ U ∈ ({A, B} : Set (Set ↑(sub (X := TopCat.of SphereDisk) {x}ᶜ))), interior U)
+      = Set.univ := by
+    rw [Set.biUnion_pair, hAopen.interior_eq, hBopen.interior_eq, Set.eq_univ_iff_forall]
+    intro q
+    rw [Set.mem_union]
+    by_contra hcon
+    rw [not_or] at hcon
+    obtain ⟨hqA, hqB⟩ := hcon
+    rw [hA, Set.mem_preimage] at hqA
+    rw [hB, Set.mem_preimage] at hqB
+    simp only [diskFactorSet, sphereFactorSet, Set.mem_setOf_eq, not_not] at hqA hqB
+    exact q.2 (Prod.ext hqB hqA)
+  -- `H₄(sub (A ∩ B)) = 0`
+  have hInterZero : ∀ w : Homology (sub (A ∩ B)) 4, w = 0 := by
+    have hz := homology_restrSub_eq_zero (Set.inter_subset_left.trans h2) 4
+      (interFactor_homology_four_eq_zero x.1 x.2 hy0)
+    exact fun w => hz w
+  -- kernel-triviality of `H₄(A₀) → H₄({x}ᶜ)` (the ambient inclusion)
+  have hker : ∀ u, Homology.map (ambIncl A) 4 u = 0 → u = 0 := by
+    intro u hu
+    have hsum : mvHomSum A B 4 (u, 0) = 0 := by
+      rw [mvHomSum_apply]; simp [hu]
+    obtain ⟨w, hw⟩ := (mv_exact_middle A B 3 hcov (u, 0)).mp hsum
+    rw [hInterZero w, map_zero] at hw
+    simpa using congrArg Prod.fst hw.symm
+  have hInjAmb : Function.Injective ⇑(Homology.map (ambIncl A) 4) := by
+    intro a b hab
+    exact sub_eq_zero.mp (hker _ (by rw [map_sub, hab, sub_self]))
+  -- transport back to `subIncl` via the `flatIncl` factorization
+  rw [subIncl_eq_ambIncl_comp_flatIncl h2, SingularFunctoriality.Homology.map_comp,
+    LinearMap.coe_comp]
+  exact hInjAmb.comp (map_flatIncl_bijective h2 4).injective
 
 end
 
