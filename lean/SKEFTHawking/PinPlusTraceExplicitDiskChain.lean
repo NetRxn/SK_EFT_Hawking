@@ -129,6 +129,63 @@ theorem explicitDiskChain_hdet
       (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (3 + 1) diskDetectChain_hc)]
   exact diskDetectChain_hdet y hy
 
+/-! ## §2.5. The homology witness from a relative-class equality — the geometric form. -/
+
+/-- **The homology witness is exactly `cHa` being a relative fundamental cycle.** If an explicit
+almost-cycle `cHa` (boundary on the sphere) has the SAME relative `(D⁵, ∂D⁵)`-class as
+`diskDetectChain` — i.e. `cHa` represents the disk's relative fundamental class — then it IS homologous
+rel-sphere to `diskDetectChain`: `cHa = diskDetectChain + ∂w + e` with `e` on the sphere. This is the
+"class characterization" that discharges the raw existential homology witness (`hcongr`) from a purely
+geometric condition on the VISIBLE boundary: `cHa` need only be a relative fundamental cycle of the
+disk. (`RelativeHomology.mk_eq_zero_iff`: equal classes differ by a relative boundary, which unfolds
+mod 2 to `∂w + e`.) -/
+theorem homologyWitness_of_relClass_eq
+    (cHa : SingularChain (TopCat.of D5) (3 + 2))
+    (hc : chainBoundary (TopCat.of D5) (3 + 1) cHa
+      ∈ subspaceChains (X := TopCat.of D5) {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} (3 + 1))
+    (hcl : relClassOf (X := TopCat.of D5)
+        {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} 3 cHa hc
+      = relClassOf (X := TopCat.of D5)
+        {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} 3 diskDetectChain diskDetectChain_hc) :
+    ∃ (w : SingularChain (TopCat.of D5) (3 + 3)) (e : SingularChain (TopCat.of D5) (3 + 2)),
+      e ∈ subspaceChains (X := TopCat.of D5)
+          {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} (3 + 2)
+        ∧ cHa = diskDetectChain + chainBoundary (TopCat.of D5) (3 + 2) w + e := by
+  -- The sum class `[cHa + diskDetectChain]` vanishes (equal classes, char 2).
+  have hbdd : chainBoundary (TopCat.of D5) (3 + 1) (cHa + diskDetectChain)
+      ∈ subspaceChains (X := TopCat.of D5)
+        {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} (3 + 1) := by
+    rw [map_add]; exact Submodule.add_mem _ hc diskDetectChain_hc
+  have hsum : relClassOf (X := TopCat.of D5)
+      {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} 3 (cHa + diskDetectChain) hbdd = 0 := by
+    rw [relClassOf_add _ 3 cHa diskDetectChain hc diskDetectChain_hc, hcl]
+    exact ZModModule.add_self _
+  -- A vanishing class is a relative boundary: extract a relative-chain lift `W = [w]`.
+  have hmem := (RelativeHomology.mk_eq_zero_iff _ (3 + 2)
+    (relCycleOf (X := TopCat.of D5)
+      {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} 3 (cHa + diskDetectChain) hbdd)).mp hsum
+  rw [relBoundaries, LinearMap.mem_range] at hmem
+  obtain ⟨W, hW⟩ := hmem
+  obtain ⟨w, rfl⟩ := Submodule.Quotient.mk_surjective _ W
+  rw [show (Submodule.Quotient.mk w :
+        RelativeChain {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} (3 + 3))
+      = RelativeChain.mk _ (3 + 3) w from rfl, relBoundary_mk] at hW
+  -- `hW : mk (∂w) = mk (cHa + diskDetectChain)`; its difference is the sphere-supported remainder.
+  have hsub := (Submodule.Quotient.eq _).mp hW
+  refine ⟨w, chainBoundary (TopCat.of D5) (3 + 2) w + cHa + diskDetectChain, ?_, ?_⟩
+  · -- `e = ∂w + cHa + diskDetectChain = ∂w - (cHa + diskDetectChain)` lies in the sphere chains.
+    have hrw : chainBoundary (TopCat.of D5) (3 + 2) w + cHa + diskDetectChain
+        = chainBoundary (TopCat.of D5) (3 + 2) w - (cHa + diskDetectChain) := by
+      rw [sub_eq_add_neg, neg_eq_of_add_eq_zero_right (ZModModule.add_self _)]
+      abel
+    rw [hrw]; exact hsub
+  · -- `cHa = diskDetectChain + ∂w + e` by char-2 cancellation of the doubled terms.
+    rw [show diskDetectChain + chainBoundary (TopCat.of D5) (3 + 2) w
+          + (chainBoundary (TopCat.of D5) (3 + 2) w + cHa + diskDetectChain)
+        = cHa + (diskDetectChain + diskDetectChain)
+          + (chainBoundary (TopCat.of D5) (3 + 2) w + chainBoundary (TopCat.of D5) (3 + 2) w)
+        from by abel, ZModModule.add_self, ZModModule.add_self, add_zero, add_zero]
+
 /-! ## §3. The explicit-`cHa` capstone residual — the disk chain is now EXPLICIT with a visible face. -/
 
 section Residual
@@ -203,6 +260,72 @@ def CapstoneSeamTransferResidualExplicit.toHasClass
   hasClass_ofTransfer s t S hS φ hφ hφinj cd hseam d R.z R.hz
     R.cHa (explicitDiskChain_hc R.cHa R.w R.e R.he R.hcongr)
     (fun y hy => explicitDiskChain_hdet R.cHa R.w R.e R.he R.hcongr y hy)
+    (CapstoneSeamTransferSeam.toTransfer s S hS φ hφ hφinj R.seam)
+    R.hdetAB
+
+/-! ## §4. The class-form residual — the disk condition is "`cHa` is a relative fundamental cycle". -/
+
+/-- **The narrowed capstone residual, relative-class form.** The geometric-cleanest packaging: the raw
+existential homology witness (`w`/`e`/`he`/`hcongr`) is replaced by the single condition that the
+EXPLICIT disk chain `cHa` represents the disk's relative fundamental class — `relClassOf cHa =
+relClassOf diskDetectChain` — a statement purely about `cHa`'s VISIBLE boundary
+(`homologyWitness_of_relClass_eq` supplies the witness). So the disk side asks exactly: an explicit
+`cHa` that (i) is a relative fundamental cycle of `(D⁵, ∂D⁵)` and (ii) carries the shared seam's
+visible `S`-face split `∂cHa = incl_# cSeam + vOut`. -/
+structure CapstoneSeamTransferResidualExplicitClass where
+  /-- a fundamental cycle of the closed source 4-manifold `M`. -/
+  z : cycles (TopCat.of s.M) (2 + 2)
+  /-- `z` represents the fundamental class. -/
+  hz : SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := s.M)
+      = Homology.mk (TopCat.of s.M) (2 + 2) z
+  /-- the EXPLICIT disk chain (typed at `D⁵ ≡ .Ha`). -/
+  cHa : SingularChain (TopCat.of D5) (3 + 2)
+  /-- its boundary is supported on the boundary sphere `∂D⁵`. -/
+  hc : chainBoundary (TopCat.of D5) (3 + 1) cHa
+    ∈ subspaceChains (X := TopCat.of D5) {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} (3 + 1)
+  /-- **the geometric disk condition**: `cHa` represents the disk's relative fundamental class. -/
+  hcl : relClassOf (X := TopCat.of D5)
+      {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} 3 cHa hc
+    = relClassOf (X := TopCat.of D5)
+      {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} 3 diskDetectChain diskDetectChain_hc
+  /-- the `htransfer`-free shared seam core over the EXPLICIT `cHa` (its `hsplitHa` is the visible
+  `S`-face split `∂cHa = incl_# cSeam + vOut`). -/
+  seam : CapstoneSeamTransferSeam s S hS φ hφ hφinj z cHa
+  /-- the overlap-zone straddle detection over the glued (controlled cylinder ⊕ EXPLICIT disk) chain. -/
+  hdetAB : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      (hx : x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)),
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+    relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+      (closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+          (3 + 2) (capstoneCylChainT s S hS φ hφ hφinj z)
+        + closedEmbeddingChain
+          (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+          (3 + 2) cHa)
+      (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1)
+        (hbd_ofTransfer s t S hS φ hφ hφinj cd hseam d
+          (CapstoneSeamTransferSeam.toTransfer s S hS φ hφ hφinj seam))) ≠ 0
+
+/-- **The class-form residual fires the capstone `hasClass`.** Discharges the homology witness from the
+relative-class equality (`homologyWitness_of_relClass_eq`) and delegates to the explicit-`cHa` supplier.
+So the deepest capstone atom reduces, for connected `s.M`, to inhabiting
+`CapstoneSeamTransferResidualExplicitClass` — `{a fundamental cycle of M, an explicit disk chain that IS
+a relative fundamental cycle of the disk carrying the shared seam's visible `S`-face split, the straddle
+detection}`. The remaining GEOMETRIC residual is the shared `cSeam` serving BOTH the disk split (in
+`seam`) and the cylinder split simultaneously — the co-adaptation to the attaching map `φ`, which walls
+at the CLOSED-`S` support barrier (a machinery gap, not kernel-false; #204). -/
+def CapstoneSeamTransferResidualExplicitClass.toHasClass
+    (R : CapstoneSeamTransferResidualExplicitClass s t S hS φ hφ hφinj cd hseam d) :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) := by
+  obtain ⟨w, e, he, hcongr⟩ := homologyWitness_of_relClass_eq R.cHa R.hc R.hcl
+  exact hasClass_ofTransfer s t S hS φ hφ hφinj cd hseam d R.z R.hz
+    R.cHa (explicitDiskChain_hc R.cHa w e he hcongr)
+    (fun y hy => explicitDiskChain_hdet R.cHa w e he hcongr y hy)
     (CapstoneSeamTransferSeam.toTransfer s S hS φ hφ hφinj R.seam)
     R.hdetAB
 
