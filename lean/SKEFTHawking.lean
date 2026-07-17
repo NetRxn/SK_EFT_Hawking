@@ -4560,6 +4560,7 @@ import SKEFTHawking.PinPlusKTCollapseDischarge
 import SKEFTHawking.PinPlusKTFreezeDischarge
 import SKEFTHawking.PinPlusKTSphereProdBordism
 import SKEFTHawking.PinPlusKTSphereProdWAdm
+import SKEFTHawking.PinPlusKTSphereProdCohomology
 import SKEFTHawking.PinPlusKTSpinSigmaAtom
 import SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
 import SKEFTHawking.PinPlusKTSpinSigmaStock
