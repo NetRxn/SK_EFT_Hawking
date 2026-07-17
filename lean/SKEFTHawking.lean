@@ -4574,6 +4574,7 @@ import SKEFTHawking.PinPlusKTSphereProdCohomology
 -- (𝓡4)×(𝓡∂1), the H₁/H₄ homology roots, and the H₄/H₅ + betaClass + half-hincl relFund partials. The
 -- relFund/P23 root + Root 2 (H₃(S²×S²;ℤ/2)) remain open (→ #213 keystone / the disk-factor EZ cross).
 import SKEFTHawking.PinPlusKTSphereProdReassoc
+import SKEFTHawking.PinPlusKTSphereProdHincl
 import SKEFTHawking.PinPlusKTSphereProdHomologyRoots
 import SKEFTHawking.PinPlusKTSphereProdRelFundWuRoots
 import SKEFTHawking.PinPlusKTSpinSigmaAtom

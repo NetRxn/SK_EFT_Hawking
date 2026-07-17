@@ -353,6 +353,46 @@ theorem injective_diskFactorSet_to_compl (x : ↑(TopCat.of SphereDisk))
     LinearMap.coe_comp]
   exact hInjAmb.comp (map_flatIncl_bijective h2 4).injective
 
+/-! ## §4. `hincl_sphereDisk` — the boundary inclusion is `H₄`-injective at every interior point. -/
+
+/-- The disk-factor set is inside `{x}ᶜ`: `p.2 ≠ y₀ ⟹ p ≠ (·, y₀)`. -/
+theorem diskFactorSet_subset_compl (x : ↑(TopCat.of SphereDisk)) :
+    diskFactorSet x.2 ⊆ ({x}ᶜ : Set SphereDisk) := by
+  intro p hp hpx
+  rw [Set.mem_singleton_iff] at hpx
+  exact hp (by rw [hpx])
+
+/-- **`hincl` over `sphereDiskBoundarySet`.** Factor `∂W ↪ A₀ ↪ {x}ᶜ` (`A₀ = diskFactorSet x.2`):
+`∂W ↪ A₀` is the banked `injective_boundary_to_diskFactorSet`; `A₀ ↪ {x}ᶜ` is the §3 MV result. -/
+theorem hincl_aux (x : ↑(TopCat.of SphereDisk)) (hy0 : ‖((x.2 : ThreeDisk) : E3)‖ < 1)
+    (hsub : sphereDiskBoundarySet ⊆ ({x}ᶜ : Set SphereDisk)) :
+    Function.Injective (Homology.map (subIncl (X := TopCat.of SphereDisk) hsub) 4) := by
+  have h1 : sphereDiskBoundarySet ⊆ diskFactorSet x.2 :=
+    sphereDiskBoundarySet_subset_diskFactorSet hy0
+  have h2 : diskFactorSet x.2 ⊆ ({x}ᶜ : Set SphereDisk) := diskFactorSet_subset_compl x
+  have hcomp : subIncl hsub = (subIncl (X := TopCat.of SphereDisk) h2).comp
+      (subIncl (X := TopCat.of SphereDisk) h1) := ContinuousMap.ext fun _ => rfl
+  rw [hcomp, SingularFunctoriality.Homology.map_comp, LinearMap.coe_comp]
+  exact (injective_diskFactorSet_to_compl x hy0 h2).comp
+    (injective_boundary_to_diskFactorSet x.2 hy0)
+
+/-- **`hincl_sphereDisk`** — at every INTERIOR point `x` of `SphereDisk = S²×D³`, the boundary
+inclusion `∂W = S²×S² ↪ {x}ᶜ = S²×D³ ∖ {x}` is `H₄(·; ℤ/2)`-injective. The Mayer–Vietoris completion
+of the `S²×D³` relative-fundamental-class assembly. -/
+theorem hincl_sphereDisk (x : ↑(TopCat.of SphereDisk))
+    (hx : x ∉ ((𝓡 4).prod (𝓡∂ 1)).boundary SphereDisk) :
+    Function.Injective (Homology.map (subIncl (X := TopCat.of SphereDisk)
+      (Set.subset_compl_singleton_iff.mpr hx)) 4) := by
+  have hy0 : ‖((x.2 : ThreeDisk) : E3)‖ < 1 := by
+    have hle : ‖((x.2 : ThreeDisk) : E3)‖ ≤ 1 := mem_closedBall_zero_iff.mp x.2.2
+    refine lt_of_le_of_ne hle (fun h => hx ?_)
+    rw [sphereDisk_boundary_eq]
+    exact mem_sphere_zero_iff_norm.mpr h
+  revert hx
+  rw [sphereDisk_boundary_eq]
+  intro hx
+  exact hincl_aux x hy0 (Set.subset_compl_singleton_iff.mpr hx)
+
 end
 
 end SKEFTHawking.PinPlusKTSphereProdHincl
