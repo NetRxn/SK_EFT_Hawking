@@ -4623,6 +4623,7 @@ import SKEFTHawking.PinPlusCylDataDischargeDisconnectedD
 import SKEFTHawking.SphereProdP23
 import SKEFTHawking.KummerK3Base
 import SKEFTHawking.KummerInvolution
+import SKEFTHawking.KummerHomologyT4
 import SKEFTHawking.KTCompletenessProvider
 
 /-!
