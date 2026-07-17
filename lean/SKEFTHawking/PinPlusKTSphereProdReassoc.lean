@@ -178,4 +178,147 @@ theorem isManifold_R4 {k : WithTop ℕ∞} : IsManifold (R4) k SphereProd := by
     exact conj_mem_R4 ((contDiffGroupoid k I4L).compatible hf₁ hf₂)
   exact IsManifold.mk' (R4) k SphereProd
 
+/-! ### §3. `sphereProdSM4` — the `S²×S²` source re-associated to `𝓡 4` (deliverable 3) -/
+
+/-- **`S²×S²` as an absolute singular manifold over the merged `𝓡 4` model** (the consumer's source
+model, `X = PUnit`). Transport of `sphereProdSM k` along `Lmerge`. -/
+noncomputable def sphereProdSM4 (k : WithTop ℕ∞) : SingularManifold PUnit k (R4) :=
+  haveI : IsManifold (R4) k SphereProd := isManifold_R4
+  ⟨SphereProd, fun _ => PUnit.unit, continuous_const⟩
+
+/-! ### §4. The `J5 → J6` re-association on `SphereDisk` (deliverable 2)
+
+Same pattern as §2, threaded through the trailing boundary factor `𝓡∂ 1`: the euclidean-space
+merge `Lcle2 = Lmerge.prodCongr (refl E1)` and the model-space merge
+`βhomeo = γhomeo.prodCongr (refl HH)`, both acting only on the first (`E²×E²`/`ModelProd E2 E2`)
+factor and fixing the boundary factor. -/
+
+/-- `J5`'s euclidean space `(E²×E²)×E¹` merged to `J6`'s euclidean space `E⁴×E¹` (first factor
+only). -/
+noncomputable def Lcle2 : ((E2 × E2) × E1) ≃L[ℝ] (E4 × E1) :=
+  Lmerge.prodCongr (ContinuousLinearEquiv.refl ℝ E1)
+
+/-- `J5` reparametrized so its euclidean space is `J6`'s (`E⁴×E¹`), keeping `J5`'s model space
+`HB = ModelProd (ModelProd E2 E2) HH`. -/
+noncomputable def J6L : ModelWithCorners ℝ (E4 × E1) HB :=
+  J5.transContinuousLinearEquiv Lcle2
+
+theorem J6L_coe : ⇑J6L = Lcle2 ∘ ⇑J5 := rfl
+
+attribute [local instance] SKEFTHawking.SpinSigmaRoute.chartW
+
+/-- `IsManifold J6L k SphereDisk` — free, via the `transContinuousLinearEquiv` instance and the
+banked `isManifold_J5`. -/
+theorem isManifold_J6L {k : WithTop ℕ∞} : IsManifold J6L k SphereDisk := by
+  haveI : IsManifold J5 k SphereDisk := isManifold_J5
+  exact ContinuousLinearEquiv.instIsManifoldtransContinuousLinearEquiv Lcle2
+
+/-- `J6`'s model space `HC = ModelProd E4 HH` (`= E⁴×HH`). -/
+abbrev HC := ModelProd E4 HH
+
+/-- The model-space merge homeomorphism `HB ≃ₜ HC` (merge on the first factor, identity on the
+boundary factor). -/
+noncomputable def βhomeo : HB ≃ₜ HC := γhomeo.prodCongr (Homeomorph.refl HH)
+
+/-- `βhomeo` as an `OpenPartialHomeomorph` (global chart, source = univ). -/
+noncomputable def βOPH : OpenPartialHomeomorph HB HC := βhomeo.toOpenPartialHomeomorph
+
+/-- **The model intertwining**: `J6 ∘ βhomeo = J6L` (`rfl`). -/
+theorem J6_comp_βhomeo (p : HB) : (J6) (βhomeo p) = J6L p := rfl
+
+/-- `HB` charted over `HC` by the single global merge chart `βhomeo`. -/
+@[reducible] noncomputable def chartedSpaceHC_HB : ChartedSpace HC HB where
+  atlas := {βOPH}
+  chartAt _ := βOPH
+  mem_chart_source x := by
+    show x ∈ βOPH.source
+    simp [βOPH, Homeomorph.toOpenPartialHomeomorph]
+  chart_mem_atlas _ := rfl
+
+attribute [local instance] chartedSpaceHC_HB
+
+/-- The natural charted space of `SphereDisk` over `HC` (`J6`'s model space): `J5`'s `HB`-atlas
+(`chartW`, `SphereDiskJ5.lean`), re-modelled over `HC` by the merge (`ChartedSpace.comp`). -/
+@[reducible] noncomputable def chartW6 : ChartedSpace HC SphereDisk :=
+  ChartedSpace.comp HC HB SphereDisk
+
+/-- The euclidean ranges coincide: `range J6 = range J6L` (via `βhomeo` surjective). -/
+theorem range_J6_eq_J6L : range (⇑J6) = range J6L := by
+  have h : range J6L = range (fun p => (J6) (βhomeo p)) := by
+    apply congrArg; funext p; exact (J6_comp_βhomeo p).symm
+  rw [h, Set.range_comp' (g := (J6)) (f := βhomeo)]
+  · simp [βhomeo.surjective.range_eq]
+
+@[simp] theorem βOPH_coe : ⇑βOPH = βhomeo := rfl
+@[simp] theorem βOPH_symm_coe : ⇑βOPH.symm = βhomeo.symm := rfl
+@[simp] theorem βOPH_source : βOPH.source = Set.univ := by
+  simp [βOPH, Homeomorph.toOpenPartialHomeomorph]
+@[simp] theorem βOPH_target : βOPH.target = Set.univ := by
+  simp [βOPH, Homeomorph.toOpenPartialHomeomorph]
+
+/-- `J6L.symm = βhomeo.symm ∘ J6.symm` (as functions `E⁴×E¹ → HB`). -/
+theorem J6L_symm_eq (q : E4 × E1) : (J6L).symm q = βhomeo.symm ((J6).symm q) := rfl
+
+theorem J6L_symm_fun : ⇑(J6L).symm = βhomeo.symm ∘ ⇑(J6).symm := by
+  funext q; exact J6L_symm_eq q
+
+/-- The conjugated coordinate map: `⇑(βOPH.symm ≫ₕ g ≫ₕ βOPH) = βhomeo ∘ g ∘ βhomeo.symm`. -/
+theorem conj_coe6 (g : OpenPartialHomeomorph HB HB) :
+    ⇑(βOPH.symm.trans (g.trans βOPH)) = βhomeo ∘ ⇑g ∘ βhomeo.symm := by
+  simp [OpenPartialHomeomorph.coe_trans]; rfl
+
+/-- The conjugated source: `(βOPH.symm ≫ₕ g ≫ₕ βOPH).source = βhomeo.symm ⁻¹' g.source`. -/
+theorem conj_source6 (g : OpenPartialHomeomorph HB HB) :
+    (βOPH.symm.trans (g.trans βOPH)).source = βhomeo.symm ⁻¹' g.source := by simp
+
+/-- **The `contDiffPregroupoid` property transfer under merge conjugation**. -/
+theorem conj_property_transfer6 {n : WithTop ℕ∞} (φ : HB → HB) (s : Set HB)
+    (hφ : ContDiffOn ℝ n (⇑J6L ∘ φ ∘ ⇑(J6L).symm) (⇑(J6L).symm ⁻¹' s ∩ range J6L)) :
+    ContDiffOn ℝ n (⇑J6 ∘ (βhomeo ∘ φ ∘ βhomeo.symm) ∘ ⇑(J6).symm)
+      (⇑(J6).symm ⁻¹' (βhomeo.symm ⁻¹' s) ∩ range J6) := by
+  have hfun : ⇑J6 ∘ (βhomeo ∘ φ ∘ βhomeo.symm) ∘ ⇑(J6).symm = ⇑J6L ∘ φ ∘ ⇑(J6L).symm := by
+    funext y
+    simp only [Function.comp_apply]
+    rw [J6_comp_βhomeo, ← J6L_symm_eq]
+  have hset : ⇑(J6).symm ⁻¹' (βhomeo.symm ⁻¹' s) ∩ range J6 = ⇑(J6L).symm ⁻¹' s ∩ range J6L := by
+    rw [range_J6_eq_J6L, J6L_symm_fun, Set.preimage_comp]
+  rw [hfun, hset]; exact hφ
+
+/-- **Merge conjugation preserves `C^n` compatibility**. -/
+theorem conj_mem_J6 {n : WithTop ℕ∞} {g : OpenPartialHomeomorph HB HB}
+    (hg : g ∈ contDiffGroupoid n J6L) :
+    (βOPH.symm.trans (g.trans βOPH)) ∈ contDiffGroupoid n J6 := by
+  rw [contDiffGroupoid, mem_groupoid_of_pregroupoid] at hg ⊢
+  obtain ⟨hg1, hg2⟩ := hg
+  refine ⟨?_, ?_⟩
+  · rw [conj_coe6, conj_source6]
+    exact conj_property_transfer6 g g.source hg1
+  · have hsymm_coe : ⇑(βOPH.symm.trans (g.trans βOPH)).symm = βhomeo ∘ ⇑g.symm ∘ βhomeo.symm := by
+      simp only [OpenPartialHomeomorph.coe_trans_symm, OpenPartialHomeomorph.symm_symm,
+        βOPH_coe, βOPH_symm_coe]
+    have htarget : (βOPH.symm.trans (g.trans βOPH)).target = βhomeo.symm ⁻¹' g.target := by
+      simp
+    rw [hsymm_coe, htarget]
+    exact conj_property_transfer6 g.symm g.target hg2
+
+attribute [local instance] chartW6
+
+/-- **`IsManifold J6 k SphereDisk`** — `S²×D³`'s manifold structure, re-associated from the banked
+`J5` structure to the consumer's `J6 = (𝓡 4).prod (𝓡∂ 1)` model (deliverable 2). -/
+theorem isManifold_J6 {k : WithTop ℕ∞} : IsManifold (J6) k SphereDisk := by
+  haveI : IsManifold J6L k SphereDisk := isManifold_J6L
+  haveI hg : HasGroupoid SphereDisk (contDiffGroupoid k (J6)) := by
+    refine ⟨fun {e₁ e₂} he₁ he₂ => ?_⟩
+    obtain ⟨f₁, hf₁, β₁, hβ₁, rfl⟩ := he₁
+    obtain ⟨f₂, hf₂, β₂, hβ₂, rfl⟩ := he₂
+    obtain rfl : β₁ = βOPH := hβ₁
+    obtain rfl : β₂ = βOPH := hβ₂
+    have heq : (f₁.trans βOPH).symm.trans (f₂.trans βOPH)
+        = βOPH.symm.trans ((f₁.symm.trans f₂).trans βOPH) := by
+      simp only [OpenPartialHomeomorph.trans_symm_eq_symm_trans_symm,
+        OpenPartialHomeomorph.trans_assoc]
+    rw [heq]
+    exact conj_mem_J6 ((contDiffGroupoid k J6L).compatible hf₁ hf₂)
+  exact IsManifold.mk' (J6) k SphereDisk
+
 end SKEFTHawking.SpinSigmaRoute
