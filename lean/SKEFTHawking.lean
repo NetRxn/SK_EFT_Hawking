@@ -4624,6 +4624,7 @@ import SKEFTHawking.SphereProdP23
 import SKEFTHawking.KummerK3Base
 import SKEFTHawking.KummerInvolution
 import SKEFTHawking.KummerHomologyT4
+import SKEFTHawking.KummerH0T4
 import SKEFTHawking.KTCompletenessProvider
 
 /-!
