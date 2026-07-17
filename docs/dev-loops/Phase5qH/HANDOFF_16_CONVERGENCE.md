@@ -215,11 +215,25 @@ interface — then **the pinned (2,3) datum P23** (H²(W) ≅ H³(W,∂W) perfec
   submanifold, smooth transversality) — opened at #160 (the single-witness wall:
   bordism gluing absent by design), untouched since. Round-12 spec 1 binds.
 - **The E1 atom bundle + K3RealizingElement + hΦg (hypotheses 2, 8):** the
-  σ-presentation's terminal atoms. `K3RealizingElement` is DEFINED but inhabited
-  NOWHERE (Mathlib has no complex geometry); hΦg = Φ[g] = k₀ rides on it (g = the
-  K3-class generator). **DECISION NEEDED before spending workers:** a from-scratch K3
-  lattice-realization arc vs re-routing the generator witness — a design pass, not a
-  brick.
+  σ-presentation's terminal atoms. **CORRECTED 2026-07-17 (design pass — the earlier
+  "DEFINED but inhabited NOWHERE / needs complex geometry" framing was OVER-STATED; the
+  corpus already refuted it).** The σ-route `Ω₄^{Spin}≅ℤ` is **PROVEN CONDITIONAL**
+  (`dataBordismGrp_equiv_int_of_row` / `K3RealizingElement.dataBordismGrp_equiv_int`) on:
+  (i) a GENUINE `StrMfd` generator `g` whose E1 intersection form is `IntCongr` to
+  `k3Form` (b₂=22 — **σ[g]=−16 is DERIVED via `SpinPresentationRow.hg`, NOT posited;
+  docstring-explicit "no lattice-object-as-manifold fake"**, so it is already gate-clean on
+  faithfulness); (ii) hCob/hBase (Benedetti Freeze-A handle-trades); (iii)
+  SphereProductBounds (Freeze-B — **DISCHARGED**, `SphereDiskFreezeB`). `k3Form` (σ=−16) is
+  banked algebra. So the ONLY genuinely-open geometric residual is a genuine smooth closed
+  spin 4-mfd realizing the K3 form + the two handle-trade atoms — a **BOUNDED Benedetti-Ch.20
+  program** (lead-vetted blueprint:
+  `Lit-Search/Phase-5qH/Omega4Spin_Z_formalization_route_20260706.md`), NOT a spectral tower,
+  NOT a Kähler K3 build. **This unifies with hCob/hBase below: `row`/`hΦg`/`hCob`/`hBase` are
+  ONE Benedetti-Ch.20 cluster, not two black boxes.** The one sharp DESIGN QUESTION (the DR's
+  findings 3 vs 5 are in mild tension): does the generator require K3-the-smooth-manifold, or
+  does a surgery/plumbing realization of `2(−E₈)⊕3H` exist, or a KT §5 route to
+  σ-surjectivity that sidesteps the generator manifold entirely? — a scoped `research-scout`
+  question, not a from-scratch build decision. hΦg = Φ[g]=k₀ rides on the same g.
 
 **Convergence (after the row):**
 
