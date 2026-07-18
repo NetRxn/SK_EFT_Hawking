@@ -67,6 +67,8 @@ import SKEFTHawking.SingularMVCohomologyFinite
 import SKEFTHawking.SingularLineMinusPoint
 import SKEFTHawking.SingularClosedHomologyFinite
 import SKEFTHawking.SingularSphereHighDegree
+import SKEFTHawking.SphereProdHTwoMod2
+import SKEFTHawking.SingularPairLES
 
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
 open SKEFTHawking.SingularRelativeHomologyMod2 SKEFTHawking.SingularRelativeCohomologyMod2
@@ -78,6 +80,8 @@ open SKEFTHawking.PinPlusKTSphereProdRelFundWuRoots
 open SKEFTHawking.PinPlusCharPairRealizationTied (homeoHomologyEquiv)
 open SKEFTHawking.SingularKroneckerEquiv (kroneckerHEquiv)
 open SKEFTHawking.SingularRelativeKroneckerEquiv (relKroneckerHEquiv)
+open SKEFTHawking.SingularPairLES (homIncl homProj connecting exact_homProj_connecting
+  exact_connecting_homIncl)
 
 namespace SKEFTHawking.SphereProdP23
 
@@ -194,6 +198,114 @@ theorem sphereDiskDimeq23_of_relativeCohomology_rank_one
       = Module.finrank (ZMod 2)
         (RelativeCohomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet 3) := by
   rw [finrank_sphereDisk_cohomology_two, hrel]
+
+/-! ## §4. The residual `dim H₃(W,∂W;ℤ/2) = 1` via the mod-2 pair-LES.
+
+The `dimeq` residual `dim H³(W,∂W;ℤ/2) = 1` reduces (via
+`finrank_relativeCohomology_eq_relativeHomology`) to `dim H₃(W,∂W;ℤ/2) = 1`, which the mod-2 pair-LES
+`H₃(W) →ᵖ H₃(W,∂W) →ᵟ H₂(∂W) →ⁱ H₂(W)` supplies once the two Betti inputs
+`dim H₂(∂W;ℤ/2) = 2` (transported from `SphereProdHTwoMod2.finrank_sphereProd_homologyMod2_two`) and
+`dim H₂(W;ℤ/2) = 1` are banked and the boundary inclusion `i = homIncl` is nonzero (the surviving
+`S²` class). With `H₃(W;ℤ/2) = 0` the connecting `δ` is injective, so
+`dim H₃(W,∂W) = dim ker i = 2 − rank i = 2 − 1 = 1`. -/
+
+/-- `dim_{ℤ/2} H₂(∂W;ℤ/2) = 2` on the boundary set — transported from
+`SphereProdHTwoMod2.finrank_sphereProd_homologyMod2_two` along the boundary homeomorphism
+`sphereDiskInclHomeo`. -/
+theorem finrank_sphereDiskBoundary_homology_two :
+    Module.finrank (ZMod 2)
+      (Homology (sub (X := TopCat.of SphereDisk) sphereDiskBoundarySet) 2) = 2 := by
+  rw [← (homeoHomologyEquiv sphereDiskInclHomeo 2).finrank_eq]
+  exact SphereProdHTwoMod2.finrank_sphereProd_homologyMod2_two
+
+/-- **The EXACT `ℤ/2`-dimension of `H₂(S²×D³;ℤ/2)` is `1`** — the surviving `S²` area class, via the
+contractible-`D³`-factor collapse `sphereDiskCollapse 1` and the top sphere homology
+`topSphereIso 1 : H₂(S²) ≃ ℤ/2`. The homology analogue of `finrank_sphereDisk_cohomology_two`. -/
+theorem finrank_sphereDisk_homology_two :
+    Module.finrank (ZMod 2) (Homology (TopCat.of SphereDisk) 2) = 1 := by
+  rw [(sphereDiskCollapse 1).finrank_eq, (topSphereIso 1).finrank_eq, Module.finrank_self]
+
+/-- **`dim H₃(S²×D³, S²×S²;ℤ/2) = 1`, CONDITIONAL on the boundary inclusion being nonzero.** The
+mod-2 pair-LES `H₃(W) →ᵖ H₃(W,∂W) →ᵟ H₂(∂W) →ⁱ H₂(W)`: `H₃(W;ℤ/2) = 0` makes `ᵖ` the zero map, so
+exactness makes `δ` injective (`H₃(W,∂W) ≃ range δ = ker i`); rank–nullity on
+`i = homIncl` (`dim H₂(∂W) = 2`) with `rank i = 1` (nonzero `i`, `range i ⊆ H₂(W)` of dim 1) gives
+`dim ker i = 2 − 1 = 1`. The `i ≠ 0` hypothesis is the surviving-`S²`-class geometric residual. -/
+theorem finrank_relativeHomology_three_of_homIncl_ne_zero
+    (hincl : homIncl (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2 ≠ 0) :
+    Module.finrank (ZMod 2)
+      (RelativeHomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet 3) = 1 := by
+  haveI := finiteDimensional_sphereDiskBoundary_homology_two
+  haveI := finiteDimensional_sphereDisk_homology_two
+  haveI : Subsingleton (Homology (TopCat.of SphereDisk) (2 + 1)) :=
+    ⟨fun a b => (sphereDisk_homology_three_eq_zero a).trans
+      (sphereDisk_homology_three_eq_zero b).symm⟩
+  -- `homProj` on the subsingleton `H₃(W)` is the zero map, so `δ = connecting` is injective.
+  have hker : LinearMap.ker (connecting (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2) = ⊥ := by
+    rw [(exact_homProj_connecting (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2).linearMap_ker_eq,
+      LinearMap.range_eq_bot]
+    ext x
+    simp [Subsingleton.elim x 0]
+  have hconn_inj :
+      Function.Injective (connecting (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2) :=
+    LinearMap.ker_eq_bot.mp hker
+  -- `H₃(W,∂W) ≃ range δ = ker i`.
+  have heq1 : Module.finrank (ZMod 2)
+      (RelativeHomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet 3)
+      = Module.finrank (ZMod 2)
+        (LinearMap.range (connecting (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2)) :=
+    (LinearEquiv.ofInjective _ hconn_inj).finrank_eq
+  have heq2 : LinearMap.range (connecting (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2)
+      = LinearMap.ker (homIncl (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2) :=
+    ((exact_connecting_homIncl (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2).linearMap_ker_eq).symm
+  rw [heq1, heq2]
+  -- rank–nullity for `i = homIncl S 2` with `rank i = 1`.
+  have hrn := LinearMap.finrank_range_add_finrank_ker
+    (homIncl (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2)
+  rw [finrank_sphereDiskBoundary_homology_two] at hrn
+  have hne : LinearMap.range (homIncl (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2) ≠ ⊥ :=
+    fun h => hincl (LinearMap.range_eq_bot.mp h)
+  have hrange1 : Module.finrank (ZMod 2)
+      (LinearMap.range (homIncl (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2)) = 1 := by
+    have hle : Module.finrank (ZMod 2)
+        (LinearMap.range (homIncl (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2))
+        ≤ Module.finrank (ZMod 2) (Homology (TopCat.of SphereDisk) 2) := Submodule.finrank_le _
+    rw [finrank_sphereDisk_homology_two] at hle
+    have hpos : 0 < Module.finrank (ZMod 2)
+        (LinearMap.range (homIncl (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2)) :=
+      Module.finrank_pos_iff.mpr (Submodule.nontrivial_iff_ne_bot.mpr hne)
+    omega
+  omega
+
+/-- The relative-cohomology↔homology rank bridge at the LITERAL index `3` (the reduction
+`finrank_relativeCohomology_eq_relativeHomology` re-stated at `3` rather than `2+1`). The `3 → 2+1`
+conversion is pushed through `congrArg` at the `finrank` (`ℕ`-valued) level, so the heavy
+`RelativeCohomology` `2+1↔3` *type*-defeq (which blows the heartbeat wall) never fires. -/
+theorem finrank_relativeCohomology_three_eq_relativeHomology :
+    Module.finrank (ZMod 2)
+        (RelativeCohomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet 3)
+      = Module.finrank (ZMod 2)
+        (RelativeHomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet 3) := by
+  have h32 : (3 : ℕ) = 2 + 1 := rfl
+  rw [congrArg (fun n => Module.finrank (ZMod 2)
+        (RelativeCohomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet n)) h32,
+    congrArg (fun n => Module.finrank (ZMod 2)
+        (RelativeHomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet n)) h32]
+  exact finrank_relativeCohomology_eq_relativeHomology
+    (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2
+
+/-- **`dimeq` for the `(2,3)` leg, CONDITIONAL only on the boundary inclusion `homIncl S 2 ≠ 0`.**
+Combines the pair-LES residual `finrank_relativeHomology_three_of_homIncl_ne_zero` with the banked
+relative-Kronecker reduction and the unconditional absolute rank. The sole remaining input to the
+full `(2,3)` `dimeq` is now the crisp geometric fact that the boundary `S²×S² ↪ S²×D³` induces a
+nonzero map on `H₂(·;ℤ/2)` (the surviving `S²` area class). -/
+theorem sphereDiskDimeq23_of_homIncl_ne_zero
+    (hincl : homIncl (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2 ≠ 0) :
+    Module.finrank (ZMod 2) (Cohomology (TopCat.of SphereDisk) 2)
+      = Module.finrank (ZMod 2)
+        (RelativeCohomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet 3) :=
+  sphereDiskDimeq23_of_relativeCohomology_rank_one
+    (finrank_relativeCohomology_three_eq_relativeHomology.trans
+      (finrank_relativeHomology_three_of_homIncl_ne_zero hincl))
 
 end
 
