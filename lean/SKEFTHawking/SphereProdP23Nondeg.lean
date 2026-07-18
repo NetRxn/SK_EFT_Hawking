@@ -89,6 +89,95 @@ theorem sphereProd_nondeg23_of_intertwining {V' W' : Type}
   lefschetzPairing_injective_of_congr D.mu
     (relCupH23 (X := TopCat.of SphereDisk) (S := sphereDiskBoundarySet)) B' α β hcompat hB'
 
+/-! ## §3. The base `S²` pairing — the top `H²(S²) × H⁰(S²) → ℤ/2` perfectness.
+
+The 2-manifold analogue of `SingularPD4Instances.nondeg_of_closed`: for the closed charted surface
+`S²`, the top fundamental functional `μ = ⟨·, [S²]⟩ : H²(S²;ℤ/2) → ℤ/2` is INJECTIVE — the honest
+`H²(S²) ≅ ℤ/2` duality. Combined with `H⁰(S²) ≅ ℤ/2` (folded into `W' = ℤ/2`) this gives the perfect
+base pairing `B'(a, c) = μ(a) · c` the intertwining transports. -/
+
+open SKEFTHawking.SingularSurfaceIntersectionForm
+
+/-- **`dim_{ℤ/2} H²(S²;ℤ/2) = 1`** — the exact rank of the 2-sphere's top cohomology, via the perfect
+Kronecker pairing `kroneckerHEquiv 1 : H²(S²) ≃ (H₂(S²))^*` and `topSphereIso 1 : H₂(S²) ≃ ℤ/2`. -/
+theorem finrank_twoSphere_cohomology_two :
+    Module.finrank (ZMod 2) (Cohomology (TopCat.of TwoSphere) (0 + 2)) = 1 := by
+  rw [(SKEFTHawking.SingularKroneckerEquiv.kroneckerHEquiv (X := TopCat.of TwoSphere) 1).finrank_eq,
+    Subspace.dual_finrank_eq, (SKEFTHawking.SingularLineMinusPoint.topSphereIso 1).finrank_eq,
+    Module.finrank_self]
+
+/-- **The `S²` top fundamental functional `μ = ⟨·, [S²]⟩ : H²(S²;ℤ/2) → ℤ/2` is injective** — the
+2-manifold analogue of the closed-4-manifold `nondeg_of_closed` core. Injective because it is nonzero
+(`surfaceFundamentalFunctional_ne_zero`) on a `1`-dimensional space
+(`finrank_twoSphere_cohomology_two`): equal-finrank ⟹ injective ⟺ surjective, and a nonzero map into
+`ℤ/2` is surjective. -/
+theorem twoSphere_fundamentalFunctional_injective :
+    Function.Injective ⇑(surfaceFundamentalFunctional (M := TwoSphere)) := by
+  haveI : FiniteDimensional (ZMod 2) (Cohomology (TopCat.of TwoSphere) (0 + 2)) :=
+    SKEFTHawking.SingularMVCohomologyFinite.finiteDimensional_cohomology_of_homology
+      (X := TopCat.of TwoSphere) 1 SKEFTHawking.SphereProdP23.finiteDimensional_twoSphere_homology_two
+  rw [← LinearMap.ker_eq_bot]
+  have hrn := LinearMap.finrank_range_add_finrank_ker (surfaceFundamentalFunctional (M := TwoSphere))
+  rw [finrank_twoSphere_cohomology_two] at hrn
+  have hne : LinearMap.range (surfaceFundamentalFunctional (M := TwoSphere)) ≠ ⊥ := by
+    rw [Ne, LinearMap.range_eq_bot]; exact surfaceFundamentalFunctional_ne_zero
+  have hpos : 0 < Module.finrank (ZMod 2)
+      (LinearMap.range (surfaceFundamentalFunctional (M := TwoSphere))) :=
+    Module.finrank_pos_iff.mpr (Submodule.nontrivial_iff_ne_bot.mpr hne)
+  have hle : Module.finrank (ZMod 2)
+      (LinearMap.range (surfaceFundamentalFunctional (M := TwoSphere)))
+      ≤ Module.finrank (ZMod 2) (ZMod 2) := Submodule.finrank_le _
+  rw [Module.finrank_self] at hle
+  have hker0 : Module.finrank (ZMod 2)
+      (LinearMap.ker (surfaceFundamentalFunctional (M := TwoSphere))) = 0 := by omega
+  exact Submodule.finrank_eq_zero.mp hker0
+
+/-- **The base `S²` pairing** `B'(a, c) = ⟨a, [S²]⟩ · c : H²(S²;ℤ/2) × ℤ/2 → ℤ/2`, with the second
+argument the `ℤ/2` into which `H⁰(S²)` (spanned by the unit) is folded. Genuinely the top
+Poincaré pairing of `S²` (the `[S²]` fundamental functional in the first slot). -/
+def sphereBaseB : Cohomology (TopCat.of TwoSphere) (0 + 2) →ₗ[ZMod 2] ZMod 2 →ₗ[ZMod 2] ZMod 2 :=
+  (LinearMap.lsmul (ZMod 2) (ZMod 2)).comp (surfaceFundamentalFunctional (M := TwoSphere))
+
+@[simp] theorem sphereBaseB_apply (a : Cohomology (TopCat.of TwoSphere) (0 + 2)) (c : ZMod 2) :
+    sphereBaseB a c = surfaceFundamentalFunctional (M := TwoSphere) a * c := rfl
+
+/-- **The base `S²` pairing is left non-degenerate** — the 2-manifold analogue of
+`SingularPD4Instances.nondeg_of_closed`. Injectivity in the first argument follows from injectivity of
+the `[S²]` fundamental functional (`twoSphere_fundamentalFunctional_injective`): `B' a = 0` forces
+`⟨a,[S²]⟩ = B' a 1 = 0`, hence `a = 0`. -/
+theorem sphereBaseB_injective : Function.Injective ⇑sphereBaseB := by
+  rw [injective_iff_map_eq_zero]
+  intro a ha
+  refine (injective_iff_map_eq_zero _).mp twoSphere_fundamentalFunctional_injective a ?_
+  have := LinearMap.congr_fun ha 1
+  rwa [sphereBaseB_apply, mul_one, LinearMap.zero_apply] at this
+
+/-! ## §5. The `(2,3)` `nondeg` reduction with the base `S²` pairing baked in.
+
+The exact `S²×D³` mirror of `cylinder_nondeg23_of_intertwining` (whose base `nondeg_of_closed` is
+baked). Only `(α, β, hcompat)` remain as inputs; the base pairing perfectness is consumed via
+`sphereBaseB_injective`. The sole residual is the intertwining — cohomology `D³`-collapse (`α`), the
+relative Künneth iso (`β`), and the `[D³,∂D³]` cup-Fubini `μ(a ∪ b) = ⟨α a ∪ β b, [S²]⟩` (`hcompat`). -/
+
+/-- **The `S²×D³` `(2,3)` Lefschetz non-degeneracy, base pairing baked.** Given the intertwining
+`α : H²(S²×D³) ≅ H²(S²)`, `β : H³(S²×D³,S²×S²) ≅ ℤ/2` (the folded `H⁰(S²)⊗H³(D³,∂D³)`), and the
+cup-Fubini compatibility `μ(a ∪ b) = ⟨α a, [S²]⟩ · β b`, the sphereDisk `(2,3)` pairing is
+left-non-degenerate. This is exactly the `nondeg` field
+`PoincareLefschetzWuAssembly.LefschetzWuDatum.ofRelFund23` expects (once the intertwining lands),
+mirroring the cylinder. -/
+theorem sphereDiskNondeg23_of_intertwining
+    (D : RelFundClassDatum (m := 3) (X := TopCat.of SphereDisk) sphereDiskBoundarySet)
+    (α : Cohomology (TopCat.of SphereDisk) 2 ≃ₗ[ZMod 2] Cohomology (TopCat.of TwoSphere) (0 + 2))
+    (β : RelativeCohomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet 3 ≃ₗ[ZMod 2] ZMod 2)
+    (hcompat : ∀ (a : Cohomology (TopCat.of SphereDisk) 2)
+        (b : RelativeCohomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet 3),
+        D.mu (relCupH23 (X := TopCat.of SphereDisk) (S := sphereDiskBoundarySet) a b)
+          = surfaceFundamentalFunctional (M := TwoSphere) (α a) * β b) :
+    Function.Injective
+      ⇑((relCupH23 (X := TopCat.of SphereDisk) (S := sphereDiskBoundarySet)).compr₂ D.mu) :=
+  sphereProd_nondeg23_of_intertwining D sphereBaseB α β
+    (fun a b => by rw [hcompat a b, sphereBaseB_apply]) sphereBaseB_injective
+
 end
 
 end SKEFTHawking.SphereProdP23Nondeg
