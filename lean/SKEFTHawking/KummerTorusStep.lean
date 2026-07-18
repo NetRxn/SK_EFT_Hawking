@@ -367,12 +367,12 @@ theorem alphaGen_range_eq_ker_delta (v : ↑(Sph 1)) (n : ℕ) :
 
 /-! ## §5. The positive-degree circle-product step lemma -/
 
-/-- **The positive-degree circle-product step (free-finite form).** For `Y : TopCat` with free finite
-integral homology in degrees `k+1, k+2`, the homology of `Y × S¹` in degree `k+2` is free finite of
-rank `finrank H_{k+2}(Y) + finrank H_{k+1}(Y)`. This is the MV short exact sequence
+/-- **The positive-degree circle-product step (free-finite form).** For `Y : TopCat` with free
+finite integral homology in degrees `k+1, k+2`, the homology of `Y × S¹` in degree `k+2` is free
+finite of rank `finrank H_{k+2}(Y) + finrank H_{k+1}(Y)`. This is the MV short exact sequence
 `0 → im Σ → H_{k+2}(Y×S¹) → ker Δ → 0` split by the projectivity of its free right end
-`ker Δ ≅ H_{k+1}(Y)` (rank `b`), with left end `im Σ = im αGen ≅ H_{k+2}(Y)` (rank `a`). The reusable
-step: iterating from `T² = Circle²` builds `H₂(T³), H₂(T⁴)`. -/
+`ker Δ ≅ H_{k+1}(Y)` (rank `b`), with left end `im Σ = im αGen ≅ H_{k+2}(Y)` (rank `a`). The
+reusable step: iterating from `T² = Circle²` builds `H₂(T³), H₂(T⁴)`. -/
 theorem stepPos_free_finrank (Y : TopCat) (k : ℕ)
     (hf2 : Module.Free ℤ (Homology Y (k + 2))) (hfin2 : Module.Finite ℤ (Homology Y (k + 2)))
     (hf1 : Module.Free ℤ (Homology Y (k + 1))) (hfin1 : Module.Finite ℤ (Homology Y (k + 1))) :
@@ -412,9 +412,11 @@ theorem stepPos_free_finrank (Y : TopCat) (k : ℕ)
     rw [hq, LinearMap.ker_codRestrict]; exact (alphaGen_range_eq_ker_delta Y v (k + 1)).symm
   -- `ker q = im αGen ≅ H_{k+2}(Y)` — free finite of rank `a`.
   haveI hαF : Module.Free ℤ ↥(LinearMap.range (alphaGen Y v (k + 1))) :=
-    Module.Free.of_equiv (LinearEquiv.ofInjective (alphaGen Y v (k + 1)) (alphaGen_injective Y v (k + 1)))
+    Module.Free.of_equiv
+      (LinearEquiv.ofInjective (alphaGen Y v (k + 1)) (alphaGen_injective Y v (k + 1)))
   haveI hαFin : Module.Finite ℤ ↥(LinearMap.range (alphaGen Y v (k + 1))) :=
-    Module.Finite.equiv (LinearEquiv.ofInjective (alphaGen Y v (k + 1)) (alphaGen_injective Y v (k + 1)))
+    Module.Finite.equiv
+      (LinearEquiv.ofInjective (alphaGen Y v (k + 1)) (alphaGen_injective Y v (k + 1)))
   haveI hKerqF : Module.Free ℤ ↥(LinearMap.ker q) :=
     Module.Free.of_equiv (LinearEquiv.ofEq _ _ hkerq).symm
   haveI hKerqFin : Module.Finite ℤ ↥(LinearMap.ker q) :=
@@ -496,8 +498,8 @@ theorem reducedH0_inter_iso_int [PathConnectedSpace ↑Y] (v : ↑(Sph 1)) :
     (augHInt_ker_iso_int (isClopen_arcU Y) (augHInt_arcU_bijective Y)
       (augHInt_arcUcompl_bijective Y)).some⟩
 
-/-- **`ker Δ₀ = ker (augHInt)`** — a degree-0 class dies under the MV diagonal `Δ₀` iff it dies under
-the augmentation (both legs path-connected so their augmentations are injective;
+/-- **`ker Δ₀ = ker (augHInt)`** — a degree-0 class dies under the MV diagonal `Δ₀` iff it dies
+under the augmentation (both legs path-connected so their augmentations are injective;
 `augHInt_naturality`). -/
 theorem ker_delta0_eq [PathConnectedSpace ↑Y] (v : ↑(Sph 1)) :
     LinearMap.ker (mvHomDiagInt (covA Y v) (covB Y v) 0)
