@@ -55,6 +55,8 @@ open SKEFTHawking.SingularSphereHighDegree (sphere_homology_high)
 open SKEFTHawking.SpinSigmaRoute
 open SKEFTHawking.PinPlusKTSphereProdRelFundWuRoots
 open SKEFTHawking.PinPlusCharPairRealizationTied (homeoHomologyEquiv)
+open SKEFTHawking.SingularKroneckerEquiv (kroneckerHEquiv)
+open SKEFTHawking.SingularRelativeKroneckerEquiv (relKroneckerHEquiv)
 
 namespace SKEFTHawking.SphereProdP23
 
@@ -131,6 +133,18 @@ theorem sphereDisk_findimRel23 :
       finiteDimensional_sphereDiskBoundary_homology_two
   exact finiteDimensional_relativeCohomology_of_relativeHomology
     (X := TopCat.of SphereDisk) (S := sphereDiskBoundarySet) 2 hrel
+
+/-! ## §3. `dimeq` for the `(2,3)` leg — the two EXACT rank-1 identities and their equality. -/
+
+/-- **The EXACT `ℤ/2`-dimension of `H²(S²×D³;ℤ/2)` is `1`.** Not merely finite: the `S²` area class
+survives the contractible-`D³`-factor collapse. Chain: the perfect Kronecker pairing
+`kroneckerHEquiv 1 : H²(W) ≃ (H₂(W))^*`, then `Subspace.dual_finrank_eq` (`dim V^* = dim V`), the
+collapse `sphereDiskCollapse 1 : H₂(S²×D³) ≃ H₂(S²)`, and the top sphere homology
+`topSphereIso 1 : H₂(S²) ≃ ℤ/2`. -/
+theorem finrank_sphereDisk_cohomology_two :
+    Module.finrank (ZMod 2) (Cohomology (TopCat.of SphereDisk) 2) = 1 := by
+  rw [(kroneckerHEquiv (X := TopCat.of SphereDisk) 1).finrank_eq, Subspace.dual_finrank_eq,
+    (sphereDiskCollapse 1).finrank_eq, (topSphereIso 1).finrank_eq, Module.finrank_self]
 
 end
 
