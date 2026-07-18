@@ -2,7 +2,7 @@
 
 > **Auto-generated** by `scripts/atlas_heatmap.py` from `atlas_view.build_atlas()` — a VIEW over `lean_deps.json` ∪ `HYPOTHESIS_REGISTRY`. Do not hand-edit; regenerate with `uv run python scripts/atlas_heatmap.py --write`.
 
-_Source: 19981 theorem nodes, 41 tracked open assumptions, 77 IMPLIES edges._
+_Source: 19981 theorem nodes, 43 tracked open assumptions, 77 IMPLIES edges._
 
 ## Landscape
 
@@ -10,7 +10,7 @@ _Source: 19981 theorem nodes, 41 tracked open assumptions, 77 IMPLIES edges._
 |---|---:|
 | ✅ TRUE (proved) | 19686 |
 | ⛔ OBSTRUCTION (no-go) | 295 |
-| ❓ open (tracked assumptions) | 41 |
+| ❓ open (tracked assumptions) | 43 |
 | ★ apex (headline open targets) | 4 |
 
 ## Open frontier by track ("separate areas")
@@ -19,7 +19,7 @@ Each open assumption belongs to a TRACK (`tier`); `gating` is the Σ of how many
 
 | track | open | gating (Σ impact) | apex |
 |---|---:|---:|---:|
-| `discharge_future` | 10 | 23 |  |
+| `discharge_future` | 12 | 23 |  |
 | `external_boundary` | 14 | 23 |  |
 | `headline` | 4 | 0 | 4 |
 | `local` | 6 | 0 |  |

@@ -4,7 +4,7 @@
 
 **Purpose.** Catalogue the project's load-bearing tracked-hypothesis Props — Lean predicates consumed by substantive theorems but NOT independently derived. Each is a *constructive* alternative to a global `axiom`: the claim is packaged as a `def … : Prop` and taken as an explicit hypothesis, making the project's assumption surface visible at the type-signature level (Pipeline Invariant #15/#16).
 
-**Count.** 41 tracked hypotheses 4 headline, 15 external_boundary, 16 discharge_future, 6 local.
+**Count.** 43 tracked hypotheses 4 headline, 15 external_boundary, 18 discharge_future, 6 local.
 
 ---
 
@@ -274,6 +274,26 @@
 - **Discharge path.** Phase 6h W4 (Gate Z.4 NEGATIVE / inactive): rigorous only in 2D; 4D needs Catterall mirror decoupling.
 - **Source.** Phase 6h hypercharge-splitting path (asymptotic-safety).
 - **Risk.** Phase 6h inactive; tracked bundle.
+
+### `acyclic_factor_graph_has_rank_cert`
+
+**Statement.** Every acyclic (tree) factor graph admits a BP rank certificate (BeliefPropagation.BPRankCert G): a topological subtree-depth order on directed message endpoints with the two strict-monotonicity properties. Equivalently `IsAcyclicFactorGraph G → Nonempty (BPRankCert G)`.
+
+- status `proposed — BUILDABLE follow-up (corrected-posture: on the build queue, not a permanent assumption). The genuine convergence theorem `bp_converges_on_ranked_acyclic` is PROVEN taking a concrete BPRankCert as an explicit binder, and fires non-vacuously on a real 3-node tree (`bp_converges_on_star`). This entry tracks ONLY the general acyclic⟹cert-exists step, which would upgrade the theorem to `IsAcyclicFactorGraph G → (BP converges)` with no cert hyp.` · eliminability `hard` · module `BeliefPropagation.lean (`bp_converges_on_ranked_acyclic` takes cert : BPRankCert G explicitly; `bp_converges_on_star` is the concrete-tree non-vacuity witness)`
+- **Posture.** Belief propagation converges to a fixed point on tree (acyclic) factor graphs in ≤ diameter rounds. The project proves this on the actual message-passing dynamics GIVEN the tree rank certificate (witnessed on a real tree); the general "every acyclic graph admits the certificate" step is a buildable follow-up.
+- **Discharge path.** A finite well-founded construction: leaf-strip the acyclic bipartite incidence graph (SimpleGraph.deleteEdges + dist + connected-component sup) to assign the subtree-depth rank and discharge the two strict-monotonicity obligations by a strict-subset cardinality argument. In-tree buildable (a routine graph-theory grind); scoped as a follow-up brick.
+- **Source.** Standard: belief propagation is exact on trees (Pearl 1988; Yedidia–Freeman–Weiss 2003). The rank certificate = the tree topological / subtree-depth order.
+- **Risk.** Very low — BP-exact-on-trees is textbook; the certificate is a routine finite well-founded construction. Buildable in-tree.
+
+### `he3a_moving_eta_nonzero`
+
+**Statement.** The APS η-invariant (regularized spectral asymmetry of the non-zero spectrum) of the ³He-A MOVING (boosted / time-dependent 3D) domain-wall Dirac operator on the horizon 3-manifold Σ = S²×ℝ is non-zero. DISTINCT from the zero-mode / boundary-correction term h(Σ)=1, which IS proven kernel-pure (APSEta/He3A.lean: a genuine Jackiw–Rebbi normalizable zero mode → boundaryKernelDim_He3AMovingDomainWall_eq_one → apsIndex_..._ne_zero, apsIndex = −1/2 ≠ 0).
+
+- status `proposed — NOT consumed by any Lean theorem; the in-tree `etaInvariant .He3AMovingDomainWall = 0` is kept HONEST (the static 1D reduction has a λ↦−λ symmetric non-zero spectrum, so η = 0 genuinely). This entry tracks ONLY the residual η-spectral-asymmetry-SYMBOL claim for the full moving operator; the genuine non-zero APS boundary CONTENT ³He-A carries (apsIndex ≠ 0) is a separate proven theorem.` · eliminability `very_hard` · module `APSEta/He3A.lean (§7 documents this gap precisely; §1–§6 ship the PROVEN Jackiw–Rebbi zero-mode / boundary-correction content)`
+- **Posture.** The ³He-A moving-domain-wall analog horizon is expected to carry a non-zero APS η spectral-asymmetry invariant (Volovik chirality-vector framework). The project PROVES the non-zero APS boundary correction (apsIndex = −1/2, from a genuine Jackiw–Rebbi zero mode); the η-invariant symbol for the full moving 3D operator awaits Dirac-operator / APS-index infrastructure absent from Mathlib.
+- **Discharge path.** Requires substrate absent from Mathlib v4.29.1 and in-tree: (1) the moving 3D domain-wall Dirac operator as an unbounded self-adjoint operator on an L² section space; (2) its discrete spectrum with multiplicities (compact-resolvent spectral theory); (3) the APS η-function η(s)=Σ_{λ≠0} sgn(λ)|λ|^{−s} + analytic continuation to s=0; (4) the APS index theorem for manifolds with boundary (Mathlib lacks even the closed-manifold Atiyah–Singer theorem). A future Phase 6X wave or a Mathlib Dirac/APS contribution.
+- **Source.** Volovik, The Universe in a Helium Droplet (2003); Phys. Rep. 351 (2001) 195 (chirality vector, moving domain wall); Atiyah–Patodi–Singer I–III (1975–76).
+- **Risk.** Low physically (Volovik chirality asymmetry is well-established) — but UNPROVEN in-tree; carried honestly as a landmark, NOT asserted as a theorem.
 
 ### `intCapIsoData_determinant_datum`
 
