@@ -374,11 +374,12 @@ rank `finrank H_{k+2}(Y) + finrank H_{k+1}(Y)`. This is the MV short exact seque
 `ker Δ ≅ H_{k+1}(Y)` (rank `b`), with left end `im Σ = im αGen ≅ H_{k+2}(Y)` (rank `a`). The reusable
 step: iterating from `T² = Circle²` builds `H₂(T³), H₂(T⁴)`. -/
 theorem stepPos_free_finrank (Y : TopCat) (k : ℕ)
-    [Module.Free ℤ (Homology Y (k + 2))] [Module.Finite ℤ (Homology Y (k + 2))]
-    [Module.Free ℤ (Homology Y (k + 1))] [Module.Finite ℤ (Homology Y (k + 1))] :
+    (hf2 : Module.Free ℤ (Homology Y (k + 2))) (hfin2 : Module.Finite ℤ (Homology Y (k + 2)))
+    (hf1 : Module.Free ℤ (Homology Y (k + 1))) (hfin1 : Module.Finite ℤ (Homology Y (k + 1))) :
     Module.Free ℤ (Homology (Tor Y) (k + 2)) ∧ Module.Finite ℤ (Homology (Tor Y) (k + 2)) ∧
       Module.finrank ℤ (Homology (Tor Y) (k + 2))
         = Module.finrank ℤ (Homology Y (k + 2)) + Module.finrank ℤ (Homology Y (k + 1)) := by
+  haveI := hf2; haveI := hfin2; haveI := hf1; haveI := hfin1
   set v : ↑(Sph 1) := basePoint 1 with hv
   have hcov := covAB_cover Y v
   -- Intersection homology at degree `k+1` is free finite of rank `2 · finrank H_{k+1}(Y)`.
