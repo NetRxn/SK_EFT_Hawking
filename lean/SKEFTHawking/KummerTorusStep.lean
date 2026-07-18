@@ -33,6 +33,19 @@ axiom.
 import Mathlib
 import SKEFTHawking.KummerHomologyT2
 
+/-- **Kernel finrank identity for a surjection over a PID.** For `f : M → N` surjective from a free
+finite `R`-module `M` over a PID domain `R`, `finrank (ker f) + finrank N = finrank M` (quotient
+rank-nullity via `quotKerEquivOfSurjective`). Stated over a general PID (not fixed to `ℤ`) so the
+quotient's `Module R` instance is unique, dodging the `ℤ`-module `AddCommGroup.toIntModule`
+diamond. -/
+theorem ker_finrank_add {R : Type} [CommRing R] [IsPrincipalIdealRing R] [IsDomain R]
+    {M N : Type} [AddCommGroup M] [Module R M] [Module.Free R M] [Module.Finite R M]
+    [AddCommGroup N] [Module R N] (f : M →ₗ[R] N) (hf : Function.Surjective f) :
+    Module.finrank R (LinearMap.ker f) + Module.finrank R N = Module.finrank R M := by
+  have h1 := Submodule.finrank_quotient_add_finrank (LinearMap.ker f)
+  rw [(f.quotKerEquivOfSurjective hf).finrank_eq] at h1
+  omega
+
 namespace SKEFTHawking.KummerTorusStep
 
 open SKEFTHawking.SingularHomologyInt (Homology)
@@ -280,5 +293,76 @@ theorem iB_surjective (v : ↑(Sph 1)) (n : ℕ) :
   obtain ⟨w, hw⟩ := firstCollapse_surjective Y v n (legBEquivInt Y v n y)
   refine ⟨w, (legBEquivInt Y v n).injective ?_⟩
   rw [covB_collapse_inter Y v n w, hw]
+
+/-! ## §4. The first-circle generator `alphaGen` and its range `= ker δ` -/
+
+/-- **The first-circle generator** `alphaGen : H_{k+2}(Y) → H_{k+2}(Y×S¹)`,
+`c ↦ Σ((legA⁻¹ c, 0))`: the `Y`-class pushed through the `A`-leg into `im Σ`. The generalization of
+`KummerHomologyT2.alphaGen` to a variable first factor `Y` and general degree. -/
+noncomputable def alphaGen (v : ↑(Sph 1)) (k : ℕ) :
+    Homology Y (k + 2) →ₗ[ℤ] Homology (Tor Y) (k + 2) :=
+  (mvHomSumInt (covA Y v) (covB Y v) (k + 2)).comp
+    ((LinearMap.inl ℤ _ _).comp (legAEquivInt Y v (k + 1)).symm.toLinearMap)
+
+theorem alphaGen_apply (v : ↑(Sph 1)) (k : ℕ) (c : Homology Y (k + 2)) :
+    alphaGen Y v k c
+      = mvHomSumInt (covA Y v) (covB Y v) (k + 2) ((legAEquivInt Y v (k + 1)).symm c, 0) := rfl
+
+/-- **`alphaGen` is injective**: `alphaGen c = 0` puts `(legA⁻¹ c, 0) ∈ ker Σ = im Δ` (middle
+exactness); its second coordinate `iB∗ w = 0` forces `firstCollapse w = 0`
+(`covB_collapse_inter`), and its first coordinate then reads the collapse `legA⁻¹ c = 0`
+(`covA_collapse_inter`), so `c = 0`. -/
+theorem alphaGen_injective (v : ↑(Sph 1)) (k : ℕ) : Function.Injective (alphaGen Y v k) := by
+  refine (injective_iff_map_eq_zero (alphaGen Y v k)).mpr fun c hc => ?_
+  rw [alphaGen_apply] at hc
+  obtain ⟨w, hw⟩ := (mv_exact_middleInt (covA Y v) (covB Y v) (k + 1) (covAB_cover Y v) _).mp hc
+  rw [mvHomDiagInt_apply] at hw
+  have hfst := congrArg Prod.fst hw
+  have hsnd := congrArg Prod.snd hw
+  simp only at hfst hsnd
+  have hFC : Homology.mapInt (fstCM Y (covA Y v ∩ covB Y v)) (k + 2) w = 0 := by
+    rw [← covB_collapse_inter Y v (k + 1) w, hsnd, map_zero]
+  have hc' := covA_collapse_inter Y v (k + 1) w
+  rw [hfst, LinearEquiv.apply_symm_apply, hFC] at hc'
+  exact hc'
+
+/-- **`range alphaGen = ker δ`** (` = im Σ`, ambient exactness). The `A`-part `Σ(u,0)` is directly
+`alphaGen (legA u)`; the `B`-part `Σ(0,v')` equals `−Σ(iA∗ w, 0)` for a `w` with `iB∗ w = v'`
+(`iB_surjective` + the MV complex condition `Σ ∘ Δ = 0`), so it too lies in `range alphaGen`. -/
+theorem alphaGen_range_eq_ker_delta (v : ↑(Sph 1)) (k : ℕ) :
+    LinearMap.range (alphaGen Y v k)
+      = LinearMap.ker (mvDeltaInt (covA Y v) (covB Y v) (k + 1) (covAB_cover Y v)) := by
+  have hkExact : LinearMap.ker (mvDeltaInt (covA Y v) (covB Y v) (k + 1) (covAB_cover Y v))
+      = LinearMap.range (mvHomSumInt (covA Y v) (covB Y v) (k + 2)) :=
+    (mv_exact_ambientInt (covA Y v) (covB Y v) (k + 1) (covAB_cover Y v)).linearMap_ker_eq
+  rw [hkExact]
+  apply le_antisymm
+  · rintro _ ⟨c, rfl⟩
+    rw [alphaGen_apply]
+    exact LinearMap.mem_range_self _ _
+  · rintro _ ⟨p, rfl⟩
+    obtain ⟨u, v'⟩ := p
+    obtain ⟨w, hw⟩ := iB_surjective Y v (k + 1) v'
+    set iAw := Homology.mapInt
+      (subIncl (Set.inter_subset_left (s := covA Y v) (t := covB Y v))) (k + 2) w with hiAw
+    -- `Σ(iAw, v') = Σ(Δw) = 0`, so `Σ(u, v') = Σ(u − iAw, 0) = alphaGen(legA (u − iAw))`.
+    have hΔ : mvHomSumInt (covA Y v) (covB Y v) (k + 2) (iAw, v') = 0 := by
+      have := mvHomSumInt_mvHomDiagInt (covA Y v) (covB Y v) (k + 2) w
+      rwa [mvHomDiagInt_apply, hw] at this
+    have hkey : alphaGen Y v k (legAEquivInt Y v (k + 1) (u - iAw))
+        = mvHomSumInt (covA Y v) (covB Y v) (k + 2) (u - iAw, 0) := by
+      rw [alphaGen_apply, LinearEquiv.symm_apply_apply]
+    have hdiff : mvHomSumInt (covA Y v) (covB Y v) (k + 2) (u, v')
+        - mvHomSumInt (covA Y v) (covB Y v) (k + 2) (u - iAw, 0) = 0 := by
+      rw [← map_sub]
+      have hp : ((u, v') - (u - iAw, 0) : Homology (sub (covA Y v)) (k + 2)
+          × Homology (sub (covB Y v)) (k + 2)) = (iAw, v') := by
+        rw [Prod.mk_sub_mk, sub_zero]; congr 1; abel
+      rw [hp]; exact hΔ
+    have hval : mvHomSumInt (covA Y v) (covB Y v) (k + 2) (u, v')
+        = alphaGen Y v k (legAEquivInt Y v (k + 1) (u - iAw)) := by
+      rw [hkey, ← sub_eq_zero]; exact hdiff
+    rw [hval]
+    exact LinearMap.mem_range_self _ _
 
 end SKEFTHawking.KummerTorusStep
