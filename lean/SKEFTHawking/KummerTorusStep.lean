@@ -299,42 +299,42 @@ theorem iB_surjective (v : ↑(Sph 1)) (n : ℕ) :
 /-- **The first-circle generator** `alphaGen : H_{k+2}(Y) → H_{k+2}(Y×S¹)`,
 `c ↦ Σ((legA⁻¹ c, 0))`: the `Y`-class pushed through the `A`-leg into `im Σ`. The generalization of
 `KummerHomologyT2.alphaGen` to a variable first factor `Y` and general degree. -/
-noncomputable def alphaGen (v : ↑(Sph 1)) (k : ℕ) :
-    Homology Y (k + 2) →ₗ[ℤ] Homology (Tor Y) (k + 2) :=
-  (mvHomSumInt (covA Y v) (covB Y v) (k + 2)).comp
-    ((LinearMap.inl ℤ _ _).comp (legAEquivInt Y v (k + 1)).symm.toLinearMap)
+noncomputable def alphaGen (v : ↑(Sph 1)) (n : ℕ) :
+    Homology Y (n + 1) →ₗ[ℤ] Homology (Tor Y) (n + 1) :=
+  (mvHomSumInt (covA Y v) (covB Y v) (n + 1)).comp
+    ((LinearMap.inl ℤ _ _).comp (legAEquivInt Y v n).symm.toLinearMap)
 
-theorem alphaGen_apply (v : ↑(Sph 1)) (k : ℕ) (c : Homology Y (k + 2)) :
-    alphaGen Y v k c
-      = mvHomSumInt (covA Y v) (covB Y v) (k + 2) ((legAEquivInt Y v (k + 1)).symm c, 0) := rfl
+theorem alphaGen_apply (v : ↑(Sph 1)) (n : ℕ) (c : Homology Y (n + 1)) :
+    alphaGen Y v n c
+      = mvHomSumInt (covA Y v) (covB Y v) (n + 1) ((legAEquivInt Y v n).symm c, 0) := rfl
 
 /-- **`alphaGen` is injective**: `alphaGen c = 0` puts `(legA⁻¹ c, 0) ∈ ker Σ = im Δ` (middle
 exactness); its second coordinate `iB∗ w = 0` forces `firstCollapse w = 0`
 (`covB_collapse_inter`), and its first coordinate then reads the collapse `legA⁻¹ c = 0`
-(`covA_collapse_inter`), so `c = 0`. -/
-theorem alphaGen_injective (v : ↑(Sph 1)) (k : ℕ) : Function.Injective (alphaGen Y v k) := by
-  refine (injective_iff_map_eq_zero (alphaGen Y v k)).mpr fun c hc => ?_
+(`covA_collapse_inter`), so `c = 0`. Valid at every output degree `n+1 ≥ 1`. -/
+theorem alphaGen_injective (v : ↑(Sph 1)) (n : ℕ) : Function.Injective (alphaGen Y v n) := by
+  refine (injective_iff_map_eq_zero (alphaGen Y v n)).mpr fun c hc => ?_
   rw [alphaGen_apply] at hc
-  obtain ⟨w, hw⟩ := (mv_exact_middleInt (covA Y v) (covB Y v) (k + 1) (covAB_cover Y v) _).mp hc
+  obtain ⟨w, hw⟩ := (mv_exact_middleInt (covA Y v) (covB Y v) n (covAB_cover Y v) _).mp hc
   rw [mvHomDiagInt_apply] at hw
   have hfst := congrArg Prod.fst hw
   have hsnd := congrArg Prod.snd hw
   simp only at hfst hsnd
-  have hFC : Homology.mapInt (fstCM Y (covA Y v ∩ covB Y v)) (k + 2) w = 0 := by
-    rw [← covB_collapse_inter Y v (k + 1) w, hsnd, map_zero]
-  have hc' := covA_collapse_inter Y v (k + 1) w
+  have hFC : Homology.mapInt (fstCM Y (covA Y v ∩ covB Y v)) (n + 1) w = 0 := by
+    rw [← covB_collapse_inter Y v n w, hsnd, map_zero]
+  have hc' := covA_collapse_inter Y v n w
   rw [hfst, LinearEquiv.apply_symm_apply, hFC] at hc'
   exact hc'
 
 /-- **`range alphaGen = ker δ`** (` = im Σ`, ambient exactness). The `A`-part `Σ(u,0)` is directly
 `alphaGen (legA u)`; the `B`-part `Σ(0,v')` equals `−Σ(iA∗ w, 0)` for a `w` with `iB∗ w = v'`
 (`iB_surjective` + the MV complex condition `Σ ∘ Δ = 0`), so it too lies in `range alphaGen`. -/
-theorem alphaGen_range_eq_ker_delta (v : ↑(Sph 1)) (k : ℕ) :
-    LinearMap.range (alphaGen Y v k)
-      = LinearMap.ker (mvDeltaInt (covA Y v) (covB Y v) (k + 1) (covAB_cover Y v)) := by
-  have hkExact : LinearMap.ker (mvDeltaInt (covA Y v) (covB Y v) (k + 1) (covAB_cover Y v))
-      = LinearMap.range (mvHomSumInt (covA Y v) (covB Y v) (k + 2)) :=
-    (mv_exact_ambientInt (covA Y v) (covB Y v) (k + 1) (covAB_cover Y v)).linearMap_ker_eq
+theorem alphaGen_range_eq_ker_delta (v : ↑(Sph 1)) (n : ℕ) :
+    LinearMap.range (alphaGen Y v n)
+      = LinearMap.ker (mvDeltaInt (covA Y v) (covB Y v) n (covAB_cover Y v)) := by
+  have hkExact : LinearMap.ker (mvDeltaInt (covA Y v) (covB Y v) n (covAB_cover Y v))
+      = LinearMap.range (mvHomSumInt (covA Y v) (covB Y v) (n + 1)) :=
+    (mv_exact_ambientInt (covA Y v) (covB Y v) n (covAB_cover Y v)).linearMap_ker_eq
   rw [hkExact]
   apply le_antisymm
   · rintro _ ⟨c, rfl⟩
@@ -342,25 +342,25 @@ theorem alphaGen_range_eq_ker_delta (v : ↑(Sph 1)) (k : ℕ) :
     exact LinearMap.mem_range_self _ _
   · rintro _ ⟨p, rfl⟩
     obtain ⟨u, v'⟩ := p
-    obtain ⟨w, hw⟩ := iB_surjective Y v (k + 1) v'
+    obtain ⟨w, hw⟩ := iB_surjective Y v n v'
     set iAw := Homology.mapInt
-      (subIncl (Set.inter_subset_left (s := covA Y v) (t := covB Y v))) (k + 2) w with hiAw
+      (subIncl (Set.inter_subset_left (s := covA Y v) (t := covB Y v))) (n + 1) w with hiAw
     -- `Σ(iAw, v') = Σ(Δw) = 0`, so `Σ(u, v') = Σ(u − iAw, 0) = alphaGen(legA (u − iAw))`.
-    have hΔ : mvHomSumInt (covA Y v) (covB Y v) (k + 2) (iAw, v') = 0 := by
-      have := mvHomSumInt_mvHomDiagInt (covA Y v) (covB Y v) (k + 2) w
+    have hΔ : mvHomSumInt (covA Y v) (covB Y v) (n + 1) (iAw, v') = 0 := by
+      have := mvHomSumInt_mvHomDiagInt (covA Y v) (covB Y v) (n + 1) w
       rwa [mvHomDiagInt_apply, hw] at this
-    have hkey : alphaGen Y v k (legAEquivInt Y v (k + 1) (u - iAw))
-        = mvHomSumInt (covA Y v) (covB Y v) (k + 2) (u - iAw, 0) := by
+    have hkey : alphaGen Y v n (legAEquivInt Y v n (u - iAw))
+        = mvHomSumInt (covA Y v) (covB Y v) (n + 1) (u - iAw, 0) := by
       rw [alphaGen_apply, LinearEquiv.symm_apply_apply]
-    have hdiff : mvHomSumInt (covA Y v) (covB Y v) (k + 2) (u, v')
-        - mvHomSumInt (covA Y v) (covB Y v) (k + 2) (u - iAw, 0) = 0 := by
+    have hdiff : mvHomSumInt (covA Y v) (covB Y v) (n + 1) (u, v')
+        - mvHomSumInt (covA Y v) (covB Y v) (n + 1) (u - iAw, 0) = 0 := by
       rw [← map_sub]
-      have hp : ((u, v') - (u - iAw, 0) : Homology (sub (covA Y v)) (k + 2)
-          × Homology (sub (covB Y v)) (k + 2)) = (iAw, v') := by
+      have hp : ((u, v') - (u - iAw, 0) : Homology (sub (covA Y v)) (n + 1)
+          × Homology (sub (covB Y v)) (n + 1)) = (iAw, v') := by
         rw [Prod.mk_sub_mk, sub_zero]; congr 1; abel
       rw [hp]; exact hΔ
-    have hval : mvHomSumInt (covA Y v) (covB Y v) (k + 2) (u, v')
-        = alphaGen Y v k (legAEquivInt Y v (k + 1) (u - iAw)) := by
+    have hval : mvHomSumInt (covA Y v) (covB Y v) (n + 1) (u, v')
+        = alphaGen Y v n (legAEquivInt Y v n (u - iAw)) := by
       rw [hkey, ← sub_eq_zero]; exact hdiff
     rw [hval]
     exact LinearMap.mem_range_self _ _
@@ -407,25 +407,165 @@ theorem stepPos_free_finrank (Y : TopCat) (k : ℕ)
       rw [← (mv_exact_interInt (covA Y v) (covB Y v) (k + 1) hcov).linearMap_ker_eq]; exact hy
     obtain ⟨x, hx⟩ := hyr
     exact ⟨x, Subtype.ext hx⟩
-  have hkerq : LinearMap.ker q = LinearMap.range (alphaGen Y v k) := by
-    rw [hq, LinearMap.ker_codRestrict]; exact (alphaGen_range_eq_ker_delta Y v k).symm
+  have hkerq : LinearMap.ker q = LinearMap.range (alphaGen Y v (k + 1)) := by
+    rw [hq, LinearMap.ker_codRestrict]; exact (alphaGen_range_eq_ker_delta Y v (k + 1)).symm
   -- `ker q = im αGen ≅ H_{k+2}(Y)` — free finite of rank `a`.
-  haveI hαF : Module.Free ℤ ↥(LinearMap.range (alphaGen Y v k)) :=
-    Module.Free.of_equiv (LinearEquiv.ofInjective (alphaGen Y v k) (alphaGen_injective Y v k))
-  haveI hαFin : Module.Finite ℤ ↥(LinearMap.range (alphaGen Y v k)) :=
-    Module.Finite.equiv (LinearEquiv.ofInjective (alphaGen Y v k) (alphaGen_injective Y v k))
+  haveI hαF : Module.Free ℤ ↥(LinearMap.range (alphaGen Y v (k + 1))) :=
+    Module.Free.of_equiv (LinearEquiv.ofInjective (alphaGen Y v (k + 1)) (alphaGen_injective Y v (k + 1)))
+  haveI hαFin : Module.Finite ℤ ↥(LinearMap.range (alphaGen Y v (k + 1))) :=
+    Module.Finite.equiv (LinearEquiv.ofInjective (alphaGen Y v (k + 1)) (alphaGen_injective Y v (k + 1)))
   haveI hKerqF : Module.Free ℤ ↥(LinearMap.ker q) :=
     Module.Free.of_equiv (LinearEquiv.ofEq _ _ hkerq).symm
   haveI hKerqFin : Module.Finite ℤ ↥(LinearMap.ker q) :=
     Module.Finite.equiv (LinearEquiv.ofEq _ _ hkerq).symm
   have hkerq_fin : Module.finrank ℤ ↥(LinearMap.ker q) = Module.finrank ℤ (Homology Y (k + 2)) := by
     rw [(LinearEquiv.ofEq _ _ hkerq).finrank_eq,
-      ← (LinearEquiv.ofInjective (alphaGen Y v k) (alphaGen_injective Y v k)).finrank_eq]
+      ← (LinearEquiv.ofInjective (alphaGen Y v (k + 1))
+        (alphaGen_injective Y v (k + 1))).finrank_eq]
   -- Split the SES `0 → ker q → H_{k+2}(Y×S¹) → K → 0` (right end `K` free ⟹ projective).
   obtain ⟨s, hs⟩ := q.exists_rightInverse_of_surjective (LinearMap.range_eq_top.mpr hqsurj)
   have hexact : Function.Exact (⇑(LinearMap.ker q).subtype) (⇑q) := by
     rw [LinearMap.exact_iff, Submodule.range_subtype]
   set e : Homology (Tor Y) (k + 2) ≃ₗ[ℤ] (↥(LinearMap.ker q) × K) :=
+    (hexact.splitSurjectiveEquiv (Submodule.injective_subtype _) ⟨s, hs⟩).1 with he
+  refine ⟨Module.Free.of_equiv e.symm, Module.Finite.equiv e.symm, ?_⟩
+  rw [e.finrank_eq, Module.finrank_prod, hkerq_fin, hKfin]
+
+/-! ## §6. The degree-1 circle-product step (reduced-`H₀` right end) -/
+
+open SKEFTHawking.SingularH0PathConnectedInt (augHInt_injective_pathConnected)
+open SKEFTHawking.SingularLineMinusPointInt (augHInt augHInt_naturality augHInt_surjective
+  augHInt_ker_iso_int augHIntKerEquivOfHomeo)
+open SKEFTHawking.SphereProdHOneInt (pathConnectedSpace_of_homeo pathConnectedSpace_prod)
+open SKEFTHawking.SingularHomotopyInvariance (constSimplex)
+
+/-- The `A`-leg `Y × (S¹∖{v})` is path-connected (for path-connected `Y`). -/
+theorem pathConnected_covA [PathConnectedSpace ↑Y] (v : ↑(Sph 1)) :
+    PathConnectedSpace ↑(sub (covA Y v)) := by
+  haveI : PathConnectedSpace ↑(sub ({v}ᶜ : Set ↑(Sph 1))) := KummerHomologyT2.pathConnected_apunc v
+  haveI : PathConnectedSpace ↑(ProdSp Y (sub ({v}ᶜ : Set ↑(Sph 1)))) := pathConnectedSpace_prod
+  exact pathConnectedSpace_of_homeo (prodSetHomeo Y (Sph 1) ({v}ᶜ : Set ↑(Sph 1))).symm
+
+/-- The `B`-leg `Y × (S¹∖{−v})` is path-connected. -/
+theorem pathConnected_covB [PathConnectedSpace ↑Y] (v : ↑(Sph 1)) :
+    PathConnectedSpace ↑(sub (covB Y v)) := by
+  haveI : PathConnectedSpace ↑(sub ({antipode v}ᶜ : Set ↑(Sph 1))) :=
+    KummerHomologyT2.pathConnected_apunc (antipode v)
+  haveI : PathConnectedSpace ↑(ProdSp Y (sub ({antipode v}ᶜ : Set ↑(Sph 1)))) :=
+    pathConnectedSpace_prod
+  exact pathConnectedSpace_of_homeo (prodSetHomeo Y (Sph 1) ({antipode v}ᶜ : Set ↑(Sph 1))).symm
+
+/-- The positive clopen piece `Y × posSet` of the intersection is path-connected. -/
+theorem pathConnected_arcU [PathConnectedSpace ↑Y] : PathConnectedSpace ↑(sub (arcU Y)) := by
+  haveI := KummerHomologyT2.pathConnected_posSet
+  haveI : PathConnectedSpace ↑(ProdSp Y (sub posSet)) := pathConnectedSpace_prod
+  exact pathConnectedSpace_of_homeo (prodSetHomeo Y (Punc 1) posSet).symm
+
+/-- The negative clopen piece `Y × posSetᶜ` of the intersection is path-connected. -/
+theorem pathConnected_arcUcompl [PathConnectedSpace ↑Y] :
+    PathConnectedSpace ↑(sub (arcU Y)ᶜ) := by
+  haveI := KummerHomologyT2.pathConnected_posSetCompl
+  haveI : PathConnectedSpace ↑(ProdSp Y (sub (posSetᶜ))) := pathConnectedSpace_prod
+  exact pathConnectedSpace_of_homeo
+    ((Homeomorph.setCongr (arcUcompl_eq Y)).trans (prodSetHomeo Y (Punc 1) (posSetᶜ))).symm
+
+/-- The augmentation of the positive intersection piece is bijective (path-connected + nonempty). -/
+theorem augHInt_arcU_bijective [PathConnectedSpace ↑Y] :
+    Function.Bijective (augHInt (sub (arcU Y))) := by
+  haveI := pathConnected_arcU Y
+  exact ⟨augHInt_injective_pathConnected,
+    augHInt_surjective _ (constSimplex (Classical.arbitrary _) 0)⟩
+
+/-- The augmentation of the negative intersection piece is bijective. -/
+theorem augHInt_arcUcompl_bijective [PathConnectedSpace ↑Y] :
+    Function.Bijective (augHInt (sub (arcU Y)ᶜ)) := by
+  haveI := pathConnected_arcUcompl Y
+  exact ⟨augHInt_injective_pathConnected,
+    augHInt_surjective _ (constSimplex (Classical.arbitrary _) 0)⟩
+
+/-- **`H̃₀(covA∩covB;ℤ) ≅ ℤ`** — the reduced degree-0 homology of the disconnected intersection
+(`Y × (ℝ∖0)`, two path components, for path-connected `Y`): the clopen two-arc split has both pieces
+augmentation-bijective, so `ker (augHInt) ≅ ℤ`, transported from `Y × Punc 1` across `intHomeo`. -/
+theorem reducedH0_inter_iso_int [PathConnectedSpace ↑Y] (v : ↑(Sph 1)) :
+    Nonempty (↥(LinearMap.ker (augHInt (sub (covA Y v ∩ covB Y v)))) ≃ₗ[ℤ] ℤ) :=
+  ⟨(augHIntKerEquivOfHomeo ⟨intHomeo Y v, (intHomeo Y v).continuous⟩
+      ⟨(intHomeo Y v).symm, (intHomeo Y v).symm.continuous⟩
+      (ContinuousMap.ext fun x => (intHomeo Y v).symm_apply_apply x)
+      (ContinuousMap.ext fun x => (intHomeo Y v).apply_symm_apply x)).trans
+    (augHInt_ker_iso_int (isClopen_arcU Y) (augHInt_arcU_bijective Y)
+      (augHInt_arcUcompl_bijective Y)).some⟩
+
+/-- **`ker Δ₀ = ker (augHInt)`** — a degree-0 class dies under the MV diagonal `Δ₀` iff it dies under
+the augmentation (both legs path-connected so their augmentations are injective;
+`augHInt_naturality`). -/
+theorem ker_delta0_eq [PathConnectedSpace ↑Y] (v : ↑(Sph 1)) :
+    LinearMap.ker (mvHomDiagInt (covA Y v) (covB Y v) 0)
+      = LinearMap.ker (augHInt (sub (covA Y v ∩ covB Y v))) := by
+  haveI := pathConnected_covA Y v
+  haveI := pathConnected_covB Y v
+  ext w
+  rw [LinearMap.mem_ker, LinearMap.mem_ker, mvHomDiagInt_apply, Prod.mk_eq_zero]
+  constructor
+  · rintro ⟨hA, _⟩
+    rw [← augHInt_naturality (subIncl (Set.inter_subset_left (s := covA Y v) (t := covB Y v))) w,
+      hA, map_zero]
+  · intro hAug
+    refine ⟨?_, ?_⟩
+    · apply augHInt_injective_pathConnected (X := sub (covA Y v))
+      rw [map_zero,
+        augHInt_naturality (subIncl (Set.inter_subset_left (s := covA Y v) (t := covB Y v))) w]
+      exact hAug
+    · apply augHInt_injective_pathConnected (X := sub (covB Y v))
+      rw [map_zero,
+        augHInt_naturality (subIncl (Set.inter_subset_right (s := covA Y v) (t := covB Y v))) w]
+      exact hAug
+
+/-- **The degree-1 circle-product step (free-finite form), for path-connected `Y`.** The homology of
+`Y × S¹` in degree `1` is free finite of rank `finrank H₁(Y) + 1`. Same MV split as `stepPos`, but
+the right end is the reduced `H₀` of the disconnected intersection (`ker Δ₀ ≅ ℤ`, one class fewer
+than the two arc components), which for path-connected `Y` is `finrank H₀(Y) = 1`. Delivers
+`H₁(T³) ≅ ℤ³` from the banked `H₁(T²) ≅ ℤ²`. -/
+theorem stepDeg1_free_finrank (Y : TopCat) [PathConnectedSpace ↑Y]
+    [Module.Free ℤ (Homology Y 1)] [Module.Finite ℤ (Homology Y 1)] :
+    Module.Free ℤ (Homology (Tor Y) 1) ∧ Module.Finite ℤ (Homology (Tor Y) 1) ∧
+      Module.finrank ℤ (Homology (Tor Y) 1) = Module.finrank ℤ (Homology Y 1) + 1 := by
+  set v : ↑(Sph 1) := basePoint 1 with hv
+  have hcov := covAB_cover Y v
+  -- Right end `K = ker Δ₀ ≅ ℤ` (reduced `H₀`), free finite of rank 1.
+  obtain ⟨eK0⟩ := reducedH0_inter_iso_int Y v
+  set K := LinearMap.ker (mvHomDiagInt (covA Y v) (covB Y v) 0) with hK
+  have hKeqAug : K = LinearMap.ker (augHInt (sub (covA Y v ∩ covB Y v))) := ker_delta0_eq Y v
+  set eK : K ≃ₗ[ℤ] ℤ := (LinearEquiv.ofEq _ _ hKeqAug).trans eK0 with heK
+  haveI hKF : Module.Free ℤ K := Module.Free.of_equiv eK.symm
+  haveI hKFin : Module.Finite ℤ K := Module.Finite.equiv eK.symm
+  have hKfin : Module.finrank ℤ K = 1 := by rw [eK.finrank_eq, Module.finrank_self]
+  -- Left end `ker q = im αGen ≅ H₁(Y)`, free finite of rank `finrank H₁(Y)`.
+  set δ := mvDeltaInt (covA Y v) (covB Y v) 0 hcov with hδ
+  set q : Homology (Tor Y) 1 →ₗ[ℤ] K :=
+    δ.codRestrict K (fun x => LinearMap.mem_ker.mpr (mvHomDiagInt_mvDeltaInt _ _ _ hcov x)) with hq
+  have hqsurj : Function.Surjective q := by
+    rintro ⟨y, hy⟩
+    have hyr : y ∈ LinearMap.range δ := by
+      rw [← (mv_exact_interInt (covA Y v) (covB Y v) 0 hcov).linearMap_ker_eq]; exact hy
+    obtain ⟨x, hx⟩ := hyr
+    exact ⟨x, Subtype.ext hx⟩
+  have hkerq : LinearMap.ker q = LinearMap.range (alphaGen Y v 0) := by
+    rw [hq, LinearMap.ker_codRestrict]; exact (alphaGen_range_eq_ker_delta Y v 0).symm
+  haveI hαF : Module.Free ℤ ↥(LinearMap.range (alphaGen Y v 0)) :=
+    Module.Free.of_equiv (LinearEquiv.ofInjective (alphaGen Y v 0) (alphaGen_injective Y v 0))
+  haveI hαFin : Module.Finite ℤ ↥(LinearMap.range (alphaGen Y v 0)) :=
+    Module.Finite.equiv (LinearEquiv.ofInjective (alphaGen Y v 0) (alphaGen_injective Y v 0))
+  haveI hKerqF : Module.Free ℤ ↥(LinearMap.ker q) :=
+    Module.Free.of_equiv (LinearEquiv.ofEq _ _ hkerq).symm
+  haveI hKerqFin : Module.Finite ℤ ↥(LinearMap.ker q) :=
+    Module.Finite.equiv (LinearEquiv.ofEq _ _ hkerq).symm
+  have hkerq_fin : Module.finrank ℤ ↥(LinearMap.ker q) = Module.finrank ℤ (Homology Y 1) := by
+    rw [(LinearEquiv.ofEq _ _ hkerq).finrank_eq,
+      ← (LinearEquiv.ofInjective (alphaGen Y v 0) (alphaGen_injective Y v 0)).finrank_eq]
+  obtain ⟨s, hs⟩ := q.exists_rightInverse_of_surjective (LinearMap.range_eq_top.mpr hqsurj)
+  have hexact : Function.Exact (⇑(LinearMap.ker q).subtype) (⇑q) := by
+    rw [LinearMap.exact_iff, Submodule.range_subtype]
+  set e : Homology (Tor Y) 1 ≃ₗ[ℤ] (↥(LinearMap.ker q) × K) :=
     (hexact.splitSurjectiveEquiv (Submodule.injective_subtype _) ⟨s, hs⟩).1 with he
   refine ⟨Module.Free.of_equiv e.symm, Module.Finite.equiv e.symm, ?_⟩
   rw [e.finrank_eq, Module.finrank_prod, hkerq_fin, hKfin]
