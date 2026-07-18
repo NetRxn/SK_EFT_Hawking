@@ -35,6 +35,25 @@ import SKEFTHawking.KummerHomologyT4
 import SKEFTHawking.SphereProdHTwoInt
 import SKEFTHawking.SingularClopenSplitInt
 
+/-- **Abstract kernel lemma.** For a surjective linear map `f : M → N` over a PID `R`, from a free
+finite module of rank `2` onto a module of rank `1`, the kernel is `≅ R`: quotient rank-nullity
+(`Submodule.finrank_quotient_add_finrank` + `M ⧸ ker f ≅ range f = N`) gives `finrank (ker f) = 1`;
+a submodule of a free finite module over a PID is free, and free of rank `1` is `≅ R`. (Stated over a
+general PID `R` — not fixed to `ℤ` — so the quotient's `Module R` instance is unique, avoiding the
+`ℤ`-module `AddCommGroup.toIntModule` diamond that a `ℤ`-specialised statement triggers.) -/
+theorem ker_iso_R_of_surjective {R : Type} [CommRing R] [IsPrincipalIdealRing R] [IsDomain R]
+    {M : Type} [AddCommGroup M] [Module R M] [Module.Free R M] [Module.Finite R M]
+    (hM : Module.finrank R M = 2) {N : Type} [AddCommGroup N] [Module R N]
+    (f : M →ₗ[R] N) (hf : Function.Surjective f) (hN : Module.finrank R N = 1) :
+    Nonempty (↥(LinearMap.ker f) ≃ₗ[R] R) := by
+  have hquot : Module.finrank R (M ⧸ LinearMap.ker f) = 1 := by
+    rw [f.quotKerEquivRange.finrank_eq, LinearMap.range_eq_top.mpr hf, finrank_top]; exact hN
+  have hrn := Submodule.finrank_quotient_add_finrank (LinearMap.ker f)
+  have hrank : Module.finrank R (LinearMap.ker f) = 1 := by omega
+  have b := Module.finBasis R (LinearMap.ker f)
+  rw [hrank] at b
+  exact ⟨b.equivFun.trans (LinearEquiv.funUnique (Fin 1) R R)⟩
+
 namespace SKEFTHawking.KummerHomologyT2
 
 open SKEFTHawking.SingularHomologyInt (Homology)
@@ -263,5 +282,159 @@ noncomputable def interArcSplitEquivInt (v : ↑(Sph 1)) (n : ℕ) :
 noncomputable def interHOneEquivInt (v : ↑(Sph 1)) :
     Homology (sub (covA v ∩ covB v)) 1 ≃ₗ[ℤ] ℤ × ℤ :=
   (interArcSplitEquivInt v 0).trans (LinearEquiv.prodCongr circleH1EquivInt circleH1EquivInt)
+
+/-! ### §2c. The first-coordinate collapse and the leg "master lemma" -/
+
+open SKEFTHawking.SingularHomologyInt
+open SKEFTHawking.SingularFunctorialityInt
+open SKEFTHawking.SingularMayerVietorisLES (subIncl ambIncl)
+open SKEFTHawking.SingularMayerVietorisLESInt
+
+/-- The first-coordinate collapse `p ↦ p.1.1` of a subset of `S¹×S¹` onto the first `S¹`. -/
+def fstCM (T : Set ↑TwoTorus) : C(↥(sub (X := TwoTorus) T), ↑(Sph 1)) :=
+  ⟨fun p => (p : ↑TwoTorus).1, continuous_fst.comp continuous_subtype_val⟩
+
+/-- **The `A`-leg collapse is the first-coordinate pushforward** — the canonical `mapInt` form of
+`legAEquivInt` (homeo seam + projection compose to the literal `p ↦ p.1.1`). Mirrors the S²×S² arc's
+`coverAEquivInt_eq_mapInt`, one dimension lower. -/
+theorem legAEquivInt_eq_mapInt (v : ↑(Sph 1)) (n : ℕ) (y : Homology (sub (covA v)) (n + 1)) :
+    legAEquivInt v n y = Homology.mapInt (fstCM (covA v)) (n + 1) y := by
+  show Homology.mapInt (prodFst (Sph 1) (sub ({v}ᶜ : Set ↑(Sph 1)))) (n + 1)
+      (Homology.mapInt
+        ⟨prodSetHomeo (Sph 1) (Sph 1) ({v}ᶜ : Set ↑(Sph 1)),
+         (prodSetHomeo (Sph 1) (Sph 1) ({v}ᶜ : Set ↑(Sph 1))).continuous⟩ (n + 1) y)
+      = _
+  rw [← LinearMap.comp_apply, ← Homology.mapInt_comp]
+  rfl
+
+/-- The `B`-leg collapse in canonical `mapInt` form. -/
+theorem legBEquivInt_eq_mapInt (v : ↑(Sph 1)) (n : ℕ) (y : Homology (sub (covB v)) (n + 1)) :
+    legBEquivInt v n y = Homology.mapInt (fstCM (covB v)) (n + 1) y := by
+  show Homology.mapInt (prodFst (Sph 1) (sub ({antipode v}ᶜ : Set ↑(Sph 1)))) (n + 1)
+      (Homology.mapInt
+        ⟨prodSetHomeo (Sph 1) (Sph 1) ({antipode v}ᶜ : Set ↑(Sph 1)),
+         (prodSetHomeo (Sph 1) (Sph 1) ({antipode v}ᶜ : Set ↑(Sph 1))).continuous⟩ (n + 1) y)
+      = _
+  rw [← LinearMap.comp_apply, ← Homology.mapInt_comp]
+  rfl
+
+/-- **`legA ∘ iA∗ = firstCollapse`**: pushing an intersection class into the `A`-leg and collapsing =
+collapsing the intersection's first coordinate directly (both are `p ↦ p.1.1`). -/
+theorem covA_collapse_inter (v : ↑(Sph 1)) (w : Homology (sub (covA v ∩ covB v)) 1) :
+    legAEquivInt v 0 (Homology.mapInt
+        (subIncl (Set.inter_subset_left (s := covA v) (t := covB v))) 1 w)
+      = Homology.mapInt (fstCM (covA v ∩ covB v)) 1 w := by
+  rw [legAEquivInt_eq_mapInt, ← LinearMap.comp_apply, ← Homology.mapInt_comp]
+  rfl
+
+/-- Same for the `B`-leg — the SAME first-coordinate collapse. -/
+theorem covB_collapse_inter (v : ↑(Sph 1)) (w : Homology (sub (covA v ∩ covB v)) 1) :
+    legBEquivInt v 0 (Homology.mapInt
+        (subIncl (Set.inter_subset_right (s := covA v) (t := covB v))) 1 w)
+      = Homology.mapInt (fstCM (covA v ∩ covB v)) 1 w := by
+  rw [legBEquivInt_eq_mapInt, ← LinearMap.comp_apply, ← Homology.mapInt_comp]
+  rfl
+
+/-! ### §2d. The first-coordinate collapse is surjective (a `Punc 1` section) -/
+
+open SKEFTHawking.SingularProdContractibleInt (prodFst_comp_prodSect homeoHomologyEquivInt_apply)
+
+/-- A chosen nonzero point of `ℝ¹∖0 = Punc 1` (the section basepoint for the `S¹` projection). -/
+noncomputable def puncPt : ↑(Punc 1) :=
+  ⟨EuclideanSpace.single (0 : Fin 1) (1 : ℝ), by simp⟩
+
+/-- **`mapInt (prodFst) : H₁(S¹×(ℝ∖0)) → H₁(S¹)` is surjective** — the projection has the section
+`x ↦ (x, puncPt)` (`ℝ∖0` is nonempty). -/
+theorem prodFst_punc_surjective :
+    Function.Surjective (Homology.mapInt (prodFst (Sph 1) (Punc 1)) 1) := by
+  intro z
+  refine ⟨Homology.mapInt (prodSect (Sph 1) (Punc 1) puncPt) 1 z, ?_⟩
+  have h : (Homology.mapInt (prodFst (Sph 1) (Punc 1)) 1).comp
+      (Homology.mapInt (prodSect (Sph 1) (Punc 1) puncPt) 1) = LinearMap.id := by
+    rw [← Homology.mapInt_comp, prodFst_comp_prodSect, Homology.mapInt_id]
+  exact LinearMap.congr_fun h z
+
+/-- **The first-coordinate collapse `H₁(covA∩covB) → H₁(S¹)` is surjective** — it factors as the
+`Punc 1` projection after the intersection homeomorphism `intHomeo` (which preserves the first
+coordinate), and the projection is surjective. -/
+theorem firstCollapse_surjective (v : ↑(Sph 1)) :
+    Function.Surjective (Homology.mapInt (fstCM (covA v ∩ covB v)) 1) := by
+  have hrw : fstCM (covA v ∩ covB v)
+      = (prodFst (Sph 1) (Punc 1)).comp ⟨intHomeo v, (intHomeo v).continuous⟩ := rfl
+  rw [hrw, Homology.mapInt_comp]
+  refine prodFst_punc_surjective.comp ?_
+  intro z
+  obtain ⟨y, hy⟩ := (homeoHomologyEquivInt (intHomeo v) 1).surjective z
+  exact ⟨y, (homeoHomologyEquivInt_apply (intHomeo v) 1 y).symm.trans hy⟩
+
+/-! ## §3. `H₂(S¹×S¹;ℤ) ≅ ℤ` — the torus fundamental class -/
+
+/-- The first-coordinate collapse `H₁(covA∩covB) →ₗ[ℤ] H₁(S¹)` as a linear map. -/
+noncomputable def firstCollapseLM (v : ↑(Sph 1)) :
+    Homology (sub (covA v ∩ covB v)) 1 →ₗ[ℤ] Homology (Sph 1) 1 :=
+  Homology.mapInt (fstCM (covA v ∩ covB v)) 1
+
+/-- **`ker Δ₁ = ker (firstCollapse)`**: a class dies under the Mayer–Vietoris diagonal `Δ₁` iff it
+dies under the first-coordinate collapse — because both legs collapse `iA∗`/`iB∗` to that same
+collapse (`covA_collapse_inter`/`covB_collapse_inter`), and the legs are isomorphisms. -/
+theorem ker_delta1_eq (v : ↑(Sph 1)) :
+    LinearMap.ker (mvHomDiagInt (covA v) (covB v) 1) = LinearMap.ker (firstCollapseLM v) := by
+  ext w
+  rw [LinearMap.mem_ker, LinearMap.mem_ker, mvHomDiagInt_apply, Prod.mk_eq_zero, firstCollapseLM]
+  constructor
+  · rintro ⟨hA, _⟩
+    rw [← covA_collapse_inter v w, hA, map_zero]
+  · intro hF
+    exact ⟨(legAEquivInt v 0).map_eq_zero_iff.mp ((covA_collapse_inter v w).trans hF),
+      (legBEquivInt v 0).map_eq_zero_iff.mp ((covB_collapse_inter v w).trans hF)⟩
+
+/-- **`δ : H₂(S¹×S¹) → H₁(covA∩covB)` is injective**: exactness at `H₂(X)` puts `ker δ = im Σ₂`,
+but both legs have `H₂ = 0`, so `im Σ₂ = 0`. -/
+theorem delta_injective (v : ↑(Sph 1)) :
+    Function.Injective (mvDeltaInt (covA v) (covB v) 1 (covAB_cover v)) := by
+  rw [injective_iff_map_eq_zero]
+  intro x hx
+  obtain ⟨⟨u, u'⟩, hxeq⟩ := (mv_exact_ambientInt (covA v) (covB v) 1 (covAB_cover v) x).mp hx
+  rw [← hxeq, legA_homology_two_eq_zero v u, legB_homology_two_eq_zero v u']
+  simp
+
+/-- **`H₂(S¹×S¹;ℤ) ≅ ker (firstCollapse)`**: `δ` embeds `H₂(X)` isomorphically onto `im δ = ker Δ₁`
+(exactness at `H₁(covA∩covB)`), which equals `ker (firstCollapse)`. -/
+noncomputable def torusTwoH2EquivKer (v : ↑(Sph 1)) :
+    Homology TwoTorus 2 ≃ₗ[ℤ] ↥(LinearMap.ker (firstCollapseLM v)) :=
+  (LinearEquiv.ofInjective (mvDeltaInt (covA v) (covB v) 1 (covAB_cover v)) (delta_injective v)).trans
+    (LinearEquiv.ofEq _ _
+      (((LinearMap.exact_iff.mp (mv_exact_interInt (covA v) (covB v) 1 (covAB_cover v))).symm).trans
+        (ker_delta1_eq v)))
+
+/-- **`H₂(S¹×S¹;ℤ) ≅ ℤ`** — the torus fundamental class, on `Sph 1 × Sph 1`. `ker (firstCollapse)`
+is the kernel of a surjection from `H₁(covA∩covB) ≅ ℤ²` onto `H₁(S¹) ≅ ℤ`, hence `≅ ℤ`. -/
+noncomputable def torusTwoH2EquivIntSph : Homology TwoTorus 2 ≃ₗ[ℤ] ℤ :=
+  haveI : Module.Free ℤ (Homology (sub (covA (basePoint 1) ∩ covB (basePoint 1))) 1) :=
+    Module.Free.of_equiv (interHOneEquivInt (basePoint 1)).symm
+  haveI : Module.Finite ℤ (Homology (sub (covA (basePoint 1) ∩ covB (basePoint 1))) 1) :=
+    Module.Finite.equiv (interHOneEquivInt (basePoint 1)).symm
+  (torusTwoH2EquivKer (basePoint 1)).trans
+    (ker_iso_R_of_surjective (R := ℤ)
+      ((interHOneEquivInt (basePoint 1)).finrank_eq.trans (by simp))
+      (firstCollapseLM (basePoint 1))
+      (firstCollapse_surjective (basePoint 1))
+      (circleH1EquivInt.finrank_eq.trans (by simp))).some
+
+/-! ## §5. The `Circle × Circle` headlines (transported from `Sph 1 × Sph 1`) -/
+
+open SKEFTHawking.KummerHomologyT4 (circleHomeoSph1)
+
+/-- The product bridge `Circle × Circle ≃ₜ S¹ × S¹` (product of the two `circleHomeoSph1` factors)
+identifying the actual `T² = Circle²` with the sphere-homology stack's `Sph 1 × Sph 1`. -/
+noncomputable def prodCircleHomeo : (Circle × Circle) ≃ₜ (↑(Sph 1) × ↑(Sph 1)) :=
+  circleHomeoSph1.prodCongr circleHomeoSph1
+
+/-- **`H₂(S¹×S¹;ℤ) ≅ ℤ`** — the torus fundamental class, on the actual `T² = Circle × Circle`
+(transported across `prodCircleHomeo`). A genuine iso: the codomain-`ℤ` is `ker Δ₁`, the class the
+two arc generators of the doubly-punctured circle bound. -/
+noncomputable def torusTwoH2EquivInt : Homology (TopCat.of (Circle × Circle)) 2 ≃ₗ[ℤ] ℤ :=
+  (homeoHomologyEquivInt (X := TopCat.of (Circle × Circle)) (Y := TwoTorus) prodCircleHomeo 2).trans
+    torusTwoH2EquivIntSph
 
 end SKEFTHawking.KummerHomologyT2
