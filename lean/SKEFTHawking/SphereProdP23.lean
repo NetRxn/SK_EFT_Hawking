@@ -183,7 +183,7 @@ Given `dim H³(S²×D³,S²×S²;ℤ/2) = 1` — the genuinely-nonzero relative-
 the surviving `S²` area class; `= dim H³(D³,∂D³)⊗H⁰(S²) = 1` by the relative Künneth `S²×(D³,∂D³)`) — the
 Lefschetz Betti equality `dim H²(W) = dim H³(W,∂W)` holds, both sides `= 1`. The absolute side
 (`finrank_sphereDisk_cohomology_two`) is banked UNCONDITIONALLY; the relative rank is the sole residual
-(§4 module note). This is exactly the `dimeq` field
+(see the module docstring's residual section). This is exactly the `dimeq` field
 `PoincareLefschetzWuAssembly.LefschetzWuDatum.ofRelFund23` expects, once the residual is discharged.
 The residual is equivalently the relative-homology rank `dim H₃(W,∂W;ℤ/2) = 1` via
 `finrank_relativeCohomology_eq_relativeHomology sphereDiskBoundarySet 2`. -/
