@@ -437,4 +437,298 @@ noncomputable def torusTwoH2EquivInt : Homology (TopCat.of (Circle × Circle)) 2
   (homeoHomologyEquivInt (X := TopCat.of (Circle × Circle)) (Y := TwoTorus) prodCircleHomeo 2).trans
     torusTwoH2EquivIntSph
 
+/-! ## §4. `H₁(S¹×S¹;ℤ) ≅ ℤ²` — the two circle generators -/
+
+open SKEFTHawking.SingularH0PathConnectedInt (augHInt_injective_pathConnected)
+open SKEFTHawking.SingularLineMinusPointInt (augHInt_naturality augHInt_surjective
+  augHInt_ker_iso_int)
+open SKEFTHawking.SphereProdHOneInt (pathConnectedSpace_of_homeo pathConnectedSpace_prod)
+open SKEFTHawking.SingularHomotopyInvariance (constSimplex)
+
+/-- `S¹ = Sph 1` is path-connected (`rank ℝ² = 2 > 1`). -/
+theorem pathConnected_sph1 : PathConnectedSpace ↑(Sph 1) := by
+  have hrank : 1 < Module.rank ℝ (EuclideanSpace ℝ (Fin 2)) := by
+    have hfr : Module.finrank ℝ (EuclideanSpace ℝ (Fin 2)) = 2 := finrank_euclideanSpace_fin
+    rw [← Module.finrank_eq_rank, hfr]; exact_mod_cast (by norm_num : (1 : ℕ) < 2)
+  exact isPathConnected_iff_pathConnectedSpace.mp (isPathConnected_sphere hrank 0 zero_le_one)
+
+/-- The punctured circle `S¹∖{v}` is path-connected (homeomorphic to `ℝ`). -/
+theorem pathConnected_apunc (v : ↑(Sph 1)) :
+    PathConnectedSpace ↑(sub ({v}ᶜ : Set ↑(Sph 1))) :=
+  pathConnectedSpace_of_homeo (puncturedHomeo 1 v).symm
+
+/-- The `A`-leg `S¹ × (S¹∖{v})` is path-connected. -/
+theorem pathConnected_covA (v : ↑(Sph 1)) : PathConnectedSpace ↑(sub (covA v)) := by
+  haveI : PathConnectedSpace ↑(Sph 1) := pathConnected_sph1
+  haveI : PathConnectedSpace ↑(sub ({v}ᶜ : Set ↑(Sph 1))) := pathConnected_apunc v
+  haveI : PathConnectedSpace ↑(ProdSp (Sph 1) (sub ({v}ᶜ : Set ↑(Sph 1)))) := pathConnectedSpace_prod
+  exact pathConnectedSpace_of_homeo (prodSetHomeo (Sph 1) (Sph 1) ({v}ᶜ : Set ↑(Sph 1))).symm
+
+/-- The `B`-leg `S¹ × (S¹∖{−v})` is path-connected. -/
+theorem pathConnected_covB (v : ↑(Sph 1)) : PathConnectedSpace ↑(sub (covB v)) := by
+  haveI : PathConnectedSpace ↑(Sph 1) := pathConnected_sph1
+  haveI : PathConnectedSpace ↑(sub ({antipode v}ᶜ : Set ↑(Sph 1))) := pathConnected_apunc (antipode v)
+  haveI : PathConnectedSpace ↑(ProdSp (Sph 1) (sub ({antipode v}ᶜ : Set ↑(Sph 1)))) :=
+    pathConnectedSpace_prod
+  exact pathConnectedSpace_of_homeo (prodSetHomeo (Sph 1) (Sph 1) ({antipode v}ᶜ : Set ↑(Sph 1))).symm
+
+/-! ### §4a. The reduced `H₀` of the disconnected intersection: `ker Δ₀ ≅ ℤ` -/
+
+open SKEFTHawking.SingularLineMinusPointInt (augHIntKerEquivOfHomeo)
+
+/-- The positive half-line `posRay ⊆ ℝ¹` is path-connected (convex, nonempty). -/
+theorem pathConnected_posRay : PathConnectedSpace ↑(sub (X := R1) posRay) :=
+  isPathConnected_iff_pathConnectedSpace.mp
+    (convex_posRay.isPathConnected ⟨_, posRayPt_mem⟩)
+
+/-- The positive arc `posSet ⊆ ℝ¹∖0` is path-connected (homeomorphic to `posRay`). -/
+theorem pathConnected_posSet : PathConnectedSpace ↑(sub posSet) :=
+  haveI := pathConnected_posRay
+  pathConnectedSpace_of_homeo posHomeo.symm
+
+/-- The negative arc `posSetᶜ ⊆ ℝ¹∖0` is path-connected (antipodal to the positive arc). -/
+theorem pathConnected_posSetCompl : PathConnectedSpace ↑(sub posSetᶜ) :=
+  haveI := pathConnected_posSet
+  pathConnectedSpace_of_homeo negHomeo.symm
+
+/-- The positive clopen piece `S¹ × posSet` of the intersection is path-connected. -/
+theorem pathConnected_arcU : PathConnectedSpace ↑(sub arcU) := by
+  haveI := pathConnected_sph1
+  haveI := pathConnected_posSet
+  haveI : PathConnectedSpace ↑(ProdSp (Sph 1) (sub posSet)) := pathConnectedSpace_prod
+  exact pathConnectedSpace_of_homeo (prodSetHomeo (Sph 1) (Punc 1) posSet).symm
+
+/-- The negative clopen piece `S¹ × posSetᶜ` of the intersection is path-connected. -/
+theorem pathConnected_arcUcompl : PathConnectedSpace ↑(sub arcUᶜ) := by
+  haveI := pathConnected_sph1
+  haveI := pathConnected_posSetCompl
+  haveI : PathConnectedSpace ↑(ProdSp (Sph 1) (sub posSetᶜ)) := pathConnectedSpace_prod
+  exact pathConnectedSpace_of_homeo
+    ((Homeomorph.setCongr arcUcompl_eq).trans (prodSetHomeo (Sph 1) (Punc 1) posSetᶜ)).symm
+
+/-- The augmentation of the positive intersection piece is bijective (path-connected + nonempty). -/
+theorem augHInt_arcU_bijective : Function.Bijective (augHInt (sub arcU)) := by
+  haveI := pathConnected_arcU
+  exact ⟨augHInt_injective_pathConnected,
+    augHInt_surjective _ (constSimplex (Classical.arbitrary _) 0)⟩
+
+/-- The augmentation of the negative intersection piece is bijective. -/
+theorem augHInt_arcUcompl_bijective : Function.Bijective (augHInt (sub arcUᶜ)) := by
+  haveI := pathConnected_arcUcompl
+  exact ⟨augHInt_injective_pathConnected,
+    augHInt_surjective _ (constSimplex (Classical.arbitrary _) 0)⟩
+
+/-- **`H̃₀(covA∩covB;ℤ) ≅ ℤ`** — the reduced degree-0 homology of the disconnected intersection
+(`S¹ × (ℝ∖0)`, two path components): the clopen two-arc split has both pieces augmentation-bijective,
+so `ker (augHInt) ≅ ℤ`, transported from `ProdSp (Sph 1) (Punc 1)` across `intHomeo`. -/
+theorem reducedH0_inter_iso_int (v : ↑(Sph 1)) :
+    Nonempty (↥(LinearMap.ker (augHInt (sub (covA v ∩ covB v)))) ≃ₗ[ℤ] ℤ) :=
+  ⟨(augHIntKerEquivOfHomeo ⟨intHomeo v, (intHomeo v).continuous⟩
+      ⟨(intHomeo v).symm, (intHomeo v).symm.continuous⟩
+      (ContinuousMap.ext fun x => (intHomeo v).symm_apply_apply x)
+      (ContinuousMap.ext fun x => (intHomeo v).apply_symm_apply x)).trans
+    (augHInt_ker_iso_int isClopen_arcU augHInt_arcU_bijective augHInt_arcUcompl_bijective).some⟩
+
+/-- **`ker Δ₀ = ker (augHInt)`**: a degree-0 class dies under the Mayer–Vietoris diagonal `Δ₀` iff it
+dies under the augmentation — both legs' augmentations agree with the intersection augmentation
+(`augHInt_naturality`), and the legs (`covA`, `covB`) are path-connected so their augmentations are
+injective. -/
+theorem ker_delta0_eq (v : ↑(Sph 1)) :
+    LinearMap.ker (mvHomDiagInt (covA v) (covB v) 0)
+      = LinearMap.ker (augHInt (sub (covA v ∩ covB v))) := by
+  haveI := pathConnected_covA v
+  haveI := pathConnected_covB v
+  ext w
+  rw [LinearMap.mem_ker, LinearMap.mem_ker, mvHomDiagInt_apply, Prod.mk_eq_zero]
+  constructor
+  · rintro ⟨hA, _⟩
+    rw [← augHInt_naturality (subIncl (Set.inter_subset_left (s := covA v) (t := covB v))) w, hA,
+      map_zero]
+  · intro hAug
+    refine ⟨?_, ?_⟩
+    · apply augHInt_injective_pathConnected (X := sub (covA v))
+      rw [map_zero,
+        augHInt_naturality (subIncl (Set.inter_subset_left (s := covA v) (t := covB v))) w]
+      exact hAug
+    · apply augHInt_injective_pathConnected (X := sub (covB v))
+      rw [map_zero,
+        augHInt_naturality (subIncl (Set.inter_subset_right (s := covA v) (t := covB v))) w]
+      exact hAug
+
+/-! ### §4b. The first circle generator `α` and the inclusion surjectivity -/
+
+/-- **The first circle generator** `α : ℤ → H₁(T²)`, `m ↦ Σ₁((legA⁻¹(m·[S¹]), 0))`: the `S¹` class
+pushed through the `A`-leg (the "meridian" circle, `im Σ₁`'s generator). -/
+noncomputable def alphaGen (v : ↑(Sph 1)) : ℤ →ₗ[ℤ] Homology TwoTorus 1 :=
+  (mvHomSumInt (covA v) (covB v) 1).comp
+    ((LinearMap.inl ℤ _ _).comp
+      ((legAEquivInt v 0).symm.toLinearMap.comp circleH1EquivInt.symm.toLinearMap))
+
+theorem alphaGen_apply (v : ↑(Sph 1)) (m : ℤ) :
+    alphaGen v m = mvHomSumInt (covA v) (covB v) 1
+      ((legAEquivInt v 0).symm (circleH1EquivInt.symm m), 0) := rfl
+
+/-- The `α`-line lies in `ker δ₀` (the complex condition `δ₀ ∘ Σ₁ = 0`). -/
+theorem delta_alphaGen (v : ↑(Sph 1)) (m : ℤ) :
+    mvDeltaInt (covA v) (covB v) 0 (covAB_cover v) (alphaGen v m) = 0 := by
+  rw [alphaGen_apply]
+  exact mvDeltaInt_mvHomSumInt (covA v) (covB v) 0 (covAB_cover v) _
+
+/-- **The inclusion `iB∗ : H₁(covA∩covB) → H₁(covB)` is surjective** — `legB ∘ iB∗ = firstCollapse`
+(`covB_collapse_inter`) is surjective and `legB` is an iso. -/
+theorem iB_surjective (v : ↑(Sph 1)) :
+    Function.Surjective (Homology.mapInt
+      (subIncl (Set.inter_subset_right (s := covA v) (t := covB v))) 1) := by
+  intro y
+  obtain ⟨w, hw⟩ := firstCollapse_surjective v (legBEquivInt v 0 y)
+  refine ⟨w, (legBEquivInt v 0).injective ?_⟩
+  rw [covB_collapse_inter v w, hw]
+
+/-- **`α` is injective**: a vanishing `α m` lies in `im Δ₁` (middle exactness), whose second
+coordinate `iB∗ w` forces `firstCollapse w = 0` (`covB_collapse_inter`), and whose first coordinate
+then reads the collapse `m·[S¹] = firstCollapse w = 0` (`covA_collapse_inter`), so `m = 0`. -/
+theorem alphaGen_injective (v : ↑(Sph 1)) : Function.Injective (alphaGen v) := by
+  refine (injective_iff_map_eq_zero (alphaGen v)).mpr fun m hm => ?_
+  rw [alphaGen_apply] at hm
+  obtain ⟨w, hw⟩ := (mv_exact_middleInt (covA v) (covB v) 0 (covAB_cover v) _).mp hm
+  rw [mvHomDiagInt_apply] at hw
+  have hfst := congrArg Prod.fst hw
+  have hsnd := congrArg Prod.snd hw
+  simp only at hfst hsnd
+  have hFC : Homology.mapInt (fstCM (covA v ∩ covB v)) 1 w = 0 := by
+    rw [← covB_collapse_inter v w, hsnd, map_zero]
+  have hzero : circleH1EquivInt.symm m = 0 := by
+    have hc := covA_collapse_inter v w
+    rw [hfst, LinearEquiv.apply_symm_apply, hFC] at hc
+    exact hc
+  exact circleH1EquivInt.symm.injective (hzero.trans (map_zero _).symm)
+
+/-! ### §4c. The second circle generator `deltaGen` and the `k`-readout -/
+
+/-- The chosen reduced-`H₀` iso `ker (augHInt(covA∩covB)) ≅ ℤ` (from `reducedH0_inter_iso_int`). -/
+noncomputable def e0 (v : ↑(Sph 1)) :
+    ↥(LinearMap.ker (augHInt (sub (covA v ∩ covB v)))) ≃ₗ[ℤ] ℤ :=
+  (reducedH0_inter_iso_int v).some
+
+/-- A chosen generator of the reduced `H₀` of the intersection (`e0⁻¹ 1`). -/
+noncomputable def redGen (v : ↑(Sph 1)) : Homology (sub (covA v ∩ covB v)) 0 :=
+  ((e0 v).symm 1 : ↥(LinearMap.ker (augHInt (sub (covA v ∩ covB v)))))
+
+theorem redGen_delta0 (v : ↑(Sph 1)) : mvHomDiagInt (covA v) (covB v) 0 (redGen v) = 0 := by
+  have h : redGen v ∈ LinearMap.ker (augHInt (sub (covA v ∩ covB v))) := ((e0 v).symm 1).2
+  rw [← ker_delta0_eq v] at h
+  exact h
+
+/-- **The second circle generator** `deltaGen` — a chosen `δ₀`-preimage of the reduced-`H₀`
+generator (`im δ₀ = ker Δ₀ = ker augHInt` by exactness). Canonical modulo `im Σ₁` (the split
+choice). -/
+noncomputable def deltaGen (v : ↑(Sph 1)) : Homology TwoTorus 1 :=
+  ((mv_exact_interInt (covA v) (covB v) 0 (covAB_cover v) (redGen v)).mp (redGen_delta0 v)).choose
+
+theorem deltaGen_spec (v : ↑(Sph 1)) :
+    mvDeltaInt (covA v) (covB v) 0 (covAB_cover v) (deltaGen v) = redGen v :=
+  ((mv_exact_interInt (covA v) (covB v) 0 (covAB_cover v) (redGen v)).mp (redGen_delta0 v)).choose_spec
+
+/-- `δ₀ x` always lands in the reduced `H₀` (`Δ₀ ∘ δ₀ = 0`). -/
+theorem delta_mem_ker (v : ↑(Sph 1)) (x : Homology TwoTorus 1) :
+    mvDeltaInt (covA v) (covB v) 0 (covAB_cover v) x
+      ∈ LinearMap.ker (augHInt (sub (covA v ∩ covB v))) := by
+  rw [← ker_delta0_eq v, LinearMap.mem_ker]
+  exact mvHomDiagInt_mvDeltaInt (covA v) (covB v) 0 (covAB_cover v) x
+
+/-- **The `k`-readout** `H₁(T²) → ℤ`: `e0` applied to `δ₀ x` (which lands in the reduced `H₀`). -/
+noncomputable def readK (v : ↑(Sph 1)) : Homology TwoTorus 1 →ₗ[ℤ] ℤ :=
+  (e0 v).toLinearMap.comp
+    ((mvDeltaInt (covA v) (covB v) 0 (covAB_cover v)).codRestrict
+      (LinearMap.ker (augHInt (sub (covA v ∩ covB v)))) (delta_mem_ker v))
+
+/-- The readout is `1` on the second generator (`δ₀ deltaGen = redGen = e0⁻¹ 1`). -/
+theorem readK_deltaGen (v : ↑(Sph 1)) : readK v (deltaGen v) = 1 := by
+  have hsub : (⟨mvDeltaInt (covA v) (covB v) 0 (covAB_cover v) (deltaGen v),
+      delta_mem_ker v (deltaGen v)⟩ :
+        ↥(LinearMap.ker (augHInt (sub (covA v ∩ covB v))))) = (e0 v).symm 1 :=
+    Subtype.ext (deltaGen_spec v)
+  show e0 v ⟨mvDeltaInt (covA v) (covB v) 0 (covAB_cover v) (deltaGen v),
+    delta_mem_ker v (deltaGen v)⟩ = 1
+  rw [hsub, LinearEquiv.apply_symm_apply]
+
+/-- The readout is `0` on the first generator (`δ₀ ∘ α = 0`). -/
+theorem readK_alphaGen (v : ↑(Sph 1)) (m : ℤ) : readK v (alphaGen v m) = 0 := by
+  have hsub : (⟨mvDeltaInt (covA v) (covB v) 0 (covAB_cover v) (alphaGen v m),
+      delta_mem_ker v (alphaGen v m)⟩ :
+        ↥(LinearMap.ker (augHInt (sub (covA v ∩ covB v))))) = 0 :=
+    Subtype.ext (by simp [delta_alphaGen v m])
+  show e0 v ⟨mvDeltaInt (covA v) (covB v) 0 (covAB_cover v) (alphaGen v m),
+    delta_mem_ker v (alphaGen v m)⟩ = 0
+  rw [hsub, map_zero]
+
+/-! ### §4d. The split `0 → im Σ₁ → H₁(T²) → im δ₀ → 0` and `H₁(T²) ≅ ℤ²` -/
+
+/-- **The rank-2 comparison map** `(m, k) ↦ α m + k·deltaGen`: the first circle (`α`, `im Σ₁`) plus
+the chosen `δ₀`-section (`deltaGen`, `im δ₀`) — the split of `0 → im Σ₁ → H₁(T²) → im δ₀ → 0`. -/
+noncomputable def psi (v : ↑(Sph 1)) : ℤ × ℤ →ₗ[ℤ] Homology TwoTorus 1 :=
+  (alphaGen v).coprod (LinearMap.toSpanSingleton ℤ _ (deltaGen v))
+
+theorem psi_apply (v : ↑(Sph 1)) (m k : ℤ) : psi v (m, k) = alphaGen v m + k • deltaGen v := rfl
+
+/-- The `k`-readout of `psi`: reads exactly the second coordinate. -/
+theorem readK_psi (v : ↑(Sph 1)) (m k : ℤ) : readK v (psi v (m, k)) = k := by
+  rw [psi_apply, map_add, readK_alphaGen, zero_add, map_smul, readK_deltaGen, smul_eq_mul, mul_one]
+
+theorem psi_injective (v : ↑(Sph 1)) : Function.Injective (psi v) := by
+  refine (injective_iff_map_eq_zero (psi v)).mpr fun p hp => ?_
+  obtain ⟨m, k⟩ := p
+  have hk : k = 0 := by have h := readK_psi v m k; rw [hp, map_zero] at h; exact h.symm
+  have hm : alphaGen v m = 0 := by rw [psi_apply, hk, zero_smul, add_zero] at hp; exact hp
+  exact Prod.ext (alphaGen_injective v (hm.trans (map_zero _).symm)) hk
+
+theorem psi_surjective (v : ↑(Sph 1)) : Function.Surjective (psi v) := by
+  intro x
+  set k := readK v x with hk
+  have hδ : mvDeltaInt (covA v) (covB v) 0 (covAB_cover v) (x - k • deltaGen v) = 0 := by
+    have hker : (⟨mvDeltaInt (covA v) (covB v) 0 (covAB_cover v) (x - k • deltaGen v),
+        delta_mem_ker v (x - k • deltaGen v)⟩ :
+          ↥(LinearMap.ker (augHInt (sub (covA v ∩ covB v))))) = 0 := by
+      apply (e0 v).injective
+      rw [map_zero]
+      show readK v (x - k • deltaGen v) = 0
+      rw [map_sub, map_smul, readK_deltaGen, ← hk, smul_eq_mul, mul_one, sub_self]
+    exact congrArg Subtype.val hker
+  obtain ⟨⟨u, u'⟩, huv⟩ :=
+    (mv_exact_ambientInt (covA v) (covB v) 0 (covAB_cover v) (x - k • deltaGen v)).mp hδ
+  obtain ⟨w, hw⟩ := iB_surjective v u'
+  set iAw := Homology.mapInt (subIncl (Set.inter_subset_left (s := covA v) (t := covB v))) 1 w
+    with hiAw
+  have hSigZero : mvHomSumInt (covA v) (covB v) 1 (iAw, u') = 0 := by
+    have hDiag : mvHomDiagInt (covA v) (covB v) 1 w = (iAw, u') := by
+      rw [mvHomDiagInt_apply, hw, hiAw]
+    rw [← hDiag]; exact mvHomSumInt_mvHomDiagInt (covA v) (covB v) 1 w
+  refine ⟨(circleH1EquivInt (legAEquivInt v 0 (u - iAw)), k), ?_⟩
+  rw [psi_apply]
+  have halpha : alphaGen v (circleH1EquivInt (legAEquivInt v 0 (u - iAw)))
+      = mvHomSumInt (covA v) (covB v) 1 (u - iAw, 0) := by
+    rw [alphaGen_apply, LinearEquiv.symm_apply_apply, LinearEquiv.symm_apply_apply]
+  have hsum : mvHomSumInt (covA v) (covB v) 1 (u - iAw, 0)
+      = mvHomSumInt (covA v) (covB v) 1 (u, u') := by
+    have hpair : ((u - iAw, (0 : Homology (sub (covB v)) 1)))
+        = (u, u') - (iAw, u') := by rw [Prod.mk_sub_mk, sub_self]
+    rw [hpair, map_sub, hSigZero, sub_zero]
+  rw [halpha, hsum, huv, sub_add_cancel]
+
+/-! ## §5b. The `H₁` headline -/
+
+/-- **`H₁(S¹×S¹;ℤ) ≅ ℤ²`** — the two circle generators, on `Sph 1 × Sph 1`. `psi` sends `(m, k)` to
+`m·α + k·deltaGen`: `α` the meridian (`im Σ₁`), `deltaGen` the longitude (`δ₀`-section of the reduced
+`H₀` of the doubly-punctured circle). -/
+noncomputable def torusTwoH1EquivIntSph : Homology TwoTorus 1 ≃ₗ[ℤ] ℤ × ℤ :=
+  (LinearEquiv.ofBijective (psi (basePoint 1))
+    ⟨psi_injective (basePoint 1), psi_surjective (basePoint 1)⟩).symm
+
+/-- **`H₁(S¹×S¹;ℤ) ≅ ℤ²`** — the two circle generators, on the actual `T² = Circle × Circle`
+(transported across `prodCircleHomeo`). A genuine iso: the two summands carry the two real circle
+classes (the meridian `α` and the longitude `deltaGen`), not a defined-to-be-`ℤ²` shell. -/
+noncomputable def torusTwoH1EquivInt : Homology (TopCat.of (Circle × Circle)) 1 ≃ₗ[ℤ] ℤ × ℤ :=
+  (homeoHomologyEquivInt (X := TopCat.of (Circle × Circle)) (Y := TwoTorus) prodCircleHomeo 1).trans
+    torusTwoH1EquivIntSph
+
 end SKEFTHawking.KummerHomologyT2
