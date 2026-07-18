@@ -7,9 +7,11 @@ needs a concrete `LefschetzWuDatum (TopCat.of SphereDisk) sphereDiskBoundarySet 
 `W = SphereDisk = S²×D³`, `∂W = sphereDiskBoundarySet ≃ S²×S²`.
 
 This module discharges the TWO **finite-dimensionality** numerics — `findimAbs`, `findimRel` — on the
-fixed carrier, kernel-pure and unconditionally, precisely isolating the residual of the `(2,3)` leg to
-`{nondeg, dimeq}` (the perfect-cup-pairing content). Both bottom out at ALREADY-BANKED sphere /
-sphere-product facts via the carrier-agnostic exact-sequence bricks of `SingularMVCohomologyFinite`:
+fixed carrier, kernel-pure and unconditionally, AND (in §3) banks the FIRST of the two EXACT rank-1
+identities `dimeq` needs plus the reduction of the second, leaving `dimeq` conditional on ONE crisp
+un-banked relative-rank residual and `nondeg` fully residual (lead-owned). The finiteness numerics
+bottom out at ALREADY-BANKED sphere / sphere-product facts via the carrier-agnostic exact-sequence
+bricks of `SingularMVCohomologyFinite`:
 
 * **`sphereDisk_findimAbs23`** — `H²(S²×D³;ℤ/2)` finite. Route: mod-2 universal coefficients
   (`finiteDimensional_cohomology_of_homology`) ∘ the contractible-`D³`-factor collapse
@@ -22,20 +24,39 @@ sphere-product facts via the carrier-agnostic exact-sequence bricks of `Singular
   `SingularClosedHomologyFinite.finiteDimensional_homology_of_closed` on `SphereProd`, transported
   along the boundary homeomorphism `PinPlusKTSphereProdRelFundWuRoots.sphereDiskInclHomeo`).
 
+## §3 — the `dimeq` numeric: one EXACT rank-1 identity banked, the other reduced
+
+`dimeq` is the Betti equality `dim H²(W;ℤ/2) = dim H³(W,∂W;ℤ/2)`, and its content is the two EXACT
+rank-1 identities `dim H²(W) = 1` and `dim H³(W,∂W) = 1`. §3 banks:
+
+* **`finrank_sphereDisk_cohomology_two`** — the EXACT `dim H²(S²×D³;ℤ/2) = 1` (not merely finite): the
+  perfect Kronecker pairing `kroneckerHEquiv 1 : H²(W) ≃ (H₂(W))^*`, then `Subspace.dual_finrank_eq`, the
+  collapse `sphereDiskCollapse 1 : H₂(S²×D³) ≃ H₂(S²)`, and `topSphereIso 1 : H₂(S²) ≃ ℤ/2`. GENUINE.
+* **`finrank_relativeCohomology_eq_relativeHomology`** — the UNCONDITIONAL reduction (generic in `(X,S,N)`)
+  `dim Hᴺ⁺¹(X,S) = dim H_{N+1}(X,S)` via the relative Kronecker pairing, so the second identity's residual
+  is the pure-homology rank `dim H₃(W,∂W;ℤ/2)`.
+* **`sphereDiskDimeq23_of_relativeCohomology_rank_one`** — assembles the full `dimeq` (the exact field
+  `LefschetzWuDatum.ofRelFund23` expects) CONDITIONAL on the ONE residual `dim H³(W,∂W;ℤ/2) = 1`.
+
 ## The precise remaining residual of the `(2,3)` leg (reported, NOT faked)
 
-The other two numerics — `nondeg` (Lefschetz non-degeneracy of the GENUINE Alexander–Whitney cup
-`SingularRelativeCup.relCupH23` against the fundamental functional) and `dimeq` (the Betti equality
-`dim H²(W) = dim H³(W,∂W) = 1`) — are the perfect-pairing content, and both require the relative
-cross-product / cohomology cup-Fubini for the `(D³, ∂D³)` factor. The ONLY in-tree relative
-cross-product (`SingularRelativeCrossProduct`) is the interval `[I, ∂I]` engine (`prismOp` over
-`Δᵖ × I`); there is NO `[D³, ∂D³]` analogue. The cylinder discharged its own `nondeg` only through an
-entire interval-specific tower (`…CylinderSuspDual.CylinderSuspIntertwineData.ofCapCross`,
-`SingularCapCrossProjection`, `…CrossLocalBridge`), none of which transfers to a 3-disk factor —
-this is the same class of wall the sibling `PinPlusKTSphereProdRelFundWuRoots` docstring names ("the
-`(2,3)` Wu datum needs an ADDITIONAL, separate Lefschetz-nondegeneracy computation … not attempted
-here"). So this module banks the two provable numerics and leaves `{nondeg, dimeq}` as the honest,
-precisely-scoped residual.
+* **`dimeq` residual** — `dim H³(S²×D³, S²×S²;ℤ/2) = 1` (equivalently `dim H₃(W,∂W;ℤ/2) = 1`; genuinely
+  nonzero, `= dim H₀(S²) = 1` by the relative Künneth `S²×(D³,∂D³)`, Lefschetz-dual to the surviving `S²`
+  class). Via the pair-LES `H₃(W)=0 → H₃(W,∂W) →δ H₂(∂W) →i H₂(W)`, this rank equals `dim ker i`, which
+  needs `dim H₂(S²×S²;ℤ/2) = 2` and `i` surjective (rank 1). NEITHER is in-tree: only the INTEGRAL
+  `H₂(S²×S²;ℤ) ≅ ℤ²` (`SphereProdHTwoInt.sphereProdHTwoEquivInt`, free) is banked — there is no in-tree
+  integral→mod-2 homology UCT / coefficient-change bridge (`SingularUniversalCoeff` is the *Kronecker*
+  cohomology-from-homology UCT), and no mod-2 inclusion-map (`i`) rank analysis (the integral first-
+  projection facts `SphereProdHTwoInt.sumInto_prodFst/Snd` exist, but mod-2 versions + the boundary-
+  inclusion↔projection identification are not). This is a separate mod-2-`H₂(S²×S²)` sub-brick.
+* **`nondeg` residual** (lead-owned) — Lefschetz non-degeneracy of the GENUINE Alexander–Whitney cup
+  `SingularRelativeCup.relCupH23` against the fundamental functional. Requires the relative cross-product /
+  cohomology cup-Fubini for the `(D³, ∂D³)` factor. The ONLY in-tree relative cross-product
+  (`SingularRelativeCrossProduct`) is the interval `[I, ∂I]` engine (`prismOp` over `Δᵖ × I`); there is NO
+  `[D³, ∂D³]` analogue. The cylinder discharged its own `nondeg` only through an entire interval-specific
+  tower (`…CylinderSuspDual.CylinderSuspIntertwineData.ofCapCross`, `SingularCapCrossProjection`,
+  `…CrossLocalBridge`), none of which transfers to a 3-disk factor — the same wall the sibling
+  `PinPlusKTSphereProdRelFundWuRoots` docstring names.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new project axiom, no
 `native_decide`, no `maxHeartbeats`.
@@ -145,6 +166,34 @@ theorem finrank_sphereDisk_cohomology_two :
     Module.finrank (ZMod 2) (Cohomology (TopCat.of SphereDisk) 2) = 1 := by
   rw [(kroneckerHEquiv (X := TopCat.of SphereDisk) 1).finrank_eq, Subspace.dual_finrank_eq,
     (sphereDiskCollapse 1).finrank_eq, (topSphereIso 1).finrank_eq, Module.finrank_self]
+
+/-- **Relative Kronecker duality of ranks (any subspace, any successor degree).** By the perfect
+relative Kronecker pairing `relKroneckerHEquiv N : Hᴺ⁺¹(X,S) ≃ (H_{N+1}(X,S))^*` and
+`Subspace.dual_finrank_eq` (`dim V^* = dim V`), `dim Hᴺ⁺¹(X,S;ℤ/2) = dim H_{N+1}(X,S;ℤ/2)`. UNCONDITIONAL
+(no finite-dimensionality needed — both sides `0` when infinite-dimensional). Stated at the equiv's
+native `N+1` index so the rewrite matches syntactically. Applied at `S = sphereDiskBoundarySet`, `N = 2`
+this reduces the `(2,3)` `dimeq` residual `dim H³(W,∂W)` to the pure-homology rank `dim H₃(W,∂W)`. -/
+theorem finrank_relativeCohomology_eq_relativeHomology {X : TopCat} (S : Set X) (N : ℕ) :
+    Module.finrank (ZMod 2) (RelativeCohomology S (N + 1))
+      = Module.finrank (ZMod 2) (RelativeHomology S (N + 1)) := by
+  rw [(relKroneckerHEquiv S N).finrank_eq, Subspace.dual_finrank_eq]
+
+/-- **`dimeq` for the `(2,3)` leg, CONDITIONAL on the ONE un-banked relative-cohomology-rank residual.**
+Given `dim H³(S²×D³,S²×S²;ℤ/2) = 1` — the genuinely-nonzero relative-cohomology rank (Lefschetz-dual to
+the surviving `S²` area class; `= dim H³(D³,∂D³)⊗H⁰(S²) = 1` by the relative Künneth `S²×(D³,∂D³)`) — the
+Lefschetz Betti equality `dim H²(W) = dim H³(W,∂W)` holds, both sides `= 1`. The absolute side
+(`finrank_sphereDisk_cohomology_two`) is banked UNCONDITIONALLY; the relative rank is the sole residual
+(§4 module note). This is exactly the `dimeq` field
+`PoincareLefschetzWuAssembly.LefschetzWuDatum.ofRelFund23` expects, once the residual is discharged.
+The residual is equivalently the relative-homology rank `dim H₃(W,∂W;ℤ/2) = 1` via
+`finrank_relativeCohomology_eq_relativeHomology sphereDiskBoundarySet 2`. -/
+theorem sphereDiskDimeq23_of_relativeCohomology_rank_one
+    (hrel : Module.finrank (ZMod 2)
+      (RelativeCohomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet 3) = 1) :
+    Module.finrank (ZMod 2) (Cohomology (TopCat.of SphereDisk) 2)
+      = Module.finrank (ZMod 2)
+        (RelativeCohomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet 3) := by
+  rw [finrank_sphereDisk_cohomology_two, hrel]
 
 end
 
