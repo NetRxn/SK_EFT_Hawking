@@ -38,17 +38,32 @@ rank-1 identities `dim H²(W) = 1` and `dim H³(W,∂W) = 1`. §3 banks:
 * **`sphereDiskDimeq23_of_relativeCohomology_rank_one`** — assembles the full `dimeq` (the exact field
   `LefschetzWuDatum.ofRelFund23` expects) CONDITIONAL on the ONE residual `dim H³(W,∂W;ℤ/2) = 1`.
 
-## The precise remaining residual of the `(2,3)` leg (reported, NOT faked)
+## §4 — `dimeq` reduced to a SINGLE crisp geometric residual (`homIncl ≠ 0`)
 
-* **`dimeq` residual** — `dim H³(S²×D³, S²×S²;ℤ/2) = 1` (equivalently `dim H₃(W,∂W;ℤ/2) = 1`; genuinely
-  nonzero, `= dim H₀(S²) = 1` by the relative Künneth `S²×(D³,∂D³)`, Lefschetz-dual to the surviving `S²`
-  class). Via the pair-LES `H₃(W)=0 → H₃(W,∂W) →δ H₂(∂W) →i H₂(W)`, this rank equals `dim ker i`, which
-  needs `dim H₂(S²×S²;ℤ/2) = 2` and `i` surjective (rank 1). NEITHER is in-tree: only the INTEGRAL
-  `H₂(S²×S²;ℤ) ≅ ℤ²` (`SphereProdHTwoInt.sphereProdHTwoEquivInt`, free) is banked — there is no in-tree
-  integral→mod-2 homology UCT / coefficient-change bridge (`SingularUniversalCoeff` is the *Kronecker*
-  cohomology-from-homology UCT), and no mod-2 inclusion-map (`i`) rank analysis (the integral first-
-  projection facts `SphereProdHTwoInt.sumInto_prodFst/Snd` exist, but mod-2 versions + the boundary-
-  inclusion↔projection identification are not). This is a separate mod-2-`H₂(S²×S²)` sub-brick.
+§4 discharges the pair-LES rank computation, so `dimeq` now hinges on ONE geometric fact, NOT on the
+former "no in-tree UCT bridge" wall (that wall is GONE — the mod-2 rank UCT is banked in
+`SphereProdHTwoMod2`):
+
+* **`finrank_sphereDiskBoundary_homology_two`** — `dim H₂(∂W;ℤ/2) = 2`, transported from
+  `SphereProdHTwoMod2.finrank_sphereProd_homologyMod2_two` (the genuine mod-2 rank UCT on the banked
+  `redHomology` bridge) along `sphereDiskInclHomeo`.
+* **`finrank_sphereDisk_homology_two`** — `dim H₂(W;ℤ/2) = 1` (collapse + `topSphereIso`).
+* **`finrank_relativeHomology_three_of_homIncl_ne_zero`** — the pair-LES
+  `H₃(W)=0 → H₃(W,∂W) →δ H₂(∂W) →i H₂(W)`: `δ` injective (`H₃(W)=0`), rank–nullity on `i = homIncl`
+  gives `dim H₃(W,∂W;ℤ/2) = 2 − rank i = 1` GIVEN `i ≠ 0`.
+* **`sphereDiskDimeq23_of_homIncl_ne_zero`** — the full `(2,3)` `dimeq`, CONDITIONAL only on
+  `homIncl sphereDiskBoundarySet 2 ≠ 0`.
+
+### The precise remaining residual (reported, NOT faked)
+
+* **`dimeq` residual** — `homIncl sphereDiskBoundarySet 2 ≠ 0`: the boundary inclusion `S²×S² ↪ S²×D³`
+  induces a NONZERO map on `H₂(·;ℤ/2)` (the surviving `S²` area class). The clean route is the banked
+  integral→mod-2 naturality `SingularLocalHomologyRedCompatInt.redHomology_homIncl`
+  (`redHomology X 2 (homIncl_int S 2 h) = homIncl S 2 (redHomology (sub S) 2 h)`) plus the integral
+  first-projection `SphereProdHTwoInt.sumInto_prodFst` and `redHomology`-of-generator nonvanishing
+  (`SingularSphereGenReducesInt`), but it needs the map-identification lemmas `homIncl_int = mapInt`
+  of the subtype inclusion and `sphereDiskCollapse = Homology.map prodFst`, which are NOT in-tree —
+  a separate `homIncl`-realization sub-brick.
 * **`nondeg` residual** (lead-owned) — Lefschetz non-degeneracy of the GENUINE Alexander–Whitney cup
   `SingularRelativeCup.relCupH23` against the fundamental functional. Requires the relative cross-product /
   cohomology cup-Fubini for the `(D³, ∂D³)` factor. The ONLY in-tree relative cross-product
