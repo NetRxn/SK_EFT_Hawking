@@ -1251,6 +1251,158 @@ def check_paper_table_consistency() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 4b: D1 hierarchy table + crossover ↔ canonical evaluator (finding B-01)
+# ═══════════════════════════════════════════════════════════════════════
+
+def _parse_latex_number(cell: str):
+    """Parse a LaTeX numeric table/prose cell into a float, or None.
+
+    Handles the forms that appear in D1's hierarchy table and crossover
+    sentences, so the check FAILS on the stale hand-authored formats
+    (``$-2.7\\%$``, ``$\\sim 26\\%$``, ``$10^{-1}$``) as well as on wrong
+    scientific-notation values:
+
+        ``$-8.53\\times10^{-5}$``  -> -8.53e-5
+        ``$1.41\\times10^{-5}$``   -> 1.41e-5
+        ``$10^{-5}$``              -> 1e-5
+        ``$-2.7\\%$`` / ``$\\sim 26\\%$``  -> -0.027 / 0.26
+        bare float / ``1.59\\times10^{-3}`` (no ``$``)
+    """
+    import re as _re
+    s = cell.strip()
+    s = s.replace("\\textbf{", "").rstrip("}")
+    s = s.replace("$", "").replace("\\sim", "").replace("\\approx", "").strip()
+    # mantissa × 10^{exp}
+    m = _re.search(r"(-?\d+\.?\d*)\s*\\times\s*10\^\{?(-?\d+)\}?", s)
+    if m:
+        return float(m.group(1)) * 10.0 ** int(m.group(2))
+    # pure power ±10^{exp}
+    m = _re.fullmatch(r"(-?)10\^\{?(-?\d+)\}?", s)
+    if m:
+        return (-1.0 if m.group(1) == "-" else 1.0) * 10.0 ** int(m.group(2))
+    # percentage
+    m = _re.match(r"(-?\d+\.?\d*)\s*\\%", s)
+    if m:
+        return float(m.group(1)) / 100.0
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+@register_check("d1_hierarchy_table",
+                "D1 BEC hierarchy table + crossover match the canonical evaluator")
+def check_d1_hierarchy_table() -> CheckResult:
+    """Parse D1's rendered hierarchy table (three BEC rows) and the
+    spectral-floor crossover sentences from ``papers/D1/paper_draft.tex``
+    and compare every numeric against the SINGLE canonical evaluator
+    ``scripts/gen_d1_hierarchy_table.compute_bec_hierarchy()`` within a
+    declared 0.5 % relative tolerance (the table cells carry 3 significant
+    figures, so 3-sig-fig rounding is < 0.5 %).
+
+    Closes finding B-01. The pre-existing ``paper_provenance`` /
+    ``paper_table`` checks parse no D1 numerics, so the stale
+    hand-authored magnitudes (δ_disp −2.7/−1.2/−0.5 %, δ_diss
+    26 %/10⁻¹/10⁻⁵, crossover ≈ 2.0 T_H) were never caught. This check
+    FAILS on those (wrong value *and* wrong format) and PASSES only once
+    the rows are regenerated from the pipeline.
+    """
+    import re as _re
+    import math as _math
+
+    paper_path = PAPERS_DIR / "D1" / "paper_draft.tex"
+    if not paper_path.exists():
+        return CheckResult(passed=False, error=f"Paper not found: {paper_path}")
+
+    try:
+        from scripts.gen_d1_hierarchy_table import compute_bec_hierarchy
+    except Exception as e:  # pragma: no cover - import guard
+        return CheckResult(passed=False, error=f"cannot import evaluator: {e}")
+
+    hier = compute_bec_hierarchy()
+    text = paper_path.read_text(encoding="utf-8")
+    TOL = 0.005  # 0.5 % relative
+
+    details: List[Detail] = []
+    all_pass = True
+
+    def _rel_ok(got, want) -> tuple:
+        if got is None:
+            return False, "unparseable / wrong format"
+        if want == 0:
+            return abs(got) <= TOL, f"paper={got:.4g}, canon=0"
+        rel = abs(got - want) / abs(want)
+        return rel <= TOL, f"paper={got:.4g}, canon={want:.4g}, rel={rel:.2%}"
+
+    # --- (1) The three BEC table rows -----------------------------------
+    tbl = _re.search(
+        r"\\label\{tab:hierarchy\}.*?\\begin\{tabular\}(.*?)\\end\{tabular\}",
+        text, _re.DOTALL)
+    if not tbl:
+        return CheckResult(passed=False,
+                           error="tab:hierarchy tabular block not found in D1 draft")
+    body = tbl.group(1)
+    rows = [r for r in body.split(r"\\") if "&" in r]
+
+    for plat in ("Steinhauer", "Heidelberg", "Trento"):
+        canon = hier[plat]
+        row = next((r for r in rows
+                    if _re.search(r"^[^&]*" + plat, r.strip())), None)
+        if row is None:
+            details.append(Detail(f"{plat}.row", False, "table row not found"))
+            all_pass = False
+            continue
+        cells = [c.strip() for c in row.split("&")]
+        if len(cells) < 5:
+            details.append(Detail(f"{plat}.row", False,
+                                  f"expected 5 cells, got {len(cells)}"))
+            all_pass = False
+            continue
+        # cells: [label, T_H, delta_disp, delta_diss, dominance]
+        for idx, key in ((2, "delta_disp"), (3, "delta_diss")):
+            ok, msg = _rel_ok(_parse_latex_number(cells[idx]), canon[key])
+            details.append(Detail(f"{plat}.{key}", ok, msg))
+            all_pass = all_pass and ok
+        dom_cell = cells[4].replace("\\textbf{", "").replace("}", "").strip()
+        dom_ok = dom_cell.startswith(canon["dominance"])
+        details.append(Detail(f"{plat}.dominance", dom_ok,
+                              f"paper={dom_cell!r}, canon={canon['dominance']!r}"))
+        all_pass = all_pass and dom_ok
+
+    # --- (2) Numeric crossover sentences ω_× ≈ T_H ln(2/X) ≈ Y T_H -------
+    # Only the *numeric* sentences match (the symbolic abstract/display
+    # forms use `=`, `\;\approx\;` or `\cdot` and are excluded by shape).
+    cross_re = _re.compile(
+        r"\\omega_\\times\s*\\approx\s*T_H\s*\\ln\(2/([^)]+)\)\s*"
+        r"\\approx\s*([\d.]+)\\,\s*T_H", _re.DOTALL)
+    matches = list(cross_re.finditer(text))
+    if not matches:
+        details.append(Detail("crossover.present", False,
+                              "no numeric ω_× ≈ T_H ln(2/X) ≈ Y T_H sentence found"))
+        all_pass = False
+    diss_values = [h["delta_diss"] for h in hier.values()]
+    for i, m in enumerate(matches):
+        X = _parse_latex_number(m.group(1))
+        Y = float(m.group(2))
+        # (a) the ln-argument X must be one of the canonical δ_diss values
+        if X is None:
+            details.append(Detail(f"crossover[{i}].arg", False,
+                                  f"unparseable ln argument {m.group(1)!r}"))
+            all_pass = False
+            continue
+        best = min((abs(X - d) / abs(d)) for d in diss_values)
+        arg_ok = best <= TOL
+        details.append(Detail(f"crossover[{i}].delta_diss_match", arg_ok,
+                              f"ln-arg={X:.4g}, nearest canon δ_diss rel={best:.2%}"))
+        # (b) the quoted coefficient Y must equal ln(2/X)
+        y_ok, y_msg = _rel_ok(Y, _math.log(2.0 / X))
+        details.append(Detail(f"crossover[{i}].coefficient", y_ok, y_msg))
+        all_pass = all_pass and arg_ok and y_ok
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CHECK 5: Theorem registry
 # ═══════════════════════════════════════════════════════════════════════
 
