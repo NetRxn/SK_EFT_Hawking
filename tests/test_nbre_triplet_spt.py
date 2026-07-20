@@ -16,6 +16,7 @@ import os
 import pytest
 
 from src.core.citations import CITATION_REGISTRY
+from src.core.workspace import find_workspace
 
 
 COLANGELO_BIBKEY = "Colangelo2025NbReTripletSpinValve"
@@ -36,9 +37,7 @@ def test_colangelo_bibkey_present():
 
 def test_colangelo_primary_source_cache():
     bib = CITATION_REGISTRY[COLANGELO_BIBKEY]
-    workspace_root = os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    )
+    workspace_root = find_workspace()
     path = os.path.join(workspace_root, bib["primary_source_path"])
     assert os.path.exists(path), f"Primary source missing at {path}."
     assert os.path.getsize(path) > 100_000

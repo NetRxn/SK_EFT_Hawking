@@ -3830,8 +3830,12 @@ def check_bundle_consistency() -> CheckResult:
     Phase 6i Wave 7.3 deliverable. Builds on the cluster-bundle index
     from Wave 7.1 + the per-bundle anchor list from Wave 7.2.
     """
-    PROJECT_ROOT_LOCAL = Path(__file__).resolve().parent.parent.parent
-    INDEX_PATH = PROJECT_ROOT_LOCAL / "SK_EFT_Hawking" / "papers" / "cluster_bundle_index.json"
+    # Layout-independent (works from the main checkout AND a worktree slot):
+    # PAPERS_DIR = PROJECT_ROOT / "papers", where PROJECT_ROOT is this
+    # checkout's repo root. The old `__file__.parent×3 / "SK_EFT_Hawking" /
+    # "papers"` walk resolved to `.claude/worktrees/SK_EFT_Hawking/papers`
+    # from a worktree. Per CLAUDE.md: never hardcode parent-walks.
+    INDEX_PATH = PAPERS_DIR / "cluster_bundle_index.json"
 
     details: List[Detail] = []
     if not INDEX_PATH.exists():
@@ -4044,8 +4048,13 @@ def check_bibitem_title_primary_source() -> CheckResult:
     """
     import re
     from src.core.citations import CITATION_REGISTRY
+    from src.core.workspace import find_workspace
 
-    PROJECT_ROOT_LOCAL = Path(__file__).resolve().parent.parent.parent
+    # ps_path entries are workspace-relative (`Lit-Search/...`), so resolve
+    # against the workspace root. Layout-independent (main checkout AND a
+    # worktree slot); the old `__file__.parent×3` walk resolved to
+    # `.claude/worktrees` from a worktree. Per CLAUDE.md: no parent-walks.
+    PROJECT_ROOT_LOCAL = find_workspace()
 
     try:
         from pdfminer.high_level import extract_text  # type: ignore

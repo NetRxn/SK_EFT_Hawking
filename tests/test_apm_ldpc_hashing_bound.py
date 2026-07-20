@@ -20,6 +20,7 @@ import pytest
 from fractions import Fraction
 
 from src.core.citations import CITATION_REGISTRY
+from src.core.workspace import find_workspace
 
 
 KK_BIBKEY = "KomotoKasai2025APMLDPCHashingBound"
@@ -38,9 +39,7 @@ def test_komoto_kasai_bibkey_present():
 
 def test_komoto_kasai_primary_source_cache():
     bib = CITATION_REGISTRY[KK_BIBKEY]
-    workspace_root = os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    )
+    workspace_root = find_workspace()
     path = os.path.join(workspace_root, bib["primary_source_path"])
     assert os.path.exists(path), f"Primary source missing at {path}."
     assert os.path.getsize(path) > 100_000

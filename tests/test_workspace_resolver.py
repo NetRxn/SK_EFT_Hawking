@@ -66,3 +66,46 @@ def test_git_dir_excludes_candidate(tmp_path: Path):
     (outer / "SK_EFT_Hawking").mkdir(parents=True)
     (outer / ".mcp.json").write_text("{}")
     assert find_workspace(start=inner / "SK_EFT_Hawking") == outer
+
+
+def test_worktree_layout_resolves_to_outer_workspace(tmp_path: Path):
+    """Regression (B-01 worktree-path bug): resolution from inside a git
+    worktree — nested at ``SK_EFT_Hawking/.claude/worktrees/wtN/`` — must
+    reach the OUTER workspace, not the intermediate ``.claude/worktrees``.
+
+    A naive ``__file__.parent × 3`` walk from ``wtN/tests`` lands on
+    ``.claude/worktrees`` (which has no ``Lit-Search/``); ``find_workspace``
+    must instead climb past the nesting to the real workspace root.
+    """
+    ws = tmp_path / "ws"
+    repo = ws / "SK_EFT_Hawking"
+    worktree = repo / ".claude" / "worktrees" / "wt3"
+    (worktree / "src" / "core").mkdir(parents=True)
+    (worktree / "tests").mkdir(parents=True)
+    # Realistic git markers: the main repo carries a .git DIR; a worktree
+    # carries a .git FILE. Neither must be mistaken for the workspace.
+    (repo / ".git").mkdir()
+    (worktree / ".git").write_text("gitdir: ../../..\n")
+    # Only the true workspace carries the shared .mcp.json + repo child.
+    (ws / ".mcp.json").write_text("{}")
+    # Resolution from both a src module and a test file inside the worktree.
+    assert find_workspace(start=worktree / "src" / "core") == ws
+    assert find_workspace(start=worktree / "tests" / "test_x.py") == ws
+    assert lit_search_dir(start=worktree / "tests") == ws / "Lit-Search"
+
+
+def test_main_and_worktree_layouts_agree(tmp_path: Path):
+    """The resolver returns the SAME workspace whether called from the main
+    checkout or a worktree nested under it — behaviour is layout-independent
+    (the acceptance requirement for the B-01 test-hygiene fix)."""
+    ws = tmp_path / "ws"
+    repo = ws / "SK_EFT_Hawking"
+    (repo / "src" / "core").mkdir(parents=True)
+    (repo / ".git").mkdir()
+    worktree = repo / ".claude" / "worktrees" / "wt3"
+    (worktree / "src" / "core").mkdir(parents=True)
+    (worktree / ".git").write_text("gitdir: ../../..\n")
+    (ws / ".mcp.json").write_text("{}")
+    from_main = find_workspace(start=repo / "src" / "core")
+    from_worktree = find_workspace(start=worktree / "src" / "core")
+    assert from_main == from_worktree == ws
