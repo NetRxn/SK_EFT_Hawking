@@ -34,6 +34,7 @@ no `sorry`, no new project axiom, no `native_decide`, no `maxHeartbeats`.
 -/
 import Mathlib
 import SKEFTHawking.KTCompletenessMVCover
+import SKEFTHawking.KTCompletenessMVHtpy
 
 open scoped Manifold
 open SKEFTHawking.BordismTheory
@@ -49,6 +50,7 @@ open SKEFTHawking.SingularHomologyFiniteTransfer
 open SKEFTHawking.PinPlusTraceCapstoneInhabit
 open SKEFTHawking.PinPlusTraceCapstoneMVPieces
 open SKEFTHawking.KTCompletenessMVCover
+open SKEFTHawking.KTCompletenessMVHtpy
 
 namespace SKEFTHawking.KTCompletenessCollarSplit
 
@@ -905,6 +907,53 @@ theorem finiteDimensional_homology_coverB
       ⟨y.val, range_fromHandle_subset_coverB s t S hS φ hφ hφinj cd hseam d y.2⟩ y.2).symm
   · ext y
     rfl
+
+/-! ## §J. The capstone — the four cohomology finite-dimensionality atoms from the split datum. -/
+
+/-- **`findimAbs14` from the split datum + `hYAB`.** `H¹(W)` finite-dimensional for arbitrary
+attachment data, with the piece finiteness `hA`/`hB` now DISCHARGED (§G/§I) — the only remaining
+input is the overlap finiteness `hYAB` (the `WeldedCollarModel cd.A` finiteness) and the collar-split
+datum `csd`. -/
+theorem findimAbs14_of_collarSplit [T2Space t.M]
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (hYAB : ∀ n, FiniteDimensional (ZMod 2) (Homology (TopCat.of (WeldedCollarModel cd.A)) n)) :
+    FiniteDimensional (ZMod 2)
+      (Cohomology (TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W) 1) :=
+  findimAbs14_of_pieceFiniteness s t S hS φ hφ hφinj cd hseam d
+    (finiteDimensional_homology_coverA s t S hS φ hφ hφinj cd hseam d csd)
+    (finiteDimensional_homology_coverB s t S hS φ hφ hφinj cd hseam d csd) hYAB
+
+/-- **`findimAbs23` from the split datum + `hYAB`** — `H²(W)` finite-dimensional. -/
+theorem findimAbs23_of_collarSplit [T2Space t.M]
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (hYAB : ∀ n, FiniteDimensional (ZMod 2) (Homology (TopCat.of (WeldedCollarModel cd.A)) n)) :
+    FiniteDimensional (ZMod 2)
+      (Cohomology (TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W) 2) :=
+  findimAbs23_of_pieceFiniteness s t S hS φ hφ hφinj cd hseam d
+    (finiteDimensional_homology_coverA s t S hS φ hφ hφinj cd hseam d csd)
+    (finiteDimensional_homology_coverB s t S hS φ hφ hφinj cd hseam d csd) hYAB
+
+/-- **`findimRel14` from the split datum + `hYAB`** — `H⁴(W, ∂W)` finite-dimensional. -/
+theorem findimRel14_of_collarSplit [T2Space t.M]
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (hYAB : ∀ n, FiniteDimensional (ZMod 2) (Homology (TopCat.of (WeldedCollarModel cd.A)) n)) :
+    FiniteDimensional (ZMod 2)
+      (RelativeCohomology (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) 4) :=
+  findimRel14_of_pieceFiniteness s t S hS φ hφ hφinj cd hseam d
+    (finiteDimensional_homology_coverA s t S hS φ hφ hφinj cd hseam d csd)
+    (finiteDimensional_homology_coverB s t S hS φ hφ hφinj cd hseam d csd) hYAB
+
+/-- **`findimRel23` from the split datum + `hYAB`** — `H³(W, ∂W)` finite-dimensional. -/
+theorem findimRel23_of_collarSplit [T2Space t.M]
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (hYAB : ∀ n, FiniteDimensional (ZMod 2) (Homology (TopCat.of (WeldedCollarModel cd.A)) n)) :
+    FiniteDimensional (ZMod 2)
+      (RelativeCohomology (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) 3) :=
+  findimRel23_of_pieceFiniteness s t S hS φ hφ hφinj cd hseam d
+    (finiteDimensional_homology_coverA s t S hS φ hφ hφinj cd hseam d csd)
+    (finiteDimensional_homology_coverB s t S hS φ hφ hφinj cd hseam d csd) hYAB
 
 end
 
