@@ -309,6 +309,74 @@ theorem exists_collar {y : ↥puncturedTorus} (h : (y : TorusFour) ∉ interiorS
     ∃ c ∈ fixedFinset, (y : TorusFour) ∈ collarSet c :=
   (punctured_covered y.2).resolve_left h
 
+/-- The chosen collar fixed point for a non-interior point. -/
+noncomputable def chosenC {y : ↥puncturedTorus} (h : (y : TorusFour) ∉ interiorSet) : TorusFour :=
+  (exists_collar h).choose
+
+theorem chosenC_mem {y : ↥puncturedTorus} (h : (y : TorusFour) ∉ interiorSet) :
+    chosenC h ∈ fixedSet :=
+  (mem_fixedFinset _).mp (exists_collar h).choose_spec.1
+
+theorem mem_collarSet_chosenC {y : ↥puncturedTorus} (h : (y : TorusFour) ∉ interiorSet) :
+    (y : TorusFour) ∈ collarSet (chosenC h) :=
+  (exists_collar h).choose_spec.2
+
+/-- The collar preimage of `y` as a shell point (via the collar homeomorphism's inverse). -/
+noncomputable def chosenShell {y : ↥puncturedTorus} (h : (y : TorusFour) ∉ interiorSet) :
+    ↥shellSetE4 :=
+  (collarHomeo (chosenC h)).symm ⟨(y : TorusFour), mem_collarSet_chosenC h⟩
+
+/-- The collar chart selected for a non-interior point `y`, with base direction the shell direction of
+`y`'s collar preimage (so `y` lands in the base chart's source). -/
+noncomputable def bdyChartAt {y : ↥puncturedTorus} (h : (y : TorusFour) ∉ interiorSet) :
+    OpenPartialHomeomorph (↥puncturedTorus) Model :=
+  boundaryChart (chosenC h) (shellDir (shellIncl (chosenShell h))) (chosenC_mem h)
+
+/-- An interior point lies in the source of its interior chart. -/
+theorem mem_interiorChartR_source (x : ↥interiorOpens) :
+    (⟨(x : TorusFour), interiorSet_subset_puncturedTorus x.2⟩ : ↥puncturedTorus)
+      ∈ (interiorChartR x).source := by
+  rw [interiorChartR, OpenPartialHomeomorph.lift_openEmbedding_source]
+  refine ⟨x, ?_, rfl⟩
+  rw [OpenPartialHomeomorph.trans_source]
+  exact ⟨mem_chart_source PModel x, Set.mem_univ _⟩
+
+/-- A non-interior (collar) point lies in the source of its selected collar chart — its shell direction
+is the base point of the sphere chart, which contains its own base. -/
+theorem mem_bdyChartAt_source {y : ↥puncturedTorus} (h : (y : TorusFour) ∉ interiorSet) :
+    y ∈ (bdyChartAt h).source := by
+  simp only [bdyChartAt, boundaryChart, OpenPartialHomeomorph.lift_openEmbedding_source]
+  refine ⟨⟨(y : TorusFour), mem_collarSet_chosenC h⟩, ?_, rfl⟩
+  simp only [innerCollarChart, OpenPartialHomeomorph.trans_source]
+  refine ⟨Set.mem_univ _, Set.mem_univ _, ?_⟩
+  rw [Set.mem_preimage]
+  exact mem_chart_source _ _
+
+open Classical in
+/-- **`T⁴° = ↥puncturedTorus` is a charted space on the manifold-with-boundary model
+`(𝓡 3).prod (𝓡∂ 1)`** — the K4′′ certificate. The atlas is the round-ball interior charts
+(`interiorChartR`, ambient product charts reshaped into the half-space interior) together with the 16
+boundary collar chart families (`boundaryChart`). `chartAt` dispatches on membership in the round-ball
+interior region; every point is covered (`punctured_covered`). -/
+noncomputable instance instChartedSpacePuncturedTorus :
+    ChartedSpace Model (↥puncturedTorus) where
+  atlas := Set.range interiorChartR ∪
+    ⋃ (c : TorusFour) (u₀ : NSphere 3) (_ : c ∈ fixedSet), {boundaryChart c u₀ ‹_›}
+  chartAt y :=
+    if h : (y : TorusFour) ∈ interiorSet then interiorChartR ⟨(y : TorusFour), h⟩
+    else bdyChartAt h
+  mem_chart_source y := by
+    by_cases h : (y : TorusFour) ∈ interiorSet
+    · rw [dif_pos h]; exact mem_interiorChartR_source ⟨(y : TorusFour), h⟩
+    · rw [dif_neg h]; exact mem_bdyChartAt_source h
+  chart_mem_atlas y := by
+    by_cases h : (y : TorusFour) ∈ interiorSet
+    · rw [dif_pos h]; exact Or.inl (Set.mem_range_self _)
+    · rw [dif_neg h]
+      refine Or.inr ?_
+      simp only [Set.mem_iUnion, Set.mem_singleton_iff]
+      exact ⟨chosenC h, shellDir (shellIncl (chosenShell h)), chosenC_mem h, rfl⟩
+
 end
 
 end SKEFTHawking.KummerBoundaryChart
