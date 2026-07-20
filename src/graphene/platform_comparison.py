@@ -13,12 +13,11 @@ from dataclasses import dataclass
 from src.core.constants import (
     HBAR, K_B, EXPERIMENTS, POLARITON_PLATFORMS, GRAPHENE_PLATFORMS,
 )
-from src.core.formulas import hawking_temperature
+from src.core.formulas import hawking_temperature, dispersive_correction
 from src.graphene.hawking_predictions import graphene_hawking_prediction
 from src.graphene.wkb_spectrum import detection_protocol_summary
-from src.graphene.transport_counting import (
-    classify_first_order_conformal_charged,
-    wiedemann_franz_lorenz_ratio,
+from src.wkb.spectrum import (
+    steinhauer_platform, heidelberg_platform, trento_platform,
 )
 
 
@@ -50,16 +49,25 @@ def bec_platform_summaries() -> list:
     )
 
     summaries = []
+    # (transonic-background factory, canonical WKB platform factory, label, realized)
     factories = {
-        'Steinhauer_Rb87': (steinhauer_Rb87, 'Steinhauer ⁸⁷Rb (Technion)', True),
-        'Heidelberg_K39': (heidelberg_K39, 'Heidelberg ³⁹K (projected)', False),
-        'Trento_Na23': (trento_spin_sonic, 'Trento ²³Na spin-sonic (projected)', False),
+        'Steinhauer_Rb87': (steinhauer_Rb87, steinhauer_platform, 'Steinhauer ⁸⁷Rb (Technion)', True),
+        'Heidelberg_K39': (heidelberg_K39, heidelberg_platform, 'Heidelberg ³⁹K (projected)', False),
+        'Trento_Na23': (trento_spin_sonic, trento_platform, 'Trento ²³Na spin-sonic (projected)', False),
     }
 
-    for name, (factory, desc, realized) in factories.items():
+    for name, (factory, wkb_factory, desc, realized) in factories.items():
         params = factory()
         bg = solve_transonic_background(params)
         T_H = hawking_temperature(bg.surface_gravity)
+        # Canonical corrections — Invariant #1: formulas.py / the WKB platform
+        # are the only home. δ_disp = -(π/6)D² via formulas.dispersive_correction;
+        # δ_diss = the horizon-calibrated, frequency-INDEPENDENT first-order
+        # dissipative correction Γ_H/κ = gamma_dim (B-05 semantics), from the same
+        # constants→solver→Beliaev chain as scripts.gen_d1_hierarchy_table.
+        # (Replaces the hard-coded δ_diss = 0.01; canonical values span
+        # 1.41e-5 (Trento) … 1.59e-3 (Heidelberg).)
+        plat = wkb_factory()
 
         summaries.append(PlatformSummary(
             name=name,
@@ -69,8 +77,8 @@ def bec_platform_summaries() -> list:
             T_ambient_K=1e-8,  # BEC: ~10 nK
             T_ratio=T_H / 1e-8,
             D_adiabaticity=bg.adiabaticity,
-            delta_disp=-(np.pi / 6) * bg.adiabaticity**2,
-            delta_diss=0.01,  # order of magnitude for Beliaev
+            delta_disp=dispersive_correction(bg.adiabaticity),
+            delta_diss=plat.gamma_dim,
             dispersion_type='superluminal',
             dimensionality='1+1D',
             horizon_realized=realized,
@@ -95,7 +103,7 @@ def polariton_platform_summaries() -> list:
             T_ambient_K=4.0,  # cryostat
             T_ratio=T_H / 4.0,
             D_adiabaticity=D,
-            delta_disp=-(np.pi / 6) * D**2,
+            delta_disp=dispersive_correction(D),
             delta_diss=plat['Gamma_pol'] / plat['kappa'],
             dispersion_type='superluminal',
             dimensionality='1+1D',
