@@ -103,14 +103,24 @@ class — already demonstrated by `memory_eq_softCharge`. The algebra layer has 
 
 ### Sub-waves
 
-- **C0 — literature-anchoring scout** *(dispatched 2026-07-20; research-scout, read-only)*.
-  Pin the correct **horizon** charge algebra for the analog case before any model is chosen:
-  Mason–Ruzziconi–Yelleshpur Srikant (2312.10138) Carrollian amplitudes; Have–Nguyen–Prohazka–Salzer
-  (2504.10577) Carrollian Ward ↔ soft; Penna (1508.06577) membrane-paradigm horizon BMS;
-  Datta–Fischer (2011.05837) BEC memory. Deliverable: a cited verdict on (a) BMS₃ vs Carrollian-line
-  for the 1+1/2+1 acoustic horizon, (b) the explicit supertranslation charge expression to encode,
-  (c) which Ward-identity form is the honest "conservation ⟹ soft theorem" statement. Filed under
-  `Lit-Search/Phase-6o-prime/`; lead vets before C4.
+- **C0 — literature-anchoring scout** — ✅ **RETURNED + LEAD-VETTED + FILED 2026-07-20**:
+  `Lit-Search/Phase-6o-prime/C0_horizon_BMS_charge_algebra_verdict_20260720.md` (MANDATORY read
+  before C3/C4/C5). **Verdict:** (a) primary model = the 2+1 acoustic horizon with the
+  Donnay-et-al./Penna **horizon** algebra `Vect(S¹) ⋉ C∞(S¹)_ab` — CENTERLESS at vector-field
+  level (central extensions are charge-algebra properties to be DERIVED, never assumed;
+  Barnich–Compère); the 1+1 Carrollian-line is the degenerate check. (b) The charge to encode =
+  **Penna eq 3.3/3.13: `Q_f = ∫ f · κ/8π`** over the horizon cut — κ = the sonic-horizon surface
+  gravity, ALREADY formalized in this project; conservation via the Damour–Navier–Stokes + energy
+  equations. (c) The Ward identity to encode = Agrawal–Nguyen eqs 10/11/18 (charge difference
+  across the correlator = zero-frequency mode insertion; spontaneously-broken-symmetry framing);
+  spot-check those equation numbers at PDF fidelity before Lean encoding (HTML-extraction grade).
+  The memory corner cites Strominger–Zhiboedov 1411.5745. **Dissipation subtlety DISSOLVES:
+  Penna's membrane conservation holds WITH real viscosities — dissipation relocates charge into
+  the membrane energy density ("energy conserved at every angle", §4.2).** Negative result
+  confirmed: NO published acoustic-horizon BMS theorem exists — the build is a new composition.
+  **⚠ Citation correction propagated:** arXiv:2504.10577 = Agrawal–Nguyen (NOT
+  Have–Nguyen–Prohazka–Salzer, whose paper is 2402.05190) — fixed in Carrollian.lean, the
+  registry entry, and here.
 - **C1 — `CarrollianStructure` + the acoustic-horizon instance** *(~1 block)*. Structure class:
   carrier + degenerate symmetric bilinear form of corank 1 + nowhere-zero null field spanning the
   kernel; concrete instance on an explicit ℝⁿ model of the sonic line of a transonic background.

@@ -2665,10 +2665,17 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
         'dependent_theorems': [],
         'module': 'SoftTheorems/Carrollian.lean (the "Documented GAP" section states the three required '
             'structures precisely; the proven memory/soft content lives in the same module)',
-        'source': 'Mason-Ruzziconi-Yelleshpur Srikant, JHEP 05 (2024) 012, arXiv:2312.10138 (Carrollian '
-            'amplitudes); Have-Nguyen-Prohazka-Salzer arXiv:2504.10577 (Carrollian Ward <-> soft); Penna '
-            'arXiv:1508.06577 (BMS on horizons / membrane paradigm); Datta-Fischer arXiv:2011.05837 (BEC '
-            'acoustic memory); On-Shell Methods DR §4.3, §8.2.',
+        'source': 'Penna arXiv:1508.06577 (membrane-paradigm horizon charges — THE transcription target '
+            'per the C0 verdict: Q_f = ∫ f·κ/8π, conservation via Damour-Navier-Stokes); Agrawal-Nguyen '
+            'arXiv:2504.10577 (the supertranslation Ward identity <-> soft-mode insertion; attribution '
+            'corrected 2026-07-20 — formerly miscited as Have-Nguyen-Prohazka-Salzer, = arXiv:2402.05190); '
+            'Donnay-Giribet-Gonzalez-Pino arXiv:1511.08687 (horizon Vect(S¹)⋉C∞(S¹)_ab algebra); '
+            'Donnay-Marteau arXiv:1903.09654 (horizon = Carrollian geometry); Barnich-Compere '
+            'gr-qc/0610130 (BMS₃; central extension lives in the CHARGE algebra only); '
+            'Strominger-Zhiboedov arXiv:1411.5745 (the memory corner); Mason-Ruzziconi-Yelleshpur Srikant '
+            'arXiv:2312.10138 (Carrollian amplitudes); Datta-Fischer arXiv:2011.05837 (BEC acoustic '
+            'memory); C0 verdict: Lit-Search/Phase-6o-prime/C0_horizon_BMS_charge_algebra_verdict_20260720.md; '
+            'On-Shell Methods DR §4.3, §8.2.',
         'risk': 'Low physically (the Carrollian/BMS soft-theorem correspondence is established for '
             'gravitational systems; the analog transcription is standard-shaped). Formalization-novel: '
             'no paper proves a BMS theorem for an acoustic analog (On-Shell DR §4.3), so the bounded '

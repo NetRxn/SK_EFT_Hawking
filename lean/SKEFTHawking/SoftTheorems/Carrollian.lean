@@ -55,7 +55,10 @@ as a `True` placeholder.
 ## References
 
 - Mason-Ruzziconi-Yelleshpur Srikant, JHEP 05 (2024) 012, arXiv:2312.10138.
-- Have-Nguyen-Prohazka-Salzer, arXiv:2504.10577 (Carrollian Ward ↔ soft).
+- Agrawal-Nguyen, arXiv:2504.10577 (soft theorems ↔ spontaneous symmetry breaking; the
+  supertranslation Ward identity ↔ soft-mode-insertion equivalence). [Attribution corrected
+  2026-07-20 per the C0 scout — formerly misattributed to Have-Nguyen-Prohazka-Salzer,
+  whose paper is arXiv:2402.05190, massive carrollian fields at timelike infinity.]
 - Datta-Fischer, arXiv:2011.05837 (BEC acoustic gravitational memory).
 - Penna, "BMS invariance and the membrane paradigm," arXiv:1508.06577.
 - On-Shell Methods DR §3, §4, §4.3, §8.2.
