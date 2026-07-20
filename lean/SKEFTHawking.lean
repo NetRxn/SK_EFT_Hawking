@@ -4228,6 +4228,8 @@ import SKEFTHawking.TopologicalBand.PrincipalBranch
 import SKEFTHawking.TopologicalBand.FiniteTorus
 import SKEFTHawking.TopologicalBand.FHSLatticeGauge
 import SKEFTHawking.TopologicalBand.FHSExamples
+import SKEFTHawking.TopologicalBand.BlochFrame
+import SKEFTHawking.TopologicalBand.BlochFHS
 -- Phase 6CE (D11 materials series) — effective-medium homogenization (Maxwell–Garnett)
 import SKEFTHawking.MaxwellGarnett
 import SKEFTHawking.EffectiveMediumBounds
