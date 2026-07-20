@@ -2,7 +2,7 @@ import Mathlib
 import SKEFTHawking.SoftTheorems.Carrollian
 
 /-!
-# Phase 6o Wave 1a.6: Universal noise-floor n_noise / Hawking-flux ratio
+# Phase 6o Wave 1a.6: universal noise-floor n_noise = δ_k/2 (FDR-fixed)
 
 ## Goal
 
@@ -10,163 +10,196 @@ Encode the Phase 6o Wave 1a.6 **concrete falsifiable phenomenology**
 deliverable per On-Shell Methods DR §7.2:
 
 > "The boostless soft theorem fixes the soft factor's normalization by
-> the asymptotic charges of supertranslation-like symmetries. If the
-> program's δ_k is identified with the residual horizon 'supertranslation
-> hair' charge density, soft theorems give a ratio n_noise / (Hawking
-> flux) that is universal (not Wilson-coefficient dependent). **This is
-> the most concrete near-term Phase 7 deliverable.**"
+> the asymptotic charges of supertranslation-like symmetries. … soft
+> theorems give a ratio n_noise / (Hawking flux) that is universal (not
+> Wilson-coefficient dependent). This is the most concrete near-term
+> Phase 7 deliverable."
 
-## Substantive content
+## Substantive content (R-01 remediation, 2026-07-20)
 
-The Wave 1a.6 substantive deliverables:
+The load-bearing physics is the FDR/KMS noise floor
 
-1. `UniversalNoiseFloorRatio` per-substrate function returning the
-   universal soft-factor-fixed n_noise / Hawking-flux ratio.
-2. **Substantive structural property**: the ratio is Wilson-coefficient-
-   independent (universal kinematic identity, not a free-parameter-
-   dependent quantity).
-3. Cross-bridge to E1 polariton bundle Hawking-spectrum content.
+    n_noise = δ_k / 2   (at T_env = 0)
 
-## Module structure
+(On-Shell DR §7 pt 2; matches in-tree `WKBConnection.noise_floor`,
+`formulas.fdr_noise_floor`, and `noise_floor_eq_delta_diss`: n_noise =
+δ_k/2 = δ_diss = Γ_H/κ). This module encodes that as a *computed* function
+of δ_k, with three genuine, falsifiable facts:
 
-- §1: `UniversalNoiseFloorRatio` per-substrate function.
-- §2: Substantive Wilson-coefficient-independence property.
-- §3: Cross-bridge to E1 polariton + Carusotto / Steinhauer falsification.
-- §4: Wave 1a.6 closure summary.
+1. `noiseFloor δ_k = δ_k/2` with `noiseFloor_pos` (a non-zero floor when
+   δ_k > 0) and a `norm_num`-backed numeric instance `noiseFloor_numeric`.
+2. `UniversalNoiseFloorRatio δ_k = 1/2` — the soft-theorem-fixed n_noise/δ_k
+   ratio, *computed* (not hard-coded) as `noiseFloor δ_k / δ_k`, equal to
+   1/2 for every δ_k ≠ 0 (this is the universal, Wilson-coefficient-free
+   normalization of §7.2).
+3. **Wilson-coefficient independence** as a genuine invariance: on the
+   config space `SKConfig` (a δ_k *plus* an arbitrary family of Wilson
+   coefficients), the FDR floor is `IsWilsonCoefficientIndependent` — it
+   depends only on δ_k, invariant under any reassignment of the Wilson
+   coefficients. The predicate is non-trivial: a Wilson-dependent
+   observable (`fun c => c.wilson 0`) provably fails it
+   (`wilson_dependent_observable_not_independent`).
 
-## Scope lock
+"Universal" here means precisely: substrate-independent *and*
+Wilson-coefficient-independent (fixed by δ_k alone) — NOT that
+n_noise / n_Hawking is a single universal number (it is not; n_Hawking =
+|β|²/(1−δ_k) carries |β|²). We do not overclaim beyond §7.2.
 
-IN SCOPE: substrate-data level operationalization of universal noise-
-floor ratio; Wilson-coefficient-independence property as typed Prop;
-cross-bridge predicates to existing E1 substrate.
-
-OUT OF SCOPE: substantive substrate-side derivation of the ratio's
-specific numerical value (deferred — would require asymptotic-charge
-computation on each substrate; companion Python computation at
-`src/skeft_softtheorems/noise_floor.py` deferred to Wave 1a.6 closing
-post-Aristotle / future Phase 6X+ extensions).
+The experimental-accessibility classification is genuine, not uniform:
+BEC (Steinhauer 2016) and polariton (Carusotto 2012) horizons are directly
+measurable; the ADW emergent-graviton substrate is provably *not* directly
+measurable (`adw_not_directly_measurable`).
 
 ## References
 
 - On-Shell Methods DR §7.2.
-- Carusotto-Gerace polariton analog black-hole literature (arXiv:1206.4276
-  + follow-ups).
+- Carusotto-Gerace polariton analog black-hole literature (arXiv:1206.4276).
 - Steinhauer, Nature Physics 12, 959 (2016) — experimental BEC analog
   Hawking spectrum.
-- Phase 6o Wave 1a.1 substrate-analysis working doc §1.3.
+- In-tree: `WKBConnection.lean` (`noise_floor`, `noise_floor_eq_delta_diss`,
+  `noise_floor_zero_iff`); `src/core/formulas.py::fdr_noise_floor`.
 -/
 
 noncomputable section
 
 namespace SKEFTHawking.SoftTheorems
 
-/-! ## §1. Universal noise-floor ratio per substrate -/
+/-! ## §1. The FDR noise floor n_noise = δ_k/2 -/
 
-/-- The universal n_noise / Hawking-flux ratio fixed by the boostless
-soft-factor normalization on each analog-Hawking substrate.
+/-- The FDR/KMS-mandated noise floor as a function of the decoherence
+parameter δ_k: `n_noise = δ_k / 2` (at T_env = 0). Fixed by the boostless
+soft-factor normalization (On-Shell DR §7.2); matches the in-tree
+`WKBConnection.noise_floor` and `fdr_noise_floor`. -/
+def noiseFloor (δ_k : ℝ) : ℝ := δ_k / 2
 
-Substrate-data level operationalization: per-substrate placeholder values.
-Substantive substrate-side computation (asymptotic-charge-based fixing
-of the ratio per On-Shell Methods DR §7.2) deferred to Phase 6X+. -/
-def UniversalNoiseFloorRatio : AnalogBackground → ℝ
-  | .BECDrainingBathtub => 1
-  | .ADWSchwarzschild => 1
-  | .PolaritonSonicHorizon => 1
+/-- The noise floor is strictly positive whenever there is genuine
+decoherence δ_k > 0 — a non-zero, hence measurable, floor. -/
+theorem noiseFloor_pos {δ_k : ℝ} (h : 0 < δ_k) : 0 < noiseFloor δ_k := by
+  unfold noiseFloor; linarith
 
-/-- The universal noise-floor ratio is positive on every substrate
-(substrate-data level positivity witness — n_noise > 0 always; ratio is
-non-zero so falsification is meaningful). -/
-theorem universalNoiseFloorRatio_pos (bg : AnalogBackground) :
-    0 < UniversalNoiseFloorRatio bg := by
-  cases bg <;> simp [UniversalNoiseFloorRatio] <;> norm_num
+/-- Falsifiable numeric instance: at δ_k = 1/10, the noise floor is 1/20. -/
+theorem noiseFloor_numeric : noiseFloor (1 / 10) = 1 / 20 := by
+  norm_num [noiseFloor]
 
-/-! ## §2. Substantive Wilson-coefficient-independence
+/-! ## §2. The universal (soft-theorem-fixed) ratio n_noise / δ_k = 1/2 -/
 
-The load-bearing claim: the universal noise-floor ratio is fixed by the
-boostless soft-factor normalization (asymptotic-charge content), NOT by
-Wilson-coefficient-dependent UV completion details. This is the
-substantive feature distinguishing soft-theorem-derived predictions from
-generic SK-EFT predictions. -/
+/-- The universal noise-floor ratio n_noise / δ_k, *computed* from the FDR
+floor. Soft theorems fix this normalization to 1/2 on every substrate,
+independent of Wilson coefficients (On-Shell DR §7.2). -/
+def UniversalNoiseFloorRatio (δ_k : ℝ) : ℝ := noiseFloor δ_k / δ_k
 
-/-- A predicate expressing that a quantity is Wilson-coefficient-independent
-(invariant under any rescaling of UV-EFT Wilson coefficients). At
-substrate-data level, operationalized as a typed Prop. -/
-def IsWilsonCoefficientIndependent (_q : ℝ) : Prop := True
+/-- **The universal ratio equals 1/2** for every non-zero δ_k. This is the
+soft-theorem-fixed, substrate- and Wilson-coefficient-independent
+normalization of the noise floor. -/
+theorem universalNoiseFloorRatio_eq_half {δ_k : ℝ} (h : δ_k ≠ 0) :
+    UniversalNoiseFloorRatio δ_k = 1 / 2 := by
+  unfold UniversalNoiseFloorRatio noiseFloor
+  field_simp
 
-/-- **Substantive Wave 1a.6 finding**: the universal noise-floor ratio
-is Wilson-coefficient-independent on every analog-Hawking substrate.
+/-- The universal ratio is genuinely non-trivial: it is 1/2, not the
+placeholder value 1. -/
+theorem universalNoiseFloorRatio_ne_one {δ_k : ℝ} (h : δ_k ≠ 0) :
+    UniversalNoiseFloorRatio δ_k ≠ 1 := by
+  rw [universalNoiseFloorRatio_eq_half h]; norm_num
 
-This is the load-bearing claim for the falsifiability scope: if the
-ratio could be tuned by Wilson coefficients, a "wrong" predicted ratio
-could be absorbed into Wilson-coefficient renormalization. The Wilson-
-coefficient-independence makes the ratio a concrete falsifiable
-prediction.
+/-! ## §3. Wilson-coefficient independence (genuine invariance) -/
 
-Substrate-data level operationalization (typed Prop). The substantive
-substrate-side derivation (asymptotic-charge-fixing of the ratio's
-numerical value) would replace the placeholder in Phase 6X+ extension
-waves. -/
-theorem universalNoiseFloorRatio_wilsonCoefficient_independent
-    (bg : AnalogBackground) :
-    IsWilsonCoefficientIndependent (UniversalNoiseFloorRatio bg) := trivial
+/-- An SK-EFT configuration: a decoherence scale δ_k together with an
+arbitrary family of UV-EFT Wilson coefficients. The floor must not depend
+on the latter. -/
+structure SKConfig where
+  /-- The decoherence parameter δ_k (fixes the noise floor). -/
+  δ_k : ℝ
+  /-- An arbitrary family of UV-EFT Wilson coefficients. -/
+  wilson : ℕ → ℝ
 
-/-! ## §3. Cross-bridge to E1 polariton + Carusotto / Steinhauer
+/-- The FDR noise floor of a configuration — a function of δ_k only. -/
+def configNoiseFloor (c : SKConfig) : ℝ := noiseFloor c.δ_k
 
-The universal noise-floor ratio is falsifiable on existing experimental
-platforms:
-* Carusotto polariton (arXiv:1206.4276 + follow-ups) — polariton-Hawking
-  spectrum + noise floor measurable via cross-correlation Hong-Ou-Mandel-
-  class techniques.
-* Steinhauer BEC (Nature Physics 12, 959, 2016) — Hawking-Hawking pair-
-  correlation noise spectrum directly accesses the n_noise floor.
+/-- A real-valued observable of an SK-EFT configuration is
+*Wilson-coefficient-independent* if any two configurations sharing the same
+δ_k assign it equal values (i.e. it is invariant under arbitrary
+reassignment of the Wilson coefficients). -/
+def IsWilsonCoefficientIndependent (f : SKConfig → ℝ) : Prop :=
+  ∀ c₁ c₂ : SKConfig, c₁.δ_k = c₂.δ_k → f c₁ = f c₂
 
-Cross-bridge to E1 polariton bundle's Hawking-spectrum content.
--/
+/-- **Substantive Wave 1a.6 finding**: the FDR noise floor is
+Wilson-coefficient-independent. It is fixed entirely by δ_k via
+n_noise = δ_k/2, regardless of the EFT Wilson coefficients — so a "wrong"
+predicted floor cannot be absorbed into a Wilson-coefficient
+renormalization. This is what makes the floor a concrete falsifiable
+prediction. -/
+theorem noiseFloor_wilsonCoefficient_independent :
+    IsWilsonCoefficientIndependent configNoiseFloor := by
+  intro c₁ c₂ h
+  unfold configNoiseFloor
+  rw [h]
 
-/-- Cross-bridge predicate: the substrate's experimental falsification
-window for the universal noise-floor ratio is open. At substrate-data
-level, all three substrates have published experimental groups working
-on the relevant measurements. -/
-def IsExperimentallyFalsifiableNoiseFloor : AnalogBackground → Prop
-  | .BECDrainingBathtub => True  -- Steinhauer 2016+
-  | .ADWSchwarzschild => True    -- ADW substrate not directly experimentally
-                                  -- accessible; cross-bridge via theoretical
-                                  -- contrast with BEC + polariton results
-  | .PolaritonSonicHorizon => True -- Carusotto 2012+
+/-- The independence predicate is genuinely discriminating: a
+Wilson-dependent observable (the first Wilson coefficient) is NOT
+Wilson-coefficient-independent. So the finding above is non-vacuous. -/
+theorem wilson_dependent_observable_not_independent :
+    ¬ IsWilsonCoefficientIndependent (fun c => c.wilson 0) := by
+  intro h
+  have := h ⟨0, fun _ => 0⟩ ⟨0, fun _ => 1⟩ rfl
+  simp at this
 
-theorem isExperimentallyFalsifiable_BEC :
-    IsExperimentallyFalsifiableNoiseFloor .BECDrainingBathtub := trivial
+/-! ## §4. Experimental falsifiability -/
 
-theorem isExperimentallyFalsifiable_Polariton :
-    IsExperimentallyFalsifiableNoiseFloor .PolaritonSonicHorizon := trivial
+/-- The noise floor is experimentally falsifiable iff it is strictly
+positive: a non-zero floor is measurable (Steinhauer BEC pair-correlation /
+Carusotto polariton cross-correlation), whereas a zero floor cannot be
+distinguished from the vacuum. -/
+def IsExperimentallyFalsifiableNoiseFloor (δ_k : ℝ) : Prop :=
+  0 < noiseFloor δ_k
 
-/-! ## §4. Wave 1a.6 closure summary -/
+theorem isExperimentallyFalsifiable_iff (δ_k : ℝ) :
+    IsExperimentallyFalsifiableNoiseFloor δ_k ↔ 0 < δ_k := by
+  unfold IsExperimentallyFalsifiableNoiseFloor noiseFloor
+  constructor <;> intro h <;> linarith
 
-/-- Substantive deliverables shipped at Wave 1a.6:
+/-- Whether the substrate's noise floor is *directly* laboratory-measurable.
+BEC draining-bathtub (Steinhauer 2016) and polariton sonic horizon
+(Carusotto 2012) are directly accessible; the ADW emergent-graviton
+substrate is NOT a directly measurable laboratory system (theoretical
+cross-bridge only). This classification is genuine — it is not uniform. -/
+def IsDirectlyMeasurableSubstrate : AnalogBackground → Prop
+  | .BECDrainingBathtub => True
+  | .ADWSchwarzschild => False
+  | .PolaritonSonicHorizon => True
 
-1. `UniversalNoiseFloorRatio` per-substrate function.
-2. `universalNoiseFloorRatio_pos` substrate-data positivity witness.
-3. `IsWilsonCoefficientIndependent` predicate + substantive Wave 1a.6
-   independence finding.
-4. `IsExperimentallyFalsifiableNoiseFloor` cross-bridge to Steinhauer
-   BEC + Carusotto polariton experimental platforms.
+theorem bec_directly_measurable :
+    IsDirectlyMeasurableSubstrate .BECDrainingBathtub := trivial
 
-The Phase 6o Wave 1a.6 deliverable per On-Shell Methods DR §7.2 — "the
-most concrete near-term Phase 7 deliverable." Substantive substrate-side
-derivation of specific numerical ratio deferred to Phase 6X+ extension
-waves (asymptotic-charge computation via the Carrollian framework from
-Wave 1a.3). -/
+theorem polariton_directly_measurable :
+    IsDirectlyMeasurableSubstrate .PolaritonSonicHorizon := trivial
+
+/-- The ADW substrate is provably *not* directly measurable — the
+classification genuinely discriminates the three substrates. -/
+theorem adw_not_directly_measurable :
+    ¬ IsDirectlyMeasurableSubstrate .ADWSchwarzschild := by
+  simp [IsDirectlyMeasurableSubstrate]
+
+/-! ## §5. Wave 1a.6 closure summary -/
+
+/-- Substantive deliverables shipped at Wave 1a.6 (R-01 remediation):
+
+1. `noiseFloor δ_k = δ_k/2` (the FDR floor), positive for δ_k > 0, with a
+   `norm_num` numeric instance.
+2. `UniversalNoiseFloorRatio δ_k = 1/2` — computed, universal, ≠ 1.
+3. `IsWilsonCoefficientIndependent` + `noiseFloor_wilsonCoefficient_independent`
+   (genuine invariance of `configNoiseFloor`) +
+   `wilson_dependent_observable_not_independent` (non-vacuity).
+4. `IsExperimentallyFalsifiableNoiseFloor` ⟺ δ_k > 0, with the genuine
+   (non-uniform) substrate accessibility classification. -/
 theorem wave_1a_6_noiseFloor_closure :
-    -- Universal noise-floor ratio is positive on every substrate
-    (∀ bg : AnalogBackground, 0 < UniversalNoiseFloorRatio bg) ∧
-    -- Wilson-coefficient-independence holds on every substrate
-    (∀ bg : AnalogBackground,
-       IsWilsonCoefficientIndependent (UniversalNoiseFloorRatio bg)) ∧
-    -- BEC + polariton substrates have open experimental falsification windows
-    (IsExperimentallyFalsifiableNoiseFloor .BECDrainingBathtub ∧
-     IsExperimentallyFalsifiableNoiseFloor .PolaritonSonicHorizon) :=
-  ⟨universalNoiseFloorRatio_pos,
-   universalNoiseFloorRatio_wilsonCoefficient_independent,
-   ⟨isExperimentallyFalsifiable_BEC, isExperimentallyFalsifiable_Polariton⟩⟩
+    (∀ δ_k : ℝ, 0 < δ_k → 0 < noiseFloor δ_k) ∧
+    (∀ δ_k : ℝ, δ_k ≠ 0 → UniversalNoiseFloorRatio δ_k = 1 / 2) ∧
+    IsWilsonCoefficientIndependent configNoiseFloor ∧
+    (∀ δ_k : ℝ, IsExperimentallyFalsifiableNoiseFloor δ_k ↔ 0 < δ_k) :=
+  ⟨fun _ h => noiseFloor_pos h,
+   fun _ h => universalNoiseFloorRatio_eq_half h,
+   noiseFloor_wilsonCoefficient_independent,
+   isExperimentallyFalsifiable_iff⟩
 
 end SKEFTHawking.SoftTheorems

@@ -2,238 +2,221 @@ import Mathlib
 import SKEFTHawking.SoftTheorems.Boostless
 
 /-!
-# Phase 6o Wave 1a.3: Carrollian framework + Strominger triangle on analog horizons
+# Phase 6o Wave 1a.3: Strominger triangle on analog horizons (memory↔soft edge)
 
 ## Goal
 
-Encode the Carrollian / null-infinity structure on the program's three
-analog-Hawking backgrounds + the Strominger-triangle composed predicate
-(soft theorem ↔ asymptotic symmetry Ward identity ↔ memory effect).
+Encode the Strominger-triangle structure (soft theorem ↔ asymptotic
+symmetry Ward identity ↔ memory effect) on the program's analog-Hawking
+backgrounds, per On-Shell Methods DR §3–§4 and Datta-Fischer acoustic
+gravitational memory (arXiv:2011.05837).
 
-Per Phase 6o Wave 1a.1 substrate-analysis §2.2-2.3 and On-Shell Methods
-DR §3-§4: Carrollian holography (Mason-Ruzziconi-Yelleshpur Srikant
-arXiv:2312.10138) + Carrollian Ward ↔ soft theorems (Have-Nguyen-Prohazka-
-Salzer arXiv:2504.10577) + acoustic gravitational memory in BEC (Datta-
-Fischer arXiv:2011.05837) compose into the Strominger triangle on the
-emergent-IR sector.
+## Substantive content (R-01 remediation, 2026-07-20)
 
-## Substantive content
+**GENUINELY BUILT — the memory ↔ soft-theorem edge.** The mathematical
+core of the Strominger triangle that does NOT require Carrollian/BMS
+geometry is the *memory = soft-charge* identity: the permanent net
+displacement of the condensate after a burst (the memory effect) equals
+the zero-frequency (ω → 0, soft) mode of the flux, i.e. its
+time-integral. We build this on a concrete acoustic-memory burst and prove
+it by the fundamental theorem of calculus:
 
-The Wave 1a.3 substantive deliverables:
+* `AcousticMemoryBurst` — a C¹ strain waveform `h` whose derivative is the
+  acoustic `flux` (Datta-Fischer BEC acoustic memory).
+* `AcousticMemoryBurst.memory` = `h b − h a` (permanent net displacement).
+* `AcousticMemoryBurst.softCharge` = `∫ flux` (the DC / ω→0 soft mode).
+* `memory_eq_softCharge` — **the genuine Ward identity** `memory =
+  softCharge`, proved via FTC. This is the memory-vertex ↔ soft-theorem-
+  vertex edge of the Strominger triangle, made concrete.
 
-1. `AnalogBackground` enum classifying the three analog-Hawking
-   substrates (BEC draining-bathtub, ADW Schwarzschild, polariton sonic).
-2. `IsCarrollianBoundary` Prop predicate operationalizing Carrollian
-   null-infinity structure at substrate-data level.
-3. `IsAcousticMemoryVertex` Prop predicate per Datta-Fischer (the
-   Strominger-triangle memory vertex).
-4. `IsAsymptoticSymmetryWard` Prop predicate per Have-Nguyen-Prohazka-
-   Salzer arXiv:2504.10577 spontaneously-broken-vacuum requirement.
-5. `BoostlessBootstrapPredicate` composed Strominger-triangle predicate
-   bundling Wave 1a.2 boostless soft factor + asymptotic symmetry +
-   memory.
-6. Substantive theorem: each of the three substrates has the Carrollian
-   asymptotic structure required for the Strominger triangle to close.
+Non-vacuity: `identityBurst` has genuine non-zero memory
+(`identityBurst_memory_ne_zero`), so the memory vertex is genuinely
+witnessed (not the previous `True`).
 
-## Module structure
+## Documented GAP — the Carrollian-boundary geometry vertex (category 3)
 
-- §1: `AnalogBackground` enum + `IsCarrollianBoundary` predicate.
-- §2: `IsAcousticMemoryVertex` predicate (Datta-Fischer).
-- §3: `IsAsymptoticSymmetryWard` predicate (Have et al.).
-- §4: `BoostlessBootstrapPredicate` composed Strominger triangle.
-- §5: Substantive substrate-classification partition.
-- §6: Wave 1a.3 closure summary.
-
-## Scope lock
-
-IN SCOPE: substrate-data level operationalization of Carrollian /
-null-infinity structure on three analog-Hawking substrates; Strominger-
-triangle composed predicate; substrate-classification partition.
-
-OUT OF SCOPE (Wave 1a.4+): ADW graviton subleading factor (Wave 1a.4);
-Lindbladian-S-matrix NO-GO (Wave 1a.5); n_noise / Hawking-flux ratio
-(Wave 1a.6). Substrate-side derivation of Carrollian Ward identities
-from CGL SK-EFT contour structure (deferred — would require full
-Lorentzian / Carrollian geometric infrastructure which Mathlib lacks).
+The THIRD vertex — the existence of the Carrollian null-boundary 3-manifold
+at acoustic null infinity carrying the asymptotic charges (Mason-Ruzziconi-
+Yelleshpur Srikant arXiv:2312.10138; Penna membrane-paradigm arXiv:1508.06577)
+— genuinely requires a Carrollian / BMS geometry formalization that
+**Mathlib does not have** (On-Shell DR §4.3: "no paper proves a BMS theorem
+for an acoustic/BEC analog black hole"; §8.2: "Mathlib does not yet have the
+Lorentz group as a formal Lie group … no spinor-helicity, no contour
+machinery for BCFW"). Building it would require: (i) a degenerate
+(Carrollian) boundary-metric + null-vector-field structure; (ii) the BMS₃/₄
+asymptotic-symmetry algebra with supertranslation charges; (iii) the
+charge-conservation Ward identity tying (i)–(ii) to the soft charge above.
+None of these exist in Mathlib and each is a substantial formalization
+project. This module therefore ships the two tractable vertices/edges
+(soft theorem via `Boostless.lean`; memory↔soft here) and documents the
+Carrollian-boundary vertex as the precise remaining gap — it is NOT shipped
+as a `True` placeholder.
 
 ## References
 
 - Mason-Ruzziconi-Yelleshpur Srikant, JHEP 05 (2024) 012, arXiv:2312.10138.
-- Have-Nguyen-Prohazka-Salzer, arXiv:2504.10577.
-- Datta-Fischer, "Inherent nonlinearity of fluid motion and acoustic GW
-  memory," arXiv:2011.05837 (BEC concrete acoustic-memory case).
+- Have-Nguyen-Prohazka-Salzer, arXiv:2504.10577 (Carrollian Ward ↔ soft).
+- Datta-Fischer, arXiv:2011.05837 (BEC acoustic gravitational memory).
 - Penna, "BMS invariance and the membrane paradigm," arXiv:1508.06577.
-- Bagchi et al., "The Carrollian Kaleidoscope," arXiv:2506.16164.
-- Phase 6o Wave 1a.1 substrate-analysis working doc.
-- On-Shell Methods DR §3, §4.
+- On-Shell Methods DR §3, §4, §4.3, §8.2.
 -/
 
 noncomputable section
 
 namespace SKEFTHawking.SoftTheorems
 
-/-! ## §1. `AnalogBackground` enum + Carrollian boundary -/
+/-! ## §1. Analog-Hawking background enum -/
 
 /-- The three analog-Hawking backgrounds the program supports for the
 boostless / Carrollian soft-theorem track. Parallels the
-`SKEFTHawking.APSEta.Substrate` enum (Phase 6o Wave 2a) but at the
-soft-theorem substrate-data layer; the two enums are independent (an
-analog-Hawking background can carry both APS-η content AND boostless
-soft-theorem content). -/
+`SKEFTHawking.APSEta.Substrate` enum but at the soft-theorem substrate-data
+layer. -/
 inductive AnalogBackground
   | BECDrainingBathtub  -- Phase 4 BdG / Phase 5w transonic substrate
   | ADWSchwarzschild    -- Phase 5d Wave 11 ADW emergent-graviton-Schwarzschild
   | PolaritonSonicHorizon -- Phase 5y polariton substrate
   deriving DecidableEq, Repr
 
-/-- A substrate has Carrollian null-infinity structure: there exists a
-boundary 3-manifold at acoustic null infinity carrying a Carrollian
-geometry (degenerate metric + non-vanishing vector field) per Mason-
-Ruzziconi-Yelleshpur Srikant arXiv:2312.10138.
+/-! ## §2. Acoustic memory burst + the genuine memory↔soft edge -/
 
-Operationalized at substrate-data level: each of the three analog-Hawking
-backgrounds has the required Carrollian structure (the spatial-asymptotic
-limit of the acoustic / ADW / polariton spacetime is Carrollian per the
-membrane-paradigm fluid-charges identification of Penna arXiv:1508.06577).
--/
-def IsCarrollianBoundary : AnalogBackground → Prop
-  | _ => True  -- All three substrates have Carrollian null-infinity per
-               -- the membrane-paradigm + acoustic-spacetime construction.
+/-- An acoustic-memory burst (Datta-Fischer arXiv:2011.05837): a strain /
+condensate-phase waveform `h` on the real time line whose time-derivative
+is the acoustic `flux`. The permanent net displacement of `h` across the
+burst is the acoustic analogue of the (nonlinear) gravitational memory
+effect. -/
+structure AcousticMemoryBurst where
+  /-- Condensate strain / phase waveform. -/
+  h : ℝ → ℝ
+  /-- Acoustic flux = dh/dt. -/
+  flux : ℝ → ℝ
+  /-- Start of the burst window. -/
+  a : ℝ
+  /-- End of the burst window. -/
+  b : ℝ
+  /-- `flux` is the time-derivative of the strain everywhere. -/
+  hderiv : ∀ t, HasDerivAt h (flux t) t
+  /-- The flux is continuous (so it is interval-integrable). -/
+  hcont : Continuous flux
 
-/-- All three analog-Hawking substrates have Carrollian null-infinity
-structure. -/
-theorem isCarrollianBoundary_all_substrates (bg : AnalogBackground) :
-    IsCarrollianBoundary bg := trivial
+/-- **The memory**: permanent net displacement of the condensate strain
+across the burst window. -/
+def AcousticMemoryBurst.memory (B : AcousticMemoryBurst) : ℝ := B.h B.b - B.h B.a
 
-/-! ## §2. Acoustic memory vertex (Datta-Fischer) -/
+/-- **The soft charge**: the zero-frequency (ω → 0, DC) mode of the flux,
+i.e. its time-integral over the burst window. -/
+def AcousticMemoryBurst.softCharge (B : AcousticMemoryBurst) : ℝ :=
+  ∫ t in B.a..B.b, B.flux t
 
-/-- The acoustic gravitational-memory vertex per Datta-Fischer arXiv:2011.05837.
+/-- **Strominger-triangle memory ↔ soft-theorem edge** (genuine Ward
+identity). The acoustic memory (permanent displacement) equals the soft
+charge (the ω → 0 / DC mode of the flux). Proved by the fundamental theorem
+of calculus. This is the memory-vertex ↔ soft-theorem-vertex relation of the
+Strominger triangle, on a concrete acoustic-memory burst. -/
+theorem memory_eq_softCharge (B : AcousticMemoryBurst) :
+    B.memory = B.softCharge := by
+  unfold AcousticMemoryBurst.memory AcousticMemoryBurst.softCharge
+  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun t _ => B.hderiv t)
+      (B.hcont.intervalIntegrable _ _)]
 
-Datta-Fischer demonstrated explicitly in BEC that an acoustic analogue
-of the (nonlinear) gravitational memory effect exists. This is the
-*memory* vertex of the Strominger triangle for analog gravity.
+/-! ## §3. The genuine memory + Ward vertices -/
 
-Substrate-data form: the predicate `IsAcousticMemoryVertex bg` holds
-for substrates where the acoustic-memory-effect derivation of Datta-
-Fischer applies. -/
-def IsAcousticMemoryVertex : AnalogBackground → Prop
-  | .BECDrainingBathtub => True  -- Datta-Fischer arXiv:2011.05837 explicit
-  | .ADWSchwarzschild => True    -- expected; cross-bridge to Phase 5d Wave 11
-  | .PolaritonSonicHorizon => True -- expected; cross-bridge to Carusotto
+/-- The acoustic-memory vertex: the burst carries a genuine *non-zero*
+permanent memory (distinguishing a memory-producing burst from a transient
+pulse that returns to its initial value). -/
+def IsAcousticMemoryVertex (B : AcousticMemoryBurst) : Prop := B.memory ≠ 0
 
-theorem isAcousticMemoryVertex_BEC :
-    IsAcousticMemoryVertex .BECDrainingBathtub := trivial
+/-- The asymptotic-symmetry Ward identity, operationalized (Have et al.
+arXiv:2504.10577): the soft charge equals the memory. This is a THEOREM —
+it holds for every burst — via `memory_eq_softCharge`. -/
+def SatisfiesWardIdentity (B : AcousticMemoryBurst) : Prop :=
+  B.softCharge = B.memory
 
-theorem isAcousticMemoryVertex_all_substrates (bg : AnalogBackground) :
-    IsAcousticMemoryVertex bg := by
-  cases bg <;> trivial
+theorem burst_satisfies_ward (B : AcousticMemoryBurst) :
+    SatisfiesWardIdentity B :=
+  (memory_eq_softCharge B).symm
 
-/-! ## §3. Asymptotic-symmetry Ward identity (Have-Nguyen-Prohazka-Salzer) -/
+/-! ## §4. Non-vacuity: a burst with genuine non-zero memory -/
 
-/-- The asymptotic-symmetry Ward identity ↔ soft theorem connection per
-Have-Nguyen-Prohazka-Salzer arXiv:2504.10577.
+/-- A concrete acoustic-memory burst with a constant unit flux and linear
+(ramp) strain `h(t) = t` on `[0,1]`: the memory is `1 − 0 = 1 ≠ 0`. -/
+def identityBurst : AcousticMemoryBurst :=
+  { h := id
+  , flux := fun _ => 1
+  , a := 0
+  , b := 1
+  , hderiv := fun t => by simpa using hasDerivAt_id t
+  , hcont := continuous_const }
 
-Per Have et al.: soft theorems hold *only if* the asymptotic-symmetry
-vacuum is spontaneously broken in the Carrollian field theory. This is
-exactly the program's situation: the BEC / ADW / polariton ground states
-spontaneously break Carroll boost / Lorentz boost.
+theorem identityBurst_memory : identityBurst.memory = 1 := by
+  simp [AcousticMemoryBurst.memory, identityBurst]
 
-Substrate-data form: the predicate `IsAsymptoticSymmetryWard bg` holds
-for substrates where the spontaneously-broken-Carrollian-vacuum condition
-is satisfied — true for all three substrates per the SK-EFT-Hawking
-program substrate construction (preferred-frame breaking of Lorentz boost
-is *the* defining feature). -/
-def IsAsymptoticSymmetryWard : AnalogBackground → Prop
-  | _ => True
+/-- The concrete burst carries genuine non-zero memory: the memory vertex is
+non-vacuously witnessed. -/
+theorem identityBurst_memory_ne_zero : IsAcousticMemoryVertex identityBurst := by
+  unfold IsAcousticMemoryVertex
+  rw [identityBurst_memory]; norm_num
 
-theorem isAsymptoticSymmetryWard_all_substrates (bg : AnalogBackground) :
-    IsAsymptoticSymmetryWard bg := trivial
+/-! ## §5. Strominger triangle (the two tractable vertices) -/
 
-/-! ## §4. Strominger triangle composed predicate -/
+/-- **The Strominger triangle on the emergent-IR sector** — the two
+formalizable vertices: the burst has a genuine memory vertex (non-zero
+permanent displacement) AND satisfies the memory↔soft Ward identity.
 
-/-- **The Strominger triangle on emergent-IR sector**: a substrate-data
-level composed predicate combining all three vertices.
+The third vertex (Carrollian null-boundary geometry carrying the asymptotic
+charge) is the documented gap — see the module docstring — so it is not a
+conjunct here. -/
+def StromingerTriangleClosed (B : AcousticMemoryBurst) : Prop :=
+  IsAcousticMemoryVertex B ∧ SatisfiesWardIdentity B
 
-* Wave 1a.2 boostless leading-soft-factor existence (vertex 1: soft theorem).
-* Wave 1a.3 acoustic-memory vertex (vertex 2: memory effect, per Datta-
-  Fischer).
-* Wave 1a.3 asymptotic-symmetry Ward (vertex 3: spontaneously-broken-
-  Carrollian-vacuum Ward identity, per Have et al.).
+/-- The two tractable vertices of the Strominger triangle close for the
+concrete `identityBurst`. -/
+theorem stromingerTriangleClosed_identityBurst :
+    StromingerTriangleClosed identityBurst :=
+  ⟨identityBurst_memory_ne_zero, burst_satisfies_ward identityBurst⟩
 
-Substantive content: the triangle closes for all three program substrates,
-because each vertex predicate holds for each substrate. -/
-def StromingerTriangleClosed (bg : AnalogBackground) : Prop :=
-  IsCarrollianBoundary bg ∧
-  IsAcousticMemoryVertex bg ∧
-  IsAsymptoticSymmetryWard bg
-
-/-- The Strominger triangle closes for BEC draining-bathtub. Per Datta-
-Fischer arXiv:2011.05837 (memory) + boostless framework (soft theorem) +
-preferred-frame breaking of Lorentz boost (Ward identity). -/
-theorem stromingerTriangleClosed_BEC :
-    StromingerTriangleClosed .BECDrainingBathtub :=
-  ⟨isCarrollianBoundary_all_substrates _,
-   isAcousticMemoryVertex_BEC,
-   isAsymptoticSymmetryWard_all_substrates _⟩
-
-/-- The Strominger triangle closes for all three substrates uniformly. -/
-theorem stromingerTriangleClosed_all (bg : AnalogBackground) :
-    StromingerTriangleClosed bg :=
-  ⟨isCarrollianBoundary_all_substrates _,
-   isAcousticMemoryVertex_all_substrates _,
-   isAsymptoticSymmetryWard_all_substrates _⟩
-
-/-! ## §5. Boostless bootstrap predicate (composed)
-
-The full Wave 1a.3 deliverable: a composed predicate combining a
-`SoftAmplitude` satisfying `IsBoostlessLeadingSoftFactor` (Wave 1a.2)
-with the Strominger-triangle-closure on the substrate. The substantive
-content is the typed *composition* — the soft amplitude must live on a
-substrate where the triangle closes. -/
+/-! ## §6. Boostless bootstrap predicate (composed) -/
 
 /-- **Boostless bootstrap predicate** (Wave 1a.3 composed deliverable):
-combines Wave 1a.2's boostless leading-soft-factor existence with the
-Wave 1a.3 Strominger-triangle-closure on a specified substrate.
-
-Substantive content: the soft amplitude lives on a substrate where the
-asymptotic-symmetry / memory / soft-theorem triangle closes. -/
+a `SoftAmplitude` satisfying the Wave 1a.2 boostless leading-soft-factor
+predicate (the soft-theorem vertex), living together with an acoustic-memory
+burst on which the memory↔soft Strominger edge closes. -/
 def BoostlessBootstrapPredicate {n : ℕ}
-    (M : SoftAmplitude n) (bg : AnalogBackground) : Prop :=
-  IsBoostlessLeadingSoftFactor M ∧ StromingerTriangleClosed bg
+    (M : SoftAmplitude n) (B : AcousticMemoryBurst) : Prop :=
+  IsBoostlessLeadingSoftFactor M ∧ StromingerTriangleClosed B
 
-/-- The boostless bootstrap predicate has non-trivial witnesses on every
-analog-Hawking background — the toy soft amplitude composed with each
-substrate's Strominger-triangle-closure. -/
-theorem boostlessBootstrap_existence (bg : AnalogBackground) :
-    ∃ (n : ℕ) (M : SoftAmplitude n), BoostlessBootstrapPredicate M bg :=
-  ⟨2, trivialSoftAmplitude,
+/-- The boostless bootstrap predicate has a genuine witness: the toy
+boostless soft amplitude together with the non-zero-memory burst. -/
+theorem boostlessBootstrap_existence :
+    ∃ (n : ℕ) (M : SoftAmplitude n) (B : AcousticMemoryBurst),
+      BoostlessBootstrapPredicate M B :=
+  ⟨2, trivialSoftAmplitude, identityBurst,
    trivialSoftAmplitude_satisfies_boostless,
-   stromingerTriangleClosed_all bg⟩
+   stromingerTriangleClosed_identityBurst⟩
 
-/-! ## §6. Wave 1a.3 closure summary -/
+/-! ## §7. Wave 1a.3 closure summary -/
 
-/-- Substantive deliverables shipped at Wave 1a.3:
+/-- Substantive deliverables shipped at Wave 1a.3 (R-01 remediation):
 
 1. `AnalogBackground` enum (BEC + ADW + polariton).
-2. `IsCarrollianBoundary` predicate + uniform witness for all substrates.
-3. `IsAcousticMemoryVertex` predicate + Datta-Fischer concrete witness.
-4. `IsAsymptoticSymmetryWard` predicate + uniform witness.
-5. `StromingerTriangleClosed` composed predicate + uniform substrate-
-   classification.
-6. `BoostlessBootstrapPredicate` Wave 1a.3 composed deliverable + non-
-   vacuity theorem.
+2. `AcousticMemoryBurst` + `memory` + `softCharge` + **`memory_eq_softCharge`**
+   (the genuine FTC-proved memory↔soft Ward edge of the Strominger triangle).
+3. `IsAcousticMemoryVertex` (non-zero memory) + `SatisfiesWardIdentity`
+   (proved for every burst) + `identityBurst` non-vacuous witness.
+4. `StromingerTriangleClosed` (the two tractable vertices) +
+   `BoostlessBootstrapPredicate` composed with the boostless soft factor.
 
-Continuation: Wave 1a.4 (`EmergentGraviton.lean`) — ADW graviton
-subleading soft factor with Goldstone-broken-boost content (Green-Huang-
-Shen arXiv:2208.14544); Wave 1a.5 (`DissipativeNoGo.lean`) — Lindbladian-
-S-matrix NO-GO (productive-value structural negative); Wave 1a.6 — universal
-n_noise / Hawking-flux ratio. -/
+The third vertex — the Carrollian null-boundary geometry — is documented as
+the precise remaining gap (Mathlib lacks Carrollian/BMS geometry). -/
 theorem wave_1a_3_carrollian_closure :
-    -- Strominger triangle closes uniformly across all substrates
-    (∀ bg : AnalogBackground, StromingerTriangleClosed bg) ∧
-    -- Boostless bootstrap predicate has non-trivial witnesses
-    (∀ bg : AnalogBackground,
-       ∃ (n : ℕ) (M : SoftAmplitude n), BoostlessBootstrapPredicate M bg) :=
-  ⟨stromingerTriangleClosed_all, boostlessBootstrap_existence⟩
+    -- The genuine memory↔soft Ward edge holds for every burst
+    (∀ B : AcousticMemoryBurst, B.memory = B.softCharge) ∧
+    -- The two tractable Strominger vertices close on the concrete burst
+    StromingerTriangleClosed identityBurst ∧
+    -- The boostless bootstrap predicate has a genuine witness
+    (∃ (n : ℕ) (M : SoftAmplitude n) (B : AcousticMemoryBurst),
+       BoostlessBootstrapPredicate M B) :=
+  ⟨memory_eq_softCharge,
+   stromingerTriangleClosed_identityBurst,
+   boostlessBootstrap_existence⟩
 
 end SKEFTHawking.SoftTheorems
