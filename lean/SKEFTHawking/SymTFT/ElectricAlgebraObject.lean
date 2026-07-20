@@ -367,4 +367,205 @@ theorem electricAlgebra_S2_closure :
   ⟨electricMul_corner_11 k, electricMul_corner_ee k, electricMul_one_mul k,
    electricMul_mul_one k, degenerate_corner_ee k, electricObject_support_eq_S1⟩
 
+/-! ## §11. The fusion-to-unit iso `e ⊗ e ≅ 𝟙_(Center C)`
+
+The composite `electric_squared_iso_vacuum ≫ vacuumUnitIso` lands the `e ⊗ e ≅
+vacuum` fusion in the actual unit summand `𝟙_(Center C)`. Its `.inv` (`𝟙 ⟶ e ⊗ e`)
+is the honest comultiplication's non-degenerate `1 → e⊗e` corner. -/
+
+/-- **`eeVacUnitIso`** — the composite iso `electricAnyon ⊗ electricAnyon ≅
+𝟙_(Center (VecG_Cat k G2))` (fusion `e ⊗ e ≅ vacuum ≅ 𝟙`). -/
+noncomputable def eeVacUnitIso :
+    electricAnyon k ⊗ electricAnyon k ≅ 𝟙_ (CategoryTheory.Center (VecG_Cat k G2)) :=
+  electric_squared_iso_vacuum k ≪≫ vacuumUnitIso k
+
+/-! ## §12. The honest comultiplication `electricComul`
+
+The **transpose group-algebra comultiplication** of `k[ℤ/2]` on the carrier
+`X = unitPlusElectricObj k`, dual to `electricMul`. It is the Frobenius
+comultiplication (adjoint of the multiplication under the pairing `⟨g,h⟩ =
+δ_{gh,1}`), sending each summand to the sum over its splittings:
+
+- `1 → 1⊗1`  : `counit ≫ (λ_ 𝟙).inv ≫ (one ⊗ one)`
+- `1 → e⊗e`  : `counit ≫ (e²≅1).inv ≫ (inr ⊗ inr)`   ← the non-degenerate corner
+- `e → 1⊗e`  : `snd ≫ (λ_ e).inv ≫ (one ⊗ inr)`
+- `e → e⊗1`  : `snd ≫ (ρ_ e).inv ≫ (inr ⊗ one)`
+
+so `Δ(1) = 1⊗1 + e⊗e` and `Δ(e) = 1⊗e + e⊗1`. This is chosen compatibly with the
+honest multiplication rather than inherited from the degenerate
+projection-through-vacuum candidate (`unitPlusElectric_comul`, which factors
+through the vacuum). The `1 → e⊗e` corner is the non-degenerate one, dual to the
+`e·e → 1` corner of `electricMul`. -/
+
+/-- **`electricComul`** — the honest object-level group-algebra comultiplication
+on `unitPlusElectricObj k`, componentwise over the four biproduct corners. -/
+noncomputable def electricComul :
+    unitPlusElectricObj k ⟶ (unitPlusElectricObj k) ⊗ (unitPlusElectricObj k) :=
+  unitPlusElectric_counit k ≫ (λ_ (𝟙_ (CategoryTheory.Center (VecG_Cat k G2)))).inv ≫
+      (unitPlusElectric_one k ⊗ₘ unitPlusElectric_one k)
+  + unitPlusElectric_counit k ≫ (eeVacUnitIso k).inv ≫
+      (electricInj k ⊗ₘ electricInj k)
+  + electricProj k ≫ (λ_ (electricAnyon k)).inv ≫
+      (unitPlusElectric_one k ⊗ₘ electricInj k)
+  + electricProj k ≫ (ρ_ (electricAnyon k)).inv ≫
+      (electricInj k ⊗ₘ unitPlusElectric_one k)
+
+/-! ## §13. Comultiplication corner equations — the group-algebra cosplitting
+
+Each corner postcomposes `electricComul` with a projection pair and reduces (via
+the biproduct helpers) to the cofactor followed by the summand's cosplit. The
+interchange + `one ≫ counit = 𝟙` / `... = 0` helpers kill three of four summands
+per corner. Dual to the `electricMul_corner_*` equations. -/
+
+/-- **Cocorner `1 → 1⊗1`** — `electricComul ≫ (counit ⊗ counit) = counit ≫ (λ_ 𝟙).inv`. -/
+theorem electricComul_cocorner_11 :
+    electricComul k ≫ (unitPlusElectric_counit k ⊗ₘ unitPlusElectric_counit k) =
+      unitPlusElectric_counit k ≫ (λ_ (𝟙_ (CategoryTheory.Center (VecG_Cat k G2)))).inv := by
+  simp [electricComul, MonoidalCategory.tensorHom_comp_tensorHom]
+
+/-- **Cocorner `1 → e⊗e`** — the non-degenerate corner:
+`electricComul ≫ (snd ⊗ snd) = counit ≫ (e²≅1).inv`. Dual to `electricMul_corner_ee`. -/
+theorem electricComul_cocorner_ee :
+    electricComul k ≫ (electricProj k ⊗ₘ electricProj k) =
+      unitPlusElectric_counit k ≫ (eeVacUnitIso k).inv := by
+  simp [electricComul, MonoidalCategory.tensorHom_comp_tensorHom]
+
+/-- **Cocorner `e → 1⊗e`** — `electricComul ≫ (counit ⊗ snd) = snd ≫ (λ_ e).inv`. -/
+theorem electricComul_cocorner_1e :
+    electricComul k ≫ (unitPlusElectric_counit k ⊗ₘ electricProj k) =
+      electricProj k ≫ (λ_ (electricAnyon k)).inv := by
+  simp [electricComul, MonoidalCategory.tensorHom_comp_tensorHom]
+
+/-- **Cocorner `e → e⊗1`** — `electricComul ≫ (snd ⊗ counit) = snd ≫ (ρ_ e).inv`. -/
+theorem electricComul_cocorner_e1 :
+    electricComul k ≫ (electricProj k ⊗ₘ unitPlusElectric_counit k) =
+      electricProj k ≫ (ρ_ (electricAnyon k)).inv := by
+  simp [electricComul, MonoidalCategory.tensorHom_comp_tensorHom]
+
+/-! ## §14. ComonObj counit laws
+
+Dual to the MonObj unit laws: `comul ≫ (counit ▷ X) = (λ_ X).inv` and
+`comul ≫ (X ◁ counit) = (ρ_ X).inv`. Both are `(★)`-free — the non-degenerate
+`1 → e⊗e` term (`eeVacUnitIso.inv`) is annihilated by the counit projection on
+either factor, so only the vacuum-carrying terms survive and recombine through the
+biproduct total identity `unitPlusElectric_total`. -/
+
+/-- **ComonObj counit law `counit_comul`** — `electricComul ≫ (counit ▷ X) = (λ_ X).inv`. -/
+theorem electricComul_counit_comul :
+    electricComul k ≫ (unitPlusElectric_counit k ▷ unitPlusElectricObj k) =
+      (λ_ (unitPlusElectricObj k)).inv := by
+  rw [electricComul]
+  simp only [Preadditive.add_comp, Category.assoc, ← MonoidalCategory.tensorHom_id,
+    MonoidalCategory.tensorHom_comp_tensorHom, Category.comp_id,
+    unitPlusElectric_one_counit, electricInj_comp_vacProj,
+    center_zero_tensorHom, Limits.comp_zero, add_zero,
+    MonoidalCategory.id_tensorHom, ← MonoidalCategory.leftUnitor_inv_naturality]
+  simp only [← Category.assoc]
+  rw [← Preadditive.add_comp, unitPlusElectric_total, Category.id_comp]
+
+/-- **ComonObj counit law `comul_counit`** — `electricComul ≫ (X ◁ counit) = (ρ_ X).inv`. -/
+theorem electricComul_comul_counit :
+    electricComul k ≫ (unitPlusElectricObj k ◁ unitPlusElectric_counit k) =
+      (ρ_ (unitPlusElectricObj k)).inv := by
+  rw [electricComul]
+  simp only [Preadditive.add_comp, Category.assoc, ← MonoidalCategory.id_tensorHom,
+    MonoidalCategory.tensorHom_comp_tensorHom, Category.comp_id,
+    unitPlusElectric_one_counit, electricInj_comp_vacProj,
+    center_tensorHom_zero, Limits.comp_zero, add_zero,
+    MonoidalCategory.tensorHom_id, MonoidalCategory.unitors_inv_equal,
+    ← MonoidalCategory.rightUnitor_inv_naturality]
+  simp only [← Category.assoc]
+  rw [← Preadditive.add_comp, unitPlusElectric_total, Category.id_comp]
+
+/-! ## §15. Non-vacuity contrast for the comultiplication
+
+The degenerate projection-through-vacuum comultiplication
+`A5VacuumPlusElectric.unitPlusElectric_comul = counit ≫ (λ_ 𝟙).inv ≫ (one ⊗ one)`
+factors through the vacuum, so it produces **no** `e ⊗ e` summand: its `1 → e⊗e`
+cocorner is zero. The honest `electricComul` produces the non-degenerate `e⊗e`
+summand (`electricComul_cocorner_ee = counit ≫ (e²≅1).inv ≠ 0`). This is the S2
+comultiplication non-vacuity discriminator — dual to `degenerate_corner_ee` for
+the multiplication. -/
+
+/-- The degenerate comultiplication annihilates the `1 → e⊗e` cocorner
+(vs. `electricComul_cocorner_ee`, which is `counit ≫ (e²≅1).inv`). -/
+theorem degenerate_comul_cocorner_ee :
+    unitPlusElectric_comul k ≫ (electricProj k ⊗ₘ electricProj k) = 0 := by
+  simp [unitPlusElectric_comul, MonoidalCategory.tensorHom_comp_tensorHom]
+
+/-! ## §16. The FPdim² = 4 tie to the S1 skeletal model
+
+The object-level electric algebra's support (`{vacuum, electric}`) satisfies the
+S1 skeletal model's Lagrangian FPdim law: `FPdim(A)² = (1 + 1)² = 4 =
+globalFPdimSquared` of the toric bulk. This reads the *derived* model dimension
+(`toricSkeletalModel_globalFPdimSquared_eq_four`) via the object/support tie
+(`electricObject_support_eq_S1`) and the S1 datum's own `fpdim_lagrangian` law —
+the object-to-support-level Lagrangian-dimension bridge. -/
+
+/-- **Object-level FPdim² = 4** — the electric object's support carrier satisfies
+the toric-model Lagrangian FPdim law, tying object-level to the S1 skeletal datum:
+`(∑_{a ∈ {1,e}} FPdim a)² = 4 = globalFPdimSquared`. -/
+theorem electricObject_fpdim_squared_eq_four :
+    (∑ a ∈ ({ToricAnyon.vacuum, ToricAnyon.electric} : Finset ToricAnyon),
+        toricSkeletalModel.fpdim a) ^ 2 = toricSkeletalModel.globalFPdimSquared := by
+  rw [electricObject_support_eq_S1]
+  exact toricElectricSupport.fpdim_lagrangian
+
+/-- The object-level FPdim² is the numeral `4`, discharging the derived global
+dimension via `toricSkeletalModel_globalFPdimSquared_eq_four`. -/
+theorem electricObject_fpdim_squared_eq_four' :
+    (∑ a ∈ ({ToricAnyon.vacuum, ToricAnyon.electric} : Finset ToricAnyon),
+        toricSkeletalModel.fpdim a) ^ 2 = 4 := by
+  rw [electricObject_fpdim_squared_eq_four, toricSkeletalModel_globalFPdimSquared_eq_four]
+
+/-! ## §17. Weak connectedness — the unit summand is a retract
+
+The unit map `one : 𝟙 ⟶ A` is a split monomorphism (retraction `counit`), so the
+unit is a direct summand of the algebra. This is the **char-free** connectedness
+fact. The *strong* haploid statement `Hom(𝟙, A) ≅ k` (rank 1) is char-dependent
+here: `electricAnyon` shares the unit's underlying object and is distinguished only
+by the sign half-braiding, which collapses to the identity in characteristic 2 —
+so `Hom(𝟙, electric) = 0` (hence rank-1 connectedness) needs `2` invertible in `k`.
+The strong form is recorded as an S2 residual. -/
+
+/-- **Weak connectedness** — `one` is a split monomorphism (the unit is a retract
+of the algebra), witnessed by `counit` via `unitPlusElectric_one_counit`. -/
+theorem electricObject_one_isSplitMono : IsSplitMono (unitPlusElectric_one k) :=
+  IsSplitMono.mk' ⟨unitPlusElectric_counit k, unitPlusElectric_one_counit k⟩
+
+/-! ## §18. S2 continuation closure — the comonoid + FPdim + connectedness prefix
+
+Bundles the S2 continuation deliverable (beyond the multiplication prefix `§10`):
+the honest comultiplication's cosplitting corners (with the non-degenerate
+`1 → e⊗e` cocorner), the ComonObj counit laws, the degenerate-comultiplication
+contrast, the FPdim² = 4 tie to the S1 skeletal model, and weak connectedness. -/
+
+/-- **S2 continuation closure** — the honest object-level comultiplication
+`electricComul` on `unitPlusElectricObj` is the transpose group-algebra cosplitting
+(non-degenerate `1 → e⊗e` cocorner), satisfies the ComonObj counit laws, differs
+from the degenerate projection comultiplication on the `e⊗e` cocorner, has support
+FPdim² = 4 (tied to the S1 skeletal model), and a retract unit. -/
+theorem electricAlgebra_S2_continuation_closure :
+    -- transpose group-algebra cosplitting (vacuum + non-degenerate e⊗e cocorners)
+    (electricComul k ≫ (unitPlusElectric_counit k ⊗ₘ unitPlusElectric_counit k) =
+        unitPlusElectric_counit k ≫ (λ_ (𝟙_ (CategoryTheory.Center (VecG_Cat k G2)))).inv) ∧
+      (electricComul k ≫ (electricProj k ⊗ₘ electricProj k) =
+        unitPlusElectric_counit k ≫ (eeVacUnitIso k).inv) ∧
+      -- ComonObj counit laws
+      (electricComul k ≫ (unitPlusElectric_counit k ▷ unitPlusElectricObj k) =
+        (λ_ (unitPlusElectricObj k)).inv) ∧
+      (electricComul k ≫ (unitPlusElectricObj k ◁ unitPlusElectric_counit k) =
+        (ρ_ (unitPlusElectricObj k)).inv) ∧
+      -- degenerate comultiplication kills the 1→e⊗e cocorner (honest one does not)
+      (unitPlusElectric_comul k ≫ (electricProj k ⊗ₘ electricProj k) = 0) ∧
+      -- FPdim² = 4 tie to the S1 skeletal model
+      ((∑ a ∈ ({ToricAnyon.vacuum, ToricAnyon.electric} : Finset ToricAnyon),
+        toricSkeletalModel.fpdim a) ^ 2 = 4) ∧
+      -- weak connectedness: the unit is a retract of the algebra
+      IsSplitMono (unitPlusElectric_one k) :=
+  ⟨electricComul_cocorner_11 k, electricComul_cocorner_ee k,
+   electricComul_counit_comul k, electricComul_comul_counit k,
+   degenerate_comul_cocorner_ee k, electricObject_fpdim_squared_eq_four',
+   electricObject_one_isSplitMono k⟩
+
 end SKEFTHawking.SymTFT.ElectricAlgebraObject
