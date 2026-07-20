@@ -197,6 +197,50 @@ theorem seam_collar_coord_eq_mid {HA : HandleAttachment} {cd : SeamCollarDatum H
     (cd.hHomeo p).2 = csd.mid :=
   le_antisymm (collar_coord_le_mid csd p hpC) (collar_coord_ge_mid csd p hpH)
 
+/-! ## §Bʺ. The collar-slide coordinate — the explicit interval deformation collapsing to `mid`. -/
+
+/-- The real value of the collar slide: `min w ((1-τ)·w + τ·mid)`. Fixes levels `≤ mid` (there the
+convex combination is `≥ w`, so the `min` is `w`) and pushes a level `≥ mid` down toward `mid` (there
+the convex combination is in `[mid, w]`). -/
+def slideVal (mid w : ℝ) (τ : unitInterval) : ℝ :=
+  min w ((1 - (τ : ℝ)) * w + (τ : ℝ) * mid)
+
+/-- The slide value stays in the OPEN welded interval `(-1, 1)` — a `min` of `w ∈ (-1,1)` and a
+convex combination of `w`, `mid ∈ (-1,1)`. -/
+theorem slideVal_mem (mid w : ℝ) (τ : unitInterval)
+    (hw : (-1 : ℝ) < w ∧ w < 1) (hm : (-1 : ℝ) < mid ∧ mid < 1) :
+    (-1 : ℝ) < slideVal mid w τ ∧ slideVal mid w τ < 1 := by
+  obtain ⟨hw1, hw2⟩ := hw
+  obtain ⟨hm1, _⟩ := hm
+  have hτ0 : (0 : ℝ) ≤ (τ : ℝ) := τ.2.1
+  have hτ1 : (τ : ℝ) ≤ 1 := τ.2.2
+  refine ⟨lt_min hw1 ?_, lt_of_le_of_lt (min_le_left _ _) hw2⟩
+  have hconv_ge : min w mid ≤ (1 - (τ : ℝ)) * w + (τ : ℝ) * mid := by
+    nlinarith [mul_nonneg (by linarith : (0 : ℝ) ≤ 1 - (τ : ℝ))
+        (sub_nonneg.mpr (min_le_left w mid)),
+      mul_nonneg hτ0 (sub_nonneg.mpr (min_le_right w mid))]
+  exact lt_of_lt_of_le (lt_min hw1 hm1) hconv_ge
+
+/-- The collar-slide coordinate as a point of the welded interval `(-1,1)`: `slideVal` packaged as an
+element of `↥weldedInterval` (the nested `Icc(-1,1)`-then-open-interval subtype). -/
+def slideCoord (mid w : ↥weldedInterval) (τ : unitInterval) : ↥weldedInterval :=
+  ⟨⟨slideVal mid.val.val w.val.val τ,
+      ⟨le_of_lt (slideVal_mem _ _ _ w.2 mid.2).1, le_of_lt (slideVal_mem _ _ _ w.2 mid.2).2⟩⟩,
+    slideVal_mem _ _ _ w.2 mid.2⟩
+
+/-- **The collar slide is continuous jointly in the level and the time.** `slideVal` is a `min` of
+continuous real functions; packaged through the two nested subtype memberships it gives a continuous
+`↥weldedInterval × unitInterval → ↥weldedInterval`. -/
+theorem continuous_slideCoord (mid : ↥weldedInterval) :
+    Continuous (fun p : ↥weldedInterval × unitInterval => slideCoord mid p.1 p.2) := by
+  apply Continuous.subtype_mk
+  apply Continuous.subtype_mk
+  have hw : Continuous (fun p : ↥weldedInterval × unitInterval => (p.1.val.val : ℝ)) :=
+    (continuous_subtype_val.comp continuous_subtype_val).comp continuous_fst
+  have hτ : Continuous (fun p : ↥weldedInterval × unitInterval => ((p.2 : ℝ))) :=
+    continuous_subtype_val.comp continuous_snd
+  exact (hw.min (((continuous_const.sub hτ).mul hw).add (hτ.mul continuous_const)))
+
 /-! ## §C. The closed ends as carrier subspaces, and their banked all-degree finiteness. -/
 
 /-- **The cyl end `B` sits inside `W` as the closed subspace `↥(range fromCyl)`** — `fromCyl` is a
