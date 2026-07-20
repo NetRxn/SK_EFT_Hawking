@@ -375,6 +375,178 @@ theorem bdryMap_mem_boundary (x : S3) : bdryMap x ∈ boundaryE := by
   · rw [dif_neg h]
     exact ⟨_, fiber_norm_eq_one (S3_fst_ne_zero (not_le.mp h).le), Or.inr rfl⟩
 
+/-! ### §3.3 Point-equality criteria in `E` (quotient unwinding — used by injectivity and K6′b) -/
+
+/-- **Two chart-0 points coincide in `E` iff their coordinates coincide** (the chart-0 inclusion is
+injective): same-chart points are never core-welded, so `chart0 p = chart0 q ↔ p = q`. -/
+theorem chart0_inj_iff {p q : ResChart} : chart0 p = chart0 q ↔ p = q := by
+  constructor
+  · intro h
+    rcases Quotient.exact h with (heq | hg)
+    · exact Sum.inl.inj heq
+    · exact (hg : False).elim
+  · rintro rfl; rfl
+
+/-- **Two chart-1 points coincide in `E` iff their coordinates coincide.** -/
+theorem chart1_inj_iff {p q : ResChart} : chart1 p = chart1 q ↔ p = q := by
+  constructor
+  · intro h
+    rcases Quotient.exact h with (heq | hg)
+    · exact Sum.inr.inj heq
+    · exact (hg : False).elim
+  · rintro rfl; rfl
+
+/-- **A chart-0 point equals a chart-1 point iff they are welded** (`glued`): the only cross-chart
+identifications in `E` are the equator welds. -/
+theorem chart0_eq_chart1_iff {p q : ResChart} : chart0 p = chart1 q ↔ glued p q := by
+  constructor
+  · intro h
+    rcases Quotient.exact h with (heq | hg)
+    · exact absurd heq (by simp)
+    · exact hg
+  · intro h; exact Quotient.sound (Or.inr h)
+
+/-! ### §3.4 Injectivity of `ℝP³ → ∂E` -/
+
+/-- **The Hopf coordinate recovery lemma** (the algebraic core of injectivity): two unit-sphere points
+with the same base ratio `a/b = a'/b'` and the same squared fiber phase `(b/‖b‖)² = (b'/‖b'‖)²` are
+equal up to the antipodal sign. The `±` is exactly the square-root ambiguity the `ℝP³` quotient
+absorbs. -/
+theorem recover {a b a' b' : ℂ} (hb : b ≠ 0) (hb' : b' ≠ 0)
+    (hn : ‖a‖ ^ 2 + ‖b‖ ^ 2 = 1) (hn' : ‖a'‖ ^ 2 + ‖b'‖ ^ 2 = 1)
+    (hbase : a / b = a' / b') (hfib : (b / (‖b‖ : ℂ)) ^ 2 = (b' / (‖b'‖ : ℂ)) ^ 2) :
+    (a' = a ∧ b' = b) ∨ (a' = -a ∧ b' = -b) := by
+  have haz' : a' = (a / b) * b' := (div_eq_iff hb').mp hbase.symm
+  -- ‖b‖ = ‖b'‖ from the sphere constraints and the shared ratio
+  have e1 : ‖a‖ ^ 2 = ‖a / b‖ ^ 2 * ‖b‖ ^ 2 := by
+    have h : ‖a / b‖ * ‖b‖ = ‖a‖ := by rw [← norm_mul, div_mul_cancel₀ a hb]
+    rw [← h]; ring
+  have e2 : ‖a'‖ ^ 2 = ‖a / b‖ ^ 2 * ‖b'‖ ^ 2 := by
+    have h : ‖a'‖ = ‖a / b‖ * ‖b'‖ := by rw [haz', norm_mul]
+    rw [h]; ring
+  have hb2 : ‖b‖ ^ 2 = ‖b'‖ ^ 2 := by nlinarith [norm_nonneg (a / b)]
+  have hnb : ‖b‖ = ‖b'‖ := by
+    have := congrArg Real.sqrt hb2
+    rwa [Real.sqrt_sq (norm_nonneg b), Real.sqrt_sq (norm_nonneg b')] at this
+  -- b² = b'²  (multiply the fiber equation by ‖b‖²)
+  have hbc : (‖b‖ : ℂ) ≠ 0 := by exact_mod_cast norm_ne_zero_iff.mpr hb
+  have hbc' : (‖b'‖ : ℂ) ≠ 0 := by exact_mod_cast norm_ne_zero_iff.mpr hb'
+  have hsq : b ^ 2 = b' ^ 2 := by
+    have hnbc : (‖b‖ : ℂ) = (‖b'‖ : ℂ) := by exact_mod_cast hnb
+    have h := hfib
+    rw [hnbc] at h
+    field_simp at h
+    linear_combination h
+  rcases (sq_eq_sq_iff_eq_or_eq_neg).mp hsq with hbb | hbb
+  · left
+    refine ⟨?_, hbb.symm⟩
+    rw [haz', ← hbb, div_mul_cancel₀ a hb]
+  · right
+    have hb'eq : b' = -b := by linear_combination hbb
+    exact ⟨by rw [haz', hb'eq, mul_neg, div_mul_cancel₀ a hb], hb'eq⟩
+
+/-- Bridge: coordinate agreement (up to antipode) implies equal `ℝP³` classes. -/
+theorem mkRP3_of_coords {u v : S3}
+    (h : (v.1.1 = u.1.1 ∧ v.1.2 = u.1.2) ∨ (v.1.1 = -u.1.1 ∧ v.1.2 = -u.1.2)) :
+    mkRP3 u = mkRP3 v := by
+  rcases h with ⟨e1, e2⟩ | ⟨e1, e2⟩
+  · have : v = u := Subtype.ext (Prod.ext e1 e2)
+    rw [this]
+  · have : v = negS3 u := Subtype.ext (Prod.ext e1 e2)
+    rw [this, mkRP3_neg]
+
+/-- **`ρ̄ : ℝP³ → ∂E` is injective.** Two sphere points with equal Hopf image agree up to the
+antipode (`recover`), across all four hemisphere combinations — the cross-chart cases route through
+the equator weld (`glued` / `hopf_clutch`). So the descended map does not collapse `ℝP³`. -/
+theorem bdryMap_eq_imp {x y : S3} (h : bdryMap x = bdryMap y) : mkRP3 x = mkRP3 y := by
+  simp only [bdryMap] at h
+  by_cases hx : ‖x.1.1‖ ≤ ‖x.1.2‖ <;> by_cases hy : ‖y.1.1‖ ≤ ‖y.1.2‖
+  · -- TT: both chart 0
+    rw [dif_pos hx, dif_pos hy] at h
+    have hpair := chart0_inj_iff.mp h
+    have hbase : x.1.1 / x.1.2 = y.1.1 / y.1.2 :=
+      congrArg (fun r : ResChart => (r.1 : ℂ)) hpair
+    have hfib : (x.1.2 / (‖x.1.2‖ : ℂ)) ^ 2 = (y.1.2 / (‖y.1.2‖ : ℂ)) ^ 2 :=
+      congrArg (fun r : ResChart => (r.2 : ℂ)) hpair
+    exact mkRP3_of_coords
+      (recover (S3_snd_ne_zero hx) (S3_snd_ne_zero hy) x.2 y.2 hbase hfib)
+  · -- TF: x chart 0, y chart 1 — equator weld
+    rw [dif_pos hx, dif_neg hy] at h
+    obtain ⟨hseam, hbeq, hfeq⟩ := chart0_eq_chart1_iff.mp h
+    have hxb : x.1.2 ≠ 0 := S3_snd_ne_zero hx
+    have hya : y.1.1 ≠ 0 := S3_fst_ne_zero (not_le.mp hy).le
+    have hab : ‖x.1.1‖ = ‖x.1.2‖ := by
+      rw [show ((⟨x.1.1 / x.1.2, _⟩ : Disk) : ℂ) = x.1.1 / x.1.2 from rfl, norm_div,
+        div_eq_one_iff_eq (norm_ne_zero_iff.mpr hxb)] at hseam
+      exact hseam
+    have hxa : x.1.1 ≠ 0 := by
+      intro h0
+      have hz1 : ‖x.1.1‖ = 0 := by rw [h0, norm_zero]
+      rw [hz1] at hab
+      have := x.2; rw [hz1, ← hab] at this; norm_num at this
+    have hbase : y.1.2 / y.1.1 = x.1.2 / x.1.1 := by
+      have : y.1.2 / y.1.1 = (x.1.1 / x.1.2)⁻¹ := hbeq
+      rw [this, inv_div]
+    have hfib : (y.1.1 / (‖y.1.1‖ : ℂ)) ^ 2 = (x.1.1 / (‖x.1.1‖ : ℂ)) ^ 2 := by
+      have he : (y.1.1 / (‖y.1.1‖ : ℂ)) ^ 2
+          = (x.1.1 / x.1.2) ^ 2 * (x.1.2 / (‖x.1.2‖ : ℂ)) ^ 2 := hfeq
+      rw [he]
+      have hbc : (‖x.1.2‖ : ℂ) = (‖x.1.1‖ : ℂ) := by exact_mod_cast hab.symm
+      have hxa1 : (‖x.1.1‖ : ℂ) ≠ 0 := by exact_mod_cast norm_ne_zero_iff.mpr hxa
+      rw [hbc]; field_simp
+    have hrec := recover hya hxa (by rw [add_comm]; exact y.2) (by rw [add_comm]; exact x.2)
+      hbase hfib
+    rcases hrec with ⟨e1, e2⟩ | ⟨e1, e2⟩
+    · exact mkRP3_of_coords (Or.inl ⟨e2.symm, e1.symm⟩)
+    · exact mkRP3_of_coords (Or.inr ⟨by rw [e2, neg_neg], by rw [e1, neg_neg]⟩)
+  · -- FT: x chart 1, y chart 0 — equator weld (mirror of TF)
+    rw [dif_neg hx, dif_pos hy] at h
+    obtain ⟨hseam, hbeq, hfeq⟩ := chart0_eq_chart1_iff.mp h.symm
+    have hyb : y.1.2 ≠ 0 := S3_snd_ne_zero hy
+    have hxa : x.1.1 ≠ 0 := S3_fst_ne_zero (not_le.mp hx).le
+    have hab : ‖y.1.1‖ = ‖y.1.2‖ := by
+      rw [show ((⟨y.1.1 / y.1.2, _⟩ : Disk) : ℂ) = y.1.1 / y.1.2 from rfl, norm_div,
+        div_eq_one_iff_eq (norm_ne_zero_iff.mpr hyb)] at hseam
+      exact hseam
+    have hya : y.1.1 ≠ 0 := by
+      intro h0
+      have hz1 : ‖y.1.1‖ = 0 := by rw [h0, norm_zero]
+      rw [hz1] at hab
+      have := y.2; rw [hz1, ← hab] at this; norm_num at this
+    have hbase : x.1.2 / x.1.1 = y.1.2 / y.1.1 := by
+      have : x.1.2 / x.1.1 = (y.1.1 / y.1.2)⁻¹ := hbeq
+      rw [this, inv_div]
+    have hfib : (x.1.1 / (‖x.1.1‖ : ℂ)) ^ 2 = (y.1.1 / (‖y.1.1‖ : ℂ)) ^ 2 := by
+      have he : (x.1.1 / (‖x.1.1‖ : ℂ)) ^ 2
+          = (y.1.1 / y.1.2) ^ 2 * (y.1.2 / (‖y.1.2‖ : ℂ)) ^ 2 := hfeq
+      rw [he]
+      have hbc : (‖y.1.2‖ : ℂ) = (‖y.1.1‖ : ℂ) := by exact_mod_cast hab.symm
+      have hya1 : (‖y.1.1‖ : ℂ) ≠ 0 := by exact_mod_cast norm_ne_zero_iff.mpr hya
+      rw [hbc]; field_simp
+    have hrec := recover hxa hya (by rw [add_comm]; exact x.2) (by rw [add_comm]; exact y.2)
+      hbase hfib
+    rcases hrec with ⟨e1, e2⟩ | ⟨e1, e2⟩
+    · exact mkRP3_of_coords (Or.inl ⟨e2, e1⟩)
+    · exact mkRP3_of_coords (Or.inr ⟨e2, e1⟩)
+  · -- FF: both chart 1
+    rw [dif_neg hx, dif_neg hy] at h
+    have hpair := chart1_inj_iff.mp h
+    have hbase : x.1.2 / x.1.1 = y.1.2 / y.1.1 :=
+      congrArg (fun r : ResChart => (r.1 : ℂ)) hpair
+    have hfib : (x.1.1 / (‖x.1.1‖ : ℂ)) ^ 2 = (y.1.1 / (‖y.1.1‖ : ℂ)) ^ 2 :=
+      congrArg (fun r : ResChart => (r.2 : ℂ)) hpair
+    have hrec := recover (S3_fst_ne_zero (not_le.mp hx).le) (S3_fst_ne_zero (not_le.mp hy).le)
+      (by rw [add_comm]; exact x.2) (by rw [add_comm]; exact y.2) hbase hfib
+    rcases hrec with ⟨e1, e2⟩ | ⟨e1, e2⟩
+    · exact mkRP3_of_coords (Or.inl ⟨e2, e1⟩)
+    · exact mkRP3_of_coords (Or.inr ⟨e2, e1⟩)
+
+/-- **`ρ̄ : ℝP³ → ∂E` is injective** (packaged). -/
+theorem bdryMapRP3_injective : Function.Injective bdryMapRP3 := by
+  refine Quotient.ind fun x => Quotient.ind fun y => ?_
+  intro h
+  exact bdryMap_eq_imp h
+
 end
 
 end SKEFTHawking.KummerResolutionPiece
