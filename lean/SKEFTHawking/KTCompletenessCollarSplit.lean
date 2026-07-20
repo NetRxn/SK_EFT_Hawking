@@ -159,6 +159,44 @@ structure CollarSplitDatum (HA : HandleAttachment) (cd : SeamCollarDatum HA.carr
     cd.hHomeo '' {p : ↥cd.seamNbhd | (p : HA.carrier) ∈ Set.range HA.fromHandle}
       = {q : WeldedCollarModel cd.A | mid ≤ q.2}
 
+/-! ## §Bʹ. Collar geometry from the split datum — the seam sits at the middle collar slice. -/
+
+/-- From the split datum: a collar point lying in `range fromCyl` has collar coordinate `≤ mid`
+(it is in the lower collar `cd.A × (-1, mid]`). -/
+theorem collar_coord_le_mid {HA : HandleAttachment} {cd : SeamCollarDatum HA.carrier}
+    (csd : CollarSplitDatum HA cd) (p : ↥cd.seamNbhd)
+    (hp : (p : HA.carrier) ∈ Set.range HA.fromCyl) :
+    (cd.hHomeo p).2 ≤ csd.mid := by
+  have hmem : cd.hHomeo p
+      ∈ cd.hHomeo '' {p : ↥cd.seamNbhd | (p : HA.carrier) ∈ Set.range HA.fromCyl} :=
+    Set.mem_image_of_mem _ hp
+  rw [csd.cyl_side] at hmem
+  exact hmem
+
+/-- From the split datum: a collar point lying in `range fromHandle` has collar coordinate `≥ mid`
+(it is in the upper collar `cd.A × [mid, 1)`). -/
+theorem collar_coord_ge_mid {HA : HandleAttachment} {cd : SeamCollarDatum HA.carrier}
+    (csd : CollarSplitDatum HA cd) (p : ↥cd.seamNbhd)
+    (hp : (p : HA.carrier) ∈ Set.range HA.fromHandle) :
+    csd.mid ≤ (cd.hHomeo p).2 := by
+  have hmem : cd.hHomeo p
+      ∈ cd.hHomeo '' {p : ↥cd.seamNbhd | (p : HA.carrier) ∈ Set.range HA.fromHandle} :=
+    Set.mem_image_of_mem _ hp
+  rw [csd.handle_side] at hmem
+  exact hmem
+
+/-- **The seam sits at the middle collar slice.** A collar point in BOTH closed ranges — a seam
+point, inside the collar — has collar coordinate exactly `mid`. This is the geometric content of the
+split datum: the surgery seam `range fromCyl ∩ range fromHandle` is the healed mid-level of the
+welded collar, so the collar slide (which fixes the level `mid`) fixes the seam — the compatibility
+that lets the retraction glue to the identity on `range fromCyl`. -/
+theorem seam_collar_coord_eq_mid {HA : HandleAttachment} {cd : SeamCollarDatum HA.carrier}
+    (csd : CollarSplitDatum HA cd) (p : ↥cd.seamNbhd)
+    (hpC : (p : HA.carrier) ∈ Set.range HA.fromCyl)
+    (hpH : (p : HA.carrier) ∈ Set.range HA.fromHandle) :
+    (cd.hHomeo p).2 = csd.mid :=
+  le_antisymm (collar_coord_le_mid csd p hpC) (collar_coord_ge_mid csd p hpH)
+
 /-! ## §C. The closed ends as carrier subspaces, and their banked all-degree finiteness. -/
 
 /-- **The cyl end `B` sits inside `W` as the closed subspace `↥(range fromCyl)`** — `fromCyl` is a
