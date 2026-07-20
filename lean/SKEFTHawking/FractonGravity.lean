@@ -58,8 +58,21 @@ inductive AgreementStatus where
   | diverge
   deriving DecidableEq, Repr
 
-/-- The agreement status as a function of bootstrap order.
-    Fracton and GR agree at orders 0 and 1, diverge at order ≥ 2. -/
+/-- The agreement status as a function of bootstrap order — a **literature
+classification ledger** (NOT a derivation) recording the Afxonidis-Caddeo-
+Hoyos-Musso finding (arXiv:2311.01818, 2406.19268): fracton and GR agree at the
+linearized (order 0) and first-nonlinear (order 1) levels, and diverge at the
+second-nonlinear (order ≥ 2) level.
+
+The *genuine, verified* structural obstruction underlying this "diverge" verdict
+is proved below (`fracton_route_no_diffeo`, `derivative_order_mismatch`,
+`parameter_dim_mismatch`, `dof_mismatch_4d`) and bundled in
+`bootstrap_gap_grounded_in_structure`: the fracton gauge algebra `⟨2,1⟩` is a
+strict Abelian subalgebra of the diffeomorphism algebra `⟨1,4⟩`, and the DOF
+counts differ. The full Gupta-Feynman cubic-vertex bootstrap recursion (vertex
+enumeration + spin-1 stability analysis of Afxonidis et al.) is a substantial
+build **not** carried out here — a documented gap; this ledger stands in for it,
+grounded in the structural inequalities that Lean does verify. -/
 def bootstrap_agreement (order : BootstrapOrder) : AgreementStatus :=
   if order ≤ 1 then AgreementStatus.agree
   else AgreementStatus.diverge
@@ -133,6 +146,7 @@ structure GaugeStructure where
   derivative_order : Nat
   /-- Dimension of the gauge parameter (1 = scalar, d = vector) -/
   parameter_dim : Nat
+deriving DecidableEq
 
 /-- Fracton gauge structure: δA_ij = ∂_i ∂_j α (scalar parameter, 2 derivatives). -/
 def fracton_gauge : GaugeStructure where
@@ -175,18 +189,62 @@ inductive GravityRoute where
   /-- Fracton: tensor gauge theory → spin-2 → (fails at nonlinear) -/
   | fracton_bootstrap
 
-/-- Whether the route achieves full diffeomorphism invariance. -/
-def achieves_diffeo_invariance : GravityRoute → Bool
-  | GravityRoute.adw_tetrad => true
-  | GravityRoute.fracton_bootstrap => false
+/-- The **effective gauge structure** each route delivers (fracton-gravity DR
+§1, §5). The ADW tetrad route produces the full linearized-diffeomorphism gauge
+structure (1-derivative, `d`-component vector parameter `ξ_μ`), because the
+tetrad is a fermionic bilinear whose fluctuations realize the diagonal Lorentz
+group. The fracton bootstrap route delivers only the fracton gauge structure
+(2-derivative, scalar parameter `α`, `δA_ij = ∂_i∂_j α`) — a strict Abelian
+subalgebra of the diffeomorphism algebra. -/
+def routeGaugeStructure : GravityRoute → GaugeStructure
+  | GravityRoute.adw_tetrad       => diffeo_gauge 4
+  | GravityRoute.fracton_bootstrap => fracton_gauge
 
-/-- **The ADW route achieves full diffeomorphism invariance.** -/
+/-- Whether the route achieves full diffeomorphism invariance — **derived** by
+comparing the route's actual gauge structure to the diffeomorphism gauge
+structure (NOT an assigned constant). A route achieves diffeo invariance iff its
+gauge transformation matches diffeomorphisms in *both* derivative order and
+parameter dimension. -/
+def achieves_diffeo_invariance (r : GravityRoute) : Bool :=
+  decide (routeGaugeStructure r = diffeo_gauge 4)
+
+/-- **The ADW route achieves full diffeomorphism invariance** — its tetrad gauge
+structure *is* the diffeomorphism gauge structure. -/
 theorem adw_achieves_diffeo :
-    achieves_diffeo_invariance GravityRoute.adw_tetrad = true := rfl
+    achieves_diffeo_invariance GravityRoute.adw_tetrad = true := by decide
 
-/-- **The fracton route does NOT achieve full diffeomorphism invariance.** -/
+/-- **The fracton route does NOT achieve full diffeomorphism invariance.** This is
+now *derived from structure*: the fracton gauge structure `⟨2,1⟩` differs from the
+diffeomorphism gauge structure `⟨1,4⟩` (the DR §4 algebraic obstruction), so the
+comparison returns `false`. -/
 theorem fracton_fails_diffeo :
-    achieves_diffeo_invariance GravityRoute.fracton_bootstrap = false := rfl
+    achieves_diffeo_invariance GravityRoute.fracton_bootstrap = false := by decide
+
+/-- **Structural no-go (Prop form): the fracton route's gauge structure is not the
+diffeomorphism gauge structure.** Falsity derived from the genuine derivative-order
+mismatch (`2 ≠ 1`), not from an assigned Bool — this is the DR §4 "algebraic
+obstruction" (fracton = 1-scalar Abelian subalgebra ⊊ diffeo = `d`-vector
+non-Abelian algebra). -/
+theorem fracton_route_no_diffeo :
+    routeGaugeStructure GravityRoute.fracton_bootstrap ≠ diffeo_gauge 4 := by
+  intro h
+  have := congrArg GaugeStructure.derivative_order h
+  simp [routeGaugeStructure, fracton_gauge, diffeo_gauge] at this
+
+/-- **The bootstrap "diverge" verdict is grounded in genuine structural
+inequalities.** The order-2 divergence recorded by the `bootstrap_agreement`
+ledger is backed by two *proven* obstructions: (i) the gauge-algebra mismatch
+`fracton_gauge ≠ diffeo_gauge 4` (DR §4 algebraic obstruction), and (ii) the DOF
+mismatch `fracton_dof 3 ≠ graviton_dof 4` (4 ≠ 2). These are the verified
+structural content behind the literature classification. -/
+theorem bootstrap_gap_grounded_in_structure :
+    bootstrap_agreement 2 = AgreementStatus.diverge ∧
+    fracton_gauge ≠ diffeo_gauge 4 ∧
+    fracton_dof 3 ≠ graviton_dof 4 := by
+  refine ⟨bootstrap_gap_order_2, ?_, dof_mismatch_4d⟩
+  intro h
+  have := congrArg GaugeStructure.derivative_order h
+  simp [fracton_gauge, diffeo_gauge] at this
 
 /-!
 ## DOF Gap for General Dimension
