@@ -198,6 +198,17 @@ theorem seam_collar_coord_eq_mid {HA : HandleAttachment} {cd : SeamCollarDatum H
     (cd.hHomeo p).2 = csd.mid :=
   le_antisymm (collar_coord_le_mid csd p hpC) (collar_coord_ge_mid csd p hpH)
 
+/-- **Converse of `collar_coord_le_mid`.** A collar point whose collar level is `≤ mid` lies on the
+cyl side, `range fromCyl` — the reverse inclusion of the `cyl_side` image equality (`cd.hHomeo`
+injective). This places the fully-slid handle sliver (level `≤ mid` at time `1`) into `range fromCyl`. -/
+theorem mem_fromCyl_of_collar_coord_le_mid {HA : HandleAttachment} {cd : SeamCollarDatum HA.carrier}
+    (csd : CollarSplitDatum HA cd) (p : ↥cd.seamNbhd) (h : (cd.hHomeo p).2 ≤ csd.mid) :
+    (p : HA.carrier) ∈ Set.range HA.fromCyl := by
+  have hmem : cd.hHomeo p
+      ∈ cd.hHomeo '' {p : ↥cd.seamNbhd | (p : HA.carrier) ∈ Set.range HA.fromCyl} := by
+    rw [csd.cyl_side]; exact h
+  exact (cd.hHomeo.injective.mem_set_image).mp hmem
+
 /-! ## §Bʺ. The collar-slide coordinate — the explicit interval deformation collapsing to `mid`. -/
 
 /-- The real value of the collar slide: `min w ((1-τ)·w + τ·mid)`. Fixes levels `≤ mid` (there the
@@ -262,6 +273,17 @@ theorem slideCoord_fix_of_le (mid w : ↥weldedInterval) (τ : unitInterval) (h 
 /-- The `↥weldedInterval` slide is the identity at time `0`. -/
 theorem slideCoord_at_zero (mid w : ↥weldedInterval) : slideCoord mid w 0 = w :=
   Subtype.ext (Subtype.ext (slideVal_at_zero _ _))
+
+/-- At time `1` the slide has fully collapsed to `min w mid`, in particular `≤ mid`. -/
+theorem slideVal_one_le (mid w : ℝ) : slideVal mid w 1 ≤ mid := by
+  have h : (1 - ((1 : unitInterval) : ℝ)) * w + ((1 : unitInterval) : ℝ) * mid = mid := by
+    simp [Set.Icc.coe_one]
+  rw [slideVal, h]
+  exact min_le_right w mid
+
+/-- The `↥weldedInterval` slide lands at level `≤ mid` at time `1`. -/
+theorem slideCoord_one_le_mid (mid w : ↥weldedInterval) : slideCoord mid w 1 ≤ mid :=
+  slideVal_one_le _ _
 
 /-! ## §B‴. The collar slide transported to the seam neighbourhood. -/
 
@@ -498,6 +520,77 @@ theorem continuous_collarRetractVal
         ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle := q.2
     simp only [Set.restrict_apply, collarRetractVal]
     rw [dif_pos hq]
+
+/-- `range fromCyl ⊆ coverA` (the cyl side is one of the two thickened pieces). -/
+theorem range_fromCyl_subset_coverA :
+    Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl
+      ⊆ coverA s t S hS φ hφ hφinj cd hseam d := by
+  intro x hx
+  exact Or.inl hx
+
+/-- The retraction value lands in `coverA` (the slide stays in the collar `⊆ coverA`; off the handle
+side it is the identity). -/
+theorem collarRetractVal_mem_coverA
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (x : ↥(coverA s t S hS φ hφ hφinj cd hseam d)) (τ : unitInterval) :
+    collarRetractVal s t S hS φ hφ hφinj cd hseam d csd x τ
+      ∈ coverA s t S hS φ hφ hφinj cd hseam d := by
+  rw [collarRetractVal]
+  by_cases hH : (x.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle
+  · rw [dif_pos hH]
+    exact Or.inr (Subtype.coe_prop _)
+  · rw [dif_neg hH]; exact x.2
+
+/-- At time `0` the retraction is the identity. -/
+theorem collarRetractVal_at_zero
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (x : ↥(coverA s t S hS φ hφ hφinj cd hseam d)) :
+    collarRetractVal s t S hS φ hφ hφinj cd hseam d csd x 0 = x.val := by
+  rw [collarRetractVal]
+  by_cases hH : (x.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle
+  · rw [dif_pos hH, slideCollarMap_at_zero]
+  · rw [dif_neg hH]
+
+/-- At time `1` the retraction lands in the closed cyl end `range fromCyl` (the handle sliver is
+pushed to level `≤ mid`, which the split datum places in `range fromCyl`; pure cyl points are fixed). -/
+theorem collarRetractVal_one_mem_fromCyl
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (x : ↥(coverA s t S hS φ hφ hφinj cd hseam d)) :
+    collarRetractVal s t S hS φ hφ hφinj cd hseam d csd x 1
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl := by
+  rw [collarRetractVal]
+  by_cases hH : (x.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle
+  · rw [dif_pos hH]
+    refine mem_fromCyl_of_collar_coord_le_mid csd _ ?_
+    rw [slideCollarMap, Homeomorph.apply_symm_apply]
+    exact slideCoord_one_le_mid _ _
+  · rw [dif_neg hH]
+    rcases coverA_subset_ranges_union s t S hS φ hφ hφinj cd hseam d x.2 with h | h
+    · exact h
+    · exact absurd h hH
+
+/-- At time `1` the retraction FIXES the cyl end (`f ∘ g = id`): a point of `range fromCyl` is either
+a pure cyl point (identity) or a seam point (collar level `mid`, fixed by the slide). -/
+theorem collarRetractVal_one_fix_of_fromCyl
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (x : ↥(coverA s t S hS φ hφ hφinj cd hseam d))
+    (hx : (x.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl) :
+    collarRetractVal s t S hS φ hφ hφinj cd hseam d csd x 1 = x.val := by
+  rw [collarRetractVal]
+  by_cases hH : (x.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle
+  · rw [dif_pos hH,
+      slideCollarMap_fix_of_le cd csd.mid
+        ⟨x.val, handle_mem_seamNbhd_of_mem_coverA s t S hS φ hφ hφinj cd hseam d
+          x.val x.2 hH⟩ 1
+        (seam_collar_coord_eq_mid csd
+          ⟨x.val, handle_mem_seamNbhd_of_mem_coverA s t S hS φ hφ hφinj cd hseam d
+            x.val x.2 hH⟩ hx hH).le]
+  · rw [dif_neg hH]
 
 end
 
