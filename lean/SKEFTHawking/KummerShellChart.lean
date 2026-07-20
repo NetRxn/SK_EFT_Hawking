@@ -463,6 +463,44 @@ the boundary chart, delivered by the extended round chart's `homeomorphOfImageSu
 noncomputable def collarHomeo (c : TorusFour) : ↥shellSetE4 ≃ₜ ↥(collarSet c) :=
   (centeredChartParamE4 c).homeomorphOfImageSubsetSource (shellSetE4_subset_source c) rfl
 
+/-! ### §C. STATUS — the K4′′ certificate
+
+**GREEN here — deliverable (1) COMPLETE, deliverable (2) mathematical content + topological core:**
+
+Deliverable (1) — **the exterior-shell collar charts** (§A):
+- `shellCollarChart u₀` — the collar chart of `ExtShell = {t : E⁴ ∣ ρ ≤ ‖t‖}` onto `(𝓡 3).prod (𝓡∂ 1)`,
+  `v ↦ (chart_{S³}(v/‖v‖), ‖v‖ − ρ)`; the exterior-of-ball analogue of `DiskChartGeneric.diskCollarChart`.
+- `instChartedSpaceExtShell` — `ExtShell` is a manifold-with-boundary charted on the half-space model,
+  the polar collar family alone (no interior chart: no centre).
+
+Deliverable (2) — **the transport to the T⁴° side** (§B):
+- `toE4`/`ofE4`/`homeoE4` — the coordinate iso `ℝ⁴ ≅ E⁴` (`sqNorm`-faithful).
+- `circle_exp_injOn_threeQuarters`, `centeredChartParam_injOn_threeQuarters` — chart injectivity extended
+  from the excision ball `{sqNorm ≤ ρ²}` to `{sqNorm ≤ (3/4)²}` (room for the exterior collar).
+- `centeredChartParamE4 c` — the extended round chart as an `OpenPartialHomeomorph E⁴ → T⁴` on `{‖w‖ < 3/4}`.
+- `shellImage_mem_puncturedTorus` — the geometric heart: the exterior shell lands on the punctured side.
+- `collarHomeo c : ↥shellSetE4 ≃ₜ ↥(collarSet c)` — **each of the 16 boundary collars is homeomorphic to
+  the Euclidean exterior shell**; `collarSet_subset_puncturedTorus` places the collar inside `T⁴°`.
+
+**Residual (the point-set packaging, path now unblocked by `collarHomeo`):**
+The full `ChartedSpace ((𝓡 3).prod (𝓡∂ 1)) (↥puncturedTorus)` needs two assembly steps, both reducible to
+composition of the objects above:
+1. **Boundary charts** — per `(c, u₀)`, the `OpenPartialHomeomorph (↥puncturedTorus) ((𝓡 3).prod (𝓡∂ 1))`
+   with source `collarSet c` (relatively open in `T⁴°`), built by `OpenPartialHomeomorph.ofContinuousOpenRestrict`
+   with forward map `shellCollarChart u₀ ∘ (↥shellSetE4 ↪ ExtShell) ∘ (collarHomeo c).symm ∘ val`. Its
+   `IsOpenMap` requirement is now discharged by composition: `(collarHomeo c).symm` is a homeomorphism, the
+   inclusion `↥shellSetE4 ↪ ExtShell` is an open embedding (`shellSetE4` is open in `ExtShell`), and
+   `shellCollarChart u₀` is a chart — no bespoke subtype open-map argument remains.
+2. **Interior charts** — the ambient `T⁴` product charts on `openPunctured` (`interior_chartedSpace`,
+   `KummerChartedSpace`) reshaped `E⁴ ≅ E³ × (0,∞) ⊆ E³ × HalfSpace¹` into the boundary model's interior,
+   glued to the boundary charts via the `chartAt` dispatch (interior vs the 16 collars).
+
+The Q-side descent (deliverable 3) then follows: `shellCollarChart` is `τ`-equivariant (`τ = −id` preserves
+`‖·‖` and antipodes directions), so it descends through `qmk` to the `ℝP³ × collar` charts on `FreeQuotient`
+via the banked `qmk_localOpenPartialHomeomorph`/`isOpenEmbedding_qmk_sepBall`.
+
+Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom. -/
+
 end
 
 end SKEFTHawking.KummerShellChart
