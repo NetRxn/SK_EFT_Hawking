@@ -1,5 +1,5 @@
 /-
-# Phase 5q.H — the Kummer K3 generator, K4′ (Route B): the punctured torus `T⁴°`
+# Phase 5q.H — the Kummer K3 generator, K4′ (Route B): the punctured torus `T⁴°` (ROUND-BALL)
 
 Continues `KummerInvolution.lean` (K2 = the involution `τ(w) = w⁻¹`, K3 = its 16 fixed points
 `{±1}⁴`, both PROVEN there). Read `KummerK3Base.lean` §A first (the whole Kummer brick sequence) and
@@ -9,41 +9,40 @@ module ships the **K4′** brick (Wave K-I) plus the residual K2/K3 packaging th
 UNCONDITIONALLY (kernel-pure `{propext, Classical.choice, Quot.sound}`; no
 `sorry`/`native_decide`/`maxHeartbeats`/axiom).
 
+**THE ROUND-BALL EXCISION (the 2026-07-20 route-level fix).** The excised regions were originally the
+sup-metric `Metric.ball c (1/2)` on `TorusFour = (S¹)⁴`. But `Prod.dist_eq = max`, so those balls are
+**boxes**: their boundary `Metric.sphere c (1/2)` is a *cubical* `S³` with corners, blocking the smooth
+manifold-with-boundary / collar chart. The fix: excise **round Euclidean balls in the centered chart**
+`{t : ℝ⁴ ∣ ‖t‖ < ρ}` mapped in by `centeredChartParam c` (`chartBall`). In the chart the boundary is a
+**round** `S³` (`‖t‖ = ρ`), and the `τ = −id` normal form (`centeredChartParam_involution`) makes the
+boundary quotient EXACTLY `S³/±1 = ℝP³` on the nose (Design Risk #2). The pinned radius is **ρ = 1/2**
+(`excisionRadius`); any `0 < ρ < π` with `2ρ ≤ 2` works — the 16 fixed points `{±1}⁴` are `≥ 2` apart
+(`fixedSet_dist_ge`) and `dist(centeredChartParam c t, c) ≤ ‖t‖` (arc ≤ chord bound), so the round balls
+sit inside the metric `1/2`-balls (`chartBall_subset_metricBall`) and stay pairwise disjoint; `ρ = 1/2 < π`
+gives injectivity of the chart on the closed ball (`centeredChartParam_injOn`), which pins the boundary
+sphere off the open ball.
+
 **K2 packaging (extension).** `τ` as a **homeomorphism** (`torusFourInvolutionHomeo`) and a
 **`C^ω` diffeomorphism** (`torusFourInvolutionDiffeo`) of `T⁴` — the group inverse of the compact
-abelian Lie group `T⁴`, self-inverse and smooth both ways. These give the structure-preserving self-map
-K5′ needs to descend `τ` to the free quotient.
+abelian Lie group `T⁴`, self-inverse and smooth both ways.
 
 **K3 packaging (extension).** The 16 fixed points as an explicit **`Fintype`** with
-**`Fintype.card = 16`** (`torusFourInvolution_fixedPoints_fintypeCard`, from the banked
-`Nat.card = 16`), an explicit **`Finset`** (`fixedFinset`, card 16, decidable membership), and the
-coordinatewise membership certificate `mem_fixedSet_iff` (`x` fixed ⟺ each coordinate `∈ {1, negOne}`).
+**`Fintype.card = 16`** (`torusFourInvolution_fixedPoints_fintypeCard`), an explicit **`Finset`**
+(`fixedFinset`, card 16), and the coordinatewise membership certificate `mem_fixedSet_iff`.
 
-**K4′ — the punctured torus (the brick).**
-- **Equivariant charts (`τ = −id` in-chart).** In the exp-centered chart at a 2-torsion point `c`
-  (`c⁻¹ = c`), inversion is negation: `τ (c · exp t) = c · exp (−t)` (`circle_chart_involution`
-  per factor, `centeredChartParam_involution` on `T⁴`). This is the `τ = −id` fact that makes `T⁴/τ`
-  locally `ℝ⁴/±1 = cone(ℝP³)` at each fixed point (consumed by K5′/K6′a).
-- **16 disjoint open `τ`-invariant balls.** `excisedBalls = ⋃ c ∈ Fix(τ), ball c (1/2)`. `τ` is an
-  **isometry** of `T⁴` (`torusFourInvolution_isometry`), each ball is centered at a fixed point hence
-  `τ`-invariant (`ball_involution_mem_iff`); the 16 fixed points are the subgroup `{±1}⁴` with explicit
-  minimum separation `dist ≥ 2` (`fixedSet_dist_ge`), so the radius-`1/2` balls are pairwise disjoint
-  (`excisedBalls_pairwiseDisjoint`, via `Metric.ball_disjoint_ball`).
-- **`T⁴° := T⁴ ∖ excisedBalls`** (`puncturedTorus`), `τ`-invariant (`puncturedTorus_involution_mem_iff`),
-  with `τ` restricting to a **free** involution there (`involution_free_on_puncturedTorus`,
-  `involution_bijOn_puncturedTorus`) — freeness is immediate: `Fix(τ) ⊆ excisedBalls`.
-- **Boundary spheres — S³/±1 PRESENTATION (Design Risk #2, BINDING).** `∂B_i = sphere c (1/2) ≅ S³`
-  lies in `T⁴°` (`sphere_subset_puncturedTorus`) and is `τ`-invariant (`sphere_involution_invariant`);
-  `τ` is free on it. **The downstream `ℝP³` boundary of the free quotient MUST be presented as the
-  antipodal quotient `∂B_i / τ = S³/±1`** (in the centered chart `τ = −id`, so on the sphere `‖t‖ = r`
-  it is the antipodal map). K5′ and K6′a must both use this S³/±1 presentation (seam-match).
-
-**Honest residual (the STRETCH, NOT shipped here).** Packaging `T⁴°` as a smooth
-*manifold-with-boundary* (`∂ = 16 × S³`) via the surgery-foundation excision/chart stack is the deep
-half of K4′; Mathlib has no "closed-ball complement is a manifold-with-boundary" lemma and the
-project's excision machinery must be threaded through. This module ships `T⁴°` as a `τ`-invariant
-subspace with the full free-action data (charts, disjoint invariant balls, freeness, invariant
-boundary spheres); the `IsManifold`/`∂ = 16 × S³` certificate is the residual for the K4′ follow-up.
+**K4′ — the round-punctured torus (the brick).**
+- **Equivariant charts (`τ = −id` in-chart).** `circle_chart_involution` per factor,
+  `centeredChartParam_involution` on `T⁴`: `τ (centeredChartParam c t) = centeredChartParam c (−t)`.
+- **16 disjoint open `τ`-invariant round balls.** `chartBall c = centeredChartParam c '' {‖t‖ < ρ}`,
+  open (`isOpen_chartBall`, since `centeredChartParam c` is an open map — `Circle.exp` is a covering
+  map), `τ`-invariant (`chartBall_involution_mem_iff`; `τ = −id` in-chart preserves `‖t‖`), pairwise
+  disjoint (`excisedBalls_pairwiseDisjoint`, via the metric containment + `fixedSet_dist_ge`).
+- **`T⁴° := T⁴ ∖ excisedBalls`** (`puncturedTorus`), `τ`-invariant, `τ` FREE there
+  (`involution_free_on_puncturedTorus` — `Fix(τ) ⊆ excisedBalls`).
+- **Boundary spheres — round `S³/±1`.** `chartSphere c = centeredChartParam c '' {‖t‖ = ρ}` lies in
+  `T⁴°` (`sphere_subset_puncturedTorus`, uses chart injectivity), `τ`-invariant
+  (`chartSphere_involution_invariant`); in-chart `τ = −id`, so on `‖t‖ = ρ` it is the antipodal map,
+  making `∂B_i / τ = S³/±1 = ℝP³` literal (the pinned presentation K5′/K6′a weld against).
 -/
 import Mathlib
 import SKEFTHawking.KummerK3Base
@@ -156,63 +155,7 @@ theorem dist_involution_fixed {c : TorusFour} (hc : torusFourInvolution c = c) (
       = dist (torusFourInvolution x) (torusFourInvolution c) := by rw [hc]
   rw [this, torusFourInvolution_dist]
 
-/-! ## K4′ — the excised balls, the punctured torus, freeness -/
-
-/-- The excision radius `r = 1/2`. Any `0 < r < 1` works: the 16 fixed points `{±1}⁴` have minimum
-separation `2` (`fixedSet_dist_ge`), so `2r = 1 < 2` gives pairwise-disjoint balls. -/
-noncomputable def excisionRadius : ℝ := 1 / 2
-
-theorem excisionRadius_pos : 0 < excisionRadius := by norm_num [excisionRadius]
-
-/-- **The 16 excised open balls**: one radius-`1/2` ball around each of the 16 fixed points. -/
-noncomputable def excisedBalls : Set TorusFour := ⋃ c ∈ fixedSet, Metric.ball c excisionRadius
-
-/-- **The punctured torus `T⁴° := T⁴ ∖ (16 open balls)`** — the free locus of the `τ`-action. -/
-noncomputable def puncturedTorus : Set TorusFour := (excisedBalls)ᶜ
-
-/-- Each fixed point is the center of its excised ball, hence lies in the excised region. -/
-theorem fixedSet_subset_excisedBalls : fixedSet ⊆ excisedBalls := fun _ hc =>
-  Set.mem_biUnion hc (Metric.mem_ball_self excisionRadius_pos)
-
-/-- **`τ`-invariance of a fixed-point ball**: `τ x ∈ ball c r ⟺ x ∈ ball c r` when `τ c = c`. -/
-theorem ball_involution_mem_iff {c : TorusFour} (hc : torusFourInvolution c = c) (x : TorusFour) :
-    torusFourInvolution x ∈ Metric.ball c excisionRadius ↔ x ∈ Metric.ball c excisionRadius := by
-  simp only [Metric.mem_ball, dist_involution_fixed hc]
-
-/-- **`τ`-invariance of the excised region** (union of fixed-point balls). -/
-theorem excisedBalls_involution_mem_iff (x : TorusFour) :
-    torusFourInvolution x ∈ excisedBalls ↔ x ∈ excisedBalls := by
-  simp only [excisedBalls, Set.mem_iUnion, exists_prop]
-  constructor
-  · rintro ⟨c, hc, hx⟩; exact ⟨c, hc, (ball_involution_mem_iff hc x).mp hx⟩
-  · rintro ⟨c, hc, hx⟩; exact ⟨c, hc, (ball_involution_mem_iff hc x).mpr hx⟩
-
-/-- **`τ`-invariance of the punctured torus**. -/
-theorem puncturedTorus_involution_mem_iff (x : TorusFour) :
-    torusFourInvolution x ∈ puncturedTorus ↔ x ∈ puncturedTorus := by
-  simp only [puncturedTorus, Set.mem_compl_iff, excisedBalls_involution_mem_iff]
-
-/-- `τ` maps `T⁴°` into `T⁴°`. -/
-theorem involution_mapsTo_puncturedTorus :
-    Set.MapsTo torusFourInvolution puncturedTorus puncturedTorus :=
-  fun _ hx => (puncturedTorus_involution_mem_iff _).mpr hx
-
-/-- **`τ` acts FREELY on `T⁴°`** — no fixed point survives excision (`Fix(τ) ⊆ excisedBalls`). This is
-the K4′ freeness that lets K5′ form the quotient as an honest smooth manifold-with-boundary. -/
-theorem involution_free_on_puncturedTorus :
-    ∀ x ∈ puncturedTorus, torusFourInvolution x ≠ x := by
-  intro x hx hfix
-  exact hx (fixedSet_subset_excisedBalls hfix)
-
-/-- **`τ` restricts to a (free) involution of `T⁴°`** — a bijection of the punctured torus onto itself. -/
-theorem involution_bijOn_puncturedTorus :
-    Set.BijOn torusFourInvolution puncturedTorus puncturedTorus :=
-  ⟨involution_mapsTo_puncturedTorus,
-    torusFourInvolution_involutive.injective.injOn,
-    fun x hx => ⟨torusFourInvolution x, involution_mapsTo_puncturedTorus hx,
-      torusFourInvolution_involutive x⟩⟩
-
-/-! ## K4′ — minimum separation of the 16 fixed points, disjointness of the balls -/
+/-! ## K4′ — minimum separation of the 16 fixed points -/
 
 /-- `dist (1, negOne) = 2` on the circle (the two real points of `S¹`, at distance `‖1 − (−1)‖ = 2`). -/
 theorem dist_one_negOne : dist (1 : Circle) negOne = 2 := by
@@ -267,51 +210,11 @@ theorem fixedSet_dist_ge {c1 c2 : TorusFour} (h1 : c1 ∈ fixedSet) (h2 : c2 ∈
   · calc (2 : ℝ) = dist c1.1 c2.1 := (perFactor_dist_of_ne a1 b1 e1).symm
       _ ≤ dist c1 c2 := le_dist_c1 c1 c2
 
-/-- **The excised balls are pairwise disjoint** (`Metric.ball_disjoint_ball`: `1/2 + 1/2 = 1 ≤ 2 ≤
-dist c1 c2`). -/
-theorem excisedBalls_ball_disjoint {c1 c2 : TorusFour} (h1 : c1 ∈ fixedSet) (h2 : c2 ∈ fixedSet)
-    (hne : c1 ≠ c2) :
-    Disjoint (Metric.ball c1 excisionRadius) (Metric.ball c2 excisionRadius) := by
-  apply Metric.ball_disjoint_ball
-  calc excisionRadius + excisionRadius = 1 := by norm_num [excisionRadius]
-    _ ≤ 2 := by norm_num
-    _ ≤ dist c1 c2 := fixedSet_dist_ge h1 h2 hne
-
-/-- **The 16 excised balls are a pairwise-disjoint family indexed by the fixed points.** -/
-theorem excisedBalls_pairwiseDisjoint :
-    fixedSet.PairwiseDisjoint (fun c => Metric.ball c excisionRadius) :=
-  fun _ h1 _ h2 hne => excisedBalls_ball_disjoint h1 h2 hne
-
-/-! ## K4′ — the boundary spheres (S³/±1 presentation, Design Risk #2) -/
-
-/-- **The boundary spheres lie in `T⁴°`**: `∂B_i = sphere c (1/2) ⊆ T⁴°`. (A point at distance `1/2`
-from a fixed point `c` is `≥ 3/2` from every other fixed point, hence outside every excised ball.) -/
-theorem sphere_subset_puncturedTorus {c : TorusFour} (hc : c ∈ fixedSet) :
-    Metric.sphere c excisionRadius ⊆ puncturedTorus := by
-  intro x hx
-  rw [Metric.mem_sphere] at hx
-  rw [puncturedTorus, Set.mem_compl_iff, excisedBalls, Set.mem_iUnion₂]
-  rintro ⟨c', hc', hxc'⟩
-  rw [Metric.mem_ball] at hxc'
-  by_cases hcc : c' = c
-  · subst hcc; rw [hx] at hxc'; exact absurd hxc' (lt_irrefl _)
-  · have hsep : (2 : ℝ) ≤ dist c c' := fixedSet_dist_ge hc hc' (fun h => hcc h.symm)
-    have htri : dist c c' ≤ dist c x + dist x c' := dist_triangle c x c'
-    rw [dist_comm c x, hx] at htri
-    rw [show excisionRadius = (1 : ℝ) / 2 from rfl] at htri hxc'
-    linarith
-
-/-- **`τ`-invariance of a boundary sphere** at a fixed center. -/
-theorem sphere_involution_invariant {c : TorusFour} (hc : torusFourInvolution c = c) (x : TorusFour) :
-    torusFourInvolution x ∈ Metric.sphere c excisionRadius ↔
-      x ∈ Metric.sphere c excisionRadius := by
-  simp only [Metric.mem_sphere, dist_involution_fixed hc]
-
 /-! ## K4′ — the equivariant centered charts (`τ = −id` in chart) -/
 
 /-- **Per-factor equivariant chart**: on the circle, in the exp-chart centered at a square-root of
 unity `c` (`c⁻¹ = c`), inversion is negation of the chart parameter — `(c · exp t)⁻¹ = c · exp (−t)`.
-The local model that makes `S¹/τ` a half-circle with an `ℝP⁰`-type end, and `T⁴/τ` locally `cone(ℝP³)`. -/
+The local model that makes `S¹/τ` a half-circle, and `T⁴/τ` locally `cone(ℝP³)`. -/
 theorem circle_chart_involution (c : Circle) (hc : c⁻¹ = c) (t : ℝ) :
     (c * Circle.exp t)⁻¹ = c * Circle.exp (-t) := by
   rw [mul_inv, hc, ← Circle.exp_neg]
@@ -350,5 +253,331 @@ theorem centeredChartParam_involution (c : TorusFour) (hc : torusFourInvolution 
 theorem centeredChartParam_involution_comp (c : TorusFour) (hc : torusFourInvolution c = c) :
     torusFourInvolution ∘ centeredChartParam c = centeredChartParam c ∘ chartNeg :=
   funext (centeredChartParam_involution c hc)
+
+/-! ## K4′ — chart-domain Euclidean-norm machinery
+
+The chart domain is `ℝ⁴ = ℝ × ℝ × ℝ × ℝ`. `sqNorm` is the squared **Euclidean** norm (NOT the product
+sup-norm), so the round ball `{sqNorm < ρ²}` is genuinely round; its image under `centeredChartParam c`
+is `chartBall c`, whose boundary is a round `S³` (the box-corner fix). -/
+
+/-- `|u| < ρ` from `u² < ρ²` (with `0 < ρ`) — the sign-free Euclidean-coordinate bound. -/
+theorem abs_lt_of_sq_lt_sq {u ρ : ℝ} (hρ : 0 < ρ) (h : u ^ 2 < ρ ^ 2) : |u| < ρ := by
+  rw [← Real.sqrt_sq_eq_abs, show ρ = Real.sqrt (ρ ^ 2) from (Real.sqrt_sq hρ.le).symm]
+  exact Real.sqrt_lt_sqrt (sq_nonneg u) h
+
+/-- `|u| ≤ ρ` from `u² ≤ ρ²` (with `0 ≤ ρ`). -/
+theorem abs_le_of_sq_le_sq {u ρ : ℝ} (hρ : 0 ≤ ρ) (h : u ^ 2 ≤ ρ ^ 2) : |u| ≤ ρ := by
+  rw [← Real.sqrt_sq_eq_abs, show ρ = Real.sqrt (ρ ^ 2) from (Real.sqrt_sq hρ).symm]
+  exact Real.sqrt_le_sqrt h
+
+/-- The squared **Euclidean** norm of a chart coordinate `t : ℝ⁴`. -/
+def sqNorm (t : ℝ × ℝ × ℝ × ℝ) : ℝ := t.1 ^ 2 + t.2.1 ^ 2 + t.2.2.1 ^ 2 + t.2.2.2 ^ 2
+
+theorem sqNorm_nonneg (t : ℝ × ℝ × ℝ × ℝ) : 0 ≤ sqNorm t := by
+  simp only [sqNorm]; positivity
+
+theorem sqNorm_zero : sqNorm 0 = 0 := by simp [sqNorm]
+
+/-- `‖·‖` (hence `sqNorm`) is invariant under the in-chart antipode `−id` (`chartNeg`). This is the
+freeness input: `τ = −id` in-chart preserves the round balls/spheres. -/
+theorem sqNorm_chartNeg (t : ℝ × ℝ × ℝ × ℝ) : sqNorm (chartNeg t) = sqNorm t := by
+  simp only [sqNorm, chartNeg]; ring
+
+theorem sqNorm_continuous : Continuous sqNorm := by unfold sqNorm; fun_prop
+
+/-- The excision radius `ρ = 1/2`. Any `0 < ρ < π` with `2ρ ≤ 2` works: the 16 fixed points `{±1}⁴`
+have minimum separation `2` (`fixedSet_dist_ge`) and `chartBall c ⊆ Metric.ball c ρ`, giving
+pairwise-disjoint balls; `ρ < π` gives chart injectivity on the closed ball. -/
+noncomputable def excisionRadius : ℝ := 1 / 2
+
+theorem excisionRadius_pos : 0 < excisionRadius := by norm_num [excisionRadius]
+
+/-- **Arc ≤ chord (per factor)**: `dist (c · exp s) c ≤ |s|` — the chart moves a point by at most the
+arc length. (`‖exp(sI) − 1‖ ≤ |s|`, times the unit `‖c‖ = 1`.) -/
+theorem circle_chartParam_dist_le (a : Circle) (s : ℝ) : dist (a * Circle.exp s) a ≤ |s| := by
+  show dist ((↑(a * Circle.exp s) : ℂ)) (↑a) ≤ |s|
+  rw [Complex.dist_eq, Circle.coe_mul, Circle.coe_exp]
+  have hfac : (↑a : ℂ) * Complex.exp (↑s * Complex.I) - ↑a
+      = ↑a * (Complex.exp (↑s * Complex.I) - 1) := by ring
+  rw [hfac, norm_mul, Circle.norm_coe, one_mul, mul_comm (↑s : ℂ) Complex.I]
+  calc ‖Complex.exp (Complex.I * ↑s) - 1‖ ≤ ‖s‖ := Real.norm_exp_I_mul_ofReal_sub_one_le
+    _ = |s| := Real.norm_eq_abs s
+
+/-- **Per-factor chart injectivity on `[−1/2, 1/2]`**: `Circle.exp` is injective there (its period is
+`2π > 1`), the input to the product chart injectivity. -/
+theorem circle_exp_injOn_half {s s' : ℝ} (hs : |s| ≤ 1 / 2) (hs' : |s'| ≤ 1 / 2)
+    (h : Circle.exp s = Circle.exp s') : s = s' := by
+  have hc : Complex.exp (↑s * Complex.I) = Complex.exp (↑s' * Complex.I) := by
+    rw [← Circle.coe_exp, ← Circle.coe_exp, h]
+  rw [Complex.exp_eq_exp_iff_exists_int] at hc
+  obtain ⟨n, hn⟩ := hc
+  have hfac : (↑s : ℂ) * Complex.I = (↑s' + ↑n * (2 * ↑Real.pi)) * Complex.I := by rw [hn]; ring
+  have hcC : (↑s : ℂ) = ↑s' + ↑n * (2 * ↑Real.pi) := mul_right_cancel₀ Complex.I_ne_zero hfac
+  have hR : s = s' + (n : ℝ) * (2 * Real.pi) := by exact_mod_cast hcC
+  have hpi : (2 : ℝ) ≤ 2 * Real.pi := by nlinarith [Real.pi_gt_three]
+  have hdiff : |(n : ℝ) * (2 * Real.pi)| ≤ 1 := by
+    have he : (n : ℝ) * (2 * Real.pi) = s - s' := by linarith [hR]
+    rw [he]
+    calc |s - s'| ≤ |s| + |s'| := abs_sub _ _
+      _ ≤ 1 / 2 + 1 / 2 := by linarith [hs, hs']
+      _ = 1 := by norm_num
+  have hn0 : n = 0 := by
+    by_contra hne
+    have h1 : (1 : ℝ) ≤ |(n : ℝ)| := by
+      have hz : (1 : ℤ) ≤ |n| := Int.one_le_abs (by exact_mod_cast hne)
+      have hz' := (Int.cast_le (R := ℝ)).mpr hz
+      rwa [Int.cast_abs, Int.cast_one] at hz'
+    rw [abs_mul, abs_of_pos (by positivity : (0 : ℝ) < 2 * Real.pi)] at hdiff
+    nlinarith [hdiff, h1, hpi]
+  rw [hn0] at hR; simpa using hR
+
+/-- **Product dist bound (open)**: `sqNorm t < ρ² ⟹ dist (centeredChartParam c t) c < ρ`. The sup-metric
+distance is the max of the four per-factor arc-lengths, each `≤ |t.i| < ρ`. -/
+theorem dist_centeredChartParam_lt (c : TorusFour) {t : ℝ × ℝ × ℝ × ℝ} {ρ : ℝ} (hρ : 0 < ρ)
+    (h : sqNorm t < ρ ^ 2) : dist (centeredChartParam c t) c < ρ := by
+  have b1 : |t.1| < ρ := abs_lt_of_sq_lt_sq hρ (by
+    simp only [sqNorm] at h; nlinarith [sq_nonneg t.2.1, sq_nonneg t.2.2.1, sq_nonneg t.2.2.2])
+  have b2 : |t.2.1| < ρ := abs_lt_of_sq_lt_sq hρ (by
+    simp only [sqNorm] at h; nlinarith [sq_nonneg t.1, sq_nonneg t.2.2.1, sq_nonneg t.2.2.2])
+  have b3 : |t.2.2.1| < ρ := abs_lt_of_sq_lt_sq hρ (by
+    simp only [sqNorm] at h; nlinarith [sq_nonneg t.1, sq_nonneg t.2.1, sq_nonneg t.2.2.2])
+  have b4 : |t.2.2.2| < ρ := abs_lt_of_sq_lt_sq hρ (by
+    simp only [sqNorm] at h; nlinarith [sq_nonneg t.1, sq_nonneg t.2.1, sq_nonneg t.2.2.1])
+  simp only [centeredChartParam, Prod.dist_eq]
+  exact max_lt (lt_of_le_of_lt (circle_chartParam_dist_le _ _) b1)
+    (max_lt (lt_of_le_of_lt (circle_chartParam_dist_le _ _) b2)
+      (max_lt (lt_of_le_of_lt (circle_chartParam_dist_le _ _) b3)
+        (lt_of_le_of_lt (circle_chartParam_dist_le _ _) b4)))
+
+/-- **Product dist bound (closed)**: `sqNorm t ≤ ρ² ⟹ dist (centeredChartParam c t) c ≤ ρ`. -/
+theorem dist_centeredChartParam_le (c : TorusFour) {t : ℝ × ℝ × ℝ × ℝ} {ρ : ℝ} (hρ : 0 ≤ ρ)
+    (h : sqNorm t ≤ ρ ^ 2) : dist (centeredChartParam c t) c ≤ ρ := by
+  have b1 : |t.1| ≤ ρ := abs_le_of_sq_le_sq hρ (by
+    simp only [sqNorm] at h; nlinarith [sq_nonneg t.2.1, sq_nonneg t.2.2.1, sq_nonneg t.2.2.2])
+  have b2 : |t.2.1| ≤ ρ := abs_le_of_sq_le_sq hρ (by
+    simp only [sqNorm] at h; nlinarith [sq_nonneg t.1, sq_nonneg t.2.2.1, sq_nonneg t.2.2.2])
+  have b3 : |t.2.2.1| ≤ ρ := abs_le_of_sq_le_sq hρ (by
+    simp only [sqNorm] at h; nlinarith [sq_nonneg t.1, sq_nonneg t.2.1, sq_nonneg t.2.2.2])
+  have b4 : |t.2.2.2| ≤ ρ := abs_le_of_sq_le_sq hρ (by
+    simp only [sqNorm] at h; nlinarith [sq_nonneg t.1, sq_nonneg t.2.1, sq_nonneg t.2.2.1])
+  simp only [centeredChartParam, Prod.dist_eq]
+  exact max_le (le_trans (circle_chartParam_dist_le _ _) b1)
+    (max_le (le_trans (circle_chartParam_dist_le _ _) b2)
+      (max_le (le_trans (circle_chartParam_dist_le _ _) b3)
+        (le_trans (circle_chartParam_dist_le _ _) b4)))
+
+/-- **`centeredChartParam c` is continuous** — a product of `s ↦ c.i · Circle.exp s`, each a
+composition of the continuous `Circle.exp` with left multiplication. -/
+theorem continuous_centeredChartParam (c : TorusFour) : Continuous (centeredChartParam c) := by
+  unfold centeredChartParam; fun_prop
+
+/-- **`centeredChartParam c` is an open map** — it is `(left-translate) ∘ Circle.exp` per factor, and
+`Circle.exp` is a covering map (`isLocalHomeomorph_circleExp`), hence open. This is what makes the round
+`chartBall`/`chartSphere` genuine open/closed subsets of `T⁴` (so `T⁴°` is closed and compact). -/
+theorem isOpenMap_centeredChartParam (c : TorusFour) : IsOpenMap (centeredChartParam c) := by
+  have g : ∀ a : Circle, IsOpenMap (fun s : ℝ => a * Circle.exp s) :=
+    fun a => (isOpenMap_mul_left a).comp isLocalHomeomorph_circleExp.isOpenMap
+  have h : centeredChartParam c = Prod.map (fun s => c.1 * Circle.exp s)
+      (Prod.map (fun s => c.2.1 * Circle.exp s)
+        (Prod.map (fun s => c.2.2.1 * Circle.exp s) (fun s => c.2.2.2 * Circle.exp s))) := rfl
+  rw [h]
+  exact (g _).prodMap ((g _).prodMap ((g _).prodMap (g _)))
+
+/-- **Product chart injectivity on the closed round ball `{sqNorm ≤ ρ²}` (`ρ = 1/2`).** Each coordinate
+`|t.i| ≤ 1/2`, where `Circle.exp` is injective (`circle_exp_injOn_half`). Pins the boundary sphere off
+the open ball (`sphere_subset_puncturedTorus`). -/
+theorem centeredChartParam_injOn (c : TorusFour) :
+    Set.InjOn (centeredChartParam c) {t | sqNorm t ≤ excisionRadius ^ 2} := by
+  intro t ht t' ht' h
+  rw [Set.mem_setOf_eq, show excisionRadius = (1 : ℝ) / 2 from rfl] at ht ht'
+  have a1 : |t.1| ≤ 1 / 2 := abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht; nlinarith [sq_nonneg t.2.1, sq_nonneg t.2.2.1, sq_nonneg t.2.2.2])
+  have a2 : |t.2.1| ≤ 1 / 2 := abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht; nlinarith [sq_nonneg t.1, sq_nonneg t.2.2.1, sq_nonneg t.2.2.2])
+  have a3 : |t.2.2.1| ≤ 1 / 2 := abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht; nlinarith [sq_nonneg t.1, sq_nonneg t.2.1, sq_nonneg t.2.2.2])
+  have a4 : |t.2.2.2| ≤ 1 / 2 := abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht; nlinarith [sq_nonneg t.1, sq_nonneg t.2.1, sq_nonneg t.2.2.1])
+  have a1' : |t'.1| ≤ 1 / 2 := abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht'; nlinarith [sq_nonneg t'.2.1, sq_nonneg t'.2.2.1, sq_nonneg t'.2.2.2])
+  have a2' : |t'.2.1| ≤ 1 / 2 := abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht'; nlinarith [sq_nonneg t'.1, sq_nonneg t'.2.2.1, sq_nonneg t'.2.2.2])
+  have a3' : |t'.2.2.1| ≤ 1 / 2 := abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht'; nlinarith [sq_nonneg t'.1, sq_nonneg t'.2.1, sq_nonneg t'.2.2.2])
+  have a4' : |t'.2.2.2| ≤ 1 / 2 := abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht'; nlinarith [sq_nonneg t'.1, sq_nonneg t'.2.1, sq_nonneg t'.2.2.1])
+  simp only [centeredChartParam, Prod.mk.injEq] at h
+  obtain ⟨e1, e2, e3, e4⟩ := h
+  exact Prod.ext (circle_exp_injOn_half a1 a1' (mul_left_cancel e1))
+    (Prod.ext (circle_exp_injOn_half a2 a2' (mul_left_cancel e2))
+      (Prod.ext (circle_exp_injOn_half a3 a3' (mul_left_cancel e3))
+        (circle_exp_injOn_half a4 a4' (mul_left_cancel e4))))
+
+/-! ## K4′ — the round excised balls, the punctured torus, freeness -/
+
+/-- **The `i`-th round excised open ball**: `centeredChartParam c '' {t : ℝ⁴ ∣ ‖t‖ < ρ}` — a round
+Euclidean ball in the `τ = −id` centered chart at `c`, NOT a sup-metric box. -/
+noncomputable def chartBall (c : TorusFour) : Set TorusFour :=
+  centeredChartParam c '' {t | sqNorm t < excisionRadius ^ 2}
+
+/-- **The `i`-th round boundary sphere**: `centeredChartParam c '' {t : ℝ⁴ ∣ ‖t‖ = ρ}` — a round `S³`
+in the centered chart, on which `τ = −id` acts antipodally (`S³/±1 = ℝP³`, Design Risk #2). -/
+noncomputable def chartSphere (c : TorusFour) : Set TorusFour :=
+  centeredChartParam c '' {t | sqNorm t = excisionRadius ^ 2}
+
+/-- **The 16 round excised open balls** (union over the 16 fixed points). -/
+noncomputable def excisedBalls : Set TorusFour := ⋃ c ∈ fixedSet, chartBall c
+
+/-- **The punctured torus `T⁴° := T⁴ ∖ (16 round balls)`** — the free locus of the `τ`-action. -/
+noncomputable def puncturedTorus : Set TorusFour := (excisedBalls)ᶜ
+
+/-- **A round ball sits inside the metric `ρ`-ball** (`dist(centeredChartParam c t, c) ≤ ‖t‖ < ρ`) — the
+bridge that transports the metric fixed-point separation to round-ball disjointness. -/
+theorem chartBall_subset_metricBall (c : TorusFour) :
+    chartBall c ⊆ Metric.ball c excisionRadius := by
+  rintro _ ⟨t, ht, rfl⟩
+  rw [Metric.mem_ball]
+  exact dist_centeredChartParam_lt c excisionRadius_pos ht
+
+/-- A round ball sits inside the closed metric `ρ`-ball. -/
+theorem chartBall_subset_metricClosedBall (c : TorusFour) :
+    chartBall c ⊆ Metric.closedBall c excisionRadius := fun _ hx =>
+  Metric.ball_subset_closedBall (chartBall_subset_metricBall c hx)
+
+/-- A round boundary sphere sits inside the closed metric `ρ`-ball (`dist ≤ ‖t‖ = ρ`). -/
+theorem chartSphere_subset_metricClosedBall (c : TorusFour) :
+    chartSphere c ⊆ Metric.closedBall c excisionRadius := by
+  rintro _ ⟨t, ht, rfl⟩
+  rw [Metric.mem_closedBall]
+  exact dist_centeredChartParam_le c excisionRadius_pos.le (le_of_eq ht)
+
+/-- Each round ball is **open** (image of an open ball under the open map `centeredChartParam c`). -/
+theorem isOpen_chartBall (c : TorusFour) : IsOpen (chartBall c) :=
+  isOpenMap_centeredChartParam c _ (isOpen_lt sqNorm_continuous continuous_const)
+
+/-- Each fixed point is the center of its round ball (`centeredChartParam c 0 = c`, `0 < ρ²`), hence
+lies in the excised region. -/
+theorem fixedSet_subset_excisedBalls : fixedSet ⊆ excisedBalls := fun c hc =>
+  Set.mem_biUnion hc ⟨0, by
+    rw [Set.mem_setOf_eq, sqNorm_zero, show excisionRadius = (1 : ℝ) / 2 from rfl]; norm_num,
+    centeredChartParam_zero c⟩
+
+/-- **Image-`τ`-invariance helper**: if `S ⊆ ℝ⁴` is `chartNeg`-invariant, then its `centeredChartParam`
+image is `τ`-invariant (at a fixed center). Both `chartBall` and `chartSphere` invariance specialize. -/
+theorem centeredChartParam_image_involution_mem {c : TorusFour}
+    (hc : torusFourInvolution c = c) {S : Set (ℝ × ℝ × ℝ × ℝ)}
+    (hS : ∀ t, chartNeg t ∈ S ↔ t ∈ S) (x : TorusFour) :
+    torusFourInvolution x ∈ centeredChartParam c '' S ↔ x ∈ centeredChartParam c '' S := by
+  constructor
+  · rintro ⟨t, htS, ht⟩
+    refine ⟨chartNeg t, (hS t).mpr htS, ?_⟩
+    rw [← centeredChartParam_involution c hc t, ht]
+    exact torusFourInvolution_involutive x
+  · rintro ⟨t, htS, rfl⟩
+    exact ⟨chartNeg t, (hS t).mpr htS, (centeredChartParam_involution c hc t).symm⟩
+
+/-- **`τ`-invariance of a round ball** at a fixed center. -/
+theorem chartBall_involution_mem_iff {c : TorusFour} (hc : torusFourInvolution c = c)
+    (x : TorusFour) : torusFourInvolution x ∈ chartBall c ↔ x ∈ chartBall c :=
+  centeredChartParam_image_involution_mem hc
+    (fun t => by simp only [Set.mem_setOf_eq, sqNorm_chartNeg]) x
+
+/-- **`τ`-invariance of the excised region** (union of round fixed-point balls). -/
+theorem excisedBalls_involution_mem_iff (x : TorusFour) :
+    torusFourInvolution x ∈ excisedBalls ↔ x ∈ excisedBalls := by
+  simp only [excisedBalls, Set.mem_iUnion, exists_prop]
+  constructor
+  · rintro ⟨c, hc, hx⟩; exact ⟨c, hc, (chartBall_involution_mem_iff hc x).mp hx⟩
+  · rintro ⟨c, hc, hx⟩; exact ⟨c, hc, (chartBall_involution_mem_iff hc x).mpr hx⟩
+
+/-- **`τ`-invariance of the punctured torus**. -/
+theorem puncturedTorus_involution_mem_iff (x : TorusFour) :
+    torusFourInvolution x ∈ puncturedTorus ↔ x ∈ puncturedTorus := by
+  simp only [puncturedTorus, Set.mem_compl_iff, excisedBalls_involution_mem_iff]
+
+/-- `τ` maps `T⁴°` into `T⁴°`. -/
+theorem involution_mapsTo_puncturedTorus :
+    Set.MapsTo torusFourInvolution puncturedTorus puncturedTorus :=
+  fun _ hx => (puncturedTorus_involution_mem_iff _).mpr hx
+
+/-- **`τ` acts FREELY on `T⁴°`** — no fixed point survives excision (`Fix(τ) ⊆ excisedBalls`). This is
+the K4′ freeness that lets K5′ form the quotient as an honest smooth manifold-with-boundary. -/
+theorem involution_free_on_puncturedTorus :
+    ∀ x ∈ puncturedTorus, torusFourInvolution x ≠ x := by
+  intro x hx hfix
+  exact hx (fixedSet_subset_excisedBalls hfix)
+
+/-- **`τ` restricts to a (free) involution of `T⁴°`** — a bijection of the punctured torus onto itself. -/
+theorem involution_bijOn_puncturedTorus :
+    Set.BijOn torusFourInvolution puncturedTorus puncturedTorus :=
+  ⟨involution_mapsTo_puncturedTorus,
+    torusFourInvolution_involutive.injective.injOn,
+    fun x hx => ⟨torusFourInvolution x, involution_mapsTo_puncturedTorus hx,
+      torusFourInvolution_involutive x⟩⟩
+
+/-! ## K4′ — pairwise disjointness of the round balls -/
+
+/-- **The metric `1/2`-balls at the fixed points are pairwise disjoint** (`1/2 + 1/2 = 1 ≤ 2 ≤
+dist c1 c2`). The round balls sit inside these (`chartBall_subset_metricBall`), so inherit disjointness. -/
+theorem metricBall_disjoint {c1 c2 : TorusFour} (h1 : c1 ∈ fixedSet) (h2 : c2 ∈ fixedSet)
+    (hne : c1 ≠ c2) :
+    Disjoint (Metric.ball c1 excisionRadius) (Metric.ball c2 excisionRadius) := by
+  apply Metric.ball_disjoint_ball
+  calc excisionRadius + excisionRadius = 1 := by norm_num [excisionRadius]
+    _ ≤ 2 := by norm_num
+    _ ≤ dist c1 c2 := fixedSet_dist_ge h1 h2 hne
+
+/-- **Two distinct round excised balls are disjoint** (each inside its metric `1/2`-ball). -/
+theorem chartBall_disjoint {c1 c2 : TorusFour} (h1 : c1 ∈ fixedSet) (h2 : c2 ∈ fixedSet)
+    (hne : c1 ≠ c2) : Disjoint (chartBall c1) (chartBall c2) :=
+  (metricBall_disjoint h1 h2 hne).mono (chartBall_subset_metricBall c1)
+    (chartBall_subset_metricBall c2)
+
+/-- **The 16 round excised balls are a pairwise-disjoint family indexed by the fixed points.** -/
+theorem excisedBalls_pairwiseDisjoint :
+    fixedSet.PairwiseDisjoint (fun c => chartBall c) :=
+  fun _ h1 _ h2 hne => chartBall_disjoint h1 h2 hne
+
+/-! ## K4′ — the boundary spheres (round `S³/±1` presentation, Design Risk #2) -/
+
+/-- **The round boundary spheres lie in `T⁴°`**: `chartSphere c ⊆ T⁴°`. A boundary point `x` is at
+distance `≤ 1/2` from its own center `c` (so `≥ 3/2` from every OTHER fixed point, hence outside their
+balls) and — by chart injectivity on the closed ball — is NOT in `c`'s own open ball. -/
+theorem sphere_subset_puncturedTorus {c : TorusFour} (hc : c ∈ fixedSet) :
+    chartSphere c ⊆ puncturedTorus := by
+  rintro _ ⟨t, ht, rfl⟩
+  rw [Set.mem_setOf_eq] at ht
+  rw [puncturedTorus, Set.mem_compl_iff, excisedBalls, Set.mem_iUnion₂]
+  rintro ⟨c', hc', hxc'⟩
+  by_cases hcc : c' = c
+  · rw [hcc] at hxc'
+    obtain ⟨s, hs, hcs⟩ := hxc'
+    rw [Set.mem_setOf_eq] at hs
+    have hsmem : s ∈ {t | sqNorm t ≤ excisionRadius ^ 2} := by
+      rw [Set.mem_setOf_eq]; exact le_of_lt hs
+    have htmem : t ∈ {t | sqNorm t ≤ excisionRadius ^ 2} := by
+      rw [Set.mem_setOf_eq]; exact le_of_eq ht
+    have hst : s = t := centeredChartParam_injOn c hsmem htmem hcs
+    rw [hst, ht] at hs
+    exact lt_irrefl _ hs
+  · have hxc'ball : dist (centeredChartParam c t) c' < excisionRadius := by
+      rw [← Metric.mem_ball]; exact chartBall_subset_metricBall c' hxc'
+    have hmemsph : centeredChartParam c t ∈ chartSphere c :=
+      ⟨t, by rw [Set.mem_setOf_eq]; exact ht, rfl⟩
+    have hxcball : dist (centeredChartParam c t) c ≤ excisionRadius := by
+      rw [← Metric.mem_closedBall]; exact chartSphere_subset_metricClosedBall c hmemsph
+    have hsep : (2 : ℝ) ≤ dist c c' := fixedSet_dist_ge hc hc' (fun h => hcc h.symm)
+    have htri : dist c c' ≤ dist c (centeredChartParam c t) + dist (centeredChartParam c t) c' :=
+      dist_triangle _ _ _
+    rw [dist_comm c (centeredChartParam c t)] at htri
+    rw [show excisionRadius = (1 : ℝ) / 2 from rfl] at hxc'ball hxcball
+    linarith
+
+/-- **`τ`-invariance of a round boundary sphere** at a fixed center (in-chart `τ = −id` preserves
+`‖t‖ = ρ`). -/
+theorem chartSphere_involution_invariant {c : TorusFour} (hc : torusFourInvolution c = c)
+    (x : TorusFour) : torusFourInvolution x ∈ chartSphere c ↔ x ∈ chartSphere c :=
+  centeredChartParam_image_involution_mem hc
+    (fun t => by simp only [Set.mem_setOf_eq, sqNorm_chartNeg]) x
 
 end SKEFTHawking.KummerPuncturedTorus
