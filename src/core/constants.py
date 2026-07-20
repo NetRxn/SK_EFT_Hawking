@@ -2354,6 +2354,40 @@ PLACEHOLDER_LEAN_NAMES = {
     v.get('lean_name', k): k for k, v in PLACEHOLDER_THEOREMS.items()
 }
 
+# ─────────────────────────────────────────────────────────────────────────
+# Formula-grounding kind registry (R-05, 2026-07-20)
+# ─────────────────────────────────────────────────────────────────────────
+# Per `formulas.py` `Lean:` reference, the HONEST classification of what the
+# cited theorem provides. The default (any ref NOT listed here) is 'derivation':
+# an independent proof whose CONCLUSION substantively grounds the formula. A
+# ref is listed here ONLY when its grounding is a 'definitional-record' — a
+# theorem that is TRUE BY DEFINITION and therefore does not independently
+# derive the formula:
+#   * an identity wrapper `P → P` that returns its own hypothesis, or
+#   * an `rfl`/definitional equality `f x = <body of f>` (unfolds a definition).
+# The `formula_grounding` validate check enforces this both ways: a vacuous
+# identity wrapper MUST be declared here (it proves nothing), and an entry
+# declared 'derivation' whose Lean is actually an identity wrapper / rfl-
+# definitional equality FAILS — so a definitional record cannot be silently
+# re-labeled a derivation (the R-05 evidence-laundering class). Keys are the
+# short Lean decl name (the `Lean:` token in formulas.py).
+FORMULA_GROUNDING_KIND: dict[str, dict[str, str]] = {
+    'wrt_S2xS1_eq_rank': {
+        'kind': 'definitional-record',
+        'note': "WRTInvariant.lean: `wrtS2xS1 D := D.n` and `wrt_S2xS1_eq_rank : "
+                "wrtS2xS1 D = D.n := rfl`. A definitional equality (the WRT S²×S¹ "
+                "invariant is DEFINED as the rank), NOT an independent derivation "
+                "from the 0-framed-unknot surgery / Verlinde formula. R-05.",
+    },
+    'dd_simples_count': {
+        'kind': 'definitional-record',
+        'note': "DrinfeldDouble.lean: `dd_simples_count (…) (h : Σ irreps = Σ irreps) "
+                ": Σ irreps = Σ irreps := h`. An identity wrapper (type `P → P`, "
+                "returns its hypothesis), NOT a proof of the general Burnside/Drinfeld "
+                "-double simple count. R-05.",
+    },
+}
+
 # native_decide kernel-trust surface ceiling (Substrate Integrity Gates R4 / W5).
 # The decl-closure count (declarations whose transitive axiom closure includes a
 # native_decide compiler-trust axiom — ADR-002's authoritative metric, NOT the
@@ -2943,7 +2977,11 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
         'eliminability': 'algebraic',
         'elimination_path': 'This was DERIVED (not hypothesized) in WangBridge.lean from the 16 Weyl fermions per generation. But the derivation assumes the standard SM fermion content — the hypothesis is that the SM has exactly 16 Weyl fermions per generation.',
         'dependent_theorems': [
-            'SKEFTHawking.central_charge_from_sm',
+            # R-07 (2026-07-20): was 'SKEFTHawking.central_charge_from_sm', which
+            # does not exist in lean_deps.json. The real derivation theorem is
+            # fermion_count_gives_central_charge — weyl_central_charge(Σ SMFermion
+            # components) = 8, i.e. c₋ = 16/2 = 8 per generation from the SM count.
+            'SKEFTHawking.fermion_count_gives_central_charge',
         ],
         'module': 'WangBridge',
         'source': 'SM fermion content (standard textbook result)',
@@ -3198,27 +3236,30 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
     },
     'H_Fib_v4_witness': {
         'statement': 'exp(ℝ•X₁) ⊆ H_Fib for two ℝ-linearly-independent tangents X₁, X₂ — the v4 density witness for the Fibonacci closure subgroup.',
-        'status': 'active', 'tier': 'headline', 'eliminability': 'hard',
+        'status': 'discharged', 'tier': 'headline', 'eliminability': 'hard',
         'module': 'FKLW.CartanSubstrate',
-        'elimination_path': 'Discharge ~50-150 LoC (deferred); gates the FKLW Fibonacci SU(2) density / universality headline (audit #8 "sound predicate v3/v4").',
-        'source': 'FKLW Fibonacci density (Cartan substrate).', 'risk': 'Headline-gating density witness.',
-        'circularity_note': 'None.', 'prose': 'Fibonacci-density v4 witness; the Fibonacci universality headline rides on the H_Fib density witnesses.',
+        'discharged_by': 'SKEFTHawking.FKLW.OneParameterSubgroupSU2.H_Fib_v4_witness_unconditional',
+        'elimination_path': 'DISCHARGED (2026-07-20, R-07 registry hygiene): proved unconditionally (no hypothesis arguments, sorry-free) by `H_Fib_v4_witness_unconditional` (OneParameterSubgroupSU2.lean §80, verified in lean_deps.json). Retained for provenance; no longer an open frontier apex.',
+        'source': 'FKLW Fibonacci density (Cartan substrate).', 'risk': 'Was headline-gating; DISCHARGED by an unconditional producer.',
+        'circularity_note': 'None.', 'prose': 'Fibonacci-density v4 witness — DISCHARGED by H_Fib_v4_witness_unconditional; the Fibonacci universality headline rode on the H_Fib density witnesses, now unconditional.',
     },
     'H_Fib_NonCentralConjugateWitness': {
         'statement': 'There exist (g₁,g₂) ∈ H_Fib × H_Fib with g₁ not commuting with its g₂-conjugate (non-central-conjugate antecedent for the Fibonacci density argument).',
-        'status': 'active', 'tier': 'headline', 'eliminability': 'hard',
+        'status': 'discharged', 'tier': 'headline', 'eliminability': 'hard',
         'module': 'FKLW.CartanSubstrate',
-        'elimination_path': 'Discharge plan: g₁=σ_Fib_1, g₂=σ_Fib_2 (deferred ~50-150 LoC).',
-        'source': 'FKLW Fibonacci density.', 'risk': 'Headline-gating density sub-witness.',
-        'circularity_note': 'None.', 'prose': 'Non-central-conjugate witness feeding the Fibonacci density argument.',
+        'discharged_by': 'SKEFTHawking.FKLW.H_Fib_NonCentralConjugateWitness_discharged',
+        'elimination_path': 'DISCHARGED (2026-07-20, R-07 registry hygiene): proved unconditionally (sorry-free) by `H_Fib_NonCentralConjugateWitness_discharged` (CartanSubstrate.lean §4.9, verified in lean_deps.json). Retained for provenance; no longer an open frontier apex.',
+        'source': 'FKLW Fibonacci density.', 'risk': 'Was headline-gating; DISCHARGED by an unconditional producer.',
+        'circularity_note': 'None.', 'prose': 'Non-central-conjugate witness — DISCHARGED by H_Fib_NonCentralConjugateWitness_discharged; fed the Fibonacci density argument.',
     },
     'H_Fib_TwoLITangents': {
         'statement': 'Two ℝ-linearly-independent tangent directions exist in the Lie algebra of H_Fib (companion antecedent for the Fibonacci density v4 witness).',
-        'status': 'active', 'tier': 'headline', 'eliminability': 'hard',
+        'status': 'discharged', 'tier': 'headline', 'eliminability': 'hard',
         'module': 'FKLW.CartanSubstrate',
-        'elimination_path': 'Discharge ~50-150 LoC (deferred).',
-        'source': 'FKLW Fibonacci density.', 'risk': 'Headline-gating density sub-witness.',
-        'circularity_note': 'None.', 'prose': 'Two-LI-tangents witness feeding the Fibonacci density argument.',
+        'discharged_by': 'SKEFTHawking.FKLW.OneParameterSubgroupSU2.H_Fib_TwoLITangents_unconditional',
+        'elimination_path': 'DISCHARGED (2026-07-20, R-07 registry hygiene): proved unconditionally (sorry-free) by `H_Fib_TwoLITangents_unconditional` (OneParameterSubgroupSU2.lean §78, verified in lean_deps.json). Retained for provenance; no longer an open frontier apex.',
+        'source': 'FKLW Fibonacci density.', 'risk': 'Was headline-gating; DISCHARGED by an unconditional producer.',
+        'circularity_note': 'None.', 'prose': 'Two-LI-tangents witness — DISCHARGED by H_Fib_TwoLITangents_unconditional; fed the Fibonacci density argument.',
     },
     'H_CFZ2_sq_e': {
         'statement': 'The halfBraiding double-swap (hexagon-derived β≫β_can≫β≫desc = ρ) identity at the (eAdd, aAdd, aAdd) index triple of the Z/2 Drinfeld-center functor.',

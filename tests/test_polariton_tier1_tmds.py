@@ -15,6 +15,7 @@ import pytest
 from src.core.constants import POLARITON_PLATFORMS, FALQUE_STEEP_HORIZON_KAPPA
 from src.core.provenance import PARAMETER_PROVENANCE
 from src.core.citations import CITATION_REGISTRY
+from src.core.workspace import find_workspace
 
 
 PENN = "Penn_TMD_MoSe2"
@@ -132,9 +133,7 @@ def test_penn_tmd_primary_source_cache_file_exists():
     import os
 
     bib = CITATION_REGISTRY[BIBKEY]
-    workspace_root = os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    )
+    workspace_root = find_workspace()
     path = os.path.join(workspace_root, bib["primary_source_path"])
     assert os.path.exists(path), (
         f"Primary source cache file missing at {path}. "

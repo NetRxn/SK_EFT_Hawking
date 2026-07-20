@@ -777,6 +777,77 @@ def _thin_type_label(type_str: str):
     return None
 
 
+def _is_vacuous_identity_wrapper(type_str: str) -> bool:
+    """True iff the elaborated type is a DOUBLY-vacuous identity wrapper: an
+    implication `P → P` whose antecedent equals its consequent AND that shared
+    `P` is itself a reflexive equality `Eq X X` / `X = X`. This is the
+    `dd_simples_count` evidence-laundering shape (`… (h : Σ = Σ) : Σ = Σ := h`
+    — returns its hypothesis, proves nothing).
+
+    Requiring the reflexive body is what makes this false-positive-free: a
+    genuine transfer `P_ℝ → P_ℚ` also prints `P → P` after implicit-arg elision
+    (the reason `_thin_type_label` omits bare `P→P`), but there `P` is a
+    substantive proposition, not `Eq X X`. Only the reflexive-body case is
+    unambiguously content-free."""
+    if not type_str:
+        return False
+    core = _strip_leading_binders(type_str.replace("\n", " ").strip())
+    parts = _top_arrow_split(core)
+    if len(parts) < 2 or parts[-1].strip() != parts[-2].strip():
+        return False
+    toks = _top_tokens(parts[-1].strip())
+    return ((len(toks) == 3 and toks[0] == "Eq" and toks[1] == toks[2])
+            or (len(toks) == 3 and toks[1] == "=" and toks[0] == toks[2]))
+
+
+# Bare definitional closers: an `rfl`-family proof of an equality means the two
+# sides are DEFINITIONALLY equal (the theorem unfolds a definition, deriving
+# nothing). `simp`/`norm_num`/`decide` are deliberately NOT here — those can
+# discharge substantive computations.
+_BARE_RFL_RE = re.compile(r"^(by\s+)?(exact\s+)?(rfl|Iff\.rfl|Eq\.refl(\s+\S+)?)$")
+
+
+def _lean_decl_proof_body(short_name: str, module: str):
+    """Normalized proof body of ``short_name`` in its Lean ``module`` file, or
+    None. ``module`` is the lean_deps form ``SKEFTHawking.<Path.To.Module>`` and
+    maps to ``LEAN_DIR/<Path>/<To>/<Module>.lean``. Reads a single file."""
+    if not module:
+        return None
+    import sys as _sys
+    _sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        from build_graph import _scan_lean_theorem_bodies
+    except Exception:  # pragma: no cover - import guard
+        return None
+    segs = str(module).split(".")
+    if segs and segs[0] == "SKEFTHawking":
+        segs = segs[1:]
+    if not segs:
+        return None
+    f = LEAN_DIR.joinpath(*segs).with_suffix(".lean")
+    if not f.exists():
+        return None
+    try:
+        source = f.read_text()
+    except (OSError, UnicodeDecodeError):
+        return None
+    for name, _ln, body in _scan_lean_theorem_bodies(source):
+        if name.split(".")[-1] == short_name:
+            return " ".join(body.split())
+    return None
+
+
+def _grounding_is_definitional(decl: dict) -> bool:
+    """A grounding theorem is a 'definitional record' iff its elaborated type is
+    a vacuous identity wrapper OR its Lean proof body is a bare `rfl`-family
+    closer (definitional equality). Used by `formula_grounding` to keep the
+    `FORMULA_GROUNDING_KIND` declarations honest."""
+    if _is_vacuous_identity_wrapper(decl.get("type", "")):
+        return True
+    body = _lean_decl_proof_body(decl.get("name", "").split(".")[-1], decl.get("module", ""))
+    return bool(body and _BARE_RFL_RE.match(body))
+
+
 def _parse_formula_lean_refs(src: str) -> set:
     """Extract Lean theorem-name tokens from `Lean: …` docstring lines in
     formulas.py, dropping non-decl artifacts (file names, `pending`, fragments,
@@ -856,12 +927,65 @@ def check_formula_grounding() -> CheckResult:
         if _thin_type_label(d.get("type", "")) in _THIN_HARD:
             thin_grounded.append(t)
 
+    # ── R-05: grounding-kind honesty (definitional-record vs derivation) ──
+    # A formula must not present a DEFINITIONAL record (identity wrapper / rfl
+    # equality) as an independent DERIVATION. FORMULA_GROUNDING_KIND is the
+    # authoritative per-ref claim; this cross-checks it against the Lean.
+    from src.core.constants import FORMULA_GROUNDING_KIND
+    kind_violations: List[tuple] = []
+
+    # Leg B (false-positive-free, ALL refs): a vacuous identity wrapper (`P → P`
+    # with reflexive body — proves nothing) MUST be declared a definitional
+    # record; grounding a formula on one as a derivation is forbidden.
+    for t in sorted(refs):
+        if not resolves(t):
+            continue
+        d = decl(t)
+        if not d or not _is_vacuous_identity_wrapper(d.get("type", "")):
+            continue
+        meta = FORMULA_GROUNDING_KIND.get(t.split(".")[-1])
+        if not meta or meta.get("kind") != "definitional-record":
+            kind_violations.append((t,
+                "vacuous identity wrapper (`P → P`, reflexive body — proves nothing) grounds "
+                "a formula; declare grounding_kind='definitional-record' in FORMULA_GROUNDING_KIND "
+                "or reground on a substantive theorem"))
+
+    # Legs A/C (the declared entries): the declared kind must MATCH the Lean.
+    # 'definitional-record' that is actually substantive → mislabel; 'derivation'
+    # that is actually an identity wrapper / rfl-definitional equality → the R-05
+    # relabel we forbid (a definitional record cannot be re-labeled a derivation).
+    for short, meta in FORMULA_GROUNDING_KIND.items():
+        d = by_short.get(short)
+        if not d:
+            kind_violations.append((short,
+                "FORMULA_GROUNDING_KIND entry resolves to no Lean declaration"))
+            continue
+        kind = meta.get("kind")
+        is_defl = _grounding_is_definitional(d)
+        if kind == "definitional-record" and not is_defl:
+            kind_violations.append((short,
+                "declared grounding_kind='definitional-record' but the Lean is neither an identity "
+                "wrapper nor an rfl-definitional equality — inaccurate label (do not hide a "
+                "substantive or open theorem behind a definitional record)"))
+        elif kind == "derivation" and is_defl:
+            kind_violations.append((short,
+                "declared grounding_kind='derivation' but the Lean IS an identity wrapper / "
+                "rfl-definitional equality — a definitional record cannot be re-labeled a "
+                "derivation (R-05 evidence-laundering)"))
+        elif kind not in ("definitional-record", "derivation"):
+            kind_violations.append((short,
+                f"kind={kind!r} is not 'definitional-record' or 'derivation'"))
+
+    ok = not (placeholder_grounded or dangling or thin_grounded or kind_violations)
     details: List[Detail] = []
     details.append(Detail(
-        "coverage", not (placeholder_grounded or dangling or thin_grounded),
+        "coverage", ok,
         f"{len(refs)} Lean refs; {len(refs) - len(dangling)} resolve; "
         f"{len(placeholder_grounded)} placeholder-grounded; {len(thin_grounded)} thin-grounded; "
-        f"{len(dangling)} dangling"))
+        f"{len(dangling)} dangling; {len(FORMULA_GROUNDING_KIND)} grounding-kind declared; "
+        f"{len(kind_violations)} grounding-kind violation(s)"))
+    for t, msg in kind_violations:
+        details.append(Detail(t, False, msg))
     for t in placeholder_grounded:
         details.append(Detail(t, False, "formula grounded on a placeholder/True stub (Invariant #4)"))
     for t in thin_grounded:
@@ -878,7 +1002,7 @@ def check_formula_grounding() -> CheckResult:
         details.append(Detail(
             t, False,
             "formula Lean-ref does not resolve (stale/renamed) — fix the name or drop the ref"))
-    return CheckResult(passed=not (placeholder_grounded or dangling or thin_grounded), details=details)
+    return CheckResult(passed=ok, details=details)
 
 
 @register_check(
@@ -3085,7 +3209,7 @@ def check_atlas_integrity() -> CheckResult:
     try:
         sys.path.insert(0, str(SCRIPT_DIR))
         import atlas_view
-        from src.core.constants import AXIOM_METADATA
+        from src.core.constants import AXIOM_METADATA, HYPOTHESIS_REGISTRY
         lean_deps = atlas_view.load_lean_deps_file()
         atlas = atlas_view.build_atlas(lean_deps)
     except Exception as exc:  # noqa: BLE001
@@ -3126,25 +3250,71 @@ def check_atlas_integrity() -> CheckResult:
         f"{len(unknowns)} open nodes, all from HYPOTHESIS_REGISTRY" if not malformed
         else f"{len(malformed)} malformed open nodes: {malformed[:5]}"))
 
-    # (4) Apex-never-silently-closed (ADR-005 D-F/D-H). Apexes = HEADLINE-tier OPEN targets (`is_apex`,
-    #     now sourced from HYPOTHESIS_REGISTRY; the D-E `@[atlas_node apex]` attribute would only ADD
-    #     apex-marking onto PROVED theorems and is not yet used). The worst failure: a headline OPEN
-    #     target that is no longer genuinely open — either its status flipped to a closed one, or a
-    #     project theorem named exactly after the hypothesis key already proves it (the goal secretly
-    #     became a theorem but the registry still lists it open, misleading the frontier).
+    # (4) Apex closure integrity (ADR-005 D-F/D-H). Apexes = HEADLINE-tier registry
+    #     targets (`is_apex`). A discharge theorem's short name may be SUFFIXED
+    #     (`H_Fib_v4_witness_unconditional` discharges key `H_Fib_v4_witness`), so
+    #     exact-name matching alone misses silent discharges (R-07, 2026-07-20). Two
+    #     failure modes:
+    #       (a) SILENT closure — the apex is still marked OPEN but a producer theorem
+    #           (exact key, or key + a recognized discharge suffix) already proves it;
+    #       (b) BOGUS closure — the apex is marked DISCHARGED/SUPERSEDED but NO producer
+    #           theorem is found (a closure with nothing behind it).
+    #     An EXPLICITLY discharged apex backed by a real producer is correct → passes.
     apexes = [u for u in unknowns if u.get("is_apex")]
     proved = {n["fqn"] for n in nodes if n.get("atlas_status") == "PROVED"}
     proved_last = {fqn.split(".")[-1] for fqn in proved}
-    closed_apex = []
+    _DISCHARGE_SUFFIXES = ("", "_unconditional", "_discharged", "_proven")
+
+    def _apex_producer(key: str):
+        for suf in _DISCHARGE_SUFFIXES:
+            if (key + suf) in proved_last:
+                return key + suf
+        return None
+
+    _OPEN_ST = ("STATED", "PLANNED", "ACTIVE", "OPEN")
+    _CLOSED_ST = ("DISCHARGED", "SUPERSEDED")
+    bad_apex = []
+    open_apex_n = 0
     for u in apexes:
         key = str(u.get("id", ""))[len("hyp:"):]
-        open_status = str(u.get("atlas_status", "")).upper() in ("STATED", "PLANNED", "ACTIVE", "OPEN")
-        if (not open_status) or (key in proved_last):
-            closed_apex.append(u.get("id"))
-    details.append(Detail("apex_not_closed", not closed_apex,
-        f"{len(apexes)} apex (headline) open target(s), none silently closed" if apexes and not closed_apex
+        st = str(u.get("atlas_status", "")).upper()
+        producer = _apex_producer(key)
+        if st in _OPEN_ST:
+            open_apex_n += 1
+            if producer:
+                bad_apex.append(f"{u.get('id')} (open but producer {producer} exists)")
+        elif st in _CLOSED_ST and not producer:
+            bad_apex.append(f"{u.get('id')} (marked {st} but no producer theorem found)")
+    details.append(Detail("apex_not_closed", not bad_apex,
+        (f"{len(apexes)} headline apex(es): {open_apex_n} open (none silently discharged), "
+         f"{len(apexes) - open_apex_n} explicitly discharged (producer-verified)")
+        if apexes and not bad_apex
         else ("no apex (headline-tier) nodes" if not apexes
-              else f"{len(closed_apex)} apex silently closed: {closed_apex[:5]}")))
+              else f"{len(bad_apex)} apex integrity failure(s): {bad_apex[:5]}")))
+
+    # (5) Every declared `dependent_theorems` FQN resolves to a real declaration.
+    #     A short name absent from the ENTIRE declaration set is a PHANTOM target
+    #     (hard fail; R-07 caught `SKEFTHawking.central_charge_from_sm`). A short name
+    #     that exists but under a different full namespace is namespace DRIFT
+    #     (advisory warning — the theorem exists, only the registry FQN prefix is stale).
+    #     Resolve against the FULL declaration set (raw lean_deps), NOT the classified
+    #     atlas `nodes` subset (which excludes many real decls and would false-flag them).
+    all_fqns = {r.get("name") for r in lean_deps if isinstance(r, dict) and r.get("name")}
+    all_short = {fqn.split(".")[-1] for fqn in all_fqns}
+    phantoms, drift = [], []
+    for hkey, h in HYPOTHESIS_REGISTRY.items():
+        for dt in (h.get("dependent_theorems") or []):
+            if dt in all_fqns:
+                continue
+            (drift if dt.split(".")[-1] in all_short else phantoms).append(f"{hkey}:{dt}")
+    details.append(Detail("dependent_theorems_resolve", not phantoms,
+        f"all {sum(len(h.get('dependent_theorems') or []) for h in HYPOTHESIS_REGISTRY.values())} "
+        f"dependent_theorems FQNs resolve to a declaration"
+        if not phantoms else f"{len(phantoms)} phantom target(s): {phantoms[:5]}"))
+    if drift:
+        details.append(Detail("dependent_theorems_namespace_drift", True,
+            f"{len(drift)} ref(s) resolve by short name but the FQN namespace prefix "
+            f"has drifted (advisory, not gating): {drift[:8]}", warning=True))
 
     passed = all(d.passed for d in details)
     return CheckResult(passed=passed, details=details)
@@ -3830,8 +4000,12 @@ def check_bundle_consistency() -> CheckResult:
     Phase 6i Wave 7.3 deliverable. Builds on the cluster-bundle index
     from Wave 7.1 + the per-bundle anchor list from Wave 7.2.
     """
-    PROJECT_ROOT_LOCAL = Path(__file__).resolve().parent.parent.parent
-    INDEX_PATH = PROJECT_ROOT_LOCAL / "SK_EFT_Hawking" / "papers" / "cluster_bundle_index.json"
+    # Layout-independent (works from the main checkout AND a worktree slot):
+    # PAPERS_DIR = PROJECT_ROOT / "papers", where PROJECT_ROOT is this
+    # checkout's repo root. The old `__file__.parent×3 / "SK_EFT_Hawking" /
+    # "papers"` walk resolved to `.claude/worktrees/SK_EFT_Hawking/papers`
+    # from a worktree. Per CLAUDE.md: never hardcode parent-walks.
+    INDEX_PATH = PAPERS_DIR / "cluster_bundle_index.json"
 
     details: List[Detail] = []
     if not INDEX_PATH.exists():
@@ -4044,8 +4218,13 @@ def check_bibitem_title_primary_source() -> CheckResult:
     """
     import re
     from src.core.citations import CITATION_REGISTRY
+    from src.core.workspace import find_workspace
 
-    PROJECT_ROOT_LOCAL = Path(__file__).resolve().parent.parent.parent
+    # ps_path entries are workspace-relative (`Lit-Search/...`), so resolve
+    # against the workspace root. Layout-independent (main checkout AND a
+    # worktree slot); the old `__file__.parent×3` walk resolved to
+    # `.claude/worktrees` from a worktree. Per CLAUDE.md: no parent-walks.
+    PROJECT_ROOT_LOCAL = find_workspace()
 
     try:
         from pdfminer.high_level import extract_text  # type: ignore

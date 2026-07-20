@@ -341,3 +341,85 @@ def test_vacuous_baseline_nonempty_and_all_gates_green():
     assert check_proxy_body_audit().passed
     assert check_formula_grounding().passed
     assert check_disclosure_consistency().passed
+
+
+# ── R-07: apex discharge + dependent-theorem resolution (live smoke) ─────
+
+def test_r07_fib_apexes_discharged_in_registry():
+    """The three Fibonacci headline apexes are marked discharged with a
+    producer pointer, and the phantom central_charge dep target is gone."""
+    from src.core.constants import HYPOTHESIS_REGISTRY
+    for key, producer_suffix in (
+        ("H_Fib_v4_witness", "H_Fib_v4_witness_unconditional"),
+        ("H_Fib_TwoLITangents", "H_Fib_TwoLITangents_unconditional"),
+        ("H_Fib_NonCentralConjugateWitness", "H_Fib_NonCentralConjugateWitness_discharged"),
+    ):
+        h = HYPOTHESIS_REGISTRY[key]
+        assert h["status"] == "discharged", key
+        assert h.get("discharged_by", "").endswith(producer_suffix), key
+    # the phantom target is replaced by the real WangBridge derivation theorem
+    cc = HYPOTHESIS_REGISTRY["c_minus_equals_8Nf"]["dependent_theorems"]
+    assert "SKEFTHawking.central_charge_from_sm" not in cc
+    assert "SKEFTHawking.fermion_count_gives_central_charge" in cc
+
+
+def test_r07_atlas_integrity_apex_and_dep_legs():
+    """The strengthened atlas_integrity check passes and reflects R-07:
+    3 apexes explicitly discharged (producer-verified), all dependent_theorems
+    FQNs resolve (no phantom)."""
+    from scripts.validate import check_atlas_integrity
+    result = check_atlas_integrity()
+    assert result.passed, [(d.name, d.message) for d in result.details if not d.passed]
+    by_name = {d.name: d for d in result.details}
+    assert "discharged" in by_name["apex_not_closed"].message
+    assert by_name["dependent_theorems_resolve"].passed
+
+
+# ── R-05: formula-grounding kind (definitional-record vs derivation) ─────
+
+def test_r05_grounding_kind_registry_and_helpers():
+    from src.core.constants import FORMULA_GROUNDING_KIND
+    from scripts.validate import _is_vacuous_identity_wrapper
+    for k in ("wrt_S2xS1_eq_rank", "dd_simples_count"):
+        assert FORMULA_GROUNDING_KIND[k]["kind"] == "definitional-record"
+    # dd_simples_count-shape: `P → P` with a reflexive body -> vacuous idwrap.
+    dd_ty = ("∀ (n : Nat) (f : Fin n → Nat), Eq (Finset.univ.sum f) (Finset.univ.sum f) "
+             "→ Eq (Finset.univ.sum f) (Finset.univ.sum f)")
+    assert _is_vacuous_identity_wrapper(dd_ty)
+    # a genuine transfer P_ℝ → P_ℚ (elision) is NOT flagged (body not reflexive).
+    assert not _is_vacuous_identity_wrapper("∀ (x : R), P x → Q x")
+    # a plain equality is not an identity wrapper.
+    assert not _is_vacuous_identity_wrapper("∀ (D : T), Eq (wrtS2xS1 D) D.n")
+
+
+def test_r05_formula_grounding_passes_live():
+    from scripts.validate import check_formula_grounding
+    r = check_formula_grounding()
+    assert r.passed, [(d.name, d.message) for d in r.details if not d.passed]
+
+
+def test_r05_gate_fails_if_definitional_record_relabeled_derivation(monkeypatch):
+    """The gate must FAIL if someone re-labels a definitional record as a
+    derivation, for BOTH shapes: the identity wrapper (auto-detected) and the
+    rfl-definitional equality (source-proof-confirmed)."""
+    from scripts.validate import check_formula_grounding
+    from src.core import constants as C
+    base = dict(C.FORMULA_GROUNDING_KIND)
+
+    # (1) drop dd_simples_count entirely -> its vacuous identity wrapper is now
+    #     an undeclared derivation-grounding -> FAIL flagging dd_simples_count.
+    monkeypatch.setattr(
+        C, "FORMULA_GROUNDING_KIND",
+        {k: v for k, v in base.items() if k != "dd_simples_count"})
+    r = check_formula_grounding()
+    assert not r.passed
+    assert any("dd_simples_count" in d.name for d in r.details if not d.passed)
+
+    # (2) relabel wrt_S2xS1_eq_rank to 'derivation' -> its rfl-definitional
+    #     equality contradicts the label -> FAIL flagging wrt_S2xS1_eq_rank.
+    relabel = dict(base)
+    relabel["wrt_S2xS1_eq_rank"] = {"kind": "derivation", "note": "x"}
+    monkeypatch.setattr(C, "FORMULA_GROUNDING_KIND", relabel)
+    r = check_formula_grounding()
+    assert not r.passed
+    assert any("wrt_S2xS1_eq_rank" in d.name for d in r.details if not d.passed)

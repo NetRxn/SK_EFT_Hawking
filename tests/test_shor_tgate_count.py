@@ -21,6 +21,7 @@ import os
 import pytest
 
 from src.core.citations import CITATION_REGISTRY
+from src.core.workspace import find_workspace
 
 
 GOOGLE_BIBKEY = "BabbushGidneyEtAl2026ECC256Shor"
@@ -48,9 +49,7 @@ def test_bk_bibkey_present():
 def test_primary_source_cache_file_exists(bibkey):
     """Pipeline Invariant #11."""
     bib = CITATION_REGISTRY[bibkey]
-    workspace_root = os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    )
+    workspace_root = find_workspace()
     path = os.path.join(workspace_root, bib["primary_source_path"])
     assert os.path.exists(path), (
         f"Primary source cache file missing at {path}."

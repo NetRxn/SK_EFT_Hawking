@@ -14,31 +14,31 @@
 
 **Statement.** There exist (g₁,g₂) ∈ H_Fib × H_Fib with g₁ not commuting with its g₂-conjugate (non-central-conjugate antecedent for the Fibonacci density argument).
 
-- status `active` · eliminability `hard` · module `FKLW.CartanSubstrate`
-- **Posture.** Non-central-conjugate witness feeding the Fibonacci density argument.
-- **Discharge path.** Discharge plan: g₁=σ_Fib_1, g₂=σ_Fib_2 (deferred ~50-150 LoC).
+- status `discharged` · eliminability `hard` · module `FKLW.CartanSubstrate`
+- **Posture.** Non-central-conjugate witness — DISCHARGED by H_Fib_NonCentralConjugateWitness_discharged; fed the Fibonacci density argument.
+- **Discharge path.** DISCHARGED (2026-07-20, R-07 registry hygiene): proved unconditionally (sorry-free) by `H_Fib_NonCentralConjugateWitness_discharged` (CartanSubstrate.lean §4.9, verified in lean_deps.json). Retained for provenance; no longer an open frontier apex.
 - **Source.** FKLW Fibonacci density.
-- **Risk.** Headline-gating density sub-witness.
+- **Risk.** Was headline-gating; DISCHARGED by an unconditional producer.
 
 ### `H_Fib_TwoLITangents`
 
 **Statement.** Two ℝ-linearly-independent tangent directions exist in the Lie algebra of H_Fib (companion antecedent for the Fibonacci density v4 witness).
 
-- status `active` · eliminability `hard` · module `FKLW.CartanSubstrate`
-- **Posture.** Two-LI-tangents witness feeding the Fibonacci density argument.
-- **Discharge path.** Discharge ~50-150 LoC (deferred).
+- status `discharged` · eliminability `hard` · module `FKLW.CartanSubstrate`
+- **Posture.** Two-LI-tangents witness — DISCHARGED by H_Fib_TwoLITangents_unconditional; fed the Fibonacci density argument.
+- **Discharge path.** DISCHARGED (2026-07-20, R-07 registry hygiene): proved unconditionally (sorry-free) by `H_Fib_TwoLITangents_unconditional` (OneParameterSubgroupSU2.lean §78, verified in lean_deps.json). Retained for provenance; no longer an open frontier apex.
 - **Source.** FKLW Fibonacci density.
-- **Risk.** Headline-gating density sub-witness.
+- **Risk.** Was headline-gating; DISCHARGED by an unconditional producer.
 
 ### `H_Fib_v4_witness`
 
 **Statement.** exp(ℝ•X₁) ⊆ H_Fib for two ℝ-linearly-independent tangents X₁, X₂ — the v4 density witness for the Fibonacci closure subgroup.
 
-- status `active` · eliminability `hard` · module `FKLW.CartanSubstrate`
-- **Posture.** Fibonacci-density v4 witness; the Fibonacci universality headline rides on the H_Fib density witnesses.
-- **Discharge path.** Discharge ~50-150 LoC (deferred); gates the FKLW Fibonacci SU(2) density / universality headline (audit #8 "sound predicate v3/v4").
+- status `discharged` · eliminability `hard` · module `FKLW.CartanSubstrate`
+- **Posture.** Fibonacci-density v4 witness — DISCHARGED by H_Fib_v4_witness_unconditional; the Fibonacci universality headline rode on the H_Fib density witnesses, now unconditional.
+- **Discharge path.** DISCHARGED (2026-07-20, R-07 registry hygiene): proved unconditionally (no hypothesis arguments, sorry-free) by `H_Fib_v4_witness_unconditional` (OneParameterSubgroupSU2.lean §80, verified in lean_deps.json). Retained for provenance; no longer an open frontier apex.
 - **Source.** FKLW Fibonacci density (Cartan substrate).
-- **Risk.** Headline-gating density witness.
+- **Risk.** Was headline-gating; DISCHARGED by an unconditional producer.
 
 ### `H_PMNSAnglesFromExactSubstrate`
 
@@ -159,7 +159,7 @@
 - **Discharge path.** This was DERIVED (not hypothesized) in WangBridge.lean from the 16 Weyl fermions per generation. But the derivation assumes the standard SM fermion content — the hypothesis is that the SM has exactly 16 Weyl fermions per generation.
 - **Source.** SM fermion content (standard textbook result)
 - **Risk.** Zero — this is the definition of the SM.
-- **Consumers.** `SKEFTHawking.central_charge_from_sm`
+- **Consumers.** `SKEFTHawking.fermion_count_gives_central_charge`
 
 ### `characteristic_square_mod_8`
 
