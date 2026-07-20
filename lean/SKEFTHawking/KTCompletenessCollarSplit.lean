@@ -592,6 +592,43 @@ theorem collarRetractVal_one_fix_of_fromCyl
             x.val x.2 hH⟩ hx hH).le]
   · rw [dif_neg hH]
 
+/-! ## §G. The unconditional `hA`/`hB` discharge from the `CollarSplitDatum`. -/
+
+/-- **`hA` discharged from the `CollarSplitDatum`.** The collar-collapse deformation retraction
+(`collarRetractVal`: retraction `f` at time `1`, inclusion `g`, deformation `Hgf` via the reversed
+slide, constant `Hfg` since `f` fixes `range fromCyl`) is a genuine homotopy equivalence
+`sub coverA ≃ sub (range fromCyl)`; feeding it to §D transfers the closed cyl end's banked
+finiteness (§C) to `coverA` in EVERY degree. `hA` now holds for ARBITRARY attachment data,
+conditional ONLY on the `CollarSplitDatum` `csd`. -/
+theorem finiteDimensional_homology_coverA
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd) (n : ℕ) :
+    FiniteDimensional (ZMod 2) (Homology (sub (coverA s t S hS φ hφ hφinj cd hseam d)) n) := by
+  refine finiteDimensional_homology_coverA_of_htpyEquiv s t S hS φ hφ hφinj cd hseam d
+    ⟨fun x => ⟨collarRetractVal s t S hS φ hφ hφinj cd hseam d csd x 1,
+        collarRetractVal_one_mem_fromCyl s t S hS φ hφ hφinj cd hseam d csd x⟩,
+      Continuous.subtype_mk ((continuous_collarRetractVal s t S hS φ hφ hφinj cd hseam d csd).comp
+        (continuous_id.prodMk continuous_const)) _⟩
+    ⟨fun y => ⟨y.val, range_fromCyl_subset_coverA s t S hS φ hφ hφinj cd hseam d y.2⟩,
+      Continuous.subtype_mk continuous_subtype_val _⟩
+    ⟨fun p => ⟨collarRetractVal s t S hS φ hφ hφinj cd hseam d csd p.1 (unitInterval.symm p.2),
+        collarRetractVal_mem_coverA s t S hS φ hφ hφinj cd hseam d csd p.1 (unitInterval.symm p.2)⟩,
+      Continuous.subtype_mk ((continuous_collarRetractVal s t S hS φ hφ hφinj cd hseam d csd).comp
+        (continuous_fst.prodMk (unitInterval.continuous_symm.comp continuous_snd))) _⟩
+    ?_ ?_
+    ⟨fun p => p.1, continuous_fst⟩ ?_ ?_ n
+  · ext x
+    show collarRetractVal s t S hS φ hφ hφinj cd hseam d csd x (unitInterval.symm 0)
+      = collarRetractVal s t S hS φ hφ hφinj cd hseam d csd x 1
+    rw [unitInterval.symm_zero]
+  · ext x
+    show collarRetractVal s t S hS φ hφ hφinj cd hseam d csd x (unitInterval.symm 1) = x.val
+    rw [unitInterval.symm_one, collarRetractVal_at_zero]
+  · ext y
+    exact (collarRetractVal_one_fix_of_fromCyl s t S hS φ hφ hφinj cd hseam d csd
+      ⟨y.val, range_fromCyl_subset_coverA s t S hS φ hφ hφinj cd hseam d y.2⟩ y.2).symm
+  · ext y
+    rfl
+
 end
 
 end SKEFTHawking.KTCompletenessCollarSplit
