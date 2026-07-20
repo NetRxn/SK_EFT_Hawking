@@ -241,6 +241,58 @@ theorem continuous_slideCoord (mid : ↥weldedInterval) :
     continuous_subtype_val.comp continuous_snd
   exact (hw.min (((continuous_const.sub hτ).mul hw).add (hτ.mul continuous_const)))
 
+/-- At a level `w ≤ mid` the slide is the identity — the convex combination is `≥ w`, so the `min`
+is `w`. -/
+theorem slideVal_fix_of_le (mid w : ℝ) (τ : unitInterval) (h : w ≤ mid) :
+    slideVal mid w τ = w := by
+  rw [slideVal, min_eq_left]
+  nlinarith [mul_nonneg τ.2.1 (sub_nonneg.mpr h)]
+
+/-- At time `0` the slide is the identity. -/
+theorem slideVal_at_zero (mid w : ℝ) : slideVal mid w 0 = w := by
+  simp [slideVal, Set.Icc.coe_zero]
+
+/-- The `↥weldedInterval` slide fixes a level `≤ mid`. -/
+theorem slideCoord_fix_of_le (mid w : ↥weldedInterval) (τ : unitInterval) (h : w ≤ mid) :
+    slideCoord mid w τ = w := by
+  have hle : w.val.val ≤ mid.val.val := h
+  exact Subtype.ext (Subtype.ext (slideVal_fix_of_le _ _ _ hle))
+
+/-- The `↥weldedInterval` slide is the identity at time `0`. -/
+theorem slideCoord_at_zero (mid w : ↥weldedInterval) : slideCoord mid w 0 = w :=
+  Subtype.ext (Subtype.ext (slideVal_at_zero _ _))
+
+/-! ## §B‴. The collar slide transported to the seam neighbourhood. -/
+
+/-- **The collar slide on the seam neighbourhood.** Transport the interval slide `slideCoord`
+through the collar homeomorphism `cd.hHomeo` (fixing the `cd.A` attaching-base factor): at time `τ`
+it fixes collar levels `≤ mid` and pushes levels `≥ mid` down toward the middle slice. Continuous. -/
+def slideCollarMap {W : Type} [TopologicalSpace W] (cd : SeamCollarDatum W) (mid : ↥weldedInterval) :
+    ↥cd.seamNbhd × unitInterval → ↥cd.seamNbhd :=
+  fun p => cd.hHomeo.symm ((cd.hHomeo p.1).1, slideCoord mid (cd.hHomeo p.1).2 p.2)
+
+theorem continuous_slideCollarMap {W : Type} [TopologicalSpace W] (cd : SeamCollarDatum W)
+    (mid : ↥weldedInterval) : Continuous (slideCollarMap cd mid) := by
+  refine cd.hHomeo.symm.continuous.comp (Continuous.prodMk ?_ ?_)
+  · exact continuous_fst.comp (cd.hHomeo.continuous.comp continuous_fst)
+  · exact (continuous_slideCoord mid).comp (Continuous.prodMk
+      (continuous_snd.comp (cd.hHomeo.continuous.comp continuous_fst)) continuous_snd)
+
+/-- **The collar slide fixes a point whose collar level is `≤ mid`.** In particular (with §Bʹ) it
+fixes the cyl side of the collar and the seam — the identity-gluing compatibility on `range fromCyl`. -/
+theorem slideCollarMap_fix_of_le {W : Type} [TopologicalSpace W] (cd : SeamCollarDatum W)
+    (mid : ↥weldedInterval) (p : ↥cd.seamNbhd) (τ : unitInterval) (h : (cd.hHomeo p).2 ≤ mid) :
+    slideCollarMap cd mid (p, τ) = p := by
+  rw [slideCollarMap, slideCoord_fix_of_le _ _ _ h]
+  simp
+
+/-- **The collar slide is the identity at time `0`.** -/
+theorem slideCollarMap_at_zero {W : Type} [TopologicalSpace W] (cd : SeamCollarDatum W)
+    (mid : ↥weldedInterval) (p : ↥cd.seamNbhd) :
+    slideCollarMap cd mid (p, 0) = p := by
+  rw [slideCollarMap, slideCoord_at_zero]
+  simp
+
 /-! ## §C. The closed ends as carrier subspaces, and their banked all-degree finiteness. -/
 
 /-- **The cyl end `B` sits inside `W` as the closed subspace `↥(range fromCyl)`** — `fromCyl` is a
