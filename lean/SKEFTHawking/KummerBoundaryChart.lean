@@ -226,6 +226,89 @@ in the interior region `{q | 0 < q.2.val.ofLp 0}`. -/
 def interiorChart (x : ↥openPunctured) : OpenPartialHomeomorph (↥puncturedTorus) Model :=
   ((chartAt PModel x).trans interiorReshape).lift_openEmbedding isOpenEmbedding_openPuncturedIncl
 
+/-! ### §6. The covering — the round-ball interior region ∪ the 16 collars ⊇ `T⁴°`
+
+`KummerChartedSpace.openPunctured` excises the **metric** closed balls (radius `1/2`), which is too
+much: a point with all four chart coordinates `≈ 1/2` has metric distance `≈ 0.495 < 1/2` (so it is
+outside `openPunctured`) yet round chart-radius `≈ 1.0 > 3/4` (so it is outside every collar) — a genuine
+coverage gap. The instance therefore uses a **round-ball** interior region `interiorSet` (the complement
+of the round CLOSED balls of chart-radius `5/8 ∈ (1/2, 3/4)`), which overlaps the collar band `[1/2, 3/4)`
+on `[1/2, 5/8]` and so, together with the collars, covers all of `T⁴°`. -/
+
+/-- The round CLOSED ball of chart-radius `5/8` at `c` — the continuous image of a Euclidean closed
+ball, hence compact and closed. -/
+def chartClosedBall58 (c : TorusFour) : Set TorusFour :=
+  (fun w : EuclideanSpace ℝ (Fin 4) => centeredChartParam c (ofE4 w)) ''
+    Metric.closedBall 0 (5 / 8)
+
+theorem isClosed_chartClosedBall58 (c : TorusFour) : IsClosed (chartClosedBall58 c) :=
+  ((isCompact_closedBall 0 (5 / 8)).image
+    ((continuous_centeredChartParam c).comp continuous_ofE4)).isClosed
+
+/-- **The round-ball interior region** `T⁴ ∖ (16 round closed balls of radius 5/8)`. Open, contained in
+`T⁴°`, and (with the collars) covers `T⁴°`. -/
+def interiorSet : Set TorusFour := (⋃ c ∈ fixedFinset, chartClosedBall58 c)ᶜ
+
+theorem isOpen_interiorSet : IsOpen interiorSet :=
+  (fixedFinset.finite_toSet.isClosed_biUnion fun c _ => isClosed_chartClosedBall58 c).isOpen_compl
+
+/-- The round-ball interior region as an `Opens TorusFour` (the open-submanifold carrier of the
+interior charts used by the instance). -/
+def interiorOpens : TopologicalSpace.Opens TorusFour := ⟨interiorSet, isOpen_interiorSet⟩
+
+theorem interiorSet_subset_puncturedTorus : interiorSet ⊆ puncturedTorus := by
+  intro y hy
+  rw [puncturedTorus, Set.mem_compl_iff, excisedBalls, Set.mem_iUnion₂]
+  rintro ⟨c, hc, t, ht, rfl⟩
+  refine hy ?_
+  rw [Set.mem_iUnion₂]
+  refine ⟨c, (mem_fixedFinset c).mpr hc, toE4 t, ?_, by simp only [ofE4_toE4]⟩
+  rw [Metric.mem_closedBall, dist_zero_right, norm_toE4]
+  rw [Set.mem_setOf_eq, show excisionRadius = (1 : ℝ) / 2 from rfl] at ht
+  have : Real.sqrt (sqNorm t) < 1 / 2 := by
+    rw [show (1 : ℝ) / 2 = Real.sqrt ((1 / 2) ^ 2) from by rw [Real.sqrt_sq (by norm_num)]]
+    exact Real.sqrt_lt_sqrt (sqNorm_nonneg t) ht
+  linarith
+
+/-- **The covering.** Every point of `T⁴°` is either in the round-ball interior region or in one of the
+16 collars — the antidote to the metric-ball gap above. -/
+theorem punctured_covered {y : TorusFour} (hy : y ∈ puncturedTorus) :
+    y ∈ interiorSet ∨ ∃ c ∈ fixedFinset, y ∈ collarSet c := by
+  by_cases h : y ∈ interiorSet
+  · exact Or.inl h
+  · right
+    simp only [interiorSet, Set.mem_compl_iff, not_not, Set.mem_iUnion₂] at h
+    obtain ⟨c, hcF, w, hw, rfl⟩ := h
+    have hw58 : ‖w‖ ≤ 5 / 8 := by rwa [Metric.mem_closedBall, dist_zero_right] at hw
+    have hc : c ∈ fixedSet := (mem_fixedFinset c).mp hcF
+    refine ⟨c, hcF, w, ⟨?_, by linarith⟩, rfl⟩
+    by_contra hlt
+    rw [not_le] at hlt
+    refine (Set.mem_compl_iff _ _ |>.mp hy) ?_
+    rw [excisedBalls, Set.mem_iUnion₂]
+    refine ⟨c, hc, ofE4 w, ?_, rfl⟩
+    rw [Set.mem_setOf_eq, sqNorm_ofE4, show excisionRadius = (1 : ℝ) / 2 from rfl]
+    nlinarith [norm_nonneg w, hlt]
+
+/-! ### §7. The manifold-with-boundary `ChartedSpace` on `T⁴°` -/
+
+/-- The inclusion `↥interiorOpens ↪ ↥puncturedTorus` is an open embedding. -/
+theorem isOpenEmbedding_interiorIncl :
+    Topology.IsOpenEmbedding (Set.inclusion interiorSet_subset_puncturedTorus :
+      ↥interiorOpens → ↥puncturedTorus) :=
+  Topology.IsOpenEmbedding.inclusion interiorSet_subset_puncturedTorus
+    (isOpen_interiorSet.preimage continuous_subtype_val)
+
+/-- **The interior chart on the round-ball interior region** — the ambient product chart at `x`
+reshaped into the interior of the half-space model and lifted to `↥puncturedTorus`. -/
+def interiorChartR (x : ↥interiorOpens) : OpenPartialHomeomorph (↥puncturedTorus) Model :=
+  ((chartAt PModel x).trans interiorReshape).lift_openEmbedding isOpenEmbedding_interiorIncl
+
+/-- For a non-interior point of `T⁴°`, the covering supplies a collar containing it. -/
+theorem exists_collar {y : ↥puncturedTorus} (h : (y : TorusFour) ∉ interiorSet) :
+    ∃ c ∈ fixedFinset, (y : TorusFour) ∈ collarSet c :=
+  (punctured_covered y.2).resolve_left h
+
 end
 
 end SKEFTHawking.KummerBoundaryChart
