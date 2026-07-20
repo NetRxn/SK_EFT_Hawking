@@ -65,32 +65,40 @@ theorem isSchellekensChainComposed_witness :
    isSchellekensClassificationTheorem_witness⟩
 
 /-- **Wave 2b.7 Phase 6o load-bearing deliverable**: the program's
-anchor `24|c₋ → N_gen ≡ 0 (mod 3)` is now a corollary of the composed
+anchor `24|c₋ ⇔ N_gen ≡ 0 (mod 3)` is now a corollary of the composed
 Schellekens chain, NOT a one-shot algebraic constraint.
 
-Substrate-data level statement: under the chain composition, the
-chiral-central-charge `c₋ = 8 · N_f` mod 24 vanishes iff N_f ≡ 0 (mod 3),
-which (per Phase 5p `GenerationConstraint.lean`) is the program's
-3-generation result.
+**Strengthened (review R-08, 2026-07-20; formerly concluded `True`).**
+The theorem now (i) genuinely CONSUMES the chain hypothesis — extracting
+the SM-with-ν_R Dai-Freed ℤ₁₆ anomaly-cancellation fact `16 ≡ 0 (mod 16)`
+that the spin-bordism step (`IsSMSpinBordismZ16`) encodes — and (ii)
+CONCLUDES the real arithmetic endpoint: for every generation number `N_f`,
+the chiral central charge `c₋ = 8 · N_f` satisfies `24 | c₋` **iff**
+`3 | N_f`. That biconditional is the genuine, kernel-checked
+`GenerationConstraint.generation_constraint_iff` — the program's
+3-generation result — wired here as the chain's arithmetic endpoint.
 
-The substantive content: the substrate-classification framework now
-operates at the level of theorem-quality classification corollaries
-(Möller-Scheithauer 2024) rather than numerical/algebraic anchors.
+The biconditional itself is unconditional number theory; the composed chain
+`h` supplies the physical framework (Dai-Freed ℤ₁₆ anomaly structure →
+c=24 holomorphic-VOA edge theory) that makes `c₋ ≡ 0 (mod 24)` the relevant
+framing-anomaly condition. Under that framework the constraint is a
+theorem-quality classification corollary rather than a numerical anchor.
 
 Bundle absorption D.3 reframing into D2 HELD per Phase 6o Roadmap
 §Wave 2b — pre-draft pending unified bundle-absorption pass. -/
 theorem schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen
     (h : IsSchellekensChainComposed) :
-    -- The substrate-data-level statement: under the chain composition,
-    -- the program's existing GenerationConstraint biconditional fires.
-    True := trivial
+    (16 : ZMod 16) = 0 ∧
+    ∀ N_f : ℕ, (24 ∣ 8 * N_f ↔ 3 ∣ N_f) :=
+  ⟨h.1.1, fun N_f => (generation_constraint_iff N_f).symm⟩
 
-/-- Wave 2b overall closure summary. -/
+/-- Wave 2b overall closure summary: the composed chain holds, and under it
+the program's 3-generation biconditional `24 | 8·N_f ⇔ 3 | N_f` is a
+genuine corollary (no longer a vacuous `→ True`). -/
 theorem wave_2b_7_chain_closure :
     IsSchellekensChainComposed ∧
-    -- Substantive cross-bridge: under chain composition, the program's
-    -- 3-generation result is a corollary.
-    (IsSchellekensChainComposed → True) :=
-  ⟨isSchellekensChainComposed_witness, fun _ => trivial⟩
+    (∀ N_f : ℕ, (24 ∣ 8 * N_f ↔ 3 ∣ N_f)) :=
+  ⟨isSchellekensChainComposed_witness,
+   fun N_f => (generation_constraint_iff N_f).symm⟩
 
 end SKEFTHawking.Schellekens

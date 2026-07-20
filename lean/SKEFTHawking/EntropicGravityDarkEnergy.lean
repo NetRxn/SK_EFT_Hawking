@@ -264,20 +264,74 @@ def hasScalarPerturbationTheory : EntropicGravityCandidate → Bool
 theorem padmanabhan_cosmin_no_go_no_scalar_perturbation_theory :
     hasScalarPerturbationTheory .padmanabhanCosMIn = false := rfl
 
-/-- **EGDE3 — Hossenfelder-Verlinde NO-GO post Yoon-Guha (R5 §2.2 update
-    over R2).**
+/-- **EGDE3 — Hossenfelder-Verlinde: the dS-instability leg is no longer
+    load-bearing after Yoon-Guha (R5 §2.2 update over R2).**
 
     The R2 §5(c) dS-instability claim is **superseded** by Yoon-Guha
     2304.07301: matter+radiation FLRW stabilises the dS attractor.
-    The residual model still fails CMB, so the candidate remains NO-GO,
-    but via a *different mechanism* than R2 stated. Encoded as a Boolean
-    flag indicating the dS-instability route is no longer load-bearing. -/
+
+    **Scope of this theorem (narrowed 2026-07-20, review R-04).** This
+    theorem asserts *only* that the dS-instability route is no longer
+    load-bearing (the Boolean flag below). It does **not**, by itself,
+    prove the residual NO-GO — that is the separate, genuinely quantitative
+    `hossenfelder_verlinde_residual_no_go_cmb_absent_cold_dark_matter`
+    below, which encodes the residual CMB failure that survives the
+    Yoon-Guha rescue (dossier B.2.3: "NO-GO survives Yoon-Guha rescue
+    because the residual model fails CMB test independently"). -/
 def dsInstabilityLoadBearing : EntropicGravityCandidate → Bool
   | .hossenfelderVerlinde => false  -- superseded by Yoon-Guha
   | _ => true
 
 theorem hossenfelder_verlinde_no_go_post_yoon_guha :
     dsInstabilityLoadBearing .hossenfelderVerlinde = false := rfl
+
+/-- Planck 2018 baseline cold-dark-matter physical density
+    ω_cdm = Ω_cdm h² (Planck 2018 VI, arXiv:1807.06209, Table 2;
+    TT,TE,EE+lowE+lensing): 0.1200 ± 0.0012. A nonzero value is required to
+    fit the CMB acoustic peaks (third-peak height, odd/even peak asymmetry). -/
+noncomputable def planck_omega_cdm_h2 : ℝ := 0.12
+
+/-- Planck 2018 baseline 1σ error on ω_cdm (arXiv:1807.06209, Table 2):
+    ± 0.0012. -/
+noncomputable def planck_omega_cdm_h2_sigma : ℝ := 0.0012
+
+/-- Cold-dark-matter physical density available to the CMB acoustic physics
+    in a Verlinde/Hossenfelder emergent-gravity universe: ω_cdm = 0.
+
+    Emergent gravity (Verlinde 1611.02269; Hossenfelder's covariant version
+    1703.01415) replaces particle cold dark matter with an *apparent*
+    dark-matter response of the de-Sitter entropy to the baryon distribution.
+    That response is a low-redshift, de-Sitter-dominated-regime phenomenon;
+    at recombination (z ≈ 1100, deep in the matter/radiation-dominated era)
+    it is absent, so the model supplies **no** cold-dark-matter density to the
+    acoustic-peak physics. -/
+noncomputable def emergent_gravity_cmb_omega_cdm_h2 : ℝ := 0.0
+
+/-- **EGDE3′ — Hossenfelder-Verlinde RESIDUAL NO-GO: the quantitative CMB
+    failure that survives the Yoon-Guha dS-attractor rescue (R5 §2.2,
+    dossier B.2.3).**
+
+    After Yoon-Guha 2304.07301 removes the dS-instability leg
+    (`hossenfelder_verlinde_no_go_post_yoon_guha`), the residual model still
+    fails the CMB *independently* — dossier B.2.3: "NO-GO survives Yoon-Guha
+    rescue because the residual model fails CMB test independently." This is
+    the concrete, primary-source-anchored form of that residual leg.
+
+    **Mechanism → falsifiable inequality.** The residual emergent-gravity
+    model supplies no cold-dark-matter density to the recombination-epoch
+    acoustic physics (`emergent_gravity_cmb_omega_cdm_h2` = 0), whereas Planck
+    2018 measures ω_cdm = 0.1200 ± 0.0012 (`planck_omega_cdm_h2`). The
+    emergent-gravity ω_cdm deficit (0.12) exceeds five times the Planck
+    measurement error (5 × 0.0012 = 0.006), so the residual model is excluded
+    at ≫ 5σ. This is r_d-independent: it is a recombination-epoch density,
+    not a late-time BAO sound-horizon calibration. Both sides of the
+    inequality are on the ω_cdm scale (unit-coherent). -/
+theorem hossenfelder_verlinde_residual_no_go_cmb_absent_cold_dark_matter :
+    planck_omega_cdm_h2 - emergent_gravity_cmb_omega_cdm_h2
+      ≥ five_sigma_threshold * planck_omega_cdm_h2_sigma := by
+  unfold planck_omega_cdm_h2 emergent_gravity_cmb_omega_cdm_h2
+    five_sigma_threshold planck_omega_cdm_h2_sigma
+  norm_num
 
 /-- **EGDE4 — Cadoni-Tuveri DEC NO-GO via Gibbs-Duhem theorem
     forcing w_DE = −1 (Class (c) of unified Phase 6m GD taxonomy;
@@ -551,6 +605,51 @@ theorem all_quantitative_bounds_disfavoured :
    tsallis_hde_no_go_bayes_factor_tyagi_haridasu_basak,
    barrow_hde_disfavoured_information_criteria_luciano_paliathanasis_saridakis,
    by unfold odintsov_log_bayes jeffreys_decisive_threshold; norm_num⟩
+
+/-- **EGDE12 — Seven of the eight Track-B candidates carry a genuine
+    per-candidate falsifier theorem; this aggregate bundles their actual
+    proof content (review R-04).**
+
+    Unlike `entropic_gravity_no_go_count_eight` (a list-length tally) and
+    `r_d_anchoring_partial_rescue_does_not_save_class_b_or_class_d` (a Bool
+    registry over `rDIndependentNoGo`), this theorem is a genuine conjunction
+    of the *substantive* per-candidate falsifier statements — six norm_num
+    numerical exclusions against published data thresholds plus the
+    Hossenfelder-Verlinde residual ω_cdm CMB exclusion:
+
+    1. Verlinde 2017 — Halenka-Miller cluster σ ≥ 5σ;
+    2. Hossenfelder-Verlinde residual — Planck ω_cdm deficit ≥ 5σ;
+    3. Cadoni-Tuveri DEC — DESI w₀ gap ≥ 0.5 at the GD-locked w = −1;
+    4. Li 2004 HDE event-horizon — w_a sign-mismatch ≥ 3σ;
+    5. Tsallis HDE — |log𝓑| ≥ Jeffreys-decisive;
+    6. Barrow HDE — ΔAIC ≥ Burnham-Anderson moderate;
+    7. Odintsov-D'Onofrio-Paul — |log𝓑| ∈ [15, 17].
+
+    The eighth candidate, Padmanabhan/CosMIn, has a *structural* (no-σ)
+    NO-GO — "no scalar perturbation theory derivable from the CosMIn axiom
+    set" — which is a disclosed literature-ledger record registered in
+    `MODELING_ASSUMPTION_THEOREMS` (`src/core/constants.py`), and is
+    intentionally not a conjunct here because it is not a numerical
+    comparison. The 8/8 closure narrative therefore rests on 7 genuine
+    per-candidate falsifier theorems + 1 disclosed structural ledger item,
+    not on a bare list length. -/
+theorem entropic_gravity_seven_genuine_per_candidate_falsifiers :
+    halenka_miller_cluster_nominal_sigma ≥ five_sigma_threshold ∧
+    planck_omega_cdm_h2 - emergent_gravity_cmb_omega_cdm_h2
+      ≥ five_sigma_threshold * planck_omega_cdm_h2_sigma ∧
+    (dec_w_de < desi_dr2_w0_best_fit ∧
+      desi_dr2_w0_best_fit - dec_w_de ≥ 0.5) ∧
+    hde_event_horizon_wa_sigma ≥ 3.0 ∧
+    tsallis_log_bayes ≥ jeffreys_decisive_threshold ∧
+    barrow_aic_delta ≥ aic_moderate_threshold ∧
+    (odintsov_log_bayes ≥ 15 ∧ odintsov_log_bayes ≤ 17) :=
+  ⟨verlinde_2017_no_go_via_cluster_mass_densities_halenka_miller,
+   hossenfelder_verlinde_residual_no_go_cmb_absent_cold_dark_matter,
+   cadoni_tuveri_dec_no_go_via_gd_theorem_w_eq_minus_1,
+   hde_event_horizon_no_go_w_a_sign_mismatch_3sigma,
+   tsallis_hde_no_go_bayes_factor_tyagi_haridasu_basak,
+   barrow_hde_disfavoured_information_criteria_luciano_paliathanasis_saridakis,
+   odintsov_donofrio_paul_omega_k_no_go_logB_15_to_17⟩
 
 /-- **Deprecation alias.** The Phase-6m-era name
     `all_quantitative_bounds_exceed_jeffreys_decisive` is retained for
