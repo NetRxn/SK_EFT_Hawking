@@ -90,8 +90,10 @@ class TestComplexTurningPoint:
         expected = 1.0 * tp.Gamma_H / (2.0 * 1.0**2)
         assert abs(tp.x_imag - expected) < 1e-12
 
-    def test_shift_inversely_proportional_to_kappa_squared(self):
-        """Doubling kappa quarters the shift (delta_x ∝ 1/kappa²)."""
+    def test_shift_kappa_independent_horizon_calibrated(self):
+        """With the horizon-calibrated first-order Gamma_H = (g1+g2)(kappa/c_s)^2,
+        the imaginary shift delta_x = c_s*Gamma_H/(2 kappa^2) = (g1+g2)/(2 c_s) is
+        INDEPENDENT of kappa (Gamma_H ∝ kappa^2 cancels the 1/kappa^2). (B-05.)"""
         tp1 = compute_complex_turning_point(
             omega=0.5, kappa=1.0, c_s=1.0, xi=0.03,
             gamma_1=0.01, gamma_2=0.01,
@@ -100,11 +102,14 @@ class TestComplexTurningPoint:
             omega=0.5, kappa=2.0, c_s=1.0, xi=0.03,
             gamma_1=0.01, gamma_2=0.01,
         )
-        # Same Gamma_H (same k_H and omega), kappa doubled → shift / 4
-        assert abs(tp2.x_imag - tp1.x_imag / 4.0) < 1e-12
+        assert abs(tp2.x_imag - tp1.x_imag) < 1e-12
+        # Closed form: (g1+g2)/(2 c_s)
+        assert abs(tp1.x_imag - 0.02 / (2.0 * 1.0)) < 1e-12
 
-    def test_shift_frequency_dependent(self):
-        """Shift grows with frequency (through k_H dependence)."""
+    def test_shift_frequency_independent(self):
+        """The first-order dissipative turning-point shift is a horizon property,
+        so it is FREQUENCY-INDEPENDENT — the fix for B-05 (previously k_H = omega/c_s
+        made it spuriously grow with omega)."""
         tp_low = compute_complex_turning_point(
             omega=0.1, kappa=1.0, c_s=1.0, xi=0.03,
             gamma_1=0.01, gamma_2=0.01,
@@ -113,7 +118,7 @@ class TestComplexTurningPoint:
             omega=1.0, kappa=1.0, c_s=1.0, xi=0.03,
             gamma_1=0.01, gamma_2=0.01,
         )
-        assert tp_high.x_imag > tp_low.x_imag
+        assert abs(tp_high.x_imag - tp_low.x_imag) < 1e-14
 
     def test_delta_diss_property(self):
         """delta_diss = Gamma_H / kappa."""
@@ -132,8 +137,12 @@ class TestComplexTurningPoint:
         assert tp.x_complex.real == tp.x_real
         assert tp.x_complex.imag == tp.x_imag
 
-    def test_all_eft_orders_contribute(self):
-        """Third-order coefficients increase the shift."""
+    def test_higher_orders_do_not_shift_turning_point(self):
+        """The leading (first-order) turning-point shift is set by gamma_1, gamma_2
+        only. Higher-order coefficients are frequency-dependent spectral-distortion
+        terms carried by effective_surface_gravity's delta_higher(omega) — they do
+        NOT enter the leading turning-point shift. (B-05: previously all orders were
+        lumped into a single omega/c_s-evaluated Gamma_H.)"""
         tp2 = compute_complex_turning_point(
             omega=0.5, kappa=1.0, c_s=1.0, xi=0.03,
             gamma_1=0.01, gamma_2=0.01,
@@ -143,7 +152,19 @@ class TestComplexTurningPoint:
             gamma_1=0.01, gamma_2=0.01,
             gamma_3_1=0.001, gamma_3_2=0.001, gamma_3_3=0.001,
         )
-        assert tp3.x_imag > tp2.x_imag
+        assert abs(tp3.x_imag - tp2.x_imag) < 1e-14
+        # ...but higher orders DO change the frequency-dependent kappa_eff:
+        r2 = effective_surface_gravity(
+            omega=0.5, kappa=1.0, c_s=1.0, xi=0.03,
+            gamma_1=0.01, gamma_2=0.01,
+        )
+        r3 = effective_surface_gravity(
+            omega=0.5, kappa=1.0, c_s=1.0, xi=0.03,
+            gamma_1=0.01, gamma_2=0.01,
+            gamma_3_1=0.001, gamma_3_2=0.001, gamma_3_3=0.001,
+        )
+        assert r3.delta_higher != r2.delta_higher
+        assert abs(r2.delta_higher) < 1e-15  # no higher-order coeffs → zero
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -227,8 +248,10 @@ class TestEffectiveSurfaceGravity:
         )
         assert result.delta_disp < 0
 
-    def test_frequency_dependence(self):
-        """kappa_eff depends on omega through the damping rate."""
+    def test_first_order_only_is_frequency_independent(self):
+        """With only first-order (and dispersive) corrections, kappa_eff is
+        FREQUENCY-INDEPENDENT: delta_disp and delta_diss are both horizon
+        properties, and delta_higher = 0. (B-05.)"""
         r1 = effective_surface_gravity(
             omega=0.1, kappa=1.0, c_s=1.0, xi=0.03,
             gamma_1=0.01, gamma_2=0.01,
@@ -237,16 +260,37 @@ class TestEffectiveSurfaceGravity:
             omega=1.0, kappa=1.0, c_s=1.0, xi=0.03,
             gamma_1=0.01, gamma_2=0.01,
         )
-        # Higher omega → larger Gamma_H → larger delta_diss → lower kappa_eff
+        assert abs(r2.delta_diss - r1.delta_diss) < 1e-15
+        assert abs(r2.delta_disp - r1.delta_disp) < 1e-15
+        assert abs(r2.kappa_eff - r1.kappa_eff) < 1e-14
+
+    def test_frequency_dependence_from_higher_orders(self):
+        """kappa_eff acquires omega-dependence ONLY through the mode-dependent
+        higher-order corrections delta_higher(omega) (evaluated at k = omega/c_s)."""
+        r1 = effective_surface_gravity(
+            omega=0.1, kappa=1.0, c_s=1.0, xi=0.03,
+            gamma_1=0.01, gamma_2=0.01, gamma_2_1=0.001,
+        )
+        r2 = effective_surface_gravity(
+            omega=1.0, kappa=1.0, c_s=1.0, xi=0.03,
+            gamma_1=0.01, gamma_2=0.01, gamma_2_1=0.001,
+        )
+        # Higher omega → larger |delta_higher| → larger delta_total → lower kappa_eff
+        assert abs(r2.delta_higher) > abs(r1.delta_higher)
         assert r2.kappa_eff < r1.kappa_eff
+        # First-order part unchanged across omega
+        assert abs(r2.delta_diss - r1.delta_diss) < 1e-15
 
     def test_delta_total_is_sum(self):
-        """delta_total = delta_disp + delta_diss."""
+        """delta_total = delta_disp + delta_diss + delta_higher."""
         result = effective_surface_gravity(
             omega=0.5, kappa=1.0, c_s=1.0, xi=0.03,
-            gamma_1=0.01, gamma_2=0.01,
+            gamma_1=0.01, gamma_2=0.01, gamma_2_1=0.001,
         )
-        assert abs(result.delta_total - result.delta_disp - result.delta_diss) < 1e-12
+        assert abs(
+            result.delta_total
+            - result.delta_disp - result.delta_diss - result.delta_higher
+        ) < 1e-12
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -612,11 +656,17 @@ class TestSpectrum:
             assert spec.points[i].n_total >= spec.points[i + 1].n_total
 
     def test_noise_floor_creates_spectral_floor(self):
-        """At high omega, n_total approaches n_noise (spectral floor)."""
+        """At high omega, n_total approaches n_noise (spectral floor).
+
+        With the corrected horizon-calibrated first-order dissipation (B-05),
+        the noise floor n_noise = delta_k/2 is a genuine constant (delta_k is
+        frequency-independent), while n_hawking decays as exp(-2*pi*omega/kappa).
+        So the floor dominates once omega is large enough — here well below the
+        UV cutoff (omega_max ~ 18 kappa ~ 114 T_H for Steinhauer)."""
         p = steinhauer_platform()
-        spec = compute_spectrum(p, omega_min=0.1, omega_max_factor=10.0, n_points=30)
+        spec = compute_spectrum(p, omega_min=0.1, omega_max_factor=25.0, n_points=40)
         last = spec.points[-1]
-        # At high omega, n_noise should be comparable to n_total
+        # At high omega, the constant noise floor dominates n_total
         assert last.n_noise / last.n_total > 0.5
 
     def test_steinhauer_deviations_small_at_peak(self):
@@ -682,7 +732,9 @@ class TestCrossModuleConsistency:
     """Test consistency with existing wkb_analysis.py."""
 
     def test_delta_diss_matches_wkb_analysis(self):
-        """delta_diss from exact WKB matches perturbative wkb_analysis.py."""
+        """delta_diss from exact WKB matches the perturbative wkb_analysis.py path
+        on shared Steinhauer parameters (both are the horizon-calibrated first-order
+        rate now, so they agree to machine precision)."""
         from src.second_order.wkb_analysis import (
             steinhauer_params,
             connection_formula as pert_connection,
@@ -699,34 +751,108 @@ class TestCrossModuleConsistency:
             p.gamma_1, p.gamma_2,
         )
 
-        # delta_diss should match (same formula at leading order)
-        assert abs(conn.kappa_eff.delta_diss - pert.delta_diss) / max(abs(pert.delta_diss), 1e-15) < 0.1
+        assert abs(conn.kappa_eff.delta_diss - pert.delta_diss) / max(
+            abs(pert.delta_diss), 1e-15) < 1e-9
 
-    def test_dispersive_correction_consistent(self):
-        """Dispersive correction matches between modules."""
-        from src.second_order.wkb_analysis import steinhauer_params
-        from src.core.formulas import dispersive_correction
+    def _shared_params(self):
+        """A common, explicit parameter set feeding BOTH independent WKB paths."""
+        from src.second_order.wkb_analysis import TransonicProfile, WKBParameters
+        kappa, c_s, xi = 1.0, 1.0, 0.05          # D = kappa*xi/c_s = 0.05
+        gamma_1, gamma_2 = 0.02, 0.03
+        profile = TransonicProfile(kappa=kappa, c_s=c_s, xi=xi)
+        params = WKBParameters(profile=profile, gamma_1=gamma_1, gamma_2=gamma_2)
+        return (kappa, c_s, xi, gamma_1, gamma_2), params
 
-        params = steinhauer_params()
-        D = params.profile.D
+    def test_first_order_corrections_agree_multi_omega(self):
+        """CROSS-PATH: the perturbative wkb_analysis.connection_formula and the
+        exact connection_formula.effective_surface_gravity are INDEPENDENT
+        implementations. After B-05 both use the canonical delta_disp = -(pi/6)D^2
+        and the horizon-calibrated first-order delta_diss = (g1+g2)(kappa/c_s)^2/kappa.
+        They must AGREE at every frequency, and both must be FREQUENCY-INDEPENDENT.
+        (Previously they disagreed except at omega = kappa.)"""
+        from src.second_order.wkb_analysis import connection_formula as pert_connection
 
-        delta_from_formulas = dispersive_correction(D)
-        p = steinhauer_platform()
-        D_platform = p.D
-        delta_from_platform = dispersive_correction(D_platform)
+        (kappa, c_s, xi, gamma_1, gamma_2), params = self._shared_params()
 
-        assert abs(delta_from_formulas - delta_from_platform) < 1e-10
+        ref_disp = None
+        ref_diss = None
+        for ratio in (0.5, 1.0, 2.0):
+            omega = ratio * kappa
+            pert = pert_connection(omega, params)
+            exact = effective_surface_gravity(
+                omega, kappa, c_s, xi, gamma_1, gamma_2)
+
+            # (a) the two independent implementations agree at this omega
+            assert abs(pert.delta_disp - exact.delta_disp) < 1e-15, (
+                f"delta_disp mismatch at omega/kappa={ratio}")
+            assert abs(pert.delta_diss - exact.delta_diss) < 1e-15, (
+                f"delta_diss mismatch at omega/kappa={ratio}")
+
+            # (b) both are frequency-independent (regression guard for B-05:
+            #     the old code scaled these by omega/kappa and (omega/c_s)^2)
+            if ref_disp is None:
+                ref_disp, ref_diss = pert.delta_disp, pert.delta_diss
+            else:
+                assert abs(pert.delta_disp - ref_disp) < 1e-15
+                assert abs(pert.delta_diss - ref_diss) < 1e-15
+                assert abs(exact.delta_disp - ref_disp) < 1e-15
+                assert abs(exact.delta_diss - ref_diss) < 1e-15
+
+        # sanity: the shared values equal the closed forms
+        import numpy as np
+        assert abs(ref_disp - (-(np.pi / 6) * 0.05 ** 2)) < 1e-15
+        assert abs(ref_diss - (gamma_1 + gamma_2) * (kappa / c_s) ** 2 / kappa) < 1e-15
+
+    def test_second_order_is_mode_dependent_both_paths(self):
+        """CROSS-PATH: the second-order correction IS frequency-dependent in both
+        paths (evaluated at the mode wavenumber k = omega/c_s), and the two
+        implementations agree at each omega."""
+        from src.second_order.wkb_analysis import (
+            TransonicProfile, WKBParameters,
+            connection_formula as pert_connection,
+        )
+        from src.core.formulas import second_order_correction
+
+        kappa, c_s, xi = 1.0, 1.0, 0.05
+        gamma_1, gamma_2 = 0.02, 0.03
+        gamma_2_1, gamma_2_2 = 0.001, 0.0004   # not enforcing positivity → nonzero
+        profile = TransonicProfile(kappa=kappa, c_s=c_s, xi=xi)
+        params = WKBParameters(
+            profile=profile, gamma_1=gamma_1, gamma_2=gamma_2,
+            gamma_2_1=gamma_2_1, gamma_2_2=gamma_2_2,
+        )
+        vals = []
+        for ratio in (0.5, 1.0, 2.0):
+            omega = ratio * kappa
+            pert = pert_connection(omega, params)
+            k_mode = omega / c_s
+            canonical = second_order_correction(
+                k_mode, omega, c_s, gamma_2_1, gamma_2_2, kappa)
+            # perturbative path matches the canonical mode-dependent second order
+            assert abs(pert.delta_second - canonical) < 1e-15
+            vals.append(pert.delta_second)
+        # genuinely frequency-dependent (grows with omega)
+        assert abs(vals[2]) > abs(vals[1]) > abs(vals[0]) > 0.0
 
     def test_damping_rate_consistent(self):
-        """Damping rate from formulas.py matches in both modules."""
+        """The turning-point Gamma_H is the horizon-calibrated first-order rate
+        Gamma_H = (gamma_1 + gamma_2)(kappa/c_s)^2 (evaluated at k_H = kappa/c_s),
+        frequency-INDEPENDENT — matching the canonical damping_rate at the horizon
+        wavenumber and horizon frequency (k = kappa/c_s, omega = kappa), and the
+        Lean definition SecondOrderSK.GammaH. (B-05.)"""
         p = steinhauer_platform()
-        omega = 0.5
-        k_H = omega / p.c_s
-        Gamma = damping_rate(k_H, omega, p.c_s, p.gamma_1, p.gamma_2)
-        tp = compute_complex_turning_point(
-            omega, p.kappa, p.c_s, p.xi, p.gamma_1, p.gamma_2,
-        )
-        assert abs(tp.Gamma_H - Gamma) < 1e-12
+        k_H = p.kappa / p.c_s
+        # damping_rate at the horizon scale (k = kappa/c_s, omega = kappa) equals
+        # (gamma_1 + gamma_2)(kappa/c_s)^2 for first-order coefficients.
+        Gamma_horizon = damping_rate(k_H, p.kappa, p.c_s, p.gamma_1, p.gamma_2)
+        Gamma_closed = (p.gamma_1 + p.gamma_2) * (p.kappa / p.c_s) ** 2
+        assert abs(Gamma_horizon - Gamma_closed) < 1e-18
+        # ...and it is the value carried by the complex turning point, for any omega.
+        for omega in (0.3, 0.5, 1.0, 2.0):
+            tp = compute_complex_turning_point(
+                omega, p.kappa, p.c_s, p.xi, p.gamma_1, p.gamma_2,
+            )
+            assert abs(tp.Gamma_H - Gamma_closed) < 1e-18
 
     def test_platform_params_match_wkb_analysis(self):
         """Platform parameter values consistent between modules."""
