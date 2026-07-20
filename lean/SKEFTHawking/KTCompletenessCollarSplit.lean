@@ -41,6 +41,7 @@ open SKEFTHawking.SurgeryFoundation
 open SKEFTHawking.SurgeryFoundation.HandleAttachment
 open SKEFTHawking.DiskChartGeneric (D5)
 open SKEFTHawking.SingularHomologyMod2 SKEFTHawking.SingularCohomologyMod2
+open SKEFTHawking.SingularRelativeHomologyMod2 SKEFTHawking.SingularRelativeCohomologyMod2
 open SKEFTHawking.SingularFunctoriality
 open SKEFTHawking.SingularPrism
 open SKEFTHawking.SingularHomotopyInvariance
@@ -157,6 +158,48 @@ structure CollarSplitDatum (HA : HandleAttachment) (cd : SeamCollarDatum HA.carr
   handle_side :
     cd.hHomeo '' {p : ↥cd.seamNbhd | (p : HA.carrier) ∈ Set.range HA.fromHandle}
       = {q : WeldedCollarModel cd.A | mid ≤ q.2}
+
+/-! ## §C. The closed ends as carrier subspaces, and their banked all-degree finiteness. -/
+
+/-- **The cyl end `B` sits inside `W` as the closed subspace `↥(range fromCyl)`** — `fromCyl` is a
+closed embedding, so it is a homeomorphism onto its range. The `Homeomorph`-packaged form of the
+banked `isClosedEmbedding_fromCyl`. -/
+def cylRangeHomeo (HA : HandleAttachment) : HA.B ≃ₜ ↥(Set.range HA.fromCyl) :=
+  HA.isClosedEmbedding_fromCyl.isEmbedding.toHomeomorph
+
+/-- **The handle end `Ha` sits inside `W` as the closed subspace `↥(range fromHandle)`.** -/
+def handleRangeHomeo (HA : HandleAttachment) : HA.Ha ≃ₜ ↥(Set.range HA.fromHandle) :=
+  HA.isClosedEmbedding_fromHandle.isEmbedding.toHomeomorph
+
+variable (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+  (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+  (hφ : Continuous φ) (hφinj : Function.Injective φ)
+
+/-- **`H_*(range fromCyl) < ∞` in every degree** — the cyl end is `s.M × I`, so its all-degree
+homology finiteness is the banked `finiteDimensional_homology_cyl_all`, transported across the
+closed-embedding homeomorphism `cylRangeHomeo`. The closed-end stock the collar-collapse retraction
+transfers to `coverA`. -/
+theorem finiteDimensional_homology_sub_range_fromCyl (n : ℕ) :
+    FiniteDimensional (ZMod 2)
+      (Homology (sub (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl)) n) := by
+  haveI : ChartedSpace (EuclideanSpace ℝ (Fin (2 + 2))) s.M :=
+    inferInstanceAs (ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M)
+  exact finiteDimensional_homology_of_homeomorph
+    (cylRangeHomeo (ktHandleAttachment s.M D5 S hS φ hφ hφinj)).symm n
+    (finiteDimensional_homology_cyl_all n)
+
+/-- **`H_*(range fromHandle) < ∞` in every degree** — the handle end is `D⁵`, so its all-degree
+homology finiteness is the banked `finiteDimensional_homology_D5_all`, transported across the
+closed-embedding homeomorphism `handleRangeHomeo`. The closed-end stock the collar-collapse
+retraction transfers to `coverB`. -/
+theorem finiteDimensional_homology_sub_range_fromHandle (n : ℕ) :
+    FiniteDimensional (ZMod 2)
+      (Homology (sub (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle)) n) :=
+  finiteDimensional_homology_of_homeomorph
+    (handleRangeHomeo (ktHandleAttachment s.M D5 S hS φ hφ hφinj)).symm n
+    (finiteDimensional_homology_D5_all n)
 
 end
 
