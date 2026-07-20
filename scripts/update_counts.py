@@ -148,11 +148,54 @@ def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
             key = "other"
         nd_clusters[key] = nd_clusters.get(key, 0) + 1
 
+    # A-01 vacuity-debt transparency (review 2026-07-16): publish the KNOWN,
+    # already-registered-and-gated vacuity/definitional debt SEPARATELY from the
+    # kernel-load-bearing count, rather than lumping it all into
+    # `theorems_substantive` (= total − placeholders). Every name below is tracked
+    # in a registry and gated by `validate.py --check {vacuous_statement_audit,
+    # proxy_body_audit}`; this only makes the split visible in the headline counts.
+    try:
+        import sys as _sys
+        from pathlib import Path as _P
+        _sys.path.insert(0, str(_P(__file__).resolve().parent.parent))
+        from src.core.constants import (
+            VACUOUS_STATEMENT_BASELINE, MODELING_ASSUMPTION_THEOREMS,
+        )
+
+        def _short(x):
+            return str(x).split(".")[-1]
+
+        _thm_short = {_short(d["name"]) for d in theorems}
+        _ph_short = {_short(d["name"]) for d in placeholders}
+        _baseline = {_short(n) for n in VACUOUS_STATEMENT_BASELINE
+                     if _short(n) in _thm_short}
+        _proxy = {_short(v.get("lean_name", k))
+                  for k, v in MODELING_ASSUMPTION_THEOREMS.items()
+                  if v.get("category") == "vacuous_proxy"
+                  and _short(v.get("lean_name", k)) in _thm_short}
+        _defl = {_short(v.get("lean_name", k))
+                 for k, v in MODELING_ASSUMPTION_THEOREMS.items()
+                 if v.get("category") == "definitional"
+                 and _short(v.get("lean_name", k)) in _thm_short}
+        _debt = (_baseline | _proxy | _defl) - _ph_short  # union, placeholders already split off
+        _n_baseline, _n_proxy, _n_defl, _n_debt = (
+            len(_baseline), len(_proxy), len(_defl), len(_debt))
+    except Exception:
+        _n_baseline = _n_proxy = _n_defl = _n_debt = 0
+    _substantive = len(theorems) - len(placeholders)
+
     return {
         "total_declarations": len(data),
         "theorems_total": len(theorems),
-        "theorems_substantive": len(theorems) - len(placeholders),
+        "theorems_substantive": _substantive,
         "theorems_placeholder": len(placeholders),
+        # Kernel-load-bearing = substantive minus the registered tracked-vacuity
+        # debt (all gated). total = kernel_substantive + placeholder + tracked_debt.
+        "theorems_kernel_substantive": _substantive - _n_debt,
+        "theorems_tracked_vacuity_debt": _n_debt,
+        "theorems_vacuity_baseline": _n_baseline,
+        "theorems_vacuous_proxy": _n_proxy,
+        "theorems_disclosed_definitional": _n_defl,
         "axioms": len(axioms),
         "axiom_names": [a["name"] for a in axioms],
         "sorry_declarations": len(sorry_deps),
@@ -284,6 +327,8 @@ def generate_tex(counts: dict, path: Path, deps: list | None = None):
         f"\\newcommand{{\\totaltheorems}}{{{lean.get('theorems_total', '?')}}}",
         f"\\newcommand{{\\substantivetheorems}}{{{lean.get('theorems_substantive', '?')}}}",
         f"\\newcommand{{\\placeholdertheorems}}{{{lean.get('theorems_placeholder', '?')}}}",
+        f"\\newcommand{{\\kernelsubstantivetheorems}}{{{lean.get('theorems_kernel_substantive', '?')}}}",
+        f"\\newcommand{{\\trackedvacuitydebt}}{{{lean.get('theorems_tracked_vacuity_debt', '?')}}}",
         f"\\newcommand{{\\axiomcount}}{{{lean.get('axioms', '?')}}}",
         f"\\newcommand{{\\sorrycount}}{{{lean.get('sorry_declarations', '?')}}}",
         f"\\newcommand{{\\sorrypercent}}{{{sorry_pct}}}",

@@ -8592,9 +8592,15 @@ def bh_entropy_kaul_majumdar(area, G_N=None, c0=0.0):
     (½ Gaussian saddle + 1 SU(2)-singlet projection); see
     `log_correction_coefficient_su2k` for the decomposition.
 
-    Lean: BHEntropyMicroscopic.kaulMajumdarS (def);
-          structural log coefficient via `kaul_majumdar_log_coefficient` and
-          its decomposition via `kaul_majumdar_log_decomposition`.
+    Lean: BHEntropyMicroscopic.kaulMajumdarS (def). The −3/2 log coefficient is
+          GENUINELY DERIVED (not merely asserted) by the Γ–Catalan chain:
+          `verlindeEntropy_SU2k` (the faithful literal Γ-Catalan log-dimension)
+          plus `gaussianSaddleAsymptotic` (the kernel-pure per-G_N O(1/A)
+          asymptotic rate vs `kaulMajumdarS`, discharging
+          `H_VerlindeKMLiteralSumDerivation`). The arithmetic coefficient-split
+          −1/2 (Gaussian saddle) + −1 (SU(2) singlet) is only the bookkeeping
+          lemma `kaul_majumdar_log_decomposition` (proved by `ring`) — a poor
+          grounding pointer on its own, NOT the derivation (review A-03).
     Aristotle: pending
     Source: Kaul-Majumdar, PRL 84, 5255-5257 (2000), arXiv:gr-qc/0002040;
             Kaul SIGMA 8, 005 (2012), arXiv:1201.6102 §5.
