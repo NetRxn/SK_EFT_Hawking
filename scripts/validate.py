@@ -1403,6 +1403,93 @@ def check_d1_hierarchy_table() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 4c: Flagship (F) inline BEC hierarchy claims ↔ canonical evaluator
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("f_hierarchy_claims",
+                "Flagship F inline Heidelberg BEC corrections match the canonical evaluator")
+def check_f_hierarchy_claims() -> CheckResult:
+    """Sibling of ``d1_hierarchy_table`` for the flagship ``papers/F``.
+
+    F quotes the BEC corrections inline (prose), not as a table, so this
+    check targets the specific Heidelberg sentences by anchored regex and
+    compares each quoted value against the SAME canonical evaluator
+    ``scripts/gen_d1_hierarchy_table.compute_bec_hierarchy()`` (Heidelberg
+    row) within 0.5 % relative. Each claim is REQUIRED to be present in the
+    expected form: a missing/rephrased-stale anchor is a failure, so the
+    historical magnitudes (δ_diss ~26 %, δ_disp ~10 %, spectral floor
+    ~2 T_H) — none of which match the anchored numeric form — FAIL, and the
+    corrected sentences PASS. The polariton (−19 %) and graphene (−2.8 %)
+    values are deliberately NOT matched here: they belong to other
+    platforms/modules and would false-positive against the Heidelberg row.
+    """
+    import re as _re
+    import math as _math
+
+    paper_path = PAPERS_DIR / "F" / "paper_draft.tex"
+    if not paper_path.exists():
+        return CheckResult(passed=False, error=f"Paper not found: {paper_path}")
+
+    try:
+        from scripts.gen_d1_hierarchy_table import compute_bec_hierarchy
+    except Exception as e:  # pragma: no cover - import guard
+        return CheckResult(passed=False, error=f"cannot import evaluator: {e}")
+
+    heid = compute_bec_hierarchy()["Heidelberg"]
+    text = paper_path.read_text(encoding="utf-8")
+    TOL = 0.005  # 0.5 % relative
+
+    details: List[Detail] = []
+    all_pass = True
+
+    def _rel_ok(got, want) -> tuple:
+        if got is None:
+            return False, "unparseable / wrong format"
+        if want == 0:
+            return abs(got) <= TOL, f"paper={got:.4g}, canon=0"
+        rel = abs(got - want) / abs(want)
+        return rel <= TOL, f"paper={got:.4g}, canon={want:.4g}, rel={rel:.2%}"
+
+    # (label, anchored regex capturing the LaTeX value, canonical key)
+    claims = [
+        ("heidelberg.delta_diss.second_order",
+         r"\\delta_\{\\mathrm\{diss\}\}\s*\\approx\s*([^$]+?)\$.*?Heidelberg parameters",
+         "delta_diss"),
+        ("heidelberg.delta_disp.hierarchy",
+         r"dispersive correction is \$\\delta_\{\\mathrm\{disp\}\}\s*\\approx\s*([^$]+?)\$",
+         "delta_disp"),
+        ("heidelberg.delta_diss.hierarchy",
+         r"dissipative correction\s*\$?\\delta_\{\\mathrm\{diss\}\}\s*\\approx\s*([^$]+?)\$",
+         "delta_diss"),
+    ]
+    for label, pat, key in claims:
+        m = _re.search(pat, text, _re.DOTALL)
+        if not m:
+            details.append(Detail(label, False,
+                                  "expected Heidelberg claim not found (missing or stale form)"))
+            all_pass = False
+            continue
+        ok, msg = _rel_ok(_parse_latex_number(m.group(1)), heid[key])
+        details.append(Detail(label, ok, msg))
+        all_pass = all_pass and ok
+
+    # Crossover sentence: ω_× = T_H ln(2/δ_diss) ≈ Y T_H (symbolic ln-arg;
+    # the coefficient Y must equal ln(2 / canonical δ_diss)).
+    cm = _re.search(
+        r"\\ln\(2/\\delta_\{\\mathrm\{diss\}\}\)\s*\\approx\s*([\d.]+)\\,\s*T_H", text)
+    if not cm:
+        details.append(Detail("heidelberg.crossover", False,
+                              "expected ω_× = T_H ln(2/δ_diss) ≈ Y T_H sentence not found"))
+        all_pass = False
+    else:
+        y_ok, y_msg = _rel_ok(float(cm.group(1)), _math.log(2.0 / heid["delta_diss"]))
+        details.append(Detail("heidelberg.crossover", y_ok, y_msg))
+        all_pass = all_pass and y_ok
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CHECK 5: Theorem registry
 # ═══════════════════════════════════════════════════════════════════════
 
