@@ -2639,6 +2639,47 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'the η-invariant symbol for the full moving 3D operator awaits Dirac-operator / APS-index '
             'infrastructure absent from Mathlib.',
     },
+    'carrollian_boundary_bms_vertex': {
+        'tier': 'discharge_future',
+        'statement': 'The acoustic analog-Hawking null boundary (sonic horizon) carries a Carrollian '
+            'structure (degenerate boundary metric + null direction) whose BMS-type asymptotic-symmetry '
+            'supertranslation charges satisfy the charge-conservation Ward identity equivalent to the '
+            'acoustic soft theorem — the THIRD Strominger-triangle vertex. The other triangle content is '
+            'PROVEN kernel-pure: the soft theorem (Boostless.lean) and the memory↔soft edge '
+            '(SoftTheorems/Carrollian.lean `memory_eq_softCharge`, FTC-proved, with `burst_satisfies_ward`).',
+        'status': 'proposed — BUILDABLE follow-up (operator-authorized 2026-07-20, corrected-posture: on '
+            'the build queue, not a permanent assumption). The former `True`-placeholder predicates '
+            '(`IsCarrollianBoundary`, `IsAsymptoticSymmetryWard`) were REMOVED in the R-01 remediation '
+            '(2026-07-20); nothing in-tree asserts this vertex. This entry tracks the genuine build.',
+        'eliminability': 'moderate',
+        'elimination_path': 'The Phase 6o-prime Wave 1a-prime arc (docs/roadmaps/Phase6o_prime_Roadmap.md): '
+            'C0 literature-anchoring scout (horizon/membrane-paradigm BMS charge algebra for the analog '
+            'case) -> C1 CarrollianStructure (degenerate metric + null field) + acoustic-horizon instance '
+            '-> C2 Witt/Virasoro in-tree (Mathlib has LieAlgebra.Extension for the central extension; no '
+            'named Virasoro) -> C3 BMS semidirect product + supertranslation subalgebra -> C4 boundary '
+            'phase-space model + charge functionals (the vacuity-risk item; Fable-gate before consumption) '
+            '-> C5 the charge Ward identity wiring the triangle third vertex -> C6 vacuity gate round. '
+            'SCOPE FENCE: analog-appropriate fidelity ONLY (acoustic horizon, BMS-3 / Carrollian-line, '
+            'algebraic phase-space model) — NOT asymptotically-flat BMS-4 with asymptotic expansions. '
+            'Reference class: the cylinder cap-cross arc (~10 worker tasks).',
+        'dependent_theorems': [],
+        'module': 'SoftTheorems/Carrollian.lean (the "Documented GAP" section states the three required '
+            'structures precisely; the proven memory/soft content lives in the same module)',
+        'source': 'Mason-Ruzziconi-Yelleshpur Srikant, JHEP 05 (2024) 012, arXiv:2312.10138 (Carrollian '
+            'amplitudes); Have-Nguyen-Prohazka-Salzer arXiv:2504.10577 (Carrollian Ward <-> soft); Penna '
+            'arXiv:1508.06577 (BMS on horizons / membrane paradigm); Datta-Fischer arXiv:2011.05837 (BEC '
+            'acoustic memory); On-Shell Methods DR §4.3, §8.2.',
+        'risk': 'Low physically (the Carrollian/BMS soft-theorem correspondence is established for '
+            'gravitational systems; the analog transcription is standard-shaped). Formalization-novel: '
+            'no paper proves a BMS theorem for an acoustic analog (On-Shell DR §4.3), so the bounded '
+            'build is itself a novel result. Main technical risk concentrates in C4 (the phase-space / '
+            'charge model must act non-trivially — vacuity-gated).',
+        'prose': 'The Strominger triangle for analog Hawking systems has two of its three corners proven '
+            'in-tree (soft theorem; memory↔soft-charge Ward relation). The third — Carrollian null-boundary '
+            'geometry carrying BMS supertranslation charges whose conservation IS the soft theorem — '
+            'requires a bounded Carrollian/BMS formalization arc (Phase 6o-prime Wave 1a-prime), fenced to '
+            'analog fidelity. Tracked here until the arc discharges it.',
+    },
     'acyclic_factor_graph_has_rank_cert': {
         'tier': 'discharge_future',
         'statement': 'Every acyclic (tree) factor graph admits a BP rank certificate '

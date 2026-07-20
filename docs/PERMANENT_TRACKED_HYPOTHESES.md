@@ -4,7 +4,7 @@
 
 **Purpose.** Catalogue the project's load-bearing tracked-hypothesis Props — Lean predicates consumed by substantive theorems but NOT independently derived. Each is a *constructive* alternative to a global `axiom`: the claim is packaged as a `def … : Prop` and taken as an explicit hypothesis, making the project's assumption surface visible at the type-signature level (Pipeline Invariant #15/#16).
 
-**Count.** 43 tracked hypotheses 4 headline, 15 external_boundary, 18 discharge_future, 6 local.
+**Count.** 44 tracked hypotheses 4 headline, 15 external_boundary, 19 discharge_future, 6 local.
 
 ---
 
@@ -284,6 +284,16 @@
 - **Discharge path.** A finite well-founded construction: leaf-strip the acyclic bipartite incidence graph (SimpleGraph.deleteEdges + dist + connected-component sup) to assign the subtree-depth rank and discharge the two strict-monotonicity obligations by a strict-subset cardinality argument. In-tree buildable (a routine graph-theory grind); scoped as a follow-up brick.
 - **Source.** Standard: belief propagation is exact on trees (Pearl 1988; Yedidia–Freeman–Weiss 2003). The rank certificate = the tree topological / subtree-depth order.
 - **Risk.** Very low — BP-exact-on-trees is textbook; the certificate is a routine finite well-founded construction. Buildable in-tree.
+
+### `carrollian_boundary_bms_vertex`
+
+**Statement.** The acoustic analog-Hawking null boundary (sonic horizon) carries a Carrollian structure (degenerate boundary metric + null direction) whose BMS-type asymptotic-symmetry supertranslation charges satisfy the charge-conservation Ward identity equivalent to the acoustic soft theorem — the THIRD Strominger-triangle vertex. The other triangle content is PROVEN kernel-pure: the soft theorem (Boostless.lean) and the memory↔soft edge (SoftTheorems/Carrollian.lean `memory_eq_softCharge`, FTC-proved, with `burst_satisfies_ward`).
+
+- status `proposed — BUILDABLE follow-up (operator-authorized 2026-07-20, corrected-posture: on the build queue, not a permanent assumption). The former `True`-placeholder predicates (`IsCarrollianBoundary`, `IsAsymptoticSymmetryWard`) were REMOVED in the R-01 remediation (2026-07-20); nothing in-tree asserts this vertex. This entry tracks the genuine build.` · eliminability `moderate` · module `SoftTheorems/Carrollian.lean (the "Documented GAP" section states the three required structures precisely; the proven memory/soft content lives in the same module)`
+- **Posture.** The Strominger triangle for analog Hawking systems has two of its three corners proven in-tree (soft theorem; memory↔soft-charge Ward relation). The third — Carrollian null-boundary geometry carrying BMS supertranslation charges whose conservation IS the soft theorem — requires a bounded Carrollian/BMS formalization arc (Phase 6o-prime Wave 1a-prime), fenced to analog fidelity. Tracked here until the arc discharges it.
+- **Discharge path.** The Phase 6o-prime Wave 1a-prime arc (docs/roadmaps/Phase6o_prime_Roadmap.md): C0 literature-anchoring scout (horizon/membrane-paradigm BMS charge algebra for the analog case) -> C1 CarrollianStructure (degenerate metric + null field) + acoustic-horizon instance -> C2 Witt/Virasoro in-tree (Mathlib has LieAlgebra.Extension for the central extension; no named Virasoro) -> C3 BMS semidirect product + supertranslation subalgebra -> C4 boundary phase-space model + charge functionals (the vacuity-risk item; Fable-gate before consumption) -> C5 the charge Ward identity wiring the triangle third vertex -> C6 vacuity gate round. SCOPE FENCE: analog-appropriate fidelity ONLY (acoustic horizon, BMS-3 / Carrollian-line, algebraic phase-space model) — NOT asymptotically-flat BMS-4 with asymptotic expansions. Reference class: the cylinder cap-cross arc (~10 worker tasks).
+- **Source.** Mason-Ruzziconi-Yelleshpur Srikant, JHEP 05 (2024) 012, arXiv:2312.10138 (Carrollian amplitudes); Have-Nguyen-Prohazka-Salzer arXiv:2504.10577 (Carrollian Ward <-> soft); Penna arXiv:1508.06577 (BMS on horizons / membrane paradigm); Datta-Fischer arXiv:2011.05837 (BEC acoustic memory); On-Shell Methods DR §4.3, §8.2.
+- **Risk.** Low physically (the Carrollian/BMS soft-theorem correspondence is established for gravitational systems; the analog transcription is standard-shaped). Formalization-novel: no paper proves a BMS theorem for an acoustic analog (On-Shell DR §4.3), so the bounded build is itself a novel result. Main technical risk concentrates in C4 (the phase-space / charge model must act non-trivially — vacuity-gated).
 
 ### `he3a_moving_eta_nonzero`
 
