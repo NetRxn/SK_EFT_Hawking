@@ -40,11 +40,12 @@ open SKEFTHawking.KummerPuncturedTorus
 
 /-! ## §0. `T⁴°` is a compact (closed-in-`T⁴`) Hausdorff subtype -/
 
-/-- The excised region is open (a finite union of open balls). -/
+/-- The excised region is open (a finite union of round balls, each open as the image of an open ball
+under the open map `centeredChartParam c` — `isOpen_chartBall`). -/
 theorem isOpen_excisedBalls : IsOpen excisedBalls := by
   refine isOpen_biUnion ?_
   intro c _
-  exact Metric.isOpen_ball
+  exact isOpen_chartBall c
 
 /-- **`T⁴°` is closed** (complement of the open excised region). -/
 theorem isClosed_puncturedTorus : IsClosed puncturedTorus := by
@@ -189,11 +190,12 @@ noncomputable def witnessPoint : TorusFour := (circleI, 1, 1, 1)
 theorem witnessPoint_mem : witnessPoint ∈ puncturedTorus := by
   rw [puncturedTorus, Set.mem_compl_iff, excisedBalls, Set.mem_iUnion₂]
   rintro ⟨c, hc, hmem⟩
-  rw [Metric.mem_ball] at hmem
+  have hmem' : witnessPoint ∈ Metric.ball c excisionRadius := chartBall_subset_metricBall c hmem
+  rw [Metric.mem_ball] at hmem'
   have hc1 : c.1 = 1 ∨ c.1 = negOne := ((mem_fixedSet_iff c).mp hc).1
   have hbound : (1 : ℝ) / 2 ≤ dist witnessPoint.1 c.1 := half_le_dist_circleI hc1
   have hle : dist witnessPoint.1 c.1 ≤ dist witnessPoint c := le_dist_c1 witnessPoint c
-  rw [show excisionRadius = (1 : ℝ) / 2 from rfl] at hmem
+  rw [show excisionRadius = (1 : ℝ) / 2 from rfl] at hmem'
   linarith
 
 /-- **`T⁴°` is inhabited** — the free orbit at `witnessPoint` witnesses that `Q` genuinely glues a
@@ -295,10 +297,11 @@ free on each (`KummerPuncturedTorus`), so their `qmk`-images are the antipodal q
 `S³/±1 = ℝP³` (Design Risk #2 — the pinned presentation K6′a's `∂E ≅ ℝP³` welds against). The 16
 components are pairwise disjoint (the fixed points are `≥ 2` apart, the spheres `≤ 1` across). -/
 
-/-- The `i`-th **boundary 3-sphere** inside `T⁴°`: `∂B_i = {x | dist(x, c) = 1/2}` (`c` a fixed
-point). Lies in `T⁴°` and is `τ`-invariant (`KummerPuncturedTorus`). -/
+/-- The `i`-th **boundary 3-sphere** inside `T⁴°`: `∂B_i = chartSphere c` — the round `S³` at radius
+`ρ = 1/2` in the `τ = −id` centered chart at the fixed point `c`. Lies in `T⁴°`
+(`sphere_subset_puncturedTorus`) and is `τ`-invariant (`chartSphere_involution_invariant`). -/
 def boundarySphere (c : TorusFour) : Set (↥puncturedTorus) :=
-  {x : ↥puncturedTorus | dist x.1 c = excisionRadius}
+  {x : ↥puncturedTorus | x.1 ∈ chartSphere c}
 
 /-- The `i`-th **boundary component of `Q`**: `qmk '' ∂B_i` — the 3-sphere's antipodal quotient
 `S³/±1 = ℝP³`, the pinned boundary presentation (Design Risk #2). -/
@@ -311,7 +314,8 @@ noncomputable def boundaryQ : Set FreeQuotient := ⋃ c ∈ fixedSet, boundaryCo
 /-- **`τ`-invariance of a boundary 3-sphere** at a fixed centre: `τ x ∈ ∂B_i ↔ x ∈ ∂B_i`. -/
 theorem boundarySphere_smul_mem {c : TorusFour} (hc : torusFourInvolution c = c)
     (x : ↥puncturedTorus) : (-1 : ℤˣ) • x ∈ boundarySphere c ↔ x ∈ boundarySphere c := by
-  simp only [boundarySphere, Set.mem_setOf_eq, neg_one_smul_val, dist_involution_fixed hc]
+  simp only [boundarySphere, Set.mem_setOf_eq, neg_one_smul_val]
+  exact chartSphere_involution_invariant hc x.1
 
 /-- **The S³/±1 antipodal presentation (Design Risk #2)**: on each boundary 3-sphere `∂B_i`
 (`c ∈ Fix(τ)`), the antipode `τ x` also lies on `∂B_i`, is DISTINCT from `x` (freeness), and is
@@ -329,15 +333,24 @@ theorem boundaryComponent_disjoint {c1 c2 : TorusFour} (h1 : c1 ∈ fixedSet) (h
     (hne : c1 ≠ c2) : Disjoint (boundaryComponent c1) (boundaryComponent c2) := by
   rw [Set.disjoint_left]
   rintro z ⟨x1, hx1, rfl⟩ ⟨x2, hx2, hz⟩
-  have hr1 : dist x1.1 c1 = excisionRadius := hx1
-  have hr2 : dist x2.1 c2 = excisionRadius := hx2
-  have hsep : (2 : ℝ) ≤ dist c1 c2 := fixedSet_dist_ge h1 h2 hne
-  have hx1c2 : dist x1.1 c2 = excisionRadius := by
+  simp only [boundarySphere, Set.mem_setOf_eq] at hx1 hx2
+  have h1' : torusFourInvolution c1 = c1 := h1
+  have h2' : torusFourInvolution c2 = c2 := h2
+  -- `x1.1` lies on the round spheres at BOTH `c1` and `c2` (via the fibre law `qmk x2 = qmk x1`)
+  have hx1c2 : x1.1 ∈ chartSphere c2 := by
     rcases (qmk_eq_iff x2 x1).mp hz with rfl | hτ
-    · exact hr2
-    · rw [hτ, neg_one_smul_val, dist_involution_fixed h2] at hr2; exact hr2
+    · exact hx2
+    · have hval : x2.1 = torusFourInvolution x1.1 := by rw [hτ, neg_one_smul_val]
+      rw [hval] at hx2
+      exact (chartSphere_involution_invariant h2' x1.1).mp hx2
+  have d1 : dist x1.1 c1 ≤ excisionRadius := by
+    rw [← Metric.mem_closedBall]; exact chartSphere_subset_metricClosedBall c1 hx1
+  have d2 : dist x1.1 c2 ≤ excisionRadius := by
+    rw [← Metric.mem_closedBall]; exact chartSphere_subset_metricClosedBall c2 hx1c2
+  have hsep : (2 : ℝ) ≤ dist c1 c2 := fixedSet_dist_ge h1 h2 hne
   have htri : dist c1 c2 ≤ dist c1 x1.1 + dist x1.1 c2 := dist_triangle c1 x1.1 c2
-  rw [dist_comm c1 x1.1, hr1, hx1c2, show excisionRadius = (1 : ℝ) / 2 from rfl] at htri
+  rw [dist_comm c1 x1.1] at htri
+  rw [show excisionRadius = (1 : ℝ) / 2 from rfl] at d1 d2
   linarith
 
 /-- `∂Q` re-indexed over the explicit 16-element `Finset` of fixed points. -/

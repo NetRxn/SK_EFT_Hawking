@@ -17,18 +17,19 @@ directly:
 - The free `τ`-action restricts to `openPunctured` (freeness, proper discontinuity carried from K4′/K5′),
   so the interior of `Q` is a boundaryless smooth 4-manifold (§C).
 
-## The boundary structure (a GEOMETRIC obstruction — reported to the lead, NOT ground)
+## The boundary structure (round `S³` in-chart — the box obstruction is RESOLVED)
 
-`excisionRadius = 1/2` and the excised balls are `Metric.ball c (1/2)` in the **product (sup) metric**
-on `TorusFour = Circle × Circle × Circle × Circle` (`Prod.dist_eq = max`, used already in
-`le_dist_c1 … le_dist_c4`). Hence each excised ball is a **box** — a product of four chordal arcs
-(`ball_isBox` below) — whose topological boundary `Metric.sphere c (1/2)` is a **cubical** `S³` with
-edges and corners, NOT a round `S³`. A smooth manifold-with-boundary structure `IsManifold (𝓡∂ 4)`
-with the DiskManifold spherical-shell collar chart (direction ∈ S³ × radial ∈ half-space) requires a
-smooth codim-1 boundary; the box boundary has corners, so the local model at a corner is a Euclidean
-QUADRANT, not a half-space. The literal `puncturedTorus` is therefore a manifold-with-CORNERS, and the
-`IsManifold (𝓡∂ 4)` / round-`S³`-boundary target of the mission does not hold on the nose for the
-metric-ball definition. See the wall report at the foot of this file.
+The earlier definition excised sup-metric balls `Metric.ball c (1/2)`, which are **boxes** (`ball_isBox`
+below is the kernel-checked witness: `Prod.dist_eq = max`, so a metric ball is a product of four chordal
+arcs), giving a cubical `S³` boundary with corners — the local model at a corner is a Euclidean QUADRANT,
+not a half-space, so `IsManifold (𝓡∂ 4)` fails on the nose. **This is why K4′ was redefined
+(`KummerPuncturedTorus`, 2026-07-20 round-ball refactor):** the excised regions are now
+`centeredChartParam c '' {t : ℝ⁴ ∣ ‖t‖ < ρ}` (round Euclidean balls in the `τ = −id` centered chart),
+whose boundary `chartSphere c = centeredChartParam c '' {‖t‖ = ρ}` is a **round** `S³` in the chart, and
+on which `τ = −id` acts antipodally — so the DiskManifold spherical-shell collar chart (direction ∈ S³ ×
+radial ∈ half-space) is applicable and the boundary quotient is `S³/±1 = ℝP³` on the nose (Design Risk
+#2). `ball_isBox` is retained as the recorded reason for the route change; `Metric.ball` no longer
+defines the excision.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no
 `sorry`/`native_decide`/`maxHeartbeats`/axiom.
@@ -45,15 +46,17 @@ open SKEFTHawking.KummerInvolution
 open SKEFTHawking.KummerPuncturedTorus
 open SKEFTHawking.KummerFreeQuotient
 
-/-! ## §A. The excised balls are boxes — the sup-metric obstruction to a round boundary
+/-! ## §A. Why the excision is round-in-chart, not metric — the box witness (`ball_isBox`)
 
 `TorusFour` carries the product (sup) metric, so a metric ball is a product of per-factor balls: a
-**box**, not a round ball. This is the kernel-checked witness for the boundary-corner obstruction
-documented in the module header. -/
+**box**, not a round ball. This kernel-checked fact is the recorded reason K4′ excises round
+`centeredChartParam c`-image balls (`chartBall`) rather than `Metric.ball` — a box boundary is a cubical
+`S³` with corners, blocking `IsManifold (𝓡∂ 4)`; the round chart boundary is a smooth `S³`. -/
 
 /-- **A `TorusFour` metric ball is a box** — the product of the four per-factor chordal balls.
 The sup-metric structure (`Prod.dist_eq = max`) makes `ball c r` a product of arcs; its topological
-boundary is a cubical `S³` with corners, not a round `S³`. -/
+boundary is a cubical `S³` with corners, not a round `S³`. This motivates the round-in-chart excision
+(`chartBall`) that K4′ now uses. -/
 theorem ball_isBox (c : TorusFour) (r : ℝ) :
     Metric.ball c r
       = (Metric.ball c.1 r) ×ˢ ((Metric.ball c.2.1 r) ×ˢ
@@ -92,7 +95,7 @@ theorem openPunctured_subset_puncturedTorus : openPuncturedSet ⊆ puncturedToru
   rintro ⟨c, hc, hxc⟩
   refine hx ?_
   rw [excisedClosedBalls, Set.mem_iUnion₂]
-  exact ⟨c, (mem_fixedFinset c).mpr hc, Metric.ball_subset_closedBall hxc⟩
+  exact ⟨c, (mem_fixedFinset c).mpr hc, chartBall_subset_metricClosedBall c hxc⟩
 
 /-- **The interior of `T⁴°` is a charted space** on the product model `𝔼¹ × 𝔼¹ × 𝔼¹ × 𝔼¹` — the
 open-submanifold `ChartedSpace` instance, restricting the ambient `T⁴` atlas. -/
@@ -153,39 +156,64 @@ theorem qmk_isLocalHomeomorph : IsLocalHomeomorph qmk :=
   IsLocalHomeomorph.mk qmk fun x =>
     ⟨qmk_localOpenPartialHomeomorph x, mem_qmk_localOpenPartialHomeomorph_source x, fun _ _ => rfl⟩
 
-/-! ## §D. WALL REPORT — the smooth-boundary target needs an architecture decision (for the lead)
+/-! ## §D. The round centered chart — the payoff object the box definition could not provide
 
-**What lands here (decision-independent, GREEN):**
+With the round-ball refactor the centered chart `centeredChartParam c` is a genuine
+`OpenPartialHomeomorph` from the round Euclidean ball `{t : ℝ⁴ ∣ ‖t‖ < ρ}` onto the round `chartBall c`:
+continuous (`continuous_centeredChartParam`), injective there (`centeredChartParam_injOn`, `ρ = 1/2 < π`),
+and open (`isOpenMap_centeredChartParam`, since `Circle.exp` is a covering map). This is the object the
+box definition could NOT provide — a box has no Euclidean-ball chart at its corners. It is the
+`diskInteriorChart` analogue: the interior chart building block, and the domain-side model on which the
+banked `diskCollarChart` (spherical shell ↦ half-space) will be assembled for the boundary. -/
+
+/-- **The round centered chart at `c` as an `OpenPartialHomeomorph`** — `centeredChartParam c` restricts
+to a homeomorphism of the open round ball `{‖t‖ < ρ}` onto the round `chartBall c`. The genuine smooth
+chart the round-ball refactor unlocks (impossible for a sup-metric box). -/
+noncomputable def centeredChartParam_openPartialHomeomorph (c : TorusFour) :
+    OpenPartialHomeomorph (ℝ × ℝ × ℝ × ℝ) TorusFour := by
+  refine OpenPartialHomeomorph.ofContinuousOpenRestrict
+    (Set.InjOn.toPartialEquiv (centeredChartParam c) {t | sqNorm t < excisionRadius ^ 2}
+      ((centeredChartParam_injOn c).mono (Set.setOf_subset_setOf.mpr fun _ h => le_of_lt h)))
+    ?_ ?_ ?_
+  · exact (continuous_centeredChartParam c).continuousOn
+  · exact (isOpenMap_centeredChartParam c).restrict (isOpen_lt sqNorm_continuous continuous_const)
+  · exact isOpen_lt sqNorm_continuous continuous_const
+
+/-- The chart's source is the open round ball `{‖t‖ < ρ}`. -/
+@[simp] theorem centeredChartParam_openPartialHomeomorph_source (c : TorusFour) :
+    (centeredChartParam_openPartialHomeomorph c).source = {t | sqNorm t < excisionRadius ^ 2} := rfl
+
+/-- The chart agrees with `centeredChartParam c` on its source. -/
+@[simp] theorem centeredChartParam_openPartialHomeomorph_apply (c : TorusFour)
+    (t : ℝ × ℝ × ℝ × ℝ) : (centeredChartParam_openPartialHomeomorph c) t = centeredChartParam c t := rfl
+
+/-- The chart's image (target) is exactly the round ball `chartBall c`. -/
+theorem centeredChartParam_openPartialHomeomorph_target (c : TorusFour) :
+    (centeredChartParam_openPartialHomeomorph c).target = chartBall c := rfl
+
+/-! ## §E. STATUS — the smooth manifold-with-boundary certificate (route now UNBLOCKED)
+
+**GREEN here (the maximal clean prefix, round-ball route):**
 - `interior_isManifold` — the interior of `T⁴°` is a boundaryless smooth `C^ω` 4-manifold (§B).
 - `qmk_isLocalHomeomorph` — `Q` is locally homeomorphic to `T⁴°` EVERYWHERE, so `Q` is a topological
-  4-manifold-with-boundary wherever `T⁴°` is; and interior points of `Q` descend the `T⁴°` charts
-  through `qmk_localOpenPartialHomeomorph` (§C). This is the topological backbone of the K6′b weld.
+  4-manifold-with-boundary wherever `T⁴°` is; interior points descend the `T⁴°` charts through
+  `qmk_localOpenPartialHomeomorph` (§C). Topological backbone of the K6′b weld.
+- `centeredChartParam_openPartialHomeomorph` — the round centered chart is a genuine `OpenPartialHomeomorph`
+  (§D); the box `Metric.ball` had none. This is the interior-chart / collar-chart building block.
 
-**The wall (`ball_isBox`, §A):** `excisedBalls` are `Metric.ball c (1/2)` in the product (sup)
-metric, hence BOXES. So `Metric.sphere c (1/2)` (= `boundarySphere c`, the pinned "S³") is a CUBICAL
-`S³` with edges/corners, not a round `S³`. Consequences:
-  1. A smooth `IsManifold (𝓡∂ 4)` / `((𝓡 3).prod (𝓡∂ 1))` structure with the banked DiskManifold
-     spherical-shell collar chart (direction ∈ S³ × radial ∈ half-space) does NOT apply on the nose:
-     near a corner the local model is a Euclidean QUADRANT, not a half-space. The literal
-     `puncturedTorus` is a manifold-with-CORNERS, not -with-boundary.
-  2. The `centeredChartParam c` centered charts do NOT carry the box boundary to a round Euclidean
-     sphere (`centeredChartParam` uses `Circle.exp` = arc-length, an isometry of the chart line but
-     NOT of the chordal `Circle` metric), so "transport to the standard ℝ⁴-minus-ball model" — the
-     mission's collar-chart plan — is not literal.
+**The box obstruction is RESOLVED** (`ball_isBox` records why): the excision is now round-in-chart
+(`chartBall`), so `chartSphere c` is a round `S³` (`sphere_subset_puncturedTorus`,
+`chartSphere_involution_invariant`) on which `τ = −id` acts antipodally — the DiskManifold spherical-shell
+collar chart (direction ∈ S³ × radial ∈ `EuclideanHalfSpace 1`) now applies, and the boundary quotient is
+`S³/±1 = ℝP³` on the nose (Design Risk #2 becomes literal).
 
-**Recommended fix (lead decision; a statement change to K4′, so out of this worker's scope):**
-Redefine the 16 excised balls as the `centeredChartParam c`-images of ROUND Euclidean balls
-`{t : ℝ⁴ | ‖t‖ < ρ}` (a "coordinate ball" in the τ = −id centered chart) instead of the sup-metric
-`Metric.ball c (1/2)`. Then (a) the boundary is a round `S³` in the chart, the DiskManifold collar
-chart applies, and the smooth `IsManifold (𝓡∂ 4)` target is reachable; (b) the `τ = −id` normal form
-(`centeredChartParam_involution`) makes the boundary quotient exactly `S³/±1 = ℝP³` on the nose,
-matching K6′a's `∂E ≅ ℝP³` weld presentation (Design Risk #2). The `qmk_isLocalHomeomorph` /
-`interior_isManifold` bricks here carry over verbatim; only the excised-region definition and the
-disjointness/`sphere_subset` lemmas (currently metric) need re-deriving in chart coordinates.
-
-Until that decision, the smooth manifold-with-boundary ChartedSpace on the FULL `T⁴°`/`Q` (both
-`IsManifold` AND a Euclidean-model ChartedSpace instance at the corner/boundary points) is blocked;
-the interior smooth structure and the topological covering structure above are the maximal clean
-prefix. -/
+**Residual (the deep half of K4′, now UNBLOCKED — the collar-chart brick K4′′/K5′′):** the full
+`IsManifold ((𝓡 3).prod (𝓡∂ 1)) ω (↥puncturedTorus)` manifold-WITH-boundary `ChartedSpace` on the FULL
+`T⁴°` (and its ℝP³-boundary descent on `Q`) requires, per boundary sphere, a collar chart of the shell
+`{ρ ≤ ‖t‖ < ρ + ε}` — the EXTERIOR-of-ball analogue of the banked `DiskChart.diskCollarChart` (radial
+`‖t‖ − ρ ≥ 0` in place of `1 − ‖v‖`), assembled through `centeredChartParam_openPartialHomeomorph` above,
+glued to the interior atlas `interior_chartedSpace`. Every input is now in place (round chart + round
+sphere + antipodal `τ`); the remaining work is the DiskChart-style transition-smoothness bookkeeping,
+one collar per fixed point. -/
 
 end SKEFTHawking.KummerChartedSpace
