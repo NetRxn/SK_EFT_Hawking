@@ -55,12 +55,12 @@ def test_readiness_display_surfaced():
     assert "b.readiness_display" in BUNDLES_TPL
 
 
-def test_load_bundles_summary_has_18_bundles_with_display():
+def test_load_bundles_summary_has_19_bundles_with_display():
     from datastar_bundles import load_bundles_summary
 
     summary = load_bundles_summary()
-    assert summary["total_bundles"] == 18
+    assert summary["total_bundles"] == 19
     codes = {b["code"] for b in summary["bundles"]}
-    assert {"F", "D1", "D9", "L1", "L3", "I1", "I3", "E1", "E2"} <= codes
+    assert {"F", "D1", "D9", "D10", "L1", "L3", "I1", "I3", "E1", "E2"} <= codes
     for b in summary["bundles"]:
         assert "readiness_display" in b, b["code"]

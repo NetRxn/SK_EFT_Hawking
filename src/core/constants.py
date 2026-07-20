@@ -2466,6 +2466,16 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
         'reason': 'Records dim sl₂ = 3 via the named constant `sl2_dim : ℕ := 3`; a definitional record of a textbook value.',
         'discloses': '`def sl2_dim : ℕ := 3` (OnsagerAlgebra.lean:172).',
     },
+    'sphereProd_s2s2_rank': {
+        'lean_name': 'sphereProd_s2s2_rank', 'module': 'PinPlusKTSpinSigmaStock',
+        'category': 'definitional',
+        'reason': 'Records the `s2s2_rank` wiring obligation at the distinguished witness: the COMPUTED '
+                  'rank-2 basis datum `sphereProdIntH2Basis` has rank field = 2 by construction (rfl). '
+                  'The rank literal is a read-off of a datum whose non-vacuity is established elsewhere.',
+        'discloses': 'substantive content in `sphereProdHTwoEquivInt : H₂(S²×S²;ℤ) ≃ₗ[ℤ] ℤ × ℤ` '
+                     '(SphereProdHTwoInt.lean — the genuine rank-2 homology computation) and the '
+                     'SphereWitnessTowerInt computed-basis tower tying `sphereProdIntH2Basis` to it.',
+    },
     'emanant_su2_dim': {
         'lean_name': 'emanant_su2_dim', 'module': 'GTWeylDoublet',
         'category': 'definitional',

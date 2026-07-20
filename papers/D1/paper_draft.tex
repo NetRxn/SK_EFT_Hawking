@@ -815,19 +815,25 @@ PAPER\_STRATEGY.md).
 The Phase 6w foundational substrate extends to a substantive
 quantum-advantage demarcation criterion: an analog Hawking system on
 a factor graph $G$ with factor weights $f_a$ and categorical-Chern data
-$(c_0, c_1)$ admits classical simulation if and only if (i) the LDP
-rate function of the loop-correction terms vanishes (equivalently,
-the system's underlying topology is tree-like and the
+$(c_0, c_1)$ passes the BP-on-PEPS classical-simulability screen if
+and only if (i) the LDP rate function of the loop-correction terms
+vanishes (equivalently, the factor graph is four-cycle-free --- the
+combinatorial screen implied by tree-like topology --- and the
 factor weights are non-negative) AND (ii) the topological coefficient
 $c_1$ vanishes. Lean module
 \texttt{AnalogHawkingDemarcation.lean} (Wave 6w.6, headline
-\texttt{analog\_hawking\_quantum\_advantage\_demarcation}) substantively
+\texttt{analog\_hawking\_fourCycleFree\_demarcation}) substantively
 combines the Wave 6w.3 BP-LDP biconditional
-(\texttt{bp\_convergence\_iff\_ldp\_rate\_zero}) with the Wave
+(\texttt{fourCycleFree\_nonneg\_iff\_ldp\_rate\_zero}) with the Wave
 6w.5 Chern bridge (\texttt{crystalline\_eq\_quasicrystalline\_iff\_c1\_zero})
-into this falsifiable two-axis demarcation. The contrapositive
-(\texttt{loopy\_or\_nonzero\_c1\_implies\_not\_simulable}) gives the
-quantum-advantage regime explicitly --- loopy topology OR non-trivial
+into this falsifiable two-axis demarcation; the end-to-end tree-side
+statement (genuine tree-ness plus synchronous BP convergence to a
+fixed point in diameter-many sweeps) is
+\texttt{analog\_hawking\_tree\_simulable\_demarcation}. The
+contrapositive
+(\texttt{not\_fourCycleFreeNonneg\_or\_nonzero\_c1\_implies\_not\_simulable})
+gives the screen-failure regime explicitly --- four-cycle-bearing
+topology or negative factor weights, OR non-trivial
 Chern coefficient. Tindall-Sels-Aalto thus jointly bracket the
 classical-simulability boundary for the analog-Hawking platforms
 documented here.

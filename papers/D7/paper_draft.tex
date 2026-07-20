@@ -98,10 +98,10 @@ the graph's 4-cycle density). The closed form $-\log(1-p)$ is a
 theorem (\texttt{loopCorrectionRate\_eq\_neg\_log}, an explicit
 least-upper-bound argument; the supremum is approached as $\theta
 \to -\infty$ and not attained on loopy graphs), as are the
-zero-rate $\Leftrightarrow$ tree equivalence
-(\texttt{loopCorrectionRate\_eq\_zero\_iff\_tree}), strict
+zero-rate $\Leftrightarrow$ four-cycle-freeness equivalence
+(\texttt{loopCorrectionRate\_eq\_zero\_iff\_fourCycleFree}), strict
 positivity on loopy graphs
-(\texttt{loopCorrectionRate\_pos\_of\_not\_tree}), strict
+(\texttt{loopCorrectionRate\_pos\_of\_not\_fourCycleFree}), strict
 monotonicity in loop density
 (\texttt{loopCorrectionRate\_lt\_of\_loopDensity\_lt} --- the rate
 separates loopy graphs by loop content, e.g.\ the complete
@@ -194,14 +194,20 @@ boundary + functoriality, and the tree-factor-graph predicate.]
 
 [Wave 6w.3 headline substrate, upgraded per review-2026-06-05
 finding D7-EV3. The biconditional
-\texttt{bp\_convergence\_iff\_ldp\_rate\_zero} ties the
-structural simulability property \texttt{IsBPConvergenceFavorable} to
+\texttt{fourCycleFree\_nonneg\_iff\_ldp\_rate\_zero} ties the
+structural favorability predicate
+\texttt{IsFourCycleFreeNonnegWeighted} (four-cycle-free topology with
+non-negative factor weights) to
 the vanishing of the loop-correction rate function via the
 substantive characterization
-\texttt{loopCorrectionRate\_eq\_zero\_iff\_tree} (proven through the
+\texttt{loopCorrectionRate\_eq\_zero\_iff\_fourCycleFree} (proven
+through the
 Legendre evaluation \texttt{loopCorrectionRate\_eq\_neg\_log}, the
 log/density analysis, and the 4-cycle Finset $\leftrightarrow$
-tree-predicate bridge \texttt{fourCycles\_eq\_empty\_iff\_tree}).
+predicate bridge \texttt{fourCycles\_eq\_empty\_iff\_fourCycleFree});
+genuine tree-ness enters through
+\texttt{IsTreeFactorGraph} and the end-to-end BP-convergence
+demarcation \texttt{analog\_hawking\_tree\_simulable\_demarcation}.
 Twenty-two substantive theorems + two companions verified
 kernel-only, including strict positivity on loopy graphs, strict
 monotonicity in loop density, the threshold $\Leftrightarrow$
