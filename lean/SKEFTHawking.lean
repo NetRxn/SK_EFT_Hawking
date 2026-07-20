@@ -300,6 +300,15 @@ import SKEFTHawking.SymTFT.ToricCodeLagrangianAnyons
 -- quality work; currently absent from Mathlib"). Honest discipline:
 -- ship the Mathlib-style substrate in our repo.
 import SKEFTHawking.SymTFT.FrobeniusPerronDim
+-- SymTFT S0/S1 lane opener (Fable-Targets SymTFT packet, 2026-07-20):
+-- honest v2 statement layer BESIDE the Phase-6r façade. SkeletalModularModel
+-- (finite skeletal modular model; global FPdim² DERIVED, not a free parameter)
+-- + model-tied LagrangianSupport (condensable-boundary datum whose FPdim law
+-- reads the model's global dimension). Toric non-vacuity + the decisive unit
+-- falsifier + the fermion braiding falsifier + the honest support classification
+-- (electric/magnetic). Repairs the free-globalFPdimSquared + unused-boundary-C
+-- defects without touching legacy predicates.
+import SKEFTHawking.SymTFT.SkeletalModularModel
 -- Phase 6r-prime M2 upstream-PR-quality ship (2026-05-25): Drinfeld-
 -- center binary biproducts. Builds the diagonal half-braiding iso on
 -- X.1 ⊞ Y.1 for X, Y : Center C under [MonoidalPreadditive C] +
