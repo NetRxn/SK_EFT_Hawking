@@ -24,6 +24,16 @@ References:
 
 from dataclasses import dataclass
 
+import numpy as np
+
+from src.core.constants import K_B, E_CHARGE
+
+# Sommerfeld/Drude Lorenz number L₀ = (π²/3)(k_B/e)² ≈ 2.44e-8 W·Ω·K⁻²,
+# equivalently [V²/K²]. The Lorenz NUMBER L = κ/(σT) carries THESE units;
+# only the RATIO L/L₀ is dimensionless. (Encodes the units the old
+# `wiedemann_franz_lorenz_ratio` docstring mislabelled — R-09.)
+L_LORENZ_SOMMERFELD = (np.pi ** 2 / 3.0) * (K_B / E_CHARGE) ** 2  # [V²/K²] = [W·Ω·K⁻²]
+
 
 @dataclass
 class TransportSector:
@@ -245,41 +255,56 @@ def comparison_table():
     print('No closed-form counting formula exists for 2+1D.')
 
 
-def wiedemann_franz_lorenz_ratio(v_F, s, sigma_Q, n, T):
-    """Lorenz ratio L = κ/(σT) for the two-channel Dirac fluid.
+def wiedemann_franz_lorenz_ratio(n, n_0, lorenz_peak_ratio):
+    """Regularized Wiedemann–Franz Lorenz-ratio profile L/L₀(n) for the
+    graphene Dirac fluid near charge neutrality.
 
-    At charge neutrality (n → 0):
-    L = v_F² s² / (σ_Q² T) → ∞
+    Two-channel hydrodynamics gives, in the CLEAN limit, a thermal
+    conductivity κ ∝ (ε+p)²v_F²/(T σ_Q n²) and hence a Lorenz ratio
+    L/L₀ = κ/(σ_Q T L₀) that would diverge as n → 0 (Lucas & Fong 2018,
+    §3). That divergence is an idealization: every real sample has a finite
+    intrinsic/disorder carrier density n₀ — the charge-puddle rms density
+    together with the thermally-excited density n_th ~ (k_B T / ℏ v_F)² —
+    that REGULARIZES the neutrality-point divergence to a finite peak. This
+    is the measured behaviour: a LARGE but FINITE violation, ~10× at 75 K
+    (Crossno 2016) and >200× in ultra-clean samples (Majumdar 2025). The
+    standard finite-density-regularized two-channel form (κ ∝ 1/(n² + n₀²))
+    gives
 
-    The giant WF violation (>200× in Majumdar 2025) is a constitutive-relation
-    feature: charge conductivity σ_Q is finite while thermal conductivity
-    κ ∝ (ε+p)²v_F²/(Tσ_Q n²) diverges as n → 0.
+        L/L₀(n) = 1 + (R_peak − 1) · n₀² / (n² + n₀²),
 
-    Lean: pending (DiracFluidFDR.lean)
-    Source: Lucas & Fong 2018, Eq. (3.45)
+    which equals R_peak at the neutrality point (n = 0) and recovers the
+    Wiedemann–Franz value L/L₀ → 1 (Fermi-liquid regime) as |n| ≫ n₀.
+
+    Dimensionless BY CONSTRUCTION: n and n_0 enter only through the ratio
+    n/n_0, so the result carries no Lorenz-number units. (The Lorenz NUMBER
+    L = κ/(σT) itself has units [V²/K²] = [W·Ω·K⁻²] — see the module
+    constant ``L_LORENZ_SOMMERFELD``; only the ratio L/L₀ is dimensionless.
+    The prior version conflated the two and claimed L was dimensionless.)
 
     Args:
-        v_F: Fermi velocity [m/s]
-        s: entropy density [J/(K·m²)]
-        sigma_Q: quantum critical conductivity [S]
-        n: carrier density [m⁻²]
-        T: temperature [K]
+        n: carrier density (any units, consistent with ``n_0``) [m⁻²].
+        n_0: intrinsic/disorder regularizing carrier density, > 0 (same
+            units as ``n``) [m⁻²]. The charge-puddle rms + thermal density
+            scale — a microscopic (sample-dependent) INPUT, not predicted by
+            the EFT (cf. σ_Q, which the CGL/FDR framework also takes as an
+            input rather than deriving).
+        lorenz_peak_ratio: R_peak = L/L₀ at charge neutrality — the measured
+            peak violation (e.g. ~10 for Crossno 2016 at 75 K, >200 for the
+            ultra-clean Majumdar 2025 samples). > 1 for a WF violation.
 
     Returns:
-        L (dimensionless Lorenz number), L/L₀ (ratio to Drude value)
+        L/L₀(n): the dimensionless Wiedemann–Franz violation ratio. Finite
+        for every n, equal to ``lorenz_peak_ratio`` at n = 0 and → 1 as
+        |n| → ∞.
+
+    Lean: pending (DiracFluidFDR.lean)
+    Source: Lucas & Fong, J. Phys.: Condens. Matter 30, 053001 (2018), §3
+        (two-channel hydrodynamic transport); Crossno et al., Science 351,
+        1058 (2016) (first WF-violation measurement, ~10×); Majumdar et al.,
+        Nat. Phys. 21, 1374 (2025) (>200× in ultra-clean graphene).
     """
-    import numpy as np
-    L_0 = np.pi**2 / 3 * (1.380649e-23 / 1.602176634e-19)**2  # π²/3 (k_B/e)²
-
-    # Two-component fluid: enthalpy w = ε + p ≈ Ts (conformal)
-    # Thermal conductivity: κ = w²v_F²/(Tσ_Q(n² + n₀²))
-    # where n₀ = s√(σ_Q/(v_F²)) is the intrinsic carrier density
-    w = T * s  # conformal: w ≈ Ts
-    n_0_sq = s**2 * sigma_Q / v_F**2  # intrinsic carrier density squared
-    kappa = w**2 * v_F**2 / (T * sigma_Q * (n**2 + n_0_sq))
-
-    # Electrical conductivity: σ = σ_Q + e²v_F²n²l_mr/w (ignore second term near CNP)
-    sigma = sigma_Q  # at CNP, dominated by σ_Q
-
-    L = kappa / (sigma * T)
-    return L, L / L_0
+    if n_0 <= 0:
+        raise ValueError("n_0 (regularizing carrier density) must be > 0")
+    x_sq = (n / n_0) ** 2
+    return 1.0 + (lorenz_peak_ratio - 1.0) / (1.0 + x_sq)
