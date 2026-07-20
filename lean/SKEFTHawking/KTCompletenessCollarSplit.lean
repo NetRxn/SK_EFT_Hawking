@@ -46,6 +46,7 @@ open SKEFTHawking.SingularFunctoriality
 open SKEFTHawking.SingularPrism
 open SKEFTHawking.SingularHomotopyInvariance
 open SKEFTHawking.SingularHomologyFiniteTransfer
+open SKEFTHawking.PinPlusTraceCapstoneInhabit
 open SKEFTHawking.PinPlusTraceCapstoneMVPieces
 open SKEFTHawking.KTCompletenessMVCover
 
@@ -427,6 +428,76 @@ theorem coverA_subset_ranges_union :
         ∪ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle := fun x _ =>
   (Set.eq_univ_iff_forall.mp
     (ktHandleAttachment s.M D5 S hS φ hφ hφinj).range_fromCyl_union_range_fromHandle) x
+
+/-! ## §F. The collar-collapse retraction homotopy value (the pasting). -/
+
+open Classical in
+/-- **The collar-collapse retraction homotopy, as a carrier-valued map.** On the handle side of
+`coverA` (points in `range fromHandle`, all collar-interior by §E) it applies the collar slide
+`slideCollarMap`; elsewhere (the pure cyl points) it is the identity. At time `0` it is the identity;
+as time runs to `1` it collapses the handle-side collar sliver down onto the middle slice
+(`⊆ range fromCyl`). Continuous by the closed-cover pasting on `{range fromCyl, range fromHandle}`. -/
+noncomputable def collarRetractVal
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (x : ↥(coverA s t S hS φ hφ hφinj cd hseam d)) (τ : unitInterval) :
+    (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier :=
+  if h : (x.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle
+  then (slideCollarMap cd csd.mid
+      (⟨x.val, handle_mem_seamNbhd_of_mem_coverA s t S hS φ hφ hφinj cd hseam d x.val x.2 h⟩,
+        τ)).val
+  else x.val
+
+theorem continuous_collarRetractVal
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd) :
+    Continuous (fun p : ↥(coverA s t S hS φ hφ hφinj cd hseam d) × unitInterval =>
+      collarRetractVal s t S hS φ hφ hφinj cd hseam d csd p.1 p.2) := by
+  classical
+  rw [← continuousOn_univ]
+  refine ContinuousOn.mono (s := {p : ↥(coverA s t S hS φ hφ hφinj cd hseam d) × unitInterval |
+        (p.1.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl}
+      ∪ {p : ↥(coverA s t S hS φ hφ hφinj cd hseam d) × unitInterval |
+        (p.1.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle}) ?_
+      (fun p _ => coverA_subset_ranges_union s t S hS φ hφ hφinj cd hseam d p.1.2)
+  refine (continuousOn_union_iff_of_isClosed ?_ ?_).mpr ⟨?_, ?_⟩
+  · exact (isClosed_range_fromCyl s S hS φ hφ hφinj).preimage
+      (continuous_subtype_val.comp continuous_fst)
+  · exact (isClosed_range_fromHandle s S hS φ hφ hφinj).preimage
+      (continuous_subtype_val.comp continuous_fst)
+  · -- cyl piece: the value is the identity
+    refine ContinuousOn.congr (continuous_subtype_val.comp continuous_fst).continuousOn
+      (fun p hp => ?_)
+    simp only [collarRetractVal]
+    by_cases hH : (p.1.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle
+    · rw [dif_pos hH,
+        slideCollarMap_fix_of_le cd csd.mid
+          ⟨p.1.val, handle_mem_seamNbhd_of_mem_coverA s t S hS φ hφ hφinj cd hseam d
+            p.1.val p.1.2 hH⟩ p.2
+          (seam_collar_coord_eq_mid csd
+            ⟨p.1.val, handle_mem_seamNbhd_of_mem_coverA s t S hS φ hφ hφinj cd hseam d
+              p.1.val p.1.2 hH⟩ hp hH).le]
+      rfl
+    · rw [dif_neg hH]; rfl
+  · -- handle piece: the value is the slide, continuous by transporting through the collar homeo
+    rw [continuousOn_iff_continuous_restrict]
+    have hgt : Continuous (fun q : ↥{p : ↥(coverA s t S hS φ hφ hφinj cd hseam d) × unitInterval |
+          (p.1.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+            ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle} =>
+        (slideCollarMap cd csd.mid
+          (⟨q.val.1.val, handle_mem_seamNbhd_of_mem_coverA s t S hS φ hφ hφinj cd hseam d
+            q.val.1.val q.val.1.2 q.2⟩, q.val.2)).val) := by
+      refine continuous_subtype_val.comp ((continuous_slideCollarMap cd csd.mid).comp
+        (Continuous.prodMk (Continuous.subtype_mk ?_ _) ?_))
+      · exact continuous_subtype_val.comp (continuous_fst.comp continuous_subtype_val)
+      · exact continuous_snd.comp continuous_subtype_val
+    refine hgt.congr (fun q => ?_)
+    have hq : (q.val.1.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle := q.2
+    simp only [Set.restrict_apply, collarRetractVal]
+    rw [dif_pos hq]
 
 end
 
