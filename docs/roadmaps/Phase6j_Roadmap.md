@@ -37,7 +37,7 @@
 >    - `CLAUDE.md`
 >    - `SK_EFT_Hawking/docs/WAVE_EXECUTION_PIPELINE.md`
 >    - `SK_EFT_Hawking/SK_EFT_Hawking_Inventory_Index.md`
->    - `SK_EFT_Hawking/README.MD`
+>    - `SK_EFT_Hawking/README.md`
 >    - `temporary/working-docs/brainstorm/20260413-context-lean-dev/Lean-Development-Optimization.txt`
 >    - `SK_EFT_Hawking/docs/references/Theorm_Proving_Aristotle_Lean.md`
 > 2. Read this roadmap end-to-end before claiming any wave assignment.

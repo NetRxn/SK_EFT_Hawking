@@ -587,7 +587,7 @@
 ### 5F. Document Sync (Stage 12)
 
 - [x] `SK_EFT_Hawking_Inventory.md` — FULL UPDATE: all 10 sections updated (source of truth), 429 theorems, 99 Aristotle, 30 modules, 1014 tests, 61 figures (2026-03-30)
-- [x] `README.MD` — theorem table (29 modules), project tree (30 Lean modules, 7 papers, 20 notebooks), all counts updated (2026-03-30)
+- [x] `README.md` — theorem table (29 modules), project tree (30 Lean modules, 7 papers, 20 notebooks), all counts updated (2026-03-30)
 - [x] Formula docstring Aristotle provenance — DONE (2026-03-30)
 - [x] `SK_EFT_Hawking_Inventory_Index.md` — counts updated, FusionExamples sorry removed, VecG/DrinfeldDouble/GaugeEmergence added (2026-03-30)
 - [x] `src/__init__.py` — updated

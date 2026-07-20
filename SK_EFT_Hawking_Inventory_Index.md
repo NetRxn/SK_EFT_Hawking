@@ -7,7 +7,7 @@
 **Size discipline.** Target ~50–80 KB. Keep under 100 KB so future LLM bootstraps can read it in a single `Read` call (the harness truncates files >256 KB and may skip files much smaller than that). When this file approaches 100 KB, prune narrative — move it to `SK_EFT_Hawking_Inventory.md` or `temporary/working-docs/`. Do NOT inline session logs, wave-history, or per-commit detail; those belong in `temporary/working-docs/` or the prose inventory.
 
 **Sibling docs (read on bootstrap):**
-- `README.MD` — project framing (public-facing).
+- `README.md` — project framing (public-facing).
 - `../CLAUDE.md` (workspace root) — agent guidance and conventions; project-level guidance for SK_EFT_Hawking lives here (there is no separate per-repo `CLAUDE.md`).
 - `docs/WAVE_EXECUTION_PIPELINE.md` — 14-stage wave protocol and 15 pipeline invariants.
 - `docs/PAPER_STRATEGY.md` — 17-bundle publication architecture (D8 added 2026-05-31).
@@ -26,22 +26,22 @@
 <!-- AUTOGEN:counts-table BEGIN -->
 | Metric | Value |
 |---|---:|
-| Lean declarations (total) | 32173 |
-| Lean theorems (total) | 20174 |
-| Lean theorems (substantive) | 20148 |
+| Lean declarations (total) | 32309 |
+| Lean theorems (total) | 20255 |
+| Lean theorems (substantive) | 20229 |
 | Lean theorems (placeholder `True := trivial`) | 26 |
-| Lean modules | 1734 |
-| Lean definitions | 10697 |
-| Lean structures | 426 |
-| Lean instances | 776 |
+| Lean modules | 1737 |
+| Lean definitions | 10748 |
+| Lean structures | 429 |
+| Lean instances | 777 |
 | Lean inductives | 100 |
 | Lean axioms | **0** (project-local) |
 | Lean sorries | **0** |
 | Aristotle-proved theorems | 322 |
 | Aristotle runs | 44 |
 | Python source modules | 137 |
-| Test files | 130 |
-| pytest cases | 4796 |
+| Test files | 132 |
+| pytest cases | 4823 |
 | Figures (PNG) | 163 |
 | Notebooks | 89 |
 | Papers (drafts) | 42 |
@@ -91,7 +91,7 @@
 
 ## 2. Public-facing framing pointers
 
-For the public narrative of what the project does, see `README.MD`. Key story arcs:
+For the public narrative of what the project does, see `README.md`. Key story arcs:
 - **Analog Hawking radiation** — SK-EFT corrections to BEC / polariton / graphene-Dirac-fluid sonic horizons (Bundle D1).
 - **Three generations from anomaly + modular invariance** — `c₋ = 8·N_f` and `24 | c₋` force `3 | N_f` (Bundle D2).
 - **The "16 convergence"** — SM Weyl count, ℤ₁₆ classification, Rokhlin theorem, Kitaev DIII period all the same 16 (Bundle D2).
@@ -108,7 +108,7 @@ For the public narrative of what the project does, see `README.MD`. Key story ar
 **936 Lean modules** (per `docs/counts.json` regen 2026-06-10 PM; the jump from 751 at 2026-05-30 reflects (i) the FKLW Ross-Selinger / KMM / grid-synth corpus growth across Phases 6AM→6AO, and (ii) the `QuantumNetwork/` build-out — 103 modules now — across Phases 6AF→6AQ) under `lean/SKEFTHawking/`. Grouped by subdirectory or topical family.
 
 <!-- AUTOGEN:per-family-counts BEGIN -->
-**Per-family verified counts** (from grouping `lean.module_names`): FKLW 373, QuantumNetwork 103, SymTFT 40, DKMBootstrap 12, QuantumCrooks 11, GloriosoLiu 9, CrooksAnalogHawking 8, SymTFTAudit 8, APSEta 7, FaultTolerance 7, Itô 6, LDP 6, Schellekens 6, DoubleCopy 5, Resurgence 5, SoftTheorems 5, ETH 3, CrossBridges 2, MathlibAux 1; remaining **1117 top-level** modules under `lean/SKEFTHawking/` directly. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
+**Per-family verified counts** (from grouping `lean.module_names`): FKLW 373, QuantumNetwork 103, SymTFT 40, DKMBootstrap 12, QuantumCrooks 11, GloriosoLiu 9, CrooksAnalogHawking 8, SymTFTAudit 8, APSEta 7, FaultTolerance 7, Itô 6, LDP 6, Schellekens 6, DoubleCopy 5, Resurgence 5, SoftTheorems 5, ETH 3, CrossBridges 2, MathlibAux 1; remaining **1120 top-level** modules under `lean/SKEFTHawking/` directly. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
 <!-- AUTOGEN:per-family-counts END -->
 
 ### 3.1 Subdirectory families (sub-packages)
@@ -159,8 +159,8 @@ For the public narrative of what the project does, see `README.MD`. Key story ar
 | `ETH` | 3 |
 | `CrossBridges` | 2 |
 | `MathlibAux` | 1 |
-| _(top-level)_ | 1117 |
-| **Total** | **1734** |
+| _(top-level)_ | 1120 |
+| **Total** | **1737** |
 <!-- AUTOGEN:family-count-table END -->
 
 ### 3.2 Topical groupings (top-level `.lean` files)

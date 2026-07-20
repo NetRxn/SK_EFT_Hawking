@@ -314,7 +314,7 @@ The order of the electroweak phase transition (first-order vs crossover) is a mi
 >    - `CLAUDE.md`
 >    - `SK_EFT_Hawking/docs/WAVE_EXECUTION_PIPELINE.md` (14-stage pipeline; Stages 1–8 + 10 mandatory for Wave 4, Stages 9 + 13 user-triggered)
 >    - `SK_EFT_Hawking/SK_EFT_Hawking_Inventory_Index.md` (current state)
->    - `SK_EFT_Hawking/README.MD`
+>    - `SK_EFT_Hawking/README.md`
 >    - `temporary/working-docs/brainstorm/20260413-context-lean-dev/Lean-Development-Optimization.txt` — read before MCP Lean session
 >    - `SK_EFT_Hawking/docs/references/Theorm_Proving_Aristotle_Lean.md` — read if Aristotle session anticipated
 >

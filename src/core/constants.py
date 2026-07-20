@@ -2735,8 +2735,13 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'full-NP-classification claim carried by README/RESEARCH_STATUS_OVERVIEW prose (both updated '
             '2026-07-20 to cite this entry).',
         'eliminability': 'very_hard',
-        'elimination_path': 'Requires a Newman-Penrose / 2-spinor formalism absent from Mathlib: spinor '
-            'dyads, the Weyl spinor decomposition, principal null directions, and the Petrov '
+        'elimination_path': 'Requires a Newman-Penrose / 2-spinor formalism absent from Mathlib AND '
+            'PhysLib (VERIFIED 2026-07-20: pinned Mathlib v4.29.1 has CliffordAlgebra + spinGroup/'
+            'pinGroup — the abstract Clifford/Spin layer only; recent Mathlib master adds Riemannian '
+            'METRICS/bundles (IsRiemannianManifold) but NO curvature tensors of any kind, no Lorentzian '
+            'signature machinery, no tetrads, no SL(2,C) 2-spinor calculus, no Petrov classification; '
+            'the PhysLib Lake dep is QuantumInfo-only — zero GR content, direct package read). Missing '
+            'layer: spinor dyads, the Weyl curvature spinor, principal null directions, the Petrov '
             'classification theorem (CK-Duality DR §8.2 flags the same absence for spinor-helicity). '
             'A future Phase 6X wave or Mathlib spinor-geometry contribution; Phase 6o-prime Wave 1b-prime '
             'tracks it (docs/roadmaps/Phase6o_prime_Roadmap.md).',

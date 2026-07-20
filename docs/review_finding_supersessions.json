@@ -974,14 +974,14 @@
    "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:7.4",
    "status": "accepted",
    "superseded_by": "docs/phase6i_wave6_close.md",
-   "evidence": "Wave 6 triage: README.MD line 51 frames the 'rooted in the quaternionic structure of spinors in four dimensions' phrasing as motivation for the cross-area unification (Z16 anomaly + 4-manifold + chiral fractionalization), not as a proven causal lemma. The cited theorem (Z16 anomaly) is intact in lean/SKEFTHawking/Z16AnomalyComputation.lean (23 substantive theorems); the surrounding prose does not claim the spinor-structure motivation is itself a theorem. Advisory finding accepted as motivational framing.",
+   "evidence": "Wave 6 triage: README.md line 51 frames the 'rooted in the quaternionic structure of spinors in four dimensions' phrasing as motivation for the cross-area unification (Z16 anomaly + 4-manifold + chiral fractionalization), not as a proven causal lemma. The cited theorem (Z16 anomaly) is intact in lean/SKEFTHawking/Z16AnomalyComputation.lean (23 substantive theorems); the surrounding prose does not claim the spinor-structure motivation is itself a theorem. Advisory finding accepted as motivational framing.",
    "date": "2026-04-29"
   },
   {
    "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:7.6",
    "status": "accepted",
    "superseded_by": "docs/phase6i_wave6_close.md",
-   "evidence": "Wave 6 triage: README.MD line 51 reads '...algebra alone (specifically, the E8 lattice, verified using Mathlib's Cartan matrix) only forces divisibility by 8.' This is the correct algebraic statement — the E8 *lattice* (an 8-dimensional integral form with even unimodular signature) is the quadratic-form counterexample showing pure-algebra Rokhlin is divisibility-by-8, not 16. The E8 *manifold* (4-manifold with E8 intersection form, not spin) is a separate object cited elsewhere in the original Rokhlin literature. The README sentence does not conflate them — the lattice reference is on the algebra-only side. Advisory finding accepted: original adversarial review's concern was over-broad; current text is technically correct.",
+   "evidence": "Wave 6 triage: README.md line 51 reads '...algebra alone (specifically, the E8 lattice, verified using Mathlib's Cartan matrix) only forces divisibility by 8.' This is the correct algebraic statement — the E8 *lattice* (an 8-dimensional integral form with even unimodular signature) is the quadratic-form counterexample showing pure-algebra Rokhlin is divisibility-by-8, not 16. The E8 *manifold* (4-manifold with E8 intersection form, not spin) is a separate object cited elsewhere in the original Rokhlin literature. The README sentence does not conflate them — the lattice reference is on the algebra-only side. Advisory finding accepted: original adversarial review's concern was over-broad; current text is technically correct.",
    "date": "2026-04-29"
   },
   {

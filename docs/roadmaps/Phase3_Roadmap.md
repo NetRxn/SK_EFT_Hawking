@@ -480,7 +480,7 @@ When modifying physics results or proof counts, these must stay synced:
 | **Notebooks** | All 10 `.ipynb` files (summary cells, verification sections) |
 | **Stakeholder docs** | `docs/stakeholder/Phase2_companion_guide.md`, `Phase2_Strategic_Positioning.md`, `Phase2_Implications.md`, `Phase1_Implications.md`, `companion_guide.md` |
 | **Roadmaps** | `docs/roadmaps/Phase2_Roadmap.md`, `docs/roadmaps/Phase3_Roadmap.md` |
-| **Root** | `SK_EFT_Hawking_Inventory.md`, `README.MD` | 
+| **Root** | `SK_EFT_Hawking_Inventory.md`, `README.md` | 
 | **Top-level** | `README.md`, `CLAUDE.md`, `Fluid-Based Approach to Fundamental Physics  Feasibility Study.md`, `Fluid-Based Approach to Fundamental Physics- Consolidated Critical Review v3.md` |
 
 ### Handoff Documents

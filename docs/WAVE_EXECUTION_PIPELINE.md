@@ -524,7 +524,7 @@ Adding a new paper table:
 |----------|-------|---------------|
 | **Code** | `src/__init__.py` | Phase summary (not counts — use counts.json) |
 | **Code** | `src/core/constants.py` | Phase summary in header |
-| **Root** | `README.MD` | Project tree, architecture description |
+| **Root** | `README.md` | Project tree, architecture description |
 | **Root** | `SK_EFT_Hawking_Inventory.md` | Module descriptions, section content |
 | **Root** | `../CLAUDE.md` (workspace root) | Architecture, conventions (project guidance lives in the workspace CLAUDE.md; no separate per-repo CLAUDE.md) |
 | **Docs** | `docs/RESEARCH_STATUS_OVERVIEW.md` | Proof Chains, strategic situation, module inventory |

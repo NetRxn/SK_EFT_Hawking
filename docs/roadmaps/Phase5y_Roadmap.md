@@ -18,7 +18,7 @@
 > - ✅ Wave 5 — `VestigialEOS.lean` (20 + `fine_tuning_log_lower_bound` VE18a)
 > - ✅ Wave 6 — Extensions: `VestigialGravity` +7, `VestigialSusceptibility` +8, `TetradGapEquation` +4
 > - ✅ Wave 7 — `ClassificationTableDark.lean` (8) + companion markdown
-> - ✅ Wave 8 — `ARCHITECTURE_SCOPE.md` (new) + `README.MD` Phase 5y milestone
+> - ✅ Wave 8 — `ARCHITECTURE_SCOPE.md` (new) + `README.md` Phase 5y milestone
 > - ✅ Wave 9 — 5 stakeholder memos (Closure_Summary + Impact_on_5x/5u/5d/5w)
 
 *Supersedes `Phase5y_Roadmap.md` v1 (2026-04-22). Closes the phase after six rounds of deep research returned dual NO-GO on the original headline bet and the reframed alternatives. Follows the Phase 5s convention: decompose a program-level outcome ("5y is closed, harvest what was learned") into tractable finite deliverables with clear Tier-0 / Tier-1 / Tier-2 priorities.*

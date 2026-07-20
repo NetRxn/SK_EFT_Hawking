@@ -193,7 +193,7 @@ The shipping-ready state is "all 14 bundles cleared per-bundle reviewer triple, 
 
 | Topic | Document |
 |-------|----------|
-| Full technical README | [`README.MD`](../../README.MD) |
+| Full technical README | [`README.md`](../../README.md) |
 | Module inventory and quick-reference index | [`SK_EFT_Hawking_Inventory_Index.md`](../../SK_EFT_Hawking_Inventory_Index.md) |
 | Strategic situation and proof-chain assessment | [`docs/RESEARCH_STATUS_OVERVIEW.md`](../RESEARCH_STATUS_OVERVIEW.md) |
 | What each phase accomplished | `docs/stakeholder/Phase{N}_Implications.md` |
