@@ -397,3 +397,6 @@ conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
 - memory: [[project_5qH_nonhausdorff_substrate_bug]]
 - created_ts: 2026-07-17T00:00:00Z
 - reviewed_ts: 2026-07-17T00:00:00Z
+
+## metric-vs-chart-radius-coverage (2026-07-20, K4′′ packaging — ROUTE FACT, prose-only, not kernel-refutable)
+On `TorusFour` with ρ = 1/2 chart-ball excisions, a METRIC-ball interior region (`openPunctured`, metric radius 1/2) does NOT overlap-cover T⁴° with the ROUND chart-radius collar band `[1/2, 3/4)`: a point with all four per-factor chart-coords ≈ 1/2 has metric (sup) distance ≈ 0.495 but round chart-radius ≈ 1.0 — in T⁴°, covered by neither family. Any interior/collar chartAt dispatch on the punctured torus must use the CHART-radius interior region (`KummerBoundaryChart.interiorSet`, round closed balls of chart-radius 5/8, overlap band [1/2, 5/8]; covering = `punctured_covered`). Do not re-introduce the metric-ball interior region in covering arguments. Same lesson applies to any future excision family: keep the interior region and the collar band in the SAME radial coordinate.
