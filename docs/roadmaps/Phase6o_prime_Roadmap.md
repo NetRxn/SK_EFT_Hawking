@@ -121,15 +121,33 @@ class — already demonstrated by `memory_eq_softCharge`. The algebra layer has 
   **⚠ Citation correction propagated:** arXiv:2504.10577 = Agrawal–Nguyen (NOT
   Have–Nguyen–Prohazka–Salzer, whose paper is 2402.05190) — fixed in Carrollian.lean, the
   registry entry, and here.
-- **C1 — `CarrollianStructure` + the acoustic-horizon instance** *(~1 block)*. Structure class:
-  carrier + degenerate symmetric bilinear form of corank 1 + nowhere-zero null field spanning the
-  kernel; concrete instance on an explicit ℝⁿ model of the sonic line of a transonic background.
-  Non-vacuity pins: the form is genuinely degenerate (a kernel witness) AND genuinely nonzero off
-  the kernel (a falsifiable evaluation).
-- **C2 — Witt/Virasoro in-tree** *(~1–2 blocks; independent of C1)*. ℤ-graded basis Lₙ as
-  finitely-supported functions; explicit bracket; Jacobi; the standard 2-cocycle + central extension
-  via `LieAlgebra.Extension`. Mathlib-style naming for future upstreaming.
-- **C3 — BMS semidirect product + supertranslation subalgebra** *(~1 block; needs C2)*.
+- **C1 — `CarrollianStructure` + the acoustic-horizon instance** — ✅ **SHIPPED 2026-07-20**
+  (`lean/SKEFTHawking/Carrollian/Structure.lean`, kernel-pure): the structure class with the
+  corank-1 radical law (`radical_eq` — degenerate PRECISELY along `n`), the `(∂_u,∂_θ)` tangent
+  model of the ℝ×S¹ sonic horizon (`acousticHorizonCarrollian`), falsifiable pins (kernel witness,
+  off-kernel nondegeneracy, norm_num evaluation), and the C4 κ-slot: `membranePressure κ := κ/8π`
+  (Penna eq 3.3/3.13) tied to the in-tree `SonicHorizon.surfaceGravity` via
+  `AcousticHorizonBoundary.ofSonicHorizon`.
+- **C2 — Witt/Virasoro in-tree** — ✅ **SHIPPED 2026-07-20**
+  (`lean/SKEFTHawking/Carrollian/WittAlgebra.lean`, kernel-pure): `WittAlgebra := ℤ →₀ ℝ` with
+  **Jacobi PROVED** (`wittBracket_leibniz`) → genuine `LieRing`/`LieAlgebra ℝ` instances;
+  non-vacuity `[L₁,L₋₁]=2L₀`; the Virasoro 2-cocycle `(m³−m)/12·δ_{m+n,0}` with the CE cocycle
+  identity proved for ALL elements (+ skew/alternating); no central-charge VALUE claimed (per C0).
+  Exported `Vect(S¹)` seam for C3. **Documented residual (no new math):** the
+  `LieAlgebra.Extension.ofTwoCocycle` packaging adaptor (trivial-coefficient instances) — both
+  membership obligations already proven; wire during C3.
+- **C3 — BMS semidirect product + supertranslation subalgebra** — ✅ **SHIPPED 2026-07-20**
+  (`Carrollian/BMSAlgebra.lean` + `Carrollian/VirasoroExtension.lean`, all headliners kernel-pure):
+  `BMSAlgebra := Witt × SuperTrans` with the weight-(−1) action `⁅Lₘ,Tₙ⁆ = (m−n)T_{m+n}` — the
+  convention VERIFIED by Jacobi (`bmsBracket_leibniz` reduces to the proven Witt Jacobi on the
+  action cross-terms); abelian `superTransIdeal : LieIdeal` (≠⊥, ≠⊤) and the genuine first-iso
+  quotient `bmsQuotSupertransEquivWitt : BMS ⧸ supertrans ≃ₗ⁅ℝ⁆ Witt` (the full BMS₃ short exact
+  sequence); mixed pin `⁅L₁,T₋₁⁆ = 2T₀` per C0; centerless discipline held. **C2's Extension
+  residual FULLY DISCHARGED** (not the fallback): `wittTwoCocycle` in Mathlib's
+  `LieModule.Cohomology.twoCocycle` + **`virasoroExtension : LieAlgebra.Extension ℝ VirCoeff
+  WittAlgebra`** — the honest `0 → ℝ → Vir → Vect(S¹) → 0`. C4 seam exposed (`superAction`,
+  `bmsInr`, the §9 Q_f/membranePressure pairing comment).
+  *(original spec: ~1 block; needs C2.)*
   Vect ⋉ functions with the action bracket; the abelian supertranslation ideal as a `LieIdeal`;
   the quotient statement.
 - **C4 — boundary phase-space model + charge functionals** *(~1–2 blocks; needs C0+C1+C3; LEAD
