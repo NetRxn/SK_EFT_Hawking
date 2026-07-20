@@ -547,6 +547,122 @@ theorem bdryMapRP3_injective : Function.Injective bdryMapRP3 := by
   intro h
   exact bdryMap_eq_imp h
 
+/-! ### §3.5 Surjectivity of `ℝP³ → ∂E` -/
+
+/-- **Complex square root at unit modulus**: every `u` with `‖u‖ = 1` has a unit square root
+(`ℂ` is algebraically closed). The `±` ambiguity of the root is what `ℝP³` absorbs. -/
+theorem exists_sqrt_unit {u : ℂ} (hu : ‖u‖ = 1) : ∃ w : ℂ, w ^ 2 = u ∧ ‖w‖ = 1 := by
+  obtain ⟨w, hw⟩ := IsAlgClosed.exists_pow_nat_eq u (n := 2) (by norm_num)
+  refine ⟨w, hw, ?_⟩
+  have h2 : ‖w‖ ^ 2 = 1 := by rw [← norm_pow, hw, hu]
+  nlinarith [norm_nonneg w, h2]
+
+/-- **The explicit `S³` preimage of a boundary Hopf coordinate** `(z, u)` with `‖z‖ ≤ 1`, `‖u‖ = 1`:
+`a = z·b`, `b = r·w` with `r = (1 + ‖z‖²)^(-1/2)` and `w` a unit square root of `u`. It lands in the
+chart-0 hemisphere `‖a‖ ≤ ‖b‖`, has base ratio `a/b = z`, and squared fiber phase `(b/‖b‖)² = u`. -/
+theorem hopf_preimage {z u : ℂ} (hz : ‖z‖ ≤ 1) (hu : ‖u‖ = 1) :
+    ∃ x : S3, ‖x.1.1‖ ≤ ‖x.1.2‖ ∧ x.1.1 / x.1.2 = z ∧ (x.1.2 / (‖x.1.2‖ : ℂ)) ^ 2 = u ∧
+      x.1.2 ≠ 0 := by
+  obtain ⟨w, hw2, hwn⟩ := exists_sqrt_unit hu
+  set rr : ℝ := 1 + ‖z‖ ^ 2 with hrr
+  have hrrpos : 0 < rr := by positivity
+  set r : ℝ := (Real.sqrt rr)⁻¹ with hrdef
+  have hrpos : 0 < r := inv_pos.mpr (Real.sqrt_pos.mpr hrrpos)
+  have hr2 : r ^ 2 = rr⁻¹ := by rw [hrdef, inv_pow, Real.sq_sqrt hrrpos.le]
+  have hrc : (r : ℂ) ≠ 0 := by exact_mod_cast ne_of_gt hrpos
+  have hwne : w ≠ 0 := by rw [← norm_ne_zero_iff, hwn]; norm_num
+  set b : ℂ := (r : ℂ) * w with hbdef
+  set a : ℂ := z * b with hadef
+  have hbnorm : ‖b‖ = r := by
+    rw [hbdef, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hrpos, hwn, mul_one]
+  have hbne : b ≠ 0 := mul_ne_zero hrc hwne
+  have hanorm : ‖a‖ = ‖z‖ * r := by rw [hadef, norm_mul, hbnorm]
+  have hmem : ‖a‖ ^ 2 + ‖b‖ ^ 2 = 1 := by
+    rw [hanorm, hbnorm, mul_pow, hr2, hrr]; field_simp; ring
+  refine ⟨⟨(a, b), hmem⟩, ?_, ?_, ?_, hbne⟩
+  · show ‖a‖ ≤ ‖b‖
+    rw [hanorm, hbnorm]
+    nlinarith [hz, hrpos.le, norm_nonneg z]
+  · show a / b = z
+    rw [hadef, mul_div_assoc, div_self hbne, mul_one]
+  · show (b / (‖b‖ : ℂ)) ^ 2 = u
+    rw [hbnorm, hbdef, mul_comm (r : ℂ) w, mul_div_assoc, div_self hrc, mul_one, hw2]
+
+/-- Weld criterion in coordinate form (a convenient repackaging of `chart0_eq_chart1_iff`). -/
+theorem chart0_eq_chart1' {q p : ResChart} (hz : ‖(q.1 : ℂ)‖ = 1)
+    (h1 : (p.1 : ℂ) = (q.1 : ℂ)⁻¹) (h2 : (p.2 : ℂ) = (q.1 : ℂ) ^ 2 * (q.2 : ℂ)) :
+    chart0 q = chart1 p :=
+  chart0_eq_chart1_iff.mpr ⟨hz, h1, h2⟩
+
+/-- **Every chart-0 boundary point is in the image of `ρ`** (`chart0` stratum of `∂E` surjectivity). -/
+theorem chart0_mem_range {p : ResChart} (hp : ‖(p.2 : ℂ)‖ = 1) :
+    ∃ x : S3, bdryMap x = chart0 p := by
+  obtain ⟨x, hxle, hbase, hfib, _⟩ := hopf_preimage p.1.2 hp
+  refine ⟨x, ?_⟩
+  unfold bdryMap
+  rw [dif_pos hxle]
+  exact congrArg chart0 (Prod.ext (Subtype.ext hbase) (Subtype.ext hfib))
+
+/-- **Every chart-1 boundary point is in the image of `ρ`** (`chart1` stratum). The generic point uses
+the swapped preimage in the chart-1 hemisphere; the equator point routes through the weld
+(`chart0_eq_chart1'`). -/
+theorem chart1_mem_range {p : ResChart} (hp : ‖(p.2 : ℂ)‖ = 1) :
+    ∃ x : S3, bdryMap x = chart1 p := by
+  obtain ⟨x, hxle, hbase, hfib, hx2⟩ := hopf_preimage p.1.2 hp
+  have hswapmem : ‖x.1.2‖ ^ 2 + ‖x.1.1‖ ^ 2 = 1 := by rw [add_comm]; exact x.2
+  refine ⟨⟨(x.1.2, x.1.1), hswapmem⟩, ?_⟩
+  by_cases hc : ‖x.1.2‖ ≤ ‖x.1.1‖
+  · -- equator edge: ‖x.1.1‖ = ‖x.1.2‖; weld chart0 → chart1
+    have heq : ‖x.1.1‖ = ‖x.1.2‖ := le_antisymm hxle hc
+    have hx1 : x.1.1 ≠ 0 := by rw [← norm_ne_zero_iff, heq]; exact norm_ne_zero_iff.mpr hx2
+    unfold bdryMap
+    rw [dif_pos hc]
+    apply chart0_eq_chart1'
+    · show ‖x.1.2 / x.1.1‖ = 1
+      rw [norm_div, heq, div_self (norm_ne_zero_iff.mpr hx2)]
+    · show (p.1 : ℂ) = (x.1.2 / x.1.1)⁻¹
+      rw [inv_div]; exact hbase.symm
+    · show (p.2 : ℂ) = (x.1.2 / x.1.1) ^ 2 * (x.1.1 / (‖x.1.1‖ : ℂ)) ^ 2
+      rw [← hfib]
+      have hac : (‖x.1.1‖ : ℂ) = (‖x.1.2‖ : ℂ) := by exact_mod_cast heq
+      have hnc : (‖x.1.2‖ : ℂ) ≠ 0 := by exact_mod_cast norm_ne_zero_iff.mpr hx2
+      rw [hac]; field_simp
+  · -- generic chart-1 point: swapped preimage lands in the chart-1 hemisphere
+    unfold bdryMap
+    rw [dif_neg hc]
+    exact congrArg chart1 (Prod.ext (Subtype.ext hbase) (Subtype.ext hfib))
+
+/-- **The image of the Hopf map is exactly the boundary `∂E`**: `range ρ = ∂E`. Together with
+`bdryMap_mem_boundary` (⊆) and the two `mem_range` lemmas (⊇). -/
+theorem range_bdryMap_eq_boundaryE : Set.range bdryMap = boundaryE := by
+  apply Set.eq_of_subset_of_subset
+  · rintro y ⟨x, rfl⟩; exact bdryMap_mem_boundary x
+  · rintro y ⟨p, hp2, hy | hy⟩
+    · obtain ⟨x, hx⟩ := chart0_mem_range hp2; exact ⟨x, by rw [hx, hy]⟩
+    · obtain ⟨x, hx⟩ := chart1_mem_range hp2; exact ⟨x, by rw [hx, hy]⟩
+
+theorem range_bdryMapRP3 : Set.range bdryMapRP3 = Set.range bdryMap := by
+  ext y
+  constructor
+  · rintro ⟨q, rfl⟩
+    obtain ⟨x, rfl⟩ := Quotient.exists_rep q
+    exact ⟨x, rfl⟩
+  · rintro ⟨x, rfl⟩
+    exact ⟨mkRP3 x, rfl⟩
+
+/-- **`range ρ̄ = ∂E`** — the descended map surjects exactly onto the boundary locus. -/
+theorem range_bdryMapRP3_eq_boundaryE : Set.range bdryMapRP3 = boundaryE :=
+  range_bdryMapRP3.trans range_bdryMap_eq_boundaryE
+
+/-- **`ρ̄ : ℝP³ → ∂E` is a bijection onto the boundary `∂E`** (injective + surjective onto `∂E`) —
+`bijectivity`, the within-boundary priority of the K6′a design. The homeomorphism packaging
+(continuity both ways) is the remaining stretch. -/
+theorem bdryMapRP3_bijOn : Set.BijOn bdryMapRP3 Set.univ boundaryE := by
+  refine ⟨?_, bdryMapRP3_injective.injOn, ?_⟩
+  · intro q _
+    rw [← range_bdryMapRP3_eq_boundaryE]; exact ⟨q, rfl⟩
+  · rw [Set.SurjOn, Set.image_univ, range_bdryMapRP3_eq_boundaryE]
+
 end
 
 end SKEFTHawking.KummerResolutionPiece
