@@ -663,6 +663,144 @@ theorem bdryMapRP3_bijOn : Set.BijOn bdryMapRP3 Set.univ boundaryE := by
     rw [← range_bdryMapRP3_eq_boundaryE]; exact ⟨q, rfl⟩
   · rw [Set.SurjOn, Set.image_univ, range_bdryMapRP3_eq_boundaryE]
 
+/-! ## §4. The zero section — the embedded `S²` (`w = 0`), the standard two-chart sphere
+
+The zero section of `E` is the base `S²` sitting at `w = 0`. It is the standard two-chart sphere: two
+disks glued by `z ↦ z⁻¹` on the equator (the fiber-`0` restriction of the Euler−2 clutch, which fixes
+`w = 0`: `clutch (z, 0) = (z⁻¹, 0)`). The `(−2)` self-intersection number belongs to K8 (not here);
+the H₂-generator / deformation-retract homology packaging is the residual. -/
+
+/-- The base gluing `z ↦ z⁻¹` on the equator (the `w = 0` restriction of the clutch). -/
+def baseGlued (p q : Disk) : Prop := ‖(p : ℂ)‖ = 1 ∧ (q : ℂ) = (p : ℂ)⁻¹
+
+def baseGcore : Disk ⊕ Disk → Disk ⊕ Disk → Prop
+  | Sum.inl p, Sum.inr q => baseGlued p q
+  | Sum.inr q, Sum.inl p => baseGlued p q
+  | _, _ => False
+
+def baseRel (a b : Disk ⊕ Disk) : Prop := a = b ∨ baseGcore a b
+
+theorem baseGcore_symm {a b : Disk ⊕ Disk} (h : baseGcore a b) : baseGcore b a := by
+  cases a <;> cases b <;> simp only [baseGcore] at h ⊢ <;> exact h
+
+theorem baseGlued_right_unique {p q q' : Disk} (h : baseGlued p q) (h' : baseGlued p q') : q = q' :=
+  Subtype.ext (by rw [h.2, h'.2])
+
+theorem baseGlued_left_unique {p p' q : Disk} (h : baseGlued p q) (h' : baseGlued p' q) : p = p' := by
+  apply Subtype.ext
+  have : (p : ℂ)⁻¹ = (p' : ℂ)⁻¹ := by rw [← h.2, ← h'.2]
+  exact inv_injective this
+
+theorem baseRel_equivalence : Equivalence baseRel := by
+  refine ⟨fun a => Or.inl rfl, ?_, ?_⟩
+  · rintro a b (rfl | h)
+    · exact Or.inl rfl
+    · exact Or.inr (baseGcore_symm h)
+  · rintro a b c (rfl | hab) (rfl | hbc)
+    · exact Or.inl rfl
+    · exact Or.inr hbc
+    · exact Or.inr hab
+    · cases a with
+      | inl p =>
+        cases b with
+        | inl _ => exact (hab : False).elim
+        | inr q =>
+          cases c with
+          | inl p' => exact Or.inl (by rw [baseGlued_left_unique (hab : baseGlued p q) (hbc : baseGlued p' q)])
+          | inr _ => exact (hbc : False).elim
+      | inr q =>
+        cases b with
+        | inr _ => exact (hab : False).elim
+        | inl p =>
+          cases c with
+          | inr q' => exact Or.inl (by rw [baseGlued_right_unique (hab : baseGlued p q) (hbc : baseGlued p q')])
+          | inl _ => exact (hbc : False).elim
+
+def baseSetoid : Setoid (Disk ⊕ Disk) := ⟨baseRel, baseRel_equivalence⟩
+
+/-- **The base `S²`** — the standard two-chart sphere (two disks glued by `z ↦ z⁻¹` on the equator),
+the zero section's model. -/
+def BaseS2 : Type := Quotient baseSetoid
+
+instance : TopologicalSpace BaseS2 := inferInstanceAs (TopologicalSpace (Quotient baseSetoid))
+
+instance : Nonempty BaseS2 := ⟨Quotient.mk baseSetoid (Sum.inl ⟨0, by simp⟩)⟩
+
+def baseChart0 (z : Disk) : BaseS2 := Quotient.mk baseSetoid (Sum.inl z)
+def baseChart1 (z : Disk) : BaseS2 := Quotient.mk baseSetoid (Sum.inr z)
+
+theorem continuous_baseChart0 : Continuous baseChart0 := continuous_quotient_mk'.comp continuous_inl
+theorem continuous_baseChart1 : Continuous baseChart1 := continuous_quotient_mk'.comp continuous_inr
+
+/-- The origin of the fiber `D²`, as a `Disk` — the zero of the zero section. -/
+def zeroFiber : Disk := ⟨0, by simp⟩
+
+/-- The zero-section point at base `z`: `(z, 0)` in a chart of `E`. -/
+def zeroPt (z : Disk) : ResChart := (z, zeroFiber)
+
+/-- **The zero-section inclusion** `BaseS2 → E`, `z ↦ (z, 0)`. Well-defined: the base gluing `z ↦ z⁻¹`
+maps to `E`'s equator weld because the clutch fixes the zero fiber (`clutch (z, 0) = (z⁻¹, 0)`). -/
+def zeroSection : BaseS2 → ResE :=
+  Quotient.lift (Sum.elim (fun z => chart0 (zeroPt z)) (fun z => chart1 (zeroPt z))) (by
+    rintro a b (rfl | hg)
+    · rfl
+    · cases a with
+      | inl p =>
+        cases b with
+        | inr q =>
+          have hz : ‖((zeroPt p).1 : ℂ)‖ = 1 := hg.1
+          show chart0 (zeroPt p) = chart1 (zeroPt q)
+          rw [chart_glue hz]
+          refine congrArg chart1 (Prod.ext (Subtype.ext ?_) (Subtype.ext ?_))
+          · show ((zeroPt p).1 : ℂ)⁻¹ = (q : ℂ)
+            exact hg.2.symm
+          · show ((zeroPt p).1 : ℂ) ^ 2 * ((zeroPt p).2 : ℂ) = 0
+            simp [zeroPt, zeroFiber]
+        | inl _ => exact (hg : False).elim
+      | inr q =>
+        cases b with
+        | inl p =>
+          have hz : ‖((zeroPt p).1 : ℂ)‖ = 1 := hg.1
+          show chart1 (zeroPt q) = chart0 (zeroPt p)
+          rw [chart_glue hz]
+          refine congrArg chart1 (Prod.ext (Subtype.ext ?_) (Subtype.ext ?_)).symm
+          · show ((zeroPt p).1 : ℂ)⁻¹ = (q : ℂ)
+            exact hg.2.symm
+          · show ((zeroPt p).1 : ℂ) ^ 2 * ((zeroPt p).2 : ℂ) = 0
+            simp [zeroPt, zeroFiber]
+        | inr _ => exact (hg : False).elim)
+
+@[simp] theorem zeroSection_baseChart0 (z : Disk) : zeroSection (baseChart0 z) = chart0 (zeroPt z) := rfl
+@[simp] theorem zeroSection_baseChart1 (z : Disk) : zeroSection (baseChart1 z) = chart1 (zeroPt z) := rfl
+
+theorem continuous_zeroSection : Continuous zeroSection := by
+  apply Continuous.quotient_lift
+  apply Continuous.sumElim
+  · exact continuous_chart0.comp (Continuous.prodMk continuous_id continuous_const)
+  · exact continuous_chart1.comp (Continuous.prodMk continuous_id continuous_const)
+
+/-- **The zero-section locus** — the `w = 0` sphere inside `E`. -/
+def zeroLocus : Set ResE :=
+  {y | ∃ z : Disk, y = chart0 (zeroPt z) ∨ y = chart1 (zeroPt z)}
+
+/-- **The zero section lands in the `w = 0` locus** and covers it: `range zeroSection = zeroLocus`. The
+embedded `S²` sits inside `E` at `w = 0`. -/
+theorem range_zeroSection_eq_zeroLocus : Set.range zeroSection = zeroLocus := by
+  apply Set.eq_of_subset_of_subset
+  · rintro y ⟨q, rfl⟩
+    obtain ⟨a, rfl⟩ := Quotient.exists_rep q
+    cases a with
+    | inl z => exact ⟨z, Or.inl rfl⟩
+    | inr z => exact ⟨z, Or.inr rfl⟩
+  · rintro y ⟨z, hy | hy⟩
+    · exact ⟨baseChart0 z, hy.symm⟩
+    · exact ⟨baseChart1 z, hy.symm⟩
+
+/-- **Falsifiable pin**: the clutch fixes the zero fiber — `clutch (z, 0) = (z⁻¹, 0)`. This is why the
+zero section is well-defined (the base gluing `z ↦ z⁻¹` is exactly the `w = 0` restriction). -/
+theorem clutch_zero_fiber (z : ℂ) : clutch (z, 0) = (z⁻¹, 0) := by
+  simp only [clutch, mul_zero]
+
 end
 
 end SKEFTHawking.KummerResolutionPiece
