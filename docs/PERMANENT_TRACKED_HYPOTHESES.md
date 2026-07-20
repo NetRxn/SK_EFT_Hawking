@@ -4,7 +4,7 @@
 
 **Purpose.** Catalogue the project's load-bearing tracked-hypothesis Props — Lean predicates consumed by substantive theorems but NOT independently derived. Each is a *constructive* alternative to a global `axiom`: the claim is packaged as a `def … : Prop` and taken as an explicit hypothesis, making the project's assumption surface visible at the type-signature level (Pipeline Invariant #15/#16).
 
-**Count.** 45 tracked hypotheses 4 headline, 15 external_boundary, 20 discharge_future, 6 local.
+**Count.** 47 tracked hypotheses 4 headline, 15 external_boundary, 22 discharge_future, 6 local.
 
 ---
 
@@ -398,6 +398,26 @@
 - **Risk.** Low mathematically (textbook: PD makes the intersection form unimodular); cost is the from-scratch Lean construction of integral homology H₂(M;ℤ) + the integral cap product + the iso proof, deferred to a later E1 brick. Every result in IntersectionFormUnimodularInt holds for an ARBITRARY such datum.
 - **Circularity.** None. The unimodularity lemmas are built for an ARBITRARY IntPoincareDuality datum; no property of a specific (future) integral cap iso is assumed. The perfect-pairing ⟹ unit-det reduction (LinearEquiv.isUnit_det + Int.isUnit_iff + the Gram-matrix identification) is proved unconditionally. The evenness/Wu conjunct of IsEvenUnimodular is a SEPARATE disclosed datum (SpinWuDatum, spinWu_even_datum); this datum supplies ONLY unimodular. It is NOT the lattice-Arf route (nogo_lattice_arf_not_sigma8): unimodularity is a genuine PD fact, orthogonal to the banned σ/8 ≡ Arf congruence.
 - **Consumers.** `SKEFTHawking.SingularCohomologyInt.interMatrix_eq_toMatrix_intPD`, `SKEFTHawking.SingularCohomologyInt.interMatrix_isUnit_det_of_intPD`, `SKEFTHawking.SingularCohomologyInt.interMatrix_isUnimodular_of_intPD`, `SKEFTHawking.SingularCohomologyInt.isEvenUnimodular_of_intPD`, `SKEFTHawking.SingularCohomologyInt.sixteen_dvd_manifold_sig_of_intPD`
+
+### `niemeier_classification_exactly_24`
+
+**Statement.** There are EXACTLY 24 even unimodular positive-definite lattices of rank 24 (the Niemeier lattices; Niemeier 1973). The Schellekens chain (Schellekens/*.lean, rebuilt genuine 2026-07-20) carries the falsifiable ARITHMETIC content this classification entails (24 = 8*3 = lcm(8,3) etc.); only the classification EXHAUSTIVENESS is this external hypothesis.
+
+- status `proposed — an external-literature classification fact, disclosed in the module docstrings; the chain headline `schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen` concludes its real arithmetic biconditional (via the kernel-checked GenerationConstraint) conditional at most on the named classification hypotheses.` · eliminability `very_hard` · module `Schellekens/NiemeierLattice.lean (docstring disclosure)`
+- **Posture.** The 24 Niemeier lattices underpin the c=24 story; the chain encodes their arithmetic consequences and defers the exhaustiveness to this tracked external fact.
+- **Discharge path.** Requires formalized lattice-classification machinery (even unimodular lattices, root systems, mass formulas / neighbor method) absent from Mathlib. A future Mathlib lattice-theory program; not project-critical (the arithmetic endpoint is proven independently).
+- **Source.** Niemeier, J. Number Theory 5 (1973) 142; Conway-Sloane SPLAG Ch. 16.
+- **Risk.** Effectively zero physically/mathematically (a settled 1973 classification); carried as an honest external-completeness landmark.
+
+### `schellekens_c24_voa_classification_exactly_71`
+
+**Statement.** There are EXACTLY 71 holomorphic vertex operator algebras of central charge 24 (Schellekens 1993 list; completeness proven by Moeller-Scheithauer 2024 and companions), each unique up to isomorphism. The chain carries the falsifiable count relations (24 <= 71; 71 = 70 + 1 with the Moonshine module); the classification EXHAUSTIVENESS/uniqueness is this external hypothesis.
+
+- status `proposed — external-literature classification fact, disclosed in the module docstrings (see niemeier_classification_exactly_24 for the chain structure).` · eliminability `very_hard` · module `Schellekens/HolomorphicVOAc24.lean (docstring disclosure)`
+- **Posture.** The 71 holomorphic c=24 VOAs anchor the Schellekens chain; the exhaustiveness is tracked here, the arithmetic consequences are proven in-tree.
+- **Discharge path.** Requires formalized VOA theory (vertex algebras, characters, modular invariance, orbifold constructions) absent from Mathlib — a research-frontier formalization program.
+- **Source.** Schellekens, Comm. Math. Phys. 153 (1993) 159; Moeller-Scheithauer arXiv:2112.12291 (Ann. Math. 2024) + companions.
+- **Risk.** Very low (peer-reviewed completeness proof, Annals 2024); carried as an honest external-completeness landmark.
 
 ### `smith_inflow_z16`
 

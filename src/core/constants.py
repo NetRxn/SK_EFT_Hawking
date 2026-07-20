@@ -2744,6 +2744,52 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'requires a bounded Carrollian/BMS formalization arc (Phase 6o-prime Wave 1a-prime), fenced to '
             'analog fidelity. Tracked here until the arc discharges it.',
     },
+    'niemeier_classification_exactly_24': {
+        'tier': 'discharge_future',
+        'statement': 'There are EXACTLY 24 even unimodular positive-definite lattices of rank 24 '
+            '(the Niemeier lattices; Niemeier 1973). The Schellekens chain (Schellekens/*.lean, '
+            'rebuilt genuine 2026-07-20) carries the falsifiable ARITHMETIC content this classification '
+            'entails (24 = 8*3 = lcm(8,3) etc.); only the classification EXHAUSTIVENESS is this '
+            'external hypothesis.',
+        'status': 'proposed — an external-literature classification fact, disclosed in the module '
+            'docstrings; the chain headline `schellekensChain_implies_24_divides_c_minus_iff_3_divides_'
+            'N_gen` concludes its real arithmetic biconditional (via the kernel-checked '
+            'GenerationConstraint) conditional at most on the named classification hypotheses.',
+        'eliminability': 'very_hard',
+        'elimination_path': 'Requires formalized lattice-classification machinery (even unimodular '
+            'lattices, root systems, mass formulas / neighbor method) absent from Mathlib. A future '
+            'Mathlib lattice-theory program; not project-critical (the arithmetic endpoint is proven '
+            'independently).',
+        'dependent_theorems': [],
+        'module': 'Schellekens/NiemeierLattice.lean (docstring disclosure)',
+        'source': 'Niemeier, J. Number Theory 5 (1973) 142; Conway-Sloane SPLAG Ch. 16.',
+        'risk': 'Effectively zero physically/mathematically (a settled 1973 classification); carried '
+            'as an honest external-completeness landmark.',
+        'prose': 'The 24 Niemeier lattices underpin the c=24 story; the chain encodes their arithmetic '
+            'consequences and defers the exhaustiveness to this tracked external fact.',
+    },
+    'schellekens_c24_voa_classification_exactly_71': {
+        'tier': 'discharge_future',
+        'statement': 'There are EXACTLY 71 holomorphic vertex operator algebras of central charge 24 '
+            '(Schellekens 1993 list; completeness proven by Moeller-Scheithauer 2024 and companions), '
+            'each unique up to isomorphism. The chain carries the falsifiable count relations '
+            '(24 <= 71; 71 = 70 + 1 with the Moonshine module); the classification EXHAUSTIVENESS/'
+            'uniqueness is this external hypothesis.',
+        'status': 'proposed — external-literature classification fact, disclosed in the module '
+            'docstrings (see niemeier_classification_exactly_24 for the chain structure).',
+        'eliminability': 'very_hard',
+        'elimination_path': 'Requires formalized VOA theory (vertex algebras, characters, modular '
+            'invariance, orbifold constructions) absent from Mathlib — a research-frontier '
+            'formalization program.',
+        'dependent_theorems': [],
+        'module': 'Schellekens/HolomorphicVOAc24.lean (docstring disclosure)',
+        'source': 'Schellekens, Comm. Math. Phys. 153 (1993) 159; Moeller-Scheithauer arXiv:2112.12291 '
+            '(Ann. Math. 2024) + companions.',
+        'risk': 'Very low (peer-reviewed completeness proof, Annals 2024); carried as an honest '
+            'external-completeness landmark.',
+        'prose': 'The 71 holomorphic c=24 VOAs anchor the Schellekens chain; the exhaustiveness is '
+            'tracked here, the arithmetic consequences are proven in-tree.',
+    },
     'acoustic_petrov_d_np_classification': {
         'tier': 'discharge_future',
         'statement': 'The draining-bathtub / acoustic Kerr-Schild metric is Petrov type D in the full '
