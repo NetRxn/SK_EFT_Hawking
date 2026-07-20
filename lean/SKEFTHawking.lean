@@ -309,6 +309,14 @@ import SKEFTHawking.SymTFT.FrobeniusPerronDim
 -- (electric/magnetic). Repairs the free-globalFPdimSquared + unused-boundary-C
 -- defects without touching legacy predicates.
 import SKEFTHawking.SymTFT.SkeletalModularModel
+-- SymTFT S2 lane (Fable-Targets SymTFT packet, 2026-07-20): the honest
+-- object-level electric Lagrangian algebra. Componentwise group-algebra
+-- multiplication on the `unit ⊞ electric` carrier via the four biproduct corners
+-- + `electric_squared_iso_vacuum`, REPLACING the degenerate projection-through-
+-- vacuum multiplication (audit §1.7). Four corner equations (incl. the
+-- non-degenerate `e·e → vacuum` corner), MonObj unit laws, the degenerate-
+-- multiplication contrast, and the S1 `toricElectricSupport` tie.
+import SKEFTHawking.SymTFT.ElectricAlgebraObject
 -- Phase 6r-prime M2 upstream-PR-quality ship (2026-05-25): Drinfeld-
 -- center binary biproducts. Builds the diagonal half-braiding iso on
 -- X.1 ⊞ Y.1 for X, Y : Center C under [MonoidalPreadditive C] +
