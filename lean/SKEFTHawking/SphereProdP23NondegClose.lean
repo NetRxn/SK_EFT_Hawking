@@ -214,4 +214,56 @@ theorem sphereDiskNondeg23 :
       (by simp [sphereDiskBoundarySet]))
     feeder_sphereDisk
 
+/-! ## §4. STRETCH — the `dimeq` residual (`homIncl ≠ 0`) from the feeder, and the assembled `(2,3)` datum. -/
+
+/-- **The boundary inclusion `S²×S² ↪ S²×D³` is nonzero on `H₂(·;ℤ/2)`** — the surviving-`S²`-class
+`dimeq` residual, discharged from the feeder by the Kronecker adjunction. If `homIncl = 0` then for
+every `a, z`, `⟨a|_∂W, z⟩ = ⟨a, homIncl z⟩ = 0` (`kroneckerH_cohomologyPullback` + `homIncl_eq_map`),
+so `a|_∂W = 0` by the perfect boundary pairing (`kroneckerHEquiv`); but `feeder_sphereDisk` makes
+`a|_∂W ≠ 0` for the nonzero `a₀ ∈ H²(W)` (rank `1`). -/
+theorem sphereDiskHomIncl_ne_zero :
+    homIncl (X := TopCat.of SphereDisk) sphereDiskBoundarySet 2 ≠ 0 := by
+  intro h0
+  haveI : FiniteDimensional (ZMod 2) (Cohomology (TopCat.of SphereDisk) 2) :=
+    SphereProdP23.sphereDisk_findimAbs23
+  haveI : Nontrivial (Cohomology (TopCat.of SphereDisk) 2) :=
+    Module.nontrivial_of_finrank_pos (R := ZMod 2)
+      (by rw [SphereProdP23.finrank_sphereDisk_cohomology_two]; norm_num)
+  obtain ⟨a₀, ha₀⟩ := exists_ne (0 : Cohomology (TopCat.of SphereDisk) 2)
+  have hmaps : SingularCapConnecting.inclC (X := TopCat.of SphereDisk) sphereDiskBoundarySet
+      = SingularCohomologyPairRestrict.subInclCM (X := TopCat.of SphereDisk) sphereDiskBoundarySet := by
+    apply ContinuousMap.ext; intro x; rfl
+  refine feeder_sphereDisk a₀ ha₀ ?_
+  refine (SKEFTHawking.SingularKroneckerEquiv.kroneckerHEquiv
+    (X := sub (X := TopCat.of SphereDisk) sphereDiskBoundarySet) 1).injective ?_
+  rw [map_zero]
+  ext z
+  rw [SKEFTHawking.SingularKroneckerEquiv.kroneckerHEquiv_apply,
+    kroneckerH_cohomologyPullback, hmaps,
+    ← PoincareLefschetzRelFundClassCylinderSuspension.homIncl_eq_map, h0]
+  simp
+
+/-- **The `(2,3)` `dimeq`, UNCONDITIONAL** — the sole boundary residual `homIncl ≠ 0`
+(`sphereDiskHomIncl_ne_zero`) discharged, so `dim H²(S²×D³;ℤ/2) = dim H³(S²×D³,S²×S²;ℤ/2)`. -/
+theorem sphereDiskDimeq23 :
+    Module.finrank (ZMod 2) (Cohomology (TopCat.of SphereDisk) 2)
+      = Module.finrank (ZMod 2)
+        (RelativeCohomology (X := TopCat.of SphereDisk) sphereDiskBoundarySet 3) :=
+  SphereProdP23.sphereDiskDimeq23_of_homIncl_ne_zero sphereDiskHomIncl_ne_zero
+
+/-- **The `S²×D³` `(2,3)` Lefschetz–Wu datum, UNCONDITIONAL** — `LefschetzWuDatum … 2 3 5` assembled by
+`ofRelFund23` from the concrete relative fundamental-class datum with all four PL-duality numerics
+discharged: `findimAbs`, `findimRel` (banked), the direct cap-injectivity `nondeg`
+(`sphereDiskNondeg23`), and `dimeq` (`sphereDiskDimeq23`; the boundary residual closed via the feeder).
+No `β`/`hcompat` residual, no open hypotheses — the full `(2,3)` leg of the `S²×D³` W-admissibility. -/
+noncomputable def sphereDiskP23 :
+    PoincareLefschetzWu5.LefschetzWuDatum (TopCat.of SphereDisk) sphereDiskBoundarySet 2 3 5 :=
+  PoincareLefschetzWuAssembly.LefschetzWuDatum.ofRelFund23 sphereDiskRelFundDatum
+    SphereProdP23.sphereDisk_findimAbs23 SphereProdP23.sphereDisk_findimRel23
+    sphereDiskNondeg23 sphereDiskDimeq23
+
+/-- **`ofRelFund23_pinned`** — the assembled `(2,3)` datum's `mu` field is exactly the concrete relative
+fundamental-class functional `sphereDiskRelFundDatum.mu` (the Wu tower consumes `μ = ⟨·, [W,∂W]⟩`). -/
+theorem sphereDiskP23_mu : (sphereDiskP23).mu = sphereDiskRelFundDatum.mu := rfl
+
 end SKEFTHawking.SphereProdP23NondegClose
