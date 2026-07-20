@@ -4,7 +4,7 @@
 
 **Purpose.** Catalogue the project's load-bearing tracked-hypothesis Props — Lean predicates consumed by substantive theorems but NOT independently derived. Each is a *constructive* alternative to a global `axiom`: the claim is packaged as a `def … : Prop` and taken as an explicit hypothesis, making the project's assumption surface visible at the type-signature level (Pipeline Invariant #15/#16).
 
-**Count.** 44 tracked hypotheses 4 headline, 15 external_boundary, 19 discharge_future, 6 local.
+**Count.** 45 tracked hypotheses 4 headline, 15 external_boundary, 20 discharge_future, 6 local.
 
 ---
 
@@ -274,6 +274,16 @@
 - **Discharge path.** Phase 6h W4 (Gate Z.4 NEGATIVE / inactive): rigorous only in 2D; 4D needs Catterall mirror decoupling.
 - **Source.** Phase 6h hypercharge-splitting path (asymptotic-safety).
 - **Risk.** Phase 6h inactive; tracked bundle.
+
+### `acoustic_petrov_d_np_classification`
+
+**Statement.** The draining-bathtub / acoustic Kerr-Schild metric is Petrov type D in the full Newman-Penrose sense: the Weyl curvature spinor satisfies the type-D vacuum reformulation Psi_ABCD = Phi_(AB Phi_CD)/S for the KS congruence. DISTINCT from the PROVEN in-tree content (2026-07-20 R-02 rebuild): the genuine Kerr-Schild decomposition with a falsifiable null condition + the exact Sherman-Morrison inverse (`kerrSchild_exact_inverse`), the Maxwell single copy A = phi*k, the derived 3-obstruction BCJ no-go, and `IsPetrovD` in the KS repeated-principal-null sense (KS form + nonzero null congruence).
+
+- status `proposed — NOT consumed by any Lean theorem (the R-02 rebuild dropped the redundant conjunction; WeylSpinor.lean records only the KS precondition). Tracks the residual full-NP-classification claim carried by README/RESEARCH_STATUS_OVERVIEW prose (both updated 2026-07-20 to cite this entry).` · eliminability `very_hard` · module `DoubleCopy/WeylSpinor.lean (documents the gap; the genuine KS content lives in DoubleCopy/PetrovD.lean + SingleCopy.lean + BCJNoGo.lean and KerrSchild.lean)`
+- **Posture.** The acoustic Kerr-Schild metric is type D in the KS repeated-principal-null sense (proven); the full Newman-Penrose Petrov classification and the type-D vacuum reformulation await a spinor formalism absent from Mathlib.
+- **Discharge path.** Requires a Newman-Penrose / 2-spinor formalism absent from Mathlib: spinor dyads, the Weyl spinor decomposition, principal null directions, and the Petrov classification theorem (CK-Duality DR §8.2 flags the same absence for spinor-helicity). A future Phase 6X wave or Mathlib spinor-geometry contribution; Phase 6o-prime Wave 1b-prime tracks it (docs/roadmaps/Phase6o_prime_Roadmap.md).
+- **Source.** Stephani et al., Exact Solutions of Einstein Field Equations (Petrov classification); Monteiro-O'Connell-White JHEP 12 (2014) 056 (Kerr-Schild double copy); Color-Kinematics Duality DR §8.2.
+- **Risk.** Low physically (the draining-bathtub metric being type D is standard in the analog-gravity literature); carried honestly as a landmark. The load-bearing double-copy content (KS + single copy + BCJ no-go) is PROVEN and does not depend on this entry.
 
 ### `acyclic_factor_graph_has_rank_cert`
 
