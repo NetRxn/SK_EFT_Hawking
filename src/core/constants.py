@@ -2549,6 +2549,29 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
         'reason': 'List-length rfl over the 8-candidate NO-GO list = 8. A bookkeeping tally; the proof load is the per-candidate quantitative NO-GO theorems (the substantive content). Disclosed 2026-06-13 (SIG reconcile #9) so disclosure_consistency covers the D5 prose, which previously prose-claimed it "establishes the 8/8 closure".',
         'discloses': 'docstring + D5 prose reframed to "records the 8/8 tally ... classification ledger rather than the proof load"; the per-candidate legs carry the closure.',
     },
+    # Padmanabhan/CosMIn: the ONE Track-B candidate whose NO-GO is genuinely
+    # STRUCTURAL (no verified σ) rather than a numerical exclusion — registered
+    # here 2026-07-20 (review R-04) as a disclosed literature-ledger record.
+    # (The other seven candidates now each carry a genuine falsifier theorem,
+    # bundled in `entropic_gravity_seven_genuine_per_candidate_falsifiers`,
+    # including the new Hossenfelder-Verlinde residual ω_cdm CMB exclusion.)
+    'padmanabhan_cosmin_no_go_no_scalar_perturbation_theory': {
+        'lean_name': 'padmanabhan_cosmin_no_go_no_scalar_perturbation_theory',
+        'module': 'EntropicGravityDarkEnergy', 'category': 'definitional',
+        'reason': 'rfl over the Boolean flag `hasScalarPerturbationTheory .padmanabhanCosMIn = false`. '
+                  'The NO-GO is genuinely STRUCTURAL and carries NO verified σ value: the CosMIn axiom set '
+                  '(H. Padmanabhan & T. Padmanabhan 1302.3226) is evaluated only at the FLRW background '
+                  'level with no Lagrangian scalar degree of freedom, so no scalar perturbation theory is '
+                  'derivable and (w₀, w_a) cannot be matched against DESI DR2\'s perturbation-derived '
+                  'contour. This is a literature-ledger fact about the theory\'s field content, not a '
+                  'numerical comparison — a numerical (w₀, w_a) exclusion is deliberately NOT asserted here '
+                  '(unlike the other seven candidates), because CosMIn cannot even enter that comparison. '
+                  'The Bool flag is the honest encoding of that structural absence.',
+        'discloses': 'EGDE2 docstring ("Encoded as a Boolean flag on the candidate"; "no perturbation '
+                     'theory"; "cannot be matched against DESI DR2\'s perturbation-derived contour"); '
+                     'D5 prose §Phase-6m Track-B ("the closure is structural — there is no Lagrangian '
+                     'scalar to drive sub-Hubble dynamics"); dossier B.2 (Phase-6m Round 5).',
+    },
     # surfaced by the W7 M3 name-pattern broadening (correspondence/preserved/holds):
     'signature_preserved': {
         'lean_name': 'signature_preserved', 'module': 'CenterEquivalenceZ2',
