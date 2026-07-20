@@ -56,6 +56,12 @@ Machinery: `Circle` elements `1` and `-1` (= the two real points); `Finset`/`Fin
 `(Fin 2)⁴`. Sub-wall: identifying `{z : Circle | z⁻¹ = z} = {1, -1}` (a `Circle`-membership computation)
 and transporting to the product.
 
+**⚠ ROUTE SUPERSEDED (lead design pass 2026-07-20): K4–K6 as stated below are replaced by ROUTE B**
+(excise-first / free-quotient / boundary-weld — the singular orbifold carrier is never built; van Kampen
+is off the critical path since `K3RealizingElement` has no π₁ field). Binding brick sequence
+K4′/K5′/K6′a/K6′b + the K8a/K8b split: `docs/dev-loops/Phase5qH/KUMMER_K4K10_DESIGN.md`. The entries
+below are retained as the original scoping record.
+
 **K4 — the quotient orbifold T⁴/τ with 16 A₁ (cone-on-ℝP³) singular points.**  (Open, harder.)
 `T⁴/τ` is a smooth manifold away from the 16 images of the fixed points; near each, the local model is
 `ℝ⁴/±1 = ` cone on `ℝP³` (an A₁ / ordinary double point). Machinery: the project's
