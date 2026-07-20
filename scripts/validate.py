@@ -3138,7 +3138,24 @@ def check_graph_integrity() -> CheckResult:
     else:
         details.append(Detail("conflicts", True, "No verification conflicts"))
 
-    # Orphans are warnings
+    # Orphan CLAIM nodes are a HARD FAIL (R-06 regression guard). Every discovered
+    # paper claim must be CLAIMS-connected to its paper; a non-zero count means
+    # paper/claim discovery drifted out of sync. Distinct from generic orphans
+    # below (unconnected Lean declaration nodes are expected substrate).
+    orphan_claims = s.get('orphan_claims', 0)
+    if orphan_claims > 0:
+        oc_sample = ', '.join(o['id'] for o in report.get('orphan_claims', [])[:5])
+        oc_suffix = f" (+{orphan_claims - 5} more)" if orphan_claims > 5 else ""
+        details.append(Detail(
+            "orphan_claims", False,
+            f"{orphan_claims} orphan paper-claim nodes (no CLAIMS edge to a paper) — "
+            f"paper/claim discovery is out of sync: {oc_sample}{oc_suffix}",
+        ))
+    else:
+        details.append(Detail("orphan_claims", True,
+                              "No orphan paper-claim nodes (all claims CLAIMS-connected)"))
+
+    # Generic orphans (mostly unconnected Lean declaration nodes) are warnings.
     if s['orphans'] > 0:
         orphan_sample = ', '.join(o['id'] for o in report['orphan_nodes'][:5])
         suffix = f" (+{s['orphans'] - 5} more)" if s['orphans'] > 5 else ""
@@ -3187,8 +3204,8 @@ def check_graph_integrity() -> CheckResult:
         details.append(Detail("missing_provenance", True,
                               "All non-projected params have provenance sources"))
 
-    # Only conflicts are hard failures
-    passed = s['conflicts'] == 0
+    # Hard failures: verification conflicts and orphan claim nodes (R-06 guard).
+    passed = s['conflicts'] == 0 and s.get('orphan_claims', 0) == 0
 
     return CheckResult(passed=passed, details=details)
 

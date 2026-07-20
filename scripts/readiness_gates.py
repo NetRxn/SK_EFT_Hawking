@@ -298,6 +298,35 @@ def _eval_computation_correctness(paper: dict, idx: GraphIndex) -> GateResult:
         f'({len(strong)} with golden/identity/roundtrip, '
         f'{len(bounds_only)} bounds-only, {len(no_tests)} no tests)'
     )
+
+    # R-06 WARN: surface formulas this paper grounds on whose Lean grounding does
+    # NOT resolve to a real theorem (graph verification 'unverified') or is only a
+    # definitional record — the honest-label distinction. This is advisory (it does
+    # not change the test-coverage blocking semantics above) but makes an
+    # unresolved formula mapping visible instead of silently accepted.
+    unresolved_grounding = sorted(
+        fid.replace('formula:', '', 1)
+        for fid in formula_ids
+        if fid in idx.by_id and idx.by_id[fid].get('verification') == 'unverified'
+    )
+    definitional_grounding = sorted(
+        fid.replace('formula:', '', 1)
+        for fid in formula_ids
+        if fid in idx.by_id
+        and idx.by_id[fid].get('verification') == 'definitional-record'
+    )
+    if unresolved_grounding:
+        r.evidence.append(
+            f'WARN: {len(unresolved_grounding)} grounding formula(s) have no '
+            f'resolving Lean theorem (unverified): '
+            f'{", ".join(unresolved_grounding[:10])}'
+        )
+    if definitional_grounding:
+        r.evidence.append(
+            f'NOTE: {len(definitional_grounding)} grounding formula(s) are '
+            f'definitional records (not independent derivations): '
+            f'{", ".join(definitional_grounding[:10])}'
+        )
     if bounds_only or no_tests:
         r.blockers = (
             [f'bounds-only: {b.replace("formula:","",1)}' for b in bounds_only[:10]] +

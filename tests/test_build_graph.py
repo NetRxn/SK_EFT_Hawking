@@ -50,10 +50,13 @@ from scripts.build_graph import (
     extract_claims_edges,
     extract_verified_by_edges,
     extract_sourced_from_edges,
+    discover_paper_draft_paths,
     build_graph_json,
     compute_source_hash,
     SHAPE_MAP,
 )
+
+PAPERS_DIR = PROJECT_ROOT / "papers"
 
 _REQUIRED_NODE_FIELDS = {'id', 'type', 'label', 'name', 'verification', 'detail', 'meta'}
 
@@ -101,6 +104,38 @@ class TestExtractFormulaNodes:
         ht = ht_nodes[0]
         assert len(ht['meta']['lean_refs']) > 0
 
+    def test_formula_verification_is_resolution_based(self):
+        """R-06 honest-labels: a formula is 'verified' only when a Lean ref
+        actually RESOLVES (present in lean_deps.json), never on the mere presence
+        of a `Lean:` string. Every 'verified' formula must have >=1 resolved ref;
+        an 'unverified' formula must have 0 resolved refs."""
+        nodes = extract_formula_nodes()
+        # These metadata keys exist regardless of build state.
+        for n in nodes:
+            assert 'lean_refs_resolved' in n['meta']
+            assert 'lean_refs_dangling' in n['meta']
+        # If resolution was actually checked (lean_deps.json present), the label
+        # must agree with the resolved-ref set.
+        checked = [n for n in nodes if n['meta'].get('lean_resolution_checked')]
+        if checked:
+            for n in checked:
+                if n['verification'] == 'verified':
+                    assert n['meta']['lean_refs_resolved'], (
+                        f"{n['name']} labelled verified but no ref resolves")
+                if n['verification'] == 'unverified':
+                    assert not n['meta']['lean_refs_resolved'], (
+                        f"{n['name']} labelled unverified but a ref resolves")
+
+    def test_definitional_record_formulas_labelled_honestly(self):
+        """R-06 + R-05: a formula grounded only on a declared definitional-record
+        theorem (identity wrapper / rfl) is labelled 'definitional-record', not
+        'verified'. wrt_s2xs1 grounds on wrt_S2xS1_eq_rank (a rfl equality)."""
+        nodes = {n['name']: n for n in extract_formula_nodes()}
+        wrt = nodes.get('wrt_s2xs1')
+        if wrt is not None and wrt['meta'].get('lean_resolution_checked'):
+            assert wrt['verification'] == 'definitional-record', (
+                f"wrt_s2xs1 should be definitional-record, got {wrt['verification']}")
+
 
 class TestExtractLeanTheoremNodes:
     """Tests for extract_lean_theorem_nodes()."""
@@ -138,6 +173,24 @@ class TestExtractPaperNodes:
         """Count >= 7 (project has 8 paper entries)."""
         nodes = extract_paper_nodes()
         assert len(nodes) >= 7
+
+    def test_bundle_dirs_discovered(self):
+        """R-06: publication-target bundle directories (D*, E*, F, I*, L*) are
+        discovered as paper nodes, not just the legacy paper*_* dirs."""
+        labels = {n['label'] for n in extract_paper_nodes()}
+        # At least these bundle targets must appear if they exist on disk.
+        for bundle in ('D1', 'D2', 'E1', 'F', 'I1', 'L1'):
+            if (PAPERS_DIR / bundle / "paper_draft.tex").exists():
+                assert bundle in labels, f"bundle {bundle} not discovered as a paper node"
+
+    def test_discover_paper_draft_paths_matches_glob(self):
+        """discover_paper_draft_paths finds every papers/*/paper_draft.tex."""
+        found = {p.parent.name for p in discover_paper_draft_paths(PAPERS_DIR)}
+        expected = {p.parent.name for p in PAPERS_DIR.glob("*/paper_draft.tex")}
+        assert found == expected
+        # And it is a strict superset of the old paper*_* glob.
+        legacy = {p.parent.name for p in PAPERS_DIR.glob("paper*_*/paper_draft.tex")}
+        assert legacy <= found
 
 
 class TestExtractPaperClaimNodes:
@@ -229,6 +282,31 @@ class TestEdgeIntegrity:
             assert e['type'] == 'CLAIMS'
             assert e['source'].startswith('paper:')
             assert e['target'].startswith('claim:')
+
+    def test_every_claim_node_has_a_claims_edge(self):
+        """R-06 core: every discovered PaperClaim node (declared, tex-auto, OR
+        bundle-discovered) is CLAIMS-connected to its paper — zero orphan claims.
+        The pre-remediation graph had 128 orphan claims because CLAIMS edges were
+        driven from PAPER_DEPENDENCIES.key_claims alone."""
+        nodes = extract_all_nodes()
+        node_ids = {n['id'] for n in nodes}
+        claim_ids = {n['id'] for n in nodes if n['type'] == 'PaperClaim'}
+        claimed = {e['target'] for e in extract_claims_edges(node_ids)}
+        orphans = claim_ids - claimed
+        assert not orphans, f"{len(orphans)} orphan claim(s): {sorted(orphans)[:10]}"
+
+    def test_claims_edges_cover_bundle_claims(self):
+        """R-06: claims on a bundle paper (e.g. D1) get CLAIMS edges too."""
+        nodes = extract_all_nodes()
+        node_ids = {n['id'] for n in nodes}
+        edges = extract_claims_edges(node_ids)
+        if 'paper:D1' in node_ids:
+            d1_claims = {e['target'] for e in edges if e['source'] == 'paper:D1'}
+            d1_claim_nodes = {n['id'] for n in nodes
+                              if n['type'] == 'PaperClaim'
+                              and n['meta'].get('paper') == 'D1'}
+            if d1_claim_nodes:
+                assert d1_claim_nodes <= d1_claims
 
     def test_verified_by_edges_exist(self):
         """VERIFIED_BY edges connect formulas to Lean theorems."""

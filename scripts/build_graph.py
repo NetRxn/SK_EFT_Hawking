@@ -22,6 +22,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import functools
 import hashlib
 import importlib
 import importlib.util
@@ -113,6 +114,30 @@ _AUTOGEN_SHORT_RE = re.compile(
 # node IDs so short-name collisions surface as ambiguity (logged + skipped)
 # instead of silent drops.
 _LEAN_SHORT_INDEX: dict[str, list[str]] = {}
+
+
+def discover_paper_draft_paths(papers_dir: Path) -> list[Path]:
+    """All publication-target paper drafts on disk: every ``papers/*/paper_draft.tex``.
+
+    R-06 (2026-07-20 remediation): the previous ``paper*_*/paper_draft.tex`` glob
+    was blind to the 20 bundle directories (D1–D10, E1–E2, F, I1–I3, L1–L3) that
+    ARE the canonical publication targets (``docs/PAPER_STRATEGY.md``), plus the
+    ``note_rt_ch_bounds`` note — 20 drafts that were entirely graph-invisible (no
+    paper node, no claim nodes, no edges). Separately, the CLAIMS-edge extractor
+    was driven from ``PAPER_DEPENDENCIES`` alone, so tex-auto claim nodes on the
+    discovered ``paper*_*`` papers had no incoming CLAIMS edge (128 orphan claims
+    together with the — then undiscovered — bundle claims).
+
+    Discovering every ``*/paper_draft.tex`` subdirectory (a) subsumes both the
+    historical ``paper*_*`` set and the bundle set, (b) is robust to new bundles
+    being added, and (c) naturally excludes ``AutomatedReviews/`` and
+    ``experimental_predictions/`` (neither carries a ``paper_draft.tex``). All
+    node/edge extractors route through this one helper so discovery cannot drift
+    between them.
+    """
+    if not papers_dir.exists():
+        return []
+    return sorted(papers_dir.glob("*/paper_draft.tex"))
 
 
 # Seen-ambiguity dedup: log each unique ambiguous short name at WARNING
@@ -296,10 +321,102 @@ def _safe_json_value(val):
     return str(val)
 
 
+@functools.lru_cache(maxsize=1)
+def _lean_ref_resolution_index() -> frozenset:
+    """All resolvable Lean name-forms from ``lean_deps.json``: each full name,
+    every dotted suffix, and every short (last-segment) name.
+
+    Mirrors the resolution used by ``validate.py``'s ``formula_grounding`` gate so
+    the graph's formula-node ``verification`` label agrees with the gate. Cached
+    (the deps file is read-only during a build). Empty when the file is absent —
+    callers then fall back to the pre-R-06 has-lean-ref behaviour so an unbuilt
+    ``lean_deps.json`` never spuriously downgrades every formula.
+    """
+    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
+    if not deps_path.exists():
+        return frozenset()
+    try:
+        deps = json.loads(deps_path.read_text())
+    except (OSError, ValueError):
+        return frozenset()
+    forms: set[str] = set()
+    for d in deps:
+        n = d.get("name", "")
+        if not n:
+            continue
+        forms.add(n)
+        segs = n.split(".")
+        forms.add(segs[-1])
+        for i in range(1, len(segs)):
+            forms.add(".".join(segs[i:]))
+    return frozenset(forms)
+
+
+def _clean_lean_ref(ref: str) -> str | None:
+    """Normalise a raw ``Lean:`` docstring token to a bare declaration name, or
+    return ``None`` if the token is not a declaration-name claim at all.
+
+    Mirrors ``validate.py``'s ``_parse_formula_lean_refs`` filtering so the graph
+    label agrees with the ``formula_grounding`` gate: strips a trailing
+    ``(Module.lean)`` annotation and trailing punctuation, and rejects non-decl
+    artifacts — bare ``*.lean`` file names, the literal ``pending``, ``_``-prefixed
+    fragments, all-caps matrix-element labels (``K0E0``), and ≤2-char stubs.
+    Rejected tokens are IGNORED (they are not grounding claims), never counted as
+    dangling — so a docstring that also cites a source file next to a real theorem
+    is not spuriously downgraded.
+    """
+    # Drop any trailing prose description after an em/en-dash or ' - ', strip a
+    # parenthetical module annotation, then take the leading whitespace-delimited
+    # token (the declaration name; the old extractor split on the first space).
+    head = re.split(r"[—–]\s|\s-\s", ref)[0]
+    head = re.sub(r"\(.*?\)", "", head).strip()
+    if not head:
+        return None
+    tok = head.split()[0].rstrip(".;,").strip()
+    if not re.fullmatch(r"[A-Za-z_][\w.]*", tok) or len(tok) <= 2:
+        return None
+    if tok.endswith(".lean") or tok == "pending" or tok.startswith("_"):
+        return None
+    if re.fullmatch(r"[A-Z][A-Z0-9]{0,4}", tok):  # matrix-element labels (K0E0)
+        return None
+    return tok
+
+
+@functools.lru_cache(maxsize=1)
+def _definitional_record_grounding_shorts() -> frozenset:
+    """Lean short names declared ``grounding_kind='definitional-record'`` in
+    ``FORMULA_GROUNDING_KIND`` (R-05). A formula grounded on one of these is an
+    honest DEFINITIONAL RECORD, not a verified derivation, and is labelled as
+    such in the graph rather than ``verified`` (R-06 honest-labels)."""
+    try:
+        from src.core.constants import FORMULA_GROUNDING_KIND
+    except ImportError:
+        return frozenset()
+    return frozenset(
+        short for short, meta in FORMULA_GROUNDING_KIND.items()
+        if meta.get("kind") == "definitional-record"
+    )
+
+
 def extract_formula_nodes() -> list[dict]:
-    """Extract formula nodes from function definitions in formulas.py."""
+    """Extract formula nodes from function definitions in formulas.py.
+
+    Verification label (R-06 honest-labels, 2026-07-20): a formula is
+    ``verified`` only when at least one of its ``Lean:`` references RESOLVES to a
+    real declaration in ``lean_deps.json`` — never on the mere presence of a
+    ``Lean:`` string (the old rule). A formula grounded exclusively on a declared
+    R-05 ``definitional-record`` (identity wrapper / rfl equality) is labelled
+    ``definitional-record`` (an honest evidence class, not a derivation). A
+    formula that carries ``Lean:`` refs none of which resolve is ``unverified``,
+    with the dangling refs recorded in ``meta`` so the drift is visible. When
+    ``lean_deps.json`` is absent (unbuilt tree) the extractor falls back to the
+    pre-R-06 has-lean-ref labelling so it never spuriously downgrades everything.
+    """
     formulas_path = PROJECT_ROOT / "src" / "core" / "formulas.py"
     source = formulas_path.read_text()
+
+    resolvable = _lean_ref_resolution_index()
+    defl_shorts = _definitional_record_grounding_shorts()
 
     # Parse function definitions and their docstrings
     pattern = re.compile(
@@ -342,9 +459,32 @@ def extract_formula_nodes() -> list[dict]:
             source_matches = re.findall(r'Source:\s*(.+?)(?:\n|$)', docstring)
             source_refs = [s.strip() for s in source_matches]
 
-        # Determine verification and detail
+        # Determine verification and detail.
+        # R-06: 'verified' requires an actually-RESOLVING Lean reference, not the
+        # mere presence of a `Lean:` string. Cross-checked against lean_deps.json.
         has_lean = len(lean_refs) > 0
-        verification = 'verified' if has_lean else 'unverified'
+        clean_refs = [r for r in (_clean_lean_ref(x) for x in lean_refs) if r]
+        if resolvable:
+            resolved_refs = [r for r in clean_refs if r in resolvable]
+            dangling_refs = [r for r in clean_refs if r not in resolvable]
+            resolved_defl = [r for r in resolved_refs
+                             if r.split('.')[-1] in defl_shorts]
+            if not resolved_refs:
+                # No `Lean:` ref, or refs present but NONE resolve — a stale-name
+                # drift. Not verified. Dangling refs surfaced in meta.
+                verification = 'unverified'
+            elif len(resolved_defl) == len(resolved_refs):
+                # Every RESOLVING ref is a declared R-05 definitional record →
+                # the formula is grounded only on definitional records, not on an
+                # independent derivation. Label it honestly.
+                verification = 'definitional-record'
+            else:
+                verification = 'verified'
+        else:
+            # lean_deps.json absent — preserve legacy behaviour (build-order
+            # robustness); annotate that resolution was not checked.
+            resolved_refs, dangling_refs = [], []
+            verification = 'verified' if has_lean else 'unverified'
 
         # First line of docstring description
         formula_detail = ''
@@ -363,6 +503,9 @@ def extract_formula_nodes() -> list[dict]:
             'detail': formula_detail,
             'meta': {
                 'lean_refs': lean_refs,
+                'lean_refs_resolved': resolved_refs,
+                'lean_refs_dangling': dangling_refs,
+                'lean_resolution_checked': bool(resolvable),
                 'aristotle_refs': aristotle_refs,
                 'source_refs': source_refs,
             },
@@ -674,7 +817,7 @@ def extract_paper_nodes() -> list[dict]:
 
     # Start from filesystem (ground truth)
     if papers_dir.exists():
-        for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+        for tex_path in discover_paper_draft_paths(papers_dir):
             key = tex_path.parent.name  # e.g. "paper1_first_order"
             entry = PAPER_DEPENDENCIES.get(key, {})
             title = (
@@ -852,7 +995,7 @@ def extract_paper_claim_nodes() -> list[dict]:
                 })
         return nodes
 
-    for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+    for tex_path in discover_paper_draft_paths(papers_dir):
         paper_key = tex_path.parent.name
         entry = PAPER_DEPENDENCIES.get(paper_key, {})
         declared = entry.get('key_claims', [])
@@ -1042,7 +1185,7 @@ def extract_prose_claim_nodes() -> list[dict]:
     nodes = []
     seen_ids: set[str] = set()
 
-    for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+    for tex_path in discover_paper_draft_paths(papers_dir):
         paper_key = tex_path.parent.name
         try:
             text = tex_path.read_text()
@@ -2426,22 +2569,37 @@ def extract_all_nodes() -> list[dict]:
 # ═══════════════════════════════════════════════════════════════════════
 
 def extract_claims_edges(node_ids: set) -> list[dict]:
-    """CLAIMS: Paper -> PaperClaim."""
-    from src.core.provenance import PAPER_DEPENDENCIES
+    """CLAIMS: Paper -> PaperClaim.
 
+    Driven from the claim NODES present in the graph, NOT from
+    ``PAPER_DEPENDENCIES`` (R-06 remediation, 2026-07-20). The previous
+    implementation iterated ``PAPER_DEPENDENCIES`` and only emitted an edge for
+    each ``range(len(key_claims))``, so every tex-auto claim node (a claim on a
+    paper with no declared ``key_claims``) — and every bundle-discovered claim —
+    was left CLAIMS-orphaned (128 orphan claims). Claim node IDs encode the paper
+    key as ``claim:{paper_key}:{idx}``; we recover the key from the node ID and
+    connect it to ``paper:{paper_key}`` whenever both nodes exist. This connects
+    every discovered claim (declared, tex-auto, or bundle) to its paper and drives
+    the orphan-claim count to 0.
+    """
     edges = []
-    for paper_key, entry in PAPER_DEPENDENCIES.items():
-        paper_id = f'paper:{paper_key}'
-        if paper_id not in node_ids:
+    for nid in node_ids:
+        if not nid.startswith('claim:'):
             continue
-        for idx in range(len(entry.get('key_claims', []))):
-            claim_id = f'claim:{paper_key}:{idx}'
-            if claim_id in node_ids:
-                edges.append({
-                    'source': paper_id,
-                    'target': claim_id,
-                    'type': 'CLAIMS',
-                })
+        # claim:{paper_key}:{idx} — idx is the trailing integer; the paper key
+        # may itself contain no ':' (directory names never do), so split from
+        # the right once to isolate the index and recover the exact key.
+        prefix, sep, idx = nid.rpartition(':')
+        if not sep or not idx.isdigit():
+            continue
+        paper_key = prefix[len('claim:'):]
+        paper_id = f'paper:{paper_key}'
+        if paper_id in node_ids:
+            edges.append({
+                'source': paper_id,
+                'target': nid,
+                'type': 'CLAIMS',
+            })
 
     return edges
 
@@ -2718,7 +2876,7 @@ def extract_has_figure_edges(node_ids: set) -> list[dict]:
     seen: set[tuple[str, str]] = set()
     unresolved_counter: dict[str, int] = {}
 
-    for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+    for tex_path in discover_paper_draft_paths(papers_dir):
         paper_key = tex_path.parent.name
         paper_id = f'paper:{paper_key}'
         if paper_id not in node_ids:
@@ -2888,7 +3046,7 @@ def extract_cites_source_edges(node_ids: set) -> list[dict]:
 
     edges = []
     seen: set[tuple[str, str]] = set()
-    for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+    for tex_path in discover_paper_draft_paths(papers_dir):
         paper_key = tex_path.parent.name
         paper_id = f'paper:{paper_key}'
         if paper_id not in node_ids:
@@ -2960,7 +3118,7 @@ def extract_cites_theorem_edges(node_ids: set) -> list[dict]:
         r'\\textsc\{([A-Za-z_][A-Za-z0-9_\\]*?)\}|'
         r'\\verb\|([A-Za-z_][A-Za-z0-9_\\]*?)\|'
     )
-    for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+    for tex_path in discover_paper_draft_paths(papers_dir):
         paper_key = tex_path.parent.name
         paper_id = f'paper:{paper_key}'
         if paper_id not in node_ids:
@@ -3022,7 +3180,7 @@ def extract_reports_edges(node_ids: set) -> list[dict]:
 
     edges = []
     seen: set[tuple[str, str, int]] = set()  # (paper_id, target, value) triples
-    for tex_path in sorted(papers_dir.glob("paper*_*/paper_draft.tex")):
+    for tex_path in discover_paper_draft_paths(papers_dir):
         paper_key = tex_path.parent.name
         paper_id = f'paper:{paper_key}'
         if paper_id not in node_ids:
@@ -3571,6 +3729,10 @@ def build_graph_json(*, sync_pg: bool = False) -> dict:
     the graph is cached upstream.
     """
     _reset_lean_ambiguity_log()  # fresh dedup per build
+    # Drop the cached Lean-resolution index so a long-lived process (dashboard)
+    # that rebuilds after a lean_deps.json re-extraction re-derives honest
+    # formula-verification labels instead of reusing a stale resolution set.
+    _lean_ref_resolution_index.cache_clear()
     nodes = extract_all_nodes()
     node_ids = {n['id'] for n in nodes}
     edges = extract_all_edges(node_ids)
