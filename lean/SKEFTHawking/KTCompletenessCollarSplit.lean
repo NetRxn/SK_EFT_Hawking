@@ -201,6 +201,64 @@ theorem finiteDimensional_homology_sub_range_fromHandle (n : ℕ) :
     (handleRangeHomeo (ktHandleAttachment s.M D5 S hS φ hφ hφinj)).symm n
     (finiteDimensional_homology_D5_all n)
 
+/-! ## §D. The `hA`/`hB` discharge, reduced to the collar-collapse homotopy equivalence. -/
+
+variable (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+  (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+  (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+
+/-- **The `hA` discharge, given the collar-collapse deformation retraction.** The collar-thickened
+cyl piece `coverA = range fromCyl ∪ cd.seamNbhd` is homotopy-equivalent to the closed cyl end
+`range fromCyl` (the collar-collapse deformation retraction — the geometrically-honest replacement
+for the false homeomorphism `eA`). Given that homotopy equivalence
+(`f`/`g`/`Hgf`/`Hfg` — the retraction, the inclusion, and the two witnessing homotopies), the
+all-degree homology finiteness `hA` of `coverA` transfers from the closed cyl end's banked
+finiteness (§C `finiteDimensional_homology_sub_range_fromCyl`) through §A's all-degree
+homotopy-equivalence transfer. This is `hA` reduced to EXACTLY the collar-collapse homotopy
+equivalence — the residual the `CollarSplitDatum` collar slide supplies geometrically. -/
+theorem finiteDimensional_homology_coverA_of_htpyEquiv
+    (f : C(↑(sub (coverA s t S hS φ hφ hφinj cd hseam d)),
+        ↑(sub (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl))))
+    (g : C(↑(sub (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl)),
+        ↑(sub (coverA s t S hS φ hφ hφinj cd hseam d))))
+    (Hgf : C(↑(sub (coverA s t S hS φ hφ hφinj cd hseam d)) × unitInterval,
+        ↑(sub (coverA s t S hS φ hφ hφinj cd hseam d))))
+    (hgf0 : slice Hgf 0 = g.comp f) (hgf1 : slice Hgf 1 = ContinuousMap.id _)
+    (Hfg : C(↑(sub (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl)) × unitInterval,
+        ↑(sub (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl))))
+    (hfg0 : slice Hfg 0 = f.comp g) (hfg1 : slice Hfg 1 = ContinuousMap.id _) (n : ℕ) :
+    FiniteDimensional (ZMod 2) (Homology (sub (coverA s t S hS φ hφ hφinj cd hseam d)) n) :=
+  finiteDimensional_homology_of_homotopyEquiv_all f g Hgf hgf0 hgf1 Hfg hfg0 hfg1 n
+    (finiteDimensional_homology_sub_range_fromCyl s S hS φ hφ hφinj n)
+
+/-- **The `hB` discharge, given the collar-collapse deformation retraction.** Symmetric to
+`finiteDimensional_homology_coverA_of_htpyEquiv`: the collar-thickened handle piece
+`coverB = range fromHandle ∪ cd.seamNbhd` is homotopy-equivalent to the closed handle end
+`range fromHandle` (`≃ D⁵`), so `hB` transfers from §C's
+`finiteDimensional_homology_sub_range_fromHandle`. -/
+theorem finiteDimensional_homology_coverB_of_htpyEquiv
+    (f : C(↑(sub (coverB s t S hS φ hφ hφinj cd hseam d)),
+        ↑(sub (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle))))
+    (g : C(↑(sub (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle)),
+        ↑(sub (coverB s t S hS φ hφ hφinj cd hseam d))))
+    (Hgf : C(↑(sub (coverB s t S hS φ hφ hφinj cd hseam d)) × unitInterval,
+        ↑(sub (coverB s t S hS φ hφ hφinj cd hseam d))))
+    (hgf0 : slice Hgf 0 = g.comp f) (hgf1 : slice Hgf 1 = ContinuousMap.id _)
+    (Hfg : C(↑(sub (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle)) × unitInterval,
+        ↑(sub (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle))))
+    (hfg0 : slice Hfg 0 = f.comp g) (hfg1 : slice Hfg 1 = ContinuousMap.id _) (n : ℕ) :
+    FiniteDimensional (ZMod 2) (Homology (sub (coverB s t S hS φ hφ hφinj cd hseam d)) n) :=
+  finiteDimensional_homology_of_homotopyEquiv_all f g Hgf hgf0 hgf1 Hfg hfg0 hfg1 n
+    (finiteDimensional_homology_sub_range_fromHandle s S hS φ hφ hφinj n)
+
 end
 
 end SKEFTHawking.KTCompletenessCollarSplit
