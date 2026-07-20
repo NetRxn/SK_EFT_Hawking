@@ -801,6 +801,374 @@ zero section is well-defined (the base gluing `z ↦ z⁻¹` is exactly the `w =
 theorem clutch_zero_fiber (z : ℂ) : clutch (z, 0) = (z⁻¹, 0) := by
   simp only [clutch, mul_zero]
 
+/-! ## §5. Compactness of `E`, `S³`, `ℝP³` (the compact-to-T2 homeomorphism prerequisites)
+
+The two-chart carrier `E`, the sphere `S³`, and the antipodal quotient `ℝP³` are all compact:
+`D²` is a closed ball (compact), `E` and `ℝP³` are quotients of compact spaces, and `S³` is a
+closed bounded subset of the finite-dimensional `ℂ²`. Compactness of `ℝP³` (source) plus
+Hausdorffness of `E` (target, §6) is what upgrades the continuous bijection `ρ̄` to a homeomorphism
+(`Continuous.homeoOfEquivCompactToT2`). -/
+
+/-- The closed fiber/base disk `D²` is compact (a closed ball in `ℂ`). -/
+instance : CompactSpace Disk := by
+  have hset : {z : ℂ | ‖z‖ ≤ 1} = Metric.closedBall 0 1 := by
+    ext z; simp [Metric.mem_closedBall, dist_eq_norm]
+  have : IsCompact {z : ℂ | ‖z‖ ≤ 1} := by rw [hset]; exact isCompact_closedBall 0 1
+  exact isCompact_iff_compactSpace.mp this
+
+/-- A single disk-bundle chart `D² × D²` is compact. -/
+instance : CompactSpace ResChart := inferInstanceAs (CompactSpace (Disk × Disk))
+
+/-- The two-chart disjoint union is compact. -/
+instance : CompactSpace (ResChart ⊕ ResChart) := inferInstanceAs (CompactSpace (ResChart ⊕ ResChart))
+
+/-- **`E` is compact** — a quotient of the compact two-chart disjoint union. -/
+instance : CompactSpace ResE := inferInstanceAs (CompactSpace (Quotient resSetoid))
+
+/-- **`S³ ⊂ ℂ²` is compact** — a closed, bounded subset of the finite-dimensional (proper) `ℂ²`. -/
+instance : CompactSpace S3 := by
+  have hcont : Continuous fun p : ℂ × ℂ => ‖p.1‖ ^ 2 + ‖p.2‖ ^ 2 :=
+    ((continuous_norm.comp continuous_fst).pow 2).add ((continuous_norm.comp continuous_snd).pow 2)
+  have hclosed : IsClosed {p : ℂ × ℂ | ‖p.1‖ ^ 2 + ‖p.2‖ ^ 2 = 1} :=
+    isClosed_eq hcont continuous_const
+  have hsub : {p : ℂ × ℂ | ‖p.1‖ ^ 2 + ‖p.2‖ ^ 2 = 1} ⊆ Metric.closedBall 0 1 := by
+    intro p hp
+    simp only [Set.mem_setOf_eq] at hp
+    rw [Metric.mem_closedBall, dist_eq_norm, sub_zero, Prod.norm_def, max_le_iff]
+    constructor <;> nlinarith [norm_nonneg p.1, norm_nonneg p.2, sq_nonneg ‖p.1‖, sq_nonneg ‖p.2‖]
+  have hbdd : Bornology.IsBounded {p : ℂ × ℂ | ‖p.1‖ ^ 2 + ‖p.2‖ ^ 2 = 1} :=
+    Metric.isBounded_closedBall.subset hsub
+  exact isCompact_iff_compactSpace.mp (Metric.isCompact_iff_isClosed_bounded.mpr ⟨hclosed, hbdd⟩)
+
+/-- **`ℝP³` is compact** — a quotient of the compact `S³`. -/
+instance : CompactSpace RP3 := inferInstanceAs (CompactSpace (Quotient antipSetoid))
+
+/-! ## §6. Continuity of the boundary map `ρ : S³ → E` and its descent `ρ̄ : ℝP³ → E`
+
+`bdryMap` is defined piecewise on the two hemispheres `‖a‖ ≤ ‖b‖` / `‖a‖ ≥ ‖b‖`, glued at the
+equator seam `‖a‖ = ‖b‖`. Continuity is by pasting the two chart branches over the closed
+hemisphere cover; the seam agreement is exactly the weld (`hopf_clutch` + `chart_glue`). Descent to
+`ρ̄` is then automatic (`Continuous.quotient_lift`). -/
+
+/-- **The chart-1 closed form of `ρ` on the hemisphere `‖b‖ ≤ ‖a‖`.** On the whole closed
+hemisphere (INCLUDING the seam `‖a‖ = ‖b‖`, where `bdryMap` uses the chart-0 branch), `bdryMap x`
+equals the single chart-1 value `chart1 ⟨b/a, (a/‖a‖)²⟩`; on the seam this is the weld
+(`chart_glue` ∘ `hopf_clutch`). This is what makes `bdryMap` continuous on the chart-1 hemisphere. -/
+theorem bdryMap_chart1_of_snd_le {x : S3} (h : ‖x.1.2‖ ≤ ‖x.1.1‖) :
+    bdryMap x = chart1 (⟨x.1.2 / x.1.1, by
+        rw [norm_div]; exact (div_le_one (norm_pos_iff.mpr (S3_fst_ne_zero h))).mpr h⟩,
+      ⟨(x.1.1 / (‖x.1.1‖ : ℂ)) ^ 2, le_of_eq (fiber_norm_eq_one (S3_fst_ne_zero h))⟩) := by
+  have ha : x.1.1 ≠ 0 := S3_fst_ne_zero h
+  by_cases hc : ‖x.1.1‖ ≤ ‖x.1.2‖
+  · -- seam `‖a‖ = ‖b‖`: `bdryMap` uses chart 0; weld it to chart 1
+    have hab : ‖x.1.1‖ = ‖x.1.2‖ := le_antisymm hc h
+    have hb : x.1.2 ≠ 0 := by
+      rw [← norm_ne_zero_iff, ← hab]; exact norm_ne_zero_iff.mpr ha
+    unfold bdryMap
+    rw [dif_pos hc]
+    set p : ResChart := (⟨x.1.1 / x.1.2, by
+        rw [norm_div]; exact (div_le_one (norm_pos_iff.mpr hb)).mpr hc⟩,
+      ⟨(x.1.2 / (‖x.1.2‖ : ℂ)) ^ 2, le_of_eq (fiber_norm_eq_one hb)⟩) with hp
+    have hz : ‖(p.1 : ℂ)‖ = 1 := by
+      show ‖x.1.1 / x.1.2‖ = 1
+      rw [norm_div, hab, div_self (norm_ne_zero_iff.mpr hb)]
+    rw [chart_glue hz]
+    obtain ⟨hc1, hc2⟩ := hopf_clutch ha hb hab p rfl rfl hz
+    exact congrArg chart1 (Prod.ext (Subtype.ext hc1) (Subtype.ext hc2))
+  · -- interior `‖b‖ < ‖a‖`: `bdryMap` uses the chart-1 branch directly
+    unfold bdryMap
+    rw [dif_neg hc]
+
+/-- **`ρ : S³ → E` is continuous.** By pasting the two chart branches over the closed hemisphere
+cover `{‖a‖ ≤ ‖b‖} ∪ {‖b‖ ≤ ‖a‖} = S³`; the branches agree on the seam by `bdryMap_chart1_of_snd_le`.
+-/
+theorem continuous_bdryMap : Continuous bdryMap := by
+  have hnf : Continuous fun x : S3 => ‖x.1.1‖ :=
+    continuous_norm.comp (continuous_fst.comp continuous_subtype_val)
+  have hns : Continuous fun x : S3 => ‖x.1.2‖ :=
+    continuous_norm.comp (continuous_snd.comp continuous_subtype_val)
+  have hAclosed : IsClosed {x : S3 | ‖x.1.1‖ ≤ ‖x.1.2‖} := isClosed_le hnf hns
+  have hBclosed : IsClosed {x : S3 | ‖x.1.2‖ ≤ ‖x.1.1‖} := isClosed_le hns hnf
+  -- chart-0 branch is continuous on the `‖a‖ ≤ ‖b‖` hemisphere
+  have hcontA : ContinuousOn bdryMap {x : S3 | ‖x.1.1‖ ≤ ‖x.1.2‖} := by
+    rw [continuousOn_iff_continuous_restrict]
+    have hne : ∀ x : {x : S3 // ‖x.1.1‖ ≤ ‖x.1.2‖}, x.1.1.2 ≠ 0 := fun x => S3_snd_ne_zero x.2
+    have hbase : Continuous fun x : {x : S3 // ‖x.1.1‖ ≤ ‖x.1.2‖} => x.1.1.1 / x.1.1.2 :=
+      Continuous.div
+        (continuous_fst.comp (continuous_subtype_val.comp continuous_subtype_val))
+        (continuous_snd.comp (continuous_subtype_val.comp continuous_subtype_val)) hne
+    have hfib : Continuous fun x : {x : S3 // ‖x.1.1‖ ≤ ‖x.1.2‖} =>
+        (x.1.1.2 / (‖x.1.1.2‖ : ℂ)) ^ 2 := by
+      refine Continuous.pow (Continuous.div
+        (continuous_snd.comp (continuous_subtype_val.comp continuous_subtype_val))
+        (Complex.continuous_ofReal.comp
+          (continuous_norm.comp (continuous_snd.comp (continuous_subtype_val.comp continuous_subtype_val))))
+        (fun x => ?_)) 2
+      simpa [Complex.ofReal_ne_zero] using norm_ne_zero_iff.mpr (hne x)
+    refine (continuous_chart0.comp (Continuous.prodMk
+      (hbase.subtype_mk (fun x => by
+        rw [norm_div]; exact (div_le_one (norm_pos_iff.mpr (hne x))).mpr x.2))
+      (hfib.subtype_mk (fun x => by exact le_of_eq (fiber_norm_eq_one (hne x)))))).congr (fun x => ?_)
+    rw [Set.restrict_apply, Function.comp_apply]
+    unfold bdryMap
+    rw [dif_pos x.2]
+  -- chart-1 branch is continuous on the `‖b‖ ≤ ‖a‖` hemisphere
+  have hcontB : ContinuousOn bdryMap {x : S3 | ‖x.1.2‖ ≤ ‖x.1.1‖} := by
+    rw [continuousOn_iff_continuous_restrict]
+    have hne : ∀ x : {x : S3 // ‖x.1.2‖ ≤ ‖x.1.1‖}, x.1.1.1 ≠ 0 := fun x => S3_fst_ne_zero x.2
+    have hbase : Continuous fun x : {x : S3 // ‖x.1.2‖ ≤ ‖x.1.1‖} => x.1.1.2 / x.1.1.1 :=
+      Continuous.div
+        (continuous_snd.comp (continuous_subtype_val.comp continuous_subtype_val))
+        (continuous_fst.comp (continuous_subtype_val.comp continuous_subtype_val)) hne
+    have hfib : Continuous fun x : {x : S3 // ‖x.1.2‖ ≤ ‖x.1.1‖} =>
+        (x.1.1.1 / (‖x.1.1.1‖ : ℂ)) ^ 2 := by
+      refine Continuous.pow (Continuous.div
+        (continuous_fst.comp (continuous_subtype_val.comp continuous_subtype_val))
+        (Complex.continuous_ofReal.comp
+          (continuous_norm.comp (continuous_fst.comp (continuous_subtype_val.comp continuous_subtype_val))))
+        (fun x => ?_)) 2
+      simpa [Complex.ofReal_ne_zero] using norm_ne_zero_iff.mpr (hne x)
+    refine (continuous_chart1.comp (Continuous.prodMk
+      (hbase.subtype_mk (fun x => by
+        rw [norm_div]; exact (div_le_one (norm_pos_iff.mpr (hne x))).mpr x.2))
+      (hfib.subtype_mk (fun x => by exact le_of_eq (fiber_norm_eq_one (hne x)))))).congr (fun x => ?_)
+    rw [Set.restrict_apply]
+    exact (bdryMap_chart1_of_snd_le x.2).symm
+  -- paste over the closed cover
+  rw [continuous_iff_continuousAt]
+  intro x
+  rcases le_total ‖x.1.1‖ ‖x.1.2‖ with h | h
+  · by_cases hb : ‖x.1.2‖ ≤ ‖x.1.1‖
+    · have huniv : {x : S3 | ‖x.1.1‖ ≤ ‖x.1.2‖} ∪ {x : S3 | ‖x.1.2‖ ≤ ‖x.1.1‖} = Set.univ := by
+        ext y; simp [le_total]
+      rw [← continuousWithinAt_univ, ← huniv]
+      exact continuousWithinAt_union.mpr ⟨hcontA x h, hcontB x hb⟩
+    · refine hcontA.continuousAt (Filter.mem_of_superset
+        ((isOpen_lt hnf hns).mem_nhds (lt_of_le_of_ne h (fun he => hb (le_of_eq he.symm)))) ?_)
+      exact Set.setOf_subset_setOf.2 fun _ hy => le_of_lt hy
+  · by_cases ha : ‖x.1.1‖ ≤ ‖x.1.2‖
+    · have huniv : {x : S3 | ‖x.1.1‖ ≤ ‖x.1.2‖} ∪ {x : S3 | ‖x.1.2‖ ≤ ‖x.1.1‖} = Set.univ := by
+        ext y; simp [le_total]
+      rw [← continuousWithinAt_univ, ← huniv]
+      exact continuousWithinAt_union.mpr ⟨hcontA x ha, hcontB x h⟩
+    · refine hcontB.continuousAt (Filter.mem_of_superset
+        ((isOpen_lt hns hnf).mem_nhds (lt_of_le_of_ne h (fun he => ha (le_of_eq he.symm)))) ?_)
+      exact Set.setOf_subset_setOf.2 fun _ hy => le_of_lt hy
+
+/-- **`ρ̄ : ℝP³ → E` is continuous** — the descent of the continuous `ρ` through the antipodal
+quotient (`Continuous.quotient_lift`). -/
+theorem continuous_bdryMapRP3 : Continuous bdryMapRP3 :=
+  continuous_bdryMap.quotient_lift _
+
+/-! ## §7. The homeomorphism `ℝP³ ≃ₜ ∂E` (compact-to-T2 upgrade of the continuous bijection)
+
+`ρ̄ : ℝP³ → E` is a continuous injection whose image is exactly `∂E` (`bdryMapRP3_bijOn`,
+`continuous_bdryMapRP3`). Corestricted to `∂E` it is a continuous bijection from the compact `ℝP³`;
+the compact-to-Hausdorff principle (`Continuous.homeoOfEquivCompactToT2`) upgrades it to a
+homeomorphism as soon as the target subspace `∂E ⊆ E` is Hausdorff — which holds once `E` is (§8). -/
+
+/-- The corestriction of `ρ̄` to its image `∂E`, as an equivalence `ℝP³ ≃ ∂E`. -/
+def bdryEquivRP3 : RP3 ≃ ↥boundaryE :=
+  Equiv.ofBijective
+    (fun q => ⟨bdryMapRP3 q, by rw [← range_bdryMapRP3_eq_boundaryE]; exact ⟨q, rfl⟩⟩)
+    ⟨fun a b h => bdryMapRP3_injective (Subtype.ext_iff.mp h), fun y => by
+      have hy : y.1 ∈ Set.range bdryMapRP3 := by rw [range_bdryMapRP3_eq_boundaryE]; exact y.2
+      obtain ⟨q, hq⟩ := hy
+      exact ⟨q, Subtype.ext hq⟩⟩
+
+theorem continuous_bdryEquivRP3 : Continuous bdryEquivRP3 :=
+  continuous_bdryMapRP3.subtype_mk _
+
+/-! ## §8. `E` is Hausdorff (`T2Space ResE`), and the boundary homeomorphism `ℝP³ ≃ₜ ∂E`
+
+`E` is the quotient of the compact Hausdorff two-chart disjoint union by the clutch gluing. The
+quotient map is a **closed map** (the saturation of a closed set stays closed — the weld is along the
+compact equator circle), so it is proper; its square is then proper, hence closed, and the diagonal
+of `E` is the image of the (closed) gluing relation under it, hence closed — i.e. `E` is Hausdorff.
+This upgrades `bdryHomeoRP3` from conditional to unconditional. -/
+
+/-- On the unit circle `‖z‖ = 1`, complex conjugation coincides with inversion. -/
+theorem conj_eq_inv_of_norm_one {z : ℂ} (hz : ‖z‖ = 1) : (starRingEnd ℂ) z = z⁻¹ := by
+  have hz0 : z ≠ 0 := norm_ne_zero_iff.mp (by rw [hz]; norm_num)
+  refine eq_inv_of_mul_eq_one_left ?_
+  rw [mul_comm, Complex.mul_conj]
+  have : Complex.normSq z = 1 := by rw [Complex.normSq_eq_norm_sq, hz]; norm_num
+  rw [this]; norm_num
+
+/-- **The total continuous glue map** on `D² × D²`: the equator weld `clutchDisk`, extended
+continuously to the whole chart by using `conj` (which equals `⁻¹` on the equator, but — unlike `⁻¹`
+— is continuous everywhere). The fiber component is the same polynomial `z² · w`. Its totality +
+continuity is what makes saturations of closed sets closed. -/
+def gtot (p : ResChart) : ResChart :=
+  (⟨(starRingEnd ℂ) (p.1 : ℂ), by rw [Complex.norm_conj]; exact p.1.2⟩,
+   ⟨(p.1 : ℂ) ^ 2 * (p.2 : ℂ), by
+     rw [norm_mul, norm_pow]
+     nlinarith [p.1.2, p.2.2, norm_nonneg (p.1 : ℂ), norm_nonneg (p.2 : ℂ)]⟩)
+
+theorem continuous_gtot : Continuous gtot := by
+  refine Continuous.prodMk (Continuous.subtype_mk ?_ ?_) (Continuous.subtype_mk ?_ ?_)
+  · exact Complex.continuous_conj.comp (continuous_subtype_val.comp continuous_fst)
+  · intro p
+    simp only [Complex.norm_conj]
+    exact p.1.2
+  · exact ((continuous_subtype_val.comp continuous_fst).pow 2).mul
+      (continuous_subtype_val.comp continuous_snd)
+  · intro p
+    simp only [norm_mul, norm_pow]
+    nlinarith [p.1.2, p.2.2, norm_nonneg (p.1 : ℂ), norm_nonneg (p.2 : ℂ)]
+
+/-- On the equator `‖z‖ = 1`, the total glue `gtot` coincides with the clutch weld `clutchDisk`. -/
+theorem gtot_eq_clutchDisk {p : ResChart} (hz : ‖(p.1 : ℂ)‖ = 1) : gtot p = clutchDisk p hz :=
+  Prod.ext (Subtype.ext (conj_eq_inv_of_norm_one hz)) (Subtype.ext rfl)
+
+/-- **Every equator point `p` welds to its total-glue image**: `glued p (gtot p)` for `‖p.1‖ = 1`.
+The weld relation `gcore` is exactly `glued` on the two cross-chart constructor cases. -/
+theorem glued_gtot {p : ResChart} (hz : ‖(p.1 : ℂ)‖ = 1) : glued p (gtot p) :=
+  ⟨hz, conj_eq_inv_of_norm_one hz, rfl⟩
+
+/-- **The quotient map `E`'s projection is a closed map.** For a closed `C`, its saturation
+`q⁻¹(q '' C)` equals `C` together with the two chart-swap partner strata (the images of `C`'s equator
+points under the total glue `gtot`); each stratum is the continuous image of a compact set, hence
+closed. This is the "gluing is along a compact circle" fact that makes `E` Hausdorff. -/
+theorem isClosedMap_quotientMk : IsClosedMap (Quotient.mk resSetoid) := by
+  intro C hC
+  have hEqClosed : IsClosed {p : ResChart | ‖(p.1 : ℂ)‖ = 1} :=
+    isClosed_eq (continuous_norm.comp (continuous_subtype_val.comp continuous_fst)) continuous_const
+  have hInl : IsClosed ((Sum.inl : ResChart → ResChart ⊕ ResChart) ''
+      {p : ResChart | ‖(p.1 : ℂ)‖ = 1 ∧ Sum.inr (gtot p) ∈ C}) := by
+    have hK : IsCompact {p : ResChart | ‖(p.1 : ℂ)‖ = 1 ∧ Sum.inr (gtot p) ∈ C} :=
+      IsClosed.isCompact (hEqClosed.inter (hC.preimage (continuous_inr.comp continuous_gtot)))
+    exact (hK.image continuous_inl).isClosed
+  have hInr : IsClosed ((Sum.inr : ResChart → ResChart ⊕ ResChart) ''
+      (gtot '' {p : ResChart | ‖(p.1 : ℂ)‖ = 1 ∧ Sum.inl p ∈ C})) := by
+    have hK : IsCompact {p : ResChart | ‖(p.1 : ℂ)‖ = 1 ∧ Sum.inl p ∈ C} :=
+      IsClosed.isCompact (hEqClosed.inter (hC.preimage continuous_inl))
+    exact ((hK.image continuous_gtot).image continuous_inr).isClosed
+  rw [← (isQuotientMap_quotient_mk' (s := resSetoid)).isClosed_preimage]
+  have hsat : Quotient.mk resSetoid ⁻¹' (Quotient.mk resSetoid '' C) =
+      C ∪ Sum.inl '' {p : ResChart | ‖(p.1 : ℂ)‖ = 1 ∧ Sum.inr (gtot p) ∈ C} ∪
+        Sum.inr '' (gtot '' {p : ResChart | ‖(p.1 : ℂ)‖ = 1 ∧ Sum.inl p ∈ C}) := by
+    ext a
+    constructor
+    · intro ha
+      rw [Set.mem_preimage, Set.mem_image] at ha
+      obtain ⟨b, hbC, hab⟩ := ha
+      rcases (Quotient.exact hab : resRel b a) with rfl | hg
+      · exact Set.mem_union_left _ (Set.mem_union_left _ hbC)
+      · cases b with
+        | inl p =>
+          cases a with
+          | inl p' => exact (hg : False).elim
+          | inr q =>
+            have hglued : glued p q := hg
+            have hz : ‖(p.1 : ℂ)‖ = 1 := hglued.1
+            have hgt : gtot p = q := by
+              rw [gtot_eq_clutchDisk hz]
+              exact Prod.ext (Subtype.ext hglued.2.1.symm) (Subtype.ext hglued.2.2.symm)
+            exact Set.mem_union_right _
+              (Set.mem_image_of_mem (Sum.inr : ResChart → ResChart ⊕ ResChart) ⟨p, ⟨hz, hbC⟩, hgt⟩)
+        | inr q =>
+          cases a with
+          | inl p =>
+            have hglued : glued p q := hg
+            have hz : ‖(p.1 : ℂ)‖ = 1 := hglued.1
+            have hgt : gtot p = q := by
+              rw [gtot_eq_clutchDisk hz]
+              exact Prod.ext (Subtype.ext hglued.2.1.symm) (Subtype.ext hglued.2.2.symm)
+            exact Set.mem_union_left _ (Set.mem_union_right _
+              (Set.mem_image_of_mem (Sum.inl : ResChart → ResChart ⊕ ResChart)
+                ⟨hz, by rw [hgt]; exact hbC⟩))
+          | inr q' => exact (hg : False).elim
+    · intro ha
+      rw [Set.mem_preimage, Set.mem_image]
+      rcases ha with (haC | ha_inl) | ha_inr
+      · exact ⟨a, haC, rfl⟩
+      · obtain ⟨p, ⟨hz, hmem⟩, rfl⟩ := ha_inl
+        exact ⟨Sum.inr (gtot p), hmem, Quotient.sound (Or.inr (glued_gtot hz))⟩
+      · obtain ⟨y, ⟨p, ⟨hz, hpC⟩, hgt⟩, rfl⟩ := ha_inr
+        subst hgt
+        exact ⟨Sum.inl p, hpC, Quotient.sound (Or.inr (glued_gtot hz))⟩
+  show IsClosed (Quotient.mk resSetoid ⁻¹' (Quotient.mk resSetoid '' C))
+  rw [hsat]
+  exact (hC.union hInl).union hInr
+
+/-- A weld determines the chart-1 partner: `glued p q → q = gtot p`. -/
+theorem glued_right_eq_gtot {p q : ResChart} (h : glued p q) : q = gtot p := by
+  rw [gtot_eq_clutchDisk h.1]
+  exact Prod.ext (Subtype.ext h.2.1) (Subtype.ext h.2.2)
+
+/-- A weld determines the chart-0 partner: `glued p q → p = gtot q` (the clutch is an involution
+on the equator). -/
+theorem glued_left_eq_gtot {p q : ResChart} (h : glued p q) : p = gtot q := by
+  have hq : ‖(q.1 : ℂ)‖ = 1 := by rw [h.2.1, norm_inv, h.1, inv_one]
+  have hp0 : (p.1 : ℂ) ≠ 0 := by rw [← norm_ne_zero_iff, h.1]; norm_num
+  rw [gtot_eq_clutchDisk hq]
+  refine Prod.ext (Subtype.ext ?_) (Subtype.ext ?_)
+  · show (p.1 : ℂ) = (q.1 : ℂ)⁻¹
+    rw [h.2.1, inv_inv]
+  · show (p.2 : ℂ) = (q.1 : ℂ) ^ 2 * (q.2 : ℂ)
+    rw [h.2.1, h.2.2]; field_simp
+
+/-- **Every fiber of `E`'s projection is finite** (a gluing class has at most two points: the point
+and its unique equator partner). Hence the fibers are compact — the last ingredient for properness. -/
+theorem finite_fiber (y : ResE) : (Quotient.mk resSetoid ⁻¹' {y}).Finite := by
+  obtain ⟨a, rfl⟩ := Quotient.exists_rep y
+  refine Set.Finite.subset ((Set.finite_singleton (Sum.elim (fun p => Sum.inr (gtot p))
+    (fun q => Sum.inl (gtot q)) a)).insert a) ?_
+  intro b hb
+  simp only [Set.mem_preimage] at hb
+  rcases (Quotient.exact hb.symm : resRel a b) with rfl | hg
+  · exact Set.mem_insert _ _
+  · refine Set.mem_insert_of_mem _ ?_
+    rw [Set.mem_singleton_iff]
+    cases a with
+    | inl p =>
+      cases b with
+      | inl p' => exact (hg : False).elim
+      | inr q =>
+        show (Sum.inr q : ResChart ⊕ ResChart) = _
+        rw [Sum.elim_inl, glued_right_eq_gtot (hg : glued p q)]
+    | inr q =>
+      cases b with
+      | inl p =>
+        show (Sum.inl p : ResChart ⊕ ResChart) = _
+        rw [Sum.elim_inr, glued_left_eq_gtot (hg : glued p q)]
+      | inr q' => exact (hg : False).elim
+
+/-- **`E` is Hausdorff (`T2Space ResE`).** The projection `q` is proper (continuous, closed map, with
+finite hence compact fibers), so `q × q` is proper, hence a closed map; the diagonal of `E` is the
+image of the closed diagonal of the (Hausdorff) two-chart union under `q × q`, hence closed. This
+discharges the hypothesis of `bdryHomeoRP3` — the boundary homeomorphism `ℝP³ ≃ₜ ∂E` holds outright. -/
+instance instT2SpaceResE : T2Space ResE := by
+  have hproper : IsProperMap (Quotient.mk resSetoid) :=
+    isProperMap_iff_isClosedMap_and_compact_fibers.mpr
+      ⟨continuous_quotient_mk', isClosedMap_quotientMk, fun y => (finite_fiber y).isCompact⟩
+  rw [t2_iff_isClosed_diagonal]
+  have hdiag : Set.diagonal ResE =
+      Prod.map (Quotient.mk resSetoid) (Quotient.mk resSetoid) '' Set.diagonal (ResChart ⊕ ResChart) := by
+    apply Set.eq_of_subset_of_subset
+    · rintro ⟨y1, y2⟩ hy
+      have hy' : y1 = y2 := hy
+      subst hy'
+      obtain ⟨a, rfl⟩ := Quotient.exists_rep y1
+      exact ⟨(a, a), rfl, rfl⟩
+    · rintro ⟨y1, y2⟩ ⟨⟨a, b⟩, hab, heq⟩
+      have hab' : a = b := hab
+      have h1 : Quotient.mk resSetoid a = y1 := congrArg Prod.fst heq
+      have h2 : Quotient.mk resSetoid b = y2 := congrArg Prod.snd heq
+      show y1 = y2
+      rw [← h1, ← h2, hab']
+  rw [hdiag]
+  exact (hproper.prodMap hproper).isClosedMap _ isClosed_diagonal
+
+/-- **`ℝP³ ≃ₜ ∂E`** — the boundary of the Euler−2 disk bundle `E` is homeomorphic to `ℝP³` in the
+pinned S³/±1 antipodal presentation. The continuous bijection `ρ̄` from the compact `ℝP³`
+(`bdryEquivRP3`, `continuous_bdryEquivRP3`) is a homeomorphism onto the now-Hausdorff subspace `∂E`
+(`Continuous.homeoOfEquivCompactToT2`, using `instT2SpaceResE`). This is the `∂E ≅ ℝP³` identification
+K6′b welds along — an honest topological homeomorphism (both directions continuous), unconditional. -/
+def bdryHomeoRP3 : RP3 ≃ₜ ↥boundaryE :=
+  Continuous.homeoOfEquivCompactToT2 (f := bdryEquivRP3) continuous_bdryEquivRP3
+
 end
 
 end SKEFTHawking.KummerResolutionPiece
