@@ -393,6 +393,41 @@ theorem finiteDimensional_homology_coverB_of_htpyEquiv
   finiteDimensional_homology_of_homotopyEquiv_all f g Hgf hgf0 hgf1 Hfg hfg0 hfg1 n
     (finiteDimensional_homology_sub_range_fromHandle s S hS φ hφ hφinj n)
 
+/-! ## §E. The closed-cover topology of `coverA` (toward the collar-collapse retraction). -/
+
+/-- A point of `coverA` lying in `range fromHandle` lies in the collar `cd.seamNbhd` — the handle
+side of `coverA` is entirely inside the collar (the moving set of the retraction is collar-interior).
+Either the point is already a collar point, or it is a seam point (`range fromCyl ∩ range fromHandle`),
+which `hseam` places inside the collar. -/
+theorem handle_mem_seamNbhd_of_mem_coverA
+    (x : ↑(TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier))
+    (hxA : x ∈ coverA s t S hS φ hφ hφinj cd hseam d)
+    (hxH : x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle) :
+    x ∈ cd.seamNbhd := by
+  rw [coverA] at hxA
+  rcases hxA with hxC | hxN
+  · exact seam_subset_seamSet s t S hS φ hφ hφinj cd hseam d ⟨hxC, hxH⟩
+  · exact hxN
+
+/-- `range fromCyl` is closed in the carrier. -/
+theorem isClosed_range_fromCyl :
+    IsClosed (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl) :=
+  (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isClosed_range
+
+/-- `range fromHandle` is closed in the carrier. -/
+theorem isClosed_range_fromHandle :
+    IsClosed (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle) :=
+  (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isClosed_range
+
+/-- The two closed ranges cover `coverA`: every point of `coverA` is a cyl point or a handle point
+(the full carrier is `range fromCyl ∪ range fromHandle`). -/
+theorem coverA_subset_ranges_union :
+    coverA s t S hS φ hφ hφinj cd hseam d
+      ⊆ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl
+        ∪ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle := fun x _ =>
+  (Set.eq_univ_iff_forall.mp
+    (ktHandleAttachment s.M D5 S hS φ hφ hφinj).range_fromCyl_union_range_fromHandle) x
+
 end
 
 end SKEFTHawking.KTCompletenessCollarSplit
