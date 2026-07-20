@@ -130,6 +130,102 @@ def boundaryChart (c : TorusFour) (u₀ : NSphere 3) (hc : c ∈ fixedSet) :
     OpenPartialHomeomorph (↥puncturedTorus) Model :=
   (innerCollarChart c u₀).lift_openEmbedding (isOpenEmbedding_collarIncl hc)
 
+/-! ### §4. The interior reshaping `𝔼¹×𝔼¹×𝔼¹×𝔼¹ → 𝔼³ × HalfSpace¹` (into the interior) -/
+
+/-- The ambient product chart model of `T⁴` (the four `Circle` factors), on which the interior of
+`T⁴°` is charted (`KummerChartedSpace.interior_chartedSpace`). -/
+abbrev PModel : Type := ModelProd (EuclideanSpace ℝ (Fin 1))
+  (ModelProd (EuclideanSpace ℝ (Fin 1))
+    (ModelProd (EuclideanSpace ℝ (Fin 1)) (EuclideanSpace ℝ (Fin 1))))
+
+/-- Round-trip: rebuilding `E³` from its three coordinates. -/
+theorem toLp_ofLp_fin_three (v : EuclideanSpace ℝ (Fin 3)) :
+    (WithLp.toLp 2 ![v.ofLp 0, v.ofLp 1, v.ofLp 2] : EuclideanSpace ℝ (Fin 3)) = v := by
+  ext i
+  fin_cases i <;> simp
+
+/-- **The interior reshaping** `PModel → Model`: the first three ambient coordinates combine into the
+`𝔼³` factor, the fourth maps by `Real.exp` into the strictly-positive ray — the interior of the
+half-space. An `OpenPartialHomeomorph` (source `univ`, target `{q | 0 < q.2.val.ofLp 0}` = the interior
+region), so composing an ambient product chart with it charts an interior point of `T⁴°` into the
+interior of the half-space model, coexisting with the boundary collar charts of §3. -/
+def interiorReshape : OpenPartialHomeomorph PModel Model where
+  source := Set.univ
+  target := {q : Model | 0 < q.2.val.ofLp 0}
+  toFun p := (WithLp.toLp 2 ![p.1.ofLp 0, p.2.1.ofLp 0, p.2.2.1.ofLp 0],
+    ⟨WithLp.toLp 2 (fun _ : Fin 1 => Real.exp (p.2.2.2.ofLp 0)), by simp; positivity⟩)
+  invFun q := (WithLp.toLp 2 (fun _ : Fin 1 => q.1.ofLp 0),
+    (WithLp.toLp 2 (fun _ : Fin 1 => q.1.ofLp 1),
+      (WithLp.toLp 2 (fun _ : Fin 1 => q.1.ofLp 2),
+        WithLp.toLp 2 (fun _ : Fin 1 => Real.log (q.2.val.ofLp 0)))))
+  map_source' p _ := by
+    show (0 : ℝ) < (WithLp.toLp 2 (fun _ : Fin 1 => Real.exp (p.2.2.2.ofLp 0))).ofLp 0
+    simp; positivity
+  map_target' _ _ := Set.mem_univ _
+  left_inv' p _ := by
+    refine Prod.ext ?_ (Prod.ext ?_ (Prod.ext ?_ ?_)) <;>
+      simp [DiskChartGeneric.toLp_ofLp_fin_one]
+  right_inv' q hq := by
+    have hpos : (0 : ℝ) < q.2.val.ofLp 0 := hq
+    refine Prod.ext ?_ ?_
+    · show (WithLp.toLp 2 ![q.1.ofLp 0, q.1.ofLp 1, q.1.ofLp 2] : EuclideanSpace ℝ (Fin 3)) = q.1
+      · simp [toLp_ofLp_fin_three]
+    · apply Subtype.ext
+      show WithLp.toLp 2 (fun _ : Fin 1 =>
+        Real.exp ((WithLp.toLp 2 (fun _ : Fin 1 => Real.log (q.2.val.ofLp 0))).ofLp 0)) = q.2.val
+      rw [show (WithLp.toLp 2 (fun _ : Fin 1 => Real.log (q.2.val.ofLp 0))).ofLp 0
+          = Real.log (q.2.val.ofLp 0) from by simp, Real.exp_log hpos]
+      exact DiskChartGeneric.toLp_ofLp_fin_one _
+  open_source := isOpen_univ
+  open_target := by
+    apply isOpen_lt continuous_const
+    exact (PiLp.continuous_apply 2 (fun _ : Fin 1 => ℝ) 0).comp
+      (continuous_subtype_val.comp continuous_snd)
+  continuousOn_toFun := by
+    apply Continuous.continuousOn
+    apply Continuous.prodMk
+    · refine (PiLp.continuous_toLp 2 _).comp (continuous_pi (fun i => ?_))
+      fin_cases i <;> simp <;> fun_prop
+    · apply Continuous.subtype_mk
+      refine (PiLp.continuous_toLp 2 _).comp (continuous_pi (fun _ => ?_))
+      fun_prop
+  continuousOn_invFun := by
+    refine ContinuousOn.prodMk ?_ (ContinuousOn.prodMk ?_ (ContinuousOn.prodMk ?_ ?_))
+    · apply Continuous.continuousOn
+      refine (PiLp.continuous_toLp 2 _).comp (continuous_pi (fun _ => ?_)); fun_prop
+    · apply Continuous.continuousOn
+      refine (PiLp.continuous_toLp 2 _).comp (continuous_pi (fun _ => ?_)); fun_prop
+    · apply Continuous.continuousOn
+      refine (PiLp.continuous_toLp 2 _).comp (continuous_pi (fun _ => ?_)); fun_prop
+    · apply (PiLp.continuous_toLp 2 _).comp_continuousOn
+      apply continuousOn_pi.mpr
+      intro _
+      apply Real.continuousOn_log.comp
+      · exact ((PiLp.continuous_apply 2 (fun _ : Fin 1 => ℝ) 0).comp
+          (continuous_subtype_val.comp continuous_snd)).continuousOn
+      · intro q hq
+        exact ne_of_gt hq
+
+/-! ### §5. The interior charts (the ambient product charts reshaped into the interior) -/
+
+open SKEFTHawking.KummerChartedSpace
+
+/-- The inclusion `↥openPunctured ↪ ↥puncturedTorus` is an open embedding (`openPunctured` is open in
+`T⁴` and contained in `T⁴°`). -/
+theorem isOpenEmbedding_openPuncturedIncl :
+    Topology.IsOpenEmbedding
+      (Set.inclusion openPunctured_subset_puncturedTorus :
+        ↥openPunctured → ↥puncturedTorus) :=
+  Topology.IsOpenEmbedding.inclusion openPunctured_subset_puncturedTorus
+    (isOpen_openPuncturedSet.preimage continuous_subtype_val)
+
+/-- **The interior chart at an interior point `x`** — the ambient `T⁴` product chart at `x` reshaped
+into the interior of the half-space model by `interiorReshape`, then lifted along the open embedding
+`↥openPunctured ↪ ↥puncturedTorus`. An `OpenPartialHomeomorph (↥puncturedTorus) Model` whose image lies
+in the interior region `{q | 0 < q.2.val.ofLp 0}`. -/
+def interiorChart (x : ↥openPunctured) : OpenPartialHomeomorph (↥puncturedTorus) Model :=
+  ((chartAt PModel x).trans interiorReshape).lift_openEmbedding isOpenEmbedding_openPuncturedIncl
+
 end
 
 end SKEFTHawking.KummerBoundaryChart
