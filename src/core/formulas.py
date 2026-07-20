@@ -431,7 +431,21 @@ def effective_temperature_ratio(omega, c_s, kappa, D,
 
     T_eff/T_H = 1 + δ_disp + δ_diss + δ⁽²⁾(ω)
 
-    Lean: effective_temp_zeroth_order
+    Semantics (single, consistent contract — see finding B-05, 2026-07):
+      - δ_disp = -(π/6)·D² is FREQUENCY-INDEPENDENT (a horizon/dispersion
+        property; no ω).
+      - δ_diss = Γ_H/κ is the FIRST-ORDER dissipative correction, evaluated at
+        the horizon wavenumber k_H = κ/c_s, so Γ_H = (γ₁+γ₂)(κ/c_s)² and δ_diss
+        is FREQUENCY-INDEPENDENT (Paper I's constant shift). This matches the
+        Lean definition SecondOrderSK.GammaH and the canonical caller
+        transonic_background.compute_dissipative_correction — NOT the on-shell
+        mode wavenumber ω/c_s (which would make the first-order term spuriously
+        scale with frequency).
+      - δ⁽²⁾(ω) is the FREQUENCY-DEPENDENT second-order term, evaluated at the
+        on-shell mode wavenumber k = ω/c_s (the new physics of Paper II).
+
+    Lean: effective_temp_zeroth_order; SecondOrderSK.GammaH / gammaH_via_kH /
+          deltaDissFromTransport_eq (horizon-calibrated Γ_H = (γ₁+γ₂)(κ/c_s)²)
     Aristotle: c4d73ca8
     Source: original
 
@@ -447,11 +461,19 @@ def effective_temperature_ratio(omega, c_s, kappa, D,
         (ratio, details_dict) where ratio = T_eff/T_H and details_dict
         contains the individual corrections.
     """
-    k = omega / c_s  # On-shell acoustic wavenumber
+    k = omega / c_s  # On-shell acoustic wavenumber (mode-dependent higher orders)
 
     delta_disp = dispersive_correction(D)
-    Gamma_H = damping_rate(k, omega, c_s, gamma_1, gamma_2, gamma_2_1, gamma_2_2)
-    delta_diss = first_order_correction(Gamma_H, kappa)
+
+    # First-order dissipative correction: horizon-calibrated at k_H = κ/c_s,
+    # hence FREQUENCY-INDEPENDENT. Γ_H = (γ₁+γ₂)(κ/c_s)² matches the Lean
+    # definition SecondOrderSK.GammaH and transonic_background.
+    # compute_dissipative_correction. Forming Γ_H at the mode wavenumber ω/c_s
+    # would make this first-order term spuriously scale with frequency (B-05).
+    Gamma_H = (gamma_1 + gamma_2) * (kappa / c_s) ** 2 if c_s > 0 else 0.0
+    delta_diss = first_order_correction(Gamma_H, kappa) if kappa > 0 else 0.0
+
+    # Second-order correction: mode-dependent (k = ω/c_s), FREQUENCY-DEPENDENT.
     delta_2 = second_order_correction(k, omega, c_s, gamma_2_1, gamma_2_2, kappa)
 
     ratio = 1.0 + delta_disp + delta_diss + delta_2

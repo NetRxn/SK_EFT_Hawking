@@ -38,8 +38,8 @@ from typing import Optional
 import numpy as np
 
 from src.core.formulas import (
-    damping_rate, dispersive_correction, turning_point_shift,
-    first_order_correction,
+    dispersive_correction, turning_point_shift,
+    first_order_correction, second_order_correction, third_order_correction,
 )
 
 
@@ -98,15 +98,23 @@ def compute_complex_turning_point(
 ) -> ComplexTurningPoint:
     """Compute the dissipation-shifted complex turning point.
 
-    The horizon wavenumber k_H = omega/c_s is the characteristic momentum
-    scale for a mode of frequency omega at the horizon. The damping rate
-    Gamma_H is evaluated at (k_H, omega).
+    The leading (first-order) dissipative shift of the turning point is set by
+    the horizon-calibrated damping rate Gamma_H = (gamma_1+gamma_2)(kappa/c_s)^2,
+    evaluated at the horizon wavenumber k_H = kappa/c_s. This is a property of
+    the horizon (not of the mode's frequency), so both x_imag and the derived
+    delta_diss are FREQUENCY-INDEPENDENT — matching Paper I's constant shift, the
+    Lean definition SecondOrderSK.GammaH, and transonic_background.
+    compute_dissipative_correction. (Finding B-05: the previous k_H = omega/c_s
+    made the nominal first-order shift spuriously scale with frequency.)
+
+    The higher-order (second/third) coefficients do NOT enter this leading
+    turning-point shift; they are frequency-dependent spectral-distortion terms
+    carried by effective_surface_gravity's delta_higher(omega). They are accepted
+    here only for interface compatibility.
 
     The complex turning point has:
         x_real = delta_disp * c_s / kappa  (dispersive, from xi)
         x_imag = c_s * Gamma_H / (2 * kappa^2)  (dissipative, from formulas.turning_point_shift)
-
-    Both shifts are exact to all EFT orders through their frequency dependence.
 
     Lean: complex_turning_point_shift (WKBConnection.lean)
 
@@ -115,18 +123,16 @@ def compute_complex_turning_point(
         kappa: Surface gravity.
         c_s: Sound speed at horizon.
         xi: Healing length.
-        gamma_*: SK-EFT transport coefficients (orders 1-3).
+        gamma_1, gamma_2: first-order transport coefficients (set the leading shift).
+        gamma_2_1..gamma_3_3: higher-order coefficients (accepted for interface
+            compatibility; enter kappa_eff via effective_surface_gravity, not the
+            leading turning-point shift).
 
     Returns:
         ComplexTurningPoint with the shifted position.
     """
-    k_H = omega / c_s
-    Gamma_H = damping_rate(
-        k_H, omega, c_s,
-        gamma_1, gamma_2,
-        gamma_2_1, gamma_2_2,
-        gamma_3_1, gamma_3_2, gamma_3_3,
-    )
+    # First-order, horizon-calibrated (k_H = kappa/c_s): frequency-independent.
+    Gamma_H = (gamma_1 + gamma_2) * (kappa / c_s) ** 2 if c_s > 0 else 0.0
     delta_x_imag = turning_point_shift(Gamma_H, kappa, c_s) if kappa > 0 and c_s > 0 else 0.0
 
     # Dispersive shift of real part: from formulas.dispersive_correction
@@ -233,17 +239,26 @@ class EffectiveSurfaceGravity:
 
     kappa_eff(omega) = kappa / (1 + delta_total(omega))
 
-    where delta_total = delta_disp + delta_diss_exact(omega).
+    where delta_total = delta_disp + delta_diss + delta_higher(omega).
 
-    The exact WKB derivation shows that delta_diss_exact is determined by
-    the imaginary shift of the turning point, which includes all orders
-    of the EFT expansion through the frequency dependence of Gamma_H.
+    Correction semantics (single, consistent contract — see finding B-05):
+      - delta_disp = -(pi/6) D^2 : dispersive, FREQUENCY-INDEPENDENT.
+      - delta_diss : the FIRST-ORDER dissipative correction Gamma_H/kappa with
+        Gamma_H = (gamma_1+gamma_2)(kappa/c_s)^2 evaluated at the horizon
+        wavenumber k_H = kappa/c_s — hence FREQUENCY-INDEPENDENT (Paper I's
+        constant shift; matches Lean SecondOrderSK.GammaH and the canonical
+        transonic_background.compute_dissipative_correction).
+      - delta_higher(omega) : the second- and third-order corrections, evaluated
+        at the on-shell mode wavenumber k = omega/c_s — hence FREQUENCY-DEPENDENT
+        (the spectral-distortion physics of Paper II+). This is where all
+        omega-dependence of kappa_eff enters.
 
     Attributes:
         kappa: Bare surface gravity.
         kappa_eff: Effective (corrected) surface gravity.
-        delta_disp: Dispersive correction.
-        delta_diss: Total dissipative correction (all EFT orders).
+        delta_disp: Dispersive correction (frequency-independent).
+        delta_diss: First-order dissipative correction (frequency-independent).
+        delta_higher: Second+third-order dissipative corrections (frequency-dependent).
         delta_total: Sum of all corrections.
         omega: Mode frequency at which this was evaluated.
     """
@@ -253,6 +268,7 @@ class EffectiveSurfaceGravity:
     delta_diss: float
     delta_total: float
     omega: float
+    delta_higher: float = 0.0
 
 
 def effective_surface_gravity(
@@ -274,11 +290,16 @@ def effective_surface_gravity(
 
         kappa_eff(omega) = kappa / (1 + delta_total(omega))
 
-    where delta_total includes:
-    - Dispersive correction: delta_disp = -(pi/6) * D^2
-    - Dissipative correction from ALL EFT orders:
-        delta_diss = Gamma_H(omega) / kappa
-      where Gamma_H includes first, second, and third-order terms.
+    where delta_total decomposes as (finding B-05, single consistent contract):
+    - Dispersive correction: delta_disp = -(pi/6) * D^2 (frequency-independent).
+    - First-order dissipative correction (frequency-INDEPENDENT):
+        delta_diss = Gamma_H / kappa,  Gamma_H = (gamma_1+gamma_2)(kappa/c_s)^2
+      evaluated at the horizon wavenumber k_H = kappa/c_s (matches Lean
+      SecondOrderSK.GammaH and transonic_background.compute_dissipative_correction).
+    - Higher-order dissipative corrections (frequency-DEPENDENT):
+        delta_higher = delta^(2)(omega) + delta^(3)(omega)
+      evaluated at the on-shell mode wavenumber k = omega/c_s. All omega-dependence
+      of kappa_eff enters here (Paper II+ spectral distortion).
 
     At leading order, this matches the perturbative result in
     src/second_order/wkb_analysis.py. The non-perturbative structure
@@ -299,16 +320,23 @@ def effective_surface_gravity(
     D = kappa * xi / c_s
     delta_disp = dispersive_correction(D)
 
-    k_H = omega / c_s
-    Gamma_H = damping_rate(
-        k_H, omega, c_s,
-        gamma_1, gamma_2,
-        gamma_2_1, gamma_2_2,
-        gamma_3_1, gamma_3_2, gamma_3_3,
-    )
+    # First-order dissipative: horizon-calibrated (k_H = kappa/c_s),
+    # frequency-INDEPENDENT.
+    Gamma_H = (gamma_1 + gamma_2) * (kappa / c_s) ** 2 if c_s > 0 else 0.0
     delta_diss = first_order_correction(Gamma_H, kappa) if kappa > 0 else 0.0
 
-    delta_total = delta_disp + delta_diss
+    # Higher-order dissipative: mode-dependent (k = omega/c_s), frequency-DEPENDENT.
+    k_mode = omega / c_s if c_s > 0 else 0.0
+    if kappa > 0:
+        delta_2 = second_order_correction(
+            k_mode, omega, c_s, gamma_2_1, gamma_2_2, kappa)
+        delta_3 = third_order_correction(
+            k_mode, omega, c_s, gamma_3_1, gamma_3_2, gamma_3_3, kappa)
+        delta_higher = delta_2 + delta_3
+    else:
+        delta_higher = 0.0
+
+    delta_total = delta_disp + delta_diss + delta_higher
     kappa_eff = kappa / (1 + delta_total) if (1 + delta_total) > 0 else kappa
 
     return EffectiveSurfaceGravity(
@@ -316,6 +344,7 @@ def effective_surface_gravity(
         kappa_eff=kappa_eff,
         delta_disp=delta_disp,
         delta_diss=delta_diss,
+        delta_higher=delta_higher,
         delta_total=delta_total,
         omega=omega,
     )

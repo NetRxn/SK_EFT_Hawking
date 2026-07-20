@@ -41,7 +41,12 @@ import numpy as np
 from scipy.optimize import brentq
 
 from src.core.constants import ATOMS
-from src.core.formulas import beliaev_transport_coefficients
+from src.core.formulas import (
+    beliaev_transport_coefficients,
+    dispersive_correction,
+    first_order_correction,
+    second_order_correction,
+)
 from src.core.transonic_background import (
     steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
     solve_transonic_background,
@@ -367,13 +372,19 @@ def connection_formula(
         |β/α|² = exp(-2πω/κ)  →  T_eff = κ/(2π) = T_H
 
     With dispersive corrections (Corley-Jacobson 1996):
-        δ_disp ≈ -(π/6)(ω/κ)·D² + O(D⁴)
+        δ_disp = -(π/6)·D²  (frequency-INDEPENDENT; matches the canonical
+                             formulas.dispersive_correction and every Lean
+                             theorem — HawkingUniversality/KappaScaling/…)
 
     With dissipative corrections (first order, this work):
-        δ_diss = Γ_H / κ  (frequency-independent)
+        δ_diss = Γ_H / κ  with Γ_H = (γ₁+γ₂)(κ/c_s)² evaluated at the horizon
+                 wavenumber k_H = κ/c_s → FREQUENCY-INDEPENDENT (Paper I's
+                 constant shift; matches Lean SecondOrderSK.GammaH and
+                 transonic_background.compute_dissipative_correction).
 
     With second-order corrections:
-        δ^(2)(ω) = frequency-dependent part from γ_{2,1}, γ_{2,2}
+        δ^(2)(ω) = frequency-DEPENDENT part from γ_{2,1}, γ_{2,2}, evaluated at
+                 the on-shell mode wavenumber k = ω/c_s (the new physics).
 
     The derivation:
     1. The turning point in the complex k-plane shifts by
@@ -397,27 +408,30 @@ def connection_formula(
     D = p.D
 
     # ─── Dispersive correction (Corley-Jacobson) ───
-    # δ_disp = -(π/6)(ω/κ)·D² for Bogoliubov dispersion
-    # This is the leading-order result; higher-order terms are O(D⁴)
-    omega_bar = omega / kappa  # dimensionless frequency
-    delta_disp = -(np.pi / 6) * omega_bar * D**2
+    # δ_disp = -(π/6)·D², FREQUENCY-INDEPENDENT. Uses the canonical
+    # formulas.dispersive_correction so this path agrees with the exact WKB
+    # path and every Lean theorem. (Finding B-05: the previous -(π/6)(ω/κ)·D²
+    # form disagreed with the canonical -(π/6)D² except at ω = κ.)
+    delta_disp = dispersive_correction(D)
 
     # ─── First-order dissipative correction ───
-    # δ_diss = Γ_H / κ  where Γ_H is the effective damping rate
-    # at the horizon. For a mode with frequency ω:
-    #   Γ_H(ω) = γ₁·k_H² + γ₂·ω²/c_s²
-    # where k_H ~ ω/c_s is the characteristic momentum at the horizon.
-    k_H = omega / c_s  # characteristic horizon momentum
-    Gamma_H = params.gamma_1 * k_H**2 + params.gamma_2 * omega**2 / c_s**2
-    delta_diss = Gamma_H / kappa if kappa > 0 else 0.0
+    # δ_diss = Γ_H / κ with Γ_H = (γ₁+γ₂)(κ/c_s)² the damping rate at the
+    # horizon wavenumber k_H = κ/c_s. This is FREQUENCY-INDEPENDENT (Paper I's
+    # constant shift) — matching Lean SecondOrderSK.GammaH and
+    # transonic_background.compute_dissipative_correction. (Finding B-05: the
+    # previous k_H = ω/c_s made the first-order term spuriously scale with ω².)
+    Gamma_H = (params.gamma_1 + params.gamma_2) * (kappa / c_s) ** 2 \
+        if c_s > 0 else 0.0
+    delta_diss = first_order_correction(Gamma_H, kappa) if kappa > 0 else 0.0
 
-    # ─── Second-order correction (frequency-dependent) ───
-    # From the two new transport coefficients:
-    #   γ_{2,1} · k³ + γ_{2,2} · ω²k/c_s²
-    # evaluated at k = k_H
-    Gamma_H_2 = params.gamma_2_1 * k_H**3 + \
-                params.gamma_2_2 * omega**2 * k_H / c_s**2
-    delta_second = Gamma_H_2 / kappa if kappa > 0 else 0.0
+    # ─── Second-order correction (frequency-DEPENDENT) ───
+    # From the two new transport coefficients γ_{2,1}, γ_{2,2}, evaluated at
+    # the on-shell mode wavenumber k = ω/c_s (the canonical mode-dependent
+    # construction). This is where the ω-dependence of the spectrum enters.
+    k_mode = omega / c_s if c_s > 0 else 0.0
+    delta_second = second_order_correction(
+        k_mode, omega, c_s, params.gamma_2_1, params.gamma_2_2, kappa
+    ) if kappa > 0 else 0.0
 
     # ─── Combined Bogoliubov coefficients ───
     # |β/α|² = exp(-2πω/κ_eff)
@@ -585,10 +599,13 @@ if __name__ == "__main__":
               f"{r.delta_second:10.4e} {r.T_eff/p.T_H:10.6f}")
 
     print(f"\nKey result:")
-    print(f"  At ω = T_H: δ_diss = {results[4].delta_diss:.4e} (constant)")
-    print(f"  At ω = 3T_H: δ_diss = {results[12].delta_diss:.4e} (grows with ω)")
-    print(f"  The δ_diss growth with ω is from the k_H² = (ω/c_s)² dependence")
-    print(f"  of the first-order damping rate — already frequency-dependent!")
+    print(f"  At ω = T_H:  δ_diss = {results[4].delta_diss:.4e}")
+    print(f"  At ω = 3T_H: δ_diss = {results[12].delta_diss:.4e}")
+    print(f"  δ_diss is FREQUENCY-INDEPENDENT (Paper I's constant shift):")
+    print(f"  the first-order damping rate is horizon-calibrated,")
+    print(f"  Γ_H = (γ₁+γ₂)(κ/c_s)² at k_H = κ/c_s — no ω dependence.")
+    print(f"  Frequency dependence of the spectrum enters via δ^(2)(ω) and")
+    print(f"  the explicit ω in the thermal factor exp(-2πω/κ_eff).")
     print(f"\n  Second-order correction δ^(2) = 0 (γ_{2,1} = γ_{2,2} = 0 here)")
 
     # Now with second-order coefficients
