@@ -293,6 +293,71 @@ theorem rokhlin_sixteen_of_residuals_freezeAtoms_sphereDisk
   rokhlin_sixteen_of_residuals_freezeAtoms_ofCoboundary H row hCob hBase
     (hrow ▸ sphereProdCoboundaryWAdm_sphereDisk residualProv str) hcolD hker hΦg
 
+/-! ## §5. The geometric interface at its terminal grain — the `(str, hrow)` row-realization couple
+folded to the SINGLE distinguished-slot base pin. The discharged coboundary lane
+(`sphereProdCoboundaryWAdm_sphereDisk`) is uniform in the tangential-structure component of the slot,
+so the row-realization needs only that the distinguished slot's MANIFOLD is `sphereProdSM4 0`; the
+structure component is carried, not constrained. This maximally collapses the geometric side; the
+remaining row-cluster `{row, hCob, hBase}` is the settled E1-surgery floor
+(`docs/dev-loops/SETTLED_FORKS.md` `freeze-atoms-not-composable-from-sigma-trace`), NOT this lane. -/
+
+/-- **`SphereProdCoboundaryWAdm` for any distinguished slot whose MANIFOLD is the concrete `S²×S²`.**
+The banked discharge `sphereProdCoboundaryWAdm_sphereDisk` is uniform in the tangential-structure
+component of the slot, so it applies to ANY `p : StrMfd (spinEmptyData prov)` with `p.1 = sphereProdSM4 0`
+— the structure `p.2` is carried, not constrained. Destructure `p` + `subst` the base equality lands the
+concrete slot `⟨sphereProdSM4 0, p.2⟩`, where the sister-node discharge fires. -/
+theorem sphereProdCoboundaryWAdm_sphereDisk_ofBase
+    (prov : CharPairWProviderPerOp (𝓡 4) 0)
+    (p : StrMfd (spinEmptyData prov)) (hp : p.1 = sphereProdSM4 0) :
+    SphereProdCoboundaryWAdm prov p := by
+  obtain ⟨M, s⟩ := p
+  subst hp
+  exact sphereProdCoboundaryWAdm_sphereDisk prov s
+
+/-- **THE HEADLINE, geometric interface at terminal grain** (`≃+ ZMod 16`) — as
+`kt_equiv_zmod16_of_residuals_freezeAtoms_sphereDisk`, but the `(str, hrow)` row-realization couple is
+collapsed to the SINGLE distinguished-slot base pin `hs2s2 : (row.R.s2s2).1 = sphereProdSM4 0`. The free
+tangential-structure binder `str` is eliminated (it is exactly `(row.R.s2s2).2`, carried through the
+uniform discharge) and the `StrMfd` equality `hrow` is weakened to its manifold component — a strictly
+smaller geometric hypothesis. The whole geometric coboundary content is discharged internally; the
+surviving residual is EXACTLY the settled E1-surgery floor `{row` (the open `SpinSigmaAtoms` bundle)`,
+hCob, hBase}` (`freeze-atoms-not-composable-from-sigma-trace`) plus the fixed K3-assembly residual
+`{H, hcolD, hker, hΦg}`. -/
+theorem kt_equiv_zmod16_of_residuals_freezeAtoms_sphereDiskPinned
+    (H : ∀ p : StrMfd (pinPlusCharPairData residualProv).toTangentialData,
+        charPairBrown residualProv (T2DataBordismGrp.mk (pinPlusCharPairData residualProv) p) = 0 →
+        0 < p.2.n → KRSResidualRow residualProv p)
+    (row : SpinPresentationRow residualProv)
+    (hCob : row.R.HandleTradeCobordism) (hBase : row.R.HyperbolicBase)
+    (hs2s2 : (row.R.s2s2).1 = sphereProdSM4 0)
+    (hcolD : ∀ p : StrMfd (pinPlusCharPairData residualProv).toTangentialData,
+        IsSpinSectorStr residualProv p → RankZeroCollapseDatum residualProv p)
+    (hker : KerPhiSubDoubles residualProv)
+    (hΦg : spinForgetPhi residualProv
+        (DataBordismGrp.mk (spinEmptyData residualProv) row.g) = ktKernelRep residualProv) :
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData residualProv) ≃+ ZMod 16) :=
+  kt_equiv_zmod16_of_residuals_freezeAtoms_ofCoboundary H row hCob hBase
+    (sphereProdCoboundaryWAdm_sphereDisk_ofBase residualProv row.R.s2s2 hs2s2) hcolD hker hΦg
+
+/-- **The Rokhlin-16 twin, geometric interface at terminal grain.** As
+`rokhlin_sixteen_of_residuals_freezeAtoms_sphereDisk` but with `(str, hrow)` collapsed to the single
+distinguished-slot base pin `hs2s2 : (row.R.s2s2).1 = sphereProdSM4 0`. Pure transport; no new residual. -/
+theorem rokhlin_sixteen_of_residuals_freezeAtoms_sphereDiskPinned
+    (H : ∀ p : StrMfd (pinPlusCharPairData residualProv).toTangentialData,
+        charPairBrown residualProv (T2DataBordismGrp.mk (pinPlusCharPairData residualProv) p) = 0 →
+        0 < p.2.n → KRSResidualRow residualProv p)
+    (row : SpinPresentationRow residualProv)
+    (hCob : row.R.HandleTradeCobordism) (hBase : row.R.HyperbolicBase)
+    (hs2s2 : (row.R.s2s2).1 = sphereProdSM4 0)
+    (hcolD : ∀ p : StrMfd (pinPlusCharPairData residualProv).toTangentialData,
+        IsSpinSectorStr residualProv p → RankZeroCollapseDatum residualProv p)
+    (hker : KerPhiSubDoubles residualProv)
+    (hΦg : spinForgetPhi residualProv
+        (DataBordismGrp.mk (spinEmptyData residualProv) row.g) = ktKernelRep residualProv) :
+    Nat.card (T2DataBordismGrp (pinPlusCharPairData residualProv)) = 16 :=
+  rokhlin_sixteen_of_residuals_freezeAtoms_ofCoboundary H row hCob hBase
+    (sphereProdCoboundaryWAdm_sphereDisk_ofBase residualProv row.R.s2s2 hs2s2) hcolD hker hΦg
+
 end
 
 end SKEFTHawking.PinPlusKTSphereProdP23Close
