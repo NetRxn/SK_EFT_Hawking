@@ -613,11 +613,11 @@ theorem kronecker_cupMid_prism_1_2 (Y : TopCat) (arc : C(unitInterval, ↑(Sph 1
         (cochainPullbackInt (prodSnd Y (Sph 1)) 1 windS)) u)
       (prismOpInt (arcH Y arc) 3 c)
       = -(windS (pathEdge (Sph 1) arc)
-          * kronecker (cup w (cochainPullbackInt (endAt Y (arc 1)) 2 u)) c) := by
+          * kronecker (cup w (cochainPullbackInt (endAt Y (arc 1)) (1 + 1) u)) c) := by
   rw [show -(windS (pathEdge (Sph 1) arc)
-        * kronecker (cup w (cochainPullbackInt (endAt Y (arc 1)) 2 u)) c)
+        * kronecker (cup w (cochainPullbackInt (endAt Y (arc 1)) (1 + 1) u)) c)
       = (-(windS (pathEdge (Sph 1) arc)))
-          * kronecker (cup w (cochainPullbackInt (endAt Y (arc 1)) 2 u)) c by ring]
+          * kronecker (cup w (cochainPullbackInt (endAt Y (arc 1)) (1 + 1) u)) c by ring]
   refine kronecker_prismOpInt_of_basis _ _ _ _ (fun σ => ?_) c
   rw [kronecker_prismBasisInt]
   have hmid : ∀ i' : Fin (3 + 1),
@@ -636,7 +636,7 @@ theorem kronecker_cupMid_prism_1_2 (Y : TopCat) (arc : C(unitInterval, ↑(Sph 1
           (cochainPullbackInt (prodSnd Y (Sph 1)) 1 windS)) u)
           (prismSimplex (arcH Y arc) σ i)
         = if i = 1 then (-(windS (pathEdge (Sph 1) arc)))
-            * (cup w (cochainPullbackInt (endAt Y (arc 1)) 2 u)) σ else 0 := by
+            * (cup w (cochainPullbackInt (endAt Y (arc 1)) (1 + 1) u)) σ else 0 := by
     intro i
     by_cases hi1 : i = 1
     · subst hi1
@@ -698,7 +698,7 @@ theorem kronecker_cupMid_prism_1_2 (Y : TopCat) (arc : C(unitInterval, ↑(Sph 1
             windS_const, mul_zero, zero_mul, mul_zero]
   rw [Finset.sum_congr rfl (fun i _ => hvals i), Finset.sum_ite_eq' Finset.univ (1 : Fin (3 + 1))
     (fun _ => (-(windS (pathEdge (Sph 1) arc)))
-      * (cup w (cochainPullbackInt (endAt Y (arc 1)) 2 u)) σ),
+      * (cup w (cochainPullbackInt (endAt Y (arc 1)) (1 + 1) u)) σ),
     if_pos (Finset.mem_univ _)]
 
 
@@ -739,7 +739,7 @@ theorem kronecker_cupMid_torCross_1_2 (Y : TopCat)
     kronecker (cup (cup (cochainPullbackInt (prodFst Y (Sph 1)) 1 w)
         (cochainPullbackInt (prodSnd Y (Sph 1)) 1 windS)) u)
       (torCross Y 3 c)
-      = -(kronecker (cup w (cochainPullbackInt (endAt Y basePt) 2 u)) c) := by
+      = -(kronecker (cup w (cochainPullbackInt (endAt Y basePt) (1 + 1) u)) c) := by
   rw [torCross_apply, kronecker_add_right, kronecker_cupMid_prism_1_2,
     kronecker_cupMid_prism_1_2, windS_pathEdge_arcA, windS_pathEdge_arcB, endAt_arcB_one]
   ring
