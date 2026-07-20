@@ -2354,6 +2354,40 @@ PLACEHOLDER_LEAN_NAMES = {
     v.get('lean_name', k): k for k, v in PLACEHOLDER_THEOREMS.items()
 }
 
+# ─────────────────────────────────────────────────────────────────────────
+# Formula-grounding kind registry (R-05, 2026-07-20)
+# ─────────────────────────────────────────────────────────────────────────
+# Per `formulas.py` `Lean:` reference, the HONEST classification of what the
+# cited theorem provides. The default (any ref NOT listed here) is 'derivation':
+# an independent proof whose CONCLUSION substantively grounds the formula. A
+# ref is listed here ONLY when its grounding is a 'definitional-record' — a
+# theorem that is TRUE BY DEFINITION and therefore does not independently
+# derive the formula:
+#   * an identity wrapper `P → P` that returns its own hypothesis, or
+#   * an `rfl`/definitional equality `f x = <body of f>` (unfolds a definition).
+# The `formula_grounding` validate check enforces this both ways: a vacuous
+# identity wrapper MUST be declared here (it proves nothing), and an entry
+# declared 'derivation' whose Lean is actually an identity wrapper / rfl-
+# definitional equality FAILS — so a definitional record cannot be silently
+# re-labeled a derivation (the R-05 evidence-laundering class). Keys are the
+# short Lean decl name (the `Lean:` token in formulas.py).
+FORMULA_GROUNDING_KIND: dict[str, dict[str, str]] = {
+    'wrt_S2xS1_eq_rank': {
+        'kind': 'definitional-record',
+        'note': "WRTInvariant.lean: `wrtS2xS1 D := D.n` and `wrt_S2xS1_eq_rank : "
+                "wrtS2xS1 D = D.n := rfl`. A definitional equality (the WRT S²×S¹ "
+                "invariant is DEFINED as the rank), NOT an independent derivation "
+                "from the 0-framed-unknot surgery / Verlinde formula. R-05.",
+    },
+    'dd_simples_count': {
+        'kind': 'definitional-record',
+        'note': "DrinfeldDouble.lean: `dd_simples_count (…) (h : Σ irreps = Σ irreps) "
+                ": Σ irreps = Σ irreps := h`. An identity wrapper (type `P → P`, "
+                "returns its hypothesis), NOT a proof of the general Burnside/Drinfeld "
+                "-double simple count. R-05.",
+    },
+}
+
 # native_decide kernel-trust surface ceiling (Substrate Integrity Gates R4 / W5).
 # The decl-closure count (declarations whose transitive axiom closure includes a
 # native_decide compiler-trust axiom — ADR-002's authoritative metric, NOT the

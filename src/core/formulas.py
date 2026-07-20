@@ -3112,6 +3112,12 @@ def drinfeld_double_simples(n_conj_classes, irreps_per_class):
     Each simple module corresponds to an anyon in the DW gauge theory.
 
     Lean: dd_simples_count
+    Grounding: DEFINITIONAL-RECORD (not an independent derivation).
+        `dd_simples_count` has type `P → P` and returns its hypothesis
+        (`(h : Σ irreps = Σ irreps) : Σ irreps = Σ irreps := h`), so it does
+        NOT prove the general Burnside/Drinfeld-double simple count — that
+        identity is asserted from the cited sources and computed here in Python.
+        Classified in constants.FORMULA_GROUNDING_KIND (R-05).
     Aristotle: manual
     Source: Drinfeld, Proc. ICM 1986; Majid, Foundations of Quantum Group Theory (1995)
 
@@ -5351,6 +5357,12 @@ def ground_state_degeneracy(model):
     Fibonacci: GSD = 2 (anyons: 1, τ)
 
     Lean: wrt_S2xS1_eq_rank (WRTInvariant.lean)
+    Grounding: DEFINITIONAL-RECORD (not an independent derivation).
+        `wrtS2xS1 D := D.n` and `wrt_S2xS1_eq_rank : wrtS2xS1 D = D.n := rfl` —
+        the WRT S²×S¹ invariant is DEFINED as the rank, so this is a
+        definitional equality (Z(S²×S¹) = number of simples), NOT a derivation
+        from the 0-framed-unknot surgery / Verlinde formula. Classified in
+        constants.FORMULA_GROUNDING_KIND (R-05).
     Aristotle: N/A (rfl)
     Source: Wen, "Quantum Field Theory of Many-Body Systems" (2004)
 

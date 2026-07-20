@@ -777,6 +777,77 @@ def _thin_type_label(type_str: str):
     return None
 
 
+def _is_vacuous_identity_wrapper(type_str: str) -> bool:
+    """True iff the elaborated type is a DOUBLY-vacuous identity wrapper: an
+    implication `P → P` whose antecedent equals its consequent AND that shared
+    `P` is itself a reflexive equality `Eq X X` / `X = X`. This is the
+    `dd_simples_count` evidence-laundering shape (`… (h : Σ = Σ) : Σ = Σ := h`
+    — returns its hypothesis, proves nothing).
+
+    Requiring the reflexive body is what makes this false-positive-free: a
+    genuine transfer `P_ℝ → P_ℚ` also prints `P → P` after implicit-arg elision
+    (the reason `_thin_type_label` omits bare `P→P`), but there `P` is a
+    substantive proposition, not `Eq X X`. Only the reflexive-body case is
+    unambiguously content-free."""
+    if not type_str:
+        return False
+    core = _strip_leading_binders(type_str.replace("\n", " ").strip())
+    parts = _top_arrow_split(core)
+    if len(parts) < 2 or parts[-1].strip() != parts[-2].strip():
+        return False
+    toks = _top_tokens(parts[-1].strip())
+    return ((len(toks) == 3 and toks[0] == "Eq" and toks[1] == toks[2])
+            or (len(toks) == 3 and toks[1] == "=" and toks[0] == toks[2]))
+
+
+# Bare definitional closers: an `rfl`-family proof of an equality means the two
+# sides are DEFINITIONALLY equal (the theorem unfolds a definition, deriving
+# nothing). `simp`/`norm_num`/`decide` are deliberately NOT here — those can
+# discharge substantive computations.
+_BARE_RFL_RE = re.compile(r"^(by\s+)?(exact\s+)?(rfl|Iff\.rfl|Eq\.refl(\s+\S+)?)$")
+
+
+def _lean_decl_proof_body(short_name: str, module: str):
+    """Normalized proof body of ``short_name`` in its Lean ``module`` file, or
+    None. ``module`` is the lean_deps form ``SKEFTHawking.<Path.To.Module>`` and
+    maps to ``LEAN_DIR/<Path>/<To>/<Module>.lean``. Reads a single file."""
+    if not module:
+        return None
+    import sys as _sys
+    _sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        from build_graph import _scan_lean_theorem_bodies
+    except Exception:  # pragma: no cover - import guard
+        return None
+    segs = str(module).split(".")
+    if segs and segs[0] == "SKEFTHawking":
+        segs = segs[1:]
+    if not segs:
+        return None
+    f = LEAN_DIR.joinpath(*segs).with_suffix(".lean")
+    if not f.exists():
+        return None
+    try:
+        source = f.read_text()
+    except (OSError, UnicodeDecodeError):
+        return None
+    for name, _ln, body in _scan_lean_theorem_bodies(source):
+        if name.split(".")[-1] == short_name:
+            return " ".join(body.split())
+    return None
+
+
+def _grounding_is_definitional(decl: dict) -> bool:
+    """A grounding theorem is a 'definitional record' iff its elaborated type is
+    a vacuous identity wrapper OR its Lean proof body is a bare `rfl`-family
+    closer (definitional equality). Used by `formula_grounding` to keep the
+    `FORMULA_GROUNDING_KIND` declarations honest."""
+    if _is_vacuous_identity_wrapper(decl.get("type", "")):
+        return True
+    body = _lean_decl_proof_body(decl.get("name", "").split(".")[-1], decl.get("module", ""))
+    return bool(body and _BARE_RFL_RE.match(body))
+
+
 def _parse_formula_lean_refs(src: str) -> set:
     """Extract Lean theorem-name tokens from `Lean: …` docstring lines in
     formulas.py, dropping non-decl artifacts (file names, `pending`, fragments,
@@ -856,12 +927,65 @@ def check_formula_grounding() -> CheckResult:
         if _thin_type_label(d.get("type", "")) in _THIN_HARD:
             thin_grounded.append(t)
 
+    # ── R-05: grounding-kind honesty (definitional-record vs derivation) ──
+    # A formula must not present a DEFINITIONAL record (identity wrapper / rfl
+    # equality) as an independent DERIVATION. FORMULA_GROUNDING_KIND is the
+    # authoritative per-ref claim; this cross-checks it against the Lean.
+    from src.core.constants import FORMULA_GROUNDING_KIND
+    kind_violations: List[tuple] = []
+
+    # Leg B (false-positive-free, ALL refs): a vacuous identity wrapper (`P → P`
+    # with reflexive body — proves nothing) MUST be declared a definitional
+    # record; grounding a formula on one as a derivation is forbidden.
+    for t in sorted(refs):
+        if not resolves(t):
+            continue
+        d = decl(t)
+        if not d or not _is_vacuous_identity_wrapper(d.get("type", "")):
+            continue
+        meta = FORMULA_GROUNDING_KIND.get(t.split(".")[-1])
+        if not meta or meta.get("kind") != "definitional-record":
+            kind_violations.append((t,
+                "vacuous identity wrapper (`P → P`, reflexive body — proves nothing) grounds "
+                "a formula; declare grounding_kind='definitional-record' in FORMULA_GROUNDING_KIND "
+                "or reground on a substantive theorem"))
+
+    # Legs A/C (the declared entries): the declared kind must MATCH the Lean.
+    # 'definitional-record' that is actually substantive → mislabel; 'derivation'
+    # that is actually an identity wrapper / rfl-definitional equality → the R-05
+    # relabel we forbid (a definitional record cannot be re-labeled a derivation).
+    for short, meta in FORMULA_GROUNDING_KIND.items():
+        d = by_short.get(short)
+        if not d:
+            kind_violations.append((short,
+                "FORMULA_GROUNDING_KIND entry resolves to no Lean declaration"))
+            continue
+        kind = meta.get("kind")
+        is_defl = _grounding_is_definitional(d)
+        if kind == "definitional-record" and not is_defl:
+            kind_violations.append((short,
+                "declared grounding_kind='definitional-record' but the Lean is neither an identity "
+                "wrapper nor an rfl-definitional equality — inaccurate label (do not hide a "
+                "substantive or open theorem behind a definitional record)"))
+        elif kind == "derivation" and is_defl:
+            kind_violations.append((short,
+                "declared grounding_kind='derivation' but the Lean IS an identity wrapper / "
+                "rfl-definitional equality — a definitional record cannot be re-labeled a "
+                "derivation (R-05 evidence-laundering)"))
+        elif kind not in ("definitional-record", "derivation"):
+            kind_violations.append((short,
+                f"kind={kind!r} is not 'definitional-record' or 'derivation'"))
+
+    ok = not (placeholder_grounded or dangling or thin_grounded or kind_violations)
     details: List[Detail] = []
     details.append(Detail(
-        "coverage", not (placeholder_grounded or dangling or thin_grounded),
+        "coverage", ok,
         f"{len(refs)} Lean refs; {len(refs) - len(dangling)} resolve; "
         f"{len(placeholder_grounded)} placeholder-grounded; {len(thin_grounded)} thin-grounded; "
-        f"{len(dangling)} dangling"))
+        f"{len(dangling)} dangling; {len(FORMULA_GROUNDING_KIND)} grounding-kind declared; "
+        f"{len(kind_violations)} grounding-kind violation(s)"))
+    for t, msg in kind_violations:
+        details.append(Detail(t, False, msg))
     for t in placeholder_grounded:
         details.append(Detail(t, False, "formula grounded on a placeholder/True stub (Invariant #4)"))
     for t in thin_grounded:
@@ -878,7 +1002,7 @@ def check_formula_grounding() -> CheckResult:
         details.append(Detail(
             t, False,
             "formula Lean-ref does not resolve (stale/renamed) — fix the name or drop the ref"))
-    return CheckResult(passed=not (placeholder_grounded or dangling or thin_grounded), details=details)
+    return CheckResult(passed=ok, details=details)
 
 
 @register_check(
