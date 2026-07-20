@@ -4668,6 +4668,9 @@ import SKEFTHawking.KummerHomologyT4H2
 import SKEFTHawking.KummerHomologyT4Full
 import SKEFTHawking.KummerT4GramDiagonal
 import SKEFTHawking.KummerResolutionPiece
+import SKEFTHawking.CircleWindingCocycle
+import SKEFTHawking.TorusCrossPeel
+import SKEFTHawking.KummerT4GramCross
 import SKEFTHawking.KTCompletenessProvider
 import SKEFTHawking.KTCompletenessTransfer
 import SKEFTHawking.Carrollian.Structure
