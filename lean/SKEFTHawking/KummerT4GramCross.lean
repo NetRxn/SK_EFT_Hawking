@@ -519,4 +519,489 @@ theorem V4_23_23 : kronecker (cup (cup b2 b3) (cup b2 b3)) t4chain = 0 := by
   rw [b2_eq, b3_eq, t4chain_eq, kronecker_cupMid_torCross_1_2, cochainPullbackInt_cup,
     pb_endAt_snd_windS, cup_zero_right, cup_zero_right, kronecker_zero_left, neg_zero]
 
+
+/-! ## §6. The honest intersection-form values — the global unit `t4m` -/
+
+/-- The six cocycle representatives of the pair classes. -/
+noncomputable def e01c : LinearMap.ker (coboundaryₗ (Tor (Tor TwoTorus)) 2) :=
+  ⟨cup b0 b1, LinearMap.mem_ker.mpr (cup_cocycle b0 b1 b0_cocycle b1_cocycle)⟩
+
+noncomputable def e02c : LinearMap.ker (coboundaryₗ (Tor (Tor TwoTorus)) 2) :=
+  ⟨cup b0 b2, LinearMap.mem_ker.mpr (cup_cocycle b0 b2 b0_cocycle b2_cocycle)⟩
+
+noncomputable def e03c : LinearMap.ker (coboundaryₗ (Tor (Tor TwoTorus)) 2) :=
+  ⟨cup b0 b3, LinearMap.mem_ker.mpr (cup_cocycle b0 b3 b0_cocycle b3_cocycle)⟩
+
+noncomputable def e12c : LinearMap.ker (coboundaryₗ (Tor (Tor TwoTorus)) 2) :=
+  ⟨cup b1 b2, LinearMap.mem_ker.mpr (cup_cocycle b1 b2 b1_cocycle b2_cocycle)⟩
+
+noncomputable def e13c : LinearMap.ker (coboundaryₗ (Tor (Tor TwoTorus)) 2) :=
+  ⟨cup b1 b3, LinearMap.mem_ker.mpr (cup_cocycle b1 b3 b1_cocycle b3_cocycle)⟩
+
+noncomputable def e23c : LinearMap.ker (coboundaryₗ (Tor (Tor TwoTorus)) 2) :=
+  ⟨cup b2 b3, LinearMap.mem_ker.mpr (cup_cocycle b2 b3 b2_cocycle b3_cocycle)⟩
+
+/-- The six `e`-classes in `H²(T⁴;ℤ)`. -/
+noncomputable def eH01 : Cohomology (Tor (Tor TwoTorus)) 2 :=
+  Submodule.Quotient.mk e01c
+
+noncomputable def eH02 : Cohomology (Tor (Tor TwoTorus)) 2 :=
+  Submodule.Quotient.mk e02c
+
+noncomputable def eH03 : Cohomology (Tor (Tor TwoTorus)) 2 :=
+  Submodule.Quotient.mk e03c
+
+noncomputable def eH12 : Cohomology (Tor (Tor TwoTorus)) 2 :=
+  Submodule.Quotient.mk e12c
+
+noncomputable def eH13 : Cohomology (Tor (Tor TwoTorus)) 2 :=
+  Submodule.Quotient.mk e13c
+
+noncomputable def eH23 : Cohomology (Tor (Tor TwoTorus)) 2 :=
+  Submodule.Quotient.mk e23c
+
+theorem t4chain_mem : t4chain ∈ cycles (Tor (Tor TwoTorus)) 4 :=
+  LinearMap.mem_ker.mpr t4_cycle
+
+/-- **The global unit** — the `H₄`-coordinate of the explicit cross cycle. -/
+noncomputable def t4m : ℤ :=
+  SKEFTHawking.KummerHomologyT4Full.fourStepH4EquivInt
+    (Submodule.Quotient.mk (⟨t4chain, t4chain_mem⟩ : cycles (Tor (Tor TwoTorus)) 4))
+
+/-- `[t4chain] = t4m • [T⁴]` — automatic from `H₄(T⁴;ℤ) ≅ ℤ`; no generator detection. -/
+theorem t4Class_smul :
+    (Submodule.Quotient.mk (⟨t4chain, t4chain_mem⟩ : cycles (Tor (Tor TwoTorus)) 4)
+        : Homology (Tor (Tor TwoTorus)) 4)
+      = t4m • SKEFTHawking.KummerT4GramDiagonal.t4FundClassInt := by
+  rw [SKEFTHawking.KummerT4GramDiagonal.t4FundClassInt, ← map_smul, smul_eq_mul, mul_one]
+  exact (LinearEquiv.symm_apply_apply _ _).symm
+
+/-- **The chain–class bridge**: every explicit evaluation is `t4m` times the honest Gram entry. -/
+theorem kronecker_t4_eq (c₁ c₂ : LinearMap.ker (coboundaryₗ (Tor (Tor TwoTorus)) 2)) :
+    kronecker (cup c₁.1 c₂.1) t4chain
+      = t4m * interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+          (Submodule.Quotient.mk c₁) (Submodule.Quotient.mk c₂) := by
+  rw [SKEFTHawking.KummerT4GramDiagonal.interFormInt_honest_t4, cupH24_mk_mk]
+  have h1 : kronecker (cup c₁.1 c₂.1) t4chain
+      = kroneckerHInt 4 (Submodule.Quotient.mk
+          (⟨cup c₁.1 c₂.1, cup_cocycle c₁.1 c₂.1 (LinearMap.mem_ker.mp c₁.2)
+            (LinearMap.mem_ker.mp c₂.2)⟩ : LinearMap.ker (coboundaryₗ (Tor (Tor TwoTorus)) 4)))
+          (Submodule.Quotient.mk (⟨t4chain, t4chain_mem⟩ : cycles (Tor (Tor TwoTorus)) 4)) :=
+    (kroneckerHInt_mk_mk
+      (⟨cup c₁.1 c₂.1, cup_cocycle c₁.1 c₂.1 (LinearMap.mem_ker.mp c₁.2)
+        (LinearMap.mem_ker.mp c₂.2)⟩ : LinearMap.ker (coboundaryₗ (Tor (Tor TwoTorus)) 4))
+      (⟨t4chain, t4chain_mem⟩ : cycles (Tor (Tor TwoTorus)) 4)).symm
+  rw [h1, t4Class_smul, map_smul, smul_eq_mul]
+  congr 1
+
+/-- **`t4m` is a unit** — forced by the computed complementary value `1`. -/
+theorem t4m_unit : t4m = 1 ∨ t4m = -1 :=
+  Int.isUnit_iff.mp (IsUnit.of_mul_eq_one _ ((kronecker_t4_eq e01c e23c).symm.trans V4_01_23))
+
+theorem t4m_mul_t4m : t4m * t4m = 1 := by
+  rcases t4m_unit with hm | hm <;> rw [hm] <;> norm_num
+
+/-- Invert the global unit on a computed value. -/
+theorem of_m_mul {G v : ℤ} (h : t4m * G = v) : G = t4m * v := by
+  rcases t4m_unit with hm | hm <;> rw [hm] at h ⊢ <;> linarith
+
+theorem gh01_01 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH01 eH01 = 0 := by
+  have h := (kronecker_t4_eq e01c e01c).symm.trans V4_01_01
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh01_02 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH01 eH02 = 0 := by
+  have h := (kronecker_t4_eq e01c e02c).symm.trans V4_01_02
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh01_03 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH01 eH03 = 0 := by
+  have h := (kronecker_t4_eq e01c e03c).symm.trans V4_01_03
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh01_12 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH01 eH12 = 0 := by
+  have h := (kronecker_t4_eq e01c e12c).symm.trans V4_01_12
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh01_13 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH01 eH13 = 0 := by
+  have h := (kronecker_t4_eq e01c e13c).symm.trans V4_01_13
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh01_23 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH01 eH23 = t4m := by
+  have h := (kronecker_t4_eq e01c e23c).symm.trans V4_01_23
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh02_02 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH02 eH02 = 0 := by
+  have h := (kronecker_t4_eq e02c e02c).symm.trans V4_02_02
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh02_03 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH02 eH03 = 0 := by
+  have h := (kronecker_t4_eq e02c e03c).symm.trans V4_02_03
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh02_12 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH02 eH12 = 0 := by
+  have h := (kronecker_t4_eq e02c e12c).symm.trans V4_02_12
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh02_13 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH02 eH13 = -t4m := by
+  have h := (kronecker_t4_eq e02c e13c).symm.trans V4_02_13
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh02_23 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH02 eH23 = 0 := by
+  have h := (kronecker_t4_eq e02c e23c).symm.trans V4_02_23
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh03_03 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH03 eH03 = 0 := by
+  have h := (kronecker_t4_eq e03c e03c).symm.trans V4_03_03
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh03_12 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH03 eH12 = t4m := by
+  rw [interFormInt_symm]
+  have h := (kronecker_t4_eq e12c e03c).symm.trans V4_12_03
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh03_13 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH03 eH13 = 0 := by
+  have h := (kronecker_t4_eq e03c e13c).symm.trans V4_03_13
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh03_23 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH03 eH23 = 0 := by
+  have h := (kronecker_t4_eq e03c e23c).symm.trans V4_03_23
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh12_12 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH12 eH12 = 0 := by
+  have h := (kronecker_t4_eq e12c e12c).symm.trans V4_12_12
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh12_13 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH12 eH13 = 0 := by
+  have h := (kronecker_t4_eq e12c e13c).symm.trans V4_12_13
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh12_23 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH12 eH23 = 0 := by
+  have h := (kronecker_t4_eq e12c e23c).symm.trans V4_12_23
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh13_13 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH13 eH13 = 0 := by
+  have h := (kronecker_t4_eq e13c e13c).symm.trans V4_13_13
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh13_23 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH13 eH23 = 0 := by
+  have h := (kronecker_t4_eq e13c e23c).symm.trans V4_13_23
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh23_23 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH23 eH23 = 0 := by
+  have h := (kronecker_t4_eq e23c e23c).symm.trans V4_23_23
+  have h2 := of_m_mul h
+  simpa using h2
+
+theorem gh02_01 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH02 eH01 = 0 := by
+  rw [interFormInt_symm]
+  exact gh01_02
+
+theorem gh03_01 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH03 eH01 = 0 := by
+  rw [interFormInt_symm]
+  exact gh01_03
+
+theorem gh12_01 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH12 eH01 = 0 := by
+  rw [interFormInt_symm]
+  exact gh01_12
+
+theorem gh13_01 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH13 eH01 = 0 := by
+  rw [interFormInt_symm]
+  exact gh01_13
+
+theorem gh23_01 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH23 eH01 = t4m := by
+  rw [interFormInt_symm]
+  exact gh01_23
+
+theorem gh03_02 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH03 eH02 = 0 := by
+  rw [interFormInt_symm]
+  exact gh02_03
+
+theorem gh12_02 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH12 eH02 = 0 := by
+  rw [interFormInt_symm]
+  exact gh02_12
+
+theorem gh13_02 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH13 eH02 = -t4m := by
+  rw [interFormInt_symm]
+  exact gh02_13
+
+theorem gh23_02 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH23 eH02 = 0 := by
+  rw [interFormInt_symm]
+  exact gh02_23
+
+theorem gh12_03 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH12 eH03 = t4m := by
+  rw [interFormInt_symm]
+  exact gh03_12
+
+theorem gh13_03 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH13 eH03 = 0 := by
+  rw [interFormInt_symm]
+  exact gh03_13
+
+theorem gh23_03 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH23 eH03 = 0 := by
+  rw [interFormInt_symm]
+  exact gh03_23
+
+theorem gh13_12 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH13 eH12 = 0 := by
+  rw [interFormInt_symm]
+  exact gh12_13
+
+theorem gh23_12 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH23 eH12 = 0 := by
+  rw [interFormInt_symm]
+  exact gh12_23
+
+theorem gh23_13 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    eH23 eH13 = 0 := by
+  rw [interFormInt_symm]
+  exact gh13_23
+
+/-! ## §7. The basis, the intersection matrix, and `IntCongr` to `3H` -/
+
+/-- The e-class family, `Fin 6`-indexed in the pair order `[01, 02, 03, 12, 13, 23]`. -/
+noncomputable def eFam : Fin 6 → Cohomology (Tor (Tor TwoTorus)) 2 :=
+  ![eH01, eH02, eH03, eH12, eH13, eH23]
+
+/-- The `3H`-shaped reference cross matrix in the pair basis: `±1` exactly on complementary
+pairs. -/
+def XMat : Matrix (Fin 6) (Fin 6) ℤ :=
+  !![0, 0, 0, 0, 0, 1;
+     0, 0, 0, 0, -1, 0;
+     0, 0, 0, 1, 0, 0;
+     0, 0, 1, 0, 0, 0;
+     0, -1, 0, 0, 0, 0;
+     1, 0, 0, 0, 0, 0]
+
+/-- **The full Gram identification**: the intersection form on the six `e`-classes is `t4m • XMat`
+— every one of the 36 entries. -/
+theorem eGram_eq : (Matrix.of fun r s =>
+      interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest (eFam r) (eFam s))
+    = t4m • XMat := by
+  ext r s
+  fin_cases r <;> fin_cases s
+  · exact gh01_01.trans (mul_zero t4m).symm
+  · exact gh01_02.trans (mul_zero t4m).symm
+  · exact gh01_03.trans (mul_zero t4m).symm
+  · exact gh01_12.trans (mul_zero t4m).symm
+  · exact gh01_13.trans (mul_zero t4m).symm
+  · exact gh01_23.trans (mul_one t4m).symm
+  · exact gh02_01.trans (mul_zero t4m).symm
+  · exact gh02_02.trans (mul_zero t4m).symm
+  · exact gh02_03.trans (mul_zero t4m).symm
+  · exact gh02_12.trans (mul_zero t4m).symm
+  · exact gh02_13.trans (mul_neg_one t4m).symm
+  · exact gh02_23.trans (mul_zero t4m).symm
+  · exact gh03_01.trans (mul_zero t4m).symm
+  · exact gh03_02.trans (mul_zero t4m).symm
+  · exact gh03_03.trans (mul_zero t4m).symm
+  · exact gh03_12.trans (mul_one t4m).symm
+  · exact gh03_13.trans (mul_zero t4m).symm
+  · exact gh03_23.trans (mul_zero t4m).symm
+  · exact gh12_01.trans (mul_zero t4m).symm
+  · exact gh12_02.trans (mul_zero t4m).symm
+  · exact gh12_03.trans (mul_one t4m).symm
+  · exact gh12_12.trans (mul_zero t4m).symm
+  · exact gh12_13.trans (mul_zero t4m).symm
+  · exact gh12_23.trans (mul_zero t4m).symm
+  · exact gh13_01.trans (mul_zero t4m).symm
+  · exact gh13_02.trans (mul_neg_one t4m).symm
+  · exact gh13_03.trans (mul_zero t4m).symm
+  · exact gh13_12.trans (mul_zero t4m).symm
+  · exact gh13_13.trans (mul_zero t4m).symm
+  · exact gh13_23.trans (mul_zero t4m).symm
+  · exact gh23_01.trans (mul_one t4m).symm
+  · exact gh23_02.trans (mul_zero t4m).symm
+  · exact gh23_03.trans (mul_zero t4m).symm
+  · exact gh23_12.trans (mul_zero t4m).symm
+  · exact gh23_13.trans (mul_zero t4m).symm
+  · exact gh23_23.trans (mul_zero t4m).symm
+
+theorem XMat_mul_XMat : XMat * XMat = 1 := by decide
+
+/-- The Gram matrix squares to the identity (so its determinant is a unit). -/
+theorem eGram_mul_self : (Matrix.of fun r s =>
+      interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest (eFam r) (eFam s))
+    * (Matrix.of fun r s =>
+      interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest (eFam r) (eFam s))
+    = 1 := by
+  rw [eGram_eq, Matrix.smul_mul, Matrix.mul_smul, smul_smul, t4m_mul_t4m, one_smul,
+    XMat_mul_XMat]
+
+theorem eGram_det_isUnit : IsUnit (Matrix.of fun r s =>
+    interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+      (eFam r) (eFam s)).det :=
+  IsUnit.of_mul_eq_one _ (by rw [← Matrix.det_mul, eGram_mul_self, Matrix.det_one])
+
+/-- **Unimodular Gram ⟹ basis** (over ℤ, rank 6): a family whose Gram matrix under a bilinear
+form has unit determinant is itself a basis. Pure linear algebra: the change-of-basis matrix
+squares into the Gram determinant, so it is unimodular and `LinearEquiv.ofIsUnitDet` upgrades the
+coordinate map. -/
+theorem exists_basis_of_gram_isUnit {M : Type} [AddCommGroup M] [Module ℤ M]
+    (b : Module.Basis (Fin 6) ℤ M) (B : M →ₗ[ℤ] M →ₗ[ℤ] ℤ) (v : Fin 6 → M)
+    (h : IsUnit (Matrix.of fun i j => B (v i) (v j)).det) :
+    ∃ e : Module.Basis (Fin 6) ℤ M, ∀ i, e i = v i := by
+  set f : M →ₗ[ℤ] M := b.constr ℕ v with hf
+  have hfb : ∀ i, f (b i) = v i := fun i => b.constr_basis ℕ v i
+  have hGram : (Matrix.of fun i j => B (v i) (v j))
+      = (LinearMap.toMatrix b b f).transpose * (LinearMap.toMatrix₂ b b B)
+          * (LinearMap.toMatrix b b f) := by
+    rw [← LinearMap.toMatrix₂_compl₁₂ b b b b B f f]
+    ext i j
+    rw [Matrix.of_apply, LinearMap.toMatrix₂_apply, LinearMap.compl₁₂_apply, hfb, hfb]
+  have hdet : IsUnit (LinearMap.toMatrix b b f).det := by
+    have hsplit : (Matrix.of fun i j => B (v i) (v j)).det
+        = (LinearMap.toMatrix b b f).det
+          * ((LinearMap.toMatrix₂ b b B).det * (LinearMap.toMatrix b b f).det) := by
+      rw [hGram, Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose]
+      ring
+    rw [hsplit] at h
+    exact isUnit_of_mul_isUnit_left h
+  refine ⟨b.map (LinearEquiv.ofIsUnitDet hdet), fun i => ?_⟩
+  rw [Module.Basis.map_apply]
+  exact (DFunLike.congr_fun (LinearEquiv.coe_ofIsUnitDet hdet) (b i)).trans (hfb i)
+
+/-- The reference rank-6 basis of `H²(T⁴;ℤ)` (UCT dual of the banked `H₂ ≅ ℤ⁶`). -/
+noncomputable def t4RefBasis : Module.Basis (Fin 6) ℤ (Cohomology (Tor (Tor TwoTorus)) 2) :=
+  ((Module.Basis.ofEquivFun
+      SKEFTHawking.KummerHomologyT4H2.fourStepH2EquivFin6).dualBasis).map
+    (haveI : Module.Free ℤ (Homology (Tor (Tor TwoTorus)) (0 + 1)) :=
+      inferInstanceAs (Module.Free ℤ (Homology (Tor (Tor TwoTorus)) 1))
+     SKEFTHawking.SingularAbsoluteUCInt.ucIntEquivOfFree (Tor (Tor TwoTorus)) 0).symm
+
+theorem exists_t4GramBasis :
+    ∃ e : Module.Basis (Fin 6) ℤ (Cohomology (Tor (Tor TwoTorus)) 2), ∀ i, e i = eFam i :=
+  exists_basis_of_gram_isUnit t4RefBasis
+    (interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest) eFam eGram_det_isUnit
+
+/-- **The six `e`-classes form a ℤ-basis of `H²(T⁴;ℤ)`.** -/
+noncomputable def t4GramBasis : Module.Basis (Fin 6) ℤ (Cohomology (Tor (Tor TwoTorus)) 2) :=
+  exists_t4GramBasis.choose
+
+theorem t4GramBasis_apply (i : Fin 6) : t4GramBasis i = eFam i :=
+  exists_t4GramBasis.choose_spec i
+
+/-- The pair basis packaged as the `IntH2Basis` datum (rank `6`). -/
+noncomputable def t4IntH2Basis : IntH2Basis (Tor (Tor TwoTorus)) :=
+  ⟨6, t4GramBasis⟩
+
+/-- **The T⁴ intersection matrix in the pair basis is `t4m • XMat`.** -/
+theorem interMatrix_t4_eq :
+    interMatrix SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest t4IntH2Basis
+      = t4m • XMat := by
+  ext r s
+  rw [interMatrix_apply]
+  show interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
+    (t4GramBasis r) (t4GramBasis s) = (t4m • XMat) r s
+  rw [t4GramBasis_apply, t4GramBasis_apply]
+  exact congrFun (congrFun eGram_eq r) s
+
+/-- The two congruence witnesses (signed permutations pairing complementary indices). -/
+def P1mat : Matrix (Fin 6) (Fin 6) ℤ :=
+  !![1, 0, 0, 0, 0, 0;
+     0, 0, 1, 0, 0, 0;
+     0, 0, 0, 0, 1, 0;
+     0, 0, 0, 0, 0, 1;
+     0, 0, 0, -1, 0, 0;
+     0, 1, 0, 0, 0, 0]
+
+def P2mat : Matrix (Fin 6) (Fin 6) ℤ :=
+  !![1, 0, 0, 0, 0, 0;
+     0, 0, 1, 0, 0, 0;
+     0, 0, 0, 0, 1, 0;
+     0, 0, 0, 0, 0, -1;
+     0, 0, 0, 1, 0, 0;
+     0, -1, 0, 0, 0, 0]
+
+theorem P1_mul_P1t : P1mat * P1mat.transpose = 1 := by decide
+
+theorem P2_mul_P2t : P2mat * P2mat.transpose = 1 := by decide
+
+theorem P1_det_isUnit : IsUnit P1mat.det :=
+  IsUnit.of_mul_eq_one _
+    (by rw [← Matrix.det_mul, P1_mul_P1t, Matrix.det_one] : P1mat.det * P1mat.transpose.det = 1)
+
+theorem P2_det_isUnit : IsUnit P2mat.det :=
+  IsUnit.of_mul_eq_one _
+    (by rw [← Matrix.det_mul, P2_mul_P2t, Matrix.det_one] : P2mat.det * P2mat.transpose.det = 1)
+
+/-! ## §8. Headlines -/
+
+/-- **THE K1-b GRAM IDENTITY — `II(T⁴) ≅ 3H`.** The honest intersection matrix of `T⁴` in the
+pair basis is integrally congruent to the canonical three-hyperbolic-plane block form
+`torusFourForm`. The cross-value keystone, closed EZ-free. -/
+theorem interMatrix_t4_intCongr_torusFourForm :
+    IntCongr (interMatrix SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest t4IntH2Basis)
+      SKEFTHawking.KummerInvolution.torusFourForm := by
+  rw [interMatrix_t4_eq]
+  rcases t4m_unit with hm | hm <;> rw [hm]
+  · rw [one_smul]
+    exact ⟨P1mat, P1_det_isUnit, by decide⟩
+  · rw [neg_smul, one_smul]
+    exact ⟨P2mat, P2_det_isUnit, by decide⟩
+
+/-- **The complementary cross value, honest form**: `⟨e₀₁ ∪ e₂₃, [T⁴]⟩ = t4m`. -/
+theorem interFormInt_honest_e01_e23 :
+    interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest eH01 eH23 = t4m :=
+  gh01_23
+
+/-- **The complementary cross value is `±1`** — the unimodular off-diagonal entry the six prior
+arcs could not reach. -/
+theorem interFormInt_honest_e01_e23_pm :
+    interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest eH01 eH23 = 1
+      ∨ interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest eH01 eH23 = -1 := by
+  rcases t4m_unit with hm | hm <;> rw [gh01_23, hm]
+  · exact Or.inl rfl
+  · exact Or.inr rfl
+
 end SKEFTHawking.KummerT4GramCross
