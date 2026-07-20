@@ -4668,6 +4668,7 @@ import SKEFTHawking.KummerHomologyT4H2
 import SKEFTHawking.KummerHomologyT4Full
 import SKEFTHawking.KummerT4GramDiagonal
 import SKEFTHawking.KTCompletenessProvider
+import SKEFTHawking.KTCompletenessTransfer
 import SKEFTHawking.Carrollian.Structure
 import SKEFTHawking.Carrollian.WittAlgebra
 import SKEFTHawking.Carrollian.BMSAlgebra
