@@ -109,4 +109,83 @@ theorem interior_isManifold :
     IsManifold ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) ω (↥openPunctured) :=
   inferInstance
 
+/-! ## §C. The descent primitive — `qmk` is a local homeomorphism (the covering structure of `Q`)
+
+The mission's interior-chart descent engine (`isOpenEmbedding_qmk_sepBall`) packages into the
+`RP4PointSet` `toRP4_localOpenPartialHomeomorph` shape: on each separating ball `qmk` is an
+`OpenPartialHomeomorph`, so `qmk : ↥T⁴° ↠ Q` is a **local homeomorphism** (a 2-to-1 covering map).
+This is PURELY TOPOLOGICAL — it holds on the WHOLE of `↥T⁴°` (freeness of `τ` holds on the boundary
+spheres too), independent of the smooth-boundary question. It is the topological backbone for the
+chart descent on both the interior and the boundary of `Q`: `Q` is locally homeomorphic to `T⁴°`
+everywhere, so `Q` is a topological 4-manifold-with-boundary wherever `T⁴°` is. -/
+
+/-- **The local `OpenPartialHomeomorph` of `qmk` at `x`** — the separating-ball open embedding
+`isOpenEmbedding_qmk_sepBall` packaged as an `OpenPartialHomeomorph ↥T⁴° Q` (the
+`toRP4_localOpenPartialHomeomorph` analogue; the reusable interior/boundary chart-descent primitive).
+Source `= ball x (sepRadius x)`; `qmk`-image as target; local inverse the `InjOn` section. -/
+noncomputable def qmk_localOpenPartialHomeomorph (x : ↥puncturedTorus) :
+    OpenPartialHomeomorph (↥puncturedTorus) FreeQuotient := by
+  refine OpenPartialHomeomorph.ofContinuousOpenRestrict
+    (Set.InjOn.toPartialEquiv qmk (Metric.ball x (sepRadius x)) (qmk_injOn_sepBall x)) ?_ ?_ ?_
+  · exact continuous_quotient_mk'.continuousOn
+  · exact isOpenMap_qmk.restrict Metric.isOpen_ball
+  · exact Metric.isOpen_ball
+
+/-- The source of the local `OpenPartialHomeomorph` at `x` is the separating ball. -/
+@[simp] theorem qmk_localOpenPartialHomeomorph_source (x : ↥puncturedTorus) :
+    (qmk_localOpenPartialHomeomorph x).source = Metric.ball x (sepRadius x) := rfl
+
+/-- The local `OpenPartialHomeomorph` at `x` agrees with `qmk` on its source. -/
+@[simp] theorem qmk_localOpenPartialHomeomorph_apply (x y : ↥puncturedTorus) :
+    (qmk_localOpenPartialHomeomorph x) y = qmk y := rfl
+
+/-- Every `x` lies in the source of its own local `OpenPartialHomeomorph` (center of the ball). -/
+theorem mem_qmk_localOpenPartialHomeomorph_source (x : ↥puncturedTorus) :
+    x ∈ (qmk_localOpenPartialHomeomorph x).source :=
+  Metric.mem_ball_self (sepRadius_pos x)
+
+/-- **`qmk : ↥T⁴° ↠ Q` is a local homeomorphism** — the 2-to-1 covering structure of the free
+quotient (the `toRP4_isLocalHomeomorph` analogue, one dimension up). Every point of `T⁴°` — interior
+OR boundary — has a neighborhood mapped homeomorphically onto its `qmk`-image, so `Q` is locally
+homeomorphic to `T⁴°` everywhere. Purely topological (freeness on the whole `T⁴°`), so it is the
+chart-descent backbone that survives the boundary-corner question. -/
+theorem qmk_isLocalHomeomorph : IsLocalHomeomorph qmk :=
+  IsLocalHomeomorph.mk qmk fun x =>
+    ⟨qmk_localOpenPartialHomeomorph x, mem_qmk_localOpenPartialHomeomorph_source x, fun _ _ => rfl⟩
+
+/-! ## §D. WALL REPORT — the smooth-boundary target needs an architecture decision (for the lead)
+
+**What lands here (decision-independent, GREEN):**
+- `interior_isManifold` — the interior of `T⁴°` is a boundaryless smooth `C^ω` 4-manifold (§B).
+- `qmk_isLocalHomeomorph` — `Q` is locally homeomorphic to `T⁴°` EVERYWHERE, so `Q` is a topological
+  4-manifold-with-boundary wherever `T⁴°` is; and interior points of `Q` descend the `T⁴°` charts
+  through `qmk_localOpenPartialHomeomorph` (§C). This is the topological backbone of the K6′b weld.
+
+**The wall (`ball_isBox`, §A):** `excisedBalls` are `Metric.ball c (1/2)` in the product (sup)
+metric, hence BOXES. So `Metric.sphere c (1/2)` (= `boundarySphere c`, the pinned "S³") is a CUBICAL
+`S³` with edges/corners, not a round `S³`. Consequences:
+  1. A smooth `IsManifold (𝓡∂ 4)` / `((𝓡 3).prod (𝓡∂ 1))` structure with the banked DiskManifold
+     spherical-shell collar chart (direction ∈ S³ × radial ∈ half-space) does NOT apply on the nose:
+     near a corner the local model is a Euclidean QUADRANT, not a half-space. The literal
+     `puncturedTorus` is a manifold-with-CORNERS, not -with-boundary.
+  2. The `centeredChartParam c` centered charts do NOT carry the box boundary to a round Euclidean
+     sphere (`centeredChartParam` uses `Circle.exp` = arc-length, an isometry of the chart line but
+     NOT of the chordal `Circle` metric), so "transport to the standard ℝ⁴-minus-ball model" — the
+     mission's collar-chart plan — is not literal.
+
+**Recommended fix (lead decision; a statement change to K4′, so out of this worker's scope):**
+Redefine the 16 excised balls as the `centeredChartParam c`-images of ROUND Euclidean balls
+`{t : ℝ⁴ | ‖t‖ < ρ}` (a "coordinate ball" in the τ = −id centered chart) instead of the sup-metric
+`Metric.ball c (1/2)`. Then (a) the boundary is a round `S³` in the chart, the DiskManifold collar
+chart applies, and the smooth `IsManifold (𝓡∂ 4)` target is reachable; (b) the `τ = −id` normal form
+(`centeredChartParam_involution`) makes the boundary quotient exactly `S³/±1 = ℝP³` on the nose,
+matching K6′a's `∂E ≅ ℝP³` weld presentation (Design Risk #2). The `qmk_isLocalHomeomorph` /
+`interior_isManifold` bricks here carry over verbatim; only the excised-region definition and the
+disjointness/`sphere_subset` lemmas (currently metric) need re-deriving in chart coordinates.
+
+Until that decision, the smooth manifold-with-boundary ChartedSpace on the FULL `T⁴°`/`Q` (both
+`IsManifold` AND a Euclidean-model ChartedSpace instance at the corner/boundary points) is blocked;
+the interior smooth structure and the topological covering structure above are the maximal clean
+prefix. -/
+
 end SKEFTHawking.KummerChartedSpace
