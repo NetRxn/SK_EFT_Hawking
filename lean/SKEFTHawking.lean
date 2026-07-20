@@ -4660,6 +4660,7 @@ import SKEFTHawking.PinPlusKTSphereProdP23Close
 import SKEFTHawking.KummerK3Base
 import SKEFTHawking.KummerInvolution
 import SKEFTHawking.KummerPuncturedTorus
+import SKEFTHawking.KummerFreeQuotient
 import SKEFTHawking.KummerHomologyT4
 import SKEFTHawking.KummerH0T4
 import SKEFTHawking.KummerHomologyT2
