@@ -204,6 +204,158 @@ noncomputable def collarHomeoE :
     ↥collarRegion ≃ₜ ↥(Set.range (fun p : ↥collarRegion => chart0 p.1)) :=
   isOpenEmbedding_chart0_collarRegion.isEmbedding.toHomeomorph
 
+/-- **The boundary `∂E` inside the base-interior is exactly the radial-zero locus `‖w‖ = 1`.** For a
+base-interior point (`‖z‖ < 1`), `chart0 p ∈ ∂E ↔ ‖w‖ = 1`: the only way to hit `∂E` is the honest
+fiber boundary (a cross-chart weld would force `‖z‖ = 1`, excluded). This is the "boundary = radial
+coordinate `1 − ‖w‖` vanishes" fact the manifold-with-boundary structure rests on. -/
+theorem chart0_mem_boundaryE_iff {p : ResChart} (hp : ‖(p.1 : ℂ)‖ < 1) :
+    chart0 p ∈ boundaryE ↔ ‖(p.2 : ℂ)‖ = 1 := by
+  constructor
+  · rintro ⟨q, hq, (h | h)⟩
+    · rw [chart0_inj_iff.mp h]; exact hq
+    · exact absurd (chart0_eq_chart1_iff.mp h).1 (ne_of_lt hp)
+  · intro h; exact ⟨p, h, Or.inl rfl⟩
+
+/-- The `chart1` mirror: on the base-interior, `chart1 p ∈ ∂E ↔ ‖w‖ = 1`. -/
+theorem chart1_mem_boundaryE_iff {p : ResChart} (hp : ‖(p.1 : ℂ)‖ < 1) :
+    chart1 p ∈ boundaryE ↔ ‖(p.2 : ℂ)‖ = 1 := by
+  constructor
+  · rintro ⟨q, hq, (h | h)⟩
+    · have hg : glued q p := chart0_eq_chart1_iff.mp h.symm
+      exact absurd (by rw [hg.2.1, norm_inv, hg.1, inv_one] : ‖(p.1 : ℂ)‖ = 1) (ne_of_lt hp)
+    · rw [chart1_inj_iff.mp h]; exact hq
+  · intro h; exact ⟨p, h, Or.inr rfl⟩
+
+/-! ### §B.1. The fiber-collar radial coordinate `1 − ‖w‖`
+
+The half-space radial coordinate of the boundary collar chart (the `1 − ‖v‖` of
+`DiskChartGeneric.diskCollarChart`, oriented as in the disk original — the mirror of the shell's
+`‖t‖ − ρ`): nonnegative on the closed disk fiber, and exactly zero on the fiber boundary `‖w‖ = 1`. -/
+
+/-- **The fiber radial coordinate** `1 − ‖w‖` of a chart point: the half-space coordinate of the collar
+chart, `≥ 0` on the disk fiber, `= 0` on the fiber boundary `∂E`. -/
+def fiberRadial (p : ResChart) : ℝ := 1 - ‖(p.2 : ℂ)‖
+
+theorem fiberRadial_nonneg (p : ResChart) : 0 ≤ fiberRadial p := by
+  have := p.2.2; simp only [fiberRadial]; linarith
+
+theorem fiberRadial_eq_zero_iff (p : ResChart) : fiberRadial p = 0 ↔ ‖(p.2 : ℂ)‖ = 1 := by
+  rw [fiberRadial, sub_eq_zero, eq_comm]
+
+theorem continuous_fiberRadial : Continuous fiberRadial :=
+  continuous_const.sub (continuous_norm.comp (continuous_subtype_val.comp continuous_snd))
+
+/-! ### §B.2. The fiber-collar angular direction `w/‖w‖ ∈ S¹`
+
+The base direction of the collar chart pairs the base coordinate `z` with the **fiber angular direction**
+`w/‖w‖`, a point of the unit circle in `ℂ` (total on the collar, where `‖w‖ > 1/2 > 0`). The `shellDir`
+mirror one dimension down. Charting this circle to `E¹` (via the banked `Circle` manifold structure) and
+merging with the base `E²` into `E³` is the localized model-assembly step (§C). -/
+
+/-- **The fiber unit circle** `S¹ ⊆ ℂ` — the codomain of the collar chart's angular direction. -/
+abbrev FiberCircle : Type := {c : ℂ // ‖c‖ = 1}
+
+/-- **The fiber angular direction** `w/‖w‖ ∈ S¹` of a collar chart point (total on the collar, where
+`‖w‖ > 1/2 > 0`). The `KummerShellChart.shellDir` mirror one dimension down; complex-division form,
+matching the parent file's `bdryMap` convention `w/(‖w‖ : ℂ)`. -/
+def fiberDir (p : ResChart) (hp : 1 / 2 < ‖(p.2 : ℂ)‖) : FiberCircle :=
+  ⟨(p.2 : ℂ) / (‖(p.2 : ℂ)‖ : ℂ), by
+    have hpos : (0 : ℝ) < ‖(p.2 : ℂ)‖ := by linarith
+    rw [norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hpos, div_self (ne_of_gt hpos)]⟩
+
+@[simp] theorem fiberDir_coe (p : ResChart) (hp : 1 / 2 < ‖(p.2 : ℂ)‖) :
+    (fiberDir p hp : ℂ) = (p.2 : ℂ) / (‖(p.2 : ℂ)‖ : ℂ) := rfl
+
+/-- **Polar reconstruction**: `(1 − radial) · dir = w`, i.e. `‖w‖ · (w/‖w‖) = w` — the collar chart's
+inverse recovers the fiber coordinate from `(angular, radial)`. -/
+theorem fiber_polar_reconstruction (p : ResChart) (hp : 1 / 2 < ‖(p.2 : ℂ)‖) :
+    ((1 - fiberRadial p : ℝ) : ℂ) * (fiberDir p hp : ℂ) = (p.2 : ℂ) := by
+  have hne : ((‖(p.2 : ℂ)‖ : ℂ)) ≠ 0 := by
+    simp only [ne_eq, Complex.ofReal_eq_zero]; exact ne_of_gt (by linarith)
+  rw [fiberDir_coe, fiberRadial]
+  push_cast
+  field_simp
+  ring
+
+/-- The fiber angular direction is continuous on the collar region (`‖w‖ > 1/2 > 0`). -/
+theorem continuous_fiberDir :
+    Continuous fun p : ↥collarRegion => fiberDir p.1 p.2.2 := by
+  apply Continuous.subtype_mk
+  have hval : Continuous fun p : ↥collarRegion => ((p.1.2 : ℂ)) :=
+    continuous_subtype_val.comp (continuous_snd.comp continuous_subtype_val)
+  have hden : Continuous fun p : ↥collarRegion => ((‖(p.1.2 : ℂ)‖ : ℂ)) :=
+    Complex.continuous_ofReal.comp (continuous_norm.comp hval)
+  refine hval.div hden (fun p => ?_)
+  simp only [ne_eq, Complex.ofReal_eq_zero]
+  exact ne_of_gt (by have := p.2.2; linarith)
+
+/-! ### §B.3. The collar seam lands in the ℝP³ boundary identification (deliverable 4 step)
+
+The collar's radial-zero seam `{p ∈ collarRegion ∣ fiberRadial p = 0} = {‖w‖ = 1}` is exactly the part of
+`∂E` this chart sees, and `∂E = range bdryMapRP3` (banked `range_bdryMapRP3_eq_boundaryE`). So every collar
+seam point is in the image of the `ℝP³ → ∂E` identification `bdryMapRP3` that `bdryHomeoRP3` upgrades — the
+chart-level compatibility with the smooth ∂-weld K6′b consumes. -/
+
+/-- **The collar seam lands in the ℝP³ boundary image.** A collar point with vanishing radial coordinate
+(`fiberRadial p = 0`, i.e. `‖w‖ = 1`) has `chart0 p ∈ range bdryMapRP3` — the pinned `S³/±1` boundary
+presentation `bdryHomeoRP3` identifies. The concrete chart-vs-`bdryHomeoRP3` compatibility step. -/
+theorem collar_seam_mem_rp3_image {p : ResChart} (hp : p ∈ collarRegion)
+    (hr : fiberRadial p = 0) : chart0 p ∈ Set.range bdryMapRP3 := by
+  rw [range_bdryMapRP3_eq_boundaryE]
+  exact (chart0_mem_boundaryE_iff hp.1).mpr ((fiberRadial_eq_zero_iff p).mp hr)
+
+/-! ## §C. STATUS — the K6′a Leg-2 E-side certificate
+
+**GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
+deliverable (4) seam step:**
+
+Deliverable (1) — **the interior open-embedding descent** (§A):
+- `isOpenEmbedding_chart0_baseInterior` / `isOpenEmbedding_chart1_baseInterior` (and the uniform
+  `_of_subset` forms) — `chart0`/`chart1` restricted to any open subset of the base-interior `{‖z‖ < 1}`
+  is an open embedding into `ResE`. The single-chart neighborhood of every point away from the equator
+  weld (the `KummerFreeQuotient.isOpenEmbedding_qmk_sepBall` sibling; simpler — clutch weld, not a free
+  action). Foundation: `preimage_chart0/1_image_baseInterior` (the empty-saturation lemma).
+
+Deliverable (2) — **the boundary-collar region + coordinates** (§B):
+- `collarRegion = {‖z‖ < 1 ∧ 1/2 < ‖w‖}` (base-interior outer fiber collar, `IsOpen`), and
+  `collarHomeoE : ↥collarRegion ≃ₜ ↥(range …)` — `chart0` restricts to a homeomorphism onto its open
+  image, a neighborhood of the base-interior part of `∂E` (the `KummerShellChart.collarHomeo` mirror).
+- `chart0/1_mem_boundaryE_iff` — on the base-interior, `∂E` is EXACTLY the radial-zero locus `‖w‖ = 1`
+  ("boundary ⟺ radial coordinate `1 − ‖w‖` vanishes").
+- `fiberRadial = 1 − ‖w‖` (the half-space coordinate; `fiberRadial_nonneg`, `fiberRadial_eq_zero_iff`,
+  `continuous_fiberRadial`) — the DiskChart-oriented radial mirror of the shell's `‖t‖ − ρ`.
+- `fiberDir : ResChart → S¹`, `w ↦ w/‖w‖` (the angular direction; `fiberDir_coe`,
+  `fiber_polar_reconstruction : (1 − radial)·dir = w`, `continuous_fiberDir`) — the `shellDir` mirror.
+
+Deliverable (4) — **the smooth ∂-identification step** (§B.3):
+- `collar_seam_mem_rp3_image` — the collar's radial-zero seam lands in `range bdryMapRP3`, the pinned
+  `S³/±1` presentation `bdryHomeoRP3` identifies. The concrete chart-vs-`bdryHomeoRP3` compatibility hook.
+
+**RESIDUAL (walls, localized precisely) — the half-space-model assembly and the manifold instance:**
+
+1. **The boundary collar chart as `OpenPartialHomeomorph ResE (ModelProd (𝓔 3) (EuclideanHalfSpace 1))`**
+   — all coordinate bricks are banked (base `z`, `fiberDir`, `fiberRadial`, `fiber_polar_reconstruction`).
+   The remaining step is the Euclidean packaging: chart the base `z ∈ D²(open) ⊆ ℂ` and the angular
+   `fiberDir ∈ S¹` into `𝓔 2 × 𝓔 1` (via a `ℂ ≅ 𝓔²` bridge `toE2/ofE2` — the `KummerShellChart.toE4/ofE4`
+   mirror one dimension down — and the banked `Circle` manifold chart / `NSphere 1` stereographic atlas),
+   merge `𝓔² × 𝓔¹ → 𝓔³` (`EuclideanSpace.finAddEquivProd`), and adjoin `fiberRadial → HalfSpace¹`,
+   assembling the `OpenPartialHomeomorph` off `collarHomeoE` + `shellCollarChart`'s brick sequence. This
+   is the direct analogue of `KummerShellChart.shellCollarChart`; no new geometry, pure packaging.
+
+2. **The interior chart into `𝓔⁴ ⊆ 𝓔³ × (0,∞)`** — `chart0/1` open embeddings (deliverable 1) reshaped
+   `ℂ² ≅ 𝓔⁴` into the boundary model's interior (radial `> 0`), the `diskInteriorChart` analogue.
+
+3. **`ChartedSpace (ModelProd (𝓔 3) (EuclideanHalfSpace 1)) ResE`** (deliverable 3) — `chartAt` dispatch
+   between interior charts (item 2), the collar charts (item 1), and the straddling equator charts (the
+   two-chart overlap at `‖z‖ = 1`, where `contDiffOn_clutch` (banked, parent §1) is the transition).
+
+4. **`IsManifold` + smooth `bdryHomeoRP3`** (deliverables 3/4) — the transition classes:
+   interior-interior = `contDiffOn_clutch` (banked); collar-collar and collar-interior = the fiber polar
+   change of coordinates (smooth off `w = 0`, and the collar avoids `w = 0` since `‖w‖ > 1/2`); the smooth
+   `∂E ≅ ℝP³` upgrade of `bdryHomeoRP3` in these charts.
+
+Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom. -/
+
 end
 
 end SKEFTHawking.KummerResolutionPieceBoundary
