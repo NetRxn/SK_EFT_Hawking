@@ -329,6 +329,102 @@ theorem centeredChartParam_injOn_threeQuarters (c : SKEFTHawking.KummerK3Base.To
       (Prod.ext (circle_exp_injOn_threeQuarters a3 a3' (mul_left_cancel e3))
         (circle_exp_injOn_threeQuarters a4 a4' (mul_left_cancel e4))))
 
+/-! ### §B.2. The extended round chart in `E⁴` coordinates
+
+`centeredChartParam_openPartialHomeomorph` (`KummerChartedSpace`) is the round chart on the excision ball
+`{sqNorm < ρ²}`. Here we bundle `ℝ⁴ ≅ E⁴` as a homeomorphism and push the round chart to the larger ball
+`{w : E⁴ ∣ ‖w‖ < 3/4}` (using the extended injectivity of §B.1), landing in `E⁴` coordinates so the shell
+direction sphere `S³ ⊆ E⁴` is directly available. This is the transport vehicle: its `‖w‖ ≥ ρ` part is the
+punctured-torus side of a boundary sphere. -/
+
+open SKEFTHawking.KummerK3Base (TorusFour)
+open SKEFTHawking.KummerPuncturedTorus
+  (continuous_centeredChartParam isOpenMap_centeredChartParam)
+
+/-- **`ℝ⁴ = ℝ × ℝ × ℝ × ℝ ≅ E⁴`** as a homeomorphism (the coordinate iso of §B.0, bundled). -/
+def homeoE4 : (ℝ × ℝ × ℝ × ℝ) ≃ₜ EuclideanSpace ℝ (Fin 4) where
+  toFun := toE4
+  invFun := ofE4
+  left_inv := ofE4_toE4
+  right_inv := toE4_ofE4
+  continuous_toFun := continuous_toE4
+  continuous_invFun := continuous_ofE4
+
+theorem isOpenMap_ofE4 : IsOpenMap ofE4 := homeoE4.symm.isOpenMap
+
+/-- **The extended round chart in `E⁴` coordinates** `centeredChartParamE4 c`: the `OpenPartialHomeomorph
+E⁴ → T⁴`, `w ↦ centeredChartParam c (ofE4 w)`, on the open ball `{‖w‖ < 3/4}`. Genuine homeomorphism onto
+its image (injective by the extended bound of §B.1, open by `isOpenMap_centeredChartParam`). Its `1/2 ≤ ‖w‖`
+locus is the exterior collar shell on the punctured-torus side of `chartSphere c`. -/
+noncomputable def centeredChartParamE4 (c : TorusFour) :
+    OpenPartialHomeomorph (EuclideanSpace ℝ (Fin 4)) TorusFour := by
+  refine OpenPartialHomeomorph.ofContinuousOpenRestrict
+    (Set.InjOn.toPartialEquiv (fun w => centeredChartParam c (ofE4 w))
+      {w : EuclideanSpace ℝ (Fin 4) | ‖w‖ < 3 / 4} ?_) ?_ ?_ ?_
+  · intro w hw w' hw' h
+    have hle : ∀ {u : EuclideanSpace ℝ (Fin 4)}, ‖u‖ < 3 / 4 → sqNorm (ofE4 u) ≤ (3 / 4) ^ 2 := by
+      intro u hu; rw [sqNorm_ofE4]; nlinarith [norm_nonneg u]
+    have := centeredChartParam_injOn_threeQuarters c (hle hw) (hle hw') h
+    have h2 : toE4 (ofE4 w) = toE4 (ofE4 w') := congrArg toE4 this
+    rwa [toE4_ofE4, toE4_ofE4] at h2
+  · exact ((continuous_centeredChartParam c).comp continuous_ofE4).continuousOn
+  · exact ((isOpenMap_centeredChartParam c).comp isOpenMap_ofE4).restrict
+      (isOpen_lt continuous_norm continuous_const)
+  · exact isOpen_lt continuous_norm continuous_const
+
+@[simp] theorem centeredChartParamE4_source (c : TorusFour) :
+    (centeredChartParamE4 c).source = {w : EuclideanSpace ℝ (Fin 4) | ‖w‖ < 3 / 4} := rfl
+
+@[simp] theorem centeredChartParamE4_apply (c : TorusFour) (w : EuclideanSpace ℝ (Fin 4)) :
+    (centeredChartParamE4 c) w = centeredChartParam c (ofE4 w) := rfl
+
+/-! ### §B.3. The exterior shell lands on the punctured-torus side (the geometric heart)
+
+The transported exterior shell `{1/2 ≤ ‖w‖ < 3/4}` (image under `centeredChartParamE4 c`) lies in
+`puncturedTorus`: it avoids `chartBall c` (by the extended injectivity — a shell point has `sqNorm ≥ 1/4`,
+so it cannot be the image of an interior `sqNorm < 1/4` point) and avoids every other `chartBall c'` (by
+the fixed-point separation `dist c c' ≥ 2`, since a shell point is within `3/4` of `c` and any point of
+`chartBall c'` is within `1/2` of `c'`, and `3/4 + 1/2 < 2`). This is the exterior analogue of
+`sphere_subset_puncturedTorus`, extended off the boundary sphere into the collar. -/
+
+open SKEFTHawking.KummerPuncturedTorus
+  (chartBall chartBall_subset_metricBall dist_centeredChartParam_lt fixedSet_dist_ge fixedSet
+    sqNorm_nonneg excisedBalls puncturedTorus)
+
+/-- **The exterior collar shell lies in `puncturedTorus`.** For `c` a fixed point and `1/2 ≤ ‖w‖ < 3/4`,
+the point `centeredChartParam c (ofE4 w)` is on the punctured-torus side of the boundary sphere. -/
+theorem shellImage_mem_puncturedTorus {c : TorusFour} (hc : c ∈ fixedSet)
+    {w : EuclideanSpace ℝ (Fin 4)} (h1 : (1 : ℝ) / 2 ≤ ‖w‖) (h2 : ‖w‖ < 3 / 4) :
+    centeredChartParam c (ofE4 w) ∈ SKEFTHawking.KummerPuncturedTorus.puncturedTorus := by
+  have hsq : sqNorm (ofE4 w) = ‖w‖ ^ 2 := sqNorm_ofE4 w
+  rw [SKEFTHawking.KummerPuncturedTorus.puncturedTorus, Set.mem_compl_iff,
+    SKEFTHawking.KummerPuncturedTorus.excisedBalls, Set.mem_iUnion₂]
+  rintro ⟨c', hc', hmem⟩
+  by_cases hcc : c' = c
+  · rw [hcc] at hmem
+    -- shell point cannot lie in the excised ball `chartBall c` (extended injectivity)
+    obtain ⟨t', ht', heq⟩ := hmem
+    rw [Set.mem_setOf_eq, show SKEFTHawking.KummerPuncturedTorus.excisionRadius = (1 : ℝ) / 2 from rfl]
+      at ht'
+    have hofE4le : sqNorm (ofE4 w) ≤ (3 / 4) ^ 2 := by rw [hsq]; nlinarith [norm_nonneg w]
+    have ht'le : sqNorm t' ≤ (3 / 4) ^ 2 := by nlinarith [sqNorm_nonneg t']
+    have : ofE4 w = t' :=
+      centeredChartParam_injOn_threeQuarters c hofE4le ht'le heq.symm
+    rw [this] at hsq
+    nlinarith [ht', hsq, h1, sq_nonneg (‖w‖ - 1 / 2)]
+  · -- shell point at `c` cannot lie in a ball at a distinct fixed point `c'` (separation ≥ 2)
+    have hdc : dist (centeredChartParam c (ofE4 w)) c < 3 / 4 :=
+      dist_centeredChartParam_lt c (by norm_num) (by rw [hsq]; nlinarith [norm_nonneg w])
+    have hdc' : dist (centeredChartParam c (ofE4 w)) c' < 1 / 2 := by
+      have := chartBall_subset_metricBall c' hmem
+      rwa [Metric.mem_ball, show SKEFTHawking.KummerPuncturedTorus.excisionRadius = (1 : ℝ) / 2 from
+        rfl] at this
+    have hsep : (2 : ℝ) ≤ dist c c' := fixedSet_dist_ge hc hc' (fun h => hcc h.symm)
+    have htri : dist c c' ≤ dist c (centeredChartParam c (ofE4 w)) +
+        dist (centeredChartParam c (ofE4 w)) c' := dist_triangle _ _ _
+    rw [dist_comm c (centeredChartParam c (ofE4 w))] at htri
+    linarith
+
 end
 
 end SKEFTHawking.KummerShellChart
