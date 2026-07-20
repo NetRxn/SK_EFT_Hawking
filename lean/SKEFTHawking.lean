@@ -4590,6 +4590,7 @@ import SKEFTHawking.SphereDiskConnectingDetect
 import SKEFTHawking.SingularCapConnecting
 import SKEFTHawking.SphereProdHFourMod2Detect
 import SKEFTHawking.SphereProdCapDetect
+import SKEFTHawking.SphereProdP23NondegClose
 import SKEFTHawking.PinPlusKTSphereProdRelFund
 import SKEFTHawking.PinPlusKTSpinSigmaAtom
 import SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
