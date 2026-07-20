@@ -89,6 +89,136 @@ smoothness the K6′a design names as the genuinely-new content. -/
 theorem contDiffOn_clutch : ContDiffOn ℝ ⊤ clutch {p : ℂ × ℂ | p.1 ≠ 0} :=
   (contDiffOn_fst.inv (fun _ hp => hp)).prodMk ((contDiffOn_fst.pow 2).mul contDiffOn_snd)
 
+/-! ## §2. The glued carrier `E` — two disk-bundle charts welded along the base equator -/
+
+/-- Closed unit disk `D² ⊆ ℂ` (the base chart and the fiber). -/
+abbrev Disk : Type := {z : ℂ // ‖z‖ ≤ 1}
+
+/-- A single disk-bundle chart `D² × D²` (base disk × fiber disk). -/
+abbrev ResChart : Type := Disk × Disk
+
+/-- **The clutch on disks** — the transition of chart 0 into chart 1, on the base equator
+`‖z‖ = 1`. On the equator `‖z⁻¹‖ = 1` and `‖z²·w‖ = ‖w‖`, so it lands in `D² × D²`. Its underlying
+`ℂ²` value is exactly `clutch` (§1). -/
+def clutchDisk (p : ResChart) (hz : ‖(p.1 : ℂ)‖ = 1) : ResChart :=
+  (⟨(p.1 : ℂ)⁻¹, by rw [norm_inv, hz, inv_one]⟩,
+   ⟨(p.1 : ℂ) ^ 2 * (p.2 : ℂ), by rw [norm_mul, norm_pow, hz, one_pow, one_mul]; exact p.2.2⟩)
+
+@[simp] theorem clutchDisk_fst_coe (p : ResChart) (hz : ‖(p.1 : ℂ)‖ = 1) :
+    ((clutchDisk p hz).1 : ℂ) = (p.1 : ℂ)⁻¹ := rfl
+@[simp] theorem clutchDisk_snd_coe (p : ResChart) (hz : ‖(p.1 : ℂ)‖ = 1) :
+    ((clutchDisk p hz).2 : ℂ) = (p.1 : ℂ) ^ 2 * (p.2 : ℂ) := rfl
+
+/-- **The gluing predicate** (chart-0 point `p` welds to chart-1 point `q`): `p` is on the base
+equator and `q` is its clutch image. Concretely `q = clutchDisk p`. -/
+def glued (p q : ResChart) : Prop :=
+  ‖(p.1 : ℂ)‖ = 1 ∧ (q.1 : ℂ) = (p.1 : ℂ)⁻¹ ∧ (q.2 : ℂ) = (p.1 : ℂ) ^ 2 * (p.2 : ℂ)
+
+/-- **The core (symmetric) gluing relation** on the two-chart disjoint union: chart-0 `p` welds to
+chart-1 `q` iff `glued p q`; same-chart points are never core-related (reflexivity is added in
+`resRel`). -/
+def gcore : ResChart ⊕ ResChart → ResChart ⊕ ResChart → Prop
+  | Sum.inl p, Sum.inr q => glued p q
+  | Sum.inr q, Sum.inl p => glued p q
+  | _, _ => False
+
+/-- **The gluing equivalence relation**: reflexivity plus the core weld. Because the clutch is an
+involution, each non-trivial class is exactly a pair `{inl p, inr (clutchDisk p)}`. -/
+def resRel (a b : ResChart ⊕ ResChart) : Prop := a = b ∨ gcore a b
+
+theorem gcore_symm {a b : ResChart ⊕ ResChart} (h : gcore a b) : gcore b a := by
+  cases a <;> cases b <;> simp only [gcore] at h ⊢ <;> exact h
+
+/-- The base-coordinate of a glued chart-0 point is nonzero (it lies on the equator). -/
+theorem glued_fst_ne_zero {p q : ResChart} (h : glued p q) : (p.1 : ℂ) ≠ 0 := by
+  obtain ⟨h1, _, _⟩ := h
+  intro h0; rw [h0, norm_zero] at h1; exact one_ne_zero h1.symm
+
+/-- **A chart-0 point welds to at most one chart-1 point** (the clutch is injective): if `p` welds to
+both `q` and `q'`, then `q = q'`. -/
+theorem glued_right_unique {p q q' : ResChart} (h : glued p q) (h' : glued p q') : q = q' := by
+  obtain ⟨_, hq1, hq2⟩ := h
+  obtain ⟨_, hq1', hq2'⟩ := h'
+  exact Prod.ext (Subtype.ext (by rw [hq1, hq1'])) (Subtype.ext (by rw [hq2, hq2']))
+
+/-- **A chart-1 point is welded from at most one chart-0 point** (the clutch is injective the other
+way): if both `p` and `p'` weld to `q`, then `p = p'`. Uses `inv` injectivity on the base flip and
+cancellation of `z² ≠ 0` on the fiber. -/
+theorem glued_left_unique {p p' q : ResChart} (h : glued p q) (h' : glued p' q) : p = p' := by
+  obtain ⟨hz, hq1, hq2⟩ := h
+  obtain ⟨hz', hq1', hq2'⟩ := h'
+  have hp0 : (p.1 : ℂ) ≠ 0 := norm_ne_zero_iff.mp (by rw [hz]; norm_num)
+  have hbase : (p.1 : ℂ) = (p'.1 : ℂ) := by
+    have : (p.1 : ℂ)⁻¹ = (p'.1 : ℂ)⁻¹ := by rw [← hq1, ← hq1']
+    exact inv_injective this
+  have hfib : (p.2 : ℂ) = (p'.2 : ℂ) := by
+    have hpow : (p.1 : ℂ) ^ 2 ≠ 0 := pow_ne_zero 2 hp0
+    have : (p.1 : ℂ) ^ 2 * (p.2 : ℂ) = (p.1 : ℂ) ^ 2 * (p'.2 : ℂ) := by
+      rw [← hq2, hq2', hbase]
+    exact mul_left_cancel₀ hpow this
+  exact Prod.ext (Subtype.ext hbase) (Subtype.ext hfib)
+
+theorem resRel_equivalence : Equivalence resRel := by
+  refine ⟨fun a => Or.inl rfl, ?_, ?_⟩
+  · rintro a b (rfl | h)
+    · exact Or.inl rfl
+    · exact Or.inr (gcore_symm h)
+  · rintro a b c (rfl | hab) (rfl | hbc)
+    · exact Or.inl rfl
+    · exact Or.inr hbc
+    · exact Or.inr hab
+    · -- both non-trivial welds: a,b differ in chart; b,c differ in chart; so a,c same chart, a = c
+      cases a with
+      | inl p =>
+        cases b with
+        | inl _ => exact (hab : False).elim
+        | inr q =>
+          cases c with
+          | inl p' =>
+            have : p = p' := glued_left_unique (hab : glued p q) (hbc : glued p' q)
+            exact Or.inl (by rw [this])
+          | inr _ => exact (hbc : False).elim
+      | inr q =>
+        cases b with
+        | inr _ => exact (hab : False).elim
+        | inl p =>
+          cases c with
+          | inr q' =>
+            have : q = q' := glued_right_unique (hab : glued p q) (hbc : glued p q')
+            exact Or.inl (by rw [this])
+          | inl _ => exact (hbc : False).elim
+
+/-- The gluing setoid on the two-chart disjoint union. -/
+def resSetoid : Setoid (ResChart ⊕ ResChart) := ⟨resRel, resRel_equivalence⟩
+
+/-- **The glued carrier `E`** — the Euler−2 disk bundle over `S²`, as a quotient topological space:
+two `D² × D²` charts welded along the base equator by the 𝒪(−2) clutch. -/
+def ResE : Type := Quotient resSetoid
+
+instance : TopologicalSpace ResE := inferInstanceAs (TopologicalSpace (Quotient resSetoid))
+
+instance : Nonempty ResE :=
+  ⟨Quotient.mk resSetoid (Sum.inl (⟨0, by simp⟩, ⟨0, by simp⟩))⟩
+
+/-- **Chart-0 inclusion** `D² × D² → E`. -/
+def chart0 (p : ResChart) : ResE := Quotient.mk resSetoid (Sum.inl p)
+
+/-- **Chart-1 inclusion** `D² × D² → E`. -/
+def chart1 (p : ResChart) : ResE := Quotient.mk resSetoid (Sum.inr p)
+
+theorem continuous_chart0 : Continuous chart0 :=
+  continuous_quotient_mk'.comp continuous_inl
+
+theorem continuous_chart1 : Continuous chart1 :=
+  continuous_quotient_mk'.comp continuous_inr
+
+/-- **The gluing identity** (falsifiable, tied to the actual clutch): on the base equator `‖z‖ = 1`,
+the chart-0 point `p` and the chart-1 point `clutchDisk p` are the SAME point of `E`. This is the
+weld that closes the two `D² × D²` charts into the Euler−2 bundle. -/
+theorem chart_glue {p : ResChart} (hz : ‖(p.1 : ℂ)‖ = 1) :
+    chart0 p = chart1 (clutchDisk p hz) :=
+  Quotient.sound (Or.inr (show glued p (clutchDisk p hz) from ⟨hz, rfl, rfl⟩))
+
 end
 
 end SKEFTHawking.KummerResolutionPiece
