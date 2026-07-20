@@ -203,6 +203,132 @@ instance instChartedSpaceExtShell :
   mem_chart_source v := mem_chart_source (EuclideanSpace ℝ (Fin 3)) (shellDir v)
   chart_mem_atlas _ := Set.mem_range_self _
 
+/-! ### §B.0. The coordinate iso `ℝ⁴ = ℝ × ℝ × ℝ × ℝ ≅ E⁴`
+
+`centeredChartParam c` (`KummerPuncturedTorus`) takes chart coordinates in the tuple `ℝ × ℝ × ℝ × ℝ`,
+whereas the shell direction sphere `S³ ⊆ E⁴` lives in `EuclideanSpace ℝ (Fin 4)`. This block builds the
+bridge: `toE4`/`ofE4` (mutually inverse, continuous) with `‖toE4 t‖ = √(sqNorm t)` (`sqNorm` = the
+Euclidean square-norm of the tuple), so the round balls/spheres in tuple coordinates are round in `E⁴`. -/
+
+open SKEFTHawking.KummerPuncturedTorus (sqNorm)
+
+/-- Pack a chart tuple `ℝ × ℝ × ℝ × ℝ` into `E⁴ = EuclideanSpace ℝ (Fin 4)`. -/
+def toE4 (t : ℝ × ℝ × ℝ × ℝ) : EuclideanSpace ℝ (Fin 4) :=
+  WithLp.toLp 2 ![t.1, t.2.1, t.2.2.1, t.2.2.2]
+
+/-- Unpack `E⁴` into a chart tuple `ℝ × ℝ × ℝ × ℝ`. -/
+def ofE4 (w : EuclideanSpace ℝ (Fin 4)) : ℝ × ℝ × ℝ × ℝ :=
+  (w.ofLp 0, w.ofLp 1, w.ofLp 2, w.ofLp 3)
+
+/-- `‖toE4 t‖² = sqNorm t` — the tuple's Euclidean square-norm is carried faithfully into `E⁴`. -/
+theorem norm_sq_toE4 (t : ℝ × ℝ × ℝ × ℝ) : ‖toE4 t‖ ^ 2 = sqNorm t := by
+  rw [EuclideanSpace.norm_eq, Real.sq_sqrt (by positivity)]
+  simp [toE4, sqNorm, Fin.sum_univ_four]
+
+/-- `‖toE4 t‖ = √(sqNorm t)`. -/
+theorem norm_toE4 (t : ℝ × ℝ × ℝ × ℝ) : ‖toE4 t‖ = Real.sqrt (sqNorm t) := by
+  rw [← norm_sq_toE4, Real.sqrt_sq (norm_nonneg _)]
+
+theorem continuous_toE4 : Continuous toE4 := by
+  apply (PiLp.continuous_toLp 2 _).comp
+  apply continuous_pi
+  intro i
+  fin_cases i <;> first
+    | exact continuous_fst
+    | exact continuous_fst.comp continuous_snd
+    | exact continuous_fst.comp (continuous_snd.comp continuous_snd)
+    | exact continuous_snd.comp (continuous_snd.comp continuous_snd)
+
+theorem continuous_ofE4 : Continuous ofE4 := by
+  apply Continuous.prodMk (PiLp.continuous_apply 2 (fun _ : Fin 4 => ℝ) 0)
+  apply Continuous.prodMk (PiLp.continuous_apply 2 (fun _ : Fin 4 => ℝ) 1)
+  exact Continuous.prodMk (PiLp.continuous_apply 2 (fun _ : Fin 4 => ℝ) 2)
+    (PiLp.continuous_apply 2 (fun _ : Fin 4 => ℝ) 3)
+
+@[simp] theorem ofE4_toE4 (t : ℝ × ℝ × ℝ × ℝ) : ofE4 (toE4 t) = t := by
+  simp only [ofE4, toE4, WithLp.ofLp_toLp, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.head_cons, Matrix.cons_val_two, Matrix.tail_cons, Matrix.cons_val_three]
+
+@[simp] theorem toE4_ofE4 (w : EuclideanSpace ℝ (Fin 4)) : toE4 (ofE4 w) = w := by
+  apply WithLp.ofLp_injective
+  funext i
+  fin_cases i <;> rfl
+
+theorem toE4_injective : Function.Injective toE4 :=
+  Function.LeftInverse.injective ofE4_toE4
+
+/-! ### §B.1. Extended chart injectivity beyond the excision radius
+
+`centeredChartParam c` is injective on `{sqNorm ≤ ρ²}` (`ρ = 1/2`) — exactly the closed excision ball
+(`KummerPuncturedTorus.centeredChartParam_injOn`). But `Circle.exp` is genuinely injective out to
+`|s| < π`, so the chart is injective on a strictly larger ball. We push the bound to `|s| ≤ 3/4`
+(`2·(3/4) = 3/2 < 2π`), giving injectivity on `{sqNorm ≤ (3/4)²}` — room for the **exterior** collar shell
+`{ρ ≤ ‖t‖ < 3/4}` that lives on the punctured-torus side of the boundary sphere. -/
+
+/-- **Per-factor chart injectivity on `[−3/4, 3/4]`** — the same period argument as `circle_exp_injOn_half`
+one notch wider (`2·(3/4) = 3/2 < 2π`), the input to injectivity on the exterior collar shell. -/
+theorem circle_exp_injOn_threeQuarters {s s' : ℝ} (hs : |s| ≤ 3 / 4) (hs' : |s'| ≤ 3 / 4)
+    (h : Circle.exp s = Circle.exp s') : s = s' := by
+  have hc : Complex.exp (↑s * Complex.I) = Complex.exp (↑s' * Complex.I) := by
+    rw [← Circle.coe_exp, ← Circle.coe_exp, h]
+  rw [Complex.exp_eq_exp_iff_exists_int] at hc
+  obtain ⟨n, hn⟩ := hc
+  have hfac : (↑s : ℂ) * Complex.I = (↑s' + ↑n * (2 * ↑Real.pi)) * Complex.I := by rw [hn]; ring
+  have hcC : (↑s : ℂ) = ↑s' + ↑n * (2 * ↑Real.pi) := mul_right_cancel₀ Complex.I_ne_zero hfac
+  have hR : s = s' + (n : ℝ) * (2 * Real.pi) := by exact_mod_cast hcC
+  have hpi : (2 : ℝ) ≤ 2 * Real.pi := by nlinarith [Real.pi_gt_three]
+  have hdiff : |(n : ℝ) * (2 * Real.pi)| ≤ 3 / 2 := by
+    have he : (n : ℝ) * (2 * Real.pi) = s - s' := by linarith [hR]
+    rw [he]
+    calc |s - s'| ≤ |s| + |s'| := abs_sub _ _
+      _ ≤ 3 / 4 + 3 / 4 := by linarith [hs, hs']
+      _ = 3 / 2 := by norm_num
+  have hn0 : n = 0 := by
+    by_contra hne
+    have h1 : (1 : ℝ) ≤ |(n : ℝ)| := by
+      have hz : (1 : ℤ) ≤ |n| := Int.one_le_abs (by exact_mod_cast hne)
+      have hz' := (Int.cast_le (R := ℝ)).mpr hz
+      rwa [Int.cast_abs, Int.cast_one] at hz'
+    rw [abs_mul, abs_of_pos (by positivity : (0 : ℝ) < 2 * Real.pi)] at hdiff
+    nlinarith [hdiff, h1, hpi]
+  rw [hn0] at hR; simpa using hR
+
+/-- The tuple square-norm of `ofE4 w` is `‖w‖²` — the bridge for transporting `sqNorm` bounds to `E⁴`. -/
+theorem sqNorm_ofE4 (w : EuclideanSpace ℝ (Fin 4)) : sqNorm (ofE4 w) = ‖w‖ ^ 2 := by
+  rw [← norm_sq_toE4, toE4_ofE4]
+
+open SKEFTHawking.KummerPuncturedTorus (centeredChartParam excisionRadius)
+
+/-- **Extended product chart injectivity on the closed ball `{sqNorm ≤ (3/4)²}`.** Each coordinate
+`|t.i| ≤ 3/4`, where `Circle.exp` is injective (`circle_exp_injOn_threeQuarters`). This strictly
+contains the closed excision ball `{sqNorm ≤ (1/2)²}`, giving the room the exterior collar shell needs. -/
+theorem centeredChartParam_injOn_threeQuarters (c : SKEFTHawking.KummerK3Base.TorusFour) :
+    Set.InjOn (centeredChartParam c) {t | sqNorm t ≤ (3 / 4) ^ 2} := by
+  intro t ht t' ht' h
+  rw [Set.mem_setOf_eq] at ht ht'
+  have a1 : |t.1| ≤ 3 / 4 := SKEFTHawking.KummerPuncturedTorus.abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht; nlinarith [sq_nonneg t.2.1, sq_nonneg t.2.2.1, sq_nonneg t.2.2.2])
+  have a2 : |t.2.1| ≤ 3 / 4 := SKEFTHawking.KummerPuncturedTorus.abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht; nlinarith [sq_nonneg t.1, sq_nonneg t.2.2.1, sq_nonneg t.2.2.2])
+  have a3 : |t.2.2.1| ≤ 3 / 4 := SKEFTHawking.KummerPuncturedTorus.abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht; nlinarith [sq_nonneg t.1, sq_nonneg t.2.1, sq_nonneg t.2.2.2])
+  have a4 : |t.2.2.2| ≤ 3 / 4 := SKEFTHawking.KummerPuncturedTorus.abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht; nlinarith [sq_nonneg t.1, sq_nonneg t.2.1, sq_nonneg t.2.2.1])
+  have a1' : |t'.1| ≤ 3 / 4 := SKEFTHawking.KummerPuncturedTorus.abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht'; nlinarith [sq_nonneg t'.2.1, sq_nonneg t'.2.2.1, sq_nonneg t'.2.2.2])
+  have a2' : |t'.2.1| ≤ 3 / 4 := SKEFTHawking.KummerPuncturedTorus.abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht'; nlinarith [sq_nonneg t'.1, sq_nonneg t'.2.2.1, sq_nonneg t'.2.2.2])
+  have a3' : |t'.2.2.1| ≤ 3 / 4 := SKEFTHawking.KummerPuncturedTorus.abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht'; nlinarith [sq_nonneg t'.1, sq_nonneg t'.2.1, sq_nonneg t'.2.2.2])
+  have a4' : |t'.2.2.2| ≤ 3 / 4 := SKEFTHawking.KummerPuncturedTorus.abs_le_of_sq_le_sq (by norm_num) (by
+    simp only [sqNorm] at ht'; nlinarith [sq_nonneg t'.1, sq_nonneg t'.2.1, sq_nonneg t'.2.2.1])
+  simp only [centeredChartParam, Prod.mk.injEq] at h
+  obtain ⟨e1, e2, e3, e4⟩ := h
+  exact Prod.ext (circle_exp_injOn_threeQuarters a1 a1' (mul_left_cancel e1))
+    (Prod.ext (circle_exp_injOn_threeQuarters a2 a2' (mul_left_cancel e2))
+      (Prod.ext (circle_exp_injOn_threeQuarters a3 a3' (mul_left_cancel e3))
+        (circle_exp_injOn_threeQuarters a4 a4' (mul_left_cancel e4))))
+
 end
 
 end SKEFTHawking.KummerShellChart
