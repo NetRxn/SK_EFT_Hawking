@@ -74,10 +74,10 @@ theorem wave_1b_overall_closure :
     IsConnectedToPolaritonRingdown .PolaritonSonic ∧
     -- Negative strong-form BCJ NO-GO (Wave 1b.5)
     StrongFormBCJObstructed := by
-  refine ⟨?_, admitsKerrSchildForm_all, isKerrSchildSingleCopy_all,
-          isVortexLikeChargeDistribution_all, isWeylDoubleCopy_all,
-          isConnectedToPolaritonRingdown_polariton,
-          strongFormBCJObstructed_witness⟩
-  intro m; cases m <;> trivial
+  exact ⟨fun m => ⟨admitsKerrSchildForm_all m, ksNull_ne_zero m⟩,
+         admitsKerrSchildForm_all, isKerrSchildSingleCopy_all,
+         isVortexLikeChargeDistribution_all, isWeylDoubleCopy_all,
+         isConnectedToPolaritonRingdown_polariton,
+         strongFormBCJObstructed_witness⟩
 
 end SKEFTHawking.DoubleCopy
