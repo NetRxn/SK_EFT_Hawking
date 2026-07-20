@@ -4659,6 +4659,7 @@ import SKEFTHawking.KummerTorusStep
 import SKEFTHawking.KummerHomologyT4H2
 import SKEFTHawking.KummerHomologyT4Full
 import SKEFTHawking.KummerT4GramDiagonal
+import SKEFTHawking.KummerResolutionPiece
 import SKEFTHawking.KTCompletenessProvider
 import SKEFTHawking.Carrollian.Structure
 import SKEFTHawking.Carrollian.WittAlgebra
