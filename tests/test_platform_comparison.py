@@ -83,3 +83,47 @@ class TestUnifiedComparison:
         """At least 2 realized horizons (Steinhauer + Dean)."""
         realized = [s for s in all_platform_summaries() if s.horizon_realized]
         assert len(realized) >= 2
+
+
+class TestBECCanonicalCorrections:
+    """R-09: BEC δ_disp/δ_diss are the canonical pipeline values, not the old
+    hard-coded δ_diss = 0.01. Exact cross-check against the canonical evaluator
+    (constants → transonic solver → Beliaev; B-05 horizon-calibrated,
+    frequency-independent first-order δ_diss)."""
+
+    _NAME_MAP = {'Steinhauer_Rb87': 'Steinhauer',
+                 'Heidelberg_K39': 'Heidelberg',
+                 'Trento_Na23': 'Trento'}
+
+    def test_bec_corrections_match_canonical_evaluator(self):
+        from scripts.gen_d1_hierarchy_table import compute_bec_hierarchy
+        hier = compute_bec_hierarchy()
+        for s in bec_platform_summaries():
+            canon = hier[self._NAME_MAP[s.name]]
+            assert s.delta_diss == pytest.approx(canon['delta_diss'], rel=1e-9), s.name
+            assert s.delta_disp == pytest.approx(canon['delta_disp'], rel=1e-9), s.name
+
+    def test_delta_diss_not_hardcoded_001(self):
+        # The old bug pinned EVERY BEC δ_diss to 0.01; canonical values span
+        # 1.41e-5 (Trento) … 1.59e-3 (Heidelberg), all far below 0.01.
+        for s in bec_platform_summaries():
+            assert s.delta_diss != pytest.approx(0.01)
+            assert 1e-5 < s.delta_diss < 2e-3, s.name
+
+    def test_delta_diss_exact_values(self):
+        by = {s.name: s for s in bec_platform_summaries()}
+        assert by['Steinhauer_Rb87'].delta_diss == pytest.approx(2.3772e-5, rel=1e-3)
+        assert by['Heidelberg_K39'].delta_diss == pytest.approx(1.5925e-3, rel=1e-3)
+        assert by['Trento_Na23'].delta_diss == pytest.approx(1.4130e-5, rel=1e-3)
+
+    def test_heidelberg_diss_dominates_the_others(self):
+        # Physical ordering the flat 0.01 erased: Heidelberg δ_diss ≫ the rest.
+        by = {s.name: s for s in bec_platform_summaries()}
+        assert by['Heidelberg_K39'].delta_diss > 10 * by['Steinhauer_Rb87'].delta_diss
+        assert by['Heidelberg_K39'].delta_diss > 10 * by['Trento_Na23'].delta_diss
+
+    def test_delta_disp_matches_canonical_formula(self):
+        from src.core.formulas import dispersive_correction
+        for s in bec_platform_summaries():
+            assert s.delta_disp == pytest.approx(
+                dispersive_correction(s.D_adiabaticity), rel=1e-12), s.name
