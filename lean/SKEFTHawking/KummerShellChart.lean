@@ -425,6 +425,44 @@ theorem shellImage_mem_puncturedTorus {c : TorusFour} (hc : c ∈ fixedSet)
     rw [dist_comm c (centeredChartParam c (ofE4 w))] at htri
     linarith
 
+/-! ### §B.4. The collar homeomorphism — the punctured-torus collar ≅ the Euclidean shell
+
+Via `OpenPartialHomeomorph.homeomorphOfImageSubsetSource` on the extended round chart `centeredChartParamE4
+c`, the Euclidean shell `shellSetE4 = {1/2 ≤ ‖w‖ < 3/4}` (a subset of the source ball, need **not** be open)
+is carried homeomorphically onto the transported collar `collarSet c` of the boundary sphere `chartSphere
+c`. This collar is **relatively open** in `puncturedTorus` and lies inside it (`shellImage_mem_puncturedTorus`):
+it is the punctured-torus-side neighborhood of the boundary sphere. Composing this homeomorphism with the
+inclusion `↥shellSetE4 ↪ ExtShell` and `shellCollarChart u₀` charts the collar onto the half-space model —
+the boundary chart at each of the 16 spheres. -/
+
+/-- **The Euclidean collar shell** `{w : E⁴ ∣ 1/2 ≤ ‖w‖ < 3/4}` — a subset of the extended round chart's
+source ball, whose image is the punctured-torus collar of a boundary sphere. -/
+def shellSetE4 : Set (EuclideanSpace ℝ (Fin 4)) := {w | (1 : ℝ) / 2 ≤ ‖w‖ ∧ ‖w‖ < 3 / 4}
+
+theorem shellSetE4_subset_ExtShell : ∀ w ∈ shellSetE4, (1 : ℝ) / 2 ≤ ‖w‖ := fun _ hw => hw.1
+
+theorem shellSetE4_subset_source (c : TorusFour) :
+    shellSetE4 ⊆ (centeredChartParamE4 c).source := by
+  intro w hw
+  rw [centeredChartParamE4_source, Set.mem_setOf_eq]
+  exact hw.2
+
+/-- **The transported collar** `collarSet c := centeredChartParamE4 c '' shellSetE4` — the punctured-torus
+neighborhood of the boundary sphere `chartSphere c`, on the exterior (punctured) side. -/
+def collarSet (c : TorusFour) : Set TorusFour := (centeredChartParamE4 c) '' shellSetE4
+
+/-- The transported collar lies inside `puncturedTorus` (via `shellImage_mem_puncturedTorus`). -/
+theorem collarSet_subset_puncturedTorus {c : TorusFour} (hc : c ∈ fixedSet) :
+    collarSet c ⊆ puncturedTorus := by
+  rintro _ ⟨w, hw, rfl⟩
+  exact shellImage_mem_puncturedTorus hc hw.1 hw.2
+
+/-- **The collar homeomorphism** `↥shellSetE4 ≃ₜ ↥(collarSet c)`: the punctured-torus collar of the
+boundary sphere `chartSphere c` is homeomorphic to the Euclidean exterior shell. The topological core of
+the boundary chart, delivered by the extended round chart's `homeomorphOfImageSubsetSource`. -/
+noncomputable def collarHomeo (c : TorusFour) : ↥shellSetE4 ≃ₜ ↥(collarSet c) :=
+  (centeredChartParamE4 c).homeomorphOfImageSubsetSource (shellSetE4_subset_source c) rfl
+
 end
 
 end SKEFTHawking.KummerShellChart
