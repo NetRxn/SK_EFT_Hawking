@@ -13,9 +13,24 @@ upstreaming (Mathlib v4.29.1 has `LieAlgebra.Extension` but no named Witt/Viraso
 re-verified in-tree). **Jacobi is the real content** (pure index algebra, no analysis).
 
 The **Virasoro 2-cocycle** `c(Lₘ, Lₙ) = δ_{m+n,0}·(m³ − m)/12` (the unique — up to coboundary —
-central extension of `W` to the Virasoro algebra) is built as a bilinear form with its
-Chevalley–Eilenberg 2-cocycle identity proved on the basis (the load-bearing index algebra). Per
-the C0 verdict, NO central-charge VALUE is claimed — only the cocycle and its cocycle property.
+central extension of `W` to the Virasoro algebra) is built as a bilinear form (`wittCocycle`) with:
+its Chevalley–Eilenberg 2-cocycle identity proved both on the basis (`cocycle_isCocycle`, the
+load-bearing index algebra) and **unconditionally for all elements** (`wittCocycleAux_isCocycle`),
+plus the alternating property for all elements (`wittCocycleAux_self`) and antisymmetry
+(`wittCocycleAux_skew`). Per the C0 verdict, NO central-charge VALUE is claimed — only the cocycle
+and its cocycle property.
+
+**Central-extension hookup (Mathlib `LieAlgebra.Extension.ofTwoCocycle`) — documented residual.**
+`ofTwoCocycle` builds the `ℝ ⊕ W` central extension from an element of
+`LieModule.Cohomology.twoCocycle ℝ WittAlgebra M` for a trivial-coefficient module `M`. The two
+membership obligations are *already discharged mathematically here*: `mem_twoCochain_iff` (the
+alternating condition `∀ x, c x x = 0`) is exactly `wittCocycleAux_self`, and `mem_twoCocycle_iff`
+(`d₂₃ c = 0`) is exactly `wittCocycleAux_isCocycle` up to Mathlib's CE sign convention (the module
+action terms of `d₂₃` vanish on trivial coefficients). What remains is purely a Mathlib-API
+adaptor: choosing the coefficient module `M = TrivialLieModule ℝ WittAlgebra ℝ` and packaging
+`wittCocycle` into the `twoCocycle` `Submodule`. No new mathematics is required. Left as the C2
+residual per the Phase 6o′ roadmap ("wire as far as one clean construction goes; else ship the
+cocycle + its property and document the hookup").
 
 This module exports the Witt `LieRing`/`LieAlgebra` — i.e. the `Vect(S¹)` factor — as the seam a
 C3 `Vect ⋉ functions` semidirect-product build consumes.
@@ -224,6 +239,66 @@ theorem cocycle_isCocycle (m n p : ℤ) :
   · rw [if_neg (by omega : ¬ (m + n + p = 0)), if_neg (by omega : ¬ (n + p + m = 0)),
         if_neg (by omega : ¬ (p + m + n = 0))]
     ring
+
+/-! ## §6. The cocycle properties, lifted to ALL elements (not just the basis) -/
+
+/-- Finsupp-typed cocycle basis value (for the general-element inductions). -/
+theorem cocycle_single (m n : ℤ) :
+    wittCocycleAux (Finsupp.single m (1 : ℝ)) (Finsupp.single n 1)
+      = if m + n = 0 then ((m : ℝ) ^ 3 - m) / 12 else 0 := cocycle_L m n
+
+/-- **Antisymmetry of the cocycle for all elements** (not just the basis), by bilinearity. -/
+theorem wittCocycleAux_skew (x y : ℤ →₀ ℝ) :
+    wittCocycleAux x y = - wittCocycleAux y x := by
+  induction x using Finsupp.induction_linear generalizing y with
+  | zero => simp
+  | add x₁ x₂ h₁ h₂ => simp only [map_add, LinearMap.add_apply, h₁, h₂]; abel
+  | single m a =>
+    induction y using Finsupp.induction_linear with
+    | zero => simp
+    | add y₁ y₂ h₁ h₂ => simp only [map_add, LinearMap.add_apply, h₁, h₂]; abel
+    | single n b =>
+      rw [single_smul m a, single_smul n b]
+      simp only [map_smul, LinearMap.smul_apply, cocycle_single, smul_eq_mul]
+      by_cases h : m + n = 0
+      · rw [if_pos h, if_pos (by omega : n + m = 0)]
+        have hn : n = -m := by omega
+        subst hn; push_cast; ring
+      · rw [if_neg h, if_neg (by omega : ¬ (n + m = 0))]; ring
+
+/-- **The cocycle is alternating on all elements**: `c(x,x) = 0`. -/
+theorem wittCocycleAux_self (x : ℤ →₀ ℝ) : wittCocycleAux x x = 0 := by
+  have h := wittCocycleAux_skew x x; linarith
+
+/-- **The Chevalley–Eilenberg 2-cocycle identity for ALL elements** (the unconditional version of
+`cocycle_isCocycle`): `c([x,y],z) + c([y,z],x) + c([z,x],y) = 0` for every `x y z`. This is the
+full obstruction-vanishing that makes the Virasoro central extension a genuine Lie algebra. -/
+theorem wittCocycleAux_isCocycle (x y z : ℤ →₀ ℝ) :
+    wittCocycleAux (wittBracketAux x y) z + wittCocycleAux (wittBracketAux y z) x
+      + wittCocycleAux (wittBracketAux z x) y = 0 := by
+  induction x using Finsupp.induction_linear generalizing y z with
+  | zero => simp
+  | add x₁ x₂ h₁ h₂ => simp only [map_add, LinearMap.add_apply]; linarith [h₁ y z, h₂ y z]
+  | single m a =>
+    induction y using Finsupp.induction_linear generalizing z with
+    | zero => simp
+    | add y₁ y₂ h₁ h₂ => simp only [map_add, LinearMap.add_apply]; linarith [h₁ z, h₂ z]
+    | single n b =>
+      induction z using Finsupp.induction_linear with
+      | zero => simp
+      | add z₁ z₂ h₁ h₂ => simp only [map_add, LinearMap.add_apply]; linarith [h₁, h₂]
+      | single p c =>
+        rw [single_smul m a, single_smul n b, single_smul p c]
+        simp only [map_smul, LinearMap.smul_apply, wittBracketAux_single, cocycle_single,
+          smul_eq_mul, smul_smul]
+        by_cases h : m + n + p = 0
+        · rw [if_pos (by omega : m + n + p = 0), if_pos (by omega : n + p + m = 0),
+              if_pos (by omega : p + m + n = 0)]
+          have hp : p = -m - n := by omega
+          subst hp; push_cast; ring
+        · rw [if_neg (by omega : ¬ (m + n + p = 0)), if_neg (by omega : ¬ (n + p + m = 0)),
+              if_neg (by omega : ¬ (p + m + n = 0))]
+          ring
 
 end WittAlgebra
 
