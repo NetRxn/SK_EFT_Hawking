@@ -4663,6 +4663,7 @@ import SKEFTHawking.KummerPuncturedTorus
 import SKEFTHawking.KummerFreeQuotient
 import SKEFTHawking.KummerChartedSpace
 import SKEFTHawking.KummerShellChart
+import SKEFTHawking.KummerBoundaryChart
 import SKEFTHawking.KummerHomologyT4
 import SKEFTHawking.KummerH0T4
 import SKEFTHawking.KummerHomologyT2
