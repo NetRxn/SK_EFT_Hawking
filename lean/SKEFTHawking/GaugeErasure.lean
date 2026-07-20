@@ -1,3 +1,4 @@
+import Mathlib
 import SKEFTHawking.Basic
 
 /-!
@@ -250,5 +251,85 @@ theorem sm_only_u1_survives :
     ¬survives (hydro_fate (higher_form_symmetry su2_data)) ∧
     survives (hydro_fate (higher_form_symmetry u1_data)) :=
   ⟨su3_erased, su2_erased, u1_survives⟩
+
+/-!
+## Genuine group-theoretic core (R-03 remediation, 2026-07-20)
+
+The `GaugeGroupData` / `higher_form_symmetry` / `hydro_fate` machinery above is
+a **decidable Bool bookkeeping shadow** of the real group-theoretic criterion
+developed here. The substrate review (R-03) correctly noted that the abstract
+lookup table does not itself formalize a gauge center. This section supplies
+the genuine content: the relevant higher-form (1-form) symmetry of a gauge
+group is carried by its **center** `Subgroup.center G` (Gaiotto-Kapustin-
+Seiberg-Willett 2015); the Goldstone survival criterion is *continuity* of that
+1-form symmetry, which — for a connected Lie group — is equivalent to the center
+being the whole group, i.e. the group being Abelian.
+
+* Non-Abelian ⟹ center is a *proper* (discrete `Z_N`) subgroup ⟹ discrete
+  1-form symmetry ⟹ domain wall ⟹ **erased** (no Goldstone).
+* Abelian (U(1)) ⟹ center is the whole continuous group ⟹ continuous 1-form
+  symmetry ⟹ **Goldstone survives** (photon; Grozdanov-Hofman-Iqbal).
+
+These are now derived from Mathlib's `Subgroup.center` on concrete groups (the
+non-Abelian `DihedralGroup 3 ≅ S₃`, whose center is proper — the SU(2)-relevant
+discrete-center case — and the genuinely continuous Abelian `Circle = U(1)`),
+NOT from an assigned lookup value.
+-/
+
+/-- **Genuine survival criterion.** A gauge group `G` survives hydrodynamization
+(produces a continuous 1-form Goldstone mode) iff its **center is the whole
+group** — i.e. its 1-form symmetry group is all of `G` (continuous when `G` is),
+equivalently `G` is Abelian. This is `Subgroup.center G = ⊤`. -/
+def SurvivesHydro (G : Type*) [Group G] : Prop := Subgroup.center G = ⊤
+
+/-- `SurvivesHydro` holds iff the group is commutative — the genuine algebraic
+content of "the 1-form (center) symmetry is the full continuous group". -/
+theorem survivesHydro_iff_comm (G : Type*) [Group G] :
+    SurvivesHydro G ↔ ∀ a b : G, a * b = b * a := by
+  rw [SurvivesHydro, Subgroup.eq_top_iff']
+  constructor
+  · intro h a b; exact (Subgroup.mem_center_iff.mp (h b) a)
+  · intro h g; rw [Subgroup.mem_center_iff]; intro a; exact h a g
+
+/-- **U(1) exception (genuine).** An Abelian (commutative) gauge group survives:
+its center is the whole group, so the 1-form symmetry is continuous and its
+spontaneous breaking yields the photon Goldstone (Grozdanov-Hofman-Iqbal). -/
+theorem survivesHydro_of_commGroup (G : Type*) [CommGroup G] : SurvivesHydro G :=
+  (survivesHydro_iff_comm G).mpr (fun a b => mul_comm a b)
+
+/-- **Non-Abelian erasure (genuine).** A gauge group with any pair of
+non-commuting elements does NOT survive: its center is a proper subgroup
+(discrete `Z_N`), so the 1-form symmetry is discrete → domain wall → erased. -/
+theorem not_survivesHydro_of_noncomm (G : Type*) [Group G]
+    (h : ∃ a b : G, a * b ≠ b * a) : ¬ SurvivesHydro G := by
+  intro hsurv
+  obtain ⟨a, b, hab⟩ := h
+  exact hab ((survivesHydro_iff_comm G).mp hsurv a b)
+
+/-- **SU(2)-relevant concrete case: the non-Abelian `DihedralGroup 3 ≅ S₃` is
+erased.** Its center is a proper subgroup (here trivial), matching the discrete
+`Z_2 ⊂ SU(2)` center structure — no continuous 1-form Goldstone. -/
+theorem dihedral3_erased : ¬ SurvivesHydro (DihedralGroup 3) := by
+  apply not_survivesHydro_of_noncomm
+  exact ⟨DihedralGroup.r 1, DihedralGroup.sr 0, by decide⟩
+
+/-- **U(1) concrete case: the genuinely continuous Abelian `Circle = U(1)`
+survives** — its center is all of `Circle`, so the magnetic 1-form symmetry
+`U(1)^{(1)}` is continuous and photonizes. -/
+theorem circle_survives : SurvivesHydro Circle :=
+  survivesHydro_of_commGroup Circle
+
+/-- **Coherence with the Bool bookkeeping model.** The genuine center criterion
+agrees with the abstract `higher_form_symmetry`/`survives` verdicts on the
+representative cases: the non-Abelian `su2_data`/`su3_data` are erased in both
+the Bool model (`survives (hydro_fate …) = False`) and the group model
+(`¬ SurvivesHydro (DihedralGroup 3)`), and `u1_data` survives in both
+(`survives (hydro_fate …)` and `SurvivesHydro Circle`). -/
+theorem bool_model_coheres_with_center :
+    (¬ survives (hydro_fate (higher_form_symmetry su2_data)) ∧
+       ¬ SurvivesHydro (DihedralGroup 3)) ∧
+    (survives (hydro_fate (higher_form_symmetry u1_data)) ∧
+       SurvivesHydro Circle) :=
+  ⟨⟨su2_erased, dihedral3_erased⟩, ⟨u1_survives, circle_survives⟩⟩
 
 end SKEFTHawking.GaugeErasure
