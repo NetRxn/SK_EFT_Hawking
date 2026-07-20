@@ -21,9 +21,9 @@ transfer verbatim to a product `S²×D³∖{x}` (removing one point from a produ
 retract onto the boundary the way removing a point from a plain disk does — the retraction is only
 literal on the `y ≠ y₀` piece of the fiber).
 
-This module builds THREE REUSABLE, fully-closed pieces that any future closing of the wall will
-need, reducing the remaining obligation as far as it goes without inventing the missing
-cross-product/relative-MV tool:
+This module builds THREE REUSABLE, fully-closed pieces that the eventual closing of the wall
+consumed (see the Status update below); at the time they reduced the remaining obligation as far as
+it went without the then-missing cross-product/relative-MV tool:
 
 * §1 — **ambient acyclicity of `SphereDisk` in the two top degrees** (`H₄(S²×D³)=0`, `H₅(S²×D³)=0`),
   via the ALREADY-BANKED mod-2 contractible-factor collapse
@@ -43,34 +43,30 @@ cross-product/relative-MV tool:
   `PinPlusTraceDiskCorePair.hasRelFundClass_D5` (ambient-abstract over any real inner-product space),
   reused verbatim at `E³` instead of `E⁵`. One half of the `hincl` Mayer–Vietoris route (below).
 
-## The precise remaining wall (reported, not faked)
+## Status update — the wall is now CLOSED downstream (this file's §1–§3 were the feeders)
 
 `hasRelFundClass_of_acyclic_boundaryIncl` (`PinPlusTraceDiskRelFundReduce`) reduces `HasRelFundClass`
-to exactly `{ambient acyclicity (§1, DONE), β ≠ 0 (§2, DONE), hincl}`, where `hincl` is injectivity of
-`H₄(∂W) → H₄(W∖x)` at every interior `x = (p₀, y₀)`. §3 lands ONE HALF of the Mayer–Vietoris route to
-`hincl`: `injective_boundary_to_diskFactorSet` — `H₄(∂W) → H₄(sub A₀)` is injective, `A₀ = S²×(D³∖y₀)`
-(via the SAME ray-exit retraction that closes `hasRelFundClass_D5`, reused verbatim at `E³`). The
-REMAINING gap to close `hincl` in full (precisely scoped, not vague):
-1. `H₄(B₀) = 0`, `B₀ = (S²∖p₀)×D³` — an easy reuse of the SAME §1 tool
-   (`prodContractibleHomologyEquiv`, `Y := S²∖p₀`, `C := D³`), since `S²∖p₀` is already known acyclic
-   in positive degrees (`SingularSphereAcyclic.punctured_sphere_homology_trivial`).
-2. `H₄(A₀ ∩ B₀) = 0`, `A₀∩B₀ = (S²∖p₀)×(D³∖y₀)` — collapse the CONTRACTIBLE `S²∖p₀` factor (a
-   `Prod.swap`-composed mirror of `prodContractibleHomologyEquiv`, keeping `D³∖y₀`), reducing to
-   `H₄(D³∖y₀) = 0` — which is NOT yet in-tree: it needs a fresh "local homology of a 3-manifold
-   vanishes outside its own dimension" lemma (a pair-LES argument: `D³` acyclic in degrees 4,5 +
-   `H₅(D³,D³∖y₀) = 0` via chart-excision to `ℝ³` + `SingularPuncturedRetract`/`sphere_homology_high`,
-   mirroring `boundaryPoint_localHomology_zero`'s excision pattern but for an INTERIOR point and a
-   degree ABOVE the manifold dimension rather than the boundary/top-degree cases already built).
-3. The `SingularMayerVietorisLES.mv_exact_middle` wiring itself, over the ambient `sub {x}ᶜ` (NOT
-   `SphereDisk` — `A₀ ∪ B₀ = {x}ᶜ ≠ univ`, so `A₀`, `B₀` must first be transported into
-   `Set ↥({x}ᶜ)` via `restr`/`PoincareLefschetzRelFundClassGeom.flatSubHomeo`, then the composite
-   `∂W ↪ A₀ ↪ sub{x}ᶜ` matched against the literal `subIncl (∂W ⊆ {x}ᶜ)` the theorem needs).
+to `{ambient acyclicity (§1), β ≠ 0 (§2), hincl}`, where `hincl` is injectivity of
+`H₄(∂W) → H₄(W∖x)` at every interior `x = (p₀, y₀)`. §3 here lands ONE HALF of the Mayer–Vietoris
+route to `hincl` (`injective_boundary_to_diskFactorSet`, the disk-factor ray-exit retraction on
+`A₀ = S²×(D³∖y₀)`); the second MV leg (`B₀ = (S²∖p₀)×D³`, the intersection `A₀∩B₀`, and the
+`mv_exact_middle` wiring over the ambient `sub {x}ᶜ`) was completed subsequently in
+`PinPlusKTSphereProdHincl` (`hincl_sphereDisk`).
 
-None of these three is faked or vacuous; each is a concrete, stated, in-principle-closeable gap — but
-assembling all three plus §3's already-landed retraction into the full `hincl` is genuine new work
-beyond this turn's safe budget, so it is reported precisely rather than forced. Even after `hincl`
-closes, deliverable 1 (the `(2,3)` Wu datum) needs an ADDITIONAL, separate Lefschetz-nondegeneracy
-computation (`findimAbs`/`findimRel`/`nondeg`/`dimeq` at bidegree `(2,3)`) not attempted here.
+With all three feeders in hand, `PinPlusKTSphereProdRelFund.hasRelFundClass_sphereDisk` now discharges
+`HasRelFundClass` for `S²×D³ = SphereDisk` **UNCONDITIONALLY** (no `sorry`/axiom), consuming §1's
+acyclicity + §2's `betaClass_ne_zero` + `hincl_sphereDisk` — the `HasRelFundClass` root the
+reduced-atoms consumer (`PinPlusKTSphereProdCohomology.sphereProdCoboundaryWAdm_of_reducedAtoms`) needs.
+
+The `(2,3)` Lefschetz–Wu datum is likewise now concrete and unconditional:
+`SphereProdP23NondegClose.sphereDiskP23` assembles it (`findimAbs`/`findimRel`/`nondeg`/`dimeq` all
+discharged), and `PinPlusKTSphereProdP23Close` supplies its pin (`sphereDiskPin23`) and middle-Wu
+vanishing (`sphereDiskWuZero : wuClass sphereDiskP23 = 0`), then feeds the whole `(P23, pin23, hv2)`
+triple — together with `hasRelFundClass_sphereDisk` and the two homology-subsingleton roots
+(`PinPlusKTSphereProdHomologyRoots`, `SphereProdHThreeMod2`) — into the coboundary atom. So the entire
+geometric `hBbord` content for the concrete `S²×D³` coboundary is now discharged; only the
+row-realization + the K3-assembly residual remain. This file's §1–§3 stand as the reusable feeders
+that route was built on.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new project axiom, no
 `native_decide`, no `maxHeartbeats`.

@@ -4639,6 +4639,7 @@ import SKEFTHawking.SphereProdP23Hincl
 import SKEFTHawking.SphereProdP23WuVanish
 import SKEFTHawking.SphereProdBoundaryCupSquare
 import SKEFTHawking.SphereProdP23NondegFeeder
+import SKEFTHawking.PinPlusKTSphereProdP23Close
 import SKEFTHawking.KummerK3Base
 import SKEFTHawking.KummerInvolution
 import SKEFTHawking.KummerHomologyT4
