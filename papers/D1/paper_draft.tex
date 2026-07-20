@@ -45,8 +45,8 @@ $|\alpha|^2 - |\beta|^2 = 1 - \delta_k$ with
 $\delta_k = 2\Gamma_H/\kappa$, an FDR-mandated noise floor
 $n_\text{noise} = \delta_k / 2$ that is mandatory by KMS even with
 zero Hawking radiation, and a platform-dependent spectral floor at
-$\omega_\times = T_H \ln(2/\delta_\text{diss})$ ($\approx 2\, T_H$ for
-Heidelberg-accessible BEC; $\approx 12\, T_H$ for Steinhauer-class)
+$\omega_\times = T_H \ln(2/\delta_\text{diss})$ ($\approx 7\, T_H$ for
+Heidelberg-accessible BEC; $\approx 11\, T_H$ for Steinhauer-class)
 where the high-$\omega$ spectrum becomes power-law rather than
 thermal. The three platforms span ten
 orders of magnitude in Hawking temperature
@@ -262,10 +262,10 @@ is the IR-dominant scale. This is captured at the Lean level in
 
 \subsection{BEC platform numerics}
 
-The hierarchy is platform-dependent and culminates in
-Heidelberg-class spin-sonic configurations where
-$\delta_\text{diss} \sim 10^{-1}$ is the dominant correction
-(see~\S\ref{sec:hierarchy} for the full table). The canonical BEC
+The hierarchy is platform-dependent and culminates in the
+Heidelberg $^{39}$K configuration, where
+$\delta_\text{diss} \sim 1.6\times10^{-3}$ dominates the dispersive
+correction (see~\S\ref{sec:hierarchy} for the full table). The canonical BEC
 parameter sets used for the numerics
 (\texttt{EXPERIMENTS['Steinhauer']}, \texttt{['Heidelberg']},
 \texttt{['Trento']} as registered in \texttt{src/core/constants.py})
@@ -451,30 +451,46 @@ while the noise floor is constant. The crossover frequency, where
 \]
 matching the abstract expression (using
 $\delta_\text{diss} = \Gamma_H/\kappa = \delta_k/2$).
-For Heidelberg-class BEC ($\delta_\text{diss} \approx 0.26$;
-Tab.~\ref{tab:hierarchy}), $\omega_\times \approx T_H \ln(2/0.26)
-\approx 2.0\, T_H$ --- well below the dispersive UV cutoff. The
+For Heidelberg-class BEC ($\delta_\text{diss} \approx 1.59\times10^{-3}$;
+Tab.~\ref{tab:hierarchy}), $\omega_\times \approx T_H \ln(2/1.59\times10^{-3})
+\approx 7.14\, T_H$ --- well below the dispersive UV cutoff
+($\omega_\text{max} \approx 121\, T_H$). The
 high-frequency spectrum becomes power-law ($\omega^{-1}$ correction)
 rather than exponentially suppressed. The predicted regime is one
 in which the spectrum is thermal at
 $\omega \lesssim T_H$, transitions to a Planckian floor at
 $\omega \sim T_H$, and bottoms out at the $\omega^{-1}$ spectral
-floor at $\omega \gtrsim 2\, T_H$. (For Steinhauer-class
-$\delta_\text{diss} \approx 10^{-5}$ the crossover sits at
-$\omega_\times \approx T_H \ln(2\!\times\!10^{5}) \approx 12\, T_H$,
-well above the dispersive UV cutoff.)
+floor at $\omega \gtrsim 7\, T_H$, where the thermal Hawking flux
+$\exp(-\omega/T_H)$ has fallen to the FDR floor
+$\delta_\text{diss}/2 \approx 8\times10^{-4}$. (For Steinhauer-class
+$\delta_\text{diss} \approx 2.38\times10^{-5}$ the crossover sits at
+$\omega_\times \approx T_H \ln(2/2.38\times10^{-5}) \approx 11.3\, T_H$,
+still below the dispersive UV cutoff but where the floor
+$\delta_\text{diss}/2 \approx 1.2\times10^{-5}$ is nearly two orders of
+magnitude smaller than at Heidelberg.)
 
 \subsection{Heidelberg as the unique BEC target}
 
-Among the three BEC platforms, only Heidelberg sits in the regime
-where the spectral floor is below the dispersive UV cutoff.
-Steinhauer and Trento have $\omega_\times$ above the dispersive
-cutoff; the spectral floor exists in principle but cannot be
-probed without extending the platform.
+Among the three BEC platforms, Heidelberg is uniquely favourable ---
+not because it is the only one whose spectral floor lies below the
+dispersive UV cutoff (all three crossovers, $\omega_\times \approx
+7$--$12\, T_H$, sit well below the cutoff $\omega_\text{max} \approx
+110$--$121\, T_H$), but because it is the only platform where
+dissipation dominates dispersion ($\delta_\text{diss}$ exceeds
+$|\delta_\text{disp}|$ by a factor $\sim 22$; Tab.~\ref{tab:hierarchy}).
+Its crossover $\omega_\times \approx 7.1\, T_H$ is the lowest of the
+three and its FDR floor $\delta_\text{diss}/2 \approx 8\times10^{-4}$ is
+the largest --- roughly $70\times$ the Steinhauer floor and $110\times$
+the Trento floor --- so the spectral floor is reached earliest along the
+thermal tail and appears as the largest fractional deviation. Steinhauer
+and Trento reach their floors only near $\omega_\times \approx
+11$--$12\, T_H$, where the corresponding floors
+($\delta_\text{diss}/2 \sim 10^{-5}$) demand occupation-number
+resolution roughly two orders of magnitude finer.
 
 \emph{Heidelberg projection caveat.} The Heidelberg numbers
 quoted in this paper (density, velocity, $\omega_\perp$, derived
-$T_H \sim 1$\,nK, $\delta_\text{diss} \approx 0.26$) are
+$T_H \sim 1$\,nK, $\delta_\text{diss} \approx 1.6\times10^{-3}$) are
 projections for a transonic-flow Hawking experiment that has not
 been performed. The Heidelberg (Oberthaler) group has published
 analog cosmology results using $^{39}$K~\cite{Viermann2022} but
@@ -483,9 +499,10 @@ catalogued in \texttt{src/core/provenance.py} as
 \texttt{tier: PROJECTED} with note ``Heidelberg has only
 published analog cosmology, not Hawking; no transonic flow
 experiment exists.''  We retain the projection because the
-$\delta_\text{diss} \sim 26\%$ regime accessed by the
-projected parameters is the most informative BEC target for the
-spectral-floor prediction.
+$\delta_\text{diss} \sim 10^{-3}$ regime accessed by the
+projected parameters is the only dissipation-dominated BEC regime
+among the three benchmarks, and hence the most informative BEC target
+for the spectral-floor prediction.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Hierarchy of corrections by platform}
@@ -496,19 +513,32 @@ strongly by platform. Table~\ref{tab:hierarchy} summarises.
 
 \begin{table*}[!t]
 \centering
-\caption{Hierarchy of corrections at three benchmark platforms.
+\caption{Hierarchy of corrections at benchmark platforms.
 $\delta_\text{disp}$ is the leading dispersive correction
-($-\pi D^2/6$ for sub-luminal dispersion);
-$\delta_\text{diss}$ is from~\eqref{eq:delta-diss};
-$\delta^{(2)}$ is the on-shell second-order correction. Numerical
-values are computed via \texttt{src/core/formulas.py} on
-\texttt{EXPERIMENTS} parameters.}
+($-\pi D^2/6$ for sub-luminal dispersion) and
+$\delta_\text{diss}$ is the leading-order, frequency-independent
+dissipative floor of~\eqref{eq:delta-diss} ($\Gamma_H/\kappa$); both
+are dimensionless fractional shifts of $T_\text{eff}$. For the three
+BEC rows (Steinhauer, Heidelberg, Trento) these are horizon-evaluated
+($\omega = \kappa$) from the canonical pipeline
+(\texttt{constants.py}~$\to$~transonic solver~$\to$
+\texttt{formulas.py}) via
+\texttt{scripts/gen\_d1\_hierarchy\_table.py}, and are gate-enforced
+against this table by \texttt{validate.py --check d1\_hierarchy\_table}.
+The polariton and graphene rows are order-of-magnitude estimates from
+their platform-specific modules (\S\ref{sec:polariton};
+\texttt{src/dkm\_bootstrap/graphene\_mir.py}) and use a
+platform-appropriate $\delta_\text{diss}$ definition (cavity decay
+$\Gamma_\text{pol}/\kappa$ for polaritons). The $T_H$ column lists the
+nominal experimental temperature scale (Steinhauer $\kappa\approx290$
+\si{\per\second}~$\to$~\SI{0.35}{\nano\kelvin}), not the smooth-model
+surface gravity feeding the correction columns.}
 \label{tab:hierarchy}
 \begin{tabular}{lcccc}\toprule
 Platform & $T_H$ & $\delta_\text{disp}$ & $\delta_\text{diss}$ & dominance \\\midrule
-$^{87}$Rb BEC (Steinhauer/de~Nova) & $\sim 0.35$\,nK & $-2.7\%$ & $10^{-5}$ & disp \\
-$^{39}$K BEC (Heidelberg, projected) & $\sim 1$\,nK & $-1.2\%$ & $\sim 26\%$ & \textbf{diss} \\
-spin-sonic BEC (Trento)    & $\sim 1$\,nK & $-0.5\%$ & $10^{-1}$ & comparable \\
+$^{87}$Rb BEC (Steinhauer/de~Nova) & $\sim 0.35$\,nK & $-8.53\times10^{-5}$ & $2.38\times10^{-5}$ & disp \\
+$^{39}$K BEC (Heidelberg, projected) & $\sim 1$\,nK & $-7.32\times10^{-5}$ & $1.59\times10^{-3}$ & \textbf{diss} \\
+spin-sonic BEC (Trento)    & $\sim 1$\,nK & $-9.89\times10^{-5}$ & $1.41\times10^{-5}$ & disp \\
 LKB polariton (smooth)     & $\sim 85$\,mK & $-19\%$ & $14\%$ & disp/comp \\
 LKB polariton (steep)      & $\sim 134$\,mK & $-46\%$ & $\sim 10\%$ & \textbf{disp} (LO only) \\
 graphene (Dean)            & $\sim 2.4$\,K & $-2.8\%$ & $\sim 10^{-13}$ & \textbf{disp} \\
