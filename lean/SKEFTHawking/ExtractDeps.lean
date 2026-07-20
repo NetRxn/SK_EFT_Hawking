@@ -27,6 +27,11 @@ Extracts all declarations from the SKEFTHawking namespace with:
 - **proof-dependency edges** (`name_deps_project`): the project-local constants this declaration's
   `type ∪ value` immediately references — the who-invokes-whom DAG the proof-dependency graph /
   derived atlas frontier needs.
+- **statement-vs-proof split** (`type_deps_project` / `value_deps_project`, R-06 2026-07-20): the same
+  immediate references partitioned into the constants used in the declaration's TYPE (statement /
+  "assumes") vs its VALUE (proof / "uses"). `name_deps_project` (the union) is retained verbatim for
+  consumer back-compat; the two split fields are additive, so an old `lean_deps.json` (pre-re-extract)
+  simply lacks them and every consumer that reads `name_deps_project` is unaffected.
 
 **ADR-005 D-G (proof-dep edges are a free byproduct).** `name_deps_project` is derived from the
 immediate-dependency map (`depCache`) that the axiom-closure Tarjan pass (`AxiomClosure`) ALREADY
@@ -138,6 +143,25 @@ private def shouldSkip (ci : ConstantInfo) : Bool :=
   | .quotInfo _ => true
   | _ => false
 
+/-- Split a declaration's immediate constant references into the constants used in its **type**
+    (statement dependencies — "assumes / mentions in its type") and the constants used in its
+    **value** (proof/definition dependencies — "uses in its proof"). Mirrors exactly the per-kind
+    match `AxiomClosure.immediateRefs` uses (only `defn`/`thm`/`opaque` carry a value expression),
+    so the split is the same `getUsedConstantsAsSet` walk, partitioned instead of unioned.
+
+    R-06 (2026-07-20): `name_deps_project` was the *union* of these two sets while being called
+    "proof dependencies", so a reverse edge could not distinguish "appears in the type" from
+    "appears in the proof". This helper is the source of the honest `type_deps_project` /
+    `value_deps_project` split emitted alongside the (unchanged, back-compat) union. -/
+private def typeValueConsts (ci : ConstantInfo) : Array Name × Array Name :=
+  let typeConsts := ci.type.getUsedConstantsAsSet.toArray
+  let valueConsts := match ci with
+    | .defnInfo v   => v.value.getUsedConstantsAsSet.toArray
+    | .thmInfo v    => v.value.getUsedConstantsAsSet.toArray
+    | .opaqueInfo v => v.value.getUsedConstantsAsSet.toArray
+    | _             => #[]
+  (typeConsts, valueConsts)
+
 /-- Process a single declaration: extract all metadata as JSON.
 
 `immDeps` is `AxiomClosure`'s `depCache` — every const's immediate `type ∪ value` constant
@@ -162,7 +186,25 @@ private def buildDeclJsonStr (env : Environment) (name : Name) (immDeps : Std.Ha
   -- Proof-dependency edges: the project-local immediate references in this decl's `type ∪ value`,
   -- taken straight from the axiom-closure pass's `depCache` (ADR-005 D-G byproduct). Excludes
   -- self-references and non-project (Mathlib/core) names so the edge set is the project DAG.
+  -- `name_deps_project` is the UNION (retained verbatim for consumer back-compat).
   let nameDeps := ((immDeps[name]?).getD #[]).filter (fun n => inSKPackage env n && n != name)
+
+  -- R-06 honest split: partition the immediate references into statement (`type_deps_project`) and
+  -- proof/value (`value_deps_project`) sets, so a downstream reverse edge can distinguish "assumes /
+  -- mentions in its type" from "uses in its proof". Computed directly from THIS decl's type and value
+  -- expressions (a local, per-decl walk mirroring the `defn`/`thm`/`opaque` cases of
+  -- `AxiomClosure.immediateRefs`), with the identical `inSKPackage ∧ ≠ self` project-filter as
+  -- `name_deps_project`. The union of the two closely tracks `name_deps_project` (both are the
+  -- project-filtered `getUsedConstantsAsSet` of `type ∪ value`); they can differ only where the
+  -- closure pass folds in extra references for a kind that carries no `value` here (e.g. an
+  -- inductive's constructors) — which is why `name_deps_project` (the union) is kept as the
+  -- authoritative back-compat field and these two are additive.
+  let (typeConstsAll, valueConstsAll) :=
+    match env.find? name with
+    | some ci => typeValueConsts ci
+    | none    => (#[], #[])
+  let typeDeps := typeConstsAll.filter (fun n => inSKPackage env n && n != name)
+  let valueDeps := valueConstsAll.filter (fun n => inSKPackage env n && n != name)
 
   let json := Json.mkObj [
     ("name", Json.str (toString name)),
@@ -172,6 +214,9 @@ private def buildDeclJsonStr (env : Environment) (name : Name) (immDeps : Std.Ha
     ("axiom_deps_project", Json.arr (projectAxioms.map (fun a => Json.str (toString a)))),
     ("axiom_deps_core", Json.arr (coreAxioms.map (fun a => Json.str (toString a)))),
     ("name_deps_project", Json.arr (nameDeps.map (fun a => Json.str (toString a)))),
+    -- R-06 honest statement-vs-proof split (additive; old consumers keep reading name_deps_project).
+    ("type_deps_project", Json.arr (typeDeps.map (fun a => Json.str (toString a)))),
+    ("value_deps_project", Json.arr (valueDeps.map (fun a => Json.str (toString a)))),
     -- Retained for consumer back-compat: edges are ALWAYS populated now (no opt-in, no budget),
     -- so name_deps_extracted is always true and name_deps_timed_out always false.
     ("name_deps_extracted", Json.bool true),
