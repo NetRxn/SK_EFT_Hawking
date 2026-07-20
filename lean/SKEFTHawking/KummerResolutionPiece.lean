@@ -1169,6 +1169,171 @@ K6′b welds along — an honest topological homeomorphism (both directions cont
 def bdryHomeoRP3 : RP3 ≃ₜ ↥boundaryE :=
   Continuous.homeoOfEquivCompactToT2 (f := bdryEquivRP3) continuous_bdryEquivRP3
 
+/-! ## §9. The fiber-scaling deformation retraction of `E` onto the zero section `S²` (K7 feeder)
+
+`E` deformation-retracts onto its zero section: scale the fiber coordinate `w ↦ t·w` for
+`t ∈ [0,1]`. At `t = 1` this is the identity; at `t = 0` it collapses every fiber to `0`, landing on
+the zero-section `S²`. The scaling is **fiber-linear**, so it commutes with the Euler−2 clutch
+(`t·(z²·w) = z²·(t·w)`) and hence descends to the quotient `E` as a total `Quotient.lift`. Joint
+continuity in `(x, t)` is by the locally-compact product-quotient principle
+(`IsQuotientMap.continuous_lift_prod_left`, `[0,1]` compact hence locally compact). The base
+projection `π : E → S²` (forget the fiber) is the retraction; `π ∘ zeroSection = id` strictly and
+`zeroSection ∘ π ≃ id` via this deformation — a genuine homotopy equivalence `E ≃ S²`, the input the
+K7 Mayer–Vietoris accounting consumes as `H₂(E;ℤ) ≅ H₂(S²;ℤ)`. -/
+
+/-- **The base projection** `π : E → S²` — forget the fiber. Well-defined: the equator weld
+`z ↦ z⁻¹` on the base is exactly the base-`S²` gluing (`baseGlued`). -/
+def baseProj : ResE → BaseS2 :=
+  Quotient.lift (Sum.elim (fun p => baseChart0 p.1) (fun p => baseChart1 p.1)) (by
+    rintro a b (rfl | hg)
+    · rfl
+    · cases a with
+      | inl p =>
+        cases b with
+        | inr q =>
+          exact Quotient.sound (Or.inr (show baseGlued p.1 q.1 from ⟨hg.1, hg.2.1⟩))
+        | inl _ => exact (hg : False).elim
+      | inr q =>
+        cases b with
+        | inl p =>
+          exact (Quotient.sound (Or.inr (show baseGlued p.1 q.1 from ⟨hg.1, hg.2.1⟩))).symm
+        | inr _ => exact (hg : False).elim)
+
+@[simp] theorem baseProj_chart0 (p : ResChart) : baseProj (chart0 p) = baseChart0 p.1 := rfl
+@[simp] theorem baseProj_chart1 (p : ResChart) : baseProj (chart1 p) = baseChart1 p.1 := rfl
+
+theorem continuous_baseProj : Continuous baseProj := by
+  apply Continuous.quotient_lift
+  exact (continuous_baseChart0.comp continuous_fst).sumElim (continuous_baseChart1.comp continuous_fst)
+
+/-- **`π ∘ zeroSection = id`** — the zero section is a genuine section of the base projection. -/
+theorem baseProj_zeroSection (x : BaseS2) : baseProj (zeroSection x) = x := by
+  induction x using Quotient.ind with
+  | _ a => cases a with
+    | inl z => rfl
+    | inr z => rfl
+
+/-- Scale a fiber `Disk` element by `t ∈ [0,1]`: `w ↦ t·w`, staying in `D²`
+(`‖t·w‖ = t‖w‖ ≤ ‖w‖ ≤ 1`). -/
+def scaleDisk (t : unitInterval) (w : Disk) : Disk :=
+  ⟨((t : ℝ) : ℂ) * (w : ℂ), by
+    rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (unitInterval.nonneg t)]
+    calc (t : ℝ) * ‖(w : ℂ)‖ ≤ 1 * ‖(w : ℂ)‖ :=
+            mul_le_mul_of_nonneg_right (unitInterval.le_one t) (norm_nonneg _)
+      _ = ‖(w : ℂ)‖ := one_mul _
+      _ ≤ 1 := w.2⟩
+
+@[simp] theorem scaleDisk_coe (t : unitInterval) (w : Disk) :
+    ((scaleDisk t w : Disk) : ℂ) = ((t : ℝ) : ℂ) * (w : ℂ) := rfl
+
+theorem continuous_scaleDisk : Continuous (fun p : unitInterval × Disk => scaleDisk p.1 p.2) := by
+  apply Continuous.subtype_mk
+  exact (Complex.continuous_ofReal.comp (continuous_subtype_val.comp continuous_fst)).mul
+    (continuous_subtype_val.comp continuous_snd)
+
+/-- The fiber-scaled point of `E`, before descent: the chart-`i` point `(z, t·w)`. -/
+def scaledSum (a : ResChart ⊕ ResChart) (t : unitInterval) : ResE :=
+  Sum.elim (fun p => chart0 (p.1, scaleDisk t p.2)) (fun p => chart1 (p.1, scaleDisk t p.2)) a
+
+/-- **Fiber-scaling respects the weld** (fiber-linearity): if `a ~ b` then their fiber-scaled points
+coincide in `E`. This is the `t·(z²·w) = z²·(t·w)` identity that makes the deformation descend. -/
+theorem scaledSum_respects {a b : ResChart ⊕ ResChart} (t : unitInterval) (h : resRel a b) :
+    scaledSum a t = scaledSum b t := by
+  rcases h with rfl | hg
+  · rfl
+  · cases a with
+    | inl p =>
+      cases b with
+      | inr q =>
+        obtain ⟨hz, hq1, hq2⟩ := (hg : glued p q)
+        refine chart0_eq_chart1' (q := (p.1, scaleDisk t p.2)) (p := (q.1, scaleDisk t q.2))
+          hz hq1 ?_
+        show ((t : ℝ) : ℂ) * (q.2 : ℂ) = (p.1 : ℂ) ^ 2 * (((t : ℝ) : ℂ) * (p.2 : ℂ))
+        rw [hq2]; ring
+      | inl _ => exact (hg : False).elim
+    | inr q =>
+      cases b with
+      | inl p =>
+        obtain ⟨hz, hq1, hq2⟩ := (hg : glued p q)
+        refine (chart0_eq_chart1' (q := (p.1, scaleDisk t p.2)) (p := (q.1, scaleDisk t q.2))
+          hz hq1 ?_).symm
+        show ((t : ℝ) : ℂ) * (q.2 : ℂ) = (p.1 : ℂ) ^ 2 * (((t : ℝ) : ℂ) * (p.2 : ℂ))
+        rw [hq2]; ring
+      | inr _ => exact (hg : False).elim
+
+/-- **The fiber-scaling deformation** `H : E × [0,1] → E` — scale the fiber by `t`. `t = 1` is the
+identity (`deform_one`); `t = 0` is the zero-section retraction `zeroSection ∘ baseProj`
+(`deform_zero`). Descends from `scaledSum` by fiber-linearity (`scaledSum_respects`). -/
+def deform : ResE × unitInterval → ResE :=
+  fun p => Quotient.liftOn p.1 (fun a => scaledSum a p.2) (fun _ _ h => scaledSum_respects p.2 h)
+
+@[simp] theorem deform_mk (a : ResChart ⊕ ResChart) (t : unitInterval) :
+    deform (Quotient.mk resSetoid a, t) = scaledSum a t := rfl
+
+theorem continuous_scaledSum :
+    Continuous (fun p : (ResChart ⊕ ResChart) × unitInterval => scaledSum p.1 p.2) := by
+  have hg0 : Continuous (fun q : ResChart × unitInterval => chart0 (q.1.1, scaleDisk q.2 q.1.2)) :=
+    continuous_chart0.comp (Continuous.prodMk (continuous_fst.comp continuous_fst)
+      (continuous_scaleDisk.comp
+        (Continuous.prodMk continuous_snd (continuous_snd.comp continuous_fst))))
+  have hg1 : Continuous (fun q : ResChart × unitInterval => chart1 (q.1.1, scaleDisk q.2 q.1.2)) :=
+    continuous_chart1.comp (Continuous.prodMk (continuous_fst.comp continuous_fst)
+      (continuous_scaleDisk.comp
+        (Continuous.prodMk continuous_snd (continuous_snd.comp continuous_fst))))
+  have hcongr : (fun p : (ResChart ⊕ ResChart) × unitInterval => scaledSum p.1 p.2)
+      = (Sum.elim (fun q : ResChart × unitInterval => chart0 (q.1.1, scaleDisk q.2 q.1.2))
+          (fun q : ResChart × unitInterval => chart1 (q.1.1, scaleDisk q.2 q.1.2)))
+        ∘ Homeomorph.sumProdDistrib := by
+    funext p
+    obtain ⟨a, t⟩ := p
+    cases a with
+    | inl q => rfl
+    | inr q => rfl
+  rw [hcongr]
+  exact (hg0.sumElim hg1).comp Homeomorph.sumProdDistrib.continuous
+
+theorem continuous_deform : Continuous deform := by
+  have hq : Topology.IsQuotientMap (Quotient.mk resSetoid) := isQuotientMap_quotient_mk'
+  exact hq.continuous_lift_prod_left continuous_scaledSum
+
+/-- **`H(·, 1) = id`** — the `t = 1` slice of the deformation is the identity. -/
+theorem deform_one (x : ResE) : deform (x, 1) = x := by
+  induction x using Quotient.ind with
+  | _ a => cases a with
+    | inl q =>
+      show chart0 (q.1, scaleDisk 1 q.2) = chart0 q
+      exact congrArg chart0 (Prod.ext rfl (Subtype.ext (by simp)))
+    | inr q =>
+      show chart1 (q.1, scaleDisk 1 q.2) = chart1 q
+      exact congrArg chart1 (Prod.ext rfl (Subtype.ext (by simp)))
+
+/-- **`H(·, 0) = zeroSection ∘ baseProj`** — the `t = 0` slice collapses every fiber to the zero
+section. This is the deformation-retraction endpoint. -/
+theorem deform_zero (x : ResE) : deform (x, 0) = zeroSection (baseProj x) := by
+  induction x using Quotient.ind with
+  | _ a => cases a with
+    | inl q =>
+      show chart0 (q.1, scaleDisk 0 q.2) = zeroSection (baseChart0 q.1)
+      rw [zeroSection_baseChart0]
+      exact congrArg chart0 (Prod.ext rfl (Subtype.ext (by simp [zeroPt, zeroFiber])))
+    | inr q =>
+      show chart1 (q.1, scaleDisk 0 q.2) = zeroSection (baseChart1 q.1)
+      rw [zeroSection_baseChart1]
+      exact congrArg chart1 (Prod.ext rfl (Subtype.ext (by simp [zeroPt, zeroFiber])))
+
+/-- **The deformation fixes the zero section**: on the zero-locus the fiber is already `0`, so scaling
+does nothing — `H(zeroSection z, t) = zeroSection z` for every `t`. (Strong deformation retraction.) -/
+theorem deform_zeroSection (z : BaseS2) (t : unitInterval) :
+    deform (zeroSection z, t) = zeroSection z := by
+  induction z using Quotient.ind with
+  | _ a => cases a with
+    | inl w =>
+      show chart0 ((zeroPt w).1, scaleDisk t (zeroPt w).2) = chart0 (zeroPt w)
+      exact congrArg chart0 (Prod.ext rfl (Subtype.ext (by simp [zeroPt, zeroFiber])))
+    | inr w =>
+      show chart1 ((zeroPt w).1, scaleDisk t (zeroPt w).2) = chart1 (zeroPt w)
+      exact congrArg chart1 (Prod.ext rfl (Subtype.ext (by simp [zeroPt, zeroFiber])))
+
 end
 
 end SKEFTHawking.KummerResolutionPiece
