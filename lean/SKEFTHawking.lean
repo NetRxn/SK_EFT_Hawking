@@ -4586,6 +4586,9 @@ import SKEFTHawking.PinPlusKTSphereProdReassoc
 import SKEFTHawking.PinPlusKTSphereProdHincl
 import SKEFTHawking.PinPlusKTSphereProdHomologyRoots
 import SKEFTHawking.PinPlusKTSphereProdRelFundWuRoots
+import SKEFTHawking.SphereDiskConnectingDetect
+import SKEFTHawking.SingularCapConnecting
+import SKEFTHawking.SphereProdHFourMod2Detect
 import SKEFTHawking.PinPlusKTSphereProdRelFund
 import SKEFTHawking.PinPlusKTSpinSigmaAtom
 import SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
