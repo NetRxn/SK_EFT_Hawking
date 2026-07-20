@@ -4634,6 +4634,8 @@ import SKEFTHawking.KummerTorusStep
 import SKEFTHawking.KummerHomologyT4H2
 import SKEFTHawking.KummerHomologyT4Full
 import SKEFTHawking.KTCompletenessProvider
+import SKEFTHawking.Carrollian.Structure
+import SKEFTHawking.Carrollian.WittAlgebra
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
