@@ -377,6 +377,28 @@ noncomputable instance instChartedSpacePuncturedTorus :
       simp only [Set.mem_iUnion, Set.mem_singleton_iff]
       exact ⟨chosenC h, shellDir (shellIncl (chosenShell h)), chosenC_mem h, rfl⟩
 
+/-! ### §8. STRETCH — the Q-side descent (the K5′ boundary-chart opener) -/
+
+open SKEFTHawking.KummerFreeQuotient (FreeQuotient qmk)
+
+/-- **The boundary collar chart descended to the free quotient `Q = T⁴°/τ`.** Near the image `qmk x` of
+a boundary/collar point `x`, the local homeomorphism `qmk` (`qmk_localOpenPartialHomeomorph`, an
+`OpenPartialHomeomorph` on a separating ball where `qmk` is injective) is inverted and composed with the
+collar chart `bdyChartAt` of `x`, giving an `OpenPartialHomeomorph Q Model` — a boundary chart of `Q`
+onto the half-space model `(𝓡 3).prod (𝓡∂ 1)`. This is the K5′ certificate opener: the ℝP³-boundary
+collar chart of the Kummer free quotient descends from the `T⁴°` collar chart of §3 through `qmk`. -/
+noncomputable def qmkBoundaryChart (x : ↥puncturedTorus) (h : (x : TorusFour) ∉ interiorSet) :
+    OpenPartialHomeomorph FreeQuotient Model :=
+  (qmk_localOpenPartialHomeomorph x).symm.trans (bdyChartAt h)
+
+/-- **The interior chart descended to `Q`.** The same construction with the interior chart: near `qmk x`
+of an interior point, `qmk` inverted then the round-ball interior chart, giving an interior chart of `Q`
+onto the interior of the half-space model. Together with `qmkBoundaryChart` these open the K5′
+manifold-with-boundary atlas of `Q`. -/
+noncomputable def qmkInteriorChart (x : ↥puncturedTorus) (hx : (x : TorusFour) ∈ interiorSet) :
+    OpenPartialHomeomorph FreeQuotient Model :=
+  (qmk_localOpenPartialHomeomorph x).symm.trans (interiorChartR ⟨(x : TorusFour), hx⟩)
+
 end
 
 end SKEFTHawking.KummerBoundaryChart
