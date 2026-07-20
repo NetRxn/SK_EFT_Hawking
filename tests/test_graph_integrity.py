@@ -44,13 +44,16 @@ class TestIntegrityReportStructure:
             'sentence_chain_incomplete', 'sentence_id_collisions',
             'audit_event_missing_logged_by', 'audit_event_malformed_actor',
             'claim_cluster_inconsistency', 'last_modified_missing',
+            # R-06: orphan paper-claim regression guard (PaperClaim subset of orphans)
+            'orphan_claims',
         }
         assert expected_keys == set(report.keys()), (
             f"Report keys mismatch. Expected: {expected_keys}, Got: {set(report.keys())}"
         )
 
         # All issue lists are actually lists
-        for key in ('orphan_nodes', 'broken_chains', 'ungrounded_claims',
+        for key in ('orphan_nodes', 'orphan_claims', 'broken_chains',
+                     'ungrounded_claims',
                      'missing_provenance', 'conflicts', 'unclassified_axioms',
                      'sentence_chain_incomplete', 'sentence_id_collisions',
                      'audit_event_missing_logged_by',
@@ -72,6 +75,8 @@ class TestIntegrityReportStructure:
             'sentence_chain_incomplete', 'sentence_id_collisions',
             'audit_event_missing_logged_by', 'audit_event_malformed_actor',
             'claim_cluster_inconsistency', 'last_modified_missing',
+            # R-06: orphan paper-claim regression guard
+            'orphan_claims',
         }
         assert expected_summary_keys == set(summary.keys()), (
             f"Summary keys mismatch. Expected: {expected_summary_keys}, "
@@ -103,6 +108,24 @@ class TestIntegrityReportStructure:
             + summary.get('audit_event_malformed_actor', 0)
             + summary.get('claim_cluster_inconsistency', 0)
         )
+
+
+class TestOrphanClaimGuard:
+    """R-06 regression guard: zero orphan paper-claim nodes."""
+
+    def test_no_orphan_paper_claims(self):
+        """Every PaperClaim node is CLAIMS-connected to its paper. The pre-R-06
+        graph had 128 orphan claims; the CLAIMS-edge extractor now connects every
+        discovered claim, so this must stay 0. A non-zero count is a hard fail in
+        validate.py --check graph_integrity."""
+        report = run_integrity_checks()
+        assert report['summary']['orphan_claims'] == 0, (
+            f"{report['summary']['orphan_claims']} orphan paper-claim(s): "
+            f"{[o['id'] for o in report['orphan_claims'][:10]]}"
+        )
+        # orphan_claims is exactly the PaperClaim subset of orphan_nodes.
+        pc_orphans = [o for o in report['orphan_nodes'] if o['type'] == 'PaperClaim']
+        assert len(pc_orphans) == report['summary']['orphan_claims']
 
 
 class TestDetectsKnownConflict:

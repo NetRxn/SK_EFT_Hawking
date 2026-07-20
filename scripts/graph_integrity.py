@@ -91,6 +91,16 @@ def run_integrity_checks() -> dict:
                 'name': n['name'],
             })
 
+    # R-06 regression guard: PaperClaim nodes with ZERO edges (no incoming CLAIMS
+    # from their paper) are the "orphan claims" the substrate review flagged (128
+    # on 2026-07-16). The CLAIMS-edge extractor now connects EVERY discovered claim
+    # to its paper, so this must stay 0; a non-zero count means paper/claim
+    # discovery drifted out of sync (e.g. a claim node whose paper node was not
+    # discovered). Tracked separately from generic orphans (unconnected Lean
+    # declaration nodes are expected substrate, not provenance failures) and
+    # HARD-FAILED by `validate.py --check graph_integrity`.
+    orphan_claims = [o for o in orphan_nodes if o['type'] == 'PaperClaim']
+
     # --- 2. Conflicts: nodes with verification == 'conflict' ---
     conflicts = []
     for n in nodes:
@@ -294,6 +304,7 @@ def run_integrity_checks() -> dict:
 
     return {
         'orphan_nodes': orphan_nodes,
+        'orphan_claims': orphan_claims,
         'conflicts': conflicts,
         'ungrounded_claims': ungrounded_claims,
         'broken_chains': broken_chains,
@@ -311,6 +322,7 @@ def run_integrity_checks() -> dict:
             'total_edges': len(edges),
             'total_issues': total_issues,
             'orphans': len(orphan_nodes),
+            'orphan_claims': len(orphan_claims),
             'conflicts': len(conflicts),
             'ungrounded': len(ungrounded_claims),
             'broken_chains': len(broken_chains),
@@ -348,6 +360,12 @@ def print_report(report: dict) -> None:
         print(f"  CONFLICTS ({s['conflicts']}):")
         for c in report['conflicts']:
             print(f"    {c['id']}  — {c['detail'][:80]}")
+        print()
+
+    if report.get('orphan_claims'):
+        print(f"  ORPHAN CLAIMS ({s.get('orphan_claims', 0)}) — HARD FAIL (R-06 guard):")
+        for o in report['orphan_claims']:
+            print(f"    {o['id']}  ({o['name'][:60]})")
         print()
 
     if report['orphan_nodes']:
