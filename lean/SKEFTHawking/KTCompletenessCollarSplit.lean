@@ -629,6 +629,283 @@ theorem finiteDimensional_homology_coverA
   · ext y
     rfl
 
+/-! ## §H. The handle-side collar slide (for `coverB`), pushing the cyl sliver up to `mid`. -/
+
+/-- The real value of the handle-side slide: `max w ((1-τ)·w + τ·mid)`. Fixes levels `≥ mid` and
+pushes a level `≤ mid` up toward `mid`. Symmetric to `slideVal` (a `max` in place of the `min`). -/
+def slideValB (mid w : ℝ) (τ : unitInterval) : ℝ :=
+  max w ((1 - (τ : ℝ)) * w + (τ : ℝ) * mid)
+
+theorem slideValB_mem (mid w : ℝ) (τ : unitInterval)
+    (hw : (-1 : ℝ) < w ∧ w < 1) (hm : (-1 : ℝ) < mid ∧ mid < 1) :
+    (-1 : ℝ) < slideValB mid w τ ∧ slideValB mid w τ < 1 := by
+  obtain ⟨hw1, hw2⟩ := hw
+  obtain ⟨_, hm2⟩ := hm
+  have hτ0 : (0 : ℝ) ≤ (τ : ℝ) := τ.2.1
+  have hτ1 : (τ : ℝ) ≤ 1 := τ.2.2
+  refine ⟨lt_of_lt_of_le hw1 (le_max_left _ _), max_lt hw2 ?_⟩
+  have hconv_le : (1 - (τ : ℝ)) * w + (τ : ℝ) * mid ≤ max w mid := by
+    nlinarith [mul_nonneg (by linarith : (0 : ℝ) ≤ 1 - (τ : ℝ))
+        (sub_nonneg.mpr (le_max_left w mid)),
+      mul_nonneg hτ0 (sub_nonneg.mpr (le_max_right w mid))]
+  exact lt_of_le_of_lt hconv_le (max_lt hw2 hm2)
+
+/-- The handle-side slide coordinate as a point of the welded interval. -/
+def slideCoordB (mid w : ↥weldedInterval) (τ : unitInterval) : ↥weldedInterval :=
+  ⟨⟨slideValB mid.val.val w.val.val τ,
+      ⟨le_of_lt (slideValB_mem _ _ _ w.2 mid.2).1, le_of_lt (slideValB_mem _ _ _ w.2 mid.2).2⟩⟩,
+    slideValB_mem _ _ _ w.2 mid.2⟩
+
+theorem continuous_slideCoordB (mid : ↥weldedInterval) :
+    Continuous (fun p : ↥weldedInterval × unitInterval => slideCoordB mid p.1 p.2) := by
+  apply Continuous.subtype_mk
+  apply Continuous.subtype_mk
+  have hw : Continuous (fun p : ↥weldedInterval × unitInterval => (p.1.val.val : ℝ)) :=
+    (continuous_subtype_val.comp continuous_subtype_val).comp continuous_fst
+  have hτ : Continuous (fun p : ↥weldedInterval × unitInterval => ((p.2 : ℝ))) :=
+    continuous_subtype_val.comp continuous_snd
+  exact (hw.max (((continuous_const.sub hτ).mul hw).add (hτ.mul continuous_const)))
+
+/-- The handle-side slide fixes a level `≥ mid`. -/
+theorem slideValB_fix_of_ge (mid w : ℝ) (τ : unitInterval) (h : mid ≤ w) :
+    slideValB mid w τ = w := by
+  rw [slideValB, max_eq_left]
+  nlinarith [mul_nonneg τ.2.1 (sub_nonneg.mpr h)]
+
+theorem slideValB_at_zero (mid w : ℝ) : slideValB mid w 0 = w := by
+  simp [slideValB, Set.Icc.coe_zero]
+
+theorem slideValB_one_ge (mid w : ℝ) : mid ≤ slideValB mid w 1 := by
+  have h : (1 - ((1 : unitInterval) : ℝ)) * w + ((1 : unitInterval) : ℝ) * mid = mid := by
+    simp [Set.Icc.coe_one]
+  rw [slideValB, h]
+  exact le_max_right w mid
+
+theorem slideCoordB_fix_of_ge (mid w : ↥weldedInterval) (τ : unitInterval) (h : mid ≤ w) :
+    slideCoordB mid w τ = w :=
+  Subtype.ext (Subtype.ext (slideValB_fix_of_ge _ _ _ h))
+
+theorem slideCoordB_at_zero (mid w : ↥weldedInterval) : slideCoordB mid w 0 = w :=
+  Subtype.ext (Subtype.ext (slideValB_at_zero _ _))
+
+theorem slideCoordB_one_ge_mid (mid w : ↥weldedInterval) : mid ≤ slideCoordB mid w 1 :=
+  slideValB_one_ge _ _
+
+/-- The handle-side collar slide on the seam neighbourhood. -/
+def slideCollarMapB {W : Type} [TopologicalSpace W] (cd : SeamCollarDatum W) (mid : ↥weldedInterval) :
+    ↥cd.seamNbhd × unitInterval → ↥cd.seamNbhd :=
+  fun p => cd.hHomeo.symm ((cd.hHomeo p.1).1, slideCoordB mid (cd.hHomeo p.1).2 p.2)
+
+theorem continuous_slideCollarMapB {W : Type} [TopologicalSpace W] (cd : SeamCollarDatum W)
+    (mid : ↥weldedInterval) : Continuous (slideCollarMapB cd mid) := by
+  refine cd.hHomeo.symm.continuous.comp (Continuous.prodMk ?_ ?_)
+  · exact continuous_fst.comp (cd.hHomeo.continuous.comp continuous_fst)
+  · exact (continuous_slideCoordB mid).comp (Continuous.prodMk
+      (continuous_snd.comp (cd.hHomeo.continuous.comp continuous_fst)) continuous_snd)
+
+theorem slideCollarMapB_fix_of_ge {W : Type} [TopologicalSpace W] (cd : SeamCollarDatum W)
+    (mid : ↥weldedInterval) (p : ↥cd.seamNbhd) (τ : unitInterval) (h : mid ≤ (cd.hHomeo p).2) :
+    slideCollarMapB cd mid (p, τ) = p := by
+  rw [slideCollarMapB, slideCoordB_fix_of_ge _ _ _ h]
+  simp
+
+theorem slideCollarMapB_at_zero {W : Type} [TopologicalSpace W] (cd : SeamCollarDatum W)
+    (mid : ↥weldedInterval) (p : ↥cd.seamNbhd) :
+    slideCollarMapB cd mid (p, 0) = p := by
+  rw [slideCollarMapB, slideCoordB_at_zero]
+  simp
+
+/-- **Converse of `collar_coord_ge_mid`.** A collar point whose level is `≥ mid` lies on the handle
+side, `range fromHandle`. -/
+theorem mem_fromHandle_of_collar_coord_ge_mid {HA : HandleAttachment} {cd : SeamCollarDatum HA.carrier}
+    (csd : CollarSplitDatum HA cd) (p : ↥cd.seamNbhd) (h : csd.mid ≤ (cd.hHomeo p).2) :
+    (p : HA.carrier) ∈ Set.range HA.fromHandle := by
+  have hmem : cd.hHomeo p
+      ∈ cd.hHomeo '' {p : ↥cd.seamNbhd | (p : HA.carrier) ∈ Set.range HA.fromHandle} := by
+    rw [csd.handle_side]; exact h
+  exact (cd.hHomeo.injective.mem_set_image).mp hmem
+
+/-! ## §I. The `hB` discharge — the collar-collapse retraction of `coverB` onto `range fromHandle`. -/
+
+/-- A point of `coverB` lying in `range fromCyl` lies in the collar `cd.seamNbhd` (symmetric to
+`handle_mem_seamNbhd_of_mem_coverA`). -/
+theorem cyl_mem_seamNbhd_of_mem_coverB
+    (x : ↑(TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier))
+    (hxB : x ∈ coverB s t S hS φ hφ hφinj cd hseam d)
+    (hxC : x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl) :
+    x ∈ cd.seamNbhd := by
+  rw [coverB] at hxB
+  rcases hxB with hxH | hxN
+  · exact seam_subset_seamSet s t S hS φ hφ hφinj cd hseam d ⟨hxC, hxH⟩
+  · exact hxN
+
+theorem coverB_subset_ranges_union :
+    coverB s t S hS φ hφ hφinj cd hseam d
+      ⊆ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl
+        ∪ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle := fun x _ =>
+  (Set.eq_univ_iff_forall.mp
+    (ktHandleAttachment s.M D5 S hS φ hφ hφinj).range_fromCyl_union_range_fromHandle) x
+
+open Classical in
+/-- **The collar-collapse retraction homotopy for `coverB`.** On the cyl side of `coverB` (points in
+`range fromCyl`, collar-interior) it applies the handle-side slide `slideCollarMapB` (pushing the
+level up toward `mid`); elsewhere it is the identity. -/
+noncomputable def collarRetractValB
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (x : ↥(coverB s t S hS φ hφ hφinj cd hseam d)) (τ : unitInterval) :
+    (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier :=
+  if h : (x.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl
+  then (slideCollarMapB cd csd.mid
+      (⟨x.val, cyl_mem_seamNbhd_of_mem_coverB s t S hS φ hφ hφinj cd hseam d x.val x.2 h⟩, τ)).val
+  else x.val
+
+theorem continuous_collarRetractValB
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd) :
+    Continuous (fun p : ↥(coverB s t S hS φ hφ hφinj cd hseam d) × unitInterval =>
+      collarRetractValB s t S hS φ hφ hφinj cd hseam d csd p.1 p.2) := by
+  classical
+  rw [← continuousOn_univ]
+  refine ContinuousOn.mono (s := {p : ↥(coverB s t S hS φ hφ hφinj cd hseam d) × unitInterval |
+        (p.1.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl}
+      ∪ {p : ↥(coverB s t S hS φ hφ hφinj cd hseam d) × unitInterval |
+        (p.1.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle}) ?_
+      (fun p _ => coverB_subset_ranges_union s t S hS φ hφ hφinj cd hseam d p.1.2)
+  refine (continuousOn_union_iff_of_isClosed ?_ ?_).mpr ⟨?_, ?_⟩
+  · exact (isClosed_range_fromCyl s S hS φ hφ hφinj).preimage
+      (continuous_subtype_val.comp continuous_fst)
+  · exact (isClosed_range_fromHandle s S hS φ hφ hφinj).preimage
+      (continuous_subtype_val.comp continuous_fst)
+  · -- cyl piece: the value is the slide
+    rw [continuousOn_iff_continuous_restrict]
+    have hgt : Continuous (fun q : ↥{p : ↥(coverB s t S hS φ hφ hφinj cd hseam d) × unitInterval |
+          (p.1.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+            ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl} =>
+        (slideCollarMapB cd csd.mid
+          (⟨q.val.1.val, cyl_mem_seamNbhd_of_mem_coverB s t S hS φ hφ hφinj cd hseam d
+            q.val.1.val q.val.1.2 q.2⟩, q.val.2)).val) := by
+      refine continuous_subtype_val.comp ((continuous_slideCollarMapB cd csd.mid).comp
+        (Continuous.prodMk (Continuous.subtype_mk ?_ _) ?_))
+      · exact continuous_subtype_val.comp (continuous_fst.comp continuous_subtype_val)
+      · exact continuous_snd.comp continuous_subtype_val
+    refine hgt.congr (fun q => ?_)
+    have hq : (q.val.1.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl := q.2
+    simp only [Set.restrict_apply, collarRetractValB]
+    rw [dif_pos hq]
+  · -- handle piece: the value is the identity (the slide fixes the seam at level mid)
+    refine ContinuousOn.congr (continuous_subtype_val.comp continuous_fst).continuousOn
+      (fun p hp => ?_)
+    simp only [collarRetractValB]
+    by_cases hC : (p.1.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl
+    · rw [dif_pos hC,
+        slideCollarMapB_fix_of_ge cd csd.mid
+          ⟨p.1.val, cyl_mem_seamNbhd_of_mem_coverB s t S hS φ hφ hφinj cd hseam d
+            p.1.val p.1.2 hC⟩ p.2
+          (seam_collar_coord_eq_mid csd
+            ⟨p.1.val, cyl_mem_seamNbhd_of_mem_coverB s t S hS φ hφ hφinj cd hseam d
+              p.1.val p.1.2 hC⟩ hC hp).ge]
+      rfl
+    · rw [dif_neg hC]; rfl
+
+theorem range_fromHandle_subset_coverB :
+    Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle
+      ⊆ coverB s t S hS φ hφ hφinj cd hseam d := by
+  intro x hx
+  exact Or.inl hx
+
+theorem collarRetractValB_mem_coverB
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (x : ↥(coverB s t S hS φ hφ hφinj cd hseam d)) (τ : unitInterval) :
+    collarRetractValB s t S hS φ hφ hφinj cd hseam d csd x τ
+      ∈ coverB s t S hS φ hφ hφinj cd hseam d := by
+  rw [collarRetractValB]
+  by_cases hC : (x.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl
+  · rw [dif_pos hC]
+    exact Or.inr (Subtype.coe_prop _)
+  · rw [dif_neg hC]; exact x.2
+
+theorem collarRetractValB_at_zero
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (x : ↥(coverB s t S hS φ hφ hφinj cd hseam d)) :
+    collarRetractValB s t S hS φ hφ hφinj cd hseam d csd x 0 = x.val := by
+  rw [collarRetractValB]
+  by_cases hC : (x.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl
+  · rw [dif_pos hC, slideCollarMapB_at_zero]
+  · rw [dif_neg hC]
+
+theorem collarRetractValB_one_mem_fromHandle
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (x : ↥(coverB s t S hS φ hφ hφinj cd hseam d)) :
+    collarRetractValB s t S hS φ hφ hφinj cd hseam d csd x 1
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle := by
+  rw [collarRetractValB]
+  by_cases hC : (x.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl
+  · rw [dif_pos hC]
+    refine mem_fromHandle_of_collar_coord_ge_mid csd _ ?_
+    rw [slideCollarMapB, Homeomorph.apply_symm_apply]
+    exact slideCoordB_one_ge_mid _ _
+  · rw [dif_neg hC]
+    rcases coverB_subset_ranges_union s t S hS φ hφ hφinj cd hseam d x.2 with h | h
+    · exact absurd h hC
+    · exact h
+
+theorem collarRetractValB_one_fix_of_fromHandle
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd)
+    (x : ↥(coverB s t S hS φ hφ hφinj cd hseam d))
+    (hx : (x.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle) :
+    collarRetractValB s t S hS φ hφ hφinj cd hseam d csd x 1 = x.val := by
+  rw [collarRetractValB]
+  by_cases hC : (x.val : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl
+  · rw [dif_pos hC,
+      slideCollarMapB_fix_of_ge cd csd.mid
+        ⟨x.val, cyl_mem_seamNbhd_of_mem_coverB s t S hS φ hφ hφinj cd hseam d
+          x.val x.2 hC⟩ 1
+        (seam_collar_coord_eq_mid csd
+          ⟨x.val, cyl_mem_seamNbhd_of_mem_coverB s t S hS φ hφ hφinj cd hseam d
+            x.val x.2 hC⟩ hC hx).ge]
+  · rw [dif_neg hC]
+
+/-- **`hB` discharged from the `CollarSplitDatum`.** Symmetric to `finiteDimensional_homology_coverA`:
+the collar-collapse retraction of `coverB` onto the closed handle end `range fromHandle` (`≃ D⁵`)
+transfers §C's banked handle-end finiteness to `coverB` in every degree, conditional ONLY on `csd`. -/
+theorem finiteDimensional_homology_coverB
+    (csd : CollarSplitDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj) cd) (n : ℕ) :
+    FiniteDimensional (ZMod 2) (Homology (sub (coverB s t S hS φ hφ hφinj cd hseam d)) n) := by
+  refine finiteDimensional_homology_coverB_of_htpyEquiv s t S hS φ hφ hφinj cd hseam d
+    ⟨fun x => ⟨collarRetractValB s t S hS φ hφ hφinj cd hseam d csd x 1,
+        collarRetractValB_one_mem_fromHandle s t S hS φ hφ hφinj cd hseam d csd x⟩,
+      Continuous.subtype_mk ((continuous_collarRetractValB s t S hS φ hφ hφinj cd hseam d csd).comp
+        (continuous_id.prodMk continuous_const)) _⟩
+    ⟨fun y => ⟨y.val, range_fromHandle_subset_coverB s t S hS φ hφ hφinj cd hseam d y.2⟩,
+      Continuous.subtype_mk continuous_subtype_val _⟩
+    ⟨fun p => ⟨collarRetractValB s t S hS φ hφ hφinj cd hseam d csd p.1 (unitInterval.symm p.2),
+        collarRetractValB_mem_coverB s t S hS φ hφ hφinj cd hseam d csd p.1 (unitInterval.symm p.2)⟩,
+      Continuous.subtype_mk ((continuous_collarRetractValB s t S hS φ hφ hφinj cd hseam d csd).comp
+        (continuous_fst.prodMk (unitInterval.continuous_symm.comp continuous_snd))) _⟩
+    ?_ ?_
+    ⟨fun p => p.1, continuous_fst⟩ ?_ ?_ n
+  · ext x
+    show collarRetractValB s t S hS φ hφ hφinj cd hseam d csd x (unitInterval.symm 0)
+      = collarRetractValB s t S hS φ hφ hφinj cd hseam d csd x 1
+    rw [unitInterval.symm_zero]
+  · ext x
+    show collarRetractValB s t S hS φ hφ hφinj cd hseam d csd x (unitInterval.symm 1) = x.val
+    rw [unitInterval.symm_one, collarRetractValB_at_zero]
+  · ext y
+    exact (collarRetractValB_one_fix_of_fromHandle s t S hS φ hφ hφinj cd hseam d csd
+      ⟨y.val, range_fromHandle_subset_coverB s t S hS φ hφ hφinj cd hseam d y.2⟩ y.2).symm
+  · ext y
+    rfl
+
 end
 
 end SKEFTHawking.KTCompletenessCollarSplit
