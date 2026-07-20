@@ -78,6 +78,19 @@ Legend: 🟢 SHIPPED this wave · 🟡 form-level algebra banked, geometric lift
   immediate: `kernelReducesToSpin_of_ambientDatumSupply H : KernelReducesToSpin prov` (already proven
   in `PinPlusKTSurgeryTrace`). No new wall beyond (ii)–(v).
 
+## §4 — the algebraic head absorbed into the completeness supply (🟢 SHIPPED this wave)
+Brick (i) is now propagated ALL THE WAY to the summit. The terminal completeness hypothesis is
+sharpened from a full `AmbientSurgeryDatum` supply to the PURELY GEOMETRIC residual
+`IsotropicSurgeryTrace prov p` (= `AmbientSurgeryDatum` minus its `x`/`hx0`/`hxq` head — the surgered
+`p'`, the rank drop, the trace bordism `b`, the tether `hBor`, and nothing else). The two headlines
+`kernelReducesToSpin_of_isotropicSurgeryTraceSupply` / `ktSurgeryReduces_of_isotropicSurgeryTraceSupply`
+prove: a ∀-`p` supply of the geometric residual discharges `KernelReducesToSpin` / `KTSurgeryReduces`,
+with the isotropic surgery class refilled internally (`IsotropicSurgeryTrace.toAmbientSurgeryDatum`,
+via `exists_isotropicClass_of_charPairBrown_zero` + `ambientSurgeryDatum_of_traceWitness`). The
+forgetful `AmbientSurgeryDatum.toIsotropicSurgeryTrace` witnesses that EXACTLY the algebraic three
+fields were dropped. Net effect: the geometric program (bricks (ii)–(v)) no longer owes the isotropic
+class — its whole remaining obligation is the geometric trace `⟨p', b, hBor⟩`.
+
 ## Foreseen hardest sub-wall
 Brick (ii)'s `StrMfd` lift and brick (iii)'s `SmoothSurgeryChartDatum` for a GENERIC `p`, `x`: the
 provider being closed under isotropic surgery, i.e. the embedded-surgery-disk / tubular-neighborhood
@@ -231,5 +244,90 @@ theorem exists_reducedForm_of_charPairBrown_zero
     ∃ (m : ℕ) (R : Z4Quadratic (Fin m)), m + 2 = p.2.n ∧ R.brown = p.2.q.brown := by
   obtain ⟨x, hx0, hxq⟩ := exists_isotropicClass_of_charPairBrown_zero hbrown hpos
   exact exists_finReduction p.2.q hxq hx0
+
+/-! ## §4. The geometric residual — the algebraic head absorbed into the completeness supply.
+
+Brick (i) (§1–§3) makes the datum's algebraic head (`x`/`hx0`/`hxq`) UNCONDITIONAL for every non-spin
+brown-0 `p`. This section propagates that all the way to the KT §5 completeness summit: the terminal
+hypothesis shrinks from a full `AmbientSurgeryDatum` (which bundles the isotropic surgery class) to the
+PURELY GEOMETRIC residual `IsotropicSurgeryTrace` — the surgered representative `p'`, the exact rank
+drop, the surgery-trace bordism `b`, and the genuine Pin⁺ tether `hBor`. The isotropic surgery class is
+no longer an obligation on the geometric program; it is supplied internally from
+`exists_isotropicClass_of_charPairBrown_zero`. What remains is EXACTLY the geometric wall (dossier
+bricks (ii)–(v)) — the surgered carrier `StrMfd`, the trace bordism, and the tether — with NO algebraic
+residue. This is the honest sharp statement of the geometric leg (the algebra fully discharged); its
+discharge is embedded-surgery-disk existence (KT §5 Thm 5.1), gated to the geometric construction wave. -/
+
+/-- **The purely-geometric surgery residual at `p`** — `AmbientSurgeryDatum prov p` with its (now
+unconditional, §3) algebraic head `x`/`hx0`/`hxq` dropped. Bundles the four geometric atoms the
+completeness program must still supply for each non-spin brown-0 `p`: the surgered representative `p'`,
+the exact rank-drop `hrank` (`n' + 2 = n`), the surgery-trace bordism `b` with Hausdorff carrier
+(`hT2`), and the genuine Pin⁺ tether `hBor` realizing `[p'] = [p]`. This is the sharp terminal
+hypothesis of the geometric leg — the honest wall (dossier bricks (ii)–(v)) with the algebraic leg
+(brick (i)) absorbed. -/
+structure IsotropicSurgeryTrace (prov : CharPairWProviderPerOp (𝓡 4) 0)
+    (p : StrMfd (pinPlusCharPairData prov).toTangentialData) where
+  /-- the surgered representative (KT §5 genus/rank-drop-by-2 output). -/
+  p' : StrMfd (pinPlusCharPairData prov).toTangentialData
+  /-- the KT surgery drops the enhancement rank by EXACTLY 2. -/
+  hrank : p'.2.n + 2 = p.2.n
+  /-- the surgery-trace bordism `W` from `p'` to `p`. -/
+  b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p'.1 p.1
+  /-- its carrier is Hausdorff. -/
+  hT2 : T2Space b.W
+  /-- **the genuine tether**: the surgery-trace membrane realizes `[p'] = [p]` as a Pin⁺ bordism. -/
+  hBor : Nonempty (CharPairBorRealizedTethered b p'.2 p.2)
+
+/-- **The forgetful map** `AmbientSurgeryDatum → IsotropicSurgeryTrace`: dropping exactly the algebraic
+head `x`/`hx0`/`hxq`. Witnesses that `IsotropicSurgeryTrace` is precisely `AmbientSurgeryDatum` minus
+its (now free, §3) algebraic three fields — nothing geometric is lost or added. -/
+def AmbientSurgeryDatum.toIsotropicSurgeryTrace (d : AmbientSurgeryDatum prov p) :
+    IsotropicSurgeryTrace prov p :=
+  ⟨d.p', d.hrank, d.b, d.hT2, d.hBor⟩
+
+/-- **The geometric residual reconstitutes the full datum** for a non-spin brown-0 `p` (the algebraic
+head refilled from brick (i), UNCONDITIONALLY). Given the brown-0 condition
+(`charPairBrown prov (mk _ p) = 0`) and `0 < p.2.n`, the isotropic surgery class `x`/`hx0`/`hxq` is
+extracted via `exists_isotropicClass_of_charPairBrown_zero` and welded to the geometric residual through
+the banked `PinPlusKTSurgeryTraceConsumers.ambientSurgeryDatum_of_traceWitness`. So a geometric
+`IsotropicSurgeryTrace` at a non-spin brown-0 `p` is EXACTLY as strong as a full `AmbientSurgeryDatum`
+there — the algebraic gap is closed. -/
+noncomputable def IsotropicSurgeryTrace.toAmbientSurgeryDatum
+    (hbrown : charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = 0)
+    (hpos : 0 < p.2.n) (G : IsotropicSurgeryTrace prov p) :
+    AmbientSurgeryDatum prov p :=
+  let hx := exists_isotropicClass_of_charPairBrown_zero (prov := prov) (p := p) hbrown hpos
+  PinPlusKTSurgeryTraceConsumers.ambientSurgeryDatum_of_traceWitness
+    hx.choose hx.choose_spec.1 hx.choose_spec.2 G.p' G.hrank G.b G.hT2 G.hBor
+
+/-- **THE GEOMETRIC-LEG WAVE HEADLINE — `KernelReducesToSpin ⟸ (∀ non-spin brown-0 `p`,
+`IsotropicSurgeryTrace`)** (CONDITIONAL; discharges nothing of the round-8 triple). A universal supply
+of the PURELY GEOMETRIC surgery residual — one `IsotropicSurgeryTrace prov p` per non-spin brown-0
+representative — discharges the deep KT §5 kernel-null binder `KernelReducesToSpin`. This is the
+completeness summit with the ALGEBRAIC leg (brick (i)) fully absorbed: the isotropic surgery class is
+supplied internally, so the residual `∀`-hypothesis is the sharpest purely-geometric statement — the
+surgered carrier, the trace bordism, and the Pin⁺ tether (dossier bricks (ii)–(v)), and nothing
+algebraic. Composes `IsotropicSurgeryTrace.toAmbientSurgeryDatum` with the banked
+`kernelReducesToSpin_of_ambientDatumSupply`. -/
+theorem kernelReducesToSpin_of_isotropicSurgeryTraceSupply
+    (H : ∀ p : StrMfd (pinPlusCharPairData prov).toTangentialData,
+      charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = 0 →
+      0 < p.2.n → IsotropicSurgeryTrace prov p) :
+    KernelReducesToSpin prov :=
+  kernelReducesToSpin_of_ambientDatumSupply
+    (fun p hbrown hpos => (H p hbrown hpos).toAmbientSurgeryDatum hbrown hpos)
+
+/-- **The shallow-binder form — `KTSurgeryReduces ⟸ (geometric-residual supply)`** (CONDITIONAL;
+discharges nothing of the triple). The same absorption at the `KTSurgeryReduces` level: a universal
+geometric-residual supply discharges the single gated geometric surgery step, with the isotropic class
+supplied internally (brick (i)). Composes `IsotropicSurgeryTrace.toAmbientSurgeryDatum` with
+`ktSurgeryReduces_of_ambientDatumSupply`. -/
+theorem ktSurgeryReduces_of_isotropicSurgeryTraceSupply
+    (H : ∀ p : StrMfd (pinPlusCharPairData prov).toTangentialData,
+      charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = 0 →
+      0 < p.2.n → IsotropicSurgeryTrace prov p) :
+    KTSurgeryReduces prov :=
+  ktSurgeryReduces_of_ambientDatumSupply
+    (fun p hbrown hpos => (H p hbrown hpos).toAmbientSurgeryDatum hbrown hpos)
 
 end SKEFTHawking.KTCompletenessProvider
