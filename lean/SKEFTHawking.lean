@@ -4225,6 +4225,9 @@ import SKEFTHawking.NonHermitianWinding
 -- Phase 6CA (D11 materials series) — topological band theory (Chern / bulk-boundary)
 import SKEFTHawking.BlochBundle
 import SKEFTHawking.TopologicalBand.PrincipalBranch
+import SKEFTHawking.TopologicalBand.FiniteTorus
+import SKEFTHawking.TopologicalBand.FHSLatticeGauge
+import SKEFTHawking.TopologicalBand.FHSExamples
 -- Phase 6CE (D11 materials series) — effective-medium homogenization (Maxwell–Garnett)
 import SKEFTHawking.MaxwellGarnett
 import SKEFTHawking.EffectiveMediumBounds
