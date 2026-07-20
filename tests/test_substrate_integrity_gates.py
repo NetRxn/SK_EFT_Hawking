@@ -341,3 +341,35 @@ def test_vacuous_baseline_nonempty_and_all_gates_green():
     assert check_proxy_body_audit().passed
     assert check_formula_grounding().passed
     assert check_disclosure_consistency().passed
+
+
+# ── R-07: apex discharge + dependent-theorem resolution (live smoke) ─────
+
+def test_r07_fib_apexes_discharged_in_registry():
+    """The three Fibonacci headline apexes are marked discharged with a
+    producer pointer, and the phantom central_charge dep target is gone."""
+    from src.core.constants import HYPOTHESIS_REGISTRY
+    for key, producer_suffix in (
+        ("H_Fib_v4_witness", "H_Fib_v4_witness_unconditional"),
+        ("H_Fib_TwoLITangents", "H_Fib_TwoLITangents_unconditional"),
+        ("H_Fib_NonCentralConjugateWitness", "H_Fib_NonCentralConjugateWitness_discharged"),
+    ):
+        h = HYPOTHESIS_REGISTRY[key]
+        assert h["status"] == "discharged", key
+        assert h.get("discharged_by", "").endswith(producer_suffix), key
+    # the phantom target is replaced by the real WangBridge derivation theorem
+    cc = HYPOTHESIS_REGISTRY["c_minus_equals_8Nf"]["dependent_theorems"]
+    assert "SKEFTHawking.central_charge_from_sm" not in cc
+    assert "SKEFTHawking.fermion_count_gives_central_charge" in cc
+
+
+def test_r07_atlas_integrity_apex_and_dep_legs():
+    """The strengthened atlas_integrity check passes and reflects R-07:
+    3 apexes explicitly discharged (producer-verified), all dependent_theorems
+    FQNs resolve (no phantom)."""
+    from scripts.validate import check_atlas_integrity
+    result = check_atlas_integrity()
+    assert result.passed, [(d.name, d.message) for d in result.details if not d.passed]
+    by_name = {d.name: d for d in result.details}
+    assert "discharged" in by_name["apex_not_closed"].message
+    assert by_name["dependent_theorems_resolve"].passed

@@ -11,7 +11,7 @@ _Source: 20174 theorem nodes, 43 tracked open assumptions, 77 IMPLIES edges._
 | ✅ TRUE (proved) | 19878 |
 | ⛔ OBSTRUCTION (no-go) | 296 |
 | ❓ open (tracked assumptions) | 43 |
-| ★ apex (headline open targets) | 4 |
+| ★ apex (headline open targets) | 1 |
 
 ## Open frontier by track ("separate areas")
 
@@ -21,16 +21,13 @@ Each open assumption belongs to a TRACK (`tier`); `gating` is the Σ of how many
 |---|---:|---:|---:|
 | `discharge_future` | 12 | 23 |  |
 | `external_boundary` | 14 | 23 |  |
-| `headline` | 4 | 0 | 4 |
+| `headline` | 1 | 0 | 1 |
 | `local` | 6 | 0 |  |
 
 ## Apex (headline) targets
 
 | target | eliminability | gating |
 |---|---|---:|
-| `hyp:H_Fib_NonCentralConjugateWitness` | hard | 0 |
-| `hyp:H_Fib_TwoLITangents` | hard | 0 |
-| `hyp:H_Fib_v4_witness` | hard | 0 |
 | `hyp:H_PMNSAnglesFromExactSubstrate` | hard | 0 |
 
 ## Most-gating open assumptions (top 15)

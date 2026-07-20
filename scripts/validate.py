@@ -3085,7 +3085,7 @@ def check_atlas_integrity() -> CheckResult:
     try:
         sys.path.insert(0, str(SCRIPT_DIR))
         import atlas_view
-        from src.core.constants import AXIOM_METADATA
+        from src.core.constants import AXIOM_METADATA, HYPOTHESIS_REGISTRY
         lean_deps = atlas_view.load_lean_deps_file()
         atlas = atlas_view.build_atlas(lean_deps)
     except Exception as exc:  # noqa: BLE001
@@ -3126,25 +3126,71 @@ def check_atlas_integrity() -> CheckResult:
         f"{len(unknowns)} open nodes, all from HYPOTHESIS_REGISTRY" if not malformed
         else f"{len(malformed)} malformed open nodes: {malformed[:5]}"))
 
-    # (4) Apex-never-silently-closed (ADR-005 D-F/D-H). Apexes = HEADLINE-tier OPEN targets (`is_apex`,
-    #     now sourced from HYPOTHESIS_REGISTRY; the D-E `@[atlas_node apex]` attribute would only ADD
-    #     apex-marking onto PROVED theorems and is not yet used). The worst failure: a headline OPEN
-    #     target that is no longer genuinely open — either its status flipped to a closed one, or a
-    #     project theorem named exactly after the hypothesis key already proves it (the goal secretly
-    #     became a theorem but the registry still lists it open, misleading the frontier).
+    # (4) Apex closure integrity (ADR-005 D-F/D-H). Apexes = HEADLINE-tier registry
+    #     targets (`is_apex`). A discharge theorem's short name may be SUFFIXED
+    #     (`H_Fib_v4_witness_unconditional` discharges key `H_Fib_v4_witness`), so
+    #     exact-name matching alone misses silent discharges (R-07, 2026-07-20). Two
+    #     failure modes:
+    #       (a) SILENT closure — the apex is still marked OPEN but a producer theorem
+    #           (exact key, or key + a recognized discharge suffix) already proves it;
+    #       (b) BOGUS closure — the apex is marked DISCHARGED/SUPERSEDED but NO producer
+    #           theorem is found (a closure with nothing behind it).
+    #     An EXPLICITLY discharged apex backed by a real producer is correct → passes.
     apexes = [u for u in unknowns if u.get("is_apex")]
     proved = {n["fqn"] for n in nodes if n.get("atlas_status") == "PROVED"}
     proved_last = {fqn.split(".")[-1] for fqn in proved}
-    closed_apex = []
+    _DISCHARGE_SUFFIXES = ("", "_unconditional", "_discharged", "_proven")
+
+    def _apex_producer(key: str):
+        for suf in _DISCHARGE_SUFFIXES:
+            if (key + suf) in proved_last:
+                return key + suf
+        return None
+
+    _OPEN_ST = ("STATED", "PLANNED", "ACTIVE", "OPEN")
+    _CLOSED_ST = ("DISCHARGED", "SUPERSEDED")
+    bad_apex = []
+    open_apex_n = 0
     for u in apexes:
         key = str(u.get("id", ""))[len("hyp:"):]
-        open_status = str(u.get("atlas_status", "")).upper() in ("STATED", "PLANNED", "ACTIVE", "OPEN")
-        if (not open_status) or (key in proved_last):
-            closed_apex.append(u.get("id"))
-    details.append(Detail("apex_not_closed", not closed_apex,
-        f"{len(apexes)} apex (headline) open target(s), none silently closed" if apexes and not closed_apex
+        st = str(u.get("atlas_status", "")).upper()
+        producer = _apex_producer(key)
+        if st in _OPEN_ST:
+            open_apex_n += 1
+            if producer:
+                bad_apex.append(f"{u.get('id')} (open but producer {producer} exists)")
+        elif st in _CLOSED_ST and not producer:
+            bad_apex.append(f"{u.get('id')} (marked {st} but no producer theorem found)")
+    details.append(Detail("apex_not_closed", not bad_apex,
+        (f"{len(apexes)} headline apex(es): {open_apex_n} open (none silently discharged), "
+         f"{len(apexes) - open_apex_n} explicitly discharged (producer-verified)")
+        if apexes and not bad_apex
         else ("no apex (headline-tier) nodes" if not apexes
-              else f"{len(closed_apex)} apex silently closed: {closed_apex[:5]}")))
+              else f"{len(bad_apex)} apex integrity failure(s): {bad_apex[:5]}")))
+
+    # (5) Every declared `dependent_theorems` FQN resolves to a real declaration.
+    #     A short name absent from the ENTIRE declaration set is a PHANTOM target
+    #     (hard fail; R-07 caught `SKEFTHawking.central_charge_from_sm`). A short name
+    #     that exists but under a different full namespace is namespace DRIFT
+    #     (advisory warning — the theorem exists, only the registry FQN prefix is stale).
+    #     Resolve against the FULL declaration set (raw lean_deps), NOT the classified
+    #     atlas `nodes` subset (which excludes many real decls and would false-flag them).
+    all_fqns = {r.get("name") for r in lean_deps if isinstance(r, dict) and r.get("name")}
+    all_short = {fqn.split(".")[-1] for fqn in all_fqns}
+    phantoms, drift = [], []
+    for hkey, h in HYPOTHESIS_REGISTRY.items():
+        for dt in (h.get("dependent_theorems") or []):
+            if dt in all_fqns:
+                continue
+            (drift if dt.split(".")[-1] in all_short else phantoms).append(f"{hkey}:{dt}")
+    details.append(Detail("dependent_theorems_resolve", not phantoms,
+        f"all {sum(len(h.get('dependent_theorems') or []) for h in HYPOTHESIS_REGISTRY.values())} "
+        f"dependent_theorems FQNs resolve to a declaration"
+        if not phantoms else f"{len(phantoms)} phantom target(s): {phantoms[:5]}"))
+    if drift:
+        details.append(Detail("dependent_theorems_namespace_drift", True,
+            f"{len(drift)} ref(s) resolve by short name but the FQN namespace prefix "
+            f"has drifted (advisory, not gating): {drift[:8]}", warning=True))
 
     passed = all(d.passed for d in details)
     return CheckResult(passed=passed, details=details)

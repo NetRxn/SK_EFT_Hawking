@@ -44,6 +44,30 @@ def test_apex_count_matches_headline_tier():
     assert all(u["is_apex"] == (u["tier"] == "headline") for u in a["unknowns"])
 
 
+def test_discharged_headline_leaves_open_frontier():
+    """R-07 (2026-07-20): a HEADLINE hypothesis marked ``status='discharged'`` is a
+    closed ledger state — kept in ``unknowns`` for provenance but excluded from the
+    open frontier, apex_ids, and per-track open rollup. (An unconditional producer
+    theorem discharged it; the frontier must not keep listing it as open.)"""
+    hyp = {
+        "open_apex": {"tier": "headline", "eliminability": "hard", "module": "M",
+                      "statement": "still open", "status": "active",
+                      "dependent_theorems": []},
+        "done_apex": {"tier": "headline", "eliminability": "hard", "module": "M",
+                      "statement": "discharged", "status": "discharged",
+                      "discharged_by": "M.done_apex_unconditional",
+                      "dependent_theorems": []},
+    }
+    a = atlas_view.build_atlas(_LEAN_DEPS, hyp_registry=hyp, axiom_metadata={})
+    # discharged apex is NOT an open apex / frontier entry ...
+    assert a["summary"]["apex_ids"] == ["hyp:open_apex"]
+    assert "hyp:done_apex" not in {f["id"] for f in a["frontier"]}
+    assert a["tracks"]["headline"]["open_count"] == 1
+    # ... but it survives in `unknowns` for provenance, tagged DISCHARGED.
+    done = next(u for u in a["unknowns"] if u["id"] == "hyp:done_apex")
+    assert done["atlas_status"] == "DISCHARGED"
+
+
 def test_tracks_rollup_groups_by_tier():
     tracks = _atlas()["tracks"]
     assert set(tracks) == {"headline", "external_boundary"}
