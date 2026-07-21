@@ -568,4 +568,61 @@ theorem electricAlgebra_S2_continuation_closure :
    degenerate_comul_cocorner_ee k, electricObject_fpdim_squared_eq_four',
    electricObject_one_isSplitMono k⟩
 
+/-! ## §19. The (★) linchpin — the cyclic-pairing coherence identity
+
+The associativity of `electricMul` (and coassociativity of `electricComul`) reduces,
+on the `(e,e,e)` corner, to a single coherence identity for the fusion pairing
+`ψ = eeVacUnitIso.hom : e ⊗ e ⟶ 𝟙`:
+
+  (★)  `(ψ ▷ e) ≫ λ_e = α_eee ≫ (e ◁ ψ) ≫ ρ_e`.
+
+This is **not** free monoidal coherence (`coherence` / `monoidal` fail — for a generic
+`X` and generic `ψ : X ⊗ X ⟶ 𝟙` the two sides differ, e.g. `B(x,y)·z ≠ B(y,z)·x`). It
+holds here because the electric object's underlying line `lineGraded k eAdd` is
+**isomorphic to the monoidal unit** (via `unitVecGIso`). The general fact is captured
+in `pairing_cyclic_of_unitIso`: for **any** monoidal category, any `u : 𝟙 ≅ X`, and any
+`ψ : X ⊗ X ⟶ 𝟙`, (★) holds — proved by conjugating with `u` to collapse `X` to `𝟙`
+(where the pairing peels to the right through the unitor naturalities), leaving a pure
+coherence residue `ρ_(𝟙⊗𝟙) = α_𝟙𝟙𝟙 ≫ λ_(𝟙⊗𝟙)` that `monoidal` discharges. -/
+
+/-- **General cyclic-pairing coherence** — for any monoidal category `C`, any object `X`
+isomorphic to the unit (`u : 𝟙_ C ≅ X`), and any pairing `ψ : X ⊗ X ⟶ 𝟙_ C`, the
+left-action and (associated) right-action of `ψ` on a third `X` factor agree:
+`(ψ ▷ X) ≫ λ_X = α_XXX ≫ (X ◁ ψ) ≫ ρ_X`. This is the abstract linchpin behind
+associativity of the electric group-algebra multiplication. It fails for generic `X`
+(needs `X ≅ 𝟙`); the proof conjugates by `u` to reduce to the unit, peels `ψ` off
+through the unitor naturalities, and closes the structural residue with `monoidal`. -/
+theorem pairing_cyclic_of_unitIso {C : Type*} [Category C] [MonoidalCategory C]
+    {X : C} (u : 𝟙_ C ≅ X) (ψ : X ⊗ X ⟶ 𝟙_ C) :
+    (ψ ▷ X) ≫ (λ_ X).hom =
+      (α_ X X X).hom ≫ (X ◁ ψ) ≫ (ρ_ X).hom := by
+  rw [← cancel_mono u.inv, ← cancel_epi (((u.hom ⊗ₘ u.hom) ⊗ₘ u.hom))]
+  simp only [Category.assoc, ← MonoidalCategory.leftUnitor_naturality,
+    ← MonoidalCategory.rightUnitor_naturality, ← MonoidalCategory.id_tensorHom,
+    ← MonoidalCategory.tensorHom_id, MonoidalCategory.tensorHom_comp_tensorHom_assoc,
+    MonoidalCategory.associator_naturality_assoc, Iso.hom_inv_id, Category.comp_id,
+    Category.id_comp]
+  generalize (u.hom ⊗ₘ u.hom) ≫ ψ = ψ₀
+  rw [MonoidalCategory.tensorHom_id, MonoidalCategory.id_tensorHom,
+    MonoidalCategory.unitors_equal, MonoidalCategory.rightUnitor_naturality,
+    ← MonoidalCategory.unitors_equal, MonoidalCategory.leftUnitor_naturality,
+    ← Category.assoc]
+  congr 1
+  monoidal
+
+/-- **(★) the linchpin** — the cyclic-pairing coherence identity for the fusion pairing
+`ψ = eeVacUnitIso.hom : e ⊗ e ⟶ 𝟙_(Center C)`. Instance of `pairing_cyclic_of_unitIso`
+after descending to the underlying `VecG_Cat` (via `Center.ext`), where the electric
+line `lineGraded k eAdd` is unit-isomorphic through `unitVecGIso`. This is the single
+identity gating `electricMul` associativity / `electricComul` coassociativity. -/
+theorem electric_linchpin :
+    ((eeVacUnitIso k).hom ▷ electricAnyon k) ≫ (λ_ (electricAnyon k)).hom =
+      (α_ (electricAnyon k) (electricAnyon k) (electricAnyon k)).hom ≫
+        (electricAnyon k ◁ (eeVacUnitIso k).hom) ≫ (ρ_ (electricAnyon k)).hom := by
+  apply CategoryTheory.Center.ext
+  simp only [CategoryTheory.Center.comp_f, CategoryTheory.Center.whiskerLeft_f,
+    CategoryTheory.Center.whiskerRight_f, CategoryTheory.Center.associator_hom_f,
+    CategoryTheory.Center.leftUnitor_hom_f, CategoryTheory.Center.rightUnitor_hom_f]
+  exact pairing_cyclic_of_unitIso (unitVecGIso k) ((eeVacUnitIso k).hom.f)
+
 end SKEFTHawking.SymTFT.ElectricAlgebraObject
