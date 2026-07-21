@@ -45,7 +45,7 @@ open SKEFTHawking.SingularFunctorialityInt (mapChainInt mapChainInt_comp)
 open SKEFTHawking.SingularCohomologyFunctorialityInt (cochainPullbackInt cochainPullbackInt_cup
   cochainPullbackInt_mem_ker kronecker_cochainPullbackInt)
 open SKEFTHawking.SingularRelativeHomologyMod2 (sub)
-open SKEFTHawking.SingularMayerVietorisLES (ambIncl seamHomeo)
+open SKEFTHawking.SingularMayerVietorisLES (ambIncl seamHomeo mapSimplex_ambIncl)
 open SKEFTHawking.SingularRelHomologyInt (chainIncl chainIncl_chainBoundary boundaryExtract
   relCycleLift chainIncl_boundaryExtract chainIncl_injective)
 open SKEFTHawking.SingularConvexRadialBaseInt (mapChainInt_ambIncl)
@@ -113,6 +113,17 @@ theorem cochainPullbackInt_comp {X Y Z : TopCat} (ψ : C(↑Y, ↑Z)) (φ : C(�
 theorem cochainPullbackInt_id {X : TopCat} (n : ℕ) (a : SingularCochainInt X n) :
     cochainPullbackInt (ContinuousMap.id ↑X) n a = a := by
   funext σ; rfl
+
+/-- **Cochain-pullback flavor bridge (integral).** The cap-side `pullbackCochainInt S` (precompose with
+`simplexIncl`) equals the functoriality-side `cochainPullbackInt (ambIncl S)` (precompose with
+`mapSimplex`), since `mapSimplex (ambIncl S) = simplexIncl S`. Integral mirror of
+`SingularPullbackAmbIncl.pullbackCochain_eq_pullbackCochainMap_ambIncl`; reconciles the seam-adjoint
+output with the two-leg cover-sum's `cochainPullbackInt`-flavored cochains. -/
+theorem pullbackCochainInt_eq_cochainPullbackInt_ambIncl {X : TopCat} (S : Set ↑X) (k : ℕ)
+    (a : SingularCochainInt X k) :
+    pullbackCochainInt S k a = cochainPullbackInt (ambIncl S) k a := by
+  funext τ
+  exact congrArg a (mapSimplex_ambIncl S τ).symm
 
 /-- **The single-leg seam restriction of a boundary pairing.** If `zB`'s boundary is supported on the
 seam `A ∩ B` (realized as `restr A B ⊆ sub B` via `relCycleLift`), pairing any cochain `w` on `sub B`
