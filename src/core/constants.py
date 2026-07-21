@@ -2471,6 +2471,24 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
     # Populated by the 2026-06-13 W2 triage of the proxy_body_audit flagged set.
 
     # ---- definitional records (legitimate trivial-by-design) ----
+    'extBordismBridge_hypotheses_are_vacuous': {
+        'lean_name': 'extBordismBridge_hypotheses_are_vacuous', 'module': 'ExtBordismBridge',
+        'category': 'definitional',
+        'reason': 'A deliberate VACUITY ALARM, not a derivation: it proves `H1_ko_cohomology ∧ '
+                  'H2_change_of_rings ∧ H3_ass_collapses` by `⟨trivial, trivial, trivial⟩` precisely '
+                  'BECAUSE those three are each `:= True`. The trivial shape IS the assertion — it makes '
+                  'the vacuity machine-checked instead of a skippable docstring caveat, and it breaks '
+                  'the build the moment any of H1–H3 is given a real type. That break is the intended '
+                  'alarm and it has already fired once, correctly: the statement formerly included '
+                  '`H4_abp_splitting`, which was rebuilt 2026-07-21 from `True` into the genuine '
+                  '`Nonempty SpinBordismData` and consequently dropped from this conjunction. The '
+                  'conjunction shrank because the substrate GREW.',
+        'discloses': 'the module-head VACUITY DISCLOSURE (ExtBordismBridge.lean §head) + this theorem\'s '
+                     'own docstring; the genuine content of the lane is the A(1)-Ext computation '
+                     '(A1Ext.lean), the arithmetic step in `generation_constraint_chain`, and — for the '
+                     'spin-bordism step — the real disclosed Prop `H4_abp_splitting` with its real '
+                     'consumer `rokhlin_from_H4` (16 ∣ σ via SpinBordism.rokhlin_from_bordism).',
+    },
     'cyl_brown_eq': {
         'lean_name': 'cyl_brown_eq', 'module': 'PinPlusCharPairData',
         'category': 'definitional',
@@ -2700,6 +2718,50 @@ TRACKED_HYPOTHESIS_NON_LOAD_BEARING: dict[str, str] = {
 }
 
 HYPOTHESIS_REGISTRY: dict[str, dict] = {
+    'abp_splitting_degree4_spin_bordism': {
+        'tier': 'discharge_future',
+        'statement': 'The degree-4 output of the Anderson-Brown-Peterson splitting exists as data: '
+            'there is an abelian group `Bordism` with an isomorphism `isoZ : Bordism ≃+ ℤ` (this is '
+            'Ω^Spin_4 ≅ ℤ), a signature homomorphism `signature : Bordism →+ ℤ`, and the K3 '
+            'normalisation `signature (isoZ.symm 1) = -16`. Formalized as '
+            '`ExtBordismBridge.H4_abp_splitting := Nonempty SpinBordism.SpinBordismData`.',
+        'status': 'REMEDIATED 2026-07-21 and newly registered. Until that date `H4_abp_splitting` was '
+            'literally `:= True` — a prose marker with zero formal content — and the module falsely '
+            'claimed it was tracked here. It was rebuilt (not renamed, not narrowed) into the genuine '
+            'Prop above, which is non-vacuous and LOAD-BEARING: `rokhlin_from_H4` consumes it to derive '
+            '16 ∣ σ via the already-proved `SpinBordism.rokhlin_from_bordism`. This registry entry makes '
+            'the module\'s formerly-false "tracked in HYPOTHESIS_REGISTRY" claim TRUE for H4. Its '
+            'siblings H1_ko_cohomology / H2_change_of_rings / H3_ass_collapses remain `:= True` and are '
+            'therefore deliberately NOT registered — a `True` marker has nothing to track (see '
+            'MODELING_ASSUMPTION_THEOREMS["extBordismBridge_hypotheses_are_vacuous"]).',
+        'eliminability': 'very_hard',
+        'elimination_path': 'Requires Thom-spectrum / stable-homotopy infrastructure absent from Mathlib '
+            'v4.29.1 and in-tree (ADR-003, trigger-gated): the Thom spectrum MSpin, its 2-local splitting '
+            'as a wedge of suspensions of ko and Eilenberg-MacLane spectra, and π_4. Constructing any '
+            '`SpinBordismData` in-tree would discharge it outright.',
+        'dependent_theorems': ['SKEFTHawking.rokhlin_from_H4'],
+        'atlas_impact_note': 'The `dependent_theorems` list is LEAN-VERIFIED, not hand-written (the '
+            '2026-07-21 atlas-integrity discipline: a hand-written list becomes a fake `frontier_impact`). '
+            'Exactly TWO in-tree declarations take an `H4_abp_splitting` binder — '
+            '`ExtBordismBridge.rokhlin_from_H4` and `ExtBordismBridge.generation_constraint_chain`. Only '
+            'the first is listed, because `generation_constraint_chain` `clear`s its `h4` binder and '
+            'closes by `omega` from `24 ∣ 8 * N_f` alone: the binder is decorative and the theorem gains '
+            'NO content from it. Advertised impact is therefore 1, and 1 is what is real.',
+        'module': 'ExtBordismBridge.lean (H4_abp_splitting, rokhlin_from_H4); the packaged structure '
+            'lives in SpinBordism.lean:46 (SpinBordismData) with SpinBordism.rokhlin_from_bordism.',
+        'source': 'Anderson, Brown, Peterson, "The structure of the Spin cobordism ring", Ann. Math. 86 '
+            '(1967) 271; Milnor, "On simply connected 4-manifolds" (1958) for σ(K3) = -16.',
+        'risk': 'Low mathematically (ABP is a classical, universally-accepted theorem) — but UNPROVEN '
+            'in-tree and carried honestly as a disclosed hypothesis, NOT asserted as a theorem. NOTE the '
+            'historical-provenance tangle recorded in the H4 docstring: the ABP computation historically '
+            'used Rokhlin-equivalent facts. There is no CIRCULARITY in the formal development (the '
+            'hypothesis implies Rokhlin here, and nothing in-tree proves the hypothesis from Rokhlin), '
+            'but the entry should not be cited as an independent re-derivation of Rokhlin.',
+        'prose': 'The spin-bordism input to the Phase-5q generation-constraint chain — Ω^Spin_4 ≅ ℤ with '
+            'the K3 generator of signature -16 — is supplied by the Anderson-Brown-Peterson splitting in '
+            'degree 4. The project does not formalize ABP; it states its degree-4 output as a disclosed '
+            'hypothesis and proves what follows from it (Rokhlin, 16 ∣ σ).',
+    },
     'he3a_moving_eta_nonzero': {
         'tier': 'discharge_future',
         'statement': 'The APS η-invariant (regularized spectral asymmetry of the non-zero spectrum) of '

@@ -1,36 +1,54 @@
 /-
 Phase 5q Wave 5: Ext → Bordism Bridge with Decomposed Hypotheses
 
-## ⚠⚠ VACUITY DISCLOSURE — READ FIRST (added 2026-07-21, atlas-integrity repair)
+## ⚠⚠ VACUITY DISCLOSURE — READ FIRST (added 2026-07-21, atlas-integrity repair;
+## H4 REMEDIATED 2026-07-21, same day — see below)
 
-**`H1_ko_cohomology`, `H2_change_of_rings`, `H3_ass_collapses` and `H4_abp_splitting` are each
-literally `:= True`.** They are PROSE MARKERS carrying **zero formal content**, not propositions.
-Consequently:
+**`H1_ko_cohomology`, `H2_change_of_rings` and `H3_ass_collapses` are each literally `:= True`.**
+They are PROSE MARKERS carrying **zero formal content**, not propositions.
+
+**`H4_abp_splitting` is no longer one of them.** It was rebuilt (not renamed, not narrowed) into the
+genuine Prop `Nonempty SpinBordismData` — the actual degree-4 ABP output: an abelian group with
+`≃+ ℤ`, a signature homomorphism, and the K3 normalisation `σ = -16` (`SpinBordism.lean:46`).  It is
+**non-vacuous and load-bearing**: `rokhlin_from_H4` below consumes it to derive `16 ∣ σ` through the
+already-proved `SpinBordism.rokhlin_from_bordism`.  H4 remains *undischarged* (nothing in-tree
+constructs a `SpinBordismData` — Thom-spectrum theory, ADR-003), which is the honest disclosed-Prop
+status, not vacuity.
+
+Consequently, for the three that remain:
 
 * **`generation_constraint_chain` is NOT conditional on them.** Its `(h1 … h4)` binders are
   decorative — the proof body `clear`s all four and closes by `omega` from `h_mod : 24 ∣ 8 * N_f`
-  alone. Anyone can supply all four binders with `trivial`. This is made kernel-visible by
-  `extBordismBridge_hypotheses_are_vacuous` below, which proves the whole conjunction outright.
-* **This module proves NONE of the spectrum / cohomology / change-of-rings / ASS-collapse /
-  ABP-splitting statements described in the docstrings below.** The docstrings state real
-  mathematics; the Lean declarations beneath them do not carry it.
+  alone. (This stays true of `h4` too: the *arithmetic* step genuinely does not need it, even now
+  that H4 has content.  H4's real consumer is `rokhlin_from_H4`.)  H1–H3 can each be supplied with
+  `trivial`; this is made kernel-visible by `extBordismBridge_hypotheses_are_vacuous` below.
+* **This module PROVES none of the spectrum / cohomology / change-of-rings / ASS-collapse /
+  ABP-splitting statements described in the docstrings below.** It now *states* one of them (H4);
+  it discharges none. For H1–H3 the docstrings state real mathematics that the Lean declarations
+  beneath them do not carry at all.
 * **They are NOT "tracked in `HYPOTHESIS_REGISTRY`."** Verified 2026-07-21: no entry for any of
   H1–H4 exists in `HYPOTHESIS_REGISTRY` (`src/core/constants.py`), and their names do not match the
   `tracked_hypothesis_ledger` gate's detection pattern, so they were never ledger-enforced either.
-  The claim to the contrary appeared in this docstring and in §3 below; both are corrected.
+  The claim to the contrary appeared in this docstring and in §3 below; both are corrected. Now
+  that H4 carries a real type it is *eligible* for the ledger; H1–H3 are not (a `True` marker has
+  nothing to track — registering them would require first giving them real types).
 * **Do NOT cite this module as a decomposition of the spin-bordism input into "four focused
   hypotheses, each independently verifiable" or as "replacing one monolithic claim with strictly
-  smaller inputs."** Replacing one opaque structure with four `True`s is not a decomposition. The
-  genuine, machine-checked content of this Phase-5q lane is the A(1)-Ext computation itself
-  (`A1Ext.lean`) and the final arithmetic step — both real, and unaffected by this disclosure.
-* **Do NOT copy the "H1–H4 disclosed-Prop pattern" as a template.** Where a Prop must be disclosed,
-  state it (cf. `PinPlusExtBound.DeltaTruncationCap`, a genuine Prop, `16 • [ℝP⁴] = 0`).
+  smaller inputs."** As of this remediation the count is **one** genuine disclosed hypothesis (H4)
+  plus three `True` markers — not four focused hypotheses, and not a replacement of
+  `SpinBordismData` by anything smaller (H4 *is* `Nonempty SpinBordismData`). The genuine,
+  machine-checked content of this Phase-5q lane remains the A(1)-Ext computation itself
+  (`A1Ext.lean`) and the final arithmetic step.
+* **Do NOT copy the "H1–H3 `True`-marker pattern" as a template.** Where a Prop must be disclosed,
+  state it — cf. `PinPlusExtBound.DeltaTruncationCap` (a genuine Prop, `16 • [ℝP⁴] = 0`) and now
+  `H4_abp_splitting` itself, which is the corrected in-module exemplar.
 
-Discharging H1/H3/H4 for real needs Thom-spectrum / stable-homotopy infrastructure that is
-Mathlib-absent (ADR-003, trigger-gated); H2 is algebraic and has a partial in-tree treatment in
+Discharging H1/H3 for real needs Thom-spectrum / stable-homotopy infrastructure that is
+Mathlib-absent (ADR-003, trigger-gated); the same is true of *discharging* H4, though H4 is at
+least now honestly stated. H2 is algebraic and has a partial in-tree treatment in
 `ChangeOfRings.lean` — though note `ChangeOfRings.h2_discharged_TODO : True := trivial` is itself a
-placeholder of the same kind. Until such a discharge lands, the honest reading of this module is
-"the algebraic core is machine-checked; the topological scaffolding is *named in prose*, not
+placeholder of the same kind. The honest reading of this module is "the algebraic core is
+machine-checked; H4 is a real, undischarged, disclosed Prop; H1–H3 are *named in prose*, not
 formalized."
 
 ---
@@ -79,6 +97,7 @@ References:
 
 import Mathlib
 import SKEFTHawking.A1Ext
+import SKEFTHawking.SpinBordism
 
 namespace SKEFTHawking
 
@@ -160,12 +179,20 @@ facts. We document this clearly — the derivation is logically valid
 (the hypothesis IMPLIES Rokhlin, so there's no circularity in the
 formal proof) but the historical provenance is tangled.
 
-⚠ **NOT FORMALIZED: this definition is `True`.** The statement above is the intended mathematics;
-the Lean body carries none of it. In particular the circularity note is moot as shipped: a `True`
-hypothesis implies nothing, so it does not "IMPLY Rokhlin" and confers no anti-circularity
-guarantee. See the module's VACUITY DISCLOSURE. -/
+✅ **FORMALIZED (2026-07-21).** This hypothesis is no longer a `True` marker.  It is now the
+genuine, non-vacuous Prop `Nonempty SpinBordismData` — i.e. the assertion that the degree-4
+output of ABP actually exists as data: an abelian group `Bordism`, an isomorphism
+`isoZ : Bordism ≃+ ℤ` (this is `Ω^Spin_4 ≅ ℤ`), a signature homomorphism, and the K3 normalisation
+`σ(isoZ.symm 1) = -16` (`SpinBordism.lean:46`).  That is exactly the content H4 is invoked for
+downstream, and it is what the whole ABP step is *for*.
+
+Because the Prop is now real, the circularity note above regains its force: the hypothesis does
+now imply Rokhlin, and `rokhlin_from_H4` below is that implication, discharged through the
+already-proved `SpinBordism.rokhlin_from_bordism`.  H4 remains **undischarged** (nothing in-tree
+constructs a `SpinBordismData`; that needs Thom-spectrum theory, ADR-003) — but it is now an
+honest disclosed Prop in the sense of `PinPlusExtBound.DeltaTruncationCap`, not a vacuity. -/
 def H4_abp_splitting : Prop :=
-  True  -- ⚠ VACUOUS: prose marker only; see extBordismBridge_hypotheses_are_vacuous
+  Nonempty SpinBordismData
 
 /-! ## 2. The Bridge Theorem
 
@@ -201,16 +228,17 @@ theorem ext_algebraic_input :
   ⟨A1.d1_d2_zero, A1.d2_d3_zero, A1.d3_d4_zero, A1.d4_d5_zero, A1.d1_minimal⟩
 
 /-- **⚠ NOT conditional on H1–H4** (docstring corrected 2026-07-21; the previous text claimed it was).
-`H1_ko_cohomology`, …, `H4_abp_splitting` are each `:= True`
-(`extBordismBridge_hypotheses_are_vacuous`), so the `h1 … h4` binders are decorative: the proof body
-below `clear`s all four and closes by `omega` from `h_mod : 24 ∣ 8 * N_f` alone. What this theorem
-actually proves is the ARITHMETIC step `24 ∣ 8 * N_f → 3 ∣ N_f` — which is real, and is the honest
-content to cite.
+`H1_ko_cohomology`, `H2_change_of_rings`, `H3_ass_collapses` are each `:= True`
+(`extBordismBridge_hypotheses_are_vacuous`); `H4_abp_splitting` is real but **unused here**. All
+four binders are decorative for *this* theorem: the proof body below `clear`s all four and closes by
+`omega` from `h_mod : 24 ∣ 8 * N_f` alone. What this theorem actually proves is the ARITHMETIC step
+`24 ∣ 8 * N_f → 3 ∣ N_f` — which is real, and is the honest content to cite.
 
 The intended reading — Ω^Spin_4 ≅ ℤ from the Ext computation given H1–H4, hence Rokhlin, hence
 (with the Wang bridge + modular invariance) 3 ∣ N_f — is documented mathematics, NOT what the
 binders enforce here. The binders are retained so the intended chain stays visible at the call site
 and so this declaration's API does not change; they must not be presented as tracked hypotheses.
+For the one step of that chain that IS now machine-backed, see `rokhlin_from_H4`.
 See the module's VACUITY DISCLOSURE. -/
 theorem generation_constraint_chain
     (h1 : H1_ko_cohomology)
@@ -228,23 +256,39 @@ theorem generation_constraint_chain
   clear h1 h2 h3 h4  -- topological hypotheses used upstream, not in arithmetic
   omega
 
-/-- **⚠ THE FOUR "HYPOTHESES" ARE FREE — kernel-visible.** Each of `H1_ko_cohomology`,
-`H2_change_of_rings`, `H3_ass_collapses`, `H4_abp_splitting` is definitionally `True`, so the whole
-conjunction is provable outright by `trivial`. Nothing in this module rests on them, and no consumer
-gains any content by supplying them.
+/-- **⚠ H1, H2, H3 ARE STILL FREE — kernel-visible.** Each of `H1_ko_cohomology`,
+`H2_change_of_rings`, `H3_ass_collapses` is definitionally `True`, so this conjunction is provable
+outright by `trivial`. No consumer gains any content by supplying them.
 
-This theorem exists so the vacuity is **machine-checked and impossible to miss**, rather than a
-docstring caveat that a reader can skip: if any of H1–H4 is ever given a real type, this proof stops
-compiling, which is precisely the alarm one wants. (Same device as
-`NonHausdorffBordismCollapse.omega4PinPlusGMTied_equiv_zmod16_of_nonHausdorff_collapse`, recorded to
-make a statement's vacuity kernel-visible.)
+This theorem exists so the remaining vacuity is **machine-checked and impossible to miss**, rather
+than a docstring caveat a reader can skip: if any of H1–H3 is ever given a real type, this proof
+stops compiling, which is precisely the alarm one wants.
 
-It asserts vacuity; it does **not** assert that the underlying mathematics is false — H1/H3/H4 are
-true theorems of algebraic topology (Adams; Bott; Anderson–Brown–Peterson). They are simply not
-formalized here. -/
+**The alarm has already fired once, and correctly.** This statement formerly included
+`H4_abp_splitting`.  H4 was upgraded on 2026-07-21 from `True` to the genuine
+`Nonempty SpinBordismData`, so it is no longer provable here and has been dropped from the
+conjunction — the conjunction shrank because the *substrate grew*, which is the intended
+direction.  H4's real content and its real consumer are `H4_abp_splitting` and `rokhlin_from_H4`.
+
+It asserts vacuity of H1–H3; it does **not** assert that the underlying mathematics is false — H1
+and H3 are true theorems of algebraic topology (Adams; Bott) and H2 is a standard change-of-rings
+isomorphism. They are simply not formalized here. -/
 theorem extBordismBridge_hypotheses_are_vacuous :
-    H1_ko_cohomology ∧ H2_change_of_rings ∧ H3_ass_collapses ∧ H4_abp_splitting :=
-  ⟨trivial, trivial, trivial, trivial⟩
+    H1_ko_cohomology ∧ H2_change_of_rings ∧ H3_ass_collapses :=
+  ⟨trivial, trivial, trivial⟩
+
+/-- **H4 has real content — kernel-checked.** Supplying `H4_abp_splitting` now genuinely buys
+Rokhlin's theorem: the degree-4 ABP output `SpinBordismData` determines a group in which every
+element's signature is divisible by 16, via the already-proved `SpinBordism.rokhlin_from_bordism`.
+
+This is the P6 discipline applied to the module's own chain diagram: the docstring step
+"H4 ⟹ Ω^Spin_4 ≅ ℤ ⟹ 16 ∣ σ" is now **backed by an actual Lean call**, not merely asserted in
+prose.  Contrast `generation_constraint_chain`, whose `h4` binder is still not used in its body —
+the final arithmetic step genuinely does not need it. -/
+theorem rokhlin_from_H4 (h4 : H4_abp_splitting) :
+    ∃ D : SpinBordismData, ∀ M : D.Bordism, 16 ∣ D.signature M := by
+  obtain ⟨D⟩ := h4
+  exact ⟨D, rokhlin_from_bordism D⟩
 
 /-- Hypothesis inventory for the generation constraint.
     ⚠ **This theorem is a numeral tautology** (`6 = 6 ∧ 3 = 3 ∧ 0 = 0`, closed by `rfl`): it records
@@ -268,21 +312,25 @@ BEFORE (SpinBordism.lean alone):
   N_f ≡ 0 mod 3, conditional on ONE opaque hypothesis:
     SpinBordismData (packages Ω^Spin_4 ≅ ℤ + σ(K3) = -16)
 
-AFTER (with A1Ext.lean + ExtBordismBridge.lean) — ⚠ CORRECTED 2026-07-21:
+AFTER (with A1Ext.lean + ExtBordismBridge.lean) — ⚠ CORRECTED 2026-07-21, H4 REMEDIATED same day:
   N_f ≡ 0 mod 3, with:
     - Machine-checked: Ext computation (resolution, d²=0, minimality, dimensions). REAL.
-    - 4 topological steps NAMED IN PROSE (H1-H4). ⚠ Each is `:= True` — NOT formalized, NOT
+    - 1 GENUINE disclosed hypothesis:
+      H4: ABP splitting in low degrees (Anderson-Brown-Peterson 1967)
+          := Nonempty SpinBordismData — a real, non-vacuous Prop; consumed by `rokhlin_from_H4`
+          to derive 16 ∣ σ. Undischarged (needs Thom spectra, ADR-003), but honestly stated.
+          Eligible for HYPOTHESIS_REGISTRY; not yet entered there.
+    - 3 topological steps NAMED IN PROSE (H1-H3). ⚠ Each is `:= True` — NOT formalized, NOT
       independently verifiable in Lean, NOT tracked in HYPOTHESIS_REGISTRY:
       H1: ko cohomology (Adams 1974)
       H2: change of rings (Shapiro's lemma — ALGEBRAIC, potentially provable)
       H3: ASS collapses for ko (Bott periodicity comparison)
-      H4: ABP splitting in low degrees (Anderson-Brown-Peterson 1967)
 
-The honest improvement: the algebraic core (WHY 16) is machine-checked, and the topological
-scaffolding is NAMED and referenced. It is NOT "decomposed into minimal, transparent pieces" and
-does NOT replace the opaque `SpinBordismData` with "strictly smaller inputs" — four `True`s are not
-smaller inputs, they are no inputs. `SpinBordism.SpinBordismData` remains the module that actually
-discloses the spin-bordism content as a real structure. Any external write-up claiming a four-way
-hypothesis decomposition here must be corrected to match. -/
+The honest improvement: the algebraic core (WHY 16) is machine-checked; H4 is a real disclosed
+Prop with a real consumer; H1-H3 are NAMED and referenced only. This is still NOT a decomposition
+"into minimal, transparent pieces", and it does NOT replace the opaque `SpinBordismData` with
+"strictly smaller inputs" — H4 *is* `Nonempty SpinBordismData`, the same input, now honestly typed;
+H1-H3 are no inputs at all. Any external write-up claiming a four-way hypothesis decomposition into
+"strictly smaller inputs" must be corrected to match. -/
 
 end SKEFTHawking
