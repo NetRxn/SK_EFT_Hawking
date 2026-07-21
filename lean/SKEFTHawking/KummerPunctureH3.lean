@@ -58,6 +58,13 @@ def interH3EquivEIndex :
   (SKEFTHawking.KummerPuncturedMV.interHnEquiv 3).trans
     (LinearEquiv.piCongrRight fun _ : EIndex => ann4H3Equiv)
 
+/-- **`H₃(ballsV;ℤ) = 0`** — the sixteen closed balls are contractible, so `H₃(D⁴) = 0` on each
+(`d4_homology_vanish`). The `E`-side vanishes in degree 3, exactly as at degree 2. -/
+theorem ballsVH3_eq_zero (x : Homology (sub (X := TopCat.of TorusFour) ballsV) 3) : x = 0 := by
+  refine (LinearEquiv.map_eq_zero_iff (SKEFTHawking.KummerPuncturedMV.ballsVHnEquiv 3)).mp ?_
+  funext _
+  exact d4_homology_vanish 2 _
+
 end
 
 end SKEFTHawking.KummerPunctureH3
