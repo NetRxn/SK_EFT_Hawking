@@ -34,11 +34,15 @@ subdivision chain homotopy.
   field type, discharged in `toCollarPairBuild`.
 
 The surviving geometric row is `hctrlC`, `hctrlH`, `houtPair`, `hq0Bd`, `hnearBd`, `hcoreHit`,
-`hq0det` — and of these `hq0Bd` is a *consequence* of the splits whenever they are stated on the
+`hq0det` — and `hq0Bd` is itself a *consequence* of the splits whenever they are stated on the
 UNSUBDIVIDED chains (`μ = 0`), discharged for free by `qZero_boundary_mem_of_splits` (§3) — which is
-exactly the shape the vetted in-tree seam atom `CapstoneSeamTransferSeam` already uses. So the honest
-count of independent geometric obligations is **six**, down from eight, with the dossier's
-highest-risk item retired.
+exactly the shape the vetted in-tree seam atom `CapstoneSeamTransferSeam` already uses. §5 makes
+that structural rather than prose: **`CollarPairGeomUnsub`** carries exactly SIX geometric fields
+(`hctrlC`, `hctrlH`, `houtPair`, `hnearBd`, `hcoreHit`, `hq0det`) and reaches `hasClass` through
+`toCollarPairGeom → toCollarPairBuild → toHasClass`.
+
+§6 records that `hq0det`'s `∀`-over-membership-proofs shape is cosmetic (`hq0det_of_witness`), so it
+is *precisely* the vetted in-tree straddle atom, not a new obligation.
 
 ## Fences
 
@@ -123,6 +127,22 @@ theorem qCtrl_eq_singularSd_iterate_qZero (z : cycles (TopCat.of s.M) (2 + 2)) (
     closedEmbeddingChain_eq_mapChain, closedEmbeddingChain_eq_mapChain,
     closedEmbeddingChain_eq_mapChain, mapChain_singularSd_iterate, mapChain_singularSd_iterate,
     ← singularSd_iterate_add]
+
+omit [PreconnectedSpace s.M] [Nonempty s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- At `μ = 0` the controlled cylinder chain is the cylinder chain. -/
+theorem ctrlCyl_zero (z : cycles (TopCat.of s.M) (2 + 2)) :
+    ctrlCyl s S hS φ hφ hφinj z 0 = capstoneCylChainT s S hS φ hφ hφinj z := rfl
+
+omit [PreconnectedSpace s.M] [Nonempty s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- At `μ = 0` the controlled disk chain is the canonical detecting chain. -/
+theorem ctrlHandle_zero : ctrlHandle s S hS φ hφ hφinj 0 = diskDetectChain := rfl
+
+omit [PreconnectedSpace s.M] [Nonempty s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- At `μ = 0` the controlled bottom face is the bottom slice of `z`. -/
+theorem ctrlBottom_zero (z : cycles (TopCat.of s.M) (2 + 2)) :
+    ctrlBottom s S hS φ hφ hφinj z 0
+      = mapChain (slice (graphHom (TopCat.of s.M)) 0) (3 + 1)
+          (z : SingularChain (TopCat.of s.M) (3 + 1)) := rfl
 
 /-! ## §2. `CollarPairGeom` — the reduced inspectable split data -/
 
@@ -221,6 +241,108 @@ structure CollarPairGeom where
           ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1) →
     cCore ∉ subspaceChains (X := TopCat.of ↥S) (K ᶜ) (3 + 1)
   /-- **THE SEAM STRADDLE-DETECTION ATOM** (verbatim `CollarPairBuild.hq0det`). -/
+  hq0det : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier),
+      x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+      ∀ (hq : chainBoundary
+          (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+          (qZero s S hS φ hφ hφinj z)
+        ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+            ({x}ᶜ) (3 + 1)),
+    relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+      (qZero s S hS φ hφ hφinj z) hq ≠ 0
+
+/-- **THE SIX-OBLIGATION ROW.** `CollarPairGeom` at `μ = 0`: the two co-adapted splits are stated on
+the UNSUBDIVIDED chains — the shape the vetted in-tree seam atom `CapstoneSeamTransferSeam` already
+uses — so `hq0Bd` disappears as a field (`qZero_boundary_mem_of_splits` proves it). Its geometric
+obligations are exactly SIX: `hctrlC`, `hctrlH`, `houtPair`, `hnearBd`, `hcoreHit`, `hq0det`. This
+structure is what makes the "six, down from eight" claim structural rather than prose. -/
+structure CollarPairGeomUnsub where
+  /-- a fundamental cycle of the closed source 4-manifold `M`. -/
+  z : cycles (TopCat.of s.M) (2 + 2)
+  /-- `z` represents THE fundamental class. -/
+  hz : SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := s.M)
+    = Homology.mk (TopCat.of s.M) (2 + 2) z
+  /-- **the shrunk closed core** `K ⊂ int A` of the attaching region (#210 repair shape). -/
+  K : Set ↥S
+  /-- the core is chosen away from the boundary of the finished trace. -/
+  hKoffBd : K ⊆ (seamPoint s S hS φ hφ hφinj ⁻¹'
+    (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W))ᶜ
+  /-- **the shared 4-dimensional seam core** on the attaching region. -/
+  cCore : SingularChain (TopCat.of ↥S) (3 + 1)
+  /-- the cylinder-side remainder (the un-attached top face, off `K`). -/
+  outC : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)
+  /-- the handle-side remainder (the free boundary sphere, off `K`). -/
+  outH : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1)
+  /-- **GEOMETRIC 1 — the cylinder-side split**, on the unsubdivided controlled cylinder chain: its
+  boundary is the shared core (pushed along the attaching leg) + the off-`K` top-face remainder +
+  the bottom face. -/
+  hctrlC : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)
+      (capstoneCylChainT s S hS φ hφ hφinj z)
+    = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) cCore + outC
+      + ctrlBottom s S hS φ hφ hφinj z 0
+  /-- **GEOMETRIC 2 — the disk-side split**, on the canonical detecting chain itself: its boundary
+  is the SAME shared core (pushed along the inclusion leg) + the off-`K` free-sphere remainder. -/
+  hctrlH : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1)
+      diskDetectChain
+    = mapChain (seamLegHa s S hS φ hφ hφinj) (3 + 1) cCore + outH
+  /-- the cylinder remainder is supported in the top face off the shrunk core (`U₂ = topface ∖ K`). -/
+  houtC : outC ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+      ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ φ '' K) (3 + 1)
+  /-- the handle remainder is supported in the boundary sphere off the shrunk core. -/
+  houtH : outH ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha)
+      ({q : D5 | ‖(q : EuclideanSpace ℝ (Fin 5))‖ = 1} \ Subtype.val '' K) (3 + 1)
+  /-- the welded boundary-subtype chain the two remainders and the bottom face assemble into. -/
+  bdOut : SingularChain
+    (sub (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)) (3 + 1)
+  /-- **GEOMETRIC 3 — the collar-annulus weld**: the two pushed remainders and the bottom face are
+  exactly a `∂W`-chain. -/
+  houtPair : closedEmbeddingChain
+        (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+        (3 + 1) outC
+      + closedEmbeddingChain
+        (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+        (3 + 1) outH
+      + closedEmbeddingChain
+        (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+        (3 + 1) (ctrlBottom s S hS φ hφ hφinj z 0)
+    = chainIncl (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1) bdOut
+  /-- the ambient subdivision count of the relative MV partition. -/
+  μW : ℕ
+  /-- the collar-near piece of the partition. -/
+  near : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 2)
+  /-- the off-overlap piece of the partition. -/
+  away : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 2)
+  /-- **the partition**: the subdivided FROZEN glued chain splits into the two pieces. -/
+  hpartition : ((⇑(singularSd
+      (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 2)))^[μW])
+      (qZero s S hS φ hφ hφinj z) = near + away
+  /-- the off-overlap piece is supported off the seam overlap. -/
+  hawayOff : away ∈ subspaceChains
+      (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl
+        ∩ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle)ᶜ (3 + 2)
+  /-- the `∂W`-subtype witness for the near piece's boundary. -/
+  nearBd : SingularChain
+    (sub (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)) (3 + 1)
+  /-- **GEOMETRIC 4 — the near piece is a relative cycle** (the collar-overlap correction). -/
+  hnearBd : chainBoundary
+      (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1) near
+    = chainIncl (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1) nearBd
+  /-- **GEOMETRIC 5 — the anti-fake tether**: genuine attachment forces the shared seam core to
+  meet `K`. -/
+  hcoreHit :
+    mapChain (slice (graphHom (TopCat.of s.M)) 1) (3 + 1)
+        (z : SingularChain (TopCat.of s.M) (3 + 1))
+      ∉ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+          ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1) →
+    cCore ∉ subspaceChains (X := TopCat.of ↥S) (K ᶜ) (3 + 1)
+  /-- **GEOMETRIC 6 — the seam straddle-detection atom**. -/
   hq0det : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier),
       x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) →
       x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
@@ -497,6 +619,91 @@ noncomputable def toHasClass :
   hasClass_ofCollarPair R.toCollarPairBuild
 
 end CollarPairGeom
+
+/-! ## §5. The six-obligation row produces the reduced one -/
+
+namespace CollarPairGeomUnsub
+
+variable (R : CollarPairGeomUnsub s t S hS φ hφ hφinj cd hseam d)
+
+/-- **THE SIX-OBLIGATION PRODUCER** `CollarPairGeomUnsub → CollarPairGeom`, at `μ := 0`. The
+`hq0Bd` field is discharged by `qZero_boundary_mem_of_splits`; the partition is transported along
+the `μ = 0` instance of the collapse (`qCtrl z 0 0 = q₀ z`). -/
+noncomputable def toCollarPairGeom : CollarPairGeom s t S hS φ hφ hφinj cd hseam d where
+  z := R.z
+  hz := R.hz
+  K := R.K
+  hKoffBd := R.hKoffBd
+  cCore := R.cCore
+  μ := 0
+  outC := R.outC
+  outH := R.outH
+  hctrlC := R.hctrlC
+  hctrlH := R.hctrlH
+  houtC := R.houtC
+  houtH := R.houtH
+  bdOut := R.bdOut
+  houtPair := R.houtPair
+  hq0Bd := qZero_boundary_mem_of_splits R.z R.hctrlC R.hctrlH R.houtPair
+  μW := R.μW
+  near := R.near
+  away := R.away
+  hpartition := by
+    rw [qCtrl_eq_singularSd_iterate_qZero, Function.iterate_zero_apply]; exact R.hpartition
+  hawayOff := R.hawayOff
+  nearBd := R.nearBd
+  hnearBd := R.hnearBd
+  hcoreHit := R.hcoreHit
+  hq0det := R.hq0det
+
+/-- **THE CAPSTONE `hasClass`, FROM SIX GEOMETRIC OBLIGATIONS.** The full #212 chain
+`CollarPairGeomUnsub → CollarPairGeom → CollarPairBuild → CapstoneSeamCorrectorT → hasClass`. -/
+noncomputable def toHasClass :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
+  CollarPairGeom.toHasClass R.toCollarPairGeom
+
+end CollarPairGeomUnsub
+
+/-! ## §6. `hq0det` is the single-witness atom (COMPATIBILITY — not on the producer path)
+
+`hq0det` quantifies over the `subspaceChains`-membership proof. That is cosmetic: the theorem below
+shows one witness suffices, so `hq0det` is *exactly* the shape of the vetted in-tree straddle atom
+`CapstoneSeamTransferSupply.CapstoneSeamTransferResidual.hdetAB` (which fixes its witness). Nothing
+in `toHasClass` uses this — it is a statement about the row, recorded so the atom is not mistaken
+for a new obligation. Note `hdetAB` itself is NOT invoked: its ambient structure carries the refuted
+`∖ Set.range φ` remainder signature (`seam-transfer-open-support-uninhabitable`). -/
+
+omit [PreconnectedSpace s.M] [Nonempty s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **`hq0det` from a single witness.** Detection at one membership proof gives detection at every
+one (`subspaceChains` membership is a `Prop`), so the `∀ hq` form is no stronger. -/
+theorem hq0det_of_witness (z : cycles (TopCat.of s.M) (2 + 2))
+    (hbd : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+        (qZero s S hS φ hφ hφinj z)
+      ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1))
+    (h : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (hx : x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)),
+        x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+        x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+        relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+            (qZero s S hS φ hφ hφinj z)
+            (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1) hbd) ≠ 0) :
+    ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier),
+      x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+      ∀ (hq : chainBoundary
+          (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+          (qZero s S hS φ hφ hφinj z)
+        ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+            ({x}ᶜ) (3 + 1)),
+      relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+        (qZero s S hS φ hφ hφinj z) hq ≠ 0 :=
+  fun x hx hxA hxB _ => h x hx hxA hxB
 
 end
 
