@@ -49,6 +49,9 @@ import SKEFTHawking.KummerPieceCollarCyclicInt
 import SKEFTHawking.KummerBaseSphereH2Int
 import SKEFTHawking.SingularLocalHomologyInt
 import SKEFTHawking.SingularSphereHomologyInt
+import SKEFTHawking.SingularLineMinusPointInt
+import SKEFTHawking.SingularH0PathConnectedInt
+import SKEFTHawking.KummerRP3HomologyUnconditional
 
 open SKEFTHawking.SingularHomologyInt (Homology)
 open SKEFTHawking.SingularRelHomologyInt (RelHomologyInt homIncl homProjInt connectingInt)
@@ -58,8 +61,13 @@ open SKEFTHawking.KummerPairTubeSeparation (PairH2TwoTorsionFree)
 open SKEFTHawking.KummerPairTransportInt (ResEtop)
 open SKEFTHawking.KummerPieceCollarInt (outerE)
 open SKEFTHawking.KummerPieceCollarCyclicInt (OuterECyclic pairH2TwoTorsionFree_iff_outerE_cyclic)
-open SKEFTHawking.KummerCollarRetractInt (OuterTop outerH1EquivZMod2 outerE_homology_two_eq_zero)
-open SKEFTHawking.KummerBaseSphereH2Int (resEH2EquivInt resE_homology_one_eq_zero)
+open SKEFTHawking.KummerCollarRetractInt (OuterTop outerH1EquivZMod2 outerE_homology_two_eq_zero
+  outerRP3HomologyEquiv)
+open SKEFTHawking.KummerBaseSphereH2Int (resEH2EquivInt resE_homology_one_eq_zero
+  resE_homology_three_eq_zero resE_homology_four_eq_zero)
+open SKEFTHawking.SingularLineMinusPointInt (augHInt homIncl_zero_injective_of_augHInt_injective
+  connectingInt_zero_injective_of_acyclic)
+open SKEFTHawking.SingularH0PathConnectedInt (augHInt_injective_pathConnected)
 
 namespace SKEFTHawking.KummerCollarPairLESInt
 
@@ -241,6 +249,67 @@ theorem kummerK3_b2_target_of_zeroSection_halved
     SKEFTHawking.KummerK7Opener.kummerK3_b2_target :=
   SKEFTHawking.KummerPieceCollarCyclicInt.kummerK3_b2_target_of_outerE_cyclic
     (outerECyclic_iff_zeroSectionClass_halved.mpr h)
+
+/-! ## §4. The rest of the pair — every other degree is settled
+
+The same LES, run in the remaining degrees, pins `H_*(E, collar; ℤ)` completely: it is `0` in degrees
+`1` and `3`, and `ℤ` in degree `4` (the Lefschetz relative fundamental class). So **degree 2 is the
+only undetermined slot of the whole pair**, and inside it only the one bit of §3. -/
+
+instance instPathConnectedOuterTop : PathConnectedSpace ↑OuterTop :=
+  SKEFTHawking.KummerK7H1Window.instPathConnectedOuterE
+
+/-- `H₀(collar;ℤ) → H₀(E;ℤ)` is injective — the collar is path-connected
+(`KummerK7H1Window.instPathConnectedOuterE`: every collar point flows to `∂E ≅ ℝP³`). -/
+theorem homIncl_zero_injective : Function.Injective (homIncl (X := ResEtop) outerE 0) :=
+  homIncl_zero_injective_of_augHInt_injective outerE augHInt_injective_pathConnected
+
+/-- The bottom connecting map vanishes (its range sits in `ker i_*` = `0`). -/
+theorem connectingInt_zero_eq_zero : connectingInt (X := ResEtop) outerE 0 = 0 := by
+  apply LinearMap.ext
+  intro y
+  rw [LinearMap.zero_apply]
+  apply homIncl_zero_injective
+  rw [map_zero, ← LinearMap.mem_ker,
+    (exact_connectingInt_homIncl (X := ResEtop) outerE 0).linearMap_ker_eq]
+  exact LinearMap.mem_range_self _ y
+
+/-- **`H₁(E, collar; ℤ) = 0`** — `H₁(E;ℤ) = 0` makes `δ` injective, and `δ` is the zero map because
+`H₀(collar) ↪ H₀(E)`. -/
+theorem collarPair_homology_one_eq_zero (y : RelHomologyInt (X := ResEtop) outerE 1) : y = 0 := by
+  refine connectingInt_zero_injective_of_acyclic (X := ResEtop) outerE resE_homology_one_eq_zero ?_
+  rw [map_zero, connectingInt_zero_eq_zero, LinearMap.zero_apply]
+
+/-- **`H₃(E, collar; ℤ) = 0`** — squeezed between `H₃(E;ℤ) = 0` and `H₂(collar;ℤ) = 0`. -/
+theorem collarPair_homology_three_eq_zero (y : RelHomologyInt (X := ResEtop) outerE 3) :
+    y = 0 := by
+  obtain ⟨x, rfl⟩ := (exact_homProjInt_connectingInt (X := ResEtop) outerE 2 y).mp
+    (outerE_homology_two_eq_zero _)
+  rw [resE_homology_three_eq_zero x, map_zero]
+
+/-- The top connecting map `δ : H₄(E, collar; ℤ) → H₃(collar; ℤ)` is bijective: `H₄(E;ℤ) = 0` on the
+left and `H₃(E;ℤ) = 0` on the right. -/
+theorem connectingInt_three_bijective :
+    Function.Bijective (connectingInt (X := ResEtop) outerE 3) := by
+  constructor
+  · intro a b hab
+    have h0 : connectingInt (X := ResEtop) outerE 3 (a - b) = 0 := by
+      rw [map_sub]; exact sub_eq_zero.mpr hab
+    obtain ⟨x, hx⟩ := (exact_homProjInt_connectingInt (X := ResEtop) outerE 3 (a - b)).mp h0
+    rw [resE_homology_four_eq_zero x, map_zero] at hx
+    exact sub_eq_zero.mp hx.symm
+  · intro w
+    exact (exact_connectingInt_homIncl (X := ResEtop) outerE 3 w).mp
+      (resE_homology_three_eq_zero _)
+
+/-- **`H₄(E, collar; ℤ) ≅ ℤ`** — the relative fundamental class of the compact 4-manifold-with-
+boundary `(E, ∂E)`, obtained as `δ`-iso onto `H₃(collar;ℤ) ≅ H₃(ℝP³;ℤ) ≅ ℤ`. Together with
+`collarPair_homology_one_eq_zero` and `collarPair_homology_three_eq_zero`, degree `2` is the only
+slot of the pair still carrying an undetermined bit. -/
+def collarPairH4EquivInt : RelHomologyInt (X := ResEtop) outerE 4 ≃ₗ[ℤ] ℤ :=
+  ((LinearEquiv.ofBijective _ connectingInt_three_bijective).trans
+    (outerRP3HomologyEquiv 2)).trans
+      SKEFTHawking.KummerRP3HomologyUnconditional.rp3H3EquivInt_unconditional
 
 end
 
