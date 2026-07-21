@@ -1,0 +1,355 @@
+/-
+# Phase 5q.H (#212) — THE THREE-OBLIGATION ROW: `hctrlC`/`hctrlH` collapse into ONE membership.
+
+**Headline (a premise correction, not a discharge).** The collar-pair row's cylinder/handle split
+block — `cCore`, `outC`, `outH`, `hctrlC`, `hctrlH`, `houtC`, `houtH` (and, upstream, `bdOut` /
+`houtPair` / the bridge triple / the whole relative-MV partition) — is consumed downstream through
+**exactly one** consequence: that the frozen glued chain `q₀ z` is a **relative cycle**,
+`∂(q₀ z) ∈ C(∂W)`. Nothing else about the split ever reaches the capstone. In particular the
+**exact shared-`cCore` co-adaptation** — the item the `#212` codex dossier ranked hardest
+("Shared `cCore`, `houtPair`, canonical-chain `hbridge`, 450–800 LOC, Opus, hardest") and the residue
+that `PinPlusTraceCapstoneCollarPairHandle` left sitting on `hctrlC` — **is not an obligation of the
+row at all.**
+
+So this module replaces the four-obligation `CollarPairGeomEnd` row by a **three-obligation** one:
+
+| End row (4) | this row (3) |
+|---|---|
+| `hctrlC` + `hctrlH` (+ the `houtC`/`houtH` support constraints) | `hseamMatch` — ONE chain membership |
+| `hcoreHit` (chain-quantified anti-fake tether) | `hseamHit` — ONE set-level nonemptiness |
+| `hq0det` | `hq0det` (verbatim) |
+
+## What is proved
+
+* **§1 `qZero_boundary_eq_seamMatch_add_botPush`** — `∂(q₀ z)` computed: the cylinder chain is a
+  prism over `z`, so its boundary is the two endpoint slices, and the bottom slice is the *source
+  end*, already inside `∂W` for free (`botPush_mem_bd`). What is left is
+  `seamMatch z := fromCyl_# (z@⊤) + fromHandle_# (∂ diskDetectChain)`.
+* **§2 `qZero_boundary_mem_iff_seamMatch_mem` — THE EQUIVALENCE CERTIFICATE (`↔`).**
+  `∂(q₀ z) ∈ C(∂W) ↔ seamMatch z ∈ C(∂W)`. So the row's field may be stated at the sharper
+  `seamMatch` granularity with **no loss and no gain**: the bottom face is genuinely free.
+* **§3 `CollarPairSeamRow`** — the three-obligation row, and `toCorrectorT` / `toHasClass`: the
+  capstone's relative fundamental class from `{hseamMatch, hseamHit, hq0det}` and nothing else.
+  The corrector is `p := q₀ z` — a **definition** of the row's own `z` (round-13 gate spec 3/8), at
+  which the gate's `heS` and `hagree` are *identically zero mismatches*. That is the content of the
+  correction: the corrector degree of freedom buys nothing; the row's real demand is that `q₀ z` is
+  already a relative cycle.
+* **§4 `CollarPairGeomEnd.toSeamRow`** — the 4 → 3 production, and
+  `nonempty_collarPairSeamRow_of_end`.
+
+## Direction of strength — stated precisely (no overclaim)
+
+The `End → Seam` production is **one-way by design**: the seam row's hypotheses are strictly
+*weaker*, so the producer theorem is strictly *stronger* and the inhabitation problem strictly
+*easier*. **`hctrlC` is NOT discharged here.** What is proved is that the row no longer asks for it:
+any inhabitation effort should target `hseamMatch`, and the exact-sharing rigidity should not be
+built. The one place an honest `↔` is available — the bottom-face drop — is supplied as one
+(§2). No converse `Seam → End` is claimed: recovering a split block from a relative-cycle statement
+would require constructing `cCore`/`outC`/`outH`, which the open-cover engine does not give at the
+closed-`S` granularity (fence `collar-pair-closed-seam-attached-collar-bridge-is-FALSE`).
+
+## Fences honored
+
+* `collar-pair-closed-seam-attached-collar-bridge-is-false` — no bridge, no collar retraction, no
+  `sphere ∖ S` support appears; this module *removes* the demand rather than supplying it.
+* `collar-pair-open-complement-annulus-is-refuted-shape` — nothing routes through
+  `SurgeredEndDatum.topFaceCovered` to build a `CapstoneSeamTransferSeam`; the only use of the
+  surgered-end datum is the *free* bottom-face containment `capstone_boundary_eq`.
+* `collar-pair-maximal-core-reenters-refuted-support` — no core is chosen at all here; `hseamHit`
+  speaks only of the canonical `seamCore`, and asks for it to be NONEMPTY (never `univ`).
+* `seam-transfer-open-support-uninhabitable` — nothing routes through `CapstoneSeamTransfer`,
+  `hbd_ofTransfer` or `hasClass_ofTransferCorrector`; the consumer is `CapstoneSeamCorrectorT`.
+
+Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new project axiom, no
+`native_decide`, no `maxHeartbeats`.
+-/
+import Mathlib
+import SKEFTHawking.PinPlusTraceCapstoneCollarPairEnd
+
+open scoped Manifold
+open SKEFTHawking.BordismTheory
+open SKEFTHawking.SurgeryFoundation
+open SKEFTHawking.SurgeryFoundation.HandleAttachment
+open SKEFTHawking.DiskChartGeneric (D5)
+open SKEFTHawking.SingularHomologyMod2
+open SKEFTHawking.SingularRelativeHomologyMod2
+open SKEFTHawking.SingularFunctoriality
+open SKEFTHawking.SingularMayerVietoris
+open SKEFTHawking.SingularRelativeCoverMV
+open SKEFTHawking.SingularRelativeCoverMVTransport
+open SKEFTHawking.SingularHomotopyInvariance
+open SKEFTHawking.SingularRelativeCrossProduct
+open SKEFTHawking.PoincareLefschetzRelFundClass
+open SKEFTHawking.PoincareLefschetzRelFundClassGeom
+open SKEFTHawking.PoincareLefschetzRelFundClassCylinderCrossLocalAlphaU
+open SKEFTHawking.PinPlusTraceRelFundReduce
+open SKEFTHawking.PinPlusTraceCapstoneInhabit
+open SKEFTHawking.PinPlusTraceCapstoneSeamTransfer
+open SKEFTHawking.PinPlusTraceCapstoneSeamTransferSupply
+open SKEFTHawking.PinPlusTraceDiskCorePair
+open SKEFTHawking.PinPlusTraceCapstoneCorrector
+open SKEFTHawking.PinPlusTraceCapstoneCollarPair
+open SKEFTHawking.PinPlusTraceCapstoneCollarPairGeom
+open SKEFTHawking.PinPlusTraceCapstoneCollarPairCore
+open SKEFTHawking.PinPlusTraceCapstoneCollarPairFace
+open SKEFTHawking.PinPlusTraceCapstoneCollarPairEnd
+
+namespace SKEFTHawking.PinPlusTraceCapstoneCollarPairMatch
+
+noncomputable section
+
+variable (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+  [CompactSpace s.M] [Nonempty s.M] [PreconnectedSpace s.M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M]
+  (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+  (hφ : Continuous φ) (hφinj : Function.Injective φ)
+  (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+  (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+  (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+
+/-! ## §1. `∂(q₀ z)`, computed: the seam-match term plus a free bottom face -/
+
+/-- **THE SEAM-MATCH CHAIN.** The top slice of the fundamental cycle and the boundary of the
+canonical disk-detecting chain, both pushed into the trace carrier. This is *all* of `∂(q₀ z)` that
+is not already inside `∂W`. -/
+def seamMatch (z : cycles (TopCat.of s.M) (2 + 2)) :
+    SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1) :=
+  closedEmbeddingChain
+      (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+      (3 + 1) (topSliceB s S hS φ hφ hφinj z)
+    + closedEmbeddingChain
+      (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+      (3 + 1) (chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1)
+        diskDetectChain)
+
+/-- The pushed bottom face of the cylinder — the source end of the trace. -/
+def botPush (z : cycles (TopCat.of s.M) (2 + 2)) :
+    SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1) :=
+  closedEmbeddingChain
+    (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+    (3 + 1) (ctrlBottom s S hS φ hφ hφinj z 0)
+
+variable {s t S hS φ hφ hφinj cd hseam d}
+
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **THE BOTTOM FACE IS FREE.** `z@⊥` lives in `M × {⊥}`, which `fromCyl` sends into
+`range ktSourceEnd ⊆ ∂W`. No datum field and no seam hypothesis is used. -/
+theorem botPush_mem_bd (z : cycles (TopCat.of s.M) (2 + 2)) :
+    botPush s S hS φ hφ hφinj z
+      ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1) :=
+  (closedEmbeddingChain_mem_iff_preimage _ _ _).mpr
+    (subspaceChains_mono (bottomFace_subset_fromCyl_preimage_bd (d := d)) (3 + 1)
+      (ctrlBottom_zero_mem_bottomFace (s := s) (S := S) (hS := hS) (φ := φ) (hφ := hφ)
+        (hφinj := hφinj) z))
+
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **`∂(q₀ z)` COMPUTED.** The controlled cylinder representative is a prism over the cycle `z`, so
+its boundary is exactly the two endpoint slices (`chainBoundary_crossChain`); pushing through the two
+closed embeddings and adding the disk term gives the seam-match chain plus the bottom face. -/
+theorem qZero_boundary_eq_seamMatch_add_botPush (z : cycles (TopCat.of s.M) (2 + 2)) :
+    chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+        (qZero s S hS φ hφ hφinj z)
+      = seamMatch s S hS φ hφ hφinj z + botPush s S hS φ hφ hφinj z := by
+  have hbd : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)
+        (capstoneCylChainT s S hS φ hφ hφinj z)
+      = topSliceB s S hS φ hφ hφinj z + ctrlBottom s S hS φ hφ hφinj z 0 :=
+    chainBoundary_crossChain 3 (z : SingularChain (TopCat.of s.M) (3 + 1)) z.2
+  rw [qZero, map_add, chainBoundary_closedEmbeddingChain, chainBoundary_closedEmbeddingChain, hbd,
+    closedEmbeddingChain_add, seamMatch, botPush]
+  abel
+
+/-! ## §2. THE EQUIVALENCE CERTIFICATE -/
+
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **THE `↔`.** The frozen glued chain is a relative cycle **iff** the seam-match chain is a
+`∂W`-chain. The bottom face is free in both directions, so sharpening the row's obligation from
+`∂(q₀ z) ∈ C(∂W)` to `seamMatch z ∈ C(∂W)` is a genuine equivalence — no content is moved. -/
+theorem qZero_boundary_mem_iff_seamMatch_mem (z : cycles (TopCat.of s.M) (2 + 2)) :
+    (chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+        (qZero s S hS φ hφ hφinj z)
+      ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1))
+      ↔ (seamMatch s S hS φ hφ hφinj z
+        ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1)) := by
+  rw [qZero_boundary_eq_seamMatch_add_botPush (s := s) z]
+  refine ⟨fun h => ?_, fun h => Submodule.add_mem _ h (botPush_mem_bd (d := d) z)⟩
+  have := Submodule.add_mem _ h (botPush_mem_bd (d := d) z)
+  rwa [add_assoc, ZModModule.add_self, add_zero] at this
+
+/-! ## §3. `CollarPairSeamRow` — the THREE-obligation row -/
+
+variable (s t S hS φ hφ hφinj cd hseam d)
+
+/-- **THE THREE-OBLIGATION ROW.** The whole `#212` collar-pair apparatus, reduced to what the
+capstone actually consumes.
+
+Geometric obligations, exactly **THREE**:
+* `hseamMatch` — the seam match: `fromCyl_#(z@⊤) + fromHandle_#(∂ diskDetectChain)` is a `∂W`-chain
+  (equivalently, by `qZero_boundary_mem_iff_seamMatch_mem`, the frozen glued chain is a relative
+  cycle). This ONE membership replaces the End row's `hctrlC` + `hctrlH` **and** their `houtC` /
+  `houtH` support constraints; no shared `cCore` and no co-adaptation is asked for.
+* `hseamHit` — genuine attachment forces the canonical core to be nonempty, i.e. **some** seam point
+  misses `∂W`. This replaces the End row's chain-quantified `hcoreHit`, of which it is the only
+  consequence ever used.
+* `hq0det` — the seam straddle-detection atom, verbatim from the End row.
+
+Note `hseamHit` is not vacuously true and not provable in this parameter row: at `S = ∅` the seam is
+empty and `seamCore = ∅`, so a genuinely attached handle is a real hypothesis on `(S, φ)`. -/
+structure CollarPairSeamRow where
+  /-- a fundamental cycle of the closed source 4-manifold `M`. -/
+  z : cycles (TopCat.of s.M) (2 + 2)
+  /-- `z` represents THE fundamental class. -/
+  hz : SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := s.M)
+    = Homology.mk (TopCat.of s.M) (2 + 2) z
+  /-- **GEOMETRIC 1 — the seam match.** -/
+  hseamMatch : seamMatch s S hS φ hφ hφinj z
+    ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1)
+  /-- **GEOMETRIC 2 — the anti-fake tether, at set level.** -/
+  hseamHit :
+    mapChain (slice (graphHom (TopCat.of s.M)) 1) (3 + 1)
+        (z : SingularChain (TopCat.of s.M) (3 + 1))
+      ∉ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+          ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1) →
+    (seamCore s t S hS φ hφ hφinj cd hseam d).Nonempty
+  /-- **GEOMETRIC 3 — the seam straddle-detection atom.** -/
+  hq0det : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier),
+      x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+      ∀ (hq : chainBoundary
+          (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+          (qZero s S hS φ hφ hφinj z)
+        ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+            ({x}ᶜ) (3 + 1)),
+    relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+      (qZero s S hS φ hφ hφinj z) hq ≠ 0
+
+namespace CollarPairSeamRow
+
+variable {s t S hS φ hφ hφinj cd hseam d}
+variable (R : CollarPairSeamRow s t S hS φ hφ hφinj cd hseam d)
+
+omit [PreconnectedSpace s.M] in
+/-- The frozen glued chain of a seam row is a relative cycle — the `↔` of §2, read forwards. -/
+theorem qZero_boundary_mem :
+    chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+        (qZero s S hS φ hφ hφinj R.z)
+      ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1) :=
+  (qZero_boundary_mem_iff_seamMatch_mem (d := d) R.z).mpr R.hseamMatch
+
+omit [PreconnectedSpace s.M] in
+/-- **The tether bites.** Genuine attachment gives a seam point of the trace carrier that lies off
+`∂W` and inside BOTH ends — the exact configuration `hq0det` speaks about. -/
+theorem exists_seamPoint_offBd
+    (hgen : mapChain (slice (graphHom (TopCat.of s.M)) 1) (3 + 1)
+        (R.z : SingularChain (TopCat.of s.M) (3 + 1))
+      ∉ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+          ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1)) :
+    ∃ x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier,
+      x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ∧ x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl
+        ∧ x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle := by
+  obtain ⟨a, ha⟩ := R.hseamHit hgen
+  exact ⟨seamPoint s S hS φ hφ hφinj a, ha,
+    ⟨φ a, (ktHandleAttachment s.M D5 S hS φ hφ hφinj).glue a⟩, ⟨(a : D5), rfl⟩⟩
+
+omit [PreconnectedSpace s.M] in
+/-- **The frozen glued chain is nonzero under genuine attachment** — the round-13 gate's spec-7
+anti-fake guard, at `p := q₀ z`. -/
+theorem qZero_ne_zero_of_genuine
+    (hgen : mapChain (slice (graphHom (TopCat.of s.M)) 1) (3 + 1)
+        (R.z : SingularChain (TopCat.of s.M) (3 + 1))
+      ∉ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+          ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1)) :
+    qZero s S hS φ hφ hφinj R.z ≠ 0 := by
+  obtain ⟨x, hx, hxA, hxB⟩ := R.exists_seamPoint_offBd hgen
+  intro hzero
+  refine R.hq0det x hx hxA hxB
+    (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1) R.qZero_boundary_mem) ?_
+  exact relClassOf_eq_zero_of_subspace (Set.empty_subset _) 3 (qZero s S hS φ hφ hφinj R.z)
+    (by rw [hzero]; exact Submodule.zero_mem _) _
+
+/-- **THE PRODUCER** `CollarPairSeamRow → CapstoneSeamCorrectorT`, with the corrector taken to be
+the frozen glued chain itself. `p` is a DEFINITION of the row's `z` (gate spec 3/8) — nothing is
+supplied independently — and at this `p` the gate's mismatch facts `heS`/`hagree` are the zero
+chain, which is the whole content of the correction this module records: **the corrector degree of
+freedom buys nothing**; what the capstone needs is that `q₀ z` is already a relative cycle. -/
+def toCorrectorT : CapstoneSeamCorrectorT s t S hS φ hφ hφinj cd hseam d where
+  z := R.z
+  hz := R.hz
+  p := qZero s S hS φ hφ hφinj R.z
+  hpS := R.qZero_boundary_mem
+  heS := by
+    rw [qZero, sub_self, map_zero]
+    exact Submodule.zero_mem _
+  hagree := by
+    rw [qZero, sub_self]
+    exact Submodule.zero_mem _
+  hp_det := fun x hx hxA hxB => R.hq0det x hx hxA hxB _
+  nonzero_of_genuine := fun hgen => R.qZero_ne_zero_of_genuine hgen
+
+/-- **THE CAPSTONE `hasClass`, FROM THREE GEOMETRIC OBLIGATIONS.** The `#212` chain, terminal form:
+`CollarPairSeamRow → CapstoneSeamCorrectorT → hasClass`. The conclusion is the EXACT
+`CapstoneAmbientSupply.hasClass` field type, so the downstream rows consume it unchanged. -/
+def toHasClass :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
+  R.toCorrectorT.toHasClass
+
+end CollarPairSeamRow
+
+/-! ## §4. The 4 → 3 production -/
+
+variable {s t S hS φ hφ hφinj cd hseam d}
+
+omit [PreconnectedSpace s.M] in
+/-- **`hseamHit` FROM `hcoreHit`.** An End row's chain-quantified tether has exactly one consequence
+the capstone uses: the canonical core is nonempty. (If `seamCore = ∅` its complement is `univ`, and
+every chain — in particular `cCore` — lies in `C(univ)`, contradicting `hcoreHit`.) -/
+theorem seamCore_nonempty_of_end (E : CollarPairGeomEnd s t S hS φ hφ hφinj cd hseam d)
+    (hgen : mapChain (slice (graphHom (TopCat.of s.M)) 1) (3 + 1)
+        (E.z : SingularChain (TopCat.of s.M) (3 + 1))
+      ∉ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+          ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1)) :
+    (seamCore s t S hS φ hφ hφinj cd hseam d).Nonempty := by
+  rw [Set.nonempty_iff_ne_empty]
+  intro hempty
+  exact E.hcoreHit hgen (by rw [hempty, Set.compl_empty]; exact mem_subspaceChains_univ _ _)
+
+omit [PreconnectedSpace s.M] in
+/-- **THE END ROW PRODUCES THE SEAM ROW** — the 4 → 3 reduction. `hseamMatch` is the End row's own
+relative-cycle consequence read through the §2 `↔`; `hseamHit` is `seamCore_nonempty_of_end`;
+`hq0det` passes through verbatim.
+
+⚠ **One-way by design.** The seam row's hypotheses are strictly weaker, so no converse is claimed
+(and none is expected: recovering a split block would need `cCore`/`outC`/`outH` at the closed-`S`
+granularity the refuted bridge asked for). `hctrlC` is not discharged — it is shown unnecessary. -/
+def CollarPairGeomEnd.toSeamRow (E : CollarPairGeomEnd s t S hS φ hφ hφinj cd hseam d) :
+    CollarPairSeamRow s t S hS φ hφ hφinj cd hseam d where
+  z := E.z
+  hz := E.hz
+  hseamMatch := (qZero_boundary_mem_iff_seamMatch_mem (d := d) E.z).mp
+    E.toCollarPairGeomFace.toCollarPairGeomCore.qZero_boundary_mem
+  hseamHit := fun hgen => seamCore_nonempty_of_end E hgen
+  hq0det := E.hq0det
+
+omit [PreconnectedSpace s.M] in
+/-- **THE PRODUCTION STATEMENT.** Inhabiting the four-obligation row inhabits the three-obligation
+one. Together with `CollarPairSeamRow.toHasClass` this is the `#212` lane's shortest end-to-end
+route: the capstone's relative fundamental class rests on `hseamMatch`, `hseamHit`, `hq0det` — and
+nothing else. -/
+theorem nonempty_collarPairSeamRow_of_end
+    (h : Nonempty (CollarPairGeomEnd s t S hS φ hφ hφinj cd hseam d)) :
+    Nonempty (CollarPairSeamRow s t S hS φ hφ hφinj cd hseam d) :=
+  ⟨CollarPairGeomEnd.toSeamRow h.some⟩
+
+end
+
+end SKEFTHawking.PinPlusTraceCapstoneCollarPairMatch
