@@ -594,6 +594,166 @@ theorem contMDiffAt_bdryMapRP3 {k : WithTop ℕ∞} {x : S3} (h : ‖x.1.1‖ < 
       (mem_nhdsWithin_of_mem_nhds ((isOpen_seamChartNbhd y).mem_nhds hmemNbhd)) hEq)
     (hEq _ hmemNbhd)
 
+/-! ### §6b. The chart-1 hemisphere mirror, and the off-equator statement -/
+
+theorem seamDom1_eq (u₀ : NSphere 1) :
+    seamDom1 u₀ = {q : ℂ × ℂ | q.1 ≠ 0} ∩
+      ((fun q : ℂ × ℂ => innerSL ℝ ((-u₀ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+        (seamFiberVec1 q)) ⁻¹' {(1 : ℝ)}ᶜ) := by
+  ext q
+  constructor
+  · rintro ⟨hq, hin⟩
+    exact ⟨hq, by rwa [norm_seamFiberVec1 hq, inv_one, one_smul] at hin⟩
+  · rintro ⟨hq, hin⟩
+    exact ⟨hq, by rwa [norm_seamFiberVec1 hq, inv_one, one_smul]⟩
+
+theorem continuousOn_seamFiberVec1 : ContinuousOn seamFiberVec1 {q : ℂ × ℂ | q.1 ≠ 0} :=
+  continuous_toE2.comp_continuousOn
+    (continuous_snd.comp_continuousOn (contDiffOn_hopf1 (k := 0)).continuousOn)
+
+theorem isOpen_seamDom1 (u₀ : NSphere 1) : IsOpen (seamDom1 u₀) := by
+  rw [seamDom1_eq]
+  refine ContinuousOn.isOpen_inter_preimage ?_ ?_ isOpen_compl_singleton
+  · exact ((innerSL ℝ
+      ((-u₀ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))).continuous).comp_continuousOn
+      continuousOn_seamFiberVec1
+  · exact isOpen_compl_singleton.preimage continuous_fst
+
+/-- The canonical collar direction at a chart-1-branch seam point. -/
+def seamDir1 {x : S3} (h : ¬ ‖x.1.1‖ ≤ ‖x.1.2‖) : NSphere 1 :=
+  diskDir 1 (diskHomeoNDisk1 (hopfChart1 h).2)
+
+theorem seamDir1_coe {x : S3} (h : ¬ ‖x.1.1‖ ≤ ‖x.1.2‖) :
+    ((seamDir1 h : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1))) = seamFiberVec1 x.1 := by
+  have ha : x.1.1 ≠ 0 := S3_fst_ne_zero (not_le.mp h).le
+  have hne : ((diskHomeoNDisk1 (hopfChart1 h).2 : NDisk 1) :
+      EuclideanSpace ℝ (Fin 2)) ≠ 0 := by
+    show toE2 ((hopfChart1 h).2 : ℂ) ≠ 0
+    rw [hopfChart1_snd_coe]
+    exact seamFiberVec1_ne_zero ha
+  rw [seamDir1, diskDir_coe hne,
+    show ((diskHomeoNDisk1 (hopfChart1 h).2 : NDisk 1) : EuclideanSpace ℝ (Fin 2))
+      = seamFiberVec1 x.1 from rfl, norm_seamFiberVec1 ha, inv_one, one_smul]
+
+theorem mem_seamDom1_seamDir1 {x : S3} (h : ¬ ‖x.1.1‖ ≤ ‖x.1.2‖) :
+    x.1 ∈ seamDom1 (seamDir1 h) := by
+  have ha : x.1.1 ≠ 0 := S3_fst_ne_zero (not_le.mp h).le
+  refine ⟨ha, ?_⟩
+  rw [norm_seamFiberVec1 ha, inv_one, one_smul, innerSL_apply_apply,
+    show ((-seamDir1 h : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+      = -((seamDir1 h : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1))) from rfl,
+    seamDir1_coe h, inner_neg_left, real_inner_self_eq_norm_sq, norm_seamFiberVec1 ha]
+  norm_num
+
+/-- The chart-1 branch neighbourhood in the `ℝP³` chart's coordinates. -/
+def seamChartNbhd1 (y : S3E) : Set (EuclideanSpace ℝ (Fin 3)) :=
+  (rp3Chart y).target ∩
+    {t | ¬ ‖(SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4)).1‖
+      ≤ ‖(SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4)).2‖}
+
+theorem isOpen_seamChartNbhd1 (y : S3E) : IsOpen (seamChartNbhd1 y) := by
+  refine (rp3Chart y).open_target.inter ?_
+  have hcont : Continuous (fun t : EuclideanSpace ℝ (Fin 3) =>
+      SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4)) :=
+    (contDiff_eucToC2 (k := 0)).continuous.comp
+      (contDiff_chartSymm_coe_S3E (k := 0) y).continuous
+  have : {t : EuclideanSpace ℝ (Fin 3) |
+      ¬ ‖(SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4)).1‖
+        ≤ ‖(SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4)).2‖}
+      = {t | ‖(SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4)).2‖
+        < ‖(SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4)).1‖} := by
+    ext t; exact not_le
+  rw [this]
+  exact isOpen_lt (continuous_norm.comp (continuous_snd.comp hcont))
+    (continuous_norm.comp (continuous_fst.comp hcont))
+
+/-- **The seam is smooth on the chart-1 hemisphere** — the mirror of `contMDiffAt_bdryMapRP3`. -/
+theorem contMDiffAt_bdryMapRP3_chart1 {k : WithTop ℕ∞} {x : S3} (h : ¬ ‖x.1.1‖ ≤ ‖x.1.2‖) :
+    ContMDiffAt (𝓡 3) ((𝓡 3).prod (𝓡∂ 1)) k bdryMapRP3 (mkRP3 x) := by
+  classical
+  set y : S3E := sphHomeoS3.symm x with hydef
+  have hyx : sphToS3 y = x := by
+    rw [hydef, ← sphHomeoS3_apply, sphHomeoS3.apply_symm_apply]
+  have hcoe : SKEFTHawking.KummerK7Opener.eucToC2 (y : E4) = x.1 := congrArg Subtype.val hyx
+  set u₀ : NSphere 1 := seamDir1 h with hu₀
+  have he : rp3PinChart y ∈ IsManifold.maximalAtlas (𝓡 3) k RP3 :=
+    IsManifold.subset_maximalAtlas (I := (𝓡 3)) (n := k) (Set.mem_range_self y)
+  have he' : collarChart1 u₀ ∈ IsManifold.maximalAtlas ((𝓡 3).prod (𝓡∂ 1)) k ResE :=
+    IsManifold.subset_maximalAtlas (I := (𝓡 3).prod (𝓡∂ 1)) (n := k)
+      (Or.inl (Or.inr (Set.mem_range_self u₀)))
+  have hmkE : mkRP3 x ∈ (rp3PinChart y).source := by
+    refine ⟨mkE y, ?_, ?_⟩
+    · rw [rp3Chart_source]; exact ⟨y, mem_hemi_self y, rfl⟩
+    · rw [← mkRP3_sphToS3, hyx]
+  have hsrc' : bdryMapRP3 (mkRP3 x) ∈ (collarChart1 u₀).source := by
+    rw [bdryMapRP3_mk, bdryMap_eq_chart1 h, hu₀, seamDir1]
+    refine mem_collarChart1_source (hopfChart1_mem_baseInterior h) ?_
+    rw [hopfChart1_snd_coe]
+    exact fun h0 => (by
+      have := norm_hopf1_snd (S3_fst_ne_zero (not_le.mp h).le)
+      rw [h0, norm_zero] at this
+      exact zero_ne_one this)
+  have htarget : rp3PinChart y (mkRP3 x) = Φ y y := by
+    rw [← hyx, mkRP3_sphToS3, rp3PinChart,
+      OpenPartialHomeomorph.lift_openEmbedding_apply, rp3Chart_apply_mkE y (mem_hemi_self y)]
+  rw [ContMDiffAt, contMDiffWithinAt_iff_of_mem_maximalAtlas he he' hmkE hsrc']
+  refine ⟨continuous_bdryMapRP3.continuousAt.continuousWithinAt, ?_⟩
+  have hsrcE : mkE y ∈ (rp3Chart y).source := by
+    rw [rp3Chart_source]; exact ⟨y, mem_hemi_self y, rfl⟩
+  have hsymm_pt : (Φ y).symm (Φ y y) = y :=
+    (Φ y).left_inv (hemi_subset_source y (mem_hemi_self y))
+  have hmemNbhd : Φ y y ∈ seamChartNbhd1 y := by
+    refine ⟨?_, ?_⟩
+    · rw [← rp3Chart_apply_mkE y (mem_hemi_self y)]
+      exact (rp3Chart y).map_source hsrcE
+    · show ¬ ‖(SKEFTHawking.KummerK7Opener.eucToC2 (((Φ y).symm (Φ y y)) : E4)).1‖
+        ≤ ‖(SKEFTHawking.KummerK7Opener.eucToC2 (((Φ y).symm (Φ y y)) : E4)).2‖
+      rw [hsymm_pt, hcoe]
+      exact h
+  have hgood : ContDiffAt ℝ k
+      (fun t : EuclideanSpace ℝ (Fin 3) =>
+        seamCollarCoord1 u₀ (SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4)))
+      (Φ y y) := by
+    have hin : SKEFTHawking.KummerK7Opener.eucToC2 (((Φ y).symm (Φ y y)) : E4) ∈ seamDom1 u₀ := by
+      rw [hsymm_pt, hcoe, hu₀]
+      exact mem_seamDom1_seamDir1 h
+    exact ((contDiffOn_seamCollarCoord1 u₀).contDiffAt
+      ((isOpen_seamDom1 u₀).mem_nhds hin)).comp (Φ y y)
+      (contDiff_eucToC2.comp (contDiff_chartSymm_coe_S3E y)).contDiffAt
+  have hEq : ∀ t ∈ seamChartNbhd1 y,
+      (fun s : EuclideanSpace ℝ (Fin 3) =>
+        ((collarChart1 u₀).extend ((𝓡 3).prod (𝓡∂ 1)))
+          (bdryMapRP3 (((rp3PinChart y).extend (𝓡 3)).symm s))) t
+        = seamCollarCoord1 u₀ (SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4)) := by
+    intro t ht
+    have hbr : ¬ ‖(sphToS3 ((Φ y).symm t) : ℂ × ℂ).1‖ ≤ ‖(sphToS3 ((Φ y).symm t) : ℂ × ℂ).2‖ :=
+      ht.2
+    have hsy : ((rp3PinChart y).symm t : RP3) = mkRP3 (sphToS3 ((Φ y).symm t)) := by
+      show rp3EHomeoRP3 ((rp3Chart y).symm t) = _
+      rw [rp3Chart_symm_apply y ht.1, ← mkRP3_sphToS3]
+    show ((𝓡 3).prod (𝓡∂ 1)) (collarChart1 u₀ (bdryMapRP3 ((rp3PinChart y).symm t))) = _
+    rw [hsy, bdryMapRP3_mk]
+    exact collarChart1_bdryMap_eq u₀ hbr
+  have hpt2 : (((rp3PinChart y).extend (𝓡 3)) (mkRP3 x) : EuclideanSpace ℝ (Fin 3)) = Φ y y :=
+    htarget
+  rw [hpt2]
+  exact (hgood.contDiffWithinAt).congr_of_eventuallyEq
+    (Filter.eventuallyEq_of_mem
+      (mem_nhdsWithin_of_mem_nhds ((isOpen_seamChartNbhd1 y).mem_nhds hmemNbhd)) hEq)
+    (hEq _ hmemNbhd)
+
+/-- **THE SEAM IS SMOOTH OFF THE EQUATOR.** At every `ℝP³` class whose `S³` representative is off
+the Hopf equator `‖a‖ = ‖b‖`, the boundary identification `bdryMapRP3 : ℝP³ → E` is `C^k` as a map
+of manifolds — from Leg 1's smooth structure on the pinned seam carrier into the E-piece's own
+`IsManifold` structure. The equator (annulus-chart) branch is the single remaining case of the
+`∂E ≅ ℝP³` smooth upgrade. -/
+theorem contMDiffAt_bdryMapRP3_off_equator {k : WithTop ℕ∞} {x : S3}
+    (h : ‖x.1.1‖ ≠ ‖x.1.2‖) :
+    ContMDiffAt (𝓡 3) ((𝓡 3).prod (𝓡∂ 1)) k bdryMapRP3 (mkRP3 x) := by
+  rcases lt_or_gt_of_ne h with hlt | hgt
+  · exact contMDiffAt_bdryMapRP3 hlt
+  · exact contMDiffAt_bdryMapRP3_chart1 (not_le.mpr hgt)
+
 end
 
 end SKEFTHawking.KummerSeamSmooth
