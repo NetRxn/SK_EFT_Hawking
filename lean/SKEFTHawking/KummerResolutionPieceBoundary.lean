@@ -1240,6 +1240,37 @@ noncomputable instance instChartedSpaceResE : ChartedSpace Model ResE where
   mem_chart_source x := (Classical.choose_spec (exists_chart x)).2
   chart_mem_atlas x := (Classical.choose_spec (exists_chart x)).1
 
+/-! ## §L. Transition smoothness — the `regDir` fiber twist is `C^∞` on the annulus (deliverable 4 seed)
+
+The `IsManifold` (smooth-structure) upgrade of `instChartedSpaceResE` needs the atlas transitions to be
+`contDiffGroupoid`-compatible. The genuinely-new transition (beyond the banked `contDiffOn_clutch` and the
+polar collar changes) is the annulus↔base fiber twist by `regDir`. This section lands its smoothness on the
+annulus `{1/2 < ‖z‖}` (where `regDir z = z/‖z‖`, smooth since `z ≠ 0`). -/
+
+open scoped ContDiff in
+/-- **The fiber-twist direction `regDir` is `C^∞` on the annulus** `{1/2 < ‖z‖}` (there `regDir z = z/‖z‖`,
+holomorphic-in-`z` since `z ≠ 0`). The smooth-transition seed for the annulus charts' `IsManifold`. -/
+theorem contDiffOn_regDir : ContDiffOn ℝ ⊤ regDir {z : ℂ | 1 / 2 < ‖z‖} := by
+  have hne : ∀ z ∈ {z : ℂ | 1 / 2 < ‖z‖}, z ≠ 0 := fun z hz =>
+    norm_ne_zero_iff.mp (ne_of_gt (lt_trans (by norm_num) hz))
+  have hid : ContDiffOn ℝ ⊤ (fun z : ℂ => z) {z : ℂ | 1 / 2 < ‖z‖} := contDiffOn_id
+  have hden : ContDiffOn ℝ ⊤ (fun z : ℂ => ((‖z‖ : ℝ) : ℂ)) {z : ℂ | 1 / 2 < ‖z‖} :=
+    Complex.ofRealCLM.contDiff.comp_contDiffOn (hid.norm ℂ hne)
+  have hinv : ContDiffOn ℝ ⊤ (fun z : ℂ => (((‖z‖ : ℝ) : ℂ))⁻¹) {z : ℂ | 1 / 2 < ‖z‖} :=
+    hden.inv (fun z hz => by
+      simp only [ne_eq, Complex.ofReal_eq_zero]; exact norm_ne_zero_iff.mpr (hne z hz))
+  refine (hid.mul hinv).congr (fun z hz => ?_)
+  rw [regDir_eq hz.le, div_eq_mul_inv]
+
+open scoped ContDiff in
+/-- **The chart-1 base coordinate `regInv` is `C^∞` on the annulus** `{1/2 < ‖z‖}` (there `regInv z = z⁻¹`,
+holomorphic since `z ≠ 0`). The annulus↔chart-1 base-transition smoothness seed. -/
+theorem contDiffOn_regInv : ContDiffOn ℝ ⊤ regInv {z : ℂ | 1 / 2 < ‖z‖} := by
+  have hne : ∀ z ∈ {z : ℂ | 1 / 2 < ‖z‖}, z ≠ 0 := fun z hz =>
+    norm_ne_zero_iff.mp (ne_of_gt (lt_trans (by norm_num) hz))
+  have hid : ContDiffOn ℝ ⊤ (fun z : ℂ => z) {z : ℂ | 1 / 2 < ‖z‖} := contDiffOn_id
+  exact (hid.inv hne).congr (fun z hz => regInv_eq hz.le)
+
 /-! ## §Z. STATUS — the K6′a Leg-2 E-side certificate
 
 **GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
@@ -1313,14 +1344,20 @@ part (a rotation, disk-preserving on BOTH chart sides); the naive `z²` factor b
 equator (`‖z‖ ≠ 1`), which is the artifact behind the earlier "no product" claim. Arc charts are therefore
 unnecessary; the annulus chart is cleaner and completes the ChartedSpace directly.
 
-**RESIDUAL (wall, localized precisely) — the smooth/manifold instance:**
+Deliverable (4) seed — **transition smoothness** (§L, this pass): `contDiffOn_regDir` and
+`contDiffOn_regInv` — the two genuinely-new equatorial transition ingredients (the annulus's fiber-twist
+`regDir z = z/‖z‖` and base coordinate `regInv z = z⁻¹`) are `C^ω` on the annulus `{1/2 < ‖z‖}` (both smooth
+since `z ≠ 0`). Because the equator is charted by a SINGLE annulus chart (not an arc family), there are NO
+annulus-annulus overlap transitions to verify — only annulus↔base, which reduces to these two.
 
-1. **`IsManifold` + smooth `bdryHomeoRP3`** (deliverables 3/4) — the transition classes (`contDiffOn`
-   compatibility of `atlasE`): interior-interior off the equator = `contDiffOn_clutch` (banked);
-   collar/interior polar changes (smooth off `w = 0`, collar avoids `w = 0`); annulus-annulus and
-   annulus↔base = the `regDir`/`regInv` coordinate changes (smooth on the annulus, `‖β‖ > 1/2 > 0`); the
-   smooth `∂E ≅ ℝP³` upgrade of `bdryHomeoRP3` in these charts. `ChartedSpace` (topological) is DONE;
-   `IsManifold` (smooth structure) is the remaining brick.
+**RESIDUAL (wall, localized precisely) — the `IsManifold` instance:**
+
+1. **`IsManifold Model ⊤ ResE` + smooth `bdryHomeoRP3`** (deliverable 4) — assemble the atlas transitions
+   into `contDiffGroupoid`/`IsManifold` membership: interior-interior off the equator = `contDiffOn_clutch`
+   (banked); collar/interior polar changes (smooth off `w = 0`, collar avoids `w = 0`); annulus↔base = the
+   §L `contDiffOn_regDir`/`contDiffOn_regInv` seeds threaded through `toE2`/`reshapeModel`; the smooth
+   `∂E ≅ ℝP³` upgrade of `bdryHomeoRP3` in these charts. `ChartedSpace` (topological) is DONE; the
+   smooth-structure assembly is the remaining brick.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom. -/
 
