@@ -10,7 +10,8 @@ local** input — one that mentions neither `tubeCoord` nor `δ₁` nor any mod-
 
 `eImage ≃ₜ 16 × ResE` and `collar ≃ 16 × ℝP³`, so this is exactly "the relative `H₂` of the
 `𝒪(−2)`-disk-bundle resolution piece `(E, ∂E)` is torsion-free", i.e. `H₂(ResE, ∂ResE;ℤ) ≅ ℤ`
-per copy (`pairH2TwoTorsionFree_of_equiv` converts the `≅ ℤ¹⁶` form into the hypothesis).
+per copy. §6 proves the two forms are **equivalent** (`pairH2TwoTorsionFree_iff_equiv`), so
+nothing is weakened by taking the no-2-torsion form as the hypothesis.
 
 ## Why the pair, and why no parity computation is needed
 
@@ -281,7 +282,133 @@ theorem tubeSeparates_of_pairH2TwoTorsionFree (h : PairH2TwoTorsionFree) : TubeS
   have h3 : x ∈ LinearMap.ker (k7Delta 1) := hδ
   rwa [ker_k7Delta_one] at h3
 
-/-! ## §6. The finale -/
+/-! ## §6. The residual is EXACTLY `H₂(ResE, ∂ResE;ℤ) ≅ ℤ¹⁶`
+
+`pairH2TwoTorsionFree_of_equiv` (§4) is one direction. This section proves the converse, so the
+hypothesis consumed by §5 is not a weakening into something unrelated: it is *equivalent* to the
+freeness statement the geometry is expected to deliver. -/
+
+instance : Module.Finite ℤ (Homology ESub 2) := Module.Finite.equiv eImageH2EquivInt.symm
+
+instance : Module.Finite ℤ ↥(LinearMap.range pairProj) := Module.Finite.range pairProj
+
+instance : Finite (PairH2 ⧸ LinearMap.range pairProj) :=
+  Finite.of_injective pairCokerEquiv pairCokerEquiv.injective
+
+instance : Module.Finite ℤ (PairH2 ⧸ LinearMap.range pairProj) := Module.Finite.of_finite
+
+/-- **`H₂(eImage, collar;ℤ)` is finitely generated** — a free `ℤ¹⁶` sublattice with finite
+cokernel. -/
+instance instPairH2Finite : Module.Finite ℤ PairH2 :=
+  Module.Finite.of_submodule_quotient (LinearMap.range pairProj)
+
+/-- **Every class of the pair group doubles into the free sublattice** — the cokernel has
+exponent 2 (§3). -/
+theorem two_smul_mem_range_pairProj (m : PairH2) : (2 : ℤ) • m ∈ LinearMap.range pairProj := by
+  have h1 : (2 : ℤ) • ((LinearMap.range pairProj).mkQ m) = 0 := by
+    apply pairCokerEquiv.injective
+    rw [map_smul, map_zero]
+    funext i
+    show (2 : ℤ) • pairCokerEquiv ((LinearMap.range pairProj).mkQ m) i = 0
+    rw [two_smul]
+    exact CharTwo.add_self_eq_zero _
+  rw [← map_smul] at h1
+  exact (Submodule.Quotient.mk_eq_zero _).mp h1
+
+/-- **The free sublattice is torsion-free in the pair group** — it is the injective image of
+`H₂(eImage;ℤ) ≅ ℤ¹⁶`. -/
+theorem torsion_inf_range_pairProj_eq_bot :
+    Submodule.torsion ℤ PairH2 ⊓ LinearMap.range pairProj = ⊥ := by
+  rw [Submodule.eq_bot_iff]
+  intro t ht
+  rw [Submodule.mem_inf] at ht
+  obtain ⟨htor, v, rfl⟩ := ht
+  obtain ⟨⟨n, hn⟩, hsmul⟩ := (Submodule.mem_torsion_iff _).mp htor
+  have h1 : pairProj (n • v) = 0 := by rw [map_smul]; exact hsmul
+  have h2 : n • v = 0 := pairProj_injective (by rw [h1, map_zero])
+  have h3 : n • eImageH2EquivInt v = 0 := by rw [← map_smul, h2, map_zero]
+  have hn0 : (n : ℤ) ≠ 0 := mem_nonZeroDivisors_iff_ne_zero.mp hn
+  have h4 : eImageH2EquivInt v = 0 := by
+    rcases smul_eq_zero.mp h3 with h | h
+    · exact absurd h hn0
+    · exact h
+  rw [show v = 0 from eImageH2EquivInt.map_eq_zero_iff.mp h4, map_zero]
+
+/-- **The residual, restated**: `H₂(eImage, collar;ℤ)` has no 2-torsion iff it is torsion-free.
+The `⟸` direction is immediate; the `⟹` direction is the content — a torsion class doubles into
+the free sublattice, dies there, and is then killed by the hypothesis. -/
+theorem pairH2TwoTorsionFree_iff_torsion_eq_bot :
+    PairH2TwoTorsionFree ↔ Submodule.torsion ℤ PairH2 = ⊥ := by
+  constructor
+  · intro h
+    rw [Submodule.eq_bot_iff]
+    intro t ht
+    have h1 : (2 : ℤ) • t ∈ Submodule.torsion ℤ PairH2 ⊓ LinearMap.range pairProj :=
+      ⟨Submodule.smul_mem _ _ ht, two_smul_mem_range_pairProj t⟩
+    rw [torsion_inf_range_pairProj_eq_bot] at h1
+    exact h t h1
+  · intro h m hm
+    have h1 : m ∈ Submodule.torsion ℤ PairH2 :=
+      (Submodule.mem_torsion_iff _).mpr
+        ⟨⟨2, by norm_num [mem_nonZeroDivisors_iff_ne_zero]⟩, hm⟩
+    rw [h] at h1
+    exact h1
+
+/-- The doubling map `H₂(eImage, collar;ℤ) → im pairProj`. -/
+def doubleIntoPairRange : PairH2 →ₗ[ℤ] ↥(LinearMap.range pairProj) :=
+  LinearMap.codRestrict _ ((2 : ℤ) • LinearMap.id) two_smul_mem_range_pairProj
+
+/-- Halving through the free sublattice: `m ↦ pairProj⁻¹(2m)` in `ℤ¹⁶` coordinates. -/
+def pairHalve : PairH2 →ₗ[ℤ] (EIndex → ℤ) :=
+  eImageH2EquivInt.toLinearMap.comp
+    (((LinearEquiv.ofInjective pairProj pairProj_injective).symm.toLinearMap).comp
+      doubleIntoPairRange)
+
+theorem pairHalve_injective (h : PairH2TwoTorsionFree) : Function.Injective pairHalve := by
+  rw [injective_iff_map_eq_zero]
+  intro m hm
+  simp only [pairHalve, LinearMap.comp_apply, LinearEquiv.coe_toLinearMap,
+    LinearEquiv.map_eq_zero_iff] at hm
+  refine h m ?_
+  have h3 : (2 : ℤ) • m = ((0 : ↥(LinearMap.range pairProj)) : PairH2) :=
+    congrArg Subtype.val hm
+  simpa using h3
+
+theorem finrank_pairH2_source : Module.finrank ℤ (EIndex → ℤ) = 16 := by
+  rw [Module.finrank_pi, SKEFTHawking.KummerWeld.eIndex_card]
+
+/-- **`H₂(ResE, ∂ResE;ℤ) ≅ ℤ¹⁶` from the residual** — the converse of
+`pairH2TwoTorsionFree_of_equiv`. Together the two make the hypothesis consumed by §5 *equivalent*
+to the geometric statement "the relative `H₂` of the resolution-piece pair is the free `ℤ¹⁶`". -/
+theorem pairH2_equiv_of_twoTorsionFree (h : PairH2TwoTorsionFree) :
+    Nonempty (PairH2 ≃ₗ[ℤ] (EIndex → ℤ)) := by
+  have htor : Submodule.torsion ℤ PairH2 = ⊥ := pairH2TwoTorsionFree_iff_torsion_eq_bot.mp h
+  haveI : Module.IsTorsionFree ℤ PairH2 := by
+    exact Submodule.isTorsionFree_iff_torsion_eq_bot.mpr htor
+  haveI : Module.Free ℤ PairH2 := Module.free_of_finite_type_torsion_free'
+  have hle : Module.finrank ℤ PairH2 ≤ 16 := by
+    have h1 := LinearMap.finrank_le_finrank_of_injective (pairHalve_injective h)
+    rwa [finrank_pairH2_source] at h1
+  have hge : 16 ≤ Module.finrank ℤ PairH2 := by
+    have h1 := LinearMap.finrank_le_finrank_of_injective
+      (f := pairProj.comp eImageH2EquivInt.symm.toLinearMap)
+      (pairProj_injective.comp eImageH2EquivInt.symm.injective)
+    rwa [finrank_pairH2_source] at h1
+  have hcard : Module.finrank ℤ PairH2 = 16 := le_antisymm hle hge
+  have hcards : Fintype.card EIndex = Fintype.card (Module.Free.ChooseBasisIndex ℤ PairH2) := by
+    rw [SKEFTHawking.KummerWeld.eIndex_card, ← Module.finrank_eq_card_chooseBasisIndex, hcard]
+  exact ⟨(Module.Free.chooseBasis ℤ PairH2).equivFun.trans
+    (LinearEquiv.funCongrLeft ℤ ℤ (Fintype.equivOfCardEq hcards))⟩
+
+
+/-- **The residual in its two equivalent forms** — `H₂(eImage, collar;ℤ)` has no 2-torsion iff it
+is the free `ℤ¹⁶`. So the hypothesis §5 consumes is not a weakening: it *is* the mission-form
+statement `H₂(ResE, ∂ResE;ℤ) ≅ ℤ` (16 copies). -/
+theorem pairH2TwoTorsionFree_iff_equiv :
+    PairH2TwoTorsionFree ↔ Nonempty (PairH2 ≃ₗ[ℤ] (EIndex → ℤ)) :=
+  ⟨pairH2_equiv_of_twoTorsionFree, fun ⟨e⟩ => pairH2TwoTorsionFree_of_equiv e⟩
+
+/-! ## §7. The finale -/
 
 /-- **`Torsion(H₂(K3;ℤ)) = ⊥` from the resolution-piece pair.** -/
 theorem kummerK3_torsion_free_of_pairH2TwoTorsionFree (h : PairH2TwoTorsionFree) :
