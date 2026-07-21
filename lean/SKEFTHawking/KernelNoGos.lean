@@ -355,7 +355,30 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    gate-pending consumption shape whose interface terms cancel mod 2.
    backing: `wAtt_mem_subspaceChains_range_phi`, `boundary_wAtt_eq_zero`, `isEmpty_capstoneSeamTransfer_of_null`, `isEmpty_capstoneSeamTransferSeam_of_null`
 
-23. `collar-pair-closed-seam-attached-collar-bridge-is-FALSE` [refutation]
+23. `k0-to-k1-transport-refuted` [refutation]
+   Every k = 0 charted space over the R^4 model is also a k >= 1 manifold -- i.e. the `k := 0` binder in the
+   live KT provider is harmless generality that transports to the smooth category for free. FALSE (kernel
+   refutation, 2026-07-21). Mathlib registers an UNCONDITIONAL `instance : IsManifold I 0 M` for every
+   charted space (contDiffGroupoid 0 I = continuousGroupoid H), so at k = 0 the IsManifold field is not weak
+   but FREE (PinPlusRegularityFence.isManifoldZero_free). And no generic transport can repair it:
+   no_generic_zero_to_one_transport refutes `forall M, IsManifold (R^4) 0 M -> IsManifold (R^4) 1 M` via
+   TwistedR4 = R^4 with atlas {id, twist 0}, whose transition carries the kink min t (t/2) with one-sided
+   derivatives 1 and 1/2 at 0 (not_differentiableAt_kinkInv). At the CARRIER level,
+   exists_carrier_element_not_smooth exhibits a legal `SingularManifold PUnit 0 (R^4)` element -- built by
+   adjoining one twisted chart to the project's own RP4 -- that is not a k >= 1 manifold. CONSUMER CHECK
+   (why this is not idle): CharPairWProviderPerOp (R^4) 0 is hard-wired in 45 files and a tree-wide grep
+   finds NO provider at k >= 1; residualProv (PinPlusKTAssemblyResiduals.lean:70) is the only provider and
+   is declared at literal 0. The C0 generality is not unexercised -- it is the only thing exercised. SCOPE
+   (worker-stated, lead-confirmed; DO NOT OVERSTATE): this separates OBJECT CLASSES, not bordism groups.
+   Bordism could still identify the extra objects, and whether the k = 0 GROUP differs is OPEN and NOT
+   claimed here; Kirby-Siebenmann is not formalized. TwistedRP4 IS homeomorphic to RP4 and does admit some
+   smooth structure -- what fails is that its ATLAS, the datum SingularManifold actually bundles, is not
+   C^1. So this upgrades the roadmap-leg-2 fence from 'the conclusion is uninterpreted' to 'the k := 0
+   binder is not harmless generality and no generic transport can exist'. It is NOT a refutation of the KT
+   Z/16 mathematics.
+   backing: `no_generic_zero_to_one_transport`, `exists_carrier_element_not_smooth`
+
+24. `collar-pair-closed-seam-attached-collar-bridge-is-FALSE` [refutation]
    PinPlusTraceSeamResidualNarrow.ClosedSeamAttachedCollarBridge S a -- the closed-S attached-collar bridge,
    believed to be hctrlH's blocking atom and readable as an open-neighbourhood-to-closed-S collar
    deformation retraction. FALSE (kernel refutation, 2026-07-21): collar_bridge_refuted exhibits closed
@@ -380,7 +403,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    case that hcoreHit rules out.
    backing: `collar_bridge_refuted`, `attachedBridge_iff_support_dichotomy`
 
-24. `collar-pair-face-row-forces-seam-to-meet-boundary` [structural_forcing]
+25. `collar-pair-face-row-forces-seam-to-meet-boundary` [structural_forcing]
    A CollarPairGeomFace row (the houtPair producer: the row's own supports plus the seam-annulus containment
    hseamAnn) can be inhabited with an ENTIRELY INTERIOR seam -- i.e. with no seam point of the surgered end
    lying in dW, so that the collar-pair route never has to pay for the seam. FALSE (structural forcing,
@@ -399,7 +422,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    FIVE.
    backing: `exists_seamPoint_mem_bd_of_null`, `exists_seamPoint_mem_range_eM'_of_null`
 
-25. `collar-pair-open-complement-annulus-is-refuted-shape` [structural_forcing]
+26. `collar-pair-open-complement-annulus-is-refuted-shape` [structural_forcing]
    houtPair (the collar-annulus weld obligation of the #212 collar-pair row) can be discharged for free by
    reading its three required boundary-supports straight off the in-tree SurgeredEndDatum, whose
    d.topFaceCovered (fromCyl '' (topface \ range phi) subset dW), d.sphereFaceCovered (fromHandle '' (sphere
@@ -419,7 +442,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    d.topFaceCovered instantiation is closed', NEVER as 'the collar-annulus refinement is closed'.
    backing: `collarAnnulusOpen_toSeamTransferSeam`, `not_collarAnnulusOpen_of_null`
 
-26. `collar-pair-maximal-core-reenters-refuted-support` [structural_forcing]
+27. `collar-pair-maximal-core-reenters-refuted-support` [structural_forcing]
    The CollarPairGeom/CollarPairGeomUnsub row's anti-fake tether hcoreHit can be made free of charge by
    enlarging the #210 shrunk core K toward its limit K = univ, keeping the rest of the collar-pair split
    data intact. FALSE (structural forcing, 2026-07-21): at K = univ the tether IS indeed a consequence of
@@ -434,7 +457,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    maximal-core shortcut is closed', never as 'every hcoreHit shortcut is closed'.
    backing: `coreHit_of_univ`, `houtC_support_univ_eq_refuted`
 
-27. `k7-seam-cover-interior-fails` [refutation]
+28. `k7-seam-cover-interior-fails` [refutation]
    K7SeamCoverHyp (the K7 opener's un-thickened MV cover hypothesis): the INTERIORS of the two closed
    Kummer-weld pieces (the Q-image and the 16 closed E-images) cover the welded K3 carrier, so the
    Mayer-Vietoris assembly can run on the un-thickened pieces directly. FALSE (kernel refutation
@@ -447,7 +470,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    KummerK7MVAssembly) and through which the whole K7 accounting now runs unconditionally.
    backing: `k7SeamCoverHyp_false`
 
-28. `gram-literal-equality-is-choice-dependent` [structural_forcing]
+29. `gram-literal-equality-is-choice-dependent` [structural_forcing]
    SphereProdGramPin - the LITERAL matrix equality `interMatrix fc B = sphereProdFormDatum` on the computed
    rank-2 basis - is a disclosed GEOMETRIC residual of the S2xS2 intersection form, dischargeable once the
    Kunneth/EZ cross value is pinned. FALSE AS FRAMED (structural forcing, 2026-07-21): the exact
@@ -469,7 +492,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    choice.
    backing: `sphereProd_interMatrix_computed_eq`, `sphereProdGramPin_iff`
 
-29. `kronecker-dual-is-not-the-h1-enhancement-transport` [refutation]
+30. `kronecker-dual-is-not-the-h1-enhancement-transport` [refutation]
    The Kronecker/UCT dual of the carried cohomology basis - `homologyBasisOfCohomologyBasis basis`, the
    value `pinCharSurfaceOfBundled` puts in `PinCharSurface.H1Iso` (and the value
    `GeoRealizationTied.derivedEsigma`/`derivedEtau` put in the seam) - is the identification of
@@ -517,6 +540,8 @@ import SKEFTHawking.PinPlusGenuineCarrierIso
 import SKEFTHawking.PinPlusKTLeafGate
 import SKEFTHawking.PinPlusKTStepGate
 import SKEFTHawking.PinPlusKTVacuityGateWD
+import SKEFTHawking.PinPlusRegularitySeparation
+import SKEFTHawking.PinPlusRegularitySeparationCarrier
 import SKEFTHawking.PinPlusResidualGate
 import SKEFTHawking.PinPlusRoundThirteenGate
 import SKEFTHawking.PinPlusTaylorConventionNoGo
@@ -697,6 +722,12 @@ alias nogo_isEmpty_capstoneSeamTransfer_of_null := SKEFTHawking.PinPlusTraceSeam
 
 /-- NO-GO [`seam-transfer-open-support-uninhabitable`] — do NOT re-derive. FALSE: The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207 hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching region, and the 3x-circled closed-S co-adaptation barrier (#198/#204/#207) is a machinery gap. Backing refutation: `SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransferSeam_of_null`. -/
 alias nogo_isEmpty_capstoneSeamTransferSeam_of_null := SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransferSeam_of_null
+
+/-- NO-GO [`k0-to-k1-transport-refuted`] — do NOT re-derive. FALSE: Every k = 0 charted space over the R^4 model is also a k >= 1 manifold -- i.e. Backing refutation: `SKEFTHawking.PinPlusRegularitySeparation.no_generic_zero_to_one_transport`. -/
+alias nogo_no_generic_zero_to_one_transport := SKEFTHawking.PinPlusRegularitySeparation.no_generic_zero_to_one_transport
+
+/-- NO-GO [`k0-to-k1-transport-refuted`] — do NOT re-derive. FALSE: Every k = 0 charted space over the R^4 model is also a k >= 1 manifold -- i.e. Backing refutation: `SKEFTHawking.PinPlusRegularitySeparationCarrier.exists_carrier_element_not_smooth`. -/
+alias nogo_exists_carrier_element_not_smooth := SKEFTHawking.PinPlusRegularitySeparationCarrier.exists_carrier_element_not_smooth
 
 /-- NO-GO [`collar-pair-closed-seam-attached-collar-bridge-is-FALSE`] — do NOT re-derive. FALSE: PinPlusTraceSeamResidualNarrow.ClosedSeamAttachedCollarBridge S a -- the closed-S attached-collar bridge, believed to be hctrlH's blocking atom and readable as an open-neighbourhood-to-closed-S collar deformation retraction. Backing refutation: `SKEFTHawking.PinPlusTraceSeamCollarBridgeNoGo.collar_bridge_refuted`. -/
 alias nogo_collar_bridge_refuted := SKEFTHawking.PinPlusTraceSeamCollarBridgeNoGo.collar_bridge_refuted
