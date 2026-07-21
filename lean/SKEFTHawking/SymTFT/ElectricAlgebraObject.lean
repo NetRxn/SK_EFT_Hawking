@@ -625,4 +625,139 @@ theorem electric_linchpin :
     CategoryTheory.Center.leftUnitor_hom_f, CategoryTheory.Center.rightUnitor_hom_f]
   exact pairing_cyclic_of_unitIso (unitVecGIso k) ((eeVacUnitIso k).hom.f)
 
+/-! ## §20. Associativity of `electricMul` → the `MonObj` instance
+
+The proof is the classical **8-corner (biproduct-extensionality) route**: two morphisms
+`(X ⊗ X) ⊗ X ⟶ X` agree iff they agree after precomposition with each of the 8 corner
+injections `(ι_a ⊗ ι_b) ⊗ ι_c` (`a,b,c ∈ {vacuum, electric}`), because the corners are
+jointly epic (their matrix sums to `𝟙` via `unitPlusElectric_total`). Seven corners are
+free monoidal coherence (`monoidal`); the `(e,e,e)` corner reduces exactly to the
+`electric_linchpin` (★). -/
+
+/-- Split a left-composite out of a tensor: `(f ≫ g) ⊗ₘ h = (f ⊗ₘ 𝟙) ≫ (g ⊗ₘ h)`.
+Interchange with the right factor split as `𝟙 ≫ h`. -/
+theorem split_left_tensor {C : Type*} [Category C] [MonoidalCategory C]
+    {W X Y : C} (f : W ⟶ X) (g : X ⟶ Y) {A B : C} (h : A ⟶ B) :
+    (f ≫ g) ⊗ₘ h = (f ⊗ₘ 𝟙 A) ≫ (g ⊗ₘ h) := by
+  rw [MonoidalCategory.tensorHom_comp_tensorHom, Category.id_comp]
+
+/-- Split a right-composite out of a tensor: `h ⊗ₘ (f ≫ g) = (𝟙 ⊗ₘ f) ≫ (h ⊗ₘ g)`. -/
+theorem split_right_tensor {C : Type*} [Category C] [MonoidalCategory C]
+    {W X Y : C} (f : W ⟶ X) (g : X ⟶ Y) {A B : C} (h : A ⟶ B) :
+    h ⊗ₘ (f ≫ g) = (𝟙 A ⊗ₘ f) ≫ (h ⊗ₘ g) := by
+  rw [MonoidalCategory.tensorHom_comp_tensorHom, Category.id_comp]
+
+/-- Unfolding of the fusion-to-unit iso's forward map: `eeVacUnitIso.hom` is the
+composite `(e²≅vac).hom ≫ (vac≅𝟙).hom`. Lets corner reductions refold to the linchpin. -/
+theorem eeVacUnitIso_hom_eq :
+    (eeVacUnitIso k).hom = (electric_squared_iso_vacuum k).hom ≫ (vacuumUnitIso k).hom := by
+  rfl
+
+/-- Left-distributivity of tensor over `+` in the Center (no `MonoidalPreadditive (Center)`
+instance exists; reduce to the base `VecG_Cat`, which is `MonoidalPreadditive`). -/
+theorem center_add_tensorHom {W X Y Z : CategoryTheory.Center (VecG_Cat k G2)}
+    (f g : W ⟶ X) (h : Y ⟶ Z) : (f + g) ⊗ₘ h = f ⊗ₘ h + g ⊗ₘ h := by
+  apply CategoryTheory.Center.ext
+  show (f.f + g.f) ⊗ₘ h.f = f.f ⊗ₘ h.f + g.f ⊗ₘ h.f
+  exact MonoidalPreadditive.add_tensor f.f g.f h.f
+
+/-- Right-distributivity of tensor over `+` in the Center. -/
+theorem center_tensorHom_add {W X Y Z : CategoryTheory.Center (VecG_Cat k G2)}
+    (f : W ⟶ X) (g h : Y ⟶ Z) : f ⊗ₘ (g + h) = f ⊗ₘ g + f ⊗ₘ h := by
+  apply CategoryTheory.Center.ext
+  show f.f ⊗ₘ (g.f + h.f) = f.f ⊗ₘ g.f + f.f ⊗ₘ h.f
+  exact MonoidalPreadditive.tensor_add f.f g.f h.f
+
+/-- **Uniform corner reduction** — closes any of the 8 associativity corners. Reduces
+both sides through the corner equations (`electricMul_corner_*`) + interchange, then the
+residue: free monoidal coherence for the 7 corners `≠ (e,e,e)`, or `electric_linchpin`
+(★) for the `(e,e,e)` corner (the only non-coherent one). -/
+local macro "corner_reduce" : tactic =>
+  `(tactic|
+    (simp only [← MonoidalCategory.tensorHom_id, ← MonoidalCategory.id_tensorHom,
+        MonoidalCategory.tensorHom_comp_tensorHom_assoc,
+        MonoidalCategory.associator_naturality_assoc, electricMul_corner_ee,
+        electricMul_corner_11, electricMul_corner_1e, electricMul_corner_e1,
+        Category.comp_id, Category.id_comp, Category.assoc]
+     simp only [split_left_tensor, split_right_tensor, Category.assoc]
+     simp only [electricMul_corner_ee, electricMul_corner_11, electricMul_corner_1e,
+        electricMul_corner_e1, MonoidalCategory.tensorHom_comp_tensorHom_assoc,
+        Category.comp_id, Category.assoc]
+     first
+       | (rw [MonoidalCategory.tensorHom_id, MonoidalCategory.id_tensorHom,
+           ← eeVacUnitIso_hom_eq, ← Category.assoc, electric_linchpin]
+          simp only [Category.assoc])
+       | (congr 1; monoidal)
+       | monoidal))
+
+/-- The associativity identity restricted to a corner injection triple `(ιa, ιb, ιc)`.
+Each of the 8 corners (`a,b,c ∈ {vacuum-one, electric-inj}`) is an instance, discharged
+uniformly by `corner_reduce`. -/
+private def AssocCornerEq {A B D : CategoryTheory.Center (VecG_Cat k G2)}
+    (ιa : A ⟶ unitPlusElectricObj k) (ιb : B ⟶ unitPlusElectricObj k)
+    (ιc : D ⟶ unitPlusElectricObj k) : Prop :=
+  ((ιa ⊗ₘ ιb) ⊗ₘ ιc) ≫ (electricMul k ▷ unitPlusElectricObj k) ≫ electricMul k =
+    ((ιa ⊗ₘ ιb) ⊗ₘ ιc) ≫
+      (α_ (unitPlusElectricObj k) (unitPlusElectricObj k) (unitPlusElectricObj k)).hom ≫
+        (unitPlusElectricObj k ◁ electricMul k) ≫ electricMul k
+
+private theorem assoc_corner_vvv :
+    AssocCornerEq k (unitPlusElectric_one k) (unitPlusElectric_one k) (unitPlusElectric_one k) := by
+  unfold AssocCornerEq; corner_reduce
+private theorem assoc_corner_vve :
+    AssocCornerEq k (unitPlusElectric_one k) (unitPlusElectric_one k) (electricInj k) := by
+  unfold AssocCornerEq; corner_reduce
+private theorem assoc_corner_vev :
+    AssocCornerEq k (unitPlusElectric_one k) (electricInj k) (unitPlusElectric_one k) := by
+  unfold AssocCornerEq; corner_reduce
+private theorem assoc_corner_vee :
+    AssocCornerEq k (unitPlusElectric_one k) (electricInj k) (electricInj k) := by
+  unfold AssocCornerEq; corner_reduce
+private theorem assoc_corner_evv :
+    AssocCornerEq k (electricInj k) (unitPlusElectric_one k) (unitPlusElectric_one k) := by
+  unfold AssocCornerEq; corner_reduce
+private theorem assoc_corner_eve :
+    AssocCornerEq k (electricInj k) (unitPlusElectric_one k) (electricInj k) := by
+  unfold AssocCornerEq; corner_reduce
+private theorem assoc_corner_eev :
+    AssocCornerEq k (electricInj k) (electricInj k) (unitPlusElectric_one k) := by
+  unfold AssocCornerEq; corner_reduce
+private theorem assoc_corner_eee :
+    AssocCornerEq k (electricInj k) (electricInj k) (electricInj k) := by
+  unfold AssocCornerEq; corner_reduce
+
+/-- **Associativity of `electricMul`** — the `mul_assoc` law for the honest object-level
+group-algebra multiplication. Proved by the 8-corner biproduct-extensionality route:
+the domain identity `𝟙_{(X⊗X)⊗X}` is decomposed through `unitPlusElectric_total`, the
+resulting eight biproduct-corner terms are matched against the corner lemmas
+`assoc_corner_*` (seven pure coherence, the `(e,e,e)` corner the `electric_linchpin`
+(★)), and reassembled. -/
+theorem electricMul_assoc :
+    (electricMul k ▷ unitPlusElectricObj k) ≫ electricMul k =
+      (α_ (unitPlusElectricObj k) (unitPlusElectricObj k) (unitPlusElectricObj k)).hom ≫
+        (unitPlusElectricObj k ◁ electricMul k) ≫ electricMul k := by
+  have hid : (((unitPlusElectric_counit k ≫ unitPlusElectric_one k + electricProj k ≫ electricInj k) ⊗ₘ
+      (unitPlusElectric_counit k ≫ unitPlusElectric_one k + electricProj k ≫ electricInj k)) ⊗ₘ
+      (unitPlusElectric_counit k ≫ unitPlusElectric_one k + electricProj k ≫ electricInj k)) =
+      𝟙 ((unitPlusElectricObj k ⊗ unitPlusElectricObj k) ⊗ unitPlusElectricObj k) := by
+    rw [unitPlusElectric_total]; simp
+  conv_lhs => rw [← Category.id_comp ((electricMul k ▷ unitPlusElectricObj k) ≫ electricMul k), ← hid]
+  conv_rhs => rw [← Category.id_comp ((α_ (unitPlusElectricObj k) (unitPlusElectricObj k)
+    (unitPlusElectricObj k)).hom ≫ (unitPlusElectricObj k ◁ electricMul k) ≫ electricMul k), ← hid]
+  simp only [center_add_tensorHom, center_tensorHom_add,
+    ← MonoidalCategory.tensorHom_comp_tensorHom, Preadditive.add_comp, Category.assoc]
+  rw [assoc_corner_vvv k, assoc_corner_vve k, assoc_corner_vev k, assoc_corner_vee k,
+    assoc_corner_evv k, assoc_corner_eve k, assoc_corner_eev k, assoc_corner_eee k]
+
+/-- **The `MonObj` instance** — `unitPlusElectricObj k` is an internal monoid object in
+`Center (VecG_Cat k G2)` under the honest group-algebra multiplication `electricMul` with
+unit `unitPlusElectric_one`. This is the object-level toric-code electric algebra as a
+genuine (associative, unital) algebra object — the S2 monoid apex. -/
+noncomputable instance electricMonObj : CategoryTheory.MonObj (unitPlusElectricObj k) where
+  one := unitPlusElectric_one k
+  mul := electricMul k
+  one_mul := electricMul_one_mul k
+  mul_one := electricMul_mul_one k
+  mul_assoc := electricMul_assoc k
+
 end SKEFTHawking.SymTFT.ElectricAlgebraObject
