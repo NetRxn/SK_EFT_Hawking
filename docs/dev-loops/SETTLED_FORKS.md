@@ -228,8 +228,95 @@ retire) — no entry is immutable. Every entry carries datetime metadata.
   direction (`32∣σ ⟹ Pin⁺-bounds`), which itself uses "K3 generates `Ω₄^{Spin}`" = the full iso. Do NOT
   re-chase that shortcut. `Ω₄^{Spin}≅ℤ` stays the one deep input; its Lean-tractability (surgery step vs the
   spectral tower it replaces) is the open judgment call.
+- **⚠ CORRECTION 2026-07-21 (atlas-integrity repair, wt3 — verified against the Lean, not the prose):** the
+  wording above ("PROVABLY the SAME single node", "apex-equivalent", "the reduction is CANONICAL") **overstates
+  what is proved and must not be cited as a kernel-checked equivalence.** What is actually in the kernel is
+  **three ONE-WAY implications**, all stated on `pinPlusGMTiedData (k := 0)`:
+  `hthom ⟹ hbound` (`UnorientedThomCapstone.grade0_bounds_of_thom`),
+  `hbound ⟹ hle` (`PinPlusGMWitness.spin_range_ge_of_grade0_inj`), and
+  `hbound ⟹` the old-carrier iso (`PinPlusGMWitness.omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`).
+  So `hbound` is **SUFFICIENT** to feed those old capstones. **NOT proved anywhere in-tree:** any reverse
+  implication (`hle ⟹ hbound`, `hbound ⟹ hthom`); **any** theorem relating the Smith leg
+  (`smith_inflow_z16` / `SmithInflow` / `Ω₆^{Pin⁻}`) to `hbound` in either direction — the Smith leg of the
+  "three routes" claim has **zero** backing; that the routes agree on the **faithful** carrier; or that any
+  node is **unavoidable**. Separately, all three implications live on the carrier that
+  `NonHausdorffBordismCollapse` later **vacated** — there `hbound` is an *unconditional theorem*
+  (`grade0_eq_zero_of_nonHausdorff`, zero geometric input) and `mk p = mk q ↔ grade16 p = grade16 q`
+  (`dataBordismGMTied_mk_eq_iff_grade16_eq`). So the *surviving* settled content is: **route-shopping on the
+  old tied carrier is moot because that carrier is dead**, not because the routes were shown equivalent. The
+  `KERNEL_NOGO_REGISTRY` entry `5qH-injectivity-routes-apex-equivalent` now carries this as an explicit
+  `scope_limit` (rendered into `KernelNoGos.lean`); the fork-id retains the legacy wording and is **not** a
+  claim. Nothing here licenses "the node is unavoidable, therefore we must pay for it."
 - memory: [[project_5qH_geometric_floor_terminal]]
 - created_ts: 2026-07-04T00:00:00Z
+
+## 5qH-capstone-regularity-level-k0-vs-k1-unbridged (2026-07-21, wt3 atlas-integrity repair — KERNEL-BACKED fence; registry entry pending an extraction refresh)
+- **verdict:** OPEN RESIDUAL — **the roadmap's leg-2 hard constraint is currently violated by the assembly
+  of record** · **tier:** automatic · **authored_by:** atlas-integrity audit (lead-dispatched; every
+  citation below verified in-tree, not taken from prose)
+- **⚠ SEVERITY (determined 2026-07-21, escalated by the lead mid-audit).**
+  `Phase5qH_LiteratureGradeUnconditional_Roadmap.md` §2 leg 2 promotes to a **hard constraint**: the
+  carrier must be smooth, `k ≥ 1`, because "at `k = 0` the honest group is topological Pin⁺ bordism
+  `≅ ℤ/2 ⊕ ℤ/8` (Kirby–Siebenmann; E₈), i.e. the **WRONG group** … the C⁰ fork must never be silently
+  conflated with the ℤ/16 target." §2 also warns a carrier missing any leg produces
+  "**true-but-vacuous completeness statements**." The lead asked whether the in-tree `k := 0` is (a) an
+  index unrelated to smoothness, or (b) a genuine C⁰ carrier. **The answer, settled in source, is (b) —
+  and it is sharper than the roadmap's phrasing.**
+- **The determination (kernel-checked, `SKEFTHawking/PinPlusRegularityFence.lean`).**
+  `CharPairWProviderPerOp`'s binder is `(k : WithTop ℕ∞)` (`PinPlusCharPairBorTethered.lean:142-143`) —
+  Mathlib's **smoothness exponent**, the same `k` fed to `SingularManifold X k I`, whose
+  `[isManifold : IsManifold I k M]` instance field (`Mathlib/Geometry/Manifold/Bordism.lean:120`)
+  is what carries regularity. At `k = 0` that field is **not weak — it is FREE**: Mathlib proves
+  `contDiffGroupoid 0 I = continuousGroupoid H` (`IsManifold/Basic.lean:694`) and registers the
+  **unconditional** `instance : IsManifold I 0 M` (ibid.:860) for *every* charted space. Two kernel-pure
+  theorems record this: `isManifoldZero_free` (the binder is free for any charted space) and
+  `singularManifoldZero_ofTopological` (a compact boundaryless charted space over
+  `EuclideanSpace ℝ (Fin 4)` yields an element of `SingularManifold PUnit 0 (𝓡 4)` with **no
+  smoothness hypothesis in its binder list**). Both `{propext, Classical.choice, Quot.sound}`.
+- **Consequence.** `PinPlusKTAssemblyResiduals.residualProv : CharPairWProviderPerOp (𝓡 4) 0` puts the
+  assembly of record on `pinPlusCharPairData residualProv : T2TangentialData PUnit 0 (𝓡 4)`, i.e. over
+  **compact boundaryless charted topological 4-manifolds, zero differentiability**. That is exactly the
+  C⁰ fork the roadmap forbids conflating with the ℤ/16 target. **Every ℤ/16 statement currently proved on
+  that carrier must be quoted with "`k = 0` / topological category" attached.**
+- **What is NOT claimed (do not overstate this fence).** The assembly's conclusion is **not refuted** —
+  it is *uninterpreted* pending a regularity fix. And the **stronger** form is deliberately NOT built: no
+  in-tree *separating witness* (a concrete element of `SingularManifold PUnit 0 (𝓡 4)` admitting no
+  `IsManifold (𝓡 4) 1` structure — an atlas with homeomorphic but non-`C¹` transitions) exists yet. That
+  witness is the honest next brick; it would upgrade this from "the binder is free" to "the categories
+  provably differ in-tree".
+- **Registry status.** This IS kernel-encodable (false statement: "the `k := 0` instantiation keeps the
+  char-pair carrier in the smooth category / the `k` binder carries regularity at `0`"; backing:
+  `isManifoldZero_free` + `singularManifoldZero_ofTopological`). It is **not yet a
+  `KERNEL_NOGO_REGISTRY` entry** only because `lean_deps.json` is stale (its regen lock was held by
+  another slot), and `nogo_substrate_integrity` hard-fails on backing theorems absent from that cache.
+  **Encode it in the same turn as the next extraction refresh** — the entry is drafted in the wt3
+  handoff report.
+- **The gap.** The standing goal requires a **smooth `k ≥ 1`** carrier —
+  `docs/dev-loops/Phase5qH/HANDOFF_16_CONVERGENCE.md:31-37` states the target as "a genuine
+  bordism-of-manifolds substrate (T2 carrier, **smooth k ≥ 1 data**, structure-extension bordism relation
+  with the Brown/ABK invariant *computed*, not posited)". But the **canonical provider actually consumed by
+  the authoritative KT assembly is declared at `k := 0`**:
+  `PinPlusKTAssemblyResiduals.residualProv : CharPairWProviderPerOp (𝓡 4) 0` (lines 65-72), and the
+  end-to-end conditional's conclusion is consequently an iso on `pinPlusCharPairData residualProv` — i.e. on
+  the `k = 0` carrier.
+- **What is missing.** **No declaration in-tree proves the resulting bordism groups equivalent**, or
+  transports a `k = 0` result to a `k ≥ 1` carrier. `T2TangentialBordism.lean:20-30` explicitly labels the
+  `k = 0` topological-vs-smooth relationship a **"record, not proven here"** (the Kirby–Siebenmann / E₈
+  concern: at `k = 0` this is *topological* bordism, where KS breaks the ℤ/16 — the same warning appears in
+  `KERNEL_NOGO_REGISTRY["nonhausdorff-bordism-collapse"]`: "even T2 at k=0 is TOPOLOGICAL bordism (KS breaks
+  ℤ/16); literature-grade needs the SMOOTH (k=∞) + T2 carrier").
+- **Why prose and not a registry entry** (per ADR-007 N-B / the encode-on-settle discrimination): this is a
+  *statement-shape / route* fact — a **gap between two stated targets**, with **no false statement and no
+  backing refutation theorem**. It is not provably-false, so it is not kernel-encodable. It becomes a
+  registry entry only if someone proves a `k = 0` ⟹ `k ≥ 1` transport is *impossible* as shaped.
+- **Standing obligation (do not let this rot).** Any claim that Phase 5q.H has landed "the Kirby–Taylor
+  `Ω₄^{Pin⁺} ≅ ℤ/16` on a faithful carrier" **must** state its regularity level explicitly. Closing it needs
+  ONE of: (a) a proved transport `k = 0 ⟹ k ≥ 1` for these carriers; (b) re-declaring `residualProv` and the
+  assembly at `k ≥ 1` and re-proving the row; or (c) an explicit, signed-off narrowing of the handoff target
+  to `k = 0` **with** the Kirby–Siebenmann caveat carried into every downstream claim. Until one of the three
+  lands, the honest phrasing is "**on the `k = 0` tethered char-pair carrier**", never an unqualified
+  "faithful smooth carrier".
+- created_ts: 2026-07-21T00:00:00Z
 
 ## 5qH-fg-ek-over-Z-blocked (2026-07-12, arm-2 — KERNEL-REGISTERED same-day; scout-verified vs primaries)
 **Encode-on-settle upgrade (same turn-chain):** now a `KERNEL_NOGO_REGISTRY` entry backed by

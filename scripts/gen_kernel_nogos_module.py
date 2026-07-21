@@ -101,6 +101,10 @@ def render() -> str:
     for key, e in KERNEL_NOGO_REGISTRY.items():
         fid = e.get("fork_id", key)
         false_statement = (e.get("false_statement") or "").strip()
+        # Optional citation bound: exactly what the backing theorems do and do NOT support. Present
+        # when an entry has previously been over-cited; rendered verbatim so a reader of the Lean
+        # fence sees the limit at the same place they read the claim.
+        scope_limit = (e.get("scope_limit") or "").strip()
         kind = e.get("nogo_kind", "?")
         backing = list(e.get("backing_theorems") or [])
         resolved: list[tuple[str, str, str]] = []  # (short, fq, module)
@@ -114,6 +118,7 @@ def render() -> str:
                 unresolved.append(t)
         forks.append({
             "key": key, "fid": fid, "false_statement": false_statement, "kind": kind,
+            "scope_limit": scope_limit,
             "backing": backing, "resolved": resolved, "unresolved": unresolved,
         })
 
@@ -142,6 +147,9 @@ def render() -> str:
         ap(f"{i}. `{fk['fid']}` [{fk['kind']}]")
         for wl in _wrap(fk["false_statement"] or "(no false-statement recorded)", indent="   "):
             ap(wl)
+        if fk["scope_limit"]:
+            for wl in _wrap("SCOPE LIMIT — " + fk["scope_limit"], indent="   "):
+                ap(wl)
         if fk["resolved"]:
             ap("   backing: " + ", ".join(f"`{s}`" for s, _, _ in fk["resolved"]))
         if fk["unresolved"]:
@@ -171,8 +179,11 @@ def render() -> str:
             first = summary.split(". ")[0].strip()
             if first and not first.endswith("."):
                 first += "."
+            limit = (" ⚠ SCOPE-LIMITED — read the SCOPE LIMIT for this fork in the module docstring "
+                     "before citing it; it supports LESS than the headline suggests."
+                     if fk["scope_limit"] else "")
             ap(f"/-- NO-GO [`{fk['fid']}`] — do NOT re-derive. FALSE: {first} "
-               f"Backing refutation: `{fq}`. -/")
+               f"Backing refutation: `{fq}`.{limit} -/")
             ap(f"alias {handle} := {fq}")
             ap("")
     if not any_alias:

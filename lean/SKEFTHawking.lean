@@ -745,6 +745,12 @@ import SKEFTHawking.JokerExt
 -- (Campbell delta-truncation height-4 cap as disclosed Prop; [RP4] order 16 DERIVED
 -- from the surface-ABK lower bound + the Ext delta-cap, not posited).
 import SKEFTHawking.PinPlusExtBound
+-- 2026-07-21 atlas-integrity repair (wt3): the k=0 REGULARITY FENCE. Makes kernel-visible that at
+-- k = 0 the SingularManifold smoothness field is FREE (Mathlib's unconditional IsManifold I 0
+-- instance), so the k := 0 canonical KT provider (PinPlusKTAssemblyResiduals.residualProv) puts the
+-- assembly of record in the C0 category -- the fork the Phase 5q.H roadmap forbids conflating with
+-- the smooth Z/16 target (Kirby-Siebenmann: topological Pin+ bordism is Z/2 + Z/8, the WRONG group).
+import SKEFTHawking.PinPlusRegularityFence
 -- Phase 5q.F W4i (2026-06-14): the FINITE Pin+ column-4 height-4 cap (Campbell delta=.h0
 -- cokernel), decidable F2 linear algebra -> |Omega_4^Pin+| <= 2^4 = 16. The genuine finite
 -- upper-bound core (no topological input; that is the one disclosed pin4_abutment Prop).
