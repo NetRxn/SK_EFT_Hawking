@@ -609,6 +609,57 @@ theorem chart0_baseInterior_covered {p : ResChart} (hz : ‖(p.1 : ℂ)‖ < 1) 
   · exact Or.inr ⟨_, mem_collarChart_source hz (by
       intro h0; exact hw (by rw [h0, norm_zero]; norm_num))⟩
 
+/-- The `chart1` mirror of `mem_interiorChart_source` (same inner chart, lifted along `chart1`). -/
+theorem mem_interiorChart1_source {p : ResChart} (hz : ‖(p.1 : ℂ)‖ < 1)
+    (hw : ‖(p.2 : ℂ)‖ < 1) : chart1 p ∈ interiorChart1.source := by
+  rw [interiorChart1, OpenPartialHomeomorph.lift_openEmbedding_source]
+  refine ⟨⟨p, hz⟩, ?_, rfl⟩
+  simp only [interiorChartInner, OpenPartialHomeomorph.trans_source,
+    Topology.IsOpenEmbedding.toOpenPartialHomeomorph_source, Set.mem_inter_iff, Set.mem_univ,
+    true_and, Set.mem_preimage]
+  show p ∈ resChartInteriorChart.source
+  simp only [resChartInteriorChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, OpenPartialHomeomorph.prod_source,
+    Set.mem_inter_iff, Set.mem_univ, and_true, Set.mem_preimage, Set.mem_prod]
+  refine ⟨hz, ?_⟩
+  simp only [fiberInteriorChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, Set.mem_inter_iff, Set.mem_univ, true_and,
+    Set.mem_preimage]
+  show ‖((diskHomeoNDisk1 p.2 : NDisk 1) : EuclideanSpace ℝ (Fin 2))‖ < 1
+  rw [show ((diskHomeoNDisk1 p.2 : NDisk 1) : EuclideanSpace ℝ (Fin 2)) = toE2 (p.2 : ℂ) from rfl,
+    norm_toE2]
+  exact hw
+
+/-- The `chart1` mirror of `mem_collarChart_source`. -/
+theorem mem_collarChart1_source {p : ResChart} (hz : ‖(p.1 : ℂ)‖ < 1) (hw : (p.2 : ℂ) ≠ 0) :
+    chart1 p ∈ (collarChart1 (diskDir 1 (diskHomeoNDisk1 p.2))).source := by
+  rw [collarChart1, OpenPartialHomeomorph.lift_openEmbedding_source]
+  refine ⟨⟨p, hz⟩, ?_, rfl⟩
+  simp only [collarChartInner, OpenPartialHomeomorph.trans_source,
+    Topology.IsOpenEmbedding.toOpenPartialHomeomorph_source, Set.mem_inter_iff, Set.mem_univ,
+    true_and, Set.mem_preimage]
+  show p ∈ (resChartCollarChart (diskDir 1 (diskHomeoNDisk1 p.2))).source
+  simp only [resChartCollarChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, OpenPartialHomeomorph.prod_source,
+    Set.mem_inter_iff, Set.mem_univ, and_true, Set.mem_preimage, Set.mem_prod]
+  refine ⟨hz, ?_⟩
+  simp only [fiberCollarChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, Set.mem_inter_iff, Set.mem_univ, true_and,
+    Set.mem_preimage]
+  refine ⟨?_, mem_chart_source (EuclideanSpace ℝ (Fin 1)) _⟩
+  show ((diskHomeoNDisk1 p.2 : NDisk 1) : EuclideanSpace ℝ (Fin 2)) ≠ 0
+  rw [show ((diskHomeoNDisk1 p.2 : NDisk 1) : EuclideanSpace ℝ (Fin 2)) = toE2 (p.2 : ℂ) from rfl]
+  intro h0
+  exact hw (norm_eq_zero.mp (by rw [← norm_toE2, h0, norm_zero]))
+
+/-- **The off-equator covering, `chart1` side.** The symmetric mirror of `chart0_baseInterior_covered`. -/
+theorem chart1_baseInterior_covered {p : ResChart} (hz : ‖(p.1 : ℂ)‖ < 1) :
+    chart1 p ∈ interiorChart1.source ∨ ∃ u₀, chart1 p ∈ (collarChart1 u₀).source := by
+  by_cases hw : ‖(p.2 : ℂ)‖ < 1
+  · exact Or.inl (mem_interiorChart1_source hz hw)
+  · exact Or.inr ⟨_, mem_collarChart1_source hz (by
+      intro h0; exact hw (by rw [h0, norm_zero]; norm_num))⟩
+
 /-! ## §Z. STATUS — the K6′a Leg-2 E-side certificate
 
 **GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
@@ -652,10 +703,11 @@ Deliverable (2/3) — **the half-space-model charts on `ResE`** (§C–§F, K6�
   coverage discipline that structurally avoids the metric-vs-chart-radius gap. Kernel-pure.
 - `collarChart1`/`interiorChart1` (`§G`) — the `chart1`-based mirrors (the SAME inner charts lifted along
   `chart1` instead of `chart0`), charting the other base disk.
-- `mem_interiorChart_source`/`mem_collarChart_source`/`chart0_baseInterior_covered` (`§H`) — **the
-  off-equator covering lemma**: every point with a `chart0` base-interior (`‖z‖ < 1`) representative lies
-  in the interior chart's source (`‖w‖ < 1`) or a collar chart's source (`w ≠ 0`, at its own fiber
-  direction `u₀ = diskDir (w/‖w‖)`). The `chart1` mirror is symmetric. Kernel-pure.
+- `mem_interiorChart_source`/`mem_collarChart_source`/`chart0_baseInterior_covered` and the `chart1`
+  mirrors `mem_interiorChart1_source`/`mem_collarChart1_source`/`chart1_baseInterior_covered` (`§H`) —
+  **the off-equator covering lemma (both base disks)**: every point with a `chart0`/`chart1` base-interior
+  (`‖z‖ < 1`) representative lies in the interior chart's source (`‖w‖ < 1`) or a collar chart's source
+  (`w ≠ 0`, at its own fiber direction `u₀ = diskDir (w/‖w‖)`). Kernel-pure.
 
 **RESIDUAL (walls, localized precisely) — the charted-space instance and the manifold instance:**
 
