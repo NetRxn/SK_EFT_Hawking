@@ -244,12 +244,13 @@ theorem no_generic_zero_to_one_transport :
   strategy: the only remaining route to a smooth-category reading is to *re-declare* the
   assembly at `k ≥ 1`.
 
-* **NOT established here — the carrier-level witness.** `TwistedR4` is **not compact**, so it
-  is not itself an element of `SingularManifold PUnit 0 (𝓡 4)` (which requires
-  `[CompactSpace M]` and `[BoundarylessManifold I M]`; see `Mathlib/Geometry/Manifold/
-  Bordism.lean:120`).  Producing a *compact* C⁰-but-not-C¹ charted 4-manifold — e.g. by
-  adjoining `rp4Chart x₀ ≫ₕ twist c` to `RP4PointSet`'s atlas — would place the witness
-  inside the carrier itself.  That is the residual brick; it is NOT done.
+* **NOT established *here* — the carrier-level witness (but see below).** `TwistedR4` is
+  **not compact**, so it is not itself an element of `SingularManifold PUnit 0 (𝓡 4)` (which
+  requires `[CompactSpace M]` and `[BoundarylessManifold I M]`; see
+  `Mathlib/Geometry/Manifold/Bordism.lean:120`).  **`PinPlusRegularitySeparationCarrier`
+  supplies the compact version** — `Twisted ℝP⁴`, and
+  `exists_carrier_element_not_smooth : ∃ s : SingularManifold PUnit 0 (𝓡 4),
+  ¬ IsManifold (𝓡 4) 1 s.M`.
 
 * **NOT established here — a bordism-group inequality.** Even a carrier-level witness would
   show the C⁰ *object class* is strictly larger; it would **not** by itself show the C⁰

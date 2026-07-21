@@ -752,6 +752,7 @@ import SKEFTHawking.PinPlusExtBound
 -- the smooth Z/16 target (Kirby-Siebenmann: topological Pin+ bordism is Z/2 + Z/8, the WRONG group).
 import SKEFTHawking.PinPlusRegularityFence
 import SKEFTHawking.PinPlusRegularitySeparation
+import SKEFTHawking.PinPlusRegularitySeparationCarrier
 -- Phase 5q.F W4i (2026-06-14): the FINITE Pin+ column-4 height-4 cap (Campbell delta=.h0
 -- cokernel), decidable F2 linear algebra -> |Omega_4^Pin+| <= 2^4 = 16. The genuine finite
 -- upper-bound core (no topological input; that is the one disclosed pin4_abutment Prop).
