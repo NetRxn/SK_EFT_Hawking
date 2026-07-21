@@ -351,6 +351,200 @@ theorem contDiffOn_transition_collar_collar_same {k : WithTop ℕ∞}
     simp only [Function.comp_apply, OpenPartialHomeomorph.coe_trans]
     rw [hval _ ht]
 
+/-! ### §2b. Reusable smoothness of the interior reshaping `interiorReshape` (crux input for 1a/1d) -/
+
+/-- **Forward reshape coordinate map is `C^k`.** `↑I ∘ interiorReshape` (the first three ambient
+coordinates repackaged into `𝔼³`, the fourth pushed through `Real.exp` into the boundary coordinate)
+is `C^k` everywhere. The `φ` of the interior transition factoring. -/
+theorem contDiff_I_interiorReshape {k : WithTop ℕ∞} :
+    ContDiff ℝ k (fun p : EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) ×
+        EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) =>
+      (((𝓡 3).prod (𝓡∂ 1)) (interiorReshape p))) := by
+  have h : (fun p : EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) ×
+        EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) =>
+        (((𝓡 3).prod (𝓡∂ 1)) (interiorReshape p)))
+      = (fun p => (WithLp.toLp 2 ![p.1.ofLp 0, p.2.1.ofLp 0, p.2.2.1.ofLp 0],
+          WithLp.toLp 2 (fun _ : Fin 1 => Real.exp (p.2.2.2.ofLp 0)))) := rfl
+  rw [h]
+  apply ContDiff.prodMk
+  · exact PiLp.contDiff_toLp.comp (contDiff_pi.mpr (fun i => by fin_cases i <;> simp <;> fun_prop))
+  · exact PiLp.contDiff_toLp.comp (contDiff_pi.mpr (fun _ => by fun_prop))
+
+/-- **Clean inverse reshape coordinate map is `C^k` on the interior region.** On `{0 < m.2.ofLp 0}` the
+map `m ↦ (m.1 split into three, Real.log m.2.ofLp 0)` (the boundary coordinate pulled back by `Real.log`)
+is `C^k`. This is `interiorReshape.symm ∘ I.symm` with the half-space clamp already resolved to the
+identity by positivity — the `ψ` of the interior transition factoring. -/
+theorem contDiffOn_interiorReshapeSymm_clean {k : WithTop ℕ∞} :
+    ContDiffOn ℝ k (fun m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1) =>
+        ((WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp 0),
+         WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp 1),
+         WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp 2),
+         WithLp.toLp 2 (fun _ : Fin 1 => Real.log (m.2.ofLp 0))) :
+        EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) ×
+          EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1)))
+      {m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1) | 0 < m.2.ofLp 0} := by
+  apply ContDiffOn.prodMk
+  · exact (PiLp.contDiff_toLp.comp (contDiff_pi.mpr (fun _ => by fun_prop))).contDiffOn
+  apply ContDiffOn.prodMk
+  · exact (PiLp.contDiff_toLp.comp (contDiff_pi.mpr (fun _ => by fun_prop))).contDiffOn
+  apply ContDiffOn.prodMk
+  · exact (PiLp.contDiff_toLp.comp (contDiff_pi.mpr (fun _ => by fun_prop))).contDiffOn
+  · apply PiLp.contDiff_toLp.comp_contDiffOn
+    apply contDiffOn_pi.mpr
+    intro _
+    apply Real.contDiffOn_log.comp
+    · exact ((contDiff_apply ℝ ℝ 0).comp (PiLp.contDiff_ofLp.comp contDiff_snd)).contDiffOn
+    · intro m hm
+      exact ne_of_gt hm
+
+/-- On the interior region `{0 < m.2.ofLp 0}`, the clean inverse reshape coordinate map equals the
+genuine `interiorReshape.symm ∘ I.symm` (the half-space clamp `max · 0` is inactive by positivity). -/
+theorem interiorReshapeSymm_eq_clean {m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1)}
+    (hpos : 0 < m.2.ofLp 0) :
+    ((WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp 0),
+      WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp 1),
+      WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp 2),
+      WithLp.toLp 2 (fun _ : Fin 1 => Real.log (m.2.ofLp 0))) :
+        EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) ×
+          EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1))
+      = interiorReshape.symm (((𝓡 3).prod (𝓡∂ 1)).symm m) := by
+  have he : (((𝓡 3).prod (𝓡∂ 1)).symm m).2.val.ofLp 0 = m.2.ofLp 0 :=
+    max_eq_left (le_of_lt hpos)
+  refine Prod.ext rfl (Prod.ext rfl (Prod.ext rfl ?_))
+  show (WithLp.toLp 2 (fun _ : Fin 1 => Real.log (m.2.ofLp 0)) : EuclideanSpace ℝ (Fin 1))
+      = WithLp.toLp 2 (fun _ : Fin 1 => Real.log ((((𝓡 3).prod (𝓡∂ 1)).symm m).2.val.ofLp 0))
+  rw [he]
+
+/-- Domain-membership extractor for the interior → interior transition on the reduced
+`(chartAt x ≫ interiorReshape)`-form domain: positivity of the boundary coordinate, plus the ambient
+chart target/source memberships of the reshaped point. -/
+theorem interior_transition_key (x x' : ↥interiorOpens)
+    {m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1)}
+    (hm : m ∈ ↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹'
+        ((chartAt PModel x ≫ₕ interiorReshape).symm ≫ₕ chartAt PModel x' ≫ₕ interiorReshape).source ∩
+      range ↑((𝓡 3).prod (𝓡∂ 1))) :
+    0 < m.2.ofLp 0 ∧
+    interiorReshape.symm (((𝓡 3).prod (𝓡∂ 1)).symm m) ∈ (chartAt PModel x).target ∧
+    (chartAt PModel x).symm (interiorReshape.symm (((𝓡 3).prod (𝓡∂ 1)).symm m)) ∈
+      (chartAt PModel x').source := by
+  obtain ⟨hmsrc, hmrange⟩ := hm
+  rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source, OpenPartialHomeomorph.symm_source,
+    Set.mem_inter_iff, OpenPartialHomeomorph.trans_target, Set.mem_inter_iff] at hmsrc
+  obtain ⟨⟨hmtarget, htgt2⟩, hsrc3⟩ := hmsrc
+  have hval : (0 : ℝ) < (((𝓡 3).prod (𝓡∂ 1)).symm m).2.val.ofLp 0 := hmtarget
+  have hposm : 0 < m.2.ofLp 0 := by
+    have he : (((𝓡 3).prod (𝓡∂ 1)).symm m).2.val.ofLp 0 = max (m.2.ofLp 0) 0 := rfl
+    rw [he] at hval
+    rcases lt_max_iff.mp hval with h | h
+    · exact h
+    · exact absurd h (lt_irrefl 0)
+  refine ⟨hposm, ?_, ?_⟩
+  · rw [Set.mem_preimage] at htgt2; exact htgt2
+  · rw [Set.mem_preimage] at hsrc3
+    simp only [OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+      OpenPartialHomeomorph.trans_source, Set.mem_inter_iff, Set.mem_preimage] at hsrc3
+    exact hsrc3.1
+
+/-- **Transition class: interior → interior.** The coordinate change between two round-ball interior
+charts is `C^k`. The lift embeddings cancel (`lift_openEmbedding_trans`), leaving
+`interiorReshape.symm ≫ (ambient torus transition) ≫ interiorReshape`; the ambient block is `C^ω`
+(the `T⁴` product smooth structure via `contDiffOn_ext_coord_change`) and the reshape blocks are the
+`φ`/`ψ` exp/log coordinate maps above. -/
+theorem contDiffOn_transition_interior_interior {k : WithTop ℕ∞} (x x' : ↥interiorOpens) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑((interiorChartR x).symm ≫ₕ interiorChartR x') ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹'
+          ((interiorChartR x).symm ≫ₕ interiorChartR x').source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) := by
+  simp only [interiorChartR, OpenPartialHomeomorph.lift_openEmbedding_trans]
+  -- `MapsTo` of the clean inverse reshape into the ambient transition source.
+  have hmaps : Set.MapsTo
+      (fun m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1) =>
+        ((WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp 0),
+          WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp 1),
+          WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp 2),
+          WithLp.toLp 2 (fun _ : Fin 1 => Real.log (m.2.ofLp 0))) :
+            EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) ×
+              EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1)))
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹'
+          ((chartAt PModel x ≫ₕ interiorReshape).symm ≫ₕ chartAt PModel x' ≫ₕ interiorReshape).source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1)))
+      ((extChartAt ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) x).symm.trans
+        (extChartAt ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) x')).source := by
+    intro m hm
+    obtain ⟨hposm, htgt, hsrc⟩ := interior_transition_key x x' hm
+    dsimp only
+    rw [interiorReshapeSymm_eq_clean hposm, PartialEquiv.trans_source]
+    refine ⟨?_, ?_⟩
+    · rw [PartialEquiv.symm_source, extChartAt_target]
+      exact ⟨htgt, interiorReshape.symm (((𝓡 3).prod (𝓡∂ 1)).symm m), rfl⟩
+    · rw [Set.mem_preimage, extChartAt_source]
+      exact hsrc
+  -- Assemble the `φ ∘ T ∘ ψ` factoring; its function is inferred, so no expensive unification.
+  have hF := (contDiff_I_interiorReshape (k := k)).comp_contDiffOn
+    ((contDiffOn_ext_coord_change
+        (I := (𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) (n := k) x' x).comp
+      (contDiffOn_interiorReshapeSymm_clean.mono
+        (fun m hm => (interior_transition_key x x' hm).1))
+      hmaps)
+  -- The genuine transition equals the factoring on the domain (positivity kills the clamp).
+  refine hF.congr (fun m hm => ?_)
+  obtain ⟨hposm, _, _⟩ := interior_transition_key x x' hm
+  simp only [Function.comp_apply, OpenPartialHomeomorph.coe_trans,
+    OpenPartialHomeomorph.coe_trans_symm]
+  rw [interiorReshapeSymm_eq_clean hposm]
+  rfl
+
+/-! ### §2c. The round chart is smooth — the crux enabler for the collar ↔ interior seam (1d) -/
+
+/-- **The extended round chart `centeredChartParamE4 c` is `C^k` into `T⁴`.** In `E⁴` coordinates
+`w ↦ centeredChartParam c (ofE4 w) = (c.i · Circle.exp (w.ofLp i))ᵢ`, each factor is
+`(left-translate by cᵢ) ∘ Circle.exp ∘ (coordinate projection)` — all `ContMDiff` (`Circle.exp` via
+`contMDiff_circleExp`, left-translation via the `Circle` Lie-group `contMDiff_mul_left`). This is the
+geometric heart of the collar ↔ interior transition class: the round chart of a boundary sphere is
+smoothly compatible with the ambient `T⁴` product charts. -/
+theorem contMDiff_centeredChartParamE4 {k : WithTop ℕ∞} (c : TorusFour) :
+    ContMDiff (𝓘(ℝ, EuclideanSpace ℝ (Fin 4)))
+      ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) k
+      (fun w : EuclideanSpace ℝ (Fin 4) => centeredChartParam c (ofE4 w)) := by
+  have hfac : ∀ (a : Circle) (j : Fin 4),
+      ContMDiff (𝓘(ℝ, EuclideanSpace ℝ (Fin 4))) (𝓡 1) k
+        (fun w : EuclideanSpace ℝ (Fin 4) => a * Circle.exp (w.ofLp j)) := by
+    intro a j
+    have hcoord : ContMDiff (𝓘(ℝ, EuclideanSpace ℝ (Fin 4))) (𝓘(ℝ, ℝ)) k
+        (fun w : EuclideanSpace ℝ (Fin 4) => w.ofLp j) := by
+      rw [contMDiff_iff_contDiff]
+      exact (contDiff_apply ℝ ℝ j).comp PiLp.contDiff_ofLp
+    exact contMDiff_mul_left.comp ((contMDiff_circleExp (m := k)).comp hcoord)
+  have h : (fun w : EuclideanSpace ℝ (Fin 4) => centeredChartParam c (ofE4 w))
+      = fun w => (c.1 * Circle.exp (w.ofLp 0), c.2.1 * Circle.exp (w.ofLp 1),
+          c.2.2.1 * Circle.exp (w.ofLp 2), c.2.2.2 * Circle.exp (w.ofLp 3)) := rfl
+  rw [h]
+  exact (hfac c.1 0).prodMk ((hfac c.2.1 1).prodMk ((hfac c.2.2.1 2).prodMk (hfac c.2.2.2 3)))
+
+/-- **The round-chart → interior-coordinate smooth core.** On the locus where the round chart lands in
+the ambient product chart's source, the coordinate map
+`w ↦ I (interiorReshape (extChartAt J y (centeredChartParam c (ofE4 w))))` is `C^k`. This is the
+analysis heart of the collar → interior transition class (1d): the round chart `centeredChartParamE4 c`
+of a boundary sphere is `ContMDiff` (`contMDiff_centeredChartParamE4`), its `extChartAt`-coordinate rep
+lands in the genuine normed product (`contMDiffOn_extChartAt` + `contMDiffOn_iff_contDiffOn`, dodging the
+`ModelProd` instance opacity), and `I ∘ interiorReshape` is `C^k` (`contDiff_I_interiorReshape`). -/
+theorem contDiffOn_roundToInterior_core {k : WithTop ℕ∞} (c : TorusFour) (y : TorusFour) :
+    ContDiffOn ℝ k
+      (fun w : EuclideanSpace ℝ (Fin 4) =>
+        ((𝓡 3).prod (𝓡∂ 1)) (interiorReshape (extChartAt
+          ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) y (centeredChartParam c (ofE4 w)))))
+      ((fun w : EuclideanSpace ℝ (Fin 4) => centeredChartParam c (ofE4 w)) ⁻¹'
+        (chartAt PModel y).source) := by
+  have hext : ContMDiffOn ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1))))
+      (𝓘(ℝ, EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) ×
+          EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1))) k
+      (extChartAt ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) y) (chartAt PModel y).source :=
+    contMDiffOn_extChartAt
+  have hcomp := hext.comp (contMDiff_centeredChartParamE4 c).contMDiffOn (fun w hw => hw)
+  rw [contMDiffOn_iff_contDiffOn] at hcomp
+  exact contDiff_I_interiorReshape.comp_contDiffOn hcomp
+
 end
 
 end SKEFTHawking.KummerBoundaryChartSmooth
