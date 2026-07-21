@@ -604,6 +604,59 @@ theorem mem_contDiffGroupoid_seamFam_trans_qFam (y₀ : ↥interiorQ) (c : EInde
   rwa [OpenPartialHomeomorph.trans_symm_eq_symm_trans_symm,
     OpenPartialHomeomorph.symm_symm] at h
 
+/-! ## §7. Non-vacuity — the (2,3) overlap is genuinely nonempty -/
+
+/-- A Q-collar point of chart radius **strictly** above `1/2` misses `∂Q`: a boundary point of any
+component would be a `qBdryMap c₀ r`, `seam_separation` forces `c₀ = c`, and `qCollar_injective`
+then pins the radius to `1/2`. -/
+theorem qCollarS3_mem_interiorQ (c : EIndex) (a : S3) (s : ↥qParam)
+    (hlt : (1 : ℝ) / 2 < (s : ℝ)) (hs58 : (s : ℝ) < 5 / 8) : qCollarS3 c a s ∈ interiorQ := by
+  intro hb
+  obtain ⟨c₀, hc₀, hmem⟩ := Set.mem_iUnion₂.mp hb
+  obtain ⟨r, hr⟩ : qCollarS3 c a s ∈
+      Set.range (qBdryMap ⟨c₀, (mem_fixedFinset c₀).mpr hc₀⟩) := by
+    rw [SKEFTHawking.KummerWeldQInterior.range_qBdryMap_eq_boundaryComponent]; exact hmem
+  have hin : qBdryMap (⟨c₀, (mem_fixedFinset c₀).mpr hc₀⟩ : EIndex) r ∈ qOpenCollarSet c := by
+    rw [hr]; exact qCollar_mem_qOpenCollarSet c (mkRP3 a, s) hs58
+  have hdc : (⟨c₀, (mem_fixedFinset c₀).mpr hc₀⟩ : EIndex) = c := seam_separation hin
+  rw [hdc] at hr
+  have hhalf : (1 : ℝ) / 2 ∈ qParam := ⟨le_refl _, by norm_num⟩
+  have hcol : qCollar c (r, ⟨1 / 2, hhalf⟩) = qCollar c (mkRP3 a, s) := by
+    rw [qCollar_half]; exact hr
+  have heq := qCollar_injective c hcol
+  have hrad : (1 : ℝ) / 2 = (s : ℝ) :=
+    congrArg (fun t : ↥qParam => (t : ℝ)) (Prod.ext_iff.mp heq).2
+  linarith
+
+/-- **CLASS (2,3) IS NOT VACUOUS.** For *every* seam component `c` and *every* pinned direction `a`
+there is a Q-interior chart of `K3` and a seam chart whose transition has a point in its source: the
+Q-collar point at chart radius `9/16 ∈ (1/2, 5/8)` is simultaneously a `Q`-interior point of the weld
+(it misses `∂Q`) and a point of the seam neighbourhood of its own component. So
+`mem_contDiffGroupoid_qFam_trans_seamFam` is a statement about a genuine coordinate change, not an
+empty-source triviality. -/
+theorem transQ_source_nonempty (c : EIndex) (a : S3) :
+    ∃ (y₀ : ↥interiorQ) (r₀ : RP3) (p : FModel),
+      p ∈ ((SKEFTHawking.KummerK3Chart.qFamChart y₀).symm.trans (seamChart c r₀)).source := by
+  have hsmem : (9 : ℝ) / 16 ∈ qParam := ⟨by norm_num, by norm_num⟩
+  set s : ↥qParam := ⟨9 / 16, hsmem⟩ with hsdef
+  have hlt : (1 : ℝ) / 2 < (s : ℝ) := by rw [hsdef]; norm_num
+  have h58 : (s : ℝ) < 5 / 8 := by rw [hsdef]; norm_num
+  set y₀ : ↥interiorQ := ⟨qCollarS3 c a s, qCollarS3_mem_interiorQ c a s hlt h58⟩ with hy₀
+  refine ⟨y₀, mkRP3 a, SKEFTHawking.KummerK3Chart.qFamChart y₀ (qInteriorPiece y₀), ?_⟩
+  have hxsrc : qInteriorPiece y₀ ∈ (SKEFTHawking.KummerK3Chart.qFamChart y₀).source :=
+    SKEFTHawking.KummerK3Chart.mem_qFamChart_source y₀
+  have hv : 1 / 2 - (s : ℝ) ∈ openParam := half_sub_mem_openParam s.2.1 h58
+  have hseam : qInteriorPiece y₀ = seamParam c (mkRP3 a, ⟨1 / 2 - (s : ℝ), hv⟩) :=
+    (seamParam_eq_weldMk_qCollarS3 c a s ⟨1 / 2 - (s : ℝ), hv⟩ rfl).symm
+  have hseamsrc : qInteriorPiece y₀ ∈ (seamChart c (mkRP3 a)).source := by
+    rw [hseam]
+    exact mem_seamChart_source c (mkRP3 a, ⟨1 / 2 - (s : ℝ), hv⟩)
+  rw [OpenPartialHomeomorph.trans_source, OpenPartialHomeomorph.symm_source,
+    Set.mem_inter_iff, Set.mem_preimage]
+  refine ⟨(SKEFTHawking.KummerK3Chart.qFamChart y₀).map_source hxsrc, ?_⟩
+  rw [(SKEFTHawking.KummerK3Chart.qFamChart y₀).left_inv hxsrc]
+  exact hseamsrc
+
 end
 
 end SKEFTHawking.KummerSeamTransQClass
