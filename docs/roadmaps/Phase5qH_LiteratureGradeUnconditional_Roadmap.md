@@ -89,8 +89,21 @@ are sound and replay on the refined relation. The infidelity lived in the *insta
 | `BordismGroup.lean` relation machinery + `TangentialData` framework + `T2TangentialBordism` generic refinement | **KEEP** (sound; group laws replay on the refined relation) |
 | Relation-free base: E1 integral topology (cohomology→cup→cap→Kronecker→σ÷16, `[M]`/orientation), K3 lattice, Brown/ABK/Rokhlin algebra, Smith double-cover tower, D³/S²×D³ atlases (k-generic) | **KEEP** (genuine, zero refs to the degenerate relation) |
 | The Pin⁺ instance (retired: `pinPlusGMTiedData` grade-as-data) | **REBUILD**: `Mfd s` = genuine Pin⁺/GM structure as geometric data; `Bor` = structure on `W` restricting to the ends; ABK **computed** from the structure; genuine `revStr` |
-| ℝP⁴ witness (exists at `k = 0` only) | **LIFT** to a smooth (`k ≥ 1`) atlas → surjectivity on the honest carrier |
+| ℝP⁴ witness (Cω — smooth at every `k`, `rp4SM_k`) | **DONE (2026-07-21):** surjectivity onto ℤ/8 on the honest smooth carrier is unconditional (`charPairBrown_surjective_smooth`) |
 | Keystone completeness statement | **RESTATE** on the rebuilt instance (absorbs the containment audit of the vacated bricks) |
+
+**Regularity (leg 2) — DISCHARGED 2026-07-21, via route (b) = re-declaration (NOT transport).** The KT
+provider is now `k`-generic (`PinPlusKTAssemblyResiduals.residualProvK`); the assembly of record
+instantiates at `k = ⊤` (`kt_equiv_zmod16_of_residuals_smooth`), carrying the same open binders as the
+`k = 0` form, and every `k = 0` statement is kept verbatim as a corollary (`residualProv = residualProvK 0`).
+Verified at merge: at `k = ⊤` the carrier's `StrMfd` genuinely requires `IsManifold (𝓡 4) ⊤` (instance
+synthesizes at `⊤`, fails on the `k = 0` control) — the `k = 0` binder was *free*
+(`PinPlusRegularityFence.isManifoldZero_free`), which is the whole reason the lift was needed. A generic
+`k=0 → k≥1` transport is kernel-refuted — see §9; never attempt one. **The one residual `C⁰`-tied input is
+a smooth handle attachment for the surgery trace** (`SurgeryFoundation.SmoothSurgeryChartDatum.ofC0` sets
+`k := 0`; `SingularSurgeryChartsConcrete.ambientTraceBordism_concrete` builds the boundary embedding's
+"smoothness" as continuity) — Mathlib-absent, and on the completeness (W-D / KRS) leg's critical path
+regardless, so it is not new work.
 
 **Blast radius of the collapse (07-13 linkage audit, conclusive):** the σ-route door + L3
 (`omega4PinPlusGMTied_equiv_zmod16_*`) are fully vacated (definitionally the collapsed carrier);
@@ -173,7 +186,11 @@ phase's design space: **`nonhausdorff-bordism-collapse`** (T2-less relation coll
 **`dataBordism_two_torsion_of_revStr_trivial`** + **`genuine-gm-carrier-eight-torsion`**
 (reversal-trivial/8-torsion carriers can't be ℤ/16); **`synthetic-grade-ker-bot-nogo`** (free
 grade has no `ker = ⊥`); **`lattice_arf_bridge_refuted`** (σ/8 ≢ Arf mod 2 — Rokhlin mod-16 is
-irreducibly geometric). Spectral machinery (β-fork) remains a policy fence in `SETTLED_FORKS.md`:
+irreducibly geometric); **`k0-to-k1-transport-refuted`** (no generic `C⁰→C¹` manifold transport exists —
+at `k = 0` the `IsManifold` binder is FREE, so a smooth-category result must be re-declared `k`-generically,
+never lifted from `k = 0`; the regularity leg is discharged that way — §4. SCOPE, do not overstate: this
+separates OBJECT CLASSES, not bordism groups, and is NOT a refutation of the KT ℤ/16 mathematics). Spectral
+machinery (β-fork) remains a policy fence in `SETTLED_FORKS.md`:
 revisit only on substrate shift (coupled Mathlib pin-set bump per
 `feedback-mathlib-physlib-bump-coupled-authorization`).
 
