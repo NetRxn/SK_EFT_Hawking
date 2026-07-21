@@ -2185,24 +2185,17 @@ Deliverable (4) — **the `reshapeModel`-conjugation wrapper + same-side/cross-s
   `contDiffOn_transition_vacuous_of_disjoint` + `disjoint_chart0_chart1_baseInterior`; apply with the
   four `*_source_subset` lemmas per cross-side pair.
 
-**RESIDUAL (wall, localized precisely) — the ResE-level `IsManifold` assembly:**
-
-1. **`IsManifold ((𝓡 3).prod (𝓡∂ 1)) k ResE` + smooth `bdryHomeoRP3`** (deliverable 4) — the six-class
-   6×6 assembly via `isManifold_of_contDiffOn`. Classes and their status (**16 of 36 pairs DONE**):
-   - cross-side (`chart0`-fam ↔ `chart1`-fam, 8 pairs): DONE (§M.1/§P.2, vacuous).
-   - same-side base-interior (`chart0`-fam ↔ `chart0`-fam and `chart1`-fam ↔ `chart1`-fam, 8 pairs):
-     DONE (§P.1) via `contDiffOn_transition_baseInterior_gen` + `contDiffOn_reshapeConj`.
-   - **annulus-annulus** (annulus-fam ↔ annulus-fam, 4 pairs): OPEN — same shape as §P.1 (`gBase = id`
-     via `toE2Homeo`, `gFiber = §O`) but the prefix is `annulusTriv.symm ≫ annulusTriv` (restricting to
-     `annulusTarget`), NOT the `val`-lift; needs an annulus-analog of `contDiffOn_transition_baseInterior_gen`.
-   - **annulus↔base** (annulus-fam ↔ chart0-fam or chart1-fam, 16 pairs): OPEN, the hard block — the annulus
-     chart and the base chart have structurally different builds (`annulusTriv.trans` vs `val`-lift), and
-     the base coordinate change is the `regDir`/`regInv` twist (§L `contDiffOn_regDir`/`contDiffOn_regInv`
-     as `gBase`, `gFiber = §O`). Reuses `contDiffOn_reshapeConj` with `gBase ≠ id`.
-   - the smooth `∂E ≅ ℝP³` upgrade of `bdryHomeoRP3` in these charts.
-   `ChartedSpace` (topological, §K), the reshape wrapper (§P.0), the same-side (§P.1) and cross-side
-   (§P.2) quadrants, and every fiber ingredient (§M/§N/§O/§L) are DONE; the remaining bricks are the
-   annulus-annulus + annulus↔base classes and the final `isManifold_of_contDiffOn` dispatch.
+**RESIDUAL — CLOSED (see `KummerResolutionPieceManifold.lean`).** The ResE-level `IsManifold`
+assembly is COMPLETE: `KummerResolutionPieceManifold.isManifold_resE :
+IsManifold ((𝓡 3).prod (𝓡∂ 1)) k ResE` (all 36/36 pairs — the 16 pairs here (§M.1/§P.1/§P.2) plus
+the annulus-annulus quadrant (4, via the `annulusFam` gen theorem: `annulusTriv` cancels by
+`right_inv`, `gBase = id`, `gFiber = §O`) and the annulus↔base classes (16, via the base-coupled
+wrapper `contDiffOn_reshapeConjTwist` — the fiber block must READ the base coordinate, since the
+fiber change is the base-dependent rotation `ζ = regDir z · w`; the four twisted fiber classes
+`contDiffOn_twistFiberTrans_{II,IC,CI,CC}` rotate by a unit `U b` between the §O recover/chart
+steps) — assembled by the 6×6 `isManifold_of_contDiffOn` dispatch over `atlasE`). The one
+remaining E-side item (K6′b's, not this pair-closure's): the smooth `∂E ≅ ℝP³` upgrade of
+`bdryHomeoRP3` in these charts.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom. -/
 
