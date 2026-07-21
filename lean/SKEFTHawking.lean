@@ -4718,6 +4718,7 @@ import SKEFTHawking.KummerWeldOpenPieces
 import SKEFTHawking.KummerWeldQInterior
 import SKEFTHawking.KummerSeamCollarE
 import SKEFTHawking.KummerSeamCollarQ
+import SKEFTHawking.KummerSeamCollarSmooth
 import SKEFTHawking.KummerSeamDoubleCollar
 import SKEFTHawking.KummerSeamOpenNbhd
 import SKEFTHawking.KummerSeamComponentOpen
