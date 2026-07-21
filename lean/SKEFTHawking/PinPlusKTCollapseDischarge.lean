@@ -66,6 +66,9 @@ open SKEFTHawking.PinPlusKTSectorGeometricReduce
 open SKEFTHawking.PinPlusTraceCapstoneResidualRow
 open SKEFTHawking.PinPlusKTAssemblyResiduals
 open SKEFTHawking.PinPlusKTBinderDischarge
+open SKEFTHawking.PinPlusKTStepGate
+open SKEFTHawking.PinPlusTraceLeafGate
+open SKEFTHawking.PinPlusKTLeafGate
 
 namespace SKEFTHawking.PinPlusKTCollapseDischarge
 
@@ -175,5 +178,54 @@ theorem rokhlin_sixteen_of_residuals_collapseDatum
     Nat.card (T2DataBordismGrp (pinPlusCharPairData residualProv)) = 16 :=
   rokhlin_sixteen_of_residuals_phig H row hA hB
     (rankZeroCollapsesToEmptySurf_of_datumSupply hcolD) hker hΦg
+
+/-! ## §5. THE SECTOR-DIRECT WIRING — the weakest honest form of the collapse hypothesis.
+
+The 2026-07-20 vetted hcolD route dossier's demand-narrowing (lead-verified against
+`nonempty_ktSpinPresentationDatum_of_row` and `rankZeroClassCollapse_of_sectorIsGeometric`): the dC
+leaf consumes ONLY the class-level `SectorIsGeometric` — the one-step `RankZeroCollapseDatum` /
+`RankZeroCollapsesToEmptySurf` forms are STRICTLY STRONGER than the assembly needs. Because
+`T2DataBordismGrp` is a `Quot` (its relation's equivalence closure supplies transitivity for free),
+`SectorIsGeometric` is dischargeable by a STAGED sequence of tethered bordisms — no combined
+single-trace `W` is required. These variants expose the headline at that weakest hypothesis. -/
+
+/-- **THE SECTOR-DIRECT WIRING** — the same end-to-end conclusion as
+`kt_equiv_zmod16_of_residuals_phig`, with the collapse hypothesis at its WEAKEST honest form:
+the class-level `hsec : SectorIsGeometric` (each rank-0 broad-sector class admits SOME empty-Σ
+representative — staged bordisms suffice), in place of the one-step `hcol`/`hcolD`. -/
+theorem kt_equiv_zmod16_of_residuals_sector
+    (H : ∀ p : StrMfd (pinPlusCharPairData residualProv).toTangentialData,
+        charPairBrown residualProv (T2DataBordismGrp.mk (pinPlusCharPairData residualProv) p) = 0 →
+        0 < p.2.n → KRSResidualRow residualProv p)
+    (row : SpinPresentationRow residualProv)
+    (hA : row.R.RealizesSphereProducts) (hB : row.R.SphereProductBounds)
+    (hsec : SectorIsGeometric residualProv)
+    (hker : KerPhiSubDoubles residualProv)
+    (hΦg : spinForgetPhi residualProv
+        (DataBordismGrp.mk (spinEmptyData residualProv) row.g) = ktKernelRep residualProv) :
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData residualProv) ≃+ ZMod 16) := by
+  have hKRS : KernelReducesToSpin residualProv := kernelReducesToSpin_of_residualRow H
+  have hfwd : ∀ x, spinForgetPhi residualProv x = 0 → (32 : ℤ) ∣ row.R.sig x :=
+    spinForgetPhi_hfwd_of_ker_sub_doubles residualProv row.R row.hdvd hker
+  obtain ⟨dC⟩ := nonempty_ktSpinPresentationDatum_of_row row hA hB hΦg hsec
+  obtain ⟨dA⟩ :=
+    nonempty_dualSpinForwardDatum_of_spinForgetPhi residualProv row.R row.g row.hg hΦg hfwd
+  exact kt_equiv_zmod16_of_two_leaves hKRS dC dA
+
+/-- **The Rokhlin-16 twin of the sector-direct wiring**: `Nat.card Ω₄^{Pin⁺} = 16` from the same
+weakest-hypothesis row. Pure transport; introduces no new residual atom. -/
+theorem rokhlin_sixteen_of_residuals_sector
+    (H : ∀ p : StrMfd (pinPlusCharPairData residualProv).toTangentialData,
+        charPairBrown residualProv (T2DataBordismGrp.mk (pinPlusCharPairData residualProv) p) = 0 →
+        0 < p.2.n → KRSResidualRow residualProv p)
+    (row : SpinPresentationRow residualProv)
+    (hA : row.R.RealizesSphereProducts) (hB : row.R.SphereProductBounds)
+    (hsec : SectorIsGeometric residualProv)
+    (hker : KerPhiSubDoubles residualProv)
+    (hΦg : spinForgetPhi residualProv
+        (DataBordismGrp.mk (spinEmptyData residualProv) row.g) = ktKernelRep residualProv) :
+    Nat.card (T2DataBordismGrp (pinPlusCharPairData residualProv)) = 16 := by
+  obtain ⟨e⟩ := kt_equiv_zmod16_of_residuals_sector H row hA hB hsec hker hΦg
+  rw [Nat.card_congr e.toEquiv, Nat.card_eq_fintype_card, ZMod.card]
 
 end SKEFTHawking.PinPlusKTCollapseDischarge

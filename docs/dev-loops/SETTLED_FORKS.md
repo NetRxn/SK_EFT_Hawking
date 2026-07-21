@@ -400,3 +400,16 @@ conjugation — the primed chain in `SixteenDvdOrientSectionInt`). See
 
 ## metric-vs-chart-radius-coverage (2026-07-20, K4′′ packaging — ROUTE FACT, prose-only, not kernel-refutable)
 On `TorusFour` with ρ = 1/2 chart-ball excisions, a METRIC-ball interior region (`openPunctured`, metric radius 1/2) does NOT overlap-cover T⁴° with the ROUND chart-radius collar band `[1/2, 3/4)`: a point with all four per-factor chart-coords ≈ 1/2 has metric (sup) distance ≈ 0.495 but round chart-radius ≈ 1.0 — in T⁴°, covered by neither family. Any interior/collar chartAt dispatch on the punctured torus must use the CHART-radius interior region (`KummerBoundaryChart.interiorSet`, round closed balls of chart-radius 5/8, overlap band [1/2, 5/8]; covering = `punctured_covered`). Do not re-introduce the metric-ball interior region in covering arguments. Same lesson applies to any future excision family: keep the interior region and the collar band in the SAME radial coordinate.
+
+## 2026-07-20 · hcolD one-sphere/3-handle route — UNSOUND WITHOUT A FRAMING THEOREM (route caution, prose)
+
+The proposed universal "kill each characteristic 2-sphere by one index-3 D³×D² handle" route for the
+rank-0 collapse is NOT available as stated: rank 0 + the carrier's `hchar` tie do NOT force the
+sphere's normal Euler number to vanish (`hchar` sees only the mod-2 characteristic class; the oriented
+GM congruence `σ ≡ F·F + 2β (mod 16)` constrains only the TOTAL self-intersection, and its transfer
+to the nonorientable Pin⁺ carrier is unverified). Any hcolD/SectorIsGeometric construction via a
+single-sphere handle MUST carry an explicit framing hypothesis or use the global
+characteristic-bordism (KT) route. Source: the 2026-07-20 vetted codex hcolD dossier
+(`codex_hcolD_route.md`, risks 2/6), demand-narrowing lead-verified in-tree
+(`nonempty_ktSpinPresentationDatum_of_row` consumes only `SectorIsGeometric`;
+`kt_equiv_zmod16_of_residuals_sector` now exposes the weakest form).
