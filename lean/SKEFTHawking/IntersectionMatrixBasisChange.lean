@@ -22,6 +22,12 @@ Consequences that unblock the Kummer-K3 → row bridge:
   `KummerT4GramCross.interMatrix_t4_intCongr_torusFourForm`, and the cross terms) can be executed on
   whatever basis makes the cup products computable, then transferred.
 
+§4 supplies the other half of the same unblocking: the **H₂ ↔ H² translation**. Every class the
+Kummer arc constructs lives in homology, while `interMatrix` is a cup-product Gram in cohomology;
+`interMatrix_capDual` turns the whole matrix into the table of Kronecker pairings of a cap-dual
+cohomology basis against the geometric homology classes (via the in-tree cap–cup adjunction), which
+is the form the arc's detection maps actually compute.
+
 The bilinear-algebra core is the already-banked `SphereProdBasisIdInt.gram_congr_of_basis_change`
 (`Gram C = Pᵀ (Gram B) P` for `Cⱼ = Σᵢ Pᵢⱼ Bᵢ`); what is new here is the unimodularity of the
 change-of-basis matrix between two genuine bases, and the `IntH2Basis`/`reindex` packaging that the
@@ -33,10 +39,11 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no
 import Mathlib
 import SKEFTHawking.SphereProdBasisIdInt
 import SKEFTHawking.SpinSigmaGenerator
+import SKEFTHawking.IntCapProductInt
 
 namespace SKEFTHawking.IntersectionMatrixBasisChange
 
-open SKEFTHawking SKEFTHawking.SingularCohomologyInt
+open SKEFTHawking SKEFTHawking.SingularCohomologyInt SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SphereProdBasisIdInt (gram_congr_of_basis_change)
 
 variable {X : TopCat}
@@ -104,5 +111,43 @@ theorem hk3_of_other_basis (fc : IntFundamentalClass X) (B C : IntH2Basis X)
     IntCongr (Matrix.reindex (finCongr hB) (finCongr hB) (interMatrix fc B))
       SKEFTHawking.SpinSigmaRoute.k3Form :=
   (interMatrix_intCongr_of_rank_eq fc B C hB hC).trans hk3
+
+/-! ## §4. The Gram matrix in GEOMETRIC coordinates — the H₂ ↔ H² translation
+
+Every class the Kummer arc actually constructs lives in **homology**: `KummerK7MVAssembly.exceptionalEmbed`
+(`ℤ¹⁶ ↪ H₂(K3;ℤ)`, the 16 exceptional `(−2)`-spheres), the `Q`-side `H₂ ≅ ℤ⁶`, the descended `T⁴`
+classes. `interMatrix` is a Gram of **cup products in cohomology**. The translation is the in-tree
+integral cap–cup adjunction `IntCapProductInt.interFormInt_eq_kroneckerHInt_capHInt`
+(`⟨a ∪ b, [M]⟩ = ⟨b, a ⌢ [M]⟩`), which turns each Gram entry into a Kronecker pairing of a
+cohomology class against a *homology* class — the shape the arc's detection maps compute in. -/
+
+/-- **The Gram matrix of a cap-dual family is a table of Kronecker pairings against the geometric
+homology classes.** If `α i` is a cohomological Poincaré dual of the geometric class `c i` (i.e.
+`α i ⌢ [M] = c i`), then the intersection form on the `α`'s is `⟨α j, c i⟩`.
+
+This is the exact translation the K3 Gram span needs: it replaces "compute 22×22 cup products in
+`H²(K3;ℤ)`" — for which the arc has no machinery — by "evaluate the 22 dual cohomology classes on the
+22 geometric homology classes", which is precisely what the in-tree detection maps
+(`KummerT4CycleDetection`'s `kroneckerHInt 2 (cupCls a)`, the `Q`-side transfer, the exceptional
+block) already do. -/
+theorem interFormInt_capDual (zM : Homology X 4) {n : ℕ} (α : Fin n → Cohomology X 2)
+    (c : Fin n → Homology X 2) (hcap : ∀ i, capHInt 2 1 (α i) zM = c i) (i j : Fin n) :
+    interFormInt (intFundamentalClassOfHomology zM) (α i) (α j)
+      = kroneckerHInt 2 (α j) (c i) := by
+  rw [interFormInt_eq_kroneckerHInt_capHInt, hcap]
+
+/-- **The whole intersection matrix in geometric coordinates.** If the `IntH2Basis` `B` is cap-dual to
+a family `c` of geometric homology classes, its entire Gram matrix is the pairing table
+`(i, j) ↦ ⟨B i, c j⟩` (transposed indices absorbed by symmetry of the intersection form). Combined
+with §3's `hk3_of_other_basis` this is the full reduction of the row's `hk3` obligation to
+*homology-side* data: pick any cap-dual cohomology basis of the 22 geometric classes, tabulate the
+Kronecker pairings, exhibit the unimodular congruence to `k3Form` — and it transfers to the packaged
+basis for free. -/
+theorem interMatrix_capDual (zM : Homology X 4) (B : IntH2Basis X)
+    (c : Fin B.rank → Homology X 2) (hcap : ∀ i, capHInt 2 1 (B.basis i) zM = c i) :
+    interMatrix (intFundamentalClassOfHomology zM) B
+      = Matrix.of fun i j => kroneckerHInt 2 (B.basis j) (c i) := by
+  ext i j
+  exact interFormInt_capDual zM B.basis c hcap i j
 
 end SKEFTHawking.IntersectionMatrixBasisChange
