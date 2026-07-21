@@ -35,7 +35,17 @@ So this module replaces the four-obligation `CollarPairGeomEnd` row by a **three
   correction: the corrector degree of freedom buys nothing; the row's real demand is that `q₀ z` is
   already a relative cycle.
 * **§4 `CollarPairGeomEnd.toSeamRow`** — the 4 → 3 production, and
-  `nonempty_collarPairSeamRow_of_end`.
+  `nonempty_collarPairSeamRow_of_end`; plus `CollarPairBuild.toSeamRow`, which shows even the
+  original frozen eight-field build factors through the three-obligation row — the collapse is not
+  an artifact of the `End` row's canonical core.
+* **§5 the vacuity attack, run on the new row.** `seamMatch_mem_of_seamCore_empty`: if the canonical
+  core is EMPTY — every seam point already inside `∂W` — then `hseamMatch` holds for **every** `z`
+  with zero geometric input. The attack succeeds, and its target is *precisely* the configuration
+  the row's own `hseamHit` excludes: the two obligations are in genuine tension, neither can be
+  traded for the other, and the row is not inhabitable by degenerating the seam.
+  `seamMatch_mem_datum_indep` — no surgered-end-datum shopping (`∂W` is `rfl`-equal across data).
+  `seamCore_nonempty_iff_exists_offRange_eM'` — under `hφtop`, `hseamHit` says exactly *the surgered
+  end does not swallow the whole seam*, a boundary-floor fact, not a datum choice.
 
 ## Direction of strength — stated precisely (no overclaim)
 
@@ -74,6 +84,7 @@ open SKEFTHawking.DiskChartGeneric (D5)
 open SKEFTHawking.SingularHomologyMod2
 open SKEFTHawking.SingularRelativeHomologyMod2
 open SKEFTHawking.SingularFunctoriality
+open SKEFTHawking.SingularRelativeFunctoriality
 open SKEFTHawking.SingularMayerVietoris
 open SKEFTHawking.SingularRelativeCoverMV
 open SKEFTHawking.SingularRelativeCoverMVTransport
@@ -349,6 +360,97 @@ theorem nonempty_collarPairSeamRow_of_end
     (h : Nonempty (CollarPairGeomEnd s t S hS φ hφ hφinj cd hseam d)) :
     Nonempty (CollarPairSeamRow s t S hS φ hφ hφinj cd hseam d) :=
   ⟨CollarPairGeomEnd.toSeamRow h.some⟩
+
+omit [PreconnectedSpace s.M] in
+/-- **THE FROZEN EIGHT-FIELD BUILD ALSO PRODUCES THE SEAM ROW.** Entering one level further left:
+even the original `CollarPairBuild` — free subdivision counts, chosen core `K`, split chains,
+`bdOut`/`houtPair`, the bridge triple and the full relative-MV partition — factors through the
+three-obligation row. Its `K.Nonempty` (from `hcoreHit`) lands inside `seamCore` by its own
+`hKoffBd`. So the collapse is not an artifact of the `End` row's canonical core: **every row in the
+`#212` tower is subsumed.** -/
+def CollarPairBuild.toSeamRow (R : CollarPairBuild s t S hS φ hφ hφinj cd hseam d) :
+    CollarPairSeamRow s t S hS φ hφ hφinj cd hseam d where
+  z := R.z
+  hz := R.hz
+  hseamMatch := (qZero_boundary_mem_iff_seamMatch_mem (d := d) R.z).mp R.qZero_boundary_mem
+  hseamHit := fun hgen => (R.K_nonempty hgen).imp (fun _ ha => R.hKoffBd ha)
+  hq0det := R.hq0det
+
+/-! ## §5. The vacuity attack, run on the new row -/
+
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- The top slice of a fundamental cycle lives in the cylinder's top face — the `⊤`-mirror of
+`ctrlBottom_zero_mem_bottomFace`. -/
+theorem topSliceB_mem_topFace (z : cycles (TopCat.of s.M) (2 + 2)) :
+    topSliceB s S hS φ hφ hφinj z
+      ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+        (Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) (3 + 1) := by
+  rw [topSliceB]
+  exact mapChain_mem_subspaceChains (slice (graphHom (TopCat.of s.M)) 1)
+    (fun x _ => by rw [slice_graphHom]; exact ⟨Set.mem_univ x, rfl⟩) (3 + 1) _
+    (mem_subspaceChains_univ _ _)
+
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **THE VACUITY ATTACK SUCCEEDS — in exactly one configuration, and the tether excludes it.**
+If the canonical core is EMPTY — i.e. every seam point already lies in `∂W` — then `hseamMatch`
+holds for *every* fundamental cycle `z`, with zero geometric input: the whole top face and the whole
+boundary sphere are then inside the `∂W`-preimages, and the two terms are separately `∂W`-chains.
+
+This is the roadmap-§3 vacuity attack run against the new row, and its verdict is the good one: the
+degenerate discharge exists, and it is *precisely* the configuration the row's own second obligation
+`hseamHit` rules out. So the two obligations are in genuine tension — `hseamMatch` carries content
+exactly when `hseamHit` does — and neither can be traded for the other. Note also what is NOT needed
+here: no `hφtop`, no shrunk core, no split. -/
+theorem seamMatch_mem_of_seamCore_empty
+    (hempty : seamCore s t S hS φ hφ hφinj cd hseam d = ∅)
+    (z : cycles (TopCat.of s.M) (2 + 2)) :
+    seamMatch s S hS φ hφ hφinj z
+      ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1) := by
+  have hseamAnn : ∀ a : ↥S, a ∉ (∅ : Set ↥S) →
+      (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle (a : D5)
+        ∈ ((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W :=
+    fun a _ => hseamAnn_seamCore (d := d) a (by rw [hempty]; exact Set.notMem_empty a)
+  have htop := topFaceShrunk_subset_fromCyl_preimage_bd (d := d) hseamAnn
+  have hsph := sphereShrunk_subset_fromHandle_preimage_bd (d := d) hseamAnn
+  rw [Set.image_empty, Set.diff_empty] at htop
+  rw [Set.image_empty, Set.diff_empty] at hsph
+  refine Submodule.add_mem _ ((closedEmbeddingChain_mem_iff_preimage _ _ _).mpr ?_)
+    ((closedEmbeddingChain_mem_iff_preimage _ _ _).mpr ?_)
+  · exact subspaceChains_mono htop (3 + 1) (topSliceB_mem_topFace (s := s) (S := S) (hS := hS) (φ := φ) (hφ := hφ) (hφinj := hφinj) z)
+  · exact subspaceChains_mono hsph (3 + 1) diskDetectChain_hc
+
+variable (s t S hS φ hφ hφinj cd hseam)
+
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **NO DATUM SHOPPING.** `seamMatch` does not mention the surgered-end datum, and `∂W` is
+`rfl`-equal across data (`bd_datum_indep`), so the `hseamMatch` obligation holds for one datum iff it
+holds for all of them — the same rigidity `seamPreimage_datum_indep` records for the core. -/
+theorem seamMatch_mem_datum_indep (d₁ d₂ : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+    (z : cycles (TopCat.of s.M) (2 + 2)) :
+    (seamMatch s S hS φ hφ hφinj z
+        ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d₁).W) (3 + 1))
+      ↔ (seamMatch s S hS φ hφ hφinj z
+        ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d₂).W) (3 + 1)) := by
+  rw [bd_datum_indep (s := s) (t := t) d₁ d₂]
+
+variable {s t S hS φ hφ hφinj cd hseam}
+
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **WHERE `hseamHit` ACTUALLY LIVES.** With the attaching map landing in the top face, a seam point
+never meets the source end, so the canonical core is nonempty **iff the surgered end fails to swallow
+the whole seam**. That is a statement about the chart-determined `∂W` / `range eM'` — boundary-floor
+territory — and by `seamPreimage_datum_indep` it is not a datum-level choice. -/
+theorem seamCore_nonempty_iff_exists_offRange_eM' (hφtop : ∀ a : ↥S, ((φ a).2 : ℝ) = 1) :
+    (seamCore s t S hS φ hφ hφinj cd hseam d).Nonempty
+      ↔ ∃ a : ↥S, seamPoint s S hS φ hφ hφinj a ∉ Set.range d.eM' := by
+  constructor
+  · rintro ⟨a, ha⟩
+    exact ⟨a, fun h => ha ((seamPoint_mem_bd_iff (d := d) hφtop a).mpr h)⟩
+  · rintro ⟨a, ha⟩
+    exact ⟨a, fun h => ha ((seamPoint_mem_bd_iff (d := d) hφtop a).mp h)⟩
 
 end
 
