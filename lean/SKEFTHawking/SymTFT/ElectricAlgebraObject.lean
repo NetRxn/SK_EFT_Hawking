@@ -760,7 +760,12 @@ noncomputable instance electricMonObj : CategoryTheory.MonObj (unitPlusElectricO
   mul_one := electricMul_mul_one k
   mul_assoc := electricMul_assoc k
 
-/-! ## §21. Coassociativity of `electricComul` → the `ComonObj` instance -/
+/-! ## §21. The dual linchpin (co-★) — toward `electricComul` coassociativity
+
+The dual of (★): the inverse cyclic-pairing identity that gates `electricComul`
+coassociativity's `(e,e,e)` cocorner. Landed here; the full `comul_assoc` / `ComonObj`
+instance is the S2 follow-on (each `(e,e,e)` cocorner reduces to `electricProj ≫
+electric_colinchpin`; the 7 coherence cocorners need per-corner projection factoring). -/
 
 /-- **The dual linchpin (co-★)** — the inverse cyclic-pairing identity for the fusion
 copairing `ψ⁻¹ = eeVacUnitIso.inv : 𝟙 ⟶ e ⊗ e`. Derived from `electric_linchpin` by
