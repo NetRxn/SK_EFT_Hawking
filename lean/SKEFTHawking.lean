@@ -4749,6 +4749,7 @@ import SKEFTHawking.KummerSeamTransition
 import SKEFTHawking.KummerSeamTransE
 import SKEFTHawking.KummerSeamTransQ
 import SKEFTHawking.KummerSeamTransQClass
+import SKEFTHawking.KummerK3Manifold
 import SKEFTHawking.KummerK7MVAssembly
 import SKEFTHawking.KummerK7SeamCoverNoGo
 import SKEFTHawking.KummerQuotientCovering
