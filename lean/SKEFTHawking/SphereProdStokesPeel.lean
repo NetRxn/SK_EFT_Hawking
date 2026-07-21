@@ -32,6 +32,9 @@ import Mathlib
 import SKEFTHawking.SingularCupInt
 import SKEFTHawking.SingularHomologyInt
 import SKEFTHawking.SingularCohomologyFunctorialityInt
+import SKEFTHawking.SingularConvexRadialBaseInt
+import SKEFTHawking.SingularRelativeCapHadjInt
+import SKEFTHawking.SingularMvDeltaPartitionInt
 
 namespace SKEFTHawking.SphereProdStokesPeel
 
@@ -40,6 +43,14 @@ open SKEFTHawking.SingularHomologyInt
 open SKEFTHawking.SingularFunctorialityInt (mapChainInt)
 open SKEFTHawking.SingularCohomologyFunctorialityInt (cochainPullbackInt cochainPullbackInt_cup
   cochainPullbackInt_mem_ker kronecker_cochainPullbackInt)
+open SKEFTHawking.SingularRelativeHomologyMod2 (sub)
+open SKEFTHawking.SingularMayerVietorisLES (ambIncl)
+open SKEFTHawking.SingularRelHomologyInt (chainIncl chainIncl_chainBoundary boundaryExtract
+  relCycleLift chainIncl_boundaryExtract)
+open SKEFTHawking.SingularConvexRadialBaseInt (mapChainInt_ambIncl)
+open SKEFTHawking.SingularCapChainInclInt (pullbackCochainInt)
+open SKEFTHawking.SingularRelativeCapHadjInt (kronecker_chainIncl_eq_pullbackCochainInt)
+open SKEFTHawking.SingularExcisionIso (restr)
 
 /-- **The single-subspace signed cup–Stokes atom.** For a cocycle `a` (degree `p`), a cochain `b`
 (degree `q+1`) whose pullback along `φ : W → X` is a coboundary `φ*b = δu`, and a chain `zW` in `W`:
@@ -65,5 +76,43 @@ theorem kronecker_cup_stokes_leg {X W : TopCat} (φ : C(↑W, ↑X)) {p q : ℕ}
       = coboundaryₗ W (p + q) (cup (cochainPullbackInt φ p a) u) from rfl,
     hleib, kronecker_smul_left, smul_eq_mul, ← mul_assoc,
     show ((-1 : ℤ) ^ p * (-1 : ℤ) ^ p) = 1 from by rw [← mul_pow]; norm_num, one_mul]
+
+/-- **The two-leg cover sum of the cup–Stokes atom.** For a cocycle `a`, a cochain `b` whose
+restrictions to the two members `A, B` of a cover are coboundaries (`ι_A* b = δu_A`, `ι_B* b = δu_B`),
+and a cover-partitioned chain `z = ι_A zA + ι_B zB`, the `a ⌣ b` pairing against `z` collapses to the
+`(−1)ᵖ`-weighted SUM of the two boundary pairings, one per leg. Two instances of
+`kronecker_cup_stokes_leg` glued over the partition via the `chainIncl = mapChainInt ∘ ambIncl`
+bridge. The pre-seam form of the MV cup–Stokes peel. -/
+theorem kronecker_cup_cover_twoleg {X : TopCat} (A B : Set ↑X) {p q : ℕ}
+    (a : SingularCochainInt X p) (b : SingularCochainInt X (q + 1))
+    (ha : coboundaryₗ X p a = 0)
+    (uA : SingularCochainInt (sub A) q) (uB : SingularCochainInt (sub B) q)
+    (hbA : cochainPullbackInt (ambIncl A) (q + 1) b = coboundaryₗ (sub A) q uA)
+    (hbB : cochainPullbackInt (ambIncl B) (q + 1) b = coboundaryₗ (sub B) q uB)
+    (zA : SingularChainInt (sub A) (p + (q + 1)))
+    (zB : SingularChainInt (sub B) (p + (q + 1))) :
+    kronecker (cup a b) (chainIncl A (p + (q + 1)) zA + chainIncl B (p + (q + 1)) zB)
+      = (-1 : ℤ) ^ p *
+          (kronecker (cup (cochainPullbackInt (ambIncl A) p a) uA)
+              (chainBoundary (sub A) (p + q) zA)
+            + kronecker (cup (cochainPullbackInt (ambIncl B) p a) uB)
+              (chainBoundary (sub B) (p + q) zB)) := by
+  rw [kronecker_add_right, ← mapChainInt_ambIncl, ← mapChainInt_ambIncl,
+    kronecker_cup_stokes_leg (ambIncl A) a b ha uA hbA zA,
+    kronecker_cup_stokes_leg (ambIncl B) a b ha uB hbB zB, mul_add]
+
+/-- **The single-leg seam restriction of a boundary pairing.** If `zB`'s boundary is supported on the
+seam `A ∩ B` (realized as `restr A B ⊆ sub B` via `relCycleLift`), pairing any cochain `w` on `sub B`
+against `∂zB` equals pairing the seam-restriction `ι_∩* w` against the extracted seam chain
+`∂zB|∩ = boundaryExtract (restr A B) ⟨zB⟩`. The `chainIncl_boundaryExtract` reversal + the
+`chainIncl`–pullback Kronecker adjoint. -/
+theorem kronecker_boundary_seam {X : TopCat} (A B : Set ↑X) {m : ℕ}
+    (w : SingularCochainInt (sub B) m)
+    (zB : SingularChainInt (sub B) (m + 1)) (hlift : zB ∈ relCycleLift (restr A B) m) :
+    kronecker w (chainBoundary (sub B) m zB)
+      = kronecker (pullbackCochainInt (restr A B) m w)
+          (boundaryExtract (restr A B) m ⟨zB, hlift⟩) := by
+  rw [← chainIncl_boundaryExtract (restr A B) m ⟨zB, hlift⟩,
+    kronecker_chainIncl_eq_pullbackCochainInt]
 
 end SKEFTHawking.SphereProdStokesPeel
