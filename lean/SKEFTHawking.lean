@@ -1278,6 +1278,7 @@ import SKEFTHawking.SingularChartStarClosureVanishInt
 import SKEFTHawking.KummerSplitBCoreVanishInt
 import SKEFTHawking.KummerSplitBChart1ExcisionInt
 import SKEFTHawking.KummerCollarRegionRetractInt
+import SKEFTHawking.KummerBasePushRetractInt
 import SKEFTHawking.SingularLocalHomologyThreeInt
 import SKEFTHawking.SingularConvexRadialMiddleInt
 import SKEFTHawking.SingularConvexStageIsoInt
