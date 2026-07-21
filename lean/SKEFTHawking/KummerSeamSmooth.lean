@@ -1048,6 +1048,221 @@ theorem contDiffOn_seamAnnulusCoord {k : WithTop ℕ∞} (u₀ : NSphere 1) :
   exact (SKEFTHawking.KummerResolutionPieceBoundary.contDiff_assemble).comp_contDiffOn
     (hbase.prodMk hang)
 
+/-! ### §7.4. The equator branch of `ContMDiffAt bdryMapRP3` -/
+
+/-- On the near-equator locus the symmetrized phase is already a unit vector, so the normalization
+in `seamAnnulusDom` is the identity. -/
+theorem seamAnnulusDom_eq (u₀ : NSphere 1) :
+    seamAnnulusDom u₀ = nearEquator ∩
+      ((fun q : ℂ × ℂ => innerSL ℝ ((-u₀ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+        (seamAnnulusVec q)) ⁻¹' {(1 : ℝ)}ᶜ) := by
+  ext q
+  constructor
+  · rintro ⟨hq, hin⟩
+    refine ⟨hq, ?_⟩
+    rwa [norm_seamAnnulusVec (nearEquator_fst_ne_zero hq) (nearEquator_snd_ne_zero hq),
+      inv_one, one_smul] at hin
+  · rintro ⟨hq, hin⟩
+    refine ⟨hq, ?_⟩
+    rwa [norm_seamAnnulusVec (nearEquator_fst_ne_zero hq) (nearEquator_snd_ne_zero hq),
+      inv_one, one_smul]
+
+theorem continuousOn_seamAnnulusVec : ContinuousOn seamAnnulusVec nearEquator :=
+  (contDiffOn_seamAnnulusVec (k := 0)).continuousOn
+
+theorem isOpen_seamAnnulusDom (u₀ : NSphere 1) : IsOpen (seamAnnulusDom u₀) := by
+  rw [seamAnnulusDom_eq]
+  refine ContinuousOn.isOpen_inter_preimage ?_ isOpen_nearEquator isOpen_compl_singleton
+  exact ((innerSL ℝ
+    ((-u₀ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))).continuous).comp_continuousOn
+    continuousOn_seamAnnulusVec
+
+/-- The canonical annulus-chart fiber direction at a near-equator seam point: the symmetrized phase
+itself, viewed in `S¹ ⊆ 𝔼²`. This is precisely the direction at which
+`mem_annulusCollarChart_source_chart0/1` place the seam point. -/
+def seamAnnulusDir (x : S3) : NSphere 1 :=
+  diskDir 1 (diskHomeoNDisk1 (seamAnnulusFiberD x.1))
+
+theorem seamAnnulusDir_coe {x : S3} (hq : x.1 ∈ nearEquator) :
+    ((seamAnnulusDir x : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1))) = seamAnnulusVec x.1 := by
+  have ha : x.1.1 ≠ 0 := nearEquator_fst_ne_zero hq
+  have hb : x.1.2 ≠ 0 := nearEquator_snd_ne_zero hq
+  have hne : ((diskHomeoNDisk1 (seamAnnulusFiberD x.1) : NDisk 1) :
+      EuclideanSpace ℝ (Fin 2)) ≠ 0 := by
+    show toE2 ((seamAnnulusFiberD x.1 : Disk) : ℂ) ≠ 0
+    rw [seamAnnulusFiberD_coe]
+    exact seamAnnulusVec_ne_zero ha hb
+  rw [seamAnnulusDir, diskDir_coe hne,
+    show ((diskHomeoNDisk1 (seamAnnulusFiberD x.1) : NDisk 1) : EuclideanSpace ℝ (Fin 2))
+      = seamAnnulusVec x.1 from rfl, norm_seamAnnulusVec ha hb, inv_one, one_smul]
+
+theorem mem_seamAnnulusDom_seamAnnulusDir {x : S3} (hq : x.1 ∈ nearEquator) :
+    x.1 ∈ seamAnnulusDom (seamAnnulusDir x) := by
+  have ha : x.1.1 ≠ 0 := nearEquator_fst_ne_zero hq
+  have hb : x.1.2 ≠ 0 := nearEquator_snd_ne_zero hq
+  refine ⟨hq, ?_⟩
+  rw [norm_seamAnnulusVec ha hb, inv_one, one_smul, innerSL_apply_apply,
+    show ((-seamAnnulusDir x : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+      = -((seamAnnulusDir x : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1))) from rfl,
+    seamAnnulusDir_coe hq, inner_neg_left, real_inner_self_eq_norm_sq,
+    norm_seamAnnulusVec ha hb]
+  norm_num
+
+/-- **The seam point sits in the annulus collar chart at its own direction.** Both hemisphere
+branches are routed to the *same* chart — the branch split survives only inside this proof, not in
+the chart choice. -/
+theorem mem_annulusCollarChart_source_bdryMap {x : S3} (hq : x.1 ∈ nearEquator) :
+    bdryMap x ∈ (annulusCollarChart (seamAnnulusDir x)).source := by
+  by_cases h : ‖x.1.1‖ ≤ ‖x.1.2‖
+  · have hw : ((hopfChart0 h).2 : ℂ) ≠ 0 := by
+      rw [hopfChart0_snd_coe]
+      intro h0
+      have := norm_hopf0_snd (S3_snd_ne_zero h)
+      rw [h0, norm_zero] at this
+      exact zero_ne_one this
+    have hmem := mem_annulusCollarChart_source_chart0 (half_lt_norm_hopfChart0_fst hq h) hw
+    rw [trivFiber_hopfChart0 hq h] at hmem
+    rw [bdryMap_eq_chart0 h]
+    exact hmem
+  · have hw : ((hopfChart1 h).2 : ℂ) ≠ 0 := by
+      rw [hopfChart1_snd_coe]
+      intro h0
+      have := norm_hopf1_snd (S3_fst_ne_zero (not_le.mp h).le)
+      rw [h0, norm_zero] at this
+      exact zero_ne_one this
+    have hmem := mem_annulusCollarChart_source_chart1 (half_lt_norm_hopfChart1_fst hq h) hw
+    rw [trivFiber_hopfChart1 hq h] at hmem
+    rw [bdryMap_eq_chart1 h]
+    exact hmem
+
+/-- The near-equator neighbourhood read in the `ℝP³` chart's coordinates. -/
+def seamAnnulusChartNbhd (y : S3E) : Set (EuclideanSpace ℝ (Fin 3)) :=
+  (rp3Chart y).target ∩
+    {t | SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4) ∈ nearEquator}
+
+theorem isOpen_seamAnnulusChartNbhd (y : S3E) : IsOpen (seamAnnulusChartNbhd y) := by
+  refine (rp3Chart y).open_target.inter ?_
+  have hcont : Continuous (fun t : EuclideanSpace ℝ (Fin 3) =>
+      SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4)) :=
+    (contDiff_eucToC2 (k := 0)).continuous.comp
+      (contDiff_chartSymm_coe_S3E (k := 0) y).continuous
+  exact isOpen_nearEquator.preimage hcont
+
+/-- **THE SEAM IS SMOOTH ON THE EQUATOR.** The remaining case of the `∂E ≅ ℝP³` smooth upgrade: at a
+`ℝP³` class whose `S³` representative sits on (or near) the Hopf equator `‖a‖ = ‖b‖`, where both
+hemisphere charts degenerate, the seam is read in the E-piece's **equatorial annulus** collar chart
+`annulusCollarChart` — a genuine member of `atlasE` — and is `C^k` there, by the branch-free
+`annulusTrivFun_bdryMap` normal form. Stated on the whole open near-equator locus, which is strictly
+stronger than the equator itself and is what makes the neighbourhood argument go through. -/
+theorem contMDiffAt_bdryMapRP3_nearEquator {k : WithTop ℕ∞} {x : S3} (hq : x.1 ∈ nearEquator) :
+    ContMDiffAt (𝓡 3) ((𝓡 3).prod (𝓡∂ 1)) k bdryMapRP3 (mkRP3 x) := by
+  classical
+  set y : S3E := sphHomeoS3.symm x with hydef
+  have hyx : sphToS3 y = x := by
+    rw [hydef, ← sphHomeoS3_apply, sphHomeoS3.apply_symm_apply]
+  have hcoe : SKEFTHawking.KummerK7Opener.eucToC2 (y : E4) = x.1 := congrArg Subtype.val hyx
+  set u₀ : NSphere 1 := seamAnnulusDir x with hu₀
+  have he : rp3PinChart y ∈ IsManifold.maximalAtlas (𝓡 3) k RP3 :=
+    IsManifold.subset_maximalAtlas (I := (𝓡 3)) (n := k) (Set.mem_range_self y)
+  have he' : annulusCollarChart u₀ ∈ IsManifold.maximalAtlas ((𝓡 3).prod (𝓡∂ 1)) k ResE :=
+    IsManifold.subset_maximalAtlas (I := (𝓡 3).prod (𝓡∂ 1)) (n := k)
+      (Or.inr (Set.mem_range_self u₀))
+  have hmkE : mkRP3 x ∈ (rp3PinChart y).source := by
+    refine ⟨mkE y, ?_, ?_⟩
+    · rw [rp3Chart_source]; exact ⟨y, mem_hemi_self y, rfl⟩
+    · rw [← mkRP3_sphToS3, hyx]
+  have hsrc' : bdryMapRP3 (mkRP3 x) ∈ (annulusCollarChart u₀).source := by
+    rw [bdryMapRP3_mk, hu₀]
+    exact mem_annulusCollarChart_source_bdryMap hq
+  have htarget : rp3PinChart y (mkRP3 x) = Φ y y := by
+    rw [← hyx, mkRP3_sphToS3, rp3PinChart,
+      OpenPartialHomeomorph.lift_openEmbedding_apply, rp3Chart_apply_mkE y (mem_hemi_self y)]
+  rw [ContMDiffAt, contMDiffWithinAt_iff_of_mem_maximalAtlas he he' hmkE hsrc']
+  refine ⟨continuous_bdryMapRP3.continuousAt.continuousWithinAt, ?_⟩
+  have hsrcE : mkE y ∈ (rp3Chart y).source := by
+    rw [rp3Chart_source]; exact ⟨y, mem_hemi_self y, rfl⟩
+  have hsymm_pt : (Φ y).symm (Φ y y) = y :=
+    (Φ y).left_inv (hemi_subset_source y (mem_hemi_self y))
+  have hmemNbhd : Φ y y ∈ seamAnnulusChartNbhd y := by
+    refine ⟨?_, ?_⟩
+    · rw [← rp3Chart_apply_mkE y (mem_hemi_self y)]
+      exact (rp3Chart y).map_source hsrcE
+    · show SKEFTHawking.KummerK7Opener.eucToC2 (((Φ y).symm (Φ y y)) : E4) ∈ nearEquator
+      rw [hsymm_pt, hcoe]
+      exact hq
+  have hgood : ContDiffAt ℝ k
+      (fun t : EuclideanSpace ℝ (Fin 3) =>
+        seamAnnulusCoord u₀ (SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4)))
+      (Φ y y) := by
+    have hin : SKEFTHawking.KummerK7Opener.eucToC2 (((Φ y).symm (Φ y y)) : E4)
+        ∈ seamAnnulusDom u₀ := by
+      rw [hsymm_pt, hcoe, hu₀]
+      exact mem_seamAnnulusDom_seamAnnulusDir hq
+    exact ((contDiffOn_seamAnnulusCoord u₀).contDiffAt
+      ((isOpen_seamAnnulusDom u₀).mem_nhds hin)).comp (Φ y y)
+      (contDiff_eucToC2.comp (contDiff_chartSymm_coe_S3E y)).contDiffAt
+  have hEq : ∀ t ∈ seamAnnulusChartNbhd y,
+      (fun s : EuclideanSpace ℝ (Fin 3) =>
+        ((annulusCollarChart u₀).extend ((𝓡 3).prod (𝓡∂ 1)))
+          (bdryMapRP3 (((rp3PinChart y).extend (𝓡 3)).symm s))) t
+        = seamAnnulusCoord u₀ (SKEFTHawking.KummerK7Opener.eucToC2 ((Φ y).symm t : E4)) := by
+    intro t ht
+    have hbr : (sphToS3 ((Φ y).symm t) : ℂ × ℂ) ∈ nearEquator := ht.2
+    have hsy : ((rp3PinChart y).symm t : RP3) = mkRP3 (sphToS3 ((Φ y).symm t)) := by
+      show rp3EHomeoRP3 ((rp3Chart y).symm t) = _
+      rw [rp3Chart_symm_apply y ht.1, ← mkRP3_sphToS3]
+    show ((𝓡 3).prod (𝓡∂ 1)) (annulusCollarChart u₀ (bdryMapRP3 ((rp3PinChart y).symm t))) = _
+    rw [hsy, bdryMapRP3_mk]
+    exact annulusCollarChart_bdryMap_eq u₀ hbr
+  have hpt2 : (((rp3PinChart y).extend (𝓡 3)) (mkRP3 x) : EuclideanSpace ℝ (Fin 3)) = Φ y y :=
+    htarget
+  rw [hpt2]
+  exact (hgood.contDiffWithinAt).congr_of_eventuallyEq
+    (Filter.eventuallyEq_of_mem
+      (mem_nhdsWithin_of_mem_nhds ((isOpen_seamAnnulusChartNbhd y).mem_nhds hmemNbhd)) hEq)
+    (hEq _ hmemNbhd)
+
+/-- **THE SEAM IS SMOOTH ON THE EQUATOR** — the specialization of
+`contMDiffAt_bdryMapRP3_nearEquator` to the Hopf equator itself, the locus left uncovered by the two
+hemisphere theorems. -/
+theorem contMDiffAt_bdryMapRP3_equator {k : WithTop ℕ∞} {x : S3} (h : ‖x.1.1‖ = ‖x.1.2‖) :
+    ContMDiffAt (𝓡 3) ((𝓡 3).prod (𝓡∂ 1)) k bdryMapRP3 (mkRP3 x) :=
+  contMDiffAt_bdryMapRP3_nearEquator (mem_nearEquator_of_eq h)
+
+/-- **The wall law on the equator.** In the E-side *annulus* collar chart the seam point again has
+half-space coordinate **exactly `0`**: the `ℝP³` seam lands on the model's boundary wall
+`∂(ℝ³ × [0,∞))` over the equator too, not just off it. Together with `bdryMap_radial_eq_zero` and
+`bdryMap_radial_eq_zero_chart1` this makes the K6′b weld an honest *boundary* weld at **every** point
+of `ℝP³`, stated throughout on `ResE`'s own atlas charts. -/
+theorem bdryMap_radial_eq_zero_annulus (u₀ : NSphere 1) {x : S3} (hq : x.1 ∈ nearEquator) :
+    ((annulusCollarChart u₀ (bdryMap x)).2.val).ofLp 0 = 0 := by
+  rw [annulusCollarChart_snd, annulusTrivFun_bdryMap x hq]
+  show (1 : ℝ) - ‖toE2 ((seamAnnulusFiberD x.1 : Disk) : ℂ)‖ = 0
+  rw [seamAnnulusFiberD_coe, norm_toE2,
+    norm_seamAnnulusFiber (nearEquator_fst_ne_zero hq) (nearEquator_snd_ne_zero hq), sub_self]
+
+/-! ## §8. THE SEAM IS SMOOTH — the global `∂E ≅ ℝP³` upgrade -/
+
+/-- **THE SEAM IS SMOOTH.** The boundary identification `bdryMapRP3 : ℝP³ → E` is `C^k` **as a map of
+manifolds, everywhere** — from Leg 1's smooth structure on the pinned seam carrier
+`KummerResolutionPiece.RP3` into the E-piece's own `IsManifold` structure on `ResE`.
+
+Three chart families of `atlasE` cover the three loci and no point is left over:
+`collarChart` on the strict chart-0 hemisphere `‖a‖ < ‖b‖` (§6), `collarChart1` on the strict
+chart-1 hemisphere `‖b‖ < ‖a‖` (§6b), and `annulusCollarChart` on the Hopf equator `‖a‖ = ‖b‖` (§7),
+where both hemisphere charts degenerate and only the equatorial annulus trivialization survives.
+
+This is the K6′b `∂E ≅ ℝP³` smooth upgrade complete: the weld of the resolution piece to the
+quotient is smooth, not merely topological, and it is stated against `ResE`'s existing atlas rather
+than a fresh copy (every branch is pinned by a `*_bdryMap_eq` lemma). Kernel-pure. -/
+theorem contMDiff_bdryMapRP3 {k : WithTop ℕ∞} :
+    ContMDiff (𝓡 3) ((𝓡 3).prod (𝓡∂ 1)) k bdryMapRP3 := by
+  intro c
+  obtain ⟨x, rfl⟩ := Quotient.exists_rep c
+  by_cases h : ‖x.1.1‖ = ‖x.1.2‖
+  · exact contMDiffAt_bdryMapRP3_equator h
+  · exact contMDiffAt_bdryMapRP3_off_equator h
+
 end
 
 end SKEFTHawking.KummerSeamSmooth
