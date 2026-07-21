@@ -4684,6 +4684,7 @@ import SKEFTHawking.KummerBaseSphereH2Int
 import SKEFTHawking.CircleWindingCocycle
 import SKEFTHawking.TorusCrossPeel
 import SKEFTHawking.KummerT4GramCross
+import SKEFTHawking.SphereProdStokesPeel
 import SKEFTHawking.KTCompletenessProvider
 import SKEFTHawking.KTCompletenessTransfer
 import SKEFTHawking.KTCompletenessMVCover
