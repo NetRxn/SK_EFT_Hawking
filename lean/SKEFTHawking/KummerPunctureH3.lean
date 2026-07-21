@@ -21,6 +21,7 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_deci
 import Mathlib
 import SKEFTHawking.KummerPunctureAnnulus
 import SKEFTHawking.SingularLineMinusPointInt
+import SKEFTHawking.KummerPuncturedMV
 
 namespace SKEFTHawking.KummerPunctureH3
 
@@ -32,6 +33,9 @@ open SKEFTHawking.SingularSphereAcyclic (Sph)
 open SKEFTHawking.SingularFiniteProdDiscreteHnInt (homologyCongrInt)
 open SKEFTHawking.KummerPunctureBalls (ann4)
 open SKEFTHawking.KummerPunctureAnnulus
+open SKEFTHawking.KummerK3Base (TorusFour)
+open SKEFTHawking.KummerWeld (EIndex)
+open SKEFTHawking.KummerPunctureBalls (ballsV thickA)
 
 noncomputable section
 
@@ -44,6 +48,15 @@ def ann4H3Equiv : Homology (TopCat.of ↥ann4) 3 ≃ₗ[ℤ] ℤ :=
       (sphIncl_mapInt_bijective 2)).symm).trans
     ((homologyCongrInt (X := sub (X := Eucl 4) sphHalf) (Y := Sph 3) sphHalfHomeoSph3 (2 + 1)).trans
       SKEFTHawking.SingularLineMinusPointInt.H3S3IsoInt)
+
+/-- **`H₃(thickA ∩ ballsV;ℤ) ≅ (EIndex → ℤ)`** — the sixteen degree-3 annulus classes. Composes the
+degree-generic 16-fold splitter (`interHnEquiv 3`) with the per-annulus `ann4H3Equiv`. This is the
+`ℤ¹⁶` diagonal term of the degree-3 puncture-MV (nonzero, unlike degree 2 where the annuli vanished
+and `Σ₂` was bijective). -/
+def interH3EquivEIndex :
+    Homology (sub (X := TopCat.of TorusFour) (thickA ∩ ballsV)) 3 ≃ₗ[ℤ] (EIndex → ℤ) :=
+  (SKEFTHawking.KummerPuncturedMV.interHnEquiv 3).trans
+    (LinearEquiv.piCongrRight fun _ : EIndex => ann4H3Equiv)
 
 end
 
