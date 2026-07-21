@@ -4685,6 +4685,7 @@ import SKEFTHawking.KummerResolutionPiece
 import SKEFTHawking.KummerResolutionPieceH2
 import SKEFTHawking.KummerRP3Covering
 import SKEFTHawking.KummerResolutionPieceBoundary
+import SKEFTHawking.KummerResolutionPieceManifold
 import SKEFTHawking.KummerWeld
 import SKEFTHawking.KummerBaseSphereH2Int
 import SKEFTHawking.KummerK7Opener
