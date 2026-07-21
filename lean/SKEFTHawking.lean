@@ -1266,6 +1266,8 @@ import SKEFTHawking.KummerHemisphereChartInt
 import SKEFTHawking.SingularRelativeClopenSplitInt
 import SKEFTHawking.SingularRelativeFiniteProdSplitInt
 import SKEFTHawking.KummerPairTransportInt
+import SKEFTHawking.KummerPieceCollarInt
+import SKEFTHawking.KummerPieceCollarCyclicInt
 import SKEFTHawking.SingularLocalHomologyThreeInt
 import SKEFTHawking.SingularConvexRadialMiddleInt
 import SKEFTHawking.SingularConvexStageIsoInt
