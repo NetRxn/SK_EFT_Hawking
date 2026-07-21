@@ -4723,6 +4723,12 @@ import SKEFTHawking.KummerSeamOpenNbhd
 import SKEFTHawking.KummerSeamComponentOpen
 import SKEFTHawking.KummerSeamChart
 import SKEFTHawking.ManifoldModelTransport
+import SKEFTHawking.HalfSpaceInteriorFlatten
+import SKEFTHawking.KummerEInteriorChart
+import SKEFTHawking.KummerQInteriorChart
+import SKEFTHawking.KummerK3Chart
+import SKEFTHawking.HalfSpaceInteriorSmooth
+import SKEFTHawking.KummerInteriorManifold
 import SKEFTHawking.KummerK7MVAssembly
 import SKEFTHawking.KummerK7SeamCoverNoGo
 import SKEFTHawking.KummerQuotientCovering
