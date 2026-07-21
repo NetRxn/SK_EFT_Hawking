@@ -673,3 +673,57 @@ asked for the `sphere ∖ S` support; they ask for `sphere ∖ (Subtype.val '' K
 engine's granularity. That pair is now SUPPLIED, bridge-free:
 `PinPlusTraceCapstoneCollarPairHandle.exists_ctrlHandle_split_offCore`. The bridge was a needlessly
 strong reduction of `#212 item d`, not the row's actual obligation.
+
+---
+
+## `collar-pair-cCore-co-adaptation-is-not-on-the-hasClass-path` (route fact — CLOSED, lead-traced 2026-07-21)
+
+**Do NOT build the shared-`cCore` co-adaptation.** The `codex_212_collarpair_design.md` dossier sizes
+it at 450–800 LOC and calls it the hardest item ("Opus, hardest"); the bridge-free `hctrlH` producer
+left its residue apparently sitting on `hctrlC`. It is not an obligation of the `#212` row.
+
+**Traced in the Lean by the lead** (not taken from a worker report):
+`PinPlusTraceCapstoneCollarPairMatch.lean` gives the full chain to the capstone —
+`CollarPairGeomEnd`(4 obligations) → `CollarPairSeamRow`(3) → `CollarPairCoreRow`(2) → `hasClass` —
+with `CollarPairSeamRow.toHasClass` (:336, via `toCorrectorT`) and `CollarPairCoreRow.toHasClass`
+(:609, firing `capstone_hasClass_ofCoreChains` directly) both producing the EXACT
+`CapstoneAmbientSupply.hasClass` field type that `CollarPairGeomEnd.toHasClass`
+(`PinPlusTraceCapstoneCollarPairEnd.lean:419`) produced before. **No link in that chain mentions the
+co-adaptation.** The live floor is `CollarPairCoreRow`'s `hbd` + `hdetAB` at the canonical
+`cHa := diskDetectChain` (where `hcHa`/`hdetHa` are discharged by banked `diskDetectChain_hc`/`_hdet`).
+
+**Scope.** This kills the *co-adaptation build*, not the row. Also note the anti-fake guard survives
+as a theorem, `CollarPairCoreRow.qGen_ne_zero_of_seamCore_nonempty` — a consequence of the two
+obligations under nonempty `seamCore`, not an added assumption. An inhabiter is still well advised to
+carry `hseamHit`: `seamMatch_mem_of_seamCore_empty` shows the *seam-row* obligation is free at
+`seamCore = ∅` (that configuration is exactly what `hseamHit` excludes).
+
+**Tooling note that produced a false alarm here:** `lean_local_search "CollarPairCoreRow"` returns the
+structure ONLY — it does not surface namespaced members like `.toHasClass`. Do not read a one-hit
+`lean_local_search` as a reference check; use `lean_references` or read the module.
+
+---
+
+## `kummer-16-plus-6-geometric-block-is-not-a-basis` (route fact — planning, lead-traced 2026-07-21)
+
+**A K3 Gram plan of the shape "tabulate the 16 exceptional + 6 descended-torus classes and stop" cannot
+work.** Those 22 classes span a PROPER finite-index sublattice of `H₂(K3;ℤ)`; the Kummer half-sums are
+mandatory. Elementary reason, self-contained: their Gram is `⟨−2⟩¹⁶ ⊕ 3H` with `|det| = 2¹⁶`, while
+`H₂(K3;ℤ)` is unimodular of rank 22 (`k3Form_isEvenUnimodular`, transported by
+`IntCongr.isEvenUnimodular`), so the index of the span is `2⁸ ≠ 1`.
+
+**Correct target instead:** choose a cap-dual cohomology family for a genuine rank-22 generating set
+(geometric classes **plus** the half-sums), tabulate `⟨·,·⟩` via
+`IntersectionMatrixBasisChange.interMatrix_capDual`, exhibit the unimodular congruence to `k3Form`,
+then apply `KummerK3E1Package.kummerK3_hk3_of_geometric_basis`. No basis-normalisation obligation on
+top, because `interMatrix_intCongr_of_rank_eq` makes the packaged basis's anonymity free.
+
+**Citation correction (lead-traced).** A worker report attributed this to
+`KummerPairHalving.pairCokerEquiv` / `pairCoker_card = 2¹⁶`. Those live in
+`KummerPairTubeSeparation`, **and they state something else**: `pairCoker_card :
+Nat.card (PairH2 ⧸ LinearMap.range pairProj) = 2 ^ 16` is the cokernel of the *relative pair*
+`H₂(ESub, CollarInE; ℤ)`, not the index of the 16+6 span inside `H₂(K3;ℤ)`. Do not cite it for this.
+
+**Status: planning fact, NOT kernel-encodable yet.** The determinant argument needs the 16+6 Gram
+computed in-tree, which has not been done. Nothing here is a refuted Prop, so there is no
+`KERNEL_NOGO_REGISTRY` entry — prose only, by the ADR-007 route-fact/refutation discrimination.
