@@ -90,6 +90,61 @@ theorem shellDir_qShellPoint {a : S3} {s : ℝ} (hs : (1 : ℝ) / 2 ≤ s)
   rw [← hstep]
   exact congrArg shellDir (Subtype.ext hcast)
 
+/-- The Q-collar shell vector at radius `s ∈ [1/2, 3/4)` lies in the Euclidean collar shell. -/
+theorem toE4_qShellPoint_mem_shellSetE4 {a : S3} {s : ℝ} (h1 : (1 : ℝ) / 2 ≤ s) (h2 : s < 3 / 4) :
+    toE4 (qShellPoint a s) ∈ shellSetE4 := by
+  have hn : ‖toE4 (qShellPoint a s)‖ = s := norm_toE4_qShellPoint (by linarith)
+  exact ⟨by rw [hn]; exact h1, by rw [hn]; exact h2⟩
+
+theorem collarHomeo_apply (c : TorusFour) (w : ↥shellSetE4) :
+    ((collarHomeo c w : ↥(collarSet c)) : TorusFour)
+      = centeredChartParam c (ofE4 (w : EuclideanSpace ℝ (Fin 4))) := rfl
+
+/-- **THE COLLAR PREIMAGE OF A Q-COLLAR POINT.** The collar homeomorphism carries the shell vector
+`toE4 (qShellPoint a s)` to the Q-collar point, so its inverse recovers that vector — the input the
+polar collar chart's direction reader consumes. -/
+theorem collarHomeo_symm_qShellPoint (c : TorusFour) (a : S3) {s : ℝ} (h1 : (1 : ℝ) / 2 ≤ s)
+    (h2 : s < 3 / 4)
+    (hy : centeredChartParam c (qShellPoint a s) ∈ collarSet c) :
+    (collarHomeo c).symm ⟨centeredChartParam c (qShellPoint a s), hy⟩
+      = ⟨toE4 (qShellPoint a s), toE4_qShellPoint_mem_shellSetE4 h1 h2⟩ := by
+  refine (Homeomorph.symm_apply_eq _).mpr (Subtype.ext ?_)
+  rw [collarHomeo_apply, ofE4_toE4]
+
+/-- **THE Q-SIDE COLLAR CHART ON A Q-COLLAR POINT** — the payoff of §1. The polar collar chart at
+base direction `u₀` reads the point `qCollar c (mkRP3 a, s)`'s representative as
+
+    ( Φ u₀ (s3ToSphE a) , s − 1/2 ) ,
+
+i.e. **the `𝓔³` coordinate is the `S³` chart at `u₀` evaluated on the pinned representative of the
+seam class, and the half-space coordinate is the collar radius above `1/2`**. Compare the seam
+chart, which reads the same point as `(Φ x₀ (s3ToSphE a), 1/2 − s)`: class (2,3) is the sphere-chart
+change `Φ x₀ ∘ (Φ u₀).symm` paired with the affine flip `t ↦ −t`. -/
+theorem innerCollarChart_qShellPoint (c : TorusFour)
+    (u₀ : SKEFTHawking.DiskChartGeneric.NSphere 3) (a : S3) {s : ℝ}
+    (h1 : (1 : ℝ) / 2 ≤ s) (h2 : s < 3 / 4)
+    (hy : centeredChartParam c (qShellPoint a s) ∈ collarSet c) :
+    innerCollarChart c u₀ ⟨centeredChartParam c (qShellPoint a s), hy⟩
+      = (chartAt (EuclideanSpace ℝ (Fin 3)) u₀ (s3ToSphE a),
+        ⟨WithLp.toLp 2 (fun _ : Fin 1 => s - 1 / 2), by
+          show (0 : ℝ) ≤ (WithLp.toLp 2 (fun _ : Fin 1 => s - 1 / 2)).ofLp 0
+          linarith⟩) := by
+  have hshell : (1 : ℝ) / 2 ≤ ‖toE4 (qShellPoint a s)‖ := by
+    rw [norm_toE4_qShellPoint (by linarith)]; exact h1
+  have hstep : innerCollarChart c u₀ ⟨centeredChartParam c (qShellPoint a s), hy⟩
+      = shellCollarChart u₀ ⟨toE4 (qShellPoint a s), hshell⟩ := by
+    show shellCollarChart u₀ (shellIncl ((collarHomeo c).symm
+      ⟨centeredChartParam c (qShellPoint a s), hy⟩)) = _
+    rw [collarHomeo_symm_qShellPoint c a h1 h2 hy]
+    rfl
+  rw [hstep]
+  refine Prod.ext ?_ (Subtype.ext ?_)
+  · show chartAt (EuclideanSpace ℝ (Fin 3)) u₀
+      (shellDir ⟨toE4 (qShellPoint a s), hshell⟩) = _
+    rw [shellDir_qShellPoint h1 hshell]
+  · show WithLp.toLp 2 (fun _ : Fin 1 => ‖toE4 (qShellPoint a s)‖ - 1 / 2) = _
+    rw [norm_toE4_qShellPoint (by linarith : (0 : ℝ) ≤ s)]
+
 /-! ## §2. The Q chart's interior branch is vacuous against the seam -/
 
 /-- The open Q collar ball sits inside the round **closed** ball of chart radius `5/8`. -/
