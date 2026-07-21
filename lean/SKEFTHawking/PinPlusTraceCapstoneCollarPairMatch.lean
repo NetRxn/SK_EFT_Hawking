@@ -496,7 +496,55 @@ def qGen (z : cycles (TopCat.of s.M) (2 + 2))
       (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
       (3 + 2) cHa
 
+/-- **THE SEAM-MATCH CHAIN AT A FREE DISK CHAIN.** `seamMatch` is this at `cHa := diskDetectChain`
+(definitionally). -/
+def seamMatchGen (z : cycles (TopCat.of s.M) (2 + 2))
+    (cHa : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 2)) :
+    SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1) :=
+  closedEmbeddingChain
+      (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+      (3 + 1) (topSliceB s S hS φ hφ hφinj z)
+    + closedEmbeddingChain
+      (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+      (3 + 1) (chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1) cHa)
+
 variable (t cd hseam d)
+
+variable {s S hS φ hφ hφinj} in
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **`∂(qGen)` COMPUTED, at a free disk chain** — the §1 identity with `diskDetectChain` replaced by
+an arbitrary `cHa`. -/
+theorem qGen_boundary_eq_seamMatchGen_add_botPush (z : cycles (TopCat.of s.M) (2 + 2))
+    (cHa : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 2)) :
+    chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+        (qGen s S hS φ hφ hφinj z cHa)
+      = seamMatchGen s S hS φ hφ hφinj z cHa + botPush s S hS φ hφ hφinj z := by
+  have hbd : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)
+        (capstoneCylChainT s S hS φ hφ hφinj z)
+      = topSliceB s S hS φ hφ hφinj z + ctrlBottom s S hS φ hφ hφinj z 0 :=
+    chainBoundary_crossChain 3 (z : SingularChain (TopCat.of s.M) (3 + 1)) z.2
+  rw [qGen, map_add, chainBoundary_closedEmbeddingChain, chainBoundary_closedEmbeddingChain, hbd,
+    closedEmbeddingChain_add, seamMatchGen, botPush]
+  abel
+
+variable {s S hS φ hφ hφinj} in
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **THE `↔` FOR THE TWO-OBLIGATION ROW'S `hbd`.** `qGen z cHa` is a relative cycle **iff** the
+free-disk seam-match chain is a `∂W`-chain — the bottom face is free at every `cHa`. This is the form
+an inhabiter should target: one membership, with the disk chain still to choose. -/
+theorem qGen_boundary_mem_iff_seamMatchGen_mem (z : cycles (TopCat.of s.M) (2 + 2))
+    (cHa : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 2)) :
+    (chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+        (qGen s S hS φ hφ hφinj z cHa)
+      ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1))
+      ↔ (seamMatchGen s S hS φ hφ hφinj z cHa
+        ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1)) := by
+  rw [qGen_boundary_eq_seamMatchGen_add_botPush z cHa]
+  refine ⟨fun h => ?_, fun h => Submodule.add_mem _ h (botPush_mem_bd (d := d) z)⟩
+  have := Submodule.add_mem _ h (botPush_mem_bd (d := d) z)
+  rwa [add_assoc, ZModModule.add_self, add_zero] at this
 
 /-- **THE TWO-OBLIGATION ROW — and the disk side is FREE.**
 
