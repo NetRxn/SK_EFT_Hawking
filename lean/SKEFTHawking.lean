@@ -4709,6 +4709,7 @@ import SKEFTHawking.KummerSeamSmooth
 import SKEFTHawking.KummerWeldFiberFlow
 import SKEFTHawking.KummerWeldOpenPieces
 import SKEFTHawking.KummerWeldQInterior
+import SKEFTHawking.KummerSeamCollarE
 import SKEFTHawking.KummerK7MVAssembly
 import SKEFTHawking.KummerK7SeamCoverNoGo
 import SKEFTHawking.KummerQuotientCovering
