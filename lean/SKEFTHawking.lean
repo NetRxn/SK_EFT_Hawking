@@ -4715,6 +4715,9 @@ import SKEFTHawking.KummerT4TowerInvolution
 import SKEFTHawking.KummerT4CycleDetection
 import SKEFTHawking.KummerQuotientH2Solve
 import SKEFTHawking.KummerPunctureFlow
+import SKEFTHawking.KummerPunctureBalls
+import SKEFTHawking.KummerPunctureAnnulus
+import SKEFTHawking.KummerPuncturedMV
 import SKEFTHawking.CircleWindingCocycle
 import SKEFTHawking.TorusCrossPeel
 import SKEFTHawking.KummerT4GramCross
