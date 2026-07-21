@@ -181,6 +181,32 @@ theorem pairH2TwoTorsionFree_iff_card_outerDoubles :
     exact Nat.pow_left_injective (by norm_num) h
   · intro h; rw [h]
 
+/-- **The per-piece group is NOT 2-divisible, unconditionally** — `M ≠ 2M`. Together with
+`pairH2TwoTorsionFree_iff_card_outerDoubles` this pins the mod-2 target from *both* sides: the count
+`|M / 2M|` is never `1`, so the residual is exactly "it is not more than `2`". Equivalently
+`dim_{𝔽₂} H₂(E, ∂E; ℤ/2) ≥ 1` always, and the `b₂` headline needs only `≤ 1`. -/
+theorem outerDoubles_ne_top : outerDoubles ≠ ⊤ := by
+  intro htop
+  have h1 : Nat.card (OuterH2 ⧸ outerDoubles) = 1 := by
+    rw [htop]
+    haveI : Subsingleton (OuterH2 ⧸ (⊤ : Submodule ℤ OuterH2)) := by
+      constructor
+      intro a b
+      obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ a
+      obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ b
+      exact (Submodule.Quotient.eq _).mpr trivial
+    exact Nat.card_eq_one_iff_unique.mpr ⟨inferInstance, ⟨Submodule.Quotient.mk 0⟩⟩
+  have h2 : Nat.card (PairH2 ⧸ pairDoubles) = 1 := by
+    rw [card_pairDoubles_eq_pow, h1, one_pow]
+  -- but `PairH2 ⧸ pairDoubles` surjects onto the order-`2¹⁶` cokernel
+  haveI : Subsingleton (PairH2 ⧸ pairDoubles) := Nat.card_eq_one_iff_unique.mp h2 |>.1
+  haveI : Subsingleton (PairH2 ⧸ LinearMap.range pairProj) :=
+    Function.Surjective.subsingleton compareQuot_surjective
+  have h3 : Nat.card (PairH2 ⧸ LinearMap.range pairProj) = 1 :=
+    Nat.card_eq_one_iff_unique.mpr ⟨inferInstance, ⟨Submodule.Quotient.mk 0⟩⟩
+  rw [pairCoker_card] at h3
+  norm_num at h3
+
 /-- **The headline consumer, per-piece mod-2 form.** -/
 theorem kummerK3_b2_target_of_card_outerDoubles
     (h : Nat.card (OuterH2 ⧸ outerDoubles) = 2) :
