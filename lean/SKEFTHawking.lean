@@ -4703,6 +4703,8 @@ import SKEFTHawking.KummerRP3EuclCharts
 import SKEFTHawking.KummerRP3GoodCoverTelescope
 import SKEFTHawking.KummerRP3HomologyUnconditional
 import SKEFTHawking.KummerRP3TransferHomology
+import SKEFTHawking.KummerWeldFiberFlow
+import SKEFTHawking.KummerK7MVAssembly
 import SKEFTHawking.CircleWindingCocycle
 import SKEFTHawking.TorusCrossPeel
 import SKEFTHawking.KummerT4GramCross
