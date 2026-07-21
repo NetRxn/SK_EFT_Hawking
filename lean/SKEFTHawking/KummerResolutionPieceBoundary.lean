@@ -1743,6 +1743,112 @@ theorem contDiffOn_reshapeConj {k : WithTop ℕ∞}
   exact contDiff_assemble.comp_contDiffOn (hGB.prodMk
     (((contDiff_apply ℝ ℝ 0).comp (PiLp.contDiff_ofLp.comp contDiff_fst)).comp_contDiffOn hGF))
 
+/-! ### §P.1. Same-side base-interior transitions (`chart0`- and `chart1`-family, `gBase = id`) -/
+
+theorem contDiffOn_transition_collarChart_CC {k : WithTop ℕ∞} (u₀ u₁ : NSphere 1) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑((collarChart u₀).symm ≫ₕ collarChart u₁) ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹' ((collarChart u₀).symm ≫ₕ collarChart u₁).source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) := by
+  simp only [collarChart, OpenPartialHomeomorph.lift_openEmbedding_trans]
+  refine (contDiffOn_reshapeConj (gBase := id) (baseSet := Set.univ) contDiffOn_id
+      (contDiffOn_transition_fiber_CC u₀ u₁) (Set.mapsTo_univ _ _) ?_).congr ?_
+  · intro x hx
+    obtain ⟨hxsrc, hxrange⟩ := hx
+    rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source,
+      OpenPartialHomeomorph.symm_source, Set.mem_inter_iff, Set.mem_preimage] at hxsrc
+    obtain ⟨htgt, hsrc⟩ := hxsrc
+    set y := ((𝓡 3).prod (𝓡∂ 1)).symm x with hy
+    rw [collarChartInner, OpenPartialHomeomorph.trans_target, Set.mem_inter_iff,
+      Set.mem_preimage] at htgt
+    have hbaseInt : (resChartCollarChart u₀).symm y ∈
+        Set.range (Subtype.val : ↥baseInterior → ResChart) := by
+      have h := htgt.2
+      rwa [Topology.IsOpenEmbedding.toOpenPartialHomeomorph_target] at h
+    -- fiber target `q.2 ∈ (diskCollarChart 1 u₀).target`
+    have hD0tgt : (reshapeModel.symm y).2 ∈ (diskCollarChart 1 u₀).target := by
+      have h := htgt.1
+      rw [resChartCollarChart, OpenPartialHomeomorph.trans_target,
+        Homeomorph.toOpenPartialHomeomorph_target, Set.univ_inter, Set.mem_preimage,
+        Homeomorph.toOpenPartialHomeomorph_symm_apply, OpenPartialHomeomorph.prod_target] at h
+      have h2 := h.2
+      rw [fiberCollarChart, OpenPartialHomeomorph.trans_target, Set.mem_inter_iff] at h2
+      exact h2.1
+    -- fiber source `D₀.symm q.2 ∈ (diskCollarChart 1 u₁).source`
+    have hBsrc : (resChartCollarChart u₀).symm y ∈ (resChartCollarChart u₁).source := by
+      simp only [collarChartInner, OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+        Set.mem_preimage, OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+        Topology.IsOpenEmbedding.toOpenPartialHomeomorph_apply,
+        Topology.IsOpenEmbedding.toOpenPartialHomeomorph_source, Set.mem_univ, true_and] at hsrc
+      rwa [Topology.IsOpenEmbedding.toOpenPartialHomeomorph_right_inv
+        (Subtype.val : ↥baseInterior → ResChart)
+        isOpen_baseInterior.isOpenEmbedding_subtypeVal hbaseInt] at hsrc
+    have hDsrc : (diskCollarChart 1 u₀).symm ((reshapeModel.symm y).2) ∈
+        (diskCollarChart 1 u₁).source := by
+      simp only [resChartCollarChart, OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+        Set.mem_preimage, OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+        Homeomorph.toOpenPartialHomeomorph_symm_apply, OpenPartialHomeomorph.prod_symm_apply,
+        OpenPartialHomeomorph.prod_source, Set.mem_prod,
+        Homeomorph.toOpenPartialHomeomorph_source, Set.mem_univ, and_true] at hBsrc
+      have hs2 := hBsrc.2
+      simp only [fiberCollarChart, OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+        Set.mem_preimage, OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+        Homeomorph.toOpenPartialHomeomorph_apply, Homeomorph.toOpenPartialHomeomorph_symm_apply,
+        Homeomorph.apply_symm_apply, Homeomorph.toOpenPartialHomeomorph_source, Set.mem_univ,
+        true_and] at hs2
+      exact hs2
+    have hrange2 : (0 : ℝ) ≤ x.2.ofLp 0 := by
+      rw [ModelWithCorners.range_prod, Set.mem_prod] at hxrange
+      have h := hxrange.2
+      rwa [range_modelWithCornersEuclideanHalfSpace] at h
+    refine ⟨?_, ?_⟩
+    · rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source, OpenPartialHomeomorph.symm_source,
+        Set.mem_inter_iff, Set.mem_preimage]
+      exact ⟨hD0tgt, hDsrc⟩
+    · rw [ModelWithCorners.range_prod, Set.mem_prod]
+      refine ⟨?_, ?_⟩
+      · rw [ModelWithCorners.Boundaryless.range_eq_univ]; exact Set.mem_univ _
+      · rw [range_modelWithCornersEuclideanHalfSpace]; exact hrange2
+  · intro x hx
+    obtain ⟨hxsrc, hxrange⟩ := hx
+    rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source,
+      OpenPartialHomeomorph.symm_source, Set.mem_inter_iff, Set.mem_preimage] at hxsrc
+    obtain ⟨htgt, -⟩ := hxsrc
+    rw [collarChartInner, OpenPartialHomeomorph.trans_target, Set.mem_inter_iff,
+      Set.mem_preimage] at htgt
+    set y := ((𝓡 3).prod (𝓡∂ 1)).symm x with hy
+    have hbaseInt : (resChartCollarChart u₀).symm y ∈
+        Set.range (Subtype.val : ↥baseInterior → ResChart) := by
+      have h := htgt.2
+      rwa [Topology.IsOpenEmbedding.toOpenPartialHomeomorph_target] at h
+    have hbtgt : (reshapeModel.symm y).1 ∈ baseDiskChart.target := by
+      have h := htgt.1
+      rw [resChartCollarChart, OpenPartialHomeomorph.trans_target,
+        Homeomorph.toOpenPartialHomeomorph_target, Set.univ_inter, Set.mem_preimage,
+        Homeomorph.toOpenPartialHomeomorph_symm_apply, OpenPartialHomeomorph.prod_target] at h
+      exact h.1
+    have hval : collarChartInner u₁ ((collarChartInner u₀).symm y)
+        = resChartCollarChart u₁ ((resChartCollarChart u₀).symm y) := by
+      simp only [collarChartInner, OpenPartialHomeomorph.coe_trans,
+        OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+        Topology.IsOpenEmbedding.toOpenPartialHomeomorph_apply]
+      congr 1
+      exact Topology.IsOpenEmbedding.toOpenPartialHomeomorph_right_inv
+        (Subtype.val : ↥baseInterior → ResChart)
+        isOpen_baseInterior.isOpenEmbedding_subtypeVal hbaseInt
+    simp only [Function.comp_apply, OpenPartialHomeomorph.coe_trans]
+    rw [hval]
+    simp only [resChartCollarChart, OpenPartialHomeomorph.coe_trans,
+      OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+      Homeomorph.toOpenPartialHomeomorph_apply, Homeomorph.toOpenPartialHomeomorph_symm_apply,
+      OpenPartialHomeomorph.prod_apply, OpenPartialHomeomorph.prod_symm_apply, id_eq]
+    rw [baseDiskChart.right_inv hbtgt]
+    simp only [fiberCollarChart, OpenPartialHomeomorph.coe_trans,
+      OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+      Homeomorph.toOpenPartialHomeomorph_apply, Homeomorph.toOpenPartialHomeomorph_symm_apply,
+      Homeomorph.apply_symm_apply]
+    rfl
+
 /-! ## §Z. STATUS — the K6′a Leg-2 E-side certificate
 
 **GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
