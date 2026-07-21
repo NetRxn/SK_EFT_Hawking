@@ -1260,6 +1260,7 @@ import SKEFTHawking.SingularOpenDualityD0FiveLemmaInt
 import SKEFTHawking.SingularConvexSubAcyclicInt
 import SKEFTHawking.SingularH0PathConnectedInt
 import SKEFTHawking.SingularSphereMiddleInt
+import SKEFTHawking.SingularStarComplementRetractInt
 import SKEFTHawking.SingularLocalHomologyThreeInt
 import SKEFTHawking.SingularConvexRadialMiddleInt
 import SKEFTHawking.SingularConvexStageIsoInt
