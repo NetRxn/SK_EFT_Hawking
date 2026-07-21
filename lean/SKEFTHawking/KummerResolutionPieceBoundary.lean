@@ -531,6 +531,84 @@ open embedding. Coexists with the boundary collar charts of §E. -/
 def interiorChart : OpenPartialHomeomorph ResE Model :=
   interiorChartInner.lift_openEmbedding isOpenEmbedding_chart0_baseInterior
 
+/-! ## §G. The `chart1`-based mirror charts (the other base disk)
+
+The base sphere `S²` is two disks welded at the equator; §E/§F chart the `chart0` base disk `{‖z‖ < 1}`.
+The `chart1` base disk is charted by the SAME inner charts (`collarChartInner`, `interiorChartInner`),
+lifted instead along the `chart1` open embedding (`isOpenEmbedding_chart1_baseInterior`, §A). Together the
+`chart0`- and `chart1`-based charts cover every point of `ResE` OFF the base equator `‖z‖ = 1`. -/
+
+/-- **The `chart1`-based boundary collar chart** — `collarChartInner` lifted along `chart1`. -/
+def collarChart1 (u₀ : NSphere 1) : OpenPartialHomeomorph ResE Model :=
+  (collarChartInner u₀).lift_openEmbedding isOpenEmbedding_chart1_baseInterior
+
+/-- **The `chart1`-based interior chart** — `interiorChartInner` lifted along `chart1`. -/
+def interiorChart1 : OpenPartialHomeomorph ResE Model :=
+  interiorChartInner.lift_openEmbedding isOpenEmbedding_chart1_baseInterior
+
+/-! ## §H. The off-equator covering (deliverable 3, coverage lemma)
+
+Every point of `ResE` with a `chart0` representative in the base-interior (`‖z‖ < 1`) lies in the source
+of the interior chart (if `‖w‖ < 1`) or a collar chart (if `w ≠ 0`), the two overlapping in the SAME
+fiber-radial coordinate `‖w‖`. The `chart1` mirror is symmetric. Together these cover every point OFF the
+base equator `‖z‖ = 1` — the covering lemma the manifold-with-boundary instance rests on (the residual
+`chartAt` dispatch adds only the straddling equator chart). -/
+
+/-- A base-interior fiber-interior point (`‖z‖ < 1`, `‖w‖ < 1`) lies in the interior chart's source. -/
+theorem mem_interiorChart_source {p : ResChart} (hz : ‖(p.1 : ℂ)‖ < 1)
+    (hw : ‖(p.2 : ℂ)‖ < 1) : chart0 p ∈ interiorChart.source := by
+  rw [interiorChart, OpenPartialHomeomorph.lift_openEmbedding_source]
+  refine ⟨⟨p, hz⟩, ?_, rfl⟩
+  simp only [interiorChartInner, OpenPartialHomeomorph.trans_source,
+    Topology.IsOpenEmbedding.toOpenPartialHomeomorph_source, Set.mem_inter_iff, Set.mem_univ,
+    true_and, Set.mem_preimage]
+  show p ∈ resChartInteriorChart.source
+  simp only [resChartInteriorChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, OpenPartialHomeomorph.prod_source,
+    Set.mem_inter_iff, Set.mem_univ, and_true, Set.mem_preimage, Set.mem_prod]
+  refine ⟨hz, ?_⟩
+  simp only [fiberInteriorChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, Set.mem_inter_iff, Set.mem_univ, true_and,
+    Set.mem_preimage]
+  show ‖((diskHomeoNDisk1 p.2 : NDisk 1) : EuclideanSpace ℝ (Fin 2))‖ < 1
+  rw [show ((diskHomeoNDisk1 p.2 : NDisk 1) : EuclideanSpace ℝ (Fin 2)) = toE2 (p.2 : ℂ) from rfl,
+    norm_toE2]
+  exact hw
+
+/-- A base-interior off-fiber-centre point (`‖z‖ < 1`, `w ≠ 0`) lies in the source of the collar chart at
+its own fiber direction `u₀ = diskDir (w/‖w‖)` — every point is in its own stereographic chart. -/
+theorem mem_collarChart_source {p : ResChart} (hz : ‖(p.1 : ℂ)‖ < 1) (hw : (p.2 : ℂ) ≠ 0) :
+    chart0 p ∈ (collarChart (diskDir 1 (diskHomeoNDisk1 p.2))).source := by
+  rw [collarChart, OpenPartialHomeomorph.lift_openEmbedding_source]
+  refine ⟨⟨p, hz⟩, ?_, rfl⟩
+  simp only [collarChartInner, OpenPartialHomeomorph.trans_source,
+    Topology.IsOpenEmbedding.toOpenPartialHomeomorph_source, Set.mem_inter_iff, Set.mem_univ,
+    true_and, Set.mem_preimage]
+  show p ∈ (resChartCollarChart (diskDir 1 (diskHomeoNDisk1 p.2))).source
+  simp only [resChartCollarChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, OpenPartialHomeomorph.prod_source,
+    Set.mem_inter_iff, Set.mem_univ, and_true, Set.mem_preimage, Set.mem_prod]
+  refine ⟨hz, ?_⟩
+  simp only [fiberCollarChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, Set.mem_inter_iff, Set.mem_univ, true_and,
+    Set.mem_preimage]
+  refine ⟨?_, mem_chart_source (EuclideanSpace ℝ (Fin 1)) _⟩
+  show ((diskHomeoNDisk1 p.2 : NDisk 1) : EuclideanSpace ℝ (Fin 2)) ≠ 0
+  rw [show ((diskHomeoNDisk1 p.2 : NDisk 1) : EuclideanSpace ℝ (Fin 2)) = toE2 (p.2 : ℂ) from rfl]
+  intro h0
+  exact hw (norm_eq_zero.mp (by rw [← norm_toE2, h0, norm_zero]))
+
+/-- **The off-equator covering.** Every point of `ResE` with a `chart0` representative in the
+base-interior (`‖z‖ < 1`) is covered: it lies in the interior chart's source (fiber interior `‖w‖ < 1`)
+or in a collar chart's source (fiber off-centre `w ≠ 0`). The two overlap on `0 < ‖w‖ < 1`, in the SAME
+fiber-radial coordinate `‖w‖` — the coverage discipline (no metric-vs-chart-radius gap). -/
+theorem chart0_baseInterior_covered {p : ResChart} (hz : ‖(p.1 : ℂ)‖ < 1) :
+    chart0 p ∈ interiorChart.source ∨ ∃ u₀, chart0 p ∈ (collarChart u₀).source := by
+  by_cases hw : ‖(p.2 : ℂ)‖ < 1
+  · exact Or.inl (mem_interiorChart_source hz hw)
+  · exact Or.inr ⟨_, mem_collarChart_source hz (by
+      intro h0; exact hw (by rw [h0, norm_zero]; norm_num))⟩
+
 /-! ## §Z. STATUS — the K6′a Leg-2 E-side certificate
 
 **GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
@@ -572,16 +650,24 @@ Deliverable (2/3) — **the half-space-model charts on `ResE`** (§C–§F, K6�
   with the banked `diskInteriorChart 1` (covers the fiber centre `w = 0`; image in the half-space
   interior `radial > 0`). Overlaps the collar on `0 < ‖w‖ < 1` in the SAME radial coordinate `‖w‖` — the
   coverage discipline that structurally avoids the metric-vs-chart-radius gap. Kernel-pure.
+- `collarChart1`/`interiorChart1` (`§G`) — the `chart1`-based mirrors (the SAME inner charts lifted along
+  `chart1` instead of `chart0`), charting the other base disk.
+- `mem_interiorChart_source`/`mem_collarChart_source`/`chart0_baseInterior_covered` (`§H`) — **the
+  off-equator covering lemma**: every point with a `chart0` base-interior (`‖z‖ < 1`) representative lies
+  in the interior chart's source (`‖w‖ < 1`) or a collar chart's source (`w ≠ 0`, at its own fiber
+  direction `u₀ = diskDir (w/‖w‖)`). The `chart1` mirror is symmetric. Kernel-pure.
 
 **RESIDUAL (walls, localized precisely) — the charted-space instance and the manifold instance:**
 
-1. **`ChartedSpace Model ResE`** (deliverable 3) — `chartAt` dispatch between `interiorChart` (fiber
-   `‖w‖ < 1`), the `collarChart` family (fiber `‖w‖ > 0`), and their `chart1`-based mirrors (the other
-   base disk). The chart0/chart1-based charts cover every point OFF the base equator `‖z‖ = 1`. The
-   base-equator boundary locus (`chart0 p`, `‖p.1‖ = 1`) — a nowhere-dense circle × fiber — needs a
-   **straddling equator chart**: an open neighborhood crossing the weld, charted through the banked
-   `contDiffOn_clutch` (parent §1) base transition `z ↦ z⁻¹` (glued base coordinate `log‖z‖`, continuous
-   across the weld). This is the one genuinely-new coverage brick beyond the base-interior charts above.
+1. **`ChartedSpace Model ResE`** (deliverable 3) — `chartAt` dispatch. The `chart0`/`chart1`-based charts
+   above cover every point OFF the base equator `‖z‖ = 1` (`chart0_baseInterior_covered` + its mirror).
+   The base-equator locus (`chart0 p`, `‖p.1‖ = 1`; a circle × fiber) is the residual. **Not** a single
+   straddling chart: over the equator circle the disk bundle has **Euler number −2** (the `z²` clutch
+   twist), so it is topologically nontrivial and admits **no** product base-annulus × fiber
+   trivialization. The equator neighborhood must be covered by a **family of charts over base ARCS** (each
+   arc contractible ⟹ the bundle trivializes over it), with the base-arc coordinate glued across the weld
+   through the banked `contDiffOn_clutch` (parent §1) transition `z ↦ z⁻¹`. This is the one genuinely-new
+   geometric brick (nontrivial-bundle coverage), beyond the base-interior packaging above.
 
 2. **`IsManifold` + smooth `bdryHomeoRP3`** (deliverables 3/4) — the transition classes:
    interior-interior = `contDiffOn_clutch` (banked); collar-collar and collar-interior = the fiber polar
