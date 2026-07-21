@@ -85,6 +85,14 @@ connecting map onto the norm-parity group `H₀(B;ℤ) ≅ ℤ/2`. -/
 def rp3H1EquivZMod2 : Homology (TopCat.of RP3) 1 ≃ₗ[ℤ] ZMod 2 :=
   ((hmlEquivHomology RP3top 1).symm.trans deltaIIIZeroEquiv).trans hmlB_zero_equiv
 
+/-- **`H₁(seam;ℤ) ≅ (ℤ/2)¹⁶`** — the full 16-copy K7 seam's integral first homology, one deck
+class per exceptional copy, through the banked seam splitting `eIndexProdHnEquivInt`. -/
+def seamH1EquivPi :
+    Homology (TopCat.of (SKEFTHawking.KummerWeld.EIndex × RP3)) 1
+      ≃ₗ[ℤ] (SKEFTHawking.KummerWeld.EIndex → ZMod 2) :=
+  (SKEFTHawking.SingularFiniteProdDiscreteHnInt.eIndexProdHnEquivInt 1).trans
+    (LinearEquiv.piCongrRight (fun _ => rp3H1EquivZMod2))
+
 end
 
 end SKEFTHawking.KummerRP3HomologySolve

@@ -23,8 +23,8 @@ need the general tool: given a levelwise short exact sequence of ℕ-graded chai
 * `exact_Hmap_Hmap`, `exact_Hmap_delta`, `exact_delta_Hmap` — the six-term exactness;
 * `Hmap_surjective_deg_zero` — the degree-0 tail `H₀(N) ↠ H₀(P)`.
 
-The base ring `R` is an opaque variable (instantiated at `ℤ` by the Smith solve) — this keeps a
-single `Module R` instance path on every carrier and avoids the `ℤ`-module diamond
+The base ring `R` is an abstract variable (instantiated at `ℤ` by the Smith solve) — this keeps
+a single `Module R` instance path on every carrier and avoids the `ℤ`-module diamond
 (`AddCommGroup.toIntModule` vs. a designated instance) entirely.
 
 Consumers: the `H_*(ℝP³;ℤ)` Smith-sequence solve (`KummerRP3SmithSolve`) — and verbatim the
