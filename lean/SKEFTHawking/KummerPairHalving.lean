@@ -233,6 +233,29 @@ theorem pairH2TwoTorsionFree_iff_halvable :
     Finite.injective_iff_surjective_of_equiv (f := pairCokerCoord) pairCokerEquiv.toEquiv,
     pairCokerCoord_surjective_iff]
 
+/-- **The residual as an EQUATION of sublattices**: `H₂(eImage;ℤ) ≅ ℤ¹⁶` sits inside
+`H₂(eImage, collar;ℤ)` as *exactly* the subgroup of doubles. The `≥` inclusion is unconditional
+(`two_smul_mem_range_pairProj`, the exponent-2 cokernel); the residual is the `≤` inclusion. -/
+theorem pairH2TwoTorsionFree_iff_range_eq_doubles :
+    PairH2TwoTorsionFree ↔
+      LinearMap.range pairProj
+        = LinearMap.range ((2 : ℤ) • LinearMap.id : PairH2 →ₗ[ℤ] PairH2) := by
+  rw [pairH2TwoTorsionFree_iff_halvable]
+  constructor
+  · intro h
+    refine le_antisymm ?_ ?_
+    · rintro _ ⟨v, rfl⟩
+      obtain ⟨q, hq⟩ := h v
+      exact ⟨q, by simpa using hq⟩
+    · rintro _ ⟨m, rfl⟩
+      have hm : (2 : ℤ) • m ∈ LinearMap.range pairProj := two_smul_mem_range_pairProj m
+      simpa using hm
+  · intro h v
+    have hmem : pairProj v ∈ LinearMap.range ((2 : ℤ) • LinearMap.id : PairH2 →ₗ[ℤ] PairH2) := by
+      rw [← h]; exact ⟨v, rfl⟩
+    obtain ⟨q, hq⟩ := hmem
+    exact ⟨q, by simpa using hq⟩
+
 /-- **The exceptional class of the `i`-th resolution piece** — the zero-section generator of the
 `i`-th `ℤ` summand of `H₂(eImage;ℤ) ≅ ℤ¹⁶`. -/
 def exceptional (i : EIndex) : Homology ESub 2 := eImageH2EquivInt.symm (Pi.single i 1)
@@ -280,6 +303,13 @@ theorem pairH2TwoTorsionFree_iff_exceptional_halvable :
     rintro _ ⟨i, rfl⟩
     exact h i
   exact hsub (Submodule.mem_top)
+
+/-- **The anti-shuffling certificate.** The 16-witness form is EQUIVALENT to the mission-form
+target `H₂(ResE, ∂ResE;ℤ) ≅ ℤ` (16 copies) — not merely sufficient for it. Chains this module's
+equivalence with the landed `pairH2TwoTorsionFree_iff_equiv`. -/
+theorem exceptional_halvable_iff_pairH2_equiv :
+    (∀ i : EIndex, Halvable (exceptional i)) ↔ Nonempty (PairH2 ≃ₗ[ℤ] (EIndex → ℤ)) := by
+  rw [← pairH2TwoTorsionFree_iff_exceptional_halvable, pairH2TwoTorsionFree_iff_equiv]
 
 /-! ## §5. The finale, on 16 witnesses -/
 
