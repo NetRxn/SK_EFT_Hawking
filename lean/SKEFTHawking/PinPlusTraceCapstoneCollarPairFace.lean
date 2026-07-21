@@ -54,6 +54,12 @@ This module takes that route to the bottom. Four things happen.
   interior seam**, and `exists_seamPoint_mem_range_eM'_of_null` reads that on the datum —
   `range d.eM'` must contain at least one seam point. That is the price of the coarse route, stated
   positively; it does not close the route (see the scope notes on those two theorems).
+  §5c then shows the coarse route is **tight**: at the forced core the row's own `houtC` support is
+  not merely inside the §0 band but *equals* its top-face part
+  (`topFaceShrunk_eq_topFace_inter_preimage`: `topface ∖ φ '' K = topface ∩ fromCyl ⁻¹' ∂W`), and
+  `hcoreHit_seamPreimage` restates the anti-fake tether with no reference to a chosen `K` at all
+  (`cCore ∉ C(seamPoint ⁻¹' ∂W)`). Every remaining difficulty is in the geometry of `range eM'`, not
+  in a suboptimal support choice.
 
 ## Fences
 
@@ -595,6 +601,64 @@ theorem exists_seamPoint_mem_range_eM'_of_null (hφtop : ∀ a : ↥S, ((φ a).2
       ∈ Set.range d.eM' :=
   let ⟨a, ha⟩ := F.exists_seamPoint_mem_bd_of_null hA hO hne
   ⟨a, (seamPoint_mem_bd_iff (d := d) hφtop a).mp ha⟩
+
+/-! ### §5c. The coarse support is TIGHT — it saturates the maximal granularity -/
+
+omit [PreconnectedSpace s.M] in
+/-- The complement of the forced core is the seam's boundary-preimage — `K_eq_compl_seamPreimage`
+read the other way round. -/
+theorem compl_K_eq_seamPreimage :
+    F.Kᶜ = seamPoint s S hS φ hφ hφinj ⁻¹'
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) := by
+  rw [F.K_eq_compl_seamPreimage, compl_compl]
+
+omit [PreconnectedSpace s.M] in
+/-- **THE COARSE SUPPORT SATURATES THE MAXIMAL BAND (on the top face).** `§0` showed the support
+granularity of any piecewise `houtPair` discharge is squeezed between the fenced open complement and
+the maximal preimage `fromCyl ⁻¹' ∂W`. At the row's *forced* core the row's own `houtC` support is
+not merely inside that band — it is *exactly* its top-face part:
+`topface ∖ φ '' K = topface ∩ fromCyl ⁻¹' ∂W`. So the coarse route is tight: there is no slack left
+between the shrunk-core support and the maximal one, and every remaining difficulty is genuinely in
+the geometry of `range eM'`, not in a suboptimal choice of support set. -/
+theorem topFaceShrunk_eq_topFace_inter_preimage (hφtop : ∀ a : ↥S, ((φ a).2 : ℝ) = 1) :
+    (Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ φ '' F.K
+      = (Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1)))
+        ∩ (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl ⁻¹'
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) := by
+  rw [topFace_inter_fromCyl_preimage_bd (d := d) hφtop]
+  refine Set.Subset.antisymm (fun y hy => ?_) ?_
+  · rcases hy with ⟨hytop, hyK⟩
+    by_cases hyφ : y ∈ Set.range φ
+    · obtain ⟨a, rfl⟩ := hyφ
+      have haK : a ∈ F.Kᶜ := fun h => hyK (Set.mem_image_of_mem _ h)
+      rw [F.compl_K_eq_seamPreimage] at haK
+      exact Set.mem_union_right _ ⟨a, (seamPoint_mem_bd_iff (d := d) hφtop a).mp haK, rfl⟩
+    · exact Set.mem_union_left _ ⟨hytop, hyφ⟩
+  · rintro y (⟨hytop, hyφ⟩ | ⟨a, ha, rfl⟩)
+    · exact ⟨hytop, fun hy => hyφ (Set.image_subset_range φ F.K hy)⟩
+    · refine ⟨⟨Set.mem_univ _, phi_snd_eq_top hφtop a⟩, fun hy => ?_⟩
+      obtain ⟨b, hbK, hba⟩ := hy
+      have hab : a = b := (hφinj hba.symm)
+      have haK : a ∈ F.Kᶜ := by
+        rw [F.compl_K_eq_seamPreimage]
+        exact (seamPoint_mem_bd_iff (d := d) hφtop a).mpr ha
+      exact haK (hab ▸ hbK)
+
+omit [PreconnectedSpace s.M] in
+/-- **THE ANTI-FAKE TETHER AT THE FORCED CORE.** With `Kᶜ = seamPoint ⁻¹' ∂W`, `hcoreHit` says
+exactly: if the top slice of the fundamental cycle is *not* supported off the attaching region, then
+the shared seam core is **not** supported entirely on the boundary part of the seam. No reference to
+a chosen `K` survives — the tether is a statement about `cCore` and `∂W` alone. -/
+theorem hcoreHit_seamPreimage
+    (htop : mapChain (slice (graphHom (TopCat.of s.M)) 1) (3 + 1)
+        (F.z : SingularChain (TopCat.of s.M) (3 + 1))
+      ∉ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+          ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1)) :
+    F.cCore ∉ subspaceChains (X := TopCat.of ↥S)
+      (seamPoint s S hS φ hφ hφinj ⁻¹'
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)) (3 + 1) := by
+  rw [← F.compl_K_eq_seamPreimage]
+  exact F.hcoreHit htop
 
 end CollarPairGeomFace
 
