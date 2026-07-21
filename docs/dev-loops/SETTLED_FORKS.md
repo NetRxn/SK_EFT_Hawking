@@ -453,3 +453,36 @@ supersedes the equality. Hypothesis-free replacements:
 equality over a congruence is basis normalization, not geometry, and it is generically unreachable
 whenever any basis vector comes from a choice. `KummerK3Base` §K8 already targets `IntCongr … k3Form`
 — that is the correct shape; keep it. Do not dispatch a worker at "prove the literal Gram equality".
+
+---
+
+## k6b-seam-chart-stays-on-RP3-x-interval — ROUTE DECISION (2026-07-21, lead)
+
+**Not a no-go — a settled architecture choice. Do not re-litigate; do not silently refactor.**
+
+The wt2 worker that closed transition classes (3,3) and (2,1) surfaced, without acting on it, an
+architectural option for the K6′b weld atlas: rebuild the **seam chart** on *E-fiber `w`-coordinates*
+with `‖w‖ ∈ (1/2, 9/8)` (E half `‖w‖ ≤ 1`, Q half above), instead of the current
+`ℝP³ × (−1/8, 1/2)` presentation. The payoff is real: class **(1,3) would become definitionally
+trivial** (identical coordinates to the E-interior charts), leaving only the Q-side gluing as
+genuine work — one hard transition class instead of two.
+
+**DECISION: keep the `ℝP³ × interval` architecture. Finish the mechanical descent.** Reasons:
+
+1. **The current route is unblocked.** The worker's own words: "No obstruction encountered — just
+   unbuilt." The hard analytic kernel is already built and kernel-pure — `contDiffOn_seamSection0`
+   (`KummerSeamSection.lean:124`), `bdryMap_seamPoint0` (:151), resting on `phaseSqrt_sq` (:38) —
+   a smooth local right inverse of the chart-0 boundary map. What remains for (1,3)/(2,3) is the
+   chart-1 and annulus analogues plus descent through `mkRP3` into `rp3Chart` (composable with
+   `contDiffOn_reprStereo`): **bulk, not depth.**
+2. **The refactor would invalidate banked, just-landed work.** `seamCompNbhd`, the openness/covering
+   arguments behind it, `isOpen_cover_three_families`, and `disjoint_seamCompNbhd` — the last of
+   which was *proved in the same block that proposed the refactor*. Trading finished mechanical work
+   for re-derivation of landed results is the wrong direction of risk.
+3. **Both routes reach the identical theorem** (`IsManifold (𝓡 4) KummerK3`), so correctness does not
+   discriminate; the tiebreak is risk, and the refactor carries strictly more.
+
+**If the mechanical descent turns out to hide a real obstruction** (as opposed to bulk), that is new
+information and this decision should be revisited *at that point* — reopen it with the obstruction
+named, not on the general appeal of fewer hard classes. Until then, a worker that proposes the
+`w`-coordinate rebuild should be pointed here.
