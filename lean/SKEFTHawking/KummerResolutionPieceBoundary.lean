@@ -1271,6 +1271,67 @@ theorem contDiffOn_regInv : ContDiffOn ℝ ⊤ regInv {z : ℂ | 1 / 2 < ‖z‖
   have hid : ContDiffOn ℝ ⊤ (fun z : ℂ => z) {z : ℂ | 1 / 2 < ‖z‖} := contDiffOn_id
   exact (hid.inv hne).congr (fun z hz => regInv_eq hz.le)
 
+/-! ## §M. Atlas transition classes toward `IsManifold` (deliverable 4)
+
+`atlasE` has six chart classes: the base-interior interior/collar charts on each base disk
+(`interiorChart`/`collarChart u₀` via `chart0`; `interiorChart1`/`collarChart1 u₀` via `chart1`) and
+the equatorial annulus interior/collar charts (`annulusInteriorChart`/`annulusCollarChart u₀`). This
+section assembles the `contDiffGroupoid` transitions for `isManifold_of_contDiffOn`.
+
+**§M.1 — the cross-side class is VACUOUS.** The `chart0`- and `chart1`-based charts have disjoint
+sources off the base equator (the only gluing locus is `‖z‖ = 1`, excluded from `baseInterior`), so the
+coordinate change between a `chart0`-family chart and a `chart1`-family chart has empty domain. -/
+
+/-- The `chart0`-based interior chart's source lands in the `chart0` base-interior image. -/
+theorem interiorChart_source_subset :
+    interiorChart.source ⊆ Set.range (fun p : ↥baseInterior => chart0 p.1) := by
+  rw [interiorChart, OpenPartialHomeomorph.lift_openEmbedding_source]
+  exact Set.image_subset_range _ _
+
+/-- The `chart0`-based collar chart's source lands in the `chart0` base-interior image. -/
+theorem collarChart_source_subset (u₀ : NSphere 1) :
+    (collarChart u₀).source ⊆ Set.range (fun p : ↥baseInterior => chart0 p.1) := by
+  rw [collarChart, OpenPartialHomeomorph.lift_openEmbedding_source]
+  exact Set.image_subset_range _ _
+
+/-- The `chart1`-based interior chart's source lands in the `chart1` base-interior image. -/
+theorem interiorChart1_source_subset :
+    interiorChart1.source ⊆ Set.range (fun p : ↥baseInterior => chart1 p.1) := by
+  rw [interiorChart1, OpenPartialHomeomorph.lift_openEmbedding_source]
+  exact Set.image_subset_range _ _
+
+/-- The `chart1`-based collar chart's source lands in the `chart1` base-interior image. -/
+theorem collarChart1_source_subset (u₀ : NSphere 1) :
+    (collarChart1 u₀).source ⊆ Set.range (fun p : ↥baseInterior => chart1 p.1) := by
+  rw [collarChart1, OpenPartialHomeomorph.lift_openEmbedding_source]
+  exact Set.image_subset_range _ _
+
+/-- **The two base-interior images are disjoint.** A `chart0` and a `chart1` base-interior point coincide
+in `ResE` only when glued, i.e. on the base equator `‖z‖ = 1` — excluded from `baseInterior` (`‖z‖ < 1`). -/
+theorem disjoint_chart0_chart1_baseInterior :
+    Disjoint (Set.range (fun p : ↥baseInterior => chart0 p.1))
+      (Set.range (fun p : ↥baseInterior => chart1 p.1)) := by
+  rw [Set.disjoint_left]
+  rintro x ⟨a, rfl⟩ ⟨b, hb⟩
+  exact absurd (chart0_eq_chart1_iff.mp hb.symm).1 (ne_of_lt a.2)
+
+/-- **Vacuous transition class.** If two charts have sources in disjoint regions of `ResE`, the
+coordinate change between them is `C^k` on its (empty) domain. The `chart0`-family ↔ `chart1`-family
+transitions all instantiate this via `disjoint_chart0_chart1_baseInterior`. -/
+theorem contDiffOn_transition_vacuous_of_disjoint {k : WithTop ℕ∞}
+    {e e' : OpenPartialHomeomorph ResE Model} {A B : Set ResE}
+    (he : e.source ⊆ A) (he' : e'.source ⊆ B) (hAB : Disjoint A B) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘ ↑(e.symm ≫ₕ e') ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹' (e.symm ≫ₕ e').source ∩ range ↑((𝓡 3).prod (𝓡∂ 1))) := by
+  have hempty : (e.symm ≫ₕ e').source = ∅ := by
+    rw [OpenPartialHomeomorph.trans_source, Set.eq_empty_iff_forall_notMem]
+    intro m hm
+    rw [Set.mem_inter_iff, OpenPartialHomeomorph.symm_source, Set.mem_preimage] at hm
+    obtain ⟨hmt, hms⟩ := hm
+    exact Set.disjoint_left.mp hAB (he (e.map_target hmt)) (he' hms)
+  rw [hempty, Set.preimage_empty, Set.empty_inter]
+  exact contDiffOn_empty
+
 /-! ## §Z. STATUS — the K6′a Leg-2 E-side certificate
 
 **GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
