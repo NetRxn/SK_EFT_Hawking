@@ -545,6 +545,167 @@ theorem contDiffOn_roundToInterior_core {k : WithTop ℕ∞} (c : TorusFour) (y 
   rw [contMDiffOn_iff_contDiffOn] at hcomp
   exact contDiff_I_interiorReshape.comp_contDiffOn hcomp
 
+/-! ### §2d. The collar ↔ interior seams (1d-CI, 1d-IC) — the round chart glued to the interior atlas -/
+
+/-- Value of the collar homeomorphism: `collarHomeo c` sends a shell-band point to the round-chart
+image of its `E⁴` vector. -/
+theorem collarHomeo_coe (c : TorusFour) (s : ↥shellSetE4) :
+    ((collarHomeo c s : ↥(collarSet c)) : TorusFour)
+      = centeredChartParam c (ofE4 (s : EuclideanSpace ℝ (Fin 4))) := rfl
+
+/-- **Gateway value lemma.** For `p` in the inner collar chart's target, the underlying `TorusFour`
+point of `(boundaryChart c u₀ hc).symm p` is the round-chart image of the reconstructed `E⁴` shell
+vector `(1/2 + p.2.ofLp 0) • (chart_{S³} u₀).symm p.1`. Unwraps the collar lift embedding
+(`lift_openEmbedding_symm`), the `shellIncl` open embedding (`right_inv` on the shell band threaded
+from the domain), and the `collarHomeo` `homeomorphOfImageSubsetSource` value. -/
+theorem boundaryChart_symm_coe_eq {c : TorusFour} (hc : c ∈ fixedSet) (u₀ : NSphere 3)
+    {p : Model} (hp : p ∈ (innerCollarChart c u₀).target) :
+    ((boundaryChart c u₀ hc).symm p : TorusFour)
+      = centeredChartParam c (ofE4 ((1 / 2 + p.2.val.ofLp 0) •
+          ((chartAt (EuclideanSpace ℝ (Fin 3)) u₀).symm p.1 : EuclideanSpace ℝ (Fin 4)))) := by
+  have hE : (shellCollarChart u₀).symm p ∈
+      (Topology.IsOpenEmbedding.toOpenPartialHomeomorph shellIncl isOpenEmbedding_shellIncl).target := by
+    simp only [innerCollarChart, OpenPartialHomeomorph.trans_target, Set.mem_inter_iff,
+      Set.mem_preimage, OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+      Homeomorph.toOpenPartialHomeomorph_target] at hp
+    exact hp.1.2
+  rw [boundaryChart, OpenPartialHomeomorph.lift_openEmbedding_symm]
+  show ((innerCollarChart c u₀).symm p : TorusFour) = _
+  simp only [innerCollarChart, OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+    Homeomorph.toOpenPartialHomeomorph_symm_apply, Homeomorph.symm_symm]
+  rw [collarHomeo_coe]
+  congr 2
+  have hri : shellIncl ((Topology.IsOpenEmbedding.toOpenPartialHomeomorph shellIncl
+        isOpenEmbedding_shellIncl).symm ((shellCollarChart u₀).symm p))
+      = (shellCollarChart u₀).symm p := by
+    have h := (Topology.IsOpenEmbedding.toOpenPartialHomeomorph shellIncl
+      isOpenEmbedding_shellIncl).right_inv hE
+    rwa [Topology.IsOpenEmbedding.toOpenPartialHomeomorph_apply] at h
+  exact congrArg (fun t : ExtShell => (t : EuclideanSpace ℝ (Fin 4))) hri
+
+/-- Value of the interior chart on a point of the round-ball interior region: `interiorChartR x'`
+factors as `interiorReshape ∘ (ambient chart at ↑x')`, via the interior lift-embedding unwrapping
+(`lift_openEmbedding_apply`) and the `Opens`-chart value bridge (`subtypeRestr_coe`). -/
+theorem interiorChartR_apply_coe (x' : ↥interiorOpens) {y : ↥puncturedTorus}
+    (hy : (y : TorusFour) ∈ interiorSet) :
+    interiorChartR x' y
+      = interiorReshape (chartAt PModel (x' : TorusFour) (y : TorusFour)) := by
+  have happ := OpenPartialHomeomorph.lift_openEmbedding_apply
+    (chartAt PModel x' ≫ₕ interiorReshape) isOpenEmbedding_interiorIncl
+    (x := (⟨(y : TorusFour), hy⟩ : ↥interiorOpens))
+  have hq : Set.inclusion interiorSet_subset_puncturedTorus
+      (⟨(y : TorusFour), hy⟩ : ↥interiorOpens) = y := Subtype.ext rfl
+  rw [hq] at happ
+  rw [interiorChartR, happ, OpenPartialHomeomorph.coe_trans, Function.comp_apply,
+    TopologicalSpace.Opens.chartAt_eq, OpenPartialHomeomorph.subtypeRestr_coe,
+    Set.restrict_apply]
+
+/-- A point of the interior chart's source has underlying `TorusFour` point in the round-ball
+interior region. -/
+theorem interiorChartR_source_coe_mem (x' : ↥interiorOpens) {q : ↥puncturedTorus}
+    (hq : q ∈ (interiorChartR x').source) : (q : TorusFour) ∈ interiorSet := by
+  rw [interiorChartR, OpenPartialHomeomorph.lift_openEmbedding_source] at hq
+  obtain ⟨q₀, _, rfl⟩ := hq
+  exact q₀.2
+
+/-- A point of the interior chart's source has underlying `TorusFour` point in the ambient product
+chart's source (the `Opens`-chart source pulled back to `T⁴`). -/
+theorem interiorChartR_source_coe_mem_chartSource (x' : ↥interiorOpens) {q : ↥puncturedTorus}
+    (hq : q ∈ (interiorChartR x').source) :
+    (q : TorusFour) ∈ (chartAt PModel (x' : TorusFour)).source := by
+  rw [interiorChartR, OpenPartialHomeomorph.lift_openEmbedding_source] at hq
+  obtain ⟨q₀, hq₀, rfl⟩ := hq
+  rw [OpenPartialHomeomorph.trans_source] at hq₀
+  obtain ⟨hq₀src, -⟩ := hq₀
+  rw [TopologicalSpace.Opens.chartAt_eq, OpenPartialHomeomorph.subtypeRestr_source,
+    Set.mem_preimage] at hq₀src
+  exact hq₀src
+
+/-- **Transition class: collar → interior (1d-CI).** The coordinate change from the `(c, u₀)`-boundary
+collar chart to the round-ball interior chart `interiorChartR x'` is `C^k`. The collar chart inverse
+reconstructs the `E⁴` shell vector `S m = (1/2 + m.2) • (chart_{S³} u₀).symm m.1` (`C^k` via
+`contDiff_chartSymm_coe`), whose round image is the collar point; feeding it into
+`contDiffOn_roundToInterior_core` gives the interior coordinate. -/
+theorem contDiffOn_transition_collar_interior {k : WithTop ℕ∞}
+    {c : TorusFour} (hc : c ∈ fixedSet) (u₀ : NSphere 3) (x' : ↥interiorOpens) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑((boundaryChart c u₀ hc).symm ≫ₕ interiorChartR x') ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹'
+          ((boundaryChart c u₀ hc).symm ≫ₕ interiorChartR x').source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) := by
+  have hS : ContDiff ℝ k (fun m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1) =>
+      (1 / 2 + m.2.ofLp 0) • ((chartAt (EuclideanSpace ℝ (Fin 3)) u₀).symm m.1 :
+        EuclideanSpace ℝ (Fin 4))) :=
+    (contDiff_const.add ((contDiff_apply ℝ ℝ 0).comp (PiLp.contDiff_ofLp.comp contDiff_snd))).smul
+      ((contDiff_chartSymm_coe u₀).comp contDiff_fst)
+  have key : ∀ m ∈ (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹'
+        ((boundaryChart c u₀ hc).symm ≫ₕ interiorChartR x').source ∩ range ↑((𝓡 3).prod (𝓡∂ 1))),
+      ((boundaryChart c u₀ hc).symm (((𝓡 3).prod (𝓡∂ 1)).symm m) : TorusFour)
+          = centeredChartParam c (ofE4 ((1 / 2 + m.2.ofLp 0) •
+              ((chartAt (EuclideanSpace ℝ (Fin 3)) u₀).symm m.1 : EuclideanSpace ℝ (Fin 4)))) ∧
+      ((boundaryChart c u₀ hc).symm (((𝓡 3).prod (𝓡∂ 1)).symm m)) ∈ (interiorChartR x').source := by
+    intro m hm
+    obtain ⟨hmsrc, hmrange⟩ := hm
+    rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source, OpenPartialHomeomorph.symm_source,
+      Set.mem_inter_iff, Set.mem_preimage] at hmsrc
+    obtain ⟨htgt, hsrc⟩ := hmsrc
+    rw [boundaryChart, OpenPartialHomeomorph.lift_openEmbedding_target] at htgt
+    rw [ModelWithCorners.range_prod] at hmrange
+    have hri := ModelWithCorners.right_inv (𝓡∂ 1) hmrange.2
+    have hval := boundaryChart_symm_coe_eq hc u₀ htgt
+    have h1 : (((𝓡 3).prod (𝓡∂ 1)).symm m).1 = m.1 := rfl
+    have h2 : (((𝓡 3).prod (𝓡∂ 1)).symm m).2.val = m.2 := hri
+    rw [h1, h2] at hval
+    exact ⟨hval, hsrc⟩
+  apply ContDiffOn.congr (f := fun m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1) =>
+      ((𝓡 3).prod (𝓡∂ 1)) (interiorReshape (extChartAt
+        ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) (x' : TorusFour)
+        (centeredChartParam c (ofE4 ((1 / 2 + m.2.ofLp 0) •
+          ((chartAt (EuclideanSpace ℝ (Fin 3)) u₀).symm m.1 : EuclideanSpace ℝ (Fin 4))))))))
+  · exact (contDiffOn_roundToInterior_core c (x' : TorusFour)).comp hS.contDiffOn
+      (fun m hm => by
+        rw [Set.mem_preimage, ← (key m hm).1]
+        exact interiorChartR_source_coe_mem_chartSource x' (key m hm).2)
+  · intro m hm
+    obtain ⟨hval, hsrc⟩ := key m hm
+    simp only [Function.comp_apply, OpenPartialHomeomorph.coe_trans, Function.comp_apply]
+    rw [interiorChartR_apply_coe x' (interiorChartR_source_coe_mem x' hsrc), hval]
+    rfl
+
+/-! ### §2e. RESIDUAL — the interior → collar seam (1d-IC) and the `IsManifold` certificate
+
+**(1d-CI) is GREEN above (`contDiffOn_transition_collar_interior`).** The mirror seam **(1d-IC)**
+is NOT mechanical: it is the one atlas-transition class whose smooth core is *not* supplied by the
+banked analysis foundation.
+
+The IC transition `↑I ∘ ((interiorChartR x).symm ≫ₕ boundaryChart c u₁ hc) ∘ ↑I.symm` reconstructs
+the interior point from its interior coordinate (ambient chart inverse — `C^k`) and then applies the
+collar chart *forward*. The collar chart forward is `shellCollarChart u₁ ∘ shellIncl ∘
+(collarHomeo c).symm ∘ collarIncl.symm`, and `(collarHomeo c).symm` carries the **round-chart inverse**
+`(centeredChartParamE4 c).symm : chartBall c → E⁴`. Unlike the round chart *forward*
+(`contMDiff_centeredChartParamE4`, ContMDiff), its inverse smoothness is NOT available:
+
+* `centeredChartParamE4 c` is built via `ofContinuousOpenRestrict` (continuous + open only); its `.symm`
+  is `Function.invFun`-based, carrying no smoothness.
+* `TorusFour = Circle⁴` is charted by the **stereographic** sphere chart, while `centeredChartParam`
+  is **`Circle.exp`**-based, so the round↔ambient transition is an exp-vs-stereographic change — smooth
+  but only via `Circle.exp`'s smooth local inverse (`Complex.arg`/`Complex.log` on `slitPlane`), which
+  Mathlib supplies only *topologically* (`isLocalHomeomorph_circleExp`, `Circle.argEquiv`), not smoothly.
+
+**Missing lemma (a dedicated analysis brick, ≈ `contMDiff_centeredChartParamE4`'s inverse):**
+`ContMDiffOn 𝓘(ℝ, E⁴)-side (fun w => (centeredChartParamE4 c).symm w) (chartBall c)` — provable via
+either (a) the manifold inverse-function-theorem (`IsLocalDiffeomorphAt.localInverse_contMDiffOn`) once
+`mfderiv (centeredChartParam c)` is shown invertible (needs `hasMFDerivAt Circle.exp` — absent in
+Mathlib, must be built from `Circle.exp = exp(·*I)`), or (b) an explicit `Complex.arg`-based inverse
+formula shown to agree with `Function.invFun` and `ContMDiffOn` via `Complex.contDiffAt_log` +
+`contMDiff_coe_sphere`. Once that lands, (1d-IC) is the `contDiffOn_roundToInterior_core`-style congr
+(collar-chart-forward = `shellCollarChart`-forward ∘ round-inverse ∘ ambient-chart-inverse), and the
+`IsManifold ((𝓡 3).prod (𝓡∂ 1)) k ↥puncturedTorus` certificate assembles via
+`isManifold_of_contDiffOn` over the atlas union → (interior-interior /
+`contDiffOn_transition_interior_interior`), (collar-interior / `contDiffOn_transition_collar_interior`),
+(interior-collar / 1d-IC), (collar-collar / `contDiffOn_transition_collar_collar_same`/`_diff`).
+Honest smoothness class: `C^k` parametric (`k : WithTop ℕ∞`), up to `ω`. -/
+
 end
 
 end SKEFTHawking.KummerBoundaryChartSmooth
