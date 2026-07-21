@@ -44,7 +44,7 @@ open SKEFTHawking.SingularFunctorialityInt (mapChainInt)
 open SKEFTHawking.SingularCohomologyFunctorialityInt (cochainPullbackInt cochainPullbackInt_cup
   cochainPullbackInt_mem_ker kronecker_cochainPullbackInt)
 open SKEFTHawking.SingularRelativeHomologyMod2 (sub)
-open SKEFTHawking.SingularMayerVietorisLES (ambIncl)
+open SKEFTHawking.SingularMayerVietorisLES (ambIncl seamHomeo)
 open SKEFTHawking.SingularRelHomologyInt (chainIncl chainIncl_chainBoundary boundaryExtract
   relCycleLift chainIncl_boundaryExtract)
 open SKEFTHawking.SingularConvexRadialBaseInt (mapChainInt_ambIncl)
@@ -101,6 +101,17 @@ theorem kronecker_cup_cover_twoleg {X : TopCat} (A B : Set ↑X) {p q : ℕ}
     kronecker_cup_stokes_leg (ambIncl A) a b ha uA hbA zA,
     kronecker_cup_stokes_leg (ambIncl B) a b ha uB hbB zB, mul_add]
 
+/-- **Cochain-pullback functoriality (composition).** `φ*(ψ*a) = (ψ ∘ φ)*a`. -/
+theorem cochainPullbackInt_comp {X Y Z : TopCat} (ψ : C(↑Y, ↑Z)) (φ : C(↑X, ↑Y)) (n : ℕ)
+    (a : SingularCochainInt Z n) :
+    cochainPullbackInt φ n (cochainPullbackInt ψ n a) = cochainPullbackInt (ψ.comp φ) n a := by
+  funext σ; rfl
+
+/-- **Cochain-pullback functoriality (identity).** `(id)*a = a`. -/
+theorem cochainPullbackInt_id {X : TopCat} (n : ℕ) (a : SingularCochainInt X n) :
+    cochainPullbackInt (ContinuousMap.id ↑X) n a = a := by
+  funext σ; rfl
+
 /-- **The single-leg seam restriction of a boundary pairing.** If `zB`'s boundary is supported on the
 seam `A ∩ B` (realized as `restr A B ⊆ sub B` via `relCycleLift`), pairing any cochain `w` on `sub B`
 against `∂zB` equals pairing the seam-restriction `ι_∩* w` against the extracted seam chain
@@ -114,5 +125,21 @@ theorem kronecker_boundary_seam {X : TopCat} (A B : Set ↑X) {m : ℕ}
           (boundaryExtract (restr A B) m ⟨zB, hlift⟩) := by
   rw [← chainIncl_boundaryExtract (restr A B) m ⟨zB, hlift⟩,
     kronecker_chainIncl_eq_pullbackCochainInt]
+
+/-- **The single-leg boundary pairing transported to the canonical seam `sub(A ∩ B)`.** Given a cochain
+`w'` on `sub(A ∩ B)` whose `seamHomeo`-pullback matches the seam-restriction of `w` (`hw'`), the boundary
+pairing of `w` against `∂zB` equals the pairing of `w'` against the `seamHomeo`-transported extracted
+seam chain `tB = seamHomeo₊ (∂zB|∩)` — the representative `mvDeltaInt` uses. Bridges the `restr A B`
+seam representation (`kronecker_boundary_seam`) to the `A ∩ B` one (`coverInterHThreeEquivInt`,
+`mvDelta_cover_partition`) via the Kronecker–pullback adjoint through the seam homeomorphism. -/
+theorem kronecker_boundary_seam_inter {X : TopCat} (A B : Set ↑X) {m : ℕ}
+    (w : SingularCochainInt (sub B) m) (w' : SingularCochainInt (sub (A ∩ B)) m)
+    (hw' : cochainPullbackInt ⟨seamHomeo A B, (seamHomeo A B).continuous⟩ m w'
+        = pullbackCochainInt (restr A B) m w)
+    (zB : SingularChainInt (sub B) (m + 1)) (hlift : zB ∈ relCycleLift (restr A B) m) :
+    kronecker w (chainBoundary (sub B) m zB)
+      = kronecker w' (mapChainInt ⟨seamHomeo A B, (seamHomeo A B).continuous⟩ m
+          (boundaryExtract (restr A B) m ⟨zB, hlift⟩)) := by
+  rw [kronecker_boundary_seam A B w zB hlift, ← hw', kronecker_cochainPullbackInt]
 
 end SKEFTHawking.SphereProdStokesPeel
