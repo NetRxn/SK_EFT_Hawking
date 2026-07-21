@@ -89,6 +89,9 @@ open SKEFTHawking.SingularRelativeCoverMV
 open SKEFTHawking.SingularRelativeCoverMVTransport
 open SKEFTHawking.SingularRelativeCrossProduct
 open SKEFTHawking.SingularHomotopyInvariance
+open SKEFTHawking.PoincareLefschetzRelFundClass
+open SKEFTHawking.PoincareLefschetzRelFundClassGeom
+open SKEFTHawking.PinPlusTraceRelFundReduce
 open SKEFTHawking.PinPlusTraceCapstoneSeamTransfer
 open SKEFTHawking.PinPlusTraceCapstoneSeamTransferSupply
 open SKEFTHawking.PinPlusTraceDiskCorePair
@@ -407,6 +410,20 @@ theorem nonempty_collarPairGeomCore_of_end
     (h : Nonempty (CollarPairGeomEnd s t S hS φ hφ hφinj cd hseam d)) :
     Nonempty (CollarPairGeomCore s t S hS φ hφ hφinj cd hseam d) :=
   nonempty_collarPairGeomCore_of_face (nonempty_collarPairGeomEnd_iff_face.mp h)
+
+omit [PreconnectedSpace s.M] in
+/-- **THE CAPSTONE `hasClass`, FROM FOUR GEOMETRIC OBLIGATIONS.** The `#212` chain extended one link
+to the left: `CollarPairGeomEnd → CollarPairGeomFace → CollarPairGeomCore → … → hasClass`. This is
+the lane's end-to-end statement, and the honest headline of this module — the capstone's relative
+fundamental class now rests on `hctrlC`, `hctrlH`, `hcoreHit`, `hq0det` and nothing else. -/
+noncomputable def CollarPairGeomEnd.toHasClass
+    (E : CollarPairGeomEnd s t S hS φ hφ hφinj cd hseam d) :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
+  CollarPairGeomCore.toHasClass E.toCollarPairGeomFace.toCollarPairGeomCore
 
 end
 
