@@ -1269,6 +1269,8 @@ import SKEFTHawking.KummerPairTransportInt
 import SKEFTHawking.KummerPieceCollarInt
 import SKEFTHawking.KummerPieceCollarCyclicInt
 import SKEFTHawking.KummerPieceCollarModTwoInt
+import SKEFTHawking.KummerCollarRetractInt
+import SKEFTHawking.KummerCollarPairLESInt
 import SKEFTHawking.SingularLocalHomologyThreeInt
 import SKEFTHawking.SingularConvexRadialMiddleInt
 import SKEFTHawking.SingularConvexStageIsoInt
