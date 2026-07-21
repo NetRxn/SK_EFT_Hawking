@@ -1262,6 +1262,7 @@ import SKEFTHawking.SingularH0PathConnectedInt
 import SKEFTHawking.SingularSphereMiddleInt
 import SKEFTHawking.SingularStarComplementRetractInt
 import SKEFTHawking.SingularFlatDiskChartVanishInt
+import SKEFTHawking.KummerHemisphereChartInt
 import SKEFTHawking.SingularLocalHomologyThreeInt
 import SKEFTHawking.SingularConvexRadialMiddleInt
 import SKEFTHawking.SingularConvexStageIsoInt
