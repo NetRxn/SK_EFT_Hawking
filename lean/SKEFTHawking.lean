@@ -4713,6 +4713,9 @@ import SKEFTHawking.KummerSeamCollarE
 import SKEFTHawking.KummerSeamCollarQ
 import SKEFTHawking.KummerSeamDoubleCollar
 import SKEFTHawking.KummerSeamOpenNbhd
+import SKEFTHawking.KummerSeamComponentOpen
+import SKEFTHawking.KummerSeamChart
+import SKEFTHawking.ManifoldModelTransport
 import SKEFTHawking.KummerK7MVAssembly
 import SKEFTHawking.KummerK7SeamCoverNoGo
 import SKEFTHawking.KummerQuotientCovering
