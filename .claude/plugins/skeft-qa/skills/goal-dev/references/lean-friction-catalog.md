@@ -121,3 +121,9 @@ FIX. Add a new entry the *first* time a pattern recurs (don't re-solve it per-in
 - **`fin_cases` + simp/rw don't mix**: `fin_cases` produces `⟨0,⋯⟩`-form Fin literals that keyed matching won't unify with OfNat-literal lemmas — use match-based theorem definitions (`| 0, 1 => by rw [...]`) or `exact`-dispatch.
 - **`push_cast` on Circle-coe inverses**: normalizes `↑(z⁻¹)` to `(↑z)⁻¹` in the goal — normalize hypotheses too (`push_cast at h ⊢`) or `linarith` atoms mismatch.
 - Pin renames: `Prod.dist_eq` named args are `x`/`y`; `ContinuousAt.max/min` absent — `Filter.Tendsto.max/min`; `div_le_div_iff` → `div_le_div_iff₀`; `le_or_lt` → `le_total`.
+
+## Puncture-MV batch (2026-07-21, wt3 #301)
+
+- **`attribute [local irreducible]` on flow-profile defs BEFORE any unification against them** — not just after banking their lemmas in the defining file. `ContinuousOn.comp_continuous`/`Continuous.comp` at such terms hit deterministic isDefEq/whnf heartbeat walls (the unifier dives into max/min/sqrt/• instance towers). Consume only through banked lemmas.
+- **`hΣ` is an illegal binder name** — `Σ` is a notation token; the parse error surfaces far downstream as "unknown identifier".
+- **`open Classical in` must PRECEDE the doc comment**, not follow it.
