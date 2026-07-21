@@ -41,8 +41,19 @@ that structural rather than prose: **`CollarPairGeomUnsub`** carries exactly SIX
 (`hctrlC`, `hctrlH`, `houtPair`, `hnearBd`, `hcoreHit`, `hq0det`) and reaches `hasClass` through
 `toCollarPairGeom → toCollarPairBuild → toHasClass`.
 
-§6 records that `hq0det`'s `∀`-over-membership-proofs shape is cosmetic (`hq0det_of_witness`), so it
-is *precisely* the vetted in-tree straddle atom, not a new obligation.
+Two further certificates pin the surviving row to what the project has already accepted:
+
+* §3b `hctrlC_zero_iff_topSplit` — `hctrlC` is, after cancelling the bottom slice that the prism
+  boundary puts on both sides, *verbatim* the vetted in-tree seam atom
+  `CapstoneSeamTransferSeam.hsplit` (`z@⊤ = φ_# cCore + outC`), the only change being `outC`'s #210
+  shrunk-core support. An `↔`; `CollarPairGeomUnsub` carries the top-face form directly.
+* §6 `hq0det_of_witness` — `hq0det`'s `∀`-over-membership-proofs shape is cosmetic, so it is
+  *precisely* the vetted in-tree straddle atom's single-witness form, not a new obligation.
+
+§7 is a FENCE, not a route: `hcoreHit` becomes a consequence of the split data exactly when
+`K = univ` (`coreHit_of_univ`), and `K = univ` collapses `houtC`'s support to *verbatim* the refuted
+open-complement signature (`houtC_support_univ_eq_refuted`). So the tether cannot be cheaply
+discharged — the only shortcut is the settled-dead fork.
 
 ## Fences
 
@@ -79,6 +90,8 @@ open SKEFTHawking.SingularRelativeCoverMVTransport
 open SKEFTHawking.SingularHomotopyInvariance
 open SKEFTHawking.PoincareLefschetzRelFundClass
 open SKEFTHawking.PoincareLefschetzRelFundClassGeom
+open SKEFTHawking.PoincareLefschetzRelFundClassCylinderCrossLocalAlphaU
+open SKEFTHawking.SingularRelativeEmpty
 open SKEFTHawking.PinPlusTraceRelFundReduce
 open SKEFTHawking.PinPlusTraceCapstoneSeamTransfer
 open SKEFTHawking.PinPlusTraceCapstoneInhabit
@@ -143,6 +156,13 @@ theorem ctrlBottom_zero (z : cycles (TopCat.of s.M) (2 + 2)) :
     ctrlBottom s S hS φ hφ hφinj z 0
       = mapChain (slice (graphHom (TopCat.of s.M)) 0) (3 + 1)
           (z : SingularChain (TopCat.of s.M) (3 + 1)) := rfl
+
+/-- The cylinder's TOP face `z@⊤`, retyped at the cylinder END `.B` (the `.B`/`cyl` defeq is real
+but not `HAdd`-transparent — the same retyping `ctrlBottom` performs for the bottom face). -/
+noncomputable def topSliceB (z : cycles (TopCat.of s.M) (2 + 2)) :
+    SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) :=
+  mapChain (slice (graphHom (TopCat.of s.M)) 1) (3 + 1)
+    (z : SingularChain (TopCat.of s.M) (3 + 1))
 
 /-! ## §2. `CollarPairGeom` — the reduced inspectable split data -/
 
@@ -275,13 +295,12 @@ structure CollarPairGeomUnsub where
   outC : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)
   /-- the handle-side remainder (the free boundary sphere, off `K`). -/
   outH : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1)
-  /-- **GEOMETRIC 1 — the cylinder-side split**, on the unsubdivided controlled cylinder chain: its
-  boundary is the shared core (pushed along the attaching leg) + the off-`K` top-face remainder +
-  the bottom face. -/
-  hctrlC : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)
-      (capstoneCylChainT s S hS φ hφ hφinj z)
+  /-- **GEOMETRIC 1 — the top-face split** `z@⊤ = φ_# cCore + outC`. This is *verbatim* the vetted
+  in-tree seam atom `CapstoneSeamTransferSeam.hsplit`, except that `outC`'s support below is the
+  #210 shrunk-core signature rather than the refuted one. Certified equal to the cylinder-boundary
+  form of `CollarPairGeom.hctrlC` by `hctrlC_zero_iff_topSplit` (an `↔`). -/
+  hctrlC : topSliceB s S hS φ hφ hφinj z
     = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) cCore + outC
-      + ctrlBottom s S hS φ hφ hφinj z 0
   /-- **GEOMETRIC 2 — the disk-side split**, on the canonical detecting chain itself: its boundary
   is the SAME shared core (pushed along the inclusion leg) + the off-`K` free-sphere remainder. -/
   hctrlH : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1)
@@ -511,6 +530,33 @@ theorem qZero_boundary_mem_of_splits (z : cycles (TopCat.of s.M) (2 + 2))
   rw [← hq, qCtrl_boundary_eq_of_splits z 0 hctrlC hctrlH houtPair]
   exact ⟨bdOut, rfl⟩
 
+/-! ## §3b. `hctrlC` IS the vetted top-face split -/
+
+omit [PreconnectedSpace s.M] [Nonempty s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **`hctrlC` unmasked.** The controlled cylinder chain is a prism over the cycle `z`, so its
+boundary is exactly the two endpoint slices (`chainBoundary_crossChain`). Cancelling the bottom
+slice — which appears verbatim on both sides — leaves the **top-face split**
+`z@⊤ = φ_# cCore + outC`. That is *literally* the in-tree vetted seam atom
+`CapstoneSeamTransferSeam.hsplit`, the only difference being that `outC`'s support is the #210
+shrunk-core signature `topface ∖ φ''K` rather than the refuted `topface ∖ range φ`. So
+`CollarPairGeomUnsub.hctrlC` introduces no new geometry beyond what the project already accepted —
+an `↔`, both directions. -/
+theorem hctrlC_zero_iff_topSplit (z : cycles (TopCat.of s.M) (2 + 2))
+    (cCore : SingularChain (TopCat.of ↥S) (3 + 1))
+    (outC : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)) :
+    (chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)
+        (capstoneCylChainT s S hS φ hφ hφinj z)
+      = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) cCore + outC
+        + ctrlBottom s S hS φ hφ hφinj z 0)
+      ↔ topSliceB s S hS φ hφ hφinj z
+          = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) cCore + outC := by
+  have hbd : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)
+        (capstoneCylChainT s S hS φ hφ hφinj z)
+      = topSliceB s S hS φ hφ hφinj z + ctrlBottom s S hS φ hφ hφinj z 0 :=
+    chainBoundary_crossChain 3 (z : SingularChain (TopCat.of s.M) (3 + 1)) z.2
+  rw [hbd]
+  exact add_left_inj _
+
 /-! ## §4. The reduced row produces the frozen one -/
 
 namespace CollarPairGeom
@@ -638,13 +684,14 @@ noncomputable def toCollarPairGeom : CollarPairGeom s t S hS φ hφ hφinj cd hs
   μ := 0
   outC := R.outC
   outH := R.outH
-  hctrlC := R.hctrlC
+  hctrlC := (hctrlC_zero_iff_topSplit R.z R.cCore R.outC).mpr R.hctrlC
   hctrlH := R.hctrlH
   houtC := R.houtC
   houtH := R.houtH
   bdOut := R.bdOut
   houtPair := R.houtPair
-  hq0Bd := qZero_boundary_mem_of_splits R.z R.hctrlC R.hctrlH R.houtPair
+  hq0Bd := qZero_boundary_mem_of_splits R.z
+    ((hctrlC_zero_iff_topSplit R.z R.cCore R.outC).mpr R.hctrlC) R.hctrlH R.houtPair
   μW := R.μW
   near := R.near
   away := R.away
@@ -704,6 +751,46 @@ theorem hq0det_of_witness (z : cycles (TopCat.of s.M) (2 + 2))
       relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
         (qZero s S hS φ hφ hφinj z) hq ≠ 0 :=
   fun x hx hxA hxB _ => h x hx hxA hxB
+
+/-! ## §7. The `hcoreHit` shortcut is the REFUTED signature (a fence, not a route)
+
+`hcoreHit` is the anti-fake tether, and the natural temptation is to make it free by taking the
+shrunk core as large as possible. The two theorems below show that the *only* choice for which the
+tether becomes a consequence of the split data is `K = univ` — and that `K = univ` collapses
+`houtC`'s support to exactly the refuted `topface ∖ range φ` signature of the settled-dead fork
+`seam-transfer-open-support-uninhabitable`. So `hcoreHit` must stay an obligation: it cannot be
+discharged inside this row without re-entering the dead shape. -/
+
+omit [T2Space s.M] [CompactSpace s.M] [PreconnectedSpace s.M] [Nonempty s.M]
+  [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **The `K = univ` collapse.** At `K = univ` the #210 remainder support is *verbatim* the refuted
+open-complement signature. This is why the `hcoreHit`-discharging choice is banned. -/
+theorem houtC_support_univ_eq_refuted :
+    (Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ φ '' (Set.univ : Set ↥S)
+      = (Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ := by
+  rw [Set.image_univ]
+
+omit [PreconnectedSpace s.M] [Nonempty s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **And at `K = univ` the tether is indeed free** — via the banned support. The top-face split
+puts `z@⊤ = φ_# cCore + outC`; with `cCore ∈ C(univᶜ) = C(∅)` the seam term dies, leaving `z@⊤ =
+outC`, which `houtC` places in the refuted signature by `houtC_support_univ_eq_refuted`. Read
+together with that theorem: the shortcut exists and is exactly the dead fork. -/
+theorem coreHit_of_univ (z : cycles (TopCat.of s.M) (2 + 2))
+    {cCore : SingularChain (TopCat.of ↥S) (3 + 1)}
+    {outC : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)}
+    (htop : topSliceB s S hS φ hφ hφinj z
+      = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) cCore + outC)
+    (houtC : outC ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+      ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ φ '' (Set.univ : Set ↥S)) (3 + 1))
+    (hcore : cCore ∈ subspaceChains (X := TopCat.of ↥S) ((Set.univ : Set ↥S)ᶜ) (3 + 1)) :
+    topSliceB s S hS φ hφ hφinj z
+      ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+          ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1) := by
+  have hz : cCore = 0 := by
+    rw [Set.compl_univ, subspaceChains_empty_eq_bot] at hcore
+    exact hcore
+  rw [htop, hz, map_zero, zero_add, ← Set.image_univ]
+  exact houtC
 
 end
 
