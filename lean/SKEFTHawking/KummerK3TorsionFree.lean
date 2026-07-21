@@ -46,6 +46,17 @@ so the residual is a finite, per-copy checkable assertion, not a statement quant
 `Torsion(H₂(K3;ℤ))` embeds ℤ-linearly into `ker tubeQuot` (`torsionIntoKerTubeQuot`,
 `torsionIntoKerTubeQuot_injective`), so `tubeQuot` is an exact measure of what remains.
 
+## `TubeParity` has real content (§6)
+
+`tubeCoord` reads off exactly which exceptional classes are being halved: if `2y` is the
+exceptional combination `v` then `tubeCoord y = v mod 2`
+(`tubeCoord_of_two_smul_eq_exceptional`, unconditional). Combined with the landed δ₁-image parity
+cut (`KummerK7Delta1Image.delta1_image_parity`), `TubeParity` therefore forces the classical
+**Kummer even-weight condition** — an exceptional combination can only become divisible by 2 with
+even weight (`exceptional_half_even_weight`) — and in particular no single exceptional sphere is
+2-divisible (`exceptional_not_two_divisible`). Both are true facts about the Kummer K3, so this is
+a nontrivial consistency check on the hypothesis rather than a vacuous carrier.
+
 ## What `TubeParity` costs geometrically (the honest residual)
 
 Through excision `H₂(K3, qThick) ≅ H₂(eImage, collar)` the connecting map `δ₁` is the pair
@@ -63,13 +74,17 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no
 -/
 import Mathlib
 import SKEFTHawking.KummerK7Delta1Window
+import SKEFTHawking.KummerK7Delta1Image
 
 namespace SKEFTHawking.KummerK3TorsionFree
 
 open SKEFTHawking.SingularHomologyInt (Homology)
 open SKEFTHawking.KummerK7Opener (KummerK3top)
 open SKEFTHawking.KummerWeld (EIndex)
-open SKEFTHawking.KummerK7MVAssembly (k7Delta k7Sum2_injective interH1EquivInt)
+open SKEFTHawking.KummerK7MVAssembly
+  (k7Delta k7Sum2_injective interH1EquivInt exceptionalEmbed eImageH2EquivInt)
+open SKEFTHawking.KummerK7Delta1Image (delta1_image_parity)
+open scoped SKEFTHawking.KummerK7Delta1Image
 open SKEFTHawking.KummerK7Delta1Window
   (Sigma2 pieceBlock sigma2SourceEquiv doubleIntoBlock ker_k7Delta_one
     torsion_inf_pieceBlock_eq_bot torsion_two_smul_eq_zero cokerSigma2Embed)
@@ -286,6 +301,58 @@ theorem torsionIntoKerTubeQuot_injective : Function.Injective torsionIntoKerTube
     Submodule.mem_inf.mpr ⟨Submodule.sub_mem _ s.2 t.2, h2⟩
   rw [torsion_inf_pieceBlock_eq_bot] at h3
   exact Subtype.ext (sub_eq_zero.mp h3)
+
+/-! ## §6. What `TubeParity` buys — the Kummer even-weight condition -/
+
+/-- **Unconditional**: if `2y` is the exceptional combination `v`, then `tubeCoord y` is `v` mod 2.
+The tube coordinate literally reads off *which* exceptional classes are being halved. -/
+theorem tubeCoord_of_two_smul_eq_exceptional {y : Homology KummerK3top 2} {v : EIndex → ℤ}
+    (h : (2 : ℤ) • y = exceptionalEmbed v) : tubeCoord y = redMod2 v := by
+  have hE : exceptionalEmbed v = Sigma2 (0, eImageH2EquivInt.symm v) := by
+    simp only [exceptionalEmbed, LinearMap.comp_apply, LinearMap.inr_apply,
+      LinearEquiv.coe_toLinearMap]
+  have h1 : Sigma2 (sigma2SourceEquiv.symm (blockCoord y))
+      = Sigma2 (0, eImageH2EquivInt.symm v) := by
+    rw [sigma2_blockCoord, h, hE]
+  have h2 : sigma2SourceEquiv.symm (blockCoord y) = (0, eImageH2EquivInt.symm v) :=
+    k7Sum2_injective h1
+  have h3 : blockCoord y = sigma2SourceEquiv (0, eImageH2EquivInt.symm v) := by
+    rw [← h2, LinearEquiv.apply_symm_apply]
+  have h4 : (sigma2SourceEquiv (0, eImageH2EquivInt.symm v)).2 = v := by
+    simp [sigma2SourceEquiv]
+  show redMod2 ((blockCoord y).2) = redMod2 v
+  rw [h3, h4]
+
+/-- **Under `TubeParity`, an exceptional combination can only be halved with even weight.** This is
+the classical Kummer-lattice condition: the sums of exceptional classes that become divisible by 2
+in `H₂(K3;ℤ)` form an even-weight binary code. It combines the tube reading
+(`tubeCoord_of_two_smul_eq_exceptional`) with the landed δ₁-image parity cut
+(`delta1_image_parity`). -/
+theorem exceptional_half_even_weight (hTP : TubeParity) {y : Homology KummerK3top 2}
+    {v : EIndex → ℤ} (h : (2 : ℤ) • y = exceptionalEmbed v) :
+    (∑ c, ((v c : ℤ) : ZMod 2)) = 0 := by
+  have h2 := delta1_image_parity (w := k7Delta 1 y) ⟨y, rfl⟩
+  rw [← hTP y, tubeCoord_of_two_smul_eq_exceptional h] at h2
+  exact h2
+
+/-- **Under `TubeParity` no single exceptional class is 2-divisible in `H₂(K3;ℤ)`** — the 16
+exceptional spheres are primitive classes. A concrete falsifiable consequence, and the standard
+Kummer-surface fact: weight-1 vectors are not in the even-weight Kummer code. -/
+theorem exceptional_not_two_divisible (hTP : TubeParity) (c : EIndex)
+    (y : Homology KummerK3top 2) :
+    (2 : ℤ) • y ≠ exceptionalEmbed (Pi.single c (1 : ℤ) : EIndex → ℤ) := by
+  intro h
+  have h1 := exceptional_half_even_weight hTP h
+  have h2 : ∀ d : EIndex, (((Pi.single c (1 : ℤ) : EIndex → ℤ) d : ℤ) : ZMod 2)
+      = (Pi.single c (1 : ZMod 2) : EIndex → ZMod 2) d := by
+    intro d
+    by_cases hd : d = c
+    · subst hd; simp
+    · rw [Pi.single_eq_of_ne hd, Pi.single_eq_of_ne hd]; simp
+  rw [Finset.sum_congr rfl (fun d _ => h2 d)] at h1
+  rw [show (∑ d, (Pi.single c (1 : ZMod 2) : EIndex → ZMod 2) d) = 1 from
+    SKEFTHawking.KummerK7Delta1Image.sumF_single_one c] at h1
+  exact one_ne_zero h1
 
 end
 
