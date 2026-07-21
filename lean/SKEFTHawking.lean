@@ -4726,8 +4726,12 @@ import SKEFTHawking.KummerK7Delta1Image
 import SKEFTHawking.KummerK7H1Window
 import SKEFTHawking.CircleWindingCocycle
 import SKEFTHawking.TorusCrossPeel
+import SKEFTHawking.TorusCrossPeelGen
 import SKEFTHawking.KummerT4GramCross
+import SKEFTHawking.SingularCoverPartitionAmbientInt
 import SKEFTHawking.SphereProdStokesPeel
+import SKEFTHawking.SphereProdCrossWitnessInt
+import SKEFTHawking.SphereProdCrossValueFeed
 import SKEFTHawking.KTCompletenessProvider
 import SKEFTHawking.KTCompletenessTether
 import SKEFTHawking.PinPlusTraceCapstoneCorrector
