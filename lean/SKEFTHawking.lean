@@ -4590,6 +4590,7 @@ import SKEFTHawking.PinPlusKTKernelSector
 import SKEFTHawking.PinPlusKTSectorGate
 import SKEFTHawking.PinPlusKTSectorGeometricReduce
 import SKEFTHawking.PinPlusKTWuSectorSplit
+import SKEFTHawking.PinPlusKTRankZeroBounding
 import SKEFTHawking.PinPlusKTKernelSpinRoute
 import SKEFTHawking.PinPlusKTStepGate
 import SKEFTHawking.PinPlusKTSurgeryTrace
