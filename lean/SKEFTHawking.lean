@@ -4705,6 +4705,7 @@ import SKEFTHawking.KummerRP3GoodCoverTelescope
 import SKEFTHawking.KummerRP3HomologyUnconditional
 import SKEFTHawking.KummerRP3TransferHomology
 import SKEFTHawking.KummerRP3Smooth
+import SKEFTHawking.KummerSeamSmooth
 import SKEFTHawking.KummerWeldFiberFlow
 import SKEFTHawking.KummerK7MVAssembly
 import SKEFTHawking.KummerK7SeamCoverNoGo
