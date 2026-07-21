@@ -413,3 +413,8 @@ characteristic-bordism (KT) route. Source: the 2026-07-20 vetted codex hcolD dos
 (`codex_hcolD_route.md`, risks 2/6), demand-narrowing lead-verified in-tree
 (`nonempty_ktSpinPresentationDatum_of_row` consumes only `SectorIsGeometric`;
 `kt_equiv_zmod16_of_residuals_sector` now exposes the weakest form).
+
+## 2026-07-21 — K7 seam-cover interior hypothesis (KERNEL no-go) + the δ₁ fence
+
+- **`k7-seam-cover-interior-fails` (KERNEL-REFUTED, registry-backed):** the K7 opener's `K7SeamCoverHyp` (interiors of the un-thickened closed weld pieces cover K3) is FALSE — `k7SeamCoverHyp_false` (KummerK7SeamCoverNoGo). A seam point is interior to neither piece. The UNIQUE route is the collar-thickened cover (`qThick`, `k7_hcov` — discharged). Do not aim any worker at "discharge K7SeamCoverHyp".
+- **δ₁ fence (route caution, prose):** in the K7 degree-2 window, the MV connecting map δ₁ over H₁(collar) = (ℤ/2)¹⁶ is GENUINELY NONZERO for the true K3 (the Kummer lattice has 2-power index in H₂). Do NOT dispatch "prove δ₁ = 0" — the correct target is the δ₁-image/extension analysis (the cokernel-exponent-2 window `k7H2_two_smul_mem_range` is the honest bound already landed).

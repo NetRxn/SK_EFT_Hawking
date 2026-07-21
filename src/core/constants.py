@@ -4011,6 +4011,15 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': 'The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207 hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching region, and the 3x-circled closed-S co-adaptation barrier (#198/#204/#207) is a machinery gap. FALSE (the #210 lead adjudication): htransfer FORCES wAtt into the CLOSED attach image (injective-mapDomain support transport + fromCyl_image_compl disjointness — wAtt_mem_subspaceChains_range_phi), char-2 boundary algebra then forces BOTH split pieces to be CYCLES (boundary_wAtt_eq_zero via subspaceChains_inf_compl_eq_bot), so z@top decomposes as a seam-supported cycle + an off-seam cycle; whenever the two regions have null 4-cycle classes (H4(S1xD3;Z/2)=0, H4 of an open 4-region = 0 — the genuine consumption) and z@top does not bound (z fundamental), the shape is EMPTY (isEmpty_capstoneSeamTransfer_of_null + the Seam corollary). Consequence: the transfer route to hasClass is dead AS SHIPPED; the honest repair = CLOSED-complement supports (wOut/vOut in the complement of the INTERIOR of the attach region — the classical two-rel-pieces-sharing-the-interface picture), a NEW gate-pending consumption shape whose interface terms cancel mod 2.',
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'k7_seam_cover_interior_fails': {
+        'fork_id': 'k7-seam-cover-interior-fails',
+        'backing_theorems': [
+            'SKEFTHawking.KummerK7SeamCoverNoGo.k7SeamCoverHyp_false',
+        ],
+        'nogo_kind': 'refutation',
+        'false_statement': 'K7SeamCoverHyp (the K7 opener\'s un-thickened MV cover hypothesis): the INTERIORS of the two closed Kummer-weld pieces (the Q-image and the 16 closed E-images) cover the welded K3 carrier, so the Mayer-Vietoris assembly can run on the un-thickened pieces directly. FALSE (kernel refutation k7SeamCoverHyp_false): a seam point (fiberNorm = 1, the glued RP3 locus) is interior to NEITHER piece - E-side, every neighbourhood meets fiber radius < 1 (the inward deform path); Q-side, every neighbourhood meets the E-exterior along the outward chart ray (via circle_exp_injOn_one -> centeredChartParam_injOn_double, chart injectivity on the doubled ball). Consequence: "discharge K7SeamCoverHyp" is settled-dead; the UNIQUE route is the collar-thickened cover (qThick = qImage union outer half-collars fiberNorm >= 1/2) whose interior-cover hypothesis IS discharged (k7_hcov, KummerK7MVAssembly) and through which the whole K7 accounting now runs unconditionally.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════
