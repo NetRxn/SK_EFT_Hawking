@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-21T12:15:18.410525",
+  "generated": "2026-07-21T12:25:16.960817",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 36344,
-    "theorems_total": 23067,
-    "theorems_substantive": 23041,
+    "total_declarations": 36390,
+    "theorems_total": 23100,
+    "theorems_substantive": 23074,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 22973,
+    "theorems_kernel_substantive": 23006,
     "theorems_tracked_vacuity_debt": 68,
     "theorems_vacuity_baseline": 48,
     "theorems_vacuous_proxy": 6,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 1863,
+    "modules": 1866,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -708,6 +708,9 @@
       "SKEFTHawking.KummerPairHalving",
       "SKEFTHawking.KummerPairTransportInt",
       "SKEFTHawking.KummerPairTubeSeparation",
+      "SKEFTHawking.KummerPieceCollarCyclicInt",
+      "SKEFTHawking.KummerPieceCollarInt",
+      "SKEFTHawking.KummerPieceCollarModTwoInt",
       "SKEFTHawking.KummerPunctureAnnulus",
       "SKEFTHawking.KummerPunctureBalls",
       "SKEFTHawking.KummerPunctureFlow",
@@ -1881,9 +1884,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 11828,
+    "definitions": 11840,
     "structures": 447,
-    "instances": 902,
+    "instances": 903,
     "inductives": 100,
     "native_decide_decl_closure": 546,
     "native_decide_clusters": {
