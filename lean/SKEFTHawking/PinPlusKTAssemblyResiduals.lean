@@ -67,9 +67,135 @@ namespace SKEFTHawking.PinPlusKTAssemblyResiduals
 open residual). Fixing this concrete provider is how the assembly INSTANTIATES the provider rather
 than hypothesizing it: the phase's remaining obligation is the residual atoms below, NOT the
 provider. -/
-noncomputable def residualProv : CharPairWProviderPerOp (𝓡 4) 0 :=
+noncomputable def residualProvK (k : WithTop ℕ∞) : CharPairWProviderPerOp (𝓡 4) k :=
   (SKEFTHawking.PinPlusCylComponentClsIdentDisc.nonempty_charPairWProviderPerOp
-    (I := 𝓡 4) (k := 0)).some
+    (I := 𝓡 4) (k := k)).some
+
+/-- **The `C⁰` specialisation of the canonical provider** — the historical name, unchanged in type.
+`nonempty_charPairWProviderPerOp` was always `k`-generic (its binder is `{k : WithTop ℕ∞}`), so the
+old `(k := 0)` instantiation was a *choice*, never a constraint; `residualProv = residualProvK 0`
+definitionally. -/
+noncomputable def residualProv : CharPairWProviderPerOp (𝓡 4) 0 := residualProvK 0
+
+/-! ## §R. THE REGULARITY-GENERIC CORE — the assembly at ANY smoothness exponent `k`
+
+The Phase 5q.H roadmap §2 leg 2 is a **hard constraint**: the carrier must live in the SMOOTH
+category (`k ≥ 1`), because at `k = 0` Mathlib's `IsManifold I 0 M` binder is *free* (it proves
+`contDiffGroupoid 0 I = continuousGroupoid H` and registers an unconditional instance for every
+charted space — see `PinPlusRegularityFence`), so a `k = 0` carrier is the class of compact
+boundaryless charted **topological** 4-manifolds, whose Pin⁺ bordism is `≅ ℤ/2 ⊕ ℤ/8`
+(Kirby–Siebenmann; E₈), not `ℤ/16`.
+
+There is **no generic `C⁰ → C¹` transport** — `PinPlusRegularitySeparation.no_generic_zero_to_one_
+transport` refutes it — so the lift cannot be a transport theorem. It has to be a **re-declaration
+at `k ≥ 1`**, and that is exactly what this section does: the whole assembly chain below
+`kt_equiv_zmod16_of_two_leaves` turned out to be regularity-generic already (the provider
+`nonempty_charPairWProviderPerOp`, the ℝP⁴ witness — `RP4Manifold.isManifold_rp4` is `Cω` and
+`RP2EquatorialInclusion.contMDiff_embRP2` is `k`-generic — the grade, the sector/step/leaf gates, the
+spin-forget `Φ`, the presentation row, the ker-Φ and collapse leaves). Only the KRS lane's
+*constructed supplier* is `C⁰`-only (see the note on `kt_equiv_zmod16_of_residuals` below).
+
+`kt_equiv_zmod16_of_residuals_ofKRS` is therefore the honest core: the same proof, over an arbitrary
+regularity exponent, taking the KRS leaf in its regularity-neutral form `KernelReducesToSpin`. The
+`k = 0` theorem of record becomes a corollary of it, unchanged in statement. -/
+
+/-- **THE REGULARITY-GENERIC END-TO-END CONDITIONAL** — `Ω₄^{Pin⁺} ≃+ ZMod 16` on the faithful
+tethered char-pair carrier at **any** smoothness exponent `k : WithTop ℕ∞`, in particular the smooth
+`k = ⊤` the literature-grade Kirby–Taylor theorem is about.
+
+Hypotheses are the residual atoms in their regularity-neutral form. Only the KRS leaf differs from
+the `k = 0` theorem below: it is taken as `KernelReducesToSpin prov` — the Prop itself ("every
+Brown-kernel class is empty-Σ representable"), which is meaningful at every `k`. That is a *weaker*
+hypothesis than the `k = 0` `KRSResidualRow` supply (the row implies it via
+`kernelReducesToSpin_of_residualRow`), so nothing is narrowed: this statement is at least as strong
+as the `k = 0` one on that leaf, at every `k`. -/
+theorem kt_equiv_zmod16_of_residuals_ofKRS {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k)
+    (hKRS : KernelReducesToSpin prov)
+    (row : SpinPresentationRow prov)
+    (hA : row.R.RealizesSphereProducts) (hB : row.R.SphereProductBounds)
+    (hcol : RankZeroCollapsesToEmptySurf prov)
+    (hker : KerPhiSubDoubles prov)
+    (hcyc : SpinImageCyclic prov)
+    (h2 : ktKernelRep prov + ktKernelRep prov = 0) :
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData prov) ≃+ ZMod 16) := by
+  -- dA's honest `hfwd` (KT Lemma 5.3 "only if"): FREE on doubles from Rokhlin, given `ker Φ ⊆ doubles`.
+  have hfwd : ∀ x, spinForgetPhi prov x = 0 → (32 : ℤ) ∣ row.R.sig x :=
+    spinForgetPhi_hfwd_of_ker_sub_doubles prov row.R row.hdvd hker
+  -- the generator image `Φ[g] = k₀`, derived (non-circular: no `k₀`/`KTNonSplit` facts).
+  have hΦg :
+      spinForgetPhi prov (DataBordismGrp.mk (spinEmptyData prov) row.g) = ktKernelRep prov :=
+    spinForgetPhi_g_eq_ktKernelRep_of_cyclic prov row.R row.g row.hg hfwd hcyc h2
+  -- dC leaf: the presentation row + the concrete collapse atom yield `KTSpinPresentationDatum`.
+  obtain ⟨dC⟩ := nonempty_ktSpinPresentationDatum_of_row_of_collapse row hA hB hΦg hcol
+  -- dA leaf: the row + honest hfwd + cyclic image + 2-torsion yield `DualSpinForwardDatum`.
+  obtain ⟨dA⟩ := nonempty_dualSpinForwardDatum_of_row row hfwd hcyc h2
+  -- the gate-certified assembly of record fires with the three real leaf inputs.
+  exact kt_equiv_zmod16_of_two_leaves hKRS dC dA
+
+/-- **THE REGULARITY-GENERIC CONDITIONAL, geometric-row form.** The KRS leaf is taken one level
+deeper, at the `AmbientSurgeryDatum` row — the *ambient KT §5 surgery* atom (an isotropic class, its
+surgered representative with rank dropped by 2, and a genuine tethered surgery-trace bordism between
+them). This row is regularity-generic by construction: `AmbientSurgeryDatum prov p` demands a
+`Bordism ((𝓡 4).prod (𝓡∂ 1)) p'.1 p.1`, whose `IsManifold … k` and `ContMDiff … k` fields carry the
+regularity honestly. At `k = 0` those two fields are free and the datum is supplied in-tree by the
+constructed handle-attachment capstone; at `k ≥ 1` they are the genuine smooth surgery trace, which
+is the honest open geometric content of the smooth lift. -/
+theorem kt_equiv_zmod16_of_residuals_ofAmbientRow {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k)
+    (H : ∀ p : StrMfd (pinPlusCharPairData prov).toTangentialData,
+        charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = 0 →
+        0 < p.2.n → SKEFTHawking.PinPlusKTSurgeryTrace.AmbientSurgeryDatum prov p)
+    (row : SpinPresentationRow prov)
+    (hA : row.R.RealizesSphereProducts) (hB : row.R.SphereProductBounds)
+    (hcol : RankZeroCollapsesToEmptySurf prov)
+    (hker : KerPhiSubDoubles prov)
+    (hcyc : SpinImageCyclic prov)
+    (h2 : ktKernelRep prov + ktKernelRep prov = 0) :
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData prov) ≃+ ZMod 16) :=
+  kt_equiv_zmod16_of_residuals_ofKRS prov
+    (SKEFTHawking.PinPlusKTSurgeryTrace.kernelReducesToSpin_of_ambientDatumSupply H)
+    row hA hB hcol hker hcyc h2
+
+/-- **THE SMOOTH-CATEGORY HEADLINE** (`k = ⊤`) — the `C^∞`/`Cω` instantiation of the assembly on the
+canonical provider `residualProvK ⊤`. This is the statement roadmap §2 leg 2 demands and the `k = 0`
+theorem of record does **not** deliver: the carrier here is the class of compact boundaryless
+`ChartedSpace (EuclideanSpace ℝ (Fin 4))` spaces whose `IsManifold (𝓡 4) ⊤` binder is a genuine
+`C^∞`-atlas obligation, not the free `k = 0` one. Since `C¹ ⟹` a unique compatible smooth structure
+(Whitney), `k = ⊤` is the flagship instantiation of the whole `k ≥ 1` family. -/
+theorem kt_equiv_zmod16_of_residuals_smooth
+    (H : ∀ p : StrMfd (pinPlusCharPairData (residualProvK ⊤)).toTangentialData,
+        charPairBrown (residualProvK ⊤)
+            (T2DataBordismGrp.mk (pinPlusCharPairData (residualProvK ⊤)) p) = 0 →
+        0 < p.2.n → SKEFTHawking.PinPlusKTSurgeryTrace.AmbientSurgeryDatum (residualProvK ⊤) p)
+    (row : SpinPresentationRow (residualProvK ⊤))
+    (hA : row.R.RealizesSphereProducts) (hB : row.R.SphereProductBounds)
+    (hcol : RankZeroCollapsesToEmptySurf (residualProvK ⊤))
+    (hker : KerPhiSubDoubles (residualProvK ⊤))
+    (hcyc : SpinImageCyclic (residualProvK ⊤))
+    (h2 : ktKernelRep (residualProvK ⊤) + ktKernelRep (residualProvK ⊤) = 0) :
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData (residualProvK ⊤)) ≃+ ZMod 16) :=
+  kt_equiv_zmod16_of_residuals_ofAmbientRow (residualProvK ⊤) H row hA hB hcol hker hcyc h2
+
+/-! ### §R.1 — the smooth carrier is NOT vacuous (unconditional). -/
+
+/-- **THE SMOOTH CARRIER IS NON-DEGENERATE — UNCONDITIONALLY.** At `k = ⊤` the computed mod-8 grade
+`charPairBrown` is already **surjective** onto `ZMod 8`, realized by the honestly-smooth (indeed
+real-analytic) `ℝP⁴` witness `RP4CharPairWitness.rp4CharPairK ⊤`: `RP4Manifold.isManifold_rp4` is
+`Cω`, `RP2Manifold.isManifold_rp2` is `Cω`, and `RP2EquatorialInclusion.contMDiff_embRP2` gives the
+`ℝP² ↪ ℝP⁴` characteristic-surface embedding at every regularity. So the smooth-category
+instantiation above is not an empty shell: its carrier carries at least the 8 grade classes, with a
+genuine smooth generator. No hypothesis. -/
+theorem charPairBrown_surjective_smooth :
+    Function.Surjective (charPairBrown (residualProvK ⊤)) :=
+  SKEFTHawking.RP4CharPairWitness.charPairBrown_surjective (residualProvK ⊤)
+
+/-- **The smooth `ℝP⁴` class is nonzero in the smooth-category carrier** — unconditional
+non-triviality of the `k = ⊤` group (grade `1 ≠ 0 ∈ ZMod 8`). -/
+theorem rp4_ne_zero_smooth :
+    T2DataBordismGrp.mk (pinPlusCharPairData (residualProvK ⊤))
+        ⟨SKEFTHawking.RP4Manifold.rp4SM_k ⊤, SKEFTHawking.RP4CharPairWitness.rp4CharPairK ⊤⟩ ≠ 0 :=
+  SKEFTHawking.RP4CharPairWitness.charPairBrown_rp4_ne_zero (residualProvK ⊤)
 
 /-- **THE END-TO-END CONDITIONAL** — `Ω₄^{Pin⁺} ≃+ ZMod 16` on the faithful tethered carrier from the
 CURRENT residual atoms. This is the single authoritative statement of everything that remains open in
@@ -109,23 +235,11 @@ theorem kt_equiv_zmod16_of_residuals
     (hker : KerPhiSubDoubles residualProv)
     (hcyc : SpinImageCyclic residualProv)
     (h2 : ktKernelRep residualProv + ktKernelRep residualProv = 0) :
-    Nonempty (T2DataBordismGrp (pinPlusCharPairData residualProv) ≃+ ZMod 16) := by
-  -- KRS leaf: the ∀-`p` residual row supply discharges the deep KT §5 kernel-null binder.
-  have hKRS : KernelReducesToSpin residualProv := kernelReducesToSpin_of_residualRow H
-  -- dA's honest `hfwd` (KT Lemma 5.3 "only if"): FREE on doubles from Rokhlin, given `ker Φ ⊆ doubles`.
-  have hfwd : ∀ x, spinForgetPhi residualProv x = 0 → (32 : ℤ) ∣ row.R.sig x :=
-    spinForgetPhi_hfwd_of_ker_sub_doubles residualProv row.R row.hdvd hker
-  -- the generator image `Φ[g] = k₀`, derived (non-circular: no `k₀`/`KTNonSplit` facts).
-  have hΦg :
-      spinForgetPhi residualProv (DataBordismGrp.mk (spinEmptyData residualProv) row.g)
-        = ktKernelRep residualProv :=
-    spinForgetPhi_g_eq_ktKernelRep_of_cyclic residualProv row.R row.g row.hg hfwd hcyc h2
-  -- dC leaf: the presentation row + the concrete collapse atom yield `KTSpinPresentationDatum`.
-  obtain ⟨dC⟩ := nonempty_ktSpinPresentationDatum_of_row_of_collapse row hA hB hΦg hcol
-  -- dA leaf: the row + honest hfwd + cyclic image + 2-torsion yield `DualSpinForwardDatum`.
-  obtain ⟨dA⟩ := nonempty_dualSpinForwardDatum_of_row row hfwd hcyc h2
-  -- the gate-certified assembly of record fires with the three real leaf inputs.
-  exact kt_equiv_zmod16_of_two_leaves hKRS dC dA
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData residualProv) ≃+ ZMod 16) :=
+  -- KRS leaf: the ∀-`p` residual row supply discharges the deep KT §5 kernel-null binder;
+  -- everything after it is the regularity-generic core (§R).
+  kt_equiv_zmod16_of_residuals_ofKRS residualProv (kernelReducesToSpin_of_residualRow H)
+    row hA hB hcol hker hcyc h2
 
 /-! ## W-E — the Rokhlin-16 corollary (pure wiring from the equivalence). -/
 
@@ -149,6 +263,25 @@ theorem rokhlin_sixteen_of_residuals
     (h2 : ktKernelRep residualProv + ktKernelRep residualProv = 0) :
     Nat.card (T2DataBordismGrp (pinPlusCharPairData residualProv)) = 16 := by
   obtain ⟨e⟩ := kt_equiv_zmod16_of_residuals H row hA hB hcol hker hcyc h2
+  rw [Nat.card_congr e.toEquiv, Nat.card_eq_fintype_card, ZMod.card]
+
+/-- **W-E — THE ROKHLIN-16 COROLLARY IN THE SMOOTH CATEGORY** (`k = ⊤`). Same pure wiring as
+`rokhlin_sixteen_of_residuals`, on the smooth-category carrier: the faithful Pin⁺ char-pair bordism
+group of compact boundaryless `C^∞` 4-manifolds has EXACTLY 16 elements. This — not the `k = 0`
+form — is the shape the literature's `Ω₄^{Pin⁺} ≅ ℤ/16` asserts (roadmap §2 leg 2). -/
+theorem rokhlin_sixteen_of_residuals_smooth
+    (H : ∀ p : StrMfd (pinPlusCharPairData (residualProvK ⊤)).toTangentialData,
+        charPairBrown (residualProvK ⊤)
+            (T2DataBordismGrp.mk (pinPlusCharPairData (residualProvK ⊤)) p) = 0 →
+        0 < p.2.n → SKEFTHawking.PinPlusKTSurgeryTrace.AmbientSurgeryDatum (residualProvK ⊤) p)
+    (row : SpinPresentationRow (residualProvK ⊤))
+    (hA : row.R.RealizesSphereProducts) (hB : row.R.SphereProductBounds)
+    (hcol : RankZeroCollapsesToEmptySurf (residualProvK ⊤))
+    (hker : KerPhiSubDoubles (residualProvK ⊤))
+    (hcyc : SpinImageCyclic (residualProvK ⊤))
+    (h2 : ktKernelRep (residualProvK ⊤) + ktKernelRep (residualProvK ⊤) = 0) :
+    Nat.card (T2DataBordismGrp (pinPlusCharPairData (residualProvK ⊤))) = 16 := by
+  obtain ⟨e⟩ := kt_equiv_zmod16_of_residuals_smooth H row hA hB hcol hker hcyc h2
   rw [Nat.card_congr e.toEquiv, Nat.card_eq_fintype_card, ZMod.card]
 
 end SKEFTHawking.PinPlusKTAssemblyResiduals

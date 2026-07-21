@@ -122,7 +122,7 @@ theorem spinSector_of_isEmpty_surf (prov : CharPairWProviderPerOp I k)
 `0` — the carrier-generic "spin classes are in the kernel" fact, re-exposed in sector language
 from `PinPlusKTExtension.charPairBrown_of_rank_zero`. (This is the DONE direction of the
 kernel/spin-image correspondence; the CONVERSE — `KernelReducesToSpin` — is the open deep content.) -/
-theorem charPairBrown_of_spinSector (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem charPairBrown_of_spinSector (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p : StrMfd (pinPlusCharPairData prov).toTangentialData) (h : IsSpinSectorStr prov p) :
     charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = 0 :=
   charPairBrown_of_rank_zero prov p h
@@ -138,7 +138,7 @@ def EmptySigmaRepresentable (prov : CharPairWProviderPerOp I k)
 /-- **Empty-Σ-representable ⟹ in the kernel** (the DONE direction at the class level). Every
 empty-Σ-representable class has `charPairBrown = 0`. The honest half of `ker = image(Ω₄^{Spin})`;
 the other half (`KernelReducesToSpin`) is the open completeness content. -/
-theorem emptySigmaRepresentable_in_kernel (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem emptySigmaRepresentable_in_kernel (prov : CharPairWProviderPerOp (𝓡 4) k)
     (x : T2DataBordismGrp (pinPlusCharPairData prov)) (h : EmptySigmaRepresentable prov x) :
     charPairBrown prov x = 0 := by
   obtain ⟨p, hp, rfl⟩ := h
@@ -146,7 +146,7 @@ theorem emptySigmaRepresentable_in_kernel (prov : CharPairWProviderPerOp (𝓡 4
 
 /-- **The zero class is empty-Σ-representable** — witnessed by the empty structure `charPairBundledEmpty`
 (rank 0). Non-vacuity of `EmptySigmaRepresentable`: the sector is inhabited (by `0`). -/
-theorem emptySigmaRepresentable_zero (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+theorem emptySigmaRepresentable_zero (prov : CharPairWProviderPerOp (𝓡 4) k) :
     EmptySigmaRepresentable prov 0 :=
   ⟨⟨emptySM, charPairBundledEmpty⟩, rfl, rfl⟩
 
@@ -190,7 +190,7 @@ theorem revStr_fixed_of_rank_zero {s : SingularManifold PUnit k I}
 
 /-- **The spin sector is 2-torsion.** Every rank-0 structured manifold's class is its own negative:
 `[p] + [p] = 0`. BANKED positive structural fact (§3 docstring). -/
-theorem spinSector_two_torsion (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem spinSector_two_torsion (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p : StrMfd (pinPlusCharPairData prov).toTangentialData) (h : IsSpinSectorStr prov p) :
     T2DataBordismGrp.mk (pinPlusCharPairData prov) p
       + T2DataBordismGrp.mk (pinPlusCharPairData prov) p = 0 :=
@@ -199,7 +199,7 @@ theorem spinSector_two_torsion (prov : CharPairWProviderPerOp (𝓡 4) 0)
 
 /-- **Every empty-Σ-representable class is 2-torsion** (class level). BANKED. Constrains any future
 Kummer witness: `κ` empty-Σ-representable ⟹ `κ + κ = 0`. -/
-theorem emptySigmaRepresentable_two_torsion (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem emptySigmaRepresentable_two_torsion (prov : CharPairWProviderPerOp (𝓡 4) k)
     (x : T2DataBordismGrp (pinPlusCharPairData prov)) (h : EmptySigmaRepresentable prov x) :
     x + x = 0 := by
   obtain ⟨p, hp, rfl⟩ := h
@@ -220,7 +220,7 @@ in-tree rank-0 witness represents a nonzero class (the Kummer carrier is UNBUILT
 `∀ x`-quantifier cannot be met by pointing at existing structures: producing the spin representative
 IS the KT §5 surgery. The statement shape (a genuine `∃` rank-0 representative equal to `x`) blocks
 the collapse. -/
-def KernelReducesToSpin (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def KernelReducesToSpin (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   ∀ x : T2DataBordismGrp (pinPlusCharPairData prov),
     charPairBrown prov x = 0 → EmptySigmaRepresentable prov x
 
@@ -239,7 +239,7 @@ actually kills is `KummerWitness` (outright) and `KernelReducesToSpin`-given-`KT
 exactly-ℤ/2 pin is `{SpinImageIsTwo, KummerWitness}` (`sector_image_eq_pair`), and the BINDING
 round-8 consumption spec makes the TRIPLE `{KernelReducesToSpin, SpinImageIsTwo, KTNonSplit}`
 the minimal consumption unit — every 2-subset admits a degenerate model (G8-2/G8-3). -/
-def SpinImageIsTwo (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def SpinImageIsTwo (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   ∀ x : T2DataBordismGrp (pinPlusCharPairData prov),
     EmptySigmaRepresentable prov x → x = 0 ∨ x = ktKernelRep prov
 
@@ -253,7 +253,7 @@ rank-8 `sumStr` of `ℝP⁴`'s). STATED as an interface; the K3 carrier is NOT b
 mod-8 `charPairBrown` door is blind to `{0, 8}`, dossier §5). The first conjunct cannot be
 discharged by the empty structure (which represents `0`, so it would force `k₀ = 0`, contradicting
 the second). A real K3/Kummer carrier is required — no zero-input witness exists. -/
-def KummerWitness (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def KummerWitness (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   EmptySigmaRepresentable prov (ktKernelRep prov) ∧ KTNonSplit prov
 
 /-! ## §5. The decomposition bridges — the sub-Props COMPOSE into the KT binders + assembly
@@ -267,7 +267,7 @@ open). -/
 decomposes into the kernel-null direction (kernel ⟹ empty-Σ) composed with the spin-image bound
 (empty-Σ ⟹ `{0, k₀}`). Pure composition — NOT a discharge (both sub-Props remain open). This is the
 decomposition's headline: `KTKernelCard = KernelReducesToSpin ∘ SpinImageIsTwo`. -/
-theorem KTKernelCard_of_reduces_of_image (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem KTKernelCard_of_reduces_of_image (prov : CharPairWProviderPerOp (𝓡 4) k)
     (h1 : KernelReducesToSpin prov) (h2 : SpinImageIsTwo prov) : KTKernelCard prov := by
   intro x hx
   exact h2 x (h1 x hx)
@@ -279,7 +279,7 @@ stronger than `PinPlusKTExtension.kt_kernelOrderTwo_of_card` (which needs `KTKer
 `KTNonSplit`): the spin-sector 2-torsion is structural, so the non-split bit is NOT required for
 `KTKernelOrderTwo`. Finding: the torsion half of `ker ≅ ℤ/2` is discharged; only the kernel-null
 direction and the non-split lower bound remain open. -/
-theorem KTKernelOrderTwo_of_reduces (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem KTKernelOrderTwo_of_reduces (prov : CharPairWProviderPerOp (𝓡 4) k)
     (h1 : KernelReducesToSpin prov) : KTKernelOrderTwo prov := by
   intro x hx
   exact emptySigmaRepresentable_two_torsion prov x (h1 x hx)
@@ -290,7 +290,7 @@ theorem KTKernelOrderTwo_of_reduces (prov : CharPairWProviderPerOp (𝓡 4) 0)
 (`KernelReducesToSpin`, `SpinImageIsTwo`, `KTNonSplit`) assemble the ℤ/16 from below (`2 · 8`).
 Shows the sector decomposition is load-bearing for the ultimate target. CONDITIONAL on the open
 sub-Props; nothing discharged. -/
-theorem kt_equiv_zmod16_of_sector (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem kt_equiv_zmod16_of_sector (prov : CharPairWProviderPerOp (𝓡 4) k)
     (h1 : KernelReducesToSpin prov) (h2 : SpinImageIsTwo prov) (hns : KTNonSplit prov) :
     Nonempty (T2DataBordismGrp (pinPlusCharPairData prov) ≃+ ZMod 16) :=
   kt_equiv_zmod16 prov (KTKernelCard_of_reduces_of_image prov h1 h2) hns
@@ -298,7 +298,7 @@ theorem kt_equiv_zmod16_of_sector (prov : CharPairWProviderPerOp (𝓡 4) 0)
 /-- **`KummerWitness` discharges `KTNonSplit`** — the interface consistency tie: the second conjunct
 IS `KTNonSplit`. (Trivial extraction; documents that a built K3/Kummer carrier closes the non-split
 bit — dossier §5 option 1.) -/
-theorem KTNonSplit_of_KummerWitness (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem KTNonSplit_of_KummerWitness (prov : CharPairWProviderPerOp (𝓡 4) k)
     (h : KummerWitness prov) : KTNonSplit prov :=
   h.2
 
@@ -309,7 +309,7 @@ the Kummer surface bounds a Pin⁺ manifold" is thus discharged from the sector 
 ÷32-upper (`σ(2·K3) = 32`) content. What remains open is the ÷32-LOWER half ("the Kummer surface
 itself does not bound", `σ(K3) = 16`), which is exactly `KTNonSplit` (`k₀ ≠ 0`). This localizes the
 whole ÷32 obstruction to the single non-split bit — the dossier §5 critical node. -/
-theorem kernelRep_two_torsion_of_KummerWitness (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem kernelRep_two_torsion_of_KummerWitness (prov : CharPairWProviderPerOp (𝓡 4) k)
     (h : KummerWitness prov) : ktKernelRep prov + ktKernelRep prov = 0 :=
   emptySigmaRepresentable_two_torsion prov _ h.1
 

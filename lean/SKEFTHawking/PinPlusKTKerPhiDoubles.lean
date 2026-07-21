@@ -83,7 +83,9 @@ open SKEFTHawking.PinPlusTraceLeafGate
 
 namespace SKEFTHawking.PinPlusKTKerPhiDoubles
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable {k : WithTop ℕ∞}
+
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-! ## §1. The statement layer — `ker Φ ⊆ doubles` in the gate lemma's exact consumption form -/
 

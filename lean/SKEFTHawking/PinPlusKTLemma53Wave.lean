@@ -11,7 +11,7 @@ the genuine `Ω₄^{Spin} → Ω₄^{Pin⁺}` forgetful map are unbuilt), so eve
 discharging nothing — exactly like `kernelReducesToSpin_of_ambientDatumSupply`.
 
 ## G8-1 provider-inhabitation rider (unchanged, applies to EVERY per-`prov` result here)
-`CharPairWProviderPerOp (𝓡 4) 0` has no unconditional in-tree inhabitant (only `ofCylinderEngine`,
+`CharPairWProviderPerOp (𝓡 4) k` has no unconditional in-tree inhabitant (only `ofCylinderEngine`,
 consuming the SINGLE remaining Track-2 residual `cylData` — addClosure was discharged by PinPlusCharPairWProviderClosed; round-10 kernel-encoded the dependency as nonempty_provider_of_cylData). Every per-`prov` theorem below is CONDITIONAL, not
 vacuous, with ZERO live instances until Track-2's `cylData`/`addClosure` land an in-tree `prov`.
 
@@ -87,6 +87,8 @@ open SKEFTHawking.PinPlusKTSectorGate
 open SKEFTHawking.PinPlusKTStepGate
 
 namespace SKEFTHawking.PinPlusKTLemma53Wave
+
+variable {k : WithTop ℕ∞}
 
 /-! ## §A. Direction A — the "only if": `32 ∣ σ` sharpness ⟹ `KTNonSplit`
 
@@ -170,7 +172,7 @@ split world (`k₀ = 0`, kernel-trivial, G8-3) it IS inhabitable (`Φ = 0`, `hfw
 only via the collapse), and there `ktNonSplit_of_dualSpinForwardDatum`'s conclusion `k₀ ≠ 0` FAILS —
 i.e. no such datum exists in the split world (`hfwd[g]` would force `32 ∣ −16`). The datum EXCLUDES
 exactly the split degenerate model, which is precisely `KTNonSplit`'s role in the triple. -/
-structure DualSpinForwardDatum (prov : CharPairWProviderPerOp (𝓡 4) 0)
+structure DualSpinForwardDatum (prov : CharPairWProviderPerOp (𝓡 4) k)
     (ξ : TangentialData X k' I') where
   /-- the σ-presentation of the spin carrier `ξ` (`DataBordismGrp ξ = Ω₄^{Spin}`). -/
   R : SpinSigmaPresentation ξ
@@ -191,7 +193,7 @@ of the triple). If `k₀ = 0` then `Φ[g] = k₀ = 0`, so the "only if" gives `3
 by `not_thirtytwo_dvd_neg_sixteen`. Hence `k₀ ≠ 0`: the ÷32-lower `σ(K3) = 16 ≢ 0 mod 32`, i.e. K3
 does not Pin⁺-bound. This is `KummerWitness.2`, reduced to the (unbuilt) forgetful map + the KT "only
 if" direction. -/
-theorem ktNonSplit_of_dualSpinForwardDatum {prov : CharPairWProviderPerOp (𝓡 4) 0}
+theorem ktNonSplit_of_dualSpinForwardDatum {prov : CharPairWProviderPerOp (𝓡 4) k}
     {ξ : TangentialData X k' I'} (d : DualSpinForwardDatum prov ξ) : KTNonSplit prov := by
   intro h0
   have hΦ0 : d.Φ (DataBordismGrp.mk ξ d.g) = 0 := by rw [d.hΦg]; exact h0
@@ -219,7 +221,7 @@ class. The empty structure represents `0` ONLY (`emptySigmaRepresentable_zero`),
 inhabited exactly when `k₀` is genuinely spin-representable: in the split/collapse world (`k₀ = 0`,
 G8-2/G8-3) the empty structure inhabits it trivially; OFF that world it requires the unbuilt K3/Kummer
 carrier. Hence `KummerWitness.1` alone is collapse-satisfiable and is consumed inside the triple. -/
-structure EnriquesDatum (prov : CharPairWProviderPerOp (𝓡 4) 0) where
+structure EnriquesDatum (prov : CharPairWProviderPerOp (𝓡 4) k) where
   /-- the [Ha]/KT double-cover generator signature `σ(K3) = −16` (the ÷32-lower record). -/
   sigK3 : ℤ
   /-- `σ(K3) = −16`. -/
@@ -231,7 +233,7 @@ structure EnriquesDatum (prov : CharPairWProviderPerOp (𝓡 4) 0) where
   /-- `[p] = k₀` — the spin representative realizes the kernel representative. -/
   hmk : T2DataBordismGrp.mk (pinPlusCharPairData prov) p = ktKernelRep prov
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 
 /-- **The Enriques datum records the ÷32-lower** (the [Ha] sharpness): `σ(K3) = −16` is NOT divisible
 by `32`. This is the arithmetic reason K3 itself does not Pin⁺-bound (the sharpness that makes `k₀`
@@ -276,7 +278,7 @@ surjects onto the spin sector).
 the conclusion itself; but `hΦgeo` (honestly-geometric range) is NOT satisfiable by such a fake for a
 nontrivial sector. So the datum carries genuine content (the geometric inclusion), inhabited only off
 the fenced worlds. -/
-structure KTSpinPresentationDatum (prov : CharPairWProviderPerOp (𝓡 4) 0)
+structure KTSpinPresentationDatum (prov : CharPairWProviderPerOp (𝓡 4) k)
     (ξ : TangentialData X k' I') where
   /-- the `Ω₄^{Spin} ≅ ℤ` σ-presentation. -/
   R : SpinSigmaPresentation ξ
@@ -303,7 +305,7 @@ structure KTSpinPresentationDatum (prov : CharPairWProviderPerOp (𝓡 4) 0)
 class as `n • k₀` (`spinImageCyclic_of_presentation`). CONDITIONAL; discharges nothing of the triple
 (the datum's geometric `Φ` is unbuilt). Per G9-3 this is the ≤-cyclic face of `SpinImageIsTwo`, not
 independent progress. -/
-theorem spinImageCyclic_of_ktSpinPresentationDatum {prov : CharPairWProviderPerOp (𝓡 4) 0}
+theorem spinImageCyclic_of_ktSpinPresentationDatum {prov : CharPairWProviderPerOp (𝓡 4) k}
     {ξ : TangentialData X k' I'} (d : KTSpinPresentationDatum prov ξ) : SpinImageCyclic prov :=
   spinImageCyclic_of_presentation prov d.R d.hA d.hB d.g d.hg d.hdvd d.Φ d.hΦg d.hΦrange
 
@@ -311,7 +313,7 @@ theorem spinImageCyclic_of_ktSpinPresentationDatum {prov : CharPairWProviderPerO
 geometric `Φ` covering the broad sector (`hΦgeo` + `hΦrange`) FORCES the G8-5 characteristic-sphere
 overhang `SectorIsGeometric` (`sectorIsGeometric_of_phiRange_geometric`). So this wave's geometric-`Φ`
 route to `hΦrange` does NOT dodge the sphere-overhang reduction — it co-discharges it, honestly. -/
-theorem sectorIsGeometric_of_ktSpinPresentationDatum {prov : CharPairWProviderPerOp (𝓡 4) 0}
+theorem sectorIsGeometric_of_ktSpinPresentationDatum {prov : CharPairWProviderPerOp (𝓡 4) k}
     {ξ : TangentialData X k' I'} (d : KTSpinPresentationDatum prov ξ) : SectorIsGeometric prov :=
   sectorIsGeometric_of_phiRange_geometric prov d.Φ d.hΦgeo d.hΦrange
 
@@ -319,7 +321,7 @@ theorem sectorIsGeometric_of_ktSpinPresentationDatum {prov : CharPairWProviderPe
 route (§C datum) plus `KummerWitness.1` (the Enriques representability, §B) collapse `⟨k₀⟩` to `{0,
 k₀}` through the 2-torsion (`spinImageIsTwo_of_cyclic_of_kummerRep`) — the Lemma-5.3 cyclic
 classification, NOT a `∀ sector x, x = 0` collapse-smell. CONDITIONAL on both leaves. -/
-theorem spinImageIsTwo_of_datums {prov : CharPairWProviderPerOp (𝓡 4) 0}
+theorem spinImageIsTwo_of_datums {prov : CharPairWProviderPerOp (𝓡 4) k}
     {ξ : TangentialData X k' I'} (dC : KTSpinPresentationDatum prov ξ) (dE : EnriquesDatum prov) :
     SpinImageIsTwo prov :=
   spinImageIsTwo_of_cyclic_of_kummerRep prov
@@ -345,7 +347,7 @@ variable {X : Type*} [TopologicalSpace X] {k' : WithTop ℕ∞}
 Enriques representability (`KummerWitness.1`, §B) with the ÷32-lower non-split bit (`KTNonSplit`, §A)
 IS `KummerWitness` (`= EmptySigmaRepresentable prov k₀ ∧ KTNonSplit prov`). CONDITIONAL on both
 leaves; discharges nothing. -/
-theorem kummerWitness_of_datums {prov : CharPairWProviderPerOp (𝓡 4) 0}
+theorem kummerWitness_of_datums {prov : CharPairWProviderPerOp (𝓡 4) k}
     {ξ : TangentialData X k' I'} (dE : EnriquesDatum prov) (dA : DualSpinForwardDatum prov ξ) :
     KummerWitness prov :=
   ⟨kummerWitness1_of_enriquesDatum dE, ktNonSplit_of_dualSpinForwardDatum dA⟩
@@ -362,7 +364,7 @@ These are EXACTLY the triple `{KernelReducesToSpin, SpinImageIsTwo, KTNonSplit}`
 consumption unit (G8-1..G8-3) — fed to the sector assembly `kt_equiv_zmod16_of_sector`. The whole KT
 Lemma 5.3 completeness content is thus reduced to the three named leaf-data structures + the surgery
 supply, with nothing discharged. -/
-theorem kt_equiv_zmod16_of_leaves {prov : CharPairWProviderPerOp (𝓡 4) 0}
+theorem kt_equiv_zmod16_of_leaves {prov : CharPairWProviderPerOp (𝓡 4) k}
     {ξ : TangentialData X k' I'}
     (hKRS : KernelReducesToSpin prov)
     (dC : KTSpinPresentationDatum prov ξ) (dE : EnriquesDatum prov)

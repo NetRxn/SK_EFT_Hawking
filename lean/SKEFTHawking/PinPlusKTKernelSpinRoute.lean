@@ -8,7 +8,7 @@ is the WAVE-1 opener for gaps **(1)** `KernelReducesToSpin` (the KT §5 kernel-n
 surgery rank-reduction bricks that are genuinely reachable, plus TRANSPORT wrappers and a
 STATEMENT layer that name precisely what remains geometric. Every step-Prop introduced here carries
 a vacuity-attack line (round-9 will attack them). Provider-inhabitation rider (G8-1) applies to every
-per-`prov` statement: `CharPairWProviderPerOp (𝓡 4) 0` has ZERO in-tree inhabitants until Track-2's
+per-`prov` statement: `CharPairWProviderPerOp (𝓡 4) k` has ZERO in-tree inhabitants until Track-2's
 `cylData`/`addClosure` residuals land, so all per-`prov` results are CONDITIONAL, not vacuous.
 
 ## What gap (1) `KernelReducesToSpin` actually is (KT-LMS-151 §5 p.217, dossier §1 K3)
@@ -62,6 +62,8 @@ open SKEFTHawking.PinPlusKTExtension
 open SKEFTHawking.PinPlusKTKernelSector
 
 namespace SKEFTHawking.PinPlusKTKernelSpinRoute
+
+variable {k : WithTop ℕ∞}
 
 /-! ## §1. Algebraic surgery rank-reduction bricks (BANKED — the reachable ALGEBRAIC half of gap 1a)
 
@@ -157,7 +159,7 @@ arbitrary non-spin brown-0 `p`, a smaller-rank `p'` with `[p'] = [p]`. The empty
 class equal to a given `[p]`: producing `p'` with `[p'] = [p]` REQUIRES an actual surgery-trace
 `CharPairBorRealizedTethered` bordism (tether §3), which is the open KT surgery. The `∃ p'` with the
 `mk`-equality blocks the collapse; `simp`/`aesop`/`decide` cannot supply the bordism. -/
-def KTSurgeryReduces (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def KTSurgeryReduces (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   ∀ p : StrMfd (pinPlusCharPairData prov).toTangentialData,
     charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = 0 →
     0 < p.2.n →
@@ -172,7 +174,7 @@ realized tether `PinPlusCharPairBorTethered.CharPairBorRealizedTethered` — its
 surgery-trace membrane `b.W` and its boundary inclusion) forces the class-equality `[p'] = [p]`.
 Thin specialization of `T2DataBordismGrp.mk_eq_of_bordant` to the tether shape; it is the concrete
 answer to "what would the surgery step's `Q`/`ιW` be" — the tether §3 witness. -/
-theorem mk_eq_of_tethered (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem mk_eq_of_tethered (prov : CharPairWProviderPerOp (𝓡 4) k)
     {p p' : StrMfd (pinPlusCharPairData prov).toTangentialData}
     (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p'.1 p.1) (hT2 : T2Space b.W)
     (hBor : Nonempty ((pinPlusCharPairData prov).Bor b p'.2 p.2)) :
@@ -185,7 +187,7 @@ Prop): a strictly rank-dropping `p'` tied to `p` by a tethered bordism witness m
 `KTSurgeryReduces` demands at `p`. This is the exact witness shape a discharge of `KTSurgeryReduces`
 must produce for each non-spin brown-0 `p`; the open content is CONSTRUCTING the `(b, tether)` pair
 (the KT §5 surgery), not this packaging. -/
-theorem surgeryStep_of_tethered (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem surgeryStep_of_tethered (prov : CharPairWProviderPerOp (𝓡 4) k)
     {p p' : StrMfd (pinPlusCharPairData prov).toTangentialData} (hlt : p'.2.n < p.2.n)
     (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p'.1 p.1) (hT2 : T2Space b.W)
     (hBor : Nonempty ((pinPlusCharPairData prov).Bor b p'.2 p.2)) :
@@ -201,7 +203,7 @@ empty-Σ-representable: at rank 0 it IS spin-sector; at rank `> 0`, one surgery 
 strictly-smaller representative of the SAME (still brown-0) class, and the induction hypothesis
 finishes. This is the honest reduction of the KT §5 kernel-null direction to its single geometric
 move. -/
-theorem emptySigmaRep_of_surgeryReduces (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem emptySigmaRep_of_surgeryReduces (prov : CharPairWProviderPerOp (𝓡 4) k)
     (h : KTSurgeryReduces prov) : ∀ (n : ℕ)
     (p : StrMfd (pinPlusCharPairData prov).toTangentialData), p.2.n = n →
     charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = 0 →
@@ -224,7 +226,7 @@ nothing of the triple). Reduces the deep `∀ x ∈ ker` kernel-null direction t
 geometric surgery step. Pure composition of `emptySigmaRep_of_surgeryReduces` (the rank induction)
 with `Quot.ind` (every class is a `mk`). This is the load-bearing decomposition headline for gap (1):
 the KT §5 surgery content is exactly `KTSurgeryReduces`, and NOTHING more. -/
-theorem kernelReducesToSpin_of_surgeryReduces (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem kernelReducesToSpin_of_surgeryReduces (prov : CharPairWProviderPerOp (𝓡 4) k)
     (h : KTSurgeryReduces prov) : KernelReducesToSpin prov := by
   intro x hx
   induction x using Quot.ind with
@@ -273,7 +275,7 @@ in-tree witness classifies arbitrary empty-Σ classes as `⟨k₀⟩`-multiples:
 (`SpinSigmaPresentation.generates`). Because the route runs through the cyclic ÷32 (Lemma 5.3)
 structure, it is the honest SIIT route (G8-4), not the `∀ sector x, x = 0` collapse (which would
 refute `KummerWitness`). -/
-def SpinImageCyclic (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def SpinImageCyclic (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   ∀ y : T2DataBordismGrp (pinPlusCharPairData prov),
     EmptySigmaRepresentable prov y → ∃ m : ℤ, y = m • ktKernelRep prov
 
@@ -284,7 +286,7 @@ empty-Σ class at `m • k₀`, and `k₀`'s empty-Σ-representability (`KummerW
 input) makes `k₀` 2-torsion (banked `emptySigmaRepresentable_two_torsion`), collapsing `⟨k₀⟩` to
 `{0, k₀}` via `zsmul_of_two_torsion`. Both hypotheses are OPEN; per the round-8 spec `SpinImageIsTwo`
 is still consumed with `KernelReducesToSpin` + `KTNonSplit`. -/
-theorem spinImageIsTwo_of_cyclic_of_kummerRep (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem spinImageIsTwo_of_cyclic_of_kummerRep (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hcyc : SpinImageCyclic prov)
     (hk : EmptySigmaRepresentable prov (ktKernelRep prov)) : SpinImageIsTwo prov := by
   intro y hy
@@ -310,7 +312,7 @@ writes `w = n • [g]`, so `y = n • Φ[g] = n • k₀`. This EXPOSES the exac
 beyond the in-tree engine: the map `Φ` (the `Ω₄^{Spin} → Ω₄^{Pin⁺}` inclusion realized on the CharPair
 carrier — dossier §3's empty-Σ specialization), plus the freezes `hA` (handle-trade) + Rokhlin. It is
 NOT a discharge: `Φ` with these properties is unbuilt (no in-tree spin-specialization witness). -/
-theorem spinImageCyclic_of_presentation (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem spinImageCyclic_of_presentation (prov : CharPairWProviderPerOp (𝓡 4) k)
     {ξ : TangentialData X k' I'} (R : SpinSigmaPresentation ξ)
     (hA : R.RealizesSphereProducts) (hB : R.SphereProductBounds)
     (g : StrMfd ξ) (hg : R.sig (DataBordismGrp.mk ξ g) = -16) (hdvd : ∀ x, (16 : ℤ) ∣ R.sig x)

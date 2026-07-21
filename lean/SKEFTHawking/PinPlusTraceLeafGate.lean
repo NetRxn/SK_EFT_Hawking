@@ -170,7 +170,9 @@ open SKEFTHawking.PinPlusTraceMembranePresented
 
 namespace SKEFTHawking.PinPlusTraceLeafGate
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable {k : WithTop ℕ∞}
+
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-! ## §1. G11-1 — THE ROUND-11 TIE: `hfwd` on the GEOMETRIC `Φ` is conclusion-strength modulo the
 presentation row.

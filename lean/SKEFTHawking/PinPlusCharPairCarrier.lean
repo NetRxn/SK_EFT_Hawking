@@ -124,7 +124,8 @@ noncomputable def charPairBrown (prov : CharPairWProviderPerOp I k) :
 
 /-! ## §13. STRETCH — the ℝP⁴ characteristic-pair witness (non-vacuity, the odd generator) -/
 
-open SKEFTHawking.RP2Manifold SKEFTHawking.RP4Unconditional SKEFTHawking.RP2EquatorialInclusion
+open SKEFTHawking.RP2Manifold SKEFTHawking.RP4Manifold SKEFTHawking.RP4Unconditional
+  SKEFTHawking.RP2EquatorialInclusion
   SKEFTHawking.RP4PointSet SKEFTHawking.RP2PointSet SKEFTHawking.RP4Witness
   SKEFTHawking.RP2IntersectionForm SKEFTHawking.SingularSurfaceIntersectionForm in
 /-- **The ℝP⁴ characteristic-pair bundle** (the headline witness) — the bundled char-pair structure on
@@ -136,15 +137,15 @@ shipped) supplies `emb`; its SMOOTHNESS (`ContMDiff (𝓡 2) (𝓡 4) 0`) and IN
 HYPOTHESES here (`contMDiff_embRP2`/`embRP2_injective`, being proven in parallel on wt2/main — not yet
 in this slot) — a hypothesis-parameterized def, NOT axioms. grade16-free; no completeness Prop is
 stated (that is W-D/W-E). -/
-noncomputable def rp4CharPairBundled
-    (embSmooth : ContMDiff (𝓡 2) (𝓡 4) 0 embRP2) (embInj : Function.Injective embRP2) :
-    CharPairStrBundled (𝓡 4) rp4SM where
+noncomputable def rp4CharPairBundledK (k : WithTop ℕ∞)
+    (embSmooth : ContMDiff (𝓡 2) (𝓡 4) k embRP2) (embInj : Function.Injective embRP2) :
+    CharPairStrBundled (𝓡 4) (rp4SM_k k) where
   toCharPairStr :=
     { t2 := inferInstanceAs (T2Space RP4)
-      cert := rp4_hcert
+      cert := rp4_hcert_k
       n := 1
       q := stdQuadratic 1 }
-  surf := rp2SM_k 0
+  surf := rp2SM_k k
   surfT2 := inferInstanceAs (T2Space RP2)
   emb := embRP2
   embSmooth := embSmooth
@@ -173,5 +174,15 @@ noncomputable def rp4CharPairBundled
     -- bridge `μ(a ⌣ a) = μ(a ⌣ x²)` (rank-1 `H²`, `c² = c`).
     (SKEFTHawking.RP4CharSurfaceSmithNat.hchar_pairing a).trans
       (SKEFTHawking.RP4WuAssembly.mu_cupH24_self_eq_cupH24_xpow2 a).symm
+
+open SKEFTHawking.RP2Manifold SKEFTHawking.RP4Unconditional SKEFTHawking.RP2EquatorialInclusion
+  SKEFTHawking.RP4PointSet SKEFTHawking.RP2PointSet SKEFTHawking.RP4Witness in
+/-- **The `C⁰` specialisation, unchanged** — the historical `k = 0` name, now a thin instantiation of
+the regularity-generic `rp4CharPairBundledK`. Every pre-existing consumer keeps its exact type
+(`rp4SM = rp4SM_k 0` by `rfl`); the generalisation is strictly conservative. -/
+noncomputable def rp4CharPairBundled
+    (embSmooth : ContMDiff (𝓡 2) (𝓡 4) 0 embRP2) (embInj : Function.Injective embRP2) :
+    CharPairStrBundled (𝓡 4) rp4SM :=
+  rp4CharPairBundledK 0 embSmooth embInj
 
 end SKEFTHawking.PinPlusCharPairData

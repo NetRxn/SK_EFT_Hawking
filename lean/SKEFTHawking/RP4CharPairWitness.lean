@@ -37,7 +37,7 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new proj
 open scoped Manifold
 open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
 open SKEFTHawking.PinPlusCharPairData SKEFTHawking.RP2EquatorialInclusion
-open SKEFTHawking.RP4Witness SKEFTHawking.RP2IntersectionForm
+open SKEFTHawking.RP4Witness SKEFTHawking.RP4Manifold SKEFTHawking.RP2IntersectionForm
 open SKEFTHawking.PinPlusWAdmPinned
 open SKEFTHawking.PinPlusCharPairBorTethered
 open SKEFTHawking.SingularSurfaceIntersectionForm SKEFTHawking.RP4CharSurfacePushforward
@@ -57,6 +57,22 @@ carrier's `k = 0`) and `embRP2_injective`. A hypothesis-free inhabitant of `Char
 rp4SM` carrying the rank-1 odd enhancement `stdQuadratic 1`. -/
 noncomputable def rp4CharPair : CharPairStrBundled (𝓡 4) rp4SM :=
   rp4CharPairBundled (contMDiff_embRP2 (k := 0)) embRP2_injective
+
+/-- **THE REGULARITY-GENERIC ℝP⁴ WITNESS** (`rp4CharPairK k`) — the same hypothesis-free bundled
+char-pair structure, carried by the `C^k` singular manifold `RP4Manifold.rp4SM_k k` for **every**
+regularity `k : WithTop ℕ∞`, in particular the smooth/analytic `k = ⊤`. Nothing new is assumed: the
+carrier's smooth atlas is `RP4Manifold.isManifold_rp4` (`Cω`, hence every `k`), the surface's is
+`RP2Manifold.isManifold_rp2`, and the embedding's smoothness is `contMDiff_embRP2` — proved
+`k`-generic (`contMDiff_embRP2_analytic`), so the `k = 0` specialisation was a *choice*, never a
+constraint. This is the witness the smooth-category (`k ≥ 1`) Pin⁺ bordism target requires
+(Phase 5q.H roadmap §2 leg 2). -/
+noncomputable def rp4CharPairK (k : WithTop ℕ∞) : CharPairStrBundled (𝓡 4) (rp4SM_k k) :=
+  rp4CharPairBundledK k contMDiff_embRP2 embRP2_injective
+
+/-- **The lift is conservative** — the regularity-generic witness at `k = 0` IS the historical `C⁰`
+witness, definitionally. Kernel-checked, so no consumer has to take the coincidence on trust: every
+`k = 0` statement below is literally the old statement, and the `k ≥ 1` ones are genuinely new. -/
+theorem rp4CharPairK_zero : rp4CharPairK 0 = rp4CharPair := rfl
 
 /-- **The witness realizes the odd generator grade** `q.brown = 1 ∈ ZMod 8` — the structure-level
 non-vacuity value (`stdQuadratic 1`, the odd order-16 generator). -/
@@ -117,10 +133,12 @@ theorem charPairBrown_mk {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = p.2.q.brown :=
   rfl
 
-/-- **The `ℝP⁴` witness class carries computed grade `1`.** -/
-theorem charPairBrown_rp4_eq_one (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+/-- **The `ℝP⁴` witness class carries computed grade `1`** — at **every** regularity `k`, the smooth
+`k ≥ 1` category included (the grade is read off the carried enhancement `stdQuadratic 1`, which the
+`k`-generic witness carries verbatim). -/
+theorem charPairBrown_rp4_eq_one {k : WithTop ℕ∞} (prov : CharPairWProviderPerOp (𝓡 4) k) :
     charPairBrown prov
-        (T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM, rp4CharPair⟩) = 1 := by
+        (T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM_k k, rp4CharPairK k⟩) = 1 := by
   rw [charPairBrown_mk]
   show (stdQuadratic 1).brown = 1
   rw [brown_stdQuadratic, Nat.cast_one]
@@ -128,10 +146,10 @@ theorem charPairBrown_rp4_eq_one (prov : CharPairWProviderPerOp (𝓡 4) 0) :
 /-- **W-C: the computed mod-8 grade is SURJECTIVE.** `charPairBrown` is additive and the `ℝP⁴` witness
 realizes the generator `1`; since `1` generates `ZMod 8`, its `n`-fold sums realize every value —
 `n • [ℝP⁴]` maps to `n • 1 = n`. The honest faithful carrier's grade hits all of `ZMod 8`. -/
-theorem charPairBrown_surjective (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+theorem charPairBrown_surjective {k : WithTop ℕ∞} (prov : CharPairWProviderPerOp (𝓡 4) k) :
     Function.Surjective (charPairBrown prov) := by
   intro y
-  refine ⟨y.val • T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM, rp4CharPair⟩, ?_⟩
+  refine ⟨y.val • T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM_k k, rp4CharPairK k⟩, ?_⟩
   rw [map_nsmul, charPairBrown_rp4_eq_one prov, nsmul_eq_mul, mul_one, ZMod.natCast_val,
     ZMod.cast_id]
 
@@ -141,11 +159,11 @@ theorem charPairBrown_surjective (prov : CharPairWProviderPerOp (𝓡 4) 0) :
 in the certified bordism group `T2DataBordismGrp (pinPlusCharPairData prov)`: its computed grade is
 `1 ≠ 0 ∈ ZMod 8`, and `charPairBrown` (a group hom) sends `0 ↦ 0`. The rebuilt substrate is NOT
 collapsed — the class survives. (No completeness/injectivity Prop is asserted; those are W-D/W-E.) -/
-theorem charPairBrown_rp4_ne_zero (prov : CharPairWProviderPerOp (𝓡 4) 0) :
-    T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM, rp4CharPair⟩ ≠ 0 := by
+theorem charPairBrown_rp4_ne_zero {k : WithTop ℕ∞} (prov : CharPairWProviderPerOp (𝓡 4) k) :
+    T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM_k k, rp4CharPairK k⟩ ≠ 0 := by
   intro h
   have h0 : charPairBrown prov
-      (T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM, rp4CharPair⟩) = 0 := by
+      (T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM_k k, rp4CharPairK k⟩) = 0 := by
     rw [h, map_zero]
   rw [charPairBrown_rp4_eq_one prov] at h0
   exact absurd h0 (by decide)
@@ -157,12 +175,13 @@ the bundle's `hchar` tie at `a = x²`: `⟨x², emb₊[Σ]⟩ = μ(x² ⌣ x²) 
 (`RP4WuAssembly.mu_cupH24_xpow2_xpow2`), so `emb₊[Σ] ≠ 0`. The characteristic-surface tie makes
 the ℝP⁴ cup-square topology bind every inhabitant — a fake class can no longer carry a surface
 whose class dies. -/
-theorem rp4_bundle_surfClass_pushforward_ne_zero (σ : CharPairStrBundled (𝓡 4) rp4SM) :
+theorem rp4_bundle_surfClass_pushforward_ne_zero {k : WithTop ℕ∞}
+    (σ : CharPairStrBundled (𝓡 4) (rp4SM_k k)) :
     Homology.map (⟨σ.emb, σ.embSmooth.continuous⟩ :
-        C(↑(TopCat.of σ.surf.M), ↑(TopCat.of rp4SM.M))) 2 σ.surfClass ≠ 0 := by
+        C(↑(TopCat.of σ.surf.M), ↑(TopCat.of (rp4SM_k k).M))) 2 σ.surfClass ≠ 0 := by
   intro h0
-  haveI : T2Space rp4SM.M := inferInstanceAs (T2Space RP4)
-  haveI : Nonempty rp4SM.M := inferInstanceAs (Nonempty RP4)
+  haveI : T2Space (rp4SM_k k).M := inferInstanceAs (T2Space RP4)
+  haveI : Nonempty (rp4SM_k k).M := inferInstanceAs (Nonempty RP4)
   have h := (σ.hchar (RP4CohomologyLadder.xpow 2)).trans
     SKEFTHawking.RP4WuAssembly.mu_cupH24_xpow2_xpow2
   rw [h0, map_zero] at h
@@ -173,7 +192,8 @@ class vanishes (empty-space homology is subsingleton), so its pushforward is `0`
 `rp4_bundle_surfClass_pushforward_ne_zero`. This is the `hchar` KILL of the W-D vacuity gate's §6
 rank-0 fake-class exhibit (`fakeRP4RankZero`): the exhibit is now UNINHABITABLE, so
 `KTKernelCard`'s quantifier no longer ranges over geometrically impossible ℝP⁴ classes. -/
-theorem no_empty_surface_bundle_on_rp4 (σ : CharPairStrBundled (𝓡 4) rp4SM)
+theorem no_empty_surface_bundle_on_rp4 {k : WithTop ℕ∞}
+    (σ : CharPairStrBundled (𝓡 4) (rp4SM_k k))
     (h : IsEmpty σ.surf.M) : False := by
   haveI := h
   exact rp4_bundle_surfClass_pushforward_ne_zero σ

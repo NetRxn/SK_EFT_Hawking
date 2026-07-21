@@ -13,7 +13,7 @@ REFUTED at the kernel level (§2) and is replaced by the frozen round-8 consumpt
 ## G8-1 — PROVIDER INHABITATION (the F6/F7-A pattern one level up): CONDITIONAL, NOT VACUOUS,
 ZERO IN-TREE INSTANCES. LOUD CAVEAT ON EVERY W-D RESULT.
 
-`CharPairWProviderPerOp (𝓡 4) 0` has **no unconditional in-tree inhabitant** (grep-verified: the
+`CharPairWProviderPerOp (𝓡 4) k` has **no unconditional in-tree inhabitant** (grep-verified: the
 only constructor is `CharPairWProviderPerOp.ofCylinderEngine`, which consumes the two OPEN Track-2
 residuals). Unlike round 7's F7-A (where the bare-`s` provider was mathematically UNINHABITABLE and
 `∀ prov`-statements were classically vacuous), the σ-threaded form is honest-inhabitable — so the
@@ -191,12 +191,12 @@ collapse kills is `KummerWitness` outright and — given `KTNonSplit` — `Kerne
 no nonzero rank-0 representative exists — e.g. no Kummer-flavoured carrier ever lands). NOT
 provable in-tree (it is itself open geometric content); used purely as the degenerate-model
 hypothesis for the vacuity demonstrators. -/
-def SectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def SectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   ∀ x : T2DataBordismGrp (pinPlusCharPairData prov), EmptySigmaRepresentable prov x → x = 0
 
 /-- **The pre-flagged finding, kernel-verified** (G8-2a): sector-collapse discharges
 `SpinImageIsTwo` at zero geometric cost (left disjunct everywhere). -/
-theorem spinImageIsTwo_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem spinImageIsTwo_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hc : SectorCollapsed prov) : SpinImageIsTwo prov :=
   fun x hx => Or.inl (hc x hx)
 
@@ -205,14 +205,14 @@ theorem spinImageIsTwo_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4
 (`k₀` need not be empty-Σ-representable), so gating the pair together excludes the collapse
 model NOT AT ALL. The pair does not pin the image to ℤ/2 (see
 `sector_image_eq_singleton_of_sectorCollapsed`: the image is trivial in this world). -/
-theorem pair_holds_under_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem pair_holds_under_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hc : SectorCollapsed prov) (hns : KTNonSplit prov) :
     SpinImageIsTwo prov ∧ KTNonSplit prov :=
   ⟨spinImageIsTwo_of_sectorCollapsed prov hc, hns⟩
 
 /-- Under sector-collapse the empty-Σ image is the SINGLETON `{0}` — not `{0, k₀}`, not ℤ/2
 (G8-2b, the "exactly ℤ/2" half of the opener's pair claim fails in the collapse world). -/
-theorem sector_image_eq_singleton_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem sector_image_eq_singleton_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hc : SectorCollapsed prov) :
     {x : T2DataBordismGrp (pinPlusCharPairData prov) | EmptySigmaRepresentable prov x} = {0} := by
   ext x
@@ -222,7 +222,7 @@ theorem sector_image_eq_singleton_of_sectorCollapsed (prov : CharPairWProviderPe
 /-- **What sector-collapse ACTUALLY falsifies, part 1** (G8-2c): `KummerWitness` — its
 representability conjunct hands the collapse `k₀ = 0`, contradicting its non-split conjunct.
 (`KummerWitness` is the one self-fenced sector Prop.) -/
-theorem not_kummerWitness_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem not_kummerWitness_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hc : SectorCollapsed prov) : ¬ KummerWitness prov :=
   fun hk => hk.2 (hc _ hk.1)
 
@@ -231,7 +231,7 @@ kills `KernelReducesToSpin` — `k₀` is a genuine kernel class (`charPairBrown
 the collapsed sector cannot represent. This is the honest triple-level fence: the collapse model
 satisfies `{SIIT, KTNS}` but never all three. -/
 theorem not_kernelReducesToSpin_of_sectorCollapsed_of_nonsplit
-    (prov : CharPairWProviderPerOp (𝓡 4) 0) (hc : SectorCollapsed prov) (hns : KTNonSplit prov) :
+    (prov : CharPairWProviderPerOp (𝓡 4) k) (hc : SectorCollapsed prov) (hns : KTNonSplit prov) :
     ¬ KernelReducesToSpin prov :=
   fun hred => hns (hc _ (hred _ (charPairBrown_ktKernelRep prov)))
 
@@ -239,7 +239,7 @@ theorem not_kernelReducesToSpin_of_sectorCollapsed_of_nonsplit
 the two-element set `{0, k₀}` is `{SpinImageIsTwo, KummerWitness}` — SIIT gives `⊆`, the banked
 zero-representability gives `0 ∈`, and the Kummer witness gives `k₀ ∈`. (Compare the refuted
 `{SIIT, KTNonSplit}`, which is collapse-satisfiable with trivial image.) -/
-theorem sector_image_eq_pair (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem sector_image_eq_pair (prov : CharPairWProviderPerOp (𝓡 4) k)
     (h2 : SpinImageIsTwo prov) (hk : KummerWitness prov) :
     {x : T2DataBordismGrp (pinPlusCharPairData prov) | EmptySigmaRepresentable prov x}
       = {0, ktKernelRep prov} := by
@@ -252,7 +252,7 @@ theorem sector_image_eq_pair (prov : CharPairWProviderPerOp (𝓡 4) 0)
 
 /-- The corrected pin, cardinality form (G8-2e): under `{SpinImageIsTwo, KummerWitness}` the
 empty-Σ image has EXACTLY two elements — the honest "spin image ≅ ℤ/2" count. -/
-theorem sector_image_ncard_two (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem sector_image_ncard_two (prov : CharPairWProviderPerOp (𝓡 4) k)
     (h2 : SpinImageIsTwo prov) (hk : KummerWitness prov) :
     {x : T2DataBordismGrp (pinPlusCharPairData prov) | EmptySigmaRepresentable prov x}.ncard
       = 2 := by
@@ -268,13 +268,13 @@ the minimal honest consumption unit. -/
 
 /-- The kernel-collapse hypothesis: the `charPairBrown` kernel is trivial (the split world).
 NOT provable in-tree; the degenerate-model hypothesis for the G8-3 demonstrators. -/
-def KernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def KernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   ∀ x : T2DataBordismGrp (pinPlusCharPairData prov), charPairBrown prov x = 0 → x = 0
 
 /-- **`KernelReducesToSpin` is kernel-collapse-dischargeable** (G8-3a): if the kernel is trivial,
 every kernel class is `0`, and `0` is empty-Σ-representable (the empty structure). The
 zero-geometric-input discharge of KRTS exists exactly in the split world. -/
-theorem kernelReducesToSpin_of_kernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem kernelReducesToSpin_of_kernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) k)
     (ht : KernelTrivial prov) : KernelReducesToSpin prov := by
   intro x hx
   rw [ht x hx]
@@ -282,14 +282,14 @@ theorem kernelReducesToSpin_of_kernelTrivial (prov : CharPairWProviderPerOp (�
 
 /-- **`SpinImageIsTwo` is ALSO kernel-collapse-dischargeable** (G8-3b): the sector sits inside the
 kernel (`emptySigmaRepresentable_in_kernel`), so kernel-triviality collapses the sector too. -/
-theorem spinImageIsTwo_of_kernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem spinImageIsTwo_of_kernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) k)
     (ht : KernelTrivial prov) : SpinImageIsTwo prov :=
   fun x hx => Or.inl (ht x (emptySigmaRepresentable_in_kernel prov x hx))
 
 /-- **Only `KTNonSplit` excludes the kernel-collapse** (G8-3c): kernel-triviality forces `k₀ = 0`
 (`k₀` is a kernel class), i.e. the split extension. The pair `{KRTS, SIIT}` — the full
 `KTKernelCard`-strength content — is satisfiable in the split world; the triple is minimal. -/
-theorem not_KTNonSplit_of_kernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem not_KTNonSplit_of_kernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) k)
     (ht : KernelTrivial prov) : ¬ KTNonSplit prov :=
   fun hns => hns (ht _ (charPairBrown_ktKernelRep prov))
 
@@ -303,14 +303,14 @@ content of the sector decomposition is `{KernelReducesToSpin, KummerWitness.1}`.
 /-- **`KTKernelCard → SpinImageIsTwo`** (G8-4a): the sector lands in the kernel, so the kernel's
 `{0, k₀}` cover restricts to the sector. `SpinImageIsTwo` is NOT independent content — it is the
 sector face of the binder it helps discharge. -/
-theorem spinImageIsTwo_of_KTKernelCard (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem spinImageIsTwo_of_KTKernelCard (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hcard : KTKernelCard prov) : SpinImageIsTwo prov :=
   fun x hx => hcard x (emptySigmaRepresentable_in_kernel prov x hx)
 
 /-- **`KTKernelCard + k₀-representability → KernelReducesToSpin`** (G8-4b): a kernel class is `0`
 (empty-representable) or `k₀` (representable by hypothesis). Together with G8-4a: the
 decomposition adds over `KTKernelCard` exactly the Kummer representability content. -/
-theorem kernelReducesToSpin_of_card_of_kummerRep (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem kernelReducesToSpin_of_card_of_kummerRep (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hcard : KTKernelCard prov) (hrep : EmptySigmaRepresentable prov (ktKernelRep prov)) :
     KernelReducesToSpin prov := by
   intro x hx
@@ -344,7 +344,7 @@ theorem rank_zero_of_subsingleton_H1 {s : SingularManifold.{0} PUnit.{1} k I}
 /-- The seam surfaced at the sector predicate (G8-5): `IsSpinSectorStr` follows from H¹-triviality
 of the carried surface — the class-level `emptySigmaRepresentable` therefore admits (classically)
 geometrically-non-spin representatives with nonempty spherical characteristic surface. -/
-theorem isSpinSectorStr_of_subsingleton_H1 (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem isSpinSectorStr_of_subsingleton_H1 (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p : StrMfd (pinPlusCharPairData prov).toTangentialData)
     (h : Subsingleton (Cohomology (TopCat.of p.2.surf.M) 1)) : IsSpinSectorStr prov p :=
   rank_zero_of_subsingleton_H1 p.2 h
@@ -358,7 +358,7 @@ leak, by any mechanism, now contradicts a kernel theorem. -/
 
 /-- **`[ℝP⁴]` is NOT 2-torsion** (G8-6a): `charPairBrown ([ℝP⁴] + [ℝP⁴]) = 1 + 1 = 2 ≠ 0` in
 `ZMod 8`. The sector 2-torsion provably CANNOT extend to the whole carrier. -/
-theorem ktRP4Class_not_two_torsion (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+theorem ktRP4Class_not_two_torsion (prov : CharPairWProviderPerOp (𝓡 4) k) :
     ktRP4Class prov + ktRP4Class prov ≠ 0 := by
   intro h
   have h8 : charPairBrown prov (ktRP4Class prov + ktRP4Class prov) = 0 := by rw [h, map_zero]
@@ -368,7 +368,7 @@ theorem ktRP4Class_not_two_torsion (prov : CharPairWProviderPerOp (𝓡 4) 0) :
 /-- **The fence, absolute form** (G8-6b): the carrier is NOT globally 2-torsion — no combination
 of the banked sector 2-torsion with in-tree ops (rank-0 sums, unit laws, anything) can produce
 the no-go's carrier-wide collapse, because its conclusion is kernel-refuted here. -/
-theorem no_carrierWide_two_torsion (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+theorem no_carrierWide_two_torsion (prov : CharPairWProviderPerOp (𝓡 4) k) :
     ¬ ∀ x : T2DataBordismGrp (pinPlusCharPairData prov), x + x = 0 :=
   fun h => ktRP4Class_not_two_torsion prov (h _)
 
@@ -380,7 +380,7 @@ representability conjunct. The sharp form: -/
 /-- **The sharp ÷32-upper bridge** (G8-7): `k₀ + k₀ = 0` needs ONLY `k₀`'s
 empty-Σ-representability — NOT the non-split conjunct. Consumers of the ÷32-upper bound should
 take this hypothesis (`KummerWitness.1`), keeping the open non-split bit out of their row. -/
-theorem kernelRep_two_torsion_of_emptySigmaRep (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem kernelRep_two_torsion_of_emptySigmaRep (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hrep : EmptySigmaRepresentable prov (ktKernelRep prov)) :
     ktKernelRep prov + ktKernelRep prov = 0 :=
   emptySigmaRepresentable_two_torsion prov _ hrep

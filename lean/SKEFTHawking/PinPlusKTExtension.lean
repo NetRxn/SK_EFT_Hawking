@@ -65,26 +65,28 @@ import SKEFTHawking.PinPlusExactSequence
 open scoped Manifold
 open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
 open SKEFTHawking.PinPlusCharPairData SKEFTHawking.RP4CharPairWitness
-open SKEFTHawking.RP4Witness
+open SKEFTHawking.RP4Witness SKEFTHawking.RP4Manifold
 open SKEFTHawking.PinPlusWAdmPinned
 open SKEFTHawking.PinPlusCharPairBorTethered
 open SKEFTHawking.T2TangentialBordism SKEFTHawking.TangentialDataBordism
 
 namespace SKEFTHawking.PinPlusKTExtension
 
+variable {k : WithTop ℕ∞}
+
 /-! ## §1. The two named classes on the honest carrier: `[ℝP⁴]` and the kernel representative -/
 
 /-- **The `ℝP⁴` class** `g := [ℝP⁴] ∈ G` — the DONE odd generator: `charPairBrown g = 1` generates
 `ZMod 8` (`charPairBrown_rp4_eq_one`) and `g ≠ 0` (`charPairBrown_rp4_ne_zero`). -/
-noncomputable def ktRP4Class (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+noncomputable def ktRP4Class (prov : CharPairWProviderPerOp (𝓡 4) k) :
     T2DataBordismGrp (pinPlusCharPairData prov) :=
-  T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM, rp4CharPair⟩
+  T2DataBordismGrp.mk (pinPlusCharPairData prov) ⟨rp4SM_k k, rp4CharPairK k⟩
 
 /-- **The kernel representative** `k₀ := 8 • [ℝP⁴] ∈ G`. Since `charPairBrown (8 • g) = 8 • 1 = 0`
 in `ZMod 8`, `k₀` lies in `ker(charPairBrown)` (the mod-8 door is blind to it — dossier §5). KT §5:
 `k₀` is the NONZERO order-2 kernel class `= [Kummer]` (non-splitness); the `(Σ,q)` data cannot tell
 whether it is `0` or `[Kummer]`, which is exactly why `KTNonSplit` is a genuine open bit. -/
-noncomputable def ktKernelRep (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+noncomputable def ktKernelRep (prov : CharPairWProviderPerOp (𝓡 4) k) :
     T2DataBordismGrp (pinPlusCharPairData prov) :=
   (8 : ℕ) • ktRP4Class prov
 
@@ -94,7 +96,7 @@ noncomputable def ktKernelRep (prov : CharPairWProviderPerOp (𝓡 4) 0) :
 its own negative. KT §5 content: `ker(→ ℤ/8) = image of Ω₄^{Spin} ≅ ℤ/2·[Kummer]`, a 2-torsion
 group. Stated as a HYPOTHESIS — its discharge is the empty-Σ spin-image analysis (§4) + Lemma 5.3's
 double-cover ÷32; this module does not prove it (it faces the vacuity gate first). -/
-def KTKernelOrderTwo (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def KTKernelOrderTwo (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   ∀ x : T2DataBordismGrp (pinPlusCharPairData prov), charPairBrown prov x = 0 → x + x = 0
 
 /-- **W-D completeness Prop (ii) — the kernel has ≤ 2 elements, exactly `{0, k₀}`.** Every
@@ -102,7 +104,7 @@ def KTKernelOrderTwo (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
 concrete, falsifiable shape of `ker(charPairBrown) ≅ ℤ/2` (KT §5: the image of `Ω₄^{Spin}` is the
 Kummer ℤ/2). Non-vacuous (it names the two elements; an infinite kernel refutes it) — the honest
 `card(ker) ≤ 2` bound the assembly's `card = 16` consumes. Stated as a HYPOTHESIS. -/
-def KTKernelCard (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def KTKernelCard (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   ∀ x : T2DataBordismGrp (pinPlusCharPairData prov),
     charPairBrown prov x = 0 → x = 0 ∨ x = ktKernelRep prov
 
@@ -112,7 +114,7 @@ node (§5). `charPairBrown (8 • [ℝP⁴]) = 8 • 1 = 0`, so `8 • [ℝP⁴]
 is NOT supplied by `charPairBrown` — this bit needs the structural `8 • [ℝP⁴] = [Kummer] ≠ 0` (§3,
 option 1) or the KT `ψ ∈ ℚ/32ℤ` index witness. Stated as a HYPOTHESIS — the most likely stall point
 regardless of route (dossier §5). -/
-def KTNonSplit (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def KTNonSplit (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   ktKernelRep prov ≠ 0
 
 /-- **The option-1 resolution TARGET shape** for `KTNonSplit` (dossier §5, best case): `8 • [ℝP⁴]`
@@ -121,13 +123,13 @@ equals a nonzero Kummer-flavoured kernel class `κ` — `charPairBrown κ = 0` (
 form (parameterized by `κ`); §4 documents what the Kummer witness needs: a `CharPairStrBundled` with
 `Σ = ∅` (rank-0 enhancement) on a K3-like carrier — the empty-Σ spin specialization (do NOT build
 K3). `KTNonSplitKummerTarget prov κ → KTNonSplit prov` (the witness discharges the open bit). -/
-def KTNonSplitKummerTarget (prov : CharPairWProviderPerOp (𝓡 4) 0)
+def KTNonSplitKummerTarget (prov : CharPairWProviderPerOp (𝓡 4) k)
     (κ : T2DataBordismGrp (pinPlusCharPairData prov)) : Prop :=
   charPairBrown prov κ = 0 ∧ κ ≠ 0 ∧ ktKernelRep prov = κ
 
 /-- The Kummer-target shape DOES discharge the non-split bit (option 1 ⟹ Prop (iii)). A cheap
 consistency tie: if a nonzero Kummer class `κ` equals `k₀`, then `k₀ ≠ 0`. -/
-theorem KTNonSplit_of_KummerTarget (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem KTNonSplit_of_KummerTarget (prov : CharPairWProviderPerOp (𝓡 4) k)
     {κ : T2DataBordismGrp (pinPlusCharPairData prov)} (h : KTNonSplitKummerTarget prov κ) :
     KTNonSplit prov := by
   obtain ⟨_, hκ, hrep⟩ := h
@@ -136,18 +138,18 @@ theorem KTNonSplit_of_KummerTarget (prov : CharPairWProviderPerOp (𝓡 4) 0)
 /-! ## §3. Basic consistency of the two classes (SELF-TEST group, cylBor-style: values check out) -/
 
 /-- `charPairBrown [ℝP⁴] = 1` — the DONE odd generator value, re-exposed at `ktRP4Class`. -/
-theorem charPairBrown_ktRP4Class (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+theorem charPairBrown_ktRP4Class (prov : CharPairWProviderPerOp (𝓡 4) k) :
     charPairBrown prov (ktRP4Class prov) = 1 :=
   charPairBrown_rp4_eq_one prov
 
 /-- `[ℝP⁴] ≠ 0` — the DONE first non-triviality, re-exposed at `ktRP4Class`. -/
-theorem ktRP4Class_ne_zero (prov : CharPairWProviderPerOp (𝓡 4) 0) : ktRP4Class prov ≠ 0 :=
+theorem ktRP4Class_ne_zero (prov : CharPairWProviderPerOp (𝓡 4) k) : ktRP4Class prov ≠ 0 :=
   charPairBrown_rp4_ne_zero prov
 
 /-- **`k₀ = 8 • [ℝP⁴]` genuinely lies in `ker(charPairBrown)`** — `charPairBrown k₀ = 8 • 1 = 0`
 in `ZMod 8`. The consistency tie the whole non-split story rests on: `k₀` is a kernel element, so
 `KTNonSplit` asks precisely whether that kernel element is the zero one or not. -/
-theorem charPairBrown_ktKernelRep (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+theorem charPairBrown_ktKernelRep (prov : CharPairWProviderPerOp (𝓡 4) k) :
     charPairBrown prov (ktKernelRep prov) = 0 := by
   rw [ktKernelRep, map_nsmul, charPairBrown_ktRP4Class]
   decide
@@ -176,7 +178,7 @@ theorem brown_rank_zero (q : Z4Quadratic (Fin 0)) : q.brown = 0 := by
 characteristic surface is empty (enhancement rank `n = 0`) lands in `ker(charPairBrown)`. This is the
 carrier-generic "spin classes are in the kernel" fact — the discharge shape for `KTKernelCard`'s
 `{0, k₀}` characterization and the empty-Σ Kummer witness (§2 option 1). -/
-theorem charPairBrown_of_rank_zero (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem charPairBrown_of_rank_zero (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p : StrMfd (pinPlusCharPairData prov).toTangentialData) (hn : p.2.n = 0) :
     charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = 0 := by
   rw [charPairBrown_mk]
@@ -199,7 +201,7 @@ completeness binders. `KTKernelCard` pins `ker ⊆ {0, k₀}`; `KTNonSplit` give
 (`ker [∩w₁²] = image Ω₄^{Spin} ≅ ℤ/2`) restated as a card fact, feeding the generic assembly. BOTH
 binders are load-bearing here: drop `KTKernelCard` and the `{0, k₀}` cover is gone (card unbounded);
 drop `KTNonSplit` and `{0, k₀}` may collapse to one element (card 1). -/
-theorem kernel_card_two (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem kernel_card_two (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hcard : KTKernelCard prov) (hns : KTNonSplit prov) :
     Nat.card (charPairBrown prov).ker = 2 := by
   have hmem : ktKernelRep prov ∈ (charPairBrown prov).ker := by
@@ -220,7 +222,7 @@ theorem kernel_card_two (prov : CharPairWProviderPerOp (𝓡 4) 0)
 two named binders. `card = 2 · 8` = |ker| · |G ⧸ ker| (Lagrange on the exact sequence). NOTE `= 16`
 (not `≤ 16`): the equality FORCES `Finite G` — it does not vacuously hold for an unknown/infinite `G`
 (where `Nat.card = 0`), so it is the honest, non-vacuous cardinality claim. -/
-theorem kt_card_eq_16 (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem kt_card_eq_16 (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hcard : KTKernelCard prov) (hns : KTNonSplit prov) :
     Nat.card (T2DataBordismGrp (pinPlusCharPairData prov)) = 16 :=
   PinPlusExactSequence.card_G_eq_16 (charPairBrown prov) (charPairBrown_surjective prov)
@@ -229,7 +231,7 @@ theorem kt_card_eq_16 (prov : CharPairWProviderPerOp (𝓡 4) 0)
 /-- **ASSEMBLY (order) — `addOrderOf [ℝP⁴] = 16`** conditional on the two binders. `8 ∣ order`
 (`charPairBrown [ℝP⁴] = 1` generates `ℤ/8`); `order ∣ 16` (`8 • [ℝP⁴]` is the order-2 kernel class,
 so `16 • [ℝP⁴] = 0`); `¬ order ∣ 8` (`8 • [ℝP⁴] ≠ 0`, `KTNonSplit`) ⟹ order = 16. -/
-theorem kt_rp4_addOrderOf (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem kt_rp4_addOrderOf (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hcard : KTKernelCard prov) (hns : KTNonSplit prov) :
     addOrderOf (ktRP4Class prov) = 16 :=
   PinPlusExactSequence.order_g_eq_16 (charPairBrown prov) (ktRP4Class prov)
@@ -241,7 +243,7 @@ an axiom; neither discharged here). The DONE facts (`charPairBrown` surjective, 
 = 1`) are supplied in-tree; the two binders are the KT §5 disclosed geometric inputs (Lemma 5.3's
 `ker ≅ ℤ/2` and the ψ-witness non-split bit `8 • [ℝP⁴] ≠ 0`). This is the honest disclosed form: the
 ℤ/16 is assembled FROM BELOW (`2 · 8`), NOT read off any carried grade. -/
-theorem kt_equiv_zmod16 (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem kt_equiv_zmod16 (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hcard : KTKernelCard prov) (hns : KTNonSplit prov) :
     Nonempty (T2DataBordismGrp (pinPlusCharPairData prov) ≃+ ZMod 16) :=
   PinPlusExactSequence.zmod16_of_kt_exact_sequence (charPairBrown prov)
@@ -254,7 +256,7 @@ Honest disclosure guarding the vacuity gate: since a group of order 2 is `ℤ/2`
 ≤ 2-element kernel with a nonzero element is automatically 2-torsion. This is why the headline
 assembly consumes only `{KTKernelCard, KTNonSplit}` — adding `KTKernelOrderTwo` would be a redundant
 (non-load-bearing) hypothesis. -/
-theorem kt_kernelOrderTwo_of_card (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem kt_kernelOrderTwo_of_card (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hcard : KTKernelCard prov) (hns : KTNonSplit prov) : KTKernelOrderTwo prov := by
   intro x hx
   have h2 : ktKernelRep prov + ktKernelRep prov = 0 := by

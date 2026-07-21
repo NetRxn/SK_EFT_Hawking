@@ -159,6 +159,8 @@ open SKEFTHawking.PinPlusKTKernelSpinRoute
 
 namespace SKEFTHawking.PinPlusKTStepGate
 
+variable {k : WithTop ℕ∞}
+
 /-! ## §1. G9-1 — the step-Prop is EQUIVALENT to the binder; every G8 model transfers -/
 
 /-- **The converse bridge** (G9-1): `KernelReducesToSpin ⟹ KTSurgeryReduces`. The rank-0
@@ -166,7 +168,7 @@ representative `p'` that KRTS supplies for the kernel class `[p]` is itself the 
 rank-dropping representative the step-Prop demands at any `0 < p.2.n` representative
 (`p'.2.n = 0 < p.2.n`). One line — which is the finding: the wave-1 decomposition RELOCATES the
 open content, it does not weaken it. -/
-theorem surgeryReduces_of_kernelReducesToSpin (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem surgeryReduces_of_kernelReducesToSpin (prov : CharPairWProviderPerOp (𝓡 4) k)
     (h : KernelReducesToSpin prov) : KTSurgeryReduces prov := by
   intro p hbrown hpos
   obtain ⟨p', hp', heq⟩ := h _ hbrown
@@ -176,7 +178,7 @@ theorem surgeryReduces_of_kernelReducesToSpin (prov : CharPairWProviderPerOp (�
 bridge-sharpness question (attack line (b)) maximally: the induction bridge consumes exactly the
 step-Prop, and the step-Prop is exactly the binder. All round-8 vacuity structure (degenerate
 models, consumption discipline) transfers verbatim between the two shapes. -/
-theorem ktSurgeryReduces_iff_kernelReducesToSpin (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+theorem ktSurgeryReduces_iff_kernelReducesToSpin (prov : CharPairWProviderPerOp (𝓡 4) k) :
     KTSurgeryReduces prov ↔ KernelReducesToSpin prov :=
   ⟨kernelReducesToSpin_of_surgeryReduces prov, surgeryReduces_of_kernelReducesToSpin prov⟩
 
@@ -185,7 +187,7 @@ transfer): in the split world every brown-0 class is `0`, so the empty structure
 strictly-smaller representative for every `0 < n` kernel representative. A surgery-trace
 construction that only ever lands on the `[p] = 0` fibre has discharged NOTHING beyond this
 degenerate model — the wave must produce tethers off that fibre. -/
-theorem ktSurgeryReduces_of_kernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem ktSurgeryReduces_of_kernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) k)
     (ht : KernelTrivial prov) : KTSurgeryReduces prov :=
   surgeryReduces_of_kernelReducesToSpin prov (kernelReducesToSpin_of_kernelTrivial prov ht)
 
@@ -194,7 +196,7 @@ in the collapsed-sector nonsplit world `k₀` is a `0 < n`-represented kernel cl
 rank-lowering chain (it would terminate at a rank-0 representative the collapse forbids). The
 step-Prop is fenced on BOTH sides — satisfiable in the split world, refutable in the
 collapsed+nonsplit world — hence genuinely open, sitting at exactly KRTS strength. -/
-theorem not_ktSurgeryReduces_of_sectorCollapsed_of_nonsplit (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem not_ktSurgeryReduces_of_sectorCollapsed_of_nonsplit (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hc : SectorCollapsed prov) (hns : KTNonSplit prov) : ¬ KTSurgeryReduces prov :=
   fun h => not_kernelReducesToSpin_of_sectorCollapsed_of_nonsplit prov hc hns
     (kernelReducesToSpin_of_surgeryReduces prov h)
@@ -206,7 +208,7 @@ theorem not_ktSurgeryReduces_of_sectorCollapsed_of_nonsplit (prov : CharPairWPro
 2-torsion collapse of `⟨k₀⟩` (recovered by wave-1's `spinImageIsTwo_of_cyclic_of_kummerRep` from
 `KummerWitness.1`). A `SpinImageCyclic` discharge is therefore never independent progress past
 SIIT. -/
-theorem spinImageCyclic_of_spinImageIsTwo (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem spinImageCyclic_of_spinImageIsTwo (prov : CharPairWProviderPerOp (𝓡 4) k)
     (h2 : SpinImageIsTwo prov) : SpinImageCyclic prov := by
   intro y hy
   rcases h2 y hy with rfl | rfl
@@ -215,28 +217,28 @@ theorem spinImageCyclic_of_spinImageIsTwo (prov : CharPairWProviderPerOp (𝓡 4
 
 /-- **Sector-collapse discharges `SpinImageCyclic`** (G9-3 degenerate model, `m = 0` everywhere):
 the G8-2 world satisfies the wave-1 Prop at zero geometric cost. -/
-theorem spinImageCyclic_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem spinImageCyclic_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hc : SectorCollapsed prov) : SpinImageCyclic prov :=
   spinImageCyclic_of_spinImageIsTwo prov (spinImageIsTwo_of_sectorCollapsed prov hc)
 
 /-- **Kernel-collapse collapses the sector** (G9-3 composition brick): the sector sits inside the
 kernel, so the G8-3 world is a sub-world of the G8-2 world. (Round 8 proved the two SIIT
 discharges independently; this is the honest containment.) -/
-theorem sectorCollapsed_of_kernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem sectorCollapsed_of_kernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) k)
     (ht : KernelTrivial prov) : SectorCollapsed prov :=
   fun x hx => ht x (emptySigmaRepresentable_in_kernel prov x hx)
 
 /-- **Kernel-collapse discharges `SpinImageCyclic`** (G9-3): via the containment. Both G8
 degenerate models satisfy the wave-1 Prop; its consumption is subject to the round-8 route
 discipline unchanged. -/
-theorem spinImageCyclic_of_kernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem spinImageCyclic_of_kernelTrivial (prov : CharPairWProviderPerOp (𝓡 4) k)
     (ht : KernelTrivial prov) : SpinImageCyclic prov :=
   spinImageCyclic_of_sectorCollapsed prov (sectorCollapsed_of_kernelTrivial prov ht)
 
 /-- **`SpinImageCyclic` is recoverable from `KTKernelCard`** (G9-3, the G8-4 pattern one Prop
 down): the kernel bound already classifies the sector into `{0, k₀} ⊆ ⟨k₀⟩`. Discharge waves
 should target `KTKernelCard`/`KernelReducesToSpin`; `SpinImageCyclic` is a recoverable face. -/
-theorem spinImageCyclic_of_KTKernelCard (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem spinImageCyclic_of_KTKernelCard (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hcard : KTKernelCard prov) : SpinImageCyclic prov :=
   spinImageCyclic_of_spinImageIsTwo prov (spinImageIsTwo_of_KTKernelCard prov hcard)
 
@@ -245,7 +247,7 @@ under sector-collapse, `k₀`'s representability hands the collapse `k₀ = 0`, 
 `KTNonSplit` — so consuming the pair TOGETHER WITH `KTNonSplit` (the round-8 triple) excludes
 both collapse worlds. The wave-1 bridge `spinImageIsTwo_of_cyclic_of_kummerRep` stays honest
 exactly when its output SIIT is consumed inside the triple. -/
-theorem not_KTNonSplit_of_kummerRep_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem not_KTNonSplit_of_kummerRep_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hc : SectorCollapsed prov)
     (hk : EmptySigmaRepresentable prov (ktKernelRep prov)) : ¬ KTNonSplit prov :=
   fun hns => hns (hc _ hk)
@@ -262,7 +264,7 @@ variable {X : Type*} [TopologicalSpace X] {k' : WithTop ℕ∞}
 /-- **A zero-map discharge of `hΦg` is exactly the split world** (G9-4): `0 = k₀` is the negation
 of `KTNonSplit`. The engine tie's generator hypothesis cannot be faked by the zero map without
 landing in the world the triple already excludes. -/
-theorem zeroPhi_apply_g_iff_not_KTNonSplit (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem zeroPhi_apply_g_iff_not_KTNonSplit (prov : CharPairWProviderPerOp (𝓡 4) k)
     (g : StrMfd ξ) :
     ((0 : DataBordismGrp ξ →+ T2DataBordismGrp (pinPlusCharPairData prov))
         (DataBordismGrp.mk ξ g) = ktKernelRep prov) ↔ ¬ KTNonSplit prov := by
@@ -271,7 +273,7 @@ theorem zeroPhi_apply_g_iff_not_KTNonSplit (prov : CharPairWProviderPerOp (𝓡 
 /-- **A zero-map discharge of `hΦrange` is exactly `SectorCollapsed`** (G9-4): surjectivity of
 the zero map onto the sector says every sector class is `0`. The engine tie's range hypothesis
 cannot be faked by the zero map without asserting the G8-2 collapse outright. -/
-theorem zeroPhi_range_iff_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+theorem zeroPhi_range_iff_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) k) :
     (∀ y, EmptySigmaRepresentable prov y →
         ∃ w : DataBordismGrp ξ,
           (0 : DataBordismGrp ξ →+ T2DataBordismGrp (pinPlusCharPairData prov)) w = y)
@@ -289,7 +291,7 @@ hypothesis. So the Φ interface's genuinely open input is `KTKernelCard`-grade (
 overhang on the geometric route, G9-5) — `hΦrange` is NOT a leaf input, and a wave that builds
 `Φ` + `hΦg` and then obtains `hΦrange` from `KTKernelCard` has made `Φ` redundant for
 `SpinImageCyclic` (`spinImageCyclic_of_KTKernelCard` is direct). -/
-theorem phiRange_of_KTKernelCard (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem phiRange_of_KTKernelCard (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hcard : KTKernelCard prov) (g : StrMfd ξ)
     (Φ : DataBordismGrp ξ →+ T2DataBordismGrp (pinPlusCharPairData prov))
     (hΦg : Φ (DataBordismGrp.mk ξ g) = ktKernelRep prov) :
@@ -308,14 +310,14 @@ characteristic surface is literally EMPTY (`IsEmpty Σ`) — the class-level ima
 spin condition (`w₂ + w₁²`-dual surface removable), STRICTLY stronger in form than the broad
 `EmptySigmaRepresentable` (`n = 0`, H¹-triviality). The `Ω₄^{Spin}` image the KT dossier speaks
 of is THIS predicate; the broad form is what the in-tree sector Props consume. -/
-def GeometricSpinRepresentable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+def GeometricSpinRepresentable (prov : CharPairWProviderPerOp (𝓡 4) k)
     (x : T2DataBordismGrp (pinPlusCharPairData prov)) : Prop :=
   ∃ p : StrMfd (pinPlusCharPairData prov).toTangentialData,
     IsEmpty p.2.surf.M ∧ T2DataBordismGrp.mk (pinPlusCharPairData prov) p = x
 
 /-- **Geometric ⟹ broad** (G9-5, the PROVED inclusion): an empty surface forces rank 0
 (`spinSector_of_isEmpty_surf`). The converse is the OPEN sphere-overhang (`SectorIsGeometric`). -/
-theorem emptySigmaRepresentable_of_geometric (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem emptySigmaRepresentable_of_geometric (prov : CharPairWProviderPerOp (𝓡 4) k)
     (x : T2DataBordismGrp (pinPlusCharPairData prov)) (h : GeometricSpinRepresentable prov x) :
     EmptySigmaRepresentable prov x := by
   obtain ⟨p, hp, rfl⟩ := h
@@ -323,7 +325,7 @@ theorem emptySigmaRepresentable_of_geometric (prov : CharPairWProviderPerOp (�
 
 /-- Non-vacuity of the geometric predicate: `0` is geometrically spin-representable (the empty
 structure's surface is `emptySM`, whose carrier is `PEmpty`). -/
-theorem geometricSpinRepresentable_zero (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+theorem geometricSpinRepresentable_zero (prov : CharPairWProviderPerOp (𝓡 4) k) :
     GeometricSpinRepresentable prov 0 :=
   ⟨⟨emptySM, charPairBundledEmpty⟩, inferInstanceAs (IsEmpty PEmpty), rfl⟩
 
@@ -338,14 +340,14 @@ discharge via geometric `Φ` must co-discharge this Prop; the `KTKernelCard` rou
 — `0` is geometric), so this is an INTERFACE, not a fence; its honest discharge demands, for each
 nonzero broad-sector class, an actual sphere-killing bordism — no in-tree witness exists (the only
 geometric representative in-tree is the empty structure, covering the `0` fibre only). -/
-def SectorIsGeometric (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def SectorIsGeometric (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   ∀ x : T2DataBordismGrp (pinPlusCharPairData prov),
     EmptySigmaRepresentable prov x → GeometricSpinRepresentable prov x
 
 /-- **Sector-collapse discharges the overhang Prop** (G9-5): every sector class is `0`, and `0`
 is geometric. The overhang is therefore an interface (collapse-satisfiable), not a fence — its
 consumption inherits the triple discipline like everything else in the sector layer. -/
-theorem sectorIsGeometric_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem sectorIsGeometric_of_sectorCollapsed (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hc : SectorCollapsed prov) : SectorIsGeometric prov := by
   intro x hx
   rw [hc x hx]
@@ -364,7 +366,7 @@ satisfying the engine tie's `hΦrange` FORCES the overhang Prop `SectorIsGeometr
 geometric route to `hΦrange` cannot dodge the characteristic-sphere overhang: covering the BROAD
 sector with geometric classes IS the sphere-killing reduction. The dossier's Lemma-5.3 gap list
 must carry `SectorIsGeometric` as a named input on this route (frozen spec item 3b). -/
-theorem sectorIsGeometric_of_phiRange_geometric (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem sectorIsGeometric_of_phiRange_geometric (prov : CharPairWProviderPerOp (𝓡 4) k)
     (Φ : DataBordismGrp ξ →+ T2DataBordismGrp (pinPlusCharPairData prov))
     (hgeo : ∀ w, GeometricSpinRepresentable prov (Φ w))
     (hΦrange : ∀ y, EmptySigmaRepresentable prov y → ∃ w, Φ w = y) :

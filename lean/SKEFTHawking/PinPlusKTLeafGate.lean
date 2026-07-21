@@ -147,6 +147,8 @@ open SKEFTHawking.PinPlusCharPairWProviderTransport
 
 namespace SKEFTHawking.PinPlusKTLeafGate
 
+variable {k : WithTop ℕ∞}
+
 /-! ## §1. G10-1 — the provider rider, UPDATED: the sole remaining residual is `cylData`
 
 The round-8 rider (G8-1) named TWO residuals (`cylData` + `addClosure`).
@@ -175,7 +177,7 @@ end Provider
 /-! ## §2. G10-2 — `AmbientSurgeryDatum`: the x-fields are assembly-decorative; the minimal step
 leaf is the x-free tether supply; diagonal-tether reuse is rank-excluded -/
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 variable {p : StrMfd (pinPlusCharPairData prov).toTangentialData}
 
 /-- **The datum's tether ends differ in rank** (G10-2ii): `hrank` forces `p'.2.n ≠ p.2.n`, so the
@@ -191,7 +193,7 @@ strictly-rank-dropping tethered steps — with NO isotropic-class fields and NO 
 demand — meets the step-Prop. Together with `tetherSupply_of_ambientDatumSupply` this pins the
 `AmbientSurgeryDatum` fields `(x, hx0, hxq)` (and the exactness of `hrank`) as KT-fidelity
 GUIDANCE, not load-bearing content: they make the leaf harder to inhabit, never easier. -/
-theorem ktSurgeryReduces_of_tetherSupply (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem ktSurgeryReduces_of_tetherSupply (prov : CharPairWProviderPerOp (𝓡 4) k)
     (H : ∀ p : StrMfd (pinPlusCharPairData prov).toTangentialData,
       charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = 0 →
       0 < p.2.n →
@@ -207,7 +209,7 @@ theorem ktSurgeryReduces_of_tetherSupply (prov : CharPairWProviderPerOp (𝓡 4)
 /-- **The ambient-datum supply projects onto the x-free tether supply** (G10-2i, the other
 direction of the locating pair): every consumer path of the ambient supply factors through this
 projection — the assembly never reads `x`, `hx0`, `hxq`, nor the exactness of the rank drop. -/
-theorem tetherSupply_of_ambientDatumSupply (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem tetherSupply_of_ambientDatumSupply (prov : CharPairWProviderPerOp (𝓡 4) k)
     (H : ∀ p : StrMfd (pinPlusCharPairData prov).toTangentialData,
       charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = 0 →
       0 < p.2.n → AmbientSurgeryDatum prov p) :
@@ -244,7 +246,7 @@ class comes with a `Div32BoundingDatum` computing its signature (the honest KT a
 arithmetic (`thirtytwo_dvd_sigM` = σ-doubling + in-tree Rokhlin). This formally ties the §A.1
 arithmetic to the §A.2 leaf and is the SHARPER Direction-A construction target: the open geometric
 content is exactly "Pin⁺-bounding produces the dual-spin datum", nothing more. -/
-theorem hfwd_of_boundingDatumSupply (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem hfwd_of_boundingDatumSupply (prov : CharPairWProviderPerOp (𝓡 4) k)
     (R : SpinSigmaPresentation ξ)
     (Φ : DataBordismGrp ξ →+ T2DataBordismGrp (pinPlusCharPairData prov))
     (H : ∀ x, Φ x = 0 → ∃ d : Div32BoundingDatum, d.sigM = R.sig x) :
@@ -257,7 +259,7 @@ theorem hfwd_of_boundingDatumSupply (prov : CharPairWProviderPerOp (𝓡 4) 0)
 division (`hdvd`), the map `w ↦ (R.sig w / 16) • k₀` is a genuine `AddMonoidHom` — built from the
 presentation's σ and the carrier's `k₀` ALONE, with zero forgetful-map geometry. It is the
 round-10 analogue of G9-4's `k₀`-generated fake, now landing at the LEAF level. -/
-noncomputable def sigmaQuotientPhi (prov : CharPairWProviderPerOp (𝓡 4) 0)
+noncomputable def sigmaQuotientPhi (prov : CharPairWProviderPerOp (𝓡 4) k)
     (R : SpinSigmaPresentation ξ) (hdvd : ∀ x, (16 : ℤ) ∣ R.sig x) :
     DataBordismGrp ξ →+ T2DataBordismGrp (pinPlusCharPairData prov) :=
   AddMonoidHom.mk' (fun w => (R.sig w / 16) • ktKernelRep prov) (by
@@ -271,14 +273,14 @@ noncomputable def sigmaQuotientPhi (prov : CharPairWProviderPerOp (𝓡 4) 0)
       Int.mul_ediv_cancel_left _ (by norm_num : (16 : ℤ) ≠ 0),
       Int.mul_ediv_cancel_left _ (by norm_num : (16 : ℤ) ≠ 0), add_zsmul])
 
-@[simp] theorem sigmaQuotientPhi_apply (prov : CharPairWProviderPerOp (𝓡 4) 0)
+@[simp] theorem sigmaQuotientPhi_apply (prov : CharPairWProviderPerOp (𝓡 4) k)
     (R : SpinSigmaPresentation ξ) (hdvd : ∀ x, (16 : ℤ) ∣ R.sig x) (w : DataBordismGrp ξ) :
     sigmaQuotientPhi prov R hdvd w = (R.sig w / 16) • ktKernelRep prov :=
   rfl
 
 /-- **The fake `Φ` hits the generator hypothesis `hΦg`** given only the ÷32-upper (`k₀`
 2-torsion): `Φ[g] = (−16/16) • k₀ = −k₀ = k₀`. -/
-theorem sigmaQuotientPhi_g (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem sigmaQuotientPhi_g (prov : CharPairWProviderPerOp (𝓡 4) k)
     (R : SpinSigmaPresentation ξ) (hdvd : ∀ x, (16 : ℤ) ∣ R.sig x) {g : StrMfd ξ}
     (hg : R.sig (DataBordismGrp.mk ξ g) = -16)
     (h2 : ktKernelRep prov + ktKernelRep prov = 0) :
@@ -290,7 +292,7 @@ theorem sigmaQuotientPhi_g (prov : CharPairWProviderPerOp (𝓡 4) 0)
 itself (+ the ÷32-upper): `Φ x = (σx/16) • k₀ = 0` with `σx/16` odd would force `k₀ = 0`; even
 gives `32 ∣ σx`. The `hfwd` field is therefore derivable from `KTNonSplit` — the leaf cannot pin
 the genuine "bounding ⟹ ÷32" geometric content by shape. -/
-theorem sigmaQuotientPhi_fwd (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem sigmaQuotientPhi_fwd (prov : CharPairWProviderPerOp (𝓡 4) k)
     (R : SpinSigmaPresentation ξ) (hdvd : ∀ x, (16 : ℤ) ∣ R.sig x)
     (hns : KTNonSplit prov) (h2 : ktKernelRep prov + ktKernelRep prov = 0) :
     ∀ x, sigmaQuotientPhi prov R hdvd x = 0 → (32 : ℤ) ∣ R.sig x := by
@@ -314,7 +316,7 @@ theorem sigmaQuotientPhi_fwd (prov : CharPairWProviderPerOp (𝓡 4) 0)
 geometry — the fake `Φ := (σ/16) • k₀` fills every field. A Direction-A construction wave whose
 `hfwd` proof consumes `KTNonSplit` or the `k₀`-torsion has built THIS, i.e. nothing (the
 non-circularity audit, frozen spec item 4). -/
-theorem dualSpinForwardDatum_of_ktNonSplit (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem dualSpinForwardDatum_of_ktNonSplit (prov : CharPairWProviderPerOp (𝓡 4) k)
     (R : SpinSigmaPresentation ξ) (g : StrMfd ξ)
     (hg : R.sig (DataBordismGrp.mk ξ g) = -16) (hdvd : ∀ x, (16 : ℤ) ∣ R.sig x)
     (h2 : ktKernelRep prov + ktKernelRep prov = 0) (hns : KTNonSplit prov) :
@@ -333,7 +335,7 @@ infrastructure and the ÷32-upper, the Direction-A leaf sits at EXACTLY `KTNonSp
 backward is the arithmetic fake. The leaf is a NAMED ROUTE, not a reduction: its discharge value
 lies entirely in the non-circularity of the construction, which the statement shape cannot
 enforce. -/
-theorem dualSpinForwardDatum_iff_ktNonSplit (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem dualSpinForwardDatum_iff_ktNonSplit (prov : CharPairWProviderPerOp (𝓡 4) k)
     (R : SpinSigmaPresentation ξ) (g : StrMfd ξ)
     (hg : R.sig (DataBordismGrp.mk ξ g) = -16) (hdvd : ∀ x, (16 : ℤ) ∣ R.sig x)
     (h2 : ktKernelRep prov + ktKernelRep prov = 0) :
@@ -372,7 +374,7 @@ theorem spinImageIsTwo_of_ktSpinPresentationDatum (d : KTSpinPresentationDatum p
 geometric-k₀}` forces `SectorIsGeometric` directly — every sector class is `0` (geometric via the
 empty structure) or `k₀` (geometric by hypothesis). Confirms
 `sectorIsGeometric_of_ktSpinPresentationDatum` carries no content beyond the locating pair. -/
-theorem sectorIsGeometric_of_siit_of_geomKummer (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem sectorIsGeometric_of_siit_of_geomKummer (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hsiit : SpinImageIsTwo prov)
     (hgeo : GeometricSpinRepresentable prov (ktKernelRep prov)) :
     SectorIsGeometric prov := by
@@ -386,7 +388,7 @@ infrastructure, `{SpinImageIsTwo, GeometricSpinRepresentable k₀}` inhabits
 `KTSpinPresentationDatum` via the arithmetic `Φ := (σ/16) • k₀` — `hΦgeo` splits over
 `zsmul_of_two_torsion` (the image is `{0, k₀}`, both geometric), `hΦrange` over SIIT. The
 Φ-dressing is interchangeable: no forgetful-map geometry beyond the pair is pinned. -/
-theorem ktSpinPresentationDatum_of_content (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem ktSpinPresentationDatum_of_content (prov : CharPairWProviderPerOp (𝓡 4) k)
     (R : SpinSigmaPresentation ξ) (hA : R.RealizesSphereProducts) (hB : R.SphereProductBounds)
     (g : StrMfd ξ) (hg : R.sig (DataBordismGrp.mk ξ g) = -16)
     (hdvd : ∀ x, (16 : ℤ) ∣ R.sig x)
@@ -414,7 +416,7 @@ theorem ktSpinPresentationDatum_of_content (prov : CharPairWProviderPerOp (𝓡 
 C-leaf is EXACTLY the pair `{SpinImageIsTwo, GeometricSpinRepresentable k₀}` — nothing weaker
 inhabits it, nothing stronger is pinned. The construction target for the discharge wave is the
 pair itself; the geometric-`Φ` structure is packaging. -/
-theorem ktSpinPresentationDatum_iff_content (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem ktSpinPresentationDatum_iff_content (prov : CharPairWProviderPerOp (𝓡 4) k)
     (R : SpinSigmaPresentation ξ) (hA : R.RealizesSphereProducts) (hB : R.SphereProductBounds)
     (g : StrMfd ξ) (hg : R.sig (DataBordismGrp.mk ξ g) = -16)
     (hdvd : ∀ x, (16 : ℤ) ∣ R.sig x) :
@@ -433,7 +435,7 @@ end CarrierForward
 zero constraint, and the remaining fields are literally the `EmptySigmaRepresentable` witness. The
 "Enriques" dressing has no formal footprint; frozen spec item 2 replaces this leaf with the sharp
 `GeometricSpinRepresentable prov k₀` target. -/
-theorem enriquesDatum_iff_kummerRep (prov : CharPairWProviderPerOp (𝓡 4) 0) :
+theorem enriquesDatum_iff_kummerRep (prov : CharPairWProviderPerOp (𝓡 4) k) :
     Nonempty (EnriquesDatum prov) ↔ EmptySigmaRepresentable prov (ktKernelRep prov) :=
   ⟨fun ⟨d⟩ => kummerWitness1_of_enriquesDatum d,
    fun ⟨p, hspin, hmk⟩ => ⟨⟨-16, rfl, p, hspin, hmk⟩⟩⟩

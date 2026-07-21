@@ -65,7 +65,9 @@ open SKEFTHawking.PinPlusKTSpinPresentationRow
 
 namespace SKEFTHawking.PinPlusKTSectorGeometricReduce
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable {k : WithTop ℕ∞}
+
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-! ## §1. The concrete surgery atom -/
 

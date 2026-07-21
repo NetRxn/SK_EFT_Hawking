@@ -43,6 +43,8 @@ open SKEFTHawking.PinPlusKTSurgeryTrace
 
 namespace SKEFTHawking.PinPlusKTSurgeryTraceConsumers
 
+variable {k : WithTop ℕ∞}
+
 /-! ## §1. The keystone-supplied tether — `CharPairBorRealizedTethered` from a membrane weld.
 
 The load-bearing bridge: build the tethered characteristic-pair bordism datum where the tether
@@ -97,7 +99,7 @@ end Bridge
 /-! ## §2. Consumer 1 — `AmbientSurgeryDatum`: the `b` field via `surgeryTraceBordism`, and the
 reduction to the sharp residuals. -/
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 variable {p : StrMfd (pinPlusCharPairData prov).toTangentialData}
 
 /-- **The ambient trace bordism, via Wave-3's `surgeryTraceBordism`.** Re-exports the Wave-3 packaging

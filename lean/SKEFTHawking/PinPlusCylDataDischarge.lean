@@ -212,7 +212,7 @@ The full `cylData : ∀ {s}, CharPairStrBundled I s → CylWAdmData s` splits by
   `hdisc`.
 
 Given the Wu leaf + the disconnected supply, `nonempty_provider_of_cylData` fires: the sole inhabitation
-dependency `cylData` is met, so `Nonempty (CharPairWProviderPerOp (𝓡 4) 0)` — the G8-1/G10-1 provider
+dependency `cylData` is met, so `Nonempty (CharPairWProviderPerOp (𝓡 4) k)` — the G8-1/G10-1 provider
 rider dies, and every per-`prov` W-D statement (`ktSurgeryReduces_of_tetherSupply`,
 `dualSpinForwardDatum_iff_ktNonSplit`, `kt_equiv_zmod16_of_two_leaves`, …) acquires a live instance. -/
 theorem nonempty_provider_of_wuLeaf_and_disconnected
