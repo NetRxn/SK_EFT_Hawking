@@ -1274,6 +1274,8 @@ import SKEFTHawking.KummerCollarRetractInt
 import SKEFTHawking.KummerCollarPairLESInt
 import SKEFTHawking.KummerCollarPairSplitInt
 import SKEFTHawking.KummerChartNbhdInt
+import SKEFTHawking.SingularChartStarClosureVanishInt
+import SKEFTHawking.KummerSplitBCoreVanishInt
 import SKEFTHawking.SingularLocalHomologyThreeInt
 import SKEFTHawking.SingularConvexRadialMiddleInt
 import SKEFTHawking.SingularConvexStageIsoInt
