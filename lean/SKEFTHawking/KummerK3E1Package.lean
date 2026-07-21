@@ -30,10 +30,12 @@ atoms' worth of bridge and states precisely what is still missing.
 1. **The basis is not canonical and not geometric.** `kummerK3_b2_target` is a `Nonempty`; the
    equivalence extracted from it is an arbitrary `Classical.choice`. So `kummerK3IntH2Basis` is *a*
    rank-22 basis, not *the* basis of 3 hyperbolic planes + 2(−E₈) on which
-   `SpinSigmaGenerator.k3Form` is the Gram matrix. `hrank` (rank = 22) is discharged; `hk3`
+   `SpinSigmaRoute.k3Form` is the Gram matrix. `hrank` (rank = 22) is discharged; `hk3`
    (`IntCongr (interMatrix …) k3Form`) is NOT, and is not weakened by anything here — the Gram
    computation still needs the exceptional/Q-side classes' cup products, which no statement in this
-   module touches.
+   module touches. **§6 shows the anonymity is nevertheless free**: `hk3` proved on ANY rank-22
+   basis transfers to this one (`kummerK3_hk3_of_geometric_basis`), because the row asks for a
+   congruence rather than a Gram equality.
 2. **Three named open inputs**, each a single homological fact on the welded carrier, listed in
    §5 (`KummerK3E1Residuals`): `H₁` free (§3's binder), `H₃` 2-torsion-free (§4), and the
    `IntPoincareDuality` unimodularity atom (untouched here).
@@ -45,6 +47,7 @@ import Mathlib
 import SKEFTHawking.KummerChart1NbhdAcyclicInt
 import SKEFTHawking.KummerK3Manifold
 import SKEFTHawking.IntOrientationMod2Lift
+import SKEFTHawking.IntersectionMatrixBasisChange
 
 namespace SKEFTHawking.KummerK3E1Package
 
@@ -214,6 +217,36 @@ theorem kummerK3E1Atoms_of_residuals (r : KummerK3E1Residuals) : Nonempty Kummer
   obtain ⟨o⟩ := nonempty_intOrientation_kummerK3 r.orientInput
   obtain ⟨pd⟩ := r.pdInput o
   exact ⟨⟨o, kummerK3IntH2Basis, pd, rfl⟩⟩
+
+/-! ## §6. The anonymity of §3's basis costs the Gram span NOTHING -/
+
+section GramTransfer
+
+variable [Module.Free ℤ (Homology KummerK3top 1)]
+
+/-- **The `hk3` obligation on the packaged (anonymous) basis, from the K3-lattice congruence on ANY
+rank-22 basis.** §3's `kummerK3IntH2Basis` is a `Classical.choice` extraction and names no geometry;
+this shows that is not a defect of the packaging. Because the row's `hk3` field asks for an
+`IntCongr` — not a Gram equality — and Gram matrices of two bases of the same free module differ by a
+unimodular congruence (`IntersectionMatrixBasisChange.interMatrix_intCongr_of_rank_eq`), the Gram
+span may be executed in whatever coordinates make the cup products computable (the 16 exceptional
+`(−2)`-sphere classes plus the six descended `T⁴` classes, the latter's block already congruent to
+`3H` by `KummerT4GramCross.interMatrix_t4_intCongr_torusFourForm`) and transferred here for free.
+
+So the outstanding Gram work is exactly the *geometric* statement `hgeo`, with no basis-normalisation
+tax on top — the K10 counterpart of the `SphereProdGramPin` retirement. -/
+theorem kummerK3_hk3_of_geometric_basis (o : IntOrientation KummerK3) (C : IntH2Basis KummerK3top)
+    (hC : C.rank = 22)
+    (hgeo : IntCongr (Matrix.reindex (finCongr hC) (finCongr hC)
+        (interMatrix (intFundamentalClassOfIntOrientation o) C))
+      SKEFTHawking.SpinSigmaRoute.k3Form) :
+    IntCongr (Matrix.reindex (finCongr kummerK3IntH2Basis_rank) (finCongr kummerK3IntH2Basis_rank)
+        (interMatrix (intFundamentalClassOfIntOrientation o) kummerK3IntH2Basis))
+      SKEFTHawking.SpinSigmaRoute.k3Form :=
+  SKEFTHawking.IntersectionMatrixBasisChange.hk3_of_other_basis _ _ C
+    kummerK3IntH2Basis_rank hC hgeo
+
+end GramTransfer
 
 end
 
