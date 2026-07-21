@@ -4724,6 +4724,9 @@ import SKEFTHawking.KummerSeamCollarQ
 import SKEFTHawking.KummerSeamCollarSmooth
 import SKEFTHawking.KummerSeamSection
 import SKEFTHawking.KummerSeamSectionAt
+import SKEFTHawking.KummerEIntChartCoord
+import SKEFTHawking.KummerSeamCollarCoord
+import SKEFTHawking.KummerRP3ChartCoord
 import SKEFTHawking.KummerSeamDoubleCollar
 import SKEFTHawking.KummerSeamOpenNbhd
 import SKEFTHawking.KummerSeamComponentOpen
