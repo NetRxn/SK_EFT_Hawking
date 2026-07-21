@@ -220,6 +220,137 @@ theorem isManifold_extShell {k : WithTop ℕ∞} :
   obtain ⟨u₁, rfl⟩ := he'
   exact contDiffOn_shellTransition_CC u₀ u₁
 
+/-! ### §2. Toward `IsManifold ↥puncturedTorus` — the T⁴° atlas transition classes -/
+
+/-- Each collar sits inside the metric `3/4`-ball at its fixed point: the chart-radius is `< 3/4`
+and the sup-metric distance is bounded by the chart radius (`dist_centeredChartParam_lt`). -/
+theorem collarSet_subset_ball34 (c : TorusFour) :
+    collarSet c ⊆ Metric.ball c (3 / 4) := by
+  rintro _ ⟨w, hw, rfl⟩
+  rw [centeredChartParamE4_apply, Metric.mem_ball]
+  refine dist_centeredChartParam_lt c (by norm_num) ?_
+  rw [sqNorm_ofE4]
+  nlinarith [hw.2, norm_nonneg w]
+
+/-- **Different-`c` collars are disjoint.** The fixed points have separation `≥ 2` (`fixedSet_dist_ge`)
+and each collar lies in the metric `3/4`-ball, so `3/4 + 3/4 = 3/2 < 2` forces disjointness. The
+geometric content behind the vacuous collar–collar (different-`c`) transition class. -/
+theorem collarSet_disjoint {c c' : TorusFour} (hc : c ∈ fixedSet) (hc' : c' ∈ fixedSet)
+    (hne : c ≠ c') : Disjoint (collarSet c) (collarSet c') := by
+  rw [Set.disjoint_left]
+  intro y hy hy'
+  have h1 : dist y c < 3 / 4 := collarSet_subset_ball34 c hy
+  have h2 : dist y c' < 3 / 4 := collarSet_subset_ball34 c' hy'
+  have hsep : (2 : ℝ) ≤ dist c c' := fixedSet_dist_ge hc hc' hne
+  have htri : dist c c' ≤ dist c y + dist y c' := dist_triangle _ _ _
+  rw [dist_comm c y] at htri
+  linarith
+
+/-- The `.symm` of a boundary chart lands (underlying `TorusFour` point) in its own collar. -/
+theorem boundaryChart_symm_coe_mem {c : TorusFour} (hc : c ∈ fixedSet) (u₀ : NSphere 3) (p : Model) :
+    (((boundaryChart c u₀ hc).symm p : ↥puncturedTorus) : TorusFour) ∈ collarSet c := by
+  rw [boundaryChart, OpenPartialHomeomorph.lift_openEmbedding_symm]
+  exact ((innerCollarChart c u₀).symm p).2
+
+/-- A point in a boundary chart's source has underlying `TorusFour` point in that collar. -/
+theorem boundaryChart_source_coe_mem {c' : TorusFour} (hc' : c' ∈ fixedSet) (u₁ : NSphere 3)
+    {q : ↥puncturedTorus} (hq : q ∈ (boundaryChart c' u₁ hc').source) :
+    (q : TorusFour) ∈ collarSet c' := by
+  rw [boundaryChart, OpenPartialHomeomorph.lift_openEmbedding_source] at hq
+  obtain ⟨q₀, _, rfl⟩ := hq
+  exact q₀.2
+
+/-- **Transition class: collar → collar, different fixed points (vacuous).** For `c ≠ c'` the two
+collars are disjoint, so the transition's source is empty and the coordinate change is `C^k` vacuously. -/
+theorem contDiffOn_transition_collar_collar_diff {k : WithTop ℕ∞}
+    {c c' : TorusFour} (hc : c ∈ fixedSet) (hc' : c' ∈ fixedSet) (hne : c ≠ c')
+    (u₀ u₁ : NSphere 3) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑((boundaryChart c u₀ hc).symm ≫ₕ boundaryChart c' u₁ hc') ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹'
+          ((boundaryChart c u₀ hc).symm ≫ₕ boundaryChart c' u₁ hc').source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) := by
+  have hempty : ((boundaryChart c u₀ hc).symm ≫ₕ boundaryChart c' u₁ hc').source = ∅ := by
+    rw [OpenPartialHomeomorph.trans_source]
+    ext p
+    simp only [Set.mem_inter_iff, Set.mem_empty_iff_false, iff_false, not_and]
+    intro _ hp2
+    rw [Set.mem_preimage] at hp2
+    have hmem : (((boundaryChart c u₀ hc).symm p : ↥puncturedTorus) : TorusFour) ∈ collarSet c :=
+      boundaryChart_symm_coe_mem hc u₀ p
+    have hmem' : (((boundaryChart c u₀ hc).symm p : ↥puncturedTorus) : TorusFour) ∈ collarSet c' :=
+      boundaryChart_source_coe_mem hc' u₁ hp2
+    exact (Set.disjoint_left.mp (collarSet_disjoint hc hc' hne) hmem) hmem'
+  rw [hempty, Set.preimage_empty, Set.empty_inter]
+  exact contDiffOn_empty
+
+/-- **Transition class: collar → collar, same fixed point.** Reduces (via `lift_openEmbedding_trans`,
+both charts lifted along the same collar open embedding) to the inner transition
+`(innerCollarChart c u₀).symm ≫ (innerCollarChart c u₁)`, whose coordinate map is the shell collar–collar
+transition (the shared `collarHomeo`/shell-embedding prefix cancels), discharged by
+`contDiffOn_shellTransition_CC`. -/
+theorem contDiffOn_transition_collar_collar_same {k : WithTop ℕ∞}
+    {c : TorusFour} (hc : c ∈ fixedSet) (u₀ u₁ : NSphere 3) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑((boundaryChart c u₀ hc).symm ≫ₕ boundaryChart c u₁ hc) ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹'
+          ((boundaryChart c u₀ hc).symm ≫ₕ boundaryChart c u₁ hc).source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) := by
+  simp only [boundaryChart, OpenPartialHomeomorph.lift_openEmbedding_trans]
+  -- The shared prefix is `A = (collarHomeo c).symm.toOPH` then `E = shell open-embedding`; both cancel.
+  -- From the inner target, the shell preimage lies in `E.target`.
+  have hkey : ∀ p : Model, p ∈ (innerCollarChart c u₀).target →
+      (shellCollarChart u₀).symm p ∈
+        (Topology.IsOpenEmbedding.toOpenPartialHomeomorph shellIncl isOpenEmbedding_shellIncl).target := by
+    intro p hp
+    simp only [innerCollarChart, OpenPartialHomeomorph.trans_target, Set.mem_inter_iff,
+      Set.mem_preimage, OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+      Homeomorph.toOpenPartialHomeomorph_target] at hp
+    exact hp.1.2
+  -- The prefix cancels: `innerCollarChart u₁ ∘ (innerCollarChart u₀).symm = B₁ ∘ B₀.symm`.
+  have hval : ∀ p : Model, p ∈ (innerCollarChart c u₀).target →
+      innerCollarChart c u₁ ((innerCollarChart c u₀).symm p)
+        = shellCollarChart u₁ ((shellCollarChart u₀).symm p) := by
+    intro p hp
+    have hE := hkey p hp
+    simp only [innerCollarChart, OpenPartialHomeomorph.coe_trans,
+      OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+      Homeomorph.toOpenPartialHomeomorph_apply, Homeomorph.toOpenPartialHomeomorph_symm_apply,
+      Homeomorph.symm_symm, Homeomorph.symm_apply_apply]
+    rw [(Topology.IsOpenEmbedding.toOpenPartialHomeomorph shellIncl
+      isOpenEmbedding_shellIncl).right_inv hE]
+  -- The source condition transfers likewise (the `chartAt u₁`-source membership is preserved).
+  have hsrc : ∀ p : Model, p ∈ (innerCollarChart c u₀).target →
+      (innerCollarChart c u₀).symm p ∈ (innerCollarChart c u₁).source →
+      (shellCollarChart u₀).symm p ∈ (shellCollarChart u₁).source := by
+    intro p hp hs
+    have hE := hkey p hp
+    simp only [innerCollarChart, OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+      Set.mem_preimage, OpenPartialHomeomorph.coe_trans_symm,
+      Function.comp_apply, Homeomorph.toOpenPartialHomeomorph_apply,
+      Homeomorph.toOpenPartialHomeomorph_symm_apply, Homeomorph.symm_symm,
+      Homeomorph.symm_apply_apply] at hs
+    rw [(Topology.IsOpenEmbedding.toOpenPartialHomeomorph shellIncl
+      isOpenEmbedding_shellIncl).right_inv hE] at hs
+    exact hs.2.2
+  refine ((contDiffOn_shellTransition_CC u₀ u₁).mono ?_).congr ?_
+  · intro x hx
+    obtain ⟨hxsrc, hxrange⟩ := hx
+    rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+      OpenPartialHomeomorph.symm_source, Set.mem_preimage] at hxsrc
+    obtain ⟨ht, hs⟩ := hxsrc
+    refine ⟨?_, hxrange⟩
+    rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+      OpenPartialHomeomorph.symm_source, Set.mem_preimage]
+    exact ⟨Set.mem_univ _, hsrc _ ht hs⟩
+  · intro x hx
+    obtain ⟨hxsrc, hxrange⟩ := hx
+    rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+      OpenPartialHomeomorph.symm_source, Set.mem_preimage] at hxsrc
+    obtain ⟨ht, _⟩ := hxsrc
+    simp only [Function.comp_apply, OpenPartialHomeomorph.coe_trans]
+    rw [hval _ ht]
+
 end
 
 end SKEFTHawking.KummerBoundaryChartSmooth
