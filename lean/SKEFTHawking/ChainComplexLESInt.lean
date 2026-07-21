@@ -146,6 +146,40 @@ noncomputable def Hmap
     (z : cycles dM n) :
     Hmap hf n (Hml.mk dM n z) = Hml.mk dN n (cyclesMap hf n z) := rfl
 
+/-- **Functoriality of `Hmap`**: the composite of the induced maps is the map induced by the
+composite chain map. -/
+theorem Hmap_comp
+    (hf : ∀ (n : ℕ) (x : M (n + 1)), dN n (f (n + 1) x) = f n (dM n x))
+    (hg : ∀ (n : ℕ) (x : N (n + 1)), dP n (g (n + 1) x) = g n (dN n x))
+    (hgf : ∀ (n : ℕ) (x : M (n + 1)), dP n (((g (n + 1)).comp (f (n + 1))) x)
+      = ((g n).comp (f n)) (dM n x))
+    (n : ℕ) (x : Hml dM n) :
+    Hmap hg n (Hmap hf n x) = Hmap (f := fun k => (g k).comp (f k)) hgf n x := by
+  obtain ⟨z, rfl⟩ := Hml.mk_surjective dM n x
+  rfl
+
+/-- `Hmap` only depends on the pointwise values of the chain map. -/
+theorem Hmap_congr {f' : ∀ n, M n →ₗ[R] N n}
+    (hf : ∀ (n : ℕ) (x : M (n + 1)), dN n (f (n + 1) x) = f n (dM n x))
+    (hf' : ∀ (n : ℕ) (x : M (n + 1)), dN n (f' (n + 1) x) = f' n (dM n x))
+    (heq : ∀ (n : ℕ) (x : M n), f n x = f' n x) (n : ℕ) (x : Hml dM n) :
+    Hmap hf n x = Hmap (f := f') hf' n x := by
+  obtain ⟨z, rfl⟩ := Hml.mk_surjective dM n x
+  rw [Hmap_mk, Hmap_mk]
+  congr 1
+  exact Subtype.ext (heq n z)
+
+/-- A chain self-map whose values are uniformly `c • x` induces `c • id` on homology. -/
+theorem Hmap_eq_smul_of_forall {fe : ∀ n, M n →ₗ[R] M n} {c : R}
+    (hf : ∀ (n : ℕ) (x : M (n + 1)), dM n (fe (n + 1) x) = fe n (dM n x))
+    (hval : ∀ (n : ℕ) (x : M n), fe n x = c • x) (n : ℕ) (x : Hml dM n) :
+    Hmap hf n x = c • x := by
+  obtain ⟨z, rfl⟩ := Hml.mk_surjective dM n x
+  rw [show (c • Hml.mk dM n z) = Hml.mk dM n (c • z) from
+    ((Hml.mkHom dM n).map_smul c z).symm, Hmap_mk]
+  congr 1
+  exact Subtype.ext (hval n z)
+
 /-! ## §2. The connecting homomorphism of a levelwise SES of chain complexes -/
 
 /-- `g ∘ f = 0` levelwise (from exactness). -/
