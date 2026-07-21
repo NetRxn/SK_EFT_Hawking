@@ -760,4 +760,29 @@ noncomputable instance electricMonObj : CategoryTheory.MonObj (unitPlusElectricO
   mul_one := electricMul_mul_one k
   mul_assoc := electricMul_assoc k
 
+/-! ## §21. Coassociativity of `electricComul` → the `ComonObj` instance -/
+
+/-- **The dual linchpin (co-★)** — the inverse cyclic-pairing identity for the fusion
+copairing `ψ⁻¹ = eeVacUnitIso.inv : 𝟙 ⟶ e ⊗ e`. Derived from `electric_linchpin` by
+inverting the underlying iso equation. Gates `electricComul` coassociativity's `(e,e,e)`
+cocorner (dual to how (★) gates `electricMul` associativity's `(e,e,e)` corner). -/
+theorem electric_colinchpin :
+    (ρ_ (electricAnyon k)).inv ≫ (electricAnyon k ◁ (eeVacUnitIso k).inv) =
+      (λ_ (electricAnyon k)).inv ≫ ((eeVacUnitIso k).inv ▷ electricAnyon k) ≫
+        (α_ (electricAnyon k) (electricAnyon k) (electricAnyon k)).hom := by
+  have hiso :
+      (MonoidalCategory.whiskerRightIso (eeVacUnitIso k) (electricAnyon k) ≪≫
+          λ_ (electricAnyon k)) =
+        α_ (electricAnyon k) (electricAnyon k) (electricAnyon k) ≪≫
+          MonoidalCategory.whiskerLeftIso (electricAnyon k) (eeVacUnitIso k) ≪≫
+            ρ_ (electricAnyon k) := by
+    apply Iso.ext
+    simp only [Iso.trans_hom, MonoidalCategory.whiskerRightIso_hom,
+      MonoidalCategory.whiskerLeftIso_hom]
+    exact electric_linchpin k
+  have h2 := congrArg Iso.inv hiso
+  simp only [Iso.trans_inv, MonoidalCategory.whiskerRightIso_inv,
+    MonoidalCategory.whiskerLeftIso_inv, Category.assoc] at h2
+  rw [← Category.assoc, h2, Category.assoc, Category.assoc, Iso.inv_hom_id, Category.comp_id]
+
 end SKEFTHawking.SymTFT.ElectricAlgebraObject
