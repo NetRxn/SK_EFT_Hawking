@@ -307,4 +307,211 @@ theorem gChain_cycle :
   rw [gChain, chainBoundary_mapChainInt,
     chainBoundary_torCross (Sph 2) 1 zSc.1 zSc_cycle, map_zero]
 
+/-! ## §5. The seam difference, its `S¹`-factorization, the peel value, and the filling argument -/
+
+open SKEFTHawking.CircleWindingCocycle (pathEdge arcA arcB)
+open SKEFTHawking.KummerT4GramCross (t1chain t1_cycle)
+open SKEFTHawking.TorusCrossPeelGen (kronecker_cup_snd_torCross_gen)
+open SKEFTHawking.SphereProdStokesPeel (pullbackCochainInt_eq_cochainPullbackInt_ambIncl)
+
+/-- The seam-difference 1-cochain of the assembly at the polar cover. -/
+noncomputable def dSeam :
+    SingularCochainInt (sub (X := SphSph) (coverA vN ∩ coverB vN)) 1 :=
+  seamCochainOf (coverA vN) (coverB vN) 1 (uLeg (antipode vN))
+    - cochainPullbackInt (interCommMap (coverB vN) (coverA vN)) 1
+        (seamCochainOf (coverB vN) (coverA vN) 1 (uLeg vN))
+
+/-- The circle-level seam difference: the equator pullbacks of the two cap primitives. -/
+noncomputable def etaS : SingularCochainInt (Sph 1) 1 :=
+  cochainPullbackInt eqInclCapB 1 (omegaCap (antipode vN))
+    - cochainPullbackInt eqInclCapA 1 (omegaCap vN)
+
+/-- Both cap composites `puncIncl ∘ eqInclCap` are the plain equator embedding. -/
+theorem puncIncl_comp_eqInclCapA : (puncIncl vN).comp eqInclCapA = eqIncl :=
+  ContinuousMap.ext fun _ => rfl
+
+theorem puncIncl_comp_eqInclCapB : (puncIncl (antipode vN)).comp eqInclCapB = eqIncl :=
+  ContinuousMap.ext fun _ => rfl
+
+/-- **`etaS` is a 1-cocycle**: its coboundary is the difference of the two equator restrictions of
+`wSc`, which agree. -/
+theorem etaS_cocycle : coboundaryₗ (Sph 1) 1 etaS = 0 := by
+  rw [etaS, map_sub]
+  have hA : coboundaryₗ (Sph 1) 1 (cochainPullbackInt eqInclCapA 1 (omegaCap vN))
+      = cochainPullbackInt eqIncl 2 wSc.1 := by
+    show coboundary (Sph 1) 1 (cochainPullbackInt eqInclCapA 1 (omegaCap vN)) = _
+    rw [coboundary_cochainPullbackInt,
+      show coboundary (Apunc 2 vN) 1 (omegaCap vN) = coboundaryₗ (Apunc 2 vN) 1 (omegaCap vN)
+        from rfl,
+      omegaCap_spec, cochainPullbackInt_comp, puncIncl_comp_eqInclCapA]
+  have hB : coboundaryₗ (Sph 1) 1 (cochainPullbackInt eqInclCapB 1 (omegaCap (antipode vN)))
+      = cochainPullbackInt eqIncl 2 wSc.1 := by
+    show coboundary (Sph 1) 1 (cochainPullbackInt eqInclCapB 1 (omegaCap (antipode vN))) = _
+    rw [coboundary_cochainPullbackInt,
+      show coboundary (Apunc 2 (antipode vN)) 1 (omegaCap (antipode vN))
+        = coboundaryₗ (Apunc 2 (antipode vN)) 1 (omegaCap (antipode vN)) from rfl,
+      omegaCap_spec, cochainPullbackInt_comp, puncIncl_comp_eqInclCapB]
+  rw [hA, hB, sub_self]
+
+/-- **The B-side seam-transport factorization**: the `crossJ`-pullback of the transported B-leg
+primitive is the second-projection pullback of the equatorial cap primitive. All five transports
+are subtype repackagings over the same underlying points. -/
+theorem crossJ_seamB :
+    cochainPullbackInt crossJ 1
+        (seamCochainOf (coverA vN) (coverB vN) 1 (uLeg (antipode vN)))
+      = cochainPullbackInt (prodSnd (Sph 2) (Sph 1)) 1
+          (cochainPullbackInt eqInclCapB 1 (omegaCap (antipode vN))) := by
+  unfold seamCochainOf uLeg
+  rw [pullbackCochainInt_eq_cochainPullbackInt_ambIncl,
+    cochainPullbackInt_comp, cochainPullbackInt_comp, cochainPullbackInt_comp,
+    cochainPullbackInt_comp]
+  exact congrArg (fun φ => cochainPullbackInt φ 1 (omegaCap (antipode vN)))
+    (ContinuousMap.ext fun p => Subtype.ext rfl)
+
+/-- **The A-side factorization** (through the extra `interComm` reassociation). -/
+theorem crossJ_seamA :
+    cochainPullbackInt crossJ 1
+        (cochainPullbackInt (interCommMap (coverB vN) (coverA vN)) 1
+          (seamCochainOf (coverB vN) (coverA vN) 1 (uLeg vN)))
+      = cochainPullbackInt (prodSnd (Sph 2) (Sph 1)) 1
+          (cochainPullbackInt eqInclCapA 1 (omegaCap vN)) := by
+  unfold seamCochainOf uLeg
+  rw [pullbackCochainInt_eq_cochainPullbackInt_ambIncl,
+    cochainPullbackInt_comp, cochainPullbackInt_comp, cochainPullbackInt_comp,
+    cochainPullbackInt_comp, cochainPullbackInt_comp]
+  exact congrArg (fun φ => cochainPullbackInt φ 1 (omegaCap vN))
+    (ContinuousMap.ext fun p => Subtype.ext rfl)
+
+/-- **The seam-difference factorization**: `crossJ* dSeam = snd* etaS`. -/
+theorem crossJ_dSeam :
+    cochainPullbackInt crossJ 1 dSeam
+      = cochainPullbackInt (prodSnd (Sph 2) (Sph 1)) 1 etaS := by
+  rw [dSeam, etaS, map_sub, map_sub, crossJ_seamB, crossJ_seamA]
+
+/-- The first-factor collapse: `crossJ* ((ι∩)* aC) = fst* wSc` on the torus. -/
+theorem crossJ_aC :
+    cochainPullbackInt crossJ 2
+        (cochainPullbackInt (ambIncl (coverA vN ∩ coverB vN)) 2 aC)
+      = cochainPullbackInt (prodFst (Sph 2) (Sph 1)) 2 wSc.1 := by
+  unfold aC
+  rw [cochainPullbackInt_comp, cochainPullbackInt_comp]
+  exact congrArg (fun φ => cochainPullbackInt φ 2 wSc.1) (ContinuousMap.ext fun p => rfl)
+
+/-- **THE PEEL VALUE**: the seam pairing of the assembly cochain against the explicit cross cycle
+is the chain-level circle pairing `⟨etaS, eA⟩ + ⟨etaS, eB⟩`. -/
+theorem F_gChain :
+    kronecker
+        (cup (cochainPullbackInt (ambIncl (coverA vN ∩ coverB vN)) 2 aC) dSeam) gChain
+      = etaS (pathEdge (Sph 1) arcA) + etaS (pathEdge (Sph 1) arcB) := by
+  rw [gChain, ← kronecker_cochainPullbackInt crossJ, cochainPullbackInt_cup, crossJ_aC,
+    crossJ_dSeam, kronecker_cup_snd_torCross_gen (Sph 2) etaS etaS_cocycle wSc.1 zSc.1,
+    kronecker_wSc_zSc]
+  ring
+
+/-! ### The filling argument: `⟨etaS, [S¹]⟩ = ⟨wSc, hemisphere difference⟩` -/
+
+/-- **Filling extraction on a punctured cap**: every 1-cycle bounds (`H₁(S²∖{u};ℤ) = 0`). -/
+theorem exists_filling_punctured (u : ↑(Sph 2)) (c : SingularChainInt (Apunc 2 u) 1)
+    (hc : chainBoundary (Apunc 2 u) 0 c = 0) :
+    ∃ D : SingularChainInt (Apunc 2 u) 2, chainBoundary (Apunc 2 u) 1 D = c := by
+  have hcls : Homology.mk (Apunc 2 u) 1 ⟨c, LinearMap.mem_ker.mpr hc⟩ = 0 :=
+    punctured_sphere_homology_trivialInt 0 _
+  have hmem := (Submodule.Quotient.mk_eq_zero _).mp hcls
+  have hrange : c ∈ LinearMap.range (chainBoundary (Apunc 2 u) 1) := by
+    have := Submodule.mem_comap.mp hmem
+    exact this
+  obtain ⟨D, hD⟩ := hrange
+  exact ⟨D, hD⟩
+
+/-- The pushed equator loop in the north cap. -/
+noncomputable def loopCapA : SingularChainInt (Apunc 2 vN) 1 := mapChainInt eqInclCapA 1 t1chain
+
+/-- The pushed equator loop in the south cap. -/
+noncomputable def loopCapB : SingularChainInt (Apunc 2 (antipode vN)) 1 :=
+  mapChainInt eqInclCapB 1 t1chain
+
+theorem loopCapA_cycle : chainBoundary (Apunc 2 vN) 0 loopCapA = 0 := by
+  rw [loopCapA, chainBoundary_mapChainInt, t1_cycle, map_zero]
+
+theorem loopCapB_cycle : chainBoundary (Apunc 2 (antipode vN)) 0 loopCapB = 0 := by
+  rw [loopCapB, chainBoundary_mapChainInt, t1_cycle, map_zero]
+
+/-- The north-cap filling of the equator loop. -/
+noncomputable def fillA : SingularChainInt (Apunc 2 vN) 2 :=
+  (exists_filling_punctured vN loopCapA loopCapA_cycle).choose
+
+theorem fillA_spec : chainBoundary (Apunc 2 vN) 1 fillA = loopCapA :=
+  (exists_filling_punctured vN loopCapA loopCapA_cycle).choose_spec
+
+/-- The south-cap filling. -/
+noncomputable def fillB : SingularChainInt (Apunc 2 (antipode vN)) 2 :=
+  (exists_filling_punctured (antipode vN) loopCapB loopCapB_cycle).choose
+
+theorem fillB_spec : chainBoundary (Apunc 2 (antipode vN)) 1 fillB = loopCapB :=
+  (exists_filling_punctured (antipode vN) loopCapB loopCapB_cycle).choose_spec
+
+/-- **The hemisphere-difference 2-chain on `S²`**: the difference of the two cap fillings, pushed
+into the sphere. -/
+noncomputable def hemiDiff : SingularChainInt (Sph 2) 2 :=
+  mapChainInt (puncIncl (antipode vN)) 2 fillB - mapChainInt (puncIncl vN) 2 fillA
+
+/-- `hemiDiff` is a 2-CYCLE: both fillings' boundaries push to the same equator loop. -/
+theorem hemiDiff_cycle : chainBoundary (Sph 2) 1 hemiDiff = 0 := by
+  rw [hemiDiff, map_sub, chainBoundary_mapChainInt, chainBoundary_mapChainInt,
+    fillA_spec, fillB_spec, loopCapA, loopCapB, ← mapChainInt_comp, ← mapChainInt_comp,
+    puncIncl_comp_eqInclCapA, puncIncl_comp_eqInclCapB, sub_self]
+
+/-- **The hemisphere class** — the ONE remaining geometric object: the class of the
+hemisphere-difference cycle in `H₂(S²;ℤ)`. -/
+noncomputable def hemiClass : Homology (Sph 2) 2 :=
+  Homology.mk (Sph 2) 2 ⟨hemiDiff, LinearMap.mem_ker.mpr hemiDiff_cycle⟩
+
+/-- Left-subtraction unfolding for the pairing. -/
+theorem kronecker_sub_left' {X : TopCat} {n : ℕ} (f g : SingularCochainInt X n)
+    (c : SingularChainInt X n) :
+    kronecker (f - g) c = kronecker f c - kronecker g c := by
+  have h : f - g = f + (-1 : ℤ) • g := by rw [neg_one_smul]; ring
+  rw [h, kronecker_add_left, kronecker_smul_left, neg_one_smul, ← sub_eq_add_neg]
+
+/-- **THE FILLING IDENTITY**: the circle pairing of the seam difference equals the `wSc`-pairing
+of the hemisphere-difference cycle — i.e. the `topSphereIsoInt`-coordinate of `hemiClass`. -/
+theorem etaS_pairing_eq_hemi :
+    etaS (pathEdge (Sph 1) arcA) + etaS (pathEdge (Sph 1) arcB)
+      = topSphereIsoInt 1 hemiClass := by
+  have hsum : etaS (pathEdge (Sph 1) arcA) + etaS (pathEdge (Sph 1) arcB)
+      = kronecker etaS t1chain := by
+    rw [t1chain, kronecker_add_right, kronecker_single, kronecker_single, one_mul, one_mul]
+  rw [hsum, etaS, kronecker_sub_left', kronecker_cochainPullbackInt, kronecker_cochainPullbackInt]
+  have hB : kronecker (omegaCap (antipode vN)) (mapChainInt eqInclCapB 1 t1chain)
+      = kronecker wSc.1 (mapChainInt (puncIncl (antipode vN)) 2 fillB) := by
+    rw [show mapChainInt eqInclCapB 1 t1chain = loopCapB from rfl, ← fillB_spec,
+      ← kronecker_coboundary_chainBoundary,
+      show coboundary (Apunc 2 (antipode vN)) 1 (omegaCap (antipode vN))
+        = coboundaryₗ (Apunc 2 (antipode vN)) 1 (omegaCap (antipode vN)) from rfl,
+      omegaCap_spec, kronecker_cochainPullbackInt]
+  have hA : kronecker (omegaCap vN) (mapChainInt eqInclCapA 1 t1chain)
+      = kronecker wSc.1 (mapChainInt (puncIncl vN) 2 fillA) := by
+    rw [show mapChainInt eqInclCapA 1 t1chain = loopCapA from rfl, ← fillA_spec,
+      ← kronecker_coboundary_chainBoundary,
+      show coboundary (Apunc 2 vN) 1 (omegaCap vN)
+        = coboundaryₗ (Apunc 2 vN) 1 (omegaCap vN) from rfl,
+      omegaCap_spec, kronecker_cochainPullbackInt]
+  rw [hB, hA]
+  have hkr : kronecker wSc.1 (mapChainInt (puncIncl (antipode vN)) 2 fillB)
+        - kronecker wSc.1 (mapChainInt (puncIncl vN) 2 fillA)
+      = kronecker wSc.1 hemiDiff := by
+    rw [hemiDiff]
+    have h2 : mapChainInt (puncIncl (antipode vN)) 2 fillB - mapChainInt (puncIncl vN) 2 fillA
+        = mapChainInt (puncIncl (antipode vN)) 2 fillB
+          + (-1 : ℤ) • mapChainInt (puncIncl vN) 2 fillA := by
+      rw [neg_one_smul, ← sub_eq_add_neg]
+    rw [h2, kronecker_add_right, kronecker_smul_right, neg_one_smul, ← sub_eq_add_neg]
+  rw [hkr]
+  have hclass := kroneckerHInt_mk_mk wSc ⟨hemiDiff, LinearMap.mem_ker.mpr hemiDiff_cycle⟩
+  rw [show (Submodule.Quotient.mk wSc : Cohomology (Sph 2) 2) = Cohomology.mk (Sph 2) 2 wSc
+      from rfl, wSc_spec,
+    show (Submodule.Quotient.mk ⟨hemiDiff, LinearMap.mem_ker.mpr hemiDiff_cycle⟩ :
+        Homology (Sph 2) 2) = hemiClass from rfl, kroneckerHInt_xS] at hclass
+  exact hclass.symm
+
 end SKEFTHawking.SphereProdCrossWitnessInt
