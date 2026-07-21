@@ -1033,6 +1033,7 @@ import SKEFTHawking.SingularExcisionInt
 -- exists_iterate_smallChainsInt/smallChainsInt) with smallChainsInt_two_eq + subspaceChainsInt_inf.
 -- Kernel-pure. Feeds the general-M ⟷ Euclidean-model chart identification behind IntLocalHomologyIso.
 import SKEFTHawking.SingularExcisionIsoInt
+import SKEFTHawking.SingularRelativeTripleSurjInt
 -- Phase 5q.H · E1 (Substrate-G topology, brick 13): integral local homology H_k(ℝⁿ,ℝⁿ∖0;ℤ) + pair-LES.
 -- Completes the integral pair long-exact-sequence: three exactness lemmas + connectingInt bijective when
 -- the ambient space is acyclic; with ℝⁿ integrally acyclic gives δ: H_{j+2}(ℝⁿ,ℝⁿ∖0;ℤ)≅H_{j+1}(ℝⁿ∖0;ℤ),
@@ -1271,6 +1272,7 @@ import SKEFTHawking.KummerPieceCollarCyclicInt
 import SKEFTHawking.KummerPieceCollarModTwoInt
 import SKEFTHawking.KummerCollarRetractInt
 import SKEFTHawking.KummerCollarPairLESInt
+import SKEFTHawking.KummerCollarPairSplitInt
 import SKEFTHawking.SingularLocalHomologyThreeInt
 import SKEFTHawking.SingularConvexRadialMiddleInt
 import SKEFTHawking.SingularConvexStageIsoInt
@@ -4326,6 +4328,7 @@ import SKEFTHawking.SphereWitnessFiringUncondInt
 -- signed prism restricts to A-chains); + the Euclidean MOVING-PUNCTURE instance: translations to
 -- two punctures inside a convex C ⊆ ℝ⁴ agree as pair maps (ℝ⁴,Cᶜ) → (ℝ⁴,ℝ⁴∖0). (wt2-built.)
 import SKEFTHawking.SingularRelativeHomotopyInvarianceInt
+import SKEFTHawking.SingularRelativeHomotopyEquivInt
 
 -- Phase 5q.H · N5 — the S²×S² PRODUCT-HOMOLOGY arc OPENER: the contractible-factor collapse
 -- Hₙ₊₁(Y×C;ℤ) ≅ Hₙ₊₁(Y;ℤ) (projection/section homotopy equivalence via the integral prism),
