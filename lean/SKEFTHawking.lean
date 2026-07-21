@@ -4728,6 +4728,7 @@ import SKEFTHawking.KummerQuotientDeckFunctional
 import SKEFTHawking.SingularFiniteProdSingleInt
 import SKEFTHawking.KummerK7Delta1Image
 import SKEFTHawking.KummerK7H1Window
+import SKEFTHawking.KummerPairTubeSeparation
 import SKEFTHawking.CircleWindingCocycle
 import SKEFTHawking.TorusCrossPeel
 import SKEFTHawking.TorusCrossPeelGen
