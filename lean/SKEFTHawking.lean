@@ -4705,6 +4705,7 @@ import SKEFTHawking.KummerRP3HomologyUnconditional
 import SKEFTHawking.KummerRP3TransferHomology
 import SKEFTHawking.KummerWeldFiberFlow
 import SKEFTHawking.KummerK7MVAssembly
+import SKEFTHawking.KummerK7SeamCoverNoGo
 import SKEFTHawking.CircleWindingCocycle
 import SKEFTHawking.TorusCrossPeel
 import SKEFTHawking.KummerT4GramCross
