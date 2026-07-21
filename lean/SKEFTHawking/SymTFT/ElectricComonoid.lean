@@ -257,4 +257,67 @@ theorem electricComul_comp_electricMul :
   rw [← unitPlusElectric_total k]
   abel
 
+/-! ## §4. The ι-side comultiplication corners and the Frobenius pair -/
+
+/-- The vacuum idempotent `ι1 ≫ ε = 𝟙` — derived from the totality decomposition (the `πe`-leg
+dies by `vacInj_comp_electricProj`) and the split-mono cancellation on `ι1`. -/
+private theorem one_comp_counit :
+    unitPlusElectric_one k ≫ unitPlusElectric_counit k =
+      𝟙 (𝟙_ (CategoryTheory.Center (VecG_Cat k G2))) := by
+  haveI := electricObject_one_isSplitMono k
+  rw [← cancel_mono (unitPlusElectric_one k), Category.id_comp]
+  have expand : unitPlusElectric_one k ≫
+      (unitPlusElectric_counit k ≫ unitPlusElectric_one k + electricProj k ≫ electricInj k) =
+      unitPlusElectric_one k := by
+    rw [unitPlusElectric_total, Category.comp_id]
+  rw [Preadditive.comp_add, ← Category.assoc, ← Category.assoc,
+    vacInj_comp_electricProj, Limits.zero_comp, add_zero] at expand
+  rw [Category.assoc] at expand ⊢
+  exact expand
+
+/-- **The ι-side comultiplication corner at the vacuum**: `ι1 ≫ Δ = λ⁻¹ ≫ (ι1 ⊗ ι1) +
+eeVac⁻¹ ≫ (ιe ⊗ ιe)` — the Frobenius coproduct of the unit (`Δ(1) = 1⊗1 + ψ⁻¹(e⊗e)`). Derived
+from the π-side cocorners by the totality decomposition of `𝟙_{X⊗X}`. -/
+private theorem incorner_one :
+    unitPlusElectric_one k ≫ electricComul k =
+      (λ_ (𝟙_ (CategoryTheory.Center (VecG_Cat k G2)))).inv ≫
+          (unitPlusElectric_one k ⊗ₘ unitPlusElectric_one k)
+        + (eeVacUnitIso k).inv ≫ (electricInj k ⊗ₘ electricInj k) := by
+  have hid : ((unitPlusElectric_counit k ≫ unitPlusElectric_one k
+        + electricProj k ≫ electricInj k) ⊗ₘ
+      (unitPlusElectric_counit k ≫ unitPlusElectric_one k + electricProj k ≫ electricInj k)) =
+      𝟙 (unitPlusElectricObj k ⊗ unitPlusElectricObj k) := by
+    rw [unitPlusElectric_total]; simp
+  conv_lhs => rw [show unitPlusElectric_one k ≫ electricComul k
+    = unitPlusElectric_one k ≫ electricComul k ≫
+        𝟙 (unitPlusElectricObj k ⊗ unitPlusElectricObj k) by rw [Category.comp_id], ← hid]
+  simp only [center_add_tensorHom, center_tensorHom_add,
+    ← MonoidalCategory.tensorHom_comp_tensorHom, Preadditive.comp_add, Category.assoc]
+  rw [cocorner_11_assoc, cocorner_1e_assoc, cocorner_e1_assoc, cocorner_ee_assoc]
+  simp only [← Category.assoc, one_comp_counit, vacInj_comp_electricProj]
+  simp only [Category.id_comp, Limits.zero_comp, Category.assoc, Preadditive.add_comp,
+    Limits.comp_zero, zero_add, add_zero]
+
+/-- **The ι-side comultiplication corner at the electric line**: `ιe ≫ Δ = λ⁻¹ ≫ (ι1 ⊗ ιe) +
+ρ⁻¹ ≫ (ιe ⊗ ι1)` — the Frobenius coproduct of `e`. -/
+private theorem incorner_e :
+    electricInj k ≫ electricComul k =
+      (λ_ (electricAnyon k)).inv ≫ (unitPlusElectric_one k ⊗ₘ electricInj k)
+        + (ρ_ (electricAnyon k)).inv ≫ (electricInj k ⊗ₘ unitPlusElectric_one k) := by
+  have hid : ((unitPlusElectric_counit k ≫ unitPlusElectric_one k
+        + electricProj k ≫ electricInj k) ⊗ₘ
+      (unitPlusElectric_counit k ≫ unitPlusElectric_one k + electricProj k ≫ electricInj k)) =
+      𝟙 (unitPlusElectricObj k ⊗ unitPlusElectricObj k) := by
+    rw [unitPlusElectric_total]; simp
+  conv_lhs => rw [show electricInj k ≫ electricComul k
+    = electricInj k ≫ electricComul k ≫
+        𝟙 (unitPlusElectricObj k ⊗ unitPlusElectricObj k) by rw [Category.comp_id], ← hid]
+  simp only [center_add_tensorHom, center_tensorHom_add,
+    ← MonoidalCategory.tensorHom_comp_tensorHom, Preadditive.comp_add, Category.assoc]
+  rw [cocorner_11_assoc, cocorner_1e_assoc, cocorner_e1_assoc, cocorner_ee_assoc]
+  simp only [← Category.assoc, electricInj_comp_electricProj, electricInj_comp_vacProj]
+  simp only [Category.id_comp, Limits.zero_comp, Category.assoc, Preadditive.add_comp,
+    Limits.comp_zero, zero_add, add_zero]
+  abel
+
 end SKEFTHawking.SymTFT.ElectricComonoid
