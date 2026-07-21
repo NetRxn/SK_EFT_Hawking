@@ -1753,16 +1753,42 @@ Deliverable (4) seed — **transition smoothness** (§L, this pass): `contDiffOn
 `contDiffOn_regInv` — the two genuinely-new equatorial transition ingredients (the annulus's fiber-twist
 `regDir z = z/‖z‖` and base coordinate `regInv z = z⁻¹`) are `C^ω` on the annulus `{1/2 < ‖z‖}` (both smooth
 since `z ≠ 0`). Because the equator is charted by a SINGLE annulus chart (not an arc family), there are NO
-annulus-annulus overlap transitions to verify — only annulus↔base, which reduces to these two.
+annulus-annulus base-side transitions from a DIFFERENT annulus chart — only fiber polar changes and
+annulus↔base, which reduce to these two plus the §O fiber transitions.
 
-**RESIDUAL (wall, localized precisely) — the `IsManifold` instance:**
+Deliverable (4) — **atlas transition classes toward `IsManifold`** (§M–§O, this pass):
+- §M.1 — **the cross-side class is VACUOUS**: `contDiffOn_transition_vacuous_of_disjoint` +
+  `disjoint_chart0_chart1_baseInterior` + the four source-subset lemmas. A `chart0`-family chart and a
+  `chart1`-family chart have disjoint sources off the equator (the only gluing locus), so every
+  `chart0`-fam ↔ `chart1`-fam transition has empty domain — closing that quadrant of the 6×6 atlas.
+- §N — **the `S¹ ⊆ E²` fiber-sphere smoothness primitives** (`contDiffOn_normalizeE2`,
+  `chartAt_oneSphere_apply`/`_source`, `innerSL_ne_one_of_mem_source`, `contDiff_chartSymm_coe`,
+  `contDiffOn_reprStereoNormalize`) — the `DiskManifoldSmooth` §0 stereographic core one dimension down,
+  the reusable substrate every fiber collar transition reduces to.
+- §O — **the fiber `IsManifold (NDisk 1)`**: `contDiff_assemble1`/`splitLo1`/`assembleShift1` and the
+  three fiber polar-change classes `contDiffOn_transition_fiber_CC`/`_IC`/`_CI`, packaged as
+  `isManifold_nDisk1 : IsManifold ((𝓡 1).prod (𝓡∂ 1)) k (NDisk 1)`. The fiber `Disk ≃ₜ NDisk 1` inherits
+  this smooth structure through `diskHomeoNDisk1`; it is the disk-transition core the ResE same-side and
+  annulus fiber changes reduce to.
 
-1. **`IsManifold Model ⊤ ResE` + smooth `bdryHomeoRP3`** (deliverable 4) — assemble the atlas transitions
-   into `contDiffGroupoid`/`IsManifold` membership: interior-interior off the equator = `contDiffOn_clutch`
-   (banked); collar/interior polar changes (smooth off `w = 0`, collar avoids `w = 0`); annulus↔base = the
-   §L `contDiffOn_regDir`/`contDiffOn_regInv` seeds threaded through `toE2`/`reshapeModel`; the smooth
-   `∂E ≅ ℝP³` upgrade of `bdryHomeoRP3` in these charts. `ChartedSpace` (topological) is DONE; the
-   smooth-structure assembly is the remaining brick.
+**RESIDUAL (wall, localized precisely) — the ResE-level `IsManifold` assembly:**
+
+1. **`IsManifold ((𝓡 3).prod (𝓡∂ 1)) k ResE` + smooth `bdryHomeoRP3`** (deliverable 4) — the six-class
+   6×6 assembly via `isManifold_of_contDiffOn`. Classes and their status:
+   - cross-side (`chart0`-fam ↔ `chart1`-fam): DONE (§M.1, vacuous).
+   - same-side base-interior (interior/collar on ONE base disk) and annulus-annulus (interior/collar in
+     ONE annulus chart): reduce — via `lift_openEmbedding_trans` (cancelling the `chart0`/`chart1`/`val`
+     open embeddings) then the `baseDiskChart × fiber` prefix + `reshapeModel` suffix cancellation — to
+     the §O `contDiffOn_transition_fiber_*` classes reshaped `E² × (E¹ × HS¹) → E³ × HS¹`. The remaining
+     brick is the `reshapeModel`-conjugation wrapper (the `KummerBoundaryChartSmooth.interiorReshape`
+     analogue: keep everything in plain-Euclidean coords around the `EuclideanHalfSpace` subtype, factor
+     `I ∘ reshapeModel ∘ (base-id × fiberTransition) ∘ reshapeModel.symm ∘ I.symm`).
+   - annulus↔base (`chart0` side): base identical, fiber twist by `regDir` — §L `contDiffOn_regDir` +
+     §O fiber classes threaded through the same `reshapeModel` wrapper.
+   - annulus↔base (`chart1` side): base `z ↦ z⁻¹` = §L `contDiffOn_regInv`, fiber twist by `regDir`.
+   - the smooth `∂E ≅ ℝP³` upgrade of `bdryHomeoRP3` in these charts.
+   `ChartedSpace` (topological, §K) and every transition-class INGREDIENT (§M/§N/§O/§L) are DONE; the
+   remaining brick is the `reshapeModel`-conjugation wrapper + the 6×6 dispatch.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom. -/
 
