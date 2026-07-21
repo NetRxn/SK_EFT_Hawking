@@ -1676,6 +1676,73 @@ theorem isManifold_nDisk1 {k : WithTop ℕ∞} :
   · exact contDiffOn_transition_fiber_CI u₀
   · exact contDiffOn_transition_fiber_CC u₀ u₁
 
+/-! ## §P. The `reshapeModel`-conjugation wrapper toward `IsManifold ResE` (deliverable 4)
+
+Every ResE atlas transition, after the outer open-embedding cancellation (`lift_openEmbedding_trans`)
+and the `annulusTriv`/`diskHomeoNDisk1` bridge cancellations, becomes a `reshapeModel`-conjugate of a
+product `(base coordinate change) × (fiber coordinate change)`. In model coordinates
+`I₃ = (𝓡 3).prod (𝓡∂ 1)` the map factors — by the two `reshapeModel`/`I₃` defeqs
+(`I₃ (reshapeModel q) = (assemble 2 q.1 (q.2.1.ofLp 0), (𝓡∂ 1) q.2.2)` and
+`reshapeModel.symm (I₃.symm m) = (splitLo 2 m.1, (toLp (m.1.ofLp (last 2)), (𝓡∂ 1).symm m.2))`) — as
+`Φ ∘ (gBase × gFiber) ∘ Ψ`, where the fiber block `gFiber` is one of the §O `contDiffOn_transition_fiber_*`
+classes (in `I₁ = (𝓡 1).prod (𝓡∂ 1)` coordinates) and `gBase` is the base coordinate change on `𝓔²`.
+`contDiffOn_reshapeConj` packages the smoothness of that plain-coordinate composite. -/
+
+/-- Generic `assemble` smoothness — the §O `contDiff_assemble1` at arbitrary `n`. -/
+theorem contDiff_assemble {n : ℕ} {m : WithTop ℕ∞} :
+    ContDiff ℝ m (fun p : EuclideanSpace ℝ (Fin n) × ℝ => assemble n p.1 p.2) := by
+  apply PiLp.contDiff_toLp.comp
+  apply contDiff_pi.mpr
+  intro i
+  refine Fin.lastCases ?_ (fun j => ?_) i
+  · simpa only [Fin.snoc_last] using contDiff_snd
+  · simpa only [Fin.snoc_castSucc] using
+      (contDiff_apply ℝ ℝ j).comp (PiLp.contDiff_ofLp.comp contDiff_fst)
+
+/-- Generic `splitLo` smoothness — the §O `contDiff_splitLo1` at arbitrary `n`. -/
+theorem contDiff_splitLo {n : ℕ} {m : WithTop ℕ∞} :
+    ContDiff ℝ m (fun w : EuclideanSpace ℝ (Fin (n + 1)) => splitLo n w) :=
+  PiLp.contDiff_toLp.comp
+    (contDiff_pi.mpr fun i => (contDiff_apply ℝ ℝ i.castSucc).comp PiLp.contDiff_ofLp)
+
+/-- **The `reshapeModel`-conjugation smoothness wrapper.** Given a base coordinate change `gBase` on
+`𝓔²` and a fiber coordinate change `gFiber` on `𝓔¹ × 𝓔¹` (both `C^k` on their domains, with the
+plain-coordinate reshape landing in those domains), the `reshapeModel`-conjugated plain-coordinate
+transition `m ↦ (assemble 2 (gBase (splitLo 2 m.1)) (…fiber angular…), …fiber radial…)` is `C^k`.
+This is the class-agnostic core; each atlas transition class reduces (via a `congr`) to this. -/
+theorem contDiffOn_reshapeConj {k : WithTop ℕ∞}
+    {gBase : EuclideanSpace ℝ (Fin 2) → EuclideanSpace ℝ (Fin 2)}
+    {gFiber : EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) →
+      EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1)}
+    {S : Set (EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1))}
+    {baseSet : Set (EuclideanSpace ℝ (Fin 2))}
+    {fiberSet : Set (EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1))}
+    (hBase : ContDiffOn ℝ k gBase baseSet) (hFiber : ContDiffOn ℝ k gFiber fiberSet)
+    (hmapBase : Set.MapsTo (fun m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1) =>
+        splitLo 2 m.1) S baseSet)
+    (hmapFiber : Set.MapsTo (fun m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1) =>
+        (WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp (Fin.last 2)), m.2)) S fiberSet) :
+    ContDiffOn ℝ k (fun m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1) =>
+      ((assemble 2 (gBase (splitLo 2 m.1))
+          ((gFiber (WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp (Fin.last 2)), m.2)).1.ofLp 0),
+        (gFiber (WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp (Fin.last 2)), m.2)).2) :
+        EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1))) S := by
+  have hfibIn : ContDiff ℝ k (fun m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1) =>
+      (WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp (Fin.last 2)), m.2)) :=
+    ContDiff.prodMk
+      (PiLp.contDiff_toLp.comp (contDiff_pi.mpr fun _ =>
+        (contDiff_apply ℝ ℝ (Fin.last 2)).comp (PiLp.contDiff_ofLp.comp contDiff_fst)))
+      contDiff_snd
+  have hGF : ContDiffOn ℝ k (fun m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1) =>
+      gFiber (WithLp.toLp 2 (fun _ : Fin 1 => m.1.ofLp (Fin.last 2)), m.2)) S :=
+    hFiber.comp hfibIn.contDiffOn hmapFiber
+  have hGB : ContDiffOn ℝ k (fun m : EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1) =>
+      gBase (splitLo 2 m.1)) S :=
+    hBase.comp (contDiff_splitLo.comp contDiff_fst).contDiffOn hmapBase
+  refine ContDiffOn.prodMk ?_ (contDiff_snd.comp_contDiffOn hGF)
+  exact contDiff_assemble.comp_contDiffOn (hGB.prodMk
+    (((contDiff_apply ℝ ℝ 0).comp (PiLp.contDiff_ofLp.comp contDiff_fst)).comp_contDiffOn hGF))
+
 /-! ## §Z. STATUS — the K6′a Leg-2 E-side certificate
 
 **GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
