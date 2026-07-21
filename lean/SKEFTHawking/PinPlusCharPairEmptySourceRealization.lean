@@ -506,4 +506,106 @@ theorem TauMembraneWeldDatum.brown_preserved
   (brown_zero_of_isEmpty σ.q).trans
     (TauMembraneWeldDatum.brown_zero s t S hS φ hφ hφinj cd hseam d σ τ D).symm
 
+/-! ### The rank-zero specialization (hcolD brick B4)
+
+For a **rank-zero** target `τ` (`Fin τ.n` empty — the hcolD collapse sector, where the carried
+surface has trivial enhancement `H¹`), the two "geometric heart" bounding-kernel fields `hq`/`hlagK`
+of `TauMembraneWeldDatum` discharge for free: the enhancement space `Fin τ.n → ℤ/2` is a
+subsingleton, so every vector is `0`, `q(0) = 0`, and `0` lies in every kernel. The HONEST residual
+of the rank-zero membrane row is therefore exactly the GEOMETRIC field list — the membrane `Q`
+genuinely bounding `Σ_τ` with its weld into the capstone carrier — which is what hcolD brick B1
+(`RankZeroSurfaceBoundingDatum`) must construct. This constructor makes that split precise. -/
+
+/-- **The rank-zero τ-side membrane datum — geometric fields only (hcolD B4).** When the target's
+enhancement is rank-zero, `TauMembraneWeldDatum`'s bounding-kernel fields are subsingleton-trivial,
+so the datum is determined by its geometric content: the compact membrane `Q`, the closed embedding
+`Σ_τ ↪ Q`, the interior `H₁` basis, and the dim-3 weld plumbing into the fixed capstone carrier.
+The algebraic self-discharge here is honest (rank-zero means there is literally no enhancement to
+obstruct); the geometric fields remain genuinely load-bearing and are the B1 construction target. -/
+noncomputable def TauMembraneWeldDatum.ofRankZero
+    (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+    (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+    (hφ : Continuous φ) (hφinj : Function.Injective φ)
+    (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+    (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+    (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+    (σ : CharPairStrBundled (𝓡 4) s) (τ : CharPairStrBundled (𝓡 4) t)
+    [IsEmpty σ.surf.M] [IsEmpty (Fin σ.n)] [IsEmpty (Fin τ.n)]
+    (QC : TopCat) (QT2 : T2Space QC) (QCompact : CompactSpace QC)
+    (ιY : C((τ.surf.M : Type), (QC : Type))) (hιY : IsClosedEmbedding ιY)
+    (mid : ℕ) (eQ : Homology QC 1 ≃ₗ[ZMod 2] (Fin mid → ZMod 2))
+    (HAQ : HandleAttachment.{0, 0})
+    (weld : HandleAttachment.Weld HAQ (ktHandleAttachment s.M D5 S hS φ hφ hφinj))
+    (hQ : letI := QT2; letI := QCompact
+      ((capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Q : Type) ≃ₜ HAQ.carrier)
+    (glueτ : letI := QT2; letI := QCompact
+      ∀ x : ↑(sub (capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Uᶜ),
+        weld.carrierMap (hQ ((capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).ι
+            (subInclCM (capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Uᶜ x)))
+          = (capstoneB s t S hS φ hφ hφinj cd hseam d).e
+              (Sum.inr (τ.emb ((capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).homτ x))))
+    (chartQ : letI := QT2; letI := QCompact
+      ChartedSpace MembraneModel ↑(capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Q) :
+    TauMembraneWeldDatum s t S hS φ hφ hφinj cd hseam d σ τ where
+  QC := QC
+  QT2 := QT2
+  QCompact := QCompact
+  ιY := ιY
+  hιY := hιY
+  mid := mid
+  eQ := eQ
+  hq := fun v _ => by rw [Subsingleton.elim v 0, τ.q.q_zero]
+  hlagK := fun v _ => by
+    rw [Subsingleton.elim v 0]
+    exact Submodule.zero_mem _
+  HAQ := HAQ
+  weld := weld
+  hQ := hQ
+  glueτ := glueτ
+  chartQ := chartQ
+
+/-- **The rank-zero membrane row, end to end (hcolD B4 consumer form)**: geometric fields in,
+`TraceMembraneLeaves` out — the composite `ofTauMembraneWeldDatum ∘ ofRankZero` the B5/B6 assembly
+consumes. Once B1 supplies the geometric fields for a rank-zero `p`, the membrane atoms of its
+collapse row are complete. -/
+noncomputable def TraceMembraneLeaves.ofRankZeroTauMembrane
+    (s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)) [T2Space s.M]
+    (S : Set D5) (hS : IsClosed S) (φ : ↥S → s.M × Set.Icc (0 : ℝ) 1)
+    (hφ : Continuous φ) (hφinj : Function.Injective φ)
+    (cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+    (hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd)
+    (d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam)
+    (σ : CharPairStrBundled (𝓡 4) s) (τ : CharPairStrBundled (𝓡 4) t)
+    [IsEmpty σ.surf.M] [IsEmpty (Fin σ.n)] [IsEmpty (Fin τ.n)]
+    (QC : TopCat) (QT2 : T2Space QC) (QCompact : CompactSpace QC)
+    (ιY : C((τ.surf.M : Type), (QC : Type))) (hιY : IsClosedEmbedding ιY)
+    (mid : ℕ) (eQ : Homology QC 1 ≃ₗ[ZMod 2] (Fin mid → ZMod 2))
+    (HAQ : HandleAttachment.{0, 0})
+    (weld : HandleAttachment.Weld HAQ (ktHandleAttachment s.M D5 S hS φ hφ hφinj))
+    (hQ : letI := QT2; letI := QCompact
+      ((capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Q : Type) ≃ₜ HAQ.carrier)
+    (glueτ : letI := QT2; letI := QCompact
+      ∀ x : ↑(sub (capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Uᶜ),
+        weld.carrierMap (hQ ((capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).ι
+            (subInclCM (capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Uᶜ x)))
+          = (capstoneB s t S hS φ hφ hφinj cd hseam d).e
+              (Sum.inr (τ.emb ((capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).homτ x))))
+    (chartQ : letI := QT2; letI := QCompact
+      ChartedSpace MembraneModel ↑(capstoneEmptySourceReal σ τ QC ιY hιY mid eQ).Q) :
+    TraceMembraneLeaves (capstoneB s t S hS φ hφ hφinj cd hseam d) σ τ :=
+  TraceMembraneLeaves.ofTauMembraneWeldDatum s t S hS φ hφ hφinj cd hseam d σ τ
+    (TauMembraneWeldDatum.ofRankZero s t S hS φ hφ hφinj cd hseam d σ τ
+      QC QT2 QCompact ιY hιY mid eQ HAQ weld hQ glueτ chartQ)
+
+/-- **Rank-zero Brown preservation is hypothesis-free**: for a rank-zero target the terminal-step
+Brown/ABK invariance `σ.q.brown = τ.q.brown` needs NO membrane datum at all — both enhancement
+spaces are empty-indexed, so both grades vanish (`brown_zero_of_isEmpty` twice). Records that in
+the collapse sector the mod-8 grade carries no obstruction; the load is entirely geometric. -/
+theorem rankZero_brown_preserved
+    {s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)}
+    (σ : CharPairStrBundled (𝓡 4) s) (τ : CharPairStrBundled (𝓡 4) t)
+    [IsEmpty (Fin σ.n)] [IsEmpty (Fin τ.n)] :
+    σ.q.brown = τ.q.brown :=
+  (brown_zero_of_isEmpty σ.q).trans (brown_zero_of_isEmpty τ.q).symm
+
 end SKEFTHawking.PinPlusCharPairEmptySourceRealization
