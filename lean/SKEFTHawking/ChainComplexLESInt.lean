@@ -469,6 +469,39 @@ theorem exact_delta_Hmap
     rw [f_pickX]
     exact ⟨pickY hgsurj (z : P (n + 1)), rfl⟩
 
+/-- **A levelwise chain isomorphism induces a homology isomorphism.** If a chain map `f` is
+bijective in every degree, `Hmap f` is bijective — the induced map on abstract homology of a chain
+iso is an iso. (Used to transport `Hₙ(ℝP³)` onto the norm subcomplex `Hₙ(A)` along the integral
+transfer, which is a levelwise iso onto `A = N·C`.) -/
+theorem Hmap_bijective_of_bijective
+    (hf : ∀ (n : ℕ) (x : M (n + 1)), dN n (f (n + 1) x) = f n (dM n x))
+    (hfbij : ∀ n, Function.Bijective (f n)) (n : ℕ) :
+    Function.Bijective (Hmap hf n) := by
+  constructor
+  · rw [← LinearMap.ker_eq_bot, Submodule.eq_bot_iff]
+    intro x hx
+    obtain ⟨z, rfl⟩ := Hml.mk_surjective dM n x
+    rw [LinearMap.mem_ker, Hmap_mk, Hml.mk_eq_zero_iff, cyclesMap_coe] at hx
+    obtain ⟨w, hw⟩ := hx
+    obtain ⟨v, rfl⟩ := (hfbij (n + 1)).surjective w
+    rw [hf n v] at hw
+    rw [Hml.mk_eq_zero_iff]
+    exact ⟨v, (hfbij n).injective hw⟩
+  · intro y
+    obtain ⟨z, rfl⟩ := Hml.mk_surjective dN n y
+    obtain ⟨x, hx⟩ := (hfbij n).surjective (z : N n)
+    have hxc : x ∈ cycles dM n := by
+      cases n with
+      | zero => exact Submodule.mem_top
+      | succ m =>
+          rw [mem_cycles_succ]
+          apply (hfbij m).injective
+          rw [← hf m x, hx, mem_cycles_succ.mp z.2, map_zero]
+    refine ⟨Hml.mk dM n ⟨x, hxc⟩, ?_⟩
+    rw [Hmap_mk]
+    congr 1
+    exact Subtype.ext (by rw [cyclesMap_coe, hx])
+
 /-- **The degree-0 tail**: `H₀(N) ↠ H₀(P)` (every degree-0 chain is a cycle, `g` is epi). -/
 theorem Hmap_surjective_deg_zero
     (hg : ∀ (n : ℕ) (x : N (n + 1)), dP n (g (n + 1) x) = g n (dN n x))
