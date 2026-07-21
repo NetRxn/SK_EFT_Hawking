@@ -4720,6 +4720,7 @@ import SKEFTHawking.KummerPunctureBalls
 import SKEFTHawking.KummerPunctureAnnulus
 import SKEFTHawking.KummerPuncturedMV
 import SKEFTHawking.KummerK7Delta1Window
+import SKEFTHawking.KummerK3TorsionFree
 import SKEFTHawking.KummerQuotientDeckFunctional
 import SKEFTHawking.SingularFiniteProdSingleInt
 import SKEFTHawking.KummerK7Delta1Image
