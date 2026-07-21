@@ -755,11 +755,19 @@ theorem hq0det_of_witness (z : cycles (TopCat.of s.M) (2 + 2))
 /-! ## §7. The `hcoreHit` shortcut is the REFUTED signature (a fence, not a route)
 
 `hcoreHit` is the anti-fake tether, and the natural temptation is to make it free by taking the
-shrunk core as large as possible. The two theorems below show that the *only* choice for which the
-tether becomes a consequence of the split data is `K = univ` — and that `K = univ` collapses
-`houtC`'s support to exactly the refuted `topface ∖ range φ` signature of the settled-dead fork
-`seam-transfer-open-support-uninhabitable`. So `hcoreHit` must stay an obligation: it cannot be
-discharged inside this row without re-entering the dead shape. -/
+shrunk core as large as possible — whose limit case is `K = univ`. The two theorems below close
+exactly that limit case: at `K = univ` the tether IS a consequence of the split data
+(`coreHit_of_univ`), and at `K = univ` `houtC`'s support is *verbatim* the refuted
+`topface ∖ range φ` signature of the settled-dead fork
+`seam-transfer-open-support-uninhabitable` (`houtC_support_univ_eq_refuted`). So the maximal-core
+shortcut is dead: it buys the tether only by re-entering the dead shape.
+
+⚠ **Scope of this fence (lead-corrected 2026-07-21).** What is proved is the ONE direction
+`K = univ ⟹ tether free ∧ support refuted`. It is NOT proved that `K = univ` is the *only* core
+choice making the tether a consequence of the split data — no uniqueness/converse theorem exists
+here, and none should be cited. A strictly-smaller `K` that still discharges `hcoreHit` is not
+excluded by anything below; it is simply unexplored. Treat this as "the obvious shortcut is
+closed", not "every shortcut is closed". -/
 
 omit [T2Space s.M] [CompactSpace s.M] [PreconnectedSpace s.M] [Nonempty s.M]
   [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in

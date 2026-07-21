@@ -342,8 +342,44 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    gate-pending consumption shape whose interface terms cancel mod 2.
    backing: `wAtt_mem_subspaceChains_range_phi`, `boundary_wAtt_eq_zero`, `isEmpty_capstoneSeamTransfer_of_null`, `isEmpty_capstoneSeamTransferSeam_of_null`
 
+23. `k7-seam-cover-interior-fails` [refutation]
+   K7SeamCoverHyp (the K7 opener's un-thickened MV cover hypothesis): the INTERIORS of the two closed
+   Kummer-weld pieces (the Q-image and the 16 closed E-images) cover the welded K3 carrier, so the
+   Mayer-Vietoris assembly can run on the un-thickened pieces directly. FALSE (kernel refutation
+   k7SeamCoverHyp_false): a seam point (fiberNorm = 1, the glued RP3 locus) is interior to NEITHER piece -
+   E-side, every neighbourhood meets fiber radius < 1 (the inward deform path); Q-side, every neighbourhood
+   meets the E-exterior along the outward chart ray (via circle_exp_injOn_one ->
+   centeredChartParam_injOn_double, chart injectivity on the doubled ball). Consequence: "discharge
+   K7SeamCoverHyp" is settled-dead; the UNIQUE route is the collar-thickened cover (qThick = qImage union
+   outer half-collars fiberNorm >= 1/2) whose interior-cover hypothesis IS discharged (k7_hcov,
+   KummerK7MVAssembly) and through which the whole K7 accounting now runs unconditionally.
+   backing: `k7SeamCoverHyp_false`
+
+24. `gram-literal-equality-is-choice-dependent` [structural_forcing]
+   SphereProdGramPin - the LITERAL matrix equality `interMatrix fc B = sphereProdFormDatum` on the computed
+   rank-2 basis - is a disclosed GEOMETRIC residual of the S2xS2 intersection form, dischargeable once the
+   Kunneth/EZ cross value is pinned. FALSE AS FRAMED (structural forcing, 2026-07-21): the exact
+   computed-basis Gram is `!![-(2*s*u*eps), u*eps; u*eps, 0]` (sphereProd_interMatrix_computed_eq), so the
+   pin holds IFF `s = 0 AND u*eps = 1` (sphereProdGramPin_iff). Neither conjunct is available: (1) `s` is
+   the alpha-coordinate of the Exists.choose split generator `deltaGen`, pinned only modulo `sumInto` whose
+   fst_* image is NONZERO (sumInto_prodFst) - so `deltaGen |-> deltaGen + k*sumInto 1` shifts `s` by `k` and
+   the (0,0) entry by `-2*k*u*eps`, making the Prop INDEPENDENT of the in-tree data, not merely unproven;
+   (2) `u`, `eps` are pinned only as units, an orientation/sign gap. Note this also kills the prior hope
+   that normalizing the cross value to literally 1 would suffice - a normalized eps still leaves the
+   diagonal free. The GEOMETRIC content the pin stood in for IS in tree and unconditional:
+   SphereProdBasisIdInt.sphereProd_interMatrix_intCongr_hyp proves II(S2xS2) integrally CONGRUENT to Hyp
+   itself. Every consumer conclusion is congruence-invariant, so the congruence supersedes the equality;
+   hypothesis-free replacements are
+   SphereProdGramPinRetire.sphereProd_s2s2_{hyp,evenUnimodular,latticeSig,htopo}'. GENERAL RULE (applies to
+   every Gram atom incl. the K3/T4 one): state Gram targets as `IntCongr ... <form>`, NEVER as a literal
+   matrix equality on a chosen basis - the extra content of an equality over a congruence is basis
+   normalization, not geometry, and is generically unreachable whenever any basis vector comes from a
+   choice.
+   backing: `sphereProd_interMatrix_computed_eq`, `sphereProdGramPin_iff`
+
 -/
 import SKEFTHawking.FGDualityNoGo
+import SKEFTHawking.KummerK7SeamCoverNoGo
 import SKEFTHawking.NonHausdorffBordismCollapse
 import SKEFTHawking.PinPlusCharPairFlipGate
 import SKEFTHawking.PinPlusCharPairGeoRealizationGate
@@ -360,6 +396,7 @@ import SKEFTHawking.PinPlusTaylorConventionNoGo
 import SKEFTHawking.PinPlusTraceLeafGate
 import SKEFTHawking.PinPlusTraceSeamTransferNoGo
 import SKEFTHawking.RokhlinArfNoGo
+import SKEFTHawking.SphereProdGramPinRetire
 import SKEFTHawking.SyntheticSmithNoGo
 import SKEFTHawking.UnorientedThomCapstone
 
@@ -523,5 +560,14 @@ alias nogo_isEmpty_capstoneSeamTransfer_of_null := SKEFTHawking.PinPlusTraceSeam
 
 /-- NO-GO [`seam-transfer-open-support-uninhabitable`] — do NOT re-derive. FALSE: The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207 hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching region, and the 3x-circled closed-S co-adaptation barrier (#198/#204/#207) is a machinery gap. Backing refutation: `SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransferSeam_of_null`. -/
 alias nogo_isEmpty_capstoneSeamTransferSeam_of_null := SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransferSeam_of_null
+
+/-- NO-GO [`k7-seam-cover-interior-fails`] — do NOT re-derive. FALSE: K7SeamCoverHyp (the K7 opener's un-thickened MV cover hypothesis): the INTERIORS of the two closed Kummer-weld pieces (the Q-image and the 16 closed E-images) cover the welded K3 carrier, so the Mayer-Vietoris assembly can run on the un-thickened pieces directly. Backing refutation: `SKEFTHawking.KummerK7SeamCoverNoGo.k7SeamCoverHyp_false`. -/
+alias nogo_k7SeamCoverHyp_false := SKEFTHawking.KummerK7SeamCoverNoGo.k7SeamCoverHyp_false
+
+/-- NO-GO [`gram-literal-equality-is-choice-dependent`] — do NOT re-derive. FALSE: SphereProdGramPin - the LITERAL matrix equality `interMatrix fc B = sphereProdFormDatum` on the computed rank-2 basis - is a disclosed GEOMETRIC residual of the S2xS2 intersection form, dischargeable once the Kunneth/EZ cross value is pinned. Backing refutation: `SKEFTHawking.SphereProdGramPinRetire.sphereProd_interMatrix_computed_eq`. -/
+alias nogo_sphereProd_interMatrix_computed_eq := SKEFTHawking.SphereProdGramPinRetire.sphereProd_interMatrix_computed_eq
+
+/-- NO-GO [`gram-literal-equality-is-choice-dependent`] — do NOT re-derive. FALSE: SphereProdGramPin - the LITERAL matrix equality `interMatrix fc B = sphereProdFormDatum` on the computed rank-2 basis - is a disclosed GEOMETRIC residual of the S2xS2 intersection form, dischargeable once the Kunneth/EZ cross value is pinned. Backing refutation: `SKEFTHawking.SphereProdGramPinRetire.sphereProdGramPin_iff`. -/
+alias nogo_sphereProdGramPin_iff := SKEFTHawking.SphereProdGramPinRetire.sphereProdGramPin_iff
 
 end SKEFTHawking.KernelNoGos

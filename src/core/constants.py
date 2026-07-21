@@ -4011,6 +4011,16 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': 'The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207 hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching region, and the 3x-circled closed-S co-adaptation barrier (#198/#204/#207) is a machinery gap. FALSE (the #210 lead adjudication): htransfer FORCES wAtt into the CLOSED attach image (injective-mapDomain support transport + fromCyl_image_compl disjointness — wAtt_mem_subspaceChains_range_phi), char-2 boundary algebra then forces BOTH split pieces to be CYCLES (boundary_wAtt_eq_zero via subspaceChains_inf_compl_eq_bot), so z@top decomposes as a seam-supported cycle + an off-seam cycle; whenever the two regions have null 4-cycle classes (H4(S1xD3;Z/2)=0, H4 of an open 4-region = 0 — the genuine consumption) and z@top does not bound (z fundamental), the shape is EMPTY (isEmpty_capstoneSeamTransfer_of_null + the Seam corollary). Consequence: the transfer route to hasClass is dead AS SHIPPED; the honest repair = CLOSED-complement supports (wOut/vOut in the complement of the INTERIOR of the attach region — the classical two-rel-pieces-sharing-the-interface picture), a NEW gate-pending consumption shape whose interface terms cancel mod 2.',
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'collar_pair_maximal_core_reenters_refuted_support': {
+        'fork_id': 'collar-pair-maximal-core-reenters-refuted-support',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusTraceCapstoneCollarPairGeom.coreHit_of_univ',
+            'SKEFTHawking.PinPlusTraceCapstoneCollarPairGeom.houtC_support_univ_eq_refuted',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': "The CollarPairGeom/CollarPairGeomUnsub row's anti-fake tether hcoreHit can be made free of charge by enlarging the #210 shrunk core K toward its limit K = univ, keeping the rest of the collar-pair split data intact. FALSE (structural forcing, 2026-07-21): at K = univ the tether IS indeed a consequence of the top-face split (coreHit_of_univ - cCore lands in subspaceChains of univ-complement = the empty set, hence cCore = 0, so z@top = outC), but at K = univ the remainder support collapses to `(univ x {top}) \\ phi '' univ = (univ x {top}) \\ range phi` (houtC_support_univ_eq_refuted), which is VERBATIM the OPEN-complement signature refuted by seam-transfer-open-support-uninhabitable. So the maximal-core shortcut purchases the tether only by re-entering the settled-dead shape, and hcoreHit must remain a genuine obligation of the row. SCOPE (lead-corrected, do not overstate): only the direction `K = univ ==> tether free AND support refuted` is proved. There is NO uniqueness/converse theorem - a strictly smaller K that still discharges hcoreHit is NOT excluded, merely unexplored. Cite this fence as 'the obvious maximal-core shortcut is closed', never as 'every hcoreHit shortcut is closed'.",
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'k7_seam_cover_interior_fails': {
         'fork_id': 'k7-seam-cover-interior-fails',
         'backing_theorems': [
