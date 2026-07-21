@@ -431,7 +431,42 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    choice.
    backing: `sphereProd_interMatrix_computed_eq`, `sphereProdGramPin_iff`
 
+28. `kronecker-dual-is-not-the-h1-enhancement-transport` [refutation]
+   The Kronecker/UCT dual of the carried cohomology basis - `homologyBasisOfCohomologyBasis basis`, the
+   value `pinCharSurfaceOfBundled` puts in `PinCharSurface.H1Iso` (and the value
+   `GeoRealizationTied.derivedEsigma`/`derivedEtau` put in the seam) - is the identification of
+   `H1(Sigma;Z/2)` that the enhancement `q` lives on, so `q` may be evaluated at those coordinates at ANY
+   rank. FALSE (audit M4, kernel-checked 2026-07-21). The carrier's `hpolar` pins `q.B` to the cup pairing
+   in the COHOMOLOGY basis `e`; the Kronecker dual is the transport that makes the KRONECKER pairing the dot
+   product (`kroneckerH_eq_dotProduct`), a different normalization. The two differ by the Gram operator of
+   `q.B` (`homologyCoords_eq_gramMap`), and the difference is not cosmetic: (1) VARIANCE MISMATCH - a gauge
+   `e |-> g o e` moves the derived homology coordinates by the transpose-inverse (`homologyCoords_gauge`)
+   while `hpolar` forces `q` to move by `g` (`hpolar_gaugePullback`), so `q o (Kronecker transport)` is not
+   gauge-invariant (`not_forall_kroneckerTransport_gauge_invariant`, rank-2 transvection witness); the
+   gauged carrier is a genuine `CharPairStrBundled` with the SAME surf/emb/surfClass/hchar and the SAME
+   Brown grade (`gaugeBundled_*`, `gaugeBundled_brown`), so the value read is not a function of the
+   geometry. (2) TRUTH-VALUE FLIP - for the genus-1 model in a symplectic basis the Gram operator is the
+   coordinate SWAP (`gramMap_hyperbolic2`), and on the a-cycle metabolizer `q` vanishes while at its
+   raw-Kronecker coordinates `q = 2 != 0` (`hyperbolic2_taylor_flip`): `TaylorKernelVanishing` is FALSE
+   exactly where Taylor Thm 1.1 says it must be TRUE. SCOPE (do not overstate): the defect is strictly
+   NONZERO-RANK. At rank 0 the two transports are EQUAL (`homologyBasisPD_eq_of_rank_zero`,
+   `pinCharSurfaceOfBundledPD_eq_of_rank_zero`), so the entire live rank-zero
+   `PinPlusKTRankZeroBounding`/`toLeaves` chain is sound and unaffected; and `gramMap_stdQuadratic` shows
+   the raw transport is accidentally correct whenever the chosen basis is orthonormal for the intersection
+   form (which a positive-genus surface's symplectic sector is not). REPAIR (SHIPPED, no hypothesis needed):
+   use `homologyBasisPD Q e := (homologyBasisOfCohomologyBasis e).trans (gramEquiv Q).symm` -
+   `Z4Quadratic.nondeg` IS the Gram operator's invertibility - which is the Poincare-dual transport
+   (`homologyBasisPD_pd`: `homologyBasisPD Q e (pd a) = e a`), is gauge-covariant (`homologyBasisPD_gauge`)
+   and yields a gauge-INVARIANT enhancement value (`q_homologyBasisPD_gauge_invariant`); carrier-level entry
+   point `pinCharSurfaceOfBundledPD`. BLAST RADIUS: the same raw transport feeds
+   `TaylorLegVanishes`/`JointLagrangian` through `GeoRealizationTied.derivedEsigma`/`derivedEtau`
+   (PinPlusCharPairRealizationTied), so any nonzero-rank use of the realized carrier's Taylor leg needs the
+   same correction.
+   backing: `homologyCoords_gauge`, `not_forall_kroneckerTransport_gauge_invariant`, `hyperbolic2_taylor_flip`, `gramMap_hyperbolic2`, `pinCharSurfaceOfBundled_gauge_H1Iso`
+
 -/
+import SKEFTHawking.CharSurfacePDBundled
+import SKEFTHawking.CharSurfacePDTransport
 import SKEFTHawking.FGDualityNoGo
 import SKEFTHawking.KummerK7SeamCoverNoGo
 import SKEFTHawking.NonHausdorffBordismCollapse
@@ -644,5 +679,20 @@ alias nogo_sphereProd_interMatrix_computed_eq := SKEFTHawking.SphereProdGramPinR
 
 /-- NO-GO [`gram-literal-equality-is-choice-dependent`] — do NOT re-derive. FALSE: SphereProdGramPin - the LITERAL matrix equality `interMatrix fc B = sphereProdFormDatum` on the computed rank-2 basis - is a disclosed GEOMETRIC residual of the S2xS2 intersection form, dischargeable once the Kunneth/EZ cross value is pinned. Backing refutation: `SKEFTHawking.SphereProdGramPinRetire.sphereProdGramPin_iff`. -/
 alias nogo_sphereProdGramPin_iff := SKEFTHawking.SphereProdGramPinRetire.sphereProdGramPin_iff
+
+/-- NO-GO [`kronecker-dual-is-not-the-h1-enhancement-transport`] — do NOT re-derive. FALSE: The Kronecker/UCT dual of the carried cohomology basis - `homologyBasisOfCohomologyBasis basis`, the value `pinCharSurfaceOfBundled` puts in `PinCharSurface.H1Iso` (and the value `GeoRealizationTied.derivedEsigma`/`derivedEtau` put in the seam) - is the identification of `H1(Sigma;Z/2)` that the enhancement `q` lives on, so `q` may be evaluated at those coordinates at ANY rank. Backing refutation: `SKEFTHawking.CharSurfacePDTransport.homologyCoords_gauge`. -/
+alias nogo_homologyCoords_gauge := SKEFTHawking.CharSurfacePDTransport.homologyCoords_gauge
+
+/-- NO-GO [`kronecker-dual-is-not-the-h1-enhancement-transport`] — do NOT re-derive. FALSE: The Kronecker/UCT dual of the carried cohomology basis - `homologyBasisOfCohomologyBasis basis`, the value `pinCharSurfaceOfBundled` puts in `PinCharSurface.H1Iso` (and the value `GeoRealizationTied.derivedEsigma`/`derivedEtau` put in the seam) - is the identification of `H1(Sigma;Z/2)` that the enhancement `q` lives on, so `q` may be evaluated at those coordinates at ANY rank. Backing refutation: `SKEFTHawking.CharSurfacePDTransport.not_forall_kroneckerTransport_gauge_invariant`. -/
+alias nogo_not_forall_kroneckerTransport_gauge_invariant := SKEFTHawking.CharSurfacePDTransport.not_forall_kroneckerTransport_gauge_invariant
+
+/-- NO-GO [`kronecker-dual-is-not-the-h1-enhancement-transport`] — do NOT re-derive. FALSE: The Kronecker/UCT dual of the carried cohomology basis - `homologyBasisOfCohomologyBasis basis`, the value `pinCharSurfaceOfBundled` puts in `PinCharSurface.H1Iso` (and the value `GeoRealizationTied.derivedEsigma`/`derivedEtau` put in the seam) - is the identification of `H1(Sigma;Z/2)` that the enhancement `q` lives on, so `q` may be evaluated at those coordinates at ANY rank. Backing refutation: `SKEFTHawking.CharSurfacePDTransport.hyperbolic2_taylor_flip`. -/
+alias nogo_hyperbolic2_taylor_flip := SKEFTHawking.CharSurfacePDTransport.hyperbolic2_taylor_flip
+
+/-- NO-GO [`kronecker-dual-is-not-the-h1-enhancement-transport`] — do NOT re-derive. FALSE: The Kronecker/UCT dual of the carried cohomology basis - `homologyBasisOfCohomologyBasis basis`, the value `pinCharSurfaceOfBundled` puts in `PinCharSurface.H1Iso` (and the value `GeoRealizationTied.derivedEsigma`/`derivedEtau` put in the seam) - is the identification of `H1(Sigma;Z/2)` that the enhancement `q` lives on, so `q` may be evaluated at those coordinates at ANY rank. Backing refutation: `SKEFTHawking.CharSurfacePDTransport.gramMap_hyperbolic2`. -/
+alias nogo_gramMap_hyperbolic2 := SKEFTHawking.CharSurfacePDTransport.gramMap_hyperbolic2
+
+/-- NO-GO [`kronecker-dual-is-not-the-h1-enhancement-transport`] — do NOT re-derive. FALSE: The Kronecker/UCT dual of the carried cohomology basis - `homologyBasisOfCohomologyBasis basis`, the value `pinCharSurfaceOfBundled` puts in `PinCharSurface.H1Iso` (and the value `GeoRealizationTied.derivedEsigma`/`derivedEtau` put in the seam) - is the identification of `H1(Sigma;Z/2)` that the enhancement `q` lives on, so `q` may be evaluated at those coordinates at ANY rank. Backing refutation: `SKEFTHawking.CharSurfacePDBundled.pinCharSurfaceOfBundled_gauge_H1Iso`. -/
+alias nogo_pinCharSurfaceOfBundled_gauge_H1Iso := SKEFTHawking.CharSurfacePDBundled.pinCharSurfaceOfBundled_gauge_H1Iso
 
 end SKEFTHawking.KernelNoGos
