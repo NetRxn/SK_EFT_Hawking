@@ -62,6 +62,8 @@ open SKEFTHawking.PinPlusKTSurgeryTraceConsumers
 
 namespace SKEFTHawking.PinPlusTraceMembranePresented
 
+variable {k : WithTop ℕ∞}
+
 /-! ## §1. The carrier-agnostic membrane-presentation leaf row and its tether discharge.
 
 For ANY bordism `b : Bordism (I.prod (𝓡∂ 1)) s t` with structured ends `σ`/`τ`, the membrane
@@ -175,7 +177,7 @@ geometric leaf rows" (transparent). -/
 
 noncomputable section
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 variable {p : StrMfd (pinPlusCharPairData prov).toTangentialData}
 
 /-- **Consumer 1 via the two leaf rows.** Assembles `AmbientSurgeryDatum prov p` from the algebraic

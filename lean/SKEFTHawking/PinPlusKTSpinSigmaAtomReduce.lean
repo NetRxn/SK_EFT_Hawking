@@ -57,6 +57,8 @@ import SKEFTHawking.PinPlusCharPairSurfaceTie
 
 namespace SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
 
+variable {k : WithTop ℕ∞}
+
 open scoped Manifold
 open SKEFTHawking SKEFTHawking.SingularCohomologyInt SKEFTHawking.SpinSigmaRoute
 open SKEFTHawking.TangentialDataBordism
@@ -68,7 +70,7 @@ open SKEFTHawking.SingularPD4Instances
 open SKEFTHawking.PoincareDualityWu
 open SKEFTHawking.SingularCohomologyMod2
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-! ## §1. The empty-Σ carrier carries the spin (Wu) certificate BY CONSTRUCTION -/
 

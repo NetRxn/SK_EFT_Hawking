@@ -46,6 +46,8 @@ import SKEFTHawking.IntersectionMatrixDisjointSumInt
 
 namespace SKEFTHawking.PinPlusKTSpinSigmaNovikovTowerBridge
 
+variable {k : WithTop ℕ∞}
+
 open scoped Manifold
 open SKEFTHawking SKEFTHawking.SingularCohomologyInt SKEFTHawking.SpinSigmaRoute
 open SKEFTHawking.TangentialDataBordism
@@ -83,7 +85,7 @@ theorem interMatrix_reverse (fc : IntFundamentalClass X) (B : IntH2Basis X) :
 
 /-! ## §2. The boundary form identification — `II(∂W) = blockDiag (II M_p) (−II M_q)` -/
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 
 /-- **The boundary intersection matrix, in coordinates, IS the consumer's block form (HEADLINE).**
 

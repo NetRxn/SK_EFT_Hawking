@@ -37,6 +37,8 @@ import SKEFTHawking.IntersectionFormUnimodularInt
 
 namespace SKEFTHawking.PinPlusKTSpinSigmaAtom
 
+variable {k : WithTop ℕ∞}
+
 open scoped Manifold
 open SKEFTHawking SKEFTHawking.SingularCohomologyInt SKEFTHawking.SpinSigmaRoute
 open SKEFTHawking.TangentialDataBordism SKEFTHawking.PinPlusKTSpinForgetPhi
@@ -45,7 +47,7 @@ open SKEFTHawking.PinPlusKTSpinPresentationRow
 open SKEFTHawking.PinPlusKTExtension SKEFTHawking.PinPlusKTStepGate
 open SKEFTHawking.PinPlusKTLemma53Wave SKEFTHawking.PinPlusKTKernelSpinRoute
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-! ## §1. The disclosed per-manifold E1 atom bundle -/
 

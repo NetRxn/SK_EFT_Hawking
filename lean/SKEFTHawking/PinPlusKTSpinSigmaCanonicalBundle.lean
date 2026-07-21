@@ -49,6 +49,8 @@ import SKEFTHawking.IntersectionMatrixDisjointSumBlockCongr
 
 namespace SKEFTHawking.PinPlusKTSpinSigmaCanonicalBundle
 
+variable {k : WithTop ℕ∞}
+
 open scoped Manifold
 open SKEFTHawking SKEFTHawking.SingularCohomologyInt SKEFTHawking.SpinSigmaRoute
 open SKEFTHawking.TangentialDataBordism
@@ -58,7 +60,7 @@ open SKEFTHawking.PinPlusKTSpinSigmaAtom
 open SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
 open SKEFTHawking.PinPlusKTSpinSigmaStock
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-! ## §1. The canonical-sum disclosure bundle -/
 

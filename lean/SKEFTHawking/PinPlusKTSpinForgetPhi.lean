@@ -75,7 +75,7 @@ datum `ξ` of the KT §5 leaves. NOT a second carrier: `Mfd s` is the subtype of
 `CharPairStrBundled I s` cut out by `IsEmpty σ.surf.M` (empty membrane, Σ = ∅), and `Bor` is the
 built carrier's W-TETHERED `CharPairBorRealizedTethered` together with a `T2Space b.W` certificate
 (so spin-side bordance is literally Hausdorff-refined CharPair bordance between the underlying
-bundles). For `prov : CharPairWProviderPerOp (𝓡 4) 0` this is the in-tree `Ω₄^{Spin}` carrier the
+bundles). For `prov : CharPairWProviderPerOp (𝓡 4) k` this is the in-tree `Ω₄^{Spin}` carrier the
 KT dossier's forgetful map departs from. -/
 noncomputable def spinEmptyData (prov : CharPairWProviderPerOp I k) :
     TangentialData.{0, 1} PUnit k I where
@@ -147,7 +147,7 @@ noncomputable def spinForgetPhi (prov : CharPairWProviderPerOp I k) :
 
 /-! ## §3. The image is honestly geometric — `hΦgeo` for free, and the sector seams -/
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-- **`hΦgeo` — every `Φ`-image class is honestly geometric** (the dC field, FREE from the
 construction): the representative `⟨p.1, p.2.val⟩` carries `p.2`'s own `IsEmpty Σ` certificate.

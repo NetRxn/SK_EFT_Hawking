@@ -116,6 +116,8 @@ open SKEFTHawking.PinPlusKTSurgeryTrace
 
 namespace SKEFTHawking.KTCompletenessProvider
 
+variable {k : WithTop ℕ∞}
+
 /-! ## §1. The isotropic-class extraction — the unconditional algebraic gateway (brick (i)).
 
 `brown = 0 ∧ rank > 0 ⟹ ∃ nonzero isotropic vector` for a nondegenerate `Z4Quadratic`. This is the
@@ -219,7 +221,7 @@ The `H`-hypothesis phrases the Brown condition as `charPairBrown prov (mk _ p) =
 identifies this with `p.2.q.brown = 0`, so the gateway of §1 delivers the isotropic surgery class
 `x`/`hx0`/`hxq` — the datum's first three fields — for EVERY non-spin brown-0 representative `p`. -/
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 variable {p : StrMfd (pinPlusCharPairData prov).toTangentialData}
 
 /-- **The generic ambient-surgery class (datum fields `x`/`hx0`/`hxq`, unconditional).** For every
@@ -265,7 +267,7 @@ the exact rank-drop `hrank` (`n' + 2 = n`), the surgery-trace bordism `b` with H
 (`hT2`), and the genuine Pin⁺ tether `hBor` realizing `[p'] = [p]`. This is the sharp terminal
 hypothesis of the geometric leg — the honest wall (dossier bricks (ii)–(v)) with the algebraic leg
 (brick (i)) absorbed. -/
-structure IsotropicSurgeryTrace (prov : CharPairWProviderPerOp (𝓡 4) 0)
+structure IsotropicSurgeryTrace (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p : StrMfd (pinPlusCharPairData prov).toTangentialData) where
   /-- the surgered representative (KT §5 genus/rank-drop-by-2 output). -/
   p' : StrMfd (pinPlusCharPairData prov).toTangentialData

@@ -113,6 +113,8 @@ open SKEFTHawking.PinPlusKTDualSpinSubmanifold
 
 namespace SKEFTHawking.PinPlusKTDualSpinConstruction
 
+variable {k : WithTop ℕ∞}
+
 /-! ## §1. Atom (c.2) DISCHARGED — the double-cover σ-doubling at the lattice level.
 
 `∂E(V)`, the `w₁(ν)`-classified 2-fold cover of the spin `V`, has `σ(∂E(V)) = 2·σ(V)` by Hirzebruch
@@ -212,7 +214,7 @@ theorem DualSpinConstruction.thirtytwo_dvd {W : Type} [TopologicalSpace W] {sigM
 
 /-! ## §5. The geometric sharpness supply from the OPENED construction, feeding the banked `hfwd`. -/
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 
 /-- **The KT-"only if" sharpness supply built from the OPENED construction** — per kernel element `x`,
 the ambient `W` together with the deeper `DualSpinConstruction` over it (with `∂E(V)` and the two-step

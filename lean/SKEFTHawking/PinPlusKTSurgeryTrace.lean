@@ -68,6 +68,8 @@ open SKEFTHawking.PinPlusKTKernelSpinRoute
 
 namespace SKEFTHawking.PinPlusKTSurgeryTrace
 
+variable {k : WithTop ℕ∞}
+
 /-! ## §1. The algebra-to-geometry seam — the surgered enhancement, reindexed to a concrete `Fin`.
 
 Unconditional algebra (no `prov`, no carrier, no vacuity concern). The KT §5 surgery on the
@@ -113,7 +115,7 @@ ONE ambient rank-lowering tethered surgery step on the non-spin brown-0 represen
 The disk / framing / tubular data underlying the ambient surgery is GEOMETRIC INPUT — named here (as
 the existence of this datum), not proven from scratch; its discharge is embedded-surgery-disk
 existence, gated next round. -/
-structure AmbientSurgeryDatum (prov : CharPairWProviderPerOp (𝓡 4) 0)
+structure AmbientSurgeryDatum (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p : StrMfd (pinPlusCharPairData prov).toTangentialData) where
   /-- the mod-2 `H₁`-class of the embedded surgery circle in `Σ`. -/
   x : Fin p.2.n → ZMod 2
@@ -132,7 +134,7 @@ structure AmbientSurgeryDatum (prov : CharPairWProviderPerOp (𝓡 4) 0)
   /-- **THE GENUINE TETHER**: the surgery-trace membrane realizes `[p'] = [p]` as a Pin⁺ bordism. -/
   hBor : Nonempty (CharPairBorRealizedTethered b p'.2 p.2)
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 variable {p : StrMfd (pinPlusCharPairData prov).toTangentialData}
 
 /-- **The datum lives OFF the rank-0 spin fibre** (round-9 spec item 1, the genuineness guarantee):

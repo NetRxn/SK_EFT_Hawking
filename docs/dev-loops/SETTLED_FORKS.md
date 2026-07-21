@@ -316,7 +316,39 @@ retire) — no entry is immutable. Every entry carries datetime metadata.
   to `k = 0` **with** the Kirby–Siebenmann caveat carried into every downstream claim. Until one of the three
   lands, the honest phrasing is "**on the `k = 0` tethered char-pair carrier**", never an unqualified
   "faithful smooth carrier".
-- created_ts: 2026-07-21T00:00:00Z
+- **✅ RESOLVED BY ROUTE (b) — 2026-07-21, wt3 (the regularity lift). Route (a) was never available:**
+  `PinPlusRegularitySeparation.no_generic_zero_to_one_transport` refutes generic `C⁰ ⟹ C¹`, and
+  `PinPlusRegularitySeparationCarrier.exists_carrier_element_not_smooth` shows the object classes
+  genuinely differ. So the lift had to be a **re-declaration**, and it is done:
+  * `PinPlusKTAssemblyResiduals.residualProvK (k)` — the canonical provider at **every** `k`
+    (`nonempty_charPairWProviderPerOp` was always `{k}`-generic; `k := 0` was a *choice*).
+    `residualProv = residualProvK 0`, type unchanged.
+  * `kt_equiv_zmod16_of_residuals_ofKRS {k}` — the regularity-generic assembly core;
+    `kt_equiv_zmod16_of_residuals_ofAmbientRow {k}` — the same with the KRS leaf at the
+    `AmbientSurgeryDatum` row; `kt_equiv_zmod16_of_residuals_smooth` /
+    `rokhlin_sixteen_of_residuals_smooth` — **the `k = ⊤` headline** (`Nat.card … = 16` in the
+    smooth category). All `{propext, Classical.choice, Quot.sound}`.
+  * The smooth carrier is **unconditionally non-vacuous**: `charPairBrown_surjective_smooth` and
+    `rp4_ne_zero_smooth`, off the `Cω` ℝP⁴ witness `RP4CharPairWitness.rp4CharPairK ⊤`
+    (`RP4Manifold.isManifold_rp4` and `RP2Manifold.isManifold_rp2` are `Cω`;
+    `RP2EquatorialInclusion.contMDiff_embRP2` is `k`-generic).
+  * **Conservative, not a walk-back:** `kt_equiv_zmod16_of_residuals` and
+    `rokhlin_sixteen_of_residuals` keep their exact `k = 0` statements and are now corollaries; the
+    generic KRS leaf is a *weaker* hypothesis than the `k = 0` `KRSResidualRow` supply.
+- **⚠ THE HONEST RESIDUE — what is still C⁰-only (named, do not paper over).** The KT surgery-trace
+  *constructed supplier* of the KRS leaf is genuinely C⁰-only, at the statement level:
+  `SurgeryFoundation.SmoothSurgeryChartDatum.ofC0` (sets `D.k := 0`, "the whole smoothness/weld stack
+  is free"), `SingularSurgeryChartsConcrete.ambientTraceBordism_concrete` (its
+  `he_smooth : ContMDiff … 0 e := contMDiff_zero_iff.mpr he_cont` — smoothness IS continuity there),
+  and everything typed on them: `ktHandleAttachment`, `SeamCollarDatum`, `SurgeredEndDatum`,
+  `ambientTraceBordism_capstone(_ofSurgeredEnd)`, `capstoneB`, `KRSResidualRow`, plus the four modules
+  `PinPlusTraceCapstone{Inhabit,MembraneWeld,SupplyMV,ResidualRow}` (deliberately byte-identical to
+  main) and `PinPlusResidualGate` / `PinPlusCharPairTetherGate`. To make the KRS leaf smooth one must
+  build a **smooth handle attachment** (corner smoothing on the glued 5-dim trace + a genuinely `C^k`
+  boundary embedding) — Mathlib-absent, a phase-scale brick, and the honest open content of the
+  smooth lift. Until it lands, the smooth headline takes its KRS leaf at `AmbientSurgeryDatum`, where
+  the `Bordism`'s `IsManifold … k` / `ContMDiff … k` fields carry the regularity for real.
+- created_ts: 2026-07-21T00:00:00Z · reviewed_ts: 2026-07-21T00:00:00Z
 
 ## 5qH-fg-ek-over-Z-blocked (2026-07-12, arm-2 — KERNEL-REGISTERED same-day; scout-verified vs primaries)
 **Encode-on-settle upgrade (same turn-chain):** now a `KERNEL_NOGO_REGISTRY` entry backed by

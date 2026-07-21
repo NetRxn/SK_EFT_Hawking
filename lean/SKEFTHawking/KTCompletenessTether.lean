@@ -79,6 +79,8 @@ open SKEFTHawking.CharSurface (Circle1)
 
 namespace SKEFTHawking.KTCompletenessTether
 
+variable {k : WithTop ℕ∞}
+
 /-! ## §1. The tethered attaching datum -/
 
 /-- **The tethered framed attaching-circle datum at `(p, x)`** (Lane H-1 interface, dossier §3.2).
@@ -106,7 +108,7 @@ isotropic class `x`, with framing data:
   statement freeze recorded there, honestly NOT restated here). At an isotropic `x` the detection
   forces the bounding framing (`spinClass_eq_zero_of_isotropic`) — KT §5's "the framing is the
   bounding one, so the handle attaches". -/
-structure IsotropicFramedAttachingDatum (prov : CharPairWProviderPerOp (𝓡 4) 0)
+structure IsotropicFramedAttachingDatum (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p : StrMfd (pinPlusCharPairData prov).toTangentialData) (x : Fin p.2.n → ZMod 2) where
   /-- the embedded circle in the carrier's characteristic surface `Σ = p.2.surf`. -/
   f : C(↑Circle1, p.2.surf.M)
@@ -136,7 +138,7 @@ structure IsotropicFramedAttachingDatum (prov : CharPairWProviderPerOp (𝓡 4) 
 
 namespace IsotropicFramedAttachingDatum
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 variable {p : StrMfd (pinPlusCharPairData prov).toTangentialData}
 variable {x : Fin p.2.n → ZMod 2}
 
@@ -174,7 +176,7 @@ end IsotropicFramedAttachingDatum
   Strictly stronger and more meaningful than recording equal rank and equal Brown invariant
   (dossier: `q_identification`); `ident_rank_eq` shows it RE-DERIVES the trace's `hrank`
   independently — the anti-drift cross-check. -/
-structure IsotropicSurgeryOutput (prov : CharPairWProviderPerOp (𝓡 4) 0)
+structure IsotropicSurgeryOutput (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p : StrMfd (pinPlusCharPairData prov).toTangentialData) (x : Fin p.2.n → ZMod 2)
     extends IsotropicFramedAttachingDatum prov p x where
   /-- the algebraic surgery reduction at the SAME class `x`. -/
@@ -189,7 +191,7 @@ structure IsotropicSurgeryOutput (prov : CharPairWProviderPerOp (𝓡 4) 0)
 
 namespace IsotropicSurgeryOutput
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 variable {p : StrMfd (pinPlusCharPairData prov).toTangentialData}
 variable {x : Fin p.2.n → ZMod 2}
 
@@ -235,7 +237,7 @@ datum. Per-REPRESENTATIVE existential (the rank induction needs one suitable `x`
 per-class ∀-strengthening is deliberately NOT adopted. Inhabiting this is Lane H-1's genuine
 geometric stack (embedded-circle realization · band-sum closure · framed tubular data · the
 Taylor detection discharge). -/
-def BrownZeroHasIsotropicFramedAttachment (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def BrownZeroHasIsotropicFramedAttachment (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   ∀ p : StrMfd (pinPlusCharPairData prov).toTangentialData,
     charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = 0 →
     0 < p.2.n →
@@ -247,7 +249,7 @@ admits a tethered surgery OUTPUT — attaching datum, algebraic reduction, geome
 exact quadratic identification, all at ONE shared `x`. Lane H-2's job is exactly
 `IsotropicFramedAttachingDatum → IsotropicSurgeryOutput` (the membrane/weld packaging), which
 upgrades `BrownZeroHasIsotropicFramedAttachment` to this. -/
-def IsotropicSurgeryOutputSupply (prov : CharPairWProviderPerOp (𝓡 4) 0) : Prop :=
+def IsotropicSurgeryOutputSupply (prov : CharPairWProviderPerOp (𝓡 4) k) : Prop :=
   ∀ p : StrMfd (pinPlusCharPairData prov).toTangentialData,
     charPairBrown prov (T2DataBordismGrp.mk (pinPlusCharPairData prov) p) = 0 →
     0 < p.2.n →
@@ -256,7 +258,7 @@ def IsotropicSurgeryOutputSupply (prov : CharPairWProviderPerOp (𝓡 4) 0) : Pr
 
 /-! ## §4. The consumer wiring — the tethered supply discharges the summit -/
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 
 /-- **The tethered supply discharges the KT §5 completeness summit** — through the EXISTING
 untethered consumer (`kernelReducesToSpin_of_ambientDatumSupply`), with each

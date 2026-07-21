@@ -71,7 +71,9 @@ open SKEFTHawking.PinPlusKTSpinForgetPhi
 
 namespace SKEFTHawking.PinPlusKTSpinPresentationRow
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable {k : WithTop ℕ∞}
+
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-! ## §1. The presentation row -/
 

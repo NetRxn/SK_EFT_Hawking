@@ -68,6 +68,8 @@ import SKEFTHawking.PinPlusKTSpinSigmaNovikovHalfDim
 
 namespace SKEFTHawking.PinPlusKTSpinSigmaNovikovRealSubstrate
 
+variable {k : WithTop ℕ∞}
+
 open scoped Manifold
 open QuadraticMap Module
 open SKEFTHawking SKEFTHawking.SingularCohomologyInt SKEFTHawking.SpinSigmaRoute
@@ -215,7 +217,7 @@ noncomputable def NovikovRealPairLES.toBoundaryRestriction : NovikovBoundaryRest
 
 /-! ## §3. The σ-descent consumer — `NovikovHalfDimAtom` from per-pair real substrates -/
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 
 /-- **`NovikovHalfDimAtom` from per-pair real pair-LES substrates.** If, for every data-bordant pair
 `p, q`, the boundary block form `blockDiag (II M_p) (−(II M_q))` carries a `NovikovRealPairLES` (the ℝ
@@ -359,7 +361,7 @@ theorem NovikovRealPairLES.nonempty_iff_exists_lagrangian {n : ℕ} (Bd : Matrix
 /-- **The per-pair real pair-LES atom (Prop form).** For every data-bordant pair `p, q`, the boundary block
 form `blockDiag (II M_p) (−II M_q)` carries a `NovikovRealPairLES`. This is the `Nonempty`-valued twin of the
 data hypothesis of `novikovHalfDim_of_realPairLES`, a genuine `Prop` fit for the atom equivalence. -/
-def NovikovRealPairLESAtom (prov : CharPairWProviderPerOp (𝓡 4) 0) (a : SpinSigmaAtoms prov) : Prop :=
+def NovikovRealPairLESAtom (prov : CharPairWProviderPerOp (𝓡 4) k) (a : SpinSigmaAtoms prov) : Prop :=
   ∀ p q : StrMfd (spinEmptyData prov), IsDataBordant (spinEmptyData prov) p q →
     Nonempty (NovikovRealPairLES
       (blockDiag (interMatrix (a.fc p) (a.B p)) (-interMatrix (a.fc q) (a.B q))))

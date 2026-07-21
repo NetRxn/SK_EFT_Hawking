@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.RP4BocksteinAssembly
 import SKEFTHawking.RP4Witness
+import SKEFTHawking.RP4Manifold
 
 /-!
 # Phase 5q.G (B-arc, M4-d) — THE REDUCTION DISCHARGED: the unconditional tied `ℤ/16`
@@ -33,6 +34,23 @@ namespace SKEFTHawking.RP4Unconditional
 /-- **`hcert` is a THEOREM**: `ℝP⁴` is `w₂`-admissible — `wuW2(ℝP⁴) = 0`, since
 `v₂ = x² = x ⌣ x = v₁²`. -/
 theorem rp4_hcert : PinPlusCertK (𝓡 4) rp4SM := by
+  intro _ _
+  refine (wuW2_eq_zero_iff _ _).mpr ?_
+  show wuClass2 (poincareDual4Mid_of_closed (M := RP4))
+    = cupH (wuClass1 (poincareDual4Lo_of_closed (M := RP4)))
+        (wuClass1 (poincareDual4Lo_of_closed (M := RP4)))
+  rw [wuClass2_eq_xpow2, wuClass1_eq_xpow1]
+  exact xpow_two_eq_cupH
+
+/-- **THE REGULARITY-GENERIC `hcert`** (the `k`-lift of `rp4_hcert`) — `ℝP⁴` is `w₂`-admissible as a
+`C^k` singular manifold for **every** regularity `k : WithTop ℕ∞`, in particular the smooth/analytic
+`k = ⊤`. The certificate's content (`wuW2 = 0`) is a statement about the carrier space `RP4` alone,
+so the proof is verbatim `rp4_hcert`'s; what changes is the ambient `SingularManifold`'s regularity
+exponent, which `RP4Manifold.isManifold_rp4` supplies at every `k`. At `k = 0` this is
+**definitionally** `rp4_hcert` (`rp4SM = rp4SM_k 0` by `rfl`) — the lift strictly extends, it does
+not replace. -/
+theorem rp4_hcert_k {k : WithTop ℕ∞} :
+    PinPlusCertK (𝓡 4) (SKEFTHawking.RP4Manifold.rp4SM_k k) := by
   intro _ _
   refine (wuW2_eq_zero_iff _ _).mpr ?_
   show wuClass2 (poincareDual4Mid_of_closed (M := RP4))

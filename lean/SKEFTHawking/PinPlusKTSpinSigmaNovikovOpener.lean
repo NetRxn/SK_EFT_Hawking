@@ -57,6 +57,8 @@ import SKEFTHawking.SingularCohomologyFunctorialityInt
 
 namespace SKEFTHawking.PinPlusKTSpinSigmaNovikovOpener
 
+variable {k : WithTop ℕ∞}
+
 open scoped Manifold
 open SKEFTHawking SKEFTHawking.SingularCohomologyInt SKEFTHawking.SpinSigmaRoute
 open SKEFTHawking.SingularCohomologyFunctorialityInt
@@ -171,7 +173,7 @@ theorem NovikovBoundaryRestriction.lagrangian {n : ℕ} {Bd : Matrix (Fin n) (Fi
 
 /-! ## §3. The reduction — `NovikovLagrangianAtom = {the half-dim atom}` only -/
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-- **The residual half-dim atom.** For each data-bordant pair `p, q`, a boundary-restriction substrate
 `NovikovBoundaryRestriction` on the boundary block form `blockDiag (II M_p) (−(II M_q))`. This re-expresses

@@ -47,6 +47,8 @@ import SKEFTHawking.ThetaDefiniteDischarge
 
 namespace SKEFTHawking.PinPlusKTSpinSigmaHbord
 
+variable {k : WithTop ℕ∞}
+
 open scoped Manifold
 open SKEFTHawking SKEFTHawking.SingularCohomologyInt SKEFTHawking.SpinSigmaRoute
 open SKEFTHawking.TangentialDataBordism
@@ -56,7 +58,7 @@ open SKEFTHawking.PinPlusKTSpinSigmaAtom
 open SKEFTHawking.PinPlusKTSpinSigmaStock
 open SKEFTHawking.PinPlusKTSpinSigmaCanonicalBundle
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-! ## §1. The Novikov-Lagrangian disclosure atom -/
 
