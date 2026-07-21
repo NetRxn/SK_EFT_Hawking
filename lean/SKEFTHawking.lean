@@ -4815,6 +4815,9 @@ import SKEFTHawking.KTCompletenessCollarSplit
 import SKEFTHawking.CharSurfacePDTransport
 import SKEFTHawking.CharSurfacePDBundled
 import SKEFTHawking.PinPlusCharPairRealizationTiedPD
+import SKEFTHawking.IntOrientationMod2Lift
+import SKEFTHawking.IntersectionMatrixBasisChange
+import SKEFTHawking.KummerK3E1Package
 import SKEFTHawking.Carrollian.Structure
 import SKEFTHawking.Carrollian.WittAlgebra
 import SKEFTHawking.Carrollian.BMSAlgebra
