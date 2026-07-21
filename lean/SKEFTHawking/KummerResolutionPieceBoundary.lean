@@ -1423,6 +1423,259 @@ theorem contDiffOn_reprStereoNormalize {k : WithTop ℕ∞} (u : NSphere 1) :
       contDiffOn_stereoToFun).comp
     (contDiffOn_normalizeE2.mono (fun _ hw => hw.1)) (fun _ hw => hw.2))
 
+/-! ## §O. The `n = 1` fiber disk `IsManifold (NDisk 1)` (the fiber polar-change transition classes)
+
+The fiber `Disk ≃ₜ NDisk 1` carries the banked interior + polar-collar charts `diskInteriorChart 1` /
+`diskCollarChart 1 u₀`. Their coordinate transitions are the `DiskManifoldSmooth` classes one dimension
+down; this section lands them and packages `IsManifold ((𝓡 1).prod (𝓡∂ 1)) k (NDisk 1)`. -/
+
+/-- `DiskChartGeneric.assemble 1` is `C^m` in its two arguments (`E¹ × ℝ → E²`). -/
+theorem contDiff_assemble1 {m : WithTop ℕ∞} :
+    ContDiff ℝ m (fun p : EuclideanSpace ℝ (Fin 1) × ℝ => assemble 1 p.1 p.2) := by
+  apply PiLp.contDiff_toLp.comp
+  apply contDiff_pi.mpr
+  intro i
+  refine Fin.lastCases ?_ (fun j => ?_) i
+  · simpa only [Fin.snoc_last] using contDiff_snd
+  · simpa only [Fin.snoc_castSucc] using
+      (contDiff_apply ℝ ℝ j).comp (PiLp.contDiff_ofLp.comp contDiff_fst)
+
+/-- `DiskChartGeneric.splitLo 1` is `C^m` (the `E² → E¹` low-block projection). -/
+theorem contDiff_splitLo1 {m : WithTop ℕ∞} :
+    ContDiff ℝ m (fun w : EuclideanSpace ℝ (Fin (1 + 1)) => splitLo 1 w) :=
+  PiLp.contDiff_toLp.comp
+    (contDiff_pi.mpr fun i => (contDiff_apply ℝ ℝ (Fin.castSucc i)).comp PiLp.contDiff_ofLp)
+
+/-- The interior-chart reconstruction map `p ↦ assemble 1 p.1 (p.2₀ − 2)` is `C^m`. -/
+theorem contDiff_assembleShift1 {m : WithTop ℕ∞} :
+    ContDiff ℝ m (fun p : EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) =>
+      assemble 1 p.1 (p.2.ofLp 0 - 2)) :=
+  contDiff_assemble1.comp (contDiff_fst.prodMk
+    (((contDiff_apply ℝ ℝ 0).comp (PiLp.contDiff_ofLp.comp contDiff_snd)).sub contDiff_const))
+
+/-- **Fiber transition: collar → collar.** The `u₀`- to `u₁`-collar coordinate change of `NDisk 1` is
+`C^k`; its sphere block is the `S¹` chart transition (radial factor cancels via `diskDir_scaled`), its
+radial block the identity. Mirrors `DiskManifoldSmooth.contDiffOn_transition_CC` at `n = 1`. -/
+theorem contDiffOn_transition_fiber_CC {k : WithTop ℕ∞} (u₀ u₁ : NSphere 1) :
+    ContDiffOn ℝ k (↑((𝓡 1).prod (𝓡∂ 1)) ∘
+        ↑((diskCollarChart 1 u₀).symm ≫ₕ diskCollarChart 1 u₁) ∘ ↑((𝓡 1).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 1).prod (𝓡∂ 1)).symm ⁻¹' ((diskCollarChart 1 u₀).symm ≫ₕ diskCollarChart 1 u₁).source ∩
+        range ↑((𝓡 1).prod (𝓡∂ 1))) := by
+  have key : ∀ x ∈ (↑((𝓡 1).prod (𝓡∂ 1)).symm ⁻¹'
+        ((diskCollarChart 1 u₀).symm ≫ₕ diskCollarChart 1 u₁).source ∩ range ↑((𝓡 1).prod (𝓡∂ 1))),
+      (0 ≤ x.2.ofLp 0 ∧ x.2.ofLp 0 < 1) ∧
+        innerSL ℝ ((-u₁ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+          ((chartAt (EuclideanSpace ℝ (Fin 1)) u₀).symm x.1 :
+            EuclideanSpace ℝ (Fin (1 + 1))) ≠ 1 := by
+    intro x hx
+    obtain ⟨hxsrc, hxrange⟩ := hx
+    rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+      OpenPartialHomeomorph.symm_source, Set.mem_preimage] at hxsrc
+    simp only [ModelWithCorners.prod_symm_apply, modelWithCornersSelf_coe_symm, id_eq] at hxsrc
+    obtain ⟨hpt, hpg⟩ := hxsrc
+    rw [ModelWithCorners.range_prod] at hxrange
+    have hge : (0 : ℝ) ≤ x.2.ofLp 0 := by
+      have h2 := hxrange.2
+      rw [range_modelWithCornersEuclideanHalfSpace] at h2
+      exact h2
+    set z : EuclideanHalfSpace 1 := (𝓡∂ 1).symm x.2 with hzdef
+    have hzval : z.val = x.2 := ModelWithCorners.right_inv (𝓡∂ 1) hxrange.2
+    have hlt : x.2.ofLp 0 < 1 := by
+      have h : z.val.ofLp 0 < 1 := hpt
+      rwa [hzval] at h
+    have hc0 : (0 : ℝ) < max 0 (1 - z.val.ofLp 0) :=
+      lt_of_lt_of_le (by rw [hzval]; linarith) (le_max_right _ _)
+    have hc1 : max 0 (1 - z.val.ofLp 0) ≤ 1 := max_le zero_le_one (by rw [hzval]; linarith)
+    obtain ⟨-, hchart⟩ := hpg
+    have hdir : diskDir 1 ((diskCollarChart 1 u₀).symm (x.1, z))
+        = (chartAt (EuclideanSpace ℝ (Fin 1)) u₀).symm x.1 :=
+      DiskChartGeneric.diskDir_scaled _ hc0 hc1 (DiskChartGeneric.collar_invFun_mem 1 u₀ (x.1, z))
+    rw [hdir] at hchart
+    exact ⟨⟨hge, hlt⟩, innerSL_ne_one_of_mem_source hchart⟩
+  apply ContDiffOn.congr (f := fun x : EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) =>
+      (((OrthonormalBasis.fromOrthogonalSpanSingleton (𝕜 := ℝ) 1
+          (ne_zero_of_mem_unit_sphere (-u₁))).repr
+          (stereoToFun ((-u₁ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+            ((chartAt (EuclideanSpace ℝ (Fin 1)) u₀).symm x.1 :
+              EuclideanSpace ℝ (Fin (1 + 1))))),
+        x.2))
+  · refine ContDiffOn.prodMk ?_ contDiff_snd.contDiffOn
+    exact ((OrthonormalBasis.fromOrthogonalSpanSingleton (𝕜 := ℝ) 1
+        (ne_zero_of_mem_unit_sphere (-u₁))).repr.contDiff.comp_contDiffOn
+        contDiffOn_stereoToFun).comp ((contDiff_chartSymm_coe u₀).comp contDiff_fst).contDiffOn
+      (fun x hx => (key x hx).2)
+  · intro x hx
+    obtain ⟨⟨hge, hlt⟩, -⟩ := key x hx
+    obtain ⟨-, hxrange⟩ := hx
+    rw [ModelWithCorners.range_prod] at hxrange
+    set z : EuclideanHalfSpace 1 := (𝓡∂ 1).symm x.2 with hzdef
+    have hzval : z.val = x.2 := ModelWithCorners.right_inv (𝓡∂ 1) hxrange.2
+    have hc0 : (0 : ℝ) < max 0 (1 - z.val.ofLp 0) :=
+      lt_of_lt_of_le (by rw [hzval]; linarith) (le_max_right _ _)
+    have hc1 : max 0 (1 - z.val.ofLp 0) ≤ 1 := max_le zero_le_one (by rw [hzval]; linarith)
+    set q : NDisk 1 := (diskCollarChart 1 u₀).symm (x.1, z) with hqdef
+    have hdir : diskDir 1 q = (chartAt (EuclideanSpace ℝ (Fin 1)) u₀).symm x.1 :=
+      DiskChartGeneric.diskDir_scaled _ hc0 hc1 (DiskChartGeneric.collar_invFun_mem 1 u₀ (x.1, z))
+    have hnormq : ‖(q : EuclideanSpace ℝ (Fin (1 + 1)))‖ = 1 - x.2.ofLp 0 := by
+      show ‖max 0 (1 - z.val.ofLp 0) • ((chartAt (EuclideanSpace ℝ (Fin 1)) u₀).symm x.1 :
+          EuclideanSpace ℝ (Fin (1 + 1)))‖ = 1 - x.2.ofLp 0
+      rw [norm_smul, Real.norm_eq_abs,
+        mem_sphere_zero_iff_norm.mp ((chartAt (EuclideanSpace ℝ (Fin 1)) u₀).symm x.1).2, mul_one,
+        abs_of_nonneg (le_max_left _ _), hzval, max_eq_right (by linarith)]
+    show (chartAt (EuclideanSpace ℝ (Fin 1)) u₁ (diskDir 1 q),
+        WithLp.toLp 2 (fun _ : Fin 1 => 1 - ‖(q : EuclideanSpace ℝ (Fin (1 + 1)))‖)) = _
+    rw [hdir, chartAt_oneSphere_apply]
+    congr 1
+    rw [hnormq, sub_sub_cancel]
+    exact DiskChartGeneric.toLp_ofLp_fin_one x.2
+
+/-- **Fiber transition: interior → collar.** The interior- to `u₁`-collar coordinate change of `NDisk 1`
+is `C^k`; its sphere block is the `stereographic ∘ normalize` keystone precomposed with the interior
+reconstruction `assemble`; its radial block is `1 − ‖·‖`. Mirrors `contDiffOn_transition_IC` at `n = 1`. -/
+theorem contDiffOn_transition_fiber_IC {k : WithTop ℕ∞} (u₁ : NSphere 1) :
+    ContDiffOn ℝ k (↑((𝓡 1).prod (𝓡∂ 1)) ∘
+        ↑((DiskChartGeneric.diskInteriorChart 1).symm ≫ₕ diskCollarChart 1 u₁) ∘
+        ↑((𝓡 1).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 1).prod (𝓡∂ 1)).symm ⁻¹'
+          ((DiskChartGeneric.diskInteriorChart 1).symm ≫ₕ diskCollarChart 1 u₁).source ∩
+        range ↑((𝓡 1).prod (𝓡∂ 1))) := by
+  have key : ∀ p ∈ (↑((𝓡 1).prod (𝓡∂ 1)).symm ⁻¹'
+        ((DiskChartGeneric.diskInteriorChart 1).symm ≫ₕ diskCollarChart 1 u₁).source ∩
+        range ↑((𝓡 1).prod (𝓡∂ 1))),
+        ‖assemble 1 p.1 (p.2.ofLp 0 - 2)‖ < 1 ∧
+        assemble 1 p.1 (p.2.ofLp 0 - 2) ≠ 0 ∧
+        innerSL ℝ ((-u₁ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+          (‖assemble 1 p.1 (p.2.ofLp 0 - 2)‖⁻¹ • assemble 1 p.1 (p.2.ofLp 0 - 2)) ≠ 1 := by
+    intro p hp
+    obtain ⟨hpsrc, hprange⟩ := hp
+    rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+      OpenPartialHomeomorph.symm_source, Set.mem_preimage] at hpsrc
+    simp only [ModelWithCorners.prod_symm_apply, modelWithCornersSelf_coe_symm, id_eq] at hpsrc
+    obtain ⟨hpt, hpg⟩ := hpsrc
+    rw [ModelWithCorners.range_prod] at hprange
+    set z : EuclideanHalfSpace 1 := (𝓡∂ 1).symm p.2 with hzdef
+    have hzval : z.val = p.2 := ModelWithCorners.right_inv (𝓡∂ 1) hprange.2
+    have hnorm : ‖assemble 1 p.1 (p.2.ofLp 0 - 2)‖ < 1 := by
+      have h : ‖assemble 1 p.1 (z.val.ofLp 0 - 2)‖ < 1 := hpt
+      rwa [hzval] at h
+    set q : NDisk 1 := (DiskChartGeneric.diskInteriorChart 1).symm (p.1, z) with hqdef
+    have hqval : (q : EuclideanSpace ℝ (Fin (1 + 1))) = assemble 1 p.1 (p.2.ofLp 0 - 2) := by
+      show (DiskChartGeneric.ballClamp 1 (assemble 1 p.1 (z.val.ofLp 0 - 2)) :
+          EuclideanSpace ℝ (Fin (1 + 1))) = assemble 1 p.1 (p.2.ofLp 0 - 2)
+      rw [DiskChartGeneric.ballClamp_coe_of_norm_le (le_of_lt (by rw [hzval]; exact hnorm)), hzval]
+    obtain ⟨hne0, hchart⟩ := hpg
+    refine ⟨hnorm, ?_, ?_⟩
+    · rw [← hqval]; exact hne0
+    · have h := innerSL_ne_one_of_mem_source hchart
+      rw [DiskChartGeneric.diskDir_coe hne0, hqval] at h
+      exact h
+  apply ContDiffOn.congr (f := fun p : EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) =>
+      (((OrthonormalBasis.fromOrthogonalSpanSingleton (𝕜 := ℝ) 1
+          (ne_zero_of_mem_unit_sphere (-u₁))).repr
+          (stereoToFun ((-u₁ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+            (‖assemble 1 p.1 (p.2.ofLp 0 - 2)‖⁻¹ • assemble 1 p.1 (p.2.ofLp 0 - 2)))),
+        (WithLp.toLp 2 (fun _ : Fin 1 => 1 - ‖assemble 1 p.1 (p.2.ofLp 0 - 2)‖))))
+  · refine ContDiffOn.prodMk ?_ ?_
+    · exact (contDiffOn_reprStereoNormalize u₁).comp contDiff_assembleShift1.contDiffOn
+        (fun p hp => ⟨(key p hp).2.1, (key p hp).2.2⟩)
+    · have hnorm_cd : ContDiffOn ℝ k (fun p : EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) =>
+          ‖assemble 1 p.1 (p.2.ofLp 0 - 2)‖) _ :=
+        fun p hp => ((contDiffAt_norm ℝ (key p hp).2.1).comp p
+          contDiff_assembleShift1.contDiffAt).contDiffWithinAt
+      have htoLp : ContDiff ℝ k (fun r : ℝ => WithLp.toLp 2 (fun _ : Fin 1 => r)) :=
+        PiLp.contDiff_toLp.comp (contDiff_pi.mpr (fun _ => contDiff_id))
+      exact htoLp.comp_contDiffOn (contDiffOn_const.sub hnorm_cd)
+  · intro x hx
+    obtain ⟨hnorm, hne0, -⟩ := key x hx
+    obtain ⟨-, hxrange⟩ := hx
+    rw [ModelWithCorners.range_prod] at hxrange
+    set z : EuclideanHalfSpace 1 := (𝓡∂ 1).symm x.2 with hzdef
+    have hzval : z.val = x.2 := ModelWithCorners.right_inv (𝓡∂ 1) hxrange.2
+    set q : NDisk 1 := (DiskChartGeneric.diskInteriorChart 1).symm (x.1, z) with hqdef
+    have hqval : (q : EuclideanSpace ℝ (Fin (1 + 1))) = assemble 1 x.1 (x.2.ofLp 0 - 2) := by
+      show (DiskChartGeneric.ballClamp 1 (assemble 1 x.1 (z.val.ofLp 0 - 2)) :
+          EuclideanSpace ℝ (Fin (1 + 1))) = assemble 1 x.1 (x.2.ofLp 0 - 2)
+      rw [DiskChartGeneric.ballClamp_coe_of_norm_le (le_of_lt (by rw [hzval]; exact hnorm)), hzval]
+    have hqne : (q : EuclideanSpace ℝ (Fin (1 + 1))) ≠ 0 := by rw [hqval]; exact hne0
+    show (chartAt (EuclideanSpace ℝ (Fin 1)) u₁ (diskDir 1 q),
+        WithLp.toLp 2 (fun _ : Fin 1 => 1 - ‖(q : EuclideanSpace ℝ (Fin (1 + 1)))‖)) = _
+    rw [chartAt_oneSphere_apply, DiskChartGeneric.diskDir_coe hqne, hqval]
+
+/-- **Fiber transition: collar → interior.** The `u₀`-collar- to interior coordinate change of `NDisk 1`
+is `C^k`; its reconstruction is the `stereographic⁻¹` inverse chart scaled by the radial coordinate,
+whose two output blocks (`splitLo`, last coordinate `+2`) are linear in it. Mirrors
+`contDiffOn_transition_CI` at `n = 1`. -/
+theorem contDiffOn_transition_fiber_CI {k : WithTop ℕ∞} (u₀ : NSphere 1) :
+    ContDiffOn ℝ k (↑((𝓡 1).prod (𝓡∂ 1)) ∘
+        ↑((diskCollarChart 1 u₀).symm ≫ₕ DiskChartGeneric.diskInteriorChart 1) ∘
+        ↑((𝓡 1).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 1).prod (𝓡∂ 1)).symm ⁻¹'
+          ((diskCollarChart 1 u₀).symm ≫ₕ DiskChartGeneric.diskInteriorChart 1).source ∩
+        range ↑((𝓡 1).prod (𝓡∂ 1))) := by
+  have key : ∀ x ∈ (↑((𝓡 1).prod (𝓡∂ 1)).symm ⁻¹'
+        ((diskCollarChart 1 u₀).symm ≫ₕ DiskChartGeneric.diskInteriorChart 1).source ∩
+        range ↑((𝓡 1).prod (𝓡∂ 1))),
+      x.2.ofLp 0 < 1 := by
+    intro x hx
+    obtain ⟨hxsrc, hxrange⟩ := hx
+    rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+      OpenPartialHomeomorph.symm_source, Set.mem_preimage] at hxsrc
+    simp only [ModelWithCorners.prod_symm_apply, modelWithCornersSelf_coe_symm, id_eq] at hxsrc
+    obtain ⟨hpt, -⟩ := hxsrc
+    rw [ModelWithCorners.range_prod] at hxrange
+    set z : EuclideanHalfSpace 1 := (𝓡∂ 1).symm x.2 with hzdef
+    have hzval : z.val = x.2 := ModelWithCorners.right_inv (𝓡∂ 1) hxrange.2
+    have h : z.val.ofLp 0 < 1 := hpt
+    rwa [hzval] at h
+  have hV : ContDiff ℝ k (fun x : EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) =>
+      (1 - x.2.ofLp 0) • ((chartAt (EuclideanSpace ℝ (Fin 1)) u₀).symm x.1 :
+        EuclideanSpace ℝ (Fin (1 + 1)))) :=
+    (contDiff_const.sub ((contDiff_apply ℝ ℝ 0).comp (PiLp.contDiff_ofLp.comp contDiff_snd))).smul
+      ((contDiff_chartSymm_coe u₀).comp contDiff_fst)
+  have htoLp : ContDiff ℝ k (fun r : ℝ => WithLp.toLp 2 (fun _ : Fin 1 => r)) :=
+    PiLp.contDiff_toLp.comp (contDiff_pi.mpr (fun _ => contDiff_id))
+  apply ContDiffOn.congr (f := fun x : EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) =>
+      (splitLo 1 ((1 - x.2.ofLp 0) • ((chartAt (EuclideanSpace ℝ (Fin 1)) u₀).symm x.1 :
+          EuclideanSpace ℝ (Fin (1 + 1)))),
+        WithLp.toLp 2 (fun _ : Fin 1 =>
+          ((1 - x.2.ofLp 0) • ((chartAt (EuclideanSpace ℝ (Fin 1)) u₀).symm x.1 :
+            EuclideanSpace ℝ (Fin (1 + 1)))).ofLp (Fin.last 1) + 2)))
+  · exact ((contDiff_splitLo1.comp hV).prodMk
+      (htoLp.comp (((contDiff_apply ℝ ℝ (Fin.last 1)).comp
+        (PiLp.contDiff_ofLp.comp hV)).add contDiff_const))).contDiffOn
+  · intro x hx
+    have hlt := key x hx
+    obtain ⟨-, hxrange⟩ := hx
+    rw [ModelWithCorners.range_prod] at hxrange
+    set z : EuclideanHalfSpace 1 := (𝓡∂ 1).symm x.2 with hzdef
+    have hzval : z.val = x.2 := ModelWithCorners.right_inv (𝓡∂ 1) hxrange.2
+    set q : NDisk 1 := (diskCollarChart 1 u₀).symm (x.1, z) with hqdef
+    have hqval : (q : EuclideanSpace ℝ (Fin (1 + 1)))
+        = (1 - x.2.ofLp 0) • ((chartAt (EuclideanSpace ℝ (Fin 1)) u₀).symm x.1 :
+          EuclideanSpace ℝ (Fin (1 + 1))) := by
+      show (max 0 (1 - z.val.ofLp 0) • ((chartAt (EuclideanSpace ℝ (Fin 1)) u₀).symm x.1 :
+          EuclideanSpace ℝ (Fin (1 + 1)))) = _
+      rw [hzval, max_eq_right (by linarith)]
+    show (splitLo 1 (q : EuclideanSpace ℝ (Fin (1 + 1))),
+        WithLp.toLp 2 (fun _ : Fin 1 =>
+          (q : EuclideanSpace ℝ (Fin (1 + 1))).ofLp (Fin.last 1) + 2)) = _
+    rw [hqval]
+
+/-- **`NDisk 1` is a smooth manifold-with-boundary** on `(𝓡 1).prod (𝓡∂ 1)`. Its atlas is the interior
+chart plus the polar-collar family; the four transition classes are §O's fiber lemmas (the diagonal is
+the trivial groupoid membership). The fiber `Disk ≃ₜ NDisk 1` inherits this smooth structure through
+`diskHomeoNDisk1`. Kernel-pure `{propext, Classical.choice, Quot.sound}`. -/
+theorem isManifold_nDisk1 {k : WithTop ℕ∞} :
+    IsManifold ((𝓡 1).prod (𝓡∂ 1)) k (NDisk 1) := by
+  apply isManifold_of_contDiffOn
+  intro e e' he he'
+  simp only [atlas] at he he'
+  rcases he with rfl | ⟨u₀, rfl⟩ <;> rcases he' with rfl | ⟨u₁, rfl⟩
+  · exact (mem_groupoid_of_pregroupoid.mp (symm_trans_mem_contDiffGroupoid _)).1
+  · exact contDiffOn_transition_fiber_IC u₁
+  · exact contDiffOn_transition_fiber_CI u₀
+  · exact contDiffOn_transition_fiber_CC u₀ u₁
+
 /-! ## §Z. STATUS — the K6′a Leg-2 E-side certificate
 
 **GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
