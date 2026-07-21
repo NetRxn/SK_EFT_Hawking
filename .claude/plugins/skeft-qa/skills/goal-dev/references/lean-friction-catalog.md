@@ -5,6 +5,19 @@ substrate (singular homology, RingQuot algebras, EuclideanSpace, quotient homolo
 error, grep this file for the symptom string** rather than re-deriving the fix. Each entry: SYMPTOM →
 FIX. Add a new entry the *first* time a pattern recurs (don't re-solve it per-instance).
 
+> ⚠ **THIS FILE HAS TWO REGIONS — GREP BOTH.** The `##` sections up to *Tooling / environment* are the
+> **curated, deduplicated taxonomy**; everything after is an **append-only dated batch tail** (one `##`
+> per harvested worker round). A symptom may be recorded in either. Grepping only the taxonomy is a
+> known way to miss a banked fix.
+>
+> **CONSOLIDATION DEBT (measured 2026-07-21).** The tail is not being folded back, and it has already
+> produced a confirmed re-derivation: the `Submodule.Quotient.mk`-doesn't-`rw`-match law was banked in
+> the curated *Quotients* section AND re-banked ~140 lines later in a dated batch by a second worker who
+> did not find the first. Related-but-separated: the `Module.Free … (0 + 1)` instance-key law and the
+> "degree literals `0 + 1` survive `trans_apply`" law are two faces of one phenomenon (un-reduced numeric
+> literals defeating keyed matching) filed as if unrelated. **When banking a new batch, first grep the
+> taxonomy for the symptom and STRENGTHEN the existing entry instead of appending a near-duplicate.**
+
 ## Quotients / instance synthesis / coercions
 
 - **`Submodule.Quotient.mk` (from `mk_surjective`) doesn't `rw`-match `RelativeHomology.mk` /
