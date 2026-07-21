@@ -4720,6 +4720,7 @@ import SKEFTHawking.KummerPunctureAnnulus
 import SKEFTHawking.KummerPuncturedMV
 import SKEFTHawking.CircleWindingCocycle
 import SKEFTHawking.TorusCrossPeel
+import SKEFTHawking.TorusCrossPeelGen
 import SKEFTHawking.KummerT4GramCross
 import SKEFTHawking.SphereProdStokesPeel
 import SKEFTHawking.KTCompletenessProvider
