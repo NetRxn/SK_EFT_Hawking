@@ -1215,6 +1215,7 @@ import SKEFTHawking.SingularRelativeMV
 import SKEFTHawking.SingularRelMvDeltaChain
 import SKEFTHawking.SingularRelativeMVNaturality
 import SKEFTHawking.SingularRelativeMVInt
+import SKEFTHawking.SingularRelativeMVLESInt
 import SKEFTHawking.SingularSmallChainsSplitInt
 import SKEFTHawking.AcyclicProjectiveContractionInt
 import SKEFTHawking.SingularKComplexAcyclicInt
@@ -1259,6 +1260,8 @@ import SKEFTHawking.SingularOpenDualityD0FiveLemmaInt
 import SKEFTHawking.SingularConvexSubAcyclicInt
 import SKEFTHawking.SingularH0PathConnectedInt
 import SKEFTHawking.SingularSphereMiddleInt
+import SKEFTHawking.SingularStarComplementRetractInt
+import SKEFTHawking.SingularFlatDiskChartVanishInt
 import SKEFTHawking.SingularLocalHomologyThreeInt
 import SKEFTHawking.SingularConvexRadialMiddleInt
 import SKEFTHawking.SingularConvexStageIsoInt
