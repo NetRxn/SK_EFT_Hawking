@@ -4425,6 +4425,11 @@ import SKEFTHawking.SpinSigmaRouteWitness
 -- via latticeSig_eq_neg16_of_congr_k3), with door_via_k3_generator / door_via_k3_realization
 -- re-expressing the door on the lattice / K3-realization residual. (wt2-built.)
 import SKEFTHawking.SpinSigmaGenerator
+-- K8b route-(i) opener (K3-lattice classification prefix): generalizes the σ=0 hyperbolic split to an
+-- indefinite residual (even_unimodular_indefinite_split_congr), iterates it three times from
+-- (rank 22, σ=−16) to a neg-definite rank-16 residual (k3_candidate_split), and exposes the interior
+-- brick interface StableNegRank16 with the consumer stub hk3_of_stable16 reducing IntCongr M k3Form.
+import SKEFTHawking.EvenUnimodularIndefiniteSplit
 import SKEFTHawking.RP4Manifold
 import SKEFTHawking.RP2PointSet
 import SKEFTHawking.RP2Manifold
