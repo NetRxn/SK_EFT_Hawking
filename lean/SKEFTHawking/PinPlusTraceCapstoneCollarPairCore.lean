@@ -41,6 +41,22 @@ an `↔`. This module continues on the two the dossier ranked as *the real geome
   top-face split `Sdᵘ(z@⊤) = φ_# cCore + outC`. That is the shape the in-tree open-cover
   subdivision engine produces, so it is the hook a future discharge of `hctrlC` will use.
 
+* §5 shows the `μ = 0` normalisation is free on the **cylinder** side only: `hz` survives
+  representative subdivision (`fundamentalClass_sdRep`) and the top slice commutes with it
+  (`topSliceB_sdRep`), so the row's `hctrlC` on `Sdᵘ z` *is* `CollarPairGeom.hctrlC` at count `μ`
+  on `z` (`hctrlC_sdRep_zero_iff_iterate`, an `↔`). No such move exists on the disk side —
+  `diskDetectChain` is fixed — and none is claimed.
+
+* **§6 is a NEW FENCE, not a route.** The in-tree `SurgeredEndDatum` carries exactly the three
+  `∂W`-containments §3 asks for (`d.topFaceCovered`, `d.sphereFaceCovered`, the bottom face), which
+  makes one instantiation of the collar-annulus refinement look free. It is settled-dead:
+  `collarAnnulusOpen_toSeamTransferSeam` *constructs*, from the row's own `hctrlC`/`hctrlH` plus a
+  refinement whose residuals sit at the OPEN-complement granularity, a verbatim
+  `CapstoneSeamTransferSeam` — the shape refuted by `seam-transfer-open-support-uninhabitable` —
+  and `not_collarAnnulusOpen_of_null` / `not_collarAnnulusOpen_row_of_null` turn it into `False`
+  under the same null/non-bounding hypotheses. Scope: ONE direction only; a refinement at the
+  coarser #210 shrunk-core granularity is NOT excluded, and §3 remains its live route.
+
 ## Fences
 
 Nothing here touches `hcoreHit`. The registry fence
@@ -55,6 +71,7 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new proj
 -/
 import Mathlib
 import SKEFTHawking.PinPlusTraceCapstoneCollarPairGeom
+import SKEFTHawking.PinPlusTraceSeamTransferNoGo
 
 open scoped Manifold
 open SKEFTHawking.BordismTheory
@@ -97,6 +114,13 @@ the concrete chain carriers are `rw`-hostile ("motive is not type correct"). -/
 theorem char2_weld {V : Type} [AddCommGroup V] [Module (ZMod 2) V] (A a b c : V) :
     A + a + (A + b) + c = a + b + c := by
   rw [show A + a + (A + b) + c = A + A + (a + b + c) from by abel, ZModModule.add_self, zero_add]
+
+/-- **Absorbing a sub-split into the leading term**: `T = B + C` and `C = A + R` give
+`T = B + A + R`. Isolated abstractly — rewriting the sub-split *inside* a concrete chain hypothesis
+trips "motive is not type correct" on these carriers. -/
+theorem split_absorb {V : Type} [AddCommGroup V] {T B C A R : V} (h1 : T = B + C)
+    (h2 : C = A + R) : T = B + A + R := by
+  rw [h1, h2, add_assoc]
 
 section
 
@@ -519,6 +543,198 @@ theorem hctrlC_iff_topSplit_iterate (z : cycles (TopCat.of s.M) (2 + 2)) (μ : �
     rfl
   rw [hiter]
   exact add_left_inj _
+
+/-! ## §5. The `μ = 0` normalisation is FREE on the cylinder side (and only there)
+
+`CollarPairGeomUnsub` / `CollarPairGeomCore` fix the subdivision count at `0`, which looks like a
+loss: the in-tree open-cover splitting engine only ever produces splits of a *subdivided* chain. §5
+shows the loss is nil on the **cylinder** side, because the fundamental cycle `z` is itself a field
+of the row and `hz` only pins its homology *class*: replacing `z` by `Sdᵘ z` keeps `hz`
+(`fundamentalClass_sdRep`) and turns the `μ = 0` top-face obligation into the count-`μ` one
+(`hctrlC_sdRep_zero_iff_iterate`, an `↔`) — because the top slice commutes with subdivision
+(`topSliceB_sdRep`, the new naturality square).
+
+⚠ **This does NOT extend to the disk side, and no claim is made that it does.** `hctrlH`'s chain is
+`diskDetectChain`, a FIXED in-tree chain with no representative freedom, so at `μ = 0` it is not in
+the engine's shape. That asymmetry — cylinder side free, disk side not — is the honest cost of the
+`μ = 0` normalisation, and it is where a future discharge of `hctrlH` has to start (see
+`PinPlusTraceSeamResidualNarrow` §3, whose split is stated at a subdivision count `μ` produced by
+the engine). Nothing here says the disk side is impossible at `μ = 0`; it says it is not reachable
+by the same representative-subdivision move. -/
+
+/-- `Sdᵘ` of a fundamental cycle, packaged back up as a cycle. -/
+noncomputable def sdRep (z : cycles (TopCat.of s.M) (2 + 2)) (μ : ℕ) :
+    cycles (TopCat.of s.M) (2 + 2) :=
+  ⟨((⇑(singularSd (TopCat.of s.M) (2 + 2)))^[μ]) (z : SingularChain (TopCat.of s.M) (2 + 2)),
+    SingularConnSquareLHSExplicit.singularSd_iterate_mem_cycles (TopCat.of s.M) 3 μ _ z.2⟩
+
+omit [PreconnectedSpace s.M] in
+/-- **`hz` survives representative subdivision.** `Sdᵘ z` still represents THE fundamental class
+(`homology_mk_singularSd_iterate`), so the `z`/`hz` pair of the row may be replaced by
+`sdRep z μ`/this at will. -/
+theorem fundamentalClass_sdRep (z : cycles (TopCat.of s.M) (2 + 2)) (μ : ℕ)
+    (hz : SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := s.M)
+      = Homology.mk (TopCat.of s.M) (2 + 2) z) :
+    SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := s.M)
+      = Homology.mk (TopCat.of s.M) (2 + 2) (sdRep z μ) :=
+  hz.trans (SingularConnSquareLHSExplicit.homology_mk_singularSd_iterate
+    (TopCat.of s.M) 3 μ (z : SingularChain (TopCat.of s.M) (2 + 2)) z.2 _)
+
+omit [PreconnectedSpace s.M] [Nonempty s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **The top slice commutes with representative subdivision** — the `slice`-instance of the
+pushforward naturality square `mapChain_singularSd_iterate`. -/
+theorem topSliceB_sdRep (z : cycles (TopCat.of s.M) (2 + 2)) (μ : ℕ) :
+    topSliceB s S hS φ hφ hφinj (sdRep z μ)
+      = ((⇑(singularSd (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)))^[μ])
+          (topSliceB s S hS φ hφ hφinj z) :=
+  mapChain_singularSd_iterate _ μ _
+
+omit [PreconnectedSpace s.M] [Nonempty s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **THE `μ = 0` NORMALISATION CERTIFICATE (cylinder side).** The five-obligation row's `hctrlC` on
+the subdivided representative `Sdᵘ z` is *exactly* `CollarPairGeom.hctrlC` at count `μ` on `z` — an
+`↔`. Together with `fundamentalClass_sdRep` (which keeps `hz`), this says the cylinder side of the
+row loses nothing by fixing `μ = 0`: subdivide the representative instead of the chain. -/
+theorem hctrlC_sdRep_zero_iff_iterate (z : cycles (TopCat.of s.M) (2 + 2)) (μ : ℕ)
+    (cCore : SingularChain (TopCat.of ↥S) (3 + 1))
+    (outC : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)) :
+    (topSliceB s S hS φ hφ hφinj (sdRep z μ)
+        = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) cCore + outC)
+      ↔ (chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)
+            (ctrlCyl s S hS φ hφ hφinj z μ)
+          = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) cCore + outC
+            + ctrlBottom s S hS φ hφ hφinj z μ) := by
+  rw [topSliceB_sdRep]
+  exact (hctrlC_iff_topSplit_iterate z μ cCore outC).symm
+
+/-! ## §6. ⛔ A FENCE: the OPEN-COMPLEMENT collar-annulus refinement is the refuted shape
+
+§3 reduces `houtPair` to a collar-annulus refinement plus three `∂W`-supports. The in-tree data
+makes one instantiation of those supports look free: `SurgeredEndDatum` carries exactly
+`d.topFaceCovered` (`fromCyl '' (topface ∖ range φ) ⊆ ∂W`), `d.sphereFaceCovered`
+(`fromHandle '' (sphere ∖ S) ⊆ ∂W`) and the bottom-face fact, and those are precisely the three
+supports `hbd_ofTransfer` consumes. **That instantiation is settled-dead.**
+
+`collarAnnulusOpen_toSeamTransferSeam` proves it by construction: a collar-annulus refinement whose
+residuals sit at the OPEN-complement granularity (`outCbd ∈ C(topface ∖ range φ)`,
+`outHbd ∈ C(sphere ∖ S)`) assembles — together with the row's own `hctrlC`/`hctrlH` — into a
+*verbatim* `CapstoneSeamTransferSeam` at `cSeam := cCore + ann`, `cHa := diskDetectChain`. That
+structure is the one refuted by `seam-transfer-open-support-uninhabitable`
+(`isEmpty_capstoneSeamTransferSeam_of_null`), so `not_collarAnnulusOpen_of_null` turns the
+refinement into `False` under the same null/non-bounding hypotheses.
+
+⚠ **Scope — do not overstate.** What is proved is the ONE direction
+`open-complement refinement ⟹ the refuted structure`. It is NOT proved that every collar-annulus
+refinement is impossible: a refinement whose residuals sit at a *strictly coarser* granularity —
+the closed-complement picture the #210 repair adopted (`topface ∖ φ '' K` for a shrunk core `K`) —
+is not excluded by anything here, and `houtPair_of_bdMem` / `houtPair_of_bdImageSubset` (§3) remain
+the live route for it. Cite this fence as "the free-looking `d.topFaceCovered` instantiation is
+closed", never as "the collar-annulus refinement is closed". -/
+
+omit [Nonempty s.M] [PreconnectedSpace s.M] [ChartedSpace (EuclideanSpace ℝ (Fin 4)) s.M] in
+/-- **THE STRUCTURAL FORCING.** A collar-annulus refinement of the two remainders at the
+OPEN-complement granularity, on top of the five-obligation row's own `hctrlC`/`hctrlH`, *is* an
+inhabitant of the refuted `CapstoneSeamTransferSeam` shape: the seam core absorbs the annulus
+(`cSeam := cCore + ann`) and the two residuals are verbatim its `wOut`/`vOut` with verbatim its
+`hwOut`/`hvOut` supports. So this refinement cannot be taken. -/
+noncomputable def collarAnnulusOpen_toSeamTransferSeam (z : cycles (TopCat.of s.M) (2 + 2))
+    {cCore ann : SingularChain (TopCat.of ↥S) (3 + 1)}
+    {outC outCbd : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)}
+    {outH outHbd : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1)}
+    (hctrlC : topSliceB s S hS φ hφ hφinj z
+      = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) cCore + outC)
+    (hctrlH : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1)
+        diskDetectChain
+      = mapChain (seamLegHa s S hS φ hφ hφinj) (3 + 1) cCore + outH)
+    (hCsplit : outC = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) ann + outCbd)
+    (hHsplit : outH = mapChain (seamLegHa s S hS φ hφ hφinj) (3 + 1) ann + outHbd)
+    (hCbd : outCbd ∈ subspaceChains
+      (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+      ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1))
+    (hHbd : outHbd ∈ subspaceChains
+      (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha)
+      ({q : D5 | ‖(q : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S) (3 + 1)) :
+    CapstoneSeamTransferSeam s S hS φ hφ hφinj z diskDetectChain where
+  cSeam := cCore + ann
+  wOut := outCbd
+  hsplit := by rw [map_add]; exact split_absorb hctrlC hCsplit
+  hwOut := hCbd
+  vOut := outHbd
+  hsplitHa := by rw [map_add]; exact split_absorb hctrlH hHsplit
+  hvOut := hHbd
+
+/-- **THE FENCE, as a refutation.** Under the same null/non-bounding hypotheses that kill the
+open-support seam-transfer shape (`isEmpty_capstoneSeamTransferSeam_of_null`), no collar-annulus
+refinement at the open-complement granularity exists on top of the row's splits. This is the reason
+`houtPair` cannot be discharged by routing its residuals through `d.topFaceCovered` /
+`d.sphereFaceCovered`, even though those are sitting in the `SurgeredEndDatum`. -/
+theorem not_collarAnnulusOpen_of_null (z : cycles (TopCat.of s.M) (2 + 2))
+    (hA : ∀ w : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1),
+      w ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+        (Set.range φ) (3 + 1) →
+      chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) 3 w = 0 →
+      ∃ b : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2),
+        chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) b = w)
+    (hO : ∀ w : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1),
+      w ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+        ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1) →
+      chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) 3 w = 0 →
+      ∃ b : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2),
+        chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) b = w)
+    (hne : ¬ ∃ b : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2),
+      chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) b
+        = topSliceB s S hS φ hφ hφinj z)
+    {cCore ann : SingularChain (TopCat.of ↥S) (3 + 1)}
+    {outC outCbd : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)}
+    {outH outHbd : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1)}
+    (hctrlC : topSliceB s S hS φ hφ hφinj z
+      = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) cCore + outC)
+    (hctrlH : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1)
+        diskDetectChain
+      = mapChain (seamLegHa s S hS φ hφ hφinj) (3 + 1) cCore + outH)
+    (hCsplit : outC = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) ann + outCbd)
+    (hHsplit : outH = mapChain (seamLegHa s S hS φ hφ hφinj) (3 + 1) ann + outHbd)
+    (hCbd : outCbd ∈ subspaceChains
+      (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+      ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1))
+    (hHbd : outHbd ∈ subspaceChains
+      (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha)
+      ({q : D5 | ‖(q : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S) (3 + 1)) : False :=
+  (PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransferSeam_of_null hA hO hne).false
+    (collarAnnulusOpen_toSeamTransferSeam z hctrlC hctrlH hCsplit hHsplit hCbd hHbd)
+
+/-- **THE FENCE AT THE ROW.** No inhabitant of the five-obligation row admits an open-complement
+collar-annulus refinement of its two remainders (under the null/non-bounding hypotheses). Stated
+directly on `CollarPairGeomCore` so the fence is citable where the temptation arises: `houtPair`'s
+residuals must NOT be routed to `d.topFaceCovered` / `d.sphereFaceCovered`. -/
+theorem not_collarAnnulusOpen_row_of_null
+    (R : CollarPairGeomCore s t S hS φ hφ hφinj cd hseam d)
+    (hA : ∀ w : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1),
+      w ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+        (Set.range φ) (3 + 1) →
+      chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) 3 w = 0 →
+      ∃ b : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2),
+        chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) b = w)
+    (hO : ∀ w : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1),
+      w ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+        ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1) →
+      chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) 3 w = 0 →
+      ∃ b : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2),
+        chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) b = w)
+    (hne : ¬ ∃ b : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2),
+      chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) b
+        = topSliceB s S hS φ hφ hφinj R.z)
+    {ann : SingularChain (TopCat.of ↥S) (3 + 1)}
+    {outCbd : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1)}
+    {outHbd : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1)}
+    (hCsplit : R.outC = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) ann + outCbd)
+    (hHsplit : R.outH = mapChain (seamLegHa s S hS φ hφ hφinj) (3 + 1) ann + outHbd)
+    (hCbd : outCbd ∈ subspaceChains
+      (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+      ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1))
+    (hHbd : outHbd ∈ subspaceChains
+      (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha)
+      ({q : D5 | ‖(q : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S) (3 + 1)) : False :=
+  not_collarAnnulusOpen_of_null R.z hA hO hne R.hctrlC R.hctrlH hCsplit hHsplit hCbd hHbd
 
 end
 
