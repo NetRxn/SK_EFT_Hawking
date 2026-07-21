@@ -486,3 +486,31 @@ genuine work — one hard transition class instead of two.
 information and this decision should be revisited *at that point* — reopen it with the obstruction
 named, not on the general appeal of fewer hard classes. Until then, a worker that proposes the
 `w`-coordinate rebuild should be pointed here.
+
+---
+
+## k7-b2-single-threshold-excision-corner — ROUTE FACT (2026-07-21, prose by design)
+
+**Not a no-go, and deliberately NOT a `KERNEL_NOGO_REGISTRY` entry.** The wt3 worker that proved
+(C0) outright identified this and correctly declined to propose a registry entry: it says one
+*excision hypothesis is unavailable*, not that a *statement is false*. Registry entries are for
+provably-false statements with a refutation/forcing theorem; this is a route constraint. Prose is
+the right home. (The discrimination itself is worth copying — not every settled obstacle is
+kernel-encodable, and mis-filing a route fact as a refutation inflates the negative frontier.)
+
+**The fact.** In the `b₂ = 22` chart-1 excision, excising `H₂(splitBOpen r, outerE; ℤ)` down to the
+chart-1 pair with a **single** threshold **fails**: the corner where `‖base‖ = r` meets
+`fiberNorm = 1/2` is not interior to `outerE` inside `splitBOpen r`, so the excision hypothesis
+cannot be met.
+
+**The fix, now kernel-checked** (`KummerSplitBChart1ExcisionInt.splitBOpen_chart1_cover` :124, with
+the forcing step `openBaseE_inter_splitBOpen_subset` :97): use **two thresholds `r' < r`**. Retain
+`chartNbhd1 r' ∩ splitBOpen r` — ⚠ note `chartNbhd1 r' ⊄ splitBOpen r`, so the intersection is
+required; the earlier prose formulation that retained `chartNbhd1 r'` alone was imprecise. The
+load-bearing set identity is `splitBOpen r ∖ chartNbhd1 r' = outerE ∩ deepChart0 r'`, every point of
+which has an open neighbourhood meeting `splitBOpen r` only inside `outerE`. Corner gone.
+
+**Housekeeping debt this created:** `KummerSplitBCoreVanishInt` now supersedes part of
+`KummerChartNbhdInt` — `relHomologyInt_splitBOpen_eq_zero_of_chart0` and `outerECyclic_of_chart_local`
+are dead weight (harmless, still green, still building). Prune when the b₂ lane closes, not before —
+they are cheap to keep and removing them mid-lane risks churn.
