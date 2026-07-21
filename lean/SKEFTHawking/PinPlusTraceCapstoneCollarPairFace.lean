@@ -8,7 +8,7 @@ refinement as settled-dead (§6 of that module: `collarAnnulusOpen_toSeamTransfe
 refuted `CapstoneSeamTransferSeam`). Its scope note left the **strictly coarser closed-complement**
 granularity — the `#210` shrunk-core picture `topface ∖ φ '' K` — open, and named it the live route.
 
-This module takes that route to the bottom. Three things happen.
+This module takes that route to the bottom. Four things happen.
 
 * **§1 — the granularity question is settled, and it is not a choice.**
   `closedEmbeddingChain_mem_iff_preimage` is an `↔`: a pushed chain lies in `C(A)` **iff** the
@@ -44,6 +44,16 @@ This module takes that route to the bottom. Three things happen.
   *because* `eM'` was chosen to contain it, and `SurgeredEndDatum` says nothing about those points.
   That containment is the sharply-named residual of `houtPair`, and it is a statement about the
   datum, not about chains.
+
+* **§5b — THE PRICE OF THE COARSE ROUTE, forced.** In a face row the shrunk core is not free data:
+  `hKoffBd` (`K` is off `∂W`) and `hseamAnn` (off-`K` is on `∂W`) pin it exactly —
+  `K_eq_compl_seamPreimage : F.K = (seamPoint ⁻¹' ∂W)ᶜ`. Consequently an *entirely interior* seam
+  makes `hseamAnn` vacuous and forces `K = univ`, at which point the row's own `houtC`/`houtH`
+  degenerate to the fenced OPEN-complement supports and `not_collarAnnulusOpen_of_null` applies. So
+  `exists_seamPoint_mem_bd_of_null`: under the null / non-bounding hypotheses **no face row has an
+  interior seam**, and `exists_seamPoint_mem_range_eM'_of_null` reads that on the datum —
+  `range d.eM'` must contain at least one seam point. That is the price of the coarse route, stated
+  positively; it does not close the route (see the scope notes on those two theorems).
 
 ## Fences
 
@@ -482,6 +492,109 @@ noncomputable def toCollarPairGeomCore :
   houtPair := (houtPair_exists F).choose_spec
   hcoreHit := F.hcoreHit
   hq0det := F.hq0det
+
+/-! ### §5b. The shrunk core is FORCED, and the seam must meet `∂W` -/
+
+omit [PreconnectedSpace s.M] in
+/-- **THE SHRUNK CORE IS NOT FREE DATA — it is determined.** `hKoffBd` says every point of `K` is a
+seam point *off* `∂W`; `hseamAnn` says every seam point off `K` is *on* `∂W`. Together they pin
+`K` exactly: `K = (seamPoint ⁻¹' ∂W)ᶜ`. So a face row does not get to *choose* its core; the choice
+is made for it by where the surgered end happens to reach into the seam. -/
+theorem K_eq_compl_seamPreimage :
+    F.K = (seamPoint s S hS φ hφ hφinj ⁻¹'
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W))ᶜ :=
+  Set.Subset.antisymm F.hKoffBd fun a ha => by
+    by_contra haK
+    exact ha (F.hseamAnn a haK)
+
+omit [PreconnectedSpace s.M] in
+/-- **AN INTERIOR SEAM MAXIMISES THE CORE.** If no seam point is a boundary point of the finished
+trace, `hseamAnn` is vacuous and the forced core is all of the attaching region — the `K = univ`
+configuration the `hcoreHit` fence `collar-pair-maximal-core-reenters-refuted-support` marks. -/
+theorem K_eq_univ_of_seam_offBd
+    (hoff : ∀ a : ↥S, (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle (a : D5)
+      ∉ ((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) :
+    F.K = Set.univ :=
+  Set.eq_univ_of_forall fun a => by
+    by_contra haK
+    exact hoff a (F.hseamAnn a haK)
+
+/-- **⛔ THE STRUCTURAL FORCING OF THE COARSE ROUTE — the surgered end must reach into the seam.**
+Under the same null / non-bounding hypotheses that kill the open-support seam-transfer shape, NO face
+row can have an entirely-interior seam. The mechanism is the forced core: an interior seam makes
+`hseamAnn` vacuous, hence `K = univ` (`K_eq_univ_of_seam_offBd`), hence the row's own `houtC`/`houtH`
+degenerate to *exactly* the fenced OPEN-complement supports (`φ '' univ = range φ`,
+`(↑·) '' univ = S`), which `collarAnnulusOpen_toSeamTransferSeam` turns into the refuted
+`CapstoneSeamTransferSeam` (with the trivial annulus `ann := 0`).
+
+⚠ **Scope.** This does NOT close the coarse route. It is the positive statement of its price: the
+route is available exactly when the surgered end `M′` genuinely reaches into the attaching region
+(`exists_seamPoint_mem_range_eM'_of_null`), and `SurgeredEndDatum` neither supplies nor forbids
+that. It is also NOT a statement about `CollarPairGeomCore`, which carries no `hseamAnn`. -/
+theorem exists_seamPoint_mem_bd_of_null
+    (hA : ∀ w : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1),
+      w ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+        (Set.range φ) (3 + 1) →
+      chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) 3 w = 0 →
+      ∃ b : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2),
+        chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) b = w)
+    (hO : ∀ w : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1),
+      w ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+        ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1) →
+      chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) 3 w = 0 →
+      ∃ b : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2),
+        chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) b = w)
+    (hne : ¬ ∃ b : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2),
+      chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) b
+        = topSliceB s S hS φ hφ hφinj F.z) :
+    ∃ a : ↥S, (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle (a : D5)
+      ∈ ((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W := by
+  by_contra hcon
+  have hK : F.K = Set.univ := F.K_eq_univ_of_seam_offBd fun a ha => hcon ⟨a, ha⟩
+  have hCbd : F.outC ∈ subspaceChains
+      (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+      ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1) := by
+    have h := F.houtC
+    rwa [hK, Set.image_univ] at h
+  have hHbd : F.outH ∈ subspaceChains
+      (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha)
+      ({q : D5 | ‖(q : EuclideanSpace ℝ (Fin 5))‖ = 1} \ S) (3 + 1) := by
+    have hSsub : S ⊆ Subtype.val '' (Set.univ : Set ↥S) :=
+      fun q hq => ⟨⟨q, hq⟩, Set.mem_univ _, rfl⟩
+    have h := F.houtH
+    rw [hK] at h
+    exact subspaceChains_mono (Set.diff_subset_diff_right hSsub) (3 + 1) h
+  have hCsplit : F.outC = mapChain (seamLegB s S hS φ hφ hφinj) (3 + 1) 0 + F.outC := by
+    rw [map_zero, zero_add]
+  have hHsplit : F.outH = mapChain (seamLegHa s S hS φ hφ hφinj) (3 + 1) 0 + F.outH := by
+    rw [map_zero, zero_add]
+  exact not_collarAnnulusOpen_of_null F.z hA hO hne F.hctrlC F.hctrlH hCsplit hHsplit hCbd hHbd
+
+/-- **THE FORCING, READ ON THE DATUM.** Combining `exists_seamPoint_mem_bd_of_null` with
+`seamPoint_mem_bd_iff`: a face row forces `range d.eM'` to contain at least one seam point. This is
+a requirement on the *surgered-end datum*, not on any chain — the sharpest available statement of
+what the coarse route needs from the geometry, and precisely the containment
+`SurgeredEndDatum.topFaceCovered` / `sphereFaceCovered` stop short of. -/
+theorem exists_seamPoint_mem_range_eM'_of_null (hφtop : ∀ a : ↥S, ((φ a).2 : ℝ) = 1)
+    (hA : ∀ w : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1),
+      w ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+        (Set.range φ) (3 + 1) →
+      chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) 3 w = 0 →
+      ∃ b : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2),
+        chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) b = w)
+    (hO : ∀ w : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1),
+      w ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+        ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1) →
+      chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) 3 w = 0 →
+      ∃ b : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2),
+        chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) b = w)
+    (hne : ¬ ∃ b : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 2),
+      chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B) (3 + 1) b
+        = topSliceB s S hS φ hφ hφinj F.z) :
+    ∃ a : ↥S, (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle (a : D5)
+      ∈ Set.range d.eM' :=
+  let ⟨a, ha⟩ := F.exists_seamPoint_mem_bd_of_null hA hO hne
+  ⟨a, (seamPoint_mem_bd_iff (d := d) hφtop a).mp ha⟩
 
 end CollarPairGeomFace
 
