@@ -113,3 +113,11 @@ FIX. Add a new entry the *first* time a pattern recurs (don't re-solve it per-in
 - **Type ascription `(h : P')` on a defeq hypothesis is a NO-OP for `linarith`** (the fvar keeps its stored type) → `have h' : P' := h`.
 - `squeeze_zero_norm`'s bound is named `a` (not `g`); `ContinuousAt.min` doesn't exist — use `Filter.Tendsto.min`.
 - **Junk-value bonus**: `1/0 = 0` makes radial flow scalars like `min(1/‖w‖, 2−t)` total with the CORRECT value at the fiber origin; continuity there via `squeeze_zero_norm`.
+
+## Q-side transfer batch (2026-07-21, wt3 #300)
+
+- **Stale-import snapshots**: after rebuilding a dependency's olean, an already-open file's LSP worker keeps the OLD import environment — apparent type mismatches that survive touches. Only `lean_build` (LSP restart) clears them; do NOT debug those "errors" as real.
+- **TopCat carrier defs**: keep the carrier a `def` (not `abbrev` — eager unfolding breaks `mapSimplex` unification) and build `C(X, X)` maps from functions + continuity lemmas pre-proven at the SUBTYPE level (instance resolution won't unfold `↑Xtop` for `SMul` etc.).
+- **`fin_cases` + simp/rw don't mix**: `fin_cases` produces `⟨0,⋯⟩`-form Fin literals that keyed matching won't unify with OfNat-literal lemmas — use match-based theorem definitions (`| 0, 1 => by rw [...]`) or `exact`-dispatch.
+- **`push_cast` on Circle-coe inverses**: normalizes `↑(z⁻¹)` to `(↑z)⁻¹` in the goal — normalize hypotheses too (`push_cast at h ⊢`) or `linarith` atoms mismatch.
+- Pin renames: `Prod.dist_eq` named args are `x`/`y`; `ContinuousAt.max/min` absent — `Filter.Tendsto.max/min`; `div_le_div_iff` → `div_le_div_iff₀`; `le_or_lt` → `le_total`.
