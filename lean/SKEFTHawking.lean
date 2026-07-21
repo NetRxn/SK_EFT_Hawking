@@ -4758,6 +4758,7 @@ import SKEFTHawking.PinPlusTraceCapstoneCorrector
 import SKEFTHawking.PinPlusTraceCapstoneCollarPair
 import SKEFTHawking.SingularSubdivisionPushNatural
 import SKEFTHawking.PinPlusTraceCapstoneCollarPairGeom
+import SKEFTHawking.PinPlusTraceCapstoneCollarPairCore
 import SKEFTHawking.KTCompletenessTransfer
 import SKEFTHawking.KTCompletenessMVCover
 import SKEFTHawking.KTCompletenessMVHtpy
