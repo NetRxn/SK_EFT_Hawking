@@ -40,7 +40,7 @@ namespace SKEFTHawking.SphereProdCrossWitnessInt
 
 open SKEFTHawking.SingularCohomologyInt
 open SKEFTHawking.SingularHomologyInt
-open SKEFTHawking.SingularFunctorialityInt (mapChainInt mapChainInt_comp chainBoundary_mapChainInt)
+open SKEFTHawking.SingularFunctorialityInt
 open SKEFTHawking.SingularCohomologyFunctorialityInt (cochainPullbackInt cochainPullbackInt_cup
   cochainPullbackInt_mem_ker kronecker_cochainPullbackInt coboundary_cochainPullbackInt
   cohomologyPullbackInt cohomologyPullbackInt_mk)
@@ -55,7 +55,9 @@ open SKEFTHawking.SingularProdContractibleInt (ProdSp prodFst)
 open SKEFTHawking.SphereProdHOneInt (coverA coverB coverAB_cover)
 open SKEFTHawking.SphereProdHTwoInt (SphSph sndCM)
 open SKEFTHawking.SingularMayerVietorisLES (ambIncl seamHomeo)
-open SKEFTHawking.SingularRelHomologyInt (chainIncl)
+open SKEFTHawking.SingularMayerVietorisLESInt
+open SKEFTHawking.SingularRelHomologyInt
+open SKEFTHawking.SingularMvDeltaPartitionInt (mvDelta_cover_partition zB_mem_relCycleLift)
 open SKEFTHawking.SingularExcisionIso (restr)
 open SKEFTHawking.SphereProdCrossInt (alphaOf betaOf)
 open SKEFTHawking.SphereProdStokesPeel (cochainPullbackInt_comp cochainPullbackInt_id
@@ -513,5 +515,157 @@ theorem etaS_pairing_eq_hemi :
     show (Submodule.Quotient.mk ⟨hemiDiff, LinearMap.mem_ker.mpr hemiDiff_cycle⟩ :
         Homology (Sph 2) 2) = hemiClass from rfl, kroneckerHInt_xS] at hclass
   exact hclass.symm
+
+/-! ## §6. The conditional headline: `hcross_pm` from the hemisphere-class unit -/
+
+open SKEFTHawking.SphereProdHFourInt (sphereProdFundClassInt sphereProdHFourEquivInt
+  sphereProdCohomFourEquivInt sphereProdCohomFourEquivInt_apply interFormInt_honest
+  coverInterHThreeEquivInt sphereProdIntFundClassHonest)
+open SKEFTHawking.SingularCoverPartitionAmbientInt (exists_cover_partition_ambient)
+
+/-- Right-subtraction unfolding for the pairing. -/
+theorem kronecker_sub_right' {X : TopCat} {n : ℕ} (f : SingularCochainInt X n)
+    (c d : SingularChainInt X n) :
+    kronecker f (c - d) = kronecker f c - kronecker f d := by
+  have h : c - d = c + (-1 : ℤ) • d := by rw [neg_one_smul, ← sub_eq_add_neg]
+  rw [h, kronecker_add_right, kronecker_smul_right, neg_one_smul, ← sub_eq_add_neg]
+
+/-- **Cocycle pairings descend to homology, `k`-scaled form**: if `[c₁] = k • [c₂]` then
+`⟨w, c₁⟩ = k · ⟨w, c₂⟩` for any cocycle `w`. -/
+theorem kronecker_homologous {X : TopCat} {n : ℕ} (w : SingularCochainInt X n)
+    (hw : coboundaryₗ X n w = 0) (c₁ c₂ : cycles X n) (k : ℤ)
+    (h : Homology.mk X n c₁ = k • Homology.mk X n c₂) :
+    kronecker w c₁.1 = k * kronecker w c₂.1 := by
+  have hdiff : Homology.mk X n (c₁ - k • c₂) = 0 := by
+    rw [show Homology.mk X n (c₁ - k • c₂)
+        = Homology.mk X n c₁ - k • Homology.mk X n c₂ from rfl, h, sub_self]
+  have hmem := (Submodule.Quotient.mk_eq_zero _).mp hdiff
+  have hrange : (c₁ - k • c₂ : cycles X n).1 ∈ boundaries X n := Submodule.mem_comap.mp hmem
+  obtain ⟨d, hd⟩ := hrange
+  have hzero : kronecker w (c₁.1 - k • c₂.1) = 0 := by
+    rw [show (c₁.1 - k • c₂.1 : SingularChainInt X n) = (c₁ - k • c₂ : cycles X n).1 from rfl,
+      ← hd, ← kronecker_coboundary_chainBoundary,
+      show coboundary X n w = coboundaryₗ X n w from rfl, hw]
+    simp [kronecker_apply]
+  rw [kronecker_sub_right', kronecker_smul_right, sub_eq_zero] at hzero
+  rw [hzero, smul_eq_mul]
+
+theorem isOpen_coverA_vN : IsOpen (coverA vN) := isOpen_univ.prod isOpen_compl_singleton
+
+theorem isOpen_coverB_vN : IsOpen (coverB vN) := isOpen_univ.prod isOpen_compl_singleton
+
+theorem coverAB_union : coverA vN ∪ coverB vN = Set.univ := by
+  have h := coverAB_cover vN
+  rwa [Set.biUnion_pair, isOpen_coverA_vN.interior_eq, isOpen_coverB_vN.interior_eq] at h
+
+set_option maxRecDepth 4000 in
+/-- The MV coordinate of the fundamental class is `1` — the normalization
+`sphereProdFundClassInt := (coverInterHThreeEquivInt ∘ mvDeltaInt).symm 1`, restated at the
+witness parameter `vN` (definitionally `basePoint 2`). Metaprogram-depth option only (the
+`hFourToInt` defeq chain is recursion-deep, exactly as in `SphereProdHFourInt`); no heartbeat
+change, no proof-content change. -/
+theorem coverInterHThreeEquivInt_mvDelta_fundClass :
+    coverInterHThreeEquivInt vN
+        (mvDeltaInt (coverA vN) (coverB vN) 3 (coverAB_cover vN) sphereProdFundClassInt) = 1 := by
+  have h1 : coverInterHThreeEquivInt vN
+      (mvDeltaInt (coverA vN) (coverB vN) 3 (coverAB_cover vN) sphereProdFundClassInt)
+      = SKEFTHawking.SphereProdHFourInt.hFourToInt sphereProdFundClassInt :=
+    (SKEFTHawking.SphereProdHFourInt.hFourToInt_apply sphereProdFundClassInt).symm
+  rw [h1, show SKEFTHawking.SphereProdHFourInt.hFourToInt sphereProdFundClassInt
+      = sphereProdHFourEquivInt sphereProdFundClassInt from rfl]
+  exact sphereProdHFourEquivInt.apply_symm_apply 1
+
+/-- **THE ±-SIGN CROSS VALUE, conditional on the hemisphere unit** (`hcross_pm`-of-hemi). If the
+hemisphere-difference class pairs to a unit against the dual generator (`[D_B − D_A] = ±[S²]` in
+coordinates), then the Eilenberg–Zilber cross value `⟨α ∪ β, [S²×S²]⟩` at the witness generator
+`xS` is a UNIT (`±1`). The ℤ-divisibility of the seam pairing closes everything else: the peel
+value on the explicit cross cycle is `(e γ)·V` with `V` the cross value, so a unit peel value
+forces `V = ±1` — no seam-class or cross-class coordinate computation is needed. -/
+theorem hcross_pm_of_hemiUnit (hHemi : IsUnit (topSphereIsoInt 1 hemiClass)) :
+    IsUnit (interFormInt sphereProdIntFundClassHonest (alphaOf xS) (betaOf xS)) := by
+  -- the partitioned representative of the fundamental class
+  obtain ⟨zA, zB, hz_cyc, hrep⟩ := exists_cover_partition_ambient (coverA vN) (coverB vN)
+    isOpen_coverA_vN isOpen_coverB_vN coverAB_union (n := 3) sphereProdFundClassInt
+  have hliftB : zB ∈ relCycleLift (restr (coverA vN) (coverB vN)) 3 :=
+    zB_mem_relCycleLift (coverA vN) (coverB vN) 3 zA zB hz_cyc
+  have hz_cyc' : chainIncl (coverB vN) 4 zB + chainIncl (coverA vN) 4 zA
+      ∈ cycles SphSph 4 := by rwa [add_comm]
+  have hliftA : zA ∈ relCycleLift (restr (coverB vN) (coverA vN)) 3 :=
+    zB_mem_relCycleLift (coverB vN) (coverA vN) 3 zB zA hz_cyc'
+  -- the assembly seam cochain and the transported seam chain
+  set W : SingularCochainInt (sub (X := SphSph) (coverA vN ∩ coverB vN)) 3 :=
+    cup (cochainPullbackInt (ambIncl (coverA vN ∩ coverB vN)) 2 aC) dSeam with hWdef
+  have hWcocycle : coboundaryₗ (sub (X := SphSph) (coverA vN ∩ coverB vN)) 3 W = 0 := by
+    rw [hWdef]
+    exact LinearMap.mem_ker.mp (cup_cocycle _ _
+      (LinearMap.mem_ker.mp (cochainPullbackInt_mem_ker (ambIncl (coverA vN ∩ coverB vN))
+        ⟨aC, cochainPullbackInt_mem_ker _ wSc⟩))
+      (seam_difference_cocycle (coverA vN) (coverB vN) bC (uLeg vN) (uLeg (antipode vN))
+        (hbLeg vN) (hbLeg (antipode vN))))
+  set tB : SingularChainInt (sub (X := SphSph) (coverA vN ∩ coverB vN)) 3 :=
+    mapChainInt ⟨seamHomeo (coverA vN) (coverB vN),
+      (seamHomeo (coverA vN) (coverB vN)).continuous⟩ 3
+      (boundaryExtract (restr (coverA vN) (coverB vN)) 3 ⟨zB, hliftB⟩) with htBdef
+  have htB_cyc : tB ∈ cycles (sub (X := SphSph) (coverA vN ∩ coverB vN)) 3 := by
+    show chainBoundary _ 2 tB = 0
+    rw [htBdef, chainBoundary_mapChainInt,
+      show chainBoundary (sub (restr (coverA vN) (coverB vN))) 2
+          (boundaryExtract (restr (coverA vN) (coverB vN)) 3 ⟨zB, hliftB⟩) = 0 from
+        boundaryExtract_mem_cyclesInt (restr (coverA vN) (coverB vN)) 3 ⟨zB, hliftB⟩,
+      map_zero]
+  set τc : cycles (sub (X := SphSph) (coverA vN ∩ coverB vN)) 3 := ⟨tB, htB_cyc⟩ with hτcdef
+  set γc : cycles (sub (X := SphSph) (coverA vN ∩ coverB vN)) 3 :=
+    ⟨gChain, LinearMap.mem_ker.mpr gChain_cycle⟩ with hγcdef
+  set e := coverInterHThreeEquivInt vN with hedef
+  -- (i) the transported seam class has coordinate 1
+  have hδ : mvDeltaInt (coverA vN) (coverB vN) 3 (coverAB_cover vN) sphereProdFundClassInt
+      = Homology.mk _ 3 τc := by
+    rw [hrep, mvDelta_cover_partition (coverA vN) (coverB vN) 3 (coverAB_cover vN) zA zB hz_cyc,
+      seamHomologyEquivInt_apply, Homology.mapInt_mk]
+    rfl
+  have heτ : e (Homology.mk _ 3 τc) = 1 := by
+    rw [← hδ]
+    exact coverInterHThreeEquivInt_mvDelta_fundClass
+  -- (ii) the cross-cycle class is `(e γ)` times the seam class
+  have hγ : Homology.mk _ 3 γc = (e (Homology.mk _ 3 γc)) • Homology.mk _ 3 τc := by
+    have h1 : Homology.mk _ 3 τc = e.symm 1 := by rw [← heτ, LinearEquiv.symm_apply_apply]
+    rw [h1, show (e (Homology.mk _ 3 γc)) • e.symm 1
+        = e.symm ((e (Homology.mk _ 3 γc)) • 1) from (map_smul e.symm _ _).symm,
+      smul_eq_mul, mul_one, LinearEquiv.symm_apply_apply]
+  -- (iii) the value transfer
+  have hval : kronecker W gChain = (e (Homology.mk _ 3 γc)) * kronecker W tB :=
+    kronecker_homologous W hWcocycle γc τc _ hγ
+  -- (iv) the peel value is the hemisphere coordinate — a unit
+  have hpeel : kronecker W gChain = topSphereIsoInt 1 hemiClass := by
+    rw [hWdef]
+    exact F_gChain.trans etaS_pairing_eq_hemi
+  have hunit_tB : IsUnit (kronecker W tB) := by
+    have : IsUnit ((e (Homology.mk _ 3 γc)) * kronecker W tB) := by
+      rw [← hval, hpeel]; exact hHemi
+    exact isUnit_of_mul_isUnit_right this
+  -- (v) the value chain: the cross value IS the seam pairing
+  have hVal1 : interFormInt sphereProdIntFundClassHonest (alphaOf xS) (betaOf xS)
+      = kroneckerHInt 4 (cupH24 (alphaOf xS) (betaOf xS)) sphereProdFundClassInt := by
+    rw [interFormInt_honest, sphereProdCohomFourEquivInt_apply]
+  have hVal2 : cupH24 (alphaOf xS) (betaOf xS)
+      = Cohomology.mk SphSph 4 ⟨cup aC bC, cup_cocycle aC bC
+          (LinearMap.mem_ker.mp (cochainPullbackInt_mem_ker _ wSc))
+          (LinearMap.mem_ker.mp (cochainPullbackInt_mem_ker _ wSc))⟩ := by
+    rw [← mk_aC, ← mk_bC]
+    exact cupH24_mk_mk _ _
+  have hVal3 : kroneckerHInt 4 (cupH24 (alphaOf xS) (betaOf xS)) sphereProdFundClassInt
+      = kronecker (cup aC bC) (chainIncl (coverA vN) 4 zA + chainIncl (coverB vN) 4 zB) := by
+    rw [hVal2, hrep]
+    exact kroneckerHInt_mk_mk _ _
+  have hVal4 := kronecker_cup_cover_seam_cup_form (coverA vN) (coverB vN) (p := 2) (q := 1)
+    aC bC aC_cocycle (uLeg vN) (uLeg (antipode vN)) (hbLeg vN) (hbLeg (antipode vN))
+    zA zB hz_cyc hliftB hliftA
+  have hfinal : interFormInt sphereProdIntFundClassHonest (alphaOf xS) (betaOf xS)
+      = kronecker W tB := by
+    refine (hVal1.trans hVal3).trans (hVal4.trans ?_)
+    rw [show ((-1 : ℤ)) ^ 2 = 1 by norm_num, one_mul]
+    rfl
+  rw [hfinal]
+  exact hunit_tB
 
 end SKEFTHawking.SphereProdCrossWitnessInt
