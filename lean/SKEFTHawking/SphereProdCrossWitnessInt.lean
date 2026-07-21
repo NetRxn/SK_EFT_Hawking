@@ -1,0 +1,310 @@
+/-
+# Phase 5q.H — the S²×S² cross-value WITNESS: `hcross_pm` reduced to the hemisphere class
+
+The geometric slices of the hcross MV cup–Stokes peel (task #289; B2's generic engine is
+`SphereProdStokesPeel`, the cocycle-generic circle peel is `TorusCrossPeelGen`, the partition input
+is `SingularCoverPartitionAmbientInt`). This module builds the concrete S²-witness data and
+executes the full value chain:
+
+* §1 — the UCT-dual **generator pair** on `S²`: the class `xS` with `⟨xS, ·⟩ = topSphereIsoInt 1`
+  (Kronecker-dual to the computed `H₂(S²;ℤ) ≅ ℤ`), a cocycle representative `wSc`, a fundamental
+  cycle representative `zSc`, and the normalization `⟨wSc, zSc⟩ = 1`.
+* §2 — **primitives on the punctured caps**: `H²(S²∖{u};ℤ) = 0` (punctured acyclicity + UCT), so
+  the restriction of `wSc` to each cap has an explicit 1-cochain primitive.
+* §3 — the **polar product-cover leg data** on `S²×S²` (cover on the SECOND factor): the pullback
+  cochains `aC = fst*wSc`, `bC = snd*wSc`, and the leg-primitive equations
+  `ι_leg* bC = δ(legSnd* ω)` the seam assembly consumes.
+* §4 — the **equator cross map** `S²×S¹ → seam` and the factorization of the transported seam
+  difference through the second projection: `crossJ* d = snd* ηS` with `ηS` a 1-COCYCLE on `S¹`.
+* §5 — the **peel evaluation**: `F(g) = ⟨ηS, [S¹-cycle]⟩ · ⟨wSc, zSc⟩ = ⟨ηS, t1chain⟩`, and the
+  **filling argument**: `⟨ηS, t1chain⟩ = ⟨wSc, hemiDiff⟩` where `hemiDiff` is the explicit
+  hemisphere-difference 2-cycle on `S²` (cap fillings of the pushed equator loop, which exist by
+  `H₁(S²∖{u};ℤ) = 0`).
+* §6 — **the conditional headline** `hcross_pm_of_hemiUnit`: if the hemisphere-difference class
+  pairs to a UNIT against `xS` (the ONE remaining geometric fact — `[D_B − D_A] = ±[S²]`), then
+  `interFormInt fc (alphaOf xS) (betaOf xS)` is a unit — the ±-sign Eilenberg–Zilber cross value.
+  The ℤ-divisibility closes everything else: `F(g) = (e γ)·F(t_B)` with `F(t_B)` the hcross value
+  (coordinate-1 seam class) forces BOTH factors to be units once `F(g) = ±1`.
+
+Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom.
+-/
+import Mathlib
+import SKEFTHawking.SphereProdCrossInt
+import SKEFTHawking.SphereProdStokesPeel
+import SKEFTHawking.TorusCrossPeelGen
+import SKEFTHawking.KummerT4GramCross
+import SKEFTHawking.SingularCoverPartitionAmbientInt
+import SKEFTHawking.SingularSphereMiddleInt
+
+namespace SKEFTHawking.SphereProdCrossWitnessInt
+
+open SKEFTHawking.SingularCohomologyInt
+open SKEFTHawking.SingularHomologyInt
+open SKEFTHawking.SingularFunctorialityInt (mapChainInt mapChainInt_comp chainBoundary_mapChainInt)
+open SKEFTHawking.SingularCohomologyFunctorialityInt (cochainPullbackInt cochainPullbackInt_cup
+  cochainPullbackInt_mem_ker kronecker_cochainPullbackInt coboundary_cochainPullbackInt
+  cohomologyPullbackInt cohomologyPullbackInt_mk)
+open SKEFTHawking.SingularAbsoluteUCInt (ucIntEquivOfFree ucIntEquivOfFree_apply)
+open SKEFTHawking.SingularSphereAcyclic (Sph Apunc antipode ne_antipode)
+open SKEFTHawking.SingularSphereHomologyInt (punctured_sphere_homology_trivialInt)
+open SKEFTHawking.SingularSphereMiddleInt (sphere_homology_middleInt)
+open SKEFTHawking.SingularLineMinusPointInt (topSphereIsoInt)
+open SKEFTHawking.SingularSphereBottom (basePoint)
+open SKEFTHawking.SingularRelativeHomologyMod2 (sub)
+open SKEFTHawking.SingularProdContractibleInt (ProdSp prodFst)
+open SKEFTHawking.SphereProdHOneInt (coverA coverB coverAB_cover)
+open SKEFTHawking.SphereProdHTwoInt (SphSph sndCM)
+open SKEFTHawking.SingularMayerVietorisLES (ambIncl seamHomeo)
+open SKEFTHawking.SingularRelHomologyInt (chainIncl)
+open SKEFTHawking.SingularExcisionIso (restr)
+open SKEFTHawking.SphereProdCrossInt (alphaOf betaOf)
+open SKEFTHawking.SphereProdStokesPeel (cochainPullbackInt_comp cochainPullbackInt_id
+  seamCochainOf interCommMap seam_difference_cocycle kronecker_cup_cover_seam_cup_form)
+
+/-! ## §1. The UCT-dual generator pair on `S²` -/
+
+/-- `H₁(S²;ℤ) = 0` — the below-top vanishing instance the degree-2 UCT consumes. -/
+instance : Subsingleton (Homology (Sph 2) 1) :=
+  subsingleton_of_forall_eq 0 fun x => sphere_homology_middleInt 1 2 one_pos one_lt_two x
+
+instance : Module.Free ℤ (Homology (Sph 2) 1) := Module.Free.of_subsingleton ℤ _
+
+/-- The `(0 + 1)`-keyed form the UCT instance search asks for. -/
+instance : Module.Free ℤ (Homology (Sph 2) (0 + 1)) :=
+  inferInstanceAs (Module.Free ℤ (Homology (Sph 2) 1))
+
+/-- **The dual generator class** `xS ∈ H²(S²;ℤ)`: the UCT preimage of the computed coordinate
+functional `topSphereIsoInt 1 : H₂(S²;ℤ) ≅ ℤ`. -/
+noncomputable def xS : Cohomology (Sph 2) 2 :=
+  (ucIntEquivOfFree (Sph 2) 0).symm (topSphereIsoInt 1).toLinearMap
+
+/-- The defining pairing rule: `⟨xS, h⟩ = topSphereIsoInt 1 h` for every `h : H₂(S²;ℤ)`. -/
+theorem kroneckerHInt_xS (h : Homology (Sph 2) 2) :
+    kroneckerHInt 2 xS h = topSphereIsoInt 1 h := by
+  have hx : ucIntEquivOfFree (Sph 2) 0 xS = (topSphereIsoInt 1).toLinearMap :=
+    (ucIntEquivOfFree (Sph 2) 0).apply_symm_apply _
+  rw [ucIntEquivOfFree_apply] at hx
+  exact LinearMap.congr_fun hx h
+
+/-- A cocycle representative of `xS`. -/
+noncomputable def wSc : LinearMap.ker (coboundaryₗ (Sph 2) 2) :=
+  (Submodule.Quotient.mk_surjective _ xS).choose
+
+theorem wSc_spec : Cohomology.mk (Sph 2) 2 wSc = xS :=
+  (Submodule.Quotient.mk_surjective _ xS).choose_spec
+
+theorem wSc_cocycle : coboundaryₗ (Sph 2) 2 wSc.1 = 0 := wSc.2
+
+/-- A fundamental-cycle representative: a cycle whose class is `(topSphereIsoInt 1).symm 1`. -/
+noncomputable def zSc : cycles (Sph 2) 2 :=
+  (Submodule.Quotient.mk_surjective _ ((topSphereIsoInt 1).symm 1)).choose
+
+theorem zSc_spec : Homology.mk (Sph 2) 2 zSc = (topSphereIsoInt 1).symm 1 :=
+  (Submodule.Quotient.mk_surjective _ ((topSphereIsoInt 1).symm 1)).choose_spec
+
+/-- **The witness normalization** `⟨wSc, zSc⟩ = 1`. -/
+theorem kronecker_wSc_zSc : kronecker wSc.1 zSc.1 = 1 := by
+  have h := kroneckerHInt_mk_mk wSc zSc
+  rw [show (Submodule.Quotient.mk wSc : Cohomology (Sph 2) 2) = Cohomology.mk (Sph 2) 2 wSc
+      from rfl, wSc_spec,
+    show (Submodule.Quotient.mk zSc : Homology (Sph 2) 2) = Homology.mk (Sph 2) 2 zSc from rfl,
+    zSc_spec, kroneckerHInt_xS] at h
+  rw [← h, LinearEquiv.apply_symm_apply]
+
+/-! ## §2. Primitives on the punctured caps: `H²(S²∖{u};ℤ) = 0` -/
+
+section Punctured
+
+variable (u : ↑(Sph 2))
+
+instance : Subsingleton (Homology (Apunc 2 u) 1) :=
+  subsingleton_of_forall_eq 0 fun x => punctured_sphere_homology_trivialInt 0 x
+
+instance : Module.Free ℤ (Homology (Apunc 2 u) 1) := Module.Free.of_subsingleton ℤ _
+
+instance : Module.Free ℤ (Homology (Apunc 2 u) (0 + 1)) :=
+  inferInstanceAs (Module.Free ℤ (Homology (Apunc 2 u) 1))
+
+/-- `H²(S²∖{u};ℤ) = 0`: the UCT sends it into the dual of the (trivial) `H₂` of the punctured
+sphere. -/
+theorem cohomology_two_punctured_eq_zero (ω : Cohomology (Apunc 2 u) 2) : ω = 0 := by
+  have h0 : ucIntEquivOfFree (Apunc 2 u) 0 ω = 0 := by
+    refine LinearMap.ext fun h => ?_
+    rw [punctured_sphere_homology_trivialInt 1 h, map_zero, LinearMap.zero_apply]
+  calc ω = (ucIntEquivOfFree (Apunc 2 u) 0).symm (ucIntEquivOfFree (Apunc 2 u) 0 ω) :=
+        ((ucIntEquivOfFree (Apunc 2 u) 0).symm_apply_apply ω).symm
+    _ = 0 := by rw [h0, map_zero]
+
+/-- **Primitive extraction**: every 2-cocycle on the punctured sphere is an explicit coboundary. -/
+theorem exists_primitive_two_punctured (c : SingularCochainInt (Apunc 2 u) 2)
+    (hc : coboundaryₗ (Apunc 2 u) 2 c = 0) :
+    ∃ ω₁ : SingularCochainInt (Apunc 2 u) 1, coboundaryₗ (Apunc 2 u) 1 ω₁ = c := by
+  have hcls : Cohomology.mk (Apunc 2 u) 2 ⟨c, LinearMap.mem_ker.mpr hc⟩ = 0 :=
+    cohomology_two_punctured_eq_zero u _
+  have hmem := (Submodule.Quotient.mk_eq_zero _).mp hcls
+  have hrange : c ∈ LinearMap.range (coboundaryₗ (Apunc 2 u) 1) := by
+    have := Submodule.mem_comap.mp hmem
+    exact this
+  obtain ⟨ω₁, hω₁⟩ := hrange
+  exact ⟨ω₁, hω₁⟩
+
+end Punctured
+
+/-! ## §3. The polar product-cover leg data on `S²×S²` -/
+
+/-- The ambient `a`-cochain: the first-factor pullback of the witness cocycle — a cocycle
+representative of `alphaOf xS`. -/
+noncomputable def aC : SingularCochainInt SphSph 2 :=
+  cochainPullbackInt (prodFst (Sph 2) (Sph 2)) 2 wSc.1
+
+/-- The ambient `b`-cochain: the second-factor pullback — a cocycle representative of
+`betaOf xS`. -/
+noncomputable def bC : SingularCochainInt SphSph 2 :=
+  cochainPullbackInt sndCM 2 wSc.1
+
+theorem aC_cocycle : coboundaryₗ SphSph 2 aC = 0 :=
+  LinearMap.mem_ker.mp (cochainPullbackInt_mem_ker (prodFst (Sph 2) (Sph 2)) wSc)
+
+theorem bC_cocycle : coboundaryₗ SphSph 2 bC = 0 :=
+  LinearMap.mem_ker.mp (cochainPullbackInt_mem_ker sndCM wSc)
+
+/-- `[aC] = alphaOf xS` — the cocycle representative realizes the α-shape class. -/
+theorem mk_aC : Cohomology.mk SphSph 2 ⟨aC, cochainPullbackInt_mem_ker _ wSc⟩ = alphaOf xS := by
+  rw [alphaOf, ← wSc_spec]
+  rfl
+
+/-- `[bC] = betaOf xS`. -/
+theorem mk_bC : Cohomology.mk SphSph 2 ⟨bC, cochainPullbackInt_mem_ker _ wSc⟩ = betaOf xS := by
+  rw [betaOf, ← wSc_spec]
+  rfl
+
+/-- The inclusion of a punctured cap into the sphere. -/
+noncomputable def puncIncl (u : ↑(Sph 2)) : C(↑(Apunc 2 u), ↑(Sph 2)) :=
+  ⟨Subtype.val, continuous_subtype_val⟩
+
+/-- The second-coordinate collapse of a product-cover leg onto its punctured cap. -/
+noncomputable def legSnd (u : ↑(Sph 2)) :
+    C(↑(sub (X := SphSph) (coverA u)), ↑(Apunc 2 u)) :=
+  ⟨fun p => ⟨p.1.2, p.2.2⟩,
+    Continuous.subtype_mk (continuous_snd.comp continuous_subtype_val) _⟩
+
+/-- The cap primitive: `δ(omegaCap u) = (puncIncl u)* wSc`. -/
+noncomputable def omegaCap (u : ↑(Sph 2)) : SingularCochainInt (Apunc 2 u) 1 :=
+  (exists_primitive_two_punctured u (cochainPullbackInt (puncIncl u) 2 wSc.1)
+    (LinearMap.mem_ker.mp (cochainPullbackInt_mem_ker (puncIncl u) wSc))).choose
+
+theorem omegaCap_spec (u : ↑(Sph 2)) :
+    coboundaryₗ (Apunc 2 u) 1 (omegaCap u) = cochainPullbackInt (puncIncl u) 2 wSc.1 :=
+  (exists_primitive_two_punctured u (cochainPullbackInt (puncIncl u) 2 wSc.1)
+    (LinearMap.mem_ker.mp (cochainPullbackInt_mem_ker (puncIncl u) wSc))).choose_spec
+
+/-- The leg primitive: the second-coordinate pullback of the cap primitive. -/
+noncomputable def uLeg (u : ↑(Sph 2)) : SingularCochainInt (sub (X := SphSph) (coverA u)) 1 :=
+  cochainPullbackInt (legSnd u) 1 (omegaCap u)
+
+/-- **The leg-primitive equation** `ι_leg* bC = δ(uLeg u)` — the `hb` input of the seam
+assembly, at every punctured cap `u`. -/
+theorem hbLeg (u : ↑(Sph 2)) :
+    cochainPullbackInt (ambIncl (coverA u)) 2 bC
+      = coboundaryₗ (sub (X := SphSph) (coverA u)) 1 (uLeg u) := by
+  rw [bC, cochainPullbackInt_comp,
+    show sndCM.comp (ambIncl (coverA u)) = (puncIncl u).comp (legSnd u) from
+      ContinuousMap.ext fun p => rfl,
+    ← cochainPullbackInt_comp]
+  show cochainPullbackInt (legSnd u) 2 (cochainPullbackInt (puncIncl u) 2 wSc.1)
+    = coboundary (sub (X := SphSph) (coverA u)) 1 (cochainPullbackInt (legSnd u) 1 (omegaCap u))
+  rw [coboundary_cochainPullbackInt,
+    show coboundary (Apunc 2 u) 1 (omegaCap u) = coboundaryₗ (Apunc 2 u) 1 (omegaCap u) from rfl,
+    omegaCap_spec]
+
+/-! ## §4. The equator cross map `S²×S¹ → seam` -/
+
+/-- The polar puncture point of the second factor: the cover parameter `v = basePoint 2`. -/
+noncomputable def vN : ↑(Sph 2) := basePoint 2
+
+/-- The underlying equator vector `(0, s₀, s₁) ∈ ℝ³` of a circle point `s`. -/
+noncomputable def eqVec (s : ↑(Sph 1)) : EuclideanSpace ℝ (Fin 3) :=
+  ((s : EuclideanSpace ℝ (Fin 2)) 0) • EuclideanSpace.single 1 (1 : ℝ)
+    + ((s : EuclideanSpace ℝ (Fin 2)) 1) • EuclideanSpace.single 2 (1 : ℝ)
+
+theorem eqVec_apply_zero (s : ↑(Sph 1)) : eqVec s 0 = 0 := by
+  simp [eqVec]
+
+theorem eqVec_apply_one (s : ↑(Sph 1)) : eqVec s 1 = (s : EuclideanSpace ℝ (Fin 2)) 0 := by
+  simp [eqVec]
+
+theorem eqVec_apply_two (s : ↑(Sph 1)) : eqVec s 2 = (s : EuclideanSpace ℝ (Fin 2)) 1 := by
+  simp [eqVec]
+
+theorem eqVec_mem_sphere (s : ↑(Sph 1)) :
+    eqVec s ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1 := by
+  have hs : ‖(s : EuclideanSpace ℝ (Fin 2))‖ = 1 := mem_sphere_zero_iff_norm.mp s.2
+  rw [EuclideanSpace.norm_eq, Fin.sum_univ_two] at hs
+  rw [mem_sphere_zero_iff_norm, EuclideanSpace.norm_eq, Fin.sum_univ_three,
+    eqVec_apply_zero, eqVec_apply_one, eqVec_apply_two]
+  simpa using hs
+
+/-- **The equatorial embedding** `S¹ ↪ S²`, `(s₀, s₁) ↦ (0, s₀, s₁)`. -/
+noncomputable def eqIncl : C(↑(Sph 1), ↑(Sph 2)) :=
+  ⟨fun s => ⟨eqVec s, eqVec_mem_sphere s⟩, by
+    refine Continuous.subtype_mk ?_ _
+    unfold eqVec
+    fun_prop⟩
+
+/-- The equator avoids the north pole (`first coordinate 0 ≠ 1`). -/
+theorem eqIncl_ne_vN (s : ↑(Sph 1)) : eqIncl s ≠ vN := by
+  intro h
+  have h0 : eqVec s 0 = ((vN : ↑(Sph 2)) : EuclideanSpace ℝ (Fin 3)) 0 :=
+    congrArg (fun p : ↑(Sph 2) => (p : EuclideanSpace ℝ (Fin 3)) 0) h
+  have hv : ((vN : ↑(Sph 2)) : EuclideanSpace ℝ (Fin 3)) 0 = 1 := by
+    show (EuclideanSpace.single 0 (1 : ℝ) : EuclideanSpace ℝ (Fin 3)) 0 = 1
+    simp
+  rw [eqVec_apply_zero, hv] at h0
+  norm_num at h0
+
+/-- The equator avoids the south pole. -/
+theorem eqIncl_ne_antipode_vN (s : ↑(Sph 1)) : eqIncl s ≠ antipode vN := by
+  intro h
+  have h0 : eqVec s 0 = ((antipode vN : ↑(Sph 2)) : EuclideanSpace ℝ (Fin 3)) 0 :=
+    congrArg (fun p : ↑(Sph 2) => (p : EuclideanSpace ℝ (Fin 3)) 0) h
+  have hv : ((antipode vN : ↑(Sph 2)) : EuclideanSpace ℝ (Fin 3)) 0 = -1 := by
+    show (-(EuclideanSpace.single 0 (1 : ℝ)) : EuclideanSpace ℝ (Fin 3)) 0 = -1
+    simp
+  rw [eqVec_apply_zero, hv] at h0
+  norm_num at h0
+
+/-- The equator embedding into the NORTH punctured cap. -/
+noncomputable def eqInclCapA : C(↑(Sph 1), ↑(Apunc 2 vN)) :=
+  ⟨fun s => ⟨eqIncl s, eqIncl_ne_vN s⟩,
+    Continuous.subtype_mk eqIncl.continuous _⟩
+
+/-- The equator embedding into the SOUTH punctured cap. -/
+noncomputable def eqInclCapB : C(↑(Sph 1), ↑(Apunc 2 (antipode vN))) :=
+  ⟨fun s => ⟨eqIncl s, eqIncl_ne_antipode_vN s⟩,
+    Continuous.subtype_mk eqIncl.continuous _⟩
+
+open SKEFTHawking.KummerTorusStep (Tor)
+open SKEFTHawking.TorusCrossPeel (prodSnd torCross chainBoundary_torCross)
+
+/-- **The equator cross map** `S²×S¹ → sub(coverA v ∩ coverB v)`: identity on the first factor,
+the equator embedding on the second — landing in the seam because the equator avoids both
+poles. -/
+noncomputable def crossJ : C(↑(Tor (Sph 2)), ↑(sub (X := SphSph) (coverA vN ∩ coverB vN))) :=
+  ⟨fun p => ⟨(p.1, eqIncl p.2),
+      ⟨⟨Set.mem_univ _, eqIncl_ne_vN p.2⟩, ⟨Set.mem_univ _, eqIncl_ne_antipode_vN p.2⟩⟩⟩, by
+    refine Continuous.subtype_mk ?_ _
+    exact continuous_fst.prodMk (eqIncl.continuous.comp continuous_snd)⟩
+
+/-- The explicit cross 3-cycle on the seam: the pushforward of `torCross zSc` — the chain-level
+`[S²] × [S¹]` inside the seam. -/
+noncomputable def gChain : SingularChainInt (sub (X := SphSph) (coverA vN ∩ coverB vN)) 3 :=
+  mapChainInt crossJ 3 (torCross (Sph 2) 2 zSc.1)
+
+theorem zSc_cycle : chainBoundary (Sph 2) 1 zSc.1 = 0 := zSc.2
+
+theorem gChain_cycle :
+    chainBoundary (sub (X := SphSph) (coverA vN ∩ coverB vN)) 2 gChain = 0 := by
+  rw [gChain, chainBoundary_mapChainInt,
+    chainBoundary_torCross (Sph 2) 1 zSc.1 zSc_cycle, map_zero]
+
+end SKEFTHawking.SphereProdCrossWitnessInt
