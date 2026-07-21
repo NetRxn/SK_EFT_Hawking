@@ -1261,6 +1261,7 @@ import SKEFTHawking.SingularConvexSubAcyclicInt
 import SKEFTHawking.SingularH0PathConnectedInt
 import SKEFTHawking.SingularSphereMiddleInt
 import SKEFTHawking.SingularStarComplementRetractInt
+import SKEFTHawking.SingularFlatDiskChartVanishInt
 import SKEFTHawking.SingularLocalHomologyThreeInt
 import SKEFTHawking.SingularConvexRadialMiddleInt
 import SKEFTHawking.SingularConvexStageIsoInt

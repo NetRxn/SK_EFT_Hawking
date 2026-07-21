@@ -385,4 +385,34 @@ noncomputable def relMvDeltaEquivInt (U V : Set ↑X) (hU : IsOpen U) (hV : IsOp
       rw [LinearEquiv.symm_apply_apply]
       exact hq⟩
 
+/-! ## §4. Local-homology packaging `Hₙ(M|A) := Hₙ(M, M∖A)`
+
+The route consumes the LES with the *closed* sets named, not their complements. -/
+
+/-- Equal subspaces give equal relative homology. -/
+noncomputable def relHomologyIntCongr {S T : Set ↑X} (h : S = T) (n : ℕ) :
+    RelHomologyInt S n ≃ₗ[ℤ] RelHomologyInt T n := by
+  subst h; exact LinearEquiv.refl _ _
+
+/-- **The local-homology Mayer–Vietoris isomorphism** (the Hatcher Lemma 3.36 step). Writing
+`Hₙ(M|A) := Hₙ(M, M∖A)`, if `A` and `B` have open complements and
+
+`Hₙ(M|A) = Hₙ(M|B) = Hₙ₊₁(M|A) = Hₙ₊₁(M|B) = 0`,
+
+then the connecting map is an isomorphism `Hₙ₊₁(M|A∩B) ≅ Hₙ(M|A∪B)`.
+
+This is `relMvDeltaEquivInt` at `U = M∖A`, `V = M∖B`, re-expressed through
+`(A∩B)ᶜ = Aᶜ ∪ Bᶜ` and `(A∪B)ᶜ = Aᶜ ∩ Bᶜ`. With `A`, `B` the two hemispheres of a 2-sphere in a
+4-manifold and the vanishing supplied per hemisphere by
+`SingularStarComplementRetractInt.relHomology_compl_eq_zero`, it reads
+`H₃(M|equator) ≅ H₂(M|S²)`. -/
+noncomputable def localMvDeltaEquivInt (A B : Set ↑X) (hA : IsOpen Aᶜ) (hB : IsOpen Bᶜ) (n : ℕ)
+    (hAn : ∀ x : RelHomologyInt Aᶜ n, x = 0) (hBn : ∀ x : RelHomologyInt Bᶜ n, x = 0)
+    (hAn1 : ∀ x : RelHomologyInt Aᶜ (n + 1), x = 0)
+    (hBn1 : ∀ x : RelHomologyInt Bᶜ (n + 1), x = 0) :
+    RelHomologyInt ((A ∩ B)ᶜ) (n + 1) ≃ₗ[ℤ] RelHomologyInt ((A ∪ B)ᶜ) n :=
+  (relHomologyIntCongr (Set.compl_inter A B) (n + 1)).trans
+    ((relMvDeltaEquivInt Aᶜ Bᶜ hA hB n hAn hBn hAn1 hBn1).trans
+      (relHomologyIntCongr (Set.compl_union A B).symm n))
+
 end SKEFTHawking.SingularRelativeMVLESInt

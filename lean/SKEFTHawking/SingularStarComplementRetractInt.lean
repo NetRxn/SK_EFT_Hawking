@@ -229,6 +229,26 @@ first `m` coordinates. For `n = 4`, `m = 2` this is the flat 2-disk `D² × {0} 
 def flatDisk (n m : ℕ) (r : ℝ) : Set (EuclideanSpace ℝ (Fin n)) :=
   {p | ‖p‖ ≤ r ∧ ∀ i : Fin n, m ≤ (i : ℕ) → p i = 0}
 
+/-- A flat disk is **closed** — a norm sublevel set intersected with coordinate hyperplanes. -/
+theorem isClosed_flatDisk (n m : ℕ) (r : ℝ) : IsClosed (flatDisk n m r) := by
+  have hset : flatDisk n m r
+      = {p : EuclideanSpace ℝ (Fin n) | ‖p‖ ≤ r}
+        ∩ ⋂ i : Fin n, {p : EuclideanSpace ℝ (Fin n) | m ≤ (i : ℕ) → p i = 0} := by
+    ext p
+    simp only [flatDisk, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+  rw [hset]
+  refine IsClosed.inter (isClosed_le continuous_norm continuous_const) (isClosed_iInter fun i => ?_)
+  by_cases hi : m ≤ (i : ℕ)
+  · have : {p : EuclideanSpace ℝ (Fin n) | m ≤ (i : ℕ) → p i = 0}
+        = {p : EuclideanSpace ℝ (Fin n) | p i = 0} := by
+      ext p; exact ⟨fun h => h hi, fun h _ => h⟩
+    rw [this]
+    exact isClosed_eq (by fun_prop) continuous_const
+  · have : {p : EuclideanSpace ℝ (Fin n) | m ≤ (i : ℕ) → p i = 0} = Set.univ := by
+      ext p; exact ⟨fun _ => trivial, fun _ h => absurd h hi⟩
+    rw [this]
+    exact isClosed_univ
+
 /-- A flat disk of radius `r ∈ [0, 1)` is a star-shaped body strictly inside the unit ball. -/
 theorem starInBall_flatDisk (n m : ℕ) {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) :
     StarInBall (flatDisk n m r) where
