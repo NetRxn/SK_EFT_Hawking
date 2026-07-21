@@ -95,3 +95,13 @@ FIX. Add a new entry the *first* time a pattern recurs (don't re-solve it per-in
   phantom-guardrail family as the worktree-reset denial (see `parallel-worktrees.md`).
 - **"do nothing" / "never executed" tactic warnings** → the proof assumed a goal state that closed
   prematurely. Use `lean_goal` at that line and restructure; don't defer — it cascades.
+
+## ℝP³/Euclidean-carrier + Hmap batch (2026-07-21, wt3 termination-input block)
+
+- **`Fin.insertNth` on constant families** — implicit-family unification fails → pin `(α := fun _ => ℝ)`; its application lemmas mismatch implicitly, close with `simp` not `rw`.
+- **Higher-order `rw` on `Hmap`-shaped functoriality lemmas NEVER matches** (reconfirmed twice) → instantiate the lemma as a `have` with explicit args and chain with `.trans`; defeq does what the syntactic matcher can't.
+- **Maps INTO `WithLp`/EuclideanSpace** → `continuous_induced_rng.mpr` + a `show` line pinning the family (application side: `fun_prop`, already recorded).
+- **Pin-name drift on this Mathlib pin**: `Set.eq_empty_iff_forall_notMem`, `convex_halfSpace_gt/lt` (capital S), `Equiv.toHomeomorphOfContinuousOpen`; `Finset.not_mem_empty` gone (use `simp`); `push_neg` deprecated.
+- **`cases hb : ε j` AFTER the goal specialized** breaks `rw` with the pre-case hypothesis → extract per-`Bool` helper lemmas (e.g. `isOpen_signSet`/`convex_signSet`) instead of casing inline.
+- **ℕ-vs-ℤ numeral-smul mismatch** (`2 • c = 2 • c` refusing rfl) → `rw [two_smul, two_smul]`.
+- **`sub`'s implicit `TopCat` won't infer from a bare `Set`** → ascribe `(… : Set ↑Xtop)` at use sites.
