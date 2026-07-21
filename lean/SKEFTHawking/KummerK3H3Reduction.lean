@@ -30,9 +30,11 @@ import SKEFTHawking.KummerK7MVAssembly
 namespace SKEFTHawking.KummerK3H3Reduction
 
 open SKEFTHawking.SingularHomologyInt (Homology)
+open SKEFTHawking.SingularFunctorialityInt
 open SKEFTHawking.KummerK7Opener (KummerK3top)
 open SKEFTHawking.KummerWeld (eImage)
 open SKEFTHawking.KummerK7MVAssembly
+open SKEFTHawking.SingularMayerVietorisLES (ambIncl)
 open SKEFTHawking.SingularMayerVietorisLESInt
 
 noncomputable section
@@ -68,6 +70,31 @@ theorem kummerK3H3TwoTorsionFree_iff_delta3_two_saturated :
     (k7_exact_middle 2 _).mpr hy2
   rw [map_smul] at hz
   exact (k7_exact_middle 2 y).mp (h3 _ hz)
+
+/-- The degree-3 inclusion-induced map `H₃(qThick) → H₃(K3)`, surjective by `k7H3_surjective_from_qThick`
+(the `E`-side is dead in degree 3). -/
+abbrev qThickIncl3 := Homology.mapInt (ambIncl (X := KummerK3top) qThick) 3
+
+/-- **THE REDUCTION, in `H₃(qThick) ≅ H₃(Q)` coordinates (the usable form).** Since `H₃(qThick) → H₃(K3)`
+is surjective on its own (`k7H3_surjective_from_qThick` — the `E`-side is dead in degree 3),
+`H₃(K3) ≅ H₃(qThick) / ker`, so `H₃(K3;ℤ)` is 2-torsion-free **iff** that kernel is 2-saturated in
+`H₃(qThick)`. This states the orientation residual purely on `H₃(qThick) ≅ H₃(Q)` (`qThickHnEquivInt 3`),
+the exact object the open Q-side degree-3 computation must produce — no product summand, no `H₃(K3)`. -/
+theorem kummerK3H3TwoTorsionFree_iff_ker_qThickIncl_two_saturated :
+    KummerK3E1Package.KummerK3H3TwoTorsionFree ↔
+      ∀ a, (2 : ℤ) • a ∈ LinearMap.ker qThickIncl3 → a ∈ LinearMap.ker qThickIncl3 := by
+  constructor
+  · intro h3 a ha
+    rw [LinearMap.mem_ker, map_smul] at ha
+    rw [LinearMap.mem_ker]
+    exact h3 _ ha
+  · intro hsat x hx
+    obtain ⟨a, ha⟩ := k7H3_surjective_from_qThick x
+    have h2a : (2 : ℤ) • a ∈ LinearMap.ker qThickIncl3 := by
+      rw [LinearMap.mem_ker, map_smul, ha]; exact hx
+    have hker := hsat a h2a
+    rw [LinearMap.mem_ker] at hker
+    rw [← ha]; exact hker
 
 end
 
