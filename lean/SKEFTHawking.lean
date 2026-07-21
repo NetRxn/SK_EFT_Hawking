@@ -4723,6 +4723,7 @@ import SKEFTHawking.HalfSpaceInteriorFlatten
 import SKEFTHawking.KummerEInteriorChart
 import SKEFTHawking.KummerQInteriorChart
 import SKEFTHawking.KummerK3Chart
+import SKEFTHawking.HalfSpaceInteriorSmooth
 import SKEFTHawking.KummerK7MVAssembly
 import SKEFTHawking.KummerK7SeamCoverNoGo
 import SKEFTHawking.KummerQuotientCovering
