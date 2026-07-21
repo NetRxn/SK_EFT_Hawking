@@ -41,13 +41,13 @@ namespace SKEFTHawking.SphereProdStokesPeel
 
 open SKEFTHawking.SingularCohomologyInt
 open SKEFTHawking.SingularHomologyInt
-open SKEFTHawking.SingularFunctorialityInt (mapChainInt)
+open SKEFTHawking.SingularFunctorialityInt (mapChainInt mapChainInt_comp)
 open SKEFTHawking.SingularCohomologyFunctorialityInt (cochainPullbackInt cochainPullbackInt_cup
   cochainPullbackInt_mem_ker kronecker_cochainPullbackInt)
 open SKEFTHawking.SingularRelativeHomologyMod2 (sub)
 open SKEFTHawking.SingularMayerVietorisLES (ambIncl seamHomeo)
 open SKEFTHawking.SingularRelHomologyInt (chainIncl chainIncl_chainBoundary boundaryExtract
-  relCycleLift chainIncl_boundaryExtract)
+  relCycleLift chainIncl_boundaryExtract chainIncl_injective)
 open SKEFTHawking.SingularConvexRadialBaseInt (mapChainInt_ambIncl)
 open SKEFTHawking.SingularCapChainInclInt (pullbackCochainInt)
 open SKEFTHawking.SingularRelativeCapHadjInt (kronecker_chainIncl_eq_pullbackCochainInt)
@@ -144,6 +144,19 @@ theorem kronecker_boundary_seam_inter {X : TopCat} (A B : Set ↑X) {m : ℕ}
           (boundaryExtract (restr A B) m ⟨zB, hlift⟩)) := by
   rw [kronecker_boundary_seam A B w zB hlift, ← hw', kronecker_cochainPullbackInt]
 
+/-- The `A ∩ B = B ∩ A` reassociation as a continuous map `sub(B ∩ A) → sub(A ∩ B)` (identity on the
+underlying `X`-point). Unifies leg-A's seam representation `sub(B ∩ A)` with leg-B's `sub(A ∩ B)`. -/
+def interCommMap {X : TopCat} (A B : Set ↑X) : C(↑(sub (B ∩ A)), ↑(sub (A ∩ B))) :=
+  ⟨fun p => ⟨p.1, Set.mem_inter p.2.2 p.2.1⟩, Continuous.subtype_mk continuous_subtype_val _⟩
+
+/-- `chainIncl` compatibility of `interCommMap` (identity on `X`-points): reassociation commutes with
+inclusion into the ambient. -/
+theorem chainIncl_mapChain_interCommMap {X : TopCat} (A B : Set ↑X) {m : ℕ}
+    (x : SingularChainInt (sub (B ∩ A)) m) :
+    chainIncl (A ∩ B) m (mapChainInt (interCommMap A B) m x) = chainIncl (B ∩ A) m x := by
+  rw [← mapChainInt_ambIncl, ← mapChainInt_ambIncl, ← mapChainInt_comp]
+  rfl
+
 /-- **The seam-chain cover relation** — the mathematical heart of the MV cup–Stokes seam assembly.
 For a cover-partitioned cycle `z = ι_A zA + ι_B zB`, the two `seamHomeo`-transported extracted seam
 chains — leg-A's `t_A = seamHomeo(B,A)₊ (∂zA|∩)` in `sub(B ∩ A)` and leg-B's `t_B = seamHomeo(A,B)₊
@@ -163,5 +176,22 @@ theorem chainIncl_seam_boundary_cover_neg {X : TopCat} (A B : Set ↑X) {m : ℕ
     chainIncl_boundaryExtract, chainIncl_boundaryExtract, chainIncl_chainBoundary,
     chainIncl_chainBoundary, eq_neg_iff_add_eq_zero, ← map_add]
   exact LinearMap.mem_ker.mp hz_cyc
+
+/-- **The unified seam-chain cover relation on `sub(A ∩ B)`.** Transporting leg-A's seam chain `t_A`
+through `interCommMap` onto the common seam `sub(A ∩ B)` makes it exactly `−t_B`: the reassociated
+A-leg boundary and the B-leg boundary cancel (`∂z = 0`), now as chains of the SAME space. The pairing-
+level input to the two-leg seam combination. -/
+theorem seam_boundary_cover_neg_inter {X : TopCat} (A B : Set ↑X) {m : ℕ}
+    (zA : SingularChainInt (sub A) (m + 1)) (zB : SingularChainInt (sub B) (m + 1))
+    (hz_cyc : chainIncl A (m + 1) zA + chainIncl B (m + 1) zB ∈ cycles X (m + 1))
+    (hliftB : zB ∈ relCycleLift (restr A B) m) (hliftA : zA ∈ relCycleLift (restr B A) m) :
+    mapChainInt (interCommMap A B) m
+        (mapChainInt ⟨seamHomeo B A, (seamHomeo B A).continuous⟩ m
+          (boundaryExtract (restr B A) m ⟨zA, hliftA⟩))
+      = - mapChainInt ⟨seamHomeo A B, (seamHomeo A B).continuous⟩ m
+          (boundaryExtract (restr A B) m ⟨zB, hliftB⟩) := by
+  apply chainIncl_injective (A ∩ B) m
+  rw [chainIncl_mapChain_interCommMap, map_neg,
+    chainIncl_seam_boundary_cover_neg A B zA zB hz_cyc hliftB hliftA]
 
 end SKEFTHawking.SphereProdStokesPeel
