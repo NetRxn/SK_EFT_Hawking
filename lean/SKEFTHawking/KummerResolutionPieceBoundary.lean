@@ -1849,6 +1849,213 @@ theorem contDiffOn_transition_collarChart_CC {k : WithTop ℕ∞} (u₀ u₁ : N
       Homeomorph.apply_symm_apply]
     rfl
 
+/-- **The general same-side base-interior transition class.** Two ResE charts, each `= a fiber sub-chart
+`Fᵢ = diskHomeoNDisk1 ⋙ Dᵢ` prefixed by `baseDiskChart` and `reshapeModel`, lifted along a COMMON
+base-interior open embedding `emb` (`chart0` or `chart1`). The lift cancels (`lift_openEmbedding_trans`),
+the `Subtype.val` prefix cancels (`toOpenPartialHomeomorph_right_inv`), the `diskHomeoNDisk1` bridge
+cancels, the base is unchanged (`gBase = id`), and the fiber transition `Dᵢ` closes via
+`contDiffOn_reshapeConj`. Instantiated by every same-side pair (interior/collar × chart0/chart1). -/
+theorem contDiffOn_transition_baseInterior_gen {k : WithTop ℕ∞}
+    {emb : ↥baseInterior → ResE} (hemb : Topology.IsOpenEmbedding emb)
+    (F₀ F₁ : OpenPartialHomeomorph Disk (ModelProd (EuclideanSpace ℝ (Fin 1)) (EuclideanHalfSpace 1)))
+    (D₀ D₁ : OpenPartialHomeomorph (NDisk 1)
+      (ModelProd (EuclideanSpace ℝ (Fin 1)) (EuclideanHalfSpace 1)))
+    (hF₀ : F₀ = diskHomeoNDisk1.toOpenPartialHomeomorph.trans D₀)
+    (hF₁ : F₁ = diskHomeoNDisk1.toOpenPartialHomeomorph.trans D₁)
+    (C₀ C₁ : OpenPartialHomeomorph ResE Model)
+    (hC₀ : C₀ = ((Topology.IsOpenEmbedding.toOpenPartialHomeomorph
+        (Subtype.val : ↥baseInterior → ResChart) isOpen_baseInterior.isOpenEmbedding_subtypeVal).trans
+        ((baseDiskChart.prod F₀).trans reshapeModel.toOpenPartialHomeomorph)).lift_openEmbedding hemb)
+    (hC₁ : C₁ = ((Topology.IsOpenEmbedding.toOpenPartialHomeomorph
+        (Subtype.val : ↥baseInterior → ResChart) isOpen_baseInterior.isOpenEmbedding_subtypeVal).trans
+        ((baseDiskChart.prod F₁).trans reshapeModel.toOpenPartialHomeomorph)).lift_openEmbedding hemb)
+    (hfiber : ContDiffOn ℝ k (↑((𝓡 1).prod (𝓡∂ 1)) ∘ ↑(D₀.symm ≫ₕ D₁) ∘ ↑((𝓡 1).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 1).prod (𝓡∂ 1)).symm ⁻¹' (D₀.symm ≫ₕ D₁).source ∩ range ↑((𝓡 1).prod (𝓡∂ 1)))) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑(C₀.symm ≫ₕ C₁) ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹' (C₀.symm ≫ₕ C₁).source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) := by
+  subst hC₀ hC₁
+  simp only [OpenPartialHomeomorph.lift_openEmbedding_trans]
+  set B₀ := (baseDiskChart.prod F₀).trans reshapeModel.toOpenPartialHomeomorph with hB₀
+  set B₁ := (baseDiskChart.prod F₁).trans reshapeModel.toOpenPartialHomeomorph with hB₁
+  set Cin₀ := (Topology.IsOpenEmbedding.toOpenPartialHomeomorph
+      (Subtype.val : ↥baseInterior → ResChart) isOpen_baseInterior.isOpenEmbedding_subtypeVal).trans B₀
+    with hCin₀
+  set Cin₁ := (Topology.IsOpenEmbedding.toOpenPartialHomeomorph
+      (Subtype.val : ↥baseInterior → ResChart) isOpen_baseInterior.isOpenEmbedding_subtypeVal).trans B₁
+    with hCin₁
+  refine (contDiffOn_reshapeConj (gBase := id) (baseSet := Set.univ) contDiffOn_id
+      hfiber (Set.mapsTo_univ _ _) ?_).congr ?_
+  · intro x hx
+    obtain ⟨hxsrc, hxrange⟩ := hx
+    rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source,
+      OpenPartialHomeomorph.symm_source, Set.mem_inter_iff, Set.mem_preimage] at hxsrc
+    obtain ⟨htgt, hsrc⟩ := hxsrc
+    set y := ((𝓡 3).prod (𝓡∂ 1)).symm x with hy
+    rw [hCin₀, OpenPartialHomeomorph.trans_target, Set.mem_inter_iff, Set.mem_preimage] at htgt
+    have hbaseInt : B₀.symm y ∈ Set.range (Subtype.val : ↥baseInterior → ResChart) := by
+      have h := htgt.2
+      rwa [Topology.IsOpenEmbedding.toOpenPartialHomeomorph_target] at h
+    have hD0tgt : (reshapeModel.symm y).2 ∈ D₀.target := by
+      have h := htgt.1
+      rw [hB₀, OpenPartialHomeomorph.trans_target,
+        Homeomorph.toOpenPartialHomeomorph_target, Set.univ_inter, Set.mem_preimage,
+        Homeomorph.toOpenPartialHomeomorph_symm_apply, OpenPartialHomeomorph.prod_target] at h
+      have h2 := h.2
+      rw [hF₀, OpenPartialHomeomorph.trans_target, Set.mem_inter_iff] at h2
+      exact h2.1
+    have hBsrc : B₀.symm y ∈ B₁.source := by
+      simp only [hCin₀, hCin₁, OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+        Set.mem_preimage, OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+        Topology.IsOpenEmbedding.toOpenPartialHomeomorph_apply,
+        Topology.IsOpenEmbedding.toOpenPartialHomeomorph_source, Set.mem_univ, true_and] at hsrc
+      rwa [Topology.IsOpenEmbedding.toOpenPartialHomeomorph_right_inv
+        (Subtype.val : ↥baseInterior → ResChart)
+        isOpen_baseInterior.isOpenEmbedding_subtypeVal hbaseInt] at hsrc
+    have hDsrc : D₀.symm ((reshapeModel.symm y).2) ∈ D₁.source := by
+      rw [hB₀, hB₁] at hBsrc
+      simp only [OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+        Set.mem_preimage, OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+        Homeomorph.toOpenPartialHomeomorph_symm_apply, OpenPartialHomeomorph.prod_symm_apply,
+        OpenPartialHomeomorph.prod_source, Set.mem_prod,
+        Homeomorph.toOpenPartialHomeomorph_source, Set.mem_univ, and_true] at hBsrc
+      have hs2 := hBsrc.2
+      rw [hF₀, hF₁] at hs2
+      simp only [OpenPartialHomeomorph.trans_source, Set.mem_inter_iff,
+        Set.mem_preimage, OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+        Homeomorph.toOpenPartialHomeomorph_apply, Homeomorph.toOpenPartialHomeomorph_symm_apply,
+        Homeomorph.apply_symm_apply, Homeomorph.toOpenPartialHomeomorph_source, Set.mem_univ,
+        true_and] at hs2
+      exact hs2
+    have hrange2 : (0 : ℝ) ≤ x.2.ofLp 0 := by
+      rw [ModelWithCorners.range_prod, Set.mem_prod] at hxrange
+      have h := hxrange.2
+      rwa [range_modelWithCornersEuclideanHalfSpace] at h
+    refine ⟨?_, ?_⟩
+    · rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source, OpenPartialHomeomorph.symm_source,
+        Set.mem_inter_iff, Set.mem_preimage]
+      exact ⟨hD0tgt, hDsrc⟩
+    · rw [ModelWithCorners.range_prod, Set.mem_prod]
+      refine ⟨?_, ?_⟩
+      · rw [ModelWithCorners.Boundaryless.range_eq_univ]; exact Set.mem_univ _
+      · rw [range_modelWithCornersEuclideanHalfSpace]; exact hrange2
+  · intro x hx
+    obtain ⟨hxsrc, hxrange⟩ := hx
+    rw [Set.mem_preimage, OpenPartialHomeomorph.trans_source,
+      OpenPartialHomeomorph.symm_source, Set.mem_inter_iff, Set.mem_preimage] at hxsrc
+    obtain ⟨htgt, -⟩ := hxsrc
+    rw [hCin₀, OpenPartialHomeomorph.trans_target, Set.mem_inter_iff, Set.mem_preimage] at htgt
+    set y := ((𝓡 3).prod (𝓡∂ 1)).symm x with hy
+    have hbaseInt : B₀.symm y ∈ Set.range (Subtype.val : ↥baseInterior → ResChart) := by
+      have h := htgt.2
+      rwa [Topology.IsOpenEmbedding.toOpenPartialHomeomorph_target] at h
+    have hbtgt : (reshapeModel.symm y).1 ∈ baseDiskChart.target := by
+      have h := htgt.1
+      rw [hB₀, OpenPartialHomeomorph.trans_target,
+        Homeomorph.toOpenPartialHomeomorph_target, Set.univ_inter, Set.mem_preimage,
+        Homeomorph.toOpenPartialHomeomorph_symm_apply, OpenPartialHomeomorph.prod_target] at h
+      exact h.1
+    have hval : Cin₁ (Cin₀.symm y) = B₁ (B₀.symm y) := by
+      rw [hCin₀, hCin₁]
+      simp only [OpenPartialHomeomorph.coe_trans,
+        OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+        Topology.IsOpenEmbedding.toOpenPartialHomeomorph_apply]
+      congr 1
+      exact Topology.IsOpenEmbedding.toOpenPartialHomeomorph_right_inv
+        (Subtype.val : ↥baseInterior → ResChart)
+        isOpen_baseInterior.isOpenEmbedding_subtypeVal hbaseInt
+    simp only [Function.comp_apply, OpenPartialHomeomorph.coe_trans]
+    rw [hval, hB₀, hB₁]
+    simp only [OpenPartialHomeomorph.coe_trans,
+      OpenPartialHomeomorph.coe_trans_symm, Function.comp_apply,
+      Homeomorph.toOpenPartialHomeomorph_apply, Homeomorph.toOpenPartialHomeomorph_symm_apply,
+      OpenPartialHomeomorph.prod_apply, OpenPartialHomeomorph.prod_symm_apply, id_eq]
+    rw [baseDiskChart.right_inv hbtgt, hF₀, hF₁]
+    simp only [OpenPartialHomeomorph.coe_trans, OpenPartialHomeomorph.coe_trans_symm,
+      Function.comp_apply, Homeomorph.toOpenPartialHomeomorph_apply,
+      Homeomorph.toOpenPartialHomeomorph_symm_apply, Homeomorph.apply_symm_apply]
+    rfl
+
+/-- **chart0 interior → collar** transition — general lemma at `F₀ = fiberInteriorChart`,
+`F₁ = fiberCollarChart u₁`, fiber `contDiffOn_transition_fiber_IC`. -/
+theorem contDiffOn_transition_interiorChart_collarChart {k : WithTop ℕ∞} (u₁ : NSphere 1) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑(interiorChart.symm ≫ₕ collarChart u₁) ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹' (interiorChart.symm ≫ₕ collarChart u₁).source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) :=
+  contDiffOn_transition_baseInterior_gen isOpenEmbedding_chart0_baseInterior
+    fiberInteriorChart (fiberCollarChart u₁) (DiskChartGeneric.diskInteriorChart 1)
+    (diskCollarChart 1 u₁) rfl rfl interiorChart (collarChart u₁) rfl rfl
+    (contDiffOn_transition_fiber_IC u₁)
+
+/-- **chart0 collar → interior** transition — fiber `contDiffOn_transition_fiber_CI`. -/
+theorem contDiffOn_transition_collarChart_interiorChart {k : WithTop ℕ∞} (u₀ : NSphere 1) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑((collarChart u₀).symm ≫ₕ interiorChart) ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹' ((collarChart u₀).symm ≫ₕ interiorChart).source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) :=
+  contDiffOn_transition_baseInterior_gen isOpenEmbedding_chart0_baseInterior
+    (fiberCollarChart u₀) fiberInteriorChart (diskCollarChart 1 u₀)
+    (DiskChartGeneric.diskInteriorChart 1) rfl rfl (collarChart u₀) interiorChart rfl rfl
+    (contDiffOn_transition_fiber_CI u₀)
+
+/-- **chart0 interior → interior** transition — fiber diagonal (`symm_trans_mem_contDiffGroupoid`). -/
+theorem contDiffOn_transition_interiorChart_II {k : WithTop ℕ∞} :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑(interiorChart.symm ≫ₕ interiorChart) ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹' (interiorChart.symm ≫ₕ interiorChart).source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) :=
+  contDiffOn_transition_baseInterior_gen isOpenEmbedding_chart0_baseInterior
+    fiberInteriorChart fiberInteriorChart (DiskChartGeneric.diskInteriorChart 1)
+    (DiskChartGeneric.diskInteriorChart 1) rfl rfl interiorChart interiorChart rfl rfl
+    (mem_groupoid_of_pregroupoid.mp
+      (symm_trans_mem_contDiffGroupoid (DiskChartGeneric.diskInteriorChart 1))).1
+
+/-- **chart1 collar → collar** transition (the `chart1`-side mirror of §P.1). -/
+theorem contDiffOn_transition_collarChart1_CC {k : WithTop ℕ∞} (u₀ u₁ : NSphere 1) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑((collarChart1 u₀).symm ≫ₕ collarChart1 u₁) ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹' ((collarChart1 u₀).symm ≫ₕ collarChart1 u₁).source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) :=
+  contDiffOn_transition_baseInterior_gen isOpenEmbedding_chart1_baseInterior
+    (fiberCollarChart u₀) (fiberCollarChart u₁) (diskCollarChart 1 u₀) (diskCollarChart 1 u₁)
+    rfl rfl (collarChart1 u₀) (collarChart1 u₁) rfl rfl (contDiffOn_transition_fiber_CC u₀ u₁)
+
+/-- **chart1 interior → collar** transition. -/
+theorem contDiffOn_transition_interiorChart1_collarChart1 {k : WithTop ℕ∞} (u₁ : NSphere 1) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑(interiorChart1.symm ≫ₕ collarChart1 u₁) ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹' (interiorChart1.symm ≫ₕ collarChart1 u₁).source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) :=
+  contDiffOn_transition_baseInterior_gen isOpenEmbedding_chart1_baseInterior
+    fiberInteriorChart (fiberCollarChart u₁) (DiskChartGeneric.diskInteriorChart 1)
+    (diskCollarChart 1 u₁) rfl rfl interiorChart1 (collarChart1 u₁) rfl rfl
+    (contDiffOn_transition_fiber_IC u₁)
+
+/-- **chart1 collar → interior** transition. -/
+theorem contDiffOn_transition_collarChart1_interiorChart1 {k : WithTop ℕ∞} (u₀ : NSphere 1) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑((collarChart1 u₀).symm ≫ₕ interiorChart1) ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹' ((collarChart1 u₀).symm ≫ₕ interiorChart1).source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) :=
+  contDiffOn_transition_baseInterior_gen isOpenEmbedding_chart1_baseInterior
+    (fiberCollarChart u₀) fiberInteriorChart (diskCollarChart 1 u₀)
+    (DiskChartGeneric.diskInteriorChart 1) rfl rfl (collarChart1 u₀) interiorChart1 rfl rfl
+    (contDiffOn_transition_fiber_CI u₀)
+
+/-- **chart1 interior → interior** transition. -/
+theorem contDiffOn_transition_interiorChart1_II {k : WithTop ℕ∞} :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘
+        ↑(interiorChart1.symm ≫ₕ interiorChart1) ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹' (interiorChart1.symm ≫ₕ interiorChart1).source ∩
+        range ↑((𝓡 3).prod (𝓡∂ 1))) :=
+  contDiffOn_transition_baseInterior_gen isOpenEmbedding_chart1_baseInterior
+    fiberInteriorChart fiberInteriorChart (DiskChartGeneric.diskInteriorChart 1)
+    (DiskChartGeneric.diskInteriorChart 1) rfl rfl interiorChart1 interiorChart1 rfl rfl
+    (mem_groupoid_of_pregroupoid.mp
+      (symm_trans_mem_contDiffGroupoid (DiskChartGeneric.diskInteriorChart 1))).1
+
 /-! ## §Z. STATUS — the K6′a Leg-2 E-side certificate
 
 **GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
