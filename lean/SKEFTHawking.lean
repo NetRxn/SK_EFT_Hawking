@@ -4690,6 +4690,7 @@ import SKEFTHawking.KummerT4GramCross
 import SKEFTHawking.SphereProdStokesPeel
 import SKEFTHawking.KTCompletenessProvider
 import SKEFTHawking.KTCompletenessTether
+import SKEFTHawking.PinPlusTraceCapstoneCorrector
 import SKEFTHawking.KTCompletenessTransfer
 import SKEFTHawking.KTCompletenessMVCover
 import SKEFTHawking.KTCompletenessMVHtpy
