@@ -4692,6 +4692,9 @@ import SKEFTHawking.KummerRP3SphereHomeo
 import SKEFTHawking.KummerRP3TauHomotopy
 import SKEFTHawking.SingularInvolutionSmithInt
 import SKEFTHawking.KummerRP3TransferInt
+import SKEFTHawking.ChainComplexLESInt
+import SKEFTHawking.KummerRP3SmithSES
+import SKEFTHawking.KummerRP3HomologySolve
 import SKEFTHawking.CircleWindingCocycle
 import SKEFTHawking.TorusCrossPeel
 import SKEFTHawking.KummerT4GramCross
