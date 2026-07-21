@@ -479,6 +479,38 @@ theorem corrector_relClassOf_eq
     3 R.q0_eq_corrector_add_away R.hawayOff _ _
 
 omit [PreconnectedSpace s.M] in
+/-- **THE EQUIVALENCE CERTIFICATE, in `↔` form.** The substituted obligation `hq0det` (detection of
+the FROZEN glued chain) and the round-13 spec's `hp_det` (detection of the DERIVED corrector) are
+the same statement at every seam point — not one merely sufficient for the other. This is the
+kernel witness for the dossier deviation recorded in the module header. -/
+theorem corrector_hp_det_iff
+    (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+    (hx : x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W))
+    (hxA : x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl)
+    (hxB : x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle) :
+    (relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+        R.corrector
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1) R.corrector_hpS) ≠ 0)
+      ↔ (relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+        (qZero s S hS φ hφ hφinj R.z)
+        (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1)
+          R.qZero_boundary_mem) ≠ 0) := by
+  rw [R.corrector_relClassOf_eq x hx hxA hxB]
+
+omit [PreconnectedSpace s.M] in
+/-- **The anti-fake tether bites: the shared seam core is nonzero.** The gate's standing anti-fake
+criterion — "a genuine attachment must force nonzero seam content" — as a kernel fact: the zero
+chain lies in every support submodule, so `hcoreHit` excludes it. -/
+theorem cCore_ne_zero
+    (hgen : mapChain (slice (graphHom (TopCat.of s.M)) 1) (3 + 1)
+        (R.z : SingularChain (TopCat.of s.M) (3 + 1))
+      ∉ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).B)
+          ((Set.univ ×ˢ ({⊤} : Set (Set.Icc (0 : ℝ) 1))) \ Set.range φ) (3 + 1)) :
+    R.cCore ≠ 0 := by
+  intro hzero
+  exact R.hcoreHit hgen (by rw [hzero]; exact Submodule.zero_mem _)
+
+omit [PreconnectedSpace s.M] in
 /-- **Corrector fact 3 (`hp_det`)**: the derived corrector detects the local generator at every
 seam point off `∂W`. -/
 theorem corrector_hp_det
