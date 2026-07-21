@@ -280,6 +280,138 @@ theorem contDiffOn_seamCollarCoord0 {k : WithTop ℕ∞} (u₀ : NSphere 1) :
   exact (SKEFTHawking.KummerResolutionPieceBoundary.contDiff_assemble).comp_contDiffOn
     (hbase.prodMk hang)
 
+/-! ## §5. The chart-1 hemisphere branch
+
+The `‖b‖ < ‖a‖` branch of `bdryMap`, welded to the other base disk. Note the branch condition is
+already *strict*, so the chart-1 Hopf point is automatically base-interior — no extra hypothesis is
+needed (unlike the chart-0 branch, where the equator `‖a‖ = ‖b‖` sits inside `‖a‖ ≤ ‖b‖`). -/
+
+/-- **The chart-1 Hopf point of `S³` as an honest `ResChart`.** -/
+def hopfChart1 {x : S3} (h : ¬ ‖x.1.1‖ ≤ ‖x.1.2‖) : ResChart :=
+  (⟨x.1.2 / x.1.1, by
+      rw [norm_div]
+      exact (div_le_one (norm_pos_iff.mpr (S3_fst_ne_zero (not_le.mp h).le))).mpr
+        (not_le.mp h).le⟩,
+   ⟨(x.1.1 / (‖x.1.1‖ : ℂ)) ^ 2,
+      le_of_eq (fiber_norm_eq_one (S3_fst_ne_zero (not_le.mp h).le))⟩)
+
+@[simp] theorem hopfChart1_fst_coe {x : S3} (h : ¬ ‖x.1.1‖ ≤ ‖x.1.2‖) :
+    ((hopfChart1 h).1 : ℂ) = (hopf1 x.1).1 := rfl
+
+@[simp] theorem hopfChart1_snd_coe {x : S3} (h : ¬ ‖x.1.1‖ ≤ ‖x.1.2‖) :
+    ((hopfChart1 h).2 : ℂ) = (hopf1 x.1).2 := rfl
+
+/-- **The seam map on the chart-1 hemisphere is `chart1` of the Hopf point.** -/
+theorem bdryMap_eq_chart1 {x : S3} (h : ¬ ‖x.1.1‖ ≤ ‖x.1.2‖) :
+    bdryMap x = chart1 (hopfChart1 h) := by
+  unfold bdryMap
+  rw [dif_neg h]
+  rfl
+
+/-- The chart-1 Hopf point is base-interior: `‖b/a‖ < 1` is forced by the strict branch condition. -/
+theorem hopfChart1_mem_baseInterior {x : S3} (h : ¬ ‖x.1.1‖ ≤ ‖x.1.2‖) :
+    hopfChart1 h ∈ baseInterior := by
+  show ‖(x.1.2 / x.1.1 : ℂ)‖ < 1
+  rw [norm_div]
+  exact (div_lt_one (norm_pos_iff.mpr (S3_fst_ne_zero (not_le.mp h).le))).mpr (not_le.mp h)
+
+/-- **The E-side `chart1` collar chart, base block.** -/
+theorem collarChart1_chart1_fst (u₀ : NSphere 1) {p : ResChart} (hp : p ∈ baseInterior) :
+    (collarChart1 u₀ (chart1 p)).1
+      = assemble 2 (toE2 (p.1 : ℂ))
+        ((chartAt (EuclideanSpace ℝ (Fin 1)) u₀ (diskDir 1 (fiberND p.2))).ofLp 0) := by
+  rw [collarChart1, show chart1 p = (fun q : ↥baseInterior => chart1 q.1) ⟨p, hp⟩ from rfl,
+    OpenPartialHomeomorph.lift_openEmbedding_apply]
+  rfl
+
+/-- **The E-side `chart1` collar chart, half-space block in full.** -/
+theorem collarChart1_chart1_snd (u₀ : NSphere 1) {p : ResChart} (hp : p ∈ baseInterior) :
+    ((collarChart1 u₀ (chart1 p)).2).val
+      = WithLp.toLp 2 (fun _ : Fin 1 => 1 - ‖toE2 (p.2 : ℂ)‖) := by
+  rw [collarChart1, show chart1 p = (fun q : ↥baseInterior => chart1 q.1) ⟨p, hp⟩ from rfl,
+    OpenPartialHomeomorph.lift_openEmbedding_apply]
+  rfl
+
+/-- **THE WALL LAW, chart-1 branch.** -/
+theorem bdryMap_radial_eq_zero_chart1 (u₀ : NSphere 1) {x : S3} (h : ¬ ‖x.1.1‖ ≤ ‖x.1.2‖) :
+    ((collarChart1 u₀ (bdryMap x)).2.val).ofLp 0 = 0 := by
+  rw [bdryMap_eq_chart1 h, collarChart1_chart1_radial u₀ (hopfChart1_mem_baseInterior h),
+    fiberRadial, hopfChart1_snd_coe,
+    norm_hopf1_snd (S3_fst_ne_zero (not_le.mp h).le), sub_self]
+
+/-- The `𝔼²` fiber vector of the chart-1 seam coordinates. -/
+def seamFiberVec1 (q : ℂ × ℂ) : EuclideanSpace ℝ (Fin 2) := toE2 (hopf1 q).2
+
+theorem norm_seamFiberVec1 {q : ℂ × ℂ} (ha : q.1 ≠ 0) : ‖seamFiberVec1 q‖ = 1 := by
+  rw [seamFiberVec1, norm_toE2, norm_hopf1_snd ha]
+
+theorem seamFiberVec1_ne_zero {q : ℂ × ℂ} (ha : q.1 ≠ 0) : seamFiberVec1 q ≠ 0 := by
+  intro h0
+  have := norm_seamFiberVec1 ha
+  rw [h0, norm_zero] at this
+  exact zero_ne_one this
+
+/-- **The seam's E-side collar-chart coordinates, chart-1 branch.** -/
+def seamCollarCoord1 (u₀ : NSphere 1) (q : ℂ × ℂ) :
+    EuclideanSpace ℝ (Fin 3) × EuclideanSpace ℝ (Fin 1) :=
+  (assemble 2 (toE2 (hopf1 q).1)
+    (((OrthonormalBasis.fromOrthogonalSpanSingleton (𝕜 := ℝ) 1
+      (ne_zero_of_mem_unit_sphere (-u₀))).repr
+      (stereoToFun ((-u₀ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+        (‖seamFiberVec1 q‖⁻¹ • seamFiberVec1 q))).ofLp 0),
+   WithLp.toLp 2 (fun _ : Fin 1 => 1 - ‖seamFiberVec1 q‖))
+
+/-- **The chart-1 pin**: the `ResE` atlas chart `collarChart1`, evaluated on a chart-1-branch seam
+point, IS `seamCollarCoord1`. -/
+theorem collarChart1_bdryMap_eq (u₀ : NSphere 1) {x : S3} (h : ¬ ‖x.1.1‖ ≤ ‖x.1.2‖) :
+    ((collarChart1 u₀ (bdryMap x)).1, ((collarChart1 u₀ (bdryMap x)).2.val))
+      = seamCollarCoord1 u₀ x.1 := by
+  have ha : x.1.1 ≠ 0 := S3_fst_ne_zero (not_le.mp h).le
+  have hne : (fiberND (hopfChart1 h).2 : EuclideanSpace ℝ (Fin 2)) ≠ 0 := by
+    show toE2 ((hopfChart1 h).2 : ℂ) ≠ 0
+    rw [hopfChart1_snd_coe]
+    exact seamFiberVec1_ne_zero ha
+  rw [bdryMap_eq_chart1 h]
+  refine Prod.ext ?_ (collarChart1_chart1_snd u₀ (hopfChart1_mem_baseInterior h))
+  rw [collarChart1_chart1_fst u₀ (hopfChart1_mem_baseInterior h)]
+  show assemble 2 (toE2 ((hopfChart1 h).1 : ℂ))
+      (((OrthonormalBasis.fromOrthogonalSpanSingleton (𝕜 := ℝ) 1
+        (ne_zero_of_mem_unit_sphere (-u₀))).repr
+        (stereoToFun ((-u₀ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+          ((diskDir 1 (fiberND (hopfChart1 h).2) :
+            EuclideanSpace ℝ (Fin (1 + 1)))))).ofLp 0) = _
+  rw [diskDir_coe hne]
+  rfl
+
+/-- The smoothness domain of the chart-1 seam coordinates. -/
+def seamDom1 (u₀ : NSphere 1) : Set (ℂ × ℂ) :=
+  {q : ℂ × ℂ | q.1 ≠ 0 ∧ innerSL ℝ ((-u₀ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+    (‖seamFiberVec1 q‖⁻¹ • seamFiberVec1 q) ≠ 1}
+
+/-- **The seam's E-side collar coordinates are `C^k`, chart-1 branch.** -/
+theorem contDiffOn_seamCollarCoord1 {k : WithTop ℕ∞} (u₀ : NSphere 1) :
+    ContDiffOn ℝ k (seamCollarCoord1 u₀) (seamDom1 u₀) := by
+  have hsub : seamDom1 u₀ ⊆ {p : ℂ × ℂ | p.1 ≠ 0} := fun q hq => hq.1
+  have hhopf : ContDiffOn ℝ k hopf1 (seamDom1 u₀) := contDiffOn_hopf1.mono hsub
+  have hG : ContDiffOn ℝ k seamFiberVec1 (seamDom1 u₀) :=
+    contDiff_toE2.comp_contDiffOn (contDiffOn_snd.comp hhopf (fun q _ => Set.mem_univ _))
+  have hGne : ∀ q ∈ seamDom1 u₀, seamFiberVec1 q ≠ 0 := fun q hq => seamFiberVec1_ne_zero hq.1
+  have hinner : ∀ q ∈ seamDom1 u₀,
+      innerSL ℝ ((-u₀ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+        (‖seamFiberVec1 q‖⁻¹ • seamFiberVec1 q) ≠ 1 := fun q hq => hq.2
+  have hfiber := contDiffOn_collarTargetForm (k := k) u₀ hG hGne hinner
+  have hbase : ContDiffOn ℝ k (fun q : ℂ × ℂ => toE2 (hopf1 q).1) (seamDom1 u₀) :=
+    contDiff_toE2.comp_contDiffOn (contDiffOn_fst.comp hhopf (fun q _ => Set.mem_univ _))
+  have hang : ContDiffOn ℝ k (fun q : ℂ × ℂ =>
+      (((OrthonormalBasis.fromOrthogonalSpanSingleton (𝕜 := ℝ) 1
+        (ne_zero_of_mem_unit_sphere (-u₀))).repr
+        (stereoToFun ((-u₀ : NSphere 1) : EuclideanSpace ℝ (Fin (1 + 1)))
+          (‖seamFiberVec1 q‖⁻¹ • seamFiberVec1 q))).ofLp 0)) (seamDom1 u₀) :=
+    (((contDiff_apply ℝ ℝ (0 : Fin 1)).comp PiLp.contDiff_ofLp).comp_contDiffOn (hfiber.fst))
+  refine ContDiffOn.prodMk ?_ hfiber.snd
+  exact (SKEFTHawking.KummerResolutionPieceBoundary.contDiff_assemble).comp_contDiffOn
+    (hbase.prodMk hang)
+
 end
 
 end SKEFTHawking.KummerSeamSmooth
