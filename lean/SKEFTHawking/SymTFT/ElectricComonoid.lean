@@ -320,4 +320,196 @@ private theorem incorner_e :
     Limits.comp_zero, zero_add, add_zero]
   abel
 
+/-! ## §5. The Frobenius compatibility pair -/
+
+/-- The LEFT Frobenius law restricted to an injection corner pair `(ιa, ιb)`. -/
+private def FrobCornerEq {A B : CategoryTheory.Center (VecG_Cat k G2)}
+    (ιa : A ⟶ unitPlusElectricObj k) (ιb : B ⟶ unitPlusElectricObj k) : Prop :=
+  (ιa ⊗ₘ ιb) ≫ (electricComul k ▷ unitPlusElectricObj k) ≫
+      (α_ (unitPlusElectricObj k) (unitPlusElectricObj k) (unitPlusElectricObj k)).hom ≫
+      (unitPlusElectricObj k ◁ electricMul k) =
+    (ιa ⊗ₘ ιb) ≫ electricMul k ≫ electricComul k
+
+/-- **Uniform Frobenius-corner reduction**: merge the whiskers, expand the LHS comultiplication
+through the ι-side incorner, reduce the RHS through the matching μ-corner then the incorner,
+distribute, slide the injections through the associator, fire the μ-corners, and close the
+structural residue (the unit-object corners need `unitors_equal`). -/
+local macro "frob_reduce" : tactic =>
+  `(tactic|
+    (simp only [← MonoidalCategory.tensorHom_id, ← MonoidalCategory.id_tensorHom,
+        MonoidalCategory.tensorHom_comp_tensorHom_assoc,
+        MonoidalCategory.tensorHom_comp_tensorHom, Category.comp_id, Category.id_comp]
+     try rw [incorner_one]
+     try rw [incorner_e]
+     first
+       | (conv_rhs => rw [← Category.assoc, electricMul_corner_11, Category.assoc, incorner_one])
+       | (conv_rhs => rw [← Category.assoc, electricMul_corner_1e, Category.assoc, incorner_e])
+       | (conv_rhs => rw [← Category.assoc, electricMul_corner_e1, Category.assoc, incorner_e])
+       | (conv_rhs => rw [← Category.assoc, electricMul_corner_ee, Category.assoc,
+           Category.assoc, incorner_one])
+     simp only [center_add_tensorHom, Preadditive.add_comp, Preadditive.comp_add, Category.assoc]
+     simp only [split_left_tensor, Category.assoc]
+     simp only [MonoidalCategory.associator_naturality_assoc]
+     simp only [MonoidalCategory.tensorHom_comp_tensorHom_assoc,
+        MonoidalCategory.tensorHom_comp_tensorHom, Category.comp_id, Category.id_comp]
+     simp only [electricMul_corner_11, electricMul_corner_1e, electricMul_corner_e1,
+        electricMul_corner_ee, ← eeVacUnitIso_hom_eq]
+     congr 1 <;>
+       simp [MonoidalCategory.tensorHom_def, MonoidalCategory.unitors_equal]))
+
+private theorem frob_corner_vv :
+    FrobCornerEq k (unitPlusElectric_one k) (unitPlusElectric_one k) := by
+  unfold FrobCornerEq; frob_reduce
+
+private theorem frob_corner_ve :
+    FrobCornerEq k (unitPlusElectric_one k) (electricInj k) := by
+  unfold FrobCornerEq; frob_reduce
+  -- the linchpin residue: `eeVacUnitIso.inv ▷ e` on the left of the associator vs the fold
+  -- through `◁ eeVacUnitIso.hom` on the right; close via `electric_colinchpin` rearranged.
+  have hkey : ((eeVacUnitIso k).inv ▷ electricAnyon k) ≫
+      (α_ (electricAnyon k) (electricAnyon k) (electricAnyon k)).hom =
+      (λ_ (electricAnyon k)).hom ≫ (ρ_ (electricAnyon k)).inv ≫
+        (electricAnyon k ◁ (eeVacUnitIso k).inv) := by
+    rw [← Iso.inv_comp_eq, electric_colinchpin]
+  rw [MonoidalCategory.associator_naturality_left_assoc,
+    ← MonoidalCategory.whisker_exchange_assoc, reassoc_of% hkey]
+  simp [← MonoidalCategory.whiskerLeft_comp_assoc]
+
+private theorem frob_corner_ev :
+    FrobCornerEq k (electricInj k) (unitPlusElectric_one k) := by
+  unfold FrobCornerEq; frob_reduce
+
+private theorem frob_corner_ee :
+    FrobCornerEq k (electricInj k) (electricInj k) := by
+  unfold FrobCornerEq; frob_reduce
+  · -- structural residue: slide `ι1` through the associator sandwich, then unfold the
+    -- `eeVacUnitIso` fold and let unitor naturality (+ `unitors_equal`) close.
+    simp only [MonoidalCategory.associator_naturality_left_assoc, Iso.inv_hom_id_assoc]
+    rw [← MonoidalCategory.whisker_exchange_assoc]
+    simp [← MonoidalCategory.leftUnitor_inv_naturality_assoc,
+      ← MonoidalCategory.rightUnitor_inv_naturality_assoc, ← eeVacUnitIso_hom_eq,
+      MonoidalCategory.unitors_equal, ← Category.assoc]
+  · -- the `eeVacUnitIso` fold: `esq.hom ≫ vacU.hom = eeVac.hom`, then `hom ≫ inv = 𝟙`.
+    simp only [← Category.assoc, ← eeVacUnitIso_hom_eq]
+    simp
+
+/-- **The LEFT Frobenius law** on the toric electric Lagrangian object:
+`(Δ ▷ X) ≫ α ≫ (X ◁ μ) = μ ≫ Δ`. Assembled from the four injection corners by DOMAIN-side
+biproduct extensionality: the domain identity `𝟙_{X⊗X}` decomposes through
+`unitPlusElectric_total`, each of the four `(ιa ⊗ ιb)`-precomposed instances is a
+`frob_corner_*`, and the sum reassembles. Together with separability
+(`electricComul_comp_electricMul` = FPdim `2·𝟙`) this makes `(μ, ι1, Δ, ε)` a genuine
+Frobenius structure — the S2 apex's compatibility content, not just the two bare
+(co)monoid instances. -/
+theorem electricFrobenius_left :
+    (electricComul k ▷ unitPlusElectricObj k) ≫
+        (α_ (unitPlusElectricObj k) (unitPlusElectricObj k) (unitPlusElectricObj k)).hom ≫
+        (unitPlusElectricObj k ◁ electricMul k) =
+      electricMul k ≫ electricComul k := by
+  have hid : ((unitPlusElectric_counit k ≫ unitPlusElectric_one k
+        + electricProj k ≫ electricInj k) ⊗ₘ
+      (unitPlusElectric_counit k ≫ unitPlusElectric_one k + electricProj k ≫ electricInj k)) =
+      𝟙 (unitPlusElectricObj k ⊗ unitPlusElectricObj k) := by
+    rw [unitPlusElectric_total]; simp
+  conv_lhs => rw [← Category.id_comp ((electricComul k ▷ unitPlusElectricObj k) ≫
+    (α_ (unitPlusElectricObj k) (unitPlusElectricObj k) (unitPlusElectricObj k)).hom ≫
+    (unitPlusElectricObj k ◁ electricMul k)), ← hid]
+  conv_rhs => rw [← Category.id_comp (electricMul k ≫ electricComul k), ← hid]
+  simp only [center_add_tensorHom, center_tensorHom_add,
+    ← MonoidalCategory.tensorHom_comp_tensorHom, Preadditive.add_comp, Category.assoc]
+  rw [frob_corner_vv k, frob_corner_ve k, frob_corner_ev k, frob_corner_ee k]
+
+/-- The RIGHT Frobenius law restricted to an injection corner pair `(ιa, ιb)`. -/
+private def FrobCornerEqR {A B : CategoryTheory.Center (VecG_Cat k G2)}
+    (ιa : A ⟶ unitPlusElectricObj k) (ιb : B ⟶ unitPlusElectricObj k) : Prop :=
+  (ιa ⊗ₘ ιb) ≫ (unitPlusElectricObj k ◁ electricComul k) ≫
+      (α_ (unitPlusElectricObj k) (unitPlusElectricObj k) (unitPlusElectricObj k)).inv ≫
+      (electricMul k ▷ unitPlusElectricObj k) =
+    (ιa ⊗ₘ ιb) ≫ electricMul k ≫ electricComul k
+
+/-- The mirror of `frob_reduce` WITHOUT the final `congr` split: the comultiplication sits in
+the SECOND tensor slot, so the split is `split_right_tensor` and the slide is inverse-associator
+naturality. The mixed corners' biproduct terms come out in CROSSED order, so the closing split
+is per-corner (with an `add_comm` swap where needed). -/
+local macro "frob_prefix_r" : tactic =>
+  `(tactic|
+    (simp only [← MonoidalCategory.tensorHom_id, ← MonoidalCategory.id_tensorHom,
+        MonoidalCategory.tensorHom_comp_tensorHom_assoc,
+        MonoidalCategory.tensorHom_comp_tensorHom, Category.comp_id, Category.id_comp]
+     try rw [incorner_one]
+     try rw [incorner_e]
+     first
+       | (conv_rhs => rw [← Category.assoc, electricMul_corner_11, Category.assoc, incorner_one])
+       | (conv_rhs => rw [← Category.assoc, electricMul_corner_1e, Category.assoc, incorner_e])
+       | (conv_rhs => rw [← Category.assoc, electricMul_corner_e1, Category.assoc, incorner_e])
+       | (conv_rhs => rw [← Category.assoc, electricMul_corner_ee, Category.assoc,
+           Category.assoc, incorner_one])
+     simp only [center_add_tensorHom, center_tensorHom_add, Preadditive.add_comp,
+        Preadditive.comp_add, Category.assoc]
+     simp only [split_right_tensor, Category.assoc]
+     simp only [MonoidalCategory.associator_inv_naturality_assoc]
+     simp only [MonoidalCategory.tensorHom_comp_tensorHom_assoc,
+        MonoidalCategory.tensorHom_comp_tensorHom, Category.comp_id, Category.id_comp]
+     simp only [electricMul_corner_11, electricMul_corner_1e, electricMul_corner_e1,
+        electricMul_corner_ee, ← eeVacUnitIso_hom_eq]))
+
+private theorem frob_corner_r_vv :
+    FrobCornerEqR k (unitPlusElectric_one k) (unitPlusElectric_one k) := by
+  unfold FrobCornerEqR; frob_prefix_r
+  congr 1 <;> simp [MonoidalCategory.tensorHom_def, MonoidalCategory.unitors_equal]
+  -- the unit-triple coherence prefix `λ⁻¹_{𝟙⊗𝟙} ≫ α⁻¹ ≫ ρ_{𝟙⊗𝟙} = 𝟙` (via `leftUnitor_tensor_inv`
+  -- + right-unitor naturality + `unitors_inv_equal`).
+  simp [MonoidalCategory.leftUnitor_tensor_inv, MonoidalCategory.unitors_inv_equal]
+
+private theorem frob_corner_r_ve :
+    FrobCornerEqR k (unitPlusElectric_one k) (electricInj k) := by
+  unfold FrobCornerEqR; frob_prefix_r
+  congr 1 <;> simp [MonoidalCategory.tensorHom_def, MonoidalCategory.unitors_equal]
+
+private theorem frob_corner_r_ev :
+    FrobCornerEqR k (electricInj k) (unitPlusElectric_one k) := by
+  unfold FrobCornerEqR; frob_prefix_r
+  conv_rhs => rw [add_comm]
+  congr 1 <;> simp [MonoidalCategory.tensorHom_def, MonoidalCategory.unitors_equal]
+  -- the mirror linchpin residue, via `electric_linchpin` under `cancel_mono λ`.
+  have hkey : (electricAnyon k ◁ (eeVacUnitIso k).inv) ≫
+      (α_ (electricAnyon k) (electricAnyon k) (electricAnyon k)).inv ≫
+      ((eeVacUnitIso k).hom ▷ electricAnyon k) =
+      (ρ_ (electricAnyon k)).hom ≫ (λ_ (electricAnyon k)).inv := by
+    rw [← cancel_mono (λ_ (electricAnyon k)).hom]
+    simp [electric_linchpin, ← MonoidalCategory.whiskerLeft_comp_assoc]
+  rw [reassoc_of% hkey]
+
+private theorem frob_corner_r_ee :
+    FrobCornerEqR k (electricInj k) (electricInj k) := by
+  unfold FrobCornerEqR; frob_prefix_r
+  conv_rhs => rw [add_comm]
+  congr 1 <;> simp [MonoidalCategory.tensorHom_def, MonoidalCategory.unitors_equal]
+  -- both residues are the `eeVacUnitIso` fold `esq.hom ≫ vacU.hom = eeVac.hom`.
+  · simp only [← Category.assoc, ← eeVacUnitIso_hom_eq]
+    simp
+  · simp only [← Category.assoc, ← eeVacUnitIso_hom_eq]
+    simp [MonoidalCategory.unitors_inv_equal]
+
+/-- **The RIGHT Frobenius law**: `(X ◁ Δ) ≫ α⁻¹ ≫ (μ ▷ X) = μ ≫ Δ` — the mirror of
+`electricFrobenius_left`, by the same domain-side biproduct extensionality over the four
+injection corners. -/
+theorem electricFrobenius_right :
+    (unitPlusElectricObj k ◁ electricComul k) ≫
+        (α_ (unitPlusElectricObj k) (unitPlusElectricObj k) (unitPlusElectricObj k)).inv ≫
+        (electricMul k ▷ unitPlusElectricObj k) =
+      electricMul k ≫ electricComul k := by
+  have hid : ((unitPlusElectric_counit k ≫ unitPlusElectric_one k
+        + electricProj k ≫ electricInj k) ⊗ₘ
+      (unitPlusElectric_counit k ≫ unitPlusElectric_one k + electricProj k ≫ electricInj k)) =
+      𝟙 (unitPlusElectricObj k ⊗ unitPlusElectricObj k) := by
+    rw [unitPlusElectric_total]; simp
+  conv_lhs => rw [← Category.id_comp ((unitPlusElectricObj k ◁ electricComul k) ≫
+    (α_ (unitPlusElectricObj k) (unitPlusElectricObj k) (unitPlusElectricObj k)).inv ≫
+    (electricMul k ▷ unitPlusElectricObj k)), ← hid]
+  conv_rhs => rw [← Category.id_comp (electricMul k ≫ electricComul k), ← hid]
+  simp only [center_add_tensorHom, center_tensorHom_add,
+    ← MonoidalCategory.tensorHom_comp_tensorHom, Preadditive.add_comp, Category.assoc]
+  rw [frob_corner_r_vv k, frob_corner_r_ve k, frob_corner_r_ev k, frob_corner_r_ee k]
+
 end SKEFTHawking.SymTFT.ElectricComonoid
