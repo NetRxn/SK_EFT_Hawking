@@ -35,7 +35,10 @@ open SKEFTHawking.KummerPunctureBalls (ann4)
 open SKEFTHawking.KummerPunctureAnnulus
 open SKEFTHawking.KummerK3Base (TorusFour)
 open SKEFTHawking.KummerWeld (EIndex)
-open SKEFTHawking.KummerPunctureBalls (ballsV thickA)
+open SKEFTHawking.KummerPunctureBalls (ballsV thickA punc_hcov)
+open SKEFTHawking.KummerPuncturedMV (interH2_eq_zero ballsV_homology_eq_zero)
+open SKEFTHawking.SingularMayerVietorisLESInt (mvHomSumInt mv_exact_ambientInt mvHomSumInt_apply)
+open SKEFTHawking.SingularMayerVietorisLES (ambIncl)
 
 noncomputable section
 
@@ -64,6 +67,23 @@ theorem ballsVH3_eq_zero (x : Homology (sub (X := TopCat.of TorusFour) ballsV) 3
   refine (LinearEquiv.map_eq_zero_iff (SKEFTHawking.KummerPuncturedMV.ballsVHnEquiv 3)).mp ?_
   funext _
   exact d4_homology_vanish 2 _
+
+/-- **`Σ₃` is surjective** — `H₂(collar) = 0` kills the outgoing connecting map, so
+`H₃(thickA) ⊕ H₃(ballsV) → H₃(T⁴)` is onto. Degree-3 mirror of `puncSum2_surjective`. -/
+theorem puncSum3_surjective :
+    Function.Surjective (mvHomSumInt (X := TopCat.of TorusFour) thickA ballsV 3) := fun x =>
+  (mv_exact_ambientInt (X := TopCat.of TorusFour) thickA ballsV 2 punc_hcov x).mp
+    (interH2_eq_zero _)
+
+/-- **Every `H₃(T⁴;ℤ)` class comes from `thickA` alone** — the ball side is dead in degree 3
+(`H₃(ballsV) = 0`). So `H₃(thickA) = H₃(T⁴°) ↠ H₃(T⁴) = ℤ⁴`. Degree-3 mirror of `thickIncl2_surjective`;
+the `ℤ⁴` free-quotient half of `H₃(T⁴°) ≅ ℤ¹⁹` (the `ℤ¹⁵` kernel half is `im Δ₃`, still open). -/
+theorem thickIncl3_surjective :
+    Function.Surjective (Homology.mapInt (ambIncl (X := TopCat.of TorusFour) thickA) 3) := by
+  intro x
+  obtain ⟨⟨u, v⟩, h⟩ := puncSum3_surjective x
+  rw [mvHomSumInt_apply, ballsV_homology_eq_zero 2 v, map_zero, sub_zero] at h
+  exact ⟨u, h⟩
 
 end
 
