@@ -141,22 +141,94 @@ theorem k3_candidate_split (M : Matrix (Fin 22) (Fin 22) ℤ)
   exact ⟨D, e₁, e₂, e₃, heuD, hsigD, hDdef,
     hcong₁.trans (IntCongr.hyp_block e₁ (hcong₂.trans (IntCongr.hyp_block e₂ hcong₃)))⟩
 
+/-! ### Block-permutation congruence toolkit (deliverable 3 support)
+
+The pure-permutation reblock `3H ⊕ 2(−E₈) ≅ 2(−E₈) ⊕ 3H = k3Form` needs a small reusable toolkit: a
+permutation `σ` acting on the index (`M.submatrix σ σ`) is an `IntCongr` (the permutation matrix `P =
+1.submatrix id σ` is unimodular via `P Pᵀ = 1` and `Pᵀ M P = M.submatrix σ σ`), relabellings of the same
+block matrix are congruent, and `blockDiag` respects congruence, commutes, and associates. -/
+
+/-- **A relabelling of the index is an integer congruence.** For a permutation `σ : Fin n ≃ Fin n` the
+permutation matrix `P = 1.submatrix id σ` is unimodular (`P Pᵀ = 1`, so `(det P)² = 1`) and satisfies
+`Pᵀ M P = M.submatrix σ σ`. The reusable core: a permutation of coordinates reorders orthogonal summands. -/
+theorem intCongr_submatrix_self {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (σ : Fin n ≃ Fin n) :
+    IntCongr M (M.submatrix σ σ) := by
+  refine ⟨(1 : Matrix (Fin n) (Fin n) ℤ).submatrix id σ, ?_, ?_⟩
+  · have hPPt : ((1 : Matrix (Fin n) (Fin n) ℤ).submatrix id σ)
+        * ((1 : Matrix (Fin n) (Fin n) ℤ).submatrix id σ)ᵀ = 1 := by
+      rw [Matrix.transpose_submatrix, Matrix.transpose_one,
+        Matrix.mul_submatrix_one, Matrix.submatrix_submatrix]
+      simp
+    have hdet := congrArg Matrix.det hPPt
+    rw [Matrix.det_mul, Matrix.det_transpose, Matrix.det_one] at hdet
+    exact ⟨Units.mkOfMulEqOne _ _ hdet, rfl⟩
+  · rw [Matrix.transpose_submatrix, Matrix.transpose_one]
+    ext i j
+    simp [Matrix.mul_apply, Matrix.submatrix_apply, Matrix.one_apply, Finset.sum_ite_eq,
+      Finset.sum_ite_eq', mul_comm]
+
+/-- **Two relabellings of the same block matrix are congruent.** `reindex e e X ≅ reindex f f X` for any
+`e f : ι ≃ Fin n`: the two only differ by the permutation `f.symm.trans e` of `Fin n`, so
+`intCongr_submatrix_self` applies. Lets an arbitrary reindex (e.g. the `eᵢ` a peel produces) be swapped
+for the canonical `finSumFinEquiv` reindex inside `blockDiag`. -/
+theorem intCongr_reindex_reindex {n : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (X : Matrix ι ι ℤ) (e f : ι ≃ Fin n) :
+    IntCongr (Matrix.reindex e e X) (Matrix.reindex f f X) := by
+  have hsub : Matrix.reindex f f X
+      = (Matrix.reindex e e X).submatrix (f.symm.trans e) (f.symm.trans e) := by
+    ext i j
+    simp [Matrix.reindex_apply, Matrix.submatrix_apply]
+  rw [hsub]
+  exact intCongr_submatrix_self _ _
+
+/-- **`blockDiag` respects congruence.** If `A ≅ A'` and `B ≅ B'` then `A ⊕ B ≅ A' ⊕ B'`, via the
+block-diagonal change of basis `blockDiag P Q` (`det = det P · det Q`, and `fromBlocks` distributes over
+the product). The multiplicative core of the reblock. -/
+theorem blockDiag_congr {na nb : ℕ} {A A' : Matrix (Fin na) (Fin na) ℤ}
+    {B B' : Matrix (Fin nb) (Fin nb) ℤ} (hA : IntCongr A A') (hB : IntCongr B B') :
+    IntCongr (blockDiag A B) (blockDiag A' B') := by
+  obtain ⟨P, hP, hPeq⟩ := hA
+  obtain ⟨Q, hQ, hQeq⟩ := hB
+  refine ⟨blockDiag P Q, ?_, ?_⟩
+  · rw [SpinSigmaRoute.blockDiag_def, Matrix.det_reindex_self, Matrix.det_fromBlocks_zero₂₁]
+    exact hP.mul hQ
+  · simp only [SpinSigmaRoute.blockDiag_def]
+    simp only [Matrix.reindex_apply, Matrix.transpose_submatrix, Matrix.submatrix_mul_equiv]
+    congr 1
+    rw [Matrix.fromBlocks_transpose, Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply]
+    simp only [Matrix.transpose_zero, Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add,
+      hPeq, hQeq]
+
+/-- **`blockDiag` block-swap is a coordinate relabelling.** `B ⊕ A` is the `Sum.swap` submatrix of
+`A ⊕ B` (the two orthogonal summands trade places under the half-swap permutation of the index). Combined
+with `intCongr_submatrix_self` this yields `A ⊕ B ≅ B ⊕ A` at any concrete pair of block sizes. -/
+theorem blockDiag_swap_eq {na nb : ℕ} (A : Matrix (Fin na) (Fin na) ℤ)
+    (B : Matrix (Fin nb) (Fin nb) ℤ) :
+    blockDiag B A = (blockDiag A B).submatrix
+      (finSumFinEquiv.symm.trans ((Equiv.sumComm (Fin nb) (Fin na)).trans finSumFinEquiv))
+      (finSumFinEquiv.symm.trans ((Equiv.sumComm (Fin nb) (Fin na)).trans finSumFinEquiv)) := by
+  rw [SpinSigmaRoute.blockDiag_def, SpinSigmaRoute.blockDiag_def, Matrix.reindex_apply,
+    Matrix.reindex_apply, Matrix.submatrix_submatrix,
+    ← Matrix.fromBlocks_submatrix_sum_swap_sum_swap A 0 0 B, Matrix.submatrix_submatrix]
+  congr 1 <;>
+    (ext x; simp [Function.comp, Equiv.trans_apply, Equiv.symm_apply_apply, Equiv.sumComm_apply])
+
 /-! ### The consumer stub: reducing `IntCongr M k3Form` to the interior brick (deliverable 3)
 
 `k3_candidate_split` reduces any even unimodular rank-22 σ=−16 form `M` to `3H ⊕ D` with `D` a
-negative-definite rank-16 even unimodular residual. Reaching `k3Form = 2(−E₈) ⊕ 3H` needs one more input —
+negative-definite rank-16 even unimodular residual. Reaching `k3Form = 2(−E₈) ⊕ 3H` needs one more input:
 the hard interior brick, exposed here as a `Prop` interface so its exact statement is concrete and
 consumable BEFORE it is proved (a later escalation owns it; NOT this dispatch).
 
-The interface has two parts, cleanly separated:
-* `StableNegRank16` — THE geometric content: the **one-hyperbolic stabilization** `H ⊕ D ≅ H ⊕ 2(−E₈)`
-  for any negative-definite even unimodular rank-16 `D`. Note rank-16 *definite* uniqueness is FALSE
-  (`E₈² ≇ D₁₆⁺`); only the `H`-stabilized statement is true, which is why the extra `H` is essential.
-* `ReblockToK3` — pure permutation bookkeeping: the block-reordering `3H ⊕ 2(−E₈) ≅ 2(−E₈) ⊕ 3H = k3Form`
-  (no geometry — an orthogonal-summand reordering congruence; an isolable ≤1-brick cleanup).
+* `StableNegRank16` (`Prop` interface, OPEN) — THE geometric content: the **one-hyperbolic stabilization**
+  `H ⊕ D ≅ H ⊕ 2(−E₈)` for any negative-definite even unimodular rank-16 `D`. Note rank-16 *definite*
+  uniqueness is FALSE (`E₈² ≇ D₁₆⁺`); only the `H`-stabilized statement is true, so the extra `H` is essential.
+* `reblockToK3` (PROVED, above §"Block-permutation congruence toolkit") — pure permutation bookkeeping: the
+  block-reordering `3H ⊕ 2(−E₈) ≅ 2(−E₈) ⊕ 3H = k3Form` (no geometry — an orthogonal-summand reordering
+  congruence). Discharged, so `hk3_of_stable16` depends on `StableNegRank16` ALONE.
 
 `hk3_of_stable16` wires them: `k3_candidate_split` (2) → `IntCongr.hyp_block` reassembly lifting the
-rank-18 stabilization through the three peeled `H`'s → the reblock. -/
+rank-18 stabilization through the three peeled `H`'s → `reblockToK3`. -/
 
 /-- **The interior brick interface (the one-hyperbolic stabilization).** For any negative-definite even
 unimodular rank-16 form `D` (`σ = −16`, `sigPos = 0`), adding a hyperbolic plane yields a form congruent to
@@ -168,32 +240,85 @@ def StableNegRank16 : Prop :=
     IsEvenUnimodular D → latticeSig D = -16 →
     sigPos (D.map (Int.cast : ℤ → ℝ)).toQuadraticMap' = 0 →
     IntCongr (Matrix.reindex e e (Matrix.fromBlocks Hyp 0 0 D))
-      (Matrix.reindex e e (Matrix.fromBlocks Hyp 0 0 (blockDiag (-E8lit) (-E8lit))))
+      (Matrix.reindex e e (Matrix.fromBlocks Hyp 0 0 (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit))))
 
-/-- **The block-reordering interface (pure permutation bookkeeping).** The peeled form `3H ⊕ 2(−E₈)` (three
-hyperbolic planes stacked over `2(−E₈)`, in the reindexings `e₁,e₂,e₃` the split produces) is congruent to
-`k3Form = 2(−E₈) ⊕ 3H`. No geometry — an orthogonal-summand reordering congruence (an isolable ≤1-brick
-permutation cleanup). Separated from `StableNegRank16` to keep the geometric interior brick's interface
-clean. -/
-def ReblockToK3 : Prop :=
-  ∀ (e₁ : Fin 2 ⊕ Fin 20 ≃ Fin 22) (e₂ : Fin 2 ⊕ Fin 18 ≃ Fin 20) (e₃ : Fin 2 ⊕ Fin 16 ≃ Fin 18),
+/-- **The block-reordering brick (pure permutation bookkeeping) — PROVED.** The peeled form `3H ⊕ 2(−E₈)`
+(three hyperbolic planes stacked over `2(−E₈)`, in the reindexings `e₁,e₂,e₃` the split produces) is
+congruent to `k3Form = 2(−E₈) ⊕ 3H`. No geometry: the arbitrary peel reindexings `eᵢ` are relabelled to the
+canonical `blockDiag` shape (`IntCongr.hyp_block` + `intCongr_reindex_reindex`), then the `2(−E₈)` block is
+rotated from the inside to the front by three `blockDiag`-swap congruences (`blockDiag_swap_eq` +
+`intCongr_submatrix_self`, threaded by `blockDiag_congr`). Discharges the former `ReblockToK3` interface, so
+`hk3_of_stable16` now depends on `StableNegRank16` alone. -/
+theorem reblockToK3
+    (e₁ : Fin 2 ⊕ Fin 20 ≃ Fin 22) (e₂ : Fin 2 ⊕ Fin 18 ≃ Fin 20) (e₃ : Fin 2 ⊕ Fin 16 ≃ Fin 18) :
     IntCongr (Matrix.reindex e₁ e₁ (Matrix.fromBlocks Hyp 0 0
       (Matrix.reindex e₂ e₂ (Matrix.fromBlocks Hyp 0 0
-        (Matrix.reindex e₃ e₃ (Matrix.fromBlocks Hyp 0 0 (blockDiag (-E8lit) (-E8lit)))))))) k3Form
+        (Matrix.reindex e₃ e₃ (Matrix.fromBlocks Hyp 0 0 (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit)))))))) k3Form := by
+  -- Step 1: relabel the arbitrary peel reindexings `eᵢ` to the canonical `blockDiag` shape.
+  have h3 : IntCongr
+      (Matrix.reindex e₃ e₃ (Matrix.fromBlocks Hyp 0 0 (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit))))
+      (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit))) :=
+    intCongr_reindex_reindex (Matrix.fromBlocks Hyp 0 0 (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit))) e₃ finSumFinEquiv
+  have h2 : IntCongr
+      (Matrix.reindex e₂ e₂ (Matrix.fromBlocks Hyp 0 0
+        (Matrix.reindex e₃ e₃ (Matrix.fromBlocks Hyp 0 0 (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit))))))
+      (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit)))) :=
+    (IntCongr.hyp_block e₂ h3).trans
+      (intCongr_reindex_reindex
+        (Matrix.fromBlocks Hyp 0 0 (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit)))) e₂ finSumFinEquiv)
+  have h1 : IntCongr
+      (Matrix.reindex e₁ e₁ (Matrix.fromBlocks Hyp 0 0
+        (Matrix.reindex e₂ e₂ (Matrix.fromBlocks Hyp 0 0
+          (Matrix.reindex e₃ e₃ (Matrix.fromBlocks Hyp 0 0 (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit))))))))
+      (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit))))) :=
+    (IntCongr.hyp_block e₁ h2).trans
+      (intCongr_reindex_reindex
+        (Matrix.fromBlocks Hyp 0 0 (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit)))))
+        e₁ finSumFinEquiv)
+  -- Step 2: rotate the `2(−E₈)` block from the inside to the front (three `blockDiag` swaps,
+  -- threaded through the outer hyperbolic planes by `blockDiag_congr`).
+  have cW' : @IntCongr 18 (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit)))
+      (SpinSigmaRoute.blockDiag (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit)) Hyp) := by
+    rw [blockDiag_swap_eq Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit))]
+    exact intCongr_submatrix_self _ _
+  have cW : @IntCongr 20
+      (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit))))
+      (SpinSigmaRoute.blockDiag (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit))) Hyp) := by
+    rw [blockDiag_swap_eq Hyp (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit)))]
+    exact intCongr_submatrix_self _ _
+  have cTop : @IntCongr 22
+      (SpinSigmaRoute.blockDiag Hyp
+        (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit)))))
+      (SpinSigmaRoute.blockDiag
+        (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit)))) Hyp) := by
+    rw [blockDiag_swap_eq Hyp
+      (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit))))]
+    exact intCongr_submatrix_self _ _
+  have hmid : @IntCongr 20
+      (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit))))
+      (SpinSigmaRoute.blockDiag (SpinSigmaRoute.blockDiag (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit)) Hyp) Hyp) :=
+    cW.trans (blockDiag_congr cW' (IntCongr.rfl Hyp))
+  have htop : @IntCongr 22
+      (SpinSigmaRoute.blockDiag Hyp
+        (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag Hyp (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit)))))
+      (SpinSigmaRoute.blockDiag (SpinSigmaRoute.blockDiag
+        (SpinSigmaRoute.blockDiag (SpinSigmaRoute.blockDiag (-E8lit) (-E8lit)) Hyp) Hyp) Hyp) :=
+    cTop.trans (blockDiag_congr hmid (IntCongr.rfl Hyp))
+  exact h1.trans htop
 
 /-- **The K8b consumer stub** (deliverable 3): `IntCongr M k3Form` for any even unimodular rank-22 form of
-signature `−16`, reduced to the interior brick `StableNegRank16` (+ the permutation reblock `ReblockToK3`).
-This is the one-line reduction wiring the interior interface: `k3_candidate_split` peels three hyperbolic
-planes off `M` down to a negative-definite rank-16 residual `D`; `StableNegRank16` stabilizes `H ⊕ D` to
-`H ⊕ 2(−E₈)`; `IntCongr.hyp_block` lifts that through the three peeled `H`'s; `ReblockToK3` reorders the
-result into `k3Form`. Once the escalation proves `StableNegRank16` (and the trivial `ReblockToK3`), this
+signature `−16`, reduced to the interior brick `StableNegRank16` ALONE (the permutation reblock is now the
+proved `reblockToK3`). This is the one-line reduction wiring the interior interface: `k3_candidate_split`
+peels three hyperbolic planes off `M` down to a negative-definite rank-16 residual `D`; `StableNegRank16`
+stabilizes `H ⊕ D` to `H ⊕ 2(−E₈)`; `IntCongr.hyp_block` lifts that through the three peeled `H`'s;
+`reblockToK3` reorders the result into `k3Form`. Once the escalation proves `StableNegRank16`, this
 discharges the `hk3` field of `K3RealizingElement` unconditionally. -/
-theorem hk3_of_stable16 (hstable : StableNegRank16) (hreblock : ReblockToK3)
+theorem hk3_of_stable16 (hstable : StableNegRank16)
     (M : Matrix (Fin 22) (Fin 22) ℤ) (heu : IsEvenUnimodular M) (hsig : latticeSig M = -16) :
     IntCongr M k3Form := by
   obtain ⟨D, e₁, e₂, e₃, hD, hDsig, hDdef, hcong⟩ := k3_candidate_split M heu hsig
   have hstab := hstable D e₃ hD hDsig hDdef
   exact (hcong.trans (IntCongr.hyp_block e₁ (IntCongr.hyp_block e₂ hstab))).trans
-    (hreblock e₁ e₂ e₃)
+    (reblockToK3 e₁ e₂ e₃)
 
 end SKEFTHawking
