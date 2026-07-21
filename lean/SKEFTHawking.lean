@@ -4670,6 +4670,7 @@ import SKEFTHawking.KummerChartedSpace
 import SKEFTHawking.KummerShellChart
 import SKEFTHawking.KummerBoundaryChart
 import SKEFTHawking.KummerBoundaryChartSmooth
+import SKEFTHawking.KummerQuotientManifold
 import SKEFTHawking.KummerHomologyT4
 import SKEFTHawking.KummerH0T4
 import SKEFTHawking.KummerHomologyT2
