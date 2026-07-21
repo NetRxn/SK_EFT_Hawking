@@ -4698,6 +4698,9 @@ import SKEFTHawking.KummerRP3SmithSES
 import SKEFTHawking.KummerRP3HomologySolve
 import SKEFTHawking.KummerRP3H1Pin
 import SKEFTHawking.KummerRP3HomologyTop
+import SKEFTHawking.KummerRP3EuclCharts
+import SKEFTHawking.KummerRP3GoodCoverTelescope
+import SKEFTHawking.KummerRP3HomologyUnconditional
 import SKEFTHawking.CircleWindingCocycle
 import SKEFTHawking.TorusCrossPeel
 import SKEFTHawking.KummerT4GramCross
