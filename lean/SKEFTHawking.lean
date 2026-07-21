@@ -4718,6 +4718,11 @@ import SKEFTHawking.KummerPunctureFlow
 import SKEFTHawking.KummerPunctureBalls
 import SKEFTHawking.KummerPunctureAnnulus
 import SKEFTHawking.KummerPuncturedMV
+import SKEFTHawking.KummerK7Delta1Window
+import SKEFTHawking.KummerQuotientDeckFunctional
+import SKEFTHawking.SingularFiniteProdSingleInt
+import SKEFTHawking.KummerK7Delta1Image
+import SKEFTHawking.KummerK7H1Window
 import SKEFTHawking.CircleWindingCocycle
 import SKEFTHawking.TorusCrossPeel
 import SKEFTHawking.KummerT4GramCross
