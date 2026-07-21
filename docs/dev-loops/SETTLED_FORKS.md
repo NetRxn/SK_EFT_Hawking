@@ -418,3 +418,38 @@ characteristic-bordism (KT) route. Source: the 2026-07-20 vetted codex hcolD dos
 
 - **`k7-seam-cover-interior-fails` (KERNEL-REFUTED, registry-backed):** the K7 opener's `K7SeamCoverHyp` (interiors of the un-thickened closed weld pieces cover K3) is FALSE — `k7SeamCoverHyp_false` (KummerK7SeamCoverNoGo). A seam point is interior to neither piece. The UNIQUE route is the collar-thickened cover (`qThick`, `k7_hcov` — discharged). Do not aim any worker at "discharge K7SeamCoverHyp".
 - **δ₁ fence (route caution, prose):** in the K7 degree-2 window, the MV connecting map δ₁ over H₁(collar) = (ℤ/2)¹⁶ is GENUINELY NONZERO for the true K3 (the Kummer lattice has 2-power index in H₂). Do NOT dispatch "prove δ₁ = 0" — the correct target is the δ₁-image/extension analysis (the cokernel-exponent-2 window `k7H2_two_smul_mem_range` is the honest bound already landed).
+
+## 2026-07-21 — Gram atoms: a literal matrix EQUALITY is the wrong target (route fact, prose; kernel-CHARACTERIZED)
+
+**`SphereProdGramPin` is RETIRED, not proved — and it is independent of the in-tree data, not merely
+unproven.** The abbrev asks for the literal `interMatrix fc B = sphereProdFormDatum` on the computed
+basis. The exact computed-basis Gram is now kernel-checked
+(`SphereProdGramPinRetire.sphereProd_interMatrix_computed_eq`):
+
+    interMatrix fc sphereProdIntH2Basis = !![-(2·s·u·ε), u·ε; u·ε, 0]
+
+with `s = (sphereProdCohomTwoEquivInt (alphaOf xS)).2`, `u = topSphereIsoInt 1 deltaSnd`, `ε` the E–Z
+cross value. Hence (`sphereProdGramPin_iff`) the pin holds **iff `s = 0 ∧ u·ε = 1`**, and BOTH conjuncts
+are unavailable:
+
+1. **`s = 0` is CHOICE-DEPENDENT — the stronger obstruction.** `deltaGen` is an `Exists.choose` section
+   pinned only modulo `sumInto`, and `fst_* sumInto ≠ 0` (`sumInto_prodFst`). Replacing
+   `deltaGen ↦ deltaGen + k·sumInto 1` shifts `s` by `k` and the (0,0) entry by `−2kuε`. So the pin is
+   **independent of the in-tree data**. Note this kills the old hope that normalizing the cross value to
+   literally `1` would suffice — even a normalized `ε` leaves the diagonal free.
+2. **`u·ε = 1`** — the orientation/sign gap; both are pinned only as units.
+
+**The content the pin stood in for IS in tree and unconditional:**
+`SphereProdBasisIdInt.sphereProd_interMatrix_intCongr_hyp` proves `II(S²×S²) ≅ Hyp` *itself* — sharp,
+no hypotheses — via the MV cup–Stokes peel (`SphereProdHemiUnitInt.hcross_pm`) plus the basis-ID
+(`crossFamily_basis_intCongr`). Every consumer's conclusion is **congruence-invariant**
+(`∃ N, IsHyperbolicForm N ∧ IntCongr M N` by transitivity; `IsEvenUnimodular` via the pre-existing
+`IntCongr.isEvenUnimodular`; likewise `latticeSig` and the `2 ∣ σ/8` binder), so the congruence
+supersedes the equality. Hypothesis-free replacements:
+`SphereProdGramPinRetire.sphereProd_s2s2_{hyp,evenUnimodular,latticeSig,htopo}'`.
+
+**THE GENERAL RULE (applies to every future Gram atom, incl. the K3/T⁴ one):** state Gram targets as
+`IntCongr … <form>`, never as a literal matrix equality on a chosen basis. The extra content of an
+equality over a congruence is basis normalization, not geometry, and it is generically unreachable
+whenever any basis vector comes from a choice. `KummerK3Base` §K8 already targets `IntCongr … k3Form`
+— that is the correct shape; keep it. Do not dispatch a worker at "prove the literal Gram equality".
