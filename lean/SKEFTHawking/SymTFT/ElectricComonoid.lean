@@ -225,4 +225,36 @@ noncomputable instance electricComonObj : CategoryTheory.ComonObj (unitPlusElect
   comul_counit := electricComul_comul_counit k
   comul_assoc := electricComul_assoc k
 
+/-! ## §3. Separability — the composite `Δ ≫ μ` computed exactly
+
+Each of the four (co)corner contributions is either `ε ≫ ι1` (the `(1,1)` and `(e,e)` corners —
+the latter through the fusion pairing `eeVacUnitIso.inv ≫ eeVacUnitIso.hom = 𝟙`) or `πe ≫ ιe`
+(the two mixed corners), so `Δ ≫ μ = 2·(ε ≫ ι1 + πe ≫ ιe) = 𝟙 + 𝟙` by `unitPlusElectric_total`.
+The value `2·𝟙` is the FPdim of the object — the separability idempotent is `½Δ` away from
+char 2 (the char-2 caveat is the ledger's documented modeling note). Falsifiable: a degenerate
+comultiplication (the old `unitPlusElectric_comul`) composes to `𝟙 + ε≫ι1 ≠ 2·𝟙`. -/
+
+/-- **The separability composite**: `Δ ≫ μ = 𝟙 + 𝟙` on the toric electric Lagrangian object —
+the exact FPdim-2 separability value of the Frobenius structure. -/
+theorem electricComul_comp_electricMul :
+    electricComul k ≫ electricMul k =
+      𝟙 (unitPlusElectricObj k) + 𝟙 (unitPlusElectricObj k) := by
+  have hid : ((unitPlusElectric_counit k ≫ unitPlusElectric_one k
+        + electricProj k ≫ electricInj k) ⊗ₘ
+      (unitPlusElectric_counit k ≫ unitPlusElectric_one k + electricProj k ≫ electricInj k)) =
+      𝟙 (unitPlusElectricObj k ⊗ unitPlusElectricObj k) := by
+    rw [unitPlusElectric_total]; simp
+  conv_lhs => rw [show electricComul k ≫ electricMul k
+    = electricComul k ≫ 𝟙 (unitPlusElectricObj k ⊗ unitPlusElectricObj k) ≫ electricMul k by
+      rw [Category.id_comp], ← hid]
+  simp only [center_add_tensorHom, center_tensorHom_add,
+    ← MonoidalCategory.tensorHom_comp_tensorHom, Preadditive.comp_add, Preadditive.add_comp,
+    Category.assoc]
+  rw [cocorner_11_assoc, cocorner_1e_assoc, cocorner_e1_assoc, cocorner_ee_assoc]
+  simp only [electricMul_corner_11, electricMul_corner_1e, electricMul_corner_e1,
+    electricMul_corner_ee, ← eeVacUnitIso_hom_eq]
+  simp only [Iso.inv_hom_id_assoc]
+  rw [← unitPlusElectric_total k]
+  abel
+
 end SKEFTHawking.SymTFT.ElectricComonoid
