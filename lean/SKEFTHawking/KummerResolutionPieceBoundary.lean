@@ -1332,6 +1332,97 @@ theorem contDiffOn_transition_vacuous_of_disjoint {k : WithTop ℕ∞}
   rw [hempty, Set.preimage_empty, Set.empty_inter]
   exact contDiffOn_empty
 
+/-! ## §N. `S¹ ⊆ E²` fiber-sphere smoothness primitives (reusable core for the collar transitions)
+
+Every collar transition (same-side, annulus↔annulus, annulus↔base with a collar chart) reduces — after
+the lift and the product/reshape unwrapping — to the `S¹ ⊆ E²` stereographic machinery of the fiber
+`DiskChartGeneric.diskCollarChart 1`. These are the `DiskManifoldSmooth` §0 primitives one dimension
+down (`Fin 2` ambient, `Fin 1` chart target), and their `n = 1` `IsManifold (NDisk 1)` corollary. -/
+
+/-- Local dimension fact for `S¹ ⊆ E²`, needed by every `stereographic'` unfold and the sphere's own
+`ChartedSpace`/`IsManifold` instances. -/
+instance instFactFinrankE2 : Fact (Module.finrank ℝ (EuclideanSpace ℝ (Fin (1 + 1))) = 1 + 1) :=
+  ⟨finrank_euclideanSpace_fin⟩
+
+/-- **Normalization is smooth away from the origin.** `v ↦ ‖v‖⁻¹ • v` is `C^m` on `{v ≠ 0} ⊆ E²`. -/
+theorem contDiffOn_normalizeE2 {m : WithTop ℕ∞} :
+    ContDiffOn ℝ m (fun v : EuclideanSpace ℝ (Fin 2) => ‖v‖⁻¹ • v) {v | v ≠ 0} := by
+  intro x hx
+  have hx0 : x ≠ 0 := hx
+  have hn : ContDiffAt ℝ m (fun v : EuclideanSpace ℝ (Fin 2) => ‖v‖) x := contDiffAt_norm ℝ hx0
+  have hinv : ContDiffAt ℝ m (fun v : EuclideanSpace ℝ (Fin 2) => ‖v‖⁻¹) x :=
+    hn.inv (norm_ne_zero_iff.mpr hx0)
+  exact (hinv.smul contDiffAt_id).contDiffWithinAt
+
+/-- Forward-apply of the `S¹` stereographic chart in the `stereoToFun`/`repr` normal form. -/
+theorem chartAt_oneSphere_apply (u s : NSphere 1) :
+    (chartAt (EuclideanSpace ℝ (Fin 1)) u) s
+      = (OrthonormalBasis.fromOrthogonalSpanSingleton (𝕜 := ℝ) 1
+          (ne_zero_of_mem_unit_sphere (-u))).repr
+          (stereoToFun ((-u : NSphere 1) : EuclideanSpace ℝ (Fin 2))
+            (s : EuclideanSpace ℝ (Fin 2))) := rfl
+
+/-- The `S¹` stereographic chart's source is the complement of the base point's antipode. -/
+theorem chartAt_oneSphere_source (u : NSphere 1) :
+    (chartAt (EuclideanSpace ℝ (Fin 1)) u).source = {-u}ᶜ := stereographic'_source (-u)
+
+/-- For a **unit** vector `y`, the north-pole exclusion `⟪-u, y⟫ ≠ 1` of `stereoToFun` is equivalent to
+the sphere point being in the `u`-chart's source. -/
+theorem innerSL_ne_one_of_mem_source {u y : NSphere 1}
+    (hmem : y ∈ (chartAt (EuclideanSpace ℝ (Fin 1)) u).source) :
+    innerSL ℝ ((-u : NSphere 1) : EuclideanSpace ℝ (Fin 2))
+      (y : EuclideanSpace ℝ (Fin 2)) ≠ 1 := by
+  rw [chartAt_oneSphere_source] at hmem
+  simp only [Set.mem_compl_iff, Set.mem_singleton_iff] at hmem
+  intro h
+  rw [innerSL_apply_apply] at h
+  have hu : ‖((-u : NSphere 1) : EuclideanSpace ℝ (Fin 2))‖ = 1 := mem_sphere_zero_iff_norm.mp (-u).2
+  have hy : ‖(y : EuclideanSpace ℝ (Fin 2))‖ = 1 := mem_sphere_zero_iff_norm.mp y.2
+  rw [inner_eq_one_iff_of_norm_eq_one hu hy] at h
+  exact hmem (Subtype.ext h).symm
+
+/-- **The inverse `S¹` stereographic chart is `C^k`** as a map into `E²`. Reusable input to the collar →
+interior transition (the `stereographic⁻¹` reconstruction). -/
+theorem contDiff_chartSymm_coe {k : WithTop ℕ∞} (u : NSphere 1) :
+    ContDiff ℝ k (fun w : EuclideanSpace ℝ (Fin 1) =>
+      ((chartAt (EuclideanSpace ℝ (Fin 1)) u).symm w : EuclideanSpace ℝ (Fin 2))) := by
+  have hcomp : ContDiff ℝ k (fun w : EuclideanSpace ℝ (Fin 1) =>
+      stereoInvFunAux ((-u : NSphere 1) : EuclideanSpace ℝ (Fin 2))
+        (((OrthonormalBasis.fromOrthogonalSpanSingleton (𝕜 := ℝ) 1
+            (ne_zero_of_mem_unit_sphere (-u))).repr.symm w :
+          (ℝ ∙ ((-u : NSphere 1) : EuclideanSpace ℝ (Fin 2)))ᗮ) :
+          EuclideanSpace ℝ (Fin 2))) :=
+    contDiff_stereoInvFunAux.comp
+      ((ℝ ∙ ((-u : NSphere 1) : EuclideanSpace ℝ (Fin 2)))ᗮ.subtypeL.contDiff.comp
+        (OrthonormalBasis.fromOrthogonalSpanSingleton (𝕜 := ℝ) 1
+          (ne_zero_of_mem_unit_sphere (-u))).repr.symm.contDiff)
+  have heq : ∀ w : EuclideanSpace ℝ (Fin 1),
+      ((chartAt (EuclideanSpace ℝ (Fin 1)) u).symm w : EuclideanSpace ℝ (Fin 2))
+        = stereoInvFunAux ((-u : NSphere 1) : EuclideanSpace ℝ (Fin 2))
+          (((OrthonormalBasis.fromOrthogonalSpanSingleton (𝕜 := ℝ) 1
+              (ne_zero_of_mem_unit_sphere (-u))).repr.symm w :
+            (ℝ ∙ ((-u : NSphere 1) : EuclideanSpace ℝ (Fin 2)))ᗮ) :
+            EuclideanSpace ℝ (Fin 2)) := by
+    intro w
+    show ((stereographic' 1 (-u)).symm w : EuclideanSpace ℝ (Fin 2)) = _
+    rw [stereographic'_symm_apply, stereoInvFunAux_apply, smul_add]
+  simpa only [heq] using hcomp
+
+/-- **Keystone.** The raw composite `w ↦ repr (stereoToFun (-u) (w/‖w‖))` — i.e. `chartAt_{S¹} u ∘ dir`
+unfolded to coordinate level — is `C^k` on the punctured non-north-pole locus. -/
+theorem contDiffOn_reprStereoNormalize {k : WithTop ℕ∞} (u : NSphere 1) :
+    ContDiffOn ℝ k
+      (fun w : EuclideanSpace ℝ (Fin 2) =>
+        (OrthonormalBasis.fromOrthogonalSpanSingleton (𝕜 := ℝ) 1
+          (ne_zero_of_mem_unit_sphere (-u))).repr
+          (stereoToFun ((-u : NSphere 1) : EuclideanSpace ℝ (Fin 2)) (‖w‖⁻¹ • w)))
+      {w : EuclideanSpace ℝ (Fin 2) | w ≠ 0 ∧
+        innerSL ℝ ((-u : NSphere 1) : EuclideanSpace ℝ (Fin 2)) (‖w‖⁻¹ • w) ≠ 1} :=
+  (((OrthonormalBasis.fromOrthogonalSpanSingleton (𝕜 := ℝ) 1
+        (ne_zero_of_mem_unit_sphere (-u))).repr.contDiff.comp_contDiffOn
+      contDiffOn_stereoToFun).comp
+    (contDiffOn_normalizeE2.mono (fun _ hw => hw.1)) (fun _ hw => hw.2))
+
 /-! ## §Z. STATUS — the K6′a Leg-2 E-side certificate
 
 **GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
