@@ -1,5 +1,5 @@
 /-
-# Phase 5q.H (#212) — THE THREE-OBLIGATION ROW: `hctrlC`/`hctrlH` collapse into ONE membership.
+# Phase 5q.H (#212) — THE ROW COLLAPSES: 4 → 3 → 2, and the disk chain stops being frozen.
 
 **Headline (a premise correction, not a discharge).** The collar-pair row's cylinder/handle split
 block — `cCore`, `outC`, `outH`, `hctrlC`, `hctrlH`, `houtC`, `houtH` (and, upstream, `bdOut` /
@@ -46,6 +46,21 @@ So this module replaces the four-obligation `CollarPairGeomEnd` row by a **three
   `seamMatch_mem_datum_indep` — no surgered-end-datum shopping (`∂W` is `rfl`-equal across data).
   `seamCore_nonempty_iff_exists_offRange_eM'` — under `hφtop`, `hseamHit` says exactly *the surgered
   end does not swallow the whole seam*, a boundary-floor fact, not a datum choice.
+* **§6 `CollarPairCoreRow` — TWO obligations, and the disk chain is FREE.** Firing the underlying
+  engine `capstone_hasClass_ofCoreChains` directly (rather than through `CapstoneSeamCorrectorT`)
+  removes two things at once. (a) The anti-fake field `hseamHit` has no premise, because no corrector
+  is supplied at all — and nothing is evaded: the guard survives as the *theorem*
+  `qGen_ne_zero_of_seamCore_nonempty`, which forces the glued chain nonzero under exactly the
+  hypothesis `hseamHit` asserts. (b) **`cHa` becomes DATA.** The disk-side rigidity recorded in
+  `collar-pair-coarse-core-does-not-relax-the-disk-side` ("`diskDetectChain` is fixed") is an artifact
+  of the corrector interface, whose `heS`/`hagree` name `diskDetectChain` literally; the engine is
+  general in *both* piece chains, needing only a disk detecting triple. `CollarPairSeamRow.toCoreRow`
+  is the 3 → 2 production at `cHa := diskDetectChain`.
+
+  **Which row to aim at.** `CollarPairCoreRow` is the terminal inhabitation target — but an inhabiter
+  should carry `hseamHit` as a *side condition* (not a field), because §5 shows the degenerate
+  `seamCore = ∅` configuration discharges the relative-cycle obligation for free; `hseamHit` is what
+  certifies the inhabitation is not that one.
 
 ## Direction of strength — stated precisely (no overclaim)
 
@@ -68,7 +83,17 @@ closed-`S` granularity (fence `collar-pair-closed-seam-attached-collar-bridge-is
 * `collar-pair-maximal-core-reenters-refuted-support` — no core is chosen at all here; `hseamHit`
   speaks only of the canonical `seamCore`, and asks for it to be NONEMPTY (never `univ`).
 * `seam-transfer-open-support-uninhabitable` — nothing routes through `CapstoneSeamTransfer`,
-  `hbd_ofTransfer` or `hasClass_ofTransferCorrector`; the consumer is `CapstoneSeamCorrectorT`.
+  `hbd_ofTransfer` or `hasClass_ofTransferCorrector`; the consumers are `CapstoneSeamCorrectorT`
+  (§3) and `capstone_hasClass_ofCoreChains` (§6).
+* `collar-pair-coarse-core-does-not-relax-the-disk-side` — **not re-attempted, and not contradicted.**
+  That fence rules out the representative-subdivision dodge *for `hctrlH`*, whose disk chain is
+  frozen by the corrector interface. §6 does not subdivide anything and does not revive `hctrlH`; it
+  observes that the ENGINE never demanded the canonical chain in the first place. The fence's scope
+  ("`diskDetectChain` is fixed") is about the row as then stated, not about
+  `capstone_hasClass_ofCoreChains`.
+* `capstone-choose-representative-corrector-uninhabitable` — the cylinder side stays the CONTROLLED
+  representative `capstoneCylChainT z` pinned by `hz`, never the opaque `.choose`-based
+  `capstoneCylChain`. (That is the one place where freedom is *not* available and must not be taken.)
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new project axiom, no
 `native_decide`, no `maxHeartbeats`.
@@ -95,6 +120,8 @@ open SKEFTHawking.PoincareLefschetzRelFundClassGeom
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinderCrossLocalAlphaU
 open SKEFTHawking.PinPlusTraceRelFundReduce
 open SKEFTHawking.PinPlusTraceCapstoneInhabit
+open SKEFTHawking.PinPlusTraceCapstoneCoverGlue
+open SKEFTHawking.PinPlusTraceCapstoneCoverGlueDisk
 open SKEFTHawking.PinPlusTraceCapstoneSeamTransfer
 open SKEFTHawking.PinPlusTraceCapstoneSeamTransferSupply
 open SKEFTHawking.PinPlusTraceDiskCorePair
@@ -451,6 +478,139 @@ theorem seamCore_nonempty_iff_exists_offRange_eM' (hφtop : ∀ a : ↥S, ((φ a
     exact ⟨a, fun h => ha ((seamPoint_mem_bd_iff (d := d) hφtop a).mpr h)⟩
   · rintro ⟨a, ha⟩
     exact ⟨a, fun h => ha ((seamPoint_mem_bd_iff (d := d) hφtop a).mp h)⟩
+
+/-! ## §6. TWO obligations — and the disk chain is NOT fixed -/
+
+variable (s S hS φ hφ hφinj)
+
+/-- **THE GLUED 5-CHAIN OVER A FREE DISK CHAIN.** The controlled cylinder representative (still
+pinned to the fundamental class through `hz`, which is what supplies the cylinder-side detection)
+glued to an ARBITRARY disk chain. At `cHa := diskDetectChain` this is `qZero`, definitionally. -/
+def qGen (z : cycles (TopCat.of s.M) (2 + 2))
+    (cHa : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 2)) :
+    SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 2) :=
+  closedEmbeddingChain
+      (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromCyl.isEmbedding
+      (3 + 2) (capstoneCylChainT s S hS φ hφ hφinj z)
+    + closedEmbeddingChain
+      (ktHandleAttachment s.M D5 S hS φ hφ hφinj).isClosedEmbedding_fromHandle.isEmbedding
+      (3 + 2) cHa
+
+variable (t cd hseam d)
+
+/-- **THE TWO-OBLIGATION ROW — and the disk side is FREE.**
+
+Two independent things happen here relative to `CollarPairSeamRow`:
+
+1. **The anti-fake field disappears** — legitimately. `hseamHit` was needed only because the
+   `CapstoneSeamCorrectorT` interface stores a corrector `p` and must guard against `p = 0`
+   (round-13 gate spec 7). Firing the underlying engine `capstone_hasClass_ofCoreChains` directly
+   supplies **no corrector at all**, so the guard has no premise. Nothing is evaded: the guard
+   survives as a *theorem* about this row — `qGen_ne_zero_of_seamCore_nonempty` — rather than as a
+   carried hypothesis.
+2. **`cHa` is DATA, not the frozen `diskDetectChain`.** The disk-side rigidity recorded in
+   `collar-pair-coarse-core-does-not-relax-the-disk-side` ("`diskDetectChain` is fixed") is an
+   artifact of the *corrector interface*, whose `heS`/`hagree` fields name `diskDetectChain`
+   literally. The engine underneath is general in both piece chains: any chain with a disk detecting
+   triple (`hcHa` boundary-in-`∂D⁵`, `hdetHa` detection at every interior point) will do. An
+   inhabiter may therefore adapt the disk chain to the cylinder side — a degree of freedom the row
+   did not previously have.
+
+Geometric obligations, exactly **TWO**: `hbd` (the glued chain is a relative cycle) and `hdetAB`
+(seam straddle-detection). Nothing else. -/
+structure CollarPairCoreRow where
+  /-- a fundamental cycle of the closed source 4-manifold `M`. -/
+  z : cycles (TopCat.of s.M) (2 + 2)
+  /-- `z` represents THE fundamental class — the pin that supplies the cylinder-side detection. -/
+  hz : SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := s.M)
+    = Homology.mk (TopCat.of s.M) (2 + 2) z
+  /-- **the disk-side chain — free data, no longer the frozen canonical one.** -/
+  cHa : SingularChain (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 2)
+  /-- its boundary lies on the disk's boundary sphere `∂D⁵`. -/
+  hcHa : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) (3 + 1) cHa
+    ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha)
+        {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1} (3 + 1)
+  /-- it detects the local generator at every disk-interior point. -/
+  hdetHa : ∀ (y : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha)
+      (hy : y ∉ {v : D5 | ‖(v : EuclideanSpace ℝ (Fin 5))‖ = 1}),
+    relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).Ha) ({y}ᶜ) 3 cHa
+      (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hy) (3 + 1) hcHa) ≠ 0
+  /-- **GEOMETRIC 1 — the glued chain is a relative cycle.** -/
+  hbd : chainBoundary (TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) (3 + 1)
+      (qGen s S hS φ hφ hφinj z cHa)
+    ∈ subspaceChains (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) (3 + 1)
+  /-- **GEOMETRIC 2 — the seam straddle-detection atom.** -/
+  hdetAB : ∀ (x : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+      (hx : x ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)),
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl →
+      x ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromHandle →
+    relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier) ({x}ᶜ) 3
+      (qGen s S hS φ hφ hφinj z cHa)
+      (subspaceChains_mono (Set.subset_compl_singleton_iff.mpr hx) (3 + 1) hbd) ≠ 0
+
+namespace CollarPairCoreRow
+
+variable {s t S hS φ hφ hφinj cd hseam d}
+variable (R : CollarPairCoreRow s t S hS φ hφ hφinj cd hseam d)
+
+/-- **THE CAPSTONE `hasClass`, FROM TWO GEOMETRIC OBLIGATIONS.** The engine
+`capstone_hasClass_ofCoreChains` fired directly: the controlled cylinder triple at `hz`, the row's
+own disk triple, the two free boundary-absorbs, and the row's two obligations. No corrector, no
+split, no bridge, no partition. -/
+def toHasClass :
+    letI := capstone_t1Space s t S hS φ hφ hφinj cd hseam d
+    HasRelFundClass (X := TopCat.of (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+      (interiorGenFamily (W := (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        ((𝓡 4).prod (𝓡∂ 1)) εtrace) :=
+  capstone_hasClass_ofCoreChains s t S hS φ hφ hφinj cd hseam d
+    (capstoneCylChainT s S hS φ hφ hφinj R.z) R.cHa R.hbd
+    (capstone_habsorbB s t S hS φ hφ hφinj cd hseam d)
+    (capstoneCylT_hc s S hS φ hφ hφinj R.z)
+    (capstoneCylT_hdet s S hS φ hφ hφinj R.z R.hz)
+    (capstone_habsorbHa s t S hS φ hφ hφinj cd hseam d)
+    R.hcHa R.hdetHa R.hdetAB
+
+omit [PreconnectedSpace s.M] in
+/-- **THE ROUND-13 ANTI-FAKE GUARD, AS A THEOREM.** Nothing was evaded by dropping the corrector
+interface's `nonzero_of_genuine` field: whenever the canonical core is nonempty — i.e. exactly under
+`CollarPairSeamRow.hseamHit` — this row's glued chain is forced nonzero by its own detection
+obligation. The guard is a *consequence* of the two obligations, never an extra assumption. -/
+theorem qGen_ne_zero_of_seamCore_nonempty
+    (h : (seamCore s t S hS φ hφ hφinj cd hseam d).Nonempty) :
+    qGen s S hS φ hφ hφinj R.z R.cHa ≠ 0 := by
+  obtain ⟨a, ha⟩ := h
+  intro hzero
+  refine R.hdetAB (seamPoint s S hS φ hφ hφinj a) ha
+    ⟨φ a, (ktHandleAttachment s.M D5 S hS φ hφ hφinj).glue a⟩ ⟨(a : D5), rfl⟩ ?_
+  exact relClassOf_eq_zero_of_subspace (Set.empty_subset _) 3 (qGen s S hS φ hφ hφinj R.z R.cHa)
+    (by rw [hzero]; exact Submodule.zero_mem _) _
+
+end CollarPairCoreRow
+
+variable {s t S hS φ hφ hφinj cd hseam d}
+
+/-- **THE 3 → 2 PRODUCTION.** A seam row is a core row at the canonical disk chain: `qGen` at
+`cHa := diskDetectChain` is `qZero` definitionally, the disk triple is the banked
+`diskDetectChain_hc`/`_hdet`, and the seam row's two remaining obligations are the core row's two.
+`hseamHit` is simply not needed by this route. -/
+def CollarPairSeamRow.toCoreRow (R : CollarPairSeamRow s t S hS φ hφ hφinj cd hseam d) :
+    CollarPairCoreRow s t S hS φ hφ hφinj cd hseam d where
+  z := R.z
+  hz := R.hz
+  cHa := diskDetectChain
+  hcHa := diskDetectChain_hc
+  hdetHa := fun y hy => diskDetectChain_hdet y hy
+  hbd := R.qZero_boundary_mem
+  hdetAB := fun x hx hxA hxB => R.hq0det x hx hxA hxB _
+
+omit [PreconnectedSpace s.M] in
+/-- The 3 → 2 production at the level of inhabitation. -/
+theorem nonempty_collarPairCoreRow_of_seamRow
+    (h : Nonempty (CollarPairSeamRow s t S hS φ hφ hφinj cd hseam d)) :
+    Nonempty (CollarPairCoreRow s t S hS φ hφ hφinj cd hseam d) :=
+  ⟨CollarPairSeamRow.toCoreRow h.some⟩
 
 end
 
