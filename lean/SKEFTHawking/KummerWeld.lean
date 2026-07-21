@@ -459,4 +459,51 @@ theorem qImage_inter_eImage : qImage ∩ eImage = seam := by
   · rintro ⟨c, r, rfl⟩
     exact ⟨⟨qBdryMap c r, weldMk_seam c r⟩, ⟨(c, bdryMapRP3 r), rfl⟩⟩
 
+/-! ## §7. The pieces embed — the interior charts descend (Priority 4, topological floor)
+
+The weld only ever identifies an `inl`-point with an `inr`-point (a Q-boundary point with its E-side
+seam partner) — NEVER `inl`-with-`inl` or `inr`-with-`inr`. So `weldMk ∘ inl` and `weldMk ∘ inr` are
+GLOBALLY injective, hence (compact source, `T2` target) CLOSED TOPOLOGICAL EMBEDDINGS: `Q` embeds as a
+closed subspace and each `E`-copy embeds as a closed subspace of `K3`. This is the topological floor
+of Priority 4's "the `Q`-atlas and the `E`-atlases embed"; the smooth chart descent (the seam
+double-collar) is the follow-on, gated on the collar-chart layers (`KummerQuotientManifold` Q-side,
+the E-side `IsManifold` in flight). -/
+
+/-- **`Q` embeds injectively** — the weld never glues two `Q`-points (only `Q`-boundary to `E`). -/
+theorem weldMk_inl_injective : Function.Injective (fun q : FreeQuotient => weldMk (Sum.inl q)) := by
+  intro q q' h
+  rcases Quotient.exact h with he | hsj | hsj
+  · exact Sum.inl.inj he
+  · obtain ⟨_, _, _, h2⟩ := hsj; exact absurd h2 (by simp)
+  · obtain ⟨_, _, _, h2⟩ := hsj; exact absurd h2 (by simp)
+
+/-- **The 16 `E`-copies embed injectively** — the weld never glues two `E`-points. -/
+theorem weldMk_inr_injective :
+    Function.Injective (fun p : EIndex × ResE => weldMk (Sum.inr p)) := by
+  intro p p' h
+  rcases Quotient.exact h with he | hsj | hsj
+  · exact Sum.inr.inj he
+  · obtain ⟨_, _, h1, _⟩ := hsj; exact absurd h1 (by simp)
+  · obtain ⟨_, _, h1, _⟩ := hsj; exact absurd h1 (by simp)
+
+/-- **`Q` embeds as a closed subspace of `K3`** (continuous injective, compact source, `T2` target).
+The Q-side interior charts descend as topological charts. -/
+theorem isClosedEmbedding_qImage :
+    Topology.IsClosedEmbedding (fun q : FreeQuotient => weldMk (Sum.inl q)) :=
+  (continuous_weldMk.comp continuous_inl).isClosedEmbedding weldMk_inl_injective
+
+/-- **The 16 `E`-copies embed as a closed subspace of `K3`.** -/
+theorem isClosedEmbedding_eImage :
+    Topology.IsClosedEmbedding (fun p : EIndex × ResE => weldMk (Sum.inr p)) :=
+  (continuous_weldMk.comp continuous_inr).isClosedEmbedding weldMk_inr_injective
+
+/-- **Each single `E`-copy embeds as a closed subspace of `K3`** — the disk bundle `E` sits inside
+`K3` as the resolution of the `c`-th `A₁` singularity. -/
+theorem isClosedEmbedding_eCopy (c : EIndex) :
+    Topology.IsClosedEmbedding (fun e : ResE => weldMk (Sum.inr (c, e))) := by
+  have hinj : Function.Injective (fun e : ResE => weldMk (Sum.inr (c, e))) :=
+    fun e e' h => congrArg Prod.snd (weldMk_inr_injective h)
+  exact (continuous_weldMk.comp
+    (continuous_inr.comp (continuous_const.prodMk continuous_id))).isClosedEmbedding hinj
+
 end SKEFTHawking.KummerWeld
