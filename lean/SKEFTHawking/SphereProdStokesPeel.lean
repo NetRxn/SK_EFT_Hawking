@@ -1,0 +1,69 @@
+/-
+# Phase 5q.H — the single-subspace signed cup–Stokes atom (hcross MV-peel reusable core)
+
+The reusable arithmetic core of the S²×S² Eilenberg–Zilber cross-value peel (`hcross`, the deferred
+Künneth residual reducing `SphereProdGramPinReduce.sphereProdGramPin_of_cross_of_basisId` to the
+S²×S² Gram pin): the "one leg" of the codex-adjudicated class-level Mayer–Vietoris cup–Stokes lemma.
+
+For a cocycle `a`, a cochain `b` whose restriction `φ*b` to a subspace-inclusion `φ : W → X` is a
+coboundary `δu`, and a chain `zW` in `W`, the Kronecker pairing of `a ⌣ b` against the pushforward
+`φ₊ zW` collapses onto a boundary pairing living on `W`:
+
+  `⟨a ⌣ b, φ₊ zW⟩ = (−1)ᵖ ⟨φ*a ⌣ u, ∂ zW⟩`.
+
+Derivation — all four steps banked:
+* pullback adjunction `⟨φ*c, z⟩ = ⟨c, φ₊ z⟩` (`kronecker_cochainPullbackInt`);
+* pullback–cup naturality `φ*(a ⌣ b) = φ*a ⌣ φ*b` (`cochainPullbackInt_cup`);
+* the signed cup Leibniz `δ(φ*a ⌣ u) = (−1)ᵖ (φ*a ⌣ δu)` (`cup_coboundary_right`, with `φ*a` a
+  cocycle via `cochainPullbackInt_mem_ker`);
+* the Kronecker coboundary–boundary adjunction `⟨δf, z⟩ = ⟨f, ∂z⟩`
+  (`kronecker_coboundary_chainBoundary`).
+
+Both legs of the full MV cup–Stokes peel (the polar-cover `A₀`-leg and `B₀`-leg of the first
+`S²` factor) are instances of this atom; their `(−1)ᵖ`-weighted difference over the shared seam is
+the `⟨a|∩ ⌣ (u_B − u_A), MV∂[z]⟩` seam pairing that pins the cross value. This module ships the
+generic, geometry-free atom; the seam assembly (`A₀,B₀` polar cover of `S²`, the `S²×S¹` seam and its
+`TorusCrossPeel.kronecker_cup_snd_torCross` right-peel, and the `SphereProdHFourInt`
+`coverInterHThreeEquivInt ∘ mvDeltaInt` H₄ pin) is the remaining geometric build.
+
+Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom.
+-/
+import Mathlib
+import SKEFTHawking.SingularCupInt
+import SKEFTHawking.SingularHomologyInt
+import SKEFTHawking.SingularCohomologyFunctorialityInt
+
+namespace SKEFTHawking.SphereProdStokesPeel
+
+open SKEFTHawking.SingularCohomologyInt
+open SKEFTHawking.SingularHomologyInt
+open SKEFTHawking.SingularFunctorialityInt (mapChainInt)
+open SKEFTHawking.SingularCohomologyFunctorialityInt (cochainPullbackInt cochainPullbackInt_cup
+  cochainPullbackInt_mem_ker kronecker_cochainPullbackInt)
+
+/-- **The single-subspace signed cup–Stokes atom.** For a cocycle `a` (degree `p`), a cochain `b`
+(degree `q+1`) whose pullback along `φ : W → X` is a coboundary `φ*b = δu`, and a chain `zW` in `W`:
+`⟨a ⌣ b, φ₊ zW⟩ = (−1)ᵖ ⟨φ*a ⌣ u, ∂ zW⟩`. The reusable core of the MV cup–Stokes peel: the
+`a ⌣ b` pairing against the `φ`-image of a chain collapses to a boundary pairing on `W`, discharged
+by the four banked naturalities (pullback adjunction, pullback–cup, signed cup Leibniz, Kronecker
+coboundary–boundary adjunction). -/
+theorem kronecker_cup_stokes_leg {X W : TopCat} (φ : C(↑W, ↑X)) {p q : ℕ}
+    (a : SingularCochainInt X p) (b : SingularCochainInt X (q + 1))
+    (ha : coboundaryₗ X p a = 0)
+    (u : SingularCochainInt W q)
+    (hbu : cochainPullbackInt φ (q + 1) b = coboundaryₗ W q u)
+    (zW : SingularChainInt W (p + (q + 1))) :
+    kronecker (cup a b) (mapChainInt φ (p + (q + 1)) zW)
+      = (-1 : ℤ) ^ p * kronecker (cup (cochainPullbackInt φ p a) u)
+          (chainBoundary W (p + q) zW) := by
+  have hφa : coboundaryₗ W p (cochainPullbackInt φ p a) = 0 :=
+    LinearMap.mem_ker.mp (cochainPullbackInt_mem_ker φ ⟨a, LinearMap.mem_ker.mpr ha⟩)
+  have hleib := cup_coboundary_right (cochainPullbackInt φ p a) u hφa
+  rw [← kronecker_cochainPullbackInt φ (cup a b) zW, cochainPullbackInt_cup, hbu,
+    ← kronecker_coboundary_chainBoundary,
+    show coboundary W (p + q) (cup (cochainPullbackInt φ p a) u)
+      = coboundaryₗ W (p + q) (cup (cochainPullbackInt φ p a) u) from rfl,
+    hleib, kronecker_smul_left, smul_eq_mul, ← mul_assoc,
+    show ((-1 : ℤ) ^ p * (-1 : ℤ) ^ p) = 1 from by rw [← mul_pow]; norm_num, one_mul]
+
+end SKEFTHawking.SphereProdStokesPeel
