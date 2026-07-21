@@ -4722,6 +4722,7 @@ import SKEFTHawking.CircleWindingCocycle
 import SKEFTHawking.TorusCrossPeel
 import SKEFTHawking.TorusCrossPeelGen
 import SKEFTHawking.KummerT4GramCross
+import SKEFTHawking.SingularCoverPartitionAmbientInt
 import SKEFTHawking.SphereProdStokesPeel
 import SKEFTHawking.KTCompletenessProvider
 import SKEFTHawking.KTCompletenessTether
