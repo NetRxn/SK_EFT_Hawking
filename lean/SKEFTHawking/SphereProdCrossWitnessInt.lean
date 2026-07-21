@@ -224,56 +224,39 @@ theorem hbLeg (u : ↑(Sph 2)) :
 /-- The polar puncture point of the second factor: the cover parameter `v = basePoint 2`. -/
 noncomputable def vN : ↑(Sph 2) := basePoint 2
 
-/-- The underlying equator vector `(0, s₀, s₁) ∈ ℝ³` of a circle point `s`. -/
-noncomputable def eqVec (s : ↑(Sph 1)) : EuclideanSpace ℝ (Fin 3) :=
-  ((s : EuclideanSpace ℝ (Fin 2)) 0) • EuclideanSpace.single 1 (1 : ℝ)
-    + ((s : EuclideanSpace ℝ (Fin 2)) 1) • EuclideanSpace.single 2 (1 : ℝ)
+open SKEFTHawking.SingularSphereAcyclic (equatorMap equatorMapInv equatorMapInv_comp_equatorMap
+  equatorMap_comp_equatorMapInv)
+open SKEFTHawking.SingularPuncturedRetract (normalize incl normalize_comp_incl)
 
-theorem eqVec_apply_zero (s : ↑(Sph 1)) : eqVec s 0 = 0 := by
-  simp [eqVec]
+/-- **The circle on the equatorial seam of `S²`**, built from the BANKED suspension machinery:
+the unit circle included in `ℝ²∖0`, transported through the equatorial homeomorphism onto the
+doubly-punctured sphere. Composite-canonical by construction: `equatorMap vN ∘ eqSeam = incl`, so
+`normalize ∘ equatorMap vN ∘ eqSeam = id` ON THE NOSE — the dimension-reduction chase of the
+hemisphere class needs no winding computation. -/
+noncomputable def eqSeam :
+    C(↑(Sph 1), ↑(sub (restr ({vN}ᶜ : Set ↑(Sph 2)) ({antipode vN}ᶜ)))) :=
+  (equatorMapInv vN).comp (incl (n := 2))
 
-theorem eqVec_apply_one (s : ↑(Sph 1)) : eqVec s 1 = (s : EuclideanSpace ℝ (Fin 2)) 0 := by
-  simp [eqVec]
-
-theorem eqVec_apply_two (s : ↑(Sph 1)) : eqVec s 2 = (s : EuclideanSpace ℝ (Fin 2)) 1 := by
-  simp [eqVec]
-
-theorem eqVec_mem_sphere (s : ↑(Sph 1)) :
-    eqVec s ∈ Metric.sphere (0 : EuclideanSpace ℝ (Fin 3)) 1 := by
-  have hs : ‖(s : EuclideanSpace ℝ (Fin 2))‖ = 1 := mem_sphere_zero_iff_norm.mp s.2
-  rw [EuclideanSpace.norm_eq, Fin.sum_univ_two] at hs
-  rw [mem_sphere_zero_iff_norm, EuclideanSpace.norm_eq, Fin.sum_univ_three,
-    eqVec_apply_zero, eqVec_apply_one, eqVec_apply_two]
-  simpa using hs
-
-/-- **The equatorial embedding** `S¹ ↪ S²`, `(s₀, s₁) ↦ (0, s₀, s₁)`. -/
+/-- **The equatorial embedding** `S¹ ↪ S²` — the underlying point map of `eqSeam`. -/
 noncomputable def eqIncl : C(↑(Sph 1), ↑(Sph 2)) :=
-  ⟨fun s => ⟨eqVec s, eqVec_mem_sphere s⟩, by
-    refine Continuous.subtype_mk ?_ _
-    unfold eqVec
-    fun_prop⟩
+  ⟨fun s => ((eqSeam s).1 : ↑(Sph 2)),
+    continuous_subtype_val.comp (continuous_subtype_val.comp eqSeam.continuous)⟩
 
-/-- The equator avoids the north pole (`first coordinate 0 ≠ 1`). -/
-theorem eqIncl_ne_vN (s : ↑(Sph 1)) : eqIncl s ≠ vN := by
-  intro h
-  have h0 : eqVec s 0 = ((vN : ↑(Sph 2)) : EuclideanSpace ℝ (Fin 3)) 0 :=
-    congrArg (fun p : ↑(Sph 2) => (p : EuclideanSpace ℝ (Fin 3)) 0) h
-  have hv : ((vN : ↑(Sph 2)) : EuclideanSpace ℝ (Fin 3)) 0 = 1 := by
-    show (EuclideanSpace.single 0 (1 : ℝ) : EuclideanSpace ℝ (Fin 3)) 0 = 1
-    simp
-  rw [eqVec_apply_zero, hv] at h0
-  norm_num at h0
+/-- The equator avoids the north pole (the `restr` membership). -/
+theorem eqIncl_ne_vN (s : ↑(Sph 1)) : eqIncl s ≠ vN := (eqSeam s).2
 
-/-- The equator avoids the south pole. -/
-theorem eqIncl_ne_antipode_vN (s : ↑(Sph 1)) : eqIncl s ≠ antipode vN := by
-  intro h
-  have h0 : eqVec s 0 = ((antipode vN : ↑(Sph 2)) : EuclideanSpace ℝ (Fin 3)) 0 :=
-    congrArg (fun p : ↑(Sph 2) => (p : EuclideanSpace ℝ (Fin 3)) 0) h
-  have hv : ((antipode vN : ↑(Sph 2)) : EuclideanSpace ℝ (Fin 3)) 0 = -1 := by
-    show (-(EuclideanSpace.single 0 (1 : ℝ)) : EuclideanSpace ℝ (Fin 3)) 0 = -1
-    simp
-  rw [eqVec_apply_zero, hv] at h0
-  norm_num at h0
+/-- The equator avoids the south pole (the inner subtype membership). -/
+theorem eqIncl_ne_antipode_vN (s : ↑(Sph 1)) : eqIncl s ≠ antipode vN := (eqSeam s).1.2
+
+/-- **The composite-collapse certificate**: `normalize ∘ equatorMap vN ∘ eqSeam = id` on the
+circle — the equatorial loop maps back to itself under the banked dimension-reduction retraction,
+with NO winding analysis. -/
+theorem normalize_equatorMap_eqSeam :
+    (normalize (n := 2)).comp ((equatorMap vN).comp eqSeam) = ContinuousMap.id ↑(Sph 1) := by
+  rw [eqSeam, show (equatorMap vN).comp ((equatorMapInv vN).comp (incl (n := 2)))
+      = incl (n := 2) from by
+    rw [← ContinuousMap.comp_assoc, equatorMap_comp_equatorMapInv, ContinuousMap.id_comp]]
+  exact normalize_comp_incl
 
 /-- The equator embedding into the NORTH punctured cap. -/
 noncomputable def eqInclCapA : C(↑(Sph 1), ↑(Apunc 2 vN)) :=
