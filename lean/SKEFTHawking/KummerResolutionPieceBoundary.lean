@@ -304,7 +304,234 @@ theorem collar_seam_mem_rp3_image {p : ResChart} (hp : p ∈ collarRegion)
   rw [range_bdryMapRP3_eq_boundaryE]
   exact (chart0_mem_boundaryE_iff hp.1).mpr ((fiberRadial_eq_zero_iff p).mp hr)
 
-/-! ## §C. STATUS — the K6′a Leg-2 E-side certificate
+/-! ## §C. The `ℂ ≅ 𝓔²` bridge (the `KummerShellChart.toE4/ofE4` mirror one dimension down)
+
+The base coordinate `z` and the fiber coordinate `w` of a chart point live in `ℂ`, whereas the boundary
+model `ModelProd (𝓔 3) (EuclideanHalfSpace 1)` and the banked sphere/disk chart machinery
+(`DiskChartGeneric`, `NSphere 1`) live in `EuclideanSpace ℝ (Fin _)`. This block builds the bridge
+`toE2`/`ofE2` (mutually inverse, continuous) with `‖toE2 c‖ = ‖c‖` — so the round disks/circles in `ℂ`
+are round in `𝓔²`. The one-dimension-down analogue of `KummerShellChart.toE4`/`ofE4` (which bridges
+`ℝ × ℝ × ℝ × ℝ ≅ 𝓔⁴`). -/
+
+/-- Pack a complex number into `𝓔² = EuclideanSpace ℝ (Fin 2)` by real/imaginary parts. The
+`KummerShellChart.toE4` mirror one dimension down. -/
+def toE2 (c : ℂ) : EuclideanSpace ℝ (Fin 2) := WithLp.toLp 2 ![c.re, c.im]
+
+/-- Unpack `𝓔²` into a complex number `re + im·I`. -/
+def ofE2 (v : EuclideanSpace ℝ (Fin 2)) : ℂ := ⟨v.ofLp 0, v.ofLp 1⟩
+
+/-- `‖toE2 c‖² = ‖c‖²` — the modulus is carried faithfully into `𝓔²`. -/
+theorem norm_sq_toE2 (c : ℂ) : ‖toE2 c‖ ^ 2 = ‖c‖ ^ 2 := by
+  rw [EuclideanSpace.norm_eq, Real.sq_sqrt (by positivity)]
+  simp only [toE2, WithLp.ofLp_toLp, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Real.norm_eq_abs, sq_abs]
+  rw [Complex.sq_norm, Complex.normSq_apply]; ring
+
+/-- `‖toE2 c‖ = ‖c‖`. -/
+theorem norm_toE2 (c : ℂ) : ‖toE2 c‖ = ‖c‖ := by
+  have := norm_sq_toE2 c
+  nlinarith [norm_nonneg (toE2 c), norm_nonneg c]
+
+theorem continuous_toE2 : Continuous toE2 := by
+  apply (PiLp.continuous_toLp 2 _).comp
+  apply continuous_pi
+  intro i
+  fin_cases i
+  · exact Complex.continuous_re
+  · exact Complex.continuous_im
+
+theorem continuous_ofE2 : Continuous ofE2 := by
+  have h0 : Continuous fun v : EuclideanSpace ℝ (Fin 2) => v.ofLp 0 :=
+    PiLp.continuous_apply 2 (fun _ : Fin 2 => ℝ) 0
+  have h1 : Continuous fun v : EuclideanSpace ℝ (Fin 2) => v.ofLp 1 :=
+    PiLp.continuous_apply 2 (fun _ : Fin 2 => ℝ) 1
+  have hc : Continuous fun v : EuclideanSpace ℝ (Fin 2) =>
+      (v.ofLp 0 : ℂ) + (v.ofLp 1 : ℂ) * Complex.I :=
+    (Complex.continuous_ofReal.comp h0).add
+      ((Complex.continuous_ofReal.comp h1).mul continuous_const)
+  refine hc.congr (fun v => ?_)
+  apply Complex.ext <;> simp [ofE2]
+
+@[simp] theorem ofE2_toE2 (c : ℂ) : ofE2 (toE2 c) = c := by
+  apply Complex.ext <;> simp [ofE2, toE2]
+
+@[simp] theorem toE2_ofE2 (v : EuclideanSpace ℝ (Fin 2)) : toE2 (ofE2 v) = v := by
+  apply WithLp.ofLp_injective
+  funext i
+  fin_cases i <;> simp [toE2, ofE2]
+
+theorem toE2_injective : Function.Injective toE2 :=
+  Function.LeftInverse.injective ofE2_toE2
+
+/-! ## §D. The half-space boundary model and the base/fiber chart bridges
+
+The E-side boundary model is `Model = ModelProd (𝓔 3) (EuclideanHalfSpace 1)` (4 real dims = 2 base +
+1 fiber-angular + 1 fiber-radial-halfspace), matching `KummerShellChart.Model`. A collar chart of a
+disk-bundle point `(z, w)` decomposes as **base** `z ∈ D²(ℂ)` (charted plainly into `𝓔²`, no boundary)
+× **fiber** `w ∈ D²(ℂ)` (charted by the banked `DiskChartGeneric.diskCollarChart 1` into
+`𝓔¹ × HalfSpace¹`), reshaped `𝓔² × (𝓔¹ × HalfSpace¹) → 𝓔³ × HalfSpace¹`. The fiber reuses the fully
+banked polar collar chart of the closed disk one dimension down (`n = 1`, `S¹` stereographic) through
+the `Disk(ℂ) ≃ₜ NDisk 1` bridge — no bespoke sphere-chart inverse work. -/
+
+open SKEFTHawking.DiskChartGeneric (NDisk NSphere ballClamp diskDir assemble splitLo diskCollarChart)
+
+/-- The E-side half-space boundary model `ModelProd (𝓔 3) (EuclideanHalfSpace 1)` (`= (𝓡 3).prod (𝓡∂ 1)`).
+The `KummerShellChart.Model` mirror. -/
+abbrev Model : Type := ModelProd (EuclideanSpace ℝ (Fin 3)) (EuclideanHalfSpace 1)
+
+/-- **The `Disk(ℂ) ≃ₜ NDisk 1` bridge** — the closed unit disk in `ℂ` is homeomorphic to the closed
+unit ball `D²` in `𝓔²`, by the norm-faithful `toE2`/`ofE2`. Lets the fiber reuse the banked
+`DiskChartGeneric` disk-chart machinery. -/
+def diskHomeoNDisk1 : Disk ≃ₜ NDisk 1 where
+  toFun z := ⟨toE2 (z : ℂ), by rw [mem_closedBall_zero_iff, norm_toE2]; exact z.2⟩
+  invFun v := ⟨ofE2 (v : EuclideanSpace ℝ (Fin 2)), by
+    rw [show ‖ofE2 (v : EuclideanSpace ℝ (Fin 2))‖ = ‖(v : EuclideanSpace ℝ (Fin 2))‖ from by
+      rw [← norm_toE2, toE2_ofE2]]
+    exact mem_closedBall_zero_iff.mp v.2⟩
+  left_inv z := by apply Subtype.ext; simp [ofE2_toE2]
+  right_inv v := by apply Subtype.ext; simp [toE2_ofE2]
+  continuous_toFun := by apply Continuous.subtype_mk; exact continuous_toE2.comp continuous_subtype_val
+  continuous_invFun := by
+    apply Continuous.subtype_mk; exact continuous_ofE2.comp continuous_subtype_val
+
+/-- **The base chart** `Disk → 𝓔²`: `toE2` on the OPEN base disk `{‖z‖ < 1}` (base-interior), a
+homeomorphism onto the open ball `{‖v‖ < 1} ⊆ 𝓔²`. The base half of the collar chart — the base `z` is
+charted plainly (no boundary; the fiber carries the manifold boundary). Junk-clamped off-source by
+`ballClamp`. -/
+def baseDiskChart : OpenPartialHomeomorph Disk (EuclideanSpace ℝ (Fin 2)) where
+  source := {z : Disk | ‖(z : ℂ)‖ < 1}
+  target := {v : EuclideanSpace ℝ (Fin 2) | ‖v‖ < 1}
+  toFun z := toE2 (z : ℂ)
+  invFun v := ⟨ofE2 (ballClamp 1 v : EuclideanSpace ℝ (Fin 2)), by
+    rw [show ‖ofE2 (ballClamp 1 v : EuclideanSpace ℝ (Fin 2))‖
+        = ‖(ballClamp 1 v : EuclideanSpace ℝ (Fin 2))‖ from by rw [← norm_toE2, toE2_ofE2]]
+    exact mem_closedBall_zero_iff.mp (ballClamp 1 v).2⟩
+  map_source' z hz := by show ‖toE2 (z : ℂ)‖ < 1; rw [norm_toE2]; exact hz
+  map_target' v hv := by
+    show ‖ofE2 (ballClamp 1 v : EuclideanSpace ℝ (Fin 2))‖ < 1
+    rw [DiskChartGeneric.ballClamp_coe_of_norm_le (le_of_lt hv),
+      show ‖ofE2 (v : EuclideanSpace ℝ (Fin 2))‖ = ‖(v : EuclideanSpace ℝ (Fin 2))‖ from by
+        rw [← norm_toE2, toE2_ofE2]]
+    exact hv
+  left_inv' z hz := by
+    apply Subtype.ext
+    show ofE2 (ballClamp 1 (toE2 (z : ℂ)) : EuclideanSpace ℝ (Fin 2)) = (z : ℂ)
+    rw [DiskChartGeneric.ballClamp_coe_of_norm_le (by rw [norm_toE2]; exact le_of_lt hz), ofE2_toE2]
+  right_inv' v hv := by
+    show toE2 (ofE2 (ballClamp 1 v : EuclideanSpace ℝ (Fin 2))) = v
+    rw [DiskChartGeneric.ballClamp_coe_of_norm_le (le_of_lt hv), toE2_ofE2]
+  open_source := isOpen_lt (continuous_norm.comp continuous_subtype_val) continuous_const
+  open_target := isOpen_lt continuous_norm continuous_const
+  continuousOn_toFun := (continuous_toE2.comp continuous_subtype_val).continuousOn
+  continuousOn_invFun := by
+    apply Continuous.continuousOn
+    apply Continuous.subtype_mk
+    exact continuous_ofE2.comp (continuous_subtype_val.comp (DiskChartGeneric.continuous_ballClamp 1))
+
+/-- **The model reshape** `𝓔² × (𝓔¹ × HalfSpace¹) ≃ₜ 𝓔³ × HalfSpace¹`: merge the base `𝓔²` and the
+fiber-angular `𝓔¹` into `𝓔³` (via the banked `assemble 2`/`splitLo 2` — playing the
+`EuclideanSpace.finAddEquivProd` role), keeping the fiber-radial `HalfSpace¹` untouched. -/
+def reshapeModel :
+    (EuclideanSpace ℝ (Fin 2) × ModelProd (EuclideanSpace ℝ (Fin 1)) (EuclideanHalfSpace 1)) ≃ₜ Model where
+  toFun q := (assemble 2 q.1 (q.2.1.ofLp 0), q.2.2)
+  invFun r := (splitLo 2 r.1, (WithLp.toLp 2 (fun _ : Fin 1 => r.1.ofLp (Fin.last 2)), r.2))
+  left_inv q := by
+    refine Prod.ext ?_ (Prod.ext ?_ rfl)
+    · exact DiskChartGeneric.splitLo_assemble 2 q.1 (q.2.1.ofLp 0)
+    · show WithLp.toLp 2 (fun _ : Fin 1 => (assemble 2 q.1 (q.2.1.ofLp 0)).ofLp (Fin.last 2)) = q.2.1
+      rw [DiskChartGeneric.assemble_ofLp_last]; exact DiskChartGeneric.toLp_ofLp_fin_one _
+  right_inv r := by
+    refine Prod.ext ?_ rfl
+    show assemble 2 (splitLo 2 r.1)
+        ((WithLp.toLp 2 (fun _ : Fin 1 => r.1.ofLp (Fin.last 2))).ofLp 0) = r.1
+    rw [show (WithLp.toLp 2 (fun _ : Fin 1 => r.1.ofLp (Fin.last 2))).ofLp 0
+        = r.1.ofLp (Fin.last 2) from by simp]
+    exact DiskChartGeneric.assemble_splitLo 2 r.1
+  continuous_toFun := by
+    refine Continuous.prodMk ?_ (continuous_snd.comp continuous_snd)
+    exact (DiskChartGeneric.continuous_assemble 2).comp (Continuous.prodMk continuous_fst
+      ((PiLp.continuous_apply 2 (fun _ : Fin 1 => ℝ) 0).comp (continuous_fst.comp continuous_snd)))
+  continuous_invFun := by
+    refine Continuous.prodMk ((DiskChartGeneric.continuous_splitLo 2).comp continuous_fst) ?_
+    refine Continuous.prodMk ?_ continuous_snd
+    apply (PiLp.continuous_toLp 2 _).comp
+    apply continuous_pi; intro _
+    exact (PiLp.continuous_apply 2 (fun _ : Fin 3 => ℝ) (Fin.last 2)).comp continuous_fst
+
+/-- **The fiber collar chart** `Disk → ModelProd 𝓔¹ HalfSpace¹` — the banked
+`DiskChartGeneric.diskCollarChart 1` transported through the `Disk ≃ₜ NDisk 1` bridge:
+`w ↦ (chart_{S¹}(w/‖w‖), 1 − ‖w‖)`. Reuses the full sphere-chart-inverse machinery one dimension down. -/
+def fiberCollarChart (u₀ : NSphere 1) :
+    OpenPartialHomeomorph Disk (ModelProd (EuclideanSpace ℝ (Fin 1)) (EuclideanHalfSpace 1)) :=
+  diskHomeoNDisk1.toOpenPartialHomeomorph.trans (diskCollarChart 1 u₀)
+
+/-- **The disk-bundle collar chart on `ResChart`** at fiber-base direction `u₀ ∈ S¹`: base `z` charted
+into `𝓔²`, fiber `w` into `𝓔¹ × HalfSpace¹` (polar), reshaped into `𝓔³ × HalfSpace¹`. The
+`KummerShellChart.shellCollarChart` analogue on the disk bundle — pure packaging of the banked bricks. -/
+def resChartCollarChart (u₀ : NSphere 1) : OpenPartialHomeomorph ResChart Model :=
+  (baseDiskChart.prod (fiberCollarChart u₀)).trans reshapeModel.toOpenPartialHomeomorph
+
+/-! ## §E. The E-side boundary collar chart on `ResE` (deliverable 2 complete)
+
+The `ResChart` collar chart (§D) is restricted to the base-interior subtype `↥baseInterior` — where
+`chart0` is an open embedding into `ResE` (§A) — and then **lifted** along that open embedding by
+`OpenPartialHomeomorph.lift_openEmbedding` (the `KummerBoundaryChart.boundaryChart` compositional
+pattern). No bespoke junk-value / open-map work: every obligation is discharged by the combinators. -/
+
+instance instNonemptyBaseInterior : Nonempty ↥baseInterior :=
+  ⟨⟨(⟨0, by simp⟩, ⟨0, by simp⟩), by simp [baseInterior]⟩⟩
+
+/-- **The `ResChart` collar chart restricted to `↥baseInterior`** — precomposed with the open embedding
+`Subtype.val : ↥baseInterior → ResChart`, so its source type matches the `chart0` open embedding for the
+lift. -/
+def collarChartInner (u₀ : NSphere 1) : OpenPartialHomeomorph (↥baseInterior) Model :=
+  (Topology.IsOpenEmbedding.toOpenPartialHomeomorph (Subtype.val)
+    isOpen_baseInterior.isOpenEmbedding_subtypeVal).trans (resChartCollarChart u₀)
+
+/-- **The E-side boundary collar chart on `ResE`** at fiber-base direction `u₀ ∈ S¹` — the
+`OpenPartialHomeomorph ResE Model` charting the base-interior part of the disk bundle onto the half-space
+model `ModelProd (𝓔 3) (EuclideanHalfSpace 1)`. Built by lifting `collarChartInner` along the open
+embedding `chart0 : ↥baseInterior → ResE` (§A); the fiber boundary `‖w‖ = 1` lands on the half-space wall.
+The `KummerBoundaryChart.boundaryChart` mirror on the resolution piece `E`. -/
+def collarChart (u₀ : NSphere 1) : OpenPartialHomeomorph ResE Model :=
+  (collarChartInner u₀).lift_openEmbedding isOpenEmbedding_chart0_baseInterior
+
+/-! ## §F. The E-side interior chart on `ResE` (deliverable 3, interior half)
+
+The interior chart mirrors the collar chart exactly, swapping the banked fiber **collar** chart
+`diskCollarChart 1` for the banked fiber **interior** chart `diskInteriorChart 1` — which charts the OPEN
+fiber disk `{‖w‖ < 1}` (including the fiber centre `w = 0`, the zero section, where the collar's angular
+direction is undefined) into the **interior** of the half-space (`radial > 0`). Base `z` is charted as
+before. Both fiber charts use the SAME radial coordinate `‖w‖` (interior `‖w‖ < 1`, collar `‖w‖ > 0`), so
+they overlap on `0 < ‖w‖ < 1` — the coverage discipline that avoids the metric-vs-chart-radius gap (the
+settled route fact): no separate metric interior region, hence no gap. -/
+
+/-- **The fiber interior chart** `Disk → ModelProd 𝓔¹ HalfSpace¹` — the banked
+`DiskChartGeneric.diskInteriorChart 1` transported through the `Disk ≃ₜ NDisk 1` bridge. Charts the open
+fiber disk (incl. the centre) into the interior of the half-space model. -/
+def fiberInteriorChart :
+    OpenPartialHomeomorph Disk (ModelProd (EuclideanSpace ℝ (Fin 1)) (EuclideanHalfSpace 1)) :=
+  diskHomeoNDisk1.toOpenPartialHomeomorph.trans (DiskChartGeneric.diskInteriorChart 1)
+
+/-- **The disk-bundle interior chart on `ResChart`**: base `z → 𝓔²`, fiber `w → 𝓔¹ × HalfSpace¹`
+(interior), reshaped into `𝓔³ × HalfSpace¹`. -/
+def resChartInteriorChart : OpenPartialHomeomorph ResChart Model :=
+  (baseDiskChart.prod fiberInteriorChart).trans reshapeModel.toOpenPartialHomeomorph
+
+/-- **The `ResChart` interior chart restricted to `↥baseInterior`** — the `chart0`-open-embedding
+source-type match for the lift. -/
+def interiorChartInner : OpenPartialHomeomorph (↥baseInterior) Model :=
+  (Topology.IsOpenEmbedding.toOpenPartialHomeomorph (Subtype.val)
+    isOpen_baseInterior.isOpenEmbedding_subtypeVal).trans resChartInteriorChart
+
+/-- **The E-side interior chart on `ResE`** — the `OpenPartialHomeomorph ResE Model` charting the
+base-interior fiber-interior part of the disk bundle (incl. the zero section) onto the interior of the
+half-space model `{q | 0 < q.2.val.ofLp 0}`. Built by lifting `interiorChartInner` along the `chart0`
+open embedding. Coexists with the boundary collar charts of §E. -/
+def interiorChart : OpenPartialHomeomorph ResE Model :=
+  interiorChartInner.lift_openEmbedding isOpenEmbedding_chart0_baseInterior
+
+/-! ## §Z. STATUS — the K6′a Leg-2 E-side certificate
 
 **GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
 deliverable (4) seam step:**
@@ -331,25 +558,32 @@ Deliverable (4) — **the smooth ∂-identification step** (§B.3):
 - `collar_seam_mem_rp3_image` — the collar's radial-zero seam lands in `range bdryMapRP3`, the pinned
   `S³/±1` presentation `bdryHomeoRP3` identifies. The concrete chart-vs-`bdryHomeoRP3` compatibility hook.
 
-**RESIDUAL (walls, localized precisely) — the half-space-model assembly and the manifold instance:**
+Deliverable (2/3) — **the half-space-model charts on `ResE`** (§C–§F, K6′a Leg-2 completion, this pass):
+- `toE2`/`ofE2` (`§C`) — the `ℂ ≅ 𝓔²` bridge (norm-faithful, continuous, mutually inverse), the
+  `KummerShellChart.toE4`/`ofE4` mirror one dimension down.
+- `diskHomeoNDisk1 : Disk ≃ₜ NDisk 1`, `baseDiskChart`, `reshapeModel : 𝓔² × (𝓔¹ × HS¹) ≃ₜ 𝓔³ × HS¹`
+  (`§D`) — the base chart + the `𝓔² ⊕ 𝓔¹ → 𝓔³` assembly (via banked `assemble 2`/`splitLo 2`, the
+  `EuclideanSpace.finAddEquivProd` role) adjoining `fiberRadial → HalfSpace¹`.
+- `collarChart u₀ : OpenPartialHomeomorph ResE Model` (`§E`) — the boundary collar chart, base `z → 𝓔²` ×
+  fiber `w → 𝓔¹ × HalfSpace¹` (banked `diskCollarChart 1` through the bridge) reshaped, then lifted along
+  the `chart0` open embedding by `lift_openEmbedding`. The `KummerBoundaryChart.boundaryChart` mirror;
+  kernel-pure `{propext, Classical.choice, Quot.sound}`.
+- `interiorChart : OpenPartialHomeomorph ResE Model` (`§F`) — the interior chart, identical construction
+  with the banked `diskInteriorChart 1` (covers the fiber centre `w = 0`; image in the half-space
+  interior `radial > 0`). Overlaps the collar on `0 < ‖w‖ < 1` in the SAME radial coordinate `‖w‖` — the
+  coverage discipline that structurally avoids the metric-vs-chart-radius gap. Kernel-pure.
 
-1. **The boundary collar chart as `OpenPartialHomeomorph ResE (ModelProd (𝓔 3) (EuclideanHalfSpace 1))`**
-   — all coordinate bricks are banked (base `z`, `fiberDir`, `fiberRadial`, `fiber_polar_reconstruction`).
-   The remaining step is the Euclidean packaging: chart the base `z ∈ D²(open) ⊆ ℂ` and the angular
-   `fiberDir ∈ S¹` into `𝓔 2 × 𝓔 1` (via a `ℂ ≅ 𝓔²` bridge `toE2/ofE2` — the `KummerShellChart.toE4/ofE4`
-   mirror one dimension down — and the banked `Circle` manifold chart / `NSphere 1` stereographic atlas),
-   merge `𝓔² × 𝓔¹ → 𝓔³` (`EuclideanSpace.finAddEquivProd`), and adjoin `fiberRadial → HalfSpace¹`,
-   assembling the `OpenPartialHomeomorph` off `collarHomeoE` + `shellCollarChart`'s brick sequence. This
-   is the direct analogue of `KummerShellChart.shellCollarChart`; no new geometry, pure packaging.
+**RESIDUAL (walls, localized precisely) — the charted-space instance and the manifold instance:**
 
-2. **The interior chart into `𝓔⁴ ⊆ 𝓔³ × (0,∞)`** — `chart0/1` open embeddings (deliverable 1) reshaped
-   `ℂ² ≅ 𝓔⁴` into the boundary model's interior (radial `> 0`), the `diskInteriorChart` analogue.
+1. **`ChartedSpace Model ResE`** (deliverable 3) — `chartAt` dispatch between `interiorChart` (fiber
+   `‖w‖ < 1`), the `collarChart` family (fiber `‖w‖ > 0`), and their `chart1`-based mirrors (the other
+   base disk). The chart0/chart1-based charts cover every point OFF the base equator `‖z‖ = 1`. The
+   base-equator boundary locus (`chart0 p`, `‖p.1‖ = 1`) — a nowhere-dense circle × fiber — needs a
+   **straddling equator chart**: an open neighborhood crossing the weld, charted through the banked
+   `contDiffOn_clutch` (parent §1) base transition `z ↦ z⁻¹` (glued base coordinate `log‖z‖`, continuous
+   across the weld). This is the one genuinely-new coverage brick beyond the base-interior charts above.
 
-3. **`ChartedSpace (ModelProd (𝓔 3) (EuclideanHalfSpace 1)) ResE`** (deliverable 3) — `chartAt` dispatch
-   between interior charts (item 2), the collar charts (item 1), and the straddling equator charts (the
-   two-chart overlap at `‖z‖ = 1`, where `contDiffOn_clutch` (banked, parent §1) is the transition).
-
-4. **`IsManifold` + smooth `bdryHomeoRP3`** (deliverables 3/4) — the transition classes:
+2. **`IsManifold` + smooth `bdryHomeoRP3`** (deliverables 3/4) — the transition classes:
    interior-interior = `contDiffOn_clutch` (banked); collar-collar and collar-interior = the fiber polar
    change of coordinates (smooth off `w = 0`, and the collar avoids `w = 0` since `‖w‖ > 1/2`); the smooth
    `∂E ≅ ℝP³` upgrade of `bdryHomeoRP3` in these charts.
