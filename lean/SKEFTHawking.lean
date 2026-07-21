@@ -1273,6 +1273,7 @@ import SKEFTHawking.KummerPieceCollarModTwoInt
 import SKEFTHawking.KummerCollarRetractInt
 import SKEFTHawking.KummerCollarPairLESInt
 import SKEFTHawking.KummerCollarPairSplitInt
+import SKEFTHawking.KummerChartNbhdInt
 import SKEFTHawking.SingularLocalHomologyThreeInt
 import SKEFTHawking.SingularConvexRadialMiddleInt
 import SKEFTHawking.SingularConvexStageIsoInt
