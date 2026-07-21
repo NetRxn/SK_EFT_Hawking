@@ -342,7 +342,27 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    gate-pending consumption shape whose interface terms cancel mod 2.
    backing: `wAtt_mem_subspaceChains_range_phi`, `boundary_wAtt_eq_zero`, `isEmpty_capstoneSeamTransfer_of_null`, `isEmpty_capstoneSeamTransferSeam_of_null`
 
-23. `collar-pair-maximal-core-reenters-refuted-support` [structural_forcing]
+23. `collar-pair-open-complement-annulus-is-refuted-shape` [structural_forcing]
+   houtPair (the collar-annulus weld obligation of the #212 collar-pair row) can be discharged for free by
+   reading its three required boundary-supports straight off the in-tree SurgeredEndDatum, whose
+   d.topFaceCovered (fromCyl '' (topface \ range phi) subset dW), d.sphereFaceCovered (fromHandle '' (sphere
+   \ S) subset dW) and bottom-face fact are exactly the three supports hbd_ofTransfer consumes. FALSE
+   (structural forcing, 2026-07-21): a collar-annulus refinement at that OPEN-COMPLEMENT granularity, taken
+   on top of the row's own hctrlC/hctrlH, CONSTRUCTS a verbatim inhabitant of CapstoneSeamTransferSeam
+   (collarAnnulusOpen_toSeamTransferSeam: the seam core absorbs the annulus at cSeam := cCore + ann, cHa :=
+   diskDetectChain, and the two residuals are verbatim its wOut/vOut with verbatim its hwOut/hvOut supports)
+   -- i.e. the shape refuted by seam-transfer-open-support-uninhabitable. not_collarAnnulusOpen_of_null then
+   turns that refinement into False under the identical null/non-bounding hypotheses backing
+   isEmpty_capstoneSeamTransferSeam_of_null. So the free-looking SurgeredEndDatum instantiation of houtPair
+   is settled-dead. SCOPE (worker-stated, lead-confirmed -- do not overstate): only the ONE direction
+   `open-complement refinement ==> refuted structure` is proved. It is NOT proved that every collar-annulus
+   refinement is impossible: a refinement at the strictly COARSER closed-complement granularity the #210
+   repair adopted (topface \ phi '' K for a shrunk core K) is excluded by nothing here, and
+   houtPair_of_bdMem / houtPair_of_bdImageSubset remain its LIVE route. Cite as 'the free-looking
+   d.topFaceCovered instantiation is closed', NEVER as 'the collar-annulus refinement is closed'.
+   backing: `collarAnnulusOpen_toSeamTransferSeam`, `not_collarAnnulusOpen_of_null`
+
+24. `collar-pair-maximal-core-reenters-refuted-support` [structural_forcing]
    The CollarPairGeom/CollarPairGeomUnsub row's anti-fake tether hcoreHit can be made free of charge by
    enlarging the #210 shrunk core K toward its limit K = univ, keeping the rest of the collar-pair split
    data intact. FALSE (structural forcing, 2026-07-21): at K = univ the tether IS indeed a consequence of
@@ -357,7 +377,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    maximal-core shortcut is closed', never as 'every hcoreHit shortcut is closed'.
    backing: `coreHit_of_univ`, `houtC_support_univ_eq_refuted`
 
-24. `k7-seam-cover-interior-fails` [refutation]
+25. `k7-seam-cover-interior-fails` [refutation]
    K7SeamCoverHyp (the K7 opener's un-thickened MV cover hypothesis): the INTERIORS of the two closed
    Kummer-weld pieces (the Q-image and the 16 closed E-images) cover the welded K3 carrier, so the
    Mayer-Vietoris assembly can run on the un-thickened pieces directly. FALSE (kernel refutation
@@ -370,7 +390,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    KummerK7MVAssembly) and through which the whole K7 accounting now runs unconditionally.
    backing: `k7SeamCoverHyp_false`
 
-25. `gram-literal-equality-is-choice-dependent` [structural_forcing]
+26. `gram-literal-equality-is-choice-dependent` [structural_forcing]
    SphereProdGramPin - the LITERAL matrix equality `interMatrix fc B = sphereProdFormDatum` on the computed
    rank-2 basis - is a disclosed GEOMETRIC residual of the S2xS2 intersection form, dischargeable once the
    Kunneth/EZ cross value is pinned. FALSE AS FRAMED (structural forcing, 2026-07-21): the exact
@@ -408,6 +428,7 @@ import SKEFTHawking.PinPlusKTVacuityGateWD
 import SKEFTHawking.PinPlusResidualGate
 import SKEFTHawking.PinPlusRoundThirteenGate
 import SKEFTHawking.PinPlusTaylorConventionNoGo
+import SKEFTHawking.PinPlusTraceCapstoneCollarPairCore
 import SKEFTHawking.PinPlusTraceCapstoneCollarPairGeom
 import SKEFTHawking.PinPlusTraceLeafGate
 import SKEFTHawking.PinPlusTraceSeamTransferNoGo
@@ -576,6 +597,12 @@ alias nogo_isEmpty_capstoneSeamTransfer_of_null := SKEFTHawking.PinPlusTraceSeam
 
 /-- NO-GO [`seam-transfer-open-support-uninhabitable`] — do NOT re-derive. FALSE: The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207 hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching region, and the 3x-circled closed-S co-adaptation barrier (#198/#204/#207) is a machinery gap. Backing refutation: `SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransferSeam_of_null`. -/
 alias nogo_isEmpty_capstoneSeamTransferSeam_of_null := SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransferSeam_of_null
+
+/-- NO-GO [`collar-pair-open-complement-annulus-is-refuted-shape`] — do NOT re-derive. FALSE: houtPair (the collar-annulus weld obligation of the #212 collar-pair row) can be discharged for free by reading its three required boundary-supports straight off the in-tree SurgeredEndDatum, whose d.topFaceCovered (fromCyl '' (topface \ range phi) subset dW), d.sphereFaceCovered (fromHandle '' (sphere \ S) subset dW) and bottom-face fact are exactly the three supports hbd_ofTransfer consumes. Backing refutation: `SKEFTHawking.PinPlusTraceCapstoneCollarPairCore.collarAnnulusOpen_toSeamTransferSeam`. -/
+alias nogo_collarAnnulusOpen_toSeamTransferSeam := SKEFTHawking.PinPlusTraceCapstoneCollarPairCore.collarAnnulusOpen_toSeamTransferSeam
+
+/-- NO-GO [`collar-pair-open-complement-annulus-is-refuted-shape`] — do NOT re-derive. FALSE: houtPair (the collar-annulus weld obligation of the #212 collar-pair row) can be discharged for free by reading its three required boundary-supports straight off the in-tree SurgeredEndDatum, whose d.topFaceCovered (fromCyl '' (topface \ range phi) subset dW), d.sphereFaceCovered (fromHandle '' (sphere \ S) subset dW) and bottom-face fact are exactly the three supports hbd_ofTransfer consumes. Backing refutation: `SKEFTHawking.PinPlusTraceCapstoneCollarPairCore.not_collarAnnulusOpen_of_null`. -/
+alias nogo_not_collarAnnulusOpen_of_null := SKEFTHawking.PinPlusTraceCapstoneCollarPairCore.not_collarAnnulusOpen_of_null
 
 /-- NO-GO [`collar-pair-maximal-core-reenters-refuted-support`] — do NOT re-derive. FALSE: The CollarPairGeom/CollarPairGeomUnsub row's anti-fake tether hcoreHit can be made free of charge by enlarging the #210 shrunk core K toward its limit K = univ, keeping the rest of the collar-pair split data intact. Backing refutation: `SKEFTHawking.PinPlusTraceCapstoneCollarPairGeom.coreHit_of_univ`. -/
 alias nogo_coreHit_of_univ := SKEFTHawking.PinPlusTraceCapstoneCollarPairGeom.coreHit_of_univ
