@@ -105,3 +105,11 @@ FIX. Add a new entry the *first* time a pattern recurs (don't re-solve it per-in
 - **`cases hb : ε j` AFTER the goal specialized** breaks `rw` with the pre-case hypothesis → extract per-`Bool` helper lemmas (e.g. `isOpen_signSet`/`convex_signSet`) instead of casing inline.
 - **ℕ-vs-ℤ numeral-smul mismatch** (`2 • c = 2 • c` refusing rfl) → `rw [two_smul, two_smul]`.
 - **`sub`'s implicit `TopCat` won't infer from a bare `Set`** → ascribe `(… : Set ↑Xtop)` at use sites.
+
+## K7 fiber-flow batch (2026-07-21, wt3 #299)
+
+- **`attribute [irreducible]` on ℝ-arithmetic geometric defs** (flow scalars/disks) after banking their lemmas — otherwise `Continuous.comp` unification whnf-dives into real arithmetic (deterministic timeout). Same medicine as homology equiv-builders.
+- **`sub` needs `(X := <TopCat>)` as a NAMED argument** — a `(… : Set ↑X)` ascription inside another named argument cannot be inverted (`Set K =?= Set ↑?m`).
+- **Type ascription `(h : P')` on a defeq hypothesis is a NO-OP for `linarith`** (the fvar keeps its stored type) → `have h' : P' := h`.
+- `squeeze_zero_norm`'s bound is named `a` (not `g`); `ContinuousAt.min` doesn't exist — use `Filter.Tendsto.min`.
+- **Junk-value bonus**: `1/0 = 0` makes radial flow scalars like `min(1/‖w‖, 2−t)` total with the CORRECT value at the fiber origin; continuity there via `squeeze_zero_norm`.
