@@ -317,6 +317,7 @@ import SKEFTHawking.SymTFT.SkeletalModularModel
 -- non-degenerate `e·e → vacuum` corner), MonObj unit laws, the degenerate-
 -- multiplication contrast, and the S1 `toricElectricSupport` tie.
 import SKEFTHawking.SymTFT.ElectricAlgebraObject
+import SKEFTHawking.SymTFT.ElectricComonoid
 -- Phase 6r-prime M2 upstream-PR-quality ship (2026-05-25): Drinfeld-
 -- center binary biproducts. Builds the diagonal half-braiding iso on
 -- X.1 ⊞ Y.1 for X, Y : Center C under [MonoidalPreadditive C] +
