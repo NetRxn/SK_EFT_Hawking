@@ -355,7 +355,32 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    gate-pending consumption shape whose interface terms cancel mod 2.
    backing: `wAtt_mem_subspaceChains_range_phi`, `boundary_wAtt_eq_zero`, `isEmpty_capstoneSeamTransfer_of_null`, `isEmpty_capstoneSeamTransferSeam_of_null`
 
-23. `collar-pair-face-row-forces-seam-to-meet-boundary` [structural_forcing]
+23. `collar-pair-closed-seam-attached-collar-bridge-is-FALSE` [refutation]
+   PinPlusTraceSeamResidualNarrow.ClosedSeamAttachedCollarBridge S a -- the closed-S attached-collar bridge,
+   believed to be hctrlH's blocking atom and readable as an open-neighbourhood-to-closed-S collar
+   deformation retraction. FALSE (kernel refutation, 2026-07-21): collar_bridge_refuted exhibits closed
+   nonempty S = {e_0} in the 5-sphere, U = univ (satisfying the engine's own cover hypothesis sphere subset
+   U union S-complement verbatim), and a chain a in subspaceChains (U inter sphere) with NOT (Bridge S a).
+   The witness is one concrete great-circle 4-simplex v |-> cos(pi*v_0/2)*e_0 + sin(pi*v_0/2)*e_1, norm 1
+   throughout, running from e_0 in S to e_1 not in S. ANATOMY (both directions,
+   attachedBridge_iff_support_dichotomy): the bridge holds IFF no support simplex of a straddles S -- so it
+   has NO collar content whatsoever, and the 'collar deformation-retraction' reading in
+   PinPlusTraceSeamResidualNarrow section 3 is WRONG: a retraction gives homotopy/homology invariance, never
+   the chain-level EQUALITY the bridge demands. CONSEQUENCE, and the reason this is not a wall: the bridge
+   was never hctrlH's blocker. The predecessor reduction of hctrlH to it was STRICTLY TOO STRONG -- the
+   bridge demands a correction supported in the CLOSED complement sphere minus S, while
+   CollarPairBuild.hctrlH's companion houtH only asks for the OPEN complement sphere minus (Subtype.val
+   image of K), off the builder-chosen shrunk closed core K (a free field documented K inside int A). That
+   is the open-cover engine's native granularity, so hctrlH + houtH are supplied bridge-free by
+   exists_ctrlHandle_split_offCore. SCOPE (do not overstate): this kills the ATOM, not the row. The producer
+   is SUFFICIENT, not equivalent -- it exhibits one admissible (muH, cCore, outH) triple, claims no cCore
+   uniqueness, and does NOT supply the co-adaptation with the cylinder side, which is now carried by hctrlC.
+   Non-vacuity pinned: exists_nonempty_core_of_sphere_mem shows a NONEMPTY closed core meeting the
+   interiority hypothesis exists whenever U meets the sphere, so this is not a statement about the K = empty
+   case that hcoreHit rules out.
+   backing: `collar_bridge_refuted`, `attachedBridge_iff_support_dichotomy`
+
+24. `collar-pair-face-row-forces-seam-to-meet-boundary` [structural_forcing]
    A CollarPairGeomFace row (the houtPair producer: the row's own supports plus the seam-annulus containment
    hseamAnn) can be inhabited with an ENTIRELY INTERIOR seam -- i.e. with no seam point of the surgered end
    lying in dW, so that the collar-pair route never has to pay for the seam. FALSE (structural forcing,
@@ -374,7 +399,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    FIVE.
    backing: `exists_seamPoint_mem_bd_of_null`, `exists_seamPoint_mem_range_eM'_of_null`
 
-24. `collar-pair-open-complement-annulus-is-refuted-shape` [structural_forcing]
+25. `collar-pair-open-complement-annulus-is-refuted-shape` [structural_forcing]
    houtPair (the collar-annulus weld obligation of the #212 collar-pair row) can be discharged for free by
    reading its three required boundary-supports straight off the in-tree SurgeredEndDatum, whose
    d.topFaceCovered (fromCyl '' (topface \ range phi) subset dW), d.sphereFaceCovered (fromHandle '' (sphere
@@ -394,7 +419,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    d.topFaceCovered instantiation is closed', NEVER as 'the collar-annulus refinement is closed'.
    backing: `collarAnnulusOpen_toSeamTransferSeam`, `not_collarAnnulusOpen_of_null`
 
-25. `collar-pair-maximal-core-reenters-refuted-support` [structural_forcing]
+26. `collar-pair-maximal-core-reenters-refuted-support` [structural_forcing]
    The CollarPairGeom/CollarPairGeomUnsub row's anti-fake tether hcoreHit can be made free of charge by
    enlarging the #210 shrunk core K toward its limit K = univ, keeping the rest of the collar-pair split
    data intact. FALSE (structural forcing, 2026-07-21): at K = univ the tether IS indeed a consequence of
@@ -409,7 +434,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    maximal-core shortcut is closed', never as 'every hcoreHit shortcut is closed'.
    backing: `coreHit_of_univ`, `houtC_support_univ_eq_refuted`
 
-26. `k7-seam-cover-interior-fails` [refutation]
+27. `k7-seam-cover-interior-fails` [refutation]
    K7SeamCoverHyp (the K7 opener's un-thickened MV cover hypothesis): the INTERIORS of the two closed
    Kummer-weld pieces (the Q-image and the 16 closed E-images) cover the welded K3 carrier, so the
    Mayer-Vietoris assembly can run on the un-thickened pieces directly. FALSE (kernel refutation
@@ -422,7 +447,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    KummerK7MVAssembly) and through which the whole K7 accounting now runs unconditionally.
    backing: `k7SeamCoverHyp_false`
 
-27. `gram-literal-equality-is-choice-dependent` [structural_forcing]
+28. `gram-literal-equality-is-choice-dependent` [structural_forcing]
    SphereProdGramPin - the LITERAL matrix equality `interMatrix fc B = sphereProdFormDatum` on the computed
    rank-2 basis - is a disclosed GEOMETRIC residual of the S2xS2 intersection form, dischargeable once the
    Kunneth/EZ cross value is pinned. FALSE AS FRAMED (structural forcing, 2026-07-21): the exact
@@ -444,7 +469,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    choice.
    backing: `sphereProd_interMatrix_computed_eq`, `sphereProdGramPin_iff`
 
-28. `kronecker-dual-is-not-the-h1-enhancement-transport` [refutation]
+29. `kronecker-dual-is-not-the-h1-enhancement-transport` [refutation]
    The Kronecker/UCT dual of the carried cohomology basis - `homologyBasisOfCohomologyBasis basis`, the
    value `pinCharSurfaceOfBundled` puts in `PinCharSurface.H1Iso` (and the value
    `GeoRealizationTied.derivedEsigma`/`derivedEtau` put in the seam) - is the identification of
@@ -499,6 +524,7 @@ import SKEFTHawking.PinPlusTraceCapstoneCollarPairCore
 import SKEFTHawking.PinPlusTraceCapstoneCollarPairFace
 import SKEFTHawking.PinPlusTraceCapstoneCollarPairGeom
 import SKEFTHawking.PinPlusTraceLeafGate
+import SKEFTHawking.PinPlusTraceSeamCollarBridgeNoGo
 import SKEFTHawking.PinPlusTraceSeamTransferNoGo
 import SKEFTHawking.RokhlinArfNoGo
 import SKEFTHawking.SphereProdGramPinRetire
@@ -671,6 +697,12 @@ alias nogo_isEmpty_capstoneSeamTransfer_of_null := SKEFTHawking.PinPlusTraceSeam
 
 /-- NO-GO [`seam-transfer-open-support-uninhabitable`] — do NOT re-derive. FALSE: The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207 hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching region, and the 3x-circled closed-S co-adaptation barrier (#198/#204/#207) is a machinery gap. Backing refutation: `SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransferSeam_of_null`. -/
 alias nogo_isEmpty_capstoneSeamTransferSeam_of_null := SKEFTHawking.PinPlusTraceSeamTransferNoGo.isEmpty_capstoneSeamTransferSeam_of_null
+
+/-- NO-GO [`collar-pair-closed-seam-attached-collar-bridge-is-FALSE`] — do NOT re-derive. FALSE: PinPlusTraceSeamResidualNarrow.ClosedSeamAttachedCollarBridge S a -- the closed-S attached-collar bridge, believed to be hctrlH's blocking atom and readable as an open-neighbourhood-to-closed-S collar deformation retraction. Backing refutation: `SKEFTHawking.PinPlusTraceSeamCollarBridgeNoGo.collar_bridge_refuted`. -/
+alias nogo_collar_bridge_refuted := SKEFTHawking.PinPlusTraceSeamCollarBridgeNoGo.collar_bridge_refuted
+
+/-- NO-GO [`collar-pair-closed-seam-attached-collar-bridge-is-FALSE`] — do NOT re-derive. FALSE: PinPlusTraceSeamResidualNarrow.ClosedSeamAttachedCollarBridge S a -- the closed-S attached-collar bridge, believed to be hctrlH's blocking atom and readable as an open-neighbourhood-to-closed-S collar deformation retraction. Backing refutation: `SKEFTHawking.PinPlusTraceSeamCollarBridgeNoGo.attachedBridge_iff_support_dichotomy`. -/
+alias nogo_attachedBridge_iff_support_dichotomy := SKEFTHawking.PinPlusTraceSeamCollarBridgeNoGo.attachedBridge_iff_support_dichotomy
 
 /-- NO-GO [`collar-pair-face-row-forces-seam-to-meet-boundary`] — do NOT re-derive. FALSE: A CollarPairGeomFace row (the houtPair producer: the row's own supports plus the seam-annulus containment hseamAnn) can be inhabited with an ENTIRELY INTERIOR seam -- i.e. Backing refutation: `SKEFTHawking.PinPlusTraceCapstoneCollarPairFace.CollarPairGeomFace.exists_seamPoint_mem_bd_of_null`. -/
 alias nogo_exists_seamPoint_mem_bd_of_null := SKEFTHawking.PinPlusTraceCapstoneCollarPairFace.CollarPairGeomFace.exists_seamPoint_mem_bd_of_null
