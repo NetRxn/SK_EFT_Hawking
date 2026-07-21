@@ -72,7 +72,9 @@ open SKEFTHawking.PinPlusKTLeafGate
 
 namespace SKEFTHawking.PinPlusKTCollapseDischarge
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {k : WithTop ℕ∞}
+
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 
 /-! ## §1. The terminal-step per-object collapse datum -/
 
@@ -90,7 +92,7 @@ membrane-kill collapse of the (trivial-`H¹`, possibly nonempty) characteristic 
 The disk / framing / bounding data underlying the collapse is GEOMETRIC INPUT — named here as the
 existence of this datum (its discharge = the terminal-KRS bounding datum's construction, round-9
 freeze), not proven from scratch. -/
-structure RankZeroCollapseDatum (prov : CharPairWProviderPerOp (𝓡 4) 0)
+structure RankZeroCollapseDatum (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p : StrMfd (pinPlusCharPairData prov).toTangentialData) where
   /-- the surgered representative (terminal KT §5 step output). -/
   p' : StrMfd (pinPlusCharPairData prov).toTangentialData

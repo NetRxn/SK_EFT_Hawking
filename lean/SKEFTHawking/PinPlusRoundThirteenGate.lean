@@ -151,6 +151,8 @@ open SKEFTHawking.PinPlusKTCollapseDischarge
 
 namespace SKEFTHawking.PinPlusRoundThirteenGate
 
+variable {k : WithTop ℕ∞}
+
 /-! ## §1. G13-1 — the Novikov "genuine-tower" carrier is conclusion-fakeable: the field row of
 `NovikovGeometricPairLESData` sits at EXACTLY substrate (= σ-agreement = `hbord`) strength. -/
 
@@ -487,7 +489,7 @@ end SeamStructure
 
 section CollapseDatum
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 
 /-- **The collapse datum is the Skolemized per-object conclusion** — `Nonempty (RankZeroCollapseDatum
 prov p)` is EQUIVALENT to the collapse Prop's body at `p`. Forward: project the datum's fields.

@@ -82,7 +82,9 @@ open SKEFTHawking.PinPlusKTKerPhiDoubles
 
 namespace SKEFTHawking.PinPlusKTDualSpinSubmanifold
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable {k : WithTop ℕ∞}
+
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-! ## §1. The named geometric atom — the `w₁(W)`-dual spin submanifold `V ⊂ W` (deep leaf) -/
 

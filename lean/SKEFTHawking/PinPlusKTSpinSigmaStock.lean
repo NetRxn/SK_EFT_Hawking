@@ -25,6 +25,8 @@ import SKEFTHawking.SphereProdCrossInt
 
 namespace SKEFTHawking.PinPlusKTSpinSigmaStock
 
+variable {k : WithTop ℕ∞}
+
 open scoped Manifold
 open SKEFTHawking SKEFTHawking.SpinSigmaRoute
 open SKEFTHawking.SingularCohomologyInt
@@ -61,7 +63,7 @@ theorem latticeSig_of_blockCongr {n np nq : ℕ} (hn : n = np + nq)
 
 /-! ## §2. The σ-descent additivity input, discharged for the atom bundle -/
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-- **The geometric block-sum atom of the atom bundle** — the ONLY residual of Thom additivity after the
 lattice bookkeeping (§1) is discharged. For the disclosed atom bundle `a`, the intersection matrix of a
@@ -250,7 +252,7 @@ disclosed E1 object, which stays non-vacuous precisely because its fields are fu
 `orient` — the vacuity boundary). What the package DOES do is REALIZE, by genuine per-manifold disclosed
 geometry, the bundle's even-unimodular obligation at its element — the honest per-element↔total bridge. -/
 
-variable {prov : CharPairWProviderPerOp (𝓡 4) 0}
+variable {prov : CharPairWProviderPerOp (𝓡 4) k}
 
 /-- **The per-element package realizes the presentation's even-unimodular obligation at its element.**
 If the disclosed total bundle `a`'s fundamental class at `p` is the package's (from its orientation),

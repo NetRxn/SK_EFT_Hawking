@@ -10,9 +10,25 @@ gives a unique smooth structure), because
 
 The audit of 2026-07-21 found the canonical KT provider declared at `k := 0`
 (`PinPlusKTAssemblyResiduals.residualProv : CharPairWProviderPerOp (𝓡 4) 0`), so the assembly of
-record concludes about `pinPlusCharPairData residualProv`, whose ambient is
+record concluded about `pinPlusCharPairData residualProv`, whose ambient is
 `T2TangentialData.{0,1} PUnit 0 (𝓡 4)` — quantified over `SingularManifold PUnit 0 (𝓡 4)`. No
-in-tree declaration transports that conclusion to a `k ≥ 1` carrier.
+in-tree declaration transports that conclusion to a `k ≥ 1` carrier, and none can be generic:
+`PinPlusRegularitySeparation.no_generic_zero_to_one_transport` refutes generic `C⁰ ⟹ C¹`.
+
+**STATUS UPDATE (the regularity lift, same day).** The gap is now closed by *re-declaration*, which
+is the only route the separation leaves open. `PinPlusKTAssemblyResiduals` carries a
+regularity-generic core `kt_equiv_zmod16_of_residuals_ofKRS {k}` and a smooth headline
+`kt_equiv_zmod16_of_residuals_smooth` / `rokhlin_sixteen_of_residuals_smooth` on
+`residualProvK ⊤`, together with the UNCONDITIONAL non-vacuity of the smooth carrier
+(`charPairBrown_surjective_smooth`, `rp4_ne_zero_smooth` — the `Cω` ℝP⁴ witness `rp4CharPairK ⊤`).
+The `k = 0` theorems keep their exact statements and are now corollaries. **What is still `C⁰`-only**
+is the KRS lane's *constructed supplier*: `SmoothSurgeryChartDatum.ofC0`,
+`SingularSurgeryChartsConcrete.ambientTraceBordism_concrete` (whose
+`he_smooth := contMDiff_zero_iff.mpr he_cont` IS the `k = 0` freebie), and everything downstream of
+them — `ktHandleAttachment` / `SeamCollarDatum` / `SurgeredEndDatum` / `capstoneB` /
+`KRSResidualRow`. The smooth statements therefore take the KRS leaf at the regularity-honest
+`AmbientSurgeryDatum` row, whose `Bordism` fields carry `IsManifold … k` / `ContMDiff … k` for real.
+This fence stands unchanged as the reason the lift was necessary.
 
 **This module makes the consequence kernel-visible.** It does NOT refute the assembly and does NOT
 narrow anyone's claim; it fixes the *category* the current statements are about, so the conflation
@@ -41,11 +57,11 @@ an element of that category; the ℤ/16 target is a *smooth* statement.
 * **NOT established here:** that the `k = 0` assembly's conclusion is *false*. It is not refuted —
   it is *uninterpreted* until either a `k = 0 ⟹ k ≥ 1` transport is proved, or the assembly is
   re-declared at `k ≥ 1`. Nothing below is evidence against the KT lane's mathematics.
-* **NOT established here (the stronger form, deliberately not claimed):** a *separating witness* —
-  a concrete element of `SingularManifold PUnit 0 (𝓡 4)` that admits no `IsManifold (𝓡 4) 1`
-  structure. Building one (an atlas whose transition maps are homeomorphisms but not `C¹`) would
-  upgrade this fence from "the binder is free" to "the categories provably differ in-tree". That is
-  the honest next brick; it is NOT done.
+* **ESTABLISHED ELSEWHERE (the stronger form — since landed):** the *separating witness* exists in
+  tree. `PinPlusRegularitySeparationCarrier.exists_carrier_element_not_smooth` exhibits an
+  `s : SingularManifold PUnit 0 (𝓡 4)` with `¬ IsManifold (𝓡 4) 1 s.M` (the kink-twisted ℝP⁴
+  atlas), so the categories provably differ in-tree and re-declaring at `k ≥ 1` genuinely *removes*
+  objects — the `k := 0` binder was never harmless generality.
 
 See `docs/dev-loops/SETTLED_FORKS.md §5qH-capstone-regularity-level-k0-vs-k1-unbridged`.
 -/

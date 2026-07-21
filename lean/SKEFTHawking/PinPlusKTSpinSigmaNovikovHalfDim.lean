@@ -6,6 +6,8 @@ import SKEFTHawking.PinPlusKTSpinSigmaNovikovOpener
 
 namespace SKEFTHawking.PinPlusKTSpinSigmaNovikovHalfDim
 
+variable {k : WithTop ℕ∞}
+
 open scoped Manifold
 open QuadraticMap Module
 open SKEFTHawking SKEFTHawking.SingularCohomologyInt SKEFTHawking.SpinSigmaRoute
@@ -80,7 +82,7 @@ theorem NovikovBoundaryRestriction.half_of_coisotropic {n : ℕ} {Bd : Matrix (F
 
 /-! ## §4. The residual co-isotropy atom — half-dim discharged, nondeg banked, only Lefschetz left -/
 
-variable (prov : CharPairWProviderPerOp (𝓡 4) 0)
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-- **The residual co-isotropy atom.** For each data-bordant pair `p, q`, a subspace `L` of the boundary
 block form `blockDiag (II M_p) (−(II M_q))` that is **isotropic** (`Q_∂ x = 0` on `L` — banked, classes
