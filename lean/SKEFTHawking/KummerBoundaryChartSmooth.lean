@@ -495,6 +495,56 @@ theorem contDiffOn_transition_interior_interior {k : WithTop ℕ∞} (x x' : ↥
   rw [interiorReshapeSymm_eq_clean hposm]
   rfl
 
+/-! ### §2c. The round chart is smooth — the crux enabler for the collar ↔ interior seam (1d) -/
+
+/-- **The extended round chart `centeredChartParamE4 c` is `C^k` into `T⁴`.** In `E⁴` coordinates
+`w ↦ centeredChartParam c (ofE4 w) = (c.i · Circle.exp (w.ofLp i))ᵢ`, each factor is
+`(left-translate by cᵢ) ∘ Circle.exp ∘ (coordinate projection)` — all `ContMDiff` (`Circle.exp` via
+`contMDiff_circleExp`, left-translation via the `Circle` Lie-group `contMDiff_mul_left`). This is the
+geometric heart of the collar ↔ interior transition class: the round chart of a boundary sphere is
+smoothly compatible with the ambient `T⁴` product charts. -/
+theorem contMDiff_centeredChartParamE4 {k : WithTop ℕ∞} (c : TorusFour) :
+    ContMDiff (𝓘(ℝ, EuclideanSpace ℝ (Fin 4)))
+      ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) k
+      (fun w : EuclideanSpace ℝ (Fin 4) => centeredChartParam c (ofE4 w)) := by
+  have hfac : ∀ (a : Circle) (j : Fin 4),
+      ContMDiff (𝓘(ℝ, EuclideanSpace ℝ (Fin 4))) (𝓡 1) k
+        (fun w : EuclideanSpace ℝ (Fin 4) => a * Circle.exp (w.ofLp j)) := by
+    intro a j
+    have hcoord : ContMDiff (𝓘(ℝ, EuclideanSpace ℝ (Fin 4))) (𝓘(ℝ, ℝ)) k
+        (fun w : EuclideanSpace ℝ (Fin 4) => w.ofLp j) := by
+      rw [contMDiff_iff_contDiff]
+      exact (contDiff_apply ℝ ℝ j).comp PiLp.contDiff_ofLp
+    exact contMDiff_mul_left.comp ((contMDiff_circleExp (m := k)).comp hcoord)
+  have h : (fun w : EuclideanSpace ℝ (Fin 4) => centeredChartParam c (ofE4 w))
+      = fun w => (c.1 * Circle.exp (w.ofLp 0), c.2.1 * Circle.exp (w.ofLp 1),
+          c.2.2.1 * Circle.exp (w.ofLp 2), c.2.2.2 * Circle.exp (w.ofLp 3)) := rfl
+  rw [h]
+  exact (hfac c.1 0).prodMk ((hfac c.2.1 1).prodMk ((hfac c.2.2.1 2).prodMk (hfac c.2.2.2 3)))
+
+/-- **The round-chart → interior-coordinate smooth core.** On the locus where the round chart lands in
+the ambient product chart's source, the coordinate map
+`w ↦ I (interiorReshape (extChartAt J y (centeredChartParam c (ofE4 w))))` is `C^k`. This is the
+analysis heart of the collar → interior transition class (1d): the round chart `centeredChartParamE4 c`
+of a boundary sphere is `ContMDiff` (`contMDiff_centeredChartParamE4`), its `extChartAt`-coordinate rep
+lands in the genuine normed product (`contMDiffOn_extChartAt` + `contMDiffOn_iff_contDiffOn`, dodging the
+`ModelProd` instance opacity), and `I ∘ interiorReshape` is `C^k` (`contDiff_I_interiorReshape`). -/
+theorem contDiffOn_roundToInterior_core {k : WithTop ℕ∞} (c : TorusFour) (y : TorusFour) :
+    ContDiffOn ℝ k
+      (fun w : EuclideanSpace ℝ (Fin 4) =>
+        ((𝓡 3).prod (𝓡∂ 1)) (interiorReshape (extChartAt
+          ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) y (centeredChartParam c (ofE4 w)))))
+      ((fun w : EuclideanSpace ℝ (Fin 4) => centeredChartParam c (ofE4 w)) ⁻¹'
+        (chartAt PModel y).source) := by
+  have hext : ContMDiffOn ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1))))
+      (𝓘(ℝ, EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1) ×
+          EuclideanSpace ℝ (Fin 1) × EuclideanSpace ℝ (Fin 1))) k
+      (extChartAt ((𝓡 1).prod ((𝓡 1).prod ((𝓡 1).prod (𝓡 1)))) y) (chartAt PModel y).source :=
+    contMDiffOn_extChartAt
+  have hcomp := hext.comp (contMDiff_centeredChartParamE4 c).contMDiffOn (fun w hw => hw)
+  rw [contMDiffOn_iff_contDiffOn] at hcomp
+  exact contDiff_I_interiorReshape.comp_contDiffOn hcomp
+
 end
 
 end SKEFTHawking.KummerBoundaryChartSmooth
