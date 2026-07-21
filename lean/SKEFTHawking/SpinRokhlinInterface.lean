@@ -28,10 +28,15 @@ DEPENDENCY GRAPH (anti-circularity): the derivation routes
 It does NOT use Anderson–Brown–Peterson or Rokhlin's theorem itself as input (Rokhlin's theorem
 *is* the conclusion `16 ∣ σ`); the `2 ∣ σ/8` field is the more primitive index-theoretic fact.
 
-STATUS (2026-06-08): `8 ∣ σ` is DISCHARGED and the `eight_dvd` field has been DROPPED. The classification
-EXISTENCE statement (every even unimodular form ≅ `E₈^a ⊕ (−E₈)^b ⊕ H^c`) is proved — both irreducible
-pieces landed: Hasse–Minkowski (`RokhlinHMRankFour.hasWeakIsotropicVector`, all ranks; rank-4 frontier via
-binary Hilbert reciprocity) and theta-modularity (definite `8 ∣ rank`). The **only remaining tracked
+STATUS (2026-06-08; accuracy-corrected 2026-07-20): `8 ∣ σ` is DISCHARGED and the `eight_dvd` field has
+been DROPPED. The two irreducible INPUT pieces landed: Hasse–Minkowski
+(`RokhlinHMRankFour.hasWeakIsotropicVector`, all ranks; rank-4 frontier via binary Hilbert reciprocity)
+and theta-modularity (definite `8 ∣ rank`). ⚠ The full classification EXISTENCE statement (every even
+unimodular form ≅ `E₈^a ⊕ (−E₈)^b ⊕ H^c`) is NOT itself in-tree: the σ = 0 case IS
+(`HyperbolicNormalForm.exists_hyperbolic_congr`, pure-H blocks), but the definite branch stops at the
+`8 ∣ rank` DIVISIBILITY — the E₈-identification of the definite part (equivalently the stable
+classification with mixed signature) is the open K8b interior brick (see
+`docs/dev-loops/Phase5qH/KUMMER_K4K10_DESIGN.md` §K8b). The **only remaining tracked
 hypothesis is `topo`** (`2 ∣ σ/8`), which is irreducibly topological (not an axiom, not algebraic).
 
 See docs/roadmaps/Phase5qB_SpectraFreeSpinBordism_Roadmap.md (Waves B3, B4) and
