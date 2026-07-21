@@ -32,6 +32,20 @@ agree is a statement of chain-level geometry, not of algebra.
 geometric statement that supplies it. Neither is an axiom: both are `Prop`s carried explicitly by
 every downstream theorem.
 
+## The residual is a statement about a finite group
+
+`tubeCoord` descends to `tubeQuot : coker Σ₂ → (ℤ/2)¹⁶` (§5), and `coker Σ₂ ≅ im δ₁ ↪ (ℤ/2)¹⁶` is
+finite elementary abelian. So
+
+* `TubeSeparates ↔ Function.Injective tubeQuot` (`tubeSeparates_iff_tubeQuot_injective`), and
+* `TubeParity ↔ tubeQuot = cokerSigma2Embed` (`tubeParity_iff_tubeQuot_eq`) — an equality of two
+  ℤ-linear maps out of a finite elementary abelian 2-group,
+
+so the residual is a finite, per-copy checkable assertion, not a statement quantified over all of
+`H₂(K3;ℤ)`. Unconditionally (no hypothesis at all) the torsion is already trapped by that one map:
+`Torsion(H₂(K3;ℤ))` embeds ℤ-linearly into `ker tubeQuot` (`torsionIntoKerTubeQuot`,
+`torsionIntoKerTubeQuot_injective`), so `tubeQuot` is an exact measure of what remains.
+
 ## What `TubeParity` costs geometrically (the honest residual)
 
 Through excision `H₂(K3, qThick) ≅ H₂(eImage, collar)` the connecting map `δ₁` is the pair
@@ -58,7 +72,7 @@ open SKEFTHawking.KummerWeld (EIndex)
 open SKEFTHawking.KummerK7MVAssembly (k7Delta k7Sum2_injective interH1EquivInt)
 open SKEFTHawking.KummerK7Delta1Window
   (Sigma2 pieceBlock sigma2SourceEquiv doubleIntoBlock ker_k7Delta_one
-    torsion_inf_pieceBlock_eq_bot torsion_two_smul_eq_zero)
+    torsion_inf_pieceBlock_eq_bot torsion_two_smul_eq_zero cokerSigma2Embed)
 
 noncomputable section
 
@@ -131,6 +145,15 @@ theorem tubeCoord_eq_zero_of_mem_pieceBlock {x : Homology KummerK3top 2} (hx : x
 theorem tubeCoord_two_smul (x : Homology KummerK3top 2) : tubeCoord ((2 : ℤ) • x) = 0 :=
   tubeCoord_eq_zero_of_mem_pieceBlock (doubleIntoBlock x).2
 
+/-- **`tubeCoord` kills torsion — unconditional.** A torsion class is 2-torsion
+(`torsion_two_smul_eq_zero`), so it doubles to `0` and its block coordinates vanish outright.
+This is the step that makes the tube coordinate a torsion detector. -/
+theorem tubeCoord_eq_zero_of_torsion {t : Homology KummerK3top 2}
+    (ht : t ∈ Submodule.torsion ℤ (Homology KummerK3top 2)) : tubeCoord t = 0 := by
+  have hdb : doubleIntoBlock t = 0 := Subtype.ext (torsion_two_smul_eq_zero ht)
+  rw [tubeCoord, LinearMap.comp_apply, LinearMap.comp_apply, blockCoord,
+    LinearMap.comp_apply, LinearMap.comp_apply, hdb, map_zero, map_zero, map_zero, map_zero]
+
 /-! ## §3. The two named hypotheses -/
 
 /-- **`TubeSeparates`** — the tube coordinate detects the piece block: a class whose doubled
@@ -167,12 +190,7 @@ theorem torsion_eq_bot_of_tubeSeparates (h : TubeSeparates) :
     Submodule.torsion ℤ (Homology KummerK3top 2) = ⊥ := by
   rw [Submodule.eq_bot_iff]
   intro t ht
-  have h2 : (2 : ℤ) • t = 0 := torsion_two_smul_eq_zero ht
-  have hdb : doubleIntoBlock t = 0 := Subtype.ext h2
-  have htc : tubeCoord t = 0 := by
-    rw [tubeCoord, LinearMap.comp_apply, LinearMap.comp_apply, blockCoord,
-      LinearMap.comp_apply, LinearMap.comp_apply, hdb, map_zero, map_zero, map_zero, map_zero]
-  have hpb : t ∈ pieceBlock := h t htc
+  have hpb : t ∈ pieceBlock := h t (tubeCoord_eq_zero_of_torsion ht)
   have hinf : t ∈ Submodule.torsion ℤ (Homology KummerK3top 2) ⊓ pieceBlock :=
     Submodule.mem_inf.mpr ⟨ht, hpb⟩
   rwa [torsion_inf_pieceBlock_eq_bot] at hinf
@@ -196,6 +214,78 @@ theorem kummerK3_b2_target_of_tube_parity (h : TubeParity) :
     SKEFTHawking.KummerK7Opener.kummerK3_b2_target :=
   SKEFTHawking.KummerK7Delta1Window.kummerK3_b2_target_of_torsion_free
     (kummerK3_torsion_free_of_tube_parity h)
+
+/-! ## §5. Both hypotheses live on the finite group `coker Σ₂` — and the unconditional bound -/
+
+/-- **The tube coordinate descends to `coker Σ₂`** (`tubeCoord_eq_zero_of_mem_pieceBlock`). Since
+`coker Σ₂ ≅ im δ₁ ↪ (ℤ/2)¹⁶` is finite of exponent 2, `tubeQuot` is a ℤ-linear map between
+explicit finite elementary abelian 2-groups — so both `TubeSeparates` and `TubeParity` are
+finite, per-copy checkable assertions rather than statements about all of `H₂(K3;ℤ)`. -/
+def tubeQuot : (Homology KummerK3top 2 ⧸ pieceBlock) →ₗ[ℤ] (EIndex → ZMod 2) :=
+  pieceBlock.liftQ tubeCoord (fun _ hx => tubeCoord_eq_zero_of_mem_pieceBlock hx)
+
+@[simp] theorem tubeQuot_mk (x : Homology KummerK3top 2) :
+    tubeQuot (Submodule.Quotient.mk x : Homology KummerK3top 2 ⧸ pieceBlock) = tubeCoord x := rfl
+
+/-- **`TubeSeparates` is exactly the injectivity of `tubeQuot`** — the residual as a statement
+about one map out of a finite elementary abelian 2-group. -/
+theorem tubeSeparates_iff_tubeQuot_injective : TubeSeparates ↔ Function.Injective tubeQuot := by
+  constructor
+  · intro h
+    rw [← LinearMap.ker_eq_bot, Submodule.eq_bot_iff]
+    intro y hy
+    obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ y
+    rw [LinearMap.mem_ker, tubeQuot_mk] at hy
+    exact (Submodule.Quotient.mk_eq_zero _).mpr (h x hy)
+  · intro h x hx
+    have h1 : tubeQuot (Submodule.Quotient.mk x : Homology KummerK3top 2 ⧸ pieceBlock)
+        = tubeQuot 0 := by
+      rw [tubeQuot_mk, hx, map_zero]
+    exact (Submodule.Quotient.mk_eq_zero _).mp (h h1)
+
+/-- **`TubeParity` is exactly the equality of two maps on `coker Σ₂`** — `tubeQuot` versus the
+landed injective cokernel embedding `cokerSigma2Embed`. This is the sharpest packaging of the
+residual: both sides are ℤ-linear maps `coker Σ₂ → (ℤ/2)¹⁶` out of a finite group. -/
+theorem tubeParity_iff_tubeQuot_eq : TubeParity ↔ tubeQuot = cokerSigma2Embed := by
+  constructor
+  · intro h
+    apply LinearMap.ext
+    intro y
+    obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ y
+    rw [tubeQuot_mk, h x]
+    rfl
+  · intro h x
+    have h1 : tubeQuot (Submodule.Quotient.mk x : Homology KummerK3top 2 ⧸ pieceBlock)
+        = cokerSigma2Embed (Submodule.Quotient.mk x) := by rw [h]
+    rw [tubeQuot_mk] at h1
+    exact h1
+
+/-- **The unconditional torsion bound**: `Torsion(H₂(K3;ℤ))` embeds ℤ-linearly into
+`ker tubeQuot`. No hypothesis — this is the exact sense in which `tubeQuot` measures the
+remaining torsion: the torsion is trapped inside an explicitly computable kernel, and
+`TubeSeparates` says only that this kernel is trivial. -/
+def torsionIntoKerTubeQuot :
+    ↥(Submodule.torsion ℤ (Homology KummerK3top 2)) →ₗ[ℤ] ↥(LinearMap.ker tubeQuot) :=
+  LinearMap.codRestrict _
+    (pieceBlock.mkQ.comp (Submodule.torsion ℤ (Homology KummerK3top 2)).subtype)
+    (fun t => by
+      rw [LinearMap.mem_ker]
+      show tubeQuot (Submodule.Quotient.mk (t : Homology KummerK3top 2)) = 0
+      rw [tubeQuot_mk]
+      exact tubeCoord_eq_zero_of_torsion t.2)
+
+theorem torsionIntoKerTubeQuot_injective : Function.Injective torsionIntoKerTubeQuot := by
+  intro s t hst
+  have h1 : pieceBlock.mkQ ((s : Homology KummerK3top 2) - (t : Homology KummerK3top 2)) = 0 := by
+    rw [map_sub, sub_eq_zero]
+    exact congrArg Subtype.val hst
+  have h2 : (s : Homology KummerK3top 2) - (t : Homology KummerK3top 2) ∈ pieceBlock :=
+    (Submodule.Quotient.mk_eq_zero _).mp h1
+  have h3 : (s : Homology KummerK3top 2) - (t : Homology KummerK3top 2)
+      ∈ Submodule.torsion ℤ (Homology KummerK3top 2) ⊓ pieceBlock :=
+    Submodule.mem_inf.mpr ⟨Submodule.sub_mem _ s.2 t.2, h2⟩
+  rw [torsion_inf_pieceBlock_eq_bot] at h3
+  exact Subtype.ext (sub_eq_zero.mp h3)
 
 end
 
