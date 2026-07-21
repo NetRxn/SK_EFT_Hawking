@@ -4777,6 +4777,7 @@ import SKEFTHawking.PinPlusTraceCapstoneCollarPair
 import SKEFTHawking.SingularSubdivisionPushNatural
 import SKEFTHawking.PinPlusTraceCapstoneCollarPairGeom
 import SKEFTHawking.PinPlusTraceCapstoneCollarPairCore
+import SKEFTHawking.PinPlusTraceCapstoneCollarPairFace
 import SKEFTHawking.KTCompletenessTransfer
 import SKEFTHawking.KTCompletenessMVCover
 import SKEFTHawking.KTCompletenessMVHtpy
