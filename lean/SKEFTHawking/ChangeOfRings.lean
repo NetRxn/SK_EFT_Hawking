@@ -79,8 +79,9 @@ Since the coboundary maps are compatible (natural in the resolution),
 the cohomology groups agree:
   Ext^n_A(A ⊗_{A(1)} F₂, F₂) ≅ Ext^n_{A(1)}(F₂, F₂)
 
-This is hypothesis H2, now PROVED (modulo the abstract adjunction, which
-is a standard algebra fact not requiring any topology). -/
+⚠ This is hypothesis H2, and the argument above is NOT formalized below. The
+adjunction is a standard algebra fact requiring no topology, but no declaration
+in this module carries it: see `h2_discharged_TODO`. H2 is OPEN. -/
 
 /-- The change-of-rings isomorphism preserves Ext dimensions.
     dim Ext^n_A(A//A(1), F₂) = dim Ext^n_{A(1)}(F₂, F₂) for all n.
@@ -110,10 +111,13 @@ theorem h2_discharged_TODO : True := trivial
 
 /-! ## 3. Consequences for the Generation Constraint
 
-With H2 discharged, the generation constraint chain becomes:
+⚠ H2 is NOT discharged (corrected 2026-07-21). The generation constraint chain,
+with every step's true status:
 
   Ext^n_{A(1)}(F₂, F₂) computed      [MACHINE-CHECKED: A1Ext.lean]
-  = Ext^n_A(A//A(1), F₂)              [PROVED: ChangeOfRings.lean (this module)]
+  = Ext^n_A(A//A(1), F₂)              [H2: HYPOTHESIS — argued in prose above,
+                                       NOT formalized here; algebraic, so the
+                                       tractable one. Route: Phase 5q.T A1ExtReal]
        ↓ (H1: ko cohomology, HYPOTHESIS)
   = Ext^n_A(H*(ko), F₂)               [H1 identifies A//A(1) with H*(ko)]
   = E₂ page of ASS for ko             [definition of ASS]
@@ -126,18 +130,28 @@ With H2 discharged, the generation constraint chain becomes:
        ↓
   ⟹ 3 | N_f                           [PROVED: GenerationConstraint.lean]
 
-Remaining hypotheses: H1, H3, H4 (all topological, each a standard textbook result).
+Remaining hypotheses: H1, H2, H3, H4 — all four, each a standard textbook result.
+Only H4 is stated in Lean at all (`ExtBordismBridge.H4_abp_splitting`); H1/H2/H3
+are `True`-valued prose markers there.
 -/
 
-/-- Updated hypothesis count after discharging H2. -/
+/-- ⚠ **Arithmetic bookkeeping, not a status certificate** (docstring corrected
+    2026-07-21; the previous text read "updated hypothesis count after discharging
+    H2"). H2 is not discharged — see `h2_discharged_TODO`. This theorem proves
+    `4 - 1 = 3` in ℕ and says nothing whatever about any hypothesis. It is retained
+    only because removing a public declaration would change this module's API. -/
 theorem remaining_hypotheses :
     -- Total hypotheses before: 4
     -- Discharged: 1 (H2, change of rings — algebraic)
     -- Remaining: 3 (H1, H3, H4 — topological)
     (4 : ℕ) - 1 = 3 := by norm_num
 
-/-- The generation constraint chain: machine-checked algebra + 3 topological hypotheses.
-    The strongest formal position achievable without formalizing algebraic topology. -/
+/-- ⚠ **Arithmetic bookkeeping, not a status certificate** (docstring corrected
+    2026-07-21). The previous text claimed "machine-checked algebra + 3 topological
+    hypotheses … the strongest formal position achievable"; item 5 of its own comment
+    list ("Change of rings — this module") is not machine-checked, and the hypothesis
+    count is 4, not 3. This theorem proves `7 + 3 = 10` in ℕ. Retained only so this
+    module's API does not change. -/
 theorem generation_constraint_status :
     -- Machine-checked components
     -- 1. A(1) Ring verified (A1Ring.lean)
