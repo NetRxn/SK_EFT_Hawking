@@ -4681,6 +4681,7 @@ import SKEFTHawking.KummerT4GramDiagonal
 import SKEFTHawking.KummerResolutionPiece
 import SKEFTHawking.KummerResolutionPieceH2
 import SKEFTHawking.KummerResolutionPieceBoundary
+import SKEFTHawking.KummerWeld
 import SKEFTHawking.KummerBaseSphereH2Int
 import SKEFTHawking.CircleWindingCocycle
 import SKEFTHawking.TorusCrossPeel
