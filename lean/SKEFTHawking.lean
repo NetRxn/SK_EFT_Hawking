@@ -4810,6 +4810,7 @@ import SKEFTHawking.KTCompletenessMVHtpy
 import SKEFTHawking.KTCompletenessCollarSplit
 import SKEFTHawking.CharSurfacePDTransport
 import SKEFTHawking.CharSurfacePDBundled
+import SKEFTHawking.PinPlusCharPairRealizationTiedPD
 import SKEFTHawking.Carrollian.Structure
 import SKEFTHawking.Carrollian.WittAlgebra
 import SKEFTHawking.Carrollian.BMSAlgebra
