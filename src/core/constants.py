@@ -2648,9 +2648,46 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
 #   eliminability: 'algebraic' | 'hard' | 'very_hard' | 'open'
 #   elimination_path: What would be needed to prove it
 #   dependent_theorems: List of theorems that take this as a hypothesis
+#                       ⚠ HAND-WRITTEN AND LOAD-BEARING — read the warning below before editing.
 #   source: Published proof / reference
 #   risk: Assessment of the hypothesis's reliability
 #   circularity_note: Any known circularity concerns
+# ════════════════════════════════════════════════════════════════════
+#
+# ⚠⚠ `dependent_theorems` IS THE ATLAS FRONTIER RANKING. IT IS ASSERTED, NOT DERIVED.
+# ════════════════════════════════════════════════════════════════════
+# Finding of the 2026-07-21 atlas-integrity repair (wt3). `SK_EFT_Hawking/CLAUDE.md` describes the
+# atlas as "derived from `lean_deps.json` — **cannot drift**". That holds for DECLARATION nodes:
+# `scripts/atlas_view.py:156` computes their `frontier_impact` from reverse `name_deps_project`
+# edges — genuinely derived. It does NOT hold for the nodes the POSITIVE FRONTIER ranks. For every
+# open assumption node `hyp:*`, `atlas_view.py:163-182` does:
+#
+#     deps = list(h.get("dependent_theorems", []) or [])
+#     ... "frontier_impact": len(deps)
+#     for d in deps: edges.append({"source": node_id, "type": "ASSUMED_BY", "target": d})
+#
+# i.e. the impact score AND the `ASSUMED_BY` edges come straight off the list typed in below.
+# Nothing verifies that a listed name exists in Lean, that it takes the hypothesis as a binder, or
+# that it mentions the carrier at all. So the ranking that steers fan-out is only as good as this
+# hand-maintenance — and it drifts silently, in the same docstring-vs-statement way this project
+# keeps finding one level down, but here in the infrastructure that decides WHERE EFFORT GOES.
+#
+# Measured 2026-07-21 by `scripts/audit_hypothesis_dependents.py` (read-only; run it after editing
+# any list here): of 34 advertised open-frontier impact points, 6 (18%) named declarations that do
+# not exist in `lean_deps.json` at all. Two nodes were ranked entirely on absent names —
+# `H_RT_Formula_Valid` (ranked #3 with impact 4; real impact 0) and
+# `H_ScalarChannelIsTetradBifurcationOutput` (impact 2; real 0). A third, `smith_inflow_z16`, was
+# ranked #1 with impact 12 while only six in-tree declarations actually took its binder; it has
+# since been retired (see its entry).
+#
+# WHEN EDITING A LIST HERE:
+#   1. Verify each name exists AND consumes the hypothesis — do not add aspirational entries, and do
+#      not list producers/witnesses of the hypothesis (they consume nothing).
+#   2. Run `python scripts/audit_hypothesis_dependents.py` and check your node reports rot 0.
+#   3. Remember you are changing the frontier RANKING, which is operator-visible. Say so explicitly
+#      in your report; never silently re-rank.
+# The structural fix (deriving `hyp:` impact from Lean binder occurrences rather than a hand list)
+# is NOT done — it changes how the frontier ranks and is an operator decision. Scoped, not taken.
 # ════════════════════════════════════════════════════════════════════
 
 # Downgrade escape hatch for `tracked_hypothesis_ledger` (R3): a consumed
@@ -2929,7 +2966,51 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             'level as an isomorphism `ZMod 16 ≃+ SKEFTHawking.SymTFT.Omega4PinPlusBordism` pinned to the '
             'canonical generator `smith 1 = Omega4PinPlusBordism.mk pinPlusRP4` (the structure '
             'SKEFTHawking.CommonOrigin.SmithInflow, consumed via the (S : SmithInflow) binder).',
-        'status': 'active — but at the HYPOTHESIS level the W5 SmithInflow binder is now DISCHARGED by W6: '
+        # ── 2026-07-21 ATLAS-INTEGRITY REPAIR (wt3). Read this block before using the entry. ──
+        'atlas_typing_note': 'THIS KEY DOES NOT NAME AN OPEN LEAN PROPOSITION. Verified in-tree '
+            '2026-07-21: its named carrier `SKEFTHawking.CommonOrigin.SmithInflow` '
+            '(CommonOrigin.lean:83-87) is a `structure` in `Type` — two fields, an `AddEquiv` and a '
+            'generator equality — and it is INHABITED unconditionally by `substrateSmithInflow` '
+            '(CommonOrigin.lean:92-96, from the Kirby–Taylor iso) and CANONICAL/unique by '
+            '`smithInflow_smith_unique`. So there is nothing to "discharge" at the Lean level. What '
+            'remains genuinely open is the GEOMETRIC FAITHFULNESS of the thin Ω₅/Ω₄ substrates and the '
+            'η-invariant — an interpretation gap that is NOT a Lean proposition and therefore cannot be '
+            'ranked as an open frontier node. FOUR DISTINCT OBJECTS have historically been referred to '
+            'through this one key; they are NOT definitionally the same statement and must not be '
+            'conflated: (1) THIS key = the thin `SmithInflow` structure — INHABITED, closed; (2) the '
+            'intended geometric direct-Smith program (a faithful smooth/T2 dim-6 Pin⁻ carrier A, '
+            '`Nonempty (A ≃+ ZMod 16)` from a real PT/ABP/Adams computation, a codim-2 geometric Smith '
+            'hom, and its two exactness legs) — NEVER STATED in-tree; only the generic algebra exists '
+            '(`PinPlusGMDataZ16.omega4PinPlusGMData_ext_equiv_zmod16_via_smith_les_neighbor`, arbitrary '
+            'A/B); this is the object the `very_hard` tag actually fits; (3) the RETIRED old-tied-carrier '
+            'Props `hbound` (PinPlusGMWitness.lean:431-436) and `hexact` (SpinSigmaRouteDoor.lean:47-58) '
+            '— VACATED, see KERNEL_NOGO_REGISTRY["5qH-injectivity-routes-apex-equivalent"]; (4) the CURRENT '
+            'faithful-carrier completeness prop `KernelReducesToSpin prov` '
+            '(PinPlusKTKernelSector.lean:223-225) — the live open node, on a different carrier, tracked in '
+            'the KT lane, NOT here.',
+        'atlas_impact_note': 'The `dependent_theorems` list below was hand-written and formerly held 12 '
+            'entries, which the derived atlas turned verbatim into `frontier_impact: 12` — ranking this '
+            'key #1 on the open frontier. Verified 2026-07-21: only SIX in-tree declarations actually take '
+            'an `(S : SmithInflow)` binder. Of the former twelve, `..._substrate` and '
+            '`..._via_constructed_smith` carry NO binder (both are proved at an instantiated inflow); '
+            '`smithInflowOfSmithHom` PRODUCES a SmithInflow rather than consuming one; and the four '
+            '`PinPlusDischarge.*` entries consume `pin4_abutment`, not `SmithInflow` (and `pin4_abutment` '
+            'is itself inhabited by `pin4_abutment_substrate`). The list is corrected below; the '
+            'previously-advertised impact of 12 was never Lean-derived.',
+        'status': 'superseded — RETIRED AS A STRATEGIC KEYSTONE (2026-07-21 atlas-integrity repair), '
+            'formalizing the 2026-07-06 user-directed KT re-anchor which already DEMOTED this node to "an '
+            'alternative route, not the required keystone" (SETTLED_FORKS § '
+            '5qH-injectivity-routes-all-equal-one-completeness-prop; PHASE5QH_EXECUTION_MAP: "the keystone '
+            'is the KT GEOMETRIC exact-sequence close, NOT the spectral smith_inflow_z16 / ABP tower"). '
+            'Retired for TWO independent reasons: (a) the Lean object named here is inhabited and '
+            'canonical — not an open proposition (see atlas_typing_note); (b) the live 16-convergence '
+            'keystone is the KT lane on the faithful `pinPlusCharPairData` carrier, whose open triple is '
+            '{KernelReducesToSpin, SpinImageIsTwo, KTNonSplit}. The entry is KEPT (not deleted) for '
+            'provenance and because the geometric direct-Smith program (object 2 above) remains a real, '
+            'genuinely very-hard ALTERNATIVE route should the KT lane ever be abandoned; if it is revived '
+            'it must be re-entered as a NEW key naming the faithful dim-6 carrier explicitly, never on '
+            'this thin-structure key. HISTORICAL RECORD FOLLOWS (unchanged, pre-2026-07-21): '
+            'at the HYPOTHESIS level the W5 SmithInflow binder is now DISCHARGED by W6: '
             'the abstract iso is replaced by a CONSTRUCTED substrate Smith map (SymTFT.smithHom : Ω₅ → Ω₄^{Pin⁺}, '
             'SpinZ4Bordism5.lean), and sixteen_convergence_common_origin_via_constructed_smith takes no '
             'SmithInflow binder. This entry remains active because the GEOMETRIC FAITHFULNESS of the thin Ω₅/Ω₄ '
@@ -2980,20 +3061,34 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
             '(shared frontier with Leg C/D). On the ADR-003 Leg D trigger (Mathlib ships spin-flavored bordism '
             'groups + the Dirac-operator/η machinery), build the geometric (i)+(ii)+(iii) to upgrade the chain '
             'from substrate-constructed to geometrically-faithful.',
+        # CORRECTED 2026-07-21 (see atlas_impact_note): exactly the in-tree declarations that take an
+        # `(S : SmithInflow)` binder — verified by a whole-tree scan for the identifier. Six, not twelve.
         'dependent_theorems': [
             'SKEFTHawking.CommonOrigin.sixteen_convergence_common_origin',
-            'SKEFTHawking.CommonOrigin.sixteen_convergence_common_origin_substrate',
-            'SKEFTHawking.CommonOrigin.sixteen_convergence_common_origin_via_constructed_smith',
-            'SKEFTHawking.CommonOrigin.smithInflowOfSmithHom',
             'SKEFTHawking.CommonOrigin.rokhlin_reads_kitaev',
             'SKEFTHawking.CommonOrigin.kitaev_generator_is_bordism_generator',
             'SKEFTHawking.CommonOrigin.sm_anomaly_trivial_in_bordism',
             'SKEFTHawking.CommonOrigin.sm_spin10_count_trivial_in_bordism',
-            'SKEFTHawking.PinPlusDischarge.pin4_abutment',
-            'SKEFTHawking.PinPlusDischarge.pinPlus_iso_zmod16_of_pin4',
-            'SKEFTHawking.PinPlusDischarge.deltaCap_of_pin4',
-            'SKEFTHawking.PinPlusDischarge.sixteen_convergence_finite_discharge',
+            'SKEFTHawking.SixteenConvergenceDerived.sixteen_convergence_derived',
         ],
+        # Formerly listed as dependents; each verified 2026-07-21 to take NO `SmithInflow` binder. Kept
+        # here so the correction is auditable and the entries are not silently lost.
+        'former_dependent_theorems_without_binder': {
+            'SKEFTHawking.CommonOrigin.sixteen_convergence_common_origin_substrate':
+                'proved at the inhabited substrateSmithInflow; no binder',
+            'SKEFTHawking.CommonOrigin.sixteen_convergence_common_origin_via_constructed_smith':
+                'W6 constructed-smithHom form; no binder',
+            'SKEFTHawking.CommonOrigin.smithInflowOfSmithHom':
+                'a `def` PRODUCING a SmithInflow — a witness, not a consumer',
+            'SKEFTHawking.PinPlusDischarge.pin4_abutment':
+                'a `def` for a different Prop; inhabited by pin4_abutment_substrate',
+            'SKEFTHawking.PinPlusDischarge.pinPlus_iso_zmod16_of_pin4':
+                'takes (h : pin4_abutment), not SmithInflow',
+            'SKEFTHawking.PinPlusDischarge.deltaCap_of_pin4':
+                'takes (h : pin4_abutment), not SmithInflow',
+            'SKEFTHawking.PinPlusDischarge.sixteen_convergence_finite_discharge':
+                'takes (h : pin4_abutment), not SmithInflow',
+        },
         'module': 'CommonOrigin (Phase 5q.E W5 + W6); Pin⁺ half from SymTFT/PinPlusBordism4 (Phase 6r); '
             'Ω₅ substrate + constructed Smith from SymTFT/SpinZ4Bordism5 (W6); Kitaev reading from '
             'KitaevSixteenFold (W1)',
@@ -3898,22 +3993,44 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
     '5qH-injectivity-routes-apex-equivalent': {
         'fork_id': '5qH-injectivity-routes-all-equal-one-completeness-prop',
         'nogo_kind': 'structural_forcing',
-        'false_statement': 'The three 5q.H injectivity routes — Thom (hthom: SW-trivial Pin⁺ 4-manifold '
-            'bounds), KT §5 (hle: ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), Smith-LES '
-            '(smith_inflow_z16) — are DISTINCT open nodes worth route-shopping between. FALSE (kernel-'
-            'checked equivalence): all three reduce canonically to the ONE completeness prop hbound = '
-            'grade-0-injectivity on the tied carrier — hbound ⟹ hle (spin_range_ge_of_grade0_inj), '
-            'hthom ⟹ hbound (grade0_bounds_of_thom), and the capstone follows from grade-0 alone '
-            '(omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0). Route-shopping or re-deriving "which '
-            'route is closer" is settled-moot; the terminal node is the single geometric completeness '
-            'input (KT §5 from-below: N1a+N1b+N1c+N2 per ASSEMBLY_GAP_MAP_20260712).',
+        'false_statement': 'The old-tied-carrier injectivity Props — Thom (hthom: SW-trivial Pin⁺ '
+            '4-manifold bounds), KT §5 (hle: ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), and grade-0 '
+            'injectivity (hbound) — are DISTINCT OPEN nodes on pinPlusGMTiedData (k:=0) worth '
+            'route-shopping between. FALSE: that carrier is VACATED, so none of them is open there — '
+            'hbound is an UNCONDITIONAL THEOREM on it (grade0_eq_zero_of_nonHausdorff, proved with ZERO '
+            'geometric input via the non-Hausdorff collapse), and mk p = mk q ↔ grade16 p = grade16 q '
+            '(dataBordismGMTied_mk_eq_iff_grade16_eq), i.e. the relation is pure ZMod-16 bookkeeping. Every '
+            'Prop in this family is therefore free on that carrier and carries no completeness content; '
+            'route-shopping among them, or re-deriving "which route is closer", is settled-moot BECAUSE '
+            'THE CARRIER IS DEAD — not because a route was shown superior.',
+        'scope_limit': '⚠ READ BEFORE CITING. What is kernel-proved is exactly three ONE-WAY implications, '
+            'all stated on the vacated pinPlusGMTiedData (k:=0) carrier: hthom ⟹ hbound '
+            '(grade0_bounds_of_thom), hbound ⟹ hle (spin_range_ge_of_grade0_inj), and hbound ⟹ the '
+            'old-carrier iso (omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0). So: hbound is SUFFICIENT '
+            'to feed those old capstones. NOT proved, anywhere in-tree: (i) any REVERSE implication '
+            '(hle ⟹ hbound, hbound ⟹ hthom); (ii) ANY theorem relating the Smith leg (smith_inflow_z16 / '
+            'SmithInflow / Ω₆^{Pin⁻}) to hbound in either direction — the Smith leg has ZERO backing here; '
+            '(iii) that the routes are equivalent on the FAITHFUL carrier (pinPlusCharPairData); (iv) that '
+            'any node is UNAVOIDABLE. Do NOT cite this entry as "the three routes are kernel-proved '
+            'equivalent", as "the terminal node is a single geometric completeness input", or as evidence '
+            'that a node cannot be routed around — it fences the vacated carrier and nothing else. The live '
+            'keystone is the KT lane on the faithful carrier (SETTLED_FORKS 2026-07-06 user-directed '
+            're-anchor, which DEMOTED smith_inflow_z16 to an alternative route).',
         'backing_theorems': [
+            'SKEFTHawking.NonHausdorffBordismCollapse.grade0_eq_zero_of_nonHausdorff',
+            'SKEFTHawking.NonHausdorffBordismCollapse.dataBordismGMTied_mk_eq_iff_grade16_eq',
             'SKEFTHawking.PinPlusGMWitness.spin_range_ge_of_grade0_inj',
             'SKEFTHawking.PinPlusGMWitness.omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0',
             'SKEFTHawking.UnorientedThomCapstone.grade0_bounds_of_thom',
         ],
         'memory': 'SETTLED_FORKS § 5qH-injectivity-routes-all-equal-one-completeness-prop (2026-07-04 + '
-            '2026-07-06 KT-LMS re-anchor UPDATE); encoded 2026-07-12 arm-2 per N-E (audit-flagged).',
+            '2026-07-06 KT-LMS re-anchor UPDATE); encoded 2026-07-12 arm-2 per N-E (audit-flagged). '
+            'CORRECTED 2026-07-21 (atlas-integrity repair, wt3): the previous false_statement asserted a '
+            '"kernel-checked equivalence" of the three routes and a canonical reduction to one terminal '
+            'node. Verification found the backing to be three ONE-WAY implications with no Smith leg at '
+            'all, all on the carrier that NonHausdorffBordismCollapse vacated. The unsupported inference '
+            'was deleted; the fenced statement was re-pointed at the (fully backed) carrier-vacation fact '
+            'and a scope_limit added. The legacy fork_id retains the old wording and is NOT a claim.',
     },
     '5qH-fg-ek-over-Z-blocked': {
         'fork_id': '5qH-fg-ek-over-Z-blocked',

@@ -230,15 +230,28 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    backing: `gmTiedStr_grade_even_of_isEmpty`, `gmTiedStr_empty_grade16_ne_one`
 
 14. `5qH-injectivity-routes-all-equal-one-completeness-prop` [structural_forcing]
-   The three 5q.H injectivity routes — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle:
-   ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), Smith-LES (smith_inflow_z16) — are DISTINCT open nodes
-   worth route-shopping between. FALSE (kernel-checked equivalence): all three reduce canonically to the ONE
-   completeness prop hbound = grade-0-injectivity on the tied carrier — hbound ⟹ hle
-   (spin_range_ge_of_grade0_inj), hthom ⟹ hbound (grade0_bounds_of_thom), and the capstone follows from
-   grade-0 alone (omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0). Route-shopping or re-deriving "which
-   route is closer" is settled-moot; the terminal node is the single geometric completeness input (KT §5
-   from-below: N1a+N1b+N1c+N2 per ASSEMBLY_GAP_MAP_20260712).
-   backing: `spin_range_ge_of_grade0_inj`, `omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`, `grade0_bounds_of_thom`
+   The old-tied-carrier injectivity Props — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle:
+   ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), and grade-0 injectivity (hbound) — are DISTINCT OPEN nodes
+   on pinPlusGMTiedData (k:=0) worth route-shopping between. FALSE: that carrier is VACATED, so none of them
+   is open there — hbound is an UNCONDITIONAL THEOREM on it (grade0_eq_zero_of_nonHausdorff, proved with
+   ZERO geometric input via the non-Hausdorff collapse), and mk p = mk q ↔ grade16 p = grade16 q
+   (dataBordismGMTied_mk_eq_iff_grade16_eq), i.e. the relation is pure ZMod-16 bookkeeping. Every Prop in
+   this family is therefore free on that carrier and carries no completeness content; route-shopping among
+   them, or re-deriving "which route is closer", is settled-moot BECAUSE THE CARRIER IS DEAD — not because a
+   route was shown superior.
+   SCOPE LIMIT — ⚠ READ BEFORE CITING. What is kernel-proved is exactly three ONE-WAY implications, all
+   stated on the vacated pinPlusGMTiedData (k:=0) carrier: hthom ⟹ hbound (grade0_bounds_of_thom), hbound ⟹
+   hle (spin_range_ge_of_grade0_inj), and hbound ⟹ the old-carrier iso
+   (omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0). So: hbound is SUFFICIENT to feed those old
+   capstones. NOT proved, anywhere in-tree: (i) any REVERSE implication (hle ⟹ hbound, hbound ⟹ hthom); (ii)
+   ANY theorem relating the Smith leg (smith_inflow_z16 / SmithInflow / Ω₆^{Pin⁻}) to hbound in either
+   direction — the Smith leg has ZERO backing here; (iii) that the routes are equivalent on the FAITHFUL
+   carrier (pinPlusCharPairData); (iv) that any node is UNAVOIDABLE. Do NOT cite this entry as "the three
+   routes are kernel-proved equivalent", as "the terminal node is a single geometric completeness input", or
+   as evidence that a node cannot be routed around — it fences the vacated carrier and nothing else. The
+   live keystone is the KT lane on the faithful carrier (SETTLED_FORKS 2026-07-06 user-directed re-anchor,
+   which DEMOTED smith_inflow_z16 to an alternative route).
+   backing: `grade0_eq_zero_of_nonHausdorff`, `dataBordismGMTied_mk_eq_iff_grade16_eq`, `spin_range_ge_of_grade0_inj`, `omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`, `grade0_bounds_of_thom`
 
 15. `5qH-fg-ek-over-Z-blocked` [refutation]
    The mod-2 Erdős–Kaplansky finiteness forcing (SingularUCFinite: self-duality forces finite dimension)
@@ -575,13 +588,19 @@ alias nogo_gmTiedStr_grade_even_of_isEmpty := SKEFTHawking.PinPlusGMTiedData.gmT
 /-- NO-GO [`synthetic-smith-map-to-tied-carrier`] — do NOT re-derive. FALSE: The Smith map into the 5q.H TIED carrier pinPlusGMTiedData can be built SYNTHETICALLY — map every neighbor class [M,σ] to [emptySM, (σ,0)] and transport the grade (the smithDataHom shortcut). Backing refutation: `SKEFTHawking.PinPlusGMTiedData.gmTiedStr_empty_grade16_ne_one`. -/
 alias nogo_gmTiedStr_empty_grade16_ne_one := SKEFTHawking.PinPlusGMTiedData.gmTiedStr_empty_grade16_ne_one
 
-/-- NO-GO [`5qH-injectivity-routes-all-equal-one-completeness-prop`] — do NOT re-derive. FALSE: The three 5q.H injectivity routes — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle: ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), Smith-LES (smith_inflow_z16) — are DISTINCT open nodes worth route-shopping between. Backing refutation: `SKEFTHawking.PinPlusGMWitness.spin_range_ge_of_grade0_inj`. -/
+/-- NO-GO [`5qH-injectivity-routes-all-equal-one-completeness-prop`] — do NOT re-derive. FALSE: The old-tied-carrier injectivity Props — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle: ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), and grade-0 injectivity (hbound) — are DISTINCT OPEN nodes on pinPlusGMTiedData (k:=0) worth route-shopping between. Backing refutation: `SKEFTHawking.NonHausdorffBordismCollapse.grade0_eq_zero_of_nonHausdorff`. ⚠ SCOPE-LIMITED — read the SCOPE LIMIT for this fork in the module docstring before citing it; it supports LESS than the headline suggests. -/
+alias nogo_grade0_eq_zero_of_nonHausdorff := SKEFTHawking.NonHausdorffBordismCollapse.grade0_eq_zero_of_nonHausdorff
+
+/-- NO-GO [`5qH-injectivity-routes-all-equal-one-completeness-prop`] — do NOT re-derive. FALSE: The old-tied-carrier injectivity Props — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle: ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), and grade-0 injectivity (hbound) — are DISTINCT OPEN nodes on pinPlusGMTiedData (k:=0) worth route-shopping between. Backing refutation: `SKEFTHawking.NonHausdorffBordismCollapse.dataBordismGMTied_mk_eq_iff_grade16_eq`. ⚠ SCOPE-LIMITED — read the SCOPE LIMIT for this fork in the module docstring before citing it; it supports LESS than the headline suggests. -/
+alias nogo_dataBordismGMTied_mk_eq_iff_grade16_eq_2 := SKEFTHawking.NonHausdorffBordismCollapse.dataBordismGMTied_mk_eq_iff_grade16_eq
+
+/-- NO-GO [`5qH-injectivity-routes-all-equal-one-completeness-prop`] — do NOT re-derive. FALSE: The old-tied-carrier injectivity Props — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle: ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), and grade-0 injectivity (hbound) — are DISTINCT OPEN nodes on pinPlusGMTiedData (k:=0) worth route-shopping between. Backing refutation: `SKEFTHawking.PinPlusGMWitness.spin_range_ge_of_grade0_inj`. ⚠ SCOPE-LIMITED — read the SCOPE LIMIT for this fork in the module docstring before citing it; it supports LESS than the headline suggests. -/
 alias nogo_spin_range_ge_of_grade0_inj := SKEFTHawking.PinPlusGMWitness.spin_range_ge_of_grade0_inj
 
-/-- NO-GO [`5qH-injectivity-routes-all-equal-one-completeness-prop`] — do NOT re-derive. FALSE: The three 5q.H injectivity routes — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle: ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), Smith-LES (smith_inflow_z16) — are DISTINCT open nodes worth route-shopping between. Backing refutation: `SKEFTHawking.PinPlusGMWitness.omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`. -/
+/-- NO-GO [`5qH-injectivity-routes-all-equal-one-completeness-prop`] — do NOT re-derive. FALSE: The old-tied-carrier injectivity Props — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle: ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), and grade-0 injectivity (hbound) — are DISTINCT OPEN nodes on pinPlusGMTiedData (k:=0) worth route-shopping between. Backing refutation: `SKEFTHawking.PinPlusGMWitness.omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`. ⚠ SCOPE-LIMITED — read the SCOPE LIMIT for this fork in the module docstring before citing it; it supports LESS than the headline suggests. -/
 alias nogo_omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0 := SKEFTHawking.PinPlusGMWitness.omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0
 
-/-- NO-GO [`5qH-injectivity-routes-all-equal-one-completeness-prop`] — do NOT re-derive. FALSE: The three 5q.H injectivity routes — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle: ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), Smith-LES (smith_inflow_z16) — are DISTINCT open nodes worth route-shopping between. Backing refutation: `SKEFTHawking.UnorientedThomCapstone.grade0_bounds_of_thom`. -/
+/-- NO-GO [`5qH-injectivity-routes-all-equal-one-completeness-prop`] — do NOT re-derive. FALSE: The old-tied-carrier injectivity Props — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle: ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), and grade-0 injectivity (hbound) — are DISTINCT OPEN nodes on pinPlusGMTiedData (k:=0) worth route-shopping between. Backing refutation: `SKEFTHawking.UnorientedThomCapstone.grade0_bounds_of_thom`. ⚠ SCOPE-LIMITED — read the SCOPE LIMIT for this fork in the module docstring before citing it; it supports LESS than the headline suggests. -/
 alias nogo_grade0_bounds_of_thom := SKEFTHawking.UnorientedThomCapstone.grade0_bounds_of_thom
 
 /-- NO-GO [`5qH-fg-ek-over-Z-blocked`] — do NOT re-derive. FALSE: The mod-2 Erdős–Kaplansky finiteness forcing (SingularUCFinite: self-duality forces finite dimension) transports to ℤ — in particular dualization over ℤ stays in the f.g./countable size class, so PD + UCT self-duality would force H²(M;ℤ) finitely generated. Backing refutation: `SKEFTHawking.FGDualityNoGo.dual_blowup_not_finite`. -/
