@@ -177,6 +177,26 @@ theorem isDataBordant_empty_of_wadm (prov : CharPairWProviderPerOp (𝓡 4) 0)
       StrMfd (spinEmptyData prov)).2.1).n) := isEmpty_fin_n_of_isEmpty_surf _
   exact charPairBorTethered_empty _ _ b hWT2 wadmP
 
+/-- **The TWO-END spin-carrier bordism witness from a `WAdmPinned` bordism (the R0 adapter,
+2026-07-20 row-side dossier).** The general-`q` form of `isDataBordant_empty_of_wadm`: for ANY two
+spin-carrier elements `p q` (both Σ = ∅ by construction) and any bordism `b : p.1 ↝ q.1` with a
+Hausdorff carrier and a substrate-pinned Lefschetz–Wu datum `WAdmPinned b`, the tethered witness
+assembles by the same #171 empty-source collapse (`charPairBorTethered_empty` is already two-end
+generic). This is the reusable current-carrier adapter the `hCob`/`hBase` geometric bricks consume:
+a handle-trade trace to `S²×S² ⊔ p'` (A2) or a rank-zero coboundary (A3) needs only the raw
+bordism + `T2` + `WAdmPinned` — every membrane/tether obligation is discharged here. -/
+theorem isDataBordant_of_wadm (prov : CharPairWProviderPerOp (𝓡 4) 0)
+    (p q : StrMfd (spinEmptyData prov))
+    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 q.1)
+    (hWT2 : T2Space b.W) (wadmP : WAdmPinned b) :
+    IsDataBordant (spinEmptyData prov) p q := by
+  refine ⟨b, ⟨⟨?_, hWT2⟩⟩⟩
+  haveI hps : IsEmpty p.2.1.surf.M := p.2.2
+  haveI : IsEmpty (Fin p.2.1.n) := isEmpty_fin_n_of_isEmpty_surf _
+  haveI hqs : IsEmpty q.2.1.surf.M := q.2.2
+  haveI : IsEmpty (Fin q.2.1.n) := isEmpty_fin_n_of_isEmpty_surf _
+  exact charPairBorTethered_empty _ _ b hWT2 wadmP
+
 /-! ## §4. The named finest-grain atom — the coboundary Lefschetz–Wu `w₂ = 0` tower. -/
 
 /-- **The `S²×S²` bounding-bordism atom, at its finest manifold-surgery grain.** For the distinguished
