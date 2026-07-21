@@ -672,6 +672,40 @@ theorem contDiffOn_transition_collar_interior {k : WithTop ℕ∞}
     rw [interiorChartR_apply_coe x' (interiorChartR_source_coe_mem x' hsrc), hval]
     rfl
 
+/-! ### §2e. RESIDUAL — the interior → collar seam (1d-IC) and the `IsManifold` certificate
+
+**(1d-CI) is GREEN above (`contDiffOn_transition_collar_interior`).** The mirror seam **(1d-IC)**
+is NOT mechanical: it is the one atlas-transition class whose smooth core is *not* supplied by the
+banked analysis foundation.
+
+The IC transition `↑I ∘ ((interiorChartR x).symm ≫ₕ boundaryChart c u₁ hc) ∘ ↑I.symm` reconstructs
+the interior point from its interior coordinate (ambient chart inverse — `C^k`) and then applies the
+collar chart *forward*. The collar chart forward is `shellCollarChart u₁ ∘ shellIncl ∘
+(collarHomeo c).symm ∘ collarIncl.symm`, and `(collarHomeo c).symm` carries the **round-chart inverse**
+`(centeredChartParamE4 c).symm : chartBall c → E⁴`. Unlike the round chart *forward*
+(`contMDiff_centeredChartParamE4`, ContMDiff), its inverse smoothness is NOT available:
+
+* `centeredChartParamE4 c` is built via `ofContinuousOpenRestrict` (continuous + open only); its `.symm`
+  is `Function.invFun`-based, carrying no smoothness.
+* `TorusFour = Circle⁴` is charted by the **stereographic** sphere chart, while `centeredChartParam`
+  is **`Circle.exp`**-based, so the round↔ambient transition is an exp-vs-stereographic change — smooth
+  but only via `Circle.exp`'s smooth local inverse (`Complex.arg`/`Complex.log` on `slitPlane`), which
+  Mathlib supplies only *topologically* (`isLocalHomeomorph_circleExp`, `Circle.argEquiv`), not smoothly.
+
+**Missing lemma (a dedicated analysis brick, ≈ `contMDiff_centeredChartParamE4`'s inverse):**
+`ContMDiffOn 𝓘(ℝ, E⁴)-side (fun w => (centeredChartParamE4 c).symm w) (chartBall c)` — provable via
+either (a) the manifold inverse-function-theorem (`IsLocalDiffeomorphAt.localInverse_contMDiffOn`) once
+`mfderiv (centeredChartParam c)` is shown invertible (needs `hasMFDerivAt Circle.exp` — absent in
+Mathlib, must be built from `Circle.exp = exp(·*I)`), or (b) an explicit `Complex.arg`-based inverse
+formula shown to agree with `Function.invFun` and `ContMDiffOn` via `Complex.contDiffAt_log` +
+`contMDiff_coe_sphere`. Once that lands, (1d-IC) is the `contDiffOn_roundToInterior_core`-style congr
+(collar-chart-forward = `shellCollarChart`-forward ∘ round-inverse ∘ ambient-chart-inverse), and the
+`IsManifold ((𝓡 3).prod (𝓡∂ 1)) k ↥puncturedTorus` certificate assembles via
+`isManifold_of_contDiffOn` over the atlas union → (interior-interior /
+`contDiffOn_transition_interior_interior`), (collar-interior / `contDiffOn_transition_collar_interior`),
+(interior-collar / 1d-IC), (collar-collar / `contDiffOn_transition_collar_collar_same`/`_diff`).
+Honest smoothness class: `C^k` parametric (`k : WithTop ℕ∞`), up to `ω`. -/
+
 end
 
 end SKEFTHawking.KummerBoundaryChartSmooth
