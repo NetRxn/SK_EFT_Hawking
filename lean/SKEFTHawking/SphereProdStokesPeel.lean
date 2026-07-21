@@ -35,6 +35,7 @@ import SKEFTHawking.SingularCohomologyFunctorialityInt
 import SKEFTHawking.SingularConvexRadialBaseInt
 import SKEFTHawking.SingularRelativeCapHadjInt
 import SKEFTHawking.SingularMvDeltaPartitionInt
+import SKEFTHawking.SingularSeamTransportInt
 
 namespace SKEFTHawking.SphereProdStokesPeel
 
@@ -51,6 +52,7 @@ open SKEFTHawking.SingularConvexRadialBaseInt (mapChainInt_ambIncl)
 open SKEFTHawking.SingularCapChainInclInt (pullbackCochainInt)
 open SKEFTHawking.SingularRelativeCapHadjInt (kronecker_chainIncl_eq_pullbackCochainInt)
 open SKEFTHawking.SingularExcisionIso (restr)
+open SKEFTHawking.SingularSeamTransportInt (chainIncl_mapChain_seamHomeoInt)
 
 /-- **The single-subspace signed cup–Stokes atom.** For a cocycle `a` (degree `p`), a cochain `b`
 (degree `q+1`) whose pullback along `φ : W → X` is a coboundary `φ*b = δu`, and a chain `zW` in `W`:
@@ -141,5 +143,25 @@ theorem kronecker_boundary_seam_inter {X : TopCat} (A B : Set ↑X) {m : ℕ}
       = kronecker w' (mapChainInt ⟨seamHomeo A B, (seamHomeo A B).continuous⟩ m
           (boundaryExtract (restr A B) m ⟨zB, hlift⟩)) := by
   rw [kronecker_boundary_seam A B w zB hlift, ← hw', kronecker_cochainPullbackInt]
+
+/-- **The seam-chain cover relation** — the mathematical heart of the MV cup–Stokes seam assembly.
+For a cover-partitioned cycle `z = ι_A zA + ι_B zB`, the two `seamHomeo`-transported extracted seam
+chains — leg-A's `t_A = seamHomeo(B,A)₊ (∂zA|∩)` in `sub(B ∩ A)` and leg-B's `t_B = seamHomeo(A,B)₊
+(∂zB|∩)` in `sub(A ∩ B)` — realize, under `chainIncl` to the ambient `X`, to `∂(ι_A zA)` and
+`∂(ι_B zB)` respectively, which are negatives of one another (`∂z = 0`). Chains
+`chainIncl_mapChain_seamHomeoInt` + `chainIncl_boundaryExtract` + `chainIncl_chainBoundary` per leg,
+then the cycle condition. -/
+theorem chainIncl_seam_boundary_cover_neg {X : TopCat} (A B : Set ↑X) {m : ℕ}
+    (zA : SingularChainInt (sub A) (m + 1)) (zB : SingularChainInt (sub B) (m + 1))
+    (hz_cyc : chainIncl A (m + 1) zA + chainIncl B (m + 1) zB ∈ cycles X (m + 1))
+    (hliftB : zB ∈ relCycleLift (restr A B) m) (hliftA : zA ∈ relCycleLift (restr B A) m) :
+    chainIncl (B ∩ A) m (mapChainInt ⟨seamHomeo B A, (seamHomeo B A).continuous⟩ m
+        (boundaryExtract (restr B A) m ⟨zA, hliftA⟩))
+      = - chainIncl (A ∩ B) m (mapChainInt ⟨seamHomeo A B, (seamHomeo A B).continuous⟩ m
+          (boundaryExtract (restr A B) m ⟨zB, hliftB⟩)) := by
+  rw [chainIncl_mapChain_seamHomeoInt, chainIncl_mapChain_seamHomeoInt,
+    chainIncl_boundaryExtract, chainIncl_boundaryExtract, chainIncl_chainBoundary,
+    chainIncl_chainBoundary, eq_neg_iff_add_eq_zero, ← map_add]
+  exact LinearMap.mem_ker.mp hz_cyc
 
 end SKEFTHawking.SphereProdStokesPeel
