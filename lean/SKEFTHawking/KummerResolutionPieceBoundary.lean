@@ -2056,6 +2056,20 @@ theorem contDiffOn_transition_interiorChart1_II {k : WithTop ℕ∞} :
     (mem_groupoid_of_pregroupoid.mp
       (symm_trans_mem_contDiffGroupoid (DiskChartGeneric.diskInteriorChart 1))).1
 
+/-! ### §P.2. Cross-side transitions (`chart0`-family ↔ `chart1`-family) — vacuous -/
+
+/-- **Every cross-side transition is `C^k` (vacuously).** A `chart0`-family chart and a `chart1`-family
+chart have disjoint sources off the base equator (`disjoint_chart0_chart1_baseInterior`), so the
+coordinate change has empty domain. Instantiated by all 8 cross-side atlas pairs via the four
+`*_source_subset` lemmas (`interiorChart`/`collarChart` on the `chart0` side,
+`interiorChart1`/`collarChart1` on the `chart1` side). -/
+theorem contDiffOn_transition_cross {k : WithTop ℕ∞} {e e' : OpenPartialHomeomorph ResE Model}
+    (he : e.source ⊆ Set.range (fun p : ↥baseInterior => chart0 p.1))
+    (he' : e'.source ⊆ Set.range (fun p : ↥baseInterior => chart1 p.1)) :
+    ContDiffOn ℝ k (↑((𝓡 3).prod (𝓡∂ 1)) ∘ ↑(e.symm ≫ₕ e') ∘ ↑((𝓡 3).prod (𝓡∂ 1)).symm)
+      (↑((𝓡 3).prod (𝓡∂ 1)).symm ⁻¹' (e.symm ≫ₕ e').source ∩ range ↑((𝓡 3).prod (𝓡∂ 1))) :=
+  contDiffOn_transition_vacuous_of_disjoint he he' disjoint_chart0_chart1_baseInterior
+
 /-! ## §Z. STATUS — the K6′a Leg-2 E-side certificate
 
 **GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
@@ -2151,24 +2165,44 @@ Deliverable (4) — **atlas transition classes toward `IsManifold`** (§M–§O,
   this smooth structure through `diskHomeoNDisk1`; it is the disk-transition core the ResE same-side and
   annulus fiber changes reduce to.
 
+Deliverable (4) — **the `reshapeModel`-conjugation wrapper + same-side/cross-side dispatch** (§P, this pass):
+- §P.0 — **the wrapper**: `contDiff_assemble`/`contDiff_splitLo` (generic `n`) and
+  `contDiffOn_reshapeConj` — given a base coordinate change `gBase` on `𝓔²` and a fiber coordinate
+  change `gFiber` on `𝓔¹ × 𝓔¹` (each `C^k`, with the plain-coordinate reshape landing in their domains),
+  the `reshapeModel`-conjugated transition `m ↦ (assemble 2 (gBase (splitLo 2 m.1)) (…fiber…), …fiber…)`
+  is `C^k`. The class-agnostic core — the `KummerBoundaryChartSmooth.interiorReshape` analogue, driven
+  by the two `reshapeModel`/`I₃` defeqs (`I₃ ∘ reshapeModel` and `reshapeModel.symm ∘ I₃.symm` in plain
+  coordinates).
+- §P.1 — **all 8 same-side base-interior transitions DONE**: the general
+  `contDiffOn_transition_baseInterior_gen` (parameterized over the two fiber sub-charts
+  `Fᵢ = diskHomeoNDisk1 ⋙ Dᵢ` + the common `chart0`/`chart1` embedding; `lift_openEmbedding_trans`
+  cancels the outer lift, `toOpenPartialHomeomorph_right_inv` the `Subtype.val` prefix, the
+  `diskHomeoNDisk1` bridge cancels, `gBase = id`, `gFiber = §O`, closed by `contDiffOn_reshapeConj`),
+  instantiated with `rfl` hypotheses by `contDiffOn_transition_{collarChart_CC, interiorChart_collarChart,
+  collarChart_interiorChart, interiorChart_II}` (`chart0`) and the four `…1…` `chart1` mirrors. II uses
+  the fiber diagonal (`symm_trans_mem_contDiffGroupoid`).
+- §P.2 — **all 8 cross-side transitions DONE** (dispatch-ready): `contDiffOn_transition_cross` wraps
+  `contDiffOn_transition_vacuous_of_disjoint` + `disjoint_chart0_chart1_baseInterior`; apply with the
+  four `*_source_subset` lemmas per cross-side pair.
+
 **RESIDUAL (wall, localized precisely) — the ResE-level `IsManifold` assembly:**
 
 1. **`IsManifold ((𝓡 3).prod (𝓡∂ 1)) k ResE` + smooth `bdryHomeoRP3`** (deliverable 4) — the six-class
-   6×6 assembly via `isManifold_of_contDiffOn`. Classes and their status:
-   - cross-side (`chart0`-fam ↔ `chart1`-fam): DONE (§M.1, vacuous).
-   - same-side base-interior (interior/collar on ONE base disk) and annulus-annulus (interior/collar in
-     ONE annulus chart): reduce — via `lift_openEmbedding_trans` (cancelling the `chart0`/`chart1`/`val`
-     open embeddings) then the `baseDiskChart × fiber` prefix + `reshapeModel` suffix cancellation — to
-     the §O `contDiffOn_transition_fiber_*` classes reshaped `E² × (E¹ × HS¹) → E³ × HS¹`. The remaining
-     brick is the `reshapeModel`-conjugation wrapper (the `KummerBoundaryChartSmooth.interiorReshape`
-     analogue: keep everything in plain-Euclidean coords around the `EuclideanHalfSpace` subtype, factor
-     `I ∘ reshapeModel ∘ (base-id × fiberTransition) ∘ reshapeModel.symm ∘ I.symm`).
-   - annulus↔base (`chart0` side): base identical, fiber twist by `regDir` — §L `contDiffOn_regDir` +
-     §O fiber classes threaded through the same `reshapeModel` wrapper.
-   - annulus↔base (`chart1` side): base `z ↦ z⁻¹` = §L `contDiffOn_regInv`, fiber twist by `regDir`.
+   6×6 assembly via `isManifold_of_contDiffOn`. Classes and their status (**16 of 36 pairs DONE**):
+   - cross-side (`chart0`-fam ↔ `chart1`-fam, 8 pairs): DONE (§M.1/§P.2, vacuous).
+   - same-side base-interior (`chart0`-fam ↔ `chart0`-fam and `chart1`-fam ↔ `chart1`-fam, 8 pairs):
+     DONE (§P.1) via `contDiffOn_transition_baseInterior_gen` + `contDiffOn_reshapeConj`.
+   - **annulus-annulus** (annulus-fam ↔ annulus-fam, 4 pairs): OPEN — same shape as §P.1 (`gBase = id`
+     via `toE2Homeo`, `gFiber = §O`) but the prefix is `annulusTriv.symm ≫ annulusTriv` (restricting to
+     `annulusTarget`), NOT the `val`-lift; needs an annulus-analog of `contDiffOn_transition_baseInterior_gen`.
+   - **annulus↔base** (annulus-fam ↔ chart0-fam or chart1-fam, 16 pairs): OPEN, the hard block — the annulus
+     chart and the base chart have structurally different builds (`annulusTriv.trans` vs `val`-lift), and
+     the base coordinate change is the `regDir`/`regInv` twist (§L `contDiffOn_regDir`/`contDiffOn_regInv`
+     as `gBase`, `gFiber = §O`). Reuses `contDiffOn_reshapeConj` with `gBase ≠ id`.
    - the smooth `∂E ≅ ℝP³` upgrade of `bdryHomeoRP3` in these charts.
-   `ChartedSpace` (topological, §K) and every transition-class INGREDIENT (§M/§N/§O/§L) are DONE; the
-   remaining brick is the `reshapeModel`-conjugation wrapper + the 6×6 dispatch.
+   `ChartedSpace` (topological, §K), the reshape wrapper (§P.0), the same-side (§P.1) and cross-side
+   (§P.2) quadrants, and every fiber ingredient (§M/§N/§O/§L) are DONE; the remaining bricks are the
+   annulus-annulus + annulus↔base classes and the final `isManifold_of_contDiffOn` dispatch.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom. -/
 
