@@ -1279,6 +1279,7 @@ import SKEFTHawking.KummerSplitBCoreVanishInt
 import SKEFTHawking.KummerSplitBChart1ExcisionInt
 import SKEFTHawking.KummerCollarRegionRetractInt
 import SKEFTHawking.KummerBasePushRetractInt
+import SKEFTHawking.KummerChart1NbhdAcyclicInt
 import SKEFTHawking.SingularLocalHomologyThreeInt
 import SKEFTHawking.SingularConvexRadialMiddleInt
 import SKEFTHawking.SingularConvexStageIsoInt
