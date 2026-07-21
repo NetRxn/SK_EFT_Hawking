@@ -41,7 +41,9 @@ is contractible and integrally acyclic in every positive degree; the boundary mo
 ## Output
 
 * `homology_chartNbhd1_eq_zero` : `Hₖ₊₁(chartNbhd1 r; ℤ) = 0` for `0 < r < 1` — fact 1.
-* `bdryRegion_h1_cyclic` : `H₁(∂E ∩ chartNbhd1 r; ℤ)` is cyclic — fact 2.
+* `bdryRegionH1EquivInt` : `H₁(∂E ∩ chartNbhd1 r; ℤ) ≅ ℤ` — the sharp form of fact 2, with
+  `bdryRegion_h1_cyclic` the cyclicity shape the headline consumes and
+  `bdryRegion_h1_generator_ne_zero` / `chartNbhd1_nonempty` the two non-vacuity pins.
 * `kummerK3_b2_target_unconditional` : **`H₂(K3;ℤ) ≅ ℤ²²`, with no hypotheses left.**
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new axiom, no
@@ -840,15 +842,42 @@ theorem bdryModel_h1_cyclic {r : ℝ} (hr : 0 < r) :
   exact ⟨e.symm (circH1Equiv.symm 1),
     cyclic_of_surjective e.symm.toLinearMap e.symm.surjective circ_h1_cyclic⟩
 
+/-- **The sharp form of fact 2**: `H₁(∂E ∩ chartNbhd1 r; ℤ) ≅ ℤ` — a solid torus on the nose, not
+merely "cyclic". Stated as an equivalence so the group is pinned (in particular it is NOT the zero
+module, which would make the cyclicity statement vacuous). -/
+def bdryRegionH1EquivInt {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) :
+    Homology (BdryRegion (chartNbhd1 r)) 1 ≃ₗ[ℤ] ℤ :=
+  (LinearEquiv.ofBijective _ (mapInt_ThetaBdry_bijective hr0 hr1 1)).symm.trans
+    ((LinearEquiv.ofBijective _ (mapInt_bdryRetrMap_bijective hr0 0)).trans circH1Equiv)
+
 /-- **FACT 2 — the boundary part of the chart-1 neighbourhood is a solid torus**, so its `H₁` is
-cyclic. -/
+cyclic. This is the shape `kummerK3_b2_target_of_chartNbhd1` consumes; the generator is the `ℤ`-basis
+element of `bdryRegionH1EquivInt`. -/
 theorem bdryRegion_h1_cyclic {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) :
     ∃ a : Homology (BdryRegion (chartNbhd1 r)) 1,
       ∀ x : Homology (BdryRegion (chartNbhd1 r)) 1, ∃ k : ℤ, x = k • a := by
-  obtain ⟨a, ha⟩ := bdryModel_h1_cyclic hr0
-  exact ⟨Homology.mapInt (ThetaBdry hr1) 1 a,
-    cyclic_of_surjective (Homology.mapInt (ThetaBdry hr1) 1)
-      (mapInt_ThetaBdry_bijective hr0 hr1 1).2 ha⟩
+  refine ⟨(bdryRegionH1EquivInt hr0 hr1).symm 1, fun x => ⟨bdryRegionH1EquivInt hr0 hr1 x, ?_⟩⟩
+  rw [← map_zsmul, smul_eq_mul, mul_one, LinearEquiv.symm_apply_apply]
+
+/-- **The cyclicity is not vacuous**: the generator is nonzero, i.e. `H₁(∂E ∩ chartNbhd1 r; ℤ) ≠ 0`.
+(A cyclic group is trivially cyclic when it vanishes; this rules that reading out.) -/
+theorem bdryRegion_h1_generator_ne_zero {r : ℝ} (hr0 : 0 < r) (hr1 : r < 1) :
+    (bdryRegionH1EquivInt hr0 hr1).symm 1 ≠ 0 := by
+  intro h
+  have h' := congrArg (bdryRegionH1EquivInt hr0 hr1) h
+  rw [LinearEquiv.apply_symm_apply, map_zero] at h'
+  exact one_ne_zero h'
+
+/-- **The acyclicity is not vacuous either**: `chartNbhd1 r` is nonempty (it contains the whole of
+chart 1, in particular the chart-1 origin) for every `r < 1`. -/
+theorem chartNbhd1_nonempty {r : ℝ} (hr1 : r < 1) : (chartNbhd1 r).Nonempty := by
+  refine ⟨chart1 (⟨0, by simp⟩, ⟨0, by simp⟩), ?_⟩
+  rintro ⟨p', hp', hmk⟩
+  have hmk' : chart0 p' = chart1 (⟨(0 : ℂ), by simp⟩, ⟨(0 : ℂ), by simp⟩) := hmk
+  obtain ⟨hseam, -, -⟩ := chart0_eq_chart1_iff.mp hmk'
+  have hle : ‖((p'.1 : Disk) : ℂ)‖ ≤ r := hp'
+  rw [hseam] at hle
+  linarith
 
 /-! ## §7. The headline, unconditional -/
 
