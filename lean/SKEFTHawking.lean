@@ -4712,6 +4712,7 @@ import SKEFTHawking.KummerWeldQInterior
 import SKEFTHawking.KummerSeamCollarE
 import SKEFTHawking.KummerSeamCollarQ
 import SKEFTHawking.KummerSeamDoubleCollar
+import SKEFTHawking.KummerSeamOpenNbhd
 import SKEFTHawking.KummerK7MVAssembly
 import SKEFTHawking.KummerK7SeamCoverNoGo
 import SKEFTHawking.KummerQuotientCovering
