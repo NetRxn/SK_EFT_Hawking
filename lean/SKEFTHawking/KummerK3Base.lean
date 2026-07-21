@@ -41,7 +41,12 @@ even unimodular). Machinery: Mathlib group cohomology of `T⁴` is thin; the pro
 `IntersectionMatrixInt.interMatrix` + `SphereWitnessTowerInt` S²×S² Gram template
 (`SphereProdHTwoInt`/`SphereProdGramInt`) are the in-tree pattern for a concrete 4-manifold's
 intersection form. Sub-wall: no Künneth/cup-product-on-a-product-basis in Mathlib — the `II(T⁴)=3H`
-Gram identity is a disclosed geometric atom (same posture as the S²×S² `SphereProdGramPin`).
+Gram identity is a disclosed geometric atom. **Posture note (updated):** the S²×S² `SphereProdGramPin`
+is NO LONGER the model for "disclosed geometric atom" — it has been RETIRED
+(`SphereProdGramPinRetire`), its Künneth content replaced by an unconditional MV cup–Stokes peel on
+this project's own cochain layer. The lesson for `II(T⁴)=3H` is the opposite of deferral: the
+in-tree route is the peel, and the target to aim at is a CONGRUENCE to `3H`, not a literal Gram
+equality (which, as `sphereProdGramPin_iff` shows, is a choice-dependent basis normalization).
 
 **K2 — the involution τ(w) = −w on T⁴.**  (Open.)
 On `(S¹)⁴`, `τ = ` complex-conjugation on each factor (`z ↦ z̄`, a `Circle` anti-automorphism / the
@@ -100,7 +105,11 @@ Machinery: `k3Form`, `k3Form_isEvenUnimodular`, `k3Form_latticeSig = −16` (DON
 `IntersectionMatrixInt.interMatrix`; `HyperbolicNormalForm.IntCongr` for the `IntCongr … k3Form`
 target. Sub-wall: the geometric Gram identity `II(Kummer) ≅ k3Form` — a disclosed atom (Milnor–Husemoller
 uniqueness of the rank-22 even unimodular σ=−16 form pins the lattice; the *manifold*'s realizing it is
-the geometric input), the direct analogue of the S²×S² `SphereProdGramPin`.
+the geometric input). Formerly billed as "the direct analogue of the S²×S² `SphereProdGramPin`"; that
+analogy no longer supports deferral — `SphereProdGramPin` was RETIRED (`SphereProdGramPinRetire`) and
+its content proved unconditionally. Note this K8 target is already stated as an `IntCongr` (the right
+shape); `sphereProdGramPin_iff` is the cautionary result on why a literal Gram equality would be the
+wrong target.
 
 **K9 — spin structure + `StrMfd` packaging on `𝓡 4`.**  (Open — packaging.)
 Kummer K3 is spin (its form is even ⟹ `w₂ = 0`). Package as `SingularManifold X 4 (𝓡 4)` → choose the

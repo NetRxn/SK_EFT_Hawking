@@ -34,8 +34,13 @@ input a spin-carrier bordism witness needs and the op-provider does not supply**
   `mkCharPairBorRealizedTethered`, whose FIRST argument is a `WAdmPinned b` (even the surgery-trace
   path `borTetheredOfWeld` takes it as an input). The per-op provider `residualProv` supplies
   `WAdmPinned` for the cylinder/doubling/mapCylinder/add op family ONLY; the `S²×D³` coboundary is not
-  in that family, and its Lefschetz–Wu tower needs manifold cohomology Mathlib lacks (the same
-  Künneth / EZ-cross-product gap `SphereProdGramPin` records as off-critical-path/deferred).
+  in that family, and its Lefschetz–Wu tower needs manifold cohomology Mathlib lacks. (This was
+  formerly cross-referenced to `SphereProdGramPin` as "the same Künneth / EZ-cross-product gap,
+  off-critical-path/deferred". That cross-reference is now WRONG in one direction and must not be
+  read as evidence: the S²×S² EZ-cross gap is CLOSED — `SphereProdBasisIdInt` /
+  `SphereProdGramPinRetire` — by the MV cup–Stokes peel built on this project's own cochain layer.
+  The `S²×D³` coboundary's Lefschetz–Wu tower is a genuinely separate rel-Poincaré–Lefschetz atom
+  and remains open.)
 
 ## What lands GREEN here (an honest reduction — NO minted completeness `Prop`, NO consumed assembly output).
 

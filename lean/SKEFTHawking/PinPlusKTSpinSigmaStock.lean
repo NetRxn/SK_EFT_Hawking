@@ -175,8 +175,11 @@ theorem sphere4_pkg_sixteen_dvd_latticeSig :
 The distinguished `S²×S²` is the presentation's `s2s2` normalization witness (rank-2 hyperbolic form
 `II(S²×S²) = H`). Its integral-homology arc is COMPUTED in-tree: `H₁ = 0`, `H₂ ≅ ℤ²` with a computed
 rank-2 basis (`sphereProdIntH2Basis`), the honest fundamental class `sphereProdIntFundClassHonest`
-(`H₄ ≅ ℤ`). The ONE geometric residual is the **Gram pin** `interMatrix fc B = H` (Künneth /
-Benedetti Ch. 20). Given it, the `s2s2_hyp` field shape is discharged (below).
+(`H₄ ≅ ℤ`). The `s2s2_hyp` field shape is discharged from the **Gram pin** `interMatrix fc B = H`
+below — but **the pin is no longer the residual**: the S²×S² intersection form is now known
+UNCONDITIONALLY to be integrally congruent to `Hyp` itself (`SphereProdBasisIdInt`, downstream of
+this module), and the hypothesis-free replacements for every `*_of_gram` consumer below live in
+`SphereProdGramPinRetire` (§2 there). See the `SphereProdGramPin` docstring for what remains.
 
 **The orientation gap (an honest per-element-vs-total-function boundary instance).** Unlike `S⁴` (which
 carries the unconditional orientation datum `sphere4IntOrientationDataUncond` — §3), the S²×S² arc
@@ -193,10 +196,23 @@ open SKEFTHawking.SphereWitnessTowerInt
    sphereProd_interMatrix_evenUnimodular_of_gram sphereProd_interMatrix_latticeSig_of_gram)
 open SKEFTHawking.SphereProdHFourInt (sphereProdIntFundClassHonest)
 
-/-- **The S²×S² Gram-pin atom.** The single geometric residual of the product intersection form:
-`II(S²×S²) = H` (`= sphereProdFormDatum`) on the computed rank-2 basis. This is the Künneth/Benedetti
-statement the S²×S² witness bottoms out at; named here as the explicit input the s2s2 discharge below
-consumes (not in-tree — no manifold cup product on the product basis in Mathlib). -/
+/-- **The S²×S² Gram-pin slot — RETIRED, not a geometric residual.** The literal matrix equality
+`II(S²×S²) = H` (`= sphereProdFormDatum`) on the computed rank-2 basis, kept as the hypothesis shape
+of the `*_of_gram` consumers below.
+
+**This is no longer a disclosed geometric atom.** The Künneth/EZ content it stood in for IS in tree
+and unconditional: `SphereProdBasisIdInt.sphereProd_interMatrix_intCongr_hyp` (the MV cup–Stokes peel
+`SphereProdHemiUnitInt.hcross_pm` + the basis-ID `crossFamily_basis_intCongr`) proves the intersection
+matrix integrally CONGRUENT to `Hyp` itself, with no hypotheses. Every consumer of this pin concludes
+something congruence-invariant, so the congruence supersedes it; the hypothesis-free forms are
+`SphereProdGramPinRetire.sphereProd_s2s2_{hyp,evenUnimodular,latticeSig,htopo}'`.
+
+What the literal equality asks for BEYOND the congruence is a basis normalization, not geometry, and
+is provably NOT available in tree: `SphereProdGramPinRetire.sphereProdGramPin_iff` computes the exact
+computed-basis Gram (`!![-(2sυε), υε; υε, 0]`) and shows this Prop holds iff `s = 0` and `υ·ε = 1` —
+where `s` is the α-coordinate of the `Exists.choose` split generator `deltaGen` (choice-dependent
+modulo `sumInto`) and `υ`, `ε` are pinned only as units. So the pin is retired at the consumer level
+rather than proved. -/
 abbrev SphereProdGramPin : Prop :=
   interMatrix sphereProdIntFundClassHonest sphereProdHDataComputed.intH2Basis = sphereProdFormDatum
 
@@ -204,7 +220,8 @@ abbrev SphereProdGramPin : Prop :=
 fundamental class + computed rank-2 basis deliver the `∃ N, IsHyperbolicForm N ∧ IntCongr (II) N` shape
 — exactly the `s2s2_hyp` field of `SpinSigmaAtoms` / `SpinSigmaPresentation`, now stated for the CONCRETE
 product intersection matrix (`interMatrix (honest fc) (computed B)`), not the abstract
-`sphereProdFormDatum`. -/
+`sphereProdFormDatum`. **Superseded**: `SphereProdGramPinRetire.sphereProd_s2s2_hyp'` proves the same
+conclusion with NO hypothesis. -/
 theorem sphereProd_s2s2_hyp_of_gram (hgram : SphereProdGramPin) :
     ∃ N, IsHyperbolicForm N ∧
       IntCongr (interMatrix sphereProdIntFundClassHonest sphereProdHDataComputed.intH2Basis) N := by
@@ -214,7 +231,8 @@ theorem sphereProd_s2s2_hyp_of_gram (hgram : SphereProdGramPin) :
 /-- **The S²×S² intersection matrix is even unimodular under the Gram pin** — the concrete
 `even_unimod` obligation at the distinguished `s2s2`, from `sphereProd_interMatrix_evenUnimodular_of_gram`.
 Confirms the s2s2 sector's even-unimodularity is realized by the computed product data (modulo the pin),
-consistent with the S⁴ pipeline. -/
+consistent with the S⁴ pipeline. **Superseded**:
+`SphereProdGramPinRetire.sphereProd_s2s2_evenUnimodular'` proves it with NO hypothesis. -/
 theorem sphereProd_s2s2_evenUnimodular_of_gram (hgram : SphereProdGramPin) :
     IsEvenUnimodular (interMatrix sphereProdIntFundClassHonest sphereProdHDataComputed.intH2Basis) :=
   sphereProd_interMatrix_evenUnimodular_of_gram sphereProdHDataComputed sphereProdIntFundClassHonest hgram
