@@ -601,3 +601,75 @@ which has an open neighbourhood meeting `splitBOpen r` only inside `outerE`. Cor
 `KummerChartNbhdInt` — `relHomologyInt_splitBOpen_eq_zero_of_chart0` and `outerECyclic_of_chart_local`
 are dead weight (harmless, still green, still building). Prune when the b₂ lane closes, not before —
 they are cheap to keep and removing them mid-lane risks churn.
+
+---
+
+## collar-pair-surgered-end-range-has-no-degrees-of-freedom — ROUTE FACT (2026-07-21, prose by design)
+
+**Not a no-go — a statement that a *hypothesis is unavailable*, not that a statement is false. Prose
+is the right home** (same discrimination as `k7-b2-single-threshold-excision-corner`).
+
+`SurgeredEndDatum.bdry` is an **equality**, so `range eM' = ∂W ∖ range ktSourceEnd` exactly — there is
+no slack in it. `bd_datum_indep` shows `∂W` is `rfl`-equal across data, hence `range_eM'_datum_indep`
+and `seamPreimage_datum_indep`: **all `SurgeredEndDatum`s have the SAME `eM'` range**, and the
+residual holds for one iff it holds for all.
+
+**Consequence — never dispatch this:** "construct a `SurgeredEndDatum` whose `eM'` covers the seam
+annulus." There is nothing to construct; the datum has no degrees of freedom here. The residual's
+truth is a fact about the chart-determined `∂W` (boundary-floor territory), not about datum choice.
+
+---
+
+## collar-pair-coarse-core-does-not-relax-the-disk-side — ROUTE FACT (2026-07-21, prose by design)
+
+**Not a no-go.** Records a *failed relaxation attempt*, so that it is not re-attempted.
+
+The End row's `houtH` support is `sphere ∖ ↑''seamCore`, which is **weaker** than `sphere ∖ S`
+(`seamCore ⊆ S`), and it is tempting to read that extra room as relaxing the disk side. It does not.
+The extra room lies **inside `S`**, whereas the closed-`S` barrier concerns simplices in `U ∖ S` —
+**outside** `S`. Room inside `S` cannot host a simplex outside it.
+
+**Scope: this does not close `hctrlH`.** (What *does* close it is unrelated — see the entry below:
+the row's remainder is demanded off the builder-chosen core `K`, and that is a genuinely different,
+*open*-complement condition, not a coarsening of the closed-`S` one.)
+
+Also settled in the same lane, and equally not to be retried:
+* the **representative-subdivision dodge** does not reach `hctrlH`. At `μ = 0` the cylinder side
+  loses nothing (one subdivides the *representative*), but the disk side does — `diskDetectChain` is
+  fixed.
+
+---
+
+## collar-pair-closed-seam-attached-collar-bridge-is-FALSE — KERNEL NO-GO (2026-07-21)
+
+⚠ **Kernel-checkable — this entry is a POINTER. The registry is the home of record**
+(`KERNEL_NOGO_REGISTRY` in `src/core/constants.py`, filed by the atlas/registry owner). Recorded here
+only because the fork was settled in the collar-pair lane and readers arrive here first.
+
+**Refutation theorem:** `SKEFTHawking.PinPlusTraceSeamCollarBridgeNoGo.collar_bridge_refuted`
+(`lean/SKEFTHawking/PinPlusTraceSeamCollarBridgeNoGo.lean`), kernel-pure
+`{propext, Classical.choice, Quot.sound}`.
+
+**False statement:** `PinPlusTraceSeamResidualNarrow.ClosedSeamAttachedCollarBridge S a` — for a
+closed seam `S ⊆ D⁵` and an attached chain `a` supported in an open neighbourhood's sphere-part,
+`∃ cSeam corr, a = mapChain (ambIncl S) cSeam + corr ∧ corr ∈ subspaceChains (sphere ∖ S)`.
+
+**Why it is false.** `attachedBridge_iff_support_dichotomy` (same module) shows the atom is EXACTLY
+"no support simplex of `a` straddles `S`" — a purely combinatorial condition on the free `ℤ/2`-module
+basis, with **no collar content whatsoever**. The "collar deformation-retraction" reading in
+`PinPlusTraceSeamResidualNarrow` §3 is wrong: a retraction gives homotopy/homology invariance, never
+the chain-level EQUALITY the atom demands. `collar_bridge_refuted` then exhibits a closed nonempty
+`S = {e₀} ⊆ sphere`, `U = univ` (satisfying the engine's own cover hypothesis
+`sphere ⊆ U ∪ Sᶜ` verbatim), and a single great-circle 4-simplex chain running from `e₀` into the
+sphere, for which the atom fails.
+
+**Do NOT re-attempt** any of: a collar retraction supplying it; a homotopy/prism argument; more
+subdivision (the atom carries no subdivision hypothesis, and the engine's `a` is post-subdivision by
+construction). No proof can exist at the stated generality.
+
+**Scope — this kills the ATOM, not the collar-pair row.** `CollarPairBuild.hctrlH`/`houtH` never
+asked for the `sphere ∖ S` support; they ask for `sphere ∖ (Subtype.val '' K)`, off the
+*builder-chosen shrunk closed core* `K ⊂ int A` — an **open** complement, exactly the open-cover
+engine's granularity. That pair is now SUPPLIED, bridge-free:
+`PinPlusTraceCapstoneCollarPairHandle.exists_ctrlHandle_split_offCore`. The bridge was a needlessly
+strong reduction of `#212 item d`, not the row's actual obligation.
