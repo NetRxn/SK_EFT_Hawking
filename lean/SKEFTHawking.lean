@@ -4741,6 +4741,7 @@ import SKEFTHawking.SphereProdGramPinRetire
 import SKEFTHawking.KTCompletenessProvider
 import SKEFTHawking.KTCompletenessTether
 import SKEFTHawking.PinPlusTraceCapstoneCorrector
+import SKEFTHawking.PinPlusTraceCapstoneCollarPair
 import SKEFTHawking.KTCompletenessTransfer
 import SKEFTHawking.KTCompletenessMVCover
 import SKEFTHawking.KTCompletenessMVHtpy
