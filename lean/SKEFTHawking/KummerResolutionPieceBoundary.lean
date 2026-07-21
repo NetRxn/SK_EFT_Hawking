@@ -1091,6 +1091,155 @@ section over the equator). -/
 def annulusInteriorChart : OpenPartialHomeomorph ResE Model :=
   annulusTriv.trans baseFiberInteriorChart
 
+/-! ## §K. The equatorial covering and the `ChartedSpace Model ResE` instance -/
+
+/-- `‖regDir z‖ = 1` on the annulus (`‖z‖ ≥ 1/2`). -/
+theorem norm_regDir_of {z : ℂ} (hz : 1 / 2 ≤ ‖z‖) : ‖regDir z‖ = 1 := by
+  have hpos : (0 : ℝ) < ‖z‖ := by positivity
+  rw [regDir_eq hz, norm_div, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hpos,
+    div_self (ne_of_gt hpos)]
+
+/-- The fiber interior chart's source is the open fiber disk `‖w‖ < 1`. -/
+theorem mem_fiberInteriorChart_source {w : Disk} (hw : ‖(w : ℂ)‖ < 1) :
+    w ∈ fiberInteriorChart.source := by
+  simp only [fiberInteriorChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, Set.mem_inter_iff, Set.mem_univ, true_and,
+    Set.mem_preimage]
+  show ‖((diskHomeoNDisk1 w : NDisk 1) : EuclideanSpace ℝ (Fin 2))‖ < 1
+  rw [show ((diskHomeoNDisk1 w : NDisk 1) : EuclideanSpace ℝ (Fin 2)) = toE2 (w : ℂ) from rfl,
+    norm_toE2]
+  exact hw
+
+/-- The fiber collar chart (at `w`'s own fiber direction) contains `w` when `w ≠ 0`. -/
+theorem mem_fiberCollarChart_source {w : Disk} (hw : (w : ℂ) ≠ 0) :
+    w ∈ (fiberCollarChart (diskDir 1 (diskHomeoNDisk1 w))).source := by
+  simp only [fiberCollarChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, Set.mem_inter_iff, Set.mem_univ, true_and,
+    Set.mem_preimage]
+  refine ⟨?_, mem_chart_source (EuclideanSpace ℝ (Fin 1)) _⟩
+  show ((diskHomeoNDisk1 w : NDisk 1) : EuclideanSpace ℝ (Fin 2)) ≠ 0
+  rw [show ((diskHomeoNDisk1 w : NDisk 1) : EuclideanSpace ℝ (Fin 2)) = toE2 (w : ℂ) from rfl]
+  intro h0
+  exact hw (norm_eq_zero.mp (by rw [← norm_toE2, h0, norm_zero]))
+
+/-- The `ℂ × Disk` interior chart's source is `{fiber ‖w‖ < 1}` (base `β` free). -/
+theorem mem_baseFiberInteriorChart_source {β : ℂ} {w : Disk} (hw : ‖(w : ℂ)‖ < 1) :
+    (β, w) ∈ baseFiberInteriorChart.source := by
+  simp only [baseFiberInteriorChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, OpenPartialHomeomorph.prod_source,
+    Set.mem_inter_iff, Set.mem_univ, true_and, and_true, Set.mem_preimage, Set.mem_prod]
+  exact mem_fiberInteriorChart_source hw
+
+/-- The `ℂ × Disk` collar chart (at `w`'s fiber direction) contains `(β, w)` when `w ≠ 0`. -/
+theorem mem_baseFiberCollarChart_source {β : ℂ} {w : Disk} (hw : (w : ℂ) ≠ 0) :
+    (β, w) ∈ (baseFiberCollarChart (diskDir 1 (diskHomeoNDisk1 w))).source := by
+  simp only [baseFiberCollarChart, OpenPartialHomeomorph.trans_source,
+    Homeomorph.toOpenPartialHomeomorph_source, OpenPartialHomeomorph.prod_source,
+    Set.mem_inter_iff, Set.mem_univ, true_and, and_true, Set.mem_preimage, Set.mem_prod]
+  exact mem_fiberCollarChart_source hw
+
+/-- The twisted fiber `ζ = trivFiber z w` is nonzero when `w ≠ 0` (on the annulus, `‖z‖ ≥ 1/2`). -/
+theorem trivFiber_ne_zero {z : ℂ} (hz : 1 / 2 ≤ ‖z‖) {w : Disk} (hw : (w : ℂ) ≠ 0) :
+    (trivFiber z w : ℂ) ≠ 0 := by
+  rw [trivFiber_coe]
+  exact mul_ne_zero (norm_pos_iff.mp (by rw [norm_regDir_of hz]; norm_num)) hw
+
+/-- **Equator, chart-0, fiber-interior** (`1/2 < ‖z‖`, `‖w‖ < 1`) lies in the annulus interior chart. -/
+theorem mem_annulusInteriorChart_source_chart0 {p : ResChart} (hz : 1 / 2 < ‖(p.1 : ℂ)‖)
+    (hw : ‖(p.2 : ℂ)‖ < 1) : chart0 p ∈ annulusInteriorChart.source := by
+  rw [annulusInteriorChart, OpenPartialHomeomorph.trans_source]
+  refine ⟨Or.inl ⟨p, hz, rfl⟩, ?_⟩
+  rw [Set.mem_preimage]
+  show annulusTrivFun (chart0 p) ∈ baseFiberInteriorChart.source
+  rw [annulusTrivFun_chart0]
+  apply mem_baseFiberInteriorChart_source
+  rw [trivFiber_coe, norm_mul, norm_regDir_of hz.le, one_mul]; exact hw
+
+/-- **Equator, chart-1, fiber-interior** lies in the annulus interior chart. -/
+theorem mem_annulusInteriorChart_source_chart1 {q : ResChart} (hz : 1 / 2 < ‖(q.1 : ℂ)‖)
+    (hw : ‖(q.2 : ℂ)‖ < 1) : chart1 q ∈ annulusInteriorChart.source := by
+  rw [annulusInteriorChart, OpenPartialHomeomorph.trans_source]
+  refine ⟨Or.inr ⟨q, hz, rfl⟩, ?_⟩
+  rw [Set.mem_preimage]
+  show annulusTrivFun (chart1 q) ∈ baseFiberInteriorChart.source
+  rw [annulusTrivFun_chart1]
+  apply mem_baseFiberInteriorChart_source
+  rw [trivFiber_coe, norm_mul, norm_regDir_of hz.le, one_mul]; exact hw
+
+/-- **Equator, chart-0, fiber-off-centre** (`1/2 < ‖z‖`, `w ≠ 0`) lies in the annulus collar chart at
+the twisted fiber's own direction. -/
+theorem mem_annulusCollarChart_source_chart0 {p : ResChart} (hz : 1 / 2 < ‖(p.1 : ℂ)‖)
+    (hw : (p.2 : ℂ) ≠ 0) :
+    chart0 p ∈
+      (annulusCollarChart (diskDir 1 (diskHomeoNDisk1 (trivFiber (p.1 : ℂ) p.2)))).source := by
+  rw [annulusCollarChart, OpenPartialHomeomorph.trans_source]
+  refine ⟨Or.inl ⟨p, hz, rfl⟩, ?_⟩
+  rw [Set.mem_preimage]
+  show annulusTrivFun (chart0 p)
+    ∈ (baseFiberCollarChart (diskDir 1 (diskHomeoNDisk1 (trivFiber (p.1 : ℂ) p.2)))).source
+  rw [annulusTrivFun_chart0]
+  exact mem_baseFiberCollarChart_source (trivFiber_ne_zero hz.le hw)
+
+/-- **Equator, chart-1, fiber-off-centre** lies in the annulus collar chart. -/
+theorem mem_annulusCollarChart_source_chart1 {q : ResChart} (hz : 1 / 2 < ‖(q.1 : ℂ)‖)
+    (hw : (q.2 : ℂ) ≠ 0) :
+    chart1 q ∈
+      (annulusCollarChart (diskDir 1 (diskHomeoNDisk1 (trivFiber (q.1 : ℂ) q.2)))).source := by
+  rw [annulusCollarChart, OpenPartialHomeomorph.trans_source]
+  refine ⟨Or.inr ⟨q, hz, rfl⟩, ?_⟩
+  rw [Set.mem_preimage]
+  show annulusTrivFun (chart1 q)
+    ∈ (baseFiberCollarChart (diskDir 1 (diskHomeoNDisk1 (trivFiber (q.1 : ℂ) q.2)))).source
+  rw [annulusTrivFun_chart1]
+  exact mem_baseFiberCollarChart_source (trivFiber_ne_zero hz.le hw)
+
+/-- **The E-side atlas** — the base-interior charts (§E–§G) plus the equatorial annulus charts (§J). -/
+def atlasE : Set (OpenPartialHomeomorph ResE Model) :=
+  {interiorChart, interiorChart1, annulusInteriorChart}
+    ∪ Set.range collarChart ∪ Set.range collarChart1 ∪ Set.range annulusCollarChart
+
+/-- **The full covering**: every point of `ResE` lies in the source of some chart in `atlasE`. The
+base-interior charts cover `‖z‖ < 1` (banked §H); the equatorial annulus charts cover the equator
+`‖z‖ = 1` (§J–§K). The dispatch that makes `ResE` a charted space. -/
+theorem exists_chart (x : ResE) : ∃ c ∈ atlasE, x ∈ c.source := by
+  obtain ⟨a, rfl⟩ := Quotient.exists_rep x
+  cases a with
+  | inl p =>
+    by_cases hz : ‖(p.1 : ℂ)‖ < 1
+    · rcases chart0_baseInterior_covered hz with h | ⟨u₀, h⟩
+      · exact ⟨interiorChart, Or.inl (Or.inl (Or.inl (Set.mem_insert _ _))), h⟩
+      · exact ⟨collarChart u₀, Or.inl (Or.inl (Or.inr (Set.mem_range_self u₀))), h⟩
+    · have hz1 : 1 / 2 < ‖(p.1 : ℂ)‖ := lt_of_lt_of_le (by norm_num) (not_lt.mp hz)
+      by_cases hw : ‖(p.2 : ℂ)‖ < 1
+      · exact ⟨annulusInteriorChart,
+          Or.inl (Or.inl (Or.inl (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ rfl)))),
+          mem_annulusInteriorChart_source_chart0 hz1 hw⟩
+      · exact ⟨_, Or.inr (Set.mem_range_self _),
+          mem_annulusCollarChart_source_chart0 hz1 (fun h0 => hw (by rw [h0, norm_zero]; norm_num))⟩
+  | inr q =>
+    by_cases hz : ‖(q.1 : ℂ)‖ < 1
+    · rcases chart1_baseInterior_covered hz with h | ⟨u₀, h⟩
+      · exact ⟨interiorChart1,
+          Or.inl (Or.inl (Or.inl (Set.mem_insert_of_mem _ (Set.mem_insert _ _)))), h⟩
+      · exact ⟨collarChart1 u₀, Or.inl (Or.inr (Set.mem_range_self u₀)), h⟩
+    · have hz1 : 1 / 2 < ‖(q.1 : ℂ)‖ := lt_of_lt_of_le (by norm_num) (not_lt.mp hz)
+      by_cases hw : ‖(q.2 : ℂ)‖ < 1
+      · exact ⟨annulusInteriorChart,
+          Or.inl (Or.inl (Or.inl (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ rfl)))),
+          mem_annulusInteriorChart_source_chart1 hz1 hw⟩
+      · exact ⟨_, Or.inr (Set.mem_range_self _),
+          mem_annulusCollarChart_source_chart1 hz1 (fun h0 => hw (by rw [h0, norm_zero]; norm_num))⟩
+
+/-- **`ResE` is a charted space over the half-space model** `ModelProd (𝓔 3) (EuclideanHalfSpace 1)` —
+the topological manifold-with-boundary skeleton of the K6′a Leg-2 E-side certificate. `chartAt`
+dispatches each point to a covering chart (base-interior §E–§G off the equator, equatorial annulus §J
+on it). Kernel-pure `{propext, Classical.choice, Quot.sound}`. -/
+noncomputable instance instChartedSpaceResE : ChartedSpace Model ResE where
+  atlas := atlasE
+  chartAt x := Classical.choose (exists_chart x)
+  mem_chart_source x := (Classical.choose_spec (exists_chart x)).2
+  chart_mem_atlas x := (Classical.choose_spec (exists_chart x)).1
+
 /-! ## §Z. STATUS — the K6′a Leg-2 E-side certificate
 
 **GREEN here — deliverable (1) COMPLETE; deliverable (2) topological core + coordinate infrastructure;
@@ -1140,22 +1289,38 @@ Deliverable (2/3) — **the half-space-model charts on `ResE`** (§C–§F, K6�
   (`‖z‖ < 1`) representative lies in the interior chart's source (`‖w‖ < 1`) or a collar chart's source
   (`w ≠ 0`, at its own fiber direction `u₀ = diskDir (w/‖w‖)`). Kernel-pure.
 
-**RESIDUAL (walls, localized precisely) — the charted-space instance and the manifold instance:**
+Deliverable (3) — **`ChartedSpace Model ResE` COMPLETE** (§I–§K, this pass): the last equator gap closed.
+- **The equatorial annulus trivialization** (§I): `annulusTriv : OpenPartialHomeomorph ResE (ℂ × Disk)`,
+  the product trivialization of the disk bundle over the base annulus `{1/2 < ‖β‖ < 2}`, charting an
+  OPEN neighborhood of the ENTIRE base equator in ONE chart. Built from regularized coordinates
+  (`regDir`/`regInv`/`clampBall`/`recoverFiber0`, globally continuous ⟹ forward = `Quotient.lift`,
+  inverse pastes via `Continuous.if_le`) with the weld-descent and the equator cross-branch case closed
+  by `chart_glue`/`chart0_eq_chart1'`.
+- **The half-space-model equatorial charts** (§J): `toE2Homeo : ℂ ≃ₜ 𝓔²`, and
+  `annulusCollarChart u₀`/`annulusInteriorChart : OpenPartialHomeomorph ResE Model` (`annulusTriv` composed
+  with the fiber collar/interior chart), mirroring the base-interior pair.
+- **The full covering + the instance** (§K): `atlasE`, `exists_chart` (every point covered — base-interior
+  §H off the equator, equatorial annulus on it), and `instChartedSpaceResE : ChartedSpace Model ResE`
+  (`chartAt` = `Classical.choose` of the covering). Kernel-pure `{propext, Classical.choice, Quot.sound}`.
 
-1. **`ChartedSpace Model ResE`** (deliverable 3) — `chartAt` dispatch. The `chart0`/`chart1`-based charts
-   above cover every point OFF the base equator `‖z‖ = 1` (`chart0_baseInterior_covered` + its mirror).
-   The base-equator locus (`chart0 p`, `‖p.1‖ = 1`; a circle × fiber) is the residual. **Not** a single
-   straddling chart: over the equator circle the disk bundle has **Euler number −2** (the `z²` clutch
-   twist), so it is topologically nontrivial and admits **no** product base-annulus × fiber
-   trivialization. The equator neighborhood must be covered by a **family of charts over base ARCS** (each
-   arc contractible ⟹ the bundle trivializes over it), with the base-arc coordinate glued across the weld
-   through the banked `contDiffOn_clutch` (parent §1) transition `z ↦ z⁻¹`. This is the one genuinely-new
-   geometric brick (nontrivial-bundle coverage), beyond the base-interior packaging above.
+**CORRECTED TOPOLOGY FINDING (this pass).** The prior status note claimed the Euler−2 twist forbids a
+product base-annulus × fiber trivialization, forcing arc charts. That is **not correct**: a single product
+trivialization over the FULL equator annulus DOES exist (built above, kernel-checked). Over the equator
+`S¹` the disk bundle is an ORIENTED `D²`-bundle, hence trivial (`π₀(SO(2)) = 0`); the Euler−2 obstruction
+is the global `S²` invariant (the obstruction to extending the trivialization over a DISK), not seen over
+the annulus. The trivializing fiber coordinate is `ζ = (β/‖β‖)·w` — the fiber twisted by the UNIT angular
+part (a rotation, disk-preserving on BOTH chart sides); the naive `z²` factor blows the disk up off the
+equator (`‖z‖ ≠ 1`), which is the artifact behind the earlier "no product" claim. Arc charts are therefore
+unnecessary; the annulus chart is cleaner and completes the ChartedSpace directly.
 
-2. **`IsManifold` + smooth `bdryHomeoRP3`** (deliverables 3/4) — the transition classes:
-   interior-interior = `contDiffOn_clutch` (banked); collar-collar and collar-interior = the fiber polar
-   change of coordinates (smooth off `w = 0`, and the collar avoids `w = 0` since `‖w‖ > 1/2`); the smooth
-   `∂E ≅ ℝP³` upgrade of `bdryHomeoRP3` in these charts.
+**RESIDUAL (wall, localized precisely) — the smooth/manifold instance:**
+
+1. **`IsManifold` + smooth `bdryHomeoRP3`** (deliverables 3/4) — the transition classes (`contDiffOn`
+   compatibility of `atlasE`): interior-interior off the equator = `contDiffOn_clutch` (banked);
+   collar/interior polar changes (smooth off `w = 0`, collar avoids `w = 0`); annulus-annulus and
+   annulus↔base = the `regDir`/`regInv` coordinate changes (smooth on the annulus, `‖β‖ > 1/2 > 0`); the
+   smooth `∂E ≅ ℝP³` upgrade of `bdryHomeoRP3` in these charts. `ChartedSpace` (topological) is DONE;
+   `IsManifold` (smooth structure) is the remaining brick.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom. -/
 
