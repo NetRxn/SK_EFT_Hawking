@@ -38,6 +38,7 @@
     "disabled_tools": [
       "lean_build"
     ],
+    "probe_file": "SKEFTHawking/A1ExtSubstantive.lean",
     "instructions": "Use Lean LSP proof-state, diagnostics, search, hover, completion, and verification tools. This worker endpoint cannot build, clean, repair, integrate, or mutate the project cache; report environment failures to the orchestrator.",
     "startup_timeout_seconds": 45
   },

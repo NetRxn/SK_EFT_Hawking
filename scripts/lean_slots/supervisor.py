@@ -262,7 +262,7 @@ class Supervisor:
         }
 
         def request(payload: dict[str, Any], session_id: str | None = None):
-            connection = http.client.HTTPConnection(host, int(slot["proxy_port"]), timeout=30)
+            connection = http.client.HTTPConnection(host, int(slot["proxy_port"]), timeout=120)
             current = dict(headers)
             if session_id:
                 current["Mcp-Session-Id"] = session_id
@@ -313,6 +313,26 @@ class Supervisor:
             raise SlotError(f"MCP worker endpoint wt{number} exposed forbidden lean_build")
         if not any(name.startswith("lean_") for name in tools):
             raise SlotError(f"MCP worker endpoint wt{number} exposed no Lean tools")
+        active_dispatch: bool | str = False
+        lease = self.inventory.lease(number, required=False)
+        if lease and lease.get("state") == "ACTIVE" and lease.get("client") == client:
+            diagnostics, _ = request(
+                {
+                    "jsonrpc": "2.0",
+                    "id": 3,
+                    "method": "tools/call",
+                    "params": {
+                        "name": "lean_diagnostic_messages",
+                        "arguments": {"file_path": self.inventory.raw["server"]["probe_file"]},
+                    },
+                },
+                session_id,
+            )
+            if diagnostics.get("error") or "result" not in diagnostics:
+                raise SlotError(f"active MCP dispatch failed for wt{number}: {diagnostics}")
+            active_dispatch = True
+        elif lease:
+            active_dispatch = "skipped-nonmatching-lease"
         connection = http.client.HTTPConnection(host, int(slot["proxy_port"]), timeout=10)
         cleanup_headers = {"Authorization": f"Bearer {token}", "Mcp-Session-Id": session_id}
         connection.request("DELETE", "/mcp", headers=cleanup_headers)
@@ -325,6 +345,7 @@ class Supervisor:
             "server": initialized["result"].get("serverInfo"),
             "tool_count": len(tools),
             "lean_build_exposed": False,
+            "active_dispatch": active_dispatch,
             "cleanup_status": cleanup.status,
         }
 
