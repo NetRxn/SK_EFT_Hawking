@@ -70,6 +70,77 @@ class Controller:
     def _primary_sha(self, ref: str) -> str:
         return _git(self.repo, "rev-parse", "--verify", f"{ref}^{{commit}}")
 
+    def _dependency_primary_sha(self) -> str | None:
+        paired = self.inventory.paired_inventory()
+        if paired is None:
+            return None
+        configured = self.inventory.raw["paired_dependency"]
+        dependency_ref = str(configured.get("base_ref", "main"))
+        expected_root = paired.repo_root / "lean"
+        actual_root = self.inventory.primary_dependency_lean_root()
+        if actual_root != expected_root.resolve():
+            raise SlotError(
+                "primary downstream dependency path mismatch: "
+                f"{actual_root} != {expected_root.resolve()}"
+            )
+        dependency_sha = _git(
+            paired.repo_root, "rev-parse", "--verify", f"{dependency_ref}^{{commit}}"
+        )
+        actual_head = _git(paired.repo_root, "rev-parse", "HEAD")
+        if actual_head != dependency_sha:
+            raise SlotError(
+                "downstream dependency primary checkout is not on its configured base: "
+                f"{actual_head} != {dependency_sha}"
+            )
+        dirty = self._dirty(paired.repo_root)
+        if dirty:
+            raise SlotError(
+                "downstream dependency primary checkout is dirty: "
+                + ", ".join(dirty[:8])
+            )
+        return dependency_sha
+
+    def _assert_paired_dependency(
+        self,
+        number: int,
+        expected_sha: str | None = None,
+        *,
+        require_primary_match: bool = True,
+    ) -> str | None:
+        paired = self.inventory.paired_inventory()
+        if paired is None:
+            return None
+        paired_controller = Controller(paired)
+        worktree, _ = paired_controller._assert_worktree_identity(number)
+        actual_root = self.inventory.paired_dependency_lean_root(number)
+        expected_root = paired.lean_root(number).resolve()
+        if actual_root != expected_root:
+            raise SlotError(
+                f"paired dependency path mismatch for wt{number}: "
+                f"{actual_root} != {expected_root}"
+            )
+        dirty = paired_controller._dirty(worktree)
+        if dirty:
+            raise SlotError(
+                f"paired dependency wt{number} is dirty: {', '.join(dirty[:8])}"
+            )
+        current_primary_sha = (
+            self._dependency_primary_sha() if require_primary_match or expected_sha is None else None
+        )
+        dependency_sha = expected_sha or current_primary_sha
+        assert dependency_sha is not None
+        if expected_sha is not None and current_primary_sha not in {None, expected_sha}:
+            raise SlotError(
+                f"paired dependency base advanced for wt{number}: "
+                f"{current_primary_sha} != {expected_sha}"
+            )
+        head = _git(worktree, "rev-parse", "HEAD")
+        if head != dependency_sha:
+            raise SlotError(
+                f"paired dependency wt{number} is not pinned: {head} != {dependency_sha}"
+            )
+        return dependency_sha
+
     def _branch(self, path: Path) -> str:
         branch = _git(path, "branch", "--show-current")
         if not branch:
@@ -126,6 +197,10 @@ class Controller:
             raise SlotError(f"repository-role mismatch for wt{number}")
         if lease.get("worktree") != expected_path:
             raise SlotError(f"worktree mismatch for wt{number}")
+        if self.inventory.paired_inventory() is not None and not lease.get(
+            "public_dependency_sha"
+        ):
+            raise SlotError(f"downstream lease for wt{number} lacks a public dependency SHA")
         client = str(lease.get("client", ""))
         current_hash = token_hash(self.inventory.token(client, create=False))
         if lease.get("token_hash") != current_hash:
@@ -174,6 +249,7 @@ class Controller:
                 )
             worktree, slot = self._assert_worktree_identity(number)
             base_sha = self._primary_sha(base_ref)
+            public_dependency_sha = self._assert_paired_dependency(number)
             lease: dict[str, Any] = {
                 "schema_version": SCHEMA_VERSION,
                 "slot": number,
@@ -190,6 +266,8 @@ class Controller:
                 "heartbeat_at": now_iso(),
                 **self._owner(),
             }
+            if public_dependency_sha is not None:
+                lease["public_dependency_sha"] = public_dependency_sha
             dirty = self._dirty(worktree)
             if dirty:
                 reason = f"worktree is dirty: {', '.join(dirty[:8])}"
@@ -211,7 +289,12 @@ class Controller:
             exclusive_json(self.inventory.lease_path(number), lease)
             return lease
 
-    def _fingerprint(self, commit_sha: str | None = None) -> dict[str, Any]:
+    def _fingerprint(
+        self,
+        commit_sha: str | None = None,
+        *,
+        public_dependency_sha: str | None = None,
+    ) -> dict[str, Any]:
         commit = commit_sha or _git(self.repo, "rev-parse", "HEAD")
         files: dict[str, str] = {}
         for configured in self.inventory.raw["build"]["fingerprint_files"]:
@@ -231,13 +314,28 @@ class Controller:
             "commit_sha": commit,
             "files": files,
         }
+        current_dependency_sha = self._dependency_primary_sha()
+        if current_dependency_sha is not None:
+            if (
+                public_dependency_sha is not None
+                and current_dependency_sha != public_dependency_sha
+            ):
+                raise SlotError(
+                    "downstream public dependency advanced after lease acquisition: "
+                    f"{current_dependency_sha} != {public_dependency_sha}"
+                )
+            fingerprint["public_dependency_sha"] = current_dependency_sha
         fingerprint["digest"] = canonical_digest(fingerprint)
         return fingerprint
 
-    def _matching_epoch(self, commit_sha: str) -> dict[str, Any]:
+    def _matching_epoch(
+        self, commit_sha: str, *, public_dependency_sha: str | None = None
+    ) -> dict[str, Any]:
         path = self.inventory.epoch_path()
         epoch = read_json(path)
-        expected = self._fingerprint(commit_sha)
+        expected = self._fingerprint(
+            commit_sha, public_dependency_sha=public_dependency_sha
+        )
         if epoch.get("fingerprint") != expected:
             raise SlotError(
                 "no successful-build epoch matches the acquired commit and dependency fingerprint; "
@@ -323,16 +421,26 @@ class Controller:
             if current_base != lease["base_sha"]:
                 self._quarantine(number, lease, "base ref advanced after acquisition")
                 raise SlotError(f"wt{number} quarantined; base ref advanced after acquisition")
-            self._matching_epoch(current_base)
+            public_dependency_sha = lease.get("public_dependency_sha")
+            self._assert_paired_dependency(number, public_dependency_sha)
+            self._matching_epoch(
+                current_base, public_dependency_sha=public_dependency_sha
+            )
             lease["state"] = "PREPARING"
             self.inventory.save_lease(number, lease)
             from .supervisor import Supervisor
 
             supervisor = Supervisor(self.inventory)
+            paired_inventory = self.inventory.paired_inventory()
             try:
                 if os.environ.get("LEAN_SLOT_SKIP_SUPERVISOR"):
                     _git(worktree, "reset", "--hard", current_base)
                     self._replace_lake(number)
+                elif paired_inventory is not None:
+                    paired_supervisor = Supervisor(paired_inventory)
+                    with supervisor.activating_from(number, paired_supervisor):
+                        _git(worktree, "reset", "--hard", current_base)
+                        self._replace_lake(number)
                 else:
                     with supervisor.paused_backend(number):
                         _git(worktree, "reset", "--hard", current_base)
@@ -350,6 +458,13 @@ class Controller:
         with self._slot_lock(number):
             lease = self._lease_for_command(number, states={"ACTIVE"})
             worktree, _ = self._assert_worktree_identity(number)
+            try:
+                self._assert_paired_dependency(
+                    number, lease.get("public_dependency_sha")
+                )
+            except SlotError as exc:
+                self._quarantine(number, lease, str(exc))
+                raise
             dirty = self._dirty(worktree)
             if dirty:
                 self._quarantine(number, lease, f"ready requires a clean commit: {dirty[:8]}")
@@ -383,6 +498,15 @@ class Controller:
             )
             worktree, _ = self._assert_worktree_identity(number)
             dirty = self._dirty(worktree)
+            try:
+                self._assert_paired_dependency(
+                    number,
+                    lease.get("public_dependency_sha"),
+                    require_primary_match=False,
+                )
+            except SlotError as exc:
+                self._quarantine(number, lease, str(exc))
+                raise
             base_sha = self._primary_sha(str(lease["base_ref"]))
             result = _run(
                 ["git", "merge-base", "--is-ancestor", "HEAD", base_sha],
@@ -393,7 +517,20 @@ class Controller:
                 reason = "release refused: dirty files or unabsorbed commits remain"
                 self._quarantine(number, lease, reason)
                 raise SlotError(f"wt{number} quarantined; {reason}")
+            try:
+                self._restore_paired_backend(number)
+            except Exception as exc:
+                self._quarantine(number, lease, f"counterpart restore failed: {exc}")
+                raise
             self.inventory.lease_path(number).unlink()
+
+    def _restore_paired_backend(self, number: int) -> None:
+        paired = self.inventory.paired_inventory()
+        if paired is None or os.environ.get("LEAN_SLOT_SKIP_SUPERVISOR"):
+            return
+        from .supervisor import Supervisor
+
+        Supervisor(self.inventory).restore_counterpart(number, Supervisor(paired))
 
     def reclaim(self, number: int, *, confirm_owner_gone: bool = False) -> None:
         with self._slot_lock(number):
@@ -420,6 +557,15 @@ class Controller:
                 raise SlotError(f"wt{number} has an invalid owner identity")
             worktree, _ = self._assert_worktree_identity(number)
             dirty = self._dirty(worktree)
+            try:
+                self._assert_paired_dependency(
+                    number,
+                    lease.get("public_dependency_sha"),
+                    require_primary_match=False,
+                )
+            except SlotError as exc:
+                self._quarantine(number, lease, str(exc))
+                raise
             base_sha = self._primary_sha(str(lease["base_ref"]))
             absorbed = _run(
                 ["git", "merge-base", "--is-ancestor", "HEAD", base_sha],
@@ -430,6 +576,11 @@ class Controller:
                 reason = "stale owner, but dirty files or unabsorbed commits require recovery"
                 self._quarantine(number, lease, reason)
                 raise SlotError(f"wt{number} quarantined; {reason}")
+            try:
+                self._restore_paired_backend(number)
+            except Exception as exc:
+                self._quarantine(number, lease, f"counterpart restore failed: {exc}")
+                raise
             self.inventory.lease_path(number).unlink()
 
     def absorb(self, number: int) -> dict[str, Any]:
@@ -441,6 +592,13 @@ class Controller:
                 if self._dirty(worktree):
                     self._quarantine(number, lease, "worktree became dirty before integration")
                     raise SlotError(f"wt{number} quarantined; worktree became dirty")
+                try:
+                    self._assert_paired_dependency(
+                        number, lease.get("public_dependency_sha")
+                    )
+                except SlotError as exc:
+                    self._quarantine(number, lease, str(exc))
+                    raise
                 current_ready_head = _git(worktree, "rev-parse", "HEAD")
                 if current_ready_head != lease.get("ready_head"):
                     self._quarantine(number, lease, "slot HEAD changed after ready audit")
@@ -487,6 +645,11 @@ class Controller:
                             self._replace_lake(number)
                 except Exception as exc:
                     self._quarantine(number, lease, f"post-integration build/rewarm failed: {exc}")
+                    raise
+                try:
+                    self._restore_paired_backend(number)
+                except Exception as exc:
+                    self._quarantine(number, lease, f"counterpart restore failed: {exc}")
                     raise
                 self.inventory.lease_path(number).unlink()
                 return {"integrated_head": slot_head, "epoch": epoch}
@@ -549,6 +712,13 @@ class Controller:
     ) -> list[Path]:
         if scope not in {"repo", "workspace", "both"}:
             raise SlotError("config scope must be repo, workspace, or both")
+        if scope in {"workspace", "both"} and not bool(
+            self.inventory.raw.get("config", {}).get("manage_workspace", True)
+        ):
+            raise SlotError(
+                "this repository overlay does not manage workspace Codex configuration; "
+                "render the repo scope and launch Codex from that repository"
+            )
         if rotate_token:
             active = [n for n in (1, 2, 3) if self.inventory.lease(n, required=False)]
             if active:
@@ -601,8 +771,10 @@ class Controller:
                 lease = self.inventory.lease(number, required=False)
                 record(
                     f"wt{number}.lease",
-                    lease is None or lease.get("repo_role") == self.inventory.repo_role,
-                    "FREE" if lease is None else str(lease.get("state")),
+                    True,
+                    "FREE"
+                    if lease is None
+                    else f"{lease.get('repo_role')}:{lease.get('state')}",
                 )
             except SlotError as exc:
                 record(f"wt{number}.lease", False, str(exc))
@@ -622,8 +794,13 @@ class Controller:
             ("repo", self.repo / ".codex" / "config.toml"),
             ("workspace", self.inventory.workspace_root / ".codex" / "config.toml"),
         ):
-            ok = path.exists() and path.read_text(encoding="utf-8") == expected
-            record(f"config.{label}", ok, "current" if ok else f"missing or drifted: {path}")
+            if label == "workspace" and not bool(
+                self.inventory.raw.get("config", {}).get("manage_workspace", True)
+            ):
+                record(f"config.{label}", True, "not managed by this overlay")
+            else:
+                ok = path.exists() and path.read_text(encoding="utf-8") == expected
+                record(f"config.{label}", ok, "current" if ok else f"missing or drifted: {path}")
         from .supervisor import Supervisor
 
         supervisor = Supervisor(self.inventory).status()
@@ -634,11 +811,25 @@ class Controller:
             f"{running_backends}/3 running",
         )
         for item in supervisor["slots"]:
+            expected_backend = self.inventory.backend_expected(int(item["slot"]))
             record(
                 f"wt{item['slot']}.endpoint",
-                item["proxy_running"] and item["backend_running"],
-                f"proxy={item['proxy_running']} backend={item['backend_running']}",
+                item["proxy_running"] and item["backend_running"] == expected_backend,
+                f"proxy={item['proxy_running']} backend={item['backend_running']} "
+                f"expected_backend={expected_backend}",
             )
+        paired = self.inventory.paired_inventory()
+        if paired is not None:
+            for number in (1, 2, 3):
+                try:
+                    dependency_sha = self._assert_paired_dependency(number)
+                    record(
+                        f"wt{number}.paired_dependency",
+                        True,
+                        str(dependency_sha),
+                    )
+                except SlotError as exc:
+                    record(f"wt{number}.paired_dependency", False, str(exc))
         relative_paths = all(
             not Path(str(slot["worktree"])).is_absolute()
             for slot in self.inventory.raw["slots"].values()
