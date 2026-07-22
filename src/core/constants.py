@@ -2471,6 +2471,19 @@ MODELING_ASSUMPTION_THEOREMS: dict[str, dict[str, str]] = {
     # Populated by the 2026-06-13 W2 triage of the proxy_body_audit flagged set.
 
     # ---- definitional records (legitimate trivial-by-design) ----
+    'extBordismBridge_hypotheses_are_vacuous': {
+        'lean_name': 'extBordismBridge_hypotheses_are_vacuous',
+        'module': 'ExtBordismBridge',
+        'category': 'definitional',
+        'reason': 'A deliberate vacuity alarm, not a derivation: it proves the conjunction of '
+                  'H1_ko_cohomology, H2_change_of_rings, H3_ass_collapses, and H4_abp_splitting '
+                  'by trivial precisely because all four are currently defined as True. The '
+                  'trivial proof is the assertion and is intended to stop compiling when any '
+                  'marker gains substantive content.',
+        'discloses': 'ExtBordismBridge module-head VACUITY DISCLOSURE and the theorem docstring; '
+                     'the generation_constraint_chain docstring separately states that these '
+                     'binders document upstream mathematics but are cleared before arithmetic.',
+    },
     'cyl_brown_eq': {
         'lean_name': 'cyl_brown_eq', 'module': 'PinPlusCharPairData',
         'category': 'definitional',
