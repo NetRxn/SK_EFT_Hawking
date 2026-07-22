@@ -72,6 +72,7 @@ def slot_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Controll
             "host": "127.0.0.1",
             "command": ["false"],
             "disabled_tools": ["lean_build"],
+            "probe_file": "Test.lean",
             "instructions": "no builds",
             "startup_timeout_seconds": 1,
         },
