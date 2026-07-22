@@ -173,6 +173,18 @@ def make_handler(inventory: Inventory, number: int):
             finally:
                 connection.close()
 
+        def do_HEAD(self) -> None:
+            try:
+                gate.identify(self.headers.get("Authorization"))
+            except SlotError as exc:
+                self.send_response(401)
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                return
+            self.send_response(204)
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+
         do_GET = _handle
         do_POST = _handle
         do_DELETE = _handle

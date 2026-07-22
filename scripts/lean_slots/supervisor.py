@@ -9,14 +9,16 @@ import socket
 import subprocess
 import sys
 import time
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 from .state import (
     SCHEMA_VERSION,
     Inventory,
     SlotError,
     atomic_json,
+    directory_lock,
     now_iso,
     process_matches,
     process_start_signature,
@@ -51,6 +53,20 @@ class Supervisor:
             metadata
             and process_matches(int(metadata.get("pid", 0)), metadata.get("signature"))
         )
+
+    def global_backend_count(self) -> int:
+        count = 0
+        process_root = self.inventory.state_root / "processes"
+        for path in process_root.glob("*-backend.json") if process_root.exists() else []:
+            try:
+                metadata = read_json(path)
+            except SlotError:
+                continue
+            if metadata.get("kind") == "backend" and process_matches(
+                int(metadata.get("pid", 0)), metadata.get("signature")
+            ):
+                count += 1
+        return count
 
     def _wait_port(self, host: str, port: int, *, open_: bool) -> None:
         timeout = float(self.inventory.raw["server"].get("startup_timeout_seconds", 45))
@@ -185,48 +201,96 @@ class Supervisor:
             str(number),
         ]
 
-    def start_backend(self, number: int) -> None:
+    def _start_backend_unlocked(self, number: int) -> None:
         slot = self.inventory.slot(number)
+        if self._running("backend", number):
+            return
+        limit = int(self.inventory.raw["max_active_slots"])
+        running = self.global_backend_count()
+        if running >= limit:
+            raise SlotError(
+                f"global heavy-backend limit reached ({running}/{limit}); "
+                "stop the numbered counterpart before switching repository roles"
+            )
         # Materialize the private backend credential before exposing the port.
         self.inventory.backend_token(number)
         self._spawn("backend", number, self.backend_command(number), int(slot["backend_port"]))
 
-    def stop_backend(self, number: int) -> None:
+    def _stop_backend_unlocked(self, number: int) -> None:
         self._stop("backend", number, int(self.inventory.slot(number)["backend_port"]))
 
-    def start_proxy(self, number: int) -> None:
+    def _start_proxy_unlocked(self, number: int) -> None:
         slot = self.inventory.slot(number)
         self._spawn("proxy", number, self.proxy_command(number), int(slot["proxy_port"]))
 
-    def stop_proxy(self, number: int) -> None:
+    def _stop_proxy_unlocked(self, number: int) -> None:
         self._stop("proxy", number, int(self.inventory.slot(number)["proxy_port"]))
+
+    @contextmanager
+    def lifecycle(self) -> Iterator[None]:
+        with directory_lock(
+            self.inventory.state_root / "locks" / "supervisor.lock",
+            purpose="shared Lean endpoint lifecycle",
+        ):
+            yield
+
+    def start_backend(self, number: int) -> None:
+        with self.lifecycle():
+            self._start_backend_unlocked(number)
+
+    def stop_backend(self, number: int) -> None:
+        with self.lifecycle():
+            self._stop_backend_unlocked(number)
+
+    def start_proxy(self, number: int) -> None:
+        with self.lifecycle():
+            self._start_proxy_unlocked(number)
+
+    def stop_proxy(self, number: int) -> None:
+        with self.lifecycle():
+            self._stop_proxy_unlocked(number)
+
+    @contextmanager
+    def paused_backend(self, number: int) -> Iterator[None]:
+        """Keep one backend stopped across an atomic cache/branch transition."""
+        with self.lifecycle():
+            self.assert_healthy(number)
+            self._stop_backend_unlocked(number)
+            try:
+                yield
+            finally:
+                if not self._running("backend", number):
+                    self._start_backend_unlocked(number)
+                self.assert_healthy(number)
 
     def start(self) -> dict[str, Any]:
         started: list[tuple[str, int]] = []
-        try:
-            for number in (1, 2, 3):
-                if not self._running("backend", number):
-                    self.start_backend(number)
-                    started.append(("backend", number))
-                if not self._running("proxy", number):
-                    self.start_proxy(number)
-                    started.append(("proxy", number))
-        except Exception:
-            for kind, number in reversed(started):
-                slot = self.inventory.slot(number)
-                port = int(slot[f"{kind}_port"])
-                try:
-                    self._stop(kind, number, port)
-                except SlotError:
-                    pass
-            raise
+        with self.lifecycle():
+            try:
+                for number in (1, 2, 3):
+                    if not self._running("backend", number):
+                        self._start_backend_unlocked(number)
+                        started.append(("backend", number))
+                    if not self._running("proxy", number):
+                        self._start_proxy_unlocked(number)
+                        started.append(("proxy", number))
+            except Exception:
+                for kind, number in reversed(started):
+                    slot = self.inventory.slot(number)
+                    port = int(slot[f"{kind}_port"])
+                    try:
+                        self._stop(kind, number, port)
+                    except SlotError:
+                        pass
+                raise
         return self.status()
 
     def stop(self) -> dict[str, Any]:
-        for number in (1, 2, 3):
-            self.stop_proxy(number)
-        for number in (1, 2, 3):
-            self.stop_backend(number)
+        with self.lifecycle():
+            for number in (1, 2, 3):
+                self._stop_proxy_unlocked(number)
+            for number in (1, 2, 3):
+                self._stop_backend_unlocked(number)
         return self.status()
 
     def assert_healthy(self, number: int) -> None:
@@ -366,4 +430,8 @@ class Supervisor:
                     and _port_open(host, int(slot["backend_port"])),
                 }
             )
-        return {"schema_version": SCHEMA_VERSION, "slots": slots}
+        return {
+            "schema_version": SCHEMA_VERSION,
+            "global_running_backends": self.global_backend_count(),
+            "slots": slots,
+        }

@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+from types import SimpleNamespace
 from pathlib import Path
 
 import pytest
@@ -11,6 +12,8 @@ import pytest
 from scripts.lean_slots.controller import Controller
 from scripts.lean_slots.proxy import LeaseGate
 from scripts.lean_slots.state import Inventory, SlotError
+from scripts.lean_slots.state import atomic_json, process_start_signature
+from scripts.lean_slots.supervisor import Supervisor
 
 
 def run(cwd: Path, *command: str) -> str:
@@ -189,6 +192,36 @@ def test_ready_requires_clean_committed_work(slot_repo) -> None:
     assert controller.inventory.lease(1)["state"] == "QUARANTINED"
 
 
+def test_absorb_refuses_a_head_changed_after_ready(slot_repo) -> None:
+    controller, _, worktrees = slot_repo
+    controller.build()
+    prepare(controller, 1)
+    commit(worktrees[0], "reviewed.txt", "reviewed\n")
+    controller.ready(1)
+    commit(worktrees[0], "late.txt", "late\n")
+    with pytest.raises(SlotError, match="HEAD changed after ready"):
+        controller.absorb(1)
+    assert controller.inventory.lease(1)["state"] == "QUARANTINED"
+
+
+def test_lake_clone_fallback_removes_partial_copy(
+    slot_repo, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    controller, _, worktrees = slot_repo
+
+    def failed_clone(command, **kwargs):
+        destination = Path(command[-1])
+        destination.mkdir(parents=True)
+        (destination / "partial").write_text("partial\n")
+        return SimpleNamespace(returncode=1)
+
+    monkeypatch.setattr("scripts.lean_slots.controller.subprocess.run", failed_clone)
+    controller._replace_lake(3)
+    destination = worktrees[2] / "lean" / ".lake"
+    assert not (destination / "partial").exists()
+    assert (destination / "build" / "artifact").read_text() == "built\n"
+
+
 def test_two_sibling_workers_absorb_by_rebase_and_fast_forward(slot_repo) -> None:
     controller, repo, worktrees = slot_repo
     base_count = int(run(repo, "git", "rev-list", "--count", "main"))
@@ -293,6 +326,43 @@ def test_generated_config_drift_and_token_rotation_are_fail_closed(slot_repo) ->
     controller.acquire(1, client="codex", base_ref="main")
     with pytest.raises(SlotError, match="while slots are leased"):
         controller.render_config(scope="repo", rotate_token=True)
+
+
+def test_two_scope_render_preflights_before_writing(slot_repo) -> None:
+    controller, _, _ = slot_repo
+    [repo_config] = controller.render_config(scope="repo")
+    stale = repo_config.read_text() + "# stale generated copy\n"
+    repo_config.write_text(stale)
+    workspace_config = controller.inventory.workspace_root / ".codex" / "config.toml"
+    workspace_config.parent.mkdir(exist_ok=True)
+    workspace_config.write_text("# operator-owned\n")
+    with pytest.raises(SlotError, match="refusing to overwrite"):
+        controller.render_config(scope="both", force=True)
+    assert repo_config.read_text() == stale
+    assert workspace_config.read_text() == "# operator-owned\n"
+
+
+def test_global_backend_limit_counts_other_repository_roles(slot_repo) -> None:
+    controller, _, _ = slot_repo
+    process_root = controller.inventory.state_root / "processes"
+    signature = process_start_signature(os.getpid())
+    assert signature
+    for number in (1, 2, 3):
+        atomic_json(
+            process_root / f"other-wt{number}-backend.json",
+            {
+                "schema_version": 1,
+                "repo_role": "other",
+                "slot": number,
+                "kind": "backend",
+                "pid": os.getpid(),
+                "signature": signature,
+            },
+        )
+    supervisor = Supervisor(controller.inventory)
+    assert supervisor.global_backend_count() == 3
+    with pytest.raises(SlotError, match="global heavy-backend limit"):
+        supervisor.start_backend(1)
 
 
 def test_doctor_json_shape_is_stable(slot_repo) -> None:
