@@ -108,6 +108,54 @@ theorem puncInter3_exact :
       (mvHomDiagInt (X := TopCat.of TorusFour) thickA ballsV 3) :=
   mv_exact_interInt (X := TopCat.of TorusFour) thickA ballsV 3 punc_hcov
 
+/-! ## The H₃(T⁴°) 2-saturation reduction — isolating the connecting-map crux.
+
+Mirroring `KummerK3H3Reduction` one level down (`T⁴°` in place of `K3`): `H₃(T⁴°) = H₃(thickA)` is
+2-torsion-free **as soon as** the puncture connecting map `∂₃ = mvDeltaInt thickA ballsV 3` has
+2-saturated image in `H₃(collar) ≅ ℤ¹⁶`. This reduces the still-open `H₃(T⁴°) ≅ ℤ¹⁹` torsion-freeness
+to the single geometric fact that `∂₃[T⁴]` is a *primitive* vector — the fundamental class's local
+degree `±1` at each of the 16 punctures — removing all the LES bookkeeping from the residual. -/
+
+/-- **`H₃(T⁴)` is 2-torsion-free** — it is `≅ ℤ⁴` (`torusFourH3EquivFin4`), a free module. -/
+theorem torusFourH3_twoTorsionFree
+    (a : Homology (TopCat.of TorusFour) 3) (ha : (2 : ℤ) • a = 0) : a = 0 := by
+  refine (SKEFTHawking.KummerHomologyT4Full.torusFourH3EquivFin4).injective ?_
+  rw [map_zero]
+  have h : (2 : ℤ) • SKEFTHawking.KummerHomologyT4Full.torusFourH3EquivFin4 a = 0 := by
+    rw [← map_smul, ha, map_zero]
+  funext i
+  have hi := congrFun h i
+  simpa using hi
+
+/-- **THE H₃(T⁴°) 2-SATURATION REDUCTION (sufficiency).** `H₃(T⁴°) = H₃(thickA)` is 2-torsion-free
+whenever `∂₃ = mvDeltaInt thickA ballsV 3` has 2-saturated image in `H₃(collar)`. Pure diagram chase
+over the two banked exactness rows (`puncMiddle3_exact`, `puncInter3_exact`) + `H₃(T⁴)` free: a
+2-torsion class `x ∈ H₃(thickA)` dies in `H₃(T⁴)` (ℤ⁴ free) ⟹ `(x,0) ∈ ker Σ₃ = im Δ₃`, say
+`Δ₃ w = (x,0)` ⟹ `2•w ∈ ker Δ₃ = im ∂₃` ⟹ (saturation) `w ∈ im ∂₃` ⟹ `Δ₃ w = 0` ⟹ `x = 0`.
+Isolates the connecting-map crux (`∂₃[T⁴]` primitive) as the single remaining input to `ℤ¹⁹`. -/
+theorem thickA_H3_twoTorsionFree_of_delta3_saturated
+    (hsat : ∀ w, (2 : ℤ) • w ∈
+          Set.range (mvDeltaInt (X := TopCat.of TorusFour) thickA ballsV 3 punc_hcov) →
+        w ∈ Set.range (mvDeltaInt (X := TopCat.of TorusFour) thickA ballsV 3 punc_hcov))
+    (x : Homology (sub (X := TopCat.of TorusFour) thickA) 3) (hx : (2 : ℤ) • x = 0) : x = 0 := by
+  -- (1) `x` dies in `H₃(T⁴)` (ℤ⁴ free): `thickIncl₃ x = 0`.
+  have hincl0 : Homology.mapInt (ambIncl (X := TopCat.of TorusFour) thickA) 3 x = 0 :=
+    torusFourH3_twoTorsionFree _ (by rw [← map_smul, hx, map_zero])
+  -- (2) `(x,0) ∈ ker Σ₃ = im Δ₃`.
+  have hsum0 : mvHomSumInt (X := TopCat.of TorusFour) thickA ballsV 3 (x, 0) = 0 := by
+    rw [mvHomSumInt_apply]; simp [hincl0]
+  obtain ⟨w, hw⟩ := (puncMiddle3_exact (x, 0)).mp hsum0
+  -- (3) `2•w ∈ ker Δ₃ = im ∂₃`, so by saturation `w ∈ im ∂₃`, hence `Δ₃ w = 0`.
+  have hdiag2 : mvHomDiagInt (X := TopCat.of TorusFour) thickA ballsV 3 ((2 : ℤ) • w) = 0 := by
+    rw [map_smul, hw, Prod.smul_mk, hx, smul_zero]; rfl
+  have hwmem := hsat w ((puncInter3_exact ((2 : ℤ) • w)).mp hdiag2)
+  have hzero : mvHomDiagInt (X := TopCat.of TorusFour) thickA ballsV 3 w = 0 :=
+    (puncInter3_exact w).mpr hwmem
+  -- (4) `(x,0) = Δ₃ w = 0`, so `x = 0`.
+  have : ((x, 0) : Homology (sub (X := TopCat.of TorusFour) thickA) 3 ×
+      Homology (sub (X := TopCat.of TorusFour) ballsV) 3) = 0 := hw ▸ hzero
+  simpa using congrArg Prod.fst this
+
 end
 
 end SKEFTHawking.KummerPunctureH3
