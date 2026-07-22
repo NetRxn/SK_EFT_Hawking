@@ -294,6 +294,8 @@ class Controller:
                 text=True,
             )
             if clone.returncode:
+                if temporary.exists():
+                    shutil.rmtree(temporary)
                 shutil.copytree(source, temporary, symlinks=True)
             if backup.exists():
                 raise SlotError(f"stale Lake backup requires manual inspection: {backup}")
@@ -327,20 +329,17 @@ class Controller:
             from .supervisor import Supervisor
 
             supervisor = Supervisor(self.inventory)
-            if not os.environ.get("LEAN_SLOT_SKIP_SUPERVISOR"):
-                supervisor.assert_healthy(number)
-                supervisor.stop_backend(number)
             try:
-                _git(worktree, "reset", "--hard", current_base)
-                self._replace_lake(number)
+                if os.environ.get("LEAN_SLOT_SKIP_SUPERVISOR"):
+                    _git(worktree, "reset", "--hard", current_base)
+                    self._replace_lake(number)
+                else:
+                    with supervisor.paused_backend(number):
+                        _git(worktree, "reset", "--hard", current_base)
+                        self._replace_lake(number)
             except Exception as exc:
                 self._quarantine(number, lease, f"prepare failed: {exc}")
-                if not os.environ.get("LEAN_SLOT_SKIP_SUPERVISOR"):
-                    supervisor.start_backend(number)
                 raise
-            if not os.environ.get("LEAN_SLOT_SKIP_SUPERVISOR"):
-                supervisor.start_backend(number)
-                supervisor.assert_healthy(number)
             lease["state"] = "ACTIVE"
             lease["prepared_epoch"] = read_json(self.inventory.epoch_path())["epoch_id"]
             lease["prepared_at"] = now_iso()
@@ -356,7 +355,12 @@ class Controller:
                 self._quarantine(number, lease, f"ready requires a clean commit: {dirty[:8]}")
                 raise SlotError(f"wt{number} quarantined; ready requires a clean committed worktree")
             commits = int(_git(worktree, "rev-list", "--count", f"{lease['base_sha']}..HEAD"))
-            if commits < 1:
+            base_is_ancestor = _run(
+                ["git", "merge-base", "--is-ancestor", str(lease["base_sha"]), "HEAD"],
+                cwd=worktree,
+                check=False,
+            ).returncode == 0
+            if commits < 1 or not base_is_ancestor:
                 raise SlotError(f"wt{number} has no committed changes; use release for a no-change task")
             lease["state"] = "READY_TO_ABSORB"
             lease["ready_head"] = _git(worktree, "rev-parse", "HEAD")
@@ -437,6 +441,10 @@ class Controller:
                 if self._dirty(worktree):
                     self._quarantine(number, lease, "worktree became dirty before integration")
                     raise SlotError(f"wt{number} quarantined; worktree became dirty")
+                current_ready_head = _git(worktree, "rev-parse", "HEAD")
+                if current_ready_head != lease.get("ready_head"):
+                    self._quarantine(number, lease, "slot HEAD changed after ready audit")
+                    raise SlotError(f"wt{number} quarantined; slot HEAD changed after ready")
                 primary_branch = self._branch(self.repo)
                 if primary_branch != lease["base_ref"]:
                     raise SlotError(
@@ -472,12 +480,11 @@ class Controller:
                     from .supervisor import Supervisor
 
                     supervisor = Supervisor(self.inventory)
-                    if not os.environ.get("LEAN_SLOT_SKIP_SUPERVISOR"):
-                        supervisor.stop_backend(number)
-                    self._replace_lake(number)
-                    if not os.environ.get("LEAN_SLOT_SKIP_SUPERVISOR"):
-                        supervisor.start_backend(number)
-                        supervisor.assert_healthy(number)
+                    if os.environ.get("LEAN_SLOT_SKIP_SUPERVISOR"):
+                        self._replace_lake(number)
+                    else:
+                        with supervisor.paused_backend(number):
+                            self._replace_lake(number)
                 except Exception as exc:
                     self._quarantine(number, lease, f"post-integration build/rewarm failed: {exc}")
                     raise
@@ -546,8 +553,6 @@ class Controller:
             active = [n for n in (1, 2, 3) if self.inventory.lease(n, required=False)]
             if active:
                 raise SlotError(f"cannot rotate Codex token while slots are leased: {active}")
-        if rotate_token:
-            self.inventory.token("codex", rotate=True)
         content = self.rendered_config()
         destinations: list[Path] = []
         if scope in {"repo", "both"}:
@@ -563,6 +568,9 @@ class Controller:
                         f"refusing to overwrite drifted/local config {destination}; "
                         "inspect it and pass --force only for a generated file"
                     )
+        if rotate_token:
+            self.inventory.token("codex", rotate=True)
+        for destination in destinations:
             atomic_write(destination, content)
         return destinations
 
@@ -598,6 +606,12 @@ class Controller:
                 )
             except SlotError as exc:
                 record(f"wt{number}.lease", False, str(exc))
+        primary_dirty = self._dirty(self.repo)
+        record(
+            "primary.clean",
+            not primary_dirty,
+            "clean" if not primary_dirty else "; ".join(primary_dirty[:8]),
+        )
         try:
             epoch = self._matching_epoch(_git(self.repo, "rev-parse", "HEAD"))
             record("build_epoch", True, str(epoch.get("epoch_id")))
@@ -613,7 +627,7 @@ class Controller:
         from .supervisor import Supervisor
 
         supervisor = Supervisor(self.inventory).status()
-        running_backends = sum(1 for item in supervisor["slots"] if item["backend_running"])
+        running_backends = int(supervisor["global_running_backends"])
         record(
             "heavy_backend_limit",
             running_backends <= int(self.inventory.raw["max_active_slots"]),
