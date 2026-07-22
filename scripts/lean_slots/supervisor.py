@@ -68,6 +68,24 @@ class Supervisor:
                 count += 1
         return count
 
+    def global_backend_owners(self, number: int) -> list[str]:
+        owners: list[str] = []
+        process_root = self.inventory.state_root / "processes"
+        for path in process_root.glob("*-backend.json") if process_root.exists() else []:
+            try:
+                metadata = read_json(path)
+            except SlotError:
+                continue
+            if (
+                metadata.get("kind") == "backend"
+                and metadata.get("slot") == number
+                and process_matches(
+                    int(metadata.get("pid", 0)), metadata.get("signature")
+                )
+            ):
+                owners.append(str(metadata.get("repo_role", "unknown")))
+        return sorted(owners)
+
     def _wait_port(self, host: str, port: int, *, open_: bool) -> None:
         timeout = float(self.inventory.raw["server"].get("startup_timeout_seconds", 45))
         deadline = time.monotonic() + timeout
@@ -212,12 +230,28 @@ class Supervisor:
                 f"global heavy-backend limit reached ({running}/{limit}); "
                 "stop the numbered counterpart before switching repository roles"
             )
+        owners = self.global_backend_owners(number)
+        if owners:
+            raise SlotError(
+                f"physical wt{number} already has a heavy backend owned by {owners}"
+            )
         # Materialize the private backend credential before exposing the port.
         self.inventory.backend_token(number)
         self._spawn("backend", number, self.backend_command(number), int(slot["backend_port"]))
 
     def _stop_backend_unlocked(self, number: int) -> None:
         self._stop("backend", number, int(self.inventory.slot(number)["backend_port"]))
+
+    def _assert_backend_owned_or_stopped(self, number: int) -> None:
+        if self._running("backend", number):
+            return
+        host = str(self.inventory.raw["server"]["host"])
+        port = int(self.inventory.slot(number)["backend_port"])
+        if _port_open(host, port):
+            raise SlotError(
+                f"backend port for {self.inventory.repo_role} wt{number} is owned by "
+                "an unknown process"
+            )
 
     def _start_proxy_unlocked(self, number: int) -> None:
         slot = self.inventory.slot(number)
@@ -263,17 +297,70 @@ class Supervisor:
                     self._start_backend_unlocked(number)
                 self.assert_healthy(number)
 
+    @contextmanager
+    def activating_from(
+        self, number: int, counterpart: "Supervisor"
+    ) -> Iterator[None]:
+        """Park a paired backend, mutate the target cache, then activate target.
+
+        The shared lifecycle lock makes the handoff atomic with respect to all
+        controller-managed endpoints.  On any failure the previous backend is
+        restored before the exception escapes.
+        """
+        if counterpart.inventory.state_root != self.inventory.state_root:
+            raise SlotError("counterpart supervisors must share one runtime state directory")
+        with self.lifecycle():
+            self._start_proxy_unlocked(number)
+            self._assert_backend_owned_or_stopped(number)
+            counterpart._assert_backend_owned_or_stopped(number)
+            if self._running("backend", number):
+                raise SlotError(
+                    f"target backend for {self.inventory.repo_role} wt{number} is already running"
+                )
+            counterpart_was_running = counterpart._running("backend", number)
+            if counterpart_was_running:
+                counterpart._stop_backend_unlocked(number)
+            try:
+                yield
+                self._start_backend_unlocked(number)
+                self.assert_healthy(number)
+            except Exception:
+                if self._running("backend", number):
+                    self._stop_backend_unlocked(number)
+                if counterpart_was_running and not counterpart._running("backend", number):
+                    counterpart._start_backend_unlocked(number)
+                raise
+
+    def restore_counterpart(self, number: int, counterpart: "Supervisor") -> None:
+        """Return one leased slot to its default paired backend without overlap."""
+        if counterpart.inventory.state_root != self.inventory.state_root:
+            raise SlotError("counterpart supervisors must share one runtime state directory")
+        with self.lifecycle():
+            target_was_running = self._running("backend", number)
+            if target_was_running:
+                self._stop_backend_unlocked(number)
+            try:
+                if not counterpart._running("backend", number):
+                    counterpart._start_backend_unlocked(number)
+            except Exception:
+                if target_was_running and not self._running("backend", number):
+                    self._start_backend_unlocked(number)
+                raise
+
     def start(self) -> dict[str, Any]:
         started: list[tuple[str, int]] = []
         with self.lifecycle():
             try:
                 for number in (1, 2, 3):
-                    if not self._running("backend", number):
-                        self._start_backend_unlocked(number)
-                        started.append(("backend", number))
                     if not self._running("proxy", number):
                         self._start_proxy_unlocked(number)
                         started.append(("proxy", number))
+                    expected_backend = self.inventory.backend_expected(number)
+                    if expected_backend and not self._running("backend", number):
+                        self._start_backend_unlocked(number)
+                        started.append(("backend", number))
+                    elif not expected_backend and self._running("backend", number):
+                        self._stop_backend_unlocked(number)
             except Exception:
                 for kind, number in reversed(started):
                     slot = self.inventory.slot(number)

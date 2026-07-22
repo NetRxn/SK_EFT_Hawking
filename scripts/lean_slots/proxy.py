@@ -4,6 +4,7 @@ from __future__ import annotations
 import hmac
 import http.client
 import json
+import subprocess
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -91,6 +92,43 @@ class LeaseGate:
             raise SlotError(f"wt{self.number} project-root mismatch")
         if lease.get("endpoint") != slot["endpoint_name"]:
             raise SlotError(f"wt{self.number} endpoint-identity mismatch")
+        self._authorize_paired_dependency(lease)
+
+    def _authorize_paired_dependency(self, lease: dict[str, Any]) -> None:
+        paired = self.inventory.paired_inventory()
+        if paired is None:
+            return
+        expected_sha = str(lease.get("public_dependency_sha", ""))
+        if not expected_sha:
+            raise SlotError(f"wt{self.number} downstream lease lacks a public dependency SHA")
+        expected_root = paired.lean_root(self.number).resolve()
+        actual_root = self.inventory.paired_dependency_lean_root(self.number)
+        if actual_root != expected_root:
+            raise SlotError(f"wt{self.number} paired dependency root changed")
+        worktree = paired.worktree(self.number)
+        try:
+            head = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=worktree,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            status = subprocess.run(
+                ["git", "status", "--porcelain=v1"],
+                cwd=worktree,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        except OSError as exc:
+            raise SlotError(
+                f"wt{self.number} could not audit paired dependency: {exc}"
+            ) from exc
+        if head.returncode or head.stdout.strip() != expected_sha:
+            raise SlotError(f"wt{self.number} paired dependency SHA changed")
+        if status.returncode or status.stdout.strip():
+            raise SlotError(f"wt{self.number} paired dependency became dirty")
 
 
 def make_handler(inventory: Inventory, number: int):
