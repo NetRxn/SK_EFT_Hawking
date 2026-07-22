@@ -4,9 +4,11 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shlex
 import shutil
 import subprocess
 import tempfile
+import tomllib
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
@@ -83,6 +85,9 @@ class Controller:
                 "primary downstream dependency path mismatch: "
                 f"{actual_root} != {expected_root.resolve()}"
             )
+        self._assert_lake_dependency_path(
+            self.repo / "lean", "path_from_primary_lean"
+        )
         dependency_sha = _git(
             paired.repo_root, "rev-parse", "--verify", f"{dependency_ref}^{{commit}}"
         )
@@ -99,6 +104,39 @@ class Controller:
                 + ", ".join(dirty[:8])
             )
         return dependency_sha
+
+    def _assert_lake_dependency_path(self, lean_root: Path, path_key: str) -> None:
+        configured = self.inventory.raw.get("paired_dependency")
+        if configured is None:
+            return
+        dependency_name = str(configured.get("lake_dependency_name", ""))
+        if not dependency_name:
+            raise SlotError("paired_dependency.lake_dependency_name is required")
+        lakefile = lean_root / "lakefile.toml"
+        try:
+            parsed = tomllib.loads(lakefile.read_text(encoding="utf-8"))
+        except (OSError, tomllib.TOMLDecodeError) as exc:
+            raise SlotError(
+                f"could not inspect paired Lake dependency in {lakefile}: {exc}"
+            ) from exc
+        requirements = parsed.get("require", [])
+        if not isinstance(requirements, list):
+            raise SlotError(f"invalid Lake requirements in {lakefile}")
+        matches = [
+            item
+            for item in requirements
+            if isinstance(item, dict) and str(item.get("name", "")) == dependency_name
+        ]
+        if len(matches) != 1 or "path" not in matches[0]:
+            raise SlotError(
+                f"expected exactly one path dependency {dependency_name!r} in {lakefile}"
+            )
+        declared = Path(os.path.normpath(str(matches[0]["path"])))
+        expected = Path(os.path.normpath(str(configured.get(path_key, ""))))
+        if not str(expected) or declared != expected:
+            raise SlotError(
+                f"Lake dependency path mismatch in {lakefile}: {declared} != {expected}"
+            )
 
     def _assert_paired_dependency(
         self,
@@ -119,6 +157,9 @@ class Controller:
                 f"paired dependency path mismatch for wt{number}: "
                 f"{actual_root} != {expected_root}"
             )
+        self._assert_lake_dependency_path(
+            self.inventory.lean_root(number), "path_from_slot_lean"
+        )
         dirty = paired_controller._dirty(worktree)
         if dirty:
             raise SlotError(
@@ -536,6 +577,13 @@ class Controller:
         with self._slot_lock(number):
             lease = self.inventory.lease(number)
             assert lease is not None
+            if lease.get("repo_role") != self.inventory.repo_role:
+                raise SlotError(
+                    f"repository-role mismatch for stale reclaim of wt{number}: "
+                    f"{lease.get('repo_role')} != {self.inventory.repo_role}"
+                )
+            if lease.get("worktree") != str(self.inventory.worktree(number)):
+                raise SlotError(f"worktree mismatch for stale reclaim of wt{number}")
             heartbeat = datetime.strptime(
                 str(lease["heartbeat_at"]), "%Y-%m-%dT%H:%M:%SZ"
             ).replace(tzinfo=timezone.utc)
@@ -751,7 +799,10 @@ class Controller:
                 raise SlotError(f"cannot rotate {client} token while slots are leased: {active}")
         token = self.inventory.token(client, rotate=rotate_token)
         variable = f"LEAN_SLOT_{client.upper().replace('-', '_')}_TOKEN"
-        return f"export {variable}={token}"
+        return (
+            f"export {variable}={shlex.quote(token)}\n"
+            f"export LEAN_SLOT_STATE_DIR={shlex.quote(str(self.inventory.state_root))}"
+        )
 
     def doctor(self) -> dict[str, Any]:
         checks: list[dict[str, Any]] = []

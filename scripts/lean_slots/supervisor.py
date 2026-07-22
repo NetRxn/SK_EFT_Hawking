@@ -242,6 +242,17 @@ class Supervisor:
     def _stop_backend_unlocked(self, number: int) -> None:
         self._stop("backend", number, int(self.inventory.slot(number)["backend_port"]))
 
+    def _assert_backend_owned_or_stopped(self, number: int) -> None:
+        if self._running("backend", number):
+            return
+        host = str(self.inventory.raw["server"]["host"])
+        port = int(self.inventory.slot(number)["backend_port"])
+        if _port_open(host, port):
+            raise SlotError(
+                f"backend port for {self.inventory.repo_role} wt{number} is owned by "
+                "an unknown process"
+            )
+
     def _start_proxy_unlocked(self, number: int) -> None:
         slot = self.inventory.slot(number)
         self._spawn("proxy", number, self.proxy_command(number), int(slot["proxy_port"]))
@@ -300,6 +311,8 @@ class Supervisor:
             raise SlotError("counterpart supervisors must share one runtime state directory")
         with self.lifecycle():
             self._start_proxy_unlocked(number)
+            self._assert_backend_owned_or_stopped(number)
+            counterpart._assert_backend_owned_or_stopped(number)
             if self._running("backend", number):
                 raise SlotError(
                     f"target backend for {self.inventory.repo_role} wt{number} is already running"

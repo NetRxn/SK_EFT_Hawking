@@ -124,7 +124,12 @@ def downstream_repo(slot_repo, tmp_path: Path) -> tuple[Controller, Controller, 
     run(repo, "git", "config", "user.email", "slot@example.invalid")
     (repo / "lean").mkdir()
     (repo / "lean" / "lean-toolchain").write_text("leanprover/lean4:v4.test\n")
-    (repo / "lean" / "lakefile.toml").write_text("name = 'Downstream'\n")
+    (repo / "lean" / "lakefile.toml").write_text(
+        "name = 'Downstream'\n"
+        "[[require]]\n"
+        "name = 'Primary'\n"
+        "path = '../../primary/lean'\n"
+    )
     (repo / "lean" / "lake-manifest.json").write_text("{}\n")
     (repo / ".gitignore").write_text("lean/.lake/\n")
     run(repo, "git", "add", ".")
@@ -161,6 +166,7 @@ def downstream_repo(slot_repo, tmp_path: Path) -> tuple[Controller, Controller, 
         "paired_dependency": {
             "inventory": "../../primary/config/lean-slots.public.json",
             "base_ref": "main",
+            "lake_dependency_name": "Primary",
             "path_from_primary_lean": "../../primary/lean",
             "path_from_slot_lean": "../../primary/lean",
         },
@@ -526,6 +532,34 @@ def test_active_downstream_gate_rechecks_dependency_pin(downstream_repo) -> None
         gate.authorize(client, supplied_hash, call)
 
 
+def test_downstream_lakefile_path_must_match_pair_inventory(downstream_repo) -> None:
+    controller, _, repo, _ = downstream_repo
+    lakefile = repo / "lean" / "lakefile.toml"
+    lakefile.write_text(lakefile.read_text().replace("../../primary/lean", "../wrong/lean"))
+    run(repo, "git", "add", "lean/lakefile.toml")
+    run(repo, "git", "commit", "-m", "misdirect dependency")
+    with pytest.raises(SlotError, match="Lake dependency path mismatch"):
+        controller.acquire(2, client="codex", base_ref="main")
+
+
+def test_foreign_repository_cannot_reclaim_stale_lease(
+    downstream_repo, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    controller, public_controller, _, _ = downstream_repo
+    monkeypatch.setenv("LEAN_SLOT_OWNER_PID", "999999")
+    controller.acquire(2, client="codex", base_ref="main")
+    with pytest.raises(SlotError, match="repository-role mismatch"):
+        public_controller.reclaim(2)
+    assert controller.inventory.lease(2)["repo_role"] == "downstream"
+
+
+def test_session_environment_exports_shared_state_root(slot_repo) -> None:
+    controller, _, _ = slot_repo
+    environment = controller.session_environment(client="codex")
+    assert "export LEAN_SLOT_CODEX_TOKEN=" in environment
+    assert f"export LEAN_SLOT_STATE_DIR={controller.inventory.state_root}" in environment
+
+
 def test_backend_pair_handoff_is_ordered_and_rolls_back(
     downstream_repo, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -538,6 +572,8 @@ def test_backend_pair_handoff_is_ordered_and_rolls_back(
     monkeypatch.setattr(target, "_running", lambda kind, number: running["target"] if kind == "backend" else True)
     monkeypatch.setattr(counterpart, "_running", lambda kind, number: running["counterpart"] if kind == "backend" else True)
     monkeypatch.setattr(target, "_start_proxy_unlocked", lambda number: events.append("proxy"))
+    monkeypatch.setattr(target, "_assert_backend_owned_or_stopped", lambda number: None)
+    monkeypatch.setattr(counterpart, "_assert_backend_owned_or_stopped", lambda number: None)
     monkeypatch.setattr(target, "assert_healthy", lambda number: events.append("healthy"))
 
     def start_target(number: int) -> None:
