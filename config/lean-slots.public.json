@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "repo_role": "public",
+  "repo_root": "..",
+  "max_active_slots": 3,
+  "lease_timeout_seconds": 900,
+  "slots": {
+    "1": {
+      "worktree": ".claude/worktrees/wt1",
+      "branch": "worktree-wt1",
+      "endpoint_name": "skeft_wt1",
+      "proxy_port": 8761,
+      "backend_port": 18761
+    },
+    "2": {
+      "worktree": ".claude/worktrees/wt2",
+      "branch": "worktree-wt2",
+      "endpoint_name": "skeft_wt2",
+      "proxy_port": 8762,
+      "backend_port": 18762
+    },
+    "3": {
+      "worktree": ".claude/worktrees/wt3",
+      "branch": "worktree-wt3",
+      "endpoint_name": "skeft_wt3",
+      "proxy_port": 8763,
+      "backend_port": 18763
+    }
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "command": [
+      "uvx",
+      "--from",
+      "git+https://github.com/NetRxn/lean-lsp-mcp@135997851a6b219c944cb1a9b46970658f874382",
+      "lean-lsp-mcp"
+    ],
+    "disabled_tools": [
+      "lean_build"
+    ],
+    "instructions": "Use Lean LSP proof-state, diagnostics, search, hover, completion, and verification tools. This worker endpoint cannot build, clean, repair, integrate, or mutate the project cache; report environment failures to the orchestrator.",
+    "startup_timeout_seconds": 45
+  },
+  "build": {
+    "cwd": "lean",
+    "command": [
+      "lake",
+      "build",
+      "SKEFTHawking.ExtractDeps"
+    ],
+    "fingerprint_files": [
+      "lean/lean-toolchain",
+      "lean/lakefile.toml",
+      "lean/lake-manifest.json"
+    ]
+  }
+}
