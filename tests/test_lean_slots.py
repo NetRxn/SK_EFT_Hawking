@@ -620,7 +620,24 @@ def test_doctor_json_shape_is_stable(slot_repo) -> None:
     assert {item["name"] for item in first["checks"]} >= {
         "wt1.identity",
         "wt1.clean",
+        "wt1.integrated",
         "build_epoch",
         "config.repo",
         "heavy_backend_limit",
     }
+
+
+def test_doctor_fails_closed_for_quarantine_and_unabsorbed_commits(slot_repo) -> None:
+    controller, _, worktrees = slot_repo
+    protected = worktrees[0] / "protected.lean"
+    protected.write_text("keep\n")
+    with pytest.raises(SlotError, match="quarantined"):
+        controller.acquire(1, client="codex", base_ref="main")
+    first = {item["name"]: item for item in controller.doctor()["checks"]}
+    assert not first["wt1.lease"]["ok"]
+    assert "QUARANTINED" in first["wt1.lease"]["detail"]
+
+    commit(worktrees[1], "unabsorbed.txt", "keep\n")
+    second = {item["name"]: item for item in controller.doctor()["checks"]}
+    assert not second["wt2.integrated"]["ok"]
+    assert "1 unabsorbed commit" in second["wt2.integrated"]["detail"]

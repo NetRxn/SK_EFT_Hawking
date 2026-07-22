@@ -816,13 +816,28 @@ class Controller:
                 dirty = self._dirty(worktree)
                 record(f"wt{number}.identity", True, str(worktree))
                 record(f"wt{number}.clean", not dirty, "clean" if not dirty else "; ".join(dirty[:8]))
+                primary_head = _git(self.repo, "rev-parse", "HEAD")
+                ahead = int(_git(worktree, "rev-list", "--count", f"{primary_head}..HEAD"))
+                contained = _run(
+                    ["git", "merge-base", "--is-ancestor", "HEAD", primary_head],
+                    cwd=worktree,
+                    check=False,
+                ).returncode == 0
+                record(
+                    f"wt{number}.integrated",
+                    ahead == 0 and contained,
+                    "contained in primary HEAD"
+                    if ahead == 0 and contained
+                    else f"{ahead} unabsorbed commit(s) or divergent ancestry",
+                )
             except SlotError as exc:
                 record(f"wt{number}.identity", False, str(exc))
             try:
                 lease = self.inventory.lease(number, required=False)
+                lease_ok = lease is None or lease.get("state") != "QUARANTINED"
                 record(
                     f"wt{number}.lease",
-                    True,
+                    lease_ok,
                     "FREE"
                     if lease is None
                     else f"{lease.get('repo_role')}:{lease.get('state')}",
