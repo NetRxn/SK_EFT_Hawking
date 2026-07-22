@@ -37,7 +37,8 @@ open SKEFTHawking.KummerK3Base (TorusFour)
 open SKEFTHawking.KummerWeld (EIndex)
 open SKEFTHawking.KummerPunctureBalls (ballsV thickA punc_hcov)
 open SKEFTHawking.KummerPuncturedMV (interH2_eq_zero ballsV_homology_eq_zero)
-open SKEFTHawking.SingularMayerVietorisLESInt (mvHomSumInt mv_exact_ambientInt mvHomSumInt_apply)
+open SKEFTHawking.SingularMayerVietorisLESInt (mvHomSumInt mv_exact_ambientInt mvHomSumInt_apply
+  mvHomDiagInt mvDeltaInt mv_exact_interInt mv_exact_middleInt)
 open SKEFTHawking.SingularMayerVietorisLES (ambIncl)
 
 noncomputable section
@@ -84,6 +85,28 @@ theorem thickIncl3_surjective :
   obtain ⟨⟨u, v⟩, h⟩ := puncSum3_surjective x
   rw [mvHomSumInt_apply, ballsV_homology_eq_zero 2 v, map_zero, sub_zero] at h
   exact ⟨u, h⟩
+
+/-! ## The degree-3 exact sequence, named — the scaffolding the `H₃(T⁴°) ≅ ℤ¹⁹` solve consumes.
+
+`H₄(T⁴)=ℤ --∂₃--> H₃(collar)=ℤ¹⁶ --Δ₃--> H₃(thickA)⊕H₃(ballsV) --Σ₃--> H₃(T⁴)=ℤ⁴ --> 0`.
+`Σ₃` surjective (`puncSum3_surjective`) + `ker Σ₃ = im Δ₃` (`puncMiddle3_exact`) give the SES
+`0 → im Δ₃ → H₃(T⁴°) → ℤ⁴ → 0` (splits, ℤ⁴ free); `ker Δ₃ = im ∂₃` (`puncInter3_exact`) reduces
+`im Δ₃ = ℤ¹⁶/ker Δ₃ = ℤ¹⁶/im ∂₃`. The single remaining GEOMETRIC input is `im ∂₃ =` the diagonal
+`ℤ ⊆ ℤ¹⁶` — the MV connecting map on `[T⁴]` (the fundamental class bounds the 16-annulus complement).
+That is a bespoke connecting-map computation (cf. the K7 `delta1_image_parity` arc), NOT a compose. -/
+
+/-- **`ker Σ₃ = im Δ₃`** at the middle — the SES-defining exactness. -/
+theorem puncMiddle3_exact :
+    Function.Exact (mvHomDiagInt (X := TopCat.of TorusFour) thickA ballsV 3)
+      (mvHomSumInt (X := TopCat.of TorusFour) thickA ballsV 3) :=
+  mv_exact_middleInt (X := TopCat.of TorusFour) thickA ballsV 2 punc_hcov
+
+/-- **`ker Δ₃ = im ∂₃`** at the collar — reduces `im Δ₃` to `ℤ¹⁶ / im ∂₃`, isolating the connecting
+map `∂₃ : H₄(T⁴) → H₃(collar)` as the single remaining geometric input. -/
+theorem puncInter3_exact :
+    Function.Exact (mvDeltaInt (X := TopCat.of TorusFour) thickA ballsV 3 punc_hcov)
+      (mvHomDiagInt (X := TopCat.of TorusFour) thickA ballsV 3) :=
+  mv_exact_interInt (X := TopCat.of TorusFour) thickA ballsV 3 punc_hcov
 
 end
 
