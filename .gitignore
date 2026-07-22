@@ -92,6 +92,13 @@ papers/**/*.pdf
 # dev-harness runtime state (markers, watermarks, caches, locks)
 /.claude/dev-harness/
 
+# ADR-008 Codex Lean-slot configuration is rendered locally because it contains
+# checkout-specific absolute paths. The bearer token, leases, process metadata,
+# epochs, and logs live outside Git in the workspace-level `.lean-slots/` state
+# directory.
+/.codex/config.toml
+/.codex/lean-slots-state/
+
 # parallel-agent worktree slots (wt1/wt2/wt3) — created by `claude --worktree wtN`
 # / EnterWorktree; served by lean-lsp-wt1/2/3 in the workspace .mcp.json.
 # Keep them out of the main checkout's status so a worktree's files never
