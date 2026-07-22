@@ -202,6 +202,65 @@ class Inventory:
             atomic_write(path, secrets.token_urlsafe(48) + "\n")
         return path.read_text(encoding="utf-8").strip()
 
+    def paired_inventory(self) -> "Inventory | None":
+        """Return the optional downstream dependency inventory.
+
+        The public control plane deliberately knows only this product-neutral
+        schema.  Repository names and paths live in the downstream inventory.
+        """
+        paired = self.raw.get("paired_dependency")
+        if paired is None:
+            return None
+        if not isinstance(paired, dict) or not paired.get("inventory"):
+            raise SlotError("paired_dependency.inventory must name an inventory JSON file")
+        source = Path(str(paired["inventory"]))
+        if source.is_absolute():
+            raise SlotError("paired dependency inventory paths must be relative")
+        inventory = Inventory.load(self.source.parent / source)
+        if inventory.state_root != self.state_root:
+            raise SlotError("paired inventories must share one runtime state directory")
+        if inventory.repo_role == self.repo_role:
+            raise SlotError("paired inventories must use distinct repository roles")
+        return inventory
+
+    def paired_dependency_lean_root(self, number: int) -> Path | None:
+        paired = self.raw.get("paired_dependency")
+        if paired is None:
+            return None
+        relative = Path(str(paired.get("path_from_slot_lean", "")))
+        if not str(relative) or relative.is_absolute():
+            raise SlotError("paired_dependency.path_from_slot_lean must be relative")
+        return (self.lean_root(number) / relative).resolve()
+
+    def primary_dependency_lean_root(self) -> Path | None:
+        paired = self.raw.get("paired_dependency")
+        if paired is None:
+            return None
+        relative = Path(str(paired.get("path_from_primary_lean", "")))
+        if not str(relative) or relative.is_absolute():
+            raise SlotError("paired_dependency.path_from_primary_lean must be relative")
+        return (self.repo_root / "lean" / relative).resolve()
+
+    def backend_expected(self, number: int) -> bool:
+        """Whether this inventory should own the heavy backend right now."""
+        policy = str(self.raw.get("server", {}).get("backend_policy", "default"))
+        if policy not in {"default", "leased"}:
+            raise SlotError(f"unsupported backend policy: {policy!r}")
+        lease = self.lease(number, required=False)
+        if lease is not None:
+            if lease.get("repo_role") != self.repo_role:
+                return False
+            if lease.get("state") in {
+                "ACTIVE",
+                "READY_TO_ABSORB",
+                "INTEGRATING",
+                "REBUILDING",
+                "REWARMING",
+            }:
+                return True
+            return policy == "default"
+        return policy == "default"
+
     def lease(self, number: int, *, required: bool = True) -> dict[str, Any] | None:
         path = self.lease_path(number)
         if not path.exists():

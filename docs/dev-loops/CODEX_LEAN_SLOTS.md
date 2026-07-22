@@ -18,6 +18,9 @@ python3 scripts/slotctl.py doctor
 Run the `session env` command in the shell that will launch Codex. It stores the
 credential outside Git and exports it as `LEAN_SLOT_CODEX_TOKEN`; generated
 configuration refers to that environment variable and never embeds the token.
+`--rotate-token` is for a coordinated first activation or restart: omit it when
+joining an already-running installation, because rotation intentionally expires
+the bearer value held by existing Codex processes.
 `config render` creates gitignored Codex configuration in this repository and
 the workspace root. It refuses to overwrite a locally modified generated file
 unless `--force` is explicit.
