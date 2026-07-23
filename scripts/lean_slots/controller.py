@@ -1,8 +1,8 @@
 """Fail-closed lease, build-epoch, and integration controller for ADR-008."""
+
 from __future__ import annotations
 
 import hashlib
-import json
 import os
 import shlex
 import shutil
@@ -85,9 +85,7 @@ class Controller:
                 "primary downstream dependency path mismatch: "
                 f"{actual_root} != {expected_root.resolve()}"
             )
-        self._assert_lake_dependency_path(
-            self.repo / "lean", "path_from_primary_lean"
-        )
+        self._assert_lake_dependency_path(self.repo / "lean", "path_from_primary_lean")
         dependency_sha = _git(
             paired.repo_root, "rev-parse", "--verify", f"{dependency_ref}^{{commit}}"
         )
@@ -166,7 +164,9 @@ class Controller:
                 f"paired dependency wt{number} is dirty: {', '.join(dirty[:8])}"
             )
         current_primary_sha = (
-            self._dependency_primary_sha() if require_primary_match or expected_sha is None else None
+            self._dependency_primary_sha()
+            if require_primary_match or expected_sha is None
+            else None
         )
         dependency_sha = expected_sha or current_primary_sha
         assert dependency_sha is not None
@@ -189,7 +189,9 @@ class Controller:
         return branch
 
     def _dirty(self, path: Path) -> list[str]:
-        return [line for line in _git(path, "status", "--porcelain=v1").splitlines() if line]
+        return [
+            line for line in _git(path, "status", "--porcelain=v1").splitlines() if line
+        ]
 
     def _assert_worktree_identity(self, number: int) -> tuple[Path, dict[str, Any]]:
         slot = self.inventory.slot(number)
@@ -198,7 +200,9 @@ class Controller:
             raise SlotError(f"configured worktree is missing: {worktree}")
         top = Path(_git(worktree, "rev-parse", "--show-toplevel")).resolve()
         if top != worktree:
-            raise SlotError(f"worktree root mismatch for wt{number}: {top} != {worktree}")
+            raise SlotError(
+                f"worktree root mismatch for wt{number}: {top} != {worktree}"
+            )
         if self._branch(worktree) != slot["branch"]:
             raise SlotError(
                 f"branch mismatch for wt{number}: expected {slot['branch']!r}, "
@@ -241,11 +245,17 @@ class Controller:
         if self.inventory.paired_inventory() is not None and not lease.get(
             "public_dependency_sha"
         ):
-            raise SlotError(f"downstream lease for wt{number} lacks a public dependency SHA")
-        client = str(lease.get("client", ""))
-        current_hash = token_hash(self.inventory.token(client, create=False))
-        if lease.get("token_hash") != current_hash:
-            raise SlotError(f"session token mismatch for wt{number}")
+            raise SlotError(
+                f"downstream lease for wt{number} lacks a public dependency SHA"
+            )
+        auth_mode = self.inventory.client_auth_mode
+        if lease.get("client_auth") != auth_mode:
+            raise SlotError(f"client-auth mode mismatch for wt{number}")
+        if auth_mode == "bearer":
+            client = str(lease.get("client", ""))
+            current_hash = token_hash(self.inventory.token(client, create=False))
+            if lease.get("token_hash") != current_hash:
+                raise SlotError(f"session token mismatch for wt{number}")
         current_owner = self._owner()
         if lease.get("owner_kind") != current_owner.get("owner_kind"):
             raise SlotError(f"owner identity kind mismatch for wt{number}")
@@ -296,7 +306,7 @@ class Controller:
                 "slot": number,
                 "repo_role": self.inventory.repo_role,
                 "client": client,
-                "token_hash": token_hash(self.inventory.token(client)),
+                "client_auth": self.inventory.client_auth_mode,
                 "base_ref": base_ref,
                 "base_sha": base_sha,
                 "worktree": str(worktree),
@@ -307,6 +317,8 @@ class Controller:
                 "heartbeat_at": now_iso(),
                 **self._owner(),
             }
+            if self.inventory.client_auth_mode == "bearer":
+                lease["token_hash"] = token_hash(self.inventory.token(client))
             if public_dependency_sha is not None:
                 lease["public_dependency_sha"] = public_dependency_sha
             dirty = self._dirty(worktree)
@@ -315,11 +327,14 @@ class Controller:
                 self._quarantine(number, lease, reason, create=True)
                 raise SlotError(f"wt{number} quarantined; {reason}")
             ahead = int(_git(worktree, "rev-list", "--count", f"{base_sha}..HEAD"))
-            ancestor = _run(
-                ["git", "merge-base", "--is-ancestor", "HEAD", base_sha],
-                cwd=worktree,
-                check=False,
-            ).returncode == 0
+            ancestor = (
+                _run(
+                    ["git", "merge-base", "--is-ancestor", "HEAD", base_sha],
+                    cwd=worktree,
+                    check=False,
+                ).returncode
+                == 0
+            )
             if ahead or not ancestor:
                 reason = (
                     f"worktree has {ahead} unabsorbed commit(s) or divergent ancestry "
@@ -387,7 +402,9 @@ class Controller:
     def build(self) -> dict[str, Any]:
         top = Path(_git(self.repo, "rev-parse", "--show-toplevel")).resolve()
         if top != self.repo:
-            raise SlotError("authoritative build must run from the configured primary checkout")
+            raise SlotError(
+                "authoritative build must run from the configured primary checkout"
+            )
         dirty = self._dirty(self.repo)
         if dirty:
             raise SlotError(
@@ -437,7 +454,9 @@ class Controller:
                     shutil.rmtree(temporary)
                 shutil.copytree(source, temporary, symlinks=True)
             if backup.exists():
-                raise SlotError(f"stale Lake backup requires manual inspection: {backup}")
+                raise SlotError(
+                    f"stale Lake backup requires manual inspection: {backup}"
+                )
             if destination.exists():
                 os.replace(destination, backup)
             os.replace(temporary, destination)
@@ -457,11 +476,15 @@ class Controller:
             worktree, _ = self._assert_worktree_identity(number)
             if self._dirty(worktree):
                 self._quarantine(number, lease, "worktree became dirty before prepare")
-                raise SlotError(f"wt{number} quarantined; worktree became dirty before prepare")
+                raise SlotError(
+                    f"wt{number} quarantined; worktree became dirty before prepare"
+                )
             current_base = self._primary_sha(str(lease["base_ref"]))
             if current_base != lease["base_sha"]:
                 self._quarantine(number, lease, "base ref advanced after acquisition")
-                raise SlotError(f"wt{number} quarantined; base ref advanced after acquisition")
+                raise SlotError(
+                    f"wt{number} quarantined; base ref advanced after acquisition"
+                )
             public_dependency_sha = lease.get("public_dependency_sha")
             self._assert_paired_dependency(number, public_dependency_sha)
             self._matching_epoch(
@@ -508,16 +531,33 @@ class Controller:
                 raise
             dirty = self._dirty(worktree)
             if dirty:
-                self._quarantine(number, lease, f"ready requires a clean commit: {dirty[:8]}")
-                raise SlotError(f"wt{number} quarantined; ready requires a clean committed worktree")
-            commits = int(_git(worktree, "rev-list", "--count", f"{lease['base_sha']}..HEAD"))
-            base_is_ancestor = _run(
-                ["git", "merge-base", "--is-ancestor", str(lease["base_sha"]), "HEAD"],
-                cwd=worktree,
-                check=False,
-            ).returncode == 0
+                self._quarantine(
+                    number, lease, f"ready requires a clean commit: {dirty[:8]}"
+                )
+                raise SlotError(
+                    f"wt{number} quarantined; ready requires a clean committed worktree"
+                )
+            commits = int(
+                _git(worktree, "rev-list", "--count", f"{lease['base_sha']}..HEAD")
+            )
+            base_is_ancestor = (
+                _run(
+                    [
+                        "git",
+                        "merge-base",
+                        "--is-ancestor",
+                        str(lease["base_sha"]),
+                        "HEAD",
+                    ],
+                    cwd=worktree,
+                    check=False,
+                ).returncode
+                == 0
+            )
             if commits < 1 or not base_is_ancestor:
-                raise SlotError(f"wt{number} has no committed changes; use release for a no-change task")
+                raise SlotError(
+                    f"wt{number} has no committed changes; use release for a no-change task"
+                )
             lease["state"] = "READY_TO_ABSORB"
             lease["ready_head"] = _git(worktree, "rev-parse", "HEAD")
             self.inventory.save_lease(number, lease)
@@ -594,7 +634,9 @@ class Controller:
                     f"wt{number} heartbeat is only {int(age)}s old; stale threshold is {timeout}s"
                 )
             if lease.get("owner_kind") == "process":
-                if process_matches(int(lease.get("owner_pid", 0)), lease.get("owner_signature")):
+                if process_matches(
+                    int(lease.get("owner_pid", 0)), lease.get("owner_signature")
+                ):
                     raise SlotError(f"wt{number} owner process is still alive")
             elif lease.get("owner_kind") == "session" and not confirm_owner_gone:
                 raise SlotError(
@@ -615,11 +657,14 @@ class Controller:
                 self._quarantine(number, lease, str(exc))
                 raise
             base_sha = self._primary_sha(str(lease["base_ref"]))
-            absorbed = _run(
-                ["git", "merge-base", "--is-ancestor", "HEAD", base_sha],
-                cwd=worktree,
-                check=False,
-            ).returncode == 0
+            absorbed = (
+                _run(
+                    ["git", "merge-base", "--is-ancestor", "HEAD", base_sha],
+                    cwd=worktree,
+                    check=False,
+                ).returncode
+                == 0
+            )
             if dirty or not absorbed:
                 reason = "stale owner, but dirty files or unabsorbed commits require recovery"
                 self._quarantine(number, lease, reason)
@@ -638,7 +683,9 @@ class Controller:
                 lease = self._lease_for_command(number, states={"READY_TO_ABSORB"})
                 worktree, _ = self._assert_worktree_identity(number)
                 if self._dirty(worktree):
-                    self._quarantine(number, lease, "worktree became dirty before integration")
+                    self._quarantine(
+                        number, lease, "worktree became dirty before integration"
+                    )
                     raise SlotError(f"wt{number} quarantined; worktree became dirty")
                 try:
                     self._assert_paired_dependency(
@@ -649,8 +696,12 @@ class Controller:
                     raise
                 current_ready_head = _git(worktree, "rev-parse", "HEAD")
                 if current_ready_head != lease.get("ready_head"):
-                    self._quarantine(number, lease, "slot HEAD changed after ready audit")
-                    raise SlotError(f"wt{number} quarantined; slot HEAD changed after ready")
+                    self._quarantine(
+                        number, lease, "slot HEAD changed after ready audit"
+                    )
+                    raise SlotError(
+                        f"wt{number} quarantined; slot HEAD changed after ready"
+                    )
                 primary_branch = self._branch(self.repo)
                 if primary_branch != lease["base_ref"]:
                     raise SlotError(
@@ -660,21 +711,30 @@ class Controller:
                 lease["state"] = "INTEGRATING"
                 self.inventory.save_lease(number, lease)
                 current_base = self._primary_sha(str(lease["base_ref"]))
-                if not _run(
-                    ["git", "merge-base", "--is-ancestor", current_base, "HEAD"],
-                    cwd=worktree,
-                    check=False,
-                ).returncode == 0:
-                    result = _run(["git", "rebase", current_base], cwd=worktree, check=False)
+                if (
+                    not _run(
+                        ["git", "merge-base", "--is-ancestor", current_base, "HEAD"],
+                        cwd=worktree,
+                        check=False,
+                    ).returncode
+                    == 0
+                ):
+                    result = _run(
+                        ["git", "rebase", current_base], cwd=worktree, check=False
+                    )
                     if result.returncode:
                         _run(["git", "rebase", "--abort"], cwd=worktree, check=False)
-                        self._quarantine(number, lease, "rebase conflict during absorption")
+                        self._quarantine(
+                            number, lease, "rebase conflict during absorption"
+                        )
                         raise SlotError(f"wt{number} quarantined; rebase conflict")
                 slot_head = _git(worktree, "rev-parse", "HEAD")
                 try:
                     _git(self.repo, "merge", "--ff-only", slot_head)
                 except SlotError as exc:
-                    self._quarantine(number, lease, f"fast-forward integration failed: {exc}")
+                    self._quarantine(
+                        number, lease, f"fast-forward integration failed: {exc}"
+                    )
                     raise
                 lease["state"] = "REBUILDING"
                 lease["integrated_head"] = slot_head
@@ -692,12 +752,16 @@ class Controller:
                         with supervisor.paused_backend(number):
                             self._replace_lake(number)
                 except Exception as exc:
-                    self._quarantine(number, lease, f"post-integration build/rewarm failed: {exc}")
+                    self._quarantine(
+                        number, lease, f"post-integration build/rewarm failed: {exc}"
+                    )
                     raise
                 try:
                     self._restore_paired_backend(number)
                 except Exception as exc:
-                    self._quarantine(number, lease, f"counterpart restore failed: {exc}")
+                    self._quarantine(
+                        number, lease, f"counterpart restore failed: {exc}"
+                    )
                     raise
                 self.inventory.lease_path(number).unlink()
                 return {"integrated_head": slot_head, "epoch": epoch}
@@ -745,11 +809,39 @@ class Controller:
         return digest.hexdigest()
 
     def rendered_config(self) -> str:
-        template = (self.repo / ".codex" / "config.template.toml").read_text(encoding="utf-8")
+        template = (self.repo / ".codex" / "config.template.toml").read_text(
+            encoding="utf-8"
+        )
+        bearer_line = (
+            'bearer_token_env_var = "LEAN_SLOT_CODEX_TOKEN"'
+            if self.inventory.client_auth_mode == "bearer"
+            else ""
+        )
+        agent_dir = self.repo / ".codex" / "agents"
+        if self.inventory.client_auth_mode == "bearer":
+            agent_dir = self.repo / ".codex" / "generated" / "agents"
         return (
             template.replace("{{SOURCE_DIGEST}}", self.source_digest())
             .replace("{{REPO_ROOT}}", str(self.repo))
+            .replace("{{AGENT_CONFIG_DIR}}", str(agent_dir))
+            .replace("{{MCP_CLIENT_AUTH}}", bearer_line)
         )
+
+    def rendered_bearer_agent_configs(self) -> dict[Path, str]:
+        """Render secure-mode agent profiles without dirtying versioned bases."""
+
+        if self.inventory.client_auth_mode != "bearer":
+            return {}
+        rendered: dict[Path, str] = {}
+        destination_root = self.repo / ".codex" / "generated" / "agents"
+        for source in sorted((self.repo / ".codex" / "agents").glob("*.toml")):
+            lines: list[str] = ["# GENERATED by scripts/slotctl.py config render."]
+            for line in source.read_text(encoding="utf-8").splitlines():
+                lines.append(line)
+                if line.startswith("url = "):
+                    lines.append('bearer_token_env_var = "LEAN_SLOT_CODEX_TOKEN"')
+            rendered[destination_root / source.name] = "\n".join(lines) + "\n"
+        return rendered
 
     def render_config(
         self,
@@ -767,42 +859,66 @@ class Controller:
                 "this repository overlay does not manage workspace Codex configuration; "
                 "render the repo scope and launch Codex from that repository"
             )
+        if rotate_token and self.inventory.client_auth_mode != "bearer":
+            raise SlotError(
+                "token rotation is available only in bearer client-auth mode"
+            )
         if rotate_token:
             active = [n for n in (1, 2, 3) if self.inventory.lease(n, required=False)]
             if active:
-                raise SlotError(f"cannot rotate Codex token while slots are leased: {active}")
+                raise SlotError(
+                    f"cannot rotate Codex token while slots are leased: {active}"
+                )
         content = self.rendered_config()
         destinations: list[Path] = []
         if scope in {"repo", "both"}:
             destinations.append(self.repo / ".codex" / "config.toml")
         if scope in {"workspace", "both"}:
-            destinations.append(self.inventory.workspace_root / ".codex" / "config.toml")
+            destinations.append(
+                self.inventory.workspace_root / ".codex" / "config.toml"
+            )
         for destination in destinations:
-            if destination.exists() and destination.read_text(encoding="utf-8") != content:
+            if (
+                destination.exists()
+                and destination.read_text(encoding="utf-8") != content
+            ):
                 first = destination.read_text(encoding="utf-8").splitlines()[:3]
-                generated = any("GENERATED by scripts/slotctl.py" in line for line in first)
+                generated = any(
+                    "GENERATED by scripts/slotctl.py" in line for line in first
+                )
                 if not (force and generated):
                     raise SlotError(
                         f"refusing to overwrite drifted/local config {destination}; "
                         "inspect it and pass --force only for a generated file"
                     )
+        bearer_agents = self.rendered_bearer_agent_configs()
         if rotate_token:
             self.inventory.token("codex", rotate=True)
+        for destination, agent_content in bearer_agents.items():
+            atomic_write(destination, agent_content)
         for destination in destinations:
             atomic_write(destination, content)
         return destinations
 
     def session_environment(self, *, client: str, rotate_token: bool = False) -> str:
+        if rotate_token and self.inventory.client_auth_mode != "bearer":
+            raise SlotError(
+                "token rotation is available only in bearer client-auth mode"
+            )
         if rotate_token:
             active = [n for n in (1, 2, 3) if self.inventory.lease(n, required=False)]
             if active:
-                raise SlotError(f"cannot rotate {client} token while slots are leased: {active}")
-        token = self.inventory.token(client, rotate=rotate_token)
-        variable = f"LEAN_SLOT_{client.upper().replace('-', '_')}_TOKEN"
-        return (
-            f"export {variable}={shlex.quote(token)}\n"
+                raise SlotError(
+                    f"cannot rotate {client} token while slots are leased: {active}"
+                )
+        exports = [
             f"export LEAN_SLOT_STATE_DIR={shlex.quote(str(self.inventory.state_root))}"
-        )
+        ]
+        if self.inventory.client_auth_mode == "bearer":
+            token = self.inventory.token(client, rotate=rotate_token)
+            variable = f"LEAN_SLOT_{client.upper().replace('-', '_')}_TOKEN"
+            exports.insert(0, f"export {variable}={shlex.quote(token)}")
+        return "\n".join(exports)
 
     def doctor(self) -> dict[str, Any]:
         checks: list[dict[str, Any]] = []
@@ -815,14 +931,23 @@ class Controller:
                 worktree, _ = self._assert_worktree_identity(number)
                 dirty = self._dirty(worktree)
                 record(f"wt{number}.identity", True, str(worktree))
-                record(f"wt{number}.clean", not dirty, "clean" if not dirty else "; ".join(dirty[:8]))
+                record(
+                    f"wt{number}.clean",
+                    not dirty,
+                    "clean" if not dirty else "; ".join(dirty[:8]),
+                )
                 primary_head = _git(self.repo, "rev-parse", "HEAD")
-                ahead = int(_git(worktree, "rev-list", "--count", f"{primary_head}..HEAD"))
-                contained = _run(
-                    ["git", "merge-base", "--is-ancestor", "HEAD", primary_head],
-                    cwd=worktree,
-                    check=False,
-                ).returncode == 0
+                ahead = int(
+                    _git(worktree, "rev-list", "--count", f"{primary_head}..HEAD")
+                )
+                contained = (
+                    _run(
+                        ["git", "merge-base", "--is-ancestor", "HEAD", primary_head],
+                        cwd=worktree,
+                        check=False,
+                    ).returncode
+                    == 0
+                )
                 record(
                     f"wt{number}.integrated",
                     ahead == 0 and contained,
@@ -844,6 +969,15 @@ class Controller:
                 )
             except SlotError as exc:
                 record(f"wt{number}.lease", False, str(exc))
+        try:
+            auth_mode = self.inventory.client_auth_mode
+            record(
+                "client_auth",
+                True,
+                f"{auth_mode} on {self.inventory.raw['server']['host']}",
+            )
+        except SlotError as exc:
+            record("client_auth", False, str(exc))
         primary_dirty = self._dirty(self.repo)
         record(
             "primary.clean",
@@ -866,7 +1000,11 @@ class Controller:
                 record(f"config.{label}", True, "not managed by this overlay")
             else:
                 ok = path.exists() and path.read_text(encoding="utf-8") == expected
-                record(f"config.{label}", ok, "current" if ok else f"missing or drifted: {path}")
+                record(
+                    f"config.{label}",
+                    ok,
+                    "current" if ok else f"missing or drifted: {path}",
+                )
         from .supervisor import Supervisor
 
         supervisor = Supervisor(self.inventory).status()
@@ -896,10 +1034,13 @@ class Controller:
                     )
                 except SlotError as exc:
                     record(f"wt{number}.paired_dependency", False, str(exc))
-        relative_paths = all(
-            not Path(str(slot["worktree"])).is_absolute()
-            for slot in self.inventory.raw["slots"].values()
-        ) and not Path(str(self.inventory.raw["repo_root"])).is_absolute()
+        relative_paths = (
+            all(
+                not Path(str(slot["worktree"])).is_absolute()
+                for slot in self.inventory.raw["slots"].values()
+            )
+            and not Path(str(self.inventory.raw["repo_root"])).is_absolute()
+        )
         record(
             "public_boundary",
             self.inventory.repo_role != "public" or relative_paths,
@@ -907,4 +1048,8 @@ class Controller:
             if relative_paths
             else "public inventory contains an absolute repository/worktree path",
         )
-        return {"schema_version": SCHEMA_VERSION, "ok": all(c["ok"] for c in checks), "checks": checks}
+        return {
+            "schema_version": SCHEMA_VERSION,
+            "ok": all(c["ok"] for c in checks),
+            "checks": checks,
+        }

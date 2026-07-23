@@ -1,4 +1,5 @@
 """Deterministic local process lifecycle for fixed-root Lean MCP endpoints."""
+
 from __future__ import annotations
 
 import json
@@ -10,7 +11,6 @@ import subprocess
 import sys
 import time
 from contextlib import contextmanager
-from pathlib import Path
 from typing import Any, Iterator
 
 from .state import (
@@ -18,11 +18,13 @@ from .state import (
     Inventory,
     SlotError,
     atomic_json,
+    canonical_digest,
     directory_lock,
     now_iso,
     process_matches,
     process_start_signature,
     read_json,
+    sha256_bytes,
 )
 
 
@@ -52,12 +54,57 @@ class Supervisor:
         return bool(
             metadata
             and process_matches(int(metadata.get("pid", 0)), metadata.get("signature"))
+            and metadata.get("runtime_fingerprint")
+            == self._runtime_fingerprint(kind, number)
+        )
+
+    def _runtime_fingerprint(
+        self, kind: str, number: int, command: list[str] | None = None
+    ) -> str:
+        """Identify the code/config a managed process actually loaded.
+
+        The proxy command line names an inventory file but does not encode the
+        selected client-auth mode. Recording the loaded inputs prevents a plain
+        ``supervisor start`` from silently reusing a front door that still runs
+        an earlier authentication policy or implementation.
+        """
+
+        if command is None:
+            command = (
+                self.proxy_command(number)
+                if kind == "proxy"
+                else self.backend_command(number)
+            )
+        sources: dict[str, str] = {}
+        if kind == "proxy":
+            candidates = [self.inventory.repo_root / "scripts" / "slotctl.py"]
+            candidates.extend(
+                sorted(
+                    (self.inventory.repo_root / "scripts" / "lean_slots").glob("*.py")
+                )
+            )
+            for path in candidates:
+                if path.is_file():
+                    sources[str(path.relative_to(self.inventory.repo_root))] = (
+                        sha256_bytes(path.read_bytes())
+                    )
+        return canonical_digest(
+            {
+                "kind": kind,
+                "repo_role": self.inventory.repo_role,
+                "command": command,
+                "server": self.inventory.raw.get("server", {}),
+                "slot": self.inventory.slot(number),
+                "sources": sources,
+            }
         )
 
     def global_backend_count(self) -> int:
         count = 0
         process_root = self.inventory.state_root / "processes"
-        for path in process_root.glob("*-backend.json") if process_root.exists() else []:
+        for path in (
+            process_root.glob("*-backend.json") if process_root.exists() else []
+        ):
             try:
                 metadata = read_json(path)
             except SlotError:
@@ -71,7 +118,9 @@ class Supervisor:
     def global_backend_owners(self, number: int) -> list[str]:
         owners: list[str] = []
         process_root = self.inventory.state_root / "processes"
-        for path in process_root.glob("*-backend.json") if process_root.exists() else []:
+        for path in (
+            process_root.glob("*-backend.json") if process_root.exists() else []
+        ):
             try:
                 metadata = read_json(path)
             except SlotError:
@@ -97,7 +146,16 @@ class Supervisor:
         raise SlotError(f"timed out waiting for {host}:{port} to {expected}")
 
     def _spawn(self, kind: str, number: int, command: list[str], port: int) -> None:
-        if self._running(kind, number):
+        expected_fingerprint = self._runtime_fingerprint(kind, number, command)
+        metadata = self._metadata(kind, number)
+        if metadata and process_matches(
+            int(metadata.get("pid", 0)), metadata.get("signature")
+        ):
+            if metadata.get("runtime_fingerprint") != expected_fingerprint:
+                raise SlotError(
+                    f"managed {kind} wt{number} is running stale code/configuration; "
+                    "run supervisor stop, then supervisor start"
+                )
             return
         host = str(self.inventory.raw["server"]["host"])
         if _port_open(host, port):
@@ -136,13 +194,17 @@ class Supervisor:
                 process.wait(timeout=5)
             except subprocess.TimeoutExpired:
                 pass
-            raise SlotError(f"timed out starting {kind} for wt{number}; inspect {log_path}")
+            raise SlotError(
+                f"timed out starting {kind} for wt{number}; inspect {log_path}"
+            )
         # uvx may exec the resolved application during startup. Capture identity
         # only after the listening socket is live so later comparisons are stable.
         time.sleep(0.1)
         signature = process_start_signature(process.pid)
         if process.poll() is not None or not signature:
-            raise SlotError(f"could not establish process identity for {kind} wt{number}")
+            raise SlotError(
+                f"could not establish process identity for {kind} wt{number}"
+            )
         atomic_json(
             self.inventory.process_path(kind, number),
             {
@@ -153,6 +215,7 @@ class Supervisor:
                 "pid": process.pid,
                 "signature": signature,
                 "command": command,
+                "runtime_fingerprint": expected_fingerprint,
                 "port": port,
                 "started_at": now_iso(),
             },
@@ -178,7 +241,9 @@ class Supervisor:
             return
         os.kill(pid, signal.SIGTERM)
         deadline = time.monotonic() + 10
-        while time.monotonic() < deadline and process_matches(pid, metadata.get("signature")):
+        while time.monotonic() < deadline and process_matches(
+            pid, metadata.get("signature")
+        ):
             time.sleep(0.1)
         if process_matches(pid, metadata.get("signature")):
             raise SlotError(
@@ -237,7 +302,9 @@ class Supervisor:
             )
         # Materialize the private backend credential before exposing the port.
         self.inventory.backend_token(number)
-        self._spawn("backend", number, self.backend_command(number), int(slot["backend_port"]))
+        self._spawn(
+            "backend", number, self.backend_command(number), int(slot["backend_port"])
+        )
 
     def _stop_backend_unlocked(self, number: int) -> None:
         self._stop("backend", number, int(self.inventory.slot(number)["backend_port"]))
@@ -255,7 +322,9 @@ class Supervisor:
 
     def _start_proxy_unlocked(self, number: int) -> None:
         slot = self.inventory.slot(number)
-        self._spawn("proxy", number, self.proxy_command(number), int(slot["proxy_port"]))
+        self._spawn(
+            "proxy", number, self.proxy_command(number), int(slot["proxy_port"])
+        )
 
     def _stop_proxy_unlocked(self, number: int) -> None:
         self._stop("proxy", number, int(self.inventory.slot(number)["proxy_port"]))
@@ -298,9 +367,7 @@ class Supervisor:
                 self.assert_healthy(number)
 
     @contextmanager
-    def activating_from(
-        self, number: int, counterpart: "Supervisor"
-    ) -> Iterator[None]:
+    def activating_from(self, number: int, counterpart: "Supervisor") -> Iterator[None]:
         """Park a paired backend, mutate the target cache, then activate target.
 
         The shared lifecycle lock makes the handoff atomic with respect to all
@@ -308,7 +375,9 @@ class Supervisor:
         restored before the exception escapes.
         """
         if counterpart.inventory.state_root != self.inventory.state_root:
-            raise SlotError("counterpart supervisors must share one runtime state directory")
+            raise SlotError(
+                "counterpart supervisors must share one runtime state directory"
+            )
         with self.lifecycle():
             self._start_proxy_unlocked(number)
             self._assert_backend_owned_or_stopped(number)
@@ -327,14 +396,18 @@ class Supervisor:
             except Exception:
                 if self._running("backend", number):
                     self._stop_backend_unlocked(number)
-                if counterpart_was_running and not counterpart._running("backend", number):
+                if counterpart_was_running and not counterpart._running(
+                    "backend", number
+                ):
                     counterpart._start_backend_unlocked(number)
                 raise
 
     def restore_counterpart(self, number: int, counterpart: "Supervisor") -> None:
         """Return one leased slot to its default paired backend without overlap."""
         if counterpart.inventory.state_root != self.inventory.state_root:
-            raise SlotError("counterpart supervisors must share one runtime state directory")
+            raise SlotError(
+                "counterpart supervisors must share one runtime state directory"
+            )
         with self.lifecycle():
             target_was_running = self._running("backend", number)
             if target_was_running:
@@ -383,10 +456,18 @@ class Supervisor:
     def assert_healthy(self, number: int) -> None:
         slot = self.inventory.slot(number)
         host = str(self.inventory.raw["server"]["host"])
-        if not self._running("proxy", number) or not _port_open(host, int(slot["proxy_port"])):
-            raise SlotError(f"proxy for wt{number} is not healthy; run slotctl supervisor start")
-        if not self._running("backend", number) or not _port_open(host, int(slot["backend_port"])):
-            raise SlotError(f"backend for wt{number} is not healthy; run slotctl supervisor start")
+        if not self._running("proxy", number) or not _port_open(
+            host, int(slot["proxy_port"])
+        ):
+            raise SlotError(
+                f"proxy for wt{number} is not healthy; run slotctl supervisor start"
+            )
+        if not self._running("backend", number) or not _port_open(
+            host, int(slot["backend_port"])
+        ):
+            raise SlotError(
+                f"backend for wt{number} is not healthy; run slotctl supervisor start"
+            )
 
     @staticmethod
     def _sse_json(body: bytes) -> dict[str, Any]:
@@ -401,23 +482,30 @@ class Supervisor:
         return value
 
     def probe(self, number: int, *, client: str = "codex") -> dict[str, Any]:
-        """Exercise auth, initialization, and the server-side no-build tool list."""
+        """Exercise initialization, lease gating, and the no-build tool list."""
         self.assert_healthy(number)
         slot = self.inventory.slot(number)
         host = str(self.inventory.raw["server"]["host"])
-        token = self.inventory.token(client)
         headers = {
-            "Authorization": f"Bearer {token}",
             "Accept": "application/json, text/event-stream",
             "Content-Type": "application/json",
         }
+        if self.inventory.client_auth_mode == "bearer":
+            headers["Authorization"] = f"Bearer {self.inventory.token(client)}"
 
         def request(payload: dict[str, Any], session_id: str | None = None):
-            connection = http.client.HTTPConnection(host, int(slot["proxy_port"]), timeout=120)
+            connection = http.client.HTTPConnection(
+                host, int(slot["proxy_port"]), timeout=120
+            )
             current = dict(headers)
             if session_id:
                 current["Mcp-Session-Id"] = session_id
-            connection.request("POST", "/mcp", body=json.dumps(payload), headers=current)
+            connection.request(
+                "POST",
+                f"/mcp?client={client}",
+                body=json.dumps(payload),
+                headers=current,
+            )
             response = connection.getresponse()
             body = response.read()
             response_headers = dict(response.getheaders())
@@ -442,11 +530,17 @@ class Supervisor:
             }
         )
         session_id = next(
-            (value for key, value in response_headers.items() if key.lower() == "mcp-session-id"),
+            (
+                value
+                for key, value in response_headers.items()
+                if key.lower() == "mcp-session-id"
+            ),
             None,
         )
         if not session_id or "result" not in initialized:
-            raise SlotError(f"MCP initialize response for wt{number} lacked a session/result")
+            raise SlotError(
+                f"MCP initialize response for wt{number} lacked a session/result"
+            )
         request(
             {"jsonrpc": "2.0", "method": "notifications/initialized", "params": {}},
             session_id,
@@ -461,7 +555,9 @@ class Supervisor:
             if isinstance(item, dict)
         ]
         if "lean_build" in tools:
-            raise SlotError(f"MCP worker endpoint wt{number} exposed forbidden lean_build")
+            raise SlotError(
+                f"MCP worker endpoint wt{number} exposed forbidden lean_build"
+            )
         if not any(name.startswith("lean_") for name in tools):
             raise SlotError(f"MCP worker endpoint wt{number} exposed no Lean tools")
         active_dispatch: bool | str = False
@@ -474,19 +570,27 @@ class Supervisor:
                     "method": "tools/call",
                     "params": {
                         "name": "lean_diagnostic_messages",
-                        "arguments": {"file_path": self.inventory.raw["server"]["probe_file"]},
+                        "arguments": {
+                            "file_path": self.inventory.raw["server"]["probe_file"]
+                        },
                     },
                 },
                 session_id,
             )
             if diagnostics.get("error") or "result" not in diagnostics:
-                raise SlotError(f"active MCP dispatch failed for wt{number}: {diagnostics}")
+                raise SlotError(
+                    f"active MCP dispatch failed for wt{number}: {diagnostics}"
+                )
             active_dispatch = True
         elif lease:
             active_dispatch = "skipped-nonmatching-lease"
-        connection = http.client.HTTPConnection(host, int(slot["proxy_port"]), timeout=10)
-        cleanup_headers = {"Authorization": f"Bearer {token}", "Mcp-Session-Id": session_id}
-        connection.request("DELETE", "/mcp", headers=cleanup_headers)
+        connection = http.client.HTTPConnection(
+            host, int(slot["proxy_port"]), timeout=10
+        )
+        cleanup_headers = {"Mcp-Session-Id": session_id}
+        if self.inventory.client_auth_mode == "bearer":
+            cleanup_headers["Authorization"] = headers["Authorization"]
+        connection.request("DELETE", f"/mcp?client={client}", headers=cleanup_headers)
         cleanup = connection.getresponse()
         cleanup.read()
         connection.close()

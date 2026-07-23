@@ -1,4 +1,5 @@
 """Configuration and durable-state primitives for the Lean slot controller."""
+
 from __future__ import annotations
 
 import hashlib
@@ -104,7 +105,9 @@ def directory_lock(path: Path, *, purpose: str) -> Iterator[None]:
         path.mkdir(mode=0o700)
     except FileExistsError as exc:
         owner = path / "owner.json"
-        detail = owner.read_text(encoding="utf-8").strip() if owner.exists() else "unknown"
+        detail = (
+            owner.read_text(encoding="utf-8").strip() if owner.exists() else "unknown"
+        )
         raise SlotError(f"{purpose} is already locked ({detail})") from exc
     try:
         atomic_json(
@@ -132,23 +135,68 @@ class Inventory:
     def load(cls, source: Path | str | None = None) -> "Inventory":
         if source is None:
             env_path = os.environ.get("LEAN_SLOT_CONFIG")
-            source = env_path or Path(__file__).resolve().parents[2] / "config" / "lean-slots.public.json"
+            source = (
+                env_path
+                or Path(__file__).resolve().parents[2]
+                / "config"
+                / "lean-slots.public.json"
+            )
         source_path = Path(source).expanduser().resolve()
         raw = read_json(source_path)
         if raw.get("schema_version") != SCHEMA_VERSION:
-            raise SlotError(f"unsupported inventory schema: {raw.get('schema_version')!r}")
-        if raw.get("max_active_slots") != 3 or set(raw.get("slots", {})) != {"1", "2", "3"}:
-            raise SlotError("inventory must define exactly the global slots 1, 2, and 3")
+            raise SlotError(
+                f"unsupported inventory schema: {raw.get('schema_version')!r}"
+            )
+        if raw.get("max_active_slots") != 3 or set(raw.get("slots", {})) != {
+            "1",
+            "2",
+            "3",
+        }:
+            raise SlotError(
+                "inventory must define exactly the global slots 1, 2, and 3"
+            )
         repo_root = (source_path.parent / str(raw.get("repo_root", ".."))).resolve()
         workspace_root = repo_root.parent
-        state_root = Path(
-            os.environ.get("LEAN_SLOT_STATE_DIR", str(workspace_root / ".lean-slots"))
-        ).expanduser().resolve()
-        return cls(source_path, raw, repo_root, workspace_root, state_root)
+        state_root = (
+            Path(
+                os.environ.get(
+                    "LEAN_SLOT_STATE_DIR", str(workspace_root / ".lean-slots")
+                )
+            )
+            .expanduser()
+            .resolve()
+        )
+        inventory = cls(source_path, raw, repo_root, workspace_root, state_root)
+        _ = inventory.client_auth_mode
+        return inventory
 
     @property
     def repo_role(self) -> str:
         return str(self.raw["repo_role"])
+
+    @property
+    def client_auth_mode(self) -> str:
+        """Client-to-proxy authentication mode.
+
+        ``trusted-local`` is the single-user workstation default: the proxy is
+        loopback-only and the lease remains the dispatch authority, but Codex
+        does not need a bearer credential merely to start. ``bearer`` retains
+        the stronger client/session binding for a future shared-user host.
+        """
+
+        server = self.raw.get("server", {})
+        mode = str(server.get("client_auth", "trusted-local"))
+        if mode not in {"trusted-local", "bearer"}:
+            raise SlotError(
+                f"server.client_auth must be 'trusted-local' or 'bearer', got {mode!r}"
+            )
+        host = str(server.get("host", ""))
+        if mode == "trusted-local" and host not in {"127.0.0.1", "::1", "localhost"}:
+            raise SlotError(
+                "trusted-local client auth requires a loopback server.host, "
+                f"got {host!r}"
+            )
+        return mode
 
     def slot(self, number: int) -> dict[str, Any]:
         if number not in {1, 2, 3}:
@@ -168,7 +216,9 @@ class Inventory:
         return self.state_root / "epochs" / f"{self.repo_role}.json"
 
     def process_path(self, kind: str, number: int) -> Path:
-        return self.state_root / "processes" / f"{self.repo_role}-wt{number}-{kind}.json"
+        return (
+            self.state_root / "processes" / f"{self.repo_role}-wt{number}-{kind}.json"
+        )
 
     def log_path(self, kind: str, number: int) -> Path:
         return self.state_root / "logs" / f"{self.repo_role}-wt{number}-{kind}.log"
@@ -212,7 +262,9 @@ class Inventory:
         if paired is None:
             return None
         if not isinstance(paired, dict) or not paired.get("inventory"):
-            raise SlotError("paired_dependency.inventory must name an inventory JSON file")
+            raise SlotError(
+                "paired_dependency.inventory must name an inventory JSON file"
+            )
         source = Path(str(paired["inventory"]))
         if source.is_absolute():
             raise SlotError("paired dependency inventory paths must be relative")
