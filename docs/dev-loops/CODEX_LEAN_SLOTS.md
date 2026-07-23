@@ -9,21 +9,29 @@ live-validation phase.
 From the primary `SK_EFT_Hawking` checkout:
 
 ```bash
-eval "$(python3 scripts/slotctl.py session env --client codex --rotate-token)"
 python3 scripts/slotctl.py config render --scope both
 python3 scripts/slotctl.py supervisor start
 python3 scripts/slotctl.py doctor
 ```
 
-Run the `session env` command in the shell that will launch Codex. It stores the
-credential outside Git and exports it as `LEAN_SLOT_CODEX_TOKEN`; generated
-configuration refers to that environment variable and never embeds the token.
-`--rotate-token` is for a coordinated first activation or restart: omit it when
-joining an already-running installation, because rotation intentionally expires
-the bearer value held by existing Codex processes.
+The active workstation inventory uses `server.client_auth = "trusted-local"`:
+the MCP front doors bind only to `127.0.0.1`, so normal Codex launches need no
+token or shell bootstrap. Lease state, repository/worktree/endpoint identity,
+the no-build policy, and the global backend limit remain enforced.
+
+Bearer authentication is banked for a future shared-user deployment. To use it,
+select `server.client_auth = "bearer"` in that deployment's inventory, render
+configuration, and run `eval "$(python3 scripts/slotctl.py session env --client
+codex --rotate-token)"` in the shell that launches Codex. Token rotation is
+invalid in trusted-local mode and must never occur while leases are active.
 `config render` creates gitignored Codex configuration in this repository and
 the workspace root. It refuses to overwrite a locally modified generated file
 unless `--force` is explicit.
+
+Changing `server.client_auth` requires a front-door restart so existing proxy
+processes load the new mode: run `slotctl.py supervisor stop`, then `supervisor
+start`. The supervisor fingerprints the loaded proxy code and inventory; a plain
+`supervisor start` fails closed rather than silently reusing stale policy.
 
 Restart Codex after the first render so the HTTP MCP endpoints and the
 `lean_wt1_worker`–`lean_wt3_worker` agent profiles load.

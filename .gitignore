@@ -97,6 +97,7 @@ papers/**/*.pdf
 # epochs, and logs live outside Git in the workspace-level `.lean-slots/` state
 # directory.
 /.codex/config.toml
+/.codex/generated/
 /.codex/lean-slots-state/
 
 # parallel-agent worktree slots (wt1/wt2/wt3) — created by `claude --worktree wtN`

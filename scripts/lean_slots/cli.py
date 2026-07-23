@@ -1,4 +1,5 @@
 """Command-line contract for the ADR-008 Lean slot controller."""
+
 from __future__ import annotations
 
 import argparse
@@ -48,7 +49,9 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--inventory", type=Path, help="versioned slot inventory JSON")
     commands = result.add_subparsers(dest="command", required=True)
 
-    doctor = commands.add_parser("doctor", help="audit worktrees, leases, epochs, config, and endpoints")
+    doctor = commands.add_parser(
+        "doctor", help="audit worktrees, leases, epochs, config, and endpoints"
+    )
     doctor.add_argument("--json", action="store_true", dest="as_json")
 
     status = commands.add_parser("status", help="show global slot state")
@@ -73,22 +76,36 @@ def parser() -> argparse.ArgumentParser:
         if name == "reclaim":
             command.add_argument("--confirm-owner-gone", action="store_true")
 
-    commands.add_parser("build", help="run the serialized authoritative build and publish an epoch")
+    commands.add_parser(
+        "build", help="run the serialized authoritative build and publish an epoch"
+    )
 
-    config = commands.add_parser("config", help="render or inspect generated client configuration")
+    config = commands.add_parser(
+        "config", help="render or inspect generated client configuration"
+    )
     config_commands = config.add_subparsers(dest="config_command", required=True)
-    render = config_commands.add_parser("render", help="render gitignored Codex configuration")
-    render.add_argument("--scope", choices=("repo", "workspace", "both"), default="repo")
+    render = config_commands.add_parser(
+        "render", help="render gitignored Codex configuration"
+    )
+    render.add_argument(
+        "--scope", choices=("repo", "workspace", "both"), default="repo"
+    )
     render.add_argument("--force", action="store_true")
     render.add_argument("--rotate-token", action="store_true")
 
-    session = commands.add_parser("session", help="emit the bearer environment for a client session")
+    session = commands.add_parser(
+        "session", help="emit optional client-auth and shared-state environment"
+    )
     session_commands = session.add_subparsers(dest="session_command", required=True)
-    environment = session_commands.add_parser("env", help="print a shell export for the client token")
+    environment = session_commands.add_parser(
+        "env", help="print shell exports required by the selected client-auth mode"
+    )
     environment.add_argument("--client", choices=("codex", "claude"), required=True)
     environment.add_argument("--rotate-token", action="store_true")
 
-    supervisor = commands.add_parser("supervisor", help="manage the three fixed-root endpoints")
+    supervisor = commands.add_parser(
+        "supervisor", help="manage the three fixed-root endpoints"
+    )
     supervisor.add_argument("action", choices=("start", "stop", "status", "probe"))
     supervisor.add_argument("--slot", type=int)
     supervisor.add_argument("--json", action="store_true", dest="as_json")

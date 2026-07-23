@@ -1,4 +1,5 @@
-"""Bearer-authenticated, lease-gated reverse proxy for one fixed Lean endpoint."""
+"""Lease-gated reverse proxy for one fixed, loopback-only Lean endpoint."""
+
 from __future__ import annotations
 
 import hmac
@@ -6,8 +7,8 @@ import http.client
 import json
 import subprocess
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qs, urlsplit
 
 from .state import Inventory, SlotError, token_hash
 
@@ -49,7 +50,15 @@ class LeaseGate:
         self.inventory = inventory
         self.number = number
 
-    def identify(self, authorization: str | None) -> tuple[str, str]:
+    def identify(
+        self, authorization: str | None, client_hint: str | None = None
+    ) -> tuple[str | None, str | None]:
+        if self.inventory.client_auth_mode == "trusted-local":
+            if client_hint is None:
+                return None, None
+            if client_hint not in {"codex", "claude"}:
+                raise SlotError(f"unknown local client identity: {client_hint!r}")
+            return client_hint, None
         if not authorization or not authorization.startswith("Bearer "):
             raise SlotError("missing bearer credential")
         supplied = authorization.removeprefix("Bearer ").strip()
@@ -57,11 +66,18 @@ class LeaseGate:
         for path in sorted(clients.glob("*.token")) if clients.exists() else []:
             expected = path.read_text(encoding="utf-8").strip()
             if expected and hmac.compare_digest(supplied, expected):
+                if client_hint is not None and client_hint != path.stem:
+                    raise SlotError("client identity does not match bearer credential")
                 return path.stem, token_hash(supplied)
         raise SlotError("unknown or expired bearer credential")
 
     def authorize(
-        self, client: str, supplied_hash: str, body: bytes, *, http_method: str = "POST"
+        self,
+        client: str | None,
+        supplied_hash: str | None,
+        body: bytes,
+        *,
+        http_method: str = "POST",
     ) -> None:
         messages = _messages(body)
         requires_lease = http_method == "GET"
@@ -82,10 +98,13 @@ class LeaseGate:
             raise SlotError(f"wt{self.number} has no active lease")
         if lease.get("state") != "ACTIVE":
             raise SlotError(f"wt{self.number} is not active ({lease.get('state')})")
-        if lease.get("client") != client or not hmac.compare_digest(
-            str(lease.get("token_hash", "")), supplied_hash
-        ):
+        if client is None or lease.get("client") != client:
             raise SlotError(f"wt{self.number} is leased by another client/session")
+        if self.inventory.client_auth_mode == "bearer":
+            if supplied_hash is None or not hmac.compare_digest(
+                str(lease.get("token_hash", "")), supplied_hash
+            ):
+                raise SlotError(f"wt{self.number} is leased by another client/session")
         if lease.get("repo_role") != self.inventory.repo_role:
             raise SlotError(f"wt{self.number} repository-role mismatch")
         if lease.get("worktree") != expected_worktree:
@@ -100,7 +119,9 @@ class LeaseGate:
             return
         expected_sha = str(lease.get("public_dependency_sha", ""))
         if not expected_sha:
-            raise SlotError(f"wt{self.number} downstream lease lacks a public dependency SHA")
+            raise SlotError(
+                f"wt{self.number} downstream lease lacks a public dependency SHA"
+            )
         expected_root = paired.lean_root(self.number).resolve()
         actual_root = self.inventory.paired_dependency_lean_root(self.number)
         if actual_root != expected_root:
@@ -149,7 +170,10 @@ def make_handler(inventory: Inventory, number: int):
                 {
                     "jsonrpc": "2.0",
                     "id": request_id,
-                    "error": {"code": -32001, "message": f"ADR-008 lease gate: {detail}"},
+                    "error": {
+                        "code": -32001,
+                        "message": f"ADR-008 lease gate: {detail}",
+                    },
                 }
             ).encode()
             self.send_response(status)
@@ -170,7 +194,11 @@ def make_handler(inventory: Inventory, number: int):
                 parsed = _messages(body)
                 if parsed:
                     request_id = parsed[0].get("id")
-                client, supplied_hash = gate.identify(self.headers.get("Authorization"))
+                request_url = urlsplit(self.path)
+                client_hint = parse_qs(request_url.query).get("client", [None])[0]
+                client, supplied_hash = gate.identify(
+                    self.headers.get("Authorization"), client_hint
+                )
                 gate.authorize(client, supplied_hash, body, http_method=self.command)
             except SlotError as exc:
                 status = 401 if "credential" in str(exc) else 403
@@ -185,14 +213,22 @@ def make_handler(inventory: Inventory, number: int):
             headers["Authorization"] = f"Bearer {backend_token}"
             if body:
                 headers["Content-Length"] = str(len(body))
-            connection = http.client.HTTPConnection(backend_host, backend_port, timeout=180)
+            connection = http.client.HTTPConnection(
+                backend_host, backend_port, timeout=180
+            )
             try:
-                connection.request(self.command, self.path, body=body or None, headers=headers)
+                connection.request(
+                    self.command, request_url.path, body=body or None, headers=headers
+                )
                 response = connection.getresponse()
                 self.send_response(response.status, response.reason)
                 for key, value in response.getheaders():
                     lowered = key.lower()
-                    if lowered not in _HOP_HEADERS and lowered not in {"content-length", "server", "date"}:
+                    if lowered not in _HOP_HEADERS and lowered not in {
+                        "content-length",
+                        "server",
+                        "date",
+                    }:
                         self.send_header(key, value)
                 self.send_header("Connection", "close")
                 self.end_headers()
@@ -213,8 +249,10 @@ def make_handler(inventory: Inventory, number: int):
 
         def do_HEAD(self) -> None:
             try:
-                gate.identify(self.headers.get("Authorization"))
-            except SlotError as exc:
+                request_url = urlsplit(self.path)
+                client_hint = parse_qs(request_url.query).get("client", [None])[0]
+                gate.identify(self.headers.get("Authorization"), client_hint)
+            except SlotError:
                 self.send_response(401)
                 self.send_header("Cache-Control", "no-store")
                 self.end_headers()
@@ -233,7 +271,9 @@ def make_handler(inventory: Inventory, number: int):
 def serve(inventory: Inventory, number: int) -> None:
     slot = inventory.slot(number)
     host = str(inventory.raw["server"]["host"])
-    server = ThreadingHTTPServer((host, int(slot["proxy_port"])), make_handler(inventory, number))
+    server = ThreadingHTTPServer(
+        (host, int(slot["proxy_port"])), make_handler(inventory, number)
+    )
     try:
         server.serve_forever(poll_interval=0.2)
     finally:

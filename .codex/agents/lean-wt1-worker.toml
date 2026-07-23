@@ -13,24 +13,21 @@ endpoint, Git, or environment mismatch, stop and report the exact error.
 
 [mcp_servers.skeft_wt1]
 enabled = true
-url = "http://127.0.0.1:8761/mcp"
-bearer_token_env_var = "LEAN_SLOT_CODEX_TOKEN"
+url = "http://127.0.0.1:8761/mcp?client=codex"
 required = false
 tool_timeout_sec = 120
 disabled_tools = ["lean_build"]
 
 [mcp_servers.skeft_wt2]
 enabled = false
-url = "http://127.0.0.1:8762/mcp"
-bearer_token_env_var = "LEAN_SLOT_CODEX_TOKEN"
+url = "http://127.0.0.1:8762/mcp?client=codex"
 required = false
 tool_timeout_sec = 120
 disabled_tools = ["lean_build"]
 
 [mcp_servers.skeft_wt3]
 enabled = false
-url = "http://127.0.0.1:8763/mcp"
-bearer_token_env_var = "LEAN_SLOT_CODEX_TOKEN"
+url = "http://127.0.0.1:8763/mcp?client=codex"
 required = false
 tool_timeout_sec = 120
 disabled_tools = ["lean_build"]

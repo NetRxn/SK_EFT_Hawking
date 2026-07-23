@@ -29,6 +29,7 @@
   },
   "server": {
     "host": "127.0.0.1",
+    "client_auth": "trusted-local",
     "command": [
       "uvx",
       "--from",

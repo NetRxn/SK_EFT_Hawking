@@ -1,9 +1,15 @@
 # ADR-008 — Shared three-slot Lean control plane for Codex and Claude Code
 
-- **Status:** **ACCEPTED (design, 2026-07-22). CODEX-FIRST IMPLEMENTATION AUTHORIZED; CLAUDE CODE ACTIVATION DEFERRED.** Codex may be enabled immediately. The shared infrastructure MUST be Claude-compatible, but Claude configuration/plugin changes MUST NOT be activated or declared verified until a live Claude Code validation window is available, no earlier than the week of 2026-07-27. Legacy Claude behavior remains the rollback path until that validation passes.
+- **Status:** **ACCEPTED (design, 2026-07-22; trusted-local authentication amendment, 2026-07-22). CODEX-FIRST IMPLEMENTATION AUTHORIZED; CLAUDE CODE ACTIVATION DEFERRED.** Codex may be enabled immediately. The local single-user deployment defaults to credential-free loopback access; optional bearer authentication remains banked for a future shared-user deployment. The shared infrastructure MUST be Claude-compatible, but Claude configuration/plugin changes MUST NOT be activated or declared verified until a live Claude Code validation window is available, no earlier than the week of 2026-07-27. Legacy Claude behavior remains the rollback path until that validation passes.
 - **Decider:** John Roehm (project owner) — approved the three-slot, orchestrator-owned-build posture and the Codex-first/Claude-later rollout on 2026-07-22.
 - **Investigation and draft:** Codex, following an adversarial review of the current workspace, the pinned `lean-lsp-mcp` implementation, and the relevant public Claude-plugin commit history.
 - **Scope:** the public `SK_EFT_Hawking` Lean substrate, product-neutral local slot infrastructure, Codex integration, and a privacy-preserving extension point for private downstream repositories. Repository-specific private configuration and paths remain in private overlays and MUST NOT be committed here.
+
+## 2026-07-22 authentication amendment
+
+The original Codex-first implementation required every local MCP client to inherit an environment-backed bearer token. That requirement was not part of the operator's requested feature and adds little protection on this trusted, single-user workstation: any process with the same user account can already read the local runtime state and repositories. It also creates a material reliability cost because an otherwise normal Codex launch fails MCP startup when hidden shell state is absent.
+
+The active deployment therefore uses `server.client_auth = "trusted-local"`. Front doors remain bound to loopback, each client supplies a nonsecret URL identity label for collision/routing checks, tool dispatch remains fail-closed on the active lease and its client/repository/worktree/endpoint/dependency identity, and `lean_build` remains disabled. `server.client_auth = "bearer"` is retained and tested as an explicit deployment feature flag for a future shared-user host; only that mode requires `LEAN_SLOT_CODEX_TOKEN` and client-token hashes. Proxy process metadata fingerprints the loaded implementation and inventory so an authentication-mode or code change cannot be mistaken for an already-current process. This amendment changes authentication, not lifecycle authority or collision safety.
 - **Related:** [ADR-004](ADR-004-substrate-integrity-gates.md) (single-writer/generated-artifact integrity posture); [ADR-005](ADR-005-derived-proof-atlas.md) (three-slot proof swarming and lead-owned extraction); [ADR-007](ADR-007-kernel-nogo-ledger-and-negative-frontier.md) (machine-enforced swarm steering); `ef0c3d36`, `f0d1d6eb`, `5639f685`, `abaff71b`, `ff0dcab4`, `62e8da08`, `e3441cc5`, and `43686347` (the public worktree/LSP harness evolution whose lessons this ADR preserves).
 
 ---
@@ -51,8 +57,8 @@ The words MUST, MUST NOT, SHOULD, and MAY below are normative.
 |---|---|---|
 | **S-A — Three global physical slots** | Slot identifiers are exactly `1`, `2`, and `3`. They are a workspace-wide capacity pool, not a per-client allowance. Codex and Claude MUST reuse this pool. Private/downstream work MAY have a repository-specific worktree paired with each number, but it remains the same capacity slot: only one heavy backend and one writer may be active for slot `N`. |
 | **S-B — The primary orchestrator owns lifecycle and builds** | Only a non-worktree orchestrator may acquire/reclaim slots, reset branches, replace `.lake`, start/stop heavy backends, absorb commits, publish build epochs, run authoritative `lake build`/extraction/validation, or repair infrastructure. Workers may edit, query their leased MCP endpoint, verify proof state, stage their assigned files, and commit. Workers MUST NOT invoke `lake build`, `lake clean`, `lean_build`, dependency/cache repair, raw Git plumbing, or integration operations. |
-| **S-C — Cross-client lease is the authority** | Every active slot has one fail-closed lease containing at least: schema version, slot number, repository role, client (`codex` or `claude`), owner/session token hash, base ref and base SHA, worktree path, endpoint identity, acquired/heartbeat timestamps, lease state, and—when downstream—its exact public dependency SHA. Lease creation/transfer MUST use an atomic filesystem primitive; implementations MUST NOT assume `flock` exists on macOS. Prompt text and Claude goal markers are advisory projections of this lease, not competing authorities. |
-| **S-D — Fixed-root HTTP endpoints** | Each repository/worktree has a stable, repository-qualified streamable-HTTP endpoint bound to `127.0.0.1` and protected by an uncommitted bearer credential. Both products connect to the same endpoint for that project/worktree; no endpoint is duplicated per client. An endpoint MUST NOT be hot-rebound between public and downstream projects. A global gate MUST prevent more than three heavy Lean LSP/REPL backends across the numbered slots, even if more lightweight HTTP front doors are configured. |
+| **S-C — Cross-client lease is the authority** | Every active slot has one fail-closed lease containing at least: schema version, slot number, repository role, client (`codex` or `claude`), client-auth mode, owner process/session identity, base ref and base SHA, worktree path, endpoint identity, acquired/heartbeat timestamps, lease state, and—when downstream—its exact public dependency SHA. Bearer mode additionally stores the client-token hash. Lease creation/transfer MUST use an atomic filesystem primitive; implementations MUST NOT assume `flock` exists on macOS. Prompt text and Claude goal markers are advisory projections of this lease, not competing authorities. |
+| **S-D — Fixed-root HTTP endpoints** | Each repository/worktree has a stable, repository-qualified streamable-HTTP endpoint bound to `127.0.0.1`. The active single-user deployment uses credential-free `trusted-local` client access; an explicit `bearer` feature flag adds environment-backed client authentication for a shared-user deployment. Both products connect to the same endpoint for that project/worktree; no endpoint is duplicated per client. An endpoint MUST NOT be hot-rebound between public and downstream projects. A global gate MUST prevent more than three heavy Lean LSP/REPL backends across the numbered slots, even if more lightweight HTTP front doors are configured. |
 | **S-E — Worker endpoint tool policy** | `lean_build` MUST be removed server-side from worker endpoint tool listings, then denied again by each client's worker tool policy. Shell `lake build`/`lake clean` MUST likewise be unavailable to worker roles. Defense is layered because client hooks are guardrails, not the sole enforcement boundary. Main/orchestrator validation uses an explicit orchestrator command path, never the worker endpoint. |
 | **S-F — REPL is initially disabled** | Codex-first endpoints launch without `--repl`. Shared REPL is a later optimization, not an activation dependency. It may be enabled only after the pinned fork provides one lazy, project-scoped REPL per daemon (or an equivalently bounded design), serializes stateful access, resets it at lease/build boundaries, and passes two-client concurrency and teardown tests. Per-session REPL subprocess multiplication is not acceptable. |
 | **S-G — Successful-build epochs replace HEAD-only stamps** | A slot cache is current only when it matches an orchestrator-published successful-build epoch. A public epoch includes the public commit SHA plus Lean toolchain and Lake manifest/dependency fingerprints. A downstream epoch additionally includes the exact public dependency SHA and the downstream fingerprints. The orchestrator MUST stop/park the slot LSP, clone the authoritative `.lake` to a temporary sibling, atomically install it, then restart service. It MUST NOT delete or replace `.lake` beneath a live LSP, and MUST NOT publish an epoch before the authoritative build succeeds. |
@@ -88,8 +94,8 @@ Any invariant failure -> QUARANTINED
 
 ### Lease and stale-reclaim rules
 
-1. A process/session token is generated outside Git and supplied to the MCP client through an environment-backed bearer header. The lease stores only its hash.
-2. Every slot-affecting controller command verifies the token, repository role, worktree realpath, branch, and lease state.
+1. Trusted-local mode requires loopback binding and uses a nonsecret client identity label, not a credential. Bearer mode generates a token outside Git, supplies it through an environment-backed header, and stores only its hash in the lease.
+2. Every slot-affecting controller command verifies owner process/session identity, client-auth mode, repository role, worktree realpath, branch, and lease state; bearer mode additionally verifies the token hash.
 3. Heartbeat expiry alone does not authorize destructive reclaim. Reclaim also requires the recorded owner process/session to be absent and a Git audit to show no dirty files or unabsorbed commits.
 4. If work exists, reclaim moves the slot to `QUARANTINED` and reports exact recovery commands; it does not reset automatically.
 5. The endpoint gate checks the active lease before resource creation and tool dispatch. A stale client connection therefore cannot reactivate a released slot.
@@ -129,7 +135,7 @@ Codex activation is accepted only after the Codex acceptance tests below pass. C
 
 ### Claude Code — prepare now, activate later
 
-The shared infrastructure is Claude-ready when it provides stable HTTP URLs, bearer-header input, the lease API, generated `.mcp.json` data, and product-neutral status/doctor output. During the current usage-limit window:
+The shared infrastructure is Claude-ready when it provides stable HTTP URLs, optional bearer-header input, the lease API, generated `.mcp.json` data, and product-neutral status/doctor output. During the current usage-limit window:
 
 - Do not alter the active Claude `.mcp.json`, workspace approval state, or installed plugin cache solely to switch transports.
 - Do not remove the legacy stdio servers or session-start trimming procedure.
@@ -156,7 +162,7 @@ When live Claude testing becomes available, the Claude activation change set mus
 3. Dirty or untracked slot contents prevent reset/reclaim and produce `QUARANTINED`, not data loss.
 4. Owner death with a clean, fully absorbed slot permits audited stale reclaim; owner death with work does not.
 5. Endpoint project-root mismatch and repository-role mismatch fail before LSP/REPL creation.
-6. A released lease token cannot call tools through an existing HTTP session.
+6. A released lease cannot call tools through an existing HTTP session; bearer mode additionally rejects stale or wrong client credentials.
 7. A daemon crash does not lose lease state; restart either reattaches to the matching lease or stays inactive.
 8. Build/cache refresh cannot overlap another authoritative build, including across public and downstream repositories.
 9. `.lake` replacement is atomic and never occurs while the slot LSP is live.
@@ -211,7 +217,7 @@ Each phase is independently reversible. A later phase may not weaken an earlier 
 
 ### Phase 3 — Claude-ready shared infrastructure, inactive client wiring
 
-- Ensure the supervisor exposes stable Claude-compatible HTTP endpoints and environment-backed bearer headers.
+- Ensure the supervisor exposes stable Claude-compatible HTTP endpoints in trusted-local mode and can feature-flag environment-backed bearer headers for a shared-user deployment.
 - Generate a reviewable Claude configuration preview from the same endpoint inventory without activating it.
 - Keep current Claude plugin/config/stdio behavior unchanged and label Claude status `DESIGNED_NOT_VALIDATED`.
 
@@ -234,7 +240,7 @@ Each phase is independently reversible. A later phase may not weaken an earlier 
 
 **Costs.** The controller, supervisor/gate, generated configuration, epoch schema, and test matrix add real infrastructure. Initial Codex proof iteration may be slower without REPL. Downstream pairing requires repository-specific private work. Claude transport and plugin changes remain a separate change set and cannot be considered complete until live-tested.
 
-**Risks and mitigations.** A controller bug could strand a slot; fail-closed quarantine and non-destructive recovery are mandatory. A bearer token identifies a session but does not replace filesystem/Git checks; the endpoint verifies both. Lightweight endpoint processes may outnumber active slots, but the global heavy-backend semaphore—not process-name counting—is the resource invariant. The host vnode increase provides headroom but is not used as a substitute for lifecycle control.
+**Risks and mitigations.** A controller bug could strand a slot; fail-closed quarantine and non-destructive recovery are mandatory. Trusted-local mode deliberately assumes processes running as the workstation owner are trusted and is rejected on non-loopback bindings. Bearer mode is available when that assumption no longer holds, but bearer identity never replaces filesystem/Git and lease checks. Lightweight endpoint processes may outnumber active slots, but the global heavy-backend semaphore—not process-name counting—is the resource invariant. The host vnode increase provides headroom but is not used as a substitute for lifecycle control.
 
 ---
 
