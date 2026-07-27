@@ -4155,6 +4155,17 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': 'Opening DualSpinFromW into DualSpinConstruction (Vspace/ιV/Vspin/hcob/hcover fields) makes the dual-spin supply a genuine geometric obligation not derivable from the conclusion. FALSE (gate round 12): on an unpinned ambient, Nonempty (DualSpinConstruction PUnit sigM) ↔ 32 ∣ sigM — every field including hcob inhabits from bare arithmetic (the σ-onto realization engine spinOfSigMul16 supplies genuine SmoothSpinManifold4 witnesses for every multiple of 16), and modulo the presentation row the whole opened supply ⟺ the hfwd conclusion. The mechanism: amb is a FREE TopCat field. Consequence (binding round-12 spec 1): dA supply claims pass by DATA INSPECTION only — amb must be TopCat.of b.W of the actual tethered witness and edge the geometric ∂E(V); statement-shape audits are insufficient at every opening depth.',
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'hker-ambient-pin-does-not-restore-geometry': {
+        'fork_id': 'hker-ambient-pin-does-not-restore-geometry',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusKTHkerAmbPinGate.nonempty_dualSpinFromW_iff_thirtytwo_dvd',
+            'SKEFTHawking.PinPlusKTHkerAmbPinGate.dualSpinFamily_iff_pointwise_thirtytwo_dvd',
+            'SKEFTHawking.PinPlusKTHkerAmbPinGate.isClosedEmbedding_empty',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'Pinning the ambient — requiring amb x hx = TopCat.of b.W of the genuine tethered witness, as binding round-12 spec 1 demands — restores geometric content to the dA/hker dual-spin supply, so an amb-pinned KTSharpnessSupplyGeo variant would be real progress on hker. FALSE (2026-07-27, lead): the conclusion-equivalence holds at EVERY Hausdorff ambient W, not just the trivial PUnit of the round-12 exhibit — nonempty_dualSpinFromW_iff_thirtytwo_dvd proves Nonempty (DualSpinFromW W sigM) ↔ 32 ∣ sigM for all T2 W, and dualSpinFamily_iff_pointwise_thirtytwo_dvd lifts it to an arbitrary ambient FAMILY (the strongest pin the spec could ask for). MECHANISM (the structural root, deeper than the round-12 amb note): SmoothSpinManifold4 is PURE LATTICE DATA (rank/form/even_unimod/topo) with NO underlying space, so in DualSpinFromW the topological half (Vspace/iotaV/hclosed) and the arithmetic half (Vspin/hdouble) are DISCONNECTED BY CONSTRUCTION — the empty submanifold closed-embeds into any T2 W (isClosedEmbedding_empty) while spinOfSigMul16 supplies the lattice. CONSEQUENCE: hker cannot be discharged through ANY shape built over SmoothSpinManifold4 + a bare embedded Vspace; the interface cannot express "V is the w1(W)-dual submanifold AND Vspin is its intersection lattice". A genuine hker discharge needs an interface carrying the submanifold and DERIVING its lattice (the SpinSigmaAtomPkg pattern: fundamental class + H2 basis + Poincare duality on an actual manifold) plus the w1-duality tie. Do NOT dispatch amb-pinning as an hker brick.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'novikov-substrate-synthetic-inhabitation': {
         'fork_id': 'novikov-substrate-synthetic-inhabitation',
         'backing_theorems': [

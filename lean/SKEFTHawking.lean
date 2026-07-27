@@ -4663,6 +4663,7 @@ import SKEFTHawking.IntersectionMatrixDisjointSumBlockCongr
 import SKEFTHawking.PinPlusKTSpinSigmaCanonicalBundle
 import SKEFTHawking.SphereProdGramPinReduce
 import SKEFTHawking.PinPlusKTDualSpinSubmanifold
+import SKEFTHawking.PinPlusKTHkerAmbPinGate
 import SKEFTHawking.PinPlusKTDualSpinConstruction
 import SKEFTHawking.LatticeMetabolic
 import SKEFTHawking.PinPlusKTSpinSigmaHbord
