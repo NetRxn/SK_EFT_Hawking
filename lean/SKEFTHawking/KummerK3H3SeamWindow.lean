@@ -34,6 +34,16 @@ neither vacuous nor an over-approximation: it is the strongest form of the resid
 2-saturation `↔` is the weakest. Both are stated, so a future `Q`-side solve may discharge whichever
 it lands on.
 
+## The complete degree-4/3 MV window in those coordinates
+
+§4b assembles the whole window UNCONDITIONALLY (`exact_k7Sum4_k7Delta3Coord`,
+`exact_k7Delta3Coord_qSeamCoord3`, `qSeamCoord3_surjective_iff_h3K3_eq_zero`):
+
+    H₄(qThick;ℤ) ⊕ H₄(eImage;ℤ) --Σ₄--> H₄(K3;ℤ) --∂₄--> ℤ¹⁶ --qSeamCoord3--> H₃(Q;ℤ) ↠ H₃(K3;ℤ) → 0
+
+with `Σ₄` injective (`k7Sum4_injective`). So `ker qSeamCoord3 = im ∂₄` is pinned too: the only objects
+in the whole degree-3 window still uncomputed are `H₃(Q;ℤ)` and `H₄(K3;ℤ)`.
+
 ## ⛔ What this module deliberately does NOT do — the free-quotient descent trap
 
 `KummerPunctureH3Mod2.thickA_H3_twoTorsionFree` is UNCONDITIONAL: `H₃(T⁴°;ℤ)` has no 2-torsion. It
@@ -238,6 +248,67 @@ theorem nonempty_intOrientation_of_qSeamCoord3_surjective
     Nonempty (SingularHomologyInt.IntOrientation SKEFTHawking.KummerWeld.KummerK3) :=
   KummerK3E1Package.nonempty_intOrientation_kummerK3
     (kummerK3H3TwoTorsionFree_of_qSeamCoord3_surjective h)
+
+/-! ## §4b. The kernel of the seam map: the whole degree-3 window in `Q`-side coordinates -/
+
+/-- The degree-3 MV connecting map in the same `ℤ¹⁶` coordinates as `qSeamCoord3`:
+`∂₄ : H₄(K3;ℤ) → H₃(collar;ℤ) ≅ ℤ¹⁶`. -/
+abbrev k7Delta3Coord : Homology KummerK3top 4 →ₗ[ℤ] (EIndex → ℤ) :=
+  interH3EquivInt.toLinearMap ∘ₗ k7Delta 3
+
+theorem k7Delta3Coord_apply (a : Homology KummerK3top 4) :
+    k7Delta3Coord a = interH3EquivInt (k7Delta 3 a) := by
+  simp only [k7Delta3Coord, LinearMap.coe_comp, Function.comp_apply, LinearEquiv.coe_coe]
+
+/-- Vanishing of `Δ₃` is vanishing of its live half (the `E`-side component is always `0`). -/
+theorem delta3_eq_zero_iff (w : Homology (sub (X := KummerK3top) (qThick ∩ eImage)) 3) :
+    delta3 w = 0 ↔ collarToQThick3 w = 0 := by
+  constructor
+  · intro h
+    exact congrArg Prod.fst h
+  · intro h
+    exact Prod.ext h (eImageH3_eq_zero _)
+
+/-- **THE DEGREE-3 WINDOW, fully in `Q`-side coordinates (UNCONDITIONAL).**
+
+    H₄(K3;ℤ) --∂₄--> ℤ¹⁶ --qSeamCoord3--> H₃(Q;ℤ)
+
+is exact. Together with `qSeamCoord3_surjective_iff_h3K3_eq_zero` (the cokernel is `H₃(K3;ℤ)`) this
+pins the entire MV degree-3 window of the weld on a single ℤ-linear diagram whose only unknown
+object is `H₃(Q;ℤ)`: `im qSeamCoord3 ≅ ℤ¹⁶ / im ∂₄`, and `H₃(K3;ℤ) ≅ H₃(Q;ℤ) / im qSeamCoord3`. -/
+theorem exact_k7Delta3Coord_qSeamCoord3 : Function.Exact k7Delta3Coord qSeamCoord3 := by
+  intro v
+  have hker : qSeamCoord3 v = 0 ↔ collarToQThick3 (interH3EquivInt.symm v) = 0 := by
+    constructor
+    · intro h
+      have := congrArg (qThickHnEquivInt 2).symm h
+      simpa using this
+    · intro h
+      show (qThickHnEquivInt 2) (collarToQThick3 (interH3EquivInt.symm v)) = 0
+      rw [h, map_zero]
+  rw [hker, ← delta3_eq_zero_iff, k7_exact_inter 3 (interH3EquivInt.symm v)]
+  constructor
+  · rintro ⟨a, ha⟩
+    exact ⟨a, by rw [k7Delta3Coord_apply, ha, LinearEquiv.apply_symm_apply]⟩
+  · rintro ⟨a, ha⟩
+    refine ⟨a, ?_⟩
+    rw [← ha, k7Delta3Coord_apply, LinearEquiv.symm_apply_apply]
+
+/-- **The window extends one step left**: `ker ∂₄ = im Σ₄`. With
+`exact_k7Delta3Coord_qSeamCoord3` and `qSeamCoord3_surjective_iff_h3K3_eq_zero` this is the complete
+degree-4/3 MV window of the weld,
+
+    H₄(qThick;ℤ) ⊕ H₄(eImage;ℤ) --Σ₄--> H₄(K3;ℤ) --∂₄--> ℤ¹⁶ --qSeamCoord3--> H₃(Q;ℤ) ↠ H₃(K3;ℤ) → 0,
+
+with `Σ₄` injective (`k7Sum4_injective`) — every object but `H₃(Q;ℤ)` and `H₄(K3;ℤ)` is banked. -/
+theorem exact_k7Sum4_k7Delta3Coord :
+    Function.Exact (mvHomSumInt (X := KummerK3top) qThick eImage 4) k7Delta3Coord := by
+  intro b
+  have h : k7Delta3Coord b = 0 ↔ k7Delta 3 b = 0 := by
+    rw [k7Delta3Coord_apply]
+    exact LinearEquiv.map_eq_zero_iff interH3EquivInt
+  rw [h]
+  exact k7_exact_ambient 3 b
 
 /-! ## §5. The free-quotient descent: what the covering DOES give (and what it does NOT)
 
