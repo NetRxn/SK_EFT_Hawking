@@ -31,6 +31,19 @@ and there is therefore nothing to gain by "building the handle-trade cobordism" 
 dodge propagates up the entire Freeze-A reduction chain (`HandleTradeSplit`, `HyperbolicPeel`), so no
 statement layer above the primitive recovers the content either.
 
+**THE STRUCTURAL CONFINEMENT (§2b) — how far the finding does NOT reach.** Both dodges have
+`rank ≤ 2` (essentially forced: `s2s2_rank = 2` pins the slot while the handle-trade demands a
+rank-`0` residual), and Sylvester's `|σ| ≤ b₂` — lifted to the presentation level here as
+`abs_sig_le_rank` via the presentation's own `sig_eq` — makes that fatal: the route's generator
+binder `σ(K3) = −16` forces `16 ≤ rank g` (`sixteen_le_rank_of_generator`), so no rank-`≤2`
+presentation admits a generator at all (`no_generator_of_rank_le_two`). Both dodges also have
+`sig = 0`, and a σ-blind presentation discharging Freeze A + Freeze B would force `Ω^ξ` trivial
+(`subsingleton_of_sig_eq_zero`). **So the dodges refute the individual ATOMS, not the route.** What
+the audit establishes is narrower and sharper than "Freeze A is broken": *primitive (1) as currently
+stated is not a statement about handle-trading*, and a future E1 surgery foundation must state it on
+a presentation already constrained (by faithfulness, or by carrying the generator) — otherwise its
+theorem is discharged by a cylinder.
+
 **THE REPAIR (§5).** What the two dodges exploit is that `SpinSigmaPresentation` never requires
 `rank` to behave like `b₂`. `FaithfulRank` adds exactly the two literature-trivial facts that close
 the hole — `b₂(∅) = 0` and additivity of `b₂` under disjoint union — and both degenerate
@@ -130,6 +143,49 @@ theorem exists_hyperbolic_offDiagOne : ∀ {n : ℕ}, n = 0 ∨ n = 2 →
   · refine ⟨_, IsHyperbolicForm.cons (Equiv.sumEmpty (Fin 2) (Fin 0)) IsHyperbolicForm.empty, ?_⟩
     rw [offDiagOne_two]
     exact intCongr_hyp_block
+
+/-! ### §2b. Presentation-level invariants — the STRUCTURAL exclusion
+
+These hold for *every* `SpinSigmaPresentation`, with no extra hypothesis, and are what ultimately
+confines the zero-geometry dodges of §3–§4: they are rank-bounded, and a rank-bounded presentation
+cannot host the route's `σ = −16` generator. This exclusion is independent of the §5 repair. -/
+
+/-- **Sylvester at the presentation level**: `|σ(x)| ≤ b₂`. The presentation's own `sig_eq` turns
+`abs_latticeSig_le` (the inertia indices never exceed the rank) into a bound on the bordism-invariant
+signature by the declared rank. -/
+theorem abs_sig_le_rank (R : SpinSigmaPresentation ξ) (p : StrMfd ξ) :
+    |R.sig (DataBordismGrp.mk ξ p)| ≤ (R.rank p : ℤ) := by
+  rw [R.sig_eq p]
+  exact abs_latticeSig_le (R.form p)
+
+/-- **The route's generator binder costs rank 16.** `dataBordismGrp_equiv_int`'s generator witness
+`hg : R.sig [g] = −16` (K3) forces `16 ≤ R.rank g`. A falsifiable numerical consequence of
+`abs_sig_le_rank`: the `−16` of `hyp:spin_bordism_iso_Z` is not free of the `rank` field. -/
+theorem sixteen_le_rank_of_generator (R : SpinSigmaPresentation ξ) (g : StrMfd ξ)
+    (hg : R.sig (DataBordismGrp.mk ξ g) = -16) : 16 ≤ R.rank g := by
+  have h := abs_sig_le_rank R g
+  rw [hg, show |(-16 : ℤ)| = 16 from by norm_num] at h
+  omega
+
+/-- **No rank-bounded presentation can carry the σ-route.** If a presentation's `rank` never exceeds
+`2` then it admits no `σ = −16` generator, hence never reaches `dataBordismGrp_equiv_int`. Both
+zero-geometry dodges below have exactly this shape — and a two-valued `rank` is essentially forced on
+a dodge, since `s2s2_rank = 2` pins the slot while the handle-trade needs a rank-`0` residual. So the
+dodges are excluded from the *route* structurally, by Sylvester's inequality alone, with no appeal to
+the §5 faithfulness repair. -/
+theorem no_generator_of_rank_le_two (R : SpinSigmaPresentation ξ) (hrk : ∀ p, R.rank p ≤ 2)
+    (g : StrMfd ξ) : R.sig (DataBordismGrp.mk ξ g) ≠ -16 := by
+  intro hg
+  have h16 := sixteen_le_rank_of_generator R g hg
+  have h2 := hrk g
+  omega
+
+/-- **A σ-blind presentation is self-refuting.** If `R.sig = 0` then discharging Freeze A and Freeze
+B forces `Ω^ξ` to be a singleton, via the route's own `sig_injective`. Since `Ω₄^{Spin} ≅ ℤ` is not
+trivial, no `sig = 0` presentation can carry the route — and both dodges below have `sig = 0`. -/
+theorem subsingleton_of_sig_eq_zero (R : SpinSigmaPresentation ξ) (hsig : R.sig = 0)
+    (hA : R.RealizesSphereProducts) (hB : R.SphereProductBounds) (x : DataBordismGrp ξ) : x = 0 :=
+  R.sig_injective hA hB (by rw [hsig]; rfl)
 
 /-! ### §3. The rank-collapsed presentation — primitive (1) with ZERO geometry -/
 
@@ -243,10 +299,22 @@ theorem collapsedPresentation_subsingleton_of_base_and_bounds (ξ : TangentialDa
     (p₀ : StrMfd ξ) (hp₀ : Nonempty p₀.1.M)
     (hBase : (collapsedPresentation ξ p₀).HyperbolicBase)
     (hB : (collapsedPresentation ξ p₀).SphereProductBounds) (x : DataBordismGrp ξ) : x = 0 :=
-  (collapsedPresentation ξ p₀).sig_injective
-      (SpinSigmaPresentation.realizesSphereProducts_of_cobordism_and_base _
-        (collapsedPresentation_handleTradeCobordism ξ p₀ hp₀) hBase) hB
-    (show (0 : DataBordismGrp ξ →+ ℤ) x = (0 : DataBordismGrp ξ →+ ℤ) 0 from rfl)
+  subsingleton_of_sig_eq_zero _ rfl
+    (SpinSigmaPresentation.realizesSphereProducts_of_cobordism_and_base _
+      (collapsedPresentation_handleTradeCobordism ξ p₀ hp₀) hBase) hB x
+
+/-- The collapsed presentation is rank-bounded by `2` … -/
+theorem collapsedPresentation_rank_le_two (ξ : TangentialData.{u, v} X k I) (p₀ p : StrMfd ξ) :
+    (collapsedPresentation ξ p₀).rank p ≤ 2 := by
+  show collapsedRank p₀ p ≤ 2
+  rcases collapsedRank_cases p₀ p with h | h <;> omega
+
+/-- … hence, by §2b's Sylvester bound, it admits **no `σ = −16` generator** and cannot reach
+`dataBordismGrp_equiv_int`. The zero-geometry discharge of primitive (1) therefore buys nothing on
+the route: it lives only on presentations the route already excludes. -/
+theorem collapsedPresentation_no_generator (ξ : TangentialData.{u, v} X k I) (p₀ g : StrMfd ξ) :
+    (collapsedPresentation ξ p₀).sig (DataBordismGrp.mk ξ g) ≠ -16 :=
+  no_generator_of_rank_le_two _ (collapsedPresentation_rank_le_two ξ p₀) g
 
 /-! ### §4. The constant-rank-2 presentation — primitive (2) VACUOUSLY -/
 
@@ -292,6 +360,12 @@ theorem constRankTwoPresentation_not_handleTradeCobordism (ξ : TangentialData.{
   obtain ⟨p', hrk, -⟩ :=
     h p₀ 0 (Equiv.sumEmpty (Fin 2) (Fin 0)) 0 IsHyperbolicForm.empty intCongr_hyp_block
   exact constRankTwoPresentation_rank_ne_zero ξ p₀ p' hrk
+
+/-- The constant-rank-2 presentation is likewise rank-bounded by `2`, so §2b excludes it from the
+route: it admits **no `σ = −16` generator** either. Both dodges are confined the same way. -/
+theorem constRankTwoPresentation_no_generator (ξ : TangentialData.{u, v} X k I) (p₀ g : StrMfd ξ) :
+    (constRankTwoPresentation ξ p₀).sig (DataBordismGrp.mk ξ g) ≠ -16 :=
+  no_generator_of_rank_le_two _ (fun p => le_of_eq (constRankTwoPresentation_rank ξ p₀ p)) g
 
 /-! ### §5. The repair — `rank` faithfulness, and what primitive (1) then costs -/
 
