@@ -759,3 +759,31 @@ Nat.card (PairH2 ⧸ LinearMap.range pairProj) = 2 ^ 16` is the cokernel of the 
 **Status: planning fact, NOT kernel-encodable yet.** The determinant argument needs the 16+6 Gram
 computed in-tree, which has not been done. Nothing here is a refuted Prop, so there is no
 `KERNEL_NOGO_REGISTRY` entry — prose only, by the ADR-007 route-fact/refutation discrimination.
+
+## hker-opener-supplyGeo-is-non-reducing
+- `verdict`: `banned`
+- `tier`: `agent-reviewed`
+- `authored_by`: `coach`
+- `killed_by`: lead trace 2026-07-27 against the FROZEN ROUND-12 SPEC item 1
+  (`PinPlusResidualGate.lean:107-110`) + kernel fork
+  `dual-spin-opened-construction-conclusion-fakeable` (registry #19)
+- `reason`: **Do NOT dispatch `hker` as "inhabit `KTSharpnessSupplyGeo` and fire
+  `kerPhiSubDoubles_of_row_of_supplyGeo`".** That theorem is TRUE but NON-REDUCING: its input is
+  conclusion-strength. `KTSharpnessSupplyGeo.amb : ∀ x, Φ x = 0 → TopCat`
+  (`PinPlusKTDualSpinSubmanifold.lean:148`) is a **FREE `TopCat` field** — the docstring says
+  "intended value `TopCat.of b.W`", i.e. intent, not enforcement. Round-12 spec 1 binds exactly this:
+  a `KTSharpnessSupplyConstr`/`KTSharpnessSupplyGeo` claim is construction progress ONLY IF `amb x hx`
+  is the tethered witness's `TopCat.of b.W` and `Vspace`/`ιV`/`edge` are the genuine `w₁(W)`-dual data
+  — "**checked by DATA INSPECTION; the statement shape is conclusion-strength (G12-1) and can never
+  enforce this**". Kernel backing: `nonempty_dualSpinConstruction_iff_thirtytwo_dvd`,
+  `nonempty_ktSharpnessSupplyConstr_iff_hfwd`, `spinOfSigMul16_sig` (the σ-onto engine realizes a
+  genuine `SmoothSpinManifold4` for every multiple of 16, so on an unpinned ambient the whole opened
+  supply ⟺ the `hfwd` conclusion). **So `hker` is not "unstarted with an opener available" — the
+  opener does not open anything.** The real work is (1) an `amb`-PINNED supply shape that makes the
+  exploit type-level unavailable rather than leaving it to permanent data inspection, then (2) the
+  genuine `w₁(W)`-dual spin submanifold `V ⊂ W` (smooth transversality, Mathlib-absent).
+  ⚠ Method note for the lead: a `grep` for consumers of `KTSharpnessSupplyGeo` initially suggested
+  "no gate coverage"; that was WRONG — `PinPlusResidualGate.lean:107` names it explicitly. Read the
+  gate spec, never grep-conclude coverage (`feedback_no_grep_scoped_directionshift_claims`).
+- `memory`: `[[project_5qH_nonhausdorff_substrate_bug]]`
+- `created_ts`: 2026-07-27
