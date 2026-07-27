@@ -4860,6 +4860,7 @@ import SKEFTHawking.Carrollian.VirasoroExtension
 -- content (refl/symm of the refined relation; `GluesT2` ⟺ single-witness; the seam pushout with
 -- its compact/T2/end-map/`X`-map fields; `SeamGlueChart` = the exact residue)
 import SKEFTHawking.T2BordismGluing
+import SKEFTHawking.T2BordismGlueFamilies
 -- the lane instantiation: gluing ⟹ a single tethered null-bordism witness per `ker Φ` element
 -- (⛔ NOT routed into `KTSharpnessSupplyGeo` — see that module's SCOPE FENCE)
 import SKEFTHawking.PinPlusHkerSingleWitness
