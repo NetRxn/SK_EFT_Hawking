@@ -4470,6 +4470,17 @@ import SKEFTHawking.SpinSigmaGenerator
 -- (rank 22, σ=−16) to a neg-definite rank-16 residual (k3_candidate_split), and exposes the interior
 -- brick interface StableNegRank16 with the consumer stub hk3_of_stable16 reducing IntCongr M k3Form.
 import SKEFTHawking.EvenUnimodularIndefiniteSplit
+-- K8b interior, leaf 1 (Milnor-Husemoller II.4.3 entry point): an INDEFINITE ODD unimodular form of
+-- rank >= 5 represents +-1 by a PRIMITIVE vector (odd_indefinite_represents_one / _neg_one), built on
+-- the banked Meyer/Hasse-Minkowski isotropy weakIsotropic_of_five_le (which needs no evenness at that
+-- rank) plus elementary hyperbolic-pair algebra. Sharpness companion even_form_not_represents_one
+-- shows the odd-diagonal hypothesis is load-bearing, not decorative. (wt1-built.)
+import SKEFTHawking.OddIndefiniteUnitVector
+-- K8b interior, leaf 2: the two absorption identities that keep the Milnor-Husemoller induction from
+-- stalling on an even residual -- <1> (+) <-1>^8 ~= <1> (+) (-E8) via the del Pezzo K^perp = E8
+-- configuration (intCongr_I18_oneNegE8), and <1> (+) H ~= <1> (+) <1> (+) <-1> (intCongr_oneHyp_I21).
+-- Both explicit, kernel `decide`, no classification input and no native_decide. (wt1-built.)
+import SKEFTHawking.OddFormE8Absorption
 import SKEFTHawking.RP4Manifold
 import SKEFTHawking.RP2PointSet
 import SKEFTHawking.RP2Manifold

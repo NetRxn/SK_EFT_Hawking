@@ -234,7 +234,42 @@ rank-18 stabilization through the three peeled `H`'s → `reblockToK3`. -/
 unimodular rank-16 form `D` (`σ = −16`, `sigPos = 0`), adding a hyperbolic plane yields a form congruent to
 `H ⊕ 2(−E₈)`: `H ⊕ D ≅ H ⊕ 2(−E₈)` at rank 18, in the reindexing `e` the split produces. This is THE hard
 content the K8b escalation must discharge (rank-16 definite uniqueness `E₈² ≟ D₁₆⁺` is FALSE — the `H` is
-essential). Stated as a `Prop` so `hk3_of_stable16` can consume it before it is proved. -/
+essential). Stated as a `Prop` so `hk3_of_stable16` can consume it before it is proved.
+
+**ROUTE STATUS (do not re-derive the framing).** `StableNegRank16` is the Eichler/Kneser classification of
+indefinite even unimodular lattices; Mathlib has none of that theory (no genus, no spinor genus, no strong
+approximation, no `E₈`-lattice classification — only `CartanMatrix.E₈` as a matrix). The tractable route is
+the classical **Milnor–Husemoller II.4.3** one adjudicated in `KUMMER_K4K10_DESIGN.md`, which routes the
+EVEN statement through the ODD one:
+
+* `M := H ⊕ D` and `N := H ⊕ 2(−E₈)` are even unimodular of rank 18, `σ = −16`;
+* `M ⊕ ⟨1⟩` and `N ⊕ ⟨1⟩` are ODD unimodular of rank 19, `σ = −15`, indefinite, hence both `≅ ⟨1⟩² ⊕ ⟨−1⟩¹⁷`
+  by the odd classification;
+* in each, the adjoined `⟨1⟩` generator is a CHARACTERISTIC vector of self-product `1` whose orthogonal
+  complement is `M` (resp. `N`) — so transitivity of the automorphism group on such vectors gives `M ≅ N`.
+
+Two leaves of that route are now BANKED, kernel-pure (built wt1):
+
+* `SKEFTHawking.odd_indefinite_represents_one` / `_neg_one` (`OddIndefiniteUnitVector`) — the II.4.3 entry
+  point: an indefinite odd unimodular form of rank `≥ 5` represents `±1` primitively. Enabled by the banked
+  Meyer/Hasse–Minkowski `weakIsotropic_of_five_le`, which carries NO evenness hypothesis at rank `≥ 5`.
+* `SKEFTHawking.intCongr_I18_oneNegE8` and `SKEFTHawking.intCongr_oneHyp_I21` (`OddFormE8Absorption`) — the
+  absorption identities `⟨1⟩ ⊕ ⟨−1⟩⁸ ≅ ⟨1⟩ ⊕ (−E₈)` (explicit del Pezzo `K^⊥ = E₈` basis) and
+  `⟨1⟩ ⊕ H ≅ ⟨1⟩ ⊕ ⟨1⟩ ⊕ ⟨−1⟩`. These are what stop the induction stalling when a unit peel strands an
+  even residual (`H` and `±E₈` are the only blocks such a residual contributes).
+
+THREE pieces remain, in dependency order:
+
+1. **Unit-vector split engine** — the rank-1 analogue of `SplitHyperbolic`: from `x` with `x ⬝ᵥ M *ᵥ x = ε`
+   (`ε = ±1`), produce `IntCongr M (reindex e e (fromBlocks ⟨ε⟩ 0 0 M'))` with `M'` unimodular of rank
+   `n − 1`. Mirrors `hypPerp` / `hypFullBasis` / `residGram` / `gramB_eq` / `latticeSig_split` one rank down.
+   Mechanical, no new mathematics.
+2. **Milnor–Husemoller II.4.3** — odd indefinite unimodular `≅ ⟨1⟩^p ⊕ ⟨−1⟩^q`, by induction on rank using
+   (1) + `odd_indefinite_represents_±one` + the two absorptions. Bookkeeping-heavy, no new mathematics.
+3. **Wall's characteristic-vector transitivity** — in `⟨1⟩^p ⊕ ⟨−1⟩^q` indefinite, the automorphism group is
+   transitive on characteristic vectors of self-product `1`. This is the one genuinely remaining classical
+   input (it is what performs the `⟨1⟩`-cancellation), and it is the piece to escalate. It is elementary in
+   the sense of using only reflections — NOT genus theory — so it stays inside this route. -/
 def StableNegRank16 : Prop :=
   ∀ (D : Matrix (Fin 16) (Fin 16) ℤ) (e : Fin 2 ⊕ Fin 16 ≃ Fin 18),
     IsEvenUnimodular D → latticeSig D = -16 →
