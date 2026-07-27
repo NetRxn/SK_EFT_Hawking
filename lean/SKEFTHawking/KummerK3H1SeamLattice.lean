@@ -30,6 +30,13 @@ this form is `SeamWindingOdd`: *a lift of a difference of two distinct seam clas
 winding coordinate.* Its parity vector is lift-independent
 (`windowJ_sub_even_of_mapInt_qmkC_eq`), so no choice is hidden in it.
 
+§9 then builds the **explicit** lift — the seam-difference cycle `γ_c − γ_{c'} + v − τ_# v`
+(`seamDiffChain`, cycle by `seamDiffChain_cycle`, projecting to the seam-loop difference by
+`mapChainInt_qmkC_seamDiffChain`, hence lifting `seamClass c − seamClass c'` by
+`mapInt_qmkC_seamDiffClass`) — and `seamWindingOdd_of_explicit` shows it suffices to find an odd
+winding coordinate *on that one chain*, for an arbitrary connecting chain `v`. That is the
+concrete target left for the remaining geometry: four integers per pair of fixed points.
+
 **Honest scope.** `Function.Injective seamClass` is a *sufficient* condition, proved sufficient
 here; the converse is **not** proved (it would need the matching lower bound `16 ≤ |im p_*|`,
 i.e. surjectivity of the puncture window `H₁(T⁴°;ℤ) → H₁(T⁴;ℤ)`, which is not in the tree). It is
@@ -47,13 +54,21 @@ import SKEFTHawking.KummerT4CycleDetection
 
 namespace SKEFTHawking.KummerK3H1SeamLattice
 
-open SKEFTHawking.SingularHomologyInt (Homology chainBoundary)
+open SKEFTHawking.SingularHomologyInt (Homology chainBoundary SingularChainInt)
 open SKEFTHawking.SingularFunctorialityInt (Homology.mapInt Homology.mapInt_comp
-  Homology.mapInt_id)
+  Homology.mapInt_id Homology.mapInt_mk mapChainInt mapChainInt_single mapChainInt_comp
+  chainBoundary_mapChainInt)
+open SKEFTHawking.SingularHomotopyInvariance (constSimplex)
+open SKEFTHawking.CircleWindingCocycle (mapSimplex_constSimplex)
+open SKEFTHawking.SingularLineMinusPointInt (augmentationInt_single)
+open SKEFTHawking.KummerResolutionPiece (negS3)
+open SKEFTHawking.KummerRP3H1Pin (genRP3Simplex)
 open SKEFTHawking.KummerQuotientCovering (PTtop Qtop qmkC tauC tauC_comp_self qmkC_comp_tauC)
 open SKEFTHawking.KummerWeld (EIndex)
 open SKEFTHawking.ChainComplexLESInt
-open SKEFTHawking.KummerQuotientDeckFunctional (qDeck qDeck_qBdryMap)
+open SKEFTHawking.KummerQuotientDeckFunctional (qDeck qDeck_qBdryMap sBase sphereEmbedPT
+  tauFun_sphereEmbedPT qBdryMapC seamLoopSimplex seamLoop_cycle liftChain mapChainInt_liftChain
+  boundary_liftChain genRP3Class)
 open SKEFTHawking.KummerQuotientSmithSES
 open SKEFTHawking.KummerQuotientH2Solve (inclXC tauH_eq_mapInt)
 open SKEFTHawking.KummerPuncturedMV (x_H1_fixed_eq_zero puncture_hX1)
@@ -331,7 +346,138 @@ theorem seamClass_injective_of_seamWindingOdd (h : SeamWindingOdd) :
 theorem qLatticeInSeamSpan_of_seamWindingOdd (h : SeamWindingOdd) : QLatticeInSeamSpan :=
   qLatticeInSeamSpan_of_seamClass_injective (seamClass_injective_of_seamWindingOdd h)
 
-/-! ## §9. Downstream: the `h1Free` atom under the finite residual -/
+/-! ## §9. The explicit seam-difference cycle in `T⁴°`
+
+The residual `SeamWindingOdd` quantifies over *any* lift `y`; by
+`windowJ_sub_even_of_mapInt_qmkC_eq` its parity is lift-independent, so it suffices to evaluate
+the four winding functionals on **one** explicit lift. This section builds that lift.
+
+For a connecting `1`-chain `v` in `T⁴°` from the `c'`-sphere basepoint to the `c`-sphere
+basepoint (path-connectedness), the chain
+
+  `γ_c − γ_{c'} + v − τ_# v`
+
+is a cycle (`seamDiffChain_cycle`) whose `p_#`-image is the seam-loop difference
+(`mapChainInt_qmkC_seamDiffChain`), hence whose class lifts `seamClass c − seamClass c'`
+(`mapInt_qmkC_seamDiffClass`). Note the `τ`-corrected form: the connecting path enters twice with
+opposite deck parity, so it cancels under `p_#` (`p ∘ τ = p`) — which is why the *choice* of
+connecting path is invisible downstream. -/
+
+/-- The `0`-chain of the `c`-th sphere basepoint — the start of the `c`-th seam half-loop lift. -/
+def seamPtChain (c : EIndex) : SingularChainInt PTtop 0 :=
+  Finsupp.single (constSimplex (X := PTtop) (sphereEmbedPT c sBase) 0) 1
+
+/-- The deck involution moves the `c`-th sphere basepoint to its antipode on the same sphere
+(`tauFun_sphereEmbedPT`). -/
+theorem mapChainInt_tauC_seamPtChain (c : EIndex) :
+    mapChainInt tauC 0 (seamPtChain c)
+      = Finsupp.single (constSimplex (X := PTtop) (sphereEmbedPT c (negS3 sBase)) 0) 1 := by
+  rw [seamPtChain, mapChainInt_single, mapSimplex_constSimplex]
+  congr 2
+  exact tauFun_sphereEmbedPT c sBase
+
+/-- **A connecting chain exists**: `T⁴°` is path-connected, so the difference of two sphere
+basepoints has vanishing augmentation and therefore bounds. -/
+theorem exists_connecting_chain (c c' : EIndex) :
+    ∃ v : SingularChainInt PTtop 1,
+      chainBoundary PTtop 0 v = seamPtChain c - seamPtChain c' :=
+  SKEFTHawking.SingularH0PathConnectedInt.mem_boundaries_of_augmentationInt_eq_zero
+    (X := PTtop) basePt _ (by
+      rw [seamPtChain, seamPtChain, map_sub, augmentationInt_single, augmentationInt_single,
+        sub_self])
+
+/-- **The seam-difference chain** — the two sphere half-loops, closed up by a connecting path and
+its deck image. -/
+def seamDiffChain (c c' : EIndex) (v : SingularChainInt PTtop 1) : SingularChainInt PTtop 1 :=
+  liftChain c - liftChain c' + v - mapChainInt tauC 1 v
+
+/-- **The seam-difference chain is a cycle** — the four endpoint pairs cancel exactly. -/
+theorem seamDiffChain_cycle (c c' : EIndex) (v : SingularChainInt PTtop 1)
+    (hv : chainBoundary PTtop 0 v = seamPtChain c - seamPtChain c') :
+    chainBoundary PTtop 0 (seamDiffChain c c' v) = 0 := by
+  rw [seamDiffChain, map_sub, map_add, map_sub, boundary_liftChain, boundary_liftChain, hv,
+    chainBoundary_mapChainInt, hv, map_sub, mapChainInt_tauC_seamPtChain,
+    mapChainInt_tauC_seamPtChain, seamPtChain, seamPtChain]
+  abel
+
+/-- **The seam-difference chain projects to the seam-loop difference** — the connecting path
+cancels against its deck image because `p ∘ τ = p`. -/
+theorem mapChainInt_qmkC_seamDiffChain (c c' : EIndex) (v : SingularChainInt PTtop 1) :
+    mapChainInt qmkC 1 (seamDiffChain c c' v)
+      = Finsupp.single (seamLoopSimplex c) 1 - Finsupp.single (seamLoopSimplex c') 1 := by
+  have hτ : mapChainInt qmkC 1 (mapChainInt tauC 1 v) = mapChainInt qmkC 1 v := by
+    rw [← mapChainInt_comp, qmkC_comp_tauC]
+  rw [seamDiffChain, map_sub, map_add, map_sub, mapChainInt_liftChain, mapChainInt_liftChain, hτ]
+  abel
+
+/-- The pinned representation of a seam class by its seam-loop `1`-simplex. -/
+theorem seamClass_eq_mk (c : EIndex) :
+    seamClass c = SKEFTHawking.SingularHomologyInt.Homology.mk Qtop 1
+      ⟨Finsupp.single (seamLoopSimplex c) 1, mem_cycles_succ.mpr (seamLoop_cycle c)⟩ := by
+  rw [seamClass, genRP3Class, Homology.mapInt_mk]
+  congr 1
+  apply Subtype.ext
+  show mapChainInt (qBdryMapC c) 1 (Finsupp.single genRP3Simplex 1) = _
+  rw [mapChainInt_single]
+  rfl
+
+/-- **THE EXPLICIT LIFT of a seam difference.** The class of the seam-difference cycle is a
+`p_*`-preimage of `seamClass c − seamClass c'`; by §6 its winding parity vector is the *unique*
+such parity vector, so this is THE chain on which the four winding functionals of `SeamWindingOdd`
+are to be evaluated. -/
+theorem mapInt_qmkC_seamDiffClass (c c' : EIndex) (v : SingularChainInt PTtop 1)
+    (hv : chainBoundary PTtop 0 v = seamPtChain c - seamPtChain c') :
+    Homology.mapInt qmkC 1
+        (SKEFTHawking.SingularHomologyInt.Homology.mk PTtop 1
+          ⟨seamDiffChain c c' v, mem_cycles_succ.mpr (seamDiffChain_cycle c c' v hv)⟩)
+      = seamClass c - seamClass c' := by
+  rw [Homology.mapInt_mk, seamClass_eq_mk, seamClass_eq_mk]
+  have hcy : (SKEFTHawking.SingularFunctorialityInt.cyclesMapInt qmkC 1)
+        ⟨seamDiffChain c c' v, mem_cycles_succ.mpr (seamDiffChain_cycle c c' v hv)⟩
+      = (⟨Finsupp.single (seamLoopSimplex c) 1, mem_cycles_succ.mpr (seamLoop_cycle c)⟩
+          - ⟨Finsupp.single (seamLoopSimplex c') 1, mem_cycles_succ.mpr (seamLoop_cycle c')⟩ :
+        SKEFTHawking.SingularHomologyInt.cycles Qtop 1) :=
+    Subtype.ext (mapChainInt_qmkC_seamDiffChain c c' v)
+  rw [hcy]
+  rfl
+
+/-- **Every seam difference has an explicit lift** — the `∃` form, feeding `SeamWindingOdd`
+directly. -/
+theorem exists_seamDiff_lift (c c' : EIndex) :
+    ∃ (v : SingularChainInt PTtop 1) (hv : chainBoundary PTtop 0 v
+        = seamPtChain c - seamPtChain c'),
+      Homology.mapInt qmkC 1
+          (SKEFTHawking.SingularHomologyInt.Homology.mk PTtop 1
+            ⟨seamDiffChain c c' v, mem_cycles_succ.mpr (seamDiffChain_cycle c c' v hv)⟩)
+        = seamClass c - seamClass c' := by
+  obtain ⟨v, hv⟩ := exists_connecting_chain c c'
+  exact ⟨v, hv, mapInt_qmkC_seamDiffClass c c' v hv⟩
+
+/-- **THE CONCRETE TARGET** — `SeamWindingOdd` reduces to an odd winding coordinate on the
+*explicit* seam-difference cycle of §9, for an arbitrary connecting chain `v`.
+
+This is the shape in which the remaining geometry should be attacked: no quantifier over lifts,
+no quantifier over `H₁`; just the four integers `windowJ [γ_c − γ_{c'} + v − τ_# v] i`. (And by
+`windowJ_sub_even_of_mapInt_qmkC_eq` the `v`-dependence is even, so it cancels mod 2 — the
+connecting path never has to be computed with.) -/
+theorem seamWindingOdd_of_explicit
+    (h : ∀ (c c' : EIndex), c ≠ c' → ∀ (v : SingularChainInt PTtop 1)
+      (hv : chainBoundary PTtop 0 v = seamPtChain c - seamPtChain c'),
+        ∃ i : Fin 4, ¬ ((2 : ℤ) ∣ windowJ (SKEFTHawking.SingularHomologyInt.Homology.mk PTtop 1
+          ⟨seamDiffChain c c' v, mem_cycles_succ.mpr (seamDiffChain_cycle c c' v hv)⟩) i)) :
+    SeamWindingOdd := by
+  intro c c' hne y hy
+  obtain ⟨v, hv⟩ := exists_connecting_chain c c'
+  obtain ⟨i, hi⟩ := h c c' hne v hv
+  refine ⟨i, fun hdvd => hi ?_⟩
+  have heq : Homology.mapInt qmkC 1 (SKEFTHawking.SingularHomologyInt.Homology.mk PTtop 1
+        ⟨seamDiffChain c c' v, mem_cycles_succ.mpr (seamDiffChain_cycle c c' v hv)⟩)
+      = Homology.mapInt qmkC 1 y := by
+    rw [mapInt_qmkC_seamDiffClass c c' v hv, hy]
+  have h2 := windowJ_sub_even_of_mapInt_qmkC_eq heq i
+  omega
+
+/-! ## §10. Downstream: the `h1Free` atom under the finite residual -/
 
 /-- **`H₁(K3;ℤ) = 0`** under the finite seam-distinctness residual. -/
 theorem h1K3_eq_zero_of_seamClass_injective (hinj : Function.Injective seamClass)
