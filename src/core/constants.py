@@ -3917,6 +3917,17 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
 # nogo_kind (refutation | structural_forcing | counterexample), false_statement (the path it
 # kills, one line), memory ([[slug]]).
 KERNEL_NOGO_REGISTRY: dict[str, dict] = {
+    'hker-single-witness-extraction-is-equivalent-to-gluing': {
+        'fork_id': 'hker-single-witness-extraction-is-equivalent-to-gluing',
+        'backing_theorems': [
+            'SKEFTHawking.T2BordismGluing.gluesT2_iff_singleWitness',
+            'SKEFTHawking.T2BordismGluing.IsT2DataBordant.refl',
+            'SKEFTHawking.T2BordismGluing.IsT2DataBordant.symm',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'The single tethered null-bordism witness that hker needs -- extracting one IsT2DataBordant from T2DataBordismGrp.mk = 0 -- can be obtained by a cleverer use of the quotient, a reformulation of the extraction, or any route that AVOIDS proving bordism gluing (transitivity). FALSE (2026-07-27, wt2, lead-verified: I read both directions of the iff and re-checked refl/symm are binder-free). gluesT2_iff_singleWitness proves the extraction is EQUIVALENT to gluing, not merely implied by it: the reverse direction routes the two hypotheses through Quot.sound and back, so any means of performing the extraction for all p,q IS a proof of transitivity. Combined with refl (reflCylinder) and symm (symmBor) being UNCONDITIONAL in tree, gluing is the SOLE missing equivalence law. Do not dispatch a search for a shortcut; the geometric content is irreducible. SCOPE: this is a forcing result, NOT a refutation -- GluesT2 is TRUE mathematically (every bordism admits a collar); it is an open unformalized node, not a dead fork. The wall is precisely typed: SeamGlueChart bundles the exactly-four residual Bordism fields (chartW, mfdW, he_smooth, he_boundary) and Bordism.ofSeamGlueChart assembles the composite from it plus the eight generically-constructed pieces, so 8 of 12 fields are already discharged and the residue is charts-at-the-seam = the collar neighbourhood theorem. Mathlib names the same gap in its own Geometry/Manifold/Bordism.lean and has neither the collar theorem nor boundary-is-a-submanifold. ALSO SETTLED HERE: the Hausdorff refinement is FREE along the weld (t2Space_glueCarrier, proper-map route), so the NonHausdorffBordismCollapse repair adds no obstruction to gluing.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'hcolD-same-carrier-collapse-refuted-on-wu-witness': {
         'fork_id': 'hcolD-same-carrier-collapse-refuted-on-wu-witness',
         'backing_theorems': [

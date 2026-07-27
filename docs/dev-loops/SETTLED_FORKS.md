@@ -943,3 +943,38 @@ search for the bridge (`lean_local_search` on the map/iso name), not just the tw
   is not a verdict about the tree — search by declaration, not by filename.*
 - `memory`: `[[project_5qH_nonhausdorff_substrate_bug]]`
 - `created_ts`: 2026-07-27
+
+## `do-not-redefine-bordism-on-collared-representatives` (2026-07-27, arm: close-out — LEAD DECISION)
+- `kind`: scope/policy decision (prose — a route choice, not a false statement).
+- `context`: wt2 surfaced a genuine lead-level scope call while scoping bordism gluing. Since arc A
+  (the collar neighbourhood theorem) is Mathlib-grade, an alternative is to **redefine
+  `IsT2DataBordant` on COLLARED bordisms**, packaging the collar as data. Gluing would then be
+  constructible from `SingularSurgerySeamCollar.WeldedCollarModel`-style double collars, and
+  "mathematically it is the same relation" by the collar theorem.
+- ⛔ **DECISION: DO NOT DO THIS.** Taken by the lead after diligence; not escalated, because one
+  option is clearly better on correctness grounds.
+- **Why (the decisive argument):** without the collar theorem in Lean, the collared relation is
+  a priori **strictly finer** than plain bordism — `Collared → Bordant` is easy, `Bordant → Collared`
+  is exactly the missing theorem. A finer relation gives a **LARGER quotient**. So
+  `T2DataBordismGrp` built on it could be a *different, bigger* group, and proving `≅ ℤ/16` about it
+  would be proving something about the wrong object — precisely the failure the goal's FAITHFUL-carrier
+  condition exists to prevent, and the exact shape of the `k = 0` fence ("at `k = 0` the honest group
+  is the wrong one"). It also makes **injectivity strictly harder** (Brown = 0 must now yield a
+  *collared* bordism), while surjectivity stays easy since our witnesses have explicit collars — a
+  tell-tale sign the change buys convenience by moving the difficulty rather than removing it.
+- Secondary: it is walk-back-shaped — changing the definition so the claim goes through. Standing
+  policy (`feedback_remediation_build_dont_walkback`) is to build the substrate that makes the claim
+  true, or prove it cannot be built; never redefine as the fix.
+- ✅ **DO INSTEAD — the third option, which is cheaper than either and costs no faithfulness.**
+  wt2's `SeamGlueChart` **types the wall exactly**: `Bordism.ofSeamGlueChart` already assembles the
+  composite from 8 generically-constructed fields, leaving exactly four (`chartW`, `mfdW`,
+  `he_smooth`, `he_boundary`). **Inhabit `SeamGlueChart` for the CONCRETE families actually in play**
+  (cylinder, surgery trace, sphere-product coboundary) rather than proving the general collar theorem.
+  This is the project's established and repeatedly-successful pattern — the Kummer weld's `IsManifold`
+  came from ~15 modules of concrete atlas work, not a generic engine — and it leaves the relation, and
+  therefore the group, untouched. The general collar theorem stays the eventual goal, not the
+  precondition.
+- `related`: `KERNEL_NOGO_REGISTRY['hker-single-witness-extraction-is-equivalent-to-gluing']` (the
+  extraction is EQUIVALENT to gluing, so no shortcut exists) and task **#312**.
+- `memory`: `[[project_5qH_nonhausdorff_substrate_bug]]`
+- `created_ts`: 2026-07-27
