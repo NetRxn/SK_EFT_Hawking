@@ -356,7 +356,132 @@ theorem odd_indefinite_unit_peel {n : ℕ} (hge : 5 ≤ n) (M : Matrix (Fin n) (
   obtain ⟨hsp2, hsn2⟩ := indefinite_of_abs_sig_lt _ hsymm2 hunim2 hlt2
   exact ⟨ε, unitResidGram M y hfr2, e2, hε, hcong2, hsymm2, hunim2, hodd2, hsp2, hsn2⟩
 
-/-! ### The remaining gap: ranks 2, 3, 4
+/-! ### Base cases discharged here: ranks 0, 1 (vacuous) and 2 (constructive) -/
+
+/-- The value of the real quadratic form attached to a real matrix. -/
+theorem toQuadraticMap'_apply_real {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) (x : Fin n → ℝ) :
+    A.toQuadraticMap' x = x ⬝ᵥ A *ᵥ x := by
+  simp [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply,
+    Matrix.toLinearMap₂'_apply']
+
+/-- `0 < sigNeg Q` exhibits an actual vector of negative value. -/
+theorem exists_neg_value_of_sigNeg_pos {V : Type*} [AddCommGroup V] [Module ℝ V]
+    [FiniteDimensional ℝ V] (Q : QuadraticForm ℝ V) (h : 0 < sigNeg Q) : ∃ x : V, Q x < 0 := by
+  rw [sigNeg] at h
+  obtain ⟨W, hW, hWpos⟩ := exists_finrank_eq_sigPos_and_posDef (-Q)
+  have hWne : W ≠ ⊥ := by intro hb; rw [hb, finrank_bot] at hW; omega
+  obtain ⟨x, hxW, hx0⟩ := W.exists_mem_ne_zero_of_ne_bot hWne
+  have hpos : 0 < (-Q) x := by
+    have := hWpos ⟨x, hxW⟩ (by simpa [Subtype.ext_iff] using hx0)
+    rwa [QuadraticMap.restrict_apply] at this
+  exact ⟨x, by simpa using hpos⟩
+
+/-- `0 < sigPos Q` exhibits an actual vector of positive value. -/
+theorem exists_pos_value_of_sigPos_pos {V : Type*} [AddCommGroup V] [Module ℝ V]
+    [FiniteDimensional ℝ V] (Q : QuadraticForm ℝ V) (h : 0 < sigPos Q) : ∃ x : V, 0 < Q x := by
+  obtain ⟨W, hW, hWpos⟩ := exists_finrank_eq_sigPos_and_posDef Q
+  have hWne : W ≠ ⊥ := by intro hb; rw [hb, finrank_bot] at hW; omega
+  obtain ⟨x, hxW, hx0⟩ := W.exists_mem_ne_zero_of_ne_bot hWne
+  refine ⟨x, ?_⟩
+  have := hWpos ⟨x, hxW⟩ (by simpa [Subtype.ext_iff] using hx0)
+  rwa [QuadraticMap.restrict_apply] at this
+
+/-- **A rank-2 indefinite unimodular form has `det = −1`.** If `det = +1` then
+`a·q(x) = (a x₀ + b x₁)² + x₁² ≥ 0` for every real `x` (with `a = M 0 0`, `b = M 0 1`), so a vector of
+negative value forces `a ≤ 0` and a vector of positive value forces `a ≥ 0`; then `a = 0` makes
+`det = −b² = 1` impossible. This is the determinant-sign input the rank-2 isotropic construction needs. -/
+theorem binary_det_eq_neg_one (M : Matrix (Fin 2) (Fin 2) ℤ) (hsymm : Mᵀ = M)
+    (hunim : IsUnimodular M)
+    (hsp : 0 < sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
+    (hsn : 0 < sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap') : M.det = -1 := by
+  have hb : M 1 0 = M 0 1 := by
+    have h := congrFun (congrFun hsymm 0) 1; simpa [Matrix.transpose_apply] using h
+  rcases hunim with h1 | h1
+  · exfalso
+    have hd : M 0 0 * M 1 1 - M 0 1 * M 0 1 = 1 := by
+      rw [Matrix.det_fin_two, hb] at h1; exact h1
+    have hval : ∀ x : Fin 2 → ℝ, (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' x
+        = (M 0 0 : ℝ) * x 0 ^ 2 + 2 * (M 0 1 : ℝ) * x 0 * x 1 + (M 1 1 : ℝ) * x 1 ^ 2 := by
+      intro x
+      rw [toQuadraticMap'_apply_real]
+      simp only [dotProduct, Matrix.mulVec, Fin.sum_univ_two, Matrix.map_apply, hb]
+      ring
+    have hnn : ∀ x : Fin 2 → ℝ, 0 ≤ (M 0 0 : ℝ) * (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' x := by
+      intro x
+      have hkey : (M 0 0 : ℝ) * (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' x
+          = ((M 0 0 : ℝ) * x 0 + (M 0 1 : ℝ) * x 1) ^ 2
+            + ((M 0 0 * M 1 1 - M 0 1 * M 0 1 : ℤ) : ℝ) * x 1 ^ 2 := by
+        rw [hval]; push_cast; ring
+      rw [hkey, hd]
+      positivity
+    obtain ⟨x, hx⟩ := exists_neg_value_of_sigNeg_pos _ hsn
+    obtain ⟨y, hy⟩ := exists_pos_value_of_sigPos_pos _ hsp
+    have hale : (M 0 0 : ℝ) ≤ 0 := by nlinarith [hnn x]
+    have hage : (0 : ℝ) ≤ (M 0 0 : ℝ) := by nlinarith [hnn y]
+    have ha0 : M 0 0 = 0 := by exact_mod_cast le_antisymm hale hage
+    rw [ha0] at hd
+    nlinarith [sq_nonneg (M 0 1), hd]
+  · exact h1
+
+/-- **A rank-2 symmetric form of determinant `−1` has an explicit nonzero isotropic vector.** With
+`a = M 0 0`, `b = M 0 1`: if `a = 0` take `(1, 0)`; otherwise take `(1 − b, a)`, whose value is
+`a·(1 − (b² − ac)) = 0` since `b² − ac = −det = 1`. Fully constructive — no local-global input. -/
+theorem binary_isotropic_of_det_neg_one (M : Matrix (Fin 2) (Fin 2) ℤ) (hsymm : Mᵀ = M)
+    (hdet : M.det = -1) : ∃ v : Fin 2 → ℤ, v ≠ 0 ∧ v ⬝ᵥ M *ᵥ v = 0 := by
+  have hb : M 1 0 = M 0 1 := by
+    have h := congrFun (congrFun hsymm 0) 1; simpa [Matrix.transpose_apply] using h
+  have hd : M 0 0 * M 1 1 - M 0 1 * M 0 1 = -1 := by
+    rw [Matrix.det_fin_two, hb] at hdet; exact hdet
+  by_cases ha : M 0 0 = 0
+  · refine ⟨![1, 0], ?_, ?_⟩
+    · intro h; have := congrFun h 0; simp at this
+    · simp only [dotProduct, Matrix.mulVec, Fin.sum_univ_two, Matrix.cons_val_zero,
+        Matrix.cons_val_one, Matrix.head_cons]
+      rw [ha]; ring
+  · refine ⟨![1 - M 0 1, M 0 0], ?_, ?_⟩
+    · intro h
+      have h1 := congrFun h 1
+      simp only [Matrix.cons_val_one, Matrix.head_cons, Pi.zero_apply] at h1
+      exact ha h1
+    · simp only [dotProduct, Matrix.mulVec, Fin.sum_univ_two, Matrix.cons_val_zero,
+        Matrix.cons_val_one, Matrix.head_cons, hb]
+      linear_combination (M 0 0) * hd
+
+/-- A rank-1 unimodular form is `±1`-diagonal. -/
+theorem isPMDiagonal_of_rank_one (M : Matrix (Fin 1) (Fin 1) ℤ) (h : IsUnimodular M) :
+    IsPMDiagonal M := by
+  rw [IsUnimodular, Matrix.det_fin_one] at h
+  refine ⟨fun _ => M 0 0, fun i => h, ?_⟩
+  ext i j; fin_cases i; fin_cases j; simp
+
+/-- **Rank ≤ 1 cannot be indefinite** — the vacuous base cases. -/
+theorem not_indefinite_of_rank_le_one {n : ℕ} (hn : n ≤ 1) (M : Matrix (Fin n) (Fin n) ℤ)
+    (hsymm : Mᵀ = M) (hunim : IsUnimodular M)
+    (hsp : 0 < sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
+    (hsn : 0 < sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap') : False := by
+  have hsum := QuadraticForm.sigPos_add_sigNeg_add_radical
+    (Q := (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
+  rw [unimodular_radical_eq_bot M hsymm hunim] at hsum
+  simp only [finrank_bot, add_zero, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at hsum
+  omega
+
+/-- **The rank-2 base case, DISCHARGED.** An odd indefinite unimodular binary form is `±1`-diagonal
+(necessarily `⟨1⟩ ⊕ ⟨−1⟩`). Chain: `binary_det_eq_neg_one` → `binary_isotropic_of_det_neg_one` →
+`odd_unimodular_represents_one_of_isotropic` (the rank-free entry point) → `unit_split_congr`, whose
+rank-1 residual is unimodular hence `⟨±1⟩`. -/
+theorem oddBinary_pmDiagonal (M : Matrix (Fin 2) (Fin 2) ℤ) (hsymm : Mᵀ = M)
+    (hunim : IsUnimodular M) (hodd : ∃ i, ¬ (2 ∣ M i i))
+    (hsp : 0 < sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
+    (hsn : 0 < sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap') :
+    ∃ N, IsPMDiagonal N ∧ IntCongr M N := by
+  obtain ⟨i₀, hi₀⟩ := hodd
+  obtain ⟨v, hvne, hviso⟩ :=
+    binary_isotropic_of_det_neg_one M hsymm (binary_det_eq_neg_one M hsymm hunim hsp hsn)
+  obtain ⟨x, -, hx⟩ := odd_unimodular_represents_one_of_isotropic M hsymm hunim i₀ hi₀ v hvne hviso
+  obtain ⟨M', e, hcong, -, hunim', -⟩ := unit_split_congr M hsymm hunim 1 (Or.inl rfl) x hx
+  exact ⟨_, isPMDiagonal_cons 1 (Or.inl rfl) e (isPMDiagonal_of_rank_one M' hunim'), hcong⟩
+
+/-! ### The remaining gap: ranks 3 and 4
 
 `odd_indefinite_unit_peel` drives the induction from any rank down to rank 4, where
 `odd_indefinite_represents_one` runs out (it consumes Meyer/Hasse–Minkowski
@@ -367,11 +492,12 @@ interface, in the project's usual style (`HasWeakIsotropicVectorHyp`, `StableNeg
 isotropic-vector-then-unit-vector chain that `odd_indefinite_represents_one` runs, each small rank
 reduces to: *an odd indefinite unimodular form of that rank has a nonzero integer isotropic vector.*
 
-* **Rank 2** is elementary and constructive: `det = ac − b² = −1` makes `(1 − b, a)` isotropic
-  (`a·q(1−b, a) = a·(1 − (b² − ac)) = 0`), or `(1, 0)` when `a = 0`. What it additionally needs is
-  the determinant sign — `latticeSig = 0` forces `det = −1`, since `det = +1` makes `a·q = (ax+by)² + y²`
-  semidefinite and hence `σ = ±2`.
-* **Ranks 3 and 4** are a genuine Hasse–Minkowski discharge, of the same shape as the ~600-line
+* **Ranks 0 and 1** are vacuous (`not_indefinite_of_rank_le_one`) — DISCHARGED above.
+* **Rank 2** is elementary and constructive (`oddBinary_pmDiagonal`) — DISCHARGED above:
+  `det = ac − b² = −1` makes `(1 − b, a)` isotropic (`a·q(1−b, a) = a·(1 − (b² − ac)) = 0`), or
+  `(1, 0)` when `a = 0`; the determinant sign itself comes from indefiniteness
+  (`binary_det_eq_neg_one`), since `det = +1` makes `a·q = (ax+by)² + y²` semidefinite.
+* **Ranks 3 and 4 REMAIN.** They are a genuine Hasse–Minkowski discharge, of the same shape as the ~600-line
   `RokhlinHMRankFour`, but NOT reducible to it: that file is specific to EVEN unimodular rank-4 forms,
   and specifically to the **square-discriminant** branch (it first proves `det = +1` from evenness,
   `det_eq_one_of_evenUnimodular_four`, in order to reach
@@ -381,21 +507,23 @@ reduces to: *an odd indefinite unimodular form of that rank has a nonzero intege
   banked pieces — `isotropic_padicInt_of_unit_det` (odd `p`, rank `≥ 3`) plus the reciprocity step
   `hilbertPrime_two_eq_one_of_real_odd` that pins the place `2` — but each is a build, not a rewrite. -/
 
-/-- **The rank-`≤ 4` base-case interface (OPEN).** An odd indefinite unimodular form of rank at most
-`4` is congruent to a `±1`-diagonal. See the section comment above for exactly what discharging this
-costs at each of ranks 2, 3, 4. -/
-def OddSmallRankDiagonalizable : Prop :=
-  ∀ (n : ℕ), n ≤ 4 → ∀ (M : Matrix (Fin n) (Fin n) ℤ), Mᵀ = M → IsUnimodular M →
+/-- **The rank-3/4 base-case interface — the ONLY residue (OPEN).** An odd indefinite unimodular form
+of rank `3` or `4` is congruent to a `±1`-diagonal. Ranks `≤ 2` are discharged above
+(`not_indefinite_of_rank_le_one`, `oddBinary_pmDiagonal`); see the section comment for exactly what
+discharging ranks 3 and 4 costs. -/
+def OddRank34Diagonalizable : Prop :=
+  ∀ (n : ℕ), 3 ≤ n → n ≤ 4 → ∀ (M : Matrix (Fin n) (Fin n) ℤ), Mᵀ = M → IsUnimodular M →
     (∃ i, ¬ (2 ∣ M i i)) →
     0 < sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' →
     0 < sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' →
     ∃ N, IsPMDiagonal N ∧ IntCongr M N
 
-/-- **Milnor–Husemoller II.4.3** (relative to the rank-`≤ 4` base cases): an odd indefinite
+/-- **Milnor–Husemoller II.4.3** (relative to the rank-3/4 base cases): an odd indefinite
 unimodular integer form is congruent to `⟨1⟩^p ⊕ ⟨−1⟩^q`. Strong induction on rank: peel a unit block
 with an odd indefinite residual (`odd_indefinite_unit_peel`, UNCONDITIONAL) while the rank exceeds 4,
-and re-block through `IntCongr.block_left` + `isPMDiagonal_cons`. -/
-theorem odd_indefinite_pmDiagonal (hsmall : OddSmallRankDiagonalizable) :
+and re-block through `IntCongr.block_left` + `isPMDiagonal_cons`. Ranks `0, 1` are vacuous and rank
+`2` is discharged constructively, so `hsmall` carries only ranks 3 and 4. -/
+theorem odd_indefinite_pmDiagonal (hsmall : OddRank34Diagonalizable) :
     ∀ {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ), Mᵀ = M → IsUnimodular M →
       (∃ i, ¬ (2 ∣ M i i)) →
       0 < sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' →
@@ -406,7 +534,11 @@ theorem odd_indefinite_pmDiagonal (hsmall : OddSmallRankDiagonalizable) :
   | _ n IH =>
     intro M hsymm hunim hodd hsp hsn
     rcases Nat.lt_or_ge n 5 with hlt | hge
-    · exact hsmall n (by omega) M hsymm hunim hodd hsp hsn
+    · rcases Nat.lt_or_ge n 2 with hlt1 | hge2
+      · exact (not_indefinite_of_rank_le_one (by omega) M hsymm hunim hsp hsn).elim
+      rcases Nat.eq_or_lt_of_le hge2 with heq | hgt2
+      · subst heq; exact oddBinary_pmDiagonal M hsymm hunim hodd hsp hsn
+      · exact hsmall n (by omega) (by omega) M hsymm hunim hodd hsp hsn
     · obtain ⟨i₀, hi₀⟩ := hodd
       obtain ⟨ε, M', e, hε, hcong, hsymm', hunim', hodd', hsp', hsn'⟩ :=
         odd_indefinite_unit_peel hge M hsymm hunim i₀ hi₀ hsp hsn
@@ -417,7 +549,7 @@ theorem odd_indefinite_pmDiagonal (hsmall : OddSmallRankDiagonalizable) :
 rank-`≤ 4` base cases) — the form of II.4.3 the `StableNegRank16` assembly consumes: both `M ⊕ ⟨1⟩`
 and `N ⊕ ⟨1⟩` reduce to the same `⟨1⟩^p ⊕ ⟨−1⟩^q`. Combines `odd_indefinite_pmDiagonal` with the
 uniqueness of the normal form (`IsPMDiagonal.intCongr_of_latticeSig`). -/
-theorem odd_indefinite_intCongr (hsmall : OddSmallRankDiagonalizable) {n : ℕ}
+theorem odd_indefinite_intCongr (hsmall : OddRank34Diagonalizable) {n : ℕ}
     (M N : Matrix (Fin n) (Fin n) ℤ)
     (hsymmM : Mᵀ = M) (hunimM : IsUnimodular M) (hoddM : ∃ i, ¬ (2 ∣ M i i))
     (hspM : 0 < sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
