@@ -83,6 +83,24 @@ theorem nonempty_intOrientation_of_ker_ne_bot (h : LinearMap.ker qSeamCoord3 ≠
   haveI := nontrivial_h4K3_of_ker_ne_bot h
   exact SKEFTHawking.IntOrientationFreeTopHomology.nonempty_intOrientation_of_free_nontrivial
 
+/-- **The converse** — the orientation atom forces a nontrivial seam kernel. `IntOrientation` carries
+`fundClass ≠ 0` (its reduction is `[K3]₂ ≠ 0`), and the seam kernel computes `H₄(K3;ℤ)`. -/
+theorem ker_ne_bot_of_nonempty_intOrientation (h : Nonempty (IntOrientation KummerK3)) :
+    LinearMap.ker qSeamCoord3 ≠ ⊥ := by
+  haveI : Nontrivial (Homology KummerK3top 4) :=
+    SKEFTHawking.IntOrientationFreeTopHomology.nontrivial_h4_of_nonempty_intOrientation h
+  exact Submodule.nontrivial_iff_ne_bot.mp h4K3EquivKerQSeamCoord3.toEquiv.symm.nontrivial
+
+/-- **THE RESIDUAL, LOSSLESSLY.** The `K3` orientation atom exists **iff** the sixteen seam `ℝP³`
+classes are ℤ-linearly dependent in `H₃(Q;ℤ)`. Nothing is given away by §2's sufficient form: the
+degree-4 route is not an over-approximation but the exact content of the datum on this carrier
+(freeness of `H₄(K3;ℤ)` and connectedness of the weld are both unconditional in tree, so the generic
+`↔` of `IntOrientationFreeTopHomology.nonempty_intOrientation_iff_nontrivial_h4` applies with no
+hypotheses left over). -/
+theorem nonempty_intOrientation_iff_ker_ne_bot :
+    Nonempty (IntOrientation KummerK3) ↔ LinearMap.ker qSeamCoord3 ≠ ⊥ :=
+  ⟨ker_ne_bot_of_nonempty_intOrientation, nonempty_intOrientation_of_ker_ne_bot⟩
+
 /-! ## §3. The geometric phrasing: ONE relation among the sixteen seam classes -/
 
 /-- **The `orient` atom from a single explicit seam relation.** If some nonzero integer vector

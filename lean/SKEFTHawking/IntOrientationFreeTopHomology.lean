@@ -131,4 +131,58 @@ theorem nonempty_intOrientation_of_free_nontrivial
   SKEFTHawking.IntOrientationMod2Lift.nonempty_intOrientation_iff_mem_range.mpr
     mem_range_redHomology_of_free_nontrivial
 
+/-! ## §5. The criterion is SHARP — the converse needs neither freeness nor connectedness -/
+
+omit [PreconnectedSpace M] in
+/-- **The datum forces `H₄(M;ℤ) ≠ 0`.** An `IntOrientation M` carries `fundClass` whose reduction is
+`[M]₂`, and `[M]₂ ≠ 0` unconditionally (`SingularFundamentalClass.fundamentalClass_ne_zero`), so
+`fundClass ≠ 0`. Note the asymmetry: this direction uses neither `Module.Free` nor
+`PreconnectedSpace` — they are needed only to go the other way. -/
+theorem nontrivial_h4_of_nonempty_intOrientation (h : Nonempty (IntOrientation M)) :
+    Nontrivial (Homology (TopCat.of M) 4) := by
+  classical
+  obtain ⟨o⟩ := h
+  refine ⟨⟨o.fundClass, 0, fun hz => ?_⟩⟩
+  have hred : redHomology (TopCat.of M) 4 o.fundClass = 0 := by rw [hz, map_zero]
+  rw [o.redCompat] at hred
+  exact SKEFTHawking.SingularFundamentalClass.fundamentalClass_ne_zero (m := 2)
+    (Classical.arbitrary M) hred
+
+/-- **ORIENTABILITY IS EXACTLY NONVANISHING TOP HOMOLOGY** for a closed connected charted
+4-manifold with free `H₄(M;ℤ)`. The classical statement, as an `↔`: nothing is given away by the §4
+sufficient form. (Freeness is not decorative — it is what turns "nonzero" into "has a non-2-divisible
+element". A hypothetically 2-divisible nonzero `H₄` would reduce to `0` mod 2 and carry no lift.) -/
+theorem nonempty_intOrientation_iff_nontrivial_h4
+    [Module.Free ℤ (Homology (TopCat.of M) 4)] :
+    Nonempty (IntOrientation M) ↔ Nontrivial (Homology (TopCat.of M) 4) :=
+  ⟨nontrivial_h4_of_nonempty_intOrientation, fun h => by
+    haveI := h; exact nonempty_intOrientation_of_free_nontrivial⟩
+
+/-! ## §6. Non-vacuity: the criterion fires at the in-tree `S⁴` witness -/
+
+open SKEFTHawking.SphereWitnessTowerInt (SphereFour)
+open SKEFTHawking.SingularSphereAcyclic (Sph)
+open SKEFTHawking.SingularLineMinusPointInt (topSphereIsoInt)
+
+/-- `H₄(S⁴;ℤ) ≅ ℤ` is nontrivial (`topSphereIsoInt 3`). -/
+theorem nontrivial_h4_sphereFour : Nontrivial (Homology (Sph 4) 4) :=
+  (topSphereIsoInt 3).toEquiv.nontrivial
+
+/-- **The degree-4 criterion produces the `S⁴` orientation atom.** `H₄(S⁴;ℤ) ≅ ℤ` is free
+(`SphereWitnessTowerInt`'s instance) and nontrivial, and `S⁴` is path-connected, so §4 fires — a
+non-vacuity certificate obtained WITHOUT the `H₃(S⁴;ℤ) = 0` route of
+`IntOrientationMod2Lift.intOrientation_sphere4`. The two independent routes landing on the same datum
+is the check that §4 is a genuine criterion and not an artefact. -/
+theorem intOrientation_sphereFour_of_h4 : Nonempty (IntOrientation SphereFour) := by
+  haveI : PreconnectedSpace SphereFour := by
+    have hrank : 1 < Module.rank ℝ (EuclideanSpace ℝ (Fin 5)) := by
+      rw [← Module.finrank_eq_rank, finrank_euclideanSpace_fin]
+      exact_mod_cast (by omega : 1 < 5)
+    have hpc : IsPathConnected (Metric.sphere (0 : EuclideanSpace ℝ (Fin 5)) 1) :=
+      isPathConnected_sphere hrank 0 (by norm_num)
+    haveI : PathConnectedSpace SphereFour := isPathConnected_iff_pathConnectedSpace.mp hpc
+    infer_instance
+  haveI := nontrivial_h4_sphereFour
+  exact nonempty_intOrientation_of_free_nontrivial
+
 end SKEFTHawking.IntOrientationFreeTopHomology
