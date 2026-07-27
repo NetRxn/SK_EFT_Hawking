@@ -54,8 +54,17 @@ import SKEFTHawking.PinPlusKTSpinSigmaAtomReduce
 
 namespace SKEFTHawking.PinPlusKTDualSpinDerived
 
+open scoped Manifold
 open Topology
 open SKEFTHawking SKEFTHawking.SingularCohomologyInt SKEFTHawking.SingularHomologyInt
+open SKEFTHawking.PinPlusCharPairData
+open SKEFTHawking.PinPlusCharPairBorTethered
+open SKEFTHawking.T2TangentialBordism SKEFTHawking.TangentialDataBordism
+open SKEFTHawking.BordismTheory
+open SKEFTHawking.SpinSigmaRoute
+open SKEFTHawking.PinPlusKTSpinForgetPhi
+open SKEFTHawking.PinPlusKTSpinPresentationRow
+open SKEFTHawking.PinPlusKTKerPhiDoubles
 open SKEFTHawking.PinPlusKTDualSpinSubmanifold
 
 noncomputable section
@@ -278,6 +287,64 @@ kernel-checked refutation, and per Invariant #17 it stays prose here rather than
 it is the relative Lefschetz–Wu / `[W,∂W]` tower already used by the capstone lane. This module
 deliberately stops short of asserting such a field, because a bare `Prop` named `IsW1Dual` with no
 (co)homological content would be exactly the kind of free field §1 was written to eliminate. -/
+
+/-! ## §5. The supply layer, re-based — so the lane is usable, not just designed
+
+§1–§3 replace one datum. This section re-bases the *consumed* shape on it, mirroring
+`KTSharpnessSupplyGeo` field-for-field, so the derived interface plugs into the existing
+`KerPhiSubDoubles` chain with no downstream edit. -/
+
+variable {k : WithTop ℕ∞}
+
+variable (prov : CharPairWProviderPerOp (𝓡 4) k)
+
+/-- **The KT-"only if" supply over the DERIVED datum** — the exact shape of `KTSharpnessSupplyGeo`,
+with `DualSpinFromW` swapped for `DualSpinDerivedFromW`. Per kernel element `x`: an ambient
+null-bordism total space (intended value `TopCat.of b.W`) together with a dual-spin submanifold whose
+intersection lattice is computed from its own homology. -/
+structure KTSharpnessSupplyDerived (R : SpinSigmaPresentation (spinEmptyData prov)) where
+  /-- the ambient null-bordism total space per kernel element. -/
+  amb : ∀ x, spinForgetPhi prov x = 0 → TopCat
+  /-- the dual-spin submanifold datum over that ambient, with the σ-doubling against `V`'s own
+  derived signature. -/
+  dual : ∀ x (hx : spinForgetPhi prov x = 0), DualSpinDerivedFromW (amb x hx) (R.sig x)
+
+variable {prov}
+
+/-- **The derived supply projects onto the banked geometric supply** — pointwise
+`toDualSpinFromW`. Every existing consumer therefore accepts a derived supply unchanged. -/
+def KTSharpnessSupplyDerived.toSupplyGeo {R : SpinSigmaPresentation (spinEmptyData prov)}
+    (S : KTSharpnessSupplyDerived prov R) : KTSharpnessSupplyGeo prov R where
+  amb := S.amb
+  dual := fun x hx => (S.dual x hx).toDualSpinFromW
+
+/-- **`ker Φ ⊆ doubles` from the derived supply** — the full banked chain, unchanged. -/
+theorem kerPhiSubDoubles_of_row_of_supplyDerived (row : SpinPresentationRow prov)
+    (hCob : row.R.HandleTradeCobordism) (hBase : row.R.HyperbolicBase)
+    (hBnd : row.R.SphereProductBounds)
+    (S : KTSharpnessSupplyDerived prov row.R) :
+    KerPhiSubDoubles prov :=
+  kerPhiSubDoubles_of_row_of_supplyGeo row hCob hBase hBnd S.toSupplyGeo
+
+/-- **THE FORK-32 NON-TRANSFER, per kernel element.** Fork 32
+(`nonempty_ktSharpnessSupplyGeo_iff_hfwd`) says `KTSharpnessSupplyGeo` is *equivalent* to its own
+conclusion `∀ x ∈ ker Φ, 32 ∣ σ(x)`, so it reduces nothing. That equivalence proof works by handing
+back a `DualSpinFromW` built on a point with a free lattice; it has **no analogue here**, because a
+derived supply additionally carries, at every kernel element, a numerical constraint on an actual
+space: `|σ(x)| ≤ 2·b₂(V_x)`.
+
+This is the statement to check a future "we inhabited the supply" claim against: an inhabiter must
+exhibit, per kernel element, a closed 4-manifold with an `IntPoincareDuality` datum and second Betti
+number at least `|σ(x)|/2`. On the forced kernel element (`σ = −32`) that is `b₂ ≥ 16`.
+
+⚠ This is NOT a claim that fork 32's equivalence is *false* for the derived supply — only that its
+proof does not carry over, and that any replacement must clear this bound. Whether the derived supply
+is still equivalent to `hfwd` is exactly the §4 open question. -/
+theorem KTSharpnessSupplyDerived.abs_sig_le_two_mul_rank
+    {R : SpinSigmaPresentation (spinEmptyData prov)} (S : KTSharpnessSupplyDerived prov R)
+    (x : DataBordismGrp (spinEmptyData prov)) (hx : spinForgetPhi prov x = 0) :
+    |R.sig x| ≤ 2 * (((S.dual x hx).B.rank : ℕ) : ℤ) :=
+  (S.dual x hx).abs_sig_le_two_mul_rank
 
 end
 
