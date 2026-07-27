@@ -4849,8 +4849,10 @@ import SKEFTHawking.KummerQuotientH3Descent
 import SKEFTHawking.KummerQuotientTransferSequence
 import SKEFTHawking.KummerPuncturedTorusHighVanish
 import SKEFTHawking.KummerPunctureTopVanish
+import SKEFTHawking.KummerQTopVanish
 import SKEFTHawking.KummerQuotientH3EvenDescent
 import SKEFTHawking.KummerTorusHighVanish
+import SKEFTHawking.SingularCompactManifoldTopVanishInt
 import SKEFTHawking.SingularSubVanishMV
 import SKEFTHawking.IntPoincareDualityCapOnly
 import SKEFTHawking.IntPoincareDualityDetCriterion
