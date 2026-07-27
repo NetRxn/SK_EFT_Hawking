@@ -406,4 +406,85 @@ theorem sphereProdCoboundaryWAdm_sphereDisk_zero_eq
       sphereProdCoboundaryWAdm_sphereDisk (residualProvK 0) str :=
   rfl
 
+/-! ## §7. THE `hB`-FREE ASSEMBLY AT EVERY REGULARITY — Freeze B leaves the row.
+
+`SpinSigmaPresentation.sphereProductBounds_of_bordant` (`SphereProductBounding`) is generic in the
+tangential datum `{ξ : TangentialData X k I}`, and §6 made the coboundary discharge `k`-generic. So the
+two compose at ANY `k`: the Freeze-B hypothesis `hB : row.R.SphereProductBounds` is no longer an input
+to the assembly — it is PRODUCED from the geometry, leaving only the slot pin
+`hs2s2 : (row.R.s2s2).1 = sphereProdSM4 k` (a row-realization equation on the manifold component, not a
+geometric obligation; the tangential-structure component is carried).
+
+This is the `k`-generic analogue of the `k = 0` `…_freezeAtoms_sphereDiskPinned` chain, built on the
+regularity-generic backbone `kt_equiv_zmod16_of_residuals_ofKRS` rather than on the `residualProv`-pinned
+`freezeAtoms` family.
+
+**How it compares to `kt_equiv_zmod16_of_residuals_smooth` (stated precisely — the hypothesis COUNT is
+the same, eight; the improvement is on two axes, not in arity):**
+* `hB : row.R.SphereProductBounds` (a geometric/algebraic obligation — the distinguished class bounds)
+  is replaced by `hs2s2 : (row.R.s2s2).1 = sphereProdSM4 k`, a **row-realization equation on the
+  manifold component only** (the tangential-structure component is carried, not constrained). Same
+  trade the banked `k = 0` `…_sphereDiskPinned` makes.
+* `H` is taken at `KernelReducesToSpin prov` rather than the `AmbientSurgeryDatum` ∀-`p` row. Per
+  `PinPlusKTAssemblyResiduals` §R, the row IMPLIES `KernelReducesToSpin`
+  (`kernelReducesToSpin_of_ambientDatumSupply`), so this binder is **strictly weaker** and the
+  statement correspondingly stronger.
+
+No claim is made that the row shrank; it did not. -/
+
+/-- **THE `k`-GENERIC ASSEMBLY WITH FREEZE B DISCHARGED.** `Ω₄^{Pin⁺} ≃+ ZMod 16` on the faithful
+tethered carrier at ANY smoothness exponent `k`, with `hB : row.R.SphereProductBounds` **eliminated** —
+supplied internally by the `S²×D³` coboundary geometry (`sphereProdCoboundaryWAdm_sphereDisk_ofBase`
+→ `hBbord_of_coboundary` → `sphereProductBounds_of_bordant`). The surviving row is
+`{hKRS, row, hA, hcol, hker, hcyc, h2}` plus the slot pin `hs2s2`. -/
+theorem kt_equiv_zmod16_ofKRS_sphereDiskPinned {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k)
+    (hKRS : KernelReducesToSpin prov)
+    (row : SpinPresentationRow prov)
+    (hA : row.R.RealizesSphereProducts)
+    (hs2s2 : (row.R.s2s2).1 = sphereProdSM4 k)
+    (hcol : RankZeroCollapsesToEmptySurf prov)
+    (hker : KerPhiSubDoubles prov)
+    (hcyc : SpinImageCyclic prov)
+    (h2 : ktKernelRep prov + ktKernelRep prov = 0) :
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData prov) ≃+ ZMod 16) :=
+  kt_equiv_zmod16_of_residuals_ofKRS prov hKRS row hA
+    (row.R.sphereProductBounds_of_bordant
+      (hBbord_of_coboundary prov row.R.s2s2
+        (sphereProdCoboundaryWAdm_sphereDisk_ofBase prov row.R.s2s2 hs2s2)))
+    hcol hker hcyc h2
+
+/-- **THE SMOOTH-CATEGORY HEADLINE WITH FREEZE B DISCHARGED** (`k = ⊤`). The `C^∞` instantiation of
+the above: `Ω₄^{Pin⁺} ≃+ ZMod 16` on the smooth faithful carrier from a row whose Freeze-B atom is
+supplied by geometry rather than assumed. Same conclusion and same carrier as
+`kt_equiv_zmod16_of_residuals_smooth`, and the SAME number of binders (eight) — the improvement is
+that two of them are weaker (see §7: `hB` → the row-realization pin `hs2s2`; the `AmbientSurgeryDatum`
+∀-`p` row → the `KernelReducesToSpin` Prop it implies). -/
+theorem kt_equiv_zmod16_smooth_sphereDiskPinned
+    (hKRS : KernelReducesToSpin (residualProvK ⊤))
+    (row : SpinPresentationRow (residualProvK ⊤))
+    (hA : row.R.RealizesSphereProducts)
+    (hs2s2 : (row.R.s2s2).1 = sphereProdSM4 ⊤)
+    (hcol : RankZeroCollapsesToEmptySurf (residualProvK ⊤))
+    (hker : KerPhiSubDoubles (residualProvK ⊤))
+    (hcyc : SpinImageCyclic (residualProvK ⊤))
+    (h2 : ktKernelRep (residualProvK ⊤) + ktKernelRep (residualProvK ⊤) = 0) :
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData (residualProvK ⊤)) ≃+ ZMod 16) :=
+  kt_equiv_zmod16_ofKRS_sphereDiskPinned (residualProvK ⊤) hKRS row hA hs2s2 hcol hker hcyc h2
+
+/-- **W-E, SMOOTH, WITH FREEZE B DISCHARGED** — `Nat.card Ω₄^{Pin⁺} = 16` on the smooth carrier from
+the `hB`-free row. Pure transport across the additive equivalence; no new residual atom. -/
+theorem rokhlin_sixteen_smooth_sphereDiskPinned
+    (hKRS : KernelReducesToSpin (residualProvK ⊤))
+    (row : SpinPresentationRow (residualProvK ⊤))
+    (hA : row.R.RealizesSphereProducts)
+    (hs2s2 : (row.R.s2s2).1 = sphereProdSM4 ⊤)
+    (hcol : RankZeroCollapsesToEmptySurf (residualProvK ⊤))
+    (hker : KerPhiSubDoubles (residualProvK ⊤))
+    (hcyc : SpinImageCyclic (residualProvK ⊤))
+    (h2 : ktKernelRep (residualProvK ⊤) + ktKernelRep (residualProvK ⊤) = 0) :
+    Nat.card (T2DataBordismGrp (pinPlusCharPairData (residualProvK ⊤))) = 16 := by
+  obtain ⟨e⟩ := kt_equiv_zmod16_smooth_sphereDiskPinned hKRS row hA hs2s2 hcol hker hcyc h2
+  rw [Nat.card_congr e.toEquiv, Nat.card_eq_fintype_card, ZMod.card]
+
 end SKEFTHawking.PinPlusKTSphereProdP23Close
