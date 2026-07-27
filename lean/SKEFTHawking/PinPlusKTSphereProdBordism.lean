@@ -98,7 +98,7 @@ namespace SKEFTHawking.PinPlusKTSphereProdBordism
 `ZMod 2`-linear equivalence `H¹(Σ;ℤ/2) ≃ (Fin n → ℤ/2)`; for `Σ = ∅` the left side is a subsingleton
 (`subsingleton_cohomology`), so `Fin n → ℤ/2` is a subsingleton, and since `ℤ/2` is nontrivial this
 forces `Fin n` empty. -/
-theorem isEmpty_fin_n_of_isEmpty_surf {s : SingularManifold PUnit 0 (𝓡 4)}
+theorem isEmpty_fin_n_of_isEmpty_surf {k : WithTop ℕ∞} {s : SingularManifold PUnit k (𝓡 4)}
     (σ : CharPairStrBundled (𝓡 4) s) [IsEmpty σ.surf.M] : IsEmpty (Fin σ.n) := by
   haveI := subsingleton_cohomology (M := σ.surf.M) 1
   haveI : Subsingleton (Fin σ.n → ZMod 2) := σ.basis.symm.toEquiv.subsingleton
@@ -115,7 +115,7 @@ theorem isEmpty_fin_n_of_isEmpty_surf {s : SingularManifold PUnit 0 (𝓡 4)}
 specialised to an empty target surface: the membrane `Q` is the (empty) target surface itself, the
 boundary inclusion the identity, the interior basis the trivial rank-0 equivalence. Every certificate is
 honest per-object topology on empty spaces. -/
-noncomputable def emptyEndsReal {s t : SingularManifold.{0} PUnit.{1} 0 (𝓡 4)}
+noncomputable def emptyEndsReal {k : WithTop ℕ∞} {s t : SingularManifold.{0} PUnit.{1} k (𝓡 4)}
     (σ : CharPairStrBundled (𝓡 4) s) (τ : CharPairStrBundled (𝓡 4) t)
     [IsEmpty σ.surf.M] [IsEmpty τ.surf.M] :
     GeoRealizationTied (TopCat.of σ.surf.M) (TopCat.of τ.surf.M) σ.basis τ.basis :=
@@ -131,7 +131,8 @@ characteristic surfaces are empty (Σ = ∅), the entire membrane apparatus of a
 `emptyEndsReal` on the empty membrane `Q = ∅`, the Taylor leg / Lagrangian dissolve to the vacuous
 single-surface conditions, and the tether `ιW`/glue are vacuous. The ONLY genuine input is the
 substrate-pinned Lefschetz–Wu datum `WAdmPinned b`. -/
-noncomputable def charPairBorTethered_empty {s t : SingularManifold.{0} PUnit.{1} 0 (𝓡 4)}
+noncomputable def charPairBorTethered_empty {k : WithTop ℕ∞}
+    {s t : SingularManifold.{0} PUnit.{1} k (𝓡 4)}
     (σ : CharPairStrBundled (𝓡 4) s) (τ : CharPairStrBundled (𝓡 4) t)
     [IsEmpty σ.surf.M] [IsEmpty τ.surf.M] [IsEmpty (Fin σ.n)] [IsEmpty (Fin τ.n)]
     (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) s t) (hWT2 : T2Space b.W) (wadmP : WAdmPinned b) :
@@ -168,9 +169,9 @@ Hausdorff carrier and a substrate-pinned Lefschetz–Wu `w₂ = 0` datum `WAdmPi
 characteristic-pair bordism witness assembles (its membrane realization, Taylor leg, Lagrangian and
 tether all collapse via the #171 empty-source machinery), so `p` is `spinEmptyData`-bordant to the
 empty manifold. This discharges every non-`WAdmPinned` obligation of the `hBbord` atom. -/
-theorem isDataBordant_empty_of_wadm (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem isDataBordant_empty_of_wadm {k : WithTop ℕ∞} (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p : StrMfd (spinEmptyData prov))
-    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := 0) (I := 𝓡 4)))
+    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := k) (I := 𝓡 4)))
     (hWT2 : T2Space b.W) (wadmP : WAdmPinned b) :
     IsDataBordant (spinEmptyData prov) p ⟨emptySM, (spinEmptyData prov).emptyStr⟩ := by
   refine ⟨b, ⟨⟨?_, hWT2⟩⟩⟩
@@ -190,7 +191,7 @@ assembles by the same #171 empty-source collapse (`charPairBorTethered_empty` is
 generic). This is the reusable current-carrier adapter the `hCob`/`hBase` geometric bricks consume:
 a handle-trade trace to `S²×S² ⊔ p'` (A2) or a rank-zero coboundary (A3) needs only the raw
 bordism + `T2` + `WAdmPinned` — every membrane/tether obligation is discharged here. -/
-theorem isDataBordant_of_wadm (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem isDataBordant_of_wadm {k : WithTop ℕ∞} (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p q : StrMfd (spinEmptyData prov))
     (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 q.1)
     (hWT2 : T2Space b.W) (wadmP : WAdmPinned b) :
@@ -212,15 +213,15 @@ Steenrod squares on the 5-manifold-with-boundary). This is EXACTLY the deep inpu
 not supply and current Mathlib lacks the manifold cohomology to build; everything else in `hBbord`
 (the empty-membrane realization, the tether, the T2, the quotient) is discharged by
 `isDataBordant_empty_of_wadm`. -/
-def SphereProdCoboundaryWAdm (prov : CharPairWProviderPerOp (𝓡 4) 0)
+def SphereProdCoboundaryWAdm {k : WithTop ℕ∞} (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p : StrMfd (spinEmptyData prov)) : Prop :=
-  ∃ b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := 0) (I := 𝓡 4)),
+  ∃ b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := k) (I := 𝓡 4)),
     T2Space b.W ∧ Nonempty (WAdmPinned b)
 
 /-- **`hBbord` from the coboundary atom** — the honest reduction: the `S²×S²` bounding-bordism geometric
 witness (`hBbord`) follows from the single named atom `SphereProdCoboundaryWAdm` via the empty-membrane
 collapse of `isDataBordant_empty_of_wadm`. -/
-theorem hBbord_of_coboundary (prov : CharPairWProviderPerOp (𝓡 4) 0)
+theorem hBbord_of_coboundary {k : WithTop ℕ∞} (prov : CharPairWProviderPerOp (𝓡 4) k)
     (p : StrMfd (spinEmptyData prov)) (h : SphereProdCoboundaryWAdm prov p) :
     IsDataBordant (spinEmptyData prov) p ⟨emptySM, (spinEmptyData prov).emptyStr⟩ := by
   obtain ⟨b, hWT2, hwadm⟩ := h

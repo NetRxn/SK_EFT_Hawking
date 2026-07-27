@@ -121,9 +121,9 @@ theorem sphereDiskP23Triple_of_boundary_eq {S : Set ↑(TopCat.of SphereDisk)}
 reduced atoms — the class-existence witness `hasClass` and the two homology subsingletons (the
 `PinPlusKTSphereProdHomologyRoots` / rel-fund-class lane) — so the K3-independent P23 half of `hBbord`
 is closed. -/
-theorem sphereProdCoboundaryWAdm_of_homologyAtoms
-    (prov : CharPairWProviderPerOp (𝓡 4) 0)
-    (str : (spinEmptyData prov).Mfd (sphereProdSM4 0))
+theorem sphereProdCoboundaryWAdm_of_homologyAtoms {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k)
+    (str : (spinEmptyData prov).Mfd (sphereProdSM4 k))
     (hasClass : letI := sphereDisk_t2Space.t1Space
       HasRelFundClass (X := TopCat.of SphereDisk)
         (((𝓡 4).prod (𝓡∂ 1)).boundary SphereDisk)
@@ -131,23 +131,23 @@ theorem sphereProdCoboundaryWAdm_of_homologyAtoms
     (hS1 : Subsingleton (Homology (TopCat.of SphereDisk) 1))
     (hS2 : Subsingleton (RelativeHomology (X := TopCat.of SphereDisk)
       (((𝓡 4).prod (𝓡∂ 1)).boundary SphereDisk) 4)) :
-    SphereProdCoboundaryWAdm prov ⟨sphereProdSM4 0, str⟩ := by
-  haveI : Subsingleton (Homology (TopCat.of (sphereProdCoboundaryBordism 0).W) 1) := hS1
-  haveI : Subsingleton (RelativeHomology (X := TopCat.of (sphereProdCoboundaryBordism 0).W)
-      (((𝓡 4).prod (𝓡∂ 1)).boundary (sphereProdCoboundaryBordism 0).W) 4) := hS2
+    SphereProdCoboundaryWAdm prov ⟨sphereProdSM4 k, str⟩ := by
+  haveI : Subsingleton (Homology (TopCat.of (sphereProdCoboundaryBordism k).W) 1) := hS1
+  haveI : Subsingleton (RelativeHomology (X := TopCat.of (sphereProdCoboundaryBordism k).W)
+      (((𝓡 4).prod (𝓡∂ 1)).boundary (sphereProdCoboundaryBordism k).W) 4) := hS2
   obtain ⟨P23, pin23, hv2⟩ := sphereDiskP23Triple_of_boundary_eq
-    (S := ((𝓡 4).prod (𝓡∂ 1)).boundary (sphereProdCoboundaryBordism 0).W) sphereDisk_boundary_eq
-  exact sphereProdCoboundaryWAdm_of_reducedAtoms prov ⟨sphereProdSM4 0, str⟩
-    (sphereProdCoboundaryBordism 0) sphereDisk_t2Space hasClass P23 pin23 hv2
+    (S := ((𝓡 4).prod (𝓡∂ 1)).boundary (sphereProdCoboundaryBordism k).W) sphereDisk_boundary_eq
+  exact sphereProdCoboundaryWAdm_of_reducedAtoms prov ⟨sphereProdSM4 k, str⟩
+    (sphereProdCoboundaryBordism k) sphereDisk_t2Space hasClass P23 pin23 hv2
 
 /-- **`hBbord` for the concrete `S²×S²` slot — the P23 triple GONE.** The empty-membrane collapse
 (`hBbord_of_coboundary`) composed with the P23-atom discharge: the Freeze-B geometric witness
 `IsDataBordant` for the concrete distinguished source `⟨sphereProdSM4 0, str⟩` follows from ONLY the
 non-P23 reduced atoms (`hasClass` + the two homology subsingletons). The whole `(P23, pin23, hv2)`
 triple — and the concrete coboundary bordism `b` and its `T2Space` — are discharged internally. -/
-theorem isDataBordant_empty_ofHomologyAtoms
-    (prov : CharPairWProviderPerOp (𝓡 4) 0)
-    (str : (spinEmptyData prov).Mfd (sphereProdSM4 0))
+theorem isDataBordant_empty_ofHomologyAtoms {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k)
+    (str : (spinEmptyData prov).Mfd (sphereProdSM4 k))
     (hasClass : letI := sphereDisk_t2Space.t1Space
       HasRelFundClass (X := TopCat.of SphereDisk)
         (((𝓡 4).prod (𝓡∂ 1)).boundary SphereDisk)
@@ -155,9 +155,9 @@ theorem isDataBordant_empty_ofHomologyAtoms
     (hS1 : Subsingleton (Homology (TopCat.of SphereDisk) 1))
     (hS2 : Subsingleton (RelativeHomology (X := TopCat.of SphereDisk)
       (((𝓡 4).prod (𝓡∂ 1)).boundary SphereDisk) 4)) :
-    IsDataBordant (spinEmptyData prov) ⟨sphereProdSM4 0, str⟩
+    IsDataBordant (spinEmptyData prov) ⟨sphereProdSM4 k, str⟩
       ⟨emptySM, (spinEmptyData prov).emptyStr⟩ :=
-  hBbord_of_coboundary prov ⟨sphereProdSM4 0, str⟩
+  hBbord_of_coboundary prov ⟨sphereProdSM4 k, str⟩
     (sphereProdCoboundaryWAdm_of_homologyAtoms prov str hasClass hS1 hS2)
 
 /-! ## §2b. FULLY-DISCHARGED geometric coboundary — every non-P23 atom is a PROVED sister node. -/
@@ -169,10 +169,10 @@ Root 1 = the `PinPlusKTSphereProdHomologyRoots` `Subsingleton (Homology (TopCat.
 instance, Root 2 = the `SphereProdHThreeMod2` `rootTwo_subsingleton` instance transported across
 `sphereDisk_boundary_eq`. The only surviving obligation for `hBbord` at this slot is the
 row-realization (the distinguished slot IS `⟨sphereProdSM4 0, str⟩`). -/
-theorem sphereProdCoboundaryWAdm_sphereDisk
-    (prov : CharPairWProviderPerOp (𝓡 4) 0)
-    (str : (spinEmptyData prov).Mfd (sphereProdSM4 0)) :
-    SphereProdCoboundaryWAdm prov ⟨sphereProdSM4 0, str⟩ :=
+theorem sphereProdCoboundaryWAdm_sphereDisk {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k)
+    (str : (spinEmptyData prov).Mfd (sphereProdSM4 k)) :
+    SphereProdCoboundaryWAdm prov ⟨sphereProdSM4 k, str⟩ :=
   sphereProdCoboundaryWAdm_of_homologyAtoms prov str
     PinPlusKTSphereProdRelFund.hasRelFundClass_sphereDisk
     inferInstance
@@ -181,12 +181,12 @@ theorem sphereProdCoboundaryWAdm_sphereDisk
 /-- **`hBbord` for the concrete `S²×S²` slot, geometric content fully discharged.** Same as
 `isDataBordant_empty_ofHomologyAtoms` but with every geometric atom supplied by its proved sister
 node — the Freeze-B witness follows from `str` alone. -/
-theorem isDataBordant_empty_sphereDisk
-    (prov : CharPairWProviderPerOp (𝓡 4) 0)
-    (str : (spinEmptyData prov).Mfd (sphereProdSM4 0)) :
-    IsDataBordant (spinEmptyData prov) ⟨sphereProdSM4 0, str⟩
+theorem isDataBordant_empty_sphereDisk {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k)
+    (str : (spinEmptyData prov).Mfd (sphereProdSM4 k)) :
+    IsDataBordant (spinEmptyData prov) ⟨sphereProdSM4 k, str⟩
       ⟨emptySM, (spinEmptyData prov).emptyStr⟩ :=
-  hBbord_of_coboundary prov ⟨sphereProdSM4 0, str⟩
+  hBbord_of_coboundary prov ⟨sphereProdSM4 k, str⟩
     (sphereProdCoboundaryWAdm_sphereDisk prov str)
 
 /-! ## §3. The K3-assembly headline variants — the P23 triple GONE from the `≃+ ZMod 16` / Rokhlin-16
@@ -306,9 +306,9 @@ The banked discharge `sphereProdCoboundaryWAdm_sphereDisk` is uniform in the tan
 component of the slot, so it applies to ANY `p : StrMfd (spinEmptyData prov)` with `p.1 = sphereProdSM4 0`
 — the structure `p.2` is carried, not constrained. Destructure `p` + `subst` the base equality lands the
 concrete slot `⟨sphereProdSM4 0, p.2⟩`, where the sister-node discharge fires. -/
-theorem sphereProdCoboundaryWAdm_sphereDisk_ofBase
-    (prov : CharPairWProviderPerOp (𝓡 4) 0)
-    (p : StrMfd (spinEmptyData prov)) (hp : p.1 = sphereProdSM4 0) :
+theorem sphereProdCoboundaryWAdm_sphereDisk_ofBase {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k)
+    (p : StrMfd (spinEmptyData prov)) (hp : p.1 = sphereProdSM4 k) :
     SphereProdCoboundaryWAdm prov p := by
   obtain ⟨M, s⟩ := p
   subst hp
@@ -359,5 +359,51 @@ theorem rokhlin_sixteen_of_residuals_freezeAtoms_sphereDiskPinned
     (sphereProdCoboundaryWAdm_sphereDisk_ofBase residualProv row.R.s2s2 hs2s2) hcolD hker hΦg
 
 end
+
+/-! ## §6. THE SMOOTH-CATEGORY INSTANTIATION — the Freeze-B geometric lane at `k = ⊤`.
+
+Roadmap §2 leg 2 is a hard constraint: the literature-grade `Ω₄^{Pin⁺} ≅ ℤ/16` is a SMOOTH-category
+statement. At `k = 0` the `IsManifold` binder is *free* (`PinPlusRegularityFence.isManifoldZero_free`)
+and the honest group is topological Pin⁺ bordism `≅ ℤ/2 ⊕ ℤ/8` — the wrong group — so a `k = 0`
+discharge does not serve the goal, and kernel fork `k0-to-k1-transport-refuted` forbids lifting one.
+
+The whole `S²×D³` coboundary lane above is now stated `k`-generically, so it **re-declares** at
+`k = ⊤` rather than transporting. Nothing in it was weakened to get there: every input is a fact about
+the fixed topological space `SphereDisk` (its mod-2/integral (co)homology, its Lefschetz–Wu tower, its
+Hausdorffness, its boundary) and the `k`-generic bordism object `sphereProdCoboundaryBordism k`
+(`PinPlusKTSphereProdReassoc`, whose `isManifold_R4`/`isManifold_J6` fields hold at every `k`). The
+regularity enters ONLY through that bordism object's smoothness fields, which the banked atlas
+supplies at `⊤`.
+
+Consequence: the Freeze-B geometric content of the assembly row is discharged in the SMOOTH category,
+not merely in `C⁰`. -/
+
+/-- **The `S²×D³` coboundary `WAdmPinned` atom, in the SMOOTH category** — the `k = ⊤` instantiation
+of `sphereProdCoboundaryWAdm_sphereDisk`. Every geometric obligation (the bordism object, its `T2`,
+the relative fundamental class, the two homology subsingletons, the `(2,3)` Lefschetz–Wu datum, its
+pin, and `v₂ = 0`) is a proved sister node at this regularity, exactly as at `k = 0`. -/
+theorem sphereProdCoboundaryWAdm_sphereDisk_smooth
+    (str : (spinEmptyData (residualProvK ⊤)).Mfd (sphereProdSM4 ⊤)) :
+    SphereProdCoboundaryWAdm (residualProvK ⊤) ⟨sphereProdSM4 ⊤, str⟩ :=
+  sphereProdCoboundaryWAdm_sphereDisk (residualProvK ⊤) str
+
+/-- **`hBbord` in the SMOOTH category** — the Freeze-B geometric witness
+`IsDataBordant (spinEmptyData (residualProvK ⊤)) ⟨S²×S², str⟩ ∅` at `k = ⊤`, from `str` alone. This is
+the smooth-carrier form of `isDataBordant_empty_sphereDisk`; the `S²×S² = ∂(S²×D³)` content of the
+assembly row now holds where the `IsManifold` binder is a genuine `C^∞`-atlas obligation. -/
+theorem isDataBordant_empty_sphereDisk_smooth
+    (str : (spinEmptyData (residualProvK ⊤)).Mfd (sphereProdSM4 ⊤)) :
+    IsDataBordant (spinEmptyData (residualProvK ⊤)) ⟨sphereProdSM4 ⊤, str⟩
+      ⟨emptySM, (spinEmptyData (residualProvK ⊤)).emptyStr⟩ :=
+  isDataBordant_empty_sphereDisk (residualProvK ⊤) str
+
+/-- **Conservativity certificate** — the `k`-generic lane specialises to the `k = 0` theorem of record
+on the nose (`rfl`), so generalising the binders changed no `C⁰` statement. Mirrors the
+`residualProv = residualProvK 0` certificate of the regularity lift. -/
+theorem sphereProdCoboundaryWAdm_sphereDisk_zero_eq
+    (str : (spinEmptyData residualProv).Mfd (sphereProdSM4 0)) :
+    sphereProdCoboundaryWAdm_sphereDisk residualProv str =
+      sphereProdCoboundaryWAdm_sphereDisk (residualProvK 0) str :=
+  rfl
 
 end SKEFTHawking.PinPlusKTSphereProdP23Close

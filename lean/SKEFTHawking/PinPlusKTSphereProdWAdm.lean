@@ -177,9 +177,9 @@ inhabited by ANY T2 coboundary `b` carrying: the relative fundamental-class datu
 subsingleton facts (degenerate `(1,4)` leg), a pinned `(2,3)` Poincaré–Lefschetz datum `P23`, and
 `v₂(W) = 0`. The whole `(1,4)` half is discharged for free — the residual is the `(2,3)` half + the
 relative fundamental class + `v₂ = 0`. -/
-theorem sphereProdCoboundaryWAdm_of_degenerate14
-    (prov : CharPairWProviderPerOp (𝓡 4) 0) (p : StrMfd (spinEmptyData prov))
-    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := 0) (I := 𝓡 4)))
+theorem sphereProdCoboundaryWAdm_of_degenerate14 {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k) (p : StrMfd (spinEmptyData prov))
+    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := k) (I := 𝓡 4)))
     (hWT2 : T2Space b.W)
     (D : RelFundClassDatum (X := TopCat.of b.W) (m := 3) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W))
     [Subsingleton (Cohomology (TopCat.of b.W) 1)]
@@ -193,9 +193,9 @@ theorem sphereProdCoboundaryWAdm_of_degenerate14
 #203) composed with the sharpened coboundary atom. Directly discharges the `hBbord` obligation
 `IsDataBordant (spinEmptyData prov) p ∅` from the `(2,3)` half + relative fundamental class + `v₂ = 0`
 (the `(1,4)` half free). -/
-theorem isDataBordant_empty_of_degenerate14
-    (prov : CharPairWProviderPerOp (𝓡 4) 0) (p : StrMfd (spinEmptyData prov))
-    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := 0) (I := 𝓡 4)))
+theorem isDataBordant_empty_of_degenerate14 {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k) (p : StrMfd (spinEmptyData prov))
+    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := k) (I := 𝓡 4)))
     (hWT2 : T2Space b.W)
     (D : RelFundClassDatum (X := TopCat.of b.W) (m := 3) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W))
     [Subsingleton (Cohomology (TopCat.of b.W) 1)]

@@ -80,7 +80,7 @@ open scoped Manifold
 
 section Atom3
 
-variable {s t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)}
+variable {k : WithTop ℕ∞} {s t : SingularManifold.{0} PUnit.{1} k (𝓡 4)}
 
 /-- **Atom 3, reduced to the single class-existence witness.** For a `W = S²×D³`-type coboundary
 `b : Bordism ((𝓡 4).prod (𝓡∂ 1)) s t`, the carrier-agnostic provider `relFundClassDatumOf` (canonical
@@ -142,9 +142,9 @@ sharpest sub-atoms:
 
 The `(2,3)` Poincaré–Lefschetz half (`P23`/`pin23`) and the spin condition `v₂ = 0` (`hv2`) are the
 untouched residual (not this block's lane). -/
-theorem sphereProdCoboundaryWAdm_of_reducedAtoms
-    (prov : CharPairWProviderPerOp (𝓡 4) 0) (p : StrMfd (spinEmptyData prov))
-    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := 0) (I := 𝓡 4)))
+theorem sphereProdCoboundaryWAdm_of_reducedAtoms {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k) (p : StrMfd (spinEmptyData prov))
+    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := k) (I := 𝓡 4)))
     (hWT2 : T2Space b.W)
     (hasClass : letI := hWT2.t1Space
       HasRelFundClass (X := TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W)
@@ -167,9 +167,9 @@ theorem sphereProdCoboundaryWAdm_of_reducedAtoms
 /-- **`hBbord` from the reduced atoms** — the empty-membrane collapse (`hBbord_of_coboundary`, #203)
 composed with the reduced coboundary atom. Discharges the `hBbord` obligation from the class-existence
 witness + the two homology subsingletons + the `(2,3)` half + `v₂ = 0`. -/
-theorem isDataBordant_empty_of_reducedAtoms
-    (prov : CharPairWProviderPerOp (𝓡 4) 0) (p : StrMfd (spinEmptyData prov))
-    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := 0) (I := 𝓡 4)))
+theorem isDataBordant_empty_of_reducedAtoms {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k) (p : StrMfd (spinEmptyData prov))
+    (b : Bordism ((𝓡 4).prod (𝓡∂ 1)) p.1 (emptySM (X := PUnit) (k := k) (I := 𝓡 4)))
     (hWT2 : T2Space b.W)
     (hasClass : letI := hWT2.t1Space
       HasRelFundClass (X := TopCat.of b.W) (((𝓡 4).prod (𝓡∂ 1)).boundary b.W)
