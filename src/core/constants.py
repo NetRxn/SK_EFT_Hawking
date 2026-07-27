@@ -3917,6 +3917,27 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
 # nogo_kind (refutation | structural_forcing | counterexample), false_statement (the path it
 # kills, one line), memory ([[slug]]).
 KERNEL_NOGO_REGISTRY: dict[str, dict] = {
+    'collar-pair-hdetAB-one-sided-congruence-routes-dead': {
+        'fork_id': 'collar-pair-hdetAB-one-sided-congruence-routes-dead',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamDetect.cylPush_notMem_compl_seamPoint',
+            'SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamDetect.collarChain_ne_cylPush',
+            'SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamDetect.collarChain_ne_diskPush',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'CollarPairCoreRow.hdetAB can be discharged by the engine layer\'s advertised one-sided congruence route -- i.e. write qGen = p + e with p the SeamCollarChainDatum collar chain and e an away-error supported off the seam point, discard e, and detect with p via relClassOf_eq_of_congr, taking p or e to be one of the two pieces already in hand (the pushed cylinder prism or the pushed disk chain). FALSE (2026-07-27, wt3, lead-verified by #print axioms on all three backings): at a core seam point the pushed cylinder prism is SUPPORTED at every seam point (cylPush_notMem_compl_seamPoint), so it can never be the away-error e; its boundary is not even a {seamPoint a}-complement chain (collarChain_ne_cylPush), so it can never be the collar chain p; and the disk piece cannot be p either (collarChain_ne_diskPush, from the banked diskBoundaryPush_notMem_bd_of_hbd). Consequence: the collar chain of ANY congruence-route discharge of hdetAB must be a genuinely THIRD chain, constructed rather than selected from the two pieces the glued chain already has. Do NOT dispatch "discharge hdetAB by discarding one side of qGen" at any depth.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
+    'collar-pair-core-row-alone-is-vacuous-at-empty-seamcore': {
+        'fork_id': 'collar-pair-core-row-alone-is-vacuous-at-empty-seamcore',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamDetect.hdetAB_of_seamCore_empty',
+            'SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamLocal.hbd_of_seamCore_empty',
+        ],
+        'nogo_kind': 'vacuity',
+        'false_statement': 'Inhabiting CollarPairCoreRow on its own is sufficient to consume the H (KRS leaf) atom -- i.e. CollarPairCoreRow.toHasClass may be fired from the two-obligation row without carrying hseamHit. FALSE (2026-07-27, wt3, lead-verified): at seamCore = the empty set BOTH obligations discharge with ZERO geometric input -- hbd_of_seamCore_empty (SeamLocal, generalizing the frozen cHa := diskDetectChain form to every sphere-supported cHa) and hdetAB_of_seamCore_empty (SeamDetect) -- and nonempty_collarPairCoreRow_of_seamCore_empty assembles the WHOLE row there, with z/hz from exists_fundCycle and the disk triple from the banked canonical chain. Earlier rounds freed one obligation each; together they free the row. So toHasClass would fire on a row containing no geometry. Consequence: hseamHit (seamCore NONEMPTY) is a PROVED NECESSITY as a side condition on every consumption of H, not advice; any new entry point must carry it and say so in its docstring. NOT claimed: that seamCore = empty is geometrically realizable -- this is a scope/soundness fact about the interface, not about the geometry.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'nonhausdorff_bordism_collapse': {
         'fork_id': 'nonhausdorff-bordism-collapse',
         'backing_theorems': [
