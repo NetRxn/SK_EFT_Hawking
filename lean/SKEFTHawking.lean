@@ -4873,6 +4873,12 @@ import SKEFTHawking.KummerK3OrientFromSeamKernel
 -- Phase 5q.H — the covering-side MIRROR of that residual, UNCONDITIONAL: the sixteen boundary `S³`
 -- classes of `T⁴°` are ℤ-linearly dependent (`∂₃` injective + `H₄(T⁴;ℤ) ≅ ℤ`).
 import SKEFTHawking.KummerPunctureSeamRelation
+-- Phase 5q.H — the antipodal double cover `S³ → ℝP³` is INJECTIVE on top integral homology (the
+-- seam transport's degree-2 pin: `p_*` loses nothing in degree 3).
+import SKEFTHawking.KummerRP3TopDegree
+-- Phase 5q.H — the seam relation moved off the chart annuli onto the sixteen boundary `S³`s of
+-- `T⁴°` itself, i.e. into the coordinates the free `ℤ/2` covering `T⁴° ↠ Q` acts on.
+import SKEFTHawking.KummerPunctureSphereSeam
 import SKEFTHawking.IntPoincareDualityCapOnly
 import SKEFTHawking.IntPoincareDualityDetCriterion
 import SKEFTHawking.IntPoincareDualityWitnesses
