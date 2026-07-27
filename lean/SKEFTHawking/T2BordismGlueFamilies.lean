@@ -52,9 +52,11 @@ family-specific substitute for a collar — concrete, not abstract.
 The other end of the range. `emptySeamHomeo` identifies the pushout with the honest disjoint union
 (no compactness or Hausdorff hypothesis needed), which Mathlib already knows is a
 manifold-with-boundary; `emptySeamGlueChart` is the inhabitant and `isBordant_of_emptySeam` composes
-bordisms through a null-bordism — the middle object of `nullBordism_of_class_eq_zero`. Honest
-caveat: an empty seam does **not** exercise the collar; this is the base case, not evidence about
-the general one.
+bordisms through a null-bordism — the middle object of `nullBordism_of_class_eq_zero`.
+`isBordant_double_double` uses it on in-tree objects (`doublingBordism`) to prove **any two doubles
+are bordant** — a statement neither `IsBordant.of_diffeo` nor `Bordism.add` can reach, so the
+discharged chart is doing real work here. Honest caveat: an empty seam does **not** exercise the
+collar; this is the base case, not evidence about the general one.
 
 ## Scope note (the residue these families do NOT close)
 
@@ -479,6 +481,19 @@ compose: `p` bounds and `r` bounds ⟹ `p` and `r` are bordant, with the composi
 theorem isBordant_of_emptySeam [IsEmpty q.M] [T2Space b₁.W] [T2Space b₂.W] :
     IsBordant (I.prod (𝓡∂ 1)) p r :=
   ⟨Bordism.ofSeamGlueChart b₁ b₂ (emptySeamGlueChart b₁ b₂)⟩
+
+/-- **The family, used on in-tree objects: any two doubles are bordant.** `doublingBordism s` runs
+`s ⊔ s ⇝ ∅` and the reverse of `doublingBordism t` runs `∅ ⇝ t ⊔ t`, so the seam is `emptySM` —
+whose `IsEmpty` instance is exactly this family's hypothesis. Neither `IsBordant.of_diffeo` nor
+`Bordism.add` proves this (`s ⊔ s` and `t ⊔ t` need not be diffeomorphic, and no disjoint-union
+congruence relates them): it is new content, unlocked by the discharged chart. -/
+theorem isBordant_double_double [I.Boundaryless] (s t : SingularManifold X k I)
+    [T2Space s.M] [T2Space t.M] : IsBordant (I.prod (𝓡∂ 1)) (s.sum s) (t.sum t) := by
+  haveI : T2Space (doublingBordism s).W :=
+    inferInstanceAs (T2Space (s.M × Set.Icc (0 : ℝ) 1))
+  haveI : T2Space ((doublingBordism t).symm).W :=
+    inferInstanceAs (T2Space (t.M × Set.Icc (0 : ℝ) 1))
+  exact isBordant_of_emptySeam (doublingBordism s) (doublingBordism t).symm
 
 end EmptySeam
 
