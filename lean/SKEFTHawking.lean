@@ -683,6 +683,15 @@ import SKEFTHawking.SphereProductRealization
 -- being forced by signature bordism-invariance + σ=0 congruence-class uniqueness
 -- (`intCongr_of_evenUnimodular_sig_zero`). (wt3-built.)
 import SKEFTHawking.SphereProductRealizationAtoms
+-- Phase 5q.H (N1a, Freeze-A vacuity audit) — the DEGENERACY finding on the Freeze-A primitives:
+-- `HandleTradeCobordism` (the raw handle-trace cobordism) and `HyperbolicBase` (the rank-0
+-- nullbordism) are each satisfiable on ANY tangential datum with ZERO geometric input, because
+-- `SpinSigmaPresentation` carries `rank`/`form` as free data tied to the manifolds only through
+-- `sig_eq`. `collapsedPresentation` discharges the handle trade with the UNIT CYLINDER (no handle);
+-- `constRankTwoPresentation` makes the rank-0 base vacuous. Ships the repair `FaithfulRank`
+-- (`b₂(∅) = 0` + `b₂` additive), which refutes both dodges, and the honest positive residual
+-- `handleTradeConclusion_on_split` (the atom's conclusion is FREE on the split locus). (wt3-built.)
+import SKEFTHawking.HandleTradeAtomVacuity
 import SKEFTHawking.SphereProductBounding
 -- Phase 5q.H (N1a, Freeze-B gap 2) — the collar-model re-association transport for S²×D³: transports
 -- the natural E²×(E²×H) ChartedSpace/IsManifold of S²×D³ along the model prod-associator to J5's
