@@ -4852,6 +4852,7 @@ import SKEFTHawking.Carrollian.Structure
 import SKEFTHawking.Carrollian.WittAlgebra
 import SKEFTHawking.Carrollian.BMSAlgebra
 import SKEFTHawking.Carrollian.VirasoroExtension
+import SKEFTHawking.SingularRelativeCoverMVSumExact
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
