@@ -263,12 +263,13 @@ A symmetric unimodular form `M` containing a vector `x` of self-product `ε = ±
 Construction: `unitFullBasis` (the adapted basis of `ℤⁿ = ℤx ⊕ x^⊥`) gives the unimodular change of
 basis `P`; `unitGramB_eq` reads off the block form; `det M' = ε · det M` from
 `det (⟨ε⟩ ⊕ M') = ε · det M'`; and the signature bookkeeping is block additivity plus `σ(⟨ε⟩) = ε`. -/
-theorem unit_split_congr {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (hsymm : Mᵀ = M)
+theorem unit_split_congr_of_finrank {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (hsymm : Mᵀ = M)
     (hunim : IsUnimodular M) (ε : ℤ) (hε : ε = 1 ∨ ε = -1) (x : Fin n → ℤ)
-    (hx : x ⬝ᵥ M *ᵥ x = ε) :
-    ∃ (M' : Matrix (Fin (n - 1)) (Fin (n - 1)) ℤ) (e : Fin 1 ⊕ Fin (n - 1) ≃ Fin n),
-      IntCongr M (Matrix.reindex e e (Matrix.fromBlocks !![ε] 0 0 M'))
-        ∧ M'ᵀ = M' ∧ IsUnimodular M' ∧ latticeSig M' = latticeSig M - ε := by
+    (hx : x ⬝ᵥ M *ᵥ x = ε) (hfr : Module.finrank ℤ (unitPerp M x) = n - 1) :
+    ∃ e : Fin 1 ⊕ Fin (n - 1) ≃ Fin n,
+      IntCongr M (Matrix.reindex e e (Matrix.fromBlocks !![ε] 0 0 (unitResidGram M x hfr)))
+        ∧ IsUnimodular (unitResidGram M x hfr)
+        ∧ latticeSig (unitResidGram M x hfr) = latticeSig M - ε := by
   classical
   have hεε : ε * ε = 1 := by rcases hε with h | h <;> rw [h] <;> ring
   have hn1 : 1 ≤ n := by
@@ -277,9 +278,6 @@ theorem unit_split_congr {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (hsymm : M�
     subst hn0
     rw [show x ⬝ᵥ M *ᵥ x = 0 by simp] at hx
     rcases hε with h | h <;> rw [← hx] at h <;> simp at h
-  have hindep := unit_linearIndependent M x ε hx hεε
-  have hic := unit_isCompl M x ε hx hεε
-  have hfr := unitPerp_finrank M x hindep hic
   set B := unitFullBasis M x ε hx hεε hfr with hB
   let e : Fin 1 ⊕ Fin (n - 1) ≃ Fin n := finSumFinEquiv.trans (finCongr (by omega))
   set B' := B.reindex e with hB'
@@ -337,6 +335,91 @@ theorem unit_split_congr {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (hsymm : M�
       latticeSigOf_fromBlocks _ _ (unitBlock_radical hεε) hrad, latticeSigOf_fin, latticeSigOf_fin,
       latticeSig_unitBlock hε] at h
     omega
+  exact ⟨e, hcong, hunim', hsig⟩
+
+/-- **The unit-vector split, existential form.** Packages `unit_split_congr_of_finrank` with the
+rank bookkeeping discharged. -/
+theorem unit_split_congr {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (hsymm : Mᵀ = M)
+    (hunim : IsUnimodular M) (ε : ℤ) (hε : ε = 1 ∨ ε = -1) (x : Fin n → ℤ)
+    (hx : x ⬝ᵥ M *ᵥ x = ε) :
+    ∃ (M' : Matrix (Fin (n - 1)) (Fin (n - 1)) ℤ) (e : Fin 1 ⊕ Fin (n - 1) ≃ Fin n),
+      IntCongr M (Matrix.reindex e e (Matrix.fromBlocks !![ε] 0 0 M'))
+        ∧ M'ᵀ = M' ∧ IsUnimodular M' ∧ latticeSig M' = latticeSig M - ε := by
+  have hεε : ε * ε = 1 := by rcases hε with h | h <;> rw [h] <;> ring
+  have hfr := unitPerp_finrank M x (unit_linearIndependent M x ε hx hεε)
+    (unit_isCompl M x ε hx hεε)
+  obtain ⟨e, hcong, hunim', hsig⟩ := unit_split_congr_of_finrank M hsymm hunim ε hε x hx hfr
   exact ⟨unitResidGram M x hfr, e, hcong, unitResidGram_symm M hsymm x hfr, hunim', hsig⟩
+
+/-! ### Transport between `x^⊥` and the residual Gram
+
+The residual Gram `M'` is *the form `M` restricted to `x^⊥`, in coordinates*. The two lemmas below
+make that precise in both directions — a coordinate vector gives an element of `x^⊥` with the same
+Gram value (`unitResidGram_transport`), and every element of `x^⊥` is such a combination
+(`unitPerp_exists_coords`). The payoff is `unitResidGram_even_value`: parity of the residual form is
+exactly parity of `M` on `x^⊥`, which is how the induction of `OddFormDiagonalization` detects
+whether a unit peel stranded an even residual. -/
+
+/-- Bilinear expansion of the Gram pairing over coordinate combinations. -/
+theorem gram_sum_expand {n m : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (b : Fin m → (Fin n → ℤ))
+    (c c' : Fin m → ℤ) :
+    (∑ i, c i • b i) ⬝ᵥ M *ᵥ (∑ j, c' j • b j) = ∑ i, ∑ j, c i * c' j * (b i ⬝ᵥ M *ᵥ b j) := by
+  rw [Matrix.mulVec_sum, sum_dotProduct]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [smul_dotProduct, dotProduct_sum, smul_eq_mul, Finset.mul_sum]
+  refine Finset.sum_congr rfl fun j _ => ?_
+  rw [Matrix.mulVec_smul, dotProduct_smul]
+  ring
+
+/-- Entrywise expansion of a Gram pairing. -/
+theorem gram_matrix_expand {m : ℕ} (M' : Matrix (Fin m) (Fin m) ℤ) (c c' : Fin m → ℤ) :
+    c ⬝ᵥ M' *ᵥ c' = ∑ i, ∑ j, c i * c' j * (M' i j) := by
+  rw [dotProduct]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [Matrix.mulVec, dotProduct, Finset.mul_sum]
+  refine Finset.sum_congr rfl fun j _ => ?_
+  ring
+
+/-- **Forward transport:** the `M`-pairing of two coordinate combinations of the `x^⊥`-basis is the
+`M'`-pairing of their coordinate vectors. -/
+theorem unitResidGram_transport {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (x : Fin n → ℤ)
+    (hfr : Module.finrank ℤ (unitPerp M x) = n - 1) (c c' : Fin (n - 1) → ℤ) :
+    (∑ i, c i • (unitPerpBasis M x hfr i : Fin n → ℤ)) ⬝ᵥ M *ᵥ
+        (∑ j, c' j • (unitPerpBasis M x hfr j : Fin n → ℤ))
+      = c ⬝ᵥ (unitResidGram M x hfr) *ᵥ c' := by
+  rw [gram_sum_expand, gram_matrix_expand]
+  rfl
+
+/-- A coordinate combination of the `x^⊥`-basis lies in `x^⊥`. -/
+theorem unitPerp_mem_sum {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (x : Fin n → ℤ)
+    (hfr : Module.finrank ℤ (unitPerp M x) = n - 1) (c : Fin (n - 1) → ℤ) :
+    x ⬝ᵥ M *ᵥ (∑ i, c i • (unitPerpBasis M x hfr i : Fin n → ℤ)) = 0 := by
+  rw [Matrix.mulVec_sum, dotProduct_sum]
+  refine Finset.sum_eq_zero fun i _ => ?_
+  rw [Matrix.mulVec_smul, dotProduct_smul, unitPerpBasis_ortho, smul_zero]
+
+/-- **Backward transport:** every element of `x^⊥` is a coordinate combination of the basis. -/
+theorem unitPerp_exists_coords {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (x : Fin n → ℤ)
+    (hfr : Module.finrank ℤ (unitPerp M x) = n - 1) (z : Fin n → ℤ) (hz : x ⬝ᵥ M *ᵥ z = 0) :
+    ∃ c : Fin (n - 1) → ℤ, z = ∑ i, c i • (unitPerpBasis M x hfr i : Fin n → ℤ) := by
+  set b := unitPerpBasis M x hfr with hb
+  set zs : unitPerp M x := ⟨z, hz⟩ with hzs
+  refine ⟨fun i => b.repr zs i, ?_⟩
+  have h : (unitPerp M x).subtype (∑ i, (b.repr zs) i • b i)
+      = ∑ i, (b.repr zs) i • ((b i : Fin n → ℤ)) := by
+    rw [map_sum]; simp
+  rw [b.sum_repr zs] at h
+  exact h
+
+/-- **Parity transport:** if the residual Gram is even, then `M` takes only even values on `x^⊥`.
+Contrapositive: a vector of ODD self-product orthogonal to `x` witnesses that the residual is odd —
+the detection used by the diagonalization induction. -/
+theorem unitResidGram_even_value {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (hsymm : Mᵀ = M)
+    (x : Fin n → ℤ) (hfr : Module.finrank ℤ (unitPerp M x) = n - 1)
+    (heven : ∀ i, 2 ∣ (unitResidGram M x hfr) i i)
+    (z : Fin n → ℤ) (hz : x ⬝ᵥ M *ᵥ z = 0) : 2 ∣ z ⬝ᵥ M *ᵥ z := by
+  obtain ⟨c, hc⟩ := unitPerp_exists_coords M x hfr z hz
+  rw [hc, unitResidGram_transport]
+  exact EvenLattice.even_form_dvd (unitResidGram_symm M hsymm x hfr) heven c
 
 end SKEFTHawking
