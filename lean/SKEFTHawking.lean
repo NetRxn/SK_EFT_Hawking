@@ -4884,6 +4884,8 @@ import SKEFTHawking.Carrollian.WittAlgebra
 import SKEFTHawking.Carrollian.BMSAlgebra
 import SKEFTHawking.Carrollian.VirasoroExtension
 import SKEFTHawking.SingularRelativeCoverMVSumExact
+-- Collar neighbourhood arc (Mathlib-grade, upstreamable): boundary of a bordism-model manifold
+import SKEFTHawking.CollarNeighbourhood
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
