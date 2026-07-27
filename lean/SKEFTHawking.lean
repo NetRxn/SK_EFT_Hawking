@@ -4859,6 +4859,20 @@ import SKEFTHawking.SingularCompactManifoldTopVanishInt
 -- banked K7 Mayer–Vietoris. Discharges the `H₅(Q;ℤ) = 0` residual, hence `transferH 3` injective
 -- and `H₃(Q;ℤ)` 2-torsion-free, unconditionally.
 import SKEFTHawking.KummerQTopVanish
+-- Phase 5q.H — the DEGREE-4 orientation criterion (ambient-generic): a closed CONNECTED charted
+-- 4-manifold whose `H₄(M;ℤ)` is free and nontrivial carries the `IntOrientation` datum. Uses only
+-- the unconditional kernel half of the rank-UCT core plus `Hₘ₊₂(M;ℤ/2) ≅ ℤ/2`; nothing about `H₃`.
+import SKEFTHawking.IntOrientationFreeTopHomology
+-- Phase 5q.H — the welded `K3` carrier (and the resolution piece `E`) are PRECONNECTED, the
+-- instance the closed-manifold top-homology theorem requires.
+import SKEFTHawking.KummerWeldConnected
+-- Phase 5q.H — `orientInput` REPLACED: one nontrivial ℤ-linear relation among the sixteen seam
+-- `ℝP³` classes (`ker qSeamCoord3 ≠ ⊥`) produces the `K3` orientation atom, bypassing the
+-- `H₃(K3;ℤ)` 2-torsion-freeness residual entirely.
+import SKEFTHawking.KummerK3OrientFromSeamKernel
+-- Phase 5q.H — the covering-side MIRROR of that residual, UNCONDITIONAL: the sixteen boundary `S³`
+-- classes of `T⁴°` are ℤ-linearly dependent (`∂₃` injective + `H₄(T⁴;ℤ) ≅ ℤ`).
+import SKEFTHawking.KummerPunctureSeamRelation
 import SKEFTHawking.IntPoincareDualityCapOnly
 import SKEFTHawking.IntPoincareDualityDetCriterion
 import SKEFTHawking.IntPoincareDualityWitnesses
