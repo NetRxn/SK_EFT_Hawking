@@ -4823,6 +4823,7 @@ import SKEFTHawking.IntOrientationMod2Lift
 import SKEFTHawking.IntersectionMatrixBasisChange
 import SKEFTHawking.KummerK3E1Package
 import SKEFTHawking.KummerK3H3Reduction
+import SKEFTHawking.KummerK3H3SeamWindow
 import SKEFTHawking.KummerPunctureH3
 import SKEFTHawking.KummerPunctureH3Saturation
 import SKEFTHawking.SingularMayerVietorisRedCompatInt
