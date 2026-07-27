@@ -90,19 +90,47 @@ def _archive_path(path):
     return p.with_name(p.stem + "_ARCHIVE" + p.suffix)
 
 
+def _deslug(s):
+    """Human-readable text from a slug: `compact-delta-foo-bar` -> `Compact delta foo bar`."""
+    t = re.sub(r"[-_]+", " ", str(s)).strip()
+    return (t[:1].upper() + t[1:]) if t else ""
+
+
+def _derive_title(f):
+    """Best-effort title for a record whose producer supplied none. Prefers the explicit `id` — which
+    is itself `slug(class + title)` for auto-keyed records, so this is the inverse of `slug` — with a
+    leading `<class>-` prefix stripped so the title does not just repeat the class column. Falls back
+    to the first sentence of `why`. Returns "" only when the record carries neither."""
+    fid = str(f.get("id", "") or "").strip()
+    if fid and fid != "?":
+        cls = re.sub(r"[^a-z0-9]+", "-", str(f.get("class", "")).lower()).strip("-")
+        if cls and cls != "unclassified" and fid.startswith(cls + "-"):
+            fid = fid[len(cls) + 1:]
+        return _deslug(fid)
+    why = str(f.get("why", "") or "").strip()
+    if why:
+        return re.split(r"(?<=[.!?])\s", why)[0].strip()[:120].rstrip(" .,;:")
+    return ""
+
+
 def _normalize_finding(f):
     """Heal a finding to the schema invariants so NO consumer can trip on a missing field, and the
     register can never store a record that KeyErrors `record["class"]` or renders an empty Why.
     Off-schema producers exist (e.g. a Stage-13 paper-honesty / claims pass emitted records with
     `body` instead of `why` and no `class`); rather than trust every producer, the register heals at
     its own read/write boundary. Idempotent — a conformant record is returned unchanged. The explicit
-    `id` is never touched, so dedup keying stays stable even when `class` is backfilled."""
+    `id` is never touched, so dedup keying stays stable even when `class`/`title` are backfilled.
+    A BLANK `title` is healed too (it used to default to "" and stay that way): a titleless record
+    rendered an empty `**...**` header + an empty Index cell, and — worse — reached the injected
+    active-issues view as `{"title": ""}`, i.e. a blank line in the loop's re-orientation payload."""
     if not isinstance(f, dict):
         return f
     if not f.get("why") and f.get("body"):   # legacy/alt producers used `body`
         f["why"] = f["body"]
     if not f.get("class"):                    # guarantee the class surface (id is independent)
         f["class"] = "unclassified"
+    if not str(f.get("title", "") or "").strip():   # never render/inject a blank title
+        f["title"] = _derive_title(f)
     f.setdefault("title", "")
     return f
 
@@ -345,7 +373,12 @@ def write_active_issues(reg_path, out_path=None):
     active = [f for f in findings if f.get("status", "open") == "open"]
     active.sort(key=lambda f: (TIER_PRIORITY.get(f.get("tier", "automatic"), 3),
                                -len(f.get("occurrences", []))))
-    issues = [{"title": f.get("title", ""), "tier": f.get("tier", "automatic"),
+    # `load` -> `_normalize_finding` already heals a blank title; the `or _derive_title(f) or id`
+    # fallback is belt-and-braces so this surface — the one the loop actually reads back — can never
+    # emit a blank line even for a record that reached the file by some other path.
+    issues = [{"title": (str(f.get("title", "") or "").strip() or _derive_title(f)
+                         or str(f.get("id", "") or "")),
+               "tier": f.get("tier", "automatic"),
                "tally": len(f.get("occurrences", [])), "kind": "issue"}
               for f in active[:ACTIVE_ISSUES_MAX]]
     if out_path is None:

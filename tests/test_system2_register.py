@@ -219,3 +219,38 @@ def test_offschema_record_is_healed_on_load(tmp_path):
     # idempotent: a well-formed record is unchanged
     good = _f("a", "A")
     assert R._normalize_finding(dict(good)) == good
+
+
+def test_blank_title_is_healed_from_id_not_left_empty(tmp_path):
+    """A producer that omits `title` used to leave it "" forever: the record rendered an empty
+    `**...**` header + an empty Index cell, and reached the INJECTED active-issues view as a blank
+    line. Heal it from the explicit id (the inverse of `slug`), stripping the class prefix so the
+    title does not merely repeat the class — without touching the id (dedup key stays stable)."""
+    p = tmp_path / "REG.md"
+    bare = {"id": "harness-gap-slot-reset-refuses-cross-goal-reclaim", "class": "harness-gap",
+            "tier": "agent-reviewed", "status": "open", "why": "w", "how_to_apply": "h",
+            "occurrences": [{"session_id": "s", "compact_event_id": None}]}
+    p.write_text("## Open\n\n### x\n\n```json\n" + json.dumps(bare, indent=2) + "\n```\n")
+    f = next(x for x in R.load(str(p)) if x["id"] == "harness-gap-slot-reset-refuses-cross-goal-reclaim")
+    assert f["title"] == "Slot reset refuses cross goal reclaim"   # class prefix stripped, de-slugged
+    assert f["id"] == "harness-gap-slot-reset-refuses-cross-goal-reclaim"   # id untouched
+    # a real title is never overwritten by the derived one
+    kept = R._normalize_finding({"id": "harness-gap-x", "class": "harness-gap", "title": "Real title"})
+    assert kept["title"] == "Real title"
+    # fallback when there is no usable id either: first sentence of `why`
+    nofid = R._normalize_finding({"class": "c", "why": "The loop re-derived a settled route. Again."})
+    assert nofid["title"] == "The loop re-derived a settled route"
+
+
+def test_active_issues_never_emits_a_blank_title(reg, tmp_path):
+    """The injected view is the surface a blank title actually hurts — it renders as an empty line in
+    the loop's re-orientation payload. Belt-and-braces: even a record written straight to the file
+    with no title at all must come back with something identifying."""
+    R.upsert(reg, {"id": "compact-delta-head-hash-lost-across-boundary", "class": "compact-delta",
+                   "tier": "agent-reviewed", "status": "open", "why": "w",
+                   "occurrences": [{"session_id": "s", "compact_event_id": "s:1"}]})
+    out = tmp_path / "ai.json"
+    R.write_active_issues(reg, out)
+    issues = json.loads(out.read_text())["issues"]
+    assert issues and all(i["title"].strip() for i in issues)
+    assert any(i["title"] == "Head hash lost across boundary" for i in issues)
