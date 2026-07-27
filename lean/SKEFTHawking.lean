@@ -4879,6 +4879,10 @@ import SKEFTHawking.KummerRP3TopDegree
 -- Phase 5q.H — the seam relation moved off the chart annuli onto the sixteen boundary `S³`s of
 -- `T⁴°` itself, i.e. into the coordinates the free `ℤ/2` covering `T⁴° ↠ Q` acts on.
 import SKEFTHawking.KummerPunctureSphereSeam
+-- Phase 5q.H — THE SEAM TRANSPORT: the boundary-`S³` relation of `T⁴°` pushed across the free
+-- `ℤ/2` covering to the sixteen seam `ℝP³`s of `∂Q`. Discharges `ker qSeamCoord3 ≠ ⊥`, hence
+-- `orientInput`: `Nonempty (IntOrientation KummerK3)` is UNCONDITIONAL, and `H₄(K3;ℤ) ≠ 0`.
+import SKEFTHawking.KummerK3SeamTransport
 import SKEFTHawking.IntPoincareDualityCapOnly
 import SKEFTHawking.IntPoincareDualityDetCriterion
 import SKEFTHawking.IntPoincareDualityWitnesses
