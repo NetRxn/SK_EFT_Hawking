@@ -227,6 +227,28 @@ construction against the open-support transfer shape (fork
     ⚠ `T⁴° → Q` is still **not** a free transport (free ℤ/2 quotients *create* 2-torsion in general:
     H₁(S³)=0 but H₁(ℝP³)=ℤ/2). The only unconditional covering bridge is
     `two_smul_mem_range_mapInt_qmkC` (:382): `2·Hₙ₊₁(Q;ℤ) ⊆ im p_*`. Nothing claims descent. #309.
+
+    **STATE 2026-07-27 (late) — reduced to TWO inputs, both named on banked maps.**
+    `KummerQuotientTransferSequence.lean` landed the identification the previous round could only
+    *name*: `qHmlEquivA n : Hₙ(Q;ℤ) ≅ Hₙ(A;ℤ)` with `inclAH ∘ qHmlEquivA = transferH` — the Smith
+    norm subcomplex `A = N·C(T⁴°)` of the FREE double cover **is** the chain model for `Q`. Plus the
+    full transfer exact sequence (`exact_deltaQ_transferH`, `exact_transferH_diffH`,
+    `exact_inclAH_diffH`) and `deltaIII_four_bijective` / `deltaQ_three_injective`.
+    ⟹ **`transferH_three_injective_iff_h5Q_eq_zero` (:297)** — given `h4PT : H₄(T⁴°;ℤ)=0` and
+    `h5PT : H₅(T⁴°;ℤ)=0`, `transferH 3` is injective **iff `H₅(Q;ℤ) = 0`**. Composed with
+    `KummerQuotientH3Descent.twoTorsionFree_iff_transferH_three_injective`, `orientInput` reduces to:
+    **(1) three top-degree vanishings — `H₄(T⁴°)`, `H₅(T⁴°)`, `H₅(Q)` — and (2) even descent
+    (`im p_* ⊆ 2·im qSeamCoord3`).** The wiring past both is already built and unconditional:
+    `transferH_three_injective_of_top_vanishing` (:223), `twoTorsionFree_of_top_vanishing` (:230),
+    `h3K3_eq_zero_of_top_vanishing_of_evenDescent` (:238),
+    `nonempty_intOrientation_of_top_vanishing_of_evenDescent` (:247).
+    ⚙ (1) is a *dimension* fact — `T⁴°` is an OPEN 4-manifold, `Q` its free quotient — and the
+    project has run the analogous argument once already: `KummerRP3HomologyTop.lean` (`H₄(ℝP³) =
+    H₅(ℝP³) = 0`, via `hml_s3_high` on the cover + the `trA`/`rHmlEquivAHml` Smith transport, with
+    `KummerRP3GoodCoverTelescope` behind it). ⚠ "True by dimension" is a heuristic — the ℝP³ case
+    needed a real good-cover/telescope argument; budget for that.
+    ⚠ The Smith **transport** pattern (`trA`/`rHmlEquivAHml`) is NOT the fenced degree-3 Smith
+    **walk** — different mechanism, and it is fine to use.
   * `h1Free` — ✅ **CLOSED, UNCONDITIONALLY** (2026-07-27, `KummerK3SeamWindingParity.lean`).
     `free_h1K3_uncond` (:577) : `Module.Free ℤ (Homology KummerK3top 1)` — **no hypotheses**
     (lead-verified: the signature carries no binders, `#print axioms` =
@@ -272,10 +294,31 @@ construction against the open-support transfer shape (fork
     The 16 seams share deck-parity 1 — which is all `qDeck` sees — so **do not** conclude from the
     common parity that their images coincide; if they did, the cokernel would be `(ℤ/2)⁴ ≠ 0` and
     `π₁(K3) = 1` would fail. That contradiction is a useful wrong-turn detector.
-  * `pdInput` — `IntPDCapOnly.interMatrix_isUnimodular_of_capBijective` reduces the unimodularity
-    conjunct to ONE geometric Prop (cap-map bijectivity) + a cap-dual-basis sufficient condition.
-    Conditional. ⚠ Its cohomology-basis route sits under `[Module.Free ℤ (Homology KummerK3top 1)]`
-    — i.e. `h1Free` — so the two are merge-order coupled.
+  * `pdInput` — ✅ **COLLAPSED: it is NOT an independent residual.** (2026-07-27,
+    `IntPoincareDualityDetCriterion.lean` + `KummerK3PoincareDuality.lean`.)
+    **Lead-verified by reading the structure:** `IntPoincareDuality fc`
+    (`IntersectionFormUnimodularInt.lean:89`) has exactly TWO fields — `toDualEquiv` and
+    `toDualEquiv_apply` — so it asserts precisely that the *curried* form
+    `interFormInt fc : H²(M;ℤ) →ₗ Dual ℤ (H²(M;ℤ))` is an iso; and
+    `interMatrix_eq_toMatrix_interFormInt` (:85, **consumes no PD datum**) says the Gram IS that
+    map's matrix. Hence `nonempty_intPoincareDuality_iff_isUnit_det` (:119):
+    **`Nonempty (IntPoincareDuality fc) ↔ IsUnit (interMatrix fc B).det`** on any carrier holding an
+    `IntH2Basis`. Since `IntCongr` and `Matrix.reindex` preserve determinants and `k3Form` is
+    unimodular, **`intPoincareDualityOfIntCongr` (:134) derives PD from the `hk3` congruence the K10
+    Gram span already has to prove.** At K3: `kummerK3_pdInput_of_gram`,
+    `kummerK3E1Residuals_of_orient_gram`, `nonempty_kummerK3E1Atoms_of_orient_gram`.
+    Also: `k3RealizingElement_of_gram` — the `pd` disclosure inside
+    `PinPlusKTSpinSigmaStock.K3RealizingElement` is **redundant**; that structure already carries
+    `hk3`. Non-vacuity anchor: `sphereProdIntPoincareDuality` discharges the datum **unconditionally
+    at S²×S²** (`b₂ = 2`, hyperbolic) — a non-degenerate carrier where the disclosed PD is derived.
+    ⚙ Unblocked by `h1Free`: `kummerK3H1Free` (instance) makes the whole H² side unconditional —
+    `kummerK3CohomTwoEquivInt_uncond` (`H²(K3;ℤ) ≅ ℤ²²`), Free/Finite instances,
+    `kummerK3BoundariesOneProjective`.
+    ⚠ **Substrate-strength note (lead-confirmed, worth carrying):** the `IntPoincareDuality`
+    docstring calls it "the community-scale integral-PD core" and says it is "equivalently the cap
+    map `·⌢[M]` is an iso". The structure as defined is **exactly Gram unimodularity**; the cap-iso
+    reading additionally needs the `H₂ ≅ Dual H²` identification. Those coincide when `H₂` is free
+    f.g. (true for K3), so this is not a defect — but the datum is narrower than the docstring reads.
   ⚠ `KummerK7H1Window.h1K3_surjective_from_Q` gives H₁(K3) only as a surjective image of a free
   module — that does **not** give freeness.
   ⚠ State the Gram as `IntCongr … k3Form`, never a literal matrix equality on a chosen basis
