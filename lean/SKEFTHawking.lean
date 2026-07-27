@@ -4843,6 +4843,7 @@ import SKEFTHawking.KummerK3H1SeamLattice
 import SKEFTHawking.KummerK3SeamWindingParity
 import SKEFTHawking.KummerQuotientH3Descent
 import SKEFTHawking.KummerQuotientTransferSequence
+import SKEFTHawking.KummerQuotientH3EvenDescent
 import SKEFTHawking.IntPoincareDualityCapOnly
 import SKEFTHawking.IntPoincareDualityDetCriterion
 import SKEFTHawking.IntPoincareDualityWitnesses
