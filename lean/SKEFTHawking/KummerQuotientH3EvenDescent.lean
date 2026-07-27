@@ -314,6 +314,19 @@ def punctureH3ModSeamEquivFin4 :
     (Homology PTtop 3 ⧸ LinearMap.range ptSeam3) ≃ₗ[ℤ] (Fin 4 → ℤ) :=
   punctureH3ModSeam.trans SKEFTHawking.KummerHomologyT4Full.torusFourH3EquivFin4
 
+/-- **THE SEAM LATTICE IS A PROPER SUBGROUP — unconditionally.** `ptSeam3` is not surjective, since
+its cokernel is `ℤ⁴ ≠ 0` (`punctureH3ModSeamEquivFin4`). This is the sharpest one-line form of the
+overreach, and the non-vacuity witness for §4/§5: there provably *are* classes of `H₃(T⁴°;ℤ)`
+outside the boundary-`S³` lattice, and even descent asserts 2-divisibility of their `p_*`-images
+with nothing but the boundary geometry behind it. -/
+theorem not_surjective_ptSeam3 : ¬ Function.Surjective ptSeam3 := by
+  intro hs
+  haveI : Subsingleton (Homology PTtop 3 ⧸ LinearMap.range ptSeam3) :=
+    Submodule.Quotient.subsingleton_iff.mpr (LinearMap.range_eq_top.mpr hs)
+  haveI : Subsingleton (Fin 4 → ℤ) := punctureH3ModSeamEquivFin4.symm.injective.subsingleton
+  exact one_ne_zero
+    (congrFun (Subsingleton.elim (fun _ => (1 : ℤ)) (fun _ => (0 : ℤ))) (0 : Fin 4))
+
 /-- The seam lattice's kernel is the image of the puncture connecting map `∂₃ : H₄(T⁴;ℤ) → ℤ¹⁶`
 (`puncInter3_exact`) — the tree's own named remaining geometric input for `H₃(T⁴°;ℤ) ≅ ℤ¹⁹`. This
 is what ties `SeamKernelEvenlyConstant` below to an already-tracked crux rather than to a new one. -/
