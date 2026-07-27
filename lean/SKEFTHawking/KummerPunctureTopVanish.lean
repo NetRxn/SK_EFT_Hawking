@@ -263,6 +263,64 @@ theorem nonempty_intOrientation_of_h5Q_of_evenDescent (h5Q : ∀ x : Homology Qt
     Nonempty (SingularHomologyInt.IntOrientation SKEFTHawking.KummerWeld.KummerK3) :=
   nonempty_intOrientation_of_top_vanishing_of_evenDescent h5Q (fun x => h4PT x) hd
 
+/-! ## §5. The Q-side high-degree recursion — the residual is only degrees 4 and 5 -/
+
+/-- `Hₘ(A;ℤ) = 0` whenever `Hₘ(Q;ℤ) = 0`, through the transfer chain isomorphism
+`KummerQuotientTransferSequence.qHmlEquivA` (`A = N·C(T⁴°) ≅ C(Q)`). -/
+theorem hml_a_eq_zero_of {m : ℕ} (hq : ∀ y : Hml (chainBoundary Qtop) m, y = 0)
+    (x : Hml SKEFTHawking.KummerQuotientSmithSES.dA m) : x = 0 := by
+  have h := hq ((qHmlEquivA m).symm x)
+  have h2 := congrArg (qHmlEquivA m) h
+  rwa [LinearEquiv.apply_symm_apply, map_zero] at h2
+
+/-- **The Q-side two-step Smith recursion** `Hₘ(Q;ℤ) = 0 ⟹ Hₘ₊₂(Q;ℤ) = 0` for `m ≥ 4`. Exactly the
+`KummerRP3HomologyTop.rp3_hml_step` pattern with the covering `T⁴°` in place of `S³`, now that
+`Hₚ(T⁴°;ℤ) = 0` for `p ≥ 4` is discharged: `δ'(m)` kills `δ³(m+1) x` into `Hₘ(A) ≅ Hₘ(Q) = 0`, then
+`ker δ' = im D̄` lands in `Hₘ₊₁(T⁴°) = 0`, then `ker δ³ = im p̄` lands in `Hₘ₊₂(T⁴°) = 0`.
+
+**Route note (why this does not close the residual).** The recursion runs *upward*: it reduces
+`Hₘ₊₂(Q)` to `Hₘ(Q)`, so degrees `4` and `5` are its base cases, not its conclusions. Both Smith
+long exact sequences are compatible with the `ℝP^∞` pattern `Hₚ(Q) ≅ Hₚ₋₂(Q)` in every high degree,
+so — exactly as on the `ℝP³` lane (`KummerRP3HomologyTop`'s termination hypotheses `h4`, `h5`, which
+needed the 4-chart good-cover telescope) — a genuine **`Q`-side geometric input** is required. No
+amount of `T⁴°`-side data terminates it. -/
+theorem hmlQ_step (m : ℕ) (hm : 4 ≤ m) (hind : ∀ y : Hml (chainBoundary Qtop) m, y = 0)
+    (x : Hml (chainBoundary Qtop) (m + 2)) : x = 0 := by
+  have h0 : SKEFTHawking.KummerQuotientSmithSES.deltaI m
+      (SKEFTHawking.KummerQuotientSmithSES.deltaIII (m + 1) x) = 0 := hml_a_eq_zero_of hind _
+  have hdI : SKEFTHawking.KummerQuotientSmithSES.deltaIII (m + 1) x = 0 := by
+    obtain ⟨w, hw⟩ := (SKEFTHawking.KummerQuotientSmithSES.exact_diffH_deltaI m
+      (SKEFTHawking.KummerQuotientSmithSES.deltaIII (m + 1) x)).mp h0
+    rw [← hw, ptTop_hml_high (m + 1) (by omega) w, map_zero]
+  obtain ⟨t, ht⟩ := (SKEFTHawking.KummerQuotientSmithSES.exact_projH_deltaIII (m + 1) x).mp hdI
+  rw [← ht, ptTop_hml_high (m + 2) (by omega) t, map_zero]
+
+/-- `Hₚ₊₄(Q;ℤ) = 0` for every `p`, from the two base degrees `4` and `5` (strong induction on the
+degree shift, stepping by two through `hmlQ_step`). -/
+theorem hmlQ_high_shift (h4Q : ∀ x : Hml (chainBoundary Qtop) 4, x = 0)
+    (h5Q : ∀ x : Hml (chainBoundary Qtop) 5, x = 0) :
+    ∀ n, ∀ x : Hml (chainBoundary Qtop) (n + 4), x = 0 := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    match n, ih with
+    | 0, _ => exact h4Q
+    | 1, _ => exact h5Q
+    | (k + 2), ih =>
+        intro x
+        exact hmlQ_step (k + 4) (by omega) (ih k (by omega)) x
+
+/-- **`Hₚ(Q;ℤ) = 0` for every `p ≥ 4`, from degrees 4 and 5 alone.** With the `T⁴°` side fully
+discharged, the entire high-degree homology of the free quotient is pinned by its two bottom
+top-degrees — so a `Q`-side geometric input in degrees `4, 5` (a good-cover telescope for the free
+quotient, mirroring `KummerRP3GoodCoverTelescope`) is the *only* thing the `orientInput` residual
+still needs from the quotient. -/
+theorem hmlQ_high (h4Q : ∀ x : Hml (chainBoundary Qtop) 4, x = 0)
+    (h5Q : ∀ x : Hml (chainBoundary Qtop) 5, x = 0) (p : ℕ) (hp : 4 ≤ p)
+    (x : Hml (chainBoundary Qtop) p) : x = 0 := by
+  obtain ⟨k, rfl⟩ : ∃ k, p = k + 4 := ⟨p - 4, by omega⟩
+  exact hmlQ_high_shift h4Q h5Q k x
+
 end
 
 end SKEFTHawking.KummerPunctureTopVanish
