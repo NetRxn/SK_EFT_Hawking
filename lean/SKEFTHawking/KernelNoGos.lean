@@ -15,7 +15,34 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
 
 ## The register (fork-id → FALSE statement → backing theorem[s])
 
-1. `hker-single-witness-extraction-is-equivalent-to-gluing` [structural_forcing]
+1. `freeze-a-atoms-satisfiable-with-zero-geometry` [structural_forcing]
+   Building the Freeze-A primitives AS STATED -- SpinSigmaPresentation.HandleTradeCobordism (the raw
+   handle-trade cobordism, primitive 1 of the freeze-atoms-not-composable-from-sigma-trace honest floor) and
+   HyperbolicBase (primitive 2, the rank-0 nullbordism) -- discharges genuine manifold-surgery content and
+   therefore advances hA. FALSE (2026-07-27, wt3, lead-verified: I read the Sylvester chain and re-ran the
+   axiom prints myself). BOTH atoms are satisfiable with ZERO geometry. Root cause: SpinSigmaPresentation
+   carries rank and form as FREE disclosed data, tied to the manifolds only through sig_eq -- i.e. only
+   through the signature -- so nothing forces rank to behave like b_2. Concretely, collapsedPresentation
+   sets rank = 2 at the s2s2 slot and 0 elsewhere; the handle-trade hypothesis then fires only at the slot
+   with m = 0, and the conclusion is met by the UNIT CYLINDER with p-prime = empty via (mapCylinder
+   (Diffeomorph.sumEmpty ..)).symm. No handle is attached anywhere. HyperbolicBase is met vacuously (a
+   presentation may contain no rank-0 manifold at all). NOT AN ARTEFACT OF ABSTRACT xi:
+   collapsedSphereProd_handleTradeCobordism lands the same dodge on the GENUINE carrier spinEmptyData prov
+   with the genuine sphereProdSpinElement prov in the s2s2 slot. NOT ITSELF VACUOUS:
+   collapsedPresentation_hypothesis_fires proves the antecedent genuinely fires. SCOPE -- this refutes the
+   ATOMS AS STATED, NOT the route: both dodges have rank <= 2 and sig = 0, and that is structurally fatal
+   with no new hypothesis, via abs_sig_le_rank (Sylvester |sigma| <= b_2 lifted through sig_eq) ->
+   sixteen_le_rank_of_generator (sigma(K3) = -16 forces 16 <= rank g) -> no_generator_of_rank_le_two. So a
+   surgery foundation must state primitive (1) on an ALREADY-CONSTRAINED presentation or its theorem is met
+   by a cylinder. RE-SCOPING CONSEQUENCE (handleTradeConclusion_on_split): the primitive-(1) conclusion is
+   FREE on the split locus q + S2xS2 (the commBor cylinder is the required cobordism), so the irreducible
+   Benedetti content is REDUCTION TO THE SPLIT LOCUS, not production of a cobordism -- aim future work
+   there. CAUTION: FaithfulRank (b_2(empty) = 0 plus additivity) refutes both dodges but is a SOUNDNESS
+   SIDE-CONDITION, not a claimed-inhabited structure; no abstract inhabitant is constructed and none should
+   be assumed.
+   backing: `collapsedPresentation_handleTradeCobordism`, `collapsedSphereProd_handleTradeCobordism`, `constRankTwoSphereProd_hyperbolicBase`, `no_generator_of_rank_le_two`
+
+2. `hker-single-witness-extraction-is-equivalent-to-gluing` [structural_forcing]
    The single tethered null-bordism witness that hker needs -- extracting one IsT2DataBordant from
    T2DataBordismGrp.mk = 0 -- can be obtained by a cleverer use of the quotient, a reformulation of the
    extraction, or any route that AVOIDS proving bordism gluing (transitivity). FALSE (2026-07-27, wt2,
@@ -35,7 +62,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    the NonHausdorffBordismCollapse repair adds no obstruction to gluing.
    backing: `gluesT2_iff_singleWitness`, `refl`, `symm`
 
-2. `hcolD-same-carrier-collapse-refuted-on-wu-witness` [structural_forcing]
+3. `hcolD-same-carrier-collapse-refuted-on-wu-witness` [structural_forcing]
    The hcolD rank-zero collapse to an empty characteristic surface can be realized WITHOUT changing the
    carrier -- i.e. some CharPairStrBundled structure on a fixed closed 4-manifold s that carries a Wu
    witness (a degree-2 class a0 with nonzero PD-paired self-cup-square, mu (cupH24 a0 a0) != 0) has an EMPTY
@@ -59,7 +86,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    backing: `no_isEmpty_surf_of_wu_witness`
    ⚠ UNRESOLVED backing (not found in-tree — check the registry): `SKEFTHawking.PinPlusKTRankZeroCollapseSupply.RankZeroCollapseDatum.endpoint_wuNullCarrier`
 
-3. `capstone-binary-partition-detection-uninhabitable` [structural_forcing]
+4. `capstone-binary-partition-detection-uninhabitable` [structural_forcing]
    The connected capstone's hasClass can be driven through the binary complementary partition {U,
    U-complement} at U := range fromCyl -- i.e. PinPlusTraceCapstoneRelFund.CapstoneRelFundPartitionDatum is
    inhabitable at the field docstring's intended U. FALSE (2026-07-27, wt3, lead-verified by #print axioms
@@ -80,7 +107,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    (clopen pieces have no interior frontier) -- the ban is ONLY their application to the connected capstone.
    backing: `not_restrictsToRelGenOn_cylRange_at_seamCore`, `not_restrictsToRelGenOn_of_faceVanish`, `faceLocalHomology_zero_of_starConvexChart`
 
-4. `collar-pair-hdetAB-one-sided-congruence-routes-dead` [structural_forcing]
+5. `collar-pair-hdetAB-one-sided-congruence-routes-dead` [structural_forcing]
    CollarPairCoreRow.hdetAB can be discharged by the engine layer's advertised one-sided congruence route --
    i.e. write qGen = p + e with p the SeamCollarChainDatum collar chain and e an away-error supported off
    the seam point, discard e, and detect with p via relClassOf_eq_of_congr, taking p or e to be one of the
@@ -94,7 +121,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    chain already has. Do NOT dispatch "discharge hdetAB by discarding one side of qGen" at any depth.
    backing: `cylPush_notMem_compl_seamPoint`, `collarChain_ne_cylPush`, `collarChain_ne_diskPush`
 
-5. `collar-pair-core-row-alone-is-vacuous-at-empty-seamcore` [vacuity]
+6. `collar-pair-core-row-alone-is-vacuous-at-empty-seamcore` [vacuity]
    Inhabiting CollarPairCoreRow on its own is sufficient to consume the H (KRS leaf) atom -- i.e.
    CollarPairCoreRow.toHasClass may be fired from the two-obligation row without carrying hseamHit. FALSE
    (2026-07-27, wt3, lead-verified): at seamCore = the empty set BOTH obligations discharge with ZERO
@@ -109,7 +136,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    geometry.
    backing: `hdetAB_of_seamCore_empty`, `hbd_of_seamCore_empty`
 
-6. `nonhausdorff-bordism-collapse` [refutation]
+7. `nonhausdorff-bordism-collapse` [refutation]
    The in-tree `Bordism` relation (BordismGroup.lean:37-42) is a faithful bordism theory usable for a
    completeness/injectivity/bounding Prop. FALSE: `Bordism.W` is required compact/charted/IsManifold but NOT
    Hausdorff, so the non-Hausdorff bug-eyed interval B ([0,1] w/ doubled origin, compact + real-analytic + 3
@@ -122,7 +149,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    literature-grade needs the SMOOTH (k=∞) + T2 carrier.
    backing: `bordismGrp_subsingleton`, `bordismGrp_rp4_eq_zero`, `dataBordismGMTied_mk_eq_iff_grade16_eq`
 
-7. `comp-twist-doubling-incompatible` [structural_forcing]
+8. `comp-twist-doubling-incompatible` [structural_forcing]
    A tangential datum can carry an H¹-coordinate field `comp` with reversal twist `comp ↦ comp + w₁` (the P
    ↦ P⊗ε coordinate), anchored by a restriction-compatibility Bor condition. FALSE (W-A gate, Fable vacuity
    attack 2026-07-13): the mandatory `negBor` inhabits Bor on the DOUBLING bordism — a product cylinder
@@ -134,7 +161,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    the odd-bit content in the w₁-dual 3-manifold V / ψ, not in an H¹ coordinate).
    backing: `no_comp_twist_of_doubling_rigid`, `not_doubling_rigid_of_comp_twist`, `no_uniform_comp_twist_of_cylinder_rigid`
 
-8. `membrane-level-nonhausdorff-collapse` [refutation]
+9. `membrane-level-nonhausdorff-collapse` [refutation]
    A manifold-typed WITNESS datum inside a carrier or relation (the membrane/3-manifold Q, the surface Σ,
    any auxiliary manifold field) inherits honesty from the T2 fence on the ambient bordism W. FALSE (W-A
    gate, Fable vacuity attack 2026-07-13): the bug-eyed collapse is dimension-generic —
@@ -145,7 +172,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    certificate; the W-level fence does not propagate.
    backing: `qLevelTripleMembrane_not_t2`
 
-9. `free-membrane-kernel-kills-nonsplit` [refutation]
+10. `free-membrane-kernel-kills-nonsplit` [refutation]
    The as-built CharPair carrier (Bor with the membrane kernel L carried as a FREE Submodule field, the
    geometric membrane Q deferred) supports the KT §5 non-split content — KTNonSplit (8•[ℝP⁴] ≠ 0) is
    open/dischargeable on it. FALSE (W-D vacuity gate round 3, Fable, 2026-07-13, kernel-checked FOR EVERY
@@ -181,7 +208,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    vacuity gate before consumption.
    backing: `L44_metabolic`, `doubleKillerBInc_ker`
 
-10. `tied-carrier-inhabitation-equiv-free` [structural_forcing]
+11. `tied-carrier-inhabitation-equiv-free` [structural_forcing]
    The membrane-tied CharPairBorTied (L = ker mem.bInc) is a strictly finer bordism-witness class than the
    refuted free-L CharPairBor — the tie alone filters geometrically-unrealizable Lagrangians. FALSE (W-A
    re-gate round 5, Fable, 2026-07-14, kernel-checked): EVERY submodule of the joint boundary space is the
@@ -199,7 +226,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    backing: `charPairBorTied_nonempty_iff_free`, `jointLagrangian_top`
    ⚠ UNRESOLVED backing (not found in-tree — check the registry): `SKEFTHawking.PinPlusCharPairGeoRealizationGate.GeoMembrane.ofSubmodule_L`
 
-11. `realization-seam-basis-gauge-launders-e8` [refutation]
+12. `realization-seam-basis-gauge-launders-e8` [refutation]
    Topological certificates on GeoRealizationData (T2, compactness, closed-embedding ι, dimension,
    membrane-in-W) suffice to make GeoMembrane.ofGeometric honest — a fully-certified realization cannot
    carry the e₈ kernel. FALSE (W-A re-gate round 5, Fable, 2026-07-14, kernel-checked): the free basis
@@ -220,7 +247,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    record of the gauge exploit the derived bases kill.
    backing: `map_killerGauge_ker_negBorBInc`, `ker_transportedBInc_gaugeσ`, `doubleKillerGeoMem_L`, `map_blockCongr_cylLagrangian`
 
-12. `wadm-sqop-gauge-w2-filter-vacuous` [refutation]
+13. `wadm-sqop-gauge-w2-filter-vacuous` [refutation]
    WAdm/hwu (wuW2 P14 P23 = 0) is a w₂(W) = 0 filter — discharging a CharPairWProvider certifies genuine
    Pin⁺-admissibility of the bordisms it covers. FALSE (W-A re-gate round 5, Fable, 2026-07-14,
    kernel-checked): LefschetzWuDatum.sqOp is a FREE field constrained by neither nondeg nor dimeq; zeroing
@@ -256,7 +283,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    COMPLETE. Residual on this fork = the round-6 re-gate.
    backing: `wuW2_zeroSq`, `wuClass_zeroSq`
 
-13. `taylor-leg-end-convention-trap` [structural_forcing]
+14. `taylor-leg-end-convention-trap` [structural_forcing]
    The structured-bordism Taylor extension leg ('boundary classes bounding in the membrane Q have vanishing
    enhancement') can be stated as a PLAIN joint sum q_σ ⊕ q_τ, or σ-side-only, vanishing on
    ker(H₁(∂Q)→H₁(Q)). FALSE (W-A re-gate, Fable round 2, 2026-07-13 — both failures fire through the HONEST
@@ -269,7 +296,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    all 12 TangentialData ops instantiate and Brown-invariance is forced (Lagrangian + Gauss factorization).
    backing: `no_plain_end_pairing_of_cylinder`, `not_cylinder_plain_pairing_of_odd_value`, `not_cylinder_bor_of_invariant_ne`
 
-14. `untethered-membrane-factors-relation` [structural_forcing]
+15. `untethered-membrane-factors-relation` [structural_forcing]
    The flipped carrier (Bor = CharPairBorRealized: GeoRealizationTied with derived bases + computed kernels
    + pinned provider) supports the KT non-split content — the abstract compact-T2 membrane suffices; no
    explicit tether of the realization's Q to the bordism's W is needed. FALSE (W-A gate ROUND 6, Fable,
@@ -296,24 +323,24 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    backing: `isT2DataBordant_pinPlusCharPair_factors`, `ktNonSplit_false_of_e8`
    ⚠ UNRESOLVED backing (not found in-tree — check the registry): `SKEFTHawking.PinPlusCharPairFlipGate.CharPairBorRealized.transport`
 
-15. `nogo_lattice_arf_not_sigma8` [refutation]
+16. `nogo_lattice_arf_not_sigma8` [refutation]
    The lattice Arf bridge σ/8 ≡ Arf(q̄) mod 2 — deriving Rokhlin mod-16 from the intersection FORM alone.
    FALSE: E₈ has Arf(q̄)=0 but σ/8=1; Rokhlin mod-16 is irreducibly geometric (a characteristic-SURFACE Arf,
    not the lattice Arf). Kills Phase 5q.C and any form-only mod-16 shortcut.
    backing: `lattice_arf_bridge_refuted`
 
-16. `mfd-equals-H1-dead-end` [structural_forcing]
+17. `mfd-equals-H1-dead-end` [structural_forcing]
    The `Mfd := H¹` tangential-data construction yields a genuine ℤ/16 / ker=⊥. FALSE: a datum whose
    structure-reversal (revStr) is trivial is FORCED 2-torsion, never order-16.
    backing: `dataBordism_two_torsion_of_revStr_trivial`
 
-17. `synthetic-grade-ker-bot-nogo` [structural_forcing]
+18. `synthetic-grade-ker-bot-nogo` [structural_forcing]
    ker(abkGrade)=⊥ / card≤16 UNCONDITIONALLY for ANY free-per-manifold grade. FALSE: the ℝP⁴ grade-0 witness
    (w₂=0, [ℝP⁴]≠0∈Ω₄^O) has no unoriented null-bordism, so the free grade is never injective. ker=⊥ requires
    the grade TIED to the structure (the GM carrier), never a better proof on a free-grade datum.
    backing: `dataBordism_two_torsion_of_revStr_trivial`
 
-18. `synthetic-smith-map-to-tied-carrier` [structural_forcing]
+19. `synthetic-smith-map-to-tied-carrier` [structural_forcing]
    The Smith map into the 5q.H TIED carrier pinPlusGMTiedData can be built SYNTHETICALLY — map every
    neighbor class [M,σ] to [emptySM, (σ,0)] and transport the grade (the smithDataHom shortcut). FALSE
    (kernel-forced): the tie htie (reduce16to2 grade16 = swTotalNe) forces every tied structure on an EMPTY
@@ -323,7 +350,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    map; the geometric Smith map into the tied carrier is irreducibly geometric (N1b).
    backing: `gmTiedStr_grade_even_of_isEmpty`, `gmTiedStr_empty_grade16_ne_one`
 
-19. `5qH-injectivity-routes-all-equal-one-completeness-prop` [structural_forcing]
+20. `5qH-injectivity-routes-all-equal-one-completeness-prop` [structural_forcing]
    The old-tied-carrier injectivity Props — Thom (hthom: SW-trivial Pin⁺ 4-manifold bounds), KT §5 (hle:
    ker(reduce16to8∘abkGMTied16) ⊆ range(n↦n•g8)), and grade-0 injectivity (hbound) — are DISTINCT OPEN nodes
    on pinPlusGMTiedData (k:=0) worth route-shopping between. FALSE: that carrier is VACATED, so none of them
@@ -347,7 +374,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    which DEMOTED smith_inflow_z16 to an alternative route).
    backing: `grade0_eq_zero_of_nonHausdorff`, `dataBordismGMTied_mk_eq_iff_grade16_eq`, `spin_range_ge_of_grade0_inj`, `omega4PinPlusGMTied_equiv_zmod16_via_kt_of_grade0`, `grade0_bounds_of_thom`
 
-20. `5qH-fg-ek-over-Z-blocked` [refutation]
+21. `5qH-fg-ek-over-Z-blocked` [refutation]
    The mod-2 Erdős–Kaplansky finiteness forcing (SingularUCFinite: self-duality forces finite dimension)
    transports to ℤ — in particular dualization over ℤ stays in the f.g./countable size class, so PD + UCT
    self-duality would force H²(M;ℤ) finitely generated. FALSE: the ℤ-dual of the COUNTABLE free module ℕ →₀
@@ -358,7 +385,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    Lit-Search/Phase-5qH/FG_via_PD_duality_forcing_verdict_20260712.md.
    backing: `dual_blowup_not_finite`, `not_finite_baerSpecker`
 
-21. `genuine-gm-carrier-eight-torsion` [refutation]
+22. `genuine-gm-carrier-eight-torsion` [refutation]
    The genuine ℤ/16 lives directly on the thin GM carrier: DataBordismGrp(pinPlusGMData) ≃+ ZMod 16. FALSE:
    pinPlusGMData's bordism relation records ONLY the mod-8 Brown grade (q.brown ∈ ZMod 8), so
    cylinder-doubling makes every class 8-torsion (pinPlusGMData_eight_torsion: 8•x=0) ⟹
@@ -369,7 +396,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    carrier (E3) or an enriched (σ,F•F)-carrying GM carrier.
    backing: `pinPlusGMData_not_equiv_zmod16`, `pinPlusGMData_eight_torsion`
 
-22. `enriques-datum-refuted-as-shaped` [structural_forcing]
+23. `enriques-datum-refuted-as-shaped` [structural_forcing]
    EnriquesDatum as shipped carries independent Enriques-geometry content (w₂ ≠ 0, π₁ = ℤ/2, the line
    bundle) usable as the W-D B-leaf. FALSE-AS-SHAPED (gate round 10, G10-6): its [Ha] fields collapse —
    Nonempty (EnriquesDatum prov) ↔ EmptySigmaRepresentable prov (ktKernelRep prov)
@@ -381,7 +408,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    duplicates work into a vacuous shape.
    backing: `enriquesDatum_iff_kummerRep`, `enriquesDatum_of_ktSpinPresentationDatum`, `emptySigmaRepresentable_of_geometric`
 
-23. `geometric-phi-does-not-close-hfwd-fakeability` [structural_forcing]
+24. `geometric-phi-does-not-close-hfwd-fakeability` [structural_forcing]
    Fixing Φ := spinForgetPhi (the geometric forgetful map) in the dA leaf makes hfwd a genuine geometric
    obligation not derivable from the conclusion. FALSE (gate round 11): given the presentation row {hA, hB,
    hg, hdvd, hΦg, h2}, hfwd on the geometric Φ is DERIVABLE from KTNonSplit with zero geometry (R.generates
@@ -394,7 +421,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    doubles, consuming zero k₀ facts).
    backing: `spinForgetPhi_hfwd_of_ktNonSplit`, `spinForgetPhi_hfwd_iff_ktNonSplit`
 
-24. `dual-spin-opened-construction-conclusion-fakeable` [structural_forcing]
+25. `dual-spin-opened-construction-conclusion-fakeable` [structural_forcing]
    Opening DualSpinFromW into DualSpinConstruction (Vspace/ιV/Vspin/hcob/hcover fields) makes the dual-spin
    supply a genuine geometric obligation not derivable from the conclusion. FALSE (gate round 12): on an
    unpinned ambient, Nonempty (DualSpinConstruction PUnit sigM) ↔ 32 ∣ sigM — every field including hcob
@@ -405,7 +432,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    witness and edge the geometric ∂E(V); statement-shape audits are insufficient at every opening depth.
    backing: `nonempty_dualSpinConstruction_iff_thirtytwo_dvd`, `nonempty_ktSharpnessSupplyConstr_iff_hfwd`, `spinOfSigMul16_sig`
 
-25. `hker-opener-supplyGeo-is-non-reducing` [structural_forcing]
+26. `hker-opener-supplyGeo-is-non-reducing` [structural_forcing]
    Inhabiting KTSharpnessSupplyGeo and firing kerPhiSubDoubles_of_row_of_supplyGeo is a reducing step on
    hker -- i.e. the opened geometric sharpness supply is a strictly weaker obligation than the hfwd
    conclusion it feeds. FALSE (2026-07-27, lead): nonempty_ktSharpnessSupplyGeo_iff_hfwd proves Nonempty
@@ -418,7 +445,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    submanifold and DERIVES its intersection lattice (SpinSigmaAtomPkg pattern) plus the w1-duality tie.
    backing: `nonempty_ktSharpnessSupplyGeo_iff_hfwd`
 
-26. `hker-ambient-pin-does-not-restore-geometry` [structural_forcing]
+27. `hker-ambient-pin-does-not-restore-geometry` [structural_forcing]
    Pinning the ambient — requiring amb x hx = TopCat.of b.W of the genuine tethered witness, as binding
    round-12 spec 1 demands — restores geometric content to the dA/hker dual-spin supply, so an amb-pinned
    KTSharpnessSupplyGeo variant would be real progress on hker. FALSE (2026-07-27, lead): the
@@ -437,7 +464,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    Do NOT dispatch amb-pinning as an hker brick.
    backing: `nonempty_dualSpinFromW_iff_thirtytwo_dvd`, `dualSpinFamily_iff_pointwise_thirtytwo_dvd`, `isClosedEmbedding_empty`
 
-27. `novikov-substrate-synthetic-inhabitation` [structural_forcing]
+28. `novikov-substrate-synthetic-inhabitation` [structural_forcing]
    The NovikovRealPairLES substrate (or any of the four equivalent σ-descent atom formulations) constitutes
    progress toward the Thom bordism-invariance of σ beyond the bare hbord statement. FALSE (gate round 12):
    the diagonal Lagrangian + synthetic quotient inhabit the substrate with zero geometry whenever σ agrees
@@ -449,7 +476,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    bordism witness) — linear-algebra Lagrangian constructions are zero progress at both grades.
    backing: `nonempty_novikovRealPairLES_diag`, `nonempty_novikovBoundaryRestriction_iff_sig_eq`, `novikovLagrangian_iff_hbord`
 
-28. `novikov-geometric-tower-carrier-conclusion-fakeable` [structural_forcing]
+29. `novikov-geometric-tower-carrier-conclusion-fakeable` [structural_forcing]
    The NovikovGeometricPairLESData field row (the #196 genuine-tower carrier:
    rest2/delta/pairing/hexact/hnondeg/hadjDot) is a stronger-than-conclusion carrier whose inhabitation
    certifies genuine bounding-W tower progress. FALSE (gate round 13): the substrate rebuilds the carrier
@@ -464,7 +491,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    construction.
    backing: `novikovGeometricPairLESDataOfRealPairLES`, `nonempty_novikovGeometricPairLESData_iff_realPairLES`, `nonempty_novikovGeometricPairLESData_iff_sig_eq`, `nonempty_novikovGeometricPairLESData_diag`
 
-29. `seam-transfer-open-support-uninhabitable` [refutation]
+30. `seam-transfer-open-support-uninhabitable` [refutation]
    The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207
    hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the
    literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching
@@ -481,7 +508,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    gate-pending consumption shape whose interface terms cancel mod 2.
    backing: `wAtt_mem_subspaceChains_range_phi`, `boundary_wAtt_eq_zero`, `isEmpty_capstoneSeamTransfer_of_null`, `isEmpty_capstoneSeamTransferSeam_of_null`
 
-30. `k0-to-k1-transport-refuted` [refutation]
+31. `k0-to-k1-transport-refuted` [refutation]
    Every k = 0 charted space over the R^4 model is also a k >= 1 manifold -- i.e. the `k := 0` binder in the
    live KT provider is harmless generality that transports to the smooth category for free. FALSE (kernel
    refutation, 2026-07-21). Mathlib registers an UNCONDITIONAL `instance : IsManifold I 0 M` for every
@@ -504,7 +531,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    Z/16 mathematics.
    backing: `no_generic_zero_to_one_transport`, `exists_carrier_element_not_smooth`
 
-31. `collar-pair-closed-seam-attached-collar-bridge-is-FALSE` [refutation]
+32. `collar-pair-closed-seam-attached-collar-bridge-is-FALSE` [refutation]
    PinPlusTraceSeamResidualNarrow.ClosedSeamAttachedCollarBridge S a -- the closed-S attached-collar bridge,
    believed to be hctrlH's blocking atom and readable as an open-neighbourhood-to-closed-S collar
    deformation retraction. FALSE (kernel refutation, 2026-07-21): collar_bridge_refuted exhibits closed
@@ -529,7 +556,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    case that hcoreHit rules out.
    backing: `collar_bridge_refuted`, `attachedBridge_iff_support_dichotomy`
 
-32. `collar-pair-face-row-forces-seam-to-meet-boundary` [structural_forcing]
+33. `collar-pair-face-row-forces-seam-to-meet-boundary` [structural_forcing]
    A CollarPairGeomFace row (the houtPair producer: the row's own supports plus the seam-annulus containment
    hseamAnn) can be inhabited with an ENTIRELY INTERIOR seam -- i.e. with no seam point of the surgered end
    lying in dW, so that the collar-pair route never has to pay for the seam. FALSE (structural forcing,
@@ -548,7 +575,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    FIVE.
    backing: `exists_seamPoint_mem_bd_of_null`, `exists_seamPoint_mem_range_eM'_of_null`
 
-33. `collar-pair-open-complement-annulus-is-refuted-shape` [structural_forcing]
+34. `collar-pair-open-complement-annulus-is-refuted-shape` [structural_forcing]
    houtPair (the collar-annulus weld obligation of the #212 collar-pair row) can be discharged for free by
    reading its three required boundary-supports straight off the in-tree SurgeredEndDatum, whose
    d.topFaceCovered (fromCyl '' (topface \ range phi) subset dW), d.sphereFaceCovered (fromHandle '' (sphere
@@ -568,7 +595,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    d.topFaceCovered instantiation is closed', NEVER as 'the collar-annulus refinement is closed'.
    backing: `collarAnnulusOpen_toSeamTransferSeam`, `not_collarAnnulusOpen_of_null`
 
-34. `collar-pair-maximal-core-reenters-refuted-support` [structural_forcing]
+35. `collar-pair-maximal-core-reenters-refuted-support` [structural_forcing]
    The CollarPairGeom/CollarPairGeomUnsub row's anti-fake tether hcoreHit can be made free of charge by
    enlarging the #210 shrunk core K toward its limit K = univ, keeping the rest of the collar-pair split
    data intact. FALSE (structural forcing, 2026-07-21): at K = univ the tether IS indeed a consequence of
@@ -583,7 +610,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    maximal-core shortcut is closed', never as 'every hcoreHit shortcut is closed'.
    backing: `coreHit_of_univ`, `houtC_support_univ_eq_refuted`
 
-35. `k7-seam-cover-interior-fails` [refutation]
+36. `k7-seam-cover-interior-fails` [refutation]
    K7SeamCoverHyp (the K7 opener's un-thickened MV cover hypothesis): the INTERIORS of the two closed
    Kummer-weld pieces (the Q-image and the 16 closed E-images) cover the welded K3 carrier, so the
    Mayer-Vietoris assembly can run on the un-thickened pieces directly. FALSE (kernel refutation
@@ -596,7 +623,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    KummerK7MVAssembly) and through which the whole K7 accounting now runs unconditionally.
    backing: `k7SeamCoverHyp_false`
 
-36. `gram-literal-equality-is-choice-dependent` [structural_forcing]
+37. `gram-literal-equality-is-choice-dependent` [structural_forcing]
    SphereProdGramPin - the LITERAL matrix equality `interMatrix fc B = sphereProdFormDatum` on the computed
    rank-2 basis - is a disclosed GEOMETRIC residual of the S2xS2 intersection form, dischargeable once the
    Kunneth/EZ cross value is pinned. FALSE AS FRAMED (structural forcing, 2026-07-21): the exact
@@ -618,7 +645,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    choice.
    backing: `sphereProd_interMatrix_computed_eq`, `sphereProdGramPin_iff`
 
-37. `kronecker-dual-is-not-the-h1-enhancement-transport` [refutation]
+38. `kronecker-dual-is-not-the-h1-enhancement-transport` [refutation]
    The Kronecker/UCT dual of the carried cohomology basis - `homologyBasisOfCohomologyBasis basis`, the
    value `pinCharSurfaceOfBundled` puts in `PinCharSurface.H1Iso` (and the value
    `GeoRealizationTied.derivedEsigma`/`derivedEtau` put in the seam) - is the identification of
@@ -656,6 +683,8 @@ import SKEFTHawking.BordismGroup
 import SKEFTHawking.CharSurfacePDBundled
 import SKEFTHawking.CharSurfacePDTransport
 import SKEFTHawking.FGDualityNoGo
+import SKEFTHawking.HandleTradeAtomVacuity
+import SKEFTHawking.HandleTradeAtomVacuityConcrete
 import SKEFTHawking.KummerK7SeamCoverNoGo
 import SKEFTHawking.NonHausdorffBordismCollapse
 import SKEFTHawking.PinPlusCharPairFlipGate
@@ -693,6 +722,18 @@ import SKEFTHawking.T2BordismGluing
 import SKEFTHawking.UnorientedThomCapstone
 
 namespace SKEFTHawking.KernelNoGos
+
+/-- NO-GO [`freeze-a-atoms-satisfiable-with-zero-geometry`] — do NOT re-derive. FALSE: Building the Freeze-A primitives AS STATED -- SpinSigmaPresentation.HandleTradeCobordism (the raw handle-trade cobordism, primitive 1 of the freeze-atoms-not-composable-from-sigma-trace honest floor) and HyperbolicBase (primitive 2, the rank-0 nullbordism) -- discharges genuine manifold-surgery content and therefore advances hA. Backing refutation: `SKEFTHawking.SpinSigmaRoute.collapsedPresentation_handleTradeCobordism`. -/
+alias nogo_collapsedPresentation_handleTradeCobordism := SKEFTHawking.SpinSigmaRoute.collapsedPresentation_handleTradeCobordism
+
+/-- NO-GO [`freeze-a-atoms-satisfiable-with-zero-geometry`] — do NOT re-derive. FALSE: Building the Freeze-A primitives AS STATED -- SpinSigmaPresentation.HandleTradeCobordism (the raw handle-trade cobordism, primitive 1 of the freeze-atoms-not-composable-from-sigma-trace honest floor) and HyperbolicBase (primitive 2, the rank-0 nullbordism) -- discharges genuine manifold-surgery content and therefore advances hA. Backing refutation: `SKEFTHawking.HandleTradeAtomVacuityConcrete.collapsedSphereProd_handleTradeCobordism`. -/
+alias nogo_collapsedSphereProd_handleTradeCobordism := SKEFTHawking.HandleTradeAtomVacuityConcrete.collapsedSphereProd_handleTradeCobordism
+
+/-- NO-GO [`freeze-a-atoms-satisfiable-with-zero-geometry`] — do NOT re-derive. FALSE: Building the Freeze-A primitives AS STATED -- SpinSigmaPresentation.HandleTradeCobordism (the raw handle-trade cobordism, primitive 1 of the freeze-atoms-not-composable-from-sigma-trace honest floor) and HyperbolicBase (primitive 2, the rank-0 nullbordism) -- discharges genuine manifold-surgery content and therefore advances hA. Backing refutation: `SKEFTHawking.HandleTradeAtomVacuityConcrete.constRankTwoSphereProd_hyperbolicBase`. -/
+alias nogo_constRankTwoSphereProd_hyperbolicBase := SKEFTHawking.HandleTradeAtomVacuityConcrete.constRankTwoSphereProd_hyperbolicBase
+
+/-- NO-GO [`freeze-a-atoms-satisfiable-with-zero-geometry`] — do NOT re-derive. FALSE: Building the Freeze-A primitives AS STATED -- SpinSigmaPresentation.HandleTradeCobordism (the raw handle-trade cobordism, primitive 1 of the freeze-atoms-not-composable-from-sigma-trace honest floor) and HyperbolicBase (primitive 2, the rank-0 nullbordism) -- discharges genuine manifold-surgery content and therefore advances hA. Backing refutation: `SKEFTHawking.SpinSigmaRoute.no_generator_of_rank_le_two`. -/
+alias nogo_no_generator_of_rank_le_two := SKEFTHawking.SpinSigmaRoute.no_generator_of_rank_le_two
 
 /-- NO-GO [`hker-single-witness-extraction-is-equivalent-to-gluing`] — do NOT re-derive. FALSE: The single tethered null-bordism witness that hker needs -- extracting one IsT2DataBordant from T2DataBordismGrp.mk = 0 -- can be obtained by a cleverer use of the quotient, a reformulation of the extraction, or any route that AVOIDS proving bordism gluing (transitivity). Backing refutation: `SKEFTHawking.T2BordismGluing.gluesT2_iff_singleWitness`. -/
 alias nogo_gluesT2_iff_singleWitness := SKEFTHawking.T2BordismGluing.gluesT2_iff_singleWitness

@@ -972,8 +972,22 @@ search for the bridge (`lean_local_search` on the map/iso name), not just the tw
   (cylinder, surgery trace, sphere-product coboundary) rather than proving the general collar theorem.
   This is the project's established and repeatedly-successful pattern — the Kummer weld's `IsManifold`
   came from ~15 modules of concrete atlas work, not a generic engine — and it leaves the relation, and
-  therefore the group, untouched. The general collar theorem stays the eventual goal, not the
-  precondition.
+  therefore the group, untouched.
+- ⚠ **AMENDED 2026-07-27 (operator steer).** The **rejection of the collared-relation redefinition
+  above STANDS** — it rests on faithfulness (finer relation ⟹ larger quotient ⟹ possibly the wrong
+  group), which nothing here touches. **What is corrected is the OTHER half of my reasoning:** I
+  part-justified "concrete families *instead of* the general collar theorem" on the grounds that the
+  general theorem is Mathlib-grade and Mathlib lacks both it and boundary-is-a-submanifold. **That is
+  a COST input, not a closure.** This project builds Mathlib-grade infrastructure routinely and
+  upstreams later; Mathlib's own `Geometry/Manifold/Bordism.lean` *names* this exact gap, so the
+  collar neighbourhood theorem is an absent-but-true theorem blocking a real result — a legitimate
+  build target and a genuinely upstreamable one. ("Route closed" is reserved for a kernel-checked
+  no-go or a proved impossibility.)
+  ✅ **Both arcs are AUTHORIZED IN PARALLEL, not in sequence:** the concrete `SeamGlueChart`
+  inhabitation (fast unblock of `hker` for the families in play) **and** the general collar
+  neighbourhood theorem (the reusable, upstreamable asset that makes `Transitive (IsT2DataBordant)`
+  general and `T2DataBordismGrp` a genuine quotient by an equivalence relation). Neither blocks the
+  other; the concrete one is not a substitute the general one must wait behind.
 - `related`: `KERNEL_NOGO_REGISTRY['hker-single-witness-extraction-is-equivalent-to-gluing']` (the
   extraction is EQUIVALENT to gluing, so no shortcut exists) and task **#312**.
 - `memory`: `[[project_5qH_nonhausdorff_substrate_bug]]`
