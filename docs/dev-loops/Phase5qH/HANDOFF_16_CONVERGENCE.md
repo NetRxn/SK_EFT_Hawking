@@ -3,11 +3,12 @@
 **Written:** 2026-07-15. **Fully re-verified and rewritten 2026-07-27** (lead, directly in the
 Lean — every claim below was read out of the tree, not carried forward from a prior revision).
 
-**Ground state at rewrite:** main `12d34743`; last **Lean** commit `66851da4` (the 16 commits
-since are harness/CI only). `lake build SKEFTHawking.ExtractDeps` → **exit 0, 10,274 jobs**.
-`uv run python scripts/validate.py` → **48/48 checks passed**. Fence: **30 kernel-encoded no-go
-forks** (`KERNEL_NOGO_REGISTRY`) + **39** `SETTLED_FORKS.md` prose entries; `nogo_substrate_integrity`
-green. One advisory: `update_inventory_index.py` autogen blocks are stale — run `/skeft-qa:sync`.
+**Ground state (refreshed 2026-07-27 after the regularity-lift + hker arc):** main `52fc5e29`.
+`lake build SKEFTHawking.ExtractDeps` → **exit 0, 10,275 jobs**; library-wide **0 axioms, 0 sorry**
+(23,907 theorems / 1,907 modules). `nogo_substrate_integrity` **PASSED**. Fence: **32 kernel-encoded
+no-go forks / 77 backing aliases** (`KERNEL_NOGO_REGISTRY` → `KernelNoGos.lean`) + **40**
+`SETTLED_FORKS.md` prose entries. Advisory: `update_inventory_index.py` autogen blocks stale — run
+`/skeft-qa:sync`. Full `validate.py` N/N not re-run since `9880b913`.
 
 **This document:** part 1 is the big picture for anyone catching up cold; part 2 is the remaining
 work in dependency order; part 3 is the binding architectural law set. The always-authoritative
@@ -66,10 +67,18 @@ work is done and its lessons are kernel-encoded.
 ### Status in one paragraph
 
 **The theorem is proven as a sharp conditional; the phase is row-emptying plus one regularity
-lift.** Waves W-A (faithful carrier), W-B (smooth surjectivity), W-C (computed invariant) and W-E
-(Rokhlin-16 twin, automatic) are closed. W-D's assembly is proven and its hypothesis row *is* the
-remaining mathematics. Since the last rewrite the **entire S²×D³ / Freeze-B geometric coboundary
-lane closed** — `hBbord` is no longer a lane. What remains is listed atom-by-atom in part 2.
+lift.** Waves **W-A** (faithful carrier), **W-B** (smooth surjectivity — unconditional at `k = ⊤`)
+and **W-C** (computed invariant) are closed. **W-D**'s assembly is proven and its hypothesis row *is*
+the remaining mathematics.
+
+⚠ **W-E is NOT closed** (an earlier revision said "closed" — retracted). Every assembly variant ships
+a `rokhlin_sixteen_…` twin, including at `k = ⊤`, so W-E fires *automatically the moment the row
+empties* — but it inherits the row's hypotheses and is therefore exactly as conditional as W-D today.
+**W-F** (the `k = ∞` capstone + Ω₅ recast) is untouched and is a genuinely new re-basing arc.
+
+Since the 2026-07-27 rewrite the **entire S²×D³ / Freeze-B geometric coboundary lane closed** —
+`hBbord` is no longer a lane — and that lane is now `k`-generic (§2.1). What remains is listed
+atom-by-atom in part 2.
 
 ---
 
@@ -91,20 +100,33 @@ lane closed** — `hBbord` is no longer a lane. What remains is listed atom-by-a
 
 | | statement | carrier | row |
 |---|---|---|---|
-| **Refined (C⁰)** | `kt_equiv_zmod16_of_residuals_freezeAtoms_sphereDiskPinned` (`PinPlusKTSphereProdP23Close.lean:326`) | `residualProv = residualProvK 0` | 7 atoms + one slot pin |
-| **Smooth (k=⊤)** | `kt_equiv_zmod16_of_residuals_smooth` (`PinPlusKTAssemblyResiduals.lean:166`) | `residualProvK ⊤` | the COARSE 8 atoms |
+| **Refined (C⁰)** | `kt_equiv_zmod16_of_residuals_freezeAtoms_sphereDiskPinned` (`PinPlusKTSphereProdP23Close`) | `residualProv = residualProvK 0` | 7 atoms + one slot pin |
+| **Smooth (k=⊤), coarse row** | `kt_equiv_zmod16_of_residuals_smooth` (`PinPlusKTAssemblyResiduals:166`) | `residualProvK ⊤` | the COARSE 8 atoms |
+| **⭐ Smooth (k=⊤), SHARPEST** | `kt_equiv_zmod16_smooth_sphereDiskPinned` + W-E twin `rokhlin_sixteen_smooth_sphereDiskPinned` (`PinPlusKTSphereProdP23Close` §7) | `residualProvK ⊤` | 8 binders — same COUNT as the coarse row, but `hB`→`hs2s2` (row-realization pin) and `H`→`KernelReducesToSpin` are both WEAKER |
 
 **The goal requires the smooth one.** Roadmap §2 leg 2 is a hard constraint: at `k = 0` the honest
 group is topological Pin⁺ bordism `≅ ℤ/2 ⊕ ℤ/8`, the wrong group; the `IsManifold` binder at `k = 0`
 is *free* (`PinPlusRegularityFence.isManifoldZero_free`).
 
-**The refinement chain is currently C⁰-only.** `SphereProdCoboundaryWAdm`
-(`PinPlusKTSphereProdBordism.lean:215`) is hard-pinned at `k = 0`, so every `freezeAtoms` /
-`sphereDisk` refinement — including the closed coboundary lane — exists only at `k = 0`. Kernel fork
+**Regularity status (updated 2026-07-27 — the audit ran and the first tranche landed).** Kernel fork
 `k0-to-k1-transport-refuted` forbids lifting: a smooth-category result must be **re-declared**
-`k`-generically, never transported. The underlying content looks `k`-blind (`sphereDiskSmoothData k`
-is already `k`-generic; `WAdmPinned` is homological) — **verify that, then re-declare.** Doing this
-early prevents every subsequent atom from being paid for twice.
+`k`-generically, never transported.
+
+* ✅ **DONE (`c495abaf`, `ae0178e7`) — the S²×D³ coboundary lane is now `k`-generic.** The audit
+  confirmed the substrate (`CharPairBorRealizedTethered`, `CharPairStrBundled`, `WAdmPinned`,
+  `spinEmptyData`, `sphereProdCoboundaryBordism k`, `sphereDiskSmoothData k`) was **already**
+  `k`-generic; the C⁰ pin was 7 declarations across 4 files plus one section-scoped `variable`, and
+  **no proof body touched `k`**. Re-declared in place, so every `k = 0` call site still works by
+  inference; `rfl` conservativity certificate landed. `hB : SphereProductBounds` is now *produced*
+  from that geometry at every `k` rather than assumed.
+* ⬜ **REMAINING — the `freezeAtoms` family** (`PinPlusKTFreezeDischarge`, `…_ofCoboundary`,
+  `…_sphereDiskPinned`) still consumes `residualProv` (= `residualProvK 0`). Same shape of work.
+  ⚠ Do **not** mass-edit its ~297 `residualProv` references: the k-generic backbone
+  `kt_equiv_zmod16_of_residuals_ofKRS` already exists, so build on that instead (that is how
+  `kt_equiv_zmod16_smooth_sphereDiskPinned` was obtained).
+* ⚙ **Friction law (bought here):** when generalizing a parameter, grep the enclosing `section`'s
+  `variable` line FIRST. A stale section binder presents as `(deterministic) timeout at isDefEq`, and
+  `maxHeartbeats` is both banned and useless against it.
 
 The one genuinely C⁰-tied input is a **smooth handle attachment for the surgery trace**
 (`SurgeryFoundation.SmoothSurgeryChartDatum.ofC0` sets `k := 0`;
@@ -163,11 +185,33 @@ embedded bounding Q) and **B2** (`TerminalCharacteristicExtensionDatum`).
 ⚠ The one-sphere/3-handle collapse is UNSOUND without a framing theorem (SETTLED_FORKS); the
 winning construction is the global KT characteristic-bordism route.
 
-**E · `hker`** — `KerPhiSubDoubles`, the **w₁-dual spin submanifold** (smooth transversality).
-Opened at #160, untouched since; **the least-reconnoitred atom in the phase and the one most likely
-to hold a surprise.** Its true route is `KTSharpnessSupply` via `kerPhiSubDoubles_of_row_of_supply`
-— **not** the σ/Novikov tower, which is kernel-settled ORPHANED
-(`sigma-tower-ORPHANED-not-on-16-convergence-critical-path`; do not revive it).
+**E · `hker`** — `KerPhiSubDoubles`, the **w₁-dual spin submanifold**. ⛔ **BOTH previously-named
+routes are now KERNEL-REFUTED (2026-07-27). An earlier revision of this document named
+`KTSharpnessSupply` via `kerPhiSubDoubles_of_row_of_supplyGeo` as "its true route" — that claim is
+RETRACTED.**
+
+* **Fork 32 `hker-opener-supplyGeo-is-non-reducing`** (backing
+  `PinPlusKTHkerAmbPinGate.nonempty_ktSharpnessSupplyGeo_iff_hfwd`): the consumed supply is
+  **equivalent** to the `hfwd` conclusion, so `kerPhiSubDoubles_of_row_of_supplyGeo` — true as a
+  theorem — reduces nothing. **Never dispatch "inhabit `KTSharpnessSupplyGeo`" at any depth.**
+* **Fork 31 `hker-ambient-pin-does-not-restore-geometry`** (backings
+  `nonempty_dualSpinFromW_iff_thirtytwo_dvd`, `dualSpinFamily_iff_pointwise_thirtytwo_dvd`,
+  `isClosedEmbedding_empty`): the natural repair — pinning `amb` to the genuine tethered `b.W` per
+  round-12 spec 1 — buys **nothing**; the conclusion-equivalence holds at every Hausdorff ambient and
+  at an arbitrary ambient *family*.
+
+**ROOT CAUSE (structural, deeper than the round-12 `amb` note):** `SmoothSpinManifold4`
+(`SpinRokhlinInterface.lean:62`) is **pure lattice data** (`rank`/`form`/`even_unimod`/`topo`) with
+**no underlying space**. So in `DualSpinFromW` the topological half (`Vspace`/`ιV`/`hclosed`) and the
+arithmetic half (`Vspin`/`hdouble`) are **disconnected by construction** — the empty submanifold
+closed-embeds into any T2 `W` while `spinOfSigMul16` supplies the lattice.
+
+**⟹ THE ONLY REMAINING ROUTE:** a **NEW interface that carries the submanifold and DERIVES its
+intersection lattice** (the `SpinSigmaAtomPkg` pattern — fundamental class + `H²` basis + Poincaré
+duality on an actual manifold), **plus the `w₁`-duality tie**; then the smooth transversality
+(Mathlib-absent). Nothing built over `SmoothSpinManifold4` + a bare embedded `Vspace` can work —
+that is kernel-checked, not opinion. Also **not** the σ/Novikov tower, which is kernel-settled
+ORPHANED (`sigma-tower-ORPHANED-not-on-16-convergence-critical-path`; do not revive it).
 
 **F · `hΦg`** — `spinForgetPhi[g] = k₀`. Not independent: derived from `hker` + `hcyc` + `h2` once
 `row` exists (`spinForgetPhi_g_eq_ktKernelRep_of_cyclic`). `hcyc`/`h2` were shown non-independent —
@@ -231,7 +275,7 @@ Violating any of these reproduces a known multi-hour wall.
   with `show`/`rfl`, never `rw`; `lean_verify` rejects non-ASCII decl names and lexically flags the
   word "opaque" even in prose; the authoritative axiom check is a fresh `lake env lean`
   `#print axioms`.
-- **Never re-enter a registry fork** — 30 kernel-encoded forks in `KERNEL_NOGO_REGISTRY` + 39
+- **Never re-enter a registry fork** — 32 kernel-encoded forks / 77 aliases in `KERNEL_NOGO_REGISTRY` + 40
   `SETTLED_FORKS.md` prose entries, surfaced by `/skeft-qa:frontier` (negative frontier). Name the
   relevant forks in every worker brief; a fresh worker is the highest-risk re-deriver.
 
