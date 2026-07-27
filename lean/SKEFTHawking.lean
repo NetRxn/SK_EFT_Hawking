@@ -4727,6 +4727,21 @@ import SKEFTHawking.SphereProdSpinElement
 -- UNIT CYLINDER, and primitive (2) `HyperbolicBase` is vacuous. Both refuted by `FaithfulRank`.
 -- Closes the "maybe it's an artefact of abstract ξ" objection. (wt3-built.)
 import SKEFTHawking.HandleTradeAtomVacuityConcrete
+-- Phase 5q.H (N1a, Freeze A RE-SCOPED onto a constrained presentation) — acts on the vacuity
+-- finding. `FaithfulSpinSigmaPresentation` carries `b₂`-faithfulness (empty-carrier vanishing +
+-- additivity) as FIELDS; §3 shows the exclusion is regional, not case-by-case (no faithful
+-- presentation is rank-≤2, so the whole Sylvester-excluded region where both dodges live is empty
+-- of them). The re-scoped primitive is `BordantToSplitLocus` — REDUCTION TO THE SPLIT LOCUS, the
+-- part the audit found is NOT free — and it discharges `HandleTradeSplit` → `HyperbolicPeel` →
+-- `RealizesSphereProducts` → `sig_injective` / `Ω₄^{Spin} ≃+ ℤ`. §8 makes it falsifiable (a nonzero
+-- σ=0 class refutes it); §9 inhabits the constrained type with UNBOUNDED rank, closing the "no
+-- abstract inhabitant" gap `HandleTradeAtomVacuity` §5 left open. Also fixes task #314 (the six-
+-- universe `HandleTradeCobordism` shape) via the universe-pinned `StrMfd.sum`. (wt3-built.)
+import SKEFTHawking.HandleTradeSplitLocus
+-- … and the same, landed on the GENUINE `Ω₄^{Spin}` carrier: the constrained type is INHABITED over
+-- `spinEmptyData prov` with the genuine `S²×S²` spin element in the `s2s2` slot, with unbounded rank
+-- and with the carrier's bordism group untouched by the decoration (`rankGraded_equiv`). (wt3-built.)
+import SKEFTHawking.HandleTradeSplitLocusConcrete
 import SKEFTHawking.KummerK3Base
 import SKEFTHawking.KummerInvolution
 import SKEFTHawking.KummerPuncturedTorus
