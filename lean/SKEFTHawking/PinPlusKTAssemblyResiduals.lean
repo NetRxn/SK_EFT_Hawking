@@ -103,12 +103,51 @@ regularity exponent, taking the KRS leaf in its regularity-neutral form `KernelR
 tethered char-pair carrier at **any** smoothness exponent `k : WithTop ℕ∞`, in particular the smooth
 `k = ⊤` the literature-grade Kirby–Taylor theorem is about.
 
-Hypotheses are the residual atoms in their regularity-neutral form. Only the KRS leaf differs from
-the `k = 0` theorem below: it is taken as `KernelReducesToSpin prov` — the Prop itself ("every
-Brown-kernel class is empty-Σ representable"), which is meaningful at every `k`. That is a *weaker*
-hypothesis than the `k = 0` `KRSResidualRow` supply (the row implies it via
-`kernelReducesToSpin_of_residualRow`), so nothing is narrowed: this statement is at least as strong
-as the `k = 0` one on that leaf, at every `k`. -/
+Hypotheses are the residual atoms in their regularity-neutral form. Two leaves differ from the `k = 0`
+theorem of record, both in the *weakening* direction:
+
+* the KRS leaf is taken as `KernelReducesToSpin prov` — the Prop itself ("every Brown-kernel class is
+  empty-Σ representable"), meaningful at every `k`. That is *weaker* than the `k = 0` `KRSResidualRow`
+  supply (the row implies it via `kernelReducesToSpin_of_residualRow`);
+* the pair `{hcyc : SpinImageCyclic, h2 : k₀ + k₀ = 0}` is replaced by the single generator-image atom
+  `hΦg : Φ[g] = k₀` — the row is **seven** binders here against eight in `…_ofKRS`. This is the
+  `k`-generic analogue of the `k = 0` `PinPlusKTBinderDischarge.kt_equiv_zmod16_of_residuals_phig`:
+  both consumers of the pair need only `hΦg` (the dC leaf takes it directly; the dA leaf via
+  `nonempty_dualSpinForwardDatum_of_spinForgetPhi`), and `{hcyc, h2}` entered the assembly ONLY as a
+  way to derive it. That the direction is genuinely `{hcyc, h2} ⟹ hΦg` and not a lateral trade is
+  kernel-checked immediately below, where `…_ofKRS` is re-derived as a corollary of this theorem.
+
+Circularity audit (unchanged from the `k = 0` binder discharge): `hΦg` is UPSTREAM of `KTNonSplit`
+(the dA datum built on it *yields* `KTNonSplit` via `ktNonSplit_of_dualSpinForwardDatum`) and asserts
+nothing about `k₀ ≠ 0` or the ÷32 conclusion, so taking it as an atom consumes neither — the fence
+`geometric-phi-does-not-close-hfwd-fakeability` is respected. -/
+theorem kt_equiv_zmod16_of_residuals_ofKRS_phig {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k)
+    (hKRS : KernelReducesToSpin prov)
+    (row : SpinPresentationRow prov)
+    (hA : row.R.RealizesSphereProducts) (hB : row.R.SphereProductBounds)
+    (hcol : RankZeroCollapsesToEmptySurf prov)
+    (hker : KerPhiSubDoubles prov)
+    (hΦg : spinForgetPhi prov (DataBordismGrp.mk (spinEmptyData prov) row.g)
+        = ktKernelRep prov) :
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData prov) ≃+ ZMod 16) := by
+  -- dA's honest `hfwd` (KT Lemma 5.3 "only if"): FREE on doubles from Rokhlin, given `ker Φ ⊆ doubles`.
+  have hfwd : ∀ x, spinForgetPhi prov x = 0 → (32 : ℤ) ∣ row.R.sig x :=
+    spinForgetPhi_hfwd_of_ker_sub_doubles prov row.R row.hdvd hker
+  -- dC leaf: the presentation row + the concrete collapse atom yield `KTSpinPresentationDatum`.
+  obtain ⟨dC⟩ := nonempty_ktSpinPresentationDatum_of_row_of_collapse row hA hB hΦg hcol
+  -- dA leaf: `hΦg` + the honest `hfwd` alone yield `DualSpinForwardDatum` — `{hcyc, h2}` entered the
+  -- assembly ONLY through deriving `hΦg`, so at this grain they are gone from both leaves.
+  obtain ⟨dA⟩ :=
+    nonempty_dualSpinForwardDatum_of_spinForgetPhi prov row.R row.g row.hg hΦg hfwd
+  -- the gate-certified assembly of record fires with the three real leaf inputs.
+  exact kt_equiv_zmod16_of_two_leaves hKRS dC dA
+
+/-- **The `{hcyc, h2}` form as a COROLLARY of the `hΦg` form** — statement unchanged from the theorem
+of record; the proof now *factors through* `…_ofKRS_phig`, which makes the "`hΦg` is the weaker
+hypothesis" claim a kernel fact rather than a docstring assertion: the derivation
+`spinForgetPhi_g_eq_ktKernelRep_of_cyclic` is exactly the arrow `{hcyc, h2} ⟹ hΦg` (given the row and
+`hker`), and it is called here. -/
 theorem kt_equiv_zmod16_of_residuals_ofKRS {k : WithTop ℕ∞}
     (prov : CharPairWProviderPerOp (𝓡 4) k)
     (hKRS : KernelReducesToSpin prov)
@@ -118,20 +157,10 @@ theorem kt_equiv_zmod16_of_residuals_ofKRS {k : WithTop ℕ∞}
     (hker : KerPhiSubDoubles prov)
     (hcyc : SpinImageCyclic prov)
     (h2 : ktKernelRep prov + ktKernelRep prov = 0) :
-    Nonempty (T2DataBordismGrp (pinPlusCharPairData prov) ≃+ ZMod 16) := by
-  -- dA's honest `hfwd` (KT Lemma 5.3 "only if"): FREE on doubles from Rokhlin, given `ker Φ ⊆ doubles`.
-  have hfwd : ∀ x, spinForgetPhi prov x = 0 → (32 : ℤ) ∣ row.R.sig x :=
-    spinForgetPhi_hfwd_of_ker_sub_doubles prov row.R row.hdvd hker
-  -- the generator image `Φ[g] = k₀`, derived (non-circular: no `k₀`/`KTNonSplit` facts).
-  have hΦg :
-      spinForgetPhi prov (DataBordismGrp.mk (spinEmptyData prov) row.g) = ktKernelRep prov :=
-    spinForgetPhi_g_eq_ktKernelRep_of_cyclic prov row.R row.g row.hg hfwd hcyc h2
-  -- dC leaf: the presentation row + the concrete collapse atom yield `KTSpinPresentationDatum`.
-  obtain ⟨dC⟩ := nonempty_ktSpinPresentationDatum_of_row_of_collapse row hA hB hΦg hcol
-  -- dA leaf: the row + honest hfwd + cyclic image + 2-torsion yield `DualSpinForwardDatum`.
-  obtain ⟨dA⟩ := nonempty_dualSpinForwardDatum_of_row row hfwd hcyc h2
-  -- the gate-certified assembly of record fires with the three real leaf inputs.
-  exact kt_equiv_zmod16_of_two_leaves hKRS dC dA
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData prov) ≃+ ZMod 16) :=
+  kt_equiv_zmod16_of_residuals_ofKRS_phig prov hKRS row hA hB hcol hker
+    (spinForgetPhi_g_eq_ktKernelRep_of_cyclic prov row.R row.g row.hg
+      (spinForgetPhi_hfwd_of_ker_sub_doubles prov row.R row.hdvd hker) hcyc h2)
 
 /-- **THE REGULARITY-GENERIC CONDITIONAL, geometric-row form.** The KRS leaf is taken one level
 deeper, at the `AmbientSurgeryDatum` row — the *ambient KT §5 surgery* atom (an isotropic class, its

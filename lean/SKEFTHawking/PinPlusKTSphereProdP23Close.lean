@@ -66,6 +66,8 @@ open SKEFTHawking.PinPlusKTKernelSpinRoute
 open SKEFTHawking.PinPlusCharPairSurfaceTie
 open SKEFTHawking.PinPlusKTKerPhiDoubles
 open SKEFTHawking.PinPlusKTSectorGeometricReduce
+-- `spinForgetPhi_hfwd_of_ker_sub_doubles` (the `{hcyc, h2} ⟹ hΦg` derivation's `hfwd` input, §8).
+open SKEFTHawking.PinPlusTraceLeafGate
 open SKEFTHawking.PinPlusTraceCapstoneResidualRow
 open SKEFTHawking.PinPlusKTBinderDischarge
 open SKEFTHawking.PinPlusKTCollapseDischarge
@@ -485,6 +487,97 @@ theorem rokhlin_sixteen_smooth_sphereDiskPinned
     (h2 : ktKernelRep (residualProvK ⊤) + ktKernelRep (residualProvK ⊤) = 0) :
     Nat.card (T2DataBordismGrp (pinPlusCharPairData (residualProvK ⊤))) = 16 := by
   obtain ⟨e⟩ := kt_equiv_zmod16_smooth_sphereDiskPinned hKRS row hA hs2s2 hcol hker hcyc h2
+  rw [Nat.card_congr e.toEquiv, Nat.card_eq_fintype_card, ZMod.card]
+
+/-! ## §8. THE SEVEN-BINDER FORM AT EVERY REGULARITY — Freeze B out, `{hcyc, h2}` collapsed to `hΦg`.
+
+§7 removed the Freeze-B obligation `hB` from the row by producing it from the `S²×D³` coboundary
+geometry, but kept the arity at eight. This section drops the arity to **seven** by taking the W-D
+binder pair `{hcyc : SpinImageCyclic, h2 : k₀ + k₀ = 0}` at its finest honest grain — the single
+generator-image atom `hΦg : Φ[g] = k₀` — via the `k`-generic backbone
+`PinPlusKTAssemblyResiduals.kt_equiv_zmod16_of_residuals_ofKRS_phig`.
+
+The direction of the trade is kernel-checked, not asserted: in `PinPlusKTAssemblyResiduals` the
+eight-binder `…_ofKRS` is now *derived from* the seven-binder `…_ofKRS_phig` by calling
+`spinForgetPhi_g_eq_ktKernelRep_of_cyclic` (the arrow `{hcyc, h2} ⟹ hΦg`), and the same factoring is
+made explicit for the sphere-disk lane below. So every theorem of §7 is a corollary of its §8 twin:
+the implication that is kernel-checked runs `{hcyc, h2} ⟹ hΦg`, hence `hΦg` is *a* weaker input and
+the row genuinely shrank 8 → 7. (No converse is claimed: nothing here shows `hΦg ⇏ hcyc ∧ h2`, so
+"weaker" is not asserted to be "strictly weaker".)
+
+Row after §8: `{hKRS, row, hA, hcol, hker, hΦg}` plus the slot pin `hs2s2`. -/
+
+/-- **THE `k`-GENERIC SEVEN-BINDER ASSEMBLY.** `Ω₄^{Pin⁺} ≃+ ZMod 16` on the faithful tethered
+carrier at ANY smoothness exponent `k`, with BOTH reductions applied: `hB` supplied by the `S²×D³`
+coboundary geometry (§7) and `{hcyc, h2}` collapsed to the generator-image atom `hΦg`. Seven binders
+against the eight of `kt_equiv_zmod16_ofKRS_sphereDiskPinned`, which is re-derived from this one
+immediately below. -/
+theorem kt_equiv_zmod16_ofKRS_phig_sphereDiskPinned {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k)
+    (hKRS : KernelReducesToSpin prov)
+    (row : SpinPresentationRow prov)
+    (hA : row.R.RealizesSphereProducts)
+    (hs2s2 : (row.R.s2s2).1 = sphereProdSM4 k)
+    (hcol : RankZeroCollapsesToEmptySurf prov)
+    (hker : KerPhiSubDoubles prov)
+    (hΦg : spinForgetPhi prov (DataBordismGrp.mk (spinEmptyData prov) row.g)
+        = ktKernelRep prov) :
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData prov) ≃+ ZMod 16) :=
+  kt_equiv_zmod16_of_residuals_ofKRS_phig prov hKRS row hA
+    (row.R.sphereProductBounds_of_bordant
+      (hBbord_of_coboundary prov row.R.s2s2
+        (sphereProdCoboundaryWAdm_sphereDisk_ofBase prov row.R.s2s2 hs2s2)))
+    hcol hker hΦg
+
+/-- **The §7 eight-binder form as a COROLLARY of the §8 seven-binder form** — statement unchanged;
+the proof now factors through `…_phig_sphereDiskPinned` by calling the derivation
+`spinForgetPhi_g_eq_ktKernelRep_of_cyclic`. This is what makes "the row shrank" a kernel fact for the
+sphere-disk lane specifically, rather than a claim inherited from the backbone. -/
+theorem kt_equiv_zmod16_ofKRS_sphereDiskPinned_of_phig {k : WithTop ℕ∞}
+    (prov : CharPairWProviderPerOp (𝓡 4) k)
+    (hKRS : KernelReducesToSpin prov)
+    (row : SpinPresentationRow prov)
+    (hA : row.R.RealizesSphereProducts)
+    (hs2s2 : (row.R.s2s2).1 = sphereProdSM4 k)
+    (hcol : RankZeroCollapsesToEmptySurf prov)
+    (hker : KerPhiSubDoubles prov)
+    (hcyc : SpinImageCyclic prov)
+    (h2 : ktKernelRep prov + ktKernelRep prov = 0) :
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData prov) ≃+ ZMod 16) :=
+  kt_equiv_zmod16_ofKRS_phig_sphereDiskPinned prov hKRS row hA hs2s2 hcol hker
+    (spinForgetPhi_g_eq_ktKernelRep_of_cyclic prov row.R row.g row.hg
+      (spinForgetPhi_hfwd_of_ker_sub_doubles prov row.R row.hdvd hker) hcyc h2)
+
+/-- **THE SMOOTH-CATEGORY HEADLINE, SEVEN BINDERS** (`k = ⊤`). The `C^∞` instantiation of the above:
+`Ω₄^{Pin⁺} ≃+ ZMod 16` on the smooth faithful tethered carrier from the shortest row this lane
+currently supports — `{hKRS, row, hA, hcol, hker, hΦg}` + the slot pin `hs2s2`. -/
+theorem kt_equiv_zmod16_smooth_phig_sphereDiskPinned
+    (hKRS : KernelReducesToSpin (residualProvK ⊤))
+    (row : SpinPresentationRow (residualProvK ⊤))
+    (hA : row.R.RealizesSphereProducts)
+    (hs2s2 : (row.R.s2s2).1 = sphereProdSM4 ⊤)
+    (hcol : RankZeroCollapsesToEmptySurf (residualProvK ⊤))
+    (hker : KerPhiSubDoubles (residualProvK ⊤))
+    (hΦg : spinForgetPhi (residualProvK ⊤)
+        (DataBordismGrp.mk (spinEmptyData (residualProvK ⊤)) row.g)
+        = ktKernelRep (residualProvK ⊤)) :
+    Nonempty (T2DataBordismGrp (pinPlusCharPairData (residualProvK ⊤)) ≃+ ZMod 16) :=
+  kt_equiv_zmod16_ofKRS_phig_sphereDiskPinned (residualProvK ⊤) hKRS row hA hs2s2 hcol hker hΦg
+
+/-- **W-E, SMOOTH, SEVEN BINDERS** — `Nat.card Ω₄^{Pin⁺} = 16` on the smooth carrier from the
+shortest row. Pure transport across the additive equivalence; no new residual atom. -/
+theorem rokhlin_sixteen_smooth_phig_sphereDiskPinned
+    (hKRS : KernelReducesToSpin (residualProvK ⊤))
+    (row : SpinPresentationRow (residualProvK ⊤))
+    (hA : row.R.RealizesSphereProducts)
+    (hs2s2 : (row.R.s2s2).1 = sphereProdSM4 ⊤)
+    (hcol : RankZeroCollapsesToEmptySurf (residualProvK ⊤))
+    (hker : KerPhiSubDoubles (residualProvK ⊤))
+    (hΦg : spinForgetPhi (residualProvK ⊤)
+        (DataBordismGrp.mk (spinEmptyData (residualProvK ⊤)) row.g)
+        = ktKernelRep (residualProvK ⊤)) :
+    Nat.card (T2DataBordismGrp (pinPlusCharPairData (residualProvK ⊤))) = 16 := by
+  obtain ⟨e⟩ := kt_equiv_zmod16_smooth_phig_sphereDiskPinned hKRS row hA hs2s2 hcol hker hΦg
   rw [Nat.card_congr e.toEquiv, Nat.card_eq_fintype_card, ZMod.card]
 
 end SKEFTHawking.PinPlusKTSphereProdP23Close
