@@ -173,6 +173,31 @@ construction against the open-support transfer shape (fork
   (`KummerK3E1Package.lean:184`) — `orientInput` (H₃(K3;ℤ) 2-torsion-free), `h1Free` (H₁(K3;ℤ)
   free), `pdInput` (integral Poincaré duality) — then the Gram (`IntCongr … k3Form`) and the K9
   spin/`StrMfd` packaging. Each is a homology computation with a known classical answer.
+
+  **State of the triple after the 2026-07-27 three-slot fan-out (`6a2cf2e2` + `1143d9fa`):**
+  * `orientInput` — **feeder DISCHARGED, node still open.** `KummerPunctureH3Mod2.
+    thickA_H3_twoTorsionFree` is UNCONDITIONAL: `H₃(T⁴°;ℤ)` is 2-torsion-free. ⚠ That is the
+    *punctured-torus* level, NOT `orientInput`, which lives at the K3 weld
+    (`KummerK3H3Reduction.kummerK3H3TwoTorsionFree_iff_ker_qThickIncl_two_saturated`). The gap is
+    (i) the T⁴°→Q descent and (ii) the weld MV. ⚠ (i) is **not** a free transport: `T⁴° → Q` is a
+    FREE ℤ/2 quotient, and such quotients *create* 2-torsion in general (H₁(S³)=0 but H₁(ℝP³)=ℤ/2),
+    so 2-torsion-freeness does not descend for free. This is task #309.
+  * `h1Free` — `KummerK3H1Vanish` has the whole degree-1 weld MV chain
+    (`h1K3_eq_zero` / `subsingleton_h1K3` / `free_h1K3`) on ONE residual `QLatticeInSeamSpan`
+    ("the four T⁴-lattice circles lie in the seam span"), with an explicit discharge plan.
+    ⚠ **Vacuity note (lead):** given the deck-kernel theorem (`ker qDeck = im p_*`) and that every
+    seam class is deck-odd, `QLatticeInSeamSpan` is **equivalent** to `seamSpan = ⊤` — a faithful
+    re-expression in four explicit generators, **not** a strictly weaker hypothesis. Do not present
+    it as a smaller assumption than the spanning fact.
+    The geometry (independently lead-derived, then matched by the module): the seam at the fixed
+    point of half-period `v` is `t_{2v}·σ`, so seam differences realize every class of `ℤ⁴/2ℤ⁴`.
+    The 16 seams share deck-parity 1 — which is all `qDeck` sees — so **do not** conclude from the
+    common parity that their images coincide; if they did, the cokernel would be `(ℤ/2)⁴ ≠ 0` and
+    `π₁(K3) = 1` would fail. That contradiction is a useful wrong-turn detector.
+  * `pdInput` — `IntPDCapOnly.interMatrix_isUnimodular_of_capBijective` reduces the unimodularity
+    conjunct to ONE geometric Prop (cap-map bijectivity) + a cap-dual-basis sufficient condition.
+    Conditional. ⚠ Its cohomology-basis route sits under `[Module.Free ℤ (Homology KummerK3top 1)]`
+    — i.e. `h1Free` — so the two are merge-order coupled.
   ⚠ `KummerK7H1Window.h1K3_surjective_from_Q` gives H₁(K3) only as a surjective image of a free
   module — that does **not** give freeness.
   ⚠ State the Gram as `IntCongr … k3Form`, never a literal matrix equality on a chosen basis
