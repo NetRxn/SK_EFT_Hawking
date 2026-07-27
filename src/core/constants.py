@@ -3917,6 +3917,18 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
 # nogo_kind (refutation | structural_forcing | counterexample), false_statement (the path it
 # kills, one line), memory ([[slug]]).
 KERNEL_NOGO_REGISTRY: dict[str, dict] = {
+    'freeze-a-atoms-satisfiable-with-zero-geometry': {
+        'fork_id': 'freeze-a-atoms-satisfiable-with-zero-geometry',
+        'backing_theorems': [
+            'SKEFTHawking.SpinSigmaRoute.collapsedPresentation_handleTradeCobordism',
+            'SKEFTHawking.HandleTradeAtomVacuityConcrete.collapsedSphereProd_handleTradeCobordism',
+            'SKEFTHawking.HandleTradeAtomVacuityConcrete.constRankTwoSphereProd_hyperbolicBase',
+            'SKEFTHawking.SpinSigmaRoute.no_generator_of_rank_le_two',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'Building the Freeze-A primitives AS STATED -- SpinSigmaPresentation.HandleTradeCobordism (the raw handle-trade cobordism, primitive 1 of the freeze-atoms-not-composable-from-sigma-trace honest floor) and HyperbolicBase (primitive 2, the rank-0 nullbordism) -- discharges genuine manifold-surgery content and therefore advances hA. FALSE (2026-07-27, wt3, lead-verified: I read the Sylvester chain and re-ran the axiom prints myself). BOTH atoms are satisfiable with ZERO geometry. Root cause: SpinSigmaPresentation carries rank and form as FREE disclosed data, tied to the manifolds only through sig_eq -- i.e. only through the signature -- so nothing forces rank to behave like b_2. Concretely, collapsedPresentation sets rank = 2 at the s2s2 slot and 0 elsewhere; the handle-trade hypothesis then fires only at the slot with m = 0, and the conclusion is met by the UNIT CYLINDER with p-prime = empty via (mapCylinder (Diffeomorph.sumEmpty ..)).symm. No handle is attached anywhere. HyperbolicBase is met vacuously (a presentation may contain no rank-0 manifold at all). NOT AN ARTEFACT OF ABSTRACT xi: collapsedSphereProd_handleTradeCobordism lands the same dodge on the GENUINE carrier spinEmptyData prov with the genuine sphereProdSpinElement prov in the s2s2 slot. NOT ITSELF VACUOUS: collapsedPresentation_hypothesis_fires proves the antecedent genuinely fires. SCOPE -- this refutes the ATOMS AS STATED, NOT the route: both dodges have rank <= 2 and sig = 0, and that is structurally fatal with no new hypothesis, via abs_sig_le_rank (Sylvester |sigma| <= b_2 lifted through sig_eq) -> sixteen_le_rank_of_generator (sigma(K3) = -16 forces 16 <= rank g) -> no_generator_of_rank_le_two. So a surgery foundation must state primitive (1) on an ALREADY-CONSTRAINED presentation or its theorem is met by a cylinder. RE-SCOPING CONSEQUENCE (handleTradeConclusion_on_split): the primitive-(1) conclusion is FREE on the split locus q + S2xS2 (the commBor cylinder is the required cobordism), so the irreducible Benedetti content is REDUCTION TO THE SPLIT LOCUS, not production of a cobordism -- aim future work there. CAUTION: FaithfulRank (b_2(empty) = 0 plus additivity) refutes both dodges but is a SOUNDNESS SIDE-CONDITION, not a claimed-inhabited structure; no abstract inhabitant is constructed and none should be assumed.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'hker-single-witness-extraction-is-equivalent-to-gluing': {
         'fork_id': 'hker-single-witness-extraction-is-equivalent-to-gluing',
         'backing_theorems': [
