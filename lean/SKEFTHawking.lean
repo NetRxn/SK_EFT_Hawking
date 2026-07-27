@@ -4639,6 +4639,9 @@ import SKEFTHawking.PinPlusKTCollapseDischarge
 import SKEFTHawking.PinPlusKTFreezeDischarge
 import SKEFTHawking.PinPlusKTSphereProdBordism
 import SKEFTHawking.PinPlusKTSphereProdWAdm
+-- hcolD bricks B5 + B6: the rank-zero collapse row's membrane leg, closed end to end (the collapse
+-- supply row; residual = B2 terminal characteristic extension + B3 trace Poincaré–Lefschetz/Wu row).
+import SKEFTHawking.PinPlusKTRankZeroCollapseSupply
 import SKEFTHawking.PinPlusKTSphereProdCohomology
 -- Phase 5q.H · #211 harvest (wt1/wt2/wt3): the S²×D³ hBbord partials — the re-association Bordism over
 -- (𝓡4)×(𝓡∂1), the H₁/H₄ homology roots, and the H₄/H₅ + betaClass + half-hincl relFund partials. The
