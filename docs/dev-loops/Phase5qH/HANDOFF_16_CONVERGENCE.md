@@ -271,7 +271,34 @@ this project does not have, so per Invariant #17 it stays out of `KERNEL_NOGO_RE
 it as settled. **The next brick is the `w₁`-duality field, stated as an actual cohomological identity
 on `W` (`[V]` PD to `w₁(W)`) — never as a bare `Prop`**, which would reintroduce exactly the free
 field the derived interface was built to eliminate. In-tree substrate: the relative Lefschetz–Wu /
-`[W,∂W]` tower already used by the capstone lane.
+`[W,∂W]` tower already used by the capstone lane. ⚠ Scoping note (lead, assessed against the tree
+2026-07-27): the honest form needs a class `τ_V ∈ H¹(W;ℤ/2)` **realized from `ιV`** (Thom class of
+`V`'s normal bundle), then `τ_V = w₁(W)`. The Wu-class pattern (`PoincareDualityWu.wuClass2` /
+`wuClass1` / `wuClassW1` — characterize the class as the PD-representative of a functional via
+`pairing_bijective`, defining relation as a theorem) is the right *statement* template and is
+genuinely non-vacuous; the *realization* of `τ_V` is not in tree. This is a multi-brick arc — scope
+an opener before dispatching. Alternatives assessed and rejected as heavier: "`W ∖ V` orientable"
+(5-manifold orientability), mod-2 intersection number with loops (transversality).
+
+**⟹ ROOT CONSOLIDATION (lead, 2026-07-27): the `amb` pin, the single-witness extraction, and the
+`w₁` tie all sit downstream of ONE absent thing — bordism GLUING.** This is not a new discovery; it
+is already written at `PinPlusKTDualSpinSubmanifold.lean:38–48` and is recorded here so the three
+residuals stop being tracked as independent. From `hx : spinForgetPhi prov x = 0` one can only reach
+`EqvGen (IsT2DataBordant) …` (`Quot.exact` on `Quot (IsT2DataBordant)`, `T2TangentialBordism.lean:69`);
+collapsing that to a single `IsT2DataBordant` needs **transitivity of the bordism relation**, which is
+**ABSENT BY DESIGN** (`BordismGroup.lean` §4: "`Quot (IsBordant)` — no transitivity/gluing needed").
+There is no `Equivalence (IsT2DataBordant ξ)` in tree (verified by search: zero refl/symm/trans
+lemmas). Consequences, in order:
+* no gluing ⟹ no single-witness extraction ⟹ `amb` **must** be carried as a field ⟹ item (1) is not
+  a wiring fix but a request for the gluing theorem;
+* with `amb` free, `V` cannot be a function of `W`, which is also what makes the `w₁` tie load-bearing.
+**Open strategic call for a future turn** (not decided here): whether to invest in
+`Equivalence (IsT2DataBordant ξ)` — refl = cylinder, symm = reversal, **trans = collar-gluing** —
+which would unblock the `amb` pin and the extraction together. The project does hold relevant
+machinery (`SmoothWeld`, the collar stack, `addBorRealized`/`negBorRealized`), so this is *not*
+obviously infeasible; but transitivity is the hard leg and it was deliberately designed around.
+⚠ Do NOT record "gluing is impossible" — nothing kernel-checked says that; it says only that the
+current construction avoids needing it.
 
 **F · `hΦg`** — `spinForgetPhi[g] = k₀`. Not independent: derived from `hker` + `hcyc` + `h2` once
 `row` exists (`spinForgetPhi_g_eq_ktKernelRep_of_cyclic`). `hcyc`/`h2` were shown non-independent —
