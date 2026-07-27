@@ -3917,6 +3917,17 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
 # nogo_kind (refutation | structural_forcing | counterexample), false_statement (the path it
 # kills, one line), memory ([[slug]]).
 KERNEL_NOGO_REGISTRY: dict[str, dict] = {
+    'capstone-binary-partition-detection-uninhabitable': {
+        'fork_id': 'capstone-binary-partition-detection-uninhabitable',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamLocalHom.not_restrictsToRelGenOn_cylRange_at_seamCore',
+            'SKEFTHawking.SingularFacePieceDetect.not_restrictsToRelGenOn_of_faceVanish',
+            'SKEFTHawking.SingularFaceLocalHomologyVanish.faceLocalHomology_zero_of_starConvexChart',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'The connected capstone\'s hasClass can be driven through the binary complementary partition {U, U-complement} at U := range fromCyl -- i.e. PinPlusTraceCapstoneRelFund.CapstoneRelFundPartitionDatum is inhabitable at the field docstring\'s intended U. FALSE (2026-07-27, wt3, lead-verified by #print axioms on all three backings): at a core seam point the closed cylinder piece is FACE-FLAT (its chart there is a half-space / star-convex chart), so its local homology H_(k+2)(sub U, sub U minus x) VANISHES IN EVERY DEGREE (faceLocalHomology_zero_of_starConvexChart -- degree-general, decoupled from the chart dimension); hence restrictBd of any class factors through the zero group and RestrictsToRelGenOn fails for EVERY alphaU and EVERY gen (not_restrictsToRelGenOn_of_faceVanish, specialised at the seam by not_restrictsToRelGenOn_cylRange_at_seamCore). PROMOTED FROM PROSE 2026-07-27: the prose entry (2026-07-16) recorded this as kernel-encodable-but-deferred pending the boundary-face local-homology lemma; that lemma is now formalized in both models (closedBall_faceLocalHomology_zero for the disk, cylTopFace_localHomology_zero for the cylinder), so the ban is now machine-enforced. NON-VACUITY: the face hypothesis carries the content, not the degree -- exists_ne_zero_closedBall_interiorLocalHomology and exists_ne_zero_cylInteriorLocalHomology exhibit NONZERO local homology at an INTERIOR point of the SAME carrier in the SAME degree. SCOPE (not overclaimed): this refutes the datum at U = range fromCyl, the intended choice; the fully general "every binary complementary partition of a connected W" statement is NOT claimed here. The partition/clopen-split engines remain VALID for their disconnected-cylinder uses (clopen pieces have no interior frontier) -- the ban is ONLY their application to the connected capstone.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'collar-pair-hdetAB-one-sided-congruence-routes-dead': {
         'fork_id': 'collar-pair-hdetAB-one-sided-congruence-routes-dead',
         'backing_theorems': [
