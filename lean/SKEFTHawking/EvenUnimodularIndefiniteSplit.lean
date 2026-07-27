@@ -258,18 +258,42 @@ Two leaves of that route are now BANKED, kernel-pure (built wt1):
   `⟨1⟩ ⊕ H ≅ ⟨1⟩ ⊕ ⟨1⟩ ⊕ ⟨−1⟩`. These are what stop the induction stalling when a unit peel strands an
   even residual (`H` and `±E₈` are the only blocks such a residual contributes).
 
-THREE pieces remain, in dependency order:
+Pieces (1) and (2) are now BUILT (wt1); the route status is:
 
-1. **Unit-vector split engine** — the rank-1 analogue of `SplitHyperbolic`: from `x` with `x ⬝ᵥ M *ᵥ x = ε`
-   (`ε = ±1`), produce `IntCongr M (reindex e e (fromBlocks ⟨ε⟩ 0 0 M'))` with `M'` unimodular of rank
-   `n − 1`. Mirrors `hypPerp` / `hypFullBasis` / `residGram` / `gramB_eq` / `latticeSig_split` one rank down.
-   Mechanical, no new mathematics.
-2. **Milnor–Husemoller II.4.3** — odd indefinite unimodular `≅ ⟨1⟩^p ⊕ ⟨−1⟩^q`, by induction on rank using
-   (1) + `odd_indefinite_represents_±one` + the two absorptions. Bookkeeping-heavy, no new mathematics.
-3. **Wall's characteristic-vector transitivity** — in `⟨1⟩^p ⊕ ⟨−1⟩^q` indefinite, the automorphism group is
-   transitive on characteristic vectors of self-product `1`. This is the one genuinely remaining classical
-   input (it is what performs the `⟨1⟩`-cancellation), and it is the piece to escalate. It is elementary in
-   the sense of using only reflections — NOT genus theory — so it stays inside this route. -/
+1. **Unit-vector split engine — DONE** (`SKEFTHawking/UnitVectorSplit.lean`, unconditional). The rank-1
+   analogue of `SplitHyperbolic`: `unit_split_congr` turns `x ⬝ᵥ M *ᵥ x = ε` (`ε = ±1`) into
+   `IntCongr M (reindex e e (fromBlocks ⟨ε⟩ 0 0 M'))` with `M'` symmetric unimodular of rank `n − 1` and
+   `σ(M') = σ(M) − ε`. Mirrors `hypPerp` / `hypFullBasis` / `residGram` / `gramB_eq` / `latticeSig_split`
+   one rank down, and adds the transport tower `unitResidGram_transport` /
+   `unitPerp_exists_coords` / `unitResidGram_even_value` ("the residual Gram is `M` restricted to `x^⊥`,
+   in coordinates"). Also `IntCongr.block_left`, the arbitrary-left-block form of `IntCongr.hyp_block`.
+2. **Milnor–Husemoller II.4.3 — inductive step DONE, base cases 0/1/2 DONE, ranks 3–4 OPEN**
+   (`SKEFTHawking/OddFormDiagonalization.lean`). `odd_indefinite_unit_peel` is UNCONDITIONAL: an odd
+   indefinite unimodular form of rank `≥ 5` peels a unit block whose residual is again ODD and
+   INDEFINITE. **CORRECTION to the earlier framing — this was NOT bookkeeping.** A naive unit peel can
+   strand an EVEN residual (the `⟨1⟩ ⊕ E₈` phenomenon), and absorbing it is not available: the
+   absorptions `intCongr_I18_oneNegE8` / `intCongr_oneHyp_I21` only handle the *named* blocks `−E₈`
+   and `H`, whereas the stranded residual is an ARBITRARY even unimodular form — identifying it is the
+   classification itself. The fix is to move the VECTOR: an even residual is even unimodular AND
+   indefinite, hence carries a hyperbolic pair `(v, w)`, and `y := x + w` has `y·y = ε` while
+   `z := x − ε·v` sits in `y^⊥` with ODD self-product `ε`. Peeling `y` preserves rank, signature AND
+   parity. Consequence: **this route uses neither absorption identity** and needs no block
+   re-association. `odd_indefinite_pmDiagonal` / `odd_indefinite_intCongr` (the rank-and-signature
+   classification the assembly consumes) are stated relative to `OddRank34Diagonalizable`.
+3. **The rank-3/4 base cases — OPEN, and a genuine Hasse–Minkowski build.** The induction bottoms out
+   at rank 4 because `odd_indefinite_represents_one` runs on Meyer (`weakIsotropic_of_five_le`,
+   rank `≥ 5`). Each remaining rank reduces to "an odd indefinite unimodular form of that rank has a
+   nonzero isotropic vector". This is NOT reducible to `RokhlinHMRankFour`: that file is
+   EVEN-specific and SQUARE-DISCRIMINANT-specific (it derives `det = +1` from evenness via
+   `det_eq_one_of_evenUnimodular_four` in order to reach `quaternary_sqdisc_solvable_of_local_no_two`),
+   while an odd rank-4 indefinite unimodular form has `σ ∈ {0, ±2}`, i.e. `det = ±1`, and the
+   `det = −1` shapes fall outside it; rank 3 needs the ternary/Legendre statement. Both are reachable
+   from `isotropic_padicInt_of_unit_det` (odd `p`, rank `≥ 3`) + the reciprocity step
+   `hilbertPrime_two_eq_one_of_real_odd`, but each is a build, not a rewrite.
+4. **Wall's characteristic-vector transitivity — OPEN.** In `⟨1⟩^p ⊕ ⟨−1⟩^q` indefinite, the
+   automorphism group is transitive on characteristic vectors of self-product `1`. This is what
+   performs the `⟨1⟩`-cancellation in the assembly. Elementary (reflections only) — NOT genus theory —
+   so it stays inside this route. -/
 def StableNegRank16 : Prop :=
   ∀ (D : Matrix (Fin 16) (Fin 16) ℤ) (e : Fin 2 ⊕ Fin 16 ≃ Fin 18),
     IsEvenUnimodular D → latticeSig D = -16 →

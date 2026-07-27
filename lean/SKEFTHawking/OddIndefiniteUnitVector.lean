@@ -172,13 +172,11 @@ partner (`isotropic_partner_of_even`) and the odd DIAGONAL entry supplies the pa
 
 The odd-diagonal hypothesis is load-bearing: by `even_form_not_represents_one` an even form takes only
 even values, so the conclusion is FALSE without it. -/
-theorem odd_indefinite_represents_one {m : ℕ} (hm : 5 ≤ m) (M : Matrix (Fin m) (Fin m) ℤ)
+theorem odd_unimodular_represents_one_of_isotropic {m : ℕ} (M : Matrix (Fin m) (Fin m) ℤ)
     (hsymm : Mᵀ = M) (hunim : IsUnimodular M) (i₀ : Fin m) (hodd : ¬ (2 ∣ M i₀ i₀))
-    (hsp : 0 < sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
-    (hsn : 0 < sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap') :
+    (v₀ : Fin m → ℤ) (hv₀ne : v₀ ≠ 0) (hv₀iso : v₀ ⬝ᵥ M *ᵥ v₀ = 0) :
     ∃ x : Fin m → ℤ, IsPrimitiveVec x ∧ x ⬝ᵥ M *ᵥ x = 1 := by
-  -- Meyer / Hasse–Minkowski at rank ≥ 5 (no evenness needed), then content extraction.
-  obtain ⟨v₀, hv₀ne, hv₀iso⟩ := weakIsotropic_of_five_le hm M hsp hsn
+  -- Content extraction makes the isotropic vector primitive.
   obtain ⟨v, hvprim, hviso⟩ := exists_primitive_isotropic_of_isotropic M v₀ hv₀ne hv₀iso
   -- Unimodularity gives a partner pairing to `1`.
   obtain ⟨w, hw⟩ := exists_vecMul_dot_eq_one v M hvprim hunim
@@ -210,6 +208,18 @@ theorem odd_indefinite_represents_one {m : ℕ} (hm : 5 ≤ m) (M : Matrix (Fin 
   refine ⟨x, ?_, hxx⟩
   rw [isPrimitiveVec_iff_exists_dot]
   exact ⟨M *ᵥ v, by rw [gramPair_comm hsymm x v]; exact hxv⟩
+
+/-- **An indefinite odd unimodular form of rank `≥ 5` represents `1`, primitively.** The rank-`≥ 5`
+corollary of `odd_unimodular_represents_one_of_isotropic`: Meyer/Hasse–Minkowski
+(`weakIsotropic_of_five_le`, which carries no evenness hypothesis) supplies the isotropic vector.
+This is the entry point of the Milnor–Husemoller II.4.3 classification. -/
+theorem odd_indefinite_represents_one {m : ℕ} (hm : 5 ≤ m) (M : Matrix (Fin m) (Fin m) ℤ)
+    (hsymm : Mᵀ = M) (hunim : IsUnimodular M) (i₀ : Fin m) (hodd : ¬ (2 ∣ M i₀ i₀))
+    (hsp : 0 < sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
+    (hsn : 0 < sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap') :
+    ∃ x : Fin m → ℤ, IsPrimitiveVec x ∧ x ⬝ᵥ M *ᵥ x = 1 := by
+  obtain ⟨v₀, hv₀ne, hv₀iso⟩ := weakIsotropic_of_five_le hm M hsp hsn
+  exact odd_unimodular_represents_one_of_isotropic M hsymm hunim i₀ hodd v₀ hv₀ne hv₀iso
 
 /-! ### The `−1` companion (orientation reversal) -/
 

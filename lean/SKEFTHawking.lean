@@ -4481,6 +4481,18 @@ import SKEFTHawking.OddIndefiniteUnitVector
 -- configuration (intCongr_I18_oneNegE8), and <1> (+) H ~= <1> (+) <1> (+) <-1> (intCongr_oneHyp_I21).
 -- Both explicit, kernel `decide`, no classification input and no native_decide. (wt1-built.)
 import SKEFTHawking.OddFormE8Absorption
+-- K8b interior, leaf 3: the UNIT-VECTOR SPLIT ENGINE -- the rank-1 analogue of SplitHyperbolic.
+-- From x with x . M x = eps (eps = +-1), M ~= <eps> (+) M' with M' symmetric unimodular of rank
+-- n-1 and sigma(M') = sigma(M) - eps. Mirrors hypPerp / hypPerpBasis / hypFullBasis / residGram /
+-- gramB_eq / latticeSig_split one rank down. Unconditional. (wt1-built.)
+import SKEFTHawking.UnitVectorSplit
+-- K8b interior, leaf 4: MILNOR-HUSEMOLLER II.4.3 -- an odd INDEFINITE unimodular form is
+-- <1>^p (+) <-1>^q. The inductive step odd_indefinite_unit_peel is UNCONDITIONAL: it peels a unit
+-- block whose residual is again ODD and INDEFINITE (correcting the vector against a hyperbolic pair
+-- when a naive peel strands an even residual). The classification itself is stated relative to the
+-- rank-<=4 base-case interface OddSmallRankDiagonalizable, which is a genuine rank-3/4
+-- Hasse-Minkowski discharge, NOT bookkeeping. (wt1-built.)
+import SKEFTHawking.OddFormDiagonalization
 import SKEFTHawking.RP4Manifold
 import SKEFTHawking.RP2PointSet
 import SKEFTHawking.RP2Manifold
