@@ -3917,6 +3917,16 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
 # nogo_kind (refutation | structural_forcing | counterexample), false_statement (the path it
 # kills, one line), memory ([[slug]]).
 KERNEL_NOGO_REGISTRY: dict[str, dict] = {
+    'hcolD-same-carrier-collapse-refuted-on-wu-witness': {
+        'fork_id': 'hcolD-same-carrier-collapse-refuted-on-wu-witness',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusKTRankZeroCollapseSupply.no_isEmpty_surf_of_wu_witness',
+            'SKEFTHawking.PinPlusKTRankZeroCollapseSupply.RankZeroCollapseDatum.endpoint_wuNullCarrier',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'The hcolD rank-zero collapse to an empty characteristic surface can be realized WITHOUT changing the carrier -- i.e. some CharPairStrBundled structure on a fixed closed 4-manifold s that carries a Wu witness (a degree-2 class a0 with nonzero PD-paired self-cup-square, mu (cupH24 a0 a0) != 0) has an EMPTY characteristic surface, so the terminal KT section-5 move could be performed in-place on s (or reached by a cap inside M x I). FALSE (2026-07-27, wt2, lead-verified: I read both proofs and re-derived the non-vacuity myself, not taken on the report). On any such carrier there is NO characteristic-pair structure with empty surface at all: emptiness makes the surface cohomology subsingleton, so the pushed surface class is forced to 0, contradicting the witness via the banked B0 pushforward (surfClass_pushforward_witness). Dually, endpoint_wuNullCarrier shows every collapse endpoint is necessarily Wu-null. Together the terminal move is FORCED to change the carrier, and the reflexive-cylinder shortcut that makes the already-empty fibre free provably cannot reach the Wu-witness sector. NON-VACUITY (both directions checked, since a one-sided check would not have caught a dressed-up tautology): the hypothesis is satisfiable in-tree -- S2xS2 with a0 = e1+e2 has self-intersection 2 != 0 (also true of CP2, K3) -- and the conclusion is not free, since empty-surf structures are genuinely realizable (they are exactly what the empty-Sigma spin sector and rankZeroCollapseDatum_of_isEmpty_surf construct). SCOPE (not overclaimed): this refutes the SAME-CARRIER route and the in-M-x-I cap; it does NOT refute hcolD itself, which remains open via KT characteristic extension (M,F) -> (M1,F1) with V1 normal bundle trivialised, realised as SurgeredEndDatum + weld. Also do NOT dispatch the "one sphere, one index-3 handle" variant: rank 0 plus hchar do not force normal Euler number e = 0 in the required generality.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'capstone-binary-partition-detection-uninhabitable': {
         'fork_id': 'capstone-binary-partition-detection-uninhabitable',
         'backing_theorems': [
