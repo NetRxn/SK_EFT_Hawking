@@ -4812,6 +4812,10 @@ import SKEFTHawking.PinPlusTraceCapstoneCollarPairHandle
 import SKEFTHawking.PinPlusTraceCapstoneCollarPairMatch
 import SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamLocal
 import SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamDetect
+-- SingularFaceLocalHomologyVanish — degree-general boundary-FACE local-homology vanishing
+--   H_{k+2}(W, W∖x) = 0 at a star-convex-chart (half-space) point, with the disk and cylinder
+--   models, and the interior-point ℤ/2 contrast that makes the vanishing substantive.
+import SKEFTHawking.SingularFaceLocalHomologyVanish
 import SKEFTHawking.PinPlusTraceSeamCollarBridgeNoGo
 import SKEFTHawking.KTCompletenessTransfer
 import SKEFTHawking.KTCompletenessMVCover
