@@ -4830,6 +4830,7 @@ import SKEFTHawking.SingularMayerVietorisRedCompatInt
 import SKEFTHawking.KummerPunctureH3Mod2
 import SKEFTHawking.KummerK3H1Vanish
 import SKEFTHawking.KummerK3H1SeamLattice
+import SKEFTHawking.KummerK3SeamWindingParity
 import SKEFTHawking.IntPoincareDualityCapOnly
 import SKEFTHawking.Carrollian.Structure
 import SKEFTHawking.Carrollian.WittAlgebra
