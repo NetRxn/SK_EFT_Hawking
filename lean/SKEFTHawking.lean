@@ -4915,6 +4915,8 @@ import SKEFTHawking.Carrollian.Structure
 import SKEFTHawking.Carrollian.WittAlgebra
 import SKEFTHawking.Carrollian.BMSAlgebra
 import SKEFTHawking.Carrollian.VirasoroExtension
+import SKEFTHawking.T2BordismGlueFamilies
+import SKEFTHawking.T2BordismGluing
 import SKEFTHawking.PinPlusHkerSingleWitness
 import SKEFTHawking.SingularRelativeCoverMVSumExact
 import SKEFTHawking.T2BordismGluing
