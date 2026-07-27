@@ -311,7 +311,20 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    witness and edge the geometric ∂E(V); statement-shape audits are insufficient at every opening depth.
    backing: `nonempty_dualSpinConstruction_iff_thirtytwo_dvd`, `nonempty_ktSharpnessSupplyConstr_iff_hfwd`, `spinOfSigMul16_sig`
 
-20. `hker-ambient-pin-does-not-restore-geometry` [structural_forcing]
+20. `hker-opener-supplyGeo-is-non-reducing` [structural_forcing]
+   Inhabiting KTSharpnessSupplyGeo and firing kerPhiSubDoubles_of_row_of_supplyGeo is a reducing step on
+   hker -- i.e. the opened geometric sharpness supply is a strictly weaker obligation than the hfwd
+   conclusion it feeds. FALSE (2026-07-27, lead): nonempty_ktSharpnessSupplyGeo_iff_hfwd proves Nonempty
+   (KTSharpnessSupplyGeo prov R) <-> (forall x, spinForgetPhi prov x = 0 -> 32 | R.sig x), i.e. the consumed
+   supply is EQUIVALENT to the hfwd conclusion. The opener theorem is TRUE but reduces nothing: supplying
+   its input is exactly as hard as assuming its target. Backward direction takes amb := TopCat.of PUnit, and
+   the companion fork hker-ambient-pin-does-not-restore-geometry shows no other choice of ambient (including
+   the genuine tethered b.W, or any ambient FAMILY) helps. Consequence: do NOT dispatch "inhabit
+   KTSharpnessSupplyGeo" as an hker brick at any depth; hker needs a NEW interface that carries the
+   submanifold and DERIVES its intersection lattice (SpinSigmaAtomPkg pattern) plus the w1-duality tie.
+   backing: `nonempty_ktSharpnessSupplyGeo_iff_hfwd`
+
+21. `hker-ambient-pin-does-not-restore-geometry` [structural_forcing]
    Pinning the ambient — requiring amb x hx = TopCat.of b.W of the genuine tethered witness, as binding
    round-12 spec 1 demands — restores geometric content to the dA/hker dual-spin supply, so an amb-pinned
    KTSharpnessSupplyGeo variant would be real progress on hker. FALSE (2026-07-27, lead): the
@@ -330,7 +343,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    Do NOT dispatch amb-pinning as an hker brick.
    backing: `nonempty_dualSpinFromW_iff_thirtytwo_dvd`, `dualSpinFamily_iff_pointwise_thirtytwo_dvd`, `isClosedEmbedding_empty`
 
-21. `novikov-substrate-synthetic-inhabitation` [structural_forcing]
+22. `novikov-substrate-synthetic-inhabitation` [structural_forcing]
    The NovikovRealPairLES substrate (or any of the four equivalent σ-descent atom formulations) constitutes
    progress toward the Thom bordism-invariance of σ beyond the bare hbord statement. FALSE (gate round 12):
    the diagonal Lagrangian + synthetic quotient inhabit the substrate with zero geometry whenever σ agrees
@@ -342,7 +355,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    bordism witness) — linear-algebra Lagrangian constructions are zero progress at both grades.
    backing: `nonempty_novikovRealPairLES_diag`, `nonempty_novikovBoundaryRestriction_iff_sig_eq`, `novikovLagrangian_iff_hbord`
 
-22. `novikov-geometric-tower-carrier-conclusion-fakeable` [structural_forcing]
+23. `novikov-geometric-tower-carrier-conclusion-fakeable` [structural_forcing]
    The NovikovGeometricPairLESData field row (the #196 genuine-tower carrier:
    rest2/delta/pairing/hexact/hnondeg/hadjDot) is a stronger-than-conclusion carrier whose inhabitation
    certifies genuine bounding-W tower progress. FALSE (gate round 13): the substrate rebuilds the carrier
@@ -357,7 +370,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    construction.
    backing: `novikovGeometricPairLESDataOfRealPairLES`, `nonempty_novikovGeometricPairLESData_iff_realPairLES`, `nonempty_novikovGeometricPairLESData_iff_sig_eq`, `nonempty_novikovGeometricPairLESData_diag`
 
-23. `seam-transfer-open-support-uninhabitable` [refutation]
+24. `seam-transfer-open-support-uninhabitable` [refutation]
    The CapstoneSeamTransfer / shared-cSeam CapstoneSeamTransferSeam consumption shape (the #184-#207
    hasClass route: the top-face/disk-boundary splits with OPEN-complement supports hwOut/hvOut plus the
    literal htransfer equality) is inhabitable for a genuine fundamental cycle z and a proper attaching
@@ -374,7 +387,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    gate-pending consumption shape whose interface terms cancel mod 2.
    backing: `wAtt_mem_subspaceChains_range_phi`, `boundary_wAtt_eq_zero`, `isEmpty_capstoneSeamTransfer_of_null`, `isEmpty_capstoneSeamTransferSeam_of_null`
 
-24. `k0-to-k1-transport-refuted` [refutation]
+25. `k0-to-k1-transport-refuted` [refutation]
    Every k = 0 charted space over the R^4 model is also a k >= 1 manifold -- i.e. the `k := 0` binder in the
    live KT provider is harmless generality that transports to the smooth category for free. FALSE (kernel
    refutation, 2026-07-21). Mathlib registers an UNCONDITIONAL `instance : IsManifold I 0 M` for every
@@ -397,7 +410,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    Z/16 mathematics.
    backing: `no_generic_zero_to_one_transport`, `exists_carrier_element_not_smooth`
 
-25. `collar-pair-closed-seam-attached-collar-bridge-is-FALSE` [refutation]
+26. `collar-pair-closed-seam-attached-collar-bridge-is-FALSE` [refutation]
    PinPlusTraceSeamResidualNarrow.ClosedSeamAttachedCollarBridge S a -- the closed-S attached-collar bridge,
    believed to be hctrlH's blocking atom and readable as an open-neighbourhood-to-closed-S collar
    deformation retraction. FALSE (kernel refutation, 2026-07-21): collar_bridge_refuted exhibits closed
@@ -422,7 +435,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    case that hcoreHit rules out.
    backing: `collar_bridge_refuted`, `attachedBridge_iff_support_dichotomy`
 
-26. `collar-pair-face-row-forces-seam-to-meet-boundary` [structural_forcing]
+27. `collar-pair-face-row-forces-seam-to-meet-boundary` [structural_forcing]
    A CollarPairGeomFace row (the houtPair producer: the row's own supports plus the seam-annulus containment
    hseamAnn) can be inhabited with an ENTIRELY INTERIOR seam -- i.e. with no seam point of the surgered end
    lying in dW, so that the collar-pair route never has to pay for the seam. FALSE (structural forcing,
@@ -441,7 +454,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    FIVE.
    backing: `exists_seamPoint_mem_bd_of_null`, `exists_seamPoint_mem_range_eM'_of_null`
 
-27. `collar-pair-open-complement-annulus-is-refuted-shape` [structural_forcing]
+28. `collar-pair-open-complement-annulus-is-refuted-shape` [structural_forcing]
    houtPair (the collar-annulus weld obligation of the #212 collar-pair row) can be discharged for free by
    reading its three required boundary-supports straight off the in-tree SurgeredEndDatum, whose
    d.topFaceCovered (fromCyl '' (topface \ range phi) subset dW), d.sphereFaceCovered (fromHandle '' (sphere
@@ -461,7 +474,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    d.topFaceCovered instantiation is closed', NEVER as 'the collar-annulus refinement is closed'.
    backing: `collarAnnulusOpen_toSeamTransferSeam`, `not_collarAnnulusOpen_of_null`
 
-28. `collar-pair-maximal-core-reenters-refuted-support` [structural_forcing]
+29. `collar-pair-maximal-core-reenters-refuted-support` [structural_forcing]
    The CollarPairGeom/CollarPairGeomUnsub row's anti-fake tether hcoreHit can be made free of charge by
    enlarging the #210 shrunk core K toward its limit K = univ, keeping the rest of the collar-pair split
    data intact. FALSE (structural forcing, 2026-07-21): at K = univ the tether IS indeed a consequence of
@@ -476,7 +489,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    maximal-core shortcut is closed', never as 'every hcoreHit shortcut is closed'.
    backing: `coreHit_of_univ`, `houtC_support_univ_eq_refuted`
 
-29. `k7-seam-cover-interior-fails` [refutation]
+30. `k7-seam-cover-interior-fails` [refutation]
    K7SeamCoverHyp (the K7 opener's un-thickened MV cover hypothesis): the INTERIORS of the two closed
    Kummer-weld pieces (the Q-image and the 16 closed E-images) cover the welded K3 carrier, so the
    Mayer-Vietoris assembly can run on the un-thickened pieces directly. FALSE (kernel refutation
@@ -489,7 +502,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    KummerK7MVAssembly) and through which the whole K7 accounting now runs unconditionally.
    backing: `k7SeamCoverHyp_false`
 
-30. `gram-literal-equality-is-choice-dependent` [structural_forcing]
+31. `gram-literal-equality-is-choice-dependent` [structural_forcing]
    SphereProdGramPin - the LITERAL matrix equality `interMatrix fc B = sphereProdFormDatum` on the computed
    rank-2 basis - is a disclosed GEOMETRIC residual of the S2xS2 intersection form, dischargeable once the
    Kunneth/EZ cross value is pinned. FALSE AS FRAMED (structural forcing, 2026-07-21): the exact
@@ -511,7 +524,7 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    choice.
    backing: `sphereProd_interMatrix_computed_eq`, `sphereProdGramPin_iff`
 
-31. `kronecker-dual-is-not-the-h1-enhancement-transport` [refutation]
+32. `kronecker-dual-is-not-the-h1-enhancement-transport` [refutation]
    The Kronecker/UCT dual of the carried cohomology basis - `homologyBasisOfCohomologyBasis basis`, the
    value `pinCharSurfaceOfBundled` puts in `PinCharSurface.H1Iso` (and the value
    `GeoRealizationTied.derivedEsigma`/`derivedEtau` put in the seam) - is the identification of
@@ -709,6 +722,9 @@ alias nogo_nonempty_ktSharpnessSupplyConstr_iff_hfwd := SKEFTHawking.PinPlusResi
 
 /-- NO-GO [`dual-spin-opened-construction-conclusion-fakeable`] — do NOT re-derive. FALSE: Opening DualSpinFromW into DualSpinConstruction (Vspace/ιV/Vspin/hcob/hcover fields) makes the dual-spin supply a genuine geometric obligation not derivable from the conclusion. Backing refutation: `SKEFTHawking.PinPlusResidualGate.spinOfSigMul16_sig`. -/
 alias nogo_spinOfSigMul16_sig := SKEFTHawking.PinPlusResidualGate.spinOfSigMul16_sig
+
+/-- NO-GO [`hker-opener-supplyGeo-is-non-reducing`] — do NOT re-derive. FALSE: Inhabiting KTSharpnessSupplyGeo and firing kerPhiSubDoubles_of_row_of_supplyGeo is a reducing step on hker -- i.e. Backing refutation: `SKEFTHawking.PinPlusKTHkerAmbPinGate.nonempty_ktSharpnessSupplyGeo_iff_hfwd`. -/
+alias nogo_nonempty_ktSharpnessSupplyGeo_iff_hfwd := SKEFTHawking.PinPlusKTHkerAmbPinGate.nonempty_ktSharpnessSupplyGeo_iff_hfwd
 
 /-- NO-GO [`hker-ambient-pin-does-not-restore-geometry`] — do NOT re-derive. FALSE: Pinning the ambient — requiring amb x hx = TopCat.of b.W of the genuine tethered witness, as binding round-12 spec 1 demands — restores geometric content to the dA/hker dual-spin supply, so an amb-pinned KTSharpnessSupplyGeo variant would be real progress on hker. Backing refutation: `SKEFTHawking.PinPlusKTHkerAmbPinGate.nonempty_dualSpinFromW_iff_thirtytwo_dvd`. -/
 alias nogo_nonempty_dualSpinFromW_iff_thirtytwo_dvd := SKEFTHawking.PinPlusKTHkerAmbPinGate.nonempty_dualSpinFromW_iff_thirtytwo_dvd

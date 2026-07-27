@@ -4155,6 +4155,15 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': 'Opening DualSpinFromW into DualSpinConstruction (Vspace/ιV/Vspin/hcob/hcover fields) makes the dual-spin supply a genuine geometric obligation not derivable from the conclusion. FALSE (gate round 12): on an unpinned ambient, Nonempty (DualSpinConstruction PUnit sigM) ↔ 32 ∣ sigM — every field including hcob inhabits from bare arithmetic (the σ-onto realization engine spinOfSigMul16 supplies genuine SmoothSpinManifold4 witnesses for every multiple of 16), and modulo the presentation row the whole opened supply ⟺ the hfwd conclusion. The mechanism: amb is a FREE TopCat field. Consequence (binding round-12 spec 1): dA supply claims pass by DATA INSPECTION only — amb must be TopCat.of b.W of the actual tethered witness and edge the geometric ∂E(V); statement-shape audits are insufficient at every opening depth.',
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'hker-opener-supplyGeo-is-non-reducing': {
+        'fork_id': 'hker-opener-supplyGeo-is-non-reducing',
+        'backing_theorems': [
+            'SKEFTHawking.PinPlusKTHkerAmbPinGate.nonempty_ktSharpnessSupplyGeo_iff_hfwd',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'Inhabiting KTSharpnessSupplyGeo and firing kerPhiSubDoubles_of_row_of_supplyGeo is a reducing step on hker -- i.e. the opened geometric sharpness supply is a strictly weaker obligation than the hfwd conclusion it feeds. FALSE (2026-07-27, lead): nonempty_ktSharpnessSupplyGeo_iff_hfwd proves Nonempty (KTSharpnessSupplyGeo prov R) <-> (forall x, spinForgetPhi prov x = 0 -> 32 | R.sig x), i.e. the consumed supply is EQUIVALENT to the hfwd conclusion. The opener theorem is TRUE but reduces nothing: supplying its input is exactly as hard as assuming its target. Backward direction takes amb := TopCat.of PUnit, and the companion fork hker-ambient-pin-does-not-restore-geometry shows no other choice of ambient (including the genuine tethered b.W, or any ambient FAMILY) helps. Consequence: do NOT dispatch "inhabit KTSharpnessSupplyGeo" as an hker brick at any depth; hker needs a NEW interface that carries the submanifold and DERIVES its intersection lattice (SpinSigmaAtomPkg pattern) plus the w1-duality tie.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'hker-ambient-pin-does-not-restore-geometry': {
         'fork_id': 'hker-ambient-pin-does-not-restore-geometry',
         'backing_theorems': [

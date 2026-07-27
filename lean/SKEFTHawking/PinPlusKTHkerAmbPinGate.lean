@@ -43,6 +43,10 @@ namespace SKEFTHawking.PinPlusKTHkerAmbPinGate
 open SKEFTHawking.PinPlusKTDualSpinSubmanifold
 open SKEFTHawking.PinPlusResidualGate
 open SKEFTHawking.PinPlusCharPairEmptySourceRealization
+open SKEFTHawking.PinPlusCharPairBorTethered
+open SKEFTHawking.SpinSigmaRoute
+open SKEFTHawking.PinPlusKTSpinForgetPhi
+open scoped Manifold
 
 /-! ## §1. The empty `w₁`-dual: the topological half of `DualSpinFromW` is free at every ambient. -/
 
@@ -103,5 +107,28 @@ theorem dualSpin_arith_independent_of_embedding (W : Type) [TopologicalSpace W] 
     (m : ℤ) :
     Nonempty (DualSpinFromW W (32 * m)) ∧ (spinOfSigMul16 m).sig = 16 * m :=
   ⟨(nonempty_dualSpinFromW_iff_thirtytwo_dvd W (32 * m)).mpr ⟨m, rfl⟩, spinOfSigMul16_sig m⟩
+
+/-! ## §3. The consumed shape itself: `KTSharpnessSupplyGeo` ⟺ the `hfwd` conclusion.
+
+§2 refutes the ambient pin. This section closes the loop on the shape that is actually CONSUMED by
+`PinPlusKTDualSpinSubmanifold.kerPhiSubDoubles_of_row_of_supplyGeo`, giving the `hker` lane's
+non-reducing verdict a kernel backing of its own rather than leaving it prose. -/
+
+/-- **THE `hker` OPENER IS NON-REDUCING (kernel-encoded).** `Nonempty (KTSharpnessSupplyGeo prov R)`
+is EQUIVALENT to the `hfwd` conclusion `∀ x, Φ x = 0 → 32 ∣ σ(x)`. So `kerPhiSubDoubles_of_row_of_supplyGeo`
+— true as a theorem — reduces nothing: supplying its input is exactly as hard as assuming its target's
+key ingredient. Backward direction takes `amb := TopCat.of PUnit`; §2 shows no other choice of ambient
+helps. Consequence: do NOT dispatch "inhabit `KTSharpnessSupplyGeo`" as an `hker` brick. -/
+theorem nonempty_ktSharpnessSupplyGeo_iff_hfwd {prov : CharPairWProviderPerOp (𝓡 4) 0}
+    (R : SpinSigmaPresentation (spinEmptyData prov)) :
+    Nonempty (KTSharpnessSupplyGeo prov R) ↔
+      ∀ x, spinForgetPhi prov x = 0 → (32 : ℤ) ∣ R.sig x := by
+  constructor
+  · rintro ⟨S⟩ x hx
+    exact (S.dual x hx).thirtytwo_dvd
+  · intro h
+    refine ⟨{ amb := fun _ _ => TopCat.of PUnit
+              dual := fun x hx =>
+                (nonempty_dualSpinFromW_iff_thirtytwo_dvd PUnit (R.sig x)).mpr (h x hx) |>.some }⟩
 
 end SKEFTHawking.PinPlusKTHkerAmbPinGate

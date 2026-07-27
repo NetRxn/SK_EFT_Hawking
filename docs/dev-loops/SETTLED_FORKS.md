@@ -763,7 +763,12 @@ computed in-tree, which has not been done. Nothing here is a refuted Prop, so th
 ## hker-opener-supplyGeo-is-non-reducing
 - `verdict`: `banned`
 - `tier`: `agent-reviewed`
-- `authored_by`: `coach`
+- `authored_by`: `kernel-no-go`
+- **⬆ UPGRADED 2026-07-27 (operator catch): this is now KERNEL-ENCODED, not prose-only.** Registry fork
+  `hker-opener-supplyGeo-is-non-reducing`, backing
+  `SKEFTHawking.PinPlusKTHkerAmbPinGate.nonempty_ktSharpnessSupplyGeo_iff_hfwd`
+  (`Nonempty (KTSharpnessSupplyGeo prov R) ↔ hfwd`). The prose below is the operational dispatch ban;
+  the FACT is fenced in Lean.
 - `killed_by`: lead trace 2026-07-27 against the FROZEN ROUND-12 SPEC item 1
   (`PinPlusResidualGate.lean:107-110`) + kernel fork
   `dual-spin-opened-construction-conclusion-fakeable` (registry #19)
