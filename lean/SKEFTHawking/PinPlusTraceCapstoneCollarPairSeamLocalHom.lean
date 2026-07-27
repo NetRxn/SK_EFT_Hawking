@@ -37,7 +37,23 @@ row's own localized shape — the per-parameter body of `hdetCore` in
 `…SeamDetect.CollarPairCoreRow.ofSeamCoreLocal`: the detection obligation at a seam point is **FALSE**
 as soon as `qGen z cHa` admits a one-piece representative there.
 
-## 3. What this says about the LOCAL MAYER–VIETORIS route (read before building it)
+## 3. The binary-partition detection ban, KERNEL-CHECKED (§4)
+
+`not_restrictsToRelGenOn_cylRange_at_seamCore`: for **every** class `αU` on the pair
+`(range fromCyl, ∂W ∩ range fromCyl)` and **every** interior generator family `gen`, the
+excision-pushforward fails `RestrictsToRelGenOn` on the cyl side at a core seam point. That is the
+`hdetU` field of `PinPlusTraceCapstoneRelFund.CapstoneRelFundPartitionDatum` at `U = range fromCyl`,
+so the datum is uninhabitable there. Engine:
+`SingularFacePieceDetect.not_restrictsToRelGenOn_of_faceVanish` — the face companion of the banked
+`SingularRelativeDisjointUnionLocal.restrictBd_excisionMap_eq_zero` (which kills a piece at a point
+it MISSES; this kills it at a point it contains only in its own boundary face).
+
+This is the `capstone-binary-partition-detection-uninhabitable` record's own **encode-on-settle**
+condition met: *"the kernel-encodable core = `boundary-face local homology vanishes ⟹ hdetU(seam)
+false`; formalizing the boundary-local-homology lemma is itself a task — when it lands, promote this
+ban to `KERNEL_NOGO_REGISTRY`."* It has landed.
+
+## 4. What this says about the LOCAL MAYER–VIETORIS route (read before building it)
 
 The vanishing above is the *good* half of the local-MV picture: with both piece-local `H₅` zero, a
 relative Mayer–Vietoris sequence for the pair `{A, B}` would have an INJECTIVE connecting map
@@ -91,6 +107,11 @@ open SKEFTHawking.PinPlusTraceCapstoneCollarPair
 open SKEFTHawking.PinPlusTraceCapstoneCollarPairMatch
 open SKEFTHawking.SingularFaceLocalHomologyVanish
 open SKEFTHawking.SingularFacePieceDetect
+open SKEFTHawking.SingularExcisionIso (restr excisionMap)
+open SKEFTHawking.SingularRelativeDisjointUnionFundClass (RestrictsToRelGenOn)
+open SKEFTHawking.PinPlusTraceCapstoneInhabit
+open SKEFTHawking.PinPlusTraceCapstoneCollarPairEnd
+open SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamDetect
 open SKEFTHawking.PoincareLefschetzRelFundClassCylinder (cylW)
 
 namespace SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamLocalHom
@@ -396,6 +417,55 @@ theorem not_hdetAB_at_of_handleHomologous {a : ↥S}
       relClassOf (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
         ({seamPoint s S hS φ hφ hφinj a}ᶜ) 3 (qGen s S hS φ hφ hφinj z cHa) hq ≠ 0) :=
   fun H => H hbd (relClassOf_eq_zero_of_handleHomologous hsphere hcongr hp he hbd)
+
+/-! ## §4. THE BINARY-PARTITION DETECTION BAN, KERNEL-CHECKED -/
+
+section Partition
+
+variable {t : SingularManifold.{0} PUnit.{1} (0 : WithTop ℕ∞) (𝓡 4)}
+  {cd : SeamCollarDatum (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier}
+  {hseam : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).seamRegion ⊆ cd.seamNbhd}
+  {d : SurgeredEndDatum s t S hS φ hφ hφinj cd hseam}
+
+/-- **NO CLASS ON THE CLOSED CYLINDER PIECE DETECTS AT A CORE SEAM POINT — the kernel-checked form of
+the `capstone-binary-partition-detection-uninhabitable` ban.** For **every** relative class `αU` on
+the pair `(range fromCyl, ∂W ∩ range fromCyl)` and **every** interior generator family `gen`, the
+pushed-forward class fails `RestrictsToRelGenOn` on the cyl side: at a seam point of the canonical
+core it must equal `(gen x hx).symm 1 ≠ 0`, but it restricts to `0` because the cylinder piece is
+face-flat there (`cylPiece_localHomology_zero`).
+
+This is exactly the `#156` wall analysis, no longer prose: *"at a seam point x (healed W-interior)
+the closed piece's summand restricts through `H₅(sub U, sub U∖{x'})` at a BOUNDARY-FACE point — which
+vanishes — so `restrictBd β x = 0 ≠ (gen x hx).symm 1` for EVERY `αU`."* The `hdetU` field of
+`PinPlusTraceCapstoneRelFund.CapstoneRelFundPartitionDatum` is of exactly this shape with
+`U := Set.range fromCyl`, so that datum is uninhabitable at `U` = the cyl range whenever the
+canonical core is nonempty and the attaching map lands on the cylinder's top face.
+
+The hypothesis `ha : a ∈ seamCore …` is what makes the seam point a `W`-INTERIOR point (`compl_seamCore`
+is by construction the off-`∂W` condition, `seamPoint_notMem_bd_iff_mem_seamCore`) — i.e. a point at
+which detection is actually demanded. -/
+theorem not_restrictsToRelGenOn_cylRange_at_seamCore
+    (hφtop : ∀ a : ↥S, ((φ a).2 : ℝ) = 1)
+    {a : ↥S} (ha : a ∈ seamCore s t S hS φ hφ hφinj cd hseam d)
+    (gen : ∀ y : (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier,
+      y ∉ (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) →
+      (RelativeHomology (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        ({y}ᶜ) (3 + 2) ≃ₗ[ZMod 2] ZMod 2))
+    (αU : RelativeHomology
+      (restr (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+        (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl)) (3 + 2)) :
+    ¬ RestrictsToRelGenOn (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+        (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W) gen
+        (· ∈ Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl)
+        (excisionMap (X := TopCat.of (ktHandleAttachment s.M D5 S hS φ hφ hφinj).carrier)
+          (((𝓡 4).prod (𝓡∂ 1)).boundary (capstoneB s t S hS φ hφ hφinj cd hseam d).W)
+          (Set.range (ktHandleAttachment s.M D5 S hS φ hφ hφinj).fromCyl) (3 + 2) αU) :=
+  not_restrictsToRelGenOn_of_faceVanish (seamPoint_mem_range_fromCyl a)
+    ((seamPoint_notMem_bd_iff_mem_seamCore (d := d) a).mpr ha) gen
+    (fun β => cylPiece_localHomology_zero hφtop a 3 β) αU (seamPoint_mem_range_fromCyl a)
+
+end Partition
 
 end
 
