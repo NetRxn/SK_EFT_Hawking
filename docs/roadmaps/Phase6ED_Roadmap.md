@@ -1,0 +1,106 @@
+# Phase 6ED — Kernel-Verified Graphene Electronic Structure: Honeycomb Tight-Binding, Dirac Cones, and the Haldane Chern Witness
+
+**Status: PLANNED (authorized 2026-07-27).** Fourth phase of the `6E*` series (*verified device-physics metrology*). Independent of 6EA–6EC (parallelizable); feeds 6EE's material-parameter seams and closes the graphene gap in the repo's band-theory arc. See `Phase6EA_Roadmap.md` for the series framing.
+
+**Thesis.** The repo's graphene corpus formalizes graphene as a *Dirac fluid* (Phase 5w: analog metric, Hawking spectrum, noise PSD — shipped) and its band-theory corpus formalizes *abstract* two-band Chern machinery (Phase 6CA: `blochPauli` d·σ models, FHS lattice Chern number, gauge invariance — shipped). What is missing is the bridge both sides implicitly cite: graphene's actual electronic structure. Honeycomb tight-binding, the two Dirac points with linear dispersion and the emergent Fermi velocity, the sublattice-pseudospin Berry phase π, the gapped-Dirac-mass band structure, and the Haldane model as the honeycomb Chern insulator — none is formalized (verified 2026-07-27: `BlochFHS.lean:24-26` explicitly defers any nontrivial concrete Chern frame; no honeycomb lattice model exists in the project or in PhysLib, whose `TightBindingChain` is single-band 1D and was already rejected by 6CA as "wrong model").
+
+Clean whitespace: no prover has a kernel-checked honeycomb band structure, Dirac-point dispersion, or concrete Haldane-model Chern number.
+
+> **⚠️ GUARDRAIL — coordinate the Chern witness with 6CA's gated QWZ spike; complement, never duplicate.** Phase 6CA separately gates a QWZ (square-lattice) model instantiation for a nontrivial `blochLatticeChern` value. This phase's Wave 3 provides the *Haldane* (honeycomb) witness through the same `BlochFHS` adapter. If the QWZ spike has landed by Wave-3 start, reuse its instantiation pattern verbatim and cite it; if not, Wave 3's Haldane witness becomes the first nontrivial frame and the QWZ spike should later cite *it*. Either order is fine; duplicating the adapter machinery is not. Check `TopologicalBand/` state at Stage 2 and record which branch applies.
+
+> **⚠️ GUARDRAIL — tight-binding model, not material claims.** Theorems are about the stated lattice Hamiltonians (nearest-neighbor honeycomb, Haldane's complex next-nearest-neighbor extension). Identifying model parameters with any physical sample (hopping energies, gap sizes, measured v_F) is a consumer-side hypothesis. No claim about devices, transport measurements, or fabrication.
+
+> **AGENT INSTRUCTIONS — READ BEFORE ANY WORK.** *(Compaction / sub-agent backstop.)*
+> 1. **Bootstrap reads, in order:** workspace `../../CLAUDE.md` + `SK_EFT_Hawking/CLAUDE.md` → `docs/WAVE_EXECUTION_PIPELINE.md` → `SK_EFT_Hawking_Inventory_Index.md` → `Phase6EA_Roadmap.md` (series head) → `docs/roadmaps/Phase6CA_Roadmap.md` + `lean/SKEFTHawking/TopologicalBand/BlochFHS.lean` (the machinery Wave 3 instantiates — read the source directly).
+> 2. **Read this roadmap end-to-end**; Bricks are exact (verified 2026-07-27).
+> 3. **Dev loop is MCP-first** (`lean-lsp-mcp`), per the 6EA instructions.
+> 4. **Pipeline disciplines (hard gates):** (a) **bundle target D11** (this phase joined D11's sources 2026-07-27 as its concrete graphene band-structure thread; Invariant #14 applies — bundle-aware content from inception; scaffolding at first content-lift per `BUNDLE_LIFT_PROCEDURE`); (b) preemptive-strengthening + post-wave audit; (c) kernel-purity, zero sorry, no new axioms without sign-off (#15); (d) no `maxHeartbeats` (#10).
+> 5. **This phase:** the two-band structure targets the existing `SKEFTHawking.Topological.blochPauli` d·σ form — honeycomb enters through `d(k) = (Re f k, −Im f k, m)` with `f k = 1 + exp(I·k·a₁) + exp(I·k·a₂)`; reuse `blochPauli_sq`, `blochPauli_gap_pos`, secular machinery rather than re-deriving 2×2 spectral algebra.
+
+**Standing invariants:** kernel-pure; no new axioms (#15); no `native_decide`; no `maxHeartbeats` (#10); preemptive-strengthening; never push. **Two-layer honesty:** lattice-model mathematics Lean-verified; material identifications consumer-side. Wave sizing ≈ one `/goal`.
+
+**Substrate (verified 2026-07-27).**
+- **Reuse:** `SKEFTHawking.Topological.blochPauli_isHermitian` / `blochPauli_sq` / `blochPauli_secular_det` / `blochPauli_gap_pos` (`BlochBundle.lean`) — the 2-band spectral core; `SKEFTHawking.TopologicalBand.sum_plaquetteArg_eq_two_pi_mul_latticeChern` + `latticeChern_gaugeInvariant` (`FHSLatticeGauge.lean`) and the `blochLatticeChern_integrality`/`_rephase` Bloch adapter (`BlochFHS.lean`) — Wave 3 instantiates these, building nothing new at that layer; `PrincipalBranch.lean` arg machinery (Berry-phase wave).
+- **Absent → build:** the honeycomb structure factor `f k` and its zero set (Dirac points); linear-dispersion expansion; Berry phase of the gapless/gapped cone; the Haldane d-vector and its Chern witness; bilayer extension.
+- **Rejected substrate (do not use):** PhysLib `CondensedMatter.TightBindingChain` (1D single-band; wrong model — 6CA precedent).
+
+**Publication target:** bundle **D11** — *Kernel-Verified Topological Band Theory & Metamaterial Substrate* (**joined D11's sources 2026-07-27**; `PAPER_STRATEGY.md` §2.2 thread (v)). This phase supplies the concrete named-lattice completion D11's thread (i) explicitly deferred. Its `6E*` siblings (6EA/6EB/6EC/6EE) publish in **D12**; this phase alone routes to D11.
+
+---
+
+## Wave 1 — Honeycomb tight-binding and the Dirac points
+
+**Goal.** The nearest-neighbor honeycomb Bloch Hamiltonian in `blochPauli` form; the two inequivalent Dirac points as the exact zero set of `f`; gap positivity away from them. Verdict: reachable — finite trigonometric algebra over the existing 2-band core; the zero-set characterization (`f k = 0 ↔ k ∈ {K, K'}` mod reciprocal lattice) is the only delicate step.
+
+**Why.** Everything graphene-electronic starts here; this wave alone converts the repo's "graphene" from fluid-analog language into an actual lattice model with kernel-checked band structure.
+
+**Bricks.** `blochPauli_*` family (`BlochBundle.lean`); Mathlib `Complex.exp` algebra.
+
+**Done (AC / `/goal` condition).**
+- [ ] `lean/SKEFTHawking/GrapheneBand/Honeycomb.lean` builds 0-sorry, kernel-pure, with:
+- [ ] `honeycombStructureFactor` (`f k = 1 + exp(I⟨k,a₁⟩) + exp(I⟨k,a₂⟩)`) + `honeycombBloch` as the `blochPauli` instance with `d k = (Re (f k), −Im (f k), 0)`;
+- [ ] `honeycomb_energy_eq : eigenvalues = ±|f k|` (via `blochPauli_sq`/secular reuse — cite, don't re-derive);
+- [ ] `diracPoint_K_def`/`diracPoint_K'_def` + `structureFactor_zero_iff : f k = 0 ↔ (k ≡ K ∨ k ≡ K') [mod reciprocal lattice]` — the exact zero-set characterization;
+- [ ] `honeycomb_gapless_at_dirac` and `honeycomb_gapped_away : k ∉ {K,K'} → 0 < |f k|` (via `blochPauli_gap_pos`);
+- [ ] `norm_num`/`decide`-backed evaluation witnesses at high-symmetry points (Γ: `|f| = 3`; M: `|f| = 1`);
+- [ ] preemptive-strengthening + post-wave audit.
+
+## Wave 2 — Linear dispersion, Fermi velocity, and the Dirac mass
+
+**Goal.** The first-order expansion at K: `|f(K+q)| = (3/2)·|q| + O(|q|²)` with explicit remainder bound (emergent linear dispersion; v_F as the model constant `(3/2)·t·a/ℏ` in the declared unit contract), and the gapped model `d₃ = m ≠ 0` with gap `2|m|` exactly. Verdict: reachable — Taylor-with-remainder on a trigonometric function of two variables, following the repo's enclosure discipline (explicit remainder constants, no O-notation in statements).
+
+**Why.** Linear dispersion is the load-bearing property every downstream consumer cites (it is what makes graphene "Dirac"); the explicit-remainder form makes it a usable bound instead of folklore.
+
+**Bricks.** Wave 1; `NumericalBounds` enclosure pattern; Mathlib `Complex.exp` Taylor bounds (`Complex.abs_exp_sub_one_sub_id_le`-family; exact route UNKNOWN-1).
+
+**Done (AC / `/goal` condition).**
+- [ ] `lean/SKEFTHawking/GrapheneBand/DiracExpansion.lean` builds 0-sorry, kernel-pure, with:
+- [ ] `structureFactor_linear_expansion : |‖f (K+q)‖ − (3/2)·‖q‖| ≤ C·‖q‖²` with explicit `C` and a stated validity ball — the honest linear-dispersion theorem;
+- [ ] `fermiVelocity_def` (unit-contract constant) + `dispersion_linear_enclosure` — two-sided rational enclosure of `E(K+q)/‖q‖` on the validity ball;
+- [ ] `gapped_dirac_gap_eq : d₃ = m → E_gap = 2·|m|` (exact, via the secular identity);
+- [ ] `gap_vs_mass_monotone` + a `norm_num` witness pair inside/outside the validity ball (the expansion bound must FAIL detectably outside — non-vacuity of the remainder);
+- [ ] preemptive-strengthening + post-wave audit.
+
+## Wave 3 — Berry phase and the Haldane Chern witness
+
+**Goal.** The sublattice-pseudospin winding/Berry phase π of the gapless cone (via the existing `PrincipalBranch` arg machinery), and the Haldane model (complex NNN hopping) as a concrete `BlochFHS` frame with `blochLatticeChern = ±1` — the first (or second, per the 6CA guardrail) nontrivial concrete Chern frame in the repo. Verdict: reachable-with-care — the FHS machinery makes the Chern computation finite plaquette arithmetic; the care is the frame construction (nonvanishing `d` over the discretized Brillouin torus at stated Haldane parameters).
+
+**Why.** Closes the loop the whole band-theory arc points at: an actual named lattice model with a kernel-checked nonzero topological invariant, connecting the graphene family (this phase) to the abstract Chern machinery (6CA) with zero new axioms.
+
+**Bricks.** `BlochFHS.blochLatticeChern_integrality`/`_rephase` + `FHSLatticeGauge` master identity + `FHSExamples.latticeChern_Uwit` (the existing nontrivial abstract witness whose plaquette-arithmetic pattern the Haldane frame follows); `PrincipalBranch.lean`; Waves 1–2.
+
+**Done (AC / `/goal` condition).**
+- [ ] `lean/SKEFTHawking/GrapheneBand/HaldaneWitness.lean` builds 0-sorry, kernel-pure, with:
+- [ ] `coneBerryPhase_pi` — the ±π pseudospin winding of the gapless cone, stated via the principal-branch arg sum on a stated loop (reusing `PrincipalBranch`; exact statement form frozen at Stage 2, UNKNOWN-2);
+- [ ] `haldaneDVector_def` (declared Haldane parameters `t, t₂, φ, m`) + `haldane_gapped : chosen parameters → ∀ k, d k ≠ 0` (the frame-admissibility proof);
+- [ ] `haldaneFrame_latticeChern_eq_one` (or `−1`; sign fixed by the declared orientation convention) at an explicitly stated parameter point and grid size — the concrete nontrivial Chern witness through `blochLatticeChern`;
+- [ ] `haldane_trivial_phase_chern_zero` at a parameter point in the trivial phase (`|m| > mass threshold`) — the two-phase pair that makes the witness a *classification* statement, not a single number;
+- [ ] 6CA-coordination note recorded (which guardrail branch applied); root-module import + Inventory/counts refresh;
+- [ ] preemptive-strengthening + post-wave audit.
+
+## Wave 4 (gated) — Bernal bilayer extension
+
+**Goal.** The four-band Bernal-bilayer Hamiltonian, its low-energy quadratic band touching, and the displacement-field-tunable gap. **Gated:** open this wave only after Waves 1–3 ship clean AND a consumer for bilayer statements exists (6EE seam or a lift decision); otherwise the phase closes at Wave 3 (Pareto).
+
+**Done (AC, if opened).**
+- [ ] `lean/SKEFTHawking/GrapheneBand/BernalBilayer.lean`: 4×4 Hamiltonian, `bilayer_quadratic_touching` (explicit-remainder expansion), `bilayer_field_gap : U ≠ 0 → gapped` with the gap's leading-order enclosure; strengthening + audit as above.
+
+---
+
+## Sequencing & parallelism
+
+Wave 1 → Wave 2 → Wave 3 critical path; Wave 4 gated. **The whole phase is independent of 6EA/6EB/6EC and may run in a parallel worktree slot from day one.** Contention: `TopologicalBand/` is read-only here (Wave 3 instantiates, never edits) — if 6CA's QWZ spike is concurrently active, coordinate per the guardrail; root-module import lands at Wave 3 (single-writer).
+
+## Phase Definition of Done
+
+- [ ] `lake build` + ExtractDeps clean; zero sorry; kernel-pure; no new axioms.
+- [ ] `validate.py` green; Inventory + Index refreshed with the `GrapheneBand/` family.
+- [ ] Adversarial statement audit logged (special attention: expansion theorems must carry explicit remainders and validity balls; no O-notation smuggling).
+- [ ] Roadmap status updated with dated shipped-declarations list; 6CA guardrail branch recorded.
+
+## Open UNKNOWNs
+
+- **UNKNOWN-1:** the cleanest Mathlib route for the explicit-remainder expansion of `f(K+q)` (`Complex.exp` Taylor bounds vs. `Real.cos/sin` two-variable expansion vs. a direct polynomial sandwich on the validity ball) — spike this first in Wave 2; it sets the constant `C`'s quality.
+- **UNKNOWN-2:** Berry-phase statement form — discretized principal-branch arg sum over a stated loop (matches `FHSLatticeGauge` style, cheapest) vs. a continuum line-integral formulation (needs machinery the repo deliberately avoided). Default: discretized form, documented as such.
+- **UNKNOWN-3:** Haldane witness grid size — smallest torus discretization for which the frame is admissible and the plaquette arithmetic is `decide`/`norm_num`-tractable without `maxHeartbeats` pressure; spike before freezing the AC constant.
+- **UNKNOWN-4:** whether `TopologicalBand/` gains the QWZ witness before Wave 3 starts (sets the guardrail branch).
