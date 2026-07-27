@@ -4843,6 +4843,12 @@ import SKEFTHawking.KummerK3H1SeamLattice
 import SKEFTHawking.KummerK3SeamWindingParity
 import SKEFTHawking.KummerQuotientH3Descent
 import SKEFTHawking.KummerQuotientTransferSequence
+-- Phase 5q.H — the punctured-torus top-degree vanishing tower (feeds the `orientInput`
+-- residual's two `T⁴°` inputs). Ambient-generic MV vanishing sandwich + the circle-peel
+-- vanishing step + the two-set peel up `S¹ → T² → T³ → T⁴`.
+import SKEFTHawking.SingularSubVanishMV
+import SKEFTHawking.KummerTorusHighVanish
+import SKEFTHawking.KummerPuncturedTorusHighVanish
 import SKEFTHawking.IntPoincareDualityCapOnly
 import SKEFTHawking.IntPoincareDualityDetCriterion
 import SKEFTHawking.IntPoincareDualityWitnesses
