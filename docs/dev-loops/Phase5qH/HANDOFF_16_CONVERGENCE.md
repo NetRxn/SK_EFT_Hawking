@@ -146,14 +146,43 @@ The one genuinely C⁰-tied input is a **smooth handle attachment for the surger
 Grouped by independent program. Nothing here is blocked on anything else in the table except where
 stated, so all of it is fan-out-able.
 
-**A · `H` — the KRS leaf** (the KT §5 ambient-surgery row). Reduced to the #212 **collar-pair**
-repair, itself down to exactly two obligations on `CollarPairCoreRow`: **`hbd`** and **`hdetAB`**,
+**A · `H` — the KRS leaf.** ⚠ **STATUS 2026-07-27: BOTH obligations are now seam-local, and the
+row alone is NOT a sound consumption target.**
+* `hbd` → `qGen_boundary_mem_iff_forall_seamCore` (`…CollarPairSeamLocal.lean:275`), an `↔`.
+* `hdetAB` → `hdetAB_iff_forall_seamCore` (`…CollarPairSeamDetect.lean:198`), an `↔`. `∂W` leaves
+  the statement entirely; both obligations are indexed by `seamCore ⊆ ↥S` and nothing else.
+  Entry point: `CollarPairCoreRow.ofSeamCoreLocal` (:236), strictly sharper than `ofSeamLocal`.
+* ⛔ **THE VACUITY ATTACK NOW COMPLETES ON THE WHOLE ROW.**
+  `nonempty_collarPairCoreRow_of_seamCore_empty` (`…SeamDetect.lean:283`): at `seamCore = ∅` the
+  **entire two-obligation row is inhabited with ZERO geometric input**. Earlier rounds freed one
+  obligation each; this frees both. So `CollarPairCoreRow.toHasClass` would fire on a row containing
+  no geometry. **`hseamHit` as a side condition is therefore a PROVED NECESSITY, not advice** — any
+  consumption of `H` must carry it. (No claim is made that `seamCore = ∅` is geometrically
+  realizable; this is a scope/soundness fact about the interface.)
+* ⛔ **STRUCTURAL NO-GO (kernel-checked, registry-eligible): both one-sided congruence routes are
+  dead.** The engine layer advertises exactly one route (`SeamCollarChainDatum`: `qGen = p + e`,
+  discard `e`, detect with `p`). At a core seam point: `cylPush_notMem_compl_seamPoint` (:342) — the
+  pushed cylinder prism is supported at every seam point, so never the away-error `e`;
+  `collarChain_ne_cylPush` (:424) — nor the collar chain `p`; `collarChain_ne_diskPush` (:449) — nor
+  can the disk piece be `p`. ⟹ **the collar chain of any congruence-route discharge must be a
+  genuinely THIRD chain.** Encode in `KERNEL_NOGO_REGISTRY` (Inv #17) — backings exist.
+* New reusable engine: `crossChain_notMem_subspaceChains_compl_top` (:52) — the prism over a
+  fundamental cycle is supported at every TOP-FACE point (companion to
+  `fundCycle_notMem_subspaceChains_compl`).
+* Remaining: produce `z`, `cHa` whose glued 5-chain has nonzero local class at every core seam
+  point. `diskBoundary_notMem_compl_seamParam_of_hbd` (:512) sharpens the forcing to POINTWISE —
+  `∂cHa` hits *every* core parameter — so the adapted-cycle residual is a **simultaneous**
+  cancellation over the whole core. Honest next route (wt3's read, not started): the local
+  Mayer–Vietoris at a seam point, which needs the local-homology bridge the project routes around.
+
+*(Historical: the #212 collar-pair repair reduced this to exactly two obligations on
+`CollarPairCoreRow`: **`hbd`** and **`hdetAB`**,
 at the canonical `cHa := diskDetectChain` (`hcHa`/`hdetHa` fall to the banked
 `diskDetectChain_hc`/`_hdet`). The chain to `hasClass` is complete
 (`CollarPairCoreRow.toHasClass`, `PinPlusTraceCapstoneCollarPairMatch.lean:609`). **Do not build the
 shared-`cCore` co-adaptation** — it is off-path (SETTLED_FORKS). Do not re-attempt `cSeam`
 construction against the open-support transfer shape (fork
-`seam-transfer-open-support-uninhabitable`).
+`seam-transfer-open-support-uninhabitable`).)*
 
 **B · `row` — the σ-presentation.** Two genuinely separate contents hide here:
 
@@ -198,9 +227,29 @@ construction against the open-support transfer shape (fork
     ⚠ `T⁴° → Q` is still **not** a free transport (free ℤ/2 quotients *create* 2-torsion in general:
     H₁(S³)=0 but H₁(ℝP³)=ℤ/2). The only unconditional covering bridge is
     `two_smul_mem_range_mapInt_qmkC` (:382): `2·Hₙ₊₁(Q;ℤ) ⊆ im p_*`. Nothing claims descent. #309.
-  * `h1Free` — **reduced to four integers per seam pair** (2026-07-27 wt1 round,
-    `KummerK3H1SeamLattice.lean`). Chain: `SeamWindingOdd → Function.Injective seamClass →
-    QLatticeInSeamSpan → free_h1K3`.
+  * `h1Free` — ✅ **CLOSED, UNCONDITIONALLY** (2026-07-27, `KummerK3SeamWindingParity.lean`).
+    `free_h1K3_uncond` (:577) : `Module.Free ℤ (Homology KummerK3top 1)` — **no hypotheses**
+    (lead-verified: the signature carries no binders, `#print axioms` =
+    `{propext, Classical.choice, Quot.sound}`). Also `h1K3_eq_zero_uncond` (:572),
+    `qLatticeInSeamSpan` (:568), `seamClass_injective` (:564), `seamWindingOdd` (:561),
+    `seamWindParityInjective` (:544) — all hypothesis-free.
+    **The computation that did it:** `seamWind_odd_iff` (:518) —
+    `¬ 2 ∣ seamWind c i ↔ coordC i c.1 = negOne`, i.e. **`seamWind c` IS the half-period bit
+    vector**. An `↔`, so vacuity is structurally excluded (a `c`-constant substitute has uniform
+    parity and fails it outright). Sharper than planned: `pull_tauC_wPT` (:183) gets the involution
+    pullback at **cochain** level (`τ*(wPT i) = −wPT i − δ(aPT i)`), which upgrades "the winding
+    parity is lift-independent" to the exact formula
+    `windowJ[γ_c − γ_c' + v − τ_#v] i = seamWind c i − seamWind c' i + 2⟨wPT i, v⟩` — so the
+    connecting path `δ` provably never has to be constructed.
+    ⚙ Basepoint artifact worth knowing: at `basePt = (1,0)`, coordinate `0` gets the odd bit from
+    winding `−1`/branch `0` and coordinates `≠ 0` from winding `0`/branch `1`. Both odd; the
+    asymmetry is basepoint-dependent, the total is not.
+    ⟹ **`KummerK3E1Residuals` is now a TWO-field obligation** — `orientInput` + `pdInput`.
+    `kummerK3E1Residuals_of_orient_pd` (:605) and `nonempty_kummerK3E1Atoms_of_orient_pd` (:613)
+    deliver the whole `orient`/`B`/`pd`/`rank22` atom quadruple from those two.
+    *(Superseded route record, kept for provenance: the 2026-07-27 earlier round
+    `KummerK3H1SeamLattice.lean` reduced the residual to `SeamWindingOdd`; that chain is what the
+    closure fires through.)*
     **THE residual:** `SeamWindingOdd` (:322) — for `c ≠ c'` and ANY lift `y` of
     `seamClass c − seamClass c'`, some coordinate of the four puncture-window winding functionals
     `windowJ y` (:144) is odd. Choice-independent by `windowJ_sub_even_of_mapInt_qmkC_eq` (:296), so

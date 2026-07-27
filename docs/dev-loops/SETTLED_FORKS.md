@@ -834,8 +834,34 @@ merely unbuilt; the engine's key hypothesis is FALSE one degree up.
 - `puncturedTorus = excisedBallsᶜ` — `KummerPuncturedTorus.lean:432`, FULL-radius balls
   (`chartBall c = centeredChartParam c '' {t | sqNorm t < excisionRadius ^ 2}`, :420).
 
-So `KummerPunctureH3Mod2.thickA_H3_twoTorsionFree` is a statement about `thickA`, **not** about
-`PTtop`. Any plan that treats it as "H₃ of the punctured torus" is off by one carrier: the route to
-the Q side has **TWO** gaps (`thickA → PTtop`, then `PTtop → Q`), plus the weld MV. They are very
-plausibly homotopy equivalent, but that equivalence is NOT in tree — build it or route around it,
-do not assume it.
+So `KummerPunctureH3Mod2.thickA_H3_twoTorsionFree` is literally a statement about `thickA`, **not**
+syntactically about `PTtop`.
+
+### ⚠ CORRECTION 2026-07-27 (same day) — the second half of this entry was WRONG. Lead error.
+
+The entry originally continued: *"the route to the Q side has TWO gaps (`thickA → PTtop`, then
+`PTtop → Q`) … They are very plausibly homotopy equivalent, but that equivalence is NOT in tree —
+build it or route around it, do not assume it."* **That is false**, was flagged by the wt2 worker,
+and is now **lead-verified in the source**:
+
+`SKEFTHawking.KummerPuncturedMV.puncIncl_mapInt_bijective` (`KummerPuncturedMV.lean:329`; section
+header at `:304` reads "`T⁴° ↪ thickA` is a homotopy equivalence") proves
+`Function.Bijective (Homology.mapInt puncInclC (n+1))` for **all** `n`. It is **constructed**, not
+assumed — from the glued radial deformation retraction `puncFlow` (`puncRetrC :312`,
+`thickHtpyC :317`) via `Homology.mapInt_bijective_of_homotopyEquiv`. **Gap 1 was already closed in
+tree.** Consequence, now landed as `KummerQuotientH3Descent.punctureH3_twoTorsionFree`:
+**`H₃(T⁴°;ℤ)` is 2-torsion-free, UNCONDITIONALLY**, plus the reusable bridge
+`punctureThickHEquiv (n) : H_{n+1}(T⁴°;ℤ) ≃ₗ[ℤ] H_{n+1}(thickA;ℤ)`.
+
+**What survives:** the set-distinctness (the two carriers really are different complements) — that
+half was verified and is correct, and it does mean the two names are not interchangeable.
+**What does not:** there is **ONE** gap to the Q side, not two. It is the descent along the FREE
+ℤ/2 quotient `T⁴° → Q`, which remains genuinely open (free quotients CREATE 2-torsion:
+H₁(S³)=0 vs H₁(ℝP³)=ℤ/2); the only unconditional covering bridge is
+`two_smul_mem_range_mapInt_qmkC`.
+
+**Process note (the lesson, not the fact).** The lead verified the *definitions* (radii differ →
+different sets, correct) and then asserted the *consequence* (therefore an open gap) without
+checking for a bridge. That is the `feedback_no_grep_scoped_directionshift_claims` failure mode one
+level up: checking a definition is not checking the consumers. Before writing "X is not in tree",
+search for the bridge (`lean_local_search` on the map/iso name), not just the two objects.
