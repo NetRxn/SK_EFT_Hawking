@@ -4707,6 +4707,12 @@ import SKEFTHawking.SphereProdBoundaryCupSquare
 import SKEFTHawking.SphereProdP23NondegFeeder
 import SKEFTHawking.PinPlusKTSphereProdP23Close
 import SKEFTHawking.SphereProdSpinElement
+-- Phase 5q.H (N1a, Freeze-A vacuity audit landed concretely) — instantiates the zero-geometry dodge
+-- at the GENUINE `Ω₄^{Spin}` carrier `spinEmptyData prov` with the GENUINE `S²×S²` spin element in
+-- the `s2s2` slot: on the real carrier, primitive (1) `HandleTradeCobordism` is discharged by the
+-- UNIT CYLINDER, and primitive (2) `HyperbolicBase` is vacuous. Both refuted by `FaithfulRank`.
+-- Closes the "maybe it's an artefact of abstract ξ" objection. (wt3-built.)
+import SKEFTHawking.HandleTradeAtomVacuityConcrete
 import SKEFTHawking.KummerK3Base
 import SKEFTHawking.KummerInvolution
 import SKEFTHawking.KummerPuncturedTorus

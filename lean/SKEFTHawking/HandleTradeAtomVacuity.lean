@@ -298,7 +298,17 @@ theorem constRankTwoPresentation_not_handleTradeCobordism (ξ : TangentialData.{
 /-- **The faithfulness `SpinSigmaPresentation` never required.** Both fields are literature-trivial
 facts about the second Betti number that any genuine E1 `interMatrix` presentation satisfies:
 `b₂(∅) = 0`, and `b₂` is additive under disjoint union. `SpinSigmaPresentation` asks for neither —
-which is exactly the room the §3 and §4 dodges exploit. -/
+which is exactly the room the §3 and §4 dodges exploit.
+
+**Honest scope of this repair (do not over-read it).** `FaithfulRank` is a *soundness side-condition
+on the presentation*, NOT a new geometric freeze and NOT a claimed-inhabited structure: no abstract
+inhabitant over an arbitrary `ξ` is constructed here, and none is claimed. Its role is negative and
+kernel-checked — it **excludes** the two degenerate presentations
+(`constRankTwoPresentation_not_faithfulRank`, `collapsedPresentation_not_faithfulRank`), so that a
+future discharge of primitive (1) *stated under it* cannot be met by a cylinder. Consistency with the
+`SpinSigmaPresentation` fields is unobstructed (`rank ∅ = 0`, `rank s2s2 = 2`, `rank (s2s2 ⊔ s2s2) =
+4` are mutually compatible), and the genuine `interMatrix` presentation satisfies it by construction;
+neither statement is proved here, and this docstring is the disclosure. -/
 structure SpinSigmaPresentation.FaithfulRank (R : SpinSigmaPresentation ξ) : Prop where
   /-- The empty manifold has `b₂ = 0`. -/
   rank_empty : R.rank (emptyStrMfd ξ) = 0
