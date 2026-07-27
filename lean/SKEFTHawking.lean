@@ -4816,6 +4816,11 @@ import SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamDetect
 --   H_{k+2}(W, W∖x) = 0 at a star-convex-chart (half-space) point, with the disk and cylinder
 --   models, and the interior-point ℤ/2 contrast that makes the vanishing substantive.
 import SKEFTHawking.SingularFaceLocalHomologyVanish
+-- SingularFacePieceDetect — a chain supported in a face-flat piece has ZERO local class there
+import SKEFTHawking.SingularFacePieceDetect
+-- PinPlusTraceCapstoneCollarPairSeamLocalHom — the local-homology verdict on hdetAB: neither closed
+--   piece of the trace carrier detects at a seam point, even up to homology.
+import SKEFTHawking.PinPlusTraceCapstoneCollarPairSeamLocalHom
 import SKEFTHawking.PinPlusTraceSeamCollarBridgeNoGo
 import SKEFTHawking.KTCompletenessTransfer
 import SKEFTHawking.KTCompletenessMVCover

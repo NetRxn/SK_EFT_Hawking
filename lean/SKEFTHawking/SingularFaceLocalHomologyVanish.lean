@@ -16,15 +16,23 @@ and for the two model pieces of the surgery trace.
   point of the boundary sphere `‖x‖ = 1`. Chart: the identity on the whole ball; `V` = the closed
   ball (convex) and `V∖q` star-convex from the centre — the sole geometric input is that a segment
   from `0` reaches the unit sphere only at its far endpoint.
-* §3 — `cylTopFace_localHomology_zero` / `cylBotFace_localHomology_zero`: the **cylinder model**
-  `H_{k+2}(M × [0,1], (M × [0,1])∖x) = 0` at a TOP-face point `x = (p, ⊤)` (resp. a bottom-face
-  point `(p, ⊥)`), for `M` any charted `(m'+2)`-manifold. Chart: a chart ball of `M` at `p` crossed
-  with the half-open end interval, carried into `ℝ^{m'+3}` by the canonical `EuclideanSpace`
-  splitting. The punctured slit is star-convex from a point one notch inside the end face.
+* §3 — `cylTopFace_localHomology_zero`: the **cylinder model**
+  `H_{k+2}(M × [0,1], (M × [0,1])∖(p, t₀)) = 0` at a TOP-face point (`(t₀ : ℝ) = 1`), for `M` any
+  charted `(m'+2)`-manifold. Chart: a chart ball of `M` at `p` crossed with the half-open end
+  interval `(½, 1]`, carried into `ℝ^{m'+3}` by the canonical `EuclideanSpace` splitting
+  (`cylEuclEquiv`). The punctured slit is star-convex from a point one notch inside the end face
+  (`starConvex_endSlab_diff_singleton`).
+* §4/§5 — the **vacuity attacks, run and defeated**. On the *same* ball and the *same* cylinder, in
+  the *same* degree, the local homology is `ℤ/2` (resp. nonzero) at an INTERIOR point:
+  `closedBall_interiorLocalIso` / `exists_ne_zero_closedBall_interiorLocalHomology` and
+  `exists_ne_zero_cylInteriorLocalHomology`. So neither vanishing statement is about a module that is
+  trivial anyway — the face hypotheses `‖x‖ = 1` and `(t₀ : ℝ) = 1` carry all the content.
+* §6 — `localHomology_zero_of_homeo`: transport along a homeomorphism of ambient spaces (the
+  delivery vehicle for pieces of a decomposition that are homeomorphic copies of the models).
 
-Both models are *relatively* open half-space charts — `V` is deliberately NOT open in `ℝⁿ`, which is
-exactly why the local homology vanishes instead of being `ℤ/2` (contrast
-`SingularChartBridge.manifoldLocalIso`).
+Both vanishing models use *relatively* open half-space charts — `V` is deliberately NOT open in
+`ℝⁿ`, which is exactly why the local homology vanishes instead of being `ℤ/2` (contrast
+`SingularChartBridge.manifoldLocalIso` and §4/§5, whose charts ARE open).
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom.
 -/
@@ -371,7 +379,76 @@ theorem exists_ne_zero_closedBall_interiorLocalHomology {m : ℕ}
   rw [LinearEquiv.apply_symm_apply, map_zero] at this
   exact one_ne_zero this
 
-/-! ## §5. Transport along a homeomorphism of ambient spaces -/
+/-! ## §5. NON-VACUITY for the cylinder — an INTERIOR point of the same cylinder has `ℤ/2` -/
+
+/-- The **open middle** `(0,1)` of the unit interval, as a subset of `↥(Icc 0 1)`. -/
+def midEnd : Set (Set.Icc (0 : ℝ) 1) := {t | 0 < (t : ℝ) ∧ (t : ℝ) < 1}
+
+theorem isOpen_midEnd : IsOpen midEnd :=
+  isOpen_Ioo.preimage (continuous_subtype_val (p := fun x : ℝ => x ∈ Set.Icc (0 : ℝ) 1))
+
+/-- The open middle of `↥(Icc 0 1)` is homeomorphic to the real open interval `Ioo 0 1`. -/
+def midEndHomeo : ↥midEnd ≃ₜ ↥(Set.Ioo (0 : ℝ) 1) where
+  toFun t := ⟨((t : Set.Icc (0 : ℝ) 1) : ℝ), t.2⟩
+  invFun u := ⟨⟨(u : ℝ), le_of_lt u.2.1, le_of_lt u.2.2⟩, u.2⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
+  continuous_toFun :=
+    Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _
+  continuous_invFun :=
+    Continuous.subtype_mk (Continuous.subtype_mk continuous_subtype_val _) _
+
+/-- **AN OPEN EUCLIDEAN CHART GIVES A NONZERO LOCAL CLASS.** The existence form of
+`SingularChartBridge.chartLocalIso` (`H_{m+2}(W, W∖x) ≅ ℤ/2` at a point with a genuinely OPEN
+Euclidean chart). Stated as an existence so downstream uses never have to unify against the heavy
+chart iso. -/
+theorem exists_ne_zero_localHomology_of_openChart {W : TopCat} [T1Space ↑W] {m : ℕ}
+    {x : ↑W} {U : Set ↑W} (hU : IsOpen U) (hx : x ∈ U)
+    {q : ↑(Eucl (m + 2))} {V : Set ↑(Eucl (m + 2))} (hV : IsOpen V) (hq : q ∈ V)
+    (e : ↥U ≃ₜ ↥V) (hex : (e ⟨x, hx⟩ : ↑(Eucl (m + 2))) = q) :
+    ∃ α : RelativeHomology (X := W) ({x}ᶜ) (m + 2), α ≠ 0 := by
+  refine ⟨(SingularChartBridge.chartLocalIso hU hx hV hq e hex).symm 1, fun hcon => ?_⟩
+  have h2 := congrArg (SingularChartBridge.chartLocalIso hU hx hV hq e hex) hcon
+  rw [LinearEquiv.apply_symm_apply] at h2
+  exact one_ne_zero (h2.trans (LinearEquiv.map_zero _))
+
+/-- **THE CONTRAST — at an INTERIOR point of the very same cylinder the local homology is NONZERO.**
+`H_{m'+3}(M × [0,1], (M × [0,1])∖(p, t₀)) ≠ 0` when `0 < t₀ < 1`. The construction is §3's, with the
+end interval `(½, 1]` replaced by the OPEN `(0,1)`: the chart image is then genuinely open in
+`ℝ^{m'+3}`, so `SingularChartBridge.chartLocalIso` gives `ℤ/2` rather than `0`.
+
+This is the **vacuity attack** on §3 run and defeated. On one and the same cylinder, in one and the
+same degree `m'+3`, the local homology is nonzero at an interior point and `0` at a top-face point;
+the face hypothesis `(t₀ : ℝ) = 1` of `cylTopFace_localHomology_zero` is doing all the work. -/
+theorem exists_ne_zero_cylInteriorLocalHomology {m' : ℕ} {M : Type} [TopologicalSpace M]
+    [ChartedSpace (EuclideanSpace ℝ (Fin (m' + 2))) M] [T1Space (cylW M)] (p : M)
+    {t₀ : Set.Icc (0 : ℝ) 1} (ht₀ : 0 < (t₀ : ℝ)) (ht₁ : (t₀ : ℝ) < 1) :
+    ∃ α : RelativeHomology (X := TopCat.of (cylW M)) ({((p, t₀) : cylW M)}ᶜ) (m' + 1 + 2),
+      α ≠ 0 := by
+  haveI : T1Space ↑(TopCat.of (cylW M)) := inferInstanceAs (T1Space (cylW M))
+  set c := chartAt (EuclideanSpace ℝ (Fin (m' + 2))) p with hcdef
+  have hps : p ∈ c.source := mem_chart_source _ p
+  obtain ⟨r, hr, hball⟩ := Metric.isOpen_iff.mp c.open_target (c p) (mem_chart_target _ p)
+  refine exists_ne_zero_localHomology_of_openChart (W := TopCat.of (cylW M))
+    (U := (c.source ∩ c ⁻¹' Metric.ball (c p) r) ×ˢ midEnd)
+    ((c.isOpen_inter_preimage Metric.isOpen_ball).prod isOpen_midEnd)
+    (show ((p, t₀) : cylW M) ∈ (c.source ∩ c ⁻¹' Metric.ball (c p) r) ×ˢ midEnd from
+      ⟨⟨hps, Metric.mem_ball_self hr⟩, ht₀, ht₁⟩)
+    (q := cylEuclEquiv m' (c p, ((t₀ : Set.Icc (0 : ℝ) 1) : ℝ)))
+    (V := ⇑(cylEuclEquiv m').symm ⁻¹' (Metric.ball (c p) r ×ˢ Set.Ioo (0 : ℝ) 1))
+    ((Metric.isOpen_ball.prod isOpen_Ioo).preimage (cylEuclEquiv m').symm.continuous) ?_
+    ((Homeomorph.Set.prod (c.source ∩ c ⁻¹' Metric.ball (c p) r) midEnd).trans
+      (((chartBallHomeo c hball).prodCongr midEndHomeo).trans
+        ((Homeomorph.Set.prod (Metric.ball (c p) r) (Set.Ioo (0 : ℝ) 1)).symm.trans
+          ((cylEuclEquiv m').toHomeomorph.subtype (fun w => by
+            simp only [Set.mem_preimage, ContinuousLinearEquiv.coe_toHomeomorph,
+              ContinuousLinearEquiv.symm_apply_apply]))))) rfl
+  show (cylEuclEquiv m').symm (cylEuclEquiv m' (c p, ((t₀ : Set.Icc (0 : ℝ) 1) : ℝ)))
+    ∈ Metric.ball (c p) r ×ˢ Set.Ioo (0 : ℝ) 1
+  rw [ContinuousLinearEquiv.symm_apply_apply]
+  exact ⟨Metric.mem_ball_self hr, ht₀, ht₁⟩
+
+/-! ## §6. Transport along a homeomorphism of ambient spaces -/
 
 /-- **LOCAL HOMOLOGY TRANSPORTS ALONG A HOMEOMORPHISM.** If `h : X ≃ₜ Y` and the local homology of
 `Y` at `h x` vanishes in degree `n`, so does the local homology of `X` at `x`. The delivery vehicle
