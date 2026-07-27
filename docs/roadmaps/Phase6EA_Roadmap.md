@@ -84,7 +84,7 @@ Clean whitespace: no theorem prover has a kernel-checked Poisson discrimination-
 
 ## Sequencing & parallelism
 
-Wave 1 → Wave 2 are independent (different files, disjoint substrate) — **parallelizable across two worktree slots**. Wave 3 consumes Wave 1 (Bhattacharyya identity) and is the integration wave — serialize it last. Contention: none with other active phases; the new `Detection/` directory is untouched by 6C*/6D* work. The root `SKEFTHawking.lean` import addition lands in Wave 3 (single-writer file — coordinate with any concurrent phase's root-module edit).
+Wave 1 → Wave 2 are independent (different files, disjoint substrate) — **parallelizable across two worktree slots**. Wave 3 consumes Wave 1 (Bhattacharyya identity) and is the integration wave — serialize it last. Contention: none with other active phases; the new `Detection/` directory is untouched by 6C*/6D* work. ⚠ **CORRECTED (Stage 2, lead-verified 2026-07-27): EVERY wave adds its OWN root import, in its own commit.** The original text said the root import lands in Wave 3. That is a **build defect**: `lean/lakefile.toml`'s `lean_lib` declares **no `globs`**, and `lean/SKEFTHawking.lean` is an explicit 1,878-import aggregator — so a module absent from it is **not built by `lake build` at all**, making Waves 1–2 invisible to the zero-sorry gate, `ExtractDeps`, and counts. The root is still single-writer; the orchestrator resolves the trivial import-list conflicts at merge (this is already routine).
 
 ## Phase Definition of Done
 
@@ -93,6 +93,57 @@ Wave 1 → Wave 2 are independent (different files, disjoint substrate) — **pa
 - [ ] All three waves' AC boxes checked; per-wave post-strengthening audits logged in the phase notebook.
 - [ ] Stage-13-style adversarial pass over the statement set (vacuity/tautology hunt) — mandatory even with no paper target.
 - [ ] Roadmap status updated (PLANNED → COMPLETE with dated shipped-declarations list).
+
+## Stage-2 resolutions — LEAD SIGN-OFF 2026-07-27 (binding; supersedes the AC bullets they touch)
+
+Full analysis: `docs/roadmaps/Phase6EA_Stage2_StatementFreeze.md`. The four items below were escalated
+for sign-off; all four are decided here so no wave stalls on them.
+
+- **UNKNOWN-1 — RESOLVED.** Use Mathlib `poissonPMFReal`, with the generic Le Cam chain stated over bare
+  `ℕ → ℝ`. The decisive finding is that **the randomized-rule quantifier is orthogonal to the pmf
+  carrier**: a rule is `δ : ℕ → ℝ` with `δ n ∈ [0,1]` and the errors are `∑' n, p n * δ n` /
+  `∑' n, q n * (1 − δ n)`, which never touches the pmf's *type*. So the roadmap's stated trap (silent
+  narrowing to deterministic threshold rules) is avoided by **how the rule is quantified**, not by the
+  carrier choice. `poissonPMFRealSum` carries **no positivity hypothesis**, which is what makes the
+  `N_b = 0` dark-baseline item statable at all. `PMF`/`ℝ≥0∞` rejected (truncated subtraction against
+  real-valued `exp` floors). Coercion discipline: `Real.sqrt (Nb : ℝ)`, never `NNReal.sqrt`.
+- **UNKNOWN-2 — RESOLVED, and the roadmap's framing was wrong.** **Mathlib has no `erf`/`erfc`/
+  Q-function/Gaussian CDF at pin** (declaration-level grep, zero hits), so Wave 2 *defines* `Q` locally
+  and this was never a choice between library forms. The interval-restricted rational is **REJECTED**:
+  it goes negative at `z > √(2π)/2 ≈ 1.2533`, so its side condition does not merely "leak into 6EE",
+  it swallows 6EE's operating range. Freeze `gaussianTail_ge_window : c·φ(z+c) ≤ Q z` (`z ≥ 0`, `c > 0`)
+  — global, parametric, correct exponent. The sharp `z/(1+z²)·φ(z)` is a **stretch**, and consuming
+  statements must be written so substituting it needs no restatement.
+- **UNKNOWN-3 — RESOLVED; the roadmap's option (b) is TYPE-LEVEL IMPOSSIBLE.** `OptimalHypothesisRate`
+  takes `ρ : MState d` with `[Fintype d]`, and PhysLib's classical carrier needs `[Fintype α]` —
+  **Poisson on ℕ cannot be an argument to either**. It is also the *asymmetric* Neyman–Pearson value,
+  whereas Wave 1 bounds the *symmetric* Bayes/Le Cam average error, so "specialization" would be a
+  category error. Route the seam through the `Fin 2` **pushforward** Wave 1 already builds, stated as a
+  diagonal restriction against the project's own proven FvdG. ⚠ **Wave 3 must NOT be described as
+  "first project consumption of `HypothesisTesting`"** unless that consumption actually happens — a
+  claims-accuracy fix, per Stage 13.
+- **Wave-1 `poissonTV_le_of_bhattacharyya` — DEMOTED to stretch.** Not a scope reduction: the Le Cam
+  floor route does not pass through TV at all (Cauchy–Schwarz then elementary AM–GM), so this was an
+  *assumed intermediate that turned out unnecessary*; the shipped floor is unchanged. Stating TV about
+  the true Poisson pair additionally needs an MLR/positive-part argument absent from the brick list, and
+  `Detection/` avoids importing the trace-norm tower. Keep it listed, with this reason.
+- **Wave-2 `gaussianTail_chernoff` — ATTEMPT `z ≥ 0` FIRST; `z ≥ 0.8` is the fallback, not the target.**
+  I am not signing off on narrowing the AC up front. The `z ≥ 0.8` form is provable from Mills; the full
+  `z ≥ 0` constant needs a monotone-derivative argument, which is a known-shape task rather than a wall.
+  Ship `z ≥ 0.8` only if `z ≥ 0` is attempted and fails, and **document the failure** if so.
+- **Wave-2 threshold floor — ACCEPTED at `½·Q(z₀)` uniform over `t`,** with the sharp `Q(z₀)` as stretch.
+  The factor ½ is an honest cost of uniformity in the threshold position.
+- **Reuse correction:** `avgAssignmentError` already exists (`QuantumNetwork/ReadoutRelaxationBound.lean:143`)
+  — Waves 1/2 consume it rather than re-defining `(e₀+e₁)/2`.
+- **Witness arithmetic — VERIFIED (40-digit), and both admit stronger forms than the `∃` shape asked for.**
+  W1: the undershoot is **exactly `e^{N_b}`, for every bright baseline at every `N_a`** — no `N_b < N_a`
+  needed; freeze the quantitative `6·miss ≤ folklore`, discharged via `expNeg_enclosure` at `r = 5`
+  (which also makes the cited brick a real call rather than a docstring reference). W2: the exact
+  characterization is `(N_a−N_b) − (√N_a−√N_b)² = 2√N_b(√N_a−√N_b)`, so the Le Cam floor exceeds the
+  folklore form **iff `2√N_b(√N_a−√N_b) > log 4`**; the `(50,60)` witness closes by `norm_num` with no
+  `Real.log` in the statement.
+- **Path corrections:** the Mathlib module is `…Distributions.Poisson.Basic`; the PhysLib path is
+  `QuantumInfo.Finite.ResourceTheory.HypothesisTesting`.
 
 ## Open UNKNOWNs (resolve at Stage 2 before the consuming wave freezes statements)
 
