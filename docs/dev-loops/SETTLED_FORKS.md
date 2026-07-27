@@ -792,3 +792,16 @@ computed in-tree, which has not been done. Nothing here is a refuted Prop, so th
   gate spec, never grep-conclude coverage (`feedback_no_grep_scoped_directionshift_claims`).
 - `memory`: `[[project_5qH_nonhausdorff_substrate_bug]]`
 - `created_ts`: 2026-07-27
+- `status_update_2026_07_27b`: **The `V` side of item (2)'s prerequisite is now built; items (1) and
+  (2) themselves are NOT.** `PinPlusKTDualSpinDerived` (main `c1142672` + `6dc13d7b`) replaces the
+  free `SmoothSpinManifold4` lattice with one DERIVED from `Vspace`'s own integral homology
+  (`IntOrientation` + `IntH2Basis` + `IntPoincareDuality`), and proves the resulting datum forces
+  `|σ(M)| ≤ 2·b₂(V)` on an actual space — so the fork-31 witness class (`PEmpty`/`PUnit` carriers
+  with a bolted-on lattice) is kernel-excluded (`derived_excludes_fork31_witness_class`). The
+  re-based supply `KTSharpnessSupplyDerived` still carries a FREE `amb : ∀ x hx, TopCat`, so
+  **item (1) — the `amb` pin — is untouched and remains owed**, and item (2) — the genuine
+  `w₁(W)`-duality certificate — is untouched. ⚠ Do NOT read the derived interface as making the
+  lane reducing: whether the derived supply is still equivalent to `hfwd` is OPEN (it turns on the
+  missing `w₁` tie), and that openness is deliberately NOT encoded as a no-go — proving it would
+  need a realization construction (a closed 4-manifold with an `IntPoincareDuality` datum of every
+  signature in `16ℤ`) the project does not have. Prose only; not `KERNEL_NOGO_REGISTRY` (Inv #17).

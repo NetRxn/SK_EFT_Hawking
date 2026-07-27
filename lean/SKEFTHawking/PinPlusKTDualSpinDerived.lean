@@ -300,8 +300,21 @@ variable (prov : CharPairWProviderPerOp (𝓡 4) k)
 
 /-- **The KT-"only if" supply over the DERIVED datum** — the exact shape of `KTSharpnessSupplyGeo`,
 with `DualSpinFromW` swapped for `DualSpinDerivedFromW`. Per kernel element `x`: an ambient
-null-bordism total space (intended value `TopCat.of b.W`) together with a dual-spin submanifold whose
-intersection lattice is computed from its own homology. -/
+null-bordism total space together with a dual-spin submanifold whose intersection lattice is computed
+from its own homology.
+
+⚠ **`amb` IS STILL A FREE `TopCat` FIELD, and that is a KNOWN, REGISTERED weakness — not fixed here.**
+`SETTLED_FORKS.md` (`hker-opener-supplyGeo-is-non-reducing`, 2026-07-27) states the real work as
+(1) an `amb`-PINNED supply shape that makes the unpinned-ambient exploit *type-level unavailable*
+rather than a permanent data-inspection obligation, and (2) the genuine `w₁(W)`-dual spin
+submanifold. **This module addresses neither (1) nor (2).** What it does is strengthen the `V` side —
+the lattice can no longer float free of the carrier — which is a prerequisite for (2) being
+meaningful, and it leaves (1) exactly where round-12 spec 1 put it. Do not read `toSupplyGeo` +
+`kerPhiSubDoubles_of_row_of_supplyDerived` as "the lane is re-based and now reducing"; read it as
+"the derived datum plugs in, and the ambient pin is still owed".
+
+Consequently `abs_sig_le_two_mul_rank` below is a bound on `V`, and it holds *whatever* `amb` is —
+it is not, and must not be cited as, a fix for the free ambient. -/
 structure KTSharpnessSupplyDerived (R : SpinSigmaPresentation (spinEmptyData prov)) where
   /-- the ambient null-bordism total space per kernel element. -/
   amb : ∀ x, spinForgetPhi prov x = 0 → TopCat
