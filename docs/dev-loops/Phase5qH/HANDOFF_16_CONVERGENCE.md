@@ -102,7 +102,15 @@ atom-by-atom in part 2.
 |---|---|---|---|
 | **Refined (C⁰)** | `kt_equiv_zmod16_of_residuals_freezeAtoms_sphereDiskPinned` (`PinPlusKTSphereProdP23Close`) | `residualProv = residualProvK 0` | 7 atoms + one slot pin |
 | **Smooth (k=⊤), coarse row** | `kt_equiv_zmod16_of_residuals_smooth` (`PinPlusKTAssemblyResiduals:166`) | `residualProvK ⊤` | the COARSE 8 atoms |
-| **⭐ Smooth (k=⊤), SHARPEST** | `kt_equiv_zmod16_smooth_sphereDiskPinned` + W-E twin `rokhlin_sixteen_smooth_sphereDiskPinned` (`PinPlusKTSphereProdP23Close` §7) | `residualProvK ⊤` | 8 binders — same COUNT as the coarse row, but `hB`→`hs2s2` (row-realization pin) and `H`→`KernelReducesToSpin` are both WEAKER |
+| Smooth (k=⊤), §7 | `kt_equiv_zmod16_smooth_sphereDiskPinned` + W-E twin `rokhlin_sixteen_smooth_sphereDiskPinned` (`PinPlusKTSphereProdP23Close` §7) | `residualProvK ⊤` | 8 binders — same COUNT as the coarse row, but `hB`→`hs2s2` (row-realization pin) and `H`→`KernelReducesToSpin` are both WEAKER |
+| **⭐ Smooth (k=⊤), SHARPEST** | `kt_equiv_zmod16_smooth_phig_sphereDiskPinned` + W-E twin `rokhlin_sixteen_smooth_phig_sphereDiskPinned` (`PinPlusKTSphereProdP23Close` §8, `d1c9de12`) | `residualProvK ⊤` | **7** binders `{hKRS, row, hA, hcol, hker, hΦg}` + slot pin `hs2s2` — `{hcyc, h2}` collapsed to the single generator-image atom `hΦg` |
+
+**The 8 → 7 shrink is kernel-checked, not asserted.** `kt_equiv_zmod16_of_residuals_ofKRS` (and the §7
+sphere-disk form) are now *derived from* their §8 seven-binder counterparts by calling
+`spinForgetPhi_g_eq_ktKernelRep_of_cyclic` — that call IS the arrow `{hcyc, h2} ⟹ hΦg`. Statements of
+the pre-existing theorems are unchanged; only their proofs factor through the weaker-input form.
+⚠ No converse is claimed anywhere: `hΦg` is *a* weaker input, not proven *strictly* weaker.
+The k-generic backbone is `PinPlusKTAssemblyResiduals.kt_equiv_zmod16_of_residuals_ofKRS_phig`.
 
 **The goal requires the smooth one.** Roadmap §2 leg 2 is a hard constraint: at `k = 0` the honest
 group is topological Pin⁺ bordism `≅ ℤ/2 ⊕ ℤ/8`, the wrong group; the `IsManifold` binder at `k = 0`
