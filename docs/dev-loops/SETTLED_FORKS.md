@@ -992,3 +992,36 @@ search for the bridge (`lean_local_search` on the map/iso name), not just the tw
   extraction is EQUIVALENT to gluing, so no shortcut exists) and task **#312**.
 - `memory`: `[[project_5qH_nonhausdorff_substrate_bug]]`
 - `created_ts`: 2026-07-27
+
+## `arc-b-glueBor-needs-end-reparametrisation-too` (2026-07-27, arm: close-out — wt2)
+- `kind`: interface-gap record (prose — a missing field, not a false statement; NOT registry-eligible).
+- **The finding.** Arc B of bordism gluing (transporting the tethered `ξ.Bor` across a weld) was
+  believed to need one new `TangentialData` field, `glueBor`. It needs **two**, and this is visible
+  already at the EMPTY seam, which had been expected free: `addBor` yields
+  `Bor (b₁.add b₂) (sumStr σ emptyStr) (sumStr emptyStr τ)` — endpoints `p.sum emptySM` and
+  `emptySM.sum r`, **not** `p` and `r`. Closing that needs `Bor` transported along the **unitor
+  diffeomorphism of the ENDS**, and `TangentialData` has **no boundary-reparametrisation field**
+  either. So the arc-B debt is `glueBor` **plus** an end-reparametrisation transport.
+- `consequence`: both are breaking changes to every `TangentialData` instance in tree. **Not
+  authorized**; surface before any attempt. Arc B remains gated on arc A regardless.
+- `related`: `KERNEL_NOGO_REGISTRY['hker-single-witness-extraction-is-equivalent-to-gluing']`;
+  `do-not-redefine-bordism-on-collared-representatives`; task **#312**.
+- `created_ts`: 2026-07-27
+
+## `surgery-trace-is-not-a-seamglue-composition` (2026-07-27, arm: close-out — wt2, LEAD ERROR)
+- `kind`: scope correction (prose). ⚠ **This corrects a target I set.**
+- **What I got wrong.** I briefed the surgery trace as target #2 for `SeamGlueChart` inhabitation,
+  calling it "the closest thing in tree to a collar and why I picked this route". The collar-MODEL
+  half of that was right; the CARRIER half was wrong. `HandleAttachment`
+  (`SingularSurgeryFoundation.lean:211–223`) welds along `S : Set Ha` — the closed attaching region
+  `Sʳ × D^{n−r}`, a **proper subset** of the handle — whereas `glueCarrier b₁ b₂` welds along an
+  **entire boundary component** (all of `q.M`). Lead-verified: I read the structure myself.
+- **Consequence:** the surgery trace is **not a composition of two bordisms** and cannot be typed as
+  `SeamGlueChart b₁ b₂` at all — it is not blocked by any field, it is outside the structure's domain.
+  Typing it needs a different pushout notion. Do not re-dispatch it as a `SeamGlueChart` family.
+- **Also corrected:** target #3 (`S²×D³`) is *partially covered already* — as a coboundary its other
+  end is `∅`, so composing it IS the empty-seam family, which is now discharged. Only gluing it along
+  the full `S²×S²` boundary is the collar case.
+- `lesson`: "closest thing in tree to X" is a claim about a MODEL; before making it a build target,
+  check the CARRIER the target structure actually quantifies over.
+- `created_ts`: 2026-07-27
