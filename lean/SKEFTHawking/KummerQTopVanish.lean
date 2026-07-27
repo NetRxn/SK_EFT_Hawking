@@ -17,12 +17,11 @@ quotient tower. Instead the input comes from **above**, through the weld that is
 (`KummerWeld` compactness + `KummerK3Manifold.isManifold_R4_kummerK3`, on the `𝓡 4` model via the
 flat-model transport). Two independent facts follow:
 
-1. **§1 — the whole-manifold good-compact stage.** The Poincaré-duality tower's Hatcher-3.27
-   cofinality `SingularCSCVanishAboveGeomInt.vanishAbove_cofinalInt` (whose ball-freeness input is
-   the *theorem* `hballFreeInt_dim4` in dimension 4) applied with `W = K = univ` forces its compact
-   `K'` to be all of `K3`; since `univᶜ = ∅` and `Hᵢ(M | ∅) ≅ Hᵢ(M;ℤ)` (`relHomologyEmptyEquivInt`)
-   this reads off as `Hₚ(K3;ℤ) = 0` for `p ≥ 5` **and** `H₄(K3;ℤ)` free. Both are independent of
-   `orientInput` — only the smooth 4-manifold structure is used, no orientation, no duality.
+1. **§1 — the whole-manifold good-compact stage.** `SingularCompactManifoldTopVanishInt` (the
+   ambient-generic "closed `n`-manifolds are homologically `n`-dimensional" module extracted from
+   this argument) gives `Hₚ(K3;ℤ) = 0` for `p ≥ 5` **and** `H₄(K3;ℤ)` free, off nothing but the
+   charted structure — no orientation, no duality, hence no circularity with `orientInput`. The
+   only local work is supplying the `𝓡 4` charted instance by the flat-model transport.
 2. **§2–§3 — descend along the banked K7 Mayer–Vietoris.** `KummerK7MVAssembly` already has the
    unconditional collar-thickened cover (`k7_hcov`), the piece models
    (`qThickHnEquivInt : Hₙ₊₁(qThick) ≅ Hₙ₊₁(Q)`, `eImageHnEquivInt`, `interHnEquivInt`) and the
@@ -75,19 +74,12 @@ axiom.
 import Mathlib
 import SKEFTHawking.KummerK3Manifold
 import SKEFTHawking.KummerK7MVAssembly
-import SKEFTHawking.SingularCSCVanishAboveGeomInt
-import SKEFTHawking.SingularRelativeEmptyInt
+import SKEFTHawking.SingularCompactManifoldTopVanishInt
 import SKEFTHawking.KummerPunctureTopVanish
 
 namespace SKEFTHawking.KummerQTopVanish
 
 open SKEFTHawking.SingularHomologyInt (Homology)
-open SKEFTHawking.SingularRelHomologyInt (RelHomologyInt)
-open SKEFTHawking.SingularGoodCompactInt (vanishAboveInt)
-open SKEFTHawking.SingularCompactsInOpen (CompactsIn)
-open SKEFTHawking.SingularTopHomologyFreeUnionInt (HballFreeInt hballFreeInt_dim4)
-open SKEFTHawking.SingularCSCVanishAboveGeomInt (vanishAbove_cofinalInt)
-open SKEFTHawking.SingularRelativeEmptyInt (relHomologyEmptyEquivInt)
 open SKEFTHawking.KummerWeld (KummerK3)
 open SKEFTHawking.KummerK7Opener (KummerK3top)
 
@@ -107,20 +99,8 @@ theorem k3_univ_stage :
   letI : ChartedSpace (EuclideanSpace ℝ (Fin 4)) KummerK3 :=
     SKEFTHawking.ManifoldModelTransport.transportedChartedSpace
       (SKEFTHawking.ManifoldModelTransport.prodRealEquivEuclidean 3) KummerK3
-  have hball : HballFreeInt 2 KummerK3 := hballFreeInt_dim4
-  obtain ⟨K', hKK', hvan, hfree⟩ :=
-    vanishAbove_cofinalInt (m := 2) (M := KummerK3) hball (W := (Set.univ : Set KummerK3))
-      isOpen_univ ⟨⟨Set.univ, isCompact_univ⟩, le_rfl⟩
-  have hu : (↑K'.1 : Set KummerK3) = Set.univ := Set.univ_subset_iff.mp hKK'
-  rw [hu] at hvan hfree
-  rw [Set.compl_univ] at hfree
-  refine ⟨fun i hi x => ?_, ?_⟩
-  · refine (relHomologyEmptyEquivInt (X := KummerK3top) i).symm.injective ?_
-    rw [map_zero]
-    have hy := hvan i (by omega)
-    rw [Set.compl_univ] at hy
-    exact hy _
-  · exact Module.Free.of_equiv (relHomologyEmptyEquivInt (X := KummerK3top) 4)
+  exact ⟨fun i hi x => SingularCompactManifoldTopVanishInt.homology_high_dim4 i hi x,
+    SingularCompactManifoldTopVanishInt.top_homology_free_dim4⟩
 
 /-- **`Hₚ(K3;ℤ) = 0` for every `p ≥ 5`** — the welded Kummer `K3` is homologically 4-dimensional.
 Unconditional, and independent of `orientInput` (it uses only the smooth 4-manifold structure). -/
