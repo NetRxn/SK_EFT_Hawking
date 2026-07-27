@@ -62,10 +62,24 @@ interior to both, and the correction chain `u` lives in the overlap `A ∩ B` an
 Nothing here consumes or produces a `seamCore`, a `CapstoneSeamTransfer`, or a shared-`cCore`
 co-adaptation.
 
+**Refutation witness for the headline** (`exists_excisionMap_add_of_overlap_relAcyclic`). Drop the
+cover hypothesis `hcov` and the statement becomes *false*, so it is not provable from its other
+hypotheses: take `A = B = ∅` and `S = ∅` on `X = S^{m+2}`. Then `A ∩ B = ∅` and
+`subspaceChains ∅ = ⊥`, so `hacyc` holds vacuously (`t = 0 = ∂0 + 0`), while the conclusion would
+force every class of `Hₘ₊₂(X, ∅) = Hₘ₊₂(X) ≠ 0` to be a sum of images of `Hₘ₊₂(∅, ∅) = 0`. So
+`hcov` is load-bearing and the theorem carries genuine geometric content.
+
 **Scope honesty.** What is *not* proved here: that `δ` is a well-defined linear map independent of
 the subdivision depth and of the splitting choices, and hence the reverse inclusion
 `im(sum) ⊆ ker δ` and the remaining two exactness statements of the long exact sequence. §4 gives
 existence of the datum; uniqueness-up-to-relative-boundary is the next layer.
+
+A consequence of that gap worth stating explicitly, so no downstream reader over-reads §5: because
+§4's datum is *existential*, "the datum of `z` bounds" is not yet a well-defined property of `z`
+(for a `z` that already decomposes, the datum `t = 0` bounds trivially). §5 must therefore be read
+as *"if the supplied datum bounds, then `z` decomposes"* — an implication about a given datum, not
+about `z`. `exists_excisionMap_add_of_overlap_relAcyclic` is unaffected and airtight: its `hacyc`
+hypothesis is universally quantified over `t`, so it applies to whichever datum §4 hands back.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`, no new axiom, no
 `native_decide`, no `maxHeartbeats`.
