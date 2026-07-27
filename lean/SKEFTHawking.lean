@@ -4826,6 +4826,7 @@ import SKEFTHawking.KummerPunctureH3Saturation
 import SKEFTHawking.SingularMayerVietorisRedCompatInt
 import SKEFTHawking.KummerPunctureH3Mod2
 import SKEFTHawking.KummerK3H1Vanish
+import SKEFTHawking.KummerK3H1SeamLattice
 import SKEFTHawking.IntPoincareDualityCapOnly
 import SKEFTHawking.Carrollian.Structure
 import SKEFTHawking.Carrollian.WittAlgebra
