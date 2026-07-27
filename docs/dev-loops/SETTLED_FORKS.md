@@ -865,3 +865,43 @@ different sets, correct) and then asserted the *consequence* (therefore an open 
 checking for a bridge. That is the `feedback_no_grep_scoped_directionshift_claims` failure mode one
 level up: checking a definition is not checking the consumers. Before writing "X is not in tree",
 search for the bridge (`lean_local_search` on the map/iso name), not just the two objects.
+
+## `kummer-h3-even-descent-is-non-reducing-and-likely-false` (2026-07-27, arm: orientInput)
+- `kind`: route ban — **two independent reasons**, one unconditional and one conditional.
+- `banned`: consuming the EVEN descent form `(ED) : im p_* ⊆ 2·im qSeamCoord3` as an input to
+  `orientInput`. Do NOT dispatch "prove even descent".
+- **REASON 1 (unconditional, and the decisive one): it is NON-REDUCING.**
+  `KummerQuotientH3EvenDescent.evenTwoSaturated_iff_surjective` — modulo 2-torsion-freeness of
+  `H₃(Q;ℤ)`, the even-saturation the criterion actually consumes is **equivalent to
+  `Function.Surjective qSeamCoord3`**, i.e. to its own conclusion. Same shape as fork 32
+  (`hker-opener-supplyGeo-is-non-reducing`): supplying the input is exactly as hard as assuming the
+  target. Lead-verified by reading the proof (a clean two-way argument on the 2-torsion hypothesis).
+  `evenDescent_iff_surjective_and_rangeTwoDivisible` locates the split: (ED) = the conclusion
+  (surjectivity) **plus** pure excess (`im p_* ⊆ 2·H₃(Q;ℤ)`).
+- **REASON 2 (CONDITIONAL — this is why the entry is prose, not `KERNEL_NOGO_REGISTRY`): (ED) is
+  expected FALSE.** `not_evenDescent_of_seamNormOddity` refutes it from two named Props,
+  `SeamKernelEvenlyConstant` (implied by the tree's own already-open "im ∂₃ is the diagonal
+  ℤ ⊆ ℤ¹⁶", `KummerPunctureH3.lean:89-96`) and `SeamNormOddity` (the slab fact — only its parity
+  half is new; the containment half is banked as `NormLandsInSeam`). The informal driver: the
+  boundary-`S³`↦twice-`ℝP³` fact controls only the **boundary-generated** sublattice of
+  `H₃(T⁴°;ℤ) ≅ ℤ¹⁹ = ℤ¹⁵(boundary) ⊕ ℤ⁴(bulk)`; the bulk 3-subtori give `p_*[T³] =` a sum over an
+  **8-element** subset of seam classes, a 0/1 vector that is neither `0` nor `𝟙` mod 2. Index check:
+  `[H₃(Q) : 2·H₃(Q)] = 2¹⁵` but `[H₃(Q) : im p_*] = 2¹¹`, so `im p_* ⊋ 2·H₃(Q)` outright.
+  ⚠ **Constructing `SeamNormOddity` would promote this to `KERNEL_NOGO_REGISTRY`** (Inv #17); until
+  then the refutation is conditional and stays here.
+- `scope / what survives`: the **WEAK** form `im p_* ⊆ im qSeamCoord3`
+  (`KummerK3H3SeamWindow.twoTorsionFree_iff_qSeamCoord3_surjective_of_descent`) is UNAFFECTED and is
+  the form to consume — it is satisfied by exactly the eight-fold seam sums that kill (ED). Nothing
+  about `H₃(K3;ℤ) = 0` is lost by dropping (ED).
+- `side-effects banked`: **`H₃(Q;ℤ) ≅ ℤ¹⁵` is free**, so the parallel 2-torsion-freeness target is
+  true and untouched; and the boundary-`S³` lattice of `T⁴°` is **exactly**
+  `ker (H₃(T⁴°;ℤ) → H₃(T⁴;ℤ))` with free `ℤ⁴` quotient (`ptSeam3`,
+  `range_ptSeam3_eq_ker_mapInt_inclXC`, `punctureH3ModSeamEquivFin4`, `not_surjective_ptSeam3`) —
+  the kernel-checked localization of the overreach.
+- ⚠ **CONSUMER DEBT (lead, open):** `KummerQuotientTransferSequence.lean:236` and `:247`
+  (`h3K3_eq_zero_of_top_vanishing_of_evenDescent`,
+  `nonempty_intOrientation_of_top_vanishing_of_evenDescent`) take (ED) as a hypothesis and are
+  therefore conditioned on something expected false — not unsound, but useless as written. They need
+  weak-form twins. Do not delete them; ADD the twins (remediate by building, not by walking back).
+- `memory`: `[[project_5qH_nonhausdorff_substrate_bug]]`
+- `created_ts`: 2026-07-27

@@ -14,16 +14,38 @@ binary-partition route (`capstone-binary-partition-detection-uninhabitable`, SET
 2026-07-16) failed because it demanded per-piece detection at the *frontier* of a closed piece,
 where the piece's boundary-face local homology vanishes.
 
-**Why per-piece pair classes cannot carry the glue (the honest sharpening).** Any route of the
-shape "sum of `excisionMap`-pushforwards of per-piece classes `α_P ∈ Hₙ(P, S∩P)`" is structurally
-empty on a CONNECTED `W`: for a *proper closed* piece `P ⊊ W` the pair `(P, S∩P)` takes the top
-relative homology of a compact manifold-with-boundary relative to a **proper part** of its
-boundary (the seam face is missing), which vanishes; for an *open* piece `P`, singular chains have
-compact image, so no class of `(P, S∩P)` can restrict to the local generator at every point of the
-noncompact `P`. Either way the summand is `0` or fails detection — for EVERY class. The gluing
-must instead happen where Mayer–Vietoris actually lives: at the **chain level**, where the two
-piece-chains carry boundary terms on the seam that are *not* in `S` individually but **cancel
-mod 2 in the sum** (the MV connecting-map bookkeeping — "the two classes agree on the overlap").
+**Why per-piece pair classes cannot carry the glue — ⚠ CORRECTED 2026-07-27, THE OPEN HALF OF THIS
+CLAIM WAS WRONG.**
+
+*The closed half stands.* For a *proper closed* piece `P ⊊ W` the pair `(P, S∩P)` takes the top
+relative homology of a compact manifold-with-boundary relative to a **proper part** of its boundary
+(the seam face is missing), which vanishes. That is the content kernel-encoded as
+`capstone-binary-partition-detection-uninhabitable` (`KERNEL_NOGO_REGISTRY`, promoted 2026-07-27),
+backed by `PinPlusTraceCapstoneCollarPairSeamLocalHom.not_restrictsToRelGenOn_cylRange_at_seamCore`.
+
+*The open half was an OVERREACH and is retracted.* The former text argued: "for an *open* piece `P`,
+singular chains have compact image, so no class of `(P, S∩P)` can restrict to the local generator at
+every point of the noncompact `P`. Either way the summand is `0` or fails detection — **for EVERY
+class**." The premise is true; **the conclusion does not follow**, and the route it declared
+structurally empty is now BUILT:
+`SingularRelativeCoverMVSumExact.exists_excisionMap_add_of_overlap_relAcyclic` proves exactly
+`relClassOf S m z hz = excisionMap S A α + excisionMap S B β` under an honest open cover
+(`⋃ interior = univ`) plus a relatively-acyclic overlap — kernel-pure, zero hypotheses beyond those.
+
+**Where the old argument goes wrong** (lead-verified, 2026-07-27): the open route never asks `α_A` to
+detect at *every* point of `A`. In the glued sum the `B`-term dies on `A ∖ B`, so `α_A` only has to
+detect there — and `A ∖ B` is closed in a **compact** `W`, hence compact, which a compact-support
+chain handles fine. "No single class detects everywhere on a noncompact piece" and "the decomposition
+is empty" are different statements; the former does not imply the latter.
+
+⚙ **Process note, recorded because it cost a route.** This clause read as a settled structural
+impossibility and would have deterred the very construction the `SETTLED_FORKS` entry named as *the
+live route*. A claim of the form "for EVERY class" is a no-go-strength assertion and belongs in
+`KERNEL_NOGO_REGISTRY` with a backing theorem, or it should be written with the hedging its evidence
+supports — not asserted in a module header where it silently fences future work.
+
+The chain-level gluing described below remains correct and useful; it is simply not the *only*
+route.
 
 **The glue datum (`RelCoverGlueData`).** Two closed cores `CA ∪ CB = W` and two chains `cA`
 (supported in `CA`), `cB` (supported in `CB`) with `∂(cA + cB) ∈ C(S)` — the seam-cancellation.
