@@ -4834,6 +4834,10 @@ import SKEFTHawking.KummerK3H1SeamLattice
 import SKEFTHawking.KummerK3SeamWindingParity
 import SKEFTHawking.KummerQuotientH3Descent
 import SKEFTHawking.IntPoincareDualityCapOnly
+import SKEFTHawking.IntPoincareDualityDetCriterion
+import SKEFTHawking.IntPoincareDualityWitnesses
+import SKEFTHawking.KummerK3PoincareDuality
+import SKEFTHawking.K3RealizingElementFromGram
 import SKEFTHawking.Carrollian.Structure
 import SKEFTHawking.Carrollian.WittAlgebra
 import SKEFTHawking.Carrollian.BMSAlgebra
