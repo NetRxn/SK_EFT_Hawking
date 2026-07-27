@@ -4472,6 +4472,11 @@ import SKEFTHawking.OddIndefiniteUnitVector
 -- configuration (intCongr_I18_oneNegE8), and <1> (+) H ~= <1> (+) <1> (+) <-1> (intCongr_oneHyp_I21).
 -- Both explicit, kernel `decide`, no classification input and no native_decide. (wt1-built.)
 import SKEFTHawking.OddFormE8Absorption
+-- K8b interior, leaf 3: the UNIT-VECTOR SPLIT ENGINE -- the rank-1 analogue of SplitHyperbolic.
+-- From x with x . M x = eps (eps = +-1), M ~= <eps> (+) M' with M' symmetric unimodular of rank
+-- n-1 and sigma(M') = sigma(M) - eps. Mirrors hypPerp / hypPerpBasis / hypFullBasis / residGram /
+-- gramB_eq / latticeSig_split one rank down. Unconditional. (wt1-built.)
+import SKEFTHawking.UnitVectorSplit
 import SKEFTHawking.RP4Manifold
 import SKEFTHawking.RP2PointSet
 import SKEFTHawking.RP2Manifold
