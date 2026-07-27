@@ -4850,6 +4850,11 @@ import SKEFTHawking.SingularSubVanishMV
 import SKEFTHawking.KummerTorusHighVanish
 import SKEFTHawking.KummerPuncturedTorusHighVanish
 import SKEFTHawking.KummerPunctureTopVanish
+-- Phase 5q.H — THE Q-SIDE top-degree vanishing `Hₚ(Q;ℤ) = 0` for `p ≥ 4`, through the welded
+-- `K3` (compact smooth 4-manifold ⇒ the Hatcher-3.27 good-compact stage at `K = univ`) plus the
+-- banked K7 Mayer–Vietoris. Discharges the `H₅(Q;ℤ) = 0` residual, hence `transferH 3` injective
+-- and `H₃(Q;ℤ)` 2-torsion-free, unconditionally.
+import SKEFTHawking.KummerQTopVanish
 import SKEFTHawking.IntPoincareDualityCapOnly
 import SKEFTHawking.IntPoincareDualityDetCriterion
 import SKEFTHawking.IntPoincareDualityWitnesses
