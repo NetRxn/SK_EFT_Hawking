@@ -46,14 +46,27 @@ in the whole degree-3 window still uncomputed are `H₃(Q;ℤ)` and `H₄(K3;ℤ
 
 ## ⛔ What this module deliberately does NOT do — the free-quotient descent trap
 
-`KummerPunctureH3Mod2.thickA_H3_twoTorsionFree` is UNCONDITIONAL: `H₃(T⁴°;ℤ)` has no 2-torsion. It
-does **not** transport to `Q`. `T⁴° → Q` is a *free* `ℤ/2` quotient, and free `ℤ/2` quotients
-**create** 2-torsion (`H₁(S³) = 0` but `H₁(ℝP³) = ℤ/2` — the in-tree `KummerRP3SmithSES` /
-`KummerRP3HomologyUnconditional` computation of exactly that). Any argument of the shape
-"`T⁴°` has no 2-torsion, hence `Q` has none" is FALSE, and no theorem here asserts it. §5 records the
-one thing the covering *does* give unconditionally — that the descent defect is 2-torsion, via
-`p_# ∘ tr = 2` (`KummerQuotientTransferInt.mapChainInt_transferChainInt`) — which is a statement
+`KummerPunctureH3Mod2.thickA_H3_twoTorsionFree` is UNCONDITIONAL: `H₃(thickA;ℤ)` has no 2-torsion. It
+does **not** reach the `Q` side, for two independent reasons — the second fatal:
+
+1. **Carrier**: `thickA = (⋃ halfBall c)ᶜ` (`KummerPunctureBalls`) is not the carrier the free-quotient
+   machinery runs on — that is `puncturedTorus = (⋃ chartBall c)ᶜ` (`KummerPuncturedTorus`, the
+   full-radius complement, `PTtop`). Distinct sets; this module asserts no identification of them.
+2. **Descent**: even granting the carrier, `T⁴° → Q` is a *free* `ℤ/2` quotient, and free `ℤ/2`
+   quotients **create** 2-torsion (`H₁(S³;ℤ) = 0` but `H₁(ℝP³;ℤ) = ℤ/2` — the in-tree
+   `KummerRP3SmithSES` / `KummerRP3HomologyUnconditional` computation of exactly that). Any argument
+   of the shape "`T⁴°` has no 2-torsion, hence `Q` has none" is FALSE, and no theorem here asserts it.
+
+§5 records the one thing the covering *does* give unconditionally — the descent defect is 2-torsion,
+via `p_# ∘ tr = 2` (`KummerQuotientTransferInt.mapChainInt_transferChainInt`) — which is a statement
 about `im p_*`, not about torsion-freeness of `H₃(Q;ℤ)`.
+
+Also settled against (route caution, not encoded as a no-go): the degree-3 mirror of the
+`KummerQuotientH2Solve` Smith walk. That walk got `projH 2` surjective from `inclBH_one_injective`,
+whose engine is `1 − τ_*` injective on `H₁(T⁴°)` — available because `τ` acts by `−1` on `H₁(T⁴)`.
+One degree up `τ` acts by `+1` on `H₂(T⁴)`, so `inclBH 2` is not injective, `deltaIII 2` need not
+vanish, and `projH 3` is NOT surjective (consistent with §5: `im p_*` contains only the *doubled*
+seam classes).
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom.
 -/
@@ -312,12 +325,15 @@ theorem exact_k7Sum4_k7Delta3Coord :
 
 /-! ## §5. The free-quotient descent: what the covering DOES give (and what it does NOT)
 
-`H₃(qThick;ℤ) ≅ H₃(Q;ℤ)` and `Q = T⁴°/τ` is a **free** `ℤ/2` quotient of the punctured torus, whose
-`H₃(·;ℤ)` is 2-torsion-free UNCONDITIONALLY (`KummerPunctureH3Mod2.thickA_H3_twoTorsionFree`). That
-does **not** descend: free `ℤ/2` quotients create 2-torsion (`H₁(S³;ℤ) = 0`, `H₁(ℝP³;ℤ) = ℤ/2` — the
-in-tree `KummerRP3HomologyUnconditional` computation). The covering's honest unconditional content in
-every degree is the transfer identity below: the *descent defect* `H_n(Q;ℤ)/im p_*` is killed by 2 —
-a statement about the image of `p_*`, NOT about torsion in `H_n(Q;ℤ)`.
+`H₃(qThick;ℤ) ≅ H₃(Q;ℤ)` (`qThickHnEquivInt 2`) and `Q = FreeQuotient` is the **free** `ℤ/2` quotient
+of `PTtop = puncturedTorus`. 2-torsion-freeness does NOT descend along such a quotient (`H₁(S³;ℤ) = 0`
+but `H₁(ℝP³;ℤ) = ℤ/2` — the in-tree `KummerRP3HomologyUnconditional` computation of exactly that), so
+the banked `KummerPunctureH3Mod2.thickA_H3_twoTorsionFree` gives nothing on the `Q` side; see the
+module header's ⛔ section for the two independent gaps.
+
+The covering's honest unconditional content in every degree is the transfer identity below: the
+*descent defect* `Hₙ(Q;ℤ)/im p_*` is killed by 2 — a statement about the **image** of `p_*`, NOT about
+torsion inside `Hₙ(Q;ℤ)`.
 -/
 
 section Descent
