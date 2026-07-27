@@ -4856,6 +4856,13 @@ import SKEFTHawking.Carrollian.Structure
 import SKEFTHawking.Carrollian.WittAlgebra
 import SKEFTHawking.Carrollian.BMSAlgebra
 import SKEFTHawking.Carrollian.VirasoroExtension
+-- bordism GLUING: the `hker` single-witness extraction reduced to the collar-neighbourhood
+-- content (refl/symm of the refined relation; `GluesT2` ⟺ single-witness; the seam pushout with
+-- its compact/T2/end-map/`X`-map fields; `SeamGlueChart` = the exact residue)
+import SKEFTHawking.T2BordismGluing
+-- the lane instantiation: gluing ⟹ a single tethered null-bordism witness per `ker Φ` element
+-- (⛔ NOT routed into `KTSharpnessSupplyGeo` — see that module's SCOPE FENCE)
+import SKEFTHawking.PinPlusHkerSingleWitness
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
