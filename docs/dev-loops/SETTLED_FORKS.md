@@ -905,3 +905,41 @@ search for the bridge (`lean_local_search` on the map/iso name), not just the tw
   weak-form twins. Do not delete them; ADD the twins (remediate by building, not by walking back).
 - `memory`: `[[project_5qH_nonhausdorff_substrate_bug]]`
 - `created_ts`: 2026-07-27
+
+## `k3-orientation-needs-an-integral-geometric-input-not-mod-2` (2026-07-27, arm: close-out — wt1 round 2)
+- `kind`: route ban (prose — a structural observation about proof strategies, NOT a false in-Lean
+  statement, hence NOT `KERNEL_NOGO_REGISTRY`-eligible).
+- `banned`: attempting to close `H₄(K3;ℤ) ≠ 0` — equivalently `Nonempty (IntOrientation KummerK3)`,
+  equivalently `ker qSeamCoord3 ≠ ⊥` — by any purely **mod-2 / algebraic** argument in the degree-4
+  window. **A closed NON-ORIENTABLE 4-manifold satisfies every mod-2 constraint available there**, so
+  no amount of ℤ/2 bookkeeping can separate the orientable case. A **geometric integral input is
+  structurally required**, and the cheapest one in tree is T⁴-orientability
+  (`det(τ = −id) = +1` in even dimension ⟹ `Q = T⁴°/τ` orientable).
+- `status of the lane`: `orientInput` is **REPLACED, NOT DISCHARGED**, and the replacement is
+  **lossless** — `nonempty_intOrientation_iff_ker_ne_bot : Nonempty (IntOrientation KummerK3) ↔
+  LinearMap.ker qSeamCoord3 ≠ ⊥` is a genuine `↔` (lead-verified: no hypotheses in the statement),
+  because both side conditions of the ambient-generic criterion
+  `nonempty_intOrientation_iff_nontrivial_h4` are unconditional in tree (`k3_h4_free`,
+  `instPreconnectedKummerK3`). The residual moved from a **2-saturation** statement to a single
+  **existential**: one nonzero `v ∈ ℤ¹⁶` with `qSeamCoord3 v = 0`.
+- `what is proved unconditionally` (the exact mirror, on the double cover):
+  `KummerPunctureSeamRelation.exists_nonzero_seam_relation : ∃ v : EIndex → ℤ, v ≠ 0 ∧
+  thickSeamCoord3 v = 0` and `ker_thickSeamCoord3_ne_bot` — the sixteen boundary `S³` classes of
+  `T⁴°` ARE ℤ-linearly dependent. Lead-verified kernel-pure and binder-free.
+- ⚠ **THE ONE REMAINING SPAN — a transport, not a computation.** Intertwine
+  `KummerPunctureH3.interH3EquivEIndex` (T⁴° side) with `KummerK7MVAssembly.interH3EquivInt` (K3
+  side) across the free ℤ/2 covering `T⁴° → Q`. The geometry already lines up numerically
+  (`excisionRadius = 1/2`; `chartSphere c = centeredChartParam c '' {sqNorm = 1/4}`; `ann4 =
+  {1/16 ≤ sqNorm ≤ 1/4}` retracts to `sphHalf = {‖w‖ = 1/2}`, so `chartSphere c` **is** the outer
+  face of `annPiece c`) — **but no Lean lemma states it**, and `KummerQuotientTransferInt`'s
+  `transferChainInt` has **no naturality lemma for inclusions of subspaces**. That is the whole span.
+  The degree-2 defect is NOT an obstacle: once transport exists, `2 • qSeamCoord3 v = 0` upgrades to
+  `qSeamCoord3 v = 0` for free via the banked unconditional `h3Q_twoTorsionFree`.
+- ⚠ **Retraction of an earlier claim (wt1's own, and I had propagated it):** "mod-2 top-homology
+  uniqueness `H₄(M;ℤ/2) ≅ ℤ/2` is NOT in tree" was **WRONG**. It IS in tree —
+  `SingularFundamentalClassExist.localDegree_bijective` + `homologyTopEquivZMod2` (a different file
+  from the `SingularFundamentalClass.lean` that was checked). No new span was needed; only the
+  `PreconnectedSpace` instance, which wt1 then built. *Lesson: a "not in tree" verdict from one file
+  is not a verdict about the tree — search by declaration, not by filename.*
+- `memory`: `[[project_5qH_nonhausdorff_substrate_bug]]`
+- `created_ts`: 2026-07-27
