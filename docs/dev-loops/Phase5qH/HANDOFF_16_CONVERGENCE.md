@@ -246,6 +246,33 @@ duality on an actual manifold), **plus the `w₁`-duality tie**; then the smooth
 that is kernel-checked, not opinion. Also **not** the σ/Novikov tower, which is kernel-settled
 ORPHANED (`sigma-tower-ORPHANED-not-on-16-convergence-critical-path`; do not revive it).
 
+**STATUS 2026-07-27 (lead, `c1142672`) — half of that route is BUILT.**
+`PinPlusKTDualSpinDerived.DualSpinDerivedFromW` is the derived-lattice interface: `Vspace` now carries
+the full closed-4-manifold instance block (`T2` / `CompactSpace` / `Nonempty` / `ChartedSpace
+(EuclideanSpace ℝ (Fin 4))`), and `rank` / `form` are **computed** as `interMatrix` of `V`'s own `H²`
+basis against its own fundamental class, not supplied. Kernel-checked consequences:
+
+* `abs_sig_le_two_mul_rank` : `|σ(M)| ≤ 2·b₂(V)` (Sylvester). No statement of this shape exists for
+  `DualSpinFromW`, whose `Vspin.rank` is free.
+* `derived_excludes_fork31_witness_class` : at `σ = 32m`, `m ≠ 0`, the refuted interface **is**
+  inhabited (banked) while **no** derived datum has a trivial-`H²` carrier — the exact witness class
+  behind fork 31 is excluded.
+* `rank_ge_sixteen_at_sig_neg_thirtytwo` : at the forced kernel element `2[g]` (`σ = −32`), a derived
+  datum needs `b₂(V) ≥ 16` — K3-strength, `norm_num`-backed.
+* `toDualSpinFromW` : total forward compatibility, so every existing consumer is unchanged.
+
+⚠ **This does NOT discharge `hker`, and the module says so.** The remaining half is the **`w₁`-duality
+tie**: the only `V`–`W` relation is still `hclosed : IsClosedEmbedding ιV`, which constrains `V`
+inside `W` but does not say *which class* `V` represents — so a putative inhabiter could in principle
+supply a free-floating spin 4-manifold of signature `σ(M)/2` and never use `W`'s geometry. **That
+sketch is a prose ROUTE CAUTION, not a kernel-checked no-go** — proving it needs a realization
+construction (a closed 4-manifold with an `IntPoincareDuality` datum of every signature in `16ℤ`)
+this project does not have, so per Invariant #17 it stays out of `KERNEL_NOGO_REGISTRY`. Do not cite
+it as settled. **The next brick is the `w₁`-duality field, stated as an actual cohomological identity
+on `W` (`[V]` PD to `w₁(W)`) — never as a bare `Prop`**, which would reintroduce exactly the free
+field the derived interface was built to eliminate. In-tree substrate: the relative Lefschetz–Wu /
+`[W,∂W]` tower already used by the capstone lane.
+
 **F · `hΦg`** — `spinForgetPhi[g] = k₀`. Not independent: derived from `hker` + `hcyc` + `h2` once
 `row` exists (`spinForgetPhi_g_eq_ktKernelRep_of_cyclic`). `hcyc`/`h2` were shown non-independent —
 h2 outright-discharge IS the ÷32 conclusion (circular), and the ℤ/8 quotient does not force
