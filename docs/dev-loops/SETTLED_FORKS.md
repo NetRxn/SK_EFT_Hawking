@@ -805,3 +805,37 @@ computed in-tree, which has not been done. Nothing here is a refuted Prop, so th
   missing `w₁` tie), and that openness is deliberately NOT encoded as a no-go — proving it would
   need a realization construction (a closed 4-manifold with an `IntPoincareDuality` datum of every
   signature in `16ℤ`) the project does not have. Prose only; not `KERNEL_NOGO_REGISTRY` (Inv #17).
+
+## `kummer-degree-3-smith-walk-parity-flip` (route caution — LEAD-VERIFIED in the Lean, 2026-07-27)
+
+**Do NOT attempt the degree-3 analogue of the Smith walk that produced `H₂(Q;ℤ) ≅ ℤ⁶`.** It is not
+merely unbuilt; the engine's key hypothesis is FALSE one degree up.
+
+- The degree-1/2 walk (`KummerQuotientH2Solve`) runs `inclBH_one_injective` (:102) → `deltaIII 1 = 0`
+  (:114) → `projH 2` surjective (:121). Its engine is `X_H1_fixed_eq_zero`: on `H₁(T⁴°;ℤ)` a
+  `τ`-FIXED class is zero — i.e. `τ_* = −1`.
+- One degree up the parity flips: `τ(x) = −x` on `T⁴` gives `τ_* = (−1)² = +1` on `H₂`. The tree
+  encodes exactly this asymmetry — the degree-2 lemma is `X_H2_anti_eq_zero` (ANTI-fixed ⟹ zero,
+  used by `projH_two_injective` :127), and there is **no** `X_H2_fixed_eq_zero`, because on `H₂`
+  every class is fixed. **Lead-verified by reading both proofs, not by grep.**
+- Consequence: `inclBH 2` is not injective by that route, `deltaIII 2` need not vanish, and
+  **`projH 3` is not surjective**. Consistent with `two_smul_mem_range_mapInt_qmkC`
+  (`KummerK3H3SeamWindow.lean:382`), which gives only `2·Hₙ₊₁(Q;ℤ) ⊆ im p_*` — the doubled classes.
+- ⚠ Prose only, NOT `KERNEL_NOGO_REGISTRY`: what is verified is that *this engine* does not lift, not
+  that `projH 3` is provably non-surjective as a kernel-checked false statement (Inv #17). Do not
+  cite it as a kernel no-go. The wt2 round aborted this route before building on it.
+
+## `thickA-is-not-puncturedTorus` (carrier fact — LEAD-VERIFIED, 2026-07-27)
+
+`thickA` and `puncturedTorus` are **different carriers**, and a prior revision of
+`HANDOFF_16_CONVERGENCE.md` conflated them (corrected same day). Verified in the tree:
+- `thickA = (⋃ c ∈ fixedSet, halfBall c)ᶜ` — `KummerPunctureBalls.lean:244`, HALF-radius balls
+  (`halfBall c = centeredChartParam c '' halfD4o`, :121).
+- `puncturedTorus = excisedBallsᶜ` — `KummerPuncturedTorus.lean:432`, FULL-radius balls
+  (`chartBall c = centeredChartParam c '' {t | sqNorm t < excisionRadius ^ 2}`, :420).
+
+So `KummerPunctureH3Mod2.thickA_H3_twoTorsionFree` is a statement about `thickA`, **not** about
+`PTtop`. Any plan that treats it as "H₃ of the punctured torus" is off by one carrier: the route to
+the Q side has **TWO** gaps (`thickA → PTtop`, then `PTtop → Q`), plus the weld MV. They are very
+plausibly homotopy equivalent, but that equivalence is NOT in tree — build it or route around it,
+do not assume it.

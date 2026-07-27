@@ -175,20 +175,49 @@ construction against the open-support transfer shape (fork
   spin/`StrMfd` packaging. Each is a homology computation with a known classical answer.
 
   **State of the triple after the 2026-07-27 three-slot fan-out (`6a2cf2e2` + `1143d9fa`):**
-  * `orientInput` — **feeder DISCHARGED, node still open.** `KummerPunctureH3Mod2.
-    thickA_H3_twoTorsionFree` is UNCONDITIONAL: `H₃(T⁴°;ℤ)` is 2-torsion-free. ⚠ That is the
-    *punctured-torus* level, NOT `orientInput`, which lives at the K3 weld
-    (`KummerK3H3Reduction.kummerK3H3TwoTorsionFree_iff_ker_qThickIncl_two_saturated`). The gap is
-    (i) the T⁴°→Q descent and (ii) the weld MV. ⚠ (i) is **not** a free transport: `T⁴° → Q` is a
-    FREE ℤ/2 quotient, and such quotients *create* 2-torsion in general (H₁(S³)=0 but H₁(ℝP³)=ℤ/2),
-    so 2-torsion-freeness does not descend for free. This is task #309.
-  * `h1Free` — `KummerK3H1Vanish` has the whole degree-1 weld MV chain
-    (`h1K3_eq_zero` / `subsingleton_h1K3` / `free_h1K3`) on ONE residual `QLatticeInSeamSpan`
-    ("the four T⁴-lattice circles lie in the seam span"), with an explicit discharge plan.
-    ⚠ **Vacuity note (lead):** given the deck-kernel theorem (`ker qDeck = im p_*`) and that every
-    seam class is deck-odd, `QLatticeInSeamSpan` is **equivalent** to `seamSpan = ⊤` — a faithful
-    re-expression in four explicit generators, **not** a strictly weaker hypothesis. Do not present
-    it as a smaller assumption than the spanning fact.
+  * `orientInput` — **still open; the whole degree-3 window around it is now pinned.**
+    (State after the 2026-07-27 wt2 round, `KummerK3H3SeamWindow.lean`.)
+    **THE residual, lossless (`↔`):** `kummerK3H3TwoTorsionFree_iff_qSeamCoord3_two_saturated`
+    (:196) — `im qSeamCoord3` is 2-saturated in `H₃(Q;ℤ)`, where
+    `qSeamCoord3 : (EIndex → ℤ) →ₗ[ℤ] H₃(Q;ℤ)` (:184). No `H₃(K3)`, no product summand, no abstract
+    MV map: **sixteen boundary-ℝP³ classes in `H₃(Q;ℤ)`.** Its strongest form is *exactly*
+    `H₃(K3;ℤ) = 0` (`qSeamCoord3_surjective_iff_h3K3_eq_zero`, :234 — vacuity attack run: it fails,
+    the criterion is equivalent to an open computation, not discharge-for-free).
+    Unconditional now (§4b): `H₄(qThick)⊕H₄(eImage) →Σ₄ H₄(K3) →∂₄ ℤ¹⁶ →qSeamCoord3 H₃(Q) ↠ H₃(K3) → 0`
+    with `Σ₄` injective, so `ker qSeamCoord3 = im ∂₄` is pinned too. **The only uncomputed objects
+    left in the degree-3 window are `H₃(Q;ℤ)` and `H₄(K3;ℤ)`.** New reusable brick: `projH_transferH`
+    (:351), `p̄ ∘ t = 2`, dual to the existing `transferH_projH`.
+    ⚠⚠ **CORRECTION to the 2026-07-27 (earlier) revision of this document, which said
+    `thickA_H3_twoTorsionFree` gives "H₃(T⁴°;ℤ) 2-torsion-free at the punctured-torus level". That
+    was IMPRECISE — lead-verified in the tree:** `thickA = (⋃ halfBall c)ᶜ`
+    (`KummerPunctureBalls.lean:244`, HALF-radius balls) whereas
+    `puncturedTorus = excisedBallsᶜ` (`KummerPuncturedTorus.lean:432`, FULL `excisionRadius` balls).
+    They are complements of balls of **different radii**, hence different carriers, and
+    `thickA_H3_twoTorsionFree` is NOT a statement about `PTtop`. So there are **TWO** gaps to the
+    Q side, not one: `thickA → PTtop`, then `PTtop → Q`, and then the weld MV.
+    ⚠ `T⁴° → Q` is still **not** a free transport (free ℤ/2 quotients *create* 2-torsion in general:
+    H₁(S³)=0 but H₁(ℝP³)=ℤ/2). The only unconditional covering bridge is
+    `two_smul_mem_range_mapInt_qmkC` (:382): `2·Hₙ₊₁(Q;ℤ) ⊆ im p_*`. Nothing claims descent. #309.
+  * `h1Free` — **reduced to four integers per seam pair** (2026-07-27 wt1 round,
+    `KummerK3H1SeamLattice.lean`). Chain: `SeamWindingOdd → Function.Injective seamClass →
+    QLatticeInSeamSpan → free_h1K3`.
+    **THE residual:** `SeamWindingOdd` (:322) — for `c ≠ c'` and ANY lift `y` of
+    `seamClass c − seamClass c'`, some coordinate of the four puncture-window winding functionals
+    `windowJ y` (:144) is odd. Choice-independent by `windowJ_sub_even_of_mapInt_qmkC_eq` (:296), so
+    the `∀ y` is not a strengthening. Non-vacuous: refuted outright by any collapse of two seam
+    classes, and the hypothesis is inhabited (`seam_diff_mem_range_qmk` proves a lift exists).
+    Key new bricks: **`mapInt_qmkC_eq_zero_iff` (:276) — `ker p_* = 2·H₁(T⁴°;ℤ)` EXACTLY**;
+    `tauStar_eq_neg` (:93) — `τ_* = −1` on `H₁(T⁴°;ℤ)`; `exact_inclBH_projH` (:265) — SES-III middle
+    exactness, which the tree lacked; `qLatticeInSeamSpan_of_seamClass_injective` (:219) — the
+    pigeonhole (16 distinct differences inside a set of size ≤ 2⁴).
+    ⚙ **The scary part of the old discharge plan is provably unnecessary:** the connecting path `δ`
+    drops out mod 2, so no explicit path in `T⁴°` need ever be constructed.
+    ⚠ Honest scope: `Function.Injective seamClass` is proved SUFFICIENT for `QLatticeInSeamSpan`,
+    not equivalent; the converse would need surjectivity of the puncture window
+    `H₁(T⁴°;ℤ) → H₁(T⁴;ℤ)`, which is not in tree.
+    ⚠ **Vacuity note (lead, still binding):** `QLatticeInSeamSpan` is **equivalent** to
+    `seamSpan = ⊤` — a faithful re-expression in four explicit generators, **not** a strictly weaker
+    hypothesis. Do not present it as a smaller assumption than the spanning fact.
     The geometry (independently lead-derived, then matched by the module): the seam at the fixed
     point of half-period `v` is `t_{2v}·σ`, so seam differences realize every class of `ℤ⁴/2ℤ⁴`.
     The 16 seams share deck-parity 1 — which is all `qDeck` sees — so **do not** conclude from the
