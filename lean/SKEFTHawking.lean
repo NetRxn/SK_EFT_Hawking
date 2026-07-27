@@ -4662,6 +4662,7 @@ import SKEFTHawking.IntersectionMatrixDisjointSumInt
 import SKEFTHawking.IntersectionMatrixDisjointSumBlockCongr
 import SKEFTHawking.PinPlusKTSpinSigmaCanonicalBundle
 import SKEFTHawking.SphereProdGramPinReduce
+import SKEFTHawking.PinPlusKTDualSpinDerived
 import SKEFTHawking.PinPlusKTDualSpinSubmanifold
 import SKEFTHawking.PinPlusKTHkerAmbPinGate
 import SKEFTHawking.PinPlusKTDualSpinConstruction
