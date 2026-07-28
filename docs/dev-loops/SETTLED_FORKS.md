@@ -1167,3 +1167,66 @@ search for the bridge (`lean_local_search` on the map/iso name), not just the tw
   `24ℤ` but must hit `−18` or `−16`. (ii) There is **no** general lemma "∃ isotropic `u ∈ A` with
   `u·a = ±1`" — it fails as soon as `div(a) > 1`.
 - `created_ts`: 2026-07-27
+
+## `gm-empty-surface-specialization-is-circular` (2026-07-27, arm: close-out — LEAD-VERIFIED)
+
+**Status: route caution + inventory fact. Binding on every future `hdvd` / Rokhlin dispatch.**
+
+- ⛔ **Do NOT try to obtain `hdvd` (`∀ x, 16 ∣ R.sig x`, the atlas KEYSTONE
+  `hyp:rokhlin_sigma_mod_16`, gating impact 11) by specializing the Guillou–Marin / Freedman–Kirby
+  congruence to the EMPTY characteristic surface.** For a spin manifold the characteristic surface is
+  dual to `w₂ = 0`, so `FdotF = 0` and `Q.brown = 0`, and `GMrelation σ 0 Q` **degenerates to
+  `16 ∣ σ` itself**. The specialization *is* the conclusion. Lead-verified against `GMrelation`'s
+  definition; the blueprint says the same independently ("at `F = ∅` the surface nodes
+  `[G1][G2][Q1][Q2]` are VACUOUS; only `[FK]`-at-∅ remains — that single congruence IS the node").
+- ⚠ **`SpinCharSurfaceData` is a PACKAGING of Rokhlin, not a proof of it.** Its `gm` field is the
+  genuine input; `SpinCharSurfaceData.rokhlin` (`GMRokhlinDischarge.lean:103`) consumes it. Building a
+  `SpinCharSurfaceData` for a carrier element with an empty surface therefore discharges nothing —
+  a compliant worker would ship a circular `hdvd`.
+- 📋 **Inventory, lead-verified by grepping EVERY `GMrelation` occurrence in the tree:** every in-tree
+  producer proves `GMrelation 0 0 C.Q` — the **null-bordant / metabolic** leg only
+  (`CharSurfaceMembrane.lean:343`, `CharSurfaceBounding.lean:123`,
+  `CharSurfaceNormalShadow.lean:210/233/245`, `CharSurfaceRealization.lean:199`). Each takes a
+  `Bounding` datum, i.e. the manifold bounds, where `σ = 0` holds trivially by bordism-invariance.
+  **There is NO supplier at general σ.**
+- ✅ **What IS built:** the wire *from* GM-at-general-σ *to* `16 ∣ σ` —
+  `CharSurfaceRokhlinAssembly.sixteen_dvd_sig_of_gm_realization` (:109) takes `hgm : GMrelation σ 0 C.Q`
+  plus four leaves `{KernelClassesEmbedded, KernelCirclesBound, MembraneSpinKill, KernelLagrangianForB}`,
+  and `topo_of_bounded_charSurface` (:125) carries it to `SmoothSpinManifold4.topo`. So the missing
+  piece is **exactly `hgm`**.
+- ⛔ **The tethered carrier does not supply it either** (checked before briefing):
+  `CharPairStrBundled` carries `surf`/`emb`/`embSmooth`/`embInj`/`surfClass`/`basis`/`hpolar`/`hchar`
+  — **no field relating σ to the Brown invariant**.
+- ⛔ **No algebraic shortcut exists**: `lattice_arf_bridge_refuted` (kernel no-go) kills
+  `σ/8 ≡ Arf(q̄) mod 2`; E₈ is even unimodular with `σ/8 = 1` and is not smoothly realizable, so the
+  lattice provably cannot see this node. It is irreducibly smooth-topological — confirmed, not a
+  magnitude judgment.
+- **Route of record:** blueprint `Lit-Search/Phase-5qH/Rokhlin_16_sigma_elementary_blueprint_20260703.md`
+  Route A ([FK]/Matsumoto, Arf form), with the Kervaire–Milnor sphere bridge as a candidate lighter
+  target — ⚠ "cleanest" is the blueprint's characterization and is **NOT** lead-verified; per
+  `PRE_DECISIONS.md` item 5 it must be tested, not inherited.
+- `created_ts`: 2026-07-27
+
+## `k3-gram-must-not-use-pdInput-of-gram` (2026-07-27, arm: close-out — LEAD-VERIFIED)
+
+**Status: circularity fence on the K3 Gram lane. Binding.**
+
+- The welded Kummer K3's E1 residual ledger is down to **one** obligation
+  (`KummerK3E1FromGram.nonempty_kummerK3E1Atoms_of_gram` :61): the Gram congruence
+  `∀ o, ∃ C hC, IntCongr (reindex (interMatrix [K3]_o C)) k3Form`. `h1Free` is unconditional
+  (`free_h1K3_uncond`), `orientInput` is retired as a gate
+  (`nonempty_intOrientation_kummerK3_uncond`), and `pdInput` is derived **from** the Gram.
+- ⛔ **Therefore, on the lattice-classification route to the Gram (via `hk3_of_stable16_two`), you may
+  NOT use `KummerK3PoincareDuality.kummerK3_pdInput_of_gram` to supply unimodularity** — that theorem
+  takes the Gram as its hypothesis, so `Gram ⟹ pdInput ⟹ Gram` is a strict circle. Genuine integral
+  Poincaré duality on the welded carrier is required. (`PRE_DECISIONS.md` item 4: open the arrow and
+  check its own hypothesis list. I opened it; this one contains the target.)
+- ✅ The route itself is sound: `hk3_of_stable16_two` needs `IsEvenUnimodular` + `latticeSig = -16` on
+  the rank-22 form, plus `StableNegRank16Two` (wt1's Eichler STEP 1 lane). Nothing in
+  `even_unimodular_indefinite_split_congr`'s hypothesis list (`{IsEvenUnimodular, 0 < sigPos,
+  0 < sigNeg}`) contains the target — lead-verified, so that arrow is safe.
+- ⛔ **The definite-classification shortcut is DEAD**: you cannot instead split `2U` off and classify
+  the negative-definite rank-16 residual, because there are **two** classes
+  (`−E₈ ⊕ −E₈` and `−D₁₆⁺`). Absorbing that distinction is precisely the content of the
+  `2U`-stabilization, which is why cancellation/Eichler is irreducible here.
+- `created_ts`: 2026-07-27

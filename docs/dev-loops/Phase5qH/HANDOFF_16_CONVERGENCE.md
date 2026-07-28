@@ -229,13 +229,40 @@ construction against the open-support transfer shape (fork
   from Arf — Rokhlin mod 16 is irreducibly geometric. Primary route: Matsumoto's elementary proof
   (blueprint `Lit-Search/Phase-5qH/Rokhlin_16_sigma_elementary_blueprint_20260703.md`; the
   À la recherche volume is an outstanding fetch).
+
+  **SUPPLIER INVENTORY — lead-verified 2026-07-27 by grepping every `GMrelation` occurrence.**
+  The wire *from* GM-at-general-σ *to* `16 ∣ σ` is **BUILT**
+  (`sixteen_dvd_sig_of_gm_realization` :109 → `topo_of_bounded_charSurface` :125). What is missing is
+  **exactly `hgm : GMrelation σ 0 C.Q` at general σ**: every in-tree producer proves only
+  `GMrelation 0 0 C.Q`, the null-bordant/metabolic leg (`CharSurfaceMembrane` :343,
+  `CharSurfaceBounding` :123, `CharSurfaceNormalShadow` :210/233/245, `CharSurfaceRealization` :199),
+  each off a `Bounding` datum where `σ = 0` holds trivially. The tethered carrier does **not** supply
+  it either — `CharPairStrBundled` has surf/emb/surfClass/basis/hpolar/hchar ties but **no field
+  relating σ to the Brown invariant**. ⛔ And the empty-surface specialization is **CIRCULAR** (at
+  `F = ∅`, `GMrelation σ 0 Q` degenerates to `16 ∣ σ` itself) — see SETTLED_FORKS
+  `gm-empty-surface-specialization-is-circular`.
 - **B2 · the K3 generator** (`g`, `hrank`, `hk3`). The Kummer program — far along. `KummerK3`
   exists as a genuine 16-fold welded carrier, is **smooth** (`isManifold_R4_kummerK3'`, any `k`),
   and **`kummerK3_b2_target_unconditional` (H₂(K3;ℤ) ≅ ℤ²²) is landed with no hypotheses**
-  (`KummerChart1NbhdAcyclicInt.lean:893`). Remaining: the three `KummerK3E1Residuals`
-  (`KummerK3E1Package.lean:184`) — `orientInput` (H₃(K3;ℤ) 2-torsion-free), `h1Free` (H₁(K3;ℤ)
-  free), `pdInput` (integral Poincaré duality) — then the Gram (`IntCongr … k3Form`) and the K9
-  spin/`StrMfd` packaging. Each is a homology computation with a known classical answer.
+  (`KummerChart1NbhdAcyclicInt.lean:893`).
+
+  **⭐ STATE 2026-07-27 (late): the E1 residual ledger is down to ONE obligation.**
+  `KummerK3E1FromGram.nonempty_kummerK3E1Atoms_of_gram` (:61) — all three of the original
+  `KummerK3E1Residuals` (`KummerK3E1Package.lean:184`) are gone: `h1Free` is unconditional
+  (`KummerK3SeamWindingParity.free_h1K3_uncond`, `H₁(K3;ℤ) = 0`), `orientInput` is **retired as a
+  gate** (`KummerK3SeamTransport.nonempty_intOrientation_kummerK3_uncond` produces the `orient` field
+  unconditionally by the degree-4 seam-kernel route — note it is retired, *not proved*), and
+  `pdInput` is contained in the Gram. What remains is exactly the **K3 Gram congruence**
+  `∀ o, ∃ C hC, IntCongr (reindex (interMatrix [K3]_o C)) k3Form`, then the K9 spin/`StrMfd`
+  packaging.
+
+  **The Gram converges on the K8b lattice lane.** `hk3_of_stable16_two`
+  (`UnitBlockCancellation.lean:403`) delivers `IntCongr M k3Form` from `StableNegRank16Two` plus
+  `IsEvenUnimodular M` and `latticeSig M = -16` on the rank-22 form. So B2's residual factors as
+  (i) even-unimodularity — genuine integral PD on the welded carrier, ⛔ **NOT** via
+  `kummerK3_pdInput_of_gram`, which takes the Gram as hypothesis (SETTLED_FORKS
+  `k3-gram-must-not-use-pdInput-of-gram`); (ii) `σ(K3) = −16`; and (iii) `StableNegRank16Two`, whose
+  sole residual is Eichler STEP 1.
 
   **State of the triple after the 2026-07-27 three-slot fan-out (`6a2cf2e2` + `1143d9fa`):**
   * `orientInput` — **still open; the whole degree-3 window around it is now pinned.**
