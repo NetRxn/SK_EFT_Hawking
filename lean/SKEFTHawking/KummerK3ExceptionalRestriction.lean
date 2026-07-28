@@ -147,6 +147,40 @@ theorem eGen_ne_zero_of_diagonal {c : EIndex} {α : EIndex → Cohomology Kummer
   simp only [map_zero] at hdiag
   exact absurd hdiag (by decide)
 
+/-! ## §5. WHAT THE BLOCK BUYS: the 16 exceptional classes are ℤ-INDEPENDENT
+
+The `⟨−2⟩¹⁶` name is only honest if the 16 classes actually span a rank-16 sublattice; a family of
+16 classes with that pairing table but a relation among them would not be a `⟨−2⟩¹⁶` block at all.
+The block data forces independence outright, by the standard dual-basis argument: pair a putative
+relation with `α d` and every term but the `d`-th dies, leaving `−2 · g d = 0`.
+
+This is the E-lane's *payload*, and it is what the 22-selection needs in order to have full rank —
+`KummerK3ExceptionalBlock.excClass_ne_zero_of_block` is the rank-1 shadow of it. -/
+
+/-- **The block forces ℤ-linear independence of the 16 exceptional classes.** -/
+theorem linearIndependent_excClass_of_block (o : IntOrientation KummerK3)
+    (h : ExceptionalBlockGram o) : LinearIndependent ℤ (excClass : EIndex → _) := by
+  obtain ⟨α, _, hdiag, hoff⟩ := h
+  rw [Fintype.linearIndependent_iff]
+  intro g hg d
+  -- Pair the relation with `α d`; every off-diagonal term vanishes.
+  have hpair : (kroneckerHInt 2 (α d)) (∑ c, g c • excClass c) = 0 := by
+    rw [hg, map_zero]
+  rw [map_sum] at hpair
+  simp only [map_smul, smul_eq_mul] at hpair
+  rw [Finset.sum_eq_single d (fun c _ hcd => by rw [hoff c d hcd, mul_zero])
+      (fun hd => absurd (Finset.mem_univ d) hd)] at hpair
+  rw [hdiag d] at hpair
+  omega
+
+/-- **…hence the 16 span a rank-16 free sublattice of `H₂(K3;ℤ)`** — stated as the submodule they
+generate being free of rank 16, the form the 22-selection consumes. -/
+theorem finrank_span_excClass_of_block (o : IntOrientation KummerK3)
+    (h : ExceptionalBlockGram o) :
+    Module.finrank ℤ (Submodule.span ℤ (Set.range (excClass : EIndex → _))) =
+      Fintype.card EIndex :=
+  finrank_span_eq_card (linearIndependent_excClass_of_block o h)
+
 end
 
 end SKEFTHawking.KummerK3ExceptionalRestriction
