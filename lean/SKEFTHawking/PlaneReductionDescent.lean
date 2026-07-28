@@ -293,6 +293,56 @@ theorem natAbs_gcd_lt_of_axis_round {α γ δ : ℤ}
   · exact lt_of_le_of_lt (Nat.le_of_dvd (Int.natAbs_pos.mpr h)
       (Nat.gcd_dvd_left (γ % α).natAbs (δ % α).natAbs)) hγ
 
+/-! ## §5b. ONE DESCENT ROUND, WITH THE PLANE-2 BOUND
+
+§5's induction throws away everything about `γ` and `δ`. The interleaving with §6b's axis measure
+needs one more fact about a round, and it comes from a feature of the moves that is easy to miss:
+
+**the `β`-reducing step leaves one plane-2 coordinate completely alone.** `m₂ 0 _` reduces `β`
+modulo `γ` and pays into `δ` — but `γ` itself is untouched; `m₁ 0 _` is the mirror, paying into `γ`
+and leaving `δ`. So whichever coordinate served as the modulus survives the round verbatim, and the
+new `gcd(γ, δ)` **divides** it. Since the preceding `m₃` had already put both plane-2 coordinates
+below `|β|`, the round's output gcd is bounded by them — even though the *other* coordinate may have
+grown by a multiple of `α`. -/
+
+/-- **One descent round, carrying the plane-2 bound.** Either the round lands on the zero tail, or it
+strictly drops `|β|` *and* bounds the new `gcd(γ, δ)` by the `m₃`-reduced coordinates. -/
+theorem descent_round {α β γ δ : ℤ} (hβ : β ≠ 0) :
+    (∃ a : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (a, β, 0, 0)) ∨
+    (∃ α' β' γ' δ' : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (α', β', γ', δ') ∧
+      β'.natAbs < β.natAbs ∧
+      Int.gcd γ' δ' ≤ max (γ % β).natAbs (δ % β).natAbs) := by
+  set p : ℤ := γ / β with hp
+  set q : ℤ := δ / β with hq
+  set α₁ : ℤ := α + (p * δ + q * γ) - p * q * β with hα₁
+  have hstep3 : PlaneStep (α, β, γ, δ) (α₁, β, γ % β, δ % β) := by
+    have h := PlaneStep.m₃ p q α β γ δ
+    rwa [show γ - p * β = γ % β by rw [hp, Int.emod_def]; ring,
+      show δ - q * β = δ % β by rw [hq, Int.emod_def]; ring] at h
+  by_cases hr1 : γ % β = 0
+  · by_cases hr2 : δ % β = 0
+    · refine Or.inl ⟨α₁, ?_⟩
+      rw [hr1, hr2] at hstep3
+      exact ReflTransGen.single hstep3
+    · -- `m₁ 0 _` : `δ` is the modulus and survives untouched
+      refine Or.inr ⟨α₁, β % (δ % β), γ % β + (β / (δ % β)) * α₁, δ % β, ?_, ?_, ?_⟩
+      · have hstep1 := planeStep_m₁_right (β / (δ % β)) α₁ β (γ % β) (δ % β)
+        rw [show β - (δ % β) * (β / (δ % β)) = β % (δ % β) from (Int.emod_def β (δ % β)).symm]
+          at hstep1
+        exact (ReflTransGen.single hstep3).tail hstep1
+      · exact lt_trans (natAbs_emod_lt_natAbs hr2) (natAbs_emod_lt_natAbs hβ)
+      · exact le_trans (Nat.le_of_dvd (Int.natAbs_pos.mpr hr2)
+          (Nat.gcd_dvd_right _ (δ % β).natAbs)) (le_max_right _ _)
+  · -- `m₂ 0 _` : `γ` is the modulus and survives untouched
+    refine Or.inr ⟨α₁, β % (γ % β), γ % β, δ % β + (β / (γ % β)) * α₁, ?_, ?_, ?_⟩
+    · have hstep2 := planeStep_m₂_right (β / (γ % β)) α₁ β (γ % β) (δ % β)
+      rw [show β - (γ % β) * (β / (γ % β)) = β % (γ % β) from (Int.emod_def β (γ % β)).symm]
+        at hstep2
+      exact (ReflTransGen.single hstep3).tail hstep2
+    · exact lt_trans (natAbs_emod_lt_natAbs hr1) (natAbs_emod_lt_natAbs hβ)
+    · exact le_trans (Nat.le_of_dvd (Int.natAbs_pos.mpr hr1)
+        (Nat.gcd_dvd_left (γ % β).natAbs _)) (le_max_left _ _)
+
 /-! ## §6b. THE AXIS ROUND — one visit strictly drops `gcd(γ, δ)` -/
 
 /-- **THE AXIS ROUND.** From an axis state whose `gcd(γ, δ) =: e` is positive and does **not** divide
