@@ -56,6 +56,8 @@ For the model `I.prod (𝓡∂ 1)` with `I` boundaryless:
   beyond "manifold"; in charts it is exactly `hyperplaneIncl`.
 * `isClosed_boundary_prodHalf`, `compactSpace_boundary`: `∂W` is closed, and compact when `W` is.
   Compactness of `∂W` is what makes the local collars uniform.
+* `prodIcc_boundary_nonempty_isManifold`: **non-vacuity** — `ℝ × [0,1]` satisfies the whole
+  hypothesis bundle *and* has nonempty boundary, so none of the above is vacuously true.
 
 ## TODO — the collar itself, and the state of Mathlib underneath it
 
@@ -517,5 +519,32 @@ theorem contMDiff_boundary_val (hn : n ≠ 0) :
     (key _ (mem_extChartAt_target x))
 
 end BoundaryManifold
+
+/-! ### Non-vacuity -/
+
+section Nonvacuity
+
+/-- **The hypothesis bundle of this file is satisfiable with a nonempty boundary.**
+
+`ℝ × [0,1]` is a `C^n` manifold modelled on `𝓘(ℝ, ℝ).prod (𝓡∂ 1)` with `𝓘(ℝ, ℝ)` boundaryless —
+exactly the setting of `boundaryChartedSpace` and `isManifold_boundary` — and its boundary
+`ℝ × {⊥, ⊤}` is nonempty. So the boundary manifold constructed above is not the empty manifold,
+and none of this file's results is vacuously true.
+
+Both conjuncts are load-bearing and neither implies the other: nonemptiness alone would not say
+that this file's construction applies, and the manifold structure alone would be vacuous on an
+empty boundary. -/
+theorem prodIcc_boundary_nonempty_isManifold {n : WithTop ℕ∞} (hn : n ≠ 0) :
+    letI : Fact ((0 : ℝ) < 1) := ⟨zero_lt_one⟩
+    letI := boundaryChartedSpace 𝓘(ℝ, ℝ) (ℝ × Icc (0 : ℝ) 1) hn
+    Nonempty ((𝓘(ℝ, ℝ).prod (𝓡∂ 1)).boundary (ℝ × Icc (0 : ℝ) 1)) ∧
+      IsManifold 𝓘(ℝ, ℝ) n ((𝓘(ℝ, ℝ).prod (𝓡∂ 1)).boundary (ℝ × Icc (0 : ℝ) 1)) := by
+  letI : Fact ((0 : ℝ) < 1) := ⟨zero_lt_one⟩
+  letI := boundaryChartedSpace 𝓘(ℝ, ℝ) (ℝ × Icc (0 : ℝ) 1) hn
+  refine ⟨⟨⟨(0, ⊥), ?_⟩⟩, isManifold_boundary _ _ hn⟩
+  rw [boundary_product]
+  exact ⟨mem_univ _, mem_insert _ _⟩
+
+end Nonvacuity
 
 end SKEFTHawking.Collar
