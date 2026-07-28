@@ -5010,6 +5010,10 @@ import SKEFTHawking.KummerK3ForallOrientationFalse
 -- every ODD n, so every forall-o unimodularity/nondegeneracy claim is FALSE (scale the Gram, scale
 -- the determinant by n^rank). The structural root of the forall-o defect.
 import SKEFTHawking.IntOrientationScaling
+-- Phase 5q.H — the REPAIR of the scale defect: IntOrientationPrim adds a PRIMITIVE fundamental
+-- class (not a proper multiple). smulOdd does NOT lift (the defect is closed); reverse DOES (the
+-- sign ambiguity is genuine). Produced from the same hypotheses as the unstrengthened datum.
+import SKEFTHawking.IntOrientationPrimitive
 -- Phase 5q.H — the welded K3's E1 lane: every published forall-o route is VACUOUS (pdInput, hsig,
 -- hgram, hk3, hgeo all refuted), and the pinned-single-orientation replacements that repair them.
 import SKEFTHawking.KummerK3E1Repair

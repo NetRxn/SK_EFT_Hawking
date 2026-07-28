@@ -41,6 +41,7 @@ axiom.
 -/
 import Mathlib
 import SKEFTHawking.IntOrientationScaling
+import SKEFTHawking.IntOrientationPrimitive
 import SKEFTHawking.KummerK3E1Unconditional
 import SKEFTHawking.KummerK3E1FromGram
 
@@ -59,6 +60,7 @@ open SKEFTHawking.KummerK3E1Unconditional
 open SKEFTHawking.KummerK3PoincareDuality
 open SKEFTHawking.IntOrientationReverse
 open SKEFTHawking.IntOrientationScaling
+open SKEFTHawking.IntOrientationPrimitive
 open SKEFTHawking.SpinSigmaRoute (k3Form)
 
 noncomputable section
@@ -180,6 +182,73 @@ theorem nonempty_kummerK3E1Atoms_and_hk3_at (o : IntOrientation KummerK3)
         = kummerSubForm i j) :
     Nonempty KummerK3E1Atoms ∧ IntCongr (kummerK3Gram o) k3Form :=
   ⟨nonempty_kummerK3E1Atoms_at o hpd, kummerK3_hk3_at o hpd heven hfam⟩
+
+/-! ## §3. The orientation you can actually use — PRIMITIVE, and produced unconditionally
+
+Pinning the quantifier (§2) fixes the *shape*; it does not fix the *datum*. The orientation that
+`nonempty_intOrientation_kummerK3_uncond` hands you is an arbitrary inhabitant of a structure that
+admits `3 • [K3]`, and integral PD at `3 • [K3]` is FALSE — so "produce `o` from the seam route,
+then prove PD at it" was never a viable plan either. `IntOrientationPrimitive` closes that, and at no
+cost: the degree-4 producer was already choosing a basis vector. -/
+
+/-- **A PRIMITIVE integral orientation of the welded `K3`, UNCONDITIONALLY.** Same three inputs the
+unstrengthened producer used — `H₄(K3;ℤ)` free (`k3_h4_free`) and nontrivial (`nontrivial_h4K3`, from
+the seam kernel) on the connected weld — now delivering a fundamental class that is not a proper
+multiple. This is the orientation the K3 lane should be pinned to. -/
+theorem nonempty_intOrientationPrim_kummerK3_uncond : Nonempty (IntOrientationPrim KummerK3) := by
+  haveI := SKEFTHawking.KummerQTopVanish.k3_h4_free
+  haveI := SKEFTHawking.KummerK3SeamTransport.nontrivial_h4K3
+  exact nonempty_intOrientationPrim_of_free_nontrivial
+
+/-- **E1 atoms from PD at the primitive orientation** — §2's entry point at the datum §3 produces. -/
+theorem nonempty_kummerK3E1Atoms_of_prim (op : IntOrientationPrim KummerK3)
+    (pd : Nonempty (IntPoincareDuality
+      (intFundamentalClassOfIntOrientation op.toIntOrientation))) :
+    Nonempty KummerK3E1Atoms :=
+  nonempty_kummerK3E1Atoms_at op.toIntOrientation pd
+
+/-- **The scale attack is dead on the strengthened datum**, concretely at the welded `K3`: `3 • [K3]`
+is still a legal `IntOrientation` (that is the defect) but is **not** a legal `IntOrientationPrim`. -/
+theorem not_isPrimitiveClass_smulOdd_three (o : IntOrientation KummerK3) :
+    ¬ IsPrimitiveClass (IntOrientation.smulOdd o (by decide : Odd (3 : ℤ))).fundClass :=
+  not_isPrimitiveClass_smulOdd o _ (by norm_num)
+
+/-- **Reversal negates the packaged Gram.** -/
+theorem kummerK3Gram_reverse (o : IntOrientation KummerK3) :
+    kummerK3Gram (IntOrientation.reverse o) = - kummerK3Gram o := by
+  rw [kummerK3Gram, kummerK3Gram]
+  have h : interMatrix (intFundamentalClassOfIntOrientation (IntOrientation.reverse o))
+      kummerK3IntH2Basis
+        = - interMatrix (intFundamentalClassOfIntOrientation o) kummerK3IntH2Basis := by
+    ext i j
+    simp only [interMatrix, Matrix.of_apply, Matrix.neg_apply, interFormInt_reverse_orientation]
+  rw [h]
+  rfl
+
+/-- **⛔ THE STRENGTHENING DOES NOT RESCUE SIGN-CARRYING CLAIMS.** `∀ op : IntOrientationPrim`, the
+signature statement is *still* false, because reversal lifts to the strengthened structure (as it
+must — a closed orientable manifold really has two orientations). Anyone tempted to read §3 as
+"`∀ o` is fine again now" should read this: the sign defect is irreducible and `hsig` stays dead. -/
+theorem not_forall_intOrientationPrim_latticeSig_neg16 :
+    ¬ (∀ op : IntOrientationPrim KummerK3,
+        latticeSig (kummerK3Gram op.toIntOrientation) = -16) := by
+  intro h
+  obtain ⟨op⟩ := nonempty_intOrientationPrim_kummerK3_uncond
+  have h1 := h op
+  have h2 := h (IntOrientationPrim.reverse op)
+  rw [show (IntOrientationPrim.reverse op).toIntOrientation
+      = IntOrientation.reverse op.toIntOrientation from rfl,
+    kummerK3Gram_reverse, latticeSig_neg, h1] at h2
+  omega
+
+/-- **…but unimodularity IS sign-invariant** (`det (−G) = (−1)²² det G = det G`), so — unlike `hsig`
+— a `∀ op : IntOrientationPrim` unimodularity claim survives *both* attacks. The scale attack cannot
+run on the strengthened datum and the sign attack does not bite. `pdInput` is therefore a **live
+target** again once the orientation is primitive, rather than the refuted statement §1 kills. -/
+theorem isUnimodular_kummerK3Gram_reverse_iff (o : IntOrientation KummerK3) :
+    IsUnimodular (kummerK3Gram (IntOrientation.reverse o)) ↔ IsUnimodular (kummerK3Gram o) := by
+  rw [kummerK3Gram_reverse, IsUnimodular, IsUnimodular, Matrix.det_neg]
+  norm_num
 
 end
 

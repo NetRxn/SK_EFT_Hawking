@@ -79,8 +79,21 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    exposes an over-specification the forall-o shape had hidden: integral PD at ONE orientation is by itself
    the whole E1 atom triple -- no evenness, no Gram, no lattice theory -- so the Gram lane serves the sigma
    = -16 congruence that OTHER consumers want, not the E1 atoms. DO NOT re-derive a forall-o geometric
-   hypothesis on this carrier; pin the orientation.
-   backing: `not_forall_intOrientation_isUnimodular`, `not_forall_intOrientation_pdInput`, `not_kummerK3E1Residuals`, `not_forall_latticeSig_neg16`, `not_forall_gram`, `not_forall_geoData`, `forall_orientation_kummerSubForm_family_false`
+   hypothesis on this carrier; pin the orientation. ** THE DATUM REPAIR (same day,
+   IntOrientationPrimitive.lean): pinning the QUANTIFIER is not enough, because the orientation an in-tree
+   producer hands you is an arbitrary inhabitant of the defective structure -- possibly 3 . [K3], at which
+   integral PD is FALSE. So "produce o from the seam route, then prove PD at it" was never viable either.
+   `IntOrientationPrim` = `IntOrientation` + `IsPrimitiveClass fundClass` (not a proper multiple).
+   `not_isPrimitiveClass_smul` shows `smulOdd` does NOT lift for |n| >= 2, so the SCALE defect is closed;
+   `IntOrientationPrim.reverse` shows reversal DOES lift, so the SIGN ambiguity correctly survives -- and
+   `not_forall_intOrientationPrim_latticeSig_neg16` confirms `hsig` stays FALSE even on the strengthened
+   structure (do NOT read the strengthening as reviving forall-o for sign-carrying claims). Unimodularity,
+   by contrast, is sign-invariant at even rank (`isUnimodular_kummerK3Gram_reverse_iff`), so pdInput is a
+   LIVE target once the orientation is primitive. The strengthened datum costs NOTHING to produce: the
+   degree-4 route was already choosing a basis vector, and `nonempty_intOrientationPrim_of_free_nontrivial`
+   has exactly the hypotheses of the unstrengthened producer -- instantiated unconditionally at the welded
+   K3 by `nonempty_intOrientationPrim_kummerK3_uncond`.
+   backing: `not_forall_intOrientation_isUnimodular`, `not_forall_intOrientation_pdInput`, `not_kummerK3E1Residuals`, `not_forall_latticeSig_neg16`, `not_forall_gram`, `not_forall_geoData`, `forall_orientation_kummerSubForm_family_false`, `not_isPrimitiveClass_smul`, `not_forall_intOrientationPrim_latticeSig_neg16`
 
 3. `gm-pin-torsor-free-shadow-weaker-than-van-der-blij` [structural_forcing]
    The pin-minus-FREE content of the Guillou-Marin congruence -- the part of GM that survives quotienting by
@@ -798,6 +811,7 @@ import SKEFTHawking.GMPinTorsorCeiling
 import SKEFTHawking.GMTripleLayerForcing
 import SKEFTHawking.HandleTradeAtomVacuity
 import SKEFTHawking.HandleTradeAtomVacuityConcrete
+import SKEFTHawking.IntOrientationPrimitive
 import SKEFTHawking.IntOrientationScaling
 import SKEFTHawking.KummerK3E1Repair
 import SKEFTHawking.KummerK3ForallOrientationFalse
@@ -872,6 +886,12 @@ alias nogo_not_forall_geoData := SKEFTHawking.KummerK3E1Repair.not_forall_geoDat
 
 /-- NO-GO [`k3-e1-forall-orientation-routes-are-vacuous`] — do NOT re-derive. FALSE: A geometric hypothesis about the welded Kummer K3 may be quantified over ALL integral orientations -- the shape `forall o : IntOrientation KummerK3, <Gram / unimodularity / signature / cap-dual-span statement at o>` used by EVERY published entry point into `Nonempty KummerK3E1Atoms`. Backing refutation: `SKEFTHawking.KummerK3ForallOrientationFalse.forall_orientation_kummerSubForm_family_false`. -/
 alias nogo_forall_orientation_kummerSubForm_family_false := SKEFTHawking.KummerK3ForallOrientationFalse.forall_orientation_kummerSubForm_family_false
+
+/-- NO-GO [`k3-e1-forall-orientation-routes-are-vacuous`] — do NOT re-derive. FALSE: A geometric hypothesis about the welded Kummer K3 may be quantified over ALL integral orientations -- the shape `forall o : IntOrientation KummerK3, <Gram / unimodularity / signature / cap-dual-span statement at o>` used by EVERY published entry point into `Nonempty KummerK3E1Atoms`. Backing refutation: `SKEFTHawking.IntOrientationPrimitive.not_isPrimitiveClass_smul`. -/
+alias nogo_not_isPrimitiveClass_smul := SKEFTHawking.IntOrientationPrimitive.not_isPrimitiveClass_smul
+
+/-- NO-GO [`k3-e1-forall-orientation-routes-are-vacuous`] — do NOT re-derive. FALSE: A geometric hypothesis about the welded Kummer K3 may be quantified over ALL integral orientations -- the shape `forall o : IntOrientation KummerK3, <Gram / unimodularity / signature / cap-dual-span statement at o>` used by EVERY published entry point into `Nonempty KummerK3E1Atoms`. Backing refutation: `SKEFTHawking.KummerK3E1Repair.not_forall_intOrientationPrim_latticeSig_neg16`. -/
+alias nogo_not_forall_intOrientationPrim_latticeSig_neg16 := SKEFTHawking.KummerK3E1Repair.not_forall_intOrientationPrim_latticeSig_neg16
 
 /-- NO-GO [`gm-pin-torsor-free-shadow-weaker-than-van-der-blij`] — do NOT re-derive. FALSE: The pin-minus-FREE content of the Guillou-Marin congruence -- the part of GM that survives quotienting by the H^1(F;Z/2) enhancement torsor, i.e. Backing refutation: `SKEFTHawking.GMTorsor.lattice_plus_torsor_free_shadow_cannot_prove_rokhlin`. -/
 alias nogo_lattice_plus_torsor_free_shadow_cannot_prove_rokhlin := SKEFTHawking.GMTorsor.lattice_plus_torsor_free_shadow_cannot_prove_rokhlin
