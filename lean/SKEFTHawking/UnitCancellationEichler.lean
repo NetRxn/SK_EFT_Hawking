@@ -685,6 +685,71 @@ theorem stepOne_of_dvd {m : ℕ} (G : Matrix (Fin m) (Fin m) ℤ) (hsymm : Gᵀ 
       bil_smul_right, bil_smul_right, bil_smul_right, hf₁e₂, hf₁x, hp]
     ring
 
+/-! #### The full `U ⊕ U₁` move toolkit
+
+The Euclidean descent that closes STEP 1 needs, at each step, the effect of one Eichler transvection
+on ALL FOUR pairings `e₁·w'`, `f₁·w'`, `e₂·w'`, `f₂·w'`. `planeMove` packages the transvection
+`t(u, p a + q b)` for `u` isotropic orthogonal to a hyperbolic pair `(a, b)` — the only shape needed,
+since `u` is always taken from one plane and `x` from the other. -/
+
+/-- Master formula: the bilinear form after one Eichler transvection. -/
+theorem eichler_bil {m : ℕ} (G : Matrix (Fin m) (Fin m) ℤ) (hsymm : Gᵀ = G)
+    (u x : Fin m → ℤ) (h : ℤ) (y z : Fin m → ℤ) :
+    y ⬝ᵥ G *ᵥ ((eichler G u x h) *ᵥ z)
+      = y ⬝ᵥ G *ᵥ z + (x ⬝ᵥ G *ᵥ z) * (y ⬝ᵥ G *ᵥ u) - (u ⬝ᵥ G *ᵥ z) * (y ⬝ᵥ G *ᵥ x)
+        - h * ((u ⬝ᵥ G *ᵥ z) * (y ⬝ᵥ G *ᵥ u)) := by
+  rw [eichler_mulVec_symm G hsymm, bil_sub_right, bil_sub_right, bil_add_right,
+    bil_smul_right, bil_smul_right, bil_smul_right]
+  ring
+
+/-- **The `U ⊕ U₁` Eichler move** `t(u, p a + q b)`: `u` isotropic and orthogonal to the hyperbolic
+pair `(a, b)`. Integral because `(p a + q b)² = 2pq`. -/
+def planeMove {m : ℕ} (G : Matrix (Fin m) (Fin m) ℤ) (u a b : Fin m → ℤ) (p q : ℤ) :
+    Matrix (Fin m) (Fin m) ℤ := eichler G u (p • a + q • b) (p * q)
+
+section PlaneMove
+variable {m : ℕ} {G : Matrix (Fin m) (Fin m) ℤ} {u a b : Fin m → ℤ}
+
+theorem planeMove_aux (hsymm : Gᵀ = G) (haa : a ⬝ᵥ G *ᵥ a = 0) (hbb : b ⬝ᵥ G *ᵥ b = 0)
+    (hab : a ⬝ᵥ G *ᵥ b = 1) (hua : u ⬝ᵥ G *ᵥ a = 0) (hub : u ⬝ᵥ G *ᵥ b = 0) (p q : ℤ) :
+    u ⬝ᵥ G *ᵥ (p • a + q • b) = 0 ∧
+      (p • a + q • b) ⬝ᵥ G *ᵥ (p • a + q • b) = 2 * (p * q) := by
+  have hba : b ⬝ᵥ G *ᵥ a = 1 := by rw [bil_comm hsymm]; exact hab
+  constructor
+  · rw [bil_add_right, bil_smul_right, bil_smul_right, hua, hub]; ring
+  · rw [bil_add_left, bil_add_right, bil_add_right, bil_smul_left, bil_smul_left,
+      bil_smul_left, bil_smul_left, bil_smul_right, bil_smul_right, bil_smul_right,
+      bil_smul_right, haa, hbb, hab, hba]
+    ring
+
+/-- The plane move is an isometry of `G`. -/
+theorem planeMove_isometry (hsymm : Gᵀ = G) (huu : u ⬝ᵥ G *ᵥ u = 0)
+    (haa : a ⬝ᵥ G *ᵥ a = 0) (hbb : b ⬝ᵥ G *ᵥ b = 0) (hab : a ⬝ᵥ G *ᵥ b = 1)
+    (hua : u ⬝ᵥ G *ᵥ a = 0) (hub : u ⬝ᵥ G *ᵥ b = 0) (p q : ℤ) :
+    (planeMove G u a b p q)ᵀ * G * (planeMove G u a b p q) = G := by
+  obtain ⟨h1, h2⟩ := planeMove_aux hsymm haa hbb hab hua hub p q
+  exact eichler_isometry G hsymm u _ (p * q) huu h1 h2
+
+/-- The plane move is unimodular. -/
+theorem planeMove_isUnit_det (hsymm : Gᵀ = G) (hunim : IsUnimodular G)
+    (huu : u ⬝ᵥ G *ᵥ u = 0) (haa : a ⬝ᵥ G *ᵥ a = 0) (hbb : b ⬝ᵥ G *ᵥ b = 0)
+    (hab : a ⬝ᵥ G *ᵥ b = 1) (hua : u ⬝ᵥ G *ᵥ a = 0) (hub : u ⬝ᵥ G *ᵥ b = 0) (p q : ℤ) :
+    IsUnit (planeMove G u a b p q).det := by
+  obtain ⟨h1, h2⟩ := planeMove_aux hsymm haa hbb hab hua hub p q
+  exact eichler_isUnit_det G hsymm hunim u _ (p * q) huu h1 h2
+
+/-- **The coordinate effect of a plane move** on an arbitrary pairing. -/
+theorem planeMove_bil (hsymm : Gᵀ = G) (p q : ℤ) (y z : Fin m → ℤ) :
+    y ⬝ᵥ G *ᵥ ((planeMove G u a b p q) *ᵥ z)
+      = y ⬝ᵥ G *ᵥ z
+        + (p * (a ⬝ᵥ G *ᵥ z) + q * (b ⬝ᵥ G *ᵥ z)) * (y ⬝ᵥ G *ᵥ u)
+        - (u ⬝ᵥ G *ᵥ z) * (p * (y ⬝ᵥ G *ᵥ a) + q * (y ⬝ᵥ G *ᵥ b))
+        - p * q * ((u ⬝ᵥ G *ᵥ z) * (y ⬝ᵥ G *ᵥ u)) := by
+  rw [planeMove, eichler_bil G hsymm, bil_add_left, bil_smul_left, bil_smul_left,
+    bil_add_right, bil_smul_right, bil_smul_right]
+
+end PlaneMove
+
 /-- **The residual gap of STEP 1.** After an isometry, the second plane's `e₂`-pairing with `w'`
 should DIVIDE both first-plane pairings. This is the `SO⁺(U ⊕ U₁) ≅ (SL₂ℤ × SL₂ℤ)/±` reduction — a
 Euclidean descent on the four `U ⊕ U₁` coordinates of `w'` — and it is all that remains. -/
