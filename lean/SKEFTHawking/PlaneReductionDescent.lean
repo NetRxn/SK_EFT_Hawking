@@ -293,6 +293,35 @@ theorem natAbs_gcd_lt_of_axis_round {α γ δ : ℤ}
   · exact lt_of_le_of_lt (Nat.le_of_dvd (Int.natAbs_pos.mpr h)
       (Nat.gcd_dvd_left (γ % α).natAbs (δ % α).natAbs)) hγ
 
+/-! ## §6b. THE AXIS ROUND — one visit strictly drops `gcd(γ, δ)` -/
+
+/-- **THE AXIS ROUND.** From an axis state whose `gcd(γ, δ) =: e` is positive and does **not** divide
+`α` — precisely the case `planeReduction_of_beta_zero` cannot close — there is a chain to a state
+with strictly smaller `gcd(γ, δ)`.
+
+Two moves: `planeReduction_axis_normalize` puts `α` into `(0, e)` (it is nonzero exactly because
+`e ∤ α`), then `planeReduction_axis_escape` reduces `γ` and `δ` modulo that `α`, so both land below
+`α < e`.
+
+Since `gcd(α, β, γ, δ)` is invariant and divides `gcd(γ, δ)`, the sequence of axis-visit gcds is
+strictly decreasing and bounded below by it — and at the bottom the gcd divides `α`, so the axis
+closes. That is the termination argument for the axis lane. -/
+theorem planeReduction_axis_round {α γ δ : ℤ} (he : 0 < Int.gcd γ δ)
+    (hnd : ¬ ((Int.gcd γ δ : ℤ) ∣ α)) :
+    ∃ α' β' γ' δ' : ℤ, ReflTransGen PlaneStep (α, 0, γ, δ) (α', β', γ', δ') ∧
+      Int.gcd γ' δ' < Int.gcd γ δ := by
+  have hepos : (0 : ℤ) < (Int.gcd γ δ : ℤ) := by exact_mod_cast he
+  set a : ℤ := α % (Int.gcd γ δ : ℤ) with hadef
+  have ha0 : 0 ≤ a := Int.emod_nonneg α (ne_of_gt hepos)
+  have halt : a < (Int.gcd γ δ : ℤ) := Int.emod_lt_of_pos α hepos
+  have hane : a ≠ 0 := fun h => hnd (Int.dvd_of_emod_eq_zero (hadef ▸ h))
+  refine ⟨a, (γ / a) * δ + (δ / a) * γ - (γ / a) * (δ / a) * a, γ % a, δ % a,
+    (planeReduction_axis_normalize α γ δ).trans (planeReduction_axis_escape a γ δ), ?_⟩
+  have h3 : Int.gcd (γ % a) (δ % a) < a.natAbs :=
+    natAbs_gcd_lt_of_axis_round (natAbs_emod_lt_natAbs hane) (natAbs_emod_lt_natAbs hane)
+  have h4 : (a.natAbs : ℤ) = a := Int.natAbs_of_nonneg ha0
+  omega
+
 /-! ## §7. THE CONSERVED QUANTITY
 
 `N (α, β, γ, δ) := αβ + γδ` is invariant under **all four** moves. This is not a coincidence of the
