@@ -644,6 +644,80 @@ theorem unitCancellation_of (hplanes : TwoHypPlanes) (hstep1 : EichlerStepOne) :
     exact h1.mul (h2.mul hSdet)
   exact intCongr_of_unitFixing eqv A B Φ hΦdet hΦfix hΦconj
 
+/-! ### STEP 1: the `U ⊕ U₁` transvection move, and the residual gap
+
+One Eichler transvection `t(e₂, p e₁ + q f₁)` changes the two first-plane pairings of `w'` by
+`f₁·w' ↦ f₁·w' − (e₂·w') p` and `e₁·w' ↦ e₁·w' − (e₂·w') q`, leaving `e₂·w'` fixed. So STEP 1 closes
+in ONE move as soon as `e₂·w'` divides both — which is the whole remaining content. -/
+
+/-- **The `U ⊕ U₁` transvection move closes STEP 1 under a divisibility hypothesis.** The transvection
+`t(e₂, p e₁ + q f₁)` (integral because `(p e₁ + q f₁)² = 2pq` is even) sends `f₁·w' ↦ f₁·w' − (e₂·w')p`
+and `e₁·w' ↦ e₁·w' − (e₂·w')q`; with `p, q` the cofactors both pairings vanish. -/
+theorem stepOne_of_dvd {m : ℕ} (G : Matrix (Fin m) (Fin m) ℤ) (hsymm : Gᵀ = G)
+    (hunim : IsUnimodular G) (e₁ f₁ e₂ w' : Fin m → ℤ) (p q : ℤ)
+    (he₁e₁ : e₁ ⬝ᵥ G *ᵥ e₁ = 0) (hf₁f₁ : f₁ ⬝ᵥ G *ᵥ f₁ = 0) (he₁f₁ : e₁ ⬝ᵥ G *ᵥ f₁ = 1)
+    (he₂e₂ : e₂ ⬝ᵥ G *ᵥ e₂ = 0) (he₁e₂ : e₁ ⬝ᵥ G *ᵥ e₂ = 0) (hf₁e₂ : f₁ ⬝ᵥ G *ᵥ e₂ = 0)
+    (hp : f₁ ⬝ᵥ G *ᵥ w' = (e₂ ⬝ᵥ G *ᵥ w') * p)
+    (hq : e₁ ⬝ᵥ G *ᵥ w' = (e₂ ⬝ᵥ G *ᵥ w') * q) :
+    ∃ T : Matrix (Fin m) (Fin m) ℤ, IsUnit T.det ∧ Tᵀ * G * T = G ∧
+      e₁ ⬝ᵥ G *ᵥ (T *ᵥ w') = 0 ∧ f₁ ⬝ᵥ G *ᵥ (T *ᵥ w') = 0 := by
+  set x : Fin m → ℤ := p • e₁ + q • f₁ with hxdef
+  have he₂e₁ : e₂ ⬝ᵥ G *ᵥ e₁ = 0 := by rw [bil_comm hsymm]; exact he₁e₂
+  have he₂f₁ : e₂ ⬝ᵥ G *ᵥ f₁ = 0 := by rw [bil_comm hsymm]; exact hf₁e₂
+  have hf₁e₁ : f₁ ⬝ᵥ G *ᵥ e₁ = 1 := by rw [bil_comm hsymm]; exact he₁f₁
+  have hux : e₂ ⬝ᵥ G *ᵥ x = 0 := by
+    rw [hxdef, bil_add_right, bil_smul_right, bil_smul_right, he₂e₁, he₂f₁]; ring
+  have hxx : x ⬝ᵥ G *ᵥ x = 2 * (p * q) := by
+    rw [hxdef, bil_add_left, bil_add_right, bil_add_right, bil_smul_left, bil_smul_left,
+      bil_smul_left, bil_smul_left, bil_smul_right, bil_smul_right, bil_smul_right,
+      bil_smul_right, he₁e₁, hf₁f₁, he₁f₁, hf₁e₁]
+    ring
+  have he₁x : e₁ ⬝ᵥ G *ᵥ x = q := by
+    rw [hxdef, bil_add_right, bil_smul_right, bil_smul_right, he₁e₁, he₁f₁]; ring
+  have hf₁x : f₁ ⬝ᵥ G *ᵥ x = p := by
+    rw [hxdef, bil_add_right, bil_smul_right, bil_smul_right, hf₁e₁, hf₁f₁]; ring
+  refine ⟨eichler G e₂ x (p * q), eichler_isUnit_det G hsymm hunim e₂ x (p * q) he₂e₂ hux hxx,
+    eichler_isometry G hsymm e₂ x (p * q) he₂e₂ hux hxx, ?_, ?_⟩
+  · rw [eichler_mulVec_symm G hsymm, bil_sub_right, bil_sub_right, bil_add_right,
+      bil_smul_right, bil_smul_right, bil_smul_right, he₁e₂, he₁x, hq]
+    ring
+  · rw [eichler_mulVec_symm G hsymm, bil_sub_right, bil_sub_right, bil_add_right,
+      bil_smul_right, bil_smul_right, bil_smul_right, hf₁e₂, hf₁x, hp]
+    ring
+
+/-- **The residual gap of STEP 1.** After an isometry, the second plane's `e₂`-pairing with `w'`
+should DIVIDE both first-plane pairings. This is the `SO⁺(U ⊕ U₁) ≅ (SL₂ℤ × SL₂ℤ)/±` reduction — a
+Euclidean descent on the four `U ⊕ U₁` coordinates of `w'` — and it is all that remains. -/
+def StepOneDivisorNormalization : Prop :=
+  ∀ (m : ℕ) (G : Matrix (Fin m) (Fin m) ℤ), Gᵀ = G → IsUnimodular G →
+    ∀ e₁ f₁ e₂ f₂ w w' : Fin m → ℤ,
+      e₁ ⬝ᵥ G *ᵥ e₁ = 0 → f₁ ⬝ᵥ G *ᵥ f₁ = 0 → e₁ ⬝ᵥ G *ᵥ f₁ = 1 →
+      e₂ ⬝ᵥ G *ᵥ e₂ = 0 → f₂ ⬝ᵥ G *ᵥ f₂ = 0 → e₂ ⬝ᵥ G *ᵥ f₂ = 1 →
+      e₁ ⬝ᵥ G *ᵥ e₂ = 0 → e₁ ⬝ᵥ G *ᵥ f₂ = 0 → f₁ ⬝ᵥ G *ᵥ e₂ = 0 → f₁ ⬝ᵥ G *ᵥ f₂ = 0 →
+      e₁ ⬝ᵥ G *ᵥ w = 0 → f₁ ⬝ᵥ G *ᵥ w = 0 → e₂ ⬝ᵥ G *ᵥ w = 0 → f₂ ⬝ᵥ G *ᵥ w = 0 →
+      w ⬝ᵥ G *ᵥ w = 1 → w' ⬝ᵥ G *ᵥ w' = 1 → IsCharQ G w → IsCharQ G w' →
+      ∃ T : Matrix (Fin m) (Fin m) ℤ, IsUnit T.det ∧ Tᵀ * G * T = G ∧
+        (e₂ ⬝ᵥ G *ᵥ (T *ᵥ w')) ∣ (e₁ ⬝ᵥ G *ᵥ (T *ᵥ w')) ∧
+        (e₂ ⬝ᵥ G *ᵥ (T *ᵥ w')) ∣ (f₁ ⬝ᵥ G *ᵥ (T *ᵥ w'))
+
+/-- **STEP 1 from the divisibility normalisation**: normalise, then fire one transvection. -/
+theorem eichlerStepOne_of_normalization (hnorm : StepOneDivisorNormalization) :
+    EichlerStepOne := by
+  intro m G hsymm hunim e₁ f₁ e₂ f₂ w w'
+  intro he₁e₁ hf₁f₁ he₁f₁ he₂e₂ hf₂f₂ he₂f₂ he₁e₂ he₁f₂ hf₁e₂ hf₁f₂
+  intro he₁w hf₁w he₂w hf₂w hww hw'w' hcw hcw'
+  obtain ⟨T₀, hT₀det, hT₀iso, hdvdq, hdvdp⟩ :=
+    hnorm m G hsymm hunim e₁ f₁ e₂ f₂ w w' he₁e₁ hf₁f₁ he₁f₁ he₂e₂ hf₂f₂ he₂f₂
+      he₁e₂ he₁f₂ hf₁e₂ hf₁f₂ he₁w hf₁w he₂w hf₂w hww hw'w' hcw hcw'
+  obtain ⟨q, hq⟩ := hdvdq
+  obtain ⟨p, hp⟩ := hdvdp
+  obtain ⟨T₁, hT₁det, hT₁iso, hT₁e, hT₁f⟩ :=
+    stepOne_of_dvd G hsymm hunim e₁ f₁ e₂ (T₀ *ᵥ w') p q he₁e₁ hf₁f₁ he₁f₁ he₂e₂ he₁e₂ hf₁e₂ hp hq
+  refine ⟨T₁ * T₀, ?_, isom_comp hT₁iso hT₀iso, ?_, ?_⟩
+  · rw [Matrix.det_mul]; exact hT₁det.mul hT₀det
+  · rw [← Matrix.mulVec_mulVec]; exact hT₁e
+  · rw [← Matrix.mulVec_mulVec]; exact hT₁f
+
 /-- **`UnitCancellation` now rests on STEP 1 of Eichler's criterion ALONE.** The two-hyperbolic-plane
 datum is discharged (`twoHypPlanes`), STEP 2 is discharged
 (`exists_isometry_map_of_perp_hyp`), and the whole assembly between them is discharged above. -/
