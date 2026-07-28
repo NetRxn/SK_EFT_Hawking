@@ -4999,6 +4999,10 @@ import SKEFTHawking.KummerK3ExceptionalBlock
 -- (an iff, not a weakening), plus the geometric sufficient condition (α_d restricts to 0 off the
 -- d-th piece) and the non-vacuity check that the −2 diagonal is the load-bearing conjunct.
 import SKEFTHawking.KummerK3ExceptionalRestriction
+-- Phase 5q.H — the pair-restriction leg vanishes on the subspace: iota_S^* . j^* = 0 over Z. The
+-- half of exactness at H^m(X;Z) that SUPPORT arguments consume — a class supplied RELATIVELY (as a
+-- Thom class is) automatically vanishes on the subspace, cochain-level and elementary.
+import SKEFTHawking.SingularRelativeVanishOnSubspace
 -- Phase 5q.H — `heven` DELETED from the welded K3's E1 ledger: evenness of the intersection
 -- diagonal propagates along the ℤ-span, integral PD upgrades the datum's cap-spanning to
 -- cohomological spanning, so `heven` is exactly the parity of the datum's own Kronecker diagonal.
