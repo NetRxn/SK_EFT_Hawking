@@ -4960,6 +4960,12 @@ import SKEFTHawking.CollarDefiningFunction
 import SKEFTHawking.ContMDiffPartitionOfUnity
 import SKEFTHawking.InwardFlow
 import SKEFTHawking.T2BordismGluing
+-- Phase 5q.H — the K3 Gram obligation, routed through the LATTICE classification instead of a
+-- basis: signature transports from a merely full-rank (finite-index) sublattice, so `σ = −16`
+-- follows from a table of cup products rather than from a basis of `H²(K3;ℤ)`.
+import SKEFTHawking.LatticeSigFullRankSublattice
+import SKEFTHawking.IntersectionSigFullRankFamily
+import SKEFTHawking.KummerK3GramFromLattice
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
