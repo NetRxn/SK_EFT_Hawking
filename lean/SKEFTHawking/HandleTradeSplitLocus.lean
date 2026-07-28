@@ -455,13 +455,20 @@ noncomputable def gradedPresentation (ξ₀ : TangentialData.{u, v} X k I)
     show 2 * (p.2.2.down.val + q.2.2.down.val) = 2 * p.2.2.down.val + 2 * q.2.2.down.val
     omega
 
-/-- Decoration is invisible to the bordism relation: `rankGraded ξ₀`-bordism is `ξ₀`-bordism of the
-underlying structured manifolds. **Definitional** (`Iff.rfl`) — recorded not as content but because
-it is the reason `rankGraded_equiv` below exists. -/
-theorem isDataBordant_rankGraded {ξ₀ : TangentialData.{u, v} X k I}
-    (p q : StrMfd (rankGraded ξ₀)) :
-    IsDataBordant (rankGraded ξ₀) p q ↔
-      IsDataBordant ξ₀ ⟨p.1, p.2.1⟩ ⟨q.1, q.2.1⟩ := Iff.rfl
+/-- **Relabelling is invisible to the bordism relation.** Any two labellings of the *same* underlying
+structured manifold are `rankGraded ξ₀`-bordant, witnessed by the reflexive cylinder: `rankGraded`'s
+`Bor` field ignores the label, so `ξ₀.cylBor σ` already bounds the pair.
+
+This is the half of "decoration is invisible" that carries content. The other half — that
+`IsDataBordant (rankGraded ξ₀) p q` *unfolds* to `IsDataBordant ξ₀ ⟨p.1, p.2.1⟩ ⟨q.1, q.2.1⟩` — is
+definitional (`Iff.rfl`) and is deliberately NOT recorded as a theorem: a structurally-named
+statement discharged by `Iff.rfl` asserts nothing, and the `rank` in its name would advertise a
+quantitative result it does not have. What is actually needed downstream is the statement below, and
+`rankGraded_equiv.left_inv` now calls it rather than re-deriving the cylinder inline. -/
+theorem isDataBordant_relabel {ξ₀ : TangentialData.{u, v} X k I}
+    (s : SingularManifold.{u} X k I) (σ : ξ₀.Mfd s) (ℓ ℓ' : ULift.{v} (RankLabel s)) :
+    IsDataBordant (rankGraded ξ₀) ⟨s, (σ, ℓ)⟩ ⟨s, (σ, ℓ')⟩ :=
+  ⟨reflCylinder s, ⟨ξ₀.cylBor σ⟩⟩
 
 /-- **The rank-graded datum carries the same bordism group.** `Ω^(rankGraded ξ₀) ≃+ Ω^ξ₀`: the
 forgetful map (drop the label) is an additive isomorphism, its inverse labelling everything `0` — a
@@ -478,7 +485,7 @@ noncomputable def rankGraded_equiv (ξ₀ : TangentialData.{u, v} X k I) :
   left_inv x := by
     induction x using Quot.ind with | _ p =>
     exact DataBordismGrp.mk_eq_of_bordant (rankGraded ξ₀)
-      ⟨reflCylinder p.1, ⟨ξ₀.cylBor p.2.1⟩⟩
+      (isDataBordant_relabel p.1 p.2.1 _ _)
   right_inv x := by induction x using Quot.ind with | _ p => rfl
   map_add' x y := by
     induction x using Quot.ind with | _ p =>
