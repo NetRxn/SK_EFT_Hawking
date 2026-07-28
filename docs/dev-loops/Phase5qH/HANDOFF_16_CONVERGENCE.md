@@ -168,8 +168,23 @@ proves only the null case. Three `KERNEL_NOGO_REGISTRY` entries now bound the de
    index reaches the **orientable stratum and kernel-checkably only that one**; refuted at
    `stdQuadratic 1`, the ℝP² half of the `(ℝP⁴,ℝP²)` generator. **Not fixable by more membrane
    work** — the obstruction is the polarization identity. Reaching the nonorientable stratum needs
-   the GM **ℤ/4-resolution** index, whose coefficient split the in-tree blueprint does **not** pin.
-   **Do not guess it** — it needs Klug arXiv:2011.12418 §2 read directly.
+   the GM **ℤ/4-resolution** index.
+   ✅ **RESOLVED 2026-07-28 (`3e15199c`).** The split is now PINNED from the primary source, read
+   directly by the lead: **Klug arXiv:2011.12418v3 §6 p. 18** (following Matsumoto / Guillou–Marin).
+   ⚠ The earlier version of this line said **§2** — that was wrong; §2 is the *orientable* mod-2 case
+   and Klug states the orientability assumption there explicitly. The split is
+   **`e_F(x) = n(D) + 2(D·F) + 2 d(C)  (mod 4)`**, coefficients `1,2,2`, with the half-integrality in
+   `n(D)` — the framing, counting right-handed **half**-twists — and **not** in a doubled `D·F`, so
+   the shape this fence warned against guessing was indeed the wrong one. Two cross-checks against
+   the source came back clean: Klug's `e(x+y) = e x + e y + 2(x·y)` **is** in-tree
+   `Brown.Z4Quadratic.refine'`, and Klug Theorem 5 `σ = F·F + 2β(F) (mod 16)` **is** in-tree
+   `GuillouMarinBridge.GMrelation` — the algebra layer needed no correction.
+   Built: `GMZ4MembraneIndex.lean` (`Z4MembraneData`, `index_refine` **derives** the identity from
+   the three additivity laws; `two_mul_q_self`/`q_self_reduce` give the sharp escape — the mod-2
+   index term dies under polarization and forces `B v v = 0`, the ℤ/4 term survives as `2·q v` and
+   what is forced is the *congruence* `q v ≡ B v v (mod 2)`; `orientable_framing_forces_alternating`
+   shows a whole-twist framing re-imposes the obstruction, so the half-twists are load-bearing).
+   Corpus: `Lit-Search/Phase-5qH/Klug-GuillouMarin-Z4-membrane-index-coefficient-split.md`.
 
 Positive substrate that DID land: the three FK summands are built as genuine **constructions**
 (`MembraneIndex.lean`), including the framing obstruction as a loop **degree** with additivity
@@ -181,7 +196,7 @@ both `CharSurfaceFKVacuity` §3 and the ceiling module had *assumed* this withou
 is exhibitable (the project's disk asset is the **product** model). Verified it has no load-bearing
 consumer outside its own file → a do-not-build-on-this note, not an active defect.
 
-### ⭐ LATTICE LANE (solo, in progress) — `PlaneReductionDescent.lean`
+### ✅ LATTICE LANE — **CLOSED** (`80536c5d`) — `PlaneReductionDescent.lean`
 
 `UnitCancellation` → `StableNegRank16Two` → the K3 Gram. wt1 reduced `UnitCancellation` to ONE
 geometry-free statement, **`PlaneReduction`**; the safeguard is lead-verified (`planeStep_lift`
@@ -201,8 +216,25 @@ hand-transcribed folklore). Built since:
   with the gcd bound. The key observation: the `β`-reducing step leaves one plane-2 coordinate
   *completely alone*, so the post-round gcd **divides** it.
 
-**Open:** the outer recursion needs the descent's bound in terms of the current `γ,δ` rather than
-`β`. Bookkeeping over facts now all proved, not a missing idea.
+- **the REFUTATION of the divisibility strengthening** (`23c03116`) — the tempting
+  `gcd(γ₂,δ₂) ∣ gcd(γ₁,δ₁)` between axis visits is **FALSE** (7 violations in 600 hard states;
+  smallest `(5,0,24,30) ↦ [6,4]`, `4 ∤ 6`). The measure is an inequality, so the induction must
+  carry a *bound*, not a divisibility chain. The "post-round gcd **divides** the untouched
+  coordinate" reading above was the thing this refuted — kept for provenance, superseded.
+- **`axisReturnBound` + the close** (`80536c5d`) — `PlaneReduction`, `UnitCancellation` and
+  **`StableNegRank16Two` are now unconditional theorems** (`*_holds`), kernel-pure.
+
+**The join's idea** (the whole obstacle, recorded because the shape of the fix is not the shape the
+problem suggested): §5's descent bounds the returning axis gcd by `|β|`; §6's axis induction needs it
+bounded by the *incoming* plane-2 coordinates; `m₃` rewrites `γ,δ` mod `β`, so no carried invariant
+survives a round. The resolution is that **no carry is needed** — ONE round already drops `|β|` below
+`B = max(|γ|,|δ|)` (in the `m₂` branch `β' = β % (γ%β)`, so `|β'| < γ%β ≤ γ ≤ B`; mirror in `m₁`),
+after which §5's own bound suffices verbatim. The two-sided Euclid on `(gcd(α,β), gcd(γ,δ))` that the
+open note called for was never needed and was not built.
+
+**Downstream, same commit:** `KummerK3E1Unconditional.lean` drops `hstable` from every Kummer
+consumer — `hk3_holds`, `kummerK3_hk3_holds`, and the four E1-atom entry points. The welded Kummer
+K3's E1 residual ledger is now **ONE geometric datum** (`hgeo`), the lattice half being gone.
 
 ### Method note worth keeping
 The axis measure was **tested before being formalised**, and the first test was worthless: a random

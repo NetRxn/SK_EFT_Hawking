@@ -26,10 +26,17 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    Instantiated at stdQuadratic 1 -- the RP2 surface half of the (RP4, RP2) generator, where B 1 1 = 1 --
    `no_mod2_index_on_rp2` is a flat refutation by `decide`. NOT FIXABLE BY MORE MEMBRANE WORK: the
    obstruction is the polarization identity itself, not a missing lemma or a weak construction. CONSEQUENCE
-   FOR ROUTE A: reaching the nonorientable stratum requires the Guillou-Marin Z/4-RESOLUTION index, whose
-   coefficient split is NOT pinned by the in-tree blueprint (which states only the mod-2 formula); do NOT
-   guess a split such as 2*(D.F) + O(D) + ... -- it must come from Klug arXiv:2011.12418 section 2 read
-   directly. ALSO SETTLED HERE (a second, independent refutation): with the normal-framing comparison as
+   FOR ROUTE A: reaching the nonorientable stratum requires the Guillou-Marin Z/4-RESOLUTION index.
+   ** RESOLVED 2026-07-28 (3e15199c) -- the split is now PINNED from the primary source, read directly
+   by the lead: Klug arXiv:2011.12418v3 SECTION 6 p. 18 (following Matsumoto and Guillou-Marin). NOTE
+   the earlier version of this entry cited section 2; that was WRONG -- section 2 is the ORIENTABLE
+   mod-2 case and Klug says so explicitly there. The split is  e_F(x) = n(D) + 2(D.F) + 2 d(C) (mod 4),
+   coefficients 1,2,2, with the half-integrality in n(D) -- the framing, counting right-handed HALF-
+   twists -- and NOT in a doubled D.F, so the shape this entry warned against guessing was indeed the
+   wrong one. Built in GMZ4MembraneIndex.lean; corpus note in Lit-Search/Phase-5qH/. The refutation
+   below is UNAFFECTED: the mod-2 index still cannot reach the nonorientable stratum, and
+   `orientable_framing_forces_alternating` re-derives exactly this obstruction whenever the framing is
+   a whole-twist count, which is the kernel-checked statement that the half-twists are load-bearing. ** ALSO SETTLED HERE (a second, independent refutation): with the normal-framing comparison as
    FREE data, [Q1] in its natural universal shape is FALSE -- `indexWellDefined_false_of_framedMembrane`
    shows the 2-pi twist leaves the membrane untouched and flips the index. This is the same failure mode
    `CharSurfaceFKVacuity` found one level up, reappearing at the framing; the repair is a rigidity tie
