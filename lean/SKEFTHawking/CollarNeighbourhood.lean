@@ -76,10 +76,11 @@ current Mathlib sat under that step; both are upstreamable in their own right.
    only asks `t₀ : Icc tmin tmax`, so `t₀` may be an **endpoint**, and
    `ODE.exists_eq_forall_mem_Icc_hasDerivWithinAt₀` then produces a one-sided solution on
    `Icc t₀ tmax` with `HasDerivWithinAt` relative to that interval. What is genuinely missing is
-   (a) the barrier argument keeping the trajectory inside the half space (supplied for a general
-   inward-pointing field by `SKEFTHawking.Collar.InwardFlow`), and (b) the manifold-level notion —
-   `IsMIntegralCurveAt` is two-sided, so a one-sided `IsMIntegralCurveWithinAt` on `Ici t₀` would
-   have to be introduced.
+   (a) the barrier argument keeping the trajectory inside the half space — supplied for a general
+   inward-pointing field by `SKEFTHawking.Collar.exists_forward_flow_halfSpace` and transported to
+   this model by `SKEFTHawking.Collar.exists_forward_flow_prodHalf` — and (b) the manifold-level
+   notion: `IsMIntegralCurveAt` is two-sided, so a one-sided `IsMIntegralCurveWithinAt` on `Ici t₀`
+   would have to be introduced, with its own uniqueness and uniform-time theory.
 
 2. **Partitions of unity at finite regularity — DISCHARGED**, in
    `SKEFTHawking.ContMDiffPartitionOfUnity`. Mathlib's are `C^∞`-only:
