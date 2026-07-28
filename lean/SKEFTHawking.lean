@@ -4966,6 +4966,9 @@ import SKEFTHawking.T2BordismGluing
 import SKEFTHawking.LatticeSigFullRankSublattice
 import SKEFTHawking.IntersectionSigFullRankFamily
 import SKEFTHawking.KummerK3GramFromLattice
+-- Phase 5q.H — the general-sigma Guillou-Marin/[FK] statement layer: why the empty-surface
+-- specialization of GM is CIRCULAR for a spin manifold, kernel-checked.
+import SKEFTHawking.CharSurfaceFKVacuity
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
