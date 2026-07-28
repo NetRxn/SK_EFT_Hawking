@@ -4995,6 +4995,9 @@ import SKEFTHawking.KummerK3ExceptionalBlock
 -- diagonal propagates along the ℤ-span, integral PD upgrades the datum's cap-spanning to
 -- cohomological spanning, so `heven` is exactly the parity of the datum's own Kronecker diagonal.
 import SKEFTHawking.KummerK3EvenFromSpanningFamily
+-- Phase 5q.H — signature/congruence behaviour under scaling a Gram by a positive integer:
+-- closes the `IntCongr`-vs-equality gap left by the T4 block (`t4m • XMat`).
+import SKEFTHawking.KummerK3TorusBlockScale
 -- Phase 5q.H — the general-sigma Guillou-Marin/[FK] statement layer: why the empty-surface
 -- specialization of GM is CIRCULAR for a spin manifold, kernel-checked.
 import SKEFTHawking.CharSurfaceFKVacuity
