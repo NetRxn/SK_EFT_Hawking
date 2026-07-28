@@ -10,7 +10,7 @@ import SKEFTHawking.CircleWindingCocycle
 
 namespace SKEFTHawking.MembraneIndex
 
-open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
+open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic SKEFTHawking.GuillouMarin
 open SKEFTHawking.CharSurface
 open SKEFTHawking.CircleWindingCocycle
 open scoped Manifold
@@ -339,6 +339,140 @@ the mutual intersection number, which is the mod-2 intersection form `B(x, y)`. 
 purely on membranes and the surface's own intersection form. -/
 def Refines (sys : MembraneSystem C) : Prop :=
   ∀ x y, sys.index (x + y) = sys.index x + sys.index y + C.Q.B x y
+
+end MembraneSystem
+
+/-! ## §6. The enhancement PRODUCED from the membrane index — and the pin⁻ class `w` -/
+
+section Construction
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+omit [Fintype ι] [DecidableEq ι] in
+private lemma self_add_self (v : ι → ZMod 2) : v + v = 0 := by
+  funext i
+  exact (by decide : ∀ a : ZMod 2, a + a = 0) (v i)
+
+/-- **The mod-2 membrane-index route forces an ALTERNATING intersection form** (new — the exact
+scope of blueprint Route A, kernel-checked). If any function `μ` on `H₁(F;ℤ/2)` satisfies the
+`[Q2]` polarization identity against `Q.B`, then `B(v,v) = 0` for every `v`. Setting `x = y = v`
+gives `0 = μ(v) + μ(v) + B(v,v) = B(v,v)` because `μ(v) + μ(v) = 0` in `ZMod 2`.
+
+Consequence (`not_exists_index_of_B_self_ne_zero`): the Freedman–Kirby mod-2 index provably cannot
+produce the enhancement of a characteristic surface with an odd class — the `ℝP²` stratum. That is
+not a defect of the construction; it is the precise content of the blueprint's remark that the
+Guillou–Marin (Pin⁻, `ℤ/4`) form "is sharper … but costs nonorientable-surface + Pin⁻ normal data on
+top". Route A reaches the orientable stratum and, kernel-checkably, only that one. -/
+theorem refines_forces_alternating {Q : Z4Quadratic ι} {μ : (ι → ZMod 2) → ZMod 2}
+    (h : ∀ x y, μ (x + y) = μ x + μ y + Q.B x y) (v : ι → ZMod 2) : Q.B v v = 0 := by
+  have hz : μ 0 = 0 := by
+    have h00 := h 0 0
+    rw [add_zero, Q.B_zero_left] at h00
+    revert h00
+    generalize μ 0 = a
+    revert a
+    decide
+  have hvv := h v v
+  rw [self_add_self v, hz] at hvv
+  revert hvv
+  generalize μ v = a
+  generalize Q.B v v = b
+  revert a b
+  decide
+
+/-- **No mod-2 membrane index exists on a form with an odd value** (new — the refutation form). -/
+theorem not_exists_index_of_B_self_ne_zero {Q : Z4Quadratic ι} {v : ι → ZMod 2}
+    (hv : Q.B v v ≠ 0) :
+    ¬ ∃ μ : (ι → ZMod 2) → ZMod 2, ∀ x y, μ (x + y) = μ x + μ y + Q.B x y := by
+  rintro ⟨μ, h⟩
+  exact hv (refines_forces_alternating h v)
+
+/-- **THE ENHANCEMENT, PRODUCED FROM GEOMETRY** (new — the substrate `CharSurfaceFKVacuity` §3 named
+as missing). Given a membrane index `μ` satisfying the `[Q2]` polarization identity against the
+surface's own mod-2 intersection form, `embed2 ∘ μ` is a genuine `Z4Quadratic` on `H₁(F;ℤ/2)` — the
+`ℤ/4` enhancement of the orientable (Arf) stratum, `q̂ = 2·q_F`. Only `refine'` consumes the
+geometry; the polar form and all of its algebra come from the surface datum unchanged, which is
+exactly what makes the produced enhancement comparable to `C.Q` along the torsor. -/
+noncomputable def geomEnhancement (Q : Z4Quadratic ι) (μ : (ι → ZMod 2) → ZMod 2)
+    (h : ∀ x y, μ (x + y) = μ x + μ y + Q.B x y) : Z4Quadratic ι where
+  q v := embed2 (μ v)
+  B := Q.B
+  refine' x y := by rw [h x y, embed2_add, embed2_add]
+  B_add_left := Q.B_add_left
+  B_symm := Q.B_symm
+  nondeg := Q.nondeg
+
+@[simp] lemma geomEnhancement_B (Q : Z4Quadratic ι) (μ : (ι → ZMod 2) → ZMod 2)
+    (h : ∀ x y, μ (x + y) = μ x + μ y + Q.B x y) : (geomEnhancement Q μ h).B = Q.B := rfl
+
+@[simp] lemma geomEnhancement_q (Q : Z4Quadratic ι) (μ : (ι → ZMod 2) → ZMod 2)
+    (h : ∀ x y, μ (x + y) = μ x + μ y + Q.B x y) (v : ι → ZMod 2) :
+    (geomEnhancement Q μ h).q v = embed2 (μ v) := rfl
+
+/-- The produced enhancement is even — it is `2 ×` the Arf form, so its Brown invariant is `4·Arf`. -/
+theorem geomEnhancement_isEven (Q : Z4Quadratic ι) (μ : (ι → ZMod 2) → ZMod 2)
+    (h : ∀ x y, μ (x + y) = μ x + μ y + Q.B x y) : Z4Quadratic.IsEven (geomEnhancement Q μ h) :=
+  fun v => ⟨μ v, rfl⟩
+
+/-- **THE PIN⁻ CLASS `w`, CONSTRUCTED FROM THE MEMBRANE INDEX** (new — the target of the whole
+arc). The enhancement produced by the membrane index shares the surface's polar form by
+construction, so the simply-transitive torsor theorem `PinTorsor.shift_simply_transitive` supplies a
+**unique** class `w ∈ H₁(F;ℤ/2) ≅ H¹(F;ℤ/2)` carrying the substrate's recorded enhancement to the
+geometric one. `PinEnhancementTorsor` proved that recording the polar form plus one such class
+records the enhancement completely; this theorem says the class is *computed* by the blueprint's
+`D·F + O(D) + d(C)`, not chosen. -/
+theorem exists_unique_pin_class (Q : Z4Quadratic ι) (μ : (ι → ZMod 2) → ZMod 2)
+    (h : ∀ x y, μ (x + y) = μ x + μ y + Q.B x y) :
+    ∃! w : ι → ZMod 2, Q.shift w = geomEnhancement Q μ h :=
+  SKEFTHawking.PinTorsor.shift_simply_transitive rfl
+
+/-! ### The `[FK]` congruence at the produced enhancement -/
+
+/-- The Guillou–Marin residue of an even form is `8·Arf` — so it can only be `0` or `8` in
+`ZMod 16`. -/
+theorem doubleBrown_of_isEven {Q : Z4Quadratic ι} (hE : Z4Quadratic.IsEven Q) :
+    doubleBrown Q = 8 * ((Q.arf.val : ℕ) : ZMod 16) := by
+  have hb := brown_eq_four_mul_arf Q hE
+  rcases (by decide : ∀ a : ZMod 2, a = 0 ∨ a = 1) Q.arf with h0 | h1
+  · rw [doubleBrown, hb, h0]; decide
+  · rw [doubleBrown, hb, h1]; decide
+
+/-- **The blueprint's `[FK]` congruence, at the PRODUCED enhancement** (new): Guillou–Marin for the
+membrane-index enhancement is exactly *`Arf(q_F) = (σ − ξ·ξ)/8 mod 2`* — blueprint line `[FK]`,
+re-typed over an enhancement that is computed from membranes rather than carried as a free field.
+Its hypothesis is a predicate on the membrane index, so it passes the intensional admissibility
+criterion of `GMTripleLayerForcing`. -/
+theorem gmrelation_geomEnhancement_iff (Q : Z4Quadratic ι) (μ : (ι → ZMod 2) → ZMod 2)
+    (h : ∀ x y, μ (x + y) = μ x + μ y + Q.B x y) (σ F : ℤ) :
+    GMrelation σ F (geomEnhancement Q μ h) ↔
+      ((σ - F : ℤ) : ZMod 16) = 8 * (((geomEnhancement Q μ h).arf.val : ℕ) : ZMod 16) := by
+  show ((σ - F : ℤ) : ZMod 16) = doubleBrown _ ↔ _
+  rw [doubleBrown_of_isEven (geomEnhancement_isEven Q μ h)]
+
+end Construction
+
+/-! ## §7. The surface-level assembly -/
+
+namespace MembraneSystem
+
+variable {C : PinCharSurface X k}
+
+/-- The enhancement of the characteristic surface produced by a membrane system satisfying `[Q2]`. -/
+noncomputable def enhancement (sys : MembraneSystem C) (h : sys.Refines) : Z4Quadratic C.ι :=
+  geomEnhancement C.Q sys.index h
+
+/-- **The surface's pin⁻ class, computed from its membranes** — the surface-level statement of
+`exists_unique_pin_class`. -/
+theorem exists_unique_pin_class (sys : MembraneSystem C) (h : sys.Refines) :
+    ∃! w : C.ι → ZMod 2, C.Q.shift w = sys.enhancement h :=
+  SKEFTHawking.MembraneIndex.exists_unique_pin_class C.Q sys.index h
+
+/-- **A membrane system satisfying `[Q2]` forces the surface's intersection form to be
+alternating** — the surface-level scope statement. A characteristic surface carrying an odd class
+admits no `[Q2]`-compatible membrane system at all. -/
+theorem refines_forces_alternating (sys : MembraneSystem C) (h : sys.Refines)
+    (v : C.ι → ZMod 2) : C.Q.B v v = 0 :=
+  SKEFTHawking.MembraneIndex.refines_forces_alternating h v
 
 end MembraneSystem
 
