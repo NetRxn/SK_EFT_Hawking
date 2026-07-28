@@ -1098,3 +1098,30 @@ search for the bridge (`lean_local_search` on the map/iso name), not just the tw
   carrier**. Since `hΦg ⟺ KTNonSplit`, `hΦg` inherits exactly that posture: a live open bit that
   could go either way, not a formality.
 - `created_ts`: 2026-07-27
+
+## `OPEN-RISK-collar-may-cap-below-the-flagship-k-top` (2026-07-27, arm: close-out — LEAD, UNVERIFIED)
+- `kind`: ⚠ **OPEN RISK, not a finding.** Filed so it is not lost; the verification is OWED.
+- **The observation.** wt3's finite-regularity partition of unity is stated at `{n : ℕ∞}` throughout,
+  and its scope note is that **analytic bump functions do not exist — excluded by mathematics, not by
+  a formalization gap** (`ContDiffBump.contDiff` is itself `{n : ℕ∞}`). But `ℕ∞`'s top is `∞` (C^∞),
+  whereas this project's manifold regularity is **`WithTop ℕ∞`**, whose `⊤` sits *strictly above*
+  `(⊤ : ℕ∞) = ∞`. The goal's flagship instantiates at `residualProvK ⊤`
+  (`PinPlusKTAssemblyResiduals.lean:70`, `:196`).
+- **The risk, stated precisely.** IF `⊤ : WithTop ℕ∞` is the analytic level, THEN the collar
+  neighbourhood theorem — which needs a partition of unity for the inward field — **cannot be proved
+  at `k = ⊤`**, so the `hker`-via-gluing route would cap at `k ≤ ∞` and would NOT serve the flagship.
+  Note this affects nothing already landed: no shipped theorem depends on a collar yet.
+- ⚠ **NOT VERIFIED BY ME.** I grepped Mathlib's `IsManifold/Basic.lean` for the analytic groupoid and
+  got nothing — which settles **nothing** (a failed grep is not evidence; see `PRE_DECISIONS.md`
+  "verify with the kernel, not grep"). Do not act on this entry as though it were established.
+- **What would settle it** (cheap, do it before any further collar investment):
+  1. `lean_hover_info` on `IsManifold` / read Mathlib's regularity convention — does `WithTop ℕ∞`'s `⊤`
+     select `analyticGroupoid`, and is `(∞ : WithTop ℕ∞) < ⊤`?
+  2. If yes: check whether the *bordism relation at `k = ⊤`* genuinely requires an analytic collar, or
+     whether an `∞`-collar suffices because the relation only asks for *some* manifold-with-boundary.
+     ⚠ Do NOT assume the second — a Cω-to-C^∞ slide is exactly the shape of
+     `k0-to-k1-transport-refuted`, and the goal forbids transporting across regularity levels.
+  3. If the ceiling is real, the honest options are: state the collar/`hker` discharge at `k ≤ ∞` and
+     declare the flagship at `∞` rather than `⊤` (a **goal-condition change — operator call**), or
+     find a collar construction that avoids partitions of unity.
+- `created_ts`: 2026-07-27
