@@ -5079,6 +5079,12 @@ import SKEFTHawking.Detection.GaussianThreshold
 -- single-shot matched-boxcar realizability floor `ENBW·T ≥ 1/2` with its boxcar-saturation
 -- least-element form, and the white-noise output-variance bridge.
 import SKEFTHawking.Detection.FilterFloors
+-- Phase 6EA Wave 3 — shot-noise algebra and the quantum seam: `psdSqrt` of a diagonal matrix,
+-- the diagonal-state root fidelity = classical Bhattacharyya affinity bridge, the Wave-1
+-- Poisson floor sandwiched around a quantum fidelity, the one-sided shot PSD with its
+-- reference-plane transfer, pmf-level Poisson thinning, mean = variance, and the strict-slack
+-- non-vacuity witness.
+import SKEFTHawking.Detection.ShotNoise
 -- Phase 6EB Wave 2 — NEP algebra and responsivity chains: the input-referred one-sided NEP with
 -- its incident/absorbed plane transfer, the `σ = R·NEP·√ENBW` composition, quadrature addition
 -- of uncorrelated sources, the shot-noise NEP `√(2·E_ph·P_abs)`, and the end-to-end SNR ceiling
