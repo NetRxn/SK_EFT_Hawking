@@ -5079,6 +5079,11 @@ import SKEFTHawking.Detection.GaussianThreshold
 -- single-shot matched-boxcar realizability floor `ENBW·T ≥ 1/2` with its boxcar-saturation
 -- least-element form, and the white-noise output-variance bridge.
 import SKEFTHawking.Detection.FilterFloors
+-- Phase 6EB Wave 2 — NEP algebra and responsivity chains: the input-referred one-sided NEP with
+-- its incident/absorbed plane transfer, the `σ = R·NEP·√ENBW` composition, quadrature addition
+-- of uncorrelated sources, the shot-noise NEP `√(2·E_ph·P_abs)`, and the end-to-end SNR ceiling
+-- `P_sig·√(2T)/NEP` inherited from the Wave-1 bandwidth floor.
+import SKEFTHawking.Detection.NEPAlgebra
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
