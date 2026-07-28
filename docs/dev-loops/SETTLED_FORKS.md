@@ -1172,6 +1172,30 @@ search for the bridge (`lean_local_search` on the map/iso name), not just the tw
 
 **Status: route caution + inventory fact. Binding on every future `hdvd` / Rokhlin dispatch.**
 
+> ⚠️ **AMENDED 2026-07-27 (same day) — the ROUTE CAUTION BELOW STANDS, but the REASON stated for it
+> was WRONG, and the wrongness matters because it would mis-gate future candidates.**
+>
+> I originally wrote that the defect is the **biconditional** between the layer's hypothesis and
+> `16 ∣ σ` at the spin locus. `GMTripleLayer.triple_layer_forcing` (wt2, and I re-derived both
+> directions myself before accepting it) proves that criterion is **unsatisfiable**: *any* predicate
+> `P` on the invariant triple `(σ, F·F, 2β)` that follows from Guillou–Marin and suffices for Rokhlin
+> at spin satisfies `P (σ,0,0) ↔ 16 ∣ σ` — **including the true Guillou–Marin theorem**. Judging a
+> candidate layer by "is it biconditional with the conclusion at spin?" therefore rejects everything,
+> the real theorem included. `no_triple_layer_escapes_the_biconditional` states this as a no-go on
+> the whole design space; both are registered under
+> `KERNEL_NOGO_REGISTRY['gm-triple-level-layer-is-decided-by-sigma-alone']`.
+>
+> **The correct criterion is INTENSIONAL: what DATA is the hypothesis a predicate on?** A layer
+> predicated on a pin⁻ class and a surface is admissible; one predicated on σ-arithmetic is not.
+> The admissible in-tree form is `PinTorsor.gmrelation_shift_iff` — a predicate on the pin⁻ class
+> `w`, with both attacks recorded as theorems (`no_pin_structure_realizes_gm_at_zero`,
+> `gm_layer_depends_on_pin_class`, the latter holding at `w = 0` and failing at `w = 1` on the SAME
+> triple, which a σ-arithmetic Prop provably cannot do).
+>
+> **What still stands, unchanged:** do not build `SpinCharSurfaceData` at the empty surface and call
+> `hdvd` discharged. That datum is a predicate on σ-arithmetic, so it fails the intensional test —
+> the practical ban is correct, only its justification is restated here.
+
 - ⛔ **Do NOT try to obtain `hdvd` (`∀ x, 16 ∣ R.sig x`, the atlas KEYSTONE
   `hyp:rokhlin_sigma_mod_16`, gating impact 11) by specializing the Guillou–Marin / Freedman–Kirby
   congruence to the EMPTY characteristic surface.** For a spin manifold the characteristic surface is

@@ -3917,6 +3917,30 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
 # nogo_kind (refutation | structural_forcing | counterexample), false_statement (the path it
 # kills, one line), memory ([[slug]]).
 KERNEL_NOGO_REGISTRY: dict[str, dict] = {
+    'gm-pin-torsor-free-shadow-weaker-than-van-der-blij': {
+        'fork_id': 'gm-pin-torsor-free-shadow-weaker-than-van-der-blij',
+        'backing_theorems': [
+            'SKEFTHawking.GMTorsor.lattice_plus_torsor_free_shadow_cannot_prove_rokhlin',
+            'SKEFTHawking.GMTorsor.reduce16to4_doubleBrown_shift',
+            'SKEFTHawking.GMTorsor.reduce16to8_doubleBrown_not_shift_invariant',
+            'SKEFTHawking.GMTorsor.doubleBrown_stdShift3_injective',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'The pin-minus-FREE content of the Guillou-Marin congruence -- the part of GM that survives quotienting by the H^1(F;Z/2) enhancement torsor, i.e. what one can assert about sigma WITHOUT choosing a pin-minus structure on the characteristic surface -- combined with the lattice input the project already owns (van der Blij, 8 | sigma), suffices to prove Rokhlin (16 | sigma) on the atlas KEYSTONE hyp:rokhlin_sigma_mod_16. FALSE (2026-07-27, wt2, lead-verified: I read the ceiling statement and the three supporting reductions myself). WITNESS: sigma = 8 satisfies 8 | sigma AND satisfies the full torsor-invariant GM shadow for every beta = 0 quadratic refinement Q and every shift w, yet not (16 | 8). MECHANISM, pinned exactly: mod 4 the doubled Brown invariant IS shift-invariant (reduce16to4_doubleBrown_shift), mod 8 it is NOT (reduce16to8_doubleBrown_not_shift_invariant exhibits residues 2 vs 14 on the two RP^2 enhancements), and doubleBrown_stdShift3_injective gives four classes with four distinct residues, so the enhancement ambiguity subgroup is EXACTLY 4*Z/16. Consequence: the torsor-free shadow of [FK] carries ZERO marginal content over the lattice bound already in tree -- it is strictly weaker, not merely equal. SCOPE: this refutes the pin-minus-free route to hdvd; it does NOT refute [FK] itself, whose content lives precisely in the pin-minus class w. The admissible statement layer is therefore a predicate on w (GMTorsor / PinTorsor.gmrelation_shift_iff), not on sigma-arithmetic. Do NOT dispatch a search for a pin-structure-free Rokhlin route; the geometry must enter through the enhancement.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
+    'gm-triple-level-layer-is-decided-by-sigma-alone': {
+        'fork_id': 'gm-triple-level-layer-is-decided-by-sigma-alone',
+        'backing_theorems': [
+            'SKEFTHawking.GMTripleLayer.triple_layer_forcing',
+            'SKEFTHawking.GMTripleLayer.no_triple_layer_escapes_the_biconditional',
+            'SKEFTHawking.GMTripleLayer.spin_triple_mem_closure_iff_sixteen_dvd',
+            'SKEFTHawking.GMTripleLayer.forcing_collapse_is_spin_specific',
+        ],
+        'nogo_kind': 'structural_forcing',
+        'false_statement': 'There exists a statement layer for [FK]-at-general-sigma, phrased as a predicate P on the INVARIANT TRIPLE (sigma, F.F, 2*beta), that (i) follows from Guillou-Marin and (ii) suffices for Rokhlin at spin, yet whose spin specialization is strictly weaker than 16 | sigma -- i.e. that is extensionally non-circular. FALSE (2026-07-27, wt2, lead-verified: I read triple_layer_forcing and re-derived both directions myself before accepting it). Any such P satisfies P (sigma,0,0) <-> 16 | sigma for EVERY sigma: (ii) gives the forward direction, and (i) gives the reverse because at the spin triple the GM defect vanishes exactly when 16 | sigma. No shape escapes -- bundled, existential, universal, relational or bordism-flavoured. CORRECTION THIS SUPERSEDES: the earlier fork gm-empty-surface-specialization-is-circular stated the defect as the BICONDITIONAL between the layer hypothesis and 16 | sigma. That criterion is now known to be unsatisfiable, because the TRUE Guillou-Marin theorem has the same property at the spin triple; judging a candidate layer by it rejects everything including the real theorem. The correct criterion is INTENSIONAL -- what DATA the hypothesis is a predicate on (a pin-minus class and a surface, versus sigma-arithmetic). forcing_collapse_is_spin_specific gives the forcing teeth by showing the collapse is specific to the spin locus rather than a degeneracy of triple-level predicates generally. ALSO SETTLED: the bordism-by-generators route at triple level -- generators (CP^2,CP^1) = (1,1,0) and (RP^4,RP^2) = (0,-2,2), the latter tied to the in-tree GM_rp4 by rp4_eq_tripleOf -- is likewise decided by sigma alone (spin_triple_mem_closure_iff_sixteen_dvd); it becomes a genuine reduction ONLY when typed over manifolds, where the char-pair bordism group maps NON-SURJECTIVELY onto triples, and that non-surjectivity is the entire geometric content. SCOPE: this is a forcing result about a design space, NOT a refutation of [FK] or of hdvd.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'freeze-a-atoms-satisfiable-with-zero-geometry': {
         'fork_id': 'freeze-a-atoms-satisfiable-with-zero-geometry',
         'backing_theorems': [
