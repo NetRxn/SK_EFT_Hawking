@@ -4971,6 +4971,11 @@ import SKEFTHawking.KummerK3GramFromLattice
 -- the consumer widened to any nondegenerate Gram of signature −16, plus the non-vacuity
 -- certificate (a nondegenerate Gram forces 22 linearly independent classes).
 import SKEFTHawking.KummerK3GeometricFamily
+-- Phase 5q.H — `hfam` AND `hpd` merged into ONE geometric datum: cohomology classes with known
+-- cap-duals. The cap-cup adjunction turns the 253 cup products into 253 Kronecker pairings, and
+-- the SAME classes, once their cap-duals GENERATE H₂(K3;ℤ), discharge integral Poincare duality
+-- through the cap route (not the banned Gram circle).
+import SKEFTHawking.KummerK3CapDualFamily
 -- Phase 5q.H — the general-sigma Guillou-Marin/[FK] statement layer: why the empty-surface
 -- specialization of GM is CIRCULAR for a spin manifold, kernel-checked.
 import SKEFTHawking.CharSurfaceFKVacuity
