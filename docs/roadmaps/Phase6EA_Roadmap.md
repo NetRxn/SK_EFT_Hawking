@@ -72,13 +72,13 @@ Clean whitespace: no theorem prover has a kernel-checked Poisson discrimination-
 **Bricks.** `poissonBhattacharyya_eq` (Wave 1); `SKEFTHawking.QuantumNetwork.FidelityBounds` (Bhattacharyya/Fuchs–van de Graaf family); `Physlib.QuantumInfo.Finite.ResourceTheory.HypothesisTesting.OptimalHypothesisRate` (first project consumption of this PhysLib substrate); `GrapheneNoiseFormula.johnsonNyquistPSD_pos` (PSD-convention template).
 
 **Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/Detection/ShotNoise.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `poisson_thinning : thinning by η ∈ [0,1] maps Poisson N to Poisson (η·N)` (pmf-level identity);
-- [ ] `shotPSD_def` + `shotPSD_plane_transfer : S_abs = η · S_inc`-shape reference-plane algebra with declared one-sided convention matching `GrapheneNoiseFormula`;
-- [ ] `shot_variance_eq_mean` in the filtered-count normalization (the `N_eff` scaling used by any downstream dominance argument);
-- [ ] `classical_floor_le_quantum_optimum`-shape bridge: the Wave-1 Poisson floor is implied by (is the diagonal restriction of) the quantum two-state discrimination bound — via the `FidelityBounds`/PhysLib hypothesis-testing seam; exact statement frozen at Stage 2 (UNKNOWN-3);
-- [ ] at least one consuming falsifier-style witness: a concrete parameter point where the shot-inclusive Gaussian model's average error strictly exceeds the Wave-1 floor (the `norm_num` companion to the floor's non-vacuity);
-- [ ] preemptive-strengthening + post-wave audit; Inventory Index + counts refreshed for the new `Detection/` family.
+- [x] `lean/SKEFTHawking/Detection/ShotNoise.lean` builds 0-sorry, kernel-pure, with:
+- [x] **pmf-level as required; `η ≤ 1` dropped as non-load-bearing (strictly stronger)** `poisson_thinning : thinning by η ∈ [0,1] maps Poisson N to Poisson (η·N)` (pmf-level identity);
+- [x] **+ `shotPSD_eq_hawkingNoisePSD` making the one-sided convention a kernel-checked match** `shotPSD_def` + `shotPSD_plane_transfer : S_abs = η · S_inc`-shape reference-plane algebra with declared one-sided convention matching `GrapheneNoiseFormula`;
+- [x] **SUBSTANTIVE — `poissonVariance` is the independently-computed second central moment, not `:= N`** `shot_variance_eq_mean` in the filtered-count normalization (the `N_eff` scaling used by any downstream dominance argument);
+- [x] **shipped as a SANDWICH `¼·exp(…) ≤ ¼·F(ρ₀,ρ₁)² ≤ avgAssignmentError`; (S3) not attempted (type-level impossible)** `classical_floor_le_quantum_optimum`-shape bridge: the Wave-1 Poisson floor is implied by (is the diagonal restriction of) the quantum two-state discrimination bound — via the `FidelityBounds`/PhysLib hypothesis-testing seam; exact statement frozen at Stage 2 (UNKNOWN-3);
+- [x] **quantitative factor 3/2, forced through `poissonBhattacharyya_eq`** at least one consuming falsifier-style witness: a concrete parameter point where the shot-inclusive Gaussian model's average error strictly exceeds the Wave-1 floor (the `norm_num` companion to the floor's non-vacuity);
+- [x] preemptive-strengthening + post-wave audit; Inventory Index + counts refreshed for the new `Detection/` family.
 
 ---
 
