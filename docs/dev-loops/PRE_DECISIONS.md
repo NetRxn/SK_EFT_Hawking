@@ -159,7 +159,14 @@ avoid is "verify more" — verification *was* happening. What was verified was *
    least one other route. Confirming an absence you already predicted is confirmation, not diligence.
    *(Skipped once → a missing naturality lemma that was real and irrelevant, because a pushforward
    route made it unnecessary.)*
-4. **NEVER INHERIT AN ESTIMATE.** "mechanical" / "bookkeeping" / "no new mathematics" / a line count
+4. **CHECK THE REDUCTION FOR CIRCULARITY.** When the brief says "X follows from Y via arrow A",
+   open A and confirm **A's own hypothesis list does not contain X**. Reduction-heavy substrate makes
+   this failure invisible from the outside: both arrows exist, both typecheck, and composing them
+   proves nothing. *(Added 2026-07-27 after I briefed "if `hcyc`/`h2` are discharged then `hΦg`
+   follows — land that wiring": `spinImageCyclic_of_presentation` takes `hΦg` **as a hypothesis**, so
+   `{hcyc,h2} ⟹ hΦg` composed with `hΦg ⟹ hcyc` is a strict circle. A compliant worker would have
+   shipped a FALSE discharge. The worker checked instead and found the non-circular route.)*
+5. **NEVER INHERIT AN ESTIMATE.** "mechanical" / "bookkeeping" / "no new mathematics" / a line count
    must never enter a brief as a premise. Attribute it (`worker's estimate, UNVERIFIED`) or test it.
    A difficulty claim **is** a route claim, and route claims are lead-verified. *(Skipped once →
    a step billed as bookkeeping that needed a genuinely new argument.)*

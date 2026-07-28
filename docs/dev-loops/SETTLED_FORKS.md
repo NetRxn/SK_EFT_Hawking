@@ -1066,3 +1066,35 @@ search for the bridge (`lean_local_search` on the map/iso name), not just the tw
   move, by construction.
 - `memory`: `[[project_5qH_nonhausdorff_substrate_bug]]`
 - `created_ts`: 2026-07-27
+
+## `hphig-from-hcyc-is-circular` (2026-07-27, arm: close-out — wt2; LEAD BRIEF ERROR)
+- `kind`: circular-reduction ban (prose — both arrows are true theorems; the *composition* proves
+  nothing, so there is no false statement to kernel-encode).
+- ⛔ **BANNED:** discharging `hΦg` by way of `{hcyc, h2}` and
+  `spinForgetPhi_g_eq_ktKernelRep_of_cyclic`. **`SpinImageCyclic` is a bare `def … : Prop` whose ONLY
+  route, `PinPlusKTKernelSpinRoute.spinImageCyclic_of_presentation` (`:315`), itself takes
+  `(hΦg : Φ (mk ξ g) = ktKernelRep prov)` as an explicit hypothesis** (lead-verified: I read line 320).
+  So `{hcyc,h2} ⟹ hΦg` composed with `hΦg ⟹ hcyc` is a strict circle.
+- ⚠ **This was MY brief.** I instructed wt2 that if `hcyc`/`h2` were discharged then `hΦg` follows and
+  to "land that wiring and say so plainly." A compliant worker would have shipped a **false
+  discharge**. wt2 verified first and caught it. → new checklist item 4 in `PRE_DECISIONS.md`:
+  *when a brief says X follows from Y via arrow A, open A and confirm A's own hypotheses do not
+  contain X.*
+- **Also corrected:** task #197 (`PinPlusKTBinderDischarge.lean`) is a **REDUCTION, not a discharge** —
+  its own header says so, and all three of its theorems still take `hcyc`/`hΦg`/`hk` as hypotheses.
+  Neither `SpinImageCyclic prov` nor `ktKernelRep + ktKernelRep = 0` is proved for the live provider.
+  Do not read a completed task title as a discharge.
+- ✅ **The non-circular route, BUILT:** drop `hΦg` from `spinImageCyclic_of_presentation` (it is used
+  only to rewrite `Φ[g]` into `k₀` at the last line) and the sector is cyclic **on `Φ[g]` itself`.
+  Then `k₀` brown-kernel (banked) → `hKRS` puts it in the sector → `k₀ = n • Φ[g]` → `Φ[g]` 2-torsion
+  via `spinForgetPhi_add_self` (enhancement-tied, so `dataBordism_two_torsion_of_revStr_trivial` is
+  NOT reproduced) → `k₀ = 0 ∨ k₀ = Φ[g]` → `KTNonSplit` kills the first.
+- **Consequence — `hΦg` IS `KTNonSplit`** (`phiG_eq_ktKernelRep_iff_ktNonSplit`): closing `hΦg` is
+  neither easier nor harder than closing `8·[ℝP⁴] ≠ 0`.
+- ⚠ **REFUTABILITY POSTURE (do not treat `hΦg`/`KTNonSplit` as safe):**
+  `PinPlusCharPairTetherGate.ktKernelRep_eq_zero_of_tethered_double` and
+  `PinPlusCharPairFlipGate.ktKernelRep_eq_zero_of_realization` make `k₀ = 0` derivable from open
+  geometric witnesses — the latter **refutes `KTNonSplitU` outright on the flipped/untethered
+  carrier**. Since `hΦg ⟺ KTNonSplit`, `hΦg` inherits exactly that posture: a live open bit that
+  could go either way, not a formality.
+- `created_ts`: 2026-07-27
