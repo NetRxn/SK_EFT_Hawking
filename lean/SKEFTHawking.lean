@@ -4948,6 +4948,9 @@ import SKEFTHawking.T2BordismGluing
 import SKEFTHawking.PinPlusHkerSingleWitness
 import SKEFTHawking.SingularRelativeCoverMVSumExact
 import SKEFTHawking.CollarNeighbourhood
+import SKEFTHawking.CollarDefiningFunction
+import SKEFTHawking.ContMDiffPartitionOfUnity
+import SKEFTHawking.InwardFlow
 import SKEFTHawking.T2BordismGluing
 
 /-!

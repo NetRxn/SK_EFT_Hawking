@@ -63,7 +63,7 @@ For the model `I.prod (𝓡∂ 1)` with `I` boundaryless:
 
 What remains is the classical globalisation: an inward-pointing vector field near `∂W` built from
 a partition of unity over boundary charts, and its uniform-time flow. Two independent gaps in the
-current Mathlib sit under that step; both are upstreamable in their own right.
+current Mathlib sat under that step; both are upstreamable in their own right.
 
 1. **Flow from the boundary.** `exists_isMIntegralCurveAt_of_contMDiffAt` requires
    `I.IsInteriorPoint x₀`, and *every* global / uniform-time result in
@@ -71,19 +71,30 @@ current Mathlib sit under that step; both are upstreamable in their own right.
    Flowing out of a boundary point is Mathlib's own recorded TODO in
    `Mathlib/Geometry/Manifold/IntegralCurve/ExistUnique.lean` ("the case where the integral curve
    may venture to the boundary of the manifold. See Theorem 9.34, Lee. May require submanifolds").
-   Closing it needs Picard–Lindelöf on `Ici 0` in the model half space, then the manifold-level
-   statement.
 
-2. **Partitions of unity at finite regularity.** Mathlib's are `C^∞`-only:
+   The *model-space* half of this is **not** in fact missing: `IsPicardLindelof f t₀ x₀ a r L K`
+   only asks `t₀ : Icc tmin tmax`, so `t₀` may be an **endpoint**, and
+   `ODE.exists_eq_forall_mem_Icc_hasDerivWithinAt₀` then produces a one-sided solution on
+   `Icc t₀ tmax` with `HasDerivWithinAt` relative to that interval. What is genuinely missing is
+   (a) the barrier argument keeping the trajectory inside the half space — supplied for a general
+   inward-pointing field by `SKEFTHawking.Collar.exists_forward_flow_halfSpace` and transported to
+   this model by `SKEFTHawking.Collar.exists_forward_flow_prodHalf` — and (b) the manifold-level
+   notion: `IsMIntegralCurveAt` is two-sided, so a one-sided `IsMIntegralCurveWithinAt` on `Ici t₀`
+   would have to be introduced, with its own uniqueness and uniform-time theory.
+
+2. **Partitions of unity at finite regularity — DISCHARGED**, in
+   `SKEFTHawking.ContMDiffPartitionOfUnity`. Mathlib's are `C^∞`-only:
    `SmoothPartitionOfUnity` is valued in `C^∞⟮I, M; 𝓘(ℝ), ℝ⟯` and
    `SmoothPartitionOfUnity.exists_isSubordinate` proceeds through
    `BumpCovering.exists_isSubordinate_of_prop (ContMDiff I 𝓘(ℝ) ∞)`; the smoothness of a
    `SmoothBumpFunction` on `M` lives under `variable [IsManifold I ∞ M]`. Nothing about
-   *boundarylessness* is assumed — partitions of unity work fine on manifolds with boundary, and
-   only need `[FiniteDimensional ℝ E] [T2Space M] [SigmaCompactSpace M]` — but a `C^k` partition
-   of unity for finite `k` does not exist in the library and would have to be built (the standard
-   bump is `C^∞` in a chart, so it is a `C^k` function on a `C^k` manifold; that generalisation is
-   the missing piece).
+   *boundarylessness* is assumed — partitions of unity work fine on manifolds with boundary — so
+   the obstruction was regularity alone, and the single load-bearing lemma is
+   `contMDiff_smoothBumpFunction` (the standard bump is `C^∞` in a chart, hence `C^n` on a `C^n`
+   manifold); the combinatorial half of Mathlib's construction is already regularity-agnostic.
+   `SKEFTHawking.Collar.ContMDiffPartitionOfUnity.exists_isSubordinate` is the finite-`n`
+   headline, and `SKEFTHawking.Collar.exists_contMDiff_boundaryDefiningFunction` is its first
+   consumer: the `C^n` boundary-defining function, scalar avatar of the inward field.
 
 Neither gap is about boundary *detection*, which is what this file supplies.
 -/
