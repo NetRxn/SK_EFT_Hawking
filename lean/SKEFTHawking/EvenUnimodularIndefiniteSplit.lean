@@ -278,19 +278,29 @@ Pieces (1) and (2) are now BUILT (wt1); the route status is:
    indefinite, hence carries a hyperbolic pair `(v, w)`, and `y := x + w` has `y·y = ε` while
    `z := x − ε·v` sits in `y^⊥` with ODD self-product `ε`. Peeling `y` preserves rank, signature AND
    parity. Consequence: **this route uses neither absorption identity** and needs no block
-   re-association. `odd_indefinite_pmDiagonal` / `odd_indefinite_intCongr` (the rank-and-signature
-   classification the assembly consumes) are stated relative to `OddRank34Diagonalizable`.
-3. **The rank-3/4 base cases — OPEN, and a genuine Hasse–Minkowski build.** The induction bottoms out
-   at rank 4 because `odd_indefinite_represents_one` runs on Meyer (`weakIsotropic_of_five_le`,
-   rank `≥ 5`). Each remaining rank reduces to "an odd indefinite unimodular form of that rank has a
-   nonzero isotropic vector". This is NOT reducible to `RokhlinHMRankFour`: that file is
-   EVEN-specific and SQUARE-DISCRIMINANT-specific (it derives `det = +1` from evenness via
-   `det_eq_one_of_evenUnimodular_four` in order to reach `quaternary_sqdisc_solvable_of_local_no_two`),
-   while an odd rank-4 indefinite unimodular form has `σ ∈ {0, ±2}`, i.e. `det = ±1`, and the
-   `det = −1` shapes fall outside it; rank 3 needs the ternary/Legendre statement. Both are reachable
-   from `isotropic_padicInt_of_unit_det` (odd `p`, rank `≥ 3`) + the reciprocity step
-   `hilbertPrime_two_eq_one_of_real_odd`, but each is a build, not a rewrite.
-4. **Wall's characteristic-vector transitivity — OPEN.** In `⟨1⟩^p ⊕ ⟨−1⟩^q` indefinite, the
+   re-association.
+3. **The rank-3/4 base cases — DONE** (`SKEFTHawking/OddSmallRankHM.lean`, unconditional,
+   kernel-pure). `OddRank34Diagonalizable` is now the THEOREM
+   `SKEFTHawking.oddRank34Diagonalizable`, so `odd_indefinite_pmDiagonal_unconditional` /
+   `odd_indefinite_intCongr_unconditional` are the hypothesis-free rank-and-signature classification
+   the assembly consumes. What made it work: `RokhlinHMRankFour`'s *theorem* is even- and
+   square-discriminant-specific, but its **tooling is not** —
+   `isotropic_padicInt_of_unit_det` needs only rank `≥ 3`, `p ≠ 2` and a unit determinant, so the odd
+   places are free at both ranks; `ℝ` is indefiniteness; and the place `2` splits by rank:
+   * rank 3 — a TERNARY form's local obstruction at every place is the SINGLE Hilbert symbol
+     `(−d₀d₂, −d₁d₂)_v`, so `hilbertPrime_two_eq_one_of_real_odd` pins the `2`-factor from the
+     others. **No square-discriminant hypothesis** — that was a rank-4 artifact.
+   * rank 4, `det = +1` (`σ = 0`) — square discriminant, so
+     `quaternary_sqdisc_solvable_of_local_no_two` applies verbatim; evenness entered
+     `weakIsotropic_rank_four` ONLY through `det_eq_one_of_evenUnimodular_four`, i.e. as the
+     determinant value.
+   * rank 4, `det = −1` (`σ = ±2`) — non-square discriminant, so reciprocity does NOT close it and
+     the place `2` is done directly in `ℚ_[2]`: with `α = −d₀d₁`, `β = −d₂d₃` and `αβ = −s²`, either
+     `α` or `β` is a square (then that binary is already isotropic) or `α, −α` are both non-squares,
+     and `exists_hilbert2Int_witness` (canonical class `c·σ²`, `g = 2` for `c ≡ 3,5 (mod 8)`,
+     `g = 5` for `c = 2·odd`) realizes every prescription of `((t,α)₂, (t,−1)₂)`, giving a common
+     represented value.
+4. **Wall's characteristic-vector transitivity — the LAST open leaf.** In `⟨1⟩^p ⊕ ⟨−1⟩^q` indefinite, the
    automorphism group is transitive on characteristic vectors of self-product `1`. This is what
    performs the `⟨1⟩`-cancellation in the assembly. Elementary (reflections only) — NOT genus theory —
    so it stays inside this route. -/

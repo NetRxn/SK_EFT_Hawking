@@ -4493,6 +4493,17 @@ import SKEFTHawking.UnitVectorSplit
 -- rank-<=4 base-case interface OddSmallRankDiagonalizable, which is a genuine rank-3/4
 -- Hasse-Minkowski discharge, NOT bookkeeping. (wt1-built.)
 import SKEFTHawking.OddFormDiagonalization
+-- K8b interior, leaf 5: HASSE-MINKOWSKI AT RANKS 3 AND 4 for ODD unimodular forms -- the residue of
+-- II.4.3, DISCHARGED (oddRank34Diagonalizable), so II.4.3 is unconditional. The banked local tooling
+-- carries most of it: isotropic_padicInt_of_unit_det is NOT even-specific (rank >= 3, odd p, unit
+-- det), so the odd places are free at both ranks; R is indefiniteness. Place 2 splits by rank:
+-- rank 3 is free by reciprocity (a TERNARY form's local obstruction is a SINGLE Hilbert symbol, so
+-- no discriminant hypothesis); rank 4 det = +1 is square-discriminant and reuses
+-- quaternary_sqdisc_solvable_of_local_no_two verbatim (evenness was only ever used in
+-- weakIsotropic_rank_four to produce det = 1); rank 4 det = -1 is NON-square discriminant, where
+-- reciprocity fails and the Q_2 square classes are used directly (exists_hilbert2Int_witness).
+-- (wt1-built.)
+import SKEFTHawking.OddSmallRankHM
 import SKEFTHawking.RP4Manifold
 import SKEFTHawking.RP2PointSet
 import SKEFTHawking.RP2Manifold
