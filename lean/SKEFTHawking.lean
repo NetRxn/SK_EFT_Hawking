@@ -4515,6 +4515,9 @@ import SKEFTHawking.UnitBlockCancellation
 -- Phase 5q.H K8b: the Eichler assembly for `⟨1⟩`-cancellation — the exit gate
 -- (`intCongr_of_unitFixing`), the characteristic-vector layer, and the STEP-1/STEP-2 boundary.
 import SKEFTHawking.UnitCancellationEichler
+-- Phase 5q.H — the Euclidean descent toward `PlaneReduction`, the sole remaining input to
+-- `UnitCancellation` (and hence `StableNegRank16Two` and the welded K3's Gram).
+import SKEFTHawking.PlaneReductionDescent
 import SKEFTHawking.RP4Manifold
 import SKEFTHawking.RP2PointSet
 import SKEFTHawking.RP2Manifold
