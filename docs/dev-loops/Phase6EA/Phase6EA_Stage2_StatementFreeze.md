@@ -1,7 +1,7 @@
 # Phase 6EA — Stage 2 Statement Freeze
 
 **Status: FROZEN (2026-07-27).** Resolves the three open UNKNOWNs of
-[`Phase6EA_Roadmap.md`](Phase6EA_Roadmap.md) and freezes the exact Lean statement layer for
+[`Phase6EA_Roadmap.md`](../../roadmaps/Phase6EA_Roadmap.md) and freezes the exact Lean statement layer for
 **Wave 1** (Poisson discrimination floors) and **Wave 2** (Gaussian threshold algebra), so a
 Lean slot can execute them without re-deriving design decisions. **Wave 3** is scoped and
 *recommended*, not frozen (it is serialized last).

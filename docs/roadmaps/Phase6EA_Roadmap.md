@@ -96,7 +96,7 @@ Wave 1 → Wave 2 are independent (different files, disjoint substrate) — **pa
 
 ## Stage-2 resolutions — LEAD SIGN-OFF 2026-07-27 (binding; supersedes the AC bullets they touch)
 
-Full analysis: `docs/roadmaps/Phase6EA_Stage2_StatementFreeze.md`. The four items below were escalated
+Full analysis: `docs/dev-loops/Phase6EA/Phase6EA_Stage2_StatementFreeze.md`. The four items below were escalated
 for sign-off; all four are decided here so no wave stalls on them.
 
 - **UNKNOWN-1 — RESOLVED.** Use Mathlib `poissonPMFReal`, with the generic Le Cam chain stated over bare
