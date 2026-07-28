@@ -5003,6 +5003,10 @@ import SKEFTHawking.GMTripleLayerForcing
 -- transitive, so the polar form plus ONE H^1(F;Z/2)-class determines the Guillou-Marin residue
 -- completely, and [FK] at general sigma re-types as a condition on that class.
 import SKEFTHawking.PinEnhancementTorsor
+-- Phase 5q.H — the blueprint's [G2]/[Q1] MEMBRANE INDEX `D·F + O(D) + d(C)`, constructed from
+-- geometric data rather than declared as a field: the ambient Freedman-Kirby membrane, its three
+-- summands as computed quantities, and the pin-minus class extracted from the index.
+import SKEFTHawking.MembraneIndex
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
