@@ -1,4 +1,5 @@
 import SKEFTHawking.Detection.FilterFloors
+import SKEFTHawking.Detection.ShotNoise
 
 /-!
 # Phase 6EB Wave 2 — NEP algebra, responsivity chains, and the SNR composition
@@ -20,7 +21,7 @@ contract for this file, fixed once:
 
 | symbol | Lean | unit |
 |---|---|---|
-| one-sided power PSD | `S_P`, `shotPowerPSD` | W²/Hz |
+| one-sided power PSD | `S_P`, `shotPSD` | W²/Hz |
 | NEP (input-referred, one-sided) | `nepOfPSD`, `nepOfOutput` | W/√Hz |
 | responsivity | `R` | (output unit)/W |
 | ENBW | `enbw` (Wave 1) | Hz |
@@ -35,7 +36,7 @@ decorative.
 
 The one-sided convention is inherited from `GrapheneNoiseFormula`
 (`johnsonNyquistPSD = 4·kB_T·σ_Q`, `hawkingNoisePSD` with its leading `2`) through Wave 1's
-`enbw`, whose denominator carries the matching factor `2`. `shotPowerPSD E_ph P = 2·E_ph·P`
+`enbw`, whose denominator carries the matching factor `2`. `shotPSD E_ph P = 2·E_ph·P`
 carries the same leading `2`.
 
 Wave 1 established the sharp constraint on what a convention falsifier can even *say*:
@@ -130,14 +131,6 @@ returns `0` (`nepOfOutput_of_responsivity_eq_zero`); the physically meaningful s
 carry `0 < R` explicitly. -/
 noncomputable def nepOfOutput (sigma R enbwVal : ℝ) : ℝ := sigma / (R * √enbwVal)
 
-/-- **One-sided shot-noise PSD of an optical power signal:** `S_P = 2·E_ph·P`  [W²/Hz], for
-photon energy `E_ph` [J] and mean power `P` [W].
-
-The leading `2` is the **one-sided** convention, matching `GrapheneNoiseFormula.hawkingNoisePSD`
-and Wave 1's `enbw` normalization; a two-sided convention halves it. Pairing this with a
-two-sided ENBW is exactly the detectable mixed-convention error
-(`sigma_conventionMix_eq_sqrt_two_mul`). -/
-noncomputable def shotPowerPSD (E_ph P : ℝ) : ℝ := 2 * E_ph * P
 
 /-- **End-to-end SNR of the readout chain**: signal output `R·P_sig` over noise output
 `R·NEP·√ENBW` (the composition proved in `sigma_eq_responsivity_nep_sqrt_enbw`).
@@ -333,17 +326,17 @@ of a shot-noise-limited chain — output noise divided by responsivity and `√E
 `√(2·E_ph·P_abs)` **for every** responsivity `R`, **every** admissible filter `h`, and **every**
 window `T`. The chain and the readout divide out exactly; what is left is the source.
 
-The leading `2` is the one-sided convention (`shotPowerPSD`), pinned to
+The leading `2` is the one-sided convention (`shotPSD`), pinned to
 `GrapheneNoiseFormula`'s. -/
 theorem shot_nep_formula {Vin Vout : (ℝ → ℝ) → ℝ} {R E_ph P_abs T : ℝ}
     (hR : 0 < R) (hE : 0 ≤ E_ph) (hP : 0 ≤ P_abs)
     (hchain : IsResponsivityChain Vout Vin R)
-    (hwhite : IsWhiteFilteredVariance Vin (shotPowerPSD E_ph P_abs) T)
+    (hwhite : IsWhiteFilteredVariance Vin (shotPSD E_ph P_abs) T)
     (h : ℝ → ℝ) (hDC : (∫ x in (0:ℝ)..T, h x) ≠ 0) (he : 0 < enbw h T) :
     nepOfOutput (√(Vout h / (∫ x in (0:ℝ)..T, h x) ^ 2)) R (enbw h T)
       = √(2 * E_ph * P_abs) := by
-  have hS : (0:ℝ) ≤ shotPowerPSD E_ph P_abs := by unfold shotPowerPSD; positivity
-  have hsq : (√(2 * E_ph * P_abs)) ^ 2 = shotPowerPSD E_ph P_abs := nepOfPSD_sq hS
+  have hS : (0:ℝ) ≤ shotPSD E_ph P_abs := by unfold shotPSD; positivity
+  have hsq : (√(2 * E_ph * P_abs)) ^ 2 = shotPSD E_ph P_abs := nepOfPSD_sq hS
   have hwhite' : IsWhiteFilteredVariance Vin ((√(2 * E_ph * P_abs)) ^ 2) T := by
     rw [hsq]; exact hwhite
   rw [sigma_eq_responsivity_nep_sqrt_enbw hR.le (Real.sqrt_nonneg _) hchain hwhite' h hDC]
@@ -373,9 +366,9 @@ and not a one-way heuristic. Both sides are stated in the same (one-sided) conve
 theorem shotLimited_iff_psd_lt {E_ph P_abs kB_T sigma_Q R : ℝ} (hkT : 0 < kB_T)
     (hsQ : 0 < sigma_Q) (hR : 0 < R) :
     nepOfPSD (GrapheneNoiseFormula.johnsonNyquistPSD kB_T sigma_Q / R ^ 2)
-        < nepOfPSD (shotPowerPSD E_ph P_abs)
+        < nepOfPSD (shotPSD E_ph P_abs)
       ↔ GrapheneNoiseFormula.johnsonNyquistPSD kB_T sigma_Q / R ^ 2
-        < shotPowerPSD E_ph P_abs := by
+        < shotPSD E_ph P_abs := by
   have hS : 0 < GrapheneNoiseFormula.johnsonNyquistPSD kB_T sigma_Q :=
     GrapheneNoiseFormula.johnsonNyquistPSD_pos kB_T sigma_Q hkT hsQ
   have hpos : 0 ≤ GrapheneNoiseFormula.johnsonNyquistPSD kB_T sigma_Q / R ^ 2 := by positivity
@@ -388,9 +381,9 @@ shot-noise-limited: `kB_T·σ_Q = 1`, `R = 1` gives a thermal PSD of `4`, while 
 decision procedure. -/
 theorem shotLimited_witness :
     nepOfPSD (GrapheneNoiseFormula.johnsonNyquistPSD 1 1 / (1:ℝ) ^ 2)
-      < nepOfPSD (shotPowerPSD 1 3) := by
+      < nepOfPSD (shotPSD 1 3) := by
   rw [shotLimited_iff_psd_lt one_pos one_pos one_pos]
-  unfold GrapheneNoiseFormula.johnsonNyquistPSD shotPowerPSD
+  unfold GrapheneNoiseFormula.johnsonNyquistPSD shotPSD
   norm_num
 
 /-! ## Quadrature composition of independent sources -/

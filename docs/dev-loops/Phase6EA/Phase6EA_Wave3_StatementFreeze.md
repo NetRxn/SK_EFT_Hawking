@@ -91,17 +91,31 @@ the load-bearing step, and it does **not** need to be built:
   it on a diagonal matrix by unfolding `cfc`: `hM.isHermitian`'s eigendecomposition **sorts the
   eigenvalues**, so for `diagonal d` the eigenvector matrix is a permutation, not `1`, and the
   unfold route drags in sorting bookkeeping for no reason.
-* **G8.** Mathlib **has PSD-square-root uniqueness** as
-  `Matrix.PosSemidef.sq_eq_sq_iff` (`Mathlib.Analysis.Matrix.Order`):
-  `A.PosSemidef → B.PosSemidef → (A ^ 2 = B ^ 2 ↔ A = B)`. Its siblings `sqrt_eq_iff_eq_sq`,
-  `posSemidef_sqrt`, `sq_sqrt` are in the same module.
+* **G8 — ⚠ CORRECTED 2026-07-28 (my error; caught by the executing slot).** I originally wrote that
+  Mathlib has PSD-square-root uniqueness as `Matrix.PosSemidef.sq_eq_sq_iff` in
+  `Mathlib.Analysis.Matrix.Order`. **That declaration does not exist at our pin `5e932f97`** —
+  verified by reading the file. I had it from `lean_leansearch`, which indexes a *newer* Mathlib
+  than ours; I treated a semantic-search hit as pin-verified grounding, which it is not. The only
+  `sq_eq_sq_iff` at pin is the general `CFC` one in `SpecialFunctions/…/Rpow/Basic.lean:646`,
+  which would have needed the matrix C\*-algebra instance path.
+
+  **The project already owns exactly the right lemma, in the right form:**
+  `SKEFTHawking.QuantumNetwork.posSemidef_eq_of_mul_self_eq` (`QuantumNetwork/DiamondNormChoi.lean:93`),
+  stated as `P.PosSemidef → Q.PosSemidef → P * P = Q * Q → P = Q`. Being already in `mul_self`
+  form, it also removes the `sq` / `pow_two` bridging step.
+
+  **Standing lesson:** `lean_leansearch` / `lean_loogle` hits are *candidates*, not pin-verified
+  facts. Before a route claim enters a brief, confirm the declaration in
+  `lean/.lake/packages/mathlib` at the pinned rev — or prefer a local asset, which is
+  pin-verified by construction.
 
 **Therefore the frozen proof is the uniqueness route, ~10 lines and fully cited:**
 1. Both sides are PSD — `psdSqrt_posSemidef` (`MixedState.lean:532`) and
    `Matrix.PosSemidef.diagonal` (Mathlib `PosDef.lean:61`, entries `√(d i) ≥ 0`).
 2. Both square to `diagonal d`: LHS by `psdSqrt_mul_self` (`MixedState.lean:540`), RHS by
    `Matrix.diagonal_mul_diagonal` + `Real.mul_self_sqrt (hd i)`.
-3. Conclude by `Matrix.PosSemidef.sq_eq_sq_iff` (G8). Bridge `mul_self` ↔ `^2` with `sq` / `pow_two`.
+3. Conclude by `SKEFTHawking.QuantumNetwork.posSemidef_eq_of_mul_self_eq` (G8, corrected) — no
+   `mul_self` ↔ `^2` bridging needed.
 
 `psdSqrt_eq_conj_diag` (`FidelityForwardBoundPSD.lean:40`) is **not needed** — an earlier draft of
 this freeze suggested deriving uniqueness from it, which would have been re-deriving a Mathlib
