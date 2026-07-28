@@ -360,6 +360,81 @@ theorem nonempty_kummerK3E1Atoms_of_kummerFamily_indexCard (o : IntOrientation K
   · exact Or.inl (by rw [h]; push_cast)
   · exact Or.inr (by rw [h]; push_cast)
 
+/-! ## §6. THE SIGN OF THE `⟨−2⟩¹⁶` DIAGONAL IS NOT NEEDED FOR THE E1 ATOMS
+
+The `⟨−2⟩¹⁶` block's open residual was never the *magnitude* `|⟨α_c, E_c⟩| = 2` — that is banked
+unconditionally (`KummerPairTubeSeparation.pairCokerEquiv` / `pairCoker_card`, hypothesis-free) — but
+the **sign**, which `TubeParity` cannot supply because it is deliberately mod-2.
+
+For the E1 atoms that residual is **vacuous**: §5 runs entirely through `G.det`, and at rank 22 the
+determinant cannot see the diagonal's sign. Explicitly, for **any** sign vector `ε : Fin 16 → {±1}`,
+
+    det (⟨2ε⟩¹⁶ ⊕ 3H) = 2¹⁶ · (∏ ε) · det(3H) = ±2¹⁶ = ±(2⁸)²
+
+so the criterion fires identically. The signed value is still needed for the `σ = −16` **Gram
+congruence** (`kummerK3_hk3_at`) that other consumers want — signature is very much sign-sensitive —
+but it is off the path to integral PD and the atom triple. -/
+
+/-- A `⟨2ε⟩ⁿ` diagonal block — the `⟨−2⟩ⁿ` block with each sign left free. -/
+def signedTwoDiag {n : ℕ} (ε : Fin n → ℤ) : Matrix (Fin n) (Fin n) ℤ :=
+  Matrix.diagonal fun c => 2 * ε c
+
+/-- `⟨2ε⟩ⁿ` at the all-`−1` sign vector **is** `⟨−2⟩ⁿ`, so §6 genuinely generalizes §4–§5. -/
+theorem signedTwoDiag_neg_one (n : ℕ) : signedTwoDiag (fun _ : Fin n => (-1 : ℤ)) = negTwoDiag n := by
+  rw [signedTwoDiag, negTwoDiag]
+  norm_num
+
+/-- **`det ⟨2ε⟩ⁿ = ±2ⁿ`, whatever the signs.** -/
+theorem signedTwoDiag_det {n : ℕ} (ε : Fin n → ℤ) (hε : ∀ c, ε c = 1 ∨ ε c = -1) :
+    (signedTwoDiag ε).det = 2 ^ n ∨ (signedTwoDiag ε).det = -(2 ^ n) := by
+  have hprod : (signedTwoDiag ε).det = 2 ^ n * ∏ c, ε c := by
+    rw [signedTwoDiag, Matrix.det_diagonal, Finset.prod_mul_distrib, Finset.prod_const,
+      Finset.card_univ, Fintype.card_fin]
+  have hunit : IsUnit (∏ c, ε c) :=
+    Finset.prod_induction _ IsUnit (fun a b ha hb => ha.mul hb) isUnit_one
+      fun c _ => Int.isUnit_iff.mpr (hε c)
+  rcases Int.isUnit_iff.mp hunit with h | h
+  · exact Or.inl (by rw [hprod, h, mul_one])
+  · exact Or.inr (by rw [hprod, h, mul_neg_one])
+
+/-- The Kummer sublattice form with the 16 exceptional signs left free. -/
+def kummerSubFormSigned (ε : Fin 16 → ℤ) : Matrix (Fin 22) (Fin 22) ℤ :=
+  SKEFTHawking.SpinSigmaRoute.blockDiag (signedTwoDiag ε) torusFourForm
+
+@[simp] theorem kummerSubFormSigned_neg_one :
+    kummerSubFormSigned (fun _ => (-1 : ℤ)) = kummerSubForm := by
+  rw [kummerSubFormSigned, kummerSubForm, signedTwoDiag_neg_one]
+
+/-- **`det (⟨2ε⟩¹⁶ ⊕ 3H) = ±2¹⁶` for every sign vector** — the whole point of §6. -/
+theorem kummerSubFormSigned_det (ε : Fin 16 → ℤ) (hε : ∀ c, ε c = 1 ∨ ε c = -1) :
+    (kummerSubFormSigned ε).det = 2 ^ 16 ∨ (kummerSubFormSigned ε).det = -(2 ^ 16) := by
+  rw [kummerSubFormSigned, det_blockDiag]
+  rcases signedTwoDiag_det ε hε with hd | hd <;>
+    rcases torusFourForm_isEvenUnimodular.2.1 with ht | ht <;> rw [hd, ht]
+  · left; norm_num
+  · right; norm_num
+  · right; norm_num
+  · left; norm_num
+
+/-- **THE SIGN-FREE TERMINAL.** The E1 atom triple from 22 classes whose Gram is `⟨2ε⟩¹⁶ ⊕ 3H` for an
+*arbitrary* sign vector, plus independence and index `2⁸`. Strictly weaker than §5's hypothesis
+(`kummerSubFormSigned_neg_one` shows §5 is the case `ε ≡ −1`), same conclusion — so the open signed
+`−2` diagonal is **not** on the path to the atoms; only `|⟨α_c, E_c⟩| = 2`, which is banked, is. -/
+theorem nonempty_kummerK3E1Atoms_of_signedKummerFamily (o : IntOrientation KummerK3)
+    (ε : Fin 16 → ℤ) (hε : ∀ c, ε c = 1 ∨ ε c = -1)
+    (v : Fin 22 → Cohomology KummerK3top 2)
+    (hv : ∀ i j, interFormInt (intFundamentalClassOfIntOrientation o) (v i) (v j)
+      = kummerSubFormSigned ε i j)
+    (hli : LinearIndependent ℤ v)
+    (hcard : Nat.card (Cohomology KummerK3top 2 ⧸ Submodule.span ℤ (Set.range v)) = 2 ^ 8) :
+    Nonempty KummerK3E1Atoms := by
+  refine nonempty_kummerK3E1Atoms_at o (nonempty_intPD_of_kummerK3Gram_isUnimodular o ?_)
+  refine isUnimodular_of_index_sq (intFundamentalClassOfIntOrientation o) kummerK3IntH2Basis
+    kummerK3IntH2Basis_rank v (kummerSubFormSigned ε) hv hli (by norm_num) hcard ?_
+  rcases kummerSubFormSigned_det ε hε with h | h
+  · exact Or.inl (by rw [h]; push_cast)
+  · exact Or.inr (by rw [h]; push_cast)
+
 end
 
 end SKEFTHawking.KummerK3E1Repair
