@@ -177,6 +177,61 @@ disjoint CLOSED sets — the shape an excision/support argument needs. -/
 theorem isClosed_range_eCopy (c : EIndex) : IsClosed (Set.range (eCopyC c)) :=
   (SKEFTHawking.KummerWeld.isClosedEmbedding_eCopy c).isClosed_range
 
+/-! ## §3c. THE SUPPORT CRITERION — off-diagonal vanishing from vanishing off the piece
+
+§3b gave the set-level disjointness; this section turns it into the cohomological statement, using
+contravariant functoriality (`SingularCohomologyFunctorialityInt.cohomologyPullbackInt_comp`,
+lead-verified before building on it: `(ψ ∘ φ)* = φ* ∘ ψ*`).
+
+The mechanism is a **factorization**: for `c ≠ d`, disjointness says the `c`-th piece lands entirely
+in the complement of the `d`-th, so `eCopyC c` factors through that complement. Hence if `α d`
+already restricts to `0` on the complement, its restriction to the `c`-th piece is `0` — with no
+computation on `K3`.
+
+⚠ This is still an **interface**, not a discharge: the hypothesis "`α d` vanishes off the `d`-th
+piece" is exactly what excision (`H²(K3, K3 ∖ E_d) → H²(K3)`) will supply, and that is not built. -/
+
+/-- The complement of the `d`-th piece, as a `TopCat`. -/
+def offPieceTop (d : EIndex) : TopCat := TopCat.of ↥((Set.range (eCopyC d))ᶜ)
+
+/-- Its inclusion into `K3`. -/
+def offPieceIncl (d : EIndex) : C(↑(offPieceTop d), ↑KummerK3top) :=
+  ⟨Subtype.val, continuous_subtype_val⟩
+
+/-- **For `c ≠ d`, the `c`-th piece corestricts into the complement of the `d`-th** — the map whose
+existence is exactly §3b's disjointness. -/
+def eCopyOff {c d : EIndex} (hcd : c ≠ d) : C(↑EtopR, ↑(offPieceTop d)) :=
+  ⟨fun e => ⟨eCopyC c e, Set.disjoint_left.mp (eCopy_range_disjoint hcd) ⟨e, rfl⟩⟩,
+    (eCopyC c).continuous.subtype_mk _⟩
+
+/-- **The factorization** `eCopyC c = (incl of K3 ∖ E_d) ∘ (corestriction)`, for `c ≠ d`. -/
+theorem eCopy_factors_offPiece {c d : EIndex} (hcd : c ≠ d) :
+    eCopyC c = (offPieceIncl d).comp (eCopyOff hcd) := rfl
+
+/-- **THE SUPPORT CRITERION.** If `ω` restricts to `0` on the complement of the `d`-th piece, then it
+restricts to `0` on every *other* piece. -/
+theorem restrictToPiece_eq_zero_of_vanishes_off {c d : EIndex} (hcd : c ≠ d)
+    {ω : Cohomology KummerK3top 2}
+    (h : cohomologyPullbackInt (offPieceIncl d) 2 ω = 0) :
+    restrictToPiece c ω = 0 := by
+  have : restrictToPiece c ω
+      = cohomologyPullbackInt (eCopyOff hcd) 2 (cohomologyPullbackInt (offPieceIncl d) 2 ω) := by
+    rw [restrictToPiece, eCopy_factors_offPiece hcd, cohomologyPullbackInt_comp]
+    rfl
+  rw [this, h, map_zero]
+
+/-- **The block from a family that VANISHES OFF ITS OWN PIECE**, plus the per-piece `−2`. This is the
+E-lane's obligation in the shape the Thom/excision route will actually deliver it: `α d` is supplied
+as a class supported on the `d`-th piece, and the entire off-diagonal is then automatic. -/
+theorem exceptionalBlockGram_of_supported (o : IntOrientation KummerK3)
+    (α : EIndex → Cohomology KummerK3top 2)
+    (hcap : ∀ c, capHInt 2 1 (α c) o.fundClass = excClass c)
+    (hdiag : ∀ c, kroneckerHInt 2 (restrictToPiece c (α c)) eGen = -2)
+    (hsupp : ∀ d, cohomologyPullbackInt (offPieceIncl d) 2 (α d) = 0) :
+    ExceptionalBlockGram o :=
+  exceptionalBlockGram_of_pieceLocal o α hcap hdiag
+    (fun _ d hcd => restrictToPiece_eq_zero_of_vanishes_off hcd (hsupp d))
+
 /-! ## §5. WHAT THE BLOCK BUYS: the 16 exceptional classes are ℤ-INDEPENDENT
 
 The `⟨−2⟩¹⁶` name is only honest if the 16 classes actually span a rank-16 sublattice; a family of
