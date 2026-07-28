@@ -5065,6 +5065,11 @@ import SKEFTHawking.PinEnhancementTorsor
 -- geometric data rather than declared as a field: the ambient Freedman-Kirby membrane, its three
 -- summands as computed quantities, and the pin-minus class extracted from the index.
 import SKEFTHawking.MembraneIndex
+-- Phase 6EA Wave 2 — Gaussian threshold discrimination algebra: the project-local upper-tail
+-- `Q` (Mathlib carries no erf/erfc/Gaussian CDF at pin), its window/Birnbaum lower tails and
+-- Mills/Chernoff upper tails, rational enclosures of `Q(2)`, and the separation-budget error
+-- floor on `avgAssignmentError` uniform over threshold placement.
+import SKEFTHawking.Detection.GaussianThreshold
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
