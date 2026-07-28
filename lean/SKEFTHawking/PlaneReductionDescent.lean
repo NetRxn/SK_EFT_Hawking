@@ -232,4 +232,65 @@ theorem planeReduction_of_axis
   intro α β γ δ
   exact key β.natAbs α β γ δ le_rfl
 
+/-! ## §6. The two axis moves, and why `gcd(γ, δ)` is the axis measure
+
+§5 leaves exactly the `β = 0` axis. There `γ` and `δ` are frozen by every move that fixes `β`, so
+the only thing that happens is that `α` slides through its coset of the ideal `(γ, δ)` — that is
+§4's `planeReduction_of_beta_zero`, which closes the axis when `gcd(γ, δ) ∣ α`.
+
+When it does not, the axis must be left, and `m₄` is the only move that leaves it. The two lemmas
+here are the two halves of one round trip, and together they say what the round trip BUYS:
+`α` first drops below `e := gcd(γ, δ)` (`planeReduction_axis_shift`), and then one `m₄` drops both
+`γ` and `δ` below that same `α` (`planeReduction_axis_escape`) — so the new `gcd(γ, δ)` is
+strictly smaller than the old one. `gcd(γ, δ)` is therefore the axis-visit measure. -/
+
+/-- **Sliding `α` along the ideal, on the axis.** For any `k` divisible by `gcd(γ, δ)`, one `m₃`
+move sends `(α, 0, γ, δ)` to `(α - k, 0, γ, δ)` — `β`, `γ` and `δ` are all untouched, because at
+`β = 0` every payment `m₃` makes into `γ` and `δ` is a multiple of `β`. -/
+theorem planeReduction_axis_shift (α γ δ k : ℤ) (h : (Int.gcd γ δ : ℤ) ∣ k) :
+    ReflTransGen PlaneStep (α, 0, γ, δ) (α - k, 0, γ, δ) := by
+  obtain ⟨m, hm⟩ := h
+  refine ReflTransGen.single ?_
+  have h := PlaneStep.m₃ (-(Int.gcdB γ δ * m)) (-(Int.gcdA γ δ * m)) α 0 γ δ
+  have hval : α + ((-(Int.gcdB γ δ * m)) * δ + (-(Int.gcdA γ δ * m)) * γ)
+      - (-(Int.gcdB γ δ * m)) * (-(Int.gcdA γ δ * m)) * 0 = α - k := by
+    have hb : (Int.gcd γ δ : ℤ) = γ * Int.gcdA γ δ + δ * Int.gcdB γ δ := Int.gcd_eq_gcd_ab γ δ
+    rw [hm, hb]; ring
+  rw [hval] at h
+  simpa using h
+
+/-- **On the axis, `α` may be taken below `gcd(γ, δ)`.** The `emod` normal form of the slide. -/
+theorem planeReduction_axis_normalize (α γ δ : ℤ) :
+    ReflTransGen PlaneStep (α, 0, γ, δ) (α % (Int.gcd γ δ : ℤ), 0, γ, δ) := by
+  have h : (Int.gcd γ δ : ℤ) ∣ (α - α % (Int.gcd γ δ : ℤ)) := by
+    rw [Int.emod_def]; exact ⟨α / (Int.gcd γ δ : ℤ), by ring⟩
+  have := planeReduction_axis_shift α γ δ (α - α % (Int.gcd γ δ : ℤ)) h
+  simpa using this
+
+/-- **Leaving the axis buys a strictly smaller `gcd(γ, δ)`.** One `m₄` reduces `γ` and `δ` modulo
+`α` simultaneously (they are independent), at the cost of `β` becoming nonzero — `m₄` is the only
+move that can leave the axis at all, since every other one fixes `β = 0`.
+
+Paired with `planeReduction_axis_normalize`, which first puts `0 ≤ α < e := gcd(γ, δ)`, the new
+`γ` and `δ` both land strictly below `α`, hence strictly below `e`. So each axis visit strictly
+decreases `gcd(γ, δ)`, which is what makes the axis lane well-founded. -/
+theorem planeReduction_axis_escape (α γ δ : ℤ) :
+    ReflTransGen PlaneStep (α, 0, γ, δ)
+      (α, (γ / α) * δ + (δ / α) * γ - (γ / α) * (δ / α) * α, γ % α, δ % α) := by
+  refine ReflTransGen.single ?_
+  have h := PlaneStep.m₄ (γ / α) (δ / α) α 0 γ δ
+  rwa [show γ - (γ / α) * α = γ % α by rw [Int.emod_def]; ring,
+    show δ - (δ / α) * α = δ % α by rw [Int.emod_def]; ring, zero_add] at h
+
+/-- **The axis measure, made explicit.** After normalising `α` below `e := gcd(γ, δ)` and then
+escaping, both new plane-2 coordinates are `< α < e`, so the new `gcd` is `< e`. Stated on `natAbs`
+because that is the form a well-founded recursion consumes. -/
+theorem natAbs_gcd_lt_of_axis_round {α γ δ : ℤ}
+    (hγ : (γ % α).natAbs < α.natAbs) (hδ : (δ % α).natAbs < α.natAbs) :
+    Int.gcd (γ % α) (δ % α) < α.natAbs := by
+  rcases eq_or_ne (γ % α) 0 with h | h
+  · simpa [h, Int.gcd] using hδ
+  · exact lt_of_le_of_lt (Nat.le_of_dvd (Int.natAbs_pos.mpr h)
+      (Nat.gcd_dvd_left (γ % α).natAbs (δ % α).natAbs)) hγ
+
 end SKEFTHawking
