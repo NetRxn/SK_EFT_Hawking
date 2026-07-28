@@ -1,5 +1,58 @@
 /-
-# Phase 5q.H (E2 · [G2]/[Q1]) — the MEMBRANE INDEX `D·F + O(D) + d(C)`, CONSTRUCTED
+# Phase 5q.H (E2 · `[G2]`/`[Q1]`) — the MEMBRANE INDEX `D·F + O(D) + d(C)`, **CONSTRUCTED**
+
+`PinEnhancementTorsor` proved that the substrate's missing field is *exactly* one `H¹(F;ℤ/2)`-class
+`w` (the enhancement torsor is simply transitive), and `GMTripleLayerForcing` proved that no
+triple-level layer can supply it — the escape must be finer, and must be a predicate on the pin⁻
+class rather than on `σ`. `Lit-Search/Phase-5qH/Rokhlin_16_sigma_elementary_blueprint_20260703.md`
+names what computes that class: nodes `[G2]`/`[Q1]`, Freedman–Kirby Lemma 2.6.1,
+
+> `q_F(x) := D·F + O(D) + d(C) mod 2`, well-defined (independent of the membrane `D`).
+
+**The constraint this module is built under.** A `MembraneIndexData` structure with an
+`index : (ι → ZMod 2) → ZMod 4` field plus a refinement axiom is isomorphic to `Z4Quadratic` — new
+docstrings, no new mathematics, P5 structural-tautology repackaging. So every summand here is
+*computed from geometric data*, and nothing in `AmbientMembrane`/`FramedMembrane` is `ZMod`-valued:
+
+* `D·F` (`intF`) — `Set.ncard` of `{p ∉ ∂S | D p ∈ F}`, a set the membrane map determines outright;
+* `d(C)` (`dbl`) — `Set.ncard` of the map's double-point set `doubleSet D ⊆ Sym2 S`;
+* `O(D)` (`obs`) — the **degree of the boundary framing-comparison loop**, computed through the
+  in-tree lift-based winding number `CircleWindingCocycle.windMap`. (A rank-2 bundle over a compact
+  surface-with-boundary is trivial, so `O(D)` is not a trivialization obstruction but the
+  `π₁(SO(2)) ≅ ℤ` discrepancy between the `F`-induced boundary framing and a global one.) Degree
+  additivity on loops is PROVED (`loopDegree_mul`) — structure no stored integer could have.
+
+The structure's only added inputs are the two `Finite` **genericity/transversality** fields.
+
+## What this buys, in theorems
+
+* `geomEnhancement` — a `[Q2]`-compatible membrane index PRODUCES a genuine `Z4Quadratic` on
+  `H₁(F;ℤ/2)` whose polar form **is** the surface's. This is the substrate `CharSurfaceFKVacuity` §3
+  named as missing, supplied constructively.
+* `exists_unique_pin_class` — hence `PinTorsor.shift_simply_transitive` yields the **unique class
+  `w`** carrying `C.Q` to it. *The pin⁻ class is computed by the membrane index, not chosen.*
+* `MembraneSystem.pin_class_indep_of_system` — under the corrected `[Q1]` that class is an invariant
+  of the surface: circles, membranes and framings all drop out.
+* `gmrelation_geomEnhancement_iff` — Guillou–Marin at the produced enhancement **is** the blueprint's
+  `[FK]` line `Arf(q_F) = (σ − ξ·ξ)/8 mod 2`, now a predicate on the membrane index (so it passes
+  `GMTripleLayerForcing`'s intensional admissibility criterion, where `GMrelation σ 0 C.Q` failed).
+* `index_eq_of_pin_class_eq` — the extraction is injective: no geometry lost, no class invented.
+
+## Two findings the lead should have
+
+1. **Scope (`refines_forces_alternating`).** Any `μ` satisfying the `[Q2]` polarization identity
+   against `Q.B` forces `B(v,v) = 0` for all `v`. So the mod-2 Freedman–Kirby index — blueprint
+   Route A — reaches the **orientable stratum and, kernel-checkably, only that one**; the `ℝP²`
+   stratum admits no such index at all (`not_exists_index_of_B_self_ne_zero`). This is not a defect:
+   it is the exact content of the blueprint's remark that the Guillou–Marin `ℤ/4` form "is sharper …
+   but costs nonorientable-surface + Pin⁻ normal data on top".
+2. **A real defect, found and repaired (`indexWellDefined_false_of_framedMembrane`).** With the
+   framing comparison carried as *free* data, `[Q1]` in its natural universal shape is **FALSE** —
+   twisting the comparison by one full turn flips the index (`index_twist`). This is the same failure
+   mode `CharSurfaceFKVacuity` found one level up (a free enhancement makes universal `[FK]` false,
+   not merely vacuous), reappearing at the framing: `O(D)` must be *produced* from the smooth normal
+   data. Repaired by `NormalFramingTie` (rigidity), whose twist-escape and inhabitedness requirements
+   are both shown load-bearing.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom.
 -/
@@ -615,6 +668,49 @@ normal-data-induced framings. Unlike `IndexWellDefined` (refuted by
 def IndexWellDefinedTied {C : PinCharSurface X k} (tie : NormalFramingTie C) : Prop :=
   ∀ (γ γ' : EmbeddedCircle C) (m : FramedMembrane C γ) (m' : FramedMembrane C γ'),
     tie.Tied m → tie.Tied m' → γ.cls = γ'.cls → m.index = m'.index
+
+/-! ## §9. `[Q1]` closes the arc: the extracted pin⁻ class is an invariant of the surface -/
+
+namespace MembraneSystem
+
+variable {C : PinCharSurface X k}
+
+/-- A membrane system is **tied** when every chosen framing is normal-data-induced. -/
+def Tied (sys : MembraneSystem C) (tie : NormalFramingTie C) : Prop :=
+  ∀ x, tie.Tied (sys.memb x)
+
+/-- **Tied well-definedness makes the index choice-free** (PROVED): any two tied membrane systems on
+the same characteristic surface compute the *same* index function on `H₁(F;ℤ/2)`. This is what the
+corrected `[Q1]` buys — the circles, the membranes and the framings all drop out. -/
+theorem index_eq_of_tied {tie : NormalFramingTie C} (hwd : IndexWellDefinedTied tie)
+    {sys sys' : MembraneSystem C} (ht : sys.Tied tie) (ht' : sys'.Tied tie) :
+    sys.index = sys'.index := by
+  funext x
+  exact hwd _ _ (sys.memb x) (sys'.memb x) (ht x) (ht' x)
+    ((sys.circle_cls x).trans (sys'.circle_cls x).symm)
+
+/-- Equal index functions produce the same enhancement. -/
+theorem enhancement_eq {sys sys' : MembraneSystem C} (h : sys.Refines) (h' : sys'.Refines)
+    (hidx : sys.index = sys'.index) : sys.enhancement h = sys'.enhancement h' := by
+  refine Z4Quadratic.ext (funext fun v => ?_)
+  show embed2 (sys.index v) = embed2 (sys'.index v)
+  rw [hidx]
+
+/-- **THE ARC'S CLOSING THEOREM** (new): under the corrected `[Q1]`, the pin⁻ class extracted from
+the membrane index is an invariant of the characteristic surface — independent of the representing
+circles, of the membranes, and of the framings. Combined with `exists_unique_pin_class` (the class
+exists and is unique for a given system) this says the blueprint's `D·F + O(D) + d(C)` genuinely
+*computes* the one `H¹(F;ℤ/2)`-class that `PinEnhancementTorsor` showed the substrate to be
+missing. -/
+theorem pin_class_indep_of_system {tie : NormalFramingTie C} (hwd : IndexWellDefinedTied tie)
+    {sys sys' : MembraneSystem C} (ht : sys.Tied tie) (ht' : sys'.Tied tie)
+    (h : sys.Refines) (h' : sys'.Refines) {w w' : C.ι → ZMod 2}
+    (hw : C.Q.shift w = sys.enhancement h) (hw' : C.Q.shift w' = sys'.enhancement h') :
+    w = w' := by
+  refine SKEFTHawking.PinTorsor.shift_left_injective C.Q ?_
+  rw [hw, hw', enhancement_eq h h' (index_eq_of_tied hwd ht ht')]
+
+end MembraneSystem
 
 /-! ### No information is lost or invented in the extraction -/
 
