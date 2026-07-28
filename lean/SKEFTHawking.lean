@@ -5079,6 +5079,12 @@ import SKEFTHawking.Detection.GaussianThreshold
 -- single-shot matched-boxcar realizability floor `ENBW·T ≥ 1/2` with its boxcar-saturation
 -- least-element form, and the white-noise output-variance bridge.
 import SKEFTHawking.Detection.FilterFloors
+-- Phase 6EA Wave 3 — shot-noise algebra and the quantum seam: `psdSqrt` of a diagonal matrix,
+-- the diagonal-state root fidelity = classical Bhattacharyya affinity bridge, the Wave-1
+-- Poisson floor sandwiched around a quantum fidelity, the one-sided shot PSD with its
+-- reference-plane transfer, pmf-level Poisson thinning, mean = variance, and the strict-slack
+-- non-vacuity witness.
+import SKEFTHawking.Detection.ShotNoise
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
