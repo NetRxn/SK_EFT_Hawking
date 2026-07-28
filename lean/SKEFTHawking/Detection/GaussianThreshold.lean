@@ -35,9 +35,8 @@ whose normalization is pinned to Mathlib's own Gaussian integral by `gaussianQ_z
   `NumericalBounds` rational-enclosure style; `gaussianQ_two_le_rational` consumes
   `SKEFTHawking.QuantumNetwork.expNeg_enclosure` directly.
 * **Threshold algebra** — conservativity in `σ`, the ROC tradeoff in `t`, midpoint symmetry.
-* **Error floors** — `avgError_ge_gaussianQ_sharp` and its weaker named companion
-  `avgError_ge_half_gaussianQ`, both stated in the project's canonical error functional
-  `SKEFTHawking.QuantumNetwork.avgAssignmentError`.
+* **Error floors** — `avgError_ge_gaussianQ_sharp`, stated in the project's canonical error
+  functional `SKEFTHawking.QuantumNetwork.avgAssignmentError`.
 
 ## Statement-freeze deviations (all in the strengthening direction)
 
@@ -50,9 +49,10 @@ whose normalization is pinned to Mathlib's own Gaussian integral by `gaussianQ_z
   `0 ≤ z` statement closed and is what ships as `gaussianTail_chernoff`; the narrowed form is
   not shipped, since it would be a strictly weaker restatement of a proved theorem.
 * **Threshold floor (Stage-2 `D10`).** The accepted must-ship constant was `½·Q(z₀)`. The sharp
-  `Q(z₀)` form closed, so `avgError_ge_half_gaussianQ` is derived from it rather than proved
-  independently; it is retained under the roadmap's name as an entry point, with the same
-  signature, so substituting the sharp form needs no consumer restatement.
+  `Q(z₀)` form closed, so only `avgError_ge_gaussianQ_sharp` ships: at an identical hypothesis
+  list, the half form would be a strictly weaker restatement provable in one `linarith` from the
+  sharp one — the identity-wrapper pattern the strengthening checklist forbids. See the note at
+  the end of this file. This strengthens the AC rather than descoping it.
 
 **⚠ Guardrail (inherited).** Everything below is a floor or screen on *any* threshold detector,
 stated over abstract means and an abstract noise scale. No device claim, no hardware model, no
@@ -592,16 +592,25 @@ theorem avgError_ge_gaussianQ_sharp {μ₀ μ₁ σ t z₀ : ℝ}
   have h2 : gaussianQ z₀ ≤ gaussianQ ((μ₁ - μ₀) / (2 * σ)) := gaussianQ_antitone hz
   linarith
 
-/-- The roadmap-named form of the separation-budget floor, at the factor-2-loose constant
-`½·Q(z₀)`. Superseded in strength by `avgError_ge_gaussianQ_sharp` — which closed, so this is a
-corollary of it rather than an independent argument — and retained under this name, with an
-identical signature, as the entry point named in the Phase-6EA acceptance criteria. New
-consumers should cite the sharp form. -/
-theorem avgError_ge_half_gaussianQ {μ₀ μ₁ σ t z₀ : ℝ}
-    (hσ : 0 < σ) (hμ : μ₀ ≤ μ₁) (hz : (μ₁ - μ₀) / (2 * σ) ≤ z₀) :
-    (1 / 2) * gaussianQ z₀ ≤ avgAssignmentError (thrErr0 μ₀ σ t) (thrErr1 μ₁ σ t) := by
-  have hsharp := avgError_ge_gaussianQ_sharp (t := t) hσ hμ hz
-  have hnn := gaussianQ_nonneg z₀
-  linarith
+/-!
+### On the roadmap's `avgError_ge_half_gaussianQ` (deliberately NOT shipped)
+
+The Phase-6EA acceptance criteria and the Stage-2 freeze (§7.5, decision D10) name a
+factor-2-loose form of the floor, `½·Q(z₀) ≤ avgAssignmentError …`, as the must-ship, with the
+sharp `Q(z₀)` form as a stretch. **The sharp form closed**, so the half form was dropped rather
+than shipped alongside it.
+
+Rationale (Stage-3a strengthening checklist #1/#4, lead call 2026-07-28): the half form carries
+an *identical* hypothesis list to `avgError_ge_gaussianQ_sharp` and a strictly weaker conclusion,
+and its only possible proof at that point is `sharp` + `gaussianQ_nonneg` + `linarith`. That is
+the identity-wrapper antipattern the pipeline forbids — a weaker restatement of a proved theorem
+adds no content and inflates the substantive theorem count. The freeze's own justification for
+ordering the half form first ("ship the provable form now; substituting the sharp one later
+requires no restatement of any consuming theorem") is discharged, not violated: no consumer needs
+restating because none was ever written against the weaker constant.
+
+This is a strengthening of the AC, not a descope — `avgError_ge_gaussianQ_sharp` implies the
+roadmap's stated bound pointwise, with the same signature.
+-/
 
 end SKEFTHawking.Detection

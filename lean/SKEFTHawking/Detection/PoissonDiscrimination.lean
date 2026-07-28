@@ -263,14 +263,24 @@ theorem poisson_avgError_floor {Nb Na : ℝ≥0} {δ : ℕ → ℝ} (hδ : IsCou
     ring
   rwa [hrw] at h
 
-/-- **The floor's constant is not vacuous.** Specialized to two *identical* Poisson sources the
-universal floor reads `¼`: no count rule whatsoever — however cleverly randomized — separates
-`Poisson N` from `Poisson N` with equal-prior average error below `1/4`. (The truth is `1/2`,
-attained by every rule; the Le Cam constant costs a factor of two, and nothing more.) This is
-the sanity check that pins the `¼·exp(…)` prefactor to a falsifiable number. -/
-theorem poisson_avgError_floor_equalRates {N : ℝ≥0} {δ : ℕ → ℝ} (hδ : IsCountRule δ) :
-    (1 / 4 : ℝ) ≤ avgAssignmentError (falseAlarm N δ) (missProb N δ) := by
-  simpa using poisson_avgError_floor (Nb := N) (Na := N) hδ
+/-- **Indistinguishable sources: the average error is EXACTLY one half.** Against two *identical*
+Poisson sources no count rule — however cleverly randomized — does better or worse than a coin:
+`e₀ + e₁ = ∑ₙ p n = 1`, so the equal-prior average is `1/2` for every admissible `δ`.
+
+This is the exact companion to `poisson_avgError_floor`, which at `N_a = N_b` returns the weaker
+`¼`. Stating the *value* rather than a bound is what makes the Le Cam constant's cost checkable:
+the universal floor is loose by exactly a factor of two at coincident rates, and that gap is now
+a comparison between two theorems rather than a remark in a docstring. -/
+theorem poisson_avgError_equalRates_eq_half {N : ℝ≥0} {δ : ℕ → ℝ} (hδ : IsCountRule δ) :
+    avgAssignmentError (falseAlarm N δ) (missProb N δ) = 1 / 2 := by
+  have hsum : HasSum (poissonPMFReal N) (falseAlarm N δ + missProb N δ) := by
+    have h := (hasSum_falseAlarm (r := N) hδ).add (hasSum_missProb (r := N) hδ)
+    have hfun : (fun n => poissonPMFReal N n * δ n + poissonPMFReal N n * (1 - δ n))
+        = fun n => poissonPMFReal N n := by funext n; ring
+    rwa [hfun] at h
+  have h1 : falseAlarm N δ + missProb N δ = 1 := hsum.unique (poissonPMFRealSum N)
+  unfold avgAssignmentError
+  linarith
 
 /-! ## Dark baseline (zero-false-alarm optimum) -/
 
