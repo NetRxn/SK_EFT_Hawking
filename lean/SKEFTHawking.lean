@@ -5075,6 +5075,10 @@ import SKEFTHawking.Detection.PoissonDiscrimination
 -- Mills/Chernoff upper tails, rational enclosures of `Q(2)`, and the separation-budget error
 -- floor on `avgAssignmentError` uniform over threshold placement.
 import SKEFTHawking.Detection.GaussianThreshold
+-- Phase 6EB Wave 1 — filtered-readout noise floors: ENBW of an interval-supported filter, the
+-- single-shot matched-boxcar realizability floor `ENBW·T ≥ 1/2` with its boxcar-saturation
+-- least-element form, and the white-noise output-variance bridge.
+import SKEFTHawking.Detection.FilterFloors
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
