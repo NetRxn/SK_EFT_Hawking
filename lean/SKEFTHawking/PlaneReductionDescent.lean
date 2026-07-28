@@ -153,4 +153,83 @@ theorem planeReduction_of_alpha_zero {β γ δ : ℤ} (h : (Int.gcd γ δ : ℤ)
   rw [hzero] at h
   simpa using h
 
+/-! ## §5. The descent on `|β|`
+
+`m₃` reduces `γ` and `δ` modulo `β` in one move; if both remainders vanish we are on the zero tail,
+and otherwise a nonzero remainder `r` with `|r| < |β|` is available to reduce `β` modulo `r` by
+`m₂ 0 _` (resp. `m₁ 0 _`), so `|β|` strictly drops. Iterating lands on the `β = 0` axis. -/
+
+/-- `|a % b| < |b|` for `b ≠ 0`, in the `natAbs` form the descent measure needs. -/
+theorem natAbs_emod_lt_natAbs {a b : ℤ} (hb : b ≠ 0) : (a % b).natAbs < b.natAbs := by
+  have h0 : 0 ≤ a % b := Int.emod_nonneg a hb
+  have h1 : a % b < |b| := Int.emod_lt_abs a hb
+  have h2 : |b| = (b.natAbs : ℤ) := Int.abs_eq_natAbs b
+  omega
+
+/-- **THE DESCENT.** `PlaneReduction` follows from its own restriction to the `β = 0` axis.
+
+This is the whole 4-parameter statement reduced to a 3-parameter one: given that every tuple of the
+shape `(α, 0, γ, δ)` reduces, so does every tuple. The induction is on `β.natAbs`; each round is one
+`m₃` (reducing `γ, δ` modulo `β`) followed by one `m₂ 0 _` or `m₁ 0 _` (reducing `β` modulo the
+surviving remainder), and the zero-remainder case lands on `planeReduction_zero_tail`. -/
+theorem planeReduction_of_axis
+    (haxis : ∀ a c d : ℤ, ∃ γ' δ' : ℤ, ReflTransGen PlaneStep (a, 0, c, d) (0, 0, γ', δ')) :
+    PlaneReduction := by
+  have key : ∀ n : ℕ, ∀ α β γ δ : ℤ, β.natAbs ≤ n →
+      ∃ γ' δ' : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (0, 0, γ', δ') := by
+    intro n
+    induction n with
+    | zero =>
+      intro α β γ δ hle
+      have hβ : β = 0 := by
+        have : β.natAbs = 0 := Nat.le_zero.mp hle
+        exact Int.natAbs_eq_zero.mp this
+      subst hβ; exact haxis α γ δ
+    | succ n ih =>
+      intro α β γ δ hle
+      by_cases hβ : β = 0
+      · subst hβ; exact haxis α γ δ
+      · -- one `m₃`: reduce `γ` and `δ` modulo `β`
+        set p : ℤ := γ / β with hp
+        set q : ℤ := δ / β with hq
+        set α₁ : ℤ := α + (p * δ + q * γ) - p * q * β with hα₁
+        have hstep3 : PlaneStep (α, β, γ, δ) (α₁, β, γ % β, δ % β) := by
+          have h := PlaneStep.m₃ p q α β γ δ
+          rwa [show γ - p * β = γ % β by rw [hp, Int.emod_def]; ring,
+            show δ - q * β = δ % β by rw [hq, Int.emod_def]; ring] at h
+        by_cases hr1 : γ % β = 0
+        · by_cases hr2 : δ % β = 0
+          · -- both remainders vanish: the zero tail
+            rw [hr1, hr2] at hstep3
+            obtain ⟨γ', δ', hchain⟩ := planeReduction_zero_tail α₁ β
+            exact ⟨γ', δ', (ReflTransGen.single hstep3).trans hchain⟩
+          · -- reduce `β` modulo `δ % β` with `m₁ 0 _`
+            have hstep1 : PlaneStep (α₁, β, γ % β, δ % β)
+                (α₁, β - (δ % β) * (β / (δ % β)), γ % β + (β / (δ % β)) * α₁, δ % β) :=
+              planeStep_m₁_right (β / (δ % β)) α₁ β (γ % β) (δ % β)
+            have hmod : β - (δ % β) * (β / (δ % β)) = β % (δ % β) :=
+              (Int.emod_def β (δ % β)).symm
+            rw [hmod] at hstep1
+            have hlt : (β % (δ % β)).natAbs < β.natAbs :=
+              lt_trans (natAbs_emod_lt_natAbs hr2) (natAbs_emod_lt_natAbs hβ)
+            obtain ⟨γ', δ', hchain⟩ :=
+              ih α₁ (β % (δ % β)) (γ % β + (β / (δ % β)) * α₁) (δ % β) (by omega)
+            exact ⟨γ', δ',
+              ((ReflTransGen.single hstep3).tail hstep1).trans hchain⟩
+        · -- reduce `β` modulo `γ % β` with `m₂ 0 _`
+          have hstep2 : PlaneStep (α₁, β, γ % β, δ % β)
+              (α₁, β - (γ % β) * (β / (γ % β)), γ % β, δ % β + (β / (γ % β)) * α₁) :=
+            planeStep_m₂_right (β / (γ % β)) α₁ β (γ % β) (δ % β)
+          have hmod : β - (γ % β) * (β / (γ % β)) = β % (γ % β) :=
+            (Int.emod_def β (γ % β)).symm
+          rw [hmod] at hstep2
+          have hlt : (β % (γ % β)).natAbs < β.natAbs :=
+            lt_trans (natAbs_emod_lt_natAbs hr1) (natAbs_emod_lt_natAbs hβ)
+          obtain ⟨γ', δ', hchain⟩ :=
+            ih α₁ (β % (γ % β)) (γ % β) (δ % β + (β / (γ % β)) * α₁) (by omega)
+          exact ⟨γ', δ',
+            ((ReflTransGen.single hstep3).tail hstep2).trans hchain⟩
+  intro α β γ δ
+  exact key β.natAbs α β γ δ le_rfl
+
 end SKEFTHawking
