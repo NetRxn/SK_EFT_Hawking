@@ -23,17 +23,18 @@ so `y^⊥` contains a vector of odd self-product and is therefore an odd form
 (`unitResidGram_even_value`). Peeling `y` instead of `x` keeps rank, signature — and parity.
 No block re-association, no `H`-absorption, no `E₈`-absorption is needed.
 
-**What is NOT proved here — and the precise reason.** The induction bottoms out at rank `≤ 4`, where
+**What is NOT proved here — and where it now is.** The induction bottoms out at rank `≤ 4`, where
 `odd_indefinite_represents_one` is unavailable: it runs on Meyer/Hasse–Minkowski
-(`weakIsotropic_of_five_le`), which needs rank `≥ 5`. Ranks `2, 3, 4` are therefore exposed as the
-`Prop` interface `OddSmallRankDiagonalizable`, and `odd_indefinite_pmDiagonal` /
+(`weakIsotropic_of_five_le`), which needs rank `≥ 5`. Ranks `3, 4` are therefore exposed here as the
+`Prop` interface `OddRank34Diagonalizable`, and `odd_indefinite_pmDiagonal` /
 `odd_indefinite_intCongr` are stated relative to it.
 
-That residue is **not** bookkeeping: an odd indefinite unimodular form of rank 3 or 4 need not
-visibly represent `0`, and establishing that it does is a Hasse–Minkowski discharge of the same shape
-as the (600-line, EVEN-and-square-discriminant-specific) `RokhlinHMRankFour` — a rank-3 Legendre
-step and a rank-4 step covering the non-square-discriminant (`det = −1`, `σ = ±2`) shapes that the
-banked square-discriminant machinery does not reach. See the module `## The remaining gap` section.
+That residue is **not** bookkeeping — it is a genuine Hasse–Minkowski discharge — but it is now
+**DONE**: `SKEFTHawking.oddRank34Diagonalizable` (`SKEFTHawking/OddSmallRankHM.lean`, unconditional,
+kernel-pure) proves the interface, and
+`odd_indefinite_pmDiagonal_unconditional` / `odd_indefinite_intCongr_unconditional` there are the
+hypothesis-free forms. **Use those downstream.** Do not re-derive the framing in the
+`## The remaining gap` section below: it records why the discharge is real work, not that it is open.
 
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/axiom.
 -/
@@ -497,7 +498,13 @@ reduces to: *an odd indefinite unimodular form of that rank has a nonzero intege
   `det = ac − b² = −1` makes `(1 − b, a)` isotropic (`a·q(1−b, a) = a·(1 − (b² − ac)) = 0`), or
   `(1, 0)` when `a = 0`; the determinant sign itself comes from indefiniteness
   (`binary_det_eq_neg_one`), since `det = +1` makes `a·q = (ax+by)² + y²` semidefinite.
-* **Ranks 3 and 4 REMAIN.** They are a genuine Hasse–Minkowski discharge, of the same shape as the ~600-line
+* **Ranks 3 and 4 — DONE in `OddSmallRankHM`** (`oddTernary_pmDiagonal`,
+  `oddQuaternary_pmDiagonal_of_isotropic`, assembled as `oddRank34Diagonalizable`). The paragraph below
+  records why they were a genuine Hasse–Minkowski discharge and not bookkeeping; the resolution was that
+  `RokhlinHMRankFour`'s *theorem* is even-specific but its *tooling* is not
+  (`isotropic_padicInt_of_unit_det` needs only rank `≥ 3`, `p ≠ 2`, unit determinant), and that at rank 3
+  the place-`2` obstruction is a single Hilbert symbol, so reciprocity closes it with no
+  square-discriminant hypothesis. They are a genuine Hasse–Minkowski discharge, of the same shape as the ~600-line
   `RokhlinHMRankFour`, but NOT reducible to it: that file is specific to EVEN unimodular rank-4 forms,
   and specifically to the **square-discriminant** branch (it first proves `det = +1` from evenness,
   `det_eq_one_of_evenUnimodular_four`, in order to reach
@@ -507,10 +514,12 @@ reduces to: *an odd indefinite unimodular form of that rank has a nonzero intege
   banked pieces — `isotropic_padicInt_of_unit_det` (odd `p`, rank `≥ 3`) plus the reciprocity step
   `hilbertPrime_two_eq_one_of_real_odd` that pins the place `2` — but each is a build, not a rewrite. -/
 
-/-- **The rank-3/4 base-case interface — the ONLY residue (OPEN).** An odd indefinite unimodular form
+/-- **The rank-3/4 base-case interface — DISCHARGED downstream.** An odd indefinite unimodular form
 of rank `3` or `4` is congruent to a `±1`-diagonal. Ranks `≤ 2` are discharged above
-(`not_indefinite_of_rank_le_one`, `oddBinary_pmDiagonal`); see the section comment for exactly what
-discharging ranks 3 and 4 costs. -/
+(`not_indefinite_of_rank_le_one`, `oddBinary_pmDiagonal`); ranks 3 and 4 are the theorem
+`SKEFTHawking.oddRank34Diagonalizable` in `SKEFTHawking/OddSmallRankHM.lean` (which imports this
+module, so the `Prop` stays here as the interface). See the section comment for what the discharge
+cost, and `OddSmallRankHM` for how the banked local tooling carried it. -/
 def OddRank34Diagonalizable : Prop :=
   ∀ (n : ℕ), 3 ≤ n → n ≤ 4 → ∀ (M : Matrix (Fin n) (Fin n) ℤ), Mᵀ = M → IsUnimodular M →
     (∃ i, ¬ (2 ∣ M i i)) →
