@@ -1168,6 +1168,28 @@ search for the bridge (`lean_local_search` on the map/iso name), not just the tw
   `u·a = ±1`" — it fails as soon as `div(a) > 1`.
 - `created_ts`: 2026-07-27
 
+## `planereduction-axis-gcd-divisibility-refuted` (2026-07-28, arm: close-out — LEAD-VERIFIED, numerical)
+
+**Status: route caution on a PROOF STRATEGY (not kernel-encoded — the counterexample is a numerical
+chain, and encoding it in Lean costs more than it saves).**
+
+- ⛔ **Do NOT try to prove `AxisReturnBound` (or the `PlaneReduction` outer recursion) by
+  strengthening the axis measure from `<` to DIVISIBILITY.** The tempting simplification is to carry
+  `gcd(γ₂,δ₂) ∣ gcd(γ₁,δ₁)` between successive `β = 0` axis visits, which would make the induction
+  fall out immediately. **It is FALSE.**
+- **Witnesses** (lead's own simulation of the exact in-tree move set, with the conserved quantity
+  `αβ + γδ` and `gcd(α,β,γ,δ)` asserted at every step): out of 600 adversarially constructed hard
+  axis states (`e = gcd(γ,δ) ∈ {4..72}` chosen so `e ∤ α`), **strict `<` holds with ZERO
+  violations**, but divisibility fails **7** times —
+  `(5, 0, 24, 30)` visits axis gcds `[6, 4]` and `4 ∤ 6`; also `(58,0,240,300) ↦ [60,8]`,
+  `(40,0,192,240) ↦ [48,32]`, `(30,0,144,180) ↦ [36,24]`, `(29,0,240,336) ↦ [48,8,3,1]`.
+- **Consequence for the open work:** the measure genuinely is an inequality, so the descent
+  induction must **carry a bound** through its rounds rather than re-derive a divisibility chain at
+  the end. That is exactly what `AxisReturnBound` (`PlaneReductionDescent.lean` §6c) states, and why
+  it is stated as a named Prop rather than proved in passing.
+- **Also do not retry the naive monotonicity route:** `gcd(γ,δ)` is not monotone under a single
+  descent round either — `γ = 2, δ = 3, β = 5` sends `gcd 1 → 2` whenever `3 + qα` is even.
+
 ## `gm-empty-surface-specialization-is-circular` (2026-07-27, arm: close-out — LEAD-VERIFIED)
 
 **Status: route caution + inventory fact. Binding on every future `hdvd` / Rokhlin dispatch.**

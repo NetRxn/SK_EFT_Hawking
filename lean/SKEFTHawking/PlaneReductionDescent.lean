@@ -425,7 +425,14 @@ no later round in the same descent lifts the bound back up. The obstruction is r
 `3 + qα` is even), so the bound has to be carried, not re-derived.
 
 Everything else is discharged from it here. Numerically the bound holds on 400 adversarially
-constructed hard axis states (`e ∈ {4..60}` with `e ∤ α`), max 3 round-trips, zero violations. -/
+constructed hard axis states (`e ∈ {4..60}` with `e ∤ α`), max 3 round-trips, zero violations.
+
+⛔ **Do NOT try to strengthen the measure to DIVISIBILITY.** The obvious simplification — carry
+`gcd(γ₂,δ₂) ∣ gcd(γ₁,δ₁)` between successive axis visits, which would make the induction trivial —
+is **FALSE**. Checked on 600 hard axis states: strict `<` holds with zero violations, but
+divisibility fails 7 times, e.g. `(α,β,γ,δ) = (5, 0, 24, 30)` visits axis gcds `6` then `4`, and
+`4 ∤ 6`. (Also `(58,0,240,300) ↦ [60,8]`, `(40,0,192,240) ↦ [48,32]`.) The measure really is an
+inequality, so the induction has to carry a bound rather than a divisibility chain. -/
 
 /-- **THE ONE REMAINING ARITHMETIC INPUT.** From a state with `β ≠ 0` and non-negative plane-2
 coordinates, the descent either closes or reaches the axis with `gcd(γ, δ)` bounded by the
