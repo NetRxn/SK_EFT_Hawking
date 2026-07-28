@@ -487,8 +487,10 @@ theorem thrErr1_mono_in_sigma {μ₁ σ σ' t : ℝ} (hσ : 0 < σ) (hσ' : σ �
   linarith
 
 /-- **ROC tradeoff**: moving the threshold right trades false alarm against miss, monotonically
-and in opposite directions. The two conjuncts are logically independent (they concern different
-branches under different means) and are both needed by a consumer sweeping `t`. -/
+and in opposite directions. The two conjuncts are **not** logically independent — each is the
+same antitonicity fact (`gaussianQ_antitone`) applied with opposite orientation, so either can be
+obtained from the other by substitution. They are bundled because a consumer sweeping `t` needs
+both directions at once, not because they carry separate content (Stage-13 finding, 2026-07-28). -/
 theorem offCenter_threshold_tradeoff {μ₀ μ₁ σ t t' : ℝ} (hσ : 0 < σ) (h : t ≤ t') :
     thrErr0 μ₀ σ t' ≤ thrErr0 μ₀ σ t ∧ thrErr1 μ₁ σ t ≤ thrErr1 μ₁ σ t' := by
   constructor
@@ -498,19 +500,17 @@ theorem offCenter_threshold_tradeoff {μ₀ μ₁ σ t t' : ℝ} (hσ : 0 < σ) 
 /-- **Midpoint symmetry, with the value.** At equal `σ` and the midpoint threshold the two branch
 errors are equal *and* equal to `Q` of the half-separation in units of `σ`. Naming the value is
 what makes this composable with the error floors below: the bare `e₀ = e₁` form is a
-definitional-unfolding tautology and carries no usable content. -/
-theorem midpoint_threshold_symmetric {μ₀ μ₁ σ : ℝ} (hσ : 0 < σ) :
+definitional-unfolding tautology and carries no usable content.
+
+No `0 < σ` hypothesis: the identity is a rearrangement of the standardisation argument and holds
+for every `σ`, including Lean's total-division cases `σ = 0` and `σ < 0` (Stage-13 finding, 2026-07-28
+— the hypothesis was present but unused, which falsely advertises it as load-bearing). -/
+theorem midpoint_threshold_symmetric {μ₀ μ₁ σ : ℝ} :
     thrErr0 μ₀ σ ((μ₀ + μ₁) / 2) = gaussianQ ((μ₁ - μ₀) / (2 * σ)) ∧
       thrErr1 μ₁ σ ((μ₀ + μ₁) / 2) = gaussianQ ((μ₁ - μ₀) / (2 * σ)) := by
   constructor
-  · rw [thrErr0]
-    congr 1
-    field_simp
-    ring
-  · rw [thrErr1]
-    congr 1
-    field_simp
-    ring
+  · rw [thrErr0, show (μ₀ + μ₁) / 2 - μ₀ = (μ₁ - μ₀) / 2 by ring, div_div]
+  · rw [thrErr1, show μ₁ - (μ₀ + μ₁) / 2 = (μ₁ - μ₀) / 2 by ring, div_div]
 
 /-! ## Error floors -/
 

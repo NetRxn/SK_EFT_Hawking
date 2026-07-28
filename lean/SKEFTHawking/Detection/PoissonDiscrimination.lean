@@ -20,7 +20,9 @@ decision rules**, plus the two-sided refutation of the folklore exponential form
 * `poissonBhattacharyya_hasSum` / `poissonBhattacharyya_eq` — the closed form
   `∑ₙ √(Poisson(a)ₙ · Poisson(b)ₙ) = exp(−(√a − √b)²/2)`.
 * `poisson_avgError_floor` — the headline: `(e₀+e₁)/2 ≥ ¼·exp(−(√N_a − √N_b)²)` for every rule;
-  `poisson_avgError_floor_equalRates` pins its constant to the falsifiable number `¼`.
+  `poisson_avgError_equalRates_eq_half` gives the *exact* value `1/2` at coincident rates, where
+  the headline floor returns only `¼` — so the pair measures the Le Cam constant's slack (a
+  factor of two there) rather than merely asserting a bound.
 * `falseAlarm_zero`, `poisson_darkBaseline_miss_floor` / `_optimum` /
   `darkBaseline_zeroFalseAlarm_load_bearing` (with `isCountRule_thresholdRule` and
   `falseAlarm_thresholdRule_zero`) — the dark-baseline zero-false-alarm optimum, its

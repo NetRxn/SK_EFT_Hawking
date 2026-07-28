@@ -35,11 +35,14 @@ identity in the filtered-count normalization.
   `Poisson N ↦ Poisson (ηN)`, in `HasSum` and `tsum` form.
 * `poissonMean_eq`, `poissonVariance_eq`, `shot_variance_eq_mean` — the second-moment
   computation and the resulting mean = variance identity.
-* `poissonMean_thinning` — the transfer factor of `shotPSD_plane_transfer` is the *same* `η`
-  that scales the thinned count mean.
+* `poissonMean_thinning` — mean algebra on a `Poisson (η·N)` law; `thinnedMean_eq_eta_mul` is
+  the bridge proper, reducing the *thinning sum* through `poisson_thinning` to show the
+  transfer factor of `shotPSD_plane_transfer` is the same `η` that scales the count mean.
 * `shotGaussian_avgError_gt_leCam_floor` — a concrete operating point at which a shot-limited
-  Gaussian threshold readout errs by more than 3/2 of the Le Cam floor, so the floor family is
-  a genuine *lower* bound with slack rather than a disguised equality.
+  Gaussian threshold model errs by more than 3/2 of the Le Cam floor **value**, certifying the
+  floor is not a disguised equality there. It does *not* exhibit a count rule beating its own
+  floor: the Gaussian error pair is not claimed realizable by any `δ` (see the theorem's scope
+  note).
 
 ## Guardrail
 
@@ -222,11 +225,18 @@ one-sided convention (a two-sided PSD would carry `1`); it is fixed here once an
 every statement below rather than being left to a docstring. -/
 noncomputable def shotPSD (E_ph P : ℝ) : ℝ := 2 * E_ph * P
 
-/-- **The one-sided convention agrees with the repository's.** `shotPSD` is the unit-greybody,
-unit-occupation case of `GrapheneNoiseFormula.hawkingNoisePSD`, whose leading `2` is the same
-one-sided convention (its companion `johnsonNyquistPSD = 4·k_BT·σ_Q` carries the matching `4`).
-Stating this as a theorem is what makes "matches the repo convention" checkable instead of a
-claim in prose: if either definition's convention were changed, this line would fail. -/
+/-- **The one-sided convention agrees with the repository's.** `shotPSD E_ph P` is definitionally
+the unit-greybody, unit-occupation case of `GrapheneNoiseFormula.hawkingNoisePSD`, whose leading
+`2` is the same one-sided convention (its companion `johnsonNyquistPSD = 4·k_BT·σ_Q` carries the
+matching `4`). Stating this as a theorem is what makes "matches the repo convention" checkable
+instead of a claim in prose: change either definition's convention and this line fails.
+
+**Scope (Stage-13, 2026-07-28):** this is an identity between two *dimensionless real formulas*,
+asserting agreement of the one-sided prefactor and nothing more. It does **not** assert that the
+optical power `P` of `shotPSD` and the quantum-conductance slot `σ_Q` of `hawkingNoisePSD` are
+the same physical quantity — they are not, and no such identification is claimed anywhere in this
+file. Physical identification of any slot remains the consuming phase's declared hypothesis, per
+the module guardrail. -/
 theorem shotPSD_eq_hawkingNoisePSD (E_ph P : ℝ) :
     shotPSD E_ph P = SKEFTHawking.GrapheneNoiseFormula.hawkingNoisePSD E_ph P 1 1 := by
   unfold shotPSD SKEFTHawking.GrapheneNoiseFormula.hawkingNoisePSD
@@ -237,11 +247,16 @@ through a transfer factor `η` scales the one-sided shot PSD by exactly `η`. Th
 explicit argument, never absorbed into `shotPSD`.
 
 No sign or range hypothesis on `η`: the identity is pure algebra and any `0 ≤ η ≤ 1`
-side-condition would be an unused hypothesis. The *content* of this theorem is the convention
-(the `2` inside `shotPSD`, pinned by `shotPSD_eq_hawkingNoisePSD`) and the placement of `η`
-outside the definition; the algebra itself is one `ring` call, and this docstring says so
-rather than dressing it up. What makes the `η` here more than a bare parameter is
-`poissonMean_thinning`: the same factor transfers the count statistics across the plane. -/
+side-condition would be an unused hypothesis.
+
+**Honest accounting (Stage-13, 2026-07-28).** This theorem is one `ring` call and it does **not**
+test the one-sided `2`: the same statement holds verbatim for `shotPSD' E P = 7·E·P`, so the
+constant is untested *here*. The `2` is pinned separately and genuinely, by
+`shotPSD_eq_hawkingNoisePSD` against `GrapheneNoiseFormula`. What this theorem does carry is the
+*placement* of `η` — outside the definition, as an explicit transfer factor rather than baked in.
+And what makes that `η` more than a bare algebraic parameter is `thinnedMean_eq_eta_mul` (not
+`poissonMean_thinning`, which is mean algebra and calls nothing): it reduces the thinning sum
+through `poisson_thinning` and shows the *same* `η` scales the count mean. -/
 theorem shotPSD_plane_transfer (E_ph P η : ℝ) : shotPSD E_ph (η * P) = η * shotPSD E_ph P := by
   unfold shotPSD
   ring
@@ -385,14 +400,29 @@ theorem hasSum_poissonPMFReal_mul_descFactorial (N : ℝ≥0) :
 theorem poissonMean_eq (N : ℝ≥0) : poissonMean N = (N : ℝ) :=
   (hasSum_poissonPMFReal_mul_id N).tsum_eq
 
-/-- **The `η` of the plane transfer is the `η` of the thinning.** By `poisson_thinning` the
-thinned law of a `Poisson N` source is `Poisson (η·N)`, and its mean is `η` times the original
-mean — the *same* factor by which `shotPSD_plane_transfer` scales the one-sided shot PSD. This
-is what makes referring shot noise across a reference plane consistent with referring the count
-statistics across it: one transfer factor, two carriers. Without this the `η` in
-`shotPSD_plane_transfer` would be a bare algebraic parameter with no tie to the count model. -/
+/-- The mean of a `Poisson (η·N)` law is `η` times the mean of `Poisson N`. Pure consequence of
+`poissonMean_eq`; it says nothing on its own about *thinning* — the statement that the thinned
+law has this mean is `thinnedMean_eq_eta_mul`, which is the one that calls `poisson_thinning`. -/
 theorem poissonMean_thinning (N η : ℝ≥0) : poissonMean (η * N) = (η : ℝ) * poissonMean N := by
   rw [poissonMean_eq, poissonMean_eq, NNReal.coe_mul]
+
+/-- **The `η` of the plane transfer IS the `η` of the thinning — one transfer factor, two
+carriers.** The mean of the *thinned* law — the law built by independently retaining each count
+with probability `η`, written out as its defining sum — is exactly `η` times the original mean.
+This is the theorem that makes referring shot noise across a reference plane consistent with
+referring the count statistics across it: `shotPSD_plane_transfer` scales the one-sided shot PSD
+by `η`, and this scales the count mean by the *same* `η`.
+
+Unlike `poissonMean_thinning` (which is mean algebra on an already-`Poisson (η·N)` law), this
+statement **calls `poisson_thinning`**: the thinning sum is reduced to `poissonPMFReal (η * N)`
+before the mean is taken. Without it, the `η` of `shotPSD_plane_transfer` would be a bare
+algebraic parameter with no proved tie to the count model. -/
+theorem thinnedMean_eq_eta_mul (N η : ℝ≥0) :
+    (∑' n : ℕ, (∑' m : ℕ, poissonPMFReal N m * (m.choose n : ℝ) * (η : ℝ) ^ n
+        * (1 - (η : ℝ)) ^ (m - n)) * (n : ℝ)) = (η : ℝ) * poissonMean N := by
+  simp only [poisson_thinning]
+  rw [show (∑' n : ℕ, poissonPMFReal (η * N) n * (n : ℝ)) = poissonMean (η * N) from rfl,
+    poissonMean_eq, poissonMean_eq, NNReal.coe_mul]
 
 /-- **The Poisson variance is the rate** — computed from the independently-defined second
 central moment, via `E[n(n−1)] = N²` and `E[n] = N`. -/
@@ -421,17 +451,23 @@ theorem shot_variance_eq_mean (N : ℝ≥0) : poissonVariance N = poissonMean N 
 
 /-! ## Non-vacuity: the floor family has slack -/
 
-/-- **The Wave-1 floor is not tight for a shot-limited Gaussian readout.** Take a baseline rate
-`N_b = 1` and a signal rate `N_a = 9`, read out by thresholding a Gaussian statistic at the
-midpoint count `5` with the shot-limited width `σ = 2` (= `√N` at the decision level `N = 4`).
-Both branch errors are then `Q(2)`, and the average assignment error exceeds **3/2 times** the
-Le Cam floor `¼·BC(Poisson 1, Poisson 9)²`.
+/-- **The Le Cam floor's *value* is strictly exceeded by a shot-limited Gaussian model.** At
+baseline rate `N_b = 1` and signal rate `N_a = 9`, a Gaussian threshold classifier with means
+`μ₀ = 1`, `μ₁ = 9`, common width `σ = 2` and threshold at the midpoint `t = 5` has both branch
+errors equal to `Q(2)`, and its average assignment error exceeds **3/2 times** the Le Cam floor
+value `¼·BC(Poisson 1, Poisson 9)²`.
 
-The floor is therefore a genuine *lower* bound with quantified slack, not an equality dressed
-as an inequality — which is what would make the whole floor family vacuous as a screen. The
-statement is a real cross-wave call: the left side is Wave 1's affinity at the Poisson pair
-(discharged through `poissonBhattacharyya_eq`) and the right side is Wave 2's threshold-error
-pair (bounded through `gaussianQ_two_ge_rational`). -/
+**Scope — read this before citing it.** The Gaussian error pair `(thrErr0 1 2 5, thrErr1 9 2 5)`
+is NOT claimed to be realizable by any count rule `δ`, so this does **not** exhibit a count rule
+whose error strictly exceeds its own floor; it compares the floor's numeric value against a
+different (Gaussian) model evaluated at the same rates. What it certifies is that
+`¼·exp(−(√N_a−√N_b)²)` is not an equality in disguise at this operating point — a floor that
+coincided with attainable error everywhere would be useless as a screen — and it does so with a
+quantified factor rather than a bare `≠`.
+
+The statement is a real cross-wave call in both directions: the left side is Wave 1's affinity at
+the Poisson pair (discharged through `poissonBhattacharyya_eq`) and the right side is Wave 2's
+threshold-error pair (bounded through `gaussianQ_two_ge_rational`). -/
 theorem shotGaussian_avgError_gt_leCam_floor :
     (3 / 2) * ((1 / 4) * affinity (poissonPMFReal 1) (poissonPMFReal 9) ^ 2)
       < avgAssignmentError (thrErr0 1 2 5) (thrErr1 9 2 5) := by
