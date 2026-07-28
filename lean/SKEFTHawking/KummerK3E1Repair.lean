@@ -43,6 +43,7 @@ import Mathlib
 import SKEFTHawking.IntOrientationScaling
 import SKEFTHawking.IntOrientationPrimitive
 import SKEFTHawking.IntersectionDetFullRankFamily
+import SKEFTHawking.IntersectionIndexFullRankFamily
 import SKEFTHawking.KummerK3E1Unconditional
 import SKEFTHawking.KummerK3E1FromGram
 
@@ -63,6 +64,7 @@ open SKEFTHawking.IntOrientationReverse
 open SKEFTHawking.IntOrientationScaling
 open SKEFTHawking.IntOrientationPrimitive
 open SKEFTHawking.IntersectionDetFullRankFamily
+open SKEFTHawking.IntersectionIndexFullRankFamily
 open SKEFTHawking.KummerInvolution (torusFourForm torusFourForm_isEvenUnimodular)
 open SKEFTHawking.SpinSigmaRoute (k3Form)
 
@@ -323,6 +325,40 @@ theorem coordMatrix_det_sq_of_isUnimodular (o : IntOrientation KummerK3)
   have hnn : (0 : ℤ) ≤ (coordMatrix kummerK3IntH2Basis kummerK3IntH2Basis_rank v).det ^ 2 :=
     sq_nonneg _
   rcases kummerSubForm_det_eq with hd | hd <;> rcases hconv with hc | hc <;> rw [hd] at hc <;> omega
+
+/-! ## §5. THE SUPPLY SHAPE — basis-free, and the one a geometer can actually discharge
+
+§4's `hidx` is stated against `kummerK3IntH2Basis`, a `Classical.choice` extraction naming no
+geometry: nobody can hand you the coordinates of the 16 exceptional classes in an anonymous basis.
+`IntersectionIndexFullRankFamily` removes the basis — `|det P|` **is** the index of the subgroup the
+family generates — so the obligation becomes two statements about cup products and subgroups. -/
+
+/-- **THE K3 LANE'S TERMINAL ENTRY POINT.** Everything the welded Kummer `K3` still owes, in one
+statement with no chosen basis and no Poincaré-duality input:
+
+1. `hv` — 22 classes (the 16 exceptional `(−2)`-classes + the 6 descended `T⁴` classes) whose cup
+   products tabulate `⟨−2⟩¹⁶ ⊕ 3H`;
+2. `hli` — they are `ℤ`-independent (the 16-part is already `linearIndependent_excClass_of_block`);
+3. `hcard` — they generate a subgroup of **index `2⁸`** (`SETTLED_FORKS:
+   kummer-16-plus-6-geometric-block-is-not-a-basis`; the Kummer half-sums are the missing `2⁸`).
+
+`det (⟨−2⟩¹⁶ ⊕ 3H) = ±2¹⁶ = ±(2⁸)²`, so 1+2+3 give unimodularity, hence integral PD at `o`, hence the
+E1 atom triple. Note 1 and 3 are *both* needed and neither is implied by the other: a family that
+were a basis (index 1) would give `det = ±2¹⁶`, i.e. emphatically not unimodular — which is exactly
+right, since the 22 classes alone do not span. -/
+theorem nonempty_kummerK3E1Atoms_of_kummerFamily_indexCard (o : IntOrientation KummerK3)
+    (v : Fin 22 → Cohomology KummerK3top 2)
+    (hv : ∀ i j, interFormInt (intFundamentalClassOfIntOrientation o) (v i) (v j)
+      = kummerSubForm i j)
+    (hli : LinearIndependent ℤ v)
+    (hcard : Nat.card (Cohomology KummerK3top 2 ⧸ Submodule.span ℤ (Set.range v)) = 2 ^ 8) :
+    Nonempty KummerK3E1Atoms := by
+  refine nonempty_kummerK3E1Atoms_at o (nonempty_intPD_of_kummerK3Gram_isUnimodular o ?_)
+  refine isUnimodular_of_index_sq (intFundamentalClassOfIntOrientation o) kummerK3IntH2Basis
+    kummerK3IntH2Basis_rank v kummerSubForm hv hli (by norm_num) hcard ?_
+  rcases kummerSubForm_det_eq with h | h
+  · exact Or.inl (by rw [h]; push_cast)
+  · exact Or.inr (by rw [h]; push_cast)
 
 end
 

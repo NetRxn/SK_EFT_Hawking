@@ -5018,6 +5018,10 @@ import SKEFTHawking.IntOrientationPrimitive
 -- det Gram(B). Turns "prove Poincare duality" into an arithmetic statement: the ambient form is
 -- UNIMODULAR as soon as a family's Gram determinant equals +-(its index)^2. No PD input.
 import SKEFTHawking.IntersectionDetFullRankFamily
+-- Phase 5q.H — the BASIS-FREE form: |det P| IS the index of the subgroup the family generates
+-- (Submodule.natAbs_det_basis_change), so the unimodularity criterion becomes "Gram det =
+-- +-(index)^2" -- cup products and subgroups only, no chosen basis.
+import SKEFTHawking.IntersectionIndexFullRankFamily
 -- Phase 5q.H — the welded K3's E1 lane: every published forall-o route is VACUOUS (pdInput, hsig,
 -- hgram, hk3, hgeo all refuted), and the pinned-single-orientation replacements that repair them.
 import SKEFTHawking.KummerK3E1Repair
