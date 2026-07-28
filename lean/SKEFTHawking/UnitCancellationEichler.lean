@@ -361,8 +361,8 @@ def resLift {n m : ℕ} (e : Fin 1 ⊕ Fin n ≃ Fin m) (x : Fin n → ℤ) : Fi
   (Sum.elim 0 x) ∘ e.symm
 
 /-- The bilinear form is reindex-invariant. -/
-theorem bil_reindex {n m : ℕ} (e : Fin 1 ⊕ Fin n ≃ Fin m)
-    (G' : Matrix (Fin 1 ⊕ Fin n) (Fin 1 ⊕ Fin n) ℤ) (u v : Fin 1 ⊕ Fin n → ℤ) :
+theorem bil_reindex {ι : Type*} [Fintype ι] [DecidableEq ι] {m : ℕ} (e : ι ≃ Fin m)
+    (G' : Matrix ι ι ℤ) (u v : ι → ℤ) :
     (u ∘ e.symm) ⬝ᵥ (Matrix.reindex e e G') *ᵥ (v ∘ e.symm) = u ⬝ᵥ G' *ᵥ v := by
   have hmv : ∀ i, ((Matrix.reindex e e G') *ᵥ (v ∘ e.symm)) i = (G' *ᵥ v) (e.symm i) := by
     intro i
@@ -413,6 +413,67 @@ theorem resLift_perp_gen {n m : ℕ} (e : Fin 1 ⊕ Fin n ≃ Fin m) (A : Matrix
     funext j; simp
   simp [dotProduct, Fintype.sum_sum_type, hz]
 
+/-! ### Block plumbing for the two-plane extraction
+
+The two hyperbolic planes come from iterating `even_unimodular_indefinite_split_congr`. Each peel
+produces `A ≅ H ⊕ A'` in some reindexing `e`; the plane is the pair of first-block generators, and
+the NEXT plane comes from the residual `A'` embedded through the second block. -/
+
+section Blk
+variable {p q m : ℕ}
+
+/-- Embed a second-block vector into the reindexed block sum. -/
+def blkLift (e : Fin p ⊕ Fin q ≃ Fin m) (x : Fin q → ℤ) : Fin m → ℤ := (Sum.elim 0 x) ∘ e.symm
+
+/-- The `i`-th first-block generator of the reindexed block sum. -/
+def blkGen (e : Fin p ⊕ Fin q ≃ Fin m) (i : Fin p) : Fin m → ℤ := Pi.single (e (Sum.inl i)) 1
+
+theorem blkGen_eq_comp (e : Fin p ⊕ Fin q ≃ Fin m) (i : Fin p) :
+    blkGen e i = (Pi.single (Sum.inl i) (1 : ℤ)) ∘ e.symm := by
+  funext l
+  rw [blkGen, Function.comp_apply, Pi.single_apply, Pi.single_apply]
+  by_cases h : l = e (Sum.inl i)
+  · subst h; simp
+  · have : e.symm l ≠ Sum.inl i := fun hcon => h (by rw [← hcon, Equiv.apply_symm_apply])
+    simp [h, this]
+
+theorem single_inl_eq_elim (i : Fin p) :
+    (Pi.single (Sum.inl i) (1 : ℤ) : Fin p ⊕ Fin q → ℤ) = Sum.elim (Pi.single i 1) 0 := by
+  funext a
+  match a with
+  | Sum.inl j => simp [Pi.single_apply, Sum.inl.injEq]
+  | Sum.inr j => simp
+
+/-- Pairing of two first-block generators reads off the first block. -/
+theorem bil_blk_gg (e : Fin p ⊕ Fin q ≃ Fin m) (C : Matrix (Fin p) (Fin p) ℤ)
+    (D : Matrix (Fin q) (Fin q) ℤ) (i j : Fin p) :
+    (blkGen e i) ⬝ᵥ (Matrix.reindex e e (Matrix.fromBlocks C 0 0 D)) *ᵥ (blkGen e j) = C i j := by
+  have hbs : ∀ (N : ℕ) (M : Matrix (Fin N) (Fin N) ℤ) (a b : Fin N),
+      (Pi.single a (1 : ℤ)) ⬝ᵥ M *ᵥ (Pi.single b 1) = M a b := by intro N M a b; simp
+  rw [blkGen, blkGen, hbs, Matrix.reindex_apply, Matrix.submatrix_apply, Equiv.symm_apply_apply,
+    Equiv.symm_apply_apply, Matrix.fromBlocks_apply₁₁]
+
+/-- First-block generators are orthogonal to second-block vectors. -/
+theorem bil_blk_gl (e : Fin p ⊕ Fin q ≃ Fin m) (C : Matrix (Fin p) (Fin p) ℤ)
+    (D : Matrix (Fin q) (Fin q) ℤ) (i : Fin p) (y : Fin q → ℤ) :
+    (blkGen e i) ⬝ᵥ (Matrix.reindex e e (Matrix.fromBlocks C 0 0 D)) *ᵥ (blkLift e y) = 0 := by
+  rw [blkGen_eq_comp, blkLift, bil_reindex, single_inl_eq_elim,
+    show (Sum.elim 0 y : Fin p ⊕ Fin q → ℤ) = Sum.elim (0 : Fin p → ℤ) y from rfl,
+    Matrix.fromBlocks_mulVec]
+  simp [dotProduct, Fintype.sum_sum_type]
+
+/-- Second-block vectors pair by the second block. -/
+theorem bil_blk_ll (e : Fin p ⊕ Fin q ≃ Fin m) (C : Matrix (Fin p) (Fin p) ℤ)
+    (D : Matrix (Fin q) (Fin q) ℤ) (x y : Fin q → ℤ) :
+    (blkLift e x) ⬝ᵥ (Matrix.reindex e e (Matrix.fromBlocks C 0 0 D)) *ᵥ (blkLift e y)
+      = x ⬝ᵥ D *ᵥ y := by
+  rw [blkLift, blkLift, bil_reindex,
+    show (Sum.elim 0 y : Fin p ⊕ Fin q → ℤ) = Sum.elim (0 : Fin p → ℤ) y from rfl,
+    Matrix.fromBlocks_mulVec]
+  simp [dotProduct, Fintype.sum_sum_type]
+
+end Blk
+
 /-! ### The two remaining inputs, and the reduction of `UnitCancellation` to them -/
 
 /-- **Input (a): two orthogonal hyperbolic planes inside `A`.** For even unimodular `A` with
@@ -442,6 +503,43 @@ def EichlerStepOne : Prop :=
       w ⬝ᵥ G *ᵥ w = 1 → w' ⬝ᵥ G *ᵥ w' = 1 → IsCharQ G w → IsCharQ G w' →
       ∃ T : Matrix (Fin m) (Fin m) ℤ, IsUnit T.det ∧ Tᵀ * G * T = G ∧
         e₁ ⬝ᵥ G *ᵥ (T *ᵥ w') = 0 ∧ f₁ ⬝ᵥ G *ᵥ (T *ᵥ w') = 0
+
+/-- **Input (a) DISCHARGED.** Two orthogonal hyperbolic planes exist inside any even unimodular `A`
+with `min(σ⁺, σ⁻) ≥ 2`: peel one plane with `even_unimodular_indefinite_split_congr`, note the
+residual has `min(σ⁺, σ⁻) ≥ 1` (the hyperbolic block carries inertia `(1,1)`), and peel again. The
+plane vectors are the images under the two congruences of the first-block generators. -/
+theorem twoHypPlanes : TwoHypPlanes := by
+  intro n A hA hsp hsn
+  have hrank := sigPos_add_sigNeg_of_evenUnimodular A hA
+  obtain ⟨A', e, hcongA, hA'eu, hA'sig⟩ :=
+    even_unimodular_indefinite_split_congr A hA (by omega) (by omega)
+  obtain ⟨P, hPdet, hPeq⟩ := hcongA
+  have hrank' := sigPos_add_sigNeg_of_evenUnimodular A' hA'eu
+  have hsp' : 0 < sigPos (A'.map (Int.cast : ℤ → ℝ)).toQuadraticMap' := by
+    unfold latticeSig at hA'sig; omega
+  have hsn' : 0 < sigNeg (A'.map (Int.cast : ℤ → ℝ)).toQuadraticMap' := by
+    unfold latticeSig at hA'sig; omega
+  obtain ⟨A'', e', hcongA', -, -⟩ := even_unimodular_indefinite_split_congr A' hA'eu hsp' hsn'
+  obtain ⟨Q, hQdet, hQeq⟩ := hcongA'
+  have hbilP : ∀ x y : Fin n → ℤ, (P *ᵥ x) ⬝ᵥ A *ᵥ (P *ᵥ y)
+      = x ⬝ᵥ (Matrix.reindex e e (Matrix.fromBlocks Hyp 0 0 A')) *ᵥ y := by
+    intro x y; rw [bil_congr_matrix, hPeq]
+  have hbilQ : ∀ x y : Fin (n - 2) → ℤ, (Q *ᵥ x) ⬝ᵥ A' *ᵥ (Q *ᵥ y)
+      = x ⬝ᵥ (Matrix.reindex e' e' (Matrix.fromBlocks Hyp 0 0 A'')) *ᵥ y := by
+    intro x y; rw [bil_congr_matrix, hQeq]
+  refine ⟨P *ᵥ blkGen e 0, P *ᵥ blkGen e 1,
+    P *ᵥ blkLift e (Q *ᵥ blkGen e' 0), P *ᵥ blkLift e (Q *ᵥ blkGen e' 1),
+    ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · rw [hbilP, bil_blk_gg]; simp [Hyp]
+  · rw [hbilP, bil_blk_gg]; simp [Hyp]
+  · rw [hbilP, bil_blk_gg]; simp [Hyp]
+  · rw [hbilP, bil_blk_ll, hbilQ, bil_blk_gg]; simp [Hyp]
+  · rw [hbilP, bil_blk_ll, hbilQ, bil_blk_gg]; simp [Hyp]
+  · rw [hbilP, bil_blk_ll, hbilQ, bil_blk_gg]; simp [Hyp]
+  · rw [hbilP, bil_blk_gl]
+  · rw [hbilP, bil_blk_gl]
+  · rw [hbilP, bil_blk_gl]
+  · rw [hbilP, bil_blk_gl]
 
 /-- Composing an isometry of `G` with a congruence `G ≅ H`. -/
 theorem isom_comp {n : ℕ} {G H X Y : Matrix (Fin n) (Fin n) ℤ}
@@ -545,5 +643,15 @@ theorem unitCancellation_of (hplanes : TwoHypPlanes) (hstep1 : EichlerStepOne) :
     rw [hΦdef, Matrix.det_mul, Matrix.det_mul]
     exact h1.mul (h2.mul hSdet)
   exact intCongr_of_unitFixing eqv A B Φ hΦdet hΦfix hΦconj
+
+/-- **`UnitCancellation` now rests on STEP 1 of Eichler's criterion ALONE.** The two-hyperbolic-plane
+datum is discharged (`twoHypPlanes`), STEP 2 is discharged
+(`exists_isometry_map_of_perp_hyp`), and the whole assembly between them is discharged above. -/
+theorem unitCancellation_of_stepOne (hstep1 : EichlerStepOne) : UnitCancellation :=
+  unitCancellation_of twoHypPlanes hstep1
+
+/-- **`StableNegRank16Two` from STEP 1 alone** — the K8b interior brick, one input away. -/
+theorem stableNegRank16Two_of_stepOne (hstep1 : EichlerStepOne) : StableNegRank16Two :=
+  stableNegRank16Two_of_unitCancellation (unitCancellation_of_stepOne hstep1)
 
 end SKEFTHawking
