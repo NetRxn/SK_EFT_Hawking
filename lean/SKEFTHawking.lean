@@ -5065,6 +5065,11 @@ import SKEFTHawking.PinEnhancementTorsor
 -- geometric data rather than declared as a field: the ambient Freedman-Kirby membrane, its three
 -- summands as computed quantities, and the pin-minus class extracted from the index.
 import SKEFTHawking.MembraneIndex
+-- Phase 6EA Wave 1 — kernel-verified Poisson discrimination floors: the Bhattacharyya closed
+-- form, the distribution-free Le Cam two-point average-error floor over ARBITRARY randomized
+-- count rules, the dark-baseline zero-false-alarm optimum, and the two-sided refutation of the
+-- folklore `miss ≥ exp(−(N_a − N_b))` form.
+import SKEFTHawking.Detection.PoissonDiscrimination
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
