@@ -4977,6 +4977,10 @@ import SKEFTHawking.GMPinTorsorCeiling
 -- is unachievable (the invariant-triple forcing theorem), so the admissibility criterion is
 -- intensional; the bordism-by-generators route fails it at the triple level.
 import SKEFTHawking.GMTripleLayerForcing
+-- Phase 5q.H — the missing substrate, BUILT: the pin-minus enhancement torsor is simply
+-- transitive, so the polar form plus ONE H^1(F;Z/2)-class determines the Guillou-Marin residue
+-- completely, and [FK] at general sigma re-types as a condition on that class.
+import SKEFTHawking.PinEnhancementTorsor
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
