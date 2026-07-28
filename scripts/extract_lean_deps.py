@@ -28,6 +28,36 @@ JSON_PATH = LEAN_ROOT / "lean_deps.json"
 HASH_PATH = LEAN_ROOT / "lean_deps.json.hash"
 
 
+def serialize_deps(data: list) -> str:
+    """Serialize the declaration list as a JSON array with ONE RECORD PER LINE.
+
+    Still ordinary JSON — ``json.loads`` round-trips it — but line-oriented, which matters a
+    great deal for a 68 MB artifact that is committed on every counts sync.
+
+    ExtractDeps emits its array on a **single line**, and we used to persist that stdout
+    verbatim. A 68 MB single line is pathological for every line-oriented tool in the chain:
+
+    * ``git diff --cached`` over it cost **~25 s** (measured 2026-07-28) — by itself the single
+      largest cost in the pre-commit hook, larger than the incremental ``lake build``.
+    * git stores a whole new 68 MB blob per sync instead of a delta, because there are no line
+      boundaries to delta against.
+    * ``grep``/``sed``/review tooling either chokes or silently drops the line (macOS ugrep
+      drops it outright in inverted-match mode, exit 0 — a guard that reads as passing).
+
+    One record per line fixes all three at a cost of ~1 byte per declaration. Keys are sorted so
+    the serialization is deterministic: two runs over the same declarations produce byte-identical
+    output, so a no-op re-extraction shows an EMPTY diff rather than a reordered 68 MB one.
+
+    NOTE this is a pure formatting change — the parsed value is unchanged, so nothing that reads
+    the file through ``json.load`` is affected, and it does NOT invalidate
+    ``lean_deps.json.hash`` (that hashes the .lean SOURCES, not this file).
+    """
+    if not data:
+        return "[]\n"
+    rows = (json.dumps(rec, sort_keys=True, separators=(",", ":")) for rec in data)
+    return "[\n" + ",\n".join(rows) + "\n]\n"
+
+
 def compute_lean_hash() -> str:
     """SHA-256 hash (16 hex chars) of all .lean source files (recursive).
 
@@ -123,7 +153,8 @@ def _run_extraction_locked() -> None:
         data = json.loads(stdout)
         assert isinstance(data, list), "ExtractDeps output must be a JSON array"
 
-        JSON_PATH.write_text(stdout)
+        # Persist LINE-ORIENTED, not ExtractDeps' single-line stdout — see serialize_deps().
+        JSON_PATH.write_text(serialize_deps(data))
         HASH_PATH.write_text(compute_lean_hash())
         logger.info("Wrote %d declarations to %s", len(data), JSON_PATH)
 
