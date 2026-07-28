@@ -435,6 +435,75 @@ theorem nonempty_kummerK3E1Atoms_of_signedKummerFamily (o : IntOrientation Kumme
   · exact Or.inl (by rw [h]; push_cast)
   · exact Or.inr (by rw [h]; push_cast)
 
+/-! ## §7. ⚠ THE TORUS BLOCK IS PROBABLY **DOUBLED**, AND THEN THE INDEX IS `2¹¹`, NOT `2⁸`
+
+A diligence check on §5/§6's numbers, run before building the index fact rather than after.
+
+`kummerSubForm`'s torus block is `torusFourForm`, and the banked Gram
+`interMatrix_t4_intCongr_torusFourForm` computes it **on `T⁴` itself** — the notebook already flags
+that it is *not* descended to `Q = T⁴°/τ` or to the weld. Descending should not be free: `π : T⁴° → Q`
+is a degree-2 quotient, `π_*π^* = 2`, and `τ` acts trivially on `H₂(T⁴)` (it is `(−1)⁴`), so
+
+    π_*α · π_*β = 2 (α · β),
+
+i.e. the descended six classes carry `3H(2)`, not `3H`. The arithmetic then moves too:
+`det (⟨2ε⟩¹⁶ ⊕ 3H(2)) = ±2¹⁶ · (−4)³ = ±2²²`, so the index is `2¹¹`, not `2⁸` — and `2¹¹ = 2⁵ · 2⁶`
+is exactly the classical factorization (`[K : Π] = 2⁵` for the Kummer lattice over the span of the
+sixteen `e_i`, times `2⁶` for the whole thing inside `H₂(K3;ℤ)`).
+
+⚠ **Status of that identification: lead-derived from the covering-degree argument and cross-checked
+against the index arithmetic; NOT verified against a primary source in this session.** So this
+section does not *replace* §6 — it ships the general form plus BOTH instantiations, and the
+`2⁸` reading stays available and consistent for its own family (16 mutually orthogonal roots inside
+`2(−E₈)` together with the `3H` summand really do have Gram `⟨−2⟩¹⁶ ⊕ 3H` and index `2⁸`; that family
+is simply *not* the geometric 16+6). Whichever normalization the geometry actually delivers, the
+terminal below accepts it. -/
+
+/-- **THE GENERAL K3 TERMINAL.** Gram `G`, index `k`, side condition `det G = ±k²`. Every numeric
+reading of the Kummer lattice — `(⟨−2⟩¹⁶ ⊕ 3H, 2⁸)`, `(⟨−2⟩¹⁶ ⊕ 3H(2), 2¹¹)`, or any other — is an
+instantiation, so a later correction to the normalization costs a `norm_num`, not a redesign. -/
+theorem nonempty_kummerK3E1Atoms_of_family_index (o : IntOrientation KummerK3)
+    (v : Fin 22 → Cohomology KummerK3top 2) (G : Matrix (Fin 22) (Fin 22) ℤ)
+    (hv : ∀ i j, interFormInt (intFundamentalClassOfIntOrientation o) (v i) (v j) = G i j)
+    (hli : LinearIndependent ℤ v) {k : ℕ} (hk : k ≠ 0)
+    (hcard : Nat.card (Cohomology KummerK3top 2 ⧸ Submodule.span ℤ (Set.range v)) = k)
+    (hdet : G.det = ((k : ℤ)) ^ 2 ∨ G.det = - ((k : ℤ)) ^ 2) :
+    Nonempty KummerK3E1Atoms :=
+  nonempty_kummerK3E1Atoms_at o (nonempty_intPD_of_kummerK3Gram_isUnimodular o
+    (isUnimodular_of_index_sq (intFundamentalClassOfIntOrientation o) kummerK3IntH2Basis
+      kummerK3IntH2Basis_rank v G hv hli hk hcard hdet))
+
+/-- The Kummer sublattice form with the torus block **doubled** — the descended-`π_*` normalization. -/
+def kummerSubFormGeo (ε : Fin 16 → ℤ) : Matrix (Fin 22) (Fin 22) ℤ :=
+  SKEFTHawking.SpinSigmaRoute.blockDiag (signedTwoDiag ε) ((2 : ℤ) • torusFourForm)
+
+/-- **`det (⟨2ε⟩¹⁶ ⊕ 3H(2)) = ±2²²`** — `det (2 • A) = 2⁶ det A` on a rank-6 block. -/
+theorem kummerSubFormGeo_det (ε : Fin 16 → ℤ) (hε : ∀ c, ε c = 1 ∨ ε c = -1) :
+    (kummerSubFormGeo ε).det = 2 ^ 22 ∨ (kummerSubFormGeo ε).det = -(2 ^ 22) := by
+  rw [kummerSubFormGeo, det_blockDiag, Matrix.det_smul, Fintype.card_fin]
+  rcases signedTwoDiag_det ε hε with hd | hd <;>
+    rcases torusFourForm_isEvenUnimodular.2.1 with ht | ht <;> rw [hd, ht]
+  · left; norm_num
+  · right; norm_num
+  · right; norm_num
+  · left; norm_num
+
+/-- **THE GEOMETRIC-NORMALIZATION TERMINAL** — Gram `⟨2ε⟩¹⁶ ⊕ 3H(2)` at index `2¹¹`. Same three
+inputs as §6, with the two numbers that the descended torus block moves. -/
+theorem nonempty_kummerK3E1Atoms_of_geoKummerFamily (o : IntOrientation KummerK3)
+    (ε : Fin 16 → ℤ) (hε : ∀ c, ε c = 1 ∨ ε c = -1)
+    (v : Fin 22 → Cohomology KummerK3top 2)
+    (hv : ∀ i j, interFormInt (intFundamentalClassOfIntOrientation o) (v i) (v j)
+      = kummerSubFormGeo ε i j)
+    (hli : LinearIndependent ℤ v)
+    (hcard : Nat.card (Cohomology KummerK3top 2 ⧸ Submodule.span ℤ (Set.range v)) = 2 ^ 11) :
+    Nonempty KummerK3E1Atoms := by
+  refine nonempty_kummerK3E1Atoms_of_family_index o v (kummerSubFormGeo ε) hv hli
+    (by norm_num) hcard ?_
+  rcases kummerSubFormGeo_det ε hε with h | h
+  · exact Or.inl (by rw [h]; push_cast)
+  · exact Or.inr (by rw [h]; push_cast)
+
 end
 
 end SKEFTHawking.KummerK3E1Repair
