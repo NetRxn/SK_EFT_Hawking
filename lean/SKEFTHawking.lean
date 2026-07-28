@@ -5065,6 +5065,7 @@ import SKEFTHawking.PinEnhancementTorsor
 -- geometric data rather than declared as a field: the ambient Freedman-Kirby membrane, its three
 -- summands as computed quantities, and the pin-minus class extracted from the index.
 import SKEFTHawking.MembraneIndex
+import SKEFTHawking.Detection.FilterFloors
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
