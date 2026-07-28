@@ -72,8 +72,22 @@ if git diff --cached --name-only --diff-filter=ACM | grep -q '\.lean$'; then
   # counts.json is now stale vs .lean — but its regen IS the 30-min ExtractDeps, so do
   # NOT run it here. Staleness is a METRIC, not soundness → WARN even on `main` (review
   # MAJOR); never block a routine .lean commit (that would stall the /goal loop).
-  if uv run python -c "import sys;sys.path.insert(0,'scripts');import sync_manifest as m;sys.exit(0 if any('counts.json' in s for s in m.stale_artifacts()) else 1)" 2>/dev/null; then
-    echo "(skeft-sync: counts.json stale vs .lean — run /skeft-qa:sync (full) when ready; not blocking)"
+  #     PERF: ask `validate._counts_is_stale()` DIRECTLY. The old form called
+  #     `sync_manifest.stale_artifacts()`, which evaluates EVERY edge — including the atlas-view and
+  #     atlas-heatmap content-compares, which rebuild the atlas from the 68 MB lean_deps.json — 13 s
+  #     to answer one boolean that depends on four mtimes. Measured 2026-07-28: 13.2 s → 0.15 s.
+  #     Also print the REASON: "stale" alone reads like breakage, when the overwhelmingly common
+  #     cause is benign — `git merge` of a worker branch stamps the merged .lean files with mtime=now,
+  #     so a counts regen followed by a merge is *correctly* stale again.
+  _cs=$(uv run python -c "
+import sys; sys.path.insert(0,'scripts')
+import validate
+stale, reason = validate._counts_is_stale()
+print(reason if stale else '')
+" 2>/dev/null || true)
+  if [ -n "$_cs" ]; then
+    echo "(skeft-sync: counts.json stale vs .lean ($_cs) — expected after a merge/edit;"
+    echo "             run /skeft-qa:sync (full) when ready; NOT breakage, NOT blocking)"
   fi
 fi
 
