@@ -5079,6 +5079,10 @@ import SKEFTHawking.Detection.GaussianThreshold
 -- single-shot matched-boxcar realizability floor `ENBW·T ≥ 1/2` with its boxcar-saturation
 -- least-element form, and the white-noise output-variance bridge.
 import SKEFTHawking.Detection.FilterFloors
+-- Phase 6EC Wave 1 — the linearized electrothermal (ETF) bias-point model: loop gain, effective
+-- conductance, the bias-power linearization's sign, the explicit heat-balance solution with its
+-- uniqueness, and the stability dichotomy `perturbations decay ↔ ℒ > −1` as an iff.
+import SKEFTHawking.Electrothermal.ETFModel
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
