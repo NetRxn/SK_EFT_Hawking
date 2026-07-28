@@ -147,6 +147,36 @@ theorem eGen_ne_zero_of_diagonal {c : EIndex} {α : EIndex → Cohomology Kummer
   simp only [map_zero] at hdiag
   exact absurd hdiag (by decide)
 
+/-! ## §3b. The SET-LEVEL input to disjoint support: the 16 pieces really are disjoint
+
+§3's criterion `restrictToPiece c (α d) = 0` is cohomological, and the geometry that will supply it
+is that `α d` is supported near the `d`-th piece while the pieces are pairwise disjoint. The
+disjointness half is available outright from the weld: `KummerWeld.weldMk_inr_injective` says the
+weld glues no two `E`-points, so distinct copies land in distinct points of `K3`.
+
+⚠ **Scope, stated precisely:** this is the *set-level* prerequisite, **not** the cohomological
+vanishing. Disjoint closed sets do not by themselves force a restriction to vanish — that needs the
+support/excision step (`H²(K3, K3 ∖ E_d°) → H²(K3)`), which is not built here. What §3b closes is the
+input that step consumes. -/
+
+/-- **Distinct resolution pieces are disjoint in `K3`.** -/
+theorem eCopy_range_disjoint {c d : EIndex} (hcd : c ≠ d) :
+    Disjoint (Set.range (eCopyC c)) (Set.range (eCopyC d)) := by
+  rw [Set.disjoint_left]
+  rintro x ⟨e, rfl⟩ ⟨e', he'⟩
+  exact hcd (congrArg Prod.fst
+    (SKEFTHawking.KummerWeld.weldMk_inr_injective (he'.trans rfl : _))).symm
+
+/-- **The 16 pieces are a pairwise-disjoint family** — the indexed form the excision step consumes. -/
+theorem pairwise_disjoint_eCopy_range :
+    Pairwise (Function.onFun Disjoint (fun c : EIndex => Set.range (eCopyC c))) :=
+  fun _ _ h => eCopy_range_disjoint h
+
+/-- **…and each piece is closed in `K3`** (`isClosedEmbedding_eCopy`), so the family is 16 pairwise
+disjoint CLOSED sets — the shape an excision/support argument needs. -/
+theorem isClosed_range_eCopy (c : EIndex) : IsClosed (Set.range (eCopyC c)) :=
+  (SKEFTHawking.KummerWeld.isClosedEmbedding_eCopy c).isClosed_range
+
 /-! ## §5. WHAT THE BLOCK BUYS: the 16 exceptional classes are ℤ-INDEPENDENT
 
 The `⟨−2⟩¹⁶` name is only honest if the 16 classes actually span a rank-16 sublattice; a family of
