@@ -476,4 +476,159 @@ theorem refines_forces_alternating (sys : MembraneSystem C) (h : sys.Refines)
 
 end MembraneSystem
 
+/-! ## §8. The two attacks on THIS layer, run and recorded as theorems
+
+A statement layer that fails either attack is worse than nothing, because a later worker will
+consume it. Both are run here, and the well-definedness attack **finds a genuine defect** in the
+free-framing shape of `[Q1]` — recorded as a refutation and then repaired, in the same idiom as
+`CharSurfaceFKVacuity`'s `charSurfaceFK_universal_over_free_enhancement_false` one level up. -/
+
+namespace FramedMembrane
+
+variable {C : PinCharSurface X k} {γ : EmbeddedCircle C}
+
+/-- The standard `2π`-comparison is a loop. -/
+theorem stdLoop_loop : stdLoop 1 = stdLoop 0 := by
+  show Circle.exp (2 * Real.pi * ((1 : ↑unitInterval) : ℝ))
+    = Circle.exp (2 * Real.pi * ((0 : ↑unitInterval) : ℝ))
+  norm_num [exp_two_pi]
+
+/-- **Twisting the boundary framing by one full turn**, leaving the underlying membrane untouched. -/
+noncomputable def twist (m : FramedMembrane C γ) : FramedMembrane C γ :=
+  { m with
+    cmp := m.cmp * stdLoop
+    cmp_loop := by
+      show m.cmp 1 * stdLoop 1 = m.cmp 0 * stdLoop 0
+      rw [m.cmp_loop, stdLoop_loop] }
+
+@[simp] lemma twist_toAmbientMembrane (m : FramedMembrane C γ) :
+    m.twist.toAmbientMembrane = m.toAmbientMembrane := rfl
+
+/-- The twist adds one full turn to the framing obstruction (`loopDegree_mul`). -/
+theorem obs_twist (m : FramedMembrane C γ) : m.twist.obs = m.obs + 1 := by
+  show loopDegree (m.cmp * stdLoop) = loopDegree m.cmp + 1
+  rw [loopDegree_mul m.cmp_loop stdLoop_loop, loopDegree_stdLoop]
+
+/-- The twist flips the membrane index. -/
+theorem index_twist (m : FramedMembrane C γ) : m.twist.index = m.index + 1 := by
+  have h : m.twist.index = m.intF + ((m.twist.obs : ZMod 2)) + m.dbl := rfl
+  rw [h, obs_twist, index]
+  push_cast
+  ring
+
+/-- **P5 repackaging check — the layer PASSES** (new). The anti-pattern this module exists to avoid
+is a `MembraneIndexData` structure carrying an `index : (ι → ZMod 2) → ZMod 4` field: such a thing
+makes the index a function of the homology class **by construction**, and is `Z4Quadratic` in new
+clothes. The constructed index provably is not: two framed membranes on the *same* circle — hence
+carrying the same class — have different indices. The membrane layer is therefore strictly more data
+than the enhancement it produces, which is exactly the asymmetry a field-carrying structure lacks. -/
+theorem index_not_a_function_of_the_class (m : FramedMembrane C γ) :
+    ∃ m' : FramedMembrane C γ, m'.index ≠ m.index := by
+  refine ⟨m.twist, ?_⟩
+  rw [index_twist]
+  generalize m.index = a
+  revert a
+  decide
+
+/-- **Well-definedness attack — the free-framing `[Q1]` layer is FALSE** (new; the refutation is the
+content). `IndexWellDefined` quantifies over *all* framed membranes, and the framing comparison is
+free data, so the twist refutes it outright the moment a single framed membrane exists. This is the
+same failure mode `CharSurfaceFKVacuity` found one level up (a free enhancement makes the universal
+`[FK]` statement false, not merely vacuous), reappearing at the framing: **`O(D)` must be *produced*
+from the smooth normal data, not carried.** The repair is `NormalFramingTie` below. -/
+theorem indexWellDefined_false_of_framedMembrane (m : FramedMembrane C γ) :
+    ¬ IndexWellDefined C := by
+  intro h
+  have hEq : m.index = m.twist.index := h γ γ m m.twist rfl
+  rw [index_twist] at hEq
+  revert hEq
+  generalize m.index = a
+  revert a
+  decide
+
+end FramedMembrane
+
+/-! ### The repair: the framing must be TIED to the normal data -/
+
+/-- **A normal-framing tie** — the corrected shape of the framing input. It selects, among the
+framing comparisons an ambient membrane can carry, those induced by the smooth normal data; its one
+defining property is **rigidity**: tied framings on the same underlying membrane have the same
+degree. This is the honest minimal content of "the normal bundle determines `O(D)`", and it is
+exactly what the free-framing shape lacked. Producing a tie from the smooth normal bundles of `D`
+and `F` is the residual smooth debt of node `[G2]`. -/
+structure NormalFramingTie (C : PinCharSurface X k) where
+  /-- Which framings are induced by the normal data. -/
+  Tied : ∀ {γ : EmbeddedCircle C}, FramedMembrane C γ → Prop
+  /-- **Rigidity**: the normal data determines the framing obstruction. -/
+  rigid : ∀ {γ : EmbeddedCircle C} (m m' : FramedMembrane C γ),
+    m.toAmbientMembrane = m'.toAmbientMembrane → Tied m → Tied m' → m.obs = m'.obs
+
+namespace NormalFramingTie
+
+variable {C : PinCharSurface X k}
+
+/-- **The twist escapes a rigid tie** (PROVED): at most one of a framing and its full-turn twist is
+induced by the normal data. So the refutation of `indexWellDefined_false_of_framedMembrane` does not
+reach the tied layer — the repair is genuine, not cosmetic. -/
+theorem not_tied_twist (tie : NormalFramingTie C) {γ : EmbeddedCircle C}
+    {m : FramedMembrane C γ} (h : tie.Tied m) : ¬ tie.Tied m.twist := by
+  intro htw
+  have := tie.rigid m m.twist rfl h htw
+  rw [FramedMembrane.obs_twist] at this
+  omega
+
+/-- **The tie is inhabited at an underlying membrane**: some framing on it is normal-data-induced.
+Rigidity alone is satisfied by the empty tie (`trivialTie_rigid_but_uninhabited`), so this is the
+load-bearing half. -/
+def Inhabits (tie : NormalFramingTie C) {γ : EmbeddedCircle C} (a : AmbientMembrane C γ) : Prop :=
+  ∃ m : FramedMembrane C γ, m.toAmbientMembrane = a ∧ tie.Tied m
+
+/-- **A rigid, inhabited tie determines `O(D)` outright** (PROVED — the payoff of the repair): the
+framing obstruction of an ambient membrane is a *unique* integer once the normal data selects the
+framings. This is the precise sense in which `O(D)` becomes a function of the geometry. -/
+theorem existsUnique_obs (tie : NormalFramingTie C) {γ : EmbeddedCircle C}
+    {a : AmbientMembrane C γ} (h : tie.Inhabits a) :
+    ∃! o : ℤ, ∃ m : FramedMembrane C γ, m.toAmbientMembrane = a ∧ tie.Tied m ∧ m.obs = o := by
+  obtain ⟨m, hma, hmt⟩ := h
+  refine ⟨m.obs, ⟨m, hma, hmt, rfl⟩, ?_⟩
+  rintro o ⟨m', hm'a, hm't, rfl⟩
+  exact (tie.rigid m' m (hm'a.trans hma.symm) hm't hmt)
+
+/-- **The tie's own vacuity attack — rigidity alone is NOT enough** (new). The empty tie is rigid
+and selects nothing, so `IndexWellDefinedTied` over it would be vacuously true. Inhabitedness is
+therefore a genuine, separate requirement and not a decorative conjunct. -/
+def trivialTie (C : PinCharSurface X k) : NormalFramingTie C where
+  Tied _ := False
+  rigid _ _ _ h := absurd h not_false
+
+theorem trivialTie_rigid_but_uninhabited (C : PinCharSurface X k) {γ : EmbeddedCircle C}
+    (a : AmbientMembrane C γ) : ¬ (trivialTie C).Inhabits a := by
+  rintro ⟨m, -, hm⟩
+  exact hm
+
+end NormalFramingTie
+
+/-- **`[Q1]` Freedman–Kirby Lemma 2.6.1, CORRECTED** — the well-definedness statement restricted to
+normal-data-induced framings. Unlike `IndexWellDefined` (refuted by
+`FramedMembrane.indexWellDefined_false_of_framedMembrane`) this shape survives the twist, by
+`NormalFramingTie.not_tied_twist`. It remains a predicate purely on membranes: `σ` does not occur. -/
+def IndexWellDefinedTied {C : PinCharSurface X k} (tie : NormalFramingTie C) : Prop :=
+  ∀ (γ γ' : EmbeddedCircle C) (m : FramedMembrane C γ) (m' : FramedMembrane C γ'),
+    tie.Tied m → tie.Tied m' → γ.cls = γ'.cls → m.index = m'.index
+
+/-! ### No information is lost or invented in the extraction -/
+
+/-- **The membrane index is recoverable from the pin⁻ class** (new): distinct indices give distinct
+classes. So the map "membrane index ↦ pin⁻ class `w`" of `exists_unique_pin_class` is injective —
+the extraction neither loses the geometry nor manufactures a class the index did not determine. -/
+theorem index_eq_of_pin_class_eq {ι : Type*} [Fintype ι] [DecidableEq ι] (Q : Z4Quadratic ι)
+    {μ μ' : (ι → ZMod 2) → ZMod 2}
+    (h : ∀ x y, μ (x + y) = μ x + μ y + Q.B x y)
+    (h' : ∀ x y, μ' (x + y) = μ' x + μ' y + Q.B x y) {w : ι → ZMod 2}
+    (hw : Q.shift w = geomEnhancement Q μ h) (hw' : Q.shift w = geomEnhancement Q μ' h') :
+    μ = μ' := by
+  have heq : geomEnhancement Q μ h = geomEnhancement Q μ' h' := hw ▸ hw'
+  funext v
+  exact embed2_injective (congrArg (fun R : Z4Quadratic ι => R.q v) heq)
+
 end SKEFTHawking.MembraneIndex
