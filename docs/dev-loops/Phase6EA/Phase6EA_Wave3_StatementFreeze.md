@@ -81,9 +81,31 @@ theorem psdSqrt_diagonal {d : ι → ℝ} (hd : ∀ i, 0 ≤ d i) :
 
 *Executing slot: the exact binder shape of the PSD witness is elaboration-sensitive — settle it
 with `lean_goal` before committing to the signature. The mathematical content is fixed; only the
-witness plumbing is open.* Uniqueness of the PSD square root is the load-bearing step: if the
-project lacks a `psdSqrt_unique`, derive it from `psdSqrt_eq_conj_diag`
-(`FidelityForwardBoundPSD.lean:40`) rather than re-proving spectral uniqueness.
+witness plumbing is open.*
+
+**Route grounded 2026-07-28 (G7, G8) — do not re-derive.** Uniqueness of the PSD square root is
+the load-bearing step, and it does **not** need to be built:
+
+* **G7.** `psdSqrt hM := hM.isHermitian.cfc Real.sqrt` (`MixedState.lean:528`) — the project's own
+  *eigenvalue-based* functional calculus, **not** Mathlib's `CFC.sqrt`. Do **not** try to compute
+  it on a diagonal matrix by unfolding `cfc`: `hM.isHermitian`'s eigendecomposition **sorts the
+  eigenvalues**, so for `diagonal d` the eigenvector matrix is a permutation, not `1`, and the
+  unfold route drags in sorting bookkeeping for no reason.
+* **G8.** Mathlib **has PSD-square-root uniqueness** as
+  `Matrix.PosSemidef.sq_eq_sq_iff` (`Mathlib.Analysis.Matrix.Order`):
+  `A.PosSemidef → B.PosSemidef → (A ^ 2 = B ^ 2 ↔ A = B)`. Its siblings `sqrt_eq_iff_eq_sq`,
+  `posSemidef_sqrt`, `sq_sqrt` are in the same module.
+
+**Therefore the frozen proof is the uniqueness route, ~10 lines and fully cited:**
+1. Both sides are PSD — `psdSqrt_posSemidef` (`MixedState.lean:532`) and
+   `Matrix.PosSemidef.diagonal` (Mathlib `PosDef.lean:61`, entries `√(d i) ≥ 0`).
+2. Both square to `diagonal d`: LHS by `psdSqrt_mul_self` (`MixedState.lean:540`), RHS by
+   `Matrix.diagonal_mul_diagonal` + `Real.mul_self_sqrt (hd i)`.
+3. Conclude by `Matrix.PosSemidef.sq_eq_sq_iff` (G8). Bridge `mul_self` ↔ `^2` with `sq` / `pow_two`.
+
+`psdSqrt_eq_conj_diag` (`FidelityForwardBoundPSD.lean:40`) is **not needed** — an earlier draft of
+this freeze suggested deriving uniqueness from it, which would have been re-deriving a Mathlib
+lemma. Ignore that suggestion.
 
 ### 2.2 (S1) — the classical affinity IS the diagonal quantum fidelity
 
