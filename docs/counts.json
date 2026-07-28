@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-28T03:09:23.951196",
+  "generated": "2026-07-28T03:22:01.533442",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 39260,
-    "theorems_total": 25256,
-    "theorems_substantive": 25230,
+    "total_declarations": 39268,
+    "theorems_total": 25263,
+    "theorems_substantive": 25237,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 25161,
+    "theorems_kernel_substantive": 25168,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 48,
     "theorems_vacuous_proxy": 6,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 1990,
+    "modules": 1991,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -666,6 +666,7 @@
       "SKEFTHawking.IntPoincareDualityCapOnly",
       "SKEFTHawking.IntPoincareDualityDetCriterion",
       "SKEFTHawking.IntPoincareDualityWitnesses",
+      "SKEFTHawking.IntersectionDetFullRankFamily",
       "SKEFTHawking.IntersectionFormEvenInt",
       "SKEFTHawking.IntersectionFormUnimodularInt",
       "SKEFTHawking.IntersectionMatrixBasisChange",
@@ -2008,7 +2009,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 12508,
+    "definitions": 12509,
     "structures": 468,
     "instances": 927,
     "inductives": 101,

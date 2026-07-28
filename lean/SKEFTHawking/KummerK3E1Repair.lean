@@ -42,6 +42,7 @@ axiom.
 import Mathlib
 import SKEFTHawking.IntOrientationScaling
 import SKEFTHawking.IntOrientationPrimitive
+import SKEFTHawking.IntersectionDetFullRankFamily
 import SKEFTHawking.KummerK3E1Unconditional
 import SKEFTHawking.KummerK3E1FromGram
 
@@ -61,6 +62,8 @@ open SKEFTHawking.KummerK3PoincareDuality
 open SKEFTHawking.IntOrientationReverse
 open SKEFTHawking.IntOrientationScaling
 open SKEFTHawking.IntOrientationPrimitive
+open SKEFTHawking.IntersectionDetFullRankFamily
+open SKEFTHawking.KummerInvolution (torusFourForm torusFourForm_isEvenUnimodular)
 open SKEFTHawking.SpinSigmaRoute (k3Form)
 
 noncomputable section
@@ -249,6 +252,77 @@ theorem isUnimodular_kummerK3Gram_reverse_iff (o : IntOrientation KummerK3) :
     IsUnimodular (kummerK3Gram (IntOrientation.reverse o)) ↔ IsUnimodular (kummerK3Gram o) := by
   rw [kummerK3Gram_reverse, IsUnimodular, IsUnimodular, Matrix.det_neg]
   norm_num
+
+/-! ## §4. THE PAYOFF — Poincaré duality from the Kummer family AND its index
+
+§3 says the orientation is now the right datum; it does not say how to get PD at it. This section
+does, and it removes the last structural obstacle in the K3 lane: `IntersectionDetFullRankFamily`
+turns "prove Poincaré duality on the welded `K3`" into an **arithmetic** statement about the
+classical Kummer lattice computation, with no PD input anywhere (so the circularity fence
+`k3-gram-must-not-use-pdInput-of-gram` is respected).
+
+The numbers line up exactly, which is the whole point: `det (⟨−2⟩¹⁶ ⊕ 3H) = ±2¹⁶`, the 16 exceptional
+plus 6 descended classes span an index-`2⁸` sublattice, and `2¹⁶ = (2⁸)²`. Either fact alone gives
+nothing; together they give unimodularity, hence PD, hence the E1 atoms. -/
+
+/-- **`det kummerSubForm = ±2¹⁶`** — sharpening the banked `kummerSubForm_det_ne_zero` to its value.
+`det ⟨−2⟩¹⁶ = (−2)¹⁶ = 2¹⁶` and the `3H` block is unimodular. -/
+theorem kummerSubForm_det_eq : kummerSubForm.det = 2 ^ 16 ∨ kummerSubForm.det = -(2 ^ 16) := by
+  rw [kummerSubForm, det_blockDiag, negTwoDiag_det]
+  rcases torusFourForm_isEvenUnimodular.2.1 with h | h <;> rw [h]
+  · left; norm_num
+  · right; norm_num
+
+/-- **UNIMODULARITY OF THE WELDED `K3`'s INTERSECTION FORM, from 22 classes and their index.**
+
+The two geometric inputs are exactly the classical Kummer facts: the 16 exceptional `(−2)`-classes
+plus the 6 descended `T⁴` classes have Gram `⟨−2⟩¹⁶ ⊕ 3H`, and they span a sublattice of index `2⁸`
+(`SETTLED_FORKS: kummer-16-plus-6-geometric-block-is-not-a-basis` — the Kummer half-sums are the
+missing `2⁸`). Since `det (⟨−2⟩¹⁶ ⊕ 3H) = ±2¹⁶ = ±(2⁸)²`, `IntersectionDetFullRankFamily` closes it. -/
+theorem isUnimodular_kummerK3Gram_of_kummerFamily_index (o : IntOrientation KummerK3)
+    (v : Fin 22 → Cohomology KummerK3top 2)
+    (hv : ∀ i j, interFormInt (intFundamentalClassOfIntOrientation o) (v i) (v j)
+      = kummerSubForm i j)
+    (hidx : (coordMatrix kummerK3IntH2Basis kummerK3IntH2Basis_rank v).det = 2 ^ 8
+        ∨ (coordMatrix kummerK3IntH2Basis kummerK3IntH2Basis_rank v).det = -(2 ^ 8)) :
+    IsUnimodular (kummerK3Gram o) := by
+  have hsq : (coordMatrix kummerK3IntH2Basis kummerK3IntH2Basis_rank v).det ^ 2 = 2 ^ 16 := by
+    rcases hidx with h | h <;> rw [h] <;> norm_num
+  have hne : (coordMatrix kummerK3IntH2Basis kummerK3IntH2Basis_rank v).det ≠ 0 := by
+    rcases hidx with h | h <;> rw [h] <;> norm_num
+  refine isUnimodular_of_family_index (intFundamentalClassOfIntOrientation o) kummerK3IntH2Basis
+    kummerK3IntH2Basis_rank v kummerSubForm hv hne ?_
+  rcases kummerSubForm_det_eq with h | h
+  · exact Or.inl (by rw [h, hsq])
+  · exact Or.inr (by rw [h, hsq])
+
+/-- **…hence integral Poincaré duality, hence the E1 atom triple.** THE K3 LANE, end to end, from two
+statements about 22 explicit classes — no PD assumed anywhere on the way in. -/
+theorem nonempty_kummerK3E1Atoms_of_kummerFamily_index (o : IntOrientation KummerK3)
+    (v : Fin 22 → Cohomology KummerK3top 2)
+    (hv : ∀ i j, interFormInt (intFundamentalClassOfIntOrientation o) (v i) (v j)
+      = kummerSubForm i j)
+    (hidx : (coordMatrix kummerK3IntH2Basis kummerK3IntH2Basis_rank v).det = 2 ^ 8
+        ∨ (coordMatrix kummerK3IntH2Basis kummerK3IntH2Basis_rank v).det = -(2 ^ 8)) :
+    Nonempty KummerK3E1Atoms :=
+  nonempty_kummerK3E1Atoms_at o
+    (nonempty_intPD_of_kummerK3Gram_isUnimodular o
+      (isUnimodular_kummerK3Gram_of_kummerFamily_index o v hv hidx))
+
+/-- **THE INDEX HYPOTHESIS IS FORCED, not an over-ask.** If the welded `K3`'s form is unimodular then
+any family with Gram `kummerSubForm` *must* have coordinate determinant `±2⁸`. So §4's second input
+is exactly equivalent to what it buys, given the first — it is the geometry, not a convenience. -/
+theorem coordMatrix_det_sq_of_isUnimodular (o : IntOrientation KummerK3)
+    (v : Fin 22 → Cohomology KummerK3top 2)
+    (hv : ∀ i j, interFormInt (intFundamentalClassOfIntOrientation o) (v i) (v j)
+      = kummerSubForm i j)
+    (hu : IsUnimodular (kummerK3Gram o)) :
+    (coordMatrix kummerK3IntH2Basis kummerK3IntH2Basis_rank v).det ^ 2 = 2 ^ 16 := by
+  have hconv := det_family_eq_sq_of_isUnimodular (intFundamentalClassOfIntOrientation o)
+    kummerK3IntH2Basis kummerK3IntH2Basis_rank v kummerSubForm hv hu
+  have hnn : (0 : ℤ) ≤ (coordMatrix kummerK3IntH2Basis kummerK3IntH2Basis_rank v).det ^ 2 :=
+    sq_nonneg _
+  rcases kummerSubForm_det_eq with hd | hd <;> rcases hconv with hc | hc <;> rw [hd] at hc <;> omega
 
 end
 
