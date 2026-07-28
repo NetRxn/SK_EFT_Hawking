@@ -48,6 +48,15 @@ SHARD_RE = re.compile(r"^LAB_NOTEBOOK_W(\d+)\.md$")
 # leaving margin so a post-compaction re-read of the active shard never chokes.
 BUDGET_BYTES = 72_000
 INDEX_BUDGET_BYTES = 24_000  # the INDEX itself stays glanceable (<~6k tokens)
+# --- INDEX density guards (2026-07-28) -------------------------------------------------
+# INDEX_BUDGET_BYTES alone is a CLIFF, not a gradient: the qualitative failure (paragraph-
+# length DECISIONS entries, per-declaration checklists duplicating the roadmap) sets in
+# around 4-8 KB and stays invisible until 24 KB, by which point the habit is entrenched and
+# the file no longer reads at a glance. These give `check` an early, actionable warning.
+INDEX_SOFT_BYTES = 8_000       # advisory: past here, the INDEX is drifting from "digest"
+DECISION_ROW_MAX_CHARS = 320   # a DECISIONS entry is ONE line + a pointer, not a paragraph
+SEED_MAX_ROWS = 10             # cap on rows lifted from the roadmap at bootstrap
+SEED_ROW_MAX_CHARS = 120       # a seeded row is a POINTER, never the spec itself
 
 
 def _tok(nbytes):
@@ -124,20 +133,54 @@ def _default_title(home):
 
 def _checklist_from_roadmap(roadmap):
     """Best-effort seed: lift existing GFM checkbox rows from the roadmap, reset to
-    unchecked. Returns a list of '- [ ] ...' lines, or None if nothing usable."""
+    unchecked, **compacted**. Returns a list of '- [ ] ...' lines, or None if nothing usable.
+
+    Compaction is deliberate and load-bearing (fix 2026-07-28). The prior version copied up
+    to 12 roadmap AC rows VERBATIM. Roadmap AC rows in this project are long, prose-heavy,
+    per-declaration lines (measured: 1,885 bytes over 12 rows, longest 238 chars), so the
+    INDEX was *born* at a prose density that contradicts its own "single-glance digest"
+    header — and an agent anchors on what the artifact demonstrates, not on what the header
+    says. That birth defect is the observed root cause of recurring INDEX bloat across
+    sessions. Three guards now:
+
+      * per-row cap (`SEED_ROW_MAX_CHARS`) — a seeded row is a POINTER, not the spec;
+      * explicit truncation marker — the old `>= 12: break` cut mid-list silently (6EA lost
+        its whole Wave 3), and an agent that notices the gap "helpfully" completes it,
+        growing the INDEX further;
+      * a standing reminder that the roadmap / statement-freeze docs are the
+        declaration-level source of truth and the INDEX must NOT duplicate them.
+
+    Note the seed is read from the ROADMAP, which a later Stage-2 statement freeze may
+    supersede — a verbatim seed can therefore re-introduce a fork the freeze has since
+    banned (observed: 6EA's seeded row offered the interval-restricted Gaussian lower tail
+    as a live candidate after the freeze rejected it as vacuous). Compacting to a pointer
+    keeps that stale detail out of the always-loaded layer.
+    """
     if not roadmap:
         return None
     try:
         txt = Path(roadmap).read_text(errors="ignore")
     except Exception:
         return None
-    seeds = []
+    raw = []
     for ln in txt.splitlines():
         if re.match(r"\s*- \[[ xX]\] ", ln):
-            seeds.append(re.sub(r"- \[[xX]\]", "- [ ]", ln.strip()))
-        if len(seeds) >= 12:
-            break
-    return seeds or None
+            raw.append(re.sub(r"- \[[xX]\]", "- [ ]", ln.strip()))
+    if not raw:
+        return None
+    seeds = []
+    for ln in raw[:SEED_MAX_ROWS]:
+        if len(ln) > SEED_ROW_MAX_CHARS:
+            ln = ln[:SEED_ROW_MAX_CHARS].rstrip() + " …"
+        seeds.append(ln)
+    dropped = len(raw) - len(seeds)
+    if dropped > 0:
+        seeds.append(
+            f"- [ ] … **{dropped} further AC rows NOT duplicated here** — the roadmap "
+            f"(and any Stage-2 statement freeze superseding it) is the declaration-level "
+            f"source of truth: `{Path(roadmap).name}`"
+        )
+    return seeds
 
 
 def _index_template(title, checklist_lines=None):
@@ -152,6 +195,11 @@ def _index_template(title, checklist_lines=None):
         "> edit FRONTIER + flip any completed CHECKLIST row HERE, append the long detail bullet to the active",
         "> `LAB_NOTEBOOK.md` (terse — one tight paragraph, not a 1 KB single line), and when you SETTLE a fork",
         "> or hit a kernel-checked no-go, append ONE line to DECISIONS (promote it out of the transient FRONTIER).",
+        ">",
+        "> **This file is a DIGEST, not a log.** Every entry below is one line plus a pointer. The roadmap and",
+        "> any Stage-2 statement-freeze doc are the declaration-level source of truth — do NOT restate them here;",
+        "> reasoning, derivations and evidence go in `LAB_NOTEBOOK.md`. If a bullet needs a second sentence, it",
+        "> belongs in the shard with a one-line pointer left here.",
         "",
         H_POSTURE,
         "- (standing posture for this loop — settled scope; legitimate stops only; kernel-purity; never re-pollute.)",
@@ -255,12 +303,34 @@ def op_check(home, budget_bytes=BUDGET_BYTES, repo=None):
     else:
         isz = p["index"].stat().st_size
         res["index_bytes"] = isz
+        itxt = p["index"].read_text(errors="ignore")
         if isz > INDEX_BUDGET_BYTES:
             warns.append(
                 f"{INDEX_NAME} is ~{isz // 1000} KB (> ~{INDEX_BUDGET_BYTES // 1000} KB) "
                 "— trim it; the INDEX must stay glanceable."
             )
-        if not _has_block(p["index"].read_text(errors="ignore"), "decision"):
+        elif isz > INDEX_SOFT_BYTES:
+            # Gradient warning: catch density drift long before the hard cliff.
+            warns.append(
+                f"{INDEX_NAME} is ~{isz // 1000} KB (soft limit ~{INDEX_SOFT_BYTES // 1000} KB) "
+                "— drifting from digest toward log. Move detail into the ACTIVE shard; the "
+                "INDEX carries ONE line per decision plus pointers, and must not duplicate "
+                "the roadmap / statement-freeze docs."
+            )
+        # Density, not just size: a paragraph-length DECISIONS entry is the leading indicator.
+        long_rows = [
+            ln for ln in itxt.splitlines()
+            if ln.lstrip().startswith("- ") and len(ln) > DECISION_ROW_MAX_CHARS
+        ]
+        if long_rows:
+            res["overlong_rows"] = len(long_rows)
+            warns.append(
+                f"{INDEX_NAME} has {len(long_rows)} bullet(s) over {DECISION_ROW_MAX_CHARS} "
+                "chars — an INDEX entry is one line + a pointer, not a paragraph. Move the "
+                f"detail to {ACTIVE_NAME}. First offender: "
+                f"{long_rows[0].lstrip()[:80]}…"
+            )
+        if not _has_block(itxt, "decision"):
             res["missing_decisions"] = True
             warns.append(
                 f"{INDEX_NAME} has no DECISIONS & DEAD-ENDS block — run `notebook sync`."
