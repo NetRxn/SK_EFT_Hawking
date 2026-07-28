@@ -289,7 +289,19 @@ with no numerical slack and no `π` estimate at all.
 * For `z ≥ 2/√(2π)` the claim is Mills' ratio plus `2 ≤ z·√(2π)`.
 * For `z ≤ 2/√(2π)` it is the pointwise density comparison `(x/2)·exp(−x²/2) ≤ φ(x)` on `[0, z]`
   — valid exactly while `x ≤ 2/√(2π)` — integrated against `Q z = 1/2 − ∫_0^z φ`, using that
-  `x ↦ −½·exp(−x²/2)` is an antiderivative of `(x/2)·exp(−x²/2)`. -/
+  `x ↦ −½·exp(−x²/2)` is an antiderivative of `(x/2)·exp(−x²/2)`.
+
+**Prior art — this is a refinement, not a first** (recorded 2026-07-28 after a live sweep; the
+Phase-6EA Stage-2 substrate sweep missed it by grepping for `erf`/`erfc`/Q-function, i.e. for the
+*object*, rather than for the *bound*). Mathlib already carries a kernel-checked Chernoff tail
+bound at our own pin: `ProbabilityTheory.HasSubgaussianMGF.measure_ge_le`
+(`Mathlib/Probability/Moments/SubGaussian.lean:334`, `:704`) gives
+`μ.real {ω | ε ≤ X ω} ≤ exp(−ε²/(2c))` for sub-Gaussian `X`. Two differences make the theorem
+below worth having rather than redundant: it is stated for the sub-Gaussian **class** and is not
+instantiated at `gaussianReal`, so it does not directly bound this file's `gaussianQ`; and at
+`c = 1` its constant `exp(−z²/2)` is a **factor 2 weaker** than the `½·exp(−z²/2)` proved here.
+Any external write-up of this result must position it as sharpening Mathlib's bound for the
+standard normal, never as the first kernel-checked Chernoff bound. -/
 theorem gaussianTail_chernoff {z : ℝ} (hz : 0 ≤ z) :
     gaussianQ z ≤ (1 / 2) * Real.exp (-z ^ 2 / 2) := by
   have hs : (0:ℝ) < √(2 * π) := Real.sqrt_pos.mpr (by positivity)
