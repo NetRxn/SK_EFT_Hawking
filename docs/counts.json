@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-28T13:35:46.705107",
+  "generated": "2026-07-28T14:23:42.767101",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 39515,
-    "theorems_total": 25459,
-    "theorems_substantive": 25433,
+    "total_declarations": 39516,
+    "theorems_total": 25460,
+    "theorems_substantive": 25434,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 25364,
+    "theorems_kernel_substantive": 25365,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 48,
     "theorems_vacuous_proxy": 6,

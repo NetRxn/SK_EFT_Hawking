@@ -225,8 +225,9 @@ one-sided convention (a two-sided PSD would carry `1`); it is fixed here once an
 every statement below rather than being left to a docstring. -/
 noncomputable def shotPSD (E_ph P : ℝ) : ℝ := 2 * E_ph * P
 
-/-- **The one-sided convention agrees with the repository's.** `shotPSD E_ph P` is definitionally
-the unit-greybody, unit-occupation case of `GrapheneNoiseFormula.hawkingNoisePSD`, whose leading
+/-- **The one-sided convention agrees with the repository's.** `shotPSD E_ph P` is the
+unit-greybody, unit-occupation case of `GrapheneNoiseFormula.hawkingNoisePSD` — *propositionally*,
+not definitionally: the proof needs `mul_one` twice, so `:= rfl` does not close it. Its leading
 `2` is the same one-sided convention (its companion `johnsonNyquistPSD = 4·k_BT·σ_Q` carries the
 matching `4`). Stating this as a theorem is what makes "matches the repo convention" checkable
 instead of a claim in prose: change either definition's convention and this line fails.
@@ -455,15 +456,20 @@ theorem shot_variance_eq_mean (N : ℝ≥0) : poissonVariance N = poissonMean N 
 baseline rate `N_b = 1` and signal rate `N_a = 9`, a Gaussian threshold classifier with means
 `μ₀ = 1`, `μ₁ = 9`, common width `σ = 2` and threshold at the midpoint `t = 5` has both branch
 errors equal to `Q(2)`, and its average assignment error exceeds **3/2 times** the Le Cam floor
-value `¼·BC(Poisson 1, Poisson 9)²`.
+value `¼·BC(Poisson 1, Poisson 9)²`. (`σ = 2` is the mean of the two shot widths `√1 = 1` and
+`√9 = 3`; a single common `σ` is what the equal-variance threshold model of Wave 2 assumes, and
+this is the stated choice of it — not a derived quantity.)
 
 **Scope — read this before citing it.** The Gaussian error pair `(thrErr0 1 2 5, thrErr1 9 2 5)`
 is NOT claimed to be realizable by any count rule `δ`, so this does **not** exhibit a count rule
 whose error strictly exceeds its own floor; it compares the floor's numeric value against a
-different (Gaussian) model evaluated at the same rates. What it certifies is that
-`¼·exp(−(√N_a−√N_b)²)` is not an equality in disguise at this operating point — a floor that
-coincided with attainable error everywhere would be useless as a screen — and it does so with a
-quantified factor rather than a bare `≠`.
+different (Gaussian) model evaluated at the same rates. What it certifies is narrower, and the narrowness is the point: at this operating point the
+floor's value is strictly below the error of *a* concrete detection model, with a quantified
+factor rather than a bare `≠`. It does **not** certify slack against attainable count-rule error
+— that would need the realizability this note denies. The theorem that *does* exhibit slack over
+the same experiment is `poisson_avgError_equalRates_eq_half`: at coincident rates every count
+rule errs exactly `1/2` while the floor returns `1/4`, so the Le Cam constant is provably loose
+there by a factor of two.
 
 The statement is a real cross-wave call in both directions: the left side is Wave 1's affinity at
 the Poisson pair (discharged through `poissonBhattacharyya_eq`) and the right side is Wave 2's
