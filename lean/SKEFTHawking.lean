@@ -4512,6 +4512,9 @@ import SKEFTHawking.EichlerTransvection
 -- outside Eichler's elementary regime; StableNegRank16Two (rank 20, inertia (2,18)) is inside it
 -- and hk3_of_stable16_two consumes it at zero downstream cost.
 import SKEFTHawking.UnitBlockCancellation
+-- Phase 5q.H K8b: the Eichler assembly for `⟨1⟩`-cancellation — the exit gate
+-- (`intCongr_of_unitFixing`), the characteristic-vector layer, and the STEP-1/STEP-2 boundary.
+import SKEFTHawking.UnitCancellationEichler
 import SKEFTHawking.RP4Manifold
 import SKEFTHawking.RP2PointSet
 import SKEFTHawking.RP2Manifold
