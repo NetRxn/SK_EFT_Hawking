@@ -1301,3 +1301,30 @@ chain, and encoding it in Lean costs more than it saves).**
   (`−E₈ ⊕ −E₈` and `−D₁₆⁺`). Absorbing that distinction is precisely the content of the
   `2U`-stabilization, which is why cancellation/Eichler is irreducible here.
 - `created_ts`: 2026-07-27
+
+## 6ea-interval-restricted-gaussian-lower-tail
+- verdict: banned
+- tier: agent-reviewed
+- authored_by: coach
+- killed_by: Phase 6EA Stage-2 statement freeze §3.2 (UNKNOWN-2 resolution), lead sign-off 2026-07-27
+- reason: `Q z ≥ ½ − z/√(2π)` (and the variant `½(1 − z/√(2π))`) is TRUE but VACUOUS — its RHS goes negative for `z > √(2π)/2 ≈ 1.2533`, i.e. across the entire range any consumer operates in (`z ≳ 2`). It is therefore not kernel-refutable and gets no backing theorem; it is banned on uselessness, not falsity. The shipped replacement is `gaussianTail_ge_window` (`c·φ(z+c) ≤ Q z`, global in `z`, parametric in `c`, no side condition), with `gaussianTail_birnbaum` as the sharp form — both now on main in `Detection/GaussianThreshold.lean`. If a proof attempt starts reconstructing the interval-restricted rational as the headline lower tail, stop.
+- memory: [[project_vectorC_public_6E_series]]
+- created_ts: 2026-07-28T00:00:00Z
+
+## 6ea-optimalhypothesisrate-quantum-seam
+- verdict: dead
+- tier: agent-reviewed
+- authored_by: coach
+- killed_by: Phase 6EA Stage-2 statement freeze §4 (UNKNOWN-3 resolution), after reading PhysLib `QuantumInfo.Finite.ResourceTheory.HypothesisTesting` in full (568 lines)
+- reason: TYPE-LEVEL IMPOSSIBLE, two independent ways. (i) `OptimalHypothesisRate ρ ε S` takes `ρ : MState d` with `[Fintype d]`, and PhysLib's classical embedding `MState.ofClassical` takes `ProbDistribution α` with `[Fintype α]` — Poisson lives on ℕ, which is not a `Fintype`, so it cannot be an argument to either. (ii) `OptimalHypothesisRate` is the *asymmetric* Neyman–Pearson value (min Type-II at Type-I ≤ ε), whereas the 6EA floor bounds the *symmetric* Bayes/Le Cam average error at equal priors — calling one a specialization of the other is a category error, so any such theorem would be false or vacuous. Not kernel-encodable (a typing/functional fact, not a false proposition). The seam instead routes through the `Fin 2` pushforward as a diagonal restriction of the project's own proven FvdG. COROLLARY: 6EA Wave 3 must NOT be described as "the first project consumption of `HypothesisTesting`" in any D12-facing text unless that consumption actually happens.
+- memory: [[project_vectorC_public_6E_series]]
+- created_ts: 2026-07-28T00:00:00Z
+
+## 6eb-enbw-convention-falsifier-shape
+- verdict: banned
+- tier: agent-reviewed
+- authored_by: coach
+- killed_by: Phase 6EB Wave 1 (`Detection/FilterFloors.lean`, merged `4378cc01`) — worker finding, lead-confirmed
+- reason: a dimensional/convention falsifier phrased as "the one-sided vs two-sided PSD convention is wrong" is VACUOUS over any composed variance, because the product `S₀ · ENBW` is convention-INVARIANT (a physical variance must be). The only detectable error is *MIXING* the two — one-sided PSD against two-sided ENBW — which is a clean factor of 2. Any 6EB/6EC/6EE falsifier in this family must target a MIXED pairing. Detectability is already encoded as `enbw_oneSided_ne_twoSided` (the two normalizations provably disagree on the boxcar at every `T > 0`); build on it rather than restating it.
+- memory: [[project_vectorC_public_6E_series]]
+- created_ts: 2026-07-28T00:00:00Z
