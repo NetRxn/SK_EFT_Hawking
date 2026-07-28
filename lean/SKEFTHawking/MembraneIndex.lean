@@ -727,4 +727,97 @@ theorem index_eq_of_pin_class_eq {ι : Type*} [Fintype ι] [DecidableEq ι] (Q :
   funext v
   exact embed2_injective (congrArg (fun R : Z4Quadratic ι => R.q v) heq)
 
+/-- **The Route-A scope statement, instantiated on the carrier the project actually cares about**
+(new — the registry-ready refutation). `stdQuadratic 1` is the `ℝP²` enhancement, the surface half of
+the `(ℝP⁴, ℝP²)` generator (`GuillouMarinBridge.GM_rp4`); its intersection form has `B(1,1) = 1`, so
+**no mod-2 membrane index exists on it at all**. Concretely: the Freedman–Kirby `D·F + O(D) + d(C)`
+construction of blueprint Route A cannot produce the pin⁻ class of a nonorientable characteristic
+surface, and no amount of work on the membrane layer will change that — the obstruction is the
+polarization identity itself, not a missing lemma. Reaching the `ℝP²` stratum requires the
+Guillou–Marin `ℤ/4`-resolution index, whose coefficient split is *not* pinned by the in-tree
+blueprint (which states only the mod-2 formula). -/
+theorem no_mod2_index_on_rp2 :
+    ¬ ∃ μ : (Fin 1 → ZMod 2) → ZMod 2,
+        ∀ x y, μ (x + y) = μ x + μ y + (stdQuadratic 1).B x y := by
+  refine not_exists_index_of_B_self_ne_zero (v := 1) ?_
+  decide
+
+/-! ## §10. The `[Q2]` polarization identity, DECOMPOSED into two pin-free geometric statements
+
+`MembraneSystem.Refines` is the input `geomEnhancement` consumes. Left as a single Prop it would hide
+the actual Freedman–Kirby computation, so it is split here — with the mutual intersection number of
+two membranes *constructed*, exactly like the three index summands. -/
+
+section Sum
+
+variable {C : PinCharSurface X k} {γ₁ γ₂ : EmbeddedCircle C}
+
+/-- The **mutual intersection set** of two membranes in the same ambient — determined by the two
+maps, nothing declared. -/
+def mutualSet (m₁ : FramedMembrane C γ₁) (m₂ : FramedMembrane C γ₂) : Set (m₁.S × m₂.S) :=
+  {e | m₁.D e.1 = m₂.D e.2}
+
+/-- **`D₁ · D₂` — the membrane-sum correction term, CONSTRUCTED**: the mod-2 count of the two
+membranes' mutual intersections. -/
+noncomputable def mutualInt (m₁ : FramedMembrane C γ₁) (m₂ : FramedMembrane C γ₂) : ZMod 2 :=
+  ((mutualSet m₁ m₂).ncard : ZMod 2)
+
+/-- Membranes with disjoint images do not intersect. -/
+theorem mutualInt_eq_zero (m₁ : FramedMembrane C γ₁) (m₂ : FramedMembrane C γ₂)
+    (h : mutualSet m₁ m₂ = ∅) : mutualInt m₁ m₂ = 0 := by
+  rw [mutualInt, h, Set.ncard_empty]
+  rfl
+
+/-- **The mutual intersection number is symmetric** (PROVED, via `Prod.swap`) — as the mod-2
+intersection form it is supposed to compute must be (`Z4Quadratic.B_symm`). -/
+theorem mutualInt_symm (m₁ : FramedMembrane C γ₁) (m₂ : FramedMembrane C γ₂) :
+    mutualInt m₂ m₁ = mutualInt m₁ m₂ := by
+  have h : mutualSet m₂ m₁ = Prod.swap '' (mutualSet m₁ m₂) := by
+    ext e
+    constructor
+    · intro he
+      exact ⟨(e.2, e.1), he.symm, rfl⟩
+    · rintro ⟨p, hp, rfl⟩
+      exact hp.symm
+  rw [mutualInt, mutualInt, h, Set.ncard_image_of_injective _ Prod.swap_injective]
+
+end Sum
+
+variable {C : PinCharSurface X k}
+
+/-- **`[Q2a]` the membrane-sum step** — the Freedman–Kirby computation itself: joining the membranes
+of two circles produces a membrane for a circle carrying the sum class, whose index is the sum of the
+two indices plus the mutual intersection correction. Pin-free, `σ`-free; the framings are required to
+be normal-data-induced throughout, per the §8 repair. -/
+def MembraneSumIndex (tie : NormalFramingTie C) : Prop :=
+  ∀ (γ₁ γ₂ : EmbeddedCircle C) (m₁ : FramedMembrane C γ₁) (m₂ : FramedMembrane C γ₂),
+    tie.Tied m₁ → tie.Tied m₂ →
+      ∃ (γ : EmbeddedCircle C) (m : FramedMembrane C γ),
+        γ.cls = γ₁.cls + γ₂.cls ∧ tie.Tied m ∧
+          m.index = m₁.index + m₂.index + mutualInt m₁ m₂
+
+/-- **`[Q2b]` the mutual intersection number IS the intersection form** — the classical transversality
+statement that the mod-2 count of `D₁ ⋔ D₂` computes `B(x, y)` on `H₁(F;ℤ/2)`. Pin-free, `σ`-free,
+and about membranes only. -/
+def MutualIsForm (C : PinCharSurface X k) : Prop :=
+  ∀ (γ₁ γ₂ : EmbeddedCircle C) (m₁ : FramedMembrane C γ₁) (m₂ : FramedMembrane C γ₂),
+    mutualInt m₁ m₂ = C.Q.B γ₁.cls γ₂.cls
+
+/-- **`[Q2]` SPLITS** (PROVED): the polarization identity that `geomEnhancement` consumes is
+*derived* from the membrane-sum step, the transversality identification of the mutual intersection
+number, and the corrected well-definedness — three strictly finer, pin-free, `σ`-free geometric
+statements. Nothing about the enhancement is assumed; the algebra is all that is added. -/
+theorem refines_of_membraneSum {tie : NormalFramingTie C} (hwd : IndexWellDefinedTied tie)
+    (hsum : MembraneSumIndex tie) (hform : MutualIsForm C)
+    (sys : MembraneSystem C) (ht : sys.Tied tie) : sys.Refines := by
+  intro x y
+  obtain ⟨γ, m, hcls, hmt, hidx⟩ :=
+    hsum (sys.circle x) (sys.circle y) (sys.memb x) (sys.memb y) (ht x) (ht y)
+  have hxy : γ.cls = (sys.circle (x + y)).cls := by
+    rw [hcls, sys.circle_cls, sys.circle_cls, sys.circle_cls]
+  have h1 : sys.index (x + y) = m.index :=
+    hwd _ _ (sys.memb (x + y)) m (ht (x + y)) hmt hxy.symm
+  rw [h1, hidx, hform, sys.circle_cls, sys.circle_cls]
+  rfl
+
 end SKEFTHawking.MembraneIndex
