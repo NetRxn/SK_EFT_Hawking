@@ -84,6 +84,14 @@ out **only when the DAG has genuinely branched** into independent sub-chains. To
    dead-forks in its brief.**
 3. Merge each `worktree-wtN` into `main`; re-run the full gate; `/reset-slot N` again for the next brick.
 
+**⛔ You own `lake build`; workers do not.** Slot `.lake` isolation buys correctness, not contention
+relief — Lake takes one job per core, so 3 building slots is 3× the machine. Measured 2026-07-28: three
+concurrent slot builds stretched the lead's ~15 s pre-commit hook past **10 minutes**, which reads
+exactly like a broken toolchain and isn't. Workers gate on `lean_diagnostic_messages` / `lean_goal` /
+`lean_verify` (per-file, near-free); **you** run `lake build`, `lake build SKEFTHawking.ExtractDeps`, and
+`validate.py` on `main` after the merge. Only exception: a worker adding a NEW module another file must
+`import` may run `lake build -j4 SKEFTHawking.<ThatOneModule>` — one named module, job-capped, reported.
+
 Full flow, why the slots are persistent, and the maintainer caveat: `references/parallel-worktrees.md`.
 
 ## When a proof-mechanics error recurs

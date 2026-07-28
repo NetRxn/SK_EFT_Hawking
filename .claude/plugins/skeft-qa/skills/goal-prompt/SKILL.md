@@ -27,6 +27,13 @@ skill carries the posture and (at launch) arms it. Hold this posture every turn:
 - **Legitimate stops only:** a kernel-checked no-go, or a genuine user-only decision.
   If you feel blocked, run full diligence first; if one option is clearly best, TAKE IT
   and log the rationale in the notebook.
+- **You own the builds.** If you fan out to worktree slots, **only you run `lake build` /
+  `lake build SKEFTHawking.ExtractDeps` / `validate.py`** — on `main`, after merging. Workers gate on
+  their slot's `lean_diagnostic_messages` / `lean_goal` / `lean_verify`. Slot `.lake` isolation prevents
+  corruption, not CPU contention: Lake takes one job per core, so concurrent slot builds oversubscribe
+  the machine and the cost lands on *your* serialized gate (measured: a ~15 s pre-commit hook stretched
+  past 10 min under three slot builds — indistinguishable from a broken toolchain). Rule + the one
+  narrow exception: `goal-dev/references/parallel-worktrees.md`.
 - **For the in-loop development work, invoke the `goal-dev` skill** (`/skeft-qa:goal-dev`) — the
   model-invocable companion that carries the MCP-first proof loop, kernel-purity rules, the worktree
   fan-out flow (`/reset-slot` + `lean-worker`), a symptom-indexed Lean friction catalog, the full

@@ -38,6 +38,31 @@ one per slot; **only ever touch your own slot.**
   `RingQuot` types use `erw` when `rw` "did not find pattern".
 - Read the relevant `Lit-Search/Phase-*/` deep-research file **directly** before a proof that cites it.
 
+### ⛔ You do NOT run `lake build`. The lead owns the builds. (binding)
+**Never run a bare `lake build`, `lake build SKEFTHawking.ExtractDeps`, or `mcp__lean-lsp-wtN__lean_build`.**
+Your slot has its own isolated `.lake`, so a build there is *correct* — the problem is that Lake defaults
+to one job per core and takes the whole machine. Three slots building at once is 3× the cores that exist:
+every build, and every hook and gate the lead is running, slows to a crawl together. Measured 2026-07-28:
+the lead's pre-commit hook (~15 s solo, ~90 % user-CPU) stretched past **10 minutes** under three
+concurrent slot builds, and the lead had to background its commits to make progress. Nothing was broken —
+the machine was simply oversubscribed, and the cost lands on the one process that gates everyone.
+
+**Your gate is the MCP loop, not a build.** `mcp__lean-lsp-wtN__lean_diagnostic_messages` on your file is
+the authority on whether your edit elaborates; `lean_goal` = "no goals" is the authority on whether the
+proof closes; `lean_verify` is the authority on kernel purity. All three are per-file and near-free. The
+**lead** re-runs the full `lake build` + `lake build SKEFTHawking.ExtractDeps` + `validate.py` gate on
+`main` after merging your branch — that run, not yours, is the one that counts.
+
+**Narrow exception — a NEW module that must become importable.** The LSP needs an `.olean` before another
+file can `import` your new module. Only in that case:
+```bash
+cd "$SLOT/lean" && lake build -j4 SKEFTHawking.<YourNewModule>
+```
+Always a **single named module**, never the bare target, and always **`-j4`** (this box has 16 cores; 3
+slots × 4 leaves headroom for the lead's gate and the LSP servers). Say in your report that you ran it.
+If you think you need a build for any other reason, **report and ask the lead** — that is a signal about
+the environment, which is the lead's to resolve.
+
 ## Work your whole block — maximize GREEN progress per turn (the atlas is your map)
 Your assignment is often a **large sub-chain** (a sub-DAG), not one lemma. **Prove as much of it as you can
 cleanly** — GREEN, kernel-pure, `lean_verify`-clean — per turn, committing GREEN increments as you go:
@@ -77,9 +102,11 @@ A failed commit/build is a signal for the **lead** to fix the environment — no
 the build. Report and stop; the lead re-dispatches once it's resolved.
 
 ## Finish
-- When the brick is GREEN, finalize against your own slot build: `cd "$SLOT/lean" && lake build <Module>`
-  (this builds in YOUR `.lake` — isolated). If that build errors for an environment reason (missing oleans,
-  dependency-resolution failure), **STOP and report** — do not try to repair it.
+- When the brick is GREEN, finalize with **`mcp__lean-lsp-wtN__lean_diagnostic_messages` on every file you
+  touched** (clean = no errors, no `declaration uses 'sorry'`) plus `lean_verify` on each headline. That is
+  your finalize step — **do not run `lake build` for it** (see the binding rule above; the lead runs the
+  full gate on `main` after the merge). If diagnostics show an *environment* failure rather than a proof
+  failure (missing oleans, dependency-resolution error), **STOP and report** — do not try to repair it.
 - `git -C "$SLOT" add <only your own paths>` and `git -C "$SLOT" commit` on `worktree-wtN`. The commit is
   what hands your work to the lead. **Never push. Never touch another slot. Stage only your own paths.**
 - Report back: slot N, the modules/declarations you added, the `lean_verify` axiom line for each

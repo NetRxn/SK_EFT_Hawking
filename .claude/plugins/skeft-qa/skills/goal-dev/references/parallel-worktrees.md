@@ -43,7 +43,7 @@ each. The `lean-lsp-wt1/2/3` servers are defined in the workspace `.mcp.json` + 
 2. **Dispatch** `Agent(subagent_type="skeft-qa:lean-worker", prompt="SLOT N=2, path=<abs …/wt2>, use
    mcp__lean-lsp-wt2__*. <the one independent brick + its Lit-Search refs + acceptance>")`.
 3. The worker proves MCP-first via **its own `mcp__lean-lsp-wtN__*`** (never write→`lake build`), kernel-pure,
-   and **commits on `worktree-wtN`**.
+   and **commits on `worktree-wtN`**. **The worker runs no builds — you do** (next section).
 4. **Harvest**: **`git merge --ff-only worktree-wtN`** into `main` (ancestry-preserving) — **NOT
    `cherry-pick`**, which mints a new SHA, so the slot's original commit is content-merged but not a
    SHA-ancestor of `main`, and the next `/reset-slot`'s ancestry-based unmerged-guard then refuses to
@@ -52,6 +52,33 @@ each. The `lean-lsp-wt1/2/3` servers are defined in the workspace `.mcp.json` + 
    for the next task (`/reset-slot`, don't delete).
 
 Dispatch up to 3 workers concurrently (one per slot) for genuinely independent bricks.
+
+## ⛔ Build concurrency: the LEAD owns `lake build`. Workers do not. (binding)
+
+Slot isolation is about **correctness** — each slot has its own `.lake`, so a slot build can't corrupt
+main's. It buys you nothing on **contention**: Lake defaults to one job per core, so every slot that
+builds tries to take the whole machine.
+
+Measured 2026-07-28 on a 16-core box: three workers building concurrently pushed the lead's pre-commit
+hook — ~15 s solo, ~90 % user-CPU — past **10 minutes**, and the lead started backgrounding its commits
+to keep moving. Nothing was broken; the machine was oversubscribed, and the cost landed squarely on the
+serialized process that gates everyone. It also reads exactly like a broken toolchain, so it burns
+diagnosis time before anyone suspects load.
+
+**The contract:**
+- **Workers run no builds.** Their gate is `lean_diagnostic_messages` + `lean_goal` + `lean_verify` —
+  per-file, near-free, and sufficient for "does this elaborate / close / stay kernel-pure". This is
+  written into `agents/lean-worker.md` as a binding rule; **say it again in the dispatch brief** if a
+  worker is likely to add a module.
+- **The lead runs `lake build` / `lake build SKEFTHawking.ExtractDeps` / `validate.py`** — on `main`,
+  after the merge. That is the run that counts; a slot's green build proves nothing about `main`.
+- **Narrow exception:** a worker adding a NEW module that another file must `import` needs an `.olean`
+  first. Then, and only then: `lake build -j4 SKEFTHawking.<ThatOneModule>` — a single named module,
+  never the bare target, always job-capped (3 slots × 4 of 16 cores leaves headroom for your gate and
+  the LSP servers). The worker reports that it ran one.
+- **Don't run your own full gate while workers are live.** Merge first, then gate, then re-dispatch.
+  If you must gate mid-flight, expect it to take several times its solo cost — that is load, not
+  breakage, and it is not a reason to go looking for a broken cache.
 
 > **Maintainer caveat (do not regress):** a worker's slot commit depends on `scripts/pre-commit-sync.sh`
 > detecting a worktree (`git rev-parse --git-dir` ≠ `--git-common-dir`, env-resolved so it survives the shared
