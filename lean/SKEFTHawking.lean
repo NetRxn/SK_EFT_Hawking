@@ -4984,6 +4984,10 @@ import SKEFTHawking.KummerK3ExceptionalClasses
 -- non-vacuity certificate that the datum's mod-2 fundamental functional cannot be the zero map
 -- on a carrier with unimodular intersection matrix; ledger restated as three inputs.
 import SKEFTHawking.KummerK3EvenFromSpinWu
+-- Phase 5q.H — the ⟨−2⟩¹⁶ block's obligation as ONE named Prop about the actual `excClass`es,
+-- proved to be exactly the block assembler's hself/hoff pair, with non-vacuity (the −2 diagonal
+-- forces every exceptional class nonzero) and rigidity (n² = 1).
+import SKEFTHawking.KummerK3ExceptionalBlock
 -- Phase 5q.H — the general-sigma Guillou-Marin/[FK] statement layer: why the empty-surface
 -- specialization of GM is CIRCULAR for a spin manifold, kernel-checked.
 import SKEFTHawking.CharSurfaceFKVacuity
