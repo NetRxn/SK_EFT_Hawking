@@ -1025,3 +1025,44 @@ search for the bridge (`lean_local_search` on the map/iso name), not just the tw
 - `lesson`: "closest thing in tree to X" is a claim about a MODEL; before making it a build target,
   check the CARRIER the target structure actually quantifies over.
 - `created_ts`: 2026-07-27
+
+## `collar-no-cheap-route-around-the-boundary-flow` (2026-07-27, arm: close-out — wt3)
+- `kind`: route ban (prose — two structural findings, neither a false in-Lean statement).
+- **Context.** The collar neighbourhood theorem is the wall for `hker` arc A (`SeamGlueChart`'s four
+  residual fields). wt3 built prerequisite (1) — **`isManifold_boundary`, Mathlib's own explicit TODO
+  at `IsManifold/InteriorBoundary.lean:66`, discharged for the bordism model `I.prod (𝓡∂ 1)`** — plus
+  `contMDiff_boundary_val` (the inclusion `∂W ↪ W` is `C^n`, i.e. the submanifold content). Both
+  lead-verified kernel-pure and NON-VACUOUS (`prodIcc_boundary_nonempty_isManifold` exhibits a witness
+  with a genuinely **nonempty** boundary).
+- ⛔ **BANNED ROUTE 1 — the boundaryless-enlargement dodge.** Do NOT try to sidestep the
+  boundary-flow gap by enlarging `W` to a boundaryless `W⁺ = W ∪_∂ (∂W × (−1,0])` and flowing there
+  with Mathlib's interior-point integral-curve theorem. **It is circular:** constructing `W⁺` means
+  building charts at a seam, which IS the `SeamGlueChart` problem. It is a mildly easier instance
+  (one side is a product) but the same shape, so it cannot be the tool that solves the general case.
+- ⛔ **BANNED ROUTE 2 — local collars in place of a global one.** Local product structures chosen
+  independently near each boundary point are **not `C^k`-compatible with each other across the seam**.
+  That incompatibility is precisely why the classical proof needs a coherent GLOBAL collar built from
+  a single vector field. Do not dispatch "just get local collars, that's enough for seam charts."
+- **The honest remaining inventory** (wt3, verified against the pinned Mathlib source, not memory):
+  - **(1) boundary-is-a-submanifold — DONE** (above).
+  - **(2) partitions of unity — present but `C^∞`-ONLY.** ⚠ Corrects the assumption in my brief:
+    Mathlib's machinery does **not** require boundarylessness, so manifolds-with-boundary are fine;
+    the obstruction is *regularity*. `SmoothPartitionOfUnity` is valued in `C^∞⟮I, M; 𝓘(ℝ), ℝ⟯` and
+    `SmoothBumpFunction`'s smoothness lemmas sit under `[IsManifold I ∞ M]`. A finite-`k` partition of
+    unity does not exist in the library. Since we are k-generic by fence, this is a real cost line —
+    moderate, self-contained, and separately upstreamable (the standard bump is `C^∞` in a chart,
+    hence `C^k` on a `C^k` manifold).
+  - **(3) uniform-time flow OUT OF a boundary point — the dominant gap, and Mathlib's own open TODO.**
+    `exists_isMIntegralCurveAt_of_contMDiffAt` requires `I.IsInteriorPoint x₀`, and every result in
+    `IntegralCurve/UniformTime.lean` carries `[BoundarylessManifold I M]`.
+    `IntegralCurve/ExistUnique.lean`'s header says so outright ("the case where the integral curve may
+    lie on the boundary … we leave it as a TODO … See Theorem 9.34, Lee. May require submanifolds").
+    Closing it needs Picard–Lindelöf on `Ici 0` in the model half-space, then the manifold-level
+    statement.
+- `upstreamable` (per the standing "Mathlib lacks X is COST not CLOSURE" pre-decision): the leg-1
+  general `ModelWithCorners` block is upstreamable today; leg-2/3/5 as "boundary is a submanifold for
+  `I.prod (𝓡∂ 1)`", directly addressing the named TODO; the finite-regularity partition of unity as an
+  independent third PR. The module has **no dependence on the bordism stack** — upstreaming is a file
+  move, by construction.
+- `memory`: `[[project_5qH_nonhausdorff_substrate_bug]]`
+- `created_ts`: 2026-07-27
