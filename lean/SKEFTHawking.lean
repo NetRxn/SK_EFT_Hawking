@@ -5006,6 +5006,13 @@ import SKEFTHawking.IntOrientationReverse
 -- Phase 5q.H — ADJUDICATED: the K3 ledger's forall-o Gram hypothesis is FALSE (orientation
 -- reversal forces latticeSig to be both −16 and +16). Every consumer taking it is vacuous.
 import SKEFTHawking.KummerK3ForallOrientationFalse
+-- Phase 5q.H — IntOrientation does NOT pin the fundamental class: redCompat admits n * [M] for
+-- every ODD n, so every forall-o unimodularity/nondegeneracy claim is FALSE (scale the Gram, scale
+-- the determinant by n^rank). The structural root of the forall-o defect.
+import SKEFTHawking.IntOrientationScaling
+-- Phase 5q.H — the welded K3's E1 lane: every published forall-o route is VACUOUS (pdInput, hsig,
+-- hgram, hk3, hgeo all refuted), and the pinned-single-orientation replacements that repair them.
+import SKEFTHawking.KummerK3E1Repair
 -- Phase 5q.H — the pair-restriction leg vanishes on the subspace: iota_S^* . j^* = 0 over Z. The
 -- half of exactness at H^m(X;Z) that SUPPORT arguments consume — a class supplied RELATIVELY (as a
 -- Thom class is) automatically vanishes on the subspace, cochain-level and elementary.
