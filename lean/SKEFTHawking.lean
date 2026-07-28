@@ -4991,6 +4991,18 @@ import SKEFTHawking.KummerK3ExceptionalBlock
 -- Phase 5q.H — the general-sigma Guillou-Marin/[FK] statement layer: why the empty-surface
 -- specialization of GM is CIRCULAR for a spin manifold, kernel-checked.
 import SKEFTHawking.CharSurfaceFKVacuity
+-- Phase 5q.H — the QUANTITATIVE sharpening of that obstruction: the pin⁻-structure torsor moves
+-- the Guillou-Marin residue by exactly `4·ℤ/16`, so the pin⁻-free content of [FK] is the mod-4
+-- congruence and the whole 4→16 gap is carried by the smooth normal data.
+import SKEFTHawking.GMPinTorsorCeiling
+-- Phase 5q.H — what an [FK]-at-general-sigma statement layer CAN be: extensional non-circularity
+-- is unachievable (the invariant-triple forcing theorem), so the admissibility criterion is
+-- intensional; the bordism-by-generators route fails it at the triple level.
+import SKEFTHawking.GMTripleLayerForcing
+-- Phase 5q.H — the missing substrate, BUILT: the pin-minus enhancement torsor is simply
+-- transitive, so the polar form plus ONE H^1(F;Z/2)-class determines the Guillou-Marin residue
+-- completely, and [FK] at general sigma re-types as a condition on that class.
+import SKEFTHawking.PinEnhancementTorsor
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
