@@ -6,11 +6,13 @@ Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_deci
 import Mathlib
 import SKEFTHawking.CharSurfaceMembrane
 import SKEFTHawking.PinEnhancementTorsor
+import SKEFTHawking.CircleWindingCocycle
 
 namespace SKEFTHawking.MembraneIndex
 
 open SKEFTHawking.Brown SKEFTHawking.Brown.Z4Quadratic
 open SKEFTHawking.CharSurface
+open SKEFTHawking.CircleWindingCocycle
 open scoped Manifold
 
 /-! ## §1. The double-point set of a map -/
@@ -45,7 +47,103 @@ theorem doubleSet_eq_empty_of_injective {S X : Type*} {D : S → X} (h : Functio
     rintro ⟨hne, heq⟩
     exact absurd (h heq) hne
 
-/-! ## §2. The ambient membrane ([G2]) -/
+/-! ## §2. The degree of a loop in the circle — the engine of the framing obstruction
+
+A rank-2 real vector bundle over a compact surface-with-boundary is trivial, so the normal-framing
+obstruction `O(D)` of blueprint node `[G2]` is not an obstruction to trivializing the membrane's
+normal bundle — it is the **discrepancy between the `F`-induced boundary framing and the restriction
+of a global trivialization**, i.e. an element of `π₁(SO(2)) ≅ ℤ`, computed as the degree of the
+comparison loop `∂S ≅ S¹ → SO(2) ≅ S¹`. That degree is what this section constructs, from the
+in-tree lift-based winding number `CircleWindingCocycle.windMap` — no field, no declared value. -/
+
+/-- **The degree of a loop in the circle**, computed through the canonical lift: the winding number
+of the loop read as the edge `Δ¹ → S¹`. -/
+noncomputable def loopDegree (c : C(↑unitInterval, Circle)) : ℤ := windMap (c.comp iota)
+
+/-- The canonical `2π`-loop `t ↦ exp(2πit)`. -/
+noncomputable def stdLoop : C(↑unitInterval, Circle) :=
+  ⟨fun t => Circle.exp (2 * Real.pi * (t : ℝ)), by fun_prop⟩
+
+/-- **The constant comparison has zero obstruction** (PROVED through the lift, not by fiat): a
+boundary framing that agrees with the global trivialization contributes nothing. -/
+theorem loopDegree_const (z : Circle) : loopDegree (ContinuousMap.const _ z) = 0 := by
+  refine windMap_eq_of_char _ (ContinuousMap.const _ ((z : ℂ).arg)) ?_ 0 ?_
+  · funext d
+    exact Circle.exp_arg z
+  · simp
+
+/-- **The obstruction summand genuinely takes a nonzero value** (the vacuity attack on `O(D)`,
+run): the standard `2π`-loop has degree `1`. So `O(D)` is not a dressed-up zero. -/
+theorem loopDegree_stdLoop : loopDegree stdLoop = 1 := by
+  refine windMap_eq_of_char _ ⟨fun d => 2 * Real.pi * ((iota d : ↑unitInterval) : ℝ),
+    continuous_const.mul (continuous_subtype_val.comp iota.continuous)⟩ ?_ 1 ?_
+  · funext d
+    rfl
+  · have h1 : ((stdLoop.comp iota) v1 : ℂ) = (1 : Circle) := by
+      show ((Circle.exp (2 * Real.pi * ((iota v1 : ↑unitInterval) : ℝ)) : Circle) : ℂ) = _
+      rw [iota_v1]
+      norm_num [exp_two_pi]
+    have h0 : ((stdLoop.comp iota) v0 : ℂ) = (1 : Circle) := by
+      show ((Circle.exp (2 * Real.pi * ((iota v0 : ↑unitInterval) : ℝ)) : Circle) : ℂ) = _
+      rw [iota_v0]
+      norm_num
+    rw [h1, h0]
+    show 2 * Real.pi * ((iota v1 : ↑unitInterval) : ℝ)
+      - 2 * Real.pi * ((iota v0 : ↑unitInterval) : ℝ) - _ = _
+    rw [iota_v1, iota_v0]
+    norm_num
+
+/-- **Degree is additive on loops** (PROVED — the structural theorem that makes `O(D)` a genuine
+`ℤ`-valued invariant rather than a stored number). If `L₁`, `L₂` lift `c₁`, `c₂` then `L₁ + L₂` lifts
+the pointwise product, and for *loops* the argument-correction terms of `windMap_char` cancel, so the
+winding numbers add. The framing obstruction is therefore a group homomorphism from comparison loops
+to `ℤ` — a property no `ℤ`-valued field could have. -/
+theorem loopDegree_mul {c₁ c₂ : C(↑unitInterval, Circle)}
+    (h₁ : c₁ 1 = c₁ 0) (h₂ : c₂ 1 = c₂ 0) :
+    loopDegree (c₁ * c₂) = loopDegree c₁ + loopDegree c₂ := by
+  classical
+  -- canonical lifts of the two edges
+  set f₁ : C(↑(stdSimplex ℝ (Fin 2)), Circle) := c₁.comp iota with hf₁
+  set f₂ : C(↑(stdSimplex ℝ (Fin 2)), Circle) := c₂.comp iota with hf₂
+  set L₁ := liftMap f₁ v0 ((f₁ v0 : ℂ)).arg (Circle.exp_arg (f₁ v0)) with hL₁
+  set L₂ := liftMap f₂ v0 ((f₂ v0 : ℂ)).arg (Circle.exp_arg (f₂ v0)) with hL₂
+  have hlift₁ : ⇑Circle.exp ∘ ⇑L₁ = ⇑f₁ := liftMap_lifts _ _ _ _
+  have hlift₂ : ⇑Circle.exp ∘ ⇑L₂ = ⇑f₂ := liftMap_lifts _ _ _ _
+  -- the two edges are loops: their endpoint values agree
+  have hloop₁ : f₁ v1 = f₁ v0 := by
+    show c₁ (iota v1) = c₁ (iota v0)
+    rw [iota_v1, iota_v0]; exact h₁
+  have hloop₂ : f₂ v1 = f₂ v0 := by
+    show c₂ (iota v1) = c₂ (iota v0)
+    rw [iota_v1, iota_v0]; exact h₂
+  -- the degree of each factor is the lift's total increment
+  have hd₁ : (windMap f₁ : ℝ) * (2 * Real.pi) = L₁ v1 - L₁ v0 := by
+    have := windMap_char f₁ L₁ hlift₁
+    rw [hloop₁] at this
+    linarith [this]
+  have hd₂ : (windMap f₂ : ℝ) * (2 * Real.pi) = L₂ v1 - L₂ v0 := by
+    have := windMap_char f₂ L₂ hlift₂
+    rw [hloop₂] at this
+    linarith [this]
+  -- `L₁ + L₂` lifts the product edge
+  have hprod : (c₁ * c₂).comp iota = f₁ * f₂ := rfl
+  have hliftp : ⇑Circle.exp ∘ ⇑(L₁ + L₂) = ⇑((c₁ * c₂).comp iota) := by
+    funext d
+    show Circle.exp (L₁ d + L₂ d) = _
+    rw [Circle.exp_add, hprod]
+    show _ = f₁ d * f₂ d
+    rw [show Circle.exp (L₁ d) = f₁ d from congrFun hlift₁ d,
+      show Circle.exp (L₂ d) = f₂ d from congrFun hlift₂ d]
+  have hloopp : ((c₁ * c₂).comp iota) v1 = ((c₁ * c₂).comp iota) v0 := by
+    show f₁ v1 * f₂ v1 = f₁ v0 * f₂ v0
+    rw [hloop₁, hloop₂]
+  refine windMap_eq_of_char _ (L₁ + L₂) hliftp (windMap f₁ + windMap f₂) ?_
+  rw [hloopp]
+  show (L₁ v1 + L₂ v1) - (L₁ v0 + L₂ v0) - _ = _
+  push_cast
+  linarith [hd₁, hd₂]
+
+/-! ## §3. The ambient membrane ([G2]) -/
 
 variable {X : Type} [TopologicalSpace X] {k : WithTop ℕ∞}
 
@@ -136,5 +234,112 @@ theorem dbl_eq_one_of_singleton (m : AmbientMembrane C γ) {e : Sym2 m.S}
   rfl
 
 end AmbientMembrane
+
+/-! ## §4. The framed membrane and THE INDEX `D·F + O(D) + d(C)` -/
+
+/-- **A framed ambient membrane**: an `AmbientMembrane` together with the boundary framing
+comparison — the loop `∂S ≅ S¹ → SO(2) ≅ S¹` measuring the discrepancy between the `F`-induced
+normal framing along the circle and a global trivialization of the membrane's (necessarily trivial)
+normal bundle. -/
+structure FramedMembrane (C : PinCharSurface X k) (γ : EmbeddedCircle C)
+    extends AmbientMembrane C γ where
+  /-- The boundary framing comparison. -/
+  cmp : C(↑unitInterval, Circle)
+  /-- It is a loop (the boundary is a circle). -/
+  cmp_loop : cmp 1 = cmp 0
+
+namespace FramedMembrane
+
+variable {C : PinCharSurface X k} {γ : EmbeddedCircle C}
+
+/-- **`O(D)` — the second summand, CONSTRUCTED**: the degree of the framing comparison loop. -/
+noncomputable def obs (m : FramedMembrane C γ) : ℤ := loopDegree m.cmp
+
+/-- **THE MEMBRANE INDEX** — Freedman–Kirby Lemma 2.6.1 / blueprint `[Q1]`, verbatim:
+`q_F(x) := D·F + O(D) + d(C) mod 2`.
+
+Every summand is *computed* from the membrane datum — `Set.ncard` of a set the map `D` determines,
+and the lift-based degree of the framing loop. There is no `ZMod`-valued field anywhere in
+`FramedMembrane`, which is exactly what keeps this from being `Z4Quadratic` in new clothes. -/
+noncomputable def index (m : FramedMembrane C γ) : ZMod 2 :=
+  m.intF + ((m.obs : ZMod 2)) + m.dbl
+
+/-- The index of an embedded, `F`-avoiding, untwisted membrane is `0` — all three summands
+vanish for the simplest geometry. -/
+theorem index_eq_zero (m : FramedMembrane C γ) (h1 : m.meetF = ∅) (h2 : Function.Injective m.D)
+    (h3 : m.obs = 0) : m.index = 0 := by
+  rw [index, m.intF_eq_zero_of_meetF_empty h1, m.dbl_eq_zero_of_injective h2, h3]
+  decide
+
+/-- **Each summand can flip the index on its own** (the per-summand vacuity attack, run): with the
+other two vanishing, a single interior intersection, a single double point, or an odd framing degree
+each gives `index = 1`. So the index is not a dressed-up constant and no summand is inert. -/
+theorem index_eq_one_of_intF (m : FramedMembrane C γ) {p : m.S} (h1 : m.meetF = {p})
+    (h2 : Function.Injective m.D) (h3 : m.obs = 0) : m.index = 1 := by
+  rw [index, m.intF_eq_one_of_meetF_singleton h1, m.dbl_eq_zero_of_injective h2, h3]
+  decide
+
+theorem index_eq_one_of_dbl (m : FramedMembrane C γ) (h1 : m.meetF = ∅) {e : Sym2 m.S}
+    (h2 : doubleSet m.D = {e}) (h3 : m.obs = 0) : m.index = 1 := by
+  rw [index, m.intF_eq_zero_of_meetF_empty h1, m.dbl_eq_one_of_singleton h2, h3]
+  decide
+
+theorem index_eq_one_of_obs (m : FramedMembrane C γ) (h1 : m.meetF = ∅)
+    (h2 : Function.Injective m.D) (h3 : m.obs = 1) : m.index = 1 := by
+  rw [index, m.intF_eq_zero_of_meetF_empty h1, m.dbl_eq_zero_of_injective h2, h3]
+  decide
+
+end FramedMembrane
+
+/-! ## §5. The named geometric statements ([G2] realization, [Q1] well-definedness, [Q2] sum) -/
+
+/-- **[G2] realization**: every mod-2 homology class of the characteristic surface is carried by an
+embedded circle bounding a framed membrane in the ambient. Pure existence — no index value, no
+signature, no `σ` appears. -/
+def MembraneRealizes (C : PinCharSurface X k) : Prop :=
+  ∀ x : C.ι → ZMod 2, ∃ γ : EmbeddedCircle C, γ.cls = x ∧ Nonempty (FramedMembrane C γ)
+
+/-- **[Q1] Freedman–Kirby Lemma 2.6.1** — *the* well-definedness statement of the blueprint: the
+membrane index depends only on the circle's homology class, not on the circle, the membrane, or the
+framing comparison. This is the single geometric theorem the whole construction rests on, and it is a
+predicate purely on membranes: nothing in its statement mentions `σ`, so it passes the intensional
+admissibility criterion of `GMTripleLayerForcing` by inspection. -/
+def IndexWellDefined (C : PinCharSurface X k) : Prop :=
+  ∀ (γ γ' : EmbeddedCircle C) (m : FramedMembrane C γ) (m' : FramedMembrane C γ'),
+    γ.cls = γ'.cls → m.index = m'.index
+
+/-- **A membrane system**: a choice of framed membrane for every class. Produced from `[G2]`
+realization by choice (`nonempty_membraneSystem`), so it adds nothing beyond it. -/
+structure MembraneSystem (C : PinCharSurface X k) where
+  /-- The chosen representing circle. -/
+  circle : (C.ι → ZMod 2) → EmbeddedCircle C
+  /-- It represents the class. -/
+  circle_cls : ∀ x, (circle x).cls = x
+  /-- Its chosen framed membrane. -/
+  memb : ∀ x, FramedMembrane C (circle x)
+
+/-- Realization produces a membrane system (classical choice, no new geometry). -/
+theorem nonempty_membraneSystem {C : PinCharSurface X k} (h : MembraneRealizes C) :
+    Nonempty (MembraneSystem C) := by
+  classical
+  choose γ hcls hmem using h
+  exact ⟨⟨γ, hcls, fun x => (hmem x).some⟩⟩
+
+namespace MembraneSystem
+
+variable {C : PinCharSurface X k}
+
+/-- The geometric index function on `H₁(F;ℤ/2)`, read off the system's membranes. -/
+noncomputable def index (sys : MembraneSystem C) (x : C.ι → ZMod 2) : ZMod 2 :=
+  (sys.memb x).index
+
+/-- **[Q2] the polarization identity** — the membrane-sum step of Freedman–Kirby: joining the
+membranes of `x` and `y` produces a membrane for `x + y` whose index differs from the sum by exactly
+the mutual intersection number, which is the mod-2 intersection form `B(x, y)`. Again a predicate
+purely on membranes and the surface's own intersection form. -/
+def Refines (sys : MembraneSystem C) : Prop :=
+  ∀ x y, sys.index (x + y) = sys.index x + sys.index y + C.Q.B x y
+
+end MembraneSystem
 
 end SKEFTHawking.MembraneIndex
