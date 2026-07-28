@@ -393,6 +393,7 @@ closes. That is the termination argument for the axis lane. -/
 theorem planeReduction_axis_round {α γ δ : ℤ} (he : 0 < Int.gcd γ δ)
     (hnd : ¬ ((Int.gcd γ δ : ℤ) ∣ α)) :
     ∃ α' β' γ' δ' : ℤ, ReflTransGen PlaneStep (α, 0, γ, δ) (α', β', γ', δ') ∧
+      0 ≤ γ' ∧ 0 ≤ δ' ∧ max γ'.natAbs δ'.natAbs < Int.gcd γ δ ∧
       Int.gcd γ' δ' < Int.gcd γ δ := by
   have hepos : (0 : ℤ) < (Int.gcd γ δ : ℤ) := by exact_mod_cast he
   set a : ℤ := α % (Int.gcd γ δ : ℤ) with hadef
@@ -400,11 +401,89 @@ theorem planeReduction_axis_round {α γ δ : ℤ} (he : 0 < Int.gcd γ δ)
   have halt : a < (Int.gcd γ δ : ℤ) := Int.emod_lt_of_pos α hepos
   have hane : a ≠ 0 := fun h => hnd (Int.dvd_of_emod_eq_zero (hadef ▸ h))
   refine ⟨a, (γ / a) * δ + (δ / a) * γ - (γ / a) * (δ / a) * a, γ % a, δ % a,
-    (planeReduction_axis_normalize α γ δ).trans (planeReduction_axis_escape a γ δ), ?_⟩
-  have h3 : Int.gcd (γ % a) (δ % a) < a.natAbs :=
-    natAbs_gcd_lt_of_axis_round (natAbs_emod_lt_natAbs hane) (natAbs_emod_lt_natAbs hane)
-  have h4 : (a.natAbs : ℤ) = a := Int.natAbs_of_nonneg ha0
-  omega
+    (planeReduction_axis_normalize α γ δ).trans (planeReduction_axis_escape a γ δ),
+    Int.emod_nonneg γ hane, Int.emod_nonneg δ hane, ?_, ?_⟩
+  · have h1 := natAbs_emod_lt_natAbs (a := γ) hane
+    have h2 := natAbs_emod_lt_natAbs (a := δ) hane
+    have h4 : (a.natAbs : ℤ) = a := Int.natAbs_of_nonneg ha0
+    omega
+  · have h3 : Int.gcd (γ % a) (δ % a) < a.natAbs :=
+      natAbs_gcd_lt_of_axis_round (natAbs_emod_lt_natAbs hane) (natAbs_emod_lt_natAbs hane)
+    have h4 : (a.natAbs : ℤ) = a := Int.natAbs_of_nonneg ha0
+    omega
+
+/-! ## §6c. THE RESIDUAL, NAMED — and everything else discharged from it
+
+`descent_to_axis` bounds the returned axis gcd by the **starting `|β|`**. That is too weak to feed
+the axis measure, because an escape leaves `γ, δ` small while `β` is typically large. What is needed
+is the same bound stated in terms of the plane-2 coordinates:
+
+**`AxisReturnBound`** below. One descent *round* already gives it — `descent_round` bounds the gcd by
+`max (γ%β) (δ%β)`, and `γ%β ≤ γ` for `0 ≤ γ` — so the residual is exactly the **iteration**: showing
+no later round in the same descent lifts the bound back up. The obstruction is real and worth naming:
+`gcd(γ,δ)` is **not** monotone under a round (`γ = 2, δ = 3, β = 5` sends `gcd 1 → 2` whenever
+`3 + qα` is even), so the bound has to be carried, not re-derived.
+
+Everything else is discharged from it here. Numerically the bound holds on 400 adversarially
+constructed hard axis states (`e ∈ {4..60}` with `e ∤ α`), max 3 round-trips, zero violations. -/
+
+/-- **THE ONE REMAINING ARITHMETIC INPUT.** From a state with `β ≠ 0` and non-negative plane-2
+coordinates, the descent either closes or reaches the axis with `gcd(γ, δ)` bounded by the
+*incoming* plane-2 coordinates (not, as `descent_to_axis` gives, by `|β|`). -/
+def AxisReturnBound : Prop :=
+  ∀ α β γ δ : ℤ, β ≠ 0 → 0 ≤ γ → 0 ≤ δ →
+    (∃ γ' δ' : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (0, 0, γ', δ')) ∨
+    (∃ α' γ' δ' : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (α', 0, γ', δ') ∧
+      Int.gcd γ' δ' ≤ max γ.natAbs δ.natAbs)
+
+/-- **The axis case, from the residual.** Strong induction on `gcd(γ, δ)`: either it is `0` (the
+zero tail), or it divides `α` (the axis closes), or one axis round drops it — and the return trip
+cannot lift it back, by `AxisReturnBound`. -/
+theorem planeReduction_axis_of_returnBound (h : AxisReturnBound) (a c d : ℤ) :
+    ∃ γ' δ' : ℤ, ReflTransGen PlaneStep (a, 0, c, d) (0, 0, γ', δ') := by
+  have key : ∀ n : ℕ, ∀ a c d : ℤ, Int.gcd c d ≤ n →
+      ∃ γ' δ' : ℤ, ReflTransGen PlaneStep (a, 0, c, d) (0, 0, γ', δ') := by
+    intro n
+    induction n with
+    | zero =>
+      intro a c d hle
+      obtain ⟨hc, hd⟩ := Int.gcd_eq_zero_iff.mp (Nat.le_zero.mp hle)
+      subst hc; subst hd
+      exact planeReduction_zero_tail a 0
+    | succ n ih =>
+      intro a c d hle
+      rcases Nat.eq_zero_or_pos (Int.gcd c d) with he | he
+      · obtain ⟨hc, hd⟩ := Int.gcd_eq_zero_iff.mp he
+        subst hc; subst hd
+        exact planeReduction_zero_tail a 0
+      by_cases hdvd : ((Int.gcd c d : ℤ) ∣ a)
+      · exact planeReduction_of_beta_zero hdvd
+      · obtain ⟨a', β', c', d', hchain, hc0, hd0, hmax, hgcd⟩ :=
+          planeReduction_axis_round he hdvd
+        by_cases hβ' : β' = 0
+        · subst hβ'
+          obtain ⟨g, e, h2⟩ := ih a' c' d' (by omega)
+          exact ⟨g, e, hchain.trans h2⟩
+        · rcases h a' β' c' d' hβ' hc0 hd0 with ⟨g, e, h2⟩ | ⟨a'', g', e', h2, hbd⟩
+          · exact ⟨g, e, hchain.trans h2⟩
+          · obtain ⟨g, e, h3⟩ := ih a'' g' e' (by omega)
+            exact ⟨g, e, (hchain.trans h2).trans h3⟩
+  exact key (Int.gcd c d) a c d le_rfl
+
+/-- **`PlaneReduction` from the residual alone.** Composing §5's descent with §6c's axis case:
+the whole K8b interior brick — `UnitCancellation` → `StableNegRank16Two` → the welded `K3`'s Gram —
+now rests on `AxisReturnBound` and nothing else. -/
+theorem planeReduction_of_returnBound (h : AxisReturnBound) : PlaneReduction :=
+  planeReduction_of_axis (fun a c d => planeReduction_axis_of_returnBound h a c d)
+
+/-- **THE WHOLE K8b INTERIOR BRICK, FROM ONE ARITHMETIC PROP.** Chaining
+`AxisReturnBound → PlaneReduction → UnitCancellation → StableNegRank16Two`. Downstream,
+`UnitBlockCancellation.hk3_of_stable16_two` turns this into `IntCongr M k3Form` for any even
+unimodular rank-22 `M` with `latticeSig M = −16`, and `KummerK3GramFromLattice` turns *that* into
+the welded Kummer `K3`'s E1 atoms. Every step between here and there is already proved. -/
+theorem stableNegRank16Two_of_returnBound (h : AxisReturnBound) : StableNegRank16Two :=
+  stableNegRank16Two_of_unitCancellation (unitCancellation_of_planeReduction
+    (planeReduction_of_returnBound h))
 
 /-! ## §7. THE CONSERVED QUANTITY
 
