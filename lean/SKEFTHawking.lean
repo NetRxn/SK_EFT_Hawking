@@ -4994,6 +4994,11 @@ import SKEFTHawking.KummerK3EvenFromSpinWu
 -- proved to be exactly the block assembler's hself/hoff pair, with non-vacuity (the −2 diagonal
 -- forces every exceptional class nonzero) and rigidity (n² = 1).
 import SKEFTHawking.KummerK3ExceptionalBlock
+-- Phase 5q.H — the ⟨−2⟩¹⁶ block moved onto the PIECES: the Kronecker adjunction rewrites every
+-- entry of the 16×16 table as a pairing on ONE resolution piece against its single H₂ generator
+-- (an iff, not a weakening), plus the geometric sufficient condition (α_d restricts to 0 off the
+-- d-th piece) and the non-vacuity check that the −2 diagonal is the load-bearing conjunct.
+import SKEFTHawking.KummerK3ExceptionalRestriction
 -- Phase 5q.H — `heven` DELETED from the welded K3's E1 ledger: evenness of the intersection
 -- diagonal propagates along the ℤ-span, integral PD upgrades the datum's cap-spanning to
 -- cohomological spanning, so `heven` is exactly the parity of the datum's own Kronecker diagonal.
