@@ -149,8 +149,10 @@ theorem shotPSD_plane_transfer {E_ph P η : ℝ} (hη : 0 ≤ η) :
 theorem shotPSD_pos {E_ph P : ℝ} (hE : 0 < E_ph) (hP : 0 < P) : 0 < shotPSD E_ph P
 
 /-- **Poisson thinning.** Independently retaining each count with probability `η` maps
-`Poisson N` to `Poisson (η·N)`, at the level of the pmf. -/
-theorem poisson_thinning {N η : ℝ≥0} (hη : η ≤ 1) (n : ℕ) :
+`Poisson N` to `Poisson (η·N)`, at the level of the pmf.
+
+**No `η ≤ 1` hypothesis** — see the strengthening note below. -/
+theorem poisson_thinning {N η : ℝ≥0} (n : ℕ) :
     ∑' m, poissonPMFReal N m * (m.choose n : ℝ) * (η : ℝ) ^ n * (1 - (η : ℝ)) ^ (m - n)
       = poissonPMFReal (η * N) n
 
@@ -158,6 +160,19 @@ theorem poisson_thinning {N η : ℝ≥0} (hη : η ≤ 1) (n : ℕ) :
 downstream dominance argument uses. -/
 theorem shot_variance_eq_mean {N : ℝ≥0} : poissonVariance N = poissonMean N
 ```
+
+**Strengthening note on `poisson_thinning` — the `η ≤ 1` hypothesis is DROPPED (checklist #4).**
+My own first draft of this statement carried `(hη : η ≤ 1)`. Working the proof recipe shows it is
+**not load-bearing**: reindexing `m = n + k` gives
+`e^{−N}·(ηN)ⁿ/n! · ∑ₖ (N(1−η))ᵏ/k! = e^{−N}·(ηN)ⁿ/n!·e^{N(1−η)} = e^{−ηN}(ηN)ⁿ/n!`, and the
+exponential series converges absolutely for **every** real argument — so neither the algebra nor
+the summability ever consults `η ≤ 1`. Shipping it would be an unused hypothesis, which the
+pipeline's theorem-quality rule forbids ("hypotheses must be load-bearing, not vacuously
+satisfied"). Dropping it yields a **strictly stronger** theorem. `η ≤ 1` is what makes the
+kernel a *probability* (i.e. what licenses reading the identity as physical thinning); that is a
+consumer-side interpretive condition and belongs in 6EB's declared hypotheses, not here. Note
+also that `m - n` is truncated ℕ subtraction, which is harmless: every `m < n` term is killed by
+`m.choose n = 0`.
 
 **Honest cost note on `poisson_thinning`.** This is the heaviest item in Wave 3 and the only one
 that is not one-lemma algebra: it needs the reindexing `m = n + k` and the series identity
