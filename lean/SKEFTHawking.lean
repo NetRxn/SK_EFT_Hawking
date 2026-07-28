@@ -4969,6 +4969,10 @@ import SKEFTHawking.KummerK3GramFromLattice
 -- Phase 5q.H — the general-sigma Guillou-Marin/[FK] statement layer: why the empty-surface
 -- specialization of GM is CIRCULAR for a spin manifold, kernel-checked.
 import SKEFTHawking.CharSurfaceFKVacuity
+-- Phase 5q.H — the QUANTITATIVE sharpening of that obstruction: the pin⁻-structure torsor moves
+-- the Guillou-Marin residue by exactly `4·ℤ/16`, so the pin⁻-free content of [FK] is the mod-4
+-- congruence and the whole 4→16 gap is carried by the smooth normal data.
+import SKEFTHawking.GMPinTorsorCeiling
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
