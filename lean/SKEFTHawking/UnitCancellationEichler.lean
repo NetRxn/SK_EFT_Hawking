@@ -350,4 +350,200 @@ theorem exists_char_normalization {n : ℕ} {G : Matrix (Fin n) (Fin n) ℤ} (hs
       rw [this, hk]; module
     · rw [char_k_sum_eq_one hsymm hww hw'w' hk, hs]; ring
 
+/-! ### Lifting residual-block vectors into `⟨1⟩ ⊕ A`
+
+The two hyperbolic planes that Eichler's criterion consumes live in `w^⊥ = A`. `resLift` embeds a
+vector of `A` into `⟨1⟩ ⊕ A` under the reindexing; it preserves the bilinear form and lands in the
+orthogonal complement of the adjoined generator. -/
+
+/-- Embed a residual-block vector into `⟨1⟩ ⊕ A` (reindexed). -/
+def resLift {n m : ℕ} (e : Fin 1 ⊕ Fin n ≃ Fin m) (x : Fin n → ℤ) : Fin m → ℤ :=
+  (Sum.elim 0 x) ∘ e.symm
+
+/-- The bilinear form is reindex-invariant. -/
+theorem bil_reindex {n m : ℕ} (e : Fin 1 ⊕ Fin n ≃ Fin m)
+    (G' : Matrix (Fin 1 ⊕ Fin n) (Fin 1 ⊕ Fin n) ℤ) (u v : Fin 1 ⊕ Fin n → ℤ) :
+    (u ∘ e.symm) ⬝ᵥ (Matrix.reindex e e G') *ᵥ (v ∘ e.symm) = u ⬝ᵥ G' *ᵥ v := by
+  have hmv : ∀ i, ((Matrix.reindex e e G') *ᵥ (v ∘ e.symm)) i = (G' *ᵥ v) (e.symm i) := by
+    intro i
+    simp only [Matrix.mulVec, dotProduct, Matrix.reindex_apply, Matrix.submatrix_apply,
+      Function.comp_apply]
+    exact Equiv.sum_comp e.symm (fun b => G' (e.symm i) b * v b)
+  calc (u ∘ e.symm) ⬝ᵥ (Matrix.reindex e e G') *ᵥ (v ∘ e.symm)
+      = ∑ i, u (e.symm i) * (G' *ᵥ v) (e.symm i) := by
+        simp only [dotProduct, Function.comp_apply]
+        exact Finset.sum_congr rfl fun i _ => by rw [hmv i]
+    _ = u ⬝ᵥ G' *ᵥ v := Equiv.sum_comp e.symm (fun a => u a * (G' *ᵥ v) a)
+
+/-- The adjoined generator, as the reindexing of the `Fin 1 ⊕ Fin n` standard vector. -/
+theorem unitGen_eq_comp {n m : ℕ} (e : Fin 1 ⊕ Fin n ≃ Fin m) :
+    unitGen e = (Pi.single (Sum.inl 0) (1 : ℤ)) ∘ e.symm := by
+  funext i
+  rw [unitGen, Function.comp_apply, Pi.single_apply, Pi.single_apply]
+  by_cases h : i = e (Sum.inl 0)
+  · subst h; simp
+  · have : e.symm i ≠ Sum.inl 0 := by
+      intro hcon
+      exact h (by rw [← hcon, Equiv.apply_symm_apply])
+    simp [h, this]
+
+/-- `resLift` preserves the bilinear form. -/
+theorem resLift_bil {n m : ℕ} (e : Fin 1 ⊕ Fin n ≃ Fin m) (A : Matrix (Fin n) (Fin n) ℤ)
+    (x y : Fin n → ℤ) :
+    (resLift e x) ⬝ᵥ (Matrix.reindex e e (Matrix.fromBlocks !![1] 0 0 A)) *ᵥ (resLift e y)
+      = x ⬝ᵥ A *ᵥ y := by
+  rw [resLift, resLift, bil_reindex]
+  rw [show (Sum.elim 0 y : Fin 1 ⊕ Fin n → ℤ) = Sum.elim (0 : Fin 1 → ℤ) y from rfl]
+  rw [Matrix.fromBlocks_mulVec]
+  simp [dotProduct, Fintype.sum_sum_type]
+
+/-- `resLift` lands in the orthogonal complement of the adjoined generator. -/
+theorem resLift_perp_gen {n m : ℕ} (e : Fin 1 ⊕ Fin n ≃ Fin m) (A : Matrix (Fin n) (Fin n) ℤ)
+    (x : Fin n → ℤ) :
+    (resLift e x) ⬝ᵥ (Matrix.reindex e e (Matrix.fromBlocks !![1] 0 0 A)) *ᵥ (unitGen e) = 0 := by
+  rw [resLift, unitGen_eq_comp, bil_reindex]
+  rw [show (Pi.single (Sum.inl 0) (1 : ℤ) : Fin 1 ⊕ Fin n → ℤ)
+      = Sum.elim (Pi.single 0 (1 : ℤ)) 0 by
+    funext a; match a with
+    | Sum.inl i => have : i = 0 := Subsingleton.elim i 0
+                   subst this; simp
+    | Sum.inr j => simp]
+  rw [Matrix.fromBlocks_mulVec]
+  have hz : (Pi.single (Sum.inl 0) (1 : ℤ) : Fin 1 ⊕ Fin n → ℤ) ∘ Sum.inr = 0 := by
+    funext j; simp
+  simp [dotProduct, Fintype.sum_sum_type, hz]
+
+/-! ### The two remaining inputs, and the reduction of `UnitCancellation` to them -/
+
+/-- **Input (a): two orthogonal hyperbolic planes inside `A`.** For even unimodular `A` with
+`min(σ⁺, σ⁻) ≥ 2` there are vectors `a, b, c, d` spanning `U ⊕ U₁` — the input of Eichler's
+criterion. (`even_unimodular_indefinite_split_congr` peels one plane; iterating peels the second.) -/
+def TwoHypPlanes : Prop :=
+  ∀ (n : ℕ) (A : Matrix (Fin n) (Fin n) ℤ), IsEvenUnimodular A →
+    2 ≤ sigPos (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' →
+    2 ≤ sigNeg (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' →
+    ∃ a b c d : Fin n → ℤ,
+      a ⬝ᵥ A *ᵥ a = 0 ∧ b ⬝ᵥ A *ᵥ b = 0 ∧ a ⬝ᵥ A *ᵥ b = 1 ∧
+      c ⬝ᵥ A *ᵥ c = 0 ∧ d ⬝ᵥ A *ᵥ d = 0 ∧ c ⬝ᵥ A *ᵥ d = 1 ∧
+      a ⬝ᵥ A *ᵥ c = 0 ∧ a ⬝ᵥ A *ᵥ d = 0 ∧ b ⬝ᵥ A *ᵥ c = 0 ∧ b ⬝ᵥ A *ᵥ d = 0
+
+/-- **Input (b): STEP 1 of Eichler's criterion.** Given TWO orthogonal hyperbolic planes, both
+orthogonal to the reference vector `w`, an arbitrary characteristic self-product-`1` vector `w'` can
+be moved by an isometry into the orthogonal complement of the FIRST plane. This is exactly the
+`SO⁺(U ⊕ U₁) ≅ (SL₂ℤ × SL₂ℤ)/±` normalisation that `exists_isometry_map_of_perp_hyp`'s docstring
+flags as not being part of STEP 2. -/
+def EichlerStepOne : Prop :=
+  ∀ (m : ℕ) (G : Matrix (Fin m) (Fin m) ℤ), Gᵀ = G → IsUnimodular G →
+    ∀ e₁ f₁ e₂ f₂ w w' : Fin m → ℤ,
+      e₁ ⬝ᵥ G *ᵥ e₁ = 0 → f₁ ⬝ᵥ G *ᵥ f₁ = 0 → e₁ ⬝ᵥ G *ᵥ f₁ = 1 →
+      e₂ ⬝ᵥ G *ᵥ e₂ = 0 → f₂ ⬝ᵥ G *ᵥ f₂ = 0 → e₂ ⬝ᵥ G *ᵥ f₂ = 1 →
+      e₁ ⬝ᵥ G *ᵥ e₂ = 0 → e₁ ⬝ᵥ G *ᵥ f₂ = 0 → f₁ ⬝ᵥ G *ᵥ e₂ = 0 → f₁ ⬝ᵥ G *ᵥ f₂ = 0 →
+      e₁ ⬝ᵥ G *ᵥ w = 0 → f₁ ⬝ᵥ G *ᵥ w = 0 → e₂ ⬝ᵥ G *ᵥ w = 0 → f₂ ⬝ᵥ G *ᵥ w = 0 →
+      w ⬝ᵥ G *ᵥ w = 1 → w' ⬝ᵥ G *ᵥ w' = 1 → IsCharQ G w → IsCharQ G w' →
+      ∃ T : Matrix (Fin m) (Fin m) ℤ, IsUnit T.det ∧ Tᵀ * G * T = G ∧
+        e₁ ⬝ᵥ G *ᵥ (T *ᵥ w') = 0 ∧ f₁ ⬝ᵥ G *ᵥ (T *ᵥ w') = 0
+
+/-- Composing an isometry of `G` with a congruence `G ≅ H`. -/
+theorem isom_comp {n : ℕ} {G H X Y : Matrix (Fin n) (Fin n) ℤ}
+    (hX : Xᵀ * G * X = G) (hY : Yᵀ * G * Y = H) : (X * Y)ᵀ * G * (X * Y) = H := by
+  rw [Matrix.transpose_mul]
+  calc Yᵀ * Xᵀ * G * (X * Y) = Yᵀ * (Xᵀ * G * X) * Y := by simp [Matrix.mul_assoc]
+    _ = H := by rw [hX, hY]
+
+/-- **The reduction.** `UnitCancellation` follows from the two-hyperbolic-plane datum and STEP 1 of
+Eichler's criterion; STEP 2 (`exists_isometry_map_of_perp_hyp`) and the whole assembly above supply
+everything else. -/
+theorem unitCancellation_of (hplanes : TwoHypPlanes) (hstep1 : EichlerStepOne) :
+    UnitCancellation := by
+  classical
+  intro n m A B eqv hA hB hspA hsnA hcong
+  obtain ⟨S, hSdet, hSeq⟩ := hcong
+  set G := Matrix.reindex eqv eqv (Matrix.fromBlocks !![1] 0 0 A) with hGdef
+  set H := Matrix.reindex eqv eqv (Matrix.fromBlocks !![1] 0 0 B) with hHdef
+  have hGsym : Gᵀ = G := unitExtend_symm eqv A hA.1
+  have hGunim : IsUnimodular G := unitExtend_unimodular eqv A hA.2.1
+  set w : Fin m → ℤ := unitGen eqv with hwdef
+  -- the adjoined generator: self-product 1, characteristic
+  have hgen_sq : ∀ C : Matrix (Fin n) (Fin n) ℤ,
+      (unitGen eqv) ⬝ᵥ (Matrix.reindex eqv eqv (Matrix.fromBlocks !![1] 0 0 C)) *ᵥ
+        (unitGen eqv) = 1 := by
+    intro C
+    rw [unitExtend_mulVec_gen eqv C, unitGen]
+    simp
+  have hww : w ⬝ᵥ G *ᵥ w = 1 := hgen_sq A
+  have hcharw : IsCharQ G w := isCharQ_unitGen eqv A hA.1 hA.2.2
+  -- the transported generator
+  set w' : Fin m → ℤ := S *ᵥ w with hw'def
+  have hw'w' : w' ⬝ᵥ G *ᵥ w' = 1 := by
+    rw [hw'def, bil_congr_matrix, hSeq, hHdef]; exact hgen_sq B
+  have hcharw' : IsCharQ G w' := IsCharQ.congr hSdet hSeq (isCharQ_unitGen eqv B hB.1 hB.2.2)
+  -- two hyperbolic planes, lifted into `w^⊥`
+  obtain ⟨a, b, c, d, haa, hbb, hab, hcc, hdd, hcd, hac, had, hbc, hbd⟩ :=
+    hplanes n A hA hspA hsnA
+  set e₁ := resLift eqv a with he₁def
+  set f₁ := resLift eqv b with hf₁def
+  set e₂ := resLift eqv c with he₂def
+  set f₂ := resLift eqv d with hf₂def
+  have hlift : ∀ x y : Fin n → ℤ, (resLift eqv x) ⬝ᵥ G *ᵥ (resLift eqv y) = x ⬝ᵥ A *ᵥ y :=
+    fun x y => resLift_bil eqv A x y
+  have hperp : ∀ x : Fin n → ℤ, (resLift eqv x) ⬝ᵥ G *ᵥ w = 0 :=
+    fun x => resLift_perp_gen eqv A x
+  -- STEP 1
+  obtain ⟨T₁, hT₁det, hT₁iso, hT₁e, hT₁f⟩ :=
+    hstep1 m G hGsym hGunim e₁ f₁ e₂ f₂ w w'
+      (by rw [he₁def, hlift]; exact haa) (by rw [hf₁def, hlift]; exact hbb)
+      (by rw [he₁def, hf₁def, hlift]; exact hab)
+      (by rw [he₂def, hlift]; exact hcc) (by rw [hf₂def, hlift]; exact hdd)
+      (by rw [he₂def, hf₂def, hlift]; exact hcd)
+      (by rw [he₁def, he₂def, hlift]; exact hac) (by rw [he₁def, hf₂def, hlift]; exact had)
+      (by rw [hf₁def, he₂def, hlift]; exact hbc) (by rw [hf₁def, hf₂def, hlift]; exact hbd)
+      (hperp a) (hperp b) (hperp c) (hperp d) hww hw'w' hcharw hcharw'
+  set v₁ : Fin m → ℤ := T₁ *ᵥ w' with hv₁def
+  have hv₁v₁ : v₁ ⬝ᵥ G *ᵥ v₁ = 1 := by rw [hv₁def, bil_congr_matrix, hT₁iso]; exact hw'w'
+  have hcharv₁ : IsCharQ G v₁ := IsCharQ.congr hT₁det hT₁iso hcharw'
+  -- congruence mod `2L`, then the mod-4 sign normalisation
+  obtain ⟨k, hk⟩ := exists_two_smul_sub_of_char hGunim hcharw hcharv₁
+  obtain ⟨ε, k', t, hεpm, hk', hk'k'⟩ := exists_char_normalization hGsym hww hv₁v₁ hk
+  have hεsq : ε * ε = 1 := by rcases hεpm with h | h <;> rw [h] <;> norm_num
+  have hεunit : IsUnit ε := Int.isUnit_iff.mpr hεpm
+  set v₂ : Fin m → ℤ := ε • v₁ with hv₂def
+  have hv₂v₂ : v₂ ⬝ᵥ G *ᵥ v₂ = 1 := by
+    rw [hv₂def, bil_smul_left, bil_smul_right, hv₁v₁, mul_one, hεsq]
+  have he₁v₂ : e₁ ⬝ᵥ G *ᵥ v₂ = 0 := by rw [hv₂def, bil_smul_right, hT₁e, mul_zero]
+  have hf₁v₂ : f₁ ⬝ᵥ G *ᵥ v₂ = 0 := by rw [hv₂def, bil_smul_right, hT₁f, mul_zero]
+  -- STEP 2: the three-transvection chain
+  obtain ⟨T₂, hT₂det, hT₂iso, hT₂w⟩ :=
+    exists_isometry_map_of_perp_hyp G hGsym hGunim e₁ f₁ w v₂ k' t
+      (by rw [he₁def, hlift]; exact haa) (by rw [hf₁def, hlift]; exact hbb)
+      (by rw [he₁def, hf₁def, hlift]; exact hab)
+      hww hv₂v₂ (hperp a) (hperp b) he₁v₂ hf₁v₂ hk' hk'k'
+  -- assemble the generator-fixing isometry `Φ = T₂⁻¹ (ε T₁) S`
+  letI := T₂.invertibleOfIsUnitDet hT₂det
+  have hT₂'iso : (⅟T₂)ᵀ * G * (⅟T₂) = G := by
+    have hid : (T₂ * ⅟T₂)ᵀ * G * (T₂ * ⅟T₂) = G := by rw [mul_invOf_self]; simp
+    rw [Matrix.transpose_mul] at hid
+    calc (⅟T₂)ᵀ * G * (⅟T₂) = (⅟T₂)ᵀ * (T₂ᵀ * G * T₂) * (⅟T₂) := by rw [hT₂iso]
+      _ = (⅟T₂)ᵀ * T₂ᵀ * G * (T₂ * ⅟T₂) := by simp [Matrix.mul_assoc]
+      _ = G := hid
+  have hεT₁iso : (ε • T₁)ᵀ * G * (ε • T₁) = G := by
+    have hs : (ε • T₁)ᵀ * G * (ε • T₁) = (ε * ε) • (T₁ᵀ * G * T₁) := by
+      rw [Matrix.transpose_smul, Matrix.smul_mul, Matrix.mul_smul, Matrix.smul_mul, smul_smul]
+    rw [hs, hT₁iso, hεsq, one_smul]
+  set Φ : Matrix (Fin m) (Fin m) ℤ := (⅟T₂) * ((ε • T₁) * S) with hΦdef
+  have hΦconj : Φᵀ * G * Φ = H := isom_comp hT₂'iso (isom_comp hεT₁iso hSeq)
+  have hΦfix : Φ *ᵥ w = w := by
+    rw [hΦdef, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, ← hw'def,
+      Matrix.smul_mulVec, ← hv₁def, ← hv₂def, ← hT₂w, Matrix.mulVec_mulVec,
+      invOf_mul_self, Matrix.one_mulVec]
+  have hΦdet : IsUnit Φ.det := by
+    have h1 : IsUnit (⅟T₂).det := by
+      refine IsUnit.of_mul_eq_one T₂.det ?_
+      rw [← Matrix.det_mul, invOf_mul_self, Matrix.det_one]
+    have h2 : IsUnit (ε • T₁).det := by
+      rw [Matrix.det_smul]
+      exact (hεunit.pow _).mul hT₁det
+    rw [hΦdef, Matrix.det_mul, Matrix.det_mul]
+    exact h1.mul (h2.mul hSdet)
+  exact intCongr_of_unitFixing eqv A B Φ hΦdet hΦfix hΦconj
+
 end SKEFTHawking
