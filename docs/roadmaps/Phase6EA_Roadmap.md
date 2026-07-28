@@ -37,14 +37,14 @@ Clean whitespace: no theorem prover has a kernel-checked Poisson discrimination-
 **Bricks.** `expNeg_enclosure` (`QuantumNetwork/NumericalBounds.lean:23`); Mathlib `poissonPMFReal` + `Real.exp_eq_tsum`; `classical_fvdg` (`QuantumNetwork/FidelityUpperBound.lean:47`) as the structural template for TV↔affinity manipulation.
 
 **Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/Detection/PoissonDiscrimination.lean` builds 0-sorry, kernel-pure, no new axioms, with:
-- [ ] `poissonBhattacharyya_eq : BC(Poisson N_b, Poisson N_a) = exp (−(√N_a − √N_b)^2 / 2)` (series identity via `exp_eq_tsum`);
-- [ ] `poissonTV_le_of_bhattacharyya : TV ≤ √(1 − BC^2)` specialized to Poisson pairs (or cited generic form if proved generically);
-- [ ] `poisson_avgError_floor : ∀ decision rule, (e₀ + e₁)/2 ≥ (1/4) · exp (−(√N_a − √N_b)^2)` — the Le Cam two-point bound, stated over arbitrary (possibly randomized) count-based decision rules;
-- [ ] `poisson_darkBaseline_miss_optimum : N_b = 0 → (zero-false-alarm rules satisfy miss ≥ exp (−N_a), with equality for the count-≥-1 rule)` — stated so the zero-false-alarm hypothesis is explicit and non-droppable;
-- [ ] `folklore_miss_floor_false : ∃ N_b N_a rule, miss(rule) < exp (−(N_a − N_b))` — `norm_num` witness (e.g. `N_b = 5, N_a = 10`, count-≥-1 rule, `e^{−10} < e^{−5}`);
-- [ ] `folklore_avg_floor_unsound : ∃ N_b N_a, (1/4)·exp(−(√N_a−√N_b)^2) > exp (−(N_a−N_b))` — `norm_num` witness (e.g. `N_b = 50, N_a = 60`: `0.158… > 4.6e−5`) showing the folklore form fails open as an average-error screen;
-- [ ] preemptive-strengthening checklist applied per theorem; post-wave ruthless audit logged.
+- [x] `lean/SKEFTHawking/Detection/PoissonDiscrimination.lean` builds 0-sorry, kernel-pure, no new axioms, with:
+- [x] `poissonBhattacharyya_eq : BC(Poisson N_b, Poisson N_a) = exp (−(√N_a − √N_b)^2 / 2)` (series identity via `exp_eq_tsum`);
+- [~] **DEMOTED (D3, not shipped)** `poissonTV_le_of_bhattacharyya : TV ≤ √(1 − BC^2)` specialized to Poisson pairs (or cited generic form if proved generically);
+- [x] `poisson_avgError_floor : ∀ decision rule, (e₀ + e₁)/2 ≥ (1/4) · exp (−(√N_a − √N_b)^2)` — the Le Cam two-point bound, stated over arbitrary (possibly randomized) count-based decision rules;
+- [x] **split into 3 decls (D4)** `poisson_darkBaseline_miss_optimum : N_b = 0 → (zero-false-alarm rules satisfy miss ≥ exp (−N_a), with equality for the count-≥-1 rule)` — stated so the zero-false-alarm hypothesis is explicit and non-droppable;
+- [x] **shipped ∀-quantified, stronger than ∃ (D5)** `folklore_miss_floor_false : ∃ N_b N_a rule, miss(rule) < exp (−(N_a − N_b))` — `norm_num` witness (e.g. `N_b = 5, N_a = 10`, count-≥-1 rule, `e^{−10} < e^{−5}`);
+- [x] **+ general characterization (D6)** `folklore_avg_floor_unsound : ∃ N_b N_a, (1/4)·exp(−(√N_a−√N_b)^2) > exp (−(N_a−N_b))` — `norm_num` witness (e.g. `N_b = 50, N_a = 60`: `0.158… > 4.6e−5`) showing the folklore form fails open as an average-error screen;
+- [x] preemptive-strengthening checklist applied per theorem; post-wave ruthless audit logged.
 
 ## Wave 2 — Gaussian threshold discrimination algebra
 
@@ -55,13 +55,13 @@ Clean whitespace: no theorem prover has a kernel-checked Poisson discrimination-
 **Bricks.** `expNeg_enclosure`; Mathlib Gaussian integral (`integral_gaussian`); `ReadoutRelaxationBound.avgAssignmentError_rational_floor` as the composition-shape template.
 
 **Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/Detection/GaussianThreshold.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `gaussianTail_chernoff : Q z ≤ (1/2) · exp (−z^2/2)` for `z ≥ 0` (with `Q` defined as the standardized upper-tail integral);
-- [ ] `gaussianTail_lower_enclosure` — a rational/exp lower bound on `Q z` sufficient to state error *floors* (candidate: `Q z ≥ (1/2)·(1 − z/√(2π))` on a stated interval, or the standard `z/(1+z²)·φ(z)` form; pick at Stage 2, UNKNOWN-2);
-- [ ] `thresholdErrors_monotone_in_sigma` — both branch errors increase with σ when the threshold lies between the means (the conservativity workhorse);
-- [ ] `midpoint_threshold_symmetric : equal σ → e₀ = e₁` and `offCenter_threshold_tradeoff` (signed monotonicity in the threshold position);
-- [ ] `avg_error_ge_of_z_le : z ≤ z₀ → (e₀+e₁)/2 ≥ Q z₀`-shape floor connecting separation budgets to error floors;
-- [ ] preemptive-strengthening + post-wave audit.
+- [x] `lean/SKEFTHawking/Detection/GaussianThreshold.lean` builds 0-sorry, kernel-pure, with:
+- [x] **closed at the FULL `z ≥ 0` (D7 fallback not needed)** `gaussianTail_chernoff : Q z ≤ (1/2) · exp (−z^2/2)` for `z ≥ 0` (with `Q` defined as the standardized upper-tail integral);
+- [x] **shipped as `gaussianTail_ge_window` + `gaussianTail_birnbaum` (D8; interval form rejected as vacuous)** `gaussianTail_lower_enclosure` — a rational/exp lower bound on `Q z` sufficient to state error *floors* (candidate: `Q z ≥ (1/2)·(1 − z/√(2π))` on a stated interval, or the standard `z/(1+z²)·φ(z)` form; pick at Stage 2, UNKNOWN-2);
+- [x] **shipped as `thrErr0/1_mono_in_sigma`** `thresholdErrors_monotone_in_sigma` — both branch errors increase with σ when the threshold lies between the means (the conservativity workhorse);
+- [x] **strengthened to name the value (D9)** `midpoint_threshold_symmetric : equal σ → e₀ = e₁` and `offCenter_threshold_tradeoff` (signed monotonicity in the threshold position);
+- [x] **shipped SHARP as `avgError_ge_gaussianQ_sharp`; the ½·Q(z₀) form (D10) dropped as a weaker restatement** `avg_error_ge_of_z_le : z ≤ z₀ → (e₀+e₁)/2 ≥ Q z₀`-shape floor connecting separation budgets to error floors;
+- [x] preemptive-strengthening + post-wave audit.
 
 ## Wave 3 — Shot-noise algebra & the quantum seam
 

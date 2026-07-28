@@ -37,12 +37,12 @@ Clean whitespace: no prover has a kernel-checked ENBW/NEP/matched-filter floor f
 **Bricks.** Mathlib interval-integral Cauchy–Schwarz (exact decl per UNKNOWN-1); `GrapheneNoiseFormula` PSD conventions.
 
 **Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/Detection/FilterFloors.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `enbw_def` — one-sided ENBW of `h ∈ L²[0,T]`, `ENBW h = (∫ h²) / (2·(∫ h)²)` in the normalized DC-gain convention, with the convention documented in-statement (not only in the docstring);
-- [ ] `enbw_mul_window_ge_half : (∫ h ≠ 0) → ENBW h · T ≥ 1/2` — Cauchy–Schwarz, equality characterization included (`enbw_eq_half_iff_boxcar`, a.e.-constant filter);
-- [ ] `enbw_boxcar : ENBW (boxcar T) = 1/(2T)` — the saturating witness;
-- [ ] `variance_eq_psd_mul_enbw`-shape bridge: for white noise of one-sided PSD `S₀` through filter `h`, output variance `= S₀ · ENBW h` (the definitional *raison d'être*, stated with the white-noise hypothesis explicit);
-- [ ] preemptive-strengthening + post-wave audit.
+- [x] `lean/SKEFTHawking/Detection/FilterFloors.lean` builds 0-sorry, kernel-pure, with:
+- [x] **shipped as the `enbw` def + convention-carrying statements (no `rfl` restatement)** `enbw_def` — one-sided ENBW of `h ∈ L²[0,T]`, `ENBW h = (∫ h²) / (2·(∫ h)²)` in the normalized DC-gain convention, with the convention documented in-statement (not only in the docstring);
+- [x] **+ `enbw_mul_window_isLeast` (sharpness) and a load-bearing-hypothesis witness** `enbw_mul_window_ge_half : (∫ h ≠ 0) → ENBW h · T ≥ 1/2` — Cauchy–Schwarz, equality characterization included (`enbw_eq_half_iff_boxcar`, a.e.-constant filter);
+- [x] `enbw_boxcar : ENBW (boxcar T) = 1/(2T)` — the saturating witness;
+- [x] **UNKNOWN-2 → Prop-parameter form `IsWhiteFilteredVariance`** `variance_eq_psd_mul_enbw`-shape bridge: for white noise of one-sided PSD `S₀` through filter `h`, output variance `= S₀ · ENBW h` (the definitional *raison d'être*, stated with the white-noise hypothesis explicit);
+- [x] preemptive-strengthening + post-wave audit.
 
 ## Wave 2 — NEP algebra and responsivity chains
 
