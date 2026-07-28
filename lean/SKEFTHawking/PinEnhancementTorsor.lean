@@ -217,4 +217,48 @@ theorem exists_shift_gmrelation_iff (Q : Z4Quadratic ι) (σ F : ℤ) :
         4 * (((Q.q w).val : ℕ) : ZMod 16) = doubleBrown Q - ((σ - F : ℤ) : ZMod 16) :=
   exists_congr (fun w => gmrelation_shift_iff Q w σ F)
 
+/-! ## §4. The two attacks on THIS statement layer, run and recorded as theorems
+
+A statement layer that fails either attack is worse than nothing, because a later worker will
+consume it. Both attacks are run here on `gmrelation_shift_iff`, and both are recorded as kernel
+theorems rather than as prose assurances. -/
+
+/-- **Vacuity attack — the layer PASSES** (new). The zero-geometric-input question is: can the
+class-indexed `[FK]` condition be satisfied for free? No. With the base enhancement tied to the
+surface by its polar form, the condition is a genuine constraint on `(σ, F·F)`: for the `ℝP²`
+enhancement no pin⁻ structure whatsoever realizes Guillou–Marin at `σ = F·F = 0`, because
+`4·q(w) ∈ {0, 4}` can never equal the required `2`. Contrast `CharSurfaceFKVacuity`'s
+`exists_pos_stdQuadratic_gmrelation`, where the enhancement itself was free and *every* even residue
+was realizable with no geometry — the tie to a fixed polar form is exactly what removes that. -/
+theorem no_pin_structure_realizes_gm_at_zero :
+    ¬ ∃ w : Fin 1 → ZMod 2, GMrelation 0 0 ((stdQuadratic 1).shift w) := by
+  rintro ⟨w, hw⟩
+  rw [gmrelation_shift_iff] at hw
+  have hdb : doubleBrown (stdQuadratic 1) = 2 := by
+    rw [show doubleBrown (stdQuadratic 1)
+        = 2 * (((stdQuadratic 1).brown.val : ℕ) : ZMod 16) from rfl, brown_stdQuadratic]
+    decide
+  rw [hdb] at hw
+  revert hw
+  revert w
+  decide
+
+/-- **Circularity attack — the layer PASSES** (new). The question `GMTripleLayerForcing` says is the
+right one: is the layer's hypothesis a predicate on `σ`'s residue class in disguise? No — at one and
+the same `(σ, F·F) = (0, −2)` the condition HOLDS for the pin⁻ class `w = 0` (this is the in-tree
+`GM_rp4`, `ℝP⁴` with its standard `ℝP²`) and FAILS for `w = 1` (the other pin⁻ structure, `β = 7`,
+`brown_shift_rp2`). A σ-arithmetic Prop cannot do that. So discharging the layer requires computing
+which class the smooth normal data selects — the blueprint's `[G2]`/`[Q1]` — which is precisely the
+irreducible content, correctly relocated rather than assumed away. -/
+theorem gm_layer_depends_on_pin_class :
+    GMrelation 0 (-2) ((stdQuadratic 1).shift 0) ∧
+      ¬ GMrelation 0 (-2) ((stdQuadratic 1).shift 1) := by
+  have hdb : doubleBrown (stdQuadratic 1) = 2 := by
+    rw [show doubleBrown (stdQuadratic 1)
+        = 2 * (((stdQuadratic 1).brown.val : ℕ) : ZMod 16) from rfl, brown_stdQuadratic]
+    decide
+  refine ⟨by rw [Z4Quadratic.shift_zero]; exact GM_rp4, ?_⟩
+  rw [gmrelation_shift_iff, hdb]
+  decide
+
 end SKEFTHawking.PinTorsor
