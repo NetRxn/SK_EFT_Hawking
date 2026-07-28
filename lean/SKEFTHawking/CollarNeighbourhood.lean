@@ -25,6 +25,8 @@ only project-specific thing about it is the enclosing namespace.
 * `SKEFTHawking.Collar.boundarySlice`: the slice of an ambient chart of `W` along `∂W`, as an
   `OpenPartialHomeomorph (∂W) H`.
 * `SKEFTHawking.Collar.boundaryChartedSpace`: `∂W` as a charted space over `H`.
+* `SKEFTHawking.Collar.hyperplaneIncl`: the inclusion of the boundary's model space as the boundary
+  hyperplane of the ambient model space.
 
 ## Main results
 
@@ -46,10 +48,13 @@ For the model `I.prod (𝓡∂ 1)` with `I` boundaryless:
   same detection, in *any* atlas chart. This is what makes `∂W` a well-defined slice of every
   chart, and hence the starting point of the collar construction.
 * `boundaryless_boundaryChartedSpace`: the resulting charted space has no boundary of its own.
+* `contDiffOn_boundarySlice_trans`: the transition between two boundary slices is the ambient
+  transition restricted to the boundary hyperplane, hence `C^n`.
+* `isManifold_boundary`: **`∂W` is a `C^n` manifold modelled on `I`** — the "boundary is a
+  submanifold" prerequisite, for the model bordism uses.
 
 ## TODO
 
-* `IsManifold I n (∂W)`: the boundary slices are `C^n`-compatible.
 * The collar itself: an inward vector field from a partition of unity, and its uniform-time flow.
   Mathlib's integral-curve existence theorem
   (`exists_isMIntegralCurveAt_of_contMDiffAt`) is stated *only at interior points*, and every
@@ -338,5 +343,107 @@ theorem boundaryless_boundaryChartedSpace (hn : n ≠ 0) :
   exact ModelWithCorners.Boundaryless.boundary_eq_empty
 
 end BoundaryChart
+
+/-! ### The boundary slices are `C^n`-compatible -/
+
+section BoundaryManifold
+
+variable {I : ModelWithCorners ℝ E H} [I.Boundaryless]
+  {W : Type*} [TopologicalSpace W] [ChartedSpace (ModelProd H (EuclideanHalfSpace 1)) W]
+  {n : WithTop ℕ∞} [IsManifold (I.prod (𝓡∂ 1)) n W]
+
+/-- The inverse of the half-line model sends the origin to the origin. -/
+@[simp] theorem modelWithCornersEuclideanHalfSpace_one_symm_zero :
+    (𝓡∂ 1).symm (0 : EuclideanSpace ℝ (Fin 1)) = (0 : EuclideanHalfSpace 1) := by
+  simp [modelWithCornersEuclideanHalfSpace]; rfl
+
+omit [I.Boundaryless] in
+/-- The inverse of the bordism model on the boundary hyperplane. -/
+theorem prodHalf_symm_zero (v : E) :
+    (I.prod (𝓡∂ 1)).symm ((v, 0) : E × EuclideanSpace ℝ (Fin 1)) =
+      ((I.symm v, 0) : ModelProd H (EuclideanHalfSpace 1)) := by
+  simp
+
+/-- The inclusion of the model space of the boundary as the boundary hyperplane of the ambient
+model space. -/
+def hyperplaneIncl (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] :
+    E → E × EuclideanSpace ℝ (Fin 1) := fun v => (v, 0)
+
+theorem contDiff_hyperplaneIncl {m : WithTop ℕ∞} : ContDiff ℝ m (hyperplaneIncl E) :=
+  contDiff_id.prodMk contDiff_const
+
+/-- The boundary hyperplane lands in the model range. -/
+theorem hyperplaneIncl_mem_range (I : ModelWithCorners ℝ E H) [I.Boundaryless] (v : E) :
+    hyperplaneIncl E v ∈ range (I.prod (𝓡∂ 1)) := by
+  rw [range_prodHalf]
+  simp [hyperplaneIncl]
+
+/-- **The boundary slices are `C^n`-compatible**: the transition between two boundary slices is
+the ambient transition restricted to the boundary hyperplane, hence `C^n`. -/
+theorem contDiffOn_boundarySlice_trans (hn : n ≠ 0)
+    {e e' : OpenPartialHomeomorph W (ModelProd H (EuclideanHalfSpace 1))}
+    (he : e ∈ atlas (ModelProd H (EuclideanHalfSpace 1)) W)
+    (he' : e' ∈ atlas (ModelProd H (EuclideanHalfSpace 1)) W)
+    (y₀ y₀' : (I.prod (𝓡∂ 1)).boundary W) :
+    ContDiffOn ℝ n
+      (I ∘ ((boundarySlice hn e he y₀).symm ≫ₕ boundarySlice hn e' he' y₀') ∘ I.symm)
+      (I.symm ⁻¹' ((boundarySlice hn e he y₀).symm ≫ₕ boundarySlice hn e' he' y₀').source ∩
+        range I) := by
+  have hcomp : e.symm ≫ₕ e' ∈ contDiffGroupoid n (I.prod (𝓡∂ 1)) :=
+    HasGroupoid.compatible he he'
+  rw [contDiffGroupoid, mem_groupoid_of_pregroupoid] at hcomp
+  have hamb := hcomp.1
+  have key : ∀ v ∈ I.symm ⁻¹'
+      ((boundarySlice hn e he y₀).symm ≫ₕ boundarySlice hn e' he' y₀').source ∩ range I,
+      ((I.symm v, 0) : ModelProd H (EuclideanHalfSpace 1)) ∈ e.target ∧
+        e.symm ((I.symm v, 0) : ModelProd H (EuclideanHalfSpace 1)) ∈ e'.source := by
+    rintro v ⟨hv, -⟩
+    simp only [mem_preimage, OpenPartialHomeomorph.trans_source,
+      OpenPartialHomeomorph.symm_source, boundarySlice_target, mem_inter_iff,
+      mem_setOf_eq] at hv
+    obtain ⟨hv1, hv2⟩ := hv
+    refine ⟨hv1, ?_⟩
+    rw [← boundarySlice_symm_apply hn he y₀ hv1]
+    exact hv2
+  have hmaps : MapsTo (hyperplaneIncl E)
+      (I.symm ⁻¹' ((boundarySlice hn e he y₀).symm ≫ₕ boundarySlice hn e' he' y₀').source ∩
+        range I)
+      ((I.prod (𝓡∂ 1)).symm ⁻¹' (e.symm ≫ₕ e').source ∩ range (I.prod (𝓡∂ 1))) := by
+    intro v hv
+    obtain ⟨h1, h2⟩ := key v hv
+    refine ⟨?_, hyperplaneIncl_mem_range I v⟩
+    simp only [mem_preimage, hyperplaneIncl, prodHalf_symm_zero,
+      OpenPartialHomeomorph.trans_source, OpenPartialHomeomorph.symm_source, mem_inter_iff]
+    exact ⟨h1, h2⟩
+  refine ContDiffOn.congr
+    (contDiff_fst.comp_contDiffOn (hamb.comp contDiff_hyperplaneIncl.contDiffOn hmaps)) ?_
+  intro v hv
+  obtain ⟨h1, -⟩ := key v hv
+  simp only [Function.comp_apply, hyperplaneIncl, prodHalf_symm_zero,
+    OpenPartialHomeomorph.coe_trans, boundarySlice_apply, modelWithCorners_prod_coe]
+  rw [boundarySlice_symm_apply hn he y₀ h1]
+  rfl
+
+variable (I W) in
+/-- **The boundary of a `C^n` manifold modelled on `I.prod (𝓡∂ 1)` is itself a `C^n` manifold**,
+modelled on `I` — one dimension down, and boundaryless.
+
+Together with `boundaryChartedSpace` and `boundaryless_boundaryChartedSpace` this is the
+"boundary is a submanifold" prerequisite of the collar neighbourhood theorem, for the model that
+bordism uses. Mathlib lists it as an open TODO in
+`Mathlib/Geometry/Manifold/IsManifold/InteriorBoundary.lean`.
+
+The regularity `n` is free; the hypothesis `n ≠ 0` is genuinely load-bearing, since the
+chart-independence of the boundary that makes the slices well-defined is only available from
+`C^1` up. -/
+theorem isManifold_boundary (hn : n ≠ 0) :
+    letI := boundaryChartedSpace I W hn
+    IsManifold I n ((I.prod (𝓡∂ 1)).boundary W) := by
+  letI := boundaryChartedSpace I W hn
+  refine isManifold_of_contDiffOn I n _ ?_
+  rintro f f' ⟨x, rfl⟩ ⟨x', rfl⟩
+  exact contDiffOn_boundarySlice_trans hn _ _ x x'
+
+end BoundaryManifold
 
 end SKEFTHawking.Collar
