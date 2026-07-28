@@ -4495,6 +4495,14 @@ import SKEFTHawking.OddFormDiagonalization
 -- reciprocity fails and the Q_2 square classes are used directly (exists_hilbert2Int_witness).
 -- (wt1-built.)
 import SKEFTHawking.OddSmallRankHM
+-- Phase 5q.H K8b: Eichler transvections -- the elementary integral isometry attached to an
+-- isotropic vector; the non-reflection generator the StableNegRank16 route runs on.
+import SKEFTHawking.EichlerTransvection
+-- Phase 5q.H K8b: <1>-cancellation + the TWO-hyperbolic-plane restatement of the interior brick.
+-- ROUTE CORRECTION: the rank-18 StableNegRank16 is the Lorentzian II_{1,17} case (inertia (1,17)),
+-- outside Eichler's elementary regime; StableNegRank16Two (rank 20, inertia (2,18)) is inside it
+-- and hk3_of_stable16_two consumes it at zero downstream cost.
+import SKEFTHawking.UnitBlockCancellation
 import SKEFTHawking.RP4Manifold
 import SKEFTHawking.RP2PointSet
 import SKEFTHawking.RP2Manifold
