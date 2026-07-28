@@ -52,6 +52,8 @@ For the model `I.prod (𝓡∂ 1)` with `I` boundaryless:
   transition restricted to the boundary hyperplane, hence `C^n`.
 * `isManifold_boundary`: **`∂W` is a `C^n` manifold modelled on `I`** — the "boundary is a
   submanifold" prerequisite, for the model bordism uses.
+* `contMDiff_boundary_val`: **the inclusion `∂W ↪ W` is `C^n`** — the content of "submanifold"
+  beyond "manifold"; in charts it is exactly `hyperplaneIncl`.
 * `isClosed_boundary_prodHalf`, `compactSpace_boundary`: `∂W` is closed, and compact when `W` is.
   Compactness of `∂W` is what makes the local collars uniform.
 
@@ -478,6 +480,41 @@ collars into a *uniform* one. -/
 theorem compactSpace_boundary [CompactSpace W] (hn : n ≠ 0) :
     CompactSpace ((I.prod (𝓡∂ 1)).boundary W) :=
   isCompact_iff_compactSpace.mp (isClosed_boundary_prodHalf hn).isCompact
+
+variable (I W) in
+/-- **The boundary inclusion `∂W ↪ W` is `C^n`.** This is the content of "submanifold" beyond
+"manifold": the smooth structure `boundaryChartedSpace` puts on `∂W` is compatible with the
+ambient one. In charts the inclusion is exactly `hyperplaneIncl`. -/
+theorem contMDiff_boundary_val (hn : n ≠ 0) :
+    letI := boundaryChartedSpace I W hn
+    ContMDiff I (I.prod (𝓡∂ 1)) n (Subtype.val : (I.prod (𝓡∂ 1)).boundary W → W) := by
+  letI := boundaryChartedSpace I W hn
+  haveI := isManifold_boundary I W hn
+  intro x
+  rw [contMDiffAt_iff_of_mem_source (mem_chart_source _ x) (mem_chart_source _ x.1)]
+  refine ⟨continuous_subtype_val.continuousAt, ?_⟩
+  set e := chartAt (ModelProd H (EuclideanHalfSpace 1)) x.1 with he_def
+  have key : ∀ v ∈ (extChartAt I x).target,
+      (extChartAt (I.prod (𝓡∂ 1)) x.1 ∘ (Subtype.val : (I.prod (𝓡∂ 1)).boundary W → W) ∘
+        (extChartAt I x).symm) v = hyperplaneIncl E v := by
+    intro v hv
+    rw [extChartAt_target, mem_inter_iff, mem_preimage] at hv
+    obtain ⟨hv1, hv2⟩ := hv
+    have hvt : ((I.symm v, 0) : ModelProd H (EuclideanHalfSpace 1)) ∈ e.target := hv1
+    simp only [Function.comp_apply, extChartAt, OpenPartialHomeomorph.extend,
+      PartialEquiv.coe_trans_symm, PartialEquiv.coe_trans, ModelWithCorners.toPartialEquiv_coe,
+      OpenPartialHomeomorph.coe_coe, ModelWithCorners.toPartialEquiv_coe_symm,
+      OpenPartialHomeomorph.coe_coe_symm]
+    rw [show (((chartAt H x).symm (I.symm v) : (I.prod (𝓡∂ 1)).boundary W) : W) =
+          e.symm ((I.symm v, 0) : ModelProd H (EuclideanHalfSpace 1)) from
+        boundarySlice_symm_apply hn (chart_mem_atlas _ x.1) x hvt,
+      e.right_inv hvt]
+    have hrv : I (I.symm v) = v := I.right_inv hv2
+    simp only [hyperplaneIncl, hrv, modelWithCorners_prod_coe, Prod.map_apply,
+      modelWithCornersEuclideanHalfSpace_zero]
+  refine (contDiff_hyperplaneIncl.contDiffWithinAt (s := range I)).congr_of_eventuallyEq
+    (Filter.eventually_of_mem (extChartAt_target_mem_nhdsWithin x) key)
+    (key _ (mem_extChartAt_target x))
 
 end BoundaryManifold
 
