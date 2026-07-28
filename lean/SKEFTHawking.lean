@@ -4976,6 +4976,10 @@ import SKEFTHawking.KummerK3GeometricFamily
 -- the SAME classes, once their cap-duals GENERATE H₂(K3;ℤ), discharge integral Poincare duality
 -- through the cap route (not the banned Gram circle).
 import SKEFTHawking.KummerK3CapDualFamily
+-- Phase 5q.H — the 16 exceptional classes as ACTUAL elements of H₂(K3;ℤ) on the welded carrier
+-- (pushforward of the zero-section generator of each resolution piece), with the structural
+-- statement that each piece contributes exactly the cyclic subgroup ℤ·E_c.
+import SKEFTHawking.KummerK3ExceptionalClasses
 -- Phase 5q.H — the general-sigma Guillou-Marin/[FK] statement layer: why the empty-surface
 -- specialization of GM is CIRCULAR for a spin manifold, kernel-checked.
 import SKEFTHawking.CharSurfaceFKVacuity
