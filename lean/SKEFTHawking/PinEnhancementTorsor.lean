@@ -173,6 +173,25 @@ theorem shift_simply_transitive {Q₁ Q₂ : Z4Quadratic ι} (hB : Q₁.B = Q₂
   obtain ⟨w, hw⟩ := exists_shift_of_B_eq hB
   exact ⟨w, hw, fun w' hw' => shift_left_injective Q₁ (hw'.trans hw.symm)⟩
 
+/-- **The enhancements of a given polar form ARE `H¹(F;ℤ/2)`** (new — the torsor statement in its
+strongest form). The map `w ↦ Q.shift w` is a bijection from `H₁(F;ℤ/2) ≅ H¹(F;ℤ/2)` onto the set of
+`Z4Quadratic` sharing `Q`'s polar form. -/
+noncomputable def shiftEquiv (Q : Z4Quadratic ι) :
+    (ι → ZMod 2) ≃ {R : Z4Quadratic ι // R.B = Q.B} :=
+  Equiv.ofBijective (fun w => ⟨Q.shift w, rfl⟩)
+    ⟨fun w w' h => shift_left_injective Q (congrArg Subtype.val h),
+     fun R => by
+       obtain ⟨w, hw⟩ := exists_shift_of_B_eq R.2.symm
+       exact ⟨w, Subtype.ext hw⟩⟩
+
+/-- **The characteristic surface carries exactly `2^{rk H₁(F;ℤ/2)}` pin⁻ enhancements** (new — the
+falsifiable numerical shadow of simple transitivity). The substrate's missing field ranges over a
+set of precisely this size; for `H₁ = 0` (the spin / Kervaire–Milnor sphere case) it is a single
+point, which is exactly why that specialization carries no geometry. -/
+theorem nat_card_pin_enhancements (Q : Z4Quadratic ι) :
+    Nat.card {R : Z4Quadratic ι // R.B = Q.B} = 2 ^ Fintype.card ι := by
+  rw [← Nat.card_congr (shiftEquiv Q), Nat.card_eq_fintype_card, card_fun_zmod2]
+
 /-! ## §3. The complete specification of the missing substrate field -/
 
 /-- **The Guillou–Marin residue is a function of `(B, w)` and of nothing else** (new). Given the
