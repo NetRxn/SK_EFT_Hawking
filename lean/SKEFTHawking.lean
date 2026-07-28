@@ -4966,6 +4966,28 @@ import SKEFTHawking.T2BordismGluing
 import SKEFTHawking.LatticeSigFullRankSublattice
 import SKEFTHawking.IntersectionSigFullRankFamily
 import SKEFTHawking.KummerK3GramFromLattice
+-- Phase 5q.H — the `hfam` supply side: the 22-class geometric family split into its three
+-- independent tabulations (16 exceptional `(−2)` classes, 6 descended `T⁴` classes, cross-block),
+-- the consumer widened to any nondegenerate Gram of signature −16, plus the non-vacuity
+-- certificate (a nondegenerate Gram forces 22 linearly independent classes).
+import SKEFTHawking.KummerK3GeometricFamily
+-- Phase 5q.H — `hfam` AND `hpd` merged into ONE geometric datum: cohomology classes with known
+-- cap-duals. The cap-cup adjunction turns the 253 cup products into 253 Kronecker pairings, and
+-- the SAME classes, once their cap-duals GENERATE H₂(K3;ℤ), discharge integral Poincare duality
+-- through the cap route (not the banned Gram circle).
+import SKEFTHawking.KummerK3CapDualFamily
+-- Phase 5q.H — the 16 exceptional classes as ACTUAL elements of H₂(K3;ℤ) on the welded carrier
+-- (pushforward of the zero-section generator of each resolution piece), with the structural
+-- statement that each piece contributes exactly the cyclic subgroup ℤ·E_c.
+import SKEFTHawking.KummerK3ExceptionalClasses
+-- Phase 5q.H — `heven` at the welded K3 IS a Spin/Wu datum (already reduced in-tree), plus the
+-- non-vacuity certificate that the datum's mod-2 fundamental functional cannot be the zero map
+-- on a carrier with unimodular intersection matrix; ledger restated as three inputs.
+import SKEFTHawking.KummerK3EvenFromSpinWu
+-- Phase 5q.H — the ⟨−2⟩¹⁶ block's obligation as ONE named Prop about the actual `excClass`es,
+-- proved to be exactly the block assembler's hself/hoff pair, with non-vacuity (the −2 diagonal
+-- forces every exceptional class nonzero) and rigidity (n² = 1).
+import SKEFTHawking.KummerK3ExceptionalBlock
 -- Phase 5q.H — the general-sigma Guillou-Marin/[FK] statement layer: why the empty-surface
 -- specialization of GM is CIRCULAR for a spin manifold, kernel-checked.
 import SKEFTHawking.CharSurfaceFKVacuity
