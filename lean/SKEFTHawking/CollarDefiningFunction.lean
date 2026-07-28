@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SKEFTHawking.CollarNeighbourhood
 import SKEFTHawking.ContMDiffPartitionOfUnity
+import SKEFTHawking.InwardFlow
 
 /-!
 # A `C^n` boundary-defining function on a bordism-model manifold
@@ -38,10 +39,20 @@ regularity partition of unity buys — Mathlib's `SmoothPartitionOfUnity` would 
 * `prodIcc_exists_contMDiff_boundaryDefiningFunction`: **non-vacuity with a non-degenerate
   conclusion** — on `ℝ × [0,1]` the boundary is nonempty and the `ρ` produced is provably not the
   zero function on its own neighbourhood.
+
+It also transports `SKEFTHawking.Collar.exists_forward_flow_halfSpace` (prerequisite (3), model
+form) onto this model's range:
+
+* `exists_forward_flow_prodHalf`: an inward-pointing field's forward trajectory from any point of
+  `range (I.prod (𝓡∂ 1))` stays in it, and lies in `interior (range (I.prod (𝓡∂ 1)))` for every
+  `t > 0`.
+* `exists_inward_field_prodHalf`, `exists_forward_flow_prodHalf_from_boundary`: non-vacuity — the
+  hypotheses are satisfied by the constant unit half-line field, and the origin is a genuine
+  boundary point of the model range from which the trajectory does leave the boundary.
 -/
 
 open Set Function Filter
-open scoped Topology Manifold ContDiff
+open scoped Topology Manifold ContDiff NNReal
 
 namespace SKEFTHawking.Collar
 
@@ -189,6 +200,66 @@ theorem boundaryHeight_eq_zero_iff (hn : (n : WithTop ℕ∞) ≠ 0)
   exact absurd h (boundaryHeight_pos_of_notMem_boundary f hn hf hb hy₀).ne'
 
 end Global
+
+/-! ### Flow out of a boundary point, in the ambient model space -/
+
+/-- **The forward flow of an inward-pointing field never leaves the bordism model's range, and
+enters its interior immediately.**
+
+This is `exists_forward_flow_halfSpace` transported to the model range of `I.prod (𝓡∂ 1)` via
+`range_prodHalf` / `interior_range_prodHalf`. Stated in the *model space* `E × ℝ¹`, it is the
+half of Mathlib's "integral curve venturing to the boundary" TODO that does not need a new
+manifold-level notion: starting at any point of the closed half space (in particular at a
+boundary point, where the last coordinate vanishes), the trajectory of a field whose last
+component is bounded below by `c > 0` remains admissible for all `t ∈ [0, ε]` and is strictly
+interior for all `t ∈ (0, ε]`. -/
+theorem exists_forward_flow_prodHalf [CompleteSpace E]
+    {v : E × EuclideanSpace ℝ (Fin 1) → E × EuclideanSpace ℝ (Fin 1)} {K L : ℝ≥0}
+    (hlip : LipschitzWith K v) (hbdd : ∀ x, ‖v x‖ ≤ L) {c : ℝ} (hc : 0 < c)
+    (hv : ∀ x, c ≤ (v x).2 0) {x₀ : E × EuclideanSpace ℝ (Fin 1)}
+    (hx₀ : x₀ ∈ range (I.prod (𝓡∂ 1))) {ε : ℝ} (hε : 0 < ε) :
+    ∃ α : ℝ → E × EuclideanSpace ℝ (Fin 1), α 0 = x₀ ∧
+      (∀ t ∈ Icc (0 : ℝ) ε, HasDerivWithinAt α (v (α t)) (Icc (0 : ℝ) ε) t) ∧
+      (∀ t ∈ Icc (0 : ℝ) ε, α t ∈ range (I.prod (𝓡∂ 1))) ∧
+      ∀ t ∈ Ioc (0 : ℝ) ε, α t ∈ interior (range (I.prod (𝓡∂ 1))) := by
+  rw [range_prodHalf I] at hx₀
+  obtain ⟨α, hα0, hα, hcl, hop⟩ :=
+    exists_forward_flow_halfSpace (φ := lastCoord E) hlip hbdd hc hv hx₀ hε
+  refine ⟨α, hα0, hα, fun t ht => ?_, fun t ht => ?_⟩
+  · rw [range_prodHalf I]; exact hcl t ht
+  · rw [interior_range_prodHalf I]; exact hop t ht
+
+omit [NormedSpace ℝ E] [I.Boundaryless] in
+/-- The constant unit field in the half-line direction is globally Lipschitz, bounded, and
+inward-pointing with `c = 1`: the hypotheses of `exists_forward_flow_prodHalf` are satisfiable. -/
+theorem exists_inward_field_prodHalf :
+    ∃ v : E × EuclideanSpace ℝ (Fin 1) → E × EuclideanSpace ℝ (Fin 1),
+      LipschitzWith 0 v ∧ (∀ x, ‖v x‖ ≤ 1) ∧ ∀ x, (1 : ℝ) ≤ (v x).2 0 := by
+  refine ⟨fun _ => (0, EuclideanSpace.single (0 : Fin 1) 1), LipschitzWith.const _,
+    fun x => ?_, fun x => ?_⟩
+  · simp [Prod.norm_def]
+  · simp
+
+/-- **Non-vacuity of the flow-out-of-the-boundary statement.** The origin is a genuine *boundary*
+point of the model range — it is not interior — and yet the forward trajectory of the constant
+inward field starts there, stays admissible, and is strictly interior at every positive time.
+
+So `exists_forward_flow_prodHalf` is not vacuous on two counts: its hypothesis bundle is
+satisfiable (`exists_inward_field_prodHalf`), and its conclusion is non-degenerate — the curve
+genuinely leaves the boundary, which is precisely what a collar needs. -/
+theorem exists_forward_flow_prodHalf_from_boundary [CompleteSpace E] {ε : ℝ} (hε : 0 < ε) :
+    (0 : E × EuclideanSpace ℝ (Fin 1)) ∉ interior (range (I.prod (𝓡∂ 1))) ∧
+      ∃ α : ℝ → E × EuclideanSpace ℝ (Fin 1), α 0 = 0 ∧
+        (∀ t ∈ Icc (0 : ℝ) ε, α t ∈ range (I.prod (𝓡∂ 1))) ∧
+        ∀ t ∈ Ioc (0 : ℝ) ε, α t ∈ interior (range (I.prod (𝓡∂ 1))) := by
+  obtain ⟨v, hlip, hbdd, hv⟩ := exists_inward_field_prodHalf (E := E)
+  have h0 : (0 : E × EuclideanSpace ℝ (Fin 1)) ∈ range (I.prod (𝓡∂ 1)) := by
+    rw [range_prodHalf I]; simp
+  obtain ⟨α, hα0, -, hcl, hop⟩ :=
+    exists_forward_flow_prodHalf (I := I) (L := 1) hlip (by simpa using hbdd) zero_lt_one hv h0 hε
+  refine ⟨?_, α, hα0, hcl, hop⟩
+  rw [interior_range_prodHalf I]
+  simp
 
 /-! ### Existence -/
 
