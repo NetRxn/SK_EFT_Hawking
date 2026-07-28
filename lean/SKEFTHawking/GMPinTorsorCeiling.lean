@@ -147,4 +147,102 @@ theorem reduce16to8_doubleBrown_not_shift_invariant :
   rw [reduce16to8_doubleBrown, reduce16to8_doubleBrown, brown_shift_rp2, brown_stdQuadratic]
   decide
 
+/-- The mod-4 reduction of the GM residue itself (not just the defect) is torsor-invariant. -/
+theorem reduce16to4_doubleBrown_shift (Q : Z4Quadratic ι) (w : ι → ZMod 2) :
+    reduce16to4 (doubleBrown (Q.shift w)) = reduce16to4 (doubleBrown Q) := by
+  rw [doubleBrown_shift, map_sub, map_mul]
+  have h4 : reduce16to4 (4 : ZMod 16) = 0 := by decide
+  rw [h4, zero_mul, sub_zero]
+
+/-! ## §4. The bound is ATTAINED: the ambiguity subgroup is exactly `4·ℤ/16 ≅ ℤ/4` -/
+
+/-- The `c`-th pin⁻ structure on the genus-3 standard characteristic surface: shift by the class
+supported on the first `c` handles. Since `stdQuadratic g` has `q(w) = #{i : wᵢ = 1}`, this realizes
+every value of `q(w) ∈ ℤ/4` once `g ≥ 3`. -/
+def stdShift3 (c : ZMod 4) : Fin 3 → ZMod 2 := fun i => if (i : ℕ) < c.val then 1 else 0
+
+@[simp] theorem stdQuadratic3_q_stdShift3 (c : ZMod 4) :
+    (stdQuadratic 3).q (stdShift3 c) = c := by revert c; decide
+
+/-- Multiplication by `4` is injective on the image of `ZMod 4 → ℤ/16` — the `ℤ/4 ↪ ℤ/16` that the
+torsor ambiguity subgroup is. -/
+private lemma four_mul_val_injective :
+    ∀ a b : ZMod 4, (4 : ZMod 16) * ((a.val : ℕ) : ZMod 16)
+      = 4 * ((b.val : ℕ) : ZMod 16) → a = b := by decide
+
+/-- **The four pin⁻ structures realize the four translates** (new — ATTAINMENT of the ceiling). -/
+theorem doubleBrown_stdShift3 (c : ZMod 4) :
+    doubleBrown ((stdQuadratic 3).shift (stdShift3 c))
+      = doubleBrown (stdQuadratic 3) - 4 * ((c.val : ℕ) : ZMod 16) := by
+  rw [doubleBrown_shift, stdQuadratic3_q_stdShift3]
+
+/-- **Four pin⁻ structures on ONE characteristic surface, four DISTINCT Guillou–Marin residues**
+(new). With `reduce16to4_doubleBrown_shift` (the upper bound) this pins the torsor ambiguity
+subgroup to be *exactly* `4·ℤ/16 ≅ ℤ/4` — neither larger nor smaller. -/
+theorem doubleBrown_stdShift3_injective :
+    Function.Injective (fun c : ZMod 4 => doubleBrown ((stdQuadratic 3).shift (stdShift3 c))) := by
+  intro a b hab
+  simp only [doubleBrown_stdShift3] at hab
+  exact four_mul_val_injective a b (sub_right_injective hab)
+
+/-- **The substrate must record exactly two bits beyond `(H₁(F;ℤ/2), B)`** (new — the sharp,
+quantitative form of `CharSurfaceFKVacuity.charSurfaceFK_universal_over_free_enhancement_false`,
+which exhibited only a *pair*). All four enhancements below share the polar form `B` verbatim
+(`shift_B`), so every datum the `PinCharSurface` substrate records about the characteristic surface
+is identical for the four; yet no two of them can satisfy Guillou–Marin at the same `(σ, F·F)`. -/
+theorem four_pin_structures_same_polar_form_pairwise_incompatible_gm :
+    (∀ c : ZMod 4, ((stdQuadratic 3).shift (stdShift3 c)).B = (stdQuadratic 3).B) ∧
+      ∀ c₁ c₂ : ZMod 4, c₁ ≠ c₂ → ∀ σ F : ℤ,
+        ¬ (GMrelation σ F ((stdQuadratic 3).shift (stdShift3 c₁)) ∧
+            GMrelation σ F ((stdQuadratic 3).shift (stdShift3 c₂))) := by
+  refine ⟨fun _ => rfl, fun c₁ c₂ hne σ F ⟨h₁, h₂⟩ => hne ?_⟩
+  have e₁ : ((σ - F : ℤ) : ZMod 16)
+      = doubleBrown ((stdQuadratic 3).shift (stdShift3 c₁)) := h₁
+  have e₂ : ((σ - F : ℤ) : ZMod 16)
+      = doubleBrown ((stdQuadratic 3).shift (stdShift3 c₂)) := h₂
+  exact doubleBrown_stdShift3_injective (e₁.symm.trans e₂)
+
+/-! ## §5. The verdict: the pin⁻-free shadow of `[FK]` is subsumed by what the lattice already owns
+
+The lattice half of Rokhlin — van der Blij's `σ ≡ ξ·ξ (mod 8)`, `8 ∣ σ` at a spin form — is a
+PROVED in-tree asset (`RokhlinHMDischarge`). §3–§4 show the pin⁻-free content of Guillou–Marin is
+exactly the mod-4 congruence. Putting the two together gives the strongest available verdict on the
+`[FK]`-at-general-`σ` node: **the pin⁻-structure-independent content of `[FK]` is not merely weaker
+than Rokhlin — it is strictly weaker than the lattice input the project already has, so it
+contributes ZERO marginal content.** Every bit of `[FK]`'s marginal value over the lattice is
+carried by the *choice* of pin⁻ structure, i.e. by the surface's smooth normal data. -/
+
+/-- **Van der Blij subsumes the whole pin⁻-free GM shadow** (new): given `8 ∣ σ`, the mod-4
+congruence holds automatically for a `β = 0` characteristic surface and for *every* pin⁻ structure
+on it. So the torsor-invariant part of Guillou–Marin is not an input at all. -/
+theorem torsor_free_shadow_implied_by_van_der_blij {σ : ℤ} (h8 : (8 : ℤ) ∣ σ)
+    (Q : Z4Quadratic ι) (hQ : Q.brown = 0) (w : ι → ZMod 2) :
+    reduce16to4 (((σ - 0 : ℤ) : ZMod 16)) = reduce16to4 (doubleBrown (Q.shift w)) := by
+  obtain ⟨t, ht⟩ := h8
+  have hrhs : reduce16to4 (doubleBrown (Q.shift w)) = 0 := by
+    rw [reduce16to4_doubleBrown_shift]
+    show reduce16to4 (2 * ((Q.brown.val : ℕ) : ZMod 16)) = 0
+    rw [hQ]
+    decide
+  rw [hrhs, sub_zero, ht]
+  push_cast
+  have h8' : reduce16to4 (8 : ZMod 16) = 0 := by decide
+  rw [map_mul, h8', zero_mul]
+
+/-- **The lattice input PLUS the entire pin⁻-free shadow of Guillou–Marin still cannot prove
+Rokhlin** (new — the headline no-go of this module). `σ = 8` satisfies van der Blij's `8 ∣ σ` and
+satisfies the full torsor-invariant GM congruence for *every* `β = 0` characteristic surface and
+*every* pin⁻ structure on it, yet `¬ (16 ∣ 8)`. Hence the `4 → 16` gap — the whole marginal content
+of `[FK]` — is carried strictly by the choice of pin⁻ structure, which is exactly the smooth normal
+data `CharSurfaceFKVacuity` §3 named as the missing substrate. Any proposed `hgm` supplier that
+does not *construct* `Q` from that data is refuted by this theorem before it is written. -/
+theorem lattice_plus_torsor_free_shadow_cannot_prove_rokhlin :
+    ∃ σ : ℤ, (8 : ℤ) ∣ σ ∧
+      (∀ (Q : Z4Quadratic (Fin 8)) (w : Fin 8 → ZMod 2), Q.brown = 0 →
+        reduce16to4 (((σ - 0 : ℤ) : ZMod 16)) = reduce16to4 (doubleBrown (Q.shift w))) ∧
+      ¬ (16 : ℤ) ∣ σ := by
+  refine ⟨8, ⟨1, by norm_num⟩, fun Q w hQ =>
+    torsor_free_shadow_implied_by_van_der_blij ⟨1, by norm_num⟩ Q hQ w, ?_⟩
+  decide
+
 end SKEFTHawking.GMTorsor
