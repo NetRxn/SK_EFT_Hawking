@@ -293,4 +293,59 @@ theorem natAbs_gcd_lt_of_axis_round {α γ δ : ℤ}
   · exact lt_of_le_of_lt (Nat.le_of_dvd (Int.natAbs_pos.mpr h)
       (Nat.gcd_dvd_left (γ % α).natAbs (δ % α).natAbs)) hγ
 
+/-! ## §7. THE CONSERVED QUANTITY
+
+`N (α, β, γ, δ) := αβ + γδ` is invariant under **all four** moves. This is not a coincidence of the
+formulas: the tuple is the list of pairings of `w'` with `e₁, f₁, e₂, f₂`, the form on `U ⊕ U₁` is
+hyperbolic, and every `PlaneStep` is realised by an isometry
+(`UnitCancellationEichler.planeStep_lift`) — so `2N` is the norm of `w'`'s `U ⊕ U₁` component and
+has to be preserved. The formulas simply confirm it.
+
+Two consequences worth having explicitly:
+
+* it gives the system a genuine invariant, so no proof of `PlaneReduction` can move `N`;
+* it pins the **endpoint**: reaching `(0, 0, γ', δ')` forces `γ' δ' = N`. So `PlaneReduction` is
+  implicitly the assertion that `N` always admits a factorisation reachable by the moves — a real
+  constraint, and the reason the naive "drive everything to zero" reading of the statement is wrong
+  (the plane-2 coordinates cannot both be sent to `0` unless `N = 0`). -/
+
+/-- The conserved quantity of the `PlaneStep` system: `αβ + γδ`, i.e. half the norm of `w'`'s
+`U ⊕ U₁` component. -/
+def planeNorm (t : ℤ × ℤ × ℤ × ℤ) : ℤ := t.1 * t.2.1 + t.2.2.1 * t.2.2.2
+
+/-- **Every Eichler move preserves `αβ + γδ`.** Checked on all four constructors; in each case the
+four cross terms cancel identically. -/
+theorem planeStep_planeNorm {t t' : ℤ × ℤ × ℤ × ℤ} (h : PlaneStep t t') :
+    planeNorm t' = planeNorm t := by
+  cases h <;> simp only [planeNorm] <;> ring
+
+/-- **…hence so does every chain.** -/
+theorem planeChain_planeNorm {t t' : ℤ × ℤ × ℤ × ℤ} (h : ReflTransGen PlaneStep t t') :
+    planeNorm t' = planeNorm t := by
+  induction h with
+  | refl => rfl
+  | tail _ hstep ih => rw [planeStep_planeNorm hstep, ih]
+
+/-- **THE ENDPOINT CONSTRAINT.** If `(α, β, γ, δ)` reduces to `(0, 0, γ', δ')` then
+`γ' δ' = αβ + γδ`. So the plane-2 coordinates of any endpoint multiply to the conserved quantity —
+in particular they can *both* vanish only when `αβ + γδ = 0`, which is why
+`planeReduction_zero_tail` has to return a nonzero `γ'` in general. -/
+theorem mul_eq_planeNorm_of_reduces {α β γ δ γ' δ' : ℤ}
+    (h : ReflTransGen PlaneStep (α, β, γ, δ) (0, 0, γ', δ')) : γ' * δ' = α * β + γ * δ := by
+  have := planeChain_planeNorm h
+  simpa [planeNorm] using this
+
+/-- **The `m₃` α-killing identity.** Choosing `m₃ p q` so that it sends `α` to `0` is *exactly*
+choosing a factorisation of the conserved quantity: the two new plane-2 coordinates multiply to it.
+
+This is the shape any two-move close must take — kill `α` with one `m₃`, then close on the `α = 0`
+axis with `planeReduction_of_alpha_zero`, which needs `gcd(γ', δ') ∣ β`. So the remaining question
+is sharply arithmetic: *which* factorisations of `αβ + γδ` are reachable, and can one be chosen with
+`gcd` dividing `β`. -/
+theorem mul_eq_planeNorm_of_alpha_kill {α β γ δ p q : ℤ}
+    (h : α + (p * δ + q * γ) - p * q * β = 0) :
+    (γ - p * β) * (δ - q * β) = α * β + γ * δ := by
+  have hα : α = p * q * β - p * δ - q * γ := by linarith
+  rw [hα]; ring
+
 end SKEFTHawking
