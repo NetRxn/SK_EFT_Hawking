@@ -1,6 +1,58 @@
 # Phase 6EA — Kernel-Verified Photodetection Statistics: Poisson & Gaussian Discrimination Floors
 
-**Status: PLANNED (authorized 2026-07-27).** Opens the **new `6E*` thematic series** (theme: *verified device-physics metrology — detection statistics, readout noise floors, electrothermal device physics, and graphene electronic structure*), independent of the `6B*` (comp-chem/OQS → D10), `6C*` (band-theory/metamaterials → D11), and `6D*` (constant-provenance audit) series. The `6E*` series continues the repo's existing public readout-metrology arc (`ReadoutRelaxationBound`, `ThermalAssignmentFloor`, `QuantumFDTFloor`, `GrapheneNoiseFormula`) downward into the *classical detection layer* every physical readout chain bottoms out in.
+## 🎯 STATUS: COMPLETE (2026-07-28) — all three waves shipped, Stage-13 clean
+
+Authorized 2026-07-27, closed 2026-07-28. `lake build` 10,365 jobs clean +
+`lake build SKEFTHawking.ExtractDeps` 10,366 clean, **zero sorry, zero axioms**, every declaration
+kernel-pure `{propext, Classical.choice, Quot.sound}`; `validate.py` **49/49**. Counts moved
+25,279 → 25,460 theorems and 1,992 → 1,998 modules over the session (6EA contributes the three
+`Detection/` modules below; the rest is the concurrent 6EB/6EC work).
+
+**Shipped declarations, by wave:**
+
+- **Wave 1 — `Detection/PoissonDiscrimination.lean` (27 decls).** `IsCountRule`, `falseAlarm`,
+  `missProb`, `thresholdRule`, `affinity`; the distribution-free chain `affinity_le_binaryAffinity`
+  → `binaryAffinity_sq_le_two_mul_add` → `avgError_ge_affinity_sq`; `poissonBhattacharyya_hasSum` /
+  `_eq`; the headline `poisson_avgError_floor`; the exact `poisson_avgError_equalRates_eq_half`;
+  the dark-baseline trio `poisson_darkBaseline_miss_floor` / `_optimum` /
+  `darkBaseline_zeroFalseAlarm_load_bearing` with `falseAlarm_zero`, `isCountRule_thresholdRule`,
+  `falseAlarm_thresholdRule_zero`; the ∀-quantified refutations `folklore_miss_floor_false`,
+  `folklore_missFloor_beaten_sixfold`, `folkloreGap_split`, `folklore_avgFloor_unsound_of_bright`,
+  `brightGap_5060`, `folklore_avg_floor_unsound`, `folklore_avgFloor_unsound_factor1000`.
+- **Wave 2 — `Detection/GaussianThreshold.lean` (36 decls).** Project-local `gaussianQ`, `thrErr0`,
+  `thrErr1`; `gaussianQ_zero` / `_antitone` / `_neg` / `_pos` / `_le_half` / `_sub_of_le`;
+  `gaussianPDF_moment_Ioi`; the tails `gaussianTail_ge_window`, `gaussianTail_mills`,
+  `gaussianTail_chernoff` (**full `z ≥ 0`**), `gaussianTail_birnbaum` (stretch, closed); the
+  rational bracket `gaussianQ_two_le_rational` / `_ge_rational`; `thrErr0_mono_in_sigma`,
+  `thrErr1_mono_in_sigma`, `offCenter_threshold_tradeoff`, `midpoint_threshold_symmetric`;
+  `avgError_ge_gaussianQ_sharp` (stretch, closed — shipped in place of the ½-constant form).
+- **Wave 3 — `Detection/ShotNoise.lean` (~18 decls).** `diagonalPSD`, `psdSqrt_diagonal`,
+  `diagonalState_sqrtFidelity_eq_affinity` (S1), `binaryDist`, `binaryDensityOperator`,
+  `pushforwardFidelity_eq_binaryAffinity`, `poissonFloor_le_diagonalQuantumBound` (S2, shipped as a
+  sandwich); `shotPSD`, `shotPSD_eq_hawkingNoisePSD`, `shotPSD_plane_transfer`, `shotPSD_pos`;
+  `hasSum_poisson_thinning` / `poisson_thinning`, `hasSum_poissonPMFReal_mul_descFactorial`,
+  `poissonMean_eq`, `poissonMean_thinning`, `thinnedMean_eq_eta_mul`, `poissonVariance_eq`,
+  `shot_variance_eq_mean`; `shotGaussian_avgError_gt_leCam_floor`.
+
+**Stage 13.** Round 1 (`2026-07-28-1839`): 2 BLOCKER + 5 MAJOR + 5 MINOR — all remediated.
+Round 2 (`2026-07-28-1924`): **ZERO BLOCKER**, both round-1 blockers independently verified closed;
+its 3 MAJORs + merited MINORs remediated in `1bd72ceb`. The statement set was found substantively
+sound in both rounds — no vacuous theorem, no tautology, no empty quantifier, no degenerate floor —
+and every finding in both rounds was prose attached to the artifacts, never a proof.
+
+**Deviations, all strengthenings** (detail in the two freeze docs' deviation tables): D7's Chernoff
+closed at the full `z ≥ 0`; the D10 half-constant floor was dropped as an identity-wrapper once the
+sharp form closed; `poisson_thinning`'s `η ≤ 1` and `shotPSD_plane_transfer`'s `0 ≤ η` were dropped
+as non-load-bearing; the (S2) seam shipped as a sandwich rather than the frozen conjunction; D3's
+`poissonTV_le_of_bhattacharyya` was demoted (off the critical path) and deliberately not shipped.
+
+**Open, carried forward:** the prior-art novelty claim is scoped to verified evidence pending a live
+multi-prover search (see the Novelty-claim note below) — a **pre-submission gate for D12**, not a
+substrate gap.
+
+---
+
+**Originally: PLANNED (authorized 2026-07-27).** Opens the **new `6E*` thematic series** (theme: *verified device-physics metrology — detection statistics, readout noise floors, electrothermal device physics, and graphene electronic structure*), independent of the `6B*` (comp-chem/OQS → D10), `6C*` (band-theory/metamaterials → D11), and `6D*` (constant-provenance audit) series. The `6E*` series continues the repo's existing public readout-metrology arc (`ReadoutRelaxationBound`, `ThermalAssignmentFloor`, `QuantumFDTFloor`, `GrapheneNoiseFormula`) downward into the *classical detection layer* every physical readout chain bottoms out in.
 
 **Thesis.** Every intensity-detection readout — photon counters, threshold discriminators, homodyne-style filtered-current classifiers — obeys a small set of textbook statistical floors that are routinely *cited* in device papers but have never been *kernel-checked* anywhere: the Bhattacharyya/Le Cam universal floor on Poisson discrimination, the zero-false-alarm dark-baseline optimum, and Gaussian threshold-error algebra with honest tail bounds. **(Corrected 2026-07-28, Stage-13 round 2: this sentence previously also promised "the Neyman–Pearson structure of counting tests". No Neyman–Pearson or likelihood-ratio theorem ships in this phase — the floors are symmetric Bayes/Le Cam bounds. The identical overstatement was struck from the novelty claim below; it survived here, one line above, which is the sentence most likely to be lifted into D12.)** This phase builds that layer once, exactly, in the repo's established `_enclosure` exact-rational style, so that every later device phase (6EB filtered readout, 6EC electrothermal detectors, 6EE composite readout ceilings) *consumes floors instead of re-deriving them* — and so that any experimental claim of discrimination performance can be checked against a machine-verified bound by hand.
 
@@ -88,11 +140,11 @@ Wave 1 → Wave 2 are independent (different files, disjoint substrate) — **pa
 
 ## Phase Definition of Done
 
-- [ ] `lake build` + `lake build SKEFTHawking.ExtractDeps` clean; zero sorry; kernel-pure axiom set; no new project-local axioms.
-- [ ] `uv run python scripts/validate.py` green; counts + `SK_EFT_Hawking_Inventory.md` + Inventory Index refreshed with the `Detection/` family.
-- [ ] All three waves' AC boxes checked; per-wave post-strengthening audits logged in the phase notebook.
-- [ ] Stage-13-style adversarial pass over the statement set (vacuity/tautology hunt) — mandatory even with no paper target.
-- [ ] Roadmap status updated (PLANNED → COMPLETE with dated shipped-declarations list).
+- [x] `lake build` (10,365 jobs) + `lake build SKEFTHawking.ExtractDeps` (10,366) clean; zero sorry; kernel-pure axiom set; no new project-local axioms.
+- [x] `uv run python scripts/validate.py` green (**49/49**); counts + `SK_EFT_Hawking_Inventory.md` (new §2.Z) + Inventory Index refreshed with the `Detection/` family.
+- [x] All three waves' AC boxes checked; per-wave post-strengthening audits logged in `docs/dev-loops/Phase6EA/LAB_NOTEBOOK.md`.
+- [x] Stage-13-style adversarial pass over the statement set (vacuity/tautology hunt) — **two rounds**, closing at ZERO BLOCKER (`papers/AutomatedReviews/2026-07-28-1839-…` and `…-1924-…`).
+- [x] Roadmap status updated (PLANNED → COMPLETE with dated shipped-declarations list) — see the STATUS block at the top.
 
 ## Stage-2 resolutions — LEAD SIGN-OFF 2026-07-27 (binding; supersedes the AC bullets they touch)
 
