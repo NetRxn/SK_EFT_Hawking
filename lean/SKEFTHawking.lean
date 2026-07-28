@@ -4973,6 +4973,10 @@ import SKEFTHawking.CharSurfaceFKVacuity
 -- the Guillou-Marin residue by exactly `4·ℤ/16`, so the pin⁻-free content of [FK] is the mod-4
 -- congruence and the whole 4→16 gap is carried by the smooth normal data.
 import SKEFTHawking.GMPinTorsorCeiling
+-- Phase 5q.H — what an [FK]-at-general-sigma statement layer CAN be: extensional non-circularity
+-- is unachievable (the invariant-triple forcing theorem), so the admissibility criterion is
+-- intensional; the bordism-by-generators route fails it at the triple level.
+import SKEFTHawking.GMTripleLayerForcing
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
