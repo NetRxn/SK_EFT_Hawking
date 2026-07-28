@@ -25,7 +25,33 @@ DONE criterion met: the step-1 **PSD→trace bridge `traceNorm_posSemidef` is PR
 - **6AE-A step 1 (BRIDGE) — DONE** ✅ (the linchpin): `traceNorm_posSemidef : A.PosSemidef → traceNorm A = A.trace.re`, kernel-pure, via the concrete charpoly/multiset route (no CFC instance): `trace_cfc` + `isHermitian_mul_self_eq_cfc_sq` (`A·A = cfc(·²)A`) + **`map_eigenvalues_conjTranspose_mul_self`** ({eigenvalues(AᴴA)} = {(eigenvalues A)²} as real multisets, via `charpoly_cfc_eq` → `roots_multiset_prod_X_sub_C` → strip `RCLike.ofReal` injective) + `Real.sqrt_sq` (PSD) + `Finset.sum_eq_multiset_sum`. Plus **`traceNorm_density_eq_one`** (step 2 part). Counts 769 mod / 10070 thm / 0 axiom / 0 sorry. KEY plumbing notes: lambda↔`∘` needs `show … from rfl`; the cast in `charpoly_cfc_eq` is `RCLike.ofReal`, but `trace_eq_sum_eigenvalues`'s `.re` reduces via `Complex.ofReal_re`; `roots_multiset_prod_X_sub_C` avoids the `roots_prod` ≠0 side-goal. REMAINING: `traceDist ∈ [0,1]` upper bound (needs triangle), step 3 triangle (hard core), step 4 fidelity, step 5 contractivity, step 6 diamond norm.
 - **6AE-A increment 1 (foundation) — DONE** (`MixedState.lean`, kernel-pure): `IsDensityOperator` (PSD ∧ trace 1); `traceNormOf` (factored on the PSD witness — proof-irrelevant) + `traceNormOf_congr` (matrix-equality ⟹ equal trace norm) + `traceNormOf_nonneg`; `traceNorm A := traceNormOf (posSemidef_conjTranspose_mul_self A) = ∑√eigenvalues(AᴴA)`; `traceNorm_nonneg`, `traceNorm_neg` (AᴴA = (−A)ᴴ(−A)), `traceNorm_zero`; `traceDist ρ σ := ½‖ρ−σ‖₁`; `traceDist_nonneg`, `traceDist_comm`, `traceDist_self`. Root-imported; counts 769 mod / 10065 thm / 0 axiom / 0 sorry. Built on `Analysis/Matrix/{Spectrum,PosDef}` + `open scoped ComplexOrder`.
 
-### Active research frontier (6AE-A remainder + 6AE-B) — documented, NOT sorried/axiomatized
+### ⚠ SUPERSEDED 2026-07-28 — the "active research frontier" below is CLOSED, not open
+**Do not plan against the numbered list in the next subsection.** It is a snapshot dated
+**2026-06-01**; every one of its six items was discharged between 2026-06-02 and the 6AH/6AN
+sweeps, under `SKEFTHawking.QuantumNetwork.*`. Verified 2026-07-28 by `lean_local_search` (not
+grep — see the naming note below):
+
+| # | 6AE item | Actual declaration | Module |
+|---|---|---|---|
+| 1 | bridge `traceNorm (PosSemidef A) = A.trace.re` | `traceNorm_posSemidef` | `MixedState.lean` |
+| 2 | `traceDist ρ σ ∈ [0,1]` | `traceDist_mem_Icc` | `MixedState.lean` |
+| 3 | trace-norm triangle | `traceNorm_triangle`, `traceDist_triangle` | `MixedState.lean` |
+| 4 | Uhlmann fidelity + Fuchs–van de Graaf | `traceDist_le_sqrt_one_sub_sqrtFidelity_sq` (2026-06-02) | `FidelityUpperBound.lean` |
+| 5 | CPTP contractivity (data processing) | `traceDist_krausMap_le` | `CPTPChannel.lean` |
+| 6 | `diamondNorm` stabilized sup + axioms + Choi | `diamondDist_{triangle,le_one,bddAbove,nonneg,comm}`, `diamondDist_eq_choiSDP`, `diamondDist_ge_maxEntangled` | `DiamondNormSup.lean`, `DiamondSDPDuality.lean`, `DiamondNormChoi.lean` |
+
+Beyond the frontier: exact diamond distances for named channels (`diamondDist_{ampDamp,dephasing,
+depolarizing}_eq`, `NamedChannelDiamondExact.lean`), Pauli/Weyl channels, SDP duality, and the
+composition budget (`diamondDist_composeKraus_le`) all exist. The "each a multi-week from-scratch
+build" and "held for a dedicated multi-session push" framing above is historical.
+
+**Naming note (this is why the staleness survived):** the shipped names do **not** match the names
+this roadmap predicted — item 2 is `traceDist_mem_Icc` (not `traceDist_le_one`) and item 6 is
+`diamondDist_*` (not `diamondNorm`). A grep for the *predicted* name returns nothing and reads as
+"still open". Check a roadmap's open items with `lean_local_search` on the **concept stem**
+(`traceDist`, `diamond`), never a guessed full name.
+
+### Active research frontier (6AE-A remainder + 6AE-B) — ⚠ HISTORICAL (2026-06-01), see above
 The deep theorems require wiring Mathlib's **CFC `abs`/`sqrt`** (`Analysis/SpecialFunctions/ContinuousFunctionalCalculus/Abs.lean`) to the eigenvalue-sum trace norm, plus the variational (`InnerProductSpace/Rayleigh.lean`) and cone-duality (`Analysis/Convex/Cone/`) substrate. Confirmed multi-session research, sequenced:
 1. **Bridge** `traceNorm (PosSemidef A) = A.trace.re` — linchpin. **Workhorse PROVEN** (`trace_cfc`: `(hM.cfc f).trace = ∑ (f(eigenvalues i):ℂ)`, kernel-pure, via the `trace_eq_zero_iff` template — unitary-conjugation trace-invariance + `trace_diagonal`). Two routes to finish, both blocked off-the-shelf: (a) `traceNorm A = (trace (CFC.abs A)).re` + `CFC.abs_of_nonneg` — BLOCKED: `NonUnitalContinuousFunctionalCalculus ℝ (Matrix _ _ ℂ) IsSelfAdjoint` does not synthesize even with `open scoped Matrix.Norms.L2Operator` (Mathlib instance gap); (b) concrete via `trace_cfc` only — reduces to `eigenvalues(AᴴA) i = (eigenvalues A i)²` for PSD A, needs an **antitone-sort-uniqueness** lemma (squaring preserves order on the nonneg PSD spectrum; derive `AᴴA = U·D²·Uᴴ` from `spectral_theorem` then uniqueness of sorted eigenvalues). **Route (b) is the active attempt** — avoids the CFC instance entirely. **2nd workhorse PROVEN**: `isHermitian_mul_self_eq_cfc_sq` (`M·M = cfc(·²)M` for Hermitian M, via `spectral_theorem` + `conjStarAlgAut` multiplicativity + `diagonal_mul_diagonal`, concrete — no CFC instance). Remaining = the root-multiset transfer: `(AᴴA).charpoly = ∏(X−C((eigᵢ)²))` (via `cfc_eq`+`charpoly_cfc_eq`) → `.roots` via **`Finset.prod_eq_multiset_prod` + `Polynomial.roots_multiset_prod_X_sub_C`** (avoids the `∏≠0` side-goal that `roots_prod` generates and that fought the `C(x²)=(Cx)²` normalization) → strip `RCLike.ofReal` → map `√` (`Real.sqrt_sq`, PSD) → sum. Mechanical; next firing. Blocker + route documented in `MixedState.lean`.
 2. **`traceNorm` of density = 1** + `traceDist ρ σ ∈ [0,1]` (needs bridge + triangle).
@@ -34,4 +60,9 @@ The deep theorems require wiring Mathlib's **CFC `abs`/`sqrt`** (`Analysis/Speci
 5. **CPTP contractivity** `D(Φρ,Φσ) ≤ D(ρ,σ)` (data processing) — instantiate `CompletelyPositiveMap` on `CStarMatrix`/`Matrix`.
 6. **6AE-B**: explicit `partialTrace`, `choiMatrix`, `diamondNorm` (stabilized sup) + norm axioms + Choi characterization.
 
-**Status:** foundation shipped and verified; the frontier is the genuine research effort the 6AE scoping flagged (A′ research-grade). Held for a dedicated multi-session push rather than rushed (no overclaim; correctness over expediency).
+**Status (2026-06-01, historical):** foundation shipped and verified; the frontier is the genuine research effort the 6AE scoping flagged (A′ research-grade). Held for a dedicated multi-session push rather than rushed (no overclaim; correctness over expediency).
+
+**Status (2026-07-28, current):** the dedicated push happened — items 1–6 are all proven and
+kernel-pure (table above). 6AE has no open frontier. The scoping call that these were "multi-week
+from-scratch builds" was wrong by roughly an order of magnitude, which is the project's standard
+pattern (`feedback_ignore_pm_estimates`): the LoE estimate, not the physics, was the error.
