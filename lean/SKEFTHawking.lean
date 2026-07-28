@@ -5003,6 +5003,9 @@ import SKEFTHawking.KummerK3ExceptionalRestriction
 -- target has char 2), and the cost that imposes on any forall-o Gram hypothesis: it silently
 -- demands −G as well as G.
 import SKEFTHawking.IntOrientationReverse
+-- Phase 5q.H — ADJUDICATED: the K3 ledger's forall-o Gram hypothesis is FALSE (orientation
+-- reversal forces latticeSig to be both −16 and +16). Every consumer taking it is vacuous.
+import SKEFTHawking.KummerK3ForallOrientationFalse
 -- Phase 5q.H — the pair-restriction leg vanishes on the subspace: iota_S^* . j^* = 0 over Z. The
 -- half of exactness at H^m(X;Z) that SUPPORT arguments consume — a class supplied RELATIVELY (as a
 -- Thom class is) automatically vanishes on the subspace, cochain-level and elementary.
