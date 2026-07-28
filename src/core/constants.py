@@ -3917,6 +3917,18 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
 # nogo_kind (refutation | structural_forcing | counterexample), false_statement (the path it
 # kills, one line), memory ([[slug]]).
 KERNEL_NOGO_REGISTRY: dict[str, dict] = {
+    'fk-mod2-membrane-index-cannot-reach-nonorientable-stratum': {
+        'fork_id': 'fk-mod2-membrane-index-cannot-reach-nonorientable-stratum',
+        'backing_theorems': [
+            'SKEFTHawking.MembraneIndex.no_mod2_index_on_rp2',
+            'SKEFTHawking.MembraneIndex.refines_forces_alternating',
+            'SKEFTHawking.MembraneIndex.not_exists_index_of_B_self_ne_zero',
+            'SKEFTHawking.MembraneIndex.FramedMembrane.indexWellDefined_false_of_framedMembrane',
+        ],
+        'nogo_kind': 'refutation',
+        'false_statement': 'The Freedman-Kirby MOD-2 membrane index D.F + O(D) + d(C) -- blueprint Route A nodes [G2]/[Q1]/[Q2], FK Lemma 2.6.1 -- produces the pin-minus class of a NONORIENTABLE characteristic surface, so building out the membrane layer suffices to supply `hgm` on the whole char-pair carrier. FALSE (2026-07-28, wt2, lead-verified: I re-derived the polarization step and checked the RP2 instantiation myself). Any mu : (iota -> ZMod 2) -> ZMod 2 satisfying the [Q2] refinement identity mu (x+y) = mu x + mu y + B x y FORCES B v v = 0 for every v: put x = y = v, use mu 0 = 0 and 2 * mu v = 0 in ZMod 2. So a mod-2 index can only refine an ALTERNATING form, i.e. it reaches the ORIENTABLE stratum and kernel-checkably only that one. Instantiated at stdQuadratic 1 -- the RP2 surface half of the (RP4, RP2) generator, where B 1 1 = 1 -- `no_mod2_index_on_rp2` is a flat refutation by `decide`. NOT FIXABLE BY MORE MEMBRANE WORK: the obstruction is the polarization identity itself, not a missing lemma or a weak construction. CONSEQUENCE FOR ROUTE A: reaching the nonorientable stratum requires the Guillou-Marin Z/4-RESOLUTION index, whose coefficient split is NOT pinned by the in-tree blueprint (which states only the mod-2 formula); do NOT guess a split such as 2*(D.F) + O(D) + ... -- it must come from Klug arXiv:2011.12418 section 2 read directly. ALSO SETTLED HERE (a second, independent refutation): with the normal-framing comparison as FREE data, [Q1] in its natural universal shape is FALSE -- `indexWellDefined_false_of_framedMembrane` shows the 2-pi twist leaves the membrane untouched and flips the index. This is the same failure mode `CharSurfaceFKVacuity` found one level up, reappearing at the framing; the repair is a rigidity tie (NormalFramingTie), and `not_tied_twist` plus `trivialTie_rigid_but_uninhabited` show both that the repair bites and that inhabitedness is separately load-bearing. The same theorem is the P5 repackaging check: the membrane layer is strictly MORE data than the enhancement it produces, which a field-carrying MembraneIndexData could never be. SCOPE: this refutes the mod-2 index on the nonorientable stratum and the free-framing [Q1]; it does NOT refute [FK] itself, nor the mod-2 index on the orientable stratum, where it is exactly right.',
+        'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
+    },
     'gm-pin-torsor-free-shadow-weaker-than-van-der-blij': {
         'fork_id': 'gm-pin-torsor-free-shadow-weaker-than-van-der-blij',
         'backing_theorems': [
