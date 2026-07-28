@@ -4999,6 +4999,10 @@ import SKEFTHawking.KummerK3ExceptionalBlock
 -- (an iff, not a weakening), plus the geometric sufficient condition (α_d restricts to 0 off the
 -- d-th piece) and the non-vacuity check that the −2 diagonal is the load-bearing conjunct.
 import SKEFTHawking.KummerK3ExceptionalRestriction
+-- Phase 5q.H — orientation reversal IS an IntOrientation (redCompat cannot see a sign, the mod-2
+-- target has char 2), and the cost that imposes on any forall-o Gram hypothesis: it silently
+-- demands −G as well as G.
+import SKEFTHawking.IntOrientationReverse
 -- Phase 5q.H — the pair-restriction leg vanishes on the subspace: iota_S^* . j^* = 0 over Z. The
 -- half of exactness at H^m(X;Z) that SUPPORT arguments consume — a class supplied RELATIVELY (as a
 -- Thom class is) automatically vanishes on the subspace, cochain-level and elementary.
