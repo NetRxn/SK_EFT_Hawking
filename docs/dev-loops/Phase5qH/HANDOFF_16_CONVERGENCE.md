@@ -3,12 +3,13 @@
 **Written:** 2026-07-15. **Fully re-verified and rewritten 2026-07-27** (lead, directly in the
 Lean — every claim below was read out of the tree, not carried forward from a prior revision).
 
-**Ground state (refreshed 2026-07-27 after the regularity-lift + hker arc):** main `52fc5e29`.
-`lake build SKEFTHawking.ExtractDeps` → **exit 0, 10,275 jobs**; library-wide **0 axioms, 0 sorry**
-(23,907 theorems / 1,907 modules). `nogo_substrate_integrity` **PASSED**. Fence: **32 kernel-encoded
-no-go forks / 77 backing aliases** (`KERNEL_NOGO_REGISTRY` → `KernelNoGos.lean`) + **40**
-`SETTLED_FORKS.md` prose entries. Advisory: `update_inventory_index.py` autogen blocks stale — run
-`/skeft-qa:sync`. Full `validate.py` N/N not re-run since `9880b913`.
+**Ground state (refreshed 2026-07-27, LATE — after the orientInput / hA / gluing / lattice round):**
+main `2543b0eb`. `lake build` → **exit 0, 10,323 jobs**; library-wide **0 axioms, 0 sorry**.
+`nogo_substrate_integrity` **PASSED** at **38** kernel-encoded no-go forks (was 32) +
+**44** `SETTLED_FORKS.md` prose entries (was 40). Counts stale vs `.lean` — run `/skeft-qa:sync`
+before the next gate run. Full `validate.py` N/N not re-run since `9880b913`.
+⛔ `rm -rf .lake/build` remains BANNED until after 16-convergence (operator; ~40 min, it is DONE-gate
+(3), not an interim to-do).
 
 **This document:** part 1 is the big picture for anyone catching up cold; part 2 is the remaining
 work in dependency order; part 3 is the binding architectural law set. The always-authoritative
@@ -81,6 +82,39 @@ Since the 2026-07-27 rewrite the **entire S²×D³ / Freeze-B geometric cobounda
 atom-by-atom in part 2.
 
 ---
+
+## Part 2.δ — STATE DELTA (2026-07-27 late session) — READ THIS BEFORE THE PER-ATOM DETAIL BELOW
+
+⚠ **Scope of freshness.** This δ-block and the Part-1/ground-state header are current as of the
+session that produced commits `07cf14aa`…`2543b0eb`. **The per-atom detail in §2.1 onward predates
+that movement** and is accurate about architecture but stale about status for the four atoms named
+below. Where they disagree, this block wins — and the **INDEX FRONTIER wins over both**.
+
+### The row (unchanged in shape): `{hKRS, row, hA, hcol, hker, hΦg}` + slot pin
+
+| atom | movement this session |
+|---|---|
+| **`row`** (via `row.hg`) | **`orientInput` DISCHARGED.** `nonempty_intOrientation_kummerK3_uncond` + `nontrivial_h4K3`, both binder-free, kernel-pure. K3 E1 triple now rests on **`hk3` alone** → which reduces to **`StableNegRank16`** → now gated on exactly TWO elementary inputs, **neither genus theory**: `OddRank34Diagonalizable` (ranks 3–4 only) and Wall's characteristic-vector transitivity. Milnor–Husemoller II.4.3 is BUILT (`odd_indefinite_unit_peel` unconditional; rank 2 constructive). |
+| **`hA`** | **RE-SCOPED and BUILT.** The old Freeze-A atoms are **kernel-proven satisfiable with ZERO geometry** (registry `freeze-a-atoms-satisfiable-with-zero-geometry`) — `HandleTradeCobordism` is met by the unit cylinder. Replacement `BordantToSplitLocus` on a **faithful** presentation, where `rank q = m` is DERIVED from additivity rather than declared. Refutable by a nonzero `σ = 0` class; the old atom was unrefutable. |
+| **`hker`** | Route fixed and typed. `gluesT2_iff_singleWitness` (registry): the single-witness extraction is **EQUIVALENT** to gluing — no shortcut exists. `refl`/`symm` unconditional ⟹ gluing is the SOLE missing equivalence law. **`SeamGlueChart` INHABITED** for mapping cylinders + empty seam; the transport engine means **only the `chart` field is hard**. Arc B needs **TWO** new `TangentialData` fields (not one) — visible already at the empty seam — both breaking changes, **unauthorized**. |
+| **`hcol`** | Refined, **NOT** discharged (`RankZeroCollapseSupply` is an interface). Everything there is `k = 0`. B2 wall kernel-encoded: on a Wu-witness carrier no char-pair structure has empty surface, so the terminal move must change the carrier. |
+
+### Two lane-level facts worth not relearning
+- **`orientInput` is retired as a GATE, not settled as a PROPOSITION.** The 2-saturation statement is
+  neither proved nor disproved; nothing consumes it.
+- **The surgery trace is OUTSIDE `SeamGlueChart`'s domain** (welds along a proper subset, not a whole
+  boundary component) — not blocked by a field. → `surgery-trace-is-not-a-seamglue-composition`.
+
+### Binding disciplines added this session (tracked in `../PRE_DECISIONS.md`)
+**Pre-dispatch target diligence** (vacuity-attack the target / carrier-not-model / survey alternatives
+/ never inherit an estimate) · **"Mathlib lacks X" is COST, never CLOSURE** · **never grep for
+`native_decide`/`sorry`/`axiom`** — use `#print axioms` + `lean_verify`.
+
+### Non-goal work now sharing capacity (goal stays TOP priority)
+`6E*` graphene/detector series authorized: roadmaps 6EA–6EE landed, bundle **D12** authorized, 6EA
+Stage 2 frozen. ⚠ Build defect corrected there that applies repo-wide: **the root `SKEFTHawking.lean`
+has no `globs`, so a module not imported there is NOT built by `lake build` at all** — every wave must
+add its own root import.
 
 ## Part 2 — The remaining work, in dependency order
 
