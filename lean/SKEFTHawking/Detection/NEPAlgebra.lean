@@ -180,7 +180,8 @@ noncomputable def enbwTwoSided (h : ℝ → ℝ) (T : ℝ) : ℝ :=
 /-! ## NEP basics and the unit contract -/
 
 /-- **The unit contract, in statement form:** `NEP² = S_P`, i.e. `[W/√Hz]² = [W²/Hz]`. This is
-the defining property the roadmap's `nep_def` asks to be carried in a statement rather than only
+the defining property that the roadmap's Wave-2 acceptance item (written there as nep_def, and
+shipped here as `nepOfPSD` / `nepOfOutput`) asks to be carried in a statement rather than only
 in a docstring; it is consumed by `shot_nep_formula`, which is what makes the shot NEP's leading
 `2` a checkable prefactor instead of a naming choice. Requires `0 ≤ S_P` — a PSD is
 non-negative. -/

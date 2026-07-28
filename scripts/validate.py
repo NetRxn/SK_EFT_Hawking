@@ -5644,6 +5644,136 @@ def check_inventory_index_autogen_fresh() -> CheckResult:
 # CLI
 # ═══════════════════════════════════════════════════════════════════════
 
+
+# ---------------------------------------------------------------------------
+# Lean docstring reference drift (Stage-14 QI, 2026-07-28)
+# ---------------------------------------------------------------------------
+# Structural prevention for the failure class that produced BLOCKER 1.1 of the
+# Phase-6EA Stage-13 review: a Lean module docstring naming a project declaration
+# that no longer exists, because the declaration was renamed and the prose was not.
+#
+# `prose_theorem_reference_coverage` already guards this for *bundle drafts*
+# (papers/<bundle>/paper_draft.tex). Nothing guarded Lean docstrings themselves,
+# and the class has a live generator: it fired the same day a lead rename landed.
+#
+# Low-noise by construction. A backticked snake_case token is reported only when it
+# (a) fails to resolve in lean_deps.json, AND (b) closely resembles a name that DOES
+# resolve — i.e. it looks like rename drift rather than a Mathlib or tactic name.
+# That is precisely the observed failure shape and it keeps Mathlib references,
+# tactic names and local binders out of the result.
+_DOCSTRING_STRICT_FAMILIES = ("SKEFTHawking.Detection.", "SKEFTHawking.Electrothermal.")
+_DOCSTRING_TOKEN_RE = re.compile(r"`([A-Za-z][A-Za-z0-9_']*)`")
+_DOCSTRING_BLOCK_RE = re.compile(r"/-[-!](.*?)-/", re.DOTALL)
+
+
+@register_check("lean_docstring_refs_resolve",
+                "Lean docstring `backticked` project names resolve (rename-drift guard)")
+def check_lean_docstring_refs_resolve() -> CheckResult:
+    """Flag Lean docstrings naming a project declaration that does not exist.
+
+    Round-1 design used a `difflib` near-match filter to suppress noise. A regression
+    test against the ACTUAL blocker showed that silently defeated the check: the real
+    rename pair (`poisson_avgError_floor_equalRates` vs
+    `poisson_avgError_equalRates_eq_half`) scores below any cutoff loose enough to stay
+    quiet. So the near-match is now used only to enrich the message, never to gate it.
+
+    Noise is controlled the honest way instead: a token is exempt if it is a Mathlib
+    declaration name (short-name set built from the pinned Mathlib source) or a common
+    tactic/keyword. Inside the strict families — the new, clean module families — any
+    surviving unresolvable token is a FAIL. Elsewhere it is advisory, so the legacy
+    backlog is reported without blocking.
+    """
+    import difflib
+    import subprocess
+
+    deps_path = PROJECT_ROOT / "lean" / "lean_deps.json"
+    if not deps_path.exists():
+        return CheckResult(passed=True,
+                           details=[Detail("skipped", True, "lean_deps.json absent", warning=True)])
+    decls = json.loads(deps_path.read_text())
+    full = {d["name"] for d in decls}
+    short: dict[str, str] = {}
+    for d in decls:
+        short.setdefault(d["name"].rsplit(".", 1)[-1], d["name"])
+    known = set(short) | full
+
+    mathlib_dir = PROJECT_ROOT / "lean" / ".lake" / "packages" / "mathlib" / "Mathlib"
+    mathlib_names: set[str] = set()
+    if mathlib_dir.exists():
+        try:
+            out = subprocess.run(
+                ["grep", "-rhoE",
+                 r"^(private |protected |noncomputable )*"
+                 r"(theorem|lemma|def|abbrev|instance|structure|inductive|class) "
+                 r"+[A-Za-z_][A-Za-z0-9_']*",
+                 str(mathlib_dir)],
+                capture_output=True, text=True, timeout=180).stdout
+            mathlib_names = {ln.split()[-1] for ln in out.splitlines() if ln.split()}
+        except Exception:
+            mathlib_names = set()
+
+    # A docstring may deliberately name a declaration that does NOT exist — e.g. recording a
+    # route that was rejected, retracted, or consciously not shipped. Those are the opposite of
+    # drift (they are the record that keeps someone from re-adding it), so exempt an occurrence
+    # whose surrounding sentence disclaims it. Mirrors the disclaimer exemption in
+    # `prose_theorem_reference_coverage`.
+    disclaim = re.compile(
+        r"(NOT shipped|not shipped|deliberately|does not exist|do(es)? NOT exist|retracted|"
+        r"rejected|REJECTED|banned|settled-dead|superseded|dropped|no longer|would have been|"
+        r"is wrong|was wrong|non-existent|nonexistent)", re.IGNORECASE)
+    exempt = {"set_option", "maxHeartbeats", "native_decide", "norm_num", "field_simp",
+              "ring_nf", "simp_rw", "noncomm_ring", "push_cast", "linear_combination",
+              "match_scalars", "fun_prop", "positivity", "gcongr", "gauss_sum"}
+
+    details: list[Detail] = []
+    n_fail = n_adv = 0
+    for path in sorted((PROJECT_ROOT / "lean" / "SKEFTHawking").rglob("*.lean")):
+        rel_mod = str(path.relative_to(PROJECT_ROOT / "lean" / "SKEFTHawking"))
+        module = "SKEFTHawking." + rel_mod.removesuffix(".lean").replace("/", ".")
+        strict = module.startswith(_DOCSTRING_STRICT_FAMILIES)
+        src = path.read_text(errors="ignore")
+        seen: set[str] = set()
+        for block in _DOCSTRING_BLOCK_RE.findall(src):
+            for tok in _DOCSTRING_TOKEN_RE.findall(block):
+                if tok in seen or tok in known or tok in mathlib_names or tok in exempt:
+                    continue
+                if "_" not in tok or len(tok) < 6 or not any(c.islower() for c in tok):
+                    continue
+                seen.add(tok)
+                # Disclaimed-in-context ⇒ intentional record of an absent name, not drift.
+                pos = block.index(tok)
+                if disclaim.search(block[max(0, pos - 400): pos + 400]):
+                    continue
+                near = difflib.get_close_matches(tok, short.keys(), n=1, cutoff=0.6)
+                hint = f"; nearest existing is `{near[0]}`" if near else ""
+                rel = path.relative_to(PROJECT_ROOT)
+                line = src[:src.index(tok)].count("\n") + 1 if tok in src else 0
+                if strict:
+                    n_fail += 1
+                    details.append(Detail(
+                        f"drift:{module}:{tok}", False,
+                        f"{rel}:{line} — docstring names `{tok}`, which resolves to NO "
+                        f"declaration and is not a Mathlib name{hint}. Update the prose or "
+                        f"restore the name.",
+                    ))
+                else:
+                    n_adv += 1
+                    details.append(Detail(
+                        f"drift-advisory:{module}:{tok}", True,
+                        f"{rel}:{line} — docstring names `{tok}` (unresolved{hint}) — "
+                        f"advisory outside the strict families.",
+                        warning=True,
+                    ))
+    details.insert(0, Detail(
+        "summary", True,
+        f"scanned all SKEFTHawking Lean docstrings against {len(short)} project + "
+        f"{len(mathlib_names)} Mathlib names — {n_fail} FAIL(s) in the strict families, "
+        f"{n_adv} advisory elsewhere",
+        warning=bool(n_adv),
+    ))
+    return CheckResult(passed=(n_fail == 0), details=details)
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         description="SK-EFT Hawking cross-layer validation suite",
@@ -5744,3 +5874,4 @@ Examples:
 
 if __name__ == "__main__":
     sys.exit(main())
+

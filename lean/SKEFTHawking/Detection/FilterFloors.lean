@@ -77,7 +77,7 @@ smuggled into these statements. No claim is made about any instrument's implemen
 
 ## Route note (UNKNOWN-1 of `docs/roadmaps/Phase6EB_Roadmap.md`, resolved here)
 
-The roadmap posed the Cauchy–Schwarz brick as a choice between `inner_mul_le_norm_mul_norm` on
+The roadmap posed the Cauchy–Schwarz brick as a choice between `norm_inner_le_norm` (the L² inner-product route) on
 `L²(volume.restrict (Set.Icc 0 T))` and `MeasureTheory.integral_mul_le_Lp_mul_Lq`. Neither is
 used. The bound `(∫₀ᵀ h)² ≤ T·∫₀ᵀ h²` is proved from **non-negativity of a variance**: with
 `c := (∫₀ᵀ h)/T`,
