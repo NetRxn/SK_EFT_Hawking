@@ -3,13 +3,22 @@
 **Written:** 2026-07-15. **Fully re-verified and rewritten 2026-07-27** (lead, directly in the
 Lean — every claim below was read out of the tree, not carried forward from a prior revision).
 
-**Ground state (refreshed 2026-07-27, LATE — after the orientInput / hA / gluing / lattice round):**
-main `2543b0eb`. `lake build` → **exit 0, 10,323 jobs**; library-wide **0 axioms, 0 sorry**.
-`nogo_substrate_integrity` **PASSED** at **38** kernel-encoded no-go forks (was 32) +
-**44** `SETTLED_FORKS.md` prose entries (was 40). Counts stale vs `.lean` — run `/skeft-qa:sync`
-before the next gate run. Full `validate.py` N/N not re-run since `9880b913`.
+**Ground state (refreshed 2026-07-28, SOLO — after the K3-ledger collapse / GM-ceiling / lattice
+round):** main `1b935fab`. `lake build` → **exit 0, 10,348 jobs**; library-wide **24,967 theorems,
+0 axioms, 0 sorry**. `nogo_substrate_integrity` **PASSED** at **41** kernel-encoded no-go forks
+(was 38, +3 this round: two GM entries + the FK mod-2 membrane ceiling), verified against a **fresh**
+extraction (`lake build ExtractDeps` + `update_counts.py`, never a hash delete). Counts drift again
+after each commit — run `/skeft-qa:sync` before the next gate run. Full `validate.py` N/N last run
+`20260728T033834Z` at **47/48**; the single failure (`proxy_body_audit`, an `Iff.rfl` tautology) was
+fixed by BUILDING the substantive statement (`ae4f28b1`), not by registering it as debt, and that
+check now passes standalone.
 ⛔ `rm -rf .lake/build` remains BANNED until after 16-convergence (operator; ~40 min, it is DONE-gate
 (3), not an interim to-do).
+
+⚠ **READ [Part 2.δ′](#part-2δ--state-delta-2026-07-28-solo--supersedes-2δ-read-first) FIRST.** It
+supersedes 2.δ and **corrects a false claim carried in it** (the `StableNegRank16`
+"elementary, not genus theory" characterization). Precedence: **INDEX FRONTIER > 2.δ′ > 2.δ > §2.1
+onward.**
 
 **This document:** part 1 is the big picture for anyone catching up cold; part 2 is the remaining
 work in dependency order; part 3 is the binding architectural law set. The always-authoritative
@@ -83,14 +92,126 @@ atom-by-atom in part 2.
 
 ---
 
-## Part 2.δ — STATE DELTA (2026-07-27 late session) — READ THIS BEFORE THE PER-ATOM DETAIL BELOW
+## Part 2.δ′ — STATE DELTA (2026-07-28, SOLO) — SUPERSEDES 2.δ; READ FIRST
 
-⚠ **Scope of freshness.** This δ-block and the Part-1/ground-state header are current as of the
-session that produced commits `07cf14aa`…`2543b0eb`. **The per-atom detail in §2.1 onward predates
-that movement** and is accurate about architecture but stale about status for the four atoms named
-below. Where they disagree, this block wins — and the **INDEX FRONTIER wins over both**.
+⚠ **Freshness.** Current as of `1b935fab` (main; build 10,348 jobs; 24,967 theorems, **0 axioms,
+0 sorry**). Precedence: **INDEX FRONTIER > this block > Part 2.δ > §2.1 onward.** Everything below
+2.δ is accurate about *architecture* and stale about *status*.
 
-### The row (unchanged in shape): `{hKRS, row, hA, hcol, hker, hΦg}` + slot pin
+⚠ **Mode: SOLO** (operator directive 2026-07-28 — orchestration was costing efficiency). No workers
+in flight; all three slots idle at main. The delegation-policy block in the INDEX still applies if
+fan-out resumes.
+
+### ⛔ CORRECTION TO 2.δ — do not re-inherit its `StableNegRank16` characterization
+
+2.δ says `StableNegRank16` "reduces to Wall's characteristic-vector transitivity ALONE — one open
+leaf, **elementary (reflections only), not genus theory**." **That last clause is FALSE and was
+inherited from a worker report without checking.** Compute the inertia: rank 18 with `σ = −16` gives
+`(sigPos, sigNeg) = (1, 17)` — the Lorentzian `II_{1,17}`, which is *exactly* where Eichler's
+criterion fails and where every published proof needs the spinor genus. This is kernel-checked as
+`inertia_of_rank18_sig_neg16`.
+
+That is why the brick was **restated at rank 20** as `StableNegRank16Two`, whose inertia is `(2,18)`
+— `min ≥ 2`, so `2U` splits and Eichler applies. The rank-20 form is exactly as useful downstream.
+(This error is the origin of PRE_DECISIONS item 5, "never inherit an estimate **or a
+characterization**".)
+
+### The row: `{hKRS, row, hA, hB, hcol, KTNonSplit}` — 6 binders
+
+2.δ's row shape is stale: **`hker` dropped out** of the row entirely, and `{hcyc, h2}` collapsed
+through `hΦg` to `KTNonSplit`. The row's five *fields* factor into exactly two deep lanes:
+**`hdvd`** (Rokhlin — the atlas KEYSTONE, gating 11) and **`g`/`hrank`/`hk3`** (the K3 generator).
+
+### ⭐ K3 LANE — the Gram congruence is GONE; ledger is `StableNegRank16Two` + ONE geometric datum
+
+- `f5fcf065` routed the Gram obligation through the **lattice classification**. Keystone: Sylvester's
+  law of inertia needs only an **ℝ**-invertible change of coordinates, so `latticeSig` transports
+  from a merely **finite-index sublattice**. Hence 22 classes with Gram `⟨−2⟩¹⁶ ⊕ 3H` pin `σ = −16`
+  on any rank-22 basis datum — a table of cup products; **no basis, no Kummer half-sums, no PD, no
+  gluing-signature machinery**.
+- `16c6e7e4` **merged `hpd` into `hfam`** (cap–cup adjunction turns 253 cup products into 253
+  Kronecker pairings; the same family's cap-duals supply integral PD by spanning).
+- `8bc19ac3` **DELETED `heven`** — stated as an *iff*, so it cannot relocate the obligation. The
+  whole SpinWu / `w₂(K3) = 0` sub-lane is **retired**.
+- ⛔ Anti-circularity fence still binding: `kummerK3_pdInput_of_gram` takes the Gram as hypothesis
+  and is unusable on the route that produces it (`SETTLED_FORKS: k3-gram-must-not-use-pdInput-of-gram`).
+  The live route is `nonempty_intPD_of_capSpan`, whose hypothesis list is
+  `{Free/Finite ℤ H₂, Finite ℤ H², Projective ℤ (boundaries 1)}` + an equiv + a cap-spanning family —
+  **no Gram, no `IntCongr`, no `k3Form`** (lead-verified in the Lean).
+- ⛔ **LEDGER CORRECTION, and it goes the harder way:** the banked `3H` Gram
+  (`KummerT4GramCross.interMatrix_t4_intCongr_torusFourForm`) lives on **T⁴ itself** — not descended
+  to `Q = T⁴°/τ`, not on the weld, and an `IntCongr` rather than an equality. "3H is already banked"
+  was FALSE as stated.
+- **Open here:** the T⁴°→Q→weld descent of the 6 torus classes; `E_c · E_d = −2δ_{cd}` (ambient
+  cap-dual data — the `−2` is the normal bundle's Euler number, invisible to `H₂(E;ℤ) ≅ ℤ`); and
+  `StableNegRank16Two` (below).
+
+### ⭐ ROKHLIN LANE (`hdvd`, the KEYSTONE) — the ceiling is now KNOWN, three no-gos machine-enforced
+
+The wire *from* a general-σ Guillou–Marin relation *to* `16 ∣ σ` is **built**
+(`sixteen_dvd_sig_of_gm_realization`); the sole gap is `hgm` at general σ. Every in-tree producer
+proves only the null case. Three `KERNEL_NOGO_REGISTRY` entries now bound the design space:
+
+1. `gm-triple-level-layer-is-decided-by-sigma-alone` — **this one corrects an earlier entry of mine.**
+   I had recorded the empty-surface route as circular *because* its hypothesis is biconditional with
+   `16 ∣ σ` at spin. `triple_layer_forcing` proves that criterion is **unsatisfiable**: every
+   predicate on the invariant triple `(σ, F·F, 2β)` that follows from GM and suffices for Rokhlin at
+   spin has exactly that property — **the true Guillou–Marin theorem included**. The correct test is
+   **intensional**: what DATA the hypothesis is a predicate on. The practical ban stands (that datum
+   *is* σ-arithmetic); only the justification changed. See the amendment at the head of the
+   SETTLED_FORKS entry `gm-empty-surface-specialization-is-circular`.
+2. `gm-pin-torsor-free-shadow-weaker-than-van-der-blij` — σ = 8 satisfies `8 ∣ σ` **and** the full
+   torsor-invariant GM shadow, yet `¬(16 ∣ 8)`. The pin⁻-**free** content of `[FK]` has **zero**
+   marginal content over the lattice bound already owned; the geometry must enter through `w`.
+3. `fk-mod2-membrane-index-cannot-reach-nonorientable-stratum` — any `μ` satisfying the `[Q2]`
+   refinement identity forces `B(v,v) = 0` (put `x = y = v`; `2μ(v) = 0` in `ZMod 2`), so a mod-2
+   index reaches the **orientable stratum and kernel-checkably only that one**; refuted at
+   `stdQuadratic 1`, the ℝP² half of the `(ℝP⁴,ℝP²)` generator. **Not fixable by more membrane
+   work** — the obstruction is the polarization identity. Reaching the nonorientable stratum needs
+   the GM **ℤ/4-resolution** index, whose coefficient split the in-tree blueprint does **not** pin.
+   **Do not guess it** — it needs Klug arXiv:2011.12418 §2 read directly.
+
+Positive substrate that DID land: the three FK summands are built as genuine **constructions**
+(`MembraneIndex.lean`), including the framing obstruction as a loop **degree** with additivity
+proved — no `ZMod`-valued field, so the P5 repackaging trap is avoided. The pin⁻ enhancement torsor
+is proved **simply transitive** (`shift_simply_transitive`, `nat_card_pin_enhancements = 2^rk H₁`);
+both `CharSurfaceFKVacuity` §3 and the ceiling module had *assumed* this without proving it.
+
+⚠ Carried, not acted on: `CharSurface.Membrane` hard-codes `𝓡∂ 2`, for which no in-tree inhabitant
+is exhibitable (the project's disk asset is the **product** model). Verified it has no load-bearing
+consumer outside its own file → a do-not-build-on-this note, not an active defect.
+
+### ⭐ LATTICE LANE (solo, in progress) — `PlaneReductionDescent.lean`
+
+`UnitCancellation` → `StableNegRank16Two` → the K3 Gram. wt1 reduced `UnitCancellation` to ONE
+geometry-free statement, **`PlaneReduction`**; the safeguard is lead-verified (`planeStep_lift`
+*proves* each arithmetic move is realised by an actual isometry, so the reduction target is not
+hand-transcribed folklore). Built since:
+
+- the move algebra + six closers (`65fc0d83`) — specialising one transvection parameter to `0`
+  collapses the moves to clean elementary operations;
+- **`planeReduction_of_axis`** (`c6d19bd7`) — the whole 4-parameter statement reduces to its
+  `β = 0` axis;
+- the two axis moves + **`planeReduction_axis_round`** (`456d532f`, `1404193f`) — one axis visit
+  strictly drops `gcd(γ,δ)`;
+- **the conserved quantity** (`f847b2d4`) — `N := αβ + γδ` is invariant under **all four** moves
+  (it is half the norm of `w'`'s `U ⊕ U₁` component, so isometry-invariance forces it). Endpoint
+  constraint: reaching `(0,0,γ',δ')` forces `γ'δ' = N`;
+- **`descent_round`** + **`descent_to_axis`** (`21d4b23a`, `1b935fab`) — the descent side complete,
+  with the gcd bound. The key observation: the `β`-reducing step leaves one plane-2 coordinate
+  *completely alone*, so the post-round gcd **divides** it.
+
+**Open:** the outer recursion needs the descent's bound in terms of the current `γ,δ` rather than
+`β`. Bookkeeping over facts now all proved, not a missing idea.
+
+### Method note worth keeping
+The axis measure was **tested before being formalised**, and the first test was worthless: a random
+sweep showed 239 clean trials but every gcd sequence had length ≤ 2 — random tuples essentially never
+reach the hard case. Constructing the hard case directly (400 axis states with `e ∤ α`) is what
+actually validated it. Same pattern earlier: a brute-force `PlaneReduction` search "failed" on 19
+tuples purely because the multiplier radius was 6 and `(6,10,15,0)` needs `q = 10`.
+
+### The row (SUPERSEDED — kept for provenance): `{hKRS, row, hA, hcol, hker, hΦg}` + slot pin
 
 | atom | movement this session |
 |---|---|
