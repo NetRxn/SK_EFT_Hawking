@@ -5070,6 +5070,11 @@ import SKEFTHawking.MembraneIndex
 -- count rules, the dark-baseline zero-false-alarm optimum, and the two-sided refutation of the
 -- folklore `miss ≥ exp(−(N_a − N_b))` form.
 import SKEFTHawking.Detection.PoissonDiscrimination
+-- Phase 6EA Wave 2 — Gaussian threshold discrimination algebra: the project-local upper-tail
+-- `Q` (Mathlib carries no erf/erfc/Gaussian CDF at pin), its window/Birnbaum lower tails and
+-- Mills/Chernoff upper tails, rational enclosures of `Q(2)`, and the separation-budget error
+-- floor on `avgAssignmentError` uniform over threshold placement.
+import SKEFTHawking.Detection.GaussianThreshold
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
