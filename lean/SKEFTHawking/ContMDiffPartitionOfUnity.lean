@@ -110,6 +110,24 @@ theorem contMDiff_sum : ContMDiff I 𝓘(ℝ) n fun x => ∑ᶠ i, f i x :=
   contMDiff_finsum (fun i => ContMDiffPartitionOfUnity.contMDiff f i)
     (ContMDiffPartitionOfUnity.locallyFinite f)
 
+/-- If `g` is `C^n` at every point of the topological support of `f i`, then `f i • g` is `C^n`
+on the whole manifold — the point being that `f i` kills whatever `g` does elsewhere. -/
+theorem contMDiff_smul {g : M → F} {i : ι} (hg : ∀ x ∈ tsupport (f i), ContMDiffAt I 𝓘(ℝ, F) n g x) :
+    ContMDiff I 𝓘(ℝ, F) n fun x => f i x • g x :=
+  contMDiff_of_tsupport fun x hx =>
+    (ContMDiffPartitionOfUnity.contMDiff f i).contMDiffAt.smul <|
+      hg x <| tsupport_smul_subset_left _ _ hx
+
+/-- **Patching lemma.** If `g i` is `C^n` at every point of the topological support of `f i`, then
+`fun x => ∑ᶠ i, f i x • g i x` is `C^n` on the whole manifold. This is what turns a family of
+locally defined objects into a single global `C^n` one, and is the reason the collar construction
+needs a partition of unity in the first place. -/
+theorem contMDiff_finsum_smul {g : ι → M → F}
+    (hg : ∀ i, ∀ x ∈ tsupport (f i), ContMDiffAt I 𝓘(ℝ, F) n (g i) x) :
+    ContMDiff I 𝓘(ℝ, F) n fun x => ∑ᶠ i, f i x • g i x :=
+  (contMDiff_finsum fun i => ContMDiffPartitionOfUnity.contMDiff_smul f (hg i)) <|
+    (ContMDiffPartitionOfUnity.locallyFinite f).subset fun _ => support_smul_subset_left _ _
+
 /-- A `C^n` partition of unity is *subordinate* to a family of sets `U i` if the closure of the
 support of each member is contained in the corresponding set. -/
 def IsSubordinate (f : ContMDiffPartitionOfUnity ι I M n s) (U : ι → Set M) : Prop :=

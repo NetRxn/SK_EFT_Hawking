@@ -4888,6 +4888,8 @@ import SKEFTHawking.SingularRelativeCoverMVSumExact
 import SKEFTHawking.CollarNeighbourhood
 -- Collar prerequisite (2), separately upstreamable: partitions of unity at finite regularity
 import SKEFTHawking.ContMDiffPartitionOfUnity
+-- Its first consumer: a C^n boundary-defining function on a bordism-model manifold
+import SKEFTHawking.CollarDefiningFunction
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
