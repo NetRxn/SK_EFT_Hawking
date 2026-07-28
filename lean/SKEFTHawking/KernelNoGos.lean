@@ -26,26 +26,29 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    Instantiated at stdQuadratic 1 -- the RP2 surface half of the (RP4, RP2) generator, where B 1 1 = 1 --
    `no_mod2_index_on_rp2` is a flat refutation by `decide`. NOT FIXABLE BY MORE MEMBRANE WORK: the
    obstruction is the polarization identity itself, not a missing lemma or a weak construction. CONSEQUENCE
-   FOR ROUTE A: reaching the nonorientable stratum requires the Guillou-Marin Z/4-RESOLUTION index.
-   ** RESOLVED 2026-07-28 (3e15199c) -- the split is now PINNED from the primary source, read directly
-   by the lead: Klug arXiv:2011.12418v3 SECTION 6 p. 18 (following Matsumoto and Guillou-Marin). NOTE
-   the earlier version of this entry cited section 2; that was WRONG -- section 2 is the ORIENTABLE
-   mod-2 case and Klug says so explicitly there. The split is  e_F(x) = n(D) + 2(D.F) + 2 d(C) (mod 4),
-   coefficients 1,2,2, with the half-integrality in n(D) -- the framing, counting right-handed HALF-
-   twists -- and NOT in a doubled D.F, so the shape this entry warned against guessing was indeed the
-   wrong one. Built in GMZ4MembraneIndex.lean; corpus note in Lit-Search/Phase-5qH/. The refutation
-   below is UNAFFECTED: the mod-2 index still cannot reach the nonorientable stratum, and
-   `orientable_framing_forces_alternating` re-derives exactly this obstruction whenever the framing is
-   a whole-twist count, which is the kernel-checked statement that the half-twists are load-bearing. ** ALSO SETTLED HERE (a second, independent refutation): with the normal-framing comparison as
-   FREE data, [Q1] in its natural universal shape is FALSE -- `indexWellDefined_false_of_framedMembrane`
-   shows the 2-pi twist leaves the membrane untouched and flips the index. This is the same failure mode
-   `CharSurfaceFKVacuity` found one level up, reappearing at the framing; the repair is a rigidity tie
-   (NormalFramingTie), and `not_tied_twist` plus `trivialTie_rigid_but_uninhabited` show both that the
-   repair bites and that inhabitedness is separately load-bearing. The same theorem is the P5 repackaging
-   check: the membrane layer is strictly MORE data than the enhancement it produces, which a field-carrying
-   MembraneIndexData could never be. SCOPE: this refutes the mod-2 index on the nonorientable stratum and
-   the free-framing [Q1]; it does NOT refute [FK] itself, nor the mod-2 index on the orientable stratum,
-   where it is exactly right.
+   FOR ROUTE A: reaching the nonorientable stratum requires the Guillou-Marin Z/4-RESOLUTION index. **
+   RESOLVED 2026-07-28 (3e15199c): the split is now PINNED from the primary source, read directly by the
+   lead -- Klug arXiv:2011.12418v3 SECTION 6 p. 18, following Matsumoto [Mat86] and Guillou-Marin [GM77].
+   NOTE the earlier version of this entry cited section 2; that was WRONG -- section 2 is the ORIENTABLE
+   mod-2 case and Klug states the orientability assumption there explicitly. The split is e_F(x) = n(D) +
+   2(D.F) + 2 d(C) (mod 4), coefficients 1,2,2, with the half-integrality living in n(D) -- the framing,
+   counting right-handed HALF-twists under the convention that (r_D, C, e1, e2) agrees with the ambient
+   orientation of X -- and NOT in a doubled D.F, so the shape this entry warned against guessing was indeed
+   the wrong one. Built as a construction in GMZ4MembraneIndex.lean; corpus note at
+   Lit-Search/Phase-5qH/Klug-GuillouMarin-Z4-membrane-index-coefficient-split.md. THIS REFUTATION IS
+   UNAFFECTED: the mod-2 index still cannot reach the nonorientable stratum, and
+   `GMZ4MembraneIndex.orientable_framing_forces_alternating` re-derives exactly this obstruction whenever
+   the framing is a whole-twist count -- the kernel-checked statement that the half-twists are the
+   load-bearing part. ** ALSO SETTLED HERE (a second, independent refutation): with the normal-framing
+   comparison as FREE data, [Q1] in its natural universal shape is FALSE --
+   `indexWellDefined_false_of_framedMembrane` shows the 2-pi twist leaves the membrane untouched and flips
+   the index. This is the same failure mode `CharSurfaceFKVacuity` found one level up, reappearing at the
+   framing; the repair is a rigidity tie (NormalFramingTie), and `not_tied_twist` plus
+   `trivialTie_rigid_but_uninhabited` show both that the repair bites and that inhabitedness is separately
+   load-bearing. The same theorem is the P5 repackaging check: the membrane layer is strictly MORE data than
+   the enhancement it produces, which a field-carrying MembraneIndexData could never be. SCOPE: this refutes
+   the mod-2 index on the nonorientable stratum and the free-framing [Q1]; it does NOT refute [FK] itself,
+   nor the mod-2 index on the orientable stratum, where it is exactly right.
    backing: `no_mod2_index_on_rp2`, `refines_forces_alternating`, `not_exists_index_of_B_self_ne_zero`, `indexWellDefined_false_of_framedMembrane`
 
 2. `gm-pin-torsor-free-shadow-weaker-than-van-der-blij` [structural_forcing]
