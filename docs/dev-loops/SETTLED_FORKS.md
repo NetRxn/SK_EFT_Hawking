@@ -740,9 +740,34 @@ structure ONLY — it does not surface namespaced members like `.toHasClass`. Do
 
 **A K3 Gram plan of the shape "tabulate the 16 exceptional + 6 descended-torus classes and stop" cannot
 work.** Those 22 classes span a PROPER finite-index sublattice of `H₂(K3;ℤ)`; the Kummer half-sums are
-mandatory. Elementary reason, self-contained: their Gram is `⟨−2⟩¹⁶ ⊕ 3H` with `|det| = 2¹⁶`, while
-`H₂(K3;ℤ)` is unimodular of rank 22 (`k3Form_isEvenUnimodular`, transported by
-`IntCongr.isEvenUnimodular`), so the index of the span is `2⁸ ≠ 1`.
+mandatory. Elementary reason, self-contained: their Gram has `|det| ≠ 1`, while `H₂(K3;ℤ)` is unimodular
+of rank 22 (`k3Form_isEvenUnimodular`, transported by `IntCongr.isEvenUnimodular`).
+
+⚠ **NUMERICAL CORRECTION 2026-07-28 (lead-verified at page level against the primary — the earlier
+numbers here were WRONG).** This entry used to say the Gram is `⟨−2⟩¹⁶ ⊕ 3H` with `|det| = 2¹⁶` and
+index `2⁸`. The **descended** torus block is *scaled by 2*: `π : Ã → Km(A)` is a degree-2 quotient and
+`ι*` is the identity on `H²(A;ℤ)`, so `π_*` doubles the form. Verbatim, Garbagnati–Sarti
+(arXiv:1305.3514) **Lemma 2.5, p. 5**: *"π_{A*}(U^{⊕3}) = π_{A*}(H²(A,ℤ)^{ι*}) = H²(A,ℤ)^{ι*}(2) =
+U^{⊕3}(2)"*; and immediately after it, **p. 5**: *"The lattice U(2)^{⊕3} ⊕ ⟨−2⟩^{⊕16} has index 2¹¹ in
+Λ_{K3} ≃ U^{⊕3} ⊕ E₈(−1)^{⊕2}."* So:
+
+| quantity | correct value |
+|---|---|
+| Gram of the 16+6 | `⟨−2⟩¹⁶ ⊕ 3H(2)`, `\|det\| = 2¹⁶·4³ = 2²²` |
+| index of their span in `H₂(K3;ℤ)` | **`2¹¹`** (= `2⁵ · 2⁶`), **not `2⁸`** |
+| `[K : Π]`, `K` = Kummer lattice | `2⁵` (GS Prop. 2.2, p. 4: `disc K = 2⁶` ⟹ `2¹⁶/2⁶ = 2¹⁰ = (2⁵)²`) |
+| `[H₂(K3;ℤ) : K ⊕ π_*H₂(T)]` | `2⁶` (GS Rem. 2.3(4), p. 4: `A_K ≅ (ℤ/2)⁶`) |
+
+⚠ Also corrected: the half-sums adjoined to get `K` are indexed by affine **HYPERPLANES** (dim 3, 8
+points; GS Rem. 2.3(1), p. 4 — *"there are 30 classes of this kind"*), **not** by affine subspaces of
+dimension ≥ 2. The dim-2 half-sums are **not** in `K`: GS Rem. 2.3(7), p. 4 says the six `V_{i,j}`
+half-sums *"generate the discriminant group of the Kummer lattice"*, i.e. they live in `K^∨/K`. (This
+is Nikulin's even-set theorem: a disjoint set of rational curves that is a double-cover branch locus
+has exactly 8 or 16 members.) Corpus note with the full provenance:
+`Lit-Search/Phase-5qH/Kummer-lattice-index-and-scaling.md`.
+
+**The fork's CONCLUSION is unaffected** — the 22 classes are still not a basis and the half-sums are
+still mandatory. Only the two numbers moved.
 
 **Correct target instead:** choose a cap-dual cohomology family for a genuine rank-22 generating set
 (geometric classes **plus** the half-sums), tabulate `⟨·,·⟩` via
