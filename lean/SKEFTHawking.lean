@@ -4678,6 +4678,11 @@ import SKEFTHawking.PinPlusKTKerPhiDoubles
 import SKEFTHawking.PinPlusKTAssemblyResiduals
 import SKEFTHawking.PinPlusKTSpinRowInhabit
 import SKEFTHawking.PinPlusKTBinderDischarge
+-- `hΦg` IDENTIFIED: over the residual row the unnamed generator-image atom is EXACTLY the named W-D
+-- binder `KTNonSplit` (`phiG_eq_ktKernelRep_iff_ktNonSplit`). The non-circular backward arrow drops
+-- `KerPhiSubDoubles` from the row (7 ⟶ 6, `kt_equiv_zmod16_of_row_of_nonSplit`) and discharges the
+-- historically-frozen W-D pair `{hcyc, h2}` from `KTNonSplit` alone.
+import SKEFTHawking.PinPlusKTPhiGNonSplit
 import SKEFTHawking.PinPlusKTCollapseDischarge
 import SKEFTHawking.PinPlusKTFreezeDischarge
 import SKEFTHawking.PinPlusKTSphereProdBordism
