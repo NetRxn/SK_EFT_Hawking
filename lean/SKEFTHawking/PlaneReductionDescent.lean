@@ -343,6 +343,40 @@ theorem descent_round {α β γ δ : ℤ} (hβ : β ≠ 0) :
     · exact le_trans (Nat.le_of_dvd (Int.natAbs_pos.mpr hr1)
         (Nat.gcd_dvd_left (γ % β).natAbs _)) (le_max_left _ _)
 
+/-- **THE DESCENT SIDE, ASSEMBLED.** From any state with `β ≠ 0`, iterating `descent_round` either
+closes outright or reaches the `β = 0` axis with `gcd(γ, δ)` strictly below the *starting* `|β|`.
+
+Both facts come from the round: `|β|` strictly drops (so the induction terminates) and the round's
+gcd is bounded by the `m₃`-reduced coordinates, which are themselves `< |β|`. Iterating only shrinks
+that bound, so the final axis gcd is below the `|β|` we started from. -/
+theorem descent_to_axis (α β γ δ : ℤ) (hβ : β ≠ 0) :
+    (∃ γ' δ' : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (0, 0, γ', δ')) ∨
+    (∃ α' γ' δ' : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (α', 0, γ', δ') ∧
+      Int.gcd γ' δ' < β.natAbs) := by
+  have key : ∀ n : ℕ, ∀ α β γ δ : ℤ, β ≠ 0 → β.natAbs ≤ n →
+      (∃ γ' δ' : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (0, 0, γ', δ')) ∨
+      (∃ α' γ' δ' : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (α', 0, γ', δ') ∧
+        Int.gcd γ' δ' < β.natAbs) := by
+    intro n
+    induction n with
+    | zero =>
+      intro α β γ δ hβ hle
+      exact absurd (Int.natAbs_eq_zero.mp (Nat.le_zero.mp hle)) hβ
+    | succ n ih =>
+      intro α β γ δ hβ hle
+      rcases descent_round (α := α) (γ := γ) (δ := δ) hβ with ⟨a, hchain⟩ | ⟨α', β', γ', δ', hchain, hlt, hbd⟩
+      · obtain ⟨g, d, htail⟩ := planeReduction_zero_tail a β
+        exact Or.inl ⟨g, d, hchain.trans htail⟩
+      · have hbdβ : Int.gcd γ' δ' < β.natAbs :=
+          lt_of_le_of_lt hbd (max_lt (natAbs_emod_lt_natAbs hβ) (natAbs_emod_lt_natAbs hβ))
+        by_cases hβ' : β' = 0
+        · subst hβ'
+          exact Or.inr ⟨α', γ', δ', hchain, hbdβ⟩
+        · rcases ih α' β' γ' δ' hβ' (by omega) with ⟨g, d, h⟩ | ⟨α'', g, d, h, hbd'⟩
+          · exact Or.inl ⟨g, d, hchain.trans h⟩
+          · exact Or.inr ⟨α'', g, d, hchain.trans h, by omega⟩
+  exact key β.natAbs α β γ δ hβ le_rfl
+
 /-! ## §6b. THE AXIS ROUND — one visit strictly drops `gcd(γ, δ)` -/
 
 /-- **THE AXIS ROUND.** From an axis state whose `gcd(γ, δ) =: e` is positive and does **not** divide
