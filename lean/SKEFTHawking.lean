@@ -4966,6 +4966,11 @@ import SKEFTHawking.T2BordismGluing
 import SKEFTHawking.LatticeSigFullRankSublattice
 import SKEFTHawking.IntersectionSigFullRankFamily
 import SKEFTHawking.KummerK3GramFromLattice
+-- Phase 5q.H — the `hfam` supply side: the 22-class geometric family split into its three
+-- independent tabulations (16 exceptional `(−2)` classes, 6 descended `T⁴` classes, cross-block),
+-- the consumer widened to any nondegenerate Gram of signature −16, plus the non-vacuity
+-- certificate (a nondegenerate Gram forces 22 linearly independent classes).
+import SKEFTHawking.KummerK3GeometricFamily
 -- Phase 5q.H — the general-sigma Guillou-Marin/[FK] statement layer: why the empty-surface
 -- specialization of GM is CIRCULAR for a spin manifold, kernel-checked.
 import SKEFTHawking.CharSurfaceFKVacuity
