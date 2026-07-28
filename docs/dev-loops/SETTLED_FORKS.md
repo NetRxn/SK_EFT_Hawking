@@ -1125,3 +1125,45 @@ search for the bridge (`lean_local_search` on the map/iso name), not just the tw
      declare the flagship at `∞` rather than `⊤` (a **goal-condition change — operator call**), or
      find a collar construction that avoids partitions of unity.
 - `created_ts`: 2026-07-27
+
+## `stablenegrank16-rank18-forces-spinor-genus-restate-at-rank20` (2026-07-27, arm: close-out — wt1)
+- `kind`: route ban + restatement (prose — the rank-18 statement is **TRUE**, merely not elementarily
+  provable, so there is nothing false to kernel-encode).
+- ⛔ **BANNED:** attempting Wall's characteristic-vector transitivity / `UnitCancellation` **at the
+  rank-18 phrasing of `StableNegRank16`** (one hyperbolic plane, `σ = −16`). **Kernel-checked reason:**
+  `inertia_of_rank18_sig_neg16` proves that lattice has inertia **(1, 17)** — it *is* the Lorentzian
+  even unimodular `II_{1,17} ≅ U ⊕ E₈(−1)²`. That is precisely where `2U` cannot split off for
+  numerical reasons, **Eichler's criterion does not apply**, and every published proof routes through
+  Eichler's **spinor genus / strong approximation** (Borcherds, *The Leech lattice and other lattices*,
+  arXiv:math/9911195 Thm 3.9.1 — primary source verified by wt1). Mathlib has no genus theory, so this
+  phrasing is not reachable.
+- ✅ **THE FIX, AND IT COSTS NOTHING: restate at RANK 20 (two hyperbolic planes).**
+  `inertia_of_rank20_sig_neg16` gives inertia **(2, 18)** — `min ≥ 2`, inside Eichler's elementary
+  regime. `StableNegRank16Two` + `hk3_of_stable16_two` lift the rank-20 stabilization through **one**
+  peeled `H` instead of the rank-18 one through two, and land **the same** `IntCongr M k3Form`
+  (lead-verified: I read both inertia theorems and the target, and checked the arithmetic independently
+  — rank 18: sum 18, diff −16 ⟹ (1,17); rank 20: sum 20, diff −16 ⟹ (2,18)).
+- ⚠ **MY BRIEF ERROR (second instance of the same checklist item).** I told wt1 the target was
+  "**Elementary — reflections only. Not genty theory**", asserting as fact a characterization I had
+  inherited from wt1's own earlier report. It was false at the rank I named. → `PRE_DECISIONS.md`
+  item 5 widened from "never inherit an ESTIMATE" to "never inherit an estimate **or a
+  characterization**" — a claim about the mathematical *nature* of a target is a route claim.
+  **The cheap check that would have caught it: compute the inertia.**
+- **Progress banked at the corrected rank:** the Eichler transvection is built explicitly
+  (`eichler`, `eichler_isometry`, `eichler_isUnit_det`; integrality costs exactly the parity of
+  `x·M·x`, which is the even/odd dividing line for this route), and **Eichler's criterion STEP 2 is
+  DISCHARGED** (`exists_isometry_map_of_perp_hyp` — three explicit transvections; the proof makes
+  visible that `w·w = w'·w'` is exactly what kills the middle arrow's leftover `f`-coefficient).
+  `unitExtend_intCongr_of_evenUnimodular` reduces the whole brick to **cancelling the `⟨1⟩`**, off the
+  now-unconditional `odd_indefinite_intCongr_unconditional`.
+- **Remaining = Eichler STEP 1 only** (normalize `w'` ⊥ `⟨e,f⟩`): the
+  `SO⁺(U ⊕ U₁) ≅ (SL₂ℤ × SL₂ℤ)/±` reduction, a 2×2 Smith normal form driven by four transvections
+  whose action on the pairing quadruple wt1 wrote out explicitly; plus the `2U` splitting of the
+  rank-20 `A` (two applications of the banked `even_unimodular_indefinite_split_congr`, indefinite at
+  ranks 20 and 18 since `|σ| = 16 < 18`), the `w·w' ≡ 1 (mod 4)` sign normalization, and block
+  extraction. **None of that needs genus theory.**
+- ⛔ **Two dead ends closed so they are not re-walked:** (i) a one-step reflection descent on
+  `c = w·w'` is **FALSE** — counterexample `c = 17`, `a = 6a₀` with `a₀·a₀ = −2`: the shifts live in
+  `24ℤ` but must hit `−18` or `−16`. (ii) There is **no** general lemma "∃ isotropic `u ∈ A` with
+  `u·a = ±1`" — it fails as soon as `div(a) > 1`.
+- `created_ts`: 2026-07-27

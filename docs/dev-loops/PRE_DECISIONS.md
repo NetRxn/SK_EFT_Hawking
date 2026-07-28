@@ -166,8 +166,15 @@ avoid is "verify more" — verification *was* happening. What was verified was *
    follows — land that wiring": `spinImageCyclic_of_presentation` takes `hΦg` **as a hypothesis**, so
    `{hcyc,h2} ⟹ hΦg` composed with `hΦg ⟹ hcyc` is a strict circle. A compliant worker would have
    shipped a FALSE discharge. The worker checked instead and found the non-circular route.)*
-5. **NEVER INHERIT AN ESTIMATE.** "mechanical" / "bookkeeping" / "no new mathematics" / a line count
-   must never enter a brief as a premise. Attribute it (`worker's estimate, UNVERIFIED`) or test it.
+5. **NEVER INHERIT AN ESTIMATE — OR A CHARACTERIZATION.** "mechanical" / "bookkeeping" / "no new
+   mathematics" / **"elementary"** / **"not genus theory"** / a line count must never enter a brief as
+   a premise. ⚠ Widened 2026-07-27 after the *second* violation: the first was a SIZE claim
+   ("bookkeeping-heavy"); the second was a claim about the **mathematical NATURE** of a target
+   ("elementary, reflections only, not genus theory"), which I asserted as fact having inherited it
+   from a worker's earlier report. It was false at the stated rank — the target was the Lorentzian
+   `II_{1,17}`, exactly where Eichler's criterion fails and every published proof uses the spinor
+   genus. **A characterization of the mathematics IS a route claim,** and route claims are
+   lead-verified. Cheap test that would have caught it: compute the inertia. Attribute it (`worker's estimate, UNVERIFIED`) or test it.
    A difficulty claim **is** a route claim, and route claims are lead-verified. *(Skipped once →
    a step billed as bookkeeping that needed a genuinely new argument.)*
 
