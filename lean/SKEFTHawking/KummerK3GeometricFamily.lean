@@ -259,6 +259,42 @@ theorem linearIndependent_of_gram_kummerSubForm (fc : IntFundamentalClass X)
     LinearIndependent ℤ v :=
   linearIndependent_of_gram_nondegenerate fc v kummerSubForm hv kummerSubForm_det_ne_zero
 
+/-! ## §6. Gram transport along an integer congruence — the `IntCongr`-to-equality adapter -/
+
+/-- **A family's Gram can be moved along an integer congruence by recombining the family.**
+
+If `y` has Gram `M` and `IntCongr M N` (witness `P`, `Pᵀ M P = N`), then the recombined family
+`y'ⱼ = ∑ᵢ Pᵢⱼ · yᵢ` has Gram `N` on the nose. Pure bilinear algebra
+(`SphereProdBasisIdInt.gram_congr_of_basis_change`, which never asked `P` to be unimodular — the
+`IsUnit` half of `IntCongr` is not used).
+
+**Why the block interface needs this.** §3's 6-block hypothesis asks for `⟨yᵢ ∪ yⱼ⟩ = torusFourForm i j`
+*literally*, while the banked `T⁴` result
+`KummerT4GramCross.interMatrix_t4_intCongr_torusFourForm` is an `IntCongr` to `torusFourForm`
+(its Gram in the pair basis is `t4m • XMat`). This adapter closes that gap without renegotiating
+either statement. -/
+theorem exists_family_gram_of_intCongr (fc : IntFundamentalClass X) {n : ℕ}
+    (y : Fin n → Cohomology X 2) (M N : Matrix (Fin n) (Fin n) ℤ)
+    (hy : ∀ i j, interFormInt fc (y i) (y j) = M i j) (hcong : IntCongr M N) :
+    ∃ y' : Fin n → Cohomology X 2, ∀ i j, interFormInt fc (y' i) (y' j) = N i j := by
+  obtain ⟨P, -, hP⟩ := hcong
+  refine ⟨fun j => ∑ i, P i j • y i, fun i j => ?_⟩
+  have hgram := SKEFTHawking.SphereProdBasisIdInt.gram_congr_of_basis_change (interFormInt fc) y
+    (fun j => ∑ i, P i j • y i) P (fun _ => rfl)
+  have hM : (Matrix.of fun i j => interFormInt fc (y i) (y j)) = M := by
+    ext a b; exact hy a b
+  rw [hM, hP] at hgram
+  exact (congrFun (congrFun hgram i) j).symm
+
+/-- **The 6-block hypothesis of §3 from an `IntCongr` to `3H`.** The `IntCongr`-shaped form of the
+`hy` input, so the `Q`-lane may deliver its `T⁴`-descended classes with any Gram congruent to
+`torusFourForm` rather than equal to it. -/
+theorem exists_torusBlock_of_intCongr (fc : IntFundamentalClass X)
+    (y : Fin 6 → Cohomology X 2) (M : Matrix (Fin 6) (Fin 6) ℤ)
+    (hy : ∀ i j, interFormInt fc (y i) (y j) = M i j) (hcong : IntCongr M torusFourForm) :
+    ∃ y' : Fin 6 → Cohomology X 2, ∀ i j, interFormInt fc (y' i) (y' j) = torusFourForm i j :=
+  exists_family_gram_of_intCongr fc y M torusFourForm hy hcong
+
 end
 
 end SKEFTHawking.KummerK3GeometricFamily
