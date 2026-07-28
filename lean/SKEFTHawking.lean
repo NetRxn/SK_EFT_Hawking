@@ -5002,6 +5002,12 @@ import SKEFTHawking.KummerK3EvenFromSpanningFamily
 -- theorem (`PlaneReductionDescent.stableNegRank16Two_holds`), so every Kummer consumer loses its
 -- `hstable` hypothesis and the residual ledger is ONE geometric datum.
 import SKEFTHawking.KummerK3E1Unconditional
+-- Phase 5q.H — the Guillou-Marin Z/4 membrane index with its coefficient split PINNED from the
+-- primary source (Klug arXiv:2011.12418v3 section 6 p. 18): n(D) + 2(D.F) + 2d(C) mod 4, the
+-- framing counting HALF-twists. Includes the sharp reason the Z/4 index escapes the mod-2 no-go
+-- (the index term survives polarization instead of dying) and the orientable comparison that
+-- re-derives the obstruction when the framing is a whole-twist count.
+import SKEFTHawking.GMZ4MembraneIndex
 -- Phase 5q.H — signature/congruence behaviour under scaling a Gram by a positive integer:
 -- closes the `IntCongr`-vs-equality gap left by the T4 block (`t4m • XMat`).
 import SKEFTHawking.KummerK3TorusBlockScale
