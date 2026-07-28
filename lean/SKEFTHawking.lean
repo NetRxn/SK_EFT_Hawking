@@ -4931,6 +4931,7 @@ import SKEFTHawking.T2BordismGlueFamilies
 import SKEFTHawking.T2BordismGluing
 import SKEFTHawking.PinPlusHkerSingleWitness
 import SKEFTHawking.SingularRelativeCoverMVSumExact
+import SKEFTHawking.CollarNeighbourhood
 import SKEFTHawking.T2BordismGluing
 
 /-!
