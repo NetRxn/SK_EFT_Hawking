@@ -24,6 +24,15 @@ docstrings, no new mathematics, P5 structural-tautology repackaging. So every su
 
 The structure's only added inputs are the two `Finite` **genericity/transversality** fields.
 
+**The membrane's model is abstract** (`I : ModelWithCorners ℝ E₂ H₂`), matching how
+`PinCharSurface.Bounding` parameterizes its bounding 3-manifold — deliberately *not* the hard-coded
+`𝓡∂ 2` of `CharSurface.Membrane`. The reason is a vacuity risk: Mathlib's only compact
+manifold-with-boundary charted on a half-space is `Set.Icc x y` at `EuclideanHalfSpace 1`, and the
+project's own disk-manifold asset (`DiskManifoldSmooth.isManifold_threeDisk`) is charted on the
+*product* model `(𝓡 2).prod (𝓡∂ 1)`, not on `𝓡∂ 3`. A membrane structure hard-coding `𝓡∂ 2`
+therefore has no exhibitable inhabitant even in principle from in-tree assets; with `I` abstract, the
+2-dimensional analogue of the `ThreeDisk` construction instantiates it directly.
+
 ## What this buys, in theorems
 
 * `geomEnhancement` — a `[Q2]`-compatible membrane index PRODUCES a genuine `Z4Quadratic` on
@@ -199,6 +208,8 @@ theorem loopDegree_mul {c₁ c₂ : C(↑unitInterval, Circle)}
 /-! ## §3. The ambient membrane ([G2]) -/
 
 variable {X : Type} [TopologicalSpace X] {k : WithTop ℕ∞}
+variable {E₂ H₂ : Type*} [NormedAddCommGroup E₂] [NormedSpace ℝ E₂] [TopologicalSpace H₂]
+  {I : ModelWithCorners ℝ E₂ H₂}
 
 /-- **An ambient membrane ([G2])** for an embedded circle `γ ⊂ F` inside the AMBIENT space `X`.
 
@@ -210,18 +221,19 @@ three summands of the membrane index all live on this datum.
 The two `Finite` fields are the **genericity/transversality inputs** (the membrane is put in general
 position with respect to `F` and to itself). They do NOT carry the index values — those are
 `Set.ncard` of sets that the map `D` determines outright. -/
-structure AmbientMembrane (C : PinCharSurface X k) (γ : EmbeddedCircle C) where
+structure AmbientMembrane (I : ModelWithCorners ℝ E₂ H₂) (C : PinCharSurface X k)
+    (γ : EmbeddedCircle C) where
   /-- The membrane's underlying compact 2-manifold-with-boundary. -/
   S : Type
   [topS : TopologicalSpace S]
-  [chartS : ChartedSpace (EuclideanHalfSpace 2) S]
-  [mfdS : IsManifold (𝓡∂ 2) k S]
+  [chartS : ChartedSpace H₂ S]
+  [mfdS : IsManifold I k S]
   [compactS : CompactSpace S]
   /-- The boundary identification: a continuous injection of the circle onto `∂S`. -/
   bd : ↑Circle1 → S
   bd_cont : Continuous bd
   bd_inj : Function.Injective bd
-  bd_boundary : Set.range bd = (𝓡∂ 2).boundary S
+  bd_boundary : Set.range bd = I.boundary S
   /-- The membrane map into the AMBIENT space. -/
   D : S → X
   D_cont : Continuous D
@@ -230,7 +242,7 @@ structure AmbientMembrane (C : PinCharSurface X k) (γ : EmbeddedCircle C) where
   factor : ∀ p, D (bd p) = C.F.f (γ.f p)
   /-- **Transversality to `F`** (genericity input): the membrane's interior meets the
   characteristic surface in finitely many points. -/
-  transF : {p : S | p ∉ (𝓡∂ 2).boundary S ∧ D p ∈ Set.range C.F.f}.Finite
+  transF : {p : S | p ∉ I.boundary S ∧ D p ∈ Set.range C.F.f}.Finite
   /-- **Self-transversality** (genericity input): the membrane has finitely many double points. -/
   transD : (doubleSet D).Finite
 
@@ -238,32 +250,32 @@ namespace AmbientMembrane
 
 variable {C : PinCharSurface X k} {γ : EmbeddedCircle C}
 
-instance (m : AmbientMembrane C γ) : TopologicalSpace m.S := m.topS
-instance (m : AmbientMembrane C γ) : ChartedSpace (EuclideanHalfSpace 2) m.S := m.chartS
-instance (m : AmbientMembrane C γ) : IsManifold (𝓡∂ 2) k m.S := m.mfdS
-instance (m : AmbientMembrane C γ) : CompactSpace m.S := m.compactS
+instance (m : AmbientMembrane I C γ) : TopologicalSpace m.S := m.topS
+instance (m : AmbientMembrane I C γ) : ChartedSpace H₂ m.S := m.chartS
+instance (m : AmbientMembrane I C γ) : IsManifold I k m.S := m.mfdS
+instance (m : AmbientMembrane I C γ) : CompactSpace m.S := m.compactS
 
 /-! ### The first summand `D·F`: the interior intersection with the characteristic surface -/
 
 /-- The set of interior points of the membrane lying on the characteristic surface. Determined by
 `D` and `F` — nothing about it is a field. -/
-def meetF (m : AmbientMembrane C γ) : Set m.S :=
-  {p | p ∉ (𝓡∂ 2).boundary m.S ∧ m.D p ∈ Set.range C.F.f}
+def meetF (m : AmbientMembrane I C γ) : Set m.S :=
+  {p | p ∉ I.boundary m.S ∧ m.D p ∈ Set.range C.F.f}
 
-lemma meetF_finite (m : AmbientMembrane C γ) : m.meetF.Finite := m.transF
+lemma meetF_finite (m : AmbientMembrane I C γ) : m.meetF.Finite := m.transF
 
 /-- **`D·F` — the first summand, CONSTRUCTED**: the mod-2 count of the membrane's interior
 intersections with the characteristic surface. -/
-noncomputable def intF (m : AmbientMembrane C γ) : ZMod 2 := (m.meetF.ncard : ZMod 2)
+noncomputable def intF (m : AmbientMembrane I C γ) : ZMod 2 := (m.meetF.ncard : ZMod 2)
 
 /-- A membrane whose interior misses `F` has `D·F = 0`. -/
-theorem intF_eq_zero_of_meetF_empty (m : AmbientMembrane C γ) (h : m.meetF = ∅) : m.intF = 0 := by
+theorem intF_eq_zero_of_meetF_empty (m : AmbientMembrane I C γ) (h : m.meetF = ∅) : m.intF = 0 := by
   rw [intF, h, Set.ncard_empty]
   rfl
 
 /-- A membrane whose interior meets `F` in exactly one point has `D·F = 1` — the summand is
 genuinely nonzero-valued, not a dressed-up zero. -/
-theorem intF_eq_one_of_meetF_singleton (m : AmbientMembrane C γ) {p : m.S}
+theorem intF_eq_one_of_meetF_singleton (m : AmbientMembrane I C γ) {p : m.S}
     (h : m.meetF = {p}) : m.intF = 1 := by
   rw [intF, h, Set.ncard_singleton]
   rfl
@@ -272,16 +284,16 @@ theorem intF_eq_one_of_meetF_singleton (m : AmbientMembrane C γ) {p : m.S}
 
 /-- **`d(C)` — the third summand, CONSTRUCTED**: the mod-2 count of the membrane's double points
 (unordered pairs of distinct points with the same image). -/
-noncomputable def dbl (m : AmbientMembrane C γ) : ZMod 2 := ((doubleSet m.D).ncard : ZMod 2)
+noncomputable def dbl (m : AmbientMembrane I C γ) : ZMod 2 := ((doubleSet m.D).ncard : ZMod 2)
 
 /-- An **embedded** membrane has no double points. -/
-theorem dbl_eq_zero_of_injective (m : AmbientMembrane C γ) (h : Function.Injective m.D) :
+theorem dbl_eq_zero_of_injective (m : AmbientMembrane I C γ) (h : Function.Injective m.D) :
     m.dbl = 0 := by
   rw [dbl, doubleSet_eq_empty_of_injective h, Set.ncard_empty]
   rfl
 
 /-- A membrane with exactly one double point has `d(C) = 1`. -/
-theorem dbl_eq_one_of_singleton (m : AmbientMembrane C γ) {e : Sym2 m.S}
+theorem dbl_eq_one_of_singleton (m : AmbientMembrane I C γ) {e : Sym2 m.S}
     (h : doubleSet m.D = {e}) : m.dbl = 1 := by
   rw [dbl, h, Set.ncard_singleton]
   rfl
@@ -294,8 +306,8 @@ end AmbientMembrane
 comparison — the loop `∂S ≅ S¹ → SO(2) ≅ S¹` measuring the discrepancy between the `F`-induced
 normal framing along the circle and a global trivialization of the membrane's (necessarily trivial)
 normal bundle. -/
-structure FramedMembrane (C : PinCharSurface X k) (γ : EmbeddedCircle C)
-    extends AmbientMembrane C γ where
+structure FramedMembrane (I : ModelWithCorners ℝ E₂ H₂) (C : PinCharSurface X k)
+    (γ : EmbeddedCircle C) extends AmbientMembrane I C γ where
   /-- The boundary framing comparison. -/
   cmp : C(↑unitInterval, Circle)
   /-- It is a loop (the boundary is a circle). -/
@@ -306,7 +318,7 @@ namespace FramedMembrane
 variable {C : PinCharSurface X k} {γ : EmbeddedCircle C}
 
 /-- **`O(D)` — the second summand, CONSTRUCTED**: the degree of the framing comparison loop. -/
-noncomputable def obs (m : FramedMembrane C γ) : ℤ := loopDegree m.cmp
+noncomputable def obs (m : FramedMembrane I C γ) : ℤ := loopDegree m.cmp
 
 /-- **THE MEMBRANE INDEX** — Freedman–Kirby Lemma 2.6.1 / blueprint `[Q1]`, verbatim:
 `q_F(x) := D·F + O(D) + d(C) mod 2`.
@@ -314,12 +326,12 @@ noncomputable def obs (m : FramedMembrane C γ) : ℤ := loopDegree m.cmp
 Every summand is *computed* from the membrane datum — `Set.ncard` of a set the map `D` determines,
 and the lift-based degree of the framing loop. There is no `ZMod`-valued field anywhere in
 `FramedMembrane`, which is exactly what keeps this from being `Z4Quadratic` in new clothes. -/
-noncomputable def index (m : FramedMembrane C γ) : ZMod 2 :=
+noncomputable def index (m : FramedMembrane I C γ) : ZMod 2 :=
   m.intF + ((m.obs : ZMod 2)) + m.dbl
 
 /-- The index of an embedded, `F`-avoiding, untwisted membrane is `0` — all three summands
 vanish for the simplest geometry. -/
-theorem index_eq_zero (m : FramedMembrane C γ) (h1 : m.meetF = ∅) (h2 : Function.Injective m.D)
+theorem index_eq_zero (m : FramedMembrane I C γ) (h1 : m.meetF = ∅) (h2 : Function.Injective m.D)
     (h3 : m.obs = 0) : m.index = 0 := by
   rw [index, m.intF_eq_zero_of_meetF_empty h1, m.dbl_eq_zero_of_injective h2, h3]
   decide
@@ -327,17 +339,17 @@ theorem index_eq_zero (m : FramedMembrane C γ) (h1 : m.meetF = ∅) (h2 : Funct
 /-- **Each summand can flip the index on its own** (the per-summand vacuity attack, run): with the
 other two vanishing, a single interior intersection, a single double point, or an odd framing degree
 each gives `index = 1`. So the index is not a dressed-up constant and no summand is inert. -/
-theorem index_eq_one_of_intF (m : FramedMembrane C γ) {p : m.S} (h1 : m.meetF = {p})
+theorem index_eq_one_of_intF (m : FramedMembrane I C γ) {p : m.S} (h1 : m.meetF = {p})
     (h2 : Function.Injective m.D) (h3 : m.obs = 0) : m.index = 1 := by
   rw [index, m.intF_eq_one_of_meetF_singleton h1, m.dbl_eq_zero_of_injective h2, h3]
   decide
 
-theorem index_eq_one_of_dbl (m : FramedMembrane C γ) (h1 : m.meetF = ∅) {e : Sym2 m.S}
+theorem index_eq_one_of_dbl (m : FramedMembrane I C γ) (h1 : m.meetF = ∅) {e : Sym2 m.S}
     (h2 : doubleSet m.D = {e}) (h3 : m.obs = 0) : m.index = 1 := by
   rw [index, m.intF_eq_zero_of_meetF_empty h1, m.dbl_eq_one_of_singleton h2, h3]
   decide
 
-theorem index_eq_one_of_obs (m : FramedMembrane C γ) (h1 : m.meetF = ∅)
+theorem index_eq_one_of_obs (m : FramedMembrane I C γ) (h1 : m.meetF = ∅)
     (h2 : Function.Injective m.D) (h3 : m.obs = 1) : m.index = 1 := by
   rw [index, m.intF_eq_zero_of_meetF_empty h1, m.dbl_eq_zero_of_injective h2, h3]
   decide
@@ -349,31 +361,31 @@ end FramedMembrane
 /-- **[G2] realization**: every mod-2 homology class of the characteristic surface is carried by an
 embedded circle bounding a framed membrane in the ambient. Pure existence — no index value, no
 signature, no `σ` appears. -/
-def MembraneRealizes (C : PinCharSurface X k) : Prop :=
-  ∀ x : C.ι → ZMod 2, ∃ γ : EmbeddedCircle C, γ.cls = x ∧ Nonempty (FramedMembrane C γ)
+def MembraneRealizes (I : ModelWithCorners ℝ E₂ H₂) (C : PinCharSurface X k) : Prop :=
+  ∀ x : C.ι → ZMod 2, ∃ γ : EmbeddedCircle C, γ.cls = x ∧ Nonempty (FramedMembrane I C γ)
 
 /-- **[Q1] Freedman–Kirby Lemma 2.6.1** — *the* well-definedness statement of the blueprint: the
 membrane index depends only on the circle's homology class, not on the circle, the membrane, or the
 framing comparison. This is the single geometric theorem the whole construction rests on, and it is a
 predicate purely on membranes: nothing in its statement mentions `σ`, so it passes the intensional
 admissibility criterion of `GMTripleLayerForcing` by inspection. -/
-def IndexWellDefined (C : PinCharSurface X k) : Prop :=
-  ∀ (γ γ' : EmbeddedCircle C) (m : FramedMembrane C γ) (m' : FramedMembrane C γ'),
+def IndexWellDefined (I : ModelWithCorners ℝ E₂ H₂) (C : PinCharSurface X k) : Prop :=
+  ∀ (γ γ' : EmbeddedCircle C) (m : FramedMembrane I C γ) (m' : FramedMembrane I C γ'),
     γ.cls = γ'.cls → m.index = m'.index
 
 /-- **A membrane system**: a choice of framed membrane for every class. Produced from `[G2]`
 realization by choice (`nonempty_membraneSystem`), so it adds nothing beyond it. -/
-structure MembraneSystem (C : PinCharSurface X k) where
+structure MembraneSystem (I : ModelWithCorners ℝ E₂ H₂) (C : PinCharSurface X k) where
   /-- The chosen representing circle. -/
   circle : (C.ι → ZMod 2) → EmbeddedCircle C
   /-- It represents the class. -/
   circle_cls : ∀ x, (circle x).cls = x
   /-- Its chosen framed membrane. -/
-  memb : ∀ x, FramedMembrane C (circle x)
+  memb : ∀ x, FramedMembrane I C (circle x)
 
 /-- Realization produces a membrane system (classical choice, no new geometry). -/
-theorem nonempty_membraneSystem {C : PinCharSurface X k} (h : MembraneRealizes C) :
-    Nonempty (MembraneSystem C) := by
+theorem nonempty_membraneSystem {C : PinCharSurface X k} (h : MembraneRealizes I C) :
+    Nonempty (MembraneSystem I C) := by
   classical
   choose γ hcls hmem using h
   exact ⟨⟨γ, hcls, fun x => (hmem x).some⟩⟩
@@ -383,14 +395,14 @@ namespace MembraneSystem
 variable {C : PinCharSurface X k}
 
 /-- The geometric index function on `H₁(F;ℤ/2)`, read off the system's membranes. -/
-noncomputable def index (sys : MembraneSystem C) (x : C.ι → ZMod 2) : ZMod 2 :=
+noncomputable def index (sys : MembraneSystem I C) (x : C.ι → ZMod 2) : ZMod 2 :=
   (sys.memb x).index
 
 /-- **[Q2] the polarization identity** — the membrane-sum step of Freedman–Kirby: joining the
 membranes of `x` and `y` produces a membrane for `x + y` whose index differs from the sum by exactly
 the mutual intersection number, which is the mod-2 intersection form `B(x, y)`. Again a predicate
 purely on membranes and the surface's own intersection form. -/
-def Refines (sys : MembraneSystem C) : Prop :=
+def Refines (sys : MembraneSystem I C) : Prop :=
   ∀ x y, sys.index (x + y) = sys.index x + sys.index y + C.Q.B x y
 
 end MembraneSystem
@@ -511,19 +523,19 @@ namespace MembraneSystem
 variable {C : PinCharSurface X k}
 
 /-- The enhancement of the characteristic surface produced by a membrane system satisfying `[Q2]`. -/
-noncomputable def enhancement (sys : MembraneSystem C) (h : sys.Refines) : Z4Quadratic C.ι :=
+noncomputable def enhancement (sys : MembraneSystem I C) (h : sys.Refines) : Z4Quadratic C.ι :=
   geomEnhancement C.Q sys.index h
 
 /-- **The surface's pin⁻ class, computed from its membranes** — the surface-level statement of
 `exists_unique_pin_class`. -/
-theorem exists_unique_pin_class (sys : MembraneSystem C) (h : sys.Refines) :
+theorem exists_unique_pin_class (sys : MembraneSystem I C) (h : sys.Refines) :
     ∃! w : C.ι → ZMod 2, C.Q.shift w = sys.enhancement h :=
   SKEFTHawking.MembraneIndex.exists_unique_pin_class C.Q sys.index h
 
 /-- **A membrane system satisfying `[Q2]` forces the surface's intersection form to be
 alternating** — the surface-level scope statement. A characteristic surface carrying an odd class
 admits no `[Q2]`-compatible membrane system at all. -/
-theorem refines_forces_alternating (sys : MembraneSystem C) (h : sys.Refines)
+theorem refines_forces_alternating (sys : MembraneSystem I C) (h : sys.Refines)
     (v : C.ι → ZMod 2) : C.Q.B v v = 0 :=
   SKEFTHawking.MembraneIndex.refines_forces_alternating h v
 
@@ -547,23 +559,23 @@ theorem stdLoop_loop : stdLoop 1 = stdLoop 0 := by
   norm_num [exp_two_pi]
 
 /-- **Twisting the boundary framing by one full turn**, leaving the underlying membrane untouched. -/
-noncomputable def twist (m : FramedMembrane C γ) : FramedMembrane C γ :=
+noncomputable def twist (m : FramedMembrane I C γ) : FramedMembrane I C γ :=
   { m with
     cmp := m.cmp * stdLoop
     cmp_loop := by
       show m.cmp 1 * stdLoop 1 = m.cmp 0 * stdLoop 0
       rw [m.cmp_loop, stdLoop_loop] }
 
-@[simp] lemma twist_toAmbientMembrane (m : FramedMembrane C γ) :
+@[simp] lemma twist_toAmbientMembrane (m : FramedMembrane I C γ) :
     m.twist.toAmbientMembrane = m.toAmbientMembrane := rfl
 
 /-- The twist adds one full turn to the framing obstruction (`loopDegree_mul`). -/
-theorem obs_twist (m : FramedMembrane C γ) : m.twist.obs = m.obs + 1 := by
+theorem obs_twist (m : FramedMembrane I C γ) : m.twist.obs = m.obs + 1 := by
   show loopDegree (m.cmp * stdLoop) = loopDegree m.cmp + 1
   rw [loopDegree_mul m.cmp_loop stdLoop_loop, loopDegree_stdLoop]
 
 /-- The twist flips the membrane index. -/
-theorem index_twist (m : FramedMembrane C γ) : m.twist.index = m.index + 1 := by
+theorem index_twist (m : FramedMembrane I C γ) : m.twist.index = m.index + 1 := by
   have h : m.twist.index = m.intF + ((m.twist.obs : ZMod 2)) + m.dbl := rfl
   rw [h, obs_twist, index]
   push_cast
@@ -575,8 +587,8 @@ makes the index a function of the homology class **by construction**, and is `Z4
 clothes. The constructed index provably is not: two framed membranes on the *same* circle — hence
 carrying the same class — have different indices. The membrane layer is therefore strictly more data
 than the enhancement it produces, which is exactly the asymmetry a field-carrying structure lacks. -/
-theorem index_not_a_function_of_the_class (m : FramedMembrane C γ) :
-    ∃ m' : FramedMembrane C γ, m'.index ≠ m.index := by
+theorem index_not_a_function_of_the_class (m : FramedMembrane I C γ) :
+    ∃ m' : FramedMembrane I C γ, m'.index ≠ m.index := by
   refine ⟨m.twist, ?_⟩
   rw [index_twist]
   generalize m.index = a
@@ -589,8 +601,8 @@ free data, so the twist refutes it outright the moment a single framed membrane 
 same failure mode `CharSurfaceFKVacuity` found one level up (a free enhancement makes the universal
 `[FK]` statement false, not merely vacuous), reappearing at the framing: **`O(D)` must be *produced*
 from the smooth normal data, not carried.** The repair is `NormalFramingTie` below. -/
-theorem indexWellDefined_false_of_framedMembrane (m : FramedMembrane C γ) :
-    ¬ IndexWellDefined C := by
+theorem indexWellDefined_false_of_framedMembrane (m : FramedMembrane I C γ) :
+    ¬ IndexWellDefined I C := by
   intro h
   have hEq : m.index = m.twist.index := h γ γ m m.twist rfl
   rw [index_twist] at hEq
@@ -609,11 +621,11 @@ defining property is **rigidity**: tied framings on the same underlying membrane
 degree. This is the honest minimal content of "the normal bundle determines `O(D)`", and it is
 exactly what the free-framing shape lacked. Producing a tie from the smooth normal bundles of `D`
 and `F` is the residual smooth debt of node `[G2]`. -/
-structure NormalFramingTie (C : PinCharSurface X k) where
+structure NormalFramingTie (I : ModelWithCorners ℝ E₂ H₂) (C : PinCharSurface X k) where
   /-- Which framings are induced by the normal data. -/
-  Tied : ∀ {γ : EmbeddedCircle C}, FramedMembrane C γ → Prop
+  Tied : ∀ {γ : EmbeddedCircle C}, FramedMembrane I C γ → Prop
   /-- **Rigidity**: the normal data determines the framing obstruction. -/
-  rigid : ∀ {γ : EmbeddedCircle C} (m m' : FramedMembrane C γ),
+  rigid : ∀ {γ : EmbeddedCircle C} (m m' : FramedMembrane I C γ),
     m.toAmbientMembrane = m'.toAmbientMembrane → Tied m → Tied m' → m.obs = m'.obs
 
 namespace NormalFramingTie
@@ -623,8 +635,8 @@ variable {C : PinCharSurface X k}
 /-- **The twist escapes a rigid tie** (PROVED): at most one of a framing and its full-turn twist is
 induced by the normal data. So the refutation of `indexWellDefined_false_of_framedMembrane` does not
 reach the tied layer — the repair is genuine, not cosmetic. -/
-theorem not_tied_twist (tie : NormalFramingTie C) {γ : EmbeddedCircle C}
-    {m : FramedMembrane C γ} (h : tie.Tied m) : ¬ tie.Tied m.twist := by
+theorem not_tied_twist (tie : NormalFramingTie I C) {γ : EmbeddedCircle C}
+    {m : FramedMembrane I C γ} (h : tie.Tied m) : ¬ tie.Tied m.twist := by
   intro htw
   have := tie.rigid m m.twist rfl h htw
   rw [FramedMembrane.obs_twist] at this
@@ -633,15 +645,15 @@ theorem not_tied_twist (tie : NormalFramingTie C) {γ : EmbeddedCircle C}
 /-- **The tie is inhabited at an underlying membrane**: some framing on it is normal-data-induced.
 Rigidity alone is satisfied by the empty tie (`trivialTie_rigid_but_uninhabited`), so this is the
 load-bearing half. -/
-def Inhabits (tie : NormalFramingTie C) {γ : EmbeddedCircle C} (a : AmbientMembrane C γ) : Prop :=
-  ∃ m : FramedMembrane C γ, m.toAmbientMembrane = a ∧ tie.Tied m
+def Inhabits (tie : NormalFramingTie I C) {γ : EmbeddedCircle C} (a : AmbientMembrane I C γ) : Prop :=
+  ∃ m : FramedMembrane I C γ, m.toAmbientMembrane = a ∧ tie.Tied m
 
 /-- **A rigid, inhabited tie determines `O(D)` outright** (PROVED — the payoff of the repair): the
 framing obstruction of an ambient membrane is a *unique* integer once the normal data selects the
 framings. This is the precise sense in which `O(D)` becomes a function of the geometry. -/
-theorem existsUnique_obs (tie : NormalFramingTie C) {γ : EmbeddedCircle C}
-    {a : AmbientMembrane C γ} (h : tie.Inhabits a) :
-    ∃! o : ℤ, ∃ m : FramedMembrane C γ, m.toAmbientMembrane = a ∧ tie.Tied m ∧ m.obs = o := by
+theorem existsUnique_obs (tie : NormalFramingTie I C) {γ : EmbeddedCircle C}
+    {a : AmbientMembrane I C γ} (h : tie.Inhabits a) :
+    ∃! o : ℤ, ∃ m : FramedMembrane I C γ, m.toAmbientMembrane = a ∧ tie.Tied m ∧ m.obs = o := by
   obtain ⟨m, hma, hmt⟩ := h
   refine ⟨m.obs, ⟨m, hma, hmt, rfl⟩, ?_⟩
   rintro o ⟨m', hm'a, hm't, rfl⟩
@@ -650,12 +662,14 @@ theorem existsUnique_obs (tie : NormalFramingTie C) {γ : EmbeddedCircle C}
 /-- **The tie's own vacuity attack — rigidity alone is NOT enough** (new). The empty tie is rigid
 and selects nothing, so `IndexWellDefinedTied` over it would be vacuously true. Inhabitedness is
 therefore a genuine, separate requirement and not a decorative conjunct. -/
-def trivialTie (C : PinCharSurface X k) : NormalFramingTie C where
+def trivialTie (I : ModelWithCorners ℝ E₂ H₂) (C : PinCharSurface X k) :
+    NormalFramingTie I C where
   Tied _ := False
   rigid _ _ _ h := absurd h not_false
 
-theorem trivialTie_rigid_but_uninhabited (C : PinCharSurface X k) {γ : EmbeddedCircle C}
-    (a : AmbientMembrane C γ) : ¬ (trivialTie C).Inhabits a := by
+theorem trivialTie_rigid_but_uninhabited (I : ModelWithCorners ℝ E₂ H₂)
+    (C : PinCharSurface X k) {γ : EmbeddedCircle C}
+    (a : AmbientMembrane I C γ) : ¬ (trivialTie I C).Inhabits a := by
   rintro ⟨m, -, hm⟩
   exact hm
 
@@ -665,8 +679,8 @@ end NormalFramingTie
 normal-data-induced framings. Unlike `IndexWellDefined` (refuted by
 `FramedMembrane.indexWellDefined_false_of_framedMembrane`) this shape survives the twist, by
 `NormalFramingTie.not_tied_twist`. It remains a predicate purely on membranes: `σ` does not occur. -/
-def IndexWellDefinedTied {C : PinCharSurface X k} (tie : NormalFramingTie C) : Prop :=
-  ∀ (γ γ' : EmbeddedCircle C) (m : FramedMembrane C γ) (m' : FramedMembrane C γ'),
+def IndexWellDefinedTied {C : PinCharSurface X k} (tie : NormalFramingTie I C) : Prop :=
+  ∀ (γ γ' : EmbeddedCircle C) (m : FramedMembrane I C γ) (m' : FramedMembrane I C γ'),
     tie.Tied m → tie.Tied m' → γ.cls = γ'.cls → m.index = m'.index
 
 /-! ## §9. `[Q1]` closes the arc: the extracted pin⁻ class is an invariant of the surface -/
@@ -676,21 +690,21 @@ namespace MembraneSystem
 variable {C : PinCharSurface X k}
 
 /-- A membrane system is **tied** when every chosen framing is normal-data-induced. -/
-def Tied (sys : MembraneSystem C) (tie : NormalFramingTie C) : Prop :=
+def Tied (sys : MembraneSystem I C) (tie : NormalFramingTie I C) : Prop :=
   ∀ x, tie.Tied (sys.memb x)
 
 /-- **Tied well-definedness makes the index choice-free** (PROVED): any two tied membrane systems on
 the same characteristic surface compute the *same* index function on `H₁(F;ℤ/2)`. This is what the
 corrected `[Q1]` buys — the circles, the membranes and the framings all drop out. -/
-theorem index_eq_of_tied {tie : NormalFramingTie C} (hwd : IndexWellDefinedTied tie)
-    {sys sys' : MembraneSystem C} (ht : sys.Tied tie) (ht' : sys'.Tied tie) :
+theorem index_eq_of_tied {tie : NormalFramingTie I C} (hwd : IndexWellDefinedTied tie)
+    {sys sys' : MembraneSystem I C} (ht : sys.Tied tie) (ht' : sys'.Tied tie) :
     sys.index = sys'.index := by
   funext x
   exact hwd _ _ (sys.memb x) (sys'.memb x) (ht x) (ht' x)
     ((sys.circle_cls x).trans (sys'.circle_cls x).symm)
 
 /-- Equal index functions produce the same enhancement. -/
-theorem enhancement_eq {sys sys' : MembraneSystem C} (h : sys.Refines) (h' : sys'.Refines)
+theorem enhancement_eq {sys sys' : MembraneSystem I C} (h : sys.Refines) (h' : sys'.Refines)
     (hidx : sys.index = sys'.index) : sys.enhancement h = sys'.enhancement h' := by
   refine Z4Quadratic.ext (funext fun v => ?_)
   show embed2 (sys.index v) = embed2 (sys'.index v)
@@ -702,8 +716,8 @@ circles, of the membranes, and of the framings. Combined with `exists_unique_pin
 exists and is unique for a given system) this says the blueprint's `D·F + O(D) + d(C)` genuinely
 *computes* the one `H¹(F;ℤ/2)`-class that `PinEnhancementTorsor` showed the substrate to be
 missing. -/
-theorem pin_class_indep_of_system {tie : NormalFramingTie C} (hwd : IndexWellDefinedTied tie)
-    {sys sys' : MembraneSystem C} (ht : sys.Tied tie) (ht' : sys'.Tied tie)
+theorem pin_class_indep_of_system {tie : NormalFramingTie I C} (hwd : IndexWellDefinedTied tie)
+    {sys sys' : MembraneSystem I C} (ht : sys.Tied tie) (ht' : sys'.Tied tie)
     (h : sys.Refines) (h' : sys'.Refines) {w w' : C.ι → ZMod 2}
     (hw : C.Q.shift w = sys.enhancement h) (hw' : C.Q.shift w' = sys'.enhancement h') :
     w = w' := by
@@ -754,23 +768,23 @@ variable {C : PinCharSurface X k} {γ₁ γ₂ : EmbeddedCircle C}
 
 /-- The **mutual intersection set** of two membranes in the same ambient — determined by the two
 maps, nothing declared. -/
-def mutualSet (m₁ : FramedMembrane C γ₁) (m₂ : FramedMembrane C γ₂) : Set (m₁.S × m₂.S) :=
+def mutualSet (m₁ : FramedMembrane I C γ₁) (m₂ : FramedMembrane I C γ₂) : Set (m₁.S × m₂.S) :=
   {e | m₁.D e.1 = m₂.D e.2}
 
 /-- **`D₁ · D₂` — the membrane-sum correction term, CONSTRUCTED**: the mod-2 count of the two
 membranes' mutual intersections. -/
-noncomputable def mutualInt (m₁ : FramedMembrane C γ₁) (m₂ : FramedMembrane C γ₂) : ZMod 2 :=
+noncomputable def mutualInt (m₁ : FramedMembrane I C γ₁) (m₂ : FramedMembrane I C γ₂) : ZMod 2 :=
   ((mutualSet m₁ m₂).ncard : ZMod 2)
 
 /-- Membranes with disjoint images do not intersect. -/
-theorem mutualInt_eq_zero (m₁ : FramedMembrane C γ₁) (m₂ : FramedMembrane C γ₂)
+theorem mutualInt_eq_zero (m₁ : FramedMembrane I C γ₁) (m₂ : FramedMembrane I C γ₂)
     (h : mutualSet m₁ m₂ = ∅) : mutualInt m₁ m₂ = 0 := by
   rw [mutualInt, h, Set.ncard_empty]
   rfl
 
 /-- **The mutual intersection number is symmetric** (PROVED, via `Prod.swap`) — as the mod-2
 intersection form it is supposed to compute must be (`Z4Quadratic.B_symm`). -/
-theorem mutualInt_symm (m₁ : FramedMembrane C γ₁) (m₂ : FramedMembrane C γ₂) :
+theorem mutualInt_symm (m₁ : FramedMembrane I C γ₁) (m₂ : FramedMembrane I C γ₂) :
     mutualInt m₂ m₁ = mutualInt m₁ m₂ := by
   have h : mutualSet m₂ m₁ = Prod.swap '' (mutualSet m₁ m₂) := by
     ext e
@@ -789,27 +803,27 @@ variable {C : PinCharSurface X k}
 of two circles produces a membrane for a circle carrying the sum class, whose index is the sum of the
 two indices plus the mutual intersection correction. Pin-free, `σ`-free; the framings are required to
 be normal-data-induced throughout, per the §8 repair. -/
-def MembraneSumIndex (tie : NormalFramingTie C) : Prop :=
-  ∀ (γ₁ γ₂ : EmbeddedCircle C) (m₁ : FramedMembrane C γ₁) (m₂ : FramedMembrane C γ₂),
+def MembraneSumIndex (tie : NormalFramingTie I C) : Prop :=
+  ∀ (γ₁ γ₂ : EmbeddedCircle C) (m₁ : FramedMembrane I C γ₁) (m₂ : FramedMembrane I C γ₂),
     tie.Tied m₁ → tie.Tied m₂ →
-      ∃ (γ : EmbeddedCircle C) (m : FramedMembrane C γ),
+      ∃ (γ : EmbeddedCircle C) (m : FramedMembrane I C γ),
         γ.cls = γ₁.cls + γ₂.cls ∧ tie.Tied m ∧
           m.index = m₁.index + m₂.index + mutualInt m₁ m₂
 
 /-- **`[Q2b]` the mutual intersection number IS the intersection form** — the classical transversality
 statement that the mod-2 count of `D₁ ⋔ D₂` computes `B(x, y)` on `H₁(F;ℤ/2)`. Pin-free, `σ`-free,
 and about membranes only. -/
-def MutualIsForm (C : PinCharSurface X k) : Prop :=
-  ∀ (γ₁ γ₂ : EmbeddedCircle C) (m₁ : FramedMembrane C γ₁) (m₂ : FramedMembrane C γ₂),
+def MutualIsForm (I : ModelWithCorners ℝ E₂ H₂) (C : PinCharSurface X k) : Prop :=
+  ∀ (γ₁ γ₂ : EmbeddedCircle C) (m₁ : FramedMembrane I C γ₁) (m₂ : FramedMembrane I C γ₂),
     mutualInt m₁ m₂ = C.Q.B γ₁.cls γ₂.cls
 
 /-- **`[Q2]` SPLITS** (PROVED): the polarization identity that `geomEnhancement` consumes is
 *derived* from the membrane-sum step, the transversality identification of the mutual intersection
 number, and the corrected well-definedness — three strictly finer, pin-free, `σ`-free geometric
 statements. Nothing about the enhancement is assumed; the algebra is all that is added. -/
-theorem refines_of_membraneSum {tie : NormalFramingTie C} (hwd : IndexWellDefinedTied tie)
-    (hsum : MembraneSumIndex tie) (hform : MutualIsForm C)
-    (sys : MembraneSystem C) (ht : sys.Tied tie) : sys.Refines := by
+theorem refines_of_membraneSum {tie : NormalFramingTie I C} (hwd : IndexWellDefinedTied tie)
+    (hsum : MembraneSumIndex tie) (hform : MutualIsForm I C)
+    (sys : MembraneSystem I C) (ht : sys.Tied tie) : sys.Refines := by
   intro x y
   obtain ⟨γ, m, hcls, hmt, hidx⟩ :=
     hsum (sys.circle x) (sys.circle y) (sys.memb x) (sys.memb y) (ht x) (ht y)
