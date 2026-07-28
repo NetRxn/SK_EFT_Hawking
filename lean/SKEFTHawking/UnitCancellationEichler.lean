@@ -750,6 +750,170 @@ theorem planeMove_bil (hsymm : Gᵀ = G) (p q : ℤ) (y z : Fin m → ℤ) :
 
 end PlaneMove
 
+/-! #### STEP 1 as a pure `ℤ⁴` reachability problem
+
+`PlaneStep` is the *arithmetic shadow* of the four `U ⊕ U₁` Eichler moves on the coordinate 4-tuple
+`(α, β, γ, δ) = (f₁·w', e₁·w', f₂·w', e₂·w')`. `planeReduction_lift` shows every arithmetic chain is
+realised by an actual isometry — so STEP 1, and with it the whole K8b interior brick, reduces to the
+GEOMETRY-FREE statement `PlaneReduction`: every tuple reaches one with `α = β = 0`. -/
+
+/-- Two orthogonal hyperbolic planes for `G` — the input datum of Eichler's criterion. -/
+structure TwoPlanes {m : ℕ} (G : Matrix (Fin m) (Fin m) ℤ) (e₁ f₁ e₂ f₂ : Fin m → ℤ) : Prop where
+  ee₁ : e₁ ⬝ᵥ G *ᵥ e₁ = 0
+  ff₁ : f₁ ⬝ᵥ G *ᵥ f₁ = 0
+  ef₁ : e₁ ⬝ᵥ G *ᵥ f₁ = 1
+  ee₂ : e₂ ⬝ᵥ G *ᵥ e₂ = 0
+  ff₂ : f₂ ⬝ᵥ G *ᵥ f₂ = 0
+  ef₂ : e₂ ⬝ᵥ G *ᵥ f₂ = 1
+  e₁e₂ : e₁ ⬝ᵥ G *ᵥ e₂ = 0
+  e₁f₂ : e₁ ⬝ᵥ G *ᵥ f₂ = 0
+  f₁e₂ : f₁ ⬝ᵥ G *ᵥ e₂ = 0
+  f₁f₂ : f₁ ⬝ᵥ G *ᵥ f₂ = 0
+
+/-- **One arithmetic step**: the effect of a single `U ⊕ U₁` Eichler move on `(α, β, γ, δ)`. -/
+inductive PlaneStep : ℤ × ℤ × ℤ × ℤ → ℤ × ℤ × ℤ × ℤ → Prop
+  /-- `t(e₂, p e₁ + q f₁)`. -/
+  | m₁ (p q α β γ δ : ℤ) :
+      PlaneStep (α, β, γ, δ) (α - δ * p, β - δ * q, γ + (p * β + q * α) - p * q * δ, δ)
+  /-- `t(f₂, p e₁ + q f₁)`. -/
+  | m₂ (p q α β γ δ : ℤ) :
+      PlaneStep (α, β, γ, δ) (α - γ * p, β - γ * q, γ, δ + (p * β + q * α) - p * q * γ)
+  /-- `t(e₁, p e₂ + q f₂)`. -/
+  | m₃ (p q α β γ δ : ℤ) :
+      PlaneStep (α, β, γ, δ) (α + (p * δ + q * γ) - p * q * β, β, γ - p * β, δ - q * β)
+  /-- `t(f₁, p e₂ + q f₂)`. -/
+  | m₄ (p q α β γ δ : ℤ) :
+      PlaneStep (α, β, γ, δ) (α, β + (p * δ + q * γ) - p * q * α, γ - p * α, δ - q * α)
+
+/-- `w'` realises the coordinate tuple `t` in the two planes. -/
+def Realizes {m : ℕ} (G : Matrix (Fin m) (Fin m) ℤ) (e₁ f₁ e₂ f₂ w' : Fin m → ℤ)
+    (t : ℤ × ℤ × ℤ × ℤ) : Prop :=
+  f₁ ⬝ᵥ G *ᵥ w' = t.1 ∧ e₁ ⬝ᵥ G *ᵥ w' = t.2.1 ∧
+    f₂ ⬝ᵥ G *ᵥ w' = t.2.2.1 ∧ e₂ ⬝ᵥ G *ᵥ w' = t.2.2.2
+
+section Lift
+variable {m : ℕ} {G : Matrix (Fin m) (Fin m) ℤ} {e₁ f₁ e₂ f₂ : Fin m → ℤ}
+
+set_option linter.unusedSimpArgs false in
+/-- **Every arithmetic step is realised by an actual isometry.** -/
+theorem planeStep_lift (hsymm : Gᵀ = G) (hunim : IsUnimodular G)
+    (hp : TwoPlanes G e₁ f₁ e₂ f₂) {t t' : ℤ × ℤ × ℤ × ℤ} (hst : PlaneStep t t')
+    {w' : Fin m → ℤ} (hr : Realizes G e₁ f₁ e₂ f₂ w' t) :
+    ∃ T : Matrix (Fin m) (Fin m) ℤ, IsUnit T.det ∧ Tᵀ * G * T = G ∧
+      Realizes G e₁ f₁ e₂ f₂ (T *ᵥ w') t' := by
+  -- the reversed pairings
+  have f₁e₁ : f₁ ⬝ᵥ G *ᵥ e₁ = 1 := by rw [bil_comm hsymm]; exact hp.ef₁
+  have f₂e₂ : f₂ ⬝ᵥ G *ᵥ e₂ = 1 := by rw [bil_comm hsymm]; exact hp.ef₂
+  have e₂e₁ : e₂ ⬝ᵥ G *ᵥ e₁ = 0 := by rw [bil_comm hsymm]; exact hp.e₁e₂
+  have f₂e₁ : f₂ ⬝ᵥ G *ᵥ e₁ = 0 := by rw [bil_comm hsymm]; exact hp.e₁f₂
+  have e₂f₁ : e₂ ⬝ᵥ G *ᵥ f₁ = 0 := by rw [bil_comm hsymm]; exact hp.f₁e₂
+  have f₂f₁ : f₂ ⬝ᵥ G *ᵥ f₁ = 0 := by rw [bil_comm hsymm]; exact hp.f₁f₂
+  cases hst with
+  | m₁ p q α β γ δ =>
+    obtain ⟨hα, hβ, hγ, hδ⟩ := hr
+    dsimp only at hα hβ hγ hδ
+    refine ⟨planeMove G e₂ e₁ f₁ p q,
+      planeMove_isUnit_det hsymm hunim hp.ee₂ hp.ee₁ hp.ff₁ hp.ef₁ e₂e₁ e₂f₁ p q,
+      planeMove_isometry hsymm hp.ee₂ hp.ee₁ hp.ff₁ hp.ef₁ e₂e₁ e₂f₁ p q, ?_, ?_, ?_, ?_⟩ <;>
+    · dsimp only
+      rw [planeMove_bil hsymm]
+      simp only [hα, hβ, hγ, hδ, hp.ee₁, hp.ff₁, hp.ef₁, hp.ee₂, hp.ff₂, hp.ef₂, hp.e₁e₂,
+        hp.e₁f₂, hp.f₁e₂, hp.f₁f₂, f₁e₁, f₂e₂, e₂e₁, f₂e₁, e₂f₁, f₂f₁]
+      ring
+  | m₂ p q α β γ δ =>
+    obtain ⟨hα, hβ, hγ, hδ⟩ := hr
+    dsimp only at hα hβ hγ hδ
+    refine ⟨planeMove G f₂ e₁ f₁ p q,
+      planeMove_isUnit_det hsymm hunim hp.ff₂ hp.ee₁ hp.ff₁ hp.ef₁ f₂e₁ f₂f₁ p q,
+      planeMove_isometry hsymm hp.ff₂ hp.ee₁ hp.ff₁ hp.ef₁ f₂e₁ f₂f₁ p q, ?_, ?_, ?_, ?_⟩ <;>
+    · dsimp only
+      rw [planeMove_bil hsymm]
+      simp only [hα, hβ, hγ, hδ, hp.ee₁, hp.ff₁, hp.ef₁, hp.ee₂, hp.ff₂, hp.ef₂, hp.e₁e₂,
+        hp.e₁f₂, hp.f₁e₂, hp.f₁f₂, f₁e₁, f₂e₂, e₂e₁, f₂e₁, e₂f₁, f₂f₁]
+      ring
+  | m₃ p q α β γ δ =>
+    obtain ⟨hα, hβ, hγ, hδ⟩ := hr
+    dsimp only at hα hβ hγ hδ
+    refine ⟨planeMove G e₁ e₂ f₂ p q,
+      planeMove_isUnit_det hsymm hunim hp.ee₁ hp.ee₂ hp.ff₂ hp.ef₂ hp.e₁e₂ hp.e₁f₂ p q,
+      planeMove_isometry hsymm hp.ee₁ hp.ee₂ hp.ff₂ hp.ef₂ hp.e₁e₂ hp.e₁f₂ p q, ?_, ?_, ?_, ?_⟩ <;>
+    · dsimp only
+      rw [planeMove_bil hsymm]
+      simp only [hα, hβ, hγ, hδ, hp.ee₁, hp.ff₁, hp.ef₁, hp.ee₂, hp.ff₂, hp.ef₂, hp.e₁e₂,
+        hp.e₁f₂, hp.f₁e₂, hp.f₁f₂, f₁e₁, f₂e₂, e₂e₁, f₂e₁, e₂f₁, f₂f₁]
+      ring
+  | m₄ p q α β γ δ =>
+    obtain ⟨hα, hβ, hγ, hδ⟩ := hr
+    dsimp only at hα hβ hγ hδ
+    refine ⟨planeMove G f₁ e₂ f₂ p q,
+      planeMove_isUnit_det hsymm hunim hp.ff₁ hp.ee₂ hp.ff₂ hp.ef₂ hp.f₁e₂ hp.f₁f₂ p q,
+      planeMove_isometry hsymm hp.ff₁ hp.ee₂ hp.ff₂ hp.ef₂ hp.f₁e₂ hp.f₁f₂ p q, ?_, ?_, ?_, ?_⟩ <;>
+    · dsimp only
+      rw [planeMove_bil hsymm]
+      simp only [hα, hβ, hγ, hδ, hp.ee₁, hp.ff₁, hp.ef₁, hp.ee₂, hp.ff₂, hp.ef₂, hp.e₁e₂,
+        hp.e₁f₂, hp.f₁e₂, hp.f₁f₂, f₁e₁, f₂e₂, e₂e₁, f₂e₁, e₂f₁, f₂f₁]
+      ring
+
+/-- **Every arithmetic chain is realised by an isometry.** -/
+theorem planeChain_lift (hsymm : Gᵀ = G) (hunim : IsUnimodular G)
+    (hp : TwoPlanes G e₁ f₁ e₂ f₂) {t t' : ℤ × ℤ × ℤ × ℤ}
+    (hch : Relation.ReflTransGen PlaneStep t t') :
+    ∀ {w' : Fin m → ℤ}, Realizes G e₁ f₁ e₂ f₂ w' t →
+      ∃ T : Matrix (Fin m) (Fin m) ℤ, IsUnit T.det ∧ Tᵀ * G * T = G ∧
+        Realizes G e₁ f₁ e₂ f₂ (T *ᵥ w') t' := by
+  induction hch with
+  | refl =>
+    intro w' hr
+    exact ⟨1, by simp, by simp, by rwa [Matrix.one_mulVec]⟩
+  | tail _ hlast ih =>
+    intro w' hr
+    obtain ⟨T, hTdet, hTiso, hTr⟩ := ih hr
+    obtain ⟨T', hT'det, hT'iso, hT'r⟩ := planeStep_lift hsymm hunim hp hlast hTr
+    exact ⟨T' * T, by rw [Matrix.det_mul]; exact hT'det.mul hTdet, isom_comp hT'iso hTiso,
+      by rwa [← Matrix.mulVec_mulVec]⟩
+
+end Lift
+
+/-- **The GEOMETRY-FREE residue of the whole K8b interior brick.** Every integer 4-tuple reaches, via
+the four `U ⊕ U₁` Eichler moves, one whose first two entries vanish. -/
+def PlaneReduction : Prop :=
+  ∀ α β γ δ : ℤ, ∃ γ' δ' : ℤ,
+    Relation.ReflTransGen PlaneStep (α, β, γ, δ) (0, 0, γ', δ')
+
+/-- **The terminal case of `PlaneReduction`, and its non-vacuity witness.** A tuple whose second
+plane is trivial (`γ = δ = 0`) reduces in exactly TWO moves: `m₁` writes `gcd(α, β)` into `γ` by
+Bézout, and `m₂` then divides it out of both `α` and `β`. So `PlaneReduction` is reduced to steering
+an arbitrary tuple into `γ = δ = 0`. -/
+theorem planeReduction_zero_tail (α β : ℤ) :
+    ∃ γ' δ' : ℤ, Relation.ReflTransGen PlaneStep (α, β, 0, 0) (0, 0, γ', δ') := by
+  set g : ℤ := (Int.gcd α β : ℤ) with hg
+  obtain ⟨a, ha⟩ : g ∣ α := by rw [hg]; exact Int.gcd_dvd_left α β
+  obtain ⟨b, hb⟩ : g ∣ β := by rw [hg]; exact Int.gcd_dvd_right α β
+  have hval : (Int.gcdB α β) * β + (Int.gcdA α β) * α = g := by
+    rw [hg, Int.gcd_eq_gcd_ab]; ring
+  refine ⟨g, 0 + (a * β + b * α) - a * b * g, ?_⟩
+  have h1 : PlaneStep (α, β, 0, 0) (α, β, g, 0) := by
+    have h := PlaneStep.m₁ (Int.gcdB α β) (Int.gcdA α β) α β 0 0
+    simp only [zero_mul, sub_zero, mul_zero, zero_add] at h
+    rwa [hval] at h
+  have h2 : PlaneStep (α, β, g, 0) (0, 0, g, 0 + (a * β + b * α) - a * b * g) := by
+    have h := PlaneStep.m₂ a b α β g 0
+    rwa [show α - g * a = 0 by rw [ha]; ring, show β - g * b = 0 by rw [hb]; ring] at h
+  exact (Relation.ReflTransGen.single h1).tail h2
+
+/-- **STEP 1 from the pure arithmetic statement.** -/
+theorem eichlerStepOne_of_planeReduction (hred : PlaneReduction) : EichlerStepOne := by
+  intro m G hsymm hunim e₁ f₁ e₂ f₂ w w'
+  intro he₁e₁ hf₁f₁ he₁f₁ he₂e₂ hf₂f₂ he₂f₂ he₁e₂ he₁f₂ hf₁e₂ hf₁f₂
+  intro _ _ _ _ _ _ _ _
+  have hp : TwoPlanes G e₁ f₁ e₂ f₂ :=
+    ⟨he₁e₁, hf₁f₁, he₁f₁, he₂e₂, hf₂f₂, he₂f₂, he₁e₂, he₁f₂, hf₁e₂, hf₁f₂⟩
+  obtain ⟨γ', δ', hch⟩ :=
+    hred (f₁ ⬝ᵥ G *ᵥ w') (e₁ ⬝ᵥ G *ᵥ w') (f₂ ⬝ᵥ G *ᵥ w') (e₂ ⬝ᵥ G *ᵥ w')
+  obtain ⟨T, hTdet, hTiso, hTr⟩ :=
+    planeChain_lift hsymm hunim hp hch ⟨rfl, rfl, rfl, rfl⟩
+  exact ⟨T, hTdet, hTiso, hTr.2.1, hTr.1⟩
+
 /-- **The residual gap of STEP 1.** After an isometry, the second plane's `e₂`-pairing with `w'`
 should DIVIDE both first-plane pairings. This is the `SO⁺(U ⊕ U₁) ≅ (SL₂ℤ × SL₂ℤ)/±` reduction — a
 Euclidean descent on the four `U ⊕ U₁` coordinates of `w'` — and it is all that remains. -/
@@ -792,5 +956,9 @@ theorem unitCancellation_of_stepOne (hstep1 : EichlerStepOne) : UnitCancellation
 /-- **`StableNegRank16Two` from STEP 1 alone** — the K8b interior brick, one input away. -/
 theorem stableNegRank16Two_of_stepOne (hstep1 : EichlerStepOne) : StableNegRank16Two :=
   stableNegRank16Two_of_unitCancellation (unitCancellation_of_stepOne hstep1)
+
+/-- **`UnitCancellation` from the pure arithmetic statement.** -/
+theorem unitCancellation_of_planeReduction (hred : PlaneReduction) : UnitCancellation :=
+  unitCancellation_of_stepOne (eichlerStepOne_of_planeReduction hred)
 
 end SKEFTHawking
