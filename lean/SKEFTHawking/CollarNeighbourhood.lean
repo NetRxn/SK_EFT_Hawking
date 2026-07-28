@@ -52,18 +52,36 @@ For the model `I.prod (𝓡∂ 1)` with `I` boundaryless:
   transition restricted to the boundary hyperplane, hence `C^n`.
 * `isManifold_boundary`: **`∂W` is a `C^n` manifold modelled on `I`** — the "boundary is a
   submanifold" prerequisite, for the model bordism uses.
+* `isClosed_boundary_prodHalf`, `compactSpace_boundary`: `∂W` is closed, and compact when `W` is.
+  Compactness of `∂W` is what makes the local collars uniform.
 
-## TODO
+## TODO — the collar itself, and the state of Mathlib underneath it
 
-* The collar itself: an inward vector field from a partition of unity, and its uniform-time flow.
-  Mathlib's integral-curve existence theorem
-  (`exists_isMIntegralCurveAt_of_contMDiffAt`) is stated *only at interior points*, and every
-  global/uniform-time result in `Mathlib/Geometry/Manifold/IntegralCurve/UniformTime.lean` assumes
-  `[BoundarylessManifold I M]`; the boundary case is Mathlib's own open TODO there ("the case where
-  the integral curve may venture to the boundary of the manifold. See Theorem 9.34, Lee").
-  Mathlib's smooth partitions of unity, by contrast, do *not* assume boundarylessness and are
-  usable as-is (`SmoothPartitionOfUnity.exists_isSubordinate`, needing `FiniteDimensional ℝ E`,
-  `T2Space`, `SigmaCompactSpace`, and a `C^∞` structure).
+What remains is the classical globalisation: an inward-pointing vector field near `∂W` built from
+a partition of unity over boundary charts, and its uniform-time flow. Two independent gaps in the
+current Mathlib sit under that step; both are upstreamable in their own right.
+
+1. **Flow from the boundary.** `exists_isMIntegralCurveAt_of_contMDiffAt` requires
+   `I.IsInteriorPoint x₀`, and *every* global / uniform-time result in
+   `Mathlib/Geometry/Manifold/IntegralCurve/UniformTime.lean` carries `[BoundarylessManifold I M]`.
+   Flowing out of a boundary point is Mathlib's own recorded TODO in
+   `Mathlib/Geometry/Manifold/IntegralCurve/ExistUnique.lean` ("the case where the integral curve
+   may venture to the boundary of the manifold. See Theorem 9.34, Lee. May require submanifolds").
+   Closing it needs Picard–Lindelöf on `Ici 0` in the model half space, then the manifold-level
+   statement.
+
+2. **Partitions of unity at finite regularity.** Mathlib's are `C^∞`-only:
+   `SmoothPartitionOfUnity` is valued in `C^∞⟮I, M; 𝓘(ℝ), ℝ⟯` and
+   `SmoothPartitionOfUnity.exists_isSubordinate` proceeds through
+   `BumpCovering.exists_isSubordinate_of_prop (ContMDiff I 𝓘(ℝ) ∞)`; the smoothness of a
+   `SmoothBumpFunction` on `M` lives under `variable [IsManifold I ∞ M]`. Nothing about
+   *boundarylessness* is assumed — partitions of unity work fine on manifolds with boundary, and
+   only need `[FiniteDimensional ℝ E] [T2Space M] [SigmaCompactSpace M]` — but a `C^k` partition
+   of unity for finite `k` does not exist in the library and would have to be built (the standard
+   bump is `C^∞` in a chart, so it is a `C^k` function on a `C^k` manifold; that generalisation is
+   the missing piece).
+
+Neither gap is about boundary *detection*, which is what this file supplies.
 -/
 
 open Set Function
@@ -443,6 +461,23 @@ theorem isManifold_boundary (hn : n ≠ 0) :
   refine isManifold_of_contDiffOn I n _ ?_
   rintro f f' ⟨x, rfl⟩ ⟨x', rfl⟩
   exact contDiffOn_boundarySlice_trans hn _ _ x x'
+
+omit [I.Boundaryless] in
+/-- The boundary is a closed subset of `W`. (A re-export of
+`ModelWithCorners.isClosed_boundary` at the bordism model, recorded here because the collar
+construction uses it twice: to get compactness of `∂W`, and as the closed set a subordinate
+partition of unity is built over.) -/
+theorem isClosed_boundary_prodHalf (hn : n ≠ 0) :
+    IsClosed ((I.prod (𝓡∂ 1)).boundary W) :=
+  ModelWithCorners.isClosed_boundary hn
+
+omit [I.Boundaryless] in
+/-- **The boundary of a compact bordism-model manifold is compact.** This is where the compactness
+hypothesis of the collar neighbourhood theorem enters: it is what turns the pointwise local
+collars into a *uniform* one. -/
+theorem compactSpace_boundary [CompactSpace W] (hn : n ≠ 0) :
+    CompactSpace ((I.prod (𝓡∂ 1)).boundary W) :=
+  isCompact_iff_compactSpace.mp (isClosed_boundary_prodHalf hn).isCompact
 
 end BoundaryManifold
 
