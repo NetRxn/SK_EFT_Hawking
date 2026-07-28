@@ -4886,6 +4886,8 @@ import SKEFTHawking.Carrollian.VirasoroExtension
 import SKEFTHawking.SingularRelativeCoverMVSumExact
 -- Collar neighbourhood arc (Mathlib-grade, upstreamable): boundary of a bordism-model manifold
 import SKEFTHawking.CollarNeighbourhood
+-- Collar prerequisite (2), separately upstreamable: partitions of unity at finite regularity
+import SKEFTHawking.ContMDiffPartitionOfUnity
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
