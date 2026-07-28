@@ -4988,6 +4988,10 @@ import SKEFTHawking.KummerK3EvenFromSpinWu
 -- proved to be exactly the block assembler's hself/hoff pair, with non-vacuity (the −2 diagonal
 -- forces every exceptional class nonzero) and rigidity (n² = 1).
 import SKEFTHawking.KummerK3ExceptionalBlock
+-- Phase 5q.H — `heven` DELETED from the welded K3's E1 ledger: evenness of the intersection
+-- diagonal propagates along the ℤ-span, integral PD upgrades the datum's cap-spanning to
+-- cohomological spanning, so `heven` is exactly the parity of the datum's own Kronecker diagonal.
+import SKEFTHawking.KummerK3EvenFromSpanningFamily
 -- Phase 5q.H — the general-sigma Guillou-Marin/[FK] statement layer: why the empty-surface
 -- specialization of GM is CIRCULAR for a spin manifold, kernel-checked.
 import SKEFTHawking.CharSurfaceFKVacuity
