@@ -4998,6 +4998,10 @@ import SKEFTHawking.KummerK3ExceptionalBlock
 -- diagonal propagates along the ℤ-span, integral PD upgrades the datum's cap-spanning to
 -- cohomological spanning, so `heven` is exactly the parity of the datum's own Kronecker diagonal.
 import SKEFTHawking.KummerK3EvenFromSpanningFamily
+-- Phase 5q.H — the K3 E1 ledger with the LATTICE input discharged: `StableNegRank16Two` is a
+-- theorem (`PlaneReductionDescent.stableNegRank16Two_holds`), so every Kummer consumer loses its
+-- `hstable` hypothesis and the residual ledger is ONE geometric datum.
+import SKEFTHawking.KummerK3E1Unconditional
 -- Phase 5q.H — signature/congruence behaviour under scaling a Gram by a positive integer:
 -- closes the `IntCongr`-vs-equality gap left by the T4 block (`t4m • XMat`).
 import SKEFTHawking.KummerK3TorusBlockScale

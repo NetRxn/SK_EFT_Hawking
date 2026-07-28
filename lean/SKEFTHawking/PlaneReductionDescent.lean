@@ -31,6 +31,15 @@ Two consequences drive everything below:
 * **`m₃` and `m₄` reduce `γ` and `δ` modulo `β` resp. `α`, independently.** So a single move plus
   `planeReduction_zero_tail` closes it whenever `β` (or `α`) divides both `γ` and `δ` — §3.
 
+## The result (§6d)
+
+`planeReduction_holds`, `unitCancellation_holds`, `stableNegRank16Two_holds` — all three
+**unconditional**. The descent runs: §5 drives `β` to `0` (a Euclidean induction on `β.natAbs`),
+§6 runs the axis induction on `gcd(γ, δ)`, and §6c's `axisReturnBound` supplies the one bound that
+glues the two together — the observation that a *single* descent round already sends `|β|` below
+`max(|γ|, |δ|)`, after which §5's own bound suffices. §6b's numerical fence records that the
+tempting divisibility strengthening of that measure is FALSE, so the induction must carry a bound.
+
 Kernel-pure (`{propext, Classical.choice, Quot.sound}`); no `sorry`/`native_decide`/`maxHeartbeats`/
 axiom.
 -/
@@ -311,6 +320,7 @@ theorem descent_round {α β γ δ : ℤ} (hβ : β ≠ 0) :
     (∃ a : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (a, β, 0, 0)) ∨
     (∃ α' β' γ' δ' : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (α', β', γ', δ') ∧
       β'.natAbs < β.natAbs ∧
+      β'.natAbs < max (γ % β).natAbs (δ % β).natAbs ∧
       Int.gcd γ' δ' ≤ max (γ % β).natAbs (δ % β).natAbs) := by
   set p : ℤ := γ / β with hp
   set q : ℤ := δ / β with hq
@@ -325,21 +335,23 @@ theorem descent_round {α β γ δ : ℤ} (hβ : β ≠ 0) :
       rw [hr1, hr2] at hstep3
       exact ReflTransGen.single hstep3
     · -- `m₁ 0 _` : `δ` is the modulus and survives untouched
-      refine Or.inr ⟨α₁, β % (δ % β), γ % β + (β / (δ % β)) * α₁, δ % β, ?_, ?_, ?_⟩
+      refine Or.inr ⟨α₁, β % (δ % β), γ % β + (β / (δ % β)) * α₁, δ % β, ?_, ?_, ?_, ?_⟩
       · have hstep1 := planeStep_m₁_right (β / (δ % β)) α₁ β (γ % β) (δ % β)
         rw [show β - (δ % β) * (β / (δ % β)) = β % (δ % β) from (Int.emod_def β (δ % β)).symm]
           at hstep1
         exact (ReflTransGen.single hstep3).tail hstep1
       · exact lt_trans (natAbs_emod_lt_natAbs hr2) (natAbs_emod_lt_natAbs hβ)
+      · exact lt_of_lt_of_le (natAbs_emod_lt_natAbs hr2) (le_max_right _ _)
       · exact le_trans (Nat.le_of_dvd (Int.natAbs_pos.mpr hr2)
           (Nat.gcd_dvd_right _ (δ % β).natAbs)) (le_max_right _ _)
   · -- `m₂ 0 _` : `γ` is the modulus and survives untouched
-    refine Or.inr ⟨α₁, β % (γ % β), γ % β, δ % β + (β / (γ % β)) * α₁, ?_, ?_, ?_⟩
+    refine Or.inr ⟨α₁, β % (γ % β), γ % β, δ % β + (β / (γ % β)) * α₁, ?_, ?_, ?_, ?_⟩
     · have hstep2 := planeStep_m₂_right (β / (γ % β)) α₁ β (γ % β) (δ % β)
       rw [show β - (γ % β) * (β / (γ % β)) = β % (γ % β) from (Int.emod_def β (γ % β)).symm]
         at hstep2
       exact (ReflTransGen.single hstep3).tail hstep2
     · exact lt_trans (natAbs_emod_lt_natAbs hr1) (natAbs_emod_lt_natAbs hβ)
+    · exact lt_of_lt_of_le (natAbs_emod_lt_natAbs hr1) (le_max_left _ _)
     · exact le_trans (Nat.le_of_dvd (Int.natAbs_pos.mpr hr1)
         (Nat.gcd_dvd_left (γ % β).natAbs _)) (le_max_left _ _)
 
@@ -364,7 +376,8 @@ theorem descent_to_axis (α β γ δ : ℤ) (hβ : β ≠ 0) :
       exact absurd (Int.natAbs_eq_zero.mp (Nat.le_zero.mp hle)) hβ
     | succ n ih =>
       intro α β γ δ hβ hle
-      rcases descent_round (α := α) (γ := γ) (δ := δ) hβ with ⟨a, hchain⟩ | ⟨α', β', γ', δ', hchain, hlt, hbd⟩
+      rcases descent_round (α := α) (γ := γ) (δ := δ) hβ with
+        ⟨a, hchain⟩ | ⟨α', β', γ', δ', hchain, hlt, _, hbd⟩
       · obtain ⟨g, d, htail⟩ := planeReduction_zero_tail a β
         exact Or.inl ⟨g, d, hchain.trans htail⟩
       · have hbdβ : Int.gcd γ' δ' < β.natAbs :=
@@ -434,14 +447,46 @@ divisibility fails 7 times, e.g. `(α,β,γ,δ) = (5, 0, 24, 30)` visits axis gc
 `4 ∤ 6`. (Also `(58,0,240,300) ↦ [60,8]`, `(40,0,192,240) ↦ [48,32]`.) The measure really is an
 inequality, so the induction has to carry a bound rather than a divisibility chain. -/
 
-/-- **THE ONE REMAINING ARITHMETIC INPUT.** From a state with `β ≠ 0` and non-negative plane-2
-coordinates, the descent either closes or reaches the axis with `gcd(γ, δ)` bounded by the
-*incoming* plane-2 coordinates (not, as `descent_to_axis` gives, by `|β|`). -/
+/-- **THE AXIS-RETURN BOUND** (named as a `Prop` because §6c's axis induction consumes it as one
+hypothesis; it is *proved* immediately below by `axisReturnBound`). From a state with `β ≠ 0` and
+non-negative plane-2 coordinates, the descent either closes or reaches the axis with `gcd(γ, δ)`
+bounded by the *incoming* plane-2 coordinates (not, as `descent_to_axis` gives, by `|β|`). -/
 def AxisReturnBound : Prop :=
   ∀ α β γ δ : ℤ, β ≠ 0 → 0 ≤ γ → 0 ≤ δ →
     (∃ γ' δ' : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (0, 0, γ', δ')) ∨
     (∃ α' γ' δ' : ℤ, ReflTransGen PlaneStep (α, β, γ, δ) (α', 0, γ', δ') ∧
       Int.gcd γ' δ' ≤ max γ.natAbs δ.natAbs)
+
+/-- `a % b` never exceeds a non-negative `a`. (`b * (a / b) ≥ 0` in both sign cases.) -/
+theorem natAbs_emod_le_natAbs_of_nonneg {a b : ℤ} (ha : 0 ≤ a) (hb : b ≠ 0) :
+    (a % b).natAbs ≤ a.natAbs := by
+  have h0 : 0 ≤ a % b := Int.emod_nonneg a hb
+  have hprod : 0 ≤ b * (a / b) := by
+    rcases lt_trichotomy b 0 with h | h | h
+    · exact mul_nonneg_iff.mpr (Or.inr ⟨h.le, Int.ediv_nonpos_of_nonneg_of_nonpos ha h.le⟩)
+    · exact absurd h hb
+    · exact mul_nonneg h.le (Int.ediv_nonneg ha h.le)
+  have hdef : a % b = a - b * (a / b) := Int.emod_def a b
+  omega
+
+/-- **`AxisReturnBound` IS A THEOREM.** The key is that a single round already drops `|β|` *below the
+plane-2 bound*: in the `m₂` branch `β' = β % (γ%β)`, so `|β'| < γ%β ≤ γ ≤ B`, and mirror in the `m₁`
+branch. After that one round the existing `descent_to_axis` bound `gcd < |β'|` is already `< B`, so
+no carried invariant is needed — the first round does all the work. -/
+theorem axisReturnBound : AxisReturnBound := by
+  intro α β γ δ hβ hγ0 hδ0
+  have hmax : max (γ % β).natAbs (δ % β).natAbs ≤ max γ.natAbs δ.natAbs :=
+    max_le_max (natAbs_emod_le_natAbs_of_nonneg hγ0 hβ) (natAbs_emod_le_natAbs_of_nonneg hδ0 hβ)
+  rcases descent_round (α := α) (γ := γ) (δ := δ) hβ with
+    ⟨a, hchain⟩ | ⟨α', β', γ', δ', hchain, _, hβ'lt, hbd⟩
+  · obtain ⟨g, d, htail⟩ := planeReduction_zero_tail a β
+    exact Or.inl ⟨g, d, hchain.trans htail⟩
+  · by_cases hβ'0 : β' = 0
+    · subst hβ'0
+      exact Or.inr ⟨α', γ', δ', hchain, le_trans hbd hmax⟩
+    · rcases descent_to_axis α' β' γ' δ' hβ'0 with ⟨g, d, h⟩ | ⟨α'', g, d, h, hbd2⟩
+      · exact Or.inl ⟨g, d, hchain.trans h⟩
+      · exact Or.inr ⟨α'', g, d, hchain.trans h, by omega⟩
 
 /-- **The axis case, from the residual.** Strong induction on `gcd(γ, δ)`: either it is `0` (the
 zero tail), or it divides `α` (the axis closes), or one axis round drops it — and the return trip
@@ -491,6 +536,28 @@ the welded Kummer `K3`'s E1 atoms. Every step between here and there is already 
 theorem stableNegRank16Two_of_returnBound (h : AxisReturnBound) : StableNegRank16Two :=
   stableNegRank16Two_of_unitCancellation (unitCancellation_of_planeReduction
     (planeReduction_of_returnBound h))
+
+/-! ### §6d. The residual is discharged — the brick is unconditional
+
+`axisReturnBound` (§6c) proves `AxisReturnBound` outright, so the three consumers below carry no
+hypothesis at all. -/
+
+/-- **`PlaneReduction`, UNCONDITIONALLY.** The sole geometry-free residual of `UnitCancellation`,
+proved: every `(α, β, γ, δ)` reaches a `(0, 0, γ', δ')` under the four Eichler transvections. -/
+theorem planeReduction_holds : PlaneReduction :=
+  planeReduction_of_returnBound axisReturnBound
+
+/-- **`UnitCancellation`, UNCONDITIONALLY.** -/
+theorem unitCancellation_holds : UnitCancellation :=
+  unitCancellation_of_planeReduction planeReduction_holds
+
+/-- **`StableNegRank16Two`, UNCONDITIONALLY — the K8b interior brick lands.** Downstream,
+`UnitBlockCancellation.hk3_of_stable16_two` turns this into `IntCongr M k3Form` for any even
+unimodular rank-22 `M` with `latticeSig M = −16`, and `KummerK3GramFromLattice` turns *that* into
+the welded Kummer `K3`'s E1 atoms — every step of which is already proved, so the whole chain is
+now hypothesis-free. -/
+theorem stableNegRank16Two_holds : StableNegRank16Two :=
+  stableNegRank16Two_of_returnBound axisReturnBound
 
 /-! ## §7. THE CONSERVED QUANTITY
 
