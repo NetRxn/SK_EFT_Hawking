@@ -287,7 +287,10 @@ theorem karoubi_RP4_instance_consistent :
     (HasStiefelWhitney.w (M := RP4) 2).rank = (Nat.choose 5 2 % 2 : ZMod 2) ∧
     (HasStiefelWhitney.w (M := RP4) 3).rank = (Nat.choose 5 3 % 2 : ZMod 2) ∧
     (HasStiefelWhitney.w (M := RP4) 4).rank = (Nat.choose 5 4 % 2 : ZMod 2) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> rfl
+  -- The `% 2` on the right lives in `ZMod 2`, where `(2 : ZMod 2) = 0`, so it is the
+  -- identity (`EuclideanDomain.mod_zero`); the remaining `↑(C 5 k) = w k` is `rfl`.
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
+    (rw [show (2 : ZMod 2) = 0 from rfl, EuclideanDomain.mod_zero]; rfl)
 
 /-! ## §6. RP⁴ is Pin⁺ (substantive obstruction discharge) -/
 

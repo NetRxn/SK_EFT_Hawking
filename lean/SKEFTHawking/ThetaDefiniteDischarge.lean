@@ -78,7 +78,10 @@ theorem eight_dvd_latticeSig_of_definite {m : ℕ} (A : Matrix (Fin m) (Fin m) �
     have hqm : ((-A).map (Int.cast : ℤ → ℝ)).toQuadraticMap'
         = -((A.map (Int.cast : ℤ → ℝ)).toQuadraticMap') := by
       have hmap : ((-A).map (Int.cast : ℤ → ℝ)) = -(A.map (Int.cast : ℤ → ℝ)) := by ext i j; simp
-      rw [hmap]; simp [Matrix.toQuadraticMap']
+      rw [hmap]
+      show (-A.map (Int.cast : ℤ → ℝ)).toQuadraticForm' = -(A.map (Int.cast : ℤ → ℝ)).toQuadraticForm'
+      ext x
+      simp [Matrix.toQuadraticForm']
     have hsn' : sigNeg ((-A).map (Int.cast : ℤ → ℝ)).toQuadraticMap' = 0 := by
       rw [hqm, sigNeg, neg_neg]; exact hsp
     have hpd := posDef_cast_of_sigNeg_zero (-A) hnegeu hsn'

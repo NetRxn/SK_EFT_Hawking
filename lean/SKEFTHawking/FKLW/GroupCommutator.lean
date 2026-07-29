@@ -67,7 +67,8 @@ form). -/
 `Matrix.nonsing_inv_eq_ringInverse` + `Ring.inverse_exp`. -/
 lemma exp_smul_I_inv {d : ℕ} (F : Matrix (Fin d) (Fin d) ℂ) :
     (NormedSpace.exp (Complex.I • F))⁻¹ = NormedSpace.exp (-(Complex.I • F)) := by
-  rw [Matrix.nonsing_inv_eq_ringInverse, Ring.inverse_exp]
+  rw [Matrix.nonsing_inv_eq_ringInverse]
+  exact Ring.inverse_exp (Complex.I • F)
 
 /-- The group commutator on exp form unfolds to the BCH 4-fold product. -/
 lemma groupCommutator_exp_eq {d : ℕ} (F G : Matrix (Fin d) (Fin d) ℂ) :

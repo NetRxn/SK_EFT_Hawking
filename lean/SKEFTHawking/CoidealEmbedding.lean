@@ -41,27 +41,21 @@ private theorem affComul_F0 :
     uqAffF0 k ⊗ₜ[LaurentPolynomial k] 1 + uqAffK0inv k ⊗ₜ[LaurentPolynomial k] uqAffF0 k := by
   unfold affComul uqAffF0 uqsl2AffMk;
   simp +zetaDelta at *;
-  convert FreeAlgebra.lift_ι_apply _ _
+  exact FreeAlgebra.lift_ι_apply _ _
 
 private theorem affComul_E0 :
     affComul k (uqAffE0 k) =
     uqAffE0 k ⊗ₜ[LaurentPolynomial k] uqAffK0 k + 1 ⊗ₜ[LaurentPolynomial k] uqAffE0 k := by
-  unfold uqAffE0 affComul;
-  convert FreeAlgebra.lift_ι_apply _ _;
-  rotate_left;
-  exact k[T;T⁻¹];
-  exact?;
-  exact?;
-  exact?;
-  simp +decide [ uqsl2AffMk, SKEFTHawking.uqsl2AffMk ];
-  convert FreeAlgebra.lift_ι_apply _ _
+  unfold affComul uqAffE0 uqsl2AffMk;
+  simp +zetaDelta at *;
+  exact FreeAlgebra.lift_ι_apply _ _
 
 private theorem affComul_K0inv :
     affComul k (uqAffK0inv k) =
     uqAffK0inv k ⊗ₜ[LaurentPolynomial k] uqAffK0inv k := by
   unfold uqAffK0inv affComul;
   simp +decide [ uqsl2AffMk ];
-  convert FreeAlgebra.lift_ι_apply _ _
+  exact FreeAlgebra.lift_ι_apply _ _
 
 private theorem affComul_F1 :
     affComul k (uqAffF1 k) =
@@ -69,24 +63,20 @@ private theorem affComul_F1 :
   unfold uqAffF1 uqsl2AffMk;
   -- By definition of comultiplication, we know that affComul k (uqAffF1 k) = uqAffF1 k ⊗ₜ 1 + uqAffK1inv k ⊗ₜ uqAffF1 k.
   simp [affComul];
-  convert FreeAlgebra.lift_ι_apply _ _
+  exact FreeAlgebra.lift_ι_apply _ _
 
 private theorem affComul_E1 :
     affComul k (uqAffE1 k) =
     uqAffE1 k ⊗ₜ[LaurentPolynomial k] uqAffK1 k + 1 ⊗ₜ[LaurentPolynomial k] uqAffE1 k := by
-  unfold uqAffE1;
-  convert FreeAlgebra.lift_ι_apply _ _;
-  rotate_left;
-  exact LaurentPolynomial k;
-  all_goals try infer_instance;
-  simp +decide [ affComul, uqsl2AffMk ];
-  convert FreeAlgebra.lift_ι_apply _ _
+  unfold affComul uqAffE1 uqsl2AffMk;
+  simp +zetaDelta at *;
+  exact FreeAlgebra.lift_ι_apply _ _
 
 private theorem affComul_K1inv :
     affComul k (uqAffK1inv k) =
     uqAffK1inv k ⊗ₜ[LaurentPolynomial k] uqAffK1inv k := by
   unfold affComul uqAffK1inv uqsl2AffMk; simp +decide [ uqsl2AffMk ] ;
-  convert FreeAlgebra.lift_ι_apply _ _
+  exact FreeAlgebra.lift_ι_apply _ _
 
 /-! ## 1. Coideal property for B₀ -/
 

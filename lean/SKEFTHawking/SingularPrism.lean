@@ -533,7 +533,6 @@ private theorem prism_prismOp_eq_side {X Y : TopCat} {n : ℕ} (H : C(↑X × un
   · intro a _
     rw [Finset.mem_filter]
     refine ⟨Finset.mem_univ _, ?_⟩
-    dsimp only
     split_ifs with h
     · simp only [Fin.le_def, Fin.val_castSucc] at h
       simp only [not_or, Fin.ext_iff, Fin.val_castSucc, Fin.val_succ]
@@ -574,7 +573,6 @@ private theorem prism_prismOp_eq_side {X Y : TopCat} {n : ℕ} (H : C(↑X × un
       simp only [Prod.mk.injEq, Fin.ext_iff, Fin.val_succ, Fin.val_castSucc, true_and]
       omega
   · intro a _
-    dsimp only
     split_ifs with h
     · exact congrArg (Finsupp.single · (1 : ZMod 2)) (face_prismSimplex_side_v H σ h).symm
     · rw [not_le] at h
