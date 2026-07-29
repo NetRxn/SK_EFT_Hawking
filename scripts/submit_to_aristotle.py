@@ -72,7 +72,8 @@ def cmd_stage(args) -> None:
     print(f"  pruned  : {staged.pruned_requires or '(none)'} "
           f"(D7 closure-aware require/manifest prune — staged copy only)")
     if getattr(args, "verify_build", False):
-        print("\nD7 staged-build gate (lake build under our 4.29.1; minutes)...")
+        print(f"\nD7 staged-build gate (lake build under our "
+              f"{A.local_toolchain_version()}; minutes)...")
         gate = A.verify_staged_build(staged)
         for d in gate.details:
             print("   ", d)
@@ -96,7 +97,8 @@ def cmd_submit(args) -> None:
         print(f"Staged at {staged.root}; closure {len(staged.closure)} modules (hash {staged.closure_hash}).")
         raise SystemExit(2)
     if not args.skip_build_gate:
-        print("D7 staged-build gate (lake build the pruned project under our 4.29.1; minutes)...")
+        print(f"D7 staged-build gate (lake build the pruned project under our "
+              f"{A.local_toolchain_version()}; minutes)...")
         gate = A.verify_staged_build(staged)
         for d in gate.details:
             print("   ", d)
@@ -186,7 +188,7 @@ def main() -> None:
     s = sub.add_parser("stage", help="Stage the minimal import-closure project for target(s).")
     s.add_argument("targets", nargs="+")
     s.add_argument("--verify-build", action="store_true",
-                   help="Also run the D7 staged-build gate (lake build under our 4.29.1).")
+                   help="Also run the D7 staged-build gate (lake build under our local toolchain).")
     s.set_defaults(func=cmd_stage)
 
     s = sub.add_parser("submit", help="Stage + submit (async). Requires --yes-i-authorize.")

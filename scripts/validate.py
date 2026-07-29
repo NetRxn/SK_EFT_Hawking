@@ -5774,6 +5774,183 @@ def check_lean_docstring_refs_resolve() -> CheckResult:
     return CheckResult(passed=(n_fail == 0), details=details)
 
 
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK: Paper toolchain-pin drift — Class TP (advisory)
+# ═══════════════════════════════════════════════════════════════════════
+# `docs/agents/claims_reviewer.md` defines Class TP (Toolchain Pin drift) as a
+# STRUCTURAL check — "Literal Lean/Mathlib version in paper != project pin",
+# sourced from `lean-toolchain` + `lakefile.toml`. That same doc records that
+# Classes TN and HD were mirrored into validate.py "at zero-agent-cost for
+# per-save CI-like invocation". TP never was, so it fired only when the
+# claims-reviewer agent ran — i.e. at Stage 13.
+#
+# The v4.29.1 -> v4.32.0 bump (2026-07-29) made that gap load-bearing: every
+# bundle draft's verification-provenance sentence went stale in a single commit,
+# while Stage 13 was explicitly deferred. This check closes that window.
+#
+# ADVISORY by construction (always passes, warns) — mirroring
+# `inventory_index_autogen_fresh`. A stale pin in a DRAFT is a provenance-hygiene
+# signal, not a soundness failure, and the remedy is a publication decision that
+# belongs to Stage 13: does this paper re-verify under the new pin (update the
+# literal), or does it record the pin it was actually verified under (keep it,
+# and say so explicitly)? A find-and-replace at gate time would silently assert
+# the former for every draft. This check reports; Stage 13 decides.
+#
+# Two buckets, because the bump puts different kinds of sentence at risk:
+#   pin-drift        — "verified by `lake build` (v4.29.1, Mathlib 5e932f97)":
+#                      a reproducibility instruction that now points at a
+#                      toolchain the repo no longer pins.
+#   capability-claim — "Mathlib v4.29.1 has no Kunneth theorem": a justification
+#                      for an in-tree construction or a tracked gap, whose truth
+#                      value a Mathlib bump can silently FLIP.
+#
+# Third-party environments are exempt by construction: a version literal whose
+# context names Aristotle (whose sandbox is pinned at v4.28.0 independently of
+# our toolchain) is a fact about that service, not a claim about our pin.
+
+_TP_LEAN_VER_RE = re.compile(r"\bv?(4\.\d+\.\d+)\b")
+_TP_HEX_RE = re.compile(r"\b([0-9a-f]{8,40})\b")
+_TP_THIRD_PARTY_RE = re.compile(r"aristotle|sandbox|harmonic", re.IGNORECASE)
+_TP_MATHLIB_CTX_RE = re.compile(r"mathlib", re.IGNORECASE)
+_TP_CAPABILITY_RE = re.compile(
+    r"\b(has|have|had|lacks?|lacking|ships?|provides?|contains?|carries|"
+    r"absent|missing|no longer|does not|doesn't|not (?:currently )?in)\b",
+    re.IGNORECASE,
+)
+
+
+def _tp_live_pins() -> tuple[str | None, str | None]:
+    """Read the live (toolchain_version, mathlib_rev) from the Lean project."""
+    lean_root = LEAN_DIR.parent
+    version = None
+    try:
+        raw = (lean_root / "lean-toolchain").read_text(encoding="utf-8").strip()
+        m = _TP_LEAN_VER_RE.search(raw)
+        if m:
+            version = m.group(1)
+    except OSError:
+        pass
+
+    rev = None
+    try:
+        toml_text = (lean_root / "lakefile.toml").read_text(encoding="utf-8")
+        # Find the mathlib [[require]] stanza and take its rev.
+        for block in toml_text.split("[[require]]"):
+            if re.search(r'name\s*=\s*"mathlib"', block):
+                m = re.search(r'rev\s*=\s*"([0-9a-f]{8,40})"', block)
+                if m:
+                    rev = m.group(1)
+                break
+    except OSError:
+        pass
+    return version, rev
+
+
+def _tp_scan_lines(lines: list[str], live_ver: str, live_rev: str
+                   ) -> tuple[list[tuple[int, str]], list[tuple[int, str]]]:
+    """Pure core of Class TP: scan draft lines for non-live pin literals.
+
+    Returns ``(pin_hits, capability_hits)`` as ``(line_number, found)`` pairs.
+    Split out from the check so it is unit-testable with synthetic fixtures.
+    """
+    pin_hits: list[tuple[int, str]] = []
+    cap_hits: list[tuple[int, str]] = []
+    for i, line in enumerate(lines, start=1):
+        # Context window: the line plus its neighbours, so a claim split across
+        # a TeX line-wrap still sees its own qualifiers.
+        ctx = " ".join(lines[max(0, i - 2):i + 1])
+        if _TP_THIRD_PARTY_RE.search(ctx):
+            continue  # a third-party service's own pin, not ours
+
+        stale_vers = {v for v in _TP_LEAN_VER_RE.findall(line) if v != live_ver}
+        stale_revs: set[str] = set()
+        if _TP_MATHLIB_CTX_RE.search(ctx):
+            stale_revs = {
+                h for h in _TP_HEX_RE.findall(line)
+                if not (live_rev.startswith(h) or h.startswith(live_rev))
+            }
+
+        if not stale_vers and not stale_revs:
+            continue
+
+        found = ", ".join(sorted(stale_vers | stale_revs))
+        # A capability claim names Mathlib AND a have/lack verb: the bump can
+        # flip its truth value, which is a strictly worse failure than a stale
+        # reproducibility coordinate.
+        is_capability = bool(
+            _TP_MATHLIB_CTX_RE.search(line) and _TP_CAPABILITY_RE.search(line)
+        )
+        (cap_hits if is_capability else pin_hits).append((i, found))
+    return pin_hits, cap_hits
+
+
+@register_check("paper_toolchain_pin_drift",
+                "Advisory (Class TP): paper-draft toolchain/Mathlib pins match "
+                "lean-toolchain + lakefile.toml")
+def check_paper_toolchain_pin_drift() -> CheckResult:
+    """Flag paper drafts whose stated Lean/Mathlib pin differs from the live pin.
+
+    Structural mirror of claims-reviewer Class TP, so the drift is visible on
+    every validate run rather than only when Stage 13 executes. Always passes;
+    warnings only.
+    """
+    try:
+        live_ver, live_rev = _tp_live_pins()
+    except Exception as exc:  # defensive: an advisory never breaks the suite
+        return CheckResult(passed=True, details=[
+            Detail("pins", True, f"SKIPPED — could not read live pins: {exc}",
+                   warning=True)])
+
+    if live_ver is None or live_rev is None:
+        return CheckResult(passed=True, details=[
+            Detail("pins", True,
+                   "SKIPPED — lean-toolchain / lakefile.toml pin not parseable",
+                   warning=True)])
+
+    drafts = sorted(PAPERS_DIR.glob("*/paper_draft.tex"))
+    drafts += sorted(PAPERS_DIR.glob("*/preprint_draft.md"))
+    if not drafts:
+        return CheckResult(passed=True, details=[
+            Detail("scan", True, "no paper drafts found — nothing to check")])
+
+    pin_hits: list[str] = []
+    cap_hits: list[str] = []
+
+    for draft in drafts:
+        try:
+            lines = draft.read_text(encoding="utf-8").splitlines()
+        except OSError:
+            continue
+        rel = f"papers/{draft.parent.name}/{draft.name}"
+        file_pin, file_cap = _tp_scan_lines(lines, live_ver, live_rev)
+        pin_hits += [f"{rel}:{ln} — {found}" for ln, found in file_pin]
+        cap_hits += [f"{rel}:{ln} — {found}" for ln, found in file_cap]
+
+    details: list[Detail] = []
+    details.append(Detail(
+        "live-pin", True,
+        f"live pin: toolchain v{live_ver}, Mathlib {live_rev[:8]}"))
+
+    for hit in pin_hits:
+        details.append(Detail("pin-drift", True, f"{hit} (live v{live_ver} / "
+                                                 f"{live_rev[:8]})", warning=True))
+    for hit in cap_hits:
+        details.append(Detail(
+            "capability-claim", True,
+            f"{hit} — asserts what the PINNED Mathlib does/does not provide; "
+            "a pin bump can flip this", warning=True))
+
+    n = len(pin_hits) + len(cap_hits)
+    details.insert(1, Detail(
+        "summary", True,
+        f"scanned {len(drafts)} draft(s) — {len(pin_hits)} pin-drift, "
+        f"{len(cap_hits)} capability-claim site(s) referencing a non-live pin"
+        + ("; resolve at each bundle's Stage 13" if n else ""),
+        warning=bool(n)))
+
+    return CheckResult(passed=True, details=details)
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         description="SK-EFT Hawking cross-layer validation suite",

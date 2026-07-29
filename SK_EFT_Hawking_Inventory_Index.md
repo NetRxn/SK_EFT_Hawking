@@ -40,8 +40,8 @@
 | Aristotle-proved theorems | 322 |
 | Aristotle runs | 44 |
 | Python source modules | 137 |
-| Test files | 134 |
-| pytest cases | 4873 |
+| Test files | 135 |
+| pytest cases | 4911 |
 | Figures (PNG) | 163 |
 | Notebooks | 89 |
 | Papers (drafts) | 42 |

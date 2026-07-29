@@ -18,17 +18,21 @@ defaultTargets = ["SKEFTHawking"]
 [leanOptions]
 autoImplicit = false
 
-# Pinned to Mathlib's v4.29.1 tag (5e932f97, 2026-04-17). Previous: 8850ed93 (v4.29.0 first commit, 2026-04-04).
-# Previous Aristotle-compatible pin: 8f9d9cff (v4.28.0). See: https://aristotle.harmonic.fun/dashboard/docs/toolchain
-# Bumped 2026-05-14 to align with PhysLib (leanprover-community/physlib) for downstream consumers.
+# Pinned to Mathlib's v4.32.0 tag (81a5d257, bumped 2026-07-29).
+# Previous: 5e932f97 (v4.29.1 tag, 2026-04-17); before that 8850ed93 (v4.29.0 first commit, 2026-04-04).
+# Aristotle-compatible pin was 8f9d9cff (v4.28.0). See: https://aristotle.harmonic.fun/dashboard/docs/toolchain
+# NOTE: the Aristotle sandbox stays at v4.28.0, so this bump widened the submission skew
+# from one minor version to four — see src/core/aristotle_submit.py::verify_staged_build.
+# Mathlib, PhysLib, the REPL dep and lean-toolchain move as ONE matched set — never bump one alone.
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
 rev = "81a5d257c8e410db227a6665ed08f64fea08e997"
 
-# Lean REPL binary. The leanprover-community/repl repo skipped a v4.29.1 tag
-# (jumped directly v4.29.0 -> v4.30.0-rc1); v4.29.0 build is patch-level
-# compatible with Lean v4.29.1 since the REPL is a thin protocol wrapper.
+# Lean REPL binary. The rev tracks lean-toolchain EXACTLY (both v4.32.0) — if the
+# toolchain bumps, bump this too. (Historical: under the v4.29.1 toolchain the repo had
+# no matching tag — it went v4.29.0 -> v4.30.0-rc1 — so we pinned v4.29.0 and relied on
+# the REPL being a thin protocol wrapper. That mismatch is gone; keep them equal.)
 # Built into .lake/packages/repl/.lake/build/bin/repl where lean-lsp-mcp auto-discovers it.
 # Zero transitive deps, cannot conflict with Mathlib.
 [[require]]
@@ -39,16 +43,22 @@ rev = "v4.32.0"
 # PhysLib (formerly Lean-QuantumInfo, arXiv:2510.08672; leanprover-community ownership; Apache 2.0).
 # QuantumInfo substrate: CPTPMap, HermitianMat tower, MState, TraceNorm, von Neumann / relative / Rényi
 # entropy, data-processing inequality (DPI), strong subadditivity (SSA), fidelity, trace distance.
-# Pinned to a commit whose Mathlib pin == ours (v4.29.1 tag, 5e932f97) and toolchain == ours (v4.29.1):
-# adding it requires NO Mathlib/toolchain bump. Do NOT advance to a higher physlib commit on a newer
-# Mathlib (e.g. v4.30.0) without a coordinated project-wide toolchain bump. Consuming its results
-# requires a HermitianMat/MState ↔ Matrix.IsHermitian/IsDensityOperator bridge; axiom-check before use.
-# Bumped 2026-06-29 (#1081 → #1120, both Mathlib v4.29.1; user-authorized) to gain the QuantumMechanics
-# DDimensions substrate: SpaceDQuantumSystem (kineticOperator/potentialOperator/hamiltonianOperator,
-# momentumSqOperator, 𝓜 multiplication operator) for the Phase-6BB molecular Hamiltonian. StatMech +
-# QuantumInfo APIs are unchanged across #1081..#1120 (empty diffs) — existing consumers unaffected.
-# PhysLib's unbounded SPECTRAL theory landed at #1141+ on Mathlib v4.30.0 → NOT pulled (would force a
-# project-wide Mathlib bump); Phase-6BB builds its own Kato–Rellich self-adjointness in-tree instead.
+# Pinned to a commit whose Mathlib pin == ours and toolchain == ours (v4.32.0): the two move together.
+# Do NOT advance to a physlib commit on a newer Mathlib without a coordinated project-wide bump.
+# Consuming its results requires a HermitianMat/MState ↔ Matrix.IsHermitian/IsDensityOperator bridge;
+# axiom-check before use.
+# History: #1081 → #1120 (2026-06-29, both Mathlib v4.29.1) gained the QuantumMechanics DDimensions
+# substrate — SpaceDQuantumSystem (kineticOperator/potentialOperator/hamiltonianOperator,
+# momentumSqOperator, 𝓜 multiplication operator) — for the Phase-6BB molecular Hamiltonian.
+# Bumped 2026-07-29 (#1120 → #1460, c4843367) as part of the v4.32.0 matched set.
+#
+# OPEN ITEM (created by this bump): PhysLib's unbounded SPECTRAL theory landed at #1141+ on Mathlib
+# v4.30.0 and was previously NOT pulled because it "would force a project-wide Mathlib bump" — that
+# bump has now happened, and QuantumMechanics/Operators/{Unbounded, SpectralTheory/{Basic, Symmetric,
+# SelfAdjoint}}.lean are present at this pin. Phase-6BB's in-tree Kato–Rellich self-adjointness
+# (SKEFTHawking/KineticEssentialSelfAdjoint.lean) was built to work around exactly that gap and may
+# now be replaceable by the upstream development. Not actioned here — a substrate swap is a wave-scoped
+# decision with its own bridge + axiom-check, not a side effect of a toolchain bump.
 [[require]]
 name = "Physlib"
 git = "https://github.com/leanprover-community/physlib.git"
