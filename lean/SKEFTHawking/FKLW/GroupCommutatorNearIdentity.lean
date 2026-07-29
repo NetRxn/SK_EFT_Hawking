@@ -362,14 +362,15 @@ theorem su2Log_local_lipschitz_bound :
       W ⊆ expAmbientPartialHomeo.target ∧
       ∀ h ∈ W, ‖su2Log h‖ ≤ 2 * ‖h - 1‖ := by
   -- Step 1: get the IFT-Lipschitz substrate from Mathlib.
-  have h_id_norm :
-      ‖ContinuousLinearMap.id ℝ (Matrix (Fin 2) (Fin 2) ℂ)‖₊ ≤ 1 :=
-    ContinuousLinearMap.norm_id_le
-  have h_id_lt :
-      ‖ContinuousLinearMap.id ℝ (Matrix (Fin 2) (Fin 2) ℂ)‖₊ < (2 : NNReal) :=
-    lt_of_le_of_lt h_id_norm (by norm_num)
+  -- The `hK` bound must be supplied INLINE. As a standalone `have` its statement would issue a
+  -- top-level `NNNorm (Matrix … →L[ℝ] Matrix …)` typeclass query, and with the `linftyOp*` local
+  -- instances in scope that query fails (the instance still *applies* as a term —
+  -- `ContinuousLinearMap.toSeminormedAddCommGroup` elaborates fine — synthesis just cannot find
+  -- it through the `Matrix` instance diamond). Inline, the norm is determined by the lemma's own
+  -- already-solved `E`/`F` instance arguments, so no fresh synthesis happens.
   obtain ⟨s, hs_mem_nhds, hs_lip⟩ :=
-    su2Log_hasStrictFDerivAt_one.exists_lipschitzOnWith_of_nnnorm_lt 2 h_id_lt
+    su2Log_hasStrictFDerivAt_one.exists_lipschitzOnWith_of_nnnorm_lt 2
+      (lt_of_le_of_lt ContinuousLinearMap.norm_id_le one_lt_two)
   -- Step 2: shrink `s` to its intersection with `expAmbientPartialHomeo.target`.
   refine ⟨s ∩ expAmbientPartialHomeo.target,
           Filter.inter_mem hs_mem_nhds expAmbientPartialHomeo_target_mem_nhds_one,

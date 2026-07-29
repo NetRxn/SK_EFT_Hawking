@@ -57,10 +57,14 @@ theorem re_trace_block_le_sqrtFidelity {ρ X σ : Matrix ι ι ℂ} (hρ : ρ.Po
       have hKKexp : K * Kᴴ = rρ⁻¹ * X * (rσ⁻¹ * rσ⁻¹) * Xᴴ * rρ⁻¹ := by
         rw [hK, Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, hrρih, hrσih]; noncomm_ring
       rw [hKKexp, hσinv, Matrix.mul_sub, Matrix.sub_mul]
-      congr 1
-      · rw [← hrρsq, show rρ⁻¹ * (rρ * rρ) * rρ⁻¹ = (rρ⁻¹ * rρ) * (rρ * rρ⁻¹) by noncomm_ring,
+      -- Close the two summands by named rewrites rather than `congr 1`: at v4.32 `congr` descends
+      -- into the `Sub`-instance argument and whnf-unfolds the `set`-bound `psdSqrt ⋯` bodies,
+      -- which exhausts the heartbeat budget. Rewriting each side is linear and instance-free.
+      have hconjρ : rρ⁻¹ * ρ * rρ⁻¹ = 1 := by
+        rw [← hrρsq, show rρ⁻¹ * (rρ * rρ) * rρ⁻¹ = (rρ⁻¹ * rρ) * (rρ * rρ⁻¹) by noncomm_ring,
           hrρi, hrρi', Matrix.one_mul]
-      · noncomm_ring
+      have hassoc : rρ⁻¹ * (X * σ⁻¹ * Xᴴ) * rρ⁻¹ = rρ⁻¹ * X * σ⁻¹ * Xᴴ * rρ⁻¹ := by noncomm_ring
+      rw [hconjρ, hassoc]
     rw [heq] at hconj; exact hconj
   have hMu : IsUnit (rσ * rρ) := (isUnit_psdSqrt _ hσ.isUnit).mul (isUnit_psdSqrt _ hρ.isUnit)
   have htr : X.trace = (K * (rσ * rρ)).trace := by
