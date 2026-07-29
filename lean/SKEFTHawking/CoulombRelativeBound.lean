@@ -3,7 +3,7 @@ import SKEFTHawking.KineticEssentialSelfAdjoint
 import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
 import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
-import Physlib.QuantumMechanics.DDimensions.Operators.Commutation
+import Physlib.QuantumMechanics.Operators.Commutation
 
 /-!
 # W3 (Phase 6BB Wave 3) — discharge of `hrel`: the Coulomb relative bound, via Fourier–Kato–Rellich

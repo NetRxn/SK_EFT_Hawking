@@ -1,7 +1,7 @@
 import Mathlib.Analysis.InnerProductSpace.LinearPMap
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Topology.MetricSpace.Contracting
-import Physlib.QuantumMechanics.DDimensions.Basic
+import Physlib.QuantumMechanics.SpaceDQuantumSystem
 
 /-!
 # The molecular Coulomb Hamiltonian and Kato–Rellich self-adjointness (Phase 6BB, Wave 1)
