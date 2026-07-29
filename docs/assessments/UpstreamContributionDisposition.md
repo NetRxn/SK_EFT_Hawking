@@ -1,5 +1,22 @@
 # Upstream Contribution & Duplication Disposition
 
+> ## ⚠ STALE GROUND TRUTH + ONE WITHDRAWN FINDING — read the re-validation first
+>
+> Every verdict below was established against **Mathlib v4.29.1 (`5e932f97`)** and **PhysLib
+> `69197c54`**. The project moved to **Mathlib v4.32.0 (`81a5d257`)** / **PhysLib `c4843367`** on
+> 2026-07-29. See **[`UpstreamDisposition_Revalidation_2026-07-29.md`](UpstreamDisposition_Revalidation_2026-07-29.md)**.
+>
+> Re-validation outcome: **§3.2 and §3.3 all still hold** (every gap and every novelty claim
+> re-verified at the new pins). **Two items changed**, and **one finding below is wrong**:
+>
+> **WITHDRAWN — §3.1 row 5 and Track R3.** The claim that PhysLib's
+> `fidelity_channel_nondecreasing` discharges our general-Uhlmann fence is **false**. That theorem
+> is `@[sorryful]` with body `sorry`, at our pin *and* at the `69197c54` revision this document
+> assessed. The assessment confirmed the declaration existed but not that it was proved. **Do not
+> "stop trying to prove it locally"** — the general case is still open here and upstream. (No
+> damage propagated: `FidelityBounds.lean` still records the fence honestly and our axiom closure
+> carries no `sorryAx`.)
+
 **Status:** Long-term scoping assessment — **planning/scouting only, not a near-term upstreaming plan.** Sets the long-term disposition for (a) what to eventually upstream and (b) what parallel infrastructure to systematically retire in favor of physlib/Mathlib.
 **Date:** 2026-06-08
 **Author:** Claude (Opus 4.8) for John Roehm
