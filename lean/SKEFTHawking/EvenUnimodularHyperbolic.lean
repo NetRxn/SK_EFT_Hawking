@@ -46,6 +46,13 @@ theorem even_unimodular_sig_zero_indefinite {n : ℕ} (M : Matrix (Fin n) (Fin n
   rw [hrad] at hsum
   simp only [finrank_bot, add_zero, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at hsum
   unfold latticeSig at hsig
+  -- `latticeSig` is stated in the current `toQuadraticForm'` API while this statement uses the
+  -- deprecated-alias `toQuadraticMap'`; they are definitionally equal, so re-`show` the goal and
+  -- re-ascribe `hsum` in the new name to give `omega` a single atom per signature component.
+  show 0 < sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticForm' ∧
+      0 < sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticForm'
+  have hsum' : sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticForm' +
+      sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticForm' = n := hsum
   omega
 
 /-- **The split-off-H inductive step for `σ=0` (unconditional).** A `σ=0` even unimodular form of rank

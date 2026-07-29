@@ -95,8 +95,10 @@ the two Gram values. For a symmetric `M` this is `2 · (x ⬝ᵥ M *ᵥ y)` (`po
 This is the boundary-form side of the substrate's `hadj`, in the coordinate language. -/
 theorem polarBilin_toQuadraticMap'_apply {n : ℕ} (M : Matrix (Fin n) (Fin n) ℝ) (x y : Fin n → ℝ) :
     QuadraticMap.polarBilin M.toQuadraticMap' x y = x ⬝ᵥ (M *ᵥ y) + y ⬝ᵥ (M *ᵥ x) := by
+  -- `Matrix.toQuadraticMap'` is a deprecated *alias*: unfolding it lands on the real definition
+  -- `Matrix.toQuadraticForm'`, which must also be in the set or every later lemma goes unused.
   simp only [QuadraticMap.polarBilin_apply_apply, QuadraticMap.polar, Matrix.toQuadraticMap',
-    LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toLinearMap₂'_apply',
+    Matrix.toQuadraticForm', LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toLinearMap₂'_apply',
     Matrix.mulVec_add, dotProduct_add, add_dotProduct]
   ring
 
