@@ -501,8 +501,7 @@ private theorem comulFreeAlg3_K1K1inv :
   have h : comulFreeAlg3 k (gen3 k K1) * comulFreeAlg3 k (gen3 k K1inv) = 1 ⊗ₜ 1 := by
     erw [comulFreeAlg3_ι, comulFreeAlg3_ι, Algebra.TensorProduct.tmul_mul_tmul]
     rw [uq3_K1_mul_K1inv]
-  convert h using 1
-  exact map_mul _ _ _
+  exact (map_mul _ _ _).trans (h.trans Algebra.TensorProduct.one_def.symm)
 
 private theorem comulFreeAlg3_K1invK1 :
     comulFreeAlg3 k (gen3 k K1inv * gen3 k K1) =
@@ -510,8 +509,7 @@ private theorem comulFreeAlg3_K1invK1 :
   have h : comulFreeAlg3 k (gen3 k K1inv) * comulFreeAlg3 k (gen3 k K1) = 1 ⊗ₜ 1 := by
     erw [comulFreeAlg3_ι, comulFreeAlg3_ι, Algebra.TensorProduct.tmul_mul_tmul]
     rw [uq3_K1inv_mul_K1]
-  convert h using 1
-  exact map_mul _ _ _
+  exact (map_mul _ _ _).trans (h.trans Algebra.TensorProduct.one_def.symm)
 
 private theorem comulFreeAlg3_K2K2inv :
     comulFreeAlg3 k (gen3 k K2 * gen3 k K2inv) =
@@ -519,8 +517,7 @@ private theorem comulFreeAlg3_K2K2inv :
   have h : comulFreeAlg3 k (gen3 k K2) * comulFreeAlg3 k (gen3 k K2inv) = 1 ⊗ₜ 1 := by
     erw [comulFreeAlg3_ι, comulFreeAlg3_ι, Algebra.TensorProduct.tmul_mul_tmul]
     rw [uq3_K2_mul_K2inv]
-  convert h using 1
-  exact map_mul _ _ _
+  exact (map_mul _ _ _).trans (h.trans Algebra.TensorProduct.one_def.symm)
 
 private theorem comulFreeAlg3_K2invK2 :
     comulFreeAlg3 k (gen3 k K2inv * gen3 k K2) =
@@ -528,8 +525,7 @@ private theorem comulFreeAlg3_K2invK2 :
   have h : comulFreeAlg3 k (gen3 k K2inv) * comulFreeAlg3 k (gen3 k K2) = 1 ⊗ₜ 1 := by
     erw [comulFreeAlg3_ι, comulFreeAlg3_ι, Algebra.TensorProduct.tmul_mul_tmul]
     rw [uq3_K2inv_mul_K2]
-  convert h using 1
-  exact map_mul _ _ _
+  exact (map_mul _ _ _).trans (h.trans Algebra.TensorProduct.one_def.symm)
 
 /- Group II: K-commutativity (1 helper) -/
 
@@ -4760,7 +4756,7 @@ theorem uq3_comul_coassoc :
     erw [show (uq3Comul k) (RingQuot.mkAlgHom _ _ (FreeAlgebra.ι _ _)) =
             uq3K1inv k ⊗ₜ uq3K1inv k from ?_]
     · simp +decide [Algebra.TensorProduct.map_tmul, uq3_comul_K1inv]
-    · convert uq3_comul_K1inv k using 1
+    · exact uq3_comul_K1inv k
   · -- K2
     simp +decide [uq3_comul_K2]
     erw [uq3_comul_K2]
@@ -4770,7 +4766,7 @@ theorem uq3_comul_coassoc :
     erw [show (uq3Comul k) (RingQuot.mkAlgHom _ _ (FreeAlgebra.ι _ _)) =
             uq3K2inv k ⊗ₜ uq3K2inv k from ?_]
     · simp +decide [Algebra.TensorProduct.map_tmul, uq3_comul_K2inv]
-    · convert uq3_comul_K2inv k using 1
+    · exact uq3_comul_K2inv k
 
 /-- Right counitality: (ε ⊗ id) ∘ Δ = lid.symm. -/
 theorem uq3_comul_rTensor_counit :
@@ -4801,31 +4797,31 @@ theorem uq3_comul_rTensor_counit :
     erw [uq3_comul_F2]
     simp +decide [uq3_counit_F2, uq3_counit_K2inv]
     rfl
+  -- The four grouplike cases: `convert … using 1` used to leave only defeq side goals that
+  -- the old simp set closed; v4.32 does not. `show` states the goal directly instead.
   · -- K1
-    convert congr_arg
-      (fun x : (Uqsl3 k) ⊗[LaurentPolynomial k] (Uqsl3 k) =>
-        (Algebra.TensorProduct.map (uq3Counit k) (AlgHom.id (LaurentPolynomial k) (Uqsl3 k))) x)
-      (uq3_comul_K1 k) using 1
-    simp +decide [Algebra.TensorProduct.map_tmul, uq3_counit_K1]
+    show (Algebra.TensorProduct.map (uq3Counit k) (AlgHom.id k[T;T⁻¹] (Uqsl3 k)))
+        ((uq3Comul k) (uq3K1 k)) =
+        (Algebra.TensorProduct.lid k[T;T⁻¹] (Uqsl3 k)).symm (uq3K1 k)
+    rw [uq3_comul_K1, Algebra.TensorProduct.map_tmul, uq3_counit_K1]
     rfl
   · -- K1inv
-    convert congr_arg
-      (Algebra.TensorProduct.map (uq3Counit k) (AlgHom.id (LaurentPolynomial k) (Uqsl3 k)))
-      (uq3_comul_K1inv k) using 1
-    simp +decide [Algebra.TensorProduct.map_tmul, uq3_counit_K1inv]
+    show (Algebra.TensorProduct.map (uq3Counit k) (AlgHom.id k[T;T⁻¹] (Uqsl3 k)))
+        ((uq3Comul k) (uq3K1inv k)) =
+        (Algebra.TensorProduct.lid k[T;T⁻¹] (Uqsl3 k)).symm (uq3K1inv k)
+    rw [uq3_comul_K1inv, Algebra.TensorProduct.map_tmul, uq3_counit_K1inv]
     rfl
   · -- K2
-    convert congr_arg
-      (fun x : (Uqsl3 k) ⊗[LaurentPolynomial k] (Uqsl3 k) =>
-        (Algebra.TensorProduct.map (uq3Counit k) (AlgHom.id (LaurentPolynomial k) (Uqsl3 k))) x)
-      (uq3_comul_K2 k) using 1
-    simp +decide [Algebra.TensorProduct.map_tmul, uq3_counit_K2]
+    show (Algebra.TensorProduct.map (uq3Counit k) (AlgHom.id k[T;T⁻¹] (Uqsl3 k)))
+        ((uq3Comul k) (uq3K2 k)) =
+        (Algebra.TensorProduct.lid k[T;T⁻¹] (Uqsl3 k)).symm (uq3K2 k)
+    rw [uq3_comul_K2, Algebra.TensorProduct.map_tmul, uq3_counit_K2]
     rfl
   · -- K2inv
-    convert congr_arg
-      (Algebra.TensorProduct.map (uq3Counit k) (AlgHom.id (LaurentPolynomial k) (Uqsl3 k)))
-      (uq3_comul_K2inv k) using 1
-    simp +decide [Algebra.TensorProduct.map_tmul, uq3_counit_K2inv]
+    show (Algebra.TensorProduct.map (uq3Counit k) (AlgHom.id k[T;T⁻¹] (Uqsl3 k)))
+        ((uq3Comul k) (uq3K2inv k)) =
+        (Algebra.TensorProduct.lid k[T;T⁻¹] (Uqsl3 k)).symm (uq3K2inv k)
+    rw [uq3_comul_K2inv, Algebra.TensorProduct.map_tmul, uq3_counit_K2inv]
     rfl
 
 /-- Left counitality: (id ⊗ ε) ∘ Δ = rid.symm. -/
@@ -4834,47 +4830,62 @@ theorem uq3_comul_lTensor_counit :
       (uq3Comul k) =
     (Algebra.TensorProduct.rid (LaurentPolynomial k) (LaurentPolynomial k) (Uqsl3 k)).symm := by
   ext x
-  rcases x with _ | _ | _ | _ | _ | _ | _ | _ <;> simp +decide [*]
+  -- Each generator case is stated directly with `show` (the generator image is definitionally
+  -- `uq3*`), then closed by a named rewrite chain. The previous `convert … using 1` /
+  -- `simp +decide` shape relied on the pre-v4.32 simp set to discharge defeq side goals.
+  rcases x with _ | _ | _ | _ | _ | _ | _ | _
   · -- E1
-    erw [uq3_comul_E1]
-    simp +decide [uq3_counit_K1, uq3_counit_E1]
+    show (Algebra.TensorProduct.map (AlgHom.id k[T;T⁻¹] (Uqsl3 k)) (uq3Counit k))
+        ((uq3Comul k) (uq3E1 k)) =
+        (Algebra.TensorProduct.rid k[T;T⁻¹] k[T;T⁻¹] (Uqsl3 k)).symm (uq3E1 k)
+    rw [uq3_comul_E1, map_add, Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.map_tmul,
+      uq3_counit_K1, uq3_counit_E1, TensorProduct.tmul_zero, add_zero]
     rfl
   · -- E2
-    erw [uq3_comul_E2]
-    simp +decide [uq3_counit_K2, uq3_counit_E2]
+    show (Algebra.TensorProduct.map (AlgHom.id k[T;T⁻¹] (Uqsl3 k)) (uq3Counit k))
+        ((uq3Comul k) (uq3E2 k)) =
+        (Algebra.TensorProduct.rid k[T;T⁻¹] k[T;T⁻¹] (Uqsl3 k)).symm (uq3E2 k)
+    rw [uq3_comul_E2, map_add, Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.map_tmul,
+      uq3_counit_K2, uq3_counit_E2, TensorProduct.tmul_zero, add_zero]
     rfl
   · -- F1
-    convert congr_arg (Algebra.TensorProduct.map (AlgHom.id _ _) (uq3Counit k))
-      (uq3_comul_F1 k) using 1
-    simp +decide [Algebra.TensorProduct.map_tmul]
-    rw [uq3_counit_F1]; aesop
+    show (Algebra.TensorProduct.map (AlgHom.id k[T;T⁻¹] (Uqsl3 k)) (uq3Counit k))
+        ((uq3Comul k) (uq3F1 k)) =
+        (Algebra.TensorProduct.rid k[T;T⁻¹] k[T;T⁻¹] (Uqsl3 k)).symm (uq3F1 k)
+    rw [uq3_comul_F1, map_add, Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.map_tmul,
+      uq3_counit_F1, map_one, TensorProduct.tmul_zero, add_zero]
+    rfl
   · -- F2
-    convert congr_arg (Algebra.TensorProduct.map (AlgHom.id _ _) (uq3Counit k))
-      (uq3_comul_F2 k) using 1
-    simp +decide [Algebra.TensorProduct.map_tmul]
-    rw [uq3_counit_F2]; aesop
+    show (Algebra.TensorProduct.map (AlgHom.id k[T;T⁻¹] (Uqsl3 k)) (uq3Counit k))
+        ((uq3Comul k) (uq3F2 k)) =
+        (Algebra.TensorProduct.rid k[T;T⁻¹] k[T;T⁻¹] (Uqsl3 k)).symm (uq3F2 k)
+    rw [uq3_comul_F2, map_add, Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.map_tmul,
+      uq3_counit_F2, map_one, TensorProduct.tmul_zero, add_zero]
+    rfl
   · -- K1
-    convert congr_arg (Algebra.TensorProduct.map (AlgHom.id _ _) (uq3Counit k))
-      (uq3_comul_K1 k) using 1
-    simp +decide [uq3K1]
-    congr! 1
-    exact Eq.symm (uq3_counit_K1 k)
+    show (Algebra.TensorProduct.map (AlgHom.id k[T;T⁻¹] (Uqsl3 k)) (uq3Counit k))
+        ((uq3Comul k) (uq3K1 k)) =
+        (Algebra.TensorProduct.rid k[T;T⁻¹] k[T;T⁻¹] (Uqsl3 k)).symm (uq3K1 k)
+    rw [uq3_comul_K1, Algebra.TensorProduct.map_tmul, uq3_counit_K1]
+    rfl
   · -- K1inv
-    erw [uq3_comul_K1inv]
-    erw [Algebra.TensorProduct.map_tmul]
-    simp +decide [*]
-    exact congr_arg₂ _ rfl (uq3_counit_K1inv k)
+    show (Algebra.TensorProduct.map (AlgHom.id k[T;T⁻¹] (Uqsl3 k)) (uq3Counit k))
+        ((uq3Comul k) (uq3K1inv k)) =
+        (Algebra.TensorProduct.rid k[T;T⁻¹] k[T;T⁻¹] (Uqsl3 k)).symm (uq3K1inv k)
+    rw [uq3_comul_K1inv, Algebra.TensorProduct.map_tmul, uq3_counit_K1inv]
+    rfl
   · -- K2
-    convert congr_arg (Algebra.TensorProduct.map (AlgHom.id _ _) (uq3Counit k))
-      (uq3_comul_K2 k) using 1
-    simp +decide [uq3K2]
-    congr! 1
-    exact Eq.symm (uq3_counit_K2 k)
+    show (Algebra.TensorProduct.map (AlgHom.id k[T;T⁻¹] (Uqsl3 k)) (uq3Counit k))
+        ((uq3Comul k) (uq3K2 k)) =
+        (Algebra.TensorProduct.rid k[T;T⁻¹] k[T;T⁻¹] (Uqsl3 k)).symm (uq3K2 k)
+    rw [uq3_comul_K2, Algebra.TensorProduct.map_tmul, uq3_counit_K2]
+    rfl
   · -- K2inv
-    erw [uq3_comul_K2inv]
-    erw [Algebra.TensorProduct.map_tmul]
-    simp +decide [*]
-    exact congr_arg₂ _ rfl (uq3_counit_K2inv k)
+    show (Algebra.TensorProduct.map (AlgHom.id k[T;T⁻¹] (Uqsl3 k)) (uq3Counit k))
+        ((uq3Comul k) (uq3K2inv k)) =
+        (Algebra.TensorProduct.rid k[T;T⁻¹] k[T;T⁻¹] (Uqsl3 k)).symm (uq3K2inv k)
+    rw [uq3_comul_K2inv, Algebra.TensorProduct.map_tmul, uq3_counit_K2inv]
+    rfl
 
 /-! ## 7. Bialgebra instance -/
 
@@ -5001,7 +5012,7 @@ private theorem uq3_convR_mul_step
   · simp +decide
   · intro hx
     have h_sum : ∃ (s : Finset (Uqsl3 k × Uqsl3 k)), x = ∑ p ∈ s, p.1 ⊗ₜ p.2 := by
-      exact?
+      exact exists_finset x
     obtain ⟨s, rfl⟩ := h_sum
     simp +decide [hx, mul_assoc, Finset.sum_mul _ _ _]
     simp_all +decide [← mul_assoc, ← Finset.sum_mul _ _ _, uq3AntipodeLin_mul]
@@ -5022,27 +5033,42 @@ theorem uq3_antipode_right :
   · convert uq3_convR_algebraMap k r using 1
     · simp +decide [uq3Comul]
     · simp +decide [uqsl3Mk]
-  · cases x <;> simp +decide [*]
-    · convert uq3_convR_E1 k using 1
-      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_E1 k) using 1
-    · convert uq3_convR_E2 k using 1
-      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_E2 k) using 1
-    · convert uq3_convR_F1 k using 1
-      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_F1 k) using 1
-    · convert uq3_convR_F2 k using 1
-      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_F2 k) using 1
-    · convert uq3_convR_K1 k using 1
-      erw [show (RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRelSl3 k))
-              (FreeAlgebra.ι (LaurentPolynomial k) Uqsl3Gen.K1) = uq3K1 k from rfl]
-      exact congr_arg _ (uq3_counit_K1 k)
-    · convert uq3_convR_K1inv k using 1
-      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_K1inv k) using 1
-    · convert uq3_convR_K2 k using 1
-      erw [show (RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRelSl3 k))
-              (FreeAlgebra.ι (LaurentPolynomial k) Uqsl3Gen.K2) = uq3K2 k from rfl]
-      exact congr_arg _ (uq3_counit_K2 k)
-    · convert uq3_convR_K2inv k using 1
-      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_K2inv k) using 1
+  · cases x
+    -- `show` states the (definitionally equal) convolution goal directly, so each generator
+    -- case is one named rewrite; the `convert … using 1` chains left defeq side goals that
+    -- v4.32 no longer discharges.
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3E1 k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3E1 k))
+      rw [uq3_convR_E1, uq3_counit_E1, map_zero]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3E2 k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3E2 k))
+      rw [uq3_convR_E2, uq3_counit_E2, map_zero]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3F1 k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3F1 k))
+      rw [uq3_convR_F1, uq3_counit_F1, map_zero]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3F2 k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3F2 k))
+      rw [uq3_convR_F2, uq3_counit_F2, map_zero]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3K1 k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3K1 k))
+      rw [uq3_convR_K1, uq3_counit_K1, map_one]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3K1inv k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3K1inv k))
+      rw [uq3_convR_K1inv, uq3_counit_K1inv, map_one]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3K2 k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3K2 k))
+      rw [uq3_convR_K2, uq3_counit_K2, map_one]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.rTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3K2inv k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3K2inv k))
+      rw [uq3_convR_K2inv, uq3_counit_K2inv, map_one]
   · simp_all +decide [mul_assoc, CoalgebraStruct.comul]
     convert uq3_convR_mul_step k _ _ _ hy using 1
     aesop
@@ -5182,27 +5208,40 @@ theorem uq3_antipode_left :
           ((uq3Comul k) (algebraMap _ _ r))) = _
     rw [uq3_convL_algebraMap]
     simp [AlgHom.commutes]
-  · rcases x with _ | _ | _ | _ | _ | _ | _ | _ <;> simp +decide [*]
-    · convert uq3_convL_E1 k
-      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_E1 k) using 1
-    · convert uq3_convL_E2 k
-      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_E2 k) using 1
-    · convert uq3_convL_F1 k using 1
-      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_F1 k) using 1
-    · convert uq3_convL_F2 k using 1
-      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_F2 k) using 1
-    · convert uq3_convL_K1 k using 1
-      erw [show (RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRelSl3 k))
-              (FreeAlgebra.ι (LaurentPolynomial k) Uqsl3Gen.K1) = uq3K1 k from rfl]
-      exact congr_arg _ (uq3_counit_K1 k)
-    · convert uq3_convL_K1inv k using 1
-      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_K1inv k) using 1
-    · convert uq3_convL_K2 k using 1
-      erw [show (RingQuot.mkAlgHom (LaurentPolynomial k) (ChevalleyRelSl3 k))
-              (FreeAlgebra.ι (LaurentPolynomial k) Uqsl3Gen.K2) = uq3K2 k from rfl]
-      exact congr_arg _ (uq3_counit_K2 k)
-    · convert uq3_convL_K2inv k using 1
-      convert congr_arg (algebraMap (LaurentPolynomial k) (Uqsl3 k)) (uq3_counit_K2inv k) using 1
+  · rcases x with _ | _ | _ | _ | _ | _ | _ | _
+    -- Mirror of `uq3_antipode_right`: `show` + one named rewrite per generator case.
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3E1 k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3E1 k))
+      rw [uq3_convL_E1, uq3_counit_E1, map_zero]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3E2 k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3E2 k))
+      rw [uq3_convL_E2, uq3_counit_E2, map_zero]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3F1 k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3F1 k))
+      rw [uq3_convL_F1, uq3_counit_F1, map_zero]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3F2 k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3F2 k))
+      rw [uq3_convL_F2, uq3_counit_F2, map_zero]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3K1 k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3K1 k))
+      rw [uq3_convL_K1, uq3_counit_K1, map_one]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3K1inv k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3K1inv k))
+      rw [uq3_convL_K1inv, uq3_counit_K1inv, map_one]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3K2 k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3K2 k))
+      rw [uq3_convL_K2, uq3_counit_K2, map_one]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl3 k))
+          ((LinearMap.lTensor (Uqsl3 k) (uq3AntipodeLin k)) ((uq3Comul k) (uq3K2inv k))) =
+          algebraMap k[T;T⁻¹] (Uqsl3 k) ((uq3Counit k) (uq3K2inv k))
+      rw [uq3_convL_K2inv, uq3_counit_K2inv, map_one]
   · simp_all +decide [← LinearMap.comp_assoc, ← RingHom.comp_apply]
     convert uq3_convL_mul_step k _ _ _ _ using 1
     rw [hy]

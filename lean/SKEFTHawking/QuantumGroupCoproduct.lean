@@ -112,8 +112,7 @@ theorem comulFreeAlgQG_KKinv (i : Fin r) :
             = 1 ⊗ₜ 1 := by
     erw [comulFreeAlgQG_ι, comulFreeAlgQG_ι, Algebra.TensorProduct.tmul_mul_tmul]
     rw [qg_K_mul_Kinv]
-  convert h using 1
-  exact map_mul _ _ _
+  exact (map_mul _ _ _).trans (h.trans Algebra.TensorProduct.one_def.symm)
 
 /-- comul respects K_i⁻¹ · K_i = 1. -/
 theorem comulFreeAlgQG_KinvK (i : Fin r) :
@@ -123,8 +122,7 @@ theorem comulFreeAlgQG_KinvK (i : Fin r) :
             = 1 ⊗ₜ 1 := by
     erw [comulFreeAlgQG_ι, comulFreeAlgQG_ι, Algebra.TensorProduct.tmul_mul_tmul]
     rw [qg_Kinv_mul_K]
-  convert h using 1
-  exact map_mul _ _ _
+  exact (map_mul _ _ _).trans (h.trans Algebra.TensorProduct.one_def.symm)
 
 /-! ### Group II: K-commutativity -/
 
@@ -246,7 +244,6 @@ theorem qg_E_Kinv_scaled (i j : Fin r) :
         qgKinv k A j * qgE k A i * (qgK k A j * qgKinv k A j) from by noncomm_ring]
     rw [qg_K_mul_Kinv, mul_one]
   have := congrArg (fun z => qgKinv k A j * z * qgKinv k A j) hKE
-  simp only at this
   rw [hL, hR] at this
   exact this
 
@@ -280,7 +277,6 @@ theorem qg_E_Kinv_comm (i j : Fin r) (h : A j i = 0) :
         qgKinv k A j * qgE k A i * (qgK k A j * qgKinv k A j) from by noncomm_ring]
     rw [qg_K_mul_Kinv, mul_one]
   have := congrArg (fun z => qgKinv k A j * z * qgKinv k A j) hKE
-  simp only at this
   rw [hL, hR] at this
   exact this
 
@@ -308,7 +304,6 @@ theorem qg_Kinv_F_comm (i j : Fin r) (h : A i j = 0) :
     rw [qg_K_mul_Kinv, mul_one]
   -- Apply hKF to bridge
   have := congrArg (fun z => qgKinv k A i * z * qgKinv k A i) hKF
-  simp only at this
   rw [hL, hR] at this
   exact this.symm
 
@@ -941,7 +936,7 @@ theorem qg_Kinv_F_scaled (i j : Fin r) :
         qgKinv k A i * qgF k A j * (qgK k A i * qgKinv k A i) from by noncomm_ring]
     rw [qg_K_mul_Kinv, mul_one]
   have hconj := congrArg (fun z => qgKinv k A i * z * qgKinv k A i) hKF
-  simp only at hconj; rw [hL, hR] at hconj
+  rw [hL, hR] at hconj
   calc qgKinv k A i * qgF k A j
       = (T (A i j) : QBase k) • ((T (-A i j) : QBase k) • (qgKinv k A i * qgF k A j)) := by
         rw [smul_smul, show (T (A i j) : QBase k) * T (-A i j) = 1 from by

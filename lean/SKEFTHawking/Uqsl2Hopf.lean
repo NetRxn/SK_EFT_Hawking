@@ -129,7 +129,7 @@ private theorem comulFreeAlg_KF :
   simp +decide [ comulOnGen, gen, scal' ];
   -- Apply the relation uq_KF to rewrite the left-hand side.
   have h_rewrite : uqK k * uqF k = (algebraMap (LaurentPolynomial k) (Uqsl2 k) (T (-2))) * uqF k * uqK k := by
-    exact?;
+    exact uq_KF k;
   simp +decide [ mul_add, add_mul, mul_assoc, mul_left_comm, Algebra.TensorProduct.tmul_mul_tmul ];
   simp +decide [ mul_assoc, h_rewrite, uq_K_mul_Kinv, uq_Kinv_mul_K ];
   simp +decide [ Algebra.algebraMap_eq_smul_one ];
@@ -287,10 +287,10 @@ private theorem comulFreeAlg_Serre_apply_serre :
     uqKinv k ⊗ₜ[LaurentPolynomial k] uqKinv k := by
   have h_dist : algebraMap (LaurentPolynomial k) ((Uqsl2 k) ⊗[LaurentPolynomial k] (Uqsl2 k)) (T 1 - T (-1)) * ((uqE k * uqF k - uqF k * uqE k) ⊗ₜ[LaurentPolynomial k] uqK k) = (uqK k - uqKinv k) ⊗ₜ[LaurentPolynomial k] uqK k := by
     rw [ ← uq_serre ];
-    exact?;
+    exact algMap_mul_tmul k (T 1 - T (-1)) (uqE k * uqF k - uqF k * uqE k) (uqK k);
   have h_dist2 : algebraMap (LaurentPolynomial k) ((Uqsl2 k) ⊗[LaurentPolynomial k] (Uqsl2 k)) (T 1 - T (-1)) * (uqKinv k ⊗ₜ[LaurentPolynomial k] (uqE k * uqF k - uqF k * uqE k)) = uqKinv k ⊗ₜ[LaurentPolynomial k] (uqK k - uqKinv k) := by
     rw [ ← uq_serre ];
-    exact?;
+    exact algMap_mul_tmul_right k (T 1 - T (-1)) (uqKinv k) (uqE k * uqF k - uqF k * uqE k);
   simp_all +decide [ mul_add, add_mul, sub_eq_add_neg, TensorProduct.tmul_add, TensorProduct.add_tmul, TensorProduct.tmul_sub, TensorProduct.sub_tmul ];
   convert congr_arg₂ ( · + · ) ( TensorProduct.sub_tmul ( uqK k ) ( uqKinv k ) ( uqK k ) ) ( TensorProduct.tmul_sub ( uqKinv k ) ( uqK k ) ( uqKinv k ) ) using 1 ; abel_nf
 
@@ -490,50 +490,77 @@ private theorem antipodeFreeAlg_KKinv :
 private theorem antipodeFreeAlg_KinvK :
     antipodeFreeAlg k (gen k Uqsl2Gen.Kinv * gen k Uqsl2Gen.K) =
     (1 : (Uqsl2 k)ᵐᵒᵖ) := by
-  simp_all +decide [ mul_comm, MulOpposite.op_mul ];
-  convert congr_arg MulOpposite.op ( uq_Kinv_mul_K k ) using 1;
-  convert congr_arg₂ ( · * · ) ( antipodeFreeAlg_ι k Uqsl2Gen.Kinv ) ( antipodeFreeAlg_ι k Uqsl2Gen.K ) using 1
+  -- Same closed-rewrite-chain shape as `antipodeFreeAlg_KKinv`: no `convert … using 1`
+  -- (which leaves `op`-normalization side goals the v4.32 simp set no longer discharges)
+  -- and no `exact?` (a search tactic committed as a proof).
+  have h_antipode_Kinv : antipodeFreeAlg k (gen k Uqsl2Gen.Kinv) = antipodeOnGen k Uqsl2Gen.Kinv :=
+    antipodeFreeAlg_ι k Uqsl2Gen.Kinv
+  have h_antipode_K : antipodeFreeAlg k (gen k Uqsl2Gen.K) = antipodeOnGen k Uqsl2Gen.K :=
+    antipodeFreeAlg_ι k Uqsl2Gen.K
+  rw [map_mul, h_antipode_Kinv, h_antipode_K]
+  show MulOpposite.op (uqK k) * MulOpposite.op (uqKinv k) = 1
+  rw [← MulOpposite.op_mul, uq_Kinv_mul_K, MulOpposite.op_one]
 
 private theorem antipodeFreeAlg_KE :
     antipodeFreeAlg k (gen k Uqsl2Gen.K * gen k Uqsl2Gen.E) =
     antipodeFreeAlg k (scal' k (T 2) * gen k Uqsl2Gen.E * gen k Uqsl2Gen.K) := by
-  have : antipodeFreeAlg k (gen k Uqsl2Gen.K * gen k Uqsl2Gen.E) = MulOpposite.op (uqKinv k) * MulOpposite.op (-(uqE k * uqKinv k)) := by
-    convert congr_arg₂ ( · * · ) ( antipodeFreeAlg_ι k Uqsl2Gen.K ) ( antipodeFreeAlg_ι k Uqsl2Gen.E ) using 1;
-    exact map_mul _ _ _;
-  have : antipodeFreeAlg k (scal' k (T 2) * gen k Uqsl2Gen.E * gen k Uqsl2Gen.K) = MulOpposite.op (algebraMap (LaurentPolynomial k) (Uqsl2 k) (T 2)) * MulOpposite.op (-(uqE k * uqKinv k)) * MulOpposite.op (uqKinv k) := by
-    simp +decide [ antipodeFreeAlg, antipodeOnGen ];
-  simp_all +decide [ mul_assoc, mul_left_comm, mul_comm ];
-  have : uqK k * uqE k = algebraMap (LaurentPolynomial k) (Uqsl2 k) (T 2) * uqE k * uqK k := by
-    grind +suggestions;
-  have h_mul : uqKinv k * uqK k * uqE k = uqKinv k * (algebraMap (LaurentPolynomial k) (Uqsl2 k) (T 2) * uqE k * uqK k) := by
-    rw [ ← this, mul_assoc ];
-  have h_mul : uqKinv k * uqK k = 1 := by
-    grind +suggestions;
-  simp +decide [ mul_assoc, mul_comm, mul_left_comm, h_mul ] at *;
-  rename_i h₁ h₂;
-  convert congr_arg ( fun x => MulOpposite.op ( uqKinv k ) * - ( MulOpposite.op ( uqKinv k ) * MulOpposite.op x ) ) h₂ using 1 ; simp +decide [ mul_assoc, mul_comm, mul_left_comm ];
-  simp +decide [ mul_assoc, mul_comm, mul_left_comm, ← MulOpposite.op_mul, ← MulOpposite.op_neg ];
-  simp +decide [ mul_assoc, mul_comm, mul_left_comm, uq_K_mul_Kinv ];
-  simp +decide [ mul_assoc, mul_comm, mul_left_comm, Algebra.algebraMap_eq_smul_one ];
-  simp +decide [ mul_assoc, mul_left_comm, Algebra.smul_def ];
+  have hK : antipodeFreeAlg k (gen k Uqsl2Gen.K) = MulOpposite.op (uqKinv k) :=
+    antipodeFreeAlg_ι k Uqsl2Gen.K
+  have hE : antipodeFreeAlg k (gen k Uqsl2Gen.E) = MulOpposite.op (-(uqE k * uqKinv k)) :=
+    antipodeFreeAlg_ι k Uqsl2Gen.E
+  have hscal : antipodeFreeAlg k (scal' k (T 2)) =
+      MulOpposite.op (algebraMap (LaurentPolynomial k) (Uqsl2 k) (T 2)) := by
+    rw [scal', AlgHom.commutes, MulOpposite.algebraMap_apply]
+  have hTT : (algebraMap (LaurentPolynomial k) (Uqsl2 k)) (T (-2)) *
+      (algebraMap (LaurentPolynomial k) (Uqsl2 k)) (T 2) = 1 := by
+    rw [← map_mul, ← LaurentPolynomial.T_add]; norm_num
+  have hKinvE : uqKinv k * uqE k =
+      (algebraMap (LaurentPolynomial k) (Uqsl2 k)) (T (-2)) * (uqE k * uqKinv k) := by
+    rw [uq_E_mul_Kinv, ← mul_assoc, ← mul_assoc, hTT, one_mul]
+  rw [map_mul, hK, hE, map_mul, map_mul, hscal, hE, hK]
+  rw [← MulOpposite.op_mul, ← MulOpposite.op_mul, ← MulOpposite.op_mul]
+  congr 1
+  have hcore : uqKinv k * (uqE k * uqKinv k *
+      (algebraMap (LaurentPolynomial k) (Uqsl2 k)) (T 2)) = uqE k * uqKinv k * uqKinv k := by
+    rw [← Algebra.commutes, ← mul_assoc, ← Algebra.commutes, ← mul_assoc,
+      mul_assoc _ (uqKinv k) (uqE k), hKinvE, ← mul_assoc, uq_T2_Tneg2, one_mul]
+  -- `neg_mul` / `mul_neg` cannot be `rw`/`simp`/`erw`-applied here: the `-` written in
+  -- `antipodeOnGen` carries `RingQuot.instNeg`, which v4.32 no longer matches against the
+  -- `Neg` reached through `HasDistribNeg`; and `noncomm_ring` normalises `-x` into a
+  -- Int-scalar `smul` for which `RingQuot` has no `IsScalarTower`. `grind` works at default
+  -- transparency, where the two `Neg` instances are still defeq -- but only on pure
+  -- neg-distribution, so the `hcore` rewrite is done separately.
+  rw [show uqKinv k * (-(uqE k * uqKinv k) *
+      (algebraMap (LaurentPolynomial k) (Uqsl2 k)) (T 2)) =
+      -(uqKinv k * (uqE k * uqKinv k *
+        (algebraMap (LaurentPolynomial k) (Uqsl2 k)) (T 2))) from by grind, hcore]
   grind
 
 private theorem antipodeFreeAlg_KF :
     antipodeFreeAlg k (gen k Uqsl2Gen.K * gen k Uqsl2Gen.F) =
     antipodeFreeAlg k (scal' k (T (-2)) * gen k Uqsl2Gen.F * gen k Uqsl2Gen.K) := by
-  unfold antipodeFreeAlg;
-  unfold gen scal' antipodeOnGen; simp +decide [ mul_assoc ] ;
-  simp +decide [ mul_assoc, ← MulOpposite.op_mul ];
-  have h_simp : MulOpposite.op (uqKinv k) * MulOpposite.op (uqK k * uqF k) = MulOpposite.op ((algebraMap k[T;T⁻¹] (Uqsl2 k)) (T (-2))) * (MulOpposite.op (uqK k * uqF k) * MulOpposite.op (uqKinv k)) := by
-    simp +decide [ ← mul_assoc, ← MulOpposite.op_mul ];
-    rw [ show uqKinv k * uqK k = 1 from ?_, one_mul ];
-    · convert congr_arg ( · * uqKinv k ) ( uq_KF k ) using 1 ; ring;
-      simp +decide [ mul_assoc, uq_K_mul_Kinv ];
-      grind +suggestions;
-    · exact?;
-  convert congr_arg Neg.neg h_simp using 1 <;> simp +decide [ mul_assoc ];
-  · grind +splitImp;
-  · grind
+  -- Same closed-chain shape as `antipodeFreeAlg_KE`: named generator images, an explicit
+  -- `op`-collapse, and one central-scalar computation. No `convert … using 1`, no `exact?`.
+  have hK : antipodeFreeAlg k (gen k Uqsl2Gen.K) = MulOpposite.op (uqKinv k) :=
+    antipodeFreeAlg_ι k Uqsl2Gen.K
+  have hF : antipodeFreeAlg k (gen k Uqsl2Gen.F) = MulOpposite.op (-(uqK k * uqF k)) :=
+    antipodeFreeAlg_ι k Uqsl2Gen.F
+  have hscal : antipodeFreeAlg k (scal' k (T (-2))) =
+      MulOpposite.op (algebraMap (LaurentPolynomial k) (Uqsl2 k) (T (-2))) := by
+    rw [scal', AlgHom.commutes, MulOpposite.algebraMap_apply]
+  rw [map_mul, hK, hF, map_mul, map_mul, hscal, hF, hK]
+  rw [← MulOpposite.op_mul, ← MulOpposite.op_mul, ← MulOpposite.op_mul]
+  congr 1
+  have hcore : uqKinv k * (uqK k * uqF k *
+      (algebraMap (LaurentPolynomial k) (Uqsl2 k)) (T (-2))) = uqK k * uqF k * uqKinv k := by
+    rw [uq_KF_Kinv, ← Algebra.commutes, ← mul_assoc, ← Algebra.commutes, ← mul_assoc,
+      mul_assoc _ (uqKinv k) (uqK k), uq_Kinv_mul_K, mul_one]
+  -- Same `RingQuot.instNeg` mismatch as in `antipodeFreeAlg_KE`; see the note there.
+  rw [show uqKinv k * (-(uqK k * uqF k) *
+      (algebraMap (LaurentPolynomial k) (Uqsl2 k)) (T (-2))) =
+      -(uqKinv k * (uqK k * uqF k *
+        (algebraMap (LaurentPolynomial k) (Uqsl2 k)) (T (-2)))) from by grind, hcore]
+  grind
 
 private theorem antipodeFreeAlg_Serre :
     antipodeFreeAlg k (scal' k (T 1 - T (-1)) * (gen k Uqsl2Gen.E * gen k Uqsl2Gen.F - gen k Uqsl2Gen.F * gen k Uqsl2Gen.E)) =
@@ -661,7 +688,7 @@ theorem comul_coassoc :
   · simp +decide [ comul_Kinv ];
     erw [ show ( comulUq k ) ( RingQuot.mkAlgHom _ _ ( FreeAlgebra.ι _ _ ) ) = uqKinv k ⊗ₜ uqKinv k from ?_ ];
     · simp +decide [ Algebra.TensorProduct.map_tmul, comul_Kinv ];
-    · convert comul_Kinv k using 1
+    · exact comul_Kinv k
 
 /-
 Right counitality: (epsilon tensor id) composed with Delta = lid isomorphism.
@@ -680,11 +707,16 @@ theorem comul_rTensor_counit :
     erw [ comul_F ];
     simp +decide [ counit_F, counit_Kinv ];
     rfl;
-  · convert congr_arg ( fun x : ( Uqsl2 k ) ⊗[LaurentPolynomial k] ( Uqsl2 k ) => ( Algebra.TensorProduct.map ( counitUq k ) ( AlgHom.id k[T;T⁻¹] ( Uqsl2 k ) ) ) x ) ( comul_K k ) using 1;
-    simp +decide [ Algebra.TensorProduct.map_tmul, counit_K ];
-    rfl;
-  · convert congr_arg ( Algebra.TensorProduct.map ( counitUq k ) ( AlgHom.id k[T;T⁻¹] ( Uqsl2 k ) ) ) ( comul_Kinv k ) using 1;
-    simp +decide [ Algebra.TensorProduct.map_tmul, counit_Kinv ];
+  -- `convert … using 1` used to leave only defeq side goals that the old simp set closed;
+  -- v4.32 no longer discharges them. `show` states the (definitionally equal) goal directly.
+  · show (Algebra.TensorProduct.map (counitUq k) (AlgHom.id k[T;T⁻¹] (Uqsl2 k))) ((comulUq k) (uqK k)) =
+        (Algebra.TensorProduct.lid k[T;T⁻¹] (Uqsl2 k)).symm (uqK k)
+    rw [comul_K, Algebra.TensorProduct.map_tmul, counit_K]
+    rfl
+  · show (Algebra.TensorProduct.map (counitUq k) (AlgHom.id k[T;T⁻¹] (Uqsl2 k)))
+        ((comulUq k) (uqKinv k)) =
+        (Algebra.TensorProduct.lid k[T;T⁻¹] (Uqsl2 k)).symm (uqKinv k)
+    rw [comul_Kinv, Algebra.TensorProduct.map_tmul, counit_Kinv]
     rfl
 
 /-
@@ -694,21 +726,33 @@ theorem comul_lTensor_counit :
     (Algebra.TensorProduct.map (.id (LaurentPolynomial k) (Uqsl2 k)) (counitUq k)).comp
       (comulUq k) =
     (Algebra.TensorProduct.rid (LaurentPolynomial k) (LaurentPolynomial k) (Uqsl2 k)).symm := by
-  ext x;
-  cases x <;> simp +decide [ * ];
-  · erw [ comul_E ];
-    simp +decide [ counit_K, counit_E ];
-    rfl;
-  · convert congr_arg ( Algebra.TensorProduct.map ( AlgHom.id _ _ ) ( counitUq k ) ) ( comul_F k ) using 1;
-    simp +decide [ Algebra.TensorProduct.map_tmul ];
-    rw [ counit_F ] ; aesop;
-  · convert congr_arg ( Algebra.TensorProduct.map ( AlgHom.id _ _ ) ( counitUq k ) ) ( comul_K k ) using 1;
-    simp +decide [ uqK ];
-    congr! 1;
-    exact Eq.symm ( counit_K k );
-  · erw [ comul_Kinv ];
-    erw [ Algebra.TensorProduct.map_tmul ] ; simp +decide [ * ];
-    exact congr_arg₂ _ rfl ( counit_Kinv k )
+  ext x
+  -- Each case is stated directly with `show` (the generator image is definitionally `uq*`),
+  -- then closed by a named rewrite chain. The previous `convert … using 1` / `simp +decide`
+  -- shape relied on the pre-v4.32 simp set to discharge the leftover defeq side goals.
+  cases x
+  · show (Algebra.TensorProduct.map (AlgHom.id k[T;T⁻¹] (Uqsl2 k)) (counitUq k))
+        ((comulUq k) (uqE k)) =
+        (Algebra.TensorProduct.rid k[T;T⁻¹] k[T;T⁻¹] (Uqsl2 k)).symm (uqE k)
+    rw [comul_E, map_add, Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.map_tmul,
+      counit_K, counit_E, TensorProduct.tmul_zero, add_zero]
+    rfl
+  · show (Algebra.TensorProduct.map (AlgHom.id k[T;T⁻¹] (Uqsl2 k)) (counitUq k))
+        ((comulUq k) (uqF k)) =
+        (Algebra.TensorProduct.rid k[T;T⁻¹] k[T;T⁻¹] (Uqsl2 k)).symm (uqF k)
+    rw [comul_F, map_add, Algebra.TensorProduct.map_tmul, Algebra.TensorProduct.map_tmul,
+      counit_F, map_one, TensorProduct.tmul_zero, add_zero]
+    rfl
+  · show (Algebra.TensorProduct.map (AlgHom.id k[T;T⁻¹] (Uqsl2 k)) (counitUq k))
+        ((comulUq k) (uqK k)) =
+        (Algebra.TensorProduct.rid k[T;T⁻¹] k[T;T⁻¹] (Uqsl2 k)).symm (uqK k)
+    rw [comul_K, Algebra.TensorProduct.map_tmul, counit_K]
+    rfl
+  · show (Algebra.TensorProduct.map (AlgHom.id k[T;T⁻¹] (Uqsl2 k)) (counitUq k))
+        ((comulUq k) (uqKinv k)) =
+        (Algebra.TensorProduct.rid k[T;T⁻¹] k[T;T⁻¹] (Uqsl2 k)).symm (uqKinv k)
+    rw [comul_Kinv, Algebra.TensorProduct.map_tmul, counit_Kinv]
+    rfl
 
 /-! ## 7. Bialgebra instance -/
 
@@ -751,7 +795,7 @@ private theorem convR_E :
       rw [ antipode_E, antipodeUq_one ];
       grind +revert;
   have h2 : uqKinv k * uqK k = 1 := by
-    exact?;
+    exact uq_Kinv_mul_K k;
   grind +qlia
 
 /-
@@ -808,7 +852,7 @@ private theorem convR_mul_step
   · simp +decide;
   · intro hx
     have h_sum : ∃ (s : Finset (Uqsl2 k × Uqsl2 k)), x = ∑ p ∈ s, p.1 ⊗ₜ p.2 := by
-      exact?;
+      exact exists_finset x;
     obtain ⟨ s, rfl ⟩ := h_sum; simp +decide [ hx, mul_assoc, Finset.sum_mul _ _ _ ] ;
     have h_antipode_mul : ∀ a b : Uqsl2 k, antipodeUq k (a * b) = (antipodeUq k b) * (antipodeUq k a) := by
       intro a b
@@ -918,15 +962,25 @@ theorem antipode_right :
   · convert convR_algebraMap k r using 1;
     · simp +decide [ comulUq ];
     · simp +decide [ uqsl2Mk ];
-  · cases x <;> simp +decide [ * ];
-    · convert convR_E k using 1;
-      convert congr_arg ( algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) ) ( counit_E k ) using 1;
-    · convert convR_F k using 1;
-      convert congr_arg ( algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) ) ( counit_F k ) using 1;
-    · convert convR_K k using 1;
-      erw [ show ( RingQuot.mkAlgHom k[T;T⁻¹] ( ChevalleyRel k ) ) ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.K ) = uqK k from rfl ] ; exact congr_arg _ ( counit_K k );
-    · convert convR_Kinv k using 1;
-      convert congr_arg ( algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) ) ( counit_Kinv k ) using 1;
+  · cases x
+    -- `show` states the (definitionally equal) convolution goal directly, so each case is
+    -- one named rewrite; the `convert … using 1` chains left defeq side goals unproved in v4.32.
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl2 k))
+          ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k)) ((comulUq k) (uqE k))) =
+          algebraMap k[T;T⁻¹] (Uqsl2 k) ((counitUq k) (uqE k))
+      rw [convR_E, counit_E, map_zero]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl2 k))
+          ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k)) ((comulUq k) (uqF k))) =
+          algebraMap k[T;T⁻¹] (Uqsl2 k) ((counitUq k) (uqF k))
+      rw [convR_F, counit_F, map_zero]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl2 k))
+          ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k)) ((comulUq k) (uqK k))) =
+          algebraMap k[T;T⁻¹] (Uqsl2 k) ((counitUq k) (uqK k))
+      rw [convR_K, counit_K, map_one]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl2 k))
+          ((LinearMap.rTensor (Uqsl2 k) (antipodeUq k)) ((comulUq k) (uqKinv k))) =
+          algebraMap k[T;T⁻¹] (Uqsl2 k) ((counitUq k) (uqKinv k))
+      rw [convR_Kinv, counit_Kinv, map_one]
   · simp_all +decide [ mul_assoc, CoalgebraStruct.comul ];
     convert convR_mul_step k _ _ _ hy using 1;
     aesop;
@@ -949,15 +1003,25 @@ theorem antipode_left :
       · exact ChevalleyRel.KKinv;
       · simp +decide [ counitFreeAlg ];
         exact one_mul _;
-  · rcases x with ( _ | _ | _ | _ ) <;> simp +decide [ * ];
-    · convert convL_E k;
-      convert congr_arg ( algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) ) ( counit_E k ) using 1;
-    · convert convL_F k using 1;
-      convert congr_arg ( algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) ) ( counit_F k ) using 1;
-    · convert convL_K k using 1;
-      erw [ show ( RingQuot.mkAlgHom k[T;T⁻¹] ( ChevalleyRel k ) ) ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.K ) = uqK k from rfl ] ; exact congr_arg _ ( counit_K k );
-    · convert convL_Kinv k using 1;
-      convert congr_arg ( algebraMap ( LaurentPolynomial k ) ( Uqsl2 k ) ) ( counit_Kinv k ) using 1;
+  · rcases x with ( _ | _ | _ | _ )
+    -- Mirror of the `antipode_right` generator cases: state the goal with `show`, then one
+    -- named rewrite per case (no `convert … using 1` defeq side goals).
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl2 k))
+          ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k)) ((comulUq k) (uqE k))) =
+          algebraMap k[T;T⁻¹] (Uqsl2 k) ((counitUq k) (uqE k))
+      rw [convL_E, counit_E, map_zero]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl2 k))
+          ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k)) ((comulUq k) (uqF k))) =
+          algebraMap k[T;T⁻¹] (Uqsl2 k) ((counitUq k) (uqF k))
+      rw [convL_F, counit_F, map_zero]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl2 k))
+          ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k)) ((comulUq k) (uqK k))) =
+          algebraMap k[T;T⁻¹] (Uqsl2 k) ((counitUq k) (uqK k))
+      rw [convL_K, counit_K, map_one]
+    · show (LinearMap.mul' k[T;T⁻¹] (Uqsl2 k))
+          ((LinearMap.lTensor (Uqsl2 k) (antipodeUq k)) ((comulUq k) (uqKinv k))) =
+          algebraMap k[T;T⁻¹] (Uqsl2 k) ((counitUq k) (uqKinv k))
+      rw [convL_Kinv, counit_Kinv, map_one]
   · -- mul case: use convL_mul_step
     simp_all +decide [ ← LinearMap.comp_assoc, ← RingHom.comp_apply ];
     convert convL_mul_step k _ _ _ _ using 1;
@@ -996,24 +1060,18 @@ theorem antipode_squared_is_ad_K (x : Uqsl2 k) :
           simp +decide [ uqsl2Mk ];
           grind;
         · exact map_neg ( antipodeUq k ) _;
-      · exact?;
-    · convert congr_arg ( fun x => ( antipodeUq k ) x ) ( antipode_F k ) using 1;
-      rw [ show uqsl2Mk k ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.F ) = uqF k from ?_ ];
-      · simp +decide [ antipodeUq ];
-        erw [ show ( antipodeOpAlg k ) ( - ( uqK k * uqF k ) ) = MulOpposite.op ( - ( antipodeUq k ( uqK k * uqF k ) ) ) from ?_ ];
-        · simp +decide [ antipodeUq ];
-          erw [ show ( antipodeOpAlg k ) ( uqF k ) = MulOpposite.op ( - ( uqK k * uqF k ) ) from ?_, show ( antipodeOpAlg k ) ( uqK k ) = MulOpposite.op ( uqKinv k ) from ?_ ] ; simp +decide [ mul_assoc ];
-          · grind;
-          · convert antipode_K k using 1;
-            simp +decide [ antipodeUq ];
-            rw [ ← MulOpposite.unop_inj ] ; simp +decide [ MulOpposite.unop_op ];
-          · rw [ show uqF k = uqsl2Mk k ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.F ) from ?_, antipodeOpAlg ];
-            · simp +decide [ uqsl2Mk ];
-              convert antipodeFreeAlg_ι k Uqsl2Gen.F using 1;
-            · rfl;
-        · simp +decide [ antipodeOpAlg, antipodeUq ];
-          grind;
-      · rfl;
+      · exact antipode_E k;
+    · -- S is an anti-homomorphism into the opposite ring; naming that fact (and `map_neg`)
+      -- lets the whole case be one rewrite chain. The old `convert … using 1` cascade left
+      -- defeq side goals that the v4.32 simp set no longer discharges.
+      have hanti : ∀ a b : Uqsl2 k,
+          (antipodeUq k) (a * b) = (antipodeUq k) b * (antipodeUq k) a := by
+        simp +decide [antipodeUq]
+      have hneg : ∀ a : Uqsl2 k, (antipodeUq k) (-a) = -(antipodeUq k) a := by
+        intro a; exact map_neg (antipodeUq k) a
+      show (antipodeUq k) ((antipodeUq k) (uqF k)) = uqK k * uqF k * uqKinv k
+      rw [antipode_F, hneg, hanti, antipode_F, antipode_K]
+      grind
     · simp +decide [ uqsl2Mk, antipode_K, antipode_Kinv ];
       erw [ show ( RingQuot.mkAlgHom k[T;T⁻¹] ( ChevalleyRel k ) ) ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.K ) = uqK k from rfl ] ; simp +decide [ antipode_K, antipode_Kinv ];
       rw [ mul_assoc, uq_K_mul_Kinv, mul_one ];
@@ -1068,9 +1126,8 @@ theorem counit_comp_antipode (x : Uqsl2 k) :
     · erw [ show ( RingQuot.mkAlgHom k[T;T⁻¹] ( ChevalleyRel k ) ) ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.F ) = uqF k from rfl ];
       rw [ antipode_F ];
       grind +suggestions;
-    · convert counit_Kinv k;
-      · convert antipode_K k;
-      · convert counit_K k;
+    · show (counitUq k) ((antipodeUq k) (uqK k)) = (counitUq k) (uqK k)
+      rw [antipode_K, counit_K, counit_Kinv]
     · erw [ show ( RingQuot.mkAlgHom k[T;T⁻¹] ( ChevalleyRel k ) ) ( FreeAlgebra.ι k[T;T⁻¹] Uqsl2Gen.Kinv ) = uqKinv k from rfl ] ; simp +decide [ antipode_Kinv ];
       rw [ counit_K, counit_Kinv ];
   · rename_i a b ha hb;
