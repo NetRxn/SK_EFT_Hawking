@@ -50,7 +50,13 @@ theorem cochainPullbackInt_eq_zero_of_mem_relCochainsInt {n : ℕ} (f : Singular
     ⟨Finsupp.single σ 1, rfl⟩
   have := hf _ hmem
   rw [chainIncl, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single] at this
-  simpa [kronecker, Finsupp.sum_single_index] using this
+  -- v4.32: `simpa` reduces the hypothesis correctly but no longer reduces the GOAL side
+  -- (`cochainPullbackInt` applied, and `simplexIncl` under `mapSimplex`). Name both.
+  -- v4.32 no longer bridges `mapSimplex (inclCM S) σ` and `simplexIncl S n σ` inside `simpa`'s
+  -- closing step; they are still definitionally equal (cf. `mapSimplex_inclC`, proved by `rfl`).
+  have hbridge : SKEFTHawking.SingularFunctoriality.mapSimplex (inclCM S) σ
+      = SingularRelativeHomologyMod2.simplexIncl S n σ := rfl
+  simpa [kronecker, Finsupp.sum_single_index, cochainPullbackInt, hbridge] using this
 
 /-- **`ι_S* ∘ j* = 0`.** Every class in the image of the pair-restriction leg
 `j* : Hᵐ(X, S; ℤ) → Hᵐ(X; ℤ)` restricts to `0` on `S`. This is the half of exactness at `Hᵐ(X;ℤ)`

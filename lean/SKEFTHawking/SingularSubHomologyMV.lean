@@ -132,7 +132,9 @@ theorem diagSquare (U V : Set ↑X) (n : ℕ)
     SingularOpenDualityMVSquare.subHomDiag U V n (seamI U V n w)
       = (seamU U V n).prodCongr (seamV U V n)
           (mvHomDiag (X := sub (U ∪ V)) (Subtype.val ⁻¹' U) (Subtype.val ⁻¹' V) n w) := by
-  rw [SingularOpenDualityMVSquare.subHomDiag, LinearMap.prod_apply, Pi.prod, mvHomDiag_apply,
+  rw [SingularOpenDualityMVSquare.subHomDiag, LinearMap.prod_apply]
+  simp only [Function.prod_def]
+  rw [mvHomDiag_apply,
     LinearEquiv.prodCongr_apply]
   refine Prod.ext ?_ ?_
   · show Homology.map (subInclCM Set.inter_subset_left) n

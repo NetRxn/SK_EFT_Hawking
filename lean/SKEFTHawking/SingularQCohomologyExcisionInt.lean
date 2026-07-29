@@ -201,7 +201,7 @@ theorem dualExcisionInt_injective (U V : Set ↑M) (hU : IsOpen U) (hV : IsOpen 
       QChainInt U V n →ₗ[ℤ] QChainInt U V n) x ∈ LinearMap.ker (piMapInt U V n) := by
     intro x
     rw [LinearMap.mem_ker]
-    simp only [LinearMap.sub_apply, LinearMap.id_coe, id_eq, LinearMap.comp_apply, map_sub]
+    erw [LinearMap.sub_apply, LinearMap.id_coe, id_eq, LinearMap.comp_apply, map_sub]
     have hgy : piMapInt U V n (sec (piMapInt U V n x)) = piMapInt U V n x := by
       simpa using LinearMap.congr_fun hsec (piMapInt U V n x)
     rw [hgy, sub_self]

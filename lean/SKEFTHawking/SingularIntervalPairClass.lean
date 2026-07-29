@@ -288,7 +288,9 @@ noncomputable def intervalLocalBdEquiv (t : ↑ICat) (ht0 : (0 : ℝ) < (t : ℝ
     (LinearEquiv.prodCongr (homologyZeroPathConnectedEquiv (X := sub (leftOfT t)))
       (homologyZeroPathConnectedEquiv (X := sub (leftOfT t)ᶜ)))
 
-instance instFiniteHomologyCompl (t : ↑ICat) (ht : t ∉ bdI) :
+-- v4.32 rejects this as an `instance`: `ht` is neither instance-implicit nor present in the
+-- return type, so synthesis could never have inferred it. Kind change only.
+theorem instFiniteHomologyCompl (t : ↑ICat) (ht : t ∉ bdI) :
     FiniteDimensional (ZMod 2) (Homology (sub ({t}ᶜ : Set ↑ICat)) 0) :=
   (intervalLocalBdEquiv t (lt_and_lt_of_not_mem_bdI t ht).1
     (lt_and_lt_of_not_mem_bdI t ht).2).symm.finiteDimensional
@@ -340,7 +342,9 @@ theorem finrank_intervalLocalPair (t : ↑ICat) (ht : t ∉ bdI) :
       (homIncl_one_surjective ({t}ᶜ)),
     finrank_homology_compl_singleton t ht0 ht1, finrank_homology_interval_zero]
 
-instance instFiniteIntervalLocalPair (t : ↑ICat) (ht : t ∉ bdI) :
+-- v4.32 rejects this as an `instance`: `ht` is neither instance-implicit nor present in the
+-- return type, so synthesis could never have inferred it. Kind change only.
+theorem instFiniteIntervalLocalPair (t : ↑ICat) (ht : t ∉ bdI) :
     FiniteDimensional (ZMod 2) (RelativeHomology ({t}ᶜ : Set ↑ICat) 1) :=
   FiniteDimensional.of_finrank_eq_succ (finrank_intervalLocalPair t ht)
 
