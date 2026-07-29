@@ -72,7 +72,16 @@ theorem map_eq_of_chain_add_mem_zero {X Y : TopCat} (f g : C(↑X, ↑Y))
       (Submodule.mapQ_apply _ _ _ _).symm)
   have hsub : (cycles Y 0).subtype (cyclesMap f 0 z - cyclesMap g 0 z)
       = mapChain f 0 (z : SingularChain X 0) + mapChain g 0 (z : SingularChain X 0) := by
-    rw [map_sub, Submodule.subtype_apply, Submodule.subtype_apply, cyclesMap_coe, cyclesMap_coe,
+    -- v4.32: two things at once here. `rw` runs at reducible transparency and no longer finds
+    -- `map_sub`'s `?f (?a - ?b)` through this coercion path; and the subtraction on `↥(cycles Y 0)`
+    -- carries `AddSubgroupClass.sub` while `map_sub` elaborates its own at
+    -- `AddGroup.toSubNegMonoid.toSub` — the two sides of the `AddSubgroupClass` diamond, defeq but
+    -- not syntactically equal, so supplying `map_sub` as a bare term also fails. `simp` normalizes
+    -- across the diamond; naming the result as a term then lets the rewrite chain proceed.
+    have hms : (cycles Y 0).subtype (cyclesMap f 0 z - cyclesMap g 0 z)
+        = (cycles Y 0).subtype (cyclesMap f 0 z) - (cycles Y 0).subtype (cyclesMap g 0 z) := by
+      simp
+    rw [hms, Submodule.subtype_apply, Submodule.subtype_apply, cyclesMap_coe, cyclesMap_coe,
       sub_eq_add_neg, neg_eq_of_add_eq_zero_right (ZModModule.add_self _)]
   rw [hsub]
   exact hfg (z : SingularChain X 0)

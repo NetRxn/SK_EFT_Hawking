@@ -56,7 +56,15 @@ theorem latticeSig_smul_of_pos {n : ℕ} (c : ℤ) (hc : 0 < c) (M : Matrix (Fin
       (Pr.toLinearEquiv' inferInstance)
     rwa [hcoe, ← toQuadraticMap'_congr] at h
   unfold latticeSig
-  rw [hmap, ← hequiv.sigPos_eq, ← hequiv.sigNeg_eq]
+  rw [hmap]
+  -- v4.32: `latticeSig` unfolds to the NEW `toQuadraticForm'` spelling, but `hequiv` is stated in
+  -- the deprecated alias `toQuadraticMap'`, so its rewrites find no pattern. Restate the goal in
+  -- the alias spelling (accepted by defeq) and the equivalence rewrites apply unchanged.
+  show (sigPos (Prᵀ * Mr * Pr).toQuadraticMap' : ℤ)
+        - (sigNeg (Prᵀ * Mr * Pr).toQuadraticMap' : ℤ)
+      = (sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+        - (sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+  rw [← hequiv.sigPos_eq, ← hequiv.sigNeg_eq]
 
 /-! ## §2. Determinant, symmetry, evenness under scaling -/
 

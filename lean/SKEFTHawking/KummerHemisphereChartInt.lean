@@ -525,7 +525,9 @@ theorem chartHomeoV_mem_flatDisk (u : ↥Uset) :
     refine ⟨⟨zc (x : EuclideanSpace ℝ (Fin 4)), hzle⟩, ?_⟩
     show chart0 (zeroPt ⟨zc (x : EuclideanSpace ℝ (Fin 4)), hzle⟩) = F ↑x
     rw [F_inside (Wopen_subset_Wset x.2) hzle]
-    exact congrArg chart0 (Prod.ext rfl (Subtype.ext (by simpa [zeroFiber] using hu0.symm)))
+    -- v4.32: `simp` no longer delta-unfolds the plain def `zeroPt`, so `(zeroPt _).2` never
+    -- reduces to `zeroFiber` and the `zeroFiber` rewrite has nothing to fire on. Name both.
+    exact congrArg chart0 (Prod.ext rfl (Subtype.ext (by simpa [zeroPt, zeroFiber] using hu0.symm)))
   · rintro ⟨z, hz0⟩
     replace hz0 : chart0 (zeroPt z) = F ↑x := hz0
     rcases le_or_gt ‖zc (x : EuclideanSpace ℝ (Fin 4))‖ 1 with h | h
@@ -534,7 +536,8 @@ theorem chartHomeoV_mem_flatDisk (u : ↥Uset) :
         (congrArg (fun r : ResChart => (r.1 : ℂ)) hz0).symm
       have h2 : uc (x : EuclideanSpace ℝ (Fin 4)) = 0 := by
         have := (congrArg (fun r : ResChart => (r.2 : ℂ)) hz0).symm
-        simpa [zeroFiber] using this
+        -- Same v4.32 `zeroPt` delta-unfolding gap as above.
+        simpa [zeroPt, zeroFiber] using this
       refine ⟨h2, ?_⟩
       rw [h1]
       have := z.2

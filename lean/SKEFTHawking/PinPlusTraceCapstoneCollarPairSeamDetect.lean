@@ -367,8 +367,12 @@ theorem exists_fundCycle :
     ∃ z : cycles (TopCat.of s.M) (2 + 2),
       SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := s.M)
         = Homology.mk (TopCat.of s.M) (2 + 2) z := by
-  obtain ⟨z, hz⟩ := Submodule.Quotient.mk_surjective
-    ((boundaries (TopCat.of s.M) (2 + 2)).submoduleOf (cycles (TopCat.of s.M) (2 + 2)))
+  -- v4.32: `fundamentalClass` is typed at the `def`-wrapped alias `Homology _ _`. Passing the
+  -- submodule EXPLICITLY makes the unifier compare two fully-elaborated closed types through that
+  -- alias, which blows the whnf budget. Passing `_` leaves a metavariable to assign after a single
+  -- delta step — instant, and the idiom already used in `BocksteinIntegralLift`.
+  -- (NEVER `set_option maxHeartbeats` here — Invariant #10; the budget is not the problem.)
+  obtain ⟨z, hz⟩ := Submodule.Quotient.mk_surjective _
     (SKEFTHawking.SingularFundamentalClass.fundamentalClass (m := 2) (M := s.M))
   exact ⟨z, hz.symm⟩
 

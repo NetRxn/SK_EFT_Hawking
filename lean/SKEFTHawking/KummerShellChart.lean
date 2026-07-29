@@ -184,11 +184,14 @@ def shellCollarChart (u₀ : NSphere 3) :
       exact continuousOn_univ.mp h
     apply Continuous.continuousOn
     apply Continuous.subtype_mk
-    apply Continuous.smul
-    · exact continuous_const.add
+    -- v4.32: `Continuous.smul` now concludes a Pi-smul, so `apply` cannot unify its conclusion
+    -- `Continuous (?f • ?g)` against this pointwise `fun x => _ • _` goal (same as
+    -- `DiskChartGeneric`). One `exact` with both arguments lets defeq match.
+    exact Continuous.smul
+      (continuous_const.add
         ((PiLp.continuous_apply 2 (fun _ : Fin 1 => ℝ) 0).comp
-          (continuous_subtype_val.comp continuous_snd))
-    · exact continuous_subtype_val.comp (hsymm.comp continuous_fst)
+          (continuous_subtype_val.comp continuous_snd)))
+      (continuous_subtype_val.comp (hsymm.comp continuous_fst))
 
 /-! ### §A.4. The charted-space structure on the exterior shell -/
 

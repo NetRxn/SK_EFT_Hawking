@@ -266,10 +266,13 @@ def sphHalfHomeoSph3 : ↑(sub (X := Eucl 4) sphHalf) ≃ₜ ↑(Sph 3) where
       = (y : EuclideanSpace ℝ (Fin 4))
     rw [smul_smul]
     norm_num)
+  -- v4.32: `Continuous.smul` now concludes a Pi-smul, and unifying that against these pointwise
+  -- `c • _` goals runs the whnf budget out. Both scalars here are constant, so
+  -- `Continuous.const_smul` is the direct lemma.
   continuous_toFun :=
-    (continuous_const.smul continuous_subtype_val).subtype_mk fun x => smul_two_mem_unitSphere x
+    (continuous_subtype_val.const_smul (2 : ℝ)).subtype_mk fun x => smul_two_mem_unitSphere x
   continuous_invFun :=
-    (continuous_const.smul continuous_subtype_val).subtype_mk fun y => smul_half_mem_sphHalf y
+    (continuous_subtype_val.const_smul (2⁻¹ : ℝ)).subtype_mk fun y => smul_half_mem_sphHalf y
 
 /-! ## §5. The annulus table: `H_j(Ann⁴;ℤ) = 0` for `0 < j < 3` -/
 

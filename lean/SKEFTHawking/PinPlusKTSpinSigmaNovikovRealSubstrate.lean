@@ -169,7 +169,10 @@ theorem NovikovRealPairLES.coisotropic :
   intro a
   rw [← d.hadj a v]
   have := hv (d.rest2 a) ⟨a, rfl⟩
-  rwa [LinearMap.BilinForm.isOrtho_def] at this
+  -- v4.32: the membership already arrives in the unfolded `B x y = 0` form, so the old
+  -- `isOrtho_def` rewrite now finds no `IsOrtho` pattern. `IsOrtho` is *defined* as that
+  -- equation, so `exact` closes it by defeq either way.
+  exact this
 
 /-- **The Novikov `half`, DERIVED.** `n = 2·dim(im ι*)`: the restriction image is isotropic + co-isotropic
 for the nondegenerate boundary form, so half-dimensional (`finrank_eq_half_of_isotropic_coisotropic`). The
@@ -334,7 +337,8 @@ noncomputable def NovikovRealPairLES.ofLagrangian {n : ℕ} (Bd : Matrix (Fin n)
           (QuadraticMap.polarBilin (Bd.map (Int.cast : ℤ → ℝ)).toQuadraticMap') L := by
         rw [LinearMap.BilinForm.mem_orthogonal_iff]
         intro a ha
-        rw [LinearMap.BilinForm.isOrtho_def]
+        -- v4.32: goal already arrives unfolded to `B a v = 0`; the `isOrtho_def` rewrite that
+        -- used to produce that shape now finds no pattern. Same cause as line ~172.
         have := hx ⟨a, ha⟩
         simpa [lagrangianPairing, Submodule.liftQ_apply] using this
       rw [Submodule.Quotient.mk_eq_zero]

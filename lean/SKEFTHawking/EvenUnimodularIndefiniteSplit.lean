@@ -42,7 +42,13 @@ theorem even_unimodular_indefinite_of_abs_sig_lt {n : ℕ} (M : Matrix (Fin n) (
     (Q := (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
   rw [heu.radical_eq_bot] at hsum
   simp only [finrank_bot, add_zero, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at hsum
-  unfold latticeSig at hlt
+  -- v4.32: `latticeSig` unfolds to the NEW `toQuadraticForm'` spelling, while this theorem's
+  -- statement (and `hsum`) are written with the deprecated alias `toQuadraticMap'`. The two are
+  -- defeq but are distinct ATOMS to `omega`, so it cannot connect them. Restate the hypothesis in
+  -- the statement's own spelling (typechecks by defeq) rather than renaming the statement — the
+  -- old name stays per the whole-component `toQuadraticMap'` boundary.
+  have hlt' : ((sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+      - (sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)).natAbs < n := hlt
   omega
 
 /-- **The congruence-strengthened split for an INDEFINITE residual** (deliverable 1). An even unimodular
@@ -135,8 +141,9 @@ theorem k3_candidate_split (M : Matrix (Fin 22) (Fin 22) ℤ)
     (Q := (D.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
   rw [heuD.radical_eq_bot] at hsumD
   simp only [finrank_bot, add_zero, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at hsumD
-  have hsigD' := hsigD
-  unfold latticeSig at hsigD'
+  -- Same `toQuadraticMap'`/`toQuadraticForm'` atom split as above: restate by defeq.
+  have hsigD' : (sigPos (D.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+      - (sigNeg (D.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ) = -16 := hsigD
   have hDdef : sigPos (D.map (Int.cast : ℤ → ℝ)).toQuadraticMap' = 0 := by omega
   exact ⟨D, e₁, e₂, e₃, heuD, hsigD, hDdef,
     hcong₁.trans (IntCongr.hyp_block e₁ (hcong₂.trans (IntCongr.hyp_block e₂ hcong₃)))⟩

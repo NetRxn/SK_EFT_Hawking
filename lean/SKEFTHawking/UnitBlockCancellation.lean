@@ -306,7 +306,11 @@ theorem inertia_of_rank20_sig_neg16 (A : Matrix (Fin 20) (Fin 20) ℤ) (hA : IsE
     sigPos (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' = 2 ∧
     sigNeg (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' = 18 := by
   have hsum := sigPos_add_sigNeg_of_evenUnimodular A hA
-  unfold latticeSig at hsig
+  -- v4.32: `latticeSig` unfolds to the NEW `toQuadraticForm'` spelling while this statement uses
+  -- the deprecated alias `toQuadraticMap'` — defeq, but distinct ATOMS to `omega`. Restate in the
+  -- statement's spelling (typechecks by defeq); the old name stays per the whole-component boundary.
+  have hsig' : (sigPos (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+      - (sigNeg (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ) = -16 := hsig
   omega
 
 /-- Inertia of an even unimodular rank-18 form of signature `−16`: `(sigPos, sigNeg) = (1, 17)`. The
@@ -318,7 +322,11 @@ theorem inertia_of_rank18_sig_neg16 (A : Matrix (Fin 18) (Fin 18) ℤ) (hA : IsE
     sigPos (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' = 1 ∧
     sigNeg (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' = 17 := by
   have hsum := sigPos_add_sigNeg_of_evenUnimodular A hA
-  unfold latticeSig at hsig
+  -- v4.32: `latticeSig` unfolds to the NEW `toQuadraticForm'` spelling while this statement uses
+  -- the deprecated alias `toQuadraticMap'` — defeq, but distinct ATOMS to `omega`. Restate in the
+  -- statement's spelling (typechecks by defeq); the old name stays per the whole-component boundary.
+  have hsig' : (sigPos (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+      - (sigNeg (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ) = -16 := hsig
   omega
 
 /-! ### The TWO-hyperbolic-plane interior brick (the elementary restatement) -/

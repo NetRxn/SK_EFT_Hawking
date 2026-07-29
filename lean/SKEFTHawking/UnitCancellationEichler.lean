@@ -515,10 +515,15 @@ theorem twoHypPlanes : TwoHypPlanes := by
     even_unimodular_indefinite_split_congr A hA (by omega) (by omega)
   obtain ⟨P, hPdet, hPeq⟩ := hcongA
   have hrank' := sigPos_add_sigNeg_of_evenUnimodular A' hA'eu
-  have hsp' : 0 < sigPos (A'.map (Int.cast : ℤ → ℝ)).toQuadraticMap' := by
-    unfold latticeSig at hA'sig; omega
-  have hsn' : 0 < sigNeg (A'.map (Int.cast : ℤ → ℝ)).toQuadraticMap' := by
-    unfold latticeSig at hA'sig; omega
+  -- v4.32 `toQuadraticMap'`/`toQuadraticForm'` atom split (see `UnitBlockCancellation`): restate
+  -- `hA'sig` once in these statements' own spelling — typechecks by defeq — so `omega` sees a
+  -- single atom set instead of two.
+  have hA'sig' : (sigPos (A'.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+        - (sigNeg (A'.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+      = (sigPos (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+        - (sigNeg (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ) := hA'sig
+  have hsp' : 0 < sigPos (A'.map (Int.cast : ℤ → ℝ)).toQuadraticMap' := by omega
+  have hsn' : 0 < sigNeg (A'.map (Int.cast : ℤ → ℝ)).toQuadraticMap' := by omega
   obtain ⟨A'', e', hcongA', -, -⟩ := even_unimodular_indefinite_split_congr A' hA'eu hsp' hsn'
   obtain ⟨Q, hQdet, hQeq⟩ := hcongA'
   have hbilP : ∀ x y : Fin n → ℤ, (P *ᵥ x) ⬝ᵥ A *ᵥ (P *ᵥ y)

@@ -385,7 +385,11 @@ theorem diagEmbed_comp_equiv (r : ℕ) (v : Fin r → ℝ) :
 /-- **The diagonal is isotropic in `blockDiag A (−A)`** — `Q(v, v) = Q_A(v) − Q_A(v) = 0`. -/
 theorem diag_isotropic {r : ℕ} (A : Matrix (Fin r) (Fin r) ℤ) (v : Fin r → ℝ) :
     ((blockDiag A (-A)).map (Int.cast : ℤ → ℝ)).toQuadraticMap' (diagEmbed r v) = 0 := by
-  simp only [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply,
+  -- v4.32: `Matrix.toQuadraticMap'` is a deprecated ALIAS; naming it alone unfolds one delta step
+  -- and stops, so the goal stayed at `toQuadraticForm' … = 0` and the `mulVec` rewrites below found
+  -- no pattern. Name the real def too (as the sibling sites in `BlockSignature` already do).
+  simp only [Matrix.toQuadraticMap', Matrix.toQuadraticForm',
+    LinearMap.BilinMap.toQuadraticMap_apply,
     Matrix.toLinearMap₂'_apply']
   have hmat : (blockDiag A (-A)).map (Int.cast : ℤ → ℝ)
       = (Matrix.fromBlocks (A.map (Int.cast : ℤ → ℝ)) 0 0
@@ -654,7 +658,10 @@ theorem exists_lagrangian_of_latticeSig_eq_zero {n : ℕ} (M : Matrix (Fin n) (F
       ∀ x ∈ L, (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' x = 0 := by
   have hsig' : sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap'
       = sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' := by
-    unfold latticeSig at hsig
+    -- v4.32 `toQuadraticMap'`/`toQuadraticForm'` atom split (see `UnitBlockCancellation`):
+    -- restate `hsig` in this statement's own spelling, which typechecks by defeq.
+    have hsigM : (sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+        - (sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ) = 0 := hsig
     omega
   have hsum : sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap'
       + sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap'

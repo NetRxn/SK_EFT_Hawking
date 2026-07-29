@@ -555,16 +555,19 @@ theorem exists_hilbert2Int_witness {α : ℤ} (hα : α ≠ 0)
       have h52 : HilbertSymbol.hilbert2Int 5 2 = -1 := by
         rw [HilbertSymbol.hilbert2Int_comm, HilbertSymbol.hilbert2Int_two_odd h5odd]
         decide
+      -- v4.32: `decide` now refuses a goal whose context still carries free variables it would
+      -- have to ignore, and points at `+revert` to clean them up first. The decided propositions
+      -- (`eps2 5 = 0`, `chi2 0 = 1`) are unchanged closed facts about `ZMod 8` literals.
       have h5c : HilbertSymbol.hilbert2Int 5 c' = 1 := by
         rw [HilbertSymbol.hilbert2Int_odd_odd h5odd hc'odd,
           show ((5 : ℤ) : ZMod 8) = 5 from by decide,
-          show HilbertSymbol.eps2 (5 : ZMod 8) = 0 from by decide, zero_mul]
-        decide
+          show HilbertSymbol.eps2 (5 : ZMod 8) = 0 from by decide +revert, zero_mul]
+        decide +revert
       rw [h52, h5c]; ring
     · rw [HilbertSymbol.hilbert2Int_comm, HilbertSymbol.hilbert2Int_neg_one_odd h5odd,
         show ((5 : ℤ) : ZMod 8) = 5 from by decide,
-        show HilbertSymbol.eps2 (5 : ZMod 8) = 0 from by decide]
-      decide
+        show HilbertSymbol.eps2 (5 : ZMod 8) = 0 from by decide +revert]
+      decide +revert
 
 /-- **Place-`2` isotropy of a quaternary of discriminant `−square`.** A diagonal integer quaternary
 with `d₀d₁d₂d₃ = −s²` (`s ≠ 0`) is isotropic over `ℚ_[2]`. If `α = −d₀d₁` is a square the binary

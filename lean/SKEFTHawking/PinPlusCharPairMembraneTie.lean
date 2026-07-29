@@ -85,7 +85,10 @@ theorem e8_omits_diagonal : Sum.elim gen4 gen4 ∉ graphSub phiLin := by
   intro h
   have hval : phiFun gen4 = gen4 := by
     have h' := h.symm
-    simpa [phiLin, gen4] using h'
+    -- v4.32: with `gen4` in the simp set it unfolds in `h'` but NOT in this goal, leaving the two
+    -- sides at different spellings. Drop it — `phiLin` alone is what needs unfolding, and both
+    -- sides then stay on `gen4`.
+    simpa [phiLin] using h'
   revert hval; decide
 
 /-- **THE TIE DISCRIMINATES**: the honest cylinder membrane's COMPUTED kernel is NOT the e₈ graph

@@ -96,7 +96,18 @@ theorem doublingRealizationTied_transportedBInc_eq_reindex :
     have hpt := LinearMap.congr_fun (cylRealizationTied_transportedBInc Y basis)
       ((srcEquiv (cylRealizationTied Y basis).toData) w)
     rw [transportedBInc] at hpt
-    simpa using hpt
+    -- v4.32, two independent breakages, hence the two-step shape:
+    -- (1) `simp` no longer breaks up the `∘ₗ` chain on its own, so `hpt` stays composed with
+    --     `(srcEquiv _).symm` applied to `(srcEquiv _) w` rather than collapsing to `w` — name
+    --     the composition-application and round-trip lemmas explicitly.
+    -- (2) Mathlib v4.32 ships TWO distinct `EquivLike (M ≃ₛₗ[σ] M₂) M M₂` instances
+    --     (`LinearEquiv.instEquivLike` and `DFinsupp.instEquivLikeLinearEquiv`). The goal carries
+    --     one and `hpt` the other, and they are defeq but not syntactically equal, so `simpa`'s
+    --     closing step — which unifies at reducible transparency — cannot bridge them. Splitting
+    --     the normalization (`simp only … at hpt`) from the close (bare `exact`, default
+    --     transparency) lets defeq do it. Do NOT recombine these into one `simpa`.
+    simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, LinearEquiv.symm_apply_apply] at hpt
+    exact hpt
   exact key
 
 /-! ## §3. THE SOURCE-COORDINATE IDENTITY (the UCT-dual-of-disjoint-union threading). -/

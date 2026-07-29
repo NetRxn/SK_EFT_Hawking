@@ -605,132 +605,137 @@ theorem t4m_mul_t4m : t4m * t4m = 1 := by
 theorem of_m_mul {G v : ℤ} (h : t4m * G = v) : G = t4m * v := by
   rcases t4m_unit with hm | hm <;> rw [hm] at h ⊢ <;> linarith
 
+-- v4.32: `simp` no longer delta-unfolds a plain `def`, so `cupH24_mk_mk` fires on `h2`
+-- (where the argument is literally `Submodule.Quotient.mk e01c`) but NOT on the goal
+-- (where it is the def `eH01`), leaving the two sides at different spellings of the same
+-- term. Naming the six `eH*` defs in the simp set restores the unfolding. Same fix at all
+-- 21 `gh**_**` sites below.
 theorem gh01_01 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH01 eH01 = 0 := by
   have h := (kronecker_t4_eq e01c e01c).symm.trans V4_01_01
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh01_02 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH01 eH02 = 0 := by
   have h := (kronecker_t4_eq e01c e02c).symm.trans V4_01_02
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh01_03 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH01 eH03 = 0 := by
   have h := (kronecker_t4_eq e01c e03c).symm.trans V4_01_03
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh01_12 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH01 eH12 = 0 := by
   have h := (kronecker_t4_eq e01c e12c).symm.trans V4_01_12
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh01_13 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH01 eH13 = 0 := by
   have h := (kronecker_t4_eq e01c e13c).symm.trans V4_01_13
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh01_23 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH01 eH23 = t4m := by
   have h := (kronecker_t4_eq e01c e23c).symm.trans V4_01_23
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh02_02 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH02 eH02 = 0 := by
   have h := (kronecker_t4_eq e02c e02c).symm.trans V4_02_02
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh02_03 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH02 eH03 = 0 := by
   have h := (kronecker_t4_eq e02c e03c).symm.trans V4_02_03
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh02_12 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH02 eH12 = 0 := by
   have h := (kronecker_t4_eq e02c e12c).symm.trans V4_02_12
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh02_13 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH02 eH13 = -t4m := by
   have h := (kronecker_t4_eq e02c e13c).symm.trans V4_02_13
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh02_23 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH02 eH23 = 0 := by
   have h := (kronecker_t4_eq e02c e23c).symm.trans V4_02_23
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh03_03 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH03 eH03 = 0 := by
   have h := (kronecker_t4_eq e03c e03c).symm.trans V4_03_03
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh03_12 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH03 eH12 = t4m := by
   rw [interFormInt_symm]
   have h := (kronecker_t4_eq e12c e03c).symm.trans V4_12_03
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh03_13 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH03 eH13 = 0 := by
   have h := (kronecker_t4_eq e03c e13c).symm.trans V4_03_13
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh03_23 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH03 eH23 = 0 := by
   have h := (kronecker_t4_eq e03c e23c).symm.trans V4_03_23
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh12_12 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH12 eH12 = 0 := by
   have h := (kronecker_t4_eq e12c e12c).symm.trans V4_12_12
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh12_13 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH12 eH13 = 0 := by
   have h := (kronecker_t4_eq e12c e13c).symm.trans V4_12_13
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh12_23 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH12 eH23 = 0 := by
   have h := (kronecker_t4_eq e12c e23c).symm.trans V4_12_23
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh13_13 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH13 eH13 = 0 := by
   have h := (kronecker_t4_eq e13c e13c).symm.trans V4_13_13
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh13_23 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH13 eH23 = 0 := by
   have h := (kronecker_t4_eq e13c e23c).symm.trans V4_13_23
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh23_23 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH23 eH23 = 0 := by
   have h := (kronecker_t4_eq e23c e23c).symm.trans V4_23_23
   have h2 := of_m_mul h
-  simpa using h2
+  simpa [eH01, eH02, eH03, eH12, eH13, eH23] using h2
 
 theorem gh02_01 : interFormInt SKEFTHawking.KummerT4GramDiagonal.t4IntFundClassHonest
     eH02 eH01 = 0 := by

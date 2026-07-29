@@ -242,7 +242,12 @@ theorem indefinite_of_abs_sig_lt {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) (hsy
     (Q := (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
   rw [unimodular_radical_eq_bot M hsymm hunim] at hsum
   simp only [finrank_bot, add_zero, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at hsum
-  unfold latticeSig at hlt
+  -- v4.32: `latticeSig` unfolds to the NEW `toQuadraticForm'` spelling while this statement (and
+  -- `hsum`) use the deprecated alias `toQuadraticMap'` — defeq, but distinct ATOMS to `omega`.
+  -- Restate in the statement's own spelling (typechecks by defeq); the old name stays per the
+  -- whole-component `toQuadraticMap'` boundary.
+  have hlt' : ((sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+      - (sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)).natAbs < n := hlt
   omega
 
 /-- **Indefinite ⟹ `|σ| + 2 ≤ rank`** for a symmetric unimodular form. -/
@@ -255,7 +260,10 @@ theorem abs_sig_add_two_le_of_indefinite {n : ℕ} (M : Matrix (Fin n) (Fin n) �
     (Q := (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap')
   rw [unimodular_radical_eq_bot M hsymm hunim] at hsum
   simp only [finrank_bot, add_zero, Module.finrank_fintype_fun_eq_card, Fintype.card_fin] at hsum
-  unfold latticeSig
+  -- Same atom split as `indefinite_of_abs_sig_lt`, but in the GOAL: `show` the `toQuadraticMap'`
+  -- spelling (accepted by defeq) instead of unfolding into `toQuadraticForm'`.
+  show ((sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+      - (sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)).natAbs + 2 ≤ n
   omega
 
 /-! ### The unconditional inductive step: a unit peel with an ODD indefinite residual -/
@@ -362,8 +370,11 @@ theorem odd_indefinite_unit_peel {n : ℕ} (hge : 5 ≤ n) (M : Matrix (Fin n) (
 /-- The value of the real quadratic form attached to a real matrix. -/
 theorem toQuadraticMap'_apply_real {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ) (x : Fin n → ℝ) :
     A.toQuadraticMap' x = x ⬝ᵥ A *ᵥ x := by
-  simp [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply,
-    Matrix.toLinearMap₂'_apply']
+  -- v4.32: `Matrix.toQuadraticMap'` is now a deprecated ALIAS — a separate constant. Naming only
+  -- the alias unfolds one delta step and stops (so the apply-lemmas below never fire); naming only
+  -- the real def matches nothing, since the alias is what appears in the statement. Both are
+  -- required. Downstream lemmas then match Mathlib's own idiom in `Matrix/PosDef.lean`.
+  simp [Matrix.toQuadraticMap', Matrix.toQuadraticForm', Matrix.toLinearMap₂'_apply']
 
 /-- `0 < sigNeg Q` exhibits an actual vector of negative value. -/
 theorem exists_neg_value_of_sigNeg_pos {V : Type*} [AddCommGroup V] [Module ℝ V]

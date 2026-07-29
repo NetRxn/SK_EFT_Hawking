@@ -218,7 +218,13 @@ theorem straddleChain_mem_subspaceChains :
     straddleChain ∈ subspaceChains (X := TopCat.of D5) (Set.univ ∩ sphere5) (3 + 1) := by
   refine single_mem_subspaceChains_of_subordinate ?_
   rw [Set.univ_inter]
-  simpa only [realize4_straddleSimplex] using range_straddleMap_subset_sphere5
+  -- v4.32: `realize4` is an `abbrev` (reducible), and the goal now arrives with it already
+  -- delta-reduced, so `simp only [realize4_straddleSimplex]` finds no `realize4` to rewrite.
+  -- Re-fold it by type ascription (defeq through the abbrev), rewrite there, then close.
+  have h : Set.range ⇑(realize4 straddleSimplex) ⊆ sphere5 := by
+    rw [realize4_straddleSimplex]
+    exact range_straddleMap_subset_sphere5
+  exact h
 
 theorem isClosed_straddleSeam : IsClosed straddleSeam := isClosed_singleton
 

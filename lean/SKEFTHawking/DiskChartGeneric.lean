@@ -139,7 +139,10 @@ theorem continuous_assemble :
   intro i
   refine Fin.lastCases ?_ (fun j => ?_) i
   · simpa using continuous_snd
-  · simpa using ((PiLp.continuous_apply 2 (fun _ : Fin n => ℝ) j).comp continuous_fst)
+  -- v4.32: `simp` no longer unfolds `Function.comp`, so the `∘`-shaped term never reaches the
+  -- goal's lambda form. `Function.comp_def` does it.
+  · simpa [Function.comp_def] using
+      ((PiLp.continuous_apply 2 (fun _ : Fin n => ℝ) j).comp continuous_fst)
 
 /-- **Split** the first `n` coordinates of `E^{n+1}` into `Eⁿ`. -/
 def splitLo (w : EuclideanSpace ℝ (Fin (n + 1))) : EuclideanSpace ℝ (Fin n) :=
@@ -412,11 +415,14 @@ def diskCollarChart (u₀ : NSphere n) :
       exact continuousOn_univ.mp h
     apply Continuous.continuousOn
     apply Continuous.subtype_mk
-    apply Continuous.smul
-    · exact continuous_const.max (continuous_const.sub
+    -- v4.32: `Continuous.smul` now concludes a Pi-smul, so `apply` can no longer unify its
+    -- conclusion `Continuous (?f • ?g)` against this pointwise `fun x => _ • _` goal. Supplying
+    -- both arguments in one `exact` lets defeq do the matching.
+    exact Continuous.smul
+      (continuous_const.max (continuous_const.sub
         ((PiLp.continuous_apply 2 (fun _ : Fin 1 => ℝ) 0).comp
-          (continuous_subtype_val.comp continuous_snd)))
-    · exact continuous_subtype_val.comp (hsymm.comp continuous_fst)
+          (continuous_subtype_val.comp continuous_snd))))
+      (continuous_subtype_val.comp (hsymm.comp continuous_fst))
 
 /-! ### §7. The charted-space structure on `D^{n+1}` -/
 

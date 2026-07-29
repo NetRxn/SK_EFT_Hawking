@@ -105,7 +105,10 @@ noncomputable instance instMulAction : MulAction ℤˣ (↥puncturedTorus) where
 noncomputable instance instContinuousConstSMul : ContinuousConstSMul ℤˣ (↥puncturedTorus) := by
   refine ⟨fun u => ?_⟩
   rcases Int.units_eq_one_or u with hu | hu <;> subst hu
-  · simpa only [one_smul_eq] using continuous_id
+  -- v4.32: `simp only [one_smul_eq]` now leaves the goal as `Continuous fun x => x` rather than
+  -- eta-contracting to `Continuous id`, so `continuous_id` no longer matches. `continuous_id'` is
+  -- Mathlib's lambda-spelled counterpart.
+  · simpa only [one_smul_eq] using continuous_id'
   · refine Continuous.subtype_mk ?_ _
     exact (torusFourInvolution_continuous.comp continuous_subtype_val)
 

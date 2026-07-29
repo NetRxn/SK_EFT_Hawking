@@ -244,17 +244,21 @@ theorem pairH2TwoTorsionFree_iff_range_eq_doubles :
   constructor
   · intro h
     refine le_antisymm ?_ ?_
+    -- v4.32: the three `simpa`s that used to close these now fail on an instance mismatch that is
+    -- invisible in the pretty-printed types (both sides print identically) — `simpa`'s closing step
+    -- unifies at reducible transparency and will not bridge it. The `(2 : ℤ) • LinearMap.id`
+    -- application is defeq to the plain `2 • _` anyway, so a bare `exact` closes each directly.
     · rintro _ ⟨v, rfl⟩
       obtain ⟨q, hq⟩ := h v
-      exact ⟨q, by simpa using hq⟩
+      exact ⟨q, hq⟩
     · rintro _ ⟨m, rfl⟩
       have hm : (2 : ℤ) • m ∈ LinearMap.range pairProj := two_smul_mem_range_pairProj m
-      simpa using hm
+      exact hm
   · intro h v
     have hmem : pairProj v ∈ LinearMap.range ((2 : ℤ) • LinearMap.id : PairH2 →ₗ[ℤ] PairH2) := by
       rw [← h]; exact ⟨v, rfl⟩
     obtain ⟨q, hq⟩ := hmem
-    exact ⟨q, by simpa using hq⟩
+    exact ⟨q, hq⟩
 
 /-- **The exceptional class of the `i`-th resolution piece** — the zero-section generator of the
 `i`-th `ℤ` summand of `H₂(eImage;ℤ) ≅ ℤ¹⁶`. -/

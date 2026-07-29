@@ -1437,7 +1437,9 @@ theorem contDiff_assemble1 {m : WithTop ℕ∞} :
   intro i
   refine Fin.lastCases ?_ (fun j => ?_) i
   · simpa only [Fin.snoc_last] using contDiff_snd
-  · simpa only [Fin.snoc_castSucc] using
+  -- v4.32: `simp` no longer unfolds `Function.comp`, so the `∘`-shaped composite never reaches the
+  -- goal's lambda form. `Function.comp_def` bridges it (same fix as `DiskChartGeneric`).
+  · simpa only [Fin.snoc_castSucc, Function.comp_def] using
       (contDiff_apply ℝ ℝ j).comp (PiLp.contDiff_ofLp.comp contDiff_fst)
 
 /-- `DiskChartGeneric.splitLo 1` is `C^m` (the `E² → E¹` low-block projection). -/
@@ -1696,7 +1698,9 @@ theorem contDiff_assemble {n : ℕ} {m : WithTop ℕ∞} :
   intro i
   refine Fin.lastCases ?_ (fun j => ?_) i
   · simpa only [Fin.snoc_last] using contDiff_snd
-  · simpa only [Fin.snoc_castSucc] using
+  -- v4.32: `simp` no longer unfolds `Function.comp`, so the `∘`-shaped composite never reaches the
+  -- goal's lambda form. `Function.comp_def` bridges it (same fix as `DiskChartGeneric`).
+  · simpa only [Fin.snoc_castSucc, Function.comp_def] using
       (contDiff_apply ℝ ℝ j).comp (PiLp.contDiff_ofLp.comp contDiff_fst)
 
 /-- Generic `splitLo` smoothness — the §O `contDiff_splitLo1` at arbitrary `n`. -/

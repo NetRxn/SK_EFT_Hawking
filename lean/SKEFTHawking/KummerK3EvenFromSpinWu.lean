@@ -78,7 +78,9 @@ theorem det_even_of_entries_even {n : ℕ} (hn : 0 < n) (M : Matrix (Fin n) (Fin
       ← ZMod.intCast_zmod_eq_zero_iff_dvd] at this
     simpa using this
   rw [show ((M.det : ℤ) : ZMod 2) = (Int.castRingHom (ZMod 2)) M.det from rfl,
-    RingHom.map_det, hzero, Matrix.det_zero this]
+    -- v4.32: `Matrix.det_zero`'s `Nonempty` hypothesis is now INSTANCE-implicit, not explicit —
+    -- the `haveI` above already supplies it, so the positional argument must go.
+    RingHom.map_det, hzero, Matrix.det_zero]
 
 /-- **A unimodular integer matrix of positive size has an odd entry.** The contrapositive of §2's
 elementary lemma against `det = ±1`. -/

@@ -51,8 +51,14 @@ theorem contDiff_toE2 {m : WithTop ℕ∞} : ContDiff ℝ m toE2 := by
   apply contDiff_pi.mpr
   intro i
   fin_cases i
-  · simpa using Complex.reCLM.contDiff
-  · simpa using Complex.imCLM.contDiff
+  -- v4.32: `simpa`'s closing step no longer unifies the bundled coercion `⇑Complex.reCLM` with the
+  -- goal's eta-expanded `fun x => x.re` (defeq only through `ContinuousLinearMap`'s `DFunLike`
+  -- structure, which it will not unfold). Hand simp the funext-derived equation for the UNAPPLIED
+  -- coercion so the term is rewritten into the goal's shape before the close.
+  · simpa [show (⇑Complex.reCLM : ℂ → ℝ) = fun x => x.re from funext Complex.reCLM_apply] using
+      Complex.reCLM.contDiff
+  · simpa [show (⇑Complex.imCLM : ℂ → ℝ) = fun x => x.im from funext Complex.imCLM_apply] using
+      Complex.imCLM.contDiff
 
 /-- `ofE2` is `C^m` (it is `ℝ`-linear). -/
 theorem contDiff_ofE2 {m : WithTop ℕ∞} : ContDiff ℝ m ofE2 := by
