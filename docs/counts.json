@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-28T18:22:17.260232",
-  "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
+  "generated": "2026-07-29T07:12:14.138328",
+  "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/.claude/worktrees/mathlib-bump/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 39516,
-    "theorems_total": 25460,
-    "theorems_substantive": 25434,
+    "total_declarations": 39512,
+    "theorems_total": 25455,
+    "theorems_substantive": 25429,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 25365,
+    "theorems_kernel_substantive": 25360,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 48,
     "theorems_vacuous_proxy": 6,
@@ -2018,7 +2018,7 @@
     ],
     "definitions": 12559,
     "structures": 469,
-    "instances": 927,
+    "instances": 928,
     "inductives": 101,
     "native_decide_decl_closure": 546,
     "native_decide_clusters": {
@@ -2031,7 +2031,7 @@
   "python": {
     "python_modules": 137,
     "test_files": 134,
-    "pytest_cases": 4895,
+    "pytest_cases": 4873,
     "notebooks": 89,
     "papers": 42,
     "figures": 163
