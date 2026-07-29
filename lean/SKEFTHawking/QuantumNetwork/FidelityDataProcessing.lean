@@ -16,9 +16,22 @@ Everything routes through the PSD-square-root-uniqueness workhorse `posSemidef_e
 `|U A Uᴴ| = U |A| Uᴴ` both follow because both sides are PSD with equal squares, and the trace norm
 is then unitarily invariant by trace cyclicity.
 
-**Status of general CPTP monotonicity (route mapped — Wave 6AJ.0 scout + Explore fan-out, interactive
-lean4 on Mathlib v4.29.1).** The *general* / mixed-unitary Uhlmann monotonicity is the target of an
-in-progress continuation, NOT a permanent fence. The most reachable route is the **block-PSD / Alberti
+**Status of general CPTP monotonicity (route mapped — Wave 6AJ.0 scout + Explore fan-out; route
+bricks RE-VERIFIED at Mathlib v4.32.0 `81a5d257`, 2026-07-29).** The *general* / mixed-unitary
+Uhlmann monotonicity is the target of an in-progress continuation, NOT a permanent fence.
+
+> ⚠ **Do NOT replace this route with PhysLib's `fidelity_channel_nondecreasing`.** That declaration
+> exists (`QuantumInfo/States/Mixed/Fidelity.lean`) and states exactly the general monotonicity —
+> but it is `@[sorryful]` with body `sorry`, at our pin `c4843367` **and** at the earlier
+> `69197c54`. A 2026-06-08 assessment recorded it as discharging this fence and recommended
+> stopping local work (`docs/assessments/UpstreamContributionDisposition.md`, §3.1 row 5 /
+> Track R3); that recommendation is **withdrawn** — it confirmed the declaration existed without
+> checking it was proved. This module never acted on it, and should not.
+> See `docs/assessments/UpstreamDisposition_Revalidation_2026-07-29.md` §0.
+
+Route bricks confirmed still present at v4.32.0: `fromBlocks₁₁` / `fromBlocks₂₂`
+(`Mathlib/LinearAlgebra/Matrix/PosDef.lean`), `star_left_conjugate_le_conjugate`,
+`conjugate_le_conjugate_of_nonneg`, `Matrix.PosSemidef.kronecker`, `CFC.monotone_sqrt`. The most reachable route is the **block-PSD / Alberti
 SDP characterization** `F(ρ,σ) = max{ Re tr X : [[ρ, X],[Xᴴ, σ]] ⪰ 0 }`, for which Mathlib ships the
 Schur-complement support (`Matrix.PosDef.fromBlocks₂₂` / `fromBlocks₁₁`,
 `Matrix/LinearAlgebra/Matrix/PosDef.lean`) and the conjugation-monotonicity bricks
