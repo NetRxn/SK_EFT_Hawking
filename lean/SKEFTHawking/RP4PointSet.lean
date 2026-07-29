@@ -37,7 +37,7 @@ instance : MulAction ℤˣ S4 where
     rw [Units.val_mul, Int.cast_mul, mul_smul])
 
 instance : ContinuousConstSMul ℤˣ S4 :=
-  ⟨fun _u => Continuous.subtype_mk (continuous_const.smul continuous_subtype_val) _⟩
+  ⟨fun u => Continuous.subtype_mk (continuous_subtype_val.const_smul (((u : ℤ) : ℝ))) _⟩
 
 /-- The antipodal action is properly discontinuous (`ℤˣ` is finite). -/
 instance : ProperlyDiscontinuousSMul ℤˣ S4 :=

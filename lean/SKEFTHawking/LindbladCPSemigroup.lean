@@ -104,7 +104,6 @@ lemma isCompletelyPositive_toLin_exp {M : MatrixMap d d ℂ} (hM : M.IsCompletel
       rw [hlin]; exact LinearMap.continuous_of_finiteDimensional _
     exact (hcont.tendsto _).comp (NormedSpace.expSeries_hasSum_exp A).tendsto_sum_nat
   · intro N
-    dsimp only
     rw [map_sum]
     refine Finset.sum_induction _ _ (fun _ _ => MatrixMap.IsCompletelyPositive.add)
       (MatrixMap.IsCompletelyPositive.zero d d) (fun n _ => ?_)
@@ -152,7 +151,7 @@ lemma toLin_exp_toMatrix_mulLeft (b : Module.Basis (d × d) ℂ (Matrix d d ℂ)
   have hcont : Continuous ψ := ψ.toLinearMap.continuous_of_finiteDimensional
   have key := NormedSpace.map_exp ψ hcont (s • A)
   rw [_root_.map_smul ψ, hψ_apply, hψ_apply] at key
-  rw [← key, Matrix.toLin_toMatrix]
+  exact (congrArg (Matrix.toLin b b) key.symm).trans (Matrix.toLin_toMatrix b b _)
 
 /-- Right-multiplication is left-multiplication by the transpose, conjugated by the transpose
 involution `T`: `mulRight B = T ∘ mulLeft Bᵀ ∘ T` (since `ρB = (Bᵀ ρᵀ)ᵀ`). -/

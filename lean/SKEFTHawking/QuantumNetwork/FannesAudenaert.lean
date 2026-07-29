@@ -228,7 +228,7 @@ theorem mulLogDiff_convexOn :
     have hsub : HasDerivAt (fun δ : ℝ => 1 - δ) (-1) x := by simpa using (hasDerivAt_id x).const_sub 1
     have hB : HasDerivAt (fun δ => (1 - δ) * Real.log (1 - δ)) ((Real.log (1-x) + 1) * (-1)) x :=
       (Real.hasDerivAt_mul_log h1xne).comp x hsub
-    rw [hh]; convert hA.sub hB using 1; ring
+    rw [hh]; exact (hA.sub hB).congr_deriv (by ring)
   have hHD' : ∀ x : ℝ, 0 < x → x < 1 →
       HasDerivAt (fun δ => Real.log δ + Real.log (1-δ) + 2) (1/x - 1/(1-x)) x := by
     intro x hx0 hx1
@@ -239,7 +239,7 @@ theorem mulLogDiff_convexOn :
     have hB : HasDerivAt (fun δ => Real.log (1 - δ)) ((1-x)⁻¹ * (-1)) x :=
       (Real.hasDerivAt_log h1xne).comp x hsub
     have hC : HasDerivAt (fun _ : ℝ => (2:ℝ)) 0 x := hasDerivAt_const x 2
-    convert (hA.add hB).add hC using 1; field_simp; ring
+    exact ((hA.add hB).add hC).congr_deriv (by ring)
   have hint : interior (Set.Icc (0:ℝ) (1/2)) = Set.Ioo 0 (1/2) := interior_Icc
   have hderiv_eq : Set.EqOn (deriv h) (fun δ => Real.log δ + Real.log (1-δ) + 2) (Set.Ioo 0 (1/2)) :=
     fun x hx => (hHD x hx.1 (by linarith [hx.2])).deriv
@@ -289,7 +289,7 @@ theorem negMulLog_sub_le {x δ : ℝ} (hx : 0 ≤ x) (hδ : 0 ≤ δ) (hxδ : x 
     have hA : HasDerivAt Real.negMulLog (-Real.log y - 1) y := Real.hasDerivAt_negMulLog hyne
     have hadd : HasDerivAt (fun y : ℝ => y + δ) 1 y := by simpa using (hasDerivAt_id y).add_const δ
     have hB := (Real.hasDerivAt_negMulLog hyδne).comp y hadd
-    rw [hf]; convert hA.sub hB using 1; ring
+    rw [hf]; exact (hA.sub hB).congr_deriv (by ring)
   have hmono : MonotoneOn f (Set.Icc 0 (1 - δ)) := by
     apply monotoneOn_of_deriv_nonneg (convex_Icc _ _) hcont.continuousOn
     · rw [interior_Icc]

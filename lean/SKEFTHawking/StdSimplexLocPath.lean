@@ -26,8 +26,8 @@ example (n : ℕ) : SimplyConnectedSpace (stdSimplex ℝ (Fin (n + 1))) := infer
 /-- **The standard simplex is locally path-connected**: the metric-ball basis of the subtype
 consists of preimages of convex intersections. -/
 instance instLocPathConnectedStdSimplex (n : ℕ) :
-    LocPathConnectedSpace (stdSimplex ℝ (Fin (n + 1))) := by
-  refine LocPathConnectedSpace.of_bases
+    LocallyPathConnectedSpace (stdSimplex ℝ (Fin (n + 1))) := by
+  refine LocallyPathConnectedSpace.of_bases
     (p := fun _ (ε : ℝ) => 0 < ε)
     (s := fun x ε => Subtype.val ⁻¹' Metric.ball (x : Fin (n + 1) → ℝ) ε)
     (fun x => ?_) (fun x ε hε => ?_)

@@ -250,7 +250,7 @@ theorem affineChart_symm_apply [Nonempty (affineLevelSet f' c)] (k : K) :
 
 /-- **The affine level set is a charted space over the fixed codim-1 model `K`**, with the single
 global chart. A genuine `ChartedSpace` instance over the fixed model. -/
-noncomputable instance affineChartedSpace [Nonempty (affineLevelSet f' c)] :
+@[reducible] noncomputable def affineChartedSpace [Nonempty (affineLevelSet f' c)] :
     ChartedSpace K (affineLevelSet f' c) where
   atlas := {affineChart f' c e}
   chartAt := fun _ => affineChart f' c e

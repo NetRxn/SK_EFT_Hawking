@@ -98,7 +98,7 @@ lemma col_action_norm_sq_le (A : Matrix m n 𝕜) (x : (n × p) → 𝕜) (k : p
       (toLp 2 (fun j => x (j, k)) : EuclideanSpace 𝕜 n)
     -- Goal of h_apply: ‖(EuclideanSpace.equiv m 𝕜).symm (A *ᵥ ofLp _)‖ ≤ ‖A‖ * ‖_‖.
     -- ofLp (toLp 2 v) = v (def), so A *ᵥ ofLp _ = A *ᵥ v. The .symm wrap = toLp 2.
-    convert h_apply using 1
+    exact h_apply
   have h_lhs_nn : 0 ≤ ‖(toLp 2 (A *ᵥ (fun j => x (j, k))) : EuclideanSpace 𝕜 m)‖ := norm_nonneg _
   have h_rhs_nn : 0 ≤ ‖A‖ * ‖(toLp 2 (fun j => x (j, k)) : EuclideanSpace 𝕜 n)‖ := by positivity
   nlinarith [h_le, h_lhs_nn, h_rhs_nn]

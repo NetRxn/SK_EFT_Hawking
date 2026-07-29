@@ -151,7 +151,7 @@ theorem linearTraveling_isClassicalWaveSolution (a b c : ℝ) :
         (hasDerivAt_id s).const_mul (-(a*c))
       have h2 := h1.add_const (a*y + b)
       have h3 : HasDerivAt (fun s' : ℝ => -(a*c)*s' + (a*y + b)) (-(a*c)) s := by
-        convert h2 using 1; ring
+        exact h2.congr_deriv (by ring)
       exact h3
     exact h_id.deriv
   -- Step 2: partialDeriv_x (linearTraveling) t x = a
@@ -166,7 +166,7 @@ theorem linearTraveling_isClassicalWaveSolution (a b c : ℝ) :
         (hasDerivAt_id y).const_mul a
       have h2 := h1.add_const (-(a*c)*s + b)
       have h3 : HasDerivAt (fun x' : ℝ => a*x' + (-(a*c)*s + b)) a y := by
-        convert h2 using 1; ring
+        exact h2.congr_deriv (by ring)
       exact h3
     exact h_id.deriv
   -- Step 3: second derivatives vanish (deriv of constant = 0)
