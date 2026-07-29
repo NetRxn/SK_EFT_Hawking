@@ -124,6 +124,25 @@ theorem chainIncl_add_mem_boundaries_split_n {X : TopCat} {U : Set ↑X} (hU : I
       (chainIncl_injective Uᶜ n ((hkey ▸ hmemU).trans (map_zero _).symm))).symm
   exact ⟨⟨wU, hzU.symm⟩, ⟨wUc, hzUc.symm⟩⟩
 
+/-- `splitHn` on a pair of quotient representatives is the class of the summed cycle. Extracted
+from `splitHn_injective` as its own declaration: the defeq is `rfl`, but at Mathlib v4.32 unfolding
+`splitHn`/`coprod`/`homIncl` down to `Homology.mk` costs enough that keeping it inline exhausts the
+caller's heartbeat budget. -/
+private theorem splitHn_mk_mk {X : TopCat} (U : Set ↑X) (n : ℕ) (zU : cycles (sub U) n)
+    (zUc : cycles (sub Uᶜ) n) :
+    splitHn U n (Submodule.Quotient.mk zU, Submodule.Quotient.mk zUc)
+      = Homology.mk X n ⟨chainIncl U n (zU : SingularChain (sub U) n)
+          + chainIncl Uᶜ n (zUc : SingularChain (sub Uᶜ) n),
+          Submodule.add_mem _ (chainIncl_mem_cycles U n _ zU.2)
+            (chainIncl_mem_cycles Uᶜ n _ zUc.2)⟩ := rfl
+
+/-- A homology class vanishes exactly when its representing cycle is a boundary. Stated with the
+`submoduleOf` membership verbatim: rephrasing the right-hand side as `↑z ∈ boundaries X n` inside
+this declaration makes v4.32 reconcile the two membership forms by `isDefEq` and blows the budget. -/
+private theorem mk_eq_zero_iff {X : TopCat} (n : ℕ) (z : cycles X n) :
+    Homology.mk X n z = 0 ↔ z ∈ (boundaries X n).submoduleOf (cycles X n) :=
+  Submodule.Quotient.mk_eq_zero _
+
 /-- `splitHn` is **injective** (the chain-level core `chainIncl_add_mem_boundaries_split_n`). -/
 theorem splitHn_injective {X : TopCat} {U : Set ↑X} (hU : IsClopen U) (n : ℕ) :
     Function.Injective (splitHn U n) := by
@@ -132,14 +151,10 @@ theorem splitHn_injective {X : TopCat} {U : Set ↑X} (hU : IsClopen U) (n : ℕ
   rw [LinearMap.mem_ker] at hab
   obtain ⟨zU, rfl⟩ := Submodule.Quotient.mk_surjective _ a
   obtain ⟨zUc, rfl⟩ := Submodule.Quotient.mk_surjective _ b
-  rw [show splitHn U n (Submodule.Quotient.mk zU, Submodule.Quotient.mk zUc)
-        = Homology.mk X n ⟨chainIncl U n (zU : SingularChain (sub U) n)
-            + chainIncl Uᶜ n (zUc : SingularChain (sub Uᶜ) n),
-            Submodule.add_mem _ (chainIncl_mem_cycles U n _ zU.2)
-              (chainIncl_mem_cycles Uᶜ n _ zUc.2)⟩ from rfl] at hab
+  rw [splitHn_mk_mk] at hab
   have hab' : chainIncl U n (zU : SingularChain (sub U) n)
       + chainIncl Uᶜ n (zUc : SingularChain (sub Uᶜ) n) ∈ boundaries X n :=
-    (Submodule.Quotient.mk_eq_zero ((boundaries X n).submoduleOf (cycles X n))).mp hab
+    Submodule.mem_comap.mp ((mk_eq_zero_iff n _).mp hab)
   obtain ⟨hzU, hzUc⟩ := chainIncl_add_mem_boundaries_split_n hU n _ _ hab'
   rw [Submodule.mem_bot, Prod.ext_iff]
   exact ⟨(Submodule.Quotient.mk_eq_zero _).mpr (Submodule.mem_comap.mpr hzU),

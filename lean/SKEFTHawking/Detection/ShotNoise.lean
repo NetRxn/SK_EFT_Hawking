@@ -368,8 +368,12 @@ theorem hasSum_poissonPMFReal_mul_id (N : ℝ≥0) :
     rw [poissonPMFReal, poissonPMFReal, hfac]
     field_simp
     ring
+  -- v4.32: `poissonPMFRealSum` is now a deprecated *alias* of `hasSum_one_poissonMeasure`, whose
+  -- statement spells the summand out (`exp (-N) * N ^ n / n !`) instead of `poissonPMFReal N n`.
+  -- Re-fold it through an explicitly-typed `have` so `simpa only [hstep]` matches again.
+  have hone : HasSum (fun n : ℕ => poissonPMFReal N n) 1 := poissonPMFRealSum N
   have hsum : HasSum (fun n : ℕ => poissonPMFReal N (n + 1) * ((n + 1 : ℕ) : ℝ)) ((N : ℝ) * 1) := by
-    simpa only [hstep] using (poissonPMFRealSum N).mul_left (N : ℝ)
+    simpa only [hstep] using hone.mul_left (N : ℝ)
   have := (hasSum_nat_add_iff (f := fun n : ℕ => poissonPMFReal N n * (n : ℝ)) 1).mp (by
     simpa using hsum)
   simpa using this
@@ -389,10 +393,12 @@ theorem hasSum_poissonPMFReal_mul_descFactorial (N : ℝ≥0) :
     push_cast
     field_simp
     ring
+  -- Same v4.32 re-folding as in `hasSum_poissonPMFReal_mul_id`.
+  have hone : HasSum (fun n : ℕ => poissonPMFReal N n) 1 := poissonPMFRealSum N
   have hsum : HasSum
       (fun n : ℕ => poissonPMFReal N (n + 2) * (((n + 2 : ℕ) : ℝ) * (((n + 2 : ℕ) : ℝ) - 1)))
       ((N : ℝ) ^ 2 * 1) := by
-    simpa only [hstep] using (poissonPMFRealSum N).mul_left ((N : ℝ) ^ 2)
+    simpa only [hstep] using hone.mul_left ((N : ℝ) ^ 2)
   have := (hasSum_nat_add_iff
     (f := fun n : ℕ => poissonPMFReal N n * ((n : ℝ) * ((n : ℝ) - 1))) 2).mp (by simpa using hsum)
   simpa [Finset.sum_range_succ] using this
@@ -430,7 +436,9 @@ central moment, via `E[n(n−1)] = N²` and `E[n] = N`. -/
 theorem poissonVariance_eq (N : ℝ≥0) : poissonVariance N = (N : ℝ) := by
   have hA := hasSum_poissonPMFReal_mul_descFactorial N
   have hB := (hasSum_poissonPMFReal_mul_id N).mul_left (1 - 2 * (N : ℝ))
-  have hC := (poissonPMFRealSum N).mul_left ((N : ℝ) ^ 2)
+  -- Same v4.32 re-folding as in `hasSum_poissonPMFReal_mul_id`.
+  have hone : HasSum (fun n : ℕ => poissonPMFReal N n) 1 := poissonPMFRealSum N
+  have hC := hone.mul_left ((N : ℝ) ^ 2)
   have hsum := (hA.add hB).add hC
   have hfun : (fun n : ℕ => poissonPMFReal N n * ((n : ℝ) * ((n : ℝ) - 1))
         + (1 - 2 * (N : ℝ)) * (poissonPMFReal N n * (n : ℝ)) + (N : ℝ) ^ 2 * poissonPMFReal N n)
