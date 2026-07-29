@@ -704,7 +704,7 @@ noncomputable def uu_at_eAdd_iso :
     erw [GradedObject.Monoidal.ι_tensorObjDesc]
     simp only [dite_true]
     -- (λ_).inv ≫ eqToHom ≫ eqToHom ≫ (λ_).hom = 𝟙 via unitor iso identity
-    convert Iso.inv_hom_id _ using 1
+    exact (λ_ (𝟙_ (ModuleCat k))).inv_hom_id
 
 /-- **Helper 2 (middleSwap identification)**: the middle `desc ≫ ρ⁻¹ ≫ ι` in
     `extractBraidAction_e ≫ extractBraidAction_e` equals the canonical VecG_Cat
@@ -770,7 +770,7 @@ private lemma halfBraiding_at_unit
   have h := CategoryTheory.braiding_tensorUnit_right X
   have := congrArg Center.Hom.f h
   simp only [Center.comp_f, Center.rightUnitor_hom_f, Center.leftUnitor_inv_f] at this
-  convert this
+  exact this
 
 /-- **Graded unit iso hom direction**: `(U⊗U) ⟶ 𝟙_(VecG_Cat k G2)` as a
     morphism of graded objects (function `i ↦ morphism at degree i`).
@@ -1634,7 +1634,9 @@ lemma extractBraidAction_e_electric :
     extractBraidAction_e k (electricAnyon k) = -(𝟙 _) := by
   unfold extractBraidAction_e electricAnyon
   dsimp [signHalfBraiding, signEndo]
-  simp only [Iso.trans_hom, vecG_braiding_hom_apply]
+  -- v4.32: `simp` no longer unfolds the pointwise graded-object composite `(f ≫ g) n`,
+  -- so `categoryOfGradedObjects_comp` is needed for `vecG_braiding_hom_apply` to fire.
+  simp only [Iso.trans_hom, GradedObject.categoryOfGradedObjects_comp, vecG_braiding_hom_apply]
   -- Reassoc + first ι≫desc collapse to expose β and the whiskerRight
   conv_lhs => enter [2]; rw [← Category.assoc]; enter [1]; erw [← Category.assoc]
   erw [GradedObject.Monoidal.ι_tensorObjDesc]

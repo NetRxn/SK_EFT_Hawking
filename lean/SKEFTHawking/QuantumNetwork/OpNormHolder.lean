@@ -158,7 +158,8 @@ theorem exists_unitary_traceNorm_eq_re_trace {M : Matrix ι ι ℂ} (hM : IsUnit
           rw [Matrix.mul_inv_rev,
             show M * (M⁻¹ * Mᴴ⁻¹) * Mᴴ = (M * M⁻¹) * (Mᴴ⁻¹ * Mᴴ) by noncomm_ring,
             Matrix.mul_nonsing_inv M hMd, Matrix.nonsing_inv_mul Mᴴ hMdH, Matrix.mul_one]
-  · rw [traceNorm_eq_trace_absOp]; congr 1
-    rw [Matrix.mul_assoc, ← hPP, ← Matrix.mul_assoc, hPiP, Matrix.one_mul]
+  · have hWM : P⁻¹ * Mᴴ * M = P := by
+      rw [Matrix.mul_assoc, ← hPP, ← Matrix.mul_assoc, hPiP, Matrix.one_mul]
+    rw [traceNorm_eq_trace_absOp, hWM]
 
 end SKEFTHawking.QuantumNetwork

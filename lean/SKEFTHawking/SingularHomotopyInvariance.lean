@@ -55,8 +55,9 @@ private theorem cyclesMap_sub_coe {X Y : TopCat} (f g : C(↑X, ↑Y)) (n : ℕ)
     (cycles Y (n + 1)).subtype (cyclesMap f (n + 1) z - cyclesMap g (n + 1) z)
       = mapChain f (n + 1) (z : SingularChain X (n + 1))
         + mapChain g (n + 1) (z : SingularChain X (n + 1)) := by
-  rw [map_sub, Submodule.subtype_apply, Submodule.subtype_apply, cyclesMap_coe, cyclesMap_coe,
-    sub_eq_add_neg, neg_eq_of_add_eq_zero_right (ZModModule.add_self _)]
+  rw [map_sub ((cycles Y (n + 1)).subtype), Submodule.subtype_apply, Submodule.subtype_apply,
+    cyclesMap_coe, cyclesMap_coe, sub_eq_add_neg,
+    neg_eq_of_add_eq_zero_right (ZModModule.add_self _)]
 
 /-- **Homology agreement from a chain-level boundary condition**: if `f_#(z) + g_#(z)` is a boundary
 for every cycle `z`, then `f` and `g` induce the same map on `Hₙ₊₁(·; ℤ/2)`. Generic `f`, `g` keeps
