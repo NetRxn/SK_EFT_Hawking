@@ -38,6 +38,17 @@ namespace SKEFTHawking.FKLW.CliffordCCZSU8
 
 open Matrix SKEFTHawking.FKLW.GenericSUd
 
+-- v4.32: `Matrix` has no `FirstCountableTopology` and the Pi instance no longer matches through
+-- the type synonym, so the subtype `SU(8)` gets neither it nor `FrechetUrysohnSpace` (which is
+-- derived from it). Supply the chain explicitly, file-locally.
+private instance instFirstCountableMatrix8 :
+    FirstCountableTopology (Matrix (Fin 8) (Fin 8) ℂ) :=
+  inferInstanceAs (FirstCountableTopology (Fin 8 → Fin 8 → ℂ))
+
+private instance instFirstCountableSU8 :
+    FirstCountableTopology ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ) :=
+  TopologicalSpace.Subtype.firstCountableTopology _
+
 attribute [local instance] Matrix.linftyOpNormedAddCommGroup
   Matrix.linftyOpNormedRing
   Matrix.linftyOpNormedAlgebra

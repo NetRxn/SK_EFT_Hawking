@@ -135,7 +135,9 @@ theorem subHomDiag_openDuality₀ [T2Space ↑X] {k : ℕ} {U V : Set ↑X}
     subHomDiag U V 0 (openDuality₀ (hU.inter hV) z₀ hz₀ α)
       = (openDuality₀ hU z₀ hz₀ (cscOpenMonotone Set.inter_subset_left (k + 1) α),
           openDuality₀ hV z₀ hz₀ (cscOpenMonotone Set.inter_subset_right (k + 1) α)) := by
-  rw [subHomDiag, LinearMap.prod_apply, Pi.prod,
+  rw [subHomDiag, LinearMap.prod_apply]
+  simp only [Function.prod_def]
+  rw [
     openDuality₀_cscOpenMonotone (hU.inter hV) hU Set.inter_subset_left z₀ hz₀,
     openDuality₀_cscOpenMonotone (hU.inter hV) hV Set.inter_subset_right z₀ hz₀]
 

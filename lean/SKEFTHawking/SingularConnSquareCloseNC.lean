@@ -1000,10 +1000,14 @@ theorem mem_boundaries_of_mk_eq (K : Set ↑X) {n : ℕ}
   have hsumcyc : chainBoundary (sub K) n (chainL + pd) = 0 := by
     rw [map_add, hLcyc, hpdcyc, add_zero]
   have hz : Homology.mk (sub K) (n + 1) ⟨chainL + pd, hsumcyc⟩ = 0 := by
-    rw [show (⟨chainL + pd, hsumcyc⟩ : cycles (sub K) (n + 1))
+    erw [show (⟨chainL + pd, hsumcyc⟩ : cycles (sub K) (n + 1))
           = ⟨chainL, hLcyc⟩ + ⟨pd, hpdcyc⟩ from rfl,
         SingularCapHomology.Homology.mk_add, hmk,
-        ← SingularCapHomology.Homology.mk_add, ZModModule.add_self]
+        ← SingularCapHomology.Homology.mk_add,
+        -- v4.32: `ZModModule.add_self`'s `?x + ?x` will not match on the subtype (the `+` comes
+        -- via `AddSubgroupClass`, a different instance path). Give `rw` a concrete pattern.
+        show (⟨pd, hpdcyc⟩ : cycles (sub K) (n + 1)) + ⟨pd, hpdcyc⟩ = 0 from
+          Subtype.ext (by simpa using ZModModule.add_self pd)]
     rfl
   rw [SingularCapHomology.Homology.mk_eq_zero] at hz
   simpa using Submodule.mem_comap.mp hz
@@ -1771,7 +1775,6 @@ theorem kronecker_two_splits_V_leg_eq {A B : Set ↑X} {n : ℕ}
     kronecker g b₁ = kronecker g b₂ := by
   have hbsum : b₁ + b₂ = a₁ + a₂ := by
     have h := congrArg (· + (b₁ + a₂)) heq
-    simp only at h
     abel_nf at h
     simp only [two_smul, ZModModule.add_self, add_zero, zero_add] at h
     abel_nf
@@ -1832,7 +1835,6 @@ theorem kronecker_boundary_split_V_leg_zero {A B : Set ↑X} {n : ℕ}
             (chainBoundary (sub B) (n + 1) EV + chainBoundary (sub B) (n + 1) DV) := by
     have h := congrArg
       (· + (⇑(SingularSubdivision.singularSd X (n + 1)))^[m] (chainBoundary X (n + 1) Ec)) hhom
-    simp only at h
     abel_nf at h
     simp only [two_smul, ZModModule.add_self, add_zero, zero_add] at h
     rw [map_add, map_add, h, hSdZ, hDbd]
@@ -2462,7 +2464,6 @@ theorem cap_relCochains_pair_double_support_eq_boundary {A B P : Set ↑X}
       (D₁ + SingularSubdivision.iterHomotopy X (k + n + 1) ν c) := by
     have h2 := congrArg (· + chainBoundary X (k + n + 1)
       (D₁ + SingularSubdivision.iterHomotopy X (k + n + 1) ν c)) hbeq
-    simp only at h2
     rw [h2]
     abel_nf
     simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
