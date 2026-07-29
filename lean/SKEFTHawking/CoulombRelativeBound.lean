@@ -315,7 +315,7 @@ lemma integral_normSq_weight_eq_momentumSq (f : 𝓢(Space 3, ℂ)) :
   have hpt : ∀ ξ : Space 3, ‖(𝓕 (∑ i, momentumCLM i (momentumCLM i f))) ξ‖ ^ 2
       = ((2 * Real.pi * Constants.ℏ) ^ 2) ^ 2 * (‖ξ‖ ^ 4 * ‖(𝓕 f) ξ‖ ^ 2) := by
     intro ξ
-    rw [fourier_momentumSq, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hg2, smul_smul,
+    rw [fourier_momentumSq, smul_apply, SchwartzMap.smulLeftCLM_apply_apply hg2, smul_smul,
       show ((2 * Real.pi * Constants.ℏ) ^ 2 : ℂ) * ((‖ξ‖ ^ 2 : ℝ) : ℂ)
         = (((2 * Real.pi * Constants.ℏ) ^ 2 * ‖ξ‖ ^ 2 : ℝ) : ℂ) by push_cast; ring,
       norm_smul, Complex.norm_real, Real.norm_eq_abs,
@@ -569,9 +569,10 @@ lemma norm_sup_le_kinetic_t (f : 𝓢(Space 3, ℂ)) {t : ℝ} (ht : 0 < t) (x :
 positive and integrable (W3-2a), and `volume (ℝ³) ≠ 0`. Needed so the ε-trick can divide by `C₀`. -/
 lemma integral_weightInv_sq_pos : 0 < ∫ ξ : Space 3, (((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2 := by
   have hint : Integrable (fun ξ : Space 3 => (((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2) := by
+    have hcont : Continuous (fun ξ : Space 3 => ((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) :=
+      Continuous.inv₀ (by fun_prop) (fun ξ => (by positivity : (0 : ℝ) < 1 + ‖ξ‖ ^ 2).ne')
     have h := memLp_two_oneAddNormSq_inv
-    rwa [memLp_two_iff_integrable_sq (Continuous.inv₀ (by fun_prop)
-      (fun ξ => (by positivity : (0 : ℝ) < 1 + ‖ξ‖ ^ 2).ne')).aestronglyMeasurable] at h
+    rwa [memLp_two_iff_integrable_sq hcont.aestronglyMeasurable] at h
   rw [integral_pos_iff_support_of_nonneg (fun ξ => by positivity) hint]
   have hsupp : Function.support (fun ξ : Space 3 => (((1 + ‖ξ‖ ^ 2)⁻¹ : ℝ)) ^ 2) = Set.univ :=
     Set.eq_univ_of_forall fun ξ =>
@@ -652,10 +653,10 @@ lemma integral_coulombNear_sq_pos :
   rw [integral_pos_iff_support_of_nonneg (fun x => by positivity) integrable_coulombNear_sq]
   refine lt_of_lt_of_le ?_
     (measure_mono (show Metric.ball (0 : Space 3) 1 \ {0} ⊆ _ from ?_))
-  · rw [measure_diff_null (measure_singleton 0)]
+  · rw [measure_sdiff_null (measure_singleton 0)]
     exact Metric.measure_ball_pos volume 0 one_pos
   · intro x hx
-    rw [Set.mem_diff, Metric.mem_ball, dist_zero_right, Set.mem_singleton_iff] at hx
+    rw [Set.mem_sdiff, Metric.mem_ball, dist_zero_right, Set.mem_singleton_iff] at hx
     rw [Function.mem_support, if_pos (le_of_lt hx.1)]
     exact (Real.rpow_pos_of_pos (norm_pos_iff.mpr hx.2) (-2)).ne'
 
@@ -929,12 +930,14 @@ lemma basis_repr_measurePreserving {d : ℕ} :
   (Space.basis (d := d)).repr.measurePreserving
 
 /-- **`Space d ↔ (Fin d → ℝ)` is measure-preserving** — composing the `Space ↔ EuclideanSpace` bridge
-(`basis_repr_measurePreserving`) with Mathlib's `EuclideanSpace ↔ Pi` (`volume_preserving_measurableEquiv`).
+(`basis_repr_measurePreserving`) with Mathlib's `EuclideanSpace ↔ Pi`
+(`EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp`).
 Puts `Space (3N)` at the `Pi` level where `volume_preserving_piEquivPiSubtypeProd` isolates electron `i`'s
 coordinate block — the start of the L²-Fubini for the molecular lift. -/
 lemma space_pi_measurePreserving {d : ℕ} :
     MeasureTheory.MeasurePreserving
-      (fun x : Space d => (EuclideanSpace.measurableEquiv (Fin d)) ((Space.basis (d := d)).repr x))
+      (fun x : Space d =>
+        (MeasurableEquiv.toLp 2 (Fin d → ℝ)).symm ((Space.basis (d := d)).repr x))
       (volume : MeasureTheory.Measure (Space d)) (volume : MeasureTheory.Measure (Fin d → ℝ)) :=
   (EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp (Fin d)).comp basis_repr_measurePreserving
 
@@ -957,7 +960,7 @@ lemma electron_split_measurePreserving {N : ℕ} (i : Fin N) :
     MeasureTheory.MeasurePreserving
       (fun x : Space (3 * N) =>
         (MeasurableEquiv.piEquivPiSubtypeProd (fun _ : Fin (3 * N) => ℝ) (electronCoord i))
-          ((EuclideanSpace.measurableEquiv (Fin (3 * N))) ((Space.basis (d := 3 * N)).repr x)))
+          (((MeasurableEquiv.toLp 2 (Fin (3 * N) → ℝ)).symm) ((Space.basis (d := 3 * N)).repr x)))
       (volume : MeasureTheory.Measure (Space (3 * N)))
       (volume : MeasureTheory.Measure
         ((∀ _ : {k // electronCoord i k}, ℝ) × (∀ _ : {k // ¬ electronCoord i k}, ℝ))) :=
@@ -998,7 +1001,7 @@ lemma electronBlock_piCongr_measurePreserving {N : ℕ} (i : Fin N) :
 
 /-- **Electron `i`'s block function-space is measure-preservingly `Space 3`.** Chains the reversed pi-congr
 (`electronBlock_piCongr_measurePreserving`, `BlockPi → Fin 3 → ℝ`), the reversed Euclidean↔Pi
-(`EuclideanSpace.measurableEquiv (Fin 3)`), and the reversed orthonormal-basis isometry
+(`MeasurableEquiv.toLp 2 (Fin 3 → ℝ)`), and the reversed orthonormal-basis isometry
 (`Space.basis.repr.symm`) into one measure-preserving map `({k // electronCoord i k} → ℝ) → Space 3`. This
 is what transports the inner (block) Fubini integral onto `Space 3`, the domain of the single-electron
 Coulomb bound `exists_coulomb_relbound`. -/
@@ -1006,13 +1009,13 @@ lemma block_pi_measurePreserving_space3 {N : ℕ} (i : Fin N) :
     MeasureTheory.MeasurePreserving
       (fun b : {k // electronCoord i k} → ℝ =>
         (Space.basis (d := 3)).repr.symm
-          ((EuclideanSpace.measurableEquiv (Fin 3)).symm
+          ((MeasurableEquiv.toLp 2 (Fin 3 → ℝ))
             ((MeasurableEquiv.piCongrLeft (fun _ : {k // electronCoord i k} => ℝ)
                 (electronCoordEquiv i).symm).symm b)))
       (volume : MeasureTheory.Measure ({k // electronCoord i k} → ℝ))
       (volume : MeasureTheory.Measure (Space 3)) :=
   (((Space.basis (d := 3)).repr.symm.measurePreserving).comp
-      (MeasureTheory.MeasurePreserving.symm (EuclideanSpace.measurableEquiv (Fin 3))
+      (MeasureTheory.MeasurePreserving.symm ((MeasurableEquiv.toLp 2 (Fin 3 → ℝ)).symm)
         (EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp (Fin 3)))).comp
     (MeasureTheory.MeasurePreserving.symm
       (MeasurableEquiv.piCongrLeft (fun _ : {k // electronCoord i k} => ℝ) (electronCoordEquiv i).symm)
@@ -1026,13 +1029,13 @@ noncomputable def molecularSplitMap {N : ℕ} (i : Fin N) :
   Prod.map
     (fun b : {k // electronCoord i k} → ℝ =>
       (Space.basis (d := 3)).repr.symm
-        ((EuclideanSpace.measurableEquiv (Fin 3)).symm
+        ((MeasurableEquiv.toLp 2 (Fin 3 → ℝ))
           ((MeasurableEquiv.piCongrLeft (fun _ : {k // electronCoord i k} => ℝ)
               (electronCoordEquiv i).symm).symm b)))
     id
   ∘ (fun x : Space (3 * N) =>
       (MeasurableEquiv.piEquivPiSubtypeProd (fun _ : Fin (3 * N) => ℝ) (electronCoord i))
-        ((EuclideanSpace.measurableEquiv (Fin (3 * N))) ((Space.basis (d := 3 * N)).repr x)))
+        (((MeasurableEquiv.toLp 2 (Fin (3 * N) → ℝ)).symm) ((Space.basis (d := 3 * N)).repr x)))
 
 /-- **`molecularSplitMap` is measure-preserving** onto the product `volume (Space 3) ⊗ volume (spectator)`.
 Composes the electron-`i` split (W3-45) with the block↔`Space 3` transport (W3-48) on the first factor and
@@ -1070,12 +1073,12 @@ identities. -/
 noncomputable def molecularSplitEquiv {N : ℕ} (i : Fin N) :
     Space (3 * N) ≃ᵐ Space 3 × ({k // ¬ electronCoord i k} → ℝ) :=
   (((Space.basis (d := 3 * N)).repr.toHomeomorph.toMeasurableEquiv.trans
-      (EuclideanSpace.measurableEquiv (Fin (3 * N)))).trans
+      ((MeasurableEquiv.toLp 2 (Fin (3 * N) → ℝ)).symm)).trans
     (MeasurableEquiv.piEquivPiSubtypeProd (fun _ : Fin (3 * N) => ℝ) (electronCoord i))).trans
     (MeasurableEquiv.prodCongr
       (((MeasurableEquiv.piCongrLeft (fun _ : {k // electronCoord i k} => ℝ)
             (electronCoordEquiv i).symm).symm.trans
-          (EuclideanSpace.measurableEquiv (Fin 3)).symm).trans
+          (MeasurableEquiv.toLp 2 (Fin 3 → ℝ))).trans
         (Space.basis (d := 3)).repr.toHomeomorph.toMeasurableEquiv.symm)
       (MeasurableEquiv.refl ({k // ¬ electronCoord i k} → ℝ)))
 
@@ -1627,8 +1630,10 @@ lemma momentumCLM_self_adjoint {d : ℕ} (i : Fin d) (f g : 𝓢(Space d, ℂ)) 
     ∫ x : Space d, starRingEnd ℂ (momentumCLM i f x) * g x
       = ∫ x : Space d, starRingEnd ℂ (f x) * momentumCLM i g x := by
   rw [← schwartzEquiv_inner (momentumCLM i f) g, ← schwartzEquiv_inner f (momentumCLM i g)]
-  have key := momentumOperator_isSymmetric i (schwartzEquiv f) (schwartzEquiv g)
-  simpa only [momentumOperator_apply, schwartzEquiv.symm_apply_apply, Submodule.coe_inner] using key
+  have key := momentumOperator_isSymmetric i (schwartzEquiv MeasureTheory.volume f)
+    (schwartzEquiv MeasureTheory.volume g)
+  simpa only [momentumOperator_apply, (schwartzEquiv MeasureTheory.volume).symm_apply_apply,
+    Submodule.coe_inner] using key
 
 open QuantumMechanics in
 /-- **Kinetic cross-term is a nonnegative real:** `∫ conj(𝐩ⱼ²u)·𝐩ₘ²u = ↑(∫ ‖𝐩ₘ𝐩ⱼu‖²)`. Via momentum
@@ -1665,8 +1670,7 @@ lemma integral_normSq_le_add {d : ℕ} (a b : 𝓢(Space d, ℂ)) {r : ℝ} (hr 
     (hcross : ∫ x : Space d, starRingEnd ℂ (a x) * b x = (r : ℂ)) :
     ∫ x : Space d, ‖a x‖ ^ 2 ≤ ∫ x : Space d, ‖(a + b) x‖ ^ 2 := by
   have hint_cross : Integrable (fun x : Space d => starRingEnd ℂ (a x) * b x) := by
-    have h := (SchwartzMap.memLp a 2 volume).star.integrable_mul (SchwartzMap.memLp b 2 volume)
-    simpa only [Pi.star_apply, ← starRingEnd_apply] using h
+    exact (SchwartzMap.memLp a 2 volume).star.integrable_mul (SchwartzMap.memLp b 2 volume)
   have hIa := integrable_normSq_schwartz_gen a
   have hIb := integrable_normSq_schwartz_gen b
   have hmid : Integrable (fun x : Space d => 2 * RCLike.re (starRingEnd ℂ (a x) * b x)) :=
@@ -1674,7 +1678,7 @@ lemma integral_normSq_le_add {d : ℕ} (a b : 𝓢(Space d, ℂ)) {r : ℝ} (hr 
   have hexp : (fun x : Space d => ‖(a + b) x‖ ^ 2)
       = fun x => ‖a x‖ ^ 2 + 2 * RCLike.re (starRingEnd ℂ (a x) * b x) + ‖b x‖ ^ 2 := by
     funext x
-    rw [SchwartzMap.add_apply, ← Complex.normSq_eq_norm_sq, ← Complex.normSq_eq_norm_sq,
+    rw [add_apply, ← Complex.normSq_eq_norm_sq, ← Complex.normSq_eq_norm_sq,
       ← Complex.normSq_eq_norm_sq, Complex.normSq_add]
     simp only [Complex.mul_re, Complex.conj_re, Complex.conj_im, RCLike.re_to_complex,
       Complex.mul_re]
@@ -1717,8 +1721,8 @@ open QuantumMechanics in
 /-- **Bilinear cross-term expansion for two families of iterated momenta.** For any two finite families
 of directions `p : ι → Fin d`, `q : κ → Fin d`, the L² cross term of the two block kinetics
 `(∑ᵢ 𝐩_{pi}²u)` and `(∑ₖ 𝐩_{qk}²u)` equals the double sum of per-pair `∫‖𝐩_{qk}𝐩_{pi}u‖²` — a sum of
-**nonnegative reals**. Combines `SchwartzMap.sum_apply`, `map_sum` (conj), `Finset.sum_mul_sum`,
-`integral_finset_sum`, and the per-pair identity (W3-94). This makes the off-diagonal
+**nonnegative reals**. Combines `sum_apply`, `map_sum` (conj), `Finset.sum_mul_sum`,
+`integral_finsetSum`, and the per-pair identity (W3-94). This makes the off-diagonal
 `⟪block-kinetic u, rest-kinetic u⟫` term `≥ 0`, forcing `‖block-kinetic u‖₂ ≤ ‖full-kinetic u‖₂`. -/
 lemma integral_cross_kinetic_eq {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype κ]
     (p : ι → Fin d) (q : κ → Fin d) (u : 𝓢(Space d, ℂ)) :
@@ -1730,20 +1734,19 @@ lemma integral_cross_kinetic_eq {d : ℕ} {ι κ : Type*} [Fintype ι] [Fintype 
       starRingEnd ℂ (momentumCLM (p i) (momentumCLM (p i) u) x)
         * momentumCLM (q k) (momentumCLM (q k) u) x) := by
     intro i k
-    have h := (SchwartzMap.memLp (momentumCLM (p i) (momentumCLM (p i) u)) 2 volume).star.integrable_mul
+    exact (SchwartzMap.memLp (momentumCLM (p i) (momentumCLM (p i) u)) 2 volume).star.integrable_mul
       (SchwartzMap.memLp (momentumCLM (q k) (momentumCLM (q k) u)) 2 volume)
-    simpa only [Pi.star_apply, ← starRingEnd_apply] using h
   have hpt : (fun x : Space d =>
         starRingEnd ℂ ((∑ i, momentumCLM (p i) (momentumCLM (p i) u)) x)
           * ((∑ k, momentumCLM (q k) (momentumCLM (q k) u)) x))
       = fun x => ∑ i, ∑ k, starRingEnd ℂ (momentumCLM (p i) (momentumCLM (p i) u) x)
           * momentumCLM (q k) (momentumCLM (q k) u) x := by
     funext x
-    rw [SchwartzMap.sum_apply, SchwartzMap.sum_apply, map_sum, Finset.sum_mul_sum]
-  rw [hpt, integral_finset_sum _ (fun i _ => integrable_finset_sum _ fun k _ => hint i k)]
+    rw [sum_apply, sum_apply, map_sum, Finset.sum_mul_sum]
+  rw [hpt, integral_finsetSum _ (fun i _ => integrable_finsetSum _ fun k _ => hint i k)]
   push_cast
   refine Finset.sum_congr rfl fun i _ => ?_
-  rw [integral_finset_sum _ (fun k _ => hint i k)]
+  rw [integral_finsetSum _ (fun k _ => hint i k)]
   refine Finset.sum_congr rfl fun k _ => ?_
   exact momentum_cross_term_eq (p i) (q k) u
 
@@ -1976,7 +1979,7 @@ lemma lintegral_ofReal_normSq_rpow_eq_eLpNorm {d : ℕ} (g : Space d → ℂ) :
   simp only [ENNReal.toReal_ofNat]
   congr 1
   refine lintegral_congr fun x => ?_
-  rw [ofReal_norm_eq_enorm, ← ENNReal.rpow_natCast (‖g x‖ₑ) 2]
+  rw [ofReal_norm, ← ENNReal.rpow_natCast (‖g x‖ₑ) 2]
   norm_num
 
 open QuantumMechanics in
@@ -2033,7 +2036,7 @@ lemma coulombTerm_relbound_eLpNorm_smul {N : ℕ} (iₑ : Fin N)
   rw [show (fun x => (c : ℂ) •
         ((‖electronPos x iₑ - Rf (molecularSplitMap iₑ x).2‖⁻¹ : ℝ) • u x))
       = (c : ℂ) • fun x => (‖electronPos x iₑ - Rf (molecularSplitMap iₑ x).2‖⁻¹ : ℝ) • u x from rfl,
-    eLpNorm_const_smul, ← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_eq_abs]
+    eLpNorm_const_smul, ← ofReal_norm, Complex.norm_real, Real.norm_eq_abs]
   gcongr
   exact coulombTerm_relbound_eLpNorm iₑ Rf hRf hε hC hbound u
 
@@ -2179,12 +2182,13 @@ lemma coulomb_relbound_schwartz {N : ℕ} (nuclei : Finset (Space 3 × ℝ)) {ε
       (coulomb_relbound_ee hε hC hbound u))
 
 open QuantumMechanics SpaceDHilbertSpace in
-/-- **L² norm of a Schwartz inclusion = its `eLpNorm`.** For `G : 𝓢`, `‖schwartzIncl G‖ =
+/-- **L² norm of a Schwartz inclusion = its `eLpNorm`.** For `G : 𝓢`,
+`‖schwartzIncl volume G‖ =
 (eLpNorm ⇑G 2 volume).toReal`. The bridge from the analysis-side `eLpNorm` bounds
 (`coulomb_relbound_schwartz`) to the operator-side Hilbert norms `‖potentialOperator ψ‖`,
 `‖kineticOperator ψ‖`, `‖ψ‖` on `SpaceDHilbertSpace = L²`. -/
 lemma norm_schwartzIncl_eq {d : ℕ} (G : 𝓢(Space d, ℂ)) :
-    ‖schwartzIncl G‖ = (eLpNorm (⇑G) 2 volume).toReal := by
+    ‖schwartzIncl MeasureTheory.volume G‖ = (eLpNorm (⇑G) 2 volume).toReal := by
   rw [Lp.norm_def]
   congr 1
   refine eLpNorm_congr_ae ?_
@@ -2195,7 +2199,8 @@ open QuantumMechanics SpaceDHilbertSpace in
 /-- **L² norm of a Schwartz vector = its `eLpNorm`.** `‖(schwartzEquiv u : L²)‖ = (eLpNorm ⇑u 2).toReal`
 — the `‖x‖` factor of the Kato bound at the Schwartz core, via `norm_schwartzIncl_eq`. -/
 lemma norm_schwartzEquiv_eq {d : ℕ} (u : 𝓢(Space d, ℂ)) :
-    ‖(schwartzEquiv u : SpaceDHilbertSpace d)‖ = (eLpNorm (⇑u) 2 volume).toReal := by
+    ‖(schwartzEquiv MeasureTheory.volume u : SpaceDHilbertSpace d)‖
+      = (eLpNorm (⇑u) 2 volume).toReal := by
   rw [SchwartzSubmodule.schwartzEquiv_apply_coe, norm_schwartzIncl_eq]
 
 open QuantumMechanics in
@@ -2226,7 +2231,7 @@ open QuantumMechanics SpaceDHilbertSpace in
 Schwartz core. -/
 lemma norm_kineticOperator_schwartz {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finset (Space 3 × ℝ))
     (u : 𝓢(Space (3 * N), ℂ))
-    (hmem : (schwartzEquiv u : SpaceDHilbertSpace (3 * N)) ∈
+    (hmem : (schwartzEquiv MeasureTheory.volume u : SpaceDHilbertSpace (3 * N)) ∈
       (molecularSystem N m hm nuclei).kineticOperator.domain) :
     ‖((molecularSystem N m hm nuclei).kineticOperator ⟨_, hmem⟩ : SpaceDHilbertSpace (3 * N))‖
       = (2 * m)⁻¹ * (eLpNorm (fun x => (∑ i, momentumCLM i (momentumCLM i u)) x) 2 volume).toReal := by
@@ -2242,7 +2247,7 @@ open QuantumMechanics SpaceDHilbertSpace in
 side of the Kato bound at the Schwartz core. -/
 lemma norm_potentialOperator_schwartz {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finset (Space 3 × ℝ))
     (u : 𝓢(Space (3 * N), ℂ))
-    (hmem : (schwartzEquiv u : SpaceDHilbertSpace (3 * N)) ∈
+    (hmem : (schwartzEquiv MeasureTheory.volume u : SpaceDHilbertSpace (3 * N)) ∈
       (molecularSystem N m hm nuclei).potentialOperator.domain) :
     ‖((molecularSystem N m hm nuclei).potentialOperator ⟨_, hmem⟩ : SpaceDHilbertSpace (3 * N))‖
       = (eLpNorm (fun x => (↑(molecularCoulombPotential nuclei x) : ℂ) * u x) 2 volume).toReal := by
@@ -2250,9 +2255,12 @@ lemma norm_potentialOperator_schwartz {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei :
   congr 1
   refine eLpNorm_congr_ae ?_
   filter_upwards [mulOperator_apply_ae (f := Complex.ofReal ∘ molecularCoulombPotential nuclei) ⟨_, hmem⟩,
-    SchwartzSubmodule.schwartzEquiv_coe_ae u] with x h₁ h₂
+    SchwartzSubmodule.schwartzEquiv_coe_ae (μ := MeasureTheory.volume) u] with x h₁ h₂
   erw [h₁]
-  rw [Pi.smul_apply', smul_eq_mul, Function.comp_apply, h₂]
+  rw [Pi.smul_apply', smul_eq_mul, Function.comp_apply]
+  -- v4.32: `erw` above leaves the goal well-typed only at default transparency
+  -- (`(molecularSystem …).d` vs `3 * N`), so `rw [h₂]` cannot see the pattern; close in term mode.
+  exact congrArg (fun c => (↑(molecularCoulombPotential nuclei x) : ℂ) * c) h₂
 
 open QuantumMechanics SpaceDHilbertSpace in
 /-- **The Schwartz core lies in the potential operator's domain.** `schwartzSubmodule ≤
@@ -2261,18 +2269,18 @@ transported along `schwartzEquiv_coe_ae` via `memHS_of_ae`). This is the `domain
 Schwartz-core `IsRelBounded` (and, since `kineticOperator.domain = schwartzSubmodule`, exactly
 `kineticOperator.domain ≤ potentialOperator.domain`). -/
 lemma schwartz_le_potOp_domain {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finset (Space 3 × ℝ)) :
-    schwartzSubmodule (3 * N) ≤ (molecularSystem N m hm nuclei).potentialOperator.domain := by
+    SchwartzSubmodule (3 * N) ≤ (molecularSystem N m hm nuclei).potentialOperator.domain := by
   intro ψ hψ
   obtain ⟨u, rfl⟩ := hψ
   rw [SpaceDQuantumSystem.potentialOperator_eq]
-  refine mem_mulOperator_domain_iff.mpr (memHS_of_ae
-    (fun x => (↑(molecularCoulombPotential nuclei x) : ℂ) * u x)
-    (memLp_molecular_coulomb nuclei u) ?_)
-  filter_upwards [SchwartzSubmodule.schwartzEquiv_coe_ae u] with x hx
+  refine mem_mulOperator_domain_iff.mpr (MemHS.ae_eq (f :=
+    fun x => (↑(molecularCoulombPotential nuclei x) : ℂ) * u x) ?_
+    (memLp_molecular_coulomb nuclei u))
+  filter_upwards [SchwartzSubmodule.schwartzEquiv_coe_ae (μ := MeasureTheory.volume) u] with x hx
   simp only [SchwartzSubmodule.schwartzEquiv_apply_coe] at hx
   show (↑(molecularCoulombPotential nuclei x) : ℂ) * u x
       = (↑(molecularCoulombPotential nuclei x) : ℂ)
-        * ((schwartzIncl u : SpaceDHilbertSpace (3 * N)) : Space (3 * N) → ℂ) x
+        * ((schwartzIncl MeasureTheory.volume u : SpaceDHilbertSpace (3 * N)) : Space (3 * N) → ℂ) x
   rw [hx]
 
 open QuantumMechanics in
@@ -2320,7 +2328,8 @@ lemma coulomb_isRelBounded_core {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finse
     ∃ a b : ℝ, 0 ≤ a ∧ a < 1 ∧ 0 ≤ b ∧
       IsRelBounded (molecularSystem N m hm nuclei).kineticOperator
         (molecularSystem N m hm nuclei).potentialOperator a b := by
-  have hkindom : (molecularSystem N m hm nuclei).kineticOperator.domain = schwartzSubmodule (3 * N) := by
+  have hkindom :
+      (molecularSystem N m hm nuclei).kineticOperator.domain = SchwartzSubmodule (3 * N) := by
     rw [SpaceDQuantumSystem.kineticOperator_eq, LinearPMap.smul_domain]
     exact momentumSqOperator_domain_eq
   set Ctr : ℝ := ((∑ _i : Fin N, ∑ p ∈ nuclei, ENNReal.ofReal |p.2|)
@@ -2334,13 +2343,15 @@ lemma coulomb_isRelBounded_core {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finse
     nlinarith [hm, hCtr0]
   · intro x
     obtain ⟨u, hu⟩ : ∃ u : 𝓢(Space (3 * N), ℂ),
-        (schwartzEquiv u : SpaceDHilbertSpace (3 * N)) = x.1 :=
-      ⟨schwartzEquiv.symm ⟨x.1, by rw [← hkindom]; exact x.2⟩, by rw [schwartzEquiv.apply_symm_apply]⟩
-    have hmemK : (schwartzEquiv u : SpaceDHilbertSpace (3 * N)) ∈
+        (schwartzEquiv MeasureTheory.volume u : SpaceDHilbertSpace (3 * N)) = x.1 :=
+      ⟨(schwartzEquiv MeasureTheory.volume).symm ⟨x.1, by rw [← hkindom]; exact x.2⟩, by
+        rw [(schwartzEquiv MeasureTheory.volume).apply_symm_apply]⟩
+    have hmemK : (schwartzEquiv MeasureTheory.volume u : SpaceDHilbertSpace (3 * N)) ∈
         (molecularSystem N m hm nuclei).kineticOperator.domain := by rw [hu]; exact x.2
     have hAx : ‖(molecularSystem N m hm nuclei).kineticOperator x‖
         = (2 * m)⁻¹ * (eLpNorm (fun y => (∑ i, momentumCLM i (momentumCLM i u)) y) 2 volume).toReal := by
-      rw [show x = ⟨(schwartzEquiv u : SpaceDHilbertSpace (3 * N)), hmemK⟩ from Subtype.ext hu.symm]
+      rw [show x = ⟨(schwartzEquiv MeasureTheory.volume u : SpaceDHilbertSpace (3 * N)), hmemK⟩
+        from Subtype.ext hu.symm]
       exact norm_kineticOperator_schwartz m hm nuclei u hmemK
     have hxn : ‖(x : (molecularSystem N m hm nuclei).HS)‖ = (eLpNorm (fun y => u y) 2 volume).toReal := by
       rw [← hu]; exact norm_schwartzEquiv_eq u
@@ -2348,7 +2359,8 @@ lemma coulomb_isRelBounded_core {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finse
         = (eLpNorm (fun y => (↑(molecularCoulombPotential nuclei y) : ℂ) * u y) 2 volume).toReal := by
       intro h
       rw [show (⟨↑x, h⟩ : (molecularSystem N m hm nuclei).potentialOperator.domain)
-          = ⟨(schwartzEquiv u : SpaceDHilbertSpace (3 * N)), by rw [hu]; exact h⟩ from Subtype.ext hu.symm]
+          = ⟨(schwartzEquiv MeasureTheory.volume u : SpaceDHilbertSpace (3 * N)),
+            by rw [hu]; exact h⟩ from Subtype.ext hu.symm]
       exact norm_potentialOperator_schwartz m hm nuclei u _
     rw [hAx, hxn, hBx]
     refine (coulomb_relbound_schwartz_real nuclei hεpos.le hC0 hbound u).trans (le_of_eq ?_)
@@ -2418,7 +2430,10 @@ lemma IsRelBounded.extend_to_closure {H : Type*} [NormedAddCommGroup H] [InnerPr
       linarith
     obtain ⟨z, hz⟩ := cauchySeq_tendsto_of_complete hBφ_cauchy
     have hxz : ((↑x : H), z) ∈ B.graph := by
-      rw [← SetLike.mem_coe, ← hBcl.closure_eq]
+      -- v4.32: `hBcl.closure_eq` now resolves to `LinearPMap.IsClosed.closure_eq`
+      -- (`B.closure = B`); pin the *topological* `IsClosed.closure_eq` by ascribing the type.
+      have hBset : _root_.IsClosed (↑B.graph : Set (H × H)) := hBcl
+      rw [← SetLike.mem_coe, ← hBset.closure_eq]
       refine mem_closure_iff_seq_limit.mpr ⟨fun n => (↑(φ n), Bφ n), fun n => ?_, ?_⟩
       · rw [SetLike.mem_coe, mem_graph_iff]
         exact ⟨⟨↑(φ n), hrel.domain_le (φ n).2⟩, rfl, rfl⟩
@@ -2453,8 +2468,9 @@ lemma coulomb_isRelBounded {N : ℕ} (m : ℝ) (hm : 0 < m) (nuclei : Finset (Sp
     (momentumSqOperator_isSymmetric.isClosable momentumSqOperator_hasDenseDomain).smul
       (Complex.ofReal (2 * m)⁻¹)
   have hBcl : (molecularSystem N m hm nuclei).potentialOperator.IsClosed := by
-    refine (mulOperator_isSelfAdjoint_ofReal
-      ((Complex.measurable_ofReal.comp (molecularCoulombPotential_measurable nuclei)).aestronglyMeasurable)
+    refine (mulOperator_isSelfAdjoint_ofReal (μ := MeasureTheory.volume)
+      ((Complex.measurable_ofReal.comp
+        (molecularCoulombPotential_measurable nuclei)).aestronglyMeasurable)
       ?_).isClosed
     funext x
     exact Complex.conj_ofReal _
