@@ -33,8 +33,11 @@ cohomology class. -/
 theorem kroneckerH_surjective_field {Y : TopCat} {N : ℕ} :
     Function.Surjective (kroneckerH (X := Y) (N + 1)) := by
   intro φ
+  -- v4.32: `φ`'s domain is the `Homology` ALIAS while `mkQ`'s codomain is the raw quotient;
+  -- comparing the two fully-elaborated closed types blows the whnf budget. Ascribing `mkQ`
+  -- AT the alias leaves the submodule a metavariable, so one delta step settles it.
   set ψ : ↥(cycles Y (N + 1)) →ₗ[ZMod 2] ZMod 2 :=
-    φ.comp ((boundaries Y (N + 1)).submoduleOf (cycles Y (N + 1))).mkQ with hψ
+    φ.comp (Submodule.mkQ _ : ↥(cycles Y (N + 1)) →ₗ[ZMod 2] Homology Y (N + 1)) with hψ
   obtain ⟨F, hF⟩ := LinearMap.exists_extend ψ
   obtain ⟨a, ha⟩ := exists_cochain_of_functional F
   have hFcyc : ∀ z : ↥(cycles Y (N + 1)), F (z : SingularChain Y (N + 1)) = ψ z :=
@@ -44,7 +47,8 @@ theorem kroneckerH_surjective_field {Y : TopCat} {N : ℕ} :
     have hmem : chainBoundary Y (N + 1) w ∈ boundaries Y (N + 1) := ⟨w, rfl⟩
     have hcyc : chainBoundary Y (N + 1) w ∈ cycles Y (N + 1) :=
       boundaries_le_cycles Y (N + 1) hmem
-    have hzero : ((boundaries Y (N + 1)).submoduleOf (cycles Y (N + 1))).mkQ
+    -- Same ascription as the `set ψ` above, so both sides name the quotient the same way.
+    have hzero : (Submodule.mkQ _ : ↥(cycles Y (N + 1)) →ₗ[ZMod 2] Homology Y (N + 1))
         ⟨chainBoundary Y (N + 1) w, hcyc⟩ = 0 := by
       rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
       exact Submodule.mem_comap.mpr hmem

@@ -59,7 +59,7 @@ theorem openDuality₀_union_bijectiveInt {N : ℕ} {U V : Set ↑X}
           (openDuality₀Int hV z₀ hz₀)).comp (cscMvDiagInt U V (N + 1 + 1)) := by
     refine LinearMap.ext fun α => ?_
     simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiagInt, LinearMap.prod_apply,
-      Pi.prod]
+      Function.prod_def]
     exact subHomDiagInt_openDuality₀ hU hV z₀ hz₀ α
   have hc₂ : (subHomSumInt U V 0).comp
         ((openDuality₀Int hU z₀ hz₀).prodMap (openDuality₀Int hV z₀ hz₀))

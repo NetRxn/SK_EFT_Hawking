@@ -64,7 +64,7 @@ theorem openDuality_union_bijective_botInt {N : ℕ} {U V : Set ↑X}
           (openDuality (k := N + 1) (m := 0) hV z₀ hz₀)).comp (cscMvDiagInt U V (N + 1)) := by
     refine LinearMap.ext fun α => ?_
     simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiagInt, LinearMap.prod_apply,
-      Pi.prod]
+      Function.prod_def]
     exact subHomDiagInt_openDuality (k := N + 1) (m := 0) hU hV z₀ hz₀ α
   have hc₂ : (subHomSumInt U V (0 + 1)).comp
         ((openDuality (k := N + 1) (m := 0) hU z₀ hz₀).prodMap
@@ -87,7 +87,7 @@ theorem openDuality_union_bijective_botInt {N : ℕ} {U V : Set ↑X}
           (openDuality₀Int hV z₀ hz₀)).comp (cscMvDiagInt U V (N + 2)) := by
     refine LinearMap.ext fun α => ?_
     simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiagInt, LinearMap.prod_apply,
-      Pi.prod]
+      Function.prod_def]
     exact subHomDiagInt_openDuality₀ hU hV z₀ hz₀ α
   have hi₂ : Function.Bijective
       ⇑((openDuality (k := N + 1) (m := 0) hU z₀ hz₀).prodMap

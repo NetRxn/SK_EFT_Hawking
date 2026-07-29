@@ -101,7 +101,9 @@ theorem diagSquareInt (U V : Set ↑X) (n : ℕ)
     subHomDiagInt U V n (seamI U V n w)
       = (seamU U V n).prodCongr (seamV U V n)
           (mvHomDiagInt (X := sub (U ∪ V)) (Subtype.val ⁻¹' U) (Subtype.val ⁻¹' V) n w) := by
-  rw [subHomDiagInt, LinearMap.prod_apply, Pi.prod, mvHomDiagInt_apply, LinearEquiv.prodCongr_apply]
+  rw [subHomDiagInt, LinearMap.prod_apply]
+  simp only [Function.prod_def]
+  rw [ mvHomDiagInt_apply, LinearEquiv.prodCongr_apply]
   refine Prod.ext ?_ ?_
   · show Homology.mapInt (subInclCM Set.inter_subset_left) n
           (Homology.mapInt ⟨subSeamHomeo

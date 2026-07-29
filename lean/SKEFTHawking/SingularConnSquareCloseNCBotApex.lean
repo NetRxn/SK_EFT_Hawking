@@ -670,7 +670,7 @@ theorem openDuality_union_bijective_bot {N : ℕ} {U V : Set ↑X}
           (openDuality (k := N + 1) (m := 0) hV z₀ hz₀)).comp (cscMvDiag U V (N + 1)) := by
     refine LinearMap.ext fun α => ?_
     simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiag, LinearMap.prod_apply,
-      Pi.prod]
+      Function.prod_def]
     exact subHomDiag_openDuality (k := N + 1) (m := 0) hU hV z₀ hz₀ α
   have hc₂ : (subHomSum U V (0 + 1)).comp
         ((openDuality (k := N + 1) (m := 0) hU z₀ hz₀).prodMap
@@ -692,7 +692,7 @@ theorem openDuality_union_bijective_bot {N : ℕ} {U V : Set ↑X}
           (openDuality₀ (k := N + 1) hV z₀ hz₀)).comp (cscMvDiag U V (N + 2)) := by
     refine LinearMap.ext fun α => ?_
     simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiag, LinearMap.prod_apply,
-      Pi.prod]
+      Function.prod_def]
     exact subHomDiag_openDuality₀ hU hV z₀ hz₀ α
   have hi₂ : Function.Bijective
       ⇑((openDuality (k := N + 1) (m := 0) hU z₀ hz₀).prodMap
@@ -781,7 +781,7 @@ theorem openDuality_union_bijective_upper {N p : ℕ} {U V : Set ↑X}
         z₀ hz₀))).comp (cscMvDiag U V (N + 1)) := by
     refine LinearMap.ext fun α => ?_
     simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiag, LinearMap.prod_apply,
-      Pi.prod]
+      Function.prod_def]
     exact subHomDiag_openDuality (k := N + 1) (m := p + 1) hU hV (SingularOpenDualityMVConnSquare.castChain
       (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
       (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
@@ -835,7 +835,7 @@ theorem openDuality_union_bijective_upper {N p : ℕ} {U V : Set ↑X}
         z₀ hz₀))).comp (cscMvDiag U V (N + 2)) := by
     refine LinearMap.ext fun α => ?_
     simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiag, LinearMap.prod_apply,
-      Pi.prod]
+      Function.prod_def]
     exact subHomDiag_openDuality (k := N + 2) (m := p) hU hV (SingularOpenDualityMVConnSquare.castChain
       (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
       (SingularOpenDualityMVConnSquare.chainBoundary_castChain_eq_zero (by omega) (by omega)
@@ -926,7 +926,7 @@ theorem openDuality₀_union_bijective {N : ℕ} {U V : Set ↑X}
           (openDuality₀ (k := N + 1) hV z₀ hz₀)).comp (cscMvDiag U V (N + 1 + 1)) := by
     refine LinearMap.ext fun α => ?_
     simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiag, LinearMap.prod_apply,
-      Pi.prod]
+      Function.prod_def]
     exact subHomDiag_openDuality₀ hU hV z₀ hz₀ α
   have hc₂ : (subHomSum U V 0).comp
         ((openDuality₀ (k := N + 1) hU z₀ hz₀).prodMap (openDuality₀ (k := N + 1) hV z₀ hz₀))

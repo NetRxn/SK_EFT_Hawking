@@ -89,7 +89,7 @@ theorem openDuality_union_bijective_upperInt {N p : ℕ} {U V : Set ↑X}
           (cscMvDiagInt U V (N + 1)) := by
     refine LinearMap.ext fun α => ?_
     simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiagInt, LinearMap.prod_apply,
-      Pi.prod]
+      Function.prod_def]
     exact subHomDiagInt_openDuality (k := N + 1) (m := p + 1) hU hV
       (castChainInt (show N + p + 3 = N + 1 + (p + 1) + 1 by omega) z₀)
       (chainBoundary_castChainInt_eq_zero (by omega) (by omega) z₀ hz₀) α
@@ -133,7 +133,7 @@ theorem openDuality_union_bijective_upperInt {N p : ℕ} {U V : Set ↑X}
           (cscMvDiagInt U V (N + 2)) := by
     refine LinearMap.ext fun α => ?_
     simp only [LinearMap.comp_apply, LinearMap.prodMap_apply, cscMvDiagInt, LinearMap.prod_apply,
-      Pi.prod]
+      Function.prod_def]
     exact subHomDiagInt_openDuality (k := N + 2) (m := p) hU hV
       (castChainInt (show N + p + 3 = N + 2 + p + 1 by omega) z₀)
       (chainBoundary_castChainInt_eq_zero (by omega) (by omega) z₀ hz₀) α

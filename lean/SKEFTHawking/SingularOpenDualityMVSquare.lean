@@ -52,7 +52,7 @@ theorem subHomDiag_openDuality {k m : ℕ} {U V : Set ↑X} (hU : IsOpen U) (hV 
       = (openDuality hU z₀ hz₀ (cscOpenMonotone Set.inter_subset_left k α),
           openDuality hV z₀ hz₀ (cscOpenMonotone Set.inter_subset_right k α)) := by
   rw [subHomDiag, LinearMap.prod_apply]
-  -- `Pi.prod` is a deprecated alias with no equation theorems; only `simp only` with the
+  -- `Function.prod_def` is a deprecated alias with no equation theorems; only `simp only` with the
   -- real def's lemma pierces it.
   simp only [Function.prod_def]
   rw [
