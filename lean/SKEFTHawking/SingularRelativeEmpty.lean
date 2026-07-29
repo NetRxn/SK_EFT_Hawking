@@ -125,9 +125,10 @@ empty subspace equals absolute homology. The bridge `Hᵢ(M | M) = RelativeHomol
 from the relative `Hₙ(M|·)` framework to absolute `Hₙ(M)` for the fundamental class. -/
 noncomputable def relHomologyEmptyEquiv (n : ℕ) :
     RelativeHomology (∅ : Set X) n ≃ₗ[ZMod 2] Homology X n :=
-  Submodule.Quotient.equiv
-    ((relBoundaries (∅ : Set X) n).submoduleOf (relCycles (∅ : Set X) n))
-    ((boundaries X n).submoduleOf (cycles X n))
+  -- v4.32: supplying `P`/`Q` as fully-elaborated closed types forces the unifier to compare them
+  -- against the `def`-wrapped `RelativeHomology`/`Homology` aliases and blows the whnf budget.
+  -- Leaving them as `_` lets the expected type drive: one delta step per alias, then assign.
+  Submodule.Quotient.equiv _ _
     (cyclesEmptyEquiv n)
     (by
       ext z

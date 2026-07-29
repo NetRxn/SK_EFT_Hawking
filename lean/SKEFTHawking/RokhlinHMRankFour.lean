@@ -200,8 +200,13 @@ theorem toMatrix'_toQuadraticMap' {n : ℕ} (M : Matrix (Fin n) (Fin n) ℚ) (hM
     intro x y
     rw [Matrix.toLinearMap₂'_apply', Matrix.toLinearMap₂'_apply',
         Matrix.dotProduct_mulVec, dotProduct_comm, ← Matrix.mulVec_transpose, hM.eq]
-  rw [QuadraticMap.toMatrix', Matrix.toQuadraticMap',
-      QuadraticMap.associated_left_inverse (S := ℚ) hsymm, LinearMap.toMatrix'_toLinearMap₂']
+  -- v4.32: `QuadraticMap.toMatrix'` / `Matrix.toQuadraticMap'` are deprecated *aliases*, invisible
+  -- to both `rw` and `unfold` (no usable equation theorems). `show` bridges to the real
+  -- names at default transparency; the real defs then unfold normally. The STATEMENT deliberately
+  -- keeps the old API name — the tree is mid-rename and a partial propagation breaks the interface.
+  show QuadraticForm.toMatrix' (Matrix.toQuadraticForm' M) = M
+  unfold QuadraticForm.toMatrix' Matrix.toQuadraticForm'
+  rw [QuadraticMap.associated_left_inverse (S := ℚ) hsymm, LinearMap.toMatrix'_toLinearMap₂']
 
 /-- **Explicit rational congruence to the diagonalization.** A symmetric Gram form over ℚ isometric to
 `∑ wᵢ xᵢ²` is matrix-congruent to `diagonal w` via the (invertible) change-of-basis `P = toMatrix' e`.
@@ -217,13 +222,17 @@ theorem congr_of_equiv_weighted {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (hA :
           show e.toLinearEquiv.toLinearMap ∘ₗ e.toLinearEquiv.symm.toLinearMap = LinearMap.id from by
             ext x; simp, LinearMap.toMatrix'_id, Matrix.det_one]
     exact isUnit_iff_ne_zero.mpr (left_ne_zero_of_mul_eq_one hmul)
-  · have hWM : (QuadraticMap.weightedSumSquares ℚ w).toMatrix' = Matrix.diagonal w := by
+    -- v4.32 dot-notation fork: `X.toMatrix'` resolves to the *real* `QuadraticForm.toMatrix'` when
+    -- `X`'s type head is `QuadraticForm`, but to the deprecated alias `QuadraticForm.QuadraticMap.
+    -- toMatrix'` when it is `QuadraticMap` (as for `weightedSumSquares`). The two are defeq but not
+    -- syntactically equal, so `rw` misses a visibly-present pattern. Name the real def explicitly.
+  · have hWM : QuadraticForm.toMatrix' (QuadraticMap.weightedSumSquares ℚ w) = Matrix.diagonal w := by
       rw [weightedSumSquares_eq_diagonal, toMatrix'_toQuadraticMap' _ (Matrix.isSymm_diagonal w)]
     have hcomp : A.toQuadraticMap'
         = (QuadraticMap.weightedSumSquares ℚ w).comp e.toLinearEquiv.toLinearMap := by
       ext v; rw [QuadraticMap.comp_apply]; exact (e.map_app v).symm
-    have h1 := congrArg QuadraticMap.toMatrix' hcomp
-    rw [QuadraticMap.toMatrix'_comp, hWM, toMatrix'_toQuadraticMap' A hA] at h1
+    have h1 := congrArg QuadraticForm.toMatrix' hcomp
+    rw [QuadraticForm.toMatrix'_comp, hWM, toMatrix'_toQuadraticMap' A hA] at h1
     exact h1
 
 /-- **`IsSquare (∏ wᵢ)` from `det A = 1`.** If a symmetric `det = 1` Gram form is isometric to the diagonal

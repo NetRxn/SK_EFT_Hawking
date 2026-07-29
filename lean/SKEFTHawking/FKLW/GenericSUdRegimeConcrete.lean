@@ -152,7 +152,10 @@ theorem norm_exp_sub_one_sub_self_le {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) 
   rw [hrange, hHasSum.tsum_eq] at hsplit
   have htail : NormedSpace.exp A - 1 - A
       = ∑' i : ℕ, ((i + 2).factorial : ℂ)⁻¹ • A ^ (i + 2) := by
-    rw [← hsplit]; abel
+    -- v4.32: the `NormedSpace.exp A` in `hsplit` (from `exp_series_hasSum_exp'`) and the one in the
+    -- goal carry different instance paths, so `rw [← hsplit]` misses a visibly-present pattern.
+    -- Apply `hsplit` as a term at default transparency instead.
+    exact (congrArg (fun z => z - 1 - A) hsplit.symm).trans (by abel)
   rw [htail]
   have hsumm_tail : Summable (fun i : ℕ => ((i + 2).factorial : ℂ)⁻¹ • A ^ (i + 2)) :=
     (summable_nat_add_iff 2).mpr hsumm
@@ -255,7 +258,10 @@ theorem matrixMercatorLog_inv_eq_neg {d : ℕ}
   have hcomm : Commute (matrixMercatorLog A) (matrixMercatorLog B) :=
     matrixMercatorLog_commute_mercatorLog A B hA1 hB1 hAB
   have hexpS : NormedSpace.exp (matrixMercatorLog A + matrixMercatorLog B) = 1 := by
-    rw [NormedSpace.exp_add_of_commute hcomm, hexpA, hexpB, hmul]
+    -- v4.32: `NormedSpace.exp` in the goal and in `exp_add_of_commute`/`exp_matrixMercatorLog`
+    -- carry different instance paths, so every `rw` here misses a visibly-present pattern.
+    -- Chain them as terms at default transparency instead.
+    exact ((NormedSpace.exp_add_of_commute hcomm).trans (congrArg₂ (· * ·) hexpA hexpB)).trans hmul
   have hnormA := norm_matrixMercatorLog_le_two_mul A (by linarith : ‖A‖ ≤ 1 / 2)
   have hnormB := norm_matrixMercatorLog_le_two_mul B (by linarith : ‖B‖ ≤ 1 / 2)
   have hnormS : ‖matrixMercatorLog A + matrixMercatorLog B‖ ≤ 1 / 2 := by
