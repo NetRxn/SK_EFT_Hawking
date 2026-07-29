@@ -219,7 +219,7 @@ theorem chooseReductionMu_succeeds {M : Mat2} (hu : IsUnitaryT M) (h4 : 4 ≤ mu
   have hsome : ((List.finRange 4).find?
       (fun j => decide (muMeasure (reduceStep M j) < muMeasure M))).isSome := by
     rw [List.find?_isSome]
-    exact ⟨k, List.mem_finRange k, by simpa using hk⟩
+    exact ⟨k, List.mem_finRange k, decide_eq_true hk⟩
   obtain ⟨k', hk'⟩ := Option.isSome_iff_exists.mp hsome
   exact ⟨k', hk'⟩
 

@@ -65,7 +65,8 @@ theorem charpoly_kronecker_eq {A : Matrix m m ℂ} {B : Matrix n n ℂ}
     simp only [Unitary.conjStarAlgAut_apply]
     rw [Matrix.mul_kronecker_mul, Matrix.mul_kronecker_mul, Matrix.diagonal_kronecker_diagonal]
     rfl
-  rw [hdecomp, charpoly_units_conj, Matrix.charpoly_diagonal]
+  rw [hdecomp, show (u⁻¹).val = (u.val)⁻¹ from (Matrix.inv_eq_right_inv hVW).symm,
+    charpoly_units_conj, Matrix.charpoly_diagonal]
   simp only [hd, Function.comp_apply]
 
 /-- **Eigenvalue multiset of a Kronecker product:** the eigenvalues of `A ⊗ B` are the products

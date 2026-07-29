@@ -81,7 +81,7 @@ variable {n : ℕ∞} {s : Set M} (f : ContMDiffPartitionOfUnity ι I M n s)
 
 instance : FunLike (ContMDiffPartitionOfUnity ι I M n s) ι C(M, ℝ) where
   coe f := f.toPartitionOfUnity
-  coe_injective' f g h := by
+  coe_injective f g h := by
     cases f; cases g
     congr
     exact DFunLike.coe_injective h

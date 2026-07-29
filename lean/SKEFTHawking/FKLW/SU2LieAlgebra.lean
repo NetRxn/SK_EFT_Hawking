@@ -867,7 +867,7 @@ attribute [local instance] Matrix.linftyOpNormedAddCommGroup
 theorem skewHermitianProj_continuous {n : Type*} [Fintype n] [DecidableEq n] :
     Continuous (skewHermitianProj : Matrix n n ℂ → Matrix n n ℂ) := by
   unfold skewHermitianProj
-  exact (continuous_id.sub continuous_id.matrix_conjTranspose).const_smul _
+  fun_prop
 
 /-- **`tracelessProj` is continuous**: built from `Matrix.sub`,
 `Matrix.trace`, scalar division, and `const_smul` by a (continuous)
@@ -879,7 +879,8 @@ theorem tracelessProj_continuous :
   -- M ↦ M - (M.trace / 2) • 1
   refine continuous_id.sub ?_
   -- (M.trace / 2) • (1 : Matrix _ _ ℂ) is continuous in M
-  refine Continuous.smul ?_ continuous_const
+  refine Continuous.smul (f := fun M : Matrix (Fin 2) (Fin 2) ℂ => M.trace / 2) ?_
+    continuous_const
   -- M ↦ M.trace / 2: trace continuous, division by constant continuous
   exact (continuous_id.matrix_trace).div_const 2
 

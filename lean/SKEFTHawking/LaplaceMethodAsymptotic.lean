@@ -155,7 +155,7 @@ theorem log_singletCount_sub_isBigO :
       simpa using tendsto_const_nhds.sub hone
     have hlogdiv : Tendsto (fun m : ℕ => Real.log ((m : ℝ) / ((m : ℝ) + 1))) atTop (𝓝 0) := by
       have hc := ((Real.continuousAt_log one_ne_zero).tendsto).comp hdiv
-      simpa using hc
+      simpa [Function.comp_def] using hc
     apply Filter.Tendsto.congr' _ hlogdiv
     filter_upwards [Filter.eventually_gt_atTop 0] with m hm
     have hm0 : (0 : ℝ) < (m : ℝ) := by exact_mod_cast hm

@@ -39,8 +39,8 @@ open QuadraticMap
 quadratic form obtained by casting `M` to ℝ. This is the genuine (Sylvester-invariant) signature:
 the number of positive minus the number of negative eigenvalues, counted with multiplicity. -/
 noncomputable def latticeSig {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) : ℤ :=
-  (sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
-    - (sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ)
+  (sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticForm' : ℤ)
+    - (sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticForm' : ℤ)
 
 /-- **Orientation reversal:** `σ(−M) = −σ(M)`. Negating the form swaps the positive and negative
 inertia indices, so the signature flips sign. (Topologically: reversing the orientation of a
@@ -49,9 +49,9 @@ theorem latticeSig_neg {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) :
     latticeSig (-M) = - latticeSig M := by
   have hmap : ((-M).map (Int.cast : ℤ → ℝ)) = -(M.map (Int.cast : ℤ → ℝ)) := by
     ext i j; simp
-  have hqm : ((-M).map (Int.cast : ℤ → ℝ)).toQuadraticMap'
-      = -((M.map (Int.cast : ℤ → ℝ)).toQuadraticMap') := by
-    rw [hmap]; simp [Matrix.toQuadraticMap']
+  have hqm : ((-M).map (Int.cast : ℤ → ℝ)).toQuadraticForm'
+      = -((M.map (Int.cast : ℤ → ℝ)).toQuadraticForm') := by
+    rw [hmap]; simp [Matrix.toQuadraticForm']
   unfold latticeSig
   rw [hqm]
   show (sigPos (-_) : ℤ) - (sigNeg (-_) : ℤ) = _
@@ -61,9 +61,9 @@ theorem latticeSig_neg {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) :
 /-- **Upper rank bound:** `σ(M) ≤ n`. The positive inertia index never exceeds the rank. -/
 theorem latticeSig_le {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) :
     latticeSig M ≤ (n : ℤ) := by
-  have h : sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' ≤ n := by
-    simpa using sigPos_le_finrank (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap'
-  have hneg : (0 : ℤ) ≤ (sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticMap' : ℤ) := by positivity
+  have h : sigPos (M.map (Int.cast : ℤ → ℝ)).toQuadraticForm' ≤ n := by
+    simpa using sigPos_le_finrank (M.map (Int.cast : ℤ → ℝ)).toQuadraticForm'
+  have hneg : (0 : ℤ) ≤ (sigNeg (M.map (Int.cast : ℤ → ℝ)).toQuadraticForm' : ℤ) := by positivity
   unfold latticeSig; omega
 
 /-- **Lower rank bound:** `−n ≤ σ(M)`, obtained from the upper bound via orientation reversal. -/

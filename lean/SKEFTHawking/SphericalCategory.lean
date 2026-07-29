@@ -117,7 +117,7 @@ theorem quantum_dim_tensor (τ : CategoricalTrace C) (X Y : C) :
   convert τ.tr_tensor ( 𝟙 X ) ( 𝟙 Y ) using 1;
   -- By definition of whiskering, we have that ⟡(🏴X) ▷ Y is the identity morphism on X ⊗ Y and X ◁ ( saintY ) is also the identity morphism on X ⊗ Y.
   simp [MonoidalCategory.whiskerRight_id, MonoidalCategory.whiskerLeft_id];
-  rfl
+  all_goals rfl
 
 /-
 PROBLEM
