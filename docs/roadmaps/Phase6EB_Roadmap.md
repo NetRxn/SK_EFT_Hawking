@@ -74,7 +74,7 @@ Clean whitespace: no prover has a kernel-checked ENBW/NEP/matched-filter floor f
 
 **Bricks.** Wave 1 + Wave 2; 6EA `avg_error_ge_of_z_le`.
 
-**Done (AC / `/goal` condition).** ✅ **SHIPPED 2026-07-29** — 26 declarations, 0 sorry / 0 axiom / 0 `native_decide` / 0 `maxHeartbeats`, kernel-pure `{propext, Classical.choice, Quot.sound}`, root-imported.
+**Done (AC / `/goal` condition).** ✅ **SHIPPED 2026-07-29** — 33 extracted declarations (`lean_deps.json`, the same convention under which W1 = 23 and W2 = 41), 0 sorry / 0 axiom / 0 `native_decide` / 0 `maxHeartbeats`, kernel-pure `{propext, Classical.choice, Quot.sound}`, root-imported.
 - [x] `lean/SKEFTHawking/Detection/MatchedFilter.lean` builds 0-sorry, kernel-pure, with:
 - [x] **shipped strictly stronger** as `filteredSNR_le_matchedBudget` (bound by the *filter-free* budget `√(2·∫s²/S₀)`, not by `SNR(matched)`) + `filteredSNR_matched_eq_budget` (attainment) + `matchedFilter_isGreatest` (the two as an `IsGreatest`) `matched_filter_snr_optimal : ∀ h ∈ class, SNR h ≤ SNR (matched template)` (Cauchy–Schwarz with equality characterization — shipped as the full biconditional `filteredSNR_eq_budget_iff`, saturation **iff** `h` is a.e. a *positive* multiple of the template, with `filteredSNR_neg_matched_eq_neg_budget` witnessing that the positivity is not removable). The AC's literal (weaker) form is deliberately **not** shipped — identity-wrapper rule, same call as 6EA's `avgError_ge_gaussianQ_sharp`;
 - [x] **shipped as `optimal_z_budget` + `matchedBudget_half_eq`** (the closed form `matchedBudget/2 = √(∫s²/(2·S₀))`, one-sided constant explicit) `optimal_z_budget : z ≤ √(∫ s²/S₀)`-shape corollary;
@@ -104,7 +104,7 @@ Strictly Wave 1 → Wave 2 → Wave 3 on the critical path (each consumes the pr
 |---|---|---|---|
 | W1 | `lean/SKEFTHawking/Detection/FilterFloors.lean` | 23 | `4378cc01` (2026-07-28) |
 | W2 | `lean/SKEFTHawking/Detection/NEPAlgebra.lean` | 41 | `193437a1` (2026-07-28) |
-| W3 | `lean/SKEFTHawking/Detection/MatchedFilter.lean` | 26 | 2026-07-29 |
+| W3 | `lean/SKEFTHawking/Detection/MatchedFilter.lean` | 33 | 2026-07-29 |
 
 Post-merge corrections folded in: `25307cf6` (PSD duplication reconciled — canonical is `Detection.shotPSD`), `a9c257da` (W2 docstring re-pointed at shipped names).
 

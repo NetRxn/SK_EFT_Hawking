@@ -19,21 +19,34 @@ possible linear readout cannot be beaten by a cleverer filter.
 
 `IsAdmissibleFilter T s h` — the class quantified over in every optimality statement below:
 
-* `h ∈ L²[0, T]` (interval-supported, single-shot: the filter sees the window and nothing else);
+* `h² ∈ L¹[0, T]` (finite energy **over the window**);
 * the deflection integral `∫₀ᵀ h·s` exists.
 
-Both conjuncts are carried in the statement, never in prose. The second is *mathematically*
-implied by `h, s ∈ L²` (Cauchy–Schwarz), but Mathlib's interval-integral API supplies no such
-implication at the pinned version, so it is an explicit field rather than a silent assumption.
+Both conjuncts are carried in the statement, never in prose. Two points of precision, because this
+is the section whose whole purpose is to make the class honest:
+
+* **Window *support* is not encoded, and is not needed.** `IntervalIntegrable` on `[0, T]`
+  constrains nothing about `h` outside the window — an everywhere-nonzero `h` is admissible. What
+  makes the layer single-shot is that every quantity below reads `h` only through `∫₀ᵀ`, and in
+  particular `IsWhiteFilteredVariance` defines the noise from `∫₀ᵀ h²` alone. The bound therefore
+  holds on this *larger* class, which is strictly stronger than restricting to supported filters.
+* **The second field is genuinely independent, not merely un-derivable at the pin.** It is
+  tempting to call it Cauchy–Schwarz for `h, s ∈ L²`, but the first field is `h² ∈ L¹`, which does
+  **not** give measurability of `h` (flip the sign of a constant on a non-measurable set and `h²`
+  is unchanged). So `h·s` need not be measurable and no lemma could supply the implication.
 
 ## Conventions (inherited, not re-chosen)
 
 * **One-sided PSD**, via Wave 1's `IsWhiteFilteredVariance V S₀ T : ∀ h, V h = S₀/2 · ∫₀ᵀ h²`.
   The noise scale of the filtered output is `√(V h)`; the `S₀/2` is the one-sided normalization
   fixed by `GrapheneNoiseFormula` and threaded through this file's statements via `hwhite`.
-* **Deflection**, not power: `filteredSNR` is an *amplitude* ratio `(∫ h·s) / √(V h)`, which is
-  the quantity 6EA's threshold algebra consumes (it enters `avgError_ge_gaussianQ_sharp` as
-  `(μ₁ − μ₀)/(2σ)`). Squaring it gives the power SNR; the factor is stated, not assumed.
+* **Deflection**, not power: `filteredSNR` is an *amplitude* ratio `(∫ h·s) / √(V h)`. 6EA's
+  threshold algebra consumes **half** of it: under this module's identification
+  `filteredSNR = (μ₁ − μ₀)/σ`, whereas `avgError_ge_gaussianQ_sharp` takes the midpoint-threshold
+  separation `(μ₁ − μ₀)/(2σ) = filteredSNR/2`. That factor of 2 is carried explicitly by
+  `matchedBudget_half_eq` and `optimal_z_budget`, never absorbed — and
+  `matchedBudget_half_ne_matchedBudget` makes the mix-up detectable, as the phase's
+  convention-falsifier fork requires.
 * **Sign matters.** The bound is on the signed ratio, and `filteredSNR_neg_matched_eq_neg_budget`
   witnesses that the sign is load-bearing: `h = −s` saturates Cauchy–Schwarz in magnitude yet
   sits at `−matchedBudget`, so the equality characterization's positivity condition cannot be
@@ -67,8 +80,10 @@ implication at the pinned version, so it is an explicit field rather than a sile
   the composition `filteredSNR_le_matchedBudget` ▸ `filteredSNR_matched_eq_budget` and is
   therefore *not* shipped separately — at an identical hypothesis list it would be a weaker
   restatement closable in one `linarith`, the identity-wrapper pattern the strengthening
-  checklist forbids. Same call as Wave 2's `avgError_ge_gaussianQ_sharp` (see
-  `Detection.GaussianThreshold`'s closing note).
+  checklist forbids. (Precisely: the composition covers `0 < ∫₀ᵀ s²`; at the degenerate template
+  energy the AC form additionally needs `filteredSNR_of_variance_eq_zero`, which is shipped, so
+  the AC form is derivable at *no* extra hypothesis.) Same call as **6EA** Wave 2's
+  `avgError_ge_gaussianQ_sharp` (see `Detection.GaussianThreshold`'s closing note).
 * **Equality characterization.** The AC asks for "equality characterization"; what ships is the
   full biconditional `filteredSNR_eq_budget_iff`, including the **positivity** of the scaling
   factor — which `filteredSNR_neg_matched_eq_neg_budget` shows is not removable.
@@ -91,16 +106,21 @@ open MeasureTheory Real SKEFTHawking.QuantumNetwork
 
 /-- **The admissible single-shot linear filter class on `[0, T]`, against template `s`.**
 
-A filter is admissible when it is square-integrable on the window (interval-supported `L²` —
-"single-shot": it acts on `[0, T]` and nothing outside) and its deflection integral against the
-template exists.
+A filter is admissible when it has finite energy *over the window* and its deflection integral
+against the template exists. Membership is relative to the template because the deflection is;
+this is the class the roadmap's Wave-3 AC quantifies over.
 
-The second field is mathematically redundant given `h, s ∈ L²` (it *is* Cauchy–Schwarz), but
-Mathlib carries no interval-integral form of that implication at the pinned version, so it is
-declared rather than assumed. Membership is relative to the template because the deflection is;
-this is the class the roadmap's Wave-3 AC quantifies over. -/
+**This does NOT encode window support** — `IntervalIntegrable` on `[0, T]` says nothing about `h`
+off the window, and indeed `fun x => Real.exp x` is admissible. Single-shot-ness of the *layer*
+comes from every statement reading `h` only through `∫₀ᵀ` (and `IsWhiteFilteredVariance` defining
+the noise from `∫₀ᵀ h²`), so the bounds below hold on this larger class — strictly stronger than
+restricting to supported filters. See the module docstring.
+
+**Both fields are independent.** `mul_integrable` is *not* a derivable consequence of
+`sq_integrable` plus `s² ∈ L¹`: `h² ∈ L¹` does not give measurability of `h` (flip a constant's
+sign on a non-measurable set), so `h·s` need not be measurable at all. -/
 structure IsAdmissibleFilter (T : ℝ) (s h : ℝ → ℝ) : Prop where
-  /-- `h ∈ L²[0, T]`: the filter has finite energy on the window. -/
+  /-- `h² ∈ L¹[0, T]`: the filter has finite energy over the window. -/
   sq_integrable : IntervalIntegrable (fun x => h x ^ 2) volume 0 T
   /-- The deflection integral `∫₀ᵀ h·s` exists. -/
   mul_integrable : IntervalIntegrable (fun x => h x * s x) volume 0 T
@@ -523,9 +543,15 @@ theorem matchedBudget_twoBoxcar : matchedBudget 1 2 (fun x => 2 * boxcar 2 x) = 
 average assignment error below the rational `1/125`.
 
 Falsifiable as stated: a reported error below `1/125` at this template energy and noise PSD
-refutes the declared identification (`hμ`, `hσV`), the whiteness assumption, or the admissibility
-of the readout — it cannot be a better filter. Consumes 6EA's rational Gaussian enclosure
-`gaussianQ_two_ge_rational`, so no floating-point `exp` enters anywhere. -/
+refutes one of the binders — the declared identification (`hμ`, `hσV`), the whiteness assumption
+(`hwhite`), the admissibility of the readout (`hadm`), a non-degenerate noise scale (`hσ`), or the
+non-inverted deflection (`hμle`, which excludes negative-deflection readouts; that those are a
+real case is the point of `filteredSNR_neg_matched_eq_neg_budget`). What it cannot be is a better
+filter. Consumes 6EA's rational Gaussian enclosure `gaussianQ_two_ge_rational`, so no
+floating-point `exp` enters anywhere.
+
+That this binder set is *jointly satisfiable* is not left to the reader:
+`error_floor_twoBoxcar_closed` exhibits a model and derives the floor with no hypotheses at all. -/
 theorem error_floor_twoBoxcar_witness {V : (ℝ → ℝ) → ℝ}
     (hwhite : IsWhiteFilteredVariance V 1 2)
     {h : ℝ → ℝ} (hadm : IsAdmissibleFilter 2 (fun x => 2 * boxcar 2 x) h)
@@ -550,17 +576,96 @@ Kernel-checked no-go; the settled fork is `6eb-unsigned-matched-saturation-chara
 (`KERNEL_NOGO_REGISTRY`). Any future restatement of the equality case must carry the sign. -/
 theorem unsigned_saturation_characterization_false {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
     (hwhite : IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀)
-    {s : ℝ → ℝ} (hCpos : 0 < ∫ x in (0:ℝ)..T, s x ^ 2) :
-    ¬ (∀ h : ℝ → ℝ,
+    {s : ℝ → ℝ} (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 T)
+    (hCpos : 0 < ∫ x in (0:ℝ)..T, s x ^ 2) :
+    ¬ (∀ h : ℝ → ℝ, IsAdmissibleFilter T s h →
         (∃ c : ℝ, h =ᵐ[volume.restrict (Set.Ioc 0 T)] fun x => c * s x) →
         filteredSNR V T s h = matchedBudget S₀ T s) := by
   intro hall
+  have hadm : IsAdmissibleFilter T s (fun x => -s x) := by
+    refine ⟨?_, ?_⟩
+    · have hrw : (fun x => (-s x) ^ 2) = fun x => s x ^ 2 := by funext x; ring
+      rw [hrw]; exact hs
+    · have hrw : (fun x => (-s x) * s x) = fun x => -(s x ^ 2) := by funext x; ring
+      rw [hrw]; exact hs.neg
   have hmem : ∃ c : ℝ, (fun x => -s x) =ᵐ[volume.restrict (Set.Ioc 0 T)] fun x => c * s x :=
     ⟨-1, Filter.Eventually.of_forall (fun x => by ring)⟩
   have hpos : 0 < matchedBudget S₀ T s :=
     Real.sqrt_pos.mpr (by positivity)
   have hneg := filteredSNR_neg_matched_eq_neg_budget hwhite hS hCpos
-  rw [hall _ hmem] at hneg
+  rw [hall _ hadm hmem] at hneg
+  linarith
+
+/-! ### The power-domain carve-out, kernel-backed rather than asserted -/
+
+/-- **Power (squared) deflection-to-noise ratio** — the quantity in which the *sign* of the filter
+genuinely drops out. Shipped only so that the settled fork's power-domain carve-out can be stated
+as theorems (`powerSNR_smul_eq_budget_sq`, `power_unsigned_characterization_false`) rather than
+trusted as prose. -/
+noncomputable def filteredPowerSNR (V : (ℝ → ℝ) → ℝ) (T : ℝ) (s h : ℝ → ℝ) : ℝ :=
+  (∫ x in (0:ℝ)..T, h x * s x) ^ 2 / V h
+
+/-- **In the power domain the sign really does drop out — but `c ≠ 0` does not.**
+
+For *any* non-zero multiple of the template, positive or negative, the power SNR equals
+`matchedBudget²`. This is the correct form of the carve-out recorded in the settled fork
+`6eb-unsigned-matched-saturation-characterization`. -/
+theorem powerSNR_smul_eq_budget_sq {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
+    (hwhite : IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀)
+    {s : ℝ → ℝ} (hCpos : 0 < ∫ x in (0:ℝ)..T, s x ^ 2) {c : ℝ} (hc : c ≠ 0) :
+    filteredPowerSNR V T s (fun x => c * s x) = matchedBudget S₀ T s ^ 2 := by
+  set C := ∫ x in (0:ℝ)..T, s x ^ 2 with hC
+  have hnum : (∫ x in (0:ℝ)..T, (c * s x) * s x) = c * C := by
+    rw [hC, ← intervalIntegral.integral_const_mul]
+    congr 1; funext x; ring
+  have hsq : (∫ x in (0:ℝ)..T, (c * s x) ^ 2) = c ^ 2 * C := by
+    rw [hC, ← intervalIntegral.integral_const_mul]
+    congr 1; funext x; ring
+  have hVh : V (fun x => c * s x) = S₀ / 2 * (c ^ 2 * C) := by
+    rw [hwhite (fun x => c * s x), hsq]
+  unfold filteredPowerSNR matchedBudget
+  rw [hnum, hVh, ← hC, Real.sq_sqrt (by positivity)]
+  have hcsq : c ^ 2 ≠ 0 := pow_ne_zero 2 hc
+  field_simp
+
+/-- **The power-domain carve-out still needs `c ≠ 0`.**
+
+Dropping the non-vanishing condition makes the *power* characterization false too, for a reason
+independent of the sign: the **zero filter** satisfies the unsigned membership condition at
+`c = 0` and realizes power SNR `0`, not `matchedBudget²`. Physically `c = 0` is a
+**vanishing-responsivity readout chain** — precisely the degenerate branch the downstream
+electrothermal phases carry (`Electrothermal.ETFModel.responsivityETF`'s `R = 0` disclosure), so
+this is not a pathological corner for these consumers.
+
+Shipped because the settled fork's carve-out sentence would otherwise be prose a consumer could
+act on incorrectly; with this theorem the correct scope (`∃ c ≠ 0`) is kernel-checked.
+
+Carries **neither** a whiteness binder nor template integrability: the zero filter defeats the
+statement for *any* variance functional `V`, so requiring `IsWhiteFilteredVariance` would only
+narrow the refutation. -/
+theorem power_unsigned_characterization_false {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ} (hS : 0 < S₀)
+    {s : ℝ → ℝ} (hCpos : 0 < ∫ x in (0:ℝ)..T, s x ^ 2) :
+    ¬ (∀ h : ℝ → ℝ, IsAdmissibleFilter T s h →
+        (∃ c : ℝ, h =ᵐ[volume.restrict (Set.Ioc 0 T)] fun x => c * s x) →
+        filteredPowerSNR V T s h = matchedBudget S₀ T s ^ 2) := by
+  intro hall
+  have hadm : IsAdmissibleFilter T s (fun _ => (0:ℝ)) := by
+    refine ⟨?_, ?_⟩
+    · simp
+    · simp
+  have hmem : ∃ c : ℝ,
+      (fun _ => (0:ℝ)) =ᵐ[volume.restrict (Set.Ioc 0 T)] fun x => c * s x :=
+    ⟨0, Filter.Eventually.of_forall (fun x => by ring)⟩
+  have hzero : filteredPowerSNR V T s (fun _ => (0:ℝ)) = 0 := by
+    unfold filteredPowerSNR
+    have hnum : (∫ x in (0:ℝ)..T, (0:ℝ) * s x) = 0 := by simp
+    rw [hnum]
+    simp
+  have hbudget : 0 < matchedBudget S₀ T s ^ 2 := by
+    unfold matchedBudget
+    rw [Real.sq_sqrt (by positivity)]
+    positivity
+  rw [hall _ hadm hmem] at hzero
   linarith
 
 /-- **The ceiling genuinely discriminates — a strictly sub-optimal admissible filter.**
@@ -570,10 +675,17 @@ one-sided PSD `S₀ = 2` realizes `√3/2 ≈ 0.866`, strictly below the budget 
 `filteredSNR_le_matchedBudget` is not an inequality that everything saturates: mismatch costs
 real SNR, which is what makes `filteredSNR_eq_budget_iff`'s characterization non-empty content.
 
-The exact analogue of Wave 1's `enbw_ramp_gt_half`, and computed on the same ramp. -/
+The exact analogue of Wave 1's `enbw_ramp_gt_half`, and computed on the same ramp. The ramp's
+**membership in the admissible class is part of the statement** — without it a "sub-optimal
+admissible filter" claim would not establish that the witness lies in the class being bounded. -/
 theorem filteredSNR_ramp_lt_budget {V : (ℝ → ℝ) → ℝ}
     (hwhite : IsWhiteFilteredVariance V 2 1) :
-    filteredSNR V 1 (boxcar 1) (fun x => x) < matchedBudget 2 1 (boxcar 1) := by
+    IsAdmissibleFilter 1 (boxcar 1) (fun x => x) ∧
+      filteredSNR V 1 (boxcar 1) (fun x => x) < matchedBudget 2 1 (boxcar 1) := by
+  refine ⟨⟨?_, ?_⟩, ?_⟩
+  · exact (continuous_id.pow 2).intervalIntegrable 0 1
+  · exact (continuous_id.intervalIntegrable 0 1).congr
+      (fun x hx => by rw [← boxcar_eqOn_uIoc 1 (by norm_num) hx]; simp)
   have hnum : (∫ x in (0:ℝ)..1, x * boxcar 1 x) = 1 / 2 := by
     rw [intervalIntegral.integral_congr (g := fun x : ℝ => x)
       (fun x hx => by rw [boxcar_eqOn 1 (by norm_num) hx, mul_one])]
@@ -594,6 +706,71 @@ theorem filteredSNR_ramp_lt_budget {V : (ℝ → ℝ) → ℝ}
     rw [show (1:ℝ) / 4 = (1 / 2) ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]
   rw [h4]
   exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
+
+/-- **The composed floor, closed: no hypotheses at all.**
+
+`error_floor_twoBoxcar_witness` is conditional on six binders, which leaves open the (real)
+possibility that they are jointly unsatisfiable and the floor vacuous. They are not: taking the
+matched filter `h = s = 2·𝟙[0,2]` against the canonical white variance functional
+`V h = ½·∫₀² h²` gives `μ₁ − μ₀ = ∫₀² s² = 8`, `σ = √(V s) = √4 = 2`, and the resulting
+average assignment error at any threshold — here the midpoint `t = 4` — is at least `1/125`.
+
+This is the non-vacuity certificate for the whole Wave-3 → 6EA composition: a fully closed,
+rational, floating-point-free lower bound on a detector error. -/
+theorem error_floor_twoBoxcar_closed :
+    (1:ℝ) / 125 ≤ avgAssignmentError (thrErr0 0 2 4) (thrErr1 8 2 4) := by
+  set s : ℝ → ℝ := fun x => 2 * boxcar 2 x with hs
+  set V : (ℝ → ℝ) → ℝ := fun h => 1 / 2 * ∫ x in (0:ℝ)..2, h x ^ 2 with hV
+  have hwhite : IsWhiteFilteredVariance V 1 2 := by
+    intro h; rw [hV]
+  have hadm : IsAdmissibleFilter 2 s s := by
+    refine ⟨intervalIntegrable_twoBoxcar_sq, ?_⟩
+    have hrw : (fun x => s x * s x) = fun x => s x ^ 2 := by funext x; rw [sq]
+    rw [hrw]; exact intervalIntegrable_twoBoxcar_sq
+  have hE : (∫ x in (0:ℝ)..2, s x ^ 2) = 8 := integral_twoBoxcar_sq
+  have hdefl : (8:ℝ) - 0 = ∫ x in (0:ℝ)..2, s x * s x := by
+    have hrw : (fun x => s x * s x) = fun x => s x ^ 2 := by funext x; rw [sq]
+    rw [hrw, hE]; norm_num
+  have hVs : V s = 4 := by rw [hV]; simp only []; rw [hE]; norm_num
+  have hsig : (2:ℝ) = √(V s) := by
+    rw [hVs, show (4:ℝ) = 2 ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]
+  exact error_floor_twoBoxcar_witness (t := 4) hwhite hadm (by norm_num) (by norm_num)
+    hdefl hsig
+
+/-! ## The factor-2 seam, made detectable
+
+Wave 1's settled fork `6eb-enbw-convention-falsifier-shape` requires that any falsifier in this
+family target a **mixed** pairing rather than asserting a convention is "wrong". Wave 3 introduces
+a fresh factor-2 seam — the separation `z = budget/2` against the budget itself — so it owes a
+detectability theorem for exactly that mix. -/
+
+/-- **The `budget` / `budget/2` mix is detectable.** Feeding `matchedBudget` to 6EA's threshold
+algebra where the midpoint convention wants `matchedBudget/2` is not a harmless relabelling: the
+two provably differ whenever the template energy is positive.
+
+At the concrete witness the consequence is large — `Q(2) ≈ 2.3·10⁻²` against
+`Q(4) ≈ 3.2·10⁻⁵`, nearly three orders of magnitude in the error floor — so this is the seam most
+worth having kernel-checked. -/
+theorem matchedBudget_half_ne_matchedBudget {S₀ T : ℝ} (hS : 0 < S₀) {s : ℝ → ℝ}
+    (hCpos : 0 < ∫ x in (0:ℝ)..T, s x ^ 2) :
+    matchedBudget S₀ T s / 2 ≠ matchedBudget S₀ T s := by
+  have hpos : 0 < matchedBudget S₀ T s := Real.sqrt_pos.mpr (by positivity)
+  intro h
+  linarith
+
+/-- **The layer closes: for a boxcar template the optimal filter is Wave 1's floor-saturating
+boxcar.** Matched-filter optimality and the ENBW realizability floor pick out the *same* filter,
+so "Wave 3 closes the layer" is a theorem rather than a narrative claim: the filter that attains
+the deflection ceiling is exactly the one that attains `ENBW·T = 1/2`. -/
+theorem matched_filter_of_boxcar_saturates_enbw_floor {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
+    (hwhite : IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀) (hT : 0 < T) :
+    filteredSNR V T (boxcar T) (boxcar T) = matchedBudget S₀ T (boxcar T) ∧
+      enbw (boxcar T) T * T = 1 / 2 := by
+  have hCpos : 0 < ∫ x in (0:ℝ)..T, boxcar T x ^ 2 := by
+    rw [integral_boxcar_sq T hT.le]; exact hT
+  refine ⟨filteredSNR_matched_eq_budget hwhite hS hCpos, ?_⟩
+  rw [enbw_boxcar T hT]
+  field_simp
 
 /-! ## Degenerate branches, disclosed -/
 

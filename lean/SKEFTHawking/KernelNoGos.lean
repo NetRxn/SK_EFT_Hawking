@@ -802,10 +802,45 @@ frontier + `validate.py --check nogo_substrate_integrity`) and the prose
    same correction.
    backing: `homologyCoords_gauge`, `not_forall_kroneckerTransport_gauge_invariant`, `hyperbolic2_taylor_flip`, `gramMap_hyperbolic2`, `pinCharSurfaceOfBundled_gauge_H1Iso`
 
+43. `6eb-unsigned-matched-saturation-characterization` [refutation]
+   Matched-filter saturation may be characterized WITHOUT a sign condition: `filteredSNR V T s h =
+   matchedBudget S0 T s` iff `h` is a.e. on the window SOME scalar multiple of the template `s`. FALSE
+   (Phase 6EB Wave 3, 2026-07-29, kernel-checked; refuted flatly by
+   `unsigned_saturation_characterization_false`). WITNESS: `h = -s`, i.e. `c = -1`. It satisfies the
+   unsigned membership condition, and it SATURATES Cauchy-Schwarz in MAGNITUDE -- `(int h*s)^2 = (int
+   h^2)(int s^2)` holds with equality -- yet the realized ratio is `-matchedBudget`
+   (`filteredSNR_neg_matched_eq_neg_budget`), which differs from `matchedBudget` whenever the template
+   energy is positive. MECHANISM: the deflection-to-noise ratio is a SIGNED quantity (numerator `int_0^T
+   h*s`, denominator the positive `sqrt(V h)`), while Cauchy-Schwarz equality only controls `|int h*s|`. The
+   anti-matched filter is the extremal MINIMIZER, not a maximizer. SCOPE -- this refutes the UNSIGNED
+   characterization only; it does NOT weaken the shipped form `filteredSNR_eq_budget_iff`, which carries
+   `exists c, 0 < c and h =a.e. c*s` and is correct as stated, nor the bound `filteredSNR_le_matchedBudget`,
+   which is a statement about the signed ratio and is true for `h = -s` (trivially: a negative number is
+   below a positive budget). SCOPE, PART 2 -- the refutation is CLASS-RESTRICTED (corrected 2026-07-29 after
+   adversarial review): `unsigned_saturation_characterization_false` now quantifies over `IsAdmissibleFilter
+   T s h`, because refuting the UNRESTRICTED `forall h` does NOT refute the class-restricted statement a
+   consumer would actually write (`not (forall h, P h)` does not imply `not (forall h in class, P h)` -- the
+   class-restricted claim is the weaker one to refute). The witness `h = -s` is in the class, which the
+   theorem now establishes rather than leaving to the reader. CONSEQUENCE FOR CONSUMERS (6EC electrothermal,
+   6EE composite ceilings): a downstream restatement of the equality case must carry the sign, and an
+   inverted readout chain (negative responsivity) is NOT an optimal filter even though it attains the same
+   POWER SNR. THE POWER-DOMAIN CARVE-OUT, CORRECTED 2026-07-29 (the earlier wording of this entry was FALSE
+   and is retracted): in power SNR `(int h*s)^2 / V h` the SIGN does drop out, but `c = 0` does NOT -- the
+   ZERO FILTER satisfies the unsigned membership condition at `c = 0` and realizes power SNR `0`, not
+   `matchedBudget^2`. So the sign-free power-domain statement still needs `exists c, c != 0`. This is not a
+   pathological corner for these consumers: `c = 0` is exactly a VANISHING-RESPONSIVITY readout chain, the
+   degenerate branch `Electrothermal.ETFModel.responsivityETF` / `Detection.nepOfOutput` both disclose. Both
+   halves are now kernel-backed rather than prose: `power_unsigned_characterization_false` (the `c = 0`
+   refutation, which needs no whiteness binder -- the zero filter defeats the claim for ANY variance
+   functional) and `powerSNR_smul_eq_budget_sq` (the correct `c != 0` form). Do not transport the corrected
+   power-domain statement back into the amplitude domain, which is the shape this fork bans.
+   backing: `unsigned_saturation_characterization_false`, `filteredSNR_neg_matched_eq_neg_budget`, `power_unsigned_characterization_false`, `powerSNR_smul_eq_budget_sq`
+
 -/
 import SKEFTHawking.BordismGroup
 import SKEFTHawking.CharSurfacePDBundled
 import SKEFTHawking.CharSurfacePDTransport
+import SKEFTHawking.Detection.MatchedFilter
 import SKEFTHawking.FGDualityNoGo
 import SKEFTHawking.GMPinTorsorCeiling
 import SKEFTHawking.GMTripleLayerForcing
@@ -1195,5 +1230,17 @@ alias nogo_gramMap_hyperbolic2 := SKEFTHawking.CharSurfacePDTransport.gramMap_hy
 
 /-- NO-GO [`kronecker-dual-is-not-the-h1-enhancement-transport`] — do NOT re-derive. FALSE: The Kronecker/UCT dual of the carried cohomology basis - `homologyBasisOfCohomologyBasis basis`, the value `pinCharSurfaceOfBundled` puts in `PinCharSurface.H1Iso` (and the value `GeoRealizationTied.derivedEsigma`/`derivedEtau` put in the seam) - is the identification of `H1(Sigma;Z/2)` that the enhancement `q` lives on, so `q` may be evaluated at those coordinates at ANY rank. Backing refutation: `SKEFTHawking.CharSurfacePDBundled.pinCharSurfaceOfBundled_gauge_H1Iso`. -/
 alias nogo_pinCharSurfaceOfBundled_gauge_H1Iso := SKEFTHawking.CharSurfacePDBundled.pinCharSurfaceOfBundled_gauge_H1Iso
+
+/-- NO-GO [`6eb-unsigned-matched-saturation-characterization`] — do NOT re-derive. FALSE: Matched-filter saturation may be characterized WITHOUT a sign condition: `filteredSNR V T s h = matchedBudget S0 T s` iff `h` is a.e. Backing refutation: `SKEFTHawking.Detection.unsigned_saturation_characterization_false`. -/
+alias nogo_unsigned_saturation_characterization_false := SKEFTHawking.Detection.unsigned_saturation_characterization_false
+
+/-- NO-GO [`6eb-unsigned-matched-saturation-characterization`] — do NOT re-derive. FALSE: Matched-filter saturation may be characterized WITHOUT a sign condition: `filteredSNR V T s h = matchedBudget S0 T s` iff `h` is a.e. Backing refutation: `SKEFTHawking.Detection.filteredSNR_neg_matched_eq_neg_budget`. -/
+alias nogo_filteredSNR_neg_matched_eq_neg_budget := SKEFTHawking.Detection.filteredSNR_neg_matched_eq_neg_budget
+
+/-- NO-GO [`6eb-unsigned-matched-saturation-characterization`] — do NOT re-derive. FALSE: Matched-filter saturation may be characterized WITHOUT a sign condition: `filteredSNR V T s h = matchedBudget S0 T s` iff `h` is a.e. Backing refutation: `SKEFTHawking.Detection.power_unsigned_characterization_false`. -/
+alias nogo_power_unsigned_characterization_false := SKEFTHawking.Detection.power_unsigned_characterization_false
+
+/-- NO-GO [`6eb-unsigned-matched-saturation-characterization`] — do NOT re-derive. FALSE: Matched-filter saturation may be characterized WITHOUT a sign condition: `filteredSNR V T s h = matchedBudget S0 T s` iff `h` is a.e. Backing refutation: `SKEFTHawking.Detection.powerSNR_smul_eq_budget_sq`. -/
+alias nogo_powerSNR_smul_eq_budget_sq := SKEFTHawking.Detection.powerSNR_smul_eq_budget_sq
 
 end SKEFTHawking.KernelNoGos

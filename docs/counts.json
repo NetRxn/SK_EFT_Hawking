@@ -1,12 +1,12 @@
 {
-  "generated": "2026-07-29T16:04:29.733356",
+  "generated": "2026-07-29T16:59:04.507560",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 39538,
-    "theorems_total": 25475,
-    "theorems_substantive": 25449,
+    "total_declarations": 39575,
+    "theorems_total": 25505,
+    "theorems_substantive": 25479,
     "theorems_placeholder": 26,
-    "theorems_kernel_substantive": 25380,
+    "theorems_kernel_substantive": 25410,
     "theorems_tracked_vacuity_debt": 69,
     "theorems_vacuity_baseline": 48,
     "theorems_vacuous_proxy": 6,
@@ -15,7 +15,7 @@
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 1999,
+    "modules": 2000,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -180,6 +180,7 @@
       "SKEFTHawking.EinsteinCartanExtension",
       "SKEFTHawking.EinsteinTensor",
       "SKEFTHawking.Electrothermal.ETFModel",
+      "SKEFTHawking.Electrothermal.ETFResponsivity",
       "SKEFTHawking.EmergentGravityBounds",
       "SKEFTHawking.EnergyConditions",
       "SKEFTHawking.EntropicGravityDarkEnergy",
@@ -2017,7 +2018,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 12564,
+    "definitions": 12571,
     "structures": 470,
     "instances": 928,
     "inductives": 101,

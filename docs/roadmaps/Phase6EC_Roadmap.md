@@ -1,6 +1,10 @@
 # Phase 6EC — Kernel-Verified Electrothermal Detector Physics: Bias Stability, Loop Gain, and Bolometric Noise Floors
 
-**Status: PLANNED (authorized 2026-07-27).** Third phase of the `6E*` series (*verified device-physics metrology*). Consumes 6EB (NEP/ENBW layer); consumed by 6EE (composite ceilings). See `Phase6EA_Roadmap.md` for the series framing.
+**Status: IN PROGRESS — Waves 1 + 2 SHIPPED, Wave 3 open (authorized 2026-07-27; status corrected and Wave 2 landed 2026-07-29).** Third phase of the `6E*` series (*verified device-physics metrology*). Consumes 6EB (NEP/ENBW layer, **COMPLETE 2026-07-29**); consumed by 6EE (composite ceilings). See `Phase6EA_Roadmap.md` for the series framing.
+
+> **Status correction 2026-07-29.** This header read `PLANNED` and Wave 1's AC boxes were unchecked, but Wave 1 had in fact shipped — verified against the tree, not the checkboxes: `lean/SKEFTHawking/Electrothermal/ETFModel.lean`, **52 declarations**, zero sorry / zero axiom / zero `native_decide` / zero `maxHeartbeats`, root-imported in `SKEFTHawking.lean`. (The only textual matches for the banned constructs are in the header docstring *asserting their absence* — the grep-false-positive class; purity was re-checked with `#print axioms`.) The AC list below is annotated with the shipped names. **Only Waves 2–3 remain.**
+>
+> Wave 1 shipped **more** than its AC asked: `solution_unique` (integrating-factor uniqueness of the heat-balance solution, not merely one explicit solution), the marginal case `etf_marginal_of_loopGain_eq_neg_one`, the Irwin–Hilton convention bridge `loopGain_eq_irwinHilton` as a *theorem* rather than a comment, and three **refutations** of magnitude-only stability criteria (`magnitudeOnly_criterion_unsound`, `absLoopGain_criterion_unsound`, `effectiveTimeConstant_neg_of_unstable`) — Guardrail 2 enforced by kernel, not prose.
 
 **Thesis.** Thermal detectors (bolometers, calorimeters, TES-class sensors) are governed by a small linearized electrothermal model — heat balance `C·dT/dt = P_bias(T) + P_signal − G·ΔT`, electrothermal feedback (ETF) loop gain `ℒ = P_J·α/(G·T)` (equivalently `V²(dR/dT)/(R²G)` under voltage bias), stability iff `ℒ > −1`, effective time constant `τ_eff = τ/(1+ℒ)`, and the phonon/Johnson noise floors — that the instrument literature (Irwin–Hilton and its citation graph) treats as settled algebra. None of it is kernel-checked anywhere (repo sweep 2026-07-27: zero electrothermal/bolometry content in any prover-adjacent corpus we track). This phase formalizes the linearized model exactly: the ODE facts, the stability dichotomy, the responsivity closed forms with their ETF corrections, and the noise-floor composition through the 6EB layer.
 
@@ -36,15 +40,15 @@ Clean whitespace: no kernel-checked ETF stability criterion, loop-gain-corrected
 
 **Bricks.** `DampedTwoLevel.lean` (pattern); Mathlib `HasDerivAt`.
 
-**Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/Electrothermal/ETFModel.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `etfModel` structure (C, G, bias-point R, V, signed `dRdT`, all positivity/sign hypotheses explicit and minimal) + `loopGain_def : ℒ = V^2 · dRdT / (R^2 · G)` and `effectiveConductance_def : G_eff = G·(1+ℒ)`;
-- [ ] `biasPower_linearization : d(V²/R(T))/dT = −V²·dRdT/R²` (the sign-carrying step, from `deriv`);
-- [ ] `etf_perturbation_solves : δT(t) = δT₀ · exp (−t/τ_eff)` solves the linearized heat balance, with `τ_eff = C/G_eff` (`HasDerivAt` verification, explicit solution);
-- [ ] `etf_stable_iff : (perturbations decay) ↔ ℒ > −1` — the dichotomy as an iff (decay ↔ `G_eff > 0`), including the divergence direction for `ℒ < −1`;
-- [ ] `etf_timeConstant_speedup : ℒ > 0 → τ_eff < τ` and the slowdown dual;
-- [ ] `norm_num` witnesses on both sides of the dichotomy boundary;
-- [ ] preemptive-strengthening + post-wave audit.
+**Done (AC / `/goal` condition).** ✅ **SHIPPED** — verified against the tree 2026-07-29 (52 declarations, 0 sorry / 0 axiom / 0 `native_decide` / 0 `maxHeartbeats`, root-imported).
+- [x] `lean/SKEFTHawking/Electrothermal/ETFModel.lean` builds 0-sorry, kernel-pure, with:
+- [x] **shipped as `structure ETFModel` + `loopGain` / `effectiveConductance` / `timeConstant` / `effectiveTimeConstant` / `joulePower` / `alphaTCR` defs.** Positivity is deliberately *not* a structure field — `0 < C/G/R` sit in each theorem's binder list, which keeps hypotheses minimal *and* makes the degenerate branches statable, so non-droppability is witnessed (`loopGain_R_hypothesis_load_bearing`, `stability_G_hypothesis_load_bearing`) rather than asserted. Degenerate branches disclosed: `loopGain_of_R_eq_zero`, `loopGain_of_G_eq_zero` `etfModel` structure … + `loopGain_def` and `effectiveConductance_def`;
+- [x] **shipped as `biasPower_hasDerivAt` (the `HasDerivAt` form) + `biasPower_linearization` (the `deriv` form), over an *arbitrary* differentiable `R`-vs-`T` curve rather than a chosen functional form**, plus `linearizedSlope_eq_neg_effectiveConductance`, which *calls* it — so `ℒ`'s grouping is justified by computation, not by naming `biasPower_linearization : d(V²/R(T))/dT = −V²·dRdT/R²`;
+- [x] **shipped as `perturbation` + `perturbation_eq_exp_neg_div_effectiveTimeConstant` + `etf_perturbation_solves` / `etf_perturbation_solves_linearized`, and strengthened with `solution_unique`** (integrating-factor uniqueness — no Picard–Lindelöf) `etf_perturbation_solves`;
+- [x] `etf_stable_iff` — the dichotomy as an iff, with `PerturbationsDecay` quantifying over *every* trajectory solving the ODE (a `Tendsto … (𝓝 0)` limit) rather than aliasing `G_eff > 0`; both directions shipped (`tendsto_perturbation_of_pos`, `not_perturbationsDecay_of_effectiveConductance_nonpos`), plus `etf_diverges_of_loopGain_lt_neg_one` and the marginal case `etf_marginal_of_loopGain_eq_neg_one`;
+- [x] `etf_timeConstant_speedup` + `etf_timeConstant_slowdown` (+ `effectiveTimeConstant_eq_div`, `effectiveTimeConstant_neg_of_unstable`, `unstable_imp_dRdT_neg`);
+- [x] `norm_num` witnesses on both sides of the boundary — `stableWitness` / `marginalWitness` / `unstableWitness` / `speedupWitness` with their loop gains, decay/non-decay verdicts, `marginalWitness_frozen`, and `stableWitness_decay_enclosure`;
+- [x] preemptive-strengthening + post-wave audit — residue: three **refutations** of magnitude-only stability criteria (`magnitudeOnly_criterion_unsound`, `absLoopGain_criterion_unsound`, `effectiveTimeConstant_neg_of_unstable`), i.e. Guardrail 2 enforced by kernel rather than prose.
 
 ## Wave 2 — Responsivity with ETF correction
 
@@ -54,13 +58,13 @@ Clean whitespace: no kernel-checked ETF stability criterion, loop-gain-corrected
 
 **Bricks.** Wave 1; 6EB `nep_def` + `sigma_eq_responsivity_nep_sqrt_enbw`.
 
-**Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/Electrothermal/ETFResponsivity.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `dc_responsivity_bare : |dI/dP| = V·|dRdT|/(R²·G)` (no-feedback form) and `dc_responsivity_etf : ... /(R²·G·(1+ℒ))` (ETF-consistent form), both signed at the definition level with the magnitude corollaries separate;
-- [ ] `responsivity_etf_correction : R_bare = (1+ℒ) · R_etf` (the correction-factor identity) + monotonicity corollaries;
-- [ ] `responsivity_frequency_rolloff` — the single-pole `1/√(1+(ωτ_eff)²)` magnitude factor (algebraic, no Fourier machinery: stated for the sinusoidal steady-state solution verified by `HasDerivAt`, UNKNOWN-1);
-- [ ] input-referred NEP transfer through both responsivity forms via 6EB algebra, with a `norm_num` witness quantifying the budget error from using the bare form at a stated `ℒ`;
-- [ ] preemptive-strengthening + post-wave audit.
+**Done (AC / `/goal` condition).** ✅ **SHIPPED 2026-07-29** — 26 declarations, 0 sorry / 0 axiom / 0 `native_decide` / 0 `maxHeartbeats`, kernel-pure (13 headline theorems checked individually with `#print axioms`), root-imported.
+- [x] `lean/SKEFTHawking/Electrothermal/ETFResponsivity.lean` builds 0-sorry, kernel-pure, with:
+- [x] **shipped as the signed defs `currentTempSlope` / `responsivityBare` / `responsivityETF`, each *derived* rather than posited** — `hasDerivAt_current` gets `dI/dT = −V·(dR/dT)/R²` from `HasDerivAt.div` over an arbitrary differentiable `R`-vs-`T` curve (minus sign derived, mirroring Wave 1's `biasPower_hasDerivAt`), and `hasDerivAt_responsivityETF` / `hasDerivAt_responsivityBare` obtain both responsivities as genuine **chain-rule** derivatives of current-vs-absorbed-power (`HasDerivAt.comp`), differing only in which temperature-per-power map is composed. Magnitude corollaries are separate (`abs_responsivityETF_lt_abs_responsivityBare`) `dc_responsivity_bare` and `dc_responsivity_etf`;
+- [x] `responsivity_etf_correction : R_bare = (1+ℒ)·R_etf` — **and the audit found the unrestricted form FALSE.** At the marginal point `ℒ = −1` we have `G_eff = 0`, so `R_etf` collapses to Lean's junk `0` and the RHS is `0` while the LHS is not; the shipped statement carries `1 + ℒ ≠ 0` and `marginalWitness_correction_fails` witnesses the failure at Wave 1's published `marginalWitness` (LHS `1/2`, RHS `0`). Also shipped: `responsivity_opposite_sign_of_unstable` (on the unstable branch `ℒ < −1` the two responsivities have **opposite signs**, not merely different magnitudes);
+- [x] `responsivity_frequency_rolloff` — the single-pole `1/√(1+(ωτ_eff)²)` factor, **built rather than deferred** (see UNKNOWN-1). Route as prescribed: explicit sinusoidal steady state `thermalResponse`, verified by `thermalResponse_solves` (`HasDerivAt`, no Fourier machinery), amplitude `thermalResponseAmplitude` with the single-pole closed form `thermalResponseAmplitude_eq_singlePole` (in `τ_eff`, **not** `τ` — feedback moves the pole), the DC normalization `thermalResponseAmplitude_zero`, and `thermalResponseAmplitude_strictAnti` so the factor provably *bites* rather than being compatible with a flat response;
+- [x] input-referred NEP transfer via 6EB — `nep_bare_understates_by_one_plus_loopGain` **calls** `Detection.nepOfOutput`, so the seam is a computation; the direction is the dangerous one (an overstated responsivity *understates* NEP, making a detector look better than it is). Rational witness at Wave 1's already-published `speedupWitness` (`ℒ = 3`): `speedupWitness_bare_overstates_fourfold` and `speedupWitness_nep_quarter` — the bare form reports a noise floor **4× too low**, a 300 % sensitivity overclaim, with no floating point anywhere;
+- [x] preemptive-strengthening + post-wave audit — residue: the false-without-`1+ℒ≠0` correction identity (above, caught by Lean not by review), a dead `0 ≤ P₀` binder dropped from `responsivity_frequency_rolloff`, and `responsivity_magnitudeOnly_loses_stability_information` — the Wave-2 analogue of Wave 1's `magnitudeOnly_criterion_unsound`: two bias points satisfy the *identical* magnitude relation `|R_bare| = |1+ℒ|·|R_etf|` while sitting on opposite sides of the stability dichotomy, so a magnitude-corrected budget silently accepts a divergent operating point.
 
 ## Wave 3 — Bolometric noise floors
 
@@ -94,6 +98,6 @@ Wave 1 → Wave 2 → Wave 3 on the critical path. Wave 1 depends only on the `D
 
 ## Open UNKNOWNs
 
-- **UNKNOWN-1:** the frequency-rolloff statement form — sinusoidal steady-state via explicit particular solution (`HasDerivAt`, no Fourier) vs. deferring rolloff entirely to a later phase; decide at Stage 2 by whether 6EE consumes it (if 6EE only needs DC forms, defer — Pareto).
+- **UNKNOWN-1 — RESOLVED 2026-07-29 (Wave-2 Stage 2), and resolved *past* the Pareto floor.** The prescribed test was "decide by whether 6EE consumes it". **Evidence: it does not.** `Phase6EE_Roadmap.md` Wave 3's Bricks list is entirely DC/static (`avgAssignmentError_rational_floor`, `readoutDecayProb_enclosure`, `thermalExcitedPop`, 6EA `poisson_avgError_floor` + Gaussian floors, 6EB `error_floor_from_budget`, 6EC `bolometer_error_floor`, `GeneralizedAmpDamp`, `CoherenceFidelity`), and the whole 6EE roadmap contains **zero** occurrences of frequency / ω / rolloff / bandwidth. So the Pareto branch *permits* deferral. Deferral was nonetheless **declined**: permission is not a requirement, and the rolloff is tractable by the prescribed route (sinusoidal steady state verified by `HasDerivAt`, no Fourier machinery). Wave 2 therefore builds the DC core first — the part 6EE actually consumes, so delivery of the consumed content is never at risk — and ships the rolloff on top. Rationale: correctness/completeness over expediency; a deferred single-pole factor would have to be rebuilt by any later consumer that *does* work in the frequency domain.
 - **UNKNOWN-2:** phonon-NEP prefactor generality (the `4k_BT²G` white form vs. the `γ`-factor gradient correction) — ship the white form with the hypothesis explicit; note the correction as a tagged extension, don't block on it.
 - **UNKNOWN-3:** whether the bias circuit generalization (current bias / Thévenin) is worth a wave-4 — default no (voltage bias covers the stated class; generalize on demand).

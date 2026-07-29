@@ -4415,6 +4415,8 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'backing_theorems': [
             'SKEFTHawking.Detection.unsigned_saturation_characterization_false',
             'SKEFTHawking.Detection.filteredSNR_neg_matched_eq_neg_budget',
+            'SKEFTHawking.Detection.power_unsigned_characterization_false',
+            'SKEFTHawking.Detection.powerSNR_smul_eq_budget_sq',
         ],
         'nogo_kind': 'refutation',
         'false_statement': "Matched-filter saturation may be characterized WITHOUT a sign "
@@ -4434,13 +4436,30 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
             "carries `exists c, 0 < c and h =a.e. c*s` and is correct as stated, nor the bound "
             "`filteredSNR_le_matchedBudget`, which is a statement about the signed ratio and "
             "is true for `h = -s` (trivially: a negative number is below a positive budget). "
+            "SCOPE, PART 2 -- the refutation is CLASS-RESTRICTED (corrected 2026-07-29 after "
+            "adversarial review): `unsigned_saturation_characterization_false` now quantifies "
+            "over `IsAdmissibleFilter T s h`, because refuting the UNRESTRICTED `forall h` does "
+            "NOT refute the class-restricted statement a consumer would actually write "
+            "(`not (forall h, P h)` does not imply `not (forall h in class, P h)` -- the "
+            "class-restricted claim is the weaker one to refute). The witness `h = -s` is in the "
+            "class, which the theorem now establishes rather than leaving to the reader. "
             "CONSEQUENCE FOR CONSUMERS (6EC electrothermal, 6EE composite ceilings): a "
             "downstream restatement of the equality case must carry the sign, and an inverted "
             "readout chain (negative responsivity) is NOT an optimal filter even though it "
-            "attains the same POWER SNR -- if a consumer works in power SNR `(int h*s)^2/V h`, "
-            "the sign genuinely drops out and the unsigned characterization becomes correct "
-            "THERE; do not transport the correct power-domain statement back into the "
-            "amplitude domain, which is the shape this fork bans.",
+            "attains the same POWER SNR. THE POWER-DOMAIN CARVE-OUT, CORRECTED 2026-07-29 (the "
+            "earlier wording of this entry was FALSE and is retracted): in power SNR "
+            "`(int h*s)^2 / V h` the SIGN does drop out, but `c = 0` does NOT -- the ZERO FILTER "
+            "satisfies the unsigned membership condition at `c = 0` and realizes power SNR `0`, "
+            "not `matchedBudget^2`. So the sign-free power-domain statement still needs "
+            "`exists c, c != 0`. This is not a pathological corner for these consumers: `c = 0` "
+            "is exactly a VANISHING-RESPONSIVITY readout chain, the degenerate branch "
+            "`Electrothermal.ETFModel.responsivityETF` / `Detection.nepOfOutput` both disclose. "
+            "Both halves are now kernel-backed rather than prose: "
+            "`power_unsigned_characterization_false` (the `c = 0` refutation, which needs no "
+            "whiteness binder -- the zero filter defeats the claim for ANY variance functional) "
+            "and `powerSNR_smul_eq_budget_sq` (the correct `c != 0` form). Do not transport the "
+            "corrected power-domain statement back into the amplitude domain, which is the shape "
+            "this fork bans.",
         'memory': None,
     },
 }

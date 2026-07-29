@@ -5099,6 +5099,12 @@ import SKEFTHawking.Detection.MatchedFilter
 -- conductance, the bias-power linearization's sign, the explicit heat-balance solution with its
 -- uniqueness, and the stability dichotomy `perturbations decay ↔ ℒ > −1` as an iff.
 import SKEFTHawking.Electrothermal.ETFModel
+-- Phase 6EC Wave 2 — responsivity with ETF correction: `dI/dT` and both power-to-current
+-- responsivities *derived* as chain-rule derivatives (not defined), the correction identity
+-- `R_bare = (1+ℒ)·R_etf` with its marginal-point counterexample, opposite signs on the unstable
+-- branch, the NEP understatement through 6EB's `nepOfOutput`, and the single-pole frequency
+-- rolloff in `τ_eff` from an explicit sinusoidal steady state.
+import SKEFTHawking.Electrothermal.ETFResponsivity
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
