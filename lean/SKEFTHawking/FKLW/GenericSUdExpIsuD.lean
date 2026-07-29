@@ -67,8 +67,10 @@ lemma I_smul_isHermitian_mem_skewAdjoint {d : ℕ}
 unitary submonoid of `Matrix (Fin d) (Fin d) ℂ`. -/
 lemma expAmbient_I_smul_mem_unitary {d : ℕ}
     {F : Matrix (Fin d) (Fin d) ℂ} (hF : F.IsHermitian) :
-    NormedSpace.exp (Complex.I • F) ∈ unitary (Matrix (Fin d) (Fin d) ℂ) :=
-  NormedSpace.exp_mem_unitary_of_mem_skewAdjoint
+    NormedSpace.exp (Complex.I • F) ∈ unitary (Matrix (Fin d) (Fin d) ℂ) := by
+  haveI hcs : ContinuousStar (Matrix (Fin d) (Fin d) ℂ) :=
+    ⟨continuous_id.matrix_conjTranspose⟩
+  exact @NormedSpace.exp_mem_unitary_of_mem_skewAdjoint _ _ _ _ _ hcs _
     (I_smul_isHermitian_mem_skewAdjoint hF)
 
 /-- For Hermitian `F`, `NormedSpace.exp (Complex.I • F)` lies in

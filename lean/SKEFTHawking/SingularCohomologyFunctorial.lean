@@ -36,7 +36,8 @@ theorem coboundary_inducedCochain (f : Y ⟶ X) (n : ℕ) (g : SingularCochain X
   funext σ
   simp only [coboundary_apply, inducedCochainₗ_apply, face]
   refine Finset.sum_congr rfl (fun i _ => ?_)
-  exact congrArg g (congrFun ((TopCat.toSSet.map f).naturality (SimplexCategory.δ i).op) σ).symm
+  exact congrArg g
+    (ConcreteCategory.congr_hom ((TopCat.toSSet.map f).naturality (SimplexCategory.δ i).op) σ).symm
 
 /-- The induced map sends cocycles to cocycles. -/
 theorem inducedCochainₗ_mem_ker (f : Y ⟶ X) (n : ℕ) (g : SingularCochain X n)

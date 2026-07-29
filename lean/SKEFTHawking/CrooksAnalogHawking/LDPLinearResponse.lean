@@ -608,11 +608,20 @@ instance (β k : ℝ) :
   zero_at_zero := by simp [quarticRateFunction]
   wForm_gc := quarticRateFunction_satisfies_WFormGC β k
 
+-- Lean v4.32 turned "instance has arguments that cannot be inferred by TC" from a lint
+-- warning into a hard error. `h_even`/`h_zero` are genuine explicit hypotheses of this
+-- witness (it is applied by hand, never by synthesis), so the check is disabled here rather
+-- than the statement weakened.
+-- Lean v4.32 made `checkImpossibleInstance` an unconditional hard error: an `instance` may not
+-- carry explicit hypotheses that appear neither in the return type nor in an instance-implicit
+-- argument. `h_even`/`h_zero` are exactly that, so this witness could never have been found by
+-- synthesis; it is applied by hand below (§7 closure). Demoted to `theorem` — the statement and
+-- the call site are unchanged, only the (inoperative) `instance` attribute is dropped.
 /-- **Instance: any "linear bias + even part with `g(0) = 0`" non-Gaussian rate
 function is an LDP rate function.** Generalizes the quartic case; covers
 arbitrary even functions `g` with `g(0) = 0` (e.g., `k·W^(2n)` for any n ≥ 1,
 `k·(cosh(W) - 1)`, etc.). -/
-instance nonGaussianRateFunction_isLDPRateFunction
+theorem nonGaussianRateFunction_isLDPRateFunction
     (β : ℝ) (g : ℝ → ℝ) (h_even : ∀ W, g W = g (-W)) (h_zero : g 0 = 0) :
     IsLDPRateFunction β (nonGaussianRateFunction β g) where
   zero_at_zero := by simp [nonGaussianRateFunction, h_zero]

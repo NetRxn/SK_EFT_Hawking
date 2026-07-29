@@ -78,10 +78,15 @@ structure of the kernel — supplied by the commutator LieRing on the associativ
 (`LieRing.ofAssociativeRing`, abelian since `ℝ` is commutative). These agree definitionally with
 the trivial-module instances used to build the cocycle (all reduce to `ℝ`'s own
 `AddCommGroup`/`Module`), so no instance diamond arises. -/
+-- Mathlib v4.32 demoted `LieRing.ofAssociativeRing` from a global instance to a `def` with a
+-- file-local instance attribute (it diamonds with `LieRingModule.ofAssociativeModule` when
+-- `M = A`); re-enable it locally exactly as Mathlib's own `Lie/OfAssociative.lean` does.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 noncomputable instance : LieRing VirCoeff := inferInstanceAs (LieRing ℝ)
 noncomputable instance : LieAlgebra ℝ VirCoeff := inferInstanceAs (LieAlgebra ℝ ℝ)
 instance : IsLieAbelian VirCoeff :=
-  (commutative_ring_iff_abelian_lie_ring.mp ⟨mul_comm⟩ : IsLieAbelian ℝ)
+  (isMulCommutative_iff_isLieAbelian.mp ⟨⟨mul_comm⟩⟩ : IsLieAbelian ℝ)
 
 /-- **The Virasoro algebra as a `LieAlgebra.Extension`** of the Witt algebra `Vect(S¹)` by the
 trivial 1-dimensional coefficient `ℝ` — the central extension `0 → ℝ → Vir → Vect(S¹) → 0` built

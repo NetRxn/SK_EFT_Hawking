@@ -215,8 +215,10 @@ theorem biprodTensor_hom_ext {X Y : C} {U W : C} {f g : (X ⊞ Y) ⊗ U ⟶ W}
     (h_inr : (biprod.inr ▷ U) ≫ f = (biprod.inr ▷ U) ≫ g) :
     f = g := by
   set e := Functor.mapBiprod (tensorRight U) X Y with e_def
-  have inv_inl : biprod.inl ≫ e.inv = biprod.inl ▷ U := by rw [e_def]; simp
-  have inv_inr : biprod.inr ≫ e.inv = biprod.inr ▷ U := by rw [e_def]; simp
+  have inv_inl : biprod.inl ≫ e.inv = biprod.inl ▷ U := by
+    rw [e_def]; simp; exact biprod.inl_desc _ _
+  have inv_inr : biprod.inr ≫ e.inv = biprod.inr ▷ U := by
+    rw [e_def]; simp; exact biprod.inr_desc _ _
   have key : e.inv ≫ f = e.inv ≫ g := by
     apply biprod.hom_ext'
     · rw [← Category.assoc, ← Category.assoc, inv_inl]; exact h_inl

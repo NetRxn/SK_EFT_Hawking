@@ -1916,8 +1916,9 @@ theorem E_plus_hasDerivAt_at_zero (t : ℝ) (ht : t ≠ 0) :
     simpa [zero_div] using h
   have hsum : HasDerivAt
       (fun U : ℝ => U + Real.sqrt (U^2 + 16*t^2)) 1 0 := by
-    have := (hasDerivAt_id 0).add hsqrt
-    simpa using this
+    have h : HasDerivAt (fun U : ℝ => U + Real.sqrt (U^2 + 16*t^2)) (1 + 0) 0 :=
+      (hasDerivAt_id 0).add hsqrt
+    simpa using h
   have hdiv : HasDerivAt
       (fun U : ℝ => (U + Real.sqrt (U^2 + 16*t^2)) / 2) (1/2) 0 :=
     hsum.div_const 2

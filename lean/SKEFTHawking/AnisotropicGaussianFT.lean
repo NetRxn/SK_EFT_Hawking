@@ -36,7 +36,6 @@ theorem integral_comp_linearMap_volume {d : ℕ} {f : (Fin d → ℝ) →ₗ[ℝ
   rw [← integral_map hmeas.aemeasurable hg.aestronglyMeasurable,
     Measure.map_linearMap_addHaar_eq_smul_addHaar volume hf, integral_smul_measure,
     ENNReal.toReal_ofReal (abs_nonneg _)]
-  rfl
 
 /-- **Anisotropic → isotropic reduction (algebraic).** For a positive-semidefinite real matrix `G`, the
 quadratic form `xᵀGx` equals `‖(√G) x‖²` (here written `(√G *ᵥ x) ⬝ᵥ (√G *ᵥ x)`), using `√G · √G = G`

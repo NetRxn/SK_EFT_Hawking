@@ -236,7 +236,7 @@ theorem vestigial_window_vanishes (c_D Λ : ℝ) (hc : 0 < c_D) (hΛ : 0 < Λ) :
       (nhdsWithin 0 (Set.Ioi 0)) (nhds 0) := by
   unfold vestigial_r_e_star;
   norm_num [ div_eq_mul_inv ];
-  simpa using tendsto_const_nhds.mul ( Real.tendsto_exp_atBot.comp <| Filter.tendsto_atBot_add_const_right _ _ <| Filter.tendsto_neg_atTop_atBot.comp <| Filter.Tendsto.const_mul_atTop ( by positivity ) <| Filter.tendsto_id.inv_tendsto_nhdsGT_zero.atTop_mul_const <| by positivity )
+  simpa [sub_eq_add_neg] using tendsto_const_nhds.mul ( Real.tendsto_exp_atBot.comp <| Filter.tendsto_atBot_add_const_right _ _ <| Filter.tendsto_neg_atTop_atBot.comp <| Filter.Tendsto.const_mul_atTop ( by positivity ) <| Filter.tendsto_id.inv_tendsto_nhdsGT_zero.atTop_mul_const <| by positivity )
 
 /-
 ═══════════════════════════════════════════════════════════════

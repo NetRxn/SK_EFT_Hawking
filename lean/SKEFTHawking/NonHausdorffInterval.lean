@@ -112,7 +112,7 @@ theorem origin_ne : origin false ≠ origin true := fun h => by
 /-- The origins differ from the top (the value separates them). -/
 theorem origin_ne_btop (i : Bool) : origin i ≠ btop := fun h => by
   have := congrArg (fun z => (bugVal z : ℝ)) h
-  rw [show (fun z => (bugVal z : ℝ)) (origin i) = 0 from rfl] at this
+  rw [show (bugVal (origin i) : ℝ) = 0 from rfl] at this
   norm_num [btop] at this
 
 /-! ## §3. The partial homeomorphisms to `[0,1]` -/

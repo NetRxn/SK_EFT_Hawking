@@ -228,6 +228,8 @@ lemma IsSelfAdjoint.surjective_sub_I_smul [CompleteSpace H] {A : H →ₗ.[ℂ] 
     exact (Submodule.mem_orthogonal _ _).mp hy (L x) (LinearMap.mem_range_self L x)
   have hKclosed : IsClosed ((LinearMap.range L : Submodule ℂ H) : Set H) := by
     convert IsSelfAdjoint.isClosed_range_sub_I_smul hA hμ using 2
+    ext w
+    simp only [SetLike.mem_coe, LinearMap.mem_range, Set.mem_setOf_eq, hLapp]
   have hKtop : LinearMap.range L = ⊤ := by
     have hcl : (LinearMap.range L).topologicalClosure = ⊤ :=
       Submodule.topologicalClosure_eq_top_iff.mpr hKbot
@@ -362,8 +364,9 @@ lemma surjective_one_add_of_contraction [CompleteSpace H] {T : H →ₗ[ℂ] H} 
   have hlip : LipschitzWith ⟨k, hk0⟩ (fun w => z - T w) := by
     apply LipschitzWith.of_dist_le_mul
     intro w w'
-    rw [dist_eq_norm, dist_eq_norm, NNReal.coe_mk,
+    rw [dist_eq_norm, dist_eq_norm,
       show z - T w - (z - T w') = T (w' - w) by rw [_root_.map_sub]; abel]
+    show ‖T (w' - w)‖ ≤ k * ‖w - w'‖
     calc ‖T (w' - w)‖ ≤ k * ‖w' - w‖ := hT _
       _ = k * ‖w - w'‖ := by rw [norm_sub_rev]
   have hcon : ContractingWith ⟨k, hk0⟩ (fun w => z - T w) := ⟨by exact_mod_cast hk1, hlip⟩

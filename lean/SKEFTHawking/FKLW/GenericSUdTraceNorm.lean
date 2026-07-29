@@ -52,7 +52,7 @@ theorem norm_apply_diag_le_linftyOpNorm {d : ℕ} [Nonempty (Fin d)]
   -- Goal: ‖Y i i‖ ≤ ↑(Finset.univ.sup (fun i => ∑ j, ‖Y i j‖₊))
   have h1 : ‖Y i i‖₊ ≤ ∑ j, ‖Y i j‖₊ := by
     apply Finset.single_le_sum (f := fun j => ‖Y i j‖₊)
-    · intro j _; exact zero_le _
+    · intro j _; positivity
     · exact Finset.mem_univ i
   have h2 : (∑ j, ‖Y i j‖₊) ≤ Finset.univ.sup (fun i => ∑ j, ‖Y i j‖₊) :=
     Finset.le_sup (f := fun i => ∑ j, ‖Y i j‖₊) (Finset.mem_univ i)

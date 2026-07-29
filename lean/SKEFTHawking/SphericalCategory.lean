@@ -117,7 +117,7 @@ theorem quantum_dim_tensor (τ : CategoricalTrace C) (X Y : C) :
   convert τ.tr_tensor ( 𝟙 X ) ( 𝟙 Y ) using 1;
   -- By definition of whiskering, we have that ⟡(🏴X) ▷ Y is the identity morphism on X ⊗ Y and X ◁ ( saintY ) is also the identity morphism on X ⊗ Y.
   simp [MonoidalCategory.whiskerRight_id, MonoidalCategory.whiskerLeft_id];
-  rfl
+  all_goals rfl
 
 /-
 PROBLEM
@@ -199,7 +199,7 @@ theorem double_mate_comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) :
     rightAdjointMate (rightAdjointMate (f ≫ g)) =
     rightAdjointMate (rightAdjointMate f) ≫ rightAdjointMate (rightAdjointMate g) := by
   have h_double_adj : ∀ (f : X ⟶ Y) (g : Y ⟶ Z), (f ≫ g)ᘁ = gᘁ ≫ fᘁ := by
-    exact?;
+    exact fun f g => comp_rightAdjointMate
   simp_all +decide [ CategoryTheory.Category.assoc ];
   have := @comp_rightAdjointMate;
   convert this using 1

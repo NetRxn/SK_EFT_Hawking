@@ -78,7 +78,10 @@ instance DG.instAddCommGroup : AddCommGroup (DG k G) where
   zsmul_succ' n a := by
     show (⟨(Int.ofNat n + 1) • a.coeff⟩ : DG k G) = ⟨(Int.ofNat n) • a.coeff + a.coeff⟩
     ext p; simp [add_smul, add_comm]
-  zsmul_neg' n a := by ext p; simp; ring
+  zsmul_neg' n a := by
+    ext p
+    simp only [Int.negSucc_eq]
+    exact congrFun (neg_smul ((n : ℤ) + 1) a.coeff) p
 
 /-! ## 3. Ring structure (twisted convolution) -/
 
@@ -177,8 +180,9 @@ theorem DG.basis_mul (a b g1 g2 : G) :
     DG.basis k G a g1 * DG.basis k G b g2 =
     if a = g1 * b * g1⁻¹ then DG.basis k G a (g1 * g2) else 0 := by
   ext ⟨x, h⟩;
-  convert congr_arg ( fun f : G × G → k => f ( x, h ) ) ( ddBasis_mul k G a b g1 g2 ) using 1;
-  split_ifs <;> rfl
+  convert congr_arg ( fun f : G × G → k => f ( x, h ) ) ( ddBasis_mul k G a b g1 g2 ) using 1
+  · rfl
+  · split_ifs <;> rfl
 
 /-! ## 6. Module Summary -/
 
