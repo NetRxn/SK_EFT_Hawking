@@ -1,6 +1,11 @@
 # Phase 6EB — Kernel-Verified Filtered-Readout Noise Floors: ENBW, NEP, and Matched-Filter Limits
 
-**Status: PLANNED (authorized 2026-07-27).** Second phase of the `6E*` series (*verified device-physics metrology*). Consumes Phase 6EA (Poisson/Gaussian floors); consumed by 6EC (electrothermal detectors) and 6EE (composite readout ceilings). See `Phase6EA_Roadmap.md` for the series framing.
+**Status: IN PROGRESS — Waves 1 + 2 SHIPPED, Wave 3 open (authorized 2026-07-27; status corrected 2026-07-29).** Second phase of the `6E*` series (*verified device-physics metrology*). Consumes Phase 6EA (Poisson/Gaussian floors); consumed by 6EC (electrothermal detectors) and 6EE (composite readout ceilings). See `Phase6EA_Roadmap.md` for the series framing.
+
+> **Status correction 2026-07-29.** This header read `PLANNED` and Wave 2's AC boxes were unchecked, but both waves had in fact shipped (verified against the tree, not the checkboxes):
+> `Detection/FilterFloors.lean` — 23 declarations, and `Detection/NEPAlgebra.lean` — 41 declarations; **both zero sorry, zero axiom, zero `native_decide`, zero `maxHeartbeats`**, both imported in `SKEFTHawking.lean`.
+> Wave 2 shipped under names that differ from the AC text: `nep_def` landed as the pair `nepOfPSD` / `nepOfOutput` plus the bridge `nep_def_operational_eq_spectral`, and `snr_composition` as the `snrChain` definition with its composition lemmas. The AC list below is annotated accordingly — the deliverables are present, the AC wording was not updated when they landed.
+> **Only Wave 3 (`Detection/MatchedFilter.lean`) and the Phase Definition of Done remain.**
 
 **Thesis.** Between the statistics of Phase 6EA and any physical detector sits the *signal-processing layer*: a filter of equivalent noise bandwidth (ENBW) integrating for a window `T`, a noise-equivalent-power (NEP) budget referred to a declared plane, and a responsivity chain converting power to the classified variable. This layer has its own exact floors — the matched-boxcar realizability bound `ENBW·T ≥ 1/2` (Cauchy–Schwarz), matched-filter optimality, and the `σ = R·NEP·√ENBW` composition algebra — which are ubiquitously *assumed* in detector literature and never kernel-checked. The public repo's signal layer is nearly empty (verified 2026-07-27: PSD/SNR formulas exist in `GrapheneNoiseFormula`; no filter theory, no NEP algebra, no matched filter). This phase builds it once, exactly.
 
@@ -52,14 +57,14 @@ Clean whitespace: no prover has a kernel-checked ENBW/NEP/matched-filter floor f
 
 **Bricks.** Wave 1 (`enbw_def`, `variance_eq_psd_mul_enbw`); 6EA `shotPSD_plane_transfer` + `poisson_thinning`; `GrapheneNoiseFormula.snr_independent_of_sigma_Q` (SNR shape).
 
-**Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/Detection/NEPAlgebra.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `nep_def` (input-referred, one-sided, W/√Hz semantics as a declared unit convention) + `nep_incident_absorbed_transfer : NEP_inc = NEP_abs / η` (with `R_inc = η·R_abs` dual);
-- [ ] `sigma_eq_responsivity_nep_sqrt_enbw` — the classified-variable noise composition, with hypotheses (whiteness, linearity of the chain) explicit;
-- [ ] `nep_quadrature_add` — independent noise sources add in quadrature at a common plane (finite family, stated over variances);
-- [ ] `shot_nep_formula : NEP_shot,abs = √(2·E_ph·P_abs)`-shape identity tied to 6EA's shot PSD (one-sided convention);
-- [ ] `snr_composition`-shape theorem: end-to-end SNR through the chain, monotone in each budget term — the screen consumed by composite ceilings;
-- [ ] preemptive-strengthening + post-wave audit.
+**Done (AC / `/goal` condition).** ✅ **SHIPPED** — verified against the tree 2026-07-29 (41 declarations, 0 sorry / 0 axiom / 0 `native_decide` / 0 `maxHeartbeats`, root-imported).
+- [x] `lean/SKEFTHawking/Detection/NEPAlgebra.lean` builds 0-sorry, kernel-pure, with:
+- [x] **shipped as `nepOfPSD` + `nepOfOutput` (defs) + `nep_def_operational_eq_spectral` (the bridge)** `nep_def` (input-referred, one-sided, W/√Hz semantics as a declared unit convention) + `nep_incident_absorbed_transfer : NEP_inc = NEP_abs / η` (with `R_inc = η·R_abs` dual, shipped as `responsivity_incident_eq`);
+- [x] `sigma_eq_responsivity_nep_sqrt_enbw` — the classified-variable noise composition, with hypotheses (whiteness, linearity of the chain) explicit — shipped via `IsResponsivityChain`;
+- [x] `nep_quadrature_add` — independent noise sources add in quadrature at a common plane (finite family, stated over variances) — plus `nep_total_eq_sqrt_sum_sq`, `nep_quadrature_two`, and the load-bearing-hypothesis witness `quadrature_uncorrelated_hypothesis_load_bearing`;
+- [x] `shot_nep_formula : NEP_shot,abs = √(2·E_ph·P_abs)`-shape identity tied to 6EA's shot PSD (one-sided convention) — plus `nep_thermal_johnsonNyquist`, `shotLimited_iff_psd_lt`, `shotLimited_witness`;
+- [x] **shipped as the `snrChain` definition + its composition lemmas** `snr_composition`-shape theorem: end-to-end SNR through the chain, monotone in each budget term — the screen consumed by composite ceilings;
+- [x] preemptive-strengthening + post-wave audit — the convention-mix family (`enbwTwoSided_eq_two_mul_enbw`, `sigma_conventionPair_consistent_invariant`, `sigma_conventionMix_eq_sqrt_two_mul`, `sigma_conventionMix_ne`) is the audit's falsifiable residue: it proves the one-sided/two-sided mix-up changes the answer by exactly √2 rather than merely asserting the convention matters.
 
 ## Wave 3 — Matched-filter optimality
 
