@@ -39,7 +39,7 @@ theorem kroneckerH_surjective_field {N : ℕ} :
   intro φ
   -- Pull `φ` back along the homology quotient to a functional on the cycles.
   set ψ : ↥(cycles X (N + 1)) →ₗ[ZMod 2] ZMod 2 :=
-    φ.comp ((boundaries X (N + 1)).submoduleOf (cycles X (N + 1))).mkQ with hψ
+    φ.comp (Submodule.mkQ _ : ↥(cycles X (N + 1)) →ₗ[ZMod 2] Homology X (N + 1)) with hψ
   -- Extend it to all chains (every subspace is complemented over `ℤ/2`).
   obtain ⟨F, hF⟩ := LinearMap.exists_extend ψ
   -- Realize `F` as `kronecker f` for a cochain `f`.
@@ -55,14 +55,14 @@ theorem kroneckerH_surjective_field {N : ℕ} :
       ⟨w, rfl⟩
     have hcyc : chainBoundary X (N + 1) w ∈ cycles X (N + 1) :=
       boundaries_le_cycles X (N + 1) hmem
-    have hzero : ((boundaries X (N + 1)).submoduleOf (cycles X (N + 1))).mkQ
+    have hzero : (Submodule.mkQ _ : ↥(cycles X (N + 1)) →ₗ[ZMod 2] Homology X (N + 1))
         ⟨chainBoundary X (N + 1) w, hcyc⟩ = 0 := by
       rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
       exact Submodule.mem_comap.mpr hmem
     have h1 : F (chainBoundary X (N + 1) w) = ψ ⟨chainBoundary X (N + 1) w, hcyc⟩ :=
       hFcyc ⟨chainBoundary X (N + 1) w, hcyc⟩
     rw [h1]
-    show φ (((boundaries X (N + 1)).submoduleOf (cycles X (N + 1))).mkQ
+    show φ ((Submodule.mkQ _ : ↥(cycles X (N + 1)) →ₗ[ZMod 2] Homology X (N + 1))
       ⟨chainBoundary X (N + 1) w, hcyc⟩) = 0
     rw [hzero]
     exact map_zero φ

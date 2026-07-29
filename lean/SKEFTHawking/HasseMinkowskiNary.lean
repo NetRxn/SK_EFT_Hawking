@@ -895,8 +895,7 @@ theorem hasseWitt_reciprocity {n : ℕ} (a : Fin n → ℤ) (ha : ∀ i, a i ≠
 theorem toQuadraticMap'_congr_field {K : Type*} [CommRing K] {n : ℕ} (A B : Matrix (Fin n) (Fin n) K) :
     (Bᵀ * A * B).toQuadraticMap' = A.toQuadraticMap'.comp (Matrix.mulVecLin B) := by
   ext x
-  simp only [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply,
-    Matrix.toLinearMap₂'_apply', QuadraticMap.comp_apply, Matrix.mulVecLin_apply]
+  simp only [QuadraticMap.comp_apply, Matrix.mulVecLin_apply, toQuadraticMap'_apply]
   rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec,
     Matrix.vecMul_transpose]
 

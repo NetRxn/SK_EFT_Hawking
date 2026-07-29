@@ -73,7 +73,7 @@ theorem expAmbient_smul_real_hasStrictDerivAt_zero {d : ℕ}
   have hgx : HasStrictDerivAt (fun a : ℝ => ((a : ℂ) • X : Matrix (Fin d) (Fin d) ℂ))
       X 0 := by
     rw [h_lin]
-    simpa using (hasStrictDerivAt_id (0 : ℝ)).smul_const X
+    exact ((hasStrictDerivAt_id (0 : ℝ)).smul_const X).congr_deriv (one_smul ℝ X)
   -- Step 2: exp has strict derivative identity at 0.
   have hexp : HasStrictFDerivAt (NormedSpace.exp :
       Matrix (Fin d) (Fin d) ℂ → Matrix (Fin d) (Fin d) ℂ)
@@ -84,7 +84,7 @@ theorem expAmbient_smul_real_hasStrictDerivAt_zero {d : ℕ}
     exact hasStrictFDerivAt_exp_zero
   -- Chain rule.
   have h_comp := hexp.comp_hasStrictDerivAt 0 hgx
-  simpa using h_comp
+  exact h_comp
 
 /-! ## 2. Per-direction projection strict F-derivative (E-generic) -/
 
@@ -226,23 +226,26 @@ theorem multiDirExpProduct_hasStrictFDerivAt_zero {d n : ℕ}
   rw [h_lhs] at h_prod
   -- Now align the derivative formula with multiDirDerivCLM X via .congr_fderiv.
   refine h_prod.congr_fderiv ?_
-  -- Simplify the derivative form: at t = 0, each f(·, 0) = 1.
-  apply ContinuousLinearMap.ext
-  intro t
-  -- Goal: (∑ i : Fin l.length, prefix • f' l[i] <• suffix) t = multiDirDerivCLM X t
-  simp only [ContinuousLinearMap.sum_apply, multiDirDerivCLM_apply]
+  -- v4.32: `multiDirDerivCLM X` elaborates with the `Pi`/`instTopologicalSpaceMatrix`
+  -- instance path while `HasStrictFDerivAt` forces the normed path, so the applied form
+  -- `(multiDirDerivCLM X) t` is not type-correct at `instances` transparency and neither
+  -- `multiDirDerivCLM_apply` nor `sum_apply` fires on it. Stay at the CLM level: `unfold`
+  -- (delta at default transparency) first, then match the two `Finset.sum`s of CLMs.
   -- Simplify factor values at 0.
   simp only [Pi.zero_apply, Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero]
   -- prefix/suffix lists become List.replicate _ 1; prod = 1.
   simp only [List.map_const', List.prod_replicate, one_pow]
   -- Killshot: MulOpposite.op 1 right-action collapses.
   simp only [MulOpposite.op_one, one_smul]
-  simp only [ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.proj_apply]
+  -- Goal: ∑ i : Fin l.length, (proj l[i]).smulRight (X l[i]) = multiDirDerivCLM X
+  unfold multiDirDerivCLM
   -- Bridge Fin (List.finRange n).length → Fin n.
   refine Fintype.sum_equiv (finCongr (List.length_finRange (n := n)))
     (fun i : Fin (List.finRange n).length =>
-      t (List.finRange n)[i] • X (List.finRange n)[i])
-    (fun j : Fin n => t j • X j) ?_
+      (ContinuousLinearMap.proj (List.finRange n)[i] :
+        (Fin n → ℝ) →L[ℝ] ℝ).smulRight (X (List.finRange n)[i]))
+    (fun j : Fin n =>
+      (ContinuousLinearMap.proj j : (Fin n → ℝ) →L[ℝ] ℝ).smulRight (X j)) ?_
   intro i
   simp [finCongr, Fin.cast, List.getElem_finRange]
 

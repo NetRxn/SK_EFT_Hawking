@@ -129,8 +129,9 @@ theorem matrixLog_comp_multiDirExpProduct_hasStrictFDerivAt_zero {d n : ℕ}
       (ContinuousLinearMap.id ℝ (Matrix (Fin d) (Fin d) ℂ)).comp
         (multiDirDerivCLM X) = multiDirDerivCLM X :=
     ContinuousLinearMap.id_comp _
-  rw [h_id_comp] at h_comp
-  exact h_comp
+  -- v4.32: `rw … at` cannot match the CLM through the instance path here; rewrite the
+  -- derivative in term mode instead.
+  exact h_comp.congr_fderiv h_id_comp
 
 /-! ## 3. The full composite `tsProj_d ∘ matrixLog ∘ multiDirExpProduct` -/
 

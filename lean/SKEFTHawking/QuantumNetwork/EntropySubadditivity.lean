@@ -118,8 +118,8 @@ noncomputable def kronUnitary (U : ↥(unitary (Matrix m m ℂ))) (V : ↥(unita
 `(U X Uᴴ) ⊗ (V Y Vᴴ) = (U ⊗ V) (X ⊗ Y) (U ⊗ V)ᴴ`. -/
 theorem conjStarAlgAut_kronecker (U : ↥(unitary (Matrix m m ℂ)))
     (V : ↥(unitary (Matrix n n ℂ))) (X : Matrix m m ℂ) (Y : Matrix n n ℂ) :
-    (Unitary.conjStarAlgAut ℂ _ U X) ⊗ₖ (Unitary.conjStarAlgAut ℂ _ V Y)
-      = Unitary.conjStarAlgAut ℂ _ (kronUnitary U V) (X ⊗ₖ Y) := by
+    (Unitary.conjStarAlgAut ℂ (Matrix m m ℂ) U X) ⊗ₖ (Unitary.conjStarAlgAut ℂ (Matrix n n ℂ) V Y)
+      = Unitary.conjStarAlgAut ℂ (Matrix (m × n) (m × n) ℂ) (kronUnitary U V) (X ⊗ₖ Y) := by
   rw [Unitary.conjStarAlgAut_apply, Unitary.conjStarAlgAut_apply, Unitary.conjStarAlgAut_apply,
     kronUnitary_coe]
   have hstar : star ((↑U : Matrix m m ℂ) ⊗ₖ (↑V : Matrix n n ℂ))

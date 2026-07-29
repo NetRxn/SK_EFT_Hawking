@@ -80,8 +80,13 @@ lemma expIsud_inv_val_eq_exp_neg {n : ℕ}
       NormedSpace.exp (-(Complex.I • F)) := by
   rw [expIsud_val]
   apply Matrix.inv_eq_right_inv
-  rw [← NormedSpace.exp_add_of_commute (Commute.refl _).neg_right]
-  rw [add_neg_cancel, NormedSpace.exp_zero]
+  -- v4.32: `rw ←` no longer matches the `exp _ * exp (-_)` pattern through the matrix `Mul`
+  -- instance path, so build the identity as a term and rewrite inside it instead.
+  have hcomm : NormedSpace.exp (Complex.I • F + -(Complex.I • F))
+      = NormedSpace.exp (Complex.I • F) * NormedSpace.exp (-(Complex.I • F)) :=
+    NormedSpace.exp_add_of_commute (Commute.refl (Complex.I • F)).neg_right
+  rw [add_neg_cancel, NormedSpace.exp_zero] at hcomm
+  exact hcomm.symm
 
 /-- **expIsud matrix-inverse near-identity bound**: `‖(expIsud n F).val⁻¹ − 1‖ ≤ δ·exp δ`.
 
