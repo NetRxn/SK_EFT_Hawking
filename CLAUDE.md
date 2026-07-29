@@ -87,6 +87,7 @@ never affects builds. Killed servers do not respawn within a session.
 | understanding the tree / build / architecture | [README.md](README.md) |
 | changing anything — quick module/Lean/counts map | [SK_EFT_Hawking_Inventory_Index.md](SK_EFT_Hawking_Inventory_Index.md) |
 | any Aristotle session | [docs/references/Theorm_Proving_Aristotle_Lean.md](docs/references/Theorm_Proving_Aristotle_Lean.md) |
+| any Mathlib/PhysLib/toolchain bump | [docs/references/mathlib_bump_playbook.md](docs/references/mathlib_bump_playbook.md) — repair patterns + the process rules that cost the most time |
 | any paper-shaped output | [docs/PAPER_STRATEGY.md](docs/PAPER_STRATEGY.md), [PAPER_DRAFT_MAPPING.md](docs/PAPER_DRAFT_MAPPING.md) |
 | lifting draft content into a bundle | [docs/BUNDLE_LIFT_PROCEDURE.md](docs/BUNDLE_LIFT_PROCEDURE.md), [bundle anchor list](docs/agents/claims-reviewer-bundle-prompts.md) |
 | absorbing a late wave into a drafted bundle | [docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md](docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md) |
