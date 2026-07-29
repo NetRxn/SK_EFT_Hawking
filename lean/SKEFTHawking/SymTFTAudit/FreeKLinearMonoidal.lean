@@ -722,9 +722,8 @@ theorem freeBraiding_hexagon_forward_aux (X Y Z : C) :
       freeComp_single_single, freeComp_single_single]
   congr 1
   · simp only [MonoidalCategory.id_tensorHom, MonoidalCategory.tensorHom_id]
-    have h := BraidedCategory.hexagon_forward (C := C) X Y Z
-    simp only [Category.assoc] at h
-    exact h
+    -- v4.32: `hexagon_forward` already arrives right-associated; no `Category.assoc` needed.
+    exact BraidedCategory.hexagon_forward (C := C) X Y Z
   · ring
 
 /-- **Hexagon reverse (extracted).** Right-associated `freeComp` form. -/
@@ -742,9 +741,8 @@ theorem freeBraiding_hexagon_reverse_aux (X Y Z : C) :
       freeComp_single_single, freeComp_single_single]
   congr 1
   · simp only [MonoidalCategory.id_tensorHom, MonoidalCategory.tensorHom_id]
-    have h := BraidedCategory.hexagon_reverse (C := C) X Y Z
-    simp only [Category.assoc] at h
-    exact h
+    -- v4.32: `hexagon_reverse` already arrives right-associated; no `Category.assoc` needed.
+    exact BraidedCategory.hexagon_reverse (C := C) X Y Z
   · ring
 
 /--

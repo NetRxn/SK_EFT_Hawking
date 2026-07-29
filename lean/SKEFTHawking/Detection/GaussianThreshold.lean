@@ -221,9 +221,10 @@ theorem hasDerivAt_neg_gaussianPDF (x : ℝ) :
   have h1 : HasDerivAt (fun y : ℝ => -(1 / 2 : ℝ) * y ^ 2) (-x) x := by
     simpa using (hasDerivAt_pow 2 x).const_mul (-(1 / 2 : ℝ))
   have h3 := ((h1.exp).const_mul ((√(2 * π))⁻¹)).neg
-  convert h3 using 1
-  rw [gaussianPDF_std']
-  ring
+  -- v4.32: `convert … using 1` now spawns instance-equality goals (`instAddCommGroup =
+  -- normedAddCommGroup.toAddCommGroup`, …) ahead of the real residual, so the `rw`/`ring` below fired
+  -- on the wrong goal. `congr_deriv` targets the derivative slot directly.
+  exact h3.congr_deriv (by rw [gaussianPDF_std']; ring)
 
 /-- `x ↦ x·φ(x)` is globally integrable. -/
 theorem integrable_mul_gaussianPDF :
@@ -313,8 +314,8 @@ theorem gaussianTail_chernoff {z : ℝ} (hz : 0 ≤ z) :
       have h1 : HasDerivAt (fun y : ℝ => -y ^ 2 / 2) (-x) x := by
         simpa [neg_div] using ((hasDerivAt_pow 2 x).neg.div_const 2)
       have h2 := (h1.exp).const_mul (-(1/2 : ℝ))
-      convert h2 using 1
-      ring
+      -- v4.32: `convert … using 1` leads with instance-equality goals; target the derivative slot.
+      exact h2.congr_deriv (by ring)
     have hcont : Continuous (fun x : ℝ => (x / 2) * Real.exp (-x ^ 2 / 2)) := by fun_prop
     have hval : (∫ x in (0:ℝ)..z, (x / 2) * Real.exp (-x ^ 2 / 2))
         = 1 / 2 - (1 / 2) * Real.exp (-z ^ 2 / 2) := by
@@ -351,7 +352,9 @@ theorem gaussianTail_chernoff {z : ℝ} (hz : 0 ≤ z) :
 theorem integrableOn_gaussianPDF_div_sq {z : ℝ} (hz : 0 < z) :
     IntegrableOn (fun x : ℝ => gaussianPDFReal 0 1 x / x ^ 2) (Set.Ioi z) := by
   have hg : IntegrableOn (fun x : ℝ => gaussianPDFReal 0 1 x / z ^ 2) (Set.Ioi z) := by
-    simpa [div_eq_mul_inv] using ((gaussianPDF_integrableOn (Set.Ioi z)).mul_const (z ^ 2)⁻¹)
+    -- v4.32: `simpa`'s closing step no longer unifies `IntegrableOn f s ℙ` with
+    -- `Integrable f (ℙ.restrict s)`; `exact` still does (they are defeq, as is `/` vs `* ⁻¹`).
+    exact (gaussianPDF_integrableOn (Set.Ioi z)).mul_const (z ^ 2)⁻¹
   refine hg.mono' ?_ ?_
   · exact ((measurable_gaussianPDFReal 0 1).div (measurable_id.pow_const 2)).aestronglyMeasurable
   · filter_upwards [ae_restrict_mem measurableSet_Ioi] with x hx
@@ -370,9 +373,8 @@ theorem hasDerivAt_mills {x : ℝ} (hx : 0 < x) :
     hasDerivAt_neg_gaussianPDF x
   have hd2 : HasDerivAt (fun y : ℝ => y) 1 x := hasDerivAt_id x
   have h := hd1.div hd2 (ne_of_gt hx)
-  convert h using 1
-  field_simp
-  ring
+  -- v4.32: `convert … using 1` leads with instance-equality goals; target the derivative slot.
+  exact h.congr_deriv (by field_simp; ring)
 
 /-- `−φ(y)/y → 0` as `y → ∞`. -/
 theorem tendsto_mills_atTop :
@@ -402,7 +404,8 @@ theorem gaussianTail_birnbaum {z : ℝ} (hz : 0 < z) :
       ≤ (∫ x in Set.Ioi z, gaussianPDFReal 0 1 x) / z ^ 2 := by
     rw [← integral_div]
     refine setIntegral_mono_on hint2 ?_ measurableSet_Ioi ?_
-    · simpa [div_eq_mul_inv] using ((gaussianPDF_integrableOn (Set.Ioi z)).mul_const (z ^ 2)⁻¹)
+    -- v4.32: `simpa` no longer closes `IntegrableOn f s ℙ` against `Integrable f (ℙ.restrict s)`.
+    · exact (gaussianPDF_integrableOn (Set.Ioi z)).mul_const (z ^ 2)⁻¹
     · intro x hx
       gcongr
       · exact gaussianPDFReal_nonneg 0 1 x
@@ -487,16 +490,16 @@ noise scale `σ` when the threshold sits above the baseline mean. -/
 theorem thrErr0_mono_in_sigma {μ₀ σ σ' t : ℝ} (hσ : 0 < σ) (hσ' : σ ≤ σ') (ht : μ₀ < t) :
     thrErr0 μ₀ σ t ≤ thrErr0 μ₀ σ' t := by
   refine gaussianQ_antitone ?_
+  -- v4.32: `gcongr` now discharges the `0 ≤ t - μ₀` side goal itself (was a trailing `linarith`).
   gcongr
-  linarith
 
 /-- **Conservativity workhorse (miss branch)**: the miss error increases with the noise scale
 `σ` when the threshold sits below the signal mean. -/
 theorem thrErr1_mono_in_sigma {μ₁ σ σ' t : ℝ} (hσ : 0 < σ) (hσ' : σ ≤ σ') (ht : t < μ₁) :
     thrErr1 μ₁ σ t ≤ thrErr1 μ₁ σ' t := by
   refine gaussianQ_antitone ?_
+  -- v4.32: `gcongr` now discharges the `0 ≤ μ₁ - t` side goal itself (was a trailing `linarith`).
   gcongr
-  linarith
 
 /-- **ROC tradeoff**: moving the threshold right trades false alarm against miss, monotonically
 and in opposite directions. The two conjuncts are **not** logically independent — each is the
