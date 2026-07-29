@@ -35,6 +35,16 @@ Clean whitespace: no prover has a kernel-checked RWA error bound, projected-driv
 **Why.** Every control claim in any two-level platform routes through the RWA; the explicit inequality version is the series' most broadly citable control theorem.
 
 **Bricks.** Mathlib `NormedSpace.exp`; `DampedTwoLevel` (ODE-verification pattern); PhysLib `Qubit`.
+**Additional in-repo bricks (added 2026-07-29, post-v4.32-bump substrate re-scan).** The project
+already owns a 37-declaration matrix-exponential corpus that this Bricks list predates and that
+UNKNOWN-1 should cost out before spiking either route from scratch:
+`MatrixBCHCubicMathlibPR` (4 decls — order-2/cubic Baker–Campbell–Hausdorff; BCH is the direct tool
+for bounding `exp(A)·exp(B)` against `exp(A+B)`, which is the RWA remainder's exact shape),
+`MatrixExpLocalHomeomorphMathlibPR` (14), `FKLW/GenericSUdMatrixMercatorLog` (19 — concrete-radius
+matrix log). All three are kernel-pure and Mathlib-PR-packaged. A second candidate route is PhysLib
+`Mathematics/Resolvent.lean` (new at pin `c4843367`): `norm_resolvent_le` (‖resolvent z t‖ ≤ |z.im|⁻¹),
+`contDiff_resolvent`, `iteratedDeriv_resolvent`, `norm_iteratedDeriv_resolvent_le`,
+`hasTemperateGrowth_resolvent` — a resolvent-estimate path to the same bound.
 
 **Done (AC / `/goal` condition).**
 - [ ] `lean/SKEFTHawking/Control/RotatingWave.lean` builds 0-sorry, kernel-pure, with:
@@ -95,5 +105,13 @@ Wave 1 → Wave 2 serialize (calibration consumes the RWA identity); Wave 3 cons
 ## Open UNKNOWNs
 
 - **UNKNOWN-1:** the RWA remainder route — direct Duhamel estimate on the interaction-picture generator (elementary, likely loose constant) vs. first-order averaging lemma (sharper, more machinery). Spike both to statement level before freezing Wave 1's AC constant shape.
+  **→ Spike a THIRD route first (added 2026-07-29): in-repo BCH.** `MatrixBCHCubicMathlibPR` already
+  proves the cubic BCH remainder for matrices, and the RWA bound is structurally a BCH remainder
+  (`‖exp(A)exp(B) − exp(A+B)‖` at Bloch–Siegert scale `Ω/ω`). If it applies, Wave 1 reduces to
+  instantiating an existing kernel-pure theorem instead of building a Duhamel or averaging estimate.
+  Cost to check: one `lean_hover_info` on the BCH statement + one dimensional-analysis pass against
+  the target shape. Do this before either planned spike — if it lands, both are moot; if it doesn't,
+  the two original routes stand unchanged and ~15 minutes were spent.
+  (PhysLib `Mathematics/Resolvent.lean` is a fourth route — see the Wave-1 Bricks note.)
 - **UNKNOWN-2:** Kramers-degeneracy formulation — Mathlib's antiunitary/`LinearIsometryEquiv` conjugate-linear machinery vs. an explicit 2n×2n real-form statement. Check `lean_leansearch`/`lean_loogle` for existing quaternionic-structure results first; do not rebuild what Mathlib has.
 - **UNKNOWN-3:** whether the additive combined ceiling's independence hypotheses can be stated channel-theoretically (via `GeneralizedAmpDamp` composition) rather than probabilistically — prefer the channel route if `CoherenceFidelity`'s composition pattern extends; it keeps the phase inside the existing corpus's idiom.

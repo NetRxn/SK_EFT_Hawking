@@ -7,11 +7,12 @@ four path-connected circles), so the integral augmentation `ε̄ : H₀(T⁴;ℤ
 isomorphism: it is surjective on any nonempty space (a single `0`-simplex maps to `1`) and injective on
 a path-connected space (reduced `H̃₀(T⁴;ℤ) = 0`).
 
-* §0 — the **path-connectedness inputs**. Pinned Mathlib (v4.29.1) has neither `PathConnectedSpace
-  Circle` nor `PathConnectedSpace (X × Y)` (a later Mathlib provides both), so we build them:
-  `pathConnectedSpace_circle` (the continuous surjective image of `ℝ` under `Circle.exp`, `z = exp
-  (arg z)`), `joinedProdMk` / `pathConnectedSpace_prod` (paths in each coordinate, glued by
-  `Path.trans`), and `torusFour_pathConnected` (three products of four circles).
+* §0 — the **path-connectedness inputs**, now **retired to upstream** (2026-07-29, Mathlib v4.32.0).
+  The v4.29.1 pin supplied neither `PathConnectedSpace Circle` nor `PathConnectedSpace (X × Y)`, so
+  this file built both; v4.32.0 ships the `Circle` instance and synthesises the product, and
+  `torusFour_pathConnected` now follows by `inferInstance`. `pathConnectedSpace_circle` /
+  `pathConnectedSpace_prod` / `torusFour_pathConnected` survive as named forwarders (21 downstream
+  `haveI := …` sites unchanged); `joinedProdMk` is deleted.
 * §1 — the **general integral base case** `homologyZeroPathConnectedEquivInt`: `H₀(X;ℤ) ≅ ℤ` for any
   path-connected `X`, the ℤ mirror of the mod-2 `SingularH0PathConnected.homologyZeroPathConnectedEquiv`,
   assembled from the two banked halves — injectivity
@@ -42,36 +43,26 @@ open SKEFTHawking.KummerK3Base (TorusFour)
 
 /-! ## §0. Path-connectedness of `TorusFour = Circle⁴` -/
 
-/-- **`Circle` is path-connected.** The unit circle in `ℂ` is the continuous surjective image of the
-path-connected `ℝ` under `Circle.exp : C(ℝ, Circle)` — every `z : Circle` is `Circle.exp (arg z)`
-(`Circle.exp_arg`). Pinned Mathlib (v4.29.1) has no direct `PathConnectedSpace Circle` instance (a later
-Mathlib provides one), so this supplies it for `TorusFour = Circle⁴`. -/
-theorem pathConnectedSpace_circle : PathConnectedSpace Circle :=
-  Function.Surjective.pathConnectedSpace (f := (Circle.exp : ℝ → Circle))
-    (fun z => ⟨Complex.arg (z : ℂ), Circle.exp_arg z⟩) Circle.exp.continuous
+/-! **Retired to upstream 2026-07-29 (Mathlib v4.32.0 bump).** These three were hand-built because
+the v4.29.1 pin supplied neither instance — the original docstrings said "a later Mathlib provides
+one", and it now does: `Analysis/SpecialFunctions/Complex/Circle.lean` gained
+`instance : PathConnectedSpace Circle` (0 occurrences at `5e932f97`, 1 at `81a5d257`), and the
+product instance is reachable by synthesis. The *statements* are kept as named forwarders so the
+21 downstream `haveI := …` sites need no churn; only the proofs are retired. `joinedProdMk` had no
+consumers outside this file and is deleted outright. -/
 
-/-- **Product of two `Joined` witnesses.** A path `(a,b) ⤳ (c,d)` in `X × Y`: move the first
-coordinate `a ⤳ c` (holding `b`), then the second `b ⤳ d` (holding `c`), glued by `Path.trans`. -/
-theorem joinedProdMk {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] {a c : X} {b d : Y}
-    (h₁ : Joined a c) (h₂ : Joined b d) : Joined (X := X × Y) (a, b) (c, d) :=
-  ⟨(h₁.somePath.map (f := fun x : X => (x, b)) (by fun_prop)).trans
-    (h₂.somePath.map (f := fun y : Y => (c, y)) (by fun_prop))⟩
+/-- **`Circle` is path-connected.** Now supplied by Mathlib (`PathConnectedSpace Circle`); retained
+as a named forwarder for existing consumers. -/
+theorem pathConnectedSpace_circle : PathConnectedSpace Circle := inferInstance
 
-/-- **The product of two path-connected spaces is path-connected.** The ℤ-homology base case needs
-`TorusFour = Circle⁴` path-connected; pinned Mathlib (v4.29.1) has no `PathConnectedSpace (X × Y)`
-instance (a later Mathlib provides one), so this supplies it via `joinedProdMk`. -/
+/-- **The product of two path-connected spaces is path-connected.** Now reachable by typeclass
+synthesis at the v4.32.0 pin; retained as a named forwarder for existing consumers. -/
 theorem pathConnectedSpace_prod {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
-    [PathConnectedSpace X] [PathConnectedSpace Y] : PathConnectedSpace (X × Y) where
-  nonempty := Nonempty.map2 Prod.mk PathConnectedSpace.nonempty PathConnectedSpace.nonempty
-  joined p q := joinedProdMk (PathConnectedSpace.joined p.1 q.1) (PathConnectedSpace.joined p.2 q.2)
+    [PathConnectedSpace X] [PathConnectedSpace Y] : PathConnectedSpace (X × Y) := inferInstance
 
-/-- **`TorusFour = Circle × Circle × Circle × Circle` is path-connected** — three products of the four
-path-connected circles (`pathConnectedSpace_circle`, `pathConnectedSpace_prod`). -/
-theorem torusFour_pathConnected : PathConnectedSpace TorusFour :=
-  haveI : PathConnectedSpace Circle := pathConnectedSpace_circle
-  haveI : PathConnectedSpace (Circle × Circle) := pathConnectedSpace_prod
-  haveI : PathConnectedSpace (Circle × Circle × Circle) := pathConnectedSpace_prod
-  pathConnectedSpace_prod
+/-- **`TorusFour = Circle × Circle × Circle × Circle` is path-connected** — now synthesised outright
+from the Mathlib `Circle` instance and the product instance. -/
+theorem torusFour_pathConnected : PathConnectedSpace TorusFour := inferInstance
 
 /-! ## §1. The general integral degree-0 base case `H₀(pathConnected;ℤ) ≅ ℤ` -/
 
