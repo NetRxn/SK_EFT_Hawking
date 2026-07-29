@@ -238,7 +238,7 @@ variable {I : ModelWithCorners ℝ E H} [I.Boundaryless]
 /-- A point of `EuclideanHalfSpace 1` is the origin as soon as its single coordinate vanishes. -/
 theorem euclideanHalfSpace_one_eq_zero {y : EuclideanHalfSpace 1} (hy : y.1 0 = 0) :
     y = (0 : EuclideanHalfSpace 1) := by
-  ext i; fin_cases i; simpa using hy
+  ext i; fin_cases i; exact hy
 
 variable {n : WithTop ℕ∞} [IsManifold (I.prod (𝓡∂ 1)) n W]
 

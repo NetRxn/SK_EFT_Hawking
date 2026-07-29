@@ -616,7 +616,7 @@ lemma chartTransition_contDiffOn_negPiece (s s' : S4) :
   have h_chart_conjugate_cd' : ContDiffOn ℝ ω
       (↑σ'.toPartialEquiv ∘ antipode ∘ ↑σ.symm) A_neg := by
     rw [← h_image_eq]
-    convert h_chart_conjugate_cd using 1
+    exact h_chart_conjugate_cd
   -- Use ContDiffOn.congr with chartTransition_forward_eq_neg_sphere_on_neg_piece.
   apply h_chart_conjugate_cd'.congr
   intro y hy

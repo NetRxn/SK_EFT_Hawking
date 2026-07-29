@@ -37,10 +37,9 @@ theorem cosSq_mul_sin_integral :
     intro θ _
     have h1 : HasDerivAt (fun θ => Real.cos θ ^ 3)
         (3 * Real.cos θ ^ 2 * (-Real.sin θ)) θ := by
-      simpa using (Real.hasDerivAt_cos θ).pow 3
+      exact ((Real.hasDerivAt_cos θ).pow 3).congr_deriv (by ring)
     have h2 := (h1.neg).div_const 3
-    convert h2 using 1
-    ring
+    exact h2.congr_deriv (by ring)
   have hint : IntervalIntegrable (fun θ => (Real.cos θ) ^ 2 * Real.sin θ)
       MeasureTheory.volume 0 π :=
     (Continuous.intervalIntegrable (by fun_prop) _ _)

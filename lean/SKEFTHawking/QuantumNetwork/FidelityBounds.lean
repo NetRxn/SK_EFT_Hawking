@@ -130,7 +130,7 @@ theorem eigenvectorUnitary_conj_eq_diagonal {M : Matrix ι ι ℂ} (hM : M.IsHer
       = diagonal (fun i => (hM.eigenvalues i : ℂ)) := by
   have h0 := hM.conjStarAlgAut_star_eigenvectorUnitary
   rw [Unitary.conjStarAlgAut_apply] at h0
-  simpa [Matrix.star_eq_conjTranspose, Function.comp] using h0
+  simpa [Matrix.star_eq_conjTranspose, Function.comp_def] using h0
 
 /-! ### Pointwise `√`-inverse arithmetic (for the normalized column matrix `Ĉ = C · D⁺`) -/
 

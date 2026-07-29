@@ -198,7 +198,7 @@ The braiding is NOT symmetric: R(e,m) ≠ R(m,e).
 -/
 theorem braiding_me_is_plus_one :
     braidingPhase .magnetic .electric = 1 := by
-  simp [braidingPhase, toricGrading, toricCharacter]
+  decide
 
 /--
 The braiding asymmetry: R(e,m) · R(m,e) = -1.
@@ -207,7 +207,7 @@ The product R(a,b)·R(b,a) is gauge-invariant and measures mutual statistics.
 -/
 theorem mutual_statistics_em :
     braidingPhase .electric .magnetic * braidingPhase .magnetic .electric = -1 := by
-  simp [braidingPhase, toricGrading, toricCharacter]
+  decide
 
 /--
 The fermion has fermionic self-statistics: R(ε,ε) · R(ε,ε) = ... but
@@ -223,7 +223,7 @@ The vacuum braids trivially with everything.
 -/
 theorem vacuum_braids_trivially (a : ToricAnyon) :
     braidingPhase .vacuum a = 1 := by
-  cases a <;> simp [braidingPhase, toricGrading, toricCharacter]
+  cases a <;> decide
 
 /-! ## 7. Connection to D(ℤ/2) -/
 

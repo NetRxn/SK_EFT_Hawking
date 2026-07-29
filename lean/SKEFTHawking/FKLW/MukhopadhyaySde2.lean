@@ -72,7 +72,7 @@ theorem padicValRat_two_pow_mul {q : ℚ} (hq : q ≠ 0) (n : ℕ) :
     padicValRat 2 ((2 : ℚ) ^ n * q) = n + padicValRat 2 q := by
   haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have h2 : padicValRat 2 (2 : ℚ) = 1 := padicValRat.self (by norm_num)
-  rw [padicValRat.mul (by positivity) hq, padicValRat.pow (by norm_num : (2 : ℚ) ≠ 0), h2]
+  rw [padicValRat.mul (by positivity) hq, padicValRat.pow (2 : ℚ), h2]
   ring
 
 /-- `sde₂ q ≤ n` exactly says `2^n · q` is a `2`-adic integer (or `q = 0`). -/

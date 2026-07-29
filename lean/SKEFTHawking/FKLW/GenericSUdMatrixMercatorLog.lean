@@ -261,7 +261,7 @@ theorem hasDerivAt_matrixMercatorLog_term {d : ℕ} (X : Matrix (Fin d) (Fin d) 
   have hpath : HasDerivAt (fun s : ℝ => ((-1 : ℂ) ^ n / (n + 1 : ℂ)) * (↑s : ℂ) ^ (n + 1))
       (((-1 : ℂ) ^ n / (n + 1 : ℂ)) * (((n : ℂ) + 1) * (↑t : ℂ) ^ n)) t := by
     have h_ofReal : HasDerivAt (fun s : ℝ => (↑s : ℂ)) 1 t := by
-      simpa using Complex.ofRealCLM.hasDerivAt (x := t)
+      exact Complex.ofRealCLM.hasDerivAt
     have h_pow := h_ofReal.pow (n + 1)
     simpa [Nat.cast_add, Nat.cast_one, mul_comm] using
       h_pow.const_mul ((-1 : ℂ) ^ n / (n + 1 : ℂ))
@@ -275,8 +275,8 @@ theorem hasDerivAt_matrixMercatorLog_term {d : ℕ} (X : Matrix (Fin d) (Fin d) 
     funext s
     rw [Function.comp_apply, hg_apply, hM, smul_pow, smul_smul]
   rw [hfun] at hcomp
-  rw [hg_apply] at hcomp
-  convert hcomp using 1
+  refine hcomp.congr_deriv ((hg_apply _).trans ?_)
+  rw [hM]
   have hn1 : ((n : ℂ) + 1) ≠ 0 := Nat.cast_add_one_ne_zero n
   congr 1
   field_simp
@@ -321,7 +321,8 @@ theorem tsum_matrixMercatorLog_deriv_eq {d : ℕ} (X : Matrix (Fin d) (Fin d) �
   rw [tsum_congr hterm]
   have hsummY : Summable (fun n : ℕ => (-((↑t : ℂ) • X)) ^ n) :=
     summable_geometric_of_norm_lt_one hY
-  rw [(hsummY.hasSum.mul_right X).tsum_eq, geom_series_eq_inverse _ hY, sub_neg_eq_add]
+  rw [(hsummY.hasSum.mul_right X).tsum_eq]
+  exact congrArg (· * X) ((geom_series_eq_inverse _ hY).trans (by rw [sub_neg_eq_add]))
 
 /-! ## 7. The path derivative (brick 2, crux iii COMPLETE) -/
 
@@ -390,8 +391,7 @@ theorem hasDerivAt_matrixMercatorLog_path {d : ℕ} (X : Matrix (Fin d) (Fin d) 
     have hmain := hasDerivAt_tsum_of_isPreconnected hu Metric.isOpen_ball
       (convex_ball (0 : ℝ) R).isPreconnected
       (fun n s _ => hasDerivAt_matrixMercatorLog_term X n s) hbound h0mem hgsum htmem
-    rw [tsum_matrixMercatorLog_deriv_eq X t ht] at hmain
-    exact hmain
+    exact hmain.congr_deriv (tsum_matrixMercatorLog_deriv_eq X t ht)
 
 /-! ## 8. The commuting-path exp derivative (brick 2, crux iv) -/
 
@@ -422,12 +422,11 @@ theorem hasDerivAt_exp_path {d : ℕ} (A : ℝ → Matrix (Fin d) (Fin d) ℂ)
         ((fun t => A t - A t₀) t₀) := by
       rw [hBzero]
       exact (hasStrictFDerivAt_exp_zero (𝕂 := ℝ)).hasFDerivAt
-    simpa using hfd.comp_hasDerivAt t₀ hB
+    exact hfd.comp_hasDerivAt t₀ hB
   refine (hexpB.const_mul (NormedSpace.exp (A t₀))).congr_of_eventuallyEq ?_
   filter_upwards [hcomm] with t ht
-  rw [← NormedSpace.exp_add_of_commute ht]
-  congr 1
-  abel
+  exact (congrArg NormedSpace.exp (by abel : A t = A t₀ + (A t - A t₀))).trans
+    (NormedSpace.exp_add_of_commute ht)
 
 /-- **Derivative of `exp(−matrixMercatorLog((↑t)•X))`** (the `u(t)` factor of the
 brick-2 round-trip `f(t) = exp(−mLog(t•X))·(1+t•X)`): for `|t₀|·‖X‖ < 1`,
@@ -472,12 +471,12 @@ theorem hasDerivAt_exp_neg_matrixMercatorLog_path {d : ℕ} (X : Matrix (Fin d) 
 theorem hasDerivAt_one_add_smul {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ) (t : ℝ) :
     HasDerivAt (fun s : ℝ => (1 : Matrix (Fin d) (Fin d) ℂ) + (↑s : ℂ) • X) X t := by
   have hofR : HasDerivAt (fun s : ℝ => (↑s : ℂ)) 1 t := by
-    simpa using Complex.ofRealCLM.hasDerivAt (x := t)
+    exact Complex.ofRealCLM.hasDerivAt
   have hg : HasDerivAt (fun s : ℝ => (↑s : ℂ) • X) X t := by
     have := (((ContinuousLinearMap.id ℂ ℂ).smulRight X).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt
       t hofR
-    simpa using this
-  simpa using hg.const_add (1 : Matrix (Fin d) (Fin d) ℂ)
+    exact this.congr_deriv (one_smul ℂ X)
+  exact hg.const_add (1 : Matrix (Fin d) (Fin d) ℂ)
 
 /-- **The round-trip factor has zero derivative**: for `|t|·‖X‖ < 1`,
 
@@ -503,8 +502,7 @@ theorem hasDerivAt_round_trip_factor {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ)
     (Commute.one_right X).add_right ((Commute.refl X).smul_right _)
   have hkey : Ring.inverse (1 + (↑t : ℂ) • X) * X * (1 + (↑t : ℂ) • X) = X := by
     rw [mul_assoc, hX1Y.eq, ← mul_assoc, Ring.inverse_mul_cancel _ hunit, one_mul]
-  convert hf using 1
-  symm
+  refine hf.congr_deriv ?_
   rw [mul_neg, neg_mul,
     mul_assoc (NormedSpace.exp (-(matrixMercatorLog ((↑t : ℂ) • X))))
       (Ring.inverse (1 + (↑t : ℂ) • X) * X) (1 + (↑t : ℂ) • X),
@@ -557,8 +555,9 @@ theorem exp_matrixMercatorLog {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ) (hX : �
     Convex.is_const_of_fderivWithin_eq_zero (convex_ball _ _)
       (fun t ht => (hderiv t ht).differentiableAt.differentiableWithinAt)
       (fun t ht => by
-        rw [fderivWithin_of_isOpen Metric.isOpen_ball ht, (hderiv t ht).hasFDerivAt.fderiv]
-        simp) h1s h0s
+        rw [fderivWithin_of_isOpen Metric.isOpen_ball ht]
+        exact ((hderiv t ht).hasFDerivAt.fderiv).trans
+          (ContinuousLinearMap.toSpanSingleton_zero ℝ)) h1s h0s
   have hf0 : f 0 = 1 := by
     simp only [hf_def, Complex.ofReal_zero, zero_smul, matrixMercatorLog_zero, neg_zero,
       NormedSpace.exp_zero, add_zero, one_mul]
@@ -568,8 +567,9 @@ theorem exp_matrixMercatorLog {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ) (hX : �
     simpa only [hf_def, Complex.ofReal_one, one_smul] using this
   have hcomm_exp : NormedSpace.exp (matrixMercatorLog X) *
       NormedSpace.exp (-(matrixMercatorLog X)) = 1 := by
-    rw [← NormedSpace.exp_add_of_commute (Commute.refl _).neg_right, add_neg_cancel,
-      NormedSpace.exp_zero]
+    exact (NormedSpace.exp_add_of_commute
+        ((Commute.refl (matrixMercatorLog X)).neg_right)).symm.trans
+      ((congrArg NormedSpace.exp (add_neg_cancel _)).trans NormedSpace.exp_zero)
   calc NormedSpace.exp (matrixMercatorLog X)
       = NormedSpace.exp (matrixMercatorLog X) * 1 := (mul_one _).symm
     _ = NormedSpace.exp (matrixMercatorLog X) *

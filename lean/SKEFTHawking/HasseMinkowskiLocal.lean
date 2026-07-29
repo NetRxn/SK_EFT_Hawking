@@ -126,7 +126,8 @@ theorem indefinite_matrix_repr_zero {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
   obtain ⟨x, hx0, hQx⟩ := indefinite_repr_zero A.toQuadraticMap' hp hn
   refine ⟨x, hx0, ?_⟩
   have happ : A.toQuadraticMap' x = x ⬝ᵥ A *ᵥ x := by
-    simp [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toLinearMap₂'_apply']
+    simp [Matrix.toQuadraticMap', Matrix.toQuadraticForm',
+      LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toLinearMap₂'_apply']
   rwa [happ] at hQx
 
 /-! ## Diagonalization scaffold: matrix ↔ quadratic-map and isotropy transfer
@@ -139,7 +140,8 @@ transported back. -/
 /-- **Matrix quadratic-map apply.** `M.toQuadraticMap' x = x ⬝ᵥ M *ᵥ x` (the bilinear value). -/
 theorem toQuadraticMap'_apply {R : Type*} [CommRing R] {n : Type*} [Fintype n] [DecidableEq n]
     (M : Matrix n n R) (x : n → R) : M.toQuadraticMap' x = x ⬝ᵥ M *ᵥ x := by
-  simp [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toLinearMap₂'_apply']
+  simp [Matrix.toQuadraticMap', Matrix.toQuadraticForm',
+    LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toLinearMap₂'_apply']
 
 /-- **Isotropy transfers across an isometric equivalence.** Equivalent quadratic maps are simultaneously
 isotropic: `(∃ x ≠ 0, Q₁ x = 0) ↔ (∃ x ≠ 0, Q₂ x = 0)`. The workhorse for transporting a diagonalized

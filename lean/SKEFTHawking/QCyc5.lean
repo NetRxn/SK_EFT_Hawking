@@ -235,17 +235,11 @@ instance instAddCommGroup : AddCommGroup QCyc5 where
   add_comm a b := by ext <;> simp [add_comm]
   neg_add_cancel a := by ext <;> simp
   sub_eq_add_neg a b := by ext <;> simp [sub_eq_add_neg]
-  nsmul_zero a := by ext <;> simp
+  nsmul_zero a := by ext <;> exact zero_nsmul _
   nsmul_succ n a := by ext <;> (show (n+1) • _ = n • _ + _; rw [succ_nsmul])
-  zsmul_zero' a := by ext <;> simp
-  zsmul_succ' n a := by
-    ext <;> (
-      show (Int.ofNat n + 1) • _ = _
-      rw [add_smul, one_smul]; simp)
-  zsmul_neg' n a := by
-    ext <;> (
-      show Int.negSucc n • _ = _
-      simp [Int.negSucc_eq]; ring)
+  zsmul_zero' a := by ext <;> exact zero_zsmul _
+  zsmul_succ' n a := by ext <;> exact SubNegMonoid.zsmul_succ' n _
+  zsmul_neg' n a := by ext <;> exact SubNegMonoid.zsmul_neg' n _
 
 /-- `n • x` projects component-wise (ℕ scalar action). -/
 @[simp] theorem nsmul_c0 (n : ℕ) (x : QCyc5) : (n • x).c0 = n • x.c0 := rfl

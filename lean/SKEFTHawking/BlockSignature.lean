@@ -41,7 +41,7 @@ theorem nondeg_radical_eq_bot {n : ℕ} (M : Matrix (Fin n) (Fin n) ℝ)
   have hform : (QuadraticMap.polarBilin M.toQuadraticMap') x w
       = x ⬝ᵥ M.mulVec w + w ⬝ᵥ M.mulVec x := by
     simp only [QuadraticMap.polarBilin_apply_apply, QuadraticMap.polar, Matrix.toQuadraticMap',
-      LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toLinearMap₂'_apply']
+      Matrix.toQuadraticForm', LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toLinearMap₂'_apply']
     rw [Matrix.mulVec_add, dotProduct_add, add_dotProduct, add_dotProduct]; ring
   have hcomm : w ⬝ᵥ M *ᵥ x = x ⬝ᵥ M *ᵥ w := by
     rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hsym, dotProduct_comm]
@@ -54,8 +54,8 @@ theorem fromBlocks_tQM_elim {na nb : ℕ} (A : Matrix (Fin na) (Fin na) ℝ)
     (B : Matrix (Fin nb) (Fin nb) ℝ) (x : Fin na → ℝ) (y : Fin nb → ℝ) :
     (Matrix.fromBlocks A 0 0 B).toQuadraticMap' (Sum.elim x y)
       = A.toQuadraticMap' x + B.toQuadraticMap' y := by
-  simp only [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply,
-    Matrix.toLinearMap₂'_apply']
+  simp only [Matrix.toQuadraticMap', Matrix.toQuadraticForm',
+    LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toLinearMap₂'_apply']
   rw [Matrix.fromBlocks_mulVec]
   simp only [Matrix.zero_mulVec, add_zero, zero_add, Sum.elim_comp_inl, Sum.elim_comp_inr]
   rw [dotProduct, Fintype.sum_sum_type]

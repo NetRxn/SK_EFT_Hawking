@@ -66,10 +66,9 @@ evolves under `e^{tℒ}` — is the propagator action of Wave 3.) -/
 theorem dampedTwoLevel_population_solves_rate (γ p₀ t : ℝ) :
     HasDerivAt (fun τ : ℝ => p₀ * Real.exp (-(γ * τ))) (-γ * (p₀ * Real.exp (-(γ * t)))) t := by
   have h : HasDerivAt (fun τ : ℝ => -(γ * τ)) (-γ) t := by
-    simpa using ((hasDerivAt_id t).const_mul γ).neg
+    exact ((hasDerivAt_id t).const_mul γ).neg.congr_deriv (by ring)
   have h2 := (h.exp).const_mul p₀
-  convert h2 using 1
-  ring
+  exact h2.congr_deriv (by ring)
 
 /-- **Certified decay envelope.** The excited-population decay factor `e^{−γt}` — the solution of the
 generator-induced rate equation `ṗ_e = −γ p_e` (`dampedTwoLevel_population_solves_rate`, with rate from

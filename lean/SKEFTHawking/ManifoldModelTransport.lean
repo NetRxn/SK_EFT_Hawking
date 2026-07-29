@@ -169,7 +169,7 @@ def snocContinuousLinearEquiv (n : ℕ) : ((Fin n → ℝ) × ℝ) ≃L[ℝ] (Fi
     refine continuous_pi fun i => ?_
     refine Fin.lastCases ?_ ?_ i
     · simpa [snocLinearEquiv] using continuous_snd
-    · intro j; simpa [snocLinearEquiv] using (continuous_apply j).comp continuous_fst
+    · intro j; simpa [snocLinearEquiv, Function.comp_def] using (continuous_apply j).comp continuous_fst
   continuous_invFun :=
     Continuous.prodMk (continuous_pi fun i => continuous_apply _) (continuous_apply _)
 

@@ -77,7 +77,7 @@ theorem symmetric_balanced_commutator_hermitian_unconditional {n : ℕ}
       star h_herm.eigenvectorUnitary.val := by
     have h_st := h_herm.spectral_theorem
     rw [Unitary.conjStarAlgAut_apply] at h_st
-    convert h_st
+    exact h_st
   -- Apply Session 32.
   exact symmetric_balanced_commutator_hermitian_via_spectral H h_tr
     h_herm.eigenvectorUnitary h_herm.eigenvalues h_spec θ hθ_nn hθ_le_one
