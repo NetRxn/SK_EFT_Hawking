@@ -68,7 +68,11 @@ theorem mem_boundaries_of_mk_eq₀ (K : Set ↑X)
     rw [show (⟨chainL + pd, Submodule.mem_top⟩ : cycles (sub K) 0)
           = ⟨chainL, Submodule.mem_top⟩ + ⟨pd, Submodule.mem_top⟩ from rfl,
         SingularCapHomology.Homology.mk_add, hmk,
-        ← SingularCapHomology.Homology.mk_add, ZModModule.add_self]
+        ← SingularCapHomology.Homology.mk_add,
+          -- v4.32: the subtype's `+` comes via `AddSubgroupClass`, not the `AddCommGroup.toAdd`
+          -- that `ZModModule.add_self` is stated over, so `rw` cannot match `?x + ?x`.
+          show (⟨pd, Submodule.mem_top⟩ : cycles (sub K) 0) + ⟨pd, Submodule.mem_top⟩ = 0 from
+            Subtype.ext (by simpa using ZModModule.add_self pd)]
     rfl
   rw [SingularCapHomology.Homology.mk_eq_zero] at hz
   simpa using Submodule.mem_comap.mp hz

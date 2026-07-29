@@ -53,7 +53,9 @@ theorem subHomDiagInt_openDuality {k m : ℕ} {U V : Set ↑X} (hU : IsOpen U) (
     subHomDiagInt U V (m + 1) (openDuality (hU.inter hV) z₀ hz₀ α)
       = (openDuality hU z₀ hz₀ (cscOpenMonotoneInt Set.inter_subset_left k α),
           openDuality hV z₀ hz₀ (cscOpenMonotoneInt Set.inter_subset_right k α)) := by
-  rw [subHomDiagInt, LinearMap.prod_apply, Pi.prod,
+  rw [subHomDiagInt, LinearMap.prod_apply]
+  simp only [Function.prod_def]
+  rw [
     ← openDuality_cscOpenMonotoneInt (hU.inter hV) hU Set.inter_subset_left z₀ hz₀,
     ← openDuality_cscOpenMonotoneInt (hU.inter hV) hV Set.inter_subset_right z₀ hz₀]
 
