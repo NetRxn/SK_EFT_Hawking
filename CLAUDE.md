@@ -155,7 +155,7 @@ candidate tactics, pick the winner → 5. write it, repeat from 3 → 6. when
 - **For hard proofs, read the relevant `Lit-Search/Phase-*/` deep-research file directly**
   — never delegate depth-reading to a subagent (summaries lose load-bearing coefficient
   identities / sector architectures). Subagents are fine for breadth scans.
-- Aristotle runs on Lean/Mathlib 4.28.0; we run 4.29.x → use sparingly, only after the
+- Aristotle runs on Lean/Mathlib 4.28.0; we run 4.32.x → use sparingly, only after the
   MCP loop is exhausted and the sorry is decomposed to ≤12-term targets. User gets
   first & last call on submissions.
 
@@ -193,7 +193,7 @@ A ruthless post-wave review remains mandatory.
 - **Densities** are quasi-1D linear densities [m⁻¹], not 3D.
 - **Visualization:** Plotly only (not matplotlib); colorblind-accessible blue/amber.
 - **Formula provenance:** every `formulas.py` entry references its Lean theorem + Aristotle run ID.
-- **Mathlib pin:** `lean/lakefile.toml` (`5e932f97`, the v4.29.1 tag; toolchain `leanprover/lean4:v4.29.1`).
+- **Mathlib pin:** `lean/lakefile.toml` (`81a5d257`, the v4.32.0 tag; toolchain `leanprover/lean4:v4.32.0`). Mathlib, PhysLib (`c4843367`), the REPL dep and the toolchain move as ONE matched set — never bump one alone.
 - **pytest:** `pythonpath = ["."]`.
 - **Workspace-level paths** (e.g. `Lit-Search/`): resolve via `from src.core.workspace import find_workspace` — never hardcode parent-walks.
 - **New modules:** `src/<domain>/`, `tests/test_<domain>.py`, `lean/SKEFTHawking/<Module>.lean`.

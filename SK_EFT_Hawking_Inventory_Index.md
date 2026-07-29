@@ -57,8 +57,8 @@
 | **Phase 6r/6r' total SymTFT+CrossBridges+APSEta-asymmetry LoC** | ~9,910 lines |
 
 **Toolchain pins:**
-- Lean: `leanprover/lean4:v4.29.1` (`lean/lean-toolchain`).
-- Mathlib: rev `5e932f97dd25535344f80f9dd8da3aab83df0fe6` (v4.29.1 tag, 2026-04-17) — `lean/lakefile.toml`.
+- Lean: `leanprover/lean4:v4.32.0` (`lean/lean-toolchain`).
+- Mathlib: rev `81a5d257c8e410db227a6665ed08f64fea08e997` (v4.32.0 tag) — `lean/lakefile.toml`.
 - Lean REPL: tag `v4.29.0` (must match toolchain) — `lean/lakefile.toml`.
 - Python: `>=3.14`, uv-managed (`pyproject.toml`).
 - Rust: PyO3 abi3-forward-compat (`rust/`).
@@ -532,7 +532,7 @@ The heatmap aggregates existing per-paper findings; a fresh-context bundle Stage
 
 **Posture:** Aristotle is Stage-4 fallback in the wave pipeline. As of Phase 6, MCP-interactive proving via `lean-lsp-mcp` is the primary loop; Aristotle reserved for (i) sorries that survive interactive decomposition, or (ii) batch submissions. No Aristotle runs in any 6-prefix phase as of 2026-05-23 — all Phase 6n/6o/6p/6t ships MCP-proven.
 
-**Toolchain caveat:** Aristotle runs on Lean 4.28.0 + earlier Mathlib pin; project is on 4.29.1 + `5e932f97`. Use sparingly when project uses 4.29-specific features.
+**Toolchain caveat:** Aristotle runs on Lean 4.28.0 + earlier Mathlib pin; project is on 4.32.0 + `81a5d257`. Use sparingly when project uses 4.30+-specific features.
 
 ---
 

@@ -273,7 +273,7 @@ The 42 per-wave drafts in `papers/paperN_*/` remain as historical / source mater
 - **0 `sorry` project-wide.**
 - **322 Aristotle-proved theorems across 44 runs.**
 - **137 Python modules, 4,823 pytest cases across 132 test files, 89 Jupyter notebooks, 163 figures.**
-- Lean 4.29.1, Mathlib commit `5e932f97` (v4.29.1 tag, 2026-04-17). Lean REPL pinned at v4.29.0.
+- Lean 4.32.0, Mathlib commit `81a5d257` (v4.32.0 tag). PhysLib `c4843367`. Lean REPL pinned at v4.32.0.
 
 ## Library architecture
 
@@ -330,7 +330,7 @@ The following kernel-verified theorems are the load-bearing public claims of the
 ```
 SK_EFT_Hawking/
 ├── lean/                              # Lean 4 formalization (counts above; canonical in docs/counts.json)
-│   ├── lakefile.toml                  # Lake build config (pinned Mathlib 5e932f97, v4.29.1)
+│   ├── lakefile.toml                  # Lake build config (pinned Mathlib 81a5d257, v4.32.0)
 │   ├── lean-toolchain                 # Lean 4 v4.29.1
 │   ├── SKEFTHawking.lean              # Root module
 │   └── SKEFTHawking/                  # 1,737 modules organized into nine functional areas

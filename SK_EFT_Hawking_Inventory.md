@@ -417,7 +417,7 @@ Historical (2026-05-25 snapshot): Current scale: **7339 theorems** (7314 substan
 > ChiralSSB_QCD 10, W3d CFLChiralLagrangian 12, W5 RTCasiniHuertaBounds 7.
 > See `docs/counts.json` for ground truth.
 
-### Lean 4.29.1, Mathlib pinned to commit `5e932f97` (v4.29.1 tag, 2026-04-17)
+### Lean 4.32.0, Mathlib pinned to commit `81a5d257` (v4.32.0 tag)
 
 | Module | Lines | Theorems | Axioms | Phase | Key Results |
 |--------|-------|----------|--------|-------|-------------|
@@ -1079,7 +1079,7 @@ Historical (2026-05-25 snapshot): Current scale: **7339 theorems** (7314 substan
 | uv.lock | uv package manager lock file |
 | .python-version | Python >=3.14 |
 | lean/lakefile.toml | Lean Lake build config (depends on Mathlib) |
-| lean/lean-toolchain | leanprover/lean4:v4.29.1 |
+| lean/lean-toolchain | leanprover/lean4:v4.32.0 |
 | lean/lake-manifest.json | Lean package manifest |
 | .env | ARISTOTLE_API_KEY (not committed) |
 | .gitignore | Excludes __pycache__, .venv, .env, figures/*.html, data/ |
