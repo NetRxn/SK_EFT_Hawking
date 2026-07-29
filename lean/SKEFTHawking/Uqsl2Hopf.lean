@@ -474,13 +474,18 @@ private theorem antipodeFreeAlg_ι (x : Uqsl2Gen) :
 private theorem antipodeFreeAlg_KKinv :
     antipodeFreeAlg k (gen k Uqsl2Gen.K * gen k Uqsl2Gen.Kinv) =
     (1 : (Uqsl2 k)ᵐᵒᵖ) := by
-  -- By definition of antipodeFreeAlg, we have antipodeFreeAlg k (gen k Uqsl2Gen.K) = antipodeOnGen k Uqsl2Gen.K and antipodeFreeAlg k (gen k Uqsl2Gen.Kinv) = antipodeOnGen k Uqsl2Gen.Kinv.
-  have h_antipode_K : antipodeFreeAlg k (gen k Uqsl2Gen.K) = antipodeOnGen k Uqsl2Gen.K := by
-    exact?
-  have h_antipode_Kinv : antipodeFreeAlg k (gen k Uqsl2Gen.Kinv) = antipodeOnGen k Uqsl2Gen.Kinv := by
-    exact?;
-  rw [ map_mul, h_antipode_K, h_antipode_Kinv ];
-  convert congr_arg MulOpposite.op ( uq_K_mul_Kinv k ) using 1
+  -- S is an anti-homomorphism, so S(K·K⁻¹) = S(K⁻¹)·S(K) in the opposite ring, which is
+  -- `op (K · K⁻¹) = op 1 = 1`. Written as a closed rewrite chain rather than `convert … using 1`:
+  -- that left `op`-normalization side goals for `simp` to clean up, and the v4.32 simp set no
+  -- longer does. The two `have`s were `exact?` — a SEARCH tactic committed as a proof, which
+  -- re-resolves against whatever the current Mathlib offers; named explicitly here.
+  have h_antipode_K : antipodeFreeAlg k (gen k Uqsl2Gen.K) = antipodeOnGen k Uqsl2Gen.K :=
+    antipodeFreeAlg_ι k Uqsl2Gen.K
+  have h_antipode_Kinv : antipodeFreeAlg k (gen k Uqsl2Gen.Kinv) = antipodeOnGen k Uqsl2Gen.Kinv :=
+    antipodeFreeAlg_ι k Uqsl2Gen.Kinv
+  rw [map_mul, h_antipode_K, h_antipode_Kinv]
+  show MulOpposite.op (uqKinv k) * MulOpposite.op (uqK k) = 1
+  rw [← MulOpposite.op_mul, uq_K_mul_Kinv, MulOpposite.op_one]
 
 private theorem antipodeFreeAlg_KinvK :
     antipodeFreeAlg k (gen k Uqsl2Gen.Kinv * gen k Uqsl2Gen.K) =

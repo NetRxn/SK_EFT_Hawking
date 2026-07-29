@@ -24,7 +24,7 @@ autoImplicit = false
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
-rev = "5e932f97dd25535344f80f9dd8da3aab83df0fe6"
+rev = "81a5d257c8e410db227a6665ed08f64fea08e997"
 
 # Lean REPL binary. The leanprover-community/repl repo skipped a v4.29.1 tag
 # (jumped directly v4.29.0 -> v4.30.0-rc1); v4.29.0 build is patch-level
@@ -34,7 +34,7 @@ rev = "5e932f97dd25535344f80f9dd8da3aab83df0fe6"
 [[require]]
 name = "repl"
 git = "https://github.com/leanprover-community/repl.git"
-rev = "v4.29.0"
+rev = "v4.32.0"
 
 # PhysLib (formerly Lean-QuantumInfo, arXiv:2510.08672; leanprover-community ownership; Apache 2.0).
 # QuantumInfo substrate: CPTPMap, HermitianMat tower, MState, TraceNorm, von Neumann / relative / Rényi
@@ -52,7 +52,7 @@ rev = "v4.29.0"
 [[require]]
 name = "Physlib"
 git = "https://github.com/leanprover-community/physlib.git"
-rev = "085dab8f8eab9b5703be0888729c36dde3573153"
+rev = "c48433678e8fb6306ebcd48453300c8e16058a62"
 
 [[lean_lib]]
 name = "SKEFTHawking"
