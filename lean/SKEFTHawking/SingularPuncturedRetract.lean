@@ -42,8 +42,10 @@ noncomputable def normalize : C(↑(Punc n), ↑(Sph n)) where
   toFun x := ⟨‖(x : EuclideanSpace ℝ (Fin n))‖⁻¹ • (x : EuclideanSpace ℝ (Fin n)),
     normalize_mem_sphere x⟩
   continuous_toFun := by
-    refine Continuous.subtype_mk (Continuous.smul ?_ continuous_subtype_val) _
-    exact (continuous_norm.comp continuous_subtype_val).inv₀ (fun x => norm_ne_zero_of_punc x)
+    -- v4.32: `Continuous.smul` concludes a Pi-smul, so `refine … (Continuous.smul ?_ …)` leaves the
+    -- scalar type a metavariable and `ContinuousSMul` gets stuck. Build the term bottom-up instead.
+    exact ((continuous_subtype_val.norm.inv₀ (fun x => norm_ne_zero_of_punc x)).smul
+      continuous_subtype_val).subtype_mk _
 
 /-- Sphere points are nonzero. -/
 theorem sphere_ne_zero (x : Metric.sphere (0 : EuclideanSpace ℝ (Fin n)) 1) :
@@ -86,13 +88,13 @@ noncomputable def puncHomotopy : C(↑(Punc n) × unitInterval, ↑(Punc n)) whe
       + (1 - (p.2 : ℝ)) • (‖(p.1 : EuclideanSpace ℝ (Fin n))‖⁻¹ • (p.1 : EuclideanSpace ℝ (Fin n))),
     puncHomotopy_ne_zero p.1 p.2⟩
   continuous_toFun := by
-    refine Continuous.subtype_mk (Continuous.add (Continuous.smul ?_ ?_) (Continuous.smul ?_ ?_)) _
-    · exact continuous_subtype_val.comp continuous_snd
-    · exact continuous_subtype_val.comp continuous_fst
-    · exact (continuous_const.sub (continuous_subtype_val.comp continuous_snd))
-    · exact ((continuous_norm.comp (continuous_subtype_val.comp continuous_fst)).inv₀
-        (by intro p; exact norm_ne_zero_of_punc p.1)).smul
-          (continuous_subtype_val.comp continuous_fst)
+    -- v4.32: same `Continuous.smul` metavariable stall as in `normalize` — assemble the term.
+    exact (((continuous_subtype_val.comp continuous_snd).smul
+        (continuous_subtype_val.comp continuous_fst)).add
+      ((continuous_const.sub (continuous_subtype_val.comp continuous_snd)).smul
+        (((continuous_subtype_val.comp continuous_fst).norm.inv₀
+          (fun p => norm_ne_zero_of_punc p.1)).smul
+            (continuous_subtype_val.comp continuous_fst)))).subtype_mk _
 
 /-- `H(·, 0) = incl ∘ normalize` (the retraction `x ↦ x / ‖x‖`). -/
 theorem slice_puncHomotopy_zero : slice (puncHomotopy (n := n)) 0 = incl.comp normalize := by

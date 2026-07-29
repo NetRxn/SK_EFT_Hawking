@@ -228,7 +228,9 @@ theorem toQuadraticMap'_neg_matrix {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) :
     ((-M).map (Int.cast : ℤ → ℝ)).toQuadraticMap'
       = -((M.map (Int.cast : ℤ → ℝ)).toQuadraticMap') := by
   have hmap : ((-M).map (Int.cast : ℤ → ℝ)) = -(M.map (Int.cast : ℤ → ℝ)) := by ext i j; simp
-  rw [hmap]; simp [Matrix.toQuadraticMap']
+  -- v4.32: `Matrix.toQuadraticMap'` is now a deprecated alias, so unfolding it alone stops one
+  -- delta step short of the real def; feed `simp` the new name alongside (pattern P10).
+  rw [hmap]; simp [Matrix.toQuadraticMap', Matrix.toQuadraticForm']
 
 /-- Negating the form swaps the positive inertia index into the negative one. -/
 theorem sigPos_neg_matrix {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ) :

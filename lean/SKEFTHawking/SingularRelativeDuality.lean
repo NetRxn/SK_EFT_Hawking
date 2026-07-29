@@ -93,7 +93,10 @@ homology quotient map. The descent-ready cycle-level map. -/
 noncomputable def relDualityₗ {k m : ℕ} (z : SingularChain X (k + m + 1))
     (hz : chainBoundary X (k + m) z ∈ subspaceChains S (k + m)) :
     LinearMap.ker (relCoboundaryₗ S k) →ₗ[ZMod 2] Homology X (m + 1) :=
-  ((boundaries X (m + 1)).submoduleOf (cycles X (m + 1))).mkQ.comp (capRelCocycleₗ S z hz)
+  -- v4.32: naming the submodule explicitly makes the unifier compare two *closed* fully-elaborated
+  -- quotient types across the `Homology` alias, which blows the `whnf` budget. Leaving it as `_`
+  -- lets the expected type drive: one delta step through `Homology` assigns the metavariable.
+  (Submodule.mkQ _).comp (capRelCocycleₗ S z hz)
 
 @[simp] theorem relDualityₗ_apply {k m : ℕ} (z : SingularChain X (k + m + 1))
     (hz : chainBoundary X (k + m) z ∈ subspaceChains S (k + m))

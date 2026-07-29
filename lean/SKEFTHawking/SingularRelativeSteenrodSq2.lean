@@ -40,8 +40,10 @@ theorem simplexIncl_map {m n : ℕ} (g : SimplexCategory.mk m ⟶ SimplexCategor
     (τ : (TopCat.toSSet.obj (sub S)).obj (op (SimplexCategory.mk n))) :
     (TopCat.toSSet.obj X).map g.op (simplexIncl S n τ)
       = simplexIncl S m ((TopCat.toSSet.obj (sub S)).map g.op τ) := by
+  -- v4.32: `FunctorToTypes.naturality` is deprecated in favour of `NatTrans.naturality_apply`,
+  -- which states the equation in the opposite orientation (hence `.symm`).
   simpa only [simplexIncl] using
-    FunctorToTypes.naturality _ _ (TopCat.toSSet.map (inclMap S)) g.op τ
+    (NatTrans.naturality_apply (TopCat.toSSet.map (inclMap S)) g.op τ).symm
 
 /-- The absolute cup of a relative first factor annihilates the subcomplex (`f` kills subspace
 simplices, and `frontFace` of a subspace simplex is a subspace simplex). -/

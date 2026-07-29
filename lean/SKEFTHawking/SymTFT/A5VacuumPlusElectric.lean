@@ -424,7 +424,9 @@ noncomputable def vv_at_eAdd_iso :
     simp only [Category.assoc]
     erw [GradedObject.Monoidal.ι_tensorObjDesc]
     simp only [dite_true]
-    convert Iso.inv_hom_id _ using 1
+    -- v4.32: `convert … using 1` now leaves the iso as a metavariable instead of unifying it;
+    -- the two `eqToHom`s are `rfl`-proofs, so plain `exact` closes it by defeq (pattern P1a/P2).
+    exact Iso.inv_hom_id _
 
 /-- **A5(c) e² substrate nonempty witness** — the key iso `e ⊗ e ≅ vacuum`
 exists substantively at the GradedObject level. -/
@@ -778,8 +780,10 @@ lemma electric_tensor_electric_β_hom_eq_vacuum (U : VecG_Cat k G2) :
     whiskerLeftIso_hom, Iso.symm_hom, whiskerRightIso_hom]
   -- electricAnyon.2.β = signHalfBraiding (β_can ≪≫ signEndo ▷ V)
   -- vacuumAnyon.2.β = β_can (via Center.ofBraidedObj)
+  -- v4.32: `Center.ofBraidedObj_fst` no longer fires here (the linter flags it unused), so
+  -- `(Center.ofBraidedObj V).fst` survives on the RHS; it is defeq to `V`, closed by `rfl` below.
   simp only [electricAnyon, vacuumAnyon, signHalfBraiding,
-    Center.ofBraidedObj_snd_β, Center.ofBraidedObj_fst, Iso.trans_hom]
+    Center.ofBraidedObj_snd_β, Iso.trans_hom]
   -- Distribute the composition through whiskering.
   simp only [MonoidalCategory.whiskerLeft_comp, MonoidalCategory.comp_whiskerRight,
     Category.assoc]
@@ -789,6 +793,7 @@ lemma electric_tensor_electric_β_hom_eq_vacuum (U : VecG_Cat k G2) :
   --       α.inv ≫ β_VU ▷ V ≫ α
   -- Use the reassoc form to handle the trailing α composition.
   rw [sign_factors_cancel_assoc k U]
+  rfl
 
 /-! ## §23. Cross-iso `electricAnyon ⊗ electricAnyon ≅ vacuumAnyon` in Center C
 
