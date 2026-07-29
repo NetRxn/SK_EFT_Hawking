@@ -34,8 +34,11 @@ theorem smul_mem_disk (x : Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) 1)
 noncomputable def contraction : C(↑(Disk n) × unitInterval, ↑(Disk n)) where
   toFun p := ⟨(1 - (p.2 : ℝ)) • (p.1 : EuclideanSpace ℝ (Fin n)), smul_mem_disk p.1 p.2⟩
   continuous_toFun := by
-    refine Continuous.subtype_mk (Continuous.smul ?_ (continuous_subtype_val.comp continuous_fst)) _
-    exact (continuous_const.sub (continuous_subtype_val.comp continuous_snd))
+    -- v4.32: `Continuous.smul` no longer determines the scalar factor's domain from a `?_`
+    -- hole (the stuck `TopologicalSpace ?m`), so supply both factors explicitly.
+    exact Continuous.subtype_mk
+      ((continuous_const.sub (continuous_subtype_val.comp continuous_snd)).smul
+        (continuous_subtype_val.comp continuous_fst)) _
 
 /-- The `t = 0` slice is the identity. -/
 theorem slice_contraction_zero : slice (contraction (n := n)) 0 = ContinuousMap.id ↑(Disk n) := by

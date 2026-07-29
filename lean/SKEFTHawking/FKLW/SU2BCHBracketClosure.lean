@@ -573,7 +573,9 @@ theorem trotter_sequence_tendsto
   set C : ℝ := 1280 * M^3 * t * Real.sqrt t with hC_def
   have hC_nn : 0 ≤ C := by
     rw [hC_def]; positivity
-  rw [Metric.tendsto_atTop]
+  -- v4.32: `rw` (reducible) no longer matches the `Matrix` topology instance in `nhds` against the
+  -- `PseudoMetricSpace`-derived one in `Metric.tendsto_atTop`; apply it as a term instead.
+  refine Metric.tendsto_atTop.mpr ?_
   intro ε hε
   -- N0 must satisfy: (n+1) > t·M² (for cubic bound) AND (n+1) > (C/ε)² (for ε bound).
   set N0 : ℕ := ⌈max (t * M^2) ((C / ε)^2)⌉₊ + 1 with hN0_def
@@ -822,7 +824,13 @@ lemma expAmbient_smul_real_hasStrictDerivAt_zero (X : Matrix (Fin 2) (Fin 2) ℂ
   have hgx : HasStrictDerivAt (fun a : ℝ => ((a : ℂ) • X : Matrix (Fin 2) (Fin 2) ℂ))
       X 0 := by
     rw [h_lin]
-    simpa using (hasStrictDerivAt_id (0 : ℝ)).smul_const X
+    -- v4.32: `HasStrictDerivAt` is now stated over `[TopologicalSpace F] [ContinuousSMul 𝕜 F]`,
+    -- and `Matrix _ _ ℂ` carries two defeq-but-distinct paths (`instTopologicalSpaceMatrix` here vs
+    -- the `linftyOp` `PseudoMetricSpace` one in the Mathlib lemma). `simpa`'s closing step no longer
+    -- unifies across them; normalise the hypothesis first and close with a bare `exact`.
+    have h := (hasStrictDerivAt_id (0 : ℝ)).smul_const X
+    simp only [one_smul] at h
+    exact h
   -- Step 2: expAmbient has strict derivative identity at 0.
   have hexp : HasStrictFDerivAt (SU2MatrixExp.expAmbient :
       Matrix (Fin 2) (Fin 2) ℂ → Matrix (Fin 2) (Fin 2) ℂ)
@@ -834,7 +842,9 @@ lemma expAmbient_smul_real_hasStrictDerivAt_zero (X : Matrix (Fin 2) (Fin 2) ℂ
   -- Chain rule: HasStrictDerivAt (expAmbient ∘ gx) (1 X = X) 0
   have h_comp := hexp.comp_hasStrictDerivAt 0 hgx
   -- The derivative is (1 : Matrix →L Matrix) applied to X = X.
-  simpa using h_comp
+  -- v4.32: bare `exact` bridges the `Matrix` topology-instance diamond that `simpa`'s closing
+  -- step no longer unifies (and `1 X` is already defeq to `X`).
+  exact h_comp
 
 /-- Per-direction strict derivative for the i-th factor of `threeDirProduct`. -/
 private lemma expAmbient_proj_hasStrictFDerivAt_zero
@@ -883,9 +893,7 @@ private lemma threeDirDerivCLM_apply (X₁ X₂ : Matrix (Fin 2) (Fin 2) ℂ)
     threeDirDerivCLM X₁ X₂ v = v.1 • X₁ + v.2.1 • X₂
       + v.2.2 • (X₁ * X₂ - X₂ * X₁) := by
   unfold threeDirDerivCLM proj1 proj2 proj3
-  simp [ContinuousLinearMap.add_apply, ContinuousLinearMap.smulRight_apply,
-    ContinuousLinearMap.comp_apply]
-  rfl
+  simp [ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.comp_apply]
 
 /-- **The strict Fréchet derivative of `threeDirProduct X₁ X₂` at 0 equals
 the 3-direction linear map `threeDirDerivCLM X₁ X₂`.**
