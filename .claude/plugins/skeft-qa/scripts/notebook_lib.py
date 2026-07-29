@@ -80,8 +80,48 @@ _DECISIONS_SEED = (
 )
 
 
+def _resolve_repo_relative(p):
+    """Resolve a marker-style REPO-RELATIVE path against the caller's cwd, falling back to the
+    harness repo root.
+
+    Markers store `notebook_path` repo-relative (`docs/dev-loops/<loop>/LAB_NOTEBOOK_INDEX.md`),
+    but consumers do NOT share a cwd. The pre-commit hook cd's to the repo; the SessionStart /
+    re-injection hooks run at the **workspace root** — the documented normal launch point. From
+    there a bare `Path(p)` misses entirely, and because every downstream check is phrased
+    "does it exist?", the miss FAILS OPEN twice over:
+
+      * `op_check` reports `no LAB_NOTEBOOK_INDEX.md … run `notebook new`` for a notebook that
+        exists and is being actively maintained — advice that invites scaffolding over a live loop;
+      * `extract_frontier` returns '' — so the FRONTIER block silently vanishes from the
+        re-anchor, defeating the one thing it exists for ("a post-compaction turn needs ZERO
+        Reads to re-ground"). That one leaves no trace at all.
+
+    Applied at the two chokepoints every consumer funnels through — `nb_paths` (all ops) and
+    `_index_path_from` (extract_frontier) — NOT at the CLI entry point. A fix in `main()` covers
+    `notebook_lib.py check …` and misses `import notebook_lib; nl.op_check(...)`, which is how
+    the hooks actually call it; that near-miss is what let this survive a first fix.
+
+    A nonexistent relative path resolves to the repo-joined form when a repo root is available,
+    so `notebook new` scaffolds where notebooks live (and where the pre-commit check looks)
+    regardless of cwd. Absolute paths and paths that exist at cwd are returned untouched.
+    """
+    p = Path(p)
+    if p.is_absolute() or p.exists():
+        return p
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import harness_common as hc
+
+        r = hc.repo_root()
+        if r is not None:
+            return Path(r) / p
+    except Exception:
+        pass
+    return p
+
+
 def nb_paths(home):
-    home = Path(home)
+    home = _resolve_repo_relative(home)
     shards = sorted(
         [p for p in home.glob("LAB_NOTEBOOK_W*.md") if SHARD_RE.match(p.name)],
         key=lambda p: int(SHARD_RE.match(p.name).group(1)),
@@ -96,8 +136,9 @@ def nb_paths(home):
 
 def _index_path_from(notebook_path):
     """Resolve the INDEX path from a marker's notebook_path (which may already BE the INDEX,
-    or the active shard, or the home dir)."""
-    p = Path(notebook_path)
+    or the active shard, or the home dir). Repo-relative-safe — see `_resolve_repo_relative`;
+    without it `extract_frontier` silently returns '' for every workspace-root-launched session."""
+    p = _resolve_repo_relative(notebook_path)
     if p.is_dir():
         return p / INDEX_NAME
     if p.name == INDEX_NAME:
@@ -547,42 +588,6 @@ def _home_from_marker():
     return None
 
 
-def _resolve_home(home):
-    """Resolve a notebook home robustly against the CWD the caller happened to have.
-
-    Markers store `notebook_path` REPO-RELATIVE (`docs/dev-loops/<loop>/LAB_NOTEBOOK_INDEX.md`),
-    but the callers do NOT share a cwd: the pre-commit hook cd's to the repo, while the
-    SessionStart / re-injection hooks run at the **workspace root** (one level up, the usual
-    launch point). A bare `Path(home)` therefore missed the directory entirely from the
-    workspace root and — because every downstream check is written as "file absent?" — the
-    result FAILED OPEN as `ok` plus two confident false warnings:
-
-        ⚠ no LAB_NOTEBOOK_INDEX.md in docs/dev-loops/Phase6EA — run `notebook new` to scaffold it.
-
-    …for a notebook that existed and was being actively maintained. That lands in the
-    post-compaction re-anchor, i.e. the single moment an agent is least able to sanity-check it,
-    and invites `notebook new` over a live loop. (Same cwd-fails-open class as
-    `harness_common_cli.py`.)
-
-    Order: an absolute or cwd-existing path wins; otherwise retry against the harness repo root
-    (the SAME resolver the hooks use); otherwise return the original so the caller reports a
-    not-found path rather than inventing a missing-file verdict.
-    """
-    p = Path(home)
-    if p.is_absolute() or p.exists():
-        return str(p)
-    try:
-        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        import harness_common as hc
-
-        r = hc.repo_root()
-        if r is not None and (Path(r) / p).exists():
-            return str(Path(r) / p)
-    except Exception:
-        pass
-    return str(p)
-
-
 def _parse_opts(rest):
     opts = {}
     i = 0
@@ -649,10 +654,12 @@ def main(argv):
             "or run inside a managed /goal session (resolved from the marker's notebook_path)"
         )
         return 2
-    home = _resolve_home(home)
     # Fail LOUD, never open: a read-only op on a directory that does not exist anywhere is a
     # path/cwd problem, NOT "the notebook was never scaffolded". Reporting the latter is what
-    # sent false 'run `notebook new`' advice into every SessionStart re-anchor.
+    # sent false 'run `notebook new`' advice into every SessionStart re-anchor. (Resolution
+    # itself happens in nb_paths → _resolve_repo_relative, so the import-path consumers — the
+    # hooks — get it too; this is only the CLI's loud-failure gate.)
+    home = str(_resolve_repo_relative(home))
     if op in ("sync", "shard", "roll", "check") and not Path(home).is_dir():
         print(
             f"[notebook] ERROR: notebook home not found: {home}\n"

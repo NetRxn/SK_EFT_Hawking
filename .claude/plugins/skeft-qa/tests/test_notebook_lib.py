@@ -217,3 +217,50 @@ def test_shard_preserves_all_content(tmp_path):
     combined = (tmp_path / "LAB_NOTEBOOK_W1.md").read_text() + (tmp_path / nb.ACTIVE_NAME).read_text()
     for i in range(1, 7):
         assert f"brick {i}" in combined  # no brick lost across the split
+
+
+# ---- repo-relative resolution (the SessionStart consumer path) ---------------
+# These exercise the IMPORT path (nl.op_check / nl.extract_frontier), NOT the CLI.
+# The first fix for this bug lived in main() and passed every CLI test while the
+# hooks — which import and call the functions directly — stayed broken. A CLI-only
+# test is not evidence here.
+
+def _repo_shaped(tmp_path, monkeypatch):
+    """Build <ws>/SK_EFT_Hawking/docs/dev-loops/L/ and cd to <ws> (the workspace root —
+    where the SessionStart hooks actually run), so `docs/dev-loops/L` is repo-relative
+    and does NOT exist at cwd."""
+    repo = tmp_path / "SK_EFT_Hawking"
+    home = repo / "docs" / "dev-loops" / "L"
+    home.mkdir(parents=True)
+    nb.op_new(home)
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(nb, "_resolve_repo_relative", lambda p: p if _abs_or_here(p) else repo / p)
+    return home
+
+
+def _abs_or_here(p):
+    from pathlib import Path as _P
+    return _P(p).is_absolute() or _P(p).exists()
+
+
+def test_op_check_resolves_repo_relative_from_workspace_root(tmp_path, monkeypatch):
+    _repo_shaped(tmp_path, monkeypatch)
+    r = nb.op_check("docs/dev-loops/L")
+    # The bug reported "no LAB_NOTEBOOK_INDEX.md … run `notebook new`" for a live notebook.
+    assert not any("run `notebook new`" in w for w in r["warnings"]), r["warnings"]
+
+
+def test_extract_frontier_resolves_repo_relative_from_workspace_root(tmp_path, monkeypatch):
+    home = _repo_shaped(tmp_path, monkeypatch)
+    # Replace the scaffold's own FRONTIER (appending would add a second block and
+    # extract_frontier correctly returns the first).
+    idx = home / nb.INDEX_NAME
+    idx.write_text("# L — INDEX\n\n## ▶ Frontier\n- NEXT BRICK: the live one.\n\n## Next\n")
+    # Silent failure mode: '' here means every post-compaction re-anchor loses the FRONTIER
+    # with no warning at all — the half of this bug that left no trace.
+    assert "the live one" in nb.extract_frontier("docs/dev-loops/L/LAB_NOTEBOOK_INDEX.md")
+
+
+def test_absolute_and_cwd_paths_are_untouched(tmp_path):
+    nb.op_new(tmp_path)
+    assert not any("run `notebook new`" in w for w in nb.op_check(str(tmp_path))["warnings"])
