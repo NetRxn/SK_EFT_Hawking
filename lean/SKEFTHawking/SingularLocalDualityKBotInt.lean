@@ -98,7 +98,7 @@ noncomputable def pullbackDualityIntₗ₀ {k : ℕ} (z : SingularChainInt X (k 
 noncomputable def relDualityKIntₗ₀ {k : ℕ} (z : SingularChainInt X (k + 1))
     (hzK : z ∈ subspaceChainsInt K (k + 1)) :
     LinearMap.ker (relCoboundaryIntₗ S (k + 1)) →ₗ[ℤ] Homology (sub K) 0 :=
-  ((boundaries (sub K) 0).submoduleOf (cycles (sub K) 0)).mkQ.comp
+  (Submodule.mkQ _).comp
     ((pullbackDualityIntₗ₀ S K z hzK).codRestrict (cycles (sub K) 0)
       (fun _ => Submodule.mem_top))
 

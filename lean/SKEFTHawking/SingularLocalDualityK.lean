@@ -131,7 +131,7 @@ noncomputable def relDualityKₗ {k m : ℕ} (z : SingularChain X (k + m + 1))
     (hzK : z ∈ subspaceChains K (k + m + 1))
     (hzS : chainBoundary X (k + m) z ∈ subspaceChains S (k + m)) :
     LinearMap.ker (relCoboundaryₗ S k) →ₗ[ZMod 2] Homology (sub K) (m + 1) :=
-  ((boundaries (sub K) (m + 1)).submoduleOf (cycles (sub K) (m + 1))).mkQ.comp
+  (Submodule.mkQ _).comp
     ((pullbackDualityₗ S K z hzK).codRestrict (cycles (sub K) (m + 1))
       (pullbackDualityₗ_mem_cycles S K z hzK hzS))
 

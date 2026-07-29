@@ -97,7 +97,7 @@ cycle: `cycles _ 0 = ⊤`). -/
 noncomputable def relDualityKₗ₀ {k : ℕ} (z : SingularChain X (k + 1))
     (hzK : z ∈ subspaceChains K (k + 1)) :
     LinearMap.ker (relCoboundaryₗ S (k + 1)) →ₗ[ZMod 2] Homology (sub K) 0 :=
-  ((boundaries (sub K) 0).submoduleOf (cycles (sub K) 0)).mkQ.comp
+  (Submodule.mkQ _).comp
     ((pullbackDualityₗ₀ S K z hzK).codRestrict (cycles (sub K) 0)
       (fun _ => Submodule.mem_top))
 

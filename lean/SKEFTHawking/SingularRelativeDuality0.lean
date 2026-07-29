@@ -64,7 +64,7 @@ noncomputable def capCochain0ₗ {k : ℕ} (z : SingularChain X (k + 1)) :
 `H₀` — the degree-0 cycle-level map (every `0`-chain is a cycle, `cycles X 0 = ⊤`). -/
 noncomputable def relDuality0ₗ {k : ℕ} (z : SingularChain X (k + 1)) :
     LinearMap.ker (relCoboundaryₗ S (k + 1)) →ₗ[ZMod 2] Homology X 0 :=
-  ((boundaries X 0).submoduleOf (cycles X 0)).mkQ.comp
+  (Submodule.mkQ _).comp
     ((capCochain0ₗ S z).codRestrict (cycles X 0) (fun _ => Submodule.mem_top))
 
 @[simp] theorem relDuality0ₗ_apply {k : ℕ} (z : SingularChain X (k + 1))
