@@ -8,6 +8,7 @@ feature with an always-on guard is the lesson of workspace memory
 """
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -28,9 +29,17 @@ def test_favicon_declared_in_head():
     assert 'rel="icon"' in DASHBOARD_TPL
 
 
-def test_bundle_comment_count_current():
-    assert "13 publication targets" not in BUNDLES_TPL
-    assert "18 publication targets" in BUNDLES_TPL
+def test_template_hardcodes_no_roster_count():
+    """The template must not bake a roster count into its prose.
+
+    It has gone stale three times (13 -> 18 -> 19) because two different numbers
+    get conflated: the AUTHORIZED roster in PAPER_STRATEGY.md (21 as of the
+    2026-07-27 D12 authorization) and the SCAFFOLDED bundles that
+    PAPER_DRAFT_MAPPING.md yields (19 — D11/D12 scaffolding is deferred to first
+    content-lift). The heading renders the live count from the loader instead.
+    """
+    stale = re.findall(r"\b\d+\s+publication targets\b", BUNDLES_TPL)
+    assert stale == [], f"template hardcodes a roster count: {stale}"
 
 
 def test_submission_form_present_and_posts_to_form_route():
@@ -55,12 +64,59 @@ def test_readiness_display_surfaced():
     assert "b.readiness_display" in BUNDLES_TPL
 
 
-def test_load_bundles_summary_has_19_bundles_with_display():
-    from datastar_bundles import load_bundles_summary
+def test_load_bundles_summary_matches_mapping_doc():
+    """The rendered roster is exactly what PAPER_DRAFT_MAPPING.md assigns.
+
+    Derived rather than pinned to a literal: authorizing or lifting a bundle
+    should not fail an unrelated count assertion (which is how the e2e test
+    ended up asserting 18 while this file asserted 19).
+    """
+    from bundle_migration import parse_mapping
+    from bundle_readiness import aggregate_by_bundle, load_findings_by_paper
+    from datastar_bundles import MAPPING_DOC, load_bundles_summary
+
+    expected = set(aggregate_by_bundle(
+        parse_mapping(MAPPING_DOC.read_text()), load_findings_by_paper()))
 
     summary = load_bundles_summary()
-    assert summary["total_bundles"] == 19
     codes = {b["code"] for b in summary["bundles"]}
-    assert {"F", "D1", "D9", "D10", "L1", "L3", "I1", "I3", "E1", "E2"} <= codes
+    assert codes == expected
+    assert summary["total_bundles"] == len(expected)
     for b in summary["bundles"]:
         assert "readiness_display" in b, b["code"]
+
+
+def test_every_rendered_bundle_has_a_title():
+    """D10 shipped into the mapping and _TIER_OF but never into _BUNDLE_TITLES,
+    so it rendered with a BLANK title cell for weeks. The lookup is a `.get`
+    default, so nothing failed loudly."""
+    from datastar_bundles import load_bundles_summary
+
+    blank = [b["code"] for b in load_bundles_summary()["bundles"] if not b["title"]]
+    assert blank == [], f"bundles rendering with an empty title: {blank}"
+
+
+def test_authorized_roster_is_registered_even_before_scaffolding():
+    """Every bundle authorized in PAPER_STRATEGY.md must carry tier + title
+    metadata BEFORE its papers/<code>/ directory is scaffolded — otherwise the
+    tab breaks (or renders blank) on the day of first content-lift."""
+    from datastar_bundles import _BUNDLE_TITLES, _TIER_OF
+
+    strategy = (PROJECT_ROOT / "docs" / "PAPER_STRATEGY.md").read_text()
+    # Authorized deep papers are announced as "**Paper D<n>: <title>**".
+    authorized = set(re.findall(r"\*\*Paper (D\d+):", strategy))
+    assert authorized, "no authorized deep papers parsed from PAPER_STRATEGY.md"
+
+    missing_tier = sorted(authorized - set(_TIER_OF))
+    missing_title = sorted(authorized - set(_BUNDLE_TITLES))
+    assert missing_tier == [], f"authorized but no tier: {missing_tier}"
+    assert missing_title == [], f"authorized but no title: {missing_title}"
+
+
+def test_deep_papers_sort_numerically_not_lexicographically():
+    """D10 sorted between D1 and D2 under the old plain-string key."""
+    from datastar_bundles import _bundle_sort_key
+
+    codes = ["D1", "D10", "D2", "D9", "D11", "D12"]
+    assert sorted(codes, key=_bundle_sort_key) == [
+        "D1", "D2", "D9", "D10", "D11", "D12"]

@@ -30,13 +30,22 @@ REVIEWS_DIR = PAPERS_DIR / "AutomatedReviews"
 
 
 # Tier metadata. Phase 6i Wave 7.5.
+#
+# Covers the full AUTHORIZED roster in docs/PAPER_STRATEGY.md (21 targets as of
+# the 2026-07-27 D12 authorization), not just the bundles currently scaffolded
+# on disk. D11/D12 scaffolding is deferred to first content-lift per
+# BUNDLE_LIFT_PROCEDURE, so they do not render yet — but listing them here means
+# the tab does not break on the day they do. Keep in sync with PAPER_STRATEGY.md
+# when a bundle is authorized, not when it is scaffolded.
 _TIER_OF = {
     "F": 0,
-    "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1, "D7": 1, "D8": 1, "D9": 1, "D10": 1,
+    "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1, "D6": 1,
+    "D7": 1, "D8": 1, "D9": 1, "D10": 1, "D11": 1, "D12": 1,
     "L1": 2, "L2": 2, "L3": 2,
     "I1": 3, "I2": 3, "I3": 3,
     "E1": 4, "E2": 4,
 }
+_UNKNOWN_TIER = 9  # an un-registered bundle sorts last rather than 500-ing the tab
 
 _BUNDLE_TITLES = {
     "F": "Fluid-Based Approaches to Fundamental Physics — A Formally Verified Survey",
@@ -49,6 +58,9 @@ _BUNDLE_TITLES = {
     "D7": "Classical Simulability and Quantum Advantage via Tensor Networks: A Formally Verified Demarcation",
     "D8": "Kernel-Verified Universal Quantum Gate Compilation — Alphabet-Agnostic Solovay-Kitaev across Dimensions",
     "D9": "Kernel-Verified Quantum-Network and Device-Characterization Certification Substrate",
+    "D10": "Kernel-Verified Foundations of Computational Quantum Chemistry and Open-System Dynamics",
+    "D11": "Kernel-Verified Topological Band Theory & Metamaterial Substrate",
+    "D12": "Kernel-Verified Detector & Readout Metrology",
     "L1": "GW170817 / vestigial-graviton",
     "L2": "Three generations from modular invariance",
     "L3": "BCH four laws by regime",
@@ -60,6 +72,18 @@ _BUNDLE_TITLES = {
 }
 
 _VERDICT_ICON = {"GREEN": "🟢", "YELLOW": "🟡", "RED": "🔴"}
+
+
+def _bundle_sort_key(code: str) -> tuple[int, str, int]:
+    """Order bundles by tier, then letter, then NUMERICALLY within the letter.
+
+    A plain string sort puts D10 between D1 and D2 (and would put D11/D12 there
+    too), which reads as a rendering bug in the table. Split the trailing digits
+    so the deep-paper series runs D1..D12 in the order a reader expects.
+    """
+    letter = code.rstrip("0123456789")
+    digits = code[len(letter):]
+    return (_TIER_OF.get(code, _UNKNOWN_TIER), letter, int(digits) if digits else 0)
 
 
 def _latest_review_dir_for_bundle() -> Path | None:
@@ -89,7 +113,7 @@ def load_bundles_summary() -> dict[str, Any]:
     review_dir = _latest_review_dir_for_bundle()
 
     bundles_rows = []
-    for code in sorted(by_bundle.keys(), key=lambda b: (_TIER_OF[b], b)):
+    for code in sorted(by_bundle.keys(), key=_bundle_sort_key):
         info = by_bundle[code]
         review_doc = ""
         if review_dir is not None:
@@ -98,7 +122,7 @@ def load_bundles_summary() -> dict[str, Any]:
                 review_doc = str(doc_path.relative_to(PROJECT_ROOT))
         bundles_rows.append({
             "code": code,
-            "tier": _TIER_OF[code],
+            "tier": _TIER_OF.get(code, _UNKNOWN_TIER),
             "title": _BUNDLE_TITLES.get(code, ""),
             "source_count": info["source_count"],
             "open_findings": info["open_findings"],
