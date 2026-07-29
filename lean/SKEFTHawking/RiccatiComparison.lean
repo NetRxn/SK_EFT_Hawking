@@ -128,7 +128,7 @@ theorem hasDerivAt_recipExpansion
   have h_deriv_θ : HasDerivAt θ (θ' lam) lam := h.hasDerivAt_interior lam hlam
   have h_inv := h_deriv_θ.inv h_θ_ne
   -- HasDerivAt.inv gives derivative -θ' lam / (θ lam)^2
-  convert h_inv using 1
+  exact h_inv
 
 /--
 **Reciprocal-derivative ≥ 1/3:** under `IsRaychaudhuriCurve`, for every
@@ -379,8 +379,7 @@ theorem riccatiSolution_isRaychaudhuriCurve_witness :
         h_id.const_mul (-1 : ℝ)
       have h_div := h_mul.div_const (3 : ℝ)
       have h_add := (hasDerivAt_const lam (1 : ℝ)).add h_div
-      convert h_add using 1
-      ring
+      exact h_add.congr_deriv (by ring)
     -- Quotient rule: d/dλ [-1 / denom] = -(0·denom - (-1)·denom') / denom²
     --                                  = denom' · (-1) / denom²
     --                                  = ((-1)/3) · (-1) / denom² = (1/3) / denom².
@@ -388,9 +387,7 @@ theorem riccatiSolution_isRaychaudhuriCurve_witness :
     have h_quot := h_const.div h_deriv_denom h_denom_ne
     -- h_quot : HasDerivAt (-1 / denom) ((0 * denom lam - (-1) * (-1/3)) / denom lam ^ 2) lam
     -- Now convert to -((-1/denom lam)^2 / 3)
-    convert h_quot using 1
-    field_simp
-    ring
+    exact h_quot.congr_deriv (by field_simp; ring)
   expansion_neg := by
     intro lam hlam
     apply riccatiSolution_neg (-1) lam (by norm_num)

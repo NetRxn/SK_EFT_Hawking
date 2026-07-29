@@ -62,7 +62,7 @@ theorem boseEinstein_pos (x : ℝ) (hx : x > 0) :
   apply div_pos one_pos
   have h1 : Real.exp x > 1 := by
     have h2 : Real.exp 0 = 1 := Real.exp_zero
-    have h3 : Real.exp 0 < Real.exp x := Real.exp_lt_exp_of_lt hx
+    have h3 : Real.exp 0 < Real.exp x := Real.exp_lt_exp.mpr hx
     linarith
   linarith
 

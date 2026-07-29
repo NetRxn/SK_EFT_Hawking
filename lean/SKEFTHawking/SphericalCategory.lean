@@ -199,7 +199,7 @@ theorem double_mate_comp {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) :
     rightAdjointMate (rightAdjointMate (f ≫ g)) =
     rightAdjointMate (rightAdjointMate f) ≫ rightAdjointMate (rightAdjointMate g) := by
   have h_double_adj : ∀ (f : X ⟶ Y) (g : Y ⟶ Z), (f ≫ g)ᘁ = gᘁ ≫ fᘁ := by
-    exact?;
+    exact fun f g => comp_rightAdjointMate
   simp_all +decide [ CategoryTheory.Category.assoc ];
   have := @comp_rightAdjointMate;
   convert this using 1

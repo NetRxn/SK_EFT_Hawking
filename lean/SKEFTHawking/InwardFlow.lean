@@ -3,6 +3,9 @@ Copyright (c) 2026 SK-EFT Hawking project. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Analysis.ODE.PicardLindelof
+-- Mathlib v4.32 split the Picard-Lindelöf existence theorems out of
+-- `Mathlib.Analysis.ODE.PicardLindelof` into `Mathlib.Analysis.ODE.ExistUnique`.
+import Mathlib.Analysis.ODE.ExistUnique
 import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
@@ -66,7 +69,8 @@ theorem exists_forward_flow_of_inward {v : F → F} {K L : ℝ≥0} (hlip : Lips
       norm_le := fun _ _ x _ => hbdd x
       mul_max_le := by
         simp only [NNReal.coe_mul, NNReal.coe_mk, NNReal.coe_zero, sub_zero, sub_self]
-        rw [max_eq_left hε.le] }
+        rw [max_eq_left hε.le]
+        exact le_rfl }
   obtain ⟨α, hα0, hα⟩ := hPL.exists_eq_forall_mem_Icc_hasDerivWithinAt₀
   refine ⟨α, hα0, hα, ?_⟩
   -- the barrier: `φ ∘ α` dominates the affine lower boundary `t ↦ φ x₀ + c t`
