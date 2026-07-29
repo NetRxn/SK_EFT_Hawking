@@ -79,7 +79,7 @@ theorem balanced_commutator_bounded_of_hermitian {n : ℕ}
       star h_herm.eigenvectorUnitary.val := by
     have h_st := h_herm.spectral_theorem
     rw [Unitary.conjStarAlgAut_apply] at h_st
-    convert h_st
+    exact h_st
   -- Apply Session 37's bounded form.
   obtain ⟨F, G, F_inner, G_inner, hF_herm, hG_herm, hF_tr, hG_tr, hcomm,
       hF_norm, hG_norm, _, _⟩ :=

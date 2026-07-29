@@ -354,11 +354,10 @@ theorem etf_perturbation_solves (m : ETFModel) (δT₀ : ℝ) :
   intro t
   have h : HasDerivAt (fun τ : ℝ => -(m.effectiveConductance / m.C * τ))
       (-(m.effectiveConductance / m.C)) t := by
-    simpa using ((hasDerivAt_id t).const_mul (m.effectiveConductance / m.C)).neg
+    exact ((hasDerivAt_id t).const_mul (m.effectiveConductance / m.C)).neg.congr_deriv (by ring)
   have h2 := (h.exp).const_mul δT₀
   unfold perturbation
-  convert h2 using 1
-  ring
+  exact h2.congr_deriv (by ring)
 
 /-- The heat balance in its unnormalized, physical reading: `C · δṪ(t) = −G_eff · δT(t)`. -/
 theorem heatBalance_of_solves (m : ETFModel) {f : ℝ → ℝ} (hf : m.SolvesHeatBalance f)
@@ -406,8 +405,7 @@ theorem solution_unique (m : ETFModel) {f : ℝ → ℝ} (hf : m.SolvesHeatBalan
     have hexp : HasDerivAt (fun u : ℝ => Real.exp (r * u)) (Real.exp (r * s) * (r * 1)) s :=
       (HasDerivAt.const_mul r (hasDerivAt_id s)).exp
     have hmul := (hf s).mul hexp
-    convert hmul using 1
-    ring
+    exact hmul.congr_deriv (by rw [hr]; field_simp; ring)
   have hdiff : Differentiable ℝ (fun u : ℝ => f u * Real.exp (r * u)) :=
     fun s => (hg s).differentiableAt
   have hzero : ∀ s : ℝ, deriv (fun u : ℝ => f u * Real.exp (r * u)) s = 0 :=
@@ -440,7 +438,8 @@ theorem tendsto_perturbation_of_pos (m : ETFModel) (hr : 0 < m.effectiveConducta
   have h2 : Tendsto (fun t : ℝ => -(m.effectiveConductance / m.C * t)) atTop atBot :=
     tendsto_neg_atTop_atBot.comp h1
   have h3 := (Real.tendsto_exp_atBot.comp h2).const_mul δT₀
-  simpa [perturbation] using h3
+  unfold perturbation
+  simpa using h3
 
 /-- **Non-decay engine for the unstable and marginal branches.** A non-positive effective
 conductance makes the unit-amplitude explicit solution satisfy `δT(t) ≥ 1` for every `t ≥ 0`, so

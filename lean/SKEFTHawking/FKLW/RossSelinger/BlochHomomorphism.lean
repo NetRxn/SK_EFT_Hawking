@@ -104,7 +104,7 @@ theorem bloch_completeness_unitary {B : Mat2} (hB : ZOmegaSqrt2.IsUnitaryT B) (j
       rw [hYdef]; ext x y; simp only [Matrix.mul_apply, Fin.sum_univ_two]; ring
     rw [blochEntry, harg]
   have hc := pauli_completeness Y
-  rw [hY0, zero_smul, zero_add] at hc
+  simp only [hY0, zero_smul] at hc
   have h2half : (2 : ZOmegaSqrt2) * half = 1 := by decide
   have cancel : ∀ Z : Mat2, half • ((2 : ZOmegaSqrt2) • Z) = Z := by
     intro Z; rw [smul_smul, mul_comm, h2half, one_smul]
@@ -112,6 +112,7 @@ theorem bloch_completeness_unitary {B : Mat2} (hB : ZOmegaSqrt2.IsUnitaryT B) (j
       = (2 : ZOmegaSqrt2) • (∑ k : Fin 3, blochEntry B k j • pauliMat k) := by
     rw [hc, Finset.smul_sum, Fin.sum_univ_three]
     simp only [hbe, smul_smul, ← mul_assoc, h2half, one_mul, pauliMat]
+    exact congrArg₂ (· + ·) (congrArg₂ (· + ·) (zero_add _) rfl) rfl
   calc Y = half • ((2 : ZOmegaSqrt2) • Y) := (cancel Y).symm
     _ = half • ((2 : ZOmegaSqrt2) • (∑ k : Fin 3, blochEntry B k j • pauliMat k)) := by rw [key]
     _ = ∑ k : Fin 3, blochEntry B k j • pauliMat k := cancel _

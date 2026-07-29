@@ -268,9 +268,7 @@ noncomputable def phaseShiftPath
       smul_mem_unitary_of_unitary (by rw [Complex.norm_exp]; simp) U.2⟩
   continuous_toFun := by
     apply Continuous.subtype_mk
-    apply Continuous.smul ?_ continuous_const
-    apply Complex.continuous_exp.comp
-    fun_prop
+    exact Continuous.smul (Complex.continuous_exp.comp (by fun_prop)) continuous_const
   source' := by
     apply Subtype.ext
     show Complex.exp (Complex.I * ((0 : unitInterval) : ℂ) * α) •
