@@ -1,6 +1,6 @@
 # Phase 6ED — Kernel-Verified Graphene Electronic Structure: Honeycomb Tight-Binding, Dirac Cones, and the Haldane Chern Witness
 
-**Status: PLANNED (authorized 2026-07-27).** Fourth phase of the `6E*` series (*verified device-physics metrology*). Independent of 6EA–6EC (parallelizable); feeds 6EE's material-parameter seams and closes the graphene gap in the repo's band-theory arc. See `Phase6EA_Roadmap.md` for the series framing.
+**Status: IN PROGRESS — Wave 1 SHIPPED, Waves 2–3 open, Wave 4 gated (authorized 2026-07-27; Wave 1 landed 2026-07-29).** Fourth phase of the `6E*` series (*verified device-physics metrology*). Independent of 6EA–6EC (parallelizable); feeds 6EE's material-parameter seams and closes the graphene gap in the repo's band-theory arc. See `Phase6EA_Roadmap.md` for the series framing.
 
 **Thesis.** The repo's graphene corpus formalizes graphene as a *Dirac fluid* (Phase 5w: analog metric, Hawking spectrum, noise PSD — shipped) and its band-theory corpus formalizes *abstract* two-band Chern machinery (Phase 6CA: `blochPauli` d·σ models, FHS lattice Chern number, gauge invariance — shipped). What is missing is the bridge both sides implicitly cite: graphene's actual electronic structure. Honeycomb tight-binding, the two Dirac points with linear dispersion and the emergent Fermi velocity, the sublattice-pseudospin Berry phase π, the gapped-Dirac-mass band structure, and the Haldane model as the honeycomb Chern insulator — none is formalized (verified 2026-07-27: `BlochFHS.lean:24-26` explicitly defers any nontrivial concrete Chern frame; no honeycomb lattice model exists in the project or in PhysLib, whose `TightBindingChain` is single-band 1D and was already rejected by 6CA as "wrong model").
 
@@ -36,14 +36,16 @@ Clean whitespace: no prover has a kernel-checked honeycomb band structure, Dirac
 
 **Bricks.** `blochPauli_*` family (`BlochBundle.lean`); Mathlib `Complex.exp` algebra.
 
-**Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/GrapheneBand/Honeycomb.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `honeycombStructureFactor` (`f k = 1 + exp(I⟨k,a₁⟩) + exp(I⟨k,a₂⟩)`) + `honeycombBloch` as the `blochPauli` instance with `d k = (Re (f k), −Im (f k), 0)`;
-- [ ] `honeycomb_energy_eq : eigenvalues = ±|f k|` (via `blochPauli_sq`/secular reuse — cite, don't re-derive);
-- [ ] `diracPoint_K_def`/`diracPoint_K'_def` + `structureFactor_zero_iff : f k = 0 ↔ (k ≡ K ∨ k ≡ K') [mod reciprocal lattice]` — the exact zero-set characterization;
-- [ ] `honeycomb_gapless_at_dirac` and `honeycomb_gapped_away : k ∉ {K,K'} → 0 < |f k|` (via `blochPauli_gap_pos`);
-- [ ] `norm_num`/`decide`-backed evaluation witnesses at high-symmetry points (Γ: `|f| = 3`; M: `|f| = 1`);
-- [ ] preemptive-strengthening + post-wave audit.
+**Done (AC / `/goal` condition).** ✅ **SHIPPED 2026-07-29** — 24 extracted declarations, 0 sorry / 0 axiom / 0 `native_decide` / 0 `maxHeartbeats`, kernel-pure (10 headline theorems checked individually), root-imported.
+- [x] `lean/SKEFTHawking/GrapheneBand/Honeycomb.lean` builds 0-sorry, kernel-pure, with:
+- [x] **shipped as `structureFactor` in Bloch-phase coordinates `θ = (⟨k,a₁⟩, ⟨k,a₂⟩)` rather than against a fixed primitive-vector pair — a strengthening**, since every theorem then holds for *any* primitive-vector choice and the lattice geometry enters only where a consumer supplies it (same two-layer style `BlochBundle` uses for `d(k)`). Plus `honeycombD` and `honeycombBloch`, the latter made load-bearing by `honeycombBloch_isHermitian` and `honeycombBloch_sq` rather than left as a name `honeycombStructureFactor` + `honeycombBloch`;
+- [x] `honeycomb_energy_eq` — bands `±|f(θ)|`, routed through `dNormSq_honeycombD` (`‖d‖² = |f|²`) and `BlochBundle`'s Pauli core; nothing 2×2 is re-derived;
+- [x] **shipped as the QUOTIENT-FREE characterization** `structureFactor_eq_zero_iff : f θ = 0 ↔ cos θ₁ = −1/2 ∧ cos θ₂ = −1/2 ∧ sin θ₁ + sin θ₂ = 0`, with the K/K′ reading recovered by `structureFactor_eq_zero_iff_dirac_branch` (the two branches are `sin θ₁ = ±√3/2`). **This is exactly the same set as the AC's `mod`-reciprocal-lattice phrasing** — periodicity is automatic in `cos`/`sin`, so no quotient bookkeeping is needed and none is smuggled — and it is strictly easier for a consumer to discharge (three real equations, not a statement about a quotient). Concrete points `diracK`/`diracK'` shipped `structureFactor_zero_iff` + `diracPoint_K_def`/`_K'_def`;
+- [x] `honeycomb_gapless_at_diracK` + `honeycomb_gapless_at_diracK'` and `honeycomb_gapped_away` (via `blochPauli_gap_pos`);
+- [x] `norm_num` witnesses at Γ (`|f| = 3`) and M (`|f| = 1`), plus gaplessness at K (`0`);
+- [x] preemptive-strengthening + post-wave audit — residue: `honeycombBloch` was initially a *decorative* definition no theorem touched (the `blochPauli` instantiation existed in name only); it now carries `honeycombBloch_isHermitian` and `honeycombBloch_sq`. Added `honeycomb_band_dispersive` (the three named-point energies are pairwise distinct) so the band is provably **not flat** — the formulas alone would permit a flat band.
+
+**UNKNOWN-4 RESOLVED (Stage 2, 2026-07-29) — guardrail branch B applies.** The QWZ spike has **not** landed: `TopologicalBand/BlochFHS.lean:24-26` still reads *"a nontrivial frame-derived Chern value (C = ±1) requires the QWZ transcendental evaluation … and stays behind the separately-gated QWZ spike."* Therefore **Wave 3's Haldane witness becomes the first nontrivial concrete Chern frame in the repo, and the QWZ spike should later cite it.** Recorded per the coordination guardrail. Note the difficulty signal that same comment carries: the obstruction is the transcendental `Complex.arg` evaluation at generic momenta — Wave 3 must budget for it (UNKNOWN-3's grid-size spike is the mitigation).
 
 ## Wave 2 — Linear dispersion, Fermi velocity, and the Dirac mass
 

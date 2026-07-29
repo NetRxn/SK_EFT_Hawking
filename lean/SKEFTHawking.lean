@@ -5111,6 +5111,11 @@ import SKEFTHawking.Electrothermal.ETFResponsivity
 -- quadrature composition via 6EB's algebra with the equilibrium hypothesis declared, the
 -- phonon-limited `iff` screen, and `bolometer_error_floor` — 6EC ⊕ 6EB ⊕ 6EA.
 import SKEFTHawking.Electrothermal.BolometricFloors
+-- Phase 6ED Wave 1 — honeycomb tight-binding: the structure factor in Bloch-phase coordinates
+-- (primitive-vector independent), the bands ±|f| through BlochBundle's Pauli core, the EXACT
+-- quotient-free zero set `cos θ₁ = cos θ₂ = −1/2 ∧ sin θ₁ + sin θ₂ = 0` with its K/K' branch
+-- split, gaplessness at both Dirac points, and Γ/M/K band values as checkable numbers.
+import SKEFTHawking.GrapheneBand.Honeycomb
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
