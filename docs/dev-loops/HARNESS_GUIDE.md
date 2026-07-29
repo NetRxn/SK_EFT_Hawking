@@ -111,7 +111,7 @@ claude plugin update skeft-qa@skeft-local --scope local   # run from BOTH the wo
 > ⚠ **skeft-qa has two local install records** (one per launch point: the workspace root and `SK_EFT_Hawking/`). `claude plugin update` only refreshes the record for your *current* cwd, so run it from **both** to update both. Verify with:
 > `python3 -c "import json;d=json.load(open('$HOME/.claude/plugins/installed_plugins.json'));[print(r['projectPath'].split('/')[-1],'->',r['installPath'].split('/')[-1]) for r in d['plugins']['skeft-qa@skeft-local']]"`
 
-(The private sibling plugin has its own semver-keyed update step — see its guide on the private side.)
+(The private sibling plugin now follows this exact model — same git-SHA keying, same command shape, documented on the private side. It used to declare a `version` in its `plugin.json`, which pins the cache to that string: `claude plugin update` then compares versions rather than content and prints `already at the latest version` while serving a **stale** cache. Two committed, docs-mandated components sat missing from every session that way before it was caught on 2026-07-28. Per the plugin reference: omit `version` and Claude Code falls back to the git commit SHA, so every commit is a new version. **Neither plugin should ever declare one.**)
 
 ---
 
