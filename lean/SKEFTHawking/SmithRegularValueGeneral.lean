@@ -573,7 +573,9 @@ theorem contMDiff_subtypeVal :
   · -- the chart inverse (= Subtype.val ∘ chart.symm) coincides with the implicit function on the target
     intro v hv
     have hv1 : v ∈ (levelChartE f hfC hsub p).target := by
-      have := hv.1; simpa only [mfld_simps] using this
+      have hch : v ∈ (chartAt (euclideanModel E) p).target := by
+        simpa only [mfld_simps] using hv.1
+      exact hch
     have hvmem := mem_iftChartAt_target_of f hfC hsub p v hv1
     rw [Function.comp_apply, extChartAt_coe_symm]
     simp only [modelWithCornersSelf_coe_symm, Function.comp_id]
@@ -581,7 +583,9 @@ theorem contMDiff_subtypeVal :
   · -- the chart target lands in the regular set
     intro v hv
     have hv1 : v ∈ (levelChartE f hfC hsub p).target := by
-      have := hv.1; simpa only [mfld_simps] using this
+      have hch : v ∈ (chartAt (euclideanModel E) p).target := by
+        simpa only [mfld_simps] using hv.1
+      exact hch
     have hvmem := mem_iftChartAt_target_of f hfC hsub p v hv1
     have hsrc : (levelChartE f hfC hsub p).symm v ∈ (levelChartE f hfC hsub p).source :=
       (levelChartE f hfC hsub p).map_target hv1

@@ -159,7 +159,7 @@ lemma momentumSqOperator_isSymmetric :
 lemma momentumSqOperator_hasDenseDomain :
     Dense ((momentumSqOperator (d := d)).domain : Set (SpaceDHilbertSpace d)) := by
   rw [momentumSqOperator_domain_eq]
-  exact SpaceDHilbertSpace.SchwartzSubmodule.dense d
+  exact SpaceDHilbertSpace.SchwartzSubmodule.dense d MeasureTheory.volume
 
 /-- **C1a (linchpin).** PhysLib's `momentumCLM i` is `-iℏ` times Mathlib's directional derivative
 along `Space.basis i`; both unfold to `x ↦ fderiv ℝ ψ x (Space.basis i)`. -/
@@ -306,29 +306,35 @@ lemma resolventSymbol_hasTemperateGrowth (k μ : ℝ) (hμ : μ ≠ 0) :
 /-- `𝓟ᵢ` carries `schwartzEquiv G` to the L²-inclusion of `𝐩ᵢ G` (intertwining of the unbounded
 operator with its Schwartz-space symbol). -/
 lemma momentumOperator_schwartzEquiv (i : Fin d) (G : 𝓢(Space d, ℂ)) :
-    (momentumOperator i (schwartzEquiv G) : SpaceDHilbertSpace d) = schwartzIncl (momentumCLM i G) := by
-  rw [momentumOperator_apply, schwartzEquiv.symm_apply_apply,
+    (momentumOperator i (schwartzEquiv MeasureTheory.volume G) : SpaceDHilbertSpace d)
+      = schwartzIncl MeasureTheory.volume (momentumCLM i G) := by
+  rw [momentumOperator_apply, (schwartzEquiv MeasureTheory.volume).symm_apply_apply,
     SchwartzSubmodule.schwartzEquiv_apply_coe]
 
 /-- `𝓟ᵢ` on any Schwartz-submodule element is the L²-inclusion of `𝐩ᵢ` applied to its Schwartz
 preimage. -/
-lemma momentumOperator_apply_coe (i : Fin d) (z : schwartzSubmodule d) :
+lemma momentumOperator_apply_coe (i : Fin d) (z : SchwartzSubmodule d) :
     (momentumOperator i z : SpaceDHilbertSpace d)
-      = schwartzIncl (momentumCLM i (schwartzEquiv.symm z)) := by
+      = schwartzIncl MeasureTheory.volume
+        (momentumCLM i ((schwartzEquiv MeasureTheory.volume).symm z)) := by
   rw [momentumOperator_apply, SchwartzSubmodule.schwartzEquiv_apply_coe]
 
 /-- `schwartzEquiv.symm` of the canonical inclusion `⟨schwartzIncl G, _⟩` recovers `G`. -/
-lemma schwartzEquiv_symm_mk (G : 𝓢(Space d, ℂ)) (h : schwartzIncl G ∈ schwartzSubmodule d) :
-    schwartzEquiv.symm ⟨schwartzIncl G, h⟩ = G := by
-  rw [show (⟨schwartzIncl G, h⟩ : schwartzSubmodule d) = schwartzEquiv G from
-    Subtype.ext (SchwartzSubmodule.schwartzEquiv_apply_coe G).symm, schwartzEquiv.symm_apply_apply]
+lemma schwartzEquiv_symm_mk (G : 𝓢(Space d, ℂ))
+    (h : schwartzIncl MeasureTheory.volume G ∈ SchwartzSubmodule d) :
+    (schwartzEquiv MeasureTheory.volume).symm ⟨schwartzIncl MeasureTheory.volume G, h⟩ = G := by
+  rw [show (⟨schwartzIncl MeasureTheory.volume G, h⟩ : SchwartzSubmodule d)
+      = schwartzEquiv MeasureTheory.volume G from
+    Subtype.ext (SchwartzSubmodule.schwartzEquiv_apply_coe G).symm,
+    (schwartzEquiv MeasureTheory.volume).symm_apply_apply]
 
 /-- The Hilbert-space action of `momentumSqOperator` on a Schwartz element is the L²-inclusion of
 the Schwartz-space momentum-square `∑ᵢ 𝐩ᵢ²`. -/
 lemma momentumSqOperator_apply_eq (F : 𝓢(Space d, ℂ))
-    (hmem : (schwartzEquiv F : SpaceDHilbertSpace d) ∈ momentumSqOperator.domain) :
+    (hmem : (schwartzEquiv MeasureTheory.volume F : SpaceDHilbertSpace d) ∈
+      momentumSqOperator.domain) :
     (momentumSqOperator ⟨_, hmem⟩ : SpaceDHilbertSpace d)
-      = schwartzIncl (∑ i, momentumCLM i (momentumCLM i F)) := by
+      = schwartzIncl MeasureTheory.volume (∑ i, momentumCLM i (momentumCLM i F)) := by
   unfold momentumSqOperator
   rw [LinearPMap.sum_apply, map_sum]
   apply Finset.sum_congr rfl
@@ -336,7 +342,7 @@ lemma momentumSqOperator_apply_eq (F : 𝓢(Space d, ℂ))
   simp [LinearPMap.comp, LinearPMap.codRestrict, LinearMap.compPMap_apply, momentumOperator_apply,
     SchwartzSubmodule.schwartzEquiv_apply_coe]
   congr 2
-  rw [schwartzEquiv.symm_apply_eq]
+  rw [(schwartzEquiv MeasureTheory.volume).symm_apply_eq]
   apply Subtype.ext
   exact (momentumOperator_apply_coe i _).trans
     (by simp only [SchwartzSubmodule.schwartzEquiv_apply_coe]; congr 2; exact schwartzEquiv_symm_mk F _)
@@ -433,9 +439,9 @@ lemma dense_rangeSubISmul (μ : ℝ) (hμ : μ ≠ 0) :
   intro w hw
   rw [SetLike.mem_coe, momentumSqOperator_domain_eq] at hw
   obtain ⟨G, rfl⟩ := hw
-  have hmem : (schwartzEquiv (fourierMultiplierCLM ℂ (resSym μ) G) : SpaceDHilbertSpace d)
-      ∈ momentumSqOperator.domain := by
-    rw [momentumSqOperator_domain_eq]; exact (schwartzEquiv _).2
+  have hmem : (schwartzEquiv MeasureTheory.volume (fourierMultiplierCLM ℂ (resSym μ) G) :
+      SpaceDHilbertSpace d) ∈ momentumSqOperator.domain := by
+    rw [momentumSqOperator_domain_eq]; exact (schwartzEquiv MeasureTheory.volume _).2
   refine ⟨⟨_, hmem⟩, ?_⟩
   rw [momentumSqOperator_apply_eq _ hmem, SchwartzSubmodule.schwartzEquiv_apply_coe,
     ← _root_.map_smul, ← _root_.map_sub, momentumSq_schwartz_eq_fourierMultiplier,

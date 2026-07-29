@@ -152,7 +152,7 @@ theorem symmetric_balanced_commutator_hermitian_unconditional_bounded {n : ℕ}
       star h_herm.eigenvectorUnitary.val := by
     have h_st := h_herm.spectral_theorem
     rw [Unitary.conjStarAlgAut_apply] at h_st
-    convert h_st
+    exact h_st
   -- Eigenvalues sum to zero.
   have h_tr_real : (∑ k, h_herm.eigenvalues k) = 0 := by
     have h_diag_tr : (Matrix.diagonal (fun k => ((h_herm.eigenvalues k : ℝ) : ℂ))).trace = 0 := by

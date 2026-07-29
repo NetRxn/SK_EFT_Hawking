@@ -127,7 +127,8 @@ theorem rokhlin_reads_kitaev (S : SmithInflow) (ν : ℤ) :
     have h1 : (((1 : ℤ)) : ZMod 16) = 1 := by norm_num
     rw [h1, S.smith_gen]
     exact pinPlusRP4_class_signature
-  simpa [Kitaev16.kitaevClass] using DFunLike.congr_fun key ν
+  simpa [Kitaev16.kitaevClass, SymTFT.omega4PinPlusBordismToZMod16] using
+    DFunLike.congr_fun key ν
 
 /-- **The Kitaev generator IS the Pin⁺ bordism generator.** The Kitaev `ν=1` phase maps to
 `[RP⁴]` under the Smith inflow — the non-vacuous heart of the unification (not a `0 = 0`). -/

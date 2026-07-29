@@ -55,7 +55,8 @@ noncomputable def reindexFormEquiv {ι ι' : Type*} [Fintype ι] [DecidableEq ι
   toLinearEquiv := LinearEquiv.funCongrLeft ℝ ℝ e
   map_app' x := by
     show M.toQuadraticMap' (x ∘ e) = (Matrix.reindex e e M).toQuadraticMap' x
-    simp only [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply,
+    simp only [Matrix.toQuadraticMap', Matrix.toQuadraticForm',
+      LinearMap.BilinMap.toQuadraticMap_apply,
       Matrix.toLinearMap₂'_apply', Matrix.reindex_apply, Matrix.submatrix_mulVec_equiv]
     rw [dotProduct, dotProduct, ← Equiv.sum_comp e]
     simp

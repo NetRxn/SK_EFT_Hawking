@@ -140,29 +140,29 @@ theorem qg_comul_coassoc :
     simp only [map_add, Algebra.TensorProduct.map_tmul, AlgHom.id_apply, map_one]
     erw [qgComul_E k hdiag hsym i, qgComul_K k hdiag hsym i]
     simp only [map_add, TensorProduct.add_tmul, TensorProduct.tmul_add]
-    simp only [Algebra.TensorProduct.assoc_tmul]
+    erw [Algebra.TensorProduct.assoc_tmul, Algebra.TensorProduct.assoc_tmul]
     rw [Algebra.TensorProduct.one_def]
-    simp only [Algebra.TensorProduct.assoc_tmul, add_assoc]
+    erw [Algebra.TensorProduct.assoc_tmul]
+    rw [add_assoc]
   · -- F_i
     erw [qgComul_F k hdiag hsym i]
     simp only [map_add, Algebra.TensorProduct.map_tmul, AlgHom.id_apply, map_one]
     erw [qgComul_F k hdiag hsym i, qgComul_Kinv k hdiag hsym i]
     simp only [map_add, TensorProduct.add_tmul, TensorProduct.tmul_add]
-    simp only [Algebra.TensorProduct.assoc_tmul]
+    erw [Algebra.TensorProduct.assoc_tmul, Algebra.TensorProduct.assoc_tmul]
     rw [Algebra.TensorProduct.one_def]
-    simp only [Algebra.TensorProduct.assoc_tmul, add_assoc]
+    erw [Algebra.TensorProduct.assoc_tmul]
+    rw [add_assoc]
   · -- K_i
     erw [qgComul_K k hdiag hsym i]
     simp only [Algebra.TensorProduct.map_tmul, AlgHom.id_apply]
     erw [qgComul_K k hdiag hsym i]
-    simp only [Algebra.TensorProduct.map_tmul, AlgHom.id_apply,
-      Algebra.TensorProduct.assoc_tmul]
+    erw [Algebra.TensorProduct.assoc_tmul]
   · -- Kinv_i
     erw [qgComul_Kinv k hdiag hsym i]
     simp only [Algebra.TensorProduct.map_tmul, AlgHom.id_apply]
     erw [qgComul_Kinv k hdiag hsym i]
-    simp only [Algebra.TensorProduct.map_tmul, AlgHom.id_apply,
-      Algebra.TensorProduct.assoc_tmul]
+    erw [Algebra.TensorProduct.assoc_tmul]
 
 /-- Right counitality: (ε ⊗ id) ∘ Δ = lid.symm. -/
 theorem qg_comul_rTensor_counit :

@@ -52,7 +52,7 @@ theorem simplexIncl_face (n : ℕ)
     (τ : (TopCat.toSSet.obj (sub S)).obj (op (SimplexCategory.mk (n + 1)))) (i : Fin (n + 2)) :
     simplexIncl S n (face i τ) = face i (simplexIncl S (n + 1) τ) := by
   simpa only [simplexIncl, face] using
-    (FunctorToTypes.naturality _ _ (TopCat.toSSet.map (inclMap S)) (SimplexCategory.δ i).op τ).symm
+    NatTrans.naturality_apply (TopCat.toSSet.map (inclMap S)) (SimplexCategory.δ i).op τ
 
 /-- The induced simplex map is **injective**: `toSSet` (a right adjoint) preserves the mono
 `incl : S ↪ X`, and monos of simplicial sets are levelwise injective. -/

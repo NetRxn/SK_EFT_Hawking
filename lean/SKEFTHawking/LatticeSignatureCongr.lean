@@ -36,7 +36,8 @@ Evaluating, `xᵀ (Bᵀ A B) x = (Bx)ᵀ A (Bx)`. -/
 theorem toQuadraticMap'_congr {n : ℕ} (A B : Matrix (Fin n) (Fin n) ℝ) :
     (Bᵀ * A * B).toQuadraticMap' = A.toQuadraticMap'.comp (Matrix.mulVecLin B) := by
   ext x
-  simp only [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply,
+  simp only [Matrix.toQuadraticMap', Matrix.toQuadraticForm',
+    LinearMap.BilinMap.toQuadraticMap_apply,
     Matrix.toLinearMap₂'_apply', QuadraticMap.comp_apply, Matrix.mulVecLin_apply]
   rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec,
     Matrix.vecMul_transpose]
@@ -56,11 +57,15 @@ theorem latticeSig_congr {n : ℕ} (M P : Matrix (Fin n) (Fin n) ℤ) (hP : IsUn
   letI : Invertible Pr := Matrix.invertibleOfIsUnitDet Pr hPrdet
   have hcoe : (↑(Pr.toLinearEquiv' inferInstance) : (Fin n → ℝ) →ₗ[ℝ] (Fin n → ℝ))
       = Matrix.mulVecLin Pr := by rw [Matrix.toLinearEquiv'_apply]; rfl
-  have hequiv : QuadraticMap.Equivalent Mr.toQuadraticMap' (Prᵀ * Mr * Pr).toQuadraticMap' := by
+  -- `toQuadraticMap'` is now a deprecated alias of `toQuadraticForm'`; `latticeSig` unfolds to the
+  -- latter, so restate the congruence lemma at the canonical head (definitionally the same form).
+  have hcongr : (Prᵀ * Mr * Pr).toQuadraticForm'
+      = Mr.toQuadraticForm'.comp (Matrix.mulVecLin Pr) := toQuadraticMap'_congr Mr Pr
+  have hequiv : QuadraticMap.Equivalent Mr.toQuadraticForm' (Prᵀ * Mr * Pr).toQuadraticForm' := by
     refine ⟨?_⟩
-    have h := QuadraticMap.isometryEquivOfCompLinearEquiv Mr.toQuadraticMap'
+    have h := QuadraticMap.isometryEquivOfCompLinearEquiv Mr.toQuadraticForm'
       (Pr.toLinearEquiv' inferInstance)
-    rwa [hcoe, ← toQuadraticMap'_congr] at h
+    rwa [hcoe, ← hcongr] at h
   unfold latticeSig
   rw [hmap, ← hequiv.sigPos_eq, ← hequiv.sigNeg_eq]
 
