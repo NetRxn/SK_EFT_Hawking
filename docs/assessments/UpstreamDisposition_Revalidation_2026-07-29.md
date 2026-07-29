@@ -156,6 +156,84 @@ finished migration. Natural next step: a ratchet-down wave taking `lattice_signa
 
 ---
 
+## 4b. The new PhysLib areas, assessed — **not a gold mine**
+
+Straight answer: the `FluidDynamics/` tree is **not** the windfall its name suggests for this
+project, and one of my own adjacency flags was wrong. All three areas are `sorry`-free.
+
+### FluidDynamics/ — a classical continuum *definitional* layer
+
+17 files, ~1345 lines, but the shape is **28 defs/abbrevs/structures vs. 12 theorems/lemmas**, and
+the theorems are all conservative-⟺-convective restatements
+(`navier_stokes_iff_convective_navier_stokes`, `euler_iff_convectiveEuler`,
+`cauchyMomentumEquation_iff_convectiveCauchyMomentumEquation`), divergence computations, and
+smooth⟹classical implications. `FluidDynamics/Basic.lean` is pure `abbrev` type synonyms
+(`ScalarField d := Time → Space d → ℝ`, …). No well-posedness, no existence, no uniqueness.
+
+**Every piece our analog-Hawking route actually needs is absent:**
+
+| needed | PhysLib |
+|---|---|
+| sound speed | **absent** |
+| acoustic metric / analog gravity | **absent** |
+| Mach number / transonic | **absent** |
+| Gross–Pitaevskii, Madelung, Bogoliubov, quantum pressure, condensate/superfluid | **all absent** |
+| Hawking / Unruh | **absent** |
+| Bernoulli | present only as `def LocalBernoulliLaw` / `def BernoulliLaw` — a **predicate**, not a proved law |
+
+So there is **no duplication to retire and nothing to drop in**. PhysLib's fluid layer is purely
+classical continuum mechanics; this project's is quantum-fluid (BEC) analog gravity.
+
+**The one real opportunity is structural, not a reuse.** Our `AcousticMetric.lean` is *algebraic
+and pointwise* — `acousticMetric (v cs rho : ℝ)` is a 2×2 real matrix with hand-rolled
+`partialT`/`partialX` on `Spacetime1D`, and its own header lists the deferred gaps: *"PDE
+well-posedness (existence/uniqueness of solutions to `□_g π = 0`)"* and *"regularity of the
+background fields"*. PhysLib supplies exactly that missing layer — genuine time/space-dependent
+fields with real derivative machinery, and continuity/Euler/Navier–Stokes stated as PDEs on them.
+
+Re-homing onto it would let us **derive** the acoustic metric by linearising a `FluidFlow 1`
+instead of positing it algebraically, closing our own stated gap. But PhysLib does not linearise,
+so we would build that ourselves. This is the same shape as §3.4's GR recommendation: *a better
+foundation to eventually rebuild on, not a result to import.* Low urgency, real value.
+
+### CondensedMatter/Thermoelectric/ — **my adjacency flag was wrong**
+
+I previously flagged this as sitting "next to" `Electrothermal/ETFModel.lean`. It does not.
+PhysLib's module is the **thermoelectric figure of merit**: `ThermoelectricMaterial ⟨σ, S, κl, κe⟩`,
+`powerFactor = σ·S²`, `figureOfMerit` (ZT) with positivity/monotonicity lemmas. Our `ETFModel` is
+**electrothermal feedback in a TES/bolometer**: heat balance `C·Ṫ = P_bias(T) + P_signal − G(T−T_bath)`,
+loop gain, and a stability dichotomy proved as an iff. Different physics, adjacent only in name.
+**No overlap, no reuse, nothing to do.**
+
+### CondensedMatter/TightBindingChain/ — the most substantive, but complementary
+
+539 lines and genuinely proved: a `TightBindingChain` structure, orthonormal localized states, a
+hermitian `hamiltonian`, `BrillouinZone`, `QuantaWaveNumber ⊆ BrillouinZone`, and
+`energyEigenstate` / `energyEigenvalue` with `hamiltonian_energyEigenstate`. A complete finite 1D
+band structure.
+
+Overlap with D11 is **mild and encoding-divergent**: PhysLib uses
+`BrillouinZone : Set ℝ := Set.Ico (-π/a) (π/a)` — a 1D fundamental domain carrying the physical
+lattice constant `a`; our `LatticeHamiltonian.lean` uses
+`BrillouinZone (d : ℕ) := Fin d → AddCircle (2π)` — the d-dimensional quotient. Ours is more
+general and quotient-correct; theirs is concrete, finite, and carries physical spacing. Our
+`TopologicalBand/{BlochFHS, BlochFrame, FHSLatticeGauge, FiniteTorus, PrincipalBranch}` already
+landed the finite-lattice FHS/Chern substrate with a `Uwit` C=1 witness.
+
+Plausible use: their chain as an **independent concrete instance** to check our abstract machinery
+against. Not a substitute for anything we have.
+
+### Other new `Mathematics/` modules
+
+`Calculus/Wirtinger/Basic.lean` (31 decls) is the largest. `Calculus/ParametricIntegration.lean`
+gives differentiation under the interval integral (`hasFDerivAt_parametric_intervalIntegral_of_contDiff`,
+`contDiff_parametric_intervalIntegral_of_contDiff`) — real infrastructure, but it does **not**
+unblock §3.3's `LaplaceMethod`, which needs *asymptotic expansion* of `∫ e^{-λf}g` as `λ → ∞`, a
+different object. Adjacent, not an unblock. `CrossProduct` (3), `ConjModule` (5),
+`OrthogonalMatrix` (1) are small.
+
+---
+
 ## 5. What to do (proposed, none actioned)
 
 **Cheap + fully verified.** Retire `KummerH0T4.lean` §0 (D2). Correct Track R3 in the 2026-06-08
