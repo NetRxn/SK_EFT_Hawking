@@ -60,7 +60,6 @@ noncomputable def C8r : Matrix (Fin 8) (Fin 8) ℝ := C8.map (Int.cast : ℤ →
 cast ring homomorphism `ℤ → ℝ` (over ℝ the conjugate transpose is the transpose). -/
 theorem c8r_eq : C8rᴴ * C8r = (4 : ℝ) • E8r := by
   have key := congrArg (fun M : Matrix (Fin 8) (Fin 8) ℤ => M.map (Int.castRingHom ℝ)) c8_eq
-  dsimp only at key
   rw [Matrix.map_mul, Matrix.transpose_map] at key
   simp only [Int.coe_castRingHom] at key
   rw [Matrix.conjTranspose_eq_transpose_of_trivial]

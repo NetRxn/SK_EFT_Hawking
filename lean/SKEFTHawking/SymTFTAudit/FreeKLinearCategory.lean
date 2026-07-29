@@ -427,15 +427,17 @@ On objects, `(incl ⋙ lift F).obj X = F.obj X.unwrap = F.obj X` (definitional).
 -/
 theorem lift_comp_incl (F : C ⥤ D) :
     (incl (k := k)) ⋙ lift F = F := by
-  apply CategoryTheory.Functor.ext
-  · intro X Y f
-    have h : (incl (k := k) ⋙ lift F).map f = F.map f := by
-      change Finsupp.linearCombination k (fun g : X ⟶ Y => F.map g)
-              (Finsupp.single f (1 : k)) = F.map f
-      rw [Finsupp.linearCombination_single, one_smul]
-    rw [h]; simp
-  · intro X
-    rfl
+  -- Supply `h_obj` up front (as `rfl`) so the `eqToHom` arguments are literal `rfl`
+  -- and `eqToHom_refl` can fire; leaving it as a metavariable blocks every rewrite.
+  refine CategoryTheory.Functor.ext (fun X => rfl) ?_
+  intro X Y f
+  have h : (incl (k := k) ⋙ lift F).map f = F.map f := by
+    change Finsupp.linearCombination k (fun g : X ⟶ Y => F.map g)
+            (Finsupp.single f (1 : k)) = F.map f
+    rw [Finsupp.linearCombination_single, one_smul]
+  show (incl (k := k) ⋙ lift F).map f = 𝟙 _ ≫ F.map f ≫ 𝟙 _
+  rw [Category.id_comp, Category.comp_id]
+  exact h
 
 /-! ## §6 Stage 5.10a closure theorem -/
 

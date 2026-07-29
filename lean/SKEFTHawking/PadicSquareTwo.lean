@@ -222,7 +222,7 @@ theorem toZModPow3_ne_zero_four_of_norm {x : ℤ_[2]} (hx : ‖x‖ = 1 ∨ ‖x
     rw [map_mul, map_natCast]
     have hdec : ∀ r : ZMod 8, IsUnit r → 2 * r ≠ 0 ∧ 2 * r ≠ 4 := by decide +revert
     have := hdec (toZModPow 3 u) (huu.map _)
-    convert this using 2
+    exact this
 
 /-! ## Rank-5 isotropy over `ℚ₂` (arbitrary nonzero coefficients)
 

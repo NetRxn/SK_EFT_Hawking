@@ -81,7 +81,6 @@ theorem traceNorm_mul_le_of_isUnit {A B : Matrix ι ι ℂ} (hA : IsUnit A) (hB 
   -- traceNorm M = Re tr(W M)
   have htr : traceNorm M = (W * M).trace.re := by
     rw [traceNorm_eq_trace_absOp, hWdef]
-    congr 1
     rw [Matrix.mul_assoc, ← hPP, ← Matrix.mul_assoc, hPiP, Matrix.one_mul]
   -- keystone bound
   have hkey : (W * M).trace.re ^ 2 ≤ (Aᴴ * A).trace.re * (Bᴴ * B).trace.re := by
@@ -152,7 +151,7 @@ theorem traceNorm_mul_le (A B : Matrix ι ι ℂ) :
   have hc0 : Filter.Tendsto (fun k : ℕ => Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))
       Filter.atTop (nhds 0) := by
     have := (hdiagc.tendsto 0).comp hc
-    simpa using this
+    simpa [Function.comp_def] using this
   have hAk : Filter.Tendsto (fun k : ℕ => A + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))
       Filter.atTop (nhds A) := by simpa using tendsto_const_nhds.add hc0
   have hBk : Filter.Tendsto (fun k : ℕ => B + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))

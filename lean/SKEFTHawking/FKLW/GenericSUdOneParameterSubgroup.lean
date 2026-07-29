@@ -85,7 +85,7 @@ theorem matrixLog_seq_tendsto_zero {d : ℕ}
       Filter.atTop (nhds (1 : Matrix (Fin d) (Fin d) ℂ)) := by
     have h := (continuous_subtype_val (p :=
       fun M => M ∈ Matrix.specialUnitaryGroup (Fin d) ℂ)).continuousAt.tendsto.comp h_seq
-    simpa using h
+    exact h
   have h_cont := matrixLog_continuousAt_one d
   have h := h_cont.tendsto.comp h_val
   rwa [matrixLog_one] at h
@@ -134,7 +134,7 @@ theorem eventually_val_mem_target {d : ℕ}
       Filter.atTop (nhds (1 : Matrix (Fin d) (Fin d) ℂ)) := by
     have h := (continuous_subtype_val (p :=
       fun M => M ∈ Matrix.specialUnitaryGroup (Fin d) ℂ)).continuousAt.tendsto.comp h_seq
-    simpa using h
+    exact h
   exact h_val.eventually (expAmbientPartialHomeo_target_mem_nhds_one d)
 
 /-- **Eventually `matrixLog (seq n) ≠ 0`**: from `seq → 1` and `seq n ≠ 1`. Mirror of the SU(2)
@@ -195,8 +195,12 @@ theorem vonNeumann_BW_extract {d : ℕ}
     ∃ X ∈ Metric.closedBall (0 : Matrix (Fin d) (Fin d) ℂ) 1,
       ∃ φ : ℕ → ℕ, StrictMono φ ∧
         Filter.Tendsto (fun k => vonNeumannUnitMatrixSeq seq (φ k))
-          Filter.atTop (nhds X) :=
-  isCompact_closedBall_one.tendsto_subseq
+          Filter.atTop (nhds X) := by
+  -- `FirstCountableTopology` is no longer found by TC search through the local
+  -- `linftyOp` normed structure; supply it from the countably-generated uniformity.
+  haveI : FirstCountableTopology (Matrix (Fin d) (Fin d) ℂ) :=
+    UniformSpace.firstCountableTopology (uniformSpace := PseudoMetricSpace.toUniformSpace) _
+  exact isCompact_closedBall_one.tendsto_subseq
     (vonNeumannUnitMatrixSeq_mem_closedBall_one seq)
 
 /-- **Limit has norm `1`**: under the eventually-nonzero hypothesis, the BW-extracted limit `X` has
@@ -255,7 +259,7 @@ theorem vonNeumannUnitMatrixSeq_mem_tracelessSkewHermitian_eventually {d : ℕ} 
       Filter.atTop (nhds (1 : Matrix (Fin d) (Fin d) ℂ)) := by
     have h := (continuous_subtype_val (p :=
       fun M => M ∈ Matrix.specialUnitaryGroup (Fin d) ℂ)).continuousAt.tendsto.comp h_seq
-    simpa using h
+    exact h
   filter_upwards [eventually_val_mem_target h_seq, h_val.eventually hV] with n hn_target hn_V
   unfold vonNeumannUnitMatrixSeq
   by_cases h_zero : matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ) = 0
