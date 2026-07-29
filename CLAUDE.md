@@ -240,9 +240,16 @@ graduating a recurring lesson into a **pre-decision**, are its exclusive calls).
 **Standing pre-decisions** the autonomous loop applies WITHOUT asking live in
 [docs/dev-loops/PRE_DECISIONS.md](docs/dev-loops/PRE_DECISIONS.md) (Core keystones + a Full reference;
 grown by `/debrief`). After a compaction the SessionStart re-injection carries the settled `/goal`
-condition + an always-on **RE-ANCHOR** + the live lab-notebook **FRONTIER** + a **mandatory read** of
-PRE_DECISIONS.md + (when the harvest has authored one) a per-goal **coaching block** — the synthesized,
-forward-framed re-orientation that replaced the old blind active-issues injection. Consult the register
+condition + an always-on **RE-ANCHOR** + a **FIRST_ACTION** that recomputes live state via
+`scripts/repo_state_probe.py` + a **mandatory read** of PRE_DECISIONS.md + the derived **ATLAS
+FRONTIER / NEGATIVE FRONTIER** + (when the harvest has authored one) a per-goal **coaching block** —
+the synthesized, forward-framed re-orientation that replaced the old blind active-issues injection.
+⚠ The prose lab-notebook **FRONTIER is deliberately NOT injected** (Live-Anchor redesign, Move 1): a
+hand-written "next brick" is a *proven drift vector* — it survives a compaction and re-seeds a stale
+tactic — so positive state is **recomputed** by the probe instead of narrated. The notebook INDEX
+stays the on-demand pointer. Enforced by `tests/test_harness_core.py::test_payload_never_injects_prose_frontier`;
+`harness_common._frontier_for` is a retired helper kept fail-soft, and **wiring it back in is a
+regression, not a fix.** Consult the register
 periodically; read tier-weighted (`human-reviewed > agent-reviewed > automatic`).
 
 **The derived proof atlas — the substrate map, BOTH fronts (ADR-005 + ADR-007).** Distinct from the
