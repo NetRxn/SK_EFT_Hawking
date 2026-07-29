@@ -48,8 +48,12 @@ theorem isCompact_mZeroLocus [CompactSpace M] {f : M → ℝ} (hf : Continuous f
     IsCompact (mZeroLocus f) :=
   (isClosed_mZeroLocus hf).isCompact
 
-/-- The zero locus, as a subtype, is a **compact space** when `M` is compact. -/
-instance instCompactSpace_mZeroLocus [CompactSpace M] {f : M → ℝ} (hf : Continuous f) :
+/-- The zero locus, as a subtype, is a **compact space** when `M` is compact.
+
+Not an `instance`: the explicit `hf : Continuous f` can never be inferred by typeclass
+synthesis (v4.32 makes this a hard error rather than accepting a dead instance), and the
+sole consumer below already applies it explicitly. Type is unchanged. -/
+theorem instCompactSpace_mZeroLocus [CompactSpace M] {f : M → ℝ} (hf : Continuous f) :
     CompactSpace (mZeroLocus f) :=
   isCompact_iff_compactSpace.mp (isCompact_mZeroLocus hf)
 
