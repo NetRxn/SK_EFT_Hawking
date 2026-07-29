@@ -172,6 +172,14 @@ theorem boundaries_le_cycles (X : TopCat) (n : ℕ) : boundaries X n ≤ cycles 
     rw [LinearMap.range_le_ker_iff]
     exact chainBoundary_comp_chainBoundary X m
 
+/-- Mathlib v4.32 instance-path repair: for the concrete `ℤ/2`-`Finsupp` chain module, the
+`Semiring (ZMod 2)` reached from `Ring` and the one reached from `ZMod.instField` are only
+non-reducibly defeq, so `Submodule.hasQuotient` no longer matches by unification alone. This
+alias pins it (it *is* `Submodule.hasQuotient`, elaborated at default transparency). -/
+noncomputable instance instHasQuotientCycles (X : TopCat) (n : ℕ) :
+    HasQuotient ↥(cycles X n) (Submodule (ZMod 2) ↥(cycles X n)) :=
+  @Submodule.hasQuotient (ZMod 2) ↥(cycles X n) _ _ _
+
 /-- **Singular `ℤ/2` homology** `Hₙ(X; ℤ/2) = ker ∂ₙ / im ∂ₙ₊₁` — a genuine quotient `ℤ/2`-vector
 space (the homology of the topological space `X`, built from the singular chain complex). The
 dual of `Cohomology`. -/

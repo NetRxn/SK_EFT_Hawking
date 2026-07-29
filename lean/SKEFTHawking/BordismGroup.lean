@@ -246,8 +246,18 @@ noncomputable def add {X : Type*} [TopologicalSpace X] {k : WithTop ℕ∞}
   he_boundary := by
     rw [ModelWithCorners.boundary_disjointUnion, ← b₁.he_boundary, ← b₂.he_boundary]
     ext w
-    simp only [Set.mem_range, Set.mem_union, Set.mem_image, Sum.exists, Sum.elim_inl, Sum.elim_inr]
-    aesop
+    simp only [Set.mem_range, Set.mem_union, Set.mem_image]
+    constructor
+    · rintro ⟨(a | a) | (a | a), rfl⟩
+      · exact Or.inl ⟨b₁.e (Sum.inl a), ⟨Sum.inl a, rfl⟩, rfl⟩
+      · exact Or.inr ⟨b₂.e (Sum.inl a), ⟨Sum.inl a, rfl⟩, rfl⟩
+      · exact Or.inl ⟨b₁.e (Sum.inr a), ⟨Sum.inr a, rfl⟩, rfl⟩
+      · exact Or.inr ⟨b₂.e (Sum.inr a), ⟨Sum.inr a, rfl⟩, rfl⟩
+    · rintro (⟨_, ⟨(a | a), rfl⟩, rfl⟩ | ⟨_, ⟨(a | a), rfl⟩, rfl⟩)
+      · exact ⟨Sum.inl (Sum.inl a), rfl⟩
+      · exact ⟨Sum.inr (Sum.inl a), rfl⟩
+      · exact ⟨Sum.inl (Sum.inr a), rfl⟩
+      · exact ⟨Sum.inr (Sum.inr a), rfl⟩
   g := Sum.elim b₁.g b₂.g
   hg := b₁.hg.sumElim b₂.hg
   hg_restrict := by

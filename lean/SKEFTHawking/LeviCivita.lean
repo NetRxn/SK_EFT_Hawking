@@ -232,7 +232,7 @@ structure IsLeviCivita
   metric_compatible : ∀ (X Y Z : Π x : M, TangentSpace I x) (x : M),
                        MDiffAt (T% Y) x → MDiffAt (T% Z) x →
                        MDiffAt (fun y => g y (Y y) (Z y)) x →
-                       extDerivFun (fun y => g y (Y y) (Z y)) x (X x) =
+                       extDerivFun I (fun y => g y (Y y) (Z y)) x (X x) =
                          g x (cov Y x (X x)) (Z x) + g x (Y x) (cov Z x (X x))
 
 /-! ## §4 Koszul identity from `IsLeviCivita`
@@ -275,9 +275,9 @@ theorem koszul_identity_of_isLeviCivita
     (h_g_ZX : MDiffAt (fun y => g y (Z y) (X y)) x)
     (h_g_XY : MDiffAt (fun y => g y (X y) (Y y)) x) :
     (2 : 𝕜) * g x (cov Y x (X x)) (Z x) =
-      extDerivFun (fun y => g y (Y y) (Z y)) x (X x) +
-        extDerivFun (fun y => g y (Z y) (X y)) x (Y x) -
-        extDerivFun (fun y => g y (X y) (Y y)) x (Z x) +
+      extDerivFun I (fun y => g y (Y y) (Z y)) x (X x) +
+        extDerivFun I (fun y => g y (Z y) (X y)) x (Y x) -
+        extDerivFun I (fun y => g y (X y) (Y y)) x (Z x) +
         g x (mlieBracket I X Y x) (Z x) -
         g x (mlieBracket I X Z x) (Y x) -
         g x (mlieBracket I Y Z x) (X x) := by

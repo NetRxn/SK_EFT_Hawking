@@ -136,9 +136,9 @@ theorem fermiWindow_integral_eq_one {β : ℝ} (hβ : 0 < β) (μ : ℝ) :
     have hlin : HasDerivAt (fun E => β * (E - μ)) β E := by
       simpa using ((hasDerivAt_id E).sub_const μ).const_mul β
     have hgd : HasDerivAt g (g E * β) E := by
-      simpa [hg] using (Real.hasDerivAt_exp (β * (E - μ))).comp E hlin
+      simpa [hg, Function.comp_def] using (Real.hasDerivAt_exp (β * (E - μ))).comp E hlin
     have hdend : HasDerivAt (fun E => 1 + g E) (g E * β) E := by simpa using hgd.const_add 1
-    simpa [fermi, hd] using hdend.inv (ne_of_gt (hden E))
+    exact hdend.inv (ne_of_gt (hden E))
   have hwin : (fun E => fermiWindow μ β E) = fun E => -d E := by
     funext E; rw [fermiWindow, (hderiv E).deriv]
   -- limits of `fermi` at ±∞
@@ -152,10 +152,12 @@ theorem fermiWindow_integral_eq_one {β : ℝ} (hβ : 0 < β) (μ : ℝ) :
     Real.tendsto_exp_atBot.comp (hsubbot.const_mul_atBot hβ)
   have hftop : Tendsto (fermi μ β) atTop (𝓝 0) := by
     have h1 : Tendsto (fun E => 1 + g E) atTop atTop := tendsto_atTop_add_const_left _ 1 hgtop
-    simpa [fermi] using tendsto_inv_atTop_zero.comp h1
+    exact tendsto_inv_atTop_zero.comp h1
   have hfbot : Tendsto (fermi μ β) atBot (𝓝 1) := by
     have h1 : Tendsto (fun E => 1 + g E) atBot (𝓝 (1 + 0)) := tendsto_const_nhds.add hgbot
-    simpa [fermi] using h1.inv₀ (by norm_num)
+    have h2 : Tendsto (fun E => (1 + g E)⁻¹) atBot (𝓝 1) := by
+      simpa using h1.inv₀ (by norm_num)
+    exact h2
   -- continuity + positivity of the derivative (for measurability + the domination bound)
   have hgpos : ∀ E, (0 : ℝ) < g E := fun E => by rw [hg]; positivity
   have hgc : Continuous g := by simp only [hg]; fun_prop
