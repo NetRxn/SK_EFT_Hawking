@@ -28,7 +28,7 @@ theorem frontFace_simplexIncl {p q : ℕ}
     (τ : (TopCat.toSSet.obj (sub S)).obj (op (SimplexCategory.mk (p + q)))) :
     frontFace (simplexIncl S (p + q) τ) = simplexIncl S p (frontFace τ) := by
   simpa only [simplexIncl, frontFace] using
-    (FunctorToTypes.naturality _ _ (TopCat.toSSet.map (inclMap S)) (frontIncl p q).op τ).symm
+    (NatTrans.naturality_apply (TopCat.toSSet.map (inclMap S)) (frontIncl p q).op τ).symm
 
 /-- **`backFace` commutes with the subspace inclusion** — naturality of `simplexIncl` against the
 back-face inclusion `backIncl`. -/
@@ -36,7 +36,7 @@ theorem backFace_simplexIncl {p q : ℕ}
     (τ : (TopCat.toSSet.obj (sub S)).obj (op (SimplexCategory.mk (p + q)))) :
     backFace (simplexIncl S (p + q) τ) = simplexIncl S q (backFace τ) := by
   simpa only [simplexIncl, backFace] using
-    (FunctorToTypes.naturality _ _ (TopCat.toSSet.map (inclMap S)) (backIncl p q).op τ).symm
+    (NatTrans.naturality_apply (TopCat.toSSet.map (inclMap S)) (backIncl p q).op τ).symm
 
 /-- **A cochain vanishing on `S` caps a subspace chain to `0`**: if `a σ = 0` for every `S`-simplex `σ`
 (i.e. `a` is a relative cochain), then `a ⌢ c = 0` for every `c ∈ subspaceChains S`. On a basis
