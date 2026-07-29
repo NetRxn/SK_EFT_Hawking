@@ -61,7 +61,11 @@ to the two `K`-stage classes over `U` and `V` (the same underlying compact `K`, 
             (compactsInIncl Set.inter_subset_left K) g,
           Module.DirectLimit.of ℤ (CompactsIn V) (cohomGWInt V k) (cohomFWInt V k)
             (compactsInIncl Set.inter_subset_right K) g) := by
-  rw [cscMvDiagInt, LinearMap.prod_apply, Pi.prod, cscOpenMonotoneInt_of, cscOpenMonotoneInt_of]
+  rw [cscMvDiagInt, LinearMap.prod_apply]
+  -- `Pi.prod` is a deprecated alias with no equation theorems; only `simp only` with the
+  -- real def's lemma pierces it.
+  simp only [Function.prod_def]
+  rw [ cscOpenMonotoneInt_of, cscOpenMonotoneInt_of]
   rfl
 
 end SKEFTHawking.SingularCSCMayerVietorisInt

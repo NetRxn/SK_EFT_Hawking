@@ -131,7 +131,7 @@ theorem cliffordSU2_conj (J M : Matrix (Fin 2) (Fin 2) ℂ)
   set z : ℂ := Complex.I * ((-(Real.pi / 4) : ℝ) : ℂ) with hz_def
   have hz_anti : (z • J) * M = -(M * (z • J)) := by
     rw [smul_mul_assoc, hanti, smul_neg, mul_smul_comm]
-  rw [exp_mul_of_anticommute _ _ hz_anti, mul_assoc,
+  erw [exp_mul_of_anticommute _ _ hz_anti, mul_assoc,
     ← NormedSpace.exp_add_of_commute (Commute.refl (-(z • J)))]
   rw [show -(z • J) + -(z • J) = (Complex.I * ((Real.pi / 2 : ℝ) : ℂ)) • J by
     rw [← neg_smul, ← add_smul]; congr 1; rw [hz_def]; push_cast; ring]

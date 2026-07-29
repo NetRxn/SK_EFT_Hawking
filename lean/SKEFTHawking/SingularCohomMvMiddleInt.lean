@@ -69,7 +69,10 @@ theorem exists_lift_cochain (U V : Set M) (hU : IsOpen U) (hV : IsOpen V) (m : â
       âˆˆ LinearMap.ker (piMapInt U V m) := by
     intro x
     rw [LinearMap.mem_ker]
-    simp only [LinearMap.sub_apply, LinearMap.id_coe, id_eq, LinearMap.comp_apply, map_sub]
+    -- v4.32: the goal is not type-correct at `instances` transparency (the LinearMap-level
+    -- `instHSub`), so `simp only` reports "made no progress" rather than a type error.
+    -- `rw` works at default transparency and steps through it.
+    erw [LinearMap.sub_apply, LinearMap.id_coe, id_eq, LinearMap.comp_apply, map_sub]
     have hgy : piMapInt U V m (sec (piMapInt U V m x)) = piMapInt U V m x := by
       simpa using LinearMap.congr_fun hsec (piMapInt U V m x)
     rw [hgy, sub_self]

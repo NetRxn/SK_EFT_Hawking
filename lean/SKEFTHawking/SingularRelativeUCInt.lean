@@ -343,8 +343,11 @@ theorem exists_boundaries_in_cycles_retraction {N : ℕ} [Module.Free ℤ (RelHo
   have hmem : ∀ z : relCyclesInt S N, z - sec (Bsub.mkQ z) ∈ Bsub := by
     intro z
     have hid : Bsub.mkQ (sec (Bsub.mkQ z)) = Bsub.mkQ z := by
-      have := LinearMap.congr_fun hsec (Bsub.mkQ z)
-      simpa only [LinearMap.coe_comp, Function.comp_apply, LinearMap.id_coe, id_eq] using this
+      -- v4.32: `simpa`'s closing step will not bridge `LinearMap.id x` to `x` here.
+      -- Normalise the HYPOTHESIS instead and close with a bare `exact` (P11).
+      have h := LinearMap.congr_fun hsec (Bsub.mkQ z)
+      simp only [LinearMap.coe_comp, Function.comp_apply, LinearMap.id_coe, id_eq] at h
+      exact h
     have hk : z - sec (Bsub.mkQ z) ∈ LinearMap.ker Bsub.mkQ := by
       rw [LinearMap.mem_ker, map_sub, hid, sub_self]
     rwa [Submodule.ker_mkQ] at hk

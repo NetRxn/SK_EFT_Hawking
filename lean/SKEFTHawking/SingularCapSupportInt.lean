@@ -38,7 +38,7 @@ theorem backFace_simplexInclInt {p q : ℕ}
     (τ : (TopCat.toSSet.obj (sub S)).obj (op (SimplexCategory.mk (p + q)))) :
     backFace (simplexIncl S (p + q) τ) = simplexIncl S q (backFace τ) := by
   simpa only [simplexIncl, backFace] using
-    (FunctorToTypes.naturality _ _ (TopCat.toSSet.map (SingularRelativeHomologyMod2.inclMap S))
+    (NatTrans.naturality_apply (TopCat.toSSet.map (SingularRelativeHomologyMod2.inclMap S))
       (backIncl p q).op τ).symm
 
 /-- **Integral cap-product locality**: `a ⌢ c` is supported in `S` whenever `c` is. On a basis

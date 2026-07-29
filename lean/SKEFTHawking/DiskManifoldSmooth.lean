@@ -52,8 +52,13 @@ theorem contDiff_assemble {n : WithTop ℕ∞} :
   intro i
   refine Fin.lastCases ?_ (fun j => ?_) i
   · simpa only [Fin.snoc_last] using contDiff_snd
-  · simpa only [Fin.snoc_castSucc] using
+  · -- v4.32: the composed form and the `WithLp`/`EuclideanSpace` synonym differ syntactically
+    -- but not definitionally, and `simpa`'s closing step will not bridge them. Normalise the
+    -- hypothesis first, then close.
+    have h : ContDiff ℝ n (fun p : EuclideanSpace ℝ (Fin 2) × ℝ => p.1.ofLp j) :=
       (contDiff_apply ℝ ℝ j).comp (PiLp.contDiff_ofLp.comp contDiff_fst)
+    simp only [Function.comp_def] at h
+    simpa only [Fin.snoc_castSucc] using h
 
 /-- `splitLo` is smooth (the `E³ → E²` low-block projection). -/
 theorem contDiff_splitLo {n : WithTop ℕ∞} :
