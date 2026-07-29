@@ -538,6 +538,31 @@ theorem error_floor_twoBoxcar_witness {V : (ℝ → ℝ) → ℝ}
   norm_num at hfloor
   exact le_trans gaussianQ_two_ge_rational hfloor
 
+/-- **The unsigned saturation characterization is FALSE — a flat refutation.**
+
+The tempting simplification of `filteredSNR_eq_budget_iff` — "saturation happens exactly when
+`h` is a.e. *some* multiple of the template", dropping the positivity of the multiple — does not
+merely lose information, it is **false**, and this refutes it directly rather than recording the
+fact in prose. The counterexample is `h = −s` at `c = −1`: Cauchy–Schwarz is saturated in
+magnitude, yet the realized ratio is `−matchedBudget ≠ matchedBudget`.
+
+Kernel-checked no-go; the settled fork is `6eb-unsigned-matched-saturation-characterization`
+(`KERNEL_NOGO_REGISTRY`). Any future restatement of the equality case must carry the sign. -/
+theorem unsigned_saturation_characterization_false {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
+    (hwhite : IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀)
+    {s : ℝ → ℝ} (hCpos : 0 < ∫ x in (0:ℝ)..T, s x ^ 2) :
+    ¬ (∀ h : ℝ → ℝ,
+        (∃ c : ℝ, h =ᵐ[volume.restrict (Set.Ioc 0 T)] fun x => c * s x) →
+        filteredSNR V T s h = matchedBudget S₀ T s) := by
+  intro hall
+  have hmem : ∃ c : ℝ, (fun x => -s x) =ᵐ[volume.restrict (Set.Ioc 0 T)] fun x => c * s x :=
+    ⟨-1, Filter.Eventually.of_forall (fun x => by ring)⟩
+  have hpos : 0 < matchedBudget S₀ T s :=
+    Real.sqrt_pos.mpr (by positivity)
+  have hneg := filteredSNR_neg_matched_eq_neg_budget hwhite hS hCpos
+  rw [hall _ hmem] at hneg
+  linarith
+
 /-- **The ceiling genuinely discriminates — a strictly sub-optimal admissible filter.**
 
 The linear ramp `h(x) = x` read against the unit boxcar template on `[0,1]` in white noise of

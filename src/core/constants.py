@@ -4410,6 +4410,39 @@ KERNEL_NOGO_REGISTRY: dict[str, dict] = {
         'false_statement': "The Kronecker/UCT dual of the carried cohomology basis - `homologyBasisOfCohomologyBasis basis`, the value `pinCharSurfaceOfBundled` puts in `PinCharSurface.H1Iso` (and the value `GeoRealizationTied.derivedEsigma`/`derivedEtau` put in the seam) - is the identification of `H1(Sigma;Z/2)` that the enhancement `q` lives on, so `q` may be evaluated at those coordinates at ANY rank. FALSE (audit M4, kernel-checked 2026-07-21). The carrier's `hpolar` pins `q.B` to the cup pairing in the COHOMOLOGY basis `e`; the Kronecker dual is the transport that makes the KRONECKER pairing the dot product (`kroneckerH_eq_dotProduct`), a different normalization. The two differ by the Gram operator of `q.B` (`homologyCoords_eq_gramMap`), and the difference is not cosmetic: (1) VARIANCE MISMATCH - a gauge `e |-> g o e` moves the derived homology coordinates by the transpose-inverse (`homologyCoords_gauge`) while `hpolar` forces `q` to move by `g` (`hpolar_gaugePullback`), so `q o (Kronecker transport)` is not gauge-invariant (`not_forall_kroneckerTransport_gauge_invariant`, rank-2 transvection witness); the gauged carrier is a genuine `CharPairStrBundled` with the SAME surf/emb/surfClass/hchar and the SAME Brown grade (`gaugeBundled_*`, `gaugeBundled_brown`), so the value read is not a function of the geometry. (2) TRUTH-VALUE FLIP - for the genus-1 model in a symplectic basis the Gram operator is the coordinate SWAP (`gramMap_hyperbolic2`), and on the a-cycle metabolizer `q` vanishes while at its raw-Kronecker coordinates `q = 2 != 0` (`hyperbolic2_taylor_flip`): `TaylorKernelVanishing` is FALSE exactly where Taylor Thm 1.1 says it must be TRUE. SCOPE (do not overstate): the defect is strictly NONZERO-RANK. At rank 0 the two transports are EQUAL (`homologyBasisPD_eq_of_rank_zero`, `pinCharSurfaceOfBundledPD_eq_of_rank_zero`), so the entire live rank-zero `PinPlusKTRankZeroBounding`/`toLeaves` chain is sound and unaffected; and `gramMap_stdQuadratic` shows the raw transport is accidentally correct whenever the chosen basis is orthonormal for the intersection form (which a positive-genus surface's symplectic sector is not). REPAIR (SHIPPED, no hypothesis needed): use `homologyBasisPD Q e := (homologyBasisOfCohomologyBasis e).trans (gramEquiv Q).symm` - `Z4Quadratic.nondeg` IS the Gram operator's invertibility - which is the Poincare-dual transport (`homologyBasisPD_pd`: `homologyBasisPD Q e (pd a) = e a`), is gauge-covariant (`homologyBasisPD_gauge`) and yields a gauge-INVARIANT enhancement value (`q_homologyBasisPD_gauge_invariant`); carrier-level entry point `pinCharSurfaceOfBundledPD`. BLAST RADIUS: the same raw transport feeds `TaylorLegVanishes`/`JointLagrangian` through `GeoRealizationTied.derivedEsigma`/`derivedEtau` (PinPlusCharPairRealizationTied), so any nonzero-rank use of the realized carrier's Taylor leg needs the same correction.",
         'memory': '[[project_5qH_nonhausdorff_substrate_bug]]',
     },
+    'unsigned_matched_saturation_characterization': {
+        'fork_id': '6eb-unsigned-matched-saturation-characterization',
+        'backing_theorems': [
+            'SKEFTHawking.Detection.unsigned_saturation_characterization_false',
+            'SKEFTHawking.Detection.filteredSNR_neg_matched_eq_neg_budget',
+        ],
+        'nogo_kind': 'refutation',
+        'false_statement': "Matched-filter saturation may be characterized WITHOUT a sign "
+            "condition: `filteredSNR V T s h = matchedBudget S0 T s` iff `h` is a.e. on the "
+            "window SOME scalar multiple of the template `s`. FALSE (Phase 6EB Wave 3, "
+            "2026-07-29, kernel-checked; refuted flatly by "
+            "`unsigned_saturation_characterization_false`). WITNESS: `h = -s`, i.e. `c = -1`. "
+            "It satisfies the unsigned membership condition, and it SATURATES Cauchy-Schwarz "
+            "in MAGNITUDE -- `(int h*s)^2 = (int h^2)(int s^2)` holds with equality -- yet the "
+            "realized ratio is `-matchedBudget` (`filteredSNR_neg_matched_eq_neg_budget`), "
+            "which differs from `matchedBudget` whenever the template energy is positive. "
+            "MECHANISM: the deflection-to-noise ratio is a SIGNED quantity (numerator "
+            "`int_0^T h*s`, denominator the positive `sqrt(V h)`), while Cauchy-Schwarz "
+            "equality only controls `|int h*s|`. The anti-matched filter is the extremal "
+            "MINIMIZER, not a maximizer. SCOPE -- this refutes the UNSIGNED characterization "
+            "only; it does NOT weaken the shipped form `filteredSNR_eq_budget_iff`, which "
+            "carries `exists c, 0 < c and h =a.e. c*s` and is correct as stated, nor the bound "
+            "`filteredSNR_le_matchedBudget`, which is a statement about the signed ratio and "
+            "is true for `h = -s` (trivially: a negative number is below a positive budget). "
+            "CONSEQUENCE FOR CONSUMERS (6EC electrothermal, 6EE composite ceilings): a "
+            "downstream restatement of the equality case must carry the sign, and an inverted "
+            "readout chain (negative responsivity) is NOT an optimal filter even though it "
+            "attains the same POWER SNR -- if a consumer works in power SNR `(int h*s)^2/V h`, "
+            "the sign genuinely drops out and the unsigned characterization becomes correct "
+            "THERE; do not transport the correct power-domain statement back into the "
+            "amplitude domain, which is the shape this fork bans.",
+        'memory': None,
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════
