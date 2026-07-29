@@ -826,9 +826,7 @@ theorem expAmbient_mem_span_one_X_of_sq_eq_scalar
   have h_sum : HasSum
       (fun n => (↑n.factorial : ℂ)⁻¹ • X ^ n) (NormedSpace.exp X) := by
     have := NormedSpace.expSeries_hasSum_exp (𝕂 := ℂ) X
-    convert this using 1
-    ext n
-    simp [NormedSpace.expSeries, smul_eq_mul]
+    exact this.congr_fun fun n => (NormedSpace.expSeries_apply_eq X n).symm
   -- Partial sums tend to exp X.
   have h_tendsto :
       Filter.Tendsto
@@ -1002,6 +1000,12 @@ theorem vonNeumann_extract_sequence
   have h_closure : (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∈
       closure ((H : Set _) \ {1}) :=
     mem_closure_diff_singleton_of_accPt hH
+  -- v4.32: `Matrix` no longer picks up the Pi `FirstCountableTopology` by TC search, so the
+  -- subtype (and hence its `FrechetUrysohnSpace`) has to be routed explicitly.
+  haveI : FirstCountableTopology (Matrix (Fin 2) (Fin 2) ℂ) :=
+    inferInstanceAs (FirstCountableTopology (Fin 2 → Fin 2 → ℂ))
+  haveI : FirstCountableTopology ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+    TopologicalSpace.Subtype.firstCountableTopology _
   obtain ⟨seq, h_in, h_tendsto⟩ :=
     (mem_closure_iff_seq_limit (s := (H : Set _) \ {1})
       (a := (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))).mp h_closure
@@ -1216,6 +1220,9 @@ theorem vonNeumann_BW_extract
       ∃ φ : ℕ → ℕ, StrictMono φ ∧
         Filter.Tendsto (fun k => vonNeumannUnitMatrixSeq seq (φ k))
           Filter.atTop (nhds X) := by
+  -- v4.32: `Matrix` no longer picks up the Pi `FirstCountableTopology` by TC search.
+  haveI : FirstCountableTopology (Matrix (Fin 2) (Fin 2) ℂ) :=
+    inferInstanceAs (FirstCountableTopology (Fin 2 → Fin 2 → ℂ))
   exact isCompact_closedBall_one.tendsto_subseq
     (vonNeumannUnitMatrixSeq_mem_closedBall_one seq)
 
@@ -2235,9 +2242,7 @@ theorem expAmbient_decomp_of_sq_eq_scalar
       (SU2MatrixExp.expAmbient X) := by
     unfold SU2MatrixExp.expAmbient
     have := NormedSpace.expSeries_hasSum_exp (𝕂 := ℂ) X
-    convert this using 1
-    ext n
-    simp [NormedSpace.expSeries, smul_eq_mul]
+    exact this.congr_fun fun n => (NormedSpace.expSeries_apply_eq X n).symm
   exact h_exp_sum.unique h_combined
 
 /-- **§7.6. Cos identification**: for real r, the scalar series
@@ -2796,7 +2801,9 @@ Y_h ∈ source. This unlocks the unconditional discharge over that nhd. -/
 theorem Y_h_continuousAt_one :
     ContinuousAt (Y_h : Matrix (Fin 2) (Fin 2) ℂ → Matrix (Fin 2) (Fin 2) ℂ) 1 := by
   unfold Y_h
-  refine ContinuousAt.smul ?_ ?_
+  -- v4.32: `ContinuousAt.smul` concludes the Pi-smul `f • g`, so the scalar/module types
+  -- stay as metavariables and `ContinuousSMul` gets stuck; pin them explicitly.
+  refine ContinuousAt.smul (M := ℂ) (X := Matrix (Fin 2) (Fin 2) ℂ) ?_ ?_
   · have h_trace_cont : ContinuousAt
       (fun h : Matrix (Fin 2) (Fin 2) ℂ => h.trace) 1 :=
       (Continuous.matrix_trace continuous_id).continuousAt
@@ -3623,10 +3630,13 @@ theorem expAmbient_nat_smul_anchor
   rw [h_smul_cast]
   -- Step 2: expAmbient (n • Y) = (expAmbient Y)^n
   unfold SU2MatrixExp.expAmbient
-  rw [NormedSpace.exp_nsmul]
+  -- v4.32: the ℕ-smul instance in the lemma's pattern no longer matches at `rw`'s
+  -- reducible transparency (Matrix's AddMonoid vs linftyOpNormedRing's); `erw` does.
+  erw [NormedSpace.exp_nsmul]
   -- Step 3: substitute h_anchor
   unfold SU2MatrixExp.expAmbient at h_anchor
-  rw [h_anchor]
+  -- `exp_nsmul` left the linftyOp instance path, so `h_anchor` also needs `erw`.
+  erw [h_anchor]
   -- Step 4: ((φ s).val)^n = (φ ((n:ℝ)*s)).val via hom_pow_nat + SubmonoidClass.coe_pow
   rw [hom_pow_nat hzero hhom n s]
   exact (SubmonoidClass.coe_pow _ _).symm
@@ -4067,7 +4077,7 @@ theorem OneParamSubgroupSU2.anchor_halve
   -- Step 3: expAmbient(2•u) = ((φ(t/2)).val)² via exp_nsmul + h_exp_u
   have h_exp_2u : SU2MatrixExp.expAmbient ((2 : ℕ) • u) = ((φ (t/2)).val)^2 := by
     unfold SU2MatrixExp.expAmbient
-    rw [NormedSpace.exp_nsmul]
+    erw [NormedSpace.exp_nsmul]
     show (NormedSpace.exp u)^(2 : ℕ) = ((φ (t/2)).val)^(2 : ℕ)
     rw [show (NormedSpace.exp u) = (φ (t/2)).val from h_exp_u]
   -- Step 4: ((φ(t/2)).val)² = (φ t).val via hhom + Submonoid.coe_pow
@@ -4125,7 +4135,7 @@ theorem OneParamSubgroupSU2.anchor_div_n
   -- expAmbient(n•u) = ((φ(t/n)).val)^n.
   have h_exp_nu : SU2MatrixExp.expAmbient (n • u) = ((φ (t/n)).val)^n := by
     unfold SU2MatrixExp.expAmbient
-    rw [NormedSpace.exp_nsmul]
+    erw [NormedSpace.exp_nsmul]
     show (NormedSpace.exp u)^n = ((φ (t/n)).val)^n
     rw [show (NormedSpace.exp u) = (φ (t/n)).val from h_exp_u]
   -- ((φ(t/n)).val)^n = (φ t).val via hom_pow_nat with s := t/n, then n*(t/n) = t.
@@ -5451,7 +5461,7 @@ lemma linftyOpNorm_entry_le_two
     calc ‖M i j‖₊
         ≤ ∑ k, ‖M i k‖₊ :=
           Finset.single_le_sum (f := fun k => ‖M i k‖₊)
-            (fun k _ => zero_le _) (Finset.mem_univ j)
+            (fun k _ => zero_le) (Finset.mem_univ j)
       _ ≤ Finset.univ.sup (fun i' => ∑ k, ‖M i' k‖₊) :=
           Finset.le_sup (f := fun i' => ∑ k, ‖M i' k‖₊) (Finset.mem_univ i)
   exact_mod_cast h_le
