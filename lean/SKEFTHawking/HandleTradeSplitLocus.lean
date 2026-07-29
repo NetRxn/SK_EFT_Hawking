@@ -169,7 +169,10 @@ presentations**. -/
 /-- Rank of an `n`-fold disjoint union. -/
 theorem rank_nsum (p : StrMfd ξ) (n : ℕ) : R.rank (StrMfd.nsum p n) = n * R.rank p := by
   induction n with
-  | zero => simpa using R.rank_emptyStrMfd
+  | zero =>
+    -- v4.32: simp no longer reduces `nsum p 0` to `emptyStrMfd`, and the RHS is `0 * rank p`.
+    -- Unfold explicitly, exactly as the succ branch below already does.
+    rw [StrMfd.nsum, Nat.zero_mul]; exact R.rank_emptyStrMfd
   | succ n ih => rw [StrMfd.nsum, R.rank_sum, ih, Nat.succ_mul]
 
 /-- `n` copies of `S²×S²` have rank `2n` — the falsifiable numerical content of additivity, pinned

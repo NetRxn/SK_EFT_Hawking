@@ -68,7 +68,9 @@ theorem xKronX_sq : xKronX * xKronX = 1 := by
 
 theorem exp_iHalfPi_xKronX :
     NormedSpace.exp ((Complex.I * ((Real.pi / 2 : ℝ) : ℂ)) • xKronX) = Complex.I • xKronX := by
-  rw [exp_smul_involution xKronX xKronX_sq]
+  -- v4.32: the instance is baked into the elaborated pattern, so `rw` cannot match at
+  -- reducible transparency even though the pattern is visibly present. `erw` does match.
+  erw [exp_smul_involution xKronX xKronX_sq]
   rw [show Complex.cosh (Complex.I * ((Real.pi / 2 : ℝ) : ℂ)) = 0 by
         rw [mul_comm, Complex.cosh_mul_I]; simp [Complex.cos_pi_div_two]]
   rw [show Complex.sinh (Complex.I * ((Real.pi / 2 : ℝ) : ℂ)) = Complex.I by
@@ -118,7 +120,7 @@ theorem MS_halfPi_inv :
       NormedSpace.exp (-msGenerator (Real.pi / 2)) = 1 := by
     show NormedSpace.exp (msGenerator (Real.pi / 2)) *
       NormedSpace.exp (-msGenerator (Real.pi / 2)) = 1
-    rw [← NormedSpace.exp_add_of_commute (Commute.neg_right (Commute.refl _)),
+    erw [← NormedSpace.exp_add_of_commute (Commute.neg_right (Commute.refl _)),
       add_neg_cancel, NormedSpace.exp_zero]
   exact Matrix.inv_eq_right_inv hmul
 
@@ -130,11 +132,11 @@ theorem MS_conj_X30 :
   rw [MS_halfPi_inv]
   show NormedSpace.exp (msGenerator (Real.pi / 2)) * suFourTangentAux 3 0 *
       NormedSpace.exp (-msGenerator (Real.pi / 2)) = _
-  rw [SKEFTHawking.FKLW.exp_mul_of_anticommute _ _ msGen_anticomm_X30, mul_assoc,
+  erw [SKEFTHawking.FKLW.exp_mul_of_anticommute _ _ msGen_anticomm_X30, mul_assoc,
     ← NormedSpace.exp_add_of_commute (Commute.refl (-msGenerator (Real.pi / 2)))]
   rw [show -msGenerator (Real.pi / 2) + -msGenerator (Real.pi / 2)
         = (Complex.I * ((Real.pi / 2 : ℝ) : ℂ)) • xKronX by
       unfold msGenerator; rw [← neg_add, ← add_smul, ← neg_smul]; congr 1; push_cast; ring]
-  rw [exp_iHalfPi_xKronX, X30_mul_I_xKronX]
+  erw [exp_iHalfPi_xKronX, X30_mul_I_xKronX]
 
 end SKEFTHawking.FKLW.TrappedIonSU4

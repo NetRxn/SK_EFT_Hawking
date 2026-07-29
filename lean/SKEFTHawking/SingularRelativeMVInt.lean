@@ -93,7 +93,7 @@ noncomputable def relMvChainDiagInt (U V : Set ↑M) (n : ℕ) :
 @[simp] theorem relMvChainDiagInt_mk (U V : Set ↑M) (n : ℕ) (c : SingularChainInt M n) :
     relMvChainDiagInt U V n (RelativeChainInt.mk (U ∩ V) n c)
       = (RelativeChainInt.mk U n c, RelativeChainInt.mk V n c) := by
-  simp only [relMvChainDiagInt, LinearMap.prod_apply, Pi.prod, relMapChainInt_mk,
+  simp only [relMvChainDiagInt, LinearMap.prod_apply, Function.prod_def, relMapChainInt_mk,
     SingularFunctorialityInt.mapChainInt_id]
 
 /-- `Δ` is **injective**: `([c]_U, [c]_V) = 0` forces `c ∈ C(U) ∩ C(V) = C(U∩V)`, i.e. `[c]_{U∩V} = 0`. -/

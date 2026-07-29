@@ -66,7 +66,12 @@ theorem latticeSig_eq_zero_of_lagrangian {n m : ℕ} (hn : n = 2 * m)
   have hpe : sigPos Q = m := by omega
   have hne : sigNeg Q = m := by omega
   unfold latticeSig
-  rw [← hQ, hpe, hne]
+  -- v4.32: `toQuadraticMap'` is a deprecated *alias* of `toQuadraticForm'`, so the two spellings
+  -- are defeq but not syntactically equal. `set … with hQ` captured the OLD spelling while
+  -- `latticeSig` unfolds to the NEW one, so `rw [← hQ]` cannot see its pattern. Bridge by
+  -- restating hQ in the goal's own spelling (typechecks by defeq); statements stay on the old
+  -- name per the standing whole-component boundary.
+  rw [show (M.map (Int.cast : ℤ → ℝ)).toQuadraticForm' = Q from hQ.symm, hpe, hne]
   simp
 
 /-- **The metabolic lemma keyed on even-unimodularity** — the directly-consumable form. An even-unimodular

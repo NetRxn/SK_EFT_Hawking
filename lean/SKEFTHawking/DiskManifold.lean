@@ -122,8 +122,12 @@ theorem continuous_assemble :
   apply continuous_pi
   intro i
   refine Fin.lastCases ?_ (fun j => ?_) i
-  · simpa using continuous_snd
-  · simpa using ((PiLp.continuous_apply 2 (fun _ : Fin 2 => ℝ) j).comp continuous_fst)
+  · -- `Fin.snoc … (last 2)` is defeq to the last coordinate (the `i.val < n` guard is false),
+    -- but v4.32 will not close it through `simpa`'s unifier. State the reduced goal directly.
+    show Continuous fun p : EuclideanSpace ℝ (Fin 2) × ℝ => p.2
+    exact continuous_snd
+  · simpa [Function.comp_def, Fin.snoc_castSucc] using
+      ((PiLp.continuous_apply 2 (fun _ : Fin 2 => ℝ) j).comp continuous_fst)
 
 /-- **Split** the first two coordinates of `E³` into `E²`. -/
 def splitLo (w : EuclideanSpace ℝ (Fin 3)) : EuclideanSpace ℝ (Fin 2) :=

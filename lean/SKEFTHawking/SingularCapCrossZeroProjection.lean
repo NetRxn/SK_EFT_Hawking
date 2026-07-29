@@ -61,7 +61,7 @@ noncomputable def capZeroCyclesₗ (a : LinearMap.ker (coboundaryₗ X k)) :
   LinearMap.restrict (cap (m := 0) a.1) (fun _ _ => Submodule.mem_top)
 
 @[simp] theorem capZeroCyclesₗ_coe (a : LinearMap.ker (coboundaryₗ X k)) (z : cycles X k) :
-    (capZeroCyclesₗ a z : SingularChain X 0) = cap a.1 (z : SingularChain X k) :=
+    (capZeroCyclesₗ a z : SingularChain X 0) = cap (m := 0) a.1 (z : SingularChain X k) :=
   LinearMap.restrict_coe_apply _ _ _
 
 /-- For a fixed `k`-cocycle `a`, `cap a` descends to `Hₖ(X) → H₀(X)`: it sends boundaries to
@@ -74,7 +74,7 @@ noncomputable def capZeroHomology (a : LinearMap.ker (coboundaryₗ X k)) :
     simp only [Submodule.submoduleOf, Submodule.mem_comap, Submodule.subtype_apply] at hzb
     obtain ⟨w, hw⟩ := hzb
     refine ⟨cap (m := 1) a.1 w, ?_⟩
-    show chainBoundary X 0 (cap a.1 w) = cap a.1 z
+    show chainBoundary X 0 (cap (m := 1) a.1 w) = cap (m := 0) a.1 z
     rw [cap_cocycle_chainMap (m := 0) a.1 (LinearMap.mem_ker.mp a.2) w]
     exact congrArg (cap a.1) hw)
 

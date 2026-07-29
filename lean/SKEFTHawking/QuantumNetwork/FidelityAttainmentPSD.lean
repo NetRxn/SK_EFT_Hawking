@@ -52,7 +52,8 @@ theorem exists_unitary_traceNorm_eq_re_trace_general (M : Matrix ι ι ℂ) :
     have hdiagc : Continuous fun z : ℂ => diagonal (fun _ : ι => z) :=
       Continuous.matrix_diagonal (continuous_pi fun _ => continuous_id)
     have hd0 : Tendsto (fun k : ℕ => diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹)) atTop (𝓝 0) := by
-      have := (hdiagc.tendsto 0).comp hc; simpa using this
+      -- v4.32: `simp` no longer unfolds `Function.comp` (the goal is in lambda form).
+      have := (hdiagc.tendsto 0).comp hc; simpa [Function.comp_def] using this
     simpa [hMk] using tendsto_const_nhds.add hd0
   set Wseq : ℕ → Matrix ι ι ℂ :=
     fun k => if h : IsUnit (Mk k) then (exists_unitary_traceNorm_eq_re_trace h).choose else 1
@@ -80,6 +81,10 @@ theorem exists_unitary_traceNorm_eq_re_trace_general (M : Matrix ι ι ℂ) :
     nlinarith [norm_nonneg W, Real.sq_sqrt (by positivity : (0 : ℝ) ≤ (Fintype.card ι : ℝ)),
       Real.sqrt_nonneg (Fintype.card ι : ℝ)]
   have hKcompact : IsCompact Kset := Metric.isCompact_of_isClosed_isBounded hKclosed hKbdd
+  -- v4.32: `Matrix` has no `FirstCountableTopology` and the Pi instance no longer matches
+  -- through the matrix type synonym, so `tendsto_subseq` cannot synthesize it. Supply it.
+  haveI : FirstCountableTopology (Matrix ι ι ℂ) :=
+    inferInstanceAs (FirstCountableTopology (ι → ι → ℂ))
   obtain ⟨Wstar, hWstarK, φ, hφ, hWφ⟩ := hKcompact.tendsto_subseq (fun k => hWunit k)
   refine ⟨Wstar, hWstarK, ?_⟩
   have hMφ : Tendsto (fun k => Mk (φ k)) atTop (𝓝 M) := hMtend.comp hφ.tendsto_atTop

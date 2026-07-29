@@ -68,7 +68,8 @@ noncomputable def relMvChainDiag (U V : Set ↑M) (n : ℕ) :
 @[simp] theorem relMvChainDiag_mk (U V : Set ↑M) (n : ℕ) (c : SingularChain M n) :
     relMvChainDiag U V n (RelativeChain.mk (U ∩ V) n c)
       = (RelativeChain.mk U n c, RelativeChain.mk V n c) := by
-  simp only [relMvChainDiag, LinearMap.prod_apply, Pi.prod, relMapChain_mk, mapChain_id]
+  simp only [relMvChainDiag, LinearMap.prod_apply, Function.prod_def, relMapChain_mk,
+    mapChain_id]
 
 /-- `Δ` is **injective**: `([c]_U, [c]_V) = 0` forces `c ∈ C(U) ∩ C(V) = C(U∩V)`, i.e. `[c]_{U∩V} = 0`. -/
 theorem relMvChainDiag_injective (U V : Set ↑M) (n : ℕ) :
@@ -681,13 +682,13 @@ theorem relMv_exact_middle (U V : Set ↑M) (n : ℕ) :
     have hfst : relMapChain (ContinuousMap.id ↑M) (fun _ hx => Set.inter_subset_left hx) n w
         = (a : RelativeChain U n) + relBoundary U n (b'').1 := by
       have h := congrArg Prod.fst hw
-      simpa only [relMvChainDiag, LinearMap.prod_apply, Prod.fst_add, bBoundary,
-        LinearMap.prodMap_apply] using h
+      simpa only [relMvChainDiag, LinearMap.prod_apply, Function.prod_def, Prod.fst_add,
+        bBoundary, LinearMap.prodMap_apply] using h
     have hsnd : relMapChain (ContinuousMap.id ↑M) (fun _ hx => Set.inter_subset_right hx) n w
         = (b : RelativeChain V n) + relBoundary V n (b'').2 := by
       have h := congrArg Prod.snd hw
-      simpa only [relMvChainDiag, LinearMap.prod_apply, Prod.snd_add, bBoundary,
-        LinearMap.prodMap_apply] using h
+      simpa only [relMvChainDiag, LinearMap.prod_apply, Function.prod_def, Prod.snd_add,
+        bBoundary, LinearMap.prodMap_apply] using h
     have hw_cyc : w ∈ relCycles (U ∩ V) n := by
       cases n with
       | zero => exact Submodule.mem_top

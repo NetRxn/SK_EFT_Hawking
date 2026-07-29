@@ -47,8 +47,11 @@ theorem closure_range_ρCliffT_eq_univ :
   have h := cliffordT_H_of_G_eq_top_unconditional
   have hcoe := congrArg (fun S : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
       (S : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) h
-  simpa only [SKEFTHawking.FKLW.GenericSU2.H_of_G, Subgroup.topologicalClosure_coe,
-    MonoidHom.coe_range, Subgroup.coe_top] using hcoe
+  -- v4.32 no longer reduces the structure projection `cliffordTGeneratingSet.ρ_hom` to its
+  -- field value `ρ_CliffT` during simp's closing unification, so name it explicitly.
+  simp only [SKEFTHawking.FKLW.GenericSU2.H_of_G, Subgroup.topologicalClosure_coe,
+    MonoidHom.coe_range, Subgroup.coe_top, cliffordTGeneratingSet] at hcoe
+  exact hcoe
 
 /-- **Per-ion-1 containment**: `ion1Embed A ∈ H_of_G (trappedIonGeneratingSetSU4 N hN)`
 for every `A ∈ SU(2)`. -/

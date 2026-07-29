@@ -58,7 +58,12 @@ two `K`-stage classes over `U` and `V` (the same underlying compact `K`, include
             (compactsInIncl Set.inter_subset_left K) g,
           Module.DirectLimit.of (ZMod 2) (CompactsIn V) (cohomGW V k) (cohomFW V k)
             (compactsInIncl Set.inter_subset_right K) g) := by
-  rw [cscMvDiag, LinearMap.prod_apply, Pi.prod, cscOpenMonotone_of, cscOpenMonotone_of]
+  -- v4.32: `Pi.prod` is a deprecated alias with no usable equation theorems, so `rw` cannot
+  -- unfold it (`delta`/`show` pierce aliases; `rw`/`unfold` do not). Unfold via the real
+  -- def's lemma with `simp only` first, then finish the two monotone rewrites.
+  rw [cscMvDiag, LinearMap.prod_apply]
+  simp only [Function.prod_def]
+  rw [cscOpenMonotone_of, cscOpenMonotone_of]
   rfl
 
 end SKEFTHawking.SingularCSCMayerVietoris
