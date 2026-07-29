@@ -384,8 +384,8 @@ used in the commutator linearization below. -/
 private lemma lie_sub_lie_swap_decomp {d : ℕ}
     (A B A' B' : Matrix (Fin d) (Fin d) ℂ) :
     ⁅A, B⁆ - ⁅A', B'⁆ = ⁅A - A', B⁆ + ⁅A', B - B'⁆ := by
-  rw [sub_lie, lie_sub]
-  abel
+  simp only [Ring.lie_def]
+  noncomm_ring
 
 /-- **Key smul-Lie computation**: `⁅Complex.I • G, -(Complex.I • F)⁆ = -⁅F, G⁆`.
 
@@ -397,11 +397,9 @@ swap-cost commutator `⁅T2pos G, T2neg F⁆ + ⁅F, G⁆` to be order `δ³`
 cancels with the `+ ⁅F, G⁆`. -/
 private lemma lie_I_G_neg_I_F {d : ℕ} (F G : Matrix (Fin d) (Fin d) ℂ) :
     ⁅Complex.I • G, -(Complex.I • F)⁆ = -⁅F, G⁆ := by
-  rw [← neg_smul, smul_lie, lie_smul, smul_smul]
-  rw [show (Complex.I * -Complex.I : ℂ) = (1 : ℂ) from by
-        rw [mul_neg, Complex.I_mul_I]; ring]
-  rw [one_smul]
-  exact (lie_skew G F).symm
+  simp only [Ring.lie_def, ← neg_smul, smul_mul_assoc, mul_smul_comm, smul_smul, mul_neg, neg_mul,
+    Complex.I_mul_I, neg_neg, one_smul]
+  abel
 
 /-- **The commutator linearization identity**:
 
@@ -519,7 +517,7 @@ theorem commutator_T2pos_T2neg_plus_FG_norm_le_cubic {d : ℕ}
   have h_term1 :
       2 * ‖-(((2 : ℂ)⁻¹) • G ^ 2)‖ * ‖T2neg F - 1‖ ≤ 2 * (δ ^ 2 / 2) * (3 * δ / 2) := by
     have h1 : 2 * ‖-(((2 : ℂ)⁻¹) • G ^ 2)‖ ≤ 2 * (δ ^ 2 / 2) := by linarith
-    have h1_nn : (0 : ℝ) ≤ 2 * ‖-(((2 : ℂ)⁻¹) • G ^ 2)‖ := by positivity
+    have h1_nn : (0 : ℝ) ≤ 2 * ‖-(((2 : ℂ)⁻¹) • G ^ 2)‖ := by linarith
     have h_target_nn : (0 : ℝ) ≤ 2 * (δ ^ 2 / 2) := by positivity
     calc 2 * ‖-(((2 : ℂ)⁻¹) • G ^ 2)‖ * ‖T2neg F - 1‖
         ≤ 2 * (δ ^ 2 / 2) * ‖T2neg F - 1‖ := by
