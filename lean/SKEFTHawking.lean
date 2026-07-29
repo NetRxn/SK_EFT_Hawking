@@ -5105,6 +5105,12 @@ import SKEFTHawking.Electrothermal.ETFModel
 -- branch, the NEP understatement through 6EB's `nepOfOutput`, and the single-pole frequency
 -- rolloff in `τ_eff` from an explicit sinusoidal steady state.
 import SKEFTHawking.Electrothermal.ETFResponsivity
+-- Phase 6EC Wave 3 — bolometric noise floors and the `6E*` capstone: the phonon PSD tied to the
+-- repo-canonical FDT `johnsonNyquistPSD` at the thermal conductance, Johnson noise referred to
+-- input through the ETF-corrected responsivity (understated by |1+ℒ| if the bare form is used),
+-- quadrature composition via 6EB's algebra with the equilibrium hypothesis declared, the
+-- phonon-limited `iff` screen, and `bolometer_error_floor` — 6EC ⊕ 6EB ⊕ 6EA.
+import SKEFTHawking.Electrothermal.BolometricFloors
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

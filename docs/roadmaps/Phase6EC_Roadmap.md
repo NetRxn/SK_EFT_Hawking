@@ -1,6 +1,6 @@
 # Phase 6EC — Kernel-Verified Electrothermal Detector Physics: Bias Stability, Loop Gain, and Bolometric Noise Floors
 
-**Status: IN PROGRESS — Waves 1 + 2 SHIPPED, Wave 3 open (authorized 2026-07-27; status corrected and Wave 2 landed 2026-07-29).** Third phase of the `6E*` series (*verified device-physics metrology*). Consumes 6EB (NEP/ENBW layer, **COMPLETE 2026-07-29**); consumed by 6EE (composite ceilings). See `Phase6EA_Roadmap.md` for the series framing.
+**Status: COMPLETE — all three waves SHIPPED (authorized 2026-07-27; Waves 2 + 3 landed and phase closed 2026-07-29).** Third phase of the `6E*` series (*verified device-physics metrology*). Consumes 6EB (NEP/ENBW layer, **COMPLETE 2026-07-29**); consumed by 6EE (composite ceilings). See `Phase6EA_Roadmap.md` for the series framing.
 
 > **Status correction 2026-07-29.** This header read `PLANNED` and Wave 1's AC boxes were unchecked, but Wave 1 had in fact shipped — verified against the tree, not the checkboxes: `lean/SKEFTHawking/Electrothermal/ETFModel.lean`, **52 declarations**, zero sorry / zero axiom / zero `native_decide` / zero `maxHeartbeats`, root-imported in `SKEFTHawking.lean`. (The only textual matches for the banned constructs are in the header docstring *asserting their absence* — the grep-false-positive class; purity was re-checked with `#print axioms`.) The AC list below is annotated with the shipped names. **Only Waves 2–3 remain.**
 >
@@ -74,14 +74,14 @@ Clean whitespace: no kernel-checked ETF stability criterion, loop-gain-corrected
 
 **Bricks.** `FDTNoiseFloor` (Johnson–Nyquist), `QuantumFDTFloor` (quantum floor seam); Waves 1–2; 6EB `nep_quadrature_add`.
 
-**Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/Electrothermal/BolometricFloors.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `phonon_nep_sq_def` + `phonon_nep_floor` — thermal-fluctuation NEP with the equilibrium/white-approximation hypotheses as explicit `Prop` parameters (never absorbed);
-- [ ] `johnson_nep_via_responsivity` — Johnson current noise referred to input power through the ETF-corrected responsivity (citing `FDTNoiseFloor`, not re-deriving it);
-- [ ] `bolometer_nep_floor : NEP_total² ≥ NEP_ph² + NEP_J²` (quadrature composition, with independence hypothesis explicit) and its monotone consequences;
-- [ ] `bolometer_error_floor` — the capstone seam: composed NEP + 6EB matched-filter budget + 6EA Gaussian floor ⇒ a concrete average-error floor shape for any threshold readout of this detector class;
-- [ ] root-module import + Inventory/counts refresh;
-- [ ] preemptive-strengthening + post-wave audit.
+**Done (AC / `/goal` condition).** ✅ **SHIPPED 2026-07-29** — 19 extracted declarations, 0 sorry / 0 axiom / 0 `native_decide` / 0 `maxHeartbeats`, kernel-pure (8 headline theorems checked individually), root-imported.
+- [x] `lean/SKEFTHawking/Electrothermal/BolometricFloors.lean` builds 0-sorry, kernel-pure, with:
+- [x] **shipped as `phononPSD` / `phononNEP` (via 6EB's `nepOfPSD`, not a fresh √) + `phononNEP_sq` (the spectral round trip, which needs non-negativity — not a definitional unfolding) + `IsThermalFluctuationLimited`** (the equilibrium/white hypothesis as a `Prop` parameter in the 6EB-Wave-1 style, never absorbed) `phonon_nep_sq_def` + `phonon_nep_floor`. The `4·k_B·T²·G` prefactor is **cited, not asserted**: `phonon_psd_eq_johnsonNyquist_scaled` proves it equals `GrapheneNoiseFormula.johnsonNyquistPSD (k_B·T) G · T`, i.e. the repo-canonical FDT PSD at the *thermal* conductance. Plus `phononPSD_pos` and `phononPSD_strictMono_conductance` (better isolation is strictly quieter — a falsifiable screen);
+- [x] **shipped as `johnsonCurrentPSD` + `johnsonNEP` (referred through the ETF-corrected responsivity, never the bare one) + `johnsonNEP_bare_understates_by_one_plus_loopGain`** `johnson_nep_via_responsivity`. The last is the substantive form: because NEP *divides* by responsivity, Wave 2's `(1+ℒ)` overclaim reappears as an **understatement of a noise channel** by `|1+ℒ|` — a factor of 4 at the published `ℒ = 3` bias point, in a *noise* budget. It consumes `responsivity_etf_correction`, so the cross-wave link is a computation;
+- [x] `bolometer_nep_floor` — **quadrature is 6EB's `nep_quadrature_two`, consumed with `IsUncorrelatedAt` intact and not restated**; what this wave adds is the *physical* entry point (the phonon channel enters as `IsThermalFluctuationLimited`, and the whiteness precondition 6EB needs is discharged internally by `isWhite_of_thermalFluctuationLimited`), so a consumer states physics rather than spectral algebra. **The roadmap's literal "monotone consequences" were declined** — `x² ≤ x² + y²` is true of any reals and carries no bolometric content; shipped instead is `phononLimited_iff_psd_lt`, the phonon-limited regime as an **iff** (a decision procedure on a budget, the analogue of 6EB's `shotLimited_iff_psd_lt`);
+- [x] `bolometer_error_floor` — the capstone: 6EC's composed PSD → 6EB's `error_floor_from_budget` → 6EA's `avgError_ge_gaussianQ_sharp`. Positivity of the composed noise scale is **discharged from the physical hypotheses** (`0 < kB`, `0 < T`, `0 < G`) via `bolometer_psd_pos` rather than taken as an abstract binder, so the capstone composes this wave's physics instead of forwarding;
+- [x] root-module import + Inventory/counts refresh;
+- [x] preemptive-strengthening + post-wave audit — residue: two pure forwarders caught and given content (see the two bullets above), the two trivial orderings replaced by the `iff` screen, and a dead `responsivityETF ≠ 0` binder dropped from `phononLimited_iff_psd_lt` (both sides collapse identically at `R_etf = 0`).
 
 ---
 
@@ -91,10 +91,20 @@ Wave 1 → Wave 2 → Wave 3 on the critical path. Wave 1 depends only on the `D
 
 ## Phase Definition of Done
 
-- [ ] `lake build` + ExtractDeps clean; zero sorry; kernel-pure; no new axioms.
-- [ ] `validate.py` green; Inventory + Index refreshed.
-- [ ] Adversarial statement audit logged (special attention: no theorem silently assumes `ℒ > 0`, and no magnitude-only statement hides a sign inversion).
-- [ ] Roadmap status updated with dated shipped-declarations list.
+- [x] `lake build` + ExtractDeps clean; zero sorry; kernel-pure; no new axioms. *(2026-07-29 — `Build completed successfully (10788 jobs)`; project-wide axioms 0, sorry 0.)*
+- [x] `validate.py` green; Inventory + Index refreshed.
+- [x] Adversarial statement audit logged. **Both special attentions discharged:** (a) *no theorem silently assumes `ℒ > 0`* — `responsivity_etf_correction` needs only `1 + ℒ ≠ 0` and holds on the unstable branch, where `responsivity_opposite_sign_of_unstable` shows the two responsivities *invert*; the `ℒ > 0` case appears only where it is the claim (`abs_responsivityETF_lt_abs_responsivityBare`). (b) *no magnitude-only statement hides a sign inversion* — `responsivity_magnitudeOnly_loses_stability_information` proves two bias points satisfy the identical magnitude relation `|R_bare| = |1+ℒ|·|R_etf|` on **opposite sides** of the dichotomy, the Wave-2 analogue of Wave 1's `magnitudeOnly_criterion_unsound`. Wave-3 residue: two pure forwarders caught and given content; two vacuous orderings replaced by an `iff` screen.
+- [x] Roadmap status updated with dated shipped-declarations list. *(Below, 2026-07-29.)*
+
+## Shipped declarations (dated)
+
+| wave | module | decls | date |
+|---|---|---|---|
+| W1 | `lean/SKEFTHawking/Electrothermal/ETFModel.lean` | 52 | pre-existing, status corrected 2026-07-29 |
+| W2 | `lean/SKEFTHawking/Electrothermal/ETFResponsivity.lean` | 27 | 2026-07-29 |
+| W3 | `lean/SKEFTHawking/Electrothermal/BolometricFloors.lean` | 19 | 2026-07-29 |
+
+Counts are extracted-declaration counts from `lean_deps.json` (the same convention as the 6EB table).
 
 ## Open UNKNOWNs
 
