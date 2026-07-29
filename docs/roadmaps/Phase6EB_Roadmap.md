@@ -1,6 +1,6 @@
 # Phase 6EB — Kernel-Verified Filtered-Readout Noise Floors: ENBW, NEP, and Matched-Filter Limits
 
-**Status: IN PROGRESS — Waves 1 + 2 SHIPPED, Wave 3 open (authorized 2026-07-27; status corrected 2026-07-29).** Second phase of the `6E*` series (*verified device-physics metrology*). Consumes Phase 6EA (Poisson/Gaussian floors); consumed by 6EC (electrothermal detectors) and 6EE (composite readout ceilings). See `Phase6EA_Roadmap.md` for the series framing.
+**Status: COMPLETE — all three waves SHIPPED (authorized 2026-07-27; closed 2026-07-29).** Second phase of the `6E*` series (*verified device-physics metrology*). Consumes Phase 6EA (Poisson/Gaussian floors); consumed by 6EC (electrothermal detectors) and 6EE (composite readout ceilings). See `Phase6EA_Roadmap.md` for the series framing.
 
 > **Status correction 2026-07-29.** This header read `PLANNED` and Wave 2's AC boxes were unchecked, but both waves had in fact shipped (verified against the tree, not the checkboxes):
 > `Detection/FilterFloors.lean` — 23 declarations, and `Detection/NEPAlgebra.lean` — 41 declarations; **both zero sorry, zero axiom, zero `native_decide`, zero `maxHeartbeats`**, both imported in `SKEFTHawking.lean`.
@@ -74,14 +74,16 @@ Clean whitespace: no prover has a kernel-checked ENBW/NEP/matched-filter floor f
 
 **Bricks.** Wave 1 + Wave 2; 6EA `avg_error_ge_of_z_le`.
 
-**Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/Detection/MatchedFilter.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `matched_filter_snr_optimal : ∀ h ∈ class, SNR h ≤ SNR (matched template)` (Cauchy–Schwarz with equality characterization);
-- [ ] `optimal_z_budget : z ≤ √(∫ s²/S₀)`-shape corollary (separation budget bound independent of filter choice);
-- [ ] `error_floor_from_budget` — composition with 6EA Wave-2: any threshold classifier on any admissible filter has average error `≥ Q(√(∫ s²/S₀))`-shape floor;
-- [ ] a `norm_num` non-vacuity witness at a concrete budget point;
-- [ ] root-module import + Inventory/counts refresh for the phase;
-- [ ] preemptive-strengthening + post-wave audit.
+**Done (AC / `/goal` condition).** ✅ **SHIPPED 2026-07-29** — 26 declarations, 0 sorry / 0 axiom / 0 `native_decide` / 0 `maxHeartbeats`, kernel-pure `{propext, Classical.choice, Quot.sound}`, root-imported.
+- [x] `lean/SKEFTHawking/Detection/MatchedFilter.lean` builds 0-sorry, kernel-pure, with:
+- [x] **shipped strictly stronger** as `filteredSNR_le_matchedBudget` (bound by the *filter-free* budget `√(2·∫s²/S₀)`, not by `SNR(matched)`) + `filteredSNR_matched_eq_budget` (attainment) + `matchedFilter_isGreatest` (the two as an `IsGreatest`) `matched_filter_snr_optimal : ∀ h ∈ class, SNR h ≤ SNR (matched template)` (Cauchy–Schwarz with equality characterization — shipped as the full biconditional `filteredSNR_eq_budget_iff`, saturation **iff** `h` is a.e. a *positive* multiple of the template, with `filteredSNR_neg_matched_eq_neg_budget` witnessing that the positivity is not removable). The AC's literal (weaker) form is deliberately **not** shipped — identity-wrapper rule, same call as 6EA's `avgError_ge_gaussianQ_sharp`;
+- [x] **shipped as `optimal_z_budget` + `matchedBudget_half_eq`** (the closed form `matchedBudget/2 = √(∫s²/(2·S₀))`, one-sided constant explicit) `optimal_z_budget : z ≤ √(∫ s²/S₀)`-shape corollary;
+- [x] `error_floor_from_budget` — composition with 6EA Wave-2's `avgError_ge_gaussianQ_sharp`: `gaussianQ (matchedBudget/2) ≤ avgAssignmentError …` for any admissible filter and any threshold, with the deflection/noise identification carried as explicit binders (`hμ`, `hσV`);
+- [x] a `norm_num` non-vacuity witness at a concrete budget point — `matchedBudget_twoBoxcar` (`matchedBudget 1 2 (2·𝟙[0,2]) = 4`, so `z = 2`) feeding `error_floor_twoBoxcar_witness` (`1/125 ≤ avgAssignmentError`, via 6EA's rational enclosure `gaussianQ_two_ge_rational` — no floating-point `exp` anywhere);
+- [x] root-module import + Inventory/counts refresh for the phase;
+- [x] preemptive-strengthening + post-wave audit — residue: the audit dropped a redundant `hss` binder from `matchedFilter_isGreatest` and the dead `0 ≤ ∫s²` binder from `matchedBudget_half_eq`, and added `filteredSNR_ramp_lt_budget` (the ramp against the unit boxcar sits strictly below the budget at `√3/2 < 1`) so the ceiling is shown to *discriminate* rather than being saturated by everything — the exact analogue of Wave 1's `enbw_ramp_gt_half`.
+
+**Supporting bricks shipped alongside:** `IsAdmissibleFilter` (the class, stated as a structure with both conditions in the statement), `filteredSNR`, `matchedBudget`, `admissibleSNRs`; `integral_sub_smul_sq` + `sq_integral_mul_le` (the two-function interval Cauchy–Schwarz — the settled variance route, not Hölder/`MemLp`); `matched_ratio_eq_sqrt`, `filteredSNR_smul_eq_budget`; `intervalIntegrable_twoBoxcar_sq`, `integral_twoBoxcar_sq`; `filteredSNR_of_variance_eq_zero` (degenerate branch disclosed).
 
 ---
 
@@ -91,13 +93,23 @@ Strictly Wave 1 → Wave 2 → Wave 3 on the critical path (each consumes the pr
 
 ## Phase Definition of Done
 
-- [ ] `lake build` + ExtractDeps clean; zero sorry; kernel-pure; no new axioms.
-- [ ] `validate.py` green; Inventory + Index refreshed.
-- [ ] Adversarial statement audit (vacuity/tautology hunt) logged.
-- [ ] Roadmap status updated with dated shipped-declarations list.
+- [x] `lake build` + ExtractDeps clean; zero sorry; kernel-pure; no new axioms. *(2026-07-29 — `Build completed successfully (10786 jobs)`; project-wide axioms 0, sorry 0.)*
+- [x] `validate.py` green; Inventory + Index refreshed. *(2026-07-29 — `update_counts.py` + `update_inventory_index.py` re-run against the fresh `ExtractDeps`.)*
+- [x] Adversarial statement audit (vacuity/tautology hunt) logged. *(Per-wave audits in the notebook; the Wave-3 residue is recorded inline in the Wave-3 AC above.)*
+- [x] Roadmap status updated with dated shipped-declarations list. *(This document, 2026-07-29.)*
 
-## Open UNKNOWNs
+## Shipped declarations (dated)
 
-- **UNKNOWN-1:** exact Mathlib citation for interval-L² Cauchy–Schwarz in the form needed (`inner_mul_le_norm_mul_norm` on `L²(volume.restrict (Set.Icc 0 T))` vs `MeasureTheory.integral_mul_le_Lp_mul_Lq`); resolve before freezing `enbw_mul_window_ge_half`.
-- **UNKNOWN-2:** whether `variance_eq_psd_mul_enbw` is best stated via an abstract white-noise second-moment functional (no stochastic processes in the repo) or as a definitional bridge with the whiteness hypothesis as a `Prop` parameter — prefer the latter unless Mathlib's `ProbabilityTheory` gives the former cheaply.
-- **UNKNOWN-3:** unit-semantics convention for NEP (dimensioned reals are not modeled repo-wide) — follow the existing `GrapheneNoiseFormula` precedent (dimensionless reals + documented unit contract + a dimensional-analysis falsifier where a wrong prefactor would be dimensionally detectable).
+| wave | module | decls | merged |
+|---|---|---|---|
+| W1 | `lean/SKEFTHawking/Detection/FilterFloors.lean` | 23 | `4378cc01` (2026-07-28) |
+| W2 | `lean/SKEFTHawking/Detection/NEPAlgebra.lean` | 41 | `193437a1` (2026-07-28) |
+| W3 | `lean/SKEFTHawking/Detection/MatchedFilter.lean` | 26 | 2026-07-29 |
+
+Post-merge corrections folded in: `25307cf6` (PSD duplication reconciled — canonical is `Detection.shotPSD`), `a9c257da` (W2 docstring re-pointed at shipped names).
+
+## Open UNKNOWNs — all resolved
+
+- **UNKNOWN-1 — RESOLVED (W1, 2026-07-28).** The roadmap posed a false binary. Neither Mathlib route was used: the interval Cauchy–Schwarz is proved from non-negativity of the variance integral `0 ≤ ∫₀ᵀ (h − c)²` (`sq_integral_le`), with no Hölder, no `rpow`, no `MemLp`. W3's two-function form `sq_integral_mul_le` uses the same route at `0 ≤ ∫₀ᵀ (h − c·s)²` — which additionally hands the equality case over for free, where a Hölder route would have had to reconstruct it separately.
+- **UNKNOWN-2 — RESOLVED (W1, 2026-07-28)** in favour of the roadmap's preferred option: `IsWhiteFilteredVariance` is a `Prop` parameter (`∀ h, V h = S₀/2 · ∫₀ᵀ h²`). Mathlib carries no Wiener–Khinchin / spectral measure for a second-order process at the pin, and the repo models no stochastic processes; whiteness is a modelling assumption about the *source*, so it belongs in the binder list, not smuggled into a definition. W3 consumes it directly.
+- **UNKNOWN-3 — RESOLVED (W2, 2026-07-28):** dimensionless reals + a declared unit-contract table, per the `GrapheneNoiseFormula` precedent. Falsifiability is carried by `σ = R·NEP·√ENBW` closing dimensionally, and by the convention-**mix** family (`sigma_conventionMix_ne` et al.) — a one-sided/two-sided *mix-up* is detectable at exactly √2, whereas a uniformly-wrong convention is not detectable from a variance at all (`S₀·ENBW` is convention-invariant; see `SETTLED_FORKS.md` → `6eb-enbw-convention-falsifier-shape`).

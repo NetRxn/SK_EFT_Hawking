@@ -5090,6 +5090,11 @@ import SKEFTHawking.Detection.ShotNoise
 -- of uncorrelated sources, the shot-noise NEP `√(2·E_ph·P_abs)`, and the end-to-end SNR ceiling
 -- `P_sig·√(2T)/NEP` inherited from the Wave-1 bandwidth floor.
 import SKEFTHawking.Detection.NEPAlgebra
+-- Phase 6EB Wave 3 — matched-filter optimality over the admissible single-shot class: the
+-- two-function interval Cauchy–Schwarz, the filter-free budget `√(2·∫s²/S₀)` as an `IsGreatest`,
+-- saturation exactly at positive multiples of the template, and the composed error floor
+-- `Q(budget/2)` against 6EA Wave 2 — pinned to a rational at a concrete budget point.
+import SKEFTHawking.Detection.MatchedFilter
 -- Phase 6EC Wave 1 — the linearized electrothermal (ETF) bias-point model: loop gain, effective
 -- conductance, the bias-power linearization's sign, the explicit heat-balance solution with its
 -- uniqueness, and the stability dichotomy `perturbations decay ↔ ℒ > −1` as an iff.
