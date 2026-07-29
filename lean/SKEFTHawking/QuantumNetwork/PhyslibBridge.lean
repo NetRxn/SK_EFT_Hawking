@@ -1,6 +1,6 @@
 import SKEFTHawking.QuantumNetwork.CPTPChannel
-import QuantumInfo.Finite.CPTPMap.CPTP
-import QuantumInfo.Finite.Entropy.DPI
+import QuantumInfo.Channels.CPTP
+import QuantumInfo.Entropy.DPI
 
 /-!
 # Phase 6AM Wave 2 — Kraus ↔ MState / CPTPMap bridge to PhysLib

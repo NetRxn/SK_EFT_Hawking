@@ -1,4 +1,4 @@
-import QuantumInfo.Finite.CPTPMap
+import QuantumInfo.Channels
 
 /-!
 # GKSL / Lindblad generator and complete positivity of its dissipator (Phase 6BC, Wave 1)

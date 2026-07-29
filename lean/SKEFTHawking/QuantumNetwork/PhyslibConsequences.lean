@@ -1,6 +1,6 @@
 import SKEFTHawking.QuantumNetwork.PhyslibBridge
-import QuantumInfo.Finite.Entropy.SSA
-import QuantumInfo.Finite.Entanglement
+import QuantumInfo.Entropy.SSA
+import QuantumInfo.States.Entanglement
 
 /-!
 # Phase 6AM Wave 3 — consuming PhysLib: SSA on the repo representation + operational REE
