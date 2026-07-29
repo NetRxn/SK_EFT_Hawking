@@ -254,8 +254,8 @@ theorem windC_const (z : Circle) : windC (constSimplex (X := CircleT) z 1) = 0 :
   rw [windC_apply]
   have hrl : rl (X := CircleT) (constSimplex (X := CircleT) z 1)
       = ContinuousMap.const (stdSimplex ℝ (Fin 2)) z := by
+    -- v4.32: the rewrite chain now closes the goal; the trailing `rfl` errors "No goals".
     rw [rl, constSimplex, Equiv.apply_symm_apply]
-    rfl
   refine windMap_eq_of_char _ (ContinuousMap.const _ ((z : ℂ)).arg) ?_ 0 ?_
   · funext d
     rw [hrl]

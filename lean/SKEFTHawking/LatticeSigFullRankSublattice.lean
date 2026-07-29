@@ -94,7 +94,12 @@ theorem latticeSig_congr_of_det_ne_zero {n : ℕ} (M P : Matrix (Fin n) (Fin n) 
       (Pr.toLinearEquiv' inferInstance)
     rwa [hcoe, ← toQuadraticMap'_congr] at h
   unfold latticeSig
-  rw [hmap, ← hequiv.sigPos_eq, ← hequiv.sigNeg_eq]
+  -- v4.32: `latticeSig` unfolds to `toQuadraticForm'` while `hmap`/`hequiv` are stated at the
+  -- deprecated alias `toQuadraticMap'`. They are defeq but not syntactically equal, so `rw`
+  -- cannot match at reducible transparency; `erw` can. (Renaming the statements is a separate
+  -- whole-component pass — a partial rename breaks the BlockSignature interface.)
+  erw [hmap, ← hequiv.sigPos_eq, ← hequiv.sigNeg_eq]
+  rfl
 
 /-! ## §3. Block additivity for merely nondegenerate blocks -/
 

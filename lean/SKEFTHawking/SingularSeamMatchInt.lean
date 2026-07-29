@@ -158,7 +158,8 @@ theorem seamMatch_upperInt (A B : Set ↑X) (hA : IsOpen A) (hB : IsOpen B)
     -- gW is an absolute cocycle vanishing on Kᶜ-simplices
     have hgc : coboundaryₗ X (1 + 1) gW.1.1 = 0 := by
       have hh := congrArg Subtype.val gW.2
-      simpa only [relCoboundaryIntₗ_coe, ZeroMemClass.coe_zero] using hh
+      simp only [relCoboundaryIntₗ_coe, ZeroMemClass.coe_zero] at hh
+      exact hh
     have hgvan : ∀ τ, gW.1.1 (SKEFTHawking.SingularRelativeHomologyMod2.simplexIncl ((↑K.1 : Set ↑X)ᶜ) (1 + 1) τ) = 0 :=
       fun τ => relCochainInt_vanish ((↑K.1 : Set ↑X)ᶜ) gW.1 τ
     -- STEP 1: ∂(capInt gW (f₂+f₃)) = − capInt gW (∂f₁)   [cocycle-chainmap + gW kills Sdᵘ(∂ fundCycleW K)]
@@ -232,7 +233,8 @@ theorem seamMatch_upperInt (A B : Set ↑X) (hA : IsOpen A) (hB : IsOpen B)
     -- ── the zc side ──
     have hzcc : coboundaryₗ X (1 + 2) zc.1.1 = 0 := by
       have hh := congrArg Subtype.val zc.2
-      simpa only [relCoboundaryIntₗ_coe, ZeroMemClass.coe_zero] using hh
+      simp only [relCoboundaryIntₗ_coe, ZeroMemClass.coe_zero] at hh
+      exact hh
     have hzcvan : ∀ τ, zc.1.1 (SKEFTHawking.SingularRelativeHomologyMod2.simplexIncl
         ((↑(infCompactInt A B (legSplitUInt A B hA hB K) (legSplitVInt A B hA hB K)).1 : Set ↑X)ᶜ)
         (1 + 2) τ) = 0 :=
@@ -450,7 +452,8 @@ theorem seamMatch_botInt (A B : Set ↑X) (hA : IsOpen A) (hB : IsOpen B)
     -- gW is an absolute cocycle
     have hgc : coboundaryₗ X (2 + 1) gW.1.1 = 0 := by
       have hh := congrArg Subtype.val gW.2
-      simpa only [relCoboundaryIntₗ_coe, ZeroMemClass.coe_zero] using hh
+      simp only [relCoboundaryIntₗ_coe, ZeroMemClass.coe_zero] at hh
+      exact hh
     -- STEP 2a: zc = δ(indUf U' gW) + δ(kk)
     rw [relCohomSetCongrInt_mk, relCohomRestrictInt_mk] at hzc
     have hU' : IsOpen ((↑(legSplitUInt A B hA hB K).1 : Set ↑X)ᶜ) :=
@@ -512,7 +515,8 @@ theorem seamMatch_botInt (A B : Set ↑X) (hA : IsOpen A) (hB : IsOpen B)
     -- ── the zc side (bot signs: k = 2+2 even ⟹ the ∂-terms enter POSITIVELY) ──
     have hzcc : coboundaryₗ X (2 + 2) zc.1.1 = 0 := by
       have hh := congrArg Subtype.val zc.2
-      simpa only [relCoboundaryIntₗ_coe, ZeroMemClass.coe_zero] using hh
+      simp only [relCoboundaryIntₗ_coe, ZeroMemClass.coe_zero] at hh
+      exact hh
     have hzcvan : ∀ τ, zc.1.1 (SKEFTHawking.SingularRelativeHomologyMod2.simplexIncl
         ((↑(infCompactInt A B (legSplitUInt A B hA hB K) (legSplitVInt A B hA hB K)).1 : Set ↑X)ᶜ)
         (2 + 2) τ) = 0 :=
