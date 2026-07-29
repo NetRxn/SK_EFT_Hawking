@@ -124,7 +124,7 @@ abbrev MugerCenter := ObjectProperty.FullSubcategory (IsTransparent C)
 instance : SymmetricCategory (MugerCenter C) where
   symmetry X Y := by
     apply (ObjectProperty.ι (IsTransparent C)).map_injective
-    simpa using X.property Y.obj
+    exact X.property Y.obj
 
 /-- **Isomorphism invariance:** transparency is preserved by isomorphism.
     If X is transparent and Z ≅ X, then Z is transparent.
@@ -334,8 +334,7 @@ theorem dual_isTransparent [RigidCategory C] {X : C}
     simp only [Category.assoc, Iso.hom_inv_id, Category.comp_id]
     exact h_eta
   -- Now the goal should follow by prepending (λ_ Y).inv
-  -- Reassociate goal to right-nested form, then use h_key
-  simp only [Category.assoc] at h_key ⊢
+  -- (`h_key` and the goal are already right-nested under v4.32's elaboration.)
   -- Goal: λ⁻¹ ≫ η ▷ Y ≫ α ≫ X ◁ β(Xᘁ,Y) ≫ X ◁ β(Y,Xᘁ) = λ⁻¹ ≫ η ▷ Y ≫ α
   -- h_key: η ▷ Y ≫ α ≫ X ◁ (β(Xᘁ,Y) ≫ β(Y,Xᘁ)) = η ▷ Y ≫ α
   -- Fold whiskerLeft_comp in goal:
@@ -366,22 +365,22 @@ def toricMonodromy (a b : ToricAnyon) : ℤ :=
 /-- Vacuum has trivial monodromy with everything. -/
 theorem toric_vacuum_transparent : ∀ b : ToricAnyon,
     toricMonodromy .vacuum b = 1 := by
-  intro b; cases b <;> simp [toricMonodromy, braidingPhase, toricGrading, toricCharacter]
+  intro b; cases b <;> decide
 
 /-- Electric charge is NOT transparent: monodromy with magnetic flux is -1. -/
 theorem toric_electric_not_transparent :
     toricMonodromy .electric .magnetic = -1 := by
-  simp [toricMonodromy, braidingPhase, toricGrading, toricCharacter]
+  decide
 
 /-- Magnetic flux is NOT transparent: monodromy with electric charge is -1. -/
 theorem toric_magnetic_not_transparent :
     toricMonodromy .magnetic .electric = -1 := by
-  simp [toricMonodromy, braidingPhase, toricGrading, toricCharacter]
+  decide
 
 /-- Fermion is NOT transparent: monodromy with electric charge is -1. -/
 theorem toric_fermion_not_transparent :
     toricMonodromy .fermion .electric = -1 := by
-  simp [toricMonodromy, braidingPhase, toricGrading, toricCharacter]
+  decide
 
 /-- **Toric code Muger center is trivial:** only the vacuum is transparent.
     This confirms Z(Vec_{Z/2}) is modular (consistent with our det(S) ≠ 0 verification
@@ -391,9 +390,9 @@ theorem toric_muger_trivial : ∀ a : ToricAnyon,
   intro a h
   cases a
   · rfl
-  · exfalso; have := h .magnetic; simp [toricMonodromy, braidingPhase, toricGrading, toricCharacter] at this
-  · exfalso; have := h .electric; simp [toricMonodromy, braidingPhase, toricGrading, toricCharacter] at this
-  · exfalso; have := h .electric; simp [toricMonodromy, braidingPhase, toricGrading, toricCharacter] at this
+  · exact absurd (h .magnetic) (by decide)
+  · exact absurd (h .electric) (by decide)
+  · exact absurd (h .electric) (by decide)
 
 end SKEFTHawking.MugerCenter
 

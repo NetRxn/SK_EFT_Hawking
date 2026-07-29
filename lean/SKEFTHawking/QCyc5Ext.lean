@@ -252,18 +252,15 @@ instance instAddCommGroup : AddCommGroup QCyc5Ext where
   add_comm a b := by ext <;> simp [add_comm]
   neg_add_cancel a := by ext <;> simp
   sub_eq_add_neg a b := by ext <;> simp [sub_eq_add_neg]
-  nsmul_zero a := by ext <;> simp
-  nsmul_succ n a := by ext <;> simp [succ_nsmul]
-  zsmul_zero' a := by ext <;> simp
-  zsmul_succ' n a := by
-    ext <;> (
-      show (Int.ofNat n + 1) • _ = _
-      rw [add_smul, one_smul]; simp)
-  zsmul_neg' n a := by
-    ext <;> (
-      show Int.negSucc n • _ = _
-      simp [Int.negSucc_eq]
-      ring)
+  -- v4.32: `ext` descends through both `QCyc5Ext.re/im` AND `QCyc5.c0..c3`, and `simp`
+  -- no longer reduces `(n • a).re.c0` past the field being defined. Close each component
+  -- in term mode at default transparency instead — the same shape `QCyc5.instAddCommGroup`
+  -- uses one layer down.
+  nsmul_zero a := by ext <;> exact zero_nsmul _
+  nsmul_succ n a := by ext <;> (show (n + 1) • _ = n • _ + _; rw [succ_nsmul])
+  zsmul_zero' a := by ext <;> exact zero_zsmul _
+  zsmul_succ' n a := by ext <;> exact SubNegMonoid.zsmul_succ' n _
+  zsmul_neg' n a := by ext <;> exact SubNegMonoid.zsmul_neg' n _
 
 end instAddCommGroup
 

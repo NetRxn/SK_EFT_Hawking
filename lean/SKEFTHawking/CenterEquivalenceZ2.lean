@@ -170,8 +170,7 @@ The correspondence preserves braiding phases.
 -/
 theorem braiding_preserved (a b : ToricAnyon) :
     braidingPhase a b = dz2BraidingPhase (toricToDZ2 a) (toricToDZ2 b) := by
-  cases a <;> cases b <;> simp [braidingPhase, dz2BraidingPhase, toricToDZ2,
-    toricGrading, toricCharacter, dz2Grading, dz2Character]
+  cases a <;> cases b <;> decide
 
 /--
 In particular, the toric code signature R(e,m) = -1 is preserved.

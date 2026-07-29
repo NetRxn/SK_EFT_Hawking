@@ -4953,6 +4953,16 @@ theorem H_Fib_exists_small_sequence :
   rw [accPt_principal_iff_nhdsWithin] at h_acc
   -- h_acc : (nhdsWithin 1 (H_Fib \ {1})).NeBot
   haveI := h_acc  -- register NeBot as typeclass instance
+  -- v4.32: Mathlib has no `FirstCountableTopology (Matrix …)` instance and the `Pi` one no
+  -- longer matches through `instTopologicalSpaceMatrix` at instance transparency, so the
+  -- `IsCountablyGenerated (𝓝[s] 1)` instance `Filter.exists_seq_tendsto` needs cannot be
+  -- synthesized. Transport it from the underlying Pi type (definitionally the same topology).
+  haveI : FirstCountableTopology (Matrix (Fin 2) (Fin 2) ℂ) :=
+    inferInstanceAs (FirstCountableTopology (Fin 2 → Fin 2 → ℂ))
+  -- and `Subtype.firstCountableTopology` has head `↥(s : Set α)`, which no longer unifies
+  -- with the `SetLike` coercion `↥(specialUnitaryGroup …)` at instance transparency.
+  haveI : FirstCountableTopology ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+    TopologicalSpace.Subtype.firstCountableTopology _
   exact Filter.exists_seq_tendsto _
 
 end R5_4_LayerD_2_d_SmallSequence
@@ -6348,8 +6358,10 @@ theorem H_Fib_iteration_sequence_val_tendsto_one
         ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
           Matrix (Fin 2) (Fin 2) ℂ))
       Filter.atTop (nhds (1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
-  -- Switch to "norm of difference tends to zero" form via Metric.tendsto_atTop
-  rw [Metric.tendsto_atTop]
+  -- Switch to "norm of difference tends to zero" form via Metric.tendsto_atTop.
+  -- v4.32: `rw` cannot match `nhds` here (the goal carries `instTopologicalSpaceMatrix`
+  -- while the lemma carries the metric-derived topology), so apply the iff in term mode.
+  refine Metric.tendsto_atTop.mpr ?_
   intro ε hε_pos
   -- Get N from scale tendsto: ∀ n ≥ N, δ_n < ε
   have h_scale_tendsto :=

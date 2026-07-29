@@ -963,7 +963,7 @@ theorem liePartMat_conj_specialUnitary
     (Matrix.mem_specialUnitaryGroup_iff.mp g.property).1
   have hg_gdag : g.val * g.val.conjTranspose = 1 := by
     have := Matrix.mem_unitaryGroup_iff.mp hg_uni
-    convert this
+    exact this
   -- Step 2: g·M·g† - 1 = g·(M-1)·g†
   have h_factor :
       g.val * M * g.val.conjTranspose - 1 =
