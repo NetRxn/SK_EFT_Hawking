@@ -4,6 +4,7 @@ Replaces the old SK_EFT_Phase2/tests/test_phase1_bridge.py — no more
 cross-repo importlib hacks needed.
 """
 
+import re
 import pytest
 from pathlib import Path
 
@@ -100,12 +101,42 @@ def test_lakefile_exists():
 
 
 def test_lean_toolchain():
-    """Verify lean-toolchain specifies v4.29.1 (bumped from v4.29.0 on 2026-05-14
-    to align with Mathlib v4.29.1 tag pin; see lakefile.toml header comment)."""
+    """lean-toolchain is well-formed and IN LOCKSTEP with the REPL dep's tag.
+
+    Bumped to v4.32.0 on 2026-07-28 (from v4.29.1) together with Mathlib and
+    PhysLib — the three move as one matched set.
+
+    This used to assert a hardcoded version literal, which recorded a number
+    without enforcing anything: it had to be hand-edited on every bump, and it
+    passed happily while a dep drifted out of lockstep. CLAUDE.md states the
+    actual invariant — "if the toolchain bumps, the REPL dep's `rev` must bump
+    too" (the REPL is a thin protocol wrapper built against a specific Lean).
+    So check THAT, and let the version follow the lakefile instead of a literal.
+
+    Mathlib/PhysLib are pinned by SHA, not tag, so they cannot be compared
+    textually here; `lake build` is what enforces their compatibility.
+    """
     toolchain = LEAN_DIR / "lean-toolchain"
     assert toolchain.exists(), "Missing lean-toolchain"
     content = toolchain.read_text().strip()
-    assert "v4.29.1" in content
+    m = re.fullmatch(r"leanprover/lean4:(v\d+\.\d+\.\d+(?:-rc\d+)?)", content)
+    assert m, f"malformed lean-toolchain: {content!r}"
+    version = m.group(1)
+
+    lakefile = (LEAN_DIR / "lakefile.toml").read_text()
+    repl = re.search(
+        r'name\s*=\s*"repl".*?rev\s*=\s*"([^"]+)"', lakefile, re.DOTALL
+    )
+    assert repl, "no repl [[require]] found in lakefile.toml"
+    repl_rev = repl.group(1)
+    # The REPL repo has skipped tags before (it went v4.29.0 -> v4.30.0-rc1 with
+    # no v4.29.1), so a documented mismatch is allowed — but it must be spelled
+    # out in the lakefile comment rather than silently drifting.
+    if repl_rev != version:
+        assert "skipped" in lakefile or "patch-level compatible" in lakefile, (
+            f"lean-toolchain is {version} but the repl dep is pinned to {repl_rev}, "
+            "and the lakefile does not document why they differ"
+        )
 
 
 def test_no_active_sorry():
