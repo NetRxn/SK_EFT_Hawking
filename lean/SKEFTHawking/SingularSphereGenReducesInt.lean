@@ -522,6 +522,8 @@ theorem sphereGenReducesNonzero :
       (redHomology_topSphereReduceInt 2) hcircle
   -- H3S3IsoInt.symm 1 unfolds to exactly the nested .symm chain above
   show redHomology (Sph 3) 3 (H3S3IsoInt.symm 1) ≠ 0
-  convert htop using 3
+  -- v4.32:  now leaves the (definitional) equality as an open goal;
+  -- the chain is defeq, so close it directly.
+  exact htop
 
 end SKEFTHawking.SingularSphereGenReducesInt

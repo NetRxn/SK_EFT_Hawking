@@ -85,7 +85,6 @@ theorem cap_relCochains_pair_double_support_eq_boundary₀ {A B P : Set ↑X}
       (D₁ + SingularSubdivision.iterHomotopy X (q + 1) ν c) := by
     have h2 := congrArg (· + chainBoundary X (q + 1)
       (D₁ + SingularSubdivision.iterHomotopy X (q + 1) ν c)) hbeq
-    simp only at h2
     rw [h2]
     abel_nf
     simp only [two_smul, ZModModule.add_self, add_zero, zero_add]
