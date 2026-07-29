@@ -330,11 +330,11 @@ def ballInteriorHomeo {n : ℕ} :
         ‖(v : EuclideanSpace ℝ (Fin n))‖ < 1})
       ≃ₜ ↥(Metric.ball (0 : EuclideanSpace ℝ (Fin n)) 1) where
   toFun v := ⟨((v : ↥(Metric.closedBall (0 : EuclideanSpace ℝ (Fin n)) 1)) :
-      EuclideanSpace ℝ (Fin n)), by simpa only [Metric.mem_ball, dist_zero_right] using v.2⟩
+      EuclideanSpace ℝ (Fin n)), by simpa only [Metric.mem_ball, dist_zero_right, Set.mem_setOf_eq] using v.2⟩
   invFun w := ⟨⟨(w : EuclideanSpace ℝ (Fin n)), by
       simpa only [Metric.mem_closedBall, dist_zero_right] using
-        le_of_lt (by simpa only [Metric.mem_ball, dist_zero_right] using w.2)⟩, by
-      simpa only [Metric.mem_ball, dist_zero_right] using w.2⟩
+        le_of_lt (by simpa only [Metric.mem_ball, dist_zero_right, Set.mem_setOf_eq] using w.2)⟩, by
+      simpa only [Metric.mem_ball, dist_zero_right, Set.mem_setOf_eq] using w.2⟩
   left_inv _ := rfl
   right_inv _ := rfl
   continuous_toFun :=

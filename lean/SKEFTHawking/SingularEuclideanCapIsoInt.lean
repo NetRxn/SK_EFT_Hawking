@@ -63,7 +63,10 @@ theorem frontFace_simplexIncl {p q : ℕ}
     (τ : (TopCat.toSSet.obj (sub S)).obj (op (SimplexCategory.mk (p + q)))) :
     frontFace (simplexIncl S (p + q) τ) = simplexIncl S p (frontFace τ) := by
   simpa only [simplexIncl, frontFace] using
-    (FunctorToTypes.naturality _ _ (TopCat.toSSet.map (SingularRelativeHomologyMod2.inclMap S))
+    -- v4.32: `FunctorToTypes.naturality` is deprecated in favour of `NatTrans.naturality_apply`,
+    -- which takes F/G implicitly, so the two `_`s go. Orientation is unchanged — the `.symm`
+    -- stays. (A sibling site elsewhere DID need the orientation flipped; check, do not assume.)
+    (NatTrans.naturality_apply (TopCat.toSSet.map (SingularRelativeHomologyMod2.inclMap S))
       (frontIncl p q).op τ).symm
 
 /-- **A cochain vanishing on `S` caps a subspace chain to `0`** (integral): if `a σ = 0` for every

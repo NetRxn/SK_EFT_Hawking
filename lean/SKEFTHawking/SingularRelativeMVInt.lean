@@ -487,12 +487,12 @@ theorem relMv_exact_middleInt (U V : Set ↑M) (n : ℕ) :
     have hfst : relMapChainInt (ContinuousMap.id ↑M) (fun _ hx => Set.inter_subset_left hx) n w
         = (a : RelativeChainInt U n) - relBoundaryInt U n (b'').1 := by
       have h := congrArg Prod.fst hw
-      simpa only [relMvChainDiagInt, LinearMap.prod_apply, Prod.fst_sub, bBoundaryInt,
+      simpa only [relMvChainDiagInt, LinearMap.prod_apply, Function.prod_def, Prod.fst_sub, bBoundaryInt,
         LinearMap.prodMap_apply] using h
     have hsnd : relMapChainInt (ContinuousMap.id ↑M) (fun _ hx => Set.inter_subset_right hx) n w
         = (b : RelativeChainInt V n) - relBoundaryInt V n (b'').2 := by
       have h := congrArg Prod.snd hw
-      simpa only [relMvChainDiagInt, LinearMap.prod_apply, Prod.snd_sub, bBoundaryInt,
+      simpa only [relMvChainDiagInt, LinearMap.prod_apply, Function.prod_def, Prod.snd_sub, bBoundaryInt,
         LinearMap.prodMap_apply] using h
     have hw_cyc : w ∈ relCyclesInt (U ∩ V) n := by
       cases n with

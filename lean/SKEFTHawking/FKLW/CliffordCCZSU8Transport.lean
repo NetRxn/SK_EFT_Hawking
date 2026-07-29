@@ -121,7 +121,11 @@ theorem all_lines_of_one
       Complex.I • kronK8 a ∈ W → Complex.I • kronK8 b ∈ W)
     {v0 : PauliLabel} (hv0 : v0 ≠ 0) (hmem : Complex.I • kronK8 v0 ∈ W) :
     ∀ v : PauliLabel, v ≠ 0 → Complex.I • kronK8 v ∈ W := by
-  have hsymm : Symmetric (ReflTransGen CliffordStep) := ReflTransGen.symmetric cliffordStep_symm
+  -- v4.32: `ReflTransGen.symmetric` is a deprecated alias of the INSTANCE `stdSymm :
+  -- Std.Symm (ReflTransGen r)` — it is no longer a function returning `Symmetric`.
+  -- Supply the base instance, then read `Symmetric` off it.
+  haveI : Std.Symm CliffordStep := ⟨fun _ _ h => cliffordStep_symm h⟩
+  have hsymm : Symmetric (ReflTransGen CliffordStep) := fun _ _ h => Std.Symm.symm _ _ h
   intro v hv
   exact reflTransGen_line_closed W hstep
     ((hsymm (nonzero_rtg v0 hv0)).trans (nonzero_rtg v hv)) hmem

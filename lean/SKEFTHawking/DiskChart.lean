@@ -276,13 +276,23 @@ def diskCollarChart (u₀ : TwoSphere) :
       have h := (chartAt (EuclideanSpace ℝ (Fin 2)) u₀).continuousOn_symm
       rw [chart_target_univ] at h
       exact continuousOn_univ.mp h
+    -- v4.32: `Continuous.smul` concludes the PI-smul form `(f • g)`, so `apply` no longer
+    -- unifies it with the pointwise goal. Bind both factors, ascribe the product at the
+    -- POINTWISE type (still defeq), and close with `exact`.
     apply Continuous.continuousOn
-    apply Continuous.subtype_mk
-    apply Continuous.smul
-    · exact continuous_const.max (continuous_const.sub
+    have hscal : Continuous fun p : EuclideanSpace ℝ (Fin 2) × EuclideanHalfSpace 1 =>
+        max 0 (1 - p.2.val.ofLp 0) :=
+      continuous_const.max (continuous_const.sub
         ((PiLp.continuous_apply 2 (fun _ : Fin 1 => ℝ) 0).comp
           (continuous_subtype_val.comp continuous_snd)))
-    · exact continuous_subtype_val.comp (hsymm.comp continuous_fst)
+    have hvec : Continuous fun p : EuclideanSpace ℝ (Fin 2) × EuclideanHalfSpace 1 =>
+        ((chartAt (EuclideanSpace ℝ (Fin 2)) u₀).symm p.1 : EuclideanSpace ℝ (Fin 3)) :=
+      continuous_subtype_val.comp (hsymm.comp continuous_fst)
+    have hprod : Continuous fun p : EuclideanSpace ℝ (Fin 2) × EuclideanHalfSpace 1 =>
+        max 0 (1 - p.2.val.ofLp 0) •
+          ((chartAt (EuclideanSpace ℝ (Fin 2)) u₀).symm p.1 : EuclideanSpace ℝ (Fin 3)) :=
+      hscal.smul hvec
+    exact Continuous.subtype_mk hprod _
 
 /-! ### §3. The charted-space structure on `D³` -/
 

@@ -110,7 +110,7 @@ theorem channelRep_mem_signedPermSet_of_dense
     (U : ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ)) :
     channelRep U.val ∈ (signedPermSet : Set (Matrix PauliLabel PauliLabel ℂ)) := by
   have hUclos : U.val ∈ closure (Set.range (fun w : FreeGroup (Fin 9) => (cliffordOnlyRho w).val)) := by
-    rw [Metric.mem_closure_iff]
+    erw [Metric.mem_closure_iff]
     intro ε hε
     obtain ⟨w, hw⟩ := hdense U ε hε
     refine ⟨(cliffordOnlyRho w).val, Set.mem_range_self w, ?_⟩

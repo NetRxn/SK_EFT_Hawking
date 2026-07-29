@@ -95,9 +95,13 @@ noncomputable def normalizeK (hK : StarInBall K) : C(↑(sub (X := Eucl n) Kᶜ)
     SingularPuncturedRetract.normalize_mem_sphere ⟨(p : EuclideanSpace ℝ (Fin n)),
       ne_zero_of_mem_compl hK p.2⟩⟩
   continuous_toFun := by
-    refine Continuous.subtype_mk (Continuous.smul ?_ continuous_subtype_val) _
-    exact (continuous_norm.comp continuous_subtype_val).inv₀
-      (fun p => norm_ne_zero_of_mem_compl hK p.2)
+    -- v4.32: `Continuous.smul` no longer determines the scalar factor's domain from a `?_`
+    -- hole (stuck `TopologicalSpace ?m`). Supply the scalar factor directly instead.
+    have hscal : Continuous fun p : ↑(sub (X := Eucl n) Kᶜ) =>
+        ‖(p : EuclideanSpace ℝ (Fin n))‖⁻¹ :=
+      (continuous_norm.comp continuous_subtype_val).inv₀
+        (fun p => norm_ne_zero_of_mem_compl hK p.2)
+    exact Continuous.subtype_mk (hscal.smul continuous_subtype_val) _
 
 /-- The **inclusion** `Sⁿ⁻¹ ↪ ℝⁿ ∖ K` (norm-1 points miss `K`). -/
 noncomputable def inclK (hK : StarInBall K) : C(↑(Sph n), ↑(sub (X := Eucl n) Kᶜ)) where
@@ -160,13 +164,27 @@ noncomputable def starHomotopy (hK : StarInBall K) :
         • (q.1 : EuclideanSpace ℝ (Fin n))),
     starHomotopy_mem_compl hK q.1 q.2⟩
   continuous_toFun := by
-    refine Continuous.subtype_mk (Continuous.add (Continuous.smul ?_ ?_) (Continuous.smul ?_ ?_)) _
-    · exact continuous_subtype_val.comp continuous_snd
-    · exact continuous_subtype_val.comp continuous_fst
-    · exact continuous_const.sub (continuous_subtype_val.comp continuous_snd)
-    · exact ((continuous_norm.comp (continuous_subtype_val.comp continuous_fst)).inv₀
-        (fun q => norm_ne_zero_of_mem_compl hK q.1.2)).smul
-          (continuous_subtype_val.comp continuous_fst)
+    -- v4.32: `Continuous.smul`/`.add` conclude the PI-operation form `(f • g)` / `(f + g)`,
+    -- which is defeq to but not syntactically equal to the pointwise form in the goal.
+    -- Ascribing each step at the pointwise type forces the right shape (still defeq).
+    set T := ↑(sub (X := Eucl n) Kᶜ) × unitInterval with hT
+    have h1 : Continuous fun q : T => (q.2 : ℝ) := continuous_subtype_val.comp continuous_snd
+    have h2 : Continuous fun q : T => (q.1 : EuclideanSpace ℝ (Fin n)) :=
+      continuous_subtype_val.comp continuous_fst
+    have h3 : Continuous fun q : T => 1 - (q.2 : ℝ) :=
+      continuous_const.sub (continuous_subtype_val.comp continuous_snd)
+    have hinv : Continuous fun q : T => ‖(q.1 : EuclideanSpace ℝ (Fin n))‖⁻¹ :=
+      (continuous_norm.comp (continuous_subtype_val.comp continuous_fst)).inv₀
+        (fun q => norm_ne_zero_of_mem_compl hK q.1.2)
+    have h4 : Continuous fun q : T =>
+        ‖(q.1 : EuclideanSpace ℝ (Fin n))‖⁻¹ • (q.1 : EuclideanSpace ℝ (Fin n)) := hinv.smul h2
+    have hA : Continuous fun q : T => (q.2 : ℝ) • (q.1 : EuclideanSpace ℝ (Fin n)) := h1.smul h2
+    have hB : Continuous fun q : T => (1 - (q.2 : ℝ)) •
+        (‖(q.1 : EuclideanSpace ℝ (Fin n))‖⁻¹ • (q.1 : EuclideanSpace ℝ (Fin n))) := h3.smul h4
+    have hsum : Continuous fun q : T => (q.2 : ℝ) • (q.1 : EuclideanSpace ℝ (Fin n))
+        + (1 - (q.2 : ℝ)) • (‖(q.1 : EuclideanSpace ℝ (Fin n))‖⁻¹
+          • (q.1 : EuclideanSpace ℝ (Fin n))) := hA.add hB
+    exact Continuous.subtype_mk hsum _
 
 theorem slice_starHomotopy_zero (hK : StarInBall K) :
     slice (starHomotopy hK) 0 = (inclK hK).comp (normalizeK hK) := by
