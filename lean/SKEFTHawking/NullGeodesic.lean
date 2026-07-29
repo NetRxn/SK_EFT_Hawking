@@ -254,7 +254,7 @@ theorem autoparallel_self_metric_compat_dir_deriv_zero
     (x : M)
     (hk_smooth : MDiffAt (T% k) x)
     (h_pairing_smooth : MDiffAt (fun y => g y (k y) (k y)) x) :
-    extDerivFun (fun y => g y (k y) (k y)) x (k x) = 0 := by
+    extDerivFun I (fun y => g y (k y) (k y)) x (k x) = 0 := by
   -- Specialize metric-compat at X = Y = Z = k
   have h_mc := h_LC.metric_compatible k k k x hk_smooth hk_smooth h_pairing_smooth
   -- h_mc : extDerivFun (g(k,k)) x (k x) = g x (cov k x (k x)) (k x) + g x (k x) (cov k x (k x))
@@ -300,7 +300,7 @@ theorem nullAutoParallelCongruence_g_pairing_and_dir_deriv_zero
     (hk_smooth : MDiffAt (T% k) x)
     (h_pairing_smooth : MDiffAt (fun y => g y (k y) (k y)) x) :
     g x (k x) (k x) = 0 ∧
-      extDerivFun (fun y => g y (k y) (k y)) x (k x) = 0 :=
+      extDerivFun I (fun y => g y (k y) (k y)) x (k x) = 0 :=
   ⟨h_NAPC.is_null x,
    autoparallel_self_metric_compat_dir_deriv_zero h_LC h_NAPC.autoparallel_self
      x hk_smooth h_pairing_smooth⟩

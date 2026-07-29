@@ -197,7 +197,7 @@ structure IsRaychaudhuriPair
   RHS combining the focusing term, shear², twist², and Ricci
   contraction. -/
   raychaudhuri_identity : ∀ x : M,
-    extDerivFun θ x (k x) =
+    extDerivFun I θ x (k x) =
       - (θ x)^2 / ((n : ℝ) - 1) - shear_sq x + twist_sq x - R_kk x
 
 /-! ## §2 Wave-headline: focusing inequality under
@@ -237,7 +237,7 @@ theorem raychaudhuri_focusing_ineq
     (h_shear_nonneg : ∀ x, 0 ≤ shear_sq x)
     (h_R_kk_nonneg : ∀ x, 0 ≤ R_kk x)
     (x : M) :
-    extDerivFun θ x (k x) ≤ - (θ x)^2 / ((n : ℝ) - 1) := by
+    extDerivFun I θ x (k x) ≤ - (θ x)^2 / ((n : ℝ) - 1) := by
   rw [h_R.raychaudhuri_identity x, h_HSO x]
   linarith [h_shear_nonneg x, h_R_kk_nonneg x]
 
@@ -295,7 +295,7 @@ theorem raychaudhuri_focusing_ineq_under_NEC
     (h_einstein : ∀ x : M, R_kk x = κ * T_kk x)
     (h_NEC : ∀ x : M, 0 ≤ T_kk x)
     (x : M) :
-    extDerivFun θ x (k x) ≤ - (θ x)^2 / ((n : ℝ) - 1) :=
+    extDerivFun I θ x (k x) ≤ - (θ x)^2 / ((n : ℝ) - 1) :=
   raychaudhuri_focusing_ineq h_R h_HSO h_shear_nonneg
     (R_kk_nonneg_of_NEC h_κ_pos h_einstein h_NEC) x
 
@@ -326,7 +326,7 @@ theorem raychaudhuri_focusing_at_dimension_four
     (h_shear_nonneg : ∀ x, 0 ≤ shear_sq x)
     (h_R_kk_nonneg : ∀ x, 0 ≤ R_kk x)
     (x : M) :
-    extDerivFun θ x (k x) ≤ - (θ x)^2 / 3 := by
+    extDerivFun I θ x (k x) ≤ - (θ x)^2 / 3 := by
   have h := raychaudhuri_focusing_ineq h_R h_HSO h_shear_nonneg h_R_kk_nonneg x
   -- h : extDerivFun θ x (k x) ≤ -(θ x)^2 / ((4 : ℝ) - 1)
   -- Goal: extDerivFun θ x (k x) ≤ -(θ x)^2 / 3
@@ -356,7 +356,7 @@ derivative of the constant-zero function vanishes everywhere.
 theorem isRaychaudhuriPair_zero_iff_R_kk_zero
     {k : Π x : M, TangentSpace I x} {n : ℕ}
     {R_kk : M → ℝ}
-    (h_extDerivFun_zero : ∀ x : M, extDerivFun (0 : M → ℝ) x (k x) = 0) :
+    (h_extDerivFun_zero : ∀ x : M, extDerivFun I (0 : M → ℝ) x (k x) = 0) :
     IsRaychaudhuriPair k 0 0 0 R_kk n ↔ ∀ x : M, R_kk x = 0 := by
   constructor
   · intro h_R x
