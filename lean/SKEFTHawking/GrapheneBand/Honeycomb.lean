@@ -191,7 +191,7 @@ structure IsHoneycombNeighbours (δ : Fin 3 → ℝ × ℝ) : Prop where
 /-- **The honeycomb forces the 60° chart.** Given the three 120°-separated nearest-neighbour
 vectors, the primitive pair `(δ₀ − δ₂, δ₁ − δ₂)` — the pair `structureFactor` is written against —
 is an `IsHoneycombChart`, with `‖a₁‖² = 3‖δ‖²` (so `‖a₁‖ = √3 · a_CC`: the lattice constant is
-`√3` times the nearest-neighbour distance, the conversion `dispersion_slope_of_chart` needs).
+`√3` times the nearest-neighbour distance, the conversion `dispersion_slope_of_neighbours` needs).
 
 This is the theorem that makes the chart hypothesis *derived physics* rather than a stipulation. -/
 theorem isHoneycombChart_of_neighbours {δ : Fin 3 → ℝ × ℝ} (h : IsHoneycombNeighbours δ) :

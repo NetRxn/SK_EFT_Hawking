@@ -1419,7 +1419,7 @@ lattice transition sits at `|m| ≈ 3.3177`, and on the whole interval `3.318 �
 36 % of the window) the invariant already reads `0`.
 
 This is the theorem that makes the wave's claims falsifiable in the right direction. It replaces a
-`haldane_chern_iff_mass_inversion` shipped on 2026-07-28, which asserted the two-sided
+`haldane_mass_inversion_iff` shipped on 2026-07-28, which asserted the two-sided
 correspondence; that statement was true only because it quantified over the two sampled masses `1`
 and `6`, and its proof was `iff_of_true (by decide) …` / `iff_of_false …` — both sides closed
 propositions with known truth values, hence no content beyond the four theorems it cited.

@@ -5662,7 +5662,7 @@ def check_inventory_index_autogen_fresh() -> CheckResult:
 # That is precisely the observed failure shape and it keeps Mathlib references,
 # tactic names and local binders out of the result.
 _DOCSTRING_STRICT_FAMILIES = ("SKEFTHawking.Detection.", "SKEFTHawking.Electrothermal.",
-                              "SKEFTHawking.Control.")
+                              "SKEFTHawking.Control.", "SKEFTHawking.GrapheneBand.")
 _DOCSTRING_TOKEN_RE = re.compile(r"`([A-Za-z][A-Za-z0-9_']*)`")
 # Covers `/-- … -/` doc comments, `/-! … -/` section comments AND plain `/- … -/` module
 # headers. The module-header case was previously unscanned, which let a load-bearing
