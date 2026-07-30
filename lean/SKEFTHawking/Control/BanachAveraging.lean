@@ -180,7 +180,8 @@ theorem integral_mul_ode [CompleteSpace A] (hL : ∀ s, HasDerivAt L (L s * P s)
   intervalIntegral.integral_eq_sub_of_hasDerivAt
     (fun s _ => hasDerivAt_mul_ode hL hU s) (hcont.intervalIntegrable 0 T)
 
-/-- **The unitarity transfer.** If `Ur` has right inverse `Vr` and `‖Ur‖ ≤ 1`, a bound on the
+omit [NormedAlgebra ℝ A] in
+/-- **The unitarity transfer.** If `Ur` has right inverse `Vr` and `‖Ur‖ ≤ KUr`, a bound on the
 CONJUGATED discrepancy `Vr·Ue − 1` transfers to the literal difference `Ue − Ur`. -/
 theorem norm_sub_le_norm_mul_sub_one {Ue Ur Vr : A} {KUr : ℝ} (hinv : Ur * Vr = 1)
     (hUr : ‖Ur‖ ≤ KUr) :

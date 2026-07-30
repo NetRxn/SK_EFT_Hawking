@@ -236,12 +236,25 @@ theorem relaxation_ceiling_bites {e0 e1 : ℝ} (he0 : 0 ≤ e0)
   norm_num at h
   linarith
 
-/-- **The ceiling does NOT bite.** At `t = T₁/1000` the same ceiling is `1 - 1/2002`, which permits
-a `0.999` readout. The pair together shows the ceiling is informative in one regime and
-non-binding in the other — i.e. it tracks the budget rather than being vacuous or always-fatal. -/
+/-- **The ceiling does NOT bite.** At `t = T₁/1000` there is an ACTUAL readout satisfying the
+ceiling's own hypotheses whose fidelity exceeds `0.999` — so the ceiling permits it.
+
+This is stated as an existence over readouts rather than as an inequality between numerals. A bare
+numeral statement matched to the ceiling only by eye would survive any edit to the ceiling's bound
+expression, which is exactly the "looks quantitative, proves nothing" pattern; here the witness
+mentions `readoutDecayProb` and `assignmentFidelity` and would break if either changed. -/
 theorem relaxation_ceiling_does_not_bite :
-    (1 : ℝ) - (1 / 1000) / 1 / (2 * (1 + (1 / 1000) / 1)) > 999 / 1000 := by
-  norm_num
+    ∃ e0 e1 : ℝ, 0 ≤ e0 ∧ readoutDecayProb (1 / 1000) 1 ≤ e1
+      ∧ (999 : ℝ) / 1000 ≤ assignmentFidelity e0 e1 := by
+  refine ⟨0, readoutDecayProb (1 / 1000) 1, le_rfl, le_rfl, ?_⟩
+  -- `1 - exp(-r) ≤ r` from the enclosure, at `r = 1/1000`.
+  have henc := (QuantumNetwork.expNeg_enclosure (r := (1 : ℝ) / 1000) (by norm_num)).1
+  have hd : readoutDecayProb (1 / 1000) 1 ≤ 1 / 1000 := by
+    unfold readoutDecayProb
+    norm_num at henc ⊢
+    linarith
+  unfold assignmentFidelity avgAssignmentError
+  linarith
 
 end
 

@@ -86,6 +86,16 @@ theorem rotationAngle_eq_zero_of_zero_element (Ω b c T : ℝ)
   rw [rwaRotationAngle_eq_projected, hm]
   ring
 
+/-- **The fail condition's actual claim: the calibration equation has NO SOLUTION.** With a
+vanishing matrix element, no duration whatsoever achieves a nonzero target angle. The preceding
+`= 0` lemma is the computation; this is the statement that justifies carrying `m ≠ 0` as a
+hypothesis rather than dividing and hoping. -/
+theorem no_duration_achieves_nonzero_angle_of_zero_element (Ω b c θ : ℝ)
+    (hm : ‖projectedDriveElement b c‖ = 0) (hθ : θ ≠ 0) :
+    ∀ T, rwaRotationAngle Ω b c T ≠ θ := by
+  intro T h
+  exact hθ (by rw [← h, rotationAngle_eq_zero_of_zero_element Ω b c T hm])
+
 /-- **Fail condition 2 — a sign-inverted target.** If the target angle and the drive amplitude
 carry opposite signs, the calibrated duration is NEGATIVE, i.e. unphysical. A magnitude-only
 calibration silently returns `|T|` here and rotates the wrong way. -/
@@ -99,6 +109,19 @@ theorem calibrated_duration_neg_of_sign_mismatch (Ω b c θ : ℝ)
   · have hθ : θ < 0 := by nlinarith
     have : 0 < ‖projectedDriveElement b c‖ * Ω := mul_pos hm hΩ
     exact div_neg_of_neg_of_pos (by linarith) this
+
+/-- **What the sign inversion actually costs.** A magnitude-only calibration, faced with the
+negative duration above, takes `|T|` — and then rotates to `-θ`, i.e. exactly the wrong way. This
+is the physical failure the signed treatment prevents, stated as a theorem about the achieved
+angle rather than as a fact about the sign of a quotient. -/
+theorem magnitude_calibration_rotates_backwards (Ω b c θ : ℝ)
+    (hm : 0 < ‖projectedDriveElement b c‖) (hsign : θ * Ω < 0) :
+    rwaRotationAngle Ω b c |2 * θ / (‖projectedDriveElement b c‖ * Ω)| = -θ := by
+  have hneg := calibrated_duration_neg_of_sign_mismatch Ω b c θ hm hsign
+  rw [abs_of_neg hneg, rwaRotationAngle_eq_projected]
+  have hΩ : Ω ≠ 0 := by
+    intro h; rw [h] at hsign; simp at hsign
+  field_simp
 
 /-! ## 3. Longitudinal (detuning) duration calibration -/
 
@@ -139,11 +162,17 @@ theorem transverseElement_norm_le (a b c d : ℝ) :
   exact_mod_cast le_trans hrow hsup
 
 /-- **Strict-suppression witness.** A concrete frame where the drive is large in norm but its
-projected element is `11×` smaller — a mostly-identity drive barely couples the two levels. -/
+projected element is `11×` smaller.
+
+The drive is `10·σ_z + σ_x`, deliberately TRACELESS. An earlier version used `10·1 + σ_x`, which
+gives the same `11×` ratio but inflates `‖O‖` with the identity — a global phase, which generates
+no dynamics at all and (by `rwaGenerator`) contributes nothing to the rotation. That witness was an
+artifact. Here the suppression is genuinely due to a longitudinal-dominant drive: the `σ_z`
+component is physical, and it is exactly what makes a naive `θ = Ω·T` calibration wrong. -/
 theorem transverseElement_strictly_suppressed :
-    ‖projectedDriveElement 1 0‖ < ‖driveOp 10 1 0 0‖ := by
+    ‖projectedDriveElement 1 0‖ < ‖driveOp 0 1 0 10‖ := by
   rw [Matrix.linfty_opNorm_def]
-  simp [driveOp, projectedDriveElement, σ_x, σ_y, σ_z, Matrix.one_apply, Fin.sum_univ_two]
+  simp [driveOp, projectedDriveElement, σ_x, σ_y, σ_z, Fin.sum_univ_two]
 
 /-! ## 5. Kramers degeneracy
 

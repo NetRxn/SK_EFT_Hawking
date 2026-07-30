@@ -95,6 +95,46 @@ def interactionHamiltonian (ω₀ ω Ω φ a b c d : ℝ) (t : ℝ) : Matrix (Fi
   rotFrame ω t * drivenHamiltonian ω₀ ω Ω φ a b c d t * (rotFrame ω t)ᴴ
     - ((ω / 2 : ℝ) : ℂ) • σ_z
 
+/-! ### 2.0 The closed form really is the exponential
+
+`rotFrame` is *defined* by a closed form rather than as `exp(i(ωt/2)σ_z)`. These two theorems are
+what make that a definition of convenience rather than an extra modelling assumption: the closed
+form satisfies the defining ODE `R' = i(ω/2)σ_z · R` with `R(0) = 1`, which pins it uniquely. -/
+
+/-- `R(0) = 1`. -/
+theorem rotFrame_zero (ω : ℝ) : rotFrame ω 0 = 1 := by
+  unfold rotFrame
+  simp
+
+/-- The rotating frame differentiates as `exp(i(ω t/2)σ_z)` must. -/
+theorem rotFrame_hasDerivAt (ω t : ℝ) :
+    HasDerivAt (rotFrame ω)
+      (((-(ω / 2) * Real.sin (ω * t / 2) : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+        + (Complex.I * (((ω / 2) * Real.cos (ω * t / 2) : ℝ) : ℂ)) • σ_z) t := by
+  have hc : HasDerivAt (fun s : ℝ => Real.cos (ω * s / 2))
+      (-(ω / 2) * Real.sin (ω * t / 2)) t := by
+    have h := (((hasDerivAt_id t).const_mul ω).div_const 2).cos
+    simpa [mul_comm, mul_assoc, mul_left_comm] using h
+  have hs : HasDerivAt (fun s : ℝ => Real.sin (ω * s / 2))
+      ((ω / 2) * Real.cos (ω * t / 2)) t := by
+    have h := (((hasDerivAt_id t).const_mul ω).div_const 2).sin
+    simpa [mul_comm, mul_assoc, mul_left_comm] using h
+  have h1 := hc.ofReal_comp.smul_const (1 : Matrix (Fin 2) (Fin 2) ℂ)
+  have h2 := (hs.ofReal_comp.const_mul Complex.I).smul_const σ_z
+  exact h1.add h2
+
+/-- **The defining ODE.** `R'(t) = i(ω/2)·σ_z · R(t)` — so `rotFrame` is the unique solution with
+`R(0) = 1`, i.e. genuinely `exp(i(ωt/2)σ_z)`. -/
+theorem rotFrame_ode (ω t : ℝ) :
+    ((-(ω / 2) * Real.sin (ω * t / 2) : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+        + (Complex.I * (((ω / 2) * Real.cos (ω * t / 2) : ℝ) : ℂ)) • σ_z
+      = (Complex.I * ((ω / 2 : ℝ) : ℂ)) • σ_z * rotFrame ω t := by
+  unfold rotFrame
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [σ_z, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply, Complex.ext_iff,
+      -Complex.ofReal_cos, -Complex.ofReal_sin] <;> ring
+
 /-! ### 2.1 The rotating frame is unitary and acts on the Pauli basis as a rotation -/
 
 -- Entry-level computation idiom shared by every conjugation lemma below: expand the
