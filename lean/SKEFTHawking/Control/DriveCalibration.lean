@@ -142,6 +142,74 @@ theorem longitudinalRotationAngle_eq_zero_of_zero_detuning (T : ℝ) :
   unfold longitudinalRotationAngle
   ring
 
+/-! ## 3.1 Phase calibration — where the co-rotating rotation axis actually points
+
+The duration identities above fix the rotation *angle*. The remaining calibration freedom is the
+*azimuth* of the rotation axis in the co-rotating x–y plane, set by the drive envelope phase `φ`.
+The physical content is that the achieved azimuth is **not** `φ`: it is `φ` shifted by the argument
+of the projected drive element, so in any frame where `O` is not aligned with `σ_x` a naively
+commanded axis is mis-pointed. -/
+
+/-- The transverse **axis phasor** of the co-rotating generator — the complex number whose real and
+imaginary parts are exactly the `σ_x` and `σ_y` coefficients of `rwaGenerator ω₀ ω Ω φ b c`. Its
+argument is the azimuth of the rotation axis; its modulus is half the Rabi rate. -/
+noncomputable def rwaAxisPhasor (Ω φ b c : ℝ) : ℂ :=
+  ((Ω / 2 * (b * Real.cos φ - c * Real.sin φ) : ℝ) : ℂ)
+    + Complex.I * ((Ω / 2 * (b * Real.sin φ + c * Real.cos φ) : ℝ) : ℂ)
+
+/-- **The phasor really is read off `rwaGenerator`** — not merely asserted to be by its docstring.
+The generator's own transverse element (its `(0,1)` entry, via this module's `transverseElement`) is
+the conjugate of the axis phasor, which is exactly the statement that the phasor's real and
+imaginary parts are the generator's `σ_x` and `σ_y` coefficients. -/
+theorem transverseElement_rwaGenerator (ω₀ ω Ω φ b c : ℝ) :
+    transverseElement (rwaGenerator ω₀ ω Ω φ b c)
+      = (starRingEnd ℂ) (rwaAxisPhasor Ω φ b c) := by
+  unfold transverseElement rwaGenerator rwaAxisPhasor
+  simp [σ_x, σ_y, σ_z, Matrix.add_apply, Complex.ext_iff, map_ofNat]
+
+/-- The axis phasor factorises as `(Ω/2)·conj⟨0|O|1⟩·e^{iφ}`. This identity is what makes the phase
+calibration below a computation rather than a convention: the envelope phase and the drive's own
+matrix-element argument enter as a single product. -/
+theorem rwaAxisPhasor_eq (Ω φ b c : ℝ) :
+    rwaAxisPhasor Ω φ b c
+      = ((Ω / 2 : ℝ) : ℂ) * (starRingEnd ℂ) (projectedDriveElement b c)
+          * Complex.exp ((φ : ℂ) * Complex.I) := by
+  rw [Complex.exp_mul_I, ← Complex.ofReal_cos, ← Complex.ofReal_sin]
+  unfold rwaAxisPhasor projectedDriveElement
+  simp only [map_sub, map_mul, Complex.conj_I, Complex.conj_ofReal]
+  apply Complex.ext <;> simp <;> ring
+
+/-- **Phase-calibration identity.** Commanding envelope phase `φ = χ − arg(conj⟨0|O|1⟩)` places the
+co-rotating rotation axis at azimuth `χ`: the axis phasor becomes the non-negative real multiple
+`(Ω/2)·‖⟨0|O|1⟩‖` of `e^{iχ}`. Commanding `φ = χ` instead mis-points the axis by exactly
+`arg(conj⟨0|O|1⟩)` — the calibration error this identity exists to remove. -/
+theorem envelope_phase_alignment (Ω χ b c : ℝ) :
+    rwaAxisPhasor Ω (χ - Complex.arg ((starRingEnd ℂ) (projectedDriveElement b c))) b c
+      = ((Ω / 2 * ‖projectedDriveElement b c‖ : ℝ) : ℂ) * Complex.exp ((χ : ℂ) * Complex.I) := by
+  set m : ℂ := (starRingEnd ℂ) (projectedDriveElement b c) with hmdef
+  set a : ℝ := m.arg with hadef
+  have hpolar : ((‖m‖ : ℝ) : ℂ) * Complex.exp ((a : ℂ) * Complex.I) = m :=
+    Complex.norm_mul_exp_arg_mul_I m
+  have hnorm : ‖m‖ = ‖projectedDriveElement b c‖ := by rw [hmdef]; exact RCLike.norm_conj _
+  rw [rwaAxisPhasor_eq, ← hmdef, ← hpolar, ← hnorm]
+  push_cast
+  rw [mul_assoc, mul_assoc, ← Complex.exp_add]
+  ring_nf
+
+/-- **Fail condition, explicit.** At a vanishing projected element there is no axis to place: the
+phasor is `0` for EVERY commanded envelope phase, so no phase achieves any azimuth. -/
+theorem rwaAxisPhasor_eq_zero_of_zero_element (Ω φ : ℝ) {b c : ℝ}
+    (hm : projectedDriveElement b c = 0) : rwaAxisPhasor Ω φ b c = 0 := by
+  rw [rwaAxisPhasor_eq, hm]
+  simp
+
+/-- **The mis-pointing is real, not a bookkeeping convention.** For a pure `σ_y` drive
+(`b = 0`, `c = 1`) commanding `φ = 0` puts the axis at azimuth `π/2`, not `0` — a quarter turn
+away from the naive identification of envelope phase with axis azimuth. -/
+theorem envelope_phase_misalignment_witness : rwaAxisPhasor 2 0 0 1 = Complex.I := by
+  unfold rwaAxisPhasor
+  norm_num
+
 /-! ## 4. Matrix-element suppression -/
 
 /-- **Suppression bound.** The projected drive element never exceeds the operator norm of the

@@ -256,6 +256,136 @@ theorem relaxation_ceiling_does_not_bite :
   unfold assignmentFidelity avgAssignmentError
   linarith
 
+/-! ### 4.1 Witness pairs for the remaining four ceilings
+
+Every BITES witness is a corollary **of its ceiling theorem** — it calls the ceiling and concludes
+about `assignmentFidelity`, so it cannot survive an edit that weakens the ceiling. Every DOES-NOT-BITE
+witness is stated on the ceiling's own bound *expression* with the operating point as a hypothesis
+(rather than on a bare numeral): that is the strongest honest form, since a permissive ceiling
+licenses a high-fidelity readout but does not exhibit one. -/
+
+/-- **Relaxation ⊕ thermal ceiling BITES.** At a vanishing level splitting (`x = 0`) the thermal
+branch alone pins the excited-state population at `1/2`, so the two-mechanism ceiling is at most
+`3/4` no matter how fast the readout is. -/
+theorem relaxation_thermal_ceiling_bites {t T1 e0 e1 : ℝ} (he0 : 0 ≤ e0)
+    (hd : readoutDecayProb t T1 ≤ e1) (hth : thermalExcitedPop 0 ≤ e1) :
+    assignmentFidelity e0 e1 ≤ 3 / 4 := by
+  have hc := relaxation_thermal_ceiling (x := 0) he0 hd hth
+  have hpop : thermalExcitedPop (0 : ℝ) = 1 / 2 := by
+    unfold thermalExcitedPop; norm_num
+  rw [hpop] at hc
+  have hmax : max (readoutDecayProb t T1) (1 / 2 : ℝ) ≥ 1 / 2 := le_max_right _ _
+  linarith
+
+/-- **Relaxation ⊕ thermal ceiling does NOT bite.** At `t/T₁ = 1/100` and a splitting `x = 98`
+both branches sit below `1/100`, so the ceiling exceeds `199/200` — it permits a `0.99` readout.
+Uses only the rational `exp` enclosures, no transcendental evaluation. -/
+theorem relaxation_thermal_ceiling_does_not_bite {t T1 : ℝ} (hr : t / T1 = 1 / 100) :
+    (199 : ℝ) / 200
+      ≤ 1 - max (readoutDecayProb t T1) (thermalExcitedPop 98) / 2 := by
+  have hdec : readoutDecayProb t T1 ≤ 1 / 100 := by
+    have henc := (QuantumNetwork.expNeg_enclosure (r := (1 : ℝ) / 100) (by norm_num)).1
+    unfold readoutDecayProb
+    rw [show -t / T1 = -(t / T1) by ring, hr]
+    linarith
+  have hth : thermalExcitedPop 98 ≤ 1 / 100 := by
+    have hx : (99 : ℝ) ≤ Real.exp 98 := by linarith [Real.add_one_le_exp (98 : ℝ)]
+    unfold thermalExcitedPop
+    exact one_div_le_one_div_of_le (by norm_num) (by linarith)
+  have hmax : max (readoutDecayProb t T1) (thermalExcitedPop 98) ≤ 1 / 100 :=
+    max_le hdec hth
+  linarith
+
+/-- **Photon-budget ceiling BITES.** At a separation of `(√N_a − √N_b)² = 1/4` the ceiling is at
+most `13/16`, so any claimed fidelity above that is refuted outright. -/
+theorem photon_budget_ceiling_bites {Nb Na : NNReal} {δ : ℕ → ℝ} (hδ : Detection.IsCountRule δ)
+    (hsep : (Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2 = 1 / 4) :
+    assignmentFidelity (Detection.falseAlarm Nb δ) (Detection.missProb Na δ) ≤ 13 / 16 := by
+  have hc := photon_budget_ceiling (Nb := Nb) (Na := Na) hδ
+  rw [hsep] at hc
+  have henc := (QuantumNetwork.expNeg_enclosure (r := (1 : ℝ) / 4) (by norm_num)).1
+  norm_num at henc hc ⊢
+  linarith
+
+/-- **Photon-budget ceiling does NOT bite.** At a separation of `99` the ceiling exceeds
+`399/400`, permitting a `0.99` readout. Stated on the ceiling's own Bhattacharyya-affinity bound
+with the separation as a hypothesis, so it tracks the shipped `photon_budget_ceiling`. -/
+theorem photon_budget_ceiling_does_not_bite {Nb Na : NNReal}
+    (hsep : (Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2 = 99) :
+    (399 : ℝ) / 400
+      ≤ 1 - (1 / 4) * Real.exp (-(Real.sqrt (Na : ℝ) - Real.sqrt (Nb : ℝ)) ^ 2) := by
+  rw [hsep]
+  have henc := (QuantumNetwork.expNeg_enclosure (r := (99 : ℝ)) (by norm_num)).2
+  norm_num at henc ⊢
+  linarith
+
+open MeasureTheory in
+/-- **Filtered-readout ceiling (6EB) BITES at zero matched budget**: a chain whose matched budget
+vanishes cannot beat a coin flip. Derived by calling `filtered_readout_ceiling`, so it inherits that
+theorem's whiteness / admissibility / mean-separation binders rather than assuming its conclusion. -/
+theorem filtered_readout_ceiling_bites {V : (ℝ → ℝ) → ℝ} {S₀ T : ℝ}
+    (hwhite : Detection.IsWhiteFilteredVariance V S₀ T) (hS : 0 < S₀) (hT : 0 ≤ T)
+    {s h : ℝ → ℝ} (hadm : Detection.IsAdmissibleFilter T s h)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 T)
+    {μ₀ μ₁ σ t : ℝ} (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..T, h x * s x) (hσV : σ = Real.sqrt (V h))
+    (hb : Detection.matchedBudget S₀ T s = 0) :
+    assignmentFidelity (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t) ≤ 1 / 2 := by
+  have hc := filtered_readout_ceiling (t := t) hwhite hS hT hadm hs hσ hμle hμ hσV
+  rw [hb] at hc
+  norm_num [Detection.gaussianQ_zero] at hc
+  linarith
+
+open MeasureTheory in
+/-- **Detector-chain ceiling (6EC) BITES at zero matched budget** — the same collapse, but with the
+noise budget supplied by the bolometer's own phonon ⊕ Johnson quadrature sum. Derived by calling
+`detector_chain_ceiling`. -/
+theorem detector_chain_ceiling_bites (m : Electrothermal.ETFModel) {kB T Tw : ℝ}
+    {Vtot : (ℝ → ℝ) → ℝ} {V : Fin 2 → (ℝ → ℝ) → ℝ} {s hf : ℝ → ℝ} {μ₀ μ₁ σ t : ℝ}
+    (hkB : 0 < kB) (hT : 0 < T) (hG : 0 < m.G)
+    (hindep : Detection.IsUncorrelatedAt Finset.univ Vtot V)
+    (hphonon : Electrothermal.ETFModel.IsThermalFluctuationLimited (V 0) m kB T Tw)
+    (hjohnson : Detection.IsWhiteFilteredVariance (V 1) (m.johnsonNEP kB T ^ 2) Tw)
+    (hTw : 0 ≤ Tw) (hadm : Detection.IsAdmissibleFilter Tw s hf)
+    (hs : IntervalIntegrable (fun x => s x ^ 2) volume 0 Tw)
+    (hσ : 0 < σ) (hμle : μ₀ ≤ μ₁)
+    (hμ : μ₁ - μ₀ = ∫ x in (0:ℝ)..Tw, hf x * s x) (hσV : σ = Real.sqrt (Vtot hf))
+    (hb : Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s = 0) :
+    assignmentFidelity (Detection.thrErr0 μ₀ σ t) (Detection.thrErr1 μ₁ σ t) ≤ 1 / 2 := by
+  have hc := detector_chain_ceiling m (t := t) hkB hT hG hindep hphonon hjohnson hTw hadm hs hσ
+    hμle hμ hσV
+  rw [hb] at hc
+  norm_num [Detection.gaussianQ_zero] at hc
+  linarith
+
+/-- **The Gaussian ceiling does NOT bite at a budget of `8`**: the bound exceeds `17/18`, permitting
+a high-fidelity readout. Uses the Chernoff tail from 6EA plus the rational `exp` enclosure. Stated
+over the budget `B` because the 6EB and 6EC ceilings share this bound shape and differ only in which
+noise budget they feed it; the two specialisations below instantiate it at each. -/
+theorem gaussian_ceiling_does_not_bite {B : ℝ} (hB : B = 8) :
+    (17 : ℝ) / 18 ≤ 1 - Detection.gaussianQ (B / 2) := by
+  subst hB
+  have hch := Detection.gaussianTail_chernoff (z := (4 : ℝ)) (by norm_num)
+  have henc := (QuantumNetwork.expNeg_enclosure (r := (8 : ℝ)) (by norm_num)).2
+  norm_num at hch henc ⊢
+  linarith
+
+/-- **Filtered-readout ceiling (6EB) does NOT bite** at a matched budget of `8`. -/
+theorem filtered_readout_ceiling_does_not_bite {S₀ T : ℝ} {s : ℝ → ℝ}
+    (hb : Detection.matchedBudget S₀ T s = 8) :
+    (17 : ℝ) / 18 ≤ 1 - Detection.gaussianQ (Detection.matchedBudget S₀ T s / 2) :=
+  gaussian_ceiling_does_not_bite hb
+
+/-- **Detector-chain ceiling (6EC) does NOT bite** at a bolometer noise budget yielding matched
+budget `8` — the same permissive point, reached through the phonon ⊕ Johnson sum. -/
+theorem detector_chain_ceiling_does_not_bite (m : Electrothermal.ETFModel) {kB T Tw : ℝ}
+    {s : ℝ → ℝ}
+    (hb : Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s = 8) :
+    (17 : ℝ) / 18
+      ≤ 1 - Detection.gaussianQ
+          (Detection.matchedBudget (m.phononNEP kB T ^ 2 + m.johnsonNEP kB T ^ 2) Tw s / 2) :=
+  gaussian_ceiling_does_not_bite hb
+
 end
 
 end SKEFTHawking.Control

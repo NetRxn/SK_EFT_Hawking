@@ -1,6 +1,91 @@
 # Phase 6EE — Kernel-Verified Two-Level Control & Composite Readout Ceilings
 
-**Status: PLANNED (authorized 2026-07-27).** Capstone phase of the `6E*` series (*verified device-physics metrology*). Consumes 6EA (detection floors), 6EB (filtered-readout floors), 6EC (detector floors), and the existing readout-metrology corpus; 6ED feeds material-parameter seams optionally. See `Phase6EA_Roadmap.md` for the series framing.
+**Status: COMPLETE (2026-07-30).** Capstone phase of the `6E*` series (*verified device-physics metrology*).
+
+---
+
+## ✅ Shipped declarations (2026-07-30)
+
+`lean/SKEFTHawking/Control/` — 4 modules, all root-imported in `lean/SKEFTHawking.lean`.
+**110 extracted declarations** (100 authored + 10 compiler-generated equation lemmas), **110/110
+kernel-pure** with axiom closures ⊆ `{propext, Classical.choice, Quot.sound}` and **zero project
+axioms** (verified from `lean/lean_deps.json` axiom closures, not spot-checks). Zero `sorry`, zero
+`native_decide`, zero `maxHeartbeats`, zero linter warnings. `lake build SKEFTHawking.ExtractDeps`
+clean at 10,799 jobs; `validate.py` **50/50 ALL CHECKS PASSED** (2026-07-30, archived under
+`docs/validation/reports/validation_20260730T13*`).
+
+| Module | Decls | Core content |
+|---|---:|---|
+| `RotatingWave` | 48 | `interactionHamiltonian_decomp` (the EXACT split `H_I = H_RWA + V`); `rotFrame_zero`/`_hasDerivAt`/`_ode` (the frame pinned as `exp(i(ωt/2)σ_z)`); `bsAntiderivative` + `_hasDerivAt` + `bsAntiderivative_norm_le` (`‖S t‖ ≤ 2(Ω/ω)·ℓ¹`, uniform in `t`); `integral_counterRotating` (FTC); `rwaGenerator_sq` (general `(Δ²+Ω²m²)/4`) and its resonance corollary; `generalRotationAngle` + `rwaRotationAngle_lt_generalRotationAngle`; `rwa_propagator_difference_bound`; validity + exact-value failure witnesses |
+| `BanachAveraging` | 8 | `hasDerivAt_mul₃`, `integral_averaging`, `norm_integral_mul_mul_le` (bounds `∫L·G·U` via the ANTIDERIVATIVE of `G`, general factor bounds), `integral_mul_ode` (discrepancy identity), `norm_sub_le_norm_mul_sub_one` (unitarity transfer), `norm_propagator_sub_le` |
+| `DriveCalibration` | 29 | `transverseElement`/`longitudinalElement` read off the operator and proved equal to their Pauli forms; transverse + longitudinal + general-detuning **duration** calibration identities; `no_duration_achieves_nonzero_angle_of_zero_element`, `magnitude_calibration_rotates_backwards`; the **phase** calibration layer — `rwaAxisPhasor` bridged to the generator by `transverseElement_rwaGenerator`, the factorisation `rwaAxisPhasor_eq`, `envelope_phase_alignment` (command `φ = χ − arg conj⟨0\|O\|1⟩` to land the axis at azimuth `χ`), its `m = 0` fail condition, and a σ_y quarter-turn mis-pointing witness; `transverseElement_norm_le` + traceless 11× witness; Kramers (`kramers_inner_eq_zero`, `_partner_eigenvector`, `_degeneracy`, `_hypotheses_inhabited`) |
+| `CompositeReadoutCeilings` | 25 | `assignmentFidelity` + floor→ceiling format; `add_le_branch_error_of_disjoint` (measure-theoretic disjointness); `combined_floor/ceiling_max`, `combined_floor/ceiling_add`, `combined_ceiling_add_lt_max` + `combined_ceiling_gap_witness` (gap `= 1/200`); per-mechanism ceilings for relaxation, relaxation⊕thermal, 6EA, 6EB, 6EC — the last three DERIVED from their upstream floor theorems; a BITES/does-not-BITE witness pair for **all five** ceilings, every BITES half proved *through its own ceiling theorem* (so it concludes about `assignmentFidelity`, not about a detached bound expression) and every does-not-BITE half stated on that ceiling's own bound expression with the operating point as a hypothesis |
+
+### Planned → shipped name map
+
+The acceptance boxes below are ticked against **content**, not against the placeholder names the plan
+used before the substrate existed. Where a name differs, the shipped one is authoritative:
+
+| Planned name (AC text) | Shipped as |
+|---|---|
+| `rwaReduction_def` | `rwaGenerator` + `rotFrame` + `interactionHamiltonian`, tied by `interactionHamiltonian_decomp` |
+| `rwa_remainder_bound` | `bsAntiderivative_norm_le` (integrated remainder) → `rwa_propagator_difference_bound` (propagator level) |
+| `rwa_rotation_angle` | `rwaRotationAngle` + `calibrated_duration_transverse`; `generalRotationAngle` off resonance |
+| `projectedDriveElement_def` | `projectedDriveElement`, `transverseElement`, `longitudinalElement` (+ their `_driveOp` identities) |
+| `envelope_phase_alignment` | shipped under this name |
+| `matrixElement_suppression` | `transverseElement_norm_le` + `transverseElement_strictly_suppressed` |
+| `kramers_degeneracy` | shipped under this name |
+| `relaxation_thermal_ceiling`, `photon_budget_ceiling`, `filtered_readout_ceiling`, `detector_chain_ceiling`, `combined_ceiling_max` | shipped under these names |
+
+## Open UNKNOWNs — resolutions
+
+- **UNKNOWN-1 (RWA remainder route): RESOLVED — none of the three planned routes.** The in-repo BCH
+  corpus does NOT instantiate: `bch_order_2_cubic_thm` bounds a *static* group commutator, whereas
+  the RWA remainder compares a **time-ordered** propagator of a time-*dependent* generator; and BCH
+  is cubic in one small `δ` bounding both arguments while the remainder is *first order* in `Ω/ω`
+  with non-co-small arguments. PhysLib `Resolvent` fails for the first reason too. Duhamel/Grönwall
+  alone yields only `O(Ω·T)` — true, but **not** Bloch–Siegert scale, and shipping it would have
+  been a silent de-scope. The route taken is the **near-identity (Bloch–Siegert) frame
+  transformation**: `counterRotating` is a trigonometric polynomial with a CLOSED-FORM
+  antiderivative bounded uniformly in `t`, which is where the `1/ω` comes from.
+- **UNKNOWN-2 (Kramers formulation): RESOLVED — built from first principles.** Mathlib's
+  antiunitary machinery was not used; `Θ` is carried as a plain map with `⟪Θx,Θy⟫ = ⟪y,x⟫`,
+  `Θ² = -1` and conjugate-homogeneity as explicit hypotheses, which is weaker than requiring a
+  bundled `LinearIsometryEquiv` and suffices for the whole argument (the orthogonality lemma needs
+  no linearity at all). The pre-arm guardrail directing reuse of `MajoranaKramers`'
+  `Θ`-algebra was **retracted** — see below.
+- **UNKNOWN-3 (channel-theoretic independence): RESOLVED — measure-theoretic, not channel-theoretic.**
+  The additive composite rests on `Disjoint A B` for measurable error events inside the branch
+  error event, which is the honest formalisation of "the mechanisms contribute separately". A
+  channel-composition route was not needed.
+
+## `6E*` series-close summary
+
+The series set out to make device-physics metrology claims machine-checkable end to end. Shipped
+across 6EA–6EE: detection floors (6EA), filtered-readout/matched-filter floors (6EB), detector-chain
+bolometric floors (6EC), material-parameter band substrate (6ED), and — here — the **control** layer
+(RWA with an explicit remainder, projected-drive calibration, Kramers protection) and the
+**composite-ceiling** layer that assembles every mechanism floor into a single end-to-end fidelity
+ceiling. The series' organising fact is that every mechanism floor lower-bounds the *same* quantity,
+`avgAssignmentError`, which is what lets them compose at all.
+
+**Carried forward, not silently dropped:**
+- The Bloch–Siegert scale is earned at the integrated-remainder and propagator levels; no theorem
+  asserts the co-rotating reduction as an equality anywhere in the phase.
+- `MajoranaKramers` needs honest renaming or real substrate — its `kramers_anticommutation` is
+  `eq_neg_of_add_eq_zero_left` on two reals and its `kramers_pfaffian_definite_sign` is `mul_nonneg`
+  under a self-admitted placeholder hypothesis, while both docstrings claim matrix/Pfaffian content.
+  Out of 6EE scope; flagged, and this phase now supplies the genuine Kramers substrate they could be
+  re-pointed at.
+- Neither those lemmas nor the pre-remediation 6EE defects appeared in any disclosure registry, so
+  the **name/docstring ↔ statement mismatch class is invisible to every current automated gate**.
+  That is the phase's QI-level finding and is the one worth acting on project-wide.
+
+---
+
+## Original plan (retained for provenance)
+
+Consumes 6EA (detection floors), 6EB (filtered-readout floors), 6EC (detector floors), and the existing readout-metrology corpus; 6ED feeds material-parameter seams optionally. See `Phase6EA_Roadmap.md` for the series framing.
 
 **Thesis.** The repo already owns strong single-mechanism readout floors: `readoutDecayProb_eq_cohGamma` with its enclosure suite (relaxation), `ThermalAssignmentFloor` (thermal excitation), `avgAssignmentError_rational_floor` (their composition), the generalized-amplitude-damping channel, and the T1⊕T2 gate-fidelity family. Two layers are missing to make this a complete, state-of-the-art verified-metrology stack: (1) the *control* layer — rotating-wave reduction with an explicit error bound, projected-drive Rabi calibration algebra, and the Kramers-degeneracy protection statement, which turn "a qubit was driven" into kernel-checked rotation claims; and (2) the *composite-ceiling* layer — theorems assembling relaxation + thermal + photon-budget (6EA) + filtered-noise (6EB) + detector (6EC) floors into single end-to-end assignment-fidelity ceilings, each mechanism's hypothesis explicit, each ceiling falsifiable by `norm_num`. Together they finish the arc the `6E*` series exists for: any claimed readout performance can be screened against a machine-checked ceiling assembled from its own stated budget.
 
@@ -59,12 +144,12 @@ matrix log). All three are kernel-pure and Mathlib-PR-packaged. A second candida
 `hasTemperateGrowth_resolvent` — a resolvent-estimate path to the same bound.
 
 **Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/Control/RotatingWave.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `rwaReduction_def` — the co-rotating effective Hamiltonian in the interaction picture (definition, convention-explicit);
-- [ ] `rwa_remainder_bound : ‖U_exact(T) − U_rwa(T)‖ ≤ C·(Ω/ω)·(1 + Ω·T)`-shape inequality with explicit `C` (exact shape frozen after the UNKNOWN-1 spike; the deliverable is ANY honest explicit-constant bound of Bloch–Siegert scale, not the optimal one);
-- [ ] `rwa_rotation_angle : θ = (m/2)·Ω·T` for the co-rotating propagator with projected drive element `m = |⟨0|O_drive|1⟩|` — the calibration identity at the RWA level;
-- [ ] `norm_num` witnesses: a parameter point where the remainder bound is small (validity) and one where it is order-unity (honest failure);
-- [ ] preemptive-strengthening + post-wave audit.
+- [x] `lean/SKEFTHawking/Control/RotatingWave.lean` builds 0-sorry, kernel-pure, with:
+- [x] `rwaReduction_def` — the co-rotating effective Hamiltonian in the interaction picture (definition, convention-explicit);
+- [x] `rwa_remainder_bound : ‖U_exact(T) − U_rwa(T)‖ ≤ C·(Ω/ω)·(1 + Ω·T)`-shape inequality with explicit `C` (exact shape frozen after the UNKNOWN-1 spike; the deliverable is ANY honest explicit-constant bound of Bloch–Siegert scale, not the optimal one);
+- [x] `rwa_rotation_angle : θ = (m/2)·Ω·T` for the co-rotating propagator with projected drive element `m = |⟨0|O_drive|1⟩|` — the calibration identity at the RWA level;
+- [x] `norm_num` witnesses: a parameter point where the remainder bound is small (validity) and one where it is order-unity (honest failure);
+- [x] preemptive-strengthening + post-wave audit.
 
 ## Wave 2 — Projected-drive calibration algebra & Kramers protection
 
@@ -75,12 +160,12 @@ matrix log). All three are kernel-pure and Mathlib-PR-packaged. A second candida
 **Bricks.** Wave 1; `blochPauli` spectral core (`Topological.BlochBundle`, if the doublet statement uses it); PhysLib `Qubit`.
 
 **Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/Control/DriveCalibration.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `projectedDriveElement_def` (signed complex `⟨0|O|1⟩` and longitudinal `(⟨0|O|0⟩−⟨1|O|1⟩)/2`) + `calibrated_duration_transverse : T = 2θ/(m·Ω)` and the longitudinal dual — both SIGNED, with fail-conditions (`m = 0`, sign-inverted target) as explicit hypotheses, not absorbed magnitudes;
-- [ ] `envelope_phase_alignment : achieved axis phase = φ + arg⟨0|O|1⟩` (the phase-calibration identity);
-- [ ] `matrixElement_suppression : ‖⟨0|O|1⟩‖ ≤ ‖O‖`-shape bound + a strict-suppression witness (a concrete frame where `m ≪ ‖O‖` — the physics that makes naive `θ = Ω·T` calibration wrong);
-- [ ] `kramers_degeneracy : time-reversal antiunitary with T² = −1 → every eigenvalue of a T-symmetric Hamiltonian is (at least) doubly degenerate` (finite-dimensional statement; formulation per UNKNOWN-2);
-- [ ] preemptive-strengthening + post-wave audit.
+- [x] `lean/SKEFTHawking/Control/DriveCalibration.lean` builds 0-sorry, kernel-pure, with:
+- [x] `projectedDriveElement_def` (signed complex `⟨0|O|1⟩` and longitudinal `(⟨0|O|0⟩−⟨1|O|1⟩)/2`) + `calibrated_duration_transverse : T = 2θ/(m·Ω)` and the longitudinal dual — both SIGNED, with fail-conditions (`m = 0`, sign-inverted target) as explicit hypotheses, not absorbed magnitudes;
+- [x] `envelope_phase_alignment : achieved axis phase = φ + arg⟨0|O|1⟩` (the phase-calibration identity);
+- [x] `matrixElement_suppression : ‖⟨0|O|1⟩‖ ≤ ‖O‖`-shape bound + a strict-suppression witness (a concrete frame where `m ≪ ‖O‖` — the physics that makes naive `θ = Ω·T` calibration wrong);
+- [x] `kramers_degeneracy : time-reversal antiunitary with T² = −1 → every eigenvalue of a T-symmetric Hamiltonian is (at least) doubly degenerate` (finite-dimensional statement; formulation per UNKNOWN-2);
+- [x] preemptive-strengthening + post-wave audit.
 
 ## Wave 3 — Composite readout ceilings
 
@@ -91,15 +176,15 @@ matrix log). All three are kernel-pure and Mathlib-PR-packaged. A second candida
 **Bricks.** `avgAssignmentError_rational_floor` + `readoutDecayProb_enclosure` + `thermalExcitedPop` (existing); 6EA `poisson_avgError_floor` + Gaussian floors; 6EB `error_floor_from_budget`; 6EC `bolometer_error_floor`; `GeneralizedAmpDamp` + `CoherenceFidelity` for the channel-level statements.
 
 **Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/Control/CompositeReadoutCeilings.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `relaxation_thermal_ceiling` — the existing pairwise composition re-stated in the phase's uniform ceiling format (cite `avgAssignmentError_rational_floor`; no re-proof) as the format anchor;
-- [ ] `photon_budget_ceiling : F ≤ 1 − (1/2)·(1/4)·exp(−(√N_a−√N_b)²)`-shape ceiling from the 6EA floor, attribution hypotheses explicit;
-- [ ] `filtered_readout_ceiling` — 6EB budget floor composed to a fidelity ceiling for any admissible-filter threshold readout;
-- [ ] `detector_chain_ceiling` — the 6EC bolometric floor composed end-to-end (the deepest chain: detector NEP → filter → Gaussian error → fidelity);
-- [ ] `combined_ceiling_max` — mechanisms combine at least as `F ≤ 1 − max(individual floors)/2`-shape (worst-mechanism form, always sound) plus the strictly-sharper additive form under stated independence hypotheses, with the difference between the two forms itself witnessed;
-- [ ] per-ceiling `norm_num` witness pairs: a budget point where the ceiling bites (claim above it = refuted) and one where it doesn't (non-triviality both ways);
-- [ ] root-module import + Inventory/counts refresh; series-close notes recorded in this roadmap.
-- [ ] preemptive-strengthening + post-wave audit (tautology hunt per the instructions blockquote — mandatory emphasis).
+- [x] `lean/SKEFTHawking/Control/CompositeReadoutCeilings.lean` builds 0-sorry, kernel-pure, with:
+- [x] `relaxation_thermal_ceiling` — the existing pairwise composition re-stated in the phase's uniform ceiling format (cite `avgAssignmentError_rational_floor`; no re-proof) as the format anchor;
+- [x] `photon_budget_ceiling : F ≤ 1 − (1/2)·(1/4)·exp(−(√N_a−√N_b)²)`-shape ceiling from the 6EA floor, attribution hypotheses explicit;
+- [x] `filtered_readout_ceiling` — 6EB budget floor composed to a fidelity ceiling for any admissible-filter threshold readout;
+- [x] `detector_chain_ceiling` — the 6EC bolometric floor composed end-to-end (the deepest chain: detector NEP → filter → Gaussian error → fidelity);
+- [x] `combined_ceiling_max` — mechanisms combine at least as `F ≤ 1 − max(individual floors)/2`-shape (worst-mechanism form, always sound) plus the strictly-sharper additive form under stated independence hypotheses, with the difference between the two forms itself witnessed;
+- [x] per-ceiling `norm_num` witness pairs: a budget point where the ceiling bites (claim above it = refuted) and one where it doesn't (non-triviality both ways);
+- [x] root-module import + Inventory/counts refresh; series-close notes recorded in this roadmap.
+- [x] preemptive-strengthening + post-wave audit (tautology hunt per the instructions blockquote — mandatory emphasis).
 
 ---
 
@@ -109,10 +194,10 @@ Wave 1 → Wave 2 serialize (calibration consumes the RWA identity); Wave 3 cons
 
 ## Phase Definition of Done
 
-- [ ] `lake build` + ExtractDeps clean; zero sorry; kernel-pure; no new axioms.
-- [ ] `validate.py` green; Inventory + Index refreshed with the `Control/` family.
-- [ ] Adversarial statement audit logged — composite-tautology hunt is the priority class.
-- [ ] Roadmap status updated with dated shipped-declarations list; `6E*` series-close summary recorded here (what shipped across 6EA–6EE, what remains deferred).
+- [x] `lake build` + ExtractDeps clean; zero sorry; kernel-pure; no new axioms.
+- [x] `validate.py` green; Inventory + Index refreshed with the `Control/` family.
+- [x] Adversarial statement audit logged — composite-tautology hunt is the priority class.
+- [x] Roadmap status updated with dated shipped-declarations list; `6E*` series-close summary recorded here (what shipped across 6EA–6EE, what remains deferred).
 
 ## Open UNKNOWNs
 

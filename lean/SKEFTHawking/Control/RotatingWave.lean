@@ -133,7 +133,7 @@ theorem rotFrame_ode (ω t : ℝ) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [σ_z, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply, Complex.ext_iff,
-      -Complex.ofReal_cos, -Complex.ofReal_sin] <;> ring
+      -Complex.ofReal_cos, -Complex.ofReal_sin]
 
 /-! ### 2.1 The rotating frame is unitary and acts on the Pauli basis as a rotation -/
 
