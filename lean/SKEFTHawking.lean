@@ -5172,6 +5172,13 @@ import SKEFTHawking.GrapheneBand.BernalBilayer
 -- The remainder's Bloch-Siegert `Ω/ω` scale comes from its closed-form antiderivative being
 -- bounded uniformly in `t` — a naive Duhamel/Gronwall estimate yields only `Ω·T/2`, which grows
 -- without bound in `T` and carries no `1/ω`, so it is NOT of Bloch-Siegert scale.
+-- Phase 6EE Wave 1 substrate — first-order averaging in a Banach algebra. Stated abstractly for
+-- two reasons: the estimate is not special to 2x2 matrices (it is the general trade "bound the
+-- ANTIDERIVATIVE, not the integrand", which is what converts O(||G||*T) into O(B) + O(B*T*||gens||)),
+-- and on concrete `Matrix n n C` the construction is blocked by an instance diamond —
+-- `HasDerivAt.mul` and a structure-field `HasDerivAt` reach `AddCommGroup` by different paths
+-- (`Matrix.addCommGroup` vs `Matrix.linftyOpNormedRing.toAddCommGroup`) and will not unify.
+import SKEFTHawking.Control.BanachAveraging
 import SKEFTHawking.Control.RotatingWave
 
 /-!
