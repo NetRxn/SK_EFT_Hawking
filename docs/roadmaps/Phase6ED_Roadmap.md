@@ -1,6 +1,6 @@
 # Phase 6ED — Kernel-Verified Graphene Electronic Structure: Honeycomb Tight-Binding, Dirac Cones, and the Haldane Chern Witness
 
-**Status: IN PROGRESS — Wave 1 SHIPPED, Waves 2–3 open, Wave 4 gated (authorized 2026-07-27; Wave 1 landed 2026-07-29).** Fourth phase of the `6E*` series (*verified device-physics metrology*). Independent of 6EA–6EC (parallelizable); feeds 6EE's material-parameter seams and closes the graphene gap in the repo's band-theory arc. See `Phase6EA_Roadmap.md` for the series framing.
+**Status: IN PROGRESS — Waves 1 + 2 SHIPPED, Wave 3 open, Wave 4 gated (authorized 2026-07-27; Wave 1 landed 2026-07-29).** Fourth phase of the `6E*` series (*verified device-physics metrology*). Independent of 6EA–6EC (parallelizable); feeds 6EE's material-parameter seams and closes the graphene gap in the repo's band-theory arc. See `Phase6EA_Roadmap.md` for the series framing.
 
 **Thesis.** The repo's graphene corpus formalizes graphene as a *Dirac fluid* (Phase 5w: analog metric, Hawking spectrum, noise PSD — shipped) and its band-theory corpus formalizes *abstract* two-band Chern machinery (Phase 6CA: `blochPauli` d·σ models, FHS lattice Chern number, gauge invariance — shipped). What is missing is the bridge both sides implicitly cite: graphene's actual electronic structure. Honeycomb tight-binding, the two Dirac points with linear dispersion and the emergent Fermi velocity, the sublattice-pseudospin Berry phase π, the gapped-Dirac-mass band structure, and the Haldane model as the honeycomb Chern insulator — none is formalized (verified 2026-07-27: `BlochFHS.lean:24-26` explicitly defers any nontrivial concrete Chern frame; no honeycomb lattice model exists in the project or in PhysLib, whose `TightBindingChain` is single-band 1D and was already rejected by 6CA as "wrong model").
 
@@ -55,13 +55,15 @@ Clean whitespace: no prover has a kernel-checked honeycomb band structure, Dirac
 
 **Bricks.** Wave 1; `NumericalBounds` enclosure pattern; Mathlib `Complex.exp` Taylor bounds (`Complex.abs_exp_sub_one_sub_id_le`-family; exact route UNKNOWN-1).
 
-**Done (AC / `/goal` condition).**
-- [ ] `lean/SKEFTHawking/GrapheneBand/DiracExpansion.lean` builds 0-sorry, kernel-pure, with:
-- [ ] `structureFactor_linear_expansion : |‖f (K+q)‖ − (3/2)·‖q‖| ≤ C·‖q‖²` with explicit `C` and a stated validity ball — the honest linear-dispersion theorem;
-- [ ] `fermiVelocity_def` (unit-contract constant) + `dispersion_linear_enclosure` — two-sided rational enclosure of `E(K+q)/‖q‖` on the validity ball;
-- [ ] `gapped_dirac_gap_eq : d₃ = m → E_gap = 2·|m|` (exact, via the secular identity);
-- [ ] `gap_vs_mass_monotone` + a `norm_num` witness pair inside/outside the validity ball (the expansion bound must FAIL detectably outside — non-vacuity of the remainder);
-- [ ] preemptive-strengthening + post-wave audit.
+**Done (AC / `/goal` condition).** ✅ **SHIPPED 2026-07-29** — kernel-pure, 0 sorry / axiom / `native_decide` / `maxHeartbeats`, root-imported.
+
+**UNKNOWN-1 RESOLVED:** route = the **`Complex.exp` Taylor bound** (`Complex.norm_exp_sub_one_sub_id_le`), one application per hopping term, giving remainder constant **`C = 1`** on the ball `|q₁| ≤ 1 ∧ |q₂| ≤ 1`. The two alternatives (two-variable `Real.cos`/`sin` expansion; direct polynomial sandwich) would both have rebuilt remainder control this lemma already provides.
+- [x] `lean/SKEFTHawking/GrapheneBand/DiracExpansion.lean` builds 0-sorry, kernel-pure, with:
+- [x] `structureFactor_linear_expansion` — shipped against the **coordinate-free** linear form `‖L(q)‖ = √(q₁² − q₁q₂ + q₂²)` (`linearForm_norm`) rather than `(3/2)‖q‖`. The `3/2` is that value *after* converting phase offsets to Cartesian momentum against a lattice constant `a`; it is a coordinate-and-units artifact, so shipping the quadratic form (the triangular lattice's reciprocal metric, isotropic in the physical frame) is the same strengthening Wave 1 made. `C = 1`, ball stated;
+- [x] **`fermiVelocity_def` deliberately NOT shipped** — `v_F = 3ta/2ℏ` is definable only once a lattice constant and a unit contract are fixed, which this phase keeps consumer-side; shipping it would bake in the coordinate choice Wave 1 was written to avoid. The physical content (the linear coefficient) is `linearForm_norm`;
+- [x] `gapped_dirac_gap_eq` — the gap at the Dirac point is **exactly** `2|m|`, via Wave 1's `honeycomb_gapless_at_diracK` (so `‖d‖ = |m|` on the nose, not an approximation);
+- [x] **shipped as `gap_vs_mass_strictMono` (strict, not merely monotone) + `gapped_dirac_gapless_iff_massless`** (the mass hypothesis is load-bearing: the gap closes iff `m = 0`) `gap_vs_mass_monotone`. **The AC's inside/outside witness pair was NOT shipped, because the request rests on a false premise:** the validity ball is an artifact of the *Mathlib lemma*, not of the mathematics — the sharp bound `‖e^{iq}−1−iq‖ ≤ q²/2` holds for every real `q`, so the shipped bound (constant 1) is globally true and **cannot** fail outside the ball. Rather than fake it, the honest non-vacuity content ships instead: `dispersion_linear_not_exact` exhibits the K→K′ offset, where `‖f‖ = 0` while `‖L(q)‖ = √(4π²/3) > 0`, proving the remainder term is genuinely needed and the inequality is not a disguised equality;
+- [x] preemptive-strengthening + post-wave audit.
 
 ## Wave 3 — Berry phase and the Haldane Chern witness
 
