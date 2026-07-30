@@ -5181,6 +5181,13 @@ import SKEFTHawking.GrapheneBand.BernalBilayer
 import SKEFTHawking.Control.BanachAveraging
 import SKEFTHawking.Control.RotatingWave
 
+-- Phase 6EE Wave 2 — projected-drive calibration. Every identity carries its fail condition as an
+-- EXPLICIT hypothesis: the drive matrix element can VANISH (no duration then produces any rotation)
+-- and it is SIGNED (a magnitude-only calibration returns |T| and rotates the wrong way). The
+-- elements are read off the operator as matrix ENTRIES and then proved equal to their
+-- Pauli-coefficient forms, so the definitions are not assertions.
+import SKEFTHawking.Control.DriveCalibration
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 
